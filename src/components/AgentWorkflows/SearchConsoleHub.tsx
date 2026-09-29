@@ -32,6 +32,7 @@ export const SearchConsoleHub: React.FC = () => {
   const activeProjectId = useProjectStore((s) => s.activeProjectId);
   const isGscConnected = useToolsStore((s) => s.isGscConnected);
   const gscClientId = useToolsStore((s) => s.gscClientId);
+  const gscClientSecret = useToolsStore((s) => s.gscClientSecret);
   const gscProperties = useToolsStore((s) => s.gscProperties);
   const gscProperty = useToolsStore((s) => s.gscProperty);
   const gscFilters = useToolsStore((s) => s.gscFilters || {});
@@ -48,6 +49,7 @@ export const SearchConsoleHub: React.FC = () => {
   const inspectGscUrl = useToolsStore((s) => s.inspectGscUrl);
 
   const [inputClientId, setInputClientId] = useState(gscClientId);
+  const [inputClientSecret, setInputClientSecret] = useState(gscClientSecret);
   const [inspectUrl, setInspectUrl] = useState('');
   const [dateRange, setDateRange] = useState<GscDateRange>(() => latestCompleteGscDateRange());
   const [snapshots, setSnapshots] = useState<GscPerformanceSnapshot[]>([]);
@@ -56,6 +58,7 @@ export const SearchConsoleHub: React.FC = () => {
   const dateRangeError = validateGscDateRange(dateRange);
   useEffect(() => {
     setInputClientId(gscClientId);
+    setInputClientSecret(gscClientSecret);
     if (activeProjectId) {
       const loaded = readGscSnapshots(activeProjectId).filter((snapshot) => !gscProperty || snapshot.site_url === gscProperty);
       setSnapshots(loaded);
@@ -64,8 +67,8 @@ export const SearchConsoleHub: React.FC = () => {
       setSnapshots([]);
       setBaselineId('');
     }
-    if (gscClientId) void resumeGsc();
-  }, [activeProjectId, gscClientId, gscProperty]);
+    if (gscClientId && !isGscConnected) void resumeGsc();
+  }, [activeProjectId, gscClientId, gscClientSecret, gscProperty, isGscConnected]);
 
   useEffect(() => {
     setInspectUrl('');
@@ -76,7 +79,7 @@ export const SearchConsoleHub: React.FC = () => {
   const handleConnect = (e: React.FormEvent) => {
     e.preventDefault();
     if (!inputClientId.trim()) return;
-    void connectGsc(inputClientId.trim());
+    void connectGsc(inputClientId.trim(), inputClientSecret.trim());
   };
 
   const handleInspect = (e: React.FormEvent) => {
@@ -168,6 +171,15 @@ export const SearchConsoleHub: React.FC = () => {
               value={inputClientId}
               onChange={(e) => setInputClientId(e.target.value)}
               placeholder={t('searchConsole.clientIdPlaceholder')}
+              className="flex-1 bg-slate-950 border border-slate-800 rounded-lg px-4 py-2.5 text-sm text-white placeholder-slate-500 focus:outline-none focus:border-emerald-500 font-mono"
+            />
+            <input
+              type="password"
+              value={inputClientSecret}
+              onChange={(e) => setInputClientSecret(e.target.value)}
+              placeholder={t('searchConsole.clientSecretPlaceholder')}
+              aria-label={t('searchConsole.clientSecretLabel')}
+              autoComplete="off"
               className="flex-1 bg-slate-950 border border-slate-800 rounded-lg px-4 py-2.5 text-sm text-white placeholder-slate-500 focus:outline-none focus:border-emerald-500 font-mono"
             />
             <button

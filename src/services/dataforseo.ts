@@ -174,6 +174,12 @@ const nullableNumber = (value: unknown): number | null => {
   return Number.isFinite(parsed) ? parsed : null;
 };
 const text = (value: unknown): string => typeof value === 'string' ? value : '';
+const booleanish = (value: unknown): boolean => {
+  if (typeof value === 'boolean') return value;
+  if (typeof value === 'number') return value !== 0;
+  if (typeof value === 'string') return ['1', 'true', 'yes', 'dofollow'].includes(value.trim().toLowerCase());
+  return false;
+};
 
 const DATAFORSEO_MAX_NETWORK_ATTEMPTS = 3;
 
@@ -238,6 +244,23 @@ export const dataForSeoMarket = (country: string): DataForSeoMarket => {
   }
   const code = legacyMarketCodes[country.trim().toLowerCase()] || normalized;
   return DATAFORSEO_MARKETS.find((market) => market.code === code) || DATAFORSEO_MARKETS.find((market) => market.code === 'US') || DATAFORSEO_MARKETS[0];
+};
+
+/** Resolve a provider market without silently changing a user's selection. */
+export const resolveDataForSeoMarket = (country: string): DataForSeoMarket | null => {
+  const normalized = country.trim().toUpperCase();
+  const numeric = Number(normalized);
+  if (Number.isInteger(numeric)) {
+    return DATAFORSEO_MARKETS.find((market) => market.locationCode === numeric) || null;
+  }
+  const code = legacyMarketCodes[country.trim().toLowerCase()] || normalized;
+  return DATAFORSEO_MARKETS.find((market) => market.code === code) || null;
+};
+
+export const requireDataForSeoMarket = (country: string): DataForSeoMarket => {
+  const market = resolveDataForSeoMarket(country);
+  if (!market) throw new Error(i18n.t('runtimeErrors.dataforseo.marketRequired'));
+  return market;
 };
 
 export const dataForSeoLocation = (country: string): number => dataForSeoMarket(country).locationCode;
@@ -357,7 +380,7 @@ export class DataForSEOClient {
     throw lastError || new DataForSeoRequestError(i18n.t('runtimeErrors.dataforseo.requestFailed'));
   }
 
-  private async post(path: string, payload: JsonRecord[]): Promise<JsonRecord[]> {
+  private async post(path: string, payload: JsonRecord[], allowPartialStatusCodes: number[] = []): Promise<JsonRecord[]> {
     const requestedAt = new Date().toISOString();
     const projectId = isTauriEnvironment() ? this.projectId() : activeProjectForTaskLog();
     const body = await this.request(path, payload, projectId);
@@ -390,7 +413,7 @@ export class DataForSEOClient {
       requestedAt,
       completedAt: new Date().toISOString(),
     }, projectId);
-    if (taskCode && taskCode !== 20000) throw new Error(text(task.status_message) || i18n.t('runtimeErrors.dataforseo.taskFailed', { code: taskCode }));
+    if (taskCode && taskCode !== 20000 && !allowPartialStatusCodes.includes(taskCode)) throw new Error(text(task.status_message) || i18n.t('runtimeErrors.dataforseo.taskFailed', { code: taskCode }));
     return result.map(asRecord);
   }
 
@@ -429,8 +452,8 @@ export class DataForSEOClient {
     };
   }
 
-  async getSerpCompetitors(keyword: string, locationCode = 2840, languageCode = 'en'): Promise<DataForSEOSerpItem[]> {
-    const result = (await this.post('/v3/serp/google/organic/live/regular', [{ keyword, location_code: locationCode, language_code: languageCode, depth: 100 }]))[0];
+  async getSerpCompetitors(keyword: string, locationCode = 2840, languageCode = 'en', allowPartial = false): Promise<DataForSEOSerpItem[]> {
+    const result = (await this.post('/v3/serp/google/organic/live/regular', [{ keyword, location_code: locationCode, language_code: languageCode, depth: 100 }], allowPartial ? [40106] : []))[0];
     return asArray(result?.items).map(asRecord).filter((item) => text(item.type) === 'organic').map((item) => ({
       type: text(item.type), rank_group: number(item.rank_group), rank_absolute: number(item.rank_absolute),
       domain: text(item.domain), title: text(item.title), description: text(item.description), url: text(item.url),
@@ -439,8 +462,18 @@ export class DataForSEOClient {
 
   /** Related live suggestions from Google Ads keyword data, never synthetic expansions. */
   async getKeywordIdeas(keyword: string, locationCode: number, languageCode = 'en'): Promise<KeywordIdea[]> {
-    const result = (await this.post('/v3/keywords_data/google_ads/keywords_for_keywords/live', [{ keywords: [keyword], location_code: locationCode, language_code: languageCode }]))[0];
-    const rows = asArray(result?.items).map(asRecord);
+    const result = await this.post('/v3/keywords_data/google_ads/keywords_for_keywords/live', [{ keywords: [keyword], location_code: locationCode, language_code: languageCode }]);
+    // Google Ads returns keyword rows directly in task.result, while other
+    // DataForSEO endpoints wrap rows in an `items` property. Support both
+    // documented envelopes and fail loudly for a non-empty unknown shape.
+    const rows = result.flatMap((item) => {
+      const record = asRecord(item);
+      return Array.isArray(record.items) ? asArray(record.items).map(asRecord) : [record];
+    });
+    if (result.length > 0 && !rows.some((row) => text(row.keyword))) {
+      const hasKnownEmptyEnvelope = result.every((item) => Array.isArray(asRecord(item).items));
+      if (!hasKnownEmptyEnvelope) throw new Error(i18n.t('runtimeErrors.dataforseo.keywordShape'));
+    }
     return rows.map((item) => {
       const searchIntent = asRecord(item.search_intent_info);
       const monthlySearches = asArray(item.monthly_searches).map((month) => {
@@ -481,7 +514,7 @@ export class DataForSEOClient {
     const result = (await this.post('/v3/backlinks/backlinks/live', [{ target, limit, offset }]))[0];
     const items = asArray(result?.items).map(asRecord).map((item): BacklinkItem => ({
       source_title: text(item.title), source_url: text(item.url_from), target_url: text(item.url_to), anchor_text: text(item.anchor),
-      is_dofollow: Boolean(item.dofollow), domain_rank: number(item.rank), first_seen: text(item.first_seen),
+      is_dofollow: booleanish(item.dofollow), domain_rank: number(item.rank), first_seen: text(item.first_seen),
     }));
     return { items, totalCount: nullableNumber(result?.total_count) };
   }
@@ -551,7 +584,8 @@ export class DataForSEOClient {
     const overviewItem = asArray(overviewResult[0]?.items).map(asRecord)[0];
     if (!overviewItem) return null;
     const organicMetrics = asRecord(asRecord(overviewItem.metrics).organic);
-    const organicTraffic = nullableNumber(organicMetrics.etv);
+    const rawOrganicTraffic = nullableNumber(organicMetrics.etv);
+    const organicTraffic = rawOrganicTraffic === null ? null : Math.round(rawOrganicTraffic);
     const ranked = asArray(rankedResult[0]?.items).map(asRecord);
     const pages = asArray(pagesResult[0]?.items).map(asRecord);
     const competitors = asArray(competitorsResult[0]?.items).map(asRecord);
@@ -571,7 +605,7 @@ export class DataForSEOClient {
           traffic_share: estimatedTraffic !== null && organicTraffic !== null && organicTraffic > 0 ? Number(((estimatedTraffic / organicTraffic) * 100).toFixed(2)) : null,
           intent: nullableIntent(asRecord(keywordData.search_intent_info).main_intent),
         };
-      }).filter((row) => row.keyword),
+      }).filter((row) => row.keyword && (row.position === null || row.position <= 100)),
       top_pages: pages.map((row) => {
         const pageOrganic = asRecord(asRecord(row.metrics).organic);
         const pageTraffic = nullableNumber(pageOrganic.etv);
@@ -581,7 +615,7 @@ export class DataForSEOClient {
           keywords_count: nullableNumber(pageOrganic.count),
         };
       }).filter((page) => page.url),
-      competitors: competitors.map((row) => ({ domain: text(row.domain), common_keywords: nullableNumber(row.intersections), average_position: nullableNumber(row.avg_position) })).filter((row) => row.domain),
+      competitors: competitors.map((row) => ({ domain: text(row.domain).toLowerCase().replace(/^www\./, ''), common_keywords: nullableNumber(row.intersections), average_position: nullableNumber(row.avg_position) })).filter((row) => row.domain && row.domain !== target.toLowerCase().replace(/^www\./, '')),
     };
   }
 }

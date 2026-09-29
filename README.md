@@ -44,6 +44,7 @@ The application is independent software. It does not copy the identity, interfac
 <li><a href="#release_signing">Release signing setup</a></li>
 <li><a href="#verification">Verification status</a></li>
 <li><a href="#faq">FAQ</a></li>
+<li><a href="#thanks">Thanks</a></li>
 <li><a href="#license_and_author">License and author</a></li>
 </ol>
 
@@ -533,7 +534,7 @@ Confirm that the document was rendered with the same URL, user agent, and authen
 
 ### Text hidden fields are reported
 
-Update to the current 0.0.1 build and rerun the audit. The visible control rule excludes type hidden controls while preserving text based honeypots. A visible text control still needs a programmatic label.
+Update to the current 0.0.2 build and rerun the audit. The visible control rule excludes type hidden controls while preserving text based honeypots. A visible text control still needs a programmatic label.
 
 ### An update cannot install
 
@@ -545,6 +546,14 @@ Include the application version, operating system, selected module, project iden
 
 <a id="release_notes"></a>
 ## Release notes
+
+### Version 0.0.2
+
+This maintenance release closes the complete feedback batch from the first end to end desktop evaluation. Search Console now accepts and securely stores a Desktop OAuth client secret, refreshes tokens with that secret, keeps connect and resume requests ordered, and exposes the native error detail. DataForSEO keyword rows are read from the Google Ads response shape, market selection is strict and project aware, searchable location and language pickers cannot silently submit free text, organic traffic is rounded for display, the target domain is excluded from its own competitor list, dofollow values are parsed correctly, partial clustering results remain usable, and ranked keywords outside the first one hundred are labelled explicitly.
+
+The performance workspace now displays CrUX percentiles in their API units, parses string CLS values, derives ratings from published thresholds, and distinguishes a genuine lack of field data from a failed request. AI visibility ignores prompt echoes and refusal text, redacts local personal context, runs local clients from an isolated working directory, and explains the browsing limitation of plan mode. The crawler honours the configured timeout, SSL policy, redirect limit, user agent, and reliable rendered page delivery. Decorative empty alternative text is valid, Polish readability grades are bounded, Polish function words are ignored, project backups include all workspace data, Lighthouse links are clickable, and a missing updater manifest is treated as a clean no update state.
+
+All twelve source locale files now contain the same feature keys. The frontend suite passes 611 tests and the native suite passes 302 tests. A source only tag is safe to publish while signed installers remain gated by the platform signing credentials documented below.
 
 ### Version 0.0.1
 
@@ -571,6 +580,11 @@ The release has a single squashed repository commit. Signed release packages req
 <tr><td>Updater state</td><td>Footer and updater service</td><td>Unsigned release environment pending</td></tr>
 <tr><td>Signed packages</td><td>Release workflow</td><td>Requires release secrets</td></tr>
 </table>
+
+<a id="thanks"></a>
+## Thanks
+
+Special thanks to [RafalSzy](https://github.com/RafalSzy) for the detailed macOS evaluation, the seven issue reports, the two merged pull requests, and the precise reproduction evidence behind this release. The reports covered Search Console OAuth, DataForSEO response handling, CrUX interpretation, AI visibility safety, rendered crawling, project settings, and the smaller workflow findings. That feedback made the fixes measurable and kept the desktop application honest about real provider data.
 
 ### Glossary
 

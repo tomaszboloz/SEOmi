@@ -398,6 +398,12 @@ pub async fn query_crux_record(
             "Could not connect to the Chrome UX Report API. Check your network and API quota."
                 .to_string()
         })?;
+    if response.status() == reqwest::StatusCode::NOT_FOUND {
+        return Err(
+            "CRUX_NOT_ENOUGH_DATA: Google has no sufficient real-user data for this URL or origin."
+                .into(),
+        );
+    }
     response_json(response).await
 }
 

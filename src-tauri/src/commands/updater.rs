@@ -35,7 +35,23 @@ pub async fn check_for_updates(app: tauri::AppHandle) -> Result<UpdateStatus, St
             version: None,
             current_version: env!("CARGO_PKG_VERSION").to_string(),
         }),
-        Err(e) => Err(format!("Update check failed: {}", e)),
+        Err(e) => {
+            let detail = e.to_string();
+            // Source-only releases do not publish an updater manifest. Treat
+            // a missing manifest as a clean "no update" state instead of
+            // logging an error on every application start.
+            if detail.contains("404") || detail.to_ascii_lowercase().contains("not found") {
+                Ok(UpdateStatus {
+                    available: false,
+                    installed: false,
+                    restart_required: false,
+                    version: None,
+                    current_version: env!("CARGO_PKG_VERSION").to_string(),
+                })
+            } else {
+                Err(format!("Update check failed: {detail}"))
+            }
+        }
     }
 }
 

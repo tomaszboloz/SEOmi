@@ -34,7 +34,7 @@ const DEFAULT_CONFIG: AppConfig = {
   ai_provider: 'openai',
   ai_model: 'gpt-4o',
   auto_check_updates: true,
-  auto_install_updates: true,
+  auto_install_updates: false,
 };
 
 const activeProjectId = (): string => readStorage('seomi_active_project_v1') || useProjectStore.getState().activeProjectId || '';
@@ -69,6 +69,14 @@ export const useSettingsStore = create<SettingsState>((set, get) => ({
       set({ config: conf, theme: conf.theme, language: conf.language });
       applyThemeToDOM(conf.theme);
       setLanguageDirection(conf.language);
+      // Keep the legacy general settings record and the project aware AI
+      // selector aligned after a restart. The selector remains the source of
+      // truth for provider specific local subscription connections.
+      const { useAuthStore } = await import('./authStore');
+      if (conf.ai_provider === 'openai' || conf.ai_provider === 'claude' || conf.ai_provider === 'gemini') {
+        useAuthStore.getState().setProvider(conf.ai_provider);
+        if (conf.ai_model) useAuthStore.getState().setModel(conf.ai_model);
+      }
     } catch {
       // Use defaults
     }

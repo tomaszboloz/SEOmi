@@ -30,7 +30,7 @@ const psiFixture: PageSpeedReport = {
 };
 const cruxFixture: CruxReport = {
   source: 'Chrome UX Report API (CrUX)', fetchedAt: '2026-09-22T10:01:00.000Z', target: 'https://example.com/', scope: 'url', formFactor: 'PHONE',
-  response: { record: { key: { url: 'https://example.com/' }, collectionPeriod: { firstDate: { year: 2026, month: 8, day: 26 }, lastDate: { year: 2026, month: 9, day: 22 } }, metrics: { largest_contentful_paint: { category: 'FAST', percentiles: { p75: 2100000 }, histogram: [{ density: 0.75 }, { density: 0.2 }, { density: 0.05 }] } } } },
+  response: { record: { key: { url: 'https://example.com/' }, collectionPeriod: { firstDate: { year: 2026, month: 8, day: 26 }, lastDate: { year: 2026, month: 9, day: 22 } }, metrics: { largest_contentful_paint: { category: 'FAST', percentiles: { p75: 2100 }, histogram: [{ density: 0.75 }, { density: 0.2 }, { density: 0.05 }] } } } },
 };
 
 describe('PageSpeed and CrUX workspace', () => {

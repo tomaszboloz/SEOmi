@@ -22,7 +22,7 @@ const CAPTURE_SCHEME: &str = "seomi-capture";
 const MAX_CAPTURE_HTML_CHARS: usize = 1_000_000;
 const MAX_CAPTURE_CHUNK_BYTES: usize = 12_000;
 const MAX_CAPTURE_CHUNKS: usize = 768;
-const MAX_CAPTURE_CHANNEL_EVENTS: usize = MAX_CAPTURE_CHUNKS + 32;
+const MAX_CAPTURE_CHANNEL_EVENTS: usize = (MAX_CAPTURE_CHUNKS * 2) + 32;
 const PAGE_RENDER_TIMEOUT: Duration = Duration::from_secs(60);
 const NETWORK_IDLE_MAX_WAIT_MS: u64 = 5_000;
 const NETWORK_IDLE_QUIET_MS: u64 = 500;
@@ -191,7 +191,10 @@ impl RenderedCrawlerSession {
             .on_navigation(move |url| {
                 if url.scheme() == CAPTURE_SCHEME {
                     if let Some(chunk) = parse_capture_chunk(url, &navigation_nonce) {
-                        let _ = navigation_sender.try_send(CaptureEvent::Chunk(chunk));
+                        // Navigation callbacks are synchronous. Blocking here
+                        // is bounded by the channel capacity and prevents a
+                        // dropped chunk from turning into a 60 second timeout.
+                        let _ = navigation_sender.blocking_send(CaptureEvent::Chunk(chunk));
                     }
                     return false;
                 }
@@ -214,7 +217,7 @@ impl RenderedCrawlerSession {
                 }
                 let current_sequence = build_sequence.fetch_add(1, Ordering::Relaxed) + 1;
                 if build_sender
-                    .try_send(CaptureEvent::PageReady(current_sequence))
+                    .blocking_send(CaptureEvent::PageReady(current_sequence))
                     .is_err()
                 {
                     return;

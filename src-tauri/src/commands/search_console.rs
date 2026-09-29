@@ -110,6 +110,17 @@ fn refresh_token_key(project_id: &str) -> Result<String, String> {
     Ok(format!("gsc_refresh_token_{project_id}"))
 }
 
+fn client_secret_key(project_id: &str) -> Result<String, String> {
+    if !project_id
+        .chars()
+        .all(|ch| ch.is_ascii_alphanumeric() || ch == '-')
+        || !(1..=80).contains(&project_id.len())
+    {
+        return Err("Invalid Search Console project identifier.".into());
+    }
+    Ok(format!("gsc_client_secret_{project_id}"))
+}
+
 fn code_challenge(verifier: &str) -> String {
     URL_SAFE_NO_PAD.encode(Sha256::digest(verifier.as_bytes()))
 }
@@ -129,7 +140,7 @@ fn send_browser_to(url: &str) -> Result<(), String> {
     ));
     result
         .map(|_| ())
-        .map_err(|error| format!("Nie udało się otworzyć przeglądarki systemowej: {error}"))
+        .map_err(|error| format!("Unable to open the system browser: {error}"))
 }
 
 async fn receive_oauth_code(listener: TcpListener, expected_state: &str) -> Result<String, String> {
@@ -138,12 +149,12 @@ async fn receive_oauth_code(listener: TcpListener, expected_state: &str) -> Resu
             let (mut stream, _) = listener
                 .accept()
                 .await
-                .map_err(|error| format!("Nie udało się odebrać odpowiedzi OAuth: {error}"))?;
+                .map_err(|error| format!("Unable to receive the OAuth response: {error}"))?;
             let mut buffer = vec![0u8; 16 * 1024];
             let read = stream
                 .read(&mut buffer)
                 .await
-                .map_err(|error| format!("Nie udało się odczytać odpowiedzi OAuth: {error}"))?;
+                .map_err(|error| format!("Unable to read the OAuth response: {error}"))?;
             let request = String::from_utf8_lossy(&buffer[..read]);
             let path = request
                 .lines()
@@ -182,14 +193,14 @@ async fn receive_oauth_code(listener: TcpListener, expected_state: &str) -> Resu
                 return Err(if error == "access_denied" {
                     "Autoryzacja Search Console została anulowana przez użytkownika.".into()
                 } else {
-                    format!("Google OAuth nie powiódł się: {error}")
+                    format!("Google OAuth failed: {error}")
                 });
             }
             let code = query
                 .get("code")
                 .filter(|value| !value.is_empty())
                 .cloned()
-                .ok_or_else(|| "Google nie zwrócił kodu autoryzacyjnego.".to_string())?;
+                .ok_or_else(|| "Google did not return an authorization code.".to_string())?;
             write_callback_response(
                 &mut stream,
                 "200 OK",
@@ -214,7 +225,7 @@ async fn write_callback_response(
     stream
         .write_all(response.as_bytes())
         .await
-        .map_err(|error| format!("Nie udało się zakończyć callbacku OAuth: {error}"))
+        .map_err(|error| format!("Unable to complete the OAuth callback: {error}"))
 }
 
 async fn exchange_code(
@@ -223,19 +234,24 @@ async fn exchange_code(
     code: &str,
     verifier: &str,
     redirect_uri: &str,
+    client_secret: Option<&str>,
 ) -> Result<TokenResponse, String> {
+    let mut form = vec![
+        ("client_id", client_id.to_string()),
+        ("code", code.to_string()),
+        ("code_verifier", verifier.to_string()),
+        ("grant_type", "authorization_code".to_string()),
+        ("redirect_uri", redirect_uri.to_string()),
+    ];
+    if let Some(secret) = client_secret.filter(|value| !value.trim().is_empty()) {
+        form.push(("client_secret", secret.to_string()));
+    }
     let response = client
         .post(TOKEN_URL)
-        .form(&[
-            ("client_id", client_id),
-            ("code", code),
-            ("code_verifier", verifier),
-            ("grant_type", "authorization_code"),
-            ("redirect_uri", redirect_uri),
-        ])
+        .form(&form)
         .send()
         .await
-        .map_err(|error| format!("Nie udało się wymienić kodu Google OAuth: {error}"))?;
+        .map_err(|error| format!("Unable to exchange the Google OAuth code: {error}"))?;
     let status = response.status();
     let token = response
         .json::<TokenResponse>()
@@ -259,16 +275,24 @@ async fn refresh_access_token(
         "Brak tokenu Search Console w magazynie poświadczeń systemowych. Połącz konto ponownie."
             .to_string()
     })?;
+    let client_secret = client_secret_key(project_id)
+        .ok()
+        .and_then(|key| secret_entry(&key).ok())
+        .and_then(|entry| entry.get_password().ok());
+    let mut form = vec![
+        ("client_id", client_id.to_string()),
+        ("refresh_token", refresh_token),
+        ("grant_type", "refresh_token".to_string()),
+    ];
+    if let Some(secret) = client_secret.filter(|value| !value.trim().is_empty()) {
+        form.push(("client_secret", secret));
+    }
     let response = client
         .post(TOKEN_URL)
-        .form(&[
-            ("client_id", client_id),
-            ("refresh_token", refresh_token.as_str()),
-            ("grant_type", "refresh_token"),
-        ])
+        .form(&form)
         .send()
         .await
-        .map_err(|error| format!("Nie udało się odświeżyć tokenu Google: {error}"))?;
+        .map_err(|error| format!("Unable to refresh the Google token: {error}"))?;
     let status = response.status();
     let token = response.json::<TokenResponse>().await.map_err(|error| {
         format!("Google zwrócił nieprawidłową odpowiedź odświeżenia tokenu: {error}")
@@ -320,7 +344,7 @@ async fn site_properties(
         .bearer_auth(access_token)
         .send()
         .await
-        .map_err(|error| format!("Nie udało się pobrać properties Search Console: {error}"))?;
+        .map_err(|error| format!("Unable to retrieve Search Console properties: {error}"))?;
     let status = response.status();
     let body = response
         .json::<SitesResponse>()
@@ -338,6 +362,7 @@ async fn site_properties(
 pub async fn connect_search_console(
     project_id: String,
     client_id: String,
+    client_secret: Option<String>,
 ) -> Result<Vec<GscSiteProperty>, String> {
     let client_id = validate_client_id(&client_id)?;
     let refresh_key = refresh_token_key(&project_id)?;
@@ -346,10 +371,10 @@ pub async fn connect_search_console(
         .and_then(|entry| entry.get_password().ok());
     let listener = TcpListener::bind(("127.0.0.1", 0))
         .await
-        .map_err(|error| format!("Nie udało się uruchomić lokalnego callbacku OAuth: {error}"))?;
+        .map_err(|error| format!("Unable to start the local OAuth callback: {error}"))?;
     let port = listener
         .local_addr()
-        .map_err(|error| format!("Nie udało się ustalić portu OAuth: {error}"))?
+        .map_err(|error| format!("Unable to determine the OAuth port: {error}"))?
         .port();
     let redirect_uri = format!("http://127.0.0.1:{port}/oauth2callback");
     let state = Uuid::new_v4().simple().to_string();
@@ -373,16 +398,42 @@ pub async fn connect_search_console(
     let client = reqwest::Client::builder()
         .timeout(Duration::from_secs(20))
         .build()
-        .map_err(|error| format!("Nie udało się utworzyć klienta Google OAuth: {error}"))?;
-    let token = exchange_code(&client, &client_id, &code, &verifier, &redirect_uri).await?;
+        .map_err(|error| format!("Unable to create the Google OAuth client: {error}"))?;
+    let client_secret = client_secret
+        .filter(|value| !value.trim().is_empty())
+        .or_else(|| {
+            client_secret_key(&project_id)
+                .ok()
+                .and_then(|key| secret_entry(&key).ok())
+                .and_then(|entry| entry.get_password().ok())
+        });
+    let token = exchange_code(
+        &client,
+        &client_id,
+        &code,
+        &verifier,
+        &redirect_uri,
+        client_secret.as_deref(),
+    )
+    .await?;
     let access_token = token
         .access_token
-        .ok_or_else(|| "Google OAuth nie zwrócił access tokenu.".to_string())?;
+        .ok_or_else(|| "Google OAuth did not return an access token.".to_string())?;
     let refresh_token = token.refresh_token.or(old_refresh_token)
-        .ok_or_else(|| "Google nie zwrócił refresh tokenu. Usuń dostęp SEOmi na koncie Google i połącz ponownie.".to_string())?;
+        .ok_or_else(|| "Google did not return a refresh token. Revoke SEOmi access in your Google account and connect again.".to_string())?;
     let properties = site_properties(&client, &access_token).await?;
-    secret_entry(&refresh_key)?.set_password(&refresh_token)
-        .map_err(|error| format!("Nie udało się zapisać tokenu Search Console w systemowym magazynie poświadczeń: {error}"))?;
+    secret_entry(&refresh_key)?
+        .set_password(&refresh_token)
+        .map_err(|error| {
+            format!(
+                "Unable to save the Search Console token in the system credential store: {error}"
+            )
+        })?;
+    if let Some(secret) = client_secret.filter(|value| !value.trim().is_empty()) {
+        secret_entry(&client_secret_key(&project_id)?)?
+            .set_password(&secret)
+            .map_err(|error| format!("Unable to save the Search Console client secret: {error}"))?;
+    }
     Ok(properties)
 }
 
@@ -683,32 +734,37 @@ pub async fn inspect_search_console_url(
 #[tauri::command]
 pub async fn disconnect_search_console(project_id: String) -> Result<String, String> {
     let key = refresh_token_key(&project_id)?;
+    let client_secret_key = client_secret_key(&project_id)?;
+    match secret_entry(&client_secret_key)?.delete_credential() {
+        Ok(()) | Err(keyring::Error::NoEntry) => (),
+        Err(error) => {
+            return Err(format!(
+                "Unable to remove the Search Console client secret: {error}"
+            ))
+        }
+    }
     let entry = secret_entry(&key)?;
     let refresh_token = match entry.get_password() {
         Ok(token) => Some(token),
         Err(keyring::Error::NoEntry) => None,
-        Err(error) => {
-            return Err(format!(
-                "Nie udało się odczytać tokenu Search Console: {error}"
-            ))
-        }
+        Err(error) => return Err(format!("Unable to read the Search Console token: {error}")),
     };
     match entry.delete_credential() {
         Ok(()) | Err(keyring::Error::NoEntry) => (),
         Err(error) => {
             return Err(format!(
-                "Nie udało się usunąć tokenu Search Console z magazynu poświadczeń: {error}"
+                "Unable to remove the Search Console token from the credential store: {error}"
             ))
         }
     }
     let Some(refresh_token) = refresh_token else {
         return Ok("Lokalny token Search Console został już usunięty.".into());
     };
-    let client = reqwest::Client::builder().timeout(Duration::from_secs(10)).build().map_err(|error| format!("Token usunięto lokalnie, ale nie udało się utworzyć klienta cofania zgody Google: {error}"))?;
+    let client = reqwest::Client::builder().timeout(Duration::from_secs(10)).build().map_err(|error| format!("The token was removed locally, but unable to create the Google consent revocation client: {error}"))?;
     match client.post("https://oauth2.googleapis.com/revoke").form(&[("token", refresh_token)]).send().await {
         Ok(response) if response.status().is_success() => Ok("Token Search Console usunięto z aplikacji i cofnięto zgodę Google.".into()),
         Ok(response) => Ok(format!("Token usunięto z aplikacji, ale Google nie potwierdziło cofnięcia zgody (HTTP {}). Cofnij dostęp SEOmi również w ustawieniach konta Google.", response.status())),
-        Err(error) => Ok(format!("Token usunięto z aplikacji, ale nie udało się potwierdzić cofnięcia zgody Google ({error}). Cofnij dostęp SEOmi również w ustawieniach konta Google.")),
+        Err(error) => Ok(format!("The token was removed from the app, but Google consent revocation could not be confirmed ({error}). Revoke SEOmi access in your Google account settings as well.")),
     }
 }
 

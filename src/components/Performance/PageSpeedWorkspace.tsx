@@ -92,21 +92,30 @@ const formatCruxValue = (
   translate: (key: string) => string,
 ) => {
   const p75 = metric.percentiles?.p75;
-  if (typeof p75 !== "number") return translate("pageSpeedUi.noP75");
-  if (metric.metric === "cumulative_layout_shift") return p75.toFixed(3);
-  return `${Math.round(p75 / 1000)} ${translate("pageSpeedUi.ms")}`;
+  const numeric = Number(p75);
+  if (!Number.isFinite(numeric)) return translate("pageSpeedUi.noP75");
+  if (metric.metric === "cumulative_layout_shift") return numeric.toFixed(3);
+  return `${Math.round(numeric)} ${translate("pageSpeedUi.ms")}`;
 };
 
 const cruxCategory = (
   metric: Record<string, any>,
   translate: (key: string) => string,
 ) => {
-  const category = metric.category;
-  if (category === "FAST") return translate("pageSpeedUi.crux.good");
-  if (category === "AVERAGE")
-    return translate("pageSpeedUi.crux.needsImprovement");
-  if (category === "SLOW") return translate("pageSpeedUi.crux.poor");
-  return translate("pageSpeedUi.crux.unrated");
+  const value = Number(metric.percentiles?.p75);
+  if (!Number.isFinite(value)) return translate("pageSpeedUi.crux.unrated");
+  const thresholds: Record<string, [number, number]> = {
+    largest_contentful_paint: [2500, 4000],
+    interaction_to_next_paint: [200, 500],
+    cumulative_layout_shift: [0.1, 0.25],
+    first_contentful_paint: [1800, 3000],
+    experimental_time_to_first_byte: [800, 1800],
+  };
+  const [good, needsImprovement] = thresholds[metric.metric] || [];
+  if (good === undefined) return translate("pageSpeedUi.crux.unrated");
+  if (value <= good) return translate("pageSpeedUi.crux.good");
+  if (value <= needsImprovement) return translate("pageSpeedUi.crux.needsImprovement");
+  return translate("pageSpeedUi.crux.poor");
 };
 
 const scoreColor = (score: number | null) =>
@@ -128,6 +137,16 @@ const formatDelta = (value: number | null, suffix = "") =>
   value === null
     ? "—"
     : `${value > 0 ? "+" : ""}${Number.isInteger(value) ? value : value.toFixed(2)}${suffix}`;
+
+const renderLighthouseDescription = (description: string): React.ReactNode => {
+  const parts = description.split(/(\[[^\]]+\]\(https?:\/\/[^)]+\))/g);
+  return parts.map((part, index) => {
+    const match = part.match(/^\[([^\]]+)\]\((https?:\/\/[^)]+)\)$/);
+    return match
+      ? <a key={index} href={match[2]} target="_blank" rel="noreferrer" className="text-sky-300 underline underline-offset-2">{match[1]}</a>
+      : <React.Fragment key={index}>{part}</React.Fragment>;
+  });
+};
 
 export const PageSpeedWorkspace: React.FC = () => {
   const { t } = useTranslation();
@@ -257,9 +276,10 @@ export const PageSpeedWorkspace: React.FC = () => {
       }
     } catch (error) {
       if (useProjectStore.getState().activeProjectId === projectId && cruxRequestToken.current === requestToken) {
-        setCruxError(
-          error instanceof Error ? error.message : t("pageSpeedUi.cruxError"),
-        );
+        const message = error instanceof Error ? error.message : String(error);
+        setCruxError(message.includes("CRUX_NOT_ENOUGH_DATA")
+          ? t("pageSpeedUi.cruxNotEnoughData", "Not enough real user data is available for this URL or origin.")
+          : message || t("pageSpeedUi.cruxError"));
       }
     } finally {
       if (useProjectStore.getState().activeProjectId === projectId && cruxRequestToken.current === requestToken) setIsRunningCrux(false);
@@ -775,7 +795,7 @@ export const PageSpeedWorkspace: React.FC = () => {
                       </span>
                     </div>
                     <p className="mt-1 text-xs leading-5 text-slate-500">
-                      {item.description}
+                      {renderLighthouseDescription(item.description)}
                     </p>
                   </article>
                 ))}
@@ -953,7 +973,7 @@ export const PageSpeedWorkspace: React.FC = () => {
                       </div>
                     </div>
                     <p className="mt-1 text-xs leading-5 text-slate-500">
-                      {audit.description}
+                      {renderLighthouseDescription(audit.description)}
                     </p>
                     {audit.overallSavingsBytes !== null && (
                       <p className="mt-2 text-xs text-amber-200">

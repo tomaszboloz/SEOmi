@@ -111,7 +111,7 @@ export const KeywordClustering: React.FC = () => {
         // switching projects must prevent every later billable SERP request.
         if (useProjectStore.getState().activeProjectId !== targetProjectId) return;
         const keyword = keywords[index];
-        const rows = await client.getSerpCompetitors(keyword, dataForSeoLocation(session.country), selectedLanguage);
+        const rows = await client.getSerpCompetitors(keyword, dataForSeoLocation(session.country), selectedLanguage, true);
         if (useProjectStore.getState().activeProjectId !== targetProjectId) return;
         snapshots.push(getSerpSnapshot(keyword, rows));
         completed = index + 1;

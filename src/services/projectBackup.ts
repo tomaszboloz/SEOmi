@@ -39,7 +39,20 @@ const isProject = (value: unknown): value is SeoProject => {
 };
 
 const readProjectStorage = (projectId: string): Record<string, string> => {
-  return readStorageEntries(projectStoragePrefix(projectId));
+  const primary = readStorageEntries(projectStoragePrefix(projectId));
+  const extraKeys = [
+    `seomi_gsc_client_id_${projectId}`,
+    `seomi_gsc_property_${projectId}`,
+    `seomi_gsc_filters_${projectId}_v1`,
+    `seomi_keyword_clustering_${projectId}`,
+    `seomi_pagespeed_workspace_${projectId}`,
+    `seomi_performance_${projectId}`,
+  ];
+  for (const key of extraKeys) {
+    const value = readStorage(key);
+    if (value !== null) primary[`__raw__${key}`] = value;
+  }
+  return primary;
 };
 
 const assertBackupShape = (value: unknown): ProjectBackup => {
@@ -109,7 +122,9 @@ export const restoreProjectBackup = async (backup: ProjectBackup, targetProjectI
   const writtenKeys: string[] = [];
   try {
     for (const [suffix, value] of Object.entries(validated.localStorage)) {
-      const key = `${prefix}${suffix}`;
+      const key = suffix.startsWith('__raw__')
+        ? suffix.slice('__raw__'.length).replace(validated.project.id, targetProjectId)
+        : `${prefix}${suffix}`;
       previousValues.set(key, readStorage(key));
       if (!writeStorage(key, value)) {
         throw new Error(i18n.t('runtimeErrors.backup.restore'));

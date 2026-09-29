@@ -781,6 +781,10 @@ pub struct CrawlConfig {
     pub max_response_bytes: Option<usize>,
     pub max_run_seconds: Option<u64>,
     #[serde(default)]
+    pub request_timeout_secs: Option<u64>,
+    #[serde(default = "default_verify_ssl")]
+    pub verify_ssl: bool,
+    #[serde(default)]
     pub seed_urls: Vec<String>,
     #[serde(default)]
     pub list_mode: bool,
@@ -846,6 +850,10 @@ pub struct CrawlFilterValidationResult {
 }
 
 fn default_respect_robots() -> bool {
+    true
+}
+
+fn default_verify_ssl() -> bool {
     true
 }
 fn default_respect_crawl_delay() -> bool {
@@ -3110,22 +3118,22 @@ fn readability_formula(
         // is higher than English, so its coefficient is intentionally lower.
         Some("pl") => (
             (206.835 - 0.65 * words_per_sentence - 62.3 * syllables_per_word).clamp(0.0, 100.0),
-            (0.4 * (words_per_sentence + 100.0 * syllables_per_word)).max(0.0),
+            (0.4 * (words_per_sentence + 100.0 * syllables_per_word)).clamp(0.0, 100.0),
             "flesch-pl",
         ),
         Some("es") => (
             (206.84 - 1.02 * words_per_sentence - 60.0 * syllables_per_word).clamp(0.0, 100.0),
-            (0.39 * words_per_sentence + 11.8 * syllables_per_word - 15.59).max(0.0),
+            (0.39 * words_per_sentence + 11.8 * syllables_per_word - 15.59).clamp(0.0, 100.0),
             "flesch-es",
         ),
         Some("fr") => (
             (207.0 - 1.015 * words_per_sentence - 73.6 * syllables_per_word).clamp(0.0, 100.0),
-            (0.39 * words_per_sentence + 11.8 * syllables_per_word - 15.59).max(0.0),
+            (0.39 * words_per_sentence + 11.8 * syllables_per_word - 15.59).clamp(0.0, 100.0),
             "flesch-fr",
         ),
         Some("en") | None => (
             (206.835 - 1.015 * words_per_sentence - 84.6 * syllables_per_word).clamp(0.0, 100.0),
-            (0.39 * words_per_sentence + 11.8 * syllables_per_word - 15.59).max(0.0),
+            (0.39 * words_per_sentence + 11.8 * syllables_per_word - 15.59).clamp(0.0, 100.0),
             "flesch-en",
         ),
         _ => (
@@ -3176,6 +3184,9 @@ fn content_term_stats(document: &Html, language: Option<&str>) -> Vec<CrawledCon
                             | "i"
                             | "że"
                             | "ale"
+                            | "więcej"
+                            | "czytaj"
+                            | "twojej"
                     ))
         })
         .collect::<Vec<_>>();
@@ -5032,6 +5043,8 @@ pub async fn crawl_site_with_control(
         follow_nofollow: false,
         max_response_bytes: Some(5_000_000),
         max_run_seconds: Some(300),
+        request_timeout_secs: None,
+        verify_ssl: true,
         seed_urls: Vec::new(),
         list_mode: false,
         user_agent: None,
@@ -5181,11 +5194,14 @@ pub async fn crawl_site_with_control(
     let mut client_builder = reqwest::Client::builder()
         .default_headers(headers)
         .timeout(std::time::Duration::from_secs(
-            max_run_seconds.unwrap_or(10).min(10),
+            config.request_timeout_secs.unwrap_or(15).clamp(1, 300),
         ))
         // Redirects are recorded as evidence instead of silently followed. This
         // prevents a redirect from bypassing the URL validation boundary.
         .redirect(reqwest::redirect::Policy::none());
+    if !config.verify_ssl {
+        client_builder = client_builder.danger_accept_invalid_certs(true);
+    }
     if let Some(proxy_url) = proxy_url {
         let proxy = reqwest::Proxy::all(&proxy_url)
             .map_err(|error| format!("Invalid proxy profile: {error}"))?;
@@ -7639,6 +7655,8 @@ mod tests {
             follow_nofollow: false,
             max_response_bytes: Some(5_000_000),
             max_run_seconds: Some(300),
+            request_timeout_secs: None,
+            verify_ssl: true,
             seed_urls: Vec::new(),
             list_mode: false,
             user_agent: None,

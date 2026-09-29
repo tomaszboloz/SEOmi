@@ -167,7 +167,7 @@ function handleBrowserFallback<T>(cmd: string, args?: Record<string, unknown>): 
       ai_provider: 'openai',
       ai_model: 'gpt-4o',
       auto_check_updates: true,
-      auto_install_updates: true,
+      auto_install_updates: false,
     };
     return Promise.resolve(config as T);
   }

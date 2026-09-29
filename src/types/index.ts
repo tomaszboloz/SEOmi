@@ -1021,6 +1021,8 @@ export interface CrawlConfig {
   followNofollow: boolean;
   maxResponseBytes?: number;
   maxRunSeconds?: number;
+  requestTimeoutSecs?: number;
+  verifySsl?: boolean;
   seedUrls?: string[];
   listMode?: boolean;
   /** User agent saved with the non-secret project profile. */

@@ -6,6 +6,7 @@ use std::fs;
 use std::path::{Path, PathBuf};
 use tokio::process::Command;
 use tokio::time::{timeout, Duration};
+use uuid::Uuid;
 
 #[cfg(target_os = "windows")]
 use std::ffi::OsStr;
@@ -423,7 +424,17 @@ pub async fn run_ai_cli(
     })?;
     let arguments = build_ai_cli_arguments(&provider, prompt, model)?;
 
+    let isolated_dir = env::temp_dir().join(format!("seomi-ai-{}", Uuid::new_v4().simple()));
+    fs::create_dir_all(&isolated_dir)
+        .map_err(|error| format!("Unable to prepare an isolated AI working directory: {error}"))?;
     let mut process = process_for(&resolved, &arguments);
+    process.current_dir(&isolated_dir);
+    // Keep provider authentication in the OS or CLI subscription while
+    // preventing project files, global instructions and memory from being
+    // discovered by the research command.
+    process.env("CODEX_HOME", &isolated_dir);
+    process.env("CLAUDE_CONFIG_DIR", isolated_dir.join("claude-config"));
+    process.env("GEMINI_CLI_HOME", &isolated_dir);
     if let Some(path) = augmented_path() {
         process.env("PATH", path);
     }
@@ -432,6 +443,7 @@ pub async fn run_ai_cli(
         .await
         .map_err(|_| "Local CLI timed out after 120 seconds.".to_string())?
         .map_err(|_| format!("{} is not installed or not available on PATH.", command))?;
+    let _ = fs::remove_dir_all(&isolated_dir);
     if !output.status.success() {
         let stderr = display_output(&output);
         return Err(if stderr.is_empty() {

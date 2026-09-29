@@ -1138,9 +1138,17 @@ fn parse_images(html_str: &str, base_url: &Url) -> (Vec<ImageData>, Vec<Issue>) 
         let loading = el.value().attr("loading").map(|s| s.trim().to_string());
         let srcset = el.value().attr("srcset").map(|s| s.trim().to_string());
 
-        let has_alt = matches!(&alt, Some(value) if !value.trim().is_empty());
+        let decorative = alt.as_deref().is_some_and(|value| value.trim().is_empty())
+            && (el
+                .value()
+                .attr("aria-hidden")
+                .is_some_and(|value| value.eq_ignore_ascii_case("true"))
+                || el.value().attr("role").is_some_and(|value| {
+                    matches!(value.to_ascii_lowercase().as_str(), "presentation" | "none")
+                }));
+        let has_alt = decorative || matches!(&alt, Some(value) if !value.trim().is_empty());
 
-        if !has_alt {
+        if !has_alt && !decorative {
             missing_alt_count += 1;
         }
 

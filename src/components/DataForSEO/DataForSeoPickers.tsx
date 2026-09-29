@@ -179,6 +179,12 @@ export const DataForSeoLocationPicker: React.FC<DataForSeoLocationPickerProps> =
           const exactLocation = markets.find((item) => String(item.locationCode) === nextQuery.trim());
           if (exactLocation) onChange(String(exactLocation.locationCode));
         }}
+        onBlur={() => {
+          // Free text is only a filter. A paid request may use a catalogue
+          // value after the user picks an option, never the last typed label.
+          const selectedMarket = markets.find((item) => item.code === value || String(item.locationCode) === value) || markets[0];
+          if (selectedMarket) setQuery(`${dataForSeoMarketLabel(selectedMarket)} (${selectedMarket.code})`);
+        }}
         onKeyDown={handleKeyDown}
       />
       <ChevronDown aria-hidden="true" className="pointer-events-none absolute right-2.5 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-slate-500" />
@@ -275,6 +281,10 @@ export const DataForSeoLanguagePicker: React.FC<DataForSeoLanguagePickerProps> =
         className={inputClasses}
         onFocus={() => { setOpen(true); setActiveIndex(0); selectInputText(inputRef.current); }}
         onChange={(event) => { setQuery(event.target.value); setOpen(true); setActiveIndex(0); }}
+        onBlur={() => {
+          const selectedLanguage = languages.find((item) => item.code === value) || languages[0];
+          if (selectedLanguage) setQuery(`${dataForSeoLanguageLabel(selectedLanguage)} (${selectedLanguage.code})`);
+        }}
         onKeyDown={(event) => {
           if (event.key === 'ArrowDown') { event.preventDefault(); setOpen(true); setActiveIndex((index) => Math.min(index + 1, Math.max(0, options.length - 1))); }
           else if (event.key === 'ArrowUp') { event.preventDefault(); setOpen(true); setActiveIndex((index) => Math.max(0, index - 1)); }

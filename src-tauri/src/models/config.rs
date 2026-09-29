@@ -16,7 +16,7 @@ pub struct AppConfig {
 }
 
 fn default_auto_install_updates() -> bool {
-    true
+    false
 }
 
 impl Default for AppConfig {
@@ -31,7 +31,7 @@ impl Default for AppConfig {
             ai_provider: "openai".to_string(),
             ai_model: Some("gpt-4o".to_string()),
             auto_check_updates: true,
-            auto_install_updates: true,
+            auto_install_updates: false,
         }
     }
 }

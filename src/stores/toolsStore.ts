@@ -25,12 +25,12 @@ import {
   ExternalLinkCheckBatchResult,
   ExternalLinkCheckProgress,
 } from '@/types';
-import { invokeTauriCommand, isTauriEnvironment } from '@/services/tauri';
+import { getSecureValue, invokeTauriCommand, isTauriEnvironment } from '@/services/tauri';
 import { isStorageQuotaError, loadCrawlRuns, saveCrawlRuns, usesDedicatedCrawlStorage } from '@/services/crawlPersistence';
 import { notifyCrawlCompleted } from '@/services/desktopNotifications';
 import { createId } from '@/services/ids';
 import { isStorageAvailable, readJsonStorage, readStorage, removeStorage, writeJsonStorage, writeStorage } from '@/services/storage';
-import { DataForSEOClient, dataForSeoLanguage, dataForSeoLocation, dataForSeoMarket, normalizeDataForSeoDomain } from '@/services/dataforseo';
+import { DataForSEOClient, dataForSeoLanguage, dataForSeoMarket, normalizeDataForSeoDomain, requireDataForSeoMarket, resolveDataForSeoMarket } from '@/services/dataforseo';
 import { useSettingsStore } from './settingsStore';
 import { useAuthStore } from './authStore';
 import { useProjectStore } from './projectStore';
@@ -124,6 +124,7 @@ interface ToolsState {
   // Google Search Console
   isGscConnected: boolean;
   gscClientId: string;
+  gscClientSecret: string;
   gscProperties: GscSiteProperty[];
   gscProperty: string;
   gscFilters: GscPerformanceFilters;
@@ -203,7 +204,7 @@ interface ToolsState {
   setGscProperty: (property: string) => void;
   setGscFilters: (filters: GscPerformanceFilters) => void;
   resumeGsc: () => Promise<void>;
-  connectGsc: (clientId: string) => Promise<void>;
+  connectGsc: (clientId: string, clientSecret?: string) => Promise<void>;
   disconnectGsc: () => Promise<void>;
   refreshGscData: (range?: { startDate: string; endDate: string }, filters?: GscPerformanceFilters) => Promise<void>;
   inspectGscUrl: (url: string) => Promise<void>;
@@ -390,8 +391,26 @@ const saveDomainComparisonSnapshot = (projectId: string, comparison: DomainCompa
   return nextHistory;
 };
 const researchHistory = <T,>(value: T[] | T | null): T[] => !value ? [] : Array.isArray(value) ? value : [value];
+const errorMessage = (error: unknown, fallback: string): string => error instanceof Error ? error.message : typeof error === 'string' ? error : fallback;
+const redactLocalContext = (value: string): string => value
+  .replace(/[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}/gi, '[redacted email]')
+  .replace(/(?:\/Users\/|\/home\/|C:\\Users\\)[^\s'"`]+/g, '[redacted local path]')
+  .replace(/(?:^|\s)~\/[^\s'"`]+/g, ' [redacted local path]');
+const hasAiBrandEvidence = (response: string, brand: string, domain: string, query: string): boolean => {
+  const brandNeedle = brand.toLocaleLowerCase();
+  const domainNeedle = domain.toLocaleLowerCase();
+  const refusal = /\b(i\s*(do not|don't|cannot|can't|am unable)|unable to|could not|no sources?|websearch|webfetch|not enough information|not determine|not known)\b/i;
+  return response.split(/(?<=[.!?])\s+/).some((sentence) => {
+    const normalized = sentence.trim().toLocaleLowerCase();
+    if (!normalized || normalized === query.trim().toLocaleLowerCase() || normalized.startsWith(`what is ${brandNeedle}`)) return false;
+    const mentions = normalized.includes(brandNeedle) || Boolean(domainNeedle && normalized.includes(domainNeedle));
+    if (!mentions) return false;
+    return !refusal.test(sentence) || /https?:\/\//i.test(sentence);
+  });
+};
 const backlinkGapSettingsKey = (projectId: string) => `seomi_backlink_gap_settings_${projectId}`;
 const gscClientIdKey = (projectId: string) => `seomi_gsc_client_id_${projectId}`;
+const gscClientSecretKey = (projectId: string) => `gsc_client_secret_${projectId}`;
 const gscPropertyKey = (projectId: string) => `seomi_gsc_property_${projectId}`;
 const gscFiltersKey = (projectId: string) => `seomi_gsc_filters_${projectId}_v1`;
 const DEFAULT_GSC_FILTERS: GscPerformanceFilters = {};
@@ -418,6 +437,14 @@ const projectRootDomain = (projectId: string): string => {
   }
 };
 
+const projectDefaultMarket = (projectId: string): string => {
+  const domain = projectRootDomain(projectId).toLowerCase();
+  const candidates = domain.split('.');
+  const suffix = candidates.length > 1 ? candidates[candidates.length - 1] : '';
+  const byTld = resolveDataForSeoMarket(suffix);
+  return byTld?.code || 'US';
+};
+
 const loadProjectQuery = (key: (projectId: string) => string, projectId: string): string => {
   const stored = readStorage(key(projectId));
   // An empty string is intentional (the user may clear the field), therefore
@@ -432,7 +459,7 @@ const saveProjectQuery = (key: (projectId: string) => string, value: string, pro
 const loadKeywordQuery = (projectId: string): string => readStorage(keywordQueryKey(projectId)) ?? '';
 const loadKeywordCountry = (projectId: string): string => {
   const stored = readStorage(keywordCountryKey(projectId));
-  return stored ? dataForSeoMarket(stored).code : 'US';
+  return stored ? (resolveDataForSeoMarket(stored)?.code || projectDefaultMarket(projectId)) : projectDefaultMarket(projectId);
 };
 const loadKeywordLanguage = (projectId: string): string => {
   const country = loadKeywordCountry(projectId);
@@ -440,7 +467,7 @@ const loadKeywordLanguage = (projectId: string): string => {
 };
 const loadDomainCountry = (projectId: string): string => {
   const stored = readStorage(domainCountryKey(projectId));
-  return stored ? dataForSeoMarket(stored).code : 'US';
+  return stored ? (resolveDataForSeoMarket(stored)?.code || projectDefaultMarket(projectId)) : projectDefaultMarket(projectId);
 };
 const loadDomainLanguage = (projectId: string): string => {
   const country = loadDomainCountry(projectId);
@@ -638,6 +665,8 @@ const DEFAULT_CRAWL_CONFIG: CrawlConfig = {
   followNofollow: false,
   maxResponseBytes: 5_000_000,
   maxRunSeconds: 300,
+  requestTimeoutSecs: undefined,
+  verifySsl: true,
   seedUrls: [],
   listMode: false,
   userAgent: '',
@@ -870,6 +899,7 @@ export const useToolsStore = create<ToolsState>((set, get) => ({
   // GSC
   isGscConnected: false,
   gscClientId: activeProjectId() ? readStorage(gscClientIdKey(activeProjectId()!)) || '' : '',
+  gscClientSecret: '',
   gscProperties: [],
   gscProperty: activeProjectId() ? readStorage(gscPropertyKey(activeProjectId()!)) || '' : '',
   gscFilters: activeProjectId() ? readGscFilters(activeProjectId()!) : { ...DEFAULT_GSC_FILTERS },
@@ -891,7 +921,8 @@ export const useToolsStore = create<ToolsState>((set, get) => ({
     set({ keywordQuery: query });
   },
   setKeywordCountry: (c) => {
-    const country = dataForSeoMarket(c).code;
+    const country = resolveDataForSeoMarket(c)?.code;
+    if (!country) return;
     const projectId = activeProjectId();
     if (projectId) writeStorage(keywordCountryKey(projectId), country);
     const language = dataForSeoLanguage(country, get().keywordLanguage);
@@ -920,7 +951,8 @@ export const useToolsStore = create<ToolsState>((set, get) => ({
     try {
       const { login, password } = useSettingsStore.getState().dataForSeoCredentials;
       if (!login || !password) throw new Error(i18n.t('runtimeErrors.tools.keywordConnect'));
-      const locationCode = dataForSeoLocation(selectedCountry);
+      const selectedMarket = requireDataForSeoMarket(selectedCountry);
+      const locationCode = selectedMarket.locationCode;
       const languageCode = dataForSeoLanguage(selectedCountry, language || get().keywordLanguage);
       const keywordResults = await new DataForSEOClient(login, password).getKeywordIdeas(
         q,
@@ -928,7 +960,7 @@ export const useToolsStore = create<ToolsState>((set, get) => ({
         languageCode,
       );
       if (activeProjectId() !== projectIdAtStart || !isLatestToolRequest('keyword-search', requestToken)) return;
-      set({ keywordResults, keywordResultsSource: { seedKeyword: q, countryCode: dataForSeoMarket(selectedCountry).code, locationCode, languageCode, retrievedAt: new Date().toISOString() }, isKeywordLoading: false });
+      set({ keywordResults, keywordResultsSource: { seedKeyword: q, countryCode: selectedMarket.code, locationCode, languageCode, retrievedAt: new Date().toISOString() }, isKeywordLoading: false });
     } catch (err: unknown) {
       const msg = err instanceof Error ? err.message : i18n.t('runtimeErrors.tools.comparisonFailed');
       if (activeProjectId() === projectIdAtStart && isLatestToolRequest('keyword-search', requestToken)) set({ keywordResults: [], keywordResultsSource: null, keywordError: msg, isKeywordLoading: false });
@@ -971,7 +1003,8 @@ export const useToolsStore = create<ToolsState>((set, get) => ({
   setRankTrackingDraft: (patch) => {
     const current = get().rankTrackingDraft;
     const requestedLocation = patch.location ?? current.location;
-    const location = dataForSeoMarket(requestedLocation).code;
+    const location = resolveDataForSeoMarket(requestedLocation)?.code;
+    if (!location) return;
     const draft: RankTrackingDraft = {
       ...current,
       ...patch,
@@ -1031,16 +1064,16 @@ export const useToolsStore = create<ToolsState>((set, get) => ({
       const date = new Date().toISOString().slice(0, 10);
       const attempts = await Promise.allSettled(trackedRanks.map(async (item) => {
         const languageCode = dataForSeoLanguage(item.location, item.language_code);
-        const rows = await client.getSerpCompetitors(item.keyword, dataForSeoLocation(item.location), languageCode);
+        const rows = await client.getSerpCompetitors(item.keyword, requireDataForSeoMarket(item.location).locationCode, languageCode);
         const found = rows.find((row) => row.domain === item.domain || row.domain.endsWith(`.${item.domain}`));
-        const currentRank = found?.rank_absolute ?? null;
+        const currentRank = found ? (found.rank_absolute > 100 ? 101 : found.rank_absolute) : null;
         return {
           ...item,
           language_code: languageCode,
           previous_rank: item.current_rank,
           current_rank: currentRank,
           delta: item.current_rank !== null && currentRank !== null ? item.current_rank - currentRank : null,
-          best_rank: item.best_rank !== null && currentRank !== null ? Math.min(item.best_rank, currentRank) : (currentRank ?? item.best_rank),
+          best_rank: item.best_rank !== null && currentRank !== null && currentRank <= 100 ? Math.min(item.best_rank, currentRank) : (currentRank !== null && currentRank <= 100 ? currentRank : item.best_rank),
           history: currentRank !== null ? [...item.history, { date, rank: currentRank }].slice(-90) : item.history,
           last_checked: new Date().toISOString(),
         };
@@ -1066,7 +1099,8 @@ export const useToolsStore = create<ToolsState>((set, get) => ({
   },
 
   setDomainCountry: (country) => {
-    const normalized = dataForSeoMarket(country).code;
+    const normalized = resolveDataForSeoMarket(country)?.code;
+    if (!normalized) return;
     const projectId = activeProjectId();
     if (projectId) writeStorage(domainCountryKey(projectId), normalized);
     const language = dataForSeoLanguage(normalized, get().domainLanguage);
@@ -1098,7 +1132,7 @@ export const useToolsStore = create<ToolsState>((set, get) => ({
     try {
       const { login, password } = useSettingsStore.getState().dataForSeoCredentials;
       if (!login || !password) throw new Error(i18n.t('runtimeErrors.tools.domainConnect'));
-      const domainOverview = await new DataForSEOClient(login, password).getDomainOverview(target, dataForSeoLocation(selectedCountry), selectedLanguage);
+      const domainOverview = await new DataForSEOClient(login, password).getDomainOverview(target, requireDataForSeoMarket(selectedCountry).locationCode, selectedLanguage);
       if (!domainOverview) throw new Error(i18n.t('runtimeErrors.tools.domainNoOverview'));
       if (activeProjectId() !== projectIdAtStart || !isLatestToolRequest('domain-overview', requestToken)) return;
       saveProjectResearch(domainOverviewKey, domainOverview, projectIdAtStart);
@@ -1140,6 +1174,7 @@ export const useToolsStore = create<ToolsState>((set, get) => ({
     if (language) get().setDomainLanguage(language);
     const selectedCountry = country || get().domainCountry;
     const selectedLanguage = dataForSeoLanguage(selectedCountry, language || get().domainLanguage);
+    const selectedLocationCode = requireDataForSeoMarket(selectedCountry).locationCode;
     const { login, password } = useSettingsStore.getState().dataForSeoCredentials;
     if (!login || !password) {
       set({ domainComparisonError: i18n.t('runtimeErrors.tools.dataforseoComparisonConnect') });
@@ -1150,7 +1185,7 @@ export const useToolsStore = create<ToolsState>((set, get) => ({
     try {
       const client = new DataForSEOClient(login, password);
       const retrievedAt = new Date().toISOString();
-      const attempts = await Promise.allSettled(normalizedTargets.map((domain) => client.getDomainOverview(domain, dataForSeoLocation(selectedCountry), selectedLanguage)));
+      const attempts = await Promise.allSettled(normalizedTargets.map((domain) => client.getDomainOverview(domain, selectedLocationCode, selectedLanguage)));
       const rows = attempts.flatMap((attempt, index) => attempt.status === 'fulfilled' && attempt.value ? [{
         domain: normalizedTargets[index],
         organic_traffic: attempt.value.organic_traffic,
@@ -1167,7 +1202,7 @@ export const useToolsStore = create<ToolsState>((set, get) => ({
       const failed = attempts.filter((attempt): attempt is PromiseRejectedResult => attempt.status === 'rejected');
       if (!rows.length) throw new Error(failed[0]?.reason instanceof Error ? failed[0].reason.message : i18n.t('runtimeErrors.tools.dataforseoNoComparison'));
       const comparison: DomainComparisonData = {
-        target: normalizedTargets[0], rows, location_code: dataForSeoLocation(selectedCountry), language_code: selectedLanguage, retrieved_at: retrievedAt, source: 'dataforseo',
+        target: normalizedTargets[0], rows, location_code: requireDataForSeoMarket(selectedCountry).locationCode, language_code: selectedLanguage, retrieved_at: retrievedAt, source: 'dataforseo',
       };
       if (activeProjectId() !== projectId || !isLatestToolRequest('domain-comparison', requestToken)) return;
       const nextHistory = saveDomainComparisonSnapshot(projectId, comparison, normalizedTargets, loadDomainComparisonHistory(projectId));
@@ -1414,6 +1449,11 @@ export const useToolsStore = create<ToolsState>((set, get) => ({
       ...(configPatch || {}),
       maxPages: maxLimit,
     };
+    const appConfig = useSettingsStore.getState().config;
+    effectiveCrawlConfig.maxRedirects = effectiveCrawlConfig.maxRedirects ?? appConfig.max_redirects;
+    effectiveCrawlConfig.userAgent = effectiveCrawlConfig.userAgent?.trim() || appConfig.default_user_agent;
+    effectiveCrawlConfig.requestTimeoutSecs = appConfig.request_timeout_secs;
+    effectiveCrawlConfig.verifySsl = appConfig.verify_ssl;
     // Resume arrays are execution-only checkpoint inputs. Keep them out of
     // the durable crawl history/configuration so a large frontier cannot
     // consume the same storage quota that caused the interruption.
@@ -1837,9 +1877,9 @@ export const useToolsStore = create<ToolsState>((set, get) => ({
       const observations = await Promise.all(providers.map(async (provider) => {
         const capturedAt = new Date().toISOString();
         try {
-          const response = await useAuthStore.getState().generateTextForProvider(provider, query);
-          const normalizedResponse = response.toLocaleLowerCase();
-          const present = normalizedResponse.includes(b.toLocaleLowerCase()) || Boolean(d && normalizedResponse.includes(d.toLocaleLowerCase()));
+          const rawResponse = await useAuthStore.getState().generateTextForProvider(provider, query);
+          const response = redactLocalContext(rawResponse);
+          const present = hasAiBrandEvidence(response, b, d, query);
           const citedSources = Array.from(new Set(response.match(/https?:\/\/[^\s),]+/g) || []));
           return { provider, capturedAt, response, present, citedSources, error: undefined as string | undefined };
         } catch (error) {
@@ -1851,7 +1891,7 @@ export const useToolsStore = create<ToolsState>((set, get) => ({
       const capturedAt = new Date().toISOString();
       const report: BrandAiVisibilityReport = {
         brand: b, domain: d, overall_score: successful.length ? Math.round(mentioned / successful.length * 100) : null, query_checked: query, timestamp: capturedAt,
-        key_takeaways: successful.length ? [i18n.t('runtimeErrors.tools.aiTakeaway', { mentioned, successful: successful.length })] : [i18n.t('runtimeErrors.tools.aiNoResponse')],
+        key_takeaways: successful.length ? [i18n.t('runtimeErrors.tools.aiTakeaway', { mentioned, successful: successful.length }), i18n.t('runtimeErrors.tools.aiLocalLimit', 'Local CLI responses do not include web browsing unless the connected client explicitly provides it.')] : [i18n.t('runtimeErrors.tools.aiNoResponse')],
         models: observations.map((item) => ({
           model_name: i18n.t('runtimeErrors.tools.aiProviderModel', { provider: item.provider }), model_id: null, provider: item.provider, connection_method: 'local_cli', captured_at: item.capturedAt,
           is_present: item.present, visibility_percentage: item.error ? 0 : item.present ? 100 : 0, sentiment: 'not_assessed',
@@ -1972,29 +2012,32 @@ export const useToolsStore = create<ToolsState>((set, get) => ({
       if (selectedProperty) writeStorage(gscPropertyKey(projectId), selectedProperty);
       set({ isGscConnected: true, gscProperties: properties, gscProperty: selectedProperty, isGscLoading: false });
     } catch (error) {
-      if (activeProjectId() === projectId && isLatestToolRequest('gsc-session', requestToken)) set({ isGscConnected: false, gscProperties: [], isGscLoading: false, gscError: error instanceof Error ? error.message : i18n.t('runtimeErrors.tools.gscResumeFailed') });
+      if (activeProjectId() === projectId && isLatestToolRequest('gsc-session', requestToken)) set({ isGscConnected: false, gscProperties: [], isGscLoading: false, gscError: errorMessage(error, i18n.t('runtimeErrors.tools.gscResumeFailed')) });
     } finally {
       if (activeProjectId() === projectId && isLatestToolRequest('gsc-session', requestToken)) set({ isGscLoading: false });
     }
   },
 
-  connectGsc: async (clientId) => {
+  connectGsc: async (clientId, clientSecret) => {
     const projectId = activeProjectId();
     if (!projectId) return set({ gscError: i18n.t('runtimeErrors.tools.gscProject') });
     const normalizedClientId = clientId.trim();
     if (!normalizedClientId) return set({ gscError: i18n.t('runtimeErrors.tools.gscClientId') });
     const requestToken = beginToolRequest('gsc-session');
     writeStorage(gscClientIdKey(projectId), normalizedClientId);
-    set({ gscClientId: normalizedClientId, isGscLoading: true, isGscConnected: false, gscProperties: [], gscData: null, gscDataFetchedAt: null, gscError: null });
+    const normalizedSecret = clientSecret?.trim() || get().gscClientSecret.trim();
+    set({ isGscLoading: true, isGscConnected: false, gscProperties: [], gscData: null, gscDataFetchedAt: null, gscError: null });
     try {
-      const properties = await invokeTauriCommand<GscSiteProperty[]>('connect_search_console', { projectId, clientId: normalizedClientId });
+      const connectArgs: Record<string, unknown> = { projectId, clientId: normalizedClientId };
+      if (normalizedSecret) connectArgs.clientSecret = normalizedSecret;
+      const properties = await invokeTauriCommand<GscSiteProperty[]>('connect_search_console', connectArgs);
       const storedProperty = get().gscProperty;
       const selectedProperty = properties.some((item) => item.siteUrl === storedProperty) ? storedProperty : properties[0]?.siteUrl || '';
       if (activeProjectId() !== projectId || !isLatestToolRequest('gsc-session', requestToken)) return;
       if (selectedProperty) writeStorage(gscPropertyKey(projectId), selectedProperty);
-      set({ isGscConnected: true, gscProperties: properties, gscProperty: selectedProperty });
+      set({ gscClientId: normalizedClientId, gscClientSecret: normalizedSecret, isGscConnected: true, gscProperties: properties, gscProperty: selectedProperty });
     } catch (error) {
-      if (activeProjectId() === projectId && isLatestToolRequest('gsc-session', requestToken)) set({ isGscConnected: false, gscError: error instanceof Error ? error.message : i18n.t('runtimeErrors.tools.gscConnectFailed') });
+      if (activeProjectId() === projectId && isLatestToolRequest('gsc-session', requestToken)) set({ isGscConnected: false, gscError: errorMessage(error, i18n.t('runtimeErrors.tools.gscConnectFailed')) });
     } finally { if (activeProjectId() === projectId && isLatestToolRequest('gsc-session', requestToken)) set({ isGscLoading: false }); }
   },
 
@@ -2006,9 +2049,9 @@ export const useToolsStore = create<ToolsState>((set, get) => ({
     try {
       const status = await invokeTauriCommand<string>('disconnect_search_console', { projectId });
       if (activeProjectId() !== projectId || !isLatestToolRequest('gsc-session', requestToken)) return;
-      set({ isGscConnected: false, gscProperties: [], gscData: null, gscDataFetchedAt: null, gscInspectionResult: null, isGscLoading: false, gscError: status.startsWith(i18n.t('runtimeErrors.tools.providerTokenRemovedPrefix')) ? status : null });
+      set({ isGscConnected: false, gscClientSecret: '', gscProperties: [], gscData: null, gscDataFetchedAt: null, gscInspectionResult: null, isGscLoading: false, gscError: status.startsWith(i18n.t('runtimeErrors.tools.providerTokenRemovedPrefix')) ? status : null });
     } catch (error) {
-      if (activeProjectId() === projectId && isLatestToolRequest('gsc-session', requestToken)) set({ isGscLoading: false, gscError: error instanceof Error ? error.message : i18n.t('runtimeErrors.tools.gscDisconnectFailed') });
+      if (activeProjectId() === projectId && isLatestToolRequest('gsc-session', requestToken)) set({ isGscLoading: false, gscError: errorMessage(error, i18n.t('runtimeErrors.tools.gscDisconnectFailed')) });
     }
   },
 
@@ -2058,8 +2101,14 @@ export const useToolsStore = create<ToolsState>((set, get) => ({
     beginToolRequest('gsc-session');
     beginToolRequest('gsc-data');
     beginToolRequest('gsc-inspection');
-    if (!projectId) return set({ savedKeywords: [], trackedRanks: [], rankTrackingDraft: defaultRankTrackingDraft(), isRankLoading: false, rankError: null, crawlResult: null, crawlRuns: [], isCrawling: false, isCrawlPaused: false, crawlProgress: 0, activeCrawlRunId: null, crawlError: null, crawlPersistenceError: null, crawlPersistenceNotice: null, crawlPersistenceCompacted: false, isRetryingCrawlPersistence: false, crawlProgressDetail: null, interruptedCrawl: null, crawlUrl: '', crawlLimit: 25, crawlConfig: DEFAULT_CRAWL_CONFIG, crawlRequestProfiles: [], selectedCrawlRunId: null, isSavingCrawlRequestProfile: false, isCheckingCrawlExternalLinks: false, crawlExternalLinkCheckProgress: null, crawlExternalLinkCheckError: null, keywordQuery: '', keywordCountry: 'US', keywordLanguage: 'en', isKeywordLoading: false, keywordError: null, domainQuery: '', domainCountry: 'US', domainLanguage: 'en', domainOverview: null, isDomainLoading: false, domainError: null, backlinkQuery: '', backlinkProfile: null, backlinkProfileHistory: [], isBacklinkLoading: false, backlinkError: null, backlinkGapCompetitors: [], backlinkGapIncludeSubdomains: true, backlinkGapReport: null, isBacklinkGapLoading: false, backlinkGapError: null, aiBrandQuery: '', aiBrandDomain: '', aiBrandReport: null, aiBrandHistory: [], isAiBrandLoading: false, aiBrandError: null, aiSearchPrompt: '', aiPromptComparison: null, aiPromptHistory: [], isAiPromptLoading: false, aiPromptError: null, gscClientId: '', gscProperties: [], gscProperty: '', gscFilters: { ...DEFAULT_GSC_FILTERS }, isGscConnected: false, gscData: null, gscDataFetchedAt: null, gscInspectionResult: null, isGscLoading: false, gscError: null, keywordResults: [], keywordResultsSource: null, domainComparison: null, domainComparisonHistory: [], domainComparisonTargets: [], isDomainComparisonLoading: false, domainComparisonError: null });
+    if (!projectId) return set({ savedKeywords: [], trackedRanks: [], rankTrackingDraft: defaultRankTrackingDraft(), isRankLoading: false, rankError: null, crawlResult: null, crawlRuns: [], isCrawling: false, isCrawlPaused: false, crawlProgress: 0, activeCrawlRunId: null, crawlError: null, crawlPersistenceError: null, crawlPersistenceNotice: null, crawlPersistenceCompacted: false, isRetryingCrawlPersistence: false, crawlProgressDetail: null, interruptedCrawl: null, crawlUrl: '', crawlLimit: 25, crawlConfig: DEFAULT_CRAWL_CONFIG, crawlRequestProfiles: [], selectedCrawlRunId: null, isSavingCrawlRequestProfile: false, isCheckingCrawlExternalLinks: false, crawlExternalLinkCheckProgress: null, crawlExternalLinkCheckError: null, keywordQuery: '', keywordCountry: 'US', keywordLanguage: 'en', isKeywordLoading: false, keywordError: null, domainQuery: '', domainCountry: 'US', domainLanguage: 'en', domainOverview: null, isDomainLoading: false, domainError: null, backlinkQuery: '', backlinkProfile: null, backlinkProfileHistory: [], isBacklinkLoading: false, backlinkError: null, backlinkGapCompetitors: [], backlinkGapIncludeSubdomains: true, backlinkGapReport: null, isBacklinkGapLoading: false, backlinkGapError: null, aiBrandQuery: '', aiBrandDomain: '', aiBrandReport: null, aiBrandHistory: [], isAiBrandLoading: false, aiBrandError: null, aiSearchPrompt: '', aiPromptComparison: null, aiPromptHistory: [], isAiPromptLoading: false, aiPromptError: null, gscClientId: '', gscClientSecret: '', gscProperties: [], gscProperty: '', gscFilters: { ...DEFAULT_GSC_FILTERS }, isGscConnected: false, gscData: null, gscDataFetchedAt: null, gscInspectionResult: null, isGscLoading: false, gscError: null, keywordResults: [], keywordResultsSource: null, domainComparison: null, domainComparisonHistory: [], domainComparisonTargets: [], isDomainComparisonLoading: false, domainComparisonError: null });
     const storedGscClientId = readStorage(gscClientIdKey(projectId)) || '';
+    // The browser preview has no native credential store. Avoid an extra
+    // promise turn there so project hydration remains deterministic for the
+    // WebView and keeps all secrets desktop-only.
+    const storedGscClientSecret = isTauriEnvironment()
+      ? await getSecureValue(gscClientSecretKey(projectId)).catch(() => '')
+      : '';
     const storedGscProperty = readStorage(gscPropertyKey(projectId)) || '';
     const backlinkGapSettings = loadBacklinkGapSettings(projectId);
     const projectRootUrl = useProjectStore.getState().projects.find((project) => project.id === projectId)?.rootUrl || '';
@@ -2067,7 +2116,7 @@ export const useToolsStore = create<ToolsState>((set, get) => ({
     set({ savedKeywords: loadSavedKeywords(), trackedRanks: loadTrackedRanks(), rankTrackingDraft: loadRankTrackingDraft(projectId), isRankLoading: false, rankError: null, crawlResult: null, crawlRuns: [], isCrawling: false, isCrawlPaused: false, crawlProgress: 0, activeCrawlRunId: null, crawlError: null, crawlPersistenceError: null, crawlPersistenceNotice: null, crawlPersistenceCompacted: false, isRetryingCrawlPersistence: false, crawlProgressDetail: null, interruptedCrawl: readInterruptedCrawl(projectId), selectedTagFilter: null, crawlUrl: '', crawlLimit: 25, crawlConfig: DEFAULT_CRAWL_CONFIG, crawlRequestProfiles: loadCrawlRequestProfiles(), selectedCrawlRunId: null, isSavingCrawlRequestProfile: false, isCheckingCrawlExternalLinks: false, crawlExternalLinkCheckProgress: null, crawlExternalLinkCheckError: null, keywordQuery: loadKeywordQuery(projectId), keywordCountry: loadKeywordCountry(projectId), keywordLanguage: loadKeywordLanguage(projectId), isKeywordLoading: false, keywordError: null, domainQuery: loadProjectQuery(domainQueryKey, projectId), domainCountry: loadDomainCountry(projectId), domainLanguage: loadDomainLanguage(projectId), backlinkQuery: loadProjectQuery(backlinkQueryKey, projectId), backlinkGapCompetitors: backlinkGapSettings.competitors, backlinkGapIncludeSubdomains: backlinkGapSettings.includeSubdomains, backlinkGapReport: loadBacklinkGapReport(projectId), isBacklinkGapLoading: false, backlinkGapError: null, domainOverview: loadDomainOverview(projectId), isDomainLoading: false, domainError: null, backlinkProfile: loadBacklinkProfile(projectId), backlinkProfileHistory: loadBacklinkProfileHistory(projectId), isBacklinkLoading: false, backlinkError: null, domainComparison: loadLatestDomainComparison(projectId), domainComparisonHistory: loadDomainComparisonHistory(projectId), domainComparisonTargets: loadDomainComparisonTargets(projectId), isDomainComparisonLoading: false, domainComparisonError: null,
       aiBrandQuery: '', aiBrandDomain: '', aiBrandReport: null, aiBrandHistory: [], aiBrandError: null, isAiBrandLoading: false,
       aiSearchPrompt: '', aiPromptComparison: null, aiPromptHistory: [], aiPromptError: null, isAiPromptLoading: false,
-      gscClientId: storedGscClientId, gscProperty: storedGscProperty, gscFilters: readGscFilters(projectId), gscProperties: [], isGscConnected: false, gscData: null, gscDataFetchedAt: null, gscInspectionResult: null, isGscLoading: false, gscError: null, keywordResults: [], keywordResultsSource: null });
+      gscClientId: storedGscClientId, gscClientSecret: storedGscClientSecret, gscProperty: storedGscProperty, gscFilters: readGscFilters(projectId), gscProperties: [], isGscConnected: false, gscData: null, gscDataFetchedAt: null, gscInspectionResult: null, isGscLoading: false, gscError: null, keywordResults: [], keywordResultsSource: null });
     let crawlRuns: CrawlRunRecord[] = [];
     let persistenceError: string | null = null;
     let persistenceNotice: string | null = null;

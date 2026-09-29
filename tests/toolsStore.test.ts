@@ -9,6 +9,7 @@ import i18n from '@/i18n';
 vi.mock('@/services/tauri', () => ({
   invokeTauriCommand: vi.fn(),
   isTauriEnvironment: vi.fn(() => false),
+  getSecureValue: vi.fn(async () => ''),
 }));
 
 describe('toolsStore', () => {

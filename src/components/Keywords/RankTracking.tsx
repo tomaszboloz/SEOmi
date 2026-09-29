@@ -196,7 +196,7 @@ export const RankTracking: React.FC = () => {
                           : 'bg-slate-800 text-slate-300 border-slate-700'
                       }`}
                     >
-                      {r.current_rank !== null ? `#${r.current_rank}` : t('rankTrackingUi.notChecked')}
+                      {r.current_rank !== null ? (r.current_rank > 100 ? t('rankTrackingUi.outsideTop100', 'Outside top 100') : `#${r.current_rank}`) : t('rankTrackingUi.notChecked')}
                     </span>
                   </td>
                   <td className="px-4 py-3.5 text-center">{renderDelta(r.delta)}</td>

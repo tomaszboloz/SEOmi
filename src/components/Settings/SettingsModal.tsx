@@ -389,6 +389,41 @@ export const SettingsModal: React.FC = () => {
                   className="w-full h-9 px-3 bg-slate-950 border border-slate-800 rounded-lg text-white"
                 />
               </div>
+
+              <div>
+                <label htmlFor="settings-default-user-agent" className="font-semibold text-slate-300 block mb-1">{t('settings.defaultUserAgent')}</label>
+                <select
+                  id="settings-default-user-agent"
+                  value={config.default_user_agent}
+                  onChange={(event) => updateConfig({ default_user_agent: event.target.value })}
+                  className="w-full h-9 px-3 bg-slate-950 border border-slate-800 rounded-lg text-white"
+                >
+                  <option value="chrome_mac">{t('urlBar.userAgents.chromeMac')}</option>
+                  <option value="chrome_win">{t('urlBar.userAgents.chromeWin')}</option>
+                  <option value="safari_mac">{t('urlBar.userAgents.safariMac')}</option>
+                  <option value="googlebot_desktop">{t('urlBar.userAgents.googlebotDesktop')}</option>
+                  <option value="googlebot_mobile">{t('urlBar.userAgents.googlebotMobile')}</option>
+                  <option value="bingbot">{t('urlBar.userAgents.bingbot')}</option>
+                  <option value="iphone">{t('urlBar.userAgents.iphone')}</option>
+                  {!['chrome_mac', 'chrome_win', 'safari_mac', 'googlebot_desktop', 'googlebot_mobile', 'bingbot', 'iphone'].includes(config.default_user_agent) && (
+                    <option value={config.default_user_agent}>{config.default_user_agent}</option>
+                  )}
+                </select>
+              </div>
+
+              <label className="flex items-start gap-3 rounded-xl border border-slate-800 bg-slate-950/60 p-4">
+                <input
+                  type="checkbox"
+                  checked={config.verify_ssl}
+                  onChange={(event) => updateConfig({ verify_ssl: event.target.checked })}
+                  aria-describedby="settings-verify-ssl-description"
+                  className="mt-0.5 h-4 w-4 accent-emerald-500"
+                />
+                <span>
+                  <span className="block font-semibold text-slate-200">{t('settings.verifySsl')}</span>
+                  <span id="settings-verify-ssl-description" className="mt-1 block text-[11px] leading-5 text-slate-400">{t('settings.verifySslDescription')}</span>
+                </span>
+              </label>
             </div>
           )}
 
