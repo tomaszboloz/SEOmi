@@ -207,14 +207,18 @@ describe('CrawlArchitectureGraph', () => {
     render(<CrawlArchitectureGraph pages={manyPages} startUrl={manyPages[0].url} runId="wide-run" />);
 
     fireEvent.click(screen.getByRole('tab', { name: 'Drzewo URL' }));
-    fireEvent.click(screen.getByText('blog').closest('summary')!);
-    expect(screen.getAllByText('105')).toHaveLength(2);
-    expect(screen.getByRole('button', { name: /Pokaż kolejne 5 URL-i/ })).toBeTruthy();
-    expect(screen.getByText('Article 0')).toBeTruthy();
-    expect(screen.queryByText('Article 99')).toBeNull();
+    const directory = within(screen.getByRole('tabpanel'));
+    fireEvent.click(directory.getByText('blog').closest('summary')!);
+    expect(directory.getAllByText('105')).toHaveLength(2);
+    // The catalog excludes the graph, dock and metrics from role traversal.
+    const catalog = within(directory.getByRole('list', { name: i18n.t('crawlDirectoryUi.catalogAria') }));
+    const showMore = catalog.getByRole('button', { name: /Pokaż kolejne 5 URL-i/ });
+    expect(showMore).toBeTruthy();
+    expect(catalog.getByText('Article 0')).toBeTruthy();
+    expect(catalog.queryByText('Article 99')).toBeNull();
 
-    fireEvent.click(screen.getByRole('button', { name: /Pokaż kolejne 5 URL-i/ }));
-    expect(screen.getByText('Article 99')).toBeTruthy();
+    fireEvent.click(showMore);
+    expect(catalog.getByText('Article 99')).toBeTruthy();
     expect(localStorage.getItem('seomi_project_project-wide-crawl_crawl_directory_wide-run_v1')).toContain('visibleCounts');
   });
 
