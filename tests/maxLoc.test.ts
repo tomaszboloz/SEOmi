@@ -50,3 +50,7 @@ it('keeps native schema validation and its test modules below 150 physical lines
  const files=['src-tauri/src/services/schema_validator.rs',...codeFiles('src-tauri/src/services/schema_validator')];
  expect(maxLocReport(files).violations).toEqual([]);
 });
+
+it('keeps every frontend test and shared fixture below 150 physical lines',()=>{
+ expect(maxLocReport(codeFiles('tests')).violations).toEqual([]);
+});

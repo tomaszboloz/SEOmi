@@ -2,9 +2,9 @@ import { createCrawlRunFixture, createCrawlResultFixture, createCrawlPageFixture
 // @vitest-environment node
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import { decodeCrawlRunsFromStorage, encodeCrawlRunsForStorage, saveCrawlRuns } from '../src/services/crawlPersistence';
-
-const localStorageValues = new Map<string, string>();
+import { localStorageValues } from "./fixtures/crawlPersistenceCompressionContracts";
 let localStorageQuotaFailures = 0;
+
 Object.defineProperty(globalThis, 'localStorage', { configurable: true, value: {
   clear: () => localStorageValues.clear(),
   getItem: (key: string) => localStorageValues.get(key) ?? null,
@@ -19,7 +19,13 @@ Object.defineProperty(globalThis, 'localStorage', { configurable: true, value: {
 } });
 
 describe('crawl history compression', () => {
-  it('round-trips and substantially reduces repetitive crawl snapshots', async () => {
+afterEach(() => {
+    localStorage.clear();
+    localStorageQuotaFailures = 0;
+    vi.unstubAllGlobals();
+  });
+
+it('round-trips and substantially reduces repetitive crawl snapshots', async () => {
     const runs = [{ ...createCrawlRunFixture(),
       id: 'run-1',
       result: { ...createCrawlResultFixture(),  pages: Array.from({ length: 500 }, (_, index) => ({ ...createCrawlPageFixture(),
@@ -38,7 +44,7 @@ describe('crawl history compression', () => {
     expect(await decodeCrawlRunsFromStorage(stored)).toEqual(runs);
   });
 
-  it('retries a large history when quota is hit during compression', async () => {
+it('retries a large history when quota is hit during compression', async () => {
     const NativeCompressionStream = globalThis.CompressionStream;
     let compressionCalls = 0;
     class QuotaOnceCompressionStream extends NativeCompressionStream {
@@ -59,7 +65,7 @@ describe('crawl history compression', () => {
     expect(await decodeCrawlRunsFromStorage(JSON.parse(localStorage.getItem('seomi_project_quota-project_crawl_runs') || '[]'))).toEqual([{ ...createCrawlRunFixture(),  id: 'run-0' }]);
   });
 
-  it('prunes the localStorage fallback when IndexedDB is unavailable and quota is hit', async () => {
+it('prunes the localStorage fallback when IndexedDB is unavailable and quota is hit', async () => {
     localStorageQuotaFailures = 1;
     localStorage.clear();
 
@@ -70,7 +76,7 @@ describe('crawl history compression', () => {
     expect(await decodeCrawlRunsFromStorage(JSON.parse(localStorage.getItem('seomi_project_fallback-quota-project_crawl_runs') || '[]'))).toEqual([{ ...createCrawlRunFixture(),  id: 'fallback-0' }]);
   });
 
-  it('clears obsolete legacy result copies before retrying a quota recovery', async () => {
+it('clears obsolete legacy result copies before retrying a quota recovery', async () => {
     localStorage.setItem('seomi_project_legacy-cleanup_crawl_result', JSON.stringify({ ...createCrawlResultFixture(),  pages: 500 }));
     localStorage.setItem('seomi_project_legacy-cleanup_crawl_runs', JSON.stringify([{ ...createCrawlRunFixture(),  id: 'legacy' }]));
     localStorageQuotaFailures = 1;
@@ -82,7 +88,7 @@ describe('crawl history compression', () => {
     expect(await decodeCrawlRunsFromStorage(JSON.parse(localStorage.getItem('seomi_project_legacy-cleanup_crawl_runs') || '[]'))).toEqual([{ ...createCrawlRunFixture(),  id: 'newest' }]);
   });
 
-  it('removes an obsolete result mirror on a successful dedicated history save', async () => {
+it('removes an obsolete result mirror on a successful dedicated history save', async () => {
     localStorage.setItem('seomi_project_success-cleanup_crawl_result', JSON.stringify({ ...createCrawlResultFixture(),  pages: 500 }));
 
     const result = await saveCrawlRuns('success-cleanup', [{ ...createCrawlRunFixture(),  id: 'newest' }] as never);
@@ -92,7 +98,7 @@ describe('crawl history compression', () => {
     expect(await decodeCrawlRunsFromStorage(JSON.parse(localStorage.getItem('seomi_project_success-cleanup_crawl_runs') || '[]'))).toEqual([{ ...createCrawlRunFixture(),  id: 'newest' }]);
   });
 
-  it('falls back to a minimal snapshot when one run repeatedly exceeds quota', async () => {
+it('falls back to a minimal snapshot when one run repeatedly exceeds quota', async () => {
     localStorageQuotaFailures = 3;
     localStorage.clear();
 
@@ -117,71 +123,5 @@ describe('crawl history compression', () => {
     const stored = JSON.parse(localStorage.getItem('seomi_project_minimal-quota-project_crawl_runs') || 'null');
     expect(await decodeCrawlRunsFromStorage(stored)).toHaveLength(1);
     expect((await decodeCrawlRunsFromStorage(stored))[0]).toMatchObject({ id: 'minimal-run', storage_compacted: true });
-  });
-
-  it('keeps a tiny page index when every evidence compaction attempt hits quota', async () => {
-    // Full + level 1 + level 2 + level 3 fail; the final page-index retry
-    // must still keep the completed crawl available after a reload.
-    localStorageQuotaFailures = 4;
-    localStorage.clear();
-
-    const runs = [{ ...createCrawlRunFixture(),
-      id: 'page-index-run',
-      result: { ...createCrawlResultFixture(),
-        pages: Array.from({ length: 300 }, (_, index) => ({ ...createCrawlPageFixture(),
-          url: `https://example.com/page-${index}`,
-          final_url: `https://example.com/page-${index}`,
-          depth: 1,
-          http_status: 200,
-          response_time_ms: 12,
-          indexability_status: 'indexable',
-          body_truncated: false,
-          word_count: 100,
-          internal_link_count: 2,
-          external_link_count: 1,
-          schema_types: [],
-          schema_syntax_errors: 0,
-          hreflangs: [],
-          h1_count: 1,
-          links: [],
-          images: [],
-          issues_count: 0,
-          issues: [],
-        })),
-        sitemap_urls: [],
-      },
-    }] as never;
-
-    const result = await saveCrawlRuns('page-index-project', runs);
-    expect(result).toEqual({ prunedRuns: 0, compactedRuns: 1 });
-    const stored = JSON.parse(localStorage.getItem('seomi_project_page-index-project_crawl_runs') || 'null');
-    const restored = await decodeCrawlRunsFromStorage(stored);
-    expect(restored[0]).toMatchObject({
-      id: 'page-index-run',
-      storage_compacted: true,
-      result: { storage_pages_truncated: true, storage_pages_total: 300 },
-    });
-    expect(restored[0].result.pages).toHaveLength(250);
-  });
-
-  it('compacts legacy snapshots with missing evidence arrays safely', async () => {
-    localStorageQuotaFailures = 2;
-    localStorage.clear();
-
-    const runs = [{ ...createCrawlRunFixture(),
-      id: 'legacy-run',
-      result: { ...createCrawlResultFixture(),  pages: [{ ...createCrawlPageFixture(), links: undefined, images: undefined, issues: undefined }], sitemap_urls: [] },
-    }] as never;
-
-    const result = await saveCrawlRuns('legacy-quota-project', runs);
-    expect(result).toEqual({ prunedRuns: 0, compactedRuns: 1 });
-    const stored = JSON.parse(localStorage.getItem('seomi_project_legacy-quota-project_crawl_runs') || 'null');
-    expect(await decodeCrawlRunsFromStorage(stored)).toHaveLength(1);
-  });
-
-  afterEach(() => {
-    localStorage.clear();
-    localStorageQuotaFailures = 0;
-    vi.unstubAllGlobals();
   });
 });

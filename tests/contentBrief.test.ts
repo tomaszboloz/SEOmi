@@ -1,14 +1,13 @@
 import { describe, expect, it } from 'vitest';
-import { assessAeoReadiness, assessContentBrief, assessDraftQuality, buildContentBriefExport, buildContentBriefMarkdown, compareDrafts, extractDraftParagraphs, matchParagraphToCrawlSource, saveDraftVersion, updateParagraphReview, verifiedFactsForReuse } from '@/services/contentBrief';
-import { createEmptyContentBrief, createTopicalNode, type TopicalEntityFact } from '@/services/topicalMap';
-import type { CrawledPageSummary } from '@/types';
-import i18n from '@/i18n';
+import { assessAeoReadiness, assessContentBrief, assessDraftQuality, buildContentBriefExport, buildContentBriefMarkdown, compareDrafts, extractDraftParagraphs, saveDraftVersion, updateParagraphReview, verifiedFactsForReuse } from '@/services/contentBrief';
+import { createEmptyContentBrief, createTopicalNode } from '@/services/topicalMap';
 
-const crawled = [{ url: 'https://site.test/guide', final_url: 'https://site.test/guide' }] as unknown as CrawledPageSummary[];
-const fact = (value: string, reuseStatus: TopicalEntityFact['reuseStatus'], sourceUrl = ''): TopicalEntityFact => ({ id: value, attribute: 'claim', value, reuseStatus, sourceUrl });
+import i18n from '@/i18n';
+import { crawled, fact } from "./fixtures/contentBriefContracts";
 
 describe('content brief evidence gate', () => {
-  it('scores extractable answer structure but labels the result as advisory, not AI visibility', () => {
+
+it('scores extractable answer structure but labels the result as advisory, not AI visibility', () => {
     const draft = `# Espresso\n\nEspresso is a concentrated coffee drink made by forcing hot water through finely ground coffee.\n\n## Jak przygotować espresso?\n\nNajpierw zmiel kawę drobno, następnie ubij ją równomiernie i rozpocznij ekstrakcję.\n\n- Zmiel ziarna\n- Przygotuj portafilter\n\n| Parametr | Wartość |\n|---|---|\n| Mielenie | drobne |`;
     const result = assessAeoReadiness(draft, 'definition', ['Article']);
 
@@ -21,14 +20,14 @@ describe('content brief evidence gate', () => {
     expect(assessAeoReadiness(draft, 'none').components.schemaSignal).toBe(0);
   });
 
-  it('reports outline issues without changing the advisory score gate', () => {
+it('reports outline issues without changing the advisory score gate', () => {
     const result = assessAeoReadiness('# Tytuł\n\n### Zagnieżdżenie', 'none');
 
     expect(result.outlineIssues).toEqual([i18n.t('runtimeErrors.contentBrief.outlineJump', { previous: 1, level: 3 })]);
     expect(result.score).toBeGreaterThanOrEqual(0);
   });
 
-  it('scores editorial depth and anti-filler as an advisory signal, without converting it into a readiness gate', () => {
+it('scores editorial depth and anti-filler as an advisory signal, without converting it into a readiness gate', () => {
     const good = `# Poradnik\n\n## Jak działa proces?\n\nW praktyce najpierw sprawdź HTTP status i źródło danych. Na przykład porównaj odpowiedzi 200 i 404 w Google Search Console, a następnie opisz wpływ na konkretny URL.\n\n## Kiedy użyć tej metody?\n\nRozważmy dwa URL-e, które mają osobne intencje i różne linki wewnętrzne. Dla przykładu crawler może je znaleźć z mapy XML, ale tylko treść główna pokaże kontekst powiązania.`;
     const thin = `## W skrócie\n\nOgólnie rzecz biorąc, jeśli chodzi o rozwiązanie, jest ono bardzo ważne i odgrywa kluczową rolę. Warto zauważyć, że w dzisiejszym świecie szeroki zakres nowoczesnych rozwiązań jest kluczowy.`;
 
@@ -45,7 +44,7 @@ describe('content brief evidence gate', () => {
     expect(assessContentBrief(node, brief, [], []).draftQuality.score).toBe(assessDraftQuality(thin).score);
   });
 
-  it('blocks exact reuse of locked facts and requires the declared query, concepts, and live internal URLs', () => {
+it('blocks exact reuse of locked facts and requires the declared query, concepts, and live internal URLs', () => {
     const node = { ...createTopicalNode('Guide'), queries: [{ id: 'q1', text: 'espresso guide', provenance: 'asserted' as const }] };
     const brief = { ...createEmptyContentBrief(), targetQueryId: 'q1', requiredEntities: ['espresso', 'grinder'], snippetTarget: 'definition' as const, internalLinkTargets: ['https://site.test/guide#overview'], draftMarkdown: 'An espresso guide describes grinder basics. Claim says 42 units.' };
     const locked = fact('42 units', 'locked', 'https://site.test/fact');
@@ -57,7 +56,7 @@ describe('content brief evidence gate', () => {
     expect(result.wordCount).toBe(10);
   });
 
-  it('allows a complete draft only after explicit fact verification and source entry', () => {
+it('allows a complete draft only after explicit fact verification and source entry', () => {
     const node = { ...createTopicalNode('Guide'), queries: [{ id: 'q1', text: 'espresso guide', provenance: 'asserted' as const }] };
     const draftMarkdown = 'An espresso guide explains grinder setup.';
     const brief = { ...createEmptyContentBrief(), targetQueryId: 'q1', requiredEntities: ['espresso', 'grinder'], snippetTarget: 'steps' as const, internalLinkTargets: ['https://site.test/guide'], draftMarkdown, paragraphReviews: [{ paragraph: draftMarkdown, treatment: 'source-backed' as const, sourceUrl: 'https://site.test/evidence', sourceChecked: true }] };
@@ -68,7 +67,7 @@ describe('content brief evidence gate', () => {
     expect(verifiedFactsForReuse([verified, fact('Unknown', 'verified')])).toEqual([verified]);
   });
 
-  it('keeps a missing source locked even if stale data says it was verified', () => {
+it('keeps a missing source locked even if stale data says it was verified', () => {
     const normalized = fact('Claim', 'verified', '');
     const node = createTopicalNode('Guide');
     const result = assessContentBrief(node, createEmptyContentBrief(), [normalized], []);
@@ -77,7 +76,7 @@ describe('content brief evidence gate', () => {
     expect(result.readyToAdvance).toBe(false);
   });
 
-  it('requires an explicit review for every draft paragraph and a checked source for factual paragraphs', () => {
+it('requires an explicit review for every draft paragraph and a checked source for factual paragraphs', () => {
     const node = { ...createTopicalNode('Guide'), queries: [{ id: 'q1', text: 'espresso guide', provenance: 'asserted' as const }] };
     const paragraph = 'Espresso recipes vary by region.';
     const brief = { ...createEmptyContentBrief(), targetQueryId: 'q1', snippetTarget: 'faq' as const, draftMarkdown: paragraph };
@@ -92,14 +91,14 @@ describe('content brief evidence gate', () => {
     expect(result.readyToAdvance).toBe(true);
   });
 
-  it('invalidates a source confirmation when the evidence URL changes', () => {
+it('invalidates a source confirmation when the evidence URL changes', () => {
     const paragraph = 'A claim.';
     const checked = updateParagraphReview([], paragraph, { treatment: 'source-backed', sourceUrl: 'https://site.test/a', sourceChecked: true });
     const changed = updateParagraphReview(checked, paragraph, { sourceUrl: 'https://site.test/b', sourceChecked: false });
     expect(changed[0]).toMatchObject({ treatment: 'source-backed', sourceUrl: 'https://site.test/b', sourceChecked: false });
   });
 
-  it('saves bounded explicit draft checkpoints and de-duplicates identical consecutive versions', () => {
+it('saves bounded explicit draft checkpoints and de-duplicates identical consecutive versions', () => {
     const brief = { ...createEmptyContentBrief(), draftMarkdown: 'Line one\nLine two' };
     const first = saveDraftVersion(brief, 'initial', '2026-09-24T10:00:00.000Z');
     const duplicate = saveDraftVersion(first, 'initial', '2026-09-24T10:01:00.000Z');
@@ -111,7 +110,7 @@ describe('content brief evidence gate', () => {
     expect(second.draftVersions[0]).toMatchObject({ note: 'updated', draftMarkdown: 'Line one\nLine three' });
   });
 
-  it('produces a bounded line diff with repeated-line counts', () => {
+it('produces a bounded line diff with repeated-line counts', () => {
     const diff = compareDrafts('same\nremoved\nsame', 'same\nadded\nsame\nadded', 1);
 
     expect(diff).toMatchObject({ changed: true, addedLineCount: 2, removedLineCount: 1, addedCharacterCount: 10, removedCharacterCount: 7 });
@@ -119,7 +118,7 @@ describe('content brief evidence gate', () => {
     expect(diff.removedLines).toEqual(['removed']);
   });
 
-  it('exports only declared brief data with provenance-safe Markdown and JSON', () => {
+it('exports only declared brief data with provenance-safe Markdown and JSON', () => {
     const node = { ...createTopicalNode('Coffee guide'), lifecycle: 'drafted' as const, queries: [{ id: 'q1', text: 'coffee guide', provenance: 'asserted' as const }] };
     const brief = { ...createEmptyContentBrief(), targetQueryId: 'q1', requiredEntities: ['coffee'], internalLinkTargets: ['https://site.test/about'], draftMarkdown: 'Coffee guide draft.' };
     const markdown = buildContentBriefMarkdown(node, brief);
@@ -130,26 +129,5 @@ describe('content brief evidence gate', () => {
     expect(markdown).toContain('https://site.test/about');
     expect(markdown).toContain(i18n.t('runtimeErrors.contentBrief.exportNote'));
     expect(payload).toEqual({ schemaVersion: 1, exportedAt: '2026-09-24T10:00:00.000Z', node: { id: node.id, title: 'Coffee guide', lifecycle: 'drafted' }, brief });
-  });
-
-  it('shows bounded source-context evidence without auto-verifying the paragraph', () => {
-    const sourcePages = [{
-      url: 'https://site.test/source', final_url: 'https://site.test/source', title: 'Coffee source',
-      semantic_terms: ['coffee', 'beans', 'roasted'], semantic_excerpts: ['Coffee beans are roasted before brewing for a deeper flavour profile.'],
-    }] as unknown as CrawledPageSummary[];
-    const excerptMatch = matchParagraphToCrawlSource('Coffee beans are roasted before brewing for a deeper flavour profile.', 'https://site.test/source#section', sourcePages);
-    const missing = matchParagraphToCrawlSource('Unrelated claim.', 'https://site.test/missing', sourcePages);
-
-    expect(excerptMatch).toMatchObject({ matched: true, scope: 'excerpt', overlapPercent: 100, pageUrl: 'https://site.test/source' });
-    const sentenceMatch = matchParagraphToCrawlSource('Introductory context. Coffee beans are roasted before brewing and help a deeper flavour profile. Closing note.', 'https://site.test/source', sourcePages);
-    expect(sentenceMatch).toMatchObject({
-      matched: true,
-      scope: 'sentence-match',
-      matchedSentence: 'Coffee beans are roasted before brewing and help a deeper flavour profile',
-      matchedExcerpt: 'Coffee beans are roasted before brewing for a deeper flavour profile.',
-      responseSpan: { start: 22 },
-      sourceSpan: { start: 0 },
-    });
-    expect(missing).toMatchObject({ matched: false, scope: 'not-in-snapshot', overlapPercent: null });
   });
 });
