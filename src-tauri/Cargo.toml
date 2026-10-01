@@ -21,7 +21,7 @@ name = "desktop_e2e"
 required-features = ["custom-protocol"]
 
 [dependencies]
-tauri = { version = "2", features = ["macos-proxy"] }
+tauri = { version = "2", features = ["macos-proxy", "tracing"] }
 tauri-plugin-dialog = { version = "2.7.0", default-features = false }
 tauri-plugin-updater = "2"
 tauri-plugin-process = "2"
@@ -42,6 +42,8 @@ sha2 = "0.10"
 uuid = { version = "1.11", features = ["v4", "serde"] }
 log = "0.4"
 env_logger = "0.11"
+tracing = "0.1"
+tracing-subscriber = { version = "0.3", default-features = false, features = ["registry"] }
 mime = "0.3"
 encoding_rs = "0.8"
 keyring = { version = "3.6", features = ["apple-native", "windows-native"] }
