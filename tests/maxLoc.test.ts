@@ -40,3 +40,8 @@ it('keeps project backup and notification responsibilities below 150 physical li
  const files=['src/services/projectBackup.ts','src/services/desktopNotifications.ts',...codeFiles('src/services/projectBackup'),...codeFiles('src/services/desktopNotifications')];
  expect(maxLocReport(files).violations).toEqual([]);
 });
+
+it('keeps the export facade and each report responsibility below 150 physical lines',()=>{
+ const files=['src/services/export.ts',...codeFiles('src/services/export')];
+ expect(maxLocReport(files).violations).toEqual([]);
+});

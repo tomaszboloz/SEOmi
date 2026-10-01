@@ -4304,6 +4304,7 @@
     }
   },
   "exportUi": {
+    "invalidPdf": "Generator zwrócił nieprawidłowe dane PDF. Spróbuj ponownie.",
     "labels": {
       "field": "Field",
       "value": "Value",

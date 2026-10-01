@@ -1,7 +1,7 @@
 import { afterEach, expect, it, vi } from 'vitest';
 import { downloadAuditPdf, downloadText } from '@/services/export';
 
-vi.mock('@/services/tauri', () => ({ invokeTauriCommand: vi.fn().mockResolvedValue('JVBERiBmaXh0dXJl') }));
+vi.mock('@/services/tauri', () => ({ invokeTauriCommand: vi.fn().mockResolvedValue('JVBERi0xLjcKZml4dHVyZQ==') }));
 
 afterEach(() => { vi.restoreAllMocks(); vi.useRealTimers(); });
 

@@ -4304,6 +4304,7 @@
     }
   },
   "exportUi": {
+    "invalidPdf": "The generator returned invalid PDF data. Please try again.",
     "labels": {
       "field": "Field",
       "value": "Value",
