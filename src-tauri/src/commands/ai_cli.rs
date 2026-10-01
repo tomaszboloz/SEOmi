@@ -722,8 +722,8 @@ fn cli_response(command: &str, output: &std::process::Output) -> Result<String, 
 #[cfg(test)]
 mod tests {
     use super::{
-        authenticated_output, build_ai_cli_arguments, cli_response, collect_research_output,
-        gemini_research_settings, isolate_process, required_capabilities, ResearchDirectory,
+        authenticated_output, build_ai_cli_arguments, cli_response, gemini_research_settings,
+        isolate_process, required_capabilities, ResearchDirectory,
     };
     use std::ffi::OsStr;
     use std::path::Path;
@@ -869,6 +869,22 @@ mod tests {
         assert!(required_capabilities("claude").contains(&"--safe-mode"));
     }
 
+    // Windows PowerShell cold-start loads .NET. Serializing test fixtures avoids
+    // competing startup work on shared runners. Acquire before starting the
+    // unchanged deadlines; production process execution stays parallel.
+    #[cfg(target_os = "windows")]
+    static FIXTURE_PROCESS_GATE: tokio::sync::Mutex<()> = tokio::sync::Mutex::const_new(());
+
+    async fn collect_fixture_output(
+        process: Command,
+        prompt: &str,
+        deadline: super::Duration,
+    ) -> Result<std::process::Output, String> {
+        #[cfg(target_os = "windows")]
+        let _permit = FIXTURE_PROCESS_GATE.lock().await;
+        super::collect_research_output(process, prompt, deadline).await
+    }
+
     fn fixture_process(unix_script: &str, windows_script: &str) -> Command {
         #[cfg(not(target_os = "windows"))]
         {
@@ -893,7 +909,7 @@ mod tests {
         let prompt =
             "Research & | echo injected; $(whoami) `echo secret` %PATH%\nZażółć gęślą jaźń";
         let process = fixture_process("cat", "[Console]::OutputEncoding = [Text.UTF8Encoding]::new(); [Console]::InputEncoding = [Text.UTF8Encoding]::new(); [Console]::Out.Write([Console]::In.ReadToEnd())");
-        let output = collect_research_output(process, prompt, super::Duration::from_secs(10))
+        let output = collect_fixture_output(process, prompt, super::Duration::from_secs(10))
             .await
             .unwrap();
         assert!(output.status.success());
@@ -903,8 +919,10 @@ mod tests {
     #[tokio::test]
     async fn hung_process_returns_a_timeout_without_waiting_for_its_response() {
         let process = fixture_process("sleep 2", "Start-Sleep -Seconds 2");
+        #[cfg(target_os = "windows")]
+        let _permit = FIXTURE_PROCESS_GATE.lock().await;
         let started = std::time::Instant::now();
-        let error = collect_research_output(process, "", super::Duration::from_millis(50))
+        let error = super::collect_research_output(process, "", super::Duration::from_millis(50))
             .await
             .unwrap_err();
         assert!(error.contains("timed out"));
@@ -917,7 +935,7 @@ mod tests {
             super::env::temp_dir().join(format!("seomi-absent-{}", super::Uuid::new_v4())),
         );
         assert!(
-            collect_research_output(process, "", super::Duration::from_secs(1))
+            collect_fixture_output(process, "", super::Duration::from_secs(1))
                 .await
                 .unwrap_err()
                 .contains("could not start")
@@ -927,7 +945,7 @@ mod tests {
     #[tokio::test]
     async fn nonzero_cli_exit_preserves_the_failure_instead_of_accepting_stdout() {
         let process = fixture_process("printf 'misleading answer'; printf 'login required' >&2; exit 7", "[Console]::Out.Write('misleading answer'); [Console]::Error.Write('login required'); exit 7");
-        let output = collect_research_output(process, "", super::Duration::from_secs(10))
+        let output = collect_fixture_output(process, "", super::Duration::from_secs(10))
             .await
             .unwrap();
         assert!(cli_response("fixture", &output)
@@ -937,7 +955,7 @@ mod tests {
 
     #[tokio::test]
     async fn successful_but_empty_cli_response_is_not_an_answer() {
-        let output = collect_research_output(
+        let output = collect_fixture_output(
             fixture_process("exit 0", "exit 0"),
             "",
             super::Duration::from_secs(10),
@@ -1050,7 +1068,7 @@ mod tests {
             } else {
                 "[Console]::Out.Write('x' * 2097153)"
             };
-            let error = collect_research_output(
+            let error = collect_fixture_output(
                 fixture_process(unix, windows),
                 "",
                 super::Duration::from_secs(10),

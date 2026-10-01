@@ -1060,3 +1060,10 @@ Full local suites:1382frontend cases (including parameterized locale/source chec
 Twenty-one direct component cases verify crawler start readiness, editable scope and request options, independent pause/resume/cancel, environment comparison readiness and errors, masked request-profile credentials, regex text extraction, targeted custom-search changes, filter preview evidence and bounded render wait/lazy-scroll controls. Tests use real session defaults with isolated action callbacks.
 
 Full local suites:1403frontend cases,399Rust,65MCP; build/lint/fmt/strictClippy pass. Coverage:80.84%statements,67.89%branches,80.42%functions,83.28%lines. Native source is unchanged from the preceding measured62.68%lines/57.68%functions.69executed publicTS functions still lack direct static test references; references alone do not prove unit assertions. The original audit remains69/72; frontend/native >99% and complete public-function evidence remain open. CI run36913803666 passed the macOS frontend step that had previously timed out; its complete native/desktop checks still require final verification.
+
+
+### Windows process fixture contention (audit BATCH-3q)
+
+Run36913803666 failed four Windows CLI fixture tests on their ten-second deadlines. Windows PowerShell fixtures now acquire a shared async permit before launching; timeout elapsed-time assertions also start after permit acquisition. Production process concurrency and every deadline/assertion remain unchanged. Parallel .NET startup contention is the working hypothesis; the Windows fix requires fresh CI confirmation.
+
+Full final local suites:1403frontend cases,399Rust,65MCP; build/lint/fmt/strictClippy pass. A fresh source manifest and final LLVM run confirm the same isolated production62.68%native lines/57.68%functions, with no branch instrumentation. Frontend coverage remains80.84%statements/67.89%branches/80.42%functions/83.28%lines. The original audit remains69/72; the new Windows fixture issue is pending remote verification. No release tag has been created.

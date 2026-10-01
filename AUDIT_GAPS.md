@@ -2,7 +2,7 @@
 Audytor: Staff Developer | Data: 2026-10-01
 
 ## Statystyki
-- Zidentyfikowanych luk: 83 (72 pierwotne oraz jedenaście problemów wykrytych podczas testów)
+- Zidentyfikowanych luk: 84 (72 pierwotne oraz dwanaście problemów wykrytych podczas testów)
 - Batchy do wdrożenia: 7
 - Szacowany effort: 20–35 MD; estymacja orientacyjna, do korekty po pomiarze coverage.
 - Baseline: commit 18fa446b13ec3f97db76896bfdf446f97fe80051; 704 frontend / 320 Rust / 27 MCP testów.
@@ -209,3 +209,9 @@ Pomiary bazowego commitu (2026-10-01):
 
 
 - BATCH-3p:21direct UI tests dziewięciu publicznych paneli crawlera (real session defaults, isolated callbacks): editable URL/limit/render mode, unavailable/running start guards, independent pause/resume/cancel, five environment readiness guards/error evidence, masked cookie/proxy fields, saved profile actions, regex extraction lock and targeted search edits/removal, filter diagnostics/included-excluded previews, explicit0 depth, HTTP byte units, URL/query scope controls, boundedrenderdelay/lazyscroll and transportoverride notice. Full suites1403frontend/399Rust/65MCP PASS; build/lint/fmt/strictClippyPASS. Coverage80.84%statements/67.89%branches/80.42%functions/83.28%lines. Nativeproduction source unchanged from verified3o measurement11297/18022lines62.68%,1067/1850functions57.68%, no branch instrumentation. Public inventory535/512executed/16unavailable/7factoryreturned;69executed without directstaticreference, still not complete assertion evidence.80/83FIXED locally,69/72original;022/023/026 nadalPARTIAL. FreshCI6bf7696/run36913803666: macOS frontend stepPASS after originaltimeout fix, desktopruntime/fullnativeCI still pending when recorded. No new tag.
+
+
+- [ ] GAP-084: [DISCOVERED][MEDIUM] WindowsCI/run36913803666/job110542707768: cztery PowerShell process-fixture tests kończą się wspólnym10s timeoutem (literalstdin, nonzeroexit, emptyanswer, outputoverflow), zamiast weryfikować wynik. Status: PARTIAL (BATCH-3q), freshWindows verification pending: test-only async mutex serializuje PowerShell fixtures przed uruchomieniem oryginalnego deadline; timeout-test mierzy elapsed po zdobyciu permit. Produkcyjne przetwarzanie CLI nadal równoległe, limity10s/50ms i wszystkie asercje bez zmian. Konkurencja cold-start .NET jest hipotezą opartą na czterech równoczesnych timeoutach; niepotwierdzona bez nowegoWindowsCI. Testy nie są wyłączone ani retryowane.
+
+
+- BATCH-3q: Windows PowerShell test fixtures acquire a shared async permit before their unchanged deadlines; elapsed-time assertion starts after permit acquisition. All production functions unchanged. Full final suites1403frontend/399Rust/65MCP PASS; build/lint/fmt/strictClippyPASS, final LLVM run has zero warnings. Frontend80.84%statements/67.89%branches/80.42%functions/83.28%lines. Fresh premeasurement source manifest and rawLCOV/rawLLVMJSON validate11297/18022productionlines62.68%,1067/1850functions57.68%, branchesunavailable.80/84FIXED locally,69/72original;084 awaits actualWindowsverification in addition to original022/023/026. CI6bf7696 macOSfrontend andRuststepsPASS; E2Epending. CIba73bd8 frontend/native/securityPASS, platformsstillinprogress at last read. New head requires own checks. No tag.
