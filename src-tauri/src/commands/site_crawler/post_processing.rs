@@ -218,35 +218,6 @@ pub(super) fn annotate_duplicates(pages: &mut [CrawledPageSummary]) {
         }
     }
 
-    let mut descriptions: std::collections::HashMap<String, Vec<usize>> =
-        std::collections::HashMap::new();
-    for (index, page) in pages.iter().enumerate() {
-        if let Some(description) = page
-            .meta_description
-            .as_deref()
-            .map(str::trim)
-            .filter(|value| !value.is_empty())
-        {
-            descriptions
-                .entry(description.to_ascii_lowercase())
-                .or_default()
-                .push(index);
-        }
-    }
-    for indices in descriptions
-        .into_values()
-        .filter(|indices| indices.len() > 1)
-    {
-        for index in indices {
-            let page = &mut pages[index];
-            page.issues.push(CrawledPageIssue {
-                severity: "Warning".into(),
-                message: "Duplicate meta description found in this crawl".into(),
-            });
-            page.issues_count = page.issues.len();
-        }
-    }
-
     let mut fingerprints: std::collections::HashMap<String, Vec<usize>> =
         std::collections::HashMap::new();
     for (index, page) in pages.iter().enumerate() {

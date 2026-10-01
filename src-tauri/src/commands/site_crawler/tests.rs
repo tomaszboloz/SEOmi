@@ -2508,3 +2508,182 @@ fn crawl_social_metadata_keeps_http_links_but_does_not_resolve_non_http_social_v
     assert!(favicons.is_empty());
     assert_eq!(tags[0].content.as_deref(), Some("javascript:alert(1)"));
 }
+
+#[test]
+fn duplicate_descriptions_are_reported_once_per_page() {
+    let mut pages = vec![
+        post_processing_page("https://example.com/a"),
+        post_processing_page("https://example.com/b"),
+        post_processing_page("https://example.com/c"),
+    ];
+    pages[0].meta_description = Some(" Shared description ".into());
+    pages[1].meta_description = Some("shared DESCRIPTION".into());
+    pages[2].meta_description = Some("Distinct description".into());
+    annotate_duplicates(&mut pages);
+    for page in &pages[..2] {
+        assert_eq!(
+            page.issues
+                .iter()
+                .filter(|issue| issue.message == "Duplicate meta description found in this crawl")
+                .count(),
+            1
+        );
+        assert_eq!(page.issues_count, page.issues.len());
+    }
+    assert!(pages[2].issues.is_empty());
+}
+
+#[test]
+fn empty_descriptions_do_not_create_duplicate_findings() {
+    let mut pages = vec![
+        post_processing_page("https://example.com/a"),
+        post_processing_page("https://example.com/b"),
+    ];
+    pages[0].meta_description = Some("  ".into());
+    pages[1].meta_description = Some("".into());
+    annotate_duplicates(&mut pages);
+    assert!(pages
+        .iter()
+        .all(|page| page.issues.is_empty() && page.issues_count == 0));
+}
+
+#[test]
+fn relation_annotation_requires_observed_status_in_rendered_mode() {
+    for (mode, expected) in [("http", Some(0)), ("browser-rendered", None)] {
+        let mut source = post_processing_page("https://example.com/a");
+        source.canonical_targets.push(CrawledCanonicalTarget {
+            url: "https://example.com/b".into(),
+            relation: "other".into(),
+            http_status: None,
+            checked_in_run: false,
+        });
+        source.links.push(serde_json::from_value(serde_json::json!({"target_url":"https://example.com/b","anchor_text":"B","is_internal":true})).unwrap());
+        let mut target = post_processing_page("https://example.com/b");
+        target.http_status = 0;
+        let mut pages = vec![source, target];
+        annotate_page_relations(&mut pages, mode);
+        assert_eq!(pages[0].canonical_targets[0].http_status, expected);
+        assert_eq!(pages[0].links[0].target_http_status, expected);
+        assert_eq!(
+            pages[0]
+                .issues
+                .iter()
+                .filter(|issue| issue.message.contains("Canonical target returned HTTP"))
+                .count(),
+            usize::from(expected.is_some())
+        );
+    }
+}
+
+#[test]
+fn pagination_annotation_distinguishes_reciprocal_missing_and_unobserved_targets() {
+    let link = |relation: &str, url: &str| CrawledPaginationLink {
+        relation: relation.into(),
+        target_url: url.into(),
+        query_parameter_changes: vec![],
+        http_status: None,
+        checked_in_run: false,
+        reciprocal_in_run: None,
+    };
+    for reciprocal in [false, true] {
+        let mut source = post_processing_page("https://example.com/a");
+        source
+            .pagination_links
+            .push(link("next", "https://example.com/b"));
+        source
+            .pagination_links
+            .push(link("prev", "https://example.com/not-crawled"));
+        let mut target = post_processing_page("https://example.com/b");
+        target.http_status = 404;
+        if reciprocal {
+            target
+                .pagination_links
+                .push(link("prev", "https://example.com/a"));
+        }
+        let mut pages = vec![source, target];
+        annotate_page_relations(&mut pages, "http");
+        assert_eq!(pages[0].pagination_links[0].http_status, Some(404));
+        assert_eq!(
+            pages[0].pagination_links[0].reciprocal_in_run,
+            Some(reciprocal)
+        );
+        assert_eq!(pages[0].pagination_links[1].reciprocal_in_run, None);
+        assert!(pages[0].issues.iter().any(|issue| issue
+            .message
+            .contains("Pagination next target returned HTTP 404")));
+        assert_eq!(
+            pages[0]
+                .issues
+                .iter()
+                .filter(|issue| issue.message.contains("has no reciprocal"))
+                .count(),
+            usize::from(!reciprocal)
+        );
+        assert_eq!(pages[0].issues_count, pages[0].issues.len());
+    }
+}
+
+#[test]
+fn amp_annotation_preserves_alignment_and_reports_only_observed_failures() {
+    for (canonical, alignment) in [
+        (None, "missing-canonical"),
+        (
+            Some("https://elsewhere.example"),
+            "canonical-points-elsewhere",
+        ),
+        (Some("https://example.com/a"), "canonical-to-source"),
+    ] {
+        let mut source = post_processing_page("https://example.com/a");
+        source.amp_url = Some("https://example.com/amp".into());
+        let mut amp = post_processing_page("https://example.com/amp");
+        amp.http_status = 404;
+        amp.canonical = canonical.map(str::to_string);
+        let mut pages = vec![source, amp];
+        annotate_page_relations(&mut pages, "http");
+        assert_eq!(pages[0].amp_target_http_status, Some(404));
+        assert!(pages[0].amp_target_checked_in_run);
+        assert_eq!(
+            pages[0].amp_target_canonical_alignment.as_deref(),
+            Some(alignment)
+        );
+        assert!(pages[0]
+            .issues
+            .iter()
+            .any(|issue| issue.message.contains("AMP target returned HTTP 404")));
+        assert_eq!(pages[0].issues_count, pages[0].issues.len());
+    }
+    let mut source = post_processing_page("https://example.com/a");
+    source.amp_url = Some("https://example.com/not-crawled".into());
+    let mut pages = vec![source];
+    annotate_page_relations(&mut pages, "http");
+    assert_eq!(pages[0].amp_target_http_status, None);
+    assert!(!pages[0].amp_target_checked_in_run);
+    assert!(pages[0]
+        .issues
+        .iter()
+        .any(|issue| issue.message.contains("AMP target was not included")));
+}
+
+#[test]
+fn exact_content_duplicate_annotation_updates_each_page_once() {
+    let mut pages = vec![
+        post_processing_page("https://example.com/a"),
+        post_processing_page("https://example.com/b"),
+        post_processing_page("https://example.com/c"),
+    ];
+    pages[0].content_hash = Some("same".into());
+    pages[1].content_hash = Some("same".into());
+    pages[2].content_hash = Some("different".into());
+    annotate_duplicates(&mut pages);
+    for page in &pages[..2] {
+        assert_eq!(
+            page.issues
+                .iter()
+                .filter(|issue| issue.message.contains("Duplicate normalized page content"))
+                .count(),
+            1
+        );
+        assert_eq!(page.issues_count, page.issues.len());
+    }
+    assert!(pages[2].issues.is_empty());
+}

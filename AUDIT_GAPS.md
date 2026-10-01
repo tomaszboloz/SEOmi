@@ -2,7 +2,7 @@
 Audytor: Staff Developer | Data: 2026-10-01
 
 ## Statystyki
-- Zidentyfikowanych luk: 75 (72 pierwotne oraz replay hash, wycieki eksportów i walidacja zapisanych filtrów GSC)
+- Zidentyfikowanych luk: 76 (72 pierwotne oraz replay hash, wycieki eksportów, walidacja filtrów GSC i podwójne duplicate-description findings)
 - Batchy do wdrożenia: 7
 - Szacowany effort: 20–35 MD; estymacja orientacyjna, do korekty po pomiarze coverage.
 - Baseline: commit 18fa446b13ec3f97db76896bfdf446f97fe80051; 704 frontend / 320 Rust / 27 MCP testów.
@@ -179,3 +179,7 @@ Pomiary bazowego commitu (2026-10-01):
 - [x] GAP-075: [DISCOVERED][MEDIUM] readGscFilters przyjmował dowolne enumy i skracał kraj do3znaków (POLAND→pol), tworząc błędne filtry z legacy storage. Status: FIXED (BATCH-3i): search type allow-list identyczna z backendem, device normalizowany i allow-list, country dokładnie3ASCII letters. RED na starym kodzie/GREEN na poprawce;13direct preference tests obejmuje izolację, market/language fallback, intentionally empty query, competitor bounds, corrupt records i orphan writes.
 
 - BATCH-3i: aliasy identifier chains w public-function inventory mapowane do rzeczywistego body, deduplikacja źródła, cykle kończą się bez invented body; factory-returned hooks pozostają bez fikcyjnego execution.2ASTregresje.535TS callables:512executed/16unavailable/7factory-returned,167executed bez direct static reference; reference nadal nie dowodzi assertion. Full suites1050frontend/374Rust/65MCP PASS; build/lint/fmt/strictClippyPASS. Coverage79.26%statements/64.07%branches/75.90%functions/81.76%lines.72/75FIXED,69/72original;022/023/026 nadalPARTIAL. Master fresh API: admins enforced, force/deletion false,5strictchecks.
+
+- [x] GAP-076: [DISCOVERED][MEDIUM] annotate_duplicates dwukrotnie analizował meta descriptions, generując dwa identyczne ostrzeżenia per strona i zawyżając issue count. Status: FIXED (BATCH-3j): usunięty redundantny drugi przebieg; RED expected1/actual2, GREEN duplicate/empty/distinct tests. Nowe crawl results poprawione; historyczne immutable snapshots pozostają zachowane, nowy crawl odświeża wynik.
+
+- BATCH-3j:13direct research persistence tests (bounded12history, dedup timestamps, legacy hydration, invalid metric rejection, actual null/zero, explicit project switch, storage failures);2storage namespace contracts dla wszystkich29exported key helpers.11Rustregresji:5scheduler command/validation/XML tests (macOS;Windows4) i6post-processing findings/observed canonical,pagination,AMP checks. Full suites1065frontend/385Rust/65MCP PASS; build/lint/fmt/strictClippyPASS. Frontend79.29%statements/64.13%branches/75.95%functions/81.76%lines. Fresh isolated native11095/17941lines61.84%,1057/1842functions57.38%, branch instrumentation absent; rawLCOV/JSON/source manifest retained.535TS/512executed/16MCPunavailable/7factoryreturned;129executed bez staticdirectreference, no assertion-proof claim.73/76FIXED,69/72original;022/023/026 nadalPARTIAL. CIea5c865 WindowsPASS po byte-exact fixture fix; macOSruntime nadal w toku.
