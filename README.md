@@ -354,6 +354,8 @@ The loopback API accepts JSON numbers without coercion, caps concurrent audit/cr
 
 MCP provider transports live in `mcp-server/src/providers.ts` behind an injectable fetch/environment contract. JSON must be an object, decoded response bodies have a 2 MiB ceiling, redirects are rejected and HTTP/task failures expose local status messages. Provider tests require no credentials or external requests. Tool input/output schemas remain unchanged.
 
+Static checks run with `npm run lint` (ESLint 10, TypeScript/React correctness rules) and strict native Clippy. CI publishes whole-frontend V8 coverage using `npm run test:coverage`. Declaration-only `src/types/**` is the sole explicit source exclusion. The separate `npm run test:coverage:target` enforces 99.01% statements, lines, branches and functions; it remains an unmet target, not a passing release claim. Rust baseline uses cargo-llvm-cov 0.9.1; its current summary includes inline test modules, so it is not an isolated production-code coverage guarantee. Official release signing still requires repository secrets; the Intel runner is `macos-15-intel`, paired with the explicit x86_64 target.
+
 The ongoing audit and measured coverage baseline are tracked in [AUDIT_GAPS.md](AUDIT_GAPS.md). Passing tests do not establish the >99% coverage target. Run the full frontend, native and MCP suites after every batch.
 
 ### Data boundaries

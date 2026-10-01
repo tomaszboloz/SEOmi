@@ -38,7 +38,7 @@ const httpUrl = (value: string): URL | null => {
   }
 };
 
-const schemaTypeName = (value: string): string => value.trim().split(/[\/#:]/u).filter(Boolean).at(-1) ?? '';
+const schemaTypeName = (value: string): string => value.trim().split(/[/#:]/u).filter(Boolean).at(-1) ?? '';
 
 const observedArticleTypes = (types: string[] | undefined): SchemaArticleType[] => {
   const observed = new Set((types ?? []).map(schemaTypeName));

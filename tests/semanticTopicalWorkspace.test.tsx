@@ -169,7 +169,7 @@ describe('SemanticTopicalWorkspace', () => {
       target: { value: 'NewsArticle' },
     });
 
-    const preview = screen.getByText(/\"@context\": \"https:\/\/schema.org\"/).textContent || '';
+    const preview = screen.getByText(/"@context": "https:\/\/schema.org"/).textContent || '';
     expect(preview).toContain('BreadcrumbList');
     expect(preview).toContain('NewsArticle');
     expect(preview).toContain('Coffee guide');
@@ -220,7 +220,7 @@ describe('SemanticTopicalWorkspace', () => {
     fireEvent.change(screen.getByLabelText('Szkic treści'), { target: { value: 'A coffee guide for careful readers.' } });
     fireEvent.change(screen.getByLabelText('Notatka wersji szkicu'), { target: { value: 'wersja źródłowa' } });
     fireEvent.click(screen.getByRole('button', { name: i18n.t('contentBrief.saveVersion') }));
-    let versioned = JSON.parse(localStorage.getItem('seomi_project_project-brief_topical_map_v1') || '{}');
+    const versioned = JSON.parse(localStorage.getItem('seomi_project_project-brief_topical_map_v1') || '{}');
     expect(versioned.nodes[0].contentBrief.draftVersions).toHaveLength(1);
     fireEvent.change(screen.getByLabelText(i18n.t('contentBrief.classification')), { target: { value: 'source-backed' } });
     fireEvent.change(screen.getByLabelText(i18n.t('contentBrief.sourceUrl')), { target: { value: 'https://example.com/editorial-source' } });

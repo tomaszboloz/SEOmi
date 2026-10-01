@@ -80,10 +80,10 @@ export const SchemaGraphBuilder = ({ document, pages, siteUrl, selectedUrl, incl
         {availablePages.map((item) => <option key={item.url} value={item.url}>{item.title} · {item.url}</option>)}
       </select>
     </label>
-    {page && page.schemaTypes.some((type) => SCHEMA_ARTICLE_TYPES.some((allowed) => type.trim().split(/[\/#:]/u).filter(Boolean).slice(-1)[0] === allowed)) ? <label className="mt-3 block text-[11px] font-medium text-slate-400">{t('schemaUi.detectedArticleType')}
+    {page && page.schemaTypes.some((type) => SCHEMA_ARTICLE_TYPES.some((allowed) => type.trim().split(/[/#:]/u).filter(Boolean).slice(-1)[0] === allowed)) ? <label className="mt-3 block text-[11px] font-medium text-slate-400">{t('schemaUi.detectedArticleType')}
       <select aria-label={t('schemaUi.articleTypeAria')} value={articleType} onChange={(event) => onArticleTypeChange(event.target.value as SchemaArticleType | '')} className="mt-1 h-9 w-full rounded-md border border-slate-700 bg-slate-950 px-2 text-xs text-slate-100 outline-none focus:border-emerald-400">
         <option value="">{t('schemaUi.noArticleType')}</option>
-        {SCHEMA_ARTICLE_TYPES.filter((allowed) => page.schemaTypes.some((type) => type.trim().split(/[\/#:]/u).filter(Boolean).slice(-1)[0] === allowed)).map((type) => <option key={type} value={type}>{type}</option>)}
+        {SCHEMA_ARTICLE_TYPES.filter((allowed) => page.schemaTypes.some((type) => type.trim().split(/[/#:]/u).filter(Boolean).slice(-1)[0] === allowed)).map((type) => <option key={type} value={type}>{type}</option>)}
       </select>
     </label> : null}
     {!availablePages.length ? <p className="mt-3 rounded-md border border-dashed border-slate-700 p-3 text-xs text-slate-500">{t('schemaUi.noPages')}</p>

@@ -42,6 +42,13 @@ export default defineConfig({
     chunkSizeWarningLimit: 600,
   },
   test: {
+    coverage: {
+      provider: 'v8',
+      include: ['src/**/*.{ts,tsx}'],
+      // These files contain declarations only (no executable exports).
+      exclude: ['src/types/**'],
+      reporter: ['text-summary', 'json-summary', 'lcov'],
+    },
     globals: true,
     environment: 'jsdom',
     setupFiles: './tests/setup.ts',

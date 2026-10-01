@@ -14,7 +14,7 @@ Luki wynikają z przeglądu kodu i istniejącej infrastruktury; wpis wskazuje do
 ## Baseline pomiarów
 Pomiary bazowego commitu (2026-10-01):
 - Frontend: 704 testy; statements 76,30% (10011/13119), branches 62,05% (8241/13281), functions 72,94% (2791/3826), lines 79,10% (8281/10468). Vitest V8, include src/**/*.{ts,tsx}, exclude src/types/** (deklaracje).
-- Rust: cargo llvm-cov 0.9.1; regions 67,69% (24193/35741), functions 64,33% (1499/2330), lines 67,64% (16342/24160). Brak danych branch coverage w tym pomiarze.
+- Rust: cargo llvm-cov 0.9.1; regions 67,69% (24193/35741), functions 64,33% (1499/2330), lines 67,64% (16342/24160). Brak danych branch coverage w tym pomiarze. Raport obejmuje inline mod tests; nie jest pomiarem wyłącznie kodu produkcyjnego.
 - Cel >99% nie został osiągnięty w żadnej z tych warstw.
  Wykluczenia muszą być jawne (deklaracje typów i zasoby nie są kodem wykonywalnym). Pełny suite po batchu oznacza frontend, Rust i MCP, dodatkowo build/formatowanie/static analysis.
 
@@ -43,9 +43,9 @@ Pomiary bazowego commitu (2026-10-01):
 - [ ] GAP-020: [MEDIUM] settingsStore dynamicznie importuje auditStore/authStore; auditStore importuje settingsStore. Dowód: `src/stores/settingsStore.ts:74`. Status: OPEN; wymagane testy red/green i rewalidacja.
 
 ## BATCH 3: Testing Infrastructure
-- [ ] GAP-021: [HIGH] Brak mierzonej, wersjonowanej konfiguracji coverage dla całego frontendu. Dowód: `vite.config.ts`. Status: OPEN; wymagane testy red/green i rewalidacja.
-- [ ] GAP-022: [HIGH] Brak bramki >99% statements/lines/branches/functions w CI. Dowód: `.github/workflows/test.yml`. Status: OPEN; wymagane testy red/green i rewalidacja.
-- [ ] GAP-023: [HIGH] Brak natywnego raportu llvm-cov i bramki pokrycia Rust w CI. Dowód: `.github/workflows/test.yml`. Status: OPEN; wymagane testy red/green i rewalidacja.
+- [x] GAP-021: [HIGH] Brak mierzonej, wersjonowanej konfiguracji coverage dla całego frontendu. Dowód: `vite.config.ts`. Status: FIXED (BATCH-7a); konfiguracja i testy bramek CI; lint/build/full suite PASS.
+- [ ] GAP-022: [HIGH] Brak bramki >99% statements/lines/branches/functions w CI. Dowód: `.github/workflows/test.yml`. Status: PARTIAL — ścisły test:coverage:target istnieje i ma cel 99.01%, aktualny pomiar nie przechodzi; CI raportuje coverage, cel nadal OPEN; wymagane testy red/green i rewalidacja.
+- [ ] GAP-023: [HIGH] Brak natywnego raportu llvm-cov i bramki pokrycia Rust w CI. Dowód: `.github/workflows/test.yml`. Status: PARTIAL — pomiar i raport llvm-cov w CI dodane; izolacja kodu produkcyjnego i bramka >99% nadal OPEN; wymagane testy red/green i rewalidacja.
 - [x] GAP-024: [HIGH] Testy MCP odkrywają schematy; brak happy/error testów wszystkich provider tools. Dowód: `mcp-server/test/server.test.mjs`. Status: FIXED (BATCH-2a); wszystkie 18 tools wywołane przez MCP (happy/error/schema), dodatkowe testy scope i evidence filtering.
 - [ ] GAP-025: [HIGH] Brak E2E uruchomionej aplikacji Tauri dla krytycznych przepływów. Dowód: `.github/workflows/test.yml`. Status: OPEN; wymagane testy red/green i rewalidacja.
 - [ ] GAP-026: [MEDIUM] Brak zautomatyzowanej inwentaryzacji publicznych funkcji z dowodem testu. Dowód: `tests/`. Status: OPEN; wymagane testy red/green i rewalidacja.
@@ -77,10 +77,10 @@ Pomiary bazowego commitu (2026-10-01):
 - [x] GAP-046: [MEDIUM] Kod biznesowy/widoki używają any zamiast zweryfikowanych danych providerów. Dowód: `src/components/Performance/PageSpeedWorkspace.tsx:102`. Status: FIXED (BATCH-2b); oddzielono session, hook z kontraktem DI, formatowanie i walidację CrUX; brak any w Performance. Testy UI i helperów.
 
 ## BATCH 7: Documentation & DevOps
-- [ ] GAP-047: [HIGH] Brak sekretów podpisujących: oficjalne instalatory i aktualizacje nie mogą przejść release gate. Dowód: `.github/workflows/release.yml`. Status: OPEN; wymagane testy red/green i rewalidacja.
-- [ ] GAP-048: [MEDIUM] Release używa wycofanego runnera macos-13 dla Intel. Dowód: `.github/workflows/release.yml`. Status: OPEN; wymagane testy red/green i rewalidacja.
-- [ ] GAP-049: [MEDIUM] CI nie uruchamia strict Clippy mimo natywnego kodu produkcyjnego. Dowód: `.github/workflows/test.yml`. Status: OPEN; wymagane testy red/green i rewalidacja.
-- [ ] GAP-050: [MEDIUM] Brak lintera TypeScript/React w scripts i CI. Dowód: `package.json`. Status: OPEN; wymagane testy red/green i rewalidacja.
+- [ ] GAP-047: [HIGH] Brak sekretów podpisujących: oficjalne instalatory i aktualizacje nie mogą przejść release gate. Dowód: `.github/workflows/release.yml`. Status: BLOCKED (external configuration) — gh secret list 2026-10-01 zwróciło pustą listę; podpisanych instalatorów nie można zweryfikować bez rzeczywistych sekretów; wymagane testy red/green i rewalidacja.
+- [x] GAP-048: [MEDIUM] Release używa wycofanego runnera macos-13 dla Intel. Dowód: `.github/workflows/release.yml`. Status: FIXED (BATCH-7a); konfiguracja i testy bramek CI; lint/build/full suite PASS.
+- [x] GAP-049: [MEDIUM] CI nie uruchamia strict Clippy mimo natywnego kodu produkcyjnego. Dowód: `.github/workflows/test.yml`. Status: FIXED (BATCH-7a); konfiguracja i testy bramek CI; lint/build/full suite PASS.
+- [x] GAP-050: [MEDIUM] Brak lintera TypeScript/React w scripts i CI. Dowód: `package.json`. Status: FIXED (BATCH-7a); konfiguracja i testy bramek CI; lint/build/full suite PASS.
 
 ## [DISCOVERED] - Dynamiczne wykrycia
 - [x] GAP-051: [DISCOVERED] [MEDIUM] googlePublicJson tłumiło błędny JSON i zwracało pusty obiekt jako sukces. Dowód przed poprawką: mcp-server/src/index.ts:60. FIXED (BATCH-1b): wymagany JSON object i test błędnego JSON/array/null.
@@ -105,3 +105,4 @@ Pomiary bazowego commitu (2026-10-01):
 - BATCH-4a: lokalne API: liczby bez Number coercion, 4 sloty (1–16), timeouty HTTP, bezpieczne mapowanie wyjątków, X-Request-ID i logi bez danych żądania. RED: 3 regresje potwierdziły status 200 dla błędów i brak ID; GREEN: 708 frontend / 339 Rust / 60 MCP, build/Clippy PASS. GAP-040 tylko PARTIAL (native logging pozostaje).
 - BATCH-4b: storage O(N), limit wejścia backupu przed JSON.parse, wspólny cleanup eksportu. RED: 3 regresje (125250 prac dla 500 wpisów, brak guard przed parse i pozostawiony anchor); GREEN: 714 frontend / 339 Rust / 60 MCP; build/Clippy PASS. Build wykrył union Blob|MediaSource w teście — poprawiono narrowing i powtórzono build oraz test lifecycle. GAP-054/055 odkryte i naprawione.
 - BATCH-2b: PageSpeed rozdzielony na view/session/hook/formatting/CrUX evidence. RED: niepełny okres wywracał UI, false p75 dawało zero, równoległe PSI+CrUX gubiło snapshot; GREEN: 733 frontend / 339 Rust / 60 MCP, build/Clippy PASS. Nowy hook ma DI i bezpośredni test; wszystkie publiczne helpery mają testy.
+- BATCH-7a: ESLint 10 correctness gate (bez broad any gate), strict Clippy w CI, coverage frontend/native artefakty, manualny cel 99.01%; runner macos-15-intel potwierdzony w actions/runner-images README na żywo. 734 frontend / 339 Rust / 60 MCP; lint/build/Clippy PASS. Coverage frontend (ścisły run celu): statements 77.20%, branches 62.47%, functions 73.89%, lines 79.93% — cel >99% NIEOSIĄGNIĘTY. Świeży cargo-llvm-cov: regions 68.56%, functions 65.65%, lines 68.49%; pomiar obejmuje inline test modules, nie jest izolowanym pokryciem kodu produkcyjnego. Sekrety signing nadal zewnętrznym blockerem.

@@ -13,6 +13,11 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - uses: dtolnay/rust-toolchain@stable
+        with:
+          components: clippy, llvm-tools-preview
+      - uses: taiki-e/install-action@v2
+        with:
+          tool: cargo-llvm-cov@0.9.1
       - name: Cache Cargo dependencies
         uses: actions/cache@v4
         with:
@@ -25,8 +30,16 @@ jobs:
           key: ${{ runner.os }}-cargo-${{ hashFiles('**/Cargo.lock') }}
       - name: Check Rust formatting
         run: cargo fmt --manifest-path src-tauri/Cargo.toml --check
-      - name: Run Cargo Test
-        run: cargo test --manifest-path src-tauri/Cargo.toml
+      - name: Strict Clippy
+        run: cargo clippy --manifest-path src-tauri/Cargo.toml --all-targets -- -D warnings
+      - name: Run Cargo Test with coverage
+        run: cargo llvm-cov --manifest-path src-tauri/Cargo.toml --lcov --output-path coverage-rust.lcov
+      - name: Upload native coverage
+        uses: actions/upload-artifact@v4
+        with:
+          name: native-coverage
+          path: coverage-rust.lcov
+          retention-days: 14
 
   test-frontend:
     name: Frontend TypeScript, i18n & Vitest
@@ -51,8 +64,16 @@ jobs:
           cache: 'npm'
       - name: Install dependencies
         run: npm ci
-      - name: Run Vitest unit tests
-        run: npm test
+      - name: Lint TypeScript and React
+        run: npm run lint
+      - name: Run Vitest with full frontend coverage
+        run: npm run test:coverage
+      - name: Upload frontend coverage
+        uses: actions/upload-artifact@v4
+        with:
+          name: frontend-coverage
+          path: coverage/
+          retention-days: 14
       - name: Typecheck & Production Bundle
         run: npm run build
 
