@@ -170,8 +170,10 @@ fn load_crawl_history_with_recovery(path: &Path) -> Result<Value, String> {
             // damaged destination (for example, a transient filesystem lock).
             // The warning is intentionally non-fatal so the user can inspect
             // and re-save the history instead of losing access to it.
-            if let Err(error) = replace_file(&backup, path) {
-                log::warn!("Unable to replace damaged crawl history with backup: {error}");
+            if replace_file(&backup, path).is_err() {
+                crate::utils::logging::diagnostic(
+                    crate::utils::logging::Diagnostic::CrawlBackupRestoreFailed,
+                );
             }
             Ok(recovered)
         }
@@ -213,13 +215,13 @@ pub fn save_project_crawl_runs(
     // Older versions kept a full-size backup beside every history file. Remove
     // any leftover copy after the new atomic replacement has safely completed.
     let backup = directory.join("crawl_runs.json.bak");
-    if backup.exists() {
-        if let Err(error) = fs::remove_file(&backup) {
-            // The atomic replacement already committed the new history. A
-            // stale recovery copy can consume disk space, but must not make a
-            // successful save look failed and trigger a misleading retry.
-            log::warn!("Unable to remove stale crawl-history backup: {error}");
-        }
+    if backup.exists() && fs::remove_file(&backup).is_err() {
+        // The atomic replacement already committed the new history. A
+        // stale recovery copy can consume disk space, but must not make a
+        // successful save look failed and trigger a misleading retry.
+        crate::utils::logging::diagnostic(
+            crate::utils::logging::Diagnostic::CrawlBackupCleanupFailed,
+        );
     }
     Ok(())
 }

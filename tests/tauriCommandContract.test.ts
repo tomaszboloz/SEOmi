@@ -37,7 +37,7 @@ const fallbackDesktopCommands = (): Set<string> => {
 
 const registeredCommands = (): Set<string> => {
   const source = readFileSync(rustEntryPoint, 'utf8');
-  const handler = source.match(/generate_handler!\[([\s\S]*?)\]\)/)?.[1] ?? '';
+  const handler = source.match(/generate_handler!\[([\s\S]*?)\]/)?.[1] ?? '';
   return new Set([...handler.matchAll(/::([A-Za-z_][A-Za-z0-9_]*)\s*,/g)].map((match) => match[1]));
 };
 
