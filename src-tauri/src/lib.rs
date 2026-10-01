@@ -8,7 +8,13 @@ use tauri::{Builder, Manager};
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
 pub fn run() {
     utils::logging::init();
+    desktop_builder()
+        .run(tauri::generate_context!())
+        .expect("Error while running SEOmi desktop application");
+}
 
+/// Shared production composition root, also exercised by the real desktop E2E binary.
+pub fn desktop_builder() -> Builder<tauri::Wry> {
     Builder::default()
         .plugin(tauri_plugin_dialog::init())
         .plugin(tauri_plugin_updater::Builder::new().build())
@@ -131,6 +137,4 @@ pub fn run() {
             }
             Ok(())
         })
-        .run(tauri::generate_context!())
-        .expect("Error while running SEOmi desktop application");
 }

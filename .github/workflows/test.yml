@@ -101,6 +101,16 @@ jobs:
         run: cargo test --manifest-path src-tauri/Cargo.toml
       - name: Compile Tauri desktop application without bundling
         run: npm run tauri -- build --debug --no-bundle
+      - name: Launch actual desktop runtime E2E
+        run: npm run test:desktop
+      - name: Upload desktop runtime evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: desktop-e2e-${{ matrix.os }}
+          path: test-results/desktop-e2e.json
+          if-no-files-found: warn
+          retention-days: 14
 
   dependency-security:
     name: Dependency Vulnerability Scan & SBOM

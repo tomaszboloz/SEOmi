@@ -192,6 +192,7 @@ export const App: React.FC = () => {
           setActiveTab('overview');
           const fallbackHash = buildWorkspaceHash({ projectId: activeProjectId, tab: 'overview' });
           if (fallbackHash && window.location.hash !== fallbackHash) {
+            handledWorkspaceHash.current = fallbackHash;
             window.history.replaceState(
               null,
               '',
@@ -244,6 +245,9 @@ export const App: React.FC = () => {
     }
     const nextHash = buildWorkspaceHash({ projectId: activeProjectId, tab: activeTab });
     if (!nextHash || currentHash === nextHash) return;
+    // replaceState does not emit hashchange. This address describes state we
+    // already applied, so a later project switch must not replay it as a link.
+    handledWorkspaceHash.current = nextHash;
     window.history.replaceState(null, '', `${window.location.pathname}${window.location.search}${nextHash}`);
   }, [activeProjectId, activeTab, projects]);
 

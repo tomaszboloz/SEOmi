@@ -148,6 +148,24 @@ describe('App workspace deep-link integration', () => {
     }
   });
 
+  it('keeps repeated manual project switches authoritative over internally written hashes', async () => {
+    render(<App />);
+    await waitFor(() => {
+      expect(useProjectStore.getState().activeProjectId).toBe('project-b');
+      expect(useAuditStore.getState().activeTab).toBe('keyword-research');
+    });
+    for (const [projectId, tab] of [['project-a', 'overview'], ['project-b', 'keyword-research'], ['project-a', 'overview']] as const) {
+      fireEvent.change(screen.getByRole('combobox', { name: /active project/i }), {
+        target: { value: projectId },
+      });
+      await waitFor(() => {
+        expect(useProjectStore.getState().activeProjectId).toBe(projectId);
+        expect(useAuditStore.getState().activeTab).toBe(tab);
+        expect(window.location.hash).toBe(buildWorkspaceHash({ projectId, tab }));
+      });
+    }
+  });
+
   it('normalizes an invalid workspace hash to the active project route', async () => {
     window.location.hash = '#workspace?project=project-a&tab=not-a-route';
     useProjectStore.setState({ activeProjectId: 'project-a' });

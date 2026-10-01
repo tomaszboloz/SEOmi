@@ -13,6 +13,13 @@ crate-type = ["staticlib", "cdylib", "rlib"]
 [build-dependencies]
 tauri-build = { version = "2", features = [] }
 
+[features]
+custom-protocol = ["tauri/custom-protocol"]
+
+[[example]]
+name = "desktop_e2e"
+required-features = ["custom-protocol"]
+
 [dependencies]
 tauri = { version = "2", features = ["macos-proxy"] }
 tauri-plugin-dialog = { version = "2.7.0", default-features = false }

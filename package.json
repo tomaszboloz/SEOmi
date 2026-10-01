@@ -9,6 +9,7 @@
     "preview": "vite preview",
     "tauri": "tauri",
     "test": "vitest run",
+    "test:desktop": "node scripts/run-desktop-e2e.mjs",
     "lint": "eslint src tests mcp-server/src --max-warnings 0",
     "test:coverage": "vitest run --coverage",
     "test:coverage:target": "vitest run --coverage --coverage.thresholds.statements=99.01 --coverage.thresholds.lines=99.01 --coverage.thresholds.branches=99.01 --coverage.thresholds.functions=99.01"
