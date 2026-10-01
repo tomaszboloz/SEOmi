@@ -1,3 +1,4 @@
+import { prepareBacklinkGapDomains } from './contracts/researchDomain.js';
 import { McpServer } from '@modelcontextprotocol/sdk/server/mcp.js';
 import { createRequire } from 'node:module';
 import { z } from 'zod';
@@ -279,9 +280,7 @@ export const createSeoMiServer = (dependencies: ServerDependencies = {}): McpSer
     annotations: readOnly,
   }, async ({ target, competitors, include_subdomains, offset, limit }) => {
     try {
-      const normalizedTarget = target.trim().toLowerCase().replace(/^https?:\/\//, '').replace(/^www\./, '').replace(/\/.*$/, '');
-      const normalizedCompetitors = [...new Set(competitors.map((value) => value.trim().toLowerCase().replace(/^https?:\/\//, '').replace(/^www\./, '').replace(/\/.*$/, '')).filter((value) => value && value !== normalizedTarget))];
-      if (!normalizedCompetitors.length) throw new Error('Add at least one competitor domain different from the target.');
+      const { target: normalizedTarget, competitors: normalizedCompetitors } = prepareBacklinkGapDomains(target, competitors);
       const targets = Object.fromEntries(normalizedCompetitors.map((domain, index) => [String(index + 1), domain]));
       return textResult(await dataForSeo('/v3/backlinks/domain_intersection/live', [{
         targets,

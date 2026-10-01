@@ -2,7 +2,7 @@
 Audytor: Staff Developer | Data: 2026-10-01
 
 ## Statystyki
-- Zidentyfikowanych luk: 71
+- Zidentyfikowanych luk: 72
 - Batchy do wdrożenia: 7
 - Szacowany effort: 20–35 MD; estymacja orientacyjna, do korekty po pomiarze coverage.
 - Baseline: commit 18fa446b13ec3f97db76896bfdf446f97fe80051; 704 frontend / 320 Rust / 27 MCP testów.
@@ -72,7 +72,7 @@ Pomiary bazowego commitu (2026-10-01):
 - [x] GAP-041: [MEDIUM] Domyślny user agent Rust chrome_desktop nie odpowiada frontendowemu chrome_mac. Dowód: `src-tauri/src/models/config.rs:34`. Status: FIXED (BATCH-1c); walidacja konfiguracji, ograniczony odczyt, atomowy zapis i testy błędów/recovery; pełny suite PASS.
 - [ ] GAP-042: [MEDIUM] readJsonStorage<T> zwraca JSON as T bez walidacji runtime kontraktu. Dowód: `src/services/storage.ts:46`. Status: PARTIAL (BATCH-6a/6b): Performance oraz raporty Domain/Backlinks/AI odczytują unknown i walidują pełne kontrakty; pozostałe generyczne wywołania, m.in. crawl settings/results, wymagają domknięcia kontraktów.
 - [x] GAP-043: [MEDIUM] Local API konwertuje timeout/max_pages/max_depth Number(), przyjmując stringi/bool zamiast typów kontraktu. Dowód: `mcp-server/src/localApi.ts:94`. Status: FIXED (BATCH-4a); testy integracyjne HTTP: typy, limit konkurencji, safe errors i korelacja/logi; pełny suite PASS.
-- [ ] GAP-044: [MEDIUM] Frontend i MCP duplikują reguły rynków, typy wyników i normalizację domen. Dowód: `src/services/dataforseo.ts; mcp-server/src/index.ts`. Status: OPEN; wymagane testy red/green i rewalidacja.
+- [x] GAP-044: [MEDIUM] Frontend i MCP miały osobne reguły normalizacji domen dla backlink gap. Rewalidacja zawęża pierwotny wpis: frontendowy katalog rynku i DTO oraz surowe odpowiedzi MCP mają odrębne kontrakty, nie potwierdzono ich identycznej duplikacji. Dowód: `src/services/dataforseo.ts; mcp-server/src/server.ts`. Status: FIXED (BATCH-6c): wspólny pure contract researchDomain, lokalizowany adapter frontendowy, protocol regressions i architecture guard. Katalog rynku/format narzędzi zachowany.
 - [x] GAP-045: [LOW] downloadText/downloadPdf duplikują cykl życia Blob URL i elementu anchor. Dowód: `src/services/export.ts:39`. Status: FIXED (BATCH-4b); regresje kosztu enumeracji, limitu przed JSON.parse i lifecycle text/PDF. Pełny suite/build PASS.
 - [x] GAP-046: [MEDIUM] Kod biznesowy/widoki używają any zamiast zweryfikowanych danych providerów. Dowód: `src/components/Performance/PageSpeedWorkspace.tsx:102`. Status: FIXED (BATCH-2b); oddzielono session, hook z kontraktem DI, formatowanie i walidację CrUX; brak any w Performance. Testy UI i helperów.
 
@@ -113,6 +113,8 @@ Pomiary bazowego commitu (2026-10-01):
 - [x] GAP-070: [DISCOVERED] [HIGH] Wadliwa historia AI powodowała crash hydration (.timestamp na null), a input draft przyjmował object/boolean/number do tekstowego state. Status: FIXED (BATCH-6b): niezależne filtrowanie historii, limity/legacy compatibility, string-only draft i unknown settings normalizer; testy project hydration i nested observations.
 - [x] GAP-071: [DISCOVERED] [MEDIUM] Pusty zapisany draft AI był zastępowany poprzednim raportem przez truthy fallback, przywracając świadomie usunięte zapytanie. Status: FIXED (BATCH-6b): nullish fallback zachowuje puste stringi; regresja RED/GREEN z zapisanym raportem.
 
+- [x] GAP-072: [DISCOVERED] [HIGH] Regex normalizacji MCP backlink gap wysyłał do zewnętrznego providera host z credentials, portem lub wadliwą składnią, błędnie deduplikując IDN. Dowód RED: 5 testów MCP (credential/scheme/localhost/malformed/IDN). Status: FIXED (BATCH-6c): URL contract bez ujawniania input w błędach; invalid inputs odrzucane przed providerem, dedup po normalizacji. To żądanie provider research, nie bezpośredni fetch badanego hosta.
+
 ## Dziennik batchy
 - BATCH-0: audyt bazowy: 50 wpisów; pomiary frontend/Rust ukończone, cel >99% pozostaje OPEN.
 - BATCH-1a: transport HTTP. RED: nowe testy kontraktu nie kompilowały się przed dodaniem granicy resolvera. GREEN: 704 frontend / 330 Rust / 27 MCP; build frontend + MCP, rustfmt i strict Clippy. Test strumieniowego timeoutu ujawnił konkurujące deadline'y; naprawiono i ponowiono pełny Rust suite. Brak zmian IPC/migracji.
@@ -132,3 +134,5 @@ Pomiary bazowego commitu (2026-10-01):
 - BATCH-2e: natywne ekstraktory HTML i reguły SEO oddzielone od składania dokumentu/raportu; testy przy usługach. Charakterystyka wspólnego parsera GREEN przed refaktoryzacją, 2 architecture guards RED. Sweep ujawnił panic invalid URL (GAP-068 RED/GREEN). GREEN: 793 frontend / 350 Rust / 60 MCP, build/lint/rustfmt/Clippy PASS. Compiler ujawnił współdzieloną zależność visibility; wyodrębniono markup zamiast cyklu content/accessibility. GAP-015/016/068 FIXED; publiczne API i serializacja zgodne.
 
 - BATCH-6b: runtime walidacja zapisanych Domain/Backlinks/AI, recovery pojedynczych rekordów, bounded histories, string drafts i unknown settings. RED: 4 wcześniejsze reprodukcje crash/wrong-state + cleared draft przywracany po hydration; GREEN: 861 frontend / 350 Rust / 60 MCP, build/lint/Clippy PASS. GAP-069/070/071 FIXED; GAP-042 nadal PARTIAL. Świeże CI dla be94224: wszystkie 5 jobs PASS. Brak zmiany IPC/DB schema.
+
+- BATCH-6c: wspólny frontend/MCP domain contract i backlink-gap target preparation. Frontend characterization GREEN przed ekstrakcją; pięć MCP protocol regresji RED/GREEN. GREEN: 881 frontend / 350 Rust / 65 MCP; build/lint/Clippy PASS. Lint ujawnił missing cause przy lokalizacji, poprawiono i ponowiono lint oraz pełny frontend coverage run. Coverage: statements77.38%, branches62.65%, functions74.03%, lines80.06%; denominator obejmuje teraz również współdzielony contract w mcp-server/src/contracts. GAP-044/072 FIXED; cel >99% NIEOSIĄGNIĘTY.

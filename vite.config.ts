@@ -44,7 +44,7 @@ export default defineConfig({
   test: {
     coverage: {
       provider: 'v8',
-      include: ['src/**/*.{ts,tsx}'],
+      include: ['src/**/*.{ts,tsx}', 'mcp-server/src/contracts/**/*.ts'],
       // These files contain declarations only (no executable exports).
       exclude: ['src/types/**'],
       reporter: ['text-summary', 'json-summary', 'lcov'],

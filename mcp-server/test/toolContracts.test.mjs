@@ -130,3 +130,28 @@ test('public target validation failures stop Google performance transport', asyn
     assert.equal(calls, 0);
   });
 });
+
+
+test('backlink gap normalizes ports, trailing dots and IDN before calling the provider', async () => {
+  const requests = [];
+  await withClient({ providers: { dataForSeo: async (endpoint, body) => { requests.push({ endpoint, body }); return {}; } } }, async (client) => {
+    const result = await client.callTool({ name: 'seomi_research_backlink_gap', arguments: {
+      target: 'https://WWW.Example.com.:443/path?query=1', competitors: ['https://www.bücher.de:8443/path', 'xn--bcher-kva.de'],
+    } });
+    assert.equal(result.isError, false);
+    assert.deepEqual(requests[0].body[0].targets, { '1': 'xn--bcher-kva.de' });
+    assert.deepEqual(requests[0].body[0].exclude_targets, ['example.com']);
+  });
+});
+
+for (const target of ['https://user:secret@example.com', 'ftp://example.com', 'localhost', 'https://[broken']) {
+  test(`backlink gap rejects invalid target before provider: ${target}`, async () => {
+    let calls = 0;
+    await withClient({ providers: { dataForSeo: async () => { calls++; return {}; } } }, async (client) => {
+      const result = await client.callTool({ name: 'seomi_research_backlink_gap', arguments: { target, competitors: ['other.example'] } });
+      assert.equal(result.isError, true);
+      assert.equal(calls, 0);
+      assert.equal(JSON.stringify(result).includes('secret'), false);
+    });
+  });
+}

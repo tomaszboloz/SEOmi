@@ -1,3 +1,4 @@
+import { normalizeResearchDomain, prepareBacklinkGapDomains, ResearchDomainError } from '../../mcp-server/src/contracts/researchDomain.js';
 import {
   BacklinkAnchorDistribution,
   BacklinkItem,
@@ -212,15 +213,15 @@ const retryDelayMs = (error: DataForSeoRequestError, attempt: number): number =>
 const wait = (milliseconds: number): Promise<void> => new Promise((resolve) => globalThis.setTimeout(resolve, milliseconds));
 const nullableIntent = (value: unknown): SearchIntent | null => typeof value === 'string' && value.trim() ? intent(value) : null;
 
-export const normalizeDataForSeoDomain = (value: string): string => {
-  const trimmed = value.trim();
-  if (!trimmed) throw new Error(i18n.t('runtimeErrors.dataforseo.domainRequired'));
-  const url = new URL(/^[a-z][a-z0-9+.-]*:\/\//i.test(trimmed) ? trimmed : `https://${trimmed}`);
-  if (!['http:', 'https:'].includes(url.protocol) || url.username || url.password) throw new Error(i18n.t('runtimeErrors.dataforseo.domainCredentials'));
-  const hostname = url.hostname.toLowerCase().replace(/^www\./, '').replace(/\.$/, '');
-  if (!hostname || hostname === 'localhost' || !hostname.includes('.')) throw new Error(i18n.t('runtimeErrors.dataforseo.domainInvalid'));
-  return hostname;
+const localizedDomainOperation = <T>(operation: () => T): T => {
+  try { return operation(); }
+  catch (error) {
+    if (error instanceof ResearchDomainError) throw new Error(i18n.t(`runtimeErrors.dataforseo.${error.code}`), { cause: error });
+    throw error;
+  }
 };
+
+export const normalizeDataForSeoDomain = (value: string): string => localizedDomainOperation(() => normalizeResearchDomain(value));
 
 const legacyMarketCodes: Record<string, string> = {
   'united states': 'US',
@@ -515,10 +516,7 @@ export class DataForSEOClient {
   }
 
   async getBacklinkGapPage(target: string, competitors: string[], offset = 0, limit = BACKLINK_PAGE_SIZE, includeSubdomains = true): Promise<DataForSeoPage<BacklinkGapOpportunity>> {
-    const normalizedTarget = normalizeDataForSeoDomain(target);
-    const normalizedCompetitors = Array.from(new Set(competitors.map(normalizeDataForSeoDomain).filter((domain) => domain !== normalizedTarget)));
-    if (!normalizedCompetitors.length) throw new Error(i18n.t('runtimeErrors.dataforseo.competitorRequired'));
-    if (normalizedCompetitors.length > 19) throw new Error(i18n.t('runtimeErrors.dataforseo.competitorLimit'));
+    const { target: normalizedTarget, competitors: normalizedCompetitors } = localizedDomainOperation(() => prepareBacklinkGapDomains(target, competitors));
     const targetsById = Object.fromEntries(normalizedCompetitors.map((domain, index) => [String(index + 1), domain]));
     const safeOffset = Math.max(0, Math.trunc(offset));
     const safeLimit = Math.min(1000, Math.max(1, Math.trunc(limit) || BACKLINK_PAGE_SIZE));

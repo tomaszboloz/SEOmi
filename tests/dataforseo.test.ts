@@ -1,5 +1,5 @@
 import { afterEach, describe, expect, it, vi } from 'vitest';
-import { DATAFORSEO_LANGUAGES, DATAFORSEO_MARKETS, DataForSEOClient, dataForSeoMarket, dataForSeoLanguage, dataForSeoLocation, readDataForSeoTaskLog } from '../src/services/dataforseo';
+import { DATAFORSEO_LANGUAGES, DATAFORSEO_MARKETS, DataForSEOClient, dataForSeoMarket, dataForSeoLanguage, dataForSeoLocation, readDataForSeoTaskLog, normalizeDataForSeoDomain } from '../src/services/dataforseo';
 import { DATAFORSEO_LOCATION_CATALOG } from '../src/services/dataforseoCatalog';
 
 const { invokeMock } = vi.hoisted(() => ({ invokeMock: vi.fn() }));
@@ -368,5 +368,17 @@ describe('DataForSEO feedback regressions', () => {
     expect(result.top_keywords).toHaveLength(1);
     expect(result.top_pages[0].traffic_percentage).toBe(50);
     expect(result.competitors.map((item) => item.domain)).toEqual(['competitor.test']);
+  });
+});
+
+
+describe('domain normalization contract before consolidation', () => {
+  it.each([
+    ['https://WWW.Example.com.:443/path?query=1', 'example.com'],
+    ['https://www.bücher.de:8443/path', 'xn--bcher-kva.de'],
+    [' Example.COM ', 'example.com'],
+  ])('normalizes %s', (value, expected) => expect(normalizeDataForSeoDomain(value)).toBe(expected));
+  it.each(['', 'localhost', 'ftp://example.com', 'https://user:secret@example.com', 'https://[broken'])('rejects %s', (value) => {
+    expect(() => normalizeDataForSeoDomain(value)).toThrow();
   });
 });
