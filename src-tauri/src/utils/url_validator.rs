@@ -1,6 +1,6 @@
 use std::net::IpAddr;
 use thiserror::Error;
-use url::Url;
+use url::{Host, Url};
 
 #[derive(Error, Debug, PartialEq, Eq)]
 pub enum UrlValidationError {
@@ -62,7 +62,12 @@ pub fn validate_and_normalize_url(input: &str) -> Result<Url, UrlValidationError
     }
 
     // Check if host is an IP address
-    if let Ok(ip) = host_lower.parse::<IpAddr>() {
+    let literal_ip = match parsed.host() {
+        Some(Host::Ipv4(ip)) => Some(IpAddr::V4(ip)),
+        Some(Host::Ipv6(ip)) => Some(IpAddr::V6(ip)),
+        _ => None,
+    };
+    if let Some(ip) = literal_ip {
         if is_private_or_loopback(&ip) {
             return Err(UrlValidationError::BlockedPrivateIp);
         }
@@ -119,6 +124,24 @@ fn is_private_or_loopback(ip: &IpAddr) -> bool {
 #[cfg(test)]
 mod tests {
     use super::*;
+
+    #[test]
+    fn ipv6_literals_reject_local_and_special_addresses() {
+        for target in [
+            "http://[::1]/",
+            "http://[fc00::1]/",
+            "http://[fe80::1]/",
+            "http://[::ffff:127.0.0.1]/",
+            "http://[2001:db8::1]/",
+        ] {
+            assert_eq!(
+                validate_and_normalize_url(target),
+                Err(UrlValidationError::BlockedPrivateIp),
+                "{target}"
+            );
+        }
+        assert!(validate_and_normalize_url("https://[2606:4700:4700::1111]/").is_ok());
+    }
 
     #[test]
     fn test_valid_https_url() {

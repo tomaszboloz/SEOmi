@@ -2,7 +2,7 @@
 Audytor: Staff Developer | Data: 2026-10-01
 
 ## Statystyki
-- Zidentyfikowanych luk: 61
+- Zidentyfikowanych luk: 67
 - Batchy do wdrożenia: 7
 - Szacowany effort: 20–35 MD; estymacja orientacyjna, do korekty po pomiarze coverage.
 - Baseline: commit 18fa446b13ec3f97db76896bfdf446f97fe80051; 704 frontend / 320 Rust / 27 MCP testów.
@@ -100,6 +100,13 @@ Pomiary bazowego commitu (2026-10-01):
 
 - [x] GAP-061: [DISCOVERED] [MEDIUM] Starszy loadConfig nadpisuje nowszą edycję lub przywraca błąd po udanym reloadzie. Dowód: 2 testy RED settingsDependencies (new-agent -> stale-agent; configError null -> błąd). FIXED (BATCH-2c): rewizje odczytów i invalidacja po edycji, brak side effects spóźnionej odpowiedzi.
 
+- [x] GAP-062: [DISCOVERED] [MEDIUM] Resolver audytu przekazuje IPv6 literal z nawiasami do lookup_host i odrzuca prawidłowe publiczne adresy. Dowód: RED literal_addresses_use_their_parsed_ip_and_preserve_ports, DNS lookup failed dla 2606:4700:4700::1111. Status: FIXED (BATCH-1d); typed URL host, wspólny deadline DNS/HEAD i regresje literal IP/private ranges.
+- [x] GAP-063: [DISCOVERED] [HIGH] Walidator URL parsuje host_str jako IpAddr; nawiasy IPv6 powodują pominięcie blokady ::1/ULA/link-local/mapped IPv4. Dowód: RED ipv6_literals_reject_local_and_special_addresses, ::1 zwrócił Ok. Status: FIXED (BATCH-1d); typed URL host, wspólny deadline DNS/HEAD i regresje literal IP/private ranges.
+- [x] GAP-064: [DISCOVERED] [MEDIUM] check_url_status zaczyna timeout HTTP dopiero po DNS, przekraczając zadany całkowity budżet. Dowód: http_client.rs:218–235 przed zmianą; nowy kontrakt testowy deadline DNS/HEAD. Status: FIXED (BATCH-1d); typed URL host, wspólny deadline DNS/HEAD i regresje literal IP/private ranges.
+- [ ] GAP-065: [DISCOVERED] [CRITICAL] Crawler używa osobnego reqwest client bez walidującego resolvera DNS; same URL/redirect guards nie blokują publicznego hosta rozwiązanego do prywatnego IP. Dowód: site_crawler.rs:5194 client_builder oraz request_with_safe_redirects. Status: OPEN; wymagana ochrona połączeń i deterministyczne testy bez internetu. Jawny proxy profile musi zachować udokumentowane opt-in, ambient proxy nie powinien omijać polityki.
+- [ ] GAP-066: [DISCOVERED] [CRITICAL] Canonical HEAD w seo_analyzer buduje osobny client bez kontroli DNS/proxy; canonical obcej strony może wskazać hostname z prywatnym IP. Dowód: seo_analyzer.rs:755–768. Status: OPEN; konieczne użycie wspólnego bezpiecznego HEAD transportu.
+- [ ] GAP-067: [DISCOVERED] [HIGH] Pobranie robots.txt i sitemap używa response.text() bez strumieniowego limitu, niezależnie od limitu HTML crawlera. Dowód: site_crawler.rs:5221,5325. Status: OPEN; wymagane bounded read i testy compressed/chunked/oversize/error evidence.
+
 ## Dziennik batchy
 - BATCH-0: audyt bazowy: 50 wpisów; pomiary frontend/Rust ukończone, cel >99% pozostaje OPEN.
 - BATCH-1a: transport HTTP. RED: nowe testy kontraktu nie kompilowały się przed dodaniem granicy resolvera. GREEN: 704 frontend / 330 Rust / 27 MCP; build frontend + MCP, rustfmt i strict Clippy. Test strumieniowego timeoutu ujawnił konkurujące deadline'y; naprawiono i ponowiono pełny Rust suite. Brak zmian IPC/migracji.
@@ -113,3 +120,4 @@ Pomiary bazowego commitu (2026-10-01):
 - BATCH-7a: ESLint 10 correctness gate (bez broad any gate), strict Clippy w CI, coverage frontend/native artefakty, manualny cel 99.01%; runner macos-15-intel potwierdzony w actions/runner-images README na żywo. 734 frontend / 339 Rust / 60 MCP; lint/build/Clippy PASS. Coverage frontend (ścisły run celu): statements 77.20%, branches 62.47%, functions 73.89%, lines 79.93% — cel >99% NIEOSIĄGNIĘTY. Świeży cargo-llvm-cov: regions 68.56%, functions 65.65%, lines 68.49%; pomiar obejmuje inline test modules, nie jest izolowanym pokryciem kodu produkcyjnego. Sekrety signing nadal zewnętrznym blockerem.
 - BATCH-6a: pełne runtime kontrakty PSI/CrUX przy hydration i live output. RED: 7 regresji (awarie nested evidence i nieodrzucane odpowiedzi); GREEN: 778 frontend / 339 Rust / 60 MCP, build/lint/Clippy PASS. Zod schemas sprawdzane z interfejsami podczas TypeScript build; testy null/zero, typów, finite/range, niezależnego recovery i izolacji projektów. GAP-042 PARTIAL; GAP-059/060 FIXED. PR #15 w draft; frontend/native CI dla BATCH-7a PASS, platform smoke nadal pending w chwili zapisu.
 - BATCH-2c: settings consumer DI i composition root zamiast cyklu importów; kolejki per instance, odłączanie consumerów podczas remount. RED: brak factory/architektura i 2 wyścigi config load; GREEN: 787 frontend / 339 Rust / 60 MCP, build/lint/Clippy PASS. Zachowana synchronizacja user-agent i AI oraz nazwy sekretów/IPC. GAP-020/061 FIXED; ostrzeżenie bundlera o dynamicznym auditStore usunięte.
+- BATCH-1d: IPv6 typed host w walidacji/resolverze i jeden deadline DNS/HEAD. RED: 2 literal tests DNS error, ::1 przechodził validator, brak kontraktu HEAD deadline. GREEN: 787 frontend / 343 Rust / 60 MCP, build/lint/rustfmt/Clippy PASS. Publiczne IP testowane bez połączeń z internetem; HEAD fixture lokalny z injected resolver. Sweep ujawnił GAP-065/066/067, nadal OPEN i priorytet następnego batcha.
