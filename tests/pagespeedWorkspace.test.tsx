@@ -112,6 +112,50 @@ describe('PageSpeed and CrUX workspace', () => {
     expect(screen.getByText('Laboratory data — PageSpeed Insights')).toBeTruthy();
   });
 
+  it('ignores corrupted persisted reports while keeping valid project inputs', () => {
+    localStorage.setItem('seomi_pagespeed_workspace_performance-project', JSON.stringify({
+      url: 'https://example.com/landing', strategy: 'desktop',
+      pageSpeed: { source: 'broken report' }, crux: { source: 'broken field report' },
+    }));
+    expect(() => render(<PageSpeedWorkspace />)).not.toThrow();
+    expect(screen.getByLabelText('Page URL')).toHaveProperty('value', 'https://example.com/landing');
+    expect(screen.getByLabelText('PageSpeed device')).toHaveProperty('value', 'desktop');
+    expect(screen.queryByText('Laboratory data — PageSpeed Insights')).toBeNull();
+    expect(screen.queryByText('Field data — Core Web Vitals')).toBeNull();
+  });
+
+  it.each([
+    { ...psiFixture, metrics: { lcp: null } },
+    { ...psiFixture, opportunities: [{ title: { bad: 'value' } }] },
+    { ...psiFixture, touchTargetAudit: { ...psiFixture.touchTargetAudit, evidence: [null] } },
+    { ...psiFixture, imageOptimizationAudits: [{ ...psiFixture.imageOptimizationAudits![0], evidence: [null] }] },
+  ])('rejects malformed nested persisted Lighthouse data', (pageSpeed) => {
+    localStorage.setItem('seomi_pagespeed_workspace_performance-project', JSON.stringify({ pageSpeed, crux: cruxFixture }));
+    expect(() => render(<PageSpeedWorkspace />)).not.toThrow();
+    expect(screen.queryByText('Laboratory data — PageSpeed Insights')).toBeNull();
+    expect(screen.getByText('Field data — Core Web Vitals')).toBeTruthy();
+  });
+
+  it('reports invalid live Lighthouse output without rendering or saving it', async () => {
+    runPsiMock.mockResolvedValue({ source: 'malformed response' });
+    const { result } = renderHook(() => usePerformanceWorkspace(project.id, project.rootUrl, i18n.t));
+    await act(async () => { await result.current.runPsi(); });
+    expect(result.current.psiError).toBe(i18n.t('pageSpeedUi.psiError'));
+    expect(result.current.session.pageSpeed).toBeNull();
+    expect(result.current.history).toEqual([]);
+    expect(result.current.isRunningPsi).toBe(false);
+  });
+
+  it('reports invalid live CrUX output without rendering or saving it', async () => {
+    queryCruxMock.mockResolvedValue({ ...cruxFixture, response: [] });
+    const { result } = renderHook(() => usePerformanceWorkspace(project.id, project.rootUrl, i18n.t));
+    await act(async () => { await result.current.runCrux(); });
+    expect(result.current.cruxError).toBe(i18n.t('pageSpeedUi.cruxError'));
+    expect(result.current.session.crux).toBeNull();
+    expect(result.current.history).toEqual([]);
+    expect(result.current.isRunningCrux).toBe(false);
+  });
+
   it('does not treat an unavailable Lighthouse touch-target audit as a pass', async () => {
     runPsiMock.mockResolvedValue({ ...psiFixture, touchTargetAudit: null, imageOptimizationAudits: [] });
     render(<PageSpeedWorkspace />);

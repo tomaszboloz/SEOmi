@@ -2,7 +2,7 @@
 Audytor: Staff Developer | Data: 2026-10-01
 
 ## Statystyki
-- Zidentyfikowanych luk: 58
+- Zidentyfikowanych luk: 60
 - Batchy do wdrożenia: 7
 - Szacowany effort: 20–35 MD; estymacja orientacyjna, do korekty po pomiarze coverage.
 - Baseline: commit 18fa446b13ec3f97db76896bfdf446f97fe80051; 704 frontend / 320 Rust / 27 MCP testów.
@@ -70,7 +70,7 @@ Pomiary bazowego commitu (2026-10-01):
 
 ## BATCH 6: Code Quality & Validation
 - [x] GAP-041: [MEDIUM] Domyślny user agent Rust chrome_desktop nie odpowiada frontendowemu chrome_mac. Dowód: `src-tauri/src/models/config.rs:34`. Status: FIXED (BATCH-1c); walidacja konfiguracji, ograniczony odczyt, atomowy zapis i testy błędów/recovery; pełny suite PASS.
-- [ ] GAP-042: [MEDIUM] readJsonStorage<T> zwraca JSON as T bez walidacji runtime kontraktu. Dowód: `src/services/storage.ts:46`. Status: OPEN; wymagane testy red/green i rewalidacja.
+- [ ] GAP-042: [MEDIUM] readJsonStorage<T> zwraca JSON as T bez walidacji runtime kontraktu. Dowód: `src/services/storage.ts:46`. Status: PARTIAL (BATCH-6a): Performance odczytuje unknown i waliduje pełne raporty; pozostałe generyczne wywołania, m.in. toolsStore, wymagają domknięcia kontraktów.
 - [x] GAP-043: [MEDIUM] Local API konwertuje timeout/max_pages/max_depth Number(), przyjmując stringi/bool zamiast typów kontraktu. Dowód: `mcp-server/src/localApi.ts:94`. Status: FIXED (BATCH-4a); testy integracyjne HTTP: typy, limit konkurencji, safe errors i korelacja/logi; pełny suite PASS.
 - [ ] GAP-044: [MEDIUM] Frontend i MCP duplikują reguły rynków, typy wyników i normalizację domen. Dowód: `src/services/dataforseo.ts; mcp-server/src/index.ts`. Status: OPEN; wymagane testy red/green i rewalidacja.
 - [x] GAP-045: [LOW] downloadText/downloadPdf duplikują cykl życia Blob URL i elementu anchor. Dowód: `src/services/export.ts:39`. Status: FIXED (BATCH-4b); regresje kosztu enumeracji, limitu przed JSON.parse i lifecycle text/PDF. Pełny suite/build PASS.
@@ -95,6 +95,9 @@ Pomiary bazowego commitu (2026-10-01):
 - [x] GAP-057: [DISCOVERED] [MEDIUM] Boolean p75 był konwertowany do zera i oceniany Good. Dowód przed zmianą: PageSpeedWorkspace.tsx:95; test RED false -> 0 ms. FIXED (BATCH-2b); regresja RED/GREEN i pełny suite.
 - [x] GAP-058: [DISCOVERED] [MEDIUM] Równoległe zakończenie PSI i CrUX nadpisuje jeden snapshot historii przez stale closure. Dowód: test RED oczekiwał 2 zapisów, dostał 1. FIXED (BATCH-2b); regresja RED/GREEN i pełny suite.
 
+- [x] GAP-059: [DISCOVERED] [HIGH] Uszkodzony zapisany raport PageSpeed/CrUX omija walidację i powoduje awarię widoku (categories.performance, description.split, evidence.label/url). Dowód: 5 testów RED pagespeedWorkspace; performanceSession.ts przyjmował saved.pageSpeed || null. FIXED (BATCH-6a): niezależna walidacja pełnych raportów Zod, zachowanie poprawnych inputs i drugiego raportu.
+- [x] GAP-060: [DISCOVERED] [MEDIUM] Hook Performance ufa typowanym odpowiedziom IPC/DI bez walidacji runtime; wadliwy wynik trafia do sesji i historii jako sukces. Dowód: 2 testy RED oczekiwały błędu zamiast null. FIXED (BATCH-6a): ta sama walidacja przed zapisem i historią, lokalny komunikat błędu, brak fikcyjnych wartości.
+
 ## Dziennik batchy
 - BATCH-0: audyt bazowy: 50 wpisów; pomiary frontend/Rust ukończone, cel >99% pozostaje OPEN.
 - BATCH-1a: transport HTTP. RED: nowe testy kontraktu nie kompilowały się przed dodaniem granicy resolvera. GREEN: 704 frontend / 330 Rust / 27 MCP; build frontend + MCP, rustfmt i strict Clippy. Test strumieniowego timeoutu ujawnił konkurujące deadline'y; naprawiono i ponowiono pełny Rust suite. Brak zmian IPC/migracji.
@@ -106,3 +109,4 @@ Pomiary bazowego commitu (2026-10-01):
 - BATCH-4b: storage O(N), limit wejścia backupu przed JSON.parse, wspólny cleanup eksportu. RED: 3 regresje (125250 prac dla 500 wpisów, brak guard przed parse i pozostawiony anchor); GREEN: 714 frontend / 339 Rust / 60 MCP; build/Clippy PASS. Build wykrył union Blob|MediaSource w teście — poprawiono narrowing i powtórzono build oraz test lifecycle. GAP-054/055 odkryte i naprawione.
 - BATCH-2b: PageSpeed rozdzielony na view/session/hook/formatting/CrUX evidence. RED: niepełny okres wywracał UI, false p75 dawało zero, równoległe PSI+CrUX gubiło snapshot; GREEN: 733 frontend / 339 Rust / 60 MCP, build/Clippy PASS. Nowy hook ma DI i bezpośredni test; wszystkie publiczne helpery mają testy.
 - BATCH-7a: ESLint 10 correctness gate (bez broad any gate), strict Clippy w CI, coverage frontend/native artefakty, manualny cel 99.01%; runner macos-15-intel potwierdzony w actions/runner-images README na żywo. 734 frontend / 339 Rust / 60 MCP; lint/build/Clippy PASS. Coverage frontend (ścisły run celu): statements 77.20%, branches 62.47%, functions 73.89%, lines 79.93% — cel >99% NIEOSIĄGNIĘTY. Świeży cargo-llvm-cov: regions 68.56%, functions 65.65%, lines 68.49%; pomiar obejmuje inline test modules, nie jest izolowanym pokryciem kodu produkcyjnego. Sekrety signing nadal zewnętrznym blockerem.
+- BATCH-6a: pełne runtime kontrakty PSI/CrUX przy hydration i live output. RED: 7 regresji (awarie nested evidence i nieodrzucane odpowiedzi); GREEN: 778 frontend / 339 Rust / 60 MCP, build/lint/Clippy PASS. Zod schemas sprawdzane z interfejsami podczas TypeScript build; testy null/zero, typów, finite/range, niezależnego recovery i izolacji projektów. GAP-042 PARTIAL; GAP-059/060 FIXED. PR #15 w draft; frontend/native CI dla BATCH-7a PASS, platform smoke nadal pending w chwili zapisu.

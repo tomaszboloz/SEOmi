@@ -4,6 +4,7 @@ import { useProjectStore } from '@/stores/projectStore';
 import { runPageSpeedInsights, queryCrux } from '@/services/pagespeed';
 import { createPageSpeedSnapshot, readPageSpeedSnapshots, savePageSpeedSnapshot, type PageSpeedSnapshot } from '@/services/pagespeedHistory';
 import { writeJsonStorage } from '@/services/storage';
+import { parseCruxReport, parsePageSpeedReport } from '@/services/performanceContracts';
 import { loadSession, storageKey, type PerformanceSession } from './performanceSession';
 
 export interface PerformanceDependencies {
@@ -91,10 +92,11 @@ export const usePerformanceWorkspace = (
     setIsRunningPsi(true);
     setPsiError(null);
     try {
-      const pageSpeed = await (dependencies.runPsi ?? runPageSpeedInsights)(
+      const pageSpeed = parsePageSpeedReport(await (dependencies.runPsi ?? runPageSpeedInsights)(
         session.url,
         session.strategy,
-      );
+      ));
+      if (!pageSpeed) throw new Error(t("pageSpeedUi.psiError"));
       if ((dependencies.activeProjectId ?? (() => useProjectStore.getState().activeProjectId))() === projectId && psiRequestToken.current === requestToken) {
         updateSession({ pageSpeed });
         recordSnapshot({ pageSpeed, crux: session.crux });
@@ -117,11 +119,12 @@ export const usePerformanceWorkspace = (
     setIsRunningCrux(true);
     setCruxError(null);
     try {
-      const crux = await (dependencies.runCrux ?? queryCrux)(
+      const crux = parseCruxReport(await (dependencies.runCrux ?? queryCrux)(
         session.url,
         session.formFactor,
         session.scope,
-      );
+      ));
+      if (!crux) throw new Error(t("pageSpeedUi.cruxError"));
       if ((dependencies.activeProjectId ?? (() => useProjectStore.getState().activeProjectId))() === projectId && cruxRequestToken.current === requestToken) {
         updateSession({ crux });
         recordSnapshot({ pageSpeed: session.pageSpeed, crux });

@@ -1,5 +1,6 @@
 import type { CruxFormFactor, CruxReport, PageSpeedReport, PageSpeedStrategy } from '@/services/pagespeed';
 import { readJsonStorage } from '@/services/storage';
+import { parseCruxReport, parsePageSpeedReport } from '@/services/performanceContracts';
 
 export interface PerformanceSession {
   url: string;
@@ -35,25 +36,21 @@ export const loadSession = (
 ): PerformanceSession => {
   if (!projectId) return emptySession(defaultUrl);
   try {
-    const saved = readJsonStorage<Partial<PerformanceSession> | null>(
+    const value = readJsonStorage<unknown>(
       storageKey(projectId),
       null,
     );
-    if (!saved || typeof saved !== "object") return emptySession(defaultUrl);
+    if (!value || typeof value !== "object" || Array.isArray(value)) return emptySession(defaultUrl);
+    const saved = value as Record<string, unknown>;
     return {
       url: typeof saved.url === "string" ? saved.url : defaultUrl,
       strategy: saved.strategy === "desktop" ? "desktop" : "mobile",
-      formFactor: ["PHONE", "DESKTOP", "TABLET"].includes(
-        saved.formFactor || "",
-      )
-        ? (saved.formFactor as CruxFormFactor)
-        : "PHONE",
+      formFactor: saved.formFactor === "DESKTOP" || saved.formFactor === "TABLET" ? saved.formFactor : "PHONE",
       scope: saved.scope === "origin" ? "origin" : "url",
-      pageSpeed: saved.pageSpeed || null,
-      crux: saved.crux || null,
+      pageSpeed: parsePageSpeedReport(saved.pageSpeed),
+      crux: parseCruxReport(saved.crux),
     };
   } catch {
     return emptySession(defaultUrl);
   }
 };
-
