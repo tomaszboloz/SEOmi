@@ -5,6 +5,7 @@ import { z } from 'zod';
 import { MAX_AUDIT_URL_LENGTH, validatePublicTarget } from './httpSafety.js';
 import { auditPublicUrl, crawlPublicSite } from './auditWorkflow.js';
 import { textResult, type JsonObject } from './responseOutput.js';
+import { createProviderClient } from './providers.js';
 
 type Json = JsonObject;
 
@@ -15,56 +16,7 @@ type Json = JsonObject;
 // full language/script/region extension shape supported by both APIs.
 const LANGUAGE_CODE = /^[A-Za-z]{2,8}(?:-[A-Za-z0-9]{1,8})*$/;
 
-const dataForSeo = async (path: string, payload: Json[]): Promise<Json> => {
-  const login = process.env.DATAFORSEO_LOGIN;
-  const password = process.env.DATAFORSEO_PASSWORD;
-  if (!login || !password) throw new Error('Set DATAFORSEO_LOGIN and DATAFORSEO_PASSWORD before calling DataForSEO tools.');
-  const response = await fetch(`https://api.dataforseo.com${path}`, { method: 'POST', headers: { authorization: `Basic ${Buffer.from(`${login}:${password}`).toString('base64')}`, 'content-type': 'application/json' }, body: JSON.stringify(payload), signal: AbortSignal.timeout(30_000) });
-  if (!response.ok) throw new Error(`DataForSEO HTTP ${response.status}.`);
-  const body = await response.json() as { tasks?: Array<Json> };
-  const task = body.tasks?.[0] || {};
-  if (task.status_code !== 20000) throw new Error(String(task.status_message || `DataForSEO task failed (${task.status_code ?? 'unknown'}).`));
-  return task;
-};
-
-const googleAccessToken = (): string => {
-  const token = process.env.GOOGLE_ACCESS_TOKEN?.trim();
-  if (!token) throw new Error('Set GOOGLE_ACCESS_TOKEN before calling Search Console MCP tools.');
-  return token;
-};
-
-const googleJson = async (url: string, init: RequestInit): Promise<Json> => {
-  const response = await fetch(url, {
-    ...init,
-    headers: { authorization: `Bearer ${googleAccessToken()}`, 'content-type': 'application/json', ...(init.headers || {}) },
-    signal: AbortSignal.timeout(30_000),
-  });
-  if (!response.ok) throw new Error(`Google Search Console HTTP ${response.status}.`);
-  return await response.json() as Json;
-};
-
-const googleApiKey = (): string => {
-  const key = process.env.GOOGLE_API_KEY?.trim() || process.env.GOOGLE_PAGESPEED_API_KEY?.trim();
-  if (!key) throw new Error('Set GOOGLE_API_KEY before calling Google performance MCP tools.');
-  if (key.length > 256 || /[\r\n]/.test(key)) throw new Error('GOOGLE_API_KEY is invalid.');
-  return key;
-};
-
-const googlePublicJson = async (url: string, init: RequestInit = {}): Promise<Json> => {
-  const response = await fetch(url, {
-    ...init,
-    headers: { 'content-type': 'application/json', ...(init.headers || {}) },
-    signal: AbortSignal.timeout(60_000),
-  });
-  const body = await response.json().catch(() => ({})) as Json;
-  if (!response.ok) {
-    const message = typeof body.error === 'object' && body.error && 'message' in body.error
-      ? String((body.error as { message?: unknown }).message || '')
-      : '';
-    throw new Error(`Google performance HTTP ${response.status}${message ? `: ${message}` : '.'}`);
-  }
-  return body;
-};
+const { dataForSeo, googleJson, googleApiKey, googlePublicJson } = createProviderClient();
 
 const publicTargetUrl = async (value: string): Promise<string> => {
   const target = await validatePublicTarget(value);

@@ -2,7 +2,7 @@
 Audytor: Staff Developer | Data: 2026-10-01
 
 ## Statystyki
-- Zidentyfikowanych luk: 50
+- Zidentyfikowanych luk: 53
 - Batchy do wdrożenia: 7
 - Szacowany effort: 20–35 MD; estymacja orientacyjna, do korekty po pomiarze coverage.
 - Baseline: commit 18fa446b13ec3f97db76896bfdf446f97fe80051; 704 frontend / 320 Rust / 27 MCP testów.
@@ -23,9 +23,9 @@ Pomiary bazowego commitu (2026-10-01):
 - [x] GAP-002: [CRITICAL] Automatyczne przekierowania audytu HTTP nie walidują DNS każdego kolejnego hosta. Dowód: `src-tauri/src/services/http_client.rs:80`. Status: FIXED (BATCH-1a); dowód: 12 deterministycznych testów http_client, pełny suite i Clippy. Resolver DI, przypięty transport per hop, jeden deadline i limit strumienia; brak testów zależnych od internetu.
 - [x] GAP-003: [HIGH] Limit 25 MB jest sprawdzany po response.bytes(), więc nie ogranicza alokacji odpowiedzi. Dowód: `src-tauri/src/services/http_client.rs:139`. Status: FIXED (BATCH-1a); dowód: 12 deterministycznych testów http_client, pełny suite i Clippy. Resolver DI, przypięty transport per hop, jeden deadline i limit strumienia; brak testów zależnych od internetu.
 - [x] GAP-004: [HIGH] Klient audytu HTTP dziedziczy proxy środowiska i może ominąć politykę bezpośredniego połączenia. Dowód: `src-tauri/src/services/http_client.rs:76`. Status: FIXED (BATCH-1a); dowód: 12 deterministycznych testów http_client, pełny suite i Clippy. Resolver DI, przypięty transport per hop, jeden deadline i limit strumienia; brak testów zależnych od internetu.
-- [ ] GAP-005: [MEDIUM] Uprawnienia Tauri obejmują wildcard wszystkich lokalnych okien zamiast jawnej listy. Dowód: `src-tauri/capabilities/default.json:5`. Status: OPEN; wymagane testy red/green i rewalidacja.
-- [ ] GAP-006: [HIGH] Wyjście CLI zbierane przez wait_with_output nie ma limitu bajtów. Dowód: `src-tauri/src/commands/ai_cli.rs:619`. Status: OPEN; wymagane testy red/green i rewalidacja.
-- [ ] GAP-007: [MEDIUM] MCP provider response.json() nie ma limitu rozmiaru przed parsowaniem. Dowód: `mcp-server/src/index.ts:18`. Status: OPEN; wymagane testy red/green i rewalidacja.
+- [x] GAP-005: [MEDIUM] Uprawnienia Tauri obejmują wildcard wszystkich lokalnych okien zamiast jawnej listy. Dowód: `src-tauri/capabilities/default.json:5`. Status: FIXED (BATCH-1b); testy limitów i kontraktów providerów/CLI oraz least privilege. Pełny suite, build i strict Clippy PASS.
+- [x] GAP-006: [HIGH] Wyjście CLI zbierane przez wait_with_output nie ma limitu bajtów. Dowód: `src-tauri/src/commands/ai_cli.rs:619`. Status: FIXED (BATCH-1b); testy limitów i kontraktów providerów/CLI oraz least privilege. Pełny suite, build i strict Clippy PASS.
+- [x] GAP-007: [MEDIUM] MCP provider response.json() nie ma limitu rozmiaru przed parsowaniem. Dowód: `mcp-server/src/index.ts:18`. Status: FIXED (BATCH-1b); testy limitów i kontraktów providerów/CLI oraz least privilege. Pełny suite, build i strict Clippy PASS.
 - [ ] GAP-008: [MEDIUM] Publiczny zapis AppConfig nie waliduje enumów, timeoutu, limitu przekierowań ani user-agenta. Dowód: `src-tauri/src/commands/settings.rs:330`. Status: OPEN; wymagane testy red/green i rewalidacja.
 
 ## BATCH 2: Architecture & Design Patterns
@@ -38,7 +38,7 @@ Pomiary bazowego commitu (2026-10-01):
 - [ ] GAP-015: [MEDIUM] html_parser.rs 3533 linii agreguje wiele niezależnych analiz HTML. Dowód: `src-tauri/src/services/html_parser.rs`. Status: OPEN; wymagane testy red/green i rewalidacja.
 - [ ] GAP-016: [MEDIUM] seo_analyzer.rs 2047 linii agreguje scoring i wiele niezależnych reguł. Dowód: `src-tauri/src/services/seo_analyzer.rs`. Status: OPEN; wymagane testy red/green i rewalidacja.
 - [ ] GAP-017: [MEDIUM] Monolityczny types/index.ts 1239 linii łączy kontrakty wszystkich domen. Dowód: `src/types/index.ts`. Status: OPEN; wymagane testy red/green i rewalidacja.
-- [ ] GAP-018: [MEDIUM] MCP index.ts miesza rejestrację narzędzi i trzy transporty providerów. Dowód: `mcp-server/src/index.ts`. Status: OPEN; wymagane testy red/green i rewalidacja.
+- [x] GAP-018: [MEDIUM] MCP index.ts miesza rejestrację narzędzi i trzy transporty providerów. Dowód: `mcp-server/src/index.ts`. Status: FIXED (BATCH-1b); testy limitów i kontraktów providerów/CLI oraz least privilege. Pełny suite, build i strict Clippy PASS.
 - [x] GAP-019: [MEDIUM] Natywny klient HTTP wiąże DNS, zegar, transport i limity bez kontraktu testowego. Dowód: `src-tauri/src/services/http_client.rs`. Status: FIXED (BATCH-1a); dowód: 12 deterministycznych testów http_client, pełny suite i Clippy. Resolver DI, przypięty transport per hop, jeden deadline i limit strumienia; brak testów zależnych od internetu.
 - [ ] GAP-020: [MEDIUM] settingsStore dynamicznie importuje auditStore/authStore; auditStore importuje settingsStore. Dowód: `src/stores/settingsStore.ts:74`. Status: OPEN; wymagane testy red/green i rewalidacja.
 
@@ -83,9 +83,13 @@ Pomiary bazowego commitu (2026-10-01):
 - [ ] GAP-050: [MEDIUM] Brak lintera TypeScript/React w scripts i CI. Dowód: `package.json`. Status: OPEN; wymagane testy red/green i rewalidacja.
 
 ## [DISCOVERED] - Dynamiczne wykrycia
-Nowe problemy będą dopisywane z dowodem i kolejnym numerem.
+- [x] GAP-051: [DISCOVERED] [MEDIUM] googlePublicJson tłumiło błędny JSON i zwracało pusty obiekt jako sukces. Dowód przed poprawką: mcp-server/src/index.ts:60. FIXED (BATCH-1b): wymagany JSON object i test błędnego JSON/array/null.
+- [x] GAP-052: [DISCOVERED] [MEDIUM] Komunikaty providerów były zwracane bez ograniczenia do bezpiecznego statusu (dowolne status_message/error.message). Dowód przed poprawką: mcp-server/src/index.ts:26,62. FIXED (BATCH-1b): komunikat lokalny + kod HTTP/zadania, test niewyciekania treści odpowiedzi.
+- [ ] GAP-053: [DISCOVERED] [LOW] Wersja MCP runtime 1.0.0 różni się od package.json 0.0.1. Dowód: mcp-server/src/index.ts:25; mcp-server/package.json:3. OPEN; wymagany test kontraktu metadanych.
+
 
 ## Dziennik batchy
 - BATCH-0: audyt bazowy: 50 wpisów; pomiary frontend/Rust ukończone, cel >99% pozostaje OPEN.
 - BATCH-1a: transport HTTP. RED: nowe testy kontraktu nie kompilowały się przed dodaniem granicy resolvera. GREEN: 704 frontend / 330 Rust / 27 MCP; build frontend + MCP, rustfmt i strict Clippy. Test strumieniowego timeoutu ujawnił konkurujące deadline'y; naprawiono i ponowiono pełny Rust suite. Brak zmian IPC/migracji.
 
+- BATCH-1b: limity wszystkich procesów AI CLI i JSON providerów MCP; wydzielony kontrakt providerów; wildcard capability usunięty. RED: test capability wykazał wildcard, testy nowych granic nie kompilowały/importowały się. GREEN: 705 frontend / 332 Rust / 33 MCP; build, rustfmt, strict Clippy PASS. GAP-051/052 odkryte i naprawione.

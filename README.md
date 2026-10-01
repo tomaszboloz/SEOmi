@@ -336,6 +336,10 @@ The release workflow produces signed installers only after the release signing g
 
 `services/http_client.rs` validates URL syntax and resolves every host before connecting. All DNS answers must be public; each redirect uses a fresh client pinned to those addresses with environment proxies disabled. A single operation deadline includes DNS, headers, redirects and body reads. Decoded body data is streamed with a 25 MiB ceiling, including compressed responses. Status, redirect hops, cookies and timing measurements retain their existing IPC shape; no migration is required. Resolver injection is internal and used by deterministic loopback tests; production always uses the public-address resolver.
 
+Local AI process output is drained concurrently with stdin and bounded to 2 MiB per stdout/stderr stream for research, version, authentication and capability checks. Overflow is an explicit failure rather than a truncated answer. Privileged Tauri plugins are scoped to the bundled `main` window.
+
+MCP provider transports live in `mcp-server/src/providers.ts` behind an injectable fetch/environment contract. JSON must be an object, decoded response bodies have a 2 MiB ceiling, redirects are rejected and HTTP/task failures expose local status messages. Provider tests require no credentials or external requests. Tool input/output schemas remain unchanged.
+
 The ongoing audit and measured coverage baseline are tracked in [AUDIT_GAPS.md](AUDIT_GAPS.md). Passing tests do not establish the >99% coverage target. Run the full frontend, native and MCP suites after every batch.
 
 ### Data boundaries

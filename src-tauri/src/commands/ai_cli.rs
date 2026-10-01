@@ -5,7 +5,7 @@ use std::ffi::OsString;
 use std::fs;
 use std::path::{Path, PathBuf};
 use std::process::Stdio;
-use tokio::io::AsyncWriteExt;
+use tokio::io::{AsyncRead, AsyncReadExt, AsyncWriteExt};
 use tokio::process::Command;
 use tokio::time::{timeout, Duration};
 use uuid::Uuid;
@@ -19,6 +19,8 @@ impl Drop for ResearchDirectory {
         let _ = fs::remove_dir_all(&self.0);
     }
 }
+
+const MAX_CLI_OUTPUT_BYTES: usize = 2 * 1024 * 1024;
 
 const CLI_TIMEOUT: Duration = Duration::from_secs(120);
 
@@ -416,7 +418,7 @@ async fn check_capabilities(provider: &str, resolved: &ResolvedCommand) -> Resul
     if let Some(path) = augmented_path() {
         process.env("PATH", path);
     }
-    let output = timeout(Duration::from_secs(10), process.output())
+    let output = timeout(Duration::from_secs(10), bounded_process_output(process, ""))
         .await
         .map_err(|_| "CLI capability check timed out.".to_string())?
         .map_err(|_| "Unable to check local CLI capabilities.".to_string())?;
@@ -460,7 +462,7 @@ async fn version_check(provider: &str, command: &str) -> (bool, String) {
         if let Some(path) = augmented_path() {
             process.env("PATH", path);
         }
-        process.output()
+        bounded_process_output(process, "")
     })
     .await;
     match result {
@@ -478,7 +480,11 @@ async fn version_check(provider: &str, command: &str) -> (bool, String) {
                 if let Some(path) = augmented_path() {
                     auth_process.env("PATH", path);
                 }
-                let auth_result = timeout(Duration::from_secs(5), auth_process.output()).await;
+                let auth_result = timeout(
+                    Duration::from_secs(5),
+                    bounded_process_output(auth_process, ""),
+                )
+                .await;
                 if let Ok(Ok(auth_output)) = auth_result {
                     available = auth_output.status.success()
                         && authenticated_output(provider, &output_text(&auth_output));
@@ -622,23 +628,79 @@ async fn collect_research_output(
     prompt: &str,
     deadline: Duration,
 ) -> Result<std::process::Output, String> {
+    process.kill_on_drop(true);
+    timeout(deadline, bounded_process_output(process, prompt))
+        .await
+        .map_err(|_| format!("Local CLI timed out after {} seconds.", deadline.as_secs()))?
+        .map_err(|error| {
+            if error.kind() == std::io::ErrorKind::InvalidData {
+                "Local CLI exceeded the output limit (2 MiB per stream).".to_string()
+            } else {
+                "Local CLI could not start or communicate through stdin.".to_string()
+            }
+        })
+}
+
+async fn read_cli_stream<R: AsyncRead + Unpin>(
+    mut stream: R,
+    limit: usize,
+) -> std::io::Result<Vec<u8>> {
+    let mut output = Vec::new();
+    let mut buffer = [0; 8192];
+    loop {
+        let count = stream.read(&mut buffer).await?;
+        if count == 0 {
+            return Ok(output);
+        }
+        if count > limit.saturating_sub(output.len()) {
+            return Err(std::io::Error::new(
+                std::io::ErrorKind::InvalidData,
+                "CLI output limit exceeded",
+            ));
+        }
+        output.extend_from_slice(&buffer[..count]);
+    }
+}
+
+async fn bounded_process_output(
+    mut process: Command,
+    prompt: &str,
+) -> std::io::Result<std::process::Output> {
     process
+        .kill_on_drop(true)
         .stdin(Stdio::piped())
         .stdout(Stdio::piped())
         .stderr(Stdio::piped());
-    let result = timeout(deadline, async {
-        let mut child = process.spawn()?;
-        if let Some(mut stdin) = child.stdin.take() {
+    let mut child = process.spawn()?;
+    let mut stdin = child
+        .stdin
+        .take()
+        .ok_or_else(|| std::io::Error::other("Missing CLI stdin"))?;
+    let stdout = child
+        .stdout
+        .take()
+        .ok_or_else(|| std::io::Error::other("Missing CLI stdout"))?;
+    let stderr = child
+        .stderr
+        .take()
+        .ok_or_else(|| std::io::Error::other("Missing CLI stderr"))?;
+    // Drain both pipes while writing input: providers may emit output before
+    // consuming the prompt. try_join cancels on overflow; child drop kills it.
+    let (_, stdout, stderr, status) = tokio::try_join!(
+        async {
             stdin.write_all(prompt.as_bytes()).await?;
-            // Close stdin: each provider waits for EOF before starting.
-        }
-        child.wait_with_output().await
+            drop(stdin);
+            Ok::<(), std::io::Error>(())
+        },
+        read_cli_stream(stdout, MAX_CLI_OUTPUT_BYTES),
+        read_cli_stream(stderr, MAX_CLI_OUTPUT_BYTES),
+        child.wait(),
+    )?;
+    Ok(std::process::Output {
+        status,
+        stdout,
+        stderr,
     })
-    .await;
-    let output = result
-        .map_err(|_| format!("Local CLI timed out after {} seconds.", deadline.as_secs()))?
-        .map_err(|_| "Local CLI could not start or communicate through stdin.".to_string())?;
-    Ok(output)
 }
 
 fn cli_response(command: &str, output: &std::process::Output) -> Result<String, String> {
@@ -966,5 +1028,36 @@ mod tests {
     async fn failed_help_command_cannot_pass_even_with_supported_flags_in_output() {
         let help = required_capabilities("claude").join(" ");
         assert!(capability_fixture("claude", &help, 1).await.is_err());
+    }
+    #[tokio::test]
+    async fn cli_stream_limit_accepts_boundary_and_rejects_overflow() {
+        let accepted = super::read_cli_stream(&b"12345"[..], 5).await.unwrap();
+        assert_eq!(accepted, b"12345");
+        let error = super::read_cli_stream(&b"123456"[..], 5).await.unwrap_err();
+        assert!(error.to_string().contains("output limit"));
+    }
+
+    #[tokio::test]
+    async fn excessive_stdout_or_stderr_fails_without_truncating_an_answer() {
+        for stderr in [false, true] {
+            let unix = if stderr {
+                "awk 'BEGIN { for(i=0;i<2097153;i++) printf \"x\" }' >&2"
+            } else {
+                "awk 'BEGIN { for(i=0;i<2097153;i++) printf \"x\" }'"
+            };
+            let windows = if stderr {
+                "[Console]::Error.Write('x' * 2097153)"
+            } else {
+                "[Console]::Out.Write('x' * 2097153)"
+            };
+            let error = collect_research_output(
+                fixture_process(unix, windows),
+                "",
+                super::Duration::from_secs(10),
+            )
+            .await
+            .unwrap_err();
+            assert!(error.contains("output limit"), "{error}");
+        }
     }
 }
