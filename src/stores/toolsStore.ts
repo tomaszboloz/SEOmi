@@ -36,6 +36,10 @@ import { useSettingsStore } from './settingsStore';
 import { useAuthStore } from './authStore';
 import { useProjectStore } from './projectStore';
 import i18n from '@/i18n';
+import {
+  parseAiPromptComparison, parseAiResearchInputs, parseBacklinkGapReport, parseBacklinkProfile,
+  parseBacklinkSnapshot, parseBrandAiReport, parseDomainComparison, parseDomainOverview, parseResearchHistory,
+} from '@/services/researchContracts';
 
 interface ToolsState {
   // Keyword Research
@@ -304,33 +308,21 @@ const saveProjectResearch = (key: (projectId: string) => string, value: unknown,
   if (!projectId) return;
   writeJsonStorage(key(projectId), value);
 };
-const readProjectResearch = <T,>(key: (projectId: string) => string, projectId: string): T | null => {
-  return readJsonStorage<T | null>(key(projectId), null);
+const readProjectResearch = (key: (projectId: string) => string, projectId: string): unknown => {
+  return readJsonStorage<unknown>(key(projectId), null);
 };
 const loadDomainComparisonTargets = (projectId: string): string[] => {
-  const value = readProjectResearch<unknown>(domainComparisonTargetsKey, projectId);
+  const value = readProjectResearch(domainComparisonTargetsKey, projectId);
   return Array.isArray(value) ? value.filter((item): item is string => typeof item === 'string').slice(0, 5) : [];
 };
 const loadDomainComparison = (projectId: string): DomainComparisonData | null => {
-  const value = readProjectResearch<DomainComparisonData>(domainComparisonKey, projectId);
-  if (!value || value.source !== 'dataforseo' || typeof value.target !== 'string' || !Array.isArray(value.rows)) return null;
-  return value;
+  return parseDomainComparison(readProjectResearch(domainComparisonKey, projectId));
 };
 const normalizeDomainComparisonHistory = (value: unknown): DomainComparisonHistory => {
-  if (!Array.isArray(value)) return [];
-  return value
-    .filter((item): item is DomainComparisonData => Boolean(
-      item
-      && typeof item === 'object'
-      && (item as DomainComparisonData).source === 'dataforseo'
-      && typeof (item as DomainComparisonData).target === 'string'
-      && Array.isArray((item as DomainComparisonData).rows)
-      && typeof (item as DomainComparisonData).retrieved_at === 'string',
-    ))
-    .slice(-12);
+  return parseResearchHistory(value, parseDomainComparison, 12, 'last');
 };
 const loadDomainComparisonHistory = (projectId: string): DomainComparisonHistory => {
-  const stored = readProjectResearch<unknown>(domainComparisonHistoryKey, projectId);
+  const stored = readProjectResearch(domainComparisonHistoryKey, projectId);
   const history = normalizeDomainComparisonHistory(stored);
   if (history.length) return history;
   const current = loadDomainComparison(projectId);
@@ -343,32 +335,16 @@ const loadLatestDomainComparison = (projectId: string): DomainComparisonData | n
   return history[history.length - 1] || null;
 };
 const loadDomainOverview = (projectId: string): DomainOverviewData | null => {
-  const value = readProjectResearch<DomainOverviewData>(domainOverviewKey, projectId);
-  if (!value || typeof value.domain !== 'string' || !Array.isArray(value.top_keywords) || !Array.isArray(value.top_pages) || !Array.isArray(value.competitors)) return null;
-  return value;
+  return parseDomainOverview(readProjectResearch(domainOverviewKey, projectId));
 };
 const loadBacklinkProfile = (projectId: string): BacklinkProfileData | null => {
-  const value = readProjectResearch<BacklinkProfileData>(backlinkProfileKey, projectId);
-  if (!value || typeof value.domain !== 'string' || !Array.isArray(value.anchors) || !Array.isArray(value.backlinks)) return null;
-  return value;
+  return parseBacklinkProfile(readProjectResearch(backlinkProfileKey, projectId));
 };
 const normalizeBacklinkProfileHistory = (value: unknown): BacklinkProfileHistory => {
-  if (!Array.isArray(value)) return [];
-  return value
-    .filter((item): item is BacklinkProfileSnapshot => Boolean(
-      item
-      && typeof item === 'object'
-      && typeof (item as BacklinkProfileSnapshot).domain === 'string'
-      && typeof (item as BacklinkProfileSnapshot).retrieved_at === 'string'
-      && (typeof (item as BacklinkProfileSnapshot).total_backlinks === 'number' || (item as BacklinkProfileSnapshot).total_backlinks === null)
-      && (typeof (item as BacklinkProfileSnapshot).referring_domains === 'number' || (item as BacklinkProfileSnapshot).referring_domains === null)
-      && (typeof (item as BacklinkProfileSnapshot).domain_rank === 'number' || (item as BacklinkProfileSnapshot).domain_rank === null)
-      && (typeof (item as BacklinkProfileSnapshot).dofollow_ratio === 'number' || (item as BacklinkProfileSnapshot).dofollow_ratio === null),
-    ))
-    .slice(-12);
+  return parseResearchHistory(value, parseBacklinkSnapshot, 12, 'last');
 };
 const loadBacklinkProfileHistory = (projectId: string): BacklinkProfileHistory => normalizeBacklinkProfileHistory(
-  readProjectResearch<unknown>(backlinkProfileHistoryKey, projectId),
+  readProjectResearch(backlinkProfileHistoryKey, projectId),
 );
 const saveBacklinkProfileSnapshot = (
   projectId: string,
@@ -388,9 +364,7 @@ const saveBacklinkProfileSnapshot = (
   return next;
 };
 const loadBacklinkGapReport = (projectId: string): BacklinkGapReport | null => {
-  const value = readProjectResearch<BacklinkGapReport>(backlinkGapReportKey, projectId);
-  if (!value || typeof value.target !== 'string' || !Array.isArray(value.competitors) || !Array.isArray(value.opportunities)) return null;
-  return value;
+  return parseBacklinkGapReport(readProjectResearch(backlinkGapReportKey, projectId));
 };
 const saveDomainComparison = (projectId: string, comparison: DomainComparisonData | null, targets: string[]) => {
   if (comparison) writeJsonStorage(domainComparisonKey(projectId), comparison);
@@ -402,7 +376,6 @@ const saveDomainComparisonSnapshot = (projectId: string, comparison: DomainCompa
   writeJsonStorage(domainComparisonHistoryKey(projectId), nextHistory);
   return nextHistory;
 };
-const researchHistory = <T,>(value: T[] | T | null): T[] => !value ? [] : Array.isArray(value) ? value : [value];
 const errorMessage = (error: unknown, fallback: string): string => error instanceof Error ? error.message : typeof error === 'string' ? error : fallback;
 const backlinkGapSettingsKey = (projectId: string) => `seomi_backlink_gap_settings_${projectId}`;
 const gscClientIdKey = (projectId: string) => `seomi_gsc_client_id_${projectId}`;
@@ -1877,12 +1850,12 @@ export const useToolsStore = create<ToolsState>((set, get) => ({
   setAiBrandQuery: (brand) => {
     set({ aiBrandQuery: brand });
     const projectId = activeProjectId();
-    if (projectId) saveProjectResearch(aiResearchInputsKey, { ...readProjectResearch<Record<string, string>>(aiResearchInputsKey, projectId), brand, domain: get().aiBrandDomain, prompt: get().aiSearchPrompt }, projectId);
+    if (projectId) saveProjectResearch(aiResearchInputsKey, { ...parseAiResearchInputs(readProjectResearch(aiResearchInputsKey, projectId)), brand, domain: get().aiBrandDomain, prompt: get().aiSearchPrompt }, projectId);
   },
   setAiBrandDomain: (domain) => {
     set({ aiBrandDomain: domain });
     const projectId = activeProjectId();
-    if (projectId) saveProjectResearch(aiResearchInputsKey, { ...readProjectResearch<Record<string, string>>(aiResearchInputsKey, projectId), brand: get().aiBrandQuery, domain, prompt: get().aiSearchPrompt }, projectId);
+    if (projectId) saveProjectResearch(aiResearchInputsKey, { ...parseAiResearchInputs(readProjectResearch(aiResearchInputsKey, projectId)), brand: get().aiBrandQuery, domain, prompt: get().aiSearchPrompt }, projectId);
   },
 
   analyzeAiBrandVisibility: async (brand, domain) => {
@@ -1940,7 +1913,7 @@ export const useToolsStore = create<ToolsState>((set, get) => ({
       set({ aiBrandQuery: b, aiBrandDomain: d, aiBrandReport: report, aiBrandHistory: history, isAiBrandLoading: false });
       saveProjectResearch(aiBrandReportKey, history, projectId);
       saveProjectResearch(aiBrandSelectionKey, report.timestamp, projectId);
-      saveProjectResearch(aiResearchInputsKey, { ...readProjectResearch<Record<string, string>>(aiResearchInputsKey, projectId), brand: b, domain: d, prompt: get().aiSearchPrompt }, projectId);
+      saveProjectResearch(aiResearchInputsKey, { ...parseAiResearchInputs(readProjectResearch(aiResearchInputsKey, projectId)), brand: b, domain: d, prompt: get().aiSearchPrompt }, projectId);
     } catch (err: unknown) {
       const msg = err instanceof Error ? err.message : i18n.t('runtimeErrors.tools.aiNoResponse');
       if (activeProjectId() === projectId && isLatestToolRequest('ai-brand', requestToken)) set({ aiBrandError: msg, isAiBrandLoading: false });
@@ -1960,7 +1933,7 @@ export const useToolsStore = create<ToolsState>((set, get) => ({
   setAiSearchPrompt: (p) => {
     set({ aiSearchPrompt: p });
     const projectId = activeProjectId();
-    if (projectId) saveProjectResearch(aiResearchInputsKey, { ...readProjectResearch<Record<string, string>>(aiResearchInputsKey, projectId), brand: get().aiBrandQuery, domain: get().aiBrandDomain, prompt: p }, projectId);
+    if (projectId) saveProjectResearch(aiResearchInputsKey, { ...parseAiResearchInputs(readProjectResearch(aiResearchInputsKey, projectId)), brand: get().aiBrandQuery, domain: get().aiBrandDomain, prompt: p }, projectId);
   },
 
   runAiPromptComparison: async (prompt) => {
@@ -2002,7 +1975,7 @@ export const useToolsStore = create<ToolsState>((set, get) => ({
       set({ aiSearchPrompt: p, aiPromptComparison: comparison, aiPromptHistory: history, isAiPromptLoading: false });
       saveProjectResearch(aiPromptComparisonKey, history, projectId);
       saveProjectResearch(aiPromptSelectionKey, comparison.captured_at, projectId);
-      saveProjectResearch(aiResearchInputsKey, { ...readProjectResearch<Record<string, string>>(aiResearchInputsKey, projectId), brand: get().aiBrandQuery, domain: get().aiBrandDomain, prompt: p }, projectId);
+      saveProjectResearch(aiResearchInputsKey, { ...parseAiResearchInputs(readProjectResearch(aiResearchInputsKey, projectId)), brand: get().aiBrandQuery, domain: get().aiBrandDomain, prompt: p }, projectId);
     } catch (err: unknown) {
       const msg = err instanceof Error ? err.message : i18n.t('runtimeErrors.tools.comparisonFailed');
       if (activeProjectId() === projectId && isLatestToolRequest('ai-prompt', requestToken)) set({ aiPromptError: msg, isAiPromptLoading: false });
@@ -2154,7 +2127,7 @@ export const useToolsStore = create<ToolsState>((set, get) => ({
     const backlinkGapSettings = loadBacklinkGapSettings(projectId);
     const projectRootUrl = useProjectStore.getState().projects.find((project) => project.id === projectId)?.rootUrl || '';
     migrateLegacyToolData(projectId);
-    set({ aiResearchSettings: normalizeAiResearchSettings(readProjectResearch<AiResearchSettings>(aiResearchSettingsKey, projectId)), savedKeywords: loadSavedKeywords(), trackedRanks: loadTrackedRanks(), rankTrackingDraft: loadRankTrackingDraft(projectId), isRankLoading: false, rankError: null, crawlResult: null, crawlRuns: [], isCrawling: false, isCrawlPaused: false, crawlProgress: 0, activeCrawlRunId: null, crawlError: null, crawlPersistenceError: null, crawlPersistenceNotice: null, crawlPersistenceCompacted: false, isRetryingCrawlPersistence: false, crawlProgressDetail: null, interruptedCrawl: readInterruptedCrawl(projectId), selectedTagFilter: null, crawlUrl: '', crawlLimit: 25, crawlConfig: DEFAULT_CRAWL_CONFIG, crawlRequestProfiles: loadCrawlRequestProfiles(), selectedCrawlRunId: null, isSavingCrawlRequestProfile: false, isCheckingCrawlExternalLinks: false, crawlExternalLinkCheckProgress: null, crawlExternalLinkCheckError: null, keywordQuery: loadKeywordQuery(projectId), keywordCountry: loadKeywordCountry(projectId), keywordLanguage: loadKeywordLanguage(projectId), isKeywordLoading: false, keywordError: null, domainQuery: loadProjectQuery(domainQueryKey, projectId), domainCountry: loadDomainCountry(projectId), domainLanguage: loadDomainLanguage(projectId), backlinkQuery: loadProjectQuery(backlinkQueryKey, projectId), backlinkGapCompetitors: backlinkGapSettings.competitors, backlinkGapIncludeSubdomains: backlinkGapSettings.includeSubdomains, backlinkGapReport: loadBacklinkGapReport(projectId), isBacklinkGapLoading: false, backlinkGapError: null, domainOverview: loadDomainOverview(projectId), isDomainLoading: false, domainError: null, backlinkProfile: loadBacklinkProfile(projectId), backlinkProfileHistory: loadBacklinkProfileHistory(projectId), isBacklinkLoading: false, backlinkError: null, domainComparison: loadLatestDomainComparison(projectId), domainComparisonHistory: loadDomainComparisonHistory(projectId), domainComparisonTargets: loadDomainComparisonTargets(projectId), isDomainComparisonLoading: false, domainComparisonError: null,
+    set({ aiResearchSettings: normalizeAiResearchSettings(readProjectResearch(aiResearchSettingsKey, projectId)), savedKeywords: loadSavedKeywords(), trackedRanks: loadTrackedRanks(), rankTrackingDraft: loadRankTrackingDraft(projectId), isRankLoading: false, rankError: null, crawlResult: null, crawlRuns: [], isCrawling: false, isCrawlPaused: false, crawlProgress: 0, activeCrawlRunId: null, crawlError: null, crawlPersistenceError: null, crawlPersistenceNotice: null, crawlPersistenceCompacted: false, isRetryingCrawlPersistence: false, crawlProgressDetail: null, interruptedCrawl: readInterruptedCrawl(projectId), selectedTagFilter: null, crawlUrl: '', crawlLimit: 25, crawlConfig: DEFAULT_CRAWL_CONFIG, crawlRequestProfiles: loadCrawlRequestProfiles(), selectedCrawlRunId: null, isSavingCrawlRequestProfile: false, isCheckingCrawlExternalLinks: false, crawlExternalLinkCheckProgress: null, crawlExternalLinkCheckError: null, keywordQuery: loadKeywordQuery(projectId), keywordCountry: loadKeywordCountry(projectId), keywordLanguage: loadKeywordLanguage(projectId), isKeywordLoading: false, keywordError: null, domainQuery: loadProjectQuery(domainQueryKey, projectId), domainCountry: loadDomainCountry(projectId), domainLanguage: loadDomainLanguage(projectId), backlinkQuery: loadProjectQuery(backlinkQueryKey, projectId), backlinkGapCompetitors: backlinkGapSettings.competitors, backlinkGapIncludeSubdomains: backlinkGapSettings.includeSubdomains, backlinkGapReport: loadBacklinkGapReport(projectId), isBacklinkGapLoading: false, backlinkGapError: null, domainOverview: loadDomainOverview(projectId), isDomainLoading: false, domainError: null, backlinkProfile: loadBacklinkProfile(projectId), backlinkProfileHistory: loadBacklinkProfileHistory(projectId), isBacklinkLoading: false, backlinkError: null, domainComparison: loadLatestDomainComparison(projectId), domainComparisonHistory: loadDomainComparisonHistory(projectId), domainComparisonTargets: loadDomainComparisonTargets(projectId), isDomainComparisonLoading: false, domainComparisonError: null,
       aiBrandQuery: '', aiBrandDomain: '', aiBrandReport: null, aiBrandHistory: [], aiBrandError: null, isAiBrandLoading: false,
       aiSearchPrompt: '', aiPromptComparison: null, aiPromptHistory: [], aiPromptError: null, isAiPromptLoading: false,
       gscClientId: storedGscClientId, gscClientSecret: storedGscClientSecret, gscProperty: storedGscProperty, gscFilters: readGscFilters(projectId), gscProperties: [], isGscConnected: false, gscData: null, gscDataFetchedAt: null, gscInspectionResult: null, isGscLoading: false, gscError: null, keywordResults: [], keywordResultsSource: null });
@@ -2201,13 +2174,13 @@ export const useToolsStore = create<ToolsState>((set, get) => ({
       : projectRootUrl;
     // Read both the new history arrays and the earlier single-result format.
     // Keep the migration in memory until the next successful run writes v1 history.
-    const aiBrandHistory = researchHistory(readProjectResearch<BrandAiVisibilityReport[] | BrandAiVisibilityReport>(aiBrandReportKey, projectId));
-    const aiPromptHistory = researchHistory(readProjectResearch<AiPromptComparison[] | AiPromptComparison>(aiPromptComparisonKey, projectId));
-    const savedBrandSelection = readProjectResearch<string>(aiBrandSelectionKey, projectId);
-    const savedPromptSelection = readProjectResearch<string>(aiPromptSelectionKey, projectId);
+    const aiBrandHistory = parseResearchHistory(readProjectResearch(aiBrandReportKey, projectId), parseBrandAiReport);
+    const aiPromptHistory = parseResearchHistory(readProjectResearch(aiPromptComparisonKey, projectId), parseAiPromptComparison);
+    const savedBrandSelection = readProjectResearch(aiBrandSelectionKey, projectId);
+    const savedPromptSelection = readProjectResearch(aiPromptSelectionKey, projectId);
     const aiBrandReport = aiBrandHistory.find((item) => item.timestamp === savedBrandSelection) || aiBrandHistory[0] || null;
     const aiPromptComparison = aiPromptHistory.find((item) => item.captured_at === savedPromptSelection) || aiPromptHistory[0] || null;
-    const aiResearchInputs = readProjectResearch<{ brand?: string; domain?: string; prompt?: string }>(aiResearchInputsKey, projectId);
+    const aiResearchInputs = parseAiResearchInputs(readProjectResearch(aiResearchInputsKey, projectId));
     const hydratedCompacted = Boolean(crawlRuns[0]?.storage_compacted);
     if (hydratedCompacted && !persistenceNotice) persistenceNotice = i18n.t('runtimeErrors.tools.hydratedCompacted');
     const localInterruptedCrawl = readInterruptedCrawl(projectId);
@@ -2225,7 +2198,7 @@ export const useToolsStore = create<ToolsState>((set, get) => ({
       }
     }
     set({ crawlResult: crawlRuns[0]?.result || null, crawlRuns, crawlPersistenceError: persistenceError, crawlPersistenceNotice: persistenceNotice, crawlPersistenceCompacted: hydratedCompacted, interruptedCrawl: hydratedInterruptedCrawl, crawlUrl: hydratedCrawlUrl, crawlLimit: crawlSettings?.limit || 25, crawlConfig: { ...DEFAULT_CRAWL_CONFIG, ...crawlSettings?.config }, selectedCrawlRunId: crawlRuns[0]?.id || null,
-      aiBrandQuery: aiResearchInputs?.brand || aiBrandReport?.brand || '', aiBrandDomain: aiResearchInputs?.domain || aiBrandReport?.domain || '', aiBrandReport, aiBrandHistory, isAiBrandLoading: false, aiBrandError: null,
-      aiSearchPrompt: aiResearchInputs?.prompt || aiPromptComparison?.prompt || '', aiPromptComparison, aiPromptHistory, isAiPromptLoading: false, aiPromptError: null });
+      aiBrandQuery: aiResearchInputs.brand ?? aiBrandReport?.brand ?? '', aiBrandDomain: aiResearchInputs.domain ?? aiBrandReport?.domain ?? '', aiBrandReport, aiBrandHistory, isAiBrandLoading: false, aiBrandError: null,
+      aiSearchPrompt: aiResearchInputs.prompt ?? aiPromptComparison?.prompt ?? '', aiPromptComparison, aiPromptHistory, isAiPromptLoading: false, aiPromptError: null });
   },
 }));

@@ -937,3 +937,9 @@ Website: <https://www.damtox.pl>
 Repository: <https://github.com/tomaszboloz/SEOmi>
 
 The complete license text is in the `LICENSE` file.
+
+### Research persistence contracts (audit BATCH-6b)
+
+`researchContracts.ts` validates persisted Domain, Backlinks and AI reports before project hydration. Invalid records are discarded independently; valid history, zero measurements and unavailable (`null`) values are retained. Domain/backlink histories keep the latest twelve records; AI histories keep at most fifty, with legacy single-report compatibility. AI drafts accept only strings and preserve deliberately cleared fields. AI research settings accept unknown storage values, retain valid prompts/competitors, and bound numeric repetitions without coercing invalid JSON. No IPC or database migration is required; malformed snapshots remain in storage for backup/recovery but are not rendered.
+
+Local batch verification: 861 frontend, 350 Rust and 60 MCP tests; TypeScript/Vite build, ESLint and strict Clippy pass. Remaining audit gates and coverage limitations are recorded in `AUDIT_GAPS.md`.

@@ -2,7 +2,7 @@
 Audytor: Staff Developer | Data: 2026-10-01
 
 ## Statystyki
-- Zidentyfikowanych luk: 68
+- Zidentyfikowanych luk: 71
 - Batchy do wdrożenia: 7
 - Szacowany effort: 20–35 MD; estymacja orientacyjna, do korekty po pomiarze coverage.
 - Baseline: commit 18fa446b13ec3f97db76896bfdf446f97fe80051; 704 frontend / 320 Rust / 27 MCP testów.
@@ -70,7 +70,7 @@ Pomiary bazowego commitu (2026-10-01):
 
 ## BATCH 6: Code Quality & Validation
 - [x] GAP-041: [MEDIUM] Domyślny user agent Rust chrome_desktop nie odpowiada frontendowemu chrome_mac. Dowód: `src-tauri/src/models/config.rs:34`. Status: FIXED (BATCH-1c); walidacja konfiguracji, ograniczony odczyt, atomowy zapis i testy błędów/recovery; pełny suite PASS.
-- [ ] GAP-042: [MEDIUM] readJsonStorage<T> zwraca JSON as T bez walidacji runtime kontraktu. Dowód: `src/services/storage.ts:46`. Status: PARTIAL (BATCH-6a): Performance odczytuje unknown i waliduje pełne raporty; pozostałe generyczne wywołania, m.in. toolsStore, wymagają domknięcia kontraktów.
+- [ ] GAP-042: [MEDIUM] readJsonStorage<T> zwraca JSON as T bez walidacji runtime kontraktu. Dowód: `src/services/storage.ts:46`. Status: PARTIAL (BATCH-6a/6b): Performance oraz raporty Domain/Backlinks/AI odczytują unknown i walidują pełne kontrakty; pozostałe generyczne wywołania, m.in. crawl settings/results, wymagają domknięcia kontraktów.
 - [x] GAP-043: [MEDIUM] Local API konwertuje timeout/max_pages/max_depth Number(), przyjmując stringi/bool zamiast typów kontraktu. Dowód: `mcp-server/src/localApi.ts:94`. Status: FIXED (BATCH-4a); testy integracyjne HTTP: typy, limit konkurencji, safe errors i korelacja/logi; pełny suite PASS.
 - [ ] GAP-044: [MEDIUM] Frontend i MCP duplikują reguły rynków, typy wyników i normalizację domen. Dowód: `src/services/dataforseo.ts; mcp-server/src/index.ts`. Status: OPEN; wymagane testy red/green i rewalidacja.
 - [x] GAP-045: [LOW] downloadText/downloadPdf duplikują cykl życia Blob URL i elementu anchor. Dowód: `src/services/export.ts:39`. Status: FIXED (BATCH-4b); regresje kosztu enumeracji, limitu przed JSON.parse i lifecycle text/PDF. Pełny suite/build PASS.
@@ -109,6 +109,10 @@ Pomiary bazowego commitu (2026-10-01):
 
 - [x] GAP-068: [DISCOVERED] [MEDIUM] Publiczny analyze_page zwraca Result, ale przy obu niepoprawnych URL w FetchResult używa expect i panikuje. Dowód: test RED invalid_fetch_urls_return_an_error_without_panicking, RelativeUrlWithoutBase. To kontrakt helpera, nie potwierdzony exploit IPC. Status: FIXED (BATCH-2e): lokalny błąd Result zamiast panic; regresja RED/GREEN i pełny native suite PASS.
 
+- [x] GAP-069: [DISCOVERED] [HIGH] Zapisane raporty Domain/Backlinks były rzutowane bez walidacji nested evidence; top_keywords:[null] oraz anchors:[null] powodowały crash przy renderowaniu. Status: FIXED (BATCH-6b): siedem pełnych kontraktów Zod dla raportów i porównań; wadliwe raporty odrzucane niezależnie, zachowane null/zero i poprawne rekordy historii. Reprodukcje RED/GREEN w researchHydration.
+- [x] GAP-070: [DISCOVERED] [HIGH] Wadliwa historia AI powodowała crash hydration (.timestamp na null), a input draft przyjmował object/boolean/number do tekstowego state. Status: FIXED (BATCH-6b): niezależne filtrowanie historii, limity/legacy compatibility, string-only draft i unknown settings normalizer; testy project hydration i nested observations.
+- [x] GAP-071: [DISCOVERED] [MEDIUM] Pusty zapisany draft AI był zastępowany poprzednim raportem przez truthy fallback, przywracając świadomie usunięte zapytanie. Status: FIXED (BATCH-6b): nullish fallback zachowuje puste stringi; regresja RED/GREEN z zapisanym raportem.
+
 ## Dziennik batchy
 - BATCH-0: audyt bazowy: 50 wpisów; pomiary frontend/Rust ukończone, cel >99% pozostaje OPEN.
 - BATCH-1a: transport HTTP. RED: nowe testy kontraktu nie kompilowały się przed dodaniem granicy resolvera. GREEN: 704 frontend / 330 Rust / 27 MCP; build frontend + MCP, rustfmt i strict Clippy. Test strumieniowego timeoutu ujawnił konkurujące deadline'y; naprawiono i ponowiono pełny Rust suite. Brak zmian IPC/migracji.
@@ -126,3 +130,5 @@ Pomiary bazowego commitu (2026-10-01):
 - BATCH-1e: bezpieczny DNS client crawlera, wspólny canonical HEAD oraz ograniczony odczyt robots/sitemap. RED: routing guard i brak kontraktów resolver/read; GREEN: 788 frontend / 348 Rust / 60 MCP, build/lint/rustfmt/Clippy PASS. Test połączenia odrzuconego przed socketem, mixed/empty DNS, public IPv4/IPv6, decoded gzip/chunked overflow, exact/zero cap i przerwane body. GAP-065/066/067 FIXED. CI dla poprzedniego 9d19964: frontend/native/macOS/SBOM PASS; Windows jeszcze in_progress podczas zapisu.
 - BATCH-2d: kontrakty audit/workspace/AI/research/backlinks/crawl/DataForSEO/GSC/MCP w osobnych modułach. RED: 3 testy architektury/API przed split; GREEN: 791 frontend / 348 Rust / 60 MCP, build/lint/Clippy PASS. Dokładny AST SHA-256 wszystkich 114 deklaracji pozostaje zgodny z pre-refactor; importy type-only, graf domen bez cykli. Bez migracji IPC/storage i bez sztucznego zmniejszenia coverage denominator (nadal deklaracje-only).
 - BATCH-2e: natywne ekstraktory HTML i reguły SEO oddzielone od składania dokumentu/raportu; testy przy usługach. Charakterystyka wspólnego parsera GREEN przed refaktoryzacją, 2 architecture guards RED. Sweep ujawnił panic invalid URL (GAP-068 RED/GREEN). GREEN: 793 frontend / 350 Rust / 60 MCP, build/lint/rustfmt/Clippy PASS. Compiler ujawnił współdzieloną zależność visibility; wyodrębniono markup zamiast cyklu content/accessibility. GAP-015/016/068 FIXED; publiczne API i serializacja zgodne.
+
+- BATCH-6b: runtime walidacja zapisanych Domain/Backlinks/AI, recovery pojedynczych rekordów, bounded histories, string drafts i unknown settings. RED: 4 wcześniejsze reprodukcje crash/wrong-state + cleared draft przywracany po hydration; GREEN: 861 frontend / 350 Rust / 60 MCP, build/lint/Clippy PASS. GAP-069/070/071 FIXED; GAP-042 nadal PARTIAL. Świeże CI dla be94224: wszystkie 5 jobs PASS. Brak zmiany IPC/DB schema.
