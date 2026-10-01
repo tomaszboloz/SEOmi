@@ -963,3 +963,7 @@ Only registered command names reach logs; unknown names become `unknown`. Argume
 ### Site Audit view composition (audit BATCH-2g)
 
 `SiteAudit.tsx` assembles the desktop workspace. `siteAudit/useSiteAuditSession.ts` coordinates project state, crawl controls, profile editing, comparisons and exports through a typed `SiteAuditSessionDependencies` contract. Twenty-three panels render individual forms, progress, restart controls, history, resource/page errors, report templates and exports; they receive session values and do not read stores or storage. Small helpers handle elapsed display and focus. Existing project switching, CSV evidence, storage keys and public `SiteAudit` export are preserved; no migration is required.
+
+### Crawl results boundaries (audit BATCH-2h)
+
+`CrawlResultsTabs.tsx` assembles navigation and the active tab. `crawlResults/useCrawlResultsSession.ts` owns filters, project/run transitions, derived evidence and actions. Its typed dependency contract supports rendering, artifact download, PDF export and clipboard fixtures. Eighteen tab views, a small router, page table and summary metrics receive session values without accessing stores or storage. Navigation preferences, metadata rules and primitives are separate modules. Existing props, project/run storage keys, exports and browser-rendered evidence remain compatible; no migration is required. All 45 original behavior tests and five direct preference/session tests pass; the full local suite has 908 frontend, 355 Rust and 65 MCP tests.

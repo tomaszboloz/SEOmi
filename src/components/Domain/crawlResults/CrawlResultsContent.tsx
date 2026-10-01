@@ -1,0 +1,42 @@
+import type { useCrawlResultsSession } from './useCrawlResultsSession';
+import { CrawlOverviewTab } from './CrawlOverviewTab';
+import { CrawlCrawlerReadinessTab } from './CrawlCrawlerReadinessTab';
+import { CrawlUrlsTab } from './CrawlUrlsTab';
+import { CrawlIssuesTab } from './CrawlIssuesTab';
+import { CrawlContentTab } from './CrawlContentTab';
+import { CrawlMetadataTab } from './CrawlMetadataTab';
+import { CrawlCustomSearchTab } from './CrawlCustomSearchTab';
+import { CrawlLinksTab } from './CrawlLinksTab';
+import { CrawlMediaTab } from './CrawlMediaTab';
+import { CrawlFramesTab } from './CrawlFramesTab';
+import { CrawlSocialTab } from './CrawlSocialTab';
+import { CrawlDirectivesTab } from './CrawlDirectivesTab';
+import { CrawlInternationalTab } from './CrawlInternationalTab';
+import { CrawlStructuredTab } from './CrawlStructuredTab';
+import { CrawlValidationTab } from './CrawlValidationTab';
+import { CrawlPerformanceTab } from './CrawlPerformanceTab';
+import { CrawlVisualisationsTab } from './CrawlVisualisationsTab';
+import { CrawlExportsTab } from './CrawlExportsTab';
+export const CrawlResultsContent = ({ session }: { session: ReturnType<typeof useCrawlResultsSession> }) => {
+switch (session.activeTab) {
+case 'overview': return <CrawlOverviewTab session={session} />;
+case 'crawlerReadiness': return <CrawlCrawlerReadinessTab session={session} />;
+case 'urls': return <CrawlUrlsTab session={session} />;
+case 'issues': return <CrawlIssuesTab session={session} />;
+case 'content': return <CrawlContentTab session={session} />;
+case 'metadata': return <CrawlMetadataTab session={session} />;
+case 'customSearch': return <CrawlCustomSearchTab session={session} />;
+case 'links': return <CrawlLinksTab session={session} />;
+case 'media': return <CrawlMediaTab session={session} />;
+case 'frames': return <CrawlFramesTab session={session} />;
+case 'social': return <CrawlSocialTab session={session} />;
+case 'directives': return <CrawlDirectivesTab session={session} />;
+case 'international': return <CrawlInternationalTab session={session} />;
+case 'structured': return <CrawlStructuredTab session={session} />;
+case 'validation': return <CrawlValidationTab session={session} />;
+case 'performance': return <CrawlPerformanceTab session={session} />;
+case 'visualisations': return <CrawlVisualisationsTab session={session} />;
+case 'exports': return <CrawlExportsTab session={session} />;
+default: return null;
+}
+};
