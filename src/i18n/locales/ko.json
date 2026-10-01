@@ -478,7 +478,8 @@
       "missingSignal": "Not observed now: {{value}}",
       "sharedTerms": "공유 용어: {{value}}",
       "weightedJaccard": "가중 Jaccard: {{value}}",
-      "missing": "none"
+      "missing": "none",
+      "queryChangedTitle": "Observed query tokens changed: {{query}}"
     },
     "contentBrief": {
       "draftTitle": "Content draft",

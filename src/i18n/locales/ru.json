@@ -478,7 +478,8 @@
       "missingSignal": "Not observed now: {{value}}",
       "sharedTerms": "Общие термины: {{value}}",
       "weightedJaccard": "Взвешенный Jaccard: {{value}}",
-      "missing": "none"
+      "missing": "none",
+      "queryChangedTitle": "Observed query tokens changed: {{query}}"
     },
     "contentBrief": {
       "draftTitle": "Content draft",

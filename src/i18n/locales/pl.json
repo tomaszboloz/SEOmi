@@ -478,7 +478,8 @@
       "missingSignal": "Nieobserwowane teraz: {{value}}",
       "sharedTerms": "Wspólne terminy: {{value}}",
       "weightedJaccard": "Ważony Jaccard: {{value}}",
-      "missing": "brak"
+      "missing": "brak",
+      "queryChangedTitle": "Zmieniły się zaobserwowane tokeny zapytania: {{query}}"
     },
     "contentBrief": {
       "draftTitle": "Szkic treści",

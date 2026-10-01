@@ -30,3 +30,8 @@ it('keeps the native crawler test facade and every test module below 150 physica
  const files=['src-tauri/src/commands/site_crawler/tests.rs',...codeFiles('src-tauri/src/commands/site_crawler/tests')];
  expect(maxLocReport(files).violations).toEqual([]);
 });
+
+it('keeps SERP preview and semantic comparison modules below 150 physical lines',()=>{
+ const files=['src/services/serpPreview.ts','src/services/semanticRunComparison.ts',...codeFiles('src/services/serpPreview'),...codeFiles('src/services/semanticRunComparison')];
+ expect(maxLocReport(files).violations).toEqual([]);
+});

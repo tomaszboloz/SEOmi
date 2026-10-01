@@ -1111,3 +1111,11 @@ Full local suites:1580frontend/399Rust/70MCP; build/lint/rustfmt/strictClippy pa
 The2689line native crawler test file now has25 modules organized by tested behavior, each at most147physical lines. The110line facade keeps both shared fixtures. All117test bodies and assertions are retained byte-for-byte, and all119function names are preserved. A LOC regression guard checks the facade and its children.
 
 Full local suites:1581frontend/399Rust/70MCP; build/lint/rustfmt/strictClippy pass. Latest frontend82.64%statements/70.14%branches/81.59%functions/85.21%lines. Production native unchanged from preceding62.68%lines/57.68%functions; branches unavailable. Global LOC remains incomplete:189violations across559files. Original audit69/72; no new version/tag until the required gates pass.
+
+### SERP preview and semantic run comparison (audit BATCH-3x)
+
+SERP text measurement, sitelinks, rich-result evidence and semantic comparison indexing, page/relation/topic deltas now use nine separate modules below98physical lines, retaining the original public APIs. Regressions fix zero review counts being replaced, current-document sitelinks when the audited URL contains a fragment, and changed query tokens being hidden when their match count stays equal. The query report distinguishes changed tokens from increased/decreased counts and continues to describe crawl observations only.
+
+Direct contracts cover invalid/missing/zero structured evidence, supported graph types, canvas restrictions, Unicode/pixel limits, URL aliases, real lexical graph relations, unavailable/unchanged query evidence and all documented comparison bounds. The focused suite passes a strict99.01%gate with100%statements/branches/functions/lines for these modules; this is scoped evidence, not repository-wide completion.
+
+Full local suites:1643frontend/399Rust/70MCP; build/lint/rustfmt/strictClippy pass. Latest full frontend83.25%statements/70.98%branches/81.95%functions/85.64%lines. Native production unchanged from the preceding62.68%lines/57.68%functions; branches unavailable. GlobalLOC577files/187violations remains incomplete. Original69/72;91/95including discovered local fixes. No new version/tag until the required gates pass.
