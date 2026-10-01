@@ -24,9 +24,18 @@ required-features = ["custom-protocol"]
 name = "function_inventory"
 test = true
 
+[[example]]
+name = "verify_update_signatures"
+test = true
+
+[[example]]
+name = "coverage_sources"
+test = true
+
 [dev-dependencies]
 syn = { version = "2", features = ["full"] }
 proc-macro2 = { version = "1", features = ["span-locations"] }
+minisign-verify = "0.2.5"
 
 [dependencies]
 tauri = { version = "2", features = ["macos-proxy", "tracing"] }

@@ -317,7 +317,7 @@ The frontend commands run from the repository root. The Rust commands run from t
 
 ### Production package
 
-The release workflow produces signed installers only after the release signing gate passes. A local source build is useful for verification but is not an update package. See Release signing setup before creating a version tag for distribution.
+The release workflow produces updater packages signed with the SEOmi Tauri key. Installers have no Apple Developer ID/notarization or Windows Authenticode certificates and may trigger operating-system warnings. A local source build is not a published update package. See Release signing setup before tagging a release.
 
 <a id="repository_layout"></a>
 ## Repository layout
@@ -366,7 +366,7 @@ The loopback API accepts JSON numbers without coercion, caps concurrent audit/cr
 
 MCP provider transports live in `mcp-server/src/providers.ts` behind an injectable fetch/environment contract. JSON must be an object, decoded response bodies have a 2 MiB ceiling, redirects are rejected and HTTP/task failures expose local status messages. Provider tests require no credentials or external requests. Tool input/output schemas remain unchanged.
 
-Static checks run with `npm run lint` (ESLint 10, TypeScript/React correctness rules) and strict native Clippy. CI publishes whole-frontend V8 coverage using `npm run test:coverage`. Declaration-only `src/types/**` is the sole explicit source exclusion. The separate `npm run test:coverage:target` enforces 99.01% statements, lines, branches and functions; it remains an unmet target, not a passing release claim. Rust baseline uses cargo-llvm-cov 0.9.1; its current summary includes inline test modules, so it is not an isolated production-code coverage guarantee. Official release signing still requires repository secrets; the Intel runner is `macos-15-intel`, paired with the explicit x86_64 target.
+Static checks run with `npm run lint` (ESLint 10, TypeScript/React correctness rules) and strict native Clippy. CI publishes whole-frontend V8 coverage using `npm run test:coverage`. Declaration-only `src/types/**` is the sole explicit source exclusion. The separate `npm run test:coverage:target` enforces 99.01% statements, lines, branches and functions; it remains an unmet target, not a passing release claim. Rust baseline uses cargo-llvm-cov 0.9.1; its current summary includes inline test modules, so it is not an isolated production-code coverage guarantee. Release updater signing requires the product key in repository secrets; system certificate signing is disabled for the selected free distribution mode; the Intel runner is `macos-15-intel`, paired with the explicit x86_64 target.
 
 The ongoing audit and measured coverage baseline are tracked in [AUDIT_GAPS.md](AUDIT_GAPS.md). Passing tests do not establish the >99% coverage target. Run the full frontend, native and MCP suites after every batch.
 
@@ -732,35 +732,18 @@ xattr -dr com.apple.quarantine "/path/to/SEOmi.app"
 
 Never use that command to bypass a warning for an unknown download. It removes a safety marker and is not a replacement for code signing or notarisation.
 
-### What remains unavailable without Apple credentials
+### Free distribution and operating-system certificates
 
-The local app and the macOS jobs in the test workflow do not need Apple ID, a team ID, a Developer ID certificate, or notarisation. The tagged release workflow is deliberately different. When a signing secret is missing, its preflight records a not ready status and skips compilation and publication, so an unsigned or unverifiable installer cannot be published accidentally. Automatic updates and public distribution become available only after the Apple and Tauri signing values in the next section are configured.
+The selected distribution mode signs every updater package with the SEOmi Tauri key. It does not use paid Apple Developer ID/notarization or Windows Authenticode certificates. macOS bundles use a local ad-hoc signature for executable compatibility; this does not establish an Apple-trusted developer identity. Both operating systems may display security warnings. Verify the repository release and artifact provenance before installing.
 
 <a id="release_signing"></a>
 ## Release signing setup
 
-The release workflow checks every signing value before compilation. When a value is missing, the run remains successful but is marked not ready in the job summary and the build and publication jobs are skipped. This protects users from receiving an installer that cannot be verified by the updater without turning an unconfigured private repository into a false release failure.
+The required Actions secret is `TAURI_SIGNING_PRIVATE_KEY`. `TAURI_SIGNING_PRIVATE_KEY_PASSWORD` is optional and must match the key when password protection is used. The product public key is embedded in `src-tauri/tauri.conf.json`. `tauri.release.conf.json` enables updater artifacts and their signatures. Missing updater credentials fail the tagged workflow; artifacts stay in a draft until all three platform builds and cryptographic verification pass. Apple and Windows certificate secrets are not required or consumed by the current workflow.
 
-Open the repository settings, choose Secrets and variables, choose Actions, and add the following repository secrets through the GitHub interface. Values must come from the organisation that owns the signing identities. Never commit a value to this repository and never paste a value into an issue.
+Generate a product-specific key with `npx tauri signer generate --ci --write-keys /secure/location/seomi-updater.key`. Store the private file outside the checkout with owner-only permissions, keep an offline recovery copy, and supply it to GitHub Actions through the Secrets interface or `gh secret set` using standard input. Never paste it into an issue, commit it or reuse another application's key. The public `.pub` file can be shared. Losing the private key prevents updates to applications that trust its public key; a new key requires a deliberate trust migration or manual reinstall.
 
-<table>
-<tr><th>Secret</th><th>Purpose</th><th>Source</th></tr>
-<tr><td>TAURI_SIGNING_PRIVATE_KEY</td><td>Signs updater metadata and packages</td><td>Tauri updater key generated for this product</td></tr>
-<tr><td>TAURI_SIGNING_PRIVATE_KEY_PASSWORD</td><td>Unlocks the updater key</td><td>Password chosen when the key was created</td></tr>
-<tr><td>APPLE_CERTIFICATE</td><td>Developer ID certificate in encoded form</td><td>Apple Developer account and exported certificate</td></tr>
-<tr><td>APPLE_CERTIFICATE_PASSWORD</td><td>Unlocks the certificate export</td><td>Password used for the certificate export</td></tr>
-<tr><td>APPLE_SIGNING_IDENTITY</td><td>Developer ID application identity</td><td>Exact identity shown by the macOS keychain</td></tr>
-<tr><td>APPLE_ID</td><td>Apple account for notarization</td><td>Apple Developer account</td></tr>
-<tr><td>APPLE_PASSWORD</td><td>App specific notarization password</td><td>Apple account app specific password</td></tr>
-<tr><td>APPLE_TEAM_ID</td><td>Apple developer team identity</td><td>Apple Developer membership details</td></tr>
-<tr><td>WINDOWS_CERTIFICATE</td><td>Encoded Authenticode certificate</td><td>Windows code signing provider PFX export</td></tr>
-<tr><td>WINDOWS_CERTIFICATE_PASSWORD</td><td>Unlocks the Authenticode certificate</td><td>Password used for the PFX export</td></tr>
-<tr><td>WINDOWS_CERTIFICATE_THUMBPRINT</td><td>Verifies the signer of every installer</td><td>Thumbprint of the certificate installed in the runner</td></tr>
-</table>
-
-After adding the secrets, run the release workflow again by creating or moving the version tag only when the source commit is ready. The preflight should report that all credentials are configured. The macOS jobs then verify the application signature, Gatekeeper assessment, disk image presence, and notarization ticket. The Windows job verifies the Authenticode status and the expected certificate thumbprint. The updater package is published only after all platform jobs pass. Until then, a green workflow means that no unsafe release was attempted, not that an installer was published.
-
-If a secret is rotated, update the repository secret, revoke the old identity with its issuing authority, and run a new release. Do not reuse an old updater key for a different application. Keep a recovery copy of certificates in the organisation secret manager, not in the repository.
+The release verification example checks every macOS `.app.tar.gz`, Windows MSI and NSIS update package against the application's public key. Missing signatures, altered package bytes and malformed signatures fail verification. macOS Developer ID/Gatekeeper/notarization and Windows Authenticode checks are intentionally absent from this free distribution mode. No system-trusted signing claim is made.
 
 <a id="verification"></a>
 ## Verification status
@@ -1013,3 +996,11 @@ Final code verification: commit `951b634`, GitHub run `36885645884`, all five re
 Seventeen additional tests verify PageSpeed/CrUX project switching, provider failures, native queue availability versus empty storage, failed persistence, exact acknowledgment scope and project-specific history deletion. The full local suites pass 978 frontend, 366 native and 65 MCP tests, with build, lint, formatting and strict Clippy passing. Whole-frontend coverage measures 78.12% statements, 62.43% branches, 73.79% functions and 80.60% lines. The inventory records 491 executed and 20 unexecuted TypeScript callables out of 536; the remaining evidence categories and >99% target remain open.
 
 The subsequent documentation-head CI run `36888933033` passed Windows, frontend, Rust and dependency checks; macOS stopped at a five-second timeout in the large-directory pagination test before native runtime execution. The regression retains its original timeout and 105-page fixture, narrows DOM role queries to the active directory catalog, and desktop CI limits Vitest to two workers. Cargo cache keys include runner architecture. These changes require fresh remote CI verification.
+
+### Free updater signing and isolated native coverage (audit BATCH-3g)
+
+The selected free release mode now has a product-specific Tauri updater key in Actions secrets and the matching public key in the app. A real local macOS updater bundle was built, signed and cryptographically verified; five tests reject missing, altered and malformed signatures. This establishes local package verification, not a published installer. macOS Developer ID/notarization and Windows Authenticode are absent by explicit distribution choice. Release artifacts stay in a draft until all platform jobs and updater signature checks succeed. Manual workflow dispatch builds verification artifacts without publishing a version tag.
+
+Native CI preserves raw LCOV and LLVM JSON and reports production coverage separately. A `syn` module graph identifies test-only modules and inline test ranges; a pre-measurement SHA256 manifest rejects source drift. Generic instances are grouped by exact source region, checked against LLVM's own aggregate counters before filtering. Two Rust AST fixtures and five reporter fixtures protect this boundary. Fresh local compiled production coverage is 60.98% lines (10956/17966) and 56.67% source functions (1045/1844). Branch instrumentation and uncompiled platform code are not covered by this report; the >99% gate remains open.
+
+The full suites pass 983 frontend, 373 native and 65 MCP tests, with build, lint, formatting and strict Clippy passing. Frontend coverage is 78.01% statements, 62.33% branches, 73.69% functions and 80.47% lines. The original audit stands at 69/72 fixed (71/74 including discovered regressions). Remaining gates are frontend/native >99% and complete direct public-function unit evidence. CI run `36890717194` passed all five checks for `cdf90c5`, including macOS and Windows desktop runtime; later changes need their own remote checks.

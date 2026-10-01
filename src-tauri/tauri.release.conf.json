@@ -1,18 +1,9 @@
 {
   "$schema": "https://schema.tauri.app/config/2",
   "bundle": {
-    "windows": {
-      "digestAlgorithm": "sha256",
-      "timestampUrl": "https://timestamp.digicert.com",
-      "signCommand": {
-        "cmd": "powershell.exe",
-        "args": [
-          "-NoProfile",
-          "-NonInteractive",
-          "-Command",
-          "$ErrorActionPreference = 'Stop'; if (-not $env:WINDOWS_CERTIFICATE_THUMBPRINT) { throw 'WINDOWS_CERTIFICATE_THUMBPRINT is required for Authenticode signing.' }; & signtool.exe sign /fd SHA256 /sha1 $env:WINDOWS_CERTIFICATE_THUMBPRINT /tr $env:WINDOWS_TIMESTAMP_URL /td SHA256 \"%1\""
-        ]
-      }
+    "createUpdaterArtifacts": true,
+    "macOS": {
+      "signingIdentity": "-"
     }
   }
 }

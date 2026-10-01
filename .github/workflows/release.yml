@@ -1,5 +1,6 @@
 name: Multi-Platform Release (macOS & Windows)
 on:
+  workflow_dispatch:
   push:
     tags:
       - 'v*'
@@ -13,55 +14,19 @@ jobs:
     outputs:
       ready: ${{ steps.credentials.outputs.ready }}
     steps:
-      - name: Check platform signing credentials
+      - name: Check updater signing credentials
         id: credentials
         env:
           TAURI_SIGNING_PRIVATE_KEY: ${{ secrets.TAURI_SIGNING_PRIVATE_KEY }}
-          TAURI_SIGNING_PRIVATE_KEY_PASSWORD: ${{ secrets.TAURI_SIGNING_PRIVATE_KEY_PASSWORD }}
-          APPLE_CERTIFICATE: ${{ secrets.APPLE_CERTIFICATE }}
-          APPLE_CERTIFICATE_PASSWORD: ${{ secrets.APPLE_CERTIFICATE_PASSWORD }}
-          APPLE_SIGNING_IDENTITY: ${{ secrets.APPLE_SIGNING_IDENTITY }}
-          APPLE_ID: ${{ secrets.APPLE_ID }}
-          APPLE_PASSWORD: ${{ secrets.APPLE_PASSWORD }}
-          APPLE_TEAM_ID: ${{ secrets.APPLE_TEAM_ID }}
-          WINDOWS_CERTIFICATE: ${{ secrets.WINDOWS_CERTIFICATE }}
-          WINDOWS_CERTIFICATE_PASSWORD: ${{ secrets.WINDOWS_CERTIFICATE_PASSWORD }}
-          WINDOWS_CERTIFICATE_THUMBPRINT: ${{ secrets.WINDOWS_CERTIFICATE_THUMBPRINT }}
         shell: bash
         run: |
           set -euo pipefail
-          required=(
-            TAURI_SIGNING_PRIVATE_KEY
-            TAURI_SIGNING_PRIVATE_KEY_PASSWORD
-            APPLE_CERTIFICATE
-            APPLE_CERTIFICATE_PASSWORD
-            APPLE_SIGNING_IDENTITY
-            APPLE_ID
-            APPLE_PASSWORD
-            APPLE_TEAM_ID
-            WINDOWS_CERTIFICATE
-            WINDOWS_CERTIFICATE_PASSWORD
-            WINDOWS_CERTIFICATE_THUMBPRINT
-          )
-          missing=0
-          for name in "${required[@]}"; do
-            if [[ -z "${!name:-}" ]]; then
-              printf 'Missing required release secret: %s\n' "$name" >&2
-              missing=1
-            fi
-          done
-          if (( missing )); then
-            echo 'ready=false' >> "$GITHUB_OUTPUT"
-            {
-              echo '### Release not published'
-              echo
-              echo 'Signing credentials are not configured. No unsigned or unverifiable desktop artifact will be published.'
-              echo 'Configure the repository Actions secrets when an official macOS and Windows release is ready.'
-            } >> "$GITHUB_STEP_SUMMARY"
-            exit 0
+          if [[ -z "$TAURI_SIGNING_PRIVATE_KEY" ]]; then
+            echo 'Missing TAURI_SIGNING_PRIVATE_KEY; release blocked.' >&2
+            exit 1
           fi
           echo 'ready=true' >> "$GITHUB_OUTPUT"
-          echo 'All release signing credentials are configured.' >> "$GITHUB_STEP_SUMMARY"
+          echo 'Updater signing configured. Installers have no Apple Developer ID or Windows Authenticode certificate.' >> "$GITHUB_STEP_SUMMARY"
 
   release:
     needs: release-preflight
@@ -72,7 +37,7 @@ jobs:
       fail-fast: false
       matrix:
         include:
-          - platform: 'macos-latest'
+          - platform: 'macos-15'
             args: '--target aarch64-apple-darwin'
           - platform: 'macos-15-intel'
             args: '--target x86_64-apple-darwin'
@@ -106,22 +71,10 @@ jobs:
       - name: Setup Rust Toolchain
         uses: dtolnay/rust-toolchain@stable
         with:
-          targets: ${{ matrix.platform == 'macos-latest' && 'aarch64-apple-darwin' || matrix.platform == 'macos-15-intel' && 'x86_64-apple-darwin' || '' }}
+          targets: ${{ matrix.platform == 'macos-15' && 'aarch64-apple-darwin' || matrix.platform == 'macos-15-intel' && 'x86_64-apple-darwin' || '' }}
 
       - name: Install Frontend Dependencies
         run: npm ci
-
-      - name: Import Windows Authenticode certificate
-        if: runner.os == 'Windows'
-        shell: pwsh
-        env:
-          WINDOWS_CERTIFICATE: ${{ secrets.WINDOWS_CERTIFICATE }}
-          WINDOWS_CERTIFICATE_PASSWORD: ${{ secrets.WINDOWS_CERTIFICATE_PASSWORD }}
-        run: |
-          $certificatePath = Join-Path $env:RUNNER_TEMP 'seomi-code-signing.pfx'
-          [IO.File]::WriteAllBytes($certificatePath, [Convert]::FromBase64String($env:WINDOWS_CERTIFICATE))
-          certutil.exe -f -p $env:WINDOWS_CERTIFICATE_PASSWORD -importPFX My $certificatePath NoRoot
-          Remove-Item -Force $certificatePath
 
       - name: Build Desktop Application with Tauri
         uses: tauri-apps/tauri-action@v0
@@ -129,63 +82,28 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           TAURI_SIGNING_PRIVATE_KEY: ${{ secrets.TAURI_SIGNING_PRIVATE_KEY }}
           TAURI_SIGNING_PRIVATE_KEY_PASSWORD: ${{ secrets.TAURI_SIGNING_PRIVATE_KEY_PASSWORD }}
-          APPLE_CERTIFICATE: ${{ secrets.APPLE_CERTIFICATE }}
-          APPLE_CERTIFICATE_PASSWORD: ${{ secrets.APPLE_CERTIFICATE_PASSWORD }}
-          APPLE_SIGNING_IDENTITY: ${{ secrets.APPLE_SIGNING_IDENTITY }}
-          APPLE_ID: ${{ secrets.APPLE_ID }}
-          APPLE_PASSWORD: ${{ secrets.APPLE_PASSWORD }}
-          APPLE_TEAM_ID: ${{ secrets.APPLE_TEAM_ID }}
-          WINDOWS_CERTIFICATE_THUMBPRINT: ${{ secrets.WINDOWS_CERTIFICATE_THUMBPRINT }}
-          WINDOWS_TIMESTAMP_URL: https://timestamp.digicert.com
         with:
-          tagName: ${{ github.ref_name }}
+          tagName: ${{ github.event_name == 'push' && github.ref_name || '' }}
           releaseName: 'SEOmi v__VERSION__'
-          releaseBody: 'SEOmi desktop release for macOS and Windows.'
+          releaseBody: |
+            SEOmi desktop release for macOS and Windows.
+
+            Update packages are signed with the SEOmi Tauri updater key. Installers do not carry Apple Developer ID/notarization or Windows Authenticode certificates; the operating system may display security warnings.
+
+            ### Thanks
+            Thank you @RafalSzy for the testing feedback and insistence on regression coverage.
           releaseDraft: true
           prerelease: false
+          uploadWorkflowArtifacts: true
           args: ${{ matrix.args }} --config src-tauri/tauri.release.conf.json
 
-      - name: Verify macOS signature and notarization
-        if: runner.os == 'macOS'
-        shell: bash
-        run: |
-          set -euo pipefail
-          app="$(find src-tauri/target -type d -path '*/bundle/macos/*.app' -print -quit)"
-          if [[ -z "$app" ]]; then
-            echo 'No macOS .app artifact was produced.' >&2
-            exit 1
-          fi
-          codesign --verify --deep --strict --verbose=2 "$app"
-          spctl --assess --type execute --verbose=2 "$app"
-          dmg="$(find src-tauri/target -type f -path '*/bundle/dmg/*.dmg' -print -quit)"
-          if [[ -z "$dmg" ]]; then
-            echo 'No macOS DMG artifact was produced.' >&2
-            exit 1
-          fi
-          xcrun stapler validate "$dmg"
-
-      - name: Verify Windows Authenticode signatures
-        if: runner.os == 'Windows'
-        shell: pwsh
-        env:
-          WINDOWS_CERTIFICATE_THUMBPRINT: ${{ secrets.WINDOWS_CERTIFICATE_THUMBPRINT }}
-        run: |
-          $artifacts = Get-ChildItem -Path 'src-tauri/target' -Recurse -File |
-            Where-Object { $_.Extension -in @('.exe', '.msi') }
-          if (-not $artifacts) { throw 'No Windows installer or executable artifacts were produced.' }
-          foreach ($artifact in $artifacts) {
-            $signature = Get-AuthenticodeSignature -FilePath $artifact.FullName
-            if ($signature.Status -ne 'Valid') {
-              throw "Invalid Authenticode signature ($($signature.Status)): $($artifact.FullName)"
-            }
-            if ($signature.SignerCertificate.Thumbprint -ne $env:WINDOWS_CERTIFICATE_THUMBPRINT) {
-              throw "Unexpected Authenticode certificate: $($artifact.FullName)"
-            }
-          }
+      - name: Verify every generated updater signature
+        run: cargo run --quiet --manifest-path src-tauri/Cargo.toml --features custom-protocol --example verify_update_signatures -- src-tauri/target
 
   publish-release:
     name: Publish verified release
     needs: release
+    if: github.event_name == 'push'
     runs-on: ubuntu-latest
     permissions:
       contents: write

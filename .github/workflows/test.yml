@@ -18,6 +18,9 @@ jobs:
       - uses: taiki-e/install-action@v2
         with:
           tool: cargo-llvm-cov@0.9.1
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
       - name: Cache Cargo dependencies
         uses: actions/cache@v4
         with:
@@ -33,12 +36,21 @@ jobs:
       - name: Strict Clippy
         run: cargo clippy --manifest-path src-tauri/Cargo.toml --all-targets -- -D warnings
       - name: Run Cargo Test with coverage
-        run: cargo llvm-cov --manifest-path src-tauri/Cargo.toml --lcov --output-path coverage-rust.lcov
+        run: |
+          cargo run --quiet --manifest-path src-tauri/Cargo.toml --example coverage_sources > native-coverage-sources.json
+          cargo llvm-cov --manifest-path src-tauri/Cargo.toml --lcov --output-path coverage-rust.lcov
+          cargo llvm-cov report --manifest-path src-tauri/Cargo.toml --json --output-path coverage-rust.json
+          node scripts/native-production-coverage.mjs coverage-rust.lcov native-coverage-sources.json coverage-rust-production.lcov coverage-rust.json
       - name: Upload native coverage
         uses: actions/upload-artifact@v4
         with:
           name: native-coverage
-          path: coverage-rust.lcov
+          path: |
+            coverage-rust.lcov
+            coverage-rust.json
+            coverage-rust-production.lcov
+            coverage-rust-production.lcov.summary.json
+            native-coverage-sources.json
           retention-days: 14
       - name: Inventory declared native functions using Rust AST
         run: cargo run --quiet --manifest-path src-tauri/Cargo.toml --example function_inventory > native-function-inventory.json
