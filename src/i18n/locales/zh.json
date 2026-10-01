@@ -211,6 +211,7 @@
       "articleHeadlineOmitted": "已省略文章节点：没有可用于 headline 的抓取页面标题。"
     },
     "backup": {
+      "tooLarge": "备份超过导入大小限制。",
       "missingProject": "Backup file does not contain a project object.",
       "format": "Unsupported project backup format.",
       "secrets": "Backup has an invalid secrets policy.",

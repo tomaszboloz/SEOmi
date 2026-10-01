@@ -211,6 +211,7 @@
       "articleHeadlineOmitted": "Nœud d’article omis : aucun titre de page crawlée n’est disponible pour le headline."
     },
     "backup": {
+      "tooLarge": "La sauvegarde dépasse la limite d’importation.",
       "missingProject": "Backup file does not contain a project object.",
       "format": "Unsupported project backup format.",
       "secrets": "Backup has an invalid secrets policy.",

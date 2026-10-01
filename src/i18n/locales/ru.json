@@ -211,6 +211,7 @@
       "articleHeadlineOmitted": "Узел статьи пропущен: нет заголовка просканированной страницы для headline."
     },
     "backup": {
+      "tooLarge": "Резервная копия превышает лимит импорта.",
       "missingProject": "Backup file does not contain a project object.",
       "format": "Unsupported project backup format.",
       "secrets": "Backup has an invalid secrets policy.",

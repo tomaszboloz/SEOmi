@@ -2,7 +2,7 @@
 Audytor: Staff Developer | Data: 2026-10-01
 
 ## Statystyki
-- Zidentyfikowanych luk: 53
+- Zidentyfikowanych luk: 55
 - Batchy do wdrożenia: 7
 - Szacowany effort: 20–35 MD; estymacja orientacyjna, do korekty po pomiarze coverage.
 - Baseline: commit 18fa446b13ec3f97db76896bfdf446f97fe80051; 704 frontend / 320 Rust / 27 MCP testów.
@@ -53,8 +53,8 @@ Pomiary bazowego commitu (2026-10-01):
 - [x] GAP-028: [MEDIUM] Brak testu strumieniowego przekroczenia limitu odpowiedzi audytu HTTP. Dowód: `src-tauri/src/services/http_client.rs:201`. Status: FIXED (BATCH-1a); dowód: 12 deterministycznych testów http_client, pełny suite i Clippy. Resolver DI, przypięty transport per hop, jeden deadline i limit strumienia; brak testów zależnych od internetu.
 
 ## BATCH 4: Performance & Resource Bounds
-- [ ] GAP-029: [MEDIUM] readStorageEntries wylicza Object.keys(entries) w każdej iteracji: koszt kwadratowy. Dowód: `src/services/storage.ts:69`. Status: OPEN; wymagane testy red/green i rewalidacja.
-- [ ] GAP-030: [HIGH] parseProjectBackup parsuje dowolnie duży string JSON bez limitu wejścia. Dowód: `src/services/projectBackup.ts:104`. Status: OPEN; wymagane testy red/green i rewalidacja.
+- [x] GAP-029: [MEDIUM] readStorageEntries wylicza Object.keys(entries) w każdej iteracji: koszt kwadratowy. Dowód: `src/services/storage.ts:69`. Status: FIXED (BATCH-4b); regresje kosztu enumeracji, limitu przed JSON.parse i lifecycle text/PDF. Pełny suite/build PASS.
+- [x] GAP-030: [HIGH] parseProjectBackup parsuje dowolnie duży string JSON bez limitu wejścia. Dowód: `src/services/projectBackup.ts:104`. Status: FIXED (BATCH-4b); regresje kosztu enumeracji, limitu przed JSON.parse i lifecycle text/PDF. Pełny suite/build PASS.
 - [x] GAP-031: [MEDIUM] get_config czyta cały dowolnie duży plik przed deserializacją. Dowód: `src-tauri/src/commands/settings.rs:320`. Status: FIXED (BATCH-1c); walidacja konfiguracji, ograniczony odczyt, atomowy zapis i testy błędów/recovery; pełny suite PASS.
 - [x] GAP-032: [MEDIUM] Regex identyfikatorów i nazw sekretów jest kompilowany przy każdym wywołaniu. Dowód: `src-tauri/src/commands/settings.rs:27`. Status: FIXED (BATCH-1c); walidacja konfiguracji, ograniczony odczyt, atomowy zapis i testy błędów/recovery; pełny suite PASS.
 - [x] GAP-033: [MEDIUM] Lokalne API nie ma jawnego limitu równoległych audytów/crawlów. Dowód: `mcp-server/src/localApi.ts:134`. Status: FIXED (BATCH-4a); testy integracyjne HTTP: typy, limit konkurencji, safe errors i korelacja/logi; pełny suite PASS.
@@ -73,7 +73,7 @@ Pomiary bazowego commitu (2026-10-01):
 - [ ] GAP-042: [MEDIUM] readJsonStorage<T> zwraca JSON as T bez walidacji runtime kontraktu. Dowód: `src/services/storage.ts:46`. Status: OPEN; wymagane testy red/green i rewalidacja.
 - [x] GAP-043: [MEDIUM] Local API konwertuje timeout/max_pages/max_depth Number(), przyjmując stringi/bool zamiast typów kontraktu. Dowód: `mcp-server/src/localApi.ts:94`. Status: FIXED (BATCH-4a); testy integracyjne HTTP: typy, limit konkurencji, safe errors i korelacja/logi; pełny suite PASS.
 - [ ] GAP-044: [MEDIUM] Frontend i MCP duplikują reguły rynków, typy wyników i normalizację domen. Dowód: `src/services/dataforseo.ts; mcp-server/src/index.ts`. Status: OPEN; wymagane testy red/green i rewalidacja.
-- [ ] GAP-045: [LOW] downloadText/downloadPdf duplikują cykl życia Blob URL i elementu anchor. Dowód: `src/services/export.ts:39`. Status: OPEN; wymagane testy red/green i rewalidacja.
+- [x] GAP-045: [LOW] downloadText/downloadPdf duplikują cykl życia Blob URL i elementu anchor. Dowód: `src/services/export.ts:39`. Status: FIXED (BATCH-4b); regresje kosztu enumeracji, limitu przed JSON.parse i lifecycle text/PDF. Pełny suite/build PASS.
 - [ ] GAP-046: [MEDIUM] Kod biznesowy/widoki używają any zamiast zweryfikowanych danych providerów. Dowód: `src/components/Performance/PageSpeedWorkspace.tsx:102`. Status: OPEN; wymagane testy red/green i rewalidacja.
 
 ## BATCH 7: Documentation & DevOps
@@ -88,6 +88,9 @@ Pomiary bazowego commitu (2026-10-01):
 - [x] GAP-053: [DISCOVERED] [LOW] Wersja MCP runtime 1.0.0 różni się od package.json 0.0.1. Dowód: mcp-server/src/index.ts:25; mcp-server/package.json:3. FIXED (BATCH-2a); wersja pochodzi z package.json, asercja handshake przez MCP.
 
 
+- [x] GAP-054: [DISCOVERED] [MEDIUM] Wyjątek anchor.click/createElement pomijał usunięcie anchor i revokeObjectURL. Dowód przed zmianą: src/services/export.ts:36,56; test RED downloadLifecycle. FIXED (BATCH-4b): wspólne try/finally i regresje text/PDF/DOM failure.
+- [x] GAP-055: [DISCOVERED] [LOW] Sufiks __proto__ w enumeracji storage nie był zapisywany jako własny klucz (utrata wpisu). Dowód przed zmianą: src/services/storage.ts:76. FIXED (BATCH-4b): defineProperty i test własnego klucza bez zmiany prototypu. Nie stwierdzono eskalacji prototype pollution.
+
 ## Dziennik batchy
 - BATCH-0: audyt bazowy: 50 wpisów; pomiary frontend/Rust ukończone, cel >99% pozostaje OPEN.
 - BATCH-1a: transport HTTP. RED: nowe testy kontraktu nie kompilowały się przed dodaniem granicy resolvera. GREEN: 704 frontend / 330 Rust / 27 MCP; build frontend + MCP, rustfmt i strict Clippy. Test strumieniowego timeoutu ujawnił konkurujące deadline'y; naprawiono i ponowiono pełny Rust suite. Brak zmian IPC/migracji.
@@ -96,3 +99,4 @@ Pomiary bazowego commitu (2026-10-01):
 - BATCH-1c: konfiguracja: walidacja, 64 KiB limit, spawn_blocking, atomowe zastąpienie z cleanup, migracja chrome_desktop, widoczny stan błędów (12 języków), liniowe walidatory nazw sekretów zamiast regex per call. RED: 2 testy frontend failures oraz brak natywnych granic; GREEN: 708 frontend / 339 Rust / 33 MCP, build/rustfmt/Clippy PASS. Synchronizacja wygenerowanego schematu capabilities po BATCH-1b.
 - BATCH-2a: bootstrap MCP oddzielony od fabryki serwera i kontraktów runnerów. RED: test protokołu wymagał nieistniejącej fabryki; GREEN: 708 frontend / 339 Rust / 54 MCP, build/Clippy PASS. Wszystkie 18 narzędzi mają happy/error/schema scenariusze; bez kont i płatnych wywołań.
 - BATCH-4a: lokalne API: liczby bez Number coercion, 4 sloty (1–16), timeouty HTTP, bezpieczne mapowanie wyjątków, X-Request-ID i logi bez danych żądania. RED: 3 regresje potwierdziły status 200 dla błędów i brak ID; GREEN: 708 frontend / 339 Rust / 60 MCP, build/Clippy PASS. GAP-040 tylko PARTIAL (native logging pozostaje).
+- BATCH-4b: storage O(N), limit wejścia backupu przed JSON.parse, wspólny cleanup eksportu. RED: 3 regresje (125250 prac dla 500 wpisów, brak guard przed parse i pozostawiony anchor); GREEN: 714 frontend / 339 Rust / 60 MCP; build/Clippy PASS. Build wykrył union Blob|MediaSource w teście — poprawiono narrowing i powtórzono build oraz test lifecycle. GAP-054/055 odkryte i naprawione.

@@ -211,6 +211,7 @@
       "articleHeadlineOmitted": "문서 노드 생략: headline에 사용할 크롤링 페이지 제목이 없습니다."
     },
     "backup": {
+      "tooLarge": "백업이 가져오기 크기 제한을 초과했습니다.",
       "missingProject": "Backup file does not contain a project object.",
       "format": "Unsupported project backup format.",
       "secrets": "Backup has an invalid secrets policy.",

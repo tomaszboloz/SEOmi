@@ -211,6 +211,7 @@
       "articleHeadlineOmitted": "Nó de artigo omitido: não há título de página rastreada disponível para o headline."
     },
     "backup": {
+      "tooLarge": "O backup excede o limite de importação.",
       "missingProject": "Backup file does not contain a project object.",
       "format": "Unsupported project backup format.",
       "secrets": "Backup has an invalid secrets policy.",

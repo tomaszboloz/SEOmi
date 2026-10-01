@@ -88,3 +88,11 @@ describe('project backup', () => {
     setItem.mockRestore();
   });
 });
+
+it('rejects oversized backup input before invoking the JSON parser', () => {
+  const parser = vi.spyOn(JSON, 'parse');
+  try {
+    expect(() => parseProjectBackup(' '.repeat(26 * 1024 * 1024))).toThrow(/limit|limitowany|rozmiar|large|duż/i);
+    expect(parser).not.toHaveBeenCalled();
+  } finally { parser.mockRestore(); }
+});

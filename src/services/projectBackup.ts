@@ -3,6 +3,8 @@ import { loadCrawlRuns, saveCrawlRuns } from '@/services/crawlPersistence';
 import { readStorage, readStorageEntries, removeStorage, writeStorage } from '@/services/storage';
 import i18n from '@/i18n';
 
+export const MAX_PROJECT_BACKUP_CHARS = 25 * 1024 * 1024;
+
 export const PROJECT_BACKUP_FORMAT = 'seomi-project-backup-v1' as const;
 const PROJECT_ID_PATTERN = /^[a-zA-Z0-9-]{1,80}$/;
 const projectStoragePrefix = (projectId: string): string => `seomi_project_${projectId}_`;
@@ -104,6 +106,7 @@ export const serializeProjectBackup = (backup: ProjectBackup): string =>
 
 export const parseProjectBackup = (serialized: string): ProjectBackup => {
   if (typeof serialized !== 'string' || serialized.length === 0) throw new Error(i18n.t('runtimeErrors.backup.empty'));
+  if (serialized.length > MAX_PROJECT_BACKUP_CHARS) throw new Error(i18n.t('runtimeErrors.backup.tooLarge'));
   let parsed: unknown;
   try {
     parsed = JSON.parse(serialized);

@@ -33,16 +33,23 @@ export const auditCsv = (audit: PageAuditData): string => {
     .join('\r\n');
 };
 
-export const downloadText = (filename: string, text: string, mimeType: string): void => {
-  const url = URL.createObjectURL(new Blob([text], { type: `${mimeType};charset=utf-8` }));
-  const anchor = document.createElement('a');
-  anchor.href = url;
-  anchor.download = filename;
-  document.body.appendChild(anchor);
-  anchor.click();
-  anchor.remove();
-  window.setTimeout(() => URL.revokeObjectURL(url), 0);
+const downloadBlob = (filename: string, blob: Blob): void => {
+  const url = URL.createObjectURL(blob);
+  let anchor: HTMLAnchorElement | undefined;
+  try {
+    anchor = document.createElement('a');
+    anchor.href = url;
+    anchor.download = filename;
+    document.body.appendChild(anchor);
+    anchor.click();
+  } finally {
+    anchor?.remove();
+    window.setTimeout(() => URL.revokeObjectURL(url), 0);
+  }
 };
+
+export const downloadText = (filename: string, text: string, mimeType: string): void =>
+  downloadBlob(filename, new Blob([text], { type: `${mimeType};charset=utf-8` }));
 
 const reportFilename = (audit: PageAuditData, extension: 'json' | 'csv' | 'pdf'): string => {
   const host = new URL(audit.final_url).hostname.replace(/[^a-z0-9.-]/gi, '-');
@@ -57,14 +64,7 @@ const downloadPdf = async (command: 'generate_audit_pdf' | 'generate_crawl_pdf',
   const encoded = await invokeTauriCommand<string>(command, args);
   const binary = atob(encoded);
   const bytes = Uint8Array.from(binary, (character) => character.charCodeAt(0));
-  const url = URL.createObjectURL(new Blob([bytes], { type: 'application/pdf' }));
-  const anchor = document.createElement('a');
-  anchor.href = url;
-  anchor.download = filename;
-  document.body.appendChild(anchor);
-  anchor.click();
-  anchor.remove();
-  window.setTimeout(() => URL.revokeObjectURL(url), 0);
+  downloadBlob(filename, new Blob([bytes], { type: 'application/pdf' }));
 };
 
 export const downloadAuditPdf = (audit: PageAuditData): Promise<void> => downloadPdf('generate_audit_pdf', { audit }, reportFilename(audit, 'pdf'));

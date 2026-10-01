@@ -211,6 +211,7 @@
       "articleHeadlineOmitted": "Węzeł artykułu pominięty: brak tytułu crawlowanej strony dla headline."
     },
     "backup": {
+      "tooLarge": "Plik kopii zapasowej przekracza limit rozmiaru importu.",
       "missingProject": "Plik backupu nie zawiera obiektu projektu.",
       "format": "Nieobsługiwany format backupu projektu.",
       "secrets": "Backup zawiera nieprawidłową politykę sekretów.",

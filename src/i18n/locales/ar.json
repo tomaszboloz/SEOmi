@@ -211,6 +211,7 @@
       "articleHeadlineOmitted": "تم تجاهل عقدة المقالة: لا يوجد عنوان صفحة تم الزحف إليها لاستخدامه كـ headline."
     },
     "backup": {
+      "tooLarge": "تتجاوز النسخة الاحتياطية حد الاستيراد.",
       "missingProject": "Backup file does not contain a project object.",
       "format": "Unsupported project backup format.",
       "secrets": "Backup has an invalid secrets policy.",

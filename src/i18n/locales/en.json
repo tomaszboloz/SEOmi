@@ -211,6 +211,7 @@
       "articleHeadlineOmitted": "Article node omitted: no crawled page title is available for its headline."
     },
     "backup": {
+      "tooLarge": "Backup exceeds the import size limit.",
       "missingProject": "Backup file does not contain a project object.",
       "format": "Unsupported project backup format.",
       "secrets": "Backup has an invalid secrets policy.",

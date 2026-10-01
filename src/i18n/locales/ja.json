@@ -211,6 +211,7 @@
       "articleHeadlineOmitted": "記事ノードを省略しました：headline に使えるクロール済みページのタイトルがありません。"
     },
     "backup": {
+      "tooLarge": "バックアップがインポート上限を超えています。",
       "missingProject": "Backup file does not contain a project object.",
       "format": "Unsupported project backup format.",
       "secrets": "Backup has an invalid secrets policy.",

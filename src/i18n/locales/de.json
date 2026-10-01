@@ -211,6 +211,7 @@
       "articleHeadlineOmitted": "Artikelknoten ausgelassen: Für die Überschrift ist kein gecrawlter Seitentitel vorhanden."
     },
     "backup": {
+      "tooLarge": "Das Backup überschreitet die Importgrenze.",
       "missingProject": "Backup file does not contain a project object.",
       "format": "Unsupported project backup format.",
       "secrets": "Backup has an invalid secrets policy.",
