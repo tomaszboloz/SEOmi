@@ -1,6 +1,6 @@
 use crate::models::audit_data::StructuredDataValidationIssue;
 use serde_json::Value;
-use std::collections::HashSet;
+use std::collections::{HashMap, HashSet};
 use url::Url;
 
 const MAX_JSONLD_NODES: usize = 2_048;
@@ -94,6 +94,74 @@ fn context_contains_schema_org(context: &Value) -> bool {
     }
 
     visit(context, 0)
+}
+
+/// Bounded local IRI expansion; remote contexts are never fetched or guessed.
+#[derive(Clone, Default)]
+struct JsonLdContext {
+    vocab: Option<String>,
+    terms: HashMap<String, Option<String>>,
+}
+
+impl JsonLdContext {
+    fn apply(&mut self, value: &Value, depth: usize) {
+        if depth > MAX_CONTEXT_DEPTH {
+            *self = Self::default();
+            return;
+        }
+        match value {
+            Value::Null => *self = Self::default(),
+            Value::String(iri) => {
+                *self = Self::default();
+                if schema_org_iri(iri) {
+                    self.vocab = Some(format!("{}/", iri.trim_end_matches('/')));
+                }
+            }
+            Value::Array(values) => {
+                for context in values.iter().take(MAX_JSONLD_NODES) {
+                    self.apply(context, depth + 1);
+                }
+                if values.len() > MAX_JSONLD_NODES {
+                    *self = Self::default();
+                }
+            }
+            Value::Object(values) => {
+                if let Some(vocab) = values.get("@vocab") {
+                    self.vocab = vocab.as_str().map(str::to_string);
+                }
+                for (term, definition) in values.iter().take(MAX_JSONLD_NODES) {
+                    if !term.starts_with('@') {
+                        let iri = definition
+                            .as_str()
+                            .or_else(|| definition.get("@id").and_then(Value::as_str));
+                        self.terms.insert(term.clone(), iri.map(str::to_string));
+                    }
+                }
+                if values.len() > MAX_JSONLD_NODES {
+                    *self = Self::default();
+                }
+            }
+            _ => *self = Self::default(),
+        }
+    }
+
+    fn expand(&self, value: &str, depth: usize) -> Option<String> {
+        if depth > MAX_CONTEXT_DEPTH {
+            return None;
+        }
+        if let Some(mapping) = self.terms.get(value) {
+            return mapping
+                .as_deref()
+                .and_then(|iri| self.expand(iri, depth + 1));
+        }
+        if let Some((prefix, suffix)) = value.split_once(':') {
+            if let Some(mapping) = self.terms.get(prefix) {
+                return mapping.as_deref().map(|iri| format!("{iri}{suffix}"));
+            }
+            return Url::parse(value).ok().map(|_| value.to_string());
+        }
+        self.vocab.as_ref().map(|vocab| format!("{vocab}{value}"))
+    }
 }
 
 fn type_name(value: &str) -> &str {
@@ -810,6 +878,7 @@ fn walk_jsonld(
     depth: usize,
     budget: &mut TraversalBudget,
     issues: &mut IssueCollector,
+    context: &JsonLdContext,
 ) {
     if depth > MAX_JSONLD_DEPTH || budget.visited_nodes >= MAX_JSONLD_NODES {
         budget.truncated = true;
@@ -823,10 +892,21 @@ fn walk_jsonld(
                     budget.truncated = true;
                     break;
                 }
-                walk_jsonld(item, &format!("{path}[{index}]"), depth + 1, budget, issues);
+                walk_jsonld(
+                    item,
+                    &format!("{path}[{index}]"),
+                    depth + 1,
+                    budget,
+                    issues,
+                    context,
+                );
             }
         }
         Value::Object(object) => {
+            let mut context = context.clone();
+            if let Some(local) = object.get("@context") {
+                context.apply(local, 0);
+            }
             if object.contains_key("@type") {
                 let types = type_values(&object["@type"], &format!("{path}.@type"), issues);
                 let properties = object
@@ -848,10 +928,16 @@ fn walk_jsonld(
                     ));
                 }
                 for data_type in types {
-                    validate_profile(&data_type, &properties, path, issues);
-                    validate_jsonld_profile_values(&data_type, object, path, issues);
+                    if let Some(iri) = context
+                        .expand(&data_type, 0)
+                        .filter(|iri| schema_org_iri(iri))
+                    {
+                        validate_profile(&iri, &properties, path, issues);
+                        validate_jsonld_profile_values(&iri, object, path, issues);
+                    }
                 }
-            } else if object.keys().any(|key| !key.starts_with('@'))
+            } else if context.vocab.as_deref().is_some_and(schema_org_iri)
+                && object.keys().any(|key| !key.starts_with('@'))
                 && !object.contains_key("@graph")
                 && !object.contains_key("@value")
             {
@@ -869,7 +955,14 @@ fn walk_jsonld(
                         budget.truncated = true;
                         break;
                     }
-                    walk_jsonld(child, &format!("{path}.{key}"), depth + 1, budget, issues);
+                    walk_jsonld(
+                        child,
+                        &format!("{path}.{key}"),
+                        depth + 1,
+                        budget,
+                        issues,
+                        &context,
+                    );
                 }
             }
         }
@@ -890,11 +983,18 @@ pub fn validate_jsonld(value: &Value) -> Vec<StructuredDataValidationIssue> {
             "info",
             "No Schema.org @context was detected in this JSON-LD block.",
             Some("$.@context".into()),
-            Some("This local validator applies Schema.org-specific profile rules only when a Schema.org context is declared."),
+            Some("This local validator applies Schema.org profile rules only to types that resolve locally to a Schema.org IRI; unknown remote contexts are not fetched."),
         ));
     }
     let mut budget = TraversalBudget::default();
-    walk_jsonld(value, "$", 0, &mut budget, &mut issues);
+    walk_jsonld(
+        value,
+        "$",
+        0,
+        &mut budget,
+        &mut issues,
+        &JsonLdContext::default(),
+    );
     issues.finish(budget.truncated)
 }
 
@@ -1646,5 +1746,142 @@ mod tests {
         assert!(missing
             .iter()
             .any(|issue| issue.code == "faq-main-entity-missing"));
+    }
+    #[test]
+    fn jsonld_external_and_missing_contexts_do_not_receive_schema_profiles() {
+        for document in [
+            json!({"@type":"Product"}),
+            json!({"@context":"https://other.example/", "@type":"Product"}),
+            json!({"@context":"https://schema.org", "@type":"https://other.example/Product"}),
+            json!({"@context":{"other":"https://other.example/"}, "@type":"other:Product"}),
+            json!({"@context":{"schema":"https://schema.org/", "@vocab":"https://other.example/"}, "@type":"Product"}),
+        ] {
+            let issues = validate_jsonld(&document);
+            assert!(
+                !issues.iter().any(|item| item.code.starts_with("product-")),
+                "{document}: {issues:?}"
+            );
+        }
+    }
+
+    #[test]
+    fn jsonld_context_inheritance_and_reset_are_local_to_each_node() {
+        let issues = validate_jsonld(&json!({
+            "@context":"https://schema.org", "@graph":[
+                {"@type":"Product"},
+                {"@context":null, "@type":"Product"},
+                {"@context":{"@vocab":"https://other.example/"}, "@type":"Product"},
+                {"@type":"Product"}
+            ]
+        }));
+        let paths = issues
+            .iter()
+            .filter(|item| item.code == "product-name-missing")
+            .map(|item| item.path.as_deref().unwrap())
+            .collect::<Vec<_>>();
+        assert_eq!(paths, vec!["$.@graph[0]", "$.@graph[3]"]);
+    }
+
+    #[test]
+    fn jsonld_top_level_array_contexts_do_not_leak_between_documents() {
+        let issues = validate_jsonld(&json!([
+            {"@context":"https://schema.org", "@type":"Product"},
+            {"@type":"Product"},
+            {"@context":"https://other.example/", "@type":"Product"}
+        ]));
+        let paths = issues
+            .iter()
+            .filter(|item| item.code == "product-name-missing")
+            .map(|item| item.path.as_deref().unwrap())
+            .collect::<Vec<_>>();
+        assert_eq!(paths, vec!["$[0]"]);
+    }
+
+    #[test]
+    fn jsonld_resolves_declared_schema_prefixes_terms_and_explicit_iris() {
+        for document in [
+            json!({"@type":"https://schema.org/Product"}),
+            json!({"@context":{"s":"https://schema.org/"}, "@type":"s:Product"}),
+            json!({"@context":{"s":{"@id":"https://schema.org/", "@prefix":true}}, "@type":"s:Product"}),
+            json!({"@context":{"Merchandise":"https://schema.org/Product"}, "@type":"Merchandise"}),
+            json!({"@context":["https://other.example/", {"@vocab":"https://schema.org/"}], "@type":"Product"}),
+        ] {
+            assert!(
+                validate_jsonld(&document)
+                    .iter()
+                    .any(|item| item.code == "product-name-missing"),
+                "{document}"
+            );
+        }
+    }
+
+    #[test]
+    fn jsonld_context_overrides_and_disabled_terms_suppress_profiles() {
+        for context in [
+            json!(["https://schema.org", {"@vocab":null}]),
+            json!(["https://schema.org", {"Product":null}]),
+            json!(["https://schema.org", {"Product":"https://other.example/Product"}]),
+            json!(["https://schema.org", "https://unknown.example/context"]),
+        ] {
+            let document = json!({"@context":context, "@type":"Product"});
+            assert!(
+                !validate_jsonld(&document)
+                    .iter()
+                    .any(|item| item.code.starts_with("product-")),
+                "{document}"
+            );
+        }
+    }
+
+    #[test]
+    fn jsonld_generic_type_validation_remains_active_outside_schema() {
+        let issues = validate_jsonld(
+            &json!({"@context":"https://other.example/", "@type":["Product","Product",null], "name":""}),
+        );
+        assert!(issues
+            .iter()
+            .any(|item| item.code == "jsonld-type-item-invalid"));
+        assert!(issues
+            .iter()
+            .any(|item| item.code == "jsonld-type-duplicate"));
+        assert!(!issues.iter().any(|item| item.code.starts_with("product-")));
+    }
+    #[test]
+    fn jsonld_context_alias_cycles_and_oversized_maps_are_bounded() {
+        for context in [
+            json!({"Product":"Alias", "Alias":"Product", "@vocab":"https://schema.org/"}),
+            json!({"s":null, "@vocab":"https://schema.org/"}),
+            json!(false),
+        ] {
+            let issues = validate_jsonld(&json!({"@context":context, "@type":"s:Product"}));
+            assert!(!issues.iter().any(|item| item.code.starts_with("product-")));
+        }
+        let issues = validate_jsonld(
+            &json!({"@context":{"Product":"Alias", "Alias":"Product"},"@type":"Product"}),
+        );
+        assert!(!issues.iter().any(|item| item.code.starts_with("product-")));
+        let oversized = (0..MAX_JSONLD_NODES + 1)
+            .map(|index| (format!("term{index}"), json!("https://schema.org/")))
+            .collect::<serde_json::Map<_, _>>();
+        let issues = validate_jsonld(
+            &json!({"@context":["https://schema.org", oversized],"@type":"Product"}),
+        );
+        assert!(!issues.iter().any(|item| item.code.starts_with("product-")));
+    }
+
+    #[test]
+    fn jsonld_nested_schema_context_does_not_affect_external_parent_or_sibling() {
+        let issues = validate_jsonld(&json!({
+            "@context":"https://other.example/", "@type":"Product", "children":[
+                {"@context":{"@vocab":"https://schema.org/"},"@type":"Product"},
+                {"@type":"Product"}
+            ]
+        }));
+        let paths = issues
+            .iter()
+            .filter(|item| item.code == "product-name-missing")
+            .map(|item| item.path.as_deref().unwrap())
+            .collect::<Vec<_>>();
+        assert_eq!(paths, vec!["$.children[0]"]);
     }
 }

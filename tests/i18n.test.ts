@@ -98,34 +98,32 @@ describe('i18n multi-language support', () => {
   }
   });
 
-  it('keeps every source locale file aligned and preserves interpolation variables', () => {
-    const expected = flattenKeys(en).sort();
-    const placeholders = (value: unknown): string[] => typeof value === 'string'
-      ? [...value.matchAll(/{{\s*([^}]+?)\s*}}/g)].map((match) => match[1]).sort()
-      : [];
+  const placeholders = (value: unknown): string[] => typeof value === 'string'
+    ? [...value.matchAll(/{{\s*([^}]+?)\s*}}/g)].map((match) => match[1]).sort()
+    : [];
+  const readLeaf = (value: unknown, key: string): unknown => key.split('.').reduce(
+    (current, part) => (current as Record<string, unknown>)[part], value,
+  );
+  const englishKeys = flattenKeys(en).sort();
+  const englishPlaceholders = new Map(englishKeys.map(key => [key, placeholders(readLeaf(en, key))]));
 
-    for (const loc of locales) {
-      const actual = flattenKeys(loc.data).sort();
-      expect(actual, `Locale ${loc.code} source keys differ from English`).toEqual(expected);
+  it.each(locales)('keeps source locale $code aligned and preserves interpolation variables', ({code, data}) => {
+    const actual = flattenKeys(data).sort();
+    expect(actual, `Locale ${code} source keys differ from English`).toEqual(englishKeys);
 
-      const englishLeaves = flattenKeys(en).reduce<Record<string, unknown>>((result, key) => {
-        let value: unknown = en;
-        for (const part of key.split('.')) value = (value as Record<string, unknown>)[part];
-        result[key] = value;
-        return result;
-      }, {});
-      const localeLeaves = actual.reduce<Record<string, unknown>>((result, key) => {
-        let value: unknown = loc.data;
-        for (const part of key.split('.')) value = (value as Record<string, unknown>)[part];
-        result[key] = value;
-        return result;
-      }, {});
-
-      for (const key of expected) {
-        expect(placeholders(localeLeaves[key]), `Locale ${loc.code} changed variables for ${key}`).toEqual(placeholders(englishLeaves[key]));
-        if (typeof localeLeaves[key] === 'string') expect(localeLeaves[key], `Locale ${loc.code} has an empty value for ${key}`).not.toBe('');
+    const mismatches: Array<{key:string; expected:string[]; actual:string[]}> = [];
+    const emptyValues: string[] = [];
+    for (const key of englishKeys) {
+      const leaf = readLeaf(data, key);
+      const expectedVariables = englishPlaceholders.get(key)!;
+      const actualVariables = placeholders(leaf);
+      if (actualVariables.length !== expectedVariables.length || actualVariables.some((variable, index) => variable !== expectedVariables[index])) {
+        mismatches.push({key, expected:expectedVariables, actual:actualVariables});
       }
+      if (leaf === '') emptyValues.push(key);
     }
+    expect(mismatches, `Locale ${code} changed interpolation variables`).toEqual([]);
+    expect(emptyValues, `Locale ${code} has empty translations`).toEqual([]);
   });
 
   it('does not leak Polish audit-check labels into other locales', () => {
@@ -153,55 +151,39 @@ describe('i18n multi-language support', () => {
     }
   });
 
-  it('keeps every static translation call backed by the English resource', () => {
-    const sourceRoot = join(process.cwd(), 'src');
-    const files: string[] = [];
-    const collect = (directory: string) => {
-      for (const entry of readdirSync(directory)) {
-        const absolute = join(directory, entry);
-        if (statSync(absolute).isDirectory()) collect(absolute);
-        else if (/\.(ts|tsx)$/.test(absolute) && !absolute.endsWith('.d.ts')) files.push(absolute);
-      }
-    };
-    collect(sourceRoot);
+  const sourceFiles: string[] = [];
+  const collectSourceFiles = (directory: string) => {
+    for (const entry of readdirSync(directory)) {
+      const absolute = join(directory, entry);
+      if (statSync(absolute).isDirectory()) collectSourceFiles(absolute);
+      else if (/\.(ts|tsx)$/.test(absolute) && !absolute.endsWith('.d.ts')) sourceFiles.push(absolute);
+    }
+  };
+  collectSourceFiles(join(process.cwd(), 'src'));
 
-    const englishKeys = new Set(flattenKeys(en));
-    const staticCalls: Array<{ file: string; line: number; key: string }> = [];
-    for (const file of files) {
-      const source = readFileSync(file, 'utf8');
-      const parsed = ts.createSourceFile(
-        file,
-        source,
-        ts.ScriptTarget.Latest,
-        true,
-        file.endsWith('.tsx') ? ts.ScriptKind.TSX : ts.ScriptKind.TS,
-      );
-      const visit = (node: ts.Node) => {
-        if (ts.isCallExpression(node) && node.arguments.length > 0) {
-          const callee = node.expression.getText(parsed);
-          const firstArgument = node.arguments[0];
-          // Translation keys assembled from runtime data cannot be checked
-          // statically; all literal keys are required to exist in English.
-          if (
-            (callee === 't' || callee === 'i18n.t' || callee.endsWith('.t')) &&
-            (ts.isStringLiteral(firstArgument) || ts.isNoSubstitutionTemplateLiteral(firstArgument))
-          ) {
-            staticCalls.push({
-              file,
-              line: parsed.getLineAndCharacterOfPosition(firstArgument.getStart()).line + 1,
-              key: firstArgument.text,
-            });
+  it.each(sourceFiles)('backs static translation calls with English keys in %s', (file) => {
+    const source = readFileSync(file, 'utf8');
+    const parsed = ts.createSourceFile(file, source, ts.ScriptTarget.Latest, true,
+      file.endsWith('.tsx') ? ts.ScriptKind.TSX : ts.ScriptKind.TS);
+    const missing: Array<{line:number; key:string}> = [];
+    const keys = new Set(englishKeys);
+    const visit = (node: ts.Node) => {
+      if (ts.isCallExpression(node) && node.arguments.length > 0) {
+        const callee = node.expression.getText(parsed);
+        const firstArgument = node.arguments[0];
+        // Runtime-assembled keys cannot be validated by this static check.
+        if ((callee === 't' || callee === 'i18n.t' || callee.endsWith('.t'))
+          && (ts.isStringLiteral(firstArgument) || ts.isNoSubstitutionTemplateLiteral(firstArgument))) {
+          const key = firstArgument.text;
+          if (!keys.has(key) && !keys.has(`${key}_one`) && !keys.has(`${key}_other`)) {
+            missing.push({line:parsed.getLineAndCharacterOfPosition(firstArgument.getStart()).line + 1,key});
           }
         }
-        ts.forEachChild(node, visit);
-      };
-      visit(parsed);
-    }
-
-    const missing = staticCalls.filter(({ key }) => (
-      !englishKeys.has(key) && !englishKeys.has(`${key}_one`) && !englishKeys.has(`${key}_other`)
-    ));
-    expect(missing, `Missing English translation keys: ${JSON.stringify(missing)}`).toEqual([]);
+      }
+      ts.forEachChild(node, visit);
+    };
+    visit(parsed);
+    expect(missing, `Missing English translation keys in ${file}`).toEqual([]);
   });
 
   it('localizes the interrupted-crawl workflow in every non-English locale', () => {
