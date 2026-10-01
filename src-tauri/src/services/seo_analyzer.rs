@@ -752,23 +752,10 @@ async fn verify_canonical_target(assessment: &mut IndexabilityAssessment, curren
             return;
         }
     };
-    let client = match reqwest::Client::builder()
-        .timeout(std::time::Duration::from_secs(5))
-        .redirect(reqwest::redirect::Policy::none())
-        .build()
-    {
-        Ok(client) => client,
-        Err(error) => {
-            assessment.canonical_target_check_error = Some(format!(
-                "Canonical check client could not be created: {error}"
-            ));
-            return;
-        }
-    };
-    match client.head(target).send().await {
-        Ok(response) => {
+    match crate::services::http_client::check_url_status(target.as_str(), 5).await {
+        Ok((status, _)) => {
             assessment.canonical_target_checked = true;
-            assessment.canonical_target_status = Some(response.status().as_u16());
+            assessment.canonical_target_status = Some(status);
         }
         Err(error) => {
             assessment.canonical_target_check_error =

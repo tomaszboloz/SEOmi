@@ -5191,7 +5191,7 @@ pub async fn crawl_site_with_control(
         }
     }
 
-    let mut client_builder = reqwest::Client::builder()
+    let mut client_builder = crate::services::http_client::public_client_builder()
         .default_headers(headers)
         .timeout(std::time::Duration::from_secs(
             config.request_timeout_secs.unwrap_or(15).clamp(1, 300),
@@ -5218,11 +5218,17 @@ pub async fn crawl_site_with_control(
                 .map_err(|error| format!("Failed to construct robots.txt URL: {error}"))?;
             match client.get(robots_url.clone()).send().await {
                 Ok(response) if response.status().is_success() => {
-                    let content = response.text().await.unwrap_or_default();
-                    let rules = parse_robots_rules(&content, &ua);
-                    let rule_count = rules.len();
-                    let crawl_delay = parse_robots_crawl_delay(&content, &ua);
-                    let delay_status = crawl_delay
+                    match crate::services::http_client::read_bounded_text(
+                        response,
+                        max_response_bytes,
+                    )
+                    .await
+                    {
+                        Ok(content) => {
+                            let rules = parse_robots_rules(&content, &ua);
+                            let rule_count = rules.len();
+                            let crawl_delay = parse_robots_crawl_delay(&content, &ua);
+                            let delay_status = crawl_delay
                         .map(|delay| {
                             let seconds = delay.as_secs_f64();
                             if config.respect_robots && config.respect_crawl_delay {
@@ -5232,13 +5238,26 @@ pub async fn crawl_site_with_control(
                             }
                         })
                         .unwrap_or_default();
-                    (
-                        rules,
-                        format!("Loaded {rule_count} applicable robots.txt rules{delay_status}"),
-                        parse_sitemap_directives(&content),
-                        crawl_delay.filter(|_| config.respect_robots && config.respect_crawl_delay),
-                        build_robots_agent_matrix(&content, &ua),
-                    )
+                            (
+                                rules,
+                                format!(
+                                    "Loaded {rule_count} applicable robots.txt rules{delay_status}"
+                                ),
+                                parse_sitemap_directives(&content),
+                                crawl_delay.filter(|_| {
+                                    config.respect_robots && config.respect_crawl_delay
+                                }),
+                                build_robots_agent_matrix(&content, &ua),
+                            )
+                        }
+                        Err(error) => (
+                            Vec::new(),
+                            format!("robots.txt could not be read ({error}); URLs allowed"),
+                            Vec::new(),
+                            None,
+                            Vec::new(),
+                        ),
+                    }
                 }
                 Ok(response) if response.status().as_u16() == 404 => (
                     Vec::new(),
@@ -5297,6 +5316,7 @@ pub async fn crawl_site_with_control(
             robots_sitemaps
         };
         let mut sources_loaded = 0usize;
+        let mut sources_failed = 0usize;
         let mut sitemap_queue: VecDeque<String> = candidates.into_iter().collect();
         let mut visited_sitemaps = HashSet::new();
         while let Some(candidate) = sitemap_queue.pop_front() {
@@ -5321,8 +5341,19 @@ pub async fn crawl_site_with_control(
             }
             if let Ok(response) = client.get(sitemap_url.clone()).send().await {
                 if response.status().is_success() {
+                    let content = match crate::services::http_client::read_bounded_text(
+                        response,
+                        max_response_bytes,
+                    )
+                    .await
+                    {
+                        Ok(content) => content,
+                        Err(_) => {
+                            sources_failed += 1;
+                            continue;
+                        }
+                    };
                     sources_loaded += 1;
-                    let content = response.text().await.unwrap_or_default();
                     let locations = parse_sitemap_locations(&content);
                     let is_index = content.to_ascii_lowercase().contains("<sitemapindex");
                     for location in locations {
@@ -5363,7 +5394,7 @@ pub async fn crawl_site_with_control(
         sitemap_urls.sort();
         sitemap_urls.dedup();
         format!(
-            "Loaded {sources_loaded} sitemap source(s), found {} in-scope URL(s)",
+            "Loaded {sources_loaded} sitemap source(s), found {} in-scope URL(s); {sources_failed} source body read(s) failed or exceeded the safety limit",
             sitemap_urls.len()
         )
     } else {

@@ -6,6 +6,7 @@ use reqwest::redirect::Policy;
 use std::collections::HashMap;
 use std::future::Future;
 use std::net::{IpAddr, SocketAddr};
+use std::sync::Arc;
 use std::time::{Duration, Instant};
 use tokio::net::lookup_host;
 use tokio::time::timeout;
@@ -15,6 +16,68 @@ use crate::utils::url_validator::{is_public_ip, validate_and_normalize_url};
 
 const MAX_BODY_BYTES: usize = 25 * 1024 * 1024; // 25 MB max to prevent memory exhaustion
 const DNS_TIMEOUT: Duration = Duration::from_secs(5);
+
+struct ValidatedResolver<R> {
+    lookup: R,
+}
+
+impl<R, F> reqwest::dns::Resolve for ValidatedResolver<R>
+where
+    R: Fn(String) -> F + Send + Sync,
+    F: Future<Output = std::io::Result<Vec<SocketAddr>>> + Send + 'static,
+{
+    fn resolve(&self, name: reqwest::dns::Name) -> reqwest::dns::Resolving {
+        let lookup = (self.lookup)(name.as_str().to_owned());
+        Box::pin(async move {
+            let addresses = timeout(DNS_TIMEOUT, lookup).await.map_err(|_| {
+                std::io::Error::new(std::io::ErrorKind::TimedOut, "DNS lookup timed out")
+            })??;
+            let addresses = validate_addresses(addresses).map_err(|error| {
+                std::io::Error::new(std::io::ErrorKind::PermissionDenied, error.to_string())
+            })?;
+            Ok(Box::new(addresses.into_iter()) as reqwest::dns::Addrs)
+        })
+    }
+}
+
+fn public_client_builder_with_lookup<R, F>(lookup: R) -> reqwest::ClientBuilder
+where
+    R: Fn(String) -> F + Send + Sync + 'static,
+    F: Future<Output = std::io::Result<Vec<SocketAddr>>> + Send + 'static,
+{
+    reqwest::Client::builder()
+        .no_proxy()
+        .redirect(Policy::none())
+        .dns_resolver(Arc::new(ValidatedResolver { lookup }))
+}
+
+/// URLs must first pass validate_and_normalize_url, which checks literal IPs.
+/// DNS names are resolved only once per connection and every answer is checked.
+/// Ambient proxies are disabled; an explicit user proxy is an opt-in boundary.
+pub fn public_client_builder() -> reqwest::ClientBuilder {
+    public_client_builder_with_lookup(|host| async move {
+        Ok(lookup_host((host.as_str(), 0)).await?.collect())
+    })
+}
+
+async fn read_bounded_bytes(mut response: reqwest::Response, limit: usize) -> Result<Vec<u8>> {
+    let limit = limit.min(MAX_BODY_BYTES);
+    let mut bytes = Vec::new();
+    while let Some(chunk) = response.chunk().await? {
+        if chunk.len() > limit.saturating_sub(bytes.len()) {
+            return Err(anyhow!(
+                "Response size exceeds safety limit of {limit} bytes"
+            ));
+        }
+        bytes.extend_from_slice(&chunk);
+    }
+    Ok(bytes)
+}
+
+pub async fn read_bounded_text(response: reqwest::Response, limit: usize) -> Result<String> {
+    let bytes = read_bounded_bytes(response, limit).await?;
+    Ok(String::from_utf8_lossy(&bytes).to_string())
+}
 
 async fn resolve_public_addresses(url: &Url) -> Result<Vec<SocketAddr>> {
     let host = url.host().ok_or_else(|| anyhow!("URL has no host"))?;
@@ -115,7 +178,7 @@ where
         let measured_at = Utc::now();
         let start_time = Instant::now();
         let mut recorded_hops = Vec::new();
-        let mut response = loop {
+        let response = loop {
             let addresses = resolve(current.clone()).await?;
             let host = current
                 .host_str()
@@ -175,16 +238,7 @@ where
             .filter_map(|value| value.to_str().ok().map(str::to_string))
             .collect();
         let body_start = Instant::now();
-        let mut bytes = Vec::new();
-        while let Some(chunk) = response.chunk().await? {
-            if chunk.len() > options.max_body_bytes.saturating_sub(bytes.len()) {
-                return Err(anyhow!(
-                    "Response size exceeds safety limit of {} bytes",
-                    options.max_body_bytes
-                ));
-            }
-            bytes.extend_from_slice(&chunk);
-        }
+        let bytes = read_bounded_bytes(response, options.max_body_bytes).await?;
         let body_read_ms = body_start.elapsed().as_millis() as u64;
         let decoded_body_bytes = bytes.len() as u64;
         let body = String::from_utf8_lossy(&bytes).to_string();
@@ -395,6 +449,142 @@ mod tests {
             .0,
             404
         );
+    }
+
+    #[tokio::test]
+    async fn shared_client_blocks_private_dns_before_opening_a_socket() {
+        let listener = tokio::net::TcpListener::bind("127.0.0.1:0").await.unwrap();
+        let address = listener.local_addr().unwrap();
+        let client = public_client_builder_with_lookup(move |host| async move {
+            assert_eq!(host, "crawl.example");
+            Ok(vec![address])
+        })
+        .build()
+        .unwrap();
+        let error = client
+            .get("http://crawl.example/")
+            .send()
+            .await
+            .unwrap_err();
+        assert!(format!("{error:?}").contains("private or reserved"));
+        assert!(timeout(Duration::from_millis(20), listener.accept())
+            .await
+            .is_err());
+    }
+
+    #[tokio::test]
+    async fn shared_resolver_checks_every_address_and_does_not_fabricate_dns_success() {
+        use reqwest::dns::Resolve;
+        for addresses in [
+            vec![],
+            vec!["1.1.1.1:0".parse().unwrap(), "127.0.0.1:0".parse().unwrap()],
+        ] {
+            let resolver = ValidatedResolver {
+                lookup: move |_host| {
+                    let addresses = addresses.clone();
+                    async move { Ok(addresses) }
+                },
+            };
+            assert!(resolver
+                .resolve("crawl.example".parse().unwrap())
+                .await
+                .is_err());
+        }
+        let resolver = ValidatedResolver {
+            lookup: |_host| async {
+                Ok(vec![
+                    "1.1.1.1:0".parse().unwrap(),
+                    "[2606:4700:4700::1111]:0".parse().unwrap(),
+                ])
+            },
+        };
+        assert_eq!(
+            resolver
+                .resolve("crawl.example".parse().unwrap())
+                .await
+                .unwrap()
+                .count(),
+            2
+        );
+        let resolver = ValidatedResolver {
+            lookup: |_host| async {
+                Err(std::io::Error::new(
+                    std::io::ErrorKind::NotFound,
+                    "DNS failed",
+                ))
+            },
+        };
+        assert!(resolver
+            .resolve("crawl.example".parse().unwrap())
+            .await
+            .is_err());
+    }
+
+    #[tokio::test]
+    async fn discovery_text_rejects_decoded_overflow_and_keeps_exact_limit() {
+        for (response, limit, expected) in [
+            ("HTTP/1.1 200 OK\r\nContent-Length: 5\r\nConnection: close\r\n\r\nhello", 5, Some("hello")),
+            ("HTTP/1.1 200 OK\r\nTransfer-Encoding: chunked\r\nConnection: close\r\n\r\n4\r\n1234\r\n4\r\n5678\r\n0\r\n\r\n", 5, None),
+            ("HTTP/1.1 200 OK\r\nContent-Length: 1\r\nConnection: close\r\n\r\nx", 0, None),
+        ] {
+            let address = fixture(vec![response.into()]).await;
+            let response = reqwest::Client::builder().no_proxy().build().unwrap()
+                .get(format!("http://{address}/")).send().await.unwrap();
+            let result = read_bounded_text(response, limit).await;
+            if let Some(expected) = expected { assert_eq!(result.unwrap(), expected); }
+            else { assert!(result.unwrap_err().to_string().contains("safety limit")); }
+        }
+    }
+
+    #[tokio::test]
+    async fn public_client_uses_validated_local_dns_without_contacting_local_services() {
+        let error = public_client_builder()
+            .build()
+            .unwrap()
+            .get("http://localhost/")
+            .send()
+            .await
+            .unwrap_err();
+        assert!(format!("{error:?}").contains("private or reserved"));
+    }
+
+    #[tokio::test]
+    async fn discovery_text_rejects_compressed_overflow_and_incomplete_bodies() {
+        use std::io::Write;
+        let mut encoder = flate2::write::GzEncoder::new(Vec::new(), flate2::Compression::default());
+        encoder.write_all(&[b'x'; 128]).unwrap();
+        let compressed = encoder.finish().unwrap();
+        let mut encoded_response = format!("HTTP/1.1 200 OK\r\nContent-Encoding: gzip\r\nContent-Length: {}\r\nConnection: close\r\n\r\n", compressed.len()).into_bytes();
+        encoded_response.extend(compressed);
+        let address = fixture_bytes(vec![encoded_response]).await;
+        let response = reqwest::Client::builder()
+            .no_proxy()
+            .gzip(true)
+            .build()
+            .unwrap()
+            .get(format!("http://{address}/"))
+            .send()
+            .await
+            .unwrap();
+        assert!(read_bounded_text(response, 64)
+            .await
+            .unwrap_err()
+            .to_string()
+            .contains("safety limit"));
+
+        let address = fixture(vec![
+            "HTTP/1.1 200 OK\r\nContent-Length: 10\r\nConnection: close\r\n\r\nshort".into(),
+        ])
+        .await;
+        let response = reqwest::Client::builder()
+            .no_proxy()
+            .build()
+            .unwrap()
+            .get(format!("http://{address}/"))
+            .send()
+            .await
+            .unwrap();
+        assert!(read_bounded_text(response, 64).await.is_err());
     }
 
     #[tokio::test]
