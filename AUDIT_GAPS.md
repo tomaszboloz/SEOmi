@@ -46,7 +46,7 @@ Pomiary bazowego commitu (2026-10-01):
 - [ ] GAP-021: [HIGH] Brak mierzonej, wersjonowanej konfiguracji coverage dla całego frontendu. Dowód: `vite.config.ts`. Status: OPEN; wymagane testy red/green i rewalidacja.
 - [ ] GAP-022: [HIGH] Brak bramki >99% statements/lines/branches/functions w CI. Dowód: `.github/workflows/test.yml`. Status: OPEN; wymagane testy red/green i rewalidacja.
 - [ ] GAP-023: [HIGH] Brak natywnego raportu llvm-cov i bramki pokrycia Rust w CI. Dowód: `.github/workflows/test.yml`. Status: OPEN; wymagane testy red/green i rewalidacja.
-- [ ] GAP-024: [HIGH] Testy MCP odkrywają schematy; brak happy/error testów wszystkich provider tools. Dowód: `mcp-server/test/server.test.mjs`. Status: OPEN; wymagane testy red/green i rewalidacja.
+- [x] GAP-024: [HIGH] Testy MCP odkrywają schematy; brak happy/error testów wszystkich provider tools. Dowód: `mcp-server/test/server.test.mjs`. Status: FIXED (BATCH-2a); wszystkie 18 tools wywołane przez MCP (happy/error/schema), dodatkowe testy scope i evidence filtering.
 - [ ] GAP-025: [HIGH] Brak E2E uruchomionej aplikacji Tauri dla krytycznych przepływów. Dowód: `.github/workflows/test.yml`. Status: OPEN; wymagane testy red/green i rewalidacja.
 - [ ] GAP-026: [MEDIUM] Brak zautomatyzowanej inwentaryzacji publicznych funkcji z dowodem testu. Dowód: `tests/`. Status: OPEN; wymagane testy red/green i rewalidacja.
 - [x] GAP-027: [MEDIUM] Brak testu DNS rebinding/redirect do sieci prywatnej dla inspect_url. Dowód: `src-tauri/src/services/http_client.rs:201`. Status: FIXED (BATCH-1a); dowód: 12 deterministycznych testów http_client, pełny suite i Clippy. Resolver DI, przypięty transport per hop, jeden deadline i limit strumienia; brak testów zależnych od internetu.
@@ -85,7 +85,7 @@ Pomiary bazowego commitu (2026-10-01):
 ## [DISCOVERED] - Dynamiczne wykrycia
 - [x] GAP-051: [DISCOVERED] [MEDIUM] googlePublicJson tłumiło błędny JSON i zwracało pusty obiekt jako sukces. Dowód przed poprawką: mcp-server/src/index.ts:60. FIXED (BATCH-1b): wymagany JSON object i test błędnego JSON/array/null.
 - [x] GAP-052: [DISCOVERED] [MEDIUM] Komunikaty providerów były zwracane bez ograniczenia do bezpiecznego statusu (dowolne status_message/error.message). Dowód przed poprawką: mcp-server/src/index.ts:26,62. FIXED (BATCH-1b): komunikat lokalny + kod HTTP/zadania, test niewyciekania treści odpowiedzi.
-- [ ] GAP-053: [DISCOVERED] [LOW] Wersja MCP runtime 1.0.0 różni się od package.json 0.0.1. Dowód: mcp-server/src/index.ts:25; mcp-server/package.json:3. OPEN; wymagany test kontraktu metadanych.
+- [x] GAP-053: [DISCOVERED] [LOW] Wersja MCP runtime 1.0.0 różni się od package.json 0.0.1. Dowód: mcp-server/src/index.ts:25; mcp-server/package.json:3. FIXED (BATCH-2a); wersja pochodzi z package.json, asercja handshake przez MCP.
 
 
 ## Dziennik batchy
@@ -94,3 +94,4 @@ Pomiary bazowego commitu (2026-10-01):
 
 - BATCH-1b: limity wszystkich procesów AI CLI i JSON providerów MCP; wydzielony kontrakt providerów; wildcard capability usunięty. RED: test capability wykazał wildcard, testy nowych granic nie kompilowały/importowały się. GREEN: 705 frontend / 332 Rust / 33 MCP; build, rustfmt, strict Clippy PASS. GAP-051/052 odkryte i naprawione.
 - BATCH-1c: konfiguracja: walidacja, 64 KiB limit, spawn_blocking, atomowe zastąpienie z cleanup, migracja chrome_desktop, widoczny stan błędów (12 języków), liniowe walidatory nazw sekretów zamiast regex per call. RED: 2 testy frontend failures oraz brak natywnych granic; GREEN: 708 frontend / 339 Rust / 33 MCP, build/rustfmt/Clippy PASS. Synchronizacja wygenerowanego schematu capabilities po BATCH-1b.
+- BATCH-2a: bootstrap MCP oddzielony od fabryki serwera i kontraktów runnerów. RED: test protokołu wymagał nieistniejącej fabryki; GREEN: 708 frontend / 339 Rust / 54 MCP, build/Clippy PASS. Wszystkie 18 narzędzi mają happy/error/schema scenariusze; bez kont i płatnych wywołań.

@@ -344,6 +344,8 @@ Existing configuration files keep their schema. The old `chrome_desktop` value i
 
 Local AI process output is drained concurrently with stdin and bounded to 2 MiB per stdout/stderr stream for research, version, authentication and capability checks. Overflow is an explicit failure rather than a truncated answer. Privileged Tauri plugins are scoped to the bundled `main` window.
 
+`mcp-server/src/index.ts` only starts stdio. `server.ts` builds a fresh MCP server with injectable audit, crawl, target-validation and provider contracts. Protocol tests call all 18 tools through linked MCP transports, checking happy paths, provider failures and schema rejection before transport. Runtime version comes from the MCP package metadata.
+
 MCP provider transports live in `mcp-server/src/providers.ts` behind an injectable fetch/environment contract. JSON must be an object, decoded response bodies have a 2 MiB ceiling, redirects are rejected and HTTP/task failures expose local status messages. Provider tests require no credentials or external requests. Tool input/output schemas remain unchanged.
 
 The ongoing audit and measured coverage baseline are tracked in [AUDIT_GAPS.md](AUDIT_GAPS.md). Passing tests do not establish the >99% coverage target. Run the full frontend, native and MCP suites after every batch.
