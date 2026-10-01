@@ -35,3 +35,8 @@ it('keeps SERP preview and semantic comparison modules below 150 physical lines'
  const files=['src/services/serpPreview.ts','src/services/semanticRunComparison.ts',...codeFiles('src/services/serpPreview'),...codeFiles('src/services/semanticRunComparison')];
  expect(maxLocReport(files).violations).toEqual([]);
 });
+
+it('keeps project backup and notification responsibilities below 150 physical lines',()=>{
+ const files=['src/services/projectBackup.ts','src/services/desktopNotifications.ts',...codeFiles('src/services/projectBackup'),...codeFiles('src/services/desktopNotifications')];
+ expect(maxLocReport(files).violations).toEqual([]);
+});
