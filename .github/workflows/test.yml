@@ -40,6 +40,14 @@ jobs:
           name: native-coverage
           path: coverage-rust.lcov
           retention-days: 14
+      - name: Inventory declared native functions using Rust AST
+        run: cargo run --quiet --manifest-path src-tauri/Cargo.toml --example function_inventory > native-function-inventory.json
+      - name: Upload native function inventory
+        uses: actions/upload-artifact@v4
+        with:
+          name: native-function-inventory
+          path: native-function-inventory.json
+          retention-days: 14
 
   test-frontend:
     name: Frontend TypeScript, i18n & Vitest
@@ -68,11 +76,16 @@ jobs:
         run: npm run lint
       - name: Run Vitest with full frontend coverage
         run: npm run test:coverage
+      - name: Inventory TypeScript public functions and fresh execution evidence
+        run: npm run test:inventory
       - name: Upload frontend coverage
         uses: actions/upload-artifact@v4
         with:
           name: frontend-coverage
-          path: coverage/
+          path: |
+            coverage/
+            test-results/frontend-coverage-sources.json
+            test-results/public-function-inventory.json
           retention-days: 14
       - name: Typecheck & Production Bundle
         run: npm run build

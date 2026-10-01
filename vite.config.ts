@@ -47,7 +47,7 @@ export default defineConfig({
       include: ['src/**/*.{ts,tsx}', 'mcp-server/src/contracts/**/*.ts'],
       // These files contain declarations only (no executable exports).
       exclude: ['src/types/**'],
-      reporter: ['text-summary', 'json-summary', 'lcov'],
+      reporter: ['text-summary', 'json-summary', 'json', 'lcov'],
     },
     globals: true,
     environment: 'jsdom',

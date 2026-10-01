@@ -20,6 +20,14 @@ custom-protocol = ["tauri/custom-protocol"]
 name = "desktop_e2e"
 required-features = ["custom-protocol"]
 
+[[example]]
+name = "function_inventory"
+test = true
+
+[dev-dependencies]
+syn = { version = "2", features = ["full"] }
+proc-macro2 = { version = "1", features = ["span-locations"] }
+
 [dependencies]
 tauri = { version = "2", features = ["macos-proxy", "tracing"] }
 tauri-plugin-dialog = { version = "2.7.0", default-features = false }
