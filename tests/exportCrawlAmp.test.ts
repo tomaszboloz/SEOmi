@@ -19,7 +19,7 @@ describe('export contracts: amp', () => {
         },
       } as CrawlRunRecord;
       const output = crawlPagesCsv(ampRun);
-  
+
       expect(output).toContain('AMP target status');
       expect(output).toContain('AMP target checked in run');
       expect(output).toContain('AMP target canonical alignment');

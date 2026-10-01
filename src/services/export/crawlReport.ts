@@ -91,4 +91,3 @@ export const downloadCrawlPdf = (run: CrawlRunRecord, template?: CrawlReportTemp
 }, crawlFilename(run, 'report', 'pdf'));
 
 export const downloadCrawlJson = (run: CrawlRunRecord, template?: CrawlReportTemplate): void => downloadText(crawlFilename(run, 'report', 'json'), JSON.stringify(crawlReportPayload(run, template), null, 2), 'application/json');
-

@@ -18,7 +18,7 @@ describe('export contracts: overview', () => {
         links: { total_links: 1, links: [{ href: '=unsafe-link', text: '+unsafe anchor', is_internal: true, rel: 'nofollow' }] },
         images: [{ src: '@unsafe-image', alt: '-unsafe alt', has_alt: false }],
       } as unknown as PageAuditData;
-  
+
       expect(auditLinksCsv(fullAudit)).toContain("'=unsafe-link");
       expect(auditLinksCsv(fullAudit)).toContain("'+unsafe anchor");
       expect(auditImagesCsv(fullAudit)).toContain("'@unsafe-image");

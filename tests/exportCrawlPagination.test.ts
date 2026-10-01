@@ -23,7 +23,7 @@ describe('export contracts: pagination', () => {
         },
       } as CrawlRunRecord;
       const output = crawlPagesCsv(paginationRun);
-  
+
       expect(output).toContain('Pagination declarations');
       expect(output).toContain('Pagination/canonical alignment');
       expect(output).toContain('self-canonical');
@@ -45,7 +45,7 @@ describe('export contracts: pagination', () => {
         },
       } as CrawlRunRecord;
       const output = crawlPagesCsv(internationalRun);
-  
+
       const crawlHeaders = i18n.t('exportUi.headers.crawlPages', { returnObjects: true }) as string[];
       expect(output).toContain(crawlHeaders.find((header) => header.includes('Hreflang'))!);
       expect(output).toContain(`en: https://example.com/en/ (${i18n.t('exportUi.statuses.http', { status: 200 })}; ${i18n.t('exportUi.statuses.reciprocalYes')}; self-canonical)`);

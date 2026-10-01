@@ -71,4 +71,3 @@ export const crawlIssuesCsv = (run: CrawlRunRecord): string => {
   ]));
   return crawlCsv(headers, rows, metadata);
 };
-

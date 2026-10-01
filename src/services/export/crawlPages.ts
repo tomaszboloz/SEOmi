@@ -55,4 +55,3 @@ export const crawlPagesCsv = (run: CrawlRunRecord): string => {
   ]);
   return crawlCsv(headers, rows, metadata);
 };
-

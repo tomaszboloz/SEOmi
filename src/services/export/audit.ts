@@ -41,4 +41,3 @@ export const auditImagesCsv = (audit: PageAuditData): string => {
 
 export const downloadAuditLinksCsv = (audit: PageAuditData): void => downloadText(auditTableFilename(audit, 'links'), auditLinksCsv(audit), 'text/csv');
 export const downloadAuditImagesCsv = (audit: PageAuditData): void => downloadText(auditTableFilename(audit, 'images'), auditImagesCsv(audit), 'text/csv');
-

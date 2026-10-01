@@ -21,4 +21,3 @@ export const downloadBacklinkGapCsv = (report: BacklinkGapReport): void => {
   const date = new Date().toISOString().slice(0, 10);
   downloadText(`seomi-backlink-gap-${host}-${date}.csv`, backlinkGapCsv(report), 'text/csv');
 };
-

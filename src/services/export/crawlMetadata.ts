@@ -35,4 +35,3 @@ export const crawlCsv = (
   if (headers.length > 3) envelope[3] = metadata.crawl_configuration;
   return csv([headers, envelope]);
 };
-

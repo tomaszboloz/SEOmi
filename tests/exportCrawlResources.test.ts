@@ -16,7 +16,7 @@ describe('export contracts: resources', () => {
         },
       } as CrawlRunRecord;
       const output = crawlImagesCsv(run);
-  
+
       expect(output).toContain('Resource checked in run');
       expect(output).toContain('HTTP status');
       expect(output).toContain('Content length bytes');
@@ -53,7 +53,7 @@ describe('export contracts: resources', () => {
         },
       } as CrawlRunRecord;
       const output = crawlFramesCsv(run);
-  
+
       expect(output).toContain('Source page URL');
       expect(output).toContain("'=unsafe-frame");
       expect(output).toContain('https://example.com/embed');
@@ -86,7 +86,7 @@ describe('export contracts: resources', () => {
           })),
         },
       } as CrawlRunRecord;
-  
+
       const output = crawlImagesCsv(run);
       expect(output).toContain('Srcset candidate checks');
       expect(output).toContain("'=https://example.com/image-2.webp: 404 (2048 B)");

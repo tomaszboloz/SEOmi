@@ -24,7 +24,7 @@ describe('export contracts: content', () => {
           })),
         },
       } as CrawlRunRecord;
-  
+
       const output = crawlPagesCsv(run);
       expect(output).toContain('Sentence count');
       expect(output).toContain('Average words per sentence');
@@ -50,7 +50,7 @@ describe('export contracts: content', () => {
           })),
         },
       } as CrawlRunRecord;
-  
+
       const output = crawlPagesCsv(duplicateHeadingRun);
       expect(output).toContain('Duplicate headings (text/levels/count)');
       expect(output).toContain('H2/H3: Quick start (2)');

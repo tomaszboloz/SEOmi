@@ -32,7 +32,7 @@ describe('export contracts: social', () => {
           })),
         },
       } as CrawlRunRecord;
-  
+
       const output = crawlPagesCsv(run);
       expect(output).toContain('Favicon URLs / status / bytes');
       expect(output).toContain('https://example.com/favicon.ico [HTTP 200; 321 B; image/x-icon]');
@@ -63,7 +63,7 @@ describe('export contracts: social', () => {
         },
       } as CrawlRunRecord;
       const output = crawlPagesCsv(metadataRun);
-  
+
       expect(output).toContain('Favicon URLs');
       expect(output).toContain('Favicon declarations');
       expect(output).toContain('rel=icon; type=image/svg+xml; sizes=any; format=svg');

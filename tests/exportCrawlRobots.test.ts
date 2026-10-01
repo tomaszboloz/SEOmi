@@ -23,7 +23,7 @@ describe('export contracts: robots', () => {
           })),
         },
       } as CrawlRunRecord;
-  
+
       const output = crawlPagesCsv(run);
       expect(output).toContain('Robots decision');
       expect(output).toContain('noindex; nofollow');
@@ -48,7 +48,7 @@ describe('export contracts: robots', () => {
         },
       } as CrawlRunRecord;
       const output = crawlPagesCsv(robotsRun);
-  
+
       expect(output).toContain('Applicable robots rules');
       expect(output).toContain('SEOmiDesktopBot/1.0');
       expect(output).toContain('DISALLOW: /private');

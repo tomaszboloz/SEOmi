@@ -22,7 +22,7 @@ describe('export contracts: redirects', () => {
           })),
         },
       } as CrawlRunRecord;
-  
+
       expect(crawlPagesCsv(run)).toContain('301: https://example.com/old -> https://example.com/ (42 ms)');
       expect(crawlPagesCsv(run)).toContain('Redirect stop reason');
       expect(crawlPagesCsv(run)).toContain('Redirect limit of 10 exceeded');
@@ -43,7 +43,7 @@ describe('export contracts: redirects', () => {
         },
       } as CrawlRunRecord;
       const output = crawlPagesCsv(redirectRun);
-  
+
       expect(output).toContain('Client-side redirects');
       expect(output).toContain(`${i18n.t('crawlDeepUi.mechanismMetaRefresh')}; delay=0s; target=https://example.com/next`);
       expect(output).toContain(`${i18n.t('crawlDeepUi.mechanismHttpRefresh')}; delay=5s; target=https://example.com/later`);

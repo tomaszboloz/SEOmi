@@ -18,4 +18,3 @@ export const crawlFilename = (run: CrawlRunRecord, table: string, extension: 'js
   const timestamp = run.completedAt.replace(/[^0-9]/g, '').slice(0, 14) || run.id.replace(/[^a-z0-9]/gi, '').slice(0, 14);
   return `seomi-crawl-${host}-${timestamp}-${table}.${extension}`;
 };
-

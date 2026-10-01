@@ -18,4 +18,3 @@ export const downloadPdf = async (command: 'generate_audit_pdf' | 'generate_craw
   const bytes = Uint8Array.from(binary, (character) => character.charCodeAt(0));
   downloadBlob(filename, new Blob([bytes], { type: 'application/pdf' }));
 };
-

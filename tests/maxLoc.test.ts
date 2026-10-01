@@ -45,3 +45,8 @@ it('keeps the export facade and each report responsibility below 150 physical li
  const files=['src/services/export.ts',...codeFiles('src/services/export')];
  expect(maxLocReport(files).violations).toEqual([]);
 });
+
+it('keeps native schema validation and its test modules below 150 physical lines',()=>{
+ const files=['src-tauri/src/services/schema_validator.rs',...codeFiles('src-tauri/src/services/schema_validator')];
+ expect(maxLocReport(files).violations).toEqual([]);
+});

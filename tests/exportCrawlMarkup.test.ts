@@ -28,7 +28,7 @@ describe('export contracts: markup', () => {
           })),
         },
       } as CrawlRunRecord;
-  
+
       const output = crawlPagesCsv(run);
       expect(output).toContain('Detected charset');
       expect(output).toContain('HTML validation findings');

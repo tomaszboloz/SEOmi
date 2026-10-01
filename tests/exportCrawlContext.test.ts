@@ -52,7 +52,7 @@ describe('export contracts: context', () => {
           discovery_provenance_truncated: true,
         },
       } as CrawlRunRecord;
-  
+
       const output = crawlPagesCsv(run);
       expect(output).toContain('link: https://example.com/parent: Guide | sitemap: https://example.com/sitemap.xml');
       expect(output).toContain('Discovery provenance truncated');
@@ -79,7 +79,7 @@ describe('export contracts: context', () => {
         },
       } as CrawlRunRecord;
       const output = crawlPagesCsv(canonicalRun);
-  
+
       expect(output).toContain('Canonical relation');
       expect(output).toContain('Canonical declaration count');
       expect(output).toContain('Canonical targets/status in run');

@@ -13,4 +13,3 @@ export const exportHeaders = (key: string): string[] => {
   const value = i18n.t(`exportUi.headers.${key}`, { returnObjects: true });
   return Array.isArray(value) ? value.map(String) : [];
 };
-
