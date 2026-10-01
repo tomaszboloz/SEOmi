@@ -26,7 +26,7 @@ Pomiary bazowego commitu (2026-10-01):
 - [x] GAP-005: [MEDIUM] Uprawnienia Tauri obejmują wildcard wszystkich lokalnych okien zamiast jawnej listy. Dowód: `src-tauri/capabilities/default.json:5`. Status: FIXED (BATCH-1b); testy limitów i kontraktów providerów/CLI oraz least privilege. Pełny suite, build i strict Clippy PASS.
 - [x] GAP-006: [HIGH] Wyjście CLI zbierane przez wait_with_output nie ma limitu bajtów. Dowód: `src-tauri/src/commands/ai_cli.rs:619`. Status: FIXED (BATCH-1b); testy limitów i kontraktów providerów/CLI oraz least privilege. Pełny suite, build i strict Clippy PASS.
 - [x] GAP-007: [MEDIUM] MCP provider response.json() nie ma limitu rozmiaru przed parsowaniem. Dowód: `mcp-server/src/index.ts:18`. Status: FIXED (BATCH-1b); testy limitów i kontraktów providerów/CLI oraz least privilege. Pełny suite, build i strict Clippy PASS.
-- [ ] GAP-008: [MEDIUM] Publiczny zapis AppConfig nie waliduje enumów, timeoutu, limitu przekierowań ani user-agenta. Dowód: `src-tauri/src/commands/settings.rs:330`. Status: OPEN; wymagane testy red/green i rewalidacja.
+- [x] GAP-008: [MEDIUM] Publiczny zapis AppConfig nie waliduje enumów, timeoutu, limitu przekierowań ani user-agenta. Dowód: `src-tauri/src/commands/settings.rs:330`. Status: FIXED (BATCH-1c); walidacja konfiguracji, ograniczony odczyt, atomowy zapis i testy błędów/recovery; pełny suite PASS.
 
 ## BATCH 2: Architecture & Design Patterns
 - [ ] GAP-009: [HIGH] toolsStore łączy crawling, rankingi, AI, GSC, keyword research i backlinki w 2231 liniach. Dowód: `src/stores/toolsStore.ts`. Status: OPEN; wymagane testy red/green i rewalidacja.
@@ -55,21 +55,21 @@ Pomiary bazowego commitu (2026-10-01):
 ## BATCH 4: Performance & Resource Bounds
 - [ ] GAP-029: [MEDIUM] readStorageEntries wylicza Object.keys(entries) w każdej iteracji: koszt kwadratowy. Dowód: `src/services/storage.ts:69`. Status: OPEN; wymagane testy red/green i rewalidacja.
 - [ ] GAP-030: [HIGH] parseProjectBackup parsuje dowolnie duży string JSON bez limitu wejścia. Dowód: `src/services/projectBackup.ts:104`. Status: OPEN; wymagane testy red/green i rewalidacja.
-- [ ] GAP-031: [MEDIUM] get_config czyta cały dowolnie duży plik przed deserializacją. Dowód: `src-tauri/src/commands/settings.rs:320`. Status: OPEN; wymagane testy red/green i rewalidacja.
-- [ ] GAP-032: [MEDIUM] Regex identyfikatorów i nazw sekretów jest kompilowany przy każdym wywołaniu. Dowód: `src-tauri/src/commands/settings.rs:27`. Status: OPEN; wymagane testy red/green i rewalidacja.
+- [x] GAP-031: [MEDIUM] get_config czyta cały dowolnie duży plik przed deserializacją. Dowód: `src-tauri/src/commands/settings.rs:320`. Status: FIXED (BATCH-1c); walidacja konfiguracji, ograniczony odczyt, atomowy zapis i testy błędów/recovery; pełny suite PASS.
+- [x] GAP-032: [MEDIUM] Regex identyfikatorów i nazw sekretów jest kompilowany przy każdym wywołaniu. Dowód: `src-tauri/src/commands/settings.rs:27`. Status: FIXED (BATCH-1c); walidacja konfiguracji, ograniczony odczyt, atomowy zapis i testy błędów/recovery; pełny suite PASS.
 - [ ] GAP-033: [MEDIUM] Lokalne API nie ma jawnego limitu równoległych audytów/crawlów. Dowód: `mcp-server/src/localApi.ts:134`. Status: OPEN; wymagane testy red/green i rewalidacja.
 - [ ] GAP-034: [MEDIUM] Lokalne API nie definiuje własnych timeoutów headers/request/keepalive. Dowód: `mcp-server/src/localApi.ts:134`. Status: OPEN; wymagane testy red/green i rewalidacja.
 
 ## BATCH 5: Error Handling & Logging
-- [ ] GAP-035: [MEDIUM] Uszkodzony JSON konfiguracji jest po cichu zastępowany defaults, bez informacji o utracie ustawień. Dowód: `src-tauri/src/commands/settings.rs:326`. Status: OPEN; wymagane testy red/green i rewalidacja.
-- [ ] GAP-036: [MEDIUM] save_config nadpisuje plik bez atomowego zapisu; przerwanie grozi uszkodzonym JSON. Dowód: `src-tauri/src/commands/settings.rs:350`. Status: OPEN; wymagane testy red/green i rewalidacja.
-- [ ] GAP-037: [MEDIUM] loadConfig tłumi każdy błąd odczytu i nie pokazuje statusu awarii konfiguracji. Dowód: `src/stores/settingsStore.ts:83`. Status: OPEN; wymagane testy red/green i rewalidacja.
+- [x] GAP-035: [MEDIUM] Uszkodzony JSON konfiguracji jest po cichu zastępowany defaults, bez informacji o utracie ustawień. Dowód: `src-tauri/src/commands/settings.rs:326`. Status: FIXED (BATCH-1c); walidacja konfiguracji, ograniczony odczyt, atomowy zapis i testy błędów/recovery; pełny suite PASS.
+- [x] GAP-036: [MEDIUM] save_config nadpisuje plik bez atomowego zapisu; przerwanie grozi uszkodzonym JSON. Dowód: `src-tauri/src/commands/settings.rs:350`. Status: FIXED (BATCH-1c); walidacja konfiguracji, ograniczony odczyt, atomowy zapis i testy błędów/recovery; pełny suite PASS.
+- [x] GAP-037: [MEDIUM] loadConfig tłumi każdy błąd odczytu i nie pokazuje statusu awarii konfiguracji. Dowód: `src/stores/settingsStore.ts:83`. Status: FIXED (BATCH-1c); walidacja konfiguracji, ograniczony odczyt, atomowy zapis i testy błędów/recovery; pełny suite PASS.
 - [ ] GAP-038: [MEDIUM] Lokalne API przekazuje dowolne error.message runnera bez bezpiecznego mapowania. Dowód: `mcp-server/src/localApi.ts:128`. Status: OPEN; wymagane testy red/green i rewalidacja.
 - [ ] GAP-039: [MEDIUM] Lokalne API nie nadaje identyfikatora korelacji żądaniu i odpowiedzi. Dowód: `mcp-server/src/localApi.ts`. Status: OPEN; wymagane testy red/green i rewalidacja.
 - [ ] GAP-040: [MEDIUM] Brak wspólnego kontraktu strukturalnych logów JSON dla warstw IPC/MCP. Dowód: `src-tauri/src/lib.rs`. Status: OPEN; wymagane testy red/green i rewalidacja.
 
 ## BATCH 6: Code Quality & Validation
-- [ ] GAP-041: [MEDIUM] Domyślny user agent Rust chrome_desktop nie odpowiada frontendowemu chrome_mac. Dowód: `src-tauri/src/models/config.rs:34`. Status: OPEN; wymagane testy red/green i rewalidacja.
+- [x] GAP-041: [MEDIUM] Domyślny user agent Rust chrome_desktop nie odpowiada frontendowemu chrome_mac. Dowód: `src-tauri/src/models/config.rs:34`. Status: FIXED (BATCH-1c); walidacja konfiguracji, ograniczony odczyt, atomowy zapis i testy błędów/recovery; pełny suite PASS.
 - [ ] GAP-042: [MEDIUM] readJsonStorage<T> zwraca JSON as T bez walidacji runtime kontraktu. Dowód: `src/services/storage.ts:46`. Status: OPEN; wymagane testy red/green i rewalidacja.
 - [ ] GAP-043: [MEDIUM] Local API konwertuje timeout/max_pages/max_depth Number(), przyjmując stringi/bool zamiast typów kontraktu. Dowód: `mcp-server/src/localApi.ts:94`. Status: OPEN; wymagane testy red/green i rewalidacja.
 - [ ] GAP-044: [MEDIUM] Frontend i MCP duplikują reguły rynków, typy wyników i normalizację domen. Dowód: `src/services/dataforseo.ts; mcp-server/src/index.ts`. Status: OPEN; wymagane testy red/green i rewalidacja.
@@ -93,3 +93,4 @@ Pomiary bazowego commitu (2026-10-01):
 - BATCH-1a: transport HTTP. RED: nowe testy kontraktu nie kompilowały się przed dodaniem granicy resolvera. GREEN: 704 frontend / 330 Rust / 27 MCP; build frontend + MCP, rustfmt i strict Clippy. Test strumieniowego timeoutu ujawnił konkurujące deadline'y; naprawiono i ponowiono pełny Rust suite. Brak zmian IPC/migracji.
 
 - BATCH-1b: limity wszystkich procesów AI CLI i JSON providerów MCP; wydzielony kontrakt providerów; wildcard capability usunięty. RED: test capability wykazał wildcard, testy nowych granic nie kompilowały/importowały się. GREEN: 705 frontend / 332 Rust / 33 MCP; build, rustfmt, strict Clippy PASS. GAP-051/052 odkryte i naprawione.
+- BATCH-1c: konfiguracja: walidacja, 64 KiB limit, spawn_blocking, atomowe zastąpienie z cleanup, migracja chrome_desktop, widoczny stan błędów (12 języków), liniowe walidatory nazw sekretów zamiast regex per call. RED: 2 testy frontend failures oraz brak natywnych granic; GREEN: 708 frontend / 339 Rust / 33 MCP, build/rustfmt/Clippy PASS. Synchronizacja wygenerowanego schematu capabilities po BATCH-1b.

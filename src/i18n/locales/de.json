@@ -535,6 +535,7 @@
     "settings": {
       "projectDataforseo": "Select a project before configuring DataForSEO.",
       "projectGoogle": "Select a project before configuring Google performance APIs.",
+      "configLoadFailed": "Gespeicherte Einstellungen konnten nicht geladen werden. Die aktuellen Einstellungen wurden beibehalten. Stelle eine gültige Konfigurationsdatei wieder her und versuche es erneut.",
       "configSaveFailed": "Die Konfiguration konnte im Backend nicht gespeichert werden."
     },
     "export": {

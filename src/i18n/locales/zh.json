@@ -535,6 +535,7 @@
     "settings": {
       "projectDataforseo": "Select a project before configuring DataForSEO.",
       "projectGoogle": "Select a project before configuring Google performance APIs.",
+      "configLoadFailed": "无法加载已保存的设置。已保留当前设置。请恢复有效的配置文件后重试。",
       "configSaveFailed": "无法将配置保存到后端。"
     },
     "export": {

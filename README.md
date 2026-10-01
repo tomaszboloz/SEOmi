@@ -332,6 +332,12 @@ The release workflow produces signed installers only after the release signing g
 <tr><td>Workflow configuration</td><td>Test gates, source reference checks, signing preflight, and release verification</td></tr>
 </table>
 
+### Configuration persistence and compatibility
+
+Native settings validate themes, supported languages, providers, request limits and header values before writing. Reads are bounded to 64 KiB. Invalid JSON is reported instead of silently resetting preferences. File operations run outside the async executor, and saves flush a unique temporary file before atomically replacing the previous configuration on macOS/Windows. The settings modal exposes load/save failures and clears them after recovery.
+
+Existing configuration files keep their schema. The old `chrome_desktop` value is normalized to `chrome_mac` when read; the next successful save persists that preset. Invalid files are preserved for recovery: close the app, back up `seomi_config.json` in the platform app configuration directory, then restore a valid backup or remove the invalid file to explicitly opt into defaults. No database migration is needed. New writes accept timeout 1–60 seconds and redirects 0–20; repair values outside those ranges before restoring a backup.
+
 ### Native single-page HTTP transport
 
 `services/http_client.rs` validates URL syntax and resolves every host before connecting. All DNS answers must be public; each redirect uses a fresh client pinned to those addresses with environment proxies disabled. A single operation deadline includes DNS, headers, redirects and body reads. Decoded body data is streamed with a 25 MiB ceiling, including compressed responses. Status, redirect hops, cookies and timing measurements retain their existing IPC shape; no migration is required. Resolver injection is internal and used by deterministic loopback tests; production always uses the public-address resolver.

@@ -535,6 +535,7 @@
     "settings": {
       "projectDataforseo": "Select a project before configuring DataForSEO.",
       "projectGoogle": "Select a project before configuring Google performance APIs.",
+      "configLoadFailed": "保存された設定を読み込めませんでした。現在の設定は維持されています。有効な設定ファイルを復元して再試行してください。",
       "configSaveFailed": "バックエンドに設定を保存できませんでした。"
     },
     "export": {

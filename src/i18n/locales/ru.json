@@ -535,6 +535,7 @@
     "settings": {
       "projectDataforseo": "Select a project before configuring DataForSEO.",
       "projectGoogle": "Select a project before configuring Google performance APIs.",
+      "configLoadFailed": "Не удалось загрузить сохранённые настройки. Текущие настройки сохранены. Восстановите корректный файл конфигурации и повторите попытку.",
       "configSaveFailed": "Не удалось сохранить конфигурацию в серверной части."
     },
     "export": {

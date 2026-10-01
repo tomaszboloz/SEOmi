@@ -43,6 +43,7 @@ export const SettingsModal: React.FC = () => {
   const closeModal = useUIStore((s) => s.closeModal);
   const config = useSettingsStore((s) => s.config);
   const isSaving = useSettingsStore((s) => s.isSaving);
+  const configError = useSettingsStore((s) => s.configError);
   const secureStorageError = useSettingsStore((s) => s.secureStorageError);
   const dataForSeoCredentials = useSettingsStore((s) => s.dataForSeoCredentials);
   const googleMetricsApiKey = useSettingsStore((s) => s.googleMetricsApiKey);
@@ -297,6 +298,12 @@ export const SettingsModal: React.FC = () => {
             <span>{t('settings.updates')}</span>
           </button>
         </div>
+
+        {configError && (
+          <div role="alert" className="mx-6 mt-4 rounded border border-red-500/40 bg-red-500/10 p-3 text-sm text-red-200">
+            {configError}
+          </div>
+        )}
 
         {/* Tab Content */}
         <div className="p-6 overflow-y-auto space-y-6">

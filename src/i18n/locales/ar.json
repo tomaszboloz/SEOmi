@@ -535,6 +535,7 @@
     "settings": {
       "projectDataforseo": "Select a project before configuring DataForSEO.",
       "projectGoogle": "Select a project before configuring Google performance APIs.",
+      "configLoadFailed": "تعذر تحميل الإعدادات المحفوظة. تم الاحتفاظ بالإعدادات الحالية. استعد ملف إعدادات صالحًا وحاول مرة أخرى.",
       "configSaveFailed": "تعذر حفظ الإعدادات في الواجهة الخلفية."
     },
     "export": {

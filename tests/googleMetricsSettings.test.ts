@@ -126,3 +126,24 @@ describe('general settings propagate into the active audit controls', () => {
     useSettingsStore.setState({ config: originalConfig });
   });
 });
+
+describe('configuration failure state', () => {
+  it('keeps the current settings and exposes read failures until a successful reload', async () => {
+    const original = useSettingsStore.getState().config;
+    settingsMocks.invokeTauriCommandMock.mockRejectedValueOnce(new Error('unreadable configuration'));
+    settingsMocks.getSecureValueMock.mockResolvedValue('');
+    await useSettingsStore.getState().loadConfig();
+    expect(useSettingsStore.getState().config).toEqual(original);
+    expect(useSettingsStore.getState().configError).toBeTruthy();
+    settingsMocks.invokeTauriCommandMock.mockResolvedValueOnce(original);
+    await useSettingsStore.getState().loadConfig();
+    expect(useSettingsStore.getState().configError).toBeNull();
+  });
+
+  it('exposes failed saves rather than clearing the failure as a success', async () => {
+    settingsMocks.invokeTauriCommandMock.mockRejectedValueOnce(new Error('disk failure'));
+    await useSettingsStore.getState().updateConfig({ theme: 'dark' });
+    expect(useSettingsStore.getState().configError).toBeTruthy();
+    expect(useSettingsStore.getState().isSaving).toBe(false);
+  });
+});

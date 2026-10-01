@@ -535,6 +535,7 @@
     "settings": {
       "projectDataforseo": "Wybierz projekt przed konfiguracją DataForSEO.",
       "projectGoogle": "Wybierz projekt przed konfiguracją API wydajności Google.",
+      "configLoadFailed": "Nie udało się wczytać zapisanych ustawień. Zachowano bieżące ustawienia. Przywróć poprawny plik konfiguracji i spróbuj ponownie.",
       "configSaveFailed": "Nie udało się zapisać konfiguracji w backendzie."
     },
     "export": {

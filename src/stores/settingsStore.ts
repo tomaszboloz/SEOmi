@@ -10,6 +10,7 @@ interface SettingsState {
   theme: 'dark' | 'light' | 'system';
   language: string;
   isSaving: boolean;
+  configError: string | null;
   dataForSeoCredentials: { login: string; password: string };
   googleMetricsApiKey: string;
   secureStorageError: string | null;
@@ -59,6 +60,7 @@ export const useSettingsStore = create<SettingsState>((set, get) => ({
   theme: (readStorage('seomi_theme') as any) || 'dark',
   language: readStorage('seomi_language') || 'en',
   isSaving: false,
+  configError: null,
   dataForSeoCredentials: { login: '', password: '' },
   googleMetricsApiKey: '',
   secureStorageError: null,
@@ -66,7 +68,7 @@ export const useSettingsStore = create<SettingsState>((set, get) => ({
   loadConfig: async () => {
     try {
       const conf = await invokeTauriCommand<AppConfig>('get_config');
-      set({ config: conf, theme: conf.theme, language: conf.language });
+      set({ config: conf, theme: conf.theme, language: conf.language, configError: null });
       applyThemeToDOM(conf.theme);
       setLanguageDirection(conf.language);
       // Keep the legacy general settings record and the project aware AI
@@ -80,7 +82,7 @@ export const useSettingsStore = create<SettingsState>((set, get) => ({
         if (conf.ai_model) useAuthStore.getState().setModel(conf.ai_model);
       }
     } catch {
-      // Use defaults
+      set({ configError: i18n.t('runtimeErrors.settings.configLoadFailed') });
     }
     // Credentials belong to a project. On the project gate there is deliberately
     // no project-scoped secret to read yet.
@@ -173,7 +175,7 @@ export const useSettingsStore = create<SettingsState>((set, get) => ({
   updateConfig: async (patch: Partial<AppConfig>) => {
     const updated = { ...get().config, ...patch };
     const revision = ++configUpdateRevision;
-    set({ config: updated, isSaving: true });
+    set({ config: updated, isSaving: true, configError: null });
 
     if (patch.default_user_agent) {
       const { useAuditStore } = await import('./auditStore');
@@ -198,8 +200,9 @@ export const useSettingsStore = create<SettingsState>((set, get) => ({
     configSaveQueue = save;
     try {
       await save;
-    } catch (e) {
-      console.warn(i18n.t('runtimeErrors.settings.configSaveFailed'), e);
+      if (revision === configUpdateRevision) set({ configError: null });
+    } catch {
+      if (revision === configUpdateRevision) set({ configError: i18n.t('runtimeErrors.settings.configSaveFailed') });
     } finally {
       if (revision === configUpdateRevision) set({ isSaving: false });
     }
