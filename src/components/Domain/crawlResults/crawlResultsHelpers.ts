@@ -425,7 +425,7 @@ export const loadFilterPresets = (projectId: string): CrawlFilterPreset[] => {
 };
 
 export const optional = (value?: string | number | null): string =>
-  value === undefined || value === "" ? "—" : String(value);
+  value == null || value === "" ? "—" : String(value);
 
 export const discoverySourcesForPage = (
   page: CrawledPageSummary,
