@@ -332,6 +332,12 @@ The release workflow produces signed installers only after the release signing g
 <tr><td>Workflow configuration</td><td>Test gates, source reference checks, signing preflight, and release verification</td></tr>
 </table>
 
+### Native single-page HTTP transport
+
+`services/http_client.rs` validates URL syntax and resolves every host before connecting. All DNS answers must be public; each redirect uses a fresh client pinned to those addresses with environment proxies disabled. A single operation deadline includes DNS, headers, redirects and body reads. Decoded body data is streamed with a 25 MiB ceiling, including compressed responses. Status, redirect hops, cookies and timing measurements retain their existing IPC shape; no migration is required. Resolver injection is internal and used by deterministic loopback tests; production always uses the public-address resolver.
+
+The ongoing audit and measured coverage baseline are tracked in [AUDIT_GAPS.md](AUDIT_GAPS.md). Passing tests do not establish the >99% coverage target. Run the full frontend, native and MCP suites after every batch.
+
 ### Data boundaries
 
 Interface state is kept in typed stores and project scoped persistence. Native state is accessed through explicit commands. Credential values cross the command boundary only for the operation that needs them. The agent server accepts bounded requests and returns source labels with every provider result.

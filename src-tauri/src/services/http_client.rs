@@ -4,9 +4,8 @@ use chrono::Utc;
 use reqwest::header::{HeaderValue, USER_AGENT};
 use reqwest::redirect::Policy;
 use std::collections::HashMap;
+use std::future::Future;
 use std::net::SocketAddr;
-use std::sync::atomic::{AtomicUsize, Ordering};
-use std::sync::{Arc, Mutex};
 use std::time::{Duration, Instant};
 use tokio::net::lookup_host;
 use tokio::time::timeout;
@@ -27,6 +26,10 @@ async fn resolve_public_addresses(url: &Url) -> Result<Vec<SocketAddr>> {
         .map_err(|_| anyhow!("DNS lookup timed out"))?
         .map_err(|error| anyhow!("DNS lookup failed: {error}"))?
         .collect::<Vec<_>>();
+    validate_addresses(addresses)
+}
+
+fn validate_addresses(addresses: Vec<SocketAddr>) -> Result<Vec<SocketAddr>> {
     if addresses.is_empty() {
         return Err(anyhow!("DNS returned no addresses"));
     }
@@ -67,115 +70,148 @@ pub async fn fetch_page_with_options(
     max_redirects: usize,
     verify_ssl: bool,
 ) -> Result<FetchResult> {
-    let max_redirects = max_redirects.min(20);
-    let hops: Arc<Mutex<Vec<RedirectHop>>> = Arc::new(Mutex::new(Vec::new()));
-    let hops_clone = Arc::clone(&hops);
-    let redirect_counter = Arc::new(AtomicUsize::new(0));
-    let counter_clone = Arc::clone(&redirect_counter);
+    fetch_with_resolver(
+        target_url,
+        user_agent_str,
+        FetchOptions {
+            timeout: Duration::from_secs(timeout_secs),
+            max_redirects: max_redirects.min(20),
+            verify_ssl,
+            max_body_bytes: MAX_BODY_BYTES,
+        },
+        |url| async move { resolve_public_addresses(&url).await },
+    )
+    .await
+}
 
-    let client = reqwest::Client::builder()
-        .timeout(Duration::from_secs(timeout_secs))
-        .danger_accept_invalid_certs(!verify_ssl)
-        .redirect(Policy::custom(move |attempt| {
-            // Redirects are untrusted input. Validate every hop instead of
-            // assuming that a public start URL cannot bounce to localhost,
-            // a private IP, or a URL carrying embedded credentials.
-            if let Err(error) = validate_and_normalize_url(attempt.url().as_str()) {
-                return attempt.error(anyhow!("Unsafe redirect blocked: {error}"));
+struct FetchOptions {
+    timeout: Duration,
+    max_redirects: usize,
+    verify_ssl: bool,
+    max_body_bytes: usize,
+}
+
+// The resolver contract returns addresses approved for this request. Production
+// rejects every non-public answer; only local fixtures supply loopback addresses.
+// A fresh pinned client per hop prevents DNS rebinding and cross-host reuse.
+async fn fetch_with_resolver<R, F>(
+    target_url: &Url,
+    user_agent_str: &str,
+    options: FetchOptions,
+    resolve: R,
+) -> Result<FetchResult>
+where
+    R: Fn(Url) -> F,
+    F: Future<Output = Result<Vec<SocketAddr>>>,
+{
+    timeout(options.timeout, async {
+        let mut current = validate_and_normalize_url(target_url.as_str())
+            .map_err(|error| anyhow!(error.to_string()))?;
+        let measured_at = Utc::now();
+        let start_time = Instant::now();
+        let mut recorded_hops = Vec::new();
+        let mut response = loop {
+            let addresses = resolve(current.clone()).await?;
+            let host = current
+                .host_str()
+                .ok_or_else(|| anyhow!("URL has no host"))?;
+            let client = reqwest::Client::builder()
+                .danger_accept_invalid_certs(!options.verify_ssl)
+                .redirect(Policy::none())
+                .no_proxy()
+                .resolve_to_addrs(host, &addresses)
+                .gzip(true)
+                .brotli(true)
+                .build()?;
+            let mut request = client.get(current.clone());
+            if let Ok(value) = HeaderValue::from_str(user_agent_str) {
+                request = request.header(USER_AGENT, value);
             }
-            let count = counter_clone.fetch_add(1, Ordering::SeqCst);
-            if count >= max_redirects {
-                return attempt.error(anyhow!("Too many redirects (max {max_redirects} allowed)"));
-            }
-
-            let previous = attempt.previous();
-            if let Some(prev_url) = previous.last() {
-                let status = attempt.status();
-                let loc = attempt.url().as_str().to_string();
-
-                if let Ok(mut list) = hops_clone.lock() {
-                    list.push(RedirectHop {
-                        url: prev_url.to_string(),
-                        status_code: status.as_u16(),
-                        location: Some(loc),
+            let response = request.send().await?;
+            if matches!(response.status().as_u16(), 301 | 302 | 303 | 307 | 308) {
+                if let Some(location) = response.headers().get(reqwest::header::LOCATION) {
+                    let next = current.join(location.to_str()?)?;
+                    let next = validate_and_normalize_url(next.as_str())
+                        .map_err(|error| anyhow!("Unsafe redirect blocked: {error}"))?;
+                    if recorded_hops.len() >= options.max_redirects {
+                        return Err(anyhow!(
+                            "Too many redirects (max {} allowed)",
+                            options.max_redirects
+                        ));
+                    }
+                    recorded_hops.push(RedirectHop {
+                        url: current.to_string(),
+                        status_code: response.status().as_u16(),
+                        location: Some(next.to_string()),
                     });
+                    current = next;
+                    continue;
                 }
             }
-
-            attempt.follow()
-        }))
-        .gzip(true)
-        .brotli(true)
-        .build()?;
-
-    let mut request_builder = client.get(target_url.as_str());
-    if let Ok(ua_val) = HeaderValue::from_str(user_agent_str) {
-        request_builder = request_builder.header(USER_AGENT, ua_val);
-    }
-
-    let measured_at = Utc::now();
-    let start_time = Instant::now();
-    let response = request_builder.send().await?;
-    let response_headers_ms = start_time.elapsed().as_millis() as u64;
-
-    let final_url = response.url().to_string();
-    let status = response.status().as_u16();
-
-    // Collect headers into lowercase map
-    let mut headers_map = HashMap::new();
-    for (name, val) in response.headers().iter() {
-        if let Ok(str_val) = val.to_str() {
-            headers_map.insert(name.as_str().to_lowercase(), str_val.to_string());
+            break response;
+        };
+        let response_headers_ms = start_time.elapsed().as_millis() as u64;
+        let final_url = response.url().to_string();
+        let status = response.status().as_u16();
+        let headers_map: HashMap<String, String> = response
+            .headers()
+            .iter()
+            .filter_map(|(name, value)| {
+                value
+                    .to_str()
+                    .ok()
+                    .map(|value| (name.as_str().to_lowercase(), value.to_owned()))
+            })
+            .collect();
+        let set_cookie_headers = response
+            .headers()
+            .get_all(reqwest::header::SET_COOKIE)
+            .iter()
+            .filter_map(|value| value.to_str().ok().map(str::to_string))
+            .collect();
+        let body_start = Instant::now();
+        let mut bytes = Vec::new();
+        while let Some(chunk) = response.chunk().await? {
+            if chunk.len() > options.max_body_bytes.saturating_sub(bytes.len()) {
+                return Err(anyhow!(
+                    "Response size exceeds safety limit of {} bytes",
+                    options.max_body_bytes
+                ));
+            }
+            bytes.extend_from_slice(&chunk);
         }
-    }
-    let set_cookie_headers = response
-        .headers()
-        .get_all(reqwest::header::SET_COOKIE)
-        .iter()
-        .filter_map(|value| value.to_str().ok().map(str::to_string))
-        .collect();
-
-    // Read body safely with length limit
-    let body_start = Instant::now();
-    let bytes = response.bytes().await?;
-    let body_read_ms = body_start.elapsed().as_millis() as u64;
-    let decoded_body_bytes = bytes.len() as u64;
-    if bytes.len() > MAX_BODY_BYTES {
-        return Err(anyhow!(
-            "Response size exceeds safety limit of 25MB (received {} bytes)",
-            bytes.len()
-        ));
-    }
-
-    let body = String::from_utf8_lossy(&bytes).to_string();
-    let recorded_hops = hops.lock().map(|h| h.clone()).unwrap_or_default();
-    let redirect_hops = recorded_hops.len();
-    let total_request_ms = start_time.elapsed().as_millis() as u64;
-    let content_length_header_bytes = headers_map
-        .get("content-length")
-        .and_then(|value| value.parse::<u64>().ok());
-
-    Ok(FetchResult {
-        url: target_url.to_string(),
-        final_url,
-        status,
-        response_time_ms: response_headers_ms,
-        headers: headers_map,
-        set_cookie_headers,
-        redirect_chain: recorded_hops,
-        body,
-        http_performance: HttpPerformanceMeasurement {
-            measured_at,
-            method: "GET".into(),
-            response_headers_ms,
-            body_read_ms,
-            total_request_ms,
-            decoded_body_bytes,
-            content_length_header_bytes,
-            redirect_hops,
-            scope: "native_http_get_includes_redirects_no_browser_render".into(),
-        },
+        let body_read_ms = body_start.elapsed().as_millis() as u64;
+        let decoded_body_bytes = bytes.len() as u64;
+        let body = String::from_utf8_lossy(&bytes).to_string();
+        let redirect_hops = recorded_hops.len();
+        let total_request_ms = start_time.elapsed().as_millis() as u64;
+        let content_length_header_bytes = headers_map
+            .get("content-length")
+            .and_then(|value| value.parse::<u64>().ok());
+        Ok(FetchResult {
+            url: target_url.to_string(),
+            final_url,
+            status,
+            response_time_ms: response_headers_ms,
+            headers: headers_map,
+            set_cookie_headers,
+            redirect_chain: recorded_hops,
+            body,
+            http_performance: HttpPerformanceMeasurement {
+                measured_at,
+                method: "GET".into(),
+                response_headers_ms,
+                body_read_ms,
+                total_request_ms,
+                decoded_body_bytes,
+                content_length_header_bytes,
+                redirect_hops,
+                scope: "native_http_get_includes_redirects_no_browser_render".into(),
+            },
+        })
     })
+    .await
+    .map_err(|_| anyhow!("HTTP operation timed out"))?
 }
 
 /// Helper to check HTTP status of an external or internal link
@@ -233,15 +269,199 @@ mod tests {
         assert!(result.body.contains("<title>Test</title>"));
     }
 
-    #[tokio::test]
-    async fn test_fetch_page_live_redirect() {
-        let url = Url::parse("http://rust-lang.org").unwrap();
-        let res = fetch_page(&url, "SEOmi-TestBot", 10).await;
-        if let Ok(result) = res {
-            assert_eq!(result.status, 200);
-            assert!(result.body.contains("Rust"));
-            assert!(!result.redirect_chain.is_empty());
-            assert_eq!(result.final_url, "https://rust-lang.org/");
+    fn options(limit: usize, redirects: usize) -> FetchOptions {
+        FetchOptions {
+            timeout: Duration::from_millis(250),
+            max_redirects: redirects,
+            verify_ssl: true,
+            max_body_bytes: limit,
         }
+    }
+
+    async fn fixture(responses: Vec<String>) -> SocketAddr {
+        fixture_bytes(responses.into_iter().map(String::into_bytes).collect()).await
+    }
+
+    async fn fixture_bytes(responses: Vec<Vec<u8>>) -> SocketAddr {
+        use tokio::io::{AsyncReadExt, AsyncWriteExt};
+        let listener = tokio::net::TcpListener::bind("127.0.0.1:0").await.unwrap();
+        let address = listener.local_addr().unwrap();
+        tokio::spawn(async move {
+            for response in responses {
+                let (mut stream, _) = listener.accept().await.unwrap();
+                let mut request = vec![0; 4096];
+                let _ = stream.read(&mut request).await;
+                let _ = stream.write_all(&response).await;
+            }
+        });
+        address
+    }
+
+    #[test]
+    fn dns_rejects_empty_and_mixed_answers() {
+        assert!(validate_addresses(vec![]).is_err());
+        assert!(validate_addresses(vec![
+            "93.184.216.34:80".parse().unwrap(),
+            "127.0.0.1:80".parse().unwrap()
+        ])
+        .is_err());
+        assert!(validate_addresses(vec!["[::1]:80".parse().unwrap()]).is_err());
+        assert!(validate_addresses(vec!["93.184.216.34:80".parse().unwrap()]).is_ok());
+    }
+
+    #[tokio::test]
+    async fn rejects_initial_dns_before_transport() {
+        let url = Url::parse("http://audit.example/").unwrap();
+        let result = fetch_with_resolver(&url, "Test", options(16, 2), |_| async {
+            validate_addresses(vec!["127.0.0.1:80".parse().unwrap()])
+        })
+        .await;
+        assert!(result
+            .unwrap_err()
+            .to_string()
+            .contains("private or reserved"));
+    }
+
+    #[tokio::test]
+    async fn pinned_transport_preserves_headers_cookies_and_measurements() {
+        let address = fixture(vec!["HTTP/1.1 200 OK\r\nContent-Length: 5\r\nSet-Cookie: a=1\r\nSet-Cookie: b=2\r\nConnection: close\r\n\r\nhello".into()]).await;
+        let url = Url::parse(&format!("http://audit.example:{}/", address.port())).unwrap();
+        let result =
+            fetch_with_resolver(&url, "Test", options(5, 0), |_| async { Ok(vec![address]) })
+                .await
+                .unwrap();
+        assert_eq!(result.body, "hello");
+        assert_eq!(result.set_cookie_headers, ["a=1", "b=2"]);
+        assert_eq!(result.http_performance.decoded_body_bytes, 5);
+        assert_eq!(result.http_performance.content_length_header_bytes, Some(5));
+        assert!(result.http_performance.total_request_ms >= result.response_time_ms);
+    }
+
+    #[tokio::test]
+    async fn rejects_redirect_dns_before_connection() {
+        let address = fixture(vec!["HTTP/1.1 302 Found\r\nLocation: http://private.example/\r\nContent-Length: 0\r\nConnection: close\r\n\r\n".into()]).await;
+        let url = Url::parse(&format!("http://audit.example:{}/", address.port())).unwrap();
+        let result = fetch_with_resolver(&url, "Test", options(16, 2), |url| async move {
+            if url.host_str() == Some("private.example") {
+                validate_addresses(vec!["10.0.0.1:80".parse().unwrap()])
+            } else {
+                Ok(vec![address])
+            }
+        })
+        .await;
+        assert!(result
+            .unwrap_err()
+            .to_string()
+            .contains("private or reserved"));
+    }
+
+    #[tokio::test]
+    async fn follows_relative_redirect_and_records_hop() {
+        let address = fixture(vec![
+            "HTTP/1.1 302 Found\r\nLocation: /next\r\nContent-Length: 0\r\nConnection: close\r\n\r\n".into(),
+            "HTTP/1.1 200 OK\r\nContent-Length: 2\r\nConnection: close\r\n\r\nok".into()]).await;
+        let url = Url::parse(&format!("http://audit.example:{}/", address.port())).unwrap();
+        let result = fetch_with_resolver(&url, "Test", options(16, 1), |_| async {
+            Ok(vec![address])
+        })
+        .await
+        .unwrap();
+        assert!(result.final_url.ends_with("/next"));
+        assert_eq!(result.redirect_chain.len(), 1);
+        assert_eq!(result.redirect_chain[0].status_code, 302);
+        assert_eq!(result.redirect_chain[0].url, url.to_string());
+        assert_eq!(result.http_performance.redirect_hops, 1);
+    }
+
+    #[tokio::test]
+    async fn rejects_unsafe_redirects_and_zero_redirect_budget() {
+        for (location, budget, expected) in [
+            ("http://127.0.0.1/", 1, "Unsafe redirect"),
+            ("http://user:secret@audit.example/", 1, "Unsafe redirect"),
+            ("file:///etc/passwd", 1, "Unsafe redirect"),
+            ("/next", 0, "Too many redirects"),
+        ] {
+            let address = fixture(vec![format!("HTTP/1.1 302 Found\r\nLocation: {location}\r\nContent-Length: 0\r\nConnection: close\r\n\r\n")]).await;
+            let url = Url::parse(&format!("http://audit.example:{}/", address.port())).unwrap();
+            let error = fetch_with_resolver(&url, "Test", options(16, budget), |_| async {
+                Ok(vec![address])
+            })
+            .await
+            .unwrap_err();
+            assert!(error.to_string().contains(expected), "{error}");
+        }
+    }
+
+    #[tokio::test]
+    async fn streaming_limit_applies_without_content_length() {
+        let address = fixture(vec!["HTTP/1.1 200 OK\r\nTransfer-Encoding: chunked\r\nConnection: close\r\n\r\n4\r\n1234\r\n4\r\n5678\r\n0\r\n\r\n".into()]).await;
+        let url = Url::parse(&format!("http://audit.example:{}/", address.port())).unwrap();
+        let error =
+            fetch_with_resolver(&url, "Test", options(5, 0), |_| async { Ok(vec![address]) })
+                .await
+                .unwrap_err();
+        assert!(error.to_string().contains("safety limit"));
+    }
+
+    #[tokio::test]
+    async fn deadline_includes_dns_resolution() {
+        let url = Url::parse("http://audit.example/").unwrap();
+        let error = fetch_with_resolver(&url, "Test", options(5, 0), |_| async {
+            tokio::time::sleep(Duration::from_secs(1)).await;
+            Ok(vec!["93.184.216.34:80".parse().unwrap()])
+        })
+        .await
+        .unwrap_err();
+        assert!(error.to_string().contains("timed out"));
+    }
+    #[tokio::test]
+    async fn public_entry_points_reject_unsafe_urls() {
+        let url = Url::parse("http://127.0.0.1/").unwrap();
+        assert!(fetch_page(&url, "Test", 1).await.is_err());
+        assert!(fetch_page_with_options(&url, "Test", 1, 0, true)
+            .await
+            .is_err());
+        assert!(check_url_status(url.as_str(), 1).await.is_err());
+    }
+
+    #[tokio::test]
+    async fn compressed_body_limit_counts_decoded_bytes() {
+        use std::io::Write;
+        let mut encoder = flate2::write::GzEncoder::new(Vec::new(), flate2::Compression::default());
+        encoder.write_all(&[b'x'; 128]).unwrap();
+        let compressed = encoder.finish().unwrap();
+        let mut response = format!("HTTP/1.1 200 OK\r\nContent-Encoding: gzip\r\nContent-Length: {}\r\nConnection: close\r\n\r\n", compressed.len()).into_bytes();
+        response.extend(compressed);
+        let address = fixture_bytes(vec![response]).await;
+        let url = Url::parse(&format!("http://audit.example:{}/", address.port())).unwrap();
+        let error = fetch_with_resolver(&url, "Test", options(64, 0), |_| async {
+            Ok(vec![address])
+        })
+        .await
+        .unwrap_err();
+        assert!(error.to_string().contains("safety limit"));
+    }
+
+    #[tokio::test]
+    async fn deadline_applies_to_slow_body() {
+        use tokio::io::{AsyncReadExt, AsyncWriteExt};
+        let listener = tokio::net::TcpListener::bind("127.0.0.1:0").await.unwrap();
+        let address = listener.local_addr().unwrap();
+        tokio::spawn(async move {
+            let (mut stream, _) = listener.accept().await.unwrap();
+            let mut buffer = [0; 4096];
+            let _ = stream.read(&mut buffer).await;
+            stream
+                .write_all(b"HTTP/1.1 200 OK\r\nContent-Length: 5\r\n\r\nh")
+                .await
+                .unwrap();
+            tokio::time::sleep(Duration::from_secs(1)).await;
+        });
+        let url = Url::parse(&format!("http://audit.example:{}/", address.port())).unwrap();
+        let error =
+            fetch_with_resolver(&url, "Test", options(5, 0), |_| async { Ok(vec![address]) })
+                .await
+                .unwrap_err();
+        assert!(error.to_string().contains("timed out"), "{error}");
     }
 }

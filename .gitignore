@@ -187,3 +187,6 @@ venv/
 **/*[Mm][Aa][Tt][Rr][Ii][Xx]*.txt
 **/*[Mm][Aa][Tt][Rr][Ii][Xx]*.pdf
 **/*[Mm][Aa][Tt][Rr][Ii][Xx]*.docx
+
+# Explicitly requested, versioned audit register.
+!/AUDIT_GAPS.md
