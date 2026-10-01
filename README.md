@@ -1038,3 +1038,9 @@ Full local suites:1088frontend/385Rust/65MCP; build/lint/fmt/strictClippy pass. 
 Saved Search Console snapshots now require complete finite metrics, valid row arrays, supported filters and matching row counts. Invalid records are skipped individually, retaining valid history; fetching new data creates a fresh valid snapshot. No metrics are coerced into fabricated zero values. New direct tests cover native checkpoint save/clear ordering across projects, resume frontiers, immutable merge summaries, bounded checkpoints, local provider discovery and DataForSEO market/error contracts.
 
 Full local suites:1106frontend/385Rust/65MCP; build/lint/fmt/strictClippy pass. Coverage:79.54%statements,64.50%branches,76.08%functions,81.95%lines. The original audit remains69/72;77/80 including discovered fixes. All five CI checks passed for ab3d8d8 in run36899516284.
+
+### Native wire format and structured-data scope (audit BATCH-3n)
+
+Microdata terms from an external vocabulary no longer receive Schema.org profile warnings just because the last part of the IRI matches Product. Absolute identifiers and declaration shapes remain validated; external vocabularies carry a scope notice. New contracts verify all locally supported Microdata profiles, RDFa malformed terms, JSON-LD empty properties and FAQ shapes. Native-to-frontend wire tests preserve null as unavailable and retain measured zero/false, while rejecting malformed nested evidence. Route recovery now has a direct retry interaction test.
+
+Full suites:1112frontend/391Rust/65MCP; build/lint/fmt/strictClippy pass. Frontend coverage:80.21%statements,66.08%branches,78.31%functions,82.78%lines. Fresh isolated production native coverage:11219/17943lines(62.53%),1058/1842sourcefunctions(57.44%); branches unavailable. Original audit69/72;78/81 including discovered fixes. The >99% targets and complete public-function unit evidence remain open; no release tag has been created.
