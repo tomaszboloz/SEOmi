@@ -1,6 +1,6 @@
 import { afterEach, describe, expect, it } from 'vitest';
 import i18n from '@/i18n';
-import { localizeCrawlIssue } from '@/services/crawlIssueLocalization';
+import { inferCrawlIssueMessageKey, localizeCrawlIssue } from '@/services/crawlIssueLocalization';
 
 describe('crawler issue localization', () => {
   afterEach(async () => {
@@ -50,5 +50,45 @@ describe('crawler issue localization', () => {
 
     expect(shortTitle.displayMessage).toContain('too short');
     expect(longDescription.displayMessage).toContain('too long');
+  });
+
+  it.each([
+    ['Missing <title> tag', 'auditIssues.messages.meta_title_missing'],
+    ['Multiple <title> tags found (3)', 'crawlIssues.multipleTitle'],
+    ['Missing <h1> tag', 'auditIssues.messages.headings_h1_missing'],
+    ['Multiple <h1> tags found (2)', 'auditIssues.messages.headings_h1_multiple'],
+    ['Heading hierarchy skips one or more levels', 'auditIssues.messages.headings_hierarchy_skip'],
+    ['Missing meta description tag', 'auditIssues.messages.meta_description_missing'],
+    ['Meta description is empty', 'crawlIssues.emptyDescription'],
+    ['Multiple meta description tags found (2)', 'crawlIssues.multipleDescription'],
+    ['Missing canonical link', 'auditIssues.messages.meta_canonical_missing'],
+    ['Multiple canonical links found (2)', 'crawlIssues.multipleCanonical'],
+    ['Canonical declaration has a missing, invalid, or non-HTTP URL', 'crawlIssues.invalidCanonical'],
+    ['Page declares noindex in meta robots', 'auditIssues.messages.meta_robots_noindex'],
+    ['Response declares noindex in X-Robots-Tag', 'auditIssues.messages.indexability_xrobots_noindex'],
+    ['Page declares nofollow in meta robots', 'crawlIssues.nofollowMeta'],
+    ['Response declares nofollow in X-Robots-Tag', 'crawlIssues.nofollowHeader'],
+    ['Canonical points to a different URL; the target was not validated in this verdict', 'crawlIssues.canonicalElsewhere'],
+    ['Canonical and noindex are both present; review the intended indexing signal', 'crawlIssues.canonicalConflict'],
+    ['Document has no html lang attribute', 'crawlIssues.missingLanguage'],
+    ['Duplicate normalized page content found in this crawl', 'crawlIssues.duplicateContent'],
+    ['Thin text content: 3 words', 'crawlIssues.thinContent'],
+    ['2 invalid JSON-LD block(s)', 'crawlIssues.invalidJsonLd'],
+    ['Client-side refresh redirect detected (1 declaration(s))', 'crawlIssues.clientRedirect'],
+    ['2 pagination declaration(s) have a missing or invalid HTTP(S) target', 'crawlIssues.paginationInvalid'],
+    ['Duplicate title found in this crawl', 'crawl.metadataFacets.duplicateTitleDescription'],
+    ['Duplicate meta description found in this crawl', 'crawl.metadataFacets.duplicateDescriptionDescription'],
+    ['Title length is 61 characters; reference range is 30–60', 'auditIssues.messages.meta_title_long'],
+    ['Meta description length is 30 characters; reference range is 70–160', 'auditIssues.messages.meta_description_short'],
+  ])('identifies legacy diagnostic %s without changing its evidence', (message, expected) => {
+    const issue = Object.freeze({ severity: 'Info' as const, message });
+    expect(inferCrawlIssueMessageKey(issue)).toBe(expected);
+    expect(issue.message).toBe(message);
+  });
+
+  it('prefers a recognized stable diagnostic code and refuses to guess an unrelated message', () => {
+    expect(inferCrawlIssueMessageKey({ severity: 'Info', code: 'crawl-missing-language', message: 'Missing <title> tag' })).toBe('crawlIssues.missingLanguage');
+    expect(inferCrawlIssueMessageKey({ severity: 'Info', code: 'new-provider-code', message: 'Missing <h1> tag' })).toBe('auditIssues.messages.headings_h1_missing');
+    expect(inferCrawlIssueMessageKey({ severity: 'Info', message: 'Title length unknown: provider failure' })).toBeNull();
   });
 });
