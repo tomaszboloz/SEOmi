@@ -1,5 +1,8 @@
 
-import { SiteCrawlResult, CrawlRunRecord } from '@/types';
+import { CrawlRunRecord } from '@/types';
+import { z } from 'zod';
+import { parseCrawlConfig, parseCrawlRuns, parseSiteCrawlResult } from '@/services/crawlContracts';
+import { CrawlConfigSchema } from '@/services/contracts/crawl';
 import { isTauriEnvironment } from '@/services/tauri';
 import { isStorageQuotaError, usesDedicatedCrawlStorage } from '@/services/crawlPersistence';
 
@@ -9,7 +12,7 @@ import { emptyAiResearchSettings, normalizeAiResearchSettings } from '@/services
 import { useProjectStore } from '../projectStore';
 import i18n from '@/i18n';
 import { parseAiPromptComparison, parseAiResearchInputs, parseBrandAiReport, parseResearchHistory } from '@/services/researchContracts';
-import type { ToolsState, CrawlProjectSettings, ToolsSet, ToolsGet, ToolsServices } from './contracts';
+import type { ToolsState, ToolsSet, ToolsGet, ToolsServices } from './contracts';
 import { crawlResultKey, crawlRunsKey, crawlSettingsKey, domainQueryKey, backlinkQueryKey, activeProjectId, aiBrandReportKey, aiPromptComparisonKey, aiResearchInputsKey, aiResearchSettingsKey, aiBrandSelectionKey, aiPromptSelectionKey } from './storageKeys';
 import { beginToolRequest, formatCrawlPersistenceNotice, formatCrawlRuntimeError } from './runtime';
 import { readProjectResearch, loadDomainComparisonTargets, loadDomainComparisonHistory, loadLatestDomainComparison, loadDomainOverview, loadBacklinkProfile, loadBacklinkProfileHistory, loadBacklinkGapReport } from './researchPersistence';
@@ -49,10 +52,10 @@ hydrateProject: async (projectId) => {
     // Migrate legacy WebView storage once; oversized snapshots used to exhaust
     // localStorage and make a completed crawl appear to have failed.
     if (!crawlRuns.length) {
-      const parsed = readJsonStorage<unknown>(crawlRunsKey(projectId), []);
-      crawlRuns = Array.isArray(parsed) ? parsed.filter((item): item is CrawlRunRecord => Boolean(item?.id && item?.result?.start_url)) : [];
+      const parsed = readJsonStorage(crawlRunsKey(projectId), []);
+      crawlRuns = parseCrawlRuns(parsed);
       if (!crawlRuns.length) {
-        const legacyResult = readJsonStorage<SiteCrawlResult | null>(crawlResultKey(projectId), null);
+        const legacyResult = parseSiteCrawlResult(readJsonStorage(crawlResultKey(projectId), null));
         if (legacyResult?.start_url) crawlRuns = [{ id: `legacy-${Date.now()}`, completedAt: new Date().toISOString(), startUrl: legacyResult.start_url, config: { ...DEFAULT_CRAWL_CONFIG, maxPages: legacyResult.pages_crawled }, result: legacyResult }];
       }
       if (crawlRuns.length && !persistenceError) {
@@ -73,7 +76,10 @@ hydrateProject: async (projectId) => {
       }
     }
     if (activeProjectId() !== projectId) return;
-    const crawlSettings = readJsonStorage<CrawlProjectSettings | null>(crawlSettingsKey(projectId), null);
+    const parsedSettings = z.object({ url: z.string(), limit: z.number().finite().int().min(1).max(5000),
+      config: z.preprocess(parseCrawlConfig, CrawlConfigSchema),
+    }).safeParse(readJsonStorage(crawlSettingsKey(projectId), null));
+    const crawlSettings = parsedSettings.success ? parsedSettings.data : null;
     // A project's root URL is the first crawl target. Keep an explicitly
     // saved crawl URL (including an intentional empty value) authoritative.
     const hydratedCrawlUrl = crawlSettings && typeof crawlSettings.url === 'string'

@@ -36,7 +36,7 @@ export const loadSession = (
 ): PerformanceSession => {
   if (!projectId) return emptySession(defaultUrl);
   try {
-    const value = readJsonStorage<unknown>(
+    const value = readJsonStorage(
       storageKey(projectId),
       null,
     );

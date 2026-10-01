@@ -1,3 +1,4 @@
+import { createCrawlResultFixture, createCrawlPageFixture } from './fixtures/crawl';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { useToolsStore } from '@/stores/toolsStore';
 import i18n from '@/i18n';
@@ -11,10 +12,10 @@ describe('external crawl link checks', () => {
     completedAt: '2026-09-22T12:00:00.000Z',
     startUrl: 'https://site.example/',
     config: { includePatterns: [], excludePatterns: [], allowSubdomains: false, keepQueryStrings: false },
-    result: {
+    result: { ...createCrawlResultFixture(),
       start_url: 'https://site.example/', pages_crawled: 1, health_score: 100, critical_count: 0,
       warning_count: 0, notice_count: 0, duration_ms: 20, cancelled: false,
-      pages: [{
+      pages: [{ ...createCrawlPageFixture(),
         url: 'https://site.example/', final_url: 'https://site.example/', redirect_chain: [], depth: 0,
         http_status: 200, response_time_ms: 20, indexability_status: 'indexable', internal_link_count: 0,
         external_link_count: 3, links: [

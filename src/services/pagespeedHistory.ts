@@ -90,7 +90,7 @@ export const normalizePageSpeedSnapshots = (value: unknown, now = new Date().toI
 
 export const readPageSpeedSnapshots = (projectId: string | null): PageSpeedSnapshot[] => {
   if (!projectId) return [];
-  return normalizePageSpeedSnapshots(readJsonStorage<unknown>(storageKey(projectId), []));
+  return normalizePageSpeedSnapshots(readJsonStorage(storageKey(projectId), []));
 };
 
 const makeSnapshotId = (_capturedAt: string) => createId('pagespeed');

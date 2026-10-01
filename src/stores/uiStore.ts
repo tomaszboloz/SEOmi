@@ -13,7 +13,7 @@ const readSidebarCollapsed = (): boolean => {
 const readSidebarSections = (projectId: string | null): Record<string, boolean> => {
   if (!projectId) return {};
   try {
-    const value = readJsonStorage<unknown>(sidebarSectionsKey(projectId), {});
+    const value = readJsonStorage(sidebarSectionsKey(projectId), {});
     if (!value || typeof value !== 'object' || Array.isArray(value)) return {};
     const sections = Object.fromEntries(
       Object.entries(value).filter((entry): entry is [string, boolean] => typeof entry[1] === 'boolean'),

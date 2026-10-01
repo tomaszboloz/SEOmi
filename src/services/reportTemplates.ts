@@ -70,7 +70,7 @@ const normalizeTemplate = (value: unknown): CrawlReportTemplate | null => {
 
 export const loadCrawlReportTemplates = (projectId: string | null): CrawlReportTemplate[] => {
   if (!projectId) return [DEFAULT_CRAWL_REPORT_TEMPLATE];
-  const parsed = readJsonStorage<unknown>(storageKey(projectId), []);
+  const parsed = readJsonStorage(storageKey(projectId), []);
   try {
     const custom = Array.isArray(parsed)
       ? parsed.map(normalizeTemplate).filter((template): template is CrawlReportTemplate => Boolean(template))

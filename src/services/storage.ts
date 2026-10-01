@@ -42,13 +42,12 @@ export const removeStorage = (key: string): boolean => {
   }
 };
 
-/** Read and validate a JSON preference without letting a malformed or locked
- * WebView storage value escape into the caller. */
-export const readJsonStorage = <T>(key: string, fallback: T): T => {
+/** Decode untrusted JSON. Callers must validate the returned value before use. */
+export const readJsonStorage = (key: string, fallback: unknown): unknown => {
   const raw = readStorage(key);
   if (raw === null) return fallback;
   try {
-    return JSON.parse(raw) as T;
+    return JSON.parse(raw);
   } catch {
     return fallback;
   }

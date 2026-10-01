@@ -13,7 +13,7 @@ export const saveProjectResearch = (key: (projectId: string) => string, value: u
 };
 
 export const readProjectResearch = (key: (projectId: string) => string, projectId: string): unknown => {
-  return readJsonStorage<unknown>(key(projectId), null);
+  return readJsonStorage(key(projectId), null);
 };
 
 export const loadDomainComparisonTargets = (projectId: string): string[] => {

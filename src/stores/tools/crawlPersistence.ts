@@ -1,5 +1,7 @@
+import { parseCrawlConfig } from '@/services/crawlContracts';
+export { DEFAULT_CRAWL_CONFIG } from '@/services/contracts/crawlDefaults';
 
-import { SiteCrawlResult, CrawlConfig, CrawlRequestProfile } from '@/types';
+import { SiteCrawlResult, CrawlRequestProfile } from '@/types';
 import { invokeTauriCommand, isTauriEnvironment } from '@/services/tauri';
 
 import { readJsonStorage, removeStorage, writeJsonStorage } from '@/services/storage';
@@ -21,6 +23,8 @@ export const normalizeInterruptedCrawl = (value: unknown): InterruptedCrawl | nu
   if (!value || typeof value !== 'object') return null;
   const candidate = value as Partial<InterruptedCrawl>;
   if (typeof candidate.url !== 'string' || !candidate.url.trim() || typeof candidate.limit !== 'number' || !Number.isFinite(candidate.limit) || !candidate.config || typeof candidate.config !== 'object') return null;
+  const config = parseCrawlConfig(candidate.config);
+  if (!config) return null;
   const environment = candidate.environment === 'staging' || candidate.environment === 'production' ? candidate.environment : 'default';
   const startedAt = typeof candidate.startedAt === 'string' && Number.isFinite(Date.parse(candidate.startedAt))
     ? candidate.startedAt
@@ -31,7 +35,7 @@ export const normalizeInterruptedCrawl = (value: unknown): InterruptedCrawl | nu
   return {
     url: candidate.url,
     limit: Math.max(1, Math.min(5000, Math.floor(candidate.limit))),
-    config: candidate.config as CrawlConfig,
+    config,
     environment,
     startedAt,
     updatedAt,
@@ -51,7 +55,7 @@ export const newestInterruptedCrawl = (...values: Array<InterruptedCrawl | null>
   .sort((left, right) => interruptedCrawlTimestamp(right) - interruptedCrawlTimestamp(left))[0] || null;
 
 export const readInterruptedCrawl = (projectId: string): InterruptedCrawl | null => normalizeInterruptedCrawl(
-  readJsonStorage<Partial<InterruptedCrawl> | null>(interruptedCrawlKey(projectId), null),
+  readJsonStorage(interruptedCrawlKey(projectId), null),
 );
 
 export const interruptedCrawlWrites = new Map<string, Promise<void>>();
@@ -148,49 +152,10 @@ export const mergeCrawlResults = (base: SiteCrawlResult, fresh: SiteCrawlResult)
   };
 };
 
-export const DEFAULT_CRAWL_CONFIG: CrawlConfig = {
-  crawlMode: 'http',
-  renderWaitForSelector: '',
-  renderWaitDelayMs: 0,
-  renderLazyScrollCycles: 0,
-  includePatterns: [],
-  excludePatterns: [],
-  allowSubdomains: false,
-  allowedHosts: [],
-  scopePath: undefined,
-  keepQueryStrings: false,
-  respectRobots: true,
-  respectCrawlDelay: true,
-  discoverSitemaps: true,
-  maxRedirects: 10,
-  followNofollow: false,
-  maxResponseBytes: 5_000_000,
-  maxRunSeconds: 300,
-  requestTimeoutSecs: undefined,
-  verifySsl: true,
-  seedUrls: [],
-  listMode: false,
-  userAgent: '',
-  requestProfileId: undefined,
-  trimTrailingSlash: false,
-  lowercasePath: false,
-  stripTrackingParameters: false,
-  allowedQueryParameters: [],
-  deniedQueryParameters: [],
-  customSearches: [],
-  focusPhrase: '',
-  crawlImages: false,
-  crawlStylesheets: false,
-  crawlScripts: false,
-  crawlOtherResources: false,
-  maxResourceRequests: 250,
-  maxConcurrentRequests: 4,
-};
-
 export const loadCrawlRequestProfiles = (): CrawlRequestProfile[] => {
   const projectId = activeProjectId();
   if (!projectId) return [];
-  const raw = readJsonStorage<unknown>(crawlRequestProfilesKey(projectId), []);
+  const raw = readJsonStorage(crawlRequestProfilesKey(projectId), []);
   return Array.isArray(raw)
     ? raw.filter((profile): profile is CrawlRequestProfile => Boolean(
       profile && typeof profile.id === 'string' && typeof profile.name === 'string' && typeof profile.userAgent === 'string'

@@ -1,3 +1,5 @@
+import { z } from 'zod';
+import { readJsonRecord, parseRecordEntries } from '@/services/storageContracts';
 import { useEffect, useId, useMemo, useRef, useState } from 'react';
 import type { KeyboardEvent, RefObject } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -13,7 +15,7 @@ import { useProjectStore } from '@/stores/projectStore';
 import { useToolsStore } from '@/stores/toolsStore';
 import { useUIStore } from '@/stores/uiStore';
 import type { CrawlRunRecord, CrawledPageSummary } from '@/types';
-import { readJsonStorage, writeJsonStorage } from '@/services/storage';
+import { writeJsonStorage } from '@/services/storage';
 import { normalizeSemanticText } from '@/services/semanticText';
 
 interface CrawlArchitectureGraphProps { pages: CrawledPageSummary[]; startUrl: string; crawlMode?: string; runId?: string; sitemapUrls?: string[]; runs?: CrawlRunRecord[]; currentRunId?: string; }
@@ -42,9 +44,9 @@ const emptyPreferences = (): SemanticMapPreferences => ({ query: '', clusterFilt
 const readPreferences = (key: string | null): SemanticMapPreferences => {
   if (!key) return emptyPreferences();
   try {
-    const parsed = readJsonStorage<Partial<SemanticMapPreferences> | null>(key, null);
+    const parsed = readJsonRecord(key);
     if (!parsed) return emptyPreferences();
-    const positions = Object.fromEntries(Object.entries(parsed.positions ?? {}).filter(([, point]) =>
+    const positions = Object.fromEntries(Object.entries(parseRecordEntries(parsed.positions, z.object({ x: z.number().finite(), y: z.number().finite() }))).filter(([, point]) =>
       point && Number.isFinite(point.x) && Number.isFinite(point.y),
     ).slice(0, 160));
     return {
@@ -55,14 +57,7 @@ const readPreferences = (key: string | null): SemanticMapPreferences => {
       selectedUrl: typeof parsed.selectedUrl === 'string' ? parsed.selectedUrl : null,
       activeView: parsed.activeView === 'directory' || parsed.activeView === 'plan' ? parsed.activeView : 'graph',
       positions,
-      transform: parsed.transform
-        && Number.isFinite(parsed.transform.x)
-        && Number.isFinite(parsed.transform.y)
-        && Number.isFinite(parsed.transform.k)
-        && parsed.transform.k >= 0.2
-        && parsed.transform.k <= 4
-        ? parsed.transform
-        : { x: 0, y: 0, k: 1 },
+      transform: z.object({ x: z.number().finite(), y: z.number().finite(), k: z.number().finite().min(0.2).max(4) }).catch({ x: 0, y: 0, k: 1 }).parse(parsed.transform),
     };
   } catch {
     return emptyPreferences();

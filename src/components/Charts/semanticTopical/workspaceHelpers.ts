@@ -93,6 +93,6 @@ export const readTopicalWorkspacePreferences = (projectId: string | null): Topic
     includeSchemaBreadcrumbs: z.boolean().catch(false),
     schemaArticleType: z.enum(['', 'Article', 'BlogPosting', 'NewsArticle', 'TechArticle']).catch(''),
   });
-  const result = schema.safeParse(readJsonStorage<unknown>(topicalWorkspacePreferencesKey(projectId), null));
+  const result = schema.safeParse(readJsonStorage(topicalWorkspacePreferencesKey(projectId), null));
   return result.success ? result.data : defaults;
 };

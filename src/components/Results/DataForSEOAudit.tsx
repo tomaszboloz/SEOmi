@@ -1,3 +1,4 @@
+import { readJsonRecord } from '@/services/storageContracts';
 import React, { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import {
@@ -21,7 +22,7 @@ import { useSettingsStore } from '@/stores/settingsStore';
 import { useProjectStore } from '@/stores/projectStore';
 import { DATAFORSEO_MARKETS, clearDataForSeoTaskLog, dataForSeoLanguage, dataForSeoMarketByLocation, readDataForSeoTaskLog, type DataForSeoTaskRecord } from '@/services/dataforseo';
 import { DataForSeoLanguagePicker, DataForSeoLocationPicker } from '@/components/DataForSEO/DataForSeoPickers';
-import { readJsonStorage, writeJsonStorage } from '@/services/storage';
+import { writeJsonStorage } from '@/services/storage';
 
 interface DataForSEOAuditProps {
   /** Optional: DataForSEO is also a project-level workflow and must remain
@@ -72,7 +73,7 @@ export const DataForSEOAudit: React.FC<DataForSEOAuditProps> = ({ audit }) => {
       setInputProjectId(null);
       return;
     }
-    const saved = readJsonStorage<{ keyword?: unknown; locationCode?: unknown; languageCode?: unknown } | null>(serpInputKey(activeProjectId), null);
+    const saved = readJsonRecord(serpInputKey(activeProjectId));
     const savedLocation = typeof saved?.locationCode === 'number' && validLocationCodes.has(saved.locationCode)
       ? saved.locationCode
       : defaultLocationCode;

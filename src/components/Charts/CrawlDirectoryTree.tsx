@@ -1,9 +1,11 @@
+import { z } from 'zod';
+import { readJsonRecord, parseRecordEntries } from '@/services/storageContracts';
 import { useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Folder, FileText, Search, TriangleAlert } from 'lucide-react';
 import type { CrawledPageSummary } from '@/types';
 import { buildCrawlDirectoryTree, filterCrawlPagesForDirectoryTree, type CrawlDirectoryNode } from '@/services/crawlDirectoryTree';
-import { readJsonStorage, writeJsonStorage } from '@/services/storage';
+import { writeJsonStorage } from '@/services/storage';
 
 interface CrawlDirectoryTreeProps {
   pages: CrawledPageSummary[];
@@ -28,11 +30,11 @@ const preferenceKey = (projectId: string | null, runId: string) => projectId
 const readPreferences = (key: string | null): DirectoryPreferences => {
   if (!key) return emptyPreferences();
   try {
-    const parsed = readJsonStorage<Partial<DirectoryPreferences>>(key, {});
-    const expanded = Object.fromEntries(Object.entries(parsed.expanded || {})
+    const parsed = readJsonRecord(key);
+    const expanded = Object.fromEntries(Object.entries(parseRecordEntries(parsed.expanded, z.boolean()))
       .filter(([id, value]) => id.length <= 2048 && typeof value === 'boolean')
       .slice(-500));
-    const visibleCounts = Object.fromEntries(Object.entries(parsed.visibleCounts || {})
+    const visibleCounts = Object.fromEntries(Object.entries(parseRecordEntries(parsed.visibleCounts, z.number().int().min(PAGE_SIZE)))
       .filter(([id, value]) => id.length <= 2060 && Number.isSafeInteger(value) && Number(value) >= PAGE_SIZE)
       .map(([id, value]) => [id, Math.min(Number(value), 1_000_000)])
       .slice(-500));

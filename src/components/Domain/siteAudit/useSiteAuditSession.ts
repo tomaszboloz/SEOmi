@@ -272,7 +272,7 @@ export const useSiteAuditSession = (services: SiteAuditSessionDependencies = def
       setEnvironmentUrls({ staging: "", production: "" });
       return;
     }
-    const parsed = readJsonStorage<unknown>(
+    const parsed = readJsonStorage(
       `seomi_project_${activeProjectId}_crawl_environments_v1`,
       null,
     ) as { staging?: unknown; production?: unknown } | null;

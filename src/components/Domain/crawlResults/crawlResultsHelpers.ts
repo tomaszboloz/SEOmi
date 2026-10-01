@@ -1,3 +1,4 @@
+import { z } from 'zod';
 
 
 import { Activity, Braces, Bot, CircleAlert, FileDown, FileText, Image, Languages, Link2, Map, Radar, Rows3, ScanSearch, Share2, ShieldCheck, FileWarning } from "lucide-react";
@@ -290,7 +291,7 @@ export const readCrawlNavigationPreferences = (
 ): CrawlNavigationPreferences => {
   if (!key) return emptyCrawlNavigationPreferences();
   try {
-    const parsed: unknown = readJsonStorage<unknown>(key, null);
+    const parsed: unknown = readJsonStorage(key, null);
     if (!parsed || typeof parsed !== "object")
       return emptyCrawlNavigationPreferences();
     const candidate = parsed as Partial<CrawlNavigationPreferences>;
@@ -343,7 +344,7 @@ export const readCrawlLinkNavigationPreferences = (
   key: string | null,
 ): CrawlLinkNavigationPreferences => {
   if (!key) return emptyCrawlLinkNavigationPreferences();
-  const parsed = readJsonStorage<unknown>(key, null);
+  const parsed = readJsonStorage(key, null);
   if (!parsed || typeof parsed !== "object")
     return emptyCrawlLinkNavigationPreferences();
   const candidate = parsed as Partial<CrawlLinkNavigationPreferences>;
@@ -410,31 +411,22 @@ export const filterPresetsKey = (projectId: string) =>
 
 export const loadFilterPresets = (projectId: string): CrawlFilterPreset[] => {
   try {
-    const value: unknown = readJsonStorage<unknown>(
+    const value: unknown = readJsonStorage(
       filterPresetsKey(projectId),
       [],
     );
-    return Array.isArray(value)
-      ? value.filter((item): item is CrawlFilterPreset =>
-          Boolean(
-            item?.id &&
-            item?.name &&
-            ["all", "Critical", "Warning", "Info"].includes(item.severity) &&
-            ["all", "2xx", "3xx", "4xx", "5xx", "transport"].includes(
-              item.segment,
-            ) &&
-            typeof item.onlyProblems === "boolean" &&
-            [
-              "url",
-              "status",
-              "title",
-              "depth",
-              "responseTime",
-              "issues",
-            ].includes(item.sort),
-          ),
-        )
-      : [];
+    const schema = z.object({
+      id: z.string().min(1), name: z.string().min(1).max(60),
+      severity: z.enum(['all', 'Critical', 'Warning', 'Info']),
+      errorKind: z.string().default('all'), segment: z.enum(['all', '2xx', '3xx', '4xx', '5xx', 'transport']),
+      onlyProblems: z.boolean(), query: z.string().default(''),
+      sort: z.enum(['url', 'status', 'title', 'depth', 'responseTime', 'issues']),
+      descending: z.boolean().default(false),
+    });
+    return Array.isArray(value) ? value.slice(0, 30).flatMap(item => {
+      const result = schema.safeParse(item);
+      return result.success ? [result.data] : [];
+    }) : [];
   } catch {
     return [];
   }

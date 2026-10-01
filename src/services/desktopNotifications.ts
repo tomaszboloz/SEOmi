@@ -1,3 +1,5 @@
+import { z } from 'zod';
+import { parseRecordEntries } from './storageContracts';
 import type { PageAuditData, SiteCrawlResult } from '@/types';
 import { isTauriEnvironment } from '@/services/tauri';
 import { readJsonStorage, readStorage, removeStorage, writeJsonStorage, writeStorage } from '@/services/storage';
@@ -48,7 +50,7 @@ export const notifyScheduledAuditReminder = async (
   const schedule = candidates[0];
   if (!schedule) return;
 
-  const markers = readJsonStorage<Record<string, string>>(reminderKey(projectId), {});
+  const markers = parseRecordEntries(readJsonStorage(reminderKey(projectId), {}), z.string());
   if (markers[schedule.id] === schedule.nextRunAt) return;
   try {
     const notifications = await import('@tauri-apps/plugin-notification');

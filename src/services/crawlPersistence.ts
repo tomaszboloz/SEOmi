@@ -2,6 +2,7 @@ import type { CrawlRunRecord } from '@/types';
 import { invokeTauriCommand, isTauriEnvironment } from '@/services/tauri';
 import { readStorage, removeStorage, writeStorageResult } from '@/services/storage';
 import i18n from '@/i18n';
+import { parseCrawlRuns } from './crawlContracts';
 
 const DATABASE_NAME = 'seomi-local-data';
 const STORE_NAME = 'crawl-runs';
@@ -78,7 +79,7 @@ export const encodeCrawlRunsForStorage = async (runs: CrawlRunRecord[]): Promise
 };
 
 export const decodeCrawlRunsFromStorage = async (value: unknown): Promise<CrawlRunRecord[]> => {
-  if (Array.isArray(value)) return value as CrawlRunRecord[];
+  if (Array.isArray(value)) return parseCrawlRuns(value);
   if (typeof value !== 'object' || value === null || !('format' in value) || !('bytes' in value)) return [];
   const stored = value as { format?: unknown; bytes?: unknown };
   if (stored.format !== GZIP_FORMAT || typeof DecompressionStream === 'undefined' || typeof Blob.prototype.stream !== 'function' || typeof Response === 'undefined') return [];
@@ -90,7 +91,7 @@ export const decodeCrawlRunsFromStorage = async (value: unknown): Promise<CrawlR
   if (!bytes) return [];
   const stream = new Blob([bytes]).stream().pipeThrough(new DecompressionStream('gzip'));
   const parsed: unknown = JSON.parse(await new Response(stream).text());
-  return Array.isArray(parsed) ? parsed as CrawlRunRecord[] : [];
+  return parseCrawlRuns(parsed);
 };
 
 export interface CrawlSaveResult {
@@ -411,7 +412,7 @@ const indexedDbWrite = async (projectId: string, runs: CrawlRunRecord[]): Promis
 };
 
 export const loadCrawlRuns = (projectId: string): Promise<CrawlRunRecord[]> => isTauriEnvironment()
-  ? invokeTauriCommand<CrawlRunRecord[]>('load_project_crawl_runs', { projectId })
+  ? invokeTauriCommand<unknown>('load_project_crawl_runs', { projectId }).then(parseCrawlRuns)
   : indexedDbRead(projectId);
 
 const saveCrawlRunsUnlocked = async (projectId: string, runs: CrawlRunRecord[]): Promise<CrawlSaveResult> => {

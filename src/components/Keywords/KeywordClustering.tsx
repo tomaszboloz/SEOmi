@@ -1,3 +1,5 @@
+import { keywordClusteringResultSchema } from '@/services/contracts/keywordClustering';
+import { readJsonRecord } from '@/services/storageContracts';
 import React, { useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { AlertTriangle, Layers3, Loader2, Plus, RefreshCw, X } from 'lucide-react';
@@ -7,7 +9,7 @@ import { useToolsStore } from '@/stores/toolsStore';
 import { DataForSEOClient, resolveDataForSeoMarket, dataForSeoLanguage, dataForSeoLocation, dataForSeoMarket } from '@/services/dataforseo';
 import { DataForSeoLanguagePicker, DataForSeoLocationPicker } from '@/components/DataForSEO/DataForSeoPickers';
 import { clusterKeywordsBySerpOverlap, getSerpSnapshot, KeywordClusteringResult } from '@/services/keywordClustering';
-import { readJsonStorage, readStorage, writeJsonStorage } from '@/services/storage';
+import { readStorage, writeJsonStorage } from '@/services/storage';
 
 interface ClusteringSession {
   input: string;
@@ -25,8 +27,9 @@ const loadSession = (projectId: string | null): ClusteringSession => {
   const defaults = { ...DEFAULT_SESSION, country: useToolsStore.getState().keywordCountry, language: useToolsStore.getState().keywordLanguage };
   if (!projectId) return defaults;
   try {
-    const saved = readJsonStorage<Partial<ClusteringSession> | null>(sessionKey(projectId), null);
+    const saved = readJsonRecord(sessionKey(projectId));
     if (!saved || typeof saved !== 'object') return defaults;
+    const parsedResult = keywordClusteringResultSchema.safeParse(saved.result);
     // Keep the input so an obsolete saved market cannot erase the user's list.
     const sharedCountry = readStorage(`seomi_project_${projectId}_dataforseo_market_v1`);
     const market = resolveDataForSeoMarket(sharedCountry || (typeof saved.country === 'string' ? saved.country : defaults.country));
@@ -36,7 +39,7 @@ const loadSession = (projectId: string | null): ClusteringSession => {
       country,
       language: market ? dataForSeoLanguage(market.code, sharedCountry ? defaults.language : (typeof saved.language === 'string' ? saved.language : defaults.language)) : '',
       minSharedUrls: Number.isInteger(saved.minSharedUrls) && Number(saved.minSharedUrls) > 0 ? Number(saved.minSharedUrls) : 3,
-      result: (!sharedCountry || saved.country === sharedCountry) && saved.result && Array.isArray(saved.result.clusters) && Array.isArray(saved.result.snapshots) ? saved.result : null,
+      result: (!sharedCountry || saved.country === sharedCountry) && parsedResult.success ? parsedResult.data : null,
     };
   } catch {
     return defaults;

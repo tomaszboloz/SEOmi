@@ -1,3 +1,5 @@
+import { savedKeywordSchema } from '@/services/contracts/savedKeywords';
+import { parseJsonRecord } from '@/services/storageContracts';
 
 import { SavedKeywordItem, TrackedRankItem } from '@/types';
 
@@ -19,14 +21,17 @@ export const LEGACY_TOOLS_MIGRATED_KEY = 'seomi_legacy_tools_migrated_v1';
 export const loadSavedKeywords = (): SavedKeywordItem[] => {
   const projectId = activeProjectId();
   if (!projectId) return [];
-  const value = readJsonStorage<unknown>(savedKeywordsKey(projectId), []);
-  return Array.isArray(value) ? value as SavedKeywordItem[] : [];
+  const value = readJsonStorage(savedKeywordsKey(projectId), []);
+  return Array.isArray(value) ? value.flatMap(item => {
+    const result = savedKeywordSchema.safeParse(item);
+    return result.success ? [result.data] : [];
+  }) : [];
 };
 
 export const loadTrackedRanks = (): TrackedRankItem[] => {
   const projectId = activeProjectId();
   if (!projectId) return [];
-  const value = readJsonStorage<unknown>(trackedRanksKey(projectId), []);
+  const value = readJsonStorage(trackedRanksKey(projectId), []);
   if (!Array.isArray(value)) return [];
 
   // Older project snapshots stored a display name (for example
@@ -75,9 +80,9 @@ export const defaultRankTrackingDraft = (projectId: string | null = activeProjec
 
 export const loadRankTrackingDraft = (projectId: string | null = activeProjectId()): RankTrackingDraft => {
   if (!projectId) return defaultRankTrackingDraft();
-  const stored = readJsonStorage<unknown>(rankTrackingDraftKey(projectId), null);
+  const stored = readJsonStorage(rankTrackingDraftKey(projectId), null);
   if (!stored || typeof stored !== 'object') return defaultRankTrackingDraft();
-  const value = stored as Partial<RankTrackingDraft>;
+  const value = parseJsonRecord(stored);
   const requestedLocation = typeof value.location === 'string' ? value.location : projectDefaultMarket(projectId);
   const location = resolveDataForSeoMarket(requestedLocation)?.code || requestedLocation;
   return {
@@ -85,7 +90,7 @@ export const loadRankTrackingDraft = (projectId: string | null = activeProjectId
     domain: typeof value.domain === 'string' ? value.domain : '',
     targetUrl: typeof value.targetUrl === 'string' ? value.targetUrl : '',
     location,
-    language: resolveDataForSeoMarket(location) ? dataForSeoLanguage(location, typeof value.language === 'string' ? value.language : undefined) : value.language || '',
+    language: resolveDataForSeoMarket(location) ? dataForSeoLanguage(location, typeof value.language === 'string' ? value.language : undefined) : (typeof value.language === 'string' ? value.language : ''),
   };
 };
 

@@ -44,7 +44,7 @@ export const normalizePersistedProjects = (value: unknown, now = new Date().toIS
   return normalized;
 };
 
-const loadProjects = (): SeoProject[] => normalizePersistedProjects(readJsonStorage<unknown>(PROJECTS_KEY, []));
+const loadProjects = (): SeoProject[] => normalizePersistedProjects(readJsonStorage(PROJECTS_KEY, []));
 
 const save = (projects: SeoProject[], activeProjectId: string | null): void => {
   const projectsSaved = writeJsonStorage(PROJECTS_KEY, projects);

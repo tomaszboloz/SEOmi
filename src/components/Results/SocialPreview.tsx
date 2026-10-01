@@ -1,3 +1,4 @@
+import { readJsonRecord } from '@/services/storageContracts';
 import React, { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import {
@@ -21,7 +22,7 @@ import { getSocialProblems } from '@/services/auditProblems';
 import { deriveSerpRichResult, deriveSerpSitelinks, formatSerpDisplayUrl, measureSerpText, SERP_VIEWPORTS, truncateSerpSnippet, truncateSerpText } from '@/services/serpPreview';
 import { useProjectStore } from '@/stores/projectStore';
 import { ProblemsOnlyNotice } from './ProblemsOnlyNotice';
-import { readJsonStorage, writeJsonStorage } from '@/services/storage';
+import { writeJsonStorage } from '@/services/storage';
 
 interface SocialPreviewProps {
   audit: PageAuditData;
@@ -43,7 +44,7 @@ const serpDraftKey = (projectId: string | null, url: string) => projectId
 const readSerpDraft = (key: string | null, fallback: SerpDraft): SerpDraft => {
   if (!key) return fallback;
   try {
-    const stored = readJsonStorage<Partial<SerpDraft> | null>(key, null);
+    const stored = readJsonRecord(key);
     if (!stored || typeof stored !== 'object') return fallback;
     return {
       title: typeof stored.title === 'string' ? stored.title : fallback.title,

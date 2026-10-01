@@ -1,3 +1,4 @@
+import { createCrawlRunFixture, createCrawlResultFixture, createCrawlPageFixture } from './fixtures/crawl';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import { compactCrawlRunsForStorage, crawlQuotaRetryCounts, decodeCrawlRunsFromStorage, encodeCrawlRunsForStorage, isStorageQuotaError, saveCrawlRuns } from '../src/services/crawlPersistence';
 
@@ -78,7 +79,7 @@ describe('crawl persistence quota recovery', () => {
   });
 
   it('compresses crawl history for WebView persistence and reads legacy uncompressed records', async () => {
-    const runs = [{ id: 'run-1', result: { pages: Array.from({ length: 20 }, (_, index) => ({ url: `https://example.test/${index}`, links: Array.from({ length: 25 }, () => ({ anchor_text: 'Repeated navigation link' })) })) } }] as never;
+    const runs = [createCrawlRunFixture({ id: 'run-1', result: createCrawlResultFixture({ pages: Array.from({ length: 20 }, (_, index) => createCrawlPageFixture({ url: `https://example.test/${index}`, links: Array.from({ length: 25 }, () => ({ target_url: 'https://example.test/target', is_internal: true, anchor_text: 'Repeated navigation link' })) })) }) })];
     const stored = await encodeCrawlRunsForStorage(runs);
 
     if ('format' in stored) {

@@ -1,3 +1,4 @@
+import { readJsonRecord } from '@/services/storageContracts';
 
 import { GscPerformanceFilters } from '@/types';
 
@@ -22,7 +23,7 @@ export const gscFiltersKey = (projectId: string) => `seomi_gsc_filters_${project
 export const DEFAULT_GSC_FILTERS: GscPerformanceFilters = {};
 
 export const readGscFilters = (projectId: string): GscPerformanceFilters => {
-  const stored = readJsonStorage<unknown>(gscFiltersKey(projectId), null);
+  const stored = readJsonStorage(gscFiltersKey(projectId), null);
   if (!stored || typeof stored !== 'object') return { ...DEFAULT_GSC_FILTERS };
   const value = stored as Record<string, unknown>;
   return {
@@ -88,7 +89,7 @@ export const loadDomainLanguage = (projectId: string): string => {
 };
 
 export const loadBacklinkGapSettings = (projectId: string): { competitors: string[]; includeSubdomains: boolean } => {
-  const value = readJsonStorage<unknown>(backlinkGapSettingsKey(projectId), null) as { competitors?: unknown; includeSubdomains?: unknown } | null;
+  const value = readJsonRecord(backlinkGapSettingsKey(projectId));
   return {
     competitors: Array.isArray(value?.competitors) ? value.competitors.filter((domain: unknown): domain is string => typeof domain === 'string').slice(0, 19) : [],
     includeSubdomains: typeof value?.includeSubdomains === 'boolean' ? value.includeSubdomains : true,

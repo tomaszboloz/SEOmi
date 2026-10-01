@@ -1,3 +1,4 @@
+import { createCrawlPageFixture, createCrawlResultFixture } from './fixtures/crawl';
 import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
 import { invokeTauriCommand, isTauriEnvironment } from '@/services/tauri';
 import { loadCrawlRuns } from '@/services/crawlPersistence';
@@ -190,7 +191,7 @@ describe('toolsStore', () => {
   it('hydrates a persisted crawl history only for the selected project', async () => {
     const projectId = 'project-crawl-history';
     localStorage.setItem('seomi_active_project_v1', projectId);
-    const result = {
+    const result = { ...createCrawlResultFixture(),
       start_url: 'https://example.com/', pages_crawled: 1, health_score: 100,
       critical_count: 0, warning_count: 0, notice_count: 0, duration_ms: 25, cancelled: false, timed_out: false,
       pages: [],
@@ -226,10 +227,10 @@ describe('toolsStore', () => {
 
   it('keeps a crawl result attached to the project selected when the run started', async () => {
     const projectId = 'project-crawl-start';
-    const result = {
+    const result = { ...createCrawlResultFixture(),
       start_url: 'https://example.com/', pages_crawled: 1, health_score: 94,
       critical_count: 0, warning_count: 1, notice_count: 0, duration_ms: 25,
-      cancelled: false, timed_out: false, pages: [{ url: 'https://example.com/' }],
+      cancelled: false, timed_out: false, pages: [{ ...createCrawlPageFixture(),  url: 'https://example.com/' }],
     };
     let resolveCrawl: ((value: typeof result) => void) | undefined;
     vi.mocked(invokeTauriCommand).mockImplementation(async (command) => {
@@ -288,7 +289,7 @@ describe('toolsStore', () => {
   it('does not clear a new project crawl when an older crawl completes', async () => {
     const originProject = 'project-crawl-complete-origin';
     const selectedProject = 'project-crawl-complete-selected';
-    const result = {
+    const result = { ...createCrawlResultFixture(),
       start_url: 'https://origin.example/', pages_crawled: 1, health_score: 100,
       critical_count: 0, warning_count: 0, notice_count: 0, duration_ms: 10,
       cancelled: false, timed_out: false, pages: [],
@@ -326,7 +327,7 @@ describe('toolsStore', () => {
 
   it('does not let an older same-project crawl finish over a newer run', async () => {
     const projectId = 'project-crawl-overlap';
-    const result = (url: string) => ({
+    const result = (url: string) => ({ ...createCrawlResultFixture(),
       start_url: url, pages_crawled: 1, health_score: 100,
       critical_count: 0, warning_count: 0, notice_count: 0, duration_ms: 10,
       cancelled: false, timed_out: false, pages: [{ url, final_url: url, issues: [], links: [] }],
@@ -362,10 +363,10 @@ describe('toolsStore', () => {
 
   it('persists explicit environment labels for paired staging and production runs', async () => {
     localStorage.setItem('seomi_active_project_v1', 'project-environments');
-    const result = {
+    const result = { ...createCrawlResultFixture(),
       start_url: 'https://example.com/', pages_crawled: 1, health_score: 100,
       critical_count: 0, warning_count: 0, notice_count: 0, duration_ms: 10,
-      cancelled: false, timed_out: false, pages: [{ url: 'https://example.com/' }],
+      cancelled: false, timed_out: false, pages: [{ ...createCrawlPageFixture(),  url: 'https://example.com/' }],
     };
     vi.mocked(invokeTauriCommand).mockResolvedValue(result as never);
 
@@ -379,7 +380,7 @@ describe('toolsStore', () => {
   it('keeps older same-URL snapshots when importing a scheduled crawl handoff', async () => {
     const projectId = 'project-scheduled-crawl-history';
     localStorage.setItem('seomi_active_project_v1', projectId);
-    const olderResult = {
+    const olderResult = { ...createCrawlResultFixture(),
       start_url: 'https://example.com/', pages_crawled: 1, health_score: 92,
       critical_count: 0, warning_count: 2, notice_count: 0, duration_ms: 12,
       cancelled: false, timed_out: false, pages: [],
@@ -478,7 +479,7 @@ describe('toolsStore', () => {
   it('can retry persisting a completed in-memory crawl after a storage failure', async () => {
     const projectId = 'project-persistence-retry';
     localStorage.setItem('seomi_active_project_v1', projectId);
-    const result = {
+    const result = { ...createCrawlResultFixture(),
       start_url: 'https://example.com/', pages_crawled: 1, health_score: 100,
       critical_count: 0, warning_count: 0, notice_count: 0, duration_ms: 12,
       cancelled: false, timed_out: false, pages: [],
@@ -496,7 +497,7 @@ describe('toolsStore', () => {
   it('deletes a saved crawl run, selects the newest remaining snapshot, and persists the freed space', async () => {
     const projectId = 'project-crawl-delete';
     localStorage.setItem('seomi_active_project_v1', projectId);
-    const makeResult = (url: string) => ({
+    const makeResult = (url: string) => ({ ...createCrawlResultFixture(),
       start_url: url, pages_crawled: 1, health_score: 100,
       critical_count: 0, warning_count: 0, notice_count: 0, duration_ms: 12,
       cancelled: false, timed_out: false, pages: [],
@@ -528,7 +529,7 @@ describe('toolsStore', () => {
   it('stores a bounded crawl checkpoint and resumes without refetching completed pages', async () => {
     const projectId = 'project-crawl-checkpoint';
     localStorage.setItem('seomi_active_project_v1', projectId);
-    const partial = {
+    const partial = { ...createCrawlResultFixture(),
       start_url: 'https://example.com/', pages_crawled: 2, health_score: 100,
       critical_count: 0, warning_count: 0, notice_count: 0, duration_ms: 20,
       cancelled: true, timed_out: false,
@@ -916,7 +917,8 @@ describe('toolsStore', () => {
   it('moves real legacy keyword and rank records to the first selected project once', () => {
     const projectId = 'first-project';
     localStorage.setItem('seomi_active_project_v1', projectId);
-    localStorage.setItem('seomi_saved_keywords', JSON.stringify([{ id: 'legacy-keyword', keyword: 'real record' }]));
+    localStorage.setItem('seomi_saved_keywords', JSON.stringify([{ id: 'legacy-keyword', keyword: 'real record',
+      search_volume: 0, difficulty: 0, cpc: 0, intent: 'Informational', tags: [], addedAt: '2026-10-01T00:00:00Z' }]));
     localStorage.setItem('seomi_tracked_ranks', JSON.stringify([{ id: 'legacy-rank', keyword: 'real rank', history: [] }]));
 
     useToolsStore.getState().hydrateProject(projectId);
