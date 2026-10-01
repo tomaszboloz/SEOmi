@@ -95,6 +95,17 @@ mod tests {
     }
 
     #[test]
+    fn checkout_line_ending_conversion_changes_signed_bytes_and_must_be_rejected() {
+        let key = public_key().unwrap();
+        let signature = signature(SIGNATURE).unwrap();
+        assert!(DATA.ends_with(b"\n") && !DATA.ends_with(b"\r\n"));
+        let converted = String::from_utf8(DATA.to_vec())
+            .unwrap()
+            .replace('\n', "\r\n");
+        assert!(key.verify(converted.as_bytes(), &signature, false).is_err());
+    }
+
+    #[test]
     fn malformed_and_truncated_signatures_are_rejected() {
         assert!(signature("not base64!").is_err());
         assert!(signature(&STANDARD.encode("invalid minisign signature")).is_err());
