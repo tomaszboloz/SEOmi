@@ -1026,3 +1026,9 @@ Full local suites:1065frontend/385Rust/65MCP; build/lint/fmt/strictClippy pass. 
 ### Optional values and direct evidence helpers (audit BATCH-3k)
 
 Crawler tables render null, undefined and empty optional values as unavailable while preserving measured zero. Fourteen tests verify public metadata/navigation/provenance helpers, Unicode brand matching, own-domain citation boundaries, independent AI defaults and ephemeral storage isolation. Full local suites:1079frontend/385Rust/65MCP; build/lint/fmt/strictClippy pass. Frontend coverage:79.36%statements,64.23%branches,75.95%functions,81.82%lines.112executed publicTS functions lack a static direct reference. Original audit69/72;74/77 including discovered fixes. GitHub run36896232684 for ea5c865 passed5/5checks; later commits require their own remote evidence.
+
+### Retry-safe legacy keyword migration (audit BATCH-3l)
+
+Legacy keyword and rank migration preserves both source records until every destination write succeeds. Quota failures and invalid legacy records leave the migration incomplete for a safe retry; existing project destinations are retained. Explicit project and projectless rank-draft defaults now use the requested context rather than inheriting the active project market. No manual data migration is required; retained sources are retried through the normal migration path. Nine direct tests verify these paths, bounded rank histories, market normalization and real zero/null metrics.
+
+Full local suites:1088frontend/385Rust/65MCP; build/lint/fmt/strictClippy pass. Frontend coverage:79.41%statements,64.35%branches,75.95%functions,81.84%lines.107executed publicTS functions lack a static direct reference. Original audit69/72;76/79 including discovered fixes. The release tag remains pending the original frontend/native >99% and complete public-function evidence gates.

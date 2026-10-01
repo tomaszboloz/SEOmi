@@ -79,9 +79,9 @@ export const defaultRankTrackingDraft = (projectId: string | null = activeProjec
 });
 
 export const loadRankTrackingDraft = (projectId: string | null = activeProjectId()): RankTrackingDraft => {
-  if (!projectId) return defaultRankTrackingDraft();
+  if (!projectId) return defaultRankTrackingDraft(projectId);
   const stored = readJsonStorage(rankTrackingDraftKey(projectId), null);
-  if (!stored || typeof stored !== 'object') return defaultRankTrackingDraft();
+  if (!stored || typeof stored !== 'object') return defaultRankTrackingDraft(projectId);
   const value = parseJsonRecord(stored);
   const requestedLocation = typeof value.location === 'string' ? value.location : projectDefaultMarket(projectId);
   const location = resolveDataForSeoMarket(requestedLocation)?.code || requestedLocation;
@@ -98,22 +98,24 @@ export const migrateLegacyToolData = (projectId: string) => {
   if (!isStorageAvailable()) return;
   if (readStorage(LEGACY_TOOLS_MIGRATED_KEY)) return;
 
-  let malformedLegacyRecord = false;
+  let migrationIncomplete = false;
   const migrateArray = (legacyKey: string, destinationKey: string) => {
     if (readStorage(destinationKey)) return;
     const raw = readStorage(legacyKey);
     if (!raw) return;
     let parsed: unknown;
     try { parsed = JSON.parse(raw); } catch {
-      malformedLegacyRecord = true;
+      migrationIncomplete = true;
       return;
     }
-    if (Array.isArray(parsed)) writeJsonStorage(destinationKey, parsed);
+    // Keep both source records available for retry if either destination
+    // cannot be persisted. A successful read does not imply write permission.
+    if (!Array.isArray(parsed) || !writeJsonStorage(destinationKey, parsed)) migrationIncomplete = true;
   };
 
   migrateArray(LEGACY_SAVED_KEYWORDS_KEY, savedKeywordsKey(projectId));
   migrateArray(LEGACY_TRACKED_RANKS_KEY, trackedRanksKey(projectId));
-  if (malformedLegacyRecord) return;
+  if (migrationIncomplete) return;
   removeStorage(LEGACY_SAVED_KEYWORDS_KEY);
   removeStorage(LEGACY_TRACKED_RANKS_KEY);
   writeStorage(LEGACY_TOOLS_MIGRATED_KEY, 'true');
