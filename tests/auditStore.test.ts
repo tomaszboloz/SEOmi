@@ -93,6 +93,30 @@ describe('useAuditStore', () => {
     },
   };
 
+
+  it('passes all configured request options to every audit in an imported batch', async () => {
+    localStorage.setItem('seomi_active_project_v1', 'batch-options');
+    const previous = useSettingsStore.getState().config;
+    useSettingsStore.setState({ config: { ...previous, request_timeout_secs: 29, max_redirects: 0, verify_ssl: false } });
+    useAuditStore.getState().setSelectedUserAgent('custom-agent/2.0');
+    vi.mocked(invokeTauriCommand).mockResolvedValue(mockAudit);
+    try {
+      useAuditStore.getState().importAuditCsv('url\nhttps://example.com/a\nhttps://example.com/b');
+      await useAuditStore.getState().startBatchAudits();
+      const calls = vi.mocked(invokeTauriCommand).mock.calls.filter(([command]) => command === 'inspect_url');
+      expect(calls).toHaveLength(2);
+      for (const [, args] of calls) expect(args).toMatchObject({ timeoutSecs: 29, maxRedirects: 0, verifySsl: false, userAgent: 'custom-agent/2.0', requestId: expect.any(String) });
+    } finally { useSettingsStore.setState({ config: previous }); }
+  });
+
+  it('keeps an explicit per-request user agent ahead of the selected default', async () => {
+    localStorage.setItem('seomi_active_project_v1', 'explicit-agent');
+    useAuditStore.getState().setSelectedUserAgent('googlebot_desktop');
+    vi.mocked(invokeTauriCommand).mockResolvedValue(mockAudit);
+    await useAuditStore.getState().startAudit(mockAudit.url, 'explicit-agent/1.0');
+    expect(invokeTauriCommand).toHaveBeenCalledWith('inspect_url', expect.objectContaining({ userAgent: 'explicit-agent/1.0' }));
+  });
+
   it('starts without fabricated audit data', () => {
     const state = useAuditStore.getState();
     expect(state.currentAudit).toBeNull();

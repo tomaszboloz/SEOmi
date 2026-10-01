@@ -220,9 +220,14 @@ fn process_for(resolved: &ResolvedCommand, arguments: &[String]) -> Command {
 fn display_output(output: &std::process::Output) -> String {
     let stdout = String::from_utf8_lossy(&output.stdout);
     let stderr = String::from_utf8_lossy(&output.stderr);
-    let line = stdout
+    let (primary, secondary) = if output.status.success() {
+        (&stdout, &stderr)
+    } else {
+        (&stderr, &stdout)
+    };
+    let line = primary
         .lines()
-        .chain(stderr.lines())
+        .chain(secondary.lines())
         .map(str::trim)
         .find(|value| !value.is_empty())
         .unwrap_or("");
@@ -608,11 +613,20 @@ pub async fn run_ai_cli(
         process.env("PATH", path);
     }
 
+    let output = collect_research_output(process, &prompt, CLI_TIMEOUT).await?;
+    cli_response(command, &output)
+}
+
+async fn collect_research_output(
+    mut process: Command,
+    prompt: &str,
+    deadline: Duration,
+) -> Result<std::process::Output, String> {
     process
         .stdin(Stdio::piped())
         .stdout(Stdio::piped())
         .stderr(Stdio::piped());
-    let result = timeout(CLI_TIMEOUT, async {
+    let result = timeout(deadline, async {
         let mut child = process.spawn()?;
         if let Some(mut stdin) = child.stdin.take() {
             stdin.write_all(prompt.as_bytes()).await?;
@@ -622,10 +636,14 @@ pub async fn run_ai_cli(
     })
     .await;
     let output = result
-        .map_err(|_| "Local CLI timed out after 120 seconds.".to_string())?
-        .map_err(|_| format!("{} is not installed or not available on PATH.", command))?;
+        .map_err(|_| format!("Local CLI timed out after {} seconds.", deadline.as_secs()))?
+        .map_err(|_| "Local CLI could not start or communicate through stdin.".to_string())?;
+    Ok(output)
+}
+
+fn cli_response(command: &str, output: &std::process::Output) -> Result<String, String> {
     if !output.status.success() {
-        let stderr = display_output(&output);
+        let stderr = display_output(output);
         return Err(if stderr.is_empty() {
             format!("{} exited with {}.", command, output.status)
         } else {
@@ -642,8 +660,8 @@ pub async fn run_ai_cli(
 #[cfg(test)]
 mod tests {
     use super::{
-        authenticated_output, build_ai_cli_arguments, gemini_research_settings, isolate_process,
-        required_capabilities,
+        authenticated_output, build_ai_cli_arguments, cli_response, collect_research_output,
+        gemini_research_settings, isolate_process, required_capabilities, ResearchDirectory,
     };
     use std::ffi::OsStr;
     use std::path::Path;
@@ -787,5 +805,166 @@ mod tests {
         assert_eq!(settings["mcp"]["allowed"], serde_json::json!([]));
         assert_eq!(settings["tools"]["core"], serde_json::json!([]));
         assert!(required_capabilities("claude").contains(&"--safe-mode"));
+    }
+
+    fn fixture_process(unix_script: &str, windows_script: &str) -> Command {
+        #[cfg(not(target_os = "windows"))]
+        {
+            let _ = windows_script;
+            let mut process = Command::new("sh");
+            process.args(["-c", unix_script]);
+            process.kill_on_drop(true);
+            process
+        }
+        #[cfg(target_os = "windows")]
+        {
+            let _ = unix_script;
+            let mut process = Command::new("powershell.exe");
+            process.args(["-NoProfile", "-NonInteractive", "-Command", windows_script]);
+            process.kill_on_drop(true);
+            process
+        }
+    }
+
+    #[tokio::test]
+    async fn prompt_is_transmitted_literally_through_stdin_and_closed_at_eof() {
+        let prompt =
+            "Research & | echo injected; $(whoami) `echo secret` %PATH%\nZażółć gęślą jaźń";
+        let process = fixture_process("cat", "[Console]::OutputEncoding = [Text.UTF8Encoding]::new(); [Console]::InputEncoding = [Text.UTF8Encoding]::new(); [Console]::Out.Write([Console]::In.ReadToEnd())");
+        let output = collect_research_output(process, prompt, super::Duration::from_secs(10))
+            .await
+            .unwrap();
+        assert!(output.status.success());
+        assert_eq!(String::from_utf8(output.stdout).unwrap(), prompt);
+    }
+
+    #[tokio::test]
+    async fn hung_process_returns_a_timeout_without_waiting_for_its_response() {
+        let process = fixture_process("sleep 2", "Start-Sleep -Seconds 2");
+        let started = std::time::Instant::now();
+        let error = collect_research_output(process, "", super::Duration::from_millis(50))
+            .await
+            .unwrap_err();
+        assert!(error.contains("timed out"));
+        assert!(started.elapsed() < std::time::Duration::from_secs(1));
+    }
+
+    #[tokio::test]
+    async fn absent_executable_is_a_connection_failure() {
+        let process = Command::new(
+            super::env::temp_dir().join(format!("seomi-absent-{}", super::Uuid::new_v4())),
+        );
+        assert!(
+            collect_research_output(process, "", super::Duration::from_secs(1))
+                .await
+                .unwrap_err()
+                .contains("could not start")
+        );
+    }
+
+    #[tokio::test]
+    async fn nonzero_cli_exit_preserves_the_failure_instead_of_accepting_stdout() {
+        let process = fixture_process("printf 'misleading answer'; printf 'login required' >&2; exit 7", "[Console]::Out.Write('misleading answer'); [Console]::Error.Write('login required'); exit 7");
+        let output = collect_research_output(process, "", super::Duration::from_secs(10))
+            .await
+            .unwrap();
+        assert!(cli_response("fixture", &output)
+            .unwrap_err()
+            .contains("login required"));
+    }
+
+    #[tokio::test]
+    async fn successful_but_empty_cli_response_is_not_an_answer() {
+        let output = collect_research_output(
+            fixture_process("exit 0", "exit 0"),
+            "",
+            super::Duration::from_secs(10),
+        )
+        .await
+        .unwrap();
+        assert!(cli_response("fixture", &output)
+            .unwrap_err()
+            .contains("no response"));
+    }
+
+    #[test]
+    fn scratch_directory_and_research_settings_are_removed_on_error_paths() {
+        let directory =
+            super::env::temp_dir().join(format!("seomi-cleanup-{}", super::Uuid::new_v4()));
+        let operation = || -> Result<(), &'static str> {
+            super::fs::create_dir_all(&directory).unwrap();
+            let _cleanup = ResearchDirectory(directory.clone());
+            super::fs::write(directory.join("research-settings.json"), "{}").unwrap();
+            Err("simulated request failure")
+        };
+        assert!(operation().is_err());
+        assert!(!directory.exists());
+    }
+
+    async fn capability_fixture(provider: &str, help: &str, exit_code: u8) -> Result<(), String> {
+        let directory =
+            super::env::temp_dir().join(format!("seomi-capabilities-{}", super::Uuid::new_v4()));
+        super::fs::create_dir_all(&directory).unwrap();
+        let _cleanup = ResearchDirectory(directory.clone());
+        #[cfg(target_os = "windows")]
+        let program = directory.join("fixture.cmd");
+        #[cfg(not(target_os = "windows"))]
+        let program = directory.join("fixture.sh");
+        #[cfg(target_os = "windows")]
+        super::fs::write(
+            &program,
+            format!("@echo off\r\necho {help}\r\nexit /b {exit_code}\r\n"),
+        )
+        .unwrap();
+        #[cfg(not(target_os = "windows"))]
+        {
+            use std::os::unix::fs::PermissionsExt;
+            super::fs::write(
+                &program,
+                format!("#!/bin/sh\nprintf '%s' '{help}'\nexit {exit_code}\n"),
+            )
+            .unwrap();
+            super::fs::set_permissions(&program, super::fs::Permissions::from_mode(0o700)).unwrap();
+        }
+        super::check_capabilities(
+            provider,
+            &super::ResolvedCommand {
+                program,
+                #[cfg(target_os = "windows")]
+                use_cmd_shell: true,
+            },
+        )
+        .await
+    }
+
+    #[tokio::test]
+    async fn supported_cli_help_allows_isolated_research() {
+        for provider in ["claude", "openai", "gemini"] {
+            let help = required_capabilities(provider).join(" ");
+            assert!(capability_fixture(provider, &help, 0).await.is_ok());
+        }
+    }
+
+    #[tokio::test]
+    async fn every_missing_isolation_flag_rejects_the_cli_without_a_fallback() {
+        for provider in ["claude", "openai", "gemini"] {
+            let flags = required_capabilities(provider);
+            for missing in 0..flags.len() {
+                let help = flags
+                    .iter()
+                    .enumerate()
+                    .filter_map(|(index, flag)| (index != missing).then_some(*flag))
+                    .collect::<Vec<_>>()
+                    .join(" ");
+                let error = capability_fixture(provider, &help, 0).await.unwrap_err();
+                assert!(error.contains("Update"), "{provider}: {}", flags[missing]);
+            }
+        }
+    }
+
+    #[tokio::test]
+    async fn failed_help_command_cannot_pass_even_with_supported_flags_in_output() {
+        let help = required_capabilities("claude").join(" ");
+        assert!(capability_fixture("claude", &help, 1).await.is_err());
     }
 }

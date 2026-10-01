@@ -12,6 +12,33 @@ const ack = (url: string, override: Record<string, unknown> = {}) => {
 describe('browser capture acknowledged transport', () => {
   afterEach(() => vi.useRealTimers());
 
+
+  it.each(['', 'abcdef'])('rejects empty or oversized captures before navigation', async (payload) => {
+    const send = vi.fn();
+    await expect(loadTransport(send)(payload, 'token', 1, 2, 2)).rejects.toThrow('transfer limit');
+    expect(send).not.toHaveBeenCalled();
+  });
+
+  it('ignores stale sequence and fragment acknowledgements and releases all timers after success', async () => {
+    vi.useFakeTimers();
+    const sent: string[] = [];
+    const transfer = loadTransport((url) => sent.push(url))('abcd', 'token', 4, 2, 10);
+    ack(sent[0], { sequence: 3 });
+    ack(sent[0], { index: 1 });
+    await Promise.resolve();
+    expect(sent).toHaveLength(1);
+    ack(sent[0]);
+    await Promise.resolve();
+    ack(sent[0]);
+    await Promise.resolve();
+    expect(sent).toHaveLength(2);
+    ack(sent[1]);
+    await transfer;
+    await vi.advanceTimersByTimeAsync(1000);
+    expect(sent).toHaveLength(2);
+    expect(vi.getTimerCount()).toBe(0);
+  });
+
   it('does not send the next fragment until the receiver acknowledges the current one', async () => {
     const sent: string[] = [];
     const transfer = loadTransport((url) => sent.push(url))('abcdef', 'token', 7, 2, 10);

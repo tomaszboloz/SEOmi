@@ -88,6 +88,20 @@ describe('PageSpeed and CrUX workspace', () => {
     expect(screen.getAllByText('Good')).toHaveLength(3);
   });
 
+
+  it.each([
+    ['largest_contentful_paint', 2500, 'Good'], ['largest_contentful_paint', 4000, 'Needs improvement'], ['largest_contentful_paint', 4001, 'Poor'],
+    ['interaction_to_next_paint', 200, 'Good'], ['interaction_to_next_paint', 500, 'Needs improvement'], ['interaction_to_next_paint', 501, 'Poor'],
+    ['cumulative_layout_shift', '0.1', 'Good'], ['cumulative_layout_shift', '0.25', 'Needs improvement'], ['cumulative_layout_shift', '0.251', 'Poor'],
+    ['first_contentful_paint', 1800, 'Good'], ['experimental_time_to_first_byte', 1801, 'Poor'],
+    ['largest_contentful_paint', '', 'Unrated'], ['largest_contentful_paint', 'invalid', 'Unrated'],
+  ])('rates CrUX %s p75 %j using its metric-specific thresholds', async (metric, value, expected) => {
+    queryCruxMock.mockResolvedValue({ ...cruxFixture, response: { record: { metrics: { [metric]: { percentiles: { p75: value } } } } } });
+    render(<PageSpeedWorkspace />);
+    fireEvent.click(screen.getByRole('button', { name: /Fetch field data/ }));
+    expect(await screen.findByText(expected)).toBeTruthy();
+  });
+
   it('restores the saved input, strategy and reports only in the matching project', () => {
     localStorage.setItem('seomi_pagespeed_workspace_performance-project', JSON.stringify({ url: 'https://example.com/landing', strategy: 'desktop', formFactor: 'DESKTOP', scope: 'origin', pageSpeed: psiFixture, crux: cruxFixture }));
     render(<PageSpeedWorkspace />);

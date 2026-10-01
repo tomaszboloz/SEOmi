@@ -37,3 +37,32 @@ describe('neutral AI research evidence', () => {
     expect(normalizeAiResearchSettings(null).prompts).toEqual([]);
   });
 });
+
+
+describe('AI research edge cases', () => {
+  it.each([0, -5, 1.9, 99, NaN])('normalizes repetition count %j to a bounded integer', (value) => {
+    const repetitions = normalizeAiResearchSettings({ repetitions: value }).repetitions;
+    expect(repetitions).toBe(Number.isNaN(value) || value <= 0 ? 1 : Math.min(5, Math.floor(value)));
+  });
+
+  it('bounds persisted prompts and competitors and ignores malformed entries', () => {
+    const settings = normalizeAiResearchSettings({ prompts: [...Array.from({ length: 15 }, (_, i) => `Question ${i}`), 42] as never, competitors: Array.from({ length: 25 }, (_, i) => `Brand ${i}`) });
+    expect(settings.prompts).toHaveLength(10);
+    expect(settings.competitors).toHaveLength(20);
+    expect(normalizeAiResearchSettings({ prompts: 'wrong-shape', competitors: null } as never)).toEqual({ prompts: [], competitors: [], repetitions: 1 });
+  });
+
+  it('counts repeated case-insensitive competitors once in textual order', () => {
+    expect(analyzeAiEvidence('OtherBrand, OTHERBRAND and SEOmi: https://seomi.test', 'SEOmi', 'seomi.test', ['OtherBrand', 'OTHERBRAND', 'SEOmi'])).toMatchObject({ mentionPosition: 2, competitorsMentioned: ['OtherBrand'], brandMentions: ['OtherBrand', 'SEOmi'] });
+  });
+
+  it('recognizes an own-domain citation without a literal brand name but does not invent its position', () => {
+    expect(analyzeAiEvidence('Try this tool: https://docs.seomi.test/audit', 'Audit tool', 'seomi.test', [])).toMatchObject({ brandMentioned: true, ownDomainCited: true, mentionPosition: null, brandMentions: ['Audit tool'] });
+  });
+
+  it('removes credential-bearing citations and does not accept lookalike domain suffixes', () => {
+    const result = analyzeAiEvidence('SEOmi https://user:pass@seomi.test https://seomi.test.evil.test https://evilseomi.test', 'SEOmi', 'seomi.test', []);
+    expect(result.citations).toEqual(['https://seomi.test.evil.test', 'https://evilseomi.test']);
+    expect(result).toMatchObject({ brandMentioned: false, ownDomainCited: false, mentionPosition: null });
+  });
+});

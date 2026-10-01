@@ -5,6 +5,8 @@ import { DomainOverview } from '@/components/Domain/DomainOverview';
 import { KeywordResearch } from '@/components/Keywords/KeywordResearch';
 import { AiBrandVisibility } from '@/components/AiVisibility/AiBrandVisibility';
 import { useProjectStore } from '@/stores/projectStore';
+import i18n from '@/i18n';
+import { RankTracking } from '@/components/Keywords/RankTracking';
 import { useToolsStore } from '@/stores/toolsStore';
 
 describe('domain research request boundaries', () => {
@@ -43,6 +45,28 @@ describe('domain research request boundaries', () => {
   });
 
   afterEach(() => vi.unstubAllGlobals());
+
+
+  it('shows the five-request Domain Overview cost before submitting', () => {
+    render(<DomainOverview />);
+    expect(screen.getByText(i18n.t('dataforseo.paidRequests', { count: 5 }))).toBeTruthy();
+    expect(fetch).not.toHaveBeenCalled();
+  });
+
+  it('shows Keyword Research as a paid request before submitting', () => {
+    render(<KeywordResearch />);
+    expect(screen.getByText(i18n.t('dataforseo.paidRequests', { count: 1 }))).toBeTruthy();
+    expect(fetch).not.toHaveBeenCalled();
+  });
+
+  it('shows the full rank refresh fan-out count before submitting', () => {
+    const original = useToolsStore.getState().trackedRanks;
+    useToolsStore.setState({ trackedRanks: [{ id: 'one', keyword: 'first', domain: 'example.com', location: 'PL', language_code: 'pl', history: [], current_rank: null }, { id: 'two', keyword: 'second', domain: 'example.com', location: 'PL', language_code: 'pl', history: [], current_rank: null }] as never });
+    render(<RankTracking />);
+    expect(screen.getByText(i18n.t('dataforseo.paidRequests', { count: 2 }))).toBeTruthy();
+    expect(fetch).not.toHaveBeenCalled();
+    useToolsStore.setState({ trackedRanks: original });
+  });
 
   it('does not spend a DataForSEO request when opening Domain Overview', () => {
     render(<DomainOverview />);

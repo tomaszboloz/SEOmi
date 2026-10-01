@@ -119,6 +119,49 @@ describe('project-scoped AI answer research', () => {
     expect(useAuthStore.getState().generateTextForProvider).not.toHaveBeenCalled();
   });
 
+
+  it('keeps all-provider failures as unknown scores and redacts error text before persistence', async () => {
+    useAuthStore.setState({ generateTextForProvider: vi.fn(async () => { throw new Error('Failed for user@example.test at /Users/test/private'); }) });
+    await useToolsStore.getState().analyzeAiBrandVisibility('SEOmi', 'seomi.test');
+    const report = useToolsStore.getState().aiBrandReport!;
+    expect(report.overall_score).toBeNull();
+    expect(report.share_of_voice).toBeNull();
+    expect(report.models.every((model) => model.response_status === 'error')).toBe(true);
+    const stored = localStorage.getItem('seomi_project_ai-project-one_ai_brand_report_v1');
+    expect(stored).toContain('redacted');
+    expect(stored).not.toContain('user@example.test');
+    expect(stored).not.toContain('/Users/test/private');
+    await useToolsStore.getState().runAiPromptComparison('Which audit tool?');
+    const promptStored = localStorage.getItem('seomi_project_ai-project-one_ai_prompt_comparison_v1');
+    expect(promptStored).toContain('redacted');
+    expect(promptStored).not.toContain('user@example.test');
+    expect(promptStored).not.toContain('/Users/test/private');
+  });
+
+  it('stops subsequent questions and repetitions after leaving the project mid-response', async () => {
+    useToolsStore.getState().setAiResearchSettings({ prompts: ['Which audit tool?', 'Who offers audits?'], repetitions: 3 });
+    let complete!: (value: string) => void;
+    useAuthStore.setState({
+      connectionMethod: { openai: 'local_cli', claude: 'api_key', gemini: 'api_key' },
+      generateTextForProvider: vi.fn(() => new Promise<string>((resolve) => { complete = resolve; })),
+    });
+    const run = useToolsStore.getState().analyzeAiBrandVisibility('SEOmi', 'seomi.test');
+    await vi.waitFor(() => expect(useAuthStore.getState().generateTextForProvider).toHaveBeenCalledTimes(1));
+    localStorage.setItem('seomi_active_project_v1', 'ai-project-two');
+    complete('SEOmi: https://seomi.test');
+    await run;
+    expect(useAuthStore.getState().generateTextForProvider).toHaveBeenCalledTimes(1);
+    expect(localStorage.getItem('seomi_project_ai-project-two_ai_brand_report_v1')).toBeNull();
+    expect(localStorage.getItem('seomi_project_ai-project-one_ai_brand_report_v1')).toBeNull();
+  });
+
+  it('requires explicit research questions instead of supplying a branded default prompt', async () => {
+    useToolsStore.getState().setAiResearchSettings({ prompts: [] });
+    await useToolsStore.getState().analyzeAiBrandVisibility('SEOmi', 'seomi.test');
+    expect(useToolsStore.getState().aiBrandError).toBe(i18n.t('aiResearch.promptsRequired'));
+    expect(useAuthStore.getState().generateTextForProvider).not.toHaveBeenCalled();
+  });
+
   it('appends prompt runs, restores the project history and lets the user select an older run', async () => {
     await useToolsStore.getState().runAiPromptComparison('first prompt');
     const first = useToolsStore.getState().aiPromptComparison!;

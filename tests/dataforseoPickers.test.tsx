@@ -48,3 +48,56 @@ describe('DataForSEO searchable pickers', () => {
     expect(DATAFORSEO_MARKETS.find((market) => market.code === 'CH')?.languages.map((item) => item.code)).toEqual(expect.arrayContaining(['de', 'fr', 'it']));
   });
 });
+
+
+describe('paid market selection safeguards', () => {
+  it('restores the selected location after free-text filtering without submitting that text', () => {
+    const change = vi.fn();
+    render(<DataForSeoLocationPicker value="US" onChange={change} ariaLabel="Paid location" />);
+    const input = screen.getByRole('combobox', { name: 'Paid location' }) as HTMLInputElement;
+    const previous = input.value;
+    fireEvent.focus(input);
+    fireEvent.change(input, { target: { value: 'Poland (PL)' } });
+    fireEvent.blur(input);
+    expect(input.value).toBe(previous);
+    expect(change).not.toHaveBeenCalled();
+  });
+
+  it('commits a location only when its catalogue option is selected', () => {
+    const change = vi.fn();
+    render(<DataForSeoLocationPicker value="US" onChange={change} ariaLabel="Picked location" />);
+    const input = screen.getByRole('combobox', { name: 'Picked location' });
+    fireEvent.focus(input);
+    fireEvent.change(input, { target: { value: 'Poland' } });
+    expect(change).not.toHaveBeenCalled();
+    fireEvent.click(screen.getByRole('option', { name: /Poland/ }));
+    expect(change.mock.calls).toEqual([['PL']]);
+  });
+
+  it('does not replace an unknown location with the US or submit an empty match', () => {
+    const change = vi.fn();
+    render(<DataForSeoLocationPicker value="obsolete-market" onChange={change} ariaLabel="Unknown location" />);
+    const input = screen.getByRole('combobox', { name: 'Unknown location' }) as HTMLInputElement;
+    expect(input.value).toBe('');
+    fireEvent.change(input, { target: { value: 'no-such-market' } });
+    fireEvent.keyDown(input, { key: 'Enter' });
+    expect(screen.queryAllByRole('option')).toHaveLength(0);
+    expect(change).not.toHaveBeenCalled();
+  });
+
+  it('restores the selected language after free-text filtering', () => {
+    const change = vi.fn();
+    render(<DataForSeoLanguagePicker value="de" market={dataForSeoMarket('CH')} onChange={change} ariaLabel="Paid language" />);
+    const input = screen.getByRole('combobox', { name: 'Paid language' }) as HTMLInputElement;
+    const previous = input.value;
+    fireEvent.change(input, { target: { value: 'Italian' } });
+    fireEvent.blur(input);
+    expect(input.value).toBe(previous);
+    expect(change).not.toHaveBeenCalled();
+  });
+
+  it('disables language selection when no validated market is available', () => {
+    render(<DataForSeoLanguagePicker value="en" onChange={vi.fn()} ariaLabel="Unavailable language" />);
+    expect((screen.getByRole('combobox', { name: 'Unavailable language' }) as HTMLInputElement).disabled).toBe(true);
+  });
+});

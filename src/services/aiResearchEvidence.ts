@@ -54,7 +54,13 @@ export const aiSearchMode = (provider: AiProvider): 'web_enabled' | 'model_knowl
 export const analyzeAiEvidence = (response: string, brand: string, domain: string, competitors: string[], prompt = '') => {
   const citations = extractAiCitations(response);
   const ownDomainCited = citesOwnDomain(citations, domain);
-  const evidence = response.split(/(?<=[.!?])\s+|\n/).filter((sentence) => {
+  const safeResponse = response.replace(/https?:\/\/[^\s<>"`]+/g, (value) => {
+    try {
+      const url = new URL(value);
+      return url.username || url.password ? '' : value;
+    } catch { return ''; }
+  });
+  const evidence = safeResponse.split(/(?<=[.!?])\s+|\n/).filter((sentence) => {
     if (prompt && normalizedText(sentence.trim()) === normalizedText(prompt.trim())) return false;
     return !/\b(i\s*(do not|don't|cannot|can't|am unable)|unable to|could not|no sources?|not enough information|not determine|not known|blocked)\b|nie (wiem|znam|mogę)|brak (danych|informacji)/i.test(sentence);
   }).join('\n');
