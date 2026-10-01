@@ -1,6 +1,8 @@
 import { beforeEach, describe, expect, it } from 'vitest';
 import {
   compareGscSnapshots,
+  gscSnapshotStorageKey,
+  snapshotGscPerformance,
   findGscStrikingDistanceQueries,
   latestCompleteGscDateRange,
   readGscSnapshots,
@@ -61,4 +63,29 @@ describe('GSC performance tracker', () => {
     expect(comparison.compatible).toBe(false);
     expect(comparison.reason).toBe(i18n.t('runtimeErrors.gsc.differentFilters'));
   });
+});
+
+it('bounds snapshot rows and preserves source truncation flags, zero metrics and capture identity',()=>{
+  const source=data('2026-07-01','2026-07-28',0,{queries:Array.from({length:251},(_,i)=>({query:String(i),clicks:0,impressions:0,ctr:0,position:0})),pages:[],filters:{country:' POL ',device:'MOBILE'},pages_may_be_truncated:true});
+  const snapshot=snapshotGscPerformance(source,'2026-10-01T12:00:00Z');
+  expect(snapshot).toMatchObject({captured_at:'2026-10-01T12:00:00Z',total_clicks:0,queries_may_be_truncated:true,pages_may_be_truncated:true,stored_query_rows:250,stored_page_rows:0,filters:{country:'pol',device:'MOBILE'}});
+  expect(snapshot.queries).toHaveLength(250);expect(source.queries).toHaveLength(251);
+  expect(snapshot.id).toContain('sc-domain:example.com|2026-07-01|2026-07-28|');
+  expect(gscSnapshotStorageKey('a')).toBe('seomi_project_a_gsc_performance_snapshots_v1');
+});
+
+it('drops incomplete stored snapshots before they can crash comparisons or invent zero metrics',()=>{
+  const valid=snapshotGscPerformance(data('2026-07-01','2026-07-28'));
+  localStorage.setItem(gscSnapshotStorageKey('a'),JSON.stringify([
+    {id:'broken',site_url:'sc-domain:example.com'},
+    {...valid,queries:null},
+    {...valid,total_clicks:'0'},
+    {...valid,queries:[{query:'bad',clicks:false,impressions:10,ctr:0,position:1}]},
+    {...valid,filters:{device:'PHONE'}},
+    {...valid,stored_query_rows:99},
+    {...valid,avg_position:-1},
+    {...valid,total_impressions:null},
+    valid,
+  ]));
+  expect(readGscSnapshots('a')).toEqual([valid]);
 });

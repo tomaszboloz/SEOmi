@@ -2,7 +2,7 @@
 Audytor: Staff Developer | Data: 2026-10-01
 
 ## Statystyki
-- Zidentyfikowanych luk: 79 (72 pierwotne oraz siedem problemów wykrytych podczas testów)
+- Zidentyfikowanych luk: 80 (72 pierwotne oraz osiem problemów wykrytych podczas testów)
 - Batchy do wdrożenia: 7
 - Szacowany effort: 20–35 MD; estymacja orientacyjna, do korekty po pomiarze coverage.
 - Baseline: commit 18fa446b13ec3f97db76896bfdf446f97fe80051; 704 frontend / 320 Rust / 27 MCP testów.
@@ -192,3 +192,7 @@ Pomiary bazowego commitu (2026-10-01):
 - [x] GAP-079: [DISCOVERED][MEDIUM] loadRankTrackingDraft(null) i fallback wskazanego inactive projektu używał activeProjectId zamiast jawnego kontekstu przy default market/language. Status: FIXED (BATCH-3l): jawny projectId przekazany do defaultRankTrackingDraft w obu fallback paths; null i obcy projekt nie pobierają rynku aktywnego projektu. RED/GREEN.
 
 - BATCH-3l:9direct keyword/rank persistence tests obejmuje wszystkie5public functions; actual zero/null metrics, bounded500history, legacy market normalization, invalid fields, projectless/explicit defaults, protected migration retry/no overwrite. Full suites1088frontend/385Rust/65MCP PASS; build/lint/fmt/strictClippyPASS. Coverage79.41%statements/64.35%branches/75.95%functions/81.84%lines.107executed publicTS bez directstaticrefs; no assertion-proof claim; native61.84%lines/57.38%functions z3j.76/79FIXED,69/72original;022/023/026 nadalPARTIAL. Tag/new release nieutworzone — wymagane trzy bramki nadal nieosiągnięte.
+
+- [x] GAP-080: [DISCOVERED][MEDIUM] readGscSnapshots sprawdzało wyłącznie id/site_url; niepełne rows/null/metriki jako strings/błędne filtry przechodziły do comparison i mogły powodować crash. Status: FIXED (BATCH-3m): pełny Zod snapshot contract, finite/nonnegative metrics, bounded250rows, allowed filters, row-count consistency; każdy niepoprawny snapshot odrzucany niezależnie. RED/GREEN dla uszkodzonych rekordów, valid0 i aktualnych null/zero metryk bez wymyślania wartości.
+
+- BATCH-3m:18nowych direct tests checkpoint/native write ordering/merge/frontier bounds,3runtime provider probes/notices/errors,3DataForSEOmarket/label/error contracts i2GSCsnapshot tests. Wszystkie10missing public crawl persistence/contracts functions bezpośrednio wywołane i asercje wyników. Full suites1106frontend/385Rust/65MCP PASS; build/lint/fmt/strictClippyPASS. Coverage79.54%statements/64.50%branches/76.08%functions/81.95%lines. Native ostatni compiled production61.84%lines/57.38%functions, no branch evidence.77/80FIXED,69/72original;022/023/026 nadalPARTIAL. CIab3d8d8/run36899516284:5/5PASS.

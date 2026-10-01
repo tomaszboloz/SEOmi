@@ -1,6 +1,7 @@
 import type { GscPerformanceData, GscPerformanceFilters } from '@/types';
 import { readStorage, writeStorageResult } from '@/services/storage';
 import i18n from '@/i18n';
+import { z } from 'zod';
 
 export interface GscDateRange { startDate: string; endDate: string; }
 
@@ -116,11 +117,30 @@ const browserGscStorage: Pick<Storage, 'getItem' | 'setItem'> = {
   },
 };
 
+const gscMetric = z.number().finite().nonnegative();
+const gscRowMetrics = { clicks: gscMetric, impressions: gscMetric, ctr: gscMetric, position: gscMetric };
+const gscSnapshotSchema: z.ZodType<GscPerformanceSnapshot> = z.object({
+  id: z.string(), captured_at: z.string(), site_url: z.string(), start_date: z.string(), end_date: z.string(),
+  filters: z.object({
+    search_type: z.enum(['web', 'image', 'video', 'news', 'discover', 'googleNews']).optional(),
+    device: z.enum(['DESKTOP', 'MOBILE', 'TABLET']).optional(),
+    country: z.string().regex(/^[a-z]{3}$/).optional(),
+  }).optional(),
+  total_clicks: gscMetric, total_impressions: gscMetric, avg_ctr: gscMetric, avg_position: gscMetric,
+  queries: z.array(z.object({ query: z.string(), ...gscRowMetrics })).max(MAX_STORED_GSC_ROWS_PER_DIMENSION),
+  pages: z.array(z.object({ page: z.string(), ...gscRowMetrics })).max(MAX_STORED_GSC_ROWS_PER_DIMENSION),
+  queries_may_be_truncated: z.boolean(), pages_may_be_truncated: z.boolean(),
+  max_rows_per_dimension: gscMetric.int(), stored_query_rows: gscMetric.int(), stored_page_rows: gscMetric.int(),
+}).refine(value => value.stored_query_rows === value.queries.length && value.stored_page_rows === value.pages.length);
+
 export const readGscSnapshots = (projectId: string, storage: Pick<Storage, 'getItem'> = browserGscStorage): GscPerformanceSnapshot[] => {
   try {
     const value = JSON.parse(storage.getItem(gscSnapshotStorageKey(projectId)) || '[]') as unknown;
     if (!Array.isArray(value)) return [];
-    return value.filter((item): item is GscPerformanceSnapshot => Boolean(item && typeof item === 'object' && typeof (item as GscPerformanceSnapshot).id === 'string' && typeof (item as GscPerformanceSnapshot).site_url === 'string'))
+    return value.flatMap(item => {
+      const result = gscSnapshotSchema.safeParse(item);
+      return result.success ? [result.data] : [];
+    })
       .slice(0, MAX_GSC_SNAPSHOTS_PER_PROJECT);
   } catch {
     return [];

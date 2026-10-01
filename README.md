@@ -1032,3 +1032,9 @@ Crawler tables render null, undefined and empty optional values as unavailable w
 Legacy keyword and rank migration preserves both source records until every destination write succeeds. Quota failures and invalid legacy records leave the migration incomplete for a safe retry; existing project destinations are retained. Explicit project and projectless rank-draft defaults now use the requested context rather than inheriting the active project market. No manual data migration is required; retained sources are retried through the normal migration path. Nine direct tests verify these paths, bounded rank histories, market normalization and real zero/null metrics.
 
 Full local suites:1088frontend/385Rust/65MCP; build/lint/fmt/strictClippy pass. Frontend coverage:79.41%statements,64.35%branches,75.95%functions,81.84%lines.107executed publicTS functions lack a static direct reference. Original audit69/72;76/79 including discovered fixes. The release tag remains pending the original frontend/native >99% and complete public-function evidence gates.
+
+### Validated Search Console snapshots and checkpoint ordering (audit BATCH-3m)
+
+Saved Search Console snapshots now require complete finite metrics, valid row arrays, supported filters and matching row counts. Invalid records are skipped individually, retaining valid history; fetching new data creates a fresh valid snapshot. No metrics are coerced into fabricated zero values. New direct tests cover native checkpoint save/clear ordering across projects, resume frontiers, immutable merge summaries, bounded checkpoints, local provider discovery and DataForSEO market/error contracts.
+
+Full local suites:1106frontend/385Rust/65MCP; build/lint/fmt/strictClippy pass. Coverage:79.54%statements,64.50%branches,76.08%functions,81.95%lines. The original audit remains69/72;77/80 including discovered fixes. All five CI checks passed for ab3d8d8 in run36899516284.
