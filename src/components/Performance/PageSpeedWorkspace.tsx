@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useRef, useState } from "react";
+import React from "react";
 import { useTranslation } from "react-i18next";
 import {
   Activity,
@@ -12,132 +12,19 @@ import { useProjectStore } from "@/stores/projectStore";
 import { useSettingsStore } from "@/stores/settingsStore";
 import {
   CruxFormFactor,
-  CruxReport,
-  PageSpeedReport,
   PageSpeedStrategy,
-  queryCrux,
-  runPageSpeedInsights,
 } from "@/services/pagespeed";
 import { TrendChart } from "@/components/Charts/TrendChart";
 import {
   clearPageSpeedSnapshots,
   comparePageSpeedSnapshots,
-  createPageSpeedSnapshot,
-  PageSpeedSnapshot,
   pageSpeedHistoryCsv,
-  readPageSpeedSnapshots,
-  savePageSpeedSnapshot,
 } from "@/services/pagespeedHistory";
 import { downloadText } from "@/services/export";
-import { readJsonStorage, writeJsonStorage } from "@/services/storage";
-
-interface PerformanceSession {
-  url: string;
-  strategy: PageSpeedStrategy;
-  formFactor: CruxFormFactor;
-  scope: "url" | "origin";
-  pageSpeed: PageSpeedReport | null;
-  crux: CruxReport | null;
-}
-
-const emptySession = (url = ""): PerformanceSession => ({
-  url,
-  strategy: "mobile",
-  formFactor: "PHONE",
-  scope: "url",
-  pageSpeed: null,
-  crux: null,
-});
-const storageKey = (projectId: string) =>
-  `seomi_pagespeed_workspace_${projectId}`;
-const PSI_METRICS = [
-  ["first-contentful-paint", "firstContentfulPaint"],
-  ["largest-contentful-paint", "largestContentfulPaint"],
-  ["cumulative-layout-shift", "cumulativeLayoutShift"],
-  ["total-blocking-time", "totalBlockingTime"],
-  ["speed-index", "speedIndex"],
-  ["interactive", "timeToInteractive"],
-] as const;
-
-const loadSession = (
-  projectId: string | null,
-  defaultUrl: string,
-): PerformanceSession => {
-  if (!projectId) return emptySession(defaultUrl);
-  try {
-    const saved = readJsonStorage<Partial<PerformanceSession> | null>(
-      storageKey(projectId),
-      null,
-    );
-    if (!saved || typeof saved !== "object") return emptySession(defaultUrl);
-    return {
-      url: typeof saved.url === "string" ? saved.url : defaultUrl,
-      strategy: saved.strategy === "desktop" ? "desktop" : "mobile",
-      formFactor: ["PHONE", "DESKTOP", "TABLET"].includes(
-        saved.formFactor || "",
-      )
-        ? (saved.formFactor as CruxFormFactor)
-        : "PHONE",
-      scope: saved.scope === "origin" ? "origin" : "url",
-      pageSpeed: saved.pageSpeed || null,
-      crux: saved.crux || null,
-    };
-  } catch {
-    return emptySession(defaultUrl);
-  }
-};
-
-const formatCruxValue = (
-  metric: Record<string, any>,
-  translate: (key: string) => string,
-) => {
-  const p75 = metric.percentiles?.p75;
-  const numeric = p75 === null || p75 === undefined || p75 === "" ? NaN : Number(p75);
-  if (!Number.isFinite(numeric)) return translate("pageSpeedUi.noP75");
-  if (metric.metric === "cumulative_layout_shift") return numeric.toFixed(3);
-  return `${Math.round(numeric)} ${translate("pageSpeedUi.ms")}`;
-};
-
-const cruxCategory = (
-  metric: Record<string, any>,
-  translate: (key: string) => string,
-) => {
-  const p75 = metric.percentiles?.p75;
-  const value = p75 === null || p75 === undefined || p75 === "" ? NaN : Number(p75);
-  if (!Number.isFinite(value)) return translate("pageSpeedUi.crux.unrated");
-  const thresholds: Record<string, [number, number]> = {
-    largest_contentful_paint: [2500, 4000],
-    interaction_to_next_paint: [200, 500],
-    cumulative_layout_shift: [0.1, 0.25],
-    first_contentful_paint: [1800, 3000],
-    experimental_time_to_first_byte: [800, 1800],
-  };
-  const [good, needsImprovement] = thresholds[metric.metric] || [];
-  if (good === undefined) return translate("pageSpeedUi.crux.unrated");
-  if (value <= good) return translate("pageSpeedUi.crux.good");
-  if (value <= needsImprovement) return translate("pageSpeedUi.crux.needsImprovement");
-  return translate("pageSpeedUi.crux.poor");
-};
-
-const scoreColor = (score: number | null) =>
-  score === null
-    ? "bg-slate-700"
-    : score >= 90
-      ? "bg-emerald-500"
-      : score >= 50
-        ? "bg-amber-400"
-        : "bg-rose-500";
-const formatBytes = (bytes: number | null) =>
-  bytes === null || !Number.isFinite(bytes)
-    ? null
-    : bytes >= 1024
-      ? `${(bytes / 1024).toFixed(1)} KiB`
-      : `${Math.round(bytes)} B`;
-
-const formatDelta = (value: number | null, suffix = "") =>
-  value === null
-    ? "—"
-    : `${value > 0 ? "+" : ""}${Number.isInteger(value) ? value : value.toFixed(2)}${suffix}`;
+import { PSI_METRICS } from './performanceSession';
+import { usePerformanceWorkspace } from './usePerformanceWorkspace';
+import { scoreColor, formatBytes, formatDelta } from './performanceFormatting';
+import { readCruxMetrics, formatCruxValue, cruxCategory, formatCruxCollectionPeriod } from './cruxEvidence';
 
 const renderLighthouseDescription = (description: string): React.ReactNode => {
   const parts = description.split(/(\[[^\]]+\]\(https?:\/\/[^)]+\))/g);
@@ -158,134 +45,10 @@ export const PageSpeedWorkspace: React.FC = () => {
   const hasApiKey = Boolean(
     useSettingsStore((state) => state.googleMetricsApiKey),
   );
-  const [session, setSession] = useState<PerformanceSession>(() =>
-    loadSession(activeProjectId, project?.rootUrl || ""),
-  );
-  const [isRunningPsi, setIsRunningPsi] = useState(false);
-  const [isRunningCrux, setIsRunningCrux] = useState(false);
-  const [psiError, setPsiError] = useState<string | null>(null);
-  const [cruxError, setCruxError] = useState<string | null>(null);
-  const psiRequestToken = useRef(0);
-  const cruxRequestToken = useRef(0);
-  const [history, setHistory] = useState<PageSpeedSnapshot[]>(() =>
-    readPageSpeedSnapshots(activeProjectId),
-  );
-  const [compareId, setCompareId] = useState("");
-  const defaultUrl = project?.rootUrl || "";
-
-  useEffect(() => {
-    setSession(loadSession(activeProjectId, defaultUrl));
-    setHistory(readPageSpeedSnapshots(activeProjectId));
-    setCompareId("");
-    setIsRunningPsi(false);
-    setIsRunningCrux(false);
-    setPsiError(null);
-    setCruxError(null);
-    psiRequestToken.current += 1;
-    cruxRequestToken.current += 1;
-  }, [activeProjectId, defaultUrl]);
-
-  const updateSession = (patch: Partial<PerformanceSession>) => {
-    const invalidatesPsi = "url" in patch || "strategy" in patch;
-    const invalidatesCrux = "url" in patch || "formFactor" in patch || "scope" in patch;
-    if (invalidatesPsi) {
-      psiRequestToken.current += 1;
-      setIsRunningPsi(false);
-    }
-    if (invalidatesCrux) {
-      cruxRequestToken.current += 1;
-      setIsRunningCrux(false);
-    }
-    setSession((current) => {
-      const next = { ...current, ...patch };
-      if (activeProjectId) {
-        writeJsonStorage(storageKey(activeProjectId), next);
-      }
-      return next;
-    });
-  };
-
-  const recordSnapshot = (
-    patch: Pick<PerformanceSession, "pageSpeed" | "crux">,
-  ) => {
-    if (
-      !activeProjectId ||
-      !session.url.trim() ||
-      (!patch.pageSpeed && !patch.crux)
-    )
-      return;
-    const snapshot = createPageSpeedSnapshot({
-      url: session.url,
-      strategy: session.strategy,
-      formFactor: session.formFactor,
-      scope: session.scope,
-      pageSpeed: patch.pageSpeed,
-      crux: patch.crux,
-    });
-    setHistory(savePageSpeedSnapshot(activeProjectId, snapshot, history));
-  };
-
-  const cruxMetrics = useMemo(() => {
-    const response = session.crux?.response;
-    const record = response?.record as Record<string, unknown> | undefined;
-    return record?.metrics && typeof record.metrics === "object"
-      ? (record.metrics as Record<string, Record<string, unknown>>)
-      : null;
-  }, [session.crux]);
-
-  const runPsi = async () => {
-    if (!session.url.trim()) return setPsiError(t("pageSpeedUi.urlRequired"));
-    const projectId = activeProjectId;
-    const requestToken = ++psiRequestToken.current;
-    setIsRunningPsi(true);
-    setPsiError(null);
-    try {
-      const pageSpeed = await runPageSpeedInsights(
-        session.url,
-        session.strategy,
-      );
-      if (useProjectStore.getState().activeProjectId === projectId && psiRequestToken.current === requestToken) {
-        updateSession({ pageSpeed });
-        recordSnapshot({ pageSpeed, crux: session.crux });
-      }
-    } catch (error) {
-      if (useProjectStore.getState().activeProjectId === projectId && psiRequestToken.current === requestToken) {
-        setPsiError(
-          error instanceof Error ? error.message : t("pageSpeedUi.psiError"),
-        );
-      }
-    } finally {
-      if (useProjectStore.getState().activeProjectId === projectId && psiRequestToken.current === requestToken) setIsRunningPsi(false);
-    }
-  };
-
-  const runCrux = async () => {
-    if (!session.url.trim()) return setCruxError(t("pageSpeedUi.urlRequired"));
-    const projectId = activeProjectId;
-    const requestToken = ++cruxRequestToken.current;
-    setIsRunningCrux(true);
-    setCruxError(null);
-    try {
-      const crux = await queryCrux(
-        session.url,
-        session.formFactor,
-        session.scope,
-      );
-      if (useProjectStore.getState().activeProjectId === projectId && cruxRequestToken.current === requestToken) {
-        updateSession({ crux });
-        recordSnapshot({ pageSpeed: session.pageSpeed, crux });
-      }
-    } catch (error) {
-      if (useProjectStore.getState().activeProjectId === projectId && cruxRequestToken.current === requestToken) {
-        const message = error instanceof Error ? error.message : String(error);
-        setCruxError(message.includes("CRUX_NOT_ENOUGH_DATA")
-          ? t("pageSpeedUi.cruxNotEnoughData", "Not enough real user data is available for this URL or origin.")
-          : message || t("pageSpeedUi.cruxError"));
-      }
-    } finally {
-      if (useProjectStore.getState().activeProjectId === projectId && cruxRequestToken.current === requestToken) setIsRunningCrux(false);
-    }
-  };
+  const { session, updateSession, isRunningPsi, isRunningCrux, psiError, cruxError,
+    history, setHistory, compareId, setCompareId, runPsi, runCrux } = usePerformanceWorkspace(activeProjectId, project?.rootUrl || "", t);
+  const cruxMetrics = readCruxMetrics(session.crux?.response);
+  const collectionPeriod = formatCruxCollectionPeriod(session.crux?.response);
 
   const psiReport = session.pageSpeed;
   const chronologicalHistory = [...history].sort((a, b) =>
@@ -1058,10 +821,7 @@ export const PageSpeedWorkspace: React.FC = () => {
               </p>
             </div>
             <span className="text-xs text-slate-400">
-              {(session.crux.response.record as Record<string, any> | undefined)
-                ?.collectionPeriod?.firstDate?.year
-                ? `${t("pageSpeedUi.window")}: ${(session.crux.response.record as Record<string, any>).collectionPeriod.firstDate.year}-${String((session.crux.response.record as Record<string, any>).collectionPeriod.firstDate.month).padStart(2, "0")}-${String((session.crux.response.record as Record<string, any>).collectionPeriod.firstDate.day).padStart(2, "0")} – ${(session.crux.response.record as Record<string, any>).collectionPeriod.lastDate.year}-${String((session.crux.response.record as Record<string, any>).collectionPeriod.lastDate.month).padStart(2, "0")}-${String((session.crux.response.record as Record<string, any>).collectionPeriod.lastDate.day).padStart(2, "0")}`
-                : t("pageSpeedUi.apiCollectionPeriod")}
+              {collectionPeriod ? `${t("pageSpeedUi.window")}: ${collectionPeriod}` : t("pageSpeedUi.apiCollectionPeriod")}
             </span>
           </div>
           {cruxMetrics ? (
@@ -1082,7 +842,7 @@ export const PageSpeedWorkspace: React.FC = () => {
                 <tbody className="divide-y divide-slate-800 bg-slate-950/60">
                   {Object.entries(cruxMetrics).map(([key, metric]) => {
                     const histogram = Array.isArray(metric.histogram)
-                      ? (metric.histogram as Array<Record<string, number>>)
+                      ? (metric.histogram)
                       : [];
                     return (
                       <tr key={key}>

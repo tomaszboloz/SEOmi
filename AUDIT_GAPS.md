@@ -2,7 +2,7 @@
 Audytor: Staff Developer | Data: 2026-10-01
 
 ## Statystyki
-- Zidentyfikowanych luk: 55
+- Zidentyfikowanych luk: 58
 - Batchy do wdrożenia: 7
 - Szacowany effort: 20–35 MD; estymacja orientacyjna, do korekty po pomiarze coverage.
 - Baseline: commit 18fa446b13ec3f97db76896bfdf446f97fe80051; 704 frontend / 320 Rust / 27 MCP testów.
@@ -34,7 +34,7 @@ Pomiary bazowego commitu (2026-10-01):
 - [ ] GAP-011: [HIGH] SiteAudit ma 3176 linii: formularz, orkiestracja, artefakty i historia w jednym module. Dowód: `src/components/Domain/SiteAudit.tsx`. Status: OPEN; wymagane testy red/green i rewalidacja.
 - [ ] GAP-012: [HIGH] site_crawler.rs ma 9998 linii z transportem, parsowaniem, checkpointami i konfiguracją. Dowód: `src-tauri/src/commands/site_crawler.rs`. Status: OPEN; wymagane testy red/green i rewalidacja.
 - [ ] GAP-013: [MEDIUM] SemanticTopicalWorkspace 1814 linii miesza import, analizę i rendering. Dowód: `src/components/Charts/SemanticTopicalWorkspace.tsx`. Status: OPEN; wymagane testy red/green i rewalidacja.
-- [ ] GAP-014: [MEDIUM] PageSpeedWorkspace 1152 linii miesza transport, persistence, oceny metryk i widok. Dowód: `src/components/Performance/PageSpeedWorkspace.tsx`. Status: OPEN; wymagane testy red/green i rewalidacja.
+- [x] GAP-014: [MEDIUM] PageSpeedWorkspace 1152 linii miesza transport, persistence, oceny metryk i widok. Dowód: `src/components/Performance/PageSpeedWorkspace.tsx`. Status: FIXED (BATCH-2b); oddzielono session, hook z kontraktem DI, formatowanie i walidację CrUX; brak any w Performance. Testy UI i helperów.
 - [ ] GAP-015: [MEDIUM] html_parser.rs 3533 linii agreguje wiele niezależnych analiz HTML. Dowód: `src-tauri/src/services/html_parser.rs`. Status: OPEN; wymagane testy red/green i rewalidacja.
 - [ ] GAP-016: [MEDIUM] seo_analyzer.rs 2047 linii agreguje scoring i wiele niezależnych reguł. Dowód: `src-tauri/src/services/seo_analyzer.rs`. Status: OPEN; wymagane testy red/green i rewalidacja.
 - [ ] GAP-017: [MEDIUM] Monolityczny types/index.ts 1239 linii łączy kontrakty wszystkich domen. Dowód: `src/types/index.ts`. Status: OPEN; wymagane testy red/green i rewalidacja.
@@ -74,7 +74,7 @@ Pomiary bazowego commitu (2026-10-01):
 - [x] GAP-043: [MEDIUM] Local API konwertuje timeout/max_pages/max_depth Number(), przyjmując stringi/bool zamiast typów kontraktu. Dowód: `mcp-server/src/localApi.ts:94`. Status: FIXED (BATCH-4a); testy integracyjne HTTP: typy, limit konkurencji, safe errors i korelacja/logi; pełny suite PASS.
 - [ ] GAP-044: [MEDIUM] Frontend i MCP duplikują reguły rynków, typy wyników i normalizację domen. Dowód: `src/services/dataforseo.ts; mcp-server/src/index.ts`. Status: OPEN; wymagane testy red/green i rewalidacja.
 - [x] GAP-045: [LOW] downloadText/downloadPdf duplikują cykl życia Blob URL i elementu anchor. Dowód: `src/services/export.ts:39`. Status: FIXED (BATCH-4b); regresje kosztu enumeracji, limitu przed JSON.parse i lifecycle text/PDF. Pełny suite/build PASS.
-- [ ] GAP-046: [MEDIUM] Kod biznesowy/widoki używają any zamiast zweryfikowanych danych providerów. Dowód: `src/components/Performance/PageSpeedWorkspace.tsx:102`. Status: OPEN; wymagane testy red/green i rewalidacja.
+- [x] GAP-046: [MEDIUM] Kod biznesowy/widoki używają any zamiast zweryfikowanych danych providerów. Dowód: `src/components/Performance/PageSpeedWorkspace.tsx:102`. Status: FIXED (BATCH-2b); oddzielono session, hook z kontraktem DI, formatowanie i walidację CrUX; brak any w Performance. Testy UI i helperów.
 
 ## BATCH 7: Documentation & DevOps
 - [ ] GAP-047: [HIGH] Brak sekretów podpisujących: oficjalne instalatory i aktualizacje nie mogą przejść release gate. Dowód: `.github/workflows/release.yml`. Status: OPEN; wymagane testy red/green i rewalidacja.
@@ -91,6 +91,10 @@ Pomiary bazowego commitu (2026-10-01):
 - [x] GAP-054: [DISCOVERED] [MEDIUM] Wyjątek anchor.click/createElement pomijał usunięcie anchor i revokeObjectURL. Dowód przed zmianą: src/services/export.ts:36,56; test RED downloadLifecycle. FIXED (BATCH-4b): wspólne try/finally i regresje text/PDF/DOM failure.
 - [x] GAP-055: [DISCOVERED] [LOW] Sufiks __proto__ w enumeracji storage nie był zapisywany jako własny klucz (utrata wpisu). Dowód przed zmianą: src/services/storage.ts:76. FIXED (BATCH-4b): defineProperty i test własnego klucza bez zmiany prototypu. Nie stwierdzono eskalacji prototype pollution.
 
+- [x] GAP-056: [DISCOVERED] [HIGH] Niepełne collectionPeriod CrUX wywraca widok przez niezweryfikowane lastDate.year. Dowód przed refaktoryzacją: PageSpeedWorkspace.tsx:1063; test RED z niepełnym okresem. FIXED (BATCH-2b); regresja RED/GREEN i pełny suite.
+- [x] GAP-057: [DISCOVERED] [MEDIUM] Boolean p75 był konwertowany do zera i oceniany Good. Dowód przed zmianą: PageSpeedWorkspace.tsx:95; test RED false -> 0 ms. FIXED (BATCH-2b); regresja RED/GREEN i pełny suite.
+- [x] GAP-058: [DISCOVERED] [MEDIUM] Równoległe zakończenie PSI i CrUX nadpisuje jeden snapshot historii przez stale closure. Dowód: test RED oczekiwał 2 zapisów, dostał 1. FIXED (BATCH-2b); regresja RED/GREEN i pełny suite.
+
 ## Dziennik batchy
 - BATCH-0: audyt bazowy: 50 wpisów; pomiary frontend/Rust ukończone, cel >99% pozostaje OPEN.
 - BATCH-1a: transport HTTP. RED: nowe testy kontraktu nie kompilowały się przed dodaniem granicy resolvera. GREEN: 704 frontend / 330 Rust / 27 MCP; build frontend + MCP, rustfmt i strict Clippy. Test strumieniowego timeoutu ujawnił konkurujące deadline'y; naprawiono i ponowiono pełny Rust suite. Brak zmian IPC/migracji.
@@ -100,3 +104,4 @@ Pomiary bazowego commitu (2026-10-01):
 - BATCH-2a: bootstrap MCP oddzielony od fabryki serwera i kontraktów runnerów. RED: test protokołu wymagał nieistniejącej fabryki; GREEN: 708 frontend / 339 Rust / 54 MCP, build/Clippy PASS. Wszystkie 18 narzędzi mają happy/error/schema scenariusze; bez kont i płatnych wywołań.
 - BATCH-4a: lokalne API: liczby bez Number coercion, 4 sloty (1–16), timeouty HTTP, bezpieczne mapowanie wyjątków, X-Request-ID i logi bez danych żądania. RED: 3 regresje potwierdziły status 200 dla błędów i brak ID; GREEN: 708 frontend / 339 Rust / 60 MCP, build/Clippy PASS. GAP-040 tylko PARTIAL (native logging pozostaje).
 - BATCH-4b: storage O(N), limit wejścia backupu przed JSON.parse, wspólny cleanup eksportu. RED: 3 regresje (125250 prac dla 500 wpisów, brak guard przed parse i pozostawiony anchor); GREEN: 714 frontend / 339 Rust / 60 MCP; build/Clippy PASS. Build wykrył union Blob|MediaSource w teście — poprawiono narrowing i powtórzono build oraz test lifecycle. GAP-054/055 odkryte i naprawione.
+- BATCH-2b: PageSpeed rozdzielony na view/session/hook/formatting/CrUX evidence. RED: niepełny okres wywracał UI, false p75 dawało zero, równoległe PSI+CrUX gubiło snapshot; GREEN: 733 frontend / 339 Rust / 60 MCP, build/Clippy PASS. Nowy hook ma DI i bezpośredni test; wszystkie publiczne helpery mają testy.
