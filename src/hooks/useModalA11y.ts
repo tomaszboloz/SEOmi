@@ -11,6 +11,17 @@ const focusableSelector = [
   '[tabindex]:not([tabindex="-1"])',
 ].join(',');
 
+const visibleControls = (dialog: HTMLElement): Focusable[] =>
+  Array.from(dialog.querySelectorAll<Focusable>(focusableSelector)).filter(element => {
+    if (element.tabIndex < 0 || element.matches(':disabled') || element.closest('[inert]')) return false;
+    const style = window.getComputedStyle(element);
+    if (style.visibility === 'hidden' || style.visibility === 'collapse') return false;
+    for (let ancestor: HTMLElement | null = element; ancestor; ancestor = ancestor.parentElement) {
+      if (ancestor.hidden || window.getComputedStyle(ancestor).display === 'none') return false;
+    }
+    return true;
+  });
+
 /**
  * Shared modal behaviour for desktop WebViews.
  * Keeps keyboard users inside the dialog, restores the opener and prevents
@@ -28,7 +39,7 @@ export const useModalA11y = <T extends HTMLElement>(onClose: () => void) => {
     const focusDialog = () => {
       const dialog = dialogRef.current;
       if (!dialog) return;
-      const first = dialog.querySelector<Focusable>(focusableSelector);
+      const first = visibleControls(dialog)[0];
       (first || dialog).focus();
     };
 
@@ -45,11 +56,7 @@ export const useModalA11y = <T extends HTMLElement>(onClose: () => void) => {
       if (event.key !== 'Tab') return;
       const dialog = dialogRef.current;
       if (!dialog) return;
-      const focusable = Array.from(dialog.querySelectorAll<Focusable>(focusableSelector))
-        .filter((element) => {
-          const style = window.getComputedStyle(element);
-          return style.display !== 'none' && style.visibility !== 'hidden';
-        });
+      const focusable = visibleControls(dialog);
       if (!focusable.length) {
         event.preventDefault();
         dialog.focus();

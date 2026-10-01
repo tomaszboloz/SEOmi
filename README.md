@@ -1074,3 +1074,10 @@ Full final local suites:1403frontend cases,399Rust,65MCP; build/lint/fmt/strictC
 SERP overlap counts distinct normalized pages before applying its threshold and preserves nondefault service ports. Gemini connection checks encode the key as one query value. Regression tests reproduced all three bugs before their fixes. Hosted and local CLI AI tests cover literal prompts, default models, source evidence, missing credentials, HTTP errors, malformed answers and network failures using isolated provider fixtures.
 
 Full local suites:1467frontend cases/399Rust/65MCP; build/lint/rustfmt/strictClippy pass. Coverage:81.61%statements,68.62%branches,80.52%functions,84.18%lines. Production native source is unchanged from the preceding measured62.68%lines/57.68%functions; branches unavailable.66executed publicTS bodies lack direct static references; direct assertion evidence remains incomplete. Original audit69/72; the >99% and complete public-function gates remain open. Windows Rust tests passed on bd2444d/run36915858026; full desktop CI is pending. No new release tag has been created.
+
+
+### Modal focus and scheduled execution contracts (audit BATCH-3s)
+
+Modal autofocus and Tab navigation now use the same visible, enabled control filter, excluding hidden ancestors, inert controls, negative tabindex and disabled fieldsets. Five regressions fail against the previous hook. Direct tests also cover focus restoration, Escape, frame cancellation, empty dialogs, native queue write ordering, real schedule mirrors, handoff isolation/idempotency, observed topical query preservation and lazy-route recovery.
+
+Full local suites:1491frontend cases/399Rust/65MCP; build/lint/rustfmt/strictClippy pass. Coverage:81.82%statements/68.84%branches/80.55%functions/84.41%lines; native production unchanged at the preceding measured62.68%lines/57.68%functions.61executed publicTS bodies still lack direct static references. Windows job110549526735 on bd2444d passed frontend, Rust and actual desktop E2E; macOS was still compiling when recorded. Original audit remains69/72; no new version/tag yet.
