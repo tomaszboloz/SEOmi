@@ -959,3 +959,7 @@ Only registered command names reach logs; unknown names become `unknown`. Argume
 ### Topical workspace boundaries (audit BATCH-2f)
 
 `SemanticTopicalWorkspace.tsx` assembles the view. `semanticTopical/useSemanticTopicalSession.ts` owns editing/import operations, derived candidates and project transitions; its `TopicalSessionDependencies` contract permits persistence fixtures. Eight panels handle entity editing, topic browsing, node metadata, query evidence, URL assignments and crawl evidence without reading stores or storage. Separate contracts, preference/URL/hierarchy helpers and small primitives retain the public workspace props and storage keys. Preferences now validate independently, including rejecting array values that JavaScript previously coerced into a calendar month. No storage migration is required.
+
+### Site Audit view composition (audit BATCH-2g)
+
+`SiteAudit.tsx` assembles the desktop workspace. `siteAudit/useSiteAuditSession.ts` coordinates project state, crawl controls, profile editing, comparisons and exports through a typed `SiteAuditSessionDependencies` contract. Twenty-three panels render individual forms, progress, restart controls, history, resource/page errors, report templates and exports; they receive session values and do not read stores or storage. Small helpers handle elapsed display and focus. Existing project switching, CSV evidence, storage keys and public `SiteAudit` export are preserved; no migration is required.
