@@ -3,6 +3,7 @@ import { invokeTauriCommand } from '@/services/tauri';
 import type { CrawlReportTemplate, ReportTemplateSection } from '@/services/reportTemplates';
 import { buildCrawlResourceInventory } from '@/services/crawlResources';
 import i18n from '@/i18n';
+import { downloadBlob } from '@/services/download';
 
 const spreadsheetSafe = (value: unknown): string => {
   const text = String(value ?? '');
@@ -31,21 +32,6 @@ export const auditCsv = (audit: PageAuditData): string => {
   return [exportHeaders('auditMain'), ...rows, [], exportHeaders('auditIssues'), ...issues]
     .map((row) => row.map(escapeCsv).join(','))
     .join('\r\n');
-};
-
-const downloadBlob = (filename: string, blob: Blob): void => {
-  const url = URL.createObjectURL(blob);
-  let anchor: HTMLAnchorElement | undefined;
-  try {
-    anchor = document.createElement('a');
-    anchor.href = url;
-    anchor.download = filename;
-    document.body.appendChild(anchor);
-    anchor.click();
-  } finally {
-    anchor?.remove();
-    window.setTimeout(() => URL.revokeObjectURL(url), 0);
-  }
 };
 
 export const downloadText = (filename: string, text: string, mimeType: string): void =>

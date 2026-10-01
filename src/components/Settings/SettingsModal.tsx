@@ -37,6 +37,7 @@ import {
   serializeProjectBackup,
 } from '@/services/projectBackup';
 import { relaunch } from '@tauri-apps/plugin-process';
+import { downloadBlob } from '@/services/download';
 
 export const SettingsModal: React.FC = () => {
   const { t } = useTranslation();
@@ -175,14 +176,8 @@ export const SettingsModal: React.FC = () => {
     setBackupStatus(t('legacyUi.settings.preparingBackup'));
     try {
       const backup = await createProjectBackup(activeProject);
-      const blobUrl = URL.createObjectURL(new Blob([serializeProjectBackup(backup)], { type: 'application/json' }));
-      const anchor = document.createElement('a');
-      anchor.href = blobUrl;
-      anchor.download = `seomi-${activeProject.name.toLocaleLowerCase().replace(/[^a-z0-9]+/gi, '-').replace(/^-|-$/g, '') || activeProject.id}-backup.json`;
-      document.body.appendChild(anchor);
-      anchor.click();
-      anchor.remove();
-      window.setTimeout(() => URL.revokeObjectURL(blobUrl), 0);
+      const filename = `seomi-${activeProject.name.toLocaleLowerCase().replace(/[^a-z0-9]+/gi, '-').replace(/^-|-$/g, '') || activeProject.id}-backup.json`;
+      downloadBlob(filename, new Blob([serializeProjectBackup(backup)], { type: 'application/json' }));
       setBackupStatus(t('legacyUi.settings.backupReady', { runs: backup.crawlRuns.length, entries: Object.keys(backup.localStorage).length }));
     } catch (error) {
       setBackupStatus(error instanceof Error ? t('legacyUi.settings.backupError', { error: error.message }) : t('legacyUi.settings.backupErrorGeneric'));

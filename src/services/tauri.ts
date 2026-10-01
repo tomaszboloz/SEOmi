@@ -1,6 +1,7 @@
 import { AiCliStatus, AppConfig, CrawlFilterValidationError, CrawlFilterValidationResult, RenderedPageArtifact } from '@/types';
 import { readStorage } from '@/services/storage';
 import i18n from '@/i18n';
+import { downloadBlob } from '@/services/download';
 
 export interface UpdateStatus {
   available: boolean;
@@ -27,17 +28,7 @@ export interface SaveTextFileOptions {
  */
 export async function saveTextFile(options: SaveTextFileOptions): Promise<'saved' | 'cancelled' | 'downloaded'> {
   if (!isTauriEnvironment()) {
-    const url = URL.createObjectURL(new Blob([options.contents], { type: `${options.extension === 'json' ? 'application/json' : 'text/plain'};charset=utf-8` }));
-    const anchor = document.createElement('a');
-    anchor.href = url;
-    anchor.download = options.defaultPath;
-    document.body.appendChild(anchor);
-    anchor.click();
-    anchor.remove();
-    // Let the browser start the download before releasing the object URL. A
-    // synchronous revoke is ignored by some WebView engines and can produce
-    // an empty export even though the click was dispatched successfully.
-    window.setTimeout(() => URL.revokeObjectURL(url), 0);
+    downloadBlob(options.defaultPath, new Blob([options.contents], { type: `${options.extension === 'json' ? 'application/json' : 'text/plain'};charset=utf-8` }));
     return 'downloaded';
   }
 

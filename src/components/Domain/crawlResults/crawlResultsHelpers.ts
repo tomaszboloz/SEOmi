@@ -10,6 +10,7 @@ import { type CrawlLinkKindFilter, type CrawlLinkSort, type CrawlLinkStatusFilte
 import { type CrawlResourceProvenanceStatus } from "@/services/crawlResources";
 
 import { readJsonStorage } from "@/services/storage";
+import { downloadBlob } from "@/services/download";
 
 export type CrawlTab =
   | "overview"
@@ -378,16 +379,7 @@ export const tableHead =
 export const downloadRenderedArtifact = (artifact: RenderedPageArtifact): void => {
   const binary = atob(artifact.dataBase64);
   const bytes = Uint8Array.from(binary, (character) => character.charCodeAt(0));
-  const url = URL.createObjectURL(
-    new Blob([bytes], { type: artifact.contentType }),
-  );
-  const anchor = document.createElement("a");
-  anchor.href = url;
-  anchor.download = artifact.fileName;
-  document.body.appendChild(anchor);
-  anchor.click();
-  anchor.remove();
-  window.setTimeout(() => URL.revokeObjectURL(url), 0);
+  downloadBlob(artifact.fileName, new Blob([bytes], { type: artifact.contentType }));
 };
 
 export const tableWrap =

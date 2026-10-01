@@ -2,7 +2,7 @@
 Audytor: Staff Developer | Data: 2026-10-01
 
 ## Statystyki
-- Zidentyfikowanych luk: 73 (72 pierwotne i jedna wykryta przez desktop E2E)
+- Zidentyfikowanych luk: 74 (72 pierwotne, replay hash z E2E i wycieki eksportów z inwentaryzacji)
 - Batchy do wdrożenia: 7
 - Szacowany effort: 20–35 MD; estymacja orientacyjna, do korekty po pomiarze coverage.
 - Baseline: commit 18fa446b13ec3f97db76896bfdf446f97fe80051; 704 frontend / 320 Rust / 27 MCP testów.
@@ -157,3 +157,9 @@ Pomiary bazowego commitu (2026-10-01):
 - BATCH-3b: Windows E2E exit 0xC0000139 zdiagnozowany w CI: comctl32 5.82 nie eksportuje TaskDialogIndirect. tauri-winres/embed-resource linkuje manifest tylko do binaries; Cargo example nie otrzymywał Common Controls v6. Dodano MSVC example linker /MANIFEST:EMBED i /MANIFESTINPUT oraz manifest v6. Architecture regression RED/GREEN; usunięto trzy nieużywane platformowe importy/helpers. GAP-025 pozostaje PARTIAL do rzeczywistego CI obu platform.
 
 - BATCH-3c: AST function inventory i świeży SHA256/V8 report. Cztery TS fixtures (aliases/overloads/methods/comments, evidence freshness, constructors/accessors/property callables, V8 unknown end columns/nested callback separation) i trzy syn fixtures GREEN. Final local GREEN:936 frontend/366 Rust/65 MCP; build/lint/rustfmt/Clippy PASS. Frontend77.39% statements/62.02%branches/72.93%functions/79.96%lines. Native inventory334 declarations bez invented execution proof. GAP026PARTIAL;68/73 FIXED (67/72 pierwotnych).
+
+## [DISCOVERED] — dalsza walidacja eksportów
+
+- [x] GAP-074: [DISCOVERED][MEDIUM] saveTextFile, backup ustawień i downloadRenderedArtifact pozostawiały anchor/Blob URL po DOM click failure. Status: FIXED (BATCH-3d). Trzy bezpośrednie reprodukcje RED/GREEN; wspólny downloadBlob w services/download.ts zapewnia finally cleanup i opóźniony revoke dla wszystkich czterech ścieżek (także wcześniej poprawionego eksportu raportów). 15 testów publicznych akcji eksportu i siedem native action contract tests sprawdza filenames/MIME, snapshot/allow-list PDF, dialog cancel/write failure, capture options/errors i renderer lifecycle.
+
+- BATCH-3d: Full local GREEN:961 frontend/366 Rust/65 MCP, build/lint/rustfmt/Clippy PASS. Coverage77.77%statements/62.21%branches/73.52%functions/80.28%lines; inventory536 TS (485 executed,26 not-executed,16 unavailable,9 factory-returned).69/74 FIXED (67/72 pierwotnych). Remaining originalGAP022/023/025/026/047; żadnej bramki >99% ani signed release nie zadeklarowano jako zakończonej.
