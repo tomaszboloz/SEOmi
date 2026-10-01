@@ -9,3 +9,5 @@ export function sourceHashes(files: string[]): Record<string,string>;
 export function executionEvidence(entry: InventoryEntry, coverage: Record<string,unknown>, manifest: Record<string,string> | null, currentHash: string): {status: string;calls: number | null};
 export function inventoryProgram(program: ts.Program, productionFiles: Set<string>, testFiles: string[]): InventoryEntry[];
 export function createInventory(): unknown;
+
+export function sourceAwareCompilerHost(options: ts.CompilerOptions, sourceManifest: Record<string,string> | null, runtimeManifest: Record<string,string> | null): ts.CompilerHost;

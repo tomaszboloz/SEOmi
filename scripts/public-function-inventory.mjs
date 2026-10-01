@@ -1,7 +1,7 @@
 import ts from 'typescript';
 import { createHash } from 'node:crypto';
 import { readFileSync, readdirSync, mkdirSync, writeFileSync, existsSync } from 'node:fs';
-import { resolve, relative, join } from 'node:path';
+import { resolve, relative, join, dirname } from 'node:path';
 import { pathToFileURL } from 'node:url';
 import { spawnSync } from 'node:child_process';
 
@@ -136,18 +136,54 @@ export function inventoryProgram(program, productionFiles, testFiles) {
   return [...rows.values()].sort((a, b) => a.file.localeCompare(b.file) || a.line - b.line);
 }
 
+/** Resolve calls into compiled MCP modules only when emitted/source bytes are fresh. */
+export function sourceAwareCompilerHost(options, sourceManifest, runtimeManifest) {
+  const host = ts.createCompilerHost(options);
+  host.resolveModuleNames = (names, containingFile) => names.map(name => {
+    const resolved = ts.resolveModuleName(name, containingFile, options, host).resolvedModule;
+    if (!resolved || !normalize(resolved.resolvedFileName).startsWith('mcp-server/dist/') || !resolved.resolvedFileName.endsWith('.js')) return resolved;
+    const runtime = normalize(resolved.resolvedFileName);
+    const mapFile = `${runtime}.map`;
+    if (!runtimeManifest?.[runtime] || !runtimeManifest?.[mapFile]) return resolved;
+    if (!existsSync(mapFile)) return resolved;
+    const hashes = sourceHashes([runtime, mapFile]);
+    if (hashes[runtime] !== runtimeManifest[runtime] || hashes[mapFile] !== runtimeManifest[mapFile]) return resolved;
+    try {
+      const map = JSON.parse(readFileSync(mapFile, 'utf8'));
+      if (map.sources?.length !== 1 || map.sourcesContent?.length !== 1) return resolved;
+      const original = resolve(dirname(resolve(runtime)), map.sourceRoot || '', map.sources[0]);
+      const file = normalize(original);
+      if (!sourceManifest?.[file] || !file.startsWith('mcp-server/src/') || !existsSync(original)) return resolved;
+      if (sourceHashes([original])[file] !== sourceManifest[file] || readFileSync(original, 'utf8') !== map.sourcesContent[0]) return resolved;
+      return {...resolved, resolvedFileName:original, extension:ts.Extension.Ts};
+    } catch { return resolved; }
+  });
+  return host;
+}
+
 export function createInventory() {
   const production = [...sourceFiles('src'), ...sourceFiles('mcp-server/src')].filter(file => !file.endsWith('.mjs'));
   const tests = [...sourceFiles('tests'), ...sourceFiles('mcp-server/test')];
   const configFile = ts.readConfigFile('tsconfig.json', ts.sys.readFile);
   if (configFile.error) throw new Error(ts.flattenDiagnosticMessageText(configFile.error.messageText, '\n'));
   const config = ts.parseJsonConfigFileContent(configFile.config, ts.sys, process.cwd());
-  const program = ts.createProgram([...production, ...tests].map(file => resolve(file)), { ...config.options, allowJs: true, checkJs: false });
+  const mcpSourceManifest = existsSync('test-results/mcp-coverage-sources.json') ? JSON.parse(readFileSync('test-results/mcp-coverage-sources.json', 'utf8')) : null;
+  const mcpRuntimeManifest = existsSync('test-results/mcp-runtime-sources.json') ? JSON.parse(readFileSync('test-results/mcp-runtime-sources.json', 'utf8')) : null;
+  const options = { ...config.options, allowJs:true, checkJs:false };
+  const program = ts.createProgram([...production, ...tests].map(file => resolve(file)), options, sourceAwareCompilerHost(options, mcpSourceManifest, mcpRuntimeManifest));
   const hashes = sourceHashes(production);
   const coverage = existsSync('coverage/coverage-final.json') ? JSON.parse(readFileSync('coverage/coverage-final.json', 'utf8')) : {};
   const manifest = existsSync('test-results/frontend-coverage-sources.json') ? JSON.parse(readFileSync('test-results/frontend-coverage-sources.json', 'utf8')) : null;
+  const mcpCoverage = existsSync('coverage/mcp-coverage-final.json') ? JSON.parse(readFileSync('coverage/mcp-coverage-final.json', 'utf8')) : {};
+  const mcpManifest = existsSync('test-results/mcp-coverage-sources.json') ? JSON.parse(readFileSync('test-results/mcp-coverage-sources.json', 'utf8')) : null;
+  let mcpRuntimeFresh = false;
+  try { mcpRuntimeFresh = mcpRuntimeManifest && Object.keys(mcpRuntimeManifest).length > 0 && JSON.stringify(sourceHashes(Object.keys(mcpRuntimeManifest))) === JSON.stringify(mcpRuntimeManifest); } catch { /* Missing emitted files invalidate the measured runtime. */ }
   const functions = inventoryProgram(program, new Set(production.map(file => resolve(file))), tests.map(file => resolve(file)));
-  for (const entry of functions) entry.execution = executionEvidence(entry, coverage, manifest, hashes[entry.file]);
+  for (const entry of functions) {
+    const nativeNodeEvidence = entry.file.startsWith('mcp-server/') && mcpManifest?.[entry.file];
+    entry.execution = nativeNodeEvidence && !mcpRuntimeFresh ? {status:'stale-runtime',calls:null} : executionEvidence(entry, nativeNodeEvidence ? mcpCoverage : coverage, nativeNodeEvidence ? mcpManifest : manifest, hashes[entry.file]);
+    entry.execution.provider = nativeNodeEvidence ? 'node-mcp-v8' : 'vitest-v8';
+  }
   const head = spawnSync('git', ['rev-parse', 'HEAD'], { encoding: 'utf8' });
   return {
     generatedAt: new Date().toISOString(), commit: head.status === 0 ? head.stdout.trim() : null,

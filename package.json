@@ -13,7 +13,8 @@
     "lint": "eslint src tests mcp-server/src --max-warnings 0",
     "test:coverage": "node scripts/run-frontend-coverage.mjs",
     "test:inventory": "node scripts/public-function-inventory.mjs",
-    "test:coverage:target": "vitest run --coverage --coverage.thresholds.statements=99.01 --coverage.thresholds.lines=99.01 --coverage.thresholds.branches=99.01 --coverage.thresholds.functions=99.01"
+    "test:coverage:target": "vitest run --coverage --coverage.thresholds.statements=99.01 --coverage.thresholds.lines=99.01 --coverage.thresholds.branches=99.01 --coverage.thresholds.functions=99.01",
+    "test:coverage:mcp": "node scripts/run-mcp-coverage.mjs"
   },
   "dependencies": {
     "@tailwindcss/vite": "^4.0.9",
@@ -38,6 +39,7 @@
     "zustand": "^5.0.3"
   },
   "devDependencies": {
+    "@bcoe/v8-coverage": "1.0.2",
     "@eslint/js": "10.0.1",
     "@tauri-apps/cli": "^2.11.4",
     "@testing-library/react": "^16.2.0",
@@ -50,6 +52,7 @@
     "@types/react-dom": "^19.0.4",
     "@vitejs/plugin-react": "^4.3.4",
     "@vitest/coverage-v8": "5.0.1",
+    "ast-v8-to-istanbul": "1.0.7",
     "eslint": "10.11.0",
     "eslint-plugin-react-hooks": "7.1.1",
     "globals": "16.5.0",

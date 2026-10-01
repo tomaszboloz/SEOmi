@@ -46,3 +46,16 @@ describe('shared research domain contract', () => {
     expect(shared).not.toMatch(/from ['"](?:node:|@\/|react|zod)|fetch\(/);
   });
 });
+
+
+it.each([
+  ['domainRequired','Enter a domain.'],
+  ['domainCredentials','Use an HTTP(S) domain without credentials.'],
+  ['domainInvalid','Enter a valid domain.'],
+  ['competitorRequired','Add at least one competitor domain different from the target.'],
+  ['competitorLimit','Add at most 19 competitors.'],
+] as const)('constructs a safe public error for %s without carrying the supplied URL', (code,message) => {
+  const error = new ResearchDomainError(code);
+  expect(error).toBeInstanceOf(Error);
+  expect(error).toMatchObject({name:'ResearchDomainError',code,message});
+});

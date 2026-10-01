@@ -88,6 +88,10 @@ jobs:
         run: npm run lint
       - name: Run Vitest with full frontend coverage
         run: npm run test:coverage
+      - name: Install MCP coverage dependencies
+        run: npm ci --prefix mcp-server --ignore-scripts
+      - name: Measure MCP source execution through Node tests
+        run: npm run test:coverage:mcp
       - name: Inventory TypeScript public functions and fresh execution evidence
         run: npm run test:inventory
       - name: Upload frontend coverage
@@ -97,6 +101,8 @@ jobs:
           path: |
             coverage/
             test-results/frontend-coverage-sources.json
+            test-results/mcp-coverage-sources.json
+            test-results/mcp-runtime-sources.json
             test-results/public-function-inventory.json
           retention-days: 14
       - name: Typecheck & Production Bundle
