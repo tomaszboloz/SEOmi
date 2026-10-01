@@ -64,4 +64,36 @@ describe('AST public function execution inventory', () => {
     coverage.fixture.f[0]=2;
     expect(executionEvidence(entry,coverage,{[file]:'fresh'},'fresh')).toEqual({status:'executed-under-suite',calls:2});
   });
+  it('resolves identifier alias chains to one body but keeps factory results without invented execution', () => {
+    const directory = mkdtempSync(join(tmpdir(), 'seomi-alias-'));
+    try {
+      const implementation = join(directory, 'implementation.ts');
+      const barrel = join(directory, 'barrel.ts');
+      const test = join(directory, 'alias.test.ts');
+      writeFileSync(implementation, 'function original(){return 1;} const intermediate=original; export const publicAlias=intermediate; export const secondAlias=original; const factory=()=>()=>2; export const generated=factory();');
+      writeFileSync(barrel, 'export {publicAlias as renamed} from "./implementation";');
+      writeFileSync(test, 'import {renamed} from "./barrel"; renamed();');
+      const program = ts.createProgram([implementation, barrel, test], {noLib:true, types:[], module:ts.ModuleKind.ESNext, moduleResolution:ts.ModuleResolutionKind.Bundler});
+      const rows = inventoryProgram(program, new Set([implementation, barrel]), [test]);
+      expect(rows).toHaveLength(2);
+      const original = rows.find(row => row.functionRange);
+      expect(original?.exports.map(entry => entry.name).sort()).toEqual(['publicAlias', 'renamed', 'secondAlias']);
+      expect(original?.testReferences).toHaveLength(1);
+      expect(original?.functionRange?.start.column).toBe(0);
+      expect(rows.find(row => row.name === 'generated')?.functionRange).toBeNull();
+    } finally { rmSync(directory, {recursive:true, force:true}); }
+  });
+
+  it('terminates cyclic callable aliases without inventing a body or a test reference', () => {
+    const directory = mkdtempSync(join(tmpdir(), 'seomi-alias-cycle-'));
+    try {
+      const file = join(directory, 'cycle.ts');
+      writeFileSync(file, 'export const a:()=>number=b; export const b:()=>number=a;');
+      const program = ts.createProgram([file], {noLib:true, types:[], module:ts.ModuleKind.ESNext});
+      const rows = inventoryProgram(program, new Set([file]), []);
+      expect(rows).toHaveLength(2);
+      expect(rows.every(row => row.functionRange === null && row.testReferences.length === 0)).toBe(true);
+    } finally { rmSync(directory, {recursive:true, force:true}); }
+  });
+
 });

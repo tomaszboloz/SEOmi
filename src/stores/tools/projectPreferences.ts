@@ -1,6 +1,6 @@
 import { readJsonRecord } from '@/services/storageContracts';
 
-import { GscPerformanceFilters } from '@/types';
+import { GscPerformanceFilters, GscSearchType, GscDevice } from '@/types';
 
 import { readJsonStorage, readStorage, writeJsonStorage, writeStorage } from '@/services/storage';
 
@@ -21,15 +21,20 @@ export const gscPropertyKey = (projectId: string) => `seomi_gsc_property_${proje
 export const gscFiltersKey = (projectId: string) => `seomi_gsc_filters_${projectId}_v1`;
 
 export const DEFAULT_GSC_FILTERS: GscPerformanceFilters = {};
+const GSC_SEARCH_TYPES: readonly GscSearchType[] = ['web', 'image', 'video', 'news', 'discover', 'googleNews'];
+const GSC_DEVICES: readonly GscDevice[] = ['DESKTOP', 'MOBILE', 'TABLET'];
 
 export const readGscFilters = (projectId: string): GscPerformanceFilters => {
   const stored = readJsonStorage(gscFiltersKey(projectId), null);
   if (!stored || typeof stored !== 'object') return { ...DEFAULT_GSC_FILTERS };
   const value = stored as Record<string, unknown>;
+  const searchType = typeof value.search_type === 'string' ? value.search_type.trim() : '';
+  const device = typeof value.device === 'string' ? value.device.trim().toUpperCase() : '';
+  const country = typeof value.country === 'string' ? value.country.trim().toLowerCase() : '';
   return {
-    ...(typeof value.search_type === 'string' ? { search_type: value.search_type as GscPerformanceFilters['search_type'] } : {}),
-    ...(typeof value.device === 'string' ? { device: value.device as GscPerformanceFilters['device'] } : {}),
-    ...(typeof value.country === 'string' ? { country: value.country.toLowerCase().slice(0, 3) } : {}),
+    ...(GSC_SEARCH_TYPES.includes(searchType as GscSearchType) ? { search_type: searchType as GscSearchType } : {}),
+    ...(GSC_DEVICES.includes(device as GscDevice) ? { device: device as GscDevice } : {}),
+    ...(/^[a-z]{3}$/.test(country) ? { country } : {}),
   };
 };
 

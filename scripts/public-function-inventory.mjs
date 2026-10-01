@@ -49,8 +49,25 @@ export function inventoryProgram(program, productionFiles, testFiles) {
     symbol = canonical(symbol);
     if (!symbol) return;
     const declarations = symbol.getDeclarations() || [];
-    const declaration = explicitDeclaration || declarations.find(node => ts.isFunctionDeclaration(node) && node.body) || declarations.find(node => !node.getSourceFile().isDeclarationFile);
+    let declaration = explicitDeclaration || declarations.find(node => ts.isFunctionDeclaration(node) && node.body) || declarations.find(node => !node.getSourceFile().isDeclarationFile);
     if (!declaration) return;
+    // Identifier aliases refer to the original body. A factory invocation does
+    // not: executing the factory is not evidence that its returned hook ran.
+    const aliasSymbols = [symbol];
+    const visited = new Set([symbol]);
+    while (ts.isVariableDeclaration(declaration) && declaration.initializer) {
+      let initializer = declaration.initializer;
+      while (ts.isParenthesizedExpression(initializer)) initializer = initializer.expression;
+      if (!ts.isIdentifier(initializer)) break;
+      const target = canonical(checker.getSymbolAtLocation(initializer));
+      if (!target || visited.has(target)) break;
+      const targetDeclarations = target.getDeclarations() || [];
+      const targetDeclaration = targetDeclarations.find(node => ts.isFunctionDeclaration(node) && node.body) || targetDeclarations.find(node => !node.getSourceFile().isDeclarationFile);
+      if (!targetDeclaration) break;
+      visited.add(target);
+      aliasSymbols.push(target);
+      declaration = targetDeclaration;
+    }
     let callable = declaration;
     if (ts.isVariableDeclaration(declaration) || ts.isPropertyDeclaration(declaration)) callable = declaration.initializer;
     const functionNode = callable && (ts.isFunctionDeclaration(callable) || ts.isArrowFunction(callable) || ts.isFunctionExpression(callable) || ts.isMethodDeclaration(callable) || ts.isConstructorDeclaration(callable) || ts.isGetAccessorDeclaration(callable) || ts.isSetAccessorDeclaration(callable)) ? callable : null;
@@ -68,7 +85,7 @@ export function inventoryProgram(program, productionFiles, testFiles) {
     });
     const row = rows.get(key);
     if (!row.exports.some(value => value.file === normalize(exportedFrom) && value.name === name)) row.exports.push({ file: normalize(exportedFrom), name });
-    symbolRows.set(symbol, row);
+    for (const alias of aliasSymbols) symbolRows.set(alias, row);
   };
   for (const file of productionFiles) {
     const source = program.getSourceFile(file);

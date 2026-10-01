@@ -2,7 +2,7 @@
 Audytor: Staff Developer | Data: 2026-10-01
 
 ## Statystyki
-- Zidentyfikowanych luk: 74 (72 pierwotne, replay hash z E2E i wycieki eksportów z inwentaryzacji)
+- Zidentyfikowanych luk: 75 (72 pierwotne oraz replay hash, wycieki eksportów i walidacja zapisanych filtrów GSC)
 - Batchy do wdrożenia: 7
 - Szacowany effort: 20–35 MD; estymacja orientacyjna, do korekty po pomiarze coverage.
 - Baseline: commit 18fa446b13ec3f97db76896bfdf446f97fe80051; 704 frontend / 320 Rust / 27 MCP testów.
@@ -175,3 +175,7 @@ Pomiary bazowego commitu (2026-10-01):
 - BATCH-3g.1: Windows run36893773518 wykrył zmianę signed fixture LF→CRLF przez Git autocrlf;3/5crypto tests prawidłowo odrzuciły zmienione bajty. `.gitattributes` oznacza fixture -text; lokalne checkout-index z core.autocrlf=true zachowuje bytes identycznie. Dodano szóstą regresję: CRLF conversion musi odrzucić podpis. Verifier pakietów pozostaje byte-exact, bez normalizacji. Loader diagnostics uruchamia się wyłącznie przy failure runtime step, nie przy wcześniejszym błędzie suite.6crypto tests i fullRust374PASS, fmt/ClippyPASS; remote Windows pending na nowymhead.
 
 - BATCH-3h: 52 nowe testy bezpośrednie dla 15 publicznych kontrolek crawlera, useAudit, HistoryModal, diagnostyki legacy i izolacji persistencji projektów. Wszystkie frontend public bodies mają dodatni execution evidence; 189 executed functions nadal bez statycznego direct test reference, referencja sama nie dowodzi asercji. Full suites1035frontend/374Rust/65MCP PASS; build/lint/fmt/strictClippy PASS. Frontend79.12%statements/63.85%branches/75.80%functions/81.60%lines; native production bez zmian60.98%lines/56.67%functions.69/72original pozostaje,022/023/026 nadalPARTIAL. Run36893773518:4/5PASS, Windows signed-fixture failure poprawiony w3g.1 i wymaga nowegoCI.
+
+- [x] GAP-075: [DISCOVERED][MEDIUM] readGscFilters przyjmował dowolne enumy i skracał kraj do3znaków (POLAND→pol), tworząc błędne filtry z legacy storage. Status: FIXED (BATCH-3i): search type allow-list identyczna z backendem, device normalizowany i allow-list, country dokładnie3ASCII letters. RED na starym kodzie/GREEN na poprawce;13direct preference tests obejmuje izolację, market/language fallback, intentionally empty query, competitor bounds, corrupt records i orphan writes.
+
+- BATCH-3i: aliasy identifier chains w public-function inventory mapowane do rzeczywistego body, deduplikacja źródła, cykle kończą się bez invented body; factory-returned hooks pozostają bez fikcyjnego execution.2ASTregresje.535TS callables:512executed/16unavailable/7factory-returned,167executed bez direct static reference; reference nadal nie dowodzi assertion. Full suites1050frontend/374Rust/65MCP PASS; build/lint/fmt/strictClippyPASS. Coverage79.26%statements/64.07%branches/75.90%functions/81.76%lines.72/75FIXED,69/72original;022/023/026 nadalPARTIAL. Master fresh API: admins enforced, force/deletion false,5strictchecks.
