@@ -1067,3 +1067,10 @@ Full local suites:1403frontend cases,399Rust,65MCP; build/lint/fmt/strictClippy 
 Run36913803666 failed four Windows CLI fixture tests on their ten-second deadlines. Windows PowerShell fixtures now acquire a shared async permit before launching; timeout elapsed-time assertions also start after permit acquisition. Production process concurrency and every deadline/assertion remain unchanged. Parallel .NET startup contention is the working hypothesis; the Windows fix requires fresh CI confirmation.
 
 Full final local suites:1403frontend cases,399Rust,65MCP; build/lint/fmt/strictClippy pass. A fresh source manifest and final LLVM run confirm the same isolated production62.68%native lines/57.68%functions, with no branch instrumentation. Frontend coverage remains80.84%statements/67.89%branches/80.42%functions/83.28%lines. The original audit remains69/72; the new Windows fixture issue is pending remote verification. No release tag has been created.
+
+
+### Provider requests and SERP identity (audit BATCH-3r)
+
+SERP overlap counts distinct normalized pages before applying its threshold and preserves nondefault service ports. Gemini connection checks encode the key as one query value. Regression tests reproduced all three bugs before their fixes. Hosted and local CLI AI tests cover literal prompts, default models, source evidence, missing credentials, HTTP errors, malformed answers and network failures using isolated provider fixtures.
+
+Full local suites:1467frontend cases/399Rust/65MCP; build/lint/rustfmt/strictClippy pass. Coverage:81.61%statements,68.62%branches,80.52%functions,84.18%lines. Production native source is unchanged from the preceding measured62.68%lines/57.68%functions; branches unavailable.66executed publicTS bodies lack direct static references; direct assertion evidence remains incomplete. Original audit69/72; the >99% and complete public-function gates remain open. Windows Rust tests passed on bd2444d/run36915858026; full desktop CI is pending. No new release tag has been created.

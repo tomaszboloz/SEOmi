@@ -2,7 +2,7 @@
 Audytor: Staff Developer | Data: 2026-10-01
 
 ## Statystyki
-- Zidentyfikowanych luk: 84 (72 pierwotne oraz dwanaście problemów wykrytych podczas testów)
+- Zidentyfikowanych luk: 87 (72 pierwotne oraz piętnaście problemów wykrytych podczas testów)
 - Batchy do wdrożenia: 7
 - Szacowany effort: 20–35 MD; estymacja orientacyjna, do korekty po pomiarze coverage.
 - Baseline: commit 18fa446b13ec3f97db76896bfdf446f97fe80051; 704 frontend / 320 Rust / 27 MCP testów.
@@ -215,3 +215,10 @@ Pomiary bazowego commitu (2026-10-01):
 
 
 - BATCH-3q: Windows PowerShell test fixtures acquire a shared async permit before their unchanged deadlines; elapsed-time assertion starts after permit acquisition. All production functions unchanged. Full final suites1403frontend/399Rust/65MCP PASS; build/lint/fmt/strictClippyPASS, final LLVM run has zero warnings. Frontend80.84%statements/67.89%branches/80.42%functions/83.28%lines. Fresh premeasurement source manifest and rawLCOV/rawLLVMJSON validate11297/18022productionlines62.68%,1067/1850functions57.68%, branchesunavailable.80/84FIXED locally,69/72original;084 awaits actualWindowsverification in addition to original022/023/026. CI6bf7696 macOSfrontend andRuststepsPASS; E2Epending. CIba73bd8 frontend/native/securityPASS, platformsstillinprogress at last read. New head requires own checks. No tag.
+
+
+- [x] GAP-085: [DISCOVERED][MEDIUM] Klastrowanie SERP liczyło warianty jednego URL jako kilka wspólnych stron, więc próg trzech stron mógł tworzyć klaster na podstawie jednej. Status: FIXED (BATCH-3r); test RED przed zmianą, deduplikacja przed porównaniem progu, regresje progów 1/3 i niezmienności danych wejściowych.
+- [x] GAP-086: [DISCOVERED][MEDIUM] Normalizacja SERP usuwała porty inne niż domyślne, łącząc strony z różnych usług. Status: FIXED (BATCH-3r); test RED dla :8443, zachowanie jawnego portu i regresja rozdzielenia :8443/:9443; domyślny :443 nadal normalizowany przez URL parser.
+- [x] GAP-087: [DISCOVERED][MEDIUM] Test połączenia Gemini wstawiał klucz bez kodowania query; znaki &/?/# zmieniały strukturę żądania. Status: FIXED (BATCH-3r); test RED przed zmianą, encodeURIComponent i asercje pojedynczego parametru, pełnej wartości oraz pustego fragmentu. To błąd konstrukcji żądania, bez twierdzenia o dowiedzionym wycieku sekretów.
+
+- BATCH-3r:64 nowe przypadki frontend: kontrakty trzech hosted/CLI providerów AI (metadata/text, literal prompt, missing credentials, HTTP auth/quota/server failures, empty/malformed answers, network failure), parsing suggestion objects, bezpośredni getSerpSnapshot i invalid SERP thresholds. Trzy nowe problemy odtworzone RED i poprawione. Full suites1467frontend/399Rust/65MCP PASS; build/lint/rustfmt/strictClippy PASS. Frontend81.61%statements/68.62%branches/80.52%functions/84.18%lines. Native production unchanged from BATCH-3q measurement62.68%lines/57.68%functions; branch evidence unavailable.535TS callables:512executed/16unavailable/7factoryreturned,66executed bodies bez directstaticreference; referencje nie stanowią dowodu asercji.83/87FIXED locally,69/72original. GAP084: Windows Rust fixture step SUCCESS na bd2444d/run36915858026, desktop runtime jeszcze w toku; status końcowy pozostaje pending.022/023/026 nadalPARTIAL. Nowy head wymaga własnegoCI; nowy tag nieutworzony.

@@ -351,7 +351,7 @@ Respond STRICTLY in valid JSON matching this exact schema:
 
       if (provider === 'gemini') {
         const res = await fetch(
-          `https://generativelanguage.googleapis.com/v1beta/models?key=${apiKey}`
+          `https://generativelanguage.googleapis.com/v1beta/models?key=${encodeURIComponent(apiKey)}`
         );
         if (!res.ok) {
           if (res.status === 400 || res.status === 403) {
