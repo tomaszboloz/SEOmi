@@ -193,8 +193,8 @@ async fn capture_windows(
     use webview2_com::{CapturePreviewCompletedHandler, PrintToPdfCompletedHandler};
     use windows::core::{Interface, PCWSTR};
     use windows::Win32::Foundation::HGLOBAL;
-    use windows::Win32::System::Com::StructuredStorage::CreateStreamOnHGlobal;
     use windows::Win32::System::Com::IStream;
+    use windows::Win32::System::Com::StructuredStorage::CreateStreamOnHGlobal;
 
     let (sender, receiver) = oneshot::channel::<Result<Vec<u8>, String>>();
     let sender: WindowsArtifactSender = std::sync::Arc::new(std::sync::Mutex::new(Some(sender)));
