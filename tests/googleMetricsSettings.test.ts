@@ -1,7 +1,12 @@
-import { beforeEach, describe, expect, it, vi } from 'vitest';
+import { afterAll, beforeAll, beforeEach, describe, expect, it, vi } from 'vitest';
 import { useAuditStore } from '@/stores/auditStore';
 import { useAuthStore } from '@/stores/authStore';
 import { useSettingsStore } from '../src/stores/settingsStore';
+import { connectSettingsStores } from '@/services/settingsComposition';
+
+let disconnect: () => void;
+beforeAll(() => { disconnect = connectSettingsStores(); });
+afterAll(() => disconnect());
 
 const settingsMocks = vi.hoisted(() => ({
   getSecureValueMock: vi.fn(),

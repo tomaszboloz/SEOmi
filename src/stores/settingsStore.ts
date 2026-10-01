@@ -5,6 +5,11 @@ import i18n, { setLanguageDirection } from '@/i18n';
 import { readStorage, writeStorage } from '@/services/storage';
 import { useProjectStore } from './projectStore';
 
+export interface SettingsConsumers {
+  applyUserAgent?: (userAgent: string) => void;
+  applyAiSelection?: (provider: 'openai' | 'claude' | 'gemini', model: string) => void;
+}
+
 interface SettingsState {
   config: AppConfig;
   theme: 'dark' | 'light' | 'system';
@@ -23,6 +28,7 @@ interface SettingsState {
   saveGoogleMetricsApiKey: (apiKey: string) => Promise<void>;
   setTheme: (theme: 'dark' | 'light' | 'system') => void;
   setLanguage: (lang: string) => void;
+  bindConsumers: (consumers: SettingsConsumers) => () => void;
 }
 
 const DEFAULT_CONFIG: AppConfig = {
@@ -50,172 +56,190 @@ const googleMetricsSecretNameFor = (projectId: string): string => {
 
 // Keep config writes ordered. A slow native save must not finish after a
 // newer theme/language update and restore the older snapshot on disk.
-let configSaveQueue: Promise<void> = Promise.resolve();
-let configUpdateRevision = 0;
-const secureSaveQueues = new Map<string, Promise<void>>();
-const secureSaveRevisions = new Map<string, number>();
+export const createSettingsStore = (dependencies: SettingsConsumers = {}) => {
+  let consumers = dependencies;
+  const consumerBindings: Array<{ value: SettingsConsumers }> = [];
+  let configSaveQueue: Promise<void> = Promise.resolve();
+  let configUpdateRevision = 0;
+  let configLoadRevision = 0;
+  const secureSaveQueues = new Map<string, Promise<void>>();
+  const secureSaveRevisions = new Map<string, number>();
 
-export const useSettingsStore = create<SettingsState>((set, get) => ({
-  config: DEFAULT_CONFIG,
-  theme: (readStorage('seomi_theme') as any) || 'dark',
-  language: readStorage('seomi_language') || 'en',
-  isSaving: false,
-  configError: null,
-  dataForSeoCredentials: { login: '', password: '' },
-  googleMetricsApiKey: '',
-  secureStorageError: null,
+  return create<SettingsState>((set, get) => ({
+    config: DEFAULT_CONFIG,
+    theme: (readStorage('seomi_theme') as any) || 'dark',
+    language: readStorage('seomi_language') || 'en',
+    isSaving: false,
+    configError: null,
+    dataForSeoCredentials: { login: '', password: '' },
+    googleMetricsApiKey: '',
+    secureStorageError: null,
 
-  loadConfig: async () => {
-    try {
-      const conf = await invokeTauriCommand<AppConfig>('get_config');
-      set({ config: conf, theme: conf.theme, language: conf.language, configError: null });
-      applyThemeToDOM(conf.theme);
-      setLanguageDirection(conf.language);
-      // Keep the legacy general settings record and the project aware AI
-      // selector aligned after a restart. The selector remains the source of
-      // truth for provider specific local subscription connections.
-      const { useAuditStore } = await import('./auditStore');
-      useAuditStore.getState().setSelectedUserAgent(conf.default_user_agent);
-      const { useAuthStore } = await import('./authStore');
-      if (conf.ai_provider === 'openai' || conf.ai_provider === 'claude' || conf.ai_provider === 'gemini') {
-        useAuthStore.getState().setProvider(conf.ai_provider);
-        if (conf.ai_model) useAuthStore.getState().setModel(conf.ai_model);
+    bindConsumers: (next) => {
+      const binding = { value: next };
+      consumerBindings.push(binding);
+      consumers = next;
+      return () => {
+        const index = consumerBindings.indexOf(binding);
+        if (index < 0) return;
+        consumerBindings.splice(index, 1);
+        consumers = consumerBindings.at(-1)?.value ?? dependencies;
+      };
+    },
+
+    loadConfig: async () => {
+      const revision = ++configLoadRevision;
+      try {
+        const conf = await invokeTauriCommand<AppConfig>('get_config');
+        if (revision !== configLoadRevision) return;
+        set({ config: conf, theme: conf.theme, language: conf.language, configError: null });
+        applyThemeToDOM(conf.theme);
+        setLanguageDirection(conf.language);
+        // Keep the legacy general settings record and the project aware AI
+        // selector aligned after a restart. The selector remains the source of
+        // truth for provider specific local subscription connections.
+        consumers.applyUserAgent?.(conf.default_user_agent);
+        if (conf.ai_provider === 'openai' || conf.ai_provider === 'claude' || conf.ai_provider === 'gemini') {
+          consumers.applyAiSelection?.(conf.ai_provider, conf.ai_model || '');
+        }
+      } catch {
+        if (revision === configLoadRevision) set({ configError: i18n.t('runtimeErrors.settings.configLoadFailed') });
       }
-    } catch {
-      set({ configError: i18n.t('runtimeErrors.settings.configLoadFailed') });
-    }
-    // Credentials belong to a project. On the project gate there is deliberately
-    // no project-scoped secret to read yet.
-    if (activeProjectId()) await get().loadDataForSeoCredentials();
-  },
+      // Credentials belong to a project. On the project gate there is deliberately
+      // no project-scoped secret to read yet.
+      if (activeProjectId()) await get().loadDataForSeoCredentials();
+    },
 
-  loadDataForSeoCredentials: async () => {
-    const projectId = activeProjectId();
-    if (!projectId) {
+    loadDataForSeoCredentials: async () => {
+      const projectId = activeProjectId();
+      if (!projectId) {
+        set({ dataForSeoCredentials: { login: '', password: '' }, secureStorageError: null });
+        return;
+      }
+      // Clear the previous project's in-memory secret before awaiting the new
+      // keychain read. This prevents a fast project switch from using stale
+      // credentials while the secure store responds.
       set({ dataForSeoCredentials: { login: '', password: '' }, secureStorageError: null });
-      return;
-    }
-    // Clear the previous project's in-memory secret before awaiting the new
-    // keychain read. This prevents a fast project switch from using stale
-    // credentials while the secure store responds.
-    set({ dataForSeoCredentials: { login: '', password: '' }, secureStorageError: null });
-    try {
-      const [login, password] = await Promise.all([getSecureValue(dataForSeoSecretNameFor('login', projectId)), getSecureValue(dataForSeoSecretNameFor('password', projectId))]);
-      if (activeProjectId() !== projectId) return;
-      set({ dataForSeoCredentials: { login, password }, secureStorageError: null });
-    } catch (error) {
-      if (activeProjectId() === projectId) set({ secureStorageError: error instanceof Error ? error.message : String(error) });
-    }
-  },
+      try {
+        const [login, password] = await Promise.all([getSecureValue(dataForSeoSecretNameFor('login', projectId)), getSecureValue(dataForSeoSecretNameFor('password', projectId))]);
+        if (activeProjectId() !== projectId) return;
+        set({ dataForSeoCredentials: { login, password }, secureStorageError: null });
+      } catch (error) {
+        if (activeProjectId() === projectId) set({ secureStorageError: error instanceof Error ? error.message : String(error) });
+      }
+    },
 
-  loadGoogleMetricsApiKey: async () => {
-    const projectId = activeProjectId();
-    if (!projectId) {
-      set({ googleMetricsApiKey: '' });
-      return;
-    }
-    set({ googleMetricsApiKey: '', secureStorageError: null });
-    try {
-      const apiKey = await getSecureValue(googleMetricsSecretNameFor(projectId));
-      if (activeProjectId() !== projectId) return;
-      set({ googleMetricsApiKey: apiKey });
-    } catch (error) {
-      if (activeProjectId() === projectId) set({ secureStorageError: error instanceof Error ? error.message : String(error) });
-    }
-  },
+    loadGoogleMetricsApiKey: async () => {
+      const projectId = activeProjectId();
+      if (!projectId) {
+        set({ googleMetricsApiKey: '' });
+        return;
+      }
+      set({ googleMetricsApiKey: '', secureStorageError: null });
+      try {
+        const apiKey = await getSecureValue(googleMetricsSecretNameFor(projectId));
+        if (activeProjectId() !== projectId) return;
+        set({ googleMetricsApiKey: apiKey });
+      } catch (error) {
+        if (activeProjectId() === projectId) set({ secureStorageError: error instanceof Error ? error.message : String(error) });
+      }
+    },
 
-  saveDataForSeoCredentials: async (credentials) => {
-    const projectId = activeProjectId();
-    const queueKey = 'dataforseo-' + projectId;
-    const revision = (secureSaveRevisions.get(queueKey) || 0) + 1;
-    secureSaveRevisions.set(queueKey, revision);
-    set({ isSaving: true, secureStorageError: null });
-    const previous = secureSaveQueues.get(queueKey) || Promise.resolve();
-    const save = previous.catch(() => undefined).then(() => Promise.all([
-      setSecureValue(dataForSeoSecretNameFor('login', projectId), credentials.login),
-      setSecureValue(dataForSeoSecretNameFor('password', projectId), credentials.password),
-    ])).then(() => undefined);
-    secureSaveQueues.set(queueKey, save);
-    try {
-      await save;
-      if (activeProjectId() === projectId && secureSaveRevisions.get(queueKey) === revision) set({ dataForSeoCredentials: credentials });
-    } catch (error) {
-      const message = error instanceof Error ? error.message : String(error);
-      if (activeProjectId() === projectId && secureSaveRevisions.get(queueKey) === revision) set({ secureStorageError: message });
-      throw error;
-    } finally {
-      if (secureSaveQueues.get(queueKey) === save) secureSaveQueues.delete(queueKey);
-      if (activeProjectId() === projectId && secureSaveQueues.size === 0) set({ isSaving: false });
-    }
-  },
+    saveDataForSeoCredentials: async (credentials) => {
+      const projectId = activeProjectId();
+      const queueKey = 'dataforseo-' + projectId;
+      const revision = (secureSaveRevisions.get(queueKey) || 0) + 1;
+      secureSaveRevisions.set(queueKey, revision);
+      set({ isSaving: true, secureStorageError: null });
+      const previous = secureSaveQueues.get(queueKey) || Promise.resolve();
+      const save = previous.catch(() => undefined).then(() => Promise.all([
+        setSecureValue(dataForSeoSecretNameFor('login', projectId), credentials.login),
+        setSecureValue(dataForSeoSecretNameFor('password', projectId), credentials.password),
+      ])).then(() => undefined);
+      secureSaveQueues.set(queueKey, save);
+      try {
+        await save;
+        if (activeProjectId() === projectId && secureSaveRevisions.get(queueKey) === revision) set({ dataForSeoCredentials: credentials });
+      } catch (error) {
+        const message = error instanceof Error ? error.message : String(error);
+        if (activeProjectId() === projectId && secureSaveRevisions.get(queueKey) === revision) set({ secureStorageError: message });
+        throw error;
+      } finally {
+        if (secureSaveQueues.get(queueKey) === save) secureSaveQueues.delete(queueKey);
+        if (activeProjectId() === projectId && secureSaveQueues.size === 0) set({ isSaving: false });
+      }
+    },
 
-  saveGoogleMetricsApiKey: async (apiKey) => {
-    const projectId = activeProjectId();
-    const queueKey = 'google-metrics-' + projectId;
-    const revision = (secureSaveRevisions.get(queueKey) || 0) + 1;
-    secureSaveRevisions.set(queueKey, revision);
-    set({ isSaving: true, secureStorageError: null });
-    const previous = secureSaveQueues.get(queueKey) || Promise.resolve();
-    const normalizedKey = apiKey.trim();
-    const save = previous.catch(() => undefined).then(() => setSecureValue(googleMetricsSecretNameFor(projectId), normalizedKey)).then(() => undefined);
-    secureSaveQueues.set(queueKey, save);
-    try {
-      await save;
-      if (activeProjectId() === projectId && secureSaveRevisions.get(queueKey) === revision) set({ googleMetricsApiKey: normalizedKey });
-    } catch (error) {
-      const message = error instanceof Error ? error.message : String(error);
-      if (activeProjectId() === projectId && secureSaveRevisions.get(queueKey) === revision) set({ secureStorageError: message });
-      throw error;
-    } finally {
-      if (secureSaveQueues.get(queueKey) === save) secureSaveQueues.delete(queueKey);
-      if (activeProjectId() === projectId && secureSaveQueues.size === 0) set({ isSaving: false });
-    }
-  },
+    saveGoogleMetricsApiKey: async (apiKey) => {
+      const projectId = activeProjectId();
+      const queueKey = 'google-metrics-' + projectId;
+      const revision = (secureSaveRevisions.get(queueKey) || 0) + 1;
+      secureSaveRevisions.set(queueKey, revision);
+      set({ isSaving: true, secureStorageError: null });
+      const previous = secureSaveQueues.get(queueKey) || Promise.resolve();
+      const normalizedKey = apiKey.trim();
+      const save = previous.catch(() => undefined).then(() => setSecureValue(googleMetricsSecretNameFor(projectId), normalizedKey)).then(() => undefined);
+      secureSaveQueues.set(queueKey, save);
+      try {
+        await save;
+        if (activeProjectId() === projectId && secureSaveRevisions.get(queueKey) === revision) set({ googleMetricsApiKey: normalizedKey });
+      } catch (error) {
+        const message = error instanceof Error ? error.message : String(error);
+        if (activeProjectId() === projectId && secureSaveRevisions.get(queueKey) === revision) set({ secureStorageError: message });
+        throw error;
+      } finally {
+        if (secureSaveQueues.get(queueKey) === save) secureSaveQueues.delete(queueKey);
+        if (activeProjectId() === projectId && secureSaveQueues.size === 0) set({ isSaving: false });
+      }
+    },
 
-  updateConfig: async (patch: Partial<AppConfig>) => {
-    const updated = { ...get().config, ...patch };
-    const revision = ++configUpdateRevision;
-    set({ config: updated, isSaving: true, configError: null });
+    updateConfig: async (patch: Partial<AppConfig>) => {
+      configLoadRevision += 1;
+      const updated = { ...get().config, ...patch };
+      const revision = ++configUpdateRevision;
+      set({ config: updated, isSaving: true, configError: null });
 
-    if (patch.default_user_agent) {
-      const { useAuditStore } = await import('./auditStore');
-      useAuditStore.getState().setSelectedUserAgent(patch.default_user_agent);
-    }
+      if (patch.default_user_agent) {
+        consumers.applyUserAgent?.(patch.default_user_agent);
+      }
 
-    if (patch.theme) {
-      set({ theme: patch.theme });
-      applyThemeToDOM(patch.theme);
-      writeStorage('seomi_theme', patch.theme);
-    }
+      if (patch.theme) {
+        set({ theme: patch.theme });
+        applyThemeToDOM(patch.theme);
+        writeStorage('seomi_theme', patch.theme);
+      }
 
-    if (patch.language) {
-      set({ language: patch.language });
-      setLanguageDirection(patch.language);
-    }
+      if (patch.language) {
+        set({ language: patch.language });
+        setLanguageDirection(patch.language);
+      }
 
-    const save = configSaveQueue
-      .catch(() => undefined)
-      .then(() => invokeTauriCommand('save_config', { config: updated }))
-      .then(() => undefined);
-    configSaveQueue = save;
-    try {
-      await save;
-      if (revision === configUpdateRevision) set({ configError: null });
-    } catch {
-      if (revision === configUpdateRevision) set({ configError: i18n.t('runtimeErrors.settings.configSaveFailed') });
-    } finally {
-      if (revision === configUpdateRevision) set({ isSaving: false });
-    }
-  },
+      const save = configSaveQueue
+        .catch(() => undefined)
+        .then(() => invokeTauriCommand('save_config', { config: updated }))
+        .then(() => undefined);
+      configSaveQueue = save;
+      try {
+        await save;
+        if (revision === configUpdateRevision) set({ configError: null });
+      } catch {
+        if (revision === configUpdateRevision) set({ configError: i18n.t('runtimeErrors.settings.configSaveFailed') });
+      } finally {
+        if (revision === configUpdateRevision) set({ isSaving: false });
+      }
+    },
 
-  setTheme: (theme) => {
-    get().updateConfig({ theme });
-  },
+    setTheme: (theme) => {
+      get().updateConfig({ theme });
+    },
 
-  setLanguage: (lang) => {
-    get().updateConfig({ language: lang });
-  },
-}));
+    setLanguage: (lang) => {
+      get().updateConfig({ language: lang });
+    },
+  }));
+};
+
+export const useSettingsStore = createSettingsStore();
 
 function applyThemeToDOM(theme: 'dark' | 'light' | 'system') {
   const root = document.documentElement;

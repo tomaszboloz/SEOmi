@@ -2,7 +2,7 @@
 Audytor: Staff Developer | Data: 2026-10-01
 
 ## Statystyki
-- Zidentyfikowanych luk: 60
+- Zidentyfikowanych luk: 61
 - Batchy do wdrożenia: 7
 - Szacowany effort: 20–35 MD; estymacja orientacyjna, do korekty po pomiarze coverage.
 - Baseline: commit 18fa446b13ec3f97db76896bfdf446f97fe80051; 704 frontend / 320 Rust / 27 MCP testów.
@@ -40,7 +40,7 @@ Pomiary bazowego commitu (2026-10-01):
 - [ ] GAP-017: [MEDIUM] Monolityczny types/index.ts 1239 linii łączy kontrakty wszystkich domen. Dowód: `src/types/index.ts`. Status: OPEN; wymagane testy red/green i rewalidacja.
 - [x] GAP-018: [MEDIUM] MCP index.ts miesza rejestrację narzędzi i trzy transporty providerów. Dowód: `mcp-server/src/index.ts`. Status: FIXED (BATCH-1b); testy limitów i kontraktów providerów/CLI oraz least privilege. Pełny suite, build i strict Clippy PASS.
 - [x] GAP-019: [MEDIUM] Natywny klient HTTP wiąże DNS, zegar, transport i limity bez kontraktu testowego. Dowód: `src-tauri/src/services/http_client.rs`. Status: FIXED (BATCH-1a); dowód: 12 deterministycznych testów http_client, pełny suite i Clippy. Resolver DI, przypięty transport per hop, jeden deadline i limit strumienia; brak testów zależnych od internetu.
-- [ ] GAP-020: [MEDIUM] settingsStore dynamicznie importuje auditStore/authStore; auditStore importuje settingsStore. Dowód: `src/stores/settingsStore.ts:74`. Status: OPEN; wymagane testy red/green i rewalidacja.
+- [x] GAP-020: [MEDIUM] settingsStore dynamicznie importuje auditStore/authStore; auditStore importuje settingsStore. Dowód: `src/stores/settingsStore.ts:74`. Status: FIXED (BATCH-2c): fabryka SettingsStore z kontraktem consumerów, wiring i cleanup w composition root; test architektoniczny, DI i legacy synchronizacji.
 
 ## BATCH 3: Testing Infrastructure
 - [x] GAP-021: [HIGH] Brak mierzonej, wersjonowanej konfiguracji coverage dla całego frontendu. Dowód: `vite.config.ts`. Status: FIXED (BATCH-7a); konfiguracja i testy bramek CI; lint/build/full suite PASS.
@@ -98,6 +98,8 @@ Pomiary bazowego commitu (2026-10-01):
 - [x] GAP-059: [DISCOVERED] [HIGH] Uszkodzony zapisany raport PageSpeed/CrUX omija walidację i powoduje awarię widoku (categories.performance, description.split, evidence.label/url). Dowód: 5 testów RED pagespeedWorkspace; performanceSession.ts przyjmował saved.pageSpeed || null. FIXED (BATCH-6a): niezależna walidacja pełnych raportów Zod, zachowanie poprawnych inputs i drugiego raportu.
 - [x] GAP-060: [DISCOVERED] [MEDIUM] Hook Performance ufa typowanym odpowiedziom IPC/DI bez walidacji runtime; wadliwy wynik trafia do sesji i historii jako sukces. Dowód: 2 testy RED oczekiwały błędu zamiast null. FIXED (BATCH-6a): ta sama walidacja przed zapisem i historią, lokalny komunikat błędu, brak fikcyjnych wartości.
 
+- [x] GAP-061: [DISCOVERED] [MEDIUM] Starszy loadConfig nadpisuje nowszą edycję lub przywraca błąd po udanym reloadzie. Dowód: 2 testy RED settingsDependencies (new-agent -> stale-agent; configError null -> błąd). FIXED (BATCH-2c): rewizje odczytów i invalidacja po edycji, brak side effects spóźnionej odpowiedzi.
+
 ## Dziennik batchy
 - BATCH-0: audyt bazowy: 50 wpisów; pomiary frontend/Rust ukończone, cel >99% pozostaje OPEN.
 - BATCH-1a: transport HTTP. RED: nowe testy kontraktu nie kompilowały się przed dodaniem granicy resolvera. GREEN: 704 frontend / 330 Rust / 27 MCP; build frontend + MCP, rustfmt i strict Clippy. Test strumieniowego timeoutu ujawnił konkurujące deadline'y; naprawiono i ponowiono pełny Rust suite. Brak zmian IPC/migracji.
@@ -110,3 +112,4 @@ Pomiary bazowego commitu (2026-10-01):
 - BATCH-2b: PageSpeed rozdzielony na view/session/hook/formatting/CrUX evidence. RED: niepełny okres wywracał UI, false p75 dawało zero, równoległe PSI+CrUX gubiło snapshot; GREEN: 733 frontend / 339 Rust / 60 MCP, build/Clippy PASS. Nowy hook ma DI i bezpośredni test; wszystkie publiczne helpery mają testy.
 - BATCH-7a: ESLint 10 correctness gate (bez broad any gate), strict Clippy w CI, coverage frontend/native artefakty, manualny cel 99.01%; runner macos-15-intel potwierdzony w actions/runner-images README na żywo. 734 frontend / 339 Rust / 60 MCP; lint/build/Clippy PASS. Coverage frontend (ścisły run celu): statements 77.20%, branches 62.47%, functions 73.89%, lines 79.93% — cel >99% NIEOSIĄGNIĘTY. Świeży cargo-llvm-cov: regions 68.56%, functions 65.65%, lines 68.49%; pomiar obejmuje inline test modules, nie jest izolowanym pokryciem kodu produkcyjnego. Sekrety signing nadal zewnętrznym blockerem.
 - BATCH-6a: pełne runtime kontrakty PSI/CrUX przy hydration i live output. RED: 7 regresji (awarie nested evidence i nieodrzucane odpowiedzi); GREEN: 778 frontend / 339 Rust / 60 MCP, build/lint/Clippy PASS. Zod schemas sprawdzane z interfejsami podczas TypeScript build; testy null/zero, typów, finite/range, niezależnego recovery i izolacji projektów. GAP-042 PARTIAL; GAP-059/060 FIXED. PR #15 w draft; frontend/native CI dla BATCH-7a PASS, platform smoke nadal pending w chwili zapisu.
+- BATCH-2c: settings consumer DI i composition root zamiast cyklu importów; kolejki per instance, odłączanie consumerów podczas remount. RED: brak factory/architektura i 2 wyścigi config load; GREEN: 787 frontend / 339 Rust / 60 MCP, build/lint/Clippy PASS. Zachowana synchronizacja user-agent i AI oraz nazwy sekretów/IPC. GAP-020/061 FIXED; ostrzeżenie bundlera o dynamicznym auditStore usunięte.

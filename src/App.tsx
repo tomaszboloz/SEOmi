@@ -19,6 +19,7 @@ import { acknowledgeScheduledExecution, getScheduledLaunchContext, reconcileSche
 import { loadScheduledAudits } from '@/services/auditSchedule';
 import { buildWorkspaceHash, parseWorkspaceHash } from '@/services/workspaceDeepLink';
 import i18n from '@/i18n';
+import { connectSettingsStores } from '@/services/settingsComposition';
 
 const loadToolsStore = () => import('@/stores/toolsStore');
 const SettingsModal = lazy(() => import('@/components/Settings/SettingsModal').then((module) => ({ default: module.SettingsModal })));
@@ -58,7 +59,9 @@ export const App: React.FC = () => {
   const pendingWorkspaceProject = useRef<{ hash: string; projectId: string } | null>(null);
 
   useEffect(() => {
+    const disconnect = connectSettingsStores();
     loadConfig();
+    return disconnect;
   }, [loadConfig]);
 
   useEffect(() => {
