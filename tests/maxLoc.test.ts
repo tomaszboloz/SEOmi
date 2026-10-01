@@ -25,3 +25,8 @@ it('keeps every AI and schedule responsibility below 150 physical lines',()=>{
  const files=['src/services/ai.ts','src/services/auditSchedule.ts',...codeFiles('src/services/ai'),...codeFiles('src/services/schedules')];
  expect(maxLocReport(files).violations).toEqual([]);
 });
+
+it('keeps the native crawler test facade and every test module below 150 physical lines',()=>{
+ const files=['src-tauri/src/commands/site_crawler/tests.rs',...codeFiles('src-tauri/src/commands/site_crawler/tests')];
+ expect(maxLocReport(files).violations).toEqual([]);
+});

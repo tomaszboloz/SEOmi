@@ -1105,3 +1105,9 @@ AIService and auditSchedule retain their public APIs through small facades. Prov
 Four failing regressions exposed corrupted persisted runHistory surviving validation. The parser now always returns a validated list; a real persisted-state handoff test confirms execution succeeds after invalid history is discarded.
 
 Full local suites:1580frontend/399Rust/70MCP; build/lint/rustfmt/strictClippy pass. Latest frontend coverage:82.54%statements/70.03%branches/81.49%functions/85.09%lines. Native production unchanged from preceding measured62.68%lines/57.68%functions; branches unavailable. PublicTS562callables/555executed/7factoryreturned;58executed bodies lack static direct references. Global LOC gate still fails:190violations across534files. Original audit remains69/72;88/92including discovered local fixes. No new version/tag until the required coverage, direct-unit evidence and LOC gates pass.
+
+### Native crawler test modules (audit BATCH-3w)
+
+The2689line native crawler test file now has25 modules organized by tested behavior, each at most147physical lines. The110line facade keeps both shared fixtures. All117test bodies and assertions are retained byte-for-byte, and all119function names are preserved. A LOC regression guard checks the facade and its children.
+
+Full local suites:1581frontend/399Rust/70MCP; build/lint/rustfmt/strictClippy pass. Latest frontend82.64%statements/70.14%branches/81.59%functions/85.21%lines. Production native unchanged from preceding62.68%lines/57.68%functions; branches unavailable. Global LOC remains incomplete:189violations across559files. Original audit69/72; no new version/tag until the required gates pass.
