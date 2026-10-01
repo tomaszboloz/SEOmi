@@ -1,6 +1,7 @@
 use chrono::{Datelike, Timelike};
 use serde::Serialize;
 use std::env;
+#[cfg(target_os = "macos")]
 use std::fs;
 use std::path::PathBuf;
 use std::process::Command;
@@ -108,6 +109,7 @@ fn queue_task_name(project_id: &str, run_id: &str) -> String {
     format!("seomi-audit-queue-{project_id}-{run_id}")
 }
 
+#[cfg(target_os = "macos")]
 fn escape_xml(value: &str) -> String {
     value
         .replace('&', "&amp;")

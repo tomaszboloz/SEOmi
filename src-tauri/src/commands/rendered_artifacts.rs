@@ -194,7 +194,7 @@ async fn capture_windows(
     use windows::core::{Interface, PCWSTR};
     use windows::Win32::Foundation::HGLOBAL;
     use windows::Win32::System::Com::StructuredStorage::CreateStreamOnHGlobal;
-    use windows::Win32::System::Com::{IStream, STREAM_SEEK_SET};
+    use windows::Win32::System::Com::IStream;
 
     let (sender, receiver) = oneshot::channel::<Result<Vec<u8>, String>>();
     let sender: WindowsArtifactSender = std::sync::Arc::new(std::sync::Mutex::new(Some(sender)));

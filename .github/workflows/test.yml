@@ -103,6 +103,10 @@ jobs:
         run: npm run tauri -- build --debug --no-bundle
       - name: Launch actual desktop runtime E2E
         run: npm run test:desktop
+      - name: Diagnose Windows loader failure
+        if: failure() && runner.os == 'Windows'
+        shell: pwsh
+        run: ./scripts/diagnose-windows-loader.ps1 -Executable src-tauri/target/debug/examples/desktop_e2e.exe
       - name: Upload desktop runtime evidence
         if: always()
         uses: actions/upload-artifact@v4
