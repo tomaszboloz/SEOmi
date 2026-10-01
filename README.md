@@ -1097,3 +1097,11 @@ Link relationship checks now use case-insensitive HTML tokens; prefix lookalikes
 `npm run check:loc` checks physical source/test lines across all application layers and scripts. It currently fails with193files above150out of519measured, and writes `test-results/max-loc.json`. This is an open release requirement; no global compliance is claimed.
 
 Full local suites:1546frontend cases/399Rust/70MCP; build/lint/rustfmt/strictClippy pass. Frontend82.59%statements/70.11%branches/81.58%functions/85.19%lines; native production source unchanged from preceding measured62.68%lines/57.68%functions, branch evidence unavailable. Original audit69/72 and maxLOC gate remain incomplete. No new version/tag published.
+
+### AI and schedule modules (audit BATCH-3v)
+
+AIService and auditSchedule retain their public APIs through small facades. Provider transport, prompts, parsing, connection checks and schedule persistence, validation, edits, execution and native handoffs now have separate modules under150 physical lines. Queue tests were split without dropping cases.
+
+Four failing regressions exposed corrupted persisted runHistory surviving validation. The parser now always returns a validated list; a real persisted-state handoff test confirms execution succeeds after invalid history is discarded.
+
+Full local suites:1580frontend/399Rust/70MCP; build/lint/rustfmt/strictClippy pass. Latest frontend coverage:82.54%statements/70.03%branches/81.49%functions/85.09%lines. Native production unchanged from preceding measured62.68%lines/57.68%functions; branches unavailable. PublicTS562callables/555executed/7factoryreturned;58executed bodies lack static direct references. Global LOC gate still fails:190violations across534files. Original audit remains69/72;88/92including discovered local fixes. No new version/tag until the required coverage, direct-unit evidence and LOC gates pass.

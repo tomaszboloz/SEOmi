@@ -20,3 +20,8 @@ it('keeps both entry views and each extracted responsibility below 150 physical 
  const files=['src/components/Results/ImagesAudit.tsx','src/components/Results/LinksAudit.tsx',...codeFiles('src/components/Results/images'),...codeFiles('src/components/Results/links')];
  expect(maxLocReport(files).violations).toEqual([]);
 });
+
+it('keeps every AI and schedule responsibility below 150 physical lines',()=>{
+ const files=['src/services/ai.ts','src/services/auditSchedule.ts',...codeFiles('src/services/ai'),...codeFiles('src/services/schedules')];
+ expect(maxLocReport(files).violations).toEqual([]);
+});
