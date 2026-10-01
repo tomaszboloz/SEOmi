@@ -130,6 +130,8 @@ pub async fn inspect_url(
     url: String,
     user_agent: Option<String>,
     timeout_secs: Option<u64>,
+    max_redirects: Option<usize>,
+    verify_ssl: Option<bool>,
     request_id: Option<String>,
     control: State<'_, AuditControl>,
 ) -> Result<PageAuditData, String> {
@@ -157,7 +159,7 @@ pub async fn inspect_url(
             control.finish(&request_id);
             return Err("Audit cancelled by user.".to_string());
         }
-        result = fetch_and_analyze(&validated_url, &ua, timeout) => {
+        result = fetch_and_analyze(&validated_url, &ua, timeout, max_redirects.unwrap_or(10), verify_ssl.unwrap_or(true)) => {
             // The shared helper performs both the fetch and analysis. Keeping
             // this branch as a single future preserves cancellation while
             // allowing the headless scheduler to reuse the exact audit path.
@@ -182,7 +184,7 @@ pub async fn inspect_url_headless(
         .map_err(|error| format!("URL validation failed: {error}"))?;
     let ua = user_agents::resolve_user_agent(user_agent);
     let timeout = timeout_secs.clamp(3, 60);
-    fetch_and_analyze(&validated_url, &ua, timeout)
+    fetch_and_analyze(&validated_url, &ua, timeout, 10, true)
         .await
         .map_err(|error| error.to_string())
 }
@@ -191,10 +193,23 @@ async fn fetch_and_analyze(
     validated_url: &url::Url,
     user_agent: &str,
     timeout_secs: u64,
+    max_redirects: usize,
+    verify_ssl: bool,
 ) -> Result<PageAuditData, anyhow::Error> {
-    let fetch_result = http_client::fetch_page(validated_url, user_agent, timeout_secs)
+    let request = if max_redirects == 10 && verify_ssl {
+        http_client::fetch_page(validated_url, user_agent, timeout_secs).await
+    } else {
+        http_client::fetch_page_with_options(
+            validated_url,
+            user_agent,
+            timeout_secs,
+            max_redirects,
+            verify_ssl,
+        )
         .await
-        .map_err(|error| anyhow::anyhow!("Network request failed: {error}"))?;
+    };
+    let fetch_result =
+        request.map_err(|error| anyhow::anyhow!("Network request failed: {error}"))?;
     seo_analyzer::analyze_page(fetch_result)
         .await
         .map_err(|error| anyhow::anyhow!("SEO analysis failed: {error}"))

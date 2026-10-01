@@ -374,8 +374,7 @@ Respond STRICTLY in valid JSON matching this exact schema:
 
   static async testCliConnection(provider: AiProvider): Promise<{ success: boolean; message: string }> {
     try {
-      const statuses = await invokeTauriCommand<{ provider: AiProvider; available: boolean; detail: string }[]>('detect_ai_clis');
-      const status = statuses.find((item) => item.provider === provider);
+      const status = await invokeTauriCommand<{ provider: AiProvider; available: boolean; detail: string }>('test_ai_cli_connection', { provider });
       return status?.available
         ? { success: true, message: i18n.t('runtimeErrors.ai.cliAvailable', { provider: status.provider, detail: status.detail }) }
         : { success: false, message: status?.detail || i18n.t('runtimeErrors.ai.cliMissing') };

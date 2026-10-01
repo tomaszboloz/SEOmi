@@ -387,7 +387,7 @@ export interface DataForSEOBacklinkSummary {
   referring_domains: number;
   referring_main_domains: number;
   rank: number;
-  dofollow_backlinks: number;
+  dofollow_backlinks: number | null;
   broken_backlinks: number;
 }
 
@@ -1129,7 +1129,16 @@ export interface CrawlRunRecord {
 // -------------------------------------------------------------
 // AI Visibility & GEO Models
 // -------------------------------------------------------------
-export interface AiModelPresence {
+export interface AiResearchObservation {
+  prompt?: string;
+  repetition?: number;
+  search_mode?: 'web_enabled' | 'model_knowledge';
+  mention_position?: number | null;
+  own_domain_cited?: boolean;
+  competitors_mentioned?: string[];
+}
+
+export interface AiModelPresence extends AiResearchObservation {
   model_name: string;
   model_id: string | null;
   is_present: boolean;
@@ -1145,6 +1154,11 @@ export interface AiModelPresence {
 }
 
 export interface BrandAiVisibilityReport {
+  methodology?: 'unbranded_prompts';
+  prompts?: string[];
+  repetitions?: number;
+  competitors?: string[];
+  share_of_voice?: number | null;
   brand: string;
   domain: string;
   overall_score: number | null;
@@ -1154,7 +1168,7 @@ export interface BrandAiVisibilityReport {
   key_takeaways: string[];
 }
 
-export interface AiPromptComparisonResult {
+export interface AiPromptComparisonResult extends AiResearchObservation {
   model_name: string;
   response_text: string;
   brand_mentions: string[];

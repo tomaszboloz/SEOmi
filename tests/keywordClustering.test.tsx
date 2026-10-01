@@ -74,18 +74,36 @@ describe('KeywordClustering task', () => {
     expect(saved.result.clusters[0].pairOverlaps[0].sharedUrls).toEqual(['one.example/page', 'two.example/page', 'three.example/page']);
   });
 
-  it('normalizes stale persisted market and language values before the next run', async () => {
+  it('preserves successful snapshots and retries only the failed keyword', async () => {
+    useSettingsStore.setState({ dataForSeoCredentials: { login: 'live-login', password: 'live-password' } });
+    const rows = [{ type: 'organic', url: 'https://one.example/page', rank_group: 1, rank_absolute: 1 }];
+    getSerpCompetitorsMock.mockResolvedValueOnce(rows).mockRejectedValueOnce(new Error('Temporary provider failure')).mockResolvedValueOnce(rows);
+    render(<KeywordClustering />);
+    fireEvent.change(screen.getByLabelText('Keywords — one per line'), { target: { value: 'audyt seo\naudyt strony' } });
+    fireEvent.click(screen.getByRole('button', { name: 'Fetch SERPs and create clusters' }));
+    expect(await screen.findByText(/Temporary provider failure/)).toBeTruthy();
+    const partial = JSON.parse(localStorage.getItem('seomi_keyword_clustering_project-clusters') || '{}');
+    expect(partial.result.snapshots).toHaveLength(1);
+    fireEvent.click(screen.getByRole('button', { name: 'Fetch SERPs and create clusters' }));
+    await waitFor(() => expect(JSON.parse(localStorage.getItem('seomi_keyword_clustering_project-clusters') || '{}').result.snapshots).toHaveLength(2));
+    expect(getSerpCompetitorsMock.mock.calls.map(([keyword]) => keyword)).toEqual(['audyt seo', 'audyt strony', 'audyt strony']);
+    expect(JSON.parse(localStorage.getItem('seomi_keyword_clustering_project-clusters') || '{}').result.snapshots[0].urls).toEqual(['one.example/page']);
+  });
+
+  it('keeps keywords and rejects a stale market without silently making a US request', async () => {
     localStorage.setItem('seomi_keyword_clustering_project-clusters', JSON.stringify({
       input: 'audyt seo\naudyt strony', country: 'not-a-dataforseo-market', language: 'xx', minSharedUrls: 3,
     }));
     useSettingsStore.setState({ dataForSeoCredentials: { login: 'live-login', password: 'live-password' } });
 
     render(<KeywordClustering />);
-    expect((screen.getByRole('combobox', { name: 'SERP location' }) as HTMLInputElement).value).toContain('(US)');
-    expect((screen.getByRole('combobox', { name: 'SERP language' }) as HTMLInputElement).value).toContain('(en)');
+    expect((screen.getByRole('combobox', { name: 'SERP location' }) as HTMLInputElement).value).toBe('');
+    expect((screen.getByRole('combobox', { name: 'SERP language' }) as HTMLInputElement).value).toBe('');
     fireEvent.click(screen.getByRole('button', { name: 'Fetch SERPs and create clusters' }));
 
-    await waitFor(() => expect(JSON.parse(localStorage.getItem('seomi_keyword_clustering_project-clusters') || '{}')).toMatchObject({ country: 'US', language: 'en' }));
+    expect(screen.getByText(i18n.t('runtimeErrors.dataforseo.marketRequired'))).toBeTruthy();
+    expect((screen.getByLabelText('Keywords — one per line') as HTMLTextAreaElement).value).toBe('audyt seo\naudyt strony');
+    expect(getSerpCompetitorsMock).not.toHaveBeenCalled();
   });
 
   it('stops launching paid SERP requests after switching projects mid-run', async () => {

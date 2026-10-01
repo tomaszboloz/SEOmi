@@ -116,7 +116,7 @@
       "canonicalMissingDetail": "No rel=\"canonical\" declaration was found.",
       "canonicalTarget": "Canonical target returns an HTTP error",
       "canonicalTargetDetail": "The checked target returned HTTP {{status}}.",
-      "canonicalUnverified": "Canonical target was not verified",
+    "canonicalUnverified": "Canonical target was not verified",
       "viewportMissing": "Missing viewport",
       "viewportMissingDetail": "No meta name=\"viewport\" was found.",
       "indexingBlocked": "Indexing is blocked",
@@ -552,7 +552,7 @@
       "none": "none",
       "available": "available",
       "unavailable": "unavailable",
-      "canonicalUnverified": "canonical unverified",
+    "canonicalUnverified": "canonical unverified",
       "notReciprocal": "not reciprocal",
       "reciprocityUnverified": "reciprocity unverified",
       "checked": "checked",
@@ -2615,7 +2615,8 @@
     "populationHistogram": "Population histogram: {{values}}",
     "noHistogram": "No histogram",
     "noCruxMetrics": "Google returned a record without metrics for the selected URL/origin and device; the app does not substitute zeros or data from another scope.",
-    "noP75": "No p75 percentile"
+    "noP75": "No p75 percentile",
+    "noFieldData": "Not enough real-user data"
   },
   "performance": {
     "milliseconds": "ms",
@@ -2733,7 +2734,8 @@
     "titleDescription": "Title & description",
     "action": "Action",
     "visit": "Visit",
-    "emptySerp": "Enter a keyword above to inspect top Google SERP competitors live."
+    "emptySerp": "Enter a keyword above to inspect top Google SERP competitors live.",
+    "paidRequests": "Paid DataForSEO requests: up to {{count}} for this operation. Your account determines the price and available quota."
   },
   "crawlDeepUi": {
     "timingUnder100": "< 100 ms",
@@ -3534,7 +3536,7 @@
       "technicalDirectives": "Technical Directives & Robots",
       "canonical": "Canonical URL",
       "notSpecified": "Not specified",
-      "canonicalUnverified": "Target not verified",
+    "canonicalUnverified": "Target not verified",
       "robots": "Robots Directive",
       "robotsDefault": "index, follow (default)",
       "viewport": "Viewport (mobile)",
@@ -3812,7 +3814,7 @@
       "backup": "Project backup",
       "backupDescription": "Import always creates a separate project and saves data under a new identifier. It never overwrites an existing project or copies credentials.",
       "installedVersion": "Current installed version",
-      "version": "v0.0.2 (versión actual)",
+      "version": "v0.0.3 (versión actual)",
       "checkUpdates": "Check for updates",
       "chooseProjectBackup": "Choose a project before creating a backup.",
       "preparingBackup": "Preparing project backup…",
@@ -3832,7 +3834,7 @@
       "backupTitle": "Project backup",
       "backupDescriptionLong": "Exports metadata, settings and workspace data for the active project with crawl history. DataForSEO, Google and AI client secrets remain in the system keychain and never enter the file.",
       "backupSafety": "Import always creates a separate project and saves data under a new identifier. It never overwrites an existing project or copies credentials.",
-      "releaseVersion": "v0.0.2 (versión actual)",
+      "releaseVersion": "v0.0.3 (versión actual)",
       "installUpdate": "Descargar e instalar",
       "updateAvailable": "La versión {{version}} está lista para instalar.",
       "updateInstalled": "La versión {{version}} fue instalada.",
@@ -4631,5 +4633,24 @@
     "commandPaletteShortcut": "⌘⇧P",
     "openCommandPaletteShortcut": "⌘K",
     "validationFindings": "Resultados de validación de {{format}}"
+  },
+  "aiResearch": {
+    "prompts": "Unbranded customer questions (one per line, up to 10)",
+    "promptsPlaceholder": "Who provides technical SEO audits for online shops in Poland?",
+    "competitors": "Competitor names to track (one per line)",
+    "repetitions": "Runs per question (1–5)",
+    "promptsRequired": "Add at least one unbranded customer question before measuring visibility.",
+    "unbrandedRequired": "Visibility questions must not contain your brand or domain.",
+    "methodologyNote": "Questions never include your brand. Claude has web tools enabled; Codex and Gemini use model knowledge. Enabling web tools does not prove that a search happened. A name is counted only when the supplied domain also appears or is cited. Citations are saved evidence, not independently verified sources.",
+    "scoreDescription": "Share of successful answers containing an unsolicited, domain-supported brand mention. Failed runs are excluded. Position is the order of first appearance among tracked brands.",
+    "shareOfVoice": "Share of tracked brand mentions: {{value}}",
+    "web_enabled": "Web tools enabled (usage unverified)",
+    "model_knowledge": "Model knowledge (web disabled)",
+    "position": "Tracked brand position: {{value}}",
+    "ownDomainYes": "Own domain cited",
+    "ownDomainNo": "Own domain not cited",
+    "run": "Run {{count}}",
+    "legacyRecognition": "Legacy brand recognition run",
+    "legacyNote": "This saved run included the brand in the question. It is not an unprompted visibility measurement."
   }
 }

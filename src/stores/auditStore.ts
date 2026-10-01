@@ -189,7 +189,7 @@ const readDataForSeoSummary = (projectId: string): DataForSEOBacklinkSummary | n
     const numericFields: Array<keyof Omit<DataForSEOBacklinkSummary, 'target'>> = [
       'total_backlinks', 'referring_domains', 'referring_main_domains', 'rank', 'dofollow_backlinks', 'broken_backlinks',
     ];
-    return numericFields.every((field) => isFiniteNumber(candidate[field])) ? value as DataForSEOBacklinkSummary : null;
+    return numericFields.every((field) => field === 'dofollow_backlinks' && candidate[field] === null || isFiniteNumber(candidate[field])) ? value as DataForSEOBacklinkSummary : null;
   } catch {
     return null;
   }
@@ -426,7 +426,7 @@ export const useAuditStore = create<AuditState>((set, get) => ({
     // for evidence for the URL currently being inspected.
     set({ isLoading: true, error: null, dataforseoData: null, dataforseoSerp: [], dataforseoError: null, isDataForSEOLoading: false });
     try {
-      const data = await invokeTauriCommand<PageAuditData>('inspect_url', { url, userAgent: userAgent || get().selectedUserAgent });
+      const data = await invokeTauriCommand<PageAuditData>('inspect_url', { url, userAgent: userAgent || get().selectedUserAgent || useSettingsStore.getState().config.default_user_agent, timeoutSecs: useSettingsStore.getState().config.request_timeout_secs, maxRedirects: useSettingsStore.getState().config.max_redirects, verifySsl: useSettingsStore.getState().config.verify_ssl });
       if (!isLatestAuditRequest('single', requestToken) && activeProjectId() === projectId) return false;
       const previousAudit = projectHistory.find((item) => item.final_url === data.final_url || item.url === url);
       const history = [data, ...projectHistory.filter((item) => item.final_url !== data.final_url)].slice(0, 25);
@@ -650,7 +650,7 @@ export const useAuditStore = create<AuditState>((set, get) => ({
         if (sourceStopRequested()) {
           void invokeTauriCommand('cancel_inspect_url', { requestId }).catch(() => undefined);
         }
-        const data = await invokeTauriCommand<PageAuditData>('inspect_url', { url: item.url, userAgent: run.userAgent || selectedUserAgentAtStart, requestId });
+        const data = await invokeTauriCommand<PageAuditData>('inspect_url', { url: item.url, userAgent: run.userAgent || selectedUserAgentAtStart || useSettingsStore.getState().config.default_user_agent, requestId, timeoutSecs: useSettingsStore.getState().config.request_timeout_secs, maxRedirects: useSettingsStore.getState().config.max_redirects, verifySsl: useSettingsStore.getState().config.verify_ssl });
         const sourceHistory = readHistory(projectId);
         const previousAudit = sourceHistory.find((candidate) => candidate.final_url === data.final_url || candidate.url === item.url);
         const history = [data, ...sourceHistory.filter((candidate) => candidate.final_url !== data.final_url)].slice(0, 25);

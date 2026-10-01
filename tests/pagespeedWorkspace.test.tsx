@@ -71,6 +71,23 @@ describe('PageSpeed and CrUX workspace', () => {
     });
   });
 
+  it('uses CrUX milliseconds and string CLS percentiles, and keeps null percentiles unknown', async () => {
+    queryCruxMock.mockResolvedValue({ ...cruxFixture, response: { record: { metrics: {
+      largest_contentful_paint: { percentiles: { p75: 1562 } },
+      interaction_to_next_paint: { percentiles: { p75: 137 } },
+      cumulative_layout_shift: { percentiles: { p75: '0.00' } },
+      first_contentful_paint: { percentiles: { p75: null } },
+    } } } });
+    render(<PageSpeedWorkspace />);
+    fireEvent.click(screen.getByRole('button', { name: /Fetch field data/ }));
+    expect(await screen.findByText('1562 ms')).toBeTruthy();
+    expect(screen.getByText('137 ms')).toBeTruthy();
+    expect(screen.getByText('0.000')).toBeTruthy();
+    expect(screen.getByText('No p75 percentile')).toBeTruthy();
+    expect(screen.getAllByText('Unrated')).toHaveLength(1);
+    expect(screen.getAllByText('Good')).toHaveLength(3);
+  });
+
   it('restores the saved input, strategy and reports only in the matching project', () => {
     localStorage.setItem('seomi_pagespeed_workspace_performance-project', JSON.stringify({ url: 'https://example.com/landing', strategy: 'desktop', formFactor: 'DESKTOP', scope: 'origin', pageSpeed: psiFixture, crux: cruxFixture }));
     render(<PageSpeedWorkspace />);

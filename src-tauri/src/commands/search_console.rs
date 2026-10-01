@@ -45,20 +45,20 @@ fn normalize_filters(
     if let Some(search_type) = filters.search_type.as_mut() {
         *search_type = search_type.trim().to_string();
         if !GSC_SEARCH_TYPES.contains(&search_type.as_str()) {
-            return Err("Nieprawidłowy typ wyszukiwania Search Console.".into());
+            return Err("Invalid Search Console search type.".into());
         }
     }
     if let Some(device) = filters.device.as_mut() {
         *device = device.trim().to_ascii_uppercase();
         if !GSC_DEVICES.contains(&device.as_str()) {
-            return Err("Urządzenie Search Console musi być DESKTOP, MOBILE albo TABLET.".into());
+            return Err("Search Console device must be DESKTOP, MOBILE or TABLET.".into());
         }
     }
     if let Some(country) = filters.country.as_mut() {
         *country = country.trim().to_ascii_lowercase();
         if country.len() != 3 || !country.bytes().all(|byte| byte.is_ascii_alphabetic()) {
             return Err(
-                "Kraj Search Console musi być kodem ISO 3166-1 alpha-3, np. usa lub gbr.".into(),
+                "Search Console country must be an ISO 3166-1 alpha-3 code, for example usa or gbr.".into(),
             );
         }
     }
@@ -92,9 +92,7 @@ fn validate_client_id(client_id: &str) -> Result<String, String> {
         || !value.ends_with(".apps.googleusercontent.com")
         || value.contains(char::is_whitespace)
     {
-        return Err(
-            "Wprowadź prawidłowy OAuth Client ID typu Desktop app z Google Cloud Console.".into(),
-        );
+        return Err("Enter a valid Desktop app OAuth Client ID from Google Cloud Console.".into());
     }
     Ok(value.to_string())
 }
@@ -105,7 +103,7 @@ fn refresh_token_key(project_id: &str) -> Result<String, String> {
         .all(|ch| ch.is_ascii_alphanumeric() || ch == '-')
         || !(1..=80).contains(&project_id.len())
     {
-        return Err("Nieprawidłowy identyfikator projektu Google Search Console.".into());
+        return Err("Invalid Google Search Console project identifier.".into());
     }
     Ok(format!("gsc_refresh_token_{project_id}"))
 }
@@ -162,7 +160,7 @@ async fn receive_oauth_code(listener: TcpListener, expected_state: &str) -> Resu
                 .and_then(|line| line.split_whitespace().nth(1))
                 .unwrap_or("/");
             let callback = Url::parse(&format!("http://127.0.0.1{path}"))
-                .map_err(|_| "Google zwrócił nieprawidłowy adres OAuth.".to_string())?;
+                .map_err(|_| "Google returned an invalid OAuth URL.".to_string())?;
             if callback.path() != "/oauth2callback" {
                 let _ = write_callback_response(
                     &mut stream,
@@ -178,7 +176,7 @@ async fn receive_oauth_code(listener: TcpListener, expected_state: &str) -> Resu
                 let _ = write_callback_response(
                     &mut stream,
                     "400 Bad Request",
-                    "Weryfikacja stanu OAuth nie powiodła się. Możesz zamknąć tę kartę.",
+                    "OAuth state verification failed. You can close this tab.",
                 )
                 .await;
                 continue;
@@ -187,11 +185,11 @@ async fn receive_oauth_code(listener: TcpListener, expected_state: &str) -> Resu
                 let _ = write_callback_response(
                     &mut stream,
                     "400 Bad Request",
-                    "Autoryzacja Google została anulowana. Możesz zamknąć tę kartę.",
+                    "Google authorization was cancelled. You can close this tab.",
                 )
                 .await;
                 return Err(if error == "access_denied" {
-                    "Autoryzacja Search Console została anulowana przez użytkownika.".into()
+                    "Search Console authorization was cancelled by the user.".into()
                 } else {
                     format!("Google OAuth failed: {error}")
                 });
@@ -204,14 +202,14 @@ async fn receive_oauth_code(listener: TcpListener, expected_state: &str) -> Resu
             write_callback_response(
                 &mut stream,
                 "200 OK",
-                "SEOmi otrzymało odpowiedź Google. Możesz wrócić do aplikacji i zamknąć tę kartę.",
+                "SEOmi received the Google response. Return to the app and close this tab.",
             )
             .await?;
             return Ok(code);
         }
     })
     .await
-    .map_err(|_| "Logowanie Google nie zostało zakończone w ciągu 3 minut.".to_string())?
+    .map_err(|_| "Google sign-in did not finish within 3 minutes.".to_string())?
 }
 
 async fn write_callback_response(
@@ -256,11 +254,12 @@ async fn exchange_code(
     let token = response
         .json::<TokenResponse>()
         .await
-        .map_err(|error| format!("Google zwrócił nieprawidłową odpowiedź OAuth: {error}"))?;
+        .map_err(|error| format!("Google returned an invalid OAuth response: {error}"))?;
     if !status.is_success() || token.access_token.is_none() {
-        return Err(token.error_description.or(token.error).unwrap_or_else(|| {
-            format!("Wymiana tokenu Google zakończyła się statusem {status}.")
-        }));
+        return Err(token
+            .error_description
+            .or(token.error)
+            .unwrap_or_else(|| format!("Google token exchange returned status {status}.")));
     }
     Ok(token)
 }
@@ -272,7 +271,7 @@ async fn refresh_access_token(
 ) -> Result<String, String> {
     let key = refresh_token_key(project_id)?;
     let refresh_token = secret_entry(&key)?.get_password().map_err(|_| {
-        "Brak tokenu Search Console w magazynie poświadczeń systemowych. Połącz konto ponownie."
+        "Search Console token is missing from the OS credential store. Connect your account again."
             .to_string()
     })?;
     let client_secret = client_secret_key(project_id)
@@ -294,13 +293,15 @@ async fn refresh_access_token(
         .await
         .map_err(|error| format!("Unable to refresh the Google token: {error}"))?;
     let status = response.status();
-    let token = response.json::<TokenResponse>().await.map_err(|error| {
-        format!("Google zwrócił nieprawidłową odpowiedź odświeżenia tokenu: {error}")
-    })?;
+    let token = response
+        .json::<TokenResponse>()
+        .await
+        .map_err(|error| format!("Google returned an invalid token refresh response: {error}"))?;
     if !status.is_success() || token.access_token.is_none() {
-        return Err(token.error_description.or(token.error).unwrap_or_else(|| {
-            format!("Odświeżenie tokenu Google zakończyło się statusem {status}.")
-        }));
+        return Err(token
+            .error_description
+            .or(token.error)
+            .unwrap_or_else(|| format!("Google token refresh returned status {status}.")));
     }
     Ok(token.access_token.unwrap())
 }
@@ -310,16 +311,17 @@ async fn token_json(access_token: &str, request: reqwest::RequestBuilder) -> Res
         .bearer_auth(access_token)
         .send()
         .await
-        .map_err(|error| format!("Żądanie Google Search Console nie powiodło się: {error}"))?;
+        .map_err(|error| format!("Google Search Console request failed: {error}"))?;
     let status = response.status();
-    let body = response.json::<Value>().await.map_err(|error| {
-        format!("Google Search Console zwróciło nieprawidłową odpowiedź: {error}")
-    })?;
+    let body = response
+        .json::<Value>()
+        .await
+        .map_err(|error| format!("Google Search Console returned an invalid response: {error}"))?;
     if !status.is_success() {
         let message = body
             .pointer("error.message")
             .and_then(Value::as_str)
-            .unwrap_or("nieznany błąd API");
+            .unwrap_or("unknown API error");
         return Err(format!("Google Search Console HTTP {status}: {message}"));
     }
     Ok(body)
@@ -349,10 +351,10 @@ async fn site_properties(
     let body = response
         .json::<SitesResponse>()
         .await
-        .map_err(|error| format!("Google zwrócił nieprawidłową listę properties: {error}"))?;
+        .map_err(|error| format!("Google returned an invalid property list: {error}"))?;
     if !status.is_success() {
         return Err(format!(
-            "Pobranie properties Search Console zakończyło się statusem {status}."
+            "Search Console property request returned status {status}."
         ));
     }
     Ok(body.site_entry.unwrap_or_default())
@@ -467,20 +469,19 @@ fn requested_date_range(
     match (start_date, end_date) {
         (None, None) => Ok(date_range()),
         (Some(start), Some(end)) => {
-            let start = NaiveDate::parse_from_str(start, "%Y-%m-%d").map_err(|_| {
-                "Data początkowa musi mieć prawidłowy format RRRR-MM-DD.".to_string()
-            })?;
+            let start = NaiveDate::parse_from_str(start, "%Y-%m-%d")
+                .map_err(|_| "Start date must be a valid YYYY-MM-DD date.".to_string())?;
             let end = NaiveDate::parse_from_str(end, "%Y-%m-%d")
-                .map_err(|_| "Data końcowa musi mieć prawidłowy format RRRR-MM-DD.".to_string())?;
+                .map_err(|_| "End date must be a valid YYYY-MM-DD date.".to_string())?;
             if start > end {
-                return Err("Data początkowa musi być wcześniejsza lub równa końcowej.".into());
+                return Err("Start date must not be later than end date.".into());
             }
             let latest = Utc::now()
                 .date_naive()
                 .checked_sub_days(Days::new(3))
                 .unwrap_or_else(|| Utc::now().date_naive());
             if end > latest {
-                return Err(format!("Search Console zwykle udostępnia kompletne dane do {latest}; wybierz wcześniejszy zakres."));
+                return Err(format!("Search Console usually has complete data through {latest}; choose an earlier range."));
             }
             Ok((start.to_string(), end.to_string()))
         }
@@ -711,9 +712,9 @@ pub async fn inspect_search_console_url(
 ) -> Result<Value, String> {
     let client_id = validate_client_id(&client_id)?;
     let parsed = Url::parse(&inspection_url)
-        .map_err(|_| "Wprowadź pełny URL HTTP lub HTTPS do inspekcji.".to_string())?;
+        .map_err(|_| "Enter a complete HTTP or HTTPS URL for inspection.".to_string())?;
     if !["http", "https"].contains(&parsed.scheme()) || parsed.host_str().is_none() {
-        return Err("Wprowadź pełny URL HTTP lub HTTPS do inspekcji.".into());
+        return Err("Enter a complete HTTP or HTTPS URL for inspection.".into());
     }
     let client = reqwest::Client::builder()
         .timeout(Duration::from_secs(30))
@@ -758,12 +759,12 @@ pub async fn disconnect_search_console(project_id: String) -> Result<String, Str
         }
     }
     let Some(refresh_token) = refresh_token else {
-        return Ok("Lokalny token Search Console został już usunięty.".into());
+        return Ok("The local Search Console token has already been removed.".into());
     };
     let client = reqwest::Client::builder().timeout(Duration::from_secs(10)).build().map_err(|error| format!("The token was removed locally, but unable to create the Google consent revocation client: {error}"))?;
     match client.post("https://oauth2.googleapis.com/revoke").form(&[("token", refresh_token)]).send().await {
-        Ok(response) if response.status().is_success() => Ok("Token Search Console usunięto z aplikacji i cofnięto zgodę Google.".into()),
-        Ok(response) => Ok(format!("Token usunięto z aplikacji, ale Google nie potwierdziło cofnięcia zgody (HTTP {}). Cofnij dostęp SEOmi również w ustawieniach konta Google.", response.status())),
+        Ok(response) if response.status().is_success() => Ok("Search Console token removed from the app and Google authorization revoked.".into()),
+        Ok(response) => Ok(format!("Token removed from the app, but Google did not confirm revocation (HTTP {}). Revoke SEOmi access in Google account settings too.", response.status())),
         Err(error) => Ok(format!("The token was removed from the app, but Google consent revocation could not be confirmed ({error}). Revoke SEOmi access in your Google account settings as well.")),
     }
 }

@@ -89,7 +89,7 @@ export const DataForSeoLocationPicker: React.FC<DataForSeoLocationPickerProps> =
   const rootRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
   const listId = useId();
-  const market = markets.find((item) => item.code === value || String(item.locationCode) === value) || markets[0];
+  const market = markets.find((item) => item.code === value || String(item.locationCode) === value);
   const [query, setQuery] = useState('');
   const [open, setOpen] = useState(false);
   const [activeIndex, setActiveIndex] = useState(0);
@@ -105,7 +105,7 @@ export const DataForSeoLocationPicker: React.FC<DataForSeoLocationPickerProps> =
   const options = useMemo(() => {
     const normalizedQuery = normalize(query);
     const filtered = markets.filter((item) => {
-      if (!normalizedQuery || normalizedQuery === normalize(`${dataForSeoMarketLabel(market)} (${market?.code})`)) return true;
+      if (!normalizedQuery || normalizedQuery === normalize(market ? `${dataForSeoMarketLabel(market)} (${market.code})` : '')) return true;
       const haystack = normalize(`${dataForSeoMarketLabel(item)} ${item.label} ${item.code} ${item.locationCode}`);
       return haystack.includes(normalizedQuery);
     });
@@ -182,7 +182,7 @@ export const DataForSeoLocationPicker: React.FC<DataForSeoLocationPickerProps> =
         onBlur={() => {
           // Free text is only a filter. A paid request may use a catalogue
           // value after the user picks an option, never the last typed label.
-          const selectedMarket = markets.find((item) => item.code === value || String(item.locationCode) === value) || markets[0];
+          const selectedMarket = markets.find((item) => item.code === value || String(item.locationCode) === value);
           if (selectedMarket) setQuery(`${dataForSeoMarketLabel(selectedMarket)} (${selectedMarket.code})`);
         }}
         onKeyDown={handleKeyDown}
@@ -231,7 +231,7 @@ export const DataForSeoLanguagePicker: React.FC<DataForSeoLanguagePickerProps> =
   const [open, setOpen] = useState(false);
   const [activeIndex, setActiveIndex] = useState(0);
   const languages = market?.languages || [];
-  const selected = languages.find((item) => item.code === value) || languages[0];
+  const selected = languages.find((item) => item.code === value);
 
   useEffect(() => {
     setQuery(selected ? `${dataForSeoLanguageLabel(selected)} (${selected.code})` : '');
@@ -241,7 +241,7 @@ export const DataForSeoLanguagePicker: React.FC<DataForSeoLanguagePickerProps> =
   const options = useMemo(() => {
     const normalizedQuery = normalize(query);
     const filtered = languages.filter((item) => {
-      if (!normalizedQuery || normalizedQuery === normalize(`${dataForSeoLanguageLabel(selected)} (${selected?.code})`)) return true;
+      if (!normalizedQuery || normalizedQuery === normalize(selected ? `${dataForSeoLanguageLabel(selected)} (${selected.code})` : '')) return true;
       return normalize(`${dataForSeoLanguageLabel(item)} ${item.label} ${item.code}`).includes(normalizedQuery);
     });
     return [...filtered].sort((left, right) => pickerSort(
@@ -282,7 +282,7 @@ export const DataForSeoLanguagePicker: React.FC<DataForSeoLanguagePickerProps> =
         onFocus={() => { setOpen(true); setActiveIndex(0); selectInputText(inputRef.current); }}
         onChange={(event) => { setQuery(event.target.value); setOpen(true); setActiveIndex(0); }}
         onBlur={() => {
-          const selectedLanguage = languages.find((item) => item.code === value) || languages[0];
+          const selectedLanguage = languages.find((item) => item.code === value);
           if (selectedLanguage) setQuery(`${dataForSeoLanguageLabel(selectedLanguage)} (${selectedLanguage.code})`);
         }}
         onKeyDown={(event) => {

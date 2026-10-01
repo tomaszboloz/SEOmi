@@ -1957,7 +1957,7 @@ fn readability_formula(
     match language {
         Some("pl") => (
             (206.835 - 0.65 * words_per_sentence - 62.3 * syllables_per_word).clamp(0.0, 100.0),
-            (0.4 * (words_per_sentence + 100.0 * syllables_per_word)).max(0.0),
+            (0.4 * (words_per_sentence + 100.0 * syllables_per_word)).clamp(0.0, 100.0),
             "flesch-pl",
         ),
         Some("es") => (
@@ -2413,6 +2413,11 @@ fn extract_content_stats(
         "który",
         "które",
         "których",
+        "więcej",
+        "czytaj",
+        "twojej",
+        "twoja",
+        "naszej",
         // German
         "der",
         "die",
@@ -2832,6 +2837,18 @@ mod tests {
             .top_keywords
             .iter()
             .all(|keyword| keyword.density_percent > 0.0));
+    }
+
+    #[test]
+    fn polish_function_words_are_filtered_and_grade_is_bounded() {
+        let parsed = parse_html(
+            r#"<html lang="pl"><body><p>Więcej czytaj twojej audyt audyt strony.</p></body></html>"#,
+            "https://example.com",
+        ).unwrap();
+        assert!(parsed.content_stats.readability_grade <= 100.0);
+        for keyword in &parsed.content_stats.top_keywords {
+            assert!(!["więcej", "czytaj", "twojej"].contains(&keyword.keyword.as_str()));
+        }
     }
 
     #[test]

@@ -72,6 +72,8 @@ export const useSettingsStore = create<SettingsState>((set, get) => ({
       // Keep the legacy general settings record and the project aware AI
       // selector aligned after a restart. The selector remains the source of
       // truth for provider specific local subscription connections.
+      const { useAuditStore } = await import('./auditStore');
+      useAuditStore.getState().setSelectedUserAgent(conf.default_user_agent);
       const { useAuthStore } = await import('./authStore');
       if (conf.ai_provider === 'openai' || conf.ai_provider === 'claude' || conf.ai_provider === 'gemini') {
         useAuthStore.getState().setProvider(conf.ai_provider);
@@ -172,6 +174,11 @@ export const useSettingsStore = create<SettingsState>((set, get) => ({
     const updated = { ...get().config, ...patch };
     const revision = ++configUpdateRevision;
     set({ config: updated, isSaving: true });
+
+    if (patch.default_user_agent) {
+      const { useAuditStore } = await import('./auditStore');
+      useAuditStore.getState().setSelectedUserAgent(patch.default_user_agent);
+    }
 
     if (patch.theme) {
       set({ theme: patch.theme });

@@ -57,6 +57,17 @@ pub async fn fetch_page(
     user_agent_str: &str,
     timeout_secs: u64,
 ) -> Result<FetchResult> {
+    fetch_page_with_options(target_url, user_agent_str, timeout_secs, 10, true).await
+}
+
+pub async fn fetch_page_with_options(
+    target_url: &Url,
+    user_agent_str: &str,
+    timeout_secs: u64,
+    max_redirects: usize,
+    verify_ssl: bool,
+) -> Result<FetchResult> {
+    let max_redirects = max_redirects.min(20);
     let hops: Arc<Mutex<Vec<RedirectHop>>> = Arc::new(Mutex::new(Vec::new()));
     let hops_clone = Arc::clone(&hops);
     let redirect_counter = Arc::new(AtomicUsize::new(0));
@@ -64,6 +75,7 @@ pub async fn fetch_page(
 
     let client = reqwest::Client::builder()
         .timeout(Duration::from_secs(timeout_secs))
+        .danger_accept_invalid_certs(!verify_ssl)
         .redirect(Policy::custom(move |attempt| {
             // Redirects are untrusted input. Validate every hop instead of
             // assuming that a public start URL cannot bounce to localhost,
@@ -72,8 +84,8 @@ pub async fn fetch_page(
                 return attempt.error(anyhow!("Unsafe redirect blocked: {error}"));
             }
             let count = counter_clone.fetch_add(1, Ordering::SeqCst);
-            if count >= 10 {
-                return attempt.error(anyhow!("Too many redirects (max 10 allowed)"));
+            if count >= max_redirects {
+                return attempt.error(anyhow!("Too many redirects (max {max_redirects} allowed)"));
             }
 
             let previous = attempt.previous();

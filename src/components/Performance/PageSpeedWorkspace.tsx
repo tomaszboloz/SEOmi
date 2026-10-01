@@ -92,7 +92,7 @@ const formatCruxValue = (
   translate: (key: string) => string,
 ) => {
   const p75 = metric.percentiles?.p75;
-  const numeric = Number(p75);
+  const numeric = p75 === null || p75 === undefined || p75 === "" ? NaN : Number(p75);
   if (!Number.isFinite(numeric)) return translate("pageSpeedUi.noP75");
   if (metric.metric === "cumulative_layout_shift") return numeric.toFixed(3);
   return `${Math.round(numeric)} ${translate("pageSpeedUi.ms")}`;
@@ -102,7 +102,8 @@ const cruxCategory = (
   metric: Record<string, any>,
   translate: (key: string) => string,
 ) => {
-  const value = Number(metric.percentiles?.p75);
+  const p75 = metric.percentiles?.p75;
+  const value = p75 === null || p75 === undefined || p75 === "" ? NaN : Number(p75);
   if (!Number.isFinite(value)) return translate("pageSpeedUi.crux.unrated");
   const thresholds: Record<string, [number, number]> = {
     largest_contentful_paint: [2500, 4000],
@@ -849,7 +850,7 @@ export const PageSpeedWorkspace: React.FC = () => {
                   </span>
                 </div>
                 <p className="px-4 pb-3 text-xs leading-5 text-slate-400">
-                  {psiReport.touchTargetAudit.description}
+                  {renderLighthouseDescription(psiReport.touchTargetAudit.description)}
                 </p>
                 {psiReport.strategy !== "mobile" && (
                   <p className="mx-4 mb-3 rounded-lg border border-amber-500/25 bg-amber-500/5 p-3 text-xs text-amber-200">
@@ -1032,7 +1033,7 @@ export const PageSpeedWorkspace: React.FC = () => {
               {t("pageSpeedUi.fieldIncluded", {
                 category: String(
                   psiReport.fieldExperience["overall_category"] ||
-                    t("pageSpeedUi.available"),
+                    t("pageSpeedUi.noFieldData"),
                 ),
               })}
             </p>
@@ -1092,7 +1093,7 @@ export const PageSpeedWorkspace: React.FC = () => {
                           {formatCruxValue({ ...metric, metric: key }, t)}
                         </td>
                         <td className="px-4 py-3 text-slate-300">
-                          {cruxCategory(metric, t)}
+                          {cruxCategory({ ...metric, metric: key }, t)}
                         </td>
                         <td className="px-4 py-3">
                           <div

@@ -1138,14 +1138,9 @@ fn parse_images(html_str: &str, base_url: &Url) -> (Vec<ImageData>, Vec<Issue>) 
         let loading = el.value().attr("loading").map(|s| s.trim().to_string());
         let srcset = el.value().attr("srcset").map(|s| s.trim().to_string());
 
-        let decorative = alt.as_deref().is_some_and(|value| value.trim().is_empty())
-            && (el
-                .value()
-                .attr("aria-hidden")
-                .is_some_and(|value| value.eq_ignore_ascii_case("true"))
-                || el.value().attr("role").is_some_and(|value| {
-                    matches!(value.to_ascii_lowercase().as_str(), "presentation" | "none")
-                }));
+        // The empty alt attribute is itself the HTML signal for a decorative
+        // image. aria-hidden/role are optional, not prerequisites.
+        let decorative = alt.as_deref().is_some_and(|value| value.trim().is_empty());
         let has_alt = decorative || matches!(&alt, Some(value) if !value.trim().is_empty());
 
         if !has_alt && !decorative {
@@ -1983,6 +1978,22 @@ mod tests {
         assert!(!images[0].has_alt);
         assert!(images[1].has_alt);
         assert!(issues.iter().any(|i| i.message.contains("missing 'alt'")));
+    }
+
+    #[test]
+    fn empty_alt_is_decorative_without_requiring_aria_hidden_or_role() {
+        let base = Url::parse("https://example.com").unwrap();
+        let (images, issues) = parse_images(
+            r#"<img src="decoration.png" alt=""><img src="missing.png">"#,
+            &base,
+        );
+        assert!(images[0].has_alt);
+        assert!(!images[1].has_alt);
+        let missing = issues
+            .iter()
+            .find(|issue| issue.message.contains("missing 'alt'"))
+            .unwrap();
+        assert_eq!(missing.params.as_ref().unwrap().get("count").unwrap(), "1");
     }
 
     #[test]

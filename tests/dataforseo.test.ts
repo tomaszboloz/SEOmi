@@ -15,7 +15,7 @@ describe('DataForSEOClient', () => {
     expect(dataForSeoLocation('AU')).toBe(2036);
     expect(dataForSeoLanguage('PL', 'pl')).toBe('pl');
     expect(dataForSeoLanguage('PL', 'de')).toBe('pl');
-    expect(dataForSeoLocation('unknown')).toBe(2840);
+    expect(() => dataForSeoLocation('unknown')).toThrow();
   });
 
   it('loads the complete provider location catalogue and merges languages per location', () => {
@@ -58,6 +58,30 @@ describe('DataForSEOClient', () => {
     expect(results[0].sourceMetrics).toEqual({ searchVolume: 1000, cpc: 2.5, competitionIndex: 42, intent: 'informational', monthlySearches: [{ year: null, month: null, searchVolume: 900 }] });
     expect(fetchMock.mock.calls[0][0]).toContain('/v3/keywords_data/google_ads/keywords_for_keywords/live');
     expect(JSON.parse(fetchMock.mock.calls[0][1].body)[0]).toMatchObject({ keywords: ['technical seo'], location_code: 2616, language_code: 'pl' });
+  });
+
+  it('maps the actual Google Ads flat result envelope and distinguishes empty from unknown shapes', async () => {
+    const fetchMock = vi.fn()
+      .mockResolvedValueOnce(new Response(JSON.stringify({ tasks: [{ status_code: 20000, result: [{ keyword: 'szkolenie linkedin', search_volume: 10, competition_index: 0 }] }] })))
+      .mockResolvedValueOnce(new Response(JSON.stringify({ tasks: [{ status_code: 20000, result: [] }] })))
+      .mockResolvedValueOnce(new Response(JSON.stringify({ tasks: [{ status_code: 20000, result: [{ unexpected: true }] }] })));
+    vi.stubGlobal('fetch', fetchMock);
+    const client = new DataForSEOClient('user', 'password');
+    expect(await client.getKeywordIdeas('linkedin', 2616, 'pl')).toEqual([expect.objectContaining({ keyword: 'szkolenie linkedin', search_volume: 10, competition: 0 })]);
+    expect(await client.getKeywordIdeas('linkedin', 2616, 'pl')).toEqual([]);
+    await expect(client.getKeywordIdeas('linkedin', 2616, 'pl')).rejects.toThrow();
+  });
+
+  it('retains the organic rows returned with task status 40106 for clustering without a second paid request', async () => {
+    const fetchMock = vi.fn().mockResolvedValue(new Response(JSON.stringify({ tasks: [{ status_code: 40106, status_message: 'Partial results', result: [{ items: [{ type: 'organic', url: 'https://source.test', rank_absolute: 1 }] }] }] })));
+    vi.stubGlobal('fetch', fetchMock);
+    expect(await new DataForSEOClient('user', 'password').getSerpCompetitors('seo', 2616, 'pl', true)).toHaveLength(1);
+    expect(fetchMock).toHaveBeenCalledTimes(1);
+  });
+
+  it('computes dofollow from documented referring link attributes rather than a nonexistent summary field', async () => {
+    vi.stubGlobal('fetch', vi.fn().mockResolvedValue(new Response(JSON.stringify({ tasks: [{ status_code: 20000, result: [{ backlinks: 100, referring_links_attributes: { nofollow: 20 } }] }] }))));
+    expect(await new DataForSEOClient('user', 'password').getBacklinksSummary('example.test')).toMatchObject({ total_backlinks: 100, dofollow_backlinks: 80 });
   });
 
   it('keeps missing keyword metrics distinct from provider-reported zero values', async () => {

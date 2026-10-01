@@ -15,7 +15,7 @@ import {
 } from 'lucide-react';
 import { useToolsStore } from '@/stores/toolsStore';
 import { TrendChart } from '@/components/Charts/TrendChart';
-import { dataForSeoLanguage, dataForSeoMarket, dataForSeoMarketLabel, dataForSeoLanguageLabel } from '@/services/dataforseo';
+import { dataForSeoLanguage, resolveDataForSeoMarket, dataForSeoMarketLabel, dataForSeoLanguageLabel } from '@/services/dataforseo';
 import { DataForSeoLanguagePicker, DataForSeoLocationPicker } from '@/components/DataForSEO/DataForSeoPickers';
 
 /** Keep a rank-tracking draft valid when its provider location changes. */
@@ -36,7 +36,7 @@ export const RankTracking: React.FC = () => {
   const refreshAllRanks = useToolsStore((s) => s.refreshAllRanks);
 
   const [showAddModal, setShowAddModal] = useState(false);
-  const selectedMarket = dataForSeoMarket(rankTrackingDraft.location);
+  const selectedMarket = resolveDataForSeoMarket(rankTrackingDraft.location) || undefined;
 
   const totalTracked = trackedRanks.length;
   const measuredRanks = trackedRanks.filter((r): r is typeof r & { current_rank: number } => r.current_rank !== null);
@@ -96,6 +96,7 @@ export const RankTracking: React.FC = () => {
         </div>
 
         <div className="flex items-center space-x-3">
+          <p className="text-xs text-amber-200">{t('dataforseo.paidRequests', { count: trackedRanks.length })}</p>
           <button
             onClick={() => refreshAllRanks()}
             disabled={isRankLoading}
@@ -184,7 +185,7 @@ export const RankTracking: React.FC = () => {
                   </td>
                   <td className="px-4 py-3.5 text-xs text-slate-400 flex items-center space-x-1 mt-1">
                     <Globe className="w-3.5 h-3.5 text-slate-500" />
-                    <span>{dataForSeoMarketLabel(dataForSeoMarket(r.location))} · {dataForSeoLanguageLabel({ code: dataForSeoLanguage(r.location, r.language_code) })}</span>
+                    <span>{resolveDataForSeoMarket(r.location) ? dataForSeoMarketLabel(resolveDataForSeoMarket(r.location)!) : r.location} · {r.language_code ? dataForSeoLanguageLabel({ code: r.language_code }) : '—'}</span>
                   </td>
                   <td className="px-4 py-3.5 text-center">
                     <span

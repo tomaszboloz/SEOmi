@@ -19,6 +19,7 @@ pub fn run() {
         .manage(commands::render_worker::RenderWorkerState::default())
         .invoke_handler(tauri::generate_handler![
             commands::ai_cli::detect_ai_clis,
+            commands::ai_cli::test_ai_cli_connection,
             commands::ai_cli::run_ai_cli,
             commands::audit_queue::load_project_audit_queue,
             commands::audit_queue::save_project_audit_queue,

@@ -1032,4 +1032,34 @@ describe('toolsStore', () => {
     expect(invokeTauriCommand).toHaveBeenCalledWith('delete_crawl_auth_profile', { projectId: firstProject, profileId: 'profile-1' });
     expect(localStorage.getItem(`seomi_project_${secondProject}_crawl_request_profiles_v1`)).toBeNull();
   });
+  it('derives all new-request defaults from a Polish project and shares an explicitly selected market', async () => {
+    const previous = useProjectStore.getState();
+    localStorage.setItem('seomi_active_project_v1', 'market-project');
+    useProjectStore.setState({ activeProjectId: 'market-project', projects: [{ id: 'market-project', name: 'Polish site', rootUrl: 'https://example.pl', createdAt: '2026-10-01', lastOpenedAt: '2026-10-01' }] });
+    await useToolsStore.getState().hydrateProject('market-project');
+    expect(useToolsStore.getState()).toMatchObject({ keywordCountry: 'PL', domainCountry: 'PL', rankTrackingDraft: { location: 'PL', language: 'pl' } });
+    useToolsStore.getState().setDomainCountry('DE');
+    expect(useToolsStore.getState()).toMatchObject({ keywordCountry: 'DE', domainCountry: 'DE', rankTrackingDraft: { location: 'DE' } });
+    expect(localStorage.getItem('seomi_project_market-project_dataforseo_market_v1')).toBe('DE');
+    await useToolsStore.getState().hydrateProject('market-project');
+    expect(useToolsStore.getState().keywordCountry).toBe('DE');
+    const fetchMock = vi.fn();
+    vi.stubGlobal('fetch', fetchMock);
+    await useToolsStore.getState().analyzeDomain('example.pl', 'invalid-country');
+    expect(useToolsStore.getState().domainError).toBe(i18n.t('runtimeErrors.dataforseo.marketRequired'));
+    expect(fetchMock).not.toHaveBeenCalled();
+    useProjectStore.setState(previous);
+  });
+
+  it('records a successful absent rank as outside the top 100 instead of not checked', async () => {
+    localStorage.setItem('seomi_active_project_v1', 'rank-project');
+    useToolsStore.setState({ trackedRanks: [] });
+    useToolsStore.getState().addTrackedRank('seo audit', 'example.pl', 'https://example.pl', 'PL', 'pl');
+    useSettingsStore.setState({ dataForSeoCredentials: { login: 'login', password: 'password' } });
+    vi.stubGlobal('fetch', vi.fn().mockResolvedValue(new Response(JSON.stringify({ tasks: [{ status_code: 20000, result: [{ items: [] }] }] }))));
+    await useToolsStore.getState().refreshAllRanks();
+    expect(useToolsStore.getState().trackedRanks[0]).toMatchObject({ current_rank: 101, last_checked: expect.any(String), best_rank: null });
+    useToolsStore.setState({ trackedRanks: [] });
+  });
+
 });

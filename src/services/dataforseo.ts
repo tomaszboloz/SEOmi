@@ -236,14 +236,7 @@ const legacyMarketCodes: Record<string, string> = {
 };
 
 export const dataForSeoMarket = (country: string): DataForSeoMarket => {
-  const normalized = country.trim().toUpperCase();
-  const numeric = Number(normalized);
-  if (Number.isInteger(numeric)) {
-    const byLocation = DATAFORSEO_MARKETS.find((market) => market.locationCode === numeric);
-    if (byLocation) return byLocation;
-  }
-  const code = legacyMarketCodes[country.trim().toLowerCase()] || normalized;
-  return DATAFORSEO_MARKETS.find((market) => market.code === code) || DATAFORSEO_MARKETS.find((market) => market.code === 'US') || DATAFORSEO_MARKETS[0];
+  return requireDataForSeoMarket(country);
 };
 
 /** Resolve a provider market without silently changing a user's selection. */
@@ -439,7 +432,7 @@ export class DataForSEOClient {
   }
 
   async getBacklinksSummary(target: string): Promise<DataForSEOBacklinkSummary | null> {
-    const item = (await this.post('/v3/backlinks/summary/live', [{ target }]))[0];
+    const item = (await this.post('/v3/backlinks/summary/live', [{ target, internal_list_limit: 1000 }]))[0];
     if (!item) return null;
     return {
       target,
@@ -447,7 +440,9 @@ export class DataForSEOClient {
       referring_domains: number(item.referring_domains),
       referring_main_domains: number(item.referring_main_domains),
       rank: number(item.rank),
-      dofollow_backlinks: number(item.dofollow),
+      dofollow_backlinks: item.referring_links_attributes && typeof item.referring_links_attributes === 'object'
+        ? Math.max(0, number(item.backlinks) - number(asRecord(item.referring_links_attributes).nofollow))
+        : nullableNumber(item.dofollow),
       broken_backlinks: number(item.broken_backlinks),
     };
   }
@@ -565,7 +560,7 @@ export class DataForSEOClient {
     return {
       domain: target, total_backlinks: summary.total_backlinks, referring_domains: summary.referring_domains,
       referring_subnets: anchorsPage.referringSubnets ?? null, domain_rank: summary.rank,
-      dofollow_ratio: total > 0 ? Number(((summary.dofollow_backlinks / total) * 100).toFixed(1)) : null,
+      dofollow_ratio: total > 0 && summary.dofollow_backlinks !== null ? Number(((summary.dofollow_backlinks / total) * 100).toFixed(1)) : null,
       total_anchor_rows: anchorsPage.totalCount,
       total_backlink_rows: backlinksPage.totalCount,
       anchors: anchorsPage.items,
@@ -593,7 +588,7 @@ export class DataForSEOClient {
       domain: target, organic_traffic: organicTraffic, organic_keywords: nullableNumber(organicMetrics.count),
       domain_rank: backlinks ? backlinks.rank : null, referring_domains: backlinks ? backlinks.referring_domains : null,
       total_backlinks: backlinks ? backlinks.total_backlinks : null,
-      dofollow_ratio: backlinks && backlinks.total_backlinks > 0
+      dofollow_ratio: backlinks && backlinks.total_backlinks > 0 && backlinks.dofollow_backlinks !== null
         ? Number(((backlinks.dofollow_backlinks / backlinks.total_backlinks) * 100).toFixed(1))
         : null,
       top_keywords: ranked.map((row) => {
@@ -602,7 +597,7 @@ export class DataForSEOClient {
         return {
           keyword: text(keywordData.keyword), position: nullableNumber(serpItem.rank_absolute),
           search_volume: nullableNumber(keywordInfo.search_volume),
-          traffic_share: estimatedTraffic !== null && organicTraffic !== null && organicTraffic > 0 ? Number(((estimatedTraffic / organicTraffic) * 100).toFixed(2)) : null,
+          traffic_share: estimatedTraffic !== null && rawOrganicTraffic !== null && rawOrganicTraffic > 0 ? Number(((estimatedTraffic / rawOrganicTraffic) * 100).toFixed(2)) : null,
           intent: nullableIntent(asRecord(keywordData.search_intent_info).main_intent),
         };
       }).filter((row) => row.keyword && (row.position === null || row.position <= 100)),
@@ -611,7 +606,7 @@ export class DataForSEOClient {
         const pageTraffic = nullableNumber(pageOrganic.etv);
         return {
           url: text(row.page_address),
-          traffic_percentage: pageTraffic !== null && organicTraffic !== null && organicTraffic > 0 ? Number(((pageTraffic / organicTraffic) * 100).toFixed(2)) : null,
+          traffic_percentage: pageTraffic !== null && rawOrganicTraffic !== null && rawOrganicTraffic > 0 ? Number(((pageTraffic / rawOrganicTraffic) * 100).toFixed(2)) : null,
           keywords_count: nullableNumber(pageOrganic.count),
         };
       }).filter((page) => page.url),

@@ -152,7 +152,7 @@ export const DataForSEOAudit: React.FC<DataForSEOAuditProps> = ({ audit }) => {
   const rank = dataforseoData?.rank;
   const broken = dataforseoData?.broken_backlinks;
 
-  const dofollowRatio = backlinks && dofollow !== undefined && backlinks > 0 ? Math.round((dofollow / backlinks) * 100) : null;
+  const dofollowRatio = backlinks && dofollow != null && backlinks > 0 ? Math.round((dofollow / backlinks) * 100) : null;
 
   return (
     <div className="space-y-6 max-w-6xl mx-auto p-4 md:p-6 animate-in fade-in duration-200">
@@ -319,7 +319,7 @@ export const DataForSEOAudit: React.FC<DataForSEOAuditProps> = ({ audit }) => {
             {backlinks === undefined ? '—' : backlinks.toLocaleString()}
           </div>
           <div className="mt-2 text-[11px] text-slate-400 flex items-center space-x-1">
-            {dofollowRatio === null ? <span>{t('dataforseo.runLiveMetric')}</span> : <><span className="text-emerald-400 font-semibold">{dofollowRatio}%</span><span>{t('dataforseo.dofollowBacklinks', { count: dofollow })}</span></>}
+            {dofollowRatio === null ? <span>{t('dataforseo.runLiveMetric')}</span> : <><span className="text-emerald-400 font-semibold">{dofollowRatio}%</span><span>{t('dataforseo.dofollowBacklinks', { count: dofollow ?? undefined })}</span></>}
           </div>
         </div>
 

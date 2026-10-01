@@ -94,6 +94,23 @@ This real application capture shows the crawler workspace entry that opens the s
 
 The DataForSEO workspace requests live keyword, SERP, domain, backlink, location, language, and rank data with credentials stored per project in the operating system credential manager.
 
+### Local rendering worker API
+
+The worker in Settings is for external local tools; Site Audit uses its own renderer session. Starting it returns a loopback `baseUrl`, one-shot `token`, protocol `version` and `expiresAt`. The lease lasts 90 seconds. Never publish its token. Send one request to `POST <baseUrl>/v1/render` with `Authorization: Bearer <token>`, `X-SEOmi-Worker-Version: 1` and `Content-Type: application/json`:
+
+```json
+{
+  "url": "https://example.com/",
+  "allowSubdomains": false,
+  "scopePath": null,
+  "waitForSelector": "main",
+  "waitDelayMs": 500,
+  "lazyScrollCycles": 2
+}
+```
+
+The response contains a bounded rendered DOM snapshot and available navigation/performance evidence. `GET <baseUrl>/health` reports the lease and renderer status. A valid bearer token is consumed by the first request; start a new worker for another request. Expired leases return HTTP 410, a used/invalid token 401 and an unsupported protocol 426. Private network targets are rejected. Do not treat a missing metric as a passing result.
+
 <a id="complete_feature_inventory"></a>
 ## Complete feature inventory
 
@@ -534,7 +551,7 @@ Confirm that the document was rendered with the same URL, user agent, and authen
 
 ### Text hidden fields are reported
 
-Update to the current 0.0.2 build and rerun the audit. The visible control rule excludes type hidden controls while preserving text based honeypots. A visible text control still needs a programmatic label.
+Update to the current 0.0.3 build and rerun the audit. The visible control rule excludes type hidden controls while preserving text based honeypots. A visible text control still needs a programmatic label.
 
 ### An update cannot install
 
@@ -547,9 +564,23 @@ Include the application version, operating system, selected module, project iden
 <a id="release_notes"></a>
 ## Release notes
 
+### Version 0.0.3
+
+This release merges [PR #12](https://github.com/tomaszboloz/SEOmi/pull/12) and addresses the follow-up in [#11](https://github.com/tomaszboloz/SEOmi/issues/11), plus the remaining reproducible cases from #7 and #9. Local AI clients keep their existing login directories. Claude research uses safe mode and only web tools; Codex disables user configuration, rules, project instructions, memory and web search; Gemini uses bounded research settings with context, skills, hooks, MCP and tools disabled. Unsupported CLI isolation flags produce an explicit upgrade error. Connection tests check authentication, and Gemini's explicit test makes one minimal subscription request. Prompts travel through stdin so Windows command shims cannot interpret prompt text as shell commands.
+
+AI visibility now requires project-owned customer questions without the brand or domain, supports up to ten questions and five repetitions, and records the question, run, provider, search mode, mention position among tracked brands, competitor mentions, own-domain citations and share of voice. Name-only matches with no support for the supplied domain are excluded. Older branded reports remain readable and are labelled as recognition runs rather than visibility measurements. Both AI workspaces redact email addresses and local paths before saving; citations remain unverified unless independently checked against evidence.
+
+The updater matches the native `ReleaseNotFound` variant. DataForSEO rejects unknown markets, shares project defaults, derives dofollow from the summary's `referring_links_attributes.nofollow` count, retains successful clustering snapshots and retries only missing keywords, warns about paid request counts, and records a successful rank check outside the top 100. Empty alt text no longer requires extra ARIA attributes; Polish function words are filtered; page audits receive timeout, redirect and TLS settings; missing CrUX percentiles remain unknown rather than zero. Browser capture transfers one acknowledged fragment at a time, retries dropped navigation and reports transfer failure promptly.
+
+This is a source release. Signed macOS/Windows installers and an updater manifest require repository signing secrets, which are not configured. Automated tests cover the repaired behaviors; local provider accounts, paid APIs and complete desktop browser crawls still require environment-specific end-to-end verification.
+
+#### Podziękowania / Thanks
+
+Thank you [@RafalSzy](https://github.com/RafalSzy) for PRs #1, #2 and #12, detailed reports #3–#9 and #11, reproducible API/CLI examples, macOS verification and the suggestions that shaped the visibility methodology. Your follow-up caught regressions and incomplete fixes in 0.0.2 and helped improve the regression tests.
+
 ### Version 0.0.2
 
-This maintenance release closes the complete feedback batch from the first end to end desktop evaluation. Search Console now accepts and securely stores a Desktop OAuth client secret, refreshes tokens with that secret, keeps connect and resume requests ordered, and exposes the native error detail. DataForSEO keyword rows are read from the Google Ads response shape, market selection is strict and project aware, searchable location and language pickers cannot silently submit free text, organic traffic is rounded for display, the target domain is excluded from its own competitor list, dofollow values are parsed correctly, partial clustering results remain usable, and ranked keywords outside the first one hundred are labelled explicitly.
+This maintenance release introduced the initial fixes from the first end to end desktop evaluation. Follow-up testing found regressions and incomplete cases; see version 0.0.3 for the corrections. Search Console now accepts and securely stores a Desktop OAuth client secret, refreshes tokens with that secret, keeps connect and resume requests ordered, and exposes the native error detail. DataForSEO keyword rows are read from the Google Ads response shape, market selection is strict and project aware, searchable location and language pickers cannot silently submit free text, organic traffic is rounded for display, the target domain is excluded from its own competitor list, dofollow values are parsed correctly, partial clustering results remain usable, and ranked keywords outside the first one hundred are labelled explicitly.
 
 The performance workspace now displays CrUX percentiles in their API units, parses string CLS values, derives ratings from published thresholds, and distinguishes a genuine lack of field data from a failed request. AI visibility ignores prompt echoes and refusal text, redacts local personal context, runs local clients from an isolated working directory, and explains the browsing limitation of plan mode. The crawler honours the configured timeout, SSL policy, redirect limit, user agent, and reliable rendered page delivery. Decorative empty alternative text is valid, Polish readability grades are bounded, Polish function words are ignored, project backups include all workspace data, Lighthouse links are clickable, and a missing updater manifest is treated as a clean no update state.
 

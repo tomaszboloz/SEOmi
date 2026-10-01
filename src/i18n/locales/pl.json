@@ -116,7 +116,7 @@
       "canonicalMissingDetail": "Nie znaleziono deklaracji rel=\"canonical\".",
       "canonicalTarget": "Cel canonical zwraca błąd HTTP",
       "canonicalTargetDetail": "Sprawdzony cel zwrócił HTTP {{status}}.",
-      "canonicalUnverified": "Nie zweryfikowano celu canonical",
+    "canonicalUnverified": "Nie zweryfikowano celu canonical",
       "viewportMissing": "Brak viewport",
       "viewportMissingDetail": "Nie znaleziono meta name=\"viewport\".",
       "indexingBlocked": "Indeksowanie jest zablokowane",
@@ -552,7 +552,7 @@
       "none": "brak",
       "available": "dostępne",
       "unavailable": "niedostępne",
-      "canonicalUnverified": "canonical niezweryfikowany",
+    "canonicalUnverified": "canonical niezweryfikowany",
       "notReciprocal": "niewzajemny",
       "reciprocityUnverified": "wzajemność niezweryfikowana",
       "checked": "sprawdzono",
@@ -2615,7 +2615,8 @@
     "populationHistogram": "Histogram populacji: {{values}}",
     "noHistogram": "Brak histogramu",
     "noCruxMetrics": "Google zwrócił rekord bez metryk dla wybranego URL/origin i urządzenia; aplikacja nie podstawia zer ani danych z innego zakresu.",
-    "noP75": "Brak percentyla p75"
+    "noP75": "Brak percentyla p75",
+    "noFieldData": "Brak wystarczających danych rzeczywistych użytkowników"
   },
   "performance": {
     "milliseconds": "ms",
@@ -2733,7 +2734,8 @@
     "titleDescription": "Tytuł i opis",
     "action": "Akcja",
     "visit": "Odwiedź",
-    "emptySerp": "Wpisz frazę powyżej, aby pobrać na żywo konkurentów z Google SERP."
+    "emptySerp": "Wpisz frazę powyżej, aby pobrać na żywo konkurentów z Google SERP.",
+    "paidRequests": "Płatne zapytania DataForSEO: do {{count}} w tej operacji. Cenę i dostępny limit określa Twoje konto."
   },
   "crawlDeepUi": {
     "timingUnder100": "< 100 ms",
@@ -3534,7 +3536,7 @@
       "technicalDirectives": "Dyrektywy techniczne i robots",
       "canonical": "Adres canonical",
       "notSpecified": "Nie określono",
-      "canonicalUnverified": "Cel niezweryfikowany",
+    "canonicalUnverified": "Cel niezweryfikowany",
       "robots": "Dyrektywa robots",
       "robotsDefault": "index, follow (domyślnie)",
       "viewport": "Viewport (urządzenia mobilne)",
@@ -3812,7 +3814,7 @@
       "backup": "Backup projektu",
       "backupDescription": "Import zawsze tworzy osobny projekt i zapisuje dane pod nowym identyfikatorem. Nie nadpisuje istniejącego projektu ani nie kopiuje poświadczeń.",
       "installedVersion": "Bieżąca zainstalowana wersja",
-      "version": "v0.0.2 (aktualne wydanie)",
+      "version": "v0.0.3 (aktualne wydanie)",
       "checkUpdates": "Sprawdź aktualizacje",
       "chooseProjectBackup": "Przed utworzeniem backupu wybierz projekt.",
       "preparingBackup": "Przygotowywanie backupu projektu…",
@@ -3832,7 +3834,7 @@
       "backupTitle": "Backup projektu",
       "backupDescriptionLong": "Eksportuje metadane, ustawienia i dane workspace aktywnego projektu wraz z historią crawla. Sekrety DataForSEO, Google i klientów AI pozostają w systemowym pęku kluczy i nigdy nie trafiają do pliku.",
       "backupSafety": "Import zawsze tworzy osobny projekt i zapisuje dane pod nowym identyfikatorem. Nie nadpisuje istniejącego projektu ani nie kopiuje poświadczeń.",
-      "releaseVersion": "v0.0.2 (aktualne wydanie)",
+      "releaseVersion": "v0.0.3 (aktualne wydanie)",
       "installUpdate": "Pobierz i zainstaluj",
       "updateAvailable": "Wersja {{version}} jest gotowa do instalacji.",
       "updateInstalled": "Wersja {{version}} została zainstalowana.",
@@ -4631,5 +4633,24 @@
     "commandPaletteShortcut": "⌘⇧P",
     "openCommandPaletteShortcut": "⌘K",
     "validationFindings": "{{format}} — wyniki walidacji"
+  },
+  "aiResearch": {
+    "prompts": "Pytania klientów bez nazwy marki (jedno w wierszu, do 10)",
+    "promptsPlaceholder": "Kto wykonuje audyty techniczne SEO sklepów internetowych w Polsce?",
+    "competitors": "Nazwy konkurentów do śledzenia (jedna w wierszu)",
+    "repetitions": "Liczba powtórzeń pytania (1–5)",
+    "promptsRequired": "Dodaj przynajmniej jedno pytanie klienta bez nazwy marki, aby zmierzyć widoczność.",
+    "unbrandedRequired": "Pytania o widoczność nie mogą zawierać nazwy Twojej marki ani domeny.",
+    "methodologyNote": "Pytania nie zawierają Twojej marki. Claude ma włączone narzędzia WWW; Codex i Gemini korzystają z wiedzy modelu. Włączenie narzędzi nie dowodzi wykonania wyszukiwania. Nazwa jest liczona tylko wtedy, gdy podana domena też pojawia się w odpowiedzi lub cytowaniu. Zapisane cytowania nie są niezależnie zweryfikowanymi źródłami.",
+    "scoreDescription": "Udział poprawnych odpowiedzi zawierających spontaniczną wzmiankę o marce potwierdzoną domeną. Nieudane próby są wyłączone. Pozycja oznacza kolejność pierwszego wystąpienia wśród śledzonych marek.",
+    "shareOfVoice": "Udział we wzmiankach o śledzonych markach: {{value}}",
+    "web_enabled": "Narzędzia WWW włączone (użycie niezweryfikowane)",
+    "model_knowledge": "Wiedza modelu (WWW wyłączone)",
+    "position": "Pozycja wśród śledzonych marek: {{value}}",
+    "ownDomainYes": "Własna domena cytowana",
+    "ownDomainNo": "Własna domena nie jest cytowana",
+    "run": "Próba {{count}}",
+    "legacyRecognition": "Historyczne rozpoznanie marki",
+    "legacyNote": "To zapisane pytanie zawierało nazwę marki. Nie jest pomiarem spontanicznej widoczności."
   }
 }

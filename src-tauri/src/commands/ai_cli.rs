@@ -4,12 +4,21 @@ use std::env;
 use std::ffi::OsString;
 use std::fs;
 use std::path::{Path, PathBuf};
+use std::process::Stdio;
+use tokio::io::AsyncWriteExt;
 use tokio::process::Command;
 use tokio::time::{timeout, Duration};
 use uuid::Uuid;
 
 #[cfg(target_os = "windows")]
 use std::ffi::OsStr;
+
+struct ResearchDirectory(PathBuf);
+impl Drop for ResearchDirectory {
+    fn drop(&mut self) {
+        let _ = fs::remove_dir_all(&self.0);
+    }
+}
 
 const CLI_TIMEOUT: Duration = Duration::from_secs(120);
 
@@ -245,7 +254,7 @@ fn output_text(output: &std::process::Output) -> String {
 fn auth_check_args(provider: &str) -> Option<&'static [&'static str]> {
     match provider {
         "openai" => Some(&["login", "status"]),
-        "claude" => Some(&["auth", "status", "--text"]),
+        "claude" => Some(&["auth", "status"]),
         // Gemini CLI versions do not expose one stable non-interactive auth
         // status command. A successful version check remains an availability
         // signal; the first requested workflow reports any login failure.
@@ -275,6 +284,24 @@ fn build_ai_cli_arguments(
                 "--ignore-rules".to_string(),
                 "-c".to_string(),
                 "features.memories=false".to_string(),
+                "-c".to_string(),
+                "project_doc_max_bytes=0".to_string(),
+                "-c".to_string(),
+                "features.skip_host_skill_discovery=true".to_string(),
+                "-c".to_string(),
+                "skills.bundled.enabled=false".to_string(),
+                "-c".to_string(),
+                "skills.include_instructions=false".to_string(),
+                "-c".to_string(),
+                "features.hooks=false".to_string(),
+                "-c".to_string(),
+                "features.codex_hooks=false".to_string(),
+                "-c".to_string(),
+                "features.plugin_hooks=false".to_string(),
+                "-c".to_string(),
+                "features.shell_tool=false".to_string(),
+                "-c".to_string(),
+                "web_search=\"disabled\"".to_string(),
             ]);
             if let Some(model) = model.filter(|value| !value.trim().is_empty()) {
                 arguments.extend(["--model".to_string(), model]);
@@ -302,6 +329,8 @@ fn build_ai_cli_arguments(
                 "project,local".to_string(),
                 "--allowedTools".to_string(),
                 "WebSearch,WebFetch".to_string(),
+                "--tools".to_string(),
+                "WebSearch,WebFetch".to_string(),
                 "--no-session-persistence".to_string(),
                 prompt,
             ]);
@@ -319,6 +348,8 @@ fn build_ai_cli_arguments(
                 "--sandbox".to_string(),
                 "--approval-mode".to_string(),
                 "plan".to_string(),
+                "--extensions".to_string(),
+                "none".to_string(),
             ]);
             if let Some(model) = model.filter(|value| !value.trim().is_empty()) {
                 arguments.extend(["--model".to_string(), model]);
@@ -335,7 +366,80 @@ fn build_ai_cli_arguments(
 /// stored login, so pointing them at an empty directory logs the CLI out.
 /// Global instructions and memory are disabled through CLI flags instead.
 fn isolate_process(process: &mut Command, working_dir: &Path) {
-    process.current_dir(working_dir);
+    process.current_dir(working_dir).kill_on_drop(true);
+}
+
+fn authenticated_output(provider: &str, output: &str) -> bool {
+    let lower = output.to_ascii_lowercase();
+    if lower.contains("not logged")
+        || lower.contains("not authenticated")
+        || lower.contains("logged out")
+    {
+        return false;
+    }
+    if provider == "claude" {
+        if let Ok(value) = serde_json::from_str::<serde_json::Value>(output) {
+            return value.get("loggedIn").and_then(serde_json::Value::as_bool) == Some(true);
+        }
+    }
+    lower.contains("logged in") || lower.contains("authenticated")
+}
+
+fn required_capabilities(provider: &str) -> &'static [&'static str] {
+    match provider {
+        "claude" => &[
+            "--safe-mode",
+            "--setting-sources",
+            "--no-session-persistence",
+            "--allowedTools",
+            "--tools",
+        ],
+        "openai" => &["--ephemeral", "--ignore-user-config", "--ignore-rules"],
+        "gemini" => &["--extensions", "--approval-mode"],
+        _ => &[],
+    }
+}
+
+async fn check_capabilities(provider: &str, resolved: &ResolvedCommand) -> Result<(), String> {
+    let args = if provider == "openai" {
+        vec!["exec".into(), "--help".into()]
+    } else {
+        vec!["--help".into()]
+    };
+    let mut process = process_for(resolved, &args);
+    process.kill_on_drop(true);
+    if let Some(path) = augmented_path() {
+        process.env("PATH", path);
+    }
+    let output = timeout(Duration::from_secs(10), process.output())
+        .await
+        .map_err(|_| "CLI capability check timed out.".to_string())?
+        .map_err(|_| "Unable to check local CLI capabilities.".to_string())?;
+    let help = output_text_full(&output);
+    if !output.status.success()
+        || required_capabilities(provider)
+            .iter()
+            .any(|flag| !help.contains(flag))
+    {
+        return Err(format!("Update {provider} CLI: this version does not support the isolation flags required for neutral research."));
+    }
+    Ok(())
+}
+
+fn output_text_full(output: &std::process::Output) -> String {
+    format!(
+        "{}\n{}",
+        String::from_utf8_lossy(&output.stdout),
+        String::from_utf8_lossy(&output.stderr)
+    )
+}
+
+fn gemini_research_settings(context_file: &str) -> serde_json::Value {
+    serde_json::json!({
+        "context": {"fileName": context_file, "includeDirectoryTree": false, "loadMemoryFromIncludeDirectories": false, "memoryBoundaryMarkers": []},
+        "skills": {"enabled": false}, "hooksConfig": {"enabled": false},
+        "mcp": {"allowed": []}, "tools": {"core": []}
+    })
 }
 
 async fn version_check(provider: &str, command: &str) -> (bool, String) {
@@ -347,6 +451,7 @@ async fn version_check(provider: &str, command: &str) -> (bool, String) {
     };
     let result = timeout(Duration::from_secs(5), {
         let mut process = process_for(&resolved, &["--version".to_string()]);
+        process.kill_on_drop(true);
         if let Some(path) = augmented_path() {
             process.env("PATH", path);
         }
@@ -364,30 +469,25 @@ async fn version_check(provider: &str, command: &str) -> (bool, String) {
                     .map(|argument| (*argument).to_string())
                     .collect::<Vec<_>>();
                 let mut auth_process = process_for(&resolved, &auth_arguments);
+                auth_process.kill_on_drop(true);
                 if let Some(path) = augmented_path() {
                     auth_process.env("PATH", path);
                 }
                 let auth_result = timeout(Duration::from_secs(5), auth_process.output()).await;
                 if let Ok(Ok(auth_output)) = auth_result {
-                    let auth_text = output_text(&auth_output);
-                    let lower = auth_text.to_ascii_lowercase();
-                    let explicitly_logged_out = lower.contains("not logged")
-                        || lower.contains("not authenticated")
-                        || lower.contains("\"loggedin\":false")
-                        || lower.contains("\"logged_in\":false")
-                        || lower.contains("logged out");
-                    let looks_like_unknown_command = lower.contains("unknown command")
-                        || lower.contains("unrecognized")
-                        || lower.contains("unexpected argument")
-                        || lower.contains("usage:");
-                    if !looks_like_unknown_command {
-                        available = auth_output.status.success() && !explicitly_logged_out;
-                        if !available {
-                            auth_detail = display_output(&auth_output);
-                        }
+                    available = auth_output.status.success()
+                        && authenticated_output(provider, &output_text(&auth_output));
+                    if !available {
+                        auth_detail = "Local CLI is not authenticated. Sign in with the provider CLI and test again.".to_string();
                     }
+                } else {
+                    available = false;
+                    auth_detail =
+                        "Unable to verify CLI authentication (timeout or process failure)."
+                            .to_string();
                 }
             }
+
             (
                 available,
                 if !auth_detail.is_empty() {
@@ -437,6 +537,27 @@ pub async fn detect_ai_clis() -> Vec<AiCliStatus> {
 }
 
 #[tauri::command]
+pub async fn test_ai_cli_connection(provider: String) -> Result<AiCliStatus, String> {
+    let command = command_for(&provider)?;
+    let (available, detail) = if provider == "gemini" {
+        // Gemini has no stable auth-status command. An explicit connection
+        // test must prove that a minimal isolated request can complete.
+        match run_ai_cli(provider.clone(), "Reply with OK only.".into(), None).await {
+            Ok(_) => (true, "Authenticated local CLI request completed.".into()),
+            Err(error) => (false, error),
+        }
+    } else {
+        version_check(&provider, command).await
+    };
+    Ok(AiCliStatus {
+        provider,
+        command: command.into(),
+        available,
+        detail,
+    })
+}
+
+#[tauri::command]
 pub async fn run_ai_cli(
     provider: String,
     prompt: String,
@@ -456,19 +577,50 @@ pub async fn run_ai_cli(
     let resolved = resolve_command(command).ok_or_else(|| {
         format!("{command} is not installed on PATH or in a known user install location.")
     })?;
-    let arguments = build_ai_cli_arguments(&provider, prompt, model)?;
+    if model.as_ref().is_some_and(|model| {
+        !model
+            .chars()
+            .all(|c| c.is_ascii_alphanumeric() || "-_.:/".contains(c))
+    }) {
+        return Err("Model identifier contains unsupported characters.".to_string());
+    }
+    check_capabilities(&provider, &resolved).await?;
+    // The untrusted prompt is sent through stdin, never through cmd.exe's
+    // command line (npm CLIs on Windows are commonly .cmd shims).
+    let arguments = build_ai_cli_arguments(&provider, "-".to_string(), model)?;
 
     let isolated_dir = env::temp_dir().join(format!("seomi-ai-{}", Uuid::new_v4().simple()));
     fs::create_dir_all(&isolated_dir)
         .map_err(|error| format!("Unable to prepare an isolated AI working directory: {error}"))?;
+    let _cleanup = ResearchDirectory(isolated_dir.clone());
     let mut process = process_for(&resolved, &arguments);
     isolate_process(&mut process, &isolated_dir);
+    if provider == "gemini" {
+        let settings_path = isolated_dir.join("research-settings.json");
+        let settings =
+            gemini_research_settings(&format!("seomi-no-context-{}.md", Uuid::new_v4().simple()));
+        fs::write(&settings_path, settings.to_string())
+            .map_err(|_| "Unable to prepare Gemini research settings.".to_string())?;
+        process.env("GEMINI_CLI_SYSTEM_SETTINGS_PATH", settings_path);
+        process.env_remove("GEMINI_SYSTEM_MD");
+    }
     if let Some(path) = augmented_path() {
         process.env("PATH", path);
     }
 
-    let result = timeout(CLI_TIMEOUT, process.output()).await;
-    let _ = fs::remove_dir_all(&isolated_dir);
+    process
+        .stdin(Stdio::piped())
+        .stdout(Stdio::piped())
+        .stderr(Stdio::piped());
+    let result = timeout(CLI_TIMEOUT, async {
+        let mut child = process.spawn()?;
+        if let Some(mut stdin) = child.stdin.take() {
+            stdin.write_all(prompt.as_bytes()).await?;
+            // Close stdin: each provider waits for EOF before starting.
+        }
+        child.wait_with_output().await
+    })
+    .await;
     let output = result
         .map_err(|_| "Local CLI timed out after 120 seconds.".to_string())?
         .map_err(|_| format!("{} is not installed or not available on PATH.", command))?;
@@ -489,7 +641,10 @@ pub async fn run_ai_cli(
 
 #[cfg(test)]
 mod tests {
-    use super::{build_ai_cli_arguments, isolate_process};
+    use super::{
+        authenticated_output, build_ai_cli_arguments, gemini_research_settings, isolate_process,
+        required_capabilities,
+    };
     use std::ffi::OsStr;
     use std::path::Path;
     use tokio::process::Command;
@@ -532,6 +687,24 @@ mod tests {
                 "--ignore-rules",
                 "-c",
                 "features.memories=false",
+                "-c",
+                "project_doc_max_bytes=0",
+                "-c",
+                "features.skip_host_skill_discovery=true",
+                "-c",
+                "skills.bundled.enabled=false",
+                "-c",
+                "skills.include_instructions=false",
+                "-c",
+                "features.hooks=false",
+                "-c",
+                "features.codex_hooks=false",
+                "-c",
+                "features.plugin_hooks=false",
+                "-c",
+                "features.shell_tool=false",
+                "-c",
+                "web_search=\"disabled\"",
                 "--model",
                 "gpt-5",
                 "prompt",
@@ -561,7 +734,12 @@ mod tests {
         );
         assert_eq!(
             &arguments[5..],
-            &["--model".to_string(), "gemini-2.0-flash".to_string()]
+            &[
+                "--extensions".to_string(),
+                "none".to_string(),
+                "--model".to_string(),
+                "gemini-2.0-flash".to_string()
+            ]
         );
     }
 
@@ -581,9 +759,33 @@ mod tests {
                 "project,local".to_string(),
                 "--allowedTools".to_string(),
                 "WebSearch,WebFetch".to_string(),
+                "--tools".to_string(),
+                "WebSearch,WebFetch".to_string(),
                 "--no-session-persistence".to_string(),
                 "prompt".to_string(),
             ]
         );
+    }
+
+    #[test]
+    fn authentication_requires_positive_evidence_not_just_a_version_exit_status() {
+        assert!(authenticated_output("claude", r#"{ "loggedIn": true }"#));
+        assert!(!authenticated_output("claude", r#"{ "loggedIn": false }"#));
+        assert!(authenticated_output("openai", "Logged in using ChatGPT"));
+        assert!(!authenticated_output("openai", "Not logged in"));
+        assert!(!authenticated_output("openai", "Usage: codex login"));
+        assert!(!authenticated_output("claude", "unknown command auth"));
+        assert!(!authenticated_output("claude", "2.1.285 (Claude Code)"));
+    }
+
+    #[test]
+    fn gemini_settings_disable_global_context_and_execution_without_moving_login() {
+        let settings = gemini_research_settings("unique-empty-context.md");
+        assert_eq!(settings["context"]["fileName"], "unique-empty-context.md");
+        assert_eq!(settings["skills"]["enabled"], false);
+        assert_eq!(settings["hooksConfig"]["enabled"], false);
+        assert_eq!(settings["mcp"]["allowed"], serde_json::json!([]));
+        assert_eq!(settings["tools"]["core"], serde_json::json!([]));
+        assert!(required_capabilities("claude").contains(&"--safe-mode"));
     }
 }

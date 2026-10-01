@@ -123,6 +123,7 @@ struct CapturedPayload {
 enum CaptureEvent {
     PageReady(u64),
     Chunk(CaptureChunk),
+    TransferFailed(u64),
 }
 
 #[derive(Debug)]
@@ -137,6 +138,7 @@ pub struct RenderedCrawlerSession {
     window: tauri::WebviewWindow,
     proxy: Option<BrowserRequestProxy>,
     receiver: mpsc::Receiver<CaptureEvent>,
+    nonce: String,
     requested_url: String,
     base_host: String,
     allow_subdomains: bool,
@@ -195,6 +197,10 @@ impl RenderedCrawlerSession {
                         // is bounded by the channel capacity and prevents a
                         // dropped chunk from turning into a 60 second timeout.
                         let _ = navigation_sender.blocking_send(CaptureEvent::Chunk(chunk));
+                    } else if url.host_str() == Some(navigation_nonce.as_str()) {
+                        if let Some(sequence) = url.path().strip_suffix("/error").and_then(|value| value.trim_start_matches('/').parse::<u64>().ok()) {
+                            let _ = navigation_sender.blocking_send(CaptureEvent::TransferFailed(sequence));
+                        }
                     }
                     return false;
                 }
@@ -269,6 +275,7 @@ impl RenderedCrawlerSession {
             window,
             proxy: Some(proxy),
             receiver,
+            nonce,
             requested_url: start_url.to_string(),
             base_host,
             allow_subdomains,
@@ -328,7 +335,7 @@ impl RenderedCrawlerSession {
         let sequence = loop {
             match self.receiver.recv().await {
                 Some(CaptureEvent::PageReady(sequence)) => break sequence,
-                Some(CaptureEvent::Chunk(_)) => continue,
+                Some(_) => continue,
                 None => return Err("Renderer capture channel closed.".into()),
             }
         };
@@ -337,11 +344,26 @@ impl RenderedCrawlerSession {
         let mut chunks: Vec<Option<String>> = Vec::new();
         let mut received = 0usize;
         while received < total_chunks.unwrap_or(usize::MAX) {
-            match self.receiver.recv().await {
+            // Once capture starts, a lost transfer must not consume the full
+            // page-load timeout. JS retries an unacknowledged fragment in 100ms.
+            let transfer_timeout = if received == 0 {
+                PAGE_RENDER_TIMEOUT
+            } else {
+                Duration::from_secs(3)
+            };
+            match timeout(transfer_timeout, self.receiver.recv())
+                .await
+                .map_err(|_| "Renderer capture transfer stalled.".to_string())?
+            {
                 Some(CaptureEvent::PageReady(next_sequence)) if next_sequence > sequence => {
                     return Err(
                         "The page navigated again before its rendered snapshot completed.".into(),
                     );
+                }
+                Some(CaptureEvent::TransferFailed(failed_sequence))
+                    if failed_sequence == sequence =>
+                {
+                    return Err("Renderer capture transfer failed after bounded retries.".into());
                 }
                 Some(CaptureEvent::Chunk(chunk)) if chunk.sequence == sequence => {
                     if chunk.total == 0
@@ -360,10 +382,17 @@ impl RenderedCrawlerSession {
                         total_chunks = Some(chunk.total);
                         chunks.resize(chunk.total, None);
                     }
+                    let acknowledgement = format!(
+                        "window.dispatchEvent(new CustomEvent('seomi-capture-ack', {{detail: {{nonce: {}, sequence: {}, index: {}}}}}));",
+                        serde_json::to_string(&self.nonce).map_err(|error| error.to_string())?, sequence, chunk.index
+                    );
                     if chunks[chunk.index].is_none() {
                         chunks[chunk.index] = Some(chunk.data);
                         received += 1;
                     }
+                    self.window.eval(&acknowledgement).map_err(|error| {
+                        format!("Unable to acknowledge renderer capture: {error}")
+                    })?;
                 }
                 Some(_) => continue,
                 None => return Err("Renderer capture channel closed before completion.".into()),
@@ -671,17 +700,13 @@ fn capture_script(nonce: &str, sequence: u64, options: &RenderOptions) -> String
       }}
       return btoa(binary).replace(/\\+/g, '-').replace(/\\//g, '_').replace(/=+$/g, '');
     }})();
-    const chunkSize = {MAX_CAPTURE_CHUNK_BYTES};
-    const total = Math.ceil(encoded.length / chunkSize);
-    if (total === 0 || total > {MAX_CAPTURE_CHUNKS}) return;
-    for (let index = 0; index < total; index += 1) {{
-      const chunk = encoded.slice(index * chunkSize, (index + 1) * chunkSize);
-      setTimeout(() => {{
-        location.href = 'seomi-capture://' + nonce + '/' + sequence + '/' + index + '/' + total + '?data=' + chunk;
-      }}, index * 4);
-    }}
-  }})();
-}})();"#
+    {transport}
+    await sendCaptureChunks(encoded, nonce, sequence, {MAX_CAPTURE_CHUNK_BYTES}, {MAX_CAPTURE_CHUNKS});
+  }})().catch(() => {{
+    location.href = 'seomi-capture://' + nonce + '/' + sequence + '/error';
+  }});
+}})();"#,
+        transport = include_str!("render_capture_transport.js"),
     )
 }
 
@@ -1040,6 +1065,14 @@ mod tests {
         assert!(script.contains("durationThreshold: 16"));
         assert!(script.contains("entry.startTime - previousTime > 1000"));
         assert!(script.contains("seomi-capture://"));
+    }
+
+    #[test]
+    fn capture_script_uses_acknowledged_transfer_instead_of_overlapping_navigations() {
+        let script = capture_script("nonce", 1, &RenderOptions::default());
+        assert!(script.contains("await sendCaptureChunks(encoded, nonce, sequence"));
+        assert!(script.contains("seomi-capture-ack"));
+        assert!(!script.contains("index * 4"));
     }
 
     #[test]

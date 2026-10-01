@@ -10,6 +10,23 @@ pub struct UpdateStatus {
     pub current_version: String,
 }
 
+fn no_update() -> UpdateStatus {
+    UpdateStatus {
+        available: false,
+        installed: false,
+        restart_required: false,
+        version: None,
+        current_version: env!("CARGO_PKG_VERSION").to_string(),
+    }
+}
+
+fn check_error(error: tauri_plugin_updater::Error) -> Result<UpdateStatus, String> {
+    match error {
+        tauri_plugin_updater::Error::ReleaseNotFound => Ok(no_update()),
+        error => Err(format!("Update check failed: {error}")),
+    }
+}
+
 #[tauri::command]
 pub async fn check_for_updates(app: tauri::AppHandle) -> Result<UpdateStatus, String> {
     let updater = match app.updater() {
@@ -28,30 +45,29 @@ pub async fn check_for_updates(app: tauri::AppHandle) -> Result<UpdateStatus, St
                 current_version: update.current_version,
             })
         }
-        Ok(None) => Ok(UpdateStatus {
-            available: false,
-            installed: false,
-            restart_required: false,
-            version: None,
-            current_version: env!("CARGO_PKG_VERSION").to_string(),
-        }),
-        Err(e) => {
-            let detail = e.to_string();
-            // Source-only releases do not publish an updater manifest. Treat
-            // a missing manifest as a clean "no update" state instead of
-            // logging an error on every application start.
-            if detail.contains("404") || detail.to_ascii_lowercase().contains("not found") {
-                Ok(UpdateStatus {
-                    available: false,
-                    installed: false,
-                    restart_required: false,
-                    version: None,
-                    current_version: env!("CARGO_PKG_VERSION").to_string(),
-                })
-            } else {
-                Err(format!("Update check failed: {detail}"))
-            }
-        }
+        Ok(None) => Ok(no_update()),
+        Err(error) => check_error(error),
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn missing_release_is_no_update() {
+        let status = check_error(tauri_plugin_updater::Error::ReleaseNotFound).unwrap();
+        assert!(!status.available && !status.installed && !status.restart_required);
+        assert!(status.version.is_none());
+    }
+
+    #[test]
+    fn unrelated_errors_are_not_hidden_by_message_matching() {
+        assert!(check_error(tauri_plugin_updater::Error::Network("404 not found".into())).is_err());
+        assert!(check_error(tauri_plugin_updater::Error::TargetNotFound(
+            "darwin-aarch64".into()
+        ))
+        .is_err());
     }
 }
 

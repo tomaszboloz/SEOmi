@@ -116,6 +116,7 @@ export const KeywordResearch: React.FC = () => {
       </div>
 
       {/* Search Bar Form */}
+      <p className="text-xs text-amber-200">{t('dataforseo.paidRequests', { count: 1 })}</p>
       <form
         onSubmit={handleSearch}
         className="p-4 rounded-xl bg-slate-900/70 border border-slate-800 flex flex-col md:flex-row gap-3 shadow-lg"

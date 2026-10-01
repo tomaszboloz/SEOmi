@@ -26,6 +26,15 @@ vi.mock('@/services/dataforseo', async () => {
 });
 
 describe('useAuditStore', () => {
+  it('passes configured timeout, redirect limit and TLS verification to the native page audit', async () => {
+    localStorage.setItem('seomi_active_project_v1', 'audit-options');
+    const previous = useSettingsStore.getState().config;
+    useSettingsStore.setState({ config: { ...previous, request_timeout_secs: 41, max_redirects: 2, verify_ssl: false } });
+    vi.mocked(invokeTauriCommand).mockResolvedValue(mockAudit);
+    await useAuditStore.getState().startAudit(mockAudit.url);
+    expect(invokeTauriCommand).toHaveBeenCalledWith('inspect_url', expect.objectContaining({ timeoutSecs: 41, maxRedirects: 2, verifySsl: false }));
+    useSettingsStore.setState({ config: previous });
+  });
   beforeEach(() => {
     localStorage.clear();
     useAuditStore.getState().clearAudit();

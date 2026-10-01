@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import {
   Sparkles,
@@ -27,6 +27,12 @@ export const AiBrandVisibility: React.FC = () => {
   const analyzeAiBrandVisibility = useToolsStore((s) => s.analyzeAiBrandVisibility);
   const selectAiBrandReport = useToolsStore((s) => s.selectAiBrandReport);
 
+  const researchSettings = useToolsStore((s) => s.aiResearchSettings);
+  const setResearchSettings = useToolsStore((s) => s.setAiResearchSettings);
+  const [prompts, setPrompts] = useState(researchSettings.prompts.join('\n'));
+  const [competitors, setCompetitors] = useState(researchSettings.competitors.join('\n'));
+  useEffect(() => { setPrompts(researchSettings.prompts.join('\n')); setCompetitors(researchSettings.competitors.join('\n')); }, [activeProjectId, researchSettings]);
+
   const connectionMethod = useAuthStore((s) => s.connectionMethod);
   const connectionStatus = useAuthStore((s) => s.connectionStatus);
   const connectedProviders = (['openai', 'claude', 'gemini'] as const).filter((item) => connectionMethod[item] === 'local_cli' && connectionStatus[item] === 'connected');
@@ -45,6 +51,7 @@ export const AiBrandVisibility: React.FC = () => {
     if (!aiBrandQuery.trim()) return;
     setAiBrandQuery(aiBrandQuery.trim());
     setAiBrandDomain(aiBrandDomain.trim());
+    setResearchSettings({ prompts: prompts.split(/\n/), competitors: competitors.split(/\n/) });
     analyzeAiBrandVisibility(aiBrandQuery.trim(), aiBrandDomain.trim());
   };
 
@@ -89,7 +96,7 @@ export const AiBrandVisibility: React.FC = () => {
       {/* Input Form */}
       <form
         onSubmit={handleQuery}
-        className="p-4 rounded-xl bg-slate-900/70 border border-slate-800 flex flex-col md:flex-row gap-3 shadow-lg"
+        className="p-4 rounded-xl bg-slate-900/70 border border-slate-800 flex flex-wrap gap-3 shadow-lg"
       >
         <div className="flex-1 relative">
           <Bot className="w-5 h-5 absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-500" />
@@ -114,6 +121,18 @@ export const AiBrandVisibility: React.FC = () => {
           />
         </div>
 
+        <div className="grid w-full gap-3 md:grid-cols-2">
+          <label className="grid gap-1 text-xs text-slate-300">{t('aiResearch.prompts')}
+            <textarea aria-label={t('aiResearch.prompts')} rows={4} value={prompts} onChange={(event) => setPrompts(event.target.value)} onBlur={() => setResearchSettings({ prompts: prompts.split(/\n/) })} placeholder={t('aiResearch.promptsPlaceholder')} className="rounded-lg border border-slate-700 bg-slate-950 p-3 text-sm text-white" />
+          </label>
+          <label className="grid gap-1 text-xs text-slate-300">{t('aiResearch.competitors')}
+            <textarea aria-label={t('aiResearch.competitors')} rows={4} value={competitors} onChange={(event) => setCompetitors(event.target.value)} onBlur={() => setResearchSettings({ competitors: competitors.split(/\n/) })} className="rounded-lg border border-slate-700 bg-slate-950 p-3 text-sm text-white" />
+          </label>
+          <label className="flex items-center gap-3 text-xs text-slate-300">{t('aiResearch.repetitions')}
+            <input aria-label={t('aiResearch.repetitions')} type="number" min={1} max={5} value={researchSettings.repetitions} onChange={(event) => setResearchSettings({ repetitions: Number(event.target.value) })} className="w-20 rounded border border-slate-700 bg-slate-950 p-2" />
+          </label>
+          <p className="text-xs text-slate-400">{t('aiResearch.methodologyNote')}</p>
+        </div>
         <button
           type="submit"
           disabled={isLoading}
@@ -156,14 +175,15 @@ export const AiBrandVisibility: React.FC = () => {
             <div className="p-6 rounded-xl bg-gradient-to-br from-slate-900 to-slate-950 border border-slate-800 flex flex-col justify-between space-y-4">
               <div>
                 <span className="text-xs uppercase tracking-wider text-slate-400 font-mono">
-                  {t('aiVisibility.brand.mentionRate')}
+                  {t(aiBrandReport.methodology ? 'aiVisibility.brand.mentionRate' : 'aiResearch.legacyRecognition')}
                 </span>
                 <div className="text-5xl font-black text-white font-mono mt-2 flex items-baseline gap-2">
-                  {aiBrandReport.overall_score === null ? '—' : `${aiBrandReport.overall_score}%`}
+                  {!aiBrandReport.methodology || aiBrandReport.overall_score === null ? '—' : `${aiBrandReport.overall_score}%`}
                   <span className="text-xs font-normal text-emerald-400">{t('aiVisibility.brand.sample')}</span>
                 </div>
                 <p className="text-xs text-slate-400 mt-2">
-                  {t('aiVisibility.brand.mentionDescription')}
+                  {t(aiBrandReport.methodology ? 'aiResearch.scoreDescription' : 'aiResearch.legacyNote')}
+                  {aiBrandReport.methodology && <span className="block mt-2">{t('aiResearch.shareOfVoice', { value: aiBrandReport.share_of_voice == null ? '—' : `${aiBrandReport.share_of_voice}%` })}</span>}
                 </p>
               </div>
 
@@ -230,6 +250,9 @@ export const AiBrandVisibility: React.FC = () => {
                       </div>
                     </div>
 
+                    {m.prompt && <p className="text-xs text-slate-400">{m.prompt} · {t('aiResearch.run', { count: m.repetition })}</p>}
+                    {m.search_mode && <p className="text-xs text-slate-400">{t(`aiResearch.${m.search_mode}`)} · {t('aiResearch.position', { value: m.mention_position ?? '—' })} · {t(m.own_domain_cited ? 'aiResearch.ownDomainYes' : 'aiResearch.ownDomainNo')}</p>}
+                    {m.competitors_mentioned?.length ? <p className="text-xs text-slate-400">{m.competitors_mentioned.join(', ')}</p> : null}
                     {m.error_message ? <p role="alert" className="text-xs text-rose-200 bg-rose-950/30 p-3 rounded-lg border border-rose-800/40">{m.error_message}</p> : <p className="text-xs text-slate-300 leading-relaxed bg-slate-950/60 p-3 rounded-lg border border-slate-800/80">{m.summary}</p>}
                     <p className="text-[10px] text-slate-600">{t('aiVisibility.brand.savedResponse', { date: new Date(m.captured_at).toLocaleString(), provider: m.provider })}</p>
                   </div>

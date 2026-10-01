@@ -19,8 +19,8 @@ export const UserAgentSelector: React.FC = () => {
   const setSelected = useAuditStore((s) => s.setSelectedUserAgent);
   const [isOpen, setIsOpen] = useState(false);
 
-  const activePreset = USER_AGENT_PRESETS.find((p) => p.id === selected) || USER_AGENT_PRESETS[0];
-  const ActiveIcon = activePreset.icon;
+  const activePreset = USER_AGENT_PRESETS.find((p) => p.id === selected);
+  const ActiveIcon = activePreset?.icon || Monitor;
 
   return (
     <div className="relative">
@@ -31,7 +31,7 @@ export const UserAgentSelector: React.FC = () => {
         title={t('urlBar.userAgent')}
       >
         <ActiveIcon className="w-3.5 h-3.5 text-emerald-400" />
-        <span className="hidden md:inline truncate max-w-[130px]">{t(activePreset.labelKey)}</span>
+        <span className="hidden md:inline truncate max-w-[130px]">{activePreset ? t(activePreset.labelKey) : selected}</span>
         <ChevronDown className="w-3 h-3 text-slate-400" />
       </button>
 

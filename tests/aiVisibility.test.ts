@@ -12,7 +12,7 @@ describe('project-scoped AI answer research', () => {
   beforeEach(() => {
     localStorage.clear();
     localStorage.setItem('seomi_active_project_v1', 'ai-project-one');
-    useToolsStore.setState({ aiBrandReport: null, aiBrandHistory: [], aiPromptComparison: null, aiPromptHistory: [], aiBrandError: null, aiPromptError: null });
+    useToolsStore.setState({ aiResearchSettings: { prompts: ['Who offers SEO audits?'], repetitions: 1, competitors: [] }, aiBrandQuery: 'SEOmi', aiBrandDomain: '', aiBrandReport: null, aiBrandHistory: [], aiPromptComparison: null, aiPromptHistory: [], aiBrandError: null, aiPromptError: null });
     useAuthStore.setState({
       ...connected,
       apiKeys: { openai: '', claude: '', gemini: '' },
@@ -45,7 +45,7 @@ describe('project-scoped AI answer research', () => {
       connectionMethod: { openai: 'local_cli', claude: 'api_key', gemini: 'local_cli' },
       generateTextForProvider: vi.fn(async (provider) => {
         if (provider === 'gemini') throw new Error('CLI quota reached');
-        return 'SEOmi is mentioned. https://source.example/page';
+        return 'SEOmi is mentioned. https://seomi.example/page';
       }),
     });
 
@@ -96,6 +96,29 @@ describe('project-scoped AI answer research', () => {
     expect(useToolsStore.getState().aiBrandReport?.models.map((model) => model.provider)).toEqual(['claude']);
   });
 
+  it.each(['brand', 'prompt'])('does not start %s research after switching projects during authentication', async (workflow) => {
+    let finishAuthentication!: () => void;
+    const passingTest = vi.fn(() => new Promise<{ success: boolean; message: string }>((resolve) => {
+      finishAuthentication = () => {
+        useAuthStore.setState({ connectionStatus: { openai: 'connected', claude: 'unconfigured', gemini: 'unconfigured' } });
+        resolve({ success: true, message: 'ok' });
+      };
+    }));
+    useAuthStore.setState({
+      connectionMethod: { openai: 'local_cli', claude: 'api_key', gemini: 'api_key' },
+      connectionStatus: { openai: 'unconfigured', claude: 'unconfigured', gemini: 'unconfigured' },
+      testProviderConnection: passingTest,
+    });
+    const run = workflow === 'brand'
+      ? useToolsStore.getState().analyzeAiBrandVisibility('SEOmi', 'seomi.test')
+      : useToolsStore.getState().runAiPromptComparison('Which tool offers audits?');
+    await vi.waitFor(() => expect(passingTest).toHaveBeenCalledTimes(1));
+    localStorage.setItem('seomi_active_project_v1', 'ai-project-two');
+    finishAuthentication();
+    await run;
+    expect(useAuthStore.getState().generateTextForProvider).not.toHaveBeenCalled();
+  });
+
   it('appends prompt runs, restores the project history and lets the user select an older run', async () => {
     await useToolsStore.getState().runAiPromptComparison('first prompt');
     const first = useToolsStore.getState().aiPromptComparison!;
@@ -114,6 +137,45 @@ describe('project-scoped AI answer research', () => {
     expect(localStorage.getItem('seomi_project_ai-project-one_ai_prompt_selection_v1')).toBe(JSON.stringify(first.captured_at));
     await useToolsStore.getState().hydrateProject('ai-project-one');
     expect(useToolsStore.getState().aiPromptComparison?.prompt).toBe('first prompt');
+  });
+
+  it('measures repeated unbranded questions and records competitor position, own citations and search mode', async () => {
+    useToolsStore.getState().setAiResearchSettings({ prompts: ['Who offers SEO audits?', 'Which desktop audit tool should I use?'], repetitions: 2, competitors: ['OtherBrand'] });
+    useAuthStore.setState({
+      connectionMethod: { openai: 'local_cli', claude: 'api_key', gemini: 'api_key' },
+      generateTextForProvider: vi.fn(async () => 'OtherBrand and SEOmi provide audits. https://seomi.test/audit'),
+    });
+    await useToolsStore.getState().analyzeAiBrandVisibility('SEOmi', 'seomi.test');
+    const report = useToolsStore.getState().aiBrandReport!;
+    expect(report.methodology).toBe('unbranded_prompts');
+    expect(report.models).toHaveLength(4);
+    expect(report.overall_score).toBe(100);
+    expect(report.share_of_voice).toBe(50);
+    expect(report.models[0]).toMatchObject({ mention_position: 2, own_domain_cited: true, search_mode: 'model_knowledge', competitors_mentioned: ['OtherBrand'], repetition: 1 });
+    for (const [, prompt] of vi.mocked(useAuthStore.getState().generateTextForProvider).mock.calls) {
+      expect(prompt).not.toContain('SEOmi');
+      expect(prompt).not.toContain('seomi.test');
+    }
+    await useToolsStore.getState().hydrateProject('ai-project-two');
+    expect(useToolsStore.getState().aiResearchSettings.prompts).toEqual([]);
+    await useToolsStore.getState().hydrateProject('ai-project-one');
+    expect(useToolsStore.getState().aiResearchSettings.repetitions).toBe(2);
+  });
+
+  it('does not execute branded visibility questions and redacts personal context in Prompt Explorer too', async () => {
+    useToolsStore.getState().setAiResearchSettings({ prompts: ['What is SEOmi?'] });
+    await useToolsStore.getState().analyzeAiBrandVisibility('SEOmi', 'seomi.test');
+    expect(useToolsStore.getState().aiBrandError).toBe(i18n.t('aiResearch.unbrandedRequired'));
+    expect(useAuthStore.getState().generateTextForProvider).not.toHaveBeenCalled();
+    useAuthStore.setState({ generateTextForProvider: vi.fn(async () => 'SEOmi: https://seomi.test/a. Private: user@example.test /Users/test/project') });
+    useToolsStore.setState({ aiBrandQuery: 'SEOmi', aiBrandDomain: 'seomi.test' });
+    await useToolsStore.getState().runAiPromptComparison('Which audit tool?');
+    const result = useToolsStore.getState().aiPromptComparison!.results[0];
+    expect(result.brand_mentions).toEqual(['SEOmi']);
+    expect(result.own_domain_cited).toBe(true);
+    expect(result.response_text).not.toContain('user@example.test');
+    expect(result.response_text).not.toContain('/Users/test');
+    expect(localStorage.getItem('seomi_project_ai-project-one_ai_prompt_comparison_v1')).not.toContain('user@example.test');
   });
 
   it('migrates legacy single-result records into in-memory histories and uses the latest as active', async () => {
@@ -152,10 +214,10 @@ describe('project-scoped AI answer research', () => {
     });
 
     const oldRun = useToolsStore.getState().runAiPromptComparison('old project prompt');
-    await Promise.resolve();
+    await vi.waitFor(() => expect(pending).toHaveLength(1));
     localStorage.setItem('seomi_active_project_v1', 'ai-project-two');
     const newRun = useToolsStore.getState().runAiPromptComparison('new project prompt');
-    await Promise.resolve();
+    await vi.waitFor(() => expect(pending).toHaveLength(2));
 
     pending[0]?.resolve('old response');
     await Promise.resolve();
@@ -177,9 +239,9 @@ describe('project-scoped AI answer research', () => {
     });
 
     const oldRun = useToolsStore.getState().runAiPromptComparison('older prompt');
-    await Promise.resolve();
+    await vi.waitFor(() => expect(pending).toHaveLength(1));
     const newRun = useToolsStore.getState().runAiPromptComparison('newer prompt');
-    await Promise.resolve();
+    await vi.waitFor(() => expect(pending).toHaveLength(2));
 
     pending[0]?.resolve('older response');
     await Promise.resolve();

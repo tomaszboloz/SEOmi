@@ -4,10 +4,10 @@ import { AlertTriangle, Layers3, Loader2, Plus, RefreshCw, X } from 'lucide-reac
 import { useProjectStore } from '@/stores/projectStore';
 import { useSettingsStore } from '@/stores/settingsStore';
 import { useToolsStore } from '@/stores/toolsStore';
-import { DataForSEOClient, dataForSeoLanguage, dataForSeoLocation, dataForSeoMarket } from '@/services/dataforseo';
+import { DataForSEOClient, resolveDataForSeoMarket, dataForSeoLanguage, dataForSeoLocation, dataForSeoMarket } from '@/services/dataforseo';
 import { DataForSeoLanguagePicker, DataForSeoLocationPicker } from '@/components/DataForSEO/DataForSeoPickers';
 import { clusterKeywordsBySerpOverlap, getSerpSnapshot, KeywordClusteringResult } from '@/services/keywordClustering';
-import { readJsonStorage, writeJsonStorage } from '@/services/storage';
+import { readJsonStorage, readStorage, writeJsonStorage } from '@/services/storage';
 
 interface ClusteringSession {
   input: string;
@@ -22,20 +22,24 @@ const MAX_KEYWORDS = 50;
 const sessionKey = (projectId: string) => `seomi_keyword_clustering_${projectId}`;
 
 const loadSession = (projectId: string | null): ClusteringSession => {
-  if (!projectId) return DEFAULT_SESSION;
+  const defaults = { ...DEFAULT_SESSION, country: useToolsStore.getState().keywordCountry, language: useToolsStore.getState().keywordLanguage };
+  if (!projectId) return defaults;
   try {
     const saved = readJsonStorage<Partial<ClusteringSession> | null>(sessionKey(projectId), null);
-    if (!saved || typeof saved !== 'object') return DEFAULT_SESSION;
-    const market = dataForSeoMarket(typeof saved.country === 'string' ? saved.country : DEFAULT_SESSION.country);
+    if (!saved || typeof saved !== 'object') return defaults;
+    // Keep the input so an obsolete saved market cannot erase the user's list.
+    const sharedCountry = readStorage(`seomi_project_${projectId}_dataforseo_market_v1`);
+    const market = resolveDataForSeoMarket(sharedCountry || (typeof saved.country === 'string' ? saved.country : defaults.country));
+    const country = market?.code || '';
     return {
       input: typeof saved.input === 'string' ? saved.input : '',
-      country: market.code,
-      language: dataForSeoLanguage(market.code, typeof saved.language === 'string' ? saved.language : DEFAULT_SESSION.language),
+      country,
+      language: market ? dataForSeoLanguage(market.code, sharedCountry ? defaults.language : (typeof saved.language === 'string' ? saved.language : defaults.language)) : '',
       minSharedUrls: Number.isInteger(saved.minSharedUrls) && Number(saved.minSharedUrls) > 0 ? Number(saved.minSharedUrls) : 3,
-      result: saved.result && Array.isArray(saved.result.clusters) && Array.isArray(saved.result.snapshots) ? saved.result : null,
+      result: (!sharedCountry || saved.country === sharedCountry) && saved.result && Array.isArray(saved.result.clusters) && Array.isArray(saved.result.snapshots) ? saved.result : null,
     };
   } catch {
-    return DEFAULT_SESSION;
+    return defaults;
   }
 };
 
@@ -97,6 +101,7 @@ export const KeywordClustering: React.FC = () => {
     if (keywords.length > MAX_KEYWORDS) return setError(t('keywordClusteringUi.maximumKeywordsError', { count: MAX_KEYWORDS }));
     if (!credentials.login || !credentials.password) return setError(t('keywordClusteringUi.credentialsError'));
 
+    if (!resolveDataForSeoMarket(session.country)) return setError(t('runtimeErrors.dataforseo.marketRequired'));
     const targetProjectId = activeProjectId;
     const selectedLanguage = dataForSeoLanguage(session.country, session.language);
     const client = new DataForSEOClient(credentials.login, credentials.password);
@@ -105,16 +110,21 @@ export const KeywordClustering: React.FC = () => {
     setProgress(0);
     let completed = 0;
     try {
-      const snapshots = [];
-      for (let index = 0; index < keywords.length; index += 1) {
+      const snapshots = [...(session.result?.snapshots || [])].filter((item) => keywords.includes(item.keyword)).map((item) => ({ ...item, urls: item.urls.map((url) => /^https?:\/\//.test(url) ? url : `https://${url}`) }));
+      const pending = keywords.filter((keyword) => !snapshots.some((item) => item.keyword === keyword));
+      for (const keyword of pending) {
+
         // One request already in flight cannot be recalled by fetch here, but
         // switching projects must prevent every later billable SERP request.
         if (useProjectStore.getState().activeProjectId !== targetProjectId) return;
-        const keyword = keywords[index];
         const rows = await client.getSerpCompetitors(keyword, dataForSeoLocation(session.country), selectedLanguage, true);
         if (useProjectStore.getState().activeProjectId !== targetProjectId) return;
         snapshots.push(getSerpSnapshot(keyword, rows));
-        completed = index + 1;
+        completed = snapshots.length;
+        const partialResult = clusterKeywordsBySerpOverlap(snapshots, session.minSharedUrls);
+        const partialSession = { ...session, language: selectedLanguage, result: partialResult };
+        setSession(partialSession);
+        writeJsonStorage(sessionKey(targetProjectId), partialSession);
         setProgress(completed);
       }
       const result = clusterKeywordsBySerpOverlap(snapshots, session.minSharedUrls);
@@ -136,6 +146,7 @@ export const KeywordClustering: React.FC = () => {
   const changeCountry = (country: string) => {
     const market = dataForSeoMarket(country);
     const language = dataForSeoLanguage(market.code, session.language);
+    useToolsStore.getState().setKeywordCountry(market.code);
     updateSession({ country: market.code, language, result: null });
   };
 
@@ -162,6 +173,7 @@ export const KeywordClustering: React.FC = () => {
           </div>
         </div>
         <textarea id="cluster-keywords" value={session.input} onChange={(event) => updateSession({ input: event.target.value, result: null })} disabled={isRunning} rows={8} placeholder={t('keywordClusteringUi.placeholder')} className="w-full resize-y rounded-lg border border-slate-700 bg-slate-950 px-3 py-3 font-mono text-sm text-slate-100 outline-none transition placeholder:text-slate-600 focus:border-emerald-500 disabled:opacity-70" />
+        <p className="text-xs text-amber-200">{t('dataforseo.paidRequests', { count: keywords.filter((keyword) => !session.result?.snapshots.some((item) => item.keyword === keyword)).length })}</p>
         <div className="flex flex-wrap items-end gap-3">
           <label className="grid gap-1.5 text-xs text-slate-400">{t('keywordClusteringUi.location')}
             <DataForSeoLocationPicker
@@ -176,9 +188,9 @@ export const KeywordClustering: React.FC = () => {
           <label className="grid gap-1.5 text-xs text-slate-400">{t('keywordClusteringUi.language')}
             <DataForSeoLanguagePicker
               value={session.language}
-              market={dataForSeoMarket(session.country)}
+              market={resolveDataForSeoMarket(session.country) || undefined}
               disabled={isRunning}
-              onChange={(language) => updateSession({ language, result: null })}
+              onChange={(language) => { useToolsStore.getState().setKeywordLanguage(language); updateSession({ language, result: null }); }}
               ariaLabel={t('dataforseo.languageLabel')}
               placeholder={t('dataforseo.languageLabel')}
               className="min-w-48"

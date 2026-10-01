@@ -134,6 +134,7 @@ export const DomainOverview: React.FC = () => {
       </div>
 
       {/* Domain Input Bar */}
+      <p className="text-xs text-amber-200">{t('dataforseo.paidRequests', { count: 5 })}</p>
       <form
         onSubmit={handleAnalyze}
         className="p-4 rounded-xl bg-slate-900/70 border border-slate-800 flex flex-col md:flex-row gap-3 shadow-lg"
@@ -352,6 +353,7 @@ export const DomainOverview: React.FC = () => {
               </div>
               {domainComparison && <span className="shrink-0 text-[11px] text-slate-500">{t('domainResearchUi.domainCount', { count: domainComparison.rows.length, date: new Date(domainComparison.retrieved_at).toLocaleString() })}</span>}
             </div>
+            <p className="text-xs text-amber-200">{t('dataforseo.paidRequests', { count: 5 * Math.min(5, 1 + comparisonInput.split(/[\n,;]+/).filter((value) => value.trim()).length) })}</p>
             <form onSubmit={handleCompareDomains} className="grid gap-2 sm:grid-cols-[minmax(0,1fr)_auto]">
               <label className="text-xs text-slate-400">{t('domainResearchUi.competitorInputLabel')}<textarea aria-label={t('domainResearchUi.competitorInputAria')} value={comparisonInput} onChange={(event) => { const next = event.target.value; setComparisonInput(next); const competitors = next.split(/[\n,;]+/).map((value) => value.trim()).filter(Boolean); setDomainComparisonTargets([domainOverview?.domain || inputDomain, ...competitors]); }} rows={2} placeholder={t('domainResearchUi.competitorPlaceholder')} className="mt-1.5 w-full resize-y rounded-md border border-slate-700 bg-slate-950 px-3 py-2 font-mono text-xs text-white outline-none placeholder:text-slate-600 focus:border-violet-400" /></label>
               <button type="submit" disabled={isDomainComparisonLoading || !inputDomain.trim()} className="inline-flex h-9 items-center justify-center gap-1.5 self-end rounded-md bg-violet-600 px-3 text-xs font-semibold text-white transition hover:bg-violet-500 disabled:cursor-wait disabled:opacity-50">{isDomainComparisonLoading ? <Loader2 className="h-3.5 w-3.5 animate-spin" /> : <BarChart3 className="h-3.5 w-3.5" />}{t('domainResearchUi.compareLive')}</button>

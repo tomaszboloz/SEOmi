@@ -227,6 +227,8 @@ export const AiSearchPrompts: React.FC = () => {
                   </div>
 
                   {/* Output Text */}
+                  {res.search_mode && <p className="text-xs text-slate-400">{t(`aiResearch.${res.search_mode}`)} · {t('aiResearch.position', { value: res.mention_position ?? '—' })} · {t(res.own_domain_cited ? 'aiResearch.ownDomainYes' : 'aiResearch.ownDomainNo')}</p>}
+                  {res.brand_mentions.length > 0 && <p className="text-xs text-emerald-300">{res.brand_mentions.join(', ')}</p>}
                   <div className="p-3.5 rounded-lg bg-slate-950/80 border border-slate-800/80 text-xs text-slate-300 leading-relaxed whitespace-pre-line font-sans">
                     {res.response_status === 'error' ? <span className="text-rose-200">{t('aiVisibility.search.noResponse', { message: res.error_message })}</span> : res.response_text}
                   </div>
