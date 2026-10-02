@@ -340,22 +340,34 @@ pub(super) fn extract_javascript_redirects(
     // keep the quote-delimited and template-literal patterns separate. A
     // template literal is accepted only when it has no interpolation; this is
     // static evidence and never evaluates JavaScript expressions.
-    let assignment = Regex::new(
-        r#"(?is)\b(?:(?:window|document|self|top|parent|globalThis)\.)?location(?:\.href)?\s*=\s*(['\"])([^'\"]{1,2048})['\"]"#,
-    )
-    .expect("javascript location assignment pattern is valid");
-    let assignment_template = Regex::new(
-        r#"(?is)\b(?:(?:window|document|self|top|parent|globalThis)\.)?location(?:\.href)?\s*=\s*`([^`$]{1,2048})`"#,
-    )
-    .expect("javascript template location assignment pattern is valid");
-    let call = Regex::new(
-        r#"(?is)\b(?:(?:window|document|self|top|parent|globalThis)\.)?location\.(?:replace|assign)\s*\(\s*(['\"])([^'\"]{1,2048})['\"]\s*\)"#,
-    )
-    .expect("javascript location call pattern is valid");
-    let call_template = Regex::new(
-        r#"(?is)\b(?:(?:window|document|self|top|parent|globalThis)\.)?location\.(?:replace|assign)\s*\(\s*`([^`$]{1,2048})`\s*\)"#,
-    )
-    .expect("javascript template location call pattern is valid");
+    static JS_LOCATION_ASSIGNMENT: OnceLock<Regex> = OnceLock::new();
+    let assignment = JS_LOCATION_ASSIGNMENT.get_or_init(|| {
+        Regex::new(
+            r#"(?is)\b(?:(?:window|document|self|top|parent|globalThis)\.)?location(?:\.href)?\s*=\s*(['\"])([^'\"]{1,2048})['\"]"#,
+        )
+        .expect("javascript location assignment pattern is valid")
+    });
+    static JS_LOCATION_ASSIGNMENT_TEMPLATE: OnceLock<Regex> = OnceLock::new();
+    let assignment_template = JS_LOCATION_ASSIGNMENT_TEMPLATE.get_or_init(|| {
+        Regex::new(
+            r#"(?is)\b(?:(?:window|document|self|top|parent|globalThis)\.)?location(?:\.href)?\s*=\s*`([^`$]{1,2048})`"#,
+        )
+        .expect("javascript template location assignment pattern is valid")
+    });
+    static JS_LOCATION_CALL: OnceLock<Regex> = OnceLock::new();
+    let call = JS_LOCATION_CALL.get_or_init(|| {
+        Regex::new(
+            r#"(?is)\b(?:(?:window|document|self|top|parent|globalThis)\.)?location\.(?:replace|assign)\s*\(\s*(['\"])([^'\"]{1,2048})['\"]\s*\)"#,
+        )
+        .expect("javascript location call pattern is valid")
+    });
+    static JS_LOCATION_CALL_TEMPLATE: OnceLock<Regex> = OnceLock::new();
+    let call_template = JS_LOCATION_CALL_TEMPLATE.get_or_init(|| {
+        Regex::new(
+            r#"(?is)\b(?:(?:window|document|self|top|parent|globalThis)\.)?location\.(?:replace|assign)\s*\(\s*`([^`$]{1,2048})`\s*\)"#,
+        )
+        .expect("javascript template location call pattern is valid")
+    });
     let mut redirects = Vec::new();
     let mut seen = HashSet::new();
 
