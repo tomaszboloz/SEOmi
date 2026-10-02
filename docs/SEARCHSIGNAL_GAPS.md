@@ -4,7 +4,7 @@
 
 | ID | Zakres | Stan i kryterium ukończenia |
 |---|---|---|
-| EXT-001 | GSC: kanibalizacja | OPEN: rzeczywiste wiersze query+page z jednym zakresem dat/filtrów; konkurujące adresy jako sygnał do weryfikacji, bez automatycznego werdyktu |
+| EXT-001 | GSC: kanibalizacja | PARTIAL (5g): native pobiera rzeczywiste wiersze query+page z jednym zakresem dat/filtrów oraz flagą obcięcia; zapis historii, analiza i panel nadal OPEN; konkurujące adresy jako sygnał do weryfikacji, bez automatycznego werdyktu |
 | EXT-002 | GSC: spadki | EXISTING/PARTIAL: snapshoty i porównanie wspólnych wierszy już działają; uzupełnić równe okna i brakujące wiersze bez traktowania ich jako zera |
 | EXT-003 | GSC: frazy tuż za TOP10 | LOCAL IMPLEMENTED (4q): osobny zakres pozycji >10..20 z progiem wyświetleń; istniejący zakres4..20 zachować jako szerszą szansę |
 | EXT-004 | GSC: CTR odstający | LOCAL IMPLEMENTED (4q): benchmark ważony wyświetleniami z własnych fraz o podobnej pozycji; minimum próby, wykluczenie badanego wiersza, jawna niepewność |

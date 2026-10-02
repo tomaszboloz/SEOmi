@@ -17,6 +17,7 @@ pub(super) fn next_start_row(
     (returned_rows == requested_rows && next < SEARCH_ROW_MAX).then_some(next)
 }
 
+#[cfg(test)]
 pub(super) fn analytics_page_request(
     start: &str,
     end: &str,
@@ -24,10 +25,26 @@ pub(super) fn analytics_page_request(
     start_row: usize,
     filters: &GscPerformanceFilters,
 ) -> (Value, usize) {
+    analytics_dimensions_request(
+        start,
+        end,
+        &dimension.into_iter().collect::<Vec<_>>(),
+        start_row,
+        filters,
+    )
+}
+
+pub(super) fn analytics_dimensions_request(
+    start: &str,
+    end: &str,
+    dimensions: &[&str],
+    start_row: usize,
+    filters: &GscPerformanceFilters,
+) -> (Value, usize) {
     let requested_rows = SEARCH_ROW_PAGE_SIZE.min(SEARCH_ROW_MAX.saturating_sub(start_row));
     let mut payload = json!({"startDate": start, "endDate": end, "rowLimit": requested_rows, "startRow": start_row});
-    if let Some(dimension) = dimension {
-        payload["dimensions"] = json!([dimension]);
+    if !dimensions.is_empty() {
+        payload["dimensions"] = json!(dimensions);
     }
     if let Some(search_type) = filters.search_type.as_deref() {
         payload["type"] = json!(search_type);

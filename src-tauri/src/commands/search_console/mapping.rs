@@ -23,6 +23,36 @@ fn map_analytics_row(row: &Value, key_name: &str) -> Value {
     result
 }
 
+pub(super) fn map_joint_rows(rows: &[Value]) -> Result<Vec<Value>, String> {
+    rows.iter()
+        .map(|row| {
+            let keys = row
+                .get("keys")
+                .and_then(Value::as_array)
+                .filter(|keys| {
+                    keys.len() == 2
+                        && keys
+                            .iter()
+                            .all(|key| key.as_str().is_some_and(|s| !s.trim().is_empty()))
+                })
+                .ok_or_else(|| "Google returned an invalid query/page pair.".to_string())?;
+            if ["clicks", "impressions", "ctr", "position"]
+                .iter()
+                .any(|key| {
+                    !row.get(key)
+                        .and_then(Value::as_f64)
+                        .is_some_and(|n| n.is_finite() && n >= 0.0)
+                })
+            {
+                return Err("Google returned invalid query/page metrics.".into());
+            }
+            let mut result = map_analytics_row(row, "query");
+            result["page"] = keys[1].clone();
+            Ok(result)
+        })
+        .collect()
+}
+
 #[allow(clippy::too_many_arguments)]
 pub(super) fn map_performance(
     site_url: &str,

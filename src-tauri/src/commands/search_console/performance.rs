@@ -1,7 +1,11 @@
 use super::models::GscPerformanceFilters;
 use super::{
-    credentials::validate_client_id, dates::requested_date_range, filters::normalize_filters,
-    mapping::map_performance, rows::performance_rows, tokens::refresh_access_token,
+    credentials::validate_client_id,
+    dates::requested_date_range,
+    filters::normalize_filters,
+    mapping::{map_joint_rows, map_performance},
+    rows::{performance_dimensions, performance_rows},
+    tokens::refresh_access_token,
 };
 use serde_json::Value;
 use tokio::time::Duration;
@@ -25,7 +29,7 @@ pub(super) async fn search_console_performance(
     let (start, end) = requested_date_range(start_date.as_deref(), end_date.as_deref())?;
     let filters = normalize_filters(filters)?;
     let access_token = refresh_access_token(&client, &project_id, &client_id).await?;
-    let (queries, pages, totals, daily) = tokio::try_join!(
+    let (queries, pages, totals, daily, joint) = tokio::try_join!(
         performance_rows(
             &client,
             &access_token,
@@ -62,8 +66,17 @@ pub(super) async fn search_console_performance(
             Some("date"),
             &filters,
         ),
+        performance_dimensions(
+            &client,
+            &access_token,
+            &site_url,
+            &start,
+            &end,
+            &["query", "page"],
+            &filters
+        ),
     )?;
-    Ok(map_performance(
+    let mut output = map_performance(
         &site_url,
         &start,
         &end,
@@ -74,5 +87,8 @@ pub(super) async fn search_console_performance(
         &filters,
         queries.may_be_truncated,
         pages.may_be_truncated,
-    ))
+    );
+    output["query_pages"] = serde_json::json!(map_joint_rows(&joint.rows)?);
+    output["query_pages_may_be_truncated"] = serde_json::json!(joint.may_be_truncated);
+    Ok(output)
 }

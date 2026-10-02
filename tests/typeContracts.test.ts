@@ -24,12 +24,30 @@ it('preserves all 114 pre-refactor public type names and exact contract shapes',
   const signatures = modules.flatMap((name) => {
     const source = parse(name);
     return source.statements.flatMap((node) => ts.isInterfaceDeclaration(node) || ts.isTypeAliasDeclaration(node)
-      ? [[node.name.text, printer.printNode(ts.EmitHint.Unspecified, node, source)]] : []);
+      ? [[node.name.text, printer.printNode(ts.EmitHint.Unspecified,
+        ts.isInterfaceDeclaration(node) && node.name.text === 'GscPerformanceData'
+          ? ts.factory.updateInterfaceDeclaration(node, node.modifiers, node.name, node.typeParameters,
+            node.heritageClauses, node.members.filter(member => !member.name
+              || !['query_pages', 'query_pages_may_be_truncated'].includes(member.name.getText(source))))
+          : node, source)]] : []);
   }).sort((a, b) => a[0].localeCompare(b[0]));
   expect(signatures).toHaveLength(114);
   expect(new Set(signatures.map(([name]) => name)).size).toBe(114);
   expect(createHash('sha256').update(JSON.stringify(signatures)).digest('hex'))
     .toBe('0dc108e2285391361ce07959b92ab87331255cd1bf176ff58adaa25ba46f035b');
+});
+
+it('adds only optional observed query/page fields to the legacy GSC contract', () => {
+  const source = parse('gsc.ts');
+  const data = source.statements.find(node => ts.isInterfaceDeclaration(node) && node.name.text === 'GscPerformanceData');
+  if (!data || !ts.isInterfaceDeclaration(data)) throw new Error('Missing GSC contract');
+  const pairs = data.members.find(member => member.name?.getText(source) === 'query_pages');
+  const truncated = data.members.find(member => member.name?.getText(source) === 'query_pages_may_be_truncated');
+  if (!pairs || !truncated || !ts.isPropertySignature(pairs) || !ts.isPropertySignature(truncated)) throw new Error('Missing additive fields');
+  expect(pairs.questionToken).toBeDefined();
+  expect(truncated.questionToken).toBeDefined();
+  expect(pairs.type?.getText(source)).toBe('GscMetricRow[]');
+  expect(truncated.type?.getText(source)).toBe('boolean');
 });
 
 it('allows only declarations and direct type imports/exports, with no circular module dependency', () => {

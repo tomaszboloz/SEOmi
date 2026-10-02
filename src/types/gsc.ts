@@ -19,6 +19,9 @@ export interface GscPerformanceData {
   avg_position: number;
   queries: { query: string; clicks: number; impressions: number; ctr: number; position: number }[];
   pages: { page: string; clicks: number; impressions: number; ctr: number; position: number }[];
+  /** Observed joint query/page rows; absent in legacy reports, never inferred from marginals. */
+  query_pages?: GscMetricRow[];
+  query_pages_may_be_truncated?: boolean;
   daily: { date: string; clicks: number; impressions: number; ctr: number; position: number }[];
   daily_may_be_truncated: boolean;
   queries_may_be_truncated: boolean;
