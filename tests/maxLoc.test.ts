@@ -102,3 +102,8 @@ it('keeps durable crawl storage and all of its adapters below 150 physical lines
   expect(maxLocReport(['src/services/crawlPersistence.ts',
     ...codeFiles('src/services/crawlPersistence')]).violations).toEqual([]);
 });
+
+it('keeps domain preferences, overview and comparison responsibilities below 150 physical lines', () => {
+  expect(maxLocReport(['src/stores/tools/domainSlice.ts',
+    ...codeFiles('src/stores/tools/domain')]).violations).toEqual([]);
+});

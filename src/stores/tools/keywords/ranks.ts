@@ -56,6 +56,7 @@ removeTrackedRank: (id) => {
   },
 refreshAllRanks: async () => {
     const projectIdAtStart = activeProjectId();
+    if (!projectIdAtStart) return set({ rankError: i18n.t('runtimeErrors.tools.projectRequired') });
     const trackedRanks = get().trackedRanks;
     if (trackedRanks.length === 0) {
       set({ rankError: i18n.t('runtimeErrors.tools.rankNeedPhrase') });
@@ -87,7 +88,7 @@ refreshAllRanks: async () => {
       const updated = attempts.flatMap((attempt, index) => attempt.status === 'fulfilled' ? [attempt.value] : [trackedRanks[index]]);
       const failed = attempts.filter((attempt): attempt is PromiseRejectedResult => attempt.status === 'rejected');
       if (activeProjectId() !== projectIdAtStart || !isLatestToolRequest('rank-refresh', requestToken)) return;
-      if (projectIdAtStart) writeJsonStorage(trackedRanksKey(projectIdAtStart), updated);
+      writeJsonStorage(trackedRanksKey(projectIdAtStart), updated);
       set({ trackedRanks: updated, rankError: failed.length ? i18n.t('runtimeErrors.tools.rankPartial', { failed: failed.length, total: trackedRanks.length }) : null });
     } catch (error) {
       if (activeProjectId() === projectIdAtStart && isLatestToolRequest('rank-refresh', requestToken)) set({ rankError: error instanceof Error ? error.message : i18n.t('runtimeErrors.tools.rankRefreshFailed') });

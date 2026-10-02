@@ -40,6 +40,7 @@ setKeywordLanguage: (language) => {
 setSelectedTagFilter: (tag) => set({ selectedTagFilter: tag }),
 searchKeywords: async (query, country, language) => {
     const projectIdAtStart = activeProjectId();
+    if (!projectIdAtStart) return set({ keywordError: i18n.t('runtimeErrors.tools.projectRequired') });
     const q = (query ?? get().keywordQuery).trim();
     const selectedCountry = country || get().keywordCountry;
     if (query !== undefined) get().setKeywordQuery(query);
