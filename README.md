@@ -1489,3 +1489,15 @@ The comparison separately lists queries and URLs observed only in one period. Th
 Thanks to @RafalSzy for the testing feedback in [PR #13](https://github.com/tomaszboloz/SEOmi/pull/13).
 
 BATCH-5j verification:2807frontend/516Rust/70MCP PASS; build/lint/rustfmt/strictClippy PASS. Scoped33tests cover100%72statements/51branches/30functions/50lines for comparison and unmatchedpanel. Full source-matchedfrontend88.28%statements/79.57%branches/86.43%functions/89.14%lines remainsbelow99.01%. Inventory756TS/749executed/7factory-returned; new publicpanel has direct assertions. All18source/test/localefiles match the measured isolatedcopy; changedTS/TSX modules/tests have <=79physical lines. GlobalLOC118violations across1184files remainsOPEN. All266nativehashes match previousLLVM65.56%productionlines/62.80%functions; nativebranches/uncompiledplatforms unmeasured. Originalaudit69/72;182/186includinglocallyfixeddiscoveries. Live masterprotection:admins=true,forcepush=false,deletion=false,strict=true andfive requiredcontexts verified. Requestedextensions/globalgates and release/tag remainOPEN.
+
+### BATCH-5k: scheduler module boundaries and argument validation
+
+The561-line native scheduler now uses a112-line IPC facade and separate modules below150physical lines. Names, registration payloads, deadline rounding and backend commands are preserved; the launchd XML template is unchanged byte-for-byte. Alloriginal tests remain, with11additional nativecases for validation/time/serialization, launcharguments and safeplist generation. Syntheticfixturetests do not create or remove host schedulerjobs.
+
+A regression also reproduces a missing CLIvalue being replaced by the next schedulerflag. The parser now rejects reservedflags as project/schedule values. A physicalLOC guard prevents scheduler modules/tests from growing past150lines.
+
+Thanks to @RafalSzy for the testing feedback in [PR #13](https://github.com/tomaszboloz/SEOmi/pull/13).
+
+The previoushead WindowsCI failed an existing exact2MiBpipe test because itsPowerShell fixture exceeded10seconds. Rawfile fixtures now exercise the same productionpipes onbothstreams without PowerShellstartup/encoding. Thebytebound, overflowassertions, fullbytechecks and10seconddeadline are unchanged; a newrawstderrregression preserves control/Unicode bytes. Localverificationpasses; Windowsconfirmation is pending freshCI.
+
+BATCH-5k verification:2808frontend/528Rust/70MCP PASS; build/lint/rustfmt/strictClippy PASS. Scheduler22native andCLI37focusedcases pass. Full source-matchedfrontend88.28%statements/79.57%branches/86.43%functions/89.14%lines remainsbelow99.01%; inventory756TS/749executed/7factory-returned. Fresh LLVMproduction12027/18317lines65.66%,1224/1940functions63.09%,all281sourcehashes verified; nativebranches/uncompiledplatforms remainunmeasured. GlobalLOC117violations across1200files (downfrom118); all16schedulerfiles<=112physical lines. Originalaudit69/72;183/188includinglocallyfixeddiscoveries, withGAP188awaitingfreshWindowsCI. Globalcoverage/directassertions/LOC, requestedextensions and release/tag remainOPEN.
