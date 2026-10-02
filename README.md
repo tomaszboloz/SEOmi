@@ -6,8 +6,8 @@
 [![Desktop platforms](https://img.shields.io/badge/platform-macOS%20%7C%20Windows-lightgrey.svg)](#technology)
 [![Rust backend](https://img.shields.io/badge/backend-Rust-orange.svg)](#technology)
 [![TypeScript frontend](https://img.shields.io/badge/frontend-TypeScript-blue.svg)](#technology)
-[![Frontend tests](https://img.shields.io/badge/frontend%20tests-611%20passing-success.svg)](#verification)
-[![Rust tests](https://img.shields.io/badge/Rust%20tests-302%20passing-success.svg)](#verification)
+[![Frontend tests](https://img.shields.io/badge/frontend%20tests-1842%20passing-success.svg)](#verification)
+[![Rust tests](https://img.shields.io/badge/Rust%20tests-432%20passing-success.svg)](#verification)
 
 ### Help improve SEOmi
 
@@ -1165,3 +1165,12 @@ Accessibility extraction uses an unchanged parent API through a47-line facade an
 Eighteen new tests directly assert all29exposed accessibility callables, including sample limits, actual counts, ARIA/title/text/image names, hidden ancestors, honeypots, selectors, malformed source tags, Unicode positions and bounded redaction. Fresh compiled accessibility coverage is100%lines(1241/1241) and sourcefunctions(110/110), including closures. Native branch evidence is unavailable.
 
 Full local suites:1841frontend/417Rust/70MCP; build, ESLint, rustfmt and strict Clippy pass. Globalfrontend83.79%statements/72.42%branches/82.27%functions/85.86%lines. Fresh production native63.38%lines(11552/18226)/59.02%functions(1103/1869), with matching source hashes and tests removed by AST; uncompiled platform and branch evidence are unavailable. PublicTS619callables/612executed/7factoryreturned;57executed bodies lack static direct references. GlobalLOC793files/150violations remains incomplete. Original69/72;107/111including discovered fixes. CI3a7b00e/run36934218895 and6f367ca/run36932139352 passed all five checks. Master protection is enabled for administrators with force push/deletion disabled and five strict checks. No new version/tag until the remaining gates pass.
+
+
+### Content statistics and visible roots (audit BATCH-4e)
+
+The37-line content facade delegates to thirteen responsibilities below103physical lines. All243stop-word entries retain their original order and duplicates. Fifteen new Rust cases directly assert all13callables, including supported language formulas and conservative inference, source visibility, token/frequency contracts, score labels, empty observations and the200000Unicode-character storage boundary.
+
+Four RED regressions found and fixed reading-time rounding, case/whitespace in declared readability languages, nonfinite scores in the direct helper for empty observations, and hidden/chrome-contained semantic roots suppressing visible fallback text. Root visibility now includes ancestors; hidden text stays excluded. The stored language and wire schema are unchanged. Scoped compiled content coverage is100%lines(383/383) and sourcefunctions(40/40); branches are unavailable.
+
+Full local suites:1842frontend/432Rust/70MCP; build, lint, rustfmt and strict Clippy pass. Latest global frontend83.79%statements/72.42%branches/82.27%functions/85.86%lines. Fresh production native63.13%lines(11364/18002)/59.16%functions(1108/1873) with matching183source hashes; uncompiled platform/branch evidence unavailable. PublicTS619callables/612executed/7factoryreturned;57executed bodies lack static direct references; native380declaredcallables. GlobalLOC811files/149violations remains incomplete. Original69/72;111/115including discovered local fixes. CI48c0a3b/run36977435365 passed frontend/native/security while desktop checks were still running. No new version/tag until remaining global gates pass.

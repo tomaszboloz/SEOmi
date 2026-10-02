@@ -12,3 +12,4 @@ mod reports_focusable_elements_inside_aria_hidden_with_safe_source_evidence;
 mod uses_polish_readability_formula_when_html_declares_polish;
 mod versions_are_extracted_only_from_known_explicit_generator_declarations;
 use fixture::SAMPLE_HTML;
+mod content_regressions;

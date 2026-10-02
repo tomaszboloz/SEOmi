@@ -70,3 +70,8 @@ it('keeps the native HTML parser test facade and fixtures below 150 physical lin
  const files=['src-tauri/src/services/html_parser/tests.rs',...codeFiles('src-tauri/src/services/html_parser/tests')];
  expect(maxLocReport(files).violations).toEqual([]);
 });
+
+it('keeps native content statistics and every responsibility below 150 physical lines',()=>{
+ const files=['src-tauri/src/services/html_parser/content.rs',...codeFiles('src-tauri/src/services/html_parser/content')];
+ expect(maxLocReport(files).violations).toEqual([]);
+});
