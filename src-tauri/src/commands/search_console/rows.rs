@@ -16,12 +16,33 @@ pub(super) async fn performance_rows(
         "https://searchconsole.googleapis.com/webmasters/v3/sites/{}/searchAnalytics/query",
         site_path(site_url)
     );
+    performance_rows_at(
+        client,
+        access_token,
+        &endpoint,
+        start,
+        end,
+        dimension,
+        filters,
+    )
+    .await
+}
+
+pub(super) async fn performance_rows_at(
+    client: &reqwest::Client,
+    access_token: &str,
+    endpoint: &str,
+    start: &str,
+    end: &str,
+    dimension: Option<&str>,
+    filters: &GscPerformanceFilters,
+) -> Result<AnalyticsRows, String> {
     let mut rows = Vec::new();
     let mut start_row = 0usize;
     loop {
         let (payload, requested_rows) =
             analytics_page_request(start, end, dimension, start_row, filters);
-        let body = token_json(access_token, client.post(&endpoint).json(&payload)).await?;
+        let body = token_json(access_token, client.post(endpoint).json(&payload)).await?;
         let page = body
             .get("rows")
             .and_then(Value::as_array)

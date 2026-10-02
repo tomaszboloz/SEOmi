@@ -75,6 +75,10 @@ mod callback_tests;
 #[cfg(test)]
 mod command_tests;
 #[cfg(test)]
+mod rows_test_fixture;
+#[cfg(test)]
+mod rows_transport_tests;
+#[cfg(test)]
 mod token_transport_tests;
 #[cfg(test)]
 mod transport_regressions;

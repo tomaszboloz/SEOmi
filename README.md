@@ -1447,3 +1447,9 @@ Twenty-six focused native tests cover the original nine contracts, the two RED/G
 Thanks to @RafalSzy for the testing feedback in [PR #13](https://github.com/tomaszboloz/SEOmi/pull/13).
 
 BATCH-5e verification: isolated2767frontend/506Rust/70MCP tests PASS, build/lint/rustfmt/strictClippy PASS. Fresh frontend88.14%statements/79.36%branches/86.17%functions/89.01%lines; native production11935/18221lines65.50%,1207/1926functions62.67%,263verified source hashes, no branch/platform completeness claim. Inventory753TS/746executed/7factoryreturned,23executed bodies without direct static references. This batch decreases isolated LOC violations119to118; original69/72,177/181including local discovered fixes. CI8f17d87 passed allfivejobs; this newhead requires its ownCI.
+
+### BATCH-5f: Search Analytics integration tests
+
+Search Console row fetching now accepts an internal HTTP endpoint dependency while production retains the fixed Google URL. Five real loopback cases assert bearer-authenticated JSON POSTs, exact pagination offsets and page sizes, honest25000-row truncation flags, empty follow-up pages, one totals query, filter/date propagation and no partial-success response after a provider error on page2. No credential, Google scope, publicIPC or data-schema migration changes. New fixture/test modules54/146lines remain withinLOC150. Full isolated2767frontend/511Rust/70MCP tests and build/lint/rustfmt/strictClippy pass. Frontend88.14/79.36/86.17/89.01percent (statements/branches/functions/lines), fresh productionLLVM65.61%lines/62.71%functions,265source hashes verified. Nativebranches/uncompiledplatforms unmeasured. GlobalLOC118violations across1174files, originalaudit69/72 and requestedextensions remainOPEN; no release/tag yet.
+
+Thanks to @RafalSzy for the testing feedback in [PR #13](https://github.com/tomaszboloz/SEOmi/pull/13).
