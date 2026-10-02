@@ -3331,7 +3331,11 @@
     "currentTier": "Formule Actuelle",
     "upgradePro": "Passer à Pro",
     "creditsLeft": "Crédits IA Restants",
-    "connectAccount": "Connecter un Compte"
+    "connectAccount": "Connecter un Compte",
+    "refreshModels": "Actualiser la liste des modèles",
+    "modelsFromProvider": "{{count}} modèles depuis l’API du fournisseur",
+    "modelsDefault": "Modèles par défaut — testez la clé API pour charger vos modèles",
+    "modelsUnavailable": "Impossible de charger les modèles du fournisseur ; la dernière liste connue est affichée."
   },
   "schedules": {
     "saveError": "Unable to save the schedule.",
@@ -3500,16 +3504,7 @@
     "ai": {
       "openai": "OpenAI / Codex",
       "claude": "Anthropic Claude",
-      "gemini": "Google Gemini",
-      "gpt4o": "GPT-4o (high-converting copy)",
-      "gpt4oMini": "GPT-4o Mini (fast and lightweight)",
-      "o3Mini": "o3-mini (reasoning model)",
-      "claudeOpus5": "Claude Opus 5",
-      "claudeSonnet5": "Claude Sonnet 5",
-      "claudeHaiku45": "Claude Haiku 4.5",
-      "gemini38Flash": "Gemini 3.8 Flash",
-      "gemini35FlashLite": "Gemini 3.5 Flash-Lite",
-      "gemini31ProPreview": "Gemini 3.1 Pro (preview)"
+      "gemini": "Google Gemini"
     },
     "renderWorker": {
       "title": "Worker de rendu local",

@@ -3331,7 +3331,11 @@
     "currentTier": "Текущий план",
     "upgradePro": "Перейти на Pro",
     "creditsLeft": "Остаток кредитов ИИ",
-    "connectAccount": "Подключить аккаунт"
+    "connectAccount": "Подключить аккаунт",
+    "refreshModels": "Обновить список моделей",
+    "modelsFromProvider": "{{count}} моделей из API провайдера",
+    "modelsDefault": "Модели по умолчанию — проверьте ключ API, чтобы загрузить ваши модели",
+    "modelsUnavailable": "Не удалось загрузить модели провайдера; показан последний известный список."
   },
   "schedules": {
     "saveError": "Unable to save the schedule.",
@@ -3500,16 +3504,7 @@
     "ai": {
       "openai": "OpenAI / Codex",
       "claude": "Anthropic Claude",
-      "gemini": "Google Gemini",
-      "gpt4o": "GPT-4o (high-converting copy)",
-      "gpt4oMini": "GPT-4o Mini (fast and lightweight)",
-      "o3Mini": "o3-mini (reasoning model)",
-      "claudeOpus5": "Claude Opus 5",
-      "claudeSonnet5": "Claude Sonnet 5",
-      "claudeHaiku45": "Claude Haiku 4.5",
-      "gemini38Flash": "Gemini 3.8 Flash",
-      "gemini35FlashLite": "Gemini 3.5 Flash-Lite",
-      "gemini31ProPreview": "Gemini 3.1 Pro (preview)"
+      "gemini": "Google Gemini"
     },
     "renderWorker": {
       "title": "Локальный модуль рендеринга",

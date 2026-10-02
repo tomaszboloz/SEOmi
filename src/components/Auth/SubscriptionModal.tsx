@@ -14,6 +14,7 @@ import {
 } from "lucide-react";
 import { useUIStore } from "@/stores/uiStore";
 import { useAuthStore } from "@/stores/authStore";
+import { ProviderModelSelect } from "@/components/AI/ProviderModelSelect";
 import { AiProvider } from "@/types";
 
 const providers: {
@@ -21,7 +22,6 @@ const providers: {
   nameKey: string;
   command: string;
   icon: React.ElementType;
-  models: { id: string; labelKey: string }[];
   apiHelp: string;
 }[] = [
   {
@@ -30,11 +30,6 @@ const providers: {
     command: "codex",
     icon: Bot,
     apiHelp: "https://platform.openai.com/api-keys",
-    models: [
-      { id: "gpt-4o", labelKey: "legacyUi.ai.gpt4o" },
-      { id: "gpt-4o-mini", labelKey: "legacyUi.ai.gpt4oMini" },
-      { id: "o3-mini", labelKey: "legacyUi.ai.o3Mini" },
-    ],
   },
   {
     id: "claude",
@@ -42,11 +37,6 @@ const providers: {
     command: "claude",
     icon: Flame,
     apiHelp: "https://console.anthropic.com/settings/keys",
-    models: [
-      { id: "claude-opus-5", labelKey: "legacyUi.ai.claudeOpus5" },
-      { id: "claude-sonnet-5", labelKey: "legacyUi.ai.claudeSonnet5" },
-      { id: "claude-haiku-4-5", labelKey: "legacyUi.ai.claudeHaiku45" },
-    ],
   },
   {
     id: "gemini",
@@ -54,11 +44,6 @@ const providers: {
     command: "gemini",
     icon: Sparkles,
     apiHelp: "https://aistudio.google.com/app/apikey",
-    models: [
-      { id: "gemini-3.8-flash", labelKey: "legacyUi.ai.gemini38Flash" },
-      { id: "gemini-3.5-flash-lite", labelKey: "legacyUi.ai.gemini35FlashLite" },
-      { id: "gemini-3.1-pro-preview", labelKey: "legacyUi.ai.gemini31ProPreview" },
-    ],
   },
 ];
 
@@ -66,14 +51,12 @@ export const SubscriptionModal: React.FC = () => {
   const { t } = useTranslation();
   const closeModal = useUIStore((s) => s.closeModal);
   const provider = useAuthStore((s) => s.provider);
-  const model = useAuthStore((s) => s.model);
   const apiKeys = useAuthStore((s) => s.apiKeys);
   const methods = useAuthStore((s) => s.connectionMethod);
   const statuses = useAuthStore((s) => s.connectionStatus);
   const messages = useAuthStore((s) => s.statusMessages);
   const cliStatus = useAuthStore((s) => s.cliStatus);
   const setProvider = useAuthStore((s) => s.setProvider);
-  const setModel = useAuthStore((s) => s.setModel);
   const setMethod = useAuthStore((s) => s.setConnectionMethod);
   const setApiKey = useAuthStore((s) => s.setApiKey);
   const testConnection = useAuthStore((s) => s.testProviderConnection);
@@ -278,18 +261,11 @@ export const SubscriptionModal: React.FC = () => {
                 {active && (
                   <div className="mt-3 flex flex-col gap-2 sm:flex-row sm:items-center">
                     {method === "api_key" ? (
-                      <select
-                        aria-label={t("auth.modelLabel")}
-                        value={model}
-                        onChange={(event) => setModel(event.target.value)}
-                        className="h-8 rounded-lg border border-slate-700 bg-slate-950 px-2 text-xs text-white"
-                      >
-                        {item.models.map((choice) => (
-                          <option key={choice.id} value={choice.id}>
-                            {t(choice.labelKey)}
-                          </option>
-                        ))}
-                      </select>
+                      <ProviderModelSelect
+                        provider={item.id}
+                        ariaLabel={t("auth.modelLabel")}
+                        className="h-8 min-w-0 rounded-lg border border-slate-700 bg-slate-950 px-2 text-xs text-white"
+                      />
                     ) : (
                       <span className="text-[11px] text-slate-400">
                         {t("auth.localModelNote")}

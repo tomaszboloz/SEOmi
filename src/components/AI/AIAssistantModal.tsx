@@ -19,6 +19,7 @@ import { AiSuggestionResponse } from '@/services/ai';
 import { copyText } from '@/services/clipboard';
 import { useModalA11y } from '@/hooks/useModalA11y';
 import { useTransientValue } from '@/hooks/useTransientValue';
+import { ProviderModelSelect } from '@/components/AI/ProviderModelSelect';
 
 export const AIAssistantModal: React.FC = () => {
   const { t } = useTranslation();
@@ -29,8 +30,6 @@ export const AIAssistantModal: React.FC = () => {
 
   const provider = useAuthStore((s) => s.provider);
   const setProvider = useAuthStore((s) => s.setProvider);
-  const model = useAuthStore((s) => s.model);
-  const setModel = useAuthStore((s) => s.setModel);
   const apiKeys = useAuthStore((s) => s.apiKeys);
   const setApiKey = useAuthStore((s) => s.setApiKey);
   const connectionMethod = useAuthStore((s) => s.connectionMethod);
@@ -215,34 +214,12 @@ export const AIAssistantModal: React.FC = () => {
                   {t('auth.localModelNote')}
                 </div>
               ) : (
-                <select
+                <ProviderModelSelect
+                  provider={provider}
                   id="ai-model-select"
-                  value={model}
-                  onChange={(e) => setModel(e.target.value)}
+                  ariaLabel={t('ai.modelLabel')}
                   className="w-full h-9 px-3 bg-slate-950 border border-slate-800 rounded-lg text-xs text-white focus:outline-none focus:ring-1 focus:ring-emerald-500"
-                >
-                  {provider === 'openai' && (
-                    <>
-                      <option value="gpt-4o">{t('legacyUi.ai.gpt4o')}</option>
-                      <option value="gpt-4o-mini">{t('legacyUi.ai.gpt4oMini')}</option>
-                      <option value="o3-mini">{t('legacyUi.ai.o3Mini')}</option>
-                    </>
-                  )}
-                  {provider === 'claude' && (
-                    <>
-                      <option value="claude-opus-5">{t('legacyUi.ai.claudeOpus5')}</option>
-                      <option value="claude-sonnet-5">{t('legacyUi.ai.claudeSonnet5')}</option>
-                      <option value="claude-haiku-4-5">{t('legacyUi.ai.claudeHaiku45')}</option>
-                    </>
-                  )}
-                  {provider === 'gemini' && (
-                    <>
-                      <option value="gemini-3.8-flash">{t('legacyUi.ai.gemini38Flash')}</option>
-                      <option value="gemini-3.5-flash-lite">{t('legacyUi.ai.gemini35FlashLite')}</option>
-                      <option value="gemini-3.1-pro-preview">{t('legacyUi.ai.gemini31ProPreview')}</option>
-                    </>
-                  )}
-                </select>
+                />
               )}
             </div>
 

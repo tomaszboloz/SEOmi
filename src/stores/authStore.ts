@@ -6,6 +6,7 @@ import { createAuthPreferences } from './auth/preferences';
 import { createAuthCredentials } from './auth/credentials';
 import { createAuthConnection } from './auth/connection';
 import { createAuthGeneration } from './auth/generation';
+import { createAuthModels, initialModelState } from './auth/models';
 
 export const useAuthStore = create<AuthState>((set, get) => ({
   subscription: { tier: 'direct' },
@@ -16,9 +17,11 @@ export const useAuthStore = create<AuthState>((set, get) => ({
   statusMessages: providerMap(''),
   cliStatus: providerMap<AiCliStatus | null>(null),
   isHydrated: false,
+  ...initialModelState(),
 
   ...createAuthPreferences(set, get),
   ...createAuthCredentials(set, get),
   ...createAuthConnection(set, get),
   ...createAuthGeneration(set, get),
+  ...createAuthModels(set, get),
 }));

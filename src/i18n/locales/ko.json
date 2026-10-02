@@ -3331,7 +3331,11 @@
     "currentTier": "현재 플랜",
     "upgradePro": "Pro로 업그레이드",
     "creditsLeft": "남은 AI 크레딧",
-    "connectAccount": "계정 연결"
+    "connectAccount": "계정 연결",
+    "refreshModels": "모델 목록 새로고침",
+    "modelsFromProvider": "공급자 API의 모델 {{count}}개",
+    "modelsDefault": "기본 모델 — API 키를 테스트하면 사용 가능한 모델을 불러옵니다",
+    "modelsUnavailable": "공급자에서 모델을 불러오지 못했습니다. 마지막으로 확인된 목록을 표시합니다."
   },
   "schedules": {
     "saveError": "Unable to save the schedule.",
@@ -3500,16 +3504,7 @@
     "ai": {
       "openai": "OpenAI / Codex",
       "claude": "Anthropic Claude",
-      "gemini": "Google Gemini",
-      "gpt4o": "GPT-4o (high-converting copy)",
-      "gpt4oMini": "GPT-4o Mini (fast and lightweight)",
-      "o3Mini": "o3-mini (reasoning model)",
-      "claudeOpus5": "Claude Opus 5",
-      "claudeSonnet5": "Claude Sonnet 5",
-      "claudeHaiku45": "Claude Haiku 4.5",
-      "gemini38Flash": "Gemini 3.8 Flash",
-      "gemini35FlashLite": "Gemini 3.5 Flash-Lite",
-      "gemini31ProPreview": "Gemini 3.1 Pro (preview)"
+      "gemini": "Google Gemini"
     },
     "renderWorker": {
       "title": "로컬 렌더링 워커",
