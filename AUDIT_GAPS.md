@@ -479,3 +479,17 @@ Thanks to @RafalSzy for the testing feedback in [PR #13](https://github.com/toma
 - CI128b3f2/run37014000778 allfiveSUCCESS including actualWindows/macOSdesktopE2E. Newhead requiresownCI. Master protection freshlyverified:admins enforced,force/deletiondisabled,fivestrictchecks.
 
 Thanks to @RafalSzy for the testing feedback in [PR #13](https://github.com/tomaszboloz/SEOmi/pull/13).
+
+## BATCH-4y: bounded topical documents and source identity
+- [x] GAP-165: [DISCOVERED][MEDIUM] Manual updater silently drops the 101st distinct query without limitReached. Status: FIXED: RED false versus true; collect one overflow witness beyond the available budget while keeping public parser/output bounded to100.
+- [x] GAP-166: [DISCOVERED][MEDIUM] Manual query parser caps raw lines before validation, letting blank/duplicate lines discard valid later queries. Status: FIXED: RED empty versus coffee/beans; apply the budget to valid unique entries and retain exact existing query IDs/provenance.
+- [x] GAP-167: [DISCOVERED][MEDIUM] GSC evidence identity lowercases case-sensitive property paths, merging distinct properties. Status: FIXED: RED1versus2imports; preserve GSC property identity and dates, retain existing normalized DataForSEO market identity.
+- [x] GAP-168: [DISCOVERED][MEDIUM] Cluster import treats missing final_url as a shared identity, including unrelated legacy crawl pages. Status: FIXED: RED coffee cluster includes widgets URL; unavailable URLs are excluded from the identity set and real request/final matches remain supported.
+- [x] GAP-169: [DISCOVERED][HIGH] Parent editing loops indefinitely when attaching to a preexisting foreign cycle. Status: FIXED: RED guarded traversal exceeds6visits; reject repeated parent identities, same fixture now completes in2visits without changing the document.
+- Original495line topicalMap becomes11line facade and14responsibilities, largest108physical lines. Existing types/API and ten original test bodies remain intact; three provider tests moved verbatim to a dedicated62line file. AST lexical comparison preserves18unchanged initializer bodies. Query collection/identity, cluster identity and cycle traversal intentionally change with RED/green evidence. Two unreachable optional fallbacks removed: source identities only index queries with a source; validated lateral endpoints guarantee the selected node exists.
+- Scoped43testsPASS:308/308statements,243/243branches,73/73functions,229/229lines. Full2626frontend/488Rust/70MCP PASS; build/ESLint/rustfmt/strictClippyPASS. Globalfrontend87.21%statements/77.76%branches/84.25%functions/88.18%lines remainsbelow99.01%.
+- Native production unchanged; reusedBATCH-4u evidence revalidates all238AST/source hashes:11717/18142productionlines64.58%,1167/1910sourcefunctions61.10%. Nativebranches/uncompiledplatforms remainunmeasured.
+- GlobalLOC1081files/126violations remainsOPEN. Publicinventory720TS/713executed/7factory-returned;46executedbodieswithoutdirectstaticreferences. Originalaudit69/72;165/169includinglocallyfixeddiscoveredissues. Globalcoverage/directassertions/LOC, requestedextensions and release/tag remainOPEN.
+- CIb12c2c1/run37023188353 frontend/native/securitySUCCESS; Windows/macOSdesktopE2E stillrunning atlatestread. Newhead requiresownCI. Masterprotection freshlyverified:admins enforced,force/deletiondisabled,fivestrictchecks.
+
+Thanks to @RafalSzy for the testing feedback in [PR #13](https://github.com/tomaszboloz/SEOmi/pull/13).

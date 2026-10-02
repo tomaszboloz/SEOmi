@@ -1378,3 +1378,11 @@ Thanks to @RafalSzy for the testing feedback in [PR #13](https://github.com/toma
 - CI128b3f2/run37014000778 allfiveSUCCESS including actualWindows/macOSdesktopE2E. Newhead requiresownCI. Master protection freshlyverified:admins enforced,force/deletiondisabled,fivestrictchecks.
 
 Thanks to @RafalSzy for the testing feedback in [PR #13](https://github.com/tomaszboloz/SEOmi/pull/13).
+
+### BATCH-4y: topical document contracts
+
+The495line topical document service is now an11line facade with14focused modules (largest108physical lines). Manual query limits count valid unique phrases and disclose overflow; GSC property paths retain case-sensitive identity; missing final URLs cannot link unrelated crawl pages; parent editing rejects existing foreign cycles. Five reproduced regressions are fixed. Existing public API and all ten original test bodies remain available;18unchanged initializer bodies match their original lexical tokens.
+
+Scoped43tests cover100%of308statements/243branches/73functions/229lines. Full2626frontend/488Rust/70MCP tests, build/lint/fmt/strictClippy pass. Globalfrontend87.21%statements/77.76%branches/84.25%functions/88.18%lines; reused hash-validated native evidence64.58%productionlines/61.10%sourcefunctions. GlobalLOC1081files/126violations and46executedTSbodieswithoutdirectstaticreferences remain open; originalaudit69/72,165/169including discovered fixes. No new release/tag until the global gates and requested extensions are complete. Master protection was verified with admins enforced, force pushes/deletion disabled and five strict required checks. CIb12c2c1/run37023188353 passes frontend/native/security; desktop jobs were still running at the latest read.
+
+Thanks to @RafalSzy for the test feedback in [PR #13](https://github.com/tomaszboloz/SEOmi/pull/13).
