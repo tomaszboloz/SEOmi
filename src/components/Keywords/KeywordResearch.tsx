@@ -17,6 +17,7 @@ import { SearchIntent } from '@/types';
 import { TrendChart } from '@/components/Charts/TrendChart';
 import { DataForSeoLanguagePicker, DataForSeoLocationPicker } from '@/components/DataForSEO/DataForSeoPickers';
 import { dataForSeoLanguage, dataForSeoMarket } from '@/services/dataforseo';
+import { appLocale } from '@/services/localeFormat';
 
 export const KeywordResearch: React.FC = () => {
   const { t } = useTranslation();
@@ -217,7 +218,7 @@ export const KeywordResearch: React.FC = () => {
                 <span>{t('keywordResearchUi.monthlyVolume')}</span>
               </div>
               <div className="text-2xl font-bold text-white font-mono">
-                {primaryItem.search_volume.toLocaleString()}
+                {primaryItem.search_volume.toLocaleString(appLocale())}
               </div>
               <span className="text-[11px] text-slate-500">{t('keywordResearchUi.searchesPerMonth')}</span>
             </div>
@@ -329,7 +330,7 @@ export const KeywordResearch: React.FC = () => {
                         </span>
                       </td>
                       <td className="px-4 py-3.5 text-right font-mono text-slate-200">
-                        {item.search_volume.toLocaleString()}
+                        {item.search_volume.toLocaleString(appLocale())}
                       </td>
                       <td className="px-4 py-3.5 text-center">
                         <span className={`text-xs px-2 py-0.5 rounded-md font-mono border ${getDifficultyColor(item.difficulty)}`}>

@@ -10,6 +10,7 @@ import { DataForSEOClient, resolveDataForSeoMarket, dataForSeoLanguage, dataForS
 import { DataForSeoLanguagePicker, DataForSeoLocationPicker } from '@/components/DataForSEO/DataForSeoPickers';
 import { clusterKeywordsBySerpOverlap, getSerpSnapshot, KeywordClusteringResult } from '@/services/keywordClustering';
 import { readStorage, writeJsonStorage } from '@/services/storage';
+import { appLocale } from '@/services/localeFormat';
 
 interface ClusteringSession {
   input: string;
@@ -222,7 +223,7 @@ export const KeywordClustering: React.FC = () => {
         <section className="space-y-4" aria-live="polite">
           <div className="flex flex-wrap items-baseline justify-between gap-2">
             <h2 className="text-lg font-bold text-white">{t('keywordClusteringUi.resultTitle')}</h2>
-            <span className="text-xs text-slate-500">{t('keywordClusteringUi.resultMeta', { count: session.result.snapshots.length, threshold: session.result.minSharedUrls, date: new Date(session.result.analyzedAt).toLocaleString() })}</span>
+            <span className="text-xs text-slate-500">{t('keywordClusteringUi.resultMeta', { count: session.result.snapshots.length, threshold: session.result.minSharedUrls, date: new Date(session.result.analyzedAt).toLocaleString(appLocale()) })}</span>
           </div>
           {session.result.clusters.length ? session.result.clusters.map((cluster, index) => (
             <article key={cluster.id} className="rounded-xl border border-slate-800 bg-slate-900/60 p-4">

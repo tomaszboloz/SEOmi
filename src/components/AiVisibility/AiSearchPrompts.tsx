@@ -15,6 +15,7 @@ import { useProjectStore } from '@/stores/projectStore';
 import { matchAiCitationToCrawl } from '@/services/aiCitationEvidence';
 import { readStorage, removeStorage, writeStorage } from '@/services/storage';
 import { copyText } from '@/services/clipboard';
+import { appLocale } from '@/services/localeFormat';
 
 export const AiSearchPrompts: React.FC = () => {
   const { t } = useTranslation();
@@ -173,7 +174,7 @@ export const AiSearchPrompts: React.FC = () => {
         <div className="flex flex-wrap items-center gap-3 rounded-lg border border-slate-800 bg-slate-900/60 p-3">
           <label htmlFor="ai-prompt-history" className="text-xs text-slate-300">{t('aiVisibility.search.historyLabel')}</label>
           <select id="ai-prompt-history" aria-label={t('aiVisibility.search.historyAria')} value={aiPromptComparison.captured_at} onChange={(event) => selectAiPromptComparison(event.target.value)} className="min-w-64 max-w-full rounded-md border border-slate-700 bg-slate-950 px-3 py-2 text-xs text-white">
-            {aiPromptHistory.map((comparison) => <option key={comparison.captured_at} value={comparison.captured_at}>{new Date(comparison.captured_at).toLocaleString()} · {comparison.prompt}</option>)}
+            {aiPromptHistory.map((comparison) => <option key={comparison.captured_at} value={comparison.captured_at}>{new Date(comparison.captured_at).toLocaleString(appLocale())} · {comparison.prompt}</option>)}
           </select>
           <span className="text-[10px] text-slate-500">{t('aiVisibility.search.historyNote')}</span>
         </div>
@@ -184,19 +185,19 @@ export const AiSearchPrompts: React.FC = () => {
           <label className="min-w-64 text-[10px] text-slate-400">{t('aiVisibility.search.sourceLabel')}
             <select aria-label={t('aiVisibility.search.sourceAria')} value={sourceContextRunId} onChange={(event) => selectSourceContextRun(event.target.value)} className="mt-1 h-9 w-full rounded-md border border-slate-700 bg-slate-950 px-2.5 text-xs text-slate-100">
               <option value="">{t('aiVisibility.search.noSnapshot')}</option>
-              {crawlRuns.map((run) => <option key={run.id} value={run.id}>{new Date(run.completedAt).toLocaleString()} · {run.startUrl} · {t('crawl.ui.urlsCount', { count: run.result.pages_crawled })}</option>)}
+              {crawlRuns.map((run) => <option key={run.id} value={run.id}>{new Date(run.completedAt).toLocaleString(appLocale())} · {run.startUrl} · {t('crawl.ui.urlsCount', { count: run.result.pages_crawled })}</option>)}
             </select>
           </label>
         </div>
         {sourceContextSaveError && <p role="alert" className="mt-2 text-[10px] text-amber-200">{t('aiVisibility.search.sourceSaveError')}</p>}
-        {sourceContextRun && <p className="mt-2 text-[10px] text-slate-500">{t('aiVisibility.search.evidenceRun', { id: sourceContextRun.id, date: new Date(sourceContextRun.completedAt).toLocaleString(), count: sourceContextRun.result.pages.length })}</p>}
+        {sourceContextRun && <p className="mt-2 text-[10px] text-slate-500">{t('aiVisibility.search.evidenceRun', { id: sourceContextRun.id, date: new Date(sourceContextRun.completedAt).toLocaleString(appLocale()), count: sourceContextRun.result.pages.length })}</p>}
       </section>}
 
       {/* Comparison Columns */}
       {aiPromptComparison && (
         <div className="space-y-4">
           <div className="flex items-center justify-between">
-            <div><h3 className="font-bold text-white text-base">{t('aiVisibility.search.localResponses')}</h3><p className="mt-1 text-[10px] text-slate-500">{t('aiVisibility.search.promptStarted', { date: new Date(aiPromptComparison.captured_at).toLocaleString() })}</p></div>
+            <div><h3 className="font-bold text-white text-base">{t('aiVisibility.search.localResponses')}</h3><p className="mt-1 text-[10px] text-slate-500">{t('aiVisibility.search.promptStarted', { date: new Date(aiPromptComparison.captured_at).toLocaleString(appLocale()) })}</p></div>
             <span className="max-w-xl text-xs text-slate-400">{t('aiVisibility.search.promptPrefix', { prompt: aiPromptComparison.prompt })}</span>
           </div>
 
@@ -232,7 +233,7 @@ export const AiSearchPrompts: React.FC = () => {
                   <div className="p-3.5 rounded-lg bg-slate-950/80 border border-slate-800/80 text-xs text-slate-300 leading-relaxed whitespace-pre-line font-sans">
                     {res.response_status === 'error' ? <span className="text-rose-200">{t('aiVisibility.search.noResponse', { message: res.error_message })}</span> : res.response_text}
                   </div>
-                  <p className="text-[10px] text-slate-600">{t('aiVisibility.search.providerMeta', { provider: res.provider, date: new Date(res.captured_at).toLocaleString() })}</p>
+                  <p className="text-[10px] text-slate-600">{t('aiVisibility.search.providerMeta', { provider: res.provider, date: new Date(res.captured_at).toLocaleString(appLocale()) })}</p>
                 </div>
 
                 {/* Citations */}

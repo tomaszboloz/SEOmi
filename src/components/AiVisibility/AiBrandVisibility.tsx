@@ -11,6 +11,7 @@ import {
 import { useToolsStore } from '@/stores/toolsStore';
 import { useAuthStore } from '@/stores/authStore';
 import { useProjectStore } from '@/stores/projectStore';
+import { appLocale } from '@/services/localeFormat';
 
 export const AiBrandVisibility: React.FC = () => {
   const { t } = useTranslation();
@@ -164,7 +165,7 @@ export const AiBrandVisibility: React.FC = () => {
             <div className="flex flex-wrap items-center gap-3 rounded-lg border border-slate-800 bg-slate-900/60 p-3">
               <label htmlFor="ai-brand-history" className="text-xs text-slate-300">{t('aiVisibility.brand.historyLabel')}</label>
               <select id="ai-brand-history" aria-label={t('aiVisibility.brand.historyAria')} value={aiBrandReport.timestamp} onChange={(event) => selectAiBrandReport(event.target.value)} className="min-w-64 rounded-md border border-slate-700 bg-slate-950 px-3 py-2 text-xs text-white">
-                {aiBrandHistory.map((report) => <option key={report.timestamp} value={report.timestamp}>{new Date(report.timestamp).toLocaleString()} · {report.brand}{report.domain ? ` (${report.domain})` : ''}</option>)}
+                {aiBrandHistory.map((report) => <option key={report.timestamp} value={report.timestamp}>{new Date(report.timestamp).toLocaleString(appLocale())} · {report.brand}{report.domain ? ` (${report.domain})` : ''}</option>)}
               </select>
               <span className="text-[10px] text-slate-500">{t('aiVisibility.brand.historyNote')}</span>
             </div>
@@ -188,7 +189,7 @@ export const AiBrandVisibility: React.FC = () => {
               </div>
 
               <div className="text-[11px] font-mono text-slate-500 pt-3 border-t border-slate-800">
-                {t('aiVisibility.brand.lastResearch', { date: new Date(aiBrandReport.timestamp).toLocaleString() })}
+                {t('aiVisibility.brand.lastResearch', { date: new Date(aiBrandReport.timestamp).toLocaleString(appLocale()) })}
               </div>
             </div>
 
@@ -254,7 +255,7 @@ export const AiBrandVisibility: React.FC = () => {
                     {m.search_mode && <p className="text-xs text-slate-400">{t(`aiResearch.${m.search_mode}`)} · {t('aiResearch.position', { value: m.mention_position ?? '—' })} · {t(m.own_domain_cited ? 'aiResearch.ownDomainYes' : 'aiResearch.ownDomainNo')}</p>}
                     {m.competitors_mentioned?.length ? <p className="text-xs text-slate-400">{m.competitors_mentioned.join(', ')}</p> : null}
                     {m.error_message ? <p role="alert" className="text-xs text-rose-200 bg-rose-950/30 p-3 rounded-lg border border-rose-800/40">{m.error_message}</p> : <p className="text-xs text-slate-300 leading-relaxed bg-slate-950/60 p-3 rounded-lg border border-slate-800/80">{m.summary}</p>}
-                    <p className="text-[10px] text-slate-600">{t('aiVisibility.brand.savedResponse', { date: new Date(m.captured_at).toLocaleString(), provider: m.provider })}</p>
+                    <p className="text-[10px] text-slate-600">{t('aiVisibility.brand.savedResponse', { date: new Date(m.captured_at).toLocaleString(appLocale()), provider: m.provider })}</p>
                   </div>
 
                   <div>

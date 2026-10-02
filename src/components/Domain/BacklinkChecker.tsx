@@ -15,6 +15,7 @@ import { useToolsStore } from '@/stores/toolsStore';
 import { useProjectStore } from '@/stores/projectStore';
 import { downloadBacklinkGapCsv } from '@/services/export';
 import { TrendChart } from '@/components/Charts/TrendChart';
+import { appLocale } from '@/services/localeFormat';
 
 export const BacklinkChecker: React.FC = () => {
   const { t } = useTranslation();
@@ -156,7 +157,7 @@ export const BacklinkChecker: React.FC = () => {
         {backlinkGapReport && (
           <div className="overflow-hidden rounded-lg border border-slate-800">
             <div className="flex flex-col gap-1 border-b border-slate-800 bg-slate-950/60 px-4 py-3 sm:flex-row sm:items-center sm:justify-between">
-              <span className="text-xs font-medium text-slate-200">{t('backlinkUi.gapSummary', { opportunities: backlinkGapReport.opportunities.length.toLocaleString(), scanned: backlinkGapReport.rows_scanned.toLocaleString(), total: backlinkGapReport.total_rows?.toLocaleString() ?? t('backlinkUi.unknownCount') })}</span>
+              <span className="text-xs font-medium text-slate-200">{t('backlinkUi.gapSummary', { opportunities: backlinkGapReport.opportunities.length.toLocaleString(appLocale()), scanned: backlinkGapReport.rows_scanned.toLocaleString(appLocale()), total: backlinkGapReport.total_rows?.toLocaleString(appLocale()) ?? t('backlinkUi.unknownCount') })}</span>
               <div className="flex items-center justify-between gap-3"><span className="text-[11px] text-slate-500">{t('backlinkUi.excludedTarget', { target: backlinkGapReport.target })}</span><button type="button" onClick={() => downloadBacklinkGapCsv(backlinkGapReport)} className="inline-flex shrink-0 items-center gap-1.5 rounded border border-slate-700 px-2 py-1 text-[11px] text-slate-300 hover:border-emerald-500/50 hover:text-white"><Download className="h-3 w-3" />{t('backlinkUi.exportCsv')}</button></div>
             </div>
             <div className="overflow-x-auto">
@@ -165,7 +166,7 @@ export const BacklinkChecker: React.FC = () => {
                 <tbody className="divide-y divide-slate-800/70">
                   {backlinkGapReport.opportunities.map((item) => <tr key={item.referring_domain} className="align-top hover:bg-slate-800/30">
                     <td className="px-4 py-3 font-mono text-slate-200">{item.referring_domain}</td>
-                    <td className="px-4 py-3"><ul className="space-y-1">{item.competitor_backlinks.map((competitor) => <li key={competitor.domain} className="flex items-center justify-between gap-5 text-slate-400"><span className="font-mono">{competitor.domain}</span><span className="whitespace-nowrap">{competitor.backlinks.toLocaleString()} · {t('backlinkUi.rank')} {competitor.rank ?? '—'}</span></li>)}</ul></td>
+                    <td className="px-4 py-3"><ul className="space-y-1">{item.competitor_backlinks.map((competitor) => <li key={competitor.domain} className="flex items-center justify-between gap-5 text-slate-400"><span className="font-mono">{competitor.domain}</span><span className="whitespace-nowrap">{competitor.backlinks.toLocaleString(appLocale())} · {t('backlinkUi.rank')} {competitor.rank ?? '—'}</span></li>)}</ul></td>
                     <td className="px-4 py-3 text-right font-mono text-slate-400">{item.max_competitor_spam_score ?? '—'}</td>
                   </tr>)}
                   {backlinkGapReport.opportunities.length === 0 && <tr><td colSpan={3} className="px-4 py-6 text-center text-slate-500">{t('backlinkUi.noGaps')}</td></tr>}
@@ -193,7 +194,7 @@ export const BacklinkChecker: React.FC = () => {
                 <span>{t('backlinkUi.totalBacklinks')}</span>
               </div>
               <div className="text-2xl font-bold text-white font-mono">
-                {backlinkProfile.total_backlinks.toLocaleString()}
+                {backlinkProfile.total_backlinks.toLocaleString(appLocale())}
               </div>
               <span className="text-[11px] text-slate-500">{t('backlinkUi.knownInbound')}</span>
             </div>
@@ -204,7 +205,7 @@ export const BacklinkChecker: React.FC = () => {
                 <span>{t('backlinkUi.referringDomains')}</span>
               </div>
               <div className="text-2xl font-bold text-white font-mono">
-                {backlinkProfile.referring_domains.toLocaleString()}
+                {backlinkProfile.referring_domains.toLocaleString(appLocale())}
               </div>
               <span className="text-[11px] text-slate-500">{t('backlinkUi.uniqueRoots')}</span>
             </div>
@@ -215,7 +216,7 @@ export const BacklinkChecker: React.FC = () => {
                 <span>{t('backlinkUi.referringSubnets')}</span>
               </div>
               <div className="text-2xl font-bold text-white font-mono">
-                {backlinkProfile.referring_subnets?.toLocaleString() ?? '—'}
+                {backlinkProfile.referring_subnets?.toLocaleString(appLocale()) ?? '—'}
               </div>
               <span className="text-[11px] text-slate-500">{t('backlinkUi.classC')}</span>
             </div>
@@ -293,7 +294,7 @@ export const BacklinkChecker: React.FC = () => {
                 <Sparkles className="w-4 h-4 text-amber-400" />
                 <span>{t('backlinkUi.anchorProfile')}</span>
               </h3>
-              <p className="text-[11px] text-slate-500">{t('backlinkUi.anchorSummary', { count: backlinkProfile.anchors.length, total: backlinkProfile.total_anchor_rows?.toLocaleString() ?? t('backlinkUi.unknownCount') })}</p>
+              <p className="text-[11px] text-slate-500">{t('backlinkUi.anchorSummary', { count: backlinkProfile.anchors.length, total: backlinkProfile.total_anchor_rows?.toLocaleString(appLocale()) ?? t('backlinkUi.unknownCount') })}</p>
               <p className="text-[11px] text-slate-500">{t('backlinkUi.anchorNotice')}</p>
 
               <div className="space-y-2.5">
@@ -327,7 +328,7 @@ export const BacklinkChecker: React.FC = () => {
           <div className="rounded-xl border border-slate-800 bg-slate-900/60 overflow-hidden shadow-md">
             <div className="p-4 border-b border-slate-800 flex items-center justify-between">
               <h3 className="font-bold text-white text-sm">{t('backlinkUi.returnedBacklinks')}</h3>
-              <span className="text-xs text-slate-400 font-mono">{backlinkProfile.backlinks.length.toLocaleString()} / {backlinkProfile.total_backlink_rows?.toLocaleString() ?? t('backlinkUi.unknownCount')}</span>
+              <span className="text-xs text-slate-400 font-mono">{backlinkProfile.backlinks.length.toLocaleString(appLocale())} / {backlinkProfile.total_backlink_rows?.toLocaleString(appLocale()) ?? t('backlinkUi.unknownCount')}</span>
             </div>
 
             <div className="overflow-x-auto">

@@ -10,6 +10,7 @@ import { writeJsonStorage } from "@/services/storage";
 import { createId } from "@/services/ids";
 import type { Props } from './contracts';
 import { TopicalUrlCandidate, normalizeTopicalCandidateUrl, TopicalWorkspacePreferences, topicalWorkspacePreferencesKey, readTopicalWorkspacePreferences } from './workspaceHelpers';
+import { appLocale } from '@/services/localeFormat';
 
 export interface TopicalSessionDependencies {
   readMap: typeof readTopicalMap;
@@ -54,7 +55,7 @@ export const useSemanticTopicalSession = ({
   const sourceMetric = (value: number | null) =>
     value === null
       ? t("semanticWorkspace.sourceMetricMissing")
-      : value.toLocaleString();
+      : value.toLocaleString(appLocale());
   const [document, setDocument] = useState<TopicalMapDocument>(() =>
     projectId
       ? dependencies.readMap(projectId)

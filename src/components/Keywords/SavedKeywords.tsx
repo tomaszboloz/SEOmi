@@ -15,6 +15,7 @@ import {
 import { useToolsStore } from '@/stores/toolsStore';
 import { useAuditStore } from '@/stores/auditStore';
 import { useProjectStore } from '@/stores/projectStore';
+import { appLocale } from '@/services/localeFormat';
 
 export const SavedKeywords: React.FC = () => {
   const { t } = useTranslation();
@@ -154,7 +155,7 @@ export const SavedKeywords: React.FC = () => {
             <BarChart2 className="w-3.5 h-3.5 text-blue-400" />
             <span>{t('savedKeywordsUi.aggregateVolume')}</span>
           </div>
-          <div className="text-2xl font-bold text-white font-mono">{totalVolume.toLocaleString()}</div>
+          <div className="text-2xl font-bold text-white font-mono">{totalVolume.toLocaleString(appLocale())}</div>
           <span className="text-[11px] text-slate-500">{t('savedKeywordsUi.potentialImpressions')}</span>
         </div>
 
@@ -172,7 +173,7 @@ export const SavedKeywords: React.FC = () => {
             <DollarSign className="w-3.5 h-3.5 text-purple-400" />
             <span>{t('savedKeywordsUi.trafficValue')}</span>
           </div>
-          <div className="text-2xl font-bold text-white font-mono">${Math.round(estMonthlyValue).toLocaleString()}</div>
+          <div className="text-2xl font-bold text-white font-mono">${Math.round(estMonthlyValue).toLocaleString(appLocale())}</div>
           <span className="text-[11px] text-slate-500">{t('savedKeywordsUi.organicValue')}</span>
         </div>
       </div>
@@ -303,7 +304,7 @@ export const SavedKeywords: React.FC = () => {
                       </div>
                     </td>
                     <td className="px-4 py-3.5 text-right font-mono text-slate-200">
-                      {item.search_volume.toLocaleString()}
+                      {item.search_volume.toLocaleString(appLocale())}
                     </td>
                     <td className="px-4 py-3.5 text-center font-mono">
                       <span

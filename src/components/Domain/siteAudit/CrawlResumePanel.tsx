@@ -1,4 +1,5 @@
 import type { useSiteAuditSession } from './useSiteAuditSession';
+import { appLocale } from '@/services/localeFormat';
 
 type Session = ReturnType<typeof useSiteAuditSession>;
 export const CrawlResumePanel = ({ session }: { session: Session }) => {
@@ -18,12 +19,12 @@ return (<section
                 {t("siteAudit.interruptedDescription", {
                   url: interruptedCrawl.url,
                   limit: interruptedCrawl.limit,
-                  date: new Date(interruptedCrawl.startedAt).toLocaleString(),
+                  date: new Date(interruptedCrawl.startedAt).toLocaleString(appLocale()),
                   completed:
-                    interruptedCrawl.completedUrls?.length?.toLocaleString() ||
+                    interruptedCrawl.completedUrls?.length?.toLocaleString(appLocale()) ||
                     "",
                   frontier:
-                    interruptedCrawl.frontierUrls?.length?.toLocaleString() ||
+                    interruptedCrawl.frontierUrls?.length?.toLocaleString(appLocale()) ||
                     "",
                 })}
               </p>

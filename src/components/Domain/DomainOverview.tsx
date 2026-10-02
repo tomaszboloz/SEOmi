@@ -18,6 +18,7 @@ import { useProjectStore } from '@/stores/projectStore';
 import { TrendChart } from '@/components/Charts/TrendChart';
 import { DataForSeoLanguagePicker, DataForSeoLocationPicker } from '@/components/DataForSEO/DataForSeoPickers';
 import { dataForSeoLanguage, dataForSeoMarket } from '@/services/dataforseo';
+import { appLocale } from '@/services/localeFormat';
 
 export const DomainOverview: React.FC = () => {
   const { t } = useTranslation();
@@ -204,7 +205,7 @@ export const DomainOverview: React.FC = () => {
                 <span>{t('domainResearchUi.monthlyTraffic')}</span>
               </div>
               <div className="text-2xl font-bold text-white font-mono">
-                {domainOverview.organic_traffic?.toLocaleString() ?? '—'}
+                {domainOverview.organic_traffic?.toLocaleString(appLocale()) ?? '—'}
               </div>
               <span className="text-[11px] text-slate-500">{t('domainResearchUi.estimatedVisitors')}</span>
             </div>
@@ -215,7 +216,7 @@ export const DomainOverview: React.FC = () => {
                 <span>{t('domainResearchUi.organicKeywords')}</span>
               </div>
               <div className="text-2xl font-bold text-white font-mono">
-                {domainOverview.organic_keywords?.toLocaleString() ?? '—'}
+                {domainOverview.organic_keywords?.toLocaleString(appLocale()) ?? '—'}
               </div>
               <span className="text-[11px] text-slate-500">{t('domainResearchUi.rankedTop100')}</span>
             </div>
@@ -238,7 +239,7 @@ export const DomainOverview: React.FC = () => {
                 <span>{t('domainResearchUi.referringDomains')}</span>
               </div>
               <div className="text-2xl font-bold text-white font-mono">
-                {domainOverview.referring_domains?.toLocaleString() ?? '—'}
+                {domainOverview.referring_domains?.toLocaleString(appLocale()) ?? '—'}
               </div>
               <span className="text-[11px] text-slate-500">{t('domainResearchUi.uniqueRootDomains')}</span>
             </div>
@@ -275,7 +276,7 @@ export const DomainOverview: React.FC = () => {
                             {k.position === null ? '—' : `#${k.position}`}
                           </span>
                         </td>
-                        <td className="py-2.5 text-right text-slate-300">{k.search_volume?.toLocaleString() ?? '—'}</td>
+                        <td className="py-2.5 text-right text-slate-300">{k.search_volume?.toLocaleString(appLocale()) ?? '—'}</td>
                         <td className="py-2.5 text-right text-slate-400">{k.traffic_share === null ? '—' : `${k.traffic_share}%`}</td>
                       </tr>
                     ))}
@@ -308,7 +309,7 @@ export const DomainOverview: React.FC = () => {
                       <tr key={i} className="hover:bg-slate-800/30 transition">
                         <td className="py-2.5 text-slate-300 truncate max-w-[200px]">{p.url}</td>
                         <td className="py-2.5 text-right text-emerald-400 font-bold">{p.traffic_percentage === null ? '—' : `${p.traffic_percentage}%`}</td>
-                        <td className="py-2.5 text-right text-slate-400">{p.keywords_count?.toLocaleString() ?? '—'}</td>
+                        <td className="py-2.5 text-right text-slate-400">{p.keywords_count?.toLocaleString(appLocale()) ?? '—'}</td>
                       </tr>
                     ))}
                   </tbody>
@@ -333,7 +334,7 @@ export const DomainOverview: React.FC = () => {
                   <div>
                     <div className="font-bold text-white font-mono text-sm">{c.domain}</div>
                     <div className="text-xs text-slate-400 mt-1">
-                      {c.common_keywords?.toLocaleString() ?? '—'} {t('domainResearchUi.overlappingKeywords')}
+                      {c.common_keywords?.toLocaleString(appLocale()) ?? '—'} {t('domainResearchUi.overlappingKeywords')}
                     </div>
                   </div>
                   <div className="mt-4 flex items-center justify-between pt-2 border-t border-slate-800/80 text-xs">
@@ -351,7 +352,7 @@ export const DomainOverview: React.FC = () => {
                 <h3 className="font-bold text-white flex items-center gap-2"><BarChart3 className="w-4 h-4 text-violet-300" />{t('domainResearchUi.compareDomains')}</h3>
                 <p className="mt-1 max-w-3xl text-xs leading-5 text-slate-400">{t('domainResearchUi.compareDescription')}</p>
               </div>
-              {domainComparison && <span className="shrink-0 text-[11px] text-slate-500">{t('domainResearchUi.domainCount', { count: domainComparison.rows.length, date: new Date(domainComparison.retrieved_at).toLocaleString() })}</span>}
+              {domainComparison && <span className="shrink-0 text-[11px] text-slate-500">{t('domainResearchUi.domainCount', { count: domainComparison.rows.length, date: new Date(domainComparison.retrieved_at).toLocaleString(appLocale()) })}</span>}
             </div>
             <p className="text-xs text-amber-200">{t('dataforseo.paidRequests', { count: 5 * Math.min(5, 1 + comparisonInput.split(/[\n,;]+/).filter((value) => value.trim()).length) })}</p>
             <form onSubmit={handleCompareDomains} className="grid gap-2 sm:grid-cols-[minmax(0,1fr)_auto]">
@@ -366,7 +367,7 @@ export const DomainOverview: React.FC = () => {
                   {domainComparison.rows.map((row) => {
                     const maxTraffic = Math.max(...domainComparison.rows.map((item) => item.organic_traffic ?? 0), 1);
                     const trafficWidth = row.organic_traffic === null ? 0 : Math.round((row.organic_traffic / maxTraffic) * 100);
-                    return <tr key={row.domain} className="text-slate-300 hover:bg-slate-800/30"><td className="px-3 py-2.5 font-mono font-medium text-white"><div>{row.domain}{row.domain === domainComparison.target && <span className="ml-2 rounded border border-emerald-500/25 bg-emerald-500/10 px-1.5 py-0.5 text-[10px] text-emerald-200">{t('domainResearchUi.project')}</span>}</div><span className="mt-1 block h-1 max-w-40 rounded-full bg-slate-800"><span className="block h-1 rounded-full bg-violet-400" style={{ width: `${trafficWidth}%` }} /></span>{(row.top_keywords?.length || row.top_pages?.length || row.competitors?.length) ? <details className="mt-2 max-w-80 font-sans text-[10px] font-normal text-slate-400"><summary className="cursor-pointer select-none text-violet-300">{t('domainResearchUi.topKeywords')} · {t('domainResearchUi.topPages')}</summary><div className="mt-2 space-y-2 rounded border border-slate-800 bg-slate-950/60 p-2"><div><p className="mb-1 text-slate-500">{t('domainResearchUi.topKeywords')}</p>{(row.top_keywords || []).slice(0, 5).map((item) => <div key={`${row.domain}-kw-${item.keyword}`} className="flex justify-between gap-2"><span className="truncate" title={item.keyword}>{item.keyword}</span><span className="shrink-0 font-mono">{item.position === null ? '—' : `#${item.position}`}</span></div>)}</div><div><p className="mb-1 text-slate-500">{t('domainResearchUi.topPages')}</p>{(row.top_pages || []).slice(0, 5).map((item) => <div key={`${row.domain}-page-${item.url}`} className="truncate" title={item.url}>{item.url}</div>)}</div>{(row.competitors || []).length > 0 && <div><p className="mb-1 text-slate-500">{t('domainResearchUi.competitors')}</p>{(row.competitors || []).slice(0, 5).map((item) => <div key={`${row.domain}-comp-${item.domain}`} className="flex justify-between gap-2"><span className="truncate">{item.domain}</span><span className="shrink-0 font-mono">{item.common_keywords ?? '—'}</span></div>)}</div>}</div></details> : null}</td><td className="px-3 py-2.5 text-right font-mono">{row.organic_traffic?.toLocaleString() ?? '—'}</td><td className="px-3 py-2.5 text-right font-mono">{row.organic_keywords?.toLocaleString() ?? '—'}</td><td className="px-3 py-2.5 text-right font-mono">{row.domain_rank ?? '—'}</td><td className="px-3 py-2.5 text-right font-mono">{row.referring_domains?.toLocaleString() ?? '—'}</td><td className="px-3 py-2.5 text-right font-mono">{row.total_backlinks?.toLocaleString() ?? '—'}</td><td className="px-3 py-2.5 text-right font-mono">{row.dofollow_ratio === null || row.dofollow_ratio === undefined ? '—' : `${row.dofollow_ratio}%`}</td></tr>;
+                    return <tr key={row.domain} className="text-slate-300 hover:bg-slate-800/30"><td className="px-3 py-2.5 font-mono font-medium text-white"><div>{row.domain}{row.domain === domainComparison.target && <span className="ml-2 rounded border border-emerald-500/25 bg-emerald-500/10 px-1.5 py-0.5 text-[10px] text-emerald-200">{t('domainResearchUi.project')}</span>}</div><span className="mt-1 block h-1 max-w-40 rounded-full bg-slate-800"><span className="block h-1 rounded-full bg-violet-400" style={{ width: `${trafficWidth}%` }} /></span>{(row.top_keywords?.length || row.top_pages?.length || row.competitors?.length) ? <details className="mt-2 max-w-80 font-sans text-[10px] font-normal text-slate-400"><summary className="cursor-pointer select-none text-violet-300">{t('domainResearchUi.topKeywords')} · {t('domainResearchUi.topPages')}</summary><div className="mt-2 space-y-2 rounded border border-slate-800 bg-slate-950/60 p-2"><div><p className="mb-1 text-slate-500">{t('domainResearchUi.topKeywords')}</p>{(row.top_keywords || []).slice(0, 5).map((item) => <div key={`${row.domain}-kw-${item.keyword}`} className="flex justify-between gap-2"><span className="truncate" title={item.keyword}>{item.keyword}</span><span className="shrink-0 font-mono">{item.position === null ? '—' : `#${item.position}`}</span></div>)}</div><div><p className="mb-1 text-slate-500">{t('domainResearchUi.topPages')}</p>{(row.top_pages || []).slice(0, 5).map((item) => <div key={`${row.domain}-page-${item.url}`} className="truncate" title={item.url}>{item.url}</div>)}</div>{(row.competitors || []).length > 0 && <div><p className="mb-1 text-slate-500">{t('domainResearchUi.competitors')}</p>{(row.competitors || []).slice(0, 5).map((item) => <div key={`${row.domain}-comp-${item.domain}`} className="flex justify-between gap-2"><span className="truncate">{item.domain}</span><span className="shrink-0 font-mono">{item.common_keywords ?? '—'}</span></div>)}</div>}</div></details> : null}</td><td className="px-3 py-2.5 text-right font-mono">{row.organic_traffic?.toLocaleString(appLocale()) ?? '—'}</td><td className="px-3 py-2.5 text-right font-mono">{row.organic_keywords?.toLocaleString(appLocale()) ?? '—'}</td><td className="px-3 py-2.5 text-right font-mono">{row.domain_rank ?? '—'}</td><td className="px-3 py-2.5 text-right font-mono">{row.referring_domains?.toLocaleString(appLocale()) ?? '—'}</td><td className="px-3 py-2.5 text-right font-mono">{row.total_backlinks?.toLocaleString(appLocale()) ?? '—'}</td><td className="px-3 py-2.5 text-right font-mono">{row.dofollow_ratio === null || row.dofollow_ratio === undefined ? '—' : `${row.dofollow_ratio}%`}</td></tr>;
                   })}
                 </tbody>
               </table>
@@ -386,7 +387,7 @@ export const DomainOverview: React.FC = () => {
                   return <article key={`history-${row.domain}`} className="rounded-md border border-slate-800/80 bg-slate-900/60 p-3">
                     <div className="mb-2 flex items-center justify-between gap-2">
                       <h5 className="truncate font-mono text-xs font-semibold text-slate-200" title={row.domain}>{row.domain}</h5>
-                      <span className="text-[10px] text-slate-500">{new Date(domainComparisonHistory[domainComparisonHistory.length - 1].retrieved_at).toLocaleDateString()}</span>
+                      <span className="text-[10px] text-slate-500">{new Date(domainComparisonHistory[domainComparisonHistory.length - 1].retrieved_at).toLocaleDateString(appLocale())}</span>
                     </div>
                     <div className="grid gap-3 sm:grid-cols-2">
                       <div>

@@ -11,6 +11,7 @@ import { type CrawlResourceProvenanceStatus } from "@/services/crawlResources";
 
 import { readJsonStorage } from "@/services/storage";
 import { downloadBlob } from "@/services/download";
+import { appLocale } from '@/services/localeFormat';
 
 export type CrawlTab =
   | "overview"
@@ -386,7 +387,7 @@ export const tableWrap =
   "max-h-[min(62vh,680px)] overflow-auto rounded-lg border border-slate-800";
 
 export const formatNumber = (value: number): string =>
-  Math.round(value).toLocaleString();
+  Math.round(value).toLocaleString(appLocale());
 
 export const normalizeLinkUrl = (value: string): string => {
   try {

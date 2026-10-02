@@ -7,6 +7,7 @@ import { KeywordResearch } from '@/components/Keywords/KeywordResearch';
 import { useProjectStore } from '@/stores/projectStore';
 import { useToolsStore } from '@/stores/toolsStore';
 import { readStorage, writeStorage } from '@/services/storage';
+import { appLocale } from '@/services/localeFormat';
 
 type SeoToolId =
   | 'competitor-analysis'
@@ -248,22 +249,22 @@ const TrafficCheckerPanel: React.FC = () => {
     ? [
         {
           label: t('domainResearchUi.monthlyTraffic'),
-          value: domainOverview.organic_traffic?.toLocaleString() ?? '—',
+          value: domainOverview.organic_traffic?.toLocaleString(appLocale()) ?? '—',
           detail: t('domainResearchUi.estimatedVisitors'),
         },
         {
           label: t('domainResearchUi.organicKeywords'),
-          value: domainOverview.organic_keywords?.toLocaleString() ?? '—',
+          value: domainOverview.organic_keywords?.toLocaleString(appLocale()) ?? '—',
           detail: t('domainResearchUi.rankedTop100'),
         },
         {
           label: t('domainResearchUi.referringDomains'),
-          value: domainOverview.referring_domains?.toLocaleString() ?? '—',
+          value: domainOverview.referring_domains?.toLocaleString(appLocale()) ?? '—',
           detail: t('domainResearchUi.uniqueRootDomains'),
         },
         {
           label: t('domainResearchUi.domainRank'),
-          value: domainOverview.domain_rank?.toLocaleString() ?? '—',
+          value: domainOverview.domain_rank?.toLocaleString(appLocale()) ?? '—',
           detail: t('domainResearchUi.authorityStrength'),
         },
       ]
