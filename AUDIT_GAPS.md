@@ -840,5 +840,41 @@ BATCH-5j verification:2807frontend/516Rust/70MCP PASS; build/lint/rustfmt/strict
   - Vitest suite passing with 0 failures.
   - Global LOC violations decreased from 80 to 77 across the codebase.
 
+## BATCH-5u: Rank Tracking, Crawl Media Tab, and Security Headers decomposition (LOC <= 150)
+
+- Decomposed three large frontend components into modular single-responsibility units strictly under 150 physical LOC:
+  1. `src/components/Keywords/RankTracking.tsx` (315 -> 74 LOC facade) with 7 submodules in `src/components/Keywords/rankTracking/`:
+     - `rankTrackingTypes.ts` (7 LOC)
+     - `useRankTrackingSession.ts` (61 LOC)
+     - `RankTrackingHeader.tsx` (60 LOC)
+     - `RankTrackingStatsCards.tsx` (63 LOC)
+     - `RankTrackingTable.tsx` (47 LOC)
+     - `RankTrackingTableRow.tsx` (103 LOC)
+     - `RankTrackingAddModal.tsx` (131 LOC)
+  2. `src/components/Domain/crawlResults/CrawlMediaTab.tsx` (309 -> 31 LOC facade) with 6 submodules in `src/components/Domain/crawlResults/mediaTab/`:
+     - `mediaTabTypes.ts` (17 LOC)
+     - `CrawlMediaImageRow.tsx` (119 LOC)
+     - `CrawlMediaImagesSection.tsx` (59 LOC)
+     - `CrawlMediaResourceFilter.tsx` (65 LOC)
+     - `CrawlMediaResourceRow.tsx` (63 LOC)
+     - `CrawlMediaResourcesSection.tsx` (75 LOC)
+  3. `src/components/Results/SecurityHeaders.tsx` (298 -> 51 LOC facade) with 6 submodules in `src/components/Results/securityHeaders/`:
+     - `securityHeadersTypes.ts` (81 LOC)
+     - `SecurityScoreBanner.tsx` (48 LOC)
+     - `SecurityTransportSection.tsx` (85 LOC)
+     - `SecurityDisclosureCards.tsx` (99 LOC)
+     - `SecurityHeaderCard.tsx` (70 LOC)
+     - `SecurityHeadersList.tsx` (28 LOC)
+- Added 3 dedicated test suites ensuring complete coverage (all <= 150 LOC):
+  - `tests/rankTrackingComponents.test.tsx` (114 LOC, 6 tests)
+  - `tests/crawlMediaTabComponents.test.tsx` (118 LOC, 5 tests)
+  - `tests/securityHeadersComponents.test.tsx` (80 LOC, 6 tests)
+- Full verification loop:
+  - `npm run lint` clean (0 errors, 0 warnings).
+  - `npx tsc --noEmit` clean (0 errors).
+  - `tests/maxLoc.test.ts` (25/25 tests PASS).
+  - Vitest suite passing with 0 failures.
+  - Global LOC violations decreased from 77 to 74 across the codebase.
+
 
 
