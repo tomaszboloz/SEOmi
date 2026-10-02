@@ -4677,5 +4677,15 @@
     "method": "Average position is a period metric. CTR uses other queries within ±1 position, at least 3 peers and 300 peer impressions. Signals require review; brand, intent and SERP features can differ.",
     "aiOverview": "Google includes AI Overviews and AI Mode in total Web traffic. This report cannot separate their metrics.",
     "source": "Google documentation"
+  },
+  "gscCannibalization": {
+    "title": "검색어 경쟁 가능성",
+    "method": "표시 20회 이상이며 관측된 검색어 표시의 10% 이상인 URL이 두 개 이상입니다. 확인할 신호이며 확정된 경쟁이 아닙니다.",
+    "unavailable": "관측된 검색어/URL 쌍이 없습니다. Search Console을 새로 고치세요.",
+    "invalid": "공동 관측 데이터가 잘못되었습니다. 보고서를 새로 고치세요.",
+    "empty": "기준을 충족하는 URL이 두 개인 검색어가 없습니다.",
+    "limited": "Google 또는 로컬 저장소가 데이터를 잘라낼 수 있습니다. 비율은 관측된 행에만 해당합니다.",
+    "previous": "이전",
+    "next": "다음"
   }
 }

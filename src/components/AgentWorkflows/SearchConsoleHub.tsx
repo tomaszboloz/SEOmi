@@ -1,4 +1,5 @@
 import { GscOpportunities } from './GscOpportunities';
+import { GscCannibalization } from './GscCannibalization';
 import { useSearchConsoleSession } from './searchConsole/useSearchConsoleSession';
 import { SearchConsoleHeader } from './searchConsole/Header';
 import { SearchConsoleConnection } from './searchConsole/Connection';
@@ -18,6 +19,7 @@ export function SearchConsoleHub() {
         <SearchConsoleMetrics session={session} />
         <SearchConsoleComparison session={session} />
         {session.currentSnapshot && <GscOpportunities snapshot={session.currentSnapshot} />}
+        {session.currentSnapshot && <GscCannibalization key={session.currentSnapshot.id} snapshot={session.currentSnapshot} />}
         <SearchConsoleInspection session={session} />
         <SearchConsoleTables session={session} />
       </div>}

@@ -4677,5 +4677,15 @@
     "method": "Average position is a period metric. CTR uses other queries within ±1 position, at least 3 peers and 300 peer impressions. Signals require review; brand, intent and SERP features can differ.",
     "aiOverview": "Google includes AI Overviews and AI Mode in total Web traffic. This report cannot separate their metrics.",
     "source": "Google documentation"
+  },
+  "gscCannibalization": {
+    "title": "潜在查询蚕食",
+    "method": "至少两个网址具有20次展示及观测查询展示的10%。这些是待核实的信号，并非已确认的蚕食。",
+    "unavailable": "没有观测到的查询/网址对。请刷新 Search Console。",
+    "invalid": "联合观测数据无效，请刷新报告。",
+    "empty": "没有查询的两个网址达到证据阈值。",
+    "limited": "Google 或本地存储可能截断数据。占比仅针对观测到的行。",
+    "previous": "上一页",
+    "next": "下一页"
   }
 }

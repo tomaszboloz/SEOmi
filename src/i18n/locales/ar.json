@@ -4677,5 +4677,15 @@
     "method": "Average position is a period metric. CTR uses other queries within ±1 position, at least 3 peers and 300 peer impressions. Signals require review; brand, intent and SERP features can differ.",
     "aiOverview": "Google includes AI Overviews and AI Mode in total Web traffic. This report cannot separate their metrics.",
     "source": "Google documentation"
+  },
+  "gscCannibalization": {
+    "title": "تعارض محتمل بين عناوين البحث",
+    "method": "عنوانان على الأقل مع 20 ظهورًا و10% من مرات الظهور المرصودة للاستعلام. هذه إشارات للمراجعة وليست تعارضًا مؤكدًا.",
+    "unavailable": "لا توجد أزواج استعلام وعنوان مرصودة. حدّث Search Console.",
+    "invalid": "بيانات مشتركة غير صالحة؛ حدّث التقرير.",
+    "empty": "لا يوجد استعلام بعنوانين يستوفيان الحدود.",
+    "limited": "قد يقتطع Google أو التخزين المحلي البيانات. النسب تخص الصفوف المرصودة فقط.",
+    "previous": "السابق",
+    "next": "التالي"
   }
 }

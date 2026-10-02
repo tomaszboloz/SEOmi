@@ -4677,5 +4677,15 @@
     "method": "Średnia pozycja dotyczy okresu. CTR porównujemy z innymi frazami w zakresie ±1 pozycji, przy minimum 3 frazach i 300 wyświetleniach. Sygnały wymagają oceny; marka, intencja i elementy SERP mogą się różnić.",
     "aiOverview": "Google uwzględnia AI Overviews i AI Mode w łącznym ruchu Web. Ten raport nie pozwala wydzielić ich metryk.",
     "source": "Dokumentacja Google"
+  },
+  "gscCannibalization": {
+    "title": "Możliwa kanibalizacja fraz",
+    "method": "Co najmniej dwa adresy z 20 wyświetleniami i 10% obserwowanych wyświetleń frazy. To sygnał do weryfikacji, nie potwierdzona kanibalizacja.",
+    "unavailable": "Raport nie zawiera obserwowanych par fraza–URL. Odśwież dane Search Console.",
+    "invalid": "Niepoprawne wspólne obserwacje; odśwież raport.",
+    "empty": "Żadna fraza nie ma dwóch adresów spełniających progi dowodów.",
+    "limited": "Obserwacje mogą być obcięte przez Google lub zapis lokalny. Udziały dotyczą tylko obserwowanych wierszy.",
+    "previous": "Poprzednia",
+    "next": "Następna"
   }
 }

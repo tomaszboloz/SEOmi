@@ -1461,3 +1461,13 @@ The performance response includes optional query_pages and query_pages_may_be_tr
 Thanks to @RafalSzy for the testing feedback in [PR #13](https://github.com/tomaszboloz/SEOmi/pull/13).
 
 BATCH-5g verification:2768frontend/516Rust/70MCP PASS; build/lint/rustfmt/strictClippy PASS. Fresh source-matched frontend88.14%statements/79.36%branches/86.17%functions/89.01%lines; native11996/18299productionlines65.56%,1217/1938functions62.80%,266hashes verified. Nativebranches/platforms unmeasured. Legacy114typecontracts keep the original fingerprint; separate assertions cover only the two optional GSC additions. GlobalLOC118violations across1175files, originalaudit69/72 and requestedextensions remainOPEN; no newtag.
+
+### BATCH-5h: GSC evidence persistence and cannibalization signals
+
+Search Console now displays observed query/page candidate cohorts. A candidate needs two URLs, each with20impressions and10%of observedqueryimpressions. This is evidence toreview, not a confirmed SEO diagnosis. URL/position/impression/share details and20querypagination are available in12languages. Legacyunavailable, measuredempty, invaliddata and truncateddata staydistinct.
+
+Snapshots preserve exactqueryidentity and deepcopiedjointrows; localstorage caps250rows and explicitly marksclipping. Existingproject/property/date/filterownership is preserved; olderreports remain readable and needrefresh to obtain jointobservations. Invalidmetrics, duplicatepairs, unsafeURLschemes and overflowingtotals are rejected.
+
+Thanks to @RafalSzy for the testing feedback in [PR #13](https://github.com/tomaszboloz/SEOmi/pull/13).
+
+BATCH-5h verification:2786frontend/516Rust/70MCP tests and build/lint/rustfmt/strictClippy PASS. Scoped25tests cover100%statements/branches/functions/lines (71/78/21/53). Globalfrontend88.19/79.47/86.23/89.06percent remainsbelowtarget. Unchanged nativeevidence revalidates266hashes and remains65.56%productionlines/62.80%functions; branches/platforms unmeasured. LOC118violations across1180files; originalaudit69/72,179/183includingdiscoveredfixes; remainingextensions and newversion/tag stillpending.

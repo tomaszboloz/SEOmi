@@ -4677,5 +4677,15 @@
     "method": "Average position is a period metric. CTR uses other queries within ±1 position, at least 3 peers and 300 peer impressions. Signals require review; brand, intent and SERP features can differ.",
     "aiOverview": "Google includes AI Overviews and AI Mode in total Web traffic. This report cannot separate their metrics.",
     "source": "Google documentation"
+  },
+  "gscCannibalization": {
+    "title": "Возможная каннибализация запросов",
+    "method": "Минимум два URL с 20 показами и 10% наблюдаемых показов запроса. Это сигналы для проверки, а не подтверждённая каннибализация.",
+    "unavailable": "Нет наблюдаемых пар запрос/URL. Обновите Search Console.",
+    "invalid": "Некорректные совместные наблюдения; обновите отчёт.",
+    "empty": "Нет запросов с двумя URL, достигающими порогов.",
+    "limited": "Google или локальное хранилище могут обрезать данные. Доли относятся только к наблюдаемым строкам.",
+    "previous": "Назад",
+    "next": "Далее"
   }
 }

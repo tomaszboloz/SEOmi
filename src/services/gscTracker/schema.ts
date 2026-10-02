@@ -14,7 +14,12 @@ export const gscSnapshotSchema: z.ZodType<GscPerformanceSnapshot> = z.object({
   total_clicks: gscMetric, total_impressions: gscMetric, avg_ctr: gscMetric, avg_position: gscMetric,
   queries: z.array(z.object({ query: z.string(), ...gscRowMetrics })).max(MAX_STORED_GSC_ROWS_PER_DIMENSION),
   pages: z.array(z.object({ page: z.string(), ...gscRowMetrics })).max(MAX_STORED_GSC_ROWS_PER_DIMENSION),
+  query_pages: z.array(z.object({ query: z.string().refine(value => value.trim().length > 0), page: z.string().url(),
+    ...gscRowMetrics })).max(MAX_STORED_GSC_ROWS_PER_DIMENSION).optional(),
+  query_pages_may_be_truncated: z.boolean().optional(), stored_query_page_rows: gscMetric.int().optional(),
   queries_may_be_truncated: z.boolean(), pages_may_be_truncated: z.boolean(),
   max_rows_per_dimension: gscMetric.int(), stored_query_rows: gscMetric.int(), stored_page_rows: gscMetric.int(),
-}).refine(value => value.stored_query_rows === value.queries.length && value.stored_page_rows === value.pages.length);
-
+}).refine(value => value.stored_query_rows === value.queries.length && value.stored_page_rows === value.pages.length)
+  .refine(value => value.query_pages === undefined
+    ? value.stored_query_page_rows === undefined && value.query_pages_may_be_truncated === undefined
+    : value.stored_query_page_rows === value.query_pages.length && value.query_pages_may_be_truncated !== undefined);
