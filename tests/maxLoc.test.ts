@@ -131,3 +131,9 @@ it('keeps GSC snapshot, date, persistence and comparison responsibilities within
   expect(maxLocReport(['src/services/gscPerformanceTracker.ts',
     ...codeFiles('src/services/gscTracker')]).violations).toEqual([]);
 });
+
+it('keeps Search Console views, session and opportunity evidence within LOC150', () => {
+  expect(maxLocReport(['src/components/AgentWorkflows/SearchConsoleHub.tsx',
+    'src/components/AgentWorkflows/GscOpportunities.tsx', 'src/services/gscTracker/opportunities.ts',
+    ...codeFiles('src/components/AgentWorkflows/searchConsole')]).violations).toEqual([]);
+});

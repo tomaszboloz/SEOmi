@@ -116,7 +116,7 @@
       "canonicalMissingDetail": "Nie znaleziono deklaracji rel=\"canonical\".",
       "canonicalTarget": "Cel canonical zwraca błąd HTTP",
       "canonicalTargetDetail": "Sprawdzony cel zwrócił HTTP {{status}}.",
-    "canonicalUnverified": "Nie zweryfikowano celu canonical",
+      "canonicalUnverified": "Nie zweryfikowano celu canonical",
       "viewportMissing": "Brak viewport",
       "viewportMissingDetail": "Nie znaleziono meta name=\"viewport\".",
       "indexingBlocked": "Indeksowanie jest zablokowane",
@@ -555,7 +555,7 @@
       "none": "brak",
       "available": "dostępne",
       "unavailable": "niedostępne",
-    "canonicalUnverified": "canonical niezweryfikowany",
+      "canonicalUnverified": "canonical niezweryfikowany",
       "notReciprocal": "niewzajemny",
       "reciprocityUnverified": "wzajemność niezweryfikowana",
       "checked": "sprawdzono",
@@ -3539,7 +3539,7 @@
       "technicalDirectives": "Dyrektywy techniczne i robots",
       "canonical": "Adres canonical",
       "notSpecified": "Nie określono",
-    "canonicalUnverified": "Cel niezweryfikowany",
+      "canonicalUnverified": "Cel niezweryfikowany",
       "robots": "Dyrektywa robots",
       "robotsDefault": "index, follow (domyślnie)",
       "viewport": "Viewport (urządzenia mobilne)",
@@ -3552,7 +3552,18 @@
       "author": "Autor",
       "technologies": "Wykryte technologie",
       "documentHttpSignals": "wyłącznie sygnały dokumentu lub odpowiedzi HTTP",
-      "technologyCategories": {"cmsPlatform": "Platforma CMS", "cmsGenerator": "CMS / generator", "cms": "CMS", "commercePlatform": "Platforma e-commerce", "javascriptFramework": "Framework JavaScript", "tagManager": "Menedżer tagów", "analyticsTag": "Analityka / tag", "javascriptLibrary": "Biblioteka JavaScript", "cssFramework": "Framework CSS / UI", "analytics": "Analityka"},
+      "technologyCategories": {
+        "cmsPlatform": "Platforma CMS",
+        "cmsGenerator": "CMS / generator",
+        "cms": "CMS",
+        "commercePlatform": "Platforma e-commerce",
+        "javascriptFramework": "Framework JavaScript",
+        "tagManager": "Menedżer tagów",
+        "analyticsTag": "Analityka / tag",
+        "javascriptLibrary": "Biblioteka JavaScript",
+        "cssFramework": "Framework CSS / UI",
+        "analytics": "Analityka"
+      },
       "confirmed": "potwierdzony",
       "heuristic": "heurystyczny",
       "favicons": "Zadeklarowane favicony",
@@ -4617,7 +4628,7 @@
       "bytes": "{{value}} B",
       "internal": "wewnętrzny",
       "external": "zewnętrzny",
-    "canonicalUnverified": "canonical niezweryfikowany"
+      "canonicalUnverified": "canonical niezweryfikowany"
     }
   },
   "uiUnits": {
@@ -4656,5 +4667,15 @@
     "run": "Próba {{count}}",
     "legacyRecognition": "Historyczne rozpoznanie marki",
     "legacyNote": "To zapisane pytanie zawierało nazwę marki. Nie jest pomiarem spontanicznej widoczności."
+  },
+  "gscOpportunities": {
+    "title": "Szanse w GSC",
+    "near": "Frazy tuż za TOP10 (10–20)",
+    "ctr": "CTR poniżej obserwowanych fraz",
+    "empty": "Brak wierszy spełniających progi dowodowe.",
+    "benchmark": "CTR {{actual}}% · inne frazy {{expected}}% ({{count}} fraz)",
+    "method": "Średnia pozycja dotyczy okresu. CTR porównujemy z innymi frazami w zakresie ±1 pozycji, przy minimum 3 frazach i 300 wyświetleniach. Sygnały wymagają oceny; marka, intencja i elementy SERP mogą się różnić.",
+    "aiOverview": "Google uwzględnia AI Overviews i AI Mode w łącznym ruchu Web. Ten raport nie pozwala wydzielić ich metryk.",
+    "source": "Dokumentacja Google"
   }
 }
