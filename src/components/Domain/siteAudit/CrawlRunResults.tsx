@@ -1,14 +1,12 @@
-import { REPORT_TEMPLATE_SECTIONS } from "@/services/reportTemplates";
-
 import type { useSiteAuditSession } from './useSiteAuditSession';
 import { CrawlHealthMetrics } from './CrawlHealthMetrics';
-import { CrawlReportTemplateSelector } from './CrawlReportTemplateSelector';
+import { CrawlReportTemplatePanel } from './CrawlReportTemplatePanel';
 import { CrawlExportActions } from './CrawlExportActions';
 import { CrawlResultsOverview } from './CrawlResultsOverview';
 import { CrawlPageErrors } from './CrawlPageErrors';
 type Session = ReturnType<typeof useSiteAuditSession>;
 export const CrawlRunResults = ({ session }: { session: Session }) => {
-const { crawlOnlyUrls, crawlPdfError, crawlResult, reportTemplateError, reportTemplateSectionLabels, reportTemplateSections, selectedReportTemplate, selectedRun, sitemapOnlyUrls, t, toggleReportTemplateSection } = session;
+const { crawlOnlyUrls, crawlPdfError, crawlResult, selectedRun, sitemapOnlyUrls, t } = session;
 
 if (!crawlResult) return null;
 return (<div className="space-y-8">
@@ -48,47 +46,7 @@ return (<div className="space-y-8">
                     </ul>
                   </details>
                 )}
-                {selectedRun && (
-                  <details className="rounded-xl border border-slate-800 bg-slate-900/60 p-4">
-                    <summary className="cursor-pointer text-sm font-semibold text-slate-100">
-                      {t("siteAudit.reportTemplate")} ·{" "}
-                      {selectedReportTemplate.name}
-                    </summary>
-                    <div className="mt-3 space-y-3">
-                      <CrawlReportTemplateSelector session={session} />
-                      <fieldset className="grid gap-2 sm:grid-cols-2 lg:grid-cols-3">
-                        <legend className="mb-1 text-[11px] font-semibold uppercase tracking-wide text-slate-500">
-                          {t("siteAudit.reportSectionsLegend")}
-                        </legend>
-                        {REPORT_TEMPLATE_SECTIONS.filter(
-                          (section) => section !== "summary",
-                        ).map((section) => (
-                          <label
-                            key={section}
-                            className="flex items-center gap-2 text-xs text-slate-300"
-                          >
-                            <input
-                              type="checkbox"
-                              checked={reportTemplateSections.includes(section)}
-                              onChange={() =>
-                                toggleReportTemplateSection(section)
-                              }
-                            />
-                            {reportTemplateSectionLabels[section]}
-                          </label>
-                        ))}
-                      </fieldset>
-                      <p className="text-[10px] leading-4 text-slate-500">
-                        {t("siteAudit.reportTemplateDescription")}
-                      </p>
-                      {reportTemplateError && (
-                        <p role="alert" className="text-xs text-rose-300">
-                          {reportTemplateError}
-                        </p>
-                      )}
-                    </div>
-                  </details>
-                )}
+                {selectedRun && <CrawlReportTemplatePanel session={session} />}
                 {selectedRun ? (
                   <section className="flex flex-col gap-3 rounded-xl border border-slate-800 bg-slate-900/60 p-4">
                     <div>
