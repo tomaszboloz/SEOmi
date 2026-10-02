@@ -913,6 +913,40 @@ BATCH-5j verification:2807frontend/516Rust/70MCP PASS; build/lint/rustfmt/strict
   - Vitest suite passing with 0 failures.
   - Global LOC violations decreased from 74 to 71 across the codebase.
 
+## BATCH-5w: DataForSEO Catalog, Command Palette, and Keyword Clustering decomposition (LOC <= 150)
+
+- Decomposed three large frontend modules into modular single-responsibility units strictly under 150 physical LOC:
+  1. `src/services/dataforseoCatalog.ts` (278 -> 18 LOC facade) with 3 submodules in `src/services/dataforseoCatalog/`:
+     - `catalogTypes.ts` (22 LOC)
+     - `catalogEntries.ts` (120 LOC)
+     - `catalogMetrics.ts` (125 LOC)
+  2. `src/components/Layout/CommandPalette.tsx` (260 -> 100 LOC facade) with 6 submodules in `src/components/Layout/commandPalette/`:
+     - `commandPaletteTypes.ts` (12 LOC)
+     - `useCommandPaletteItems.ts` (92 LOC)
+     - `useCommandPaletteSession.ts` (114 LOC)
+     - `CommandPaletteHeader.tsx` (47 LOC)
+     - `CommandPaletteList.tsx` (70 LOC)
+     - `CommandPaletteFooter.tsx` (20 LOC)
+  3. `src/components/Keywords/KeywordClustering.tsx` (255 -> 48 LOC facade) with 7 submodules in `src/components/Keywords/keywordClustering/`:
+     - `keywordClusteringTypes.ts` (34 LOC)
+     - `keywordClusteringStorage.ts` (41 LOC)
+     - `useKeywordClusteringSession.ts` (138 LOC)
+     - `KeywordClusteringHeader.tsx` (19 LOC)
+     - `KeywordClusteringPickers.tsx` (76 LOC)
+     - `KeywordClusteringForm.tsx` (114 LOC)
+     - `KeywordClusteringResults.tsx` (87 LOC)
+- Added 3 dedicated test suites ensuring complete coverage (all <= 150 LOC):
+  - `tests/dataforseoCatalogModules.test.ts` (36 LOC, 3 tests)
+  - `tests/commandPaletteComponents.test.tsx` (86 LOC, 4 tests)
+  - `tests/keywordClusteringComponents.test.tsx` (88 LOC, 5 tests)
+- Full verification loop:
+  - `npm run lint` clean (0 errors, 0 warnings).
+  - `npx tsc --noEmit` clean (0 errors).
+  - `tests/maxLoc.test.ts` (25/25 tests PASS).
+  - Vitest suite passing with 0 failures (66/66 tests across BATCH-5w suites).
+  - Global LOC violations decreased from 71 to 68 across the codebase.
+
+
 
 
 
