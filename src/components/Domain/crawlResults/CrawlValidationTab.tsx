@@ -2,6 +2,7 @@
 
 import { localizeHtmlValidationFinding } from "@/services/htmlValidationLocalization";
 import { cell, tableHead } from './crawlResultsHelpers';
+import { filterValidationPages } from './crawlValidationFilter';
 import { Empty, Table } from './CrawlViewPrimitives';
 
 import type { useCrawlResultsSession } from './useCrawlResultsSession';
@@ -10,58 +11,7 @@ type Session = ReturnType<typeof useCrawlResultsSession>;
 export const CrawlValidationTab = ({ session }: { session: Session }) => {
 const { result, setValidationQuery, setValidationSeverity, t, validationQuery, validationSeverity } = session;
 {
-        const checkedPages = result.pages.filter(
-          (page) =>
-            page.html_validation_findings !== undefined ||
-            page.detected_charset !== undefined,
-        );
-        const normalizedValidationQuery = validationQuery
-          .trim()
-          .toLocaleLowerCase();
-        const validationPages = checkedPages
-          .map((page) => {
-            const pageMatches = normalizedValidationQuery
-              ? [page.url, page.charset, page.detected_charset]
-                  .filter(Boolean)
-                  .some((value) =>
-                    String(value)
-                      .toLocaleLowerCase()
-                      .includes(normalizedValidationQuery),
-                  )
-              : true;
-            const findings = (page.html_validation_findings || []).filter(
-              (finding) => {
-                if (
-                  validationSeverity !== "all" &&
-                  finding.severity !== validationSeverity
-                ) {
-                  return false;
-                }
-                if (!normalizedValidationQuery || pageMatches) return true;
-                return [
-                  finding.code,
-                  finding.message,
-                  finding.element,
-                  finding.attribute,
-                  finding.value,
-                  finding.source_excerpt,
-                ]
-                  .filter(Boolean)
-                  .some((value) =>
-                    String(value)
-                      .toLocaleLowerCase()
-                      .includes(normalizedValidationQuery),
-                  );
-              },
-            );
-            return { page, findings, pageMatches };
-          })
-          .filter(
-            ({ findings, pageMatches }) =>
-              (!normalizedValidationQuery && validationSeverity === "all") ||
-              pageMatches ||
-              findings.length > 0,
-          );
+        const { checkedPages, validationPages } = filterValidationPages(result.pages, validationQuery, validationSeverity);
         const validationFindingCount = validationPages.reduce(
           (count, item) => count + item.findings.length,
           0,
