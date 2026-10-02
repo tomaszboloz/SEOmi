@@ -23,7 +23,8 @@ export const validatePublicTarget = async (value: string, resolve: AddressResolv
   const url = new URL(value);
   if (!['http:', 'https:'].includes(url.protocol)) throw new Error('Only HTTP and HTTPS URLs are supported.');
   if (url.username || url.password) throw new Error('URLs with embedded credentials are not allowed.');
-  const hostname = url.hostname.replace(/^\[|\]$/g, '').toLowerCase();
+  // "localhost." and "printer.local." name the same hosts as without the root dot.
+  const hostname = url.hostname.replace(/^\[|\]$/g, '').replace(/\.+$/, '').toLowerCase();
   if (hostname === 'localhost' || ['.localhost', '.local', '.internal', '.lan'].some((suffix) => hostname.endsWith(suffix))) {
     throw new Error('Local and private network targets are blocked.');
   }
