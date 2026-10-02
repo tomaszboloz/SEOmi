@@ -3,6 +3,9 @@ import { createHash } from 'node:crypto';
 
 export function exportedTypeContract(path: string) {
   const program = ts.createProgram([path], {
+    // Fingerprints need module resolution, not ambient/runtime libraries.
+    noLib: true,
+    types: [],
     target: ts.ScriptTarget.ESNext,
     module: ts.ModuleKind.ESNext,
     moduleResolution: ts.ModuleResolutionKind.Bundler,

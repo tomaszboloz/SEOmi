@@ -1,5 +1,6 @@
 // @vitest-environment node
-import { expect, it } from 'vitest';
+import { expect, it, vi } from 'vitest';
+import ts from 'typescript';
 import { exportedTypeContract } from './fixtures/typeContracts';
 
 it('preserves every crawler export, property type, optional flag and declaration order', () => {
@@ -14,4 +15,18 @@ it('preserves every audit export, property type, optional flag and declaration o
     exports: 35,
     sha256: '62a78ea80ca71c772571e0a25117950fb09249a5d5d39a9f6b9342b60fee0453',
   });
+});
+
+it('resolves the complete type graph without loading unrelated ambient declarations', () => {
+  const readFile = ts.sys.readFile;
+  const reads: string[] = [];
+  const spy = vi.spyOn(ts.sys, 'readFile').mockImplementation(path => {
+    reads.push(path.replace(/\\/g, '/'));
+    return readFile(path);
+  });
+  try {
+    expect(exportedTypeContract('src/types/crawl.ts').exports).toBe(37);
+    expect(reads.filter(path => path.includes('/node_modules/') && path.endsWith('.d.ts'))).toEqual([]);
+    expect(reads.some(path => path.endsWith('/types/crawl/page.ts'))).toBe(true);
+  } finally { spy.mockRestore(); }
 });

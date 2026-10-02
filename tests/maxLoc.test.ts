@@ -111,3 +111,8 @@ it('keeps domain preferences, overview and comparison responsibilities below 150
 it('keeps every model type and extracted declaration below 150 physical lines', () => {
   expect(maxLocReport(codeFiles('src/types')).violations).toEqual([]);
 });
+
+it('keeps external-link request, evidence and persistence responsibilities below 150 physical lines', () => {
+  expect(maxLocReport(['src/stores/tools/externalLinksSlice.ts',
+    ...codeFiles('src/stores/tools/externalLinks')]).violations).toEqual([]);
+});
