@@ -6,6 +6,7 @@ import { buildAiPrompt } from './ai/prompt';
 import { callOpenAI, callClaude, callGemini } from './ai/suggestions';
 import { generateAiText } from './ai/text';
 import { testAiConnection } from './ai/connection';
+import { CLAUDE_DEFAULT_MODEL } from './ai/claude';
 export { extractJsonObject, parseAiSuggestionResponse } from './ai/parsing';
 export type { AiSuggestionResponse } from './ai/parsing';
 
@@ -35,7 +36,7 @@ static async generateSuggestions(
     case 'openai':
       return callOpenAI(apiKey, model || 'gpt-4o', prompt);
     case 'claude':
-      return callClaude(apiKey, model || 'claude-3-7-sonnet-20250219', prompt);
+      return callClaude(apiKey, model || CLAUDE_DEFAULT_MODEL, prompt);
     case 'gemini':
       return callGemini(apiKey, model || 'gemini-2.0-flash', prompt);
     default:

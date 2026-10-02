@@ -585,7 +585,8 @@
       "cliMissing": "Local CLI was not found on PATH.",
       "credentialSaved": "Credential saved in the system keychain. Test it to verify access.",
       "checkingConnection": "Checking connection…",
-      "localClientRequired": "{{provider}} is not configured to use its local subscription client."
+      "localClientRequired": "{{provider}} is not configured to use its local subscription client.",
+      "refused": "{{provider}} отклонил этот запрос. Переформулируйте его или выберите другую модель."
     },
     "pagespeed": {
       "projectRequired": "Choose a project before starting the measurement."
@@ -3503,12 +3504,12 @@
       "gpt4o": "GPT-4o (high-converting copy)",
       "gpt4oMini": "GPT-4o Mini (fast and lightweight)",
       "o3Mini": "o3-mini (reasoning model)",
-      "claude37": "Claude 3.7 Sonnet (latest)",
-      "claude35": "Claude 3.5 Sonnet",
-      "claudeHaiku": "Claude 3.5 Haiku",
       "geminiFlash": "Gemini 2.0 Flash (fastest)",
       "geminiPro": "Gemini 2.0 Pro",
-      "gemini15": "Gemini 1.5 Pro"
+      "gemini15": "Gemini 1.5 Pro",
+      "claudeOpus5": "Claude Opus 5",
+      "claudeSonnet5": "Claude Sonnet 5",
+      "claudeHaiku45": "Claude Haiku 4.5"
     },
     "renderWorker": {
       "title": "Локальный модуль рендеринга",

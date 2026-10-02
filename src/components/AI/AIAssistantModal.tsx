@@ -232,9 +232,9 @@ export const AIAssistantModal: React.FC = () => {
                   )}
                   {provider === 'claude' && (
                     <>
-                      <option value="claude-3-7-sonnet-20250219">{t('legacyUi.ai.claude37')}</option>
-                      <option value="claude-3-5-sonnet-20241022">{t('legacyUi.ai.claude35')}</option>
-                      <option value="claude-3-5-haiku-20241022">{t('legacyUi.ai.claudeHaiku')}</option>
+                      <option value="claude-opus-5">{t('legacyUi.ai.claudeOpus5')}</option>
+                      <option value="claude-sonnet-5">{t('legacyUi.ai.claudeSonnet5')}</option>
+                      <option value="claude-haiku-4-5">{t('legacyUi.ai.claudeHaiku45')}</option>
                     </>
                   )}
                   {provider === 'gemini' && (

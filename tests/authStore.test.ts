@@ -25,7 +25,7 @@ describe('useAuthStore (Direct AI Subscriptions - Zero Credits)', () => {
     const store = useAuthStore.getState();
     store.setProvider('claude');
     expect(useAuthStore.getState().provider).toBe('claude');
-    expect(useAuthStore.getState().model).toBe('claude-3-7-sonnet-20250219');
+    expect(useAuthStore.getState().model).toBe('claude-opus-5');
 
     store.setProvider('gemini');
     expect(useAuthStore.getState().provider).toBe('gemini');

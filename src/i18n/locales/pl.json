@@ -585,7 +585,8 @@
       "cliMissing": "Nie znaleziono lokalnego CLI w PATH.",
       "credentialSaved": "Dane dostępu zapisano w pęku kluczy systemu. Wykonaj test, aby potwierdzić dostęp.",
       "checkingConnection": "Sprawdzanie połączenia…",
-      "localClientRequired": "{{provider}} nie jest skonfigurowany do użycia lokalnej subskrypcji CLI."
+      "localClientRequired": "{{provider}} nie jest skonfigurowany do użycia lokalnej subskrypcji CLI.",
+      "refused": "{{provider}} odmówił wykonania tego żądania. Przeformułuj je lub wybierz inny model."
     },
     "pagespeed": {
       "projectRequired": "Wybierz projekt przed uruchomieniem pomiaru."
@@ -3503,12 +3504,12 @@
       "gpt4o": "GPT-4o (high-converting copy)",
       "gpt4oMini": "GPT-4o Mini (fast and lightweight)",
       "o3Mini": "o3-mini (reasoning model)",
-      "claude37": "Claude 3.7 Sonnet (latest)",
-      "claude35": "Claude 3.5 Sonnet",
-      "claudeHaiku": "Claude 3.5 Haiku",
       "geminiFlash": "Gemini 2.0 Flash (fastest)",
       "geminiPro": "Gemini 2.0 Pro",
-      "gemini15": "Gemini 1.5 Pro"
+      "gemini15": "Gemini 1.5 Pro",
+      "claudeOpus5": "Claude Opus 5",
+      "claudeSonnet5": "Claude Sonnet 5",
+      "claudeHaiku45": "Claude Haiku 4.5"
     },
     "renderWorker": {
       "title": "Lokalny worker renderujący",

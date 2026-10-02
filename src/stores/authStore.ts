@@ -1,6 +1,7 @@
 import { create } from 'zustand';
 import type { AiProvider, AiConnectionMethod, AiConnectionState, AiCliStatus } from '@/types';
 import { readStorage } from '@/services/storage';
+import { currentClaudeModel } from '@/services/ai/claude';
 import { PROVIDERS, providerMap } from './auth/runtime';
 import type { AuthState } from './auth/types';
 import { createAuthPreferences } from './auth/preferences';
@@ -12,7 +13,7 @@ export const useAuthStore = create<AuthState>((set, get) => ({
   subscription: { tier: 'direct' },
   activeProjectId: null,
   provider: (readStorage('seomi_ai_provider') as AiProvider) || 'openai',
-  model: readStorage('seomi_ai_model') || 'gpt-4o',
+  model: currentClaudeModel(readStorage('seomi_ai_model') || 'gpt-4o'),
   connectionMethod: PROVIDERS.reduce((all, provider) => ({
     ...all,
     [provider]: (readStorage(`seomi_ai_connection_${provider}`) as AiConnectionMethod) || 'api_key',

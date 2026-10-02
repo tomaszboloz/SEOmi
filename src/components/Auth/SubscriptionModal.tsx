@@ -43,8 +43,9 @@ const providers: {
     icon: Flame,
     apiHelp: "https://console.anthropic.com/settings/keys",
     models: [
-      { id: "claude-3-7-sonnet-20250219", labelKey: "legacyUi.ai.claude37" },
-      { id: "claude-3-5-haiku-20241022", labelKey: "legacyUi.ai.claudeHaiku" },
+      { id: "claude-opus-5", labelKey: "legacyUi.ai.claudeOpus5" },
+      { id: "claude-sonnet-5", labelKey: "legacyUi.ai.claudeSonnet5" },
+      { id: "claude-haiku-4-5", labelKey: "legacyUi.ai.claudeHaiku45" },
     ],
   },
   {
