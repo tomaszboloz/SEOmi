@@ -60,3 +60,13 @@ it('keeps history, schema generator and directory-tree responsibilities below 15
  const files=names.flatMap(name=>['src/services/'+name+'.ts',...codeFiles('src/services/'+name)]);
  expect(maxLocReport(files).violations).toEqual([]);
 });
+
+it('keeps native accessibility extraction and every helper and test below 150 physical lines',()=>{
+ const files=['src-tauri/src/services/html_parser/accessibility.rs',...codeFiles('src-tauri/src/services/html_parser/accessibility')];
+ expect(maxLocReport(files).violations).toEqual([]);
+});
+
+it('keeps the native HTML parser test facade and fixtures below 150 physical lines',()=>{
+ const files=['src-tauri/src/services/html_parser/tests.rs',...codeFiles('src-tauri/src/services/html_parser/tests')];
+ expect(maxLocReport(files).violations).toEqual([]);
+});
