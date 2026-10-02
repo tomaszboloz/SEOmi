@@ -2,7 +2,7 @@
 Audytor: Staff Developer | Data: 2026-10-01
 
 ## Statystyki
-- Zidentyfikowanych luk: 179 (72 pierwotne oraz 107 problemów wykrytych podczas testów)
+- Zidentyfikowanych luk: 181 (72 pierwotne oraz 109 problemów wykrytych podczas testów)
 - Batchy do wdrożenia: 7
 - Szacowany effort: 20–35 MD; estymacja orientacyjna, do korekty po pomiarze coverage.
 - Baseline: commit 18fa446b13ec3f97db76896bfdf446f97fe80051; 704 frontend / 320 Rust / 27 MCP testów.
@@ -552,5 +552,14 @@ Thanks to @RafalSzy for the testing feedback in [PR #13](https://github.com/toma
 - Full2767frontend/489Rust/70MCP PASS; build, ESLint, rustfmt and strictClippy PASS. Globalfrontend88.04%statements/79.26%branches/86.07%functions/88.89%lines remains below99.01%. Report reflects the fresh run; asynchronous execution differences are not hidden by retaining older higher statement/line percentages.
 - Publicinventory753TS/746executed/7factory-returned; executedbodies withoutdirectstaticreferences decrease26to23. GlobalLOC1148files/119violations remainsOPEN. Native sources unchanged; all239AST/source hashes revalidated, reusedproduction64.58%lines/61.10%sourcefunctions, no nativebranch/uncompiledplatform claim.
 - Originalaudit69/72;175/179including locallyfixeddiscoveredissues. Globalcoverage/directassertions/LOC, requestedextensions and release/tag remainOPEN. CI68fbea6/run37031904371 frontend/native/security/WindowsSUCCESS, macOSpending atlatestread. CI95189ff/run37032654077 frontend/native/securitySUCCESS, desktops pending. Newhead requiresownCI.
+
+Thanks to @RafalSzy for the testing feedback in [PR #13](https://github.com/tomaszboloz/SEOmi/pull/13).
+
+## BATCH-5e: native Search Console transport and module boundaries
+- [x] GAP-180: [DISCOVERED][MEDIUM] Google HTTP errors lose the actual provider message because token_json uses an invalid JSON Pointer (error.message). Two original-code loopback regressions fail; corrected /error/message preserves the permission error. A complete native pointer scan finds no remaining missing-leading-slash pointer.
+- [x] GAP-181: [DISCOVERED][HIGH] OAuth callback reads TCP only once and rejects valid fragmented request lines. The original real TCP fixture fails with ConnectionReset; bounded incremental header reading now accepts the same request. Headers have a 16KiB cap and a fixed five-second deadline; the overall three-minute login deadline remains unchanged.
+- The 924-line native command monolith becomes a 82-line stable Tauri facade and separate models, validation, PKCE, browser, callback transport, tokens, properties, dates, requests, mapping, performance, inspection and disconnect modules. IPC names and arguments are preserved. Each native source/test module is at most120physical lines.
+- Twenty-six GSC tests pass: all nine original cases, two reproduced RED/GREEN bugs and15additional direct/integration cases. Real loopback transport covers complete/exact-limit/oversized/incomplete/invalid-UTF8 headers, fixed deadlines, byte-accurate responses, wrong routes/state, cancellation/provider errors, absent/empty codes, bearer authentication, HTTP errors/fallback, malformed JSON and connection failure. Public command validation is asserted without touching host credentials or live Google services.
+- Isolated fresh frontend2767/2767 and MCP70/70 PASS; build/lint PASS. Coverage88.14%statements/79.36%branches/86.17%functions/89.01%lines remains below99.01%. Inventory753TS/746executed/7factory-returned. LOC1172files/118violations remainsOPEN. All-target native506tests PASS (495lib+2coverage+3inventory+6signature); rustfmt/strictClippy PASS. Fresh LLVM production11935/18221lines65.50%,1207/1926sourcefunctions62.67%,263source hashes verified; branches/uncompiledplatforms remain unmeasured. Original audit remains69/72;177/181including locally fixed discovered issues. Global >99%, direct assertions, LOC150 and requested SearchSignal extensions remain OPEN. No release/tag yet.
 
 Thanks to @RafalSzy for the testing feedback in [PR #13](https://github.com/tomaszboloz/SEOmi/pull/13).

@@ -1435,3 +1435,15 @@ The first full run under concurrent build/lint load timed out three existing/lar
 ExecutedTSbodies withoutdirectstaticreferences decrease26to23. GlobalLOC119violations across1148files remainsopen. Originalaudit69/72,175/179including discoveredfixes; requestedextensions and release/tag remainpending. CI68fbea6 passes frontend/native/security/Windows, macOSpending; CI95189ff passes frontend/native/security, desktops pending atlatestread. The newhead needsownCI.
 
 Thanks to @RafalSzy for the testing feedback in [PR #13](https://github.com/tomaszboloz/SEOmi/pull/13).
+
+### BATCH-5e: Search Console transport and native module boundaries
+
+The native Search Console command file is split into an82-line Tauri facade and modules of at most120physical lines. Command names, arguments, credential namespaces, read-only Google scope and performance response contract remain unchanged; no migration is required.
+
+Two reproduced regressions are fixed: Google HTTP permission errors preserve the actual provider message, and OAuth accepts request lines fragmented across TCP reads. Callback headers are read incrementally with a16KiB limit and fixed5second per-request deadline; login retains its3minute overall deadline. Invalid routes/state cannot consume the login.
+
+Twenty-six focused native tests cover the original nine contracts, the two RED/GREEN transport defects and15additional cases for size/encoding/EOF/timeouts, cancellation/errors/codes, bearer auth/JSON/HTTP/connection failures and public command validation before host credentials or external effects. The original audit remains69/72; global coverage/direct assertions/LOC150 and requested SearchSignal extensions remain open. No new tag is published until the full goal passes.
+
+Thanks to @RafalSzy for the testing feedback in [PR #13](https://github.com/tomaszboloz/SEOmi/pull/13).
+
+BATCH-5e verification: isolated2767frontend/506Rust/70MCP tests PASS, build/lint/rustfmt/strictClippy PASS. Fresh frontend88.14%statements/79.36%branches/86.17%functions/89.01%lines; native production11935/18221lines65.50%,1207/1926functions62.67%,263verified source hashes, no branch/platform completeness claim. Inventory753TS/746executed/7factoryreturned,23executed bodies without direct static references. This batch decreases isolated LOC violations119to118; original69/72,177/181including local discovered fixes. CI8f17d87 passed allfivejobs; this newhead requires its ownCI.
