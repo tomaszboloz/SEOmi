@@ -28,11 +28,12 @@ pub fn validate_and_normalize_url(input: &str) -> Result<Url, UrlValidationError
         return Err(UrlValidationError::EmptyUrl);
     }
 
-    // Auto-prepend https:// only if no scheme is specified (no ://)
-    let target = if !trimmed.contains("://") {
-        format!("https://{}", trimmed)
-    } else {
+    // Auto-prepend https:// only when the input does not start with a scheme;
+    // a "://" later in the path or query is not a scheme.
+    let target = if has_explicit_scheme(trimmed) {
         trimmed.to_string()
+    } else {
+        format!("https://{}", trimmed)
     };
 
     let parsed =
@@ -49,7 +50,8 @@ pub fn validate_and_normalize_url(input: &str) -> Result<Url, UrlValidationError
     if !parsed.username().is_empty() || parsed.password().is_some() {
         return Err(UrlValidationError::CredentialsNotAllowed);
     }
-    let host_lower = host_str.to_lowercase();
+    // "localhost." and "printer.local." are the same names as without the root dot.
+    let host_lower = host_str.trim_end_matches('.').to_lowercase();
 
     // Check for localhost or local domain names
     if host_lower == "localhost"
@@ -74,6 +76,18 @@ pub fn validate_and_normalize_url(input: &str) -> Result<Url, UrlValidationError
     }
 
     Ok(parsed)
+}
+
+/// RFC 3986 scheme: a letter followed by letters, digits, "+", "-" or ".", then "://".
+fn has_explicit_scheme(input: &str) -> bool {
+    let Some((scheme, _)) = input.split_once("://") else {
+        return false;
+    };
+    let mut chars = scheme.chars();
+    chars
+        .next()
+        .is_some_and(|first| first.is_ascii_alphabetic())
+        && chars.all(|c| c.is_ascii_alphanumeric() || matches!(c, '+' | '-' | '.'))
 }
 
 /// Returns whether an address is safe to contact as a public internet target.
@@ -122,126 +136,6 @@ fn is_private_or_loopback(ip: &IpAddr) -> bool {
 }
 
 #[cfg(test)]
-mod tests {
-    use super::*;
-
-    #[test]
-    fn ipv6_literals_reject_local_and_special_addresses() {
-        for target in [
-            "http://[::1]/",
-            "http://[fc00::1]/",
-            "http://[fe80::1]/",
-            "http://[::ffff:127.0.0.1]/",
-            "http://[2001:db8::1]/",
-        ] {
-            assert_eq!(
-                validate_and_normalize_url(target),
-                Err(UrlValidationError::BlockedPrivateIp),
-                "{target}"
-            );
-        }
-        assert!(validate_and_normalize_url("https://[2606:4700:4700::1111]/").is_ok());
-    }
-
-    #[test]
-    fn test_valid_https_url() {
-        let res = validate_and_normalize_url("https://example.com/blog?q=test");
-        assert!(res.is_ok());
-        let url = res.unwrap();
-        assert_eq!(url.scheme(), "https");
-        assert_eq!(url.host_str(), Some("example.com"));
-        assert_eq!(url.path(), "/blog");
-    }
-
-    #[test]
-    fn test_missing_scheme_defaults_to_https() {
-        let res = validate_and_normalize_url("github.com/rust-lang");
-        assert!(res.is_ok());
-        let url = res.unwrap();
-        assert_eq!(url.scheme(), "https");
-        assert_eq!(url.host_str(), Some("github.com"));
-        assert_eq!(url.path(), "/rust-lang");
-    }
-
-    #[test]
-    fn test_unsupported_scheme_rejected() {
-        let res = validate_and_normalize_url("ftp://files.example.com");
-        assert_eq!(
-            res,
-            Err(UrlValidationError::UnsupportedScheme("ftp".to_string()))
-        );
-
-        let file_res = validate_and_normalize_url("file:///etc/passwd");
-        assert!(file_res.is_err());
-    }
-
-    #[test]
-    fn test_empty_url_rejected() {
-        let res = validate_and_normalize_url("   ");
-        assert_eq!(res, Err(UrlValidationError::EmptyUrl));
-    }
-
-    #[test]
-    fn test_localhost_blocked() {
-        let res = validate_and_normalize_url("http://localhost:8080/admin");
-        assert_eq!(res, Err(UrlValidationError::BlockedLocalhost));
-
-        let sub_res = validate_and_normalize_url("http://app.localhost");
-        assert_eq!(sub_res, Err(UrlValidationError::BlockedLocalhost));
-    }
-
-    #[test]
-    fn test_private_ips_blocked_ssrf() {
-        // 127.0.0.1 (Loopback)
-        let loopback = validate_and_normalize_url("http://127.0.0.1:3000");
-        assert_eq!(loopback, Err(UrlValidationError::BlockedPrivateIp));
-
-        // 192.168.1.1 (RFC 1918)
-        let rfc1918 = validate_and_normalize_url("http://192.168.1.1/setup");
-        assert_eq!(rfc1918, Err(UrlValidationError::BlockedPrivateIp));
-
-        // 10.0.0.5 (RFC 1918)
-        let ten_net = validate_and_normalize_url("https://10.0.0.5");
-        assert_eq!(ten_net, Err(UrlValidationError::BlockedPrivateIp));
-
-        // 169.254.169.254 (Cloud metadata service)
-        let metadata = validate_and_normalize_url("http://169.254.169.254/latest/meta-data");
-        assert_eq!(metadata, Err(UrlValidationError::BlockedPrivateIp));
-    }
-
-    #[test]
-    fn embedded_credentials_are_rejected_before_network_access() {
-        assert_eq!(
-            validate_and_normalize_url("https://user:secret@example.com"),
-            Err(UrlValidationError::CredentialsNotAllowed)
-        );
-    }
-
-    #[test]
-    fn test_public_ip_policy_rejects_special_ranges() {
-        for address in [
-            "100.64.0.1",
-            "192.0.0.8",
-            "192.88.99.1",
-            "198.18.0.1",
-            "224.0.0.1",
-            "2001:db8::1",
-            "2001::1",
-            "2002::1",
-            "fc00::1",
-            "fe80::1",
-            "::ffff:127.0.0.1",
-            "240.0.0.1",
-        ] {
-            let ip = address.parse().unwrap();
-            assert!(
-                !is_public_ip(&ip),
-                "{address} must not be treated as public"
-            );
-        }
-        for address in ["1.1.1.1", "2606:4700:4700::1111"] {
-            let ip = address.parse().unwrap();
-            assert!(is_public_ip(&ip), "{address} should be treated as public");
-        }
-    }
-}
+mod hostname_tests;
+#[cfg(test)]
+mod tests;
