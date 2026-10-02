@@ -1415,3 +1415,12 @@ The494-line service and233-line editor become small facades with22responsibiliti
 Originalaudit remains69/72 (174/178including discoveredfixes); globalLOC120violations across1142files and27executedTSbodies withoutdirectstaticreferences remainopen. Requestedextensions and newversion/tag remainpending. CI ab78611/run37028724629 passed5/5including actualWindows/macOSdesktopE2E; this batch needs its ownCI. Master protection includes administrators, disables force/deletion and requires five strict checks.
 
 Thanks to @RafalSzy for the testing feedback in [PR #13](https://github.com/tomaszboloz/SEOmi/pull/13).
+
+
+### BATCH-5c: directory pagination and preference isolation
+
+The168-line directory component is now132lines with a38-line preference module; all seven original initializer bodies remain identical. Ten direct tests verify URL filtering/selection, status and missing-data presentation, page/folder pagination, reversible expansion, project/run preference isolation, projectless behavior, record validation and bounded persistence. Scoped coverage is100% of80statements/35functions/62lines and66/67branches; one defensive empty-name fallback remains.
+
+Full2759frontend/489Rust/70MCP tests and build/lint/fmt/strictClippy pass. Globalfrontend88.08%statements/79.11%branches/86.00%functions/88.98%lines; unchanged native evidence revalidates239hashes and remains64.58%productionlines/61.10%sourcefunctions. GlobalLOC119violations across1145files and26executedTSbodies withoutdirectstaticreferences remainopen. Originalaudit69/72,174/178including discoveredfixes; requestedextensions and release/tag remainpending. CI68fbea6/run37031904371 frontend/security pass, native/desktop checks pending atlatestread; the newhead needsownCI.
+
+Thanks to @RafalSzy for the testing feedback in [PR #13](https://github.com/tomaszboloz/SEOmi/pull/13).
