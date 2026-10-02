@@ -771,7 +771,39 @@ BATCH-5j verification:2807frontend/516Rust/70MCP PASS; build/lint/rustfmt/strict
   - `npx tsc --noEmit` clean (0 errors).
   - `tests/maxLoc.test.ts` (25/25 tests PASS).
   - Full Vitest suite: **433 test files, 3155 tests passing (0 failures)**.
-  - Global LOC violations decreased from 90 to 83 across the codebase.
+## BATCH-5s: Keyword Research, Site Audit Crawl Page Errors, and Crawl Performance Tab decomposition (LOC <= 150)
+
+- Decomposed three large frontend monoliths into modular single-responsibility units strictly under 150 physical LOC:
+  1. `src/components/Keywords/KeywordResearch.tsx` (373 -> 62 LOC facade) with 6 submodules in `src/components/Keywords/keywordResearch/`:
+     - `keywordResearchHelpers.ts` (26 LOC)
+     - `useKeywordResearchSession.ts` (74 LOC)
+     - `KeywordResearchHeader.tsx` (26 LOC)
+     - `KeywordResearchSearchForm.tsx` (98 LOC)
+     - `KeywordPrimaryCard.tsx` (118 LOC)
+     - `KeywordIdeasTable.tsx` (112 LOC)
+  2. `src/components/Domain/siteAudit/CrawlPageErrors.tsx` (365 -> 35 LOC facade) with 6 submodules in `src/components/Domain/siteAudit/pageErrors/`:
+     - `CrawlPageErrorSummaryRow.tsx` (76 LOC)
+     - `CrawlPageTechnicalMeta.tsx` (62 LOC)
+     - `CrawlPageImagesPreview.tsx` (42 LOC)
+     - `CrawlPageLinksPreview.tsx` (49 LOC)
+     - `CrawlPageIssuesList.tsx` (56 LOC)
+     - `CrawlPageErrorExpandedRow.tsx` (33 LOC)
+  3. `src/components/Domain/crawlResults/CrawlPerformanceTab.tsx` (343 -> 75 LOC facade) with 6 submodules in `src/components/Domain/crawlResults/performanceTab/`:
+     - `performanceHelpers.ts` (54 LOC)
+     - `PerformanceSummaryCards.tsx` (49 LOC)
+     - `PerformanceDistributionChart.tsx` (51 LOC)
+     - `PerformanceRenderedVitalsTable.tsx` (76 LOC)
+     - `PerformanceArtifactsSection.tsx` (106 LOC)
+     - `PerformancePagesTable.tsx` (73 LOC)
+- Added 3 dedicated test suites ensuring complete coverage (all <= 150 LOC):
+  - `tests/keywordResearchComponents.test.tsx` (88 LOC, 5 tests)
+  - `tests/crawlPageErrorsComponents.test.tsx` (116 LOC, 5 tests)
+  - `tests/crawlPerformanceTabComponents.test.tsx` (113 LOC, 6 tests)
+- Full verification loop:
+  - `npm run lint` clean (0 errors, 0 warnings).
+  - `npx tsc --noEmit` clean (0 errors).
+  - `tests/maxLoc.test.ts` (25/25 tests PASS).
+  - Global LOC violations decreased from 83 to 80 across the codebase.
 
 
 
