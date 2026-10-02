@@ -1,11 +1,13 @@
 import React, { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Heading, Copy, Check, AlertTriangle, AlertCircle, CheckCircle2 } from 'lucide-react';
+import { Heading, Copy, Check } from 'lucide-react';
 import { PageAuditData } from '@/types';
 import { analyzeKeyphrase, flattenHeadings } from '@/services/keyphraseAnalysis';
 import { useAuditStore } from '@/stores/auditStore';
 import { useProjectStore } from '@/stores/projectStore';
 import { ShowOnPageButton } from '@/components/Results/ShowOnPageButton';
+import { HeadingsSummaryCards } from './HeadingsSummaryCards';
+import { HeadingsViolations } from './HeadingsViolations';
 import { copyText } from '@/services/clipboard';
 import { readStorage, writeStorage } from '@/services/storage';
 
@@ -42,8 +44,13 @@ export const HeadingsTree: React.FC<HeadingsTreeProps> = ({ audit }) => {
     const copied = await copyText(lines.join('\n'));
     if (!copied) return;
     setCopied(true);
-    setTimeout(() => setCopied(false), 2000);
   };
+
+  useEffect(() => {
+    if (!copied) return;
+    const timer = setTimeout(() => setCopied(false), 2000);
+    return () => clearTimeout(timer);
+  }, [copied]);
 
   const getLevelBadgeClass = (level: number) => {
     switch (level) {
@@ -62,93 +69,9 @@ export const HeadingsTree: React.FC<HeadingsTreeProps> = ({ audit }) => {
 
   return (
     <div className="space-y-6 max-w-5xl mx-auto p-4 md:p-6 animate-in fade-in duration-200">
-      {/* Top statistics & status header */}
-      <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-        <div className="p-4 rounded-xl bg-slate-900/60 border border-slate-800 flex items-center justify-between">
-          <div>
-            <span className="text-xs text-slate-400 uppercase tracking-wider block mb-1">
-              {t('headings.h1Count')}
-            </span>
-            <span className="text-2xl font-bold font-mono text-white">
-              {headings.h1_count}
-            </span>
-          </div>
-          <div
-            className={`p-2 rounded-lg ${
-              headings.h1_count === 1
-                ? 'bg-emerald-500/10 text-emerald-400'
-                : 'bg-rose-500/10 text-rose-400'
-            }`}
-          >
-            {headings.h1_count === 1 ? (
-              <CheckCircle2 className="w-5 h-5" />
-            ) : (
-              <AlertCircle className="w-5 h-5" />
-            )}
-          </div>
-        </div>
+      <HeadingsSummaryCards headings={headings} totalHeadings={flatHeadings.length} />
 
-        <div className="p-4 rounded-xl bg-slate-900/60 border border-slate-800 flex items-center justify-between">
-          <div>
-            <span className="text-xs text-slate-400 uppercase tracking-wider block mb-1">
-              {t('legacyUi.headings.total')}
-            </span>
-            <span className="text-2xl font-bold font-mono text-white">
-              {flatHeadings.length}
-            </span>
-          </div>
-          <div className="p-2 rounded-lg bg-blue-500/10 text-blue-400">
-            <Heading className="w-5 h-5" />
-          </div>
-        </div>
-
-        <div className="p-4 rounded-xl bg-slate-900/60 border border-slate-800 flex items-center justify-between">
-          <div>
-            <span className="text-xs text-slate-400 uppercase tracking-wider block mb-1">
-              {t('legacyUi.headings.validation')}
-            </span>
-            <span
-              className={`text-xs font-semibold px-2 py-0.5 rounded-full inline-block mt-1 ${
-                headings.has_valid_hierarchy
-                  ? 'bg-emerald-500/10 text-emerald-400 border border-emerald-500/20'
-                  : 'bg-amber-500/10 text-amber-400 border border-amber-500/20'
-              }`}
-            >
-              {headings.has_valid_hierarchy
-                ? t('headings.validHierarchy')
-                : t('headings.invalidHierarchy')}
-            </span>
-          </div>
-          <div
-            className={`p-2 rounded-lg ${
-              headings.has_valid_hierarchy
-                ? 'bg-emerald-500/10 text-emerald-400'
-                : 'bg-amber-500/10 text-amber-400'
-            }`}
-          >
-            {headings.has_valid_hierarchy ? (
-              <CheckCircle2 className="w-5 h-5" />
-            ) : (
-              <AlertTriangle className="w-5 h-5" />
-            )}
-          </div>
-        </div>
-      </div>
-
-      {/* Warnings & Issues Callout */}
-      {headings.issues.length > 0 && (
-        <div className="p-4 rounded-xl bg-amber-500/10 border border-amber-500/20 space-y-1.5">
-          <div className="flex items-center space-x-2 text-xs font-semibold text-amber-400">
-            <AlertTriangle className="w-4 h-4" />
-            <span>{t('legacyUi.headings.violations')}</span>
-          </div>
-          <ul className="list-disc list-inside text-xs text-slate-300 space-y-1 pl-1">
-            {headings.issues.map((iss, idx) => (
-              <li key={idx}>{iss}</li>
-            ))}
-          </ul>
-        </div>
-      )}
+      <HeadingsViolations issues={headings.issues} />
 
       {!showOnlyProblems && <section className="rounded-2xl border border-slate-800 bg-slate-900/60 p-4">
         <label className="block text-xs font-medium text-slate-300">{t('legacyUi.headings.keyphrase')} <span className="font-normal text-slate-500">{t('legacyUi.headings.keyphraseOptional')}</span>
