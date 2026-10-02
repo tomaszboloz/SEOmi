@@ -7,6 +7,7 @@ import { callOpenAI, callClaude, callGemini } from './ai/suggestions';
 import { generateAiText } from './ai/text';
 import { testAiConnection } from './ai/connection';
 import { CLAUDE_DEFAULT_MODEL } from './ai/claude';
+import { GEMINI_DEFAULT_MODEL, currentModel } from './ai/modelCatalog';
 export { extractJsonObject, parseAiSuggestionResponse } from './ai/parsing';
 export type { AiSuggestionResponse } from './ai/parsing';
 
@@ -38,7 +39,7 @@ static async generateSuggestions(
     case 'claude':
       return callClaude(apiKey, model || CLAUDE_DEFAULT_MODEL, prompt);
     case 'gemini':
-      return callGemini(apiKey, model || 'gemini-2.0-flash', prompt);
+      return callGemini(apiKey, currentModel(model || GEMINI_DEFAULT_MODEL), prompt);
     default:
       throw new Error(i18n.t('runtimeErrors.ai.unsupportedProvider', { provider }));
   }

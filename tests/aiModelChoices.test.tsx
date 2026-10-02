@@ -34,6 +34,12 @@ describe('Claude model choices', () => {
     expect(screen.getByRole('option', { name: 'Claude Opus 5' })).toBeTruthy();
   });
 
+  it('offers only available Gemini models in the AI assistant', () => {
+    useAuthStore.setState({ provider: 'gemini', model: 'gemini-3.8-flash' });
+    render(<AIAssistantModal />);
+    expect(optionValues(screen.getByRole('combobox', { name: i18n.t('ai.modelLabel') }))).toEqual(['gemini-3.8-flash', 'gemini-3.5-flash-lite', 'gemini-3.1-pro-preview']);
+  });
+
   it('offers only current Claude models in the connection settings', () => {
     render(<SubscriptionModal />);
     const claudeSelects = screen.getAllByRole('combobox', { name: i18n.t('auth.modelLabel') }).filter(select => optionValues(select).some(value => value?.startsWith('claude-')));
@@ -50,6 +56,14 @@ describe('persisted Claude model migration', () => {
     useAuthStore.getState().hydrateProject('p1');
     expect(useAuthStore.getState().model).toBe('claude-sonnet-5');
     expect(localStorage.getItem('seomi_project_p1_ai_model')).toBe('claude-sonnet-5');
+  });
+
+  it('rewrites a shut-down Gemini project model', () => {
+    localStorage.setItem('seomi_ai_project_preferences_migrated_v1', '1');
+    localStorage.setItem('seomi_project_p3_ai_provider', 'gemini');
+    localStorage.setItem('seomi_project_p3_ai_model', 'gemini-1.5-pro');
+    useAuthStore.getState().hydrateProject('p3');
+    expect(useAuthStore.getState().model).toBe('gemini-3.1-pro-preview');
   });
 
   it('keeps a supported or non-Claude project model', () => {

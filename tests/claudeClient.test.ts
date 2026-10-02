@@ -2,15 +2,17 @@ import { beforeEach, describe, expect, it, vi } from 'vitest';
 import i18n from '@/i18n';
 import {
   CLAUDE_CONNECTION_PROBE_MODEL, CLAUDE_DEFAULT_MODEL, CLAUDE_MAX_TOKENS, CLAUDE_MESSAGES_URL,
-  claudeHeaders, claudeMessageText, claudeRequestBody, currentClaudeModel, requestClaudeText,
+  claudeHeaders, claudeMessageText, claudeRequestBody, requestClaudeText,
 } from '@/services/ai/claude';
+import { GEMINI_DEFAULT_MODEL, currentModel } from '@/services/ai/modelCatalog';
 
 beforeEach(async () => { await i18n.changeLanguage('en'); });
 
-describe('Claude model identity', () => {
+describe('hosted model identity', () => {
   it('uses current model IDs for the default and the connection probe', () => {
     expect(CLAUDE_DEFAULT_MODEL).toBe('claude-opus-5');
     expect(CLAUDE_CONNECTION_PROBE_MODEL).toBe('claude-haiku-4-5');
+    expect(GEMINI_DEFAULT_MODEL).toBe('gemini-3.8-flash');
   });
 
   it.each([
@@ -18,13 +20,16 @@ describe('Claude model identity', () => {
     ['claude-3-5-sonnet-20241022', 'claude-sonnet-5'],
     ['claude-3-5-sonnet-20240620', 'claude-sonnet-5'],
     ['claude-3-5-haiku-20241022', 'claude-haiku-4-5'],
+    ['gemini-2.0-flash', 'gemini-3.8-flash'],
+    ['gemini-2.0-pro-exp-02-05', 'gemini-3.1-pro-preview'],
+    ['gemini-1.5-pro', 'gemini-3.1-pro-preview'],
   ])('rewrites retired %s to %s', (retired, current) => {
-    expect(currentClaudeModel(retired)).toBe(current);
+    expect(currentModel(retired)).toBe(current);
   });
 
   it('keeps current, unknown and other-provider models unchanged', () => {
-    for (const model of ['claude-opus-5', 'claude-sonnet-5', 'gpt-4o', 'gemini-2.0-flash', '', 'custom-model']) {
-      expect(currentClaudeModel(model)).toBe(model);
+    for (const model of ['claude-opus-5', 'claude-sonnet-5', 'gpt-4o', 'gpt-4o-mini', GEMINI_DEFAULT_MODEL, '', 'custom-model']) {
+      expect(currentModel(model)).toBe(model);
     }
   });
 });

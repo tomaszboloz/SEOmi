@@ -2,7 +2,7 @@ import { readStorage, writeStorage } from '@/services/storage';
 import type { AiConnectionMethod, AiConnectionState } from '@/types';
 import { PROVIDERS, providerMap, defaultModel, statusFromDetectedCli, isAiProvider, isConnectionMethod, projectPreferenceKey, AI_PROJECT_MIGRATION_KEY, beginAuthRequest } from './runtime';
 import type { AuthState, AuthSet, AuthGet } from './types';
-import { currentClaudeModel } from '@/services/ai/claude';
+import { currentModel } from '@/services/ai/modelCatalog';
 export const createAuthPreferences = (set: AuthSet, get: AuthGet): Pick<AuthState, 'setProvider' | 'setModel' | 'setConnectionMethod' | 'hydrateProject'> => ({
   setProvider: (provider) => {
     writeStorage('seomi_ai_provider', provider);
@@ -45,7 +45,7 @@ export const createAuthPreferences = (set: AuthSet, get: AuthGet): Pick<AuthStat
     const storedModel = readStorage(projectPreferenceKey(projectId, 'model'));
     const legacyModel = readStorage('seomi_ai_model');
     // Retired model IDs saved by older versions are rewritten to supported successors.
-    const model = currentClaudeModel(storedModel?.trim() || (migrateLegacyPreferences && provider === (legacyProvider || '') ? legacyModel?.trim() : '') || defaultModel(provider));
+    const model = currentModel(storedModel?.trim() || (migrateLegacyPreferences && provider === (legacyProvider || '') ? legacyModel?.trim() : '') || defaultModel(provider));
     const connectionMethod = PROVIDERS.reduce((all, item) => {
       const projectValue = readStorage(projectPreferenceKey(projectId, `connection_${item}`));
       const legacyValue = readStorage(`seomi_ai_connection_${item}`);

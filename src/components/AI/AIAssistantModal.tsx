@@ -239,9 +239,9 @@ export const AIAssistantModal: React.FC = () => {
                   )}
                   {provider === 'gemini' && (
                     <>
-                      <option value="gemini-2.0-flash">{t('legacyUi.ai.geminiFlash')}</option>
-                      <option value="gemini-2.0-pro-exp-02-05">{t('legacyUi.ai.geminiPro')}</option>
-                      <option value="gemini-1.5-pro">{t('legacyUi.ai.gemini15')}</option>
+                      <option value="gemini-3.8-flash">{t('legacyUi.ai.gemini38Flash')}</option>
+                      <option value="gemini-3.5-flash-lite">{t('legacyUi.ai.gemini35FlashLite')}</option>
+                      <option value="gemini-3.1-pro-preview">{t('legacyUi.ai.gemini31ProPreview')}</option>
                     </>
                   )}
                 </select>

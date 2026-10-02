@@ -3,6 +3,7 @@ import { invokeTauriCommand } from '@/services/tauri';
 import i18n from '@/i18n';
 import { aiProviderLabel } from './labels';
 import { requestClaudeText } from './claude';
+import { GEMINI_DEFAULT_MODEL, currentModel } from './modelCatalog';
 
 export async function generateAiText(provider: AiProvider, apiKey: string, model: string, prompt: string, method: AiConnectionMethod = 'api_key'): Promise<string> {
   // A subscription CLI owns its own model selection and authentication.
@@ -21,7 +22,7 @@ export async function generateAiText(provider: AiProvider, apiKey: string, model
     if (typeof response === 'string') return response;
     throw new Error(i18n.t('runtimeErrors.ai.apiError', { provider: aiProviderLabel('claude'), status: response.status, detail: await response.text() }));
   }
-  const endpoint = `https://generativelanguage.googleapis.com/v1beta/models/${encodeURIComponent(model)}:generateContent?key=${encodeURIComponent(apiKey)}`;
+  const endpoint = `https://generativelanguage.googleapis.com/v1beta/models/${encodeURIComponent(currentModel(model || GEMINI_DEFAULT_MODEL))}:generateContent?key=${encodeURIComponent(apiKey)}`;
   const response = await fetch(endpoint, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ contents: [{ parts: [{ text: prompt }] }] }) });
   if (!response.ok) throw new Error(i18n.t('runtimeErrors.ai.apiError', { provider: aiProviderLabel('gemini'), status: response.status, detail: await response.text() }));
   return (await response.json()).candidates?.[0]?.content?.parts?.[0]?.text || '';

@@ -55,8 +55,9 @@ const providers: {
     icon: Sparkles,
     apiHelp: "https://aistudio.google.com/app/apikey",
     models: [
-      { id: "gemini-2.0-flash", labelKey: "legacyUi.ai.geminiFlash" },
-      { id: "gemini-1.5-pro", labelKey: "legacyUi.ai.gemini15" },
+      { id: "gemini-3.8-flash", labelKey: "legacyUi.ai.gemini38Flash" },
+      { id: "gemini-3.5-flash-lite", labelKey: "legacyUi.ai.gemini35FlashLite" },
+      { id: "gemini-3.1-pro-preview", labelKey: "legacyUi.ai.gemini31ProPreview" },
     ],
   },
 ];

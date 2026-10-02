@@ -30,7 +30,7 @@ it.each(['openai','claude','gemini'] as const)('generates %s metadata through th
   expect(prompt).toContain('Observed heading');
   expect(prompt).toContain('observed (2)');
   expect(prompt).toContain('Keep the evidence');
-  expect(body.model??new URL(String(fetchMock.mock.calls[0][0])).pathname).toContain(provider==='openai'?'gpt-4o':provider==='claude'?'claude-opus-5':'gemini-2.0-flash');
+  expect(body.model??new URL(String(fetchMock.mock.calls[0][0])).pathname).toContain(provider==='openai'?'gpt-4o':provider==='claude'?'claude-opus-5':'gemini-3.8-flash');
 });
 
 it.each(['openai','claude','gemini'] as const)('routes %s CLI metadata without API credentials or forcing an API model',async provider=>{

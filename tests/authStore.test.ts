@@ -29,7 +29,7 @@ describe('useAuthStore (Direct AI Subscriptions - Zero Credits)', () => {
 
     store.setProvider('gemini');
     expect(useAuthStore.getState().provider).toBe('gemini');
-    expect(useAuthStore.getState().model).toBe('gemini-2.0-flash');
+    expect(useAuthStore.getState().model).toBe('gemini-3.8-flash');
   });
 
   it('keeps the selected connection method per provider without artificial credits', () => {

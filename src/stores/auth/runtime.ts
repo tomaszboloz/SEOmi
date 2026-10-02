@@ -1,6 +1,7 @@
 import type { AiCliStatus, AiConnectionMethod, AiConnectionState, AiProvider } from '@/types';
 import { createId } from '@/services/ids';
 import { CLAUDE_DEFAULT_MODEL } from '@/services/ai/claude';
+import { GEMINI_DEFAULT_MODEL } from '@/services/ai/modelCatalog';
 export const PROVIDERS: AiProvider[] = ['openai', 'claude', 'gemini'];
 export const SECRET_NAMES: Record<AiProvider, string> = {
   openai: 'openai_api_key',
@@ -8,7 +9,7 @@ export const SECRET_NAMES: Record<AiProvider, string> = {
   gemini: 'gemini_api_key',
 };
 export const providerMap = <T,>(value: T): Record<AiProvider, T> => ({ openai: value, claude: value, gemini: value });
-export const defaultModel = (provider: AiProvider): string => ({ openai: 'gpt-4o', claude: CLAUDE_DEFAULT_MODEL, gemini: 'gemini-2.0-flash' })[provider];
+export const defaultModel = (provider: AiProvider): string => ({ openai: 'gpt-4o', claude: CLAUDE_DEFAULT_MODEL, gemini: GEMINI_DEFAULT_MODEL })[provider];
 // Detection runs the same version and sign-in check as the explicit test for
 // Codex and Claude, so a detected CLI is a working connection. Gemini has no
 // sign-in check; only its explicit test (one real request) proves it.

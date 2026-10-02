@@ -3504,12 +3504,12 @@
       "gpt4o": "GPT-4o (high-converting copy)",
       "gpt4oMini": "GPT-4o Mini (fast and lightweight)",
       "o3Mini": "o3-mini (reasoning model)",
-      "geminiFlash": "Gemini 2.0 Flash (fastest)",
-      "geminiPro": "Gemini 2.0 Pro",
-      "gemini15": "Gemini 1.5 Pro",
       "claudeOpus5": "Claude Opus 5",
       "claudeSonnet5": "Claude Sonnet 5",
-      "claudeHaiku45": "Claude Haiku 4.5"
+      "claudeHaiku45": "Claude Haiku 4.5",
+      "gemini38Flash": "Gemini 3.8 Flash",
+      "gemini35FlashLite": "Gemini 3.5 Flash-Lite",
+      "gemini31ProPreview": "Gemini 3.1 Pro (preview)"
     },
     "renderWorker": {
       "title": "로컬 렌더링 워커",
