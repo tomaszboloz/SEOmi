@@ -39,6 +39,7 @@ const MAX_ROBOTS_RULES: usize = 100;
 /// never persisted in the crawl snapshot.
 const MAX_INTRINSIC_IMAGE_BYTES: usize = 8 * 1024 * 1024;
 
+mod byte_readers;
 mod canonical;
 mod content_metrics;
 mod control;
@@ -63,6 +64,7 @@ mod semantics;
 mod social;
 mod transport;
 
+use byte_readers::*;
 use canonical::*;
 use content_metrics::*;
 use control::*;
