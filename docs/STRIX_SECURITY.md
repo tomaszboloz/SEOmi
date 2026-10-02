@@ -36,7 +36,8 @@ Preparation/completion metadata is kept under ignored `reports/strix/`.
 
 The initial authenticated scan is `source_29c5` (2026-10-02), using a working
 copy based on `61c814b` plus the pending Windows overflow test repair.
-The scan is running; no clean security result is claimed before it completes.
+The scan exited with code 1 after ChatGPT's content guardrail blocked pentest
+tasks. The recorded status is failed; no clean security result is claimed.
 Inspect `coverage.json` alongside the final findings: missing surfaces, failed
 agents or turn-limit termination must be reported as incomplete assessment.
 
