@@ -1,89 +1,13 @@
-import { createServer, type IncomingMessage, type Server, type ServerResponse } from 'node:http';
-import { randomUUID, timingSafeEqual } from 'node:crypto';
+import { createServer, type IncomingMessage, type ServerResponse } from 'node:http';
+import { randomUUID } from 'node:crypto';
 import { auditPublicUrl, crawlPublicSite, DEFAULT_AUDIT_TIMEOUT_MS, validatePublicScopeOptions, type PublicAuditOptions, type PublicAuditResult, type PublicCrawlResult } from './auditWorkflow.js';
+import { authorized, json, readBody } from './localApiHttp.js';
+import { LOCAL_API_HOST, LocalApiError, type AuditRunner, type CrawlRunner, type LocalApiHandle, type LocalApiLog, type LocalApiOptions, type RequestSlots } from './localApiTypes.js';
 
-export const LOCAL_API_HOST = '127.0.0.1';
-export const LOCAL_API_MAX_BODY_BYTES = 64 * 1024;
+export { LOCAL_API_HOST, LOCAL_API_MAX_BODY_BYTES } from './localApiTypes.js';
+export type { LocalApiHandle, LocalApiLog, LocalApiOptions } from './localApiTypes.js';
+
 const MIN_TOKEN_LENGTH = 16;
-
-type AuditRunner = (url: string, timeoutMs: number, options: PublicAuditOptions) => Promise<PublicAuditResult>;
-type CrawlRunner = (url: string, timeoutMs: number, maxPages: number, maxDepth: number, options: PublicAuditOptions) => Promise<PublicCrawlResult>;
-
-export interface LocalApiOptions {
-  token: string;
-  port?: number;
-  audit?: AuditRunner;
-  crawl?: CrawlRunner;
-  maxConcurrentRequests?: number;
-  logger?: (entry: LocalApiLog) => void;
-}
-
-export interface LocalApiLog {
-  level: 'info' | 'error';
-  event: 'request_completed';
-  request_id: string;
-  route: '/health' | '/v1/audit' | '/v1/crawl' | 'unknown';
-  method: string;
-  status: number;
-  duration_ms: number;
-}
-
-class LocalApiError extends Error {
-  constructor(message: string, readonly statusCode: number) { super(message); }
-}
-
-interface RequestSlots {
-  acquire: () => boolean;
-  release: () => void;
-}
-
-export interface LocalApiHandle {
-  host: typeof LOCAL_API_HOST;
-  port: number;
-  server: Server;
-  close: () => Promise<void>;
-}
-
-const json = (response: ServerResponse, status: number, payload: Record<string, unknown>): void => {
-  const body = JSON.stringify(payload);
-  response.statusCode = status;
-  response.setHeader('content-type', 'application/json; charset=utf-8');
-  response.setHeader('cache-control', 'no-store');
-  response.setHeader('content-length', Buffer.byteLength(body));
-  response.end(body);
-};
-
-const readBody = async (request: IncomingMessage): Promise<unknown> => {
-  const declaredLength = Number(request.headers['content-length'] || 0);
-  if (Number.isFinite(declaredLength) && declaredLength > LOCAL_API_MAX_BODY_BYTES) {
-    throw new LocalApiError('Request body exceeds the local API limit.', 413);
-  }
-  const chunks: Buffer[] = [];
-  let bytes = 0;
-  for await (const chunk of request) {
-    const buffer = Buffer.isBuffer(chunk) ? chunk : Buffer.from(chunk);
-    bytes += buffer.length;
-    if (bytes > LOCAL_API_MAX_BODY_BYTES) {
-      throw new LocalApiError('Request body exceeds the local API limit.', 413);
-    }
-    chunks.push(buffer);
-  }
-  if (bytes === 0) return {};
-  try {
-    return JSON.parse(Buffer.concat(chunks).toString('utf8')) as unknown;
-  } catch {
-    throw new LocalApiError('Request body must be valid JSON.', 400);
-  }
-};
-
-const authorized = (request: IncomingMessage, token: string): boolean => {
-  const header = request.headers.authorization || '';
-  const prefix = 'Bearer ';
-  if (!header.startsWith(prefix)) return false;
-  const provided = Buffer.from(header.slice(prefix.length));
-  const expected = Buffer.from(token);
-  return provided.length === expected.length && timingSafeEqual(provided, expected);
-};
 
 const validateOptions = (options: LocalApiOptions): void => {
   if (options.token.trim().length < MIN_TOKEN_LENGTH) throw new Error(`Local API token must contain at least ${MIN_TOKEN_LENGTH} characters.`);
