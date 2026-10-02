@@ -1386,3 +1386,11 @@ The495line topical document service is now an11line facade with14focused modules
 Scoped43tests cover100%of308statements/243branches/73functions/229lines. Full2626frontend/488Rust/70MCP tests, build/lint/fmt/strictClippy pass. Globalfrontend87.21%statements/77.76%branches/84.25%functions/88.18%lines; reused hash-validated native evidence64.58%productionlines/61.10%sourcefunctions. GlobalLOC1081files/126violations and46executedTSbodieswithoutdirectstaticreferences remain open; originalaudit69/72,165/169including discovered fixes. No new release/tag until the global gates and requested extensions are complete. Master protection was verified with admins enforced, force pushes/deletion disabled and five strict required checks. CIb12c2c1/run37023188353 passes frontend/native/security; desktop jobs were still running at the latest read.
 
 Thanks to @RafalSzy for the test feedback in [PR #13](https://github.com/tomaszboloz/SEOmi/pull/13).
+
+### BATCH-4z: direct public UI contracts
+
+Seventeen new tests cover audit notices, update/relaunch controls, error-boundary public methods, topic browsing/dragging and URL assignment provenance/budgets. Thirteen public callables gain direct test references; remaining executed bodies without those references decrease from46 to33. Production code is unchanged, and all new files fit LOC150 (largest73 lines).
+
+Full local suites pass2643 frontend,488 Rust and70 MCP tests; build/lint/fmt/strict Clippy pass. Global coverage is87.33% statements,77.91% branches,84.53% functions and88.31% lines. The original audit remains69/72 (165/169 including discovered fixes); globalLOC still reports126 violations across1087 files. Native coverage and requested extensions remain incomplete, so the new version/tag remains pending. CI b12c2c1/run37023188353 passed5/5 jobs, including actual Windows/macOS desktop E2E; newer heads require their own checks.
+
+Thanks to @RafalSzy for the testing feedback in [PR #13](https://github.com/tomaszboloz/SEOmi/pull/13).

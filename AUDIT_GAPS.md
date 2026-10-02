@@ -493,3 +493,14 @@ Thanks to @RafalSzy for the testing feedback in [PR #13](https://github.com/toma
 - CIb12c2c1/run37023188353 frontend/native/securitySUCCESS; Windows/macOSdesktopE2E stillrunning atlatestread. Newhead requiresownCI. Masterprotection freshlyverified:admins enforced,force/deletiondisabled,fivestrictchecks.
 
 Thanks to @RafalSzy for the testing feedback in [PR #13](https://github.com/tomaszboloz/SEOmi/pull/13).
+
+## BATCH-4z: direct recovery, update and topical UI contracts
+- Seventeen new tests directly assert thirteen previously unreferenced public callables: audit notices, Empty/Table, Footer, six error-boundary methods, topic list/browser and URL assignments. Coverage execution alone is still not claimed as proof of direct assertions.
+- Contracts verify error/warning copy, escaped raw evidence, table semantics, current author/version, settings navigation, installed-update relaunch, missing update payloads, listener cleanup, supplied error stacks, retry/reload/back actions, topic selection/drag identities, filtered/empty states, parent/crawl evidence, view changes, cluster import availability, search, URL provenance, normalized unassignment and the1000-URL budget.
+- Production sources unchanged. Five test modules and one fixture satisfy LOC150 (largest73 physical lines). Ten recovery/notice/footer tests independently cover40/40 statements,17/17 branches,20/20 functions,35/35 lines. The combined eight-component scope covers84/84 statements,71/73 branches,40/40 functions; two existing URL display fallback arms remain uncovered.
+- Full2643 frontend /488 Rust /70 MCP PASS; build, ESLint, rustfmt and strict Clippy PASS. Global frontend87.33% statements /77.91% branches /84.53% functions /88.31% lines remains below99.01%.
+- Inventory720 TS callables /713 executed /7 factory-returned; executed bodies without direct static test references decrease46 to33. GlobalLOC1087 files /126 violations remains OPEN. Native production evidence remains the unchanged hash-validated BATCH-4u measurement:64.58% lines /61.10% source functions; native branches/platform coverage is unmeasured.
+- Original audit remains69/72;165/169 including discovered fixes. Global coverage, complete direct assertions, LOC150, requested extensions and release/tag remain OPEN.
+- CI b12c2c1/run37023188353 all five SUCCESS, including real Windows/macOS desktop E2E. CI f6a35df/run37024706431 frontend/security SUCCESS; native/desktops still running at latest read. New head requires its own CI.
+
+Thanks to @RafalSzy for the testing feedback in [PR #13](https://github.com/tomaszboloz/SEOmi/pull/13).

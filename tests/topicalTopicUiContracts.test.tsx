@@ -1,0 +1,73 @@
+import { fireEvent, render, screen } from '@testing-library/react';
+import { describe, expect, it, vi } from 'vitest';
+import { TopicalTopicList } from '@/components/Charts/semanticTopical/TopicalTopicList';
+import { TopicalTopicBrowser } from '@/components/Charts/semanticTopical/TopicalTopicBrowser';
+import { createTopicalNode } from '@/services/topicalMap';
+import { topicalSession } from './fixtures/topicalSessionContracts';
+
+describe('topic browsing public contracts', () => {
+  it('selects the requested topic and exposes parent/current crawl evidence', () => {
+    const session = topicalSession();
+    const parent = { ...createTopicalNode('Parent'), id: 'parent' };
+    const node = { ...session.matchingTopics[0], parentId: parent.id, sourceRunId: 'run', sourceUrls: ['https://site.test/a', 'invalid'] };
+    session.document.nodes = [parent, node]; session.matchingTopics = [node]; session.crawledUrls = new Set(['https://site.test/a']);
+    render(<TopicalTopicList session={session} />);
+    const button = screen.getByRole('button', { name: 'semanticWorkspace.topicAria:Coffee' });
+    expect(button.getAttribute('aria-pressed')).toBe('true');
+    expect(screen.getByText('semanticWorkspace.parent:Parent')).toBeTruthy();
+    expect(screen.getByText('semanticWorkspace.urlCount:1')).toBeTruthy();
+    fireEvent.click(button);
+    expect(session.setSelectedId).toHaveBeenCalledWith(node.id);
+  });
+  it('sets drag transfer identity, prevents foreign drops and clears dragging state', () => {
+    const session = topicalSession({ draggingNodeId: 'other', selectedId: null });
+    const { rerender } = render(<TopicalTopicList session={session} />);
+    const button = screen.getByRole('button');
+    const transfer = { effectAllowed: '', setData: vi.fn() };
+    fireEvent.dragStart(button, { dataTransfer: transfer });
+    expect(transfer.setData).toHaveBeenCalledWith('text/plain', 'coffee');
+    expect(transfer.effectAllowed).toBe('move');
+    expect(session.setDraggingNodeId).toHaveBeenCalledWith('coffee');
+    expect(session.setHierarchyNotice).toHaveBeenCalledWith('semanticWorkspace.dropTopicNotice');
+    expect(fireEvent.dragOver(button)).toBe(false);
+    fireEvent.drop(button);
+    expect(session.dropTopicOn).toHaveBeenCalledWith('coffee');
+    fireEvent.dragEnd(button);
+    expect(session.setDraggingNodeId).toHaveBeenCalledWith(null);
+    rerender(<TopicalTopicList session={{ ...session, draggingNodeId: 'coffee' }} />);
+    expect(fireEvent.dragOver(screen.getByRole('button'))).toBe(true);
+    rerender(<TopicalTopicList session={{ ...session, draggingNodeId: null }} />);
+    expect(fireEvent.dragOver(screen.getByRole('button'))).toBe(true);
+  });
+  it('distinguishes an empty map from filtered results and supports outer topics', () => {
+    const session = topicalSession({ matchingTopics: [] });
+    const { rerender } = render(<TopicalTopicList session={session} />);
+    expect(screen.getByText('semanticWorkspace.noTopicMatches')).toBeTruthy();
+    rerender(<TopicalTopicList session={{ ...session, document: { ...session.document, nodes: [] } }} />);
+    expect(screen.getByText('semanticWorkspace.emptyMap')).toBeTruthy();
+    const node = { ...session.document.nodes[0], boundary: 'outer' as const, parentId: 'missing' };
+    rerender(<TopicalTopicList session={{ ...session, matchingTopics: [node], selectedId: null }} />);
+    expect(screen.getByText('semanticWorkspace.outer')).toBeTruthy();
+  });
+  it('switches views, adds topics, filters and enables imports only with clusters', () => {
+    const session = topicalSession();
+    const { rerender } = render(<TopicalTopicBrowser session={session} />);
+    const importButton = screen.getByRole('button', { name: 'semanticWorkspace.importClusters' });
+    expect((importButton as HTMLButtonElement).disabled).toBe(true);
+    expect(fireEvent.dragOver(screen.getByLabelText('semanticWorkspace.dropRootAria'))).toBe(true);
+    fireEvent.click(screen.getByRole('button', { name: 'semanticWorkspace.calendar' }));
+    fireEvent.click(screen.getByRole('button', { name: 'semanticWorkspace.list' }));
+    expect(session.updateWorkspacePreferences).toHaveBeenCalledWith({ view: 'calendar' });
+    expect(session.updateWorkspacePreferences).toHaveBeenCalledWith({ view: 'topics' });
+    fireEvent.click(screen.getByRole('button', { name: '＋ semanticWorkspace.topic' }));
+    expect(session.addNode).toHaveBeenCalledTimes(1);
+    fireEvent.change(screen.getByRole('textbox'), { target: { value: 'beans' } });
+    expect(session.updateWorkspacePreferences).toHaveBeenCalledWith({ search: 'beans' });
+    rerender(<TopicalTopicBrowser session={{ ...session, graph: { ...session.graph, clusters: [{ id: 'c', label: 'Coffee', pageCount: 1 }] }, hierarchyNotice: 'Moved', draggingNodeId: 'coffee' }} />);
+    fireEvent.click(screen.getByRole('button', { name: 'semanticWorkspace.importClusters' }));
+    expect(session.importClusters).toHaveBeenCalledTimes(1);
+    expect(screen.getByRole('status').textContent).toBe('Moved');
+    expect(fireEvent.dragOver(screen.getByLabelText('semanticWorkspace.dropRootAria'))).toBe(false);
+    expect(session.dropTopicOn).toHaveBeenCalledWith(null);
+  });
+});
