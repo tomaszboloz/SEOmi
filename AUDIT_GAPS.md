@@ -2,7 +2,7 @@
 Audytor: Staff Developer | Data: 2026-10-01
 
 ## Statystyki
-- Zidentyfikowanych luk: 178 (72 pierwotne oraz 106 problemów wykrytych podczas testów)
+- Zidentyfikowanych luk: 179 (72 pierwotne oraz 107 problemów wykrytych podczas testów)
 - Batchy do wdrożenia: 7
 - Szacowany effort: 20–35 MD; estymacja orientacyjna, do korekty po pomiarze coverage.
 - Baseline: commit 18fa446b13ec3f97db76896bfdf446f97fe80051; 704 frontend / 320 Rust / 27 MCP testów.
@@ -48,7 +48,7 @@ Pomiary bazowego commitu (2026-10-01):
 - [ ] GAP-023: [HIGH] Production llvm-cov and >99% Rust gate. Status: PARTIAL (BATCH-5a): fresh compiled 11717/18142 lines 64.58%, 1167/1910 source functions 61.10%, 239 source hashes and validated LLVM grouping. Global target, native branches and uncompiled-platform evidence remain OPEN.
 - [x] GAP-024: [HIGH] Testy MCP odkrywają schematy; brak happy/error testów wszystkich provider tools. Dowód: `mcp-server/test/server.test.mjs`. Status: FIXED (BATCH-2a); wszystkie 18 tools wywołane przez MCP (happy/error/schema), dodatkowe testy scope i evidence filtering.
 - [x] GAP-025: [HIGH] Brak E2E uruchomionej aplikacji Tauri dla krytycznych przepływów. Dowód: `.github/workflows/test.yml`. Status: FIXED (BATCH-3a/3b/3e): rzeczywisty Tauri runtime z produkcyjnym builderem, WebView, IPC i izolowanym profilem. CI36885645884 dla951b634: macOS-15-intel i Windows actual E2E GREEN, wszystkie5/5checks GREEN. Windows report24/24; macOS runtime zweryfikowany w CI po pinie wspieranego Intel runnera. Native invokes nie są mockowane.
-- [ ] GAP-026: [MEDIUM] Public functions require direct unit assertions. Status: PARTIAL (BATCH-5c): 753 TS callables, 746 executed, seven factory-returned; 26 executed bodies without direct static references. Scoped CLI/provider/domain/storage and previous responsibilities have direct assertions; complete native/TS assertion proof remains OPEN.
+- [ ] GAP-026: [MEDIUM] Public functions require direct unit assertions. Status: PARTIAL (BATCH-5d): 753 TS callables, 746 executed, seven factory-returned; 23 executed bodies without direct static references. Scoped CLI/provider/domain/storage and previous responsibilities have direct assertions; complete native/TS assertion proof remains OPEN.
 - [x] GAP-027: [MEDIUM] Brak testu DNS rebinding/redirect do sieci prywatnej dla inspect_url. Dowód: `src-tauri/src/services/http_client.rs:201`. Status: FIXED (BATCH-1a); dowód: 12 deterministycznych testów http_client, pełny suite i Clippy. Resolver DI, przypięty transport per hop, jeden deadline i limit strumienia; brak testów zależnych od internetu.
 - [x] GAP-028: [MEDIUM] Brak testu strumieniowego przekroczenia limitu odpowiedzi audytu HTTP. Dowód: `src-tauri/src/services/http_client.rs:201`. Status: FIXED (BATCH-1a); dowód: 12 deterministycznych testów http_client, pełny suite i Clippy. Resolver DI, przypięty transport per hop, jeden deadline i limit strumienia; brak testów zależnych od internetu.
 
@@ -542,5 +542,15 @@ Thanks to @RafalSzy for the testing feedback in [PR #13](https://github.com/toma
 - Full2759frontend/489Rust/70MCP PASS; build, ESLint, rustfmt and strictClippy PASS. Globalfrontend88.08%statements/79.11%branches/86.00%functions/88.98%lines remains below99.01%. Publicinventory753TS/746executed/7factory-returned;26executedbodies withoutdirectstaticreferences. GlobalLOC1145files/119violations remainsOPEN.
 - Native sources unchanged; all239BATCH-5a AST/source hashes revalidated. Reused compiled production evidence remains11717/18142lines64.58%,1167/1910sourcefunctions61.10%; nativebranches/uncompiledplatforms remainunmeasured.
 - Originalaudit69/72;174/178including discoveredfixes. Globalcoverage/directassertions/LOC, requestedSearchSignalextensions and release/tag remainOPEN. CI68fbea6/run37031904371 frontend/securitySUCCESS, native andactualWindows/macOSdesktopjobs pending atlatestread. Newhead requiresownCI.
+
+Thanks to @RafalSzy for the testing feedback in [PR #13](https://github.com/tomaszboloz/SEOmi/pull/13).
+
+## BATCH-5d: direct semantic panel contracts and bounded test concurrency
+- [x] GAP-179: [DISCOVERED][MEDIUM] Default frontend worker fanout under concurrent build/lint load causes5000ms test timeouts and the1000ms lazy-view wait to expire. Status: LOCAL FIXED: first full2767case run has three failures (brief500-page link fixture, large architecture directory pagination and main-content lazy tabs). Bound Vitest to2workers; full392files/2767cases pass with unchanged test timeouts, assertions and coverage scope. Remote validation remains pending; this is evidence for the observed concurrency failure, not a guarantee against every timing failure.
+- Eight direct UI cases cover SemanticAuditPanel, EntityEvidenceGraph and InternalLinkOpportunitiesPanel. Real deterministic service fixtures assert severity/evidence searching, newest-other baseline selection and explicit switching, no invented score/authority, directed link source URLs/shared terms/heuristic scores, incomplete/no-candidate states, declared/lexical/structured/reference SVG edges, graph search, visible28fact/36page caps and exceeded-source-budget disclosure. No production panel behavior is changed.
+- Scoped8cases cover126/128statements,134/154branches,57/57functions,87/88lines; unreachable/fallback and unexercised disclosure arms remain unmeasured. All three new test files and the updated Vite config fit150physical lines (largest60).
+- Full2767frontend/489Rust/70MCP PASS; build, ESLint, rustfmt and strictClippy PASS. Globalfrontend88.04%statements/79.26%branches/86.07%functions/88.89%lines remains below99.01%. Report reflects the fresh run; asynchronous execution differences are not hidden by retaining older higher statement/line percentages.
+- Publicinventory753TS/746executed/7factory-returned; executedbodies withoutdirectstaticreferences decrease26to23. GlobalLOC1148files/119violations remainsOPEN. Native sources unchanged; all239AST/source hashes revalidated, reusedproduction64.58%lines/61.10%sourcefunctions, no nativebranch/uncompiledplatform claim.
+- Originalaudit69/72;175/179including locallyfixeddiscoveredissues. Globalcoverage/directassertions/LOC, requestedextensions and release/tag remainOPEN. CI68fbea6/run37031904371 frontend/native/security/WindowsSUCCESS, macOSpending atlatestread. CI95189ff/run37032654077 frontend/native/securitySUCCESS, desktops pending. Newhead requiresownCI.
 
 Thanks to @RafalSzy for the testing feedback in [PR #13](https://github.com/tomaszboloz/SEOmi/pull/13).

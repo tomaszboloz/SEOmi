@@ -42,6 +42,9 @@ export default defineConfig({
     chunkSizeWarningLimit: 600,
   },
   test: {
+    // Coverage plus large DOM fixtures can saturate shared desktop/CI hosts.
+    // Bound parallelism while keeping every test and its existing timeout.
+    maxWorkers: 2,
     coverage: {
       provider: 'v8',
       include: ['src/**/*.{ts,tsx}', 'mcp-server/src/contracts/**/*.ts'],

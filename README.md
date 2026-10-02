@@ -1424,3 +1424,14 @@ The168-line directory component is now132lines with a38-line preference module; 
 Full2759frontend/489Rust/70MCP tests and build/lint/fmt/strictClippy pass. Globalfrontend88.08%statements/79.11%branches/86.00%functions/88.98%lines; unchanged native evidence revalidates239hashes and remains64.58%productionlines/61.10%sourcefunctions. GlobalLOC119violations across1145files and26executedTSbodies withoutdirectstaticreferences remainopen. Originalaudit69/72,174/178including discoveredfixes; requestedextensions and release/tag remainpending. CI68fbea6/run37031904371 frontend/security pass, native/desktop checks pending atlatestread; the newhead needsownCI.
 
 Thanks to @RafalSzy for the testing feedback in [PR #13](https://github.com/tomaszboloz/SEOmi/pull/13).
+
+
+### BATCH-5d: evidence panel controls and test scheduling
+
+Eight direct tests verify semantic findings/filtering/baseline comparison, entity evidence SVG/search/display caps and directed internal-link evidence/filtering/unavailable states. The three panels keep their production behavior. Their scoped tests execute all57functions; statement/branch/line coverage is98.43%/87.01%/98.86%, with remaining arms disclosed. Every new file fits LOC150.
+
+The first full run under concurrent build/lint load timed out three existing/large DOM fixtures. Default Vitest concurrency is now bounded to2workers; all2767frontend/489Rust/70MCP tests pass, preserving timeouts/assertions/coverage scope. Build/lint/fmt/strictClippy pass. Fresh globalcoverage88.04%statements/79.26%branches/86.07%functions/88.89%lines remains belowtarget; native evidence is unchanged and all239hashes match (64.58%productionlines/61.10%sourcefunctions).
+
+ExecutedTSbodies withoutdirectstaticreferences decrease26to23. GlobalLOC119violations across1148files remainsopen. Originalaudit69/72,175/179including discoveredfixes; requestedextensions and release/tag remainpending. CI68fbea6 passes frontend/native/security/Windows, macOSpending; CI95189ff passes frontend/native/security, desktops pending atlatestread. The newhead needsownCI.
+
+Thanks to @RafalSzy for the testing feedback in [PR #13](https://github.com/tomaszboloz/SEOmi/pull/13).
