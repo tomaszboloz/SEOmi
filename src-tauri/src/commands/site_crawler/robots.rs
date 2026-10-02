@@ -213,20 +213,36 @@ pub(super) fn robots_rule_specificity(pattern: &str) -> usize {
 pub(super) fn robots_path_matches(pattern: &str, requested: &str) -> bool {
     let anchored = pattern.ends_with('$');
     let pattern = pattern.strip_suffix('$').unwrap_or(pattern);
-    let pattern = percent_decode_robots_path(pattern);
-    let requested = percent_decode_robots_path(requested);
-    let regex_pattern = format!(
-        "^{}{}",
-        pattern
-            .split('*')
-            .map(regex::escape)
-            .collect::<Vec<_>>()
-            .join(".*"),
-        if anchored { "$" } else { "" }
-    );
-    Regex::new(&regex_pattern)
-        .map(|regex| regex.is_match(&requested))
-        .unwrap_or(false)
+    let mut pattern = percent_decode_robots_path(pattern).into_bytes();
+    // Without the end anchor a rule is a prefix: it may be followed by anything.
+    if !anchored {
+        pattern.push(b'*');
+    }
+    wildcard_matches(&pattern, percent_decode_robots_path(requested).as_bytes())
+}
+
+/// `*` matches any byte sequence; every other byte matches itself. Iterative
+/// backtracking to the last `*` keeps this allocation-free and, unlike a
+/// compiled regex, it cannot fail on a long rule and silently ignore it.
+fn wildcard_matches(pattern: &[u8], text: &[u8]) -> bool {
+    let (mut p, mut t) = (0, 0);
+    let mut last_star: Option<(usize, usize)> = None;
+    while t < text.len() {
+        if p < pattern.len() && pattern[p] == b'*' {
+            last_star = Some((p, t));
+            p += 1;
+        } else if p < pattern.len() && pattern[p] == text[t] {
+            p += 1;
+            t += 1;
+        } else if let Some((star, matched)) = last_star {
+            p = star + 1;
+            t = matched + 1;
+            last_star = Some((star, matched + 1));
+        } else {
+            return false;
+        }
+    }
+    pattern[p..].iter().all(|byte| *byte == b'*')
 }
 
 /// Decode valid percent-encoded octets before matching robots paths. URL
