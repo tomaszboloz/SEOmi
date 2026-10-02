@@ -126,3 +126,8 @@ it('keeps issue localization, legacy inference and accessibility keys within LOC
   expect(maxLocReport(['src/services/auditIssueLocalization.ts',
     ...codeFiles('src/services/auditIssues')]).violations).toEqual([]);
 });
+
+it('keeps GSC snapshot, date, persistence and comparison responsibilities within LOC150', () => {
+  expect(maxLocReport(['src/services/gscPerformanceTracker.ts',
+    ...codeFiles('src/services/gscTracker')]).violations).toEqual([]);
+});
