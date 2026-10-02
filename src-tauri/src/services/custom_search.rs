@@ -1,4 +1,6 @@
 use regex::Regex;
+
+mod regex_cache;
 use scraper::{Html, Selector};
 use serde::{Deserialize, Serialize};
 
@@ -187,7 +189,7 @@ fn extract_one(
                 "Wynik regex wymaga źródłowego HTML tego dokumentu.".into(),
             );
         };
-        let regex = match Regex::new(search.query.trim()) {
+        let regex = match regex_cache::cached_regex(search.query.trim()) {
             Ok(regex) => regex,
             Err(error) => {
                 return failed_result(search, format!("Nie można wykonać regex: {error}."))
