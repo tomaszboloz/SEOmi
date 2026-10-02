@@ -16,7 +16,7 @@ async fn prompt_is_transmitted_literally_through_stdin_and_closed_at_eof() {
 async fn hung_process_returns_a_timeout_without_waiting_for_its_response() {
     let process = fixture_process("sleep 2", "Start-Sleep -Seconds 2");
     #[cfg(target_os = "windows")]
-    let _permit = FIXTURE_PROCESS_GATE.lock().await;
+    let _permit = super::fixtures::FIXTURE_PROCESS_GATE.lock().await;
     let started = std::time::Instant::now();
     let error = super::collect_research_output(process, "", super::Duration::from_millis(50))
         .await
@@ -69,4 +69,16 @@ async fn cli_stream_limit_accepts_boundary_and_rejects_overflow() {
     assert_eq!(accepted, b"12345");
     let error = super::read_cli_stream(&b"123456"[..], 5).await.unwrap_err();
     assert!(error.to_string().contains("output limit"));
+}
+
+#[tokio::test]
+async fn process_tests_can_access_the_same_exclusive_fixture_gate() {
+    let gate = &super::fixtures::FIXTURE_PROCESS_GATE;
+    let permit = gate.lock().await;
+    assert!(gate.try_lock().is_err());
+    drop(permit);
+    // Other Windows fixtures may acquire the gate immediately after release.
+    let permit = gate.lock().await;
+    assert!(gate.try_lock().is_err());
+    drop(permit);
 }

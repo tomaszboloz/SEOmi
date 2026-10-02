@@ -4,8 +4,7 @@ use tokio::process::Command;
 // Windows PowerShell cold-start loads .NET. Serializing test fixtures avoids
 // competing startup work on shared runners. Acquire before starting the
 // unchanged deadlines; production process execution stays parallel.
-#[cfg(target_os = "windows")]
-static FIXTURE_PROCESS_GATE: tokio::sync::Mutex<()> = tokio::sync::Mutex::const_new(());
+pub(super) static FIXTURE_PROCESS_GATE: tokio::sync::Mutex<()> = tokio::sync::Mutex::const_new(());
 
 pub(crate) async fn collect_fixture_output(
     process: Command,
