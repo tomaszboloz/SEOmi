@@ -1,5 +1,6 @@
 
 
+import { CrawlConfigSchema } from '@/services/contracts/crawl';
 import { readStorage } from '@/services/storage';
 import { emptyAiResearchSettings } from '@/services/aiResearchEvidence';
 
@@ -54,7 +55,7 @@ isCrawlPaused: false,
 crawlProgress: 0,
 crawlProgressDetail: null,
 interruptedCrawl: null,
-crawlConfig: DEFAULT_CRAWL_CONFIG,
+crawlConfig: CrawlConfigSchema.parse(DEFAULT_CRAWL_CONFIG),
 crawlRequestProfiles: loadCrawlRequestProfiles(),
 isSavingCrawlRequestProfile: false,
 isCheckingCrawlExternalLinks: false,

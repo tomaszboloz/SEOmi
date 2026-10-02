@@ -79,3 +79,9 @@ it('keeps native content statistics and every responsibility below 150 physical 
 it('keeps the entire native HTML parser and every helper or test below 150 physical lines',()=>{
  expect(maxLocReport(['src-tauri/src/services/html_parser.rs',...codeFiles('src-tauri/src/services/html_parser')]).violations).toEqual([]);
 });
+
+it('keeps keyword state and all contract responsibilities below 150 physical lines', () => {
+  const files = ['src/stores/tools/keywordSlice.ts', 'src/stores/tools/contracts.ts',
+    ...codeFiles('src/stores/tools/keywords'), ...codeFiles('src/stores/tools/contracts')];
+  expect(maxLocReport(files).violations).toEqual([]);
+});
