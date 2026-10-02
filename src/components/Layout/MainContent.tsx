@@ -5,23 +5,13 @@ import { useAuditStore } from "@/stores/auditStore";
 import { RouteErrorBoundary } from "@/components/Layout/RouteErrorBoundary";
 import { lazyRoute } from "@/services/lazyRoute";
 import { isPageAuditTab } from "@/services/workspaceRoutes";
+import { DataForSEOAudit, PageAuditPanel } from "@/components/Layout/PageAuditPanel";
 
 // Keep the shell small on startup. Every workspace destination is an
 // independent chunk and is fetched only after the user opens that route.
 // This is especially important for the crawler and graph visualizations,
 // which are substantially heavier than the initial project gate.
 const AuditTabs = lazyRoute(() => import("@/components/Results/AuditTabs").then((module) => ({ default: module.AuditTabs })));
-const Overview = lazyRoute(() => import("@/components/Results/Overview").then((module) => ({ default: module.Overview })));
-const SocialPreview = lazyRoute(() => import("@/components/Results/SocialPreview").then((module) => ({ default: module.SocialPreview })));
-const HeadingsTree = lazyRoute(() => import("@/components/Results/HeadingsTree").then((module) => ({ default: module.HeadingsTree })));
-const MetadataTable = lazyRoute(() => import("@/components/Results/MetadataTable").then((module) => ({ default: module.MetadataTable })));
-const ImagesAudit = lazyRoute(() => import("@/components/Results/ImagesAudit").then((module) => ({ default: module.ImagesAudit })));
-const LinksAudit = lazyRoute(() => import("@/components/Results/LinksAudit").then((module) => ({ default: module.LinksAudit })));
-const SecurityHeaders = lazyRoute(() => import("@/components/Results/SecurityHeaders").then((module) => ({ default: module.SecurityHeaders })));
-const StructuredDataView = lazyRoute(() => import("@/components/Results/StructuredDataView").then((module) => ({ default: module.StructuredDataView })));
-const AmpAuditView = lazyRoute(() => import("@/components/Results/AmpAuditView").then((module) => ({ default: module.AmpAuditView })));
-const PerformanceMetrics = lazyRoute(() => import("@/components/Results/PerformanceMetrics").then((module) => ({ default: module.PerformanceMetrics })));
-const DataForSEOAudit = lazyRoute(() => import("@/components/Results/DataForSEOAudit").then((module) => ({ default: module.DataForSEOAudit })));
 const KeywordResearch = lazyRoute(() => import("@/components/Keywords/KeywordResearch").then((module) => ({ default: module.KeywordResearch })));
 const KeywordClustering = lazyRoute(() => import("@/components/Keywords/KeywordClustering").then((module) => ({ default: module.KeywordClustering })));
 const PageSpeedWorkspace = lazyRoute(() => import("@/components/Performance/PageSpeedWorkspace").then((module) => ({ default: module.PageSpeedWorkspace })));
@@ -112,37 +102,7 @@ export const MainContent: React.FC = () => {
             </div>
           )}
           {currentAudit && (pageAuditRoute || activeTab === "dataforseo") && (
-            <section
-              id="audit-panel"
-              role="tabpanel"
-              aria-labelledby={`audit-tab-${activeTab}`}
-              tabIndex={0}
-              className="outline-none"
-            >
-              {activeTab === "overview" && <Overview audit={currentAudit} />}
-              {activeTab === "dataforseo" && (
-                <DataForSEOAudit audit={currentAudit} />
-              )}
-              {activeTab === "social" && <SocialPreview audit={currentAudit} />}
-              {activeTab === "headings" && (
-                <HeadingsTree audit={currentAudit} />
-              )}
-              {activeTab === "metadata" && (
-                <MetadataTable audit={currentAudit} />
-              )}
-              {activeTab === "images" && <ImagesAudit audit={currentAudit} />}
-              {activeTab === "links" && <LinksAudit audit={currentAudit} />}
-              {activeTab === "security" && (
-                <SecurityHeaders audit={currentAudit} />
-              )}
-              {activeTab === "structured" && (
-                <StructuredDataView audit={currentAudit} />
-              )}
-              {activeTab === "amp" && <AmpAuditView audit={currentAudit} />}
-              {activeTab === "performance" && (
-                <PerformanceMetrics audit={currentAudit} />
-              )}
-            </section>
+            <PageAuditPanel audit={currentAudit} activeTab={activeTab} />
           )}
           {activeTab === "dataforseo" && !currentAudit && (
             <section aria-label={t("dataforseo.title")} className="min-h-full">
