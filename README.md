@@ -1404,3 +1404,14 @@ Scoped28 tests cover100% of124 statements,90 branches,65 functions and109 lines 
 Executed TS bodies without direct static test references decrease33 to28; globalLOC violations decrease126 to122 across1105 files. Original audit remains69/72 (168/172 including local discovered fixes). Requested extensions and the release/tag remain pending global gates. CI f6a35df/run37024706431 passed5/5 jobs including real Windows/macOS E2E; the later Windows fixture failure has a local repair awaiting new CI. Master protection remains verified with administrators included, force/deletion disabled and five strict required checks.
 
 Thanks to @RafalSzy for the test feedback in [PR #13](https://github.com/tomaszboloz/SEOmi/pull/13).
+
+
+### BATCH-5b: source-safe briefs and topic-scoped editor state
+
+Brief assessment/editor now tolerate legacy snapshots without final_url. Paragraph evidence uses unique source ownership with exact requested URLs taking priority over redirect aliases; ambiguous aliases remain unassigned. Coverage uses all matched source terms while showing at most12, fixing40/40→30% and20/80 false negatives. Fragment-equivalent internal targets appear checked. Switching topics resets checkpoint notes/version selection and prevents stale clipboard success; feedback timers are replaced and cleaned on unmount. Each fix has reproduced RED/green regression evidence.
+
+The494-line service and233-line editor become small facades with22responsibilities; all new/changed files satisfy150physical lines (largest70). Scoped41service cases cover100% of321statements/255branches/74functions/230lines. Scoped23UI cases execute every56functions and119lines; six defensive branches remain untested. Full2748frontend/489Rust/70MCP tests, build/lint/fmt/strictClippy pass. Globalcoverage remains88.04%statements/78.95%branches/85.84%functions/88.93%lines. Native evidence is reused after separately revalidating all239source hashes:64.58%productionlines/61.10%sourcefunctions; branches/platforms remain unmeasured.
+
+Originalaudit remains69/72 (174/178including discoveredfixes); globalLOC120violations across1142files and27executedTSbodies withoutdirectstaticreferences remainopen. Requestedextensions and newversion/tag remainpending. CI ab78611/run37028724629 passed5/5including actualWindows/macOSdesktopE2E; this batch needs its ownCI. Master protection includes administrators, disables force/deletion and requires five strict checks.
+
+Thanks to @RafalSzy for the testing feedback in [PR #13](https://github.com/tomaszboloz/SEOmi/pull/13).
