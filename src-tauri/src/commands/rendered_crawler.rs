@@ -698,7 +698,7 @@ fn capture_script(nonce: &str, sequence: u64, options: &RenderOptions) -> String
       for (let start = 0; start < bytes.length; start += 0x8000) {{
         binary += String.fromCharCode(...bytes.subarray(start, Math.min(start + 0x8000, bytes.length)));
       }}
-      return btoa(binary).replace(/\\+/g, '-').replace(/\\//g, '_').replace(/=+$/g, '');
+      return btoa(binary).replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/g, '');
     }})();
     {transport}
     await sendCaptureChunks(encoded, nonce, sequence, {MAX_CAPTURE_CHUNK_BYTES}, {MAX_CAPTURE_CHUNKS});
@@ -1065,6 +1065,16 @@ mod tests {
         assert!(script.contains("durationThreshold: 16"));
         assert!(script.contains("entry.startTime - previousTime > 1000"));
         assert!(script.contains("seomi-capture://"));
+    }
+
+    #[test]
+    fn capture_script_base64url_regexes_are_valid_javascript() {
+        // The script lives in a raw string, so a doubled backslash reaches the
+        // page verbatim: `/\\//g` parses as a regex followed by `/ g` and
+        // throws a ReferenceError before any fragment is sent.
+        let script = capture_script("nonce", 1, &RenderOptions::default());
+        assert!(script.contains(r"replace(/\+/g, '-').replace(/\//g, '_')"));
+        assert!(!script.contains(r"/\\"));
     }
 
     #[test]
