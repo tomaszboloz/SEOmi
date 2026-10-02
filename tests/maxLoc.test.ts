@@ -116,3 +116,8 @@ it('keeps external-link request, evidence and persistence responsibilities below
   expect(maxLocReport(['src/stores/tools/externalLinksSlice.ts',
     ...codeFiles('src/stores/tools/externalLinks')]).violations).toEqual([]);
 });
+
+it('keeps the Tauri facade, transport, browser and native helpers within LOC150', () => {
+  expect(maxLocReport(['src/services/tauri.ts', ...codeFiles('src/services/tauri'),
+    'tests/tauriNativeDirect.test.ts', 'tests/tauriBrowserDirect.test.ts']).violations).toEqual([]);
+});
