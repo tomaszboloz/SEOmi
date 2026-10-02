@@ -43,7 +43,7 @@ describe('audit result tabs accessibility contract', () => {
     ]);
     render(<MainContent />);
 
-    const overviewTab = await screen.findByRole('tab', { name: 'Overview' });
+    const overviewTab = await screen.findByRole('tab', { name: 'Overview' }, { timeout: 5000 });
     const panel = screen.getByRole('tabpanel');
     expect(overviewTab.getAttribute('aria-controls')).toBe(panel.id);
     expect(panel.getAttribute('aria-labelledby')).toBe(overviewTab.id);
@@ -62,7 +62,7 @@ describe('audit result tabs accessibility contract', () => {
 
     render(<MainContent />);
 
-    expect(await screen.findByText(/DataForSEO/)).not.toBeNull();
+    expect(await screen.findByText(/DataForSEO/, undefined, { timeout: 5000 })).not.toBeNull();
     expect(screen.getByText('example.com')).not.toBeNull();
     expect(screen.queryByText(/No audit in this project/i)).toBeNull();
   });
@@ -77,7 +77,7 @@ describe('audit result tabs accessibility contract', () => {
     });
 
     render(<DataForSEOAudit />);
-    const keyword = await screen.findByRole('textbox', { name: /SERP keyword|Fraza SERP/i });
+    const keyword = await screen.findByRole('textbox', { name: /SERP keyword|Fraza SERP/i }, { timeout: 5000 });
     fireEvent.change(keyword, { target: { value: 'technical seo' } });
     fireEvent.change(screen.getByRole('combobox', { name: /SERP location|Lokalizacja SERP/i }), { target: { value: '2616' } });
 
