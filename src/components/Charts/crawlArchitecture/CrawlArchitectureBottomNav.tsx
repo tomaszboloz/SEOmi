@@ -26,8 +26,8 @@ export const CrawlArchitectureBottomNav = ({ activeView, setActiveView, bottomMa
   };
 
   return (
-    <div className={`pointer-events-none fixed inset-x-3 z-40 scroll-mt-28 scroll-mb-48 md:right-4 ${sidebarCollapsed ? 'md:left-[4.5rem]' : 'md:left-[16.5rem]'}`} style={{ bottom: 'max(0.75rem, env(safe-area-inset-bottom))' }} data-testid="crawl-map-bottom-navigation">
-      <nav aria-label={t('mapUi.bottomNavigationAria')} className="pointer-events-auto mx-auto flex w-full max-w-6xl flex-wrap items-center justify-between gap-2 rounded-xl border border-slate-700/90 bg-slate-950/95 p-2.5 shadow-2xl shadow-black/50 ring-1 ring-black/20 backdrop-blur supports-[backdrop-filter]:bg-slate-950/90">
+    <div className={`pointer-events-none fixed inset-x-3 z-40 scroll-mt-28 scroll-mb-48 md:right-4 ${sidebarCollapsed ? 'md:left-[4.5rem]' : 'md:left-[16.5rem]'}`} style={{ bottom: 'calc(2.75rem + env(safe-area-inset-bottom, 0px))' }} data-testid="crawl-map-bottom-navigation">
+      <nav aria-label={t('mapUi.bottomNavigationAria')} className="pointer-events-auto mx-auto flex w-full max-w-6xl flex-wrap items-center justify-between gap-2 rounded-xl border border-slate-700/90 bg-slate-950 p-2.5 shadow-2xl shadow-black/50 ring-1 ring-black/20">
         <div className="flex min-w-0 flex-1 items-center gap-2" role="toolbar" aria-label={t('mapUi.bottomViewsAria')} onKeyDown={selectMapViewByKey}>
           <MapPinned className="hidden h-4 w-4 shrink-0 text-emerald-300 sm:inline" aria-hidden="true" />
           <span className="hidden shrink-0 px-1.5 text-[10px] font-semibold uppercase tracking-wide text-slate-500 md:inline">{t('mapUi.mapView')}</span>

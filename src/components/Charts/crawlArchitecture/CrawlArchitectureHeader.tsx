@@ -24,7 +24,7 @@ export const CrawlArchitectureHeader = ({ activeView, setActiveView, mapTabsRef 
   };
 
   return (
-    <div className="sticky top-2 z-30 -mx-4 mb-4 border-b border-slate-800 bg-slate-900/95 px-4 pb-3 pt-0 shadow-lg shadow-black/10 backdrop-blur supports-[backdrop-filter]:bg-slate-900/85">
+    <div className="-mx-4 mb-4 border-b border-slate-800 bg-slate-900 px-4 pb-3 pt-0 shadow-lg shadow-black/10">
       <div className="flex flex-wrap items-center justify-between gap-2">
         <div className="min-w-0">
           <p className="text-[10px] font-semibold uppercase tracking-[.15em] text-slate-500">{t('mapUi.eyebrow')}</p>

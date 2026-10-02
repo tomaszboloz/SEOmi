@@ -118,11 +118,11 @@ it('opens the crawl directory view and filters the saved run URL tree', () => {
     expect(screen.getByText('grinding')).toBeTruthy();
   });
 
-it('keeps map view tabs visible and keyboard-navigable while working in the map', () => {
+it('keeps map view tabs in document flow and keyboard-navigable', () => {
     render(<CrawlArchitectureGraph pages={pages} startUrl={pages[0].url} />);
 
     const viewTabs = screen.getByRole('tablist', { name: 'Widoki mapy semantycznej' });
-    expect(viewTabs.parentElement?.parentElement?.className).toContain('sticky');
+    expect(viewTabs.parentElement?.parentElement?.className).not.toContain('sticky');
     fireEvent.keyDown(viewTabs, { key: 'ArrowRight' });
     expect(screen.getByRole('tab', { name: 'Drzewo URL' }).getAttribute('aria-selected')).toBe('true');
     fireEvent.keyDown(viewTabs, { key: 'ArrowRight' });

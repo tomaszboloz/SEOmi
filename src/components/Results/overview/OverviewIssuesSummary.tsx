@@ -19,32 +19,32 @@ export const OverviewIssuesSummary: React.FC<OverviewIssuesSummaryProps> = ({
   const { t } = useTranslation();
 
   return (
-    <div className="p-5 rounded-2xl bg-slate-900/60 border border-slate-800 flex flex-col justify-between">
+    <div className="min-w-0 p-5 rounded-2xl bg-slate-900/60 border border-slate-800 flex flex-col justify-between">
       <span className="text-xs font-semibold text-slate-400 uppercase tracking-wider">
         {t("legacyUi.overview.issuesAudit")}
       </span>
       <div className="grid grid-cols-3 gap-2 my-2">
-        <div className="text-center p-2 rounded-lg bg-rose-500/10 border border-rose-500/20">
+        <div className="min-w-0 text-center p-2 rounded-lg bg-rose-500/10 border border-rose-500/20">
           <div className="text-lg font-bold text-rose-400">
             {criticalIssues.length}
           </div>
-          <div className="text-[10px] text-slate-400 uppercase font-medium">
+          <div className="[overflow-wrap:anywhere] text-[10px] text-slate-400 uppercase font-medium">
             {t("legacyUi.overview.critical")}
           </div>
         </div>
-        <div className="text-center p-2 rounded-lg bg-amber-500/10 border border-amber-500/20">
+        <div className="min-w-0 text-center p-2 rounded-lg bg-amber-500/10 border border-amber-500/20">
           <div className="text-lg font-bold text-amber-400">
             {warnings.length}
           </div>
-          <div className="text-[10px] text-slate-400 uppercase font-medium">
+          <div className="[overflow-wrap:anywhere] text-[10px] text-slate-400 uppercase font-medium">
             {t("legacyUi.overview.warnings")}
           </div>
         </div>
-        <div className="text-center p-2 rounded-lg bg-blue-500/10 border border-blue-500/20">
+        <div className="min-w-0 text-center p-2 rounded-lg bg-blue-500/10 border border-blue-500/20">
           <div className="text-lg font-bold text-blue-400">
             {infoIssues.length}
           </div>
-          <div className="text-[10px] text-slate-400 uppercase font-medium">
+          <div className="[overflow-wrap:anywhere] text-[10px] text-slate-400 uppercase font-medium">
             {t("legacyUi.overview.info")}
           </div>
         </div>

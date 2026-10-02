@@ -32,7 +32,7 @@ export const OverviewScoreGauge: React.FC<OverviewScoreGaugeProps> = ({
 
   return (
     <div
-      className={`p-5 rounded-2xl border flex items-center space-x-5 ${getScoreBg(audit.health_score)}`}
+      className={`min-w-0 p-5 rounded-2xl border flex items-center space-x-5 ${getScoreBg(audit.health_score)}`}
     >
       <div className="relative w-24 h-24 flex items-center justify-center shrink-0">
         <svg className="w-24 h-24 transform -rotate-90" viewBox="0 0 100 100">
@@ -68,7 +68,7 @@ export const OverviewScoreGauge: React.FC<OverviewScoreGaugeProps> = ({
         </div>
       </div>
 
-      <div>
+      <div className="min-w-0 [overflow-wrap:anywhere]">
         <span className="text-xs font-semibold text-slate-400 uppercase tracking-wider">
           {t("overview.healthScore")}
         </span>

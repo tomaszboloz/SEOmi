@@ -25,7 +25,7 @@ export const Overview: React.FC<OverviewProps> = ({ audit }) => {
       <OverviewExportBar audit={audit} />
 
       {/* Top Banner: Score Gauge & Key Metrics */}
-      <div className="grid grid-cols-1 lg:grid-cols-4 gap-4">
+      <div className="grid grid-cols-1 md:grid-cols-2 2xl:grid-cols-[minmax(0,1.4fr)_repeat(3,minmax(0,1fr))] gap-4">
         <OverviewScoreGauge
           audit={audit}
           criticalCount={criticalIssues.length}

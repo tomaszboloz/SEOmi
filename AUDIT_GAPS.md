@@ -637,3 +637,12 @@ BATCH-5j verification:2807frontend/516Rust/70MCP PASS; build/lint/rustfmt/strict
 - [DISCOVERED] GAP-190: same run macOS Intel fails mainContentAuditTabs while still rendering Suspense fallback under the default 1s query deadline. ARIA test preloads the three real component modules before rendering; assertion semantics retained. Pending fresh macOS CI.
 - Issue #19 remains open: source confirms duplicate crawler docks and conflicting sticky graph header; responsive/browser fixes still required. Public replies posted on #16–18 and #19.
 - Original audit remains 69/72. Global coverage, LOC150, direct public assertions, requested extensions, signed release validation and final tag remain incomplete. GAP188 remains pending: desktop jobs failed before native stream-limit tests executed.
+
+## GitHub issue #19: responsive layout and navigation
+
+- PR #17 merged as bcffb0b; PR #18 merged as f9c9501 after five checks for each reviewed head. Public replies include thanks to @RafalSzy. Integration into the audit branch still requires combining the refactored modules.
+- Issue #19 layout fix removes duplicate docks and conflicting sticky headers, uses an opaque results bar, reserves the footer and wraps long non-table text. Overview breakpoints respect the sidebar; translated navigation labels have flexible widths.
+- Browser testing discovered an additional resize defect: wrapped results navigation hid the map heading on return-to-map. ResizeObserver publishes the actual bar height for scoped scroll margins; cleanup ignores queued callbacks.
+- Full frontend 3010 PASS, MCP70 PASS, build/lint PASS. Fresh source-matched frontend coverage88.63%statements/80.30%branches/86.80%functions/90.28%lines.19changed code/testfiles <=149physicalLOC; globalLOC102violations/1344files. Native sources unchanged from verified529testbaseline; not a fresh platform check.
+- Browser measurements for Polish UI, long URL, 980×680 and1280×800, both themes: summary cards contain text, main width equals scroll width, map heading clears navigation, dock bottom equals footer top. Actual components with explicit synthetic fixtures and reviewed#18palette; no claim of nativeWebView/liveGoogle verification. Details: docs/GITHUB_LAYOUT_REVIEW.md.
+- Audit remains69/72; >99%coverage/directassertions/globalLOC/extensions/release remainOPEN. Issue#19 stays open until master integration.
