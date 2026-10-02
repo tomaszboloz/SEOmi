@@ -2,7 +2,7 @@
 Audytor: Staff Developer | Data: 2026-10-01
 
 ## Statystyki
-- Rejestr pierwotny: 72 luki. Dodatkowe odkrycia są dopisywane poniżej; najwyższy identyfikator: GAP-193 (identyfikator nie oznacza liczby zamkniętych luk).
+- Rejestr pierwotny: 72 luki. Dodatkowe odkrycia są dopisywane poniżej; najwyższy identyfikator: GAP-194 (identyfikator nie oznacza liczby zamkniętych luk).
 - Batchy do wdrożenia: 7
 - Szacowany effort: 20–35 MD; estymacja orientacyjna, do korekty po pomiarze coverage.
 - Baseline: commit 18fa446b13ec3f97db76896bfdf446f97fe80051; 704 frontend / 320 Rust / 27 MCP testów.
@@ -45,7 +45,7 @@ Pomiary bazowego commitu (2026-10-01):
 ## BATCH 3: Testing Infrastructure
 - [x] GAP-021: [HIGH] Brak mierzonej, wersjonowanej konfiguracji coverage dla całego frontendu. Dowód: `vite.config.ts`. Status: FIXED (BATCH-7a); konfiguracja i testy bramek CI; lint/build/full suite PASS.
 - [ ] GAP-022: [HIGH] Brak bramki >99% statements/lines/branches/functions w CI. Dowód: `.github/workflows/test.yml`. Status: PARTIAL — ścisły test:coverage:target istnieje i ma cel 99.01%, aktualny pomiar nie przechodzi; CI raportuje coverage, cel nadal OPEN; wymagane testy red/green i rewalidacja.
-- [ ] GAP-023: [HIGH] Production llvm-cov and >99% Rust gate. Status: PARTIAL (BATCH-5g, hashes revalidated5h): fresh compiled11996/18299lines65.56%,1217/1938sourcefunctions62.80%,266sourcehashes and validated LLVM grouping. Global target, native branches and uncompiled-platform evidence remain OPEN.
+- [ ] GAP-023: [HIGH] Production llvm-cov and >99% Rust gate. Status: PARTIAL — latest settings batch: SHA256-validated production12271/18377lines,1276/1951sourcefunctions, validated AST/LLVM grouping. Global >99%, native branches and uncompiled-platform evidence remain OPEN; artifact paths and scope below.
 - [x] GAP-024: [HIGH] Testy MCP odkrywają schematy; brak happy/error testów wszystkich provider tools. Dowód: `mcp-server/test/server.test.mjs`. Status: FIXED (BATCH-2a); wszystkie 18 tools wywołane przez MCP (happy/error/schema), dodatkowe testy scope i evidence filtering.
 - [x] GAP-025: [HIGH] Brak E2E uruchomionej aplikacji Tauri dla krytycznych przepływów. Dowód: `.github/workflows/test.yml`. Status: FIXED (BATCH-3a/3b/3e): rzeczywisty Tauri runtime z produkcyjnym builderem, WebView, IPC i izolowanym profilem. CI36885645884 dla951b634: macOS-15-intel i Windows actual E2E GREEN, wszystkie5/5checks GREEN. Windows report24/24; macOS runtime zweryfikowany w CI po pinie wspieranego Intel runnera. Native invokes nie są mockowane.
 - [ ] GAP-026: [MEDIUM] Public functions require direct unit assertions. Status: PARTIAL (BATCH-5h):755TS callables,748executed, seven factory-returned; 23 executed bodies without direct static references. Scoped CLI/provider/domain/storage and previous responsibilities have direct assertions; complete native/TS assertion proof remains OPEN.
@@ -675,3 +675,14 @@ BATCH-5j verification:2807frontend/516Rust/70MCP PASS; build/lint/rustfmt/strict
 - Final local suite: **3048 frontend / 553 Rust all-targets / 70 MCP PASS**. Build, lint, rustfmt, strict Clippy and diff checks PASS. All **24 changed code/test files <=150 physical lines**. Global LOC remains FAIL: **95 violations / 1404 files**.
 - Final SHA256-validated native production coverage: **12109/18313 lines; 1248/1943 functions**. All 19 logging functions execute; four defensive guard lines remain unexecuted. Artifacts: `/tmp/seomi-logging-production-final.lcov`, `/tmp/seomi-logging-sources-final.json`, `/tmp/seomi-logging-llvm-final.json`. Native branch coverage remains unavailable (0 recorded branches); global >99% is not achieved.
 - Original audit remains **69/72**; the global coverage/direct-assertion/LOC gates, requested extension verification and signed final release/tag remain OPEN.
+
+## Settings, secure-store contracts and configuration decomposition
+
+- [DISCOVERED] GAP-194: keyring entry/read/write/delete/profile failures forwarded the backend's raw Display text to the frontend (`settings.rs` at2296cfa). The new adapter maps backend outcomes to missing/unavailable and operation-specific local errors. No actual user secret disclosure is claimed; the source showed uncontrolled backend text forwarding.
+- Settings475LOC split into configuration storage, credential names, adapter, frontend secret commands, profile storage, types and validation. The Tauri facade retains command signatures/attributes and existing crate imports. AppConfig's tests moved to a separate module; schema/defaults/validation are unchanged.
+- Added16tests: project-scoped credentials, exact secret preservation, missing versus failure, idempotent deletion, invalid names/IDs rejected before I/O, native-only GSC refresh tokens, profile lifecycle/isolation/normalization, malformed saved profiles, header/cookie/proxy boundaries, entry factory and backend failure handling.
+- The adapter is tested through the real keyring Entry API with its MockCredential, injected per instance. No global keyring backend is replaced and no valid native credential is read or written. Public command wrappers also have direct rejection assertions; live OS keychain success/permission behavior remains unverified by these fixtures.
+- Rust569all-targets PASS; strict Clippy/rustfmt/diff checks PASS. All19changedRust code/test files <=150physicalLOC. Global LOC still FAILS: **93 violations /1421 files** (two fewer violations).
+- Final SHA256-validated production native coverage: **12271/18377 lines;1276/1951 functions**. Credentials/profiles/frontend secret commands/name validation/profile validation have full measured lines/functions in this snapshot. Configuration/adapter guards and live platform paths remain incomplete. Native branches unavailable (0 recorded), not 100%. Artifacts: `/tmp/seomi-settings-production.lcov`, `/tmp/seomi-settings-sources.json`, `/tmp/seomi-settings-llvm.json`.
+- Frontend initial run under two Rust compilations:3046PASS/2FAIL; both failures remained on the SiteAudit lazy fallback after15s. After the compilations finished, the same two files passed6/6 in7.35s without source, timeout or assertion changes. Sequential full frontend **3048PASS**, build/lint and **70MCP PASS**. This records the resource-sensitive first run rather than treating it as green.
+- Original audit remains **69/72**. Global >99% coverage/direct assertions/LOC150, requested extension verification, signed release and final tag remain OPEN.
