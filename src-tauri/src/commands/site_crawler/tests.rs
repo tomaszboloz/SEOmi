@@ -109,3 +109,5 @@ mod scope_normalization;
 mod social_1;
 #[path = "tests/social_2.rs"]
 mod social_2;
+#[path = "tests/social_bounds.rs"]
+mod social_bounds;

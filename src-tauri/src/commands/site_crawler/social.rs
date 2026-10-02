@@ -1,5 +1,16 @@
 use super::*;
 
+mod favicons;
+mod frames;
+pub(super) use favicons::*;
+pub(super) use frames::*;
+
+/// Real pages declare a handful of icons and a few dozen og:/twitter: tags.
+/// Hostile pages can declare thousands; each would be stored, deduplicated in
+/// quadratic time and, for image tags, queued for a resource check.
+pub(super) const MAX_FAVICONS_PER_PAGE: usize = 50;
+pub(super) const MAX_SOCIAL_META_TAGS_PER_PAGE: usize = 200;
+
 pub(super) fn crawl_social_metadata(
     document: &Html,
     base_url: &url::Url,
@@ -44,6 +55,9 @@ pub(super) fn crawl_social_metadata(
         };
         if !favicons.contains(&icon_url) {
             favicons.push(icon_url);
+            if favicons.len() >= MAX_FAVICONS_PER_PAGE {
+                break;
+            }
         }
     }
 
@@ -76,125 +90,10 @@ pub(super) fn crawl_social_metadata(
                     })
                 })
         })
+        .take(MAX_SOCIAL_META_TAGS_PER_PAGE)
         .collect();
 
     (favicons, social_meta_tags)
-}
-
-/// Extract the same favicon declaration metadata as the single-page audit,
-/// while keeping this crawler's legacy URL list stable for persisted runs.
-pub(super) fn crawl_favicon_metadata(document: &Html, base_url: &url::Url) -> Vec<FaviconData> {
-    let Ok(selector) = Selector::parse("link[rel][href]") else {
-        return Vec::new();
-    };
-    document
-        .select(&selector)
-        .filter_map(|element| {
-            let value = element.value();
-            let rel = value.attr("rel")?.trim();
-            let rel_lower = rel.to_ascii_lowercase();
-            if !rel_lower.split_ascii_whitespace().any(|token| {
-                matches!(
-                    token,
-                    "icon" | "shortcut" | "apple-touch-icon" | "mask-icon"
-                )
-            }) {
-                return None;
-            }
-            let raw_href = value.attr("href")?.trim();
-            if raw_href.is_empty() {
-                return None;
-            }
-            let resolved = if raw_href.to_ascii_lowercase().starts_with("data:image/") {
-                bounded_inline_image_uri(raw_href)
-            } else {
-                base_url
-                    .join(raw_href)
-                    .ok()
-                    .filter(|url| matches!(url.scheme(), "http" | "https"))?
-                    .to_string()
-            };
-            let clean_path = resolved
-                .split('?')
-                .next()
-                .unwrap_or(&resolved)
-                .split('#')
-                .next()
-                .unwrap_or(&resolved)
-                .to_ascii_lowercase();
-            let inferred_format = if clean_path.starts_with("data:image/") {
-                clean_path
-                    .trim_start_matches("data:image/")
-                    .split([';', ','])
-                    .next()
-                    .filter(|format| !format.is_empty())
-                    .map(str::to_string)
-            } else {
-                clean_path
-                    .rsplit('.')
-                    .next()
-                    .filter(|extension| *extension != clean_path)
-                    .map(str::to_string)
-            };
-            Some(FaviconData {
-                href: resolved,
-                rel: rel.to_string(),
-                declared_type: value
-                    .attr("type")
-                    .map(str::trim)
-                    .filter(|item| !item.is_empty())
-                    .map(str::to_string),
-                declared_sizes: value
-                    .attr("sizes")
-                    .map(str::trim)
-                    .filter(|item| !item.is_empty())
-                    .map(str::to_string),
-                inferred_format,
-            })
-        })
-        .fold(Vec::new(), |mut unique, favicon| {
-            if !unique.iter().any(|existing: &FaviconData| {
-                existing.href == favicon.href && existing.rel == favicon.rel
-            }) {
-                unique.push(favicon);
-            }
-            unique
-        })
-}
-
-pub(super) fn crawl_frames(document: &Html, base_url: &url::Url) -> (Vec<CrawledFrame>, bool) {
-    let Ok(selector) = Selector::parse("iframe") else {
-        return (Vec::new(), false);
-    };
-    let mut frames = Vec::new();
-    let mut truncated = false;
-    for element in document.select(&selector) {
-        if frames.len() >= MAX_IFRAMES_PER_PAGE {
-            truncated = true;
-            break;
-        }
-        let value = element.value();
-        let src = value.attr("src").map(str::to_owned);
-        let resolved_url = src
-            .as_deref()
-            .map(str::trim)
-            .filter(|src| !src.is_empty())
-            .and_then(|src| base_url.join(src).ok())
-            .filter(|url| matches!(url.scheme(), "http" | "https"))
-            .map(|url| url.to_string());
-        frames.push(CrawledFrame {
-            src,
-            resolved_url,
-            title: value.attr("title").map(str::to_owned),
-            name: value.attr("name").map(str::to_owned),
-            loading: value.attr("loading").map(str::to_owned),
-            sandbox: value.attr("sandbox").map(str::to_owned),
-            checked_in_run: false,
-            http_status: None,
-            request_error_kind: None,
-        });
-    }
-    (frames, truncated)
 }
 
 pub(super) fn resolve_social_metadata_url(

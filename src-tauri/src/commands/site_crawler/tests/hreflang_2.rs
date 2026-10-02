@@ -62,3 +62,52 @@ fn hreflang_target_annotation_keeps_external_targets_explicitly_unverified() {
     assert_eq!(target.target_canonical_alignment, None);
     assert!(issues[0].message.contains("not included in this crawl"));
 }
+
+#[test]
+fn hreflang_codes_follow_bcp47_edges_case_insensitively() {
+    for valid in [
+        "X-DEFAULT",
+        "EN-us",
+        "es-419",
+        "zh-Hant-TW",
+        "sl-rozaj-biske",
+        "de-1901",
+        "en-a-bbb-x-private",
+        "i-klingon",
+        "zh-min-nan",
+    ] {
+        assert!(
+            is_valid_hreflang_code(valid),
+            "expected {valid} to be valid"
+        );
+    }
+    for invalid in [
+        "e1",
+        "e",
+        "en_US",
+        "de-1901-1901",
+        "en-a-bbb-a-ccc",
+        "en-x-",
+        "en--us",
+        "toolonglanguage",
+        "en-US-",
+    ] {
+        assert!(
+            !is_valid_hreflang_code(invalid),
+            "expected {invalid} to be invalid"
+        );
+    }
+}
+
+#[test]
+fn hreflang_urls_compare_without_fragments_and_reject_unparseable_values() {
+    assert!(same_hreflang_url(
+        "https://example.com/a#top",
+        "https://example.com/a"
+    ));
+    assert!(!same_hreflang_url(
+        "https://example.com/a?x=1",
+        "https://example.com/a"
+    ));
+    assert!(!same_hreflang_url("not a url", "not a url"));
+}
