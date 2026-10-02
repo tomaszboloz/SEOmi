@@ -2,7 +2,7 @@
 Audytor: Staff Developer | Data: 2026-10-01
 
 ## Statystyki
-- Zidentyfikowanych luk: 183 (72 pierwotne oraz 111 problemów wykrytych podczas testów)
+- Rejestr pierwotny: 72 luki. Dodatkowe odkrycia są dopisywane poniżej; najwyższy identyfikator: GAP-192 (identyfikator nie oznacza liczby zamkniętych luk).
 - Batchy do wdrożenia: 7
 - Szacowany effort: 20–35 MD; estymacja orientacyjna, do korekty po pomiarze coverage.
 - Baseline: commit 18fa446b13ec3f97db76896bfdf446f97fe80051; 704 frontend / 320 Rust / 27 MCP testów.
@@ -654,3 +654,14 @@ BATCH-5j verification:2807frontend/516Rust/70MCP PASS; build/lint/rustfmt/strict
 - Four direct slice-composition tests cover project isolation, saved credentials requiring explicit tests, authenticated CLI detection versus Gemini availability, and generation routing. Existing CLI/theme/ARIA/deep-link/lifecycle regressions retained.
 - Final matching-source frontend3048PASS; Rust530all-targetsPASS; MCP70PASS; build/lint/rustfmt/strictClippyPASS. Frontend coverage88.76%statements/80.35%branches/86.94%functions/90.41%lines remainsbelow99.01%. GlobalLOC97violations/1367files; changedintegrationmodules/tests<=150physicalLOC. Originalaudit69/72 and release/tag remainOPEN.
 - Run37047558599 for39f32f6: allfivechecksPASS. Windows job110972630171 explicitly passes excessive_stdout_or_stderr, exact_production_stream_limit and cli_stream_limit_accepts_boundary_and_rejects_overflow: GAP188 nowverified onWindows. GAP189/190 alsoverified by the passingWindows/macOSInteljobs. This new merged head still requiresfreshCI.
+
+## Native provider response limits and regression tests
+
+- GAP-191: PageSpeed/CrUX, GSC analytics/properties/OAuth and DataForSEO decoded JSON without a byte budget. Three PageSpeed regressions failed against the old implementation (oversized unknown-length response, non-object success, provider error disclosure); RED log: `/tmp/seomi-native-pagespeed-red.log`.
+- GAP-192: raw provider messages and transport errors could expose response text or request URLs containing sensitive data. The shared reader now returns local messages with provider/status only, without raw body or transport exception text.
+- FIXED locally: decoded response chunks are checked before buffering; reports have a 10 MiB limit, OAuth 64 KiB. Success requires a JSON object. OAuth additionally rejects missing, null, blank or malformed access tokens; property mapping rejects malformed lists while preserving valid empty lists and recorded site scopes/permissions.
+- Direct tests cover exact byte boundary/overflow with and without Content-Length, Unicode/zero/null preservation, invalid JSON/UTF-8/non-objects, truncated transport and error redaction. PageSpeed validation/mapping/image/touch-target modules were extracted without changing public command signatures; project-scoped key lookup is validated before reading credentials.
+- Final source-matched local verification: **3048 frontend / 548 Rust all-targets / 70 MCP PASS**, build/lint/rustfmt/strict Clippy PASS. All 26 changed Rust source/test files have <=150 physical lines. Global LOC: **96 violations / 1383 files**; the global gate still FAILS.
+- Fresh native production coverage, using SHA256-validated AST sources and LLVM function groups: **12091/18295 lines; 1247/1942 functions**. Branch measurement is unavailable (0 recorded branches), not 100%. Artifacts: `/tmp/seomi-native-quality-production.lcov`, `/tmp/seomi-native-quality-sources.json`, `/tmp/seomi-native-quality-llvm.json`. No live Google/DataForSEO or Windows behavior is inferred from these macOS loopback tests.
+- GitHub integration baseline 99639df: run37051908665 has all five checks PASS, including Windows/macOS Intel runtime E2E. Issue #19 received this confirmation and remains open until master integration. This native batch needs its own head-specific CI.
+- Original audit remains **69/72**. Coverage >99%, direct public-function assertions, global LOC150, remaining SearchSignal extensions and signed release verification are OPEN. No final release/tag created.

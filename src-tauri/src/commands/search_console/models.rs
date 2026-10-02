@@ -19,8 +19,6 @@ pub struct GscPerformanceFilters {
 pub(super) struct TokenResponse {
     pub(super) access_token: Option<String>,
     pub(super) refresh_token: Option<String>,
-    pub(super) error: Option<String>,
-    pub(super) error_description: Option<String>,
 }
 
 #[derive(Deserialize)]

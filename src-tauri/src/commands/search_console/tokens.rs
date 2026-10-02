@@ -1,6 +1,8 @@
 use super::credentials::{client_secret_key, refresh_token_key};
 use super::models::TokenResponse;
+use super::oauth_response::oauth_response;
 use crate::commands::settings::secret_entry;
+use crate::utils::provider_json::{read_provider_json, REPORT_JSON_LIMIT};
 use serde_json::Value;
 
 const TOKEN_URL: &str = "https://oauth2.googleapis.com/token";
@@ -28,19 +30,8 @@ pub(super) async fn exchange_code(
         .form(&form)
         .send()
         .await
-        .map_err(|error| format!("Unable to exchange the Google OAuth code: {error}"))?;
-    let status = response.status();
-    let token = response
-        .json::<TokenResponse>()
-        .await
-        .map_err(|error| format!("Google returned an invalid OAuth response: {error}"))?;
-    if !status.is_success() || token.access_token.is_none() {
-        return Err(token
-            .error_description
-            .or(token.error)
-            .unwrap_or_else(|| format!("Google token exchange returned status {status}.")));
-    }
-    Ok(token)
+        .map_err(|_| "Unable to exchange the Google OAuth code.".to_string())?;
+    oauth_response(response).await
 }
 
 pub(super) async fn refresh_access_token(
@@ -70,19 +61,8 @@ pub(super) async fn refresh_access_token(
         .form(&form)
         .send()
         .await
-        .map_err(|error| format!("Unable to refresh the Google token: {error}"))?;
-    let status = response.status();
-    let token = response
-        .json::<TokenResponse>()
-        .await
-        .map_err(|error| format!("Google returned an invalid token refresh response: {error}"))?;
-    if !status.is_success() || token.access_token.is_none() {
-        return Err(token
-            .error_description
-            .or(token.error)
-            .unwrap_or_else(|| format!("Google token refresh returned status {status}.")));
-    }
-    Ok(token.access_token.unwrap())
+        .map_err(|_| "Unable to refresh the Google token.".to_string())?;
+    Ok(oauth_response(response).await?.access_token.unwrap())
 }
 
 pub(super) async fn token_json(
@@ -93,20 +73,8 @@ pub(super) async fn token_json(
         .bearer_auth(access_token)
         .send()
         .await
-        .map_err(|error| format!("Google Search Console request failed: {error}"))?;
-    let status = response.status();
-    let body = response
-        .json::<Value>()
-        .await
-        .map_err(|error| format!("Google Search Console returned an invalid response: {error}"))?;
-    if !status.is_success() {
-        let message = body
-            .pointer("/error/message")
-            .and_then(Value::as_str)
-            .unwrap_or("unknown API error");
-        return Err(format!("Google Search Console HTTP {status}: {message}"));
-    }
-    Ok(body)
+        .map_err(|_| "Google Search Console request failed.".to_string())?;
+    read_provider_json(response, REPORT_JSON_LIMIT, "Google Search Console").await
 }
 
 pub(super) async fn authorized_json(

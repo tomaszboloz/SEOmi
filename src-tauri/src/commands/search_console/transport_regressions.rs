@@ -6,7 +6,7 @@ use tokio::{
 };
 
 #[tokio::test]
-async fn google_http_errors_preserve_the_provider_message() {
+async fn google_http_errors_preserve_status_without_forwarding_provider_text() {
     let listener = TcpListener::bind(("127.0.0.1", 0)).await.unwrap();
     let address = listener.local_addr().unwrap();
     let server = tokio::spawn(async move {
@@ -24,9 +24,9 @@ async fn google_http_errors_preserve_the_provider_message() {
     let client = reqwest::Client::builder().no_proxy().build().unwrap();
     let result = token_json("fixture-token", client.get(format!("http://{address}"))).await;
     server.await.unwrap();
-    assert!(result
-        .unwrap_err()
-        .contains("Insufficient Search Console property permissions"));
+    let error = result.unwrap_err();
+    assert!(error.contains("403"));
+    assert!(!error.contains("Insufficient Search Console property permissions"));
 }
 
 #[tokio::test]

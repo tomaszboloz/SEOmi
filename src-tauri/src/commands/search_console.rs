@@ -86,3 +86,12 @@ mod token_transport_tests;
 mod transport_regressions;
 #[cfg(test)]
 mod validation_tests;
+
+mod oauth_response;
+#[cfg(test)]
+#[path = "search_console/oauth_response_tests.rs"]
+mod oauth_response_tests;
+
+#[cfg(test)]
+#[path = "search_console/property_mapping_tests.rs"]
+mod property_mapping_tests;

@@ -141,6 +141,6 @@ async fn provider_error_on_next_page_does_not_return_partial_success() {
     .err()
     .unwrap();
     assert!(error.contains("403"));
-    assert!(error.contains("property access revoked"));
+    assert!(!error.contains("property access revoked"));
     assert_eq!(server.await.unwrap().len(), 2);
 }

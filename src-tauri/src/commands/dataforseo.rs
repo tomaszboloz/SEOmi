@@ -35,7 +35,7 @@ pub async fn dataforseo_request(
     let client = reqwest::Client::builder()
         .timeout(std::time::Duration::from_secs(30))
         .build()
-        .map_err(|error| format!("Unable to create DataForSEO client: {error}"))?;
+        .map_err(|_| "Unable to create DataForSEO client.".to_string())?;
     let request = client
         .request(
             if path == "/v3/appendix/user_data" {
@@ -50,20 +50,13 @@ pub async fn dataforseo_request(
         Some(payload) if path != "/v3/appendix/user_data" => request.json(&payload).send().await,
         _ => request.send().await,
     }
-    .map_err(|error| format!("DataForSEO request failed: {error}"))?;
-    let status = response.status();
-    let body = response
-        .json::<Value>()
-        .await
-        .map_err(|error| format!("DataForSEO returned an invalid JSON response: {error}"))?;
-    if !status.is_success() {
-        let message = body
-            .get("status_message")
-            .and_then(Value::as_str)
-            .unwrap_or("unknown error");
-        return Err(format!("DataForSEO HTTP {status}: {message}"));
-    }
-    Ok(body)
+    .map_err(|_| "DataForSEO request failed.".to_string())?;
+    crate::utils::provider_json::read_provider_json(
+        response,
+        crate::utils::provider_json::REPORT_JSON_LIMIT,
+        "DataForSEO",
+    )
+    .await
 }
 
 #[cfg(test)]

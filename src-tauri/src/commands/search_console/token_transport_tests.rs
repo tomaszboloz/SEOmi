@@ -2,7 +2,10 @@ use super::tokens::token_json;
 use serde_json::json;
 use tokio::{io::AsyncWriteExt, net::TcpListener};
 
-async fn response(status: &str, body: &str) -> (String, tokio::task::JoinHandle<String>) {
+pub(super) async fn response(
+    status: &str,
+    body: &str,
+) -> (String, tokio::task::JoinHandle<String>) {
     let listener = TcpListener::bind(("127.0.0.1", 0)).await.unwrap();
     let endpoint = format!("http://{}", listener.local_addr().unwrap());
     let wire = format!("HTTP/1.1 {status}\r\nContent-Type: application/json\r\nContent-Length: {}\r\nConnection: close\r\n\r\n{body}", body.len());
@@ -46,7 +49,7 @@ async fn missing_or_non_string_provider_messages_have_an_explicit_fallback() {
             .await
             .unwrap_err();
         assert!(error.contains("429"));
-        assert!(error.ends_with("unknown API error"));
+        assert!(error.ends_with("request failed."));
         server.await.unwrap();
     }
 }
@@ -58,7 +61,7 @@ async fn malformed_json_is_not_accepted_as_data() {
     assert!(token_json("synthetic", client.get(endpoint))
         .await
         .unwrap_err()
-        .starts_with("Google Search Console returned an invalid response:"));
+        .starts_with("Google Search Console returned an invalid response"));
     server.await.unwrap();
 }
 
@@ -71,5 +74,5 @@ async fn connection_failure_is_reported() {
     assert!(token_json("synthetic", client.get(endpoint))
         .await
         .unwrap_err()
-        .starts_with("Google Search Console request failed:"));
+        .starts_with("Google Search Console request failed"));
 }
