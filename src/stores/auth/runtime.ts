@@ -1,5 +1,7 @@
 import type { AiCliStatus, AiConnectionMethod, AiConnectionState, AiProvider } from '@/types';
 import { createId } from '@/services/ids';
+import { readStorage } from '@/services/storage';
+import { currentModel } from '@/services/ai/modelCatalog';
 import { CLAUDE_DEFAULT_MODEL } from '@/services/ai/claude';
 import { GEMINI_DEFAULT_MODEL } from '@/services/ai/modelCatalog';
 export const PROVIDERS: AiProvider[] = ['openai', 'claude', 'gemini'];
@@ -29,3 +31,19 @@ export const beginAuthRequest = (kind: string): string => {
 };
 export const isLatestAuthRequest = (kind: string, token: string): boolean => authRequestTokens.get(kind) === token;
 
+/**
+ * Global (pre-project) preferences. Stored values are user-editable: an unknown
+ * provider or connection method falls back to a default, and a missing model
+ * uses the selected provider's default instead of an OpenAI model ID.
+ */
+export const resolveGlobalAiPreferences = (): { provider: AiProvider; model: string; connectionMethod: Record<AiProvider, AiConnectionMethod> } => {
+  const storedProvider = readStorage('seomi_ai_provider');
+  const provider = isAiProvider(storedProvider) ? storedProvider : 'openai';
+  const model = currentModel(readStorage('seomi_ai_model')?.trim() || defaultModel(provider));
+  const connectionMethod = PROVIDERS.reduce((all, item) => {
+    const stored = readStorage(`seomi_ai_connection_${item}`);
+    all[item] = isConnectionMethod(stored) ? stored : 'api_key';
+    return all;
+  }, providerMap<AiConnectionMethod>('api_key'));
+  return { provider, model, connectionMethod };
+};

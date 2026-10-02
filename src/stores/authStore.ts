@@ -1,8 +1,6 @@
 import { create } from 'zustand';
-import type { AiProvider, AiConnectionMethod, AiConnectionState, AiCliStatus } from '@/types';
-import { readStorage } from '@/services/storage';
-import { currentModel } from '@/services/ai/modelCatalog';
-import { PROVIDERS, providerMap } from './auth/runtime';
+import type { AiConnectionState, AiCliStatus } from '@/types';
+import { providerMap, resolveGlobalAiPreferences } from './auth/runtime';
 import type { AuthState } from './auth/types';
 import { createAuthPreferences } from './auth/preferences';
 import { createAuthCredentials } from './auth/credentials';
@@ -12,12 +10,7 @@ import { createAuthGeneration } from './auth/generation';
 export const useAuthStore = create<AuthState>((set, get) => ({
   subscription: { tier: 'direct' },
   activeProjectId: null,
-  provider: (readStorage('seomi_ai_provider') as AiProvider) || 'openai',
-  model: currentModel(readStorage('seomi_ai_model') || 'gpt-4o'),
-  connectionMethod: PROVIDERS.reduce((all, provider) => ({
-    ...all,
-    [provider]: (readStorage(`seomi_ai_connection_${provider}`) as AiConnectionMethod) || 'api_key',
-  }), providerMap<AiConnectionMethod>('api_key')),
+  ...resolveGlobalAiPreferences(),
   apiKeys: providerMap(''),
   connectionStatus: providerMap<AiConnectionState>('unconfigured'),
   statusMessages: providerMap(''),
