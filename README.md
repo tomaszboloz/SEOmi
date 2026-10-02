@@ -6,8 +6,8 @@
 [![Desktop platforms](https://img.shields.io/badge/platform-macOS%20%7C%20Windows-lightgrey.svg)](#technology)
 [![Rust backend](https://img.shields.io/badge/backend-Rust-orange.svg)](#technology)
 [![TypeScript frontend](https://img.shields.io/badge/frontend-TypeScript-blue.svg)](#technology)
-[![Frontend tests](https://img.shields.io/badge/frontend%20tests-1842%20passing-success.svg)](#verification)
-[![Rust tests](https://img.shields.io/badge/Rust%20tests-432%20passing-success.svg)](#verification)
+[![Frontend tests](https://img.shields.io/badge/frontend%20tests-1843%20passing-success.svg)](#verification)
+[![Rust tests](https://img.shields.io/badge/Rust%20tests-456%20passing-success.svg)](#verification)
 
 ### Help improve SEOmi
 
@@ -1169,8 +1169,19 @@ Full local suites:1841frontend/417Rust/70MCP; build, ESLint, rustfmt and strict 
 
 ### Content statistics and visible roots (audit BATCH-4e)
 
-The37-line content facade delegates to thirteen responsibilities below103physical lines. All243stop-word entries retain their original order and duplicates. Fifteen new Rust cases directly assert all13callables, including supported language formulas and conservative inference, source visibility, token/frequency contracts, score labels, empty observations and the200000Unicode-character storage boundary.
+The35-line content facade delegates to thirteen responsibilities below103physical lines. All243stop-word entries retain their original order and duplicates. Fifteen new Rust cases directly assert all13callables, including supported language formulas and conservative inference, source visibility, token/frequency contracts, score labels, empty observations and the200000Unicode-character storage boundary.
 
 Four RED regressions found and fixed reading-time rounding, case/whitespace in declared readability languages, nonfinite scores in the direct helper for empty observations, and hidden/chrome-contained semantic roots suppressing visible fallback text. Root visibility now includes ancestors; hidden text stays excluded. The stored language and wire schema are unchanged. Scoped compiled content coverage is100%lines(383/383) and sourcefunctions(40/40); branches are unavailable.
 
 Full local suites:1842frontend/432Rust/70MCP; build, lint, rustfmt and strict Clippy pass. Latest global frontend83.79%statements/72.42%branches/82.27%functions/85.86%lines. Fresh production native63.13%lines(11364/18002)/59.16%functions(1108/1873) with matching183source hashes; uncompiled platform/branch evidence unavailable. PublicTS619callables/612executed/7factoryreturned;57executed bodies lack static direct references; native380declaredcallables. GlobalLOC811files/149violations remains incomplete. Original69/72;111/115including discovered local fixes. CI48c0a3b/run36977435365 passed frontend/native/security while desktop checks were still running. No new version/tag until remaining global gates pass.
+
+
+### HTML extraction and provider markers (audit BATCH-4f)
+
+The70-line HTML parser delegates metadata, favicons, discovery, technologies and structured data to explicit extraction contracts. Technology and structured-data facades are30/21lines; the entire parser tree, including80source/test files, fits141physical lines or fewer. All preceding committed parser test modules remain unchanged.
+
+Seven RED cases reproduced six further issues. Root discovery now preserves ports and IPv6 host syntax and requires HTTP(S); Joomla! versions use the matched generator prefix; Plausible detection validates actual HTTP host boundaries, case and protocol-relative sources. Charset matching keeps byte offsets stable after Unicode prefixes, preventing an observed panic. Favicon formats come from asset filenames rather than dots in hosts/directories. Declared values and unknown-format nulls remain distinct.
+
+Twenty-four new native cases directly assert all18exposed extraction callables, including explicit metadata fields, source formats, MIME declarations, duplicate evidence, signal identities, generator versions, filename boundaries, JSON-LD failures/type graphs, Microdata references and RDFa anchors. Fresh scoped coverage is100%lines/functions for technologies354/354+32/32, structureddata197/197+20/20, metadata82/82+9/9, favicons86/86+12/12 and discovery28/28+6/6. Native branches remain unavailable.
+
+Full local suites:1843frontend/456Rust/70MCP; build, ESLint, rustfmt and strict Clippy pass. A first frontend IPC test timed out under concurrent compilation; two complete coverage reruns passed without changing its timeout. Globalfrontend83.79%statements/72.42%branches/82.27%functions/85.86%lines. Fresh production native63.64%lines(11500/18069)/59.68%functions(1128/1890) with204matching source hashes; uncompiled platform/branch evidence unavailable. PublicTS619callables/612executed/7factoryreturned,57executed without static direct references; native393declaredcallables. GlobalLOC832files/146violations remains incomplete. Original69/72;117/121including discovered local fixes. Prior CI48c0a3b/run36977435365 passed all five checks;9707f3e/run36978525730 passed four while macOS remained in progress. No new version/tag until all global gates pass.

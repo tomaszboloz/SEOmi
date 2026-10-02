@@ -75,3 +75,7 @@ it('keeps native content statistics and every responsibility below 150 physical 
  const files=['src-tauri/src/services/html_parser/content.rs',...codeFiles('src-tauri/src/services/html_parser/content')];
  expect(maxLocReport(files).violations).toEqual([]);
 });
+
+it('keeps the entire native HTML parser and every helper or test below 150 physical lines',()=>{
+ expect(maxLocReport(['src-tauri/src/services/html_parser.rs',...codeFiles('src-tauri/src/services/html_parser')]).violations).toEqual([]);
+});

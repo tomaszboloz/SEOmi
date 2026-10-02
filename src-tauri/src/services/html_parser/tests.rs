@@ -13,3 +13,5 @@ mod uses_polish_readability_formula_when_html_declares_polish;
 mod versions_are_extracted_only_from_known_explicit_generator_declarations;
 use fixture::SAMPLE_HTML;
 mod content_regressions;
+mod extraction_contracts;
+mod parser_regressions;
