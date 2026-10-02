@@ -63,3 +63,18 @@ regressions reproduce the old unbounded read and missing child cleanup.
 Fourteen new Rust cases cover bounded streams, notification flood, exact
 boundaries, response errors/deadlines, real Node discovery and orphan cleanup;
 a physical LOC150 guard covers every extracted source/test module.
+
+Reverification on 2026-10-02: subscription authentication remains active,
+CLI 1.6.2 and Docker 29.8.0 are available; disposable-copy preparation passes.
+Current independent checks: 491 Rust tests across all targets, 70 MCP tests,
+and 11 focused frontend transport/MCP tests pass. These checks do not complete
+the failed Strix assessment or establish the global 72/72 audit gate.
+
+Reverification at 17:30 UTC on 2026-10-02: `strix auth status` confirms an
+active ChatGPT subscription session. Configuration remains mode 0600, telemetry
+is disabled and `STRIX_IMAGE` pins the digest recorded above. Preparation of
+1,348 files from working copy HEAD d2aca39 passes. Twelve focused frontend
+transport/MCP/LOC tests and all 70 MCP tests pass, including the MCP build.
+The saved Strix report still explicitly records `completeness.complete=false`,
+eight reviewed surfaces, five requiring follow-up and 26 coverage gaps.
+No second scan or workaround for the provider guardrail was attempted.

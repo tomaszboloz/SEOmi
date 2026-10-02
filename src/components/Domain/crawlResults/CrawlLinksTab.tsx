@@ -161,7 +161,7 @@ const { checkExternalLinks, copiedLinkSourceKey, copyLinkSource, currentRun, ext
                 </label>
                 <button
                   type="button"
-                  onClick={() => setLinkDescending((value) => !value)}
+                  onClick={() => setLinkDescending((value: boolean) => !value)}
                   aria-pressed={linkDescending}
                   className="h-8 rounded-md border border-slate-700 px-2.5 text-[11px] text-slate-300 hover:bg-slate-800"
                 >

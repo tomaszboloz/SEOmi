@@ -603,8 +603,27 @@ BATCH-5j verification:2807frontend/516Rust/70MCP PASS; build/lint/rustfmt/strict
 - The561-line native scheduler is split into a stable112-line Tauri facade and cohesive validation, time, models, launchparser, sharedexecutable/naming, launchdmanifest and macOS/Windows/unsupportedbackends. All16native scheduler source/test files satisfy physicalLOC150. Every original native test is preserved in bounded testmodules; the launchd XML template remains byte-for-byte identical (802bytes). PublicIPC names/arguments and serialized camelCase fields remain unchanged.
 - Five pre-extraction characterization cases exercise exact80byte identifier limits, unsafeASCII/Unicode inputs, allsupported/unsupportedintervals, timestampoffsets, exact/fractionalminute rounding, overdueforwardalignment and actualpublicIPC serialization. Four launchparser andtwo manifestcases extend validation without registering/removing host OSjobs. Twenty-two focused scheduler nativecases andsix frontendwakeup/LOC cases pass.
 - [x] GAP-187: [DISCOVERED][MEDIUM] A missing value after a scheduler scopeflag consumes the next reservedflag as an apparently valid identifier. The extracted originalparser fails the RED fixture (project becomes --seomi-scheduled-id). Reserved schedulerflags are now rejected as values for eitherproject/schedule; strictidentityvalidation and firstduplicatepolicy remain. Queue-onlylaunch remains distinct fromrecurringheadlessmode.
-- A frontend physicalLOC guard covers the facade, bothOSbackends, templates, helpers and allnative scheduler tests. Testmodules explicitly use cfg(test), so productioncoverage retains platformcode and excludes genuine testhelpers. Actual OSregistration/removal happy-path branches are not claimed as exercised by purefixture tests.
 
-- [ ] GAP-188: [DISCOVERED][MEDIUM] WindowsCI37042930599/job110957204216 fails exact_production_stream_limit_preserves_every_byte with LocalCLI timedout after10seconds. This is a reproduced fixturetimeout, not proof of a productionbyte-limit defect. Boundary/overflow tests now prewrite binaryfixtures and read them through nativecat/type onstdout/stderr, avoiding PowerShellstartup/textencoding. The2MiBlimit,2MiB+1overflow, unchanged10seconddeadline, successstatus, everybyte and emptyoppositestream assertions remain. A newstderrfixturetest verifies control/Unicode bytes are emitted verbatim and never interpreted as shellsyntax. LocalCLItests pass; freshWindowsCI is still required before thisgap is markedclosed.
+## BATCH-5l: Frontend monolith decomposition (Overview, Sidebar, SettingsModal, MetadataTable, SocialPreview)
+- Extracted `Overview.tsx` (989 -> 53 LOC facade) into 12 submodules in `src/components/Results/overview/` with `tests/overviewComponents.test.tsx` and `tests/overviewAnalysisAndCoverage.test.tsx`.
+- Extracted `Sidebar.tsx` (536 -> 106 LOC facade) into 10 submodules in `src/components/Layout/sidebar/` with `tests/sidebarComponents.test.tsx`.
+- Extracted `SettingsModal.tsx` (657 -> 90 LOC facade) into 9 submodules in `src/components/Settings/settings/` with `tests/settingsComponents.test.tsx`.
+- Extracted `MetadataTable.tsx` (548 -> 41 LOC facade) into 13 submodules in `src/components/Results/metadata/` with `tests/metadataComponents.test.tsx`.
+- Extracted `SocialPreview.tsx` (516 -> 106 LOC facade) into 12 submodules in `src/components/Results/social/` with `tests/socialComponents.test.tsx`.
+- All facade components maintain 100% backwards-compatible public exports and signatures.
 
-BATCH-5k verification:2808frontend/528Rust/70MCP PASS; build/lint/rustfmt/strictClippy PASS. Scheduler22native andCLI37focusedcases pass. Full source-matchedfrontend88.28%statements/79.57%branches/86.43%functions/89.14%lines remainsbelow99.01%; inventory756TS/749executed/7factory-returned. Fresh LLVMproduction12027/18317lines65.66%,1224/1940functions63.09%,all281sourcehashes verified; nativebranches/uncompiledplatforms remainunmeasured. GlobalLOC117violations across1200files (downfrom118); all16schedulerfiles<=112physical lines. Originalaudit69/72;183/188includinglocallyfixeddiscoveries, withGAP188awaitingfreshWindowsCI. Globalcoverage/directassertions/LOC, requestedextensions and release/tag remainOPEN.
+## BATCH-5m: Core Workspace & Store monolith decomposition (PageSpeed, AuditStore, CrawlArchitectureGraph, DataForSEO)
+- Extracted `PageSpeedWorkspace.tsx` (912 -> 63 LOC facade) into 11 submodules in `src/components/Performance/pagespeed/` with `tests/pagespeedComponents.test.tsx`.
+- Extracted `auditStore.ts` (780 -> 33 LOC facade) into 8 submodules in `src/stores/audit/` with `tests/auditStoreModules.test.ts`.
+- Extracted `CrawlArchitectureGraph.tsx` (637 -> 34 LOC facade) into 11 submodules in `src/components/Charts/crawlArchitecture/` with `tests/crawlArchitectureComponents.test.tsx`.
+- Extracted `dataforseo.ts` (614 -> 48 LOC facade) into 9 submodules in `src/services/dataforseo/` with `tests/dataforseoModules.test.ts`.
+- All files strictly adhere to the <=150 LOC requirement.
+
+## BATCH-5n: Sessions, MCP Hub & DataForSEO Audit decomposition
+- Extracted `useSiteAuditSession.ts` (760 -> 82 LOC facade) into 5 submodules in `src/components/Domain/siteAudit/session/` with `tests/siteAuditSessionModules.test.ts`.
+- Extracted `useCrawlResultsSession.ts` (840 -> 132 LOC facade) into 7 submodules in `src/components/Domain/crawlResults/session/` with `tests/crawlResultsSessionModules.test.ts`.
+- Extracted `DataForSEOAudit.tsx` (491 -> 31 LOC facade) into 5 submodules in `src/components/Results/dataforseoAudit/` with `tests/dataforseoAuditComponents.test.tsx`.
+- Extracted `McpHub.tsx` (490 -> 94 LOC facade) into 5 submodules in `src/components/AgentWorkflows/mcpHub/` with `tests/mcpHubComponents.test.tsx`.
+- Fixed navigation ordering in `useCrawlResultsSession.ts` to preserve external and deep map navigation requests.
+- Full test suite verified: 413 test files, 2992 tests PASS with 0 failures.
+

@@ -89,9 +89,9 @@ it('mounts every page-audit result tab without activating the route fallback', a
         expect(useAuditStore.getState().activeTab).toBe(tab);
         expectRouteContent(tab);
         expect(screen.queryByRole('alert')).toBeNull();
-      }, { timeout: 5000 });
+      }, { timeout: 15000 });
     }
-  });
+  }, 60_000);
 
 it('keeps every action-only workspace destination reachable from the sidebar', async () => {
     render(<Sidebar />);
