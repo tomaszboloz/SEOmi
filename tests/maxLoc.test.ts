@@ -85,3 +85,9 @@ it('keeps keyword state and all contract responsibilities below 150 physical lin
     ...codeFiles('src/stores/tools/keywords'), ...codeFiles('src/stores/tools/contracts')];
   expect(maxLocReport(files).violations).toEqual([]);
 });
+
+it('keeps AI and backlink slice responsibilities below 150 physical lines', () => {
+  const files = ['src/stores/tools/aiSlice.ts', 'src/stores/tools/backlinksSlice.ts',
+    ...codeFiles('src/stores/tools/ai'), ...codeFiles('src/stores/tools/backlinks')];
+  expect(maxLocReport(files).violations).toEqual([]);
+});
