@@ -91,3 +91,9 @@ it('keeps AI and backlink slice responsibilities below 150 physical lines', () =
     ...codeFiles('src/stores/tools/ai'), ...codeFiles('src/stores/tools/backlinks')];
   expect(maxLocReport(files).violations).toEqual([]);
 });
+
+it('keeps crawl orchestration and checkpoint persistence responsibilities below 150 physical lines', () => {
+  const files = ['src/stores/tools/crawlSlice.ts', 'src/stores/tools/crawlPersistence.ts',
+    ...codeFiles('src/stores/tools/crawl'), ...codeFiles('src/stores/tools/checkpoints')];
+  expect(maxLocReport(files).violations).toEqual([]);
+});
