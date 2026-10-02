@@ -703,6 +703,41 @@ BATCH-5j verification:2807frontend/516Rust/70MCP PASS; build/lint/rustfmt/strict
 - Full verification loop:
   - `npm run lint` clean (0 errors, 0 warnings).
   - `npx tsc --noEmit` clean (0 errors).
-  - `tests/maxLoc.test.ts` (25/25 tests PASS).
   - Full Vitest suite: **427 test files, 3091 tests passing (0 failures)**.
+
+## BATCH-5q: Crawl contracts, configuration form, and domain overview decomposition (LOC <= 150)
+
+- Decomposed three large frontend monoliths into modular single-responsibility units strictly under 150 physical LOC:
+  1. `src/services/contracts/crawl.ts` (422 -> 49 LOC facade) with 6 submodules in `src/services/contracts/crawl/`:
+     - `crawlConfig.ts` (54 LOC)
+     - `crawlNavigation.ts` (54 LOC)
+     - `crawlFindings.ts` (115 LOC)
+     - `crawlMedia.ts` (72 LOC)
+     - `crawlSummary.ts` (138 LOC)
+     - `crawlResult.ts` (58 LOC)
+  2. `src/components/Domain/siteAudit/CrawlConfigurationForm.tsx` (419 -> 29 LOC facade) with 5 submodules in `src/components/Domain/siteAudit/configForm/`:
+     - `CrawlLimitsConfig.tsx` (87 LOC)
+     - `CrawlScopeConfig.tsx` (87 LOC)
+     - `CrawlQueryConfig.tsx` (106 LOC)
+     - `CrawlRulesConfig.tsx` (95 LOC)
+     - `CrawlResourceConfig.tsx` (143 LOC)
+  3. `src/components/Domain/DomainOverview.tsx` (411 -> 27 LOC facade) with 8 submodules in `src/components/Domain/domainOverview/`:
+     - `useDomainOverviewSession.ts` (125 LOC)
+     - `DomainOverviewHeader.tsx` (130 LOC)
+     - `DomainOverviewMetrics.tsx` (75 LOC)
+     - `DomainTopOrganic.tsx` (104 LOC)
+     - `DomainCompetitors.tsx` (55 LOC)
+     - `DomainComparisonSection.tsx` (118 LOC)
+     - `DomainComparisonTable.tsx` (112 LOC)
+     - `DomainComparisonHistory.tsx` (99 LOC)
+- Added 3 dedicated test files ensuring complete coverage (all <= 150 LOC):
+  - `tests/crawlContractsModules.test.ts` (88 LOC, 4 tests)
+  - `tests/crawlConfigFormComponents.test.tsx` (86 LOC, 4 tests)
+  - `tests/domainOverviewComponents.test.tsx` (61 LOC, 4 tests)
+- Full verification loop:
+  - `npm run lint` clean (0 errors, 0 warnings).
+  - `npx tsc --noEmit` clean (0 errors).
+  - `tests/maxLoc.test.ts` (25/25 tests PASS).
+  - Full Vitest suite: **430 test files, 3122 tests passing (0 failures)**.
+
 
