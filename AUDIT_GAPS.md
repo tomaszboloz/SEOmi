@@ -627,3 +627,13 @@ BATCH-5j verification:2807frontend/516Rust/70MCP PASS; build/lint/rustfmt/strict
 - Fixed navigation ordering in `useCrawlResultsSession.ts` to preserve external and deep map navigation requests.
 - Full test suite verified: 413 test files, 2992 tests PASS with 0 failures.
 
+
+## BATCH-5o: GitHub review and desktop CI test portability
+
+- PR #16 merged to master as 4576ab0 after five required checks; thanks @RafalSzy. Protection verified: strict checks, administrators enforced, force push/deletion prohibited.
+- PR #17: added six asynchronous CLI detection tests and refreshed base with #16. Full isolated frontend 713 PASS; TypeScript PASS. Fresh platform CI required before merging.
+- PR #18: export fixture names used timestamp resolution and create_dir_all, permitting concurrent directory reuse. UUID plus atomic create_dir and a 32-thread export regression pass (321 Rust tests). Four theme lifecycle tests added; full frontend 709 PASS; TypeScript/build PASS. Palette split: 294 selector-scoped properties verified equivalent; four modules 17–136 physical lines. Fresh platform CI required before merging.
+- [DISCOVERED] GAP-189: audit run 37045802015 Windows fails nativeSchedulerLoc because node:path.join returns backslashes while expected literals use slashes. Expectations now use native join; both backend-presence assertions and physical LOC150 gate retained. Pending fresh Windows CI.
+- [DISCOVERED] GAP-190: same run macOS Intel fails mainContentAuditTabs while still rendering Suspense fallback under the default 1s query deadline. ARIA test preloads the three real component modules before rendering; assertion semantics retained. Pending fresh macOS CI.
+- Issue #19 remains open: source confirms duplicate crawler docks and conflicting sticky graph header; responsive/browser fixes still required. Public replies posted on #16–18 and #19.
+- Original audit remains 69/72. Global coverage, LOC150, direct public assertions, requested extensions, signed release validation and final tag remain incomplete. GAP188 remains pending: desktop jobs failed before native stream-limit tests executed.
