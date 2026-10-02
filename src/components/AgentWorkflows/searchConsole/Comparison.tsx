@@ -1,4 +1,5 @@
 import type { SearchConsoleSession } from './useSearchConsoleSession';
+import { SearchConsoleUnmatchedRows } from './UnmatchedRows';
 
 export function SearchConsoleComparison({ session }: { session: SearchConsoleSession }) {
   const { t, gscData, currentSnapshot, comparison, strikingDistance, snapshotScopeLabel, snapshots, baselineId, setBaselineId } = session;
@@ -18,6 +19,7 @@ export function SearchConsoleComparison({ session }: { session: SearchConsoleSes
                 {t('searchConsole.comparedRows', { queries: comparison.queryChanges.length, pages: comparison.pageChanges.length })}
               </p>
               {comparison.uncertainBecauseTruncated && <p role="note" className="text-xs text-amber-300">{t('searchConsole.truncatedWarning')}</p>}
+              <SearchConsoleUnmatchedRows rows={comparison.unmatchedRows} />
               <div className="grid gap-4 lg:grid-cols-2">
                 <div><h3 className="mb-2 text-sm font-medium text-white">{t('searchConsole.queryDeclines')}</h3>
                   {comparison.queryChanges.filter((change) => change.potentialDecline).slice(0, 10).map((change) => <div key={change.key} className="flex justify-between gap-3 border-t border-slate-800 py-2 text-xs"><span className="truncate text-slate-200">{change.key}</span><span className="shrink-0 text-rose-300">{change.clicksDeltaPercent === null ? '—' : `${change.clicksDeltaPercent.toFixed(1)}% ${t('searchConsole.clicksDelta')}`}</span></div>)}

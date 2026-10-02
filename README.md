@@ -1479,3 +1479,13 @@ The cannibalization panel now analyzes the full current GSC report instead of th
 Thanks to @RafalSzy for the testing feedback in [PR #13](https://github.com/tomaszboloz/SEOmi/pull/13).
 
 BATCH-5i verification:2789frontend/516Rust/70MCP tests PASS; build/lint/rustfmt/strictClippy PASS. Full frontend88.19%statements/79.47%branches/86.23%functions/89.06%lines remainsbelow99.01%. Publicinventory755TS/748executed/7factory-returned. All four changed source/test files match the isolated measured copy and have <=43physical lines. GlobalLOC118violations across1181files remainsOPEN. All266native sourcehashes match the prior measured LLVM evidence (65.56%productionlines/62.80%functions); nativebranches/uncompiledplatforms remainunmeasured. Originalaudit69/72;180/184includinglocallyfixeddiscoveries. Remainingrequestedextensions/globalgates/release/tag remainOPEN.
+
+### BATCH-5j: comparable periods and missing GSC observations
+
+GSC traffic deltas now require valid, disjoint periods containing the same number of days. A28-day baseline versus7days could previously report a75%decline despite constant dailytraffic; the comparison now explains why those periods cannot be compared. Strict UTC datevalidation covers impossible dates and reversedranges.
+
+The comparison separately lists queries and URLs observed only in one period. These identities are not assigned zero traffic or decline percentages. Counts and an explicit uncertainty notice are localized in12languages; allstored identities remaininspectable. Seventeen new direct/integration regressions cover windows, missingrows and the real savedbaseline/live-session view.
+
+Thanks to @RafalSzy for the testing feedback in [PR #13](https://github.com/tomaszboloz/SEOmi/pull/13).
+
+BATCH-5j verification:2807frontend/516Rust/70MCP PASS; build/lint/rustfmt/strictClippy PASS. Scoped33tests cover100%72statements/51branches/30functions/50lines for comparison and unmatchedpanel. Full source-matchedfrontend88.28%statements/79.57%branches/86.43%functions/89.14%lines remainsbelow99.01%. Inventory756TS/749executed/7factory-returned; new publicpanel has direct assertions. All18source/test/localefiles match the measured isolatedcopy; changedTS/TSX modules/tests have <=79physical lines. GlobalLOC118violations across1184files remainsOPEN. All266nativehashes match previousLLVM65.56%productionlines/62.80%functions; nativebranches/uncompiledplatforms unmeasured. Originalaudit69/72;182/186includinglocallyfixeddiscoveries. Live masterprotection:admins=true,forcepush=false,deletion=false,strict=true andfive requiredcontexts verified. Requestedextensions/globalgates and release/tag remainOPEN.

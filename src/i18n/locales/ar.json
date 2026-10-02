@@ -193,7 +193,8 @@
       "differentProperties": "Snapshots belong to different Search Console properties.",
       "differentFilters": "Snapshots use different Search Console filters; choose a snapshot with the same scope.",
       "samePeriod": "Choose two different periods.",
-      "overlapping": "Periods overlap or are out of order; choose disjoint ranges."
+      "overlapping": "Periods overlap or are out of order; choose disjoint ranges.",
+      "differentDurations": "اختر فترات بعدد أيام متساوٍ لمقارنة الزيارات."
     },
     "reportTemplates": {
       "builtInName": "Site health · full report",
@@ -3463,7 +3464,14 @@
     "noPageRows": "The API returned no page rows for this date range.",
     "snapshotSaved": "Saved snapshot {{start}} — {{end}}.",
     "snapshotSaveError": "Could not save snapshot.",
-    "fullScope": "full scope"
+    "fullScope": "full scope",
+    "unmatchedDescription": "لا تتم مقارنة الصفوف التي ظهرت في فترة واحدة فقط. غيابها عن البيانات المحمّلة لا يعني انعدام الزيارات أو خسارة مؤكدة.",
+    "unmatched": {
+      "baselineQueries": "استعلامات ظهرت في الفترة المرجعية فقط: {{count}}",
+      "currentQueries": "استعلامات ظهرت في الفترة الحالية فقط: {{count}}",
+      "baselinePages": "روابط ظهرت في الفترة المرجعية فقط: {{count}}",
+      "currentPages": "روابط ظهرت في الفترة الحالية فقط: {{count}}"
+    }
   },
   "settings": {
     "close": "Close settings",

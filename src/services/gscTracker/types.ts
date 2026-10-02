@@ -42,4 +42,10 @@ export interface GscSnapshotComparison {
   queryChanges: GscRowChange[];
   pageChanges: GscRowChange[];
   uncertainBecauseTruncated: boolean;
+  unmatchedRows?: {
+    baselineQueries: string[];
+    currentQueries: string[];
+    baselinePages: string[];
+    currentPages: string[];
+  };
 }
