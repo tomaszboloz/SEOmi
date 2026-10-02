@@ -22,7 +22,7 @@ export const SocialFacebookCard: React.FC<SocialFacebookCardProps> = ({
         <h3 className="text-sm font-bold text-white">{t('social.facebookPreview')}</h3>
       </div>
 
-      <div className="max-w-[500px] mx-auto bg-[#242526] border border-slate-700/60 rounded-xl overflow-hidden shadow-xl">
+      <div className="force-dark max-w-[500px] mx-auto bg-[#242526] border border-slate-700/60 rounded-xl overflow-hidden shadow-xl">
         {liveImage ? (
           <div className="relative aspect-[1.91/1] w-full bg-slate-800 overflow-hidden">
             <img

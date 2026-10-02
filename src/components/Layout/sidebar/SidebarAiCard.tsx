@@ -8,9 +8,7 @@ export const SidebarAiCard: React.FC = () => {
   const { t } = useTranslation();
   const openModal = useUIStore((s) => s.openModal);
   const provider = useAuthStore((s) => s.provider);
-  const isProviderConnected = useAuthStore((s) => s.isProviderConnected);
-  
-  const isConnected = isProviderConnected();
+  const isConnected = useAuthStore((s) => s.connectionStatus[s.provider] === "connected");
   const providerName =
     provider === "claude"
       ? "Claude"

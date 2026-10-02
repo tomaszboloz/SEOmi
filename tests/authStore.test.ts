@@ -41,6 +41,28 @@ describe('useAuthStore (Direct AI Subscriptions - Zero Credits)', () => {
     expect(useAuthStore.getState().subscription).toEqual({ tier: 'direct' });
   });
 
+  it('treats a detected, signed-in local CLI as connected after a restart or project switch', () => {
+    const detected = { provider: 'claude' as const, command: 'claude', available: true, detail: '2.1.287 (Claude Code)' };
+    useAuthStore.setState({ cliStatus: { openai: null, claude: detected, gemini: { provider: 'gemini', command: 'gemini', available: true, detail: '1.0' } } });
+    const store = useAuthStore.getState();
+    store.setProvider('claude');
+    store.setConnectionMethod('claude', 'local_cli');
+    store.setConnectionMethod('gemini', 'local_cli');
+    expect(useAuthStore.getState().connectionStatus.claude).toBe('connected');
+    // Gemini has no sign-in check, so detection alone proves nothing.
+    expect(useAuthStore.getState().connectionStatus.gemini).toBe('unconfigured');
+
+    store.hydrateProject('project-cli');
+    expect(useAuthStore.getState().connectionStatus).toMatchObject({ claude: 'connected', openai: 'unconfigured', gemini: 'unconfigured' });
+    expect(useAuthStore.getState().statusMessages.claude).toBe('2.1.287 (Claude Code)');
+    expect(useAuthStore.getState().isProviderConnected('claude')).toBe(true);
+
+    // The same CLI behind an API credential is not a connection.
+    useAuthStore.getState().setConnectionMethod('claude', 'api_key');
+    expect(useAuthStore.getState().connectionStatus.claude).toBe('unconfigured');
+    useAuthStore.setState({ cliStatus: { openai: null, claude: null, gemini: null } });
+  });
+
   it('isolates AI preferences by project and migrates legacy preferences only once', () => {
     const store = useAuthStore.getState();
     store.setProvider('claude');

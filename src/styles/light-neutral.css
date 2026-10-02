@@ -1,0 +1,32 @@
+@layer base {
+  html.light {
+    --color-bg-primary: #f8fafc;
+    --color-bg-secondary: #ffffff;
+    --color-bg-card: #f1f5f9;
+    --color-border: #e2e8f0;
+    --color-text-primary: #0f172a;
+    --color-text-muted: #64748b;
+    color-scheme: light;
+
+    /* The components are written with dark-surface utilities (bg-slate-900,
+       text-slate-300, text-emerald-300, ...). Tailwind resolves every one of
+       them through a --color-* variable, so the light theme mirrors each
+       palette's lightness scale here instead of duplicating thousands of
+       class names with a light variant. Accent mid tones (500) keep their
+       value; accent tints used as text map one step darker than a plain
+       mirror (400 -> 800) so they pass WCAG AA on white and on tinted cards.
+       Values are the Tailwind 4 defaults for the mapped shade. */
+    --color-white: oklch(12.9% 0.042 264.695);
+    --color-slate-50: oklch(12.9% 0.042 264.695);
+    --color-slate-100: oklch(20.8% 0.042 265.755);
+    --color-slate-200: oklch(27.9% 0.041 260.031);
+    --color-slate-300: oklch(37.2% 0.044 257.287);
+    --color-slate-400: oklch(44.6% 0.043 257.281);
+    --color-slate-500: oklch(44.6% 0.043 257.281);
+    --color-slate-600: oklch(44.6% 0.043 257.281);
+    --color-slate-700: oklch(86.9% 0.022 252.894);
+    --color-slate-800: oklch(92.9% 0.013 255.508);
+    --color-slate-900: #ffffff;
+    --color-slate-950: oklch(96.8% 0.007 247.896);
+  }
+}

@@ -22,7 +22,7 @@ export const SocialDiscordEmbed: React.FC<SocialDiscordEmbedProps> = ({
         <span className="font-bold text-white text-sm">{t('legacyUi.social.discord')}</span>
       </div>
 
-      <div className="bg-[#2f3136] rounded-md p-3 border-l-4 border-emerald-500 max-w-md">
+      <div className="force-dark bg-[#2f3136] rounded-md p-3 border-l-4 border-emerald-500 max-w-md">
         <span className="text-[11px] text-slate-400 font-medium block mb-1">
           {siteName}
         </span>

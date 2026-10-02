@@ -67,15 +67,11 @@ pub fn write_mcp_config_file(path: String, contents: String) -> Result<(), Strin
 mod tests {
     use super::{validate_export_path, write_mcp_config_file, MAX_EXPORT_BYTES};
     use std::fs;
-    use std::time::{SystemTime, UNIX_EPOCH};
 
     fn test_directory() -> std::path::PathBuf {
-        let suffix = SystemTime::now()
-            .duration_since(UNIX_EPOCH)
-            .unwrap()
-            .as_nanos();
-        let directory = std::env::temp_dir().join(format!("seomi-mcp-export-{suffix}"));
-        fs::create_dir_all(&directory).unwrap();
+        let directory =
+            std::env::temp_dir().join(format!("seomi-mcp-export-{}", uuid::Uuid::new_v4()));
+        fs::create_dir(&directory).unwrap();
         directory
     }
 
@@ -115,5 +111,32 @@ mod tests {
         )
         .is_err());
         fs::remove_dir_all(directory).unwrap();
+    }
+    #[test]
+    fn concurrent_exports_use_independent_test_directories() {
+        let directories = std::thread::scope(|scope| {
+            let workers: Vec<_> = (0..32)
+                .map(|_| {
+                    scope.spawn(|| {
+                        let directory = test_directory();
+                        let destination = directory.join("client.json");
+                        write_mcp_config_file(
+                            destination.to_string_lossy().into_owned(),
+                            "{}".into(),
+                        )
+                        .unwrap();
+                        assert_eq!(fs::read_to_string(&destination).unwrap(), "{}");
+                        fs::remove_dir_all(&directory).unwrap();
+                        directory
+                    })
+                })
+                .collect();
+            workers
+                .into_iter()
+                .map(|worker| worker.join().unwrap())
+                .collect::<Vec<_>>()
+        });
+        let unique: std::collections::HashSet<_> = directories.iter().collect();
+        assert_eq!(unique.len(), directories.len());
     }
 }

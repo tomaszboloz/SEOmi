@@ -24,7 +24,7 @@ export const SocialChatCard: React.FC<SocialChatCardProps> = ({
         <span className="font-bold text-white text-sm">{t('legacyUi.social.whatsapp')}</span>
       </div>
 
-      <div className="bg-[#1f2c34] border border-[#2a3942] rounded-xl p-3 max-w-md shadow-md">
+      <div className="force-dark bg-[#1f2c34] border border-[#2a3942] rounded-xl p-3 max-w-md shadow-md">
         <div className="flex space-x-3">
           {liveImage && (
             <div className="w-16 h-16 rounded-lg bg-slate-900 overflow-hidden shrink-0">

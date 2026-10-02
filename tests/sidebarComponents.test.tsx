@@ -98,7 +98,7 @@ describe("Sidebar Components", () => {
     });
 
     (useAuthStore as any).mockImplementation((selector: any) => {
-      const state = { provider: "openai", isProviderConnected: () => true };
+      const state = { provider: "openai", connectionStatus: { openai: "connected" } };
       return selector ? selector(state) : state;
     });
     
@@ -106,7 +106,7 @@ describe("Sidebar Components", () => {
     expect(screen.getByText("OpenAI sidebar.connected")).toBeTruthy();
     
     (useAuthStore as any).mockImplementation((selector: any) => {
-      const state = { provider: null, isProviderConnected: () => false };
+      const state = { provider: "openai", connectionStatus: { openai: "unconfigured" } };
       return selector ? selector(state) : state;
     });
     

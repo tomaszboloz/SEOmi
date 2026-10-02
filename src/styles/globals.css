@@ -1,4 +1,9 @@
 @import "tailwindcss";
+@import "./light-neutral.css";
+@import "./light-accents.css";
+@import "./preview-neutral.css";
+@import "./preview-accents.css";
+
 
 @layer base {
   :root {
@@ -10,13 +15,15 @@
     --color-text-muted: #94a3b8;
   }
 
-  html.light {
-    --color-bg-primary: #f8fafc;
-    --color-bg-secondary: #ffffff;
-    --color-bg-card: #f1f5f9;
-    --color-border: #e2e8f0;
-    --color-text-primary: #0f172a;
-    --color-text-muted: #64748b;
+
+  html.dark {
+    color-scheme: dark;
+    /* Muted text (slate-500/600) is below WCAG AA on the dark surfaces, and
+       white labels on the emerald-600 action buttons are too. Lift the two
+       text shades and deepen the button shade. */
+    --color-slate-500: oklch(70.4% 0.04 256.788);
+    --color-slate-600: oklch(65% 0.04 257);
+    --color-emerald-600: oklch(50.8% 0.118 165.612);
   }
 
 }

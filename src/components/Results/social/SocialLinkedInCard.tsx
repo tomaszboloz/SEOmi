@@ -20,7 +20,7 @@ export const SocialLinkedInCard: React.FC<SocialLinkedInCardProps> = ({
         <span className="font-bold text-white text-sm">{t('legacyUi.social.linkedin')}</span>
       </div>
 
-      <div className="bg-[#1b1f23] border border-slate-700/50 rounded-xl overflow-hidden max-w-md">
+      <div className="force-dark bg-[#1b1f23] border border-slate-700/50 rounded-xl overflow-hidden max-w-md">
         {liveImage && (
           <div className="aspect-[1.91/1] w-full bg-slate-900 overflow-hidden">
             <img src={liveImage} alt={t('legacyUi.social.linkedinAlt')} className="w-full h-full object-cover" />

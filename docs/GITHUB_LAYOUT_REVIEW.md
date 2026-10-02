@@ -39,3 +39,9 @@ Native sources are unchanged by the layout fix. The prior audit baseline has 529
 Original audit remains 69/72: >99% frontend/native coverage and direct public-function assertions are unfinished. Global LOC150 is still not met (102 violations in 1344 code files at this layout snapshot). No release or tag is published by this change. Issue #19 remains open until the fix is integrated into master.
 
 Thanks to **@RafalSzy** for the issue, measurements, proposed layout corrections and contributions #13 and #16–18.
+
+## Audit integration follow-up
+
+#17/#18 are integrated with the layout fix in the audit branch. Conflicts are resolved in the extracted Sidebar and social preview components; request tokens, project isolation and injected settings consumers remain intact. Auth/settings stores, the header language selector, project list and App lifecycle now use modules below LOC150.
+
+Final validation: 3048 frontend / 530 Rust all-targets / 70 MCP tests pass; build, lint, rustfmt and strict Clippy pass. Fresh frontend coverage is 88.76% statements / 80.35% branches / 86.94% functions / 90.41% lines. Global LOC still fails: 97 violations in 1367 files. Original audit remains 69/72; new head requires its own GitHub CI. Issue #19 remains open until master includes the fix.

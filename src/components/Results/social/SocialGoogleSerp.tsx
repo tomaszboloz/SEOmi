@@ -73,7 +73,7 @@ export const SocialGoogleSerp: React.FC<SocialGoogleSerpProps> = ({
       <p className="mb-3 text-[11px] leading-5 text-slate-500">{t('legacyUi.social.visualApprox')}</p>
 
       <div
-        className={`bg-[#202124] text-[#bdc1c6] p-4 rounded-xl border border-slate-800 font-sans ${
+        className={`force-dark bg-[#202124] text-[#bdc1c6] p-4 rounded-xl border border-slate-800 font-sans ${
           serpMode === 'mobile' ? 'max-w-[390px] mx-auto shadow-2xl' : 'max-w-[650px]'
         }`}
       >
