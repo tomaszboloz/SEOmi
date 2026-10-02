@@ -121,3 +121,8 @@ it('keeps the Tauri facade, transport, browser and native helpers within LOC150'
   expect(maxLocReport(['src/services/tauri.ts', ...codeFiles('src/services/tauri'),
     'tests/tauriNativeDirect.test.ts', 'tests/tauriBrowserDirect.test.ts']).violations).toEqual([]);
 });
+
+it('keeps issue localization, legacy inference and accessibility keys within LOC150', () => {
+  expect(maxLocReport(['src/services/auditIssueLocalization.ts',
+    ...codeFiles('src/services/auditIssues')]).violations).toEqual([]);
+});
