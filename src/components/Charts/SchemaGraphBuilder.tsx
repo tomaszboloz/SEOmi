@@ -5,6 +5,7 @@ import type { TopicalMapDocument } from '@/services/topicalMap';
 import { generateSchemaGraph, type SchemaArticleType } from '@/services/schemaGenerator';
 import { observedArticleTypes } from '@/services/schemaGenerator/urls';
 import { copyText } from '@/services/clipboard';
+import { useTransientValue } from '@/hooks/useTransientValue';
 
 interface Props {
   document: TopicalMapDocument;
@@ -31,7 +32,7 @@ const normalizeUrl = (value: string) => {
 
 export const SchemaGraphBuilder = ({ document, pages, siteUrl, selectedUrl, includeOrganization, includeUrlBreadcrumbs, articleType, onSelectedUrlChange, onIncludeOrganizationChange, onIncludeUrlBreadcrumbsChange, onArticleTypeChange }: Props) => {
   const { t } = useTranslation();
-  const [copied, setCopied] = useState(false);
+  const [copied, setCopied] = useTransientValue(false, 1800);
   const [copyError, setCopyError] = useState(false);
   const availablePages = useMemo(() => {
     const seen = new Set<string>();
@@ -64,7 +65,6 @@ export const SchemaGraphBuilder = ({ document, pages, siteUrl, selectedUrl, incl
       }
       setCopied(true);
       setCopyError(false);
-      window.setTimeout(() => setCopied(false), 1800);
     } catch { setCopyError(true); }
   };
 

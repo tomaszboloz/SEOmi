@@ -3,17 +3,17 @@ import { useTranslation } from 'react-i18next';
 import type { LinkData } from '@/types';
 import { invokeTauriCommand, isTauriEnvironment } from '@/services/tauri';
 import { copyText } from '@/services/clipboard';
+import { useTransientValue } from '@/hooks/useTransientValue';
 export interface LinkVerification {status:number;isBroken:boolean;checking?:boolean;error?:string}
 export const useLinkVerification = () => {
  const {t}=useTranslation();
  const [verifiedLinks,setVerifiedLinks]=useState<Record<string,LinkVerification>>({});
  const [isVerifyingBatch,setIsVerifyingBatch]=useState(false);
- const [copiedUrl,setCopiedUrl]=useState<string|null>(null);
+ const [copiedUrl, setCopiedUrl] = useTransientValue<string|null>(null, 1500);
   const handleCopy = async (href: string) => {
     const copied = await copyText(href);
     if (!copied) return;
     setCopiedUrl(href);
-    setTimeout(() => setCopiedUrl(null), 1500);
   };
 
   const handleVerifySingleLink = async (href: string) => {

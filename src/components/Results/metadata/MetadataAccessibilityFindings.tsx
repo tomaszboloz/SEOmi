@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { Copy, Check } from 'lucide-react';
 import { copyText } from '@/services/clipboard';
@@ -9,10 +9,11 @@ import {
   accessibilityFindingRecommendation,
   accessibilityFindingEvidence
 } from './metadataHelpers';
+import { useTransientValue } from '@/hooks/useTransientValue';
 
 export const MetadataAccessibilityFindings: React.FC<MetadataTableProps> = ({ audit }) => {
   const { t } = useTranslation();
-  const [copiedKey, setCopiedKey] = useState<string | null>(null);
+  const [copiedKey, setCopiedKey] = useTransientValue<string | null>(null, 1500);
 
   if (!audit.accessibility?.findings || audit.accessibility.findings.length === 0) return null;
 
@@ -20,7 +21,6 @@ export const MetadataAccessibilityFindings: React.FC<MetadataTableProps> = ({ au
     const copied = await copyText(text);
     if (!copied) return;
     setCopiedKey(key);
-    setTimeout(() => setCopiedKey(null), 1500);
   };
 
   return (

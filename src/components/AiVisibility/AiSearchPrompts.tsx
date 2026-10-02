@@ -16,6 +16,7 @@ import { matchAiCitationToCrawl } from '@/services/aiCitationEvidence';
 import { readStorage, removeStorage, writeStorage } from '@/services/storage';
 import { copyText } from '@/services/clipboard';
 import { appLocale } from '@/services/localeFormat';
+import { useTransientValue } from '@/hooks/useTransientValue';
 
 export const AiSearchPrompts: React.FC = () => {
   const { t } = useTranslation();
@@ -31,7 +32,7 @@ export const AiSearchPrompts: React.FC = () => {
   const crawlRuns = useToolsStore((s) => s.crawlRuns);
   const selectedCrawlRunId = useToolsStore((s) => s.selectedCrawlRunId);
 
-  const [copiedIdx, setCopiedIdx] = useState<number | null>(null);
+  const [copiedIdx, setCopiedIdx] = useTransientValue<number | null>(null, 1500);
   const [sourceContextRunId, setSourceContextRunId] = useState('');
   const [sourceContextSaveError, setSourceContextSaveError] = useState(false);
   const sourceContextKey = projectId ? `seomi_project_${projectId}_ai_citation_crawl_context_v1` : '';
@@ -86,7 +87,6 @@ export const AiSearchPrompts: React.FC = () => {
     const copied = await copyText(text);
     if (!copied) return;
     setCopiedIdx(idx);
-    setTimeout(() => setCopiedIdx(null), 1500);
   };
 
   return (

@@ -8,6 +8,7 @@ import { useProjectStore } from '@/stores/projectStore';
 import { ShowOnPageButton } from '@/components/Results/ShowOnPageButton';
 import { HeadingsSummaryCards } from './HeadingsSummaryCards';
 import { HeadingsViolations } from './HeadingsViolations';
+import { useTransientValue } from '@/hooks/useTransientValue';
 import { copyText } from '@/services/clipboard';
 import { readStorage, writeStorage } from '@/services/storage';
 
@@ -21,7 +22,7 @@ const keyphraseStorageKey = (projectId: string, target: string): string =>
 export const HeadingsTree: React.FC<HeadingsTreeProps> = ({ audit }) => {
   const { t } = useTranslation();
   const activeProjectId = useProjectStore((state) => state.activeProjectId);
-  const [copied, setCopied] = useState(false);
+  const [copied, setCopied] = useTransientValue(false, 2000);
   const [keyphrase, setKeyphrase] = useState('');
   const showOnlyProblems = useAuditStore((state) => state.showOnlyProblems);
   const auditTarget = audit.final_url || audit.url;
@@ -46,11 +47,6 @@ export const HeadingsTree: React.FC<HeadingsTreeProps> = ({ audit }) => {
     setCopied(true);
   };
 
-  useEffect(() => {
-    if (!copied) return;
-    const timer = setTimeout(() => setCopied(false), 2000);
-    return () => clearTimeout(timer);
-  }, [copied]);
 
   const getLevelBadgeClass = (level: number) => {
     switch (level) {
