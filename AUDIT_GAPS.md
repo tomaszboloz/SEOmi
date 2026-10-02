@@ -979,6 +979,36 @@ BATCH-5j verification:2807frontend/516Rust/70MCP PASS; build/lint/rustfmt/strict
   - Vitest suite passing with 0 failures (41/41 tests across BATCH-5x suites).
   - Global LOC violations decreased from 68 to 65 across the codebase.
 
+### BATCH-5y: Decompose HeadingsTree, CrawlDirectivesTab, and URLInput to LOC<=150
+- Decomposed three large frontend components into modular single-responsibility units strictly under 150 physical LOC:
+  1. `src/components/Results/HeadingsTree.tsx` (227 -> 76 LOC facade) with 5 submodules in `src/components/Results/headingsTree/`:
+     - `headingsTreeTypes.ts` (17 LOC)
+     - `HeadingsSummaryCards.tsx` (86 LOC)
+     - `HeadingsIssuesCallout.tsx` (26 LOC)
+     - `HeadingsKeyphraseSection.tsx` (82 LOC)
+     - `HeadingsTreeView.tsx` (99 LOC)
+  2. `src/components/Domain/crawlResults/CrawlDirectivesTab.tsx` (220 -> 15 LOC facade) with 4 submodules in `src/components/Domain/crawlResults/directivesTab/`:
+     - `directivesTabTypes.ts` (10 LOC)
+     - `CrawlClientRedirectsSection.tsx` (83 LOC)
+     - `CrawlDirectivesRow.tsx` (99 LOC)
+     - `CrawlRobotsDirectivesSection.tsx` (49 LOC)
+  3. `src/components/URLBar/URLInput.tsx` (196 -> 76 LOC facade) with 4 submodules in `src/components/URLBar/urlInput/`:
+     - `urlInputTypes.ts` (2 LOC)
+     - `URLInputField.tsx` (59 LOC)
+     - `URLInputActions.tsx` (88 LOC)
+     - `URLBatchQueueSection.tsx` (104 LOC)
+- Added 3 dedicated test suites ensuring complete coverage (all <= 150 LOC):
+  - `tests/headingsTreeComponents.test.tsx` (79 LOC, 3 tests)
+  - `tests/crawlDirectivesTabComponents.test.tsx` (108 LOC, 4 tests)
+  - `tests/urlInputComponents.test.tsx` (111 LOC, 5 tests)
+- Full verification loop:
+  - `npm run lint` clean (0 errors, 0 warnings).
+  - `npx tsc --noEmit` clean (0 errors).
+  - `tests/maxLoc.test.ts` (25/25 tests PASS).
+  - Vitest suite passing with 0 failures (41/41 tests across BATCH-5y and related suites).
+  - Global LOC violations decreased from 65 to 62 across the codebase.
+
+
 
 
 
