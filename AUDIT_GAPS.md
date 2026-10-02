@@ -946,6 +946,40 @@ BATCH-5j verification:2807frontend/516Rust/70MCP PASS; build/lint/rustfmt/strict
   - Vitest suite passing with 0 failures (66/66 tests across BATCH-5w suites).
   - Global LOC violations decreased from 71 to 68 across the codebase.
 
+## BATCH-5x: Crawl International Tab, Performance Metrics, and Crawl Validation Tab decomposition (LOC <= 150)
+
+- Decomposed three large frontend components into modular single-responsibility units strictly under 150 physical LOC:
+  1. `src/components/Domain/crawlResults/CrawlInternationalTab.tsx` (249 -> 33 LOC facade) with 6 submodules in `src/components/Domain/crawlResults/internationalTab/`:
+     - `internationalTabTypes.ts` (9 LOC)
+     - `CrawlHreflangList.tsx` (37 LOC)
+     - `CrawlInternationalRow.tsx` (47 LOC)
+     - `CrawlLanguageHreflangSection.tsx` (42 LOC)
+     - `CrawlPaginationRow.tsx` (80 LOC)
+     - `CrawlPaginationSection.tsx` (58 LOC)
+  2. `src/components/Results/PerformanceMetrics.tsx` (234 -> 34 LOC facade) with 4 submodules in `src/components/Results/performanceMetrics/`:
+     - `PerformanceSummaryCards.tsx` (70 LOC)
+     - `PerformanceHttpSection.tsx` (76 LOC)
+     - `PerformanceRedirectWaterfall.tsx` (68 LOC)
+     - `PerformanceDiscoveryFiles.tsx` (60 LOC)
+  3. `src/components/Domain/crawlResults/CrawlValidationTab.tsx` (232 -> 49 LOC facade) with 6 submodules in `src/components/Domain/crawlResults/validationTab/`:
+     - `validationTabTypes.ts` (10 LOC)
+     - `useValidationFilter.ts` (63 LOC)
+     - `ValidationFilterBar.tsx` (69 LOC)
+     - `ValidationFindingItem.tsx` (53 LOC)
+     - `ValidationPageRow.tsx` (55 LOC)
+     - `ValidationTable.tsx` (42 LOC)
+- Added 3 dedicated test suites ensuring complete coverage (all <= 150 LOC):
+  - `tests/crawlInternationalTabComponents.test.tsx` (101 LOC, 4 tests)
+  - `tests/performanceMetricsComponents.test.tsx` (85 LOC, 5 tests)
+  - `tests/crawlValidationTabComponents.test.tsx` (98 LOC, 4 tests)
+- Full verification loop:
+  - `npm run lint` clean (0 errors, 0 warnings).
+  - `npx tsc --noEmit` clean (0 errors).
+  - `tests/maxLoc.test.ts` (25/25 tests PASS).
+  - Vitest suite passing with 0 failures (41/41 tests across BATCH-5x suites).
+  - Global LOC violations decreased from 68 to 65 across the codebase.
+
+
 
 
 
