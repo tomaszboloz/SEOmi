@@ -1,58 +1,20 @@
-import { FormEvent, useEffect, useRef, useState } from "react";
+import { useEffect, useRef } from "react";
 import { useTranslation } from "react-i18next";
 import { FolderPlus, Globe2, X } from "lucide-react";
-import { useProjectStore } from "@/stores/projectStore";
 import { useUIStore } from "@/stores/uiStore";
-import {
-  validateProjectName,
-  validateProjectRootUrl,
-} from "@/services/projectValidation";
+import { useProjectDraft } from "./useProjectDraft";
 import { useModalA11y } from "@/hooks/useModalA11y";
 
 export const CreateProjectModal = () => {
   const { t } = useTranslation();
-  const createProject = useProjectStore((state) => state.createProject);
   const closeModal = useUIStore((state) => state.closeModal);
   const nameInput = useRef<HTMLInputElement>(null);
   const dialogRef = useModalA11y<HTMLElement>(closeModal);
-  const [name, setName] = useState("");
-  const [rootUrl, setRootUrl] = useState("");
-  const [validationError, setValidationError] = useState("");
-  const [validationField, setValidationField] = useState<
-    "name" | "rootUrl" | null
-  >(null);
+  const { name, rootUrl, setName, setRootUrl, submit, validationField, errorFor } = useProjectDraft({ onCreated: closeModal, onInvalidName: () => nameInput.current?.focus() });
 
   useEffect(() => {
     nameInput.current?.focus();
   }, []);
-
-  const submit = (event: FormEvent) => {
-    event.preventDefault();
-    const nameValidation = validateProjectName(name);
-    if (!nameValidation.ok) {
-      setValidationError(nameValidation.message);
-      setValidationField("name");
-      nameInput.current?.focus();
-      return;
-    }
-
-    const rootValidation = validateProjectRootUrl(rootUrl);
-    if (!rootValidation.ok) {
-      setValidationError(rootValidation.message);
-      setValidationField("rootUrl");
-      return;
-    }
-
-    try {
-      createProject({ name, rootUrl: rootValidation.value });
-      closeModal();
-    } catch (error) {
-      setValidationError(
-        error instanceof Error ? error.message : t("projects.createError"),
-      );
-      setValidationField("rootUrl");
-    }
-  };
 
   return (
     <div
@@ -107,33 +69,15 @@ export const CreateProjectModal = () => {
             <input
               ref={nameInput}
               value={name}
-              onChange={(event) => {
-                setName(event.target.value);
-                if (event.target.value.trim()) {
-                  setValidationError("");
-                  setValidationField(null);
-                }
-              }}
+              onChange={(event) => setName(event.target.value)}
               aria-invalid={validationField === "name"}
-              aria-describedby={
-                validationField === "name"
-                  ? "create-project-name-error"
-                  : undefined
-              }
+              aria-describedby={validationField === "name" ? "create-project-name-error" : undefined}
               required
               maxLength={80}
               placeholder={t("projects.namePlaceholder")}
               className="mt-2 h-11 w-full rounded-lg border border-slate-700 bg-slate-950 px-3 text-sm text-white outline-none transition placeholder:text-slate-600 focus:border-emerald-400"
             />
-            {validationError && validationField === "name" && (
-              <span
-                id="create-project-name-error"
-                role="alert"
-                className="mt-2 block text-xs text-rose-300"
-              >
-                {validationError}
-              </span>
-            )}
+            {errorFor("name") && <span id="create-project-name-error" role="alert" className="mt-2 block text-xs text-rose-300">{errorFor("name")}</span>}
           </label>
           <label className="block text-xs font-medium text-slate-300">
             {t("projects.startingDomain")}{" "}
@@ -144,33 +88,15 @@ export const CreateProjectModal = () => {
               <Globe2 className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-500" />
               <input
                 value={rootUrl}
-                onChange={(event) => {
-                  setRootUrl(event.target.value);
-                  if (validationField === "rootUrl") {
-                    setValidationError("");
-                    setValidationField(null);
-                  }
-                }}
+                onChange={(event) => setRootUrl(event.target.value)}
                 aria-invalid={validationField === "rootUrl"}
-                aria-describedby={
-                  validationField === "rootUrl"
-                    ? "create-project-root-url-error"
-                    : undefined
-                }
+                aria-describedby={validationField === "rootUrl" ? "create-project-root-url-error" : undefined}
                 maxLength={2048}
               placeholder={t('projects.startingDomainPlaceholder')}
                 className="h-11 w-full rounded-lg border border-slate-700 bg-slate-950 py-0 pl-10 pr-3 text-sm text-white outline-none transition placeholder:text-slate-600 focus:border-emerald-400"
               />
             </span>
-            {validationError && validationField === "rootUrl" && (
-              <span
-                id="create-project-root-url-error"
-                role="alert"
-                className="mt-2 block text-xs text-rose-300"
-              >
-                {validationError}
-              </span>
-            )}
+            {errorFor("rootUrl") && <span id="create-project-root-url-error" role="alert" className="mt-2 block text-xs text-rose-300">{errorFor("rootUrl")}</span>}
           </label>
           <div className="flex justify-end gap-2 pt-2">
             <button

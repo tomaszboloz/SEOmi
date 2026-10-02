@@ -1,48 +1,11 @@
 import { ProjectGateList } from './gate/ProjectGateList';
-import { FormEvent, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { ArrowRight, FolderPlus } from "lucide-react";
-import { useProjectStore } from "@/stores/projectStore";
-import {
-  validateProjectName,
-  validateProjectRootUrl,
-} from "@/services/projectValidation";
+import { useProjectDraft } from "./useProjectDraft";
 
 export const ProjectGate = () => {
   const { t } = useTranslation();
-  const createProject = useProjectStore((state) => state.createProject);
-  const [name, setName] = useState("");
-  const [rootUrl, setRootUrl] = useState("");
-  const [validationError, setValidationError] = useState("");
-  const [validationField, setValidationField] = useState<
-    "name" | "rootUrl" | null
-  >(null);
-
-  const submit = (event: FormEvent) => {
-    event.preventDefault();
-    const nameValidation = validateProjectName(name);
-    if (!nameValidation.ok) {
-      setValidationError(nameValidation.message);
-      setValidationField("name");
-      return;
-    }
-
-    const rootValidation = validateProjectRootUrl(rootUrl);
-    if (!rootValidation.ok) {
-      setValidationError(rootValidation.message);
-      setValidationField("rootUrl");
-      return;
-    }
-
-    try {
-      createProject({ name, rootUrl: rootValidation.value });
-    } catch (error) {
-      setValidationError(
-        error instanceof Error ? error.message : t("projects.createError"),
-      );
-      setValidationField("rootUrl");
-    }
-  };
+  const { name, rootUrl, setName, setRootUrl, submit, validationField, errorFor } = useProjectDraft();
 
   return (
     <main className="min-h-screen overflow-y-auto bg-[var(--color-bg-primary)] px-5 py-10 text-slate-100 sm:px-10">
@@ -63,13 +26,7 @@ export const ProjectGate = () => {
             {t("projects.name")}
             <input
               value={name}
-              onChange={(event) => {
-                setName(event.target.value);
-                if (event.target.value.trim()) {
-                  setValidationError("");
-                  setValidationField(null);
-                }
-              }}
+              onChange={(event) => setName(event.target.value)}
               aria-invalid={validationField === "name"}
               aria-describedby={
                 validationField === "name"
@@ -81,15 +38,7 @@ export const ProjectGate = () => {
               placeholder={t("projects.namePlaceholder")}
               className="mt-2 h-11 w-full rounded-lg border border-slate-700 bg-slate-950/80 px-3 py-3 text-sm text-white outline-none transition placeholder:text-slate-600 focus:border-emerald-400"
             />
-            {validationError && validationField === "name" && (
-              <span
-                id="project-gate-name-error"
-                role="alert"
-                className="mt-2 block text-xs text-rose-300"
-              >
-                {validationError}
-              </span>
-            )}
+            {errorFor("name") && <span id="project-gate-name-error" role="alert" className="mt-2 block text-xs text-rose-300">{errorFor("name")}</span>}
           </label>
           <label className="block text-xs font-medium text-slate-300">
             {t("projects.startingDomain")}{" "}
@@ -98,13 +47,7 @@ export const ProjectGate = () => {
             </span>
             <input
               value={rootUrl}
-              onChange={(event) => {
-                setRootUrl(event.target.value);
-                if (validationField === "rootUrl") {
-                  setValidationError("");
-                  setValidationField(null);
-                }
-              }}
+              onChange={(event) => setRootUrl(event.target.value)}
               aria-invalid={validationField === "rootUrl"}
               aria-describedby={
                 validationField === "rootUrl"
@@ -115,15 +58,7 @@ export const ProjectGate = () => {
               placeholder={t("projects.startingDomainPlaceholder")}
               className="mt-2 h-11 w-full rounded-lg border border-slate-700 bg-slate-950/80 px-3 text-sm text-white outline-none transition placeholder:text-slate-600 focus:border-emerald-400"
             />
-            {validationError && validationField === "rootUrl" && (
-              <span
-                id="project-gate-root-url-error"
-                role="alert"
-                className="mt-2 block text-xs text-rose-300"
-              >
-                {validationError}
-              </span>
-            )}
+            {errorFor("rootUrl") && <span id="project-gate-root-url-error" role="alert" className="mt-2 block text-xs text-rose-300">{errorFor("rootUrl")}</span>}
           </label>
           <button
             type="submit"
