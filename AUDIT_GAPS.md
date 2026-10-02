@@ -737,7 +737,41 @@ BATCH-5j verification:2807frontend/516Rust/70MCP PASS; build/lint/rustfmt/strict
 - Full verification loop:
   - `npm run lint` clean (0 errors, 0 warnings).
   - `npx tsc --noEmit` clean (0 errors).
+## BATCH-5r: SEO Tools Workspace, Backlink Checker, and Crawl Page Table decomposition (LOC <= 150)
+
+- Decomposed three large frontend monoliths into modular single-responsibility units strictly under 150 physical LOC:
+  1. `src/components/SeoTools/SeoToolsWorkspace.tsx` (397 -> 104 LOC facade) with 7 submodules in `src/components/SeoTools/workspace/`:
+     - `seoToolsTypes.ts` (76 LOC)
+     - `SeoToolsPanelHeader.tsx` (26 LOC)
+     - `useDomainAgeLookup.ts` (116 LOC)
+     - `DomainAgePanel.tsx` (96 LOC)
+     - `CompetitorKeywordsPanel.tsx` (128 LOC)
+     - `TrafficCheckerPanel.tsx` (118 LOC)
+     - `SerpSimulatorPanel.tsx` (100 LOC)
+  2. `src/components/Domain/BacklinkChecker.tsx` (388 -> 55 LOC facade) with 7 submodules in `src/components/Domain/backlinkChecker/`:
+     - `useBacklinkSession.ts` (92 LOC)
+     - `BacklinkHeader.tsx` (70 LOC)
+     - `BacklinkGapSection.tsx` (114 LOC)
+     - `BacklinkGapTable.tsx` (113 LOC)
+     - `BacklinkMetricsGrid.tsx` (139 LOC)
+     - `BacklinkEquityAndAnchors.tsx` (117 LOC)
+     - `BacklinkInboundTable.tsx` (110 LOC)
+  3. `src/components/Domain/crawlResults/CrawlPageTable.tsx` (378 -> 56 LOC facade) with 5 submodules in `src/components/Domain/crawlResults/pageTable/`:
+     - `CrawlPageTableHeader.tsx` (95 LOC)
+     - `CrawlPageEvidenceIssues.tsx` (32 LOC)
+     - `CrawlPageEvidenceDetails.tsx` (144 LOC)
+     - `CrawlPageDiscoveryCell.tsx` (60 LOC)
+     - `CrawlPageTableRow.tsx` (131 LOC)
+- Added 3 dedicated test suites ensuring complete coverage (all <= 150 LOC):
+  - `tests/seoToolsWorkspaceComponents.test.tsx` (48 LOC, 4 tests)
+  - `tests/backlinkCheckerComponents.test.tsx` (86 LOC, 4 tests)
+  - `tests/crawlPageTableComponents.test.tsx` (135 LOC, 6 tests)
+- Full verification loop:
+  - `npm run lint` clean (0 errors, 0 warnings).
+  - `npx tsc --noEmit` clean (0 errors).
   - `tests/maxLoc.test.ts` (25/25 tests PASS).
-  - Full Vitest suite: **430 test files, 3122 tests passing (0 failures)**.
+  - Full Vitest suite: **433 test files, 3155 tests passing (0 failures)**.
+  - Global LOC violations decreased from 90 to 83 across the codebase.
+
 
 
