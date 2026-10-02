@@ -103,6 +103,8 @@ mod runtime_3;
 mod schema;
 #[path = "tests/scope.rs"]
 mod scope;
+#[path = "tests/scope_normalization.rs"]
+mod scope_normalization;
 #[path = "tests/social_1.rs"]
 mod social_1;
 #[path = "tests/social_2.rs"]
