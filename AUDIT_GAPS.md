@@ -2,7 +2,7 @@
 Audytor: Staff Developer | Data: 2026-10-01
 
 ## Statystyki
-- Rejestr pierwotny: 72 luki. Dodatkowe odkrycia są dopisywane poniżej; najwyższy identyfikator: GAP-194 (identyfikator nie oznacza liczby zamkniętych luk).
+- Rejestr pierwotny: 72 luki. Dodatkowe odkrycia są dopisywane poniżej; najwyższy identyfikator: GAP-196 (identyfikator nie oznacza liczby zamkniętych luk).
 - Batchy do wdrożenia: 7
 - Szacowany effort: 20–35 MD; estymacja orientacyjna, do korekty po pomiarze coverage.
 - Baseline: commit 18fa446b13ec3f97db76896bfdf446f97fe80051; 704 frontend / 320 Rust / 27 MCP testów.
@@ -686,3 +686,17 @@ BATCH-5j verification:2807frontend/516Rust/70MCP PASS; build/lint/rustfmt/strict
 - Final SHA256-validated production native coverage: **12271/18377 lines;1276/1951 functions**. Credentials/profiles/frontend secret commands/name validation/profile validation have full measured lines/functions in this snapshot. Configuration/adapter guards and live platform paths remain incomplete. Native branches unavailable (0 recorded), not 100%. Artifacts: `/tmp/seomi-settings-production.lcov`, `/tmp/seomi-settings-sources.json`, `/tmp/seomi-settings-llvm.json`.
 - Frontend initial run under two Rust compilations:3046PASS/2FAIL; both failures remained on the SiteAudit lazy fallback after15s. After the compilations finished, the same two files passed6/6 in7.35s without source, timeout or assertion changes. Sequential full frontend **3048PASS**, build/lint and **70MCP PASS**. This records the resource-sensitive first run rather than treating it as green.
 - Original audit remains **69/72**. Global >99% coverage/direct assertions/LOC150, requested extension verification, signed release and final tag remain OPEN.
+
+## AMP local checks: component detection, limits and decomposition
+
+- [DISCOVERED] GAP-195: built-in amp-img/amp-layout/amp-pixel were falsely flagged as missing extension scripts; valid versioned scripts such as amp-accordion-0.1.js were not matched. Sources verified live: https://github.com/ampproject/amphtml/blob/main/src/builtins/README.md and https://amp.dev/documentation/components/amp-accordion/.
+- [DISCOVERED] GAP-196: the forbidden-element loop retained65instances despite its64-instance limit and user-facing evidence. Three regression tests failed before the fixes (`/tmp/seomi-amp-red.log`); all are now green.
+- FIXED locally: core components need no extension; component matching accepts the same component at the official HTTPS CDN with numeric dotted versions. Other origins/components/invalid suffixes remain unmatched. Forbidden-element and handler loops retain at most64instances. The missing-script baseline fixture now uses a non-built-in component, retaining its assertion.
+- AMP653LOC split into facade, alternates, canonical checks, metadata, styles, elements, component scripts, script allowlist and findings. Public audit_amp API, report schema, canonical resolution and partial-local-rules/unchecked scope remain intact; no alternate fetch or official validator parity is claimed.
+- Added10tests covering the three regressions, matching boundaries,32alternate URLs,64component names,100findings,75KB CSS counted as UTF-8 bytes, late charset/non-async runtime, invalid canonical, recommendations and data-script allowlisting. Existing9AMPtests retained.
+- Final native579all-targets PASS; strict Clippy/rustfmt/diff checks PASS. All13changedcode/testfiles <=150physicalLOC. Global LOC still FAIL: **92 violations /1433 files**.
+- SHA256-validated native production coverage: **12392/18431 lines;1293/1965 functions**. All43functions in the eight AMP rule modules execute; two defensive guard lines remain unexecuted. Stable-native branches unavailable (0 recorded). Artifacts: `/tmp/seomi-amp-production.lcov`, `/tmp/seomi-amp-sources.json`, `/tmp/seomi-amp-llvm.json`.
+- Frontend first run:3043PASS/1timeout plus one worker startup failure (semanticComparisonBounds not executed),420/421files observed. Full source-identical rerun: **3048/3048PASS,421/421files**, build/lint/**70MCP PASS**. No tests/timeout limits changed. The explicit maxWorkers=2 matches the existing configuration.
+- Native branch capability: additional nightly1.101.0(c36f14571) with llvm-tools installed. A separate tiny diagnostic crate produced BRF2/BRH2 using cargo+nightly llvm-cov --branch. This proves tooling only; application branch measurement and >99% are still OPEN. Probe: `/tmp/seomi-branch-probe.lcov`.
+- CI baseline9f1f9d2: run37057160543 completed5/5PASS, including Windows/macOS Intel runtime E2E. This AMP batch requires a fresh head-specific run after push.
+- Original audit remains **69/72**. Coverage/direct assertions/global LOC150, requested extension verification, signed release and final tag remain OPEN.
