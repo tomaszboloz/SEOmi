@@ -875,7 +875,7 @@ mod tests {
     #[cfg(target_os = "windows")]
     static FIXTURE_PROCESS_GATE: tokio::sync::Mutex<()> = tokio::sync::Mutex::const_new(());
 
-    async fn collect_fixture_output(
+    pub(super) async fn collect_fixture_output(
         process: Command,
         prompt: &str,
         deadline: super::Duration,
@@ -885,7 +885,7 @@ mod tests {
         super::collect_research_output(process, prompt, deadline).await
     }
 
-    fn fixture_process(unix_script: &str, windows_script: &str) -> Command {
+    pub(super) fn fixture_process(unix_script: &str, windows_script: &str) -> Command {
         #[cfg(not(target_os = "windows"))]
         {
             let _ = windows_script;
@@ -1054,28 +1054,8 @@ mod tests {
         let error = super::read_cli_stream(&b"123456"[..], 5).await.unwrap_err();
         assert!(error.to_string().contains("output limit"));
     }
-
-    #[tokio::test]
-    async fn excessive_stdout_or_stderr_fails_without_truncating_an_answer() {
-        for stderr in [false, true] {
-            let unix = if stderr {
-                "awk 'BEGIN { for(i=0;i<2097153;i++) printf \"x\" }' >&2"
-            } else {
-                "awk 'BEGIN { for(i=0;i<2097153;i++) printf \"x\" }'"
-            };
-            let windows = if stderr {
-                "[Console]::Error.Write('x' * 2097153)"
-            } else {
-                "[Console]::Out.Write('x' * 2097153)"
-            };
-            let error = collect_fixture_output(
-                fixture_process(unix, windows),
-                "",
-                super::Duration::from_secs(10),
-            )
-            .await
-            .unwrap_err();
-            assert!(error.contains("output limit"), "{error}");
-        }
-    }
 }
+
+#[cfg(test)]
+#[path = "ai_cli/output_limit_tests.rs"]
+mod output_limit_tests;

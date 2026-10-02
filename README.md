@@ -1291,3 +1291,12 @@ Thanks to @RafalSzy for testing feedback in [PR#13](https://github.com/tomaszbol
 - CI09acb10/run37001677748 frontend/native/securityPASS butWindowsfails in excessiveCLIoutput fixture (10stimeout beforelimiterror); macOSpending. Exactjob110820565086log archived locally. Repair isnextbatch. Prior5b32944/run36994016656 allfiveSUCCESS. No newversion/tag untilallglobalgates pass.
 
 Thanks to @RafalSzy for testing feedback in [PR#13](https://github.com/tomaszboloz/SEOmi/pull/13).
+
+### Audit BATCH-4r: Windows output fixture and local Strix installation
+- [x] GAP-142: [DISCOVERED][HIGH] Windows CI on 09acb10 (run37001677748/job110820565086) times out after 10 seconds while PowerShell TextWriter produces the 2 MiB overflow fixture. Status: LOCAL FIXED: write raw ASCII bytes to each pipe in one call; retain 2097153 bytes and the unchanged 10 second deadline. Fresh Windows CI is required to confirm the platform repair.
+- Extracted output-limit tests into a 56 line module. Added exact 2097152 byte boundary checks for stdout/stderr, successful status, every retained byte and empty opposite stream. Production code before cfg(test) is byte-identical; production limits/deadlines are unchanged.
+- Full local 2449 frontend/457 Rust/70 MCP PASS; build/ESLint/rustfmt/strict Clippy PASS. Fresh LLVM measurement on stable sources, validated against AST/source hashes and grouped LLVM functions: 11500/18069 production lines (63.64%) and 1128/1890 functions (59.68%). Native branches/uncompiled platforms remain unmeasured. Global frontend coverage remains 86.51/76.52/83.77/87.89 percent (statements/branches/functions/lines).
+- Installed Strix 1.6.2, started Docker, completed owner-authorized ChatGPT OAuth and configured local 0600 config with telemetry disabled and pinned sandbox digest. Documented model gpt-5.4 is rejected by subscription; available gpt-6.1-sol starts the actual scan. Scan source_29c5 runs on a disposable working-source copy; no final security verdict until report/completeness verification. Independent transport/security subset 20/20 PASS.
+- Reproducible launcher scripts/run-strix-security.mjs and npm run security:strix; all new modules below 150 physical lines. Reports/config/credentials remain outside versioned source. Global LOC remains 133 violations; original audit 69/72, 138/142 including locally repaired discovered issues. No new version/tag until all global gates pass.
+
+Thanks to @RafalSzy for testing feedback in [PR #13](https://github.com/tomaszboloz/SEOmi/pull/13).
