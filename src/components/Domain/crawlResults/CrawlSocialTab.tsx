@@ -1,8 +1,9 @@
 
 
-import type { CrawledPageSummary, FaviconData } from "@/types";
+import type { FaviconData } from "@/types";
 
-import { cell, tableHead, formatNumber } from './crawlResultsHelpers';
+import { cell, tableHead } from './crawlResultsHelpers';
+import { SocialTagList, socialResourceStatus } from './crawlSocialParts';
 import { Empty, Table } from './CrawlViewPrimitives';
 
 import type { useCrawlResultsSession } from './useCrawlResultsSession';
@@ -18,72 +19,6 @@ const { result, t } = session;
         );
         if (!socialPages.length)
           return <Empty>{t("crawl.social.empty")}</Empty>;
-        const resourceStatus = (
-          check: NonNullable<
-            CrawledPageSummary["favicon_resource_checks"]
-          >[number],
-        ) => {
-          if (!check.checked_in_run) return t("crawl.social.notChecked");
-          if (check.request_error_kind)
-            return t("crawl.social.requestError", {
-              kind: check.request_error_kind,
-            });
-          return [
-            check.http_status == null
-              ? t("crawl.social.noHttpStatus")
-              : t("crawl.ui.httpStatus", { status: check.http_status }),
-            check.content_length == null
-              ? null
-              : `${formatNumber(check.content_length)} B`,
-            check.intrinsic_width && check.intrinsic_height
-              ? `${check.intrinsic_width} × ${check.intrinsic_height} · ${check.dimensions_source || t("crawl.social.intrinsic")}`
-              : null,
-            check.content_type || null,
-          ]
-            .filter(Boolean)
-            .join(" · ");
-        };
-        const renderTags = (
-          page: CrawledPageSummary,
-          prefix: "og:" | "twitter:",
-        ) => {
-          const tags = (page.social_meta_tags || []).filter((tag) =>
-            tag.key.startsWith(prefix),
-          );
-          return tags.length ? (
-            <div className="max-w-[420px] space-y-2">
-              {tags.map((tag, index) => (
-                <div key={`${tag.key}-${index}`} className="break-words">
-                  <p>
-                    <span className="font-mono text-slate-500">
-                      {tag.key}:{" "}
-                    </span>
-                    {tag.content === undefined || tag.content === null ? (
-                      <span className="italic text-amber-300">
-                        {t("crawl.social.missingContent")}
-                      </span>
-                    ) : tag.content === "" ? (
-                      <span className="italic text-amber-300">
-                        {t("crawl.social.emptyContent")}
-                      </span>
-                    ) : (
-                      tag.content
-                    )}
-                  </p>
-                  {tag.resource_check && (
-                    <p className="mt-0.5 text-[10px] text-slate-500">
-                      {resourceStatus(tag.resource_check)}
-                    </p>
-                  )}
-                </div>
-              ))}
-            </div>
-          ) : (
-            <span className="text-slate-500">
-              {t("crawl.social.noDeclaration")}
-            </span>
-          );
-        };
         return (
           <div className="space-y-3">
             <p className="text-[11px] text-slate-500">
@@ -170,7 +105,7 @@ const { result, t } = session;
                                 )}
                                 <p className="mt-0.5 text-[10px] text-slate-500">
                                   {check
-                                    ? resourceStatus(check)
+                                    ? socialResourceStatus(check, t)
                                     : t("crawl.social.noResourceStatus")}
                                 </p>
                               </div>
@@ -183,8 +118,8 @@ const { result, t } = session;
                         </span>
                       )}
                     </td>
-                    <td className={cell}>{renderTags(page, "og:")}</td>
-                    <td className={cell}>{renderTags(page, "twitter:")}</td>
+                    <td className={cell}><SocialTagList page={page} prefix="og:" t={t} /></td>
+                    <td className={cell}><SocialTagList page={page} prefix="twitter:" t={t} /></td>
                   </tr>
                 ))}
               </tbody>
