@@ -1,12 +1,12 @@
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import type { GscPerformanceSnapshot } from '@/services/gscTracker/types';
+import type { GscPerformanceData } from '@/types';
 import { analyzeGscCannibalization } from '@/services/gscTracker/cannibalization';
 
-export function GscCannibalization({ snapshot }: { snapshot: GscPerformanceSnapshot }) {
+export function GscCannibalization({ data }: { data: Pick<GscPerformanceData, 'query_pages' | 'query_pages_may_be_truncated'> }) {
   const { t } = useTranslation();
   const [requestedPage, setPage] = useState(0);
-  const result = analyzeGscCannibalization(snapshot);
+  const result = analyzeGscCannibalization(data);
   const count = Math.ceil(result.candidates.length / 20);
   const page = Math.min(requestedPage, Math.max(0, count - 1));
   return <section className="rounded-xl border border-slate-800 bg-slate-900/60 p-4 space-y-3">

@@ -1471,3 +1471,11 @@ Snapshots preserve exactqueryidentity and deepcopiedjointrows; localstorage caps
 Thanks to @RafalSzy for the testing feedback in [PR #13](https://github.com/tomaszboloz/SEOmi/pull/13).
 
 BATCH-5h verification:2786frontend/516Rust/70MCP tests and build/lint/rustfmt/strictClippy PASS. Scoped25tests cover100%statements/branches/functions/lines (71/78/21/53). Globalfrontend88.19/79.47/86.23/89.06percent remainsbelowtarget. Unchanged nativeevidence revalidates266hashes and remains65.56%productionlines/62.80%functions; branches/platforms unmeasured. LOC118violations across1180files; originalaudit69/72,179/183includingdiscoveredfixes; remainingextensions and newversion/tag stillpending.
+
+### BATCH-5i: full live query/page analysis
+
+The cannibalization panel now analyzes the full current GSC report instead of the250-row history snapshot. A regression with the second competing URL at row251 proves that both URLs and their50%observed shares remain visible. Stored history retains its bounded250rows and explicit clipping; native provider truncation and property-scope checks remain in effect.
+
+Thanks to @RafalSzy for the testing feedback in [PR #13](https://github.com/tomaszboloz/SEOmi/pull/13).
+
+BATCH-5i verification:2789frontend/516Rust/70MCP tests PASS; build/lint/rustfmt/strictClippy PASS. Full frontend88.19%statements/79.47%branches/86.23%functions/89.06%lines remainsbelow99.01%. Publicinventory755TS/748executed/7factory-returned. All four changed source/test files match the isolated measured copy and have <=43physical lines. GlobalLOC118violations across1181files remainsOPEN. All266native sourcehashes match the prior measured LLVM evidence (65.56%productionlines/62.80%functions); nativebranches/uncompiledplatforms remainunmeasured. Originalaudit69/72;180/184includinglocallyfixeddiscoveries. Remainingrequestedextensions/globalgates/release/tag remainOPEN.

@@ -4,7 +4,7 @@
 
 | ID | Zakres | Stan i kryterium ukończenia |
 |---|---|---|
-| EXT-001 | GSC: kanibalizacja | LOCAL IMPLEMENTED (5h): joint query+page, spójny zakres, trwałe snapshoty z cap250/flagą obcięcia, progi20wyświetleń/10%udziału, panel paginowany i sygnały do weryfikacji; testy loopback/analizy/zapisu/UI, bez liveGoogle ani automatycznego werdyktu |
+| EXT-001 | GSC: kanibalizacja | LOCAL IMPLEMENTED (5i): joint query+page, pełna bieżąca analiza do25000wierszy, spójny zakres, trwałe snapshoty z cap250/flagą obcięcia, progi20wyświetleń/10%udziału, panel paginowany i sygnały do weryfikacji; testy loopback/analizy/zapisu/UI, bez liveGoogle ani automatycznego werdyktu |
 | EXT-002 | GSC: spadki | EXISTING/PARTIAL: snapshoty i porównanie wspólnych wierszy już działają; uzupełnić równe okna i brakujące wiersze bez traktowania ich jako zera |
 | EXT-003 | GSC: frazy tuż za TOP10 | LOCAL IMPLEMENTED (4q): osobny zakres pozycji >10..20 z progiem wyświetleń; istniejący zakres4..20 zachować jako szerszą szansę |
 | EXT-004 | GSC: CTR odstający | LOCAL IMPLEMENTED (4q): benchmark ważony wyświetleniami z własnych fraz o podobnej pozycji; minimum próby, wykluczenie badanego wiersza, jawna niepewność |
