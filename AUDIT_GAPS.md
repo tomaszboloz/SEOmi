@@ -805,5 +805,40 @@ BATCH-5j verification:2807frontend/516Rust/70MCP PASS; build/lint/rustfmt/strict
   - `tests/maxLoc.test.ts` (25/25 tests PASS).
   - Global LOC violations decreased from 83 to 80 across the codebase.
 
+## BATCH-5t: Saved Keywords, Subscription Modal, and DataForSEO Pickers decomposition (LOC <= 150)
+
+- Decomposed three large frontend components into modular single-responsibility units strictly under 150 physical LOC:
+  1. `src/components/Keywords/SavedKeywords.tsx` (341 -> 55 LOC facade) with 6 submodules in `src/components/Keywords/savedKeywords/`:
+     - `useSavedKeywordsSession.ts` (122 LOC)
+     - `SavedKeywordsHeader.tsx` (55 LOC)
+     - `SavedKeywordsMetricsCards.tsx` (64 LOC)
+     - `SavedKeywordsFilterBar.tsx` (59 LOC)
+     - `SavedKeywordsTable.tsx` (84 LOC)
+     - `SavedKeywordsTableRow.tsx` (103 LOC)
+  2. `src/components/Auth/SubscriptionModal.tsx` (325 -> 68 LOC facade) with 6 submodules in `src/components/Auth/subscriptionModal/`:
+     - `subscriptionModalTypes.ts` (55 LOC)
+     - `useSubscriptionModalSession.ts` (99 LOC)
+     - `SubscriptionModalHeader.tsx` (36 LOC)
+     - `ProviderMethodButtons.tsx` (65 LOC)
+     - `ProviderActiveControls.tsx` (75 LOC)
+     - `SubscriptionProviderCard.tsx` (131 LOC)
+  3. `src/components/DataForSEO/DataForSeoPickers.tsx` (321 -> 14 LOC facade) with 6 submodules in `src/components/DataForSEO/pickers/`:
+     - `pickerPrimitives.ts` (130 LOC)
+     - `pickerKeyboardNav.ts` (30 LOC)
+     - `PickerMenu.tsx` (23 LOC)
+     - `LocationOptionButton.tsx` (51 LOC)
+     - `DataForSeoLanguagePicker.tsx` (136 LOC)
+     - `DataForSeoLocationPicker.tsx` (137 LOC)
+- Added 3 dedicated test suites ensuring complete coverage (all <= 150 LOC):
+  - `tests/savedKeywordsComponents.test.tsx` (112 LOC, 5 tests)
+  - `tests/subscriptionModalComponents.test.tsx` (77 LOC, 4 tests)
+  - `tests/dataforseoPickersComponents.test.tsx` (98 LOC, 4 tests)
+- Full verification loop:
+  - `npm run lint` clean (0 errors, 0 warnings).
+  - `npx tsc --noEmit` clean (0 errors).
+  - `tests/maxLoc.test.ts` (25/25 tests PASS).
+  - Vitest suite passing with 0 failures.
+  - Global LOC violations decreased from 80 to 77 across the codebase.
+
 
 
