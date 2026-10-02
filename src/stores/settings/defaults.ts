@@ -1,10 +1,16 @@
 import type { AppConfig } from '@/types';
 import { readStorage } from '@/services/storage';
-import i18n from '@/i18n';
+import i18n, { LANGUAGES } from '@/i18n';
 import { useProjectStore } from '../projectStore';
+/** Stored language is user-editable; unsupported values fall back to English. */
+export const readStoredLanguage = (): string => {
+  const stored = readStorage('seomi_language');
+  return LANGUAGES.some((language) => language.code === stored) ? stored as string : 'en';
+};
+
 export const DEFAULT_CONFIG: AppConfig = {
   theme: 'dark',
-  language: readStorage('seomi_language') || 'en',
+  language: readStoredLanguage(),
   default_user_agent: 'chrome_mac',
   request_timeout_secs: 15,
   max_redirects: 10,

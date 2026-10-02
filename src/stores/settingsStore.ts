@@ -4,7 +4,7 @@ import { invokeTauriCommand } from '@/services/tauri';
 import i18n, { setLanguageDirection } from '@/i18n';
 import { readStorage, writeStorage } from '@/services/storage';
 import type { SettingsConsumers, SettingsState } from './settings/types';
-import { DEFAULT_CONFIG, activeProjectId } from './settings/defaults';
+import { DEFAULT_CONFIG, activeProjectId, readStoredLanguage } from './settings/defaults';
 import { createSettingsCredentials } from './settings/credentials';
 import { applyThemeToDOM, initializeSettingsTheme } from './settings/theme';
 export type { SettingsConsumers } from './settings/types';
@@ -22,7 +22,7 @@ export const createSettingsStore = (dependencies: SettingsConsumers = {}) => {
   return create<SettingsState>((set, get) => ({
     config: DEFAULT_CONFIG,
     theme: storedTheme === 'light' || storedTheme === 'system' ? storedTheme : 'dark',
-    language: readStorage('seomi_language') || 'en',
+    language: readStoredLanguage(),
     isSaving: false,
     configError: null,
     dataForSeoCredentials: { login: '', password: '' },
