@@ -8,10 +8,11 @@ import { CrawlSegment, CrawlSort } from './crawlResultsHelpers';
 
 import type { useCrawlResultsSession } from './useCrawlResultsSession';
 type Session = ReturnType<typeof useCrawlResultsSession>;
+import { CrawlFilterPresetBar } from './CrawlFilterPresetBar';
 import { CrawlPageTable } from './CrawlPageTable';
 
 export const CrawlUrlsTab = ({ session }: { session: Session }) => {
-const { activeErrorKind, activeProjectId, applyFilterPreset, descending, errorKinds, filterPresets, newPresetName, onlyProblems, pages, persistFilterPresets, query, result, saveFilterPreset, segment, selectedPresetId, setDescending, setErrorKind, setNewPresetName, setOnlyProblems, setQuery, setSegment, setSelectedPresetId, setSeverity, setSort, severity, sort, t } = session;
+const { activeErrorKind, descending, errorKinds, onlyProblems, pages, query, result, segment, setDescending, setErrorKind, setOnlyProblems, setQuery, setSegment, setSeverity, setSort, severity, sort, t } = session;
 const renderPageTable = (rows: CrawledPageSummary[]) => <CrawlPageTable session={session} rows={rows} />;
 return (
           <div className="space-y-3">
@@ -122,61 +123,7 @@ return (
                 {pages.length} / {result.pages.length}
               </span>
             </div>
-            <div className="flex flex-wrap items-center gap-2 rounded-lg border border-slate-800 bg-slate-950/40 p-2">
-              <label className="text-xs text-slate-400">
-                {t("crawl.ui.projectFilters")}
-                <select
-                  aria-label={t("crawl.ui.savedProjectFilters")}
-                  value={selectedPresetId}
-                  onChange={(event) => applyFilterPreset(event.target.value)}
-                  className="ml-2 h-8 max-w-56 rounded-md border border-slate-700 bg-slate-950 px-2 text-xs text-slate-200"
-                >
-                  <option value="">{t("crawl.ui.notSaved")}</option>
-                  {filterPresets.map((preset) => (
-                    <option key={preset.id} value={preset.id}>
-                      {preset.name}
-                    </option>
-                  ))}
-                </select>
-              </label>
-              <input
-                aria-label={t("crawl.ui.savedFilterName")}
-                value={newPresetName}
-                onChange={(event) => setNewPresetName(event.target.value)}
-                maxLength={60}
-                placeholder={t("crawl.ui.newFilterName")}
-                className="h-8 min-w-40 flex-1 rounded-md border border-slate-700 bg-slate-950 px-2 text-xs text-slate-200"
-              />
-              <button
-                type="button"
-                disabled={!activeProjectId || !newPresetName.trim()}
-                onClick={saveFilterPreset}
-                className="h-8 rounded-md bg-emerald-600 px-3 text-xs font-medium text-white disabled:opacity-40"
-              >
-                {t("crawl.ui.saveFilter")}
-              </button>
-              {selectedPresetId && (
-                <button
-                  type="button"
-                  onClick={() => {
-                    persistFilterPresets(
-                      filterPresets.filter(
-                        (preset) => preset.id !== selectedPresetId,
-                      ),
-                    );
-                    setSelectedPresetId("");
-                  }}
-                  className="h-8 rounded-md border border-slate-700 px-2.5 text-xs text-slate-300"
-                >
-                  {t("crawl.ui.removeFilter")}
-                </button>
-              )}
-              {!activeProjectId && (
-                <span className="text-[11px] text-amber-300">
-                  {t("crawl.ui.chooseProjectForFilters")}
-                </span>
-              )}
-            </div>
+            <CrawlFilterPresetBar session={session} />
             {renderPageTable(pages)}
           </div>
         );
