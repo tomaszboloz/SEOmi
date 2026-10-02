@@ -1,8 +1,10 @@
 import React from 'react';
 import { useTranslation } from 'react-i18next';
-import { Clock, ArrowRight, FileText, CheckCircle2, ExternalLink } from 'lucide-react';
+
 import { PageAuditData } from '@/types';
 import { appLocale } from '@/services/localeFormat';
+import { CrawlFilesDiscovery } from './CrawlFilesDiscovery';
+import { RedirectChainWaterfall } from './RedirectChainWaterfall';
 
 interface PerformanceMetricsProps {
   audit: PageAuditData;
@@ -130,106 +132,9 @@ export const PerformanceMetrics: React.FC<PerformanceMetricsProps> = ({ audit })
         </section>
       )}
 
-      {/* Redirect Chain Waterfall */}
-      <div className="bg-slate-900/60 border border-slate-800 rounded-2xl p-6">
-        <div className="flex items-center space-x-2 mb-4">
-          <Clock className="w-4 h-4 text-emerald-400" />
-          <h3 className="text-sm font-bold text-white">{t('performance.redirectChain')}</h3>
-        </div>
+      <RedirectChainWaterfall audit={audit} />
 
-        {audit.redirect_chain.length === 0 ? (
-          <div className="p-4 bg-emerald-500/10 border border-emerald-500/20 rounded-xl flex items-center space-x-3 text-xs text-emerald-300">
-            <CheckCircle2 className="w-5 h-5 text-emerald-400 shrink-0" />
-            <div>
-              <span className="font-semibold block">{t('performance.directConnection')}</span>
-              <span className="text-slate-400">{t('performance.noRedirectOverhead')}</span>
-            </div>
-          </div>
-        ) : (
-          <div className="space-y-3 relative before:absolute before:left-3 before:top-3 before:bottom-3 before:w-0.5 before:bg-slate-800">
-            {audit.redirect_chain.map((hop, idx) => (
-              <div key={idx} className="relative pl-8 flex items-center justify-between text-xs group">
-                <div className="absolute left-1.5 w-3.5 h-3.5 rounded-full bg-slate-800 border-2 border-amber-400" />
-                <div className="min-w-0 flex-1 pr-4">
-                  <div className="font-mono text-slate-300 truncate">{hop.url}</div>
-                  {hop.location && (
-                    <div className="text-[11px] text-slate-500 truncate flex items-center space-x-1 mt-0.5">
-                      <ArrowRight className="w-3 h-3 text-slate-400" />
-                      <span>{hop.location}</span>
-                    </div>
-                  )}
-                </div>
-                <span className="px-2 py-0.5 rounded font-mono text-[11px] font-bold bg-amber-500/10 text-amber-400 border border-amber-500/20 shrink-0">
-                  {t('exportUi.statuses.http', { status: hop.status_code })}
-                </span>
-              </div>
-            ))}
-
-            {/* Final Target Destination */}
-            <div className="relative pl-8 flex items-center justify-between text-xs">
-              <div className="absolute left-1.5 w-3.5 h-3.5 rounded-full bg-slate-800 border-2 border-emerald-400" />
-              <div className="min-w-0 flex-1 pr-4 font-mono text-emerald-300 truncate font-semibold">
-                {audit.final_url}
-              </div>
-              <span className="px-2 py-0.5 rounded font-mono text-[11px] font-bold bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 shrink-0">
-                {t('exportUi.statuses.http', { status: audit.http_status })}
-              </span>
-            </div>
-          </div>
-        )}
-      </div>
-
-      {/* Crawling Files Discovery */}
-      <div className="bg-slate-900/60 border border-slate-800 rounded-2xl p-6">
-        <div className="flex items-center space-x-2 mb-4">
-          <FileText className="w-4 h-4 text-blue-400" />
-          <h3 className="text-sm font-bold text-white">{t('performance.crawlingDiscovery')}</h3>
-        </div>
-
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-xs">
-          {/* Robots.txt */}
-          <div className="p-4 bg-slate-950/80 border border-slate-800 rounded-xl flex items-center justify-between">
-            <div className="min-w-0 pr-2">
-              <span className="font-semibold text-white block mb-0.5">{t('performance.robotsLocation')}</span>
-              <span className="font-mono text-slate-400 truncate block">
-                {audit.technical.robots_txt_url}
-              </span>
-            </div>
-            {audit.technical.robots_txt_url && (
-              <a
-                href={audit.technical.robots_txt_url}
-                target="_blank"
-                rel="noreferrer"
-                className="p-2 bg-slate-800 hover:bg-slate-700 rounded-lg text-slate-300 hover:text-white transition shrink-0"
-                title={t('performance.openRobots')}
-              >
-                <ExternalLink className="w-3.5 h-3.5" />
-              </a>
-            )}
-          </div>
-
-          {/* Sitemap.xml */}
-          <div className="p-4 bg-slate-950/80 border border-slate-800 rounded-xl flex items-center justify-between">
-            <div className="min-w-0 pr-2">
-              <span className="font-semibold text-white block mb-0.5">{t('performance.sitemapLocation')}</span>
-              <span className="font-mono text-slate-400 truncate block">
-                {audit.technical.sitemap_url}
-              </span>
-            </div>
-            {audit.technical.sitemap_url && (
-              <a
-                href={audit.technical.sitemap_url}
-                target="_blank"
-                rel="noreferrer"
-                className="p-2 bg-slate-800 hover:bg-slate-700 rounded-lg text-slate-300 hover:text-white transition shrink-0"
-                title={t('performance.openSitemap')}
-              >
-                <ExternalLink className="w-3.5 h-3.5" />
-              </a>
-            )}
-          </div>
-        </div>
-      </div>
+      <CrawlFilesDiscovery audit={audit} />
     </div>
   );
 };
