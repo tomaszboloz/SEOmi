@@ -876,5 +876,43 @@ BATCH-5j verification:2807frontend/516Rust/70MCP PASS; build/lint/rustfmt/strict
   - Vitest suite passing with 0 failures.
   - Global LOC violations decreased from 77 to 74 across the codebase.
 
+## BATCH-5v: Audit Checks, AI Search Prompts, and AI Brand Visibility decomposition (LOC <= 150)
+
+- Decomposed three large files into modular single-responsibility units strictly under 150 physical LOC:
+  1. `src/services/auditChecks.ts` (295 -> 47 LOC facade) with 6 submodules in `src/services/auditChecks/`:
+     - `auditChecksBase.ts` (38 LOC)
+     - `httpAndMetaChecks.ts` (61 LOC)
+     - `socialAndHeadingsChecks.ts` (63 LOC)
+     - `mediaAndLinksChecks.ts` (60 LOC)
+     - `securityAndTechnicalChecks.ts` (67 LOC)
+     - `accessibilityAndContentChecks.ts` (64 LOC)
+  2. `src/components/AiVisibility/AiSearchPrompts.tsx` (294 -> 104 LOC facade) with 7 submodules in `src/components/AiVisibility/searchPrompts/`:
+     - `searchPromptsTypes.ts` (6 LOC)
+     - `useAiSearchPromptsSession.ts` (115 LOC)
+     - `AiSearchPromptsHeader.tsx` (35 LOC)
+     - `AiSearchPromptForm.tsx` (74 LOC)
+     - `AiSearchHistoryAndContext.tsx` (101 LOC)
+     - `AiCitationEvidenceList.tsx` (133 LOC)
+     - `AiSearchResultCard.tsx` (93 LOC)
+  3. `src/components/AiVisibility/AiBrandVisibility.tsx` (284 -> 71 LOC facade) with 7 submodules in `src/components/AiVisibility/brandVisibility/`:
+     - `brandVisibilityTypes.ts` (12 LOC)
+     - `useAiBrandVisibilitySession.ts` (78 LOC)
+     - `AiBrandHeader.tsx` (39 LOC)
+     - `AiBrandInputForm.tsx` (123 LOC)
+     - `AiBrandOverviewCards.tsx` (64 LOC)
+     - `AiBrandModelCard.tsx` (114 LOC)
+     - `AiBrandModelsGrid.tsx` (63 LOC)
+- Added 3 dedicated test suites ensuring complete coverage (all <= 150 LOC):
+  - `tests/auditChecksModules.test.ts` (123 LOC, 5 tests)
+  - `tests/aiSearchPromptsComponents.test.tsx` (109 LOC, 5 tests)
+  - `tests/aiBrandVisibilityComponents.test.tsx` (104 LOC, 5 tests)
+- Full verification loop:
+  - `npm run lint` clean (0 errors, 0 warnings).
+  - `npx tsc --noEmit` clean (0 errors).
+  - `tests/maxLoc.test.ts` (25/25 tests PASS).
+  - Vitest suite passing with 0 failures.
+  - Global LOC violations decreased from 74 to 71 across the codebase.
+
+
 
 
