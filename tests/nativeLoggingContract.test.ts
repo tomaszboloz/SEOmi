@@ -14,8 +14,7 @@ it('keeps the native log allowlist synchronized with registered IPC commands', (
   const entry = readFileSync('src-tauri/src/lib.rs', 'utf8');
   const handler = entry.slice(entry.indexOf('tauri::generate_handler!'), entry.indexOf('.setup'));
   const registered = [...handler.matchAll(/commands::\w+::(\w+),/g)].map((match) => match[1]);
-  const logging = readFileSync('src-tauri/src/utils/logging.rs', 'utf8');
-  const list = logging.slice(logging.indexOf('const IPC_COMMANDS'), logging.indexOf('#[derive'));
+  const list = readFileSync('src-tauri/src/utils/logging/commands.rs', 'utf8');
   const logged = [...list.matchAll(/"([a-z_]+)"/g)].map((match) => match[1]);
   expect(registered.length).toBeGreaterThan(0);
   expect(logged.sort()).toEqual(registered.sort());

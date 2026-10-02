@@ -2,7 +2,7 @@
 Audytor: Staff Developer | Data: 2026-10-01
 
 ## Statystyki
-- Rejestr pierwotny: 72 luki. Dodatkowe odkrycia są dopisywane poniżej; najwyższy identyfikator: GAP-192 (identyfikator nie oznacza liczby zamkniętych luk).
+- Rejestr pierwotny: 72 luki. Dodatkowe odkrycia są dopisywane poniżej; najwyższy identyfikator: GAP-193 (identyfikator nie oznacza liczby zamkniętych luk).
 - Batchy do wdrożenia: 7
 - Szacowany effort: 20–35 MD; estymacja orientacyjna, do korekty po pomiarze coverage.
 - Baseline: commit 18fa446b13ec3f97db76896bfdf446f97fe80051; 704 frontend / 320 Rust / 27 MCP testów.
@@ -665,3 +665,13 @@ BATCH-5j verification:2807frontend/516Rust/70MCP PASS; build/lint/rustfmt/strict
 - Fresh native production coverage, using SHA256-validated AST sources and LLVM function groups: **12091/18295 lines; 1247/1942 functions**. Branch measurement is unavailable (0 recorded branches), not 100%. Artifacts: `/tmp/seomi-native-quality-production.lcov`, `/tmp/seomi-native-quality-sources.json`, `/tmp/seomi-native-quality-llvm.json`. No live Google/DataForSEO or Windows behavior is inferred from these macOS loopback tests.
 - GitHub integration baseline 99639df: run37051908665 has all five checks PASS, including Windows/macOS Intel runtime E2E. Issue #19 received this confirmation and remains open until master integration. This native batch needs its own head-specific CI.
 - Original audit remains **69/72**. Coverage >99%, direct public-function assertions, global LOC150, remaining SearchSignal extensions and signed release verification are OPEN. No final release/tag created.
+
+## Structured logging validation and decomposition
+
+- [DISCOVERED] GAP-193: the native formatter parsed any valid NativeEvent JSON emitted with the `seomi::event` target. Its string fields could contain arbitrary text despite the IPC route allowlist. RED proof: `structured_log_target_cannot_smuggle_untrusted_route_event_or_level` fails against the original formatter with `untrusted route leaked` (`/tmp/seomi-logging-red.log`).
+- FIXED locally: structured records now require known levels, event codes and routes. Unsupported/malformed records become a local framework diagnostic; raw text is discarded. Regression tests assert each string field's redaction, invalid UUID/type/unknown-field handling, and preservation of every allowed route/level/event.
+- Logging split into commands, request context, span layer, event construction, formatting, dispatch and diagnostics. Public `init`, `dispatch`, `diagnostic` and Diagnostic variants remain available at the same module path. Existing async completion/cancellation, concurrent request correlation, sink-failure and redaction assertions remain in separate test modules.
+- Additional context tests verify that invalid/missing request IDs do not produce task events and that untrusted Debug implementations are never invoked. The full suite exposed a test subscriber drop mismatch: tracing's registry uses the current dispatcher when closing ancestor spans. The fixture now keeps its own dispatcher active for both polling and drop, including cancellation, without global serialization or removing assertions.
+- Final local suite: **3048 frontend / 553 Rust all-targets / 70 MCP PASS**. Build, lint, rustfmt, strict Clippy and diff checks PASS. All **24 changed code/test files <=150 physical lines**. Global LOC remains FAIL: **95 violations / 1404 files**.
+- Final SHA256-validated native production coverage: **12109/18313 lines; 1248/1943 functions**. All 19 logging functions execute; four defensive guard lines remain unexecuted. Artifacts: `/tmp/seomi-logging-production-final.lcov`, `/tmp/seomi-logging-sources-final.json`, `/tmp/seomi-logging-llvm-final.json`. Native branch coverage remains unavailable (0 recorded branches); global >99% is not achieved.
+- Original audit remains **69/72**; the global coverage/direct-assertion/LOC gates, requested extension verification and signed final release/tag remain OPEN.

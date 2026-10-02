@@ -4,8 +4,8 @@ import { expect, it } from 'vitest';
 it('enables native Tauri execution spans and keeps them under the dispatcher correlation', () => {
   const manifest = readFileSync('src-tauri/Cargo.toml', 'utf8');
   expect(manifest).toMatch(/tauri = .*features = \[.*"tracing"/);
-  const source = readFileSync('src-tauri/src/utils/logging.rs', 'utf8');
-  expect(source).toContain('"seomi.ipc"');
-  expect(source).toContain('NativeTaskLayer');
-  expect(source).toContain('task_duration_ms');
+  const root = 'src-tauri/src/utils/logging/';
+  expect(readFileSync(`${root}dispatch.rs`, 'utf8')).toContain('"seomi.ipc"');
+  expect(readFileSync(`${root}layer.rs`, 'utf8')).toContain('NativeTaskLayer');
+  expect(readFileSync(`${root}layer.rs`, 'utf8')).toContain('task_duration_ms');
 });
