@@ -1394,3 +1394,13 @@ Seventeen new tests cover audit notices, update/relaunch controls, error-boundar
 Full local suites pass2643 frontend,488 Rust and70 MCP tests; build/lint/fmt/strict Clippy pass. Global coverage is87.33% statements,77.91% branches,84.53% functions and88.31% lines. The original audit remains69/72 (165/169 including discovered fixes); globalLOC still reports126 violations across1087 files. Native coverage and requested extensions remain incomplete, so the new version/tag remains pending. CI b12c2c1/run37023188353 passed5/5 jobs, including actual Windows/macOS desktop E2E; newer heads require their own checks.
 
 Thanks to @RafalSzy for the testing feedback in [PR #13](https://github.com/tomaszboloz/SEOmi/pull/13).
+
+### BATCH-5a: topical editor and deferred input contracts
+
+Four oversized topical editor components now use focused modules, all below150 physical lines. CPC evidence has one label; fact and GSC date inputs capture the typed value before a deferred React updater runs. Eight affected fields have direct contracts, and a final source AST scan finds no remaining mutable event-value reads inside setX functional updaters. The Windows diagnostic fixture now sends exact bytes through cmd/type rather than PowerShell, preserving its10s deadline and original assertion; remote validation of this fix remains pending.
+
+Scoped28 tests cover100% of124 statements,90 branches,65 functions and109 lines across14 editor components. Full local suites pass2674 frontend,489 Rust and70 MCP tests; build/lint/fmt/strict Clippy pass. Global frontend coverage remains87.73% statements,78.21% branches,85.48% functions and88.69% lines. Fresh native production coverage validates239 hashes and reports64.58% lines/61.10% source functions; branch/platform evidence remains incomplete.
+
+Executed TS bodies without direct static test references decrease33 to28; globalLOC violations decrease126 to122 across1105 files. Original audit remains69/72 (168/172 including local discovered fixes). Requested extensions and the release/tag remain pending global gates. CI f6a35df/run37024706431 passed5/5 jobs including real Windows/macOS E2E; the later Windows fixture failure has a local repair awaiting new CI. Master protection remains verified with administrators included, force/deletion disabled and five strict required checks.
+
+Thanks to @RafalSzy for the test feedback in [PR #13](https://github.com/tomaszboloz/SEOmi/pull/13).

@@ -7,10 +7,16 @@ export function SearchConsoleControls({ session }: { session: SearchConsoleSessi
           <section className="rounded-xl border border-slate-800 bg-slate-900/60 p-4 space-y-3">
             <div className="flex flex-wrap items-end gap-3">
               <label className="flex flex-col gap-1 text-xs text-slate-300">{t('searchConsole.startDate')}
-                <input aria-label={t('searchConsole.startDateAria')} type="date" value={dateRange.startDate} onChange={(event) => setDateRange((range) => ({ ...range, startDate: event.target.value }))} className="rounded-md border border-slate-700 bg-slate-950 px-3 py-2 text-slate-100" />
+                <input aria-label={t('searchConsole.startDateAria')} type="date" value={dateRange.startDate} onChange={(event) => {
+                  const value = event.currentTarget.value;
+                  setDateRange((range) => ({ ...range, startDate: value }));
+                }} className="rounded-md border border-slate-700 bg-slate-950 px-3 py-2 text-slate-100" />
               </label>
               <label className="flex flex-col gap-1 text-xs text-slate-300">{t('searchConsole.endDate')}
-                <input aria-label={t('searchConsole.endDateAria')} type="date" value={dateRange.endDate} onChange={(event) => setDateRange((range) => ({ ...range, endDate: event.target.value }))} className="rounded-md border border-slate-700 bg-slate-950 px-3 py-2 text-slate-100" />
+                <input aria-label={t('searchConsole.endDateAria')} type="date" value={dateRange.endDate} onChange={(event) => {
+                  const value = event.currentTarget.value;
+                  setDateRange((range) => ({ ...range, endDate: value }));
+                }} className="rounded-md border border-slate-700 bg-slate-950 px-3 py-2 text-slate-100" />
               </label>
               <span className="text-xs text-slate-500">{t('searchConsole.dataFreshness')}</span>
               <button type="button" onClick={handleSaveSnapshot} disabled={!gscData || !activeProjectId || gscData.site_url !== gscProperty} className="rounded-md border border-emerald-500/30 bg-emerald-500/10 px-3 py-2 text-xs text-emerald-200 disabled:opacity-40">{t('searchConsole.saveSnapshot')}</button>

@@ -14,6 +14,7 @@ use tokio::time::Duration;
 use uuid::Uuid;
 
 mod arguments;
+pub(super) mod binary_fixture;
 mod capabilities;
 mod fixtures;
 mod processes;
