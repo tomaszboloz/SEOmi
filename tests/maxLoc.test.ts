@@ -97,3 +97,8 @@ it('keeps crawl orchestration and checkpoint persistence responsibilities below 
     ...codeFiles('src/stores/tools/crawl'), ...codeFiles('src/stores/tools/checkpoints')];
   expect(maxLocReport(files).violations).toEqual([]);
 });
+
+it('keeps durable crawl storage and all of its adapters below 150 physical lines', () => {
+  expect(maxLocReport(['src/services/crawlPersistence.ts',
+    ...codeFiles('src/services/crawlPersistence')]).violations).toEqual([]);
+});
