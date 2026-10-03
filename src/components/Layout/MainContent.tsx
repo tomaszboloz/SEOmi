@@ -1,40 +1,12 @@
 import React, { Suspense } from "react";
 import { useTranslation } from "react-i18next";
-import { Loader2, AlertCircle, X } from "lucide-react";
+import { Loader2 } from "lucide-react";
 import { useAuditStore } from "@/stores/auditStore";
 import { RouteErrorBoundary } from "@/components/Layout/RouteErrorBoundary";
-import { lazyRoute } from "@/services/lazyRoute";
 import { isPageAuditTab } from "@/services/workspaceRoutes";
-
-// Keep the shell small on startup. Every workspace destination is an
-// independent chunk and is fetched only after the user opens that route.
-// This is especially important for the crawler and graph visualizations,
-// which are substantially heavier than the initial project gate.
-const AuditTabs = lazyRoute(() => import("@/components/Results/AuditTabs").then((module) => ({ default: module.AuditTabs })));
-const Overview = lazyRoute(() => import("@/components/Results/Overview").then((module) => ({ default: module.Overview })));
-const SocialPreview = lazyRoute(() => import("@/components/Results/SocialPreview").then((module) => ({ default: module.SocialPreview })));
-const HeadingsTree = lazyRoute(() => import("@/components/Results/HeadingsTree").then((module) => ({ default: module.HeadingsTree })));
-const MetadataTable = lazyRoute(() => import("@/components/Results/MetadataTable").then((module) => ({ default: module.MetadataTable })));
-const ImagesAudit = lazyRoute(() => import("@/components/Results/ImagesAudit").then((module) => ({ default: module.ImagesAudit })));
-const LinksAudit = lazyRoute(() => import("@/components/Results/LinksAudit").then((module) => ({ default: module.LinksAudit })));
-const SecurityHeaders = lazyRoute(() => import("@/components/Results/SecurityHeaders").then((module) => ({ default: module.SecurityHeaders })));
-const StructuredDataView = lazyRoute(() => import("@/components/Results/StructuredDataView").then((module) => ({ default: module.StructuredDataView })));
-const AmpAuditView = lazyRoute(() => import("@/components/Results/AmpAuditView").then((module) => ({ default: module.AmpAuditView })));
-const PerformanceMetrics = lazyRoute(() => import("@/components/Results/PerformanceMetrics").then((module) => ({ default: module.PerformanceMetrics })));
-const DataForSEOAudit = lazyRoute(() => import("@/components/Results/DataForSEOAudit").then((module) => ({ default: module.DataForSEOAudit })));
-const KeywordResearch = lazyRoute(() => import("@/components/Keywords/KeywordResearch").then((module) => ({ default: module.KeywordResearch })));
-const KeywordClustering = lazyRoute(() => import("@/components/Keywords/KeywordClustering").then((module) => ({ default: module.KeywordClustering })));
-const PageSpeedWorkspace = lazyRoute(() => import("@/components/Performance/PageSpeedWorkspace").then((module) => ({ default: module.PageSpeedWorkspace })));
-const SavedKeywords = lazyRoute(() => import("@/components/Keywords/SavedKeywords").then((module) => ({ default: module.SavedKeywords })));
-const RankTracking = lazyRoute(() => import("@/components/Keywords/RankTracking").then((module) => ({ default: module.RankTracking })));
-const DomainOverview = lazyRoute(() => import("@/components/Domain/DomainOverview").then((module) => ({ default: module.DomainOverview })));
-const BacklinkChecker = lazyRoute(() => import("@/components/Domain/BacklinkChecker").then((module) => ({ default: module.BacklinkChecker })));
-const SiteAudit = lazyRoute(() => import("@/components/Domain/SiteAudit").then((module) => ({ default: module.SiteAudit })));
-const AiBrandVisibility = lazyRoute(() => import("@/components/AiVisibility/AiBrandVisibility").then((module) => ({ default: module.AiBrandVisibility })));
-const AiSearchPrompts = lazyRoute(() => import("@/components/AiVisibility/AiSearchPrompts").then((module) => ({ default: module.AiSearchPrompts })));
-const McpHub = lazyRoute(() => import("@/components/AgentWorkflows/McpHub").then((module) => ({ default: module.McpHub })));
-const SearchConsoleHub = lazyRoute(() => import("@/components/AgentWorkflows/SearchConsoleHub").then((module) => ({ default: module.SearchConsoleHub })));
-const SeoToolsWorkspace = lazyRoute(() => import("@/components/SeoTools/SeoToolsWorkspace").then((module) => ({ default: module.SeoToolsWorkspace })));
+import { MainContentStatusBars } from "./mainContent/MainContentStatusBars";
+import { PageAuditTabPanel } from "./mainContent/PageAuditTabPanel";
+import { StandaloneWorkflowTabs } from "./mainContent/StandaloneWorkflowTabs";
 
 export const MainContent: React.FC = () => {
   const { t } = useTranslation();
@@ -53,40 +25,8 @@ export const MainContent: React.FC = () => {
 
   return (
     <main className="flex-1 min-h-0 h-full overflow-y-auto bg-slate-950 flex flex-col relative pb-28">
-      {/* Live Loading Top Bar */}
-      {isLoading && (
-        <div className="sticky top-0 z-40 w-full bg-emerald-950/80 border-b border-emerald-500/30 px-4 py-2 flex items-center justify-between text-xs text-emerald-300 backdrop-blur-md animate-in fade-in">
-          <div className="flex items-center space-x-2">
-            <Loader2 className="w-3.5 h-3.5 animate-spin text-emerald-400" />
-            <span className="font-medium">
-              {t("app.loading")} — {t("mainContent.loadingDetails")}
-            </span>
-          </div>
-          <div className="w-24 h-1.5 bg-emerald-900 rounded-full overflow-hidden">
-            <div className="h-full bg-emerald-400 rounded-full animate-[pulse_1s_infinite] w-3/4" />
-          </div>
-        </div>
-      )}
+      <MainContentStatusBars isLoading={isLoading} error={error} t={t} />
 
-      {/* Error Alert Bar */}
-      {error && (
-        <div className="sticky top-0 z-40 w-full bg-rose-950/90 border-b border-rose-500/30 px-4 py-2.5 flex items-center justify-between text-xs text-rose-300 backdrop-blur-md">
-          <div className="flex items-center space-x-2">
-            <AlertCircle className="w-4 h-4 text-rose-400 shrink-0" />
-            <span className="font-medium">{error}</span>
-          </div>
-          <button
-            type="button"
-            onClick={() => useAuditStore.setState({ error: null })}
-            aria-label={t("mainContent.dismissError")}
-            className="p-1 hover:bg-rose-900/50 rounded text-rose-400 hover:text-white"
-          >
-            <X className="w-3.5 h-3.5" />
-          </button>
-        </div>
-      )}
-
-      {/* In-Place SPA Tab Rendering */}
       <RouteErrorBoundary
         key={activeTab}
         title={t("mainContent.routeErrorTitle")}
@@ -97,79 +37,13 @@ export const MainContent: React.FC = () => {
       >
         <Suspense fallback={loadingView}>
           <div className="flex-1">
-          {/* Page Audit Suite */}
-          {currentAudit && (pageAuditRoute || activeTab === "dataforseo") && (
-            <AuditTabs />
-          )}
-          {pageAuditRoute && !currentAudit && (
-            <div className="mx-auto flex min-h-[48vh] max-w-lg flex-col justify-center px-8 text-center">
-              <h2 className="text-lg font-semibold text-slate-100">
-                {t("mainContent.noAuditTitle")}
-              </h2>
-              <p className="mt-2 text-sm leading-6 text-slate-400">
-                {t("mainContent.noAuditDescription")}
-              </p>
-            </div>
-          )}
-          {currentAudit && (pageAuditRoute || activeTab === "dataforseo") && (
-            <section
-              id="audit-panel"
-              role="tabpanel"
-              aria-labelledby={`audit-tab-${activeTab}`}
-              tabIndex={0}
-              className="outline-none"
-            >
-              {activeTab === "overview" && <Overview audit={currentAudit} />}
-              {activeTab === "dataforseo" && (
-                <DataForSEOAudit audit={currentAudit} />
-              )}
-              {activeTab === "social" && <SocialPreview audit={currentAudit} />}
-              {activeTab === "headings" && (
-                <HeadingsTree audit={currentAudit} />
-              )}
-              {activeTab === "metadata" && (
-                <MetadataTable audit={currentAudit} />
-              )}
-              {activeTab === "images" && <ImagesAudit audit={currentAudit} />}
-              {activeTab === "links" && <LinksAudit audit={currentAudit} />}
-              {activeTab === "security" && (
-                <SecurityHeaders audit={currentAudit} />
-              )}
-              {activeTab === "structured" && (
-                <StructuredDataView audit={currentAudit} />
-              )}
-              {activeTab === "amp" && <AmpAuditView audit={currentAudit} />}
-              {activeTab === "performance" && (
-                <PerformanceMetrics audit={currentAudit} />
-              )}
-            </section>
-          )}
-          {activeTab === "dataforseo" && !currentAudit && (
-            <section aria-label={t("dataforseo.title")} className="min-h-full">
-              <DataForSEOAudit />
-            </section>
-          )}
-
-          {/* Keyword Workflows */}
-          {activeTab === "keyword-research" && <KeywordResearch />}
-          {activeTab === "keyword-clustering" && <KeywordClustering />}
-          {activeTab === "core-web-vitals" && <PageSpeedWorkspace />}
-          {activeTab === "saved-keywords" && <SavedKeywords />}
-          {activeTab === "rank-tracking" && <RankTracking />}
-
-          {/* Domain Research */}
-          {activeTab === "domain-overview" && <DomainOverview />}
-          {activeTab === "backlink-checker" && <BacklinkChecker />}
-          {activeTab === "site-audit" && <SiteAudit />}
-
-          {/* AI Visibility & GEO */}
-          {activeTab === "ai-brand-visibility" && <AiBrandVisibility />}
-          {activeTab === "ai-search-prompts" && <AiSearchPrompts />}
-
-          {/* AI Agent Workflows */}
-          {activeTab === "mcp-hub" && <McpHub />}
-          {activeTab === "search-console" && <SearchConsoleHub />}
-          {activeTab === "seo-tools" && <SeoToolsWorkspace />}
+            <PageAuditTabPanel
+              currentAudit={currentAudit}
+              activeTab={activeTab}
+              pageAuditRoute={pageAuditRoute}
+              t={t}
+            />
+            <StandaloneWorkflowTabs activeTab={activeTab} />
           </div>
         </Suspense>
       </RouteErrorBoundary>

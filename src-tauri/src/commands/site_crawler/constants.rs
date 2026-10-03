@@ -1,0 +1,14 @@
+pub(super) const MAX_SEMANTIC_CONTENT_LINKS_PER_PAGE: usize = 1_000;
+pub(super) const MAX_SEMANTIC_TERMS_PER_PAGE: usize = 40;
+pub(super) const MAX_SEMANTIC_EXCERPTS_PER_PAGE: usize = 8;
+pub(super) const MAX_SCHEMA_DECLARATIONS_PER_PAGE: usize = 100;
+pub(super) const MAX_SCHEMA_FINDINGS_PER_PAGE: usize = 200;
+pub(super) const MAX_SCHEMA_REFERENCES_PER_PAGE: usize = 64;
+pub(super) const MAX_SCHEMA_REFERENCE_VALUE_CHARS: usize = 2_048;
+pub(super) const MAX_SRCSET_CANDIDATES_PER_IMAGE: usize = 20;
+pub(super) const MAX_RESOURCE_DISCOVERY_CANDIDATES: usize = 10_000;
+pub(super) const MAX_HTML_VALIDATION_FINDINGS_PER_PAGE: usize = 200;
+pub(super) const MAX_IFRAMES_PER_PAGE: usize = 500;
+pub(super) const MAX_INLINE_IMAGE_URI_CHARS: usize = 8_192;
+pub(super) const MAX_ROBOTS_RULES: usize = 100;
+pub(super) const MAX_INTRINSIC_IMAGE_BYTES: usize = 8 * 1024 * 1024;

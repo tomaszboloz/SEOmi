@@ -1,0 +1,27 @@
+import { lazyRoute } from "@/services/lazyRoute";
+
+export const AuditTabs = lazyRoute(() => import("@/components/Results/AuditTabs").then((m) => ({ default: m.AuditTabs })));
+export const Overview = lazyRoute(() => import("@/components/Results/Overview").then((m) => ({ default: m.Overview })));
+export const SocialPreview = lazyRoute(() => import("@/components/Results/SocialPreview").then((m) => ({ default: m.SocialPreview })));
+export const HeadingsTree = lazyRoute(() => import("@/components/Results/HeadingsTree").then((m) => ({ default: m.HeadingsTree })));
+export const MetadataTable = lazyRoute(() => import("@/components/Results/MetadataTable").then((m) => ({ default: m.MetadataTable })));
+export const ImagesAudit = lazyRoute(() => import("@/components/Results/ImagesAudit").then((m) => ({ default: m.ImagesAudit })));
+export const LinksAudit = lazyRoute(() => import("@/components/Results/LinksAudit").then((m) => ({ default: m.LinksAudit })));
+export const SecurityHeaders = lazyRoute(() => import("@/components/Results/SecurityHeaders").then((m) => ({ default: m.SecurityHeaders })));
+export const StructuredDataView = lazyRoute(() => import("@/components/Results/StructuredDataView").then((m) => ({ default: m.StructuredDataView })));
+export const AmpAuditView = lazyRoute(() => import("@/components/Results/AmpAuditView").then((m) => ({ default: m.AmpAuditView })));
+export const PerformanceMetrics = lazyRoute(() => import("@/components/Results/PerformanceMetrics").then((m) => ({ default: m.PerformanceMetrics })));
+export const DataForSEOAudit = lazyRoute(() => import("@/components/Results/DataForSEOAudit").then((m) => ({ default: m.DataForSEOAudit })));
+export const KeywordResearch = lazyRoute(() => import("@/components/Keywords/KeywordResearch").then((m) => ({ default: m.KeywordResearch })));
+export const KeywordClustering = lazyRoute(() => import("@/components/Keywords/KeywordClustering").then((m) => ({ default: m.KeywordClustering })));
+export const PageSpeedWorkspace = lazyRoute(() => import("@/components/Performance/PageSpeedWorkspace").then((m) => ({ default: m.PageSpeedWorkspace })));
+export const SavedKeywords = lazyRoute(() => import("@/components/Keywords/SavedKeywords").then((m) => ({ default: m.SavedKeywords })));
+export const RankTracking = lazyRoute(() => import("@/components/Keywords/RankTracking").then((m) => ({ default: m.RankTracking })));
+export const DomainOverview = lazyRoute(() => import("@/components/Domain/DomainOverview").then((m) => ({ default: m.DomainOverview })));
+export const BacklinkChecker = lazyRoute(() => import("@/components/Domain/BacklinkChecker").then((m) => ({ default: m.BacklinkChecker })));
+export const SiteAudit = lazyRoute(() => import("@/components/Domain/SiteAudit").then((m) => ({ default: m.SiteAudit })));
+export const AiBrandVisibility = lazyRoute(() => import("@/components/AiVisibility/AiBrandVisibility").then((m) => ({ default: m.AiBrandVisibility })));
+export const AiSearchPrompts = lazyRoute(() => import("@/components/AiVisibility/AiSearchPrompts").then((m) => ({ default: m.AiSearchPrompts })));
+export const McpHub = lazyRoute(() => import("@/components/AgentWorkflows/McpHub").then((m) => ({ default: m.McpHub })));
+export const SearchConsoleHub = lazyRoute(() => import("@/components/AgentWorkflows/SearchConsoleHub").then((m) => ({ default: m.SearchConsoleHub })));
+export const SeoToolsWorkspace = lazyRoute(() => import("@/components/SeoTools/SeoToolsWorkspace").then((m) => ({ default: m.SeoToolsWorkspace })));

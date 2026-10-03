@@ -1,7 +1,12 @@
-use crate::models::audit_data::{CookieSecurityFinding, TechnologySignal};
-use crate::services::html_parser::resolve_url;
-use scraper::{Html, Selector};
-use url::Url;
+use crate::models::audit_data::TechnologySignal;
+
+#[path = "cookie_security.rs"]
+mod cookie_security;
+#[path = "mixed_content.rs"]
+mod mixed_content;
+
+pub(super) use cookie_security::assess_cookie_headers;
+pub(super) use mixed_content::detect_mixed_content_resources;
 
 pub(super) fn enrich_header_technologies(
     signals: &mut Vec<TechnologySignal>,
@@ -73,158 +78,6 @@ pub(super) fn enrich_header_technologies(
             signals,
         );
     }
-}
-
-pub(super) fn detect_mixed_content_resources(html: &str, page_url: &Url) -> Vec<String> {
-    if page_url.scheme() != "https" {
-        return Vec::new();
-    }
-    let document = Html::parse_document(html);
-    let selector = Selector::parse(
-        "script[src], img[src], iframe[src], frame[src], source[src], video[src], audio[src], track[src], embed[src], object[data], form[action], link[rel~='stylesheet'][href], link[rel~='preload'][href]",
-    )
-    .expect("static embedded-resource selector is valid");
-    let mut found = std::collections::BTreeSet::new();
-    for element in document.select(&selector) {
-        let attribute = if element.value().name() == "object" {
-            "data"
-        } else if element.value().name() == "form" {
-            "action"
-        } else if element.value().name() == "link" {
-            "href"
-        } else {
-            "src"
-        };
-        if let Some(value) = element.value().attr(attribute) {
-            collect_http_resource(value, page_url, &mut found);
-        }
-        if matches!(element.value().name(), "img" | "source") {
-            if let Some(srcset) = element.value().attr("srcset") {
-                for candidate in srcset.split(',') {
-                    if let Some(value) = candidate.split_ascii_whitespace().next() {
-                        collect_http_resource(value, page_url, &mut found);
-                    }
-                }
-            }
-        }
-    }
-    let style_selector = Selector::parse("[style]").expect("static style selector is valid");
-    for element in document.select(&style_selector) {
-        if let Some(style) = element.value().attr("style") {
-            for candidate in style.split("url(").skip(1) {
-                let value = candidate
-                    .trim_start_matches([' ', '\'', '"'])
-                    .split([')', '\'', '"'])
-                    .next()
-                    .unwrap_or_default()
-                    .trim();
-                collect_http_resource(value, page_url, &mut found);
-            }
-        }
-    }
-    found.into_iter().take(100).collect()
-}
-
-pub(super) fn collect_http_resource(
-    value: &str,
-    page_url: &Url,
-    output: &mut std::collections::BTreeSet<String>,
-) {
-    let value = value.trim();
-    if value.is_empty() || value.starts_with("data:") || value.starts_with("blob:") {
-        return;
-    }
-    let Ok(mut resolved) = Url::parse(&resolve_url(value, Some(page_url))) else {
-        return;
-    };
-    if resolved.scheme() != "http" {
-        return;
-    }
-    resolved.set_query(None);
-    resolved.set_fragment(None);
-    output.insert(resolved.to_string());
-}
-
-pub(super) fn assess_cookie_headers(headers: &[String]) -> Vec<CookieSecurityFinding> {
-    headers
-        .iter()
-        .filter_map(|header| {
-            let (pair, attributes) = header
-                .split_once(';')
-                .map_or((header.as_str(), ""), |(pair, rest)| (pair, rest));
-            let (name, _) = pair.split_once('=')?;
-            let name = name.trim();
-            if name.is_empty()
-                || name.len() > 128
-                || !name.chars().all(|character| {
-                    character.is_ascii_alphanumeric()
-                        || matches!(
-                            character,
-                            '!' | '#'
-                                | '$'
-                                | '%'
-                                | '&'
-                                | '\''
-                                | '*'
-                                | '+'
-                                | '-'
-                                | '.'
-                                | '^'
-                                | '_'
-                                | '`'
-                                | '|'
-                                | '~'
-                        )
-                })
-            {
-                return None;
-            }
-            let mut secure = false;
-            let mut http_only = false;
-            let mut same_site = None;
-            for attribute in attributes
-                .split(';')
-                .map(str::trim)
-                .filter(|value| !value.is_empty())
-            {
-                let (key, value) = attribute
-                    .split_once('=')
-                    .map_or((attribute, None), |(key, value)| {
-                        (key.trim(), Some(value.trim()))
-                    });
-                if key.eq_ignore_ascii_case("secure") {
-                    secure = true;
-                }
-                if key.eq_ignore_ascii_case("httponly") {
-                    http_only = true;
-                }
-                if key.eq_ignore_ascii_case("samesite") {
-                    same_site = value
-                        .filter(|value| {
-                            matches!(
-                                value.to_ascii_lowercase().as_str(),
-                                "strict" | "lax" | "none"
-                            )
-                        })
-                        .map(|value| {
-                            match value.to_ascii_lowercase().as_str() {
-                                "strict" => "Strict",
-                                "lax" => "Lax",
-                                _ => "None",
-                            }
-                            .to_string()
-                        });
-                }
-            }
-            Some(CookieSecurityFinding {
-                name: name.to_string(),
-                secure,
-                http_only,
-                same_site,
-            })
-        })
-        .take(100)
-        .collect()
 }
 
 pub(super) fn parse_header_technology(
