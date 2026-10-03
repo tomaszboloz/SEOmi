@@ -1130,3 +1130,21 @@ BATCH-5j verification:2807frontend/516Rust/70MCP PASS; build/lint/rustfmt/strict
   - `mcp-server` build & tests: **70/70 tests passing with 0 failures** (`npm run test:coverage:mcp`).
   - `tests/maxLoc.test.ts` (25/25 tests PASS).
   - Global LOC violations decreased from 51 to 48 across the codebase.
+
+### BATCH-6e: Decompose localApi.test.mjs and public-function-inventory.mjs to LOC<=150
+- Decomposed two large test/script modules exceeding 150 LOC into modular single-responsibility units strictly under 150 physical LOC:
+  1. `mcp-server/test/localApi.test.mjs` (238 -> 145 LOC) with 1 new test module:
+     - `mcp-server/test/localApiSecurity.test.mjs` (131 LOC): concurrency slot saturation, slot release on error, token sanitization from logs, invalid concurrency configuration, and logger failure resilience.
+  2. `scripts/public-function-inventory.mjs` (203 -> 68 LOC facade) with 3 submodules in `scripts/`:
+     - `inventory-utils.mjs` (23 LOC): path normalization, source position resolution, position comparison, recursive source file discovery, and sha256 source hashing.
+     - `inventory-program.mjs` (117 LOC): AST program inventory, module export traversal, class/constructor/accessor handling, and test reference extraction.
+     - `inventory-compiler-host.mjs` (31 LOC): source-aware compiler host for mapped MCP source-to-dist resolution.
+- Full verification loop:
+  - `npm run lint` clean (0 errors, 0 warnings).
+  - `npx tsc --noEmit` clean (0 errors).
+  - `node --test mcp-server/test/localApi.test.mjs mcp-server/test/localApiSecurity.test.mjs`: 11/11 tests PASS.
+  - `npm run test:coverage:mcp`: **70/70 tests passing with 0 failures**.
+  - `npx vitest run tests/publicFunctionInventory.test.ts tests/mcpCoverageEvidence.test.ts`: 12/12 tests PASS.
+  - `npm run test:inventory`: succeeds with 1234 functions inventoried.
+  - `tests/maxLoc.test.ts`: 25/25 tests PASS.
+  - Global LOC violations decreased from 48 to 46 across the codebase.
