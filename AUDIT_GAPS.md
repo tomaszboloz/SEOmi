@@ -1381,3 +1381,34 @@ BATCH-5j verification:2807frontend/516Rust/70MCP PASS; build/lint/rustfmt/strict
   - `tests/maxLoc.test.ts`: 25/25 tests PASS.
   - Global LOC violations decreased from 14 to 10 across the codebase.
 
+### BATCH-7j: Decompose browser_proxy, seo_analyzer/tests, and amp_validator to LOC<=150
+- Decomposed three native modules exceeding 150 LOC into modular single-responsibility units strictly under 150 physical LOC:
+  1. `src-tauri/src/services/browser_proxy.rs` (576 -> 92 LOC facade) with 5 new submodules in `src-tauri/src/services/browser_proxy/`:
+     - `types.rs` (36 LOC): constants, `ProxyTarget`, `ParsedRequest`, `RequestHead`, and token/port checks.
+     - `parse.rs` (115 LOC): `find_header_end`, `read_request`, `parse_request_head`, `parse_proxy_target`, and `authority_contains_userinfo`.
+     - `upstream.rs` (77 LOC): verified DNS `connect_to_public_host`, SSRF hostname filter `is_local_hostname`, and `reject`.
+     - `server.rs` (76 LOC): connection dispatcher and bidirectional copy tunnel `serve_connection`.
+     - `tests.rs` (85 LOC): 5 unit tests for metadata host rejection, header parser boundaries, credential rejection, and web port allowlisting.
+  2. `src-tauri/src/services/seo_analyzer/tests.rs` (587 -> 6 LOC facade) with 6 new submodules in `src-tauri/src/services/seo_analyzer/tests/`:
+     - `common.rs` (16 LOC): shared `test_http_performance` fixture.
+     - `group_01.rs` (100 LOC): invalid URL handling, healthy page audit, and schema validation issue persistence.
+     - `group_02.rs` (54 LOC): AMP findings impact on score and accessibility issue details.
+     - `group_03.rs` (99 LOC): `x-robots-tag` noindex detection, canonical uncertainty vs block, and health score calculations.
+     - `group_04.rs` (106 LOC): technology detection from HTTP headers, mixed-content detection, and cookie security attributes.
+     - `group_05.rs` (96 LOC): heading hierarchy tree, image alt/dimension checks, and link target security.
+  3. `src-tauri/src/services/amp_validator.rs` (653 -> 63 LOC facade) with 6 new submodules in `src-tauri/src/services/amp_validator/`:
+     - `models.rs` (42 LOC): limits, `add_finding`, and `has_amp_noscript_boilerplate`.
+     - `discovery.rs` (74 LOC): `extract_amphtml_targets` and `extract_canonical_target`.
+     - `document_rules.rs` (132 LOC): `check_amp_canonical`, `check_amp_charset_and_viewport`, and `check_amp_runtime_and_boilerplate`.
+     - `component_rules.rs` (121 LOC): `check_custom_css`, `check_forbidden_elements_and_handlers`, and `check_amp_components_and_scripts`.
+     - `tests_1.rs` (76 LOC): 5 unit tests for regular pages, target resolution, required markers, canonical validation, and deduplication.
+     - `tests_2.rs` (47 LOC): 4 unit tests for standard boilerplate, forbidden elements, custom CSS limits, and component scripts.
+- Full verification loop:
+  - `cargo check --manifest-path src-tauri/Cargo.toml` clean (0 errors, 0 warnings).
+  - `cargo test --manifest-path src-tauri/Cargo.toml --lib -- --test-threads=1`: **558/558 library tests passing with 0 failures**.
+  - `npm run lint` clean (0 errors, 0 warnings).
+  - `npx tsc --noEmit` clean (0 errors).
+  - `tests/maxLoc.test.ts`: 25/25 tests PASS.
+  - Global LOC violations decreased from 10 to 7 across the codebase.
+
+
