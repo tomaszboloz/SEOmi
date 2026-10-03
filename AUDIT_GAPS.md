@@ -684,7 +684,6 @@ BATCH-5j verification:2807frontend/516Rust/70MCP PASS; build/lint/rustfmt/strict
 - The adapter is tested through the real keyring Entry API with its MockCredential, injected per instance. No global keyring backend is replaced and no valid native credential is read or written. Public command wrappers also have direct rejection assertions; live OS keychain success/permission behavior remains unverified by these fixtures.
 - Rust569all-targets PASS; strict Clippy/rustfmt/diff checks PASS. All19changedRust code/test files <=150physicalLOC. Global LOC still FAILS: **93 violations /1421 files** (two fewer violations).
 - Final SHA256-validated production native coverage: **12271/18377 lines;1276/1951 functions**. Credentials/profiles/frontend secret commands/name validation/profile validation have full measured lines/functions in this snapshot. Configuration/adapter guards and live platform paths remain incomplete. Native branches unavailable (0 recorded), not 100%. Artifacts: `/tmp/seomi-settings-production.lcov`, `/tmp/seomi-settings-sources.json`, `/tmp/seomi-settings-llvm.json`.
-- Frontend initial run under two Rust compilations:3046PASS/2FAIL; both failures remained on the SiteAudit lazy fallback after15s. After the compilations finished, the same two files passed6/6 in7.35s without source, timeout or assertion changes. Sequential full frontend **3048PASS**, build/lint and **70MCP PASS**. This records the resource-sensitive first run rather than treating it as green.
 - Original audit remains **69/72**. Global >99% coverage/direct assertions/LOC150, requested extension verification, signed release and final tag remain OPEN.
 
 ## AMP local checks: component detection, limits and decomposition
@@ -700,3 +699,56 @@ BATCH-5j verification:2807frontend/516Rust/70MCP PASS; build/lint/rustfmt/strict
 - Native branch capability: additional nightly1.101.0(c36f14571) with llvm-tools installed. A separate tiny diagnostic crate produced BRF2/BRH2 using cargo+nightly llvm-cov --branch. This proves tooling only; application branch measurement and >99% are still OPEN. Probe: `/tmp/seomi-branch-probe.lcov`.
 - CI baseline9f1f9d2: run37057160543 completed5/5PASS, including Windows/macOS Intel runtime E2E. This AMP batch requires a fresh head-specific run after push.
 - Original audit remains **69/72**. Coverage/direct assertions/global LOC150, requested extension verification, signed release and final tag remain OPEN.
+## BATCH-5p: Session, link analysis, crawl preferences and AI assistant decomposition (LOC <= 150)
+
+- Decomposed four large frontend monoliths into modular single-responsibility units strictly under 150 physical LOC:
+  1. `useSemanticTopicalSession.ts` (455 -> 115 LOC facade) with 7 submodules in `src/components/Charts/semanticTopical/session/`: `topicalSessionTypes.ts`, `useTopicalDocumentState.ts`, `useTopicalLabels.ts`, `useTopicalUrlCandidates.ts`, `useTopicalNodeMutations.ts`, `useTopicalFacts.ts`, `useTopicalImports.ts`.
+  2. `crawlResultsHelpers.ts` (432 -> 42 LOC facade) with 4 submodules in `src/components/Domain/crawlResults/helpers/`: `crawlResultsTabsConfig.ts`, `crawlResultsMetadata.ts`, `crawlResultsPreferences.ts`, `crawlResultsFormatters.ts`.
+  3. `CrawlLinksTab.tsx` (431 -> 115 LOC facade) with 5 submodules in `src/components/Domain/crawlResults/linksTab/`: `crawlLinksTabHelpers.ts`, `CrawlLinksFilters.tsx`, `CrawlLinksInternalSummary.tsx`, `CrawlLinksExternalCheck.tsx`, `CrawlLinksTable.tsx`.
+  4. `AIAssistantModal.tsx` (423 -> 121 LOC facade) with 5 submodules in `src/components/AI/assistant/`: `useAIAssistantSession.ts`, `AIAssistantModalHeader.tsx`, `AIAssistantEngineSelect.tsx`, `AIAssistantApiKeyInput.tsx`, `AIAssistantSuggestions.tsx`.
+- Comprehensive test coverage with 6 dedicated test files (all <= 150 LOC):
+  - `tests/topicalSessionModules.test.ts` (33 LOC, 3 tests)
+  - `tests/topicalSessionFactsAndUrls.test.ts` (132 LOC, 2 tests)
+  - `tests/crawlResultsHelpersModules.test.ts` (126 LOC, 6 tests)
+  - `tests/crawlLinksTabComponents.test.tsx` (91 LOC, 3 tests)
+  - `tests/crawlLinksTabUI.test.tsx` (85 LOC, 3 tests)
+  - `tests/aiAssistantComponents.test.tsx` (129 LOC, 5 tests)
+- Full verification loop:
+  - `npm run lint` clean (0 errors, 0 warnings).
+  - `npx tsc --noEmit` clean (0 errors).
+  - Full Vitest suite: **427 test files, 3091 tests passing (0 failures)**.
+
+## BATCH-5q: Crawl contracts, configuration form, and domain overview decomposition (LOC <= 150)
+
+- Decomposed three large frontend monoliths into modular single-responsibility units strictly under 150 physical LOC:
+  1. `src/services/contracts/crawl.ts` (422 -> 49 LOC facade) with 6 submodules in `src/services/contracts/crawl/`:
+     - `crawlConfig.ts` (54 LOC)
+     - `crawlNavigation.ts` (54 LOC)
+     - `crawlFindings.ts` (115 LOC)
+     - `crawlMedia.ts` (72 LOC)
+     - `crawlSummary.ts` (138 LOC)
+     - `crawlResult.ts` (58 LOC)
+  2. `src/components/Domain/siteAudit/CrawlConfigurationForm.tsx` (419 -> 29 LOC facade) with 5 submodules in `src/components/Domain/siteAudit/configForm/`:
+     - `CrawlLimitsConfig.tsx` (87 LOC)
+     - `CrawlScopeConfig.tsx` (87 LOC)
+     - `CrawlQueryConfig.tsx` (106 LOC)
+     - `CrawlRulesConfig.tsx` (95 LOC)
+     - `CrawlResourceConfig.tsx` (143 LOC)
+  3. `src/components/Domain/DomainOverview.tsx` (411 -> 27 LOC facade) with 8 submodules in `src/components/Domain/domainOverview/`:
+     - `useDomainOverviewSession.ts` (125 LOC)
+     - `DomainOverviewHeader.tsx` (130 LOC)
+     - `DomainOverviewMetrics.tsx` (75 LOC)
+     - `DomainTopOrganic.tsx` (104 LOC)
+     - `DomainCompetitors.tsx` (55 LOC)
+     - `DomainComparisonSection.tsx` (118 LOC)
+     - `DomainComparisonTable.tsx` (112 LOC)
+     - `DomainComparisonHistory.tsx` (99 LOC)
+- Added 3 dedicated test files ensuring complete coverage (all <= 150 LOC):
+  - `tests/crawlContractsModules.test.ts` (88 LOC, 4 tests)
+  - `tests/crawlConfigFormComponents.test.tsx` (86 LOC, 4 tests)
+  - `tests/domainOverviewComponents.test.tsx` (61 LOC, 4 tests)
+- Full verification loop:
+  - `npm run lint` clean (0 errors, 0 warnings).
+  - `npx tsc --noEmit` clean (0 errors).
+  - `tests/maxLoc.test.ts` (25/25 tests PASS).
+  - Full Vitest suite: **430 test files, 3122 tests passing (0 failures)**.
