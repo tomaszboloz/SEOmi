@@ -1061,3 +1061,31 @@ BATCH-5j verification:2807frontend/516Rust/70MCP PASS; build/lint/rustfmt/strict
   - `tests/maxLoc.test.ts` (25/25 tests PASS).
   - Vitest suite passing with 0 failures (47/47 tests across BATCH-6a and related suites).
   - Global LOC violations decreased from 59 to 56 across the codebase.
+
+### BATCH-6b: Decompose CrawlCustomSearchTab, MainContent, and CrawlVisualisationsTab to LOC<=150
+- Decomposed three large frontend components into modular single-responsibility units strictly under 150 physical LOC:
+  1. `src/components/Domain/crawlResults/CrawlCustomSearchTab.tsx` (181 -> 42 LOC facade) with 5 submodules in `src/components/Domain/crawlResults/customSearch/`:
+     - `customSearchTypes.ts` (17 LOC)
+     - `customSearchRows.ts` (62 LOC)
+     - `CustomSearchHeaderCard.tsx` (36 LOC)
+     - `CustomSearchConfigCards.tsx` (30 LOC)
+     - `CustomSearchTable.tsx` (76 LOC)
+  2. `src/components/Layout/MainContent.tsx` (178 -> 52 LOC facade) with 4 submodules in `src/components/Layout/mainContent/`:
+     - `mainContentRoutes.ts` (27 LOC)
+     - `MainContentStatusBars.tsx` (47 LOC)
+     - `PageAuditTabPanel.tsx` (76 LOC)
+     - `StandaloneWorkflowTabs.tsx` (40 LOC)
+  3. `src/components/Domain/crawlResults/CrawlVisualisationsTab.tsx` (177 -> 54 LOC facade) with 3 submodules in `src/components/Domain/crawlResults/visualisationsTab/`:
+     - `CrawlHistoryMetricsSection.tsx` (56 LOC)
+     - `ComparisonChangesList.tsx` (38 LOC)
+     - `CrawlCompareRunsSection.tsx` (102 LOC)
+- Added 3 dedicated test suites ensuring complete coverage (all <= 150 LOC):
+  - `tests/crawlCustomSearchTabComponents.test.tsx` (102 LOC, 5 tests)
+  - `tests/mainContentComponents.test.tsx` (49 LOC, 3 tests)
+  - `tests/crawlVisualisationsTabComponents.test.tsx` (77 LOC, 3 tests)
+- Full verification loop:
+  - `npm run lint` clean (0 errors, 0 warnings).
+  - `npx tsc --noEmit` clean (0 errors).
+  - `tests/maxLoc.test.ts` (25/25 tests PASS).
+  - Vitest suite passing with 0 failures (39/39 tests across BATCH-6b and related suites).
+  - Global LOC violations decreased from 56 to 53 across the codebase (only 2 frontend files remain > 150 LOC).
