@@ -1,25 +1,36 @@
+use super::types::*;
+use crate::utils::url_validator::is_public_ip;
 use std::io;
 use std::net::{IpAddr, SocketAddr};
 use tokio::io::AsyncWriteExt;
 use tokio::net::{lookup_host, TcpStream};
 use tokio::time::timeout;
 use url::Url;
-use crate::utils::url_validator::is_public_ip;
-use super::types::*;
 
 pub(super) async fn connect_to_public_host(host: &str, port: u16) -> io::Result<TcpStream> {
-    let normalized_host = host.strip_prefix('[').and_then(|v| v.strip_suffix(']')).unwrap_or(host);
+    let normalized_host = host
+        .strip_prefix('[')
+        .and_then(|v| v.strip_suffix(']'))
+        .unwrap_or(host);
     if is_local_hostname(normalized_host) {
-        return Err(io::Error::new(io::ErrorKind::PermissionDenied, "local hostname blocked"));
+        return Err(io::Error::new(
+            io::ErrorKind::PermissionDenied,
+            "local hostname blocked",
+        ));
     }
     let destinations = if let Ok(ip) = normalized_host.parse::<IpAddr>() {
         vec![SocketAddr::new(ip, port)]
     } else {
-        lookup_host((normalized_host, port)).await?.collect::<Vec<_>>()
+        lookup_host((normalized_host, port))
+            .await?
+            .collect::<Vec<_>>()
     };
-    let public = destinations.into_iter().find(|addr| is_public_ip(&addr.ip()))
+    let public = destinations
+        .into_iter()
+        .find(|addr| is_public_ip(&addr.ip()))
         .ok_or_else(|| io::Error::new(io::ErrorKind::PermissionDenied, "no public DNS result"))?;
-    timeout(CONNECT_TIMEOUT, TcpStream::connect(public)).await
+    timeout(CONNECT_TIMEOUT, TcpStream::connect(public))
+        .await
         .map_err(|_| io::Error::new(io::ErrorKind::TimedOut, "upstream connect timed out"))?
 }
 
@@ -35,7 +46,9 @@ pub(super) fn is_local_hostname(host: &str) -> bool {
 
 pub(super) fn request_target(url: &Url) -> String {
     let mut target = url.path().to_owned();
-    if target.is_empty() { target.push('/'); }
+    if target.is_empty() {
+        target.push('/');
+    }
     if let Some(query) = url.query() {
         target.push('?');
         target.push_str(query);

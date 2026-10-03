@@ -36,7 +36,8 @@ fn builds_a_nested_heading_tree_without_losing_siblings() {
 
 #[test]
 fn test_images_missing_alt() {
-    let html = r#"<html><body><img src="pic1.jpg"><img src="pic2.jpg" alt="Description"></body></html>"#;
+    let html =
+        r#"<html><body><img src="pic1.jpg"><img src="pic2.jpg" alt="Description"></body></html>"#;
     let base = Url::parse("https://example.com").unwrap();
     let (images, issues) = parse_images(html, &base);
     assert_eq!(images.len(), 2);
@@ -54,7 +55,10 @@ fn empty_alt_is_decorative_without_requiring_aria_hidden_or_role() {
     );
     assert!(images[0].has_alt);
     assert!(!images[1].has_alt);
-    let missing = issues.iter().find(|i| i.message.contains("missing 'alt'")).unwrap();
+    let missing = issues
+        .iter()
+        .find(|i| i.message.contains("missing 'alt'"))
+        .unwrap();
     assert_eq!(missing.params.as_ref().unwrap().get("count").unwrap(), "1");
 }
 
@@ -71,7 +75,10 @@ fn infers_intrinsic_dimensions_from_bounded_data_uris_without_network() {
     assert_eq!(intrinsic_data_uri_dimensions(svg_uri), Some((120, 60)));
 
     let percentage_svg = "data:image/svg+xml,%3Csvg%20width%3D%22100%25%22%20height%3D%2250%25%22%20viewBox%3D%220%200%2080%2040%22%3E%3C/svg%3E";
-    assert_eq!(intrinsic_data_uri_dimensions(percentage_svg), Some((80, 40)));
+    assert_eq!(
+        intrinsic_data_uri_dimensions(percentage_svg),
+        Some((80, 40))
+    );
 }
 
 #[test]
@@ -81,16 +88,24 @@ fn parse_images_marks_intrinsic_dimensions_as_local_evidence() {
     let (images, issues) = parse_images(html, &base);
     assert_eq!(images[0].width.as_deref(), Some("4"));
     assert_eq!(images[0].height.as_deref(), Some("5"));
-    assert_eq!(images[0].dimensions_source.as_deref(), Some("intrinsic-data-uri"));
-    assert!(!issues.iter().any(|i| i.message.contains("missing explicit width/height")));
+    assert_eq!(
+        images[0].dimensions_source.as_deref(),
+        Some("intrinsic-data-uri")
+    );
+    assert!(!issues
+        .iter()
+        .any(|i| i.message.contains("missing explicit width/height")));
 }
 
 #[test]
 fn test_links_target_blank_security() {
-    let html = r#"<html><body><a href="https://other.com" target="_blank">External</a></body></html>"#;
+    let html =
+        r#"<html><body><a href="https://other.com" target="_blank">External</a></body></html>"#;
     let base = Url::parse("https://example.com").unwrap();
     let (links, issues) = parse_links(html, &base);
     assert_eq!(links.total_links, 1);
     assert_eq!(links.external_links, 1);
-    assert!(issues.iter().any(|i| i.message.contains("noopener noreferrer")));
+    assert!(issues
+        .iter()
+        .any(|i| i.message.contains("noopener noreferrer")));
 }

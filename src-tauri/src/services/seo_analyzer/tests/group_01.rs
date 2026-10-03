@@ -1,5 +1,5 @@
-use super::common::test_http_performance;
 use super::super::*;
+use super::common::test_http_performance;
 use std::collections::HashMap;
 
 #[tokio::test]
@@ -46,8 +46,14 @@ async fn test_analyze_page_healthy() {
         status: 200,
         response_time_ms: 150,
         headers: HashMap::from([
-            ("strict-transport-security".to_string(), "max-age=31536000".to_string()),
-            ("content-security-policy".to_string(), "default-src 'self'".to_string()),
+            (
+                "strict-transport-security".to_string(),
+                "max-age=31536000".to_string(),
+            ),
+            (
+                "content-security-policy".to_string(),
+                "default-src 'self'".to_string(),
+            ),
             ("x-frame-options".to_string(), "DENY".to_string()),
             ("x-content-type-options".to_string(), "nosniff".to_string()),
         ]),
@@ -65,8 +71,18 @@ async fn test_analyze_page_healthy() {
     assert_eq!(result.links.total_links, 1);
     assert!(result.links.links[0].is_internal);
     assert_eq!(result.indexability.status, "indexable");
-    assert_eq!(result.http_performance.as_ref().unwrap().response_headers_ms, 100);
-    assert_eq!(result.http_performance.as_ref().unwrap().decoded_body_bytes, 64);
+    assert_eq!(
+        result
+            .http_performance
+            .as_ref()
+            .unwrap()
+            .response_headers_ms,
+        100
+    );
+    assert_eq!(
+        result.http_performance.as_ref().unwrap().decoded_body_bytes,
+        64
+    );
 }
 
 #[tokio::test]
@@ -90,11 +106,18 @@ async fn schema_validation_findings_are_added_to_the_saved_audit_issues() {
     };
 
     let result = analyze_page(fetch).await.unwrap();
-    assert!(result.structured_data[0].validation_issues.iter().any(|i| i.code == "product-name-missing"));
+    assert!(result.structured_data[0]
+        .validation_issues
+        .iter()
+        .any(|i| i.code == "product-name-missing"));
     assert!(result.issues.iter().any(|item| {
         item.category == IssueCategory::StructuredData
             && item.code.as_deref() == Some("structured_validation")
             && item.message.contains("Product has no name")
-            && item.params.as_ref().and_then(|p| p.get("detail")).is_some_and(|d| d.contains("Product has no name"))
+            && item
+                .params
+                .as_ref()
+                .and_then(|p| p.get("detail"))
+                .is_some_and(|d| d.contains("Product has no name"))
     }));
 }

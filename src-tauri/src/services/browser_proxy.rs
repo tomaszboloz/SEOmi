@@ -8,6 +8,7 @@ use url::Url;
 
 mod parse;
 mod server;
+mod target;
 mod types;
 mod upstream;
 

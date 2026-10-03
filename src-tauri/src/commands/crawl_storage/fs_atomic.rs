@@ -1,6 +1,5 @@
 use std::{
-    fs,
-    io,
+    fs, io,
     path::{Path, PathBuf},
 };
 use tauri::{AppHandle, Manager};
@@ -8,10 +7,7 @@ use tauri::{AppHandle, Manager};
 pub(crate) const MAX_CHECKPOINT_BYTES: usize = 32 * 1024 * 1024;
 
 #[cfg(windows)]
-pub(crate) fn replace_file(
-    source: &Path,
-    destination: &Path,
-) -> io::Result<()> {
+pub(crate) fn replace_file(source: &Path, destination: &Path) -> io::Result<()> {
     use std::{iter, os::windows::ffi::OsStrExt};
     use windows_sys::Win32::Storage::FileSystem::{
         MoveFileExW, MOVEFILE_REPLACE_EXISTING, MOVEFILE_WRITE_THROUGH,
@@ -42,10 +38,7 @@ pub(crate) fn replace_file(
 }
 
 #[cfg(not(windows))]
-pub(crate) fn replace_file(
-    source: &Path,
-    destination: &Path,
-) -> io::Result<()> {
+pub(crate) fn replace_file(source: &Path, destination: &Path) -> io::Result<()> {
     fs::rename(source, destination)
 }
 

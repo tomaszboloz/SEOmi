@@ -10,8 +10,15 @@ pub(super) const REQUEST_TIMEOUT: Duration = Duration::from_secs(45);
 pub(super) const TUNNEL_TIMEOUT: Duration = Duration::from_secs(20 * 60);
 
 pub(super) enum ProxyTarget {
-    Connect { host: String, port: u16 },
-    Http { method: String, url: Url, headers: Vec<(String, String)> },
+    Connect {
+        host: String,
+        port: u16,
+    },
+    Http {
+        method: String,
+        url: Url,
+        headers: Vec<(String, String)>,
+    },
 }
 
 pub(super) struct ParsedRequest {

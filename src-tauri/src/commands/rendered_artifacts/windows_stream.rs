@@ -1,5 +1,7 @@
 #[cfg(target_os = "windows")]
-pub(crate) fn read_com_stream(stream: &windows::Win32::System::Com::IStream) -> Result<Vec<u8>, String> {
+pub(crate) fn read_com_stream(
+    stream: &windows::Win32::System::Com::IStream,
+) -> Result<Vec<u8>, String> {
     use windows::Win32::System::Com::STREAM_SEEK_SET;
 
     let mut position = 0u64;

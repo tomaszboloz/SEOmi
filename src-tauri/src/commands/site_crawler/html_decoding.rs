@@ -5,13 +5,16 @@ pub(super) fn html_meta_charset(body: &[u8]) -> Option<String> {
     let marker = "charset";
     let start = prefix.find(marker)? + marker.len();
     let tail = prefix[start..].trim_start_matches(|c: char| c.is_ascii_whitespace());
-    let tail = tail.strip_prefix('=')?.trim_start_matches(|c: char| c.is_ascii_whitespace());
+    let tail = tail
+        .strip_prefix('=')?
+        .trim_start_matches(|c: char| c.is_ascii_whitespace());
     let quote = tail.chars().next().filter(|c| *c == '\'' || *c == '"');
     let value = if let Some(quote) = quote {
         let value = &tail[quote.len_utf8()..];
         value.split(quote).next()?
     } else {
-        tail.split(|c: char| c.is_ascii_whitespace() || c == ';' || c == '>').next()?
+        tail.split(|c: char| c.is_ascii_whitespace() || c == ';' || c == '>')
+            .next()?
     };
     (!value.is_empty()).then(|| value.to_string())
 }
@@ -40,7 +43,9 @@ pub(super) fn decode_crawl_html_body(
     } else {
         None
     };
-    let (encoding, bom_length) = if let Some((encoding, length)) = encoding_rs::Encoding::for_bom(body) {
+    let (encoding, bom_length) = if let Some((encoding, length)) =
+        encoding_rs::Encoding::for_bom(body)
+    {
         (encoding, length)
     } else {
         let declared = http_charset

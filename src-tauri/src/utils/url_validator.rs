@@ -124,4 +124,3 @@ fn is_private_or_loopback(ip: &IpAddr) -> bool {
 #[cfg(test)]
 #[path = "url_validator_tests.rs"]
 mod tests;
-

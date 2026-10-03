@@ -1,11 +1,7 @@
 use super::encoding::{decode_crawl_runs, validate_storage_size, STORAGE_MAGIC};
 use super::fs_atomic::replace_file;
 use serde_json::Value;
-use std::{
-    fs,
-    io::Read,
-    path::Path,
-};
+use std::{fs, io::Read, path::Path};
 
 pub(crate) fn recover_backup(path: &Path) -> Result<(), String> {
     let backup = path.with_extension("json.bak");

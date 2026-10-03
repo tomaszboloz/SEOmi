@@ -2,7 +2,7 @@
 Audytor: Staff Developer | Data: 2026-10-01
 
 ## Statystyki
-- Rejestr pierwotny: 72 luki. Dodatkowe odkrycia są dopisywane poniżej; najwyższy identyfikator: GAP-196 (identyfikator nie oznacza liczby zamkniętych luk).
+- Rejestr pierwotny: 72 luki. Dodatkowe odkrycia są dopisywane poniżej; najwyższy identyfikator: GAP-198 (identyfikator nie oznacza liczby zamkniętych luk).
 - Batchy do wdrożenia: 7
 - Szacowany effort: 20–35 MD; estymacja orientacyjna, do korekty po pomiarze coverage.
 - Baseline: commit 18fa446b13ec3f97db76896bfdf446f97fe80051; 704 frontend / 320 Rust / 27 MCP testów.
@@ -1424,3 +1424,13 @@ BATCH-5j verification:2807frontend/516Rust/70MCP PASS; build/lint/rustfmt/strict
   - `npx tsc --noEmit` clean (0 errors).
   - `tests/maxLoc.test.ts`: 25/25 tests PASS.
   - Global LOC violations decreased from 10 to 7 across the codebase.
+
+## Concurrent integration and physical formatting verification
+
+- Integrated remote frontend/native decomposition through abe75052 with AMP fixes005fdca via ordinary merge commits4e1f02e/43baef0. Retained both audit histories and removed unused alternate AMP modules; original nine baseline assertions plus ten regressions remain attached to the public audit entry.
+- [DISCOVERED] GAP-197: rustfmt expanded five newly extracted modules beyond150physical lines. Applied canonical formatting and split attribute validation/location, HTML metadata, content phrase evidence and proxy targets into responsibility modules. Final physical inventory:7violations/1813files; remaining modules are orchestration, rendered_crawler, custom_search, crawler models, pdf_report, http_client and scheduled_worker. No whitespace compression or exclusions used.
+- [DISCOVERED] GAP-198: extracted example helper/test files were auto-discovered as standalone Cargo examples, causing missing-symbol errors in all-targets and dead-code warnings. autoexamples=false retains the four explicitly declared example targets, with their existing test modules attached.
+- researchDomainContract architecture assertion now reads toolsBacklinks.ts after the remote MCP split, preserving checks for the shared pure domain contract and call site. The first integrated frontend failed that stale path assertion (3456PASS/1FAIL); a fresh complete rerun is pending.
+- Frozen005fdca native nightly branch run completed successfully: raw LCOV BRF4416/BRH2603, LF51093/LH13928, FNF5293/FNH1496. These raw totals include tests/auxiliary sources and are NOT production coverage or evidence for the later integration. Artifact /tmp/seomi-native-branches.lcov; log /tmp/seomi-native-branches.log; snapshot /Users/tomaszboloz/.codex/worktrees/native-branch-coverage/seomi. Production AST/hash filtering and latest-head measurement remain required.
+- Current integration all-targets/strictClippy and full frontend/build/lint/MCP are running. Logs /tmp/seomi-final-integration-{native,clippy,frontend,build,lint,mcp}.log. Earlier runs invalidated by subsequent source edits are not final evidence. No integrated push or final tag until verification.
+- Original audit remains69/72; global coverage/direct assertions/LOC and extension/release requirements remain OPEN.

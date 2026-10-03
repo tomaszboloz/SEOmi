@@ -8,14 +8,23 @@ pub(super) fn pagination_query_changes(
         url.query_pairs().fold(
             HashMap::<String, Vec<String>>::new(),
             |mut values, (key, value)| {
-                values.entry(key.into_owned()).or_default().push(value.into_owned());
+                values
+                    .entry(key.into_owned())
+                    .or_default()
+                    .push(value.into_owned());
                 values
             },
         )
     };
     let source = query_values(source_url);
     let target = query_values(target_url);
-    let mut keys = source.keys().chain(target.keys()).cloned().collect::<HashSet<_>>().into_iter().collect::<Vec<_>>();
+    let mut keys = source
+        .keys()
+        .chain(target.keys())
+        .cloned()
+        .collect::<HashSet<_>>()
+        .into_iter()
+        .collect::<Vec<_>>();
     keys.sort();
     keys.into_iter()
         .filter_map(|key| {
@@ -42,10 +51,13 @@ pub(super) fn crawl_pagination_links(
     let mut links = Vec::new();
     let (mut declaration_count, mut invalid_declaration_count) = (0, 0);
     for element in document.select(&selector) {
-        let Some(rel) = element.value().attr("rel") else { continue };
-        for relation in rel.split_ascii_whitespace().filter(|v| {
-            v.eq_ignore_ascii_case("next") || v.eq_ignore_ascii_case("prev")
-        }) {
+        let Some(rel) = element.value().attr("rel") else {
+            continue;
+        };
+        for relation in rel
+            .split_ascii_whitespace()
+            .filter(|v| v.eq_ignore_ascii_case("next") || v.eq_ignore_ascii_case("prev"))
+        {
             declaration_count += 1;
             let target = element
                 .value()
@@ -110,7 +122,8 @@ pub(super) fn pagination_edges(pages: &[CrawledPageSummary]) -> HashSet<(String,
             .map(|url| url.to_string())
             .collect::<Vec<_>>();
         for link in &page.pagination_links {
-            let Some(target) = canonical_identity_url(&link.target_url).map(|url| url.to_string()) else {
+            let Some(target) = canonical_identity_url(&link.target_url).map(|url| url.to_string())
+            else {
                 continue;
             };
             let relation = link.relation.to_ascii_lowercase();

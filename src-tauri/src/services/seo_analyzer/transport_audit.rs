@@ -1,6 +1,4 @@
-use crate::models::audit_data::{
-    Issue, IssueCategory, IssueSeverity, TransportSecurityAudit,
-};
+use crate::models::audit_data::{Issue, IssueCategory, IssueSeverity, TransportSecurityAudit};
 use crate::services::security_checker::{evaluate_security_headers, SecurityAuditResult};
 use crate::services::seo_analyzer::transport_security::{
     assess_cookie_headers, detect_mixed_content_resources,

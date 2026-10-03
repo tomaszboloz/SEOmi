@@ -1,4 +1,3 @@
-
 pub(super) fn estimate_syllables(word: &str) -> usize {
     let normalized = word.to_lowercase();
     let mut count = 0;

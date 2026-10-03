@@ -37,7 +37,7 @@ describe('shared research domain contract', () => {
 
   it('keeps frontend and MCP wired to the same pure contract', () => {
     const frontend = readFileSync('src/services/dataforseo/dataforseoBacklinks.ts', 'utf8');
-    const mcp = readFileSync('mcp-server/src/server.ts', 'utf8');
+    const mcp = readFileSync('mcp-server/src/toolsBacklinks.ts', 'utf8');
     for (const source of [frontend, mcp]) {
       expect(source).toMatch(/import .*prepareBacklinkGapDomains.*researchDomain/);
       expect(source).toContain('prepareBacklinkGapDomains(target, competitors)');

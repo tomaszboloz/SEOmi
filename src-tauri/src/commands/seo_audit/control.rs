@@ -45,7 +45,7 @@ impl AuditControl {
             .lock()
             .map(|mut ids| ids.insert(request_id.to_string()))
             .unwrap_or(false)
-        }
+    }
 
     pub(crate) fn finish(&self, request_id: &str) {
         if let Ok(mut active) = self.active.lock() {

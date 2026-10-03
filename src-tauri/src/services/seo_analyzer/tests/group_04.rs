@@ -1,5 +1,5 @@
-use super::common::test_http_performance;
 use super::super::*;
+use super::common::test_http_performance;
 use std::collections::HashMap;
 
 #[test]
@@ -14,8 +14,12 @@ fn adds_only_explicit_http_technology_evidence() {
         ]),
     );
     assert!(signals.iter().any(|signal| signal.name == "Cloudflare"));
-    assert!(signals.iter().any(|signal| signal.name == "Application runtime" && signal.evidence.contains("Express")));
-    assert!(signals.iter().all(|signal| signal.confidence == "confirmed"));
+    assert!(signals
+        .iter()
+        .any(|signal| signal.name == "Application runtime" && signal.evidence.contains("Express")));
+    assert!(signals
+        .iter()
+        .all(|signal| signal.confidence == "confirmed"));
 }
 
 #[test]
@@ -28,14 +32,22 @@ fn reports_http_technology_versions_only_for_recognized_versioned_signatures() {
             ("x-powered-by".to_string(), "PHP/8.3.3".to_string()),
         ]),
     );
-    let nginx = signals.iter().find(|signal| signal.name == "nginx").unwrap();
+    let nginx = signals
+        .iter()
+        .find(|signal| signal.name == "nginx")
+        .unwrap();
     let php = signals.iter().find(|signal| signal.name == "PHP").unwrap();
     assert_eq!(nginx.version.as_deref(), Some("1.27.4"));
     assert_eq!(php.version.as_deref(), Some("8.3.3"));
-    assert!(signals.iter().all(|signal| signal.confidence == "confirmed"));
+    assert!(signals
+        .iter()
+        .all(|signal| signal.confidence == "confirmed"));
 
     let mut unknown = Vec::new();
-    enrich_header_technologies(&mut unknown, &HashMap::from([("server".to_string(), "mystery/9.8".to_string())]));
+    enrich_header_technologies(
+        &mut unknown,
+        &HashMap::from([("server".to_string(), "mystery/9.8".to_string())]),
+    );
     assert_eq!(unknown[0].name, "Web server");
     assert_eq!(unknown[0].version, None);
 }
@@ -51,12 +63,21 @@ fn distinguishes_mixed_content_resources_from_http_navigation_links() {
     </body></html>"#;
     let resources = detect_mixed_content_resources(html, &page_url);
     assert_eq!(resources.len(), 3);
-    assert!(resources.iter().any(|url| url == "http://cdn.example.test/photo.jpg"));
-    assert!(resources.iter().any(|url| url == "http://cdn.example.test/small.jpg"));
-    assert!(resources.iter().any(|url| url == "http://cdn.example.test/bg.png"));
+    assert!(resources
+        .iter()
+        .any(|url| url == "http://cdn.example.test/photo.jpg"));
+    assert!(resources
+        .iter()
+        .any(|url| url == "http://cdn.example.test/small.jpg"));
+    assert!(resources
+        .iter()
+        .any(|url| url == "http://cdn.example.test/bg.png"));
     assert!(resources.iter().all(|url| !url.contains("secret")));
     assert!(resources.iter().all(|url| !url.contains("/archive")));
-    assert!(detect_mixed_content_resources(html, &Url::parse("http://example.com/").unwrap()).is_empty());
+    assert!(
+        detect_mixed_content_resources(html, &Url::parse("http://example.com/").unwrap())
+            .is_empty()
+    );
 }
 
 #[test]
@@ -94,11 +115,17 @@ async fn saves_transport_and_cookie_findings_without_cookie_values() {
     let report = analyze_page(fetch).await.unwrap();
     let transport = report.transport_security.as_ref().unwrap();
     assert!(transport.https);
-    assert_eq!(transport.mixed_content_urls, ["http://cdn.example.test/app.js"]);
+    assert_eq!(
+        transport.mixed_content_urls,
+        ["http://cdn.example.test/app.js"]
+    );
     assert_eq!(transport.cookies[0].name, "session");
     assert!(!transport.cookies[0].secure);
     assert!(transport.cookies[0].http_only);
-    assert!(report.issues.iter().any(|i| i.message.contains("mixed content")));
+    assert!(report
+        .issues
+        .iter()
+        .any(|i| i.message.contains("mixed content")));
     let serialized = serde_json::to_string(&report).unwrap();
     assert!(!serialized.contains("super-secret-value"));
     assert!(!serialized.contains("token=private"));

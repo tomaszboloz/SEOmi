@@ -20,7 +20,9 @@ pub fn parse_social_tags(
     let raw = collect_social_meta(html_str, base_url);
 
     let final_og_title = raw.og_title.or_else(|| page_title.map(|s| s.to_string()));
-    let final_og_desc = raw.og_description.or_else(|| page_description.map(|s| s.to_string()));
+    let final_og_desc = raw
+        .og_description
+        .or_else(|| page_description.map(|s| s.to_string()));
 
     let final_tw_title = raw
         .twitter_title

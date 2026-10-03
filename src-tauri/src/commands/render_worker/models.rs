@@ -1,7 +1,11 @@
-use std::{collections::HashMap, sync::Arc, time::Duration};
 use serde::{Deserialize, Serialize};
+use std::{collections::HashMap, sync::Arc, time::Duration};
 use tauri::AppHandle;
-use tokio::{sync::{oneshot, Mutex}, task::JoinHandle, time::Instant};
+use tokio::{
+    sync::{oneshot, Mutex},
+    task::JoinHandle,
+    time::Instant,
+};
 
 pub const RENDER_WORKER_VERSION: &str = "1";
 pub(super) const WORKER_TTL: Duration = Duration::from_secs(90);

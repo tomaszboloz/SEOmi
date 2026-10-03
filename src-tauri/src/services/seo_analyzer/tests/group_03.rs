@@ -1,5 +1,5 @@
-use super::common::test_http_performance;
 use super::super::*;
+use super::common::test_http_performance;
 use crate::models::audit_data::MetaTags;
 use std::collections::HashMap;
 
@@ -16,7 +16,10 @@ fn detects_noindex_from_x_robots_tag() {
         "https://example.com/page",
     );
     assert_eq!(assessment.status, "blocked");
-    assert!(assessment.reasons.iter().any(|r| r.contains("X-Robots-Tag")));
+    assert!(assessment
+        .reasons
+        .iter()
+        .any(|r| r.contains("X-Robots-Tag")));
 }
 
 #[tokio::test]
@@ -79,7 +82,10 @@ async fn rejects_private_canonical_target_without_sending_a_request() {
     );
     verify_canonical_target(&mut assessment, 200).await;
     assert!(!assessment.canonical_target_checked);
-    assert!(assessment.canonical_target_check_error.as_deref().is_some_and(|v| v.contains("not requested")));
+    assert!(assessment
+        .canonical_target_check_error
+        .as_deref()
+        .is_some_and(|v| v.contains("not requested")));
 }
 
 #[tokio::test]

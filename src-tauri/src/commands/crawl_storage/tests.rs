@@ -43,13 +43,10 @@ fn reads_legacy_uncompressed_crawl_history() {
 fn rejects_histories_over_storage_limits_before_decoding() {
     assert!(validate_storage_size(MAX_EXPANDED_BYTES + 1, false).is_err());
     assert!(
-        validate_storage_size((MAX_STORED_BYTES + STORAGE_MAGIC.len()) as u64 + 1, true)
-            .is_err()
+        validate_storage_size((MAX_STORED_BYTES + STORAGE_MAGIC.len()) as u64 + 1, true).is_err()
     );
     assert!(validate_storage_size(MAX_EXPANDED_BYTES, false).is_ok());
-    assert!(
-        validate_storage_size((MAX_STORED_BYTES + STORAGE_MAGIC.len()) as u64, true).is_ok()
-    );
+    assert!(validate_storage_size((MAX_STORED_BYTES + STORAGE_MAGIC.len()) as u64, true).is_ok());
 }
 
 #[test]

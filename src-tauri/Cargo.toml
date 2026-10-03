@@ -5,6 +5,7 @@ description = "Lightning-fast Native Desktop SEO & Open Graph Auditor"
 authors = ["Tomasz Bołoz"]
 edition = "2021"
 rust-version = "1.77.2"
+autoexamples = false
 
 [lib]
 name = "seomi_lib"

@@ -32,11 +32,22 @@ pub(super) fn extract_javascript_redirects(
     let mut seen = HashSet::new();
 
     let mut scan = |source: &str, evidence_source: &str| {
-        if redirects.len() >= MAX_REDIRECTS_PER_PAGE { return; }
+        if redirects.len() >= MAX_REDIRECTS_PER_PAGE {
+            return;
+        }
         for captures in [&assignment, &call] {
             for matched in captures.captures_iter(source) {
-                let (Some(full), Some(target)) = (matched.get(0).map(|v| v.as_str().trim()), matched.get(2).map(|v| v.as_str().trim())) else { continue };
-                let target_url = base_url.join(target).ok().filter(|u| matches!(u.scheme(), "http" | "https")).map(|u| u.to_string());
+                let (Some(full), Some(target)) = (
+                    matched.get(0).map(|v| v.as_str().trim()),
+                    matched.get(2).map(|v| v.as_str().trim()),
+                ) else {
+                    continue;
+                };
+                let target_url = base_url
+                    .join(target)
+                    .ok()
+                    .filter(|u| matches!(u.scheme(), "http" | "https"))
+                    .map(|u| u.to_string());
                 let dedupe_key = format!("{evidence_source}\u{1f}{full}\u{1f}{target_url:?}");
                 if seen.insert(dedupe_key) {
                     redirects.push(CrawledClientRedirect {
@@ -45,14 +56,25 @@ pub(super) fn extract_javascript_redirects(
                         delay_seconds: None,
                         target_url,
                     });
-                    if redirects.len() >= MAX_REDIRECTS_PER_PAGE { return; }
+                    if redirects.len() >= MAX_REDIRECTS_PER_PAGE {
+                        return;
+                    }
                 }
             }
         }
         for captures in [&assignment_template, &call_template] {
             for matched in captures.captures_iter(source) {
-                let (Some(full), Some(target)) = (matched.get(0).map(|v| v.as_str().trim()), matched.get(1).map(|v| v.as_str().trim())) else { continue };
-                let target_url = base_url.join(target).ok().filter(|u| matches!(u.scheme(), "http" | "https")).map(|u| u.to_string());
+                let (Some(full), Some(target)) = (
+                    matched.get(0).map(|v| v.as_str().trim()),
+                    matched.get(1).map(|v| v.as_str().trim()),
+                ) else {
+                    continue;
+                };
+                let target_url = base_url
+                    .join(target)
+                    .ok()
+                    .filter(|u| matches!(u.scheme(), "http" | "https"))
+                    .map(|u| u.to_string());
                 let dedupe_key = format!("{evidence_source}\u{1f}{full}\u{1f}{target_url:?}");
                 if seen.insert(dedupe_key) {
                     redirects.push(CrawledClientRedirect {
@@ -61,7 +83,9 @@ pub(super) fn extract_javascript_redirects(
                         delay_seconds: None,
                         target_url,
                     });
-                    if redirects.len() >= MAX_REDIRECTS_PER_PAGE { return; }
+                    if redirects.len() >= MAX_REDIRECTS_PER_PAGE {
+                        return;
+                    }
                 }
             }
         }
@@ -70,7 +94,11 @@ pub(super) fn extract_javascript_redirects(
     for script in document.select(&script_selector) {
         if let Some(script_type) = script.value().attr("type") {
             let norm = script_type.trim().to_ascii_lowercase();
-            if !norm.is_empty() && !norm.contains("javascript") && !norm.contains("ecmascript") && norm != "module" {
+            if !norm.is_empty()
+                && !norm.contains("javascript")
+                && !norm.contains("ecmascript")
+                && norm != "module"
+            {
                 continue;
             }
         }
@@ -79,7 +107,9 @@ pub(super) fn extract_javascript_redirects(
     }
     for element in document.select(&event_selector) {
         for (name, value) in element.value().attrs() {
-            if name.starts_with("on") { scan(value, "javascript-inline"); }
+            if name.starts_with("on") {
+                scan(value, "javascript-inline");
+            }
         }
     }
     redirects

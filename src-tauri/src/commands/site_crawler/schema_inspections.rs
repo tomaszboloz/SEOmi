@@ -32,23 +32,11 @@ pub(super) fn inspect_microdata(
             schema_types.extend(itemtype.split_ascii_whitespace().map(str::to_owned));
         }
         if let Some(itemid) = element.value().attr("itemid") {
-            push_schema_reference(
-                schema_references,
-                "Microdata",
-                index + 1,
-                "itemid",
-                itemid,
-            );
+            push_schema_reference(schema_references, "Microdata", index + 1, "itemid", itemid);
         }
         if let Some(itemref) = element.value().attr("itemref") {
             for target in itemref.split_ascii_whitespace() {
-                push_schema_reference(
-                    schema_references,
-                    "Microdata",
-                    index + 1,
-                    "itemref",
-                    target,
-                );
+                push_schema_reference(schema_references, "Microdata", index + 1, "itemref", target);
             }
         }
         let value = serde_json::json!({ "itemtype": itemtype, "itemprops": itemprops });

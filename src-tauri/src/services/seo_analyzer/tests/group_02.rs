@@ -1,5 +1,5 @@
-use super::common::test_http_performance;
 use super::super::*;
+use super::common::test_http_performance;
 use std::collections::HashMap;
 
 #[tokio::test]
@@ -18,8 +18,15 @@ async fn amp_local_findings_are_persisted_and_affect_the_audit_score() {
 
     let report = analyze_page(fetch).await.unwrap();
     assert!(report.amp.is_amp_document);
-    assert!(report.amp.findings.iter().any(|f| f.code == "amp-canonical-missing"));
-    assert!(report.issues.iter().any(|i| i.message.contains("[amp-canonical-missing]")));
+    assert!(report
+        .amp
+        .findings
+        .iter()
+        .any(|f| f.code == "amp-canonical-missing"));
+    assert!(report
+        .issues
+        .iter()
+        .any(|i| i.message.contains("[amp-canonical-missing]")));
     assert!(report.health_score < 100);
 }
 
@@ -38,17 +45,52 @@ async fn accessibility_findings_are_added_to_the_audit_and_health_score() {
     };
 
     let result = analyze_page(fetch).await.unwrap();
-    assert!(result.accessibility.findings.iter().any(|f| f.code == "accessibility-document-language-invalid"));
-    assert!(result.issues.iter().any(|i| i.message.contains("Dostępność · accessibility-image-alt-missing")));
-    let unlabeled_issue = result.issues.iter()
+    assert!(result
+        .accessibility
+        .findings
+        .iter()
+        .any(|f| f.code == "accessibility-document-language-invalid"));
+    assert!(result.issues.iter().any(|i| i
+        .message
+        .contains("Dostępność · accessibility-image-alt-missing")));
+    let unlabeled_issue = result
+        .issues
+        .iter()
         .find(|i| i.message.contains("accessibility-form-controls-unlabeled"))
         .unwrap();
-    assert_eq!(unlabeled_issue.code.as_deref(), Some("accessibility-form-controls-unlabeled"));
-    assert_eq!(unlabeled_issue.params.as_ref().and_then(|p| p.get("unlabeled")).map(String::as_str), Some("1"));
-    assert_eq!(unlabeled_issue.params.as_ref().and_then(|p| p.get("total")).map(String::as_str), Some("1"));
-    assert!(unlabeled_issue.recommendation.as_deref().unwrap_or_default().contains("document.querySelectorAll('input, select, textarea')[0]"));
-    assert!(result.accessibility.findings.iter()
+    assert_eq!(
+        unlabeled_issue.code.as_deref(),
+        Some("accessibility-form-controls-unlabeled")
+    );
+    assert_eq!(
+        unlabeled_issue
+            .params
+            .as_ref()
+            .and_then(|p| p.get("unlabeled"))
+            .map(String::as_str),
+        Some("1")
+    );
+    assert_eq!(
+        unlabeled_issue
+            .params
+            .as_ref()
+            .and_then(|p| p.get("total"))
+            .map(String::as_str),
+        Some("1")
+    );
+    assert!(unlabeled_issue
+        .recommendation
+        .as_deref()
+        .unwrap_or_default()
+        .contains("document.querySelectorAll('input, select, textarea')[0]"));
+    assert!(result
+        .accessibility
+        .findings
+        .iter()
         .find(|f| f.code == "accessibility-form-controls-unlabeled")
-        .unwrap().elements.iter().all(|e| !e.html_snippet.contains("must-not-leak")));
+        .unwrap()
+        .elements
+        .iter()
+        .all(|e| !e.html_snippet.contains("must-not-leak")));
     assert!(result.health_score < 100);
 }

@@ -3,10 +3,10 @@ use crate::services::html_parser::resolve_url;
 use scraper::{Html, Selector};
 use url::Url;
 
-#[path = "image_format.rs"]
-mod image_format;
 #[path = "image_dimensions.rs"]
 mod image_dimensions;
+#[path = "image_format.rs"]
+mod image_format;
 
 pub(super) use image_dimensions::intrinsic_data_uri_dimensions;
 use image_format::infer_image_format;

@@ -90,10 +90,16 @@ pub(super) fn duplicate_text_indices<'a>(
     let mut indexes: HashMap<String, Vec<usize>> = HashMap::new();
     for (index, value) in values.into_iter().enumerate() {
         if let Some(normalized) = value.map(str::trim).filter(|v| !v.is_empty()) {
-            indexes.entry(normalized.to_lowercase()).or_default().push(index);
+            indexes
+                .entry(normalized.to_lowercase())
+                .or_default()
+                .push(index);
         }
     }
-    indexes.into_values().filter(|group| group.len() > 1).collect()
+    indexes
+        .into_values()
+        .filter(|group| group.len() > 1)
+        .collect()
 }
 
 pub(super) fn verify_canonical_target(

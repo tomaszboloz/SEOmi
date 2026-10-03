@@ -1,9 +1,9 @@
-use tokio::io::AsyncWriteExt;
-use tokio::net::TcpStream;
-use tokio::time::timeout;
 use super::parse::*;
 use super::types::*;
 use super::upstream::*;
+use tokio::io::AsyncWriteExt;
+use tokio::net::TcpStream;
+use tokio::time::timeout;
 
 pub(super) async fn serve_connection(mut client: TcpStream) {
     let request = match timeout(REQUEST_TIMEOUT, read_request(&mut client)).await {
@@ -31,12 +31,24 @@ pub(super) async fn serve_connection(mut client: TcpStream) {
                     return;
                 }
             };
-            if client.write_all(b"HTTP/1.1 200 Connection Established\r\n\r\n").await.is_err() {
+            if client
+                .write_all(b"HTTP/1.1 200 Connection Established\r\n\r\n")
+                .await
+                .is_err()
+            {
                 return;
             }
-            let _ = timeout(TUNNEL_TIMEOUT, tokio::io::copy_bidirectional(&mut client, &mut upstream)).await;
+            let _ = timeout(
+                TUNNEL_TIMEOUT,
+                tokio::io::copy_bidirectional(&mut client, &mut upstream),
+            )
+            .await;
         }
-        ProxyTarget::Http { method, url, headers } => {
+        ProxyTarget::Http {
+            method,
+            url,
+            headers,
+        } => {
             let port = url.port_or_known_default().unwrap_or(80);
             if !is_allowed_plain_http_port(port) {
                 reject(client, 403, "Only public web ports are allowed").await;
@@ -53,7 +65,10 @@ pub(super) async fn serve_connection(mut client: TcpStream) {
             let mut outbound = format!("{method} {} HTTP/1.1\r\n", request_target(&url));
             for (name, value) in headers {
                 let normalized = name.to_ascii_lowercase();
-                if matches!(normalized.as_str(), "proxy-connection" | "proxy-authorization" | "connection" | "host") {
+                if matches!(
+                    normalized.as_str(),
+                    "proxy-connection" | "proxy-authorization" | "connection" | "host"
+                ) {
                     continue;
                 }
                 outbound.push_str(&name);

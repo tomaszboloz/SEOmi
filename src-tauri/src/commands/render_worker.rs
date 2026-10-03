@@ -8,10 +8,14 @@ mod tests;
 
 use std::sync::Arc;
 use tauri::{AppHandle, State};
-use tokio::{net::TcpListener, sync::{oneshot, Mutex}, time::Instant};
+use tokio::{
+    net::TcpListener,
+    sync::{oneshot, Mutex},
+    time::Instant,
+};
 
-pub use models::{RENDER_WORKER_VERSION, RenderWorkerLease, RenderWorkerState};
 use models::*;
+pub use models::{RenderWorkerLease, RenderWorkerState, RENDER_WORKER_VERSION};
 use server::run_worker;
 
 #[tauri::command]
@@ -72,7 +76,10 @@ pub async fn stop_render_worker(state: State<'_, RenderWorkerState>) -> Result<(
 #[tauri::command]
 pub async fn render_worker_status(state: State<'_, RenderWorkerState>) -> Result<bool, String> {
     let mut active = state.active.lock().await;
-    if active.as_ref().is_some_and(|handle| handle.task.is_finished()) {
+    if active
+        .as_ref()
+        .is_some_and(|handle| handle.task.is_finished())
+    {
         active.take();
     }
     Ok(active.is_some())

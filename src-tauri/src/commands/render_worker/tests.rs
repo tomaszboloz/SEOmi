@@ -1,5 +1,5 @@
 use super::http::bearer_matches;
-use super::models::{RenderWorkerRequest, RENDER_WORKER_VERSION, MAX_BODY_BYTES, WORKER_TTL};
+use super::models::{RenderWorkerRequest, MAX_BODY_BYTES, RENDER_WORKER_VERSION, WORKER_TTL};
 use super::render::{normalize_bounded_text, normalize_scope_path};
 use std::{sync::Arc, time::Duration};
 use tokio::sync::Mutex;
