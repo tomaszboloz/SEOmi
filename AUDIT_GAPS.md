@@ -1627,3 +1627,16 @@ BATCH-5j verification:2807frontend/516Rust/70MCP PASS; build/lint/rustfmt/strict
 - Original audit69/72 remains. Extensions, complete direct assertions, global99% and final signed release/tag remain unfinished. Logs:/tmp/seomi-ai-response-red.log,/tmp/seomi-ai-verified-{coverage,mcp,inventory}.log,/tmp/seomi-ai-{build,lint,loc}-final.log.
 
 - Fresh native nightly source/hash/AST-validated production: 12392/18969lines(65.33%),1350/2059functions(65.57%),2673/4402branches(60.72%). Covers compiled macOS modules; uncompiled Windows paths are not measured. Artifacts:/tmp/seomi-integration-native-{sources.json,branches.lcov,llvm.json,production.lcov}. The decomposition changes the source-function/line denominator; earlier snapshots are not current evidence.
+
+
+## BATCH-8c: direct scheduler lifecycle contracts
+
+- GAP-207 FIXED: scheduler claimed and launched tasks after unmount/project change during lazy tools-store loading, and inspected a stale audit busy snapshot. Three RED tests confirmed unexpected claim invocation. After the await, the hook now rechecks disposal, project ownership, in-flight guard and fresh audit state before claiming.
+- GAP-208 FIXED: an already running audit could clear another launch context after unmount/project change. Two RED tests confirmed unexpected setter invocation. The original project still receives its completed outcome and wakeup rescheduling; launch context is cleared only for the active, undisposed owner.
+- Twenty-nine direct hook tests cover deferred import/race boundaries, pending-run deduplication, page/crawl arguments, prior health evidence, success/false/rejection persistence, read/write/wakeup errors and retry, event scoping, 30second polling and listener/timer cleanup. They use dependency-boundary stores and do not prove real OS wakeup/notification/provider behavior.
+- Targeted29PASS; build/lint PASS; LOC1501946files/zero violations. Full source-matched3536frontend/86MCP PASS without unhandled errors. Statements13674/15135(90.34%),branches11468/13856(82.76%),functions4091/4581(89.30%),lines11205/12182(91.97%). Native implementation is unchanged from6b6e8da5; GAP-206 intermittent native logging cancellation remains OPEN. Original audit69/72 and final release/tag remain unfinished.
+- Logs:/tmp/seomi-scheduler-{red,context-red,final-targeted,final-build,final-lint,final-loc,coverage,mcp,inventory}.log.
+
+- Initial full suite executed3535tests but was rejected because a concurrent asynchronous mock-module factory escaped test isolation and loaded the real tools store against a partial project fixture. Cleanup alone did not resolve it. Scheduler loading now has an explicit injected dependency with a production default; direct tests control its promise and separately cover the default import. Isolated coverage29PASS with no unhandled errors; scheduler52/52lines,12/12functions,67/67statements,47/48branches. Full verification must replace the rejected snapshot.
+
+- Final scheduler module52/52lines,12/12functions,67/67statements,47/48branches; one branch remains unobserved. Global target99.01% and original69/72 are still OPEN. Current native next priorities include page_error129/129uncovered, audit_queue/executions116/116 and scheduled_worker/execution115/115 on the last source-validated native snapshot.

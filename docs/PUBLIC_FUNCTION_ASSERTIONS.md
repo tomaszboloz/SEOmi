@@ -47,3 +47,7 @@ The three native canonical tests failed before the integration fix. MCP tests us
 - `readAiResponseText`: direct Node-compatible stream assertions cover split UTF-8, exact1MiB byte cap, early cancellation, reader release, invalid JSON/UTF-8/envelopes and empty/null text.
 - `generateAiText`, `callOpenAI`, `callClaude`, `callGemini`: tests/aiResponseSafety.test.ts directly reject non-string model payloads and oversized responses; HTTP failure tests assert private bytes are neither consumed nor exposed.
 - Source-matched full suite after the fix:1247publicTS/MCPcallables,1215executed,32factory-returned,287without direct static test reference. Execution/reference counts remain weaker than complete direct assertion proof.
+
+## App scheduler lifecycle and execution
+
+`useAppScheduler` is mounted directly with dependency-boundary stores/notifications in tests/appSchedulerLifecycle.test.ts, tests/appSchedulerExecution.test.ts and tests/appSchedulerGuards.test.ts. Twenty-nine assertion scenarios cover deferred module load, disposal/project ownership, current audit busy state, duplicate update events, timer/listener cleanup, exact page-audit/crawl arguments, prior health score, persisted success/false/rejection, rescheduling and failed read/write/wakeup retry. Five RED scenarios confirmed stale launch/run behavior before the production fix. These tests do not establish real OS scheduler wakeup, notification delivery or live crawling.
