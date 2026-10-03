@@ -1245,3 +1245,27 @@ BATCH-5j verification:2807frontend/516Rust/70MCP PASS; build/lint/rustfmt/strict
   - `tests/maxLoc.test.ts`: 25/25 tests PASS.
   - Global LOC violations decreased from 34 to 31 across the codebase.
 
+### BATCH-7e: Decompose semantics, transport_security, post_processing, and seo_audit to LOC<=150
+- Decomposed four native modules exceeding 150 LOC into modular single-responsibility units strictly under 150 physical LOC:
+  1. `src-tauri/src/commands/site_crawler/semantics.rs` (260 -> 132 LOC facade) with 1 new submodule:
+     - `semantic_chrome.rs` (129 LOC): `semantic_content_root`, `semantic_aria_hidden`, `semantic_style_hides`, `semantic_chrome_element`, `semantic_content_contains`, and `has_semantic_content_root`.
+  2. `src-tauri/src/services/seo_analyzer/transport_security.rs` (262 -> 114 LOC facade) with 2 new submodules:
+     - `cookie_security.rs` (83 LOC): `assess_cookie_headers`.
+     - `mixed_content.rs` (73 LOC): `detect_mixed_content_resources` and `collect_http_resource`.
+  3. `src-tauri/src/commands/site_crawler/post_processing.rs` (270 -> 140 LOC facade) with 2 new submodules:
+     - `duplicate_annotation.rs` (76 LOC): `annotate_duplicates`.
+     - `target_relations.rs` (82 LOC): `annotate_amp_targets` and `annotate_hreflang_relations`.
+  4. `src-tauri/src/commands/seo_audit.rs` (275 -> 110 LOC facade) with 3 new submodules in `src-tauri/src/commands/seo_audit/`:
+     - `control.rs` (64 LOC): `AuditControl` registration, cancellation, and lifecycle tracking.
+     - `rate_limiter.rs` (51 LOC): `AuditRateLimiter` sliding window rate limiter and process-wide singleton.
+     - `tests.rs` (49 LOC): 4 unit tests for request IDs, cancellation notification, and rate limit interval/window enforcement.
+  5. Refactored `src-tauri/src/commands/site_crawler.rs` (147 LOC facade): registered `semantic_chrome`, `duplicate_annotation`, and `target_relations`.
+- Full verification loop:
+  - `cargo check --manifest-path src-tauri/Cargo.toml` clean (0 errors, 0 warnings).
+  - `cargo test --manifest-path src-tauri/Cargo.toml --lib -- --test-threads=1`: **558/558 library tests passing with 0 failures**.
+  - `npm run lint` clean (0 errors, 0 warnings).
+  - `npx tsc --noEmit` clean (0 errors).
+  - `tests/maxLoc.test.ts`: 25/25 tests PASS.
+  - Global LOC violations decreased from 31 to 27 across the codebase.
+
+

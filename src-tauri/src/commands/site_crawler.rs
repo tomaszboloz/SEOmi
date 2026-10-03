@@ -5,9 +5,7 @@ use scraper::{node::Node, ElementRef, Html, Selector};
 use serde::{Deserialize, Serialize};
 use sha2::{Digest, Sha256};
 use std::collections::{HashMap, HashSet, VecDeque};
-use std::error::Error;
-use std::sync::{Mutex, OnceLock};
-use std::time::Instant;
+use std::{error::Error, sync::{Mutex, OnceLock}, time::Instant};
 use tauri::{AppHandle, Emitter, State};
 use tokio::task::JoinSet;
 
@@ -39,6 +37,7 @@ const MAX_INTRINSIC_IMAGE_BYTES: usize = 8 * 1024 * 1024;
 mod canonical;
 mod content_metrics;
 mod control;
+mod duplicate_annotation;
 mod favicon;
 mod fetch_data;
 mod fetch_types;
@@ -60,23 +59,27 @@ mod robots;
 mod schema;
 mod scoring;
 mod scope;
+mod semantic_chrome;
 mod semantics;
 mod simhash;
 mod social;
 mod srcset;
 mod svg_dimensions;
 mod svg_inline;
+mod target_relations;
 mod transport;
 mod url_normalization;
 
 use {
-    canonical::*, content_metrics::*, control::*, favicon::*, fetch_data::*,
-    fetch_types::*, filter_validation::*, fingerprints::*, frames::*, hreflang::*,
-    hreflang_validation::*, html_validation::*, image_decoding::*, inline_images::*,
-    models::*, post_processing::*, resource_apply::*, resource_discovery::*,
-    resource_fetch::*, robots::*, schema::*, scoring::*, scope::*, semantics::*,
-    simhash::*, social::*, srcset::*, svg_dimensions::*, svg_inline::*,
-    transport::*, url_normalization::*,
+    canonical::*, content_metrics::*, control::*, duplicate_annotation::*,
+    favicon::*, fetch_data::*, fetch_types::*, filter_validation::*,
+    fingerprints::*, frames::*, hreflang::*, hreflang_validation::*,
+    html_validation::*, image_decoding::*, inline_images::*, models::*,
+    post_processing::*, resource_apply::*, resource_discovery::*,
+    resource_fetch::*, robots::*, schema::*, scoring::*, scope::*,
+    semantic_chrome::*, semantics::*, simhash::*, social::*, srcset::*,
+    svg_dimensions::*, svg_inline::*, target_relations::*, transport::*,
+    url_normalization::*,
 };
 
 pub use control::{CrawlControl, CrawlProgress};
