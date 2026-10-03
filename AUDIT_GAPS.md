@@ -1346,3 +1346,38 @@ BATCH-5j verification:2807frontend/516Rust/70MCP PASS; build/lint/rustfmt/strict
   - `npx tsc --noEmit` clean (0 errors).
   - `tests/maxLoc.test.ts`: 25/25 tests PASS.
   - Global LOC violations decreased from 18 to 14 across the codebase.
+
+### BATCH-7i: Decompose canonical, audit_data, render_worker, and html_validation to LOC<=150
+- Decomposed four native modules exceeding 150 LOC into modular single-responsibility units strictly under 150 physical LOC:
+  1. `src-tauri/src/commands/site_crawler/canonical.rs` (446 -> 107 LOC) with 3 new submodules in `src-tauri/src/commands/site_crawler/`:
+     - `pagination.rs` (123 LOC): `pagination_query_changes`, `crawl_pagination_links`, `pagination_canonical_alignment`, `verify_pagination_target`, `opposite_pagination_relation`, and `pagination_edges`.
+     - `client_redirects.rs` (57 LOC): `verify_amp_target` and `parse_client_redirect`.
+     - `js_redirects.rs` (86 LOC): static inline regex extractor `extract_javascript_redirects`.
+     - `canonical.rs` (107 LOC): `classify_canonical_relation`, `canonical_identity_url`, `crawl_canonical_declarations`, `duplicate_text_indices`, and `verify_canonical_target`.
+  2. `src-tauri/src/models/audit_data.rs` (475 -> 13 LOC facade) with 6 new submodules in `src-tauri/src/models/audit_data/`:
+     - `page.rs` (56 LOC): `PageAuditData`, `HttpPerformanceMeasurement`, `RedirectHop`.
+     - `social_meta.rs` (50 LOC): `MetaTags`, `MetaTag`, `OpenGraphData`, `TwitterCardData`.
+     - `content_headings.rs` (116 LOC): `HeadingsStructure`, `HeadingNode`, `ImageData`, `LinksAnalysis`, `LinkData`, `ContentStats`, `KeywordStat`.
+     - `security_amp.rs` (110 LOC): `SecurityHeaders`, `TransportSecurityAudit`, `CookieSecurityFinding`, `StructuredData`, `StructuredDataValidationIssue`, `TechnicalData`, `FaviconData`, `TechnologySignal`, `HreflangTag`, `AmpAudit`, `AmpFinding`.
+     - `accessibility.rs` (81 LOC): `IndexabilityAssessment`, `AccessibilityAudit`, `AccessibilityFinding`, `AccessibilityElementEvidence`, `AccessibilityLandmark`.
+     - `issues.rs` (39 LOC): `Issue`, `IssueSeverity`, `IssueCategory`.
+  3. `src-tauri/src/commands/render_worker.rs` (520 -> 79 LOC facade) with 5 new submodules in `src-tauri/src/commands/render_worker/`:
+     - `models.rs` (68 LOC): protocol constants, lease, worker state, request, and internal types.
+     - `http.rs` (109 LOC): bounded request parser `read_request`, `bearer_matches`, `json_error`, and `write_response`.
+     - `render.rs` (59 LOC): `render_request`, `normalize_scope_path`, and `normalize_bounded_text`.
+     - `server.rs` (90 LOC): connection loop `run_worker` and HTTP router `handle_connection`.
+     - `tests.rs` (50 LOC): 5 unit tests verifying scope path normalization, text boundary validation, protocol invariants, request schema security, and one-shot bearer token consumption.
+  4. `src-tauri/src/commands/site_crawler/html_validation.rs` (536 -> 109 LOC) with 3 new submodules:
+     - `html_decoding.rs` (86 LOC): `html_meta_charset`, `html_encoding_finding`, and `decode_crawl_html_body`.
+     - `html_source_locator.rs` (131 LOC): `is_valid_percent_encoding`, `push_html_validation_finding`, `locate_html_attribute`, and `set_html_finding_source`.
+     - `html_validation_rules.rs` (144 LOC): `document_declares_meta_charset`, `check_html_doctype`, `check_html_language`, and `check_html_meta_charset`.
+     - `html_validation.rs` (109 LOC): `validate_crawl_html_with_charset` and `validate_element_attributes`.
+  5. Refactored `src-tauri/src/commands/site_crawler.rs` (125 LOC facade): registered new submodules and consolidated imports.
+- Full verification loop:
+  - `cargo check --manifest-path src-tauri/Cargo.toml` clean (0 errors, 0 warnings).
+  - `cargo test --manifest-path src-tauri/Cargo.toml --lib -- --test-threads=1`: **558/558 library tests passing with 0 failures**.
+  - `npm run lint` clean (0 errors, 0 warnings).
+  - `npx tsc --noEmit` clean (0 errors).
+  - `tests/maxLoc.test.ts`: 25/25 tests PASS.
+  - Global LOC violations decreased from 14 to 10 across the codebase.
+
