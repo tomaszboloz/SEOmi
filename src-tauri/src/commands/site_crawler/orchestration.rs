@@ -110,3 +110,7 @@ pub async fn crawl_site_with_control(
         resource_limit_reached,
     }))
 }
+
+#[cfg(test)]
+#[path = "orchestration/tests/mod.rs"]
+mod tests;

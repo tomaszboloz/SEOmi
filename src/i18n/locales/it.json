@@ -1621,7 +1621,8 @@
       "start": "starting address",
       "seed": "seed list",
       "sitemap": "sitemap",
-      "link": "internal link"
+      "link": "internal link",
+      "resume": "Saved crawl frontier"
     },
     "bottomNavigationAria": "Quick semantic map navigation",
     "bottomViewsAria": "Map views at bottom",

@@ -51,3 +51,11 @@ The three native canonical tests failed before the integration fix. MCP tests us
 ## App scheduler lifecycle and execution
 
 `useAppScheduler` is mounted directly with dependency-boundary stores/notifications in tests/appSchedulerLifecycle.test.ts, tests/appSchedulerExecution.test.ts and tests/appSchedulerGuards.test.ts. Twenty-nine assertion scenarios cover deferred module load, disposal/project ownership, current audit busy state, duplicate update events, timer/listener cleanup, exact page-audit/crawl arguments, prior health score, persisted success/false/rejection, rescheduling and failed read/write/wakeup retry. Five RED scenarios confirmed stale launch/run behavior before the production fix. These tests do not establish real OS scheduler wakeup, notification delivery or live crawling.
+
+## Native orchestration contracts
+
+Direct tests in src-tauri/src/commands/site_crawler/orchestration/tests cover `handle_page_error`, `CrawlSetup::init`, `default_crawl_config`, `resolve_resume_urls`, `CrawlLoopState::new`, `init_frontier` and `resolve_page_discovery_sources`. Assertions preserve cancellation/control ownership, uncertain failed-page evidence, source provenance, actual request bounds/defaults, Unicode phrase limits, resume normalization and pre-fetch URL/scope/filter rejection. These tests build an HTTP client but do not contact live websites or instantiate a rendered WebView. A failed-setup control reset and invented sitemap attribution were confirmed RED before fixes.
+
+Ten direct render cases in tests/crawlDiscoveryLabels.test.tsx load actual English/Polish resources and assert both table and evidence labels for start/seed/sitemap/link/resume; no stub translator is used.
+
+Source-matched native proof for this batch: page_error129/129lines8/8branches,frontier104/104lines20/20branches,page_discovery24/24lines6/6branches. State/default configuration bodies are fully line-covered. Setup remains65/69lines1/2branches. Scope is compiled macOS; these counts do not prove all-platform coverage or every public native assertion.
