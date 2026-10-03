@@ -1226,3 +1226,22 @@ BATCH-5j verification:2807frontend/516Rust/70MCP PASS; build/lint/rustfmt/strict
   - `npx tsc --noEmit` clean (0 errors).
   - `tests/maxLoc.test.ts`: 25/25 tests PASS.
   - Global LOC violations decreased from 38 to 34 across the codebase.
+
+### BATCH-7d: Decompose site_crawler social, hreflang, and url_validator to LOC<=150
+- Decomposed native `site_crawler` and `utils` modules exceeding 150 LOC into modular single-responsibility units strictly under 150 physical LOC:
+  1. `src-tauri/src/commands/site_crawler/social.rs` (245 -> 130 LOC facade) with 2 new submodules:
+     - `favicon.rs` (82 LOC): `extract_favicons` DOM extractor.
+     - `frames.rs` (36 LOC): `extract_frames` DOM extractor.
+  2. `src-tauri/src/commands/site_crawler/hreflang.rs` (230 -> 125 LOC facade) with 1 new submodule:
+     - `hreflang_validation.rs` (123 LOC): `validate_hreflang_matches`, `missing_reciprocal_return_tags`, and `validate_crawled_page_hreflangs`.
+  3. `src-tauri/src/utils/url_validator.rs` (248 -> 127 LOC facade) with:
+     - `url_validator_tests.rs` (121 LOC): 10 unit tests for IPv6 literals, valid HTTPS, default scheme, unsupported schemes, empty URL, localhost blocking, SSRF private IPs, embedded credentials, and public IP policy.
+  4. Refactored `src-tauri/src/commands/site_crawler.rs` (144 LOC facade): registered `favicon`, `frames`, `hreflang_validation` modules.
+- Full verification loop:
+  - `cargo check --manifest-path src-tauri/Cargo.toml` clean (0 errors, 0 warnings).
+  - `cargo test --manifest-path src-tauri/Cargo.toml --lib -- --test-threads=1`: **558/558 library tests passing with 0 failures**.
+  - `npm run lint` clean (0 errors, 0 warnings).
+  - `npx tsc --noEmit` clean (0 errors).
+  - `tests/maxLoc.test.ts`: 25/25 tests PASS.
+  - Global LOC violations decreased from 34 to 31 across the codebase.
+

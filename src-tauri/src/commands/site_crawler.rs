@@ -34,19 +34,19 @@ const MAX_HTML_VALIDATION_FINDINGS_PER_PAGE: usize = 200;
 const MAX_IFRAMES_PER_PAGE: usize = 500;
 const MAX_INLINE_IMAGE_URI_CHARS: usize = 8_192;
 const MAX_ROBOTS_RULES: usize = 100;
-/// Resource crawling is opt-in. When enabled, retain only a bounded prefix of
-/// an image response for intrinsic-dimension decoding; the response body is
-/// never persisted in the crawl snapshot.
 const MAX_INTRINSIC_IMAGE_BYTES: usize = 8 * 1024 * 1024;
 
 mod canonical;
 mod content_metrics;
 mod control;
+mod favicon;
 mod fetch_data;
 mod fetch_types;
 mod filter_validation;
 mod fingerprints;
+mod frames;
 mod hreflang;
+mod hreflang_validation;
 mod html_validation;
 mod image_decoding;
 mod inline_images;
@@ -70,12 +70,13 @@ mod transport;
 mod url_normalization;
 
 use {
-    canonical::*, content_metrics::*, control::*, fetch_data::*, fetch_types::*,
-    filter_validation::*, fingerprints::*, hreflang::*, html_validation::*,
-    image_decoding::*, inline_images::*, models::*, post_processing::*,
-    resource_apply::*, resource_discovery::*, resource_fetch::*, robots::*,
-    schema::*, scoring::*, scope::*, semantics::*, simhash::*, social::*,
-    srcset::*, svg_dimensions::*, svg_inline::*, transport::*, url_normalization::*,
+    canonical::*, content_metrics::*, control::*, favicon::*, fetch_data::*,
+    fetch_types::*, filter_validation::*, fingerprints::*, frames::*, hreflang::*,
+    hreflang_validation::*, html_validation::*, image_decoding::*, inline_images::*,
+    models::*, post_processing::*, resource_apply::*, resource_discovery::*,
+    resource_fetch::*, robots::*, schema::*, scoring::*, scope::*, semantics::*,
+    simhash::*, social::*, srcset::*, svg_dimensions::*, svg_inline::*,
+    transport::*, url_normalization::*,
 };
 
 pub use control::{CrawlControl, CrawlProgress};
