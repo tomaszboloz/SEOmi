@@ -43,6 +43,8 @@ mod canonical;
 mod content_metrics;
 mod control;
 mod fetch_data;
+mod fetch_types;
+mod filter_validation;
 mod fingerprints;
 mod hreflang;
 mod html_validation;
@@ -51,29 +53,30 @@ mod inline_images;
 mod models;
 mod orchestration;
 mod post_processing;
-mod scoring;
-use post_processing::*;
-use scoring::*;
 mod resource_discovery;
 mod resource_fetch;
 mod robots;
 mod schema;
+mod scoring;
 mod scope;
 mod semantics;
 mod social;
+mod svg_dimensions;
 mod transport;
 
-use canonical::*;
-use content_metrics::*;
-use control::*;
+use {
+    canonical::*, content_metrics::*, control::*, fetch_data::*, fetch_types::*,
+    filter_validation::*, fingerprints::*, hreflang::*, html_validation::*,
+    image_decoding::*, inline_images::*, models::*, post_processing::*,
+    resource_discovery::*, resource_fetch::*, robots::*, schema::*, scoring::*,
+    scope::*, semantics::*, social::*, svg_dimensions::*, transport::*,
+};
+
 pub use control::{CrawlControl, CrawlProgress};
-use fetch_data::*;
-use fingerprints::*;
-use hreflang::*;
-use html_validation::*;
-use image_decoding::*;
-use inline_images::*;
-use models::*;
+pub use filter_validation::{
+    __cmd__validate_crawl_filters, __tauri_command_name_validate_crawl_filters,
+    validate_crawl_filters,
+};
 pub use models::{
     CrawlConfig, CrawlFilterPreview, CrawlFilterValidationError, CrawlFilterValidationResult,
     CrawledCanonicalTarget, CrawledClientRedirect, CrawledContentTerm, CrawledDiscoverySource,
@@ -85,19 +88,6 @@ pub use models::{
     CrawledSocialMetaTag, CrawledSocialResourceCheck, RejectedCrawlUrl, SiteCrawlResult,
 };
 pub use orchestration::crawl_site_with_control;
-
-use resource_discovery::*;
-pub use resource_discovery::{
-    __cmd__validate_crawl_filters, __tauri_command_name_validate_crawl_filters,
-    validate_crawl_filters,
-};
-use resource_fetch::*;
-use robots::*;
-use schema::*;
-use scope::*;
-use semantics::*;
-use social::*;
-use transport::*;
 
 #[tauri::command]
 pub fn cancel_site_crawl(run_id: String, control: State<'_, CrawlControl>) -> Result<(), String> {

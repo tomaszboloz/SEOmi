@@ -1171,3 +1171,20 @@ BATCH-5j verification:2807frontend/516Rust/70MCP PASS; build/lint/rustfmt/strict
   - `tests/maxLoc.test.ts`: 25/25 tests PASS.
   - Global LOC violations decreased from 46 to 44 across the codebase.
   - **HISTORIC MILESTONE**: Exactly 0 files in `src/`, `tests/`, `scripts/`, `mcp-server/src/`, and `mcp-server/test/` exceed 150 LOC. **100% of all TypeScript, JavaScript, JSX/TSX, tests, and scripts across the entire repository are strictly <= 150 LOC!** Only Rust modules in `src-tauri/` remain.
+
+### BATCH-7a: Decompose site_crawler image_decoding, resource_discovery, and fetch_data to LOC<=150
+- Decomposed three native `site_crawler` modules exceeding 150 LOC into modular single-responsibility units strictly under 150 physical LOC:
+  1. `src-tauri/src/commands/site_crawler/image_decoding.rs` (154 -> 119 LOC) with 1 new submodule:
+     - `svg_dimensions.rs` (35 LOC): SVG intrinsic dimension decoding, dimension token parsing, and viewbox dimension calculation.
+  2. `src-tauri/src/commands/site_crawler/resource_discovery.rs` (157 -> 59 LOC) with 1 new submodule:
+     - `filter_validation.rs` (98 LOC): crawl filter pattern compilation, preview filtering, and `validate_crawl_filters` Tauri IPC command handler.
+  3. `src-tauri/src/commands/site_crawler/fetch_data.rs` (170 -> 128 LOC) with 1 new submodule:
+     - `fetch_types.rs` (40 LOC): response, body, failure, and fetched page data model structs and enums (`FetchedResponse`, `FetchedPageBody`, `CrawlFetchFailure`, `FetchedPageData`).
+  4. Refactored `src-tauri/src/commands/site_crawler.rs` (148 -> 137 LOC): consolidated module declarations and module `use` statements.
+- Full verification loop:
+  - `cargo check --manifest-path src-tauri/Cargo.toml` clean (0 errors, 0 warnings).
+  - `cargo test --manifest-path src-tauri/Cargo.toml`: **558/558 native tests passing with 0 failures** (+ 11 example tests passing).
+  - `npm run lint` clean (0 errors, 0 warnings).
+  - `npx tsc --noEmit` clean (0 errors).
+  - `tests/maxLoc.test.ts`: 25/25 tests PASS.
+  - Global LOC violations decreased from 44 to 41 across the codebase.
