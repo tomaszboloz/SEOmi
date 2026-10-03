@@ -20,6 +20,11 @@ describe('text normalisation', () => {
     expect([stem('seo'), stem('2026'), stem('page')]).toEqual(['seo', '2026', 'page']);
   });
 
+  it('does not collapse different short words onto one stem', () => {
+    expect(stem('cukier')).not.toBe(stem('cukinie'));
+    expect(stem('zostan')).not.toBe(stem('zostaw'));
+  });
+
   it('drops stopwords unless a text has nothing else', () => {
     expect(contentStems('jak to jest w robots.txt')).toEqual(['robot', 'txt']);
     expect(contentStems('jak to jest')).toEqual(['jak', 'to', 'jest']);

@@ -26,11 +26,15 @@ export const normalizeText = (value: string): string =>
     .replace(/[^\p{L}\p{N}]+/gu, ' ')
     .trim();
 
-/** Strips one known suffix while keeping at least four characters of the word. */
+// A four-letter stem merges unrelated words ("cukier" and "cukinie" both
+// become "cuki"); five letters keep them apart while still joining inflections.
+const MIN_STEM = 5;
+
+/** Strips one known suffix while keeping at least MIN_STEM characters of the word. */
 export const stem = (word: string): string => {
-  if (word.length <= 4 || /^\d+$/.test(word)) return word;
+  if (word.length <= MIN_STEM || /^\d+$/.test(word)) return word;
   for (const suffix of SUFFIXES) {
-    if (word.endsWith(suffix) && word.length - suffix.length >= 4) return word.slice(0, -suffix.length);
+    if (word.endsWith(suffix) && word.length - suffix.length >= MIN_STEM) return word.slice(0, -suffix.length);
   }
   return word;
 };
