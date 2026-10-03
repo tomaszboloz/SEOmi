@@ -1317,6 +1317,32 @@ BATCH-5j verification:2807frontend/516Rust/70MCP PASS; build/lint/rustfmt/strict
   - `cargo check --manifest-path src-tauri/Cargo.toml` clean (0 errors, 0 warnings).
   - `cargo test --manifest-path src-tauri/Cargo.toml --lib -- --test-threads=1`: **558/558 library tests passing with 0 failures**.
   - `npm run lint` clean (0 errors, 0 warnings).
+  - Global LOC violations decreased from 22 to 18 across the codebase.
+
+### BATCH-7h: Decompose rendered_artifacts, content_metrics, crawl_storage, and audit_queue_worker to LOC<=150
+- Decomposed four native modules exceeding 150 LOC into modular single-responsibility units strictly under 150 physical LOC:
+  1. `src-tauri/src/commands/rendered_artifacts.rs` (353 -> 46 LOC facade) with 3 new submodules in `src-tauri/src/commands/rendered_artifacts/`:
+     - `macos.rs` (145 LOC): `capture_macos`, `send_artifact_result`, and `ns_data_bytes` WKWebView capture logic.
+     - `windows.rs` (148 LOC): `capture_windows` and `send_windows_artifact_result` WebView2 capture logic.
+     - `windows_stream.rs` (34 LOC): `read_com_stream` COM stream extraction helper.
+  2. `src-tauri/src/commands/site_crawler/content_metrics.rs` (354 -> 113 LOC facade) with 2 new submodules:
+     - `readability.rs` (81 LOC): `estimate_syllables`, `readability_label`, `normalized_language`, and `readability_formula`.
+     - `content_terms.rs` (146 LOC): `content_term_stats`, `infer_content_language`, `phrase_occurrences`, and `focus_phrase_evidence`.
+  3. Refactored `src-tauri/src/commands/site_crawler.rs` (123 LOC facade): registered `content_terms` and `readability`, and consolidated submodule declarations.
+  4. `src-tauri/src/commands/crawl_storage.rs` (393 -> 112 LOC facade) with 4 new submodules in `src-tauri/src/commands/crawl_storage/`:
+     - `encoding.rs` (57 LOC): `validate_storage_size`, `encode_crawl_runs`, `decode_crawl_runs`, and storage constants.
+     - `fs_atomic.rs` (67 LOC): cross-platform `replace_file`, `project_directory`, and safety byte limits.
+     - `history.rs` (63 LOC): `recover_backup`, `read_crawl_history_file`, and `load_crawl_history_with_recovery`.
+     - `tests.rs` (101 LOC): 5 unit tests for compression, uncompressed legacy reading, storage limits, atomic replacement, and corrupt backup recovery.
+  5. `src-tauri/src/commands/audit_queue_worker.rs` (394 -> 137 LOC facade) with 4 new submodules in `src-tauri/src/commands/audit_queue_worker/`:
+     - `models.rs` (85 LOC): `QueueItem`, `QueueRun`, `QueueSnapshot`, `parse_snapshot`, and `valid_identifier`.
+     - `lock.rs` (71 LOC): `QueueLock`, `acquire_lock`, `queue_is_stale`, `queue_has_pending_items`, `stop_requested_for_run`, and `queue_value`.
+     - `item_processor.rs` (96 LOC): `process_queue_item` and `handle_stop_requested`.
+     - `tests.rs` (62 LOC): 4 unit tests for malformed items, stale run detection, pending status, and stop request matching.
+- Full verification loop:
+  - `cargo check --manifest-path src-tauri/Cargo.toml` clean (0 errors, 0 warnings).
+  - `cargo test --manifest-path src-tauri/Cargo.toml --lib -- --test-threads=1`: **558/558 library tests passing with 0 failures**.
+  - `npm run lint` clean (0 errors, 0 warnings).
   - `npx tsc --noEmit` clean (0 errors).
   - `tests/maxLoc.test.ts`: 25/25 tests PASS.
-  - Global LOC violations decreased from 22 to 18 across the codebase.
+  - Global LOC violations decreased from 18 to 14 across the codebase.

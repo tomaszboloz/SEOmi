@@ -20,57 +20,37 @@ use crate::services::custom_search::{
 use crate::services::schema_validator;
 use crate::utils::url_validator::validate_and_normalize_url;
 
-mod canonical;
-mod constants;
-mod content_metrics;
-mod control;
-mod crawl_delay;
-mod duplicate_annotation;
-mod favicon;
-mod fetch_data;
-mod fetch_types;
-mod filter_validation;
-mod fingerprints;
-mod frames;
-mod hreflang;
-mod hreflang_validation;
-mod html_validation;
-mod image_decoding;
-mod inline_images;
-mod models;
-mod orchestration;
-mod post_processing;
-mod prefetch;
-mod request_error;
-mod resource_apply;
-mod resource_discovery;
-mod resource_fetch;
-mod robots;
-mod robots_matching;
-mod schema;
-mod schema_inspections;
-mod schema_references;
-mod scoring;
-mod scope;
-mod semantic_chrome;
-mod semantics;
-mod simhash;
-mod sitemap;
-mod social;
-mod srcset;
-mod svg_dimensions;
-mod svg_inline;
-mod target_relations;
-mod transport;
+mod canonical; mod constants;
+mod content_metrics; mod content_terms;
+mod control; mod crawl_delay;
+mod duplicate_annotation; mod favicon;
+mod fetch_data; mod fetch_types;
+mod filter_validation; mod fingerprints;
+mod frames; mod hreflang;
+mod hreflang_validation; mod html_validation;
+mod image_decoding; mod inline_images;
+mod models; mod orchestration;
+mod post_processing; mod prefetch;
+mod readability; mod request_error;
+mod resource_apply; mod resource_discovery;
+mod resource_fetch; mod robots;
+mod robots_matching; mod schema;
+mod schema_inspections; mod schema_references;
+mod scoring; mod scope;
+mod semantic_chrome; mod semantics;
+mod simhash; mod sitemap;
+mod social; mod srcset;
+mod svg_dimensions; mod svg_inline;
+mod target_relations; mod transport;
 mod url_normalization;
 
 use {
-    canonical::*, constants::*, content_metrics::*, control::*, crawl_delay::*,
-    duplicate_annotation::*, favicon::*, fetch_data::*, fetch_types::*,
+    canonical::*, constants::*, content_metrics::*, content_terms::*, control::*,
+    crawl_delay::*, duplicate_annotation::*, favicon::*, fetch_data::*, fetch_types::*,
     filter_validation::*, fingerprints::*, frames::*, hreflang::*,
     hreflang_validation::*, html_validation::*, image_decoding::*,
     inline_images::*, models::*, post_processing::*, prefetch::*,
-    request_error::*, resource_apply::*, resource_discovery::*,
+    readability::*, request_error::*, resource_apply::*, resource_discovery::*,
     resource_fetch::*, robots::*, robots_matching::*, schema::*,
     schema_inspections::*, schema_references::*, scoring::*,
     scope::*, semantic_chrome::*, semantics::*, simhash::*, sitemap::*,
