@@ -25,6 +25,8 @@ describe('KeywordClustering task', () => {
     localStorage.clear();
     i18n.changeLanguage('en');
     localStorage.setItem('seomi_active_project_v1', 'project-clusters');
+    // These tests cover the paid SERP-overlap method; embeddings are the default.
+    localStorage.setItem('seomi_project_project-clusters_keyword_clustering_method_v1', 'serp');
     useProjectStore.setState({ activeProjectId: 'project-clusters' });
     useSettingsStore.setState({ dataForSeoCredentials: { login: '', password: '' } });
     useToolsStore.setState({ keywordResults: [], savedKeywords: [] });

@@ -222,6 +222,8 @@ npm run embeddings -- cluster --input keywords.txt --label-model llama3.2
 
 **Accuracy.** `eval` reports leave-one-out k-nearest-neighbour accuracy (each labelled text is classified by its `k` most similar other texts) and cluster purity, and exits with code 1 below `--min-accuracy` (default 85%). With the `local` provider and `k=3` the bundled fixtures measure 94% (`seo-topics.json`, used to build the glossary) and 90% (`seo-topics-holdout.json`, written separately and not used for tuning); the unit tests keep both at or above 85%. These numbers describe the fixtures only — run `eval` on labelled examples from your own market before relying on a threshold.
 
+**In the app.** *Keywords → Keyword clustering* offers two methods. *Local embeddings (free)* is the default: up to 2,000 phrases are grouped on this computer with the same providers, a similarity slider and a cohesion score per group; Ollama embeddings and LLM group names are optional and use only `http://127.0.0.1:11434` (the only plain-HTTP origin the desktop CSP allows). *SERP overlap (DataForSEO, paid)* is unchanged and stays selected for projects that already have a SERP result.
+
 **Extending.** Add vocabulary to `SEO_GLOSSARY` (`src/services/embeddings/glossary.ts`), tune feature weights in `localProvider.ts`, or register a new backend in `PROVIDER_FACTORIES` (`registry.ts`); every provider works with `embed`, `eval` and `cluster` unchanged. `--cache file.json` reuses vectors for texts already embedded with the same provider and model. Cluster thresholds depend on the model (`DEFAULT_CLUSTER_THRESHOLD`); pass `--threshold` to override.
 
 <a id="data_sources"></a>

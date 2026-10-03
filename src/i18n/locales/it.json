@@ -4691,5 +4691,39 @@
     "limited": "Google o la memoria locale possono troncare i dati. Le quote riguardano solo le righe osservate.",
     "previous": "Precedente",
     "next": "Successivo"
+  },
+  "embeddingClusteringUi": {
+    "methodLabel": "Metodo di raggruppamento",
+    "methods": {
+      "embeddings": {
+        "title": "Embedding locali (gratis)",
+        "description": "Raggruppa le frasi per significato su questo computer. Nessuna chiave API né costi; Ollama è facoltativo."
+      },
+      "serp": {
+        "title": "Sovrapposizione SERP (DataForSEO, a pagamento)",
+        "description": "Raggruppa le frasi i cui risultati Google condividono URL. Richiede credenziali DataForSEO; ogni nuova frase è una richiesta a pagamento."
+      }
+    },
+    "settingsTitle": "Impostazioni embedding",
+    "description": "Le frasi vengono trasformate in embedding e raggruppate per somiglianza. Il modello locale funziona offline per polacco e inglese; Ollama aggiunge un modello neurale su questo computer.",
+    "provider": "Modello di embedding",
+    "providers": {
+      "local": "Locale (offline)",
+      "ollama": "Ollama",
+      "hybrid": "Locale + Ollama"
+    },
+    "threshold": "Soglia di somiglianza: {{value}}",
+    "ollamaModel": "Modello di embedding Ollama",
+    "labelModel": "Modello Ollama per i nomi dei gruppi (facoltativo)",
+    "labelModelPlaceholder": "es. llama3.2 — lascia vuoto per saltare",
+    "ollamaHint": "Ollama deve essere in esecuzione su questo computer a 127.0.0.1:11434 con il modello scaricato (ollama pull <model>).",
+    "run": "Raggruppa le frasi",
+    "running": "Raggruppamento…",
+    "free": "{{count}} frasi · gratis, nessuna richiesta ad API a pagamento",
+    "tooMany": "Massimo {{max}} frasi per esecuzione",
+    "resultTitle": "Gruppi per embedding",
+    "resultMeta": "{{model}} · soglia {{threshold}} · {{date}}",
+    "keywordCount": "{{count}} frasi",
+    "cohesion": "coesione {{value}}%"
   }
 }

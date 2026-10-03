@@ -4691,5 +4691,39 @@
     "limited": "Google o el almacenamiento local pueden truncar los datos. Los porcentajes solo incluyen filas observadas.",
     "previous": "Anterior",
     "next": "Siguiente"
+  },
+  "embeddingClusteringUi": {
+    "methodLabel": "Método de agrupación",
+    "methods": {
+      "embeddings": {
+        "title": "Embeddings locales (gratis)",
+        "description": "Agrupa frases por significado en este ordenador. Sin clave de API ni coste; Ollama es opcional."
+      },
+      "serp": {
+        "title": "Coincidencia de SERP (DataForSEO, de pago)",
+        "description": "Agrupa frases cuyos resultados de Google comparten URL. Requiere credenciales de DataForSEO; cada frase nueva es una solicitud de pago."
+      }
+    },
+    "settingsTitle": "Ajustes de embeddings",
+    "description": "Las frases se convierten en embeddings y se agrupan por similitud. El modelo local funciona sin conexión para polaco e inglés; Ollama añade un modelo neuronal en este ordenador.",
+    "provider": "Modelo de embeddings",
+    "providers": {
+      "local": "Local (sin conexión)",
+      "ollama": "Ollama",
+      "hybrid": "Local + Ollama"
+    },
+    "threshold": "Umbral de similitud: {{value}}",
+    "ollamaModel": "Modelo de embeddings de Ollama",
+    "labelModel": "Modelo de Ollama para nombrar grupos (opcional)",
+    "labelModelPlaceholder": "p. ej. llama3.2 — déjalo vacío para omitir",
+    "ollamaHint": "Ollama debe ejecutarse en este ordenador en 127.0.0.1:11434 con el modelo descargado (ollama pull <model>).",
+    "run": "Agrupar frases",
+    "running": "Agrupando…",
+    "free": "{{count}} frases · gratis, sin solicitudes a API de pago",
+    "tooMany": "Hasta {{max}} frases por ejecución",
+    "resultTitle": "Grupos por embeddings",
+    "resultMeta": "{{model}} · umbral {{threshold}} · {{date}}",
+    "keywordCount": "{{count}} frases",
+    "cohesion": "cohesión {{value}} %"
   }
 }

@@ -4691,5 +4691,39 @@
     "limited": "Google 또는 로컬 저장소가 데이터를 잘라낼 수 있습니다. 비율은 관측된 행에만 해당합니다.",
     "previous": "이전",
     "next": "다음"
+  },
+  "embeddingClusteringUi": {
+    "methodLabel": "그룹화 방법",
+    "methods": {
+      "embeddings": {
+        "title": "로컬 임베딩(무료)",
+        "description": "이 컴퓨터에서 의미에 따라 문구를 묶습니다. API 키와 비용이 필요 없으며 Ollama는 선택 사항입니다."
+      },
+      "serp": {
+        "title": "SERP 중복(DataForSEO, 유료)",
+        "description": "Google 결과의 URL이 겹치는 문구를 묶습니다. DataForSEO 자격 증명이 필요하며 새 문구마다 유료 요청이 발생합니다."
+      }
+    },
+    "settingsTitle": "임베딩 설정",
+    "description": "문구를 임베딩으로 바꾸고 유사도에 따라 묶습니다. 로컬 모델은 폴란드어와 영어를 오프라인으로 처리하며, Ollama는 이 컴퓨터에서 실행되는 신경망 모델을 추가합니다.",
+    "provider": "임베딩 모델",
+    "providers": {
+      "local": "로컬(오프라인)",
+      "ollama": "Ollama",
+      "hybrid": "로컬 + Ollama"
+    },
+    "threshold": "유사도 임계값: {{value}}",
+    "ollamaModel": "Ollama 임베딩 모델",
+    "labelModel": "그룹 이름용 Ollama 모델(선택)",
+    "labelModelPlaceholder": "예: llama3.2 — 비워 두면 건너뜀",
+    "ollamaHint": "Ollama가 이 컴퓨터의 127.0.0.1:11434에서 실행 중이고 모델이 받아져 있어야 합니다(ollama pull <model>).",
+    "run": "문구 그룹화",
+    "running": "그룹화 중…",
+    "free": "문구 {{count}}개 · 무료, 유료 API 요청 없음",
+    "tooMany": "한 번에 최대 {{max}}개",
+    "resultTitle": "임베딩 그룹",
+    "resultMeta": "{{model}} · 임계값 {{threshold}} · {{date}}",
+    "keywordCount": "문구 {{count}}개",
+    "cohesion": "응집도 {{value}}%"
   }
 }

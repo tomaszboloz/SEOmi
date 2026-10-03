@@ -4691,5 +4691,39 @@
     "limited": "Observations may be truncated by Google or local storage. Shares describe only observed rows.",
     "previous": "Previous",
     "next": "Next"
+  },
+  "embeddingClusteringUi": {
+    "methodLabel": "Clustering method",
+    "methods": {
+      "embeddings": {
+        "title": "Local embeddings (free)",
+        "description": "Groups phrases by meaning on this computer. No API key and no cost; Ollama is optional."
+      },
+      "serp": {
+        "title": "SERP overlap (DataForSEO, paid)",
+        "description": "Groups phrases whose Google results share URLs. Needs DataForSEO credentials; each new phrase is a paid request."
+      }
+    },
+    "settingsTitle": "Embedding settings",
+    "description": "Phrases are embedded and grouped by similarity. The local model works offline for Polish and English; Ollama adds a neural model running on this computer.",
+    "provider": "Embedding model",
+    "providers": {
+      "local": "Local (offline)",
+      "ollama": "Ollama",
+      "hybrid": "Local + Ollama"
+    },
+    "threshold": "Similarity threshold: {{value}}",
+    "ollamaModel": "Ollama embedding model",
+    "labelModel": "Ollama model for group names (optional)",
+    "labelModelPlaceholder": "e.g. llama3.2 — leave empty to skip",
+    "ollamaHint": "Ollama must run on this computer at 127.0.0.1:11434 with the model pulled (ollama pull <model>).",
+    "run": "Group phrases",
+    "running": "Grouping…",
+    "free": "{{count}} phrases · free, no requests to paid APIs",
+    "tooMany": "Up to {{max}} phrases per run",
+    "resultTitle": "Embedding groups",
+    "resultMeta": "{{model}} · threshold {{threshold}} · {{date}}",
+    "keywordCount": "{{count}} phrases",
+    "cohesion": "cohesion {{value}}%"
   }
 }

@@ -4691,5 +4691,39 @@
     "limited": "Google oder der lokale Speicher können Daten kürzen. Anteile beziehen sich nur auf beobachtete Zeilen.",
     "previous": "Zurück",
     "next": "Weiter"
+  },
+  "embeddingClusteringUi": {
+    "methodLabel": "Gruppierungsmethode",
+    "methods": {
+      "embeddings": {
+        "title": "Lokale Embeddings (kostenlos)",
+        "description": "Gruppiert Phrasen nach Bedeutung auf diesem Computer. Kein API-Schlüssel, keine Kosten; Ollama ist optional."
+      },
+      "serp": {
+        "title": "SERP-Überschneidung (DataForSEO, kostenpflichtig)",
+        "description": "Gruppiert Phrasen, deren Google-Ergebnisse gemeinsame URLs haben. Benötigt DataForSEO-Zugangsdaten; jede neue Phrase ist eine kostenpflichtige Anfrage."
+      }
+    },
+    "settingsTitle": "Embedding-Einstellungen",
+    "description": "Phrasen werden eingebettet und nach Ähnlichkeit gruppiert. Das lokale Modell arbeitet offline für Polnisch und Englisch; Ollama ergänzt ein neuronales Modell auf diesem Computer.",
+    "provider": "Embedding-Modell",
+    "providers": {
+      "local": "Lokal (offline)",
+      "ollama": "Ollama",
+      "hybrid": "Lokal + Ollama"
+    },
+    "threshold": "Ähnlichkeitsschwelle: {{value}}",
+    "ollamaModel": "Ollama-Embedding-Modell",
+    "labelModel": "Ollama-Modell für Gruppennamen (optional)",
+    "labelModelPlaceholder": "z. B. llama3.2 – leer lassen zum Überspringen",
+    "ollamaHint": "Ollama muss auf diesem Computer unter 127.0.0.1:11434 laufen und das Modell geladen haben (ollama pull <model>).",
+    "run": "Phrasen gruppieren",
+    "running": "Gruppiere…",
+    "free": "{{count}} Phrasen · kostenlos, keine Anfragen an kostenpflichtige APIs",
+    "tooMany": "Höchstens {{max}} Phrasen pro Durchlauf",
+    "resultTitle": "Embedding-Gruppen",
+    "resultMeta": "{{model}} · Schwelle {{threshold}} · {{date}}",
+    "keywordCount": "{{count}} Phrasen",
+    "cohesion": "Kohäsion {{value}} %"
   }
 }

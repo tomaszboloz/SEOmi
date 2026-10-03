@@ -4691,5 +4691,39 @@
     "limited": "Google 或本地存储可能截断数据。占比仅针对观测到的行。",
     "previous": "上一页",
     "next": "下一页"
+  },
+  "embeddingClusteringUi": {
+    "methodLabel": "分组方法",
+    "methods": {
+      "embeddings": {
+        "title": "本地嵌入（免费）",
+        "description": "在本机按含义对短语分组。无需 API 密钥，无费用；Ollama 可选。"
+      },
+      "serp": {
+        "title": "SERP 重合（DataForSEO，付费）",
+        "description": "将 Google 结果共享 URL 的短语分为一组。需要 DataForSEO 凭据；每个新短语都是一次付费请求。"
+      }
+    },
+    "settingsTitle": "嵌入设置",
+    "description": "短语会被转换为嵌入并按相似度分组。本地模型可离线处理波兰语和英语；Ollama 可添加在本机运行的神经网络模型。",
+    "provider": "嵌入模型",
+    "providers": {
+      "local": "本地（离线）",
+      "ollama": "Ollama",
+      "hybrid": "本地 + Ollama"
+    },
+    "threshold": "相似度阈值：{{value}}",
+    "ollamaModel": "Ollama 嵌入模型",
+    "labelModel": "用于组名的 Ollama 模型（可选）",
+    "labelModelPlaceholder": "例如 llama3.2 — 留空则跳过",
+    "ollamaHint": "Ollama 必须在本机 127.0.0.1:11434 运行，并已拉取模型（ollama pull <model>）。",
+    "run": "对短语分组",
+    "running": "正在分组…",
+    "free": "{{count}} 个短语 · 免费，不请求付费 API",
+    "tooMany": "每次最多 {{max}} 个短语",
+    "resultTitle": "嵌入分组",
+    "resultMeta": "{{model}} · 阈值 {{threshold}} · {{date}}",
+    "keywordCount": "{{count}} 个短语",
+    "cohesion": "凝聚度 {{value}}%"
   }
 }

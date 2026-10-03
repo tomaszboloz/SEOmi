@@ -9,8 +9,11 @@ import { useToolsStore } from '@/stores/toolsStore';
 import { DataForSEOClient, resolveDataForSeoMarket, dataForSeoLanguage, dataForSeoLocation, dataForSeoMarket } from '@/services/dataforseo';
 import { DataForSeoLanguagePicker, DataForSeoLocationPicker } from '@/components/DataForSEO/DataForSeoPickers';
 import { clusterKeywordsBySerpOverlap, getSerpSnapshot, KeywordClusteringResult } from '@/services/keywordClustering';
-import { readStorage, writeJsonStorage } from '@/services/storage';
+import { readStorage, writeJsonStorage, writeStorage } from '@/services/storage';
 import { appLocale } from '@/services/localeFormat';
+import { MAX_EMBEDDING_KEYWORDS } from '@/services/embeddingClustering';
+import { EmbeddingClusteringPanel } from './embeddingClustering/EmbeddingClusteringPanel';
+import { ClusteringMethodSwitch, loadMethod, methodKey, type ClusteringMethod } from './embeddingClustering/ClusteringMethodSwitch';
 
 interface ClusteringSession {
   input: string;
@@ -47,6 +50,8 @@ const loadSession = (projectId: string | null): ClusteringSession => {
   }
 };
 
+const hasSerpResult = (projectId: string): boolean => Boolean(loadSession(projectId).result);
+
 const parseKeywords = (input: string) => {
   const seen = new Set<string>();
   return input.split(/\r?\n/).map((keyword) => keyword.trim()).filter((keyword) => {
@@ -67,9 +72,16 @@ export const KeywordClustering: React.FC = () => {
   const [isRunning, setIsRunning] = useState(false);
   const [progress, setProgress] = useState(0);
   const [error, setError] = useState<string | null>(null);
+  const [method, setMethod] = useState<ClusteringMethod>(() => loadMethod(activeProjectId, hasSerpResult));
+  const changeMethod = (value: ClusteringMethod) => {
+    setMethod(value);
+    setError(null);
+    if (activeProjectId) writeStorage(methodKey(activeProjectId), value);
+  };
 
   useEffect(() => {
     setSession(loadSession(activeProjectId));
+    setMethod(loadMethod(activeProjectId, hasSerpResult));
     setIsRunning(false);
     setError(null);
     setProgress(0);
@@ -96,7 +108,7 @@ export const KeywordClustering: React.FC = () => {
         seen.add(normalized.toLocaleLowerCase());
       }
     }
-    updateSession({ input: merged.slice(0, MAX_KEYWORDS).join('\n') });
+    updateSession({ input: merged.slice(0, method === 'serp' ? MAX_KEYWORDS : MAX_EMBEDDING_KEYWORDS).join('\n') });
   };
 
   const runClustering = async () => {
@@ -164,6 +176,8 @@ export const KeywordClustering: React.FC = () => {
         <p className="mt-1 max-w-3xl text-sm leading-6 text-slate-400">{t('keywordClusteringUi.description')}</p>
       </header>
 
+      <ClusteringMethodSwitch method={method} disabled={isRunning} onChange={changeMethod} />
+
       <section className="space-y-4 rounded-xl border border-slate-800 bg-slate-900/70 p-5">
         <div className="flex flex-wrap items-center justify-between gap-2">
           <label htmlFor="cluster-keywords" className="text-sm font-semibold text-slate-100">{t('keywordClusteringUi.keywordsLabel')}</label>
@@ -177,6 +191,7 @@ export const KeywordClustering: React.FC = () => {
           </div>
         </div>
         <textarea id="cluster-keywords" value={session.input} onChange={(event) => updateSession({ input: event.target.value, result: null })} disabled={isRunning} rows={8} placeholder={t('keywordClusteringUi.placeholder')} className="w-full resize-y rounded-lg border border-slate-700 bg-slate-950 px-3 py-3 font-mono text-sm text-slate-100 outline-none transition placeholder:text-slate-600 focus:border-emerald-500 disabled:opacity-70" />
+        {method === 'serp' && (<>
         <p className="text-xs text-amber-200">{t('dataforseo.paidRequests', { count: keywords.filter((keyword) => !session.result?.snapshots.some((item) => item.keyword === keyword)).length })}</p>
         <div className="flex flex-wrap items-end gap-3">
           <label className="grid gap-1.5 text-xs text-slate-400">{t('keywordClusteringUi.location')}
@@ -217,9 +232,12 @@ export const KeywordClustering: React.FC = () => {
           </button>
           {!credentials.login || !credentials.password ? <span className="text-xs text-amber-300">{t('keywordClusteringUi.credentialsHint')}</span> : null}
         </div>
+        </>)}
       </section>
 
-      {session.result && (
+      {method === 'embeddings' && <EmbeddingClusteringPanel projectId={activeProjectId} keywords={keywords} />}
+
+      {method === 'serp' && session.result && (
         <section className="space-y-4" aria-live="polite">
           <div className="flex flex-wrap items-baseline justify-between gap-2">
             <h2 className="text-lg font-bold text-white">{t('keywordClusteringUi.resultTitle')}</h2>

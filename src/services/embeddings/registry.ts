@@ -12,6 +12,8 @@ export interface ProviderSettings {
   ollamaWeight?: number;
   /** Texts used to fit the local provider's IDF (usually the whole input). */
   corpus?: string[];
+  /** HTTP implementation for Ollama requests (tests, custom transports). */
+  fetchImpl?: (input: string, init: RequestInit) => Promise<Response>;
 }
 
 /**
@@ -34,7 +36,7 @@ const local = (settings: ProviderSettings) => {
   return provider;
 };
 
-const ollama = (settings: ProviderSettings) => createOllamaEmbeddingProvider({ baseUrl: settings.ollamaUrl, model: settings.ollamaModel });
+const ollama = (settings: ProviderSettings) => createOllamaEmbeddingProvider({ baseUrl: settings.ollamaUrl, model: settings.ollamaModel, fetchImpl: settings.fetchImpl });
 
 /** Register new providers here; the CLI and evaluator pick them up by name. */
 export const PROVIDER_FACTORIES: Record<string, (settings: ProviderSettings) => EmbeddingProvider> = {
