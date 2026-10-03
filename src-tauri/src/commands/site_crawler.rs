@@ -5,7 +5,8 @@ use scraper::{node::Node, ElementRef, Html, Selector};
 use serde::{Deserialize, Serialize};
 use sha2::{Digest, Sha256};
 use std::collections::{HashMap, HashSet, VecDeque};
-use std::{error::Error, sync::{Mutex, OnceLock}, time::Instant};
+use std::sync::{Mutex, OnceLock};
+use std::time::Instant;
 use tauri::{AppHandle, Emitter, State};
 use tokio::task::JoinSet;
 
@@ -19,24 +20,11 @@ use crate::services::custom_search::{
 use crate::services::schema_validator;
 use crate::utils::url_validator::validate_and_normalize_url;
 
-const MAX_SEMANTIC_CONTENT_LINKS_PER_PAGE: usize = 1_000;
-const MAX_SEMANTIC_TERMS_PER_PAGE: usize = 40;
-const MAX_SEMANTIC_EXCERPTS_PER_PAGE: usize = 8;
-const MAX_SCHEMA_DECLARATIONS_PER_PAGE: usize = 100;
-const MAX_SCHEMA_FINDINGS_PER_PAGE: usize = 200;
-const MAX_SCHEMA_REFERENCES_PER_PAGE: usize = 64;
-const MAX_SCHEMA_REFERENCE_VALUE_CHARS: usize = 2_048;
-const MAX_SRCSET_CANDIDATES_PER_IMAGE: usize = 20;
-const MAX_RESOURCE_DISCOVERY_CANDIDATES: usize = 10_000;
-const MAX_HTML_VALIDATION_FINDINGS_PER_PAGE: usize = 200;
-const MAX_IFRAMES_PER_PAGE: usize = 500;
-const MAX_INLINE_IMAGE_URI_CHARS: usize = 8_192;
-const MAX_ROBOTS_RULES: usize = 100;
-const MAX_INTRINSIC_IMAGE_BYTES: usize = 8 * 1024 * 1024;
-
 mod canonical;
+mod constants;
 mod content_metrics;
 mod control;
+mod crawl_delay;
 mod duplicate_annotation;
 mod favicon;
 mod fetch_data;
@@ -52,16 +40,20 @@ mod inline_images;
 mod models;
 mod orchestration;
 mod post_processing;
+mod prefetch;
+mod request_error;
 mod resource_apply;
 mod resource_discovery;
 mod resource_fetch;
 mod robots;
+mod robots_matching;
 mod schema;
 mod scoring;
 mod scope;
 mod semantic_chrome;
 mod semantics;
 mod simhash;
+mod sitemap;
 mod social;
 mod srcset;
 mod svg_dimensions;
@@ -71,15 +63,16 @@ mod transport;
 mod url_normalization;
 
 use {
-    canonical::*, content_metrics::*, control::*, duplicate_annotation::*,
-    favicon::*, fetch_data::*, fetch_types::*, filter_validation::*,
-    fingerprints::*, frames::*, hreflang::*, hreflang_validation::*,
-    html_validation::*, image_decoding::*, inline_images::*, models::*,
-    post_processing::*, resource_apply::*, resource_discovery::*,
-    resource_fetch::*, robots::*, schema::*, scoring::*, scope::*,
-    semantic_chrome::*, semantics::*, simhash::*, social::*, srcset::*,
-    svg_dimensions::*, svg_inline::*, target_relations::*, transport::*,
-    url_normalization::*,
+    canonical::*, constants::*, content_metrics::*, control::*, crawl_delay::*,
+    duplicate_annotation::*, favicon::*, fetch_data::*, fetch_types::*,
+    filter_validation::*, fingerprints::*, frames::*, hreflang::*,
+    hreflang_validation::*, html_validation::*, image_decoding::*,
+    inline_images::*, models::*, post_processing::*, prefetch::*,
+    request_error::*, resource_apply::*, resource_discovery::*,
+    resource_fetch::*, robots::*, robots_matching::*, schema::*, scoring::*,
+    scope::*, semantic_chrome::*, semantics::*, simhash::*, sitemap::*,
+    social::*, srcset::*, svg_dimensions::*, svg_inline::*,
+    target_relations::*, transport::*, url_normalization::*,
 };
 
 pub use control::{CrawlControl, CrawlProgress};

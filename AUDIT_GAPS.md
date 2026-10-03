@@ -1268,4 +1268,35 @@ BATCH-5j verification:2807frontend/516Rust/70MCP PASS; build/lint/rustfmt/strict
   - `tests/maxLoc.test.ts`: 25/25 tests PASS.
   - Global LOC violations decreased from 31 to 27 across the codebase.
 
+### BATCH-7f: Decompose og_parser, external_link_checker, robots, transport, and images to LOC<=150
+- Decomposed five native modules exceeding 150 LOC into modular single-responsibility units strictly under 150 physical LOC:
+  1. `src-tauri/src/services/og_parser.rs` (285 -> 62 LOC facade) with 2 new submodules:
+     - `og_collector.rs` (133 LOC): `resolve_url`, `RawSocialMeta`, and `collect_social_meta` AST traversal.
+     - `og_parser_tests.rs` (118 LOC): 5 unit tests for OpenGraph tag extraction, Twitter card extraction/fallbacks, meta tag fallback, relative OG URL resolution, and empty social tag handling.
+  2. `src-tauri/src/commands/external_link_checker.rs` (288 -> 92 LOC facade) with 3 new submodules in `src-tauri/src/commands/external_link_checker/`:
+     - `models.rs` (39 LOC): `ExternalLinkCheck`, `ExternalLinkCheckBatch`, `ExternalLinkCheckProgress`, and timing/limit constants.
+     - `network.rs` (143 LOC): `error_kind`, `rejected`, `normalize_external_url`, `checked_public_addresses`, `client_for_url`, and `check_one`.
+     - `tests.rs` (23 LOC): 3 unit tests for credentials rejection, non-HTTP schemes, fragment removal/normalization, and localhost blocking.
+  3. `src-tauri/src/commands/site_crawler/robots.rs` (291 -> 105 LOC facade) with 3 new submodules:
+     - `robots_matching.rs` (93 LOC): `robots_deciding_rule`, `robots_rule_specificity`, `robots_path_matches`, `percent_decode_robots_path`, and `robots_allows`.
+     - `crawl_delay.rs` (68 LOC): `parse_robots_crawl_delay` and `wait_for_crawl_delay` cooperative cancellation/pause sleeper.
+     - `sitemap.rs` (27 LOC): `parse_sitemap_directives` and `parse_sitemap_locations`.
+  4. `src-tauri/src/commands/site_crawler/transport.rs` (297 -> 121 LOC facade) with 2 new submodules:
+     - `request_error.rs` (60 LOC): `classify_request_error` and `request_error_kind` chained error classifier.
+     - `prefetch.rs` (116 LOC): `prefetch_http_pages` bounded concurrent HTML prefetching.
+  5. Refactored `src-tauri/src/commands/site_crawler.rs` (130 LOC facade):
+     - `constants.rs` (14 LOC): extracted bounded site crawler limits and page caps.
+     - registered all new submodules (`constants`, `crawl_delay`, `prefetch`, `request_error`, `robots_matching`, `sitemap`).
+  6. `src-tauri/src/services/seo_analyzer/images.rs` (301 -> 130 LOC facade) with 2 new submodules:
+     - `image_format.rs` (51 LOC): `infer_image_format` and `parse_dimension_token`.
+     - `image_dimensions.rs` (143 LOC): `read_be_u16`, `read_be_u32`, `read_le_u16`, `read_le_u24`, `percent_decode_data`, `svg_data_uri_dimensions`, and `intrinsic_data_uri_dimensions`.
+- Full verification loop:
+  - `cargo check --manifest-path src-tauri/Cargo.toml` clean (0 errors, 0 warnings).
+  - `cargo test --manifest-path src-tauri/Cargo.toml --lib -- --test-threads=1`: **558/558 library tests passing with 0 failures**.
+  - `npm run lint` clean (0 errors, 0 warnings).
+  - `npx tsc --noEmit` clean (0 errors).
+  - `tests/maxLoc.test.ts`: 25/25 tests PASS.
+  - Global LOC violations decreased from 27 to 22 across the codebase.
+
+
 
