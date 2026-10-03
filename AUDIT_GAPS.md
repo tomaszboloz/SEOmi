@@ -1113,3 +1113,20 @@ BATCH-5j verification:2807frontend/516Rust/70MCP PASS; build/lint/rustfmt/strict
   - Vitest suite passing with 0 failures (37/37 tests across BATCH-6c and related suites).
   - Global LOC violations decreased from 53 to 51 across the codebase.
   - **MILESTONE**: 100% of frontend source files (`src/`) are now strictly <= 150 LOC (0 violations remain in `src/`)!
+
+### BATCH-6d: Decompose MCP Server httpSafety, localApi, and toolContracts test to LOC<=150
+- Decomposed three large MCP server files into modular single-responsibility units strictly under 150 physical LOC:
+  1. `mcp-server/src/httpSafety.ts` (177 -> 117 LOC facade & request logic) with 1 submodule in `mcp-server/src/`:
+     - `ipSafety.ts` (63 LOC): IPv4 / IPv6 word parsing and `isPublicAddress` IP range verification.
+  2. `mcp-server/src/localApi.ts` (203 -> 144 LOC facade) with 2 submodules in `mcp-server/src/`:
+     - `localApiHttp.ts` (68 LOC): Local API error, JSON response formatting, request body reading, token timing-safe authorization, options validation.
+     - `localApiPayload.ts` (70 LOC): Request payload extraction, bounds checking, parameter validation, audit and crawl runner execution.
+  3. `mcp-server/test/toolContracts.test.mjs` (157 -> 87 LOC) with 2 submodules in `mcp-server/test/`:
+     - `testHelpers.mjs` (17 LOC): Shared `withClient` test harness for in-memory MCP client/server pairs.
+     - `toolContractsBacklinkGap.test.mjs` (96 LOC): Backlink gap normalization/deduplication, PageSpeed payload exclusion, Google performance transport error stopping.
+- Full verification loop:
+  - `npm run lint` clean (0 errors, 0 warnings).
+  - `npx tsc --noEmit` clean (0 errors).
+  - `mcp-server` build & tests: **70/70 tests passing with 0 failures** (`npm run test:coverage:mcp`).
+  - `tests/maxLoc.test.ts` (25/25 tests PASS).
+  - Global LOC violations decreased from 51 to 48 across the codebase.
