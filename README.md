@@ -201,6 +201,10 @@ Internal links → Graph edges → Clusters → Content briefs → Calendar
 
 The topical calendar tracks planned, briefed, drafted, published, and needs update states. A brief can contain intent, audience, primary phrase, supporting phrases, entities, outline, internal link targets, source evidence, and a draft version history.
 
+### DataForSEO costs and limits
+
+Every view that sends paid DataForSEO requests shows the cost of the last call (the amount DataForSEO reports), the spend in the current month and the estimated account balance. *Settings → API → Costs, balance and monthly limit* checks the balance (free endpoint) and sets the project's limit. By default **No limit — up to the account balance** is selected: requests are blocked before they are sent once the estimated balance cannot cover the next call. Unchecking it sets a monthly cap in USD with a warning threshold; the cap resets on the 1st of each month. For MCP, set `DATAFORSEO_MONTHLY_LIMIT_USD` (ledger: `DATAFORSEO_LEDGER_PATH`, default `~/.seomi/mcp-dataforseo-spend.json`).
+
 <a id="data_sources"></a>
 ## Data sources and integrations
 

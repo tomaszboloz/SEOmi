@@ -3,6 +3,7 @@ import type { BriefModel } from './model';
 import { useState } from 'react';
 import { compareDrafts, saveDraftVersion } from '@/services/contentBrief';
 import { inputClass } from './primitives';
+import { appLocale } from '@/services/localeFormat';
 
 export const BriefVersionHistory = ({ model }: { model: BriefModel }) => {
   const { t } = useTranslation();
@@ -42,7 +43,7 @@ export const BriefVersionHistory = ({ model }: { model: BriefModel }) => {
           <label className="min-w-0 flex-1 text-[9px] text-slate-500">{t('contentBrief.compareVersion')}
             <select aria-label={t('contentBrief.diffAria')} value={selectedVersionId} onChange={(event) => setSelectedVersionId(event.target.value)} className={inputClass}>
               <option value="">{t('contentBrief.chooseCheckpoint')}</option>
-              {brief.draftVersions.map((version) => <option key={version.id} value={version.id}>{new Date(version.savedAt).toLocaleString()} · {version.note || t('contentBrief.noNote')}</option>)}
+              {brief.draftVersions.map((version) => <option key={version.id} value={version.id}>{new Date(version.savedAt).toLocaleString(appLocale())} · {version.note || t('contentBrief.noNote')}</option>)}
             </select>
           </label>
           <button type="button" aria-label={t('contentBrief.restoreVersion')} disabled={!selectedVersion || selectedVersion.draftMarkdown === brief.draftMarkdown} onClick={restoreDraftVersion} className="h-9 rounded border border-amber-500/30 px-3 text-[10px] font-semibold text-amber-200 hover:bg-amber-500/10 disabled:cursor-not-allowed disabled:opacity-40">{t('contentBrief.restoreVersion')}</button>

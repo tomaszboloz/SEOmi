@@ -2,6 +2,7 @@ import React from 'react';
 import type { TFunction } from 'i18next';
 import type { BrandAiVisibilityReport } from '@/types';
 import { AiBrandModelCard } from './AiBrandModelCard';
+import { appLocale } from '@/services/localeFormat';
 
 interface AiBrandModelsGridProps {
   report: BrandAiVisibilityReport;
@@ -32,7 +33,7 @@ export const AiBrandModelsGrid: React.FC<AiBrandModelsGridProps> = ({
           >
             {history.map((h) => (
               <option key={h.timestamp} value={h.timestamp}>
-                {new Date(h.timestamp).toLocaleString()} · {h.brand}
+                {new Date(h.timestamp).toLocaleString(appLocale())} · {h.brand}
                 {h.domain ? ` (${h.domain})` : ''}
               </option>
             ))}

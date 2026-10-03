@@ -2,6 +2,7 @@ import React from 'react';
 import { TrendChart } from '@/components/Charts/TrendChart';
 import type { DomainComparisonData, DomainComparisonHistory as HistoryType } from '@/types';
 import type { TFunction } from 'i18next';
+import { appLocale } from '@/services/localeFormat';
 
 interface DomainComparisonHistoryProps {
   comparison: DomainComparisonData;
@@ -18,7 +19,7 @@ export const DomainComparisonHistory: React.FC<DomainComparisonHistoryProps> = (
 
   const latestDate = new Date(
     history[history.length - 1].retrieved_at,
-  ).toLocaleDateString();
+  ).toLocaleDateString(appLocale());
 
   return (
     <section

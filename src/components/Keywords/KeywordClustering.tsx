@@ -4,6 +4,7 @@ import { useKeywordClusteringSession } from './keywordClustering/useKeywordClust
 import { KeywordClusteringHeader } from './keywordClustering/KeywordClusteringHeader';
 import { KeywordClusteringForm } from './keywordClustering/KeywordClusteringForm';
 import { KeywordClusteringResults } from './keywordClustering/KeywordClusteringResults';
+import { DataForSeoCostMeter } from '@/components/DataForSEO/cost/DataForSeoCostMeter';
 
 export const KeywordClustering: React.FC = () => {
   const { t } = useTranslation();
@@ -25,6 +26,7 @@ export const KeywordClustering: React.FC = () => {
   return (
     <div className="mx-auto max-w-6xl space-y-6 px-4 py-8">
       <KeywordClusteringHeader t={t} />
+      <DataForSeoCostMeter />
 
       <KeywordClusteringForm
         session={session}

@@ -1602,3 +1602,12 @@ BATCH-5j verification:2807frontend/516Rust/70MCP PASS; build/lint/rustfmt/strict
   - `npx tsc --noEmit` clean (0 errors).
   - `tests/maxLoc.test.ts`: 25/25 tests PASS.
 
+
+## [DISCOVERED] — 2026-10-03 / DataForSEO costs, balance and monthly limit (branch `claude/dataforseo-cost`)
+- [x] GAP-C01: [DISCOVERED][HIGH] Paid DataForSEO calls showed no cost where they were made; per-task costs existed only in the task log of the DataForSEO tab. Status: FIXED: `DataForSeoCostMeter` (last call cost and endpoint, month-to-date spend, balance) in every view that sends paid requests — keyword research, rank tracking, domain overview and comparison, backlinks, keyword clustering, DataForSEO audit, SEO tools traffic and competitor panels.
+- [x] GAP-C02: [DISCOVERED][MEDIUM] The account balance was never shown. Status: FIXED: the free `/v3/appendix/user_data` endpoint is read in Settings → API; the shown balance is lowered by every later call's reported cost until the next check.
+- [x] GAP-C03: [DISCOVERED][HIGH] No spending cap. Status: FIXED: per-project monthly limit (USD, warning threshold); the default "no limit" uses the account balance as the limit. Requests are blocked before any network traffic when the cap is used, when the last observed cost of the endpoint plus requests in flight would exceed it, or when the estimated balance cannot cover the next call.
+- [x] GAP-C04: [DISCOVERED][MEDIUM] Spend was taken from `tasks[0].cost` only. Status: FIXED: the ledger uses the request-level `cost`, which covers every task.
+- [x] GAP-C05: [DISCOVERED][MEDIUM] MCP DataForSEO tools had no cap. Status: FIXED: optional `DATAFORSEO_MONTHLY_LIMIT_USD` with a ledger file (`DATAFORSEO_LEDGER_PATH`, default `~/.seomi/mcp-dataforseo-spend.json`); tool results already carry each task's `cost`.
+- [x] GAP-C06: [DISCOVERED][MEDIUM] 39 files formatted numbers and dates with the operating-system locale instead of the UI language; eight tests failed on a Polish host. Status: FIXED: `appLocale()` everywhere, host-independent tests.
+- [ ] GAP-C07: [DISCOVERED][LOW] Limit precision and scope. Status: OPEN: the first call to an endpoint has no observed price, so it can exceed the cap once; the cap is enforced in the WebView client (a guardrail, not a security boundary — the native `dataforseo_request` command does not check it); app and MCP ledgers are separate, and projects sharing one DataForSEO account have separate monthly totals while the balance is account-wide.

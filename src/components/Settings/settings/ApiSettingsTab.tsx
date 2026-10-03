@@ -3,6 +3,7 @@ import { useTranslation } from 'react-i18next';
 import { Loader2 } from 'lucide-react';
 import { useAuthStore } from '@/stores/authStore';
 import { useSettingsStore } from '@/stores/settingsStore';
+import { DataForSeoBudgetSettings } from '@/components/DataForSEO/cost/DataForSeoBudgetSettings';
 
 interface ApiSettingsTabProps {
   dataforseoLogin: string;
@@ -53,6 +54,7 @@ export const ApiSettingsTab: React.FC<ApiSettingsTabProps> = ({
           </button>
           {dataForSeoTestStatus && <p className="text-[11px] leading-4 text-slate-400">{dataForSeoTestStatus}</p>}
         </div>
+        <DataForSeoBudgetSettings />
       </div>
 
       <div className="space-y-3 p-4 bg-slate-950/80 rounded-xl border border-slate-800">

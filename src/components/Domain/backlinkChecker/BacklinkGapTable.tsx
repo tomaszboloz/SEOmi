@@ -3,6 +3,7 @@ import { Download } from 'lucide-react';
 import { downloadBacklinkGapCsv } from '@/services/export';
 import type { BacklinkGapReport } from '@/types';
 import type { TFunction } from 'i18next';
+import { appLocale } from '@/services/localeFormat';
 
 interface BacklinkGapTableProps {
   report: BacklinkGapReport;
@@ -22,10 +23,10 @@ export const BacklinkGapTable: React.FC<BacklinkGapTableProps> = ({
       <div className="flex flex-col gap-1 border-b border-slate-800 bg-slate-950/60 px-4 py-3 sm:flex-row sm:items-center sm:justify-between">
         <span className="text-xs font-medium text-slate-200">
           {t('backlinkUi.gapSummary', {
-            opportunities: report.opportunities.length.toLocaleString(),
-            scanned: report.rows_scanned.toLocaleString(),
+            opportunities: report.opportunities.length.toLocaleString(appLocale()),
+            scanned: report.rows_scanned.toLocaleString(appLocale()),
             total:
-              report.total_rows?.toLocaleString() ??
+              report.total_rows?.toLocaleString(appLocale()) ??
               t('backlinkUi.unknownCount'),
           })}
         </span>
@@ -70,7 +71,7 @@ export const BacklinkGapTable: React.FC<BacklinkGapTableProps> = ({
                       >
                         <span className="font-mono">{competitor.domain}</span>
                         <span className="whitespace-nowrap">
-                          {competitor.backlinks.toLocaleString()} ·{' '}
+                          {competitor.backlinks.toLocaleString(appLocale())} ·{' '}
                           {t('backlinkUi.rank')} {competitor.rank ?? '—'}
                         </span>
                       </li>

@@ -1,6 +1,7 @@
 import React from 'react';
 import type { DomainComparisonData } from '@/types';
 import type { TFunction } from 'i18next';
+import { appLocale } from '@/services/localeFormat';
 
 interface DomainComparisonTableProps {
   comparison: DomainComparisonData;
@@ -94,11 +95,11 @@ export const DomainComparisonTable: React.FC<DomainComparisonTableProps> = ({
                     </details>
                   )}
                 </td>
-                <td className="px-3 py-2.5 text-right font-mono">{row.organic_traffic?.toLocaleString() ?? '—'}</td>
-                <td className="px-3 py-2.5 text-right font-mono">{row.organic_keywords?.toLocaleString() ?? '—'}</td>
+                <td className="px-3 py-2.5 text-right font-mono">{row.organic_traffic?.toLocaleString(appLocale()) ?? '—'}</td>
+                <td className="px-3 py-2.5 text-right font-mono">{row.organic_keywords?.toLocaleString(appLocale()) ?? '—'}</td>
                 <td className="px-3 py-2.5 text-right font-mono">{row.domain_rank ?? '—'}</td>
-                <td className="px-3 py-2.5 text-right font-mono">{row.referring_domains?.toLocaleString() ?? '—'}</td>
-                <td className="px-3 py-2.5 text-right font-mono">{row.total_backlinks?.toLocaleString() ?? '—'}</td>
+                <td className="px-3 py-2.5 text-right font-mono">{row.referring_domains?.toLocaleString(appLocale()) ?? '—'}</td>
+                <td className="px-3 py-2.5 text-right font-mono">{row.total_backlinks?.toLocaleString(appLocale()) ?? '—'}</td>
                 <td className="px-3 py-2.5 text-right font-mono">
                   {row.dofollow_ratio === null || row.dofollow_ratio === undefined ? '—' : `${row.dofollow_ratio}%`}
                 </td>

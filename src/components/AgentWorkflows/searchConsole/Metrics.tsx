@@ -1,6 +1,7 @@
 import type { SearchConsoleSession } from './useSearchConsoleSession';
 import { TrendChart } from '@/components/Charts/TrendChart';
 import { MousePointerClick, Eye, Percent, TrendingUp } from 'lucide-react';
+import { appLocale } from '@/services/localeFormat';
 
 export function SearchConsoleMetrics({ session }: { session: SearchConsoleSession }) {
   const { t, gscData } = session;
@@ -12,7 +13,7 @@ export function SearchConsoleMetrics({ session }: { session: SearchConsoleSessio
                 <span>{t('searchConsole.totalClicks')}</span>
               </div>
               <div className="text-2xl font-bold text-white font-mono">
-                {gscData?.total_clicks.toLocaleString()}
+                {gscData?.total_clicks.toLocaleString(appLocale())}
               </div>
               <span className="text-[11px] text-slate-500">{gscData ? `${gscData.start_date} — ${gscData.end_date}` : t('searchConsole.completeDays')}</span>
             </div>
@@ -23,7 +24,7 @@ export function SearchConsoleMetrics({ session }: { session: SearchConsoleSessio
                 <span>{t('searchConsole.totalImpressions')}</span>
               </div>
               <div className="text-2xl font-bold text-white font-mono">
-                {gscData?.total_impressions.toLocaleString()}
+                {gscData?.total_impressions.toLocaleString(appLocale())}
               </div>
               <span className="text-[11px] text-slate-500">{t('searchConsole.searchAppearances')}</span>
             </div>
@@ -62,7 +63,7 @@ export function SearchConsoleMetrics({ session }: { session: SearchConsoleSessio
             </div> : <p className="text-xs text-slate-500">{t('searchConsole.tooFewPoints')}</p>}
           </section>}
           {gscData && <p role="note" className={`rounded-lg border p-3 text-[11px] leading-5 ${gscData.queries_may_be_truncated || gscData.pages_may_be_truncated ? 'border-amber-500/30 bg-amber-950/20 text-amber-200' : 'border-slate-800 bg-slate-900/40 text-slate-400'}`}>
-            {t('searchConsole.analyticsPaging', { max: gscData.max_rows_per_dimension.toLocaleString(), queries: gscData.queries.length.toLocaleString(), pages: gscData.pages.length.toLocaleString(), truncated: gscData.queries_may_be_truncated || gscData.pages_may_be_truncated ? t('searchConsole.analyticsTruncated') : '' })}
+            {t('searchConsole.analyticsPaging', { max: gscData.max_rows_per_dimension.toLocaleString(appLocale()), queries: gscData.queries.length.toLocaleString(appLocale()), pages: gscData.pages.length.toLocaleString(appLocale()), truncated: gscData.queries_may_be_truncated || gscData.pages_may_be_truncated ? t('searchConsole.analyticsTruncated') : '' })}
           </p>}
   </>;
 }

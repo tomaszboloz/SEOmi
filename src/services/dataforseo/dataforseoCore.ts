@@ -3,6 +3,9 @@ import { invokeTauriCommand, isTauriEnvironment } from '@/services/tauri';
 import { JsonRecord, DataForSeoRequestError } from './dataforseoTypes';
 import { asRecord, asArray, asRequestError, nullableNumber, text, wait, retryDelayMs, providerQuotaMessage } from './dataforseoHelpers';
 import { activeProjectForTaskLog, appendDataForSeoTask } from './dataforseoTaskLog';
+import { ACCOUNT_ENDPOINT, recordCost } from './dataforseoBudget';
+import { reserveBudget } from './dataforseoBudgetGuard';
+import { deductFromAccount, parseUserData, readAccount, writeAccount, type DataForSeoAccount } from './dataforseoAccount';
 
 const DATAFORSEO_MAX_NETWORK_ATTEMPTS = 3;
 
@@ -23,6 +26,27 @@ export class DataForSEOCore {
     const projectId = projectIdOverride !== undefined
       ? projectIdOverride
       : (isTauriEnvironment() ? this.projectId() : activeProjectForTaskLog());
+    // Throws before any network traffic when the monthly cap is reached.
+    const release = reserveBudget(projectId, path);
+    try {
+      const body = await this.send(path, payload, projectId);
+      // The top-level cost covers every task in the request.
+      if (projectId) {
+        const cost = nullableNumber(body.cost) ?? 0;
+        recordCost(projectId, path, cost);
+        deductFromAccount(projectId, cost);
+        if (path === ACCOUNT_ENDPOINT) {
+          const account = parseUserData(body);
+          if (account) writeAccount(projectId, account);
+        }
+      }
+      return body;
+    } finally {
+      release();
+    }
+  }
+
+  private async send(path: string, payload: JsonRecord[] | undefined, projectId: string | null): Promise<JsonRecord> {
     let lastError: DataForSeoRequestError | null = null;
 
     for (let attempt = 0; attempt < DATAFORSEO_MAX_NETWORK_ATTEMPTS; attempt += 1) {
@@ -87,6 +111,13 @@ export class DataForSEOCore {
     }, projectId);
     if (taskCode && taskCode !== 20000 && !allowPartialStatusCodes.includes(taskCode)) throw new Error(text(task.status_message) || i18n.t('runtimeErrors.dataforseo.taskFailed', { code: taskCode }));
     return result.map(asRecord);
+  }
+
+  /** Fetches the account balance (free endpoint) and stores it for the project. */
+  async getAccount(): Promise<DataForSeoAccount | null> {
+    const projectId = isTauriEnvironment() ? this.projectId() : activeProjectForTaskLog();
+    await this.verifyCredentials();
+    return projectId ? readAccount(projectId) : null;
   }
 
   async verifyCredentials(): Promise<void> {

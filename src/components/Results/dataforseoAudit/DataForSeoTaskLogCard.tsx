@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useProjectStore } from '@/stores/projectStore';
 import { clearDataForSeoTaskLog, readDataForSeoTaskLog, type DataForSeoTaskRecord } from '@/services/dataforseo';
+import { appLocale } from '@/services/localeFormat';
 
 export const DataForSeoTaskLogCard: React.FC = () => {
   const { t } = useTranslation();
@@ -23,7 +24,7 @@ export const DataForSeoTaskLogCard: React.FC = () => {
 
   const formatTaskTime = (value: string): string => {
     const date = new Date(value);
-    return Number.isNaN(date.getTime()) ? value : date.toLocaleString();
+    return Number.isNaN(date.getTime()) ? value : date.toLocaleString(appLocale());
   };
 
   const taskStatusLabel = (task: DataForSeoTaskRecord): string => {

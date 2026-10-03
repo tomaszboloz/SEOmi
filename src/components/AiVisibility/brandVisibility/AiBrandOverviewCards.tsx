@@ -2,6 +2,7 @@ import React from 'react';
 import { CheckCircle2, Lightbulb } from 'lucide-react';
 import type { TFunction } from 'i18next';
 import type { BrandAiVisibilityReport } from '@/types';
+import { appLocale } from '@/services/localeFormat';
 
 interface AiBrandOverviewCardsProps {
   report: BrandAiVisibilityReport;
@@ -36,7 +37,7 @@ export const AiBrandOverviewCards: React.FC<AiBrandOverviewCardsProps> = ({ repo
 
         <div className="text-[11px] font-mono text-slate-500 pt-3 border-t border-slate-800">
           {t('aiVisibility.brand.lastResearch', {
-            date: new Date(report.timestamp).toLocaleString(),
+            date: new Date(report.timestamp).toLocaleString(appLocale()),
           })}
         </div>
       </div>

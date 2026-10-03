@@ -1,4 +1,5 @@
 import type { SearchConsoleSession } from './useSearchConsoleSession';
+import { appLocale } from '@/services/localeFormat';
 
 export function SearchConsoleTables({ session }: { session: SearchConsoleSession }) {
   const { t, gscData } = session;
@@ -22,8 +23,8 @@ export function SearchConsoleTables({ session }: { session: SearchConsoleSession
                     {gscData?.queries.map((q, i) => (
                       <tr key={i} className="hover:bg-slate-800/30 transition">
                         <td className="py-2.5 font-sans font-medium text-slate-200">{q.query}</td>
-                        <td className="py-2.5 text-right text-emerald-400 font-bold">{q.clicks.toLocaleString()}</td>
-                        <td className="py-2.5 text-right text-slate-400">{q.impressions.toLocaleString()}</td>
+                        <td className="py-2.5 text-right text-emerald-400 font-bold">{q.clicks.toLocaleString(appLocale())}</td>
+                        <td className="py-2.5 text-right text-slate-400">{q.impressions.toLocaleString(appLocale())}</td>
                         <td className="py-2.5 text-right text-slate-300">{q.ctr}%</td>
                         <td className="py-2.5 text-center text-amber-400 font-bold">#{q.position}</td>
                       </tr>
@@ -51,8 +52,8 @@ export function SearchConsoleTables({ session }: { session: SearchConsoleSession
                     {gscData?.pages.map((p, i) => (
                       <tr key={i} className="hover:bg-slate-800/30 transition">
                         <td className="py-2.5 text-slate-200 truncate max-w-[180px]">{p.page}</td>
-                        <td className="py-2.5 text-right text-emerald-400 font-bold">{p.clicks.toLocaleString()}</td>
-                        <td className="py-2.5 text-right text-slate-400">{p.impressions.toLocaleString()}</td>
+                        <td className="py-2.5 text-right text-emerald-400 font-bold">{p.clicks.toLocaleString(appLocale())}</td>
+                        <td className="py-2.5 text-right text-slate-400">{p.impressions.toLocaleString(appLocale())}</td>
                         <td className="py-2.5 text-right text-slate-300">{p.ctr}%</td>
                       </tr>
                     ))}

@@ -28,6 +28,6 @@ describe('Topical session modular architecture', () => {
     expect(result.current.lifecycleLabels.planned).toBeTruthy();
     expect(result.current.nodeKindLabels.pillar).toBeTruthy();
     expect(result.current.sourceMetric(null)).toBeTruthy();
-    expect(result.current.sourceMetric(1234)).toBe((1234).toLocaleString());
+    expect(result.current.sourceMetric(1234)).toBe('1,234');
   });
 });

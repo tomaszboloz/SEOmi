@@ -5,6 +5,7 @@ import { DataForSeoCredentialsCard } from './dataforseoAudit/DataForSeoCredentia
 import { DataForSeoTaskLogCard } from './dataforseoAudit/DataForSeoTaskLogCard';
 import { DataForSeoSummaryCard } from './dataforseoAudit/DataForSeoSummaryCard';
 import { DataForSeoSerpCard } from './dataforseoAudit/DataForSeoSerpCard';
+import { DataForSeoCostMeter } from '@/components/DataForSEO/cost/DataForSeoCostMeter';
 
 export const DataForSEOAudit: React.FC<DataForSEOAuditProps> = ({ audit }) => {
   const activeProject = useProjectStore((s) => s.projects.find((project) => project.id === s.activeProjectId));
@@ -22,6 +23,7 @@ export const DataForSEOAudit: React.FC<DataForSEOAuditProps> = ({ audit }) => {
 
   return (
     <div className="space-y-6 max-w-6xl mx-auto p-4 md:p-6 animate-in fade-in duration-200">
+      <DataForSeoCostMeter />
       <DataForSeoCredentialsCard currentDomain={currentDomain} />
       <DataForSeoTaskLogCard />
       <DataForSeoSummaryCard />

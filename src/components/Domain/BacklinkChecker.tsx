@@ -5,6 +5,7 @@ import { BacklinkGapSection } from './backlinkChecker/BacklinkGapSection';
 import { BacklinkMetricsGrid } from './backlinkChecker/BacklinkMetricsGrid';
 import { BacklinkEquityAndAnchors } from './backlinkChecker/BacklinkEquityAndAnchors';
 import { BacklinkInboundTable } from './backlinkChecker/BacklinkInboundTable';
+import { DataForSeoCostMeter } from '@/components/DataForSEO/cost/DataForSeoCostMeter';
 
 export const BacklinkChecker: React.FC = () => {
   const session = useBacklinkSession();
@@ -21,6 +22,7 @@ export const BacklinkChecker: React.FC = () => {
   return (
     <div className="max-w-7xl mx-auto px-4 py-8 space-y-8">
       <BacklinkHeader session={session} />
+      <DataForSeoCostMeter />
       <BacklinkGapSection session={session} />
 
       {error && (

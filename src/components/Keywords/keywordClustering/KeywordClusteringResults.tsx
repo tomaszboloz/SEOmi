@@ -2,6 +2,7 @@ import React from 'react';
 import { X } from 'lucide-react';
 import type { TFunction } from 'i18next';
 import type { KeywordClusteringResult } from '@/services/keywordClustering';
+import { appLocale } from '@/services/localeFormat';
 
 interface KeywordClusteringResultsProps {
   result: KeywordClusteringResult;
@@ -17,7 +18,7 @@ export const KeywordClusteringResults: React.FC<KeywordClusteringResultsProps> =
           {t('keywordClusteringUi.resultMeta', {
             count: result.snapshots.length,
             threshold: result.minSharedUrls,
-            date: new Date(result.analyzedAt).toLocaleString(),
+            date: new Date(result.analyzedAt).toLocaleString(appLocale()),
           })}
         </span>
       </div>
