@@ -1,5 +1,28 @@
 use super::*;
 
+#[test]
+fn scoped_fixture_supports_prior_unscoped_request_callsite_registration() {
+    let (subscriber, records) = task_fixture();
+    dispatch_with_sink("get_config", || true, |_| Ok(()));
+    tracing::dispatcher::with_default(&subscriber, || {
+        dispatch_with_sink(
+            "get_config",
+            || {
+                assert!(!tracing::Span::current().is_disabled());
+                let span = tracing::debug_span!("ipc::request::run");
+                let _entered = span.enter();
+                true
+            },
+            |_| Ok(()),
+        );
+    });
+    let records = records.lock().unwrap();
+    assert_eq!(records.len(), 2);
+    assert_eq!(records[0]["event"], "ipc_task_started");
+    assert_eq!(records[1]["event"], "ipc_task_closed");
+    assert_eq!(records[0]["request_id"], records[1]["request_id"]);
+}
+
 #[tokio::test]
 async fn cancelling_a_polled_future_closes_its_native_span() {
     let (subscriber, records) = task_fixture();

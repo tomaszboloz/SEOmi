@@ -5,8 +5,12 @@ use serde::Deserialize;
 use serde_json::Value;
 use std::fs;
 use std::io::ErrorKind;
-use std::path::PathBuf;
+use std::path::{Path, PathBuf};
 use tauri::AppHandle;
+
+#[cfg(test)]
+#[path = "storage_tests.rs"]
+mod tests;
 
 pub(super) fn task_path(
     app: &AppHandle,
@@ -55,30 +59,19 @@ pub(super) fn write_json_atomic(
         .ok_or_else(|| "Scheduled data path has no parent directory.".to_string())?;
     fs::create_dir_all(directory)
         .map_err(|e| format!("Unable to create scheduled task directory: {e}"))?;
-    let temporary = path.with_extension("json.tmp");
-    if let Err(e) = fs::write(&temporary, bytes) {
-        let _ = fs::remove_file(&temporary);
-        return Err(format!("Unable to write scheduled data: {e}"));
-    }
-    if let Err(e) = crawl_storage::replace_file(&temporary, path) {
-        let _ = fs::remove_file(&temporary);
-        return Err(format!("Unable to finalize scheduled data: {e}"));
-    }
-    Ok(())
+    crawl_storage::write_bytes_atomic(path, &bytes)
+        .map_err(|error| format!("Unable to persist scheduled data: {error}"))
 }
 
 pub(super) fn read_json<T: for<'de> Deserialize<'de>>(
-    path: &PathBuf,
+    path: &Path,
     max_bytes: usize,
 ) -> Result<Option<T>, String> {
-    let bytes = match fs::read(path) {
+    let bytes = match crawl_storage::read_bytes_bounded(path, max_bytes) {
         Ok(bytes) => bytes,
         Err(e) if e.kind() == ErrorKind::NotFound => return Ok(None),
         Err(e) => return Err(format!("Unable to read scheduled data: {e}")),
     };
-    if bytes.len() > max_bytes {
-        return Err("Scheduled data exceeds the safety limit.".into());
-    }
     serde_json::from_slice(&bytes)
         .map(Some)
         .map_err(|e| format!("Scheduled data is invalid: {e}"))

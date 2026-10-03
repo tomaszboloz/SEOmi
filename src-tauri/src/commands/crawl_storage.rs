@@ -34,16 +34,9 @@ pub fn save_project_crawl_runs(
     fs::create_dir_all(&directory)
         .map_err(|error| format!("Unable to create project crawl folder: {error}"))?;
     let destination = directory.join("crawl_runs.json");
-    let temporary = directory.join("crawl_runs.json.tmp");
     let bytes = encode_crawl_runs(&crawl_runs)?;
-    if let Err(error) = fs::write(&temporary, bytes) {
-        let _ = fs::remove_file(&temporary);
-        return Err(format!("Unable to write saved crawl runs: {error}"));
-    }
-    if let Err(error) = replace_file(&temporary, &destination) {
-        let _ = fs::remove_file(&temporary);
-        return Err(format!("Unable to finalize saved crawl runs: {error}"));
-    }
+    write_bytes_atomic(&destination, &bytes)
+        .map_err(|error| format!("Unable to persist saved crawl runs: {error}"))?;
     let backup = directory.join("crawl_runs.json.bak");
     if backup.exists() && fs::remove_file(&backup).is_err() {
         crate::utils::logging::diagnostic(
@@ -61,11 +54,8 @@ pub fn load_project_crawl_checkpoint(app: AppHandle, project_id: String) -> Resu
     if !path.exists() {
         return Ok(Value::Null);
     }
-    let bytes = fs::read(path)
+    let bytes = read_bytes_bounded(&path, MAX_CHECKPOINT_BYTES)
         .map_err(|error| format!("Unable to read saved crawl checkpoint: {error}"))?;
-    if bytes.len() > MAX_CHECKPOINT_BYTES {
-        return Err("Saved crawl checkpoint exceeds the 32 MiB safety limit.".into());
-    }
     serde_json::from_slice(&bytes)
         .map_err(|error| format!("Saved crawl checkpoint is invalid: {error}"))
 }
@@ -89,16 +79,8 @@ pub fn save_project_crawl_checkpoint(
     fs::create_dir_all(&directory)
         .map_err(|error| format!("Unable to create project crawl folder: {error}"))?;
     let destination = directory.join("crawl_checkpoint.json");
-    let temporary = directory.join("crawl_checkpoint.json.tmp");
-    if let Err(error) = fs::write(&temporary, bytes) {
-        let _ = fs::remove_file(&temporary);
-        return Err(format!("Unable to write crawl checkpoint: {error}"));
-    }
-    if let Err(error) = replace_file(&temporary, &destination) {
-        let _ = fs::remove_file(&temporary);
-        return Err(format!("Unable to finalize crawl checkpoint: {error}"));
-    }
-    Ok(())
+    write_bytes_atomic(&destination, &bytes)
+        .map_err(|error| format!("Unable to persist crawl checkpoint: {error}"))
 }
 
 #[tauri::command]

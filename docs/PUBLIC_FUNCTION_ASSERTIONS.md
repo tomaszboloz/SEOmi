@@ -74,3 +74,8 @@ Direct assertions for `extract_page_content`, `extract_page_links`, `extract_pag
 ### Fetched response reader
 
 `read_fetched_page_data` has direct eight-case behavioral assertions in `fetch_data_tests/{http,rendered}.rs`: real loopback HTTP byte limits and errors, headers/media type, rendered observation transfer and unknown measurements, prefetched ownership. Shared `is_html_media_type` is exercised by both response paths but is private. Source/hash-validated fetch_data coverage121/121lines,14/14functions,6/6branches; full646native tests PASS. Complete global assertion proof remains OPEN.
+
+
+### Atomic storage and bounded reads
+
+Direct assertions for write_bytes_atomic/read_bytes_bounded are in crawl_storage/fs_atomic_tests.rs; queue write_atomic/write_atomic_with_limit in audit_queue/paths_tests.rs; scheduled write_json_atomic/read_json in scheduled_worker/storage_tests.rs. Cases check destination ownership, concurrent complete writes, exact/oversized byte caps, parse/missing/directory errors, null/zero/Unicode and execution64MiB versus result8MiB limits. read_crawl_history_file has direct disk-format, sparse-limit, empty/missing and backup-recovery assertions in crawl_storage/tests.rs. These helper assertions do not establish direct assertion coverage for every Tauri wrapper. A deterministic logging fixture regression plus ten complete lib runs preserves enabled spans and cancellation lifecycle assertions.659all-targets stable/nightlyPASS; complete global assertions remain OPEN.

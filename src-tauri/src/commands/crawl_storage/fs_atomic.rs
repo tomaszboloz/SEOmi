@@ -4,6 +4,46 @@ use std::{
 };
 use tauri::{AppHandle, Manager};
 
+pub(crate) fn write_bytes_atomic(destination: &Path, bytes: &[u8]) -> Result<(), String> {
+    use std::io::Write;
+    let temporary = destination.with_extension(format!("json.{}.tmp", uuid::Uuid::new_v4()));
+    let mut file = std::fs::OpenOptions::new()
+        .create_new(true)
+        .write(true)
+        .open(&temporary)
+        .map_err(|error| format!("Unable to create temporary file: {error}"))?;
+    if let Err(error) = file.write_all(bytes) {
+        drop(file);
+        let _ = std::fs::remove_file(&temporary);
+        return Err(format!("Unable to write temporary file: {error}"));
+    }
+    drop(file);
+    if let Err(error) = replace_file(&temporary, destination) {
+        let _ = std::fs::remove_file(&temporary);
+        return Err(format!("Unable to finalize file: {error}"));
+    }
+    Ok(())
+}
+
+pub(crate) fn read_bytes_bounded(path: &Path, max_bytes: usize) -> io::Result<Vec<u8>> {
+    use std::io::Read;
+    let file = std::fs::File::open(path)?;
+    let mut bytes = Vec::new();
+    file.take((max_bytes as u64).saturating_add(1))
+        .read_to_end(&mut bytes)?;
+    if bytes.len() > max_bytes {
+        return Err(io::Error::new(
+            io::ErrorKind::InvalidData,
+            "Saved data exceeds the safety limit.",
+        ));
+    }
+    Ok(bytes)
+}
+
+#[cfg(test)]
+#[path = "fs_atomic_tests.rs"]
+mod tests;
+
 pub(crate) const MAX_CHECKPOINT_BYTES: usize = 32 * 1024 * 1024;
 
 #[cfg(windows)]

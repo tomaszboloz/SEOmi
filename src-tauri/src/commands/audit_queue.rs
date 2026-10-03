@@ -27,14 +27,11 @@ use tauri::AppHandle;
 #[tauri::command]
 pub fn load_project_audit_queue(app: AppHandle, project_id: String) -> Result<Value, String> {
     let path = queue_path(&app, &project_id)?;
-    let bytes = match fs::read(path) {
+    let bytes = match crawl_storage::read_bytes_bounded(&path, MAX_QUEUE_BYTES) {
         Ok(bytes) => bytes,
         Err(error) if error.kind() == ErrorKind::NotFound => return Ok(Value::Null),
         Err(error) => return Err(format!("Unable to read audit queue: {error}")),
     };
-    if bytes.len() > MAX_QUEUE_BYTES {
-        return Err("Saved audit queue exceeds the safety limit.".into());
-    }
     serde_json::from_slice(&bytes).map_err(|error| format!("Saved audit queue is invalid: {error}"))
 }
 
@@ -43,14 +40,11 @@ pub(crate) fn read_queue_snapshot(
     project_id: &str,
 ) -> Result<Option<Value>, String> {
     let path = queue_path(app, project_id)?;
-    let bytes = match fs::read(path) {
+    let bytes = match crawl_storage::read_bytes_bounded(&path, MAX_QUEUE_BYTES) {
         Ok(bytes) => bytes,
         Err(error) if error.kind() == ErrorKind::NotFound => return Ok(None),
         Err(error) => return Err(format!("Unable to read audit queue: {error}")),
     };
-    if bytes.len() > MAX_QUEUE_BYTES {
-        return Err("Saved audit queue exceeds the safety limit.".into());
-    }
     serde_json::from_slice(&bytes)
         .map(Some)
         .map_err(|error| format!("Saved audit queue is invalid: {error}"))

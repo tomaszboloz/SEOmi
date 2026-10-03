@@ -4,6 +4,10 @@ use std::fs;
 use std::path::PathBuf;
 use tauri::AppHandle;
 
+#[cfg(test)]
+#[path = "paths_tests.rs"]
+mod tests;
+
 pub(crate) const MAX_QUEUE_BYTES: usize = 16 * 1024 * 1024;
 pub(crate) const MAX_QUEUE_EXECUTION_BYTES: usize = 64 * 1024 * 1024;
 pub(crate) const MAX_QUEUE_RESULT_BYTES: usize = 8 * 1024 * 1024;
@@ -50,9 +54,17 @@ pub(crate) fn queue_result_path(
 }
 
 pub(crate) fn write_atomic(path: &std::path::Path, value: &Value) -> Result<(), String> {
+    write_atomic_with_limit(path, value, MAX_QUEUE_BYTES)
+}
+
+pub(crate) fn write_atomic_with_limit(
+    path: &std::path::Path,
+    value: &Value,
+    max_bytes: usize,
+) -> Result<(), String> {
     let bytes = serde_json::to_vec(value)
         .map_err(|error| format!("Unable to serialize audit queue: {error}"))?;
-    if bytes.len() > MAX_QUEUE_BYTES {
+    if bytes.len() > max_bytes {
         return Err("Audit queue exceeds the safety limit.".into());
     }
     let directory = path
@@ -60,14 +72,6 @@ pub(crate) fn write_atomic(path: &std::path::Path, value: &Value) -> Result<(), 
         .ok_or_else(|| "Audit queue path has no parent directory.".to_string())?;
     fs::create_dir_all(directory)
         .map_err(|error| format!("Unable to create audit queue directory: {error}"))?;
-    let temporary = path.with_extension("json.tmp");
-    if let Err(error) = fs::write(&temporary, bytes) {
-        let _ = fs::remove_file(&temporary);
-        return Err(format!("Unable to write audit queue: {error}"));
-    }
-    if let Err(error) = crawl_storage::replace_file(&temporary, path) {
-        let _ = fs::remove_file(&temporary);
-        return Err(format!("Unable to finalize audit queue: {error}"));
-    }
-    Ok(())
+    crawl_storage::write_bytes_atomic(path, &bytes)
+        .map_err(|error| format!("Unable to persist audit queue: {error}"))
 }
