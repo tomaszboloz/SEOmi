@@ -1296,7 +1296,27 @@ BATCH-5j verification:2807frontend/516Rust/70MCP PASS; build/lint/rustfmt/strict
   - `npm run lint` clean (0 errors, 0 warnings).
   - `npx tsc --noEmit` clean (0 errors).
   - `tests/maxLoc.test.ts`: 25/25 tests PASS.
-  - Global LOC violations decreased from 27 to 22 across the codebase.
-
-
-
+### BATCH-7g: Decompose audit_queue, security_checker, seo_analyzer, and schema to LOC<=150
+- Decomposed four native modules exceeding 150 LOC into modular single-responsibility units strictly under 150 physical LOC:
+  1. `src-tauri/src/commands/audit_queue.rs` (310 -> 120 LOC facade) with 2 new submodules in `src-tauri/src/commands/audit_queue/`:
+     - `paths.rs` (73 LOC): path resolvers (`queue_path`, `queue_execution_path`, `queue_result_path`), `write_atomic`, and safety byte limits.
+     - `executions.rs` (148 LOC): atomic writers and execution/result persistence operations with explicit Tauri command re-exports.
+  2. `src-tauri/src/services/security_checker.rs` (330 -> 61 LOC facade) with 3 new submodules in `src-tauri/src/services/security_checker/`:
+     - `core_rules.rs` (125 LOC): `audit_hsts`, `audit_csp`, `audit_x_frame`, and `audit_x_content_type`.
+     - `policy_rules.rs` (88 LOC): `audit_referrer`, `audit_permissions`, `audit_information_disclosure`, and `audit_cross_origin`.
+     - `tests.rs` (88 LOC): 5 unit tests for perfect headers, missing headers, HSTS max-age, CSP unsafe-inline, and invalid X-Frame-Options.
+  3. `src-tauri/src/services/seo_analyzer.rs` (335 -> 128 LOC facade) with 3 new submodules in `src-tauri/src/services/seo_analyzer/`:
+     - `transport_audit.rs` (120 LOC): `audit_transport`, cookie security evaluation, and mixed-content issue generation.
+     - `performance_audit.rs` (122 LOC): `audit_performance_and_indexability`, HTTP status checks, response latency warnings, and canonical target validation.
+     - `findings_audit.rs` (53 LOC): `collect_structured_data_issues` and `collect_amp_issues`.
+  4. `src-tauri/src/commands/site_crawler/schema.rs` (339 -> 110 LOC facade) with 2 new submodules:
+     - `schema_references.rs` (138 LOC): `collect_json_ld_types`, `append_schema_findings`, `push_schema_reference`, and `collect_json_ld_references`.
+     - `schema_inspections.rs` (123 LOC): `inspect_microdata` and `inspect_rdfa`.
+  5. Refactored `src-tauri/src/commands/site_crawler.rs` (143 LOC facade): registered `schema_inspections` and `schema_references`.
+- Full verification loop:
+  - `cargo check --manifest-path src-tauri/Cargo.toml` clean (0 errors, 0 warnings).
+  - `cargo test --manifest-path src-tauri/Cargo.toml --lib -- --test-threads=1`: **558/558 library tests passing with 0 failures**.
+  - `npm run lint` clean (0 errors, 0 warnings).
+  - `npx tsc --noEmit` clean (0 errors).
+  - `tests/maxLoc.test.ts`: 25/25 tests PASS.
+  - Global LOC violations decreased from 22 to 18 across the codebase.

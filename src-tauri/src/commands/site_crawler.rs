@@ -48,6 +48,8 @@ mod resource_fetch;
 mod robots;
 mod robots_matching;
 mod schema;
+mod schema_inspections;
+mod schema_references;
 mod scoring;
 mod scope;
 mod semantic_chrome;
@@ -69,7 +71,8 @@ use {
     hreflang_validation::*, html_validation::*, image_decoding::*,
     inline_images::*, models::*, post_processing::*, prefetch::*,
     request_error::*, resource_apply::*, resource_discovery::*,
-    resource_fetch::*, robots::*, robots_matching::*, schema::*, scoring::*,
+    resource_fetch::*, robots::*, robots_matching::*, schema::*,
+    schema_inspections::*, schema_references::*, scoring::*,
     scope::*, semantic_chrome::*, semantics::*, simhash::*, sitemap::*,
     social::*, srcset::*, svg_dimensions::*, svg_inline::*,
     target_relations::*, transport::*, url_normalization::*,
