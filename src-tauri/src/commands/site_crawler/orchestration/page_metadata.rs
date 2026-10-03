@@ -1,3 +1,7 @@
+#[path = "page_metadata_inputs.rs"]
+mod inputs;
+pub use inputs::ExtractPageMetadataInput;
+
 use scraper::{Html, Selector};
 use url::Url;
 
@@ -28,22 +32,22 @@ pub struct PageMetadataOutcome {
     pub indexability_status: String,
 }
 
-pub fn extract_page_metadata(
-    page_data: &FetchedPageData,
-    document: &Html,
-    final_base: &Url,
-    final_url: &str,
-    current_url: &str,
-    redirect_chain_len: usize,
-    redirect_stopped_reason: Option<&String>,
-    pagination_declaration_count: usize,
-    pagination_invalid_declaration_count: usize,
-    config: &CrawlConfig,
-    canonical_selector: &Selector,
-    robots_selector: &Selector,
-    meta_refresh_selector: &Selector,
-    issues: &mut Vec<CrawledPageIssue>,
-) -> PageMetadataOutcome {
+pub fn extract_page_metadata(input: ExtractPageMetadataInput<'_>) -> PageMetadataOutcome {
+    let ExtractPageMetadataInput {
+        page_data,
+        document,
+        final_base,
+        final_url,
+        current_url,
+        redirect_chain_len,
+        redirect_stopped_reason,
+        pagination_declaration_count,
+        pagination_invalid_declaration_count,
+        config,
+        robots_selector,
+        meta_refresh_selector,
+        issues,
+    } = input;
     check_page_status_issues(
         page_data,
         final_url,
@@ -63,7 +67,6 @@ pub fn extract_page_metadata(
         is_html,
         pagination_declaration_count,
         pagination_invalid_declaration_count,
-        canonical_selector,
         issues,
     );
 
@@ -86,17 +89,18 @@ pub fn extract_page_metadata(
         });
     }
 
-    let verdicts = evaluate_page_verdicts(
-        page_data.status,
-        config,
-        directives.meta_robots.as_deref(),
-        page_data.x_robots_tag.as_deref(),
-        directives.meta_noindex,
-        directives.header_noindex,
-        directives.meta_nofollow,
-        directives.header_nofollow,
-        canon.canonical_points_elsewhere,
-    );
+    let verdicts =
+        evaluate_page_verdicts(super::page_metadata_verdicts::EvaluatePageVerdictsInput {
+            status: page_data.status,
+            config,
+            meta_robots: directives.meta_robots.as_deref(),
+            x_robots_tag: page_data.x_robots_tag.as_deref(),
+            meta_noindex: directives.meta_noindex,
+            header_noindex: directives.header_noindex,
+            meta_nofollow: directives.meta_nofollow,
+            header_nofollow: directives.header_nofollow,
+            canonical_points_elsewhere: canon.canonical_points_elsewhere,
+        });
 
     PageMetadataOutcome {
         canonical: canon.canonical,

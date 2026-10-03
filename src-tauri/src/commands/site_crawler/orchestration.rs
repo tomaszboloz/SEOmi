@@ -99,14 +99,14 @@ pub async fn crawl_site_with_control(
     let (resources, resource_limit_reached) =
         crawl_secondary_resources(&setup, control, &mut state, robots.robots_crawl_delay).await;
 
-    Ok(build_crawl_result(
-        &app,
+    Ok(build_crawl_result(summary::BuildCrawlResultInput {
+        app: &app,
         control,
-        &setup,
+        setup: &setup,
         robots,
         sitemaps,
-        &mut state,
+        state: &mut state,
         resources,
         resource_limit_reached,
-    ))
+    }))
 }

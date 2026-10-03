@@ -1,3 +1,7 @@
+#[path = "page_assembler_signals_inputs.rs"]
+mod inputs;
+pub use inputs::ExtractPageSignalsInput;
+
 use scraper::Html;
 use url::Url;
 
@@ -26,51 +30,52 @@ pub struct AssembledPageSignals {
     pub images: Vec<CrawledImage>,
 }
 
-pub fn extract_page_signals(
-    document: &Html,
-    text: &str,
-    page_data: &FetchedPageData,
-    final_base: &Url,
-    final_url: &str,
-    current_url: &str,
-    current_parsed: &Url,
-    depth: usize,
-    redirect_chain_len: usize,
-    redirect_stopped_reason: Option<&String>,
-    is_html: bool,
-    selectors: &CrawlSelectors,
-    setup: &CrawlSetup,
-    state: &mut CrawlLoopState,
-    issues: &mut Vec<CrawledPageIssue>,
-) -> AssembledPageSignals {
-    let extra = extract_page_extra(
+pub fn extract_page_signals(input: ExtractPageSignalsInput<'_>) -> AssembledPageSignals {
+    let ExtractPageSignalsInput {
+        document,
+        text,
+        page_data,
+        final_base,
+        final_url,
+        current_url,
+        current_parsed,
+        depth,
+        redirect_chain_len,
+        redirect_stopped_reason,
+        is_html,
+        selectors,
+        setup,
+        state,
+        issues,
+    } = input;
+    let extra = extract_page_extra(super::page_extra::ExtractPageExtraInput {
         document,
         text,
         final_base,
         final_url,
         current_parsed,
-        page_data.charset.as_deref(),
+        charset: page_data.charset.as_deref(),
         is_html,
-        &selectors.canonical,
-        &selectors.hreflang,
+        canonical_selector: &selectors.canonical,
+        hreflang_selector: &selectors.hreflang,
         setup,
         state,
         issues,
-    );
+    });
 
-    let content = extract_page_content(
+    let content = extract_page_content(super::page_content::ExtractPageContentInput {
         document,
-        page_data.body.len(),
+        body_len: page_data.body.len(),
         is_html,
-        page_data.body_truncated,
-        page_data.body_read_failed,
-        &selectors.html,
-        &selectors.title,
-        &selectors.h1,
-        &selectors.headings,
-        &selectors.meta_desc,
+        body_truncated: page_data.body_truncated,
+        body_read_failed: page_data.body_read_failed,
+        html_selector: &selectors.html,
+        title_selector: &selectors.title,
+        h1_selector: &selectors.h1,
+        headings_selector: &selectors.headings,
+        meta_desc_selector: &selectors.meta_desc,
         issues,
-    );
+    });
 
     let cm = if is_html {
         content_metrics(
@@ -92,7 +97,7 @@ pub fn extract_page_signals(
         None
     };
 
-    let meta = extract_page_metadata(
+    let meta = extract_page_metadata(super::page_metadata::ExtractPageMetadataInput {
         page_data,
         document,
         final_base,
@@ -100,28 +105,27 @@ pub fn extract_page_signals(
         current_url,
         redirect_chain_len,
         redirect_stopped_reason,
-        extra.pagination_declaration_count,
-        extra.pagination_invalid_declaration_count,
-        &setup.config,
-        &selectors.canonical,
-        &selectors.robots,
-        &selectors.meta_refresh,
+        pagination_declaration_count: extra.pagination_declaration_count,
+        pagination_invalid_declaration_count: extra.pagination_invalid_declaration_count,
+        config: &setup.config,
+        robots_selector: &selectors.robots,
+        meta_refresh_selector: &selectors.meta_refresh,
         issues,
-    );
+    });
 
-    let assets = extract_page_assets(
+    let assets = extract_page_assets(super::page_assembler_assets::ExtractPageAssetsInput {
         document,
         final_base,
         final_url,
         depth,
-        content.has_primary_content_root,
+        has_primary_content_root: content.has_primary_content_root,
         is_html,
-        &extra,
+        extra: &extra,
         selectors,
         setup,
         state,
         issues,
-    );
+    });
 
     AssembledPageSignals {
         extra,

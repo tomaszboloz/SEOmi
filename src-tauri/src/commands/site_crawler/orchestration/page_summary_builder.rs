@@ -1,3 +1,7 @@
+#[path = "page_summary_builder_inputs.rs"]
+mod inputs;
+pub use inputs::BuildCrawledPageSummaryInput;
+
 use super::super::{
     content_metrics::ContentMetrics,
     fetch_types::FetchedPageData,
@@ -11,27 +15,27 @@ use super::page_extra::PageExtraOutcome;
 use super::page_links::PageLinksOutcome;
 use super::page_metadata::PageMetadataOutcome;
 
-#[allow(clippy::too_many_arguments)]
-pub fn build_crawled_page_summary(
-    final_url: String,
-    redirect_chain: Vec<super::super::models::CrawledRedirectHop>,
-    redirect_stopped_reason: Option<String>,
-    page_data: &FetchedPageData,
-    page_duration: u64,
-    current_url: &str,
-    depth: usize,
-    crawl_mode: &str,
-    detected_charset: Option<String>,
-    cm: &ContentMetrics,
-    focus_phrase: Option<crate::commands::site_crawler::models::CrawledFocusPhraseEvidence>,
-    extra: PageExtraOutcome,
-    content: PageContentOutcome,
-    meta: PageMetadataOutcome,
-    links: PageLinksOutcome,
-    images: Vec<CrawledImage>,
-    discovery_sources: Vec<crate::commands::site_crawler::models::CrawledDiscoverySource>,
-    issues: Vec<CrawledPageIssue>,
-) -> CrawledPageSummary {
+pub fn build_crawled_page_summary(input: BuildCrawledPageSummaryInput<'_>) -> CrawledPageSummary {
+    let BuildCrawledPageSummaryInput {
+        final_url,
+        redirect_chain,
+        redirect_stopped_reason,
+        page_data,
+        page_duration,
+        current_url,
+        depth,
+        crawl_mode,
+        detected_charset,
+        cm,
+        focus_phrase,
+        extra,
+        content,
+        meta,
+        links,
+        images,
+        discovery_sources,
+        issues,
+    } = input;
     let semantic_content_partial = semantic_content_is_partial(
         page_data.body_truncated,
         page_data.body_read_failed,

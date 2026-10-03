@@ -1,3 +1,7 @@
+#[path = "summary_inputs.rs"]
+mod inputs;
+pub use inputs::BuildCrawlResultInput;
+
 use tauri::{AppHandle, Emitter};
 
 use super::super::{
@@ -14,16 +18,17 @@ use super::setup::CrawlSetup;
 use super::sitemaps::CrawlSitemapsOutcome;
 use super::state::CrawlLoopState;
 
-pub fn build_crawl_result(
-    app: &AppHandle,
-    control: &CrawlControl,
-    setup: &CrawlSetup,
-    robots: CrawlRobotsOutcome,
-    sitemaps: CrawlSitemapsOutcome,
-    state: &mut CrawlLoopState,
-    resources: Vec<CrawledResource>,
-    resource_limit_reached: bool,
-) -> SiteCrawlResult {
+pub fn build_crawl_result(input: BuildCrawlResultInput<'_>) -> SiteCrawlResult {
+    let BuildCrawlResultInput {
+        app,
+        control,
+        setup,
+        robots,
+        sitemaps,
+        state,
+        resources,
+        resource_limit_reached,
+    } = input;
     for page in &mut state.pages {
         apply_checked_image_resources(&mut page.images, &resources, &setup.config);
     }

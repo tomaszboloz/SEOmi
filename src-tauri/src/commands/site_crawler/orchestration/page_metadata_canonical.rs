@@ -1,8 +1,8 @@
-use scraper::{Html, Selector};
+use scraper::Html;
 use url::Url;
 
 use super::super::{
-    canonical::classify_canonical_relation,
+    canonical::{classify_canonical_relation, crawl_canonical_declarations},
     models::{CrawledCanonicalTarget, CrawledPageIssue},
     pagination::pagination_canonical_alignment,
 };
@@ -16,6 +16,10 @@ pub struct PageCanonicalOutcome {
     pub pagination_canonical_alignment: Option<String>,
 }
 
+#[cfg(test)]
+#[path = "page_metadata_canonical_tests.rs"]
+mod tests;
+
 pub fn extract_page_canonical(
     document: &Html,
     final_base: &Url,
@@ -23,41 +27,28 @@ pub fn extract_page_canonical(
     is_html: bool,
     pagination_declaration_count: usize,
     pagination_invalid_declaration_count: usize,
-    canonical_selector: &Selector,
     issues: &mut Vec<CrawledPageIssue>,
 ) -> PageCanonicalOutcome {
-    let canonical_urls = if is_html {
-        document
-            .select(canonical_selector)
-            .filter_map(|element| {
-                let rel = element.value().attr("rel")?;
-                if !rel
-                    .split_ascii_whitespace()
-                    .any(|v| v.eq_ignore_ascii_case("canonical"))
-                {
-                    return None;
-                }
-                let href = element.value().attr("href")?.trim();
-                (!href.is_empty())
-                    .then(|| final_base.join(href).ok().map(|u| u.to_string()))
-                    .flatten()
-            })
-            .collect::<Vec<_>>()
-    } else {
-        Vec::new()
-    };
+    let (canonical_declaration_count, canonical_urls) =
+        crawl_canonical_declarations(document, final_base);
     let canonical = canonical_urls.first().cloned();
-    let canonical_declaration_count = canonical_urls.len();
     if is_html && canonical_declaration_count == 0 {
         issues.push(CrawledPageIssue {
             severity: "Info".into(),
-            message: "Missing <link rel=\"canonical\"> declaration".into(),
+            message: "Missing canonical link".into(),
         });
     }
     if is_html && canonical_declaration_count > 1 {
         issues.push(CrawledPageIssue {
             severity: "Warning".into(),
-            message: format!("Multiple canonical tags found ({canonical_declaration_count})"),
+            message: format!("Multiple canonical links found ({canonical_declaration_count})"),
+        });
+    }
+
+    if is_html && canonical_declaration_count == 1 && canonical.is_none() {
+        issues.push(CrawledPageIssue {
+            severity: "Warning".into(),
+            message: "Canonical declaration has a missing, invalid, or non-HTTP URL".into(),
         });
     }
 

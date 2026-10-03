@@ -1,3 +1,7 @@
+#[path = "page_links_inputs.rs"]
+mod inputs;
+pub use inputs::ExtractPageLinksInput;
+
 use scraper::{Html, Selector};
 use url::Url;
 
@@ -21,16 +25,17 @@ pub struct PageLinksOutcome {
     pub external_link_count: usize,
 }
 
-pub fn extract_page_links(
-    document: &Html,
-    final_base: &Url,
-    final_url: &str,
-    depth: usize,
-    has_primary_content_root: bool,
-    a_selector: &Selector,
-    setup: &CrawlSetup,
-    state: &mut CrawlLoopState,
-) -> PageLinksOutcome {
+pub fn extract_page_links(input: ExtractPageLinksInput<'_>) -> PageLinksOutcome {
+    let ExtractPageLinksInput {
+        document,
+        final_base,
+        final_url,
+        depth,
+        has_primary_content_root,
+        a_selector,
+        setup,
+        state,
+    } = input;
     let mut internal_link_count = 0usize;
     let mut external_link_count = 0usize;
     let mut links = Vec::new();

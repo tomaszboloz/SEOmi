@@ -1,3 +1,7 @@
+#[path = "page_extra_inputs.rs"]
+mod inputs;
+pub use inputs::ExtractPageExtraInput;
+
 use scraper::{Html, Selector};
 use url::Url;
 
@@ -42,20 +46,21 @@ pub struct PageExtraOutcome {
     pub html_validation_truncated: bool,
 }
 
-pub fn extract_page_extra(
-    document: &Html,
-    text: &str,
-    final_base: &Url,
-    final_url: &str,
-    current_parsed: &Url,
-    charset: Option<&str>,
-    is_html: bool,
-    canonical_selector: &Selector,
-    hreflang_selector: &Selector,
-    setup: &CrawlSetup,
-    state: &mut CrawlLoopState,
-    issues: &mut Vec<CrawledPageIssue>,
-) -> PageExtraOutcome {
+pub fn extract_page_extra(input: ExtractPageExtraInput<'_>) -> PageExtraOutcome {
+    let ExtractPageExtraInput {
+        document,
+        text,
+        final_base,
+        final_url,
+        current_parsed,
+        charset,
+        is_html,
+        canonical_selector,
+        hreflang_selector,
+        setup,
+        state,
+        issues,
+    } = input;
     let (html_validation_findings, html_validation_truncated) = if is_html {
         validate_crawl_html_with_charset(
             document,

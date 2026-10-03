@@ -1,3 +1,7 @@
+#[path = "page_content_inputs.rs"]
+mod inputs;
+pub use inputs::ExtractPageContentInput;
+
 use scraper::{Html, Selector};
 
 use super::super::{
@@ -30,19 +34,20 @@ pub struct PageContentOutcome {
     pub meta_description_length: Option<usize>,
 }
 
-pub fn extract_page_content(
-    document: &Html,
-    body_len: usize,
-    is_html: bool,
-    body_truncated: bool,
-    body_read_failed: bool,
-    html_selector: &Selector,
-    title_selector: &Selector,
-    h1_selector: &Selector,
-    headings_selector: &Selector,
-    meta_desc_selector: &Selector,
-    issues: &mut Vec<CrawledPageIssue>,
-) -> PageContentOutcome {
+pub fn extract_page_content(input: ExtractPageContentInput<'_>) -> PageContentOutcome {
+    let ExtractPageContentInput {
+        document,
+        body_len,
+        is_html,
+        body_truncated,
+        body_read_failed,
+        html_selector,
+        title_selector,
+        h1_selector,
+        headings_selector,
+        meta_desc_selector,
+        issues,
+    } = input;
     let document_language = document
         .select(html_selector)
         .next()

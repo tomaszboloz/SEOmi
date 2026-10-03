@@ -50,23 +50,24 @@ pub async fn assemble_page_summary(
     };
     let document = Html::parse_document(&text);
 
-    let mut signals = extract_page_signals(
-        &document,
-        &text,
-        &page_data,
-        &final_base,
-        &final_url,
-        current_url,
-        &current_parsed,
-        depth,
-        redirect_chain.len(),
-        redirect_stopped_reason.as_ref(),
-        is_html,
-        selectors,
-        setup,
-        state,
-        &mut issues,
-    );
+    let mut signals =
+        extract_page_signals(super::page_assembler_signals::ExtractPageSignalsInput {
+            document: &document,
+            text: &text,
+            page_data: &page_data,
+            final_base: &final_base,
+            final_url: &final_url,
+            current_url,
+            current_parsed: &current_parsed,
+            depth,
+            redirect_chain_len: redirect_chain.len(),
+            redirect_stopped_reason: redirect_stopped_reason.as_ref(),
+            is_html,
+            selectors,
+            setup,
+            state,
+            issues: &mut issues,
+        });
     signals
         .extra
         .html_validation_findings
@@ -74,26 +75,27 @@ pub async fn assemble_page_summary(
 
     let discovery_sources = resolve_page_discovery_sources(current_url, setup, state);
 
-    let summary = build_crawled_page_summary(
-        final_url,
-        redirect_chain,
-        redirect_stopped_reason,
-        &page_data,
-        page_duration,
-        current_url,
-        depth,
-        setup.config.crawl_mode.as_str(),
-        detected_charset,
-        &signals.cm,
-        signals.focus_phrase,
-        signals.extra,
-        signals.content,
-        signals.meta,
-        signals.links,
-        signals.images,
-        discovery_sources,
-        issues,
-    );
+    let summary =
+        build_crawled_page_summary(super::page_summary_builder::BuildCrawledPageSummaryInput {
+            final_url,
+            redirect_chain,
+            redirect_stopped_reason,
+            page_data: &page_data,
+            page_duration,
+            current_url,
+            depth,
+            crawl_mode: setup.config.crawl_mode.as_str(),
+            detected_charset,
+            cm: &signals.cm,
+            focus_phrase: signals.focus_phrase,
+            extra: signals.extra,
+            content: signals.content,
+            meta: signals.meta,
+            links: signals.links,
+            images: signals.images,
+            discovery_sources,
+            issues,
+        });
     state.pages.push(summary);
 
     Ok(())
