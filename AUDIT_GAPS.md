@@ -1089,3 +1089,27 @@ BATCH-5j verification:2807frontend/516Rust/70MCP PASS; build/lint/rustfmt/strict
   - `tests/maxLoc.test.ts` (25/25 tests PASS).
   - Vitest suite passing with 0 failures (39/39 tests across BATCH-6b and related suites).
   - Global LOC violations decreased from 56 to 53 across the codebase (only 2 frontend files remain > 150 LOC).
+
+### BATCH-6c: Decompose CrawlRunResults and ScheduledAuditsPanel to LOC<=150 (100% Frontend <= 150 LOC)
+- Decomposed final two frontend components exceeding 150 LOC into modular single-responsibility units strictly under 150 physical LOC:
+  1. `src/components/Domain/siteAudit/CrawlRunResults.tsx` (175 -> 31 LOC facade) with 5 submodules in `src/components/Domain/siteAudit/runResults/`:
+     - `CrawlPagesTable.tsx` (29 LOC)
+     - `CrawlReportTemplateSection.tsx` (56 LOC)
+     - `CrawlRunExportSection.tsx` (35 LOC)
+     - `CrawlRunNotices.tsx` (51 LOC)
+     - `CrawlSitemapComparisonCards.tsx` (36 LOC)
+  2. `src/components/Domain/ScheduledAuditsPanel.tsx` (154 -> 141 LOC facade) with 4 submodules in `src/components/Domain/scheduledAudits/`:
+     - `scheduledAuditHelpers.ts` (15 LOC)
+     - `ScheduledAuditForm.tsx` (98 LOC)
+     - `ScheduledAuditItem.tsx` (92 LOC)
+     - `ScheduledAuditsList.tsx` (45 LOC)
+- Added 2 dedicated test suites ensuring complete coverage (all <= 150 LOC):
+  - `tests/crawlRunResultsComponents.test.tsx` (67 LOC, 4 tests)
+  - `tests/scheduledAuditsComponents.test.tsx` (127 LOC, 3 tests)
+- Full verification loop:
+  - `npm run lint` clean (0 errors, 0 warnings).
+  - `npx tsc --noEmit` clean (0 errors).
+  - `tests/maxLoc.test.ts` (25/25 tests PASS).
+  - Vitest suite passing with 0 failures (37/37 tests across BATCH-6c and related suites).
+  - Global LOC violations decreased from 53 to 51 across the codebase.
+  - **MILESTONE**: 100% of frontend source files (`src/`) are now strictly <= 150 LOC (0 violations remain in `src/`)!
