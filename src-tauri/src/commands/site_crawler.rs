@@ -2,7 +2,7 @@ use base64::{engine::general_purpose::STANDARD as BASE64_STANDARD, Engine as _};
 use regex::Regex;
 use reqwest::header::{HeaderMap, HeaderName, HeaderValue, COOKIE, USER_AGENT};
 use scraper::{node::Node, ElementRef, Html, Selector};
-use serde::{Deserialize, Serialize};
+use serde::Serialize;
 use sha2::{Digest, Sha256};
 use std::collections::{HashMap, HashSet, VecDeque};
 use std::sync::{Mutex, OnceLock};
@@ -14,8 +14,8 @@ use crate::commands::rendered_crawler::{RenderOptions, RenderedCrawlerSession};
 use crate::commands::settings::{crawl_auth_profile, CrawlAuthProfile};
 use crate::models::audit_data::{FaviconData, StructuredDataValidationIssue};
 use crate::services::custom_search::{
-    extract_custom_search_results_with_html, validate_custom_searches, CrawledCustomSearchResult,
-    CustomSearchDefinition, MAX_CUSTOM_SEARCH_CHARS_PER_RUN,
+    extract_custom_search_results_with_html, validate_custom_searches,
+    MAX_CUSTOM_SEARCH_CHARS_PER_RUN,
 };
 use crate::services::schema_validator;
 use crate::utils::url_validator::validate_and_normalize_url;

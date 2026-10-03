@@ -1465,8 +1465,6 @@ BATCH-5j verification:2807frontend/516Rust/70MCP PASS; build/lint/rustfmt/strict
   - `tests/maxLoc.test.ts`: 25/25 tests PASS.
   - Global LOC violations decreased from 7 to 4 across the codebase.
 
-
-
 - Integrated remote frontend/native decomposition through abe75052 with AMP fixes005fdca via ordinary merge commits4e1f02e/43baef0. Retained both audit histories and removed unused alternate AMP modules; original nine baseline assertions plus ten regressions remain attached to the public audit entry.
 - [DISCOVERED] GAP-197: rustfmt expanded five newly extracted modules beyond150physical lines. Applied canonical formatting and split attribute validation/location, HTML metadata, content phrase evidence and proxy targets into responsibility modules. Final physical inventory:7violations/1813files; remaining modules are orchestration, rendered_crawler, custom_search, crawler models, pdf_report, http_client and scheduled_worker. No whitespace compression or exclusions used.
 - [DISCOVERED] GAP-198: extracted example helper/test files were auto-discovered as standalone Cargo examples, causing missing-symbol errors in all-targets and dead-code warnings. autoexamples=false retains the four explicitly declared example targets, with their existing test modules attached.
@@ -1481,3 +1479,34 @@ BATCH-5j verification:2807frontend/516Rust/70MCP PASS; build/lint/rustfmt/strict
 - Run37136798264 at3000ca36 failed Rust formatting and the stale MCP architecture-test path; Windows failed on the same frontend assertion before runtime E2E. Downloaded individual job logs111242861720/111242861460/111242861676 to /tmp/seomi-job-{rust,front,windows}.log. No runtime crash is inferred from this Windows failure.
 - Verified integration041be1ef:3457frontend/579Rust all-targets/70MCP PASS; production build, lint, rustfmt, strictClippy and diff checks PASS. Logs /tmp/seomi-7k-{native,clippy}.log and /tmp/seomi-github-integration-{frontend,build,lint,mcp}.log. Earlier local frontend had one5000ms timeout under concurrent compilations; unchanged sources/timeouts/assertions passed the complete rerun.
 - Fresh physical LOC scan at041be1ef:4violations/1839files, orchestration2043/rendered_crawler1128/custom_search907/crawler models825. Original audit remains69/72; no99% coverage/direct-assertion completion or final release is claimed. The integrated commit requires fresh GitHub CI after push.
+
+### BATCH-7l: Decompose custom_search and site_crawler/models to LOC<=150
+- Decomposed two core native modules exceeding 150 LOC into modular single-responsibility units strictly under 150 physical LOC:
+  1. `src-tauri/src/services/custom_search.rs` (811 -> 25 LOC facade) with 11 new submodules in `src-tauri/src/services/custom_search/`:
+     - `models.rs` (56 LOC): match types, extraction targets, configuration models, and error bounds.
+     - `validation.rs` (98 LOC): configuration limits, regex compilation checks, and `validate_custom_search_configs`.
+     - `xpath.rs` (124 LOC): simplified XPath segment tokenization and traversal path construction.
+     - `xpath_predicate_helpers.rs` (60 LOC): attribute and text comparison predicates.
+     - `xpath_predicates.rs` (143 LOC): predicate evaluation and node matching.
+     - `xpath_text_predicates.rs` (25 LOC): `contains(text(), ...)` and `text() = ...` predicates.
+     - `regex_extraction.rs` (53 LOC): regex pattern matching on plain text and raw HTML with match count capping.
+     - `extraction.rs` (139 LOC): top-level evaluation and extraction across CSS selectors, XPath expressions, and Regex patterns.
+     - `tests_common.rs` (14 LOC): shared test HTML fixtures.
+     - `tests_1.rs` (86 LOC): 5 unit tests for text extraction, HTML inner/outer extraction, attribute extraction, regex extraction, and validation errors.
+     - `tests_2.rs` (106 LOC): 4 unit tests for XPath positional predicates, attribute predicates, count extraction, and multi-element matching.
+  2. `src-tauri/src/commands/site_crawler/models.rs` (800+ -> 15 LOC facade) with 7 new submodules in `src-tauri/src/commands/site_crawler/models/`:
+     - `config.rs` (102 LOC): `CrawlConfig` and crawler configuration options.
+     - `crawl_result.rs` (105 LOC): `CrawlResult`, status tracking, and discovery source models.
+     - `resources_and_hops.rs` (89 LOC): redirect hops, client redirects, and pagination links.
+     - `robots_and_indexability.rs` (135 LOC): robots decisions and indexability verdicts.
+     - `page_elements.rs` (113 LOC): crawled link, image, headings, issues, and schema findings.
+     - `social_and_frames.rs` (54 LOC): crawled frames, social meta tags, social resource checks, and canonical targets.
+     - `page_summary.rs` (114 LOC): `CrawledPageSummary` aggregate model.
+- Full verification loop:
+  - `cargo check --manifest-path src-tauri/Cargo.toml` clean (0 errors, 0 warnings).
+  - `cargo test --manifest-path src-tauri/Cargo.toml --lib -- --test-threads=1`: **558/558 library tests passing with 0 failures**.
+  - `npm run lint` clean (0 errors, 0 warnings).
+  - `npx tsc --noEmit` clean (0 errors).
+  - `tests/maxLoc.test.ts`: 25/25 tests PASS.
+  - Global LOC violations decreased from 4 to 2 across the codebase.
+
