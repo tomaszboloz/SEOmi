@@ -1474,3 +1474,10 @@ BATCH-5j verification:2807frontend/516Rust/70MCP PASS; build/lint/rustfmt/strict
 - Frozen005fdca native nightly branch run completed successfully: raw LCOV BRF4416/BRH2603, LF51093/LH13928, FNF5293/FNH1496. These raw totals include tests/auxiliary sources and are NOT production coverage or evidence for the later integration. Artifact /tmp/seomi-native-branches.lcov; log /tmp/seomi-native-branches.log; snapshot /Users/tomaszboloz/.codex/worktrees/native-branch-coverage/seomi. Production AST/hash filtering and latest-head measurement remain required.
 - Current integration all-targets/strictClippy and full frontend/build/lint/MCP are running. Logs /tmp/seomi-final-integration-{native,clippy,frontend,build,lint,mcp}.log. Earlier runs invalidated by subsequent source edits are not final evidence. No integrated push or final tag until verification.
 - Original audit remains69/72; global coverage/direct assertions/LOC and extension/release requirements remain OPEN.
+
+## GitHub issue / CI follow-up — 2026-10-03
+
+- Reviewed open issue19, draft PR15, merged PRs13/14/16/17/18 and the issue11 follow-up. Issue19 remains open until master integration.
+- Run37136798264 at3000ca36 failed Rust formatting and the stale MCP architecture-test path; Windows failed on the same frontend assertion before runtime E2E. Downloaded individual job logs111242861720/111242861460/111242861676 to /tmp/seomi-job-{rust,front,windows}.log. No runtime crash is inferred from this Windows failure.
+- Verified integration041be1ef:3457frontend/579Rust all-targets/70MCP PASS; production build, lint, rustfmt, strictClippy and diff checks PASS. Logs /tmp/seomi-7k-{native,clippy}.log and /tmp/seomi-github-integration-{frontend,build,lint,mcp}.log. Earlier local frontend had one5000ms timeout under concurrent compilations; unchanged sources/timeouts/assertions passed the complete rerun.
+- Fresh physical LOC scan at041be1ef:4violations/1839files, orchestration2043/rendered_crawler1128/custom_search907/crawler models825. Original audit remains69/72; no99% coverage/direct-assertion completion or final release is claimed. The integrated commit requires fresh GitHub CI after push.
