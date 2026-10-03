@@ -16,7 +16,8 @@ fn unique_atomic_bytes_replace_destination_without_touching_legacy_temporary() {
     write_bytes_atomic(&destination, b"second").unwrap();
     assert_eq!(std::fs::read(&destination).unwrap(), b"second");
     assert_eq!(std::fs::read(&legacy_temporary).unwrap(), b"other writer");
-    assert_eq!(std::fs::read_dir(&directory).unwrap().count(), 2);
+    assert!(destination.with_extension("json.write.lock").is_file());
+    assert_eq!(std::fs::read_dir(&directory).unwrap().count(), 3);
     std::fs::remove_dir_all(directory).unwrap();
 }
 
@@ -26,7 +27,7 @@ fn atomic_creation_and_finalization_errors_preserve_destination_and_remove_owned
     let missing_parent = directory.join("missing/data.json");
     assert!(write_bytes_atomic(&missing_parent, b"data")
         .unwrap_err()
-        .contains("create temporary"));
+        .contains("lock destination"));
     assert!(!missing_parent.exists());
     let destination = directory.join("data.json");
     std::fs::create_dir(&destination).unwrap();
@@ -34,7 +35,8 @@ fn atomic_creation_and_finalization_errors_preserve_destination_and_remove_owned
         .unwrap_err()
         .contains("finalize file"));
     assert!(destination.is_dir());
-    assert_eq!(std::fs::read_dir(&directory).unwrap().count(), 1);
+    assert!(destination.with_extension("json.write.lock").is_file());
+    assert_eq!(std::fs::read_dir(&directory).unwrap().count(), 2);
     std::fs::remove_dir_all(directory).unwrap();
 }
 

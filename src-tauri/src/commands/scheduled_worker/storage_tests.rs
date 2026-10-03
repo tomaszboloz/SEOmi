@@ -49,7 +49,8 @@ fn scheduled_json_reports_parse_and_directory_errors_without_overwriting_destina
         .unwrap_err()
         .contains("finalize file"));
     assert!(read_json::<Value>(&destination, 100).is_err());
-    assert_eq!(fs::read_dir(&directory).unwrap().count(), 2);
+    assert!(destination.with_extension("json.write.lock").is_file());
+    assert_eq!(fs::read_dir(&directory).unwrap().count(), 3);
     let blocked_parent = path.join("data.json");
     assert!(write_json_atomic(&blocked_parent, &json!({}), 100)
         .unwrap_err()
@@ -82,6 +83,7 @@ fn concurrent_scheduled_writes_commit_complete_json_records() {
     let value = read_json::<Value>(&path, 2000).unwrap().unwrap();
     assert!(value["writer"].as_u64().unwrap() < 12);
     assert_eq!(value["payload"].as_str().unwrap().len(), 1000);
-    assert_eq!(fs::read_dir(&directory).unwrap().count(), 1);
+    assert!(path.with_extension("json.write.lock").is_file());
+    assert_eq!(fs::read_dir(&directory).unwrap().count(), 2);
     fs::remove_dir_all(directory).unwrap();
 }

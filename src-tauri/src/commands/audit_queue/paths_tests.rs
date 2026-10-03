@@ -41,7 +41,8 @@ fn queue_writer_accepts_exact_limit_and_preserves_previous_file_on_oversize() {
         serde_json::from_slice::<Value>(&fs::read(&path).unwrap()).unwrap(),
         value
     );
-    assert_eq!(fs::read_dir(&directory).unwrap().count(), 1);
+    assert!(path.with_extension("json.write.lock").is_file());
+    assert_eq!(fs::read_dir(&directory).unwrap().count(), 2);
     fs::remove_dir_all(directory).unwrap();
 }
 
@@ -53,7 +54,8 @@ fn failed_destination_replace_cleans_only_owned_temporary_file() {
     let error = write_atomic(&path, &json!({"value":1})).unwrap_err();
     assert!(error.contains("Unable to finalize file"));
     assert!(path.is_dir());
-    assert_eq!(fs::read_dir(&directory).unwrap().count(), 1);
+    assert!(path.with_extension("json.write.lock").is_file());
+    assert_eq!(fs::read_dir(&directory).unwrap().count(), 2);
     fs::remove_dir_all(directory).unwrap();
 }
 
@@ -78,7 +80,8 @@ fn parallel_queue_writers_commit_complete_json_without_temporary_collisions() {
     let value: Value = serde_json::from_slice(&fs::read(&path).unwrap()).unwrap();
     assert!(value["writer"].as_u64().unwrap() < 16);
     assert_eq!(value["text"].as_str().unwrap().len(), 10_000);
-    assert_eq!(fs::read_dir(&directory).unwrap().count(), 1);
+    assert!(path.with_extension("json.write.lock").is_file());
+    assert_eq!(fs::read_dir(&directory).unwrap().count(), 2);
     fs::remove_dir_all(directory).unwrap();
 }
 

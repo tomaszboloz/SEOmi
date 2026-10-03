@@ -1,3 +1,4 @@
+pub(crate) mod file_lock;
 pub(crate) mod http_syntax;
 pub mod logging;
 pub mod provider_json;

@@ -6,6 +6,9 @@ use tauri::{AppHandle, Manager};
 
 pub(crate) fn write_bytes_atomic(destination: &Path, bytes: &[u8]) -> Result<(), String> {
     use std::io::Write;
+    let lock_path = destination.with_extension("json.write.lock");
+    let _write_lock = crate::utils::file_lock::lock_file(&lock_path)
+        .map_err(|error| format!("Unable to lock destination: {error}"))?;
     let temporary = destination.with_extension(format!("json.{}.tmp", uuid::Uuid::new_v4()));
     let mut file = std::fs::OpenOptions::new()
         .create_new(true)
