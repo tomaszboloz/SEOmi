@@ -1206,3 +1206,23 @@ BATCH-5j verification:2807frontend/516Rust/70MCP PASS; build/lint/rustfmt/strict
   - `npx tsc --noEmit` clean (0 errors).
   - `tests/maxLoc.test.ts`: 25/25 tests PASS.
   - Global LOC violations decreased from 41 to 38 across the codebase (100% of examples are now strictly <= 150 LOC).
+
+### BATCH-7c: Decompose site_crawler fingerprints, inline_images, resource_fetch, and scope to LOC<=150
+- Decomposed four native `site_crawler` modules exceeding 150 LOC into modular single-responsibility units strictly under 150 physical LOC:
+  1. `src-tauri/src/commands/site_crawler/fingerprints.rs` (197 -> 99 LOC facade) with 1 new submodule:
+     - `simhash.rs` (98 LOC): `content_simhash`, `simhash_distance`, and `near_duplicate_pairs` bucket matching.
+  2. `src-tauri/src/commands/site_crawler/inline_images.rs` (200 -> 67 LOC facade) with 2 new submodules:
+     - `srcset.rs` (47 LOC): `parse_srcset_urls` token stream parser.
+     - `svg_inline.rs` (85 LOC): `decode_inline_text_payload`, `svg_attribute`, `svg_numeric_dimension`, and `svg_inline_dimensions`.
+  3. `src-tauri/src/commands/site_crawler/resource_fetch.rs` (202 -> 70 LOC facade) with 1 new submodule:
+     - `resource_apply.rs` (132 LOC): `apply_checked_image_resources`, `apply_checked_social_resource_checks`, `apply_checked_social_resources`, and `apply_checked_frame_resources`.
+  4. `src-tauri/src/commands/site_crawler/scope.rs` (222 -> 92 LOC facade) with 1 new submodule:
+     - `url_normalization.rs` (121 LOC): `normalized_query_parameter_names`, `is_tracking_parameter`, `canonicalize_unreserved_percent_encoding`, and `normalize_crawl_url`.
+  5. Refactored `src-tauri/src/commands/site_crawler.rs` (143 LOC): declared and integrated all new submodules.
+- Full verification loop:
+  - `cargo check --manifest-path src-tauri/Cargo.toml` clean (0 errors, 0 warnings).
+  - `cargo test --manifest-path src-tauri/Cargo.toml --lib -- --test-threads=1`: **558/558 library tests passing with 0 failures**.
+  - `npm run lint` clean (0 errors, 0 warnings).
+  - `npx tsc --noEmit` clean (0 errors).
+  - `tests/maxLoc.test.ts`: 25/25 tests PASS.
+  - Global LOC violations decreased from 38 to 34 across the codebase.

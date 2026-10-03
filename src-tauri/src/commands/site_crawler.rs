@@ -53,6 +53,7 @@ mod inline_images;
 mod models;
 mod orchestration;
 mod post_processing;
+mod resource_apply;
 mod resource_discovery;
 mod resource_fetch;
 mod robots;
@@ -60,16 +61,21 @@ mod schema;
 mod scoring;
 mod scope;
 mod semantics;
+mod simhash;
 mod social;
+mod srcset;
 mod svg_dimensions;
+mod svg_inline;
 mod transport;
+mod url_normalization;
 
 use {
     canonical::*, content_metrics::*, control::*, fetch_data::*, fetch_types::*,
     filter_validation::*, fingerprints::*, hreflang::*, html_validation::*,
     image_decoding::*, inline_images::*, models::*, post_processing::*,
-    resource_discovery::*, resource_fetch::*, robots::*, schema::*, scoring::*,
-    scope::*, semantics::*, social::*, svg_dimensions::*, transport::*,
+    resource_apply::*, resource_discovery::*, resource_fetch::*, robots::*,
+    schema::*, scoring::*, scope::*, semantics::*, simhash::*, social::*,
+    srcset::*, svg_dimensions::*, svg_inline::*, transport::*, url_normalization::*,
 };
 
 pub use control::{CrawlControl, CrawlProgress};
