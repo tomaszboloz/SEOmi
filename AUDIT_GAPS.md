@@ -1148,3 +1148,26 @@ BATCH-5j verification:2807frontend/516Rust/70MCP PASS; build/lint/rustfmt/strict
   - `npm run test:inventory`: succeeds with 1234 functions inventoried.
   - `tests/maxLoc.test.ts`: 25/25 tests PASS.
   - Global LOC violations decreased from 48 to 46 across the codebase.
+
+### BATCH-6f: Decompose auditWorkflow.ts and server.ts to LOC<=150 (100% TS/JS/Scripts/Tests <= 150 LOC)
+- Decomposed the final two MCP server modules exceeding 150 LOC into modular single-responsibility units strictly under 150 physical LOC:
+  1. `mcp-server/src/auditWorkflow.ts` (355 -> 31 LOC facade) with 5 submodules in `mcp-server/src/`:
+     - `auditTypes.ts` (64 LOC): types, interfaces, and public audit/crawl contracts (`PublicAuditResult`, `PublicCrawlResult`, etc.).
+     - `auditScope.ts` (60 LOC): scope validation, pathname and glob pattern filtering, and host scope assertions.
+     - `auditSemantic.ts` (88 LOC): HTML extraction, link extraction, text sanitization, and semantic signal analysis.
+     - `auditRunner.ts` (55 LOC): pinned-IP redirect-safe single page audit runner.
+     - `auditCrawl.ts` (92 LOC): bounded public site crawler with SSRF protection and depth limits.
+  2. `mcp-server/src/server.ts` (334 -> 36 LOC facade) with 5 submodules in `mcp-server/src/`:
+     - `serverConstants.ts` (11 LOC): language regex and read-only tool annotations.
+     - `toolsAudit.ts` (70 LOC): registration of `seomi_audit_url` and `seomi_crawl_site`.
+     - `toolsGoogle.ts` (110 LOC): registration of `seomi_pagespeed_insights`, `seomi_crux`, `seomi_gsc_search_analytics`, and `seomi_gsc_url_inspection`.
+     - `toolsBacklinks.ts` (86 LOC): registration of `seomi_research_backlinks`, `seomi_research_backlink_anchors`, `seomi_research_backlink_pages`, and `seomi_research_backlink_gap`.
+     - `toolsResearch.ts` (97 LOC): registration of `seomi_research_keywords`, `seomi_research_keyword_suggestions`, `seomi_research_serp`, `seomi_track_rank`, and DataForSEO Labs domain overview/top pages/ranked keywords/competitors tools.
+- Full verification loop:
+  - `npm run lint` clean (0 errors, 0 warnings).
+  - `npx tsc --noEmit` clean (0 errors).
+  - `npm --prefix mcp-server run build` clean (0 errors).
+  - `npm run test:coverage:mcp`: **70/70 tests passing with 0 failures**.
+  - `tests/maxLoc.test.ts`: 25/25 tests PASS.
+  - Global LOC violations decreased from 46 to 44 across the codebase.
+  - **HISTORIC MILESTONE**: Exactly 0 files in `src/`, `tests/`, `scripts/`, `mcp-server/src/`, and `mcp-server/test/` exceed 150 LOC. **100% of all TypeScript, JavaScript, JSX/TSX, tests, and scripts across the entire repository are strictly <= 150 LOC!** Only Rust modules in `src-tauri/` remain.
