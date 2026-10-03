@@ -8,6 +8,7 @@ import { KeywordClusteringForm } from './keywordClustering/KeywordClusteringForm
 import { KeywordClusteringResults } from './keywordClustering/KeywordClusteringResults';
 import { KeywordInput } from './keywordClustering/KeywordInput';
 import { loadSession } from './keywordClustering/keywordClusteringStorage';
+import { DataForSeoCostMeter } from '@/components/DataForSEO/cost/DataForSeoCostMeter';
 import { EmbeddingClusteringPanel } from './embeddingClustering/EmbeddingClusteringPanel';
 import { ClusteringMethodSwitch, loadMethod, methodKey, type ClusteringMethod } from './embeddingClustering/ClusteringMethodSwitch';
 
@@ -46,6 +47,7 @@ export const KeywordClustering: React.FC = () => {
 
       {method === 'serp' ? (
         <>
+          <DataForSeoCostMeter />
           <KeywordClusteringForm
             session={session}
             keywords={keywords}

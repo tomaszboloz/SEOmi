@@ -1,5 +1,6 @@
 import { readResponseTextLimited } from './httpSafety.js';
 import type { JsonObject } from './responseOutput.js';
+import { assertMcpBudget, recordMcpCost } from './dataForSeoBudget.js';
 
 export const MAX_PROVIDER_BYTES = 2 * 1024 * 1024;
 
@@ -27,6 +28,7 @@ export const createProviderClient = (dependencies: ProviderDependencies = {}) =>
     const login = env.DATAFORSEO_LOGIN;
     const password = env.DATAFORSEO_PASSWORD;
     if (!login || !password) throw new Error('Set DATAFORSEO_LOGIN and DATAFORSEO_PASSWORD before calling DataForSEO tools.');
+    assertMcpBudget(env);
     const response = await request(`https://api.dataforseo.com${path}`, {
       method: 'POST', redirect: 'error',
       headers: { authorization: `Basic ${Buffer.from(`${login}:${password}`).toString('base64')}`, 'content-type': 'application/json' },
@@ -34,6 +36,7 @@ export const createProviderClient = (dependencies: ProviderDependencies = {}) =>
     });
     if (!response.ok) { await response.body?.cancel(); throw new Error(`DataForSEO HTTP ${response.status}.`); }
     const body = await readProviderJson(response);
+    recordMcpCost(env, body.cost);
     const task: unknown = Array.isArray(body.tasks) ? body.tasks[0] : undefined;
     if (!task || typeof task !== 'object' || Array.isArray(task)) throw new Error('DataForSEO returned an invalid task.');
     const record = task as JsonObject;

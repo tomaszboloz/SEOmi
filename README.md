@@ -226,6 +226,10 @@ npm run embeddings -- cluster --input keywords.txt --label-model llama3.2
 
 **Extending.** Add vocabulary to `SEO_GLOSSARY` (`src/services/embeddings/glossary.ts`), tune feature weights in `localProvider.ts`, or register a new backend in `PROVIDER_FACTORIES` (`registry.ts`); every provider works with `embed`, `eval` and `cluster` unchanged. `--cache file.json` reuses vectors for texts already embedded with the same provider and model. Cluster thresholds depend on the model (`DEFAULT_CLUSTER_THRESHOLD`); pass `--threshold` to override.
 
+### DataForSEO costs and limits
+
+Every view that sends paid DataForSEO requests shows the cost of the last call (the amount DataForSEO reports), the spend in the current month and the estimated account balance. *Settings → API → Costs, balance and monthly limit* checks the balance (free endpoint) and sets the project's limit. By default **No limit — up to the account balance** is selected: requests are blocked before they are sent once the estimated balance cannot cover the next call. Unchecking it sets a monthly cap in USD with a warning threshold; the cap resets on the 1st of each month. For MCP, set `DATAFORSEO_MONTHLY_LIMIT_USD` (ledger: `DATAFORSEO_LEDGER_PATH`, default `~/.seomi/mcp-dataforseo-spend.json`).
+
 <a id="data_sources"></a>
 ## Data sources and integrations
 

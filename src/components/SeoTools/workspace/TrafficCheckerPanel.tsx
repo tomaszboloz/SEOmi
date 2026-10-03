@@ -3,6 +3,7 @@ import { useTranslation } from 'react-i18next';
 import { Loader2, Search } from 'lucide-react';
 import { useProjectStore } from '@/stores/projectStore';
 import { useToolsStore } from '@/stores/toolsStore';
+import { DataForSeoCostMeter } from '@/components/DataForSEO/cost/DataForSeoCostMeter';
 import { appLocale } from '@/services/localeFormat';
 
 export const TrafficCheckerPanel: React.FC = () => {
@@ -54,6 +55,7 @@ export const TrafficCheckerPanel: React.FC = () => {
 
   return (
     <div className="space-y-5">
+      <DataForSeoCostMeter />
       <form className="flex flex-col gap-2 sm:flex-row" onSubmit={run}>
         <label className="sr-only" htmlFor="seo-tools-traffic-input">
           {t('seoTools.domainInput')}

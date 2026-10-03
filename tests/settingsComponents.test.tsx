@@ -44,6 +44,9 @@ vi.mock('@/components/Settings/RenderWorkerPanel', () => ({
   RenderWorkerPanel: () => <div data-testid="render-worker-panel" />
 }));
 
+// The budget section has its own tests and needs the real i18n instance.
+vi.mock('@/components/DataForSEO/cost/DataForSeoBudgetSettings', () => ({ DataForSeoBudgetSettings: () => <div data-testid="dataforseo-budget" /> }));
+
 vi.mock('@/i18n', () => ({
   LANGUAGES: [
     { code: 'en', name: 'English Name', nativeName: 'English Native' },

@@ -62,7 +62,7 @@ describe('audit result tabs accessibility contract', () => {
 
     render(<MainContent />);
 
-    expect(await screen.findByText(/DataForSEO/)).not.toBeNull();
+    expect((await screen.findAllByText(/DataForSEO/)).length).toBeGreaterThan(0);
     expect(screen.getByText('example.com')).not.toBeNull();
     expect(screen.queryByText(/No audit in this project/i)).toBeNull();
   });

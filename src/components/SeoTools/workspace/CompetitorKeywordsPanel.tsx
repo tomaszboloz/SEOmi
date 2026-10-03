@@ -5,6 +5,7 @@ import { useProjectStore } from '@/stores/projectStore';
 import { useToolsStore } from '@/stores/toolsStore';
 import { readStorage, writeStorage } from '@/services/storage';
 import { competitorKeywordsInputStorageKey } from './seoToolsTypes';
+import { DataForSeoCostMeter } from '@/components/DataForSEO/cost/DataForSeoCostMeter';
 
 export const CompetitorKeywordsPanel: React.FC = () => {
   const { t } = useTranslation();
@@ -38,6 +39,7 @@ export const CompetitorKeywordsPanel: React.FC = () => {
 
   return (
     <div className="space-y-5">
+      <DataForSeoCostMeter />
       <form
         className="flex flex-col gap-2 sm:flex-row"
         onSubmit={(event) => {
