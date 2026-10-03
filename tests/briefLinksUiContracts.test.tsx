@@ -1,5 +1,7 @@
 import { fireEvent, render, screen } from '@testing-library/react';
-import { describe, expect, it } from 'vitest';
+import { afterEach, describe, expect, it, vi } from 'vitest';
+import * as primitives from '@/components/Charts/contentBrief/primitives';
+afterEach(() => vi.restoreAllMocks());
 import { BriefLinkPlan } from '@/components/Charts/contentBrief/BriefLinkPlan';
 import { createBriefModel } from '@/components/Charts/contentBrief/model';
 import type { CrawledPageSummary } from '@/types';
@@ -27,7 +29,10 @@ describe('brief internal link planning', () => {
     const props = briefProps({ pages });
     props.node.sourceUrls = Array.from({ length: 101 }, (_, i) => `https://site.test/outside${i}`);
     props.node.contentBrief.internalLinkTargets = pages.slice(0, 50).map((page) => page.url);
-    const view = render(<BriefLinkPlan model={createBriefModel(props)} />);
+    const model = createBriefModel(props);
+    const normalization = vi.spyOn(primitives, 'normalizeUrl');
+    const view = render(<BriefLinkPlan model={model} />);
+    expect(normalization.mock.calls.length).toBeLessThanOrEqual(650);
     expect(view.container.querySelectorAll('input[type="checkbox"]')).toHaveLength(600);
     expect(screen.getByText(label('limited500'))).toBeTruthy();
     expect(screen.getByText(label('limited100'))).toBeTruthy();
