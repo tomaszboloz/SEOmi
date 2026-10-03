@@ -33,6 +33,8 @@ pub fn extract_page_schema_and_pagination(
     hreflang_selector: &Selector,
     issues: &mut Vec<CrawledPageIssue>,
 ) -> PageExtraSchemaPaginationOutcome {
+    let empty_document = (!is_html).then(|| Html::parse_document(""));
+    let document = empty_document.as_ref().unwrap_or(document);
     let mut hreflangs = Vec::new();
     for element in document.select(hreflang_selector) {
         let Some(language) = element

@@ -1,5 +1,5 @@
 use std::{
-    fs, io,
+    io,
     path::{Path, PathBuf},
 };
 use tauri::{AppHandle, Manager};
@@ -39,7 +39,7 @@ pub(crate) fn replace_file(source: &Path, destination: &Path) -> io::Result<()> 
 
 #[cfg(not(windows))]
 pub(crate) fn replace_file(source: &Path, destination: &Path) -> io::Result<()> {
-    fs::rename(source, destination)
+    std::fs::rename(source, destination)
 }
 
 pub(crate) fn project_directory(app: &AppHandle, project_id: &str) -> Result<PathBuf, String> {

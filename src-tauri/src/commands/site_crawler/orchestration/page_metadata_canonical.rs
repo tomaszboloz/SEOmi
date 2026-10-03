@@ -29,6 +29,8 @@ pub fn extract_page_canonical(
     pagination_invalid_declaration_count: usize,
     issues: &mut Vec<CrawledPageIssue>,
 ) -> PageCanonicalOutcome {
+    let empty_document = (!is_html).then(|| Html::parse_document(""));
+    let document = empty_document.as_ref().unwrap_or(document);
     let (canonical_declaration_count, canonical_urls) =
         crawl_canonical_declarations(document, final_base);
     let canonical = canonical_urls.first().cloned();

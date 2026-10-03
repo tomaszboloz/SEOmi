@@ -16,6 +16,8 @@ pub fn extract_page_title_and_meta(
     meta_desc_selector: &Selector,
     issues: &mut Vec<CrawledPageIssue>,
 ) -> PageTitleMetaOutcome {
+    let empty_document = (!is_html).then(|| Html::parse_document(""));
+    let document = empty_document.as_ref().unwrap_or(document);
     let titles = document
         .select(title_selector)
         .map(|el| el.text().collect::<Vec<_>>().join("").trim().to_string())

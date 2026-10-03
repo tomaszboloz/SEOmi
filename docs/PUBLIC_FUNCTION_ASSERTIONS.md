@@ -59,3 +59,8 @@ Direct tests in src-tauri/src/commands/site_crawler/orchestration/tests cover `h
 Ten direct render cases in tests/crawlDiscoveryLabels.test.tsx load actual English/Polish resources and assert both table and evidence labels for start/seed/sitemap/link/resume; no stub translator is used.
 
 Source-matched native proof for this batch: page_error129/129lines8/8branches,frontier104/104lines20/20branches,page_discovery24/24lines6/6branches. State/default configuration bodies are fully line-covered. Setup remains65/69lines1/2branches. Scope is compiled macOS; these counts do not prove all-platform coverage or every public native assertion.
+
+
+### Page pipeline batch
+
+Direct behavioral assertions: `build_crawled_page_summary`, `assemble_page_summary`, `extract_page_signals`, `extract_page_title_and_meta`, `extract_page_headings`, `extract_page_canonical`, `extract_page_schema_and_pagination`, `extract_page_directives`. Tests are under `orchestration/tests/page_{summary,assembly,signals,extractors,directives}.rs`. Tests assert observed measurements, metadata transfer, incomplete/non-HTML boundaries, HTTP header preservation, discovery ownership, invalid URL state preservation and Unicode lengths. Execution of additional downstream helpers is not presented as their direct assertion proof. Full624native tests and source-matched nightly coverage PASS; global coverage/assertion gates remain OPEN.

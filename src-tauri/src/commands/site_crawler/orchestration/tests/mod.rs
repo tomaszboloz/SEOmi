@@ -40,7 +40,13 @@ fn failure(kind: &str) -> CrawlFetchFailure {
 
 mod discovery;
 mod frontier;
+mod page_assembly;
+mod page_directives;
 mod page_error;
+mod page_extractors;
+mod page_fixture;
+mod page_signals;
+mod page_summary;
 mod setup_contracts;
 mod setup_lifecycle;
 mod state;

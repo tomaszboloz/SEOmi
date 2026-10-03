@@ -48,6 +48,8 @@ pub fn extract_page_content(input: ExtractPageContentInput<'_>) -> PageContentOu
         meta_desc_selector,
         issues,
     } = input;
+    let empty_document = (!is_html).then(|| Html::parse_document(""));
+    let document = empty_document.as_ref().unwrap_or(document);
     let document_language = document
         .select(html_selector)
         .next()

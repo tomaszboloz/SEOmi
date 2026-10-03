@@ -25,6 +25,10 @@ pub fn extract_page_directives(
     meta_refresh_selector: &Selector,
     issues: &mut Vec<CrawledPageIssue>,
 ) -> PageDirectivesOutcome {
+    let usable_html =
+        page_data.declared_html && !page_data.body_truncated && !page_data.body_read_failed;
+    let empty_document = (!usable_html).then(|| Html::parse_document(""));
+    let document = empty_document.as_ref().unwrap_or(document);
     let meta_robots = document
         .select(robots_selector)
         .filter_map(|el| el.value().attr("content"))
