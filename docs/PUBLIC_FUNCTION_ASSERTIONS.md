@@ -40,3 +40,10 @@ The same tests also make direct assertions for Claude/Codex configuration, activ
 | `extract_page_canonical` | `src-tauri/src/commands/site_crawler/orchestration/page_metadata_canonical_tests.rs` | malformed/missing/non-HTTP href counts, mixed declarations, exact diagnostics and self canonical identity |
 
 The three native canonical tests failed before the integration fix. MCP tests use actual Node streams and direct calls; injected audit/crawl runners do not establish live-network behavior. The register remains incremental.
+
+## Hosted AI response boundary
+
+- `aiResponseError`: direct assertions in tests/aiResponseReaderDirect.test.ts preserve auth/quota/status diagnostics while withholding raw response bytes.
+- `readAiResponseText`: direct Node-compatible stream assertions cover split UTF-8, exact1MiB byte cap, early cancellation, reader release, invalid JSON/UTF-8/envelopes and empty/null text.
+- `generateAiText`, `callOpenAI`, `callClaude`, `callGemini`: tests/aiResponseSafety.test.ts directly reject non-string model payloads and oversized responses; HTTP failure tests assert private bytes are neither consumed nor exposed.
+- Source-matched full suite after the fix:1247publicTS/MCPcallables,1215executed,32factory-returned,287without direct static test reference. Execution/reference counts remain weaker than complete direct assertion proof.

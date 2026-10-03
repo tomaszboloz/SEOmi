@@ -1614,3 +1614,16 @@ BATCH-5j verification:2807frontend/516Rust/70MCP PASS; build/lint/rustfmt/strict
 - Original audit remains69/72. This batch does not claim fresh global native/frontend coverage >99%, complete public assertion proof, completed SearchSignal extensions or a final release/tag.
 
 - Matching integrated source3911cdf:3480frontend,592Rust all-targets and86MCP PASS; build/lint/strictClippy PASS. ExpandedLOC1939files/zero violations. Logs:/tmp/seomi-review-{frontend,mcp,build,lint,integrated-native,integrated-clippy,loc}.log. Remote CI for the pushed head must be verified separately.
+
+
+## BATCH-8b: bounded validated hosted AI responses
+
+- GAP-203 FIXED: generateAiText and hosted suggestion helpers forwarded raw HTTP error bodies to UI. Six RED tests confirmed private provider payload exposure. Errors now preserve localized auth/quota/HTTP status and use a local withheld-body diagnostic without reading provider text.
+- GAP-204 FIXED: successful hosted text requests returned numbers/objects/arrays as if they were text. Three RED tests confirmed acceptance. Shared Zod envelopes validate optional/null/empty text and reject malformed provider structure.
+- GAP-205 FIXED: hosted responses had no decoded byte cap. Three RED tests confirmed acceptance of oversized JSON despite misleading Content-Length. Streaming validation now stops above1MiB, cancels consumption and releases the reader. Exact cap, multibyte splits, invalid UTF-8, stream/cancellation failures and sanitized errors have direct tests.
+- Full source-matched frontend3507PASS; MCP86PASS; build/lint/LOC PASS. Frontend89.97%statements(13616/15133),82.50%branches(11424/13847),89.12%functions(4083/4581),91.60%lines(11159/12181). AI response/suggestions/text implementation modules each have100%statements/lines/branches/functions; these scoped results do not establish the global99.01% gate.
+- Inventory1247callables:1215executed/32factory-returned,287without direct static test references. ExpandedLOC1942files,zero violations. Assertion evidence extended in docs/PUBLIC_FUNCTION_ASSERTIONS.md.
+- GAP-206 OPEN: fresh full native nightly coverage initially failed cancelling_a_polled_future_closes_its_native_span (expected2records,observed0). Isolated15loggingtests PASS; full diagnostic recheck592all-targets PASS. Intermittent failure remains OPEN until isolated cause and a regression fix. Do not discard this failure or claim deterministic cancellation instrumentation.
+- Original audit69/72 remains. Extensions, complete direct assertions, global99% and final signed release/tag remain unfinished. Logs:/tmp/seomi-ai-response-red.log,/tmp/seomi-ai-verified-{coverage,mcp,inventory}.log,/tmp/seomi-ai-{build,lint,loc}-final.log.
+
+- Fresh native nightly source/hash/AST-validated production: 12392/18969lines(65.33%),1350/2059functions(65.57%),2673/4402branches(60.72%). Covers compiled macOS modules; uncompiled Windows paths are not measured. Artifacts:/tmp/seomi-integration-native-{sources.json,branches.lcov,llvm.json,production.lcov}. The decomposition changes the source-function/line denominator; earlier snapshots are not current evidence.

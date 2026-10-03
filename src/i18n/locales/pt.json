@@ -585,7 +585,10 @@
       "cliMissing": "Local CLI was not found on PATH.",
       "credentialSaved": "Credential saved in the system keychain. Test it to verify access.",
       "checkingConnection": "Checking connection…",
-      "localClientRequired": "{{provider}} is not configured to use its local subscription client."
+      "localClientRequired": "{{provider}} is not configured to use its local subscription client.",
+      "responseHidden": "Provider response withheld.",
+      "invalidResponse": "The AI provider returned an invalid response.",
+      "responseTooLarge": "The AI provider response exceeds the 1 MiB limit."
     },
     "pagespeed": {
       "projectRequired": "Choose a project before starting the measurement."

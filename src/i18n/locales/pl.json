@@ -585,7 +585,10 @@
       "cliMissing": "Nie znaleziono lokalnego CLI w PATH.",
       "credentialSaved": "Dane dostępu zapisano w pęku kluczy systemu. Wykonaj test, aby potwierdzić dostęp.",
       "checkingConnection": "Sprawdzanie połączenia…",
-      "localClientRequired": "{{provider}} nie jest skonfigurowany do użycia lokalnej subskrypcji CLI."
+      "localClientRequired": "{{provider}} nie jest skonfigurowany do użycia lokalnej subskrypcji CLI.",
+      "responseHidden": "Treść odpowiedzi dostawcy została ukryta.",
+      "invalidResponse": "Dostawca AI zwrócił niepoprawną odpowiedź.",
+      "responseTooLarge": "Odpowiedź dostawcy AI przekracza limit 1 MiB."
     },
     "pagespeed": {
       "projectRequired": "Wybierz projekt przed uruchomieniem pomiaru."

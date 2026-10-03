@@ -43,10 +43,7 @@ describe('AI suggestion response parsing', () => {
   });
 
   it('encodes a persisted Gemini model before placing it in the request path', async () => {
-    const fetchMock = vi.spyOn(globalThis, 'fetch').mockResolvedValue({
-      ok: true,
-      json: async () => ({ candidates: [{ content: { parts: [{ text: 'safe response' }] } }] }),
-    } as Response);
+    const fetchMock = vi.spyOn(globalThis, 'fetch').mockResolvedValue(new Response(JSON.stringify({ candidates: [{ content: { parts: [{ text: 'safe response' }] } }] })));
 
     await expect(AIService.generateText('gemini', 'test-key', 'model/name?variant=1', 'prompt')).resolves.toBe('safe response');
     expect(String(fetchMock.mock.calls[0]?.[0])).toContain('models/model%2Fname%3Fvariant%3D1:generateContent');
