@@ -1035,10 +1035,29 @@ BATCH-5j verification:2807frontend/516Rust/70MCP PASS; build/lint/rustfmt/strict
   - Vitest suite passing with 0 failures (45/45 tests across BATCH-5z and related suites).
   - Global LOC violations decreased from 62 to 59 across the codebase.
 
-
-
-
-
-
-
-
+### BATCH-6a: Decompose AmpAuditView, SemanticTopicalWorkspace, and CrawlUrlsTab to LOC<=150
+- Decomposed three large frontend components into modular single-responsibility units strictly under 150 physical LOC:
+  1. `src/components/Results/AmpAuditView.tsx` (191 -> 82 LOC facade) with 5 submodules in `src/components/Results/ampAudit/`:
+     - `AmpDetectionCards.tsx` (46 LOC)
+     - `AmpFindingItem.tsx` (50 LOC)
+     - `AmpFindingsCard.tsx` (32 LOC)
+     - `AmpHtmlUrlsCard.tsx` (26 LOC)
+     - `AmpUncheckedCard.tsx` (26 LOC)
+  2. `src/components/Charts/SemanticTopicalWorkspace.tsx` (189 -> 67 LOC facade) with 3 submodules in `src/components/Charts/semanticTopical/`:
+     - `SemanticWorkspaceHeader.tsx` (48 LOC)
+     - `SemanticWorkspaceNav.tsx` (49 LOC)
+     - `SemanticWorkspacePanels.tsx` (113 LOC)
+  3. `src/components/Domain/crawlResults/CrawlUrlsTab.tsx` (183 -> 81 LOC facade) with 3 submodules in `src/components/Domain/crawlResults/urlsTab/`:
+     - `CrawlUrlsFilterBar.tsx` (80 LOC)
+     - `CrawlUrlsPresetBar.tsx` (85 LOC)
+     - `CrawlUrlsSearchSortBar.tsx` (83 LOC)
+- Added 3 dedicated test suites ensuring complete coverage (all <= 150 LOC):
+  - `tests/ampAuditViewComponents.test.tsx` (84 LOC, 4 tests)
+  - `tests/semanticWorkspaceComponents.test.tsx` (66 LOC, 3 tests)
+  - `tests/crawlUrlsTabComponents.test.tsx` (116 LOC, 4 tests)
+- Full verification loop:
+  - `npm run lint` clean (0 errors, 0 warnings).
+  - `npx tsc --noEmit` clean (0 errors).
+  - `tests/maxLoc.test.ts` (25/25 tests PASS).
+  - Vitest suite passing with 0 failures (47/47 tests across BATCH-6a and related suites).
+  - Global LOC violations decreased from 59 to 56 across the codebase.
