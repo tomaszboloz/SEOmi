@@ -69,3 +69,8 @@ Direct behavioral assertions: `build_crawled_page_summary`, `assemble_page_summa
 ### Page extraction branch batch
 
 Direct assertions for `extract_page_content`, `extract_page_links`, `extract_page_metadata`, `check_page_status_issues`, `enqueue_frontier_link` and `record_internal_link_provenance` are in `orchestration/tests/page_{text,link_contracts,metadata,frontier}.rs`. Existing title/meta and heading contracts now include missing/duplicate/boundary declarations. Cases assert bounded evidence while preserving observed counts, unknown target verification, queue ownership and provenance saturation. These direct assertions do not complete the global assertion inventory.
+
+
+### Fetched response reader
+
+`read_fetched_page_data` has direct eight-case behavioral assertions in `fetch_data_tests/{http,rendered}.rs`: real loopback HTTP byte limits and errors, headers/media type, rendered observation transfer and unknown measurements, prefetched ownership. Shared `is_html_media_type` is exercised by both response paths but is private. Source/hash-validated fetch_data coverage121/121lines,14/14functions,6/6branches; full646native tests PASS. Complete global assertion proof remains OPEN.

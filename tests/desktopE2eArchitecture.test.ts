@@ -16,6 +16,8 @@ it('embeds Common Controls v6 into all Windows executables including unit-test h
   expect(build).toContain('cargo:rustc-link-arg=/MANIFEST:EMBED');
   expect(build).toContain('cargo:rustc-link-arg=/MANIFESTINPUT:');
   expect(build).not.toContain('cargo:rustc-link-arg-examples=');
+  expect(build).toContain('WindowsAttributes::new_without_app_manifest()');
+  expect(build).toContain('tauri_build::try_build(attributes)');
   expect(build).toContain('CARGO_CFG_TARGET_OS');
   expect(build).toContain('CARGO_CFG_TARGET_ENV');
   const manifest = readFileSync('src-tauri/windows-examples.manifest', 'utf8');
