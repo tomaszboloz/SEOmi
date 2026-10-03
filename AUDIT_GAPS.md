@@ -1602,3 +1602,15 @@ BATCH-5j verification:2807frontend/516Rust/70MCP PASS; build/lint/rustfmt/strict
   - `npx tsc --noEmit` clean (0 errors).
   - `tests/maxLoc.test.ts`: 25/25 tests PASS.
 
+
+
+## GitHub review follow-up: canonical integration and direct boundary tests
+
+- GAP-201: orchestration decomposition counted only canonical links with valid href and retained non-HTTP targets. Three RED tests in page_metadata_canonical_tests.rs confirmed the regression. Extraction now uses crawl_canonical_declarations, preserves declaration counts, filters targets and restores exact diagnostics for missing/invalid/multiple declarations.
+- GAP-202: flat-directory transport wiring test omitted nested source modules. Recursive discovery preserves the existing transport assertions. A RED fixture also confirmed LOC scope omitted executed JS and styles; the guard now includes JS/CSS, root source configuration and native build.rs. Expanded snapshot:1939files,zero violations.
+- Ten native orchestration functions use named input contracts instead of suppressing too_many_arguments. Production/test imports are separated instead of suppressing unused_imports. Concurrent6dcaaca integrated normally; its transport client builder retained, new suppressions replaced by typed contracts and actual canonical use.
+- Fifteen direct MCP tests cover URL/path scope, IPv4/IPv6/address safety, streamed body limits, authentication, JSON response and option contracts, plus injected audit/crawl dispatch and invalid payload rejection. Incremental assertion evidence is in docs/PUBLIC_FUNCTION_ASSERTIONS.md.
+- GitHub review: #16–18 already merged; #19 fix remains in draft #15 pending master integration. Thank you @RafalSzy for reports, measurements and the regression-test request.
+- Original audit remains69/72. This batch does not claim fresh global native/frontend coverage >99%, complete public assertion proof, completed SearchSignal extensions or a final release/tag.
+
+- Matching integrated source3911cdf:3480frontend,592Rust all-targets and86MCP PASS; build/lint/strictClippy PASS. ExpandedLOC1939files/zero violations. Logs:/tmp/seomi-review-{frontend,mcp,build,lint,integrated-native,integrated-clippy,loc}.log. Remote CI for the pushed head must be verified separately.

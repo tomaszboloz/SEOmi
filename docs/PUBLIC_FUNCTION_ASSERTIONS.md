@@ -28,3 +28,15 @@ The same tests also make direct assertions for Claude/Codex configuration, activ
 - Factory-returned callables need their own contract evidence; do not assign invented function bodies or execution counts.
 - All other public TS/native functions still require an assertion review. The table above is deliberately incremental.
 - Coverage thresholds >99% and the global LOC150 gate remain independent completion requirements.
+
+## MCP boundaries and canonical integration
+
+| Public contract | Direct test | Asserted behavior |
+| --- | --- | --- |
+| URL/path normalization, glob matching, scope checking and validation | `mcp-server/test/auditScopeContracts.test.mjs` | normalized paths, literal regex characters, host/path boundaries, include/exclude precedence, exact limits and rejected fields |
+| `parseIpv4`, `parseIpv6Words`, `isPublicAddress` | `mcp-server/test/ipSafetyContracts.test.mjs` | exact parser results, compressed/mapped IPv6, malformed inputs and private/documentation/multicast address families |
+| `readBody`, `authorized`, `json`, `validateOptions`, `LocalApiError` | `mcp-server/test/localApiHttpContracts.test.mjs` | split UTF-8, actual and declared byte limits, exact bearer authentication, response headers/bytes, option bounds and status identity |
+| `executeApiPayload` | `mcp-server/test/localApiPayloadContracts.test.mjs` | exact injected runner arguments/defaults, no runner invocation on invalid/coerced fields, original runner error identity |
+| `extract_page_canonical` | `src-tauri/src/commands/site_crawler/orchestration/page_metadata_canonical_tests.rs` | malformed/missing/non-HTTP href counts, mixed declarations, exact diagnostics and self canonical identity |
+
+The three native canonical tests failed before the integration fix. MCP tests use actual Node streams and direct calls; injected audit/crawl runners do not establish live-network behavior. The register remains incremental.
