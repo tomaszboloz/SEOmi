@@ -1426,6 +1426,46 @@ BATCH-5j verification:2807frontend/516Rust/70MCP PASS; build/lint/rustfmt/strict
   - Global LOC violations decreased from 10 to 7 across the codebase.
 
 ## Concurrent integration and physical formatting verification
+### BATCH-7k: Decompose scheduled_worker, http_client, and pdf_report to LOC<=150
+- Decomposed three native modules exceeding 150 LOC into modular single-responsibility units strictly under 150 physical LOC:
+  1. `src-tauri/src/commands/scheduled_worker.rs` (567 -> 124 LOC facade) with 6 new submodules in `src-tauri/src/commands/scheduled_worker/`:
+     - `models.rs` (119 LOC): constants, `ExecutionHandoff`, `ScheduledExecutionState`, `ScheduledCrawlJob`, and helper utilities.
+     - `storage.rs` (91 LOC): atomic state readers/writers `read_json`, `write_json`, `execution_path`, and `result_path`.
+     - `lock.rs` (39 LOC): cross-process `ExecutionLock` file locker.
+     - `execution.rs` (109 LOC): isolated child process runner `run_headless_crawl`.
+     - `launch.rs` (17 LOC): detached child launcher `spawn_detached_worker`.
+     - `tests.rs` (102 LOC): 4 unit tests verifying execution paths, lock mutual exclusion, failure handoff, and payload size bounds.
+  2. `src-tauri/src/services/http_client.rs` (746 -> 21 LOC facade) with 11 new submodules in `src-tauri/src/services/http_client/`:
+     - `models.rs` (28 LOC): limits, `FetchResult`, and `FetchOptions`.
+     - `resolver.rs` (82 LOC): `ValidatedResolver`, `public_client_builder_with_lookup`, `public_client_builder`, `resolve_public_addresses`, and `validate_addresses`.
+     - `stream.rs` (21 LOC): `read_bounded_bytes` and `read_bounded_text`.
+     - `fetch.rs` (127 LOC): DNS rebinding resistant HTTP transport `fetch_with_resolver`.
+     - `entry.rs` (36 LOC): public entrypoints `fetch_page` and `fetch_page_with_options`.
+     - `status.rs` (43 LOC): `check_url_status` and `check_status_with_resolver`.
+     - `tests_common.rs` (37 LOC): test fixtures and mock options.
+     - `tests_dns.rs` (105 LOC): DNS validation, empty/mixed answers, literal IPs, and head deadline tests.
+     - `tests_resolver.rs` (67 LOC): private DNS blocking and address validation tests.
+     - `tests_stream.rs` (129 LOC): discovery text overflow, chunked streaming limits, gzip decompression limits, and slow body deadline tests.
+     - `tests_fetch.rs` (112 LOC): pinned transport, redirect DNS re-validation, relative redirect hops, unsafe URL rejection, and public entry point tests.
+  3. `src-tauri/src/commands/pdf_report.rs` (755 -> 45 LOC facade) with 9 new submodules in `src-tauri/src/commands/pdf_report/`:
+     - `text_utils.rs` (51 LOC): Polish diacritic ASCII substitution `ascii_pdf_text`, `pdf_literal`, and `wrapped_lines`.
+     - `audit_text.rs` (67 LOC): audit report text formatting `audit_text_lines`.
+     - `crawl_tables.rs` (126 LOC): table builders for pages, issues, links, and images.
+     - `crawl_resources_table.rs` (32 LOC): table builder for crawl resources.
+     - `crawl_page_summary.rs` (69 LOC): per-page crawl findings summary builder.
+     - `crawl_text.rs` (118 LOC): crawl report text synthesizer `crawl_text_lines`.
+     - `charts.rs` (124 LOC): metric extraction and bar calculations for crawl and audit charts.
+     - `renderer.rs` (88 LOC): PDF drawing streams `chart_stream` and PDF document assembler `pdf_bytes`.
+     - `tests.rs` (83 LOC): 4 unit tests for audit PDF generation, crawl run PDF generation, template section filtering, and input validation.
+- Full verification loop:
+  - `cargo check --manifest-path src-tauri/Cargo.toml` clean (0 errors, 0 warnings).
+  - `cargo test --manifest-path src-tauri/Cargo.toml --lib -- --test-threads=1`: **558/558 library tests passing with 0 failures**.
+  - `npm run lint` clean (0 errors, 0 warnings).
+  - `npx tsc --noEmit` clean (0 errors).
+  - `tests/maxLoc.test.ts`: 25/25 tests PASS.
+  - Global LOC violations decreased from 7 to 4 across the codebase.
+
+
 
 - Integrated remote frontend/native decomposition through abe75052 with AMP fixes005fdca via ordinary merge commits4e1f02e/43baef0. Retained both audit histories and removed unused alternate AMP modules; original nine baseline assertions plus ten regressions remain attached to the public audit entry.
 - [DISCOVERED] GAP-197: rustfmt expanded five newly extracted modules beyond150physical lines. Applied canonical formatting and split attribute validation/location, HTML metadata, content phrase evidence and proxy targets into responsibility modules. Final physical inventory:7violations/1813files; remaining modules are orchestration, rendered_crawler, custom_search, crawler models, pdf_report, http_client and scheduled_worker. No whitespace compression or exclusions used.
