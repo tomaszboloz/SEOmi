@@ -1188,3 +1188,21 @@ BATCH-5j verification:2807frontend/516Rust/70MCP PASS; build/lint/rustfmt/strict
   - `npx tsc --noEmit` clean (0 errors).
   - `tests/maxLoc.test.ts`: 25/25 tests PASS.
   - Global LOC violations decreased from 44 to 41 across the codebase.
+
+### BATCH-7b: Decompose src-tauri/examples to LOC<=150 (100% Examples <= 150 LOC)
+- Decomposed all three tool binaries in `src-tauri/examples/` exceeding 150 LOC into modular single-responsibility units strictly under 150 physical LOC:
+  1. `src-tauri/examples/verify_update_signatures.rs` (163 -> 83 LOC facade) with:
+     - `verify_update_signatures_tests.rs` (79 LOC): 6 unit tests for key verification, tampered payloads, line-ending alterations, streaming chunks, and artifact formats.
+  2. `src-tauri/examples/coverage_sources.rs` (170 -> 139 LOC facade) with:
+     - `coverage_sources_tests.rs` (30 LOC): 2 unit tests for comment/platform exclusion and module file resolution.
+  3. `src-tauri/examples/function_inventory.rs` (229 -> 44 LOC facade) with:
+     - `function_inventory_types.rs` (54 LOC): `Function` model struct, `test_only`, `visibility`, and `add` helpers.
+     - `function_inventory_collector.rs` (104 LOC): recursive AST item collector across functions, modules, impls, and traits.
+     - `function_inventory_tests.rs` (42 LOC): 3 unit tests for comment/private exclusion, visibility distinctions, and async/nested methods.
+- Full verification loop:
+  - `cargo test --manifest-path src-tauri/Cargo.toml --example verify_update_signatures --example coverage_sources --example function_inventory`: **11/11 example tests passing with 0 failures**.
+  - `cargo test --manifest-path src-tauri/Cargo.toml --lib`: **558/558 library tests passing with 0 failures**.
+  - `npm run lint` clean (0 errors, 0 warnings).
+  - `npx tsc --noEmit` clean (0 errors).
+  - `tests/maxLoc.test.ts`: 25/25 tests PASS.
+  - Global LOC violations decreased from 41 to 38 across the codebase (100% of examples are now strictly <= 150 LOC).
