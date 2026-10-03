@@ -8,7 +8,15 @@ async fn cancelling_a_polled_future_closes_its_native_span() {
         dispatch_with_sink(
             "run_ai_cli",
             || {
+                assert!(
+                    !tracing::Span::current().is_disabled(),
+                    "request span must be enabled"
+                );
                 span = Some(tracing::debug_span!("ipc::request::run"));
+                assert!(
+                    !span.as_ref().unwrap().is_disabled(),
+                    "task span must be enabled"
+                );
                 true
             },
             |_| Ok(()),

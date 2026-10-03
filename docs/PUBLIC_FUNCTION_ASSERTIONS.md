@@ -64,3 +64,8 @@ Source-matched native proof for this batch: page_error129/129lines8/8branches,fr
 ### Page pipeline batch
 
 Direct behavioral assertions: `build_crawled_page_summary`, `assemble_page_summary`, `extract_page_signals`, `extract_page_title_and_meta`, `extract_page_headings`, `extract_page_canonical`, `extract_page_schema_and_pagination`, `extract_page_directives`. Tests are under `orchestration/tests/page_{summary,assembly,signals,extractors,directives}.rs`. Tests assert observed measurements, metadata transfer, incomplete/non-HTML boundaries, HTTP header preservation, discovery ownership, invalid URL state preservation and Unicode lengths. Execution of additional downstream helpers is not presented as their direct assertion proof. Full624native tests and source-matched nightly coverage PASS; global coverage/assertion gates remain OPEN.
+
+
+### Page extraction branch batch
+
+Direct assertions for `extract_page_content`, `extract_page_links`, `extract_page_metadata`, `check_page_status_issues`, `enqueue_frontier_link` and `record_internal_link_provenance` are in `orchestration/tests/page_{text,link_contracts,metadata,frontier}.rs`. Existing title/meta and heading contracts now include missing/duplicate/boundary declarations. Cases assert bounded evidence while preserving observed counts, unknown target verification, queue ownership and provenance saturation. These direct assertions do not complete the global assertion inventory.
