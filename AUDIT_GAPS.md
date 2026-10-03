@@ -1008,6 +1008,34 @@ BATCH-5j verification:2807frontend/516Rust/70MCP PASS; build/lint/rustfmt/strict
   - Vitest suite passing with 0 failures (41/41 tests across BATCH-5y and related suites).
   - Global LOC violations decreased from 65 to 62 across the codebase.
 
+### BATCH-5z: Decompose CrawlSocialTab, CrawlSummaryMetrics, and CreateProjectModal to LOC<=150
+- Decomposed three large frontend components into modular single-responsibility units strictly under 150 physical LOC:
+  1. `src/components/Domain/crawlResults/CrawlSocialTab.tsx` (196 -> 18 LOC facade) with 5 submodules in `src/components/Domain/crawlResults/socialTab/`:
+     - `socialTabTypes.ts` (8 LOC)
+     - `CrawlSocialFaviconCell.tsx` (78 LOC)
+     - `CrawlSocialMetaTagsCell.tsx` (53 LOC)
+     - `CrawlSocialTableRow.tsx` (24 LOC)
+     - `CrawlSocialTable.tsx` (40 LOC)
+  2. `src/components/Domain/crawlResults/CrawlSummaryMetrics.tsx` (196 -> 24 LOC facade) with 3 submodules in `src/components/Domain/crawlResults/summaryMetrics/`:
+     - `SummaryBasicMetricsRows.tsx` (71 LOC)
+     - `SummaryRobotsMetricsRows.tsx` (105 LOC)
+     - `SummarySitemapAndLinkRows.tsx` (64 LOC)
+  3. `src/components/Projects/CreateProjectModal.tsx` (196 -> 127 LOC facade) with 3 submodules in `src/components/Projects/createProject/`:
+     - `CreateProjectModalHeader.tsx` (37 LOC)
+     - `ProjectNameInputField.tsx` (46 LOC)
+     - `ProjectRootUrlInputField.tsx` (49 LOC)
+- Added 3 dedicated test suites ensuring complete coverage (all <= 150 LOC):
+  - `tests/crawlSocialTabComponents.test.tsx` (90 LOC, 4 tests)
+  - `tests/crawlSummaryMetricsComponents.test.tsx` (104 LOC, 3 tests)
+  - `tests/createProjectModalComponents.test.tsx` (101 LOC, 4 tests)
+- Full verification loop:
+  - `npm run lint` clean (0 errors, 0 warnings).
+  - `npx tsc --noEmit` clean (0 errors).
+  - `tests/maxLoc.test.ts` (25/25 tests PASS).
+  - Vitest suite passing with 0 failures (45/45 tests across BATCH-5z and related suites).
+  - Global LOC violations decreased from 62 to 59 across the codebase.
+
+
 
 
 
