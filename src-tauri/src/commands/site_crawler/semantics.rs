@@ -3,7 +3,7 @@ use super::*;
 /// Return a small, safe source fragment for locating a crawled link in the
 /// fetched document. This is evidence, not a copy of the page: values and
 /// inline event handlers are redacted and the result is capped by characters.
-pub(super) fn bounded_link_source_excerpt(element: &ElementRef<'_>) -> Option<String> {
+pub(crate) fn bounded_link_source_excerpt(element: &ElementRef<'_>) -> Option<String> {
     static VALUE_ATTRIBUTE: OnceLock<Regex> = OnceLock::new();
     static EVENT_ATTRIBUTE: OnceLock<Regex> = OnceLock::new();
     let value_attribute = VALUE_ATTRIBUTE.get_or_init(|| {

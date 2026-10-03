@@ -1,6 +1,6 @@
 use super::*;
 
-pub(super) fn normalize_scope_path(path: Option<&str>) -> Option<String> {
+pub(crate) fn normalize_scope_path(path: Option<&str>) -> Option<String> {
     let path = path?.trim();
     if path.is_empty() || path == "/" {
         return None;
@@ -9,7 +9,7 @@ pub(super) fn normalize_scope_path(path: Option<&str>) -> Option<String> {
     Some(normalized)
 }
 
-pub(super) fn normalize_allowed_hosts(values: &[String]) -> Result<Vec<String>, String> {
+pub(crate) fn normalize_allowed_hosts(values: &[String]) -> Result<Vec<String>, String> {
     let mut normalized = Vec::new();
     for raw in values {
         let candidate = raw.trim();
@@ -45,7 +45,7 @@ pub(super) fn normalize_allowed_hosts(values: &[String]) -> Result<Vec<String>, 
     Ok(normalized)
 }
 
-pub(super) fn host_matches_root(host: &str, root: &str, allow_subdomains: bool) -> bool {
+pub(crate) fn host_matches_root(host: &str, root: &str, allow_subdomains: bool) -> bool {
     host.eq_ignore_ascii_case(root)
         || (allow_subdomains
             && host
@@ -53,7 +53,7 @@ pub(super) fn host_matches_root(host: &str, root: &str, allow_subdomains: bool) 
                 .ends_with(&format!(".{}", root.to_ascii_lowercase())))
 }
 
-pub(super) fn matches_scope(
+pub(crate) fn matches_scope(
     url: &url::Url,
     base_host: &str,
     allow_subdomains: bool,
@@ -70,8 +70,6 @@ pub(super) fn matches_scope(
     if !is_base_host && !is_allowed_host {
         return false;
     }
-    // A path scope belongs to the seed host. Explicitly allowlisted hosts are
-    // already opt-in and must not accidentally inherit the seed's directory.
     if !is_base_host {
         return true;
     }
@@ -82,11 +80,11 @@ pub(super) fn matches_scope(
     page_path == scope_path || page_path.starts_with(&format!("{scope_path}/"))
 }
 
-pub(super) fn matches_filters(url: &str, include: &[Regex], exclude: &[Regex]) -> bool {
+pub(crate) fn matches_filters(url: &str, include: &[Regex], exclude: &[Regex]) -> bool {
     (include.is_empty() || include.iter().any(|pattern| pattern.is_match(url)))
         && !exclude.iter().any(|pattern| pattern.is_match(url))
 }
 
-pub(super) fn rendered_profile_has_unsupported_transport(profile: &CrawlAuthProfile) -> bool {
+pub(crate) fn rendered_profile_has_unsupported_transport(profile: &CrawlAuthProfile) -> bool {
     !profile.headers.is_empty() || profile.proxy_url.is_some()
 }

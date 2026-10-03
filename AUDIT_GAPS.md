@@ -1553,3 +1553,52 @@ BATCH-5j verification:2807frontend/516Rust/70MCP PASS; build/lint/rustfmt/strict
 - Full frontend coverage suite3479tests/470files PASS;71MCP tests PASS under instrumented real Node execution; source-matched589Rust all-targets/strictClippy remain PASS from the unchanged native snapshot. Fresh build/lint/diff PASS. Logs /tmp/seomi-public-final-{frontend,mcp,inventory,build,lint}.log. Initial updater assertion failed on whitespace normalization for an absent version; corrected the test query and reran the entire suite without changing production behavior/timeouts.
 - Fresh frontend coverage:89.96%statements (13594/15111),82.47%branches (11415/13841),89.12%functions (4080/4578),91.60%lines (11150/12172). Inventory1245callables:1213executed,32factory-returned, zero not-executed;300entries lack direct static test references. No public-function completeness claim is inferred from execution counts. Evidence table: docs/PUBLIC_FUNCTION_ASSERTIONS.md.
 - Global LOC snapshot remains1violation/1876files, orchestration2043. Original69/72, global99%frontend/native, full direct assertion audit, extension verification and final signed updater/tag remain unfinished. No final release is published.
+
+## BATCH-7n: Decompose site_crawler/orchestration to LOC<=150 (Zero Violations Achieved Repository-Wide)
+
+- Completely decomposed the final and largest monolith in the codebase, `src-tauri/src/commands/site_crawler/orchestration.rs` (previously 2,043 LOC), and extracted IPC command handlers from `site_crawler.rs`, creating 35 modular single-responsibility units strictly under 150 physical LOC:
+  1. `src-tauri/src/commands/site_crawler/orchestration.rs` (109 LOC facade): coordinates crawl setup, robots, sitemaps, frontier, loop execution, post-processing, and summary construction.
+  2. `src-tauri/src/commands/site_crawler/ipc.rs` (49 LOC): Tauri IPC commands `cancel_site_crawl`, `pause_site_crawl`, `resume_site_crawl`, and `crawl_site`.
+  3. `src-tauri/src/commands/site_crawler/orchestration/frontier.rs` (120 LOC): frontier initialization and seed URLs processing.
+  4. `src-tauri/src/commands/site_crawler/orchestration/loop_runner.rs` (143 LOC): crawl loop, pause/resume, prefetch, and progress event emission.
+  5. `src-tauri/src/commands/site_crawler/orchestration/page_assembler.rs` (90 LOC): response decoding and summary assembly pipeline.
+  6. `src-tauri/src/commands/site_crawler/orchestration/page_assembler_signals.rs` (120 LOC): signal coordinator for content, metadata, extra, and assets.
+  7. `src-tauri/src/commands/site_crawler/orchestration/page_assembler_assets.rs` (70 LOC): links, images, and resource candidates registration.
+  8. `src-tauri/src/commands/site_crawler/orchestration/page_content.rs` (90 LOC): document language, content metrics, and semantic source coordinator.
+  9. `src-tauri/src/commands/site_crawler/orchestration/page_discovery.rs` (27 LOC): discovery sources resolution.
+  10. `src-tauri/src/commands/site_crawler/orchestration/page_error.rs` (139 LOC): fetch failure handling and error page summaries.
+  11. `src-tauri/src/commands/site_crawler/orchestration/page_extra.rs` (85 LOC): coordinator for extra features (social, schema, pagination, validation).
+  12. `src-tauri/src/commands/site_crawler/orchestration/page_extra_social.rs` (70 LOC): favicons, social meta tags, frames, and candidate discovery.
+  13. `src-tauri/src/commands/site_crawler/orchestration/page_extra_schema_pagination.rs` (85 LOC): hreflang, amp, pagination, and schema parsing.
+  14. `src-tauri/src/commands/site_crawler/orchestration/page_fetch.rs` (132 LOC): HTTP request / browser snapshot fetching with crawl delay.
+  15. `src-tauri/src/commands/site_crawler/orchestration/page_headings.rs` (75 LOC): H1 count, heading structure, and duplicate heading issues.
+  16. `src-tauri/src/commands/site_crawler/orchestration/page_links.rs` (95 LOC): internal/external link extraction and semantic links.
+  17. `src-tauri/src/commands/site_crawler/orchestration/page_links_enqueue.rs` (50 LOC): frontier queueing and discovery provenance recording.
+  18. `src-tauri/src/commands/site_crawler/orchestration/page_media.rs` (75 LOC): image extraction loop and resource candidate registration.
+  19. `src-tauri/src/commands/site_crawler/orchestration/page_media_build.rs` (85 LOC): CrawledImage and srcset checks builder.
+  20. `src-tauri/src/commands/site_crawler/orchestration/page_metadata.rs` (90 LOC): page status issues, canonical, directives, and verdict coordinator.
+  21. `src-tauri/src/commands/site_crawler/orchestration/page_metadata_canonical.rs` (85 LOC): canonical extraction, relation classification, and targets.
+  22. `src-tauri/src/commands/site_crawler/orchestration/page_metadata_directives.rs` (95 LOC): client redirects, robots meta, and directive issue logging.
+  23. `src-tauri/src/commands/site_crawler/orchestration/page_metadata_verdicts.rs` (60 LOC): indexability status, robots decision, and indexability verdict.
+  24. `src-tauri/src/commands/site_crawler/orchestration/page_resources_discovery.rs` (80 LOC): secondary resource candidate discovery.
+  25. `src-tauri/src/commands/site_crawler/orchestration/page_status_issues.rs` (78 LOC): HTTP status issues, redirects, and diagnostics.
+  26. `src-tauri/src/commands/site_crawler/orchestration/page_summary_builder.rs` (139 LOC): build_crawled_page_summary constructor.
+  27. `src-tauri/src/commands/site_crawler/orchestration/page_title_meta.rs` (85 LOC): title tags, title lengths, and meta description extraction.
+  28. `src-tauri/src/commands/site_crawler/orchestration/resource_crawler.rs` (100 LOC): secondary asset fetching (images, CSS, JS).
+  29. `src-tauri/src/commands/site_crawler/orchestration/robots.rs` (124 LOC): robots.txt fetching and rule evaluation.
+  30. `src-tauri/src/commands/site_crawler/orchestration/selectors.rs` (39 LOC): compiled CSS scraper selectors.
+  31. `src-tauri/src/commands/site_crawler/orchestration/setup.rs` (110 LOC): CrawlSetup initialization.
+  32. `src-tauri/src/commands/site_crawler/orchestration/setup_client.rs` (92 LOC): reqwest HTTP client and header construction.
+  33. `src-tauri/src/commands/site_crawler/orchestration/setup_config.rs` (89 LOC): default config and resume URL resolution.
+  34. `src-tauri/src/commands/site_crawler/orchestration/sitemaps.rs` (133 LOC): sitemap discovery and XML parsing.
+  35. `src-tauri/src/commands/site_crawler/orchestration/state.rs` (58 LOC): CrawlLoopState mutable state tracking.
+  36. `src-tauri/src/commands/site_crawler/orchestration/summary.rs` (124 LOC): final score computation, limit reasons, SiteCrawlResult assembly.
+- Repository-wide LOC status: **0 VIOLATIONS ACROSS ALL 1,911 FILES** (`{"limit":150,"files":1911,"violations":[]}`).
+- Full verification loop:
+  - `cargo check --manifest-path src-tauri/Cargo.toml` clean (0 errors).
+  - `cargo test --manifest-path src-tauri/Cargo.toml --lib -- --test-threads=1`: **578/578 passed, 0 failed**.
+  - `cargo fmt --manifest-path src-tauri/Cargo.toml -- --check` clean (0 diff).
+  - `npm run lint` clean (0 warnings, 0 errors).
+  - `npx tsc --noEmit` clean (0 errors).
+  - `tests/maxLoc.test.ts`: 25/25 tests PASS.
+

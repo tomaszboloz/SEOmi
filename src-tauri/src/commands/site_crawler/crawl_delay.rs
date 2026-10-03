@@ -1,6 +1,6 @@
 use super::*;
 
-pub(super) fn parse_robots_crawl_delay(
+pub(crate) fn parse_robots_crawl_delay(
     content: &str,
     crawler_agent: &str,
 ) -> Option<std::time::Duration> {
@@ -49,7 +49,7 @@ pub(super) fn parse_robots_crawl_delay(
     crawl_delay
 }
 
-pub(super) async fn wait_for_crawl_delay(
+pub(crate) async fn wait_for_crawl_delay(
     control: &CrawlControl,
     run_id: &str,
     last_request_at: Instant,

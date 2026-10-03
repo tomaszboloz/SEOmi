@@ -1,6 +1,6 @@
 use super::*;
 
-pub(super) fn bounded_inline_image_uri(value: &str) -> String {
+pub(crate) fn bounded_inline_image_uri(value: &str) -> String {
     if value.chars().count() <= MAX_INLINE_IMAGE_URI_CHARS {
         return value.to_string();
     }
@@ -15,7 +15,7 @@ pub(super) fn bounded_inline_image_uri(value: &str) -> String {
 /// Decode only bounded image data URIs. This is deliberately local:
 /// no image request, browser decode, SVG execution or arbitrary data URI is
 /// allowed during a static crawl.
-pub(super) fn inline_image_dimensions(src: &str) -> Option<(usize, usize)> {
+pub(crate) fn inline_image_dimensions(src: &str) -> Option<(usize, usize)> {
     let (header, payload) = src.split_once(',')?;
     let header_lower = header.to_ascii_lowercase();
     if !header_lower.starts_with("data:image/") {
@@ -56,7 +56,7 @@ pub(super) fn inline_image_dimensions(src: &str) -> Option<(usize, usize)> {
     }
 }
 
-pub(super) fn inline_image_format(src: &str) -> Option<String> {
+pub(crate) fn inline_image_format(src: &str) -> Option<String> {
     let header = src.split_once(',')?.0.to_ascii_lowercase();
     let mime = header
         .strip_prefix("data:image/")?

@@ -1,6 +1,6 @@
 use super::*;
 
-pub(super) fn annotate_page_relations(pages: &mut [CrawledPageSummary], crawl_mode: &str) {
+pub(crate) fn annotate_page_relations(pages: &mut [CrawledPageSummary], crawl_mode: &str) {
     let crawled_statuses = pages
         .iter()
         .filter(|page| !(crawl_mode == "browser-rendered" && page.http_status == 0))

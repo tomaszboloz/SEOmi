@@ -4,13 +4,13 @@ pub(super) fn redirect_target_is_new(seen: &mut HashSet<String>, target: &str) -
     seen.insert(target.to_string())
 }
 
-pub(super) fn crawl_deadline_reached(start_time: Instant, max_run_seconds: Option<u64>) -> bool {
+pub(crate) fn crawl_deadline_reached(start_time: Instant, max_run_seconds: Option<u64>) -> bool {
     max_run_seconds
         .is_some_and(|seconds| start_time.elapsed() >= std::time::Duration::from_secs(seconds))
 }
 
 #[allow(clippy::too_many_arguments)]
-pub(super) async fn request_with_safe_redirects(
+pub(crate) async fn request_with_safe_redirects(
     client: &reqwest::Client,
     initial_url: &str,
     base_host: &str,

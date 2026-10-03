@@ -105,7 +105,7 @@ pub(super) fn semantic_chrome_element(element: &ElementRef<'_>) -> bool {
     })
 }
 
-pub(super) fn semantic_content_contains(element: &ElementRef<'_>, has_primary_root: bool) -> bool {
+pub(crate) fn semantic_content_contains(element: &ElementRef<'_>, has_primary_root: bool) -> bool {
     if semantic_chrome_element(element) {
         return false;
     }
@@ -119,7 +119,7 @@ pub(super) fn semantic_content_contains(element: &ElementRef<'_>, has_primary_ro
     !has_primary_root || in_primary_root
 }
 
-pub(super) fn has_semantic_content_root(document: &Html) -> bool {
+pub(crate) fn has_semantic_content_root(document: &Html) -> bool {
     document
         .root_element()
         .descendants()

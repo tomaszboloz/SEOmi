@@ -1,6 +1,6 @@
 use super::*;
 
-pub(super) fn parse_sitemap_directives(content: &str) -> Vec<String> {
+pub(crate) fn parse_sitemap_directives(content: &str) -> Vec<String> {
     content
         .lines()
         .filter_map(|raw_line| {
@@ -12,7 +12,7 @@ pub(super) fn parse_sitemap_directives(content: &str) -> Vec<String> {
         .collect()
 }
 
-pub(super) fn parse_sitemap_locations(content: &str) -> Vec<String> {
+pub(crate) fn parse_sitemap_locations(content: &str) -> Vec<String> {
     Regex::new(r"(?is)<loc\s*>\s*(.*?)\s*</loc>")
         .ok()
         .map(|pattern| {

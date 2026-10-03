@@ -1,6 +1,6 @@
 use super::*;
 
-pub(super) fn annotate_duplicates(pages: &mut [CrawledPageSummary]) {
+pub(crate) fn annotate_duplicates(pages: &mut [CrawledPageSummary]) {
     let duplicate_titles = duplicate_text_indices(pages.iter().map(|page| page.title.as_deref()));
     for indices in duplicate_titles {
         for index in indices {

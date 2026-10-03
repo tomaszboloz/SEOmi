@@ -1,11 +1,11 @@
-pub(super) struct FetchedResponse {
-    pub(super) response: FetchedPageBody,
-    pub(super) final_url: String,
-    pub(super) redirect_chain: Vec<super::CrawledRedirectHop>,
-    pub(super) redirect_stopped_reason: Option<String>,
+pub(crate) struct FetchedResponse {
+    pub(crate) response: FetchedPageBody,
+    pub(crate) final_url: String,
+    pub(crate) redirect_chain: Vec<super::CrawledRedirectHop>,
+    pub(crate) redirect_stopped_reason: Option<String>,
 }
 
-pub(super) enum FetchedPageBody {
+pub(crate) enum FetchedPageBody {
     Http(reqwest::Response),
     Rendered(crate::commands::rendered_crawler::RenderedPageSnapshot),
     // Body already read inside the prefetch task. Holding an unread
@@ -14,27 +14,27 @@ pub(super) enum FetchedPageBody {
     Prefetched(Box<FetchedPageData>),
 }
 
-pub(super) struct CrawlFetchFailure {
-    pub(super) kind: String,
-    pub(super) message: String,
+pub(crate) struct CrawlFetchFailure {
+    pub(crate) kind: String,
+    pub(crate) message: String,
 }
 
-pub(super) struct FetchedPageData {
-    pub(super) status: u16,
-    pub(super) content_type: Option<String>,
-    pub(super) content_length: Option<u64>,
-    pub(super) content_encoding: Option<String>,
-    pub(super) http_refresh: Option<String>,
-    pub(super) cache_control: Option<String>,
-    pub(super) charset: Option<String>,
-    pub(super) x_robots_tag: Option<String>,
-    pub(super) declared_html: bool,
-    pub(super) body_truncated: bool,
-    pub(super) body_read_failed: bool,
-    pub(super) body: Vec<u8>,
-    pub(super) rendered_diagnostics: Option<(Vec<String>, Vec<String>)>,
-    pub(super) browser_navigation_time_ms: Option<u64>,
-    pub(super) rendered_lcp_ms: Option<u64>,
-    pub(super) rendered_inp_ms: Option<u64>,
-    pub(super) rendered_cls: Option<f64>,
+pub(crate) struct FetchedPageData {
+    pub(crate) status: u16,
+    pub(crate) content_type: Option<String>,
+    pub(crate) content_length: Option<u64>,
+    pub(crate) content_encoding: Option<String>,
+    pub(crate) http_refresh: Option<String>,
+    pub(crate) cache_control: Option<String>,
+    pub(crate) charset: Option<String>,
+    pub(crate) x_robots_tag: Option<String>,
+    pub(crate) declared_html: bool,
+    pub(crate) body_truncated: bool,
+    pub(crate) body_read_failed: bool,
+    pub(crate) body: Vec<u8>,
+    pub(crate) rendered_diagnostics: Option<(Vec<String>, Vec<String>)>,
+    pub(crate) browser_navigation_time_ms: Option<u64>,
+    pub(crate) rendered_lcp_ms: Option<u64>,
+    pub(crate) rendered_inp_ms: Option<u64>,
+    pub(crate) rendered_cls: Option<f64>,
 }
