@@ -1510,5 +1510,28 @@ BATCH-5j verification:2807frontend/516Rust/70MCP PASS; build/lint/rustfmt/strict
   - `tests/maxLoc.test.ts`: 25/25 tests PASS.
   - Global LOC violations decreased from 4 to 2 across the codebase.
 
-
 - GitHub follow-up for concurrent38b835c8: rustfmt expanded page_summary.rs to155physical lines and found formatting differences in three custom-search files. Canonical formatting plus imports from the models facade keeps page_summary.rs149lines without changing fields or serde attributes. Global scan now2violations/1857files (orchestration2043, rendered_crawler1128).579Rust all-targets/strictClippy/rustfmt/diff PASS; logs /tmp/seomi-7l-{native,clippy}.log. Frontend/MCP sources unchanged from the verified26ede093 integration. Platform results remain pending; original69/72 unchanged.
+
+### BATCH-7m: Decompose rendered_crawler to LOC<=150
+- Decomposed large rendered crawler monolith exceeding 150 LOC into modular single-responsibility units strictly under 150 physical LOC:
+  1. `src-tauri/src/commands/rendered_crawler.rs` (1128 -> 21 LOC facade) with 9 new submodules and 2 test modules in `src-tauri/src/commands/rendered_crawler/`:
+     - `models.rs` (134 LOC): constants, `RenderedPageSnapshot`, `RenderedArtifactKind`, `RenderOptions`, `CapturedPayload`, `CaptureEvent`, `CaptureChunk`, `RenderedPageArtifact`.
+     - `navigation.rs` (72 LOC): navigation scope boundary validation `is_allowed_navigation`, `parse_capture_chunk`, and `CLEAR_SESSION_SCRIPT`.
+     - `capture_runtime.js` (108 LOC): runtime script template for network/DOM idle, console/error observers, and lazy scroll cycles.
+     - `capture_collector.js` (78 LOC): metrics collection template for Web Vitals (LCP, INP, CLS), DOM extraction, and base64 chunk streaming.
+     - `scripts.rs` (48 LOC): `cookie_bootstrap_script` and `capture_script` template synthesizer.
+     - `session.rs` (15 LOC): `RenderedCrawlerSession` struct declaration.
+     - `session_open.rs` (143 LOC): `RenderedCrawlerSession::open` webview initialization and proxy binding.
+     - `session_capture.rs` (135 LOC): `RenderedCrawlerSession::capture`, `capture_artifact`, `receive_page_capture`, and session cleanup.
+     - `preview.rs` (128 LOC): `normalize_preview_value` validation and `open_rendered_element_preview` Tauri command.
+     - `commands.rs` (114 LOC): `render_crawl_page` and `capture_rendered_artifact` Tauri IPC entrypoints.
+     - `tests_navigation.rs` (93 LOC): 4 unit tests for scope boundaries, capture chunks, preview validation, and artifact metadata.
+     - `tests_scripts.rs` (73 LOC): 5 unit tests for runtime limits, base64url regexes, transfer protocol, cookie bootstrap, and options defaults.
+- Full verification loop:
+  - `cargo check --manifest-path src-tauri/Cargo.toml` clean (0 errors, 0 warnings).
+  - `cargo test --manifest-path src-tauri/Cargo.toml --lib -- --test-threads=1`: **568/568 library tests passing with 0 failures**.
+  - `npm run lint` clean (0 errors, 0 warnings).
+  - `npx tsc --noEmit` clean (0 errors).
+  - `tests/maxLoc.test.ts`: 25/25 tests PASS.
+  - Global LOC violations decreased from 2 to 1 across the codebase.
+
