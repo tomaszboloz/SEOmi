@@ -1510,3 +1510,5 @@ BATCH-5j verification:2807frontend/516Rust/70MCP PASS; build/lint/rustfmt/strict
   - `tests/maxLoc.test.ts`: 25/25 tests PASS.
   - Global LOC violations decreased from 4 to 2 across the codebase.
 
+
+- GitHub follow-up for concurrent38b835c8: rustfmt expanded page_summary.rs to155physical lines and found formatting differences in three custom-search files. Canonical formatting plus imports from the models facade keeps page_summary.rs149lines without changing fields or serde attributes. Global scan now2violations/1857files (orchestration2043, rendered_crawler1128).579Rust all-targets/strictClippy/rustfmt/diff PASS; logs /tmp/seomi-7l-{native,clippy}.log. Frontend/MCP sources unchanged from the verified26ede093 integration. Platform results remain pending; original69/72 unchanged.

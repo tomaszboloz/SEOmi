@@ -17,9 +17,7 @@ pub fn extract_regex(
     };
     let regex = match Regex::new(search.query.trim()) {
         Ok(regex) => regex,
-        Err(error) => {
-            return failed_result(search, format!("Nie można wykonać regex: {error}."))
-        }
+        Err(error) => return failed_result(search, format!("Nie można wykonać regex: {error}.")),
     };
     let mut values = Vec::new();
     let mut truncated = false;

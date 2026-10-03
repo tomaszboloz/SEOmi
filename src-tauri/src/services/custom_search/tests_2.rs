@@ -1,6 +1,4 @@
-use super::extraction::{
-    extract_custom_search_results, extract_custom_search_results_with_html,
-};
+use super::extraction::{extract_custom_search_results, extract_custom_search_results_with_html};
 use super::tests_common::query;
 use super::validation::validate_custom_searches;
 use scraper::Html;

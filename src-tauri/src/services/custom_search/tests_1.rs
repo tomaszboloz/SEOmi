@@ -1,6 +1,4 @@
-use super::extraction::{
-    extract_custom_search_results, extract_custom_search_results_with_budget,
-};
+use super::extraction::{extract_custom_search_results, extract_custom_search_results_with_budget};
 use super::models::CustomSearchDefinition;
 use super::tests_common::query;
 use scraper::Html;
