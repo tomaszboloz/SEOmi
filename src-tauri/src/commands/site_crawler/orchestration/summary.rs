@@ -14,6 +14,7 @@ use super::setup::CrawlSetup;
 use super::sitemaps::CrawlSitemapsOutcome;
 use super::state::CrawlLoopState;
 
+#[allow(clippy::too_many_arguments)]
 pub fn build_crawl_result(
     app: &AppHandle,
     control: &CrawlControl,

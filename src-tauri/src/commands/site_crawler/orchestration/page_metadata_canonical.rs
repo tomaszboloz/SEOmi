@@ -16,6 +16,7 @@ pub struct PageCanonicalOutcome {
     pub pagination_canonical_alignment: Option<String>,
 }
 
+#[allow(clippy::too_many_arguments)]
 pub fn extract_page_canonical(
     document: &Html,
     final_base: &Url,

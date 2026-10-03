@@ -69,7 +69,7 @@ pub fn build_crawler_client(
             }
         }
     }
-    let mut client_builder = crate::services::http_client::public_client_builder()
+    let mut client_builder = super::super::transport::crawler_client_builder()
         .default_headers(headers)
         .redirect(reqwest::redirect::Policy::none());
     if let Some(timeout_secs) = config.request_timeout_secs {

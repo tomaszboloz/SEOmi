@@ -21,6 +21,7 @@ pub struct PageLinksOutcome {
     pub external_link_count: usize,
 }
 
+#[allow(clippy::too_many_arguments)]
 pub fn extract_page_links(
     document: &Html,
     final_base: &Url,

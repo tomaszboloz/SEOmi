@@ -9,6 +9,7 @@ pub struct PageVerdictsOutcome {
     pub indexability_status: String,
 }
 
+#[allow(clippy::too_many_arguments)]
 pub fn evaluate_page_verdicts(
     status: u16,
     config: &CrawlConfig,

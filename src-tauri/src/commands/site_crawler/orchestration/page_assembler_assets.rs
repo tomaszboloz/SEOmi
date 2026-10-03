@@ -15,6 +15,7 @@ pub struct AssembledPageAssets {
     pub images: Vec<CrawledImage>,
 }
 
+#[allow(clippy::too_many_arguments)]
 pub fn extract_page_assets(
     document: &Html,
     final_base: &Url,

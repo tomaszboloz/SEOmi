@@ -28,6 +28,7 @@ pub struct PageMetadataOutcome {
     pub indexability_status: String,
 }
 
+#[allow(clippy::too_many_arguments)]
 pub fn extract_page_metadata(
     page_data: &FetchedPageData,
     document: &Html,

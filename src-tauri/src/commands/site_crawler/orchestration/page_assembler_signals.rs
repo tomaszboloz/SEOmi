@@ -26,6 +26,7 @@ pub struct AssembledPageSignals {
     pub images: Vec<CrawledImage>,
 }
 
+#[allow(clippy::too_many_arguments)]
 pub fn extract_page_signals(
     document: &Html,
     text: &str,

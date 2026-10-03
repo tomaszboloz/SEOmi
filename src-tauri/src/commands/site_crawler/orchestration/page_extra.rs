@@ -42,6 +42,7 @@ pub struct PageExtraOutcome {
     pub html_validation_truncated: bool,
 }
 
+#[allow(clippy::too_many_arguments)]
 pub fn extract_page_extra(
     document: &Html,
     text: &str,

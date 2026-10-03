@@ -1,24 +1,26 @@
-use base64::{engine::general_purpose::STANDARD as BASE64_STANDARD, Engine as _};
-use regex::Regex;
-use reqwest::header::{HeaderMap, HeaderName, HeaderValue, COOKIE, USER_AGENT};
-use scraper::{node::Node, ElementRef, Html, Selector};
-use serde::Serialize;
-use sha2::{Digest, Sha256};
-use std::collections::{HashMap, HashSet, VecDeque};
-use std::sync::{Mutex, OnceLock};
-use std::time::Instant;
-use tauri::{AppHandle, Emitter, State};
-use tokio::task::JoinSet;
-
-use crate::commands::rendered_crawler::{RenderOptions, RenderedCrawlerSession};
-use crate::commands::settings::{crawl_auth_profile, CrawlAuthProfile};
-use crate::models::audit_data::{FaviconData, StructuredDataValidationIssue};
-use crate::services::custom_search::{
-    extract_custom_search_results_with_html, validate_custom_searches,
-    MAX_CUSTOM_SEARCH_CHARS_PER_RUN,
+#[allow(unused_imports)]
+use {
+    crate::commands::rendered_crawler::{RenderOptions, RenderedCrawlerSession},
+    crate::commands::settings::{crawl_auth_profile, CrawlAuthProfile},
+    crate::models::audit_data::{FaviconData, StructuredDataValidationIssue},
+    crate::services::custom_search::{
+        extract_custom_search_results_with_html, validate_custom_searches,
+        MAX_CUSTOM_SEARCH_CHARS_PER_RUN,
+    },
+    crate::services::schema_validator,
+    crate::utils::url_validator::validate_and_normalize_url,
+    base64::{engine::general_purpose::STANDARD as BASE64_STANDARD, Engine as _},
+    regex::Regex,
+    reqwest::header::{HeaderMap, HeaderName, HeaderValue, COOKIE, USER_AGENT},
+    scraper::{node::Node, ElementRef, Html, Selector},
+    serde::Serialize,
+    sha2::{Digest, Sha256},
+    std::collections::{HashMap, HashSet, VecDeque},
+    std::sync::{Mutex, OnceLock},
+    std::time::Instant,
+    tauri::{AppHandle, Emitter, State},
+    tokio::task::JoinSet,
 };
-use crate::services::schema_validator;
-use crate::utils::url_validator::validate_and_normalize_url;
 
 mod canonical;
 mod client_redirects;
@@ -72,6 +74,7 @@ mod target_relations;
 mod transport;
 mod url_normalization;
 
+#[allow(unused_imports)]
 use {
     canonical::*, client_redirects::*, constants::*, content_metrics::*, content_terms::*,
     control::*, crawl_delay::*, duplicate_annotation::*, favicon::*, fetch_data::*, fetch_types::*,

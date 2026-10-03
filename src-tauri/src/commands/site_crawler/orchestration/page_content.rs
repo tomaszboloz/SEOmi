@@ -30,6 +30,7 @@ pub struct PageContentOutcome {
     pub meta_description_length: Option<usize>,
 }
 
+#[allow(clippy::too_many_arguments)]
 pub fn extract_page_content(
     document: &Html,
     body_len: usize,

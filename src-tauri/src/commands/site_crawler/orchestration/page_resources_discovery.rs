@@ -5,6 +5,7 @@ use super::super::{models::CrawledFrame, resource_discovery::add_resource_candid
 use super::setup::CrawlSetup;
 use super::state::CrawlLoopState;
 
+#[allow(clippy::too_many_arguments)]
 pub fn register_page_resource_candidates(
     document: &Html,
     final_base: &Url,

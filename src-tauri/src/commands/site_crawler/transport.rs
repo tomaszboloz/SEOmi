@@ -1,5 +1,9 @@
 use super::*;
 
+pub(crate) fn crawler_client_builder() -> reqwest::ClientBuilder {
+    crate::services::http_client::public_client_builder()
+}
+
 pub(super) fn redirect_target_is_new(seen: &mut HashSet<String>, target: &str) -> bool {
     seen.insert(target.to_string())
 }
