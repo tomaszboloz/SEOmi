@@ -1,0 +1,17 @@
+use super::*;
+use crate::models::audit_data::AccessibilityFinding;
+use std::collections::HashSet;
+
+mod accessibility_control_evidence_reports_multiline_source_location;
+mod content_statistics_ignore_site_chrome_and_forms_when_semantic_root_exists;
+mod detects_text_honeypots_with_equivalent_hidden_markers_without_mutating_their_type;
+mod fixture;
+mod public_parser_combines_independent_document_contracts;
+mod records_jsonld_syntax_and_supported_schema_profile_findings;
+mod reports_focusable_elements_inside_aria_hidden_with_safe_source_evidence;
+mod uses_polish_readability_formula_when_html_declares_polish;
+mod versions_are_extracted_only_from_known_explicit_generator_declarations;
+use fixture::SAMPLE_HTML;
+mod content_regressions;
+mod extraction_contracts;
+mod parser_regressions;

@@ -1,27 +1,13 @@
 import { describe, expect, it } from 'vitest';
 import type { CrawledPageSummary } from '@/types';
-import { createEmptyContentBrief, createEmptyTopicalMap, type TopicalNode } from '@/services/topicalMap';
+import { createEmptyTopicalMap } from '@/services/topicalMap';
 import { buildSemanticAudit } from '@/services/semanticAudit';
 import i18n from '@/i18n';
-
-const page = (url: string, semanticTerms: string[], extra: Partial<CrawledPageSummary> = {}) => ({
-  url,
-  final_url: url,
-  semantic_terms: semanticTerms,
-  semantic_links: [],
-  content_hash: null,
-  content_simhash: null,
-  ...extra,
-} as unknown as CrawledPageSummary);
-
-const topic = (sourceUrls: string[], queries: TopicalNode['queries'] = []): TopicalNode => ({
-  id: 'topic-coffee', title: 'Coffee', kind: 'pillar', boundary: 'core', parentId: null,
-  relatedNodeIds: [], intent: 'informational', lifecycle: 'published', scheduledDate: '',
-  queries, facts: [], evidenceTerms: [], sourceUrls, sourceRunId: 'run-1', sourceClusterId: null, contentBrief: createEmptyContentBrief(),
-});
+import { page, topic } from "./fixtures/semanticAuditContracts";
 
 describe('buildSemanticAudit', () => {
-  it('reports partial query coverage with matched and missing token evidence', () => {
+
+it('reports partial query coverage with matched and missing token evidence', () => {
     const document = createEmptyTopicalMap();
     document.nodes = [topic(['https://site.test/coffee'], [{ id: 'q1', text: 'espresso burr grinder', provenance: 'asserted' }])];
 
@@ -35,7 +21,7 @@ describe('buildSemanticAudit', () => {
     expect(finding?.action).toBe(i18n.t('runtimeErrors.semanticAudit.actionQuery'));
   });
 
-  it('matches topical assignments across harmless URL formatting differences', () => {
+it('matches topical assignments across harmless URL formatting differences', () => {
     const document = createEmptyTopicalMap();
     document.nodes = [topic(['https://site.test/coffee/'])];
 
@@ -46,7 +32,7 @@ describe('buildSemanticAudit', () => {
     expect(report.findings.some((item) => item.code === 'stale-url-assignment')).toBe(false);
   });
 
-  it('surfaces a provider-backed intent mismatch without rewriting the editorial declaration', () => {
+it('surfaces a provider-backed intent mismatch without rewriting the editorial declaration', () => {
     const document = createEmptyTopicalMap();
     document.nodes = [topic(['https://site.test/coffee'], [{
       id: 'q-intent',
@@ -85,7 +71,7 @@ describe('buildSemanticAudit', () => {
     expect(document.nodes[0].intent).toBe('informational');
   });
 
-  it('flags possible overlap only for pages mapped to the same topic with lexical evidence', () => {
+it('flags possible overlap only for pages mapped to the same topic with lexical evidence', () => {
     const document = createEmptyTopicalMap();
     document.nodes = [topic(['https://site.test/a', 'https://site.test/b'])];
     const pages = [
@@ -102,7 +88,7 @@ describe('buildSemanticAudit', () => {
     expect(overlap[0].provenance).toEqual(['asserted', 'measured', 'derived']);
   });
 
-  it('uses the content SimHash candidate index without treating it as confirmed cannibalization', () => {
+it('uses the content SimHash candidate index without treating it as confirmed cannibalization', () => {
     const report = buildSemanticAudit(createEmptyTopicalMap(), [
       page('https://site.test/a', [], { content_simhash: '0000000000000000' }),
       page('https://site.test/b', [], { content_simhash: '000000000000007f' }),
@@ -112,7 +98,7 @@ describe('buildSemanticAudit', () => {
     expect(report.findings.some((item) => item.code === 'possible-url-overlap')).toBe(false);
   });
 
-  it('surfaces asserted lifecycle updates and published URLs with measured non-2xx status', () => {
+it('surfaces asserted lifecycle updates and published URLs with measured non-2xx status', () => {
     const document = createEmptyTopicalMap();
     document.nodes = [
       topic(['https://site.test/coffee'], []),
@@ -125,7 +111,7 @@ describe('buildSemanticAudit', () => {
     expect(report.findings.every((item) => item.action.trim().length > 0)).toBe(true);
   });
 
-  it('reports content-only orphan pages without counting navigation links or the crawl root', () => {
+it('reports content-only orphan pages without counting navigation links or the crawl root', () => {
     const root = page('https://site.test/', [], {
       depth: 0,
       links: [{ target_url: 'https://site.test/orphan', anchor_text: 'footer link', is_internal: true }],
@@ -149,34 +135,12 @@ describe('buildSemanticAudit', () => {
     expect(report.findings.some((item) => item.code === 'content-orphan-page' && item.urls.includes(linked.url))).toBe(false);
   });
 
-  it('does not infer content orphans from legacy snapshots without semantic-link data', () => {
+it('does not infer content orphans from legacy snapshots without semantic-link data', () => {
     const legacy = page('https://site.test/legacy', ['article'], { depth: 1 });
     delete (legacy as Partial<CrawledPageSummary>).semantic_links;
     const report = buildSemanticAudit(createEmptyTopicalMap(), [legacy]);
 
     expect(report.contentOrphanPages).toBeNull();
     expect(report.findings.some((item) => item.code === 'content-orphan-page')).toBe(false);
-  });
-
-  it('flags incomplete semantic evidence without treating it as a quality or intent verdict', () => {
-    const report = buildSemanticAudit(createEmptyTopicalMap(), [
-      page('https://site.test/partial', ['coffee'], { body_truncated: true, semantic_content_source: 'unavailable', semantic_content_partial: true }),
-    ]);
-    const finding = report.findings.find((item) => item.code === 'content-evidence-partial');
-
-    expect(finding).toMatchObject({
-      severity: 'review',
-      provenance: ['measured'],
-      urls: ['https://site.test/partial'],
-      confidence: 'limited',
-    });
-    expect(finding?.detail).toContain(i18n.t('runtimeErrors.semanticAudit.contentEvidenceDetail'));
-    expect(finding?.evidence).toEqual(expect.arrayContaining([
-      i18n.t('runtimeErrors.semanticAudit.contentEvidenceTruncated'),
-      i18n.t('runtimeErrors.semanticAudit.contentEvidenceUnavailable'),
-      i18n.t('runtimeErrors.semanticAudit.contentEvidenceBounded'),
-      i18n.t('runtimeErrors.semanticAudit.contentEvidenceMissingExcerpts'),
-    ]));
-    expect(finding?.action).toBe(i18n.t('runtimeErrors.semanticAudit.actionContentEvidence'));
   });
 });

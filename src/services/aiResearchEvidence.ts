@@ -7,11 +7,18 @@ export interface AiResearchSettings {
 }
 
 export const emptyAiResearchSettings = (): AiResearchSettings => ({ prompts: [], competitors: [], repetitions: 1 });
-export const normalizeAiResearchSettings = (value: Partial<AiResearchSettings> | null): AiResearchSettings => ({
-  prompts: [...new Set((Array.isArray(value?.prompts) ? value.prompts : []).filter((item): item is string => typeof item === 'string').map((item) => item.trim()).filter(Boolean))].slice(0, 10),
-  competitors: [...new Set((Array.isArray(value?.competitors) ? value.competitors : []).filter((item): item is string => typeof item === 'string').map((item) => item.trim()).filter(Boolean))].slice(0, 20),
-  repetitions: Math.max(1, Math.min(5, Math.floor(Number(value?.repetitions) || 1))),
-});
+export const normalizeAiResearchSettings = (value: unknown): AiResearchSettings => {
+  const record = value && typeof value === 'object' && !Array.isArray(value) ? value as Record<string, unknown> : {};
+  const strings = (items: unknown, limit: number): string[] => [...new Set(
+    (Array.isArray(items) ? items : []).filter((item): item is string => typeof item === 'string').map((item) => item.trim()).filter(Boolean),
+  )].slice(0, limit);
+  return {
+    prompts: strings(record.prompts, 10),
+    competitors: strings(record.competitors, 20),
+    repetitions: typeof record.repetitions === 'number' && Number.isFinite(record.repetitions)
+      ? Math.max(1, Math.min(5, Math.floor(record.repetitions))) : 1,
+  };
+};
 
 export const redactLocalContext = (value: string): string => value
   .replace(/[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}/gi, '[redacted email]')

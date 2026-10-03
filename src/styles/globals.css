@@ -65,3 +65,17 @@
 code, pre {
   font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
 }
+
+/* Long addresses and generated text stay within cards; table columns retain
+   their own scrolling/line-break rules. */
+main {
+  overflow-wrap: anywhere;
+}
+main table {
+  overflow-wrap: normal;
+}
+
+#crawl-map-section,
+#crawl-map-visualisation {
+  scroll-margin-top: calc(var(--crawl-navigation-height, 11rem) + 1rem);
+}

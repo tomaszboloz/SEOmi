@@ -116,7 +116,7 @@
       "canonicalMissingDetail": "No rel=\"canonical\" declaration was found.",
       "canonicalTarget": "Canonical target returns an HTTP error",
       "canonicalTargetDetail": "The checked target returned HTTP {{status}}.",
-    "canonicalUnverified": "Canonical target was not verified",
+      "canonicalUnverified": "Canonical target was not verified",
       "viewportMissing": "Missing viewport",
       "viewportMissingDetail": "No meta name=\"viewport\" was found.",
       "indexingBlocked": "Indexing is blocked",
@@ -193,7 +193,8 @@
       "differentProperties": "Snapshots belong to different Search Console properties.",
       "differentFilters": "Snapshots use different Search Console filters; choose a snapshot with the same scope.",
       "samePeriod": "Choose two different periods.",
-      "overlapping": "Periods overlap or are out of order; choose disjoint ranges."
+      "overlapping": "Periods overlap or are out of order; choose disjoint ranges.",
+      "differentDurations": "اختر فترات بعدد أيام متساوٍ لمقارنة الزيارات."
     },
     "reportTemplates": {
       "builtInName": "Site health · full report",
@@ -211,6 +212,7 @@
       "articleHeadlineOmitted": "تم تجاهل عقدة المقالة: لا يوجد عنوان صفحة تم الزحف إليها لاستخدامه كـ headline."
     },
     "backup": {
+      "tooLarge": "تتجاوز النسخة الاحتياطية حد الاستيراد.",
       "missingProject": "Backup file does not contain a project object.",
       "format": "Unsupported project backup format.",
       "secrets": "Backup has an invalid secrets policy.",
@@ -477,7 +479,8 @@
       "missingSignal": "Not observed now: {{value}}",
       "sharedTerms": "المصطلحات المشتركة: {{value}}",
       "weightedJaccard": "Jaccard الموزون: {{value}}",
-      "missing": "none"
+      "missing": "none",
+      "queryChangedTitle": "Observed query tokens changed: {{query}}"
     },
     "contentBrief": {
       "draftTitle": "Content draft",
@@ -535,6 +538,7 @@
     "settings": {
       "projectDataforseo": "Select a project before configuring DataForSEO.",
       "projectGoogle": "Select a project before configuring Google performance APIs.",
+      "configLoadFailed": "تعذر تحميل الإعدادات المحفوظة. تم الاحتفاظ بالإعدادات الحالية. استعد ملف إعدادات صالحًا وحاول مرة أخرى.",
       "configSaveFailed": "تعذر حفظ الإعدادات في الواجهة الخلفية."
     },
     "export": {
@@ -552,7 +556,7 @@
       "none": "none",
       "available": "available",
       "unavailable": "unavailable",
-    "canonicalUnverified": "canonical unverified",
+      "canonicalUnverified": "canonical unverified",
       "notReciprocal": "not reciprocal",
       "reciprocityUnverified": "reciprocity unverified",
       "checked": "checked",
@@ -581,7 +585,10 @@
       "cliMissing": "Local CLI was not found on PATH.",
       "credentialSaved": "Credential saved in the system keychain. Test it to verify access.",
       "checkingConnection": "Checking connection…",
-      "localClientRequired": "{{provider}} is not configured to use its local subscription client."
+      "localClientRequired": "{{provider}} is not configured to use its local subscription client.",
+      "responseHidden": "Provider response withheld.",
+      "invalidResponse": "The AI provider returned an invalid response.",
+      "responseTooLarge": "The AI provider response exceeds the 1 MiB limit."
     },
     "pagespeed": {
       "projectRequired": "Choose a project before starting the measurement."
@@ -1614,7 +1621,8 @@
       "start": "starting address",
       "seed": "seed list",
       "sitemap": "sitemap",
-      "link": "internal link"
+      "link": "internal link",
+      "resume": "Saved crawl frontier"
     },
     "bottomNavigationAria": "Quick semantic map navigation",
     "bottomViewsAria": "Map views at bottom",
@@ -3460,7 +3468,14 @@
     "noPageRows": "The API returned no page rows for this date range.",
     "snapshotSaved": "Saved snapshot {{start}} — {{end}}.",
     "snapshotSaveError": "Could not save snapshot.",
-    "fullScope": "full scope"
+    "fullScope": "full scope",
+    "unmatchedDescription": "لا تتم مقارنة الصفوف التي ظهرت في فترة واحدة فقط. غيابها عن البيانات المحمّلة لا يعني انعدام الزيارات أو خسارة مؤكدة.",
+    "unmatched": {
+      "baselineQueries": "استعلامات ظهرت في الفترة المرجعية فقط: {{count}}",
+      "currentQueries": "استعلامات ظهرت في الفترة الحالية فقط: {{count}}",
+      "baselinePages": "روابط ظهرت في الفترة المرجعية فقط: {{count}}",
+      "currentPages": "روابط ظهرت في الفترة الحالية فقط: {{count}}"
+    }
   },
   "settings": {
     "close": "Close settings",
@@ -3536,7 +3551,7 @@
       "technicalDirectives": "Technical Directives & Robots",
       "canonical": "Canonical URL",
       "notSpecified": "Not specified",
-    "canonicalUnverified": "Target not verified",
+      "canonicalUnverified": "Target not verified",
       "robots": "Robots Directive",
       "robotsDefault": "index, follow (default)",
       "viewport": "Viewport (mobile)",
@@ -3549,7 +3564,18 @@
       "author": "Author",
       "technologies": "Detected technologies",
       "documentHttpSignals": "document or HTTP response signals only",
-      "technologyCategories": {"cmsPlatform": "منصة CMS", "cmsGenerator": "CMS / مولد", "cms": "CMS", "commercePlatform": "منصة تجارة", "javascriptFramework": "إطار JavaScript", "tagManager": "مدير العلامات", "analyticsTag": "تحليلات / علامة", "javascriptLibrary": "مكتبة JavaScript", "cssFramework": "إطار CSS / واجهة", "analytics": "تحليلات"},
+      "technologyCategories": {
+        "cmsPlatform": "منصة CMS",
+        "cmsGenerator": "CMS / مولد",
+        "cms": "CMS",
+        "commercePlatform": "منصة تجارة",
+        "javascriptFramework": "إطار JavaScript",
+        "tagManager": "مدير العلامات",
+        "analyticsTag": "تحليلات / علامة",
+        "javascriptLibrary": "مكتبة JavaScript",
+        "cssFramework": "إطار CSS / واجهة",
+        "analytics": "تحليلات"
+      },
       "confirmed": "confirmed",
       "heuristic": "heuristic",
       "favicons": "Declared favicons",
@@ -4301,6 +4327,7 @@
     }
   },
   "exportUi": {
+    "invalidPdf": "The generator returned invalid PDF data. Please try again.",
     "labels": {
       "field": "Field",
       "value": "Value",
@@ -4613,7 +4640,7 @@
       "bytes": "{{value}} B",
       "internal": "internal",
       "external": "external",
-    "canonicalUnverified": "canonical unverified"
+      "canonicalUnverified": "canonical unverified"
     }
   },
   "uiUnits": {
@@ -4652,5 +4679,25 @@
     "run": "Run {{count}}",
     "legacyRecognition": "Legacy brand recognition run",
     "legacyNote": "This saved run included the brand in the question. It is not an unprompted visibility measurement."
+  },
+  "gscOpportunities": {
+    "title": "GSC opportunities",
+    "near": "Queries just beyond TOP10 (10–20)",
+    "ctr": "CTR below observed peers",
+    "empty": "No rows meet the evidence thresholds.",
+    "benchmark": "CTR {{actual}}% · peers {{expected}}% ({{count}} queries)",
+    "method": "Average position is a period metric. CTR uses other queries within ±1 position, at least 3 peers and 300 peer impressions. Signals require review; brand, intent and SERP features can differ.",
+    "aiOverview": "Google includes AI Overviews and AI Mode in total Web traffic. This report cannot separate their metrics.",
+    "source": "Google documentation"
+  },
+  "gscCannibalization": {
+    "title": "تعارض محتمل بين عناوين البحث",
+    "method": "عنوانان على الأقل مع 20 ظهورًا و10% من مرات الظهور المرصودة للاستعلام. هذه إشارات للمراجعة وليست تعارضًا مؤكدًا.",
+    "unavailable": "لا توجد أزواج استعلام وعنوان مرصودة. حدّث Search Console.",
+    "invalid": "بيانات مشتركة غير صالحة؛ حدّث التقرير.",
+    "empty": "لا يوجد استعلام بعنوانين يستوفيان الحدود.",
+    "limited": "قد يقتطع Google أو التخزين المحلي البيانات. النسب تخص الصفوف المرصودة فقط.",
+    "previous": "السابق",
+    "next": "التالي"
   }
 }

@@ -31,7 +31,7 @@
   },
   "plugins": {
     "updater": {
-      "pubkey": "dW50cnVzdGVkIGNvbW1lbnQ6IG1pbmlzaWduIHB1YmxpYyBrZXk6IDVBRDQzMkJGMUQxNDc4ODIKUlVSY3h5Yk5zM2VwTkNxdmR0OUh5K3F5Z0hPZkRxdFprNW5ocVExWlZtUld6MFR1aXF6TXJvK0EK",
+      "pubkey": "dW50cnVzdGVkIGNvbW1lbnQ6IG1pbmlzaWduIHB1YmxpYyBrZXk6IDdERjg1Qzc0M0MwRDA0RjUKUldUMUJBMDhkRno0ZllWU0NjZldLaXMwMGxCTTNRWlJ1dTJvZ0g1Um1EV0Y5VkY4SEdoTVlHZE4K",
       "endpoints": [
         "https://github.com/tomaszboloz/SEOmi/releases/latest/download/latest.json"
       ]
@@ -39,7 +39,11 @@
   },
   "bundle": {
     "active": true,
-    "targets": ["dmg", "msi", "nsis"],
+    "targets": [
+      "dmg",
+      "msi",
+      "nsis"
+    ],
     "icon": [
       "icons/32x32.png",
       "icons/128x128.png",

@@ -2,6 +2,7 @@ import { beforeEach, describe, expect, it } from 'vitest';
 import {
   MAX_PAGESPEED_SNAPSHOTS,
   comparePageSpeedSnapshots,
+  clearPageSpeedSnapshots,
   createPageSpeedSnapshot,
   normalizePageSpeedSnapshots,
   pageSpeedHistoryCsv,
@@ -50,6 +51,18 @@ describe('PageSpeed project history', () => {
     });
     expect(snapshot.id.length).toBeGreaterThan(8);
     expect(snapshot.id).not.toContain('2026-09-24');
+  });
+
+  it('clears only the selected project history and ignores an absent project', () => {
+    const snapshot = createPageSpeedSnapshot({ url: 'https://example.com', strategy: 'mobile', formFactor: 'PHONE',
+      scope: 'url', pageSpeed: report(80, '2026-09-24T09:00:00Z') });
+    savePageSpeedSnapshot('project-a', snapshot);
+    savePageSpeedSnapshot('project-b', snapshot);
+    clearPageSpeedSnapshots(null);
+    expect(readPageSpeedSnapshots('project-a')).toHaveLength(1);
+    clearPageSpeedSnapshots('project-a');
+    expect(readPageSpeedSnapshots('project-a')).toEqual([]);
+    expect(readPageSpeedSnapshots('project-b')).toEqual([snapshot]);
   });
 
   it('compares category and lab metric deltas without inventing missing values', () => {

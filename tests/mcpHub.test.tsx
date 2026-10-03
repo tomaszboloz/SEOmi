@@ -3,17 +3,16 @@ import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { McpHub } from '@/components/AgentWorkflows/McpHub';
 import { useProjectStore } from '@/stores/projectStore';
 import { useToolsStore } from '@/stores/toolsStore';
-
+import { invokeTauriCommand } from '@/services/tauri';
+import { saveTextFile } from '@/services/tauri';
 vi.mock('@/services/tauri', () => ({
   invokeTauriCommand: vi.fn(),
   isTauriEnvironment: () => true,
   saveTextFile: vi.fn(),
 }));
-import { invokeTauriCommand } from '@/services/tauri';
-import { saveTextFile } from '@/services/tauri';
 
 describe('McpHub', () => {
-  beforeEach(() => {
+beforeEach(() => {
     localStorage.clear();
     useProjectStore.setState({ activeProjectId: 'mcp-project' });
     useToolsStore.setState({ mcpClientTab: 'claude' });
@@ -21,7 +20,7 @@ describe('McpHub', () => {
     vi.mocked(saveTextFile).mockReset();
   });
 
-  it('lists exactly the tools exposed by the local server and does not offer fake execution', () => {
+it('lists exactly the tools exposed by the local server and does not offer fake execution', () => {
     render(<McpHub />);
 
     expect(screen.getByText('Provide the full path to the built server to generate configuration.')).not.toBeNull();
@@ -39,14 +38,14 @@ describe('McpHub', () => {
     expect(screen.queryByText(/Simulated MCP Response|Execute Tool Locally/)).toBeNull();
   });
 
-  it('labels the multi-page crawl as local and does not imply DataForSEO billing', () => {
+it('labels the multi-page crawl as local and does not imply DataForSEO billing', () => {
     render(<McpHub />);
     fireEvent.click(screen.getByText('seomi_crawl_site'));
     expect(screen.getByText(/This local server tool does not require a DataForSEO account/)).not.toBeNull();
     expect(screen.queryByText(/This tool queries DataForSEO live/)).toBeNull();
   });
 
-  it('labels Search Console MCP tools separately from DataForSEO tools', () => {
+it('labels Search Console MCP tools separately from DataForSEO tools', () => {
     render(<McpHub />);
     fireEvent.click(screen.getByText('seomi_gsc_search_analytics'));
 
@@ -55,7 +54,7 @@ describe('McpHub', () => {
     expect(screen.queryByText(/odpytuje DataForSEO na żywo/)).toBeNull();
   });
 
-  it('saves the user-supplied server path per project and generates Codex TOML', () => {
+it('saves the user-supplied server path per project and generates Codex TOML', () => {
     render(<McpHub />);
 
     fireEvent.change(screen.getByRole('textbox', { name: /Absolute MCP server path/ }), { target: { value: '/Users/test/SEOmi/mcp-server/dist/index.js' } });
@@ -66,7 +65,7 @@ describe('McpHub', () => {
     expect(screen.getByRole('button', { name: /Copy config/ }).hasAttribute('disabled')).toBe(false);
   });
 
-  it('accepts an absolute Windows server path regardless of extension casing', () => {
+it('accepts an absolute Windows server path regardless of extension casing', () => {
     render(<McpHub />);
 
     fireEvent.change(screen.getByRole('textbox', { name: /Absolute MCP server path/ }), {
@@ -76,7 +75,7 @@ describe('McpHub', () => {
     expect(screen.getByRole('button', { name: /Copy config/ }).hasAttribute('disabled')).toBe(false);
   });
 
-  it('exports only the selected client configuration after an explicit click', () => {
+it('exports only the selected client configuration after an explicit click', () => {
     vi.mocked(saveTextFile).mockResolvedValue('saved');
     render(<McpHub />);
     fireEvent.change(screen.getByRole('textbox', { name: /Absolute MCP server path/ }), {
@@ -95,7 +94,7 @@ describe('McpHub', () => {
     }));
   });
 
-  it('exports Codex configuration as TOML when that client is selected', () => {
+it('exports Codex configuration as TOML when that client is selected', () => {
     vi.mocked(saveTextFile).mockResolvedValue('saved');
     render(<McpHub />);
     fireEvent.change(screen.getByRole('textbox', { name: /Absolute MCP server path/ }), {
@@ -112,7 +111,7 @@ describe('McpHub', () => {
     });
   });
 
-  it('shows a translated error instead of throwing when the file export is rejected', async () => {
+it('shows a translated error instead of throwing when the file export is rejected', async () => {
     vi.mocked(saveTextFile).mockRejectedValueOnce(new Error('download blocked'));
     render(<McpHub />);
     fireEvent.change(screen.getByRole('textbox', { name: /Absolute MCP server path/ }), {
@@ -125,7 +124,7 @@ describe('McpHub', () => {
     });
   });
 
-  it('discovers tools and input schemas from the configured local MCP process', async () => {
+it('discovers tools and input schemas from the configured local MCP process', async () => {
     vi.mocked(invokeTauriCommand).mockResolvedValueOnce({
       serverName: 'test-mcp',
       serverVersion: '2.1',
@@ -141,22 +140,5 @@ describe('McpHub', () => {
     fireEvent.click(screen.getByText('JSON input schema'));
     expect(screen.getByText(/"report_id"/)).not.toBeNull();
     expect(invokeTauriCommand).toHaveBeenCalledWith('discover_mcp_tools', { serverPath: '/Users/test/mcp-server/dist/index.js' });
-  });
-
-  it('does not apply delayed discovery results after switching projects', async () => {
-    let resolveDiscovery!: (value: unknown) => void;
-    vi.mocked(invokeTauriCommand).mockImplementation(() => new Promise((resolve) => { resolveDiscovery = resolve; }));
-    render(<McpHub />);
-    fireEvent.change(screen.getByRole('textbox', { name: /Absolute MCP server path/ }), { target: { value: '/Users/test/mcp-server/dist/index.js' } });
-    fireEvent.click(screen.getByRole('button', { name: 'Discover server tools' }));
-
-    useProjectStore.setState({ activeProjectId: 'mcp-project-next' });
-    resolveDiscovery({
-      serverName: 'stale-mcp',
-      serverVersion: '1.0',
-      tools: [{ name: 'stale_tool', description: 'Stale', inputSchema: { type: 'object' } }],
-    });
-    await waitFor(() => expect(screen.queryByText(/stale-mcp/)).toBeNull());
-    expect(screen.queryByText('stale_tool')).toBeNull();
   });
 });

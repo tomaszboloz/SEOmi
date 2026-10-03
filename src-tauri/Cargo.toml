@@ -5,6 +5,7 @@ description = "Lightning-fast Native Desktop SEO & Open Graph Auditor"
 authors = ["Tomasz Bołoz"]
 edition = "2021"
 rust-version = "1.77.2"
+autoexamples = false
 
 [lib]
 name = "seomi_lib"
@@ -13,8 +14,32 @@ crate-type = ["staticlib", "cdylib", "rlib"]
 [build-dependencies]
 tauri-build = { version = "2", features = [] }
 
+[features]
+custom-protocol = ["tauri/custom-protocol"]
+
+[[example]]
+name = "desktop_e2e"
+required-features = ["custom-protocol"]
+
+[[example]]
+name = "function_inventory"
+test = true
+
+[[example]]
+name = "verify_update_signatures"
+test = true
+
+[[example]]
+name = "coverage_sources"
+test = true
+
+[dev-dependencies]
+syn = { version = "2", features = ["full"] }
+proc-macro2 = { version = "1", features = ["span-locations"] }
+minisign-verify = "0.2.5"
+
 [dependencies]
-tauri = { version = "2", features = ["macos-proxy"] }
+tauri = { version = "2", features = ["macos-proxy", "tracing"] }
 tauri-plugin-dialog = { version = "2.7.0", default-features = false }
 tauri-plugin-updater = "2"
 tauri-plugin-process = "2"
@@ -35,9 +60,12 @@ sha2 = "0.10"
 uuid = { version = "1.11", features = ["v4", "serde"] }
 log = "0.4"
 env_logger = "0.11"
+tracing = "0.1"
+tracing-subscriber = { version = "0.3", default-features = false, features = ["registry"] }
 mime = "0.3"
 encoding_rs = "0.8"
 keyring = { version = "3.6", features = ["apple-native", "windows-native"] }
+fs2 = "0.4.3"
 
 [target.'cfg(windows)'.dependencies]
 windows-sys = { version = "0.61", features = ["Win32_Storage_FileSystem"] }

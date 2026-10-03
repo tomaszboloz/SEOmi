@@ -116,7 +116,7 @@
       "canonicalMissingDetail": "Nie znaleziono deklaracji rel=\"canonical\".",
       "canonicalTarget": "Cel canonical zwraca błąd HTTP",
       "canonicalTargetDetail": "Sprawdzony cel zwrócił HTTP {{status}}.",
-    "canonicalUnverified": "Nie zweryfikowano celu canonical",
+      "canonicalUnverified": "Nie zweryfikowano celu canonical",
       "viewportMissing": "Brak viewport",
       "viewportMissingDetail": "Nie znaleziono meta name=\"viewport\".",
       "indexingBlocked": "Indeksowanie jest zablokowane",
@@ -193,7 +193,8 @@
       "differentProperties": "Snapshoty dotyczą różnych Search Console properties.",
       "differentFilters": "Snapshoty używają różnych filtrów Search Console; wybierz snapshot z tym samym zakresem.",
       "samePeriod": "Wybierz dwa różne okresy.",
-      "overlapping": "Okresy nachodzą na siebie albo nie są uporządkowane; wybierz rozłączne zakresy."
+      "overlapping": "Okresy nachodzą na siebie albo nie są uporządkowane; wybierz rozłączne zakresy.",
+      "differentDurations": "Wybierz okresy o tej samej liczbie dni, aby porównać ruch."
     },
     "reportTemplates": {
       "builtInName": "Site health · pełny raport",
@@ -211,6 +212,7 @@
       "articleHeadlineOmitted": "Węzeł artykułu pominięty: brak tytułu crawlowanej strony dla headline."
     },
     "backup": {
+      "tooLarge": "Plik kopii zapasowej przekracza limit rozmiaru importu.",
       "missingProject": "Plik backupu nie zawiera obiektu projektu.",
       "format": "Nieobsługiwany format backupu projektu.",
       "secrets": "Backup zawiera nieprawidłową politykę sekretów.",
@@ -477,7 +479,8 @@
       "missingSignal": "Nieobserwowane teraz: {{value}}",
       "sharedTerms": "Wspólne terminy: {{value}}",
       "weightedJaccard": "Ważony Jaccard: {{value}}",
-      "missing": "brak"
+      "missing": "brak",
+      "queryChangedTitle": "Zmieniły się zaobserwowane tokeny zapytania: {{query}}"
     },
     "contentBrief": {
       "draftTitle": "Szkic treści",
@@ -535,6 +538,7 @@
     "settings": {
       "projectDataforseo": "Wybierz projekt przed konfiguracją DataForSEO.",
       "projectGoogle": "Wybierz projekt przed konfiguracją API wydajności Google.",
+      "configLoadFailed": "Nie udało się wczytać zapisanych ustawień. Zachowano bieżące ustawienia. Przywróć poprawny plik konfiguracji i spróbuj ponownie.",
       "configSaveFailed": "Nie udało się zapisać konfiguracji w backendzie."
     },
     "export": {
@@ -552,7 +556,7 @@
       "none": "brak",
       "available": "dostępne",
       "unavailable": "niedostępne",
-    "canonicalUnverified": "canonical niezweryfikowany",
+      "canonicalUnverified": "canonical niezweryfikowany",
       "notReciprocal": "niewzajemny",
       "reciprocityUnverified": "wzajemność niezweryfikowana",
       "checked": "sprawdzono",
@@ -581,7 +585,10 @@
       "cliMissing": "Nie znaleziono lokalnego CLI w PATH.",
       "credentialSaved": "Dane dostępu zapisano w pęku kluczy systemu. Wykonaj test, aby potwierdzić dostęp.",
       "checkingConnection": "Sprawdzanie połączenia…",
-      "localClientRequired": "{{provider}} nie jest skonfigurowany do użycia lokalnej subskrypcji CLI."
+      "localClientRequired": "{{provider}} nie jest skonfigurowany do użycia lokalnej subskrypcji CLI.",
+      "responseHidden": "Treść odpowiedzi dostawcy została ukryta.",
+      "invalidResponse": "Dostawca AI zwrócił niepoprawną odpowiedź.",
+      "responseTooLarge": "Odpowiedź dostawcy AI przekracza limit 1 MiB."
     },
     "pagespeed": {
       "projectRequired": "Wybierz projekt przed uruchomieniem pomiaru."
@@ -1614,7 +1621,8 @@
       "start": "adres startowy",
       "seed": "lista startowa",
       "sitemap": "sitemap",
-      "link": "link wewnętrzny"
+      "link": "link wewnętrzny",
+      "resume": "Zapisana kolejka crawla"
     },
     "bottomNavigationAria": "Szybka nawigacja mapy semantycznej",
     "bottomViewsAria": "Widoki mapy na dole",
@@ -3460,7 +3468,14 @@
     "noPageRows": "API nie zwróciło wierszy stron dla tego zakresu dat.",
     "snapshotSaved": "Zapisano snapshot {{start}} — {{end}}.",
     "snapshotSaveError": "Nie udało się zapisać snapshotu.",
-    "fullScope": "pełny zakres"
+    "fullScope": "pełny zakres",
+    "unmatchedDescription": "Wiersze zaobserwowane tylko w jednym okresie nie są porównywane. Brak w pobranych danych nie oznacza zerowego ruchu ani potwierdzonej utraty.",
+    "unmatched": {
+      "baselineQueries": "Frazy widoczne tylko w okresie bazowym: {{count}}",
+      "currentQueries": "Frazy widoczne tylko w bieżącym okresie: {{count}}",
+      "baselinePages": "Adresy URL widoczne tylko w okresie bazowym: {{count}}",
+      "currentPages": "Adresy URL widoczne tylko w bieżącym okresie: {{count}}"
+    }
   },
   "settings": {
     "close": "Zamknij ustawienia",
@@ -3536,7 +3551,7 @@
       "technicalDirectives": "Dyrektywy techniczne i robots",
       "canonical": "Adres canonical",
       "notSpecified": "Nie określono",
-    "canonicalUnverified": "Cel niezweryfikowany",
+      "canonicalUnverified": "Cel niezweryfikowany",
       "robots": "Dyrektywa robots",
       "robotsDefault": "index, follow (domyślnie)",
       "viewport": "Viewport (urządzenia mobilne)",
@@ -3549,7 +3564,18 @@
       "author": "Autor",
       "technologies": "Wykryte technologie",
       "documentHttpSignals": "wyłącznie sygnały dokumentu lub odpowiedzi HTTP",
-      "technologyCategories": {"cmsPlatform": "Platforma CMS", "cmsGenerator": "CMS / generator", "cms": "CMS", "commercePlatform": "Platforma e-commerce", "javascriptFramework": "Framework JavaScript", "tagManager": "Menedżer tagów", "analyticsTag": "Analityka / tag", "javascriptLibrary": "Biblioteka JavaScript", "cssFramework": "Framework CSS / UI", "analytics": "Analityka"},
+      "technologyCategories": {
+        "cmsPlatform": "Platforma CMS",
+        "cmsGenerator": "CMS / generator",
+        "cms": "CMS",
+        "commercePlatform": "Platforma e-commerce",
+        "javascriptFramework": "Framework JavaScript",
+        "tagManager": "Menedżer tagów",
+        "analyticsTag": "Analityka / tag",
+        "javascriptLibrary": "Biblioteka JavaScript",
+        "cssFramework": "Framework CSS / UI",
+        "analytics": "Analityka"
+      },
       "confirmed": "potwierdzony",
       "heuristic": "heurystyczny",
       "favicons": "Zadeklarowane favicony",
@@ -4301,6 +4327,7 @@
     }
   },
   "exportUi": {
+    "invalidPdf": "Generator zwrócił nieprawidłowe dane PDF. Spróbuj ponownie.",
     "labels": {
       "field": "Field",
       "value": "Value",
@@ -4613,7 +4640,7 @@
       "bytes": "{{value}} B",
       "internal": "wewnętrzny",
       "external": "zewnętrzny",
-    "canonicalUnverified": "canonical niezweryfikowany"
+      "canonicalUnverified": "canonical niezweryfikowany"
     }
   },
   "uiUnits": {
@@ -4652,5 +4679,25 @@
     "run": "Próba {{count}}",
     "legacyRecognition": "Historyczne rozpoznanie marki",
     "legacyNote": "To zapisane pytanie zawierało nazwę marki. Nie jest pomiarem spontanicznej widoczności."
+  },
+  "gscOpportunities": {
+    "title": "Szanse w GSC",
+    "near": "Frazy tuż za TOP10 (10–20)",
+    "ctr": "CTR poniżej obserwowanych fraz",
+    "empty": "Brak wierszy spełniających progi dowodowe.",
+    "benchmark": "CTR {{actual}}% · inne frazy {{expected}}% ({{count}} fraz)",
+    "method": "Średnia pozycja dotyczy okresu. CTR porównujemy z innymi frazami w zakresie ±1 pozycji, przy minimum 3 frazach i 300 wyświetleniach. Sygnały wymagają oceny; marka, intencja i elementy SERP mogą się różnić.",
+    "aiOverview": "Google uwzględnia AI Overviews i AI Mode w łącznym ruchu Web. Ten raport nie pozwala wydzielić ich metryk.",
+    "source": "Dokumentacja Google"
+  },
+  "gscCannibalization": {
+    "title": "Możliwa kanibalizacja fraz",
+    "method": "Co najmniej dwa adresy z 20 wyświetleniami i 10% obserwowanych wyświetleń frazy. To sygnał do weryfikacji, nie potwierdzona kanibalizacja.",
+    "unavailable": "Raport nie zawiera obserwowanych par fraza–URL. Odśwież dane Search Console.",
+    "invalid": "Niepoprawne wspólne obserwacje; odśwież raport.",
+    "empty": "Żadna fraza nie ma dwóch adresów spełniających progi dowodów.",
+    "limited": "Obserwacje mogą być obcięte przez Google lub zapis lokalny. Udziały dotyczą tylko obserwowanych wierszy.",
+    "previous": "Poprzednia",
+    "next": "Następna"
   }
 }

@@ -33,4 +33,16 @@ describe('RouteErrorBoundary', () => {
     fireEvent.click(screen.getByRole('button', { name: 'Overview' }));
     expect(onBack).toHaveBeenCalledTimes(1);
   });
+  it('recovers the current workflow after its failure is resolved and the user retries', () => {
+    vi.spyOn(console,'error').mockImplementation(()=>undefined);
+    let failed=true;
+    const Recoverable=()=>{if(failed)throw new Error('temporary failure');return <p>Recovered route</p>;};
+    render(<RouteErrorBoundary title="Route failed" description="Try again" retryLabel="Retry" backLabel="Overview" onBack={()=>undefined}><Recoverable/></RouteErrorBoundary>);
+    expect(screen.getByRole('alert')).toBeTruthy();
+    failed=false;
+    fireEvent.click(screen.getByRole('button',{name:'Retry'}));
+    expect(screen.queryByRole('alert')).toBeNull();
+    expect(screen.getByText('Recovered route')).toBeTruthy();
+  });
+
 });

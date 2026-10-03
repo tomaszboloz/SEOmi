@@ -1,6 +1,6 @@
 use std::net::IpAddr;
 use thiserror::Error;
-use url::Url;
+use url::{Host, Url};
 
 #[derive(Error, Debug, PartialEq, Eq)]
 pub enum UrlValidationError {
@@ -62,7 +62,12 @@ pub fn validate_and_normalize_url(input: &str) -> Result<Url, UrlValidationError
     }
 
     // Check if host is an IP address
-    if let Ok(ip) = host_lower.parse::<IpAddr>() {
+    let literal_ip = match parsed.host() {
+        Some(Host::Ipv4(ip)) => Some(IpAddr::V4(ip)),
+        Some(Host::Ipv6(ip)) => Some(IpAddr::V6(ip)),
+        _ => None,
+    };
+    if let Some(ip) = literal_ip {
         if is_private_or_loopback(&ip) {
             return Err(UrlValidationError::BlockedPrivateIp);
         }
@@ -117,108 +122,5 @@ fn is_private_or_loopback(ip: &IpAddr) -> bool {
 }
 
 #[cfg(test)]
-mod tests {
-    use super::*;
-
-    #[test]
-    fn test_valid_https_url() {
-        let res = validate_and_normalize_url("https://example.com/blog?q=test");
-        assert!(res.is_ok());
-        let url = res.unwrap();
-        assert_eq!(url.scheme(), "https");
-        assert_eq!(url.host_str(), Some("example.com"));
-        assert_eq!(url.path(), "/blog");
-    }
-
-    #[test]
-    fn test_missing_scheme_defaults_to_https() {
-        let res = validate_and_normalize_url("github.com/rust-lang");
-        assert!(res.is_ok());
-        let url = res.unwrap();
-        assert_eq!(url.scheme(), "https");
-        assert_eq!(url.host_str(), Some("github.com"));
-        assert_eq!(url.path(), "/rust-lang");
-    }
-
-    #[test]
-    fn test_unsupported_scheme_rejected() {
-        let res = validate_and_normalize_url("ftp://files.example.com");
-        assert_eq!(
-            res,
-            Err(UrlValidationError::UnsupportedScheme("ftp".to_string()))
-        );
-
-        let file_res = validate_and_normalize_url("file:///etc/passwd");
-        assert!(file_res.is_err());
-    }
-
-    #[test]
-    fn test_empty_url_rejected() {
-        let res = validate_and_normalize_url("   ");
-        assert_eq!(res, Err(UrlValidationError::EmptyUrl));
-    }
-
-    #[test]
-    fn test_localhost_blocked() {
-        let res = validate_and_normalize_url("http://localhost:8080/admin");
-        assert_eq!(res, Err(UrlValidationError::BlockedLocalhost));
-
-        let sub_res = validate_and_normalize_url("http://app.localhost");
-        assert_eq!(sub_res, Err(UrlValidationError::BlockedLocalhost));
-    }
-
-    #[test]
-    fn test_private_ips_blocked_ssrf() {
-        // 127.0.0.1 (Loopback)
-        let loopback = validate_and_normalize_url("http://127.0.0.1:3000");
-        assert_eq!(loopback, Err(UrlValidationError::BlockedPrivateIp));
-
-        // 192.168.1.1 (RFC 1918)
-        let rfc1918 = validate_and_normalize_url("http://192.168.1.1/setup");
-        assert_eq!(rfc1918, Err(UrlValidationError::BlockedPrivateIp));
-
-        // 10.0.0.5 (RFC 1918)
-        let ten_net = validate_and_normalize_url("https://10.0.0.5");
-        assert_eq!(ten_net, Err(UrlValidationError::BlockedPrivateIp));
-
-        // 169.254.169.254 (Cloud metadata service)
-        let metadata = validate_and_normalize_url("http://169.254.169.254/latest/meta-data");
-        assert_eq!(metadata, Err(UrlValidationError::BlockedPrivateIp));
-    }
-
-    #[test]
-    fn embedded_credentials_are_rejected_before_network_access() {
-        assert_eq!(
-            validate_and_normalize_url("https://user:secret@example.com"),
-            Err(UrlValidationError::CredentialsNotAllowed)
-        );
-    }
-
-    #[test]
-    fn test_public_ip_policy_rejects_special_ranges() {
-        for address in [
-            "100.64.0.1",
-            "192.0.0.8",
-            "192.88.99.1",
-            "198.18.0.1",
-            "224.0.0.1",
-            "2001:db8::1",
-            "2001::1",
-            "2002::1",
-            "fc00::1",
-            "fe80::1",
-            "::ffff:127.0.0.1",
-            "240.0.0.1",
-        ] {
-            let ip = address.parse().unwrap();
-            assert!(
-                !is_public_ip(&ip),
-                "{address} must not be treated as public"
-            );
-        }
-        for address in ["1.1.1.1", "2606:4700:4700::1111"] {
-            let ip = address.parse().unwrap();
-            assert!(is_public_ip(&ip), "{address} should be treated as public");
-        }
-    }
-}
+#[path = "url_validator_tests.rs"]
+mod tests;

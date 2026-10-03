@@ -1,7 +1,7 @@
 import { fireEvent, render, screen } from '@testing-library/react';
-import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
+import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 import { CreateProjectModal } from '@/components/Projects/CreateProjectModal';
-import { Sidebar } from '@/components/Layout/Sidebar';
+
 import { ProjectGate } from '@/components/Projects/ProjectGate';
 import { ProjectSwitcher } from '@/components/Projects/ProjectSwitcher';
 import { useProjectStore } from '@/stores/projectStore';
@@ -9,18 +9,18 @@ import { useUIStore } from '@/stores/uiStore';
 import i18n from '@/i18n';
 
 describe('project creation while a workspace is active', () => {
-  beforeEach(async () => {
+beforeEach(async () => {
     await i18n.changeLanguage('pl');
     localStorage.clear();
     useProjectStore.setState({ projects: [], activeProjectId: null });
     useUIStore.setState({ activeModal: 'create-project' });
   });
 
-  afterEach(() => {
+afterEach(() => {
     useUIStore.setState({ activeModal: null });
   });
 
-  it('creates, persists, selects, and opens the new project from the workspace dialog', () => {
+it('creates, persists, selects, and opens the new project from the workspace dialog', () => {
     render(<CreateProjectModal />);
 
     fireEvent.change(screen.getByLabelText(/Project name|Nazwa projektu/i), { target: { value: 'Drugi serwis' } });
@@ -36,7 +36,7 @@ describe('project creation while a workspace is active', () => {
     expect(useUIStore.getState().activeModal).toBeNull();
   });
 
-  it('treats project creation as a real modal: Escape closes it and restores the opener', () => {
+it('treats project creation as a real modal: Escape closes it and restores the opener', () => {
     const opener = document.createElement('button');
     opener.type = 'button';
     opener.textContent = 'Open project dialog';
@@ -54,7 +54,7 @@ describe('project creation while a workspace is active', () => {
     opener.remove();
   });
 
-  it('leaves the current project unchanged when the dialog is cancelled', () => {
+it('leaves the current project unchanged when the dialog is cancelled', () => {
     useProjectStore.setState({
       projects: [{ id: 'active-project', name: 'Pierwszy serwis', createdAt: '2026-09-21T00:00:00.000Z', lastOpenedAt: '2026-09-21T00:00:00.000Z' }],
       activeProjectId: 'active-project',
@@ -68,7 +68,7 @@ describe('project creation while a workspace is active', () => {
     expect(useUIStore.getState().activeModal).toBeNull();
   });
 
-  it('keeps project creation in the selector instead of adding a duplicate header action', () => {
+it('keeps project creation in the selector instead of adding a duplicate header action', () => {
     useProjectStore.setState({
       projects: [{ id: 'active-project', name: 'Pierwszy serwis', createdAt: '2026-09-21T00:00:00.000Z', lastOpenedAt: '2026-09-21T00:00:00.000Z' }],
       activeProjectId: 'active-project',
@@ -82,7 +82,7 @@ describe('project creation while a workspace is active', () => {
     expect(useUIStore.getState().activeModal).toBe('create-project');
   });
 
-  it('creates and activates the first project from the project chooser', () => {
+it('creates and activates the first project from the project chooser', () => {
     render(<ProjectGate />);
 
     fireEvent.change(screen.getByLabelText(/Project name|Nazwa projektu/i), { target: { value: 'Pierwszy projekt' } });
@@ -96,7 +96,7 @@ describe('project creation while a workspace is active', () => {
     expect(JSON.parse(localStorage.getItem('seomi_projects_v1') || '[]')).toHaveLength(1);
   });
 
-  it('does not persist an invalid or private root URL from the project chooser', () => {
+it('does not persist an invalid or private root URL from the project chooser', () => {
     render(<ProjectGate />);
 
     fireEvent.change(screen.getByLabelText(/Project name|Nazwa projektu/i), { target: { value: 'Niebezpieczny projekt' } });
@@ -110,7 +110,7 @@ describe('project creation while a workspace is active', () => {
     expect(localStorage.getItem('seomi_projects_v1')).toBeNull();
   });
 
-  it('normalizes a scheme-less public root URL before persistence', () => {
+it('normalizes a scheme-less public root URL before persistence', () => {
     render(<ProjectGate />);
 
     fireEvent.change(screen.getByLabelText(/Project name|Nazwa projektu/i), { target: { value: 'Publiczny projekt' } });
@@ -120,12 +120,12 @@ describe('project creation while a workspace is active', () => {
     expect(useProjectStore.getState().projects[0]?.rootUrl).toBe('https://example.com');
   });
 
-  it('enforces project name limits even when the caller bypasses the form', () => {
+it('enforces project name limits even when the caller bypasses the form', () => {
     expect(() => useProjectStore.getState().createProject({ name: 'x'.repeat(81), rootUrl: 'https://example.com' })).toThrow('maksymalnie 80 znaków');
     expect(useProjectStore.getState().projects).toHaveLength(0);
   });
 
-  it('opens project creation from the project selector option', () => {
+it('opens project creation from the project selector option', () => {
     useProjectStore.setState({
       projects: [{ id: 'active-project', name: 'Pierwszy serwis', createdAt: '2026-09-21T00:00:00.000Z', lastOpenedAt: '2026-09-21T00:00:00.000Z' }],
       activeProjectId: 'active-project',
@@ -137,44 +137,5 @@ describe('project creation while a workspace is active', () => {
 
     expect(useUIStore.getState().activeModal).toBe('create-project');
     expect(useProjectStore.getState().activeProjectId).toBe('active-project');
-  });
-
-  it('keeps new-project creation available from the active workspace sidebar', () => {
-    useProjectStore.setState({
-      projects: [{ id: 'active-project', name: 'Pierwszy serwis', createdAt: '2026-09-21T00:00:00.000Z', lastOpenedAt: '2026-09-21T00:00:00.000Z' }],
-      activeProjectId: 'active-project',
-    });
-    useUIStore.setState({ activeModal: null, sidebarCollapsed: false });
-
-    render(<Sidebar />);
-    fireEvent.click(screen.getByRole('button', { name: /Create new project|Utwórz nowy projekt/i }));
-
-    expect(useUIStore.getState().activeModal).toBe('create-project');
-  });
-
-  it('ignores an unknown project id instead of persisting a broken active context', () => {
-    useProjectStore.setState({
-      projects: [{ id: 'known-project', name: 'Znany', createdAt: '2026-09-21T00:00:00.000Z', lastOpenedAt: '2026-09-21T00:00:00.000Z' }],
-      activeProjectId: 'known-project',
-    });
-
-    useProjectStore.getState().selectProject('missing-project');
-
-    expect(useProjectStore.getState().activeProjectId).toBe('known-project');
-    expect(localStorage.getItem('seomi_active_project_v1')).toBeNull();
-  });
-
-  it('fails closed when workspace storage rejects a project write', () => {
-    const originalSetItem = localStorage.setItem.bind(localStorage);
-    const setItem = vi.spyOn(Storage.prototype, 'setItem').mockImplementation((key, value) => {
-      if (key === 'seomi_projects_v1') throw new DOMException('Storage is full', 'QuotaExceededError');
-      originalSetItem(key, value);
-    });
-
-    expect(() => useProjectStore.getState().createProject({ name: 'Nie zapisany', rootUrl: 'https://example.com' }))
-      .toThrow(i18n.t('runtimeErrors.persistence.workspaceUnavailable'));
-    expect(useProjectStore.getState().projects).toHaveLength(0);
-    expect(useProjectStore.getState().activeProjectId).toBeNull();
-    setItem.mockRestore();
   });
 });

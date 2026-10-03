@@ -30,14 +30,14 @@ const frontendCommands = (): Set<string> => {
 };
 
 const fallbackDesktopCommands = (): Set<string> => {
-  const source = readFileSync(resolve(sourceRoot, 'services/tauri.ts'), 'utf8');
+  const source = readFileSync(resolve(sourceRoot, 'services/tauri/browserFallback.ts'), 'utf8');
   const block = source.match(/const desktopOnlyCommands = new Set\(\[([\s\S]*?)\]\)/)?.[1] ?? '';
   return new Set([...block.matchAll(/['"]([^'"]+)['"]/g)].map((match) => match[1]));
 };
 
 const registeredCommands = (): Set<string> => {
   const source = readFileSync(rustEntryPoint, 'utf8');
-  const handler = source.match(/generate_handler!\[([\s\S]*?)\]\)/)?.[1] ?? '';
+  const handler = source.match(/generate_handler!\[([\s\S]*?)\]/)?.[1] ?? '';
   return new Set([...handler.matchAll(/::([A-Za-z_][A-Za-z0-9_]*)\s*,/g)].map((match) => match[1]));
 };
 
@@ -50,6 +50,7 @@ describe('Tauri IPC command contract', () => {
 
   it('registers every desktop-only browser-fallback command in the native invoke handler', () => {
     const registered = registeredCommands();
+    expect(fallbackDesktopCommands().size).toBeGreaterThan(30);
     const missing = [...fallbackDesktopCommands()].filter((command) => !registered.has(command)).sort();
     expect(missing).toEqual([]);
   });

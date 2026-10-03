@@ -1,4 +1,5 @@
 import { describe, expect, it, vi } from 'vitest';
+import i18n from "@/i18n";
 import { AIService, extractJsonObject, parseAiSuggestionResponse } from '@/services/ai';
 
 const cliInvoke = vi.hoisted(() => vi.fn());
@@ -42,10 +43,7 @@ describe('AI suggestion response parsing', () => {
   });
 
   it('encodes a persisted Gemini model before placing it in the request path', async () => {
-    const fetchMock = vi.spyOn(globalThis, 'fetch').mockResolvedValue({
-      ok: true,
-      json: async () => ({ candidates: [{ content: { parts: [{ text: 'safe response' }] } }] }),
-    } as Response);
+    const fetchMock = vi.spyOn(globalThis, 'fetch').mockResolvedValue(new Response(JSON.stringify({ candidates: [{ content: { parts: [{ text: 'safe response' }] } }] })));
 
     await expect(AIService.generateText('gemini', 'test-key', 'model/name?variant=1', 'prompt')).resolves.toBe('safe response');
     expect(String(fetchMock.mock.calls[0]?.[0])).toContain('models/model%2Fname%3Fvariant%3D1:generateContent');
@@ -75,4 +73,19 @@ describe('local CLI connection authentication contract', () => {
     cliInvoke.mockResolvedValue(undefined);
     expect((await AIService.testCliConnection('gemini')).success).toBe(false);
   });
+});
+
+
+it.each(['null','42','[]','"plain text"'])('rejects JSON without a suggestion object: %s', value => {
+  expect(()=>parseAiSuggestionResponse(value)).toThrow(i18n.t('runtimeErrors.ai.invalidSuggestion'));
+});
+
+it('does not accept non-string improvements or array-shaped Schema data', () => {
+  expect(()=>parseAiSuggestionResponse(JSON.stringify({...valid,keyImprovements:[{}]}))).toThrow('missing the required suggestion fields');
+  expect(parseAiSuggestionResponse(JSON.stringify({...valid,schemaJsonLd:[]}))).toEqual({suggestedTitle:valid.suggestedTitle,suggestedDescription:valid.suggestedDescription,keyImprovements:valid.keyImprovements});
+});
+
+it('skips an invalid complete object and retains the next valid escaped JSON object', () => {
+  const answer={...valid,suggestedTitle:'Title with "quotes" and \\ path'};
+  expect(parseAiSuggestionResponse('{invalid} followed by '+JSON.stringify(answer))).toEqual(answer);
 });

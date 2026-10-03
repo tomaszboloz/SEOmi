@@ -1,0 +1,2 @@
+# A signature authenticates bytes, including line endings. Never autocrlf this fixture.
+src-tauri/examples/fixtures/updater-signed.txt -text

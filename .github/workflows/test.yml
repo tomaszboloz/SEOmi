@@ -9,10 +9,18 @@ on:
 jobs:
   test-rust:
     name: Rust Backend Unit & Security Tests
-    runs-on: macos-latest
+    runs-on: macos-15-intel
     steps:
       - uses: actions/checkout@v4
       - uses: dtolnay/rust-toolchain@stable
+        with:
+          components: clippy, llvm-tools-preview
+      - uses: taiki-e/install-action@v2
+        with:
+          tool: cargo-llvm-cov@0.9.1
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
       - name: Cache Cargo dependencies
         uses: actions/cache@v4
         with:
@@ -22,11 +30,36 @@ jobs:
             ~/.cargo/registry/cache/
             ~/.cargo/git/db/
             src-tauri/target/
-          key: ${{ runner.os }}-cargo-${{ hashFiles('**/Cargo.lock') }}
+          key: ${{ runner.os }}-${{ runner.arch }}-cargo-${{ hashFiles('**/Cargo.lock') }}
       - name: Check Rust formatting
         run: cargo fmt --manifest-path src-tauri/Cargo.toml --check
-      - name: Run Cargo Test
-        run: cargo test --manifest-path src-tauri/Cargo.toml
+      - name: Strict Clippy
+        run: cargo clippy --manifest-path src-tauri/Cargo.toml --all-targets -- -D warnings
+      - name: Run Cargo Test with coverage
+        run: |
+          cargo run --quiet --manifest-path src-tauri/Cargo.toml --example coverage_sources > native-coverage-sources.json
+          cargo llvm-cov --manifest-path src-tauri/Cargo.toml --lcov --output-path coverage-rust.lcov
+          cargo llvm-cov report --manifest-path src-tauri/Cargo.toml --json --output-path coverage-rust.json
+          node scripts/native-production-coverage.mjs coverage-rust.lcov native-coverage-sources.json coverage-rust-production.lcov coverage-rust.json
+      - name: Upload native coverage
+        uses: actions/upload-artifact@v4
+        with:
+          name: native-coverage
+          path: |
+            coverage-rust.lcov
+            coverage-rust.json
+            coverage-rust-production.lcov
+            coverage-rust-production.lcov.summary.json
+            native-coverage-sources.json
+          retention-days: 14
+      - name: Inventory declared native functions using Rust AST
+        run: cargo run --quiet --manifest-path src-tauri/Cargo.toml --example function_inventory > native-function-inventory.json
+      - name: Upload native function inventory
+        uses: actions/upload-artifact@v4
+        with:
+          name: native-function-inventory
+          path: native-function-inventory.json
+          retention-days: 14
 
   test-frontend:
     name: Frontend TypeScript, i18n & Vitest
@@ -51,8 +84,27 @@ jobs:
           cache: 'npm'
       - name: Install dependencies
         run: npm ci
-      - name: Run Vitest unit tests
-        run: npm test
+      - name: Lint TypeScript and React
+        run: npm run lint
+      - name: Run Vitest with full frontend coverage
+        run: npm run test:coverage
+      - name: Install MCP coverage dependencies
+        run: npm ci --prefix mcp-server --ignore-scripts
+      - name: Measure MCP source execution through Node tests
+        run: npm run test:coverage:mcp
+      - name: Inventory TypeScript public functions and fresh execution evidence
+        run: npm run test:inventory
+      - name: Upload frontend coverage
+        uses: actions/upload-artifact@v4
+        with:
+          name: frontend-coverage
+          path: |
+            coverage/
+            test-results/frontend-coverage-sources.json
+            test-results/mcp-coverage-sources.json
+            test-results/mcp-runtime-sources.json
+            test-results/public-function-inventory.json
+          retention-days: 14
       - name: Typecheck & Production Bundle
         run: npm run build
 
@@ -61,7 +113,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        os: [macos-latest, windows-latest]
+        os: [macos-15-intel, windows-latest]
     runs-on: ${{ matrix.os }}
     steps:
       - uses: actions/checkout@v4
@@ -75,11 +127,34 @@ jobs:
       - name: Build frontend
         run: npm run build
       - name: Run frontend test suite
-        run: npm test -- --run
+        run: npm test -- --run --maxWorkers=2
       - name: Run Rust backend tests
+        id: desktop-rust-tests
         run: cargo test --manifest-path src-tauri/Cargo.toml
+      - name: Diagnose Windows test harness loader failure
+        if: failure() && runner.os == 'Windows' && steps.desktop-rust-tests.outcome == 'failure'
+        shell: pwsh
+        run: |
+          Get-ChildItem src-tauri/target/debug/deps/seomi_lib-*.exe | ForEach-Object {
+            ./scripts/diagnose-windows-loader.ps1 -Executable $_.FullName
+          }
       - name: Compile Tauri desktop application without bundling
         run: npm run tauri -- build --debug --no-bundle
+      - name: Launch actual desktop runtime E2E
+        id: desktop-runtime
+        run: npm run test:desktop
+      - name: Diagnose Windows loader failure
+        if: failure() && runner.os == 'Windows' && steps.desktop-runtime.outcome == 'failure'
+        shell: pwsh
+        run: ./scripts/diagnose-windows-loader.ps1 -Executable src-tauri/target/debug/examples/desktop_e2e.exe
+      - name: Upload desktop runtime evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: desktop-e2e-${{ matrix.os }}
+          path: test-results/desktop-e2e.json
+          if-no-files-found: warn
+          retention-days: 14
 
   dependency-security:
     name: Dependency Vulnerability Scan & SBOM

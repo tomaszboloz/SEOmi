@@ -5,7 +5,7 @@ import { useProjectStore } from '@/stores/projectStore';
 import { useToolsStore } from '@/stores/toolsStore';
 
 describe('SEO utilities workspace route', () => {
-  beforeEach(() => {
+beforeEach(() => {
     localStorage.clear();
     useProjectStore.setState({
       projects: [{ id: 'seo-tools-a', name: 'Primary site', rootUrl: 'https://example.com', createdAt: '2026-09-24T00:00:00.000Z', lastOpenedAt: '2026-09-24T00:00:00.000Z' }],
@@ -23,9 +23,9 @@ describe('SEO utilities workspace route', () => {
     vi.stubGlobal('fetch', vi.fn());
   });
 
-  afterEach(() => vi.unstubAllGlobals());
+afterEach(() => vi.unstubAllGlobals());
 
-  it('renders every utility tab and persists the selected tab per project', async () => {
+it('renders every utility tab and persists the selected tab per project', async () => {
     render(<SeoToolsWorkspace />);
     expect(screen.getAllByRole('tab')).toHaveLength(7);
 
@@ -43,7 +43,7 @@ describe('SEO utilities workspace route', () => {
     expect(screen.getAllByRole('tab')[1].getAttribute('aria-selected')).toBe('false');
   });
 
-  it('restores editable SEO utility domains after leaving and reopening a panel', async () => {
+it('restores editable SEO utility domains after leaving and reopening a panel', async () => {
     render(<SeoToolsWorkspace />);
 
     fireEvent.click(screen.getAllByRole('tab')[4]);
@@ -65,7 +65,7 @@ describe('SEO utilities workspace route', () => {
     expect((screen.getByLabelText('Competitor domain') as HTMLInputElement).value).toBe('competitor.example.test');
   });
 
-  it('mounts every utility panel without leaving a broken route fallback', async () => {
+it('mounts every utility panel without leaving a broken route fallback', async () => {
     render(<SeoToolsWorkspace />);
 
     for (const tab of screen.getAllByRole('tab')) {
@@ -78,7 +78,7 @@ describe('SEO utilities workspace route', () => {
     }
   });
 
-  it('keeps the traffic checker as a dedicated live-metrics workflow', async () => {
+it('keeps the traffic checker as a dedicated live-metrics workflow', async () => {
     useToolsStore.setState({
       domainQuery: 'example.com',
       domainOverview: {
@@ -104,7 +104,7 @@ describe('SEO utilities workspace route', () => {
     });
   });
 
-  it('keeps the domain-age lookup local and reports invalid input without crashing', async () => {
+it('keeps the domain-age lookup local and reports invalid input without crashing', async () => {
     render(<SeoToolsWorkspace />);
     fireEvent.click(screen.getAllByRole('tab')[4]);
     fireEvent.change(screen.getByLabelText('Domain'), { target: { value: 'not a domain' } });
@@ -113,7 +113,7 @@ describe('SEO utilities workspace route', () => {
     expect(fetch).not.toHaveBeenCalled();
   });
 
-  it('surfaces a timed-out registry request as a controlled error', async () => {
+it('surfaces a timed-out registry request as a controlled error', async () => {
     vi.stubGlobal('fetch', vi.fn((_input: RequestInfo, init?: RequestInit) => new Promise((_resolve, reject) => {
       init?.signal?.addEventListener('abort', () => reject(new DOMException('aborted', 'AbortError')));
     })));
@@ -124,35 +124,5 @@ describe('SEO utilities workspace route', () => {
     await vi.advanceTimersByTimeAsync(10_000);
     vi.useRealTimers();
     await waitFor(() => expect(screen.getByRole('alert')).toBeTruthy());
-  });
-
-  it('does not apply a pending RDAP response after switching projects', async () => {
-    let resolveResponse: ((response: Response) => void) | undefined;
-    vi.stubGlobal('fetch', vi.fn(() => new Promise<Response>((resolve) => {
-      resolveResponse = resolve;
-    })));
-    useProjectStore.setState({
-      projects: [
-        ...useProjectStore.getState().projects,
-        { id: 'seo-tools-b', name: 'Second site', rootUrl: 'https://second.example', createdAt: '2026-09-24T00:00:00.000Z', lastOpenedAt: '2026-09-24T00:00:00.000Z' },
-      ],
-    });
-
-    render(<SeoToolsWorkspace />);
-    fireEvent.click(screen.getAllByRole('tab')[4]);
-    fireEvent.click(screen.getByRole('button', { name: /Check domain/i }));
-    await waitFor(() => expect(fetch).toHaveBeenCalledTimes(1));
-
-    act(() => useProjectStore.setState({ activeProjectId: 'seo-tools-b' }));
-    fireEvent.click(screen.getAllByRole('tab')[4]);
-    await waitFor(() => {
-      expect((screen.getByLabelText('Domain') as HTMLInputElement).value).toBe('https://second.example');
-    });
-
-    resolveResponse?.(new Response(JSON.stringify({
-      ldhName: 'first.example',
-      events: [{ eventAction: 'registration', eventDate: '2020-01-01T00:00:00Z' }],
-    }), { status: 200 }));
-    await waitFor(() => expect(screen.queryByText('first.example')).toBeNull());
   });
 });

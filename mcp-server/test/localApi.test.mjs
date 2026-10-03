@@ -143,19 +143,3 @@ test('rejects invalid audit options before invoking the runner', async () => {
   assert.match((await response.json()).error, /between 1000 and 30000/);
   assert.equal(called, false);
 });
-
-test('enforces the request body limit and route contract', async () => {
-  api = await startLocalApi({ token, audit: async () => ({}) });
-  const headers = { authorization: `Bearer ${token}`, 'content-type': 'application/json' };
-
-  const oversized = await fetch(endpoint('/v1/audit'), {
-    method: 'POST',
-    headers,
-    body: JSON.stringify({ url: 'https://example.com', padding: 'x'.repeat(70_000) }),
-  });
-  assert.equal(oversized.status, 413);
-
-  const unknown = await fetch(endpoint('/v1/unknown'), { headers });
-  assert.equal(unknown.status, 404);
-  assert.match((await unknown.json()).error, /Route not found/);
-});

@@ -1,5 +1,5 @@
 import { afterEach, describe, expect, it, vi } from 'vitest';
-import { isStorageAvailable, readJsonStorage, readStorage, readStorageEntries, removeStorage, writeJsonStorage, writeStorage } from '@/services/storage';
+import { isStorageAvailable, readJsonStorage, readStorage, readStorageEntries, removeStorage, writeJsonStorage, writeStorage, writeStorageResult, readEphemeralStorage, writeEphemeralStorage, removeEphemeralStorage } from '@/services/storage';
 
 describe('locked WebView storage adapter', () => {
   afterEach(() => vi.unstubAllGlobals());
@@ -54,4 +54,57 @@ describe('locked WebView storage adapter', () => {
       empty: '',
     });
   });
+});
+
+it('enumerates storage with linear bookkeeping work and respects the entry ceiling', () => {
+  const originalKeys = Object.keys;
+  let enumerated = 0;
+  const spy = vi.spyOn(Object, 'keys').mockImplementation((value) => {
+    const keys = originalKeys(value); enumerated += keys.length; return keys;
+  });
+  vi.stubGlobal('localStorage', { length: 501, key: (index: number) => `project_${index}`, getItem: () => 'value' });
+  try {
+    const entries = readStorageEntries('project_', 500);
+    expect(originalKeys(entries)).toHaveLength(500);
+    expect(enumerated).toBeLessThanOrEqual(1000);
+  } finally { spy.mockRestore(); vi.unstubAllGlobals(); }
+});
+
+it('handles invalid ceilings, duplicate enumeration keys and prototype-like suffixes safely', () => {
+  vi.stubGlobal('localStorage', { length: 3, key: (index: number) => ['project___proto__', 'project_a', 'project_a'][index], getItem: () => 'value' });
+  try {
+    for (const limit of [0, -1, Infinity, NaN]) expect(readStorageEntries('project_', limit)).toEqual({});
+    const result = readStorageEntries('project_', 5);
+    expect(Object.prototype.hasOwnProperty.call(result, '__proto__')).toBe(true);
+    expect(result.__proto__).toBe('value');
+    expect(Object.getPrototypeOf(result)).toBe(Object.prototype);
+    expect(Object.keys(result)).toHaveLength(2);
+  } finally { vi.unstubAllGlobals(); }
+});
+
+it('returns structured durable write results without hiding the actual storage failure',()=>{
+  localStorage.clear();
+  expect(writeStorageResult('fixture','value')).toEqual({ok:true});
+  expect(localStorage.getItem('fixture')).toBe('value');
+  const failure=new Error('quota exceeded');
+  vi.stubGlobal('localStorage',{setItem:()=>{throw failure;}});
+  try {expect(writeStorageResult('fixture','next')).toEqual({ok:false,error:failure});}
+  finally {vi.unstubAllGlobals();}
+});
+
+it('keeps ephemeral secrets out of durable storage and handles blocked or missing session storage',()=>{
+  localStorage.clear();sessionStorage.clear();
+  expect(readEphemeralStorage('secret')).toBeNull();
+  expect(writeEphemeralStorage('secret','fixture')).toBe(true);
+  expect(readEphemeralStorage('secret')).toBe('fixture');
+  expect(localStorage.getItem('secret')).toBeNull();
+  expect(removeEphemeralStorage('secret')).toBe(true);
+  expect(readEphemeralStorage('secret')).toBeNull();
+  for(const storage of [undefined,{getItem:()=>{throw new Error('blocked');},setItem:()=>{throw new Error('blocked');},removeItem:()=>{throw new Error('blocked');}}]) {
+    vi.stubGlobal('sessionStorage',storage);
+    expect(readEphemeralStorage('secret')).toBeNull();
+    expect(writeEphemeralStorage('secret','fixture')).toBe(false);
+    expect(removeEphemeralStorage('secret')).toBe(false);
+  }
+  vi.unstubAllGlobals();
 });

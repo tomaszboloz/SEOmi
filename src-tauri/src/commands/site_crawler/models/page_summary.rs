@@ -1,0 +1,149 @@
+use super::*;
+use crate::models::audit_data::FaviconData;
+use crate::services::custom_search::CrawledCustomSearchResult;
+use serde::{Deserialize, Serialize};
+
+#[derive(Debug, Serialize, Deserialize, Clone)]
+pub struct CrawledPageSummary {
+    pub url: String,
+    pub final_url: String,
+    #[serde(default)]
+    pub discovery_sources: Vec<CrawledDiscoverySource>,
+    pub redirect_chain: Vec<CrawledRedirectHop>,
+    #[serde(default)]
+    pub redirect_stop_reason: Option<String>,
+    pub depth: usize,
+    pub http_status: u16,
+    pub response_time_ms: u64,
+    #[serde(default)]
+    pub rendered_lcp_ms: Option<u64>,
+    #[serde(default)]
+    pub rendered_inp_ms: Option<u64>,
+    #[serde(default)]
+    pub rendered_cls: Option<f64>,
+    pub request_error_kind: Option<String>,
+    pub title: Option<String>,
+    pub title_length: Option<usize>,
+    pub meta_description: Option<String>,
+    pub meta_description_length: Option<usize>,
+    pub canonical: Option<String>,
+    #[serde(default)]
+    pub canonical_targets: Vec<CrawledCanonicalTarget>,
+    #[serde(default)]
+    pub canonical_declaration_count: usize,
+    #[serde(default)]
+    pub canonical_relation: String,
+    #[serde(default)]
+    pub canonical_robots_conflict: bool,
+    #[serde(default)]
+    pub client_redirects: Vec<CrawledClientRedirect>,
+    pub meta_robots: Option<String>,
+    pub x_robots_tag: Option<String>,
+    #[serde(default)]
+    pub robots_decision: Option<CrawledRobotsDecision>,
+    #[serde(default)]
+    pub indexability_verdict: Option<CrawledIndexabilityVerdict>,
+    pub indexability_status: String,
+    pub content_type: Option<String>,
+    pub content_length: Option<u64>,
+    pub content_encoding: Option<String>,
+    pub charset: Option<String>,
+    #[serde(default)]
+    pub detected_charset: Option<String>,
+    pub cache_control: Option<String>,
+    pub body_truncated: bool,
+    pub word_count: usize,
+    pub text_ratio_percent: Option<f64>,
+    pub reading_time_minutes: Option<usize>,
+    #[serde(default)]
+    pub sentence_count: Option<usize>,
+    #[serde(default)]
+    pub average_words_per_sentence: Option<f64>,
+    #[serde(default)]
+    pub average_characters_per_word: Option<f64>,
+    #[serde(default)]
+    pub complexity_score: Option<u8>,
+    #[serde(default)]
+    pub complexity_label: Option<String>,
+    #[serde(default)]
+    pub readability_ease_score: Option<f64>,
+    #[serde(default)]
+    pub readability_grade: Option<f64>,
+    #[serde(default)]
+    pub readability_method: Option<String>,
+    #[serde(default)]
+    pub readability_label: Option<String>,
+    #[serde(default)]
+    pub content_terms: Vec<CrawledContentTerm>,
+    #[serde(default)]
+    pub focus_phrase: Option<CrawledFocusPhraseEvidence>,
+    pub content_hash: Option<String>,
+    pub content_simhash: Option<String>,
+    #[serde(default)]
+    pub semantic_terms: Vec<String>,
+    #[serde(default)]
+    pub semantic_excerpts: Vec<String>,
+    #[serde(default)]
+    pub semantic_links: Vec<CrawledLink>,
+    #[serde(default = "default_semantic_content_source")]
+    pub semantic_content_source: String,
+    #[serde(default = "default_semantic_content_provenance")]
+    pub semantic_content_provenance: String,
+    #[serde(default)]
+    pub semantic_content_partial: bool,
+    pub schema_types: Vec<String>,
+    #[serde(default)]
+    pub schema_references: Vec<CrawledSchemaReference>,
+    pub schema_syntax_errors: usize,
+    #[serde(default)]
+    pub schema_validation_findings: Vec<CrawledSchemaFinding>,
+    #[serde(default)]
+    pub schema_validation_truncated: bool,
+    #[serde(default)]
+    pub html_validation_findings: Vec<CrawledHtmlValidationFinding>,
+    #[serde(default)]
+    pub html_validation_truncated: bool,
+    pub document_language: Option<String>,
+    pub hreflangs: Vec<CrawledHreflang>,
+    pub amp_url: Option<String>,
+    #[serde(default)]
+    pub amp_target_http_status: Option<u16>,
+    #[serde(default)]
+    pub amp_target_checked_in_run: bool,
+    #[serde(default)]
+    pub amp_target_canonical_alignment: Option<String>,
+    pub h1_count: usize,
+    pub heading_counts: Vec<usize>,
+    #[serde(default)]
+    pub duplicate_headings: Vec<CrawledDuplicateHeading>,
+    pub pagination_next: Option<String>,
+    pub pagination_prev: Option<String>,
+    #[serde(default)]
+    pub pagination_links: Vec<CrawledPaginationLink>,
+    #[serde(default)]
+    pub pagination_declaration_count: usize,
+    #[serde(default)]
+    pub pagination_invalid_declaration_count: usize,
+    #[serde(default)]
+    pub pagination_canonical_alignment: Option<String>,
+    pub internal_link_count: usize,
+    pub external_link_count: usize,
+    pub links: Vec<CrawledLink>,
+    pub images: Vec<CrawledImage>,
+    #[serde(default)]
+    pub frames: Vec<CrawledFrame>,
+    #[serde(default)]
+    pub frames_truncated: bool,
+    #[serde(default)]
+    pub favicons: Vec<String>,
+    #[serde(default)]
+    pub favicon_metadata: Vec<FaviconData>,
+    #[serde(default)]
+    pub favicon_resource_checks: Vec<CrawledSocialResourceCheck>,
+    #[serde(default)]
+    pub social_meta_tags: Vec<CrawledSocialMetaTag>,
+    #[serde(default)]
+    pub custom_search_results: Vec<CrawledCustomSearchResult>,
+    pub issues_count: usize,
+    pub issues: Vec<CrawledPageIssue>,
+}

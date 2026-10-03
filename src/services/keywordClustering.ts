@@ -39,7 +39,7 @@ export const normalizeSerpUrl = (value: string): string | null => {
     }
     url.searchParams.sort();
     const pathname = url.pathname.replace(/\/{2,}/g, '/').replace(/\/+$/, '') || '/';
-    return `${hostname}${pathname}${url.search}`;
+    return `${hostname}${url.port ? `:${url.port}` : ''}${pathname}${url.search}`;
   } catch {
     return null;
   }
@@ -80,10 +80,10 @@ export const clusterKeywordsBySerpOverlap = (
   for (let a = 0; a < uniqueSnapshots.length; a += 1) {
     const urlsA = new Set(uniqueSnapshots[a].urls.map(normalizeSerpUrl).filter((url): url is string => Boolean(url)));
     for (let b = a + 1; b < uniqueSnapshots.length; b += 1) {
-      const sharedUrls = uniqueSnapshots[b].urls
+      const sharedUrls = [...new Set(uniqueSnapshots[b].urls
         .map(normalizeSerpUrl)
         .filter((url): url is string => Boolean(url))
-        .filter((url) => urlsA.has(url));
+        .filter((url) => urlsA.has(url)))];
       if (sharedUrls.length >= minSharedUrls) {
         pairOverlaps.push({ keywordA: uniqueSnapshots[a].keyword, keywordB: uniqueSnapshots[b].keyword, sharedUrls: [...new Set(sharedUrls)] });
         union(a, b);

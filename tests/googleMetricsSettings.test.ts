@@ -1,5 +1,9 @@
-import { beforeEach, describe, expect, it, vi } from 'vitest';
+import { afterAll, beforeAll, beforeEach, describe, expect, it, vi } from 'vitest';
+
 import { useSettingsStore } from '../src/stores/settingsStore';
+import { connectSettingsStores } from '@/services/settingsComposition';
+
+let disconnect: () => void;
 
 const settingsMocks = vi.hoisted(() => ({
   getSecureValueMock: vi.fn(),
@@ -13,8 +17,12 @@ vi.mock('../src/services/tauri', () => ({
   invokeTauriCommand: settingsMocks.invokeTauriCommandMock,
 }));
 
+beforeAll(() => { disconnect = connectSettingsStores(); });
+
+afterAll(() => disconnect());
+
 describe('project-scoped Google performance API key settings', () => {
-  beforeEach(() => {
+beforeEach(() => {
     localStorage.clear();
     localStorage.setItem('seomi_active_project_v1', 'project-one');
     settingsMocks.getSecureValueMock.mockReset().mockResolvedValue('');
@@ -23,14 +31,14 @@ describe('project-scoped Google performance API key settings', () => {
     useSettingsStore.setState({ googleMetricsApiKey: '', secureStorageError: null, isSaving: false });
   });
 
-  it('stores only a trimmed key under the active project credential name', async () => {
+it('stores only a trimmed key under the active project credential name', async () => {
     await useSettingsStore.getState().saveGoogleMetricsApiKey('  google-key  ');
 
     expect(settingsMocks.setSecureValueMock).toHaveBeenCalledWith('google_metrics_api_key_project-one', 'google-key');
     expect(useSettingsStore.getState().googleMetricsApiKey).toBe('google-key');
   });
 
-  it('loads the selected project key from secure storage without reusing another project key', async () => {
+it('loads the selected project key from secure storage without reusing another project key', async () => {
     localStorage.setItem('seomi_active_project_v1', 'project-two');
     settingsMocks.getSecureValueMock.mockResolvedValue('second-project-key');
     await useSettingsStore.getState().loadGoogleMetricsApiKey();
@@ -39,7 +47,7 @@ describe('project-scoped Google performance API key settings', () => {
     expect(useSettingsStore.getState().googleMetricsApiKey).toBe('second-project-key');
   });
 
-  it('ignores a secure-store response that belongs to a project left during the read', async () => {
+it('ignores a secure-store response that belongs to a project left during the read', async () => {
     let resolveRead: ((value: string) => void) | undefined;
     settingsMocks.getSecureValueMock.mockImplementation(() => new Promise<string>((resolve) => { resolveRead = resolve; }));
 
@@ -51,7 +59,7 @@ describe('project-scoped Google performance API key settings', () => {
     expect(useSettingsStore.getState().googleMetricsApiKey).toBe('');
   });
 
-  it('does not leak DataForSEO credentials when the project changes during keychain hydration', async () => {
+it('does not leak DataForSEO credentials when the project changes during keychain hydration', async () => {
     const resolvers: Array<(value: string) => void> = [];
     settingsMocks.getSecureValueMock.mockImplementation(() => new Promise<string>((resolve) => { resolvers.push(resolve); }));
 
@@ -63,7 +71,7 @@ describe('project-scoped Google performance API key settings', () => {
     expect(useSettingsStore.getState().dataForSeoCredentials).toEqual({ login: '', password: '' });
   });
 
-  it('serializes concurrent config writes and keeps the latest snapshot last', async () => {
+it('serializes concurrent config writes and keeps the latest snapshot last', async () => {
     const resolvers: Array<() => void> = [];
     settingsMocks.invokeTauriCommandMock.mockImplementation((command: string) => {
       if (command === 'save_config') return new Promise<void>((resolve) => { resolvers.push(resolve); });
@@ -83,7 +91,7 @@ describe('project-scoped Google performance API key settings', () => {
     expect(useSettingsStore.getState().isSaving).toBe(false);
   });
 
-  it('serializes concurrent secure API-key writes and keeps the newest value last', async () => {
+it('serializes concurrent secure API-key writes and keeps the newest value last', async () => {
     const resolvers: Array<() => void> = [];
     settingsMocks.setSecureValueMock.mockImplementation(() => new Promise<void>((resolve) => { resolvers.push(resolve); }));
 

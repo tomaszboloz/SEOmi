@@ -2,14 +2,15 @@ import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 const mocks = vi.hoisted(() => ({
   invokeTauriCommand: vi.fn(),
+  native: true,
 }));
 
 vi.mock('@/services/tauri', () => ({
-  isTauriEnvironment: () => true,
+  isTauriEnvironment: () => mocks.native,
   invokeTauriCommand: mocks.invokeTauriCommand,
 }));
 
-import { removeAuditWakeup, syncAuditWakeup } from '@/services/scheduleWakeup';
+import { acknowledgeScheduledExecution, getScheduledLaunchContext, removeAuditWakeup, syncAuditWakeup } from '@/services/scheduleWakeup';
 import type { ScheduledAudit } from '@/services/auditSchedule';
 
 const schedule = (overrides: Partial<ScheduledAudit> = {}): ScheduledAudit => ({
@@ -34,8 +35,36 @@ const flushMicrotasks = async (): Promise<void> => {
 
 describe('schedule wake-up write ordering', () => {
   beforeEach(() => {
+    mocks.native = true;
     mocks.invokeTauriCommand.mockReset();
     mocks.invokeTauriCommand.mockResolvedValue(undefined);
+  });
+
+  it('returns an inert browser launch context and never acknowledges native work there', async () => {
+    mocks.native = false;
+    await expect(getScheduledLaunchContext()).resolves.toEqual({ projectId: null, scheduleId: null, headless: false });
+    await acknowledgeScheduledExecution('project-a', 'schedule-a');
+    await syncAuditWakeup('project-a', schedule());
+    await removeAuditWakeup('project-a', 'schedule-a');
+    expect(mocks.invokeTauriCommand).not.toHaveBeenCalled();
+  });
+
+  it('preserves native launch context and propagates lookup failures', async () => {
+    const context = { projectId: 'project-a', scheduleId: 'schedule-a', headless: true };
+    mocks.invokeTauriCommand.mockResolvedValue(context);
+    await expect(getScheduledLaunchContext()).resolves.toBe(context);
+    expect(mocks.invokeTauriCommand).toHaveBeenCalledExactlyOnceWith('scheduled_launch_context');
+    mocks.invokeTauriCommand.mockRejectedValue(new Error('invalid launch arguments'));
+    await expect(getScheduledLaunchContext()).rejects.toThrow('invalid launch arguments');
+  });
+
+  it('acknowledges precisely one project schedule and exposes failed acknowledgment', async () => {
+    await acknowledgeScheduledExecution('project-a', 'schedule-a');
+    expect(mocks.invokeTauriCommand).toHaveBeenCalledExactlyOnceWith('acknowledge_scheduled_execution', {
+      projectId: 'project-a', scheduleId: 'schedule-a',
+    });
+    mocks.invokeTauriCommand.mockRejectedValue(new Error('handoff remains pending'));
+    await expect(acknowledgeScheduledExecution('project-b', 'schedule-b')).rejects.toThrow('handoff remains pending');
   });
 
   it('serializes an update before a remove for the same schedule', async () => {

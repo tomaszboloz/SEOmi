@@ -116,7 +116,7 @@
       "canonicalMissingDetail": "No rel=\"canonical\" declaration was found.",
       "canonicalTarget": "Canonical target returns an HTTP error",
       "canonicalTargetDetail": "The checked target returned HTTP {{status}}.",
-    "canonicalUnverified": "Canonical target was not verified",
+      "canonicalUnverified": "Canonical target was not verified",
       "viewportMissing": "Missing viewport",
       "viewportMissingDetail": "No meta name=\"viewport\" was found.",
       "indexingBlocked": "Indexing is blocked",
@@ -193,7 +193,8 @@
       "differentProperties": "Snapshots belong to different Search Console properties.",
       "differentFilters": "Snapshots use different Search Console filters; choose a snapshot with the same scope.",
       "samePeriod": "Choose two different periods.",
-      "overlapping": "Periods overlap or are out of order; choose disjoint ranges."
+      "overlapping": "Periods overlap or are out of order; choose disjoint ranges.",
+      "differentDurations": "트래픽을 비교하려면 일수가 같은 기간을 선택하세요."
     },
     "reportTemplates": {
       "builtInName": "Site health · full report",
@@ -211,6 +212,7 @@
       "articleHeadlineOmitted": "문서 노드 생략: headline에 사용할 크롤링 페이지 제목이 없습니다."
     },
     "backup": {
+      "tooLarge": "백업이 가져오기 크기 제한을 초과했습니다.",
       "missingProject": "Backup file does not contain a project object.",
       "format": "Unsupported project backup format.",
       "secrets": "Backup has an invalid secrets policy.",
@@ -477,7 +479,8 @@
       "missingSignal": "Not observed now: {{value}}",
       "sharedTerms": "공유 용어: {{value}}",
       "weightedJaccard": "가중 Jaccard: {{value}}",
-      "missing": "none"
+      "missing": "none",
+      "queryChangedTitle": "Observed query tokens changed: {{query}}"
     },
     "contentBrief": {
       "draftTitle": "Content draft",
@@ -535,6 +538,7 @@
     "settings": {
       "projectDataforseo": "Select a project before configuring DataForSEO.",
       "projectGoogle": "Select a project before configuring Google performance APIs.",
+      "configLoadFailed": "저장된 설정을 불러올 수 없습니다. 현재 설정이 유지되었습니다. 올바른 설정 파일을 복원한 후 다시 시도하세요.",
       "configSaveFailed": "백엔드에 구성을 저장할 수 없습니다."
     },
     "export": {
@@ -552,7 +556,7 @@
       "none": "none",
       "available": "available",
       "unavailable": "unavailable",
-    "canonicalUnverified": "canonical unverified",
+      "canonicalUnverified": "canonical unverified",
       "notReciprocal": "not reciprocal",
       "reciprocityUnverified": "reciprocity unverified",
       "checked": "checked",
@@ -581,7 +585,10 @@
       "cliMissing": "Local CLI was not found on PATH.",
       "credentialSaved": "Credential saved in the system keychain. Test it to verify access.",
       "checkingConnection": "Checking connection…",
-      "localClientRequired": "{{provider}} is not configured to use its local subscription client."
+      "localClientRequired": "{{provider}} is not configured to use its local subscription client.",
+      "responseHidden": "Provider response withheld.",
+      "invalidResponse": "The AI provider returned an invalid response.",
+      "responseTooLarge": "The AI provider response exceeds the 1 MiB limit."
     },
     "pagespeed": {
       "projectRequired": "Choose a project before starting the measurement."
@@ -1614,7 +1621,8 @@
       "start": "starting address",
       "seed": "seed list",
       "sitemap": "sitemap",
-      "link": "internal link"
+      "link": "internal link",
+      "resume": "Saved crawl frontier"
     },
     "bottomNavigationAria": "Quick semantic map navigation",
     "bottomViewsAria": "Map views at bottom",
@@ -3460,7 +3468,14 @@
     "noPageRows": "The API returned no page rows for this date range.",
     "snapshotSaved": "Saved snapshot {{start}} — {{end}}.",
     "snapshotSaveError": "Could not save snapshot.",
-    "fullScope": "full scope"
+    "fullScope": "full scope",
+    "unmatchedDescription": "한 기간에서만 관측된 행은 비교하지 않습니다. 불러온 데이터에 없다고 해서 트래픽이 0이거나 손실이 확인된 것은 아닙니다.",
+    "unmatched": {
+      "baselineQueries": "기준 기간에만 관측된 검색어: {{count}}",
+      "currentQueries": "현재 기간에만 관측된 검색어: {{count}}",
+      "baselinePages": "기준 기간에만 관측된 URL: {{count}}",
+      "currentPages": "현재 기간에만 관측된 URL: {{count}}"
+    }
   },
   "settings": {
     "close": "Close settings",
@@ -3536,7 +3551,7 @@
       "technicalDirectives": "Technical Directives & Robots",
       "canonical": "Canonical URL",
       "notSpecified": "Not specified",
-    "canonicalUnverified": "Target not verified",
+      "canonicalUnverified": "Target not verified",
       "robots": "Robots Directive",
       "robotsDefault": "index, follow (default)",
       "viewport": "Viewport (mobile)",
@@ -3549,7 +3564,18 @@
       "author": "Author",
       "technologies": "Detected technologies",
       "documentHttpSignals": "document or HTTP response signals only",
-      "technologyCategories": {"cmsPlatform": "CMS 플랫폼", "cmsGenerator": "CMS / 생성기", "cms": "CMS", "commercePlatform": "커머스 플랫폼", "javascriptFramework": "JavaScript 프레임워크", "tagManager": "태그 관리자", "analyticsTag": "분석 / 태그", "javascriptLibrary": "JavaScript 라이브러리", "cssFramework": "CSS / UI 프레임워크", "analytics": "분석"},
+      "technologyCategories": {
+        "cmsPlatform": "CMS 플랫폼",
+        "cmsGenerator": "CMS / 생성기",
+        "cms": "CMS",
+        "commercePlatform": "커머스 플랫폼",
+        "javascriptFramework": "JavaScript 프레임워크",
+        "tagManager": "태그 관리자",
+        "analyticsTag": "분석 / 태그",
+        "javascriptLibrary": "JavaScript 라이브러리",
+        "cssFramework": "CSS / UI 프레임워크",
+        "analytics": "분석"
+      },
       "confirmed": "confirmed",
       "heuristic": "heuristic",
       "favicons": "Declared favicons",
@@ -4301,6 +4327,7 @@
     }
   },
   "exportUi": {
+    "invalidPdf": "The generator returned invalid PDF data. Please try again.",
     "labels": {
       "field": "Field",
       "value": "Value",
@@ -4613,7 +4640,7 @@
       "bytes": "{{value}} B",
       "internal": "internal",
       "external": "external",
-    "canonicalUnverified": "canonical unverified"
+      "canonicalUnverified": "canonical unverified"
     }
   },
   "uiUnits": {
@@ -4652,5 +4679,25 @@
     "run": "Run {{count}}",
     "legacyRecognition": "Legacy brand recognition run",
     "legacyNote": "This saved run included the brand in the question. It is not an unprompted visibility measurement."
+  },
+  "gscOpportunities": {
+    "title": "GSC opportunities",
+    "near": "Queries just beyond TOP10 (10–20)",
+    "ctr": "CTR below observed peers",
+    "empty": "No rows meet the evidence thresholds.",
+    "benchmark": "CTR {{actual}}% · peers {{expected}}% ({{count}} queries)",
+    "method": "Average position is a period metric. CTR uses other queries within ±1 position, at least 3 peers and 300 peer impressions. Signals require review; brand, intent and SERP features can differ.",
+    "aiOverview": "Google includes AI Overviews and AI Mode in total Web traffic. This report cannot separate their metrics.",
+    "source": "Google documentation"
+  },
+  "gscCannibalization": {
+    "title": "검색어 경쟁 가능성",
+    "method": "표시 20회 이상이며 관측된 검색어 표시의 10% 이상인 URL이 두 개 이상입니다. 확인할 신호이며 확정된 경쟁이 아닙니다.",
+    "unavailable": "관측된 검색어/URL 쌍이 없습니다. Search Console을 새로 고치세요.",
+    "invalid": "공동 관측 데이터가 잘못되었습니다. 보고서를 새로 고치세요.",
+    "empty": "기준을 충족하는 URL이 두 개인 검색어가 없습니다.",
+    "limited": "Google 또는 로컬 저장소가 데이터를 잘라낼 수 있습니다. 비율은 관측된 행에만 해당합니다.",
+    "previous": "이전",
+    "next": "다음"
   }
 }

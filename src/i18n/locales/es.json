@@ -116,7 +116,7 @@
       "canonicalMissingDetail": "No rel=\"canonical\" declaration was found.",
       "canonicalTarget": "Canonical target returns an HTTP error",
       "canonicalTargetDetail": "The checked target returned HTTP {{status}}.",
-    "canonicalUnverified": "Canonical target was not verified",
+      "canonicalUnverified": "Canonical target was not verified",
       "viewportMissing": "Missing viewport",
       "viewportMissingDetail": "No meta name=\"viewport\" was found.",
       "indexingBlocked": "Indexing is blocked",
@@ -193,7 +193,8 @@
       "differentProperties": "Snapshots belong to different Search Console properties.",
       "differentFilters": "Snapshots use different Search Console filters; choose a snapshot with the same scope.",
       "samePeriod": "Choose two different periods.",
-      "overlapping": "Periods overlap or are out of order; choose disjoint ranges."
+      "overlapping": "Periods overlap or are out of order; choose disjoint ranges.",
+      "differentDurations": "Elige periodos con el mismo número de días para comparar el tráfico."
     },
     "reportTemplates": {
       "builtInName": "Site health · full report",
@@ -211,6 +212,7 @@
       "articleHeadlineOmitted": "Nodo de artículo omitido: no hay título de página rastreada para el encabezado."
     },
     "backup": {
+      "tooLarge": "La copia supera el límite de importación.",
       "missingProject": "Backup file does not contain a project object.",
       "format": "Unsupported project backup format.",
       "secrets": "Backup has an invalid secrets policy.",
@@ -477,7 +479,8 @@
       "missingSignal": "Not observed now: {{value}}",
       "sharedTerms": "Términos compartidos: {{value}}",
       "weightedJaccard": "Jaccard ponderado: {{value}}",
-      "missing": "none"
+      "missing": "none",
+      "queryChangedTitle": "Observed query tokens changed: {{query}}"
     },
     "contentBrief": {
       "draftTitle": "Content draft",
@@ -535,6 +538,7 @@
     "settings": {
       "projectDataforseo": "Select a project before configuring DataForSEO.",
       "projectGoogle": "Select a project before configuring Google performance APIs.",
+      "configLoadFailed": "No se pudo cargar la configuración guardada. Se conservaron los ajustes actuales. Restaura un archivo válido e inténtalo de nuevo.",
       "configSaveFailed": "No se pudo guardar la configuración en el backend."
     },
     "export": {
@@ -552,7 +556,7 @@
       "none": "none",
       "available": "available",
       "unavailable": "unavailable",
-    "canonicalUnverified": "canonical unverified",
+      "canonicalUnverified": "canonical unverified",
       "notReciprocal": "not reciprocal",
       "reciprocityUnverified": "reciprocity unverified",
       "checked": "checked",
@@ -581,7 +585,10 @@
       "cliMissing": "Local CLI was not found on PATH.",
       "credentialSaved": "Credential saved in the system keychain. Test it to verify access.",
       "checkingConnection": "Checking connection…",
-      "localClientRequired": "{{provider}} is not configured to use its local subscription client."
+      "localClientRequired": "{{provider}} is not configured to use its local subscription client.",
+      "responseHidden": "Provider response withheld.",
+      "invalidResponse": "The AI provider returned an invalid response.",
+      "responseTooLarge": "The AI provider response exceeds the 1 MiB limit."
     },
     "pagespeed": {
       "projectRequired": "Choose a project before starting the measurement."
@@ -1614,7 +1621,8 @@
       "start": "starting address",
       "seed": "seed list",
       "sitemap": "sitemap",
-      "link": "internal link"
+      "link": "internal link",
+      "resume": "Saved crawl frontier"
     },
     "bottomNavigationAria": "Quick semantic map navigation",
     "bottomViewsAria": "Map views at bottom",
@@ -3460,7 +3468,14 @@
     "noPageRows": "The API returned no page rows for this date range.",
     "snapshotSaved": "Saved snapshot {{start}} — {{end}}.",
     "snapshotSaveError": "Could not save snapshot.",
-    "fullScope": "full scope"
+    "fullScope": "full scope",
+    "unmatchedDescription": "Las filas observadas en un solo periodo no se comparan. Su ausencia en los datos cargados no significa tráfico cero ni una pérdida confirmada.",
+    "unmatched": {
+      "baselineQueries": "Consultas solo en el periodo base: {{count}}",
+      "currentQueries": "Consultas solo en el periodo actual: {{count}}",
+      "baselinePages": "URL solo en el periodo base: {{count}}",
+      "currentPages": "URL solo en el periodo actual: {{count}}"
+    }
   },
   "settings": {
     "close": "Close settings",
@@ -3536,7 +3551,7 @@
       "technicalDirectives": "Technical Directives & Robots",
       "canonical": "Canonical URL",
       "notSpecified": "Not specified",
-    "canonicalUnverified": "Target not verified",
+      "canonicalUnverified": "Target not verified",
       "robots": "Robots Directive",
       "robotsDefault": "index, follow (default)",
       "viewport": "Viewport (mobile)",
@@ -3549,7 +3564,18 @@
       "author": "Author",
       "technologies": "Detected technologies",
       "documentHttpSignals": "document or HTTP response signals only",
-      "technologyCategories": {"cmsPlatform": "Plataforma CMS", "cmsGenerator": "CMS / generador", "cms": "CMS", "commercePlatform": "Plataforma de comercio", "javascriptFramework": "Framework de JavaScript", "tagManager": "Gestor de etiquetas", "analyticsTag": "Analítica / etiqueta", "javascriptLibrary": "Biblioteca de JavaScript", "cssFramework": "Framework CSS / UI", "analytics": "Analítica"},
+      "technologyCategories": {
+        "cmsPlatform": "Plataforma CMS",
+        "cmsGenerator": "CMS / generador",
+        "cms": "CMS",
+        "commercePlatform": "Plataforma de comercio",
+        "javascriptFramework": "Framework de JavaScript",
+        "tagManager": "Gestor de etiquetas",
+        "analyticsTag": "Analítica / etiqueta",
+        "javascriptLibrary": "Biblioteca de JavaScript",
+        "cssFramework": "Framework CSS / UI",
+        "analytics": "Analítica"
+      },
       "confirmed": "confirmed",
       "heuristic": "heuristic",
       "favicons": "Declared favicons",
@@ -4301,6 +4327,7 @@
     }
   },
   "exportUi": {
+    "invalidPdf": "The generator returned invalid PDF data. Please try again.",
     "labels": {
       "field": "Field",
       "value": "Value",
@@ -4613,7 +4640,7 @@
       "bytes": "{{value}} B",
       "internal": "internal",
       "external": "external",
-    "canonicalUnverified": "canonical unverified"
+      "canonicalUnverified": "canonical unverified"
     }
   },
   "uiUnits": {
@@ -4652,5 +4679,25 @@
     "run": "Run {{count}}",
     "legacyRecognition": "Legacy brand recognition run",
     "legacyNote": "This saved run included the brand in the question. It is not an unprompted visibility measurement."
+  },
+  "gscOpportunities": {
+    "title": "GSC opportunities",
+    "near": "Queries just beyond TOP10 (10–20)",
+    "ctr": "CTR below observed peers",
+    "empty": "No rows meet the evidence thresholds.",
+    "benchmark": "CTR {{actual}}% · peers {{expected}}% ({{count}} queries)",
+    "method": "Average position is a period metric. CTR uses other queries within ±1 position, at least 3 peers and 300 peer impressions. Signals require review; brand, intent and SERP features can differ.",
+    "aiOverview": "Google includes AI Overviews and AI Mode in total Web traffic. This report cannot separate their metrics.",
+    "source": "Google documentation"
+  },
+  "gscCannibalization": {
+    "title": "Posible canibalización de consultas",
+    "method": "Al menos dos URL con 20 impresiones y el 10% de las impresiones observadas. Son señales para revisar, no canibalización confirmada.",
+    "unavailable": "No hay pares consulta/URL observados. Actualiza Search Console.",
+    "invalid": "Observaciones conjuntas inválidas; actualiza el informe.",
+    "empty": "Ninguna consulta tiene dos URL que alcancen los umbrales.",
+    "limited": "Google o el almacenamiento local pueden truncar los datos. Los porcentajes solo incluyen filas observadas.",
+    "previous": "Anterior",
+    "next": "Siguiente"
   }
 }

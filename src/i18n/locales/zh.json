@@ -116,7 +116,7 @@
       "canonicalMissingDetail": "No rel=\"canonical\" declaration was found.",
       "canonicalTarget": "Canonical target returns an HTTP error",
       "canonicalTargetDetail": "The checked target returned HTTP {{status}}.",
-    "canonicalUnverified": "Canonical target was not verified",
+      "canonicalUnverified": "Canonical target was not verified",
       "viewportMissing": "Missing viewport",
       "viewportMissingDetail": "No meta name=\"viewport\" was found.",
       "indexingBlocked": "Indexing is blocked",
@@ -193,7 +193,8 @@
       "differentProperties": "Snapshots belong to different Search Console properties.",
       "differentFilters": "Snapshots use different Search Console filters; choose a snapshot with the same scope.",
       "samePeriod": "Choose two different periods.",
-      "overlapping": "Periods overlap or are out of order; choose disjoint ranges."
+      "overlapping": "Periods overlap or are out of order; choose disjoint ranges.",
+      "differentDurations": "请选择天数相同的时段以比较流量。"
     },
     "reportTemplates": {
       "builtInName": "Site health · full report",
@@ -211,6 +212,7 @@
       "articleHeadlineOmitted": "已省略文章节点：没有可用于 headline 的抓取页面标题。"
     },
     "backup": {
+      "tooLarge": "备份超过导入大小限制。",
       "missingProject": "Backup file does not contain a project object.",
       "format": "Unsupported project backup format.",
       "secrets": "Backup has an invalid secrets policy.",
@@ -477,7 +479,8 @@
       "missingSignal": "Not observed now: {{value}}",
       "sharedTerms": "共享术语：{{value}}",
       "weightedJaccard": "加权 Jaccard：{{value}}",
-      "missing": "none"
+      "missing": "none",
+      "queryChangedTitle": "Observed query tokens changed: {{query}}"
     },
     "contentBrief": {
       "draftTitle": "Content draft",
@@ -535,6 +538,7 @@
     "settings": {
       "projectDataforseo": "Select a project before configuring DataForSEO.",
       "projectGoogle": "Select a project before configuring Google performance APIs.",
+      "configLoadFailed": "无法加载已保存的设置。已保留当前设置。请恢复有效的配置文件后重试。",
       "configSaveFailed": "无法将配置保存到后端。"
     },
     "export": {
@@ -552,7 +556,7 @@
       "none": "none",
       "available": "available",
       "unavailable": "unavailable",
-    "canonicalUnverified": "canonical unverified",
+      "canonicalUnverified": "canonical unverified",
       "notReciprocal": "not reciprocal",
       "reciprocityUnverified": "reciprocity unverified",
       "checked": "checked",
@@ -581,7 +585,10 @@
       "cliMissing": "Local CLI was not found on PATH.",
       "credentialSaved": "Credential saved in the system keychain. Test it to verify access.",
       "checkingConnection": "Checking connection…",
-      "localClientRequired": "{{provider}} is not configured to use its local subscription client."
+      "localClientRequired": "{{provider}} is not configured to use its local subscription client.",
+      "responseHidden": "Provider response withheld.",
+      "invalidResponse": "The AI provider returned an invalid response.",
+      "responseTooLarge": "The AI provider response exceeds the 1 MiB limit."
     },
     "pagespeed": {
       "projectRequired": "Choose a project before starting the measurement."
@@ -1614,7 +1621,8 @@
       "start": "starting address",
       "seed": "seed list",
       "sitemap": "sitemap",
-      "link": "internal link"
+      "link": "internal link",
+      "resume": "Saved crawl frontier"
     },
     "bottomNavigationAria": "Quick semantic map navigation",
     "bottomViewsAria": "Map views at bottom",
@@ -3460,7 +3468,14 @@
     "noPageRows": "The API returned no page rows for this date range.",
     "snapshotSaved": "Saved snapshot {{start}} — {{end}}.",
     "snapshotSaveError": "Could not save snapshot.",
-    "fullScope": "full scope"
+    "fullScope": "full scope",
+    "unmatchedDescription": "仅在一个时段观测到的行不参与比较。加载的数据中缺失并不表示流量为零或已确认损失。",
+    "unmatched": {
+      "baselineQueries": "仅在基准时段观测到的查询：{{count}}",
+      "currentQueries": "仅在当前时段观测到的查询：{{count}}",
+      "baselinePages": "仅在基准时段观测到的URL：{{count}}",
+      "currentPages": "仅在当前时段观测到的URL：{{count}}"
+    }
   },
   "settings": {
     "close": "Close settings",
@@ -3536,7 +3551,7 @@
       "technicalDirectives": "Technical Directives & Robots",
       "canonical": "Canonical URL",
       "notSpecified": "Not specified",
-    "canonicalUnverified": "Target not verified",
+      "canonicalUnverified": "Target not verified",
       "robots": "Robots Directive",
       "robotsDefault": "index, follow (default)",
       "viewport": "Viewport (mobile)",
@@ -3549,7 +3564,18 @@
       "author": "Author",
       "technologies": "Detected technologies",
       "documentHttpSignals": "document or HTTP response signals only",
-      "technologyCategories": {"cmsPlatform": "CMS 平台", "cmsGenerator": "CMS / 生成器", "cms": "CMS", "commercePlatform": "商业平台", "javascriptFramework": "JavaScript 框架", "tagManager": "标签管理器", "analyticsTag": "分析 / 标签", "javascriptLibrary": "JavaScript 库", "cssFramework": "CSS / UI 框架", "analytics": "分析"},
+      "technologyCategories": {
+        "cmsPlatform": "CMS 平台",
+        "cmsGenerator": "CMS / 生成器",
+        "cms": "CMS",
+        "commercePlatform": "商业平台",
+        "javascriptFramework": "JavaScript 框架",
+        "tagManager": "标签管理器",
+        "analyticsTag": "分析 / 标签",
+        "javascriptLibrary": "JavaScript 库",
+        "cssFramework": "CSS / UI 框架",
+        "analytics": "分析"
+      },
       "confirmed": "confirmed",
       "heuristic": "heuristic",
       "favicons": "Declared favicons",
@@ -4301,6 +4327,7 @@
     }
   },
   "exportUi": {
+    "invalidPdf": "The generator returned invalid PDF data. Please try again.",
     "labels": {
       "field": "Field",
       "value": "Value",
@@ -4613,7 +4640,7 @@
       "bytes": "{{value}} B",
       "internal": "internal",
       "external": "external",
-    "canonicalUnverified": "canonical unverified"
+      "canonicalUnverified": "canonical unverified"
     }
   },
   "uiUnits": {
@@ -4652,5 +4679,25 @@
     "run": "Run {{count}}",
     "legacyRecognition": "Legacy brand recognition run",
     "legacyNote": "This saved run included the brand in the question. It is not an unprompted visibility measurement."
+  },
+  "gscOpportunities": {
+    "title": "GSC opportunities",
+    "near": "Queries just beyond TOP10 (10–20)",
+    "ctr": "CTR below observed peers",
+    "empty": "No rows meet the evidence thresholds.",
+    "benchmark": "CTR {{actual}}% · peers {{expected}}% ({{count}} queries)",
+    "method": "Average position is a period metric. CTR uses other queries within ±1 position, at least 3 peers and 300 peer impressions. Signals require review; brand, intent and SERP features can differ.",
+    "aiOverview": "Google includes AI Overviews and AI Mode in total Web traffic. This report cannot separate their metrics.",
+    "source": "Google documentation"
+  },
+  "gscCannibalization": {
+    "title": "潜在查询蚕食",
+    "method": "至少两个网址具有20次展示及观测查询展示的10%。这些是待核实的信号，并非已确认的蚕食。",
+    "unavailable": "没有观测到的查询/网址对。请刷新 Search Console。",
+    "invalid": "联合观测数据无效，请刷新报告。",
+    "empty": "没有查询的两个网址达到证据阈值。",
+    "limited": "Google 或本地存储可能截断数据。占比仅针对观测到的行。",
+    "previous": "上一页",
+    "next": "下一页"
   }
 }
