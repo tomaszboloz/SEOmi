@@ -1,6 +1,6 @@
 use super::models::{ParsedXPathStep, XPathPredicate, XPathSelector, XPathTerminal};
 use super::validation::is_valid_attribute_name;
-use super::xpath_predicate_helpers::is_xpath_name_char;
+use super::xpath_predicate_helpers::{is_xpath_name_char, xpath_predicate_end};
 use super::xpath_predicates::xpath_predicate_to_css;
 use scraper::Selector;
 
@@ -120,8 +120,7 @@ fn parse_xpath_step(step: &str) -> Result<ParsedXPathStep<'_>, String> {
         let Some(rest) = remaining.strip_prefix('[') else {
             return Err(format!("Niepoprawny predicate XPath ‘{step}’."));
         };
-        let end = rest
-            .find(']')
+        let end = xpath_predicate_end(rest)
             .ok_or_else(|| format!("Niezamknięty predicate XPath ‘{step}’."))?;
         let predicate = rest[..end].trim();
         match xpath_predicate_to_css(predicate)? {

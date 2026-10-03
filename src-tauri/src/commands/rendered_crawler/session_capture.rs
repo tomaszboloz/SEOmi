@@ -1,10 +1,10 @@
-use std::time::Duration;
 use base64::{engine::general_purpose::URL_SAFE_NO_PAD, Engine as _};
+use std::time::Duration;
 use tokio::time::timeout;
 
 use super::models::{
-    CaptureEvent, CapturedPayload, RenderedArtifactKind, RenderedPageSnapshot,
-    MAX_CAPTURE_CHUNKS, MAX_CAPTURE_CHUNK_BYTES, PAGE_RENDER_TIMEOUT,
+    CaptureEvent, CapturedPayload, RenderedArtifactKind, RenderedPageSnapshot, MAX_CAPTURE_CHUNKS,
+    MAX_CAPTURE_CHUNK_BYTES, PAGE_RENDER_TIMEOUT,
 };
 use super::navigation::{is_allowed_navigation, CLEAR_SESSION_SCRIPT};
 use super::session::RenderedCrawlerSession;
@@ -99,7 +99,7 @@ impl RenderedCrawlerSession {
                     }
                     if total_chunks.is_some_and(|total| total != chunk.total) {
                         return Err(
-                            "Renderer capture chunks disagree about the total count.".into(),
+                            "Renderer capture chunks disagree about the total count.".into()
                         );
                     }
                     if total_chunks.is_none() {

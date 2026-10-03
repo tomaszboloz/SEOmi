@@ -35,16 +35,37 @@ pub(crate) fn capture_script(nonce: &str, sequence: u64, options: &RenderOptions
         .replace("__WAIT_SELECTOR__", &selector)
         .replace("__WAIT_DELAY_MS__", &wait_delay_ms.to_string())
         .replace("__SCROLL_CYCLES__", &scroll_cycles.to_string())
-        .replace("__NETWORK_IDLE_MAX_WAIT_MS__", &NETWORK_IDLE_MAX_WAIT_MS.to_string())
-        .replace("__NETWORK_IDLE_QUIET_MS__", &NETWORK_IDLE_QUIET_MS.to_string())
-        .replace("__NETWORK_IDLE_POLL_MS__", &NETWORK_IDLE_POLL_MS.to_string())
-        .replace("__DOM_IDLE_MAX_WAIT_MS__", &DOM_IDLE_MAX_WAIT_MS.to_string())
+        .replace(
+            "__NETWORK_IDLE_MAX_WAIT_MS__",
+            &NETWORK_IDLE_MAX_WAIT_MS.to_string(),
+        )
+        .replace(
+            "__NETWORK_IDLE_QUIET_MS__",
+            &NETWORK_IDLE_QUIET_MS.to_string(),
+        )
+        .replace(
+            "__NETWORK_IDLE_POLL_MS__",
+            &NETWORK_IDLE_POLL_MS.to_string(),
+        )
+        .replace(
+            "__DOM_IDLE_MAX_WAIT_MS__",
+            &DOM_IDLE_MAX_WAIT_MS.to_string(),
+        )
         .replace("__DOM_IDLE_QUIET_MS__", &DOM_IDLE_QUIET_MS.to_string());
 
     let collector = include_str!("capture_collector.js")
-        .replace("__MAX_CAPTURE_HTML_CHARS__", &MAX_CAPTURE_HTML_CHARS.to_string())
-        .replace("__TRANSPORT__", include_str!("../render_capture_transport.js"))
-        .replace("__MAX_CAPTURE_CHUNK_BYTES__", &MAX_CAPTURE_CHUNK_BYTES.to_string())
+        .replace(
+            "__MAX_CAPTURE_HTML_CHARS__",
+            &MAX_CAPTURE_HTML_CHARS.to_string(),
+        )
+        .replace(
+            "__TRANSPORT__",
+            include_str!("../render_capture_transport.js"),
+        )
+        .replace(
+            "__MAX_CAPTURE_CHUNK_BYTES__",
+            &MAX_CAPTURE_CHUNK_BYTES.to_string(),
+        )
         .replace("__MAX_CAPTURE_CHUNKS__", &MAX_CAPTURE_CHUNKS.to_string());
 
     format!("(() => {{\n{runtime}\n{collector}\n}})();")

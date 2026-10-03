@@ -1,5 +1,5 @@
-use std::time::Duration;
 use serde::{Deserialize, Serialize};
+use std::time::Duration;
 
 pub const CAPTURE_SCHEME: &str = "seomi-capture";
 pub const MAX_CAPTURE_HTML_CHARS: usize = 1_000_000;

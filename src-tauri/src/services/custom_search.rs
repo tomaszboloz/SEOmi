@@ -13,6 +13,12 @@ mod tests_1;
 mod tests_2;
 #[cfg(test)]
 mod tests_common;
+#[cfg(test)]
+mod tests_extraction_edges;
+#[cfg(test)]
+mod tests_validation_edges;
+#[cfg(test)]
+mod tests_xpath_edges;
 
 pub use extraction::{
     extract_custom_search_results, extract_custom_search_results_with_budget,
