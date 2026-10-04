@@ -10,6 +10,7 @@ import { useToolsStore } from '@/stores/toolsStore';
 import { areAuditNotificationsEnabled, disableAuditNotifications, enableAuditNotifications } from '@/services/desktopNotifications';
 import { createProjectBackup, parseProjectBackup, restoreProjectBackup, serializeProjectBackup } from '@/services/projectBackup';
 import { downloadBlob } from '@/services/download';
+import { useAsyncOperationScope } from '@/hooks/useAsyncOperationScope';
 
 export const useSettingsHandlers = () => {
   const { t } = useTranslation();
@@ -30,15 +31,23 @@ export const useSettingsHandlers = () => {
 
   const updateState = (u: Partial<typeof state>) => setState(prev => ({ ...prev, ...u }));
   const backupFileInput = useRef<HTMLInputElement>(null);
-
+  const beginCredentials = useAsyncOperationScope(activeProjectId);
+  const updateCredentialDraft = (patch: Partial<typeof state>) => {
+    beginCredentials('save'); beginCredentials('test');
+    updateState({ ...patch, savedSuccess: false, testingDataForSeo: false, dataForSeoTestStatus: null });
+  };
   useEffect(() => {
-    updateState({
-      googleMetricsKey: googleMetricsApiKey, dataforseoLogin: dataForSeoCredentials.login,
-      dataforseoPass: dataForSeoCredentials.password,
-      auditNotificationsEnabled: activeProjectId ? areAuditNotificationsEnabled(activeProjectId) : false,
-      notificationStatus: null
-    });
-  }, [googleMetricsApiKey, activeProjectId, dataForSeoCredentials.login, dataForSeoCredentials.password]);
+    updateState({ savedSuccess: false, testingDataForSeo: false, dataForSeoTestStatus: null });
+  }, [activeProjectId]);
+
+  useEffect(() => { updateState({ googleMetricsKey: googleMetricsApiKey }); }, [googleMetricsApiKey, activeProjectId]);
+  useEffect(() => {
+    beginCredentials('test');
+    updateState({ dataforseoLogin: dataForSeoCredentials.login, dataforseoPass: dataForSeoCredentials.password, testingDataForSeo: false, dataForSeoTestStatus: null });
+  }, [activeProjectId, dataForSeoCredentials.login, dataForSeoCredentials.password, beginCredentials]);
+  useEffect(() => {
+    updateState({ auditNotificationsEnabled: activeProjectId ? areAuditNotificationsEnabled(activeProjectId) : false, notificationStatus: null });
+  }, [activeProjectId]);
 
   const handleAuditNotificationsChange = async (enabled: boolean) => {
     if (!activeProjectId) return;
@@ -50,11 +59,15 @@ export const useSettingsHandlers = () => {
 
   const handleSaveGeneral = async (e: React.SyntheticEvent) => {
     e.preventDefault(); updateState({ savedSuccess: false });
+    if (!activeProjectId) return;
+    const isCurrent = beginCredentials('save');
     try {
       await useSettingsStore.getState().saveDataForSeoCredentials({ login: state.dataforseoLogin, password: state.dataforseoPass });
+      if (!isCurrent()) return;
       await useSettingsStore.getState().saveGoogleMetricsApiKey(state.googleMetricsKey);
+      if (!isCurrent()) return;
       updateState({ savedSuccess: true });
-      setTimeout(() => updateState({ savedSuccess: false }), 2000);
+      setTimeout(() => { if (isCurrent()) updateState({ savedSuccess: false }); }, 2000);
     } catch {}
   };
 
@@ -75,13 +88,14 @@ export const useSettingsHandlers = () => {
   };
 
   const handleTestDataForSeo = async () => {
+    const isCurrent = beginCredentials('test');
     if (!state.dataforseoLogin.trim() || !state.dataforseoPass) return updateState({ dataForSeoTestStatus: t('dataforseo.enterCredentials') });
     updateState({ testingDataForSeo: true, dataForSeoTestStatus: null });
     try {
       await new DataForSEOClient(state.dataforseoLogin.trim(), state.dataforseoPass).verifyCredentials();
-      updateState({ dataForSeoTestStatus: t('dataforseo.connectionConfirmed') });
-    } catch (error) { updateState({ dataForSeoTestStatus: error instanceof Error ? t('dataforseo.connectionFailed', { error: error.message }) : t('dataforseo.connectionFailed', { error: t('auditProblems.unknown') }) });
-    } finally { updateState({ testingDataForSeo: false }); }
+      if (isCurrent()) updateState({ dataForSeoTestStatus: t('dataforseo.connectionConfirmed') });
+    } catch (error) { if (isCurrent()) updateState({ dataForSeoTestStatus: error instanceof Error ? t('dataforseo.connectionFailed', { error: error.message }) : t('dataforseo.connectionFailed', { error: t('auditProblems.unknown') }) });
+    } finally { if (isCurrent()) updateState({ testingDataForSeo: false }); }
   };
 
   const handleExportProject = async () => {
@@ -112,9 +126,9 @@ export const useSettingsHandlers = () => {
   };
 
   return {
-    ...state, setDataforseoLogin: (v: string) => updateState({ dataforseoLogin: v }),
-    setDataforseoPass: (v: string) => updateState({ dataforseoPass: v }),
-    setGoogleMetricsKey: (v: string) => updateState({ googleMetricsKey: v }),
+    ...state, setDataforseoLogin: (v: string) => updateCredentialDraft({ dataforseoLogin: v }),
+    setDataforseoPass: (v: string) => updateCredentialDraft({ dataforseoPass: v }),
+    setGoogleMetricsKey: (v: string) => updateCredentialDraft({ googleMetricsKey: v }),
     backupFileInput, activeProject, handleAuditNotificationsChange, handleSaveGeneral,
     handleAiKeyChange, handleCheckUpdates, handleInstallUpdate, handleTestDataForSeo,
     handleExportProject, handleImportProject
