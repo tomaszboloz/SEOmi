@@ -13,6 +13,9 @@ mod model_tests;
 #[cfg(test)]
 mod history_tests;
 
+#[cfg(test)]
+mod launch_tests;
+
 pub use execution::run_scheduled_task;
 pub use launch::headless_launch_context;
 pub use models::{ScheduledExecutionHandoff, ScheduledTaskExecution, ScheduledTaskManifest};

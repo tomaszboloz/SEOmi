@@ -99,3 +99,8 @@ valid_identifier/validate_project_and_schedule/validate_manifest have direct con
 ### Queue snapshot and cleanup ownership
 
 valid_identifier/parse_snapshot have direct assertions in audit_queue_worker/model_tests.rs for schema/defaults/statuses/limits and invalid inputs. queue_is_stale/queue_has_pending_items/stop_requested_for_run/queue_value have direct assertions in state_tests.rs for exact time boundary, run ownership and serialization roundtrip. audit_queue/cleanup.rs tests exact handoff selection and real OS-lock preservation while removing JSON.10new cases,707all-target stable/nightlyPASS; queue models and cleanup100%measuredlines/functions/branches. Tauri delete_project_audit_queue itself is not presented as directly asserted by the selector test. Global assertions remain OPEN.
+
+
+### Public worker launch contexts
+
+Both public worker headless_launch_context functions and public scheduler::scheduled_launch_context are directly asserted in scheduler/worker_process_tests.rs using separate processes and real CLI args for recurring/queue/absent/malformed contexts. Parent requires child success and exactly1passed assertion. Shared worker_launch_context has direct mode/identifier/missing/duplicate contracts in scheduler/launch_tests.rs; each worker parser has reserved-flag regressions.4behavioral cases plus1child fixture,712all-target stable/nightlyPASS. Global direct assertions remain OPEN.

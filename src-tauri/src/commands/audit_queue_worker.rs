@@ -24,6 +24,9 @@ mod model_tests;
 #[cfg(test)]
 mod state_tests;
 
+#[cfg(test)]
+mod launch_tests;
+
 use item_processor::{handle_stop_requested, process_queue_item};
 use lock::*;
 use models::*;
@@ -123,21 +126,9 @@ pub async fn run_audit_queue(
 }
 
 pub fn headless_launch_context() -> Option<(String, String)> {
-    let args = std::env::args().collect::<Vec<_>>();
-    if !args
-        .iter()
-        .any(|value| value == "--seomi-audit-queue-headless")
-    {
-        return None;
-    }
-    let value_after = |flag: &str| {
-        args.windows(2)
-            .find(|pair| pair[0] == flag)
-            .map(|pair| pair[1].clone())
-            .filter(|value| valid_identifier(value))
-    };
-    Some((
-        value_after("--seomi-scheduled-project")?,
-        value_after("--seomi-scheduled-id")?,
-    ))
+    launch_context_from_args(&std::env::args().collect::<Vec<_>>())
+}
+
+fn launch_context_from_args(args: &[String]) -> Option<(String, String)> {
+    scheduler::worker_launch_context(args, "--seomi-audit-queue-headless")
 }

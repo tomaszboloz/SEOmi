@@ -1,5 +1,6 @@
 use std::env;
 mod launch;
+pub(crate) use launch::worker_launch_context;
 #[cfg(target_os = "macos")]
 mod macos;
 mod models;
@@ -41,6 +42,8 @@ mod launch_tests;
 mod plist_tests;
 #[cfg(test)]
 mod time_tests;
+#[cfg(test)]
+mod worker_process_tests;
 
 #[tauri::command]
 pub fn register_audit_wakeup(
