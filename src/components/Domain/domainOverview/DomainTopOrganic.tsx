@@ -2,6 +2,7 @@ import React from 'react';
 import { Search, FileText } from 'lucide-react';
 import type { DomainOverviewData } from '@/types';
 import type { TFunction } from 'i18next';
+import { appLocale } from '@/services/localeFormat';
 
 interface DomainTopOrganicProps {
   overview: DomainOverviewData;
@@ -48,7 +49,7 @@ export const DomainTopOrganic: React.FC<DomainTopOrganicProps> = ({
                     </span>
                   </td>
                   <td className="py-2.5 text-right text-slate-300">
-                    {k.search_volume?.toLocaleString() ?? '—'}
+                    {k.search_volume?.toLocaleString(appLocale()) ?? '—'}
                   </td>
                   <td className="py-2.5 text-right text-slate-400">
                     {k.traffic_share === null ? '—' : `${k.traffic_share}%`}
@@ -91,7 +92,7 @@ export const DomainTopOrganic: React.FC<DomainTopOrganicProps> = ({
                     {p.traffic_percentage === null ? '—' : `${p.traffic_percentage}%`}
                   </td>
                   <td className="py-2.5 text-right text-slate-400">
-                    {p.keywords_count?.toLocaleString() ?? '—'}
+                    {p.keywords_count?.toLocaleString(appLocale()) ?? '—'}
                   </td>
                 </tr>
               ))}

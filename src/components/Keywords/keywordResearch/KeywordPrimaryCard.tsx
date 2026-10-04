@@ -4,6 +4,7 @@ import type { TFunction } from 'i18next';
 import type { KeywordIdea } from '@/types';
 import { TrendChart } from '@/components/Charts/TrendChart';
 import { getIntentBadge, intentLabel } from './keywordResearchHelpers';
+import { appLocale } from '@/services/localeFormat';
 
 interface KeywordPrimaryCardProps {
   primaryItem: KeywordIdea;
@@ -59,7 +60,7 @@ export const KeywordPrimaryCard: React.FC<KeywordPrimaryCardProps> = ({
             <span>{t('keywordResearchUi.monthlyVolume')}</span>
           </div>
           <div className="text-2xl font-bold text-white font-mono">
-            {primaryItem.search_volume.toLocaleString()}
+            {primaryItem.search_volume.toLocaleString(appLocale())}
           </div>
           <span className="text-[11px] text-slate-500">{t('keywordResearchUi.searchesPerMonth')}</span>
         </div>

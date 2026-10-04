@@ -3,6 +3,7 @@ import { Link2, Globe, Layers, Shield } from 'lucide-react';
 import { TrendChart } from '@/components/Charts/TrendChart';
 import type { BacklinkProfileData, BacklinkProfileHistory } from '@/types';
 import type { TFunction } from 'i18next';
+import { appLocale } from '@/services/localeFormat';
 
 interface BacklinkMetricsGridProps {
   profile: BacklinkProfileData;
@@ -29,7 +30,7 @@ export const BacklinkMetricsGrid: React.FC<BacklinkMetricsGridProps> = ({
             <span>{t('backlinkUi.totalBacklinks')}</span>
           </div>
           <div className="text-2xl font-bold text-white font-mono">
-            {profile.total_backlinks.toLocaleString()}
+            {profile.total_backlinks.toLocaleString(appLocale())}
           </div>
           <span className="text-[11px] text-slate-500">
             {t('backlinkUi.knownInbound')}
@@ -42,7 +43,7 @@ export const BacklinkMetricsGrid: React.FC<BacklinkMetricsGridProps> = ({
             <span>{t('backlinkUi.referringDomains')}</span>
           </div>
           <div className="text-2xl font-bold text-white font-mono">
-            {profile.referring_domains.toLocaleString()}
+            {profile.referring_domains.toLocaleString(appLocale())}
           </div>
           <span className="text-[11px] text-slate-500">
             {t('backlinkUi.uniqueRoots')}
@@ -55,7 +56,7 @@ export const BacklinkMetricsGrid: React.FC<BacklinkMetricsGridProps> = ({
             <span>{t('backlinkUi.referringSubnets')}</span>
           </div>
           <div className="text-2xl font-bold text-white font-mono">
-            {profile.referring_subnets?.toLocaleString() ?? '—'}
+            {profile.referring_subnets?.toLocaleString(appLocale()) ?? '—'}
           </div>
           <span className="text-[11px] text-slate-500">
             {t('backlinkUi.classC')}

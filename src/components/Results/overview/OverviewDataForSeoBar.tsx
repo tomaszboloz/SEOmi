@@ -3,6 +3,7 @@ import { useTranslation } from "react-i18next";
 import { ArrowUpRight, Database } from "lucide-react";
 import type { PageAuditData } from "@/types";
 import { useAuditStore } from "@/stores/auditStore";
+import { appLocale } from '@/services/localeFormat';
 
 interface OverviewDataForSeoBarProps {
   audit: PageAuditData;
@@ -54,7 +55,7 @@ export const OverviewDataForSeoBar: React.FC<OverviewDataForSeoBarProps> = ({
         <div>
           <div className="text-lg font-black text-white font-mono">
             {dataforseoData
-              ? dataforseoData.total_backlinks.toLocaleString()
+              ? dataforseoData.total_backlinks.toLocaleString(appLocale())
               : "—"}
           </div>
           <span className="text-[10px] uppercase text-slate-400 font-semibold tracking-wider">
@@ -65,7 +66,7 @@ export const OverviewDataForSeoBar: React.FC<OverviewDataForSeoBarProps> = ({
         <div>
           <div className="text-lg font-black text-emerald-400 font-mono">
             {dataforseoData
-              ? dataforseoData.referring_domains.toLocaleString()
+              ? dataforseoData.referring_domains.toLocaleString(appLocale())
               : "—"}
           </div>
           <span className="text-[10px] uppercase text-slate-400 font-semibold tracking-wider">

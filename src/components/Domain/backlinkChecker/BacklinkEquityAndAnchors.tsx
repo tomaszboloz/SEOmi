@@ -2,6 +2,7 @@ import React from 'react';
 import { BarChart2, Sparkles } from 'lucide-react';
 import type { BacklinkProfileData } from '@/types';
 import type { TFunction } from 'i18next';
+import { appLocale } from '@/services/localeFormat';
 
 interface BacklinkEquityAndAnchorsProps {
   profile: BacklinkProfileData;
@@ -67,7 +68,7 @@ export const BacklinkEquityAndAnchors: React.FC<BacklinkEquityAndAnchorsProps> =
           {t('backlinkUi.anchorSummary', {
             count: profile.anchors.length,
             total:
-              profile.total_anchor_rows?.toLocaleString() ??
+              profile.total_anchor_rows?.toLocaleString(appLocale()) ??
               t('backlinkUi.unknownCount'),
           })}
         </p>

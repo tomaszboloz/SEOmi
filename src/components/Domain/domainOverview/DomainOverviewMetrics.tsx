@@ -2,6 +2,7 @@ import React from 'react';
 import { TrendingUp, Search, Shield, Link2 } from 'lucide-react';
 import type { DomainOverviewData } from '@/types';
 import type { TFunction } from 'i18next';
+import { appLocale } from '@/services/localeFormat';
 
 interface DomainOverviewMetricsProps {
   overview: DomainOverviewData;
@@ -20,7 +21,7 @@ export const DomainOverviewMetrics: React.FC<DomainOverviewMetricsProps> = ({
           <span>{t('domainResearchUi.monthlyTraffic')}</span>
         </div>
         <div className="text-2xl font-bold text-white font-mono">
-          {overview.organic_traffic?.toLocaleString() ?? '—'}
+          {overview.organic_traffic?.toLocaleString(appLocale()) ?? '—'}
         </div>
         <span className="text-[11px] text-slate-500">
           {t('domainResearchUi.estimatedVisitors')}
@@ -33,7 +34,7 @@ export const DomainOverviewMetrics: React.FC<DomainOverviewMetricsProps> = ({
           <span>{t('domainResearchUi.organicKeywords')}</span>
         </div>
         <div className="text-2xl font-bold text-white font-mono">
-          {overview.organic_keywords?.toLocaleString() ?? '—'}
+          {overview.organic_keywords?.toLocaleString(appLocale()) ?? '—'}
         </div>
         <span className="text-[11px] text-slate-500">
           {t('domainResearchUi.rankedTop100')}
@@ -64,7 +65,7 @@ export const DomainOverviewMetrics: React.FC<DomainOverviewMetricsProps> = ({
           <span>{t('domainResearchUi.referringDomains')}</span>
         </div>
         <div className="text-2xl font-bold text-white font-mono">
-          {overview.referring_domains?.toLocaleString() ?? '—'}
+          {overview.referring_domains?.toLocaleString(appLocale()) ?? '—'}
         </div>
         <span className="text-[11px] text-slate-500">
           {t('domainResearchUi.uniqueRootDomains')}

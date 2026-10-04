@@ -1,5 +1,6 @@
 import { useTranslation } from 'react-i18next';
 import type { SearchIntent, TopicalNode } from '@/services/topicalMap';
+import { appLocale } from '@/services/localeFormat';
 
 export const useTopicalLabels = () => {
   const { t } = useTranslation();
@@ -30,7 +31,7 @@ export const useTopicalLabels = () => {
   const sourceMetric = (value: number | null) =>
     value === null
       ? t('semanticWorkspace.sourceMetricMissing')
-      : value.toLocaleString();
+      : value.toLocaleString(appLocale());
 
   return { t, intentLabels, lifecycleLabels, nodeKindLabels, sourceMetric };
 };

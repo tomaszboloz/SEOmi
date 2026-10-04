@@ -4,6 +4,7 @@ import { buildSemanticAudit, type SemanticAuditFinding } from '@/services/semant
 import type { TopicalMapDocument } from '@/services/topicalMap';
 import type { CrawlRunRecord, CrawledPageSummary } from '@/types';
 import { compareSemanticRuns, type SemanticRunChange } from '@/services/semanticRunComparison';
+import { appLocale } from '@/services/localeFormat';
 
 interface Props { document: TopicalMapDocument; pages: CrawledPageSummary[]; runs?: CrawlRunRecord[]; currentRunId?: string; }
 type Filter = 'all' | 'risk' | 'review' | 'notice';
@@ -68,7 +69,7 @@ export const SemanticAuditPanel = ({ document, pages, runs = [], currentRunId }:
       <section aria-label={t('semanticAudit.comparisonAria')} className="rounded-xl border border-slate-800 bg-slate-900/45 p-4">
         <div className="flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
           <div><h4 className="text-xs font-semibold text-slate-200">{t('semanticAudit.comparisonTitle')}</h4><p className="mt-1 max-w-3xl text-[10px] leading-4 text-slate-500">{t('semanticAudit.comparisonDescription')}</p></div>
-          {baselineRuns.length > 0 && <label className="text-[10px] text-slate-500">{t('semanticAudit.baselineRun')}<select aria-label={t('semanticAudit.baselineRunAria')} value={baselineRun?.id ?? ''} onChange={(event) => setSelectedBaselineRunId(event.target.value)} className="mt-1 block h-9 min-w-56 rounded-md border border-slate-700 bg-slate-950 px-2 text-xs text-slate-200 outline-none focus:border-sky-400">{baselineRuns.map((run) => <option key={run.id} value={run.id}>{new Date(run.completedAt).toLocaleString()} · {t('crawl.ui.urlsCount', { count: run.result.pages_crawled })}</option>)}</select></label>}
+          {baselineRuns.length > 0 && <label className="text-[10px] text-slate-500">{t('semanticAudit.baselineRun')}<select aria-label={t('semanticAudit.baselineRunAria')} value={baselineRun?.id ?? ''} onChange={(event) => setSelectedBaselineRunId(event.target.value)} className="mt-1 block h-9 min-w-56 rounded-md border border-slate-700 bg-slate-950 px-2 text-xs text-slate-200 outline-none focus:border-sky-400">{baselineRuns.map((run) => <option key={run.id} value={run.id}>{new Date(run.completedAt).toLocaleString(appLocale())} · {t('crawl.ui.urlsCount', { count: run.result.pages_crawled })}</option>)}</select></label>}
         </div>
         {!baselineRun && <p className="mt-3 rounded-md border border-dashed border-slate-800 px-3 py-5 text-center text-[10px] text-slate-500">{t('semanticAudit.noBaseline')}</p>}
         {comparison && <>

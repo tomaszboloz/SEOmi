@@ -5,6 +5,7 @@ import type { AiPromptComparisonResult, CrawlRunRecord } from '@/types';
 import type { AiCitationEvidence } from '@/services/aiCitationEvidence';
 import type { CitationSummary } from './searchPromptsTypes';
 import { AiCitationEvidenceList } from './AiCitationEvidenceList';
+import { appLocale } from '@/services/localeFormat';
 
 interface AiSearchResultCardProps {
   result: AiPromptComparisonResult;
@@ -75,7 +76,7 @@ export const AiSearchResultCard: React.FC<AiSearchResultCardProps> = ({
         <p className="text-[10px] text-slate-600">
           {t('aiVisibility.search.providerMeta', {
             provider: result.provider,
-            date: new Date(result.captured_at).toLocaleString(),
+            date: new Date(result.captured_at).toLocaleString(appLocale()),
           })}
         </p>
       </div>

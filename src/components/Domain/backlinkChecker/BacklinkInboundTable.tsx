@@ -1,6 +1,7 @@
 import React from 'react';
 import type { BacklinkProfileData } from '@/types';
 import type { TFunction } from 'i18next';
+import { appLocale } from '@/services/localeFormat';
 
 interface BacklinkInboundTableProps {
   profile: BacklinkProfileData;
@@ -22,8 +23,8 @@ export const BacklinkInboundTable: React.FC<BacklinkInboundTableProps> = ({
           {t('backlinkUi.returnedBacklinks')}
         </h3>
         <span className="text-xs text-slate-400 font-mono">
-          {profile.backlinks.length.toLocaleString()} /{' '}
-          {profile.total_backlink_rows?.toLocaleString() ??
+          {profile.backlinks.length.toLocaleString(appLocale())} /{' '}
+          {profile.total_backlink_rows?.toLocaleString(appLocale()) ??
             t('backlinkUi.unknownCount')}
         </span>
       </div>

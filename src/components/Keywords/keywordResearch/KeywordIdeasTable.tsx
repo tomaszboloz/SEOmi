@@ -3,6 +3,7 @@ import { Filter, Plus, Check } from 'lucide-react';
 import type { TFunction } from 'i18next';
 import type { KeywordIdea } from '@/types';
 import { getIntentBadge, getDifficultyColor, intentLabel } from './keywordResearchHelpers';
+import { appLocale } from '@/services/localeFormat';
 
 interface KeywordIdeasTableProps {
   filteredResults: KeywordIdea[];
@@ -84,7 +85,7 @@ export const KeywordIdeasTable: React.FC<KeywordIdeasTableProps> = ({
                       </span>
                     </td>
                     <td className="px-4 py-3.5 text-right font-mono text-slate-200">
-                      {item.search_volume.toLocaleString()}
+                      {item.search_volume.toLocaleString(appLocale())}
                     </td>
                     <td className="px-4 py-3.5 text-center">
                       <span className={`text-xs px-2 py-0.5 rounded-md font-mono border ${getDifficultyColor(item.difficulty)}`}>

@@ -1,6 +1,7 @@
 import React from "react";
 import { useTranslation } from "react-i18next";
 import { formatCruxValue, cruxCategory } from "../cruxEvidence";
+import { appLocale } from '@/services/localeFormat';
 
 export const PageSpeedField: React.FC<{ session: any; cruxMetrics: any; collectionPeriod: string | null }> = ({
   session,
@@ -15,7 +16,7 @@ export const PageSpeedField: React.FC<{ session: any; cruxMetrics: any; collecti
         <div>
           <h2 className="text-lg font-bold text-white">{t("pageSpeedUi.fieldTitle")}</h2>
           <p className="mt-1 text-xs text-slate-500">
-            {session.crux.source} · {session.crux.scope} · {session.crux.formFactor} · {t("pageSpeedUi.fetchedAt")} {new Date(session.crux.fetchedAt).toLocaleString()}
+            {session.crux.source} · {session.crux.scope} · {session.crux.formFactor} · {t("pageSpeedUi.fetchedAt")} {new Date(session.crux.fetchedAt).toLocaleString(appLocale())}
           </p>
         </div>
         <span className="text-xs text-slate-400">

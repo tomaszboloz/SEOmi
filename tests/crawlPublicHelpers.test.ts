@@ -45,7 +45,7 @@ it('creates independent navigation defaults so changing one instance cannot cont
 });
 
 it('formats rounded numbers with the active locale and retains historical filter namespaces',()=>{
-  expect(helpers.formatNumber(1234.6)).toBe((1235).toLocaleString());
+  expect(helpers.formatNumber(1234.6)).toBe('1,235');
   expect(helpers.formatNumber(0)).toBe('0');
   expect(helpers.filterPresetsKey('a')).toBe('seomi_project_a_crawl_filter_presets_v1');
   expect(helpers.filterPresetsKey('b')).not.toBe(helpers.filterPresetsKey('a'));

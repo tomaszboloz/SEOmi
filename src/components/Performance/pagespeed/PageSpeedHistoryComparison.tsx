@@ -1,6 +1,7 @@
 import React from "react";
 import { useTranslation } from "react-i18next";
 import { formatDelta } from "../performanceFormatting";
+import { appLocale } from '@/services/localeFormat';
 
 export const PageSpeedHistoryComparison: React.FC<{ comparison: any }> = ({ comparison }) => {
   const { t } = useTranslation();
@@ -11,8 +12,8 @@ export const PageSpeedHistoryComparison: React.FC<{ comparison: any }> = ({ comp
         <h3 className="text-xs font-semibold text-sky-200">{t("pageSpeedUi.comparisonTitle")}</h3>
         <span className="text-[10px] text-slate-500">
           {t("pageSpeedUi.comparisonMeta", {
-            baseline: new Date(comparison.baseline.capturedAt).toLocaleString(),
-            current: new Date(comparison.current.capturedAt).toLocaleString(),
+            baseline: new Date(comparison.baseline.capturedAt).toLocaleString(appLocale()),
+            current: new Date(comparison.current.capturedAt).toLocaleString(appLocale()),
           })}
         </span>
       </div>

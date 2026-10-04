@@ -2,6 +2,7 @@ import React from 'react';
 import { Trash2 } from 'lucide-react';
 import type { TFunction } from 'i18next';
 import type { SavedKeywordItem } from '@/types';
+import { appLocale } from '@/services/localeFormat';
 
 interface SavedKeywordsTableRowProps {
   item: SavedKeywordItem;
@@ -84,7 +85,7 @@ export const SavedKeywordsTableRow: React.FC<SavedKeywordsTableRowProps> = ({
         </div>
       </td>
       <td className="px-4 py-3.5 text-right font-mono text-slate-200">
-        {item.search_volume.toLocaleString()}
+        {item.search_volume.toLocaleString(appLocale())}
       </td>
       <td className="px-4 py-3.5 text-center font-mono">
         <span className={`text-xs px-2 py-0.5 rounded-md border ${getDiffColor(item.difficulty)}`}>
