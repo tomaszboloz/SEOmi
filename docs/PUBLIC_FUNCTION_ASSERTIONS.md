@@ -164,3 +164,9 @@ Nine direct useCrawlExecution cases now assert stale pending validation/staging/
 ### Crawl validation filters ownership
 
 useCrawlErrorFilters now has14expanded direct cases covering current/stale validation, project/request/input/edit/unmount invalidation, null stale return, exact native args, ordered/bounded preview, normalization, errors and page/resource filtering. FiveREDcases failed before the ownership fix; final32targetedtestsPASS/3720frontendtestsPASS. Module27/28branches;global95%gateFAIL. Native filter engine and remaining form/profile async paths are not claimed verified by these synthetic invoke adapters.
+
+## Crawl form actions and ownership
+
+useCrawlFormState has25new expanded direct renderHook cases in crawlFormOwnership/crawlFormActions: project/latest/unmount import ownership; profile project/latest/selection/draft/unmount invalidation; own persisted config acceptance; malformed headers and exact current errors; URL/limit and row state; import rejection evidence/cap10000; custom-search updates/cap10; query/host normalization; exact profile args/selection/removal. NineinitialREDcases and two own-configurationREDcases preceded the final fix.27targetedtests including shared scopePASS,TypeScript/changed-fileESLintPASS. Synthetic injected store/native adapters do not prove live vault/native cancellation. Global>=95% and complete public assertion inventory remainOPEN.
+
+Final fresh frontend3745tests/494filesPASS;form114/114statements84/84lines26/26functions35/36branches;global95%gateFAIL91.42%statements92.79%lines90.03%functions84.31%branches. MAXLOC1502050files/zero violations. Own-configuration tests use actual reactive store updates with controlled async adapters; production vault behavior remains separately scoped.
