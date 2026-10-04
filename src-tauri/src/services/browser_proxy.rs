@@ -15,6 +15,12 @@ mod upstream;
 #[cfg(test)]
 mod tests;
 
+#[cfg(test)]
+mod parse_tests;
+
+#[cfg(test)]
+mod runtime_tests;
+
 use server::serve_connection;
 use types::MAX_CONCURRENT_CONNECTIONS;
 use upstream::reject;

@@ -55,7 +55,6 @@ pub(super) fn canonical_identity_url(input: &str) -> Option<url::Url> {
     url::Url::parse(&normalized).ok()
 }
 
-#[allow(dead_code)]
 pub(super) fn crawl_canonical_declarations(
     document: &Html,
     final_url: &url::Url,

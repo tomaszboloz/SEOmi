@@ -25,16 +25,28 @@ pub fn init_frontier(
     let mut rejected_urls: Vec<RejectedCrawlUrl> = Vec::new();
 
     let mut seed_candidates = if setup.config.list_mode {
-        setup.config.seed_urls.clone()
+        setup
+            .config
+            .seed_urls
+            .iter()
+            .cloned()
+            .map(|url| (url, "seed"))
+            .collect::<Vec<_>>()
     } else {
-        vec![setup.normalized_start_url.to_string()]
+        vec![(setup.normalized_start_url.to_string(), "start")]
     };
     if !setup.config.list_mode {
-        seed_candidates.extend(sitemap_urls.iter().cloned());
+        seed_candidates.extend(sitemap_urls.iter().cloned().map(|url| (url, "sitemap")));
     }
-    seed_candidates.extend(setup.resume_frontier_urls.iter().cloned());
+    seed_candidates.extend(
+        setup
+            .resume_frontier_urls
+            .iter()
+            .cloned()
+            .map(|url| (url, "resume")),
+    );
 
-    for candidate in seed_candidates {
+    for (candidate, discovery_kind) in seed_candidates {
         let url = match validate_and_normalize_url(&candidate) {
             Ok(url) => url,
             Err(error) => {
@@ -86,7 +98,7 @@ pub fn init_frontier(
                     anchor_text: None,
                 },
             );
-        } else if setup.config.list_mode {
+        } else if discovery_kind == "seed" {
             *discovery_provenance_truncated |= !record_discovery_source(
                 discovery_sources_by_url,
                 &normalized,
@@ -101,7 +113,7 @@ pub fn init_frontier(
                 discovery_sources_by_url,
                 &normalized,
                 CrawledDiscoverySource {
-                    kind: "sitemap".into(),
+                    kind: discovery_kind.into(),
                     source_url: None,
                     anchor_text: None,
                 },

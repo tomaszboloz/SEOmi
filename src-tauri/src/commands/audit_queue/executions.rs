@@ -1,5 +1,5 @@
 use super::paths::{
-    queue_execution_path, queue_result_path, write_atomic, MAX_QUEUE_EXECUTION_BYTES,
+    queue_execution_path, queue_result_path, write_atomic_with_limit, MAX_QUEUE_EXECUTION_BYTES,
     MAX_QUEUE_RESULT_BYTES,
 };
 use crate::commands::crawl_storage;
@@ -8,8 +8,8 @@ use std::fs;
 use std::io::ErrorKind;
 use tauri::AppHandle;
 
-pub(crate) fn write_queue_execution(
-    app: &AppHandle,
+pub(crate) fn write_queue_execution<R: tauri::Runtime>(
+    app: &AppHandle<R>,
     project_id: &str,
     run_id: &str,
     execution: &Value,
@@ -19,11 +19,12 @@ pub(crate) fn write_queue_execution(
     if bytes.len() > MAX_QUEUE_EXECUTION_BYTES {
         return Err("Audit queue execution exceeds the safety limit.".into());
     }
-    write_atomic(&queue_execution_path(app, project_id, run_id)?, execution)
+    let path = queue_execution_path(app, project_id, run_id)?;
+    write_atomic_with_limit(&path, execution, MAX_QUEUE_EXECUTION_BYTES)
 }
 
-pub(crate) fn write_queue_result(
-    app: &AppHandle,
+pub(crate) fn write_queue_result<R: tauri::Runtime>(
+    app: &AppHandle<R>,
     project_id: &str,
     run_id: &str,
     item_id: &str,
@@ -34,15 +35,16 @@ pub(crate) fn write_queue_result(
     if bytes.len() > MAX_QUEUE_RESULT_BYTES {
         return Err("Audit queue result exceeds the safety limit.".into());
     }
-    write_atomic(
+    write_atomic_with_limit(
         &queue_result_path(app, project_id, run_id, item_id)?,
         result,
+        MAX_QUEUE_RESULT_BYTES,
     )
 }
 
 #[tauri::command]
-pub fn list_project_audit_queue_executions(
-    app: AppHandle,
+pub fn list_project_audit_queue_executions<R: tauri::Runtime>(
+    app: AppHandle<R>,
     project_id: String,
 ) -> Result<Vec<Value>, String> {
     let directory = crawl_storage::project_directory(&app, &project_id)?;
@@ -62,11 +64,8 @@ pub fn list_project_audit_queue_executions(
         if !name.starts_with("audit_queue_execution_") || !name.ends_with(".json") {
             continue;
         }
-        let bytes = fs::read(&path)
+        let bytes = crawl_storage::read_bytes_bounded(&path, MAX_QUEUE_EXECUTION_BYTES)
             .map_err(|error| format!("Unable to read audit queue execution: {error}"))?;
-        if bytes.len() > MAX_QUEUE_EXECUTION_BYTES {
-            return Err("Saved audit queue execution exceeds the safety limit.".into());
-        }
         executions.push(
             serde_json::from_slice(&bytes)
                 .map_err(|error| format!("Saved audit queue execution is invalid: {error}"))?,
@@ -79,8 +78,8 @@ pub fn list_project_audit_queue_executions(
 }
 
 #[tauri::command]
-pub fn list_project_audit_queue_results(
-    app: AppHandle,
+pub fn list_project_audit_queue_results<R: tauri::Runtime>(
+    app: AppHandle<R>,
     project_id: String,
 ) -> Result<Vec<Value>, String> {
     let directory = crawl_storage::project_directory(&app, &project_id)?;
@@ -100,11 +99,8 @@ pub fn list_project_audit_queue_results(
         if !name.starts_with("audit_queue_result_") || !name.ends_with(".json") {
             continue;
         }
-        let bytes = fs::read(&path)
+        let bytes = crawl_storage::read_bytes_bounded(&path, MAX_QUEUE_RESULT_BYTES)
             .map_err(|error| format!("Unable to read audit queue result: {error}"))?;
-        if bytes.len() > MAX_QUEUE_RESULT_BYTES {
-            return Err("Saved audit queue result exceeds the safety limit.".into());
-        }
         results.push(
             serde_json::from_slice(&bytes)
                 .map_err(|error| format!("Saved audit queue result is invalid: {error}"))?,
@@ -117,8 +113,8 @@ pub fn list_project_audit_queue_results(
 }
 
 #[tauri::command]
-pub fn acknowledge_project_audit_queue_result(
-    app: AppHandle,
+pub fn acknowledge_project_audit_queue_result<R: tauri::Runtime>(
+    app: AppHandle<R>,
     project_id: String,
     run_id: String,
     item_id: String,
@@ -132,8 +128,8 @@ pub fn acknowledge_project_audit_queue_result(
 }
 
 #[tauri::command]
-pub fn acknowledge_project_audit_queue_execution(
-    app: AppHandle,
+pub fn acknowledge_project_audit_queue_execution<R: tauri::Runtime>(
+    app: AppHandle<R>,
     project_id: String,
     run_id: String,
 ) -> Result<(), String> {

@@ -59,7 +59,7 @@ it.each([
   expect(failure).toBeInstanceOf(Error);
   const label=i18n.t(`legacyUi.ai.${provider}`);
   const host=provider==='openai'?'platform.openai.com':provider==='claude'?'console.anthropic.com':'aistudio.google.com';
-  expect((failure as Error).message).toBe(i18n.t(`runtimeErrors.ai.${key}`,{provider:label,host,status,detail:'provider unavailable'}));
+  expect((failure as Error).message).toBe(i18n.t(`runtimeErrors.ai.${key}`,{provider:label,host,status,detail:i18n.t('runtimeErrors.ai.responseHidden')}));
 });
 
 it.each(['openai','claude','gemini'] as const)('rejects malformed %s suggestion responses',async provider=>{
@@ -101,7 +101,7 @@ it.each(['openai','claude','gemini'] as const)('generates %s text through a lite
 
 it.each(['openai','claude','gemini'] as const)('preserves %s hosted text errors',async provider=>{
   vi.spyOn(globalThis,'fetch').mockResolvedValue(new Response('provider unavailable',{status:503}));
-  await expect(AIService.generateText(provider,'dummy-key','model','prompt')).rejects.toThrow(i18n.t('runtimeErrors.ai.apiError',{provider:i18n.t(`legacyUi.ai.${provider}`),status:503,detail:'provider unavailable'}));
+  await expect(AIService.generateText(provider,'dummy-key','model','prompt')).rejects.toThrow(i18n.t('runtimeErrors.ai.apiError',{provider:i18n.t(`legacyUi.ai.${provider}`),status:503,detail:i18n.t('runtimeErrors.ai.responseHidden')}));
 });
 
 it.each(['openai','claude','gemini'] as const)('returns no invented text for an empty %s provider envelope',async provider=>{

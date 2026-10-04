@@ -1,3 +1,4 @@
+use super::social::MAX_FAVICONS_PER_PAGE;
 use super::*;
 
 /// Extract the same favicon declaration metadata as the single-page audit,

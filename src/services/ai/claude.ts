@@ -26,9 +26,9 @@ export const claudeRequestBody = (model: string, prompt: string): Record<string,
   ...(MODELS_WITH_SERVER_FALLBACK.has(model) ? { fallbacks: 'default' } : {}),
 });
 
-interface ClaudeMessage {
+export interface ClaudeMessage {
   stop_reason?: string | null;
-  content?: Array<{ type?: string; text?: string }>;
+  content?: Array<{ type?: string | null; text?: string | null }>;
 }
 
 /**
@@ -47,14 +47,12 @@ export const claudeMessageText = (message: ClaudeMessage): string => {
 
 export type ClaudeFetch = (input: string, init: RequestInit) => Promise<Response>;
 
-/** Single Messages API call shared by AI suggestions and free-form AI text. */
-export const requestClaudeText = async (apiKey: string, model: string, prompt: string, fetchImpl: ClaudeFetch = fetch): Promise<Response | string> => {
+/** One Messages API request shared by suggestions and free-form text. The caller reads the body with readAiResponseText. */
+export const requestClaude = (apiKey: string, model: string, prompt: string, fetchImpl: ClaudeFetch = fetch): Promise<Response> => {
   const resolvedModel = currentModel(model || CLAUDE_DEFAULT_MODEL);
-  const response = await fetchImpl(CLAUDE_MESSAGES_URL, {
+  return fetchImpl(CLAUDE_MESSAGES_URL, {
     method: 'POST',
     headers: claudeHeaders(apiKey, resolvedModel),
     body: JSON.stringify(claudeRequestBody(resolvedModel, prompt)),
   });
-  if (!response.ok) return response;
-  return claudeMessageText(await response.json() as ClaudeMessage);
 };

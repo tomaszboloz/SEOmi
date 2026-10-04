@@ -18,6 +18,8 @@ pub fn extract_page_headings(
     headings_selector: &Selector,
     issues: &mut Vec<CrawledPageIssue>,
 ) -> PageHeadingsOutcome {
+    let empty_document = (!is_html).then(|| Html::parse_document(""));
+    let document = empty_document.as_ref().unwrap_or(document);
     let h1_count = document.select(h1_selector).count();
     let heading_levels = document
         .select(headings_selector)

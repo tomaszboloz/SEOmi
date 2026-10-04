@@ -1,3 +1,7 @@
+#[path = "page_resources_discovery_inputs.rs"]
+mod inputs;
+pub use inputs::RegisterPageResourceCandidatesInput;
+
 use scraper::{Html, Selector};
 use url::Url;
 
@@ -5,18 +9,18 @@ use super::super::{models::CrawledFrame, resource_discovery::add_resource_candid
 use super::setup::CrawlSetup;
 use super::state::CrawlLoopState;
 
-#[allow(clippy::too_many_arguments)]
-pub fn register_page_resource_candidates(
-    document: &Html,
-    final_base: &Url,
-    final_url: &str,
-    frames: &[CrawledFrame],
-    script_src_selector: &Selector,
-    link_href_selector: &Selector,
-    media_src_selector: &Selector,
-    setup: &CrawlSetup,
-    state: &mut CrawlLoopState,
-) {
+pub fn register_page_resource_candidates(input: RegisterPageResourceCandidatesInput<'_>) {
+    let RegisterPageResourceCandidatesInput {
+        document,
+        final_base,
+        final_url,
+        frames,
+        script_src_selector,
+        link_href_selector,
+        media_src_selector,
+        setup,
+        state,
+    } = input;
     for element in document.select(script_src_selector) {
         let Some(src) = element.value().attr("src") else {
             continue;

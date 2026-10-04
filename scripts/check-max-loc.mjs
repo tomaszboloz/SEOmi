@@ -2,10 +2,11 @@ import { readFileSync, readdirSync, existsSync, mkdirSync, writeFileSync } from 
 import { join, resolve } from 'node:path';
 import { pathToFileURL } from 'node:url';
 const roots = ['src','src-tauri/src','src-tauri/examples','mcp-server/src','scripts','tests','mcp-server/test'];
+const sourceExtension = /\.(ts|tsx|rs|mjs|mts|js|css)$/;
 export function codeFiles(directory) {
   return readdirSync(directory,{withFileTypes:true}).flatMap(entry => {
     const path=join(directory,entry.name);
-    return entry.isDirectory() ? codeFiles(path) : /\.(ts|tsx|rs|mjs|mts)$/.test(path) ? [path] : [];
+    return entry.isDirectory() ? codeFiles(path) : sourceExtension.test(path) ? [path] : [];
   });
 }
 export function maxLocReport(files,limit=150) {
@@ -18,7 +19,9 @@ export function maxLocReport(files,limit=150) {
 }
 if(process.argv[1] && import.meta.url===pathToFileURL(resolve(process.argv[1])).href) {
  const files=process.argv.slice(2);
- const report=maxLocReport(files.length ? files : roots.filter(existsSync).flatMap(codeFiles));
+ const rootFiles = readdirSync('.',{withFileTypes:true}).filter(entry=>entry.isFile() && sourceExtension.test(entry.name)).map(entry=>entry.name);
+ const buildFiles = ['src-tauri/build.rs'].filter(existsSync);
+ const report=maxLocReport(files.length ? files : [...roots.filter(existsSync).flatMap(codeFiles),...rootFiles,...buildFiles]);
  mkdirSync('test-results',{recursive:true});
  writeFileSync('test-results/max-loc.json',JSON.stringify(report,null,2));
  console.log(JSON.stringify(report));

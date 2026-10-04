@@ -1,4 +1,5 @@
 import { useState, useMemo, useEffect } from "react";
+import { useCrawlOperationScope } from "./useCrawlOperationScope";
 import { useTranslation } from "react-i18next";
 import { crawlErrorKinds, filterCrawlErrors } from "@/services/crawlErrors";
 import type { CrawlFilterValidationResult } from "@/types";
@@ -26,6 +27,7 @@ export const useCrawlErrorFilters = (
     setErrorKindFilter("all");
     setFilterValidation(null);
     setFilterValidationError(null);
+    setIsCheckingFilters(false);
   }, [activeProjectId]);
 
   const filterPreviewUrls = useMemo(
@@ -43,7 +45,14 @@ export const useCrawlErrorFilters = (
     [crawlConfig.seedUrls, crawlResult, inputUrl],
   );
 
+  const validationScope = JSON.stringify([activeProjectId, crawlConfig.includePatterns, crawlConfig.excludePatterns, filterPreviewUrls]);
+  const beginValidation = useCrawlOperationScope(validationScope);
+  useEffect(() => {
+    setFilterValidation(null); setFilterValidationError(null); setIsCheckingFilters(false);
+  }, [validationScope]);
+
   const validateFilters = async (): Promise<CrawlFilterValidationResult | null> => {
+    const isCurrent = beginValidation("filters");
     setIsCheckingFilters(true);
     setFilterValidationError(null);
     try {
@@ -52,18 +61,22 @@ export const useCrawlErrorFilters = (
         excludePatterns: crawlConfig.excludePatterns,
         previewUrls: filterPreviewUrls,
       });
+      if (!isCurrent()) return null;
       setFilterValidation(result);
       return result;
     } catch (error) {
+      if (!isCurrent()) return null;
       setFilterValidation(null);
       setFilterValidationError(error instanceof Error ? error.message : t("siteAudit.filterCheckError"));
       return null;
     } finally {
-      setIsCheckingFilters(false);
+      if (isCurrent()) setIsCheckingFilters(false);
     }
   };
 
   const setFilterPatterns = (field: "includePatterns" | "excludePatterns", value: string) => {
+    beginValidation("filters");
+    setIsCheckingFilters(false);
     setFilterValidation(null);
     setFilterValidationError(null);
     setCrawlConfig({ [field]: value.split("\n").map((pattern) => pattern.trim()).filter(Boolean) });

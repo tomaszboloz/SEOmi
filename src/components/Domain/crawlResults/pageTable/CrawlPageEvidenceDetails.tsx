@@ -106,7 +106,7 @@ export const CrawlPageEvidenceDetails: React.FC<CrawlPageEvidenceDetailsProps> =
                 className="break-all"
               >
                 <span className="text-sky-200">
-                  {t(`crawl.discovery.${source.kind}`)}
+                  {t(`mapUi.discovery.${source.kind}`)}
                 </span>
                 {source.source_url ? ` · ${source.source_url}` : ''}
                 {source.anchor_text ? ` · anchor: „${source.anchor_text}”` : ''}

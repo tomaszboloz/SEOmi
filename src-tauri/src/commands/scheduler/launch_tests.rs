@@ -1,4 +1,5 @@
 use super::launch::launch_context_from_args;
+use super::worker_launch_context;
 
 fn args(values: &[&str]) -> Vec<String> {
     values.iter().map(|value| (*value).into()).collect()
@@ -70,4 +71,75 @@ fn unrelated_flags_and_queue_launches_do_not_become_recurring_headless_launches(
     assert!(!context.headless);
     assert!(context.project_id.is_none());
     assert!(context.schedule_id.is_none());
+}
+
+#[test]
+fn worker_context_requires_its_own_mode_and_both_valid_ids() {
+    for mode in ["--seomi-scheduled-headless", "--seomi-audit-queue-headless"] {
+        let values = args(&[
+            "seomi",
+            mode,
+            "--seomi-scheduled-id",
+            "schedule_1",
+            "--seomi-scheduled-project",
+            "project-2",
+        ]);
+        assert_eq!(
+            worker_launch_context(&values, mode),
+            Some(("project-2".into(), "schedule_1".into()))
+        );
+        assert!(worker_launch_context(&args(&["seomi"]), mode).is_none());
+        for invalid in ["", "../", "ż", "a b", &"a".repeat(81)] {
+            assert!(worker_launch_context(
+                &args(&[
+                    "seomi",
+                    mode,
+                    "--seomi-scheduled-project",
+                    invalid,
+                    "--seomi-scheduled-id",
+                    "run"
+                ]),
+                mode
+            )
+            .is_none());
+            assert!(worker_launch_context(
+                &args(&[
+                    "seomi",
+                    mode,
+                    "--seomi-scheduled-project",
+                    "project",
+                    "--seomi-scheduled-id",
+                    invalid
+                ]),
+                mode
+            )
+            .is_none());
+        }
+        assert!(worker_launch_context(
+            &args(&["seomi", mode, "--seomi-scheduled-project", "project"]),
+            mode
+        )
+        .is_none());
+        assert!(worker_launch_context(
+            &args(&["seomi", mode, "--seomi-scheduled-id", "run"]),
+            mode
+        )
+        .is_none());
+        assert_eq!(
+            worker_launch_context(
+                &args(&[
+                    "seomi",
+                    mode,
+                    "--seomi-scheduled-project",
+                    "first",
+                    "--seomi-scheduled-project",
+                    "second",
+                    "--seomi-scheduled-id",
+                    "run"
+                ]),
+                mode
+            ),
+            Some(("first".into(), "run".into()))
+        );
+    }
 }

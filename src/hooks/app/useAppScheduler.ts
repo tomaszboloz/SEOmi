@@ -7,9 +7,9 @@ import { isTauriEnvironment } from '@/services/tauri';
 import { syncAuditWakeup } from '@/services/scheduleWakeup';
 import { notifyCrawlCompleted, notifyScheduledAuditReminder } from '@/services/desktopNotifications';
 import i18n from '@/i18n';
-const loadToolsStore = () => import('@/stores/toolsStore');
+const defaultToolsStore = () => import('@/stores/toolsStore');
 
-export const useAppScheduler = ({ scheduledLaunchContext, setScheduledLaunchContext, scheduledLaunchContextReady }: ReturnType<typeof useScheduledLaunch>) => {
+export const useAppScheduler = ({ scheduledLaunchContext, setScheduledLaunchContext, scheduledLaunchContextReady }: ReturnType<typeof useScheduledLaunch>, loadToolsStore = defaultToolsStore) => {
   const activeProjectId = useProjectStore(s => s.activeProjectId);
   const setActiveTab = useAuditStore(s => s.setActiveTab);
   useEffect(() => {
@@ -21,8 +21,10 @@ export const useAppScheduler = ({ scheduledLaunchContext, setScheduledLaunchCont
       // Reminders are best-effort and project-scoped; they do not block or
       // trigger the scheduled task itself.
       void notifyScheduledAuditReminder(activeProjectId);
-      const audit = useAuditStore.getState();
       const { useToolsStore } = await loadToolsStore();
+      // Component/project and busy state can change while the module loads.
+      if (disposed || checking || useProjectStore.getState().activeProjectId !== activeProjectId) return;
+      const audit = useAuditStore.getState();
       if (audit.isLoading || audit.isBatchRunning || useToolsStore.getState().isCrawling) return;
       const launchScheduleId = scheduledLaunchContext.projectId === activeProjectId
         ? scheduledLaunchContext.scheduleId || undefined
@@ -60,7 +62,7 @@ export const useAppScheduler = ({ scheduledLaunchContext, setScheduledLaunchCont
           finishScheduledAudit(activeProjectId, schedule.id, succeeded, failure);
           const next = loadScheduledAudits(activeProjectId).find((item) => item.id === schedule.id);
           void syncAuditWakeup(activeProjectId, next).catch(() => undefined);
-          if (launchScheduleId === schedule.id) setScheduledLaunchContext({ projectId: null, scheduleId: null, headless: false });
+          if (!disposed && useProjectStore.getState().activeProjectId === activeProjectId && launchScheduleId === schedule.id) setScheduledLaunchContext({ projectId: null, scheduleId: null, headless: false });
         } catch (error) {
           console.error(i18n.t('runtimeErrors.app.schedulePersistFailed'), error);
         }
@@ -82,5 +84,5 @@ export const useAppScheduler = ({ scheduledLaunchContext, setScheduledLaunchCont
       window.clearInterval(timer);
       window.removeEventListener(AUDIT_SCHEDULES_UPDATED_EVENT, handleScheduleUpdated);
     };
-  }, [activeProjectId, scheduledLaunchContext, scheduledLaunchContextReady]);
+  }, [activeProjectId, scheduledLaunchContext, scheduledLaunchContextReady, loadToolsStore]);
 };

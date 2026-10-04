@@ -81,10 +81,10 @@ impl CrawlSetup {
         let exclude_patterns = compile_filter_patterns(&config.exclude_patterns, "exclude")
             .map_err(|e| format!("Invalid exclude filter `{}`: {}", e.pattern, e.message))?;
         let run_id = run_id.unwrap_or_else(|| uuid::Uuid::new_v4().to_string());
-        control.start(&run_id);
 
         let (client, ua, rendered_cookie) =
             build_crawler_client(project_id.as_deref(), &config, user_agent)?;
+        control.start(&run_id);
 
         Ok(Self {
             start_time,

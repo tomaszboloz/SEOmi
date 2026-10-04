@@ -96,3 +96,40 @@ fn recovers_a_valid_backup_when_the_primary_history_is_corrupt() {
     assert!(!backup.exists());
     fs::remove_dir_all(directory).expect("temporary test directory should be removed");
 }
+
+#[test]
+fn reads_both_history_formats_from_disk_and_rejects_sparse_oversize_files() {
+    use std::io::Write;
+    let directory = std::env::temp_dir().join(format!("seomi-history-{}", uuid::Uuid::new_v4()));
+    fs::create_dir_all(&directory).unwrap();
+    let path = directory.join("history.json");
+    let expected = json!([{ "id": "żółć", "pages": [] }]);
+    for bytes in [
+        serde_json::to_vec(&expected).unwrap(),
+        encode_crawl_runs(&expected).unwrap(),
+    ] {
+        fs::write(&path, bytes).unwrap();
+        assert_eq!(read_crawl_history_file(&path).unwrap(), expected);
+    }
+    for (header, length) in [
+        (&b"[]"[..], MAX_EXPANDED_BYTES + 1),
+        (
+            STORAGE_MAGIC,
+            (MAX_STORED_BYTES + STORAGE_MAGIC.len()) as u64 + 1,
+        ),
+    ] {
+        let mut file = fs::File::create(&path).unwrap();
+        file.write_all(header).unwrap();
+        file.set_len(length).unwrap();
+        drop(file);
+        assert_eq!(
+            read_crawl_history_file(&path).unwrap_err(),
+            "Crawl history storage quota exceeded."
+        );
+    }
+    fs::write(&path, []).unwrap();
+    assert!(read_crawl_history_file(&path).is_err());
+    fs::remove_file(&path).unwrap();
+    assert!(read_crawl_history_file(&path).is_err());
+    fs::remove_dir_all(directory).unwrap();
+}

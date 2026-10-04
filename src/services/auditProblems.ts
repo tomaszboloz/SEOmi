@@ -12,7 +12,7 @@ export interface AuditProblem {
   severity: 'error' | 'warning';
 }
 
-const hasNoIndexDirective = (value?: string) => /(?:^|[\s,;])(noindex|none)(?:$|[\s,;])|noarchive|nosnippet/i.test(value || '');
+const hasNoIndexDirective = (value?: string) => /(?:^|[\s,;])(noindex|none)(?:$|[\s,;])/i.test(value || '');
 
 /**
  * Deterministic, audit-record based findings. These deliberately do not infer

@@ -1,26 +1,17 @@
-#[allow(unused_imports)]
-use {
-    crate::commands::rendered_crawler::{RenderOptions, RenderedCrawlerSession},
-    crate::commands::settings::{crawl_auth_profile, CrawlAuthProfile},
-    crate::models::audit_data::{FaviconData, StructuredDataValidationIssue},
-    crate::services::custom_search::{
-        extract_custom_search_results_with_html, validate_custom_searches,
-        MAX_CUSTOM_SEARCH_CHARS_PER_RUN,
-    },
-    crate::services::schema_validator,
-    crate::utils::url_validator::validate_and_normalize_url,
-    base64::{engine::general_purpose::STANDARD as BASE64_STANDARD, Engine as _},
-    regex::Regex,
-    reqwest::header::{HeaderMap, HeaderName, HeaderValue, COOKIE, USER_AGENT},
-    scraper::{node::Node, ElementRef, Html, Selector},
-    serde::Serialize,
-    sha2::{Digest, Sha256},
-    std::collections::{HashMap, HashSet, VecDeque},
-    std::sync::{Mutex, OnceLock},
-    std::time::Instant,
-    tauri::{AppHandle, Emitter, State},
-    tokio::task::JoinSet,
-};
+use base64::{engine::general_purpose::STANDARD as BASE64_STANDARD, Engine as _};
+use regex::Regex;
+use scraper::{node::Node, ElementRef, Html, Selector};
+use serde::Serialize;
+use sha2::{Digest, Sha256};
+use std::collections::{HashMap, HashSet, VecDeque};
+use std::sync::{Mutex, OnceLock};
+use std::time::Instant;
+use tokio::task::JoinSet;
+
+use crate::commands::settings::CrawlAuthProfile;
+use crate::models::audit_data::{FaviconData, StructuredDataValidationIssue};
+use crate::services::schema_validator;
+use crate::utils::url_validator::validate_and_normalize_url;
 
 mod canonical;
 mod client_redirects;
@@ -74,18 +65,20 @@ mod target_relations;
 mod transport;
 mod url_normalization;
 
-#[allow(unused_imports)]
 use {
-    canonical::*, client_redirects::*, constants::*, content_metrics::*, content_terms::*,
-    control::*, crawl_delay::*, duplicate_annotation::*, favicon::*, fetch_data::*, fetch_types::*,
-    filter_validation::*, fingerprints::*, frames::*, hreflang::*, hreflang_validation::*,
-    html_decoding::*, html_source_locator::*, html_validation::*, html_validation_rules::*,
-    image_decoding::*, inline_images::*, js_redirects::*, models::*, pagination::*,
-    post_processing::*, prefetch::*, readability::*, request_error::*, resource_apply::*,
-    resource_discovery::*, resource_fetch::*, robots::*, robots_matching::*, schema::*,
-    schema_inspections::*, schema_references::*, scope::*, scoring::*, semantic_chrome::*,
-    semantics::*, simhash::*, sitemap::*, social::*, srcset::*, svg_dimensions::*, svg_inline::*,
-    target_relations::*, transport::*, url_normalization::*,
+    canonical::*, client_redirects::*, constants::*, content_terms::*, crawl_delay::*,
+    fetch_data::*, fetch_types::*, fingerprints::*, hreflang::*, hreflang_validation::*,
+    html_source_locator::*, html_validation_rules::*, image_decoding::*, inline_images::*,
+    models::*, pagination::*, readability::*, request_error::*, robots::*, robots_matching::*,
+    schema_inspections::*, schema_references::*, scope::*, semantic_chrome::*, simhash::*,
+    svg_dimensions::*, svg_inline::*, target_relations::*, transport::*, url_normalization::*,
+};
+
+#[cfg(test)]
+use {
+    content_metrics::*, duplicate_annotation::*, favicon::*, frames::*, html_decoding::*,
+    html_validation::*, js_redirects::*, post_processing::*, prefetch::*, resource_apply::*,
+    resource_discovery::*, schema::*, scoring::*, semantics::*, sitemap::*, social::*, srcset::*,
 };
 
 mod ipc;

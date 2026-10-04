@@ -1,5 +1,6 @@
 mod models;
 mod network;
+mod request;
 
 pub use models::{ExternalLinkCheck, ExternalLinkCheckBatch, ExternalLinkCheckProgress};
 use models::{
@@ -10,8 +11,8 @@ use tauri::{AppHandle, Emitter};
 use tokio::task::JoinSet;
 
 #[tauri::command]
-pub async fn check_external_crawl_links(
-    app: AppHandle,
+pub async fn check_external_crawl_links<R: tauri::Runtime>(
+    app: AppHandle<R>,
     request_id: String,
     urls: Vec<String>,
     max_urls: Option<usize>,
@@ -90,3 +91,19 @@ pub async fn check_external_crawl_links(
 #[cfg(test)]
 #[path = "external_link_checker/tests.rs"]
 mod tests;
+
+#[cfg(test)]
+#[path = "external_link_checker/command_tests.rs"]
+mod command_tests;
+
+#[cfg(test)]
+#[path = "external_link_checker/ipc_tests.rs"]
+mod ipc_tests;
+
+#[cfg(test)]
+#[path = "external_link_checker/network_tests.rs"]
+mod network_tests;
+
+#[cfg(test)]
+#[path = "external_link_checker/http_tests/mod.rs"]
+mod http_tests;

@@ -8,6 +8,25 @@ use super::super::{
 use super::setup::CrawlSetup;
 use super::state::CrawlLoopState;
 
+async fn can_fetch_resources(
+    setup: &CrawlSetup,
+    control: &CrawlControl,
+    state: &mut CrawlLoopState,
+) -> bool {
+    if crawl_deadline_reached(setup.start_time, setup.max_run_seconds) {
+        state.timed_out = true;
+        return false;
+    }
+    if !control.wait_until_resumed(&setup.run_id).await {
+        return false;
+    }
+    if crawl_deadline_reached(setup.start_time, setup.max_run_seconds) {
+        state.timed_out = true;
+        return false;
+    }
+    true
+}
+
 pub async fn crawl_secondary_resources(
     setup: &CrawlSetup,
     control: &CrawlControl,
@@ -32,11 +51,7 @@ pub async fn crawl_secondary_resources(
 
     if robots_crawl_delay.is_some() {
         for candidate in selected_resources {
-            if crawl_deadline_reached(setup.start_time, setup.max_run_seconds) {
-                state.timed_out = true;
-                break;
-            }
-            if !control.wait_until_resumed(&setup.run_id).await {
+            if !can_fetch_resources(setup, control, state).await {
                 break;
             }
             if let (Some(delay), Some(last_request_at)) =
@@ -45,11 +60,17 @@ pub async fn crawl_secondary_resources(
                 if !wait_for_crawl_delay(control, &setup.run_id, last_request_at, delay).await {
                     break;
                 }
+                if !can_fetch_resources(setup, control, state).await {
+                    break;
+                }
             }
             state.last_page_request_at = Some(Instant::now());
             resources.push(fetch_resource_candidate(setup.client.clone(), candidate).await);
         }
     } else {
+        if !selected_resources.is_empty() && !can_fetch_resources(setup, control, state).await {
+            return (resources, resource_limit_reached);
+        }
         let max_concurrent_requests = setup
             .config
             .max_concurrent_requests
@@ -63,12 +84,7 @@ pub async fn crawl_secondary_resources(
             }
         }
         while let Some(joined) = tasks.join_next().await {
-            if crawl_deadline_reached(setup.start_time, setup.max_run_seconds) {
-                state.timed_out = true;
-                tasks.abort_all();
-                break;
-            }
-            if !control.wait_until_resumed(&setup.run_id).await {
+            if !can_fetch_resources(setup, control, state).await {
                 tasks.abort_all();
                 break;
             }

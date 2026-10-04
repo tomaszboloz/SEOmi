@@ -1,5 +1,22 @@
 use super::*;
 
+#[cfg(test)]
+#[path = "fetch_data_tests/mod.rs"]
+mod tests;
+
+fn is_html_media_type(value: &str) -> bool {
+    matches!(
+        value
+            .split(';')
+            .next()
+            .unwrap_or("")
+            .trim()
+            .to_ascii_lowercase()
+            .as_str(),
+        "text/html" | "application/xhtml+xml"
+    )
+}
+
 pub(super) async fn read_fetched_page_data(
     source: FetchedPageBody,
     max_response_bytes: usize,
@@ -48,7 +65,7 @@ pub(super) async fn read_fetched_page_data(
                 .map(str::to_owned);
             let declared_html = content_type
                 .as_deref()
-                .map(|value| value.to_ascii_lowercase().contains("text/html"))
+                .map(is_html_media_type)
                 .unwrap_or(true);
             let mut body_truncated =
                 content_length.is_some_and(|size| size > max_response_bytes as u64);
@@ -97,9 +114,7 @@ pub(super) async fn read_fetched_page_data(
             let body_truncated = snapshot.html_truncated || body.len() > max_response_bytes;
             body.truncate(max_response_bytes);
             let content_type = Some(snapshot.content_type);
-            let declared_html = content_type
-                .as_deref()
-                .is_some_and(|value| value.to_ascii_lowercase().contains("html"));
+            let declared_html = content_type.as_deref().is_some_and(is_html_media_type);
             FetchedPageData {
                 status: snapshot.http_status.unwrap_or(0),
                 content_type,

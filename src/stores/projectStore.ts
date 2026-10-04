@@ -57,7 +57,7 @@ const save = (projects: SeoProject[], activeProjectId: string | null): void => {
 interface ProjectState {
   projects: SeoProject[];
   activeProjectId: string | null;
-  createProject: (input: { name: string; rootUrl?: string }) => SeoProject;
+  createProject: (input: { name: string; rootUrl?: string; activate?: boolean }) => SeoProject;
   selectProject: (id: string) => void;
 }
 
@@ -67,7 +67,7 @@ const savedActiveId = readStorage(ACTIVE_PROJECT_KEY);
 export const useProjectStore = create<ProjectState>((set, get) => ({
   projects,
   activeProjectId: projects.some((project) => project.id === savedActiveId) ? savedActiveId : null,
-  createProject: ({ name, rootUrl }) => {
+  createProject: ({ name, rootUrl, activate = true }) => {
     const nameValidation = validateProjectName(name);
     if (!nameValidation.ok) throw new Error(nameValidation.message);
     const rootValidation = validateProjectRootUrl(rootUrl);
@@ -75,8 +75,9 @@ export const useProjectStore = create<ProjectState>((set, get) => ({
     const now = new Date().toISOString();
     const project: SeoProject = { id: createId('project'), name: nameValidation.value, rootUrl: rootValidation.value, createdAt: now, lastOpenedAt: now };
     const updated = [project, ...get().projects];
-    save(updated, project.id);
-    set({ projects: updated, activeProjectId: project.id });
+    const activeProjectId = activate ? project.id : get().activeProjectId;
+    save(updated, activeProjectId);
+    set({ projects: updated, activeProjectId });
     return project;
   },
   selectProject: (id) => {

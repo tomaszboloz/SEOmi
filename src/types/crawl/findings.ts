@@ -38,7 +38,7 @@ export interface CrawledHtmlValidationFinding {
 }
 
 export interface CrawledDiscoverySource {
-  /** Stable local category: start, seed, sitemap, or link. */
+  /** Stable local category: start, seed, sitemap, link, or resume. */
   kind: string;
   /** URL that supplied the discovery, when one exists. */
   source_url?: string | null;

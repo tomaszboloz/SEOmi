@@ -1,3 +1,7 @@
+#[path = "page_assembler_assets_inputs.rs"]
+mod inputs;
+pub use inputs::ExtractPageAssetsInput;
+
 use scraper::Html;
 use url::Url;
 
@@ -15,31 +19,31 @@ pub struct AssembledPageAssets {
     pub images: Vec<CrawledImage>,
 }
 
-#[allow(clippy::too_many_arguments)]
-pub fn extract_page_assets(
-    document: &Html,
-    final_base: &Url,
-    final_url: &str,
-    depth: usize,
-    has_primary_content_root: bool,
-    is_html: bool,
-    extra: &PageExtraOutcome,
-    selectors: &CrawlSelectors,
-    setup: &CrawlSetup,
-    state: &mut CrawlLoopState,
-    issues: &mut Vec<CrawledPageIssue>,
-) -> AssembledPageAssets {
+pub fn extract_page_assets(input: ExtractPageAssetsInput<'_>) -> AssembledPageAssets {
+    let ExtractPageAssetsInput {
+        document,
+        final_base,
+        final_url,
+        depth,
+        has_primary_content_root,
+        is_html,
+        extra,
+        selectors,
+        setup,
+        state,
+        issues,
+    } = input;
     let links = if is_html {
-        extract_page_links(
+        extract_page_links(super::page_links::ExtractPageLinksInput {
             document,
             final_base,
             final_url,
             depth,
             has_primary_content_root,
-            &selectors.a,
+            a_selector: &selectors.a,
             setup,
             state,
-        )
+        })
     } else {
         PageLinksOutcome {
             links: Vec::new(),
@@ -65,15 +69,17 @@ pub fn extract_page_assets(
 
     if is_html {
         register_page_resource_candidates(
-            document,
-            final_base,
-            final_url,
-            &extra.frames,
-            &selectors.script_src,
-            &selectors.link_href,
-            &selectors.media_src,
-            setup,
-            state,
+            super::page_resources_discovery::RegisterPageResourceCandidatesInput {
+                document,
+                final_base,
+                final_url,
+                frames: &extra.frames,
+                script_src_selector: &selectors.script_src,
+                link_href_selector: &selectors.link_href,
+                media_src_selector: &selectors.media_src,
+                setup,
+                state,
+            },
         );
     }
 

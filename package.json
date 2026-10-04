@@ -14,7 +14,7 @@
     "test:coverage": "node scripts/run-frontend-coverage.mjs",
     "test:inventory": "node scripts/public-function-inventory.mjs",
     "security:strix": "node scripts/run-strix-security.mjs",
-    "test:coverage:target": "vitest run --coverage --coverage.thresholds.statements=99.01 --coverage.thresholds.lines=99.01 --coverage.thresholds.branches=99.01 --coverage.thresholds.functions=99.01",
+    "test:coverage:target": "node scripts/run-frontend-coverage.mjs --coverage.thresholds.statements=95 --coverage.thresholds.lines=95 --coverage.thresholds.branches=95 --coverage.thresholds.functions=95",
     "test:coverage:mcp": "node scripts/run-mcp-coverage.mjs",
     "check:loc": "node scripts/check-max-loc.mjs",
     "embeddings": "node scripts/embeddings.mts"

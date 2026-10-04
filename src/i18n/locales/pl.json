@@ -586,6 +586,9 @@
       "credentialSaved": "Dane dostępu zapisano w pęku kluczy systemu. Wykonaj test, aby potwierdzić dostęp.",
       "checkingConnection": "Sprawdzanie połączenia…",
       "localClientRequired": "{{provider}} nie jest skonfigurowany do użycia lokalnej subskrypcji CLI.",
+      "responseHidden": "Treść odpowiedzi dostawcy została ukryta.",
+      "invalidResponse": "Dostawca AI zwrócił niepoprawną odpowiedź.",
+      "responseTooLarge": "Odpowiedź dostawcy AI przekracza limit 1 MiB.",
       "refused": "{{provider}} odmówił wykonania tego żądania. Przeformułuj je lub wybierz inny model."
     },
     "pagespeed": {
@@ -1619,7 +1622,8 @@
       "start": "adres startowy",
       "seed": "lista startowa",
       "sitemap": "sitemap",
-      "link": "link wewnętrzny"
+      "link": "link wewnętrzny",
+      "resume": "Zapisana kolejka crawla"
     },
     "bottomNavigationAria": "Szybka nawigacja mapy semantycznej",
     "bottomViewsAria": "Widoki mapy na dole",

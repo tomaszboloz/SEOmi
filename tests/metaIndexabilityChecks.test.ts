@@ -39,8 +39,8 @@ describe('canonical, robots and charset', () => {
     ['index, follow', 'pass', 'pass'],
     ['noindex', 'pass', 'error'],
     ['NONE', 'pass', 'error'],
-    ['index, noarchive', 'pass', 'error'],
-    ['nosnippet', 'pass', 'error'],
+    ['index, noarchive', 'pass', 'pass'],
+    ['nosnippet', 'pass', 'pass'],
   ])('rates robots "%s"', (robots, present, indexable) => {
     const audit = page({ robots });
     expect(status(audit, 'robots-present')).toBe(robots ? present : 'not_applicable');

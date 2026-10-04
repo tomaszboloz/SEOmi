@@ -1,10 +1,20 @@
 mod http;
+mod http_response;
 mod models;
 mod render;
 mod server;
 
 #[cfg(test)]
 mod tests;
+
+#[cfg(test)]
+mod http_tests;
+
+#[cfg(test)]
+mod http_body_tests;
+
+#[cfg(test)]
+mod http_response_tests;
 
 use std::sync::Arc;
 use tauri::{AppHandle, State};

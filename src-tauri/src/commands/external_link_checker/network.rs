@@ -1,8 +1,7 @@
 use super::models::{ExternalLinkCheck, DNS_TIMEOUT, REQUEST_TIMEOUT};
 use crate::utils::url_validator::{is_public_ip, validate_and_normalize_url};
-use reqwest::header::{HeaderMap, HeaderValue, ACCEPT, LOCATION, RANGE, USER_AGENT};
+use reqwest::header::{HeaderMap, HeaderValue, ACCEPT, USER_AGENT};
 use std::net::SocketAddr;
-use std::time::Instant;
 use url::Url;
 
 pub fn error_kind(error: &reqwest::Error) -> String {
@@ -10,7 +9,13 @@ pub fn error_kind(error: &reqwest::Error) -> String {
         return "timeout".into();
     }
     if error.is_connect() {
-        let message = error.to_string().to_ascii_lowercase();
+        let mut message = String::new();
+        let mut cause = std::error::Error::source(error);
+        while let Some(current) = cause {
+            message.push_str(&current.to_string().to_ascii_lowercase());
+            message.push(' ');
+            cause = current.source();
+        }
         if message.contains("dns") || message.contains("resolve") || message.contains("lookup") {
             return "dns".into();
         }
@@ -53,11 +58,15 @@ pub async fn checked_public_addresses(url: &Url) -> Result<Vec<SocketAddr>, Stri
     let port = url
         .port_or_known_default()
         .ok_or_else(|| "URL has no HTTP port".to_string())?;
-    let lookup = tokio::time::timeout(DNS_TIMEOUT, tokio::net::lookup_host((host, port)))
-        .await
-        .map_err(|_| "DNS lookup timed out".to_string())?
-        .map_err(|error| format!("DNS lookup failed: {error}"))?;
-    let addresses = lookup.collect::<Vec<_>>();
+    let addresses = match url.host() {
+        Some(url::Host::Ipv4(ip)) => vec![SocketAddr::new(ip.into(), port)],
+        Some(url::Host::Ipv6(ip)) => vec![SocketAddr::new(ip.into(), port)],
+        _ => tokio::time::timeout(DNS_TIMEOUT, tokio::net::lookup_host((host, port)))
+            .await
+            .map_err(|_| "DNS lookup timed out".to_string())?
+            .map_err(|error| format!("DNS lookup failed: {error}"))?
+            .collect::<Vec<_>>(),
+    };
     if addresses.is_empty() {
         return Err("DNS returned no addresses".into());
     }
@@ -89,55 +98,10 @@ pub fn client_for_url(url: &Url, addresses: &[SocketAddr]) -> Result<reqwest::Cl
 }
 
 pub async fn check_one(input: String) -> ExternalLinkCheck {
-    let url = match normalize_external_url(&input) {
-        Ok(url) => url,
-        Err(error) => {
-            let kind = if error.contains("local/private") || error.contains("local network") {
-                "blocked"
-            } else {
-                "invalid"
-            };
-            return rejected(input, kind);
-        }
-    };
-    let normalized = url.to_string();
-    let addresses = match checked_public_addresses(&url).await {
-        Ok(addresses) => addresses,
-        Err(error) if error.starts_with("DNS lookup failed") => return rejected(normalized, "dns"),
-        Err(error) if error.contains("timed out") => return rejected(normalized, "timeout"),
-        Err(_) => return rejected(normalized, "blocked"),
-    };
-    let client = match client_for_url(&url, &addresses) {
-        Ok(client) => client,
-        Err(_) => return rejected(normalized, "network"),
-    };
-
-    let started = Instant::now();
-    let response = match client.head(url.clone()).send().await {
-        Ok(response) if response.status().as_u16() == 405 || response.status().as_u16() == 501 => {
-            let request = client.get(url.clone()).header(RANGE, "bytes=0-0");
-            match request.send().await {
-                Ok(response) => response,
-                Err(error) => return rejected(normalized, error_kind(&error)),
-            }
-        }
-        Ok(response) => response,
-        Err(error) => return rejected(normalized, error_kind(&error)),
-    };
-    let elapsed = started.elapsed().as_millis() as u64;
-    let status = response.status().as_u16();
-    let redirect_url = response
-        .headers()
-        .get(LOCATION)
-        .and_then(|location| location.to_str().ok())
-        .and_then(|location| url.join(location).ok())
-        .map(|target| target.to_string());
-    ExternalLinkCheck {
-        url: normalized,
-        http_status: Some(status),
-        response_time_ms: Some(elapsed),
-        redirect_url,
-        request_error_kind: None,
-        checked_at: chrono::Utc::now().to_rfc3339(),
-    }
+    super::request::check_with(
+        input,
+        |url| async move { checked_public_addresses(&url).await },
+        client_for_url,
+    )
+    .await
 }

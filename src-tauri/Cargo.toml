@@ -34,6 +34,7 @@ name = "coverage_sources"
 test = true
 
 [dev-dependencies]
+tauri = { version = "2", features = ["test"] }
 syn = { version = "2", features = ["full"] }
 proc-macro2 = { version = "1", features = ["span-locations"] }
 minisign-verify = "0.2.5"
@@ -65,6 +66,7 @@ tracing-subscriber = { version = "0.3", default-features = false, features = ["r
 mime = "0.3"
 encoding_rs = "0.8"
 keyring = { version = "3.6", features = ["apple-native", "windows-native"] }
+fs2 = "0.4.3"
 
 [target.'cfg(windows)'.dependencies]
 windows-sys = { version = "0.61", features = ["Win32_Storage_FileSystem"] }

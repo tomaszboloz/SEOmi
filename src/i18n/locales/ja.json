@@ -586,6 +586,9 @@
       "credentialSaved": "Credential saved in the system keychain. Test it to verify access.",
       "checkingConnection": "Checking connection…",
       "localClientRequired": "{{provider}} is not configured to use its local subscription client.",
+      "responseHidden": "Provider response withheld.",
+      "invalidResponse": "The AI provider returned an invalid response.",
+      "responseTooLarge": "The AI provider response exceeds the 1 MiB limit.",
       "refused": "{{provider}} はこのリクエストを拒否しました。言い換えるか、別のモデルを選択してください。"
     },
     "pagespeed": {
@@ -1619,7 +1622,8 @@
       "start": "starting address",
       "seed": "seed list",
       "sitemap": "sitemap",
-      "link": "internal link"
+      "link": "internal link",
+      "resume": "Saved crawl frontier"
     },
     "bottomNavigationAria": "Quick semantic map navigation",
     "bottomViewsAria": "Map views at bottom",

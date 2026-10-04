@@ -34,9 +34,7 @@ pub(super) struct RequestHead {
     pub(super) content_length: usize,
 }
 
-pub(super) fn is_http_token_byte(byte: u8) -> bool {
-    byte.is_ascii_alphanumeric() || b"!#$%&'*+-.^_`|~".contains(&byte)
-}
+pub(super) use crate::utils::http_syntax::is_http_token_byte;
 
 pub(super) fn is_allowed_plain_http_port(port: u16) -> bool {
     ALLOWED_HTTP_PORTS.contains(&port)

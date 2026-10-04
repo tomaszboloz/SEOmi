@@ -125,7 +125,9 @@ pub(super) fn validate_manifest(
     if task.run_history.iter().any(|e| {
         DateTime::parse_from_rfc3339(&e.started_at).is_err()
             || DateTime::parse_from_rfc3339(&e.completed_at).is_err()
-            || e.error.as_deref().is_some_and(|err| err.len() > 500)
+            || e.error
+                .as_deref()
+                .is_some_and(|err| err.chars().count() > 500)
     }) {
         return Err("Scheduled task history contains an invalid entry.".into());
     }

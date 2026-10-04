@@ -2,7 +2,7 @@ import { beforeEach, describe, expect, it, vi } from 'vitest';
 import i18n from '@/i18n';
 import {
   CLAUDE_CONNECTION_PROBE_MODEL, CLAUDE_DEFAULT_MODEL, CLAUDE_MAX_TOKENS, CLAUDE_MESSAGES_URL,
-  claudeHeaders, claudeMessageText, claudeRequestBody, requestClaudeText,
+  claudeHeaders, claudeMessageText, claudeRequestBody, requestClaude,
 } from '@/services/ai/claude';
 import { GEMINI_DEFAULT_MODEL, currentModel } from '@/services/ai/modelCatalog';
 
@@ -62,10 +62,11 @@ describe('Claude response text', () => {
 });
 
 describe('Claude request transport', () => {
-  it('migrates a retired or empty model before sending and returns the answer text', async () => {
-    const fetchImpl = vi.fn().mockImplementation(async () => new Response(JSON.stringify({ stop_reason: 'end_turn', content: [{ type: 'text', text: 'answer' }] })));
-    expect(await requestClaudeText('key', 'claude-3-5-haiku-20241022', 'p', fetchImpl)).toBe('answer');
-    expect(await requestClaudeText('key', '', 'p', fetchImpl)).toBe('answer');
+  const ok = () => new Response('{}');
+  it('migrates a retired or empty model before sending', async () => {
+    const fetchImpl = vi.fn().mockImplementation(async () => ok());
+    await requestClaude('key', 'claude-3-5-haiku-20241022', 'p', fetchImpl);
+    await requestClaude('key', '', 'p', fetchImpl);
     const [url, init] = fetchImpl.mock.calls[0];
     expect(url).toBe(CLAUDE_MESSAGES_URL);
     expect(JSON.parse(init.body).model).toBe('claude-haiku-4-5');
@@ -73,9 +74,8 @@ describe('Claude request transport', () => {
     expect(fetchImpl.mock.calls[1][1].headers['anthropic-beta']).toBe('server-side-fallback-2026-07-01');
   });
 
-  it('hands failed HTTP responses back to the caller for provider-specific errors', async () => {
+  it('hands the raw response back so the caller maps provider errors', async () => {
     const failed = new Response('rate limited', { status: 429 });
-    const result = await requestClaudeText('key', 'claude-sonnet-5', 'p', vi.fn().mockResolvedValue(failed));
-    expect(result).toBe(failed);
+    expect(await requestClaude('key', 'claude-sonnet-5', 'p', vi.fn().mockResolvedValue(failed))).toBe(failed);
   });
 });

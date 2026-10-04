@@ -1,13 +1,14 @@
 pub(super) use super::target::parse_proxy_target;
 use super::types::*;
-use tokio::io::AsyncReadExt;
-use tokio::net::TcpStream;
+use tokio::io::{AsyncRead, AsyncReadExt};
 
 pub(super) fn find_header_end(bytes: &[u8]) -> Option<usize> {
     bytes.windows(4).position(|window| window == b"\r\n\r\n")
 }
 
-pub(super) async fn read_request(client: &mut TcpStream) -> Result<ParsedRequest, u16> {
+pub(super) async fn read_request<R: AsyncRead + Unpin>(
+    client: &mut R,
+) -> Result<ParsedRequest, u16> {
     let mut bytes = Vec::with_capacity(8 * 1024);
     let header_end = loop {
         if let Some(index) = find_header_end(&bytes) {
@@ -23,6 +24,9 @@ pub(super) async fn read_request(client: &mut TcpStream) -> Result<ParsedRequest
         }
         bytes.extend_from_slice(&chunk[..read]);
     };
+    if header_end + 4 > MAX_HEADER_BYTES {
+        return Err(431);
+    }
     let header = std::str::from_utf8(&bytes[..header_end]).map_err(|_| 400_u16)?;
     let parsed_head = parse_request_head(header)?;
     let RequestHead {

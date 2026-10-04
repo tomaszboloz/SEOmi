@@ -3,6 +3,7 @@ import { useTranslation } from "react-i18next";
 import { useToolsStore } from "@/stores/toolsStore";
 import type { SiteAuditSessionDependencies } from "../contracts";
 import type { CustomSearchDefinition } from "@/types";
+import { useCrawlOperationScope } from "./useCrawlOperationScope";
 
 export const useCrawlFormState = (
   activeProjectId: string | null,
@@ -29,6 +30,10 @@ export const useCrawlFormState = (
   const [requestProfileStatus, setRequestProfileStatus] = useState<string | null>(null);
   const [requestProfileStatusIsError, setRequestProfileStatusIsError] = useState(false);
 
+  const beginImport = useCrawlOperationScope(activeProjectId);
+  const beginProfile = useCrawlOperationScope(JSON.stringify([activeProjectId, requestProfileName,
+    requestProfileHeaders, requestProfileCookie, requestProfileProxyUrl]));
+
   useEffect(() => {
     setInputUrl(crawlUrl);
     setSelectedLimit(crawlLimit);
@@ -51,7 +56,9 @@ export const useCrawlFormState = (
 
   const importSeedUrls = async (file: File | undefined) => {
     if (!file) return;
+    const isCurrent = beginImport("import");
     const content = await file.text();
+    if (!isCurrent()) return;
     const imported = services.importUrls(content);
     setSeedImportRejected(imported.rejected);
     setCrawlConfig({ seedUrls: imported.urls.slice(0, 10_000), listMode: true });
@@ -73,23 +80,27 @@ export const useCrawlFormState = (
   };
 
   const saveRequestProfile = async () => {
-    const headers = requestProfileHeaders.split("\n").filter((line) => line.trim()).map((line) => {
-      const separator = line.indexOf(":");
-      if (separator < 1) throw new Error(t("siteAudit.headerFormatError", { line }));
-      return { name: line.slice(0, separator).trim(), value: line.slice(separator + 1).trim() };
-    });
+    const isCurrent = beginProfile("profile");
     setRequestProfileStatus(null);
     setRequestProfileStatusIsError(false);
     try {
+      const headers = requestProfileHeaders.split("\n").filter((line) => line.trim()).map((line) => {
+        const separator = line.indexOf(":");
+        if (separator < 1) throw new Error(t("siteAudit.headerFormatError", { line }));
+        return { name: line.slice(0, separator).trim(), value: line.slice(separator + 1).trim() };
+      });
       await saveCrawlRequestProfile({ name: requestProfileName, userAgent: crawlConfig.userAgent || "", headers, cookie: requestProfileCookie, proxyUrl: requestProfileProxyUrl });
+      if (!isCurrent()) return;
       setRequestProfileName(""); setRequestProfileHeaders(""); setRequestProfileCookie(""); setRequestProfileProxyUrl("");
       setRequestProfileStatus(t("siteAudit.profileSaved")); setRequestProfileStatusIsError(false);
     } catch (error) {
+      if (!isCurrent()) return;
       setRequestProfileStatusIsError(true); setRequestProfileStatus(error instanceof Error ? error.message : t("siteAudit.profileSaveError"));
     }
   };
 
   const selectRequestProfile = (id: string) => {
+    beginProfile("profile");
     const profile = crawlRequestProfiles.find((candidate) => candidate.id === id);
     setCrawlConfig({ requestProfileId: id || undefined, userAgent: profile?.userAgent || crawlConfig.userAgent });
     setRequestProfileStatusIsError(false); setRequestProfileStatus(profile ? t("siteAudit.profileSelected", { name: profile.name }) : null);
@@ -97,10 +108,13 @@ export const useCrawlFormState = (
 
   const removeRequestProfile = async () => {
     if (!crawlConfig.requestProfileId) return;
+    const isCurrent = beginProfile("profile");
     try {
       await deleteCrawlRequestProfile(crawlConfig.requestProfileId);
+      if (!isCurrent()) return;
       setRequestProfileStatusIsError(false); setRequestProfileStatus(t("siteAudit.profileRemoved"));
     } catch (error) {
+      if (!isCurrent()) return;
       setRequestProfileStatusIsError(true); setRequestProfileStatus(error instanceof Error ? error.message : t("siteAudit.profileRemoveError"));
     }
   };

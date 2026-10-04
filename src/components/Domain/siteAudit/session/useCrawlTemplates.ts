@@ -31,13 +31,24 @@ export const useCrawlTemplates = (activeProjectId: string | null) => {
     setReportTemplateError(null);
   }, [activeProjectId]);
 
-  const selectReportTemplate = (templateId: string) => {
-    const template = reportTemplates.find((candidate) => candidate.id === templateId) || DEFAULT_CRAWL_REPORT_TEMPLATE;
+  const updateReportTemplateState = (template: CrawlReportTemplate) => {
     setSelectedReportTemplateId(template.id);
     setReportTemplateSections(template.sections);
     setReportTemplateName(template.builtIn ? "" : template.name);
-    setReportTemplateError(null);
+  };
+
+  const applyReportTemplate = (template: CrawlReportTemplate) => {
     if (activeProjectId) saveSelectedCrawlReportTemplateId(activeProjectId, template.id);
+    updateReportTemplateState(template);
+    setReportTemplateError(null);
+  };
+
+  const selectReportTemplate = (templateId: string) => {
+    try {
+      applyReportTemplate(reportTemplates.find((candidate) => candidate.id === templateId) || DEFAULT_CRAWL_REPORT_TEMPLATE);
+    } catch (error) {
+      setReportTemplateError(error instanceof Error ? error.message : t("siteAudit.templateSaveError"));
+    }
   };
 
   const toggleReportTemplateSection = (section: ReportTemplateSection) => {
@@ -55,10 +66,7 @@ export const useCrawlTemplates = (activeProjectId: string | null) => {
       const template = saveCrawlReportTemplate(activeProjectId, { name: reportTemplateName, sections: reportTemplateSections });
       const templates = loadCrawlReportTemplates(activeProjectId);
       setReportTemplates(templates);
-      setSelectedReportTemplateId(template.id);
-      saveSelectedCrawlReportTemplateId(activeProjectId, template.id);
-      setReportTemplateName(template.name);
-      setReportTemplateError(null);
+      applyReportTemplate(template);
     } catch (error) {
       setReportTemplateError(error instanceof Error ? error.message : t("siteAudit.templateSaveError"));
     }
@@ -68,10 +76,19 @@ export const useCrawlTemplates = (activeProjectId: string | null) => {
 
   const removeReportTemplate = () => {
     if (!activeProjectId || selectedReportTemplate.builtIn) return;
-    deleteCrawlReportTemplate(activeProjectId, selectedReportTemplate.id);
-    const templates = loadCrawlReportTemplates(activeProjectId);
-    setReportTemplates(templates);
-    selectReportTemplate(templates[0]?.id || DEFAULT_CRAWL_REPORT_TEMPLATE.id);
+    try {
+      deleteCrawlReportTemplate(activeProjectId, selectedReportTemplate.id);
+      const templates = loadCrawlReportTemplates(activeProjectId);
+      applyReportTemplate(templates[0] || DEFAULT_CRAWL_REPORT_TEMPLATE);
+      setReportTemplates(templates);
+    } catch (error) {
+      const templates = loadCrawlReportTemplates(activeProjectId);
+      setReportTemplates(templates);
+      if (!templates.some((template) => template.id === selectedReportTemplate.id)) {
+        updateReportTemplateState(templates[0] || DEFAULT_CRAWL_REPORT_TEMPLATE);
+      }
+      setReportTemplateError(error instanceof Error ? error.message : t("siteAudit.templateSaveError"));
+    }
   };
 
   const reportTemplateSectionLabels = Object.fromEntries(

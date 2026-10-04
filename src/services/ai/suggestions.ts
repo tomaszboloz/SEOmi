@@ -1,7 +1,6 @@
-import i18n from '@/i18n';
-import { aiProviderLabel } from './labels';
+import { aiResponseError, readAiResponseText } from './response';
+import { requestClaude } from './claude';
 import { parseAiSuggestionResponse, type AiSuggestionResponse } from './parsing';
-import { requestClaudeText } from './claude';
 
 export async function callOpenAI(
   apiKey: string,
@@ -22,20 +21,9 @@ export async function callOpenAI(
     }),
   });
 
-  if (!res.ok) {
-    const err = await res.text();
-    if (res.status === 401) {
-      throw new Error(i18n.t('runtimeErrors.ai.authFailed', { provider: aiProviderLabel('openai') }));
-    }
-    if (res.status === 429) {
-      throw new Error(i18n.t('runtimeErrors.ai.quota', { provider: aiProviderLabel('openai'), host: 'platform.openai.com' }));
-    }
-      throw new Error(i18n.t('runtimeErrors.ai.apiError', { provider: aiProviderLabel('openai'), status: res.status, detail: err }));
-  }
+  if (!res.ok) throw aiResponseError('openai', res.status, true);
 
-  const data = await res.json();
-  const content = data.choices?.[0]?.message?.content;
-  return parseAiSuggestionResponse(content || '');
+  return parseAiSuggestionResponse(await readAiResponseText(res, 'openai'));
 }
 
 export async function callClaude(
@@ -43,17 +31,10 @@ export async function callClaude(
   model: string,
   prompt: string
 ): Promise<AiSuggestionResponse> {
-  const res = await requestClaudeText(apiKey, model, prompt);
-  if (typeof res === 'string') return parseAiSuggestionResponse(res);
+  const res = await requestClaude(apiKey, model, prompt);
+  if (!res.ok) throw aiResponseError('claude', res.status, true);
 
-  const err = await res.text();
-  if (res.status === 401) {
-    throw new Error(i18n.t('runtimeErrors.ai.authFailed', { provider: aiProviderLabel('claude') }));
-  }
-  if (res.status === 429) {
-    throw new Error(i18n.t('runtimeErrors.ai.quota', { provider: aiProviderLabel('claude'), host: 'console.anthropic.com' }));
-  }
-  throw new Error(i18n.t('runtimeErrors.ai.apiError', { provider: aiProviderLabel('claude'), status: res.status, detail: err }));
+  return parseAiSuggestionResponse(await readAiResponseText(res, 'claude'));
 }
 
 export async function callGemini(
@@ -75,18 +56,7 @@ export async function callGemini(
     }),
   });
 
-  if (!res.ok) {
-    const err = await res.text();
-    if (res.status === 400 || res.status === 403) {
-      throw new Error(i18n.t('runtimeErrors.ai.authFailed', { provider: aiProviderLabel('gemini') }));
-    }
-    if (res.status === 429) {
-      throw new Error(i18n.t('runtimeErrors.ai.quota', { provider: aiProviderLabel('gemini'), host: 'aistudio.google.com' }));
-    }
-    throw new Error(i18n.t('runtimeErrors.ai.apiError', { provider: aiProviderLabel('gemini'), status: res.status, detail: err }));
-  }
+  if (!res.ok) throw aiResponseError('gemini', res.status, true);
 
-  const data = await res.json();
-  const text = data.candidates?.[0]?.content?.parts?.[0]?.text || '';
-  return parseAiSuggestionResponse(text);
+  return parseAiSuggestionResponse(await readAiResponseText(res, 'gemini'));
 }

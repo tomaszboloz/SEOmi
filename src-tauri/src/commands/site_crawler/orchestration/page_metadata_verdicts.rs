@@ -1,3 +1,7 @@
+#[path = "page_metadata_verdicts_inputs.rs"]
+mod inputs;
+pub use inputs::EvaluatePageVerdictsInput;
+
 use super::super::models::{
     build_indexability_verdict, build_robots_decision, CrawlConfig, CrawledIndexabilityVerdict,
     CrawledRobotsDecision,
@@ -9,18 +13,18 @@ pub struct PageVerdictsOutcome {
     pub indexability_status: String,
 }
 
-#[allow(clippy::too_many_arguments)]
-pub fn evaluate_page_verdicts(
-    status: u16,
-    config: &CrawlConfig,
-    meta_robots: Option<&str>,
-    x_robots_tag: Option<&str>,
-    meta_noindex: bool,
-    header_noindex: bool,
-    meta_nofollow: bool,
-    header_nofollow: bool,
-    canonical_points_elsewhere: bool,
-) -> PageVerdictsOutcome {
+pub fn evaluate_page_verdicts(input: EvaluatePageVerdictsInput<'_>) -> PageVerdictsOutcome {
+    let EvaluatePageVerdictsInput {
+        status,
+        config,
+        meta_robots,
+        x_robots_tag,
+        meta_noindex,
+        header_noindex,
+        meta_nofollow,
+        header_nofollow,
+        canonical_points_elsewhere,
+    } = input;
     let indexability_status = if status == 0 && config.crawl_mode == "browser-rendered" {
         "HTTP status unavailable from rendered document".to_string()
     } else if status >= 400 {

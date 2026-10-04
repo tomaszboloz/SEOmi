@@ -129,7 +129,15 @@ jobs:
       - name: Run frontend test suite
         run: npm test -- --run --maxWorkers=2
       - name: Run Rust backend tests
+        id: desktop-rust-tests
         run: cargo test --manifest-path src-tauri/Cargo.toml
+      - name: Diagnose Windows test harness loader failure
+        if: failure() && runner.os == 'Windows' && steps.desktop-rust-tests.outcome == 'failure'
+        shell: pwsh
+        run: |
+          Get-ChildItem src-tauri/target/debug/deps/seomi_lib-*.exe | ForEach-Object {
+            ./scripts/diagnose-windows-loader.ps1 -Executable $_.FullName
+          }
       - name: Compile Tauri desktop application without bundling
         run: npm run tauri -- build --debug --no-bundle
       - name: Launch actual desktop runtime E2E

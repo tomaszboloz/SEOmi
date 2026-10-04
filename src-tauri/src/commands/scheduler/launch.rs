@@ -21,3 +21,14 @@ pub(super) fn launch_context_from_args(args: &[String]) -> ScheduledLaunchContex
             .any(|value| value == "--seomi-scheduled-headless"),
     }
 }
+
+pub(crate) fn worker_launch_context(
+    args: &[String],
+    headless_flag: &str,
+) -> Option<(String, String)> {
+    if !args.iter().any(|value| value == headless_flag) {
+        return None;
+    }
+    let context = launch_context_from_args(args);
+    Some((context.project_id?, context.schedule_id?))
+}

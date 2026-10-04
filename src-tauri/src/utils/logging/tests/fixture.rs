@@ -36,6 +36,9 @@ impl<F> Drop for ScopedFuture<F> {
 }
 
 pub(super) fn task_fixture() -> (tracing::Dispatch, Arc<Mutex<Vec<serde_json::Value>>>) {
+    // Match desktop startup before shared callsites can register without a
+    // subscriber and cache Interest::never on an unscoped test thread.
+    init();
     let records = Arc::new(Mutex::new(Vec::new()));
     let sink_records = records.clone();
     let subscriber = tracing_subscriber::registry().with(NativeTaskLayer {
