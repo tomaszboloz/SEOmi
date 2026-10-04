@@ -148,3 +148,7 @@ buildHttpAndUrlChecks and buildMetaAndIndexabilityChecks now have44new expanded 
 ### GSC public actions and stale-session ownership
 
 createGscSlice's seven returned actions have34new expanded direct contracts via isolatedToolsSlice/native invoke adapters: set property/filters, resume/connect/disconnect, performance refresh and URL inspection. Deferred results/errors directly assert project/session invalidation and ownership, revocation completion, accessible-property selection, typed arguments, persistence, secrets/guards and current error/fallback handling.3624frontendtestsPASS;95%gateFAIL. gscSlice116/117branches with defensive typed filter fallback counted/uncovered; no liveGoogle claim. Full global assertion inventory remainsOPEN.
+
+### Accessibility metadata presentation helpers
+
+All five exported helper functions in metadataHelpers have46new expanded direct tests in metadataHelperMessagesDirect/metadataHelperCountsDirect. Exact translation calls, count evidence/fallback, original unknown content, prefix stripping, manual review ordering and technology category mapping are asserted.3670frontendtestsPASS; helper100%allmeasures; global95%targetFAIL. Presentation contracts do not prove live DOM accessibility compliance. Full assertion inventory remainsOPEN.
