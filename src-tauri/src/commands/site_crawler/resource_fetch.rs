@@ -68,3 +68,7 @@ pub(super) async fn fetch_resource_candidate(
         },
     }
 }
+
+#[cfg(test)]
+#[path = "resource_fetch_tests/mod.rs"]
+mod tests;

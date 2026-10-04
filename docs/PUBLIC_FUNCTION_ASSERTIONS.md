@@ -112,3 +112,7 @@ Both public worker headless_launch_context functions and public scheduler::sched
 ### Secondary resource orchestration
 
 `crawl_secondary_resources` has direct result, state and HTTP request assertions in `orchestration/tests/resource_{regressions,contracts,deadlines}.rs`. Eight cases cover cancellation/deadline before dispatch, pause/resume before requests, deadline/cancellation during waiting, deterministic sorting/budget clamps, empty state and retained HTTP/source evidence in parallel and robots-delay modes. Full 731 all-target stable/nightly PASS. The defensive JoinError placeholder remains unexecuted and counted. These tests execute the resource fetcher but are not presented as complete direct assertions for every standalone fetch behavior. Global >=95% and complete public-function assertions remain OPEN.
+
+### Direct resource fetching
+
+`fetch_resource_candidate` now has ten direct HTTP/result contracts in `resource_fetch_tests/{responses,limits,failures}.rs`: candidate ownership, observed status/type/length/timing, optional headers, image dimensions and absence of invented measurements, exact/over 8 MiB bounds, chunked binary responses, truncated reads and explicitly signalled accepted-connection timeout. Full 741 all-target stable/nightly PASS; production fetcher 55/55 lines, 8/8 source-grouped functions, 8/8 branches. Global >=95% and complete direct assertions remain OPEN. Fresh exact1a45ce9 CI37204121612 also verifies the earlier explicit-unlock fix on both desktop platforms; new heads need their own CI.
