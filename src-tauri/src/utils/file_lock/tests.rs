@@ -92,3 +92,22 @@ fn blocking_writer_waits_for_owner_release_and_keeps_the_same_lock_file() {
     assert!(acquire_file_lock(&path).unwrap().is_some());
     fs::remove_dir_all(directory).unwrap();
 }
+
+#[cfg(unix)]
+#[test]
+fn owner_drop_releases_lock_even_when_open_description_has_another_handle() {
+    let directory = directory();
+    let path = directory.join("task.lock");
+    let owner = lock_file(&path).unwrap();
+    let inherited_description = owner._file.try_clone().unwrap();
+    assert!(acquire_file_lock(&path).unwrap().is_none());
+    drop(owner);
+    let next = acquire_file_lock(&path)
+        .unwrap()
+        .expect("explicit owner release");
+    assert!(acquire_file_lock(&path).unwrap().is_none());
+    drop(inherited_description);
+    assert!(acquire_file_lock(&path).unwrap().is_none());
+    drop(next);
+    fs::remove_dir_all(directory).unwrap();
+}

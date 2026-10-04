@@ -89,3 +89,8 @@ Direct assertions for read_request/bearer_matches/json_error/write_response are 
 ### OS lock ownership
 
 acquire_file_lock and lock_file have direct lifecycle/contention/invalid-path/blocking assertions in utils/file_lock/tests.rs. A separate process termination test verifies actual OS release without unlinking the stable file; the child entry is a fixture, not an additional assertion. acquire_lock and acquire_scheduled_lock are directly asserted for live owners with old timestamps, fresh abandoned files, reacquisition and contextual errors in each commands lock_tests.rs.11new behavioral cases plus1fixture,688all-target stable/nightlyPASS. Destination-specific atomic writers now hold the shared blocking lock; the original concurrent-write and exact cleanup assertions are retained with explicit persistent-lock artifact assertions. Windows serialization proof remains pending CI after observed AccessDenied failures on4b1f357/3afb0b4. Global assertion/coverage gates remain OPEN.
+
+
+### Scheduled validation and execution history
+
+valid_identifier/validate_project_and_schedule/validate_manifest have direct contract cases in scheduled_worker/model_tests.rs for all supported dimensions, invalid fields, ASCII boundaries, Unicode errors and crawl bounds. append_execution/now_is_due/finalize_task have direct assertions in history_tests.rs for20record retention/order,90second grace, timezones, failed/paused state and invalid-completion non-mutation. FileLock Drop has a deterministic Unix duplicate-description ownership test plus preserved process-termination tests;10complete lib runs and697all-target stable/nightlyPASS. This does not prove all AppHandle-dependent scheduled execution paths. Global assertion/coverage gates remain OPEN.

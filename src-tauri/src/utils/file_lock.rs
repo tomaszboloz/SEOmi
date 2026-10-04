@@ -8,6 +8,15 @@ pub(crate) struct FileLock {
     _file: File,
 }
 
+impl Drop for FileLock {
+    fn drop(&mut self) {
+        // A concurrently spawned Unix child can briefly inherit the open file
+        // description before exec. Release ownership explicitly for this owner
+        // rather than waiting for the last inherited descriptor to close.
+        let _ = fs2::FileExt::unlock(&self._file);
+    }
+}
+
 /// Keep one stable inode for the lock. Never unlink it on drop: a waiter could
 /// already hold that inode while another process creates a replacement path.
 /// The OS releases exclusivity when this file closes or the process exits.

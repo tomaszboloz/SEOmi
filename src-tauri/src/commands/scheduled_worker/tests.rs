@@ -2,7 +2,7 @@ use super::models::{validate_manifest, ScheduledTaskExecution, ScheduledTaskMani
 use super::storage::{finalize_task, now_is_due};
 use chrono::{Duration as ChronoDuration, Utc};
 
-fn manifest() -> ScheduledTaskManifest {
+pub(super) fn manifest() -> ScheduledTaskManifest {
     ScheduledTaskManifest {
         schedule_id: "schedule-1".into(),
         url: "https://example.test".into(),
