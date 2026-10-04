@@ -53,11 +53,15 @@ pub async fn checked_public_addresses(url: &Url) -> Result<Vec<SocketAddr>, Stri
     let port = url
         .port_or_known_default()
         .ok_or_else(|| "URL has no HTTP port".to_string())?;
-    let lookup = tokio::time::timeout(DNS_TIMEOUT, tokio::net::lookup_host((host, port)))
-        .await
-        .map_err(|_| "DNS lookup timed out".to_string())?
-        .map_err(|error| format!("DNS lookup failed: {error}"))?;
-    let addresses = lookup.collect::<Vec<_>>();
+    let addresses = match url.host() {
+        Some(url::Host::Ipv4(ip)) => vec![SocketAddr::new(ip.into(), port)],
+        Some(url::Host::Ipv6(ip)) => vec![SocketAddr::new(ip.into(), port)],
+        _ => tokio::time::timeout(DNS_TIMEOUT, tokio::net::lookup_host((host, port)))
+            .await
+            .map_err(|_| "DNS lookup timed out".to_string())?
+            .map_err(|error| format!("DNS lookup failed: {error}"))?
+            .collect::<Vec<_>>(),
+    };
     if addresses.is_empty() {
         return Err("DNS returned no addresses".into());
     }
