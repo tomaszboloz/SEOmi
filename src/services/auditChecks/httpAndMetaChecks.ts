@@ -30,7 +30,7 @@ export const buildMetaAndIndexabilityChecks = (audit: PageAuditData): LocalAudit
   const indexability = audit.indexability;
   const viewport = meta.viewport?.trim() || '';
   const hasResponsiveViewport = /(?:^|[,;])\s*width\s*=\s*device-width(?:\s*[,;]|$)/i.test(viewport);
-  const noindex = /(?:^|[\s,;])(noindex|none)(?:$|[\s,;])|noarchive|nosnippet/i.test(meta.robots || '');
+  const noindex = /(?:^|[\s,;])(noindex|none)(?:$|[\s,;])/i.test(meta.robots || '');
   const title = meta.title?.trim() || '';
   const description = meta.description?.trim() || '';
 

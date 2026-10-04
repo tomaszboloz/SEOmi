@@ -140,3 +140,7 @@ A new direct read_bytes_bounded assertion distinguishes genuine missing multi-le
 ### External-link HTTP pipeline
 
 The private production check_with pipeline has direct real-TCP request/result assertions in http_tests: HEAD status ownership, single-byte GET405/501 fallback, observed timing, nonfollowing redirects and Location decoding, validation/resolve/build short circuits and malformed HEAD/GET failures. Actual reqwest error objects assert DNS source classification and exclusion of false DNS classification from URL text during a TLS-record connection closure. Seven cases;785all-target stable/nightlyPASS; pipeline47/47lines5/5functions12/12branches. Public check_one retains direct rejection assertions; successful pipeline tests inject resolver dependencies and do not prove real public DNS/HTTP or all platform TLS providers. Global>=95% and complete public assertions remain OPEN.
+
+### Frontend HTTP/meta direct assertions
+
+buildHttpAndUrlChecks and buildMetaAndIndexabilityChecks now have44new expanded direct result/status/evidence cases in httpAuditCheckBoundaries/metaAuditCheckBoundaries/httpMetaIndexabilityRegression. getMetadataProblems directly asserts noarchive/nosnippet do not block indexing, explicit noindex/none do, and the native blocked verdict/reasons are retained. Final3590frontendtestsPASS,95%gateFAIL; module222/223branches including a counted short-circuit fallback. Tests do not substitute live provider/native proof. Global direct assertion inventory and >=95% remain OPEN.
