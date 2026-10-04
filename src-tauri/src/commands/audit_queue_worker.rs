@@ -18,6 +18,12 @@ mod models;
 #[cfg(test)]
 mod tests;
 
+#[cfg(test)]
+mod model_tests;
+
+#[cfg(test)]
+mod state_tests;
+
 use item_processor::{handle_stop_requested, process_queue_item};
 use lock::*;
 use models::*;

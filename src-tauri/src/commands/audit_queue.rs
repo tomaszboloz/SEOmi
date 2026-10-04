@@ -1,5 +1,6 @@
 //! Project-scoped persistence for the multi-page audit queue.
 
+mod cleanup;
 mod executions;
 mod paths;
 
@@ -91,10 +92,7 @@ pub fn delete_project_audit_queue(app: AppHandle, project_id: String) -> Result<
         let Some(name) = path.file_name().and_then(|value| value.to_str()) else {
             continue;
         };
-        if name.starts_with("audit_queue_execution_")
-            || name.starts_with("audit_queue_result_")
-            || name.starts_with("audit_queue_execution_") && name.ends_with(".lock")
-        {
+        if cleanup::is_queue_handoff_file(name) {
             let _ = fs::remove_file(path);
         }
     }

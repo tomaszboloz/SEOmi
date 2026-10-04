@@ -94,3 +94,8 @@ acquire_file_lock and lock_file have direct lifecycle/contention/invalid-path/bl
 ### Scheduled validation and execution history
 
 valid_identifier/validate_project_and_schedule/validate_manifest have direct contract cases in scheduled_worker/model_tests.rs for all supported dimensions, invalid fields, ASCII boundaries, Unicode errors and crawl bounds. append_execution/now_is_due/finalize_task have direct assertions in history_tests.rs for20record retention/order,90second grace, timezones, failed/paused state and invalid-completion non-mutation. FileLock Drop has a deterministic Unix duplicate-description ownership test plus preserved process-termination tests;10complete lib runs and697all-target stable/nightlyPASS. This does not prove all AppHandle-dependent scheduled execution paths. Global assertion/coverage gates remain OPEN.
+
+
+### Queue snapshot and cleanup ownership
+
+valid_identifier/parse_snapshot have direct assertions in audit_queue_worker/model_tests.rs for schema/defaults/statuses/limits and invalid inputs. queue_is_stale/queue_has_pending_items/stop_requested_for_run/queue_value have direct assertions in state_tests.rs for exact time boundary, run ownership and serialization roundtrip. audit_queue/cleanup.rs tests exact handoff selection and real OS-lock preservation while removing JSON.10new cases,707all-target stable/nightlyPASS; queue models and cleanup100%measuredlines/functions/branches. Tauri delete_project_audit_queue itself is not presented as directly asserted by the selector test. Global assertions remain OPEN.
