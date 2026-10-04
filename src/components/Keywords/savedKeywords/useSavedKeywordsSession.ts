@@ -3,6 +3,8 @@ import { useTranslation } from 'react-i18next';
 import { useToolsStore } from '@/stores/toolsStore';
 import { useAuditStore } from '@/stores/auditStore';
 import { useProjectStore } from '@/stores/projectStore';
+import { csv } from '@/services/export/csv';
+import { downloadBlob } from '@/services/download';
 
 export const useSavedKeywordsSession = () => {
   const { t } = useTranslation();
@@ -55,27 +57,20 @@ export const useSavedKeywordsSession = () => {
       t('savedKeywordsUi.addedAt'),
     ];
     const rows = savedKeywords.map((k) => [
-      `"${k.keyword}"`,
+      k.keyword,
       k.search_volume,
       k.difficulty,
       k.cpc,
       k.intent,
-      `"${k.tags.join(', ')}"`,
+      k.tags.join(', '),
       k.addedAt,
     ]);
-    const csvContent =
-      'data:text/csv;charset=utf-8,' +
-      [headers.join(','), ...rows.map((e) => e.join(','))].join('\n');
-    const encodedUri = encodeURI(csvContent);
-    const link = document.createElement('a');
-    link.setAttribute('href', encodedUri);
-    link.setAttribute(
-      'download',
+    // csv() quotes every cell, doubles embedded quotes and defuses spreadsheet
+    // formulas; a Blob download also keeps '#' in a keyword from truncating the file.
+    downloadBlob(
       `seomi_saved_keywords_${new Date().toISOString().split('T')[0]}.csv`,
+      new Blob(['\uFEFF' + csv([headers, ...rows])], { type: 'text/csv;charset=utf-8' }),
     );
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
   };
 
   const handleAddTag = (id: string) => {
