@@ -27,7 +27,7 @@ The same tests also make direct assertions for Claude/Codex configuration, activ
 - The complete source-matched inventory must be regenerated after the full suites and coverage runs.
 - Factory-returned callables need their own contract evidence; do not assign invented function bodies or execution counts.
 - All other public TS/native functions still require an assertion review. The table above is deliberately incremental.
-- Coverage thresholds >99% and the global LOC150 gate remain independent completion requirements.
+- Coverage thresholds >=95% (user amendment, 2026-10-04) and the global LOC150 gate remain independent completion requirements. Earlier >99% measurements are retained as historical evidence.
 
 ## MCP boundaries and canonical integration
 
@@ -108,3 +108,7 @@ Both public worker headless_launch_context functions and public scheduler::sched
 ### Robots and sitemap discovery orchestration
 
 `fetch_and_eval_robots` has direct output/request assertions in `orchestration/tests/robots_contracts.rs`: applicable rules and agent evidence, directives, fractional delay, enforced/ignored settings, disabled and failed HTTP/body/network outcomes. `discover_and_parse_sitemaps` is directly asserted in `sitemap_regressions.rs`, `sitemap_contracts.rs` and `sitemap_limits.rs` for index child host versus page-path scope, normalized unique capacity, exact retained provenance, disabled/deadline states, source/URL validation, bounded reads, cycles and source/provenance caps. Tests use an actual loopback transport under a test-only resolver; the production URL validator still rejects local target URLs. Eleven new cases; 723 all-target stable/nightly PASS. Both modules have all 50 measured branches hit, but construction-error closures remain unexecuted and counted. Global coverage and complete direct public assertions remain OPEN.
+
+### Secondary resource orchestration
+
+`crawl_secondary_resources` has direct result, state and HTTP request assertions in `orchestration/tests/resource_{regressions,contracts,deadlines}.rs`. Eight cases cover cancellation/deadline before dispatch, pause/resume before requests, deadline/cancellation during waiting, deterministic sorting/budget clamps, empty state and retained HTTP/source evidence in parallel and robots-delay modes. Full 731 all-target stable/nightly PASS. The defensive JoinError placeholder remains unexecuted and counted. These tests execute the resource fetcher but are not presented as complete direct assertions for every standalone fetch behavior. Global >=95% and complete public-function assertions remain OPEN.
