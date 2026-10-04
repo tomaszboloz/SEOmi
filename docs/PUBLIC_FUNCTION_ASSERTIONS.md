@@ -160,3 +160,7 @@ useCrawlExecution has24new expanded direct renderHook cases in crawlExecutionHoo
 ### Async crawl completion ownership
 
 Nine direct useCrawlExecution cases now assert stale pending validation/staging/production/PDF behavior across project switch, return, latest export and unmount. Two direct useCrawlOperationScope cases assert independent operation types, generation invalidation and latest ownership. No stale production dispatch/selection/notification/error/loading cleanup is accepted by the tested cases.44targetedtestsPASS,3706frontendtestsPASS;global95%gateFAIL. Already-running native operations are not cancelled, and analogous form/filter async paths remain to regression-test.
+
+### Crawl validation filters ownership
+
+useCrawlErrorFilters now has14expanded direct cases covering current/stale validation, project/request/input/edit/unmount invalidation, null stale return, exact native args, ordered/bounded preview, normalization, errors and page/resource filtering. FiveREDcases failed before the ownership fix; final32targetedtestsPASS/3720frontendtestsPASS. Module27/28branches;global95%gateFAIL. Native filter engine and remaining form/profile async paths are not claimed verified by these synthetic invoke adapters.
