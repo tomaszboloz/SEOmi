@@ -10,14 +10,12 @@ export const SubscriptionModal: React.FC = () => {
     t,
     closeModal,
     provider,
-    model,
     apiKeys,
     methods,
     statuses,
     messages,
     cliStatus,
     setProvider,
-    setModel,
     setMethod,
     testConnection,
     saving,
@@ -54,12 +52,10 @@ export const SubscriptionModal: React.FC = () => {
               status={statuses[item.id]}
               statusMessage={messages[item.id]}
               apiKey={apiKeys[item.id]}
-              model={model}
               saving={saving === item.id}
               onSetProvider={setProvider}
               onSetMethod={setMethod}
               onSaveKey={saveKey}
-              onSetModel={setModel}
               onTestConnection={testConnection}
               t={t}
             />

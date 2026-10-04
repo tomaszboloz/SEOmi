@@ -14,12 +14,10 @@ interface SubscriptionProviderCardProps {
   status: AiConnectionState;
   statusMessage: string | undefined;
   apiKey: string;
-  model: string;
   saving: boolean;
   onSetProvider: (id: AiProvider) => void;
   onSetMethod: (id: AiProvider, method: 'local_cli' | 'api_key') => void;
   onSaveKey: (id: AiProvider, key: string) => void;
-  onSetModel: (model: string) => void;
   onTestConnection: (id: AiProvider) => void;
   t: TFunction;
 }
@@ -32,12 +30,10 @@ export const SubscriptionProviderCard: React.FC<SubscriptionProviderCardProps> =
   status,
   statusMessage,
   apiKey,
-  model,
   saving,
   onSetProvider,
   onSetMethod,
   onSaveKey,
-  onSetModel,
   onTestConnection,
   t,
 }) => {
@@ -118,9 +114,7 @@ export const SubscriptionProviderCard: React.FC<SubscriptionProviderCardProps> =
           method={method}
           status={status}
           statusMessage={statusMessage}
-          model={model}
           saving={saving}
-          onSetModel={onSetModel}
           onTestConnection={onTestConnection}
           t={t}
         />

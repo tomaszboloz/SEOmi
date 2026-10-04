@@ -1,5 +1,9 @@
 import type { AiCliStatus, AiConnectionMethod, AiConnectionState, AiProvider } from '@/types';
 import { createId } from '@/services/ids';
+import { readStorage } from '@/services/storage';
+import { currentModel } from '@/services/ai/modelCatalog';
+import { CLAUDE_DEFAULT_MODEL } from '@/services/ai/claude';
+import { GEMINI_DEFAULT_MODEL } from '@/services/ai/modelCatalog';
 export const PROVIDERS: AiProvider[] = ['openai', 'claude', 'gemini'];
 export const SECRET_NAMES: Record<AiProvider, string> = {
   openai: 'openai_api_key',
@@ -7,7 +11,7 @@ export const SECRET_NAMES: Record<AiProvider, string> = {
   gemini: 'gemini_api_key',
 };
 export const providerMap = <T,>(value: T): Record<AiProvider, T> => ({ openai: value, claude: value, gemini: value });
-export const defaultModel = (provider: AiProvider): string => ({ openai: 'gpt-4o', claude: 'claude-3-7-sonnet-20250219', gemini: 'gemini-2.0-flash' })[provider];
+export const defaultModel = (provider: AiProvider): string => ({ openai: 'gpt-4o', claude: CLAUDE_DEFAULT_MODEL, gemini: GEMINI_DEFAULT_MODEL })[provider];
 // Detection runs the same version and sign-in check as the explicit test for
 // Codex and Claude, so a detected CLI is a working connection. Gemini has no
 // sign-in check; only its explicit test (one real request) proves it.
@@ -27,3 +31,19 @@ export const beginAuthRequest = (kind: string): string => {
 };
 export const isLatestAuthRequest = (kind: string, token: string): boolean => authRequestTokens.get(kind) === token;
 
+/**
+ * Global (pre-project) preferences. Stored values are user-editable: an unknown
+ * provider or connection method falls back to a default, and a missing model
+ * uses the selected provider's default instead of an OpenAI model ID.
+ */
+export const resolveGlobalAiPreferences = (): { provider: AiProvider; model: string; connectionMethod: Record<AiProvider, AiConnectionMethod> } => {
+  const storedProvider = readStorage('seomi_ai_provider');
+  const provider = isAiProvider(storedProvider) ? storedProvider : 'openai';
+  const model = currentModel(readStorage('seomi_ai_model')?.trim() || defaultModel(provider));
+  const connectionMethod = PROVIDERS.reduce((all, item) => {
+    const stored = readStorage(`seomi_ai_connection_${item}`);
+    all[item] = isConnectionMethod(stored) ? stored : 'api_key';
+    return all;
+  }, providerMap<AiConnectionMethod>('api_key'));
+  return { provider, model, connectionMethod };
+};

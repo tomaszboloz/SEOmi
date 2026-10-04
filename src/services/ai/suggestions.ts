@@ -1,6 +1,7 @@
 import i18n from '@/i18n';
 import { aiProviderLabel } from './labels';
 import { parseAiSuggestionResponse, type AiSuggestionResponse } from './parsing';
+import { requestClaudeText } from './claude';
 
 export async function callOpenAI(
   apiKey: string,
@@ -42,34 +43,17 @@ export async function callClaude(
   model: string,
   prompt: string
 ): Promise<AiSuggestionResponse> {
-  const res = await fetch('https://api.anthropic.com/v1/messages', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-      'x-api-key': apiKey,
-      'anthropic-version': '2023-06-01',
-    },
-    body: JSON.stringify({
-      model,
-      max_tokens: 1024,
-      messages: [{ role: 'user', content: prompt }],
-    }),
-  });
+  const res = await requestClaudeText(apiKey, model, prompt);
+  if (typeof res === 'string') return parseAiSuggestionResponse(res);
 
-  if (!res.ok) {
-    const err = await res.text();
-    if (res.status === 401) {
-      throw new Error(i18n.t('runtimeErrors.ai.authFailed', { provider: aiProviderLabel('claude') }));
-    }
-    if (res.status === 429) {
-      throw new Error(i18n.t('runtimeErrors.ai.quota', { provider: aiProviderLabel('claude'), host: 'console.anthropic.com' }));
-    }
-      throw new Error(i18n.t('runtimeErrors.ai.apiError', { provider: aiProviderLabel('claude'), status: res.status, detail: err }));
+  const err = await res.text();
+  if (res.status === 401) {
+    throw new Error(i18n.t('runtimeErrors.ai.authFailed', { provider: aiProviderLabel('claude') }));
   }
-
-  const data = await res.json();
-  const text = data.content?.[0]?.text || '';
-  return parseAiSuggestionResponse(text);
+  if (res.status === 429) {
+    throw new Error(i18n.t('runtimeErrors.ai.quota', { provider: aiProviderLabel('claude'), host: 'console.anthropic.com' }));
+  }
+  throw new Error(i18n.t('runtimeErrors.ai.apiError', { provider: aiProviderLabel('claude'), status: res.status, detail: err }));
 }
 
 export async function callGemini(

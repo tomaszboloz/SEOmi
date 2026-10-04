@@ -40,7 +40,6 @@ describe('SubscriptionModal modular architecture', () => {
     const onSetProvider = vi.fn();
     const onSetMethod = vi.fn();
     const onSaveKey = vi.fn();
-    const onSetModel = vi.fn();
     const onTestConnection = vi.fn();
 
     render(
@@ -52,12 +51,10 @@ describe('SubscriptionModal modular architecture', () => {
         status="connected"
         statusMessage="Ready"
         apiKey="sk-test-key"
-        model="gpt-4o"
         saving={false}
         onSetProvider={onSetProvider}
         onSetMethod={onSetMethod}
         onSaveKey={onSaveKey}
-        onSetModel={onSetModel}
         onTestConnection={onTestConnection}
         t={mockT}
       />,

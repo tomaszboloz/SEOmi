@@ -1,6 +1,7 @@
 import type { AiProvider } from '@/types';
 import i18n from '@/i18n';
 import { aiProviderLabel } from './labels';
+import { CLAUDE_CONNECTION_PROBE_MODEL, CLAUDE_MESSAGES_URL, claudeHeaders } from './claude';
 
 export async function testAiConnection(
   provider: AiProvider,
@@ -28,15 +29,11 @@ export async function testAiConnection(
     }
 
     if (provider === 'claude') {
-      const res = await fetch('https://api.anthropic.com/v1/messages', {
+      const res = await fetch(CLAUDE_MESSAGES_URL, {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'x-api-key': apiKey,
-          'anthropic-version': '2023-06-01',
-        },
+        headers: claudeHeaders(apiKey, CLAUDE_CONNECTION_PROBE_MODEL),
         body: JSON.stringify({
-          model: 'claude-3-5-haiku-20241022',
+          model: CLAUDE_CONNECTION_PROBE_MODEL,
           max_tokens: 5,
           messages: [{ role: 'user', content: 'ping' }],
         }),

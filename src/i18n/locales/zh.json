@@ -585,7 +585,8 @@
       "cliMissing": "Local CLI was not found on PATH.",
       "credentialSaved": "Credential saved in the system keychain. Test it to verify access.",
       "checkingConnection": "Checking connection…",
-      "localClientRequired": "{{provider}} is not configured to use its local subscription client."
+      "localClientRequired": "{{provider}} is not configured to use its local subscription client.",
+      "refused": "{{provider}} 拒绝了此请求。请换种说法或选择其他模型。"
     },
     "pagespeed": {
       "projectRequired": "Choose a project before starting the measurement."
@@ -3330,7 +3331,11 @@
     "currentTier": "当前版本",
     "upgradePro": "升级到 Pro 专业版",
     "creditsLeft": "剩余 AI 算力额度",
-    "connectAccount": "绑定账户"
+    "connectAccount": "绑定账户",
+    "refreshModels": "刷新模型列表",
+    "modelsFromProvider": "来自提供商 API 的 {{count}} 个模型",
+    "modelsDefault": "默认模型——测试 API 密钥即可加载你的模型",
+    "modelsUnavailable": "无法从提供商加载模型；显示上次获取的列表。"
   },
   "schedules": {
     "saveError": "Unable to save the schedule.",
@@ -3499,16 +3504,7 @@
     "ai": {
       "openai": "OpenAI / Codex",
       "claude": "Anthropic Claude",
-      "gemini": "Google Gemini",
-      "gpt4o": "GPT-4o (high-converting copy)",
-      "gpt4oMini": "GPT-4o Mini (fast and lightweight)",
-      "o3Mini": "o3-mini (reasoning model)",
-      "claude37": "Claude 3.7 Sonnet (latest)",
-      "claude35": "Claude 3.5 Sonnet",
-      "claudeHaiku": "Claude 3.5 Haiku",
-      "geminiFlash": "Gemini 2.0 Flash (fastest)",
-      "geminiPro": "Gemini 2.0 Pro",
-      "gemini15": "Gemini 1.5 Pro"
+      "gemini": "Google Gemini"
     },
     "renderWorker": {
       "title": "本地渲染工作器",

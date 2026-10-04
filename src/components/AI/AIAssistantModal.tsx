@@ -16,8 +16,6 @@ export const AIAssistantModal: React.FC = () => {
     currentAudit,
     provider,
     setProvider,
-    model,
-    setModel,
     connectionMethod,
     currentKey,
     handleApiKeyChange,
@@ -59,8 +57,6 @@ export const AIAssistantModal: React.FC = () => {
           <AIAssistantEngineSelect
             provider={provider}
             setProvider={setProvider}
-            model={model}
-            setModel={setModel}
             connectionMethod={connectionMethod}
             t={t}
           />

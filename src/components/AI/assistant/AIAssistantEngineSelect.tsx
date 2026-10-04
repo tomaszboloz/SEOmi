@@ -2,12 +2,11 @@ import React from 'react';
 import type { TFunction } from 'i18next';
 import { Bot, Flame, Sparkles } from 'lucide-react';
 import type { AiProvider } from '@/types';
+import { ProviderModelSelect } from '@/components/AI/ProviderModelSelect';
 
 interface Props {
   provider: AiProvider;
   setProvider: (provider: AiProvider) => void;
-  model: string;
-  setModel: (model: string) => void;
   connectionMethod: Record<AiProvider, string>;
   t: TFunction;
 }
@@ -15,8 +14,6 @@ interface Props {
 export const AIAssistantEngineSelect: React.FC<Props> = ({
   provider,
   setProvider,
-  model,
-  setModel,
   connectionMethod,
   t,
 }) => (
@@ -85,34 +82,12 @@ export const AIAssistantEngineSelect: React.FC<Props> = ({
           {t('auth.localModelNote')}
         </div>
       ) : (
-        <select
+        <ProviderModelSelect
+          provider={provider}
           id="ai-model-select"
-          value={model}
-          onChange={(e) => setModel(e.target.value)}
+          ariaLabel={t('ai.modelLabel')}
           className="w-full h-9 px-3 bg-slate-950 border border-slate-800 rounded-lg text-xs text-white focus:outline-none focus:ring-1 focus:ring-emerald-500"
-        >
-          {provider === 'openai' && (
-            <>
-              <option value="gpt-4o">{t('legacyUi.ai.gpt4o')}</option>
-              <option value="gpt-4o-mini">{t('legacyUi.ai.gpt4oMini')}</option>
-              <option value="o3-mini">{t('legacyUi.ai.o3Mini')}</option>
-            </>
-          )}
-          {provider === 'claude' && (
-            <>
-              <option value="claude-3-7-sonnet-20250219">{t('legacyUi.ai.claude37')}</option>
-              <option value="claude-3-5-sonnet-20241022">{t('legacyUi.ai.claude35')}</option>
-              <option value="claude-3-5-haiku-20241022">{t('legacyUi.ai.claudeHaiku')}</option>
-            </>
-          )}
-          {provider === 'gemini' && (
-            <>
-              <option value="gemini-2.0-flash">{t('legacyUi.ai.geminiFlash')}</option>
-              <option value="gemini-2.0-pro-exp-02-05">{t('legacyUi.ai.geminiPro')}</option>
-              <option value="gemini-1.5-pro">{t('legacyUi.ai.gemini15')}</option>
-            </>
-          )}
-        </select>
+        />
       )}
     </div>
   </div>

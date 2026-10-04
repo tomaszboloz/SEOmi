@@ -585,7 +585,8 @@
       "cliMissing": "Local CLI was not found on PATH.",
       "credentialSaved": "Credential saved in the system keychain. Test it to verify access.",
       "checkingConnection": "Checking connection…",
-      "localClientRequired": "{{provider}} is not configured to use its local subscription client."
+      "localClientRequired": "{{provider}} is not configured to use its local subscription client.",
+      "refused": "{{provider}}이(가) 이 요청을 거부했습니다. 다시 작성하거나 다른 모델을 선택하세요."
     },
     "pagespeed": {
       "projectRequired": "Choose a project before starting the measurement."
@@ -3330,7 +3331,11 @@
     "currentTier": "현재 플랜",
     "upgradePro": "Pro로 업그레이드",
     "creditsLeft": "남은 AI 크레딧",
-    "connectAccount": "계정 연결"
+    "connectAccount": "계정 연결",
+    "refreshModels": "모델 목록 새로고침",
+    "modelsFromProvider": "공급자 API의 모델 {{count}}개",
+    "modelsDefault": "기본 모델 — API 키를 테스트하면 사용 가능한 모델을 불러옵니다",
+    "modelsUnavailable": "공급자에서 모델을 불러오지 못했습니다. 마지막으로 확인된 목록을 표시합니다."
   },
   "schedules": {
     "saveError": "Unable to save the schedule.",
@@ -3499,16 +3504,7 @@
     "ai": {
       "openai": "OpenAI / Codex",
       "claude": "Anthropic Claude",
-      "gemini": "Google Gemini",
-      "gpt4o": "GPT-4o (high-converting copy)",
-      "gpt4oMini": "GPT-4o Mini (fast and lightweight)",
-      "o3Mini": "o3-mini (reasoning model)",
-      "claude37": "Claude 3.7 Sonnet (latest)",
-      "claude35": "Claude 3.5 Sonnet",
-      "claudeHaiku": "Claude 3.5 Haiku",
-      "geminiFlash": "Gemini 2.0 Flash (fastest)",
-      "geminiPro": "Gemini 2.0 Pro",
-      "gemini15": "Gemini 1.5 Pro"
+      "gemini": "Google Gemini"
     },
     "renderWorker": {
       "title": "로컬 렌더링 워커",

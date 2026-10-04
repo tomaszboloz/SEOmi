@@ -1,6 +1,7 @@
 import type { StoreApi } from 'zustand';
 import type { AiCliStatus, AiConnectionMethod, AiConnectionState, AiProvider, UserSubscription } from '@/types';
 import type { AIService } from '@/services/ai';
+import type { AiModelOption } from '@/services/ai/modelList';
 export interface AuthState {
   subscription: UserSubscription;
   activeProjectId: string | null;
@@ -12,6 +13,10 @@ export interface AuthState {
   statusMessages: Record<AiProvider, string>;
   cliStatus: Record<AiProvider, AiCliStatus | null>;
   isHydrated: boolean;
+  /** Models returned by each provider's API for the stored key (or cached from the last successful listing). */
+  availableModels: Record<AiProvider, AiModelOption[]>;
+  modelListStatus: Record<AiProvider, 'idle' | 'loading' | 'error'>;
+  refreshProviderModels: (provider: AiProvider) => Promise<void>;
   setProvider: (provider: AiProvider) => void;
   setModel: (model: string) => void;
   setConnectionMethod: (provider: AiProvider, method: AiConnectionMethod) => void;

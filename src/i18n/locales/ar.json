@@ -585,7 +585,8 @@
       "cliMissing": "Local CLI was not found on PATH.",
       "credentialSaved": "Credential saved in the system keychain. Test it to verify access.",
       "checkingConnection": "Checking connection…",
-      "localClientRequired": "{{provider}} is not configured to use its local subscription client."
+      "localClientRequired": "{{provider}} is not configured to use its local subscription client.",
+      "refused": "رفض {{provider}} هذا الطلب. أعد صياغته أو اختر نموذجًا آخر."
     },
     "pagespeed": {
       "projectRequired": "Choose a project before starting the measurement."
@@ -3330,7 +3331,11 @@
     "currentTier": "الخطة الحالية",
     "upgradePro": "الترقية إلى Pro",
     "creditsLeft": "رصيد الائتمان المتبقي",
-    "connectAccount": "ربط الحساب"
+    "connectAccount": "ربط الحساب",
+    "refreshModels": "تحديث قائمة النماذج",
+    "modelsFromProvider": "{{count}} نموذجًا من واجهة برمجة المزوّد",
+    "modelsDefault": "النماذج الافتراضية — اختبر مفتاح API لتحميل نماذجك",
+    "modelsUnavailable": "تعذّر تحميل النماذج من المزوّد؛ تُعرض آخر قائمة معروفة."
   },
   "schedules": {
     "saveError": "Unable to save the schedule.",
@@ -3499,16 +3504,7 @@
     "ai": {
       "openai": "OpenAI / Codex",
       "claude": "Anthropic Claude",
-      "gemini": "Google Gemini",
-      "gpt4o": "GPT-4o (high-converting copy)",
-      "gpt4oMini": "GPT-4o Mini (fast and lightweight)",
-      "o3Mini": "o3-mini (reasoning model)",
-      "claude37": "Claude 3.7 Sonnet (latest)",
-      "claude35": "Claude 3.5 Sonnet",
-      "claudeHaiku": "Claude 3.5 Haiku",
-      "geminiFlash": "Gemini 2.0 Flash (fastest)",
-      "geminiPro": "Gemini 2.0 Pro",
-      "gemini15": "Gemini 1.5 Pro"
+      "gemini": "Google Gemini"
     },
     "renderWorker": {
       "title": "عامل التصيير المحلي",
