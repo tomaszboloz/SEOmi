@@ -5,6 +5,7 @@ import { useAuditStore } from '@/stores/auditStore';
 import { useAuthStore } from '@/stores/authStore';
 import type { AiSuggestionResponse } from '@/services/ai';
 import { copyText } from '@/services/clipboard';
+import { useTransientValue } from '@/hooks/useTransientValue';
 
 export const useAIAssistantSession = () => {
   const { t } = useTranslation();
@@ -27,8 +28,8 @@ export const useAIAssistantSession = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [suggestions, setSuggestions] = useState<AiSuggestionResponse | null>(null);
-  const [copiedJson, setCopiedJson] = useState(false);
-  const [appliedField, setAppliedField] = useState<'title' | 'desc' | null>(null);
+  const [copiedJson, setCopiedJson] = useTransientValue(false, 2000);
+  const [appliedField, setAppliedField] = useTransientValue<'title' | 'desc' | null>(null, 2000);
   const generationRequestToken = useRef(0);
 
   const currentKey = apiKeys[provider] || '';
@@ -83,7 +84,6 @@ export const useAIAssistantSession = () => {
     };
     setAuditData(updated);
     setAppliedField('title');
-    setTimeout(() => setAppliedField(null), 2000);
   };
 
   const applyDescription = () => {
@@ -102,7 +102,6 @@ export const useAIAssistantSession = () => {
     };
     setAuditData(updated);
     setAppliedField('desc');
-    setTimeout(() => setAppliedField(null), 2000);
   };
 
   const copySchema = async () => {
@@ -110,7 +109,6 @@ export const useAIAssistantSession = () => {
     const copied = await copyText(JSON.stringify(suggestions.schemaJsonLd, null, 2));
     if (!copied) return;
     setCopiedJson(true);
-    setTimeout(() => setCopiedJson(false), 2000);
   };
 
   return {

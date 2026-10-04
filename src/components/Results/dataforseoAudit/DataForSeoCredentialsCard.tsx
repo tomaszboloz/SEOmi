@@ -4,6 +4,7 @@ import { Database, Key, Loader2, RefreshCw, CheckCircle2, Save, AlertCircle } fr
 import { useAuditStore } from '@/stores/auditStore';
 import { useSettingsStore } from '@/stores/settingsStore';
 import { useProjectStore } from '@/stores/projectStore';
+import { useTransientValue } from '@/hooks/useTransientValue';
 
 interface Props {
   currentDomain: string;
@@ -21,7 +22,7 @@ export const DataForSeoCredentialsCard: React.FC<Props> = ({ currentDomain }) =>
   const [showCredentials, setShowCredentials] = useState(false);
   const [login, setLogin] = useState(credentials.login);
   const [password, setPassword] = useState(credentials.password);
-  const [savedSuccess, setSavedSuccess] = useState(false);
+  const [savedSuccess, setSavedSuccess] = useTransientValue(false, 2000);
 
   useEffect(() => {
     setLogin(credentials.login);
@@ -35,7 +36,6 @@ export const DataForSeoCredentialsCard: React.FC<Props> = ({ currentDomain }) =>
     e.preventDefault();
     await saveCredentials({ login, password });
     setSavedSuccess(true);
-    setTimeout(() => setSavedSuccess(false), 2000);
   };
 
   return (

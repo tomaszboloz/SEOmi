@@ -1,5 +1,6 @@
 pub mod extraction;
 pub mod models;
+pub mod regex_cache;
 pub mod regex_extraction;
 pub mod validation;
 pub mod xpath;

@@ -1,14 +1,15 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { Code, Copy, Check, Sparkles } from 'lucide-react';
 import { useUIStore } from '@/stores/uiStore';
 import { copyText } from '@/services/clipboard';
 import { MetadataTableProps } from './metadataTypes';
+import { useTransientValue } from '@/hooks/useTransientValue';
 
 export const MetadataSpotlight: React.FC<MetadataTableProps> = ({ audit }) => {
   const { t } = useTranslation();
   const openModal = useUIStore((s) => s.openModal);
-  const [copiedKey, setCopiedKey] = useState<string | null>(null);
+  const [copiedKey, setCopiedKey] = useTransientValue<string | null>(null, 1500);
 
   const { meta_tags } = audit;
 
@@ -16,7 +17,6 @@ export const MetadataSpotlight: React.FC<MetadataTableProps> = ({ audit }) => {
     const copied = await copyText(text);
     if (!copied) return;
     setCopiedKey(key);
-    setTimeout(() => setCopiedKey(null), 1500);
   };
 
   const titleLength = meta_tags.title_length;

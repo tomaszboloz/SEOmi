@@ -5,6 +5,7 @@ import { McpClientTabs } from './McpClientTabs';
 import { getActiveConfigString } from './mcpHubTypes';
 import { copyText } from '@/services/clipboard';
 import { saveTextFile, isTauriEnvironment } from '@/services/tauri';
+import { useTransientValue } from '@/hooks/useTransientValue';
 
 interface McpServerConfigCardProps {
   mcpClientTab: 'claude' | 'cursor' | 'codex' | 'gemini';
@@ -20,8 +21,8 @@ export const McpServerConfigCard: React.FC<McpServerConfigCardProps> = ({
   mcpClientTab, setMcpClientTab, serverPath, updateServerPath, discoverTools, discovering, discoveryError,
 }) => {
   const { t } = useTranslation();
-  const [copiedConfig, setCopiedConfig] = useState(false);
-  const [exportedConfig, setExportedConfig] = useState(false);
+  const [copiedConfig, setCopiedConfig] = useTransientValue(false, 2000);
+  const [exportedConfig, setExportedConfig] = useTransientValue(false, 2000);
   const [exportingConfig, setExportingConfig] = useState(false);
   const [exportError, setExportError] = useState(false);
 
@@ -35,7 +36,6 @@ export const McpServerConfigCard: React.FC<McpServerConfigCardProps> = ({
     const copied = await copyText(activeConfigString);
     if (!copied) return;
     setCopiedConfig(true);
-    setTimeout(() => setCopiedConfig(false), 2000);
   };
 
   const handleExportConfig = async () => {
@@ -44,8 +44,7 @@ export const McpServerConfigCard: React.FC<McpServerConfigCardProps> = ({
     try {
       const result = await saveTextFile({ defaultPath: configFilename, contents: activeConfigString, extension: configExtension, filterName: configExtension === 'json' ? t('mcp.jsonFileType') : t('mcp.tomlFileType') });
       if (result === 'cancelled') { setExportError(false); return; }
-      setExportError(false); setExportedConfig(true); setTimeout(() => setExportedConfig(false), 2000);
-    } catch {
+      setExportError(false); setExportedConfig(true);    } catch {
       setExportedConfig(false); setExportError(true);
     } finally {
       setExportingConfig(false);

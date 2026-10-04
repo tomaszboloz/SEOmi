@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { FileJson, Copy, Check, Code2 } from 'lucide-react';
 import { PageAuditData } from '@/types';
@@ -7,6 +7,7 @@ import { getStructuredDataProblems } from '@/services/auditProblems';
 import { ProblemsOnlyNotice } from './ProblemsOnlyNotice';
 import { copyText } from '@/services/clipboard';
 import { localizeStructuredDataFinding } from '@/services/schemaIssueLocalization';
+import { useTransientValue } from '@/hooks/useTransientValue';
 
 interface StructuredDataViewProps {
   audit: PageAuditData;
@@ -14,7 +15,7 @@ interface StructuredDataViewProps {
 
 export const StructuredDataView: React.FC<StructuredDataViewProps> = ({ audit }) => {
   const { t } = useTranslation();
-  const [copiedIdx, setCopiedIdx] = useState<number | null>(null);
+  const [copiedIdx, setCopiedIdx] = useTransientValue<number | null>(null, 1500);
   const showOnlyProblems = useAuditStore((state) => state.showOnlyProblems);
 
   const { structured_data } = audit;
@@ -24,7 +25,6 @@ export const StructuredDataView: React.FC<StructuredDataViewProps> = ({ audit })
     const copied = await copyText(JSON.stringify(content, null, 2));
     if (!copied) return;
     setCopiedIdx(idx);
-    setTimeout(() => setCopiedIdx(null), 1500);
   };
 
   if (showOnlyProblems) {

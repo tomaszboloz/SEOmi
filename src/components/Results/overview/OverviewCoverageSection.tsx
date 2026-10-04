@@ -8,6 +8,7 @@ import { useAuditStore } from "@/stores/auditStore";
 import { OverviewCoverageFilters } from "./OverviewCoverageFilters";
 import { OverviewCoverageCard } from "./OverviewCoverageCard";
 import { OverviewCoveragePagination } from "./OverviewCoveragePagination";
+import { useTransientValue } from '@/hooks/useTransientValue';
 
 interface OverviewCoverageSectionProps {
   audit: PageAuditData;
@@ -24,9 +25,9 @@ export const OverviewCoverageSection: React.FC<OverviewCoverageSectionProps> = (
   >("all");
   const [localCheckCategory, setLocalCheckCategory] = useState("all");
   const [localCheckPage, setLocalCheckPage] = useState(0);
-  const [coverageCopyState, setCoverageCopyState] = useState<
+  const [coverageCopyState, setCoverageCopyState] = useTransientValue<
     "idle" | "copied" | "failed"
-  >("idle");
+  >("idle", 1800);
 
   const localChecks = useMemo(() => buildLocalAuditChecks(audit), [audit]);
   const checksByStatus = {
@@ -66,7 +67,6 @@ export const OverviewCoverageSection: React.FC<OverviewCoverageSectionProps> = (
       .join("\n\n");
     const copied = await copyText(text);
     setCoverageCopyState(copied ? "copied" : "failed");
-    window.setTimeout(() => setCoverageCopyState("idle"), 1800);
   };
 
   return (
