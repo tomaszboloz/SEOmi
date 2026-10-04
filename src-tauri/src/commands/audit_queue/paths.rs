@@ -12,12 +12,15 @@ pub(crate) const MAX_QUEUE_BYTES: usize = 16 * 1024 * 1024;
 pub(crate) const MAX_QUEUE_EXECUTION_BYTES: usize = 64 * 1024 * 1024;
 pub(crate) const MAX_QUEUE_RESULT_BYTES: usize = 8 * 1024 * 1024;
 
-pub(crate) fn queue_path(app: &AppHandle, project_id: &str) -> Result<PathBuf, String> {
+pub(crate) fn queue_path<R: tauri::Runtime>(
+    app: &AppHandle<R>,
+    project_id: &str,
+) -> Result<PathBuf, String> {
     Ok(crawl_storage::project_directory(app, project_id)?.join("audit_queue.json"))
 }
 
-pub(crate) fn queue_execution_path(
-    app: &AppHandle,
+pub(crate) fn queue_execution_path<R: tauri::Runtime>(
+    app: &AppHandle<R>,
     project_id: &str,
     run_id: &str,
 ) -> Result<PathBuf, String> {
@@ -33,8 +36,8 @@ pub(crate) fn queue_execution_path(
         .join(format!("audit_queue_execution_{run_id}.json")))
 }
 
-pub(crate) fn queue_result_path(
-    app: &AppHandle,
+pub(crate) fn queue_result_path<R: tauri::Runtime>(
+    app: &AppHandle<R>,
     project_id: &str,
     run_id: &str,
     item_id: &str,

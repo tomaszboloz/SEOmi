@@ -34,6 +34,7 @@ name = "coverage_sources"
 test = true
 
 [dev-dependencies]
+tauri = { version = "2", features = ["test"] }
 syn = { version = "2", features = ["full"] }
 proc-macro2 = { version = "1", features = ["span-locations"] }
 minisign-verify = "0.2.5"

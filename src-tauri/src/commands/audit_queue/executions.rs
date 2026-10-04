@@ -8,8 +8,8 @@ use std::fs;
 use std::io::ErrorKind;
 use tauri::AppHandle;
 
-pub(crate) fn write_queue_execution(
-    app: &AppHandle,
+pub(crate) fn write_queue_execution<R: tauri::Runtime>(
+    app: &AppHandle<R>,
     project_id: &str,
     run_id: &str,
     execution: &Value,
@@ -23,8 +23,8 @@ pub(crate) fn write_queue_execution(
     write_atomic_with_limit(&path, execution, MAX_QUEUE_EXECUTION_BYTES)
 }
 
-pub(crate) fn write_queue_result(
-    app: &AppHandle,
+pub(crate) fn write_queue_result<R: tauri::Runtime>(
+    app: &AppHandle<R>,
     project_id: &str,
     run_id: &str,
     item_id: &str,
@@ -43,8 +43,8 @@ pub(crate) fn write_queue_result(
 }
 
 #[tauri::command]
-pub fn list_project_audit_queue_executions(
-    app: AppHandle,
+pub fn list_project_audit_queue_executions<R: tauri::Runtime>(
+    app: AppHandle<R>,
     project_id: String,
 ) -> Result<Vec<Value>, String> {
     let directory = crawl_storage::project_directory(&app, &project_id)?;
@@ -78,8 +78,8 @@ pub fn list_project_audit_queue_executions(
 }
 
 #[tauri::command]
-pub fn list_project_audit_queue_results(
-    app: AppHandle,
+pub fn list_project_audit_queue_results<R: tauri::Runtime>(
+    app: AppHandle<R>,
     project_id: String,
 ) -> Result<Vec<Value>, String> {
     let directory = crawl_storage::project_directory(&app, &project_id)?;
@@ -113,8 +113,8 @@ pub fn list_project_audit_queue_results(
 }
 
 #[tauri::command]
-pub fn acknowledge_project_audit_queue_result(
-    app: AppHandle,
+pub fn acknowledge_project_audit_queue_result<R: tauri::Runtime>(
+    app: AppHandle<R>,
     project_id: String,
     run_id: String,
     item_id: String,
@@ -128,8 +128,8 @@ pub fn acknowledge_project_audit_queue_result(
 }
 
 #[tauri::command]
-pub fn acknowledge_project_audit_queue_execution(
-    app: AppHandle,
+pub fn acknowledge_project_audit_queue_execution<R: tauri::Runtime>(
+    app: AppHandle<R>,
     project_id: String,
     run_id: String,
 ) -> Result<(), String> {

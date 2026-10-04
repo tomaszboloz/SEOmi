@@ -85,7 +85,10 @@ pub(crate) fn replace_file(source: &Path, destination: &Path) -> io::Result<()> 
     std::fs::rename(source, destination)
 }
 
-pub(crate) fn project_directory(app: &AppHandle, project_id: &str) -> Result<PathBuf, String> {
+pub(crate) fn project_directory<R: tauri::Runtime>(
+    app: &AppHandle<R>,
+    project_id: &str,
+) -> Result<PathBuf, String> {
     if project_id.is_empty()
         || project_id.len() > 80
         || !project_id

@@ -26,7 +26,10 @@ use std::io::ErrorKind;
 use tauri::AppHandle;
 
 #[tauri::command]
-pub fn load_project_audit_queue(app: AppHandle, project_id: String) -> Result<Value, String> {
+pub fn load_project_audit_queue<R: tauri::Runtime>(
+    app: AppHandle<R>,
+    project_id: String,
+) -> Result<Value, String> {
     let path = queue_path(&app, &project_id)?;
     let bytes = match crawl_storage::read_bytes_bounded(&path, MAX_QUEUE_BYTES) {
         Ok(bytes) => bytes,
@@ -36,8 +39,12 @@ pub fn load_project_audit_queue(app: AppHandle, project_id: String) -> Result<Va
     serde_json::from_slice(&bytes).map_err(|error| format!("Saved audit queue is invalid: {error}"))
 }
 
-pub(crate) fn read_queue_snapshot(
-    app: &AppHandle,
+#[cfg(test)]
+#[path = "audit_queue/command_tests/mod.rs"]
+mod command_tests;
+
+pub(crate) fn read_queue_snapshot<R: tauri::Runtime>(
+    app: &AppHandle<R>,
     project_id: &str,
 ) -> Result<Option<Value>, String> {
     let path = queue_path(app, project_id)?;
@@ -51,8 +58,8 @@ pub(crate) fn read_queue_snapshot(
         .map_err(|error| format!("Saved audit queue is invalid: {error}"))
 }
 
-pub(crate) fn write_queue_snapshot(
-    app: &AppHandle,
+pub(crate) fn write_queue_snapshot<R: tauri::Runtime>(
+    app: &AppHandle<R>,
     project_id: &str,
     snapshot: &Value,
 ) -> Result<(), String> {
@@ -63,8 +70,8 @@ pub(crate) fn write_queue_snapshot(
 }
 
 #[tauri::command]
-pub fn save_project_audit_queue(
-    app: AppHandle,
+pub fn save_project_audit_queue<R: tauri::Runtime>(
+    app: AppHandle<R>,
     project_id: String,
     snapshot: Value,
 ) -> Result<(), String> {
@@ -72,7 +79,10 @@ pub fn save_project_audit_queue(
 }
 
 #[tauri::command]
-pub fn delete_project_audit_queue(app: AppHandle, project_id: String) -> Result<(), String> {
+pub fn delete_project_audit_queue<R: tauri::Runtime>(
+    app: AppHandle<R>,
+    project_id: String,
+) -> Result<(), String> {
     let path = queue_path(&app, &project_id)?;
     match fs::remove_file(path) {
         Ok(()) => Ok(()),
