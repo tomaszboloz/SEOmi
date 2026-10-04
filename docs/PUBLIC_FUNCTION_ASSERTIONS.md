@@ -156,3 +156,7 @@ All five exported helper functions in metadataHelpers have46new expanded direct 
 ### Crawl execution hook actions/effects
 
 useCrawlExecution has24new expanded direct renderHook cases in crawlExecutionHookActions/Comparison/Events asserting public handlers, selection/comparison, errors/retries, preferences, events and listener cleanup. Actual state/effects run with synthetic crawl fixtures and injected store actions;3694frontendtestsPASS and module100%allmetrics. Neither native rendering nor asynchronous project-switch cancellation is proved by this batch. Global95%coverage and complete assertion inventory remainOPEN.
+
+### Async crawl completion ownership
+
+Nine direct useCrawlExecution cases now assert stale pending validation/staging/production/PDF behavior across project switch, return, latest export and unmount. Two direct useCrawlOperationScope cases assert independent operation types, generation invalidation and latest ownership. No stale production dispatch/selection/notification/error/loading cleanup is accepted by the tested cases.44targetedtestsPASS,3706frontendtestsPASS;global95%gateFAIL. Already-running native operations are not cancelled, and analogous form/filter async paths remain to regression-test.

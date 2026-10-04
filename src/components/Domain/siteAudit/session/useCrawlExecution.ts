@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { useCrawlOperationScope } from "./useCrawlOperationScope";
 import { useTranslation } from "react-i18next";
 import { useToolsStore } from "@/stores/toolsStore";
 import { readEphemeralStorage, removeEphemeralStorage, readStorage, writeStorage, readJsonStorage, writeJsonStorage } from "@/services/storage";
@@ -18,6 +19,7 @@ export const useCrawlExecution = (
   selectedReportTemplate: CrawlReportTemplate
 ) => {
   const { t } = useTranslation();
+  const beginOperation = useCrawlOperationScope(activeProjectId);
   const desktopAvailable = isTauriEnvironment();
   const setCrawlUrl = useToolsStore((s) => s.setCrawlUrl);
   const setCrawlLimit = useToolsStore((s) => s.setCrawlLimit);
@@ -80,8 +82,9 @@ export const useCrawlExecution = (
   const handleStartCrawl = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!desktopAvailable || !inputUrl.trim()) return;
+    const isCurrent = beginOperation("start");
     const validation = await validateFilters();
-    if (!validation?.valid) return;
+    if (!isCurrent() || !validation?.valid) return;
     setMapRequiresCrawl(false); setCrawlUrl(inputUrl.trim()); setCrawlLimit(selectedLimit);
     void startSiteCrawl(inputUrl.trim(), selectedLimit);
   };
@@ -90,30 +93,34 @@ export const useCrawlExecution = (
     if (!desktopAvailable) { setEnvironmentComparisonError(t("runtimeErrors.tauri.desktopOnly")); return; }
     const stagingUrl = environmentUrls.staging.trim(); const productionUrl = environmentUrls.production.trim();
     if (!stagingUrl || !productionUrl || isEnvironmentComparisonRunning || isCrawling) return;
+    const isCurrent = beginOperation("comparison");
     setIsEnvironmentComparisonRunning(true); setEnvironmentComparisonError(null); setComparisonByPath(true);
     try {
       const existingRunIds = new Set(useToolsStore.getState().crawlRuns.map((r) => r.id));
       const stagingResult = await startSiteCrawl(stagingUrl, selectedLimit, undefined, "staging", false);
+      if (!isCurrent()) return;
       if (!stagingResult) throw new Error(useToolsStore.getState().crawlError || t("siteAudit.stagingNoResult"));
       const stagingRun = useToolsStore.getState().crawlRuns.find((r) => !existingRunIds.has(r.id) && r.environment === "staging");
       if (!stagingRun) throw new Error(t("siteAudit.stagingRunSaveError"));
       const existingProdIds = new Set(useToolsStore.getState().crawlRuns.map((r) => r.id));
       const productionResult = await startSiteCrawl(productionUrl, selectedLimit, undefined, "production", false);
+      if (!isCurrent()) return;
       if (!productionResult) throw new Error(useToolsStore.getState().crawlError || t("siteAudit.productionNoResult"));
       const productionRun = useToolsStore.getState().crawlRuns.find((r) => !existingProdIds.has(r.id) && r.environment === "production" && r.startUrl === productionUrl);
       if (!productionRun) throw new Error(t("siteAudit.productionRunSaveError"));
       setComparisonRunId(stagingRun.id);
       if (activeProjectId) void notifyCrawlCompleted(activeProjectId, productionResult, stagingResult.health_score);
-    } catch (error) { setEnvironmentComparisonError(error instanceof Error ? error.message : t("siteAudit.environmentCompareError")); }
-    finally { setIsEnvironmentComparisonRunning(false); }
+    } catch (error) { if (isCurrent()) setEnvironmentComparisonError(error instanceof Error ? error.message : t("siteAudit.environmentCompareError")); }
+    finally { if (isCurrent()) setIsEnvironmentComparisonRunning(false); }
   };
 
   const selectedRun = crawlRuns.find((run) => run.id === selectedCrawlRunId);
   const exportCrawlPdf = async () => {
     if (!selectedRun) return;
+    const isCurrent = beginOperation("pdf");
     setCrawlPdfError(null);
     try { await services.downloadPdf(selectedRun, selectedReportTemplate); }
-    catch (error) { setCrawlPdfError(error instanceof Error ? error.message : t("siteAudit.pdfError")); }
+    catch (error) { if (isCurrent()) setCrawlPdfError(error instanceof Error ? error.message : t("siteAudit.pdfError")); }
   };
 
   const scrollToResults = (behavior: ScrollBehavior = "smooth") => {
