@@ -7,3 +7,6 @@ pub mod user_agents;
 
 #[cfg(test)]
 pub(crate) mod test_io;
+
+#[cfg(test)]
+pub(crate) mod test_app;

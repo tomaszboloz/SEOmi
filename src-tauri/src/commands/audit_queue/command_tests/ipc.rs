@@ -1,30 +1,6 @@
 use super::*;
 
-fn invoke(
-    view: &tauri::WebviewWindow<MockRuntime>,
-    command: &str,
-    body: Value,
-) -> Result<Value, Value> {
-    tauri::test::get_ipc_response(
-        view,
-        tauri::webview::InvokeRequest {
-            cmd: command.into(),
-            callback: tauri::ipc::CallbackFn(0),
-            error: tauri::ipc::CallbackFn(1),
-            url: if cfg!(windows) {
-                "http://tauri.localhost"
-            } else {
-                "tauri://localhost"
-            }
-            .parse()
-            .unwrap(),
-            body: tauri::ipc::InvokeBody::Json(body),
-            headers: Default::default(),
-            invoke_key: tauri::test::INVOKE_KEY.into(),
-        },
-    )
-    .map(|response| response.deserialize().unwrap())
-}
+use crate::utils::test_app::invoke;
 
 #[test]
 fn generated_command_handlers_preserve_camel_case_ipc_payloads_and_errors() {

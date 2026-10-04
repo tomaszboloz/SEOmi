@@ -13,14 +13,17 @@ pub(crate) use fs_atomic::*;
 pub(crate) use history::*;
 
 #[tauri::command]
-pub fn load_project_crawl_runs(app: AppHandle, project_id: String) -> Result<Value, String> {
+pub fn load_project_crawl_runs<R: tauri::Runtime>(
+    app: AppHandle<R>,
+    project_id: String,
+) -> Result<Value, String> {
     let path = project_directory(&app, &project_id)?.join("crawl_runs.json");
     load_crawl_history_with_recovery(&path)
 }
 
 #[tauri::command]
-pub fn save_project_crawl_runs(
-    app: AppHandle,
+pub fn save_project_crawl_runs<R: tauri::Runtime>(
+    app: AppHandle<R>,
     project_id: String,
     crawl_runs: Value,
 ) -> Result<(), String> {
@@ -49,7 +52,10 @@ pub fn save_project_crawl_runs(
 /// Load the small, project-scoped descriptor used to resume a crawl after a
 /// desktop restart.
 #[tauri::command]
-pub fn load_project_crawl_checkpoint(app: AppHandle, project_id: String) -> Result<Value, String> {
+pub fn load_project_crawl_checkpoint<R: tauri::Runtime>(
+    app: AppHandle<R>,
+    project_id: String,
+) -> Result<Value, String> {
     let path = project_directory(&app, &project_id)?.join("crawl_checkpoint.json");
     if !path.exists() {
         return Ok(Value::Null);
@@ -62,8 +68,8 @@ pub fn load_project_crawl_checkpoint(app: AppHandle, project_id: String) -> Resu
 
 /// Atomically persist a bounded project-scoped crawl checkpoint.
 #[tauri::command]
-pub fn save_project_crawl_checkpoint(
-    app: AppHandle,
+pub fn save_project_crawl_checkpoint<R: tauri::Runtime>(
+    app: AppHandle<R>,
     project_id: String,
     checkpoint: Value,
 ) -> Result<(), String> {
@@ -84,7 +90,10 @@ pub fn save_project_crawl_checkpoint(
 }
 
 #[tauri::command]
-pub fn delete_project_crawl_checkpoint(app: AppHandle, project_id: String) -> Result<(), String> {
+pub fn delete_project_crawl_checkpoint<R: tauri::Runtime>(
+    app: AppHandle<R>,
+    project_id: String,
+) -> Result<(), String> {
     let path = project_directory(&app, &project_id)?.join("crawl_checkpoint.json");
     match fs::remove_file(path) {
         Ok(()) => Ok(()),
@@ -92,3 +101,7 @@ pub fn delete_project_crawl_checkpoint(app: AppHandle, project_id: String) -> Re
         Err(error) => Err(format!("Unable to delete crawl checkpoint: {error}")),
     }
 }
+
+#[cfg(test)]
+#[path = "crawl_storage/command_tests/mod.rs"]
+mod command_tests;
