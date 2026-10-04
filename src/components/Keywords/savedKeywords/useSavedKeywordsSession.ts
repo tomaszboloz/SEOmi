@@ -3,6 +3,8 @@ import { useTranslation } from 'react-i18next';
 import { useToolsStore } from '@/stores/toolsStore';
 import { useAuditStore } from '@/stores/auditStore';
 import { useProjectStore } from '@/stores/projectStore';
+import { csv } from '@/services/export/csv';
+import { downloadText } from '@/services/export/download';
 
 export const useSavedKeywordsSession = () => {
   const { t } = useTranslation();
@@ -55,31 +57,19 @@ export const useSavedKeywordsSession = () => {
       t('savedKeywordsUi.addedAt'),
     ];
     const rows = savedKeywords.map((k) => [
-      `"${k.keyword}"`,
+      k.keyword,
       k.search_volume,
       k.difficulty,
       k.cpc,
       k.intent,
-      `"${k.tags.join(', ')}"`,
+      k.tags.join(', '),
       k.addedAt,
     ]);
-    const csvContent =
-      'data:text/csv;charset=utf-8,' +
-      [headers.join(','), ...rows.map((e) => e.join(','))].join('\n');
-    const encodedUri = encodeURI(csvContent);
-    const link = document.createElement('a');
-    link.setAttribute('href', encodedUri);
-    link.setAttribute(
-      'download',
-      `seomi_saved_keywords_${new Date().toISOString().split('T')[0]}.csv`,
-    );
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
+    downloadText(`seomi_saved_keywords_${new Date().toISOString().split('T')[0]}.csv`, csv([headers, ...rows]), 'text/csv');
   };
 
   const handleAddTag = (id: string) => {
-    if (!newTagInput || !newTagInput.tag.trim()) return;
+    if (!newTagInput || newTagInput.id !== id || !newTagInput.tag.trim()) return;
     const target = savedKeywords.find((k) => k.id === id);
     if (!target) return;
     const tagClean = newTagInput.tag.trim();
