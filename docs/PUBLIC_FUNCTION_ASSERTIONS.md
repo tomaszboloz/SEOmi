@@ -144,3 +144,7 @@ The private production check_with pipeline has direct real-TCP request/result as
 ### Frontend HTTP/meta direct assertions
 
 buildHttpAndUrlChecks and buildMetaAndIndexabilityChecks now have44new expanded direct result/status/evidence cases in httpAuditCheckBoundaries/metaAuditCheckBoundaries/httpMetaIndexabilityRegression. getMetadataProblems directly asserts noarchive/nosnippet do not block indexing, explicit noindex/none do, and the native blocked verdict/reasons are retained. Final3590frontendtestsPASS,95%gateFAIL; module222/223branches including a counted short-circuit fallback. Tests do not substitute live provider/native proof. Global direct assertion inventory and >=95% remain OPEN.
+
+### GSC public actions and stale-session ownership
+
+createGscSlice's seven returned actions have34new expanded direct contracts via isolatedToolsSlice/native invoke adapters: set property/filters, resume/connect/disconnect, performance refresh and URL inspection. Deferred results/errors directly assert project/session invalidation and ownership, revocation completion, accessible-property selection, typed arguments, persistence, secrets/guards and current error/fallback handling.3624frontendtestsPASS;95%gateFAIL. gscSlice116/117branches with defensive typed filter fallback counted/uncovered; no liveGoogle claim. Full global assertion inventory remainsOPEN.

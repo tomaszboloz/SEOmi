@@ -1,7 +1,7 @@
 
 import { GscPerformanceData, GscPerformanceFilters, GscSiteProperty } from '@/types';
 
-import { writeJsonStorage, writeStorage } from '@/services/storage';
+import { writeJsonStorage, writeStorage, removeStorage } from '@/services/storage';
 
 import i18n from '@/i18n';
 
@@ -10,6 +10,11 @@ import { activeProjectId } from './storageKeys';
 import { beginToolRequest, isLatestToolRequest, errorMessage } from './runtime';
 
 import { gscClientIdKey, gscPropertyKey, gscFiltersKey } from './projectPreferences';
+
+const invalidateGscEvidence = () => {
+  beginToolRequest('gsc-data');
+  beginToolRequest('gsc-inspection');
+};
 
 export const createGscSlice = (set: ToolsSet, get: ToolsGet, services: ToolsServices): Pick<ToolsState, "setGscProperty" | "setGscFilters" | "resumeGsc" | "connectGsc" | "disconnectGsc" | "refreshGscData" | "inspectGscUrl"> => ({
 setGscProperty: (property) => {
@@ -41,7 +46,12 @@ resumeGsc: async () => {
       const storedProperty = get().gscProperty;
       const selectedProperty = properties.some((item) => item.siteUrl === storedProperty) ? storedProperty : properties[0]?.siteUrl || '';
       if (activeProjectId() !== projectId || !isLatestToolRequest('gsc-session', requestToken)) return;
+      if (selectedProperty !== storedProperty) {
+        invalidateGscEvidence();
+        set({ gscData: null, gscDataFetchedAt: null, gscInspectionResult: null });
+      }
       if (selectedProperty) writeStorage(gscPropertyKey(projectId), selectedProperty);
+      else removeStorage(gscPropertyKey(projectId));
       set({ isGscConnected: true, gscProperties: properties, gscProperty: selectedProperty, isGscLoading: false });
     } catch (error) {
       if (activeProjectId() === projectId && isLatestToolRequest('gsc-session', requestToken)) set({ isGscConnected: false, gscProperties: [], isGscLoading: false, gscError: errorMessage(error, i18n.t('runtimeErrors.tools.gscResumeFailed')) });
@@ -55,9 +65,10 @@ connectGsc: async (clientId, clientSecret) => {
     const normalizedClientId = clientId.trim();
     if (!normalizedClientId) return set({ gscError: i18n.t('runtimeErrors.tools.gscClientId') });
     const requestToken = beginToolRequest('gsc-session');
+    invalidateGscEvidence();
     writeStorage(gscClientIdKey(projectId), normalizedClientId);
     const normalizedSecret = clientSecret?.trim() || get().gscClientSecret.trim();
-    set({ isGscLoading: true, isGscConnected: false, gscProperties: [], gscData: null, gscDataFetchedAt: null, gscError: null });
+    set({ isGscLoading: true, isGscConnected: false, gscProperties: [], gscData: null, gscDataFetchedAt: null, gscInspectionResult: null, gscError: null });
     try {
       const connectArgs: Record<string, unknown> = { projectId, clientId: normalizedClientId };
       if (normalizedSecret) connectArgs.clientSecret = normalizedSecret;
@@ -66,6 +77,7 @@ connectGsc: async (clientId, clientSecret) => {
       const selectedProperty = properties.some((item) => item.siteUrl === storedProperty) ? storedProperty : properties[0]?.siteUrl || '';
       if (activeProjectId() !== projectId || !isLatestToolRequest('gsc-session', requestToken)) return;
       if (selectedProperty) writeStorage(gscPropertyKey(projectId), selectedProperty);
+      else removeStorage(gscPropertyKey(projectId));
       set({ gscClientId: normalizedClientId, gscClientSecret: normalizedSecret, isGscConnected: true, gscProperties: properties, gscProperty: selectedProperty });
     } catch (error) {
       if (activeProjectId() === projectId && isLatestToolRequest('gsc-session', requestToken)) set({ isGscConnected: false, gscError: errorMessage(error, i18n.t('runtimeErrors.tools.gscConnectFailed')) });
@@ -74,11 +86,13 @@ connectGsc: async (clientId, clientSecret) => {
 disconnectGsc: async () => {
     const projectId = activeProjectId();
     if (!projectId) return;
+    invalidateGscEvidence();
     const requestToken = beginToolRequest('gsc-session');
     set({ isGscLoading: true, gscError: null });
     try {
       const status = await services.invoke<string>('disconnect_search_console', { projectId });
       if (activeProjectId() !== projectId || !isLatestToolRequest('gsc-session', requestToken)) return;
+      invalidateGscEvidence();
       set({ isGscConnected: false, gscClientSecret: '', gscProperties: [], gscData: null, gscDataFetchedAt: null, gscInspectionResult: null, isGscLoading: false, gscError: status.startsWith(i18n.t('runtimeErrors.tools.providerTokenRemovedPrefix')) ? status : null });
     } catch (error) {
       if (activeProjectId() === projectId && isLatestToolRequest('gsc-session', requestToken)) set({ isGscLoading: false, gscError: errorMessage(error, i18n.t('runtimeErrors.tools.gscDisconnectFailed')) });
