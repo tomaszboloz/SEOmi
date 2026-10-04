@@ -45,6 +45,10 @@ i18n.on('languageChanged', () => {
 const isSection = (value: unknown): value is ReportTemplateSection =>
   typeof value === 'string' && (REPORT_TEMPLATE_SECTIONS as readonly string[]).includes(value);
 
+const isTemplateId = (value: unknown): value is string =>
+  typeof value === 'string' && /^[a-z0-9][a-z0-9_-]{1,79}$/i.test(value)
+  && value !== DEFAULT_CRAWL_REPORT_TEMPLATE.id;
+
 const normalizeSections = (value: unknown): ReportTemplateSection[] => {
   const sections = Array.isArray(value) ? value.filter(isSection) : [];
   return Array.from(new Set(sections));
@@ -53,8 +57,7 @@ const normalizeSections = (value: unknown): ReportTemplateSection[] => {
 const normalizeTemplate = (value: unknown): CrawlReportTemplate | null => {
   if (!value || typeof value !== 'object') return null;
   const candidate = value as Partial<CrawlReportTemplate>;
-  if (typeof candidate.id !== 'string' || !/^[a-z0-9][a-z0-9_-]{1,79}$/i.test(candidate.id)) return null;
-  if (candidate.id === DEFAULT_CRAWL_REPORT_TEMPLATE.id) return null;
+  if (!isTemplateId(candidate.id)) return null;
   const name = typeof candidate.name === 'string' ? candidate.name.trim().slice(0, 80) : '';
   const sections = normalizeSections(candidate.sections);
   if (!name || sections.length === 0) return null;
@@ -85,6 +88,9 @@ export const saveCrawlReportTemplate = (
   projectId: string,
   input: { id?: string; name: string; sections: ReportTemplateSection[] },
 ): CrawlReportTemplate => {
+  if (input.id !== undefined && !isTemplateId(input.id)) {
+    throw new Error(i18n.t('runtimeErrors.reportTemplates.saveFailed'));
+  }
   const name = input.name.trim().slice(0, 80);
   if (!name) throw new Error(i18n.t('runtimeErrors.reportTemplates.nameRequired'));
   const sections = normalizeSections(input.sections);
@@ -109,8 +115,12 @@ export const saveCrawlReportTemplate = (
 export const deleteCrawlReportTemplate = (projectId: string, templateId: string): void => {
   if (!templateId || templateId === DEFAULT_CRAWL_REPORT_TEMPLATE.id) return;
   const custom = loadCrawlReportTemplates(projectId).filter((template) => !template.builtIn && template.id !== templateId);
-  writeJsonStorage(storageKey(projectId), custom);
-  if (readStorage(selectionKey(projectId)) === templateId) removeStorage(selectionKey(projectId));
+  if (!writeJsonStorage(storageKey(projectId), custom)) {
+    throw new Error(i18n.t('runtimeErrors.reportTemplates.saveFailed'));
+  }
+  if (readStorage(selectionKey(projectId)) === templateId && !removeStorage(selectionKey(projectId))) {
+    throw new Error(i18n.t('runtimeErrors.reportTemplates.saveFailed'));
+  }
 };
 
 export const loadSelectedCrawlReportTemplateId = (projectId: string | null): string => {
@@ -124,5 +134,7 @@ export const loadSelectedCrawlReportTemplateId = (projectId: string | null): str
 export const saveSelectedCrawlReportTemplateId = (projectId: string, templateId: string): void => {
   const valid = loadCrawlReportTemplates(projectId).some((template) => template.id === templateId);
   if (!valid) return;
-  writeStorage(selectionKey(projectId), templateId);
+  if (!writeStorage(selectionKey(projectId), templateId)) {
+    throw new Error(i18n.t('runtimeErrors.reportTemplates.saveFailed'));
+  }
 };
