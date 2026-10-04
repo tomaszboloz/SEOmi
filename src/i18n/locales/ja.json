@@ -4691,5 +4691,39 @@
     "limited": "Googleまたはローカル保存でデータが切り詰められる場合があります。割合は観測行のみを対象とします。",
     "previous": "前へ",
     "next": "次へ"
+  },
+  "embeddingClusteringUi": {
+    "methodLabel": "グループ化の方法",
+    "methods": {
+      "embeddings": {
+        "title": "ローカル埋め込み（無料）",
+        "description": "このコンピューター上で意味によってフレーズをまとめます。API キー不要・無料。Ollama は任意です。"
+      },
+      "serp": {
+        "title": "SERP の重なり（DataForSEO、有料）",
+        "description": "Google 検索結果の URL が重なるフレーズをまとめます。DataForSEO の認証情報が必要で、新しいフレーズごとに有料リクエストが発生します。"
+      }
+    },
+    "settingsTitle": "埋め込みの設定",
+    "description": "フレーズを埋め込みに変換し、類似度でグループ化します。ローカルモデルはポーランド語と英語にオフラインで対応し、Ollama はこのコンピューター上のニューラルモデルを追加します。",
+    "provider": "埋め込みモデル",
+    "providers": {
+      "local": "ローカル（オフライン）",
+      "ollama": "Ollama",
+      "hybrid": "ローカル + Ollama"
+    },
+    "threshold": "類似度のしきい値: {{value}}",
+    "ollamaModel": "Ollama の埋め込みモデル",
+    "labelModel": "グループ名用の Ollama モデル（任意）",
+    "labelModelPlaceholder": "例: llama3.2 — 空欄なら省略",
+    "ollamaHint": "Ollama がこのコンピューターの 127.0.0.1:11434 で動作し、モデルが取得済み（ollama pull <model>）である必要があります。",
+    "run": "フレーズをグループ化",
+    "running": "グループ化中…",
+    "free": "{{count}} 件のフレーズ · 無料、有料 API へのリクエストなし",
+    "tooMany": "1 回あたり最大 {{max}} 件",
+    "resultTitle": "埋め込みによるグループ",
+    "resultMeta": "{{model}} · しきい値 {{threshold}} · {{date}}",
+    "keywordCount": "{{count}} 件のフレーズ",
+    "cohesion": "まとまり {{value}}%"
   }
 }

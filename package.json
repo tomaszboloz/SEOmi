@@ -16,7 +16,8 @@
     "security:strix": "node scripts/run-strix-security.mjs",
     "test:coverage:target": "vitest run --coverage --coverage.thresholds.statements=99.01 --coverage.thresholds.lines=99.01 --coverage.thresholds.branches=99.01 --coverage.thresholds.functions=99.01",
     "test:coverage:mcp": "node scripts/run-mcp-coverage.mjs",
-    "check:loc": "node scripts/check-max-loc.mjs"
+    "check:loc": "node scripts/check-max-loc.mjs",
+    "embeddings": "node scripts/embeddings.mts"
   },
   "dependencies": {
     "@tailwindcss/vite": "^4.0.9",

@@ -1,0 +1,202 @@
+[
+ {
+  "text": "block admin folder from crawlers robots",
+  "label": "robots"
+ },
+ {
+  "text": "czy można wykluczyć katalog w robots txt",
+  "label": "robots"
+ },
+ {
+  "text": "googlebot ignores my robots file",
+  "label": "robots"
+ },
+ {
+  "text": "reguły dla botów w pliku robots",
+  "label": "robots"
+ },
+ {
+  "text": "robots.txt for staging environment",
+  "label": "robots"
+ },
+ {
+  "text": "split sitemap into multiple files",
+  "label": "sitemap"
+ },
+ {
+  "text": "mapa strony dla sklepu internetowego",
+  "label": "sitemap"
+ },
+ {
+  "text": "sitemap not found error 404",
+  "label": "sitemap"
+ },
+ {
+  "text": "aktualizacja daty w mapie witryny",
+  "label": "sitemap"
+ },
+ {
+  "text": "video sitemap tags",
+  "label": "sitemap"
+ },
+ {
+  "text": "website loads slowly on mobile",
+  "label": "speed"
+ },
+ {
+  "text": "strona wolno się ładuje na telefonie",
+  "label": "speed"
+ },
+ {
+  "text": "lcp element is a hero image",
+  "label": "speed"
+ },
+ {
+  "text": "jak zmniejszyć cls na stronie",
+  "label": "speed"
+ },
+ {
+  "text": "server response time ttfb high",
+  "label": "speed"
+ },
+ {
+  "text": "get links from news websites",
+  "label": "backlinks"
+ },
+ {
+  "text": "pozyskiwanie linków zwrotnych z blogów",
+  "label": "backlinks"
+ },
+ {
+  "text": "remove spammy backlinks",
+  "label": "backlinks"
+ },
+ {
+  "text": "referring domains dropped suddenly",
+  "label": "backlinks"
+ },
+ {
+  "text": "link building w lokalnym seo",
+  "label": "backlinks"
+ },
+ {
+  "text": "best keywords for local business",
+  "label": "keywords"
+ },
+ {
+  "text": "frazy kluczowe dla bloga kulinarnego",
+  "label": "keywords"
+ },
+ {
+  "text": "search volume for seasonal keywords",
+  "label": "keywords"
+ },
+ {
+  "text": "badanie słów kluczowych krok po kroku",
+  "label": "keywords"
+ },
+ {
+  "text": "keyword gap with competitors",
+  "label": "keywords"
+ },
+ {
+  "text": "canonical points to homepage by mistake",
+  "label": "canonical"
+ },
+ {
+  "text": "duplikat treści między kategoriami",
+  "label": "canonical"
+ },
+ {
+  "text": "pagination and canonical urls",
+  "label": "canonical"
+ },
+ {
+  "text": "kanoniczny adres dla wersji z parametrem",
+  "label": "canonical"
+ },
+ {
+  "text": "duplicate content from www and non-www",
+  "label": "canonical"
+ },
+ {
+  "text": "hreflang for spanish mexico version",
+  "label": "hreflang"
+ },
+ {
+  "text": "strona w trzech językach hreflang",
+  "label": "hreflang"
+ },
+ {
+  "text": "hreflang conflicting with canonical",
+  "label": "hreflang"
+ },
+ {
+  "text": "x-default dla strony wyboru kraju",
+  "label": "hreflang"
+ },
+ {
+  "text": "hreflang implementation in http headers",
+  "label": "hreflang"
+ },
+ {
+  "text": "recipe schema missing fields",
+  "label": "schema"
+ },
+ {
+  "text": "dane strukturalne dla wydarzenia",
+  "label": "schema"
+ },
+ {
+  "text": "json-ld article markup",
+  "label": "schema"
+ },
+ {
+  "text": "oznaczenia schema dla przepisów",
+  "label": "schema"
+ },
+ {
+  "text": "product schema price availability",
+  "label": "schema"
+ },
+ {
+  "text": "title tag best practices for ecommerce",
+  "label": "meta"
+ },
+ {
+  "text": "długość tytułu strony w google",
+  "label": "meta"
+ },
+ {
+  "text": "meta description for category pages",
+  "label": "meta"
+ },
+ {
+  "text": "jak napisać dobry meta opis",
+  "label": "meta"
+ },
+ {
+  "text": "title and description rewritten by google",
+  "label": "meta"
+ },
+ {
+  "text": "redirect non-www to www",
+  "label": "redirects"
+ },
+ {
+  "text": "przekierowanie starych adresów po migracji",
+  "label": "redirects"
+ },
+ {
+  "text": "302 temporary redirect left in place",
+  "label": "redirects"
+ },
+ {
+  "text": "łańcuchy przekierowań po zmianie struktury",
+  "label": "redirects"
+ },
+ {
+  "text": "javascript redirect seo",
+  "label": "redirects"
+ }
+]

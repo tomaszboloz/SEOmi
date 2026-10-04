@@ -19,7 +19,7 @@ describe('KeywordClustering modular architecture', () => {
       'src/components/Keywords/KeywordClustering.tsx',
       ...codeFiles('src/components/Keywords/keywordClustering'),
     ];
-    expect(files.length).toBe(8);
+    expect(files.length).toBe(9);
     const report = maxLocReport(files);
     expect(report.violations).toEqual([]);
   });

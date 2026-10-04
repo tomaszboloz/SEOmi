@@ -4691,5 +4691,39 @@
     "limited": "Obserwacje mogą być obcięte przez Google lub zapis lokalny. Udziały dotyczą tylko obserwowanych wierszy.",
     "previous": "Poprzednia",
     "next": "Następna"
+  },
+  "embeddingClusteringUi": {
+    "methodLabel": "Metoda grupowania",
+    "methods": {
+      "embeddings": {
+        "title": "Lokalne embeddingi (bezpłatne)",
+        "description": "Grupuje frazy według znaczenia na tym komputerze. Bez klucza API i bez kosztów; Ollama jest opcjonalna."
+      },
+      "serp": {
+        "title": "Wspólne wyniki SERP (DataForSEO, płatne)",
+        "description": "Grupuje frazy, których wyniki Google mają wspólne adresy URL. Wymaga danych DataForSEO; każda nowa fraza to płatne zapytanie."
+      }
+    },
+    "settingsTitle": "Ustawienia embeddingów",
+    "description": "Frazy są zamieniane na embeddingi i grupowane według podobieństwa. Model lokalny działa offline dla polskiego i angielskiego; Ollama dodaje model neuronowy działający na tym komputerze.",
+    "provider": "Model embeddingów",
+    "providers": {
+      "local": "Lokalny (offline)",
+      "ollama": "Ollama",
+      "hybrid": "Lokalny + Ollama"
+    },
+    "threshold": "Próg podobieństwa: {{value}}",
+    "ollamaModel": "Model embeddingów Ollama",
+    "labelModel": "Model Ollama do nazw grup (opcjonalnie)",
+    "labelModelPlaceholder": "np. llama3.2 — zostaw puste, aby pominąć",
+    "ollamaHint": "Ollama musi działać na tym komputerze pod adresem 127.0.0.1:11434 z pobranym modelem (ollama pull <model>).",
+    "run": "Pogrupuj frazy",
+    "running": "Grupowanie…",
+    "free": "{{count}} fraz · bezpłatnie, bez zapytań do płatnych API",
+    "tooMany": "Maksymalnie {{max}} fraz w jednym uruchomieniu",
+    "resultTitle": "Grupy według embeddingów",
+    "resultMeta": "{{model}} · próg {{threshold}} · {{date}}",
+    "keywordCount": "{{count}} fraz",
+    "cohesion": "spójność {{value}}%"
   }
 }

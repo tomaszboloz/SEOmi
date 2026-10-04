@@ -4691,5 +4691,39 @@
     "limited": "قد يقتطع Google أو التخزين المحلي البيانات. النسب تخص الصفوف المرصودة فقط.",
     "previous": "السابق",
     "next": "التالي"
+  },
+  "embeddingClusteringUi": {
+    "methodLabel": "طريقة التجميع",
+    "methods": {
+      "embeddings": {
+        "title": "تضمينات محلية (مجانية)",
+        "description": "تجمع العبارات حسب المعنى على هذا الحاسوب. بلا مفتاح API وبلا تكلفة؛ Ollama اختياري."
+      },
+      "serp": {
+        "title": "تداخل نتائج SERP ‏(DataForSEO، مدفوع)",
+        "description": "تجمع العبارات التي تتشارك نتائج Google عناوين URL. تتطلب بيانات اعتماد DataForSEO؛ كل عبارة جديدة طلب مدفوع."
+      }
+    },
+    "settingsTitle": "إعدادات التضمينات",
+    "description": "تُحوَّل العبارات إلى تضمينات وتُجمَّع حسب التشابه. يعمل النموذج المحلي دون اتصال للبولندية والإنجليزية؛ ويضيف Ollama نموذجًا عصبيًا يعمل على هذا الحاسوب.",
+    "provider": "نموذج التضمين",
+    "providers": {
+      "local": "محلي (دون اتصال)",
+      "ollama": "Ollama",
+      "hybrid": "محلي + Ollama"
+    },
+    "threshold": "عتبة التشابه: {{value}}",
+    "ollamaModel": "نموذج تضمين Ollama",
+    "labelModel": "نموذج Ollama لتسمية المجموعات (اختياري)",
+    "labelModelPlaceholder": "مثل llama3.2 — اتركه فارغًا للتخطي",
+    "ollamaHint": "يجب أن يعمل Ollama على هذا الحاسوب على 127.0.0.1:11434 مع تنزيل النموذج (ollama pull <model>).",
+    "run": "تجميع العبارات",
+    "running": "جارٍ التجميع…",
+    "free": "{{count}} عبارة · مجانًا، دون طلبات إلى واجهات برمجة مدفوعة",
+    "tooMany": "حتى {{max}} عبارة في كل تشغيل",
+    "resultTitle": "مجموعات التضمينات",
+    "resultMeta": "{{model}} · العتبة {{threshold}} · {{date}}",
+    "keywordCount": "{{count}} عبارة",
+    "cohesion": "التماسك {{value}}%"
   }
 }

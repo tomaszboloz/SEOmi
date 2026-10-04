@@ -4691,5 +4691,39 @@
     "limited": "Google ou le stockage local peuvent tronquer les données. Les parts concernent les lignes observées.",
     "previous": "Précédent",
     "next": "Suivant"
+  },
+  "embeddingClusteringUi": {
+    "methodLabel": "Méthode de regroupement",
+    "methods": {
+      "embeddings": {
+        "title": "Embeddings locaux (gratuit)",
+        "description": "Regroupe les expressions par sens sur cet ordinateur. Sans clé API ni coût ; Ollama est facultatif."
+      },
+      "serp": {
+        "title": "Chevauchement des SERP (DataForSEO, payant)",
+        "description": "Regroupe les expressions dont les résultats Google partagent des URL. Nécessite des identifiants DataForSEO ; chaque nouvelle expression est une requête payante."
+      }
+    },
+    "settingsTitle": "Paramètres des embeddings",
+    "description": "Les expressions sont vectorisées puis regroupées par similarité. Le modèle local fonctionne hors ligne pour le polonais et l’anglais ; Ollama ajoute un modèle neuronal sur cet ordinateur.",
+    "provider": "Modèle d’embeddings",
+    "providers": {
+      "local": "Local (hors ligne)",
+      "ollama": "Ollama",
+      "hybrid": "Local + Ollama"
+    },
+    "threshold": "Seuil de similarité : {{value}}",
+    "ollamaModel": "Modèle d’embeddings Ollama",
+    "labelModel": "Modèle Ollama pour nommer les groupes (facultatif)",
+    "labelModelPlaceholder": "p. ex. llama3.2 — laisser vide pour ignorer",
+    "ollamaHint": "Ollama doit tourner sur cet ordinateur à 127.0.0.1:11434 avec le modèle téléchargé (ollama pull <model>).",
+    "run": "Regrouper les expressions",
+    "running": "Regroupement…",
+    "free": "{{count}} expressions · gratuit, aucune requête vers des API payantes",
+    "tooMany": "{{max}} expressions maximum par exécution",
+    "resultTitle": "Groupes par embeddings",
+    "resultMeta": "{{model}} · seuil {{threshold}} · {{date}}",
+    "keywordCount": "{{count}} expressions",
+    "cohesion": "cohésion {{value}} %"
   }
 }
