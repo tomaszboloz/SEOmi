@@ -1,6 +1,5 @@
 import { useState, useEffect, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
-import { invokeTauriCommand, type UpdateStatus } from '@/services/tauri';
 import { DataForSEOClient } from '@/services/dataforseo';
 import { useSettingsStore } from '@/stores/settingsStore';
 import { useAuthStore } from '@/stores/authStore';
@@ -11,9 +10,11 @@ import { areAuditNotificationsEnabled, disableAuditNotifications, enableAuditNot
 import { createProjectBackup, parseProjectBackup, restoreProjectBackup, serializeProjectBackup } from '@/services/projectBackup';
 import { downloadBlob } from '@/services/download';
 import { useAsyncOperationScope } from '@/hooks/useAsyncOperationScope';
+import { useSettingsUpdateHandlers } from './useSettingsUpdateHandlers';
 
 export const useSettingsHandlers = () => {
   const { t } = useTranslation();
+  const updates = useSettingsUpdateHandlers();
   const dataForSeoCredentials = useSettingsStore((s) => s.dataForSeoCredentials);
   const googleMetricsApiKey = useSettingsStore((s) => s.googleMetricsApiKey);
   const activeProjectId = useProjectStore((s) => s.activeProjectId);
@@ -23,8 +24,7 @@ export const useSettingsHandlers = () => {
 
   const [state, setState] = useState({
     dataforseoLogin: dataForSeoCredentials.login, dataforseoPass: dataForSeoCredentials.password,
-    googleMetricsKey: googleMetricsApiKey, updateStatus: null as UpdateStatus | null, updateError: null as string | null,
-    checkingUpdates: false, installingUpdate: false, savedSuccess: false, testingDataForSeo: false,
+    googleMetricsKey: googleMetricsApiKey, savedSuccess: false, testingDataForSeo: false,
     dataForSeoTestStatus: null as string | null, auditNotificationsEnabled: false,
     notificationStatus: null as string | null, backupStatus: null as string | null
   });
@@ -32,6 +32,7 @@ export const useSettingsHandlers = () => {
   const updateState = (u: Partial<typeof state>) => setState(prev => ({ ...prev, ...u }));
   const backupFileInput = useRef<HTMLInputElement>(null);
   const beginCredentials = useAsyncOperationScope(activeProjectId);
+  const beginNotifications = useAsyncOperationScope(activeProjectId);
   const updateCredentialDraft = (patch: Partial<typeof state>) => {
     beginCredentials('save'); beginCredentials('test');
     updateState({ ...patch, savedSuccess: false, testingDataForSeo: false, dataForSeoTestStatus: null });
@@ -51,9 +52,11 @@ export const useSettingsHandlers = () => {
 
   const handleAuditNotificationsChange = async (enabled: boolean) => {
     if (!activeProjectId) return;
+    const isCurrent = beginNotifications("notifications");
     updateState({ notificationStatus: null });
     if (!enabled) { disableAuditNotifications(activeProjectId); updateState({ auditNotificationsEnabled: false }); return; }
     const granted = await enableAuditNotifications(activeProjectId);
+    if (!isCurrent()) return;
     updateState({ auditNotificationsEnabled: granted, notificationStatus: granted ? t('settings.notificationsEnabled') : t('settings.notificationsDenied') });
   };
 
@@ -72,20 +75,6 @@ export const useSettingsHandlers = () => {
   };
 
   const handleAiKeyChange = (provider: 'openai' | 'claude' | 'gemini', value: string) => void setApiKey(provider, value).catch(() => undefined);
-
-  const handleCheckUpdates = async () => {
-    updateState({ checkingUpdates: true, updateStatus: null, updateError: null });
-    try { updateState({ updateStatus: await invokeTauriCommand<UpdateStatus>('check_for_updates') }); }
-    catch (err: unknown) { updateState({ updateError: `${t('settings.updateError')}: ${String(err)}` }); }
-    finally { updateState({ checkingUpdates: false }); }
-  };
-
-  const handleInstallUpdate = async () => {
-    updateState({ installingUpdate: true, updateError: null });
-    try { updateState({ updateStatus: await invokeTauriCommand<UpdateStatus>('install_update') }); }
-    catch (err: unknown) { updateState({ updateError: `${t('settings.updateError')}: ${String(err)}` }); }
-    finally { updateState({ installingUpdate: false }); }
-  };
 
   const handleTestDataForSeo = async () => {
     const isCurrent = beginCredentials('test');
@@ -126,11 +115,11 @@ export const useSettingsHandlers = () => {
   };
 
   return {
-    ...state, setDataforseoLogin: (v: string) => updateCredentialDraft({ dataforseoLogin: v }),
+    ...state, ...updates, setDataforseoLogin: (v: string) => updateCredentialDraft({ dataforseoLogin: v }),
     setDataforseoPass: (v: string) => updateCredentialDraft({ dataforseoPass: v }),
     setGoogleMetricsKey: (v: string) => updateCredentialDraft({ googleMetricsKey: v }),
     backupFileInput, activeProject, handleAuditNotificationsChange, handleSaveGeneral,
-    handleAiKeyChange, handleCheckUpdates, handleInstallUpdate, handleTestDataForSeo,
+    handleAiKeyChange, handleTestDataForSeo,
     handleExportProject, handleImportProject
   };
 };
