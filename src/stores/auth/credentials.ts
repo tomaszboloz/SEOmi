@@ -32,6 +32,9 @@ export const createAuthCredentials = (set: AuthSet, _get: AuthGet): Pick<AuthSta
   hydrateCredentials: async () => {
     const requestToken = beginAuthRequest('credentials');
     try {
+      const pendingSaves = [...apiKeySaveQueues.values()];
+      if (pendingSaves.length) await Promise.allSettled(pendingSaves);
+      if (!isLatestAuthRequest('credentials', requestToken)) return;
       const values = await Promise.all(PROVIDERS.map((provider) => getSecureValue(SECRET_NAMES[provider])));
       if (!isLatestAuthRequest('credentials', requestToken)) return;
       set({ apiKeys: { openai: values[0], claude: values[1], gemini: values[2] }, isHydrated: true });
