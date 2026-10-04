@@ -4,6 +4,10 @@ pub(crate) fn crawler_client_builder() -> reqwest::ClientBuilder {
     crate::services::http_client::public_client_builder()
 }
 
+#[cfg(test)]
+#[path = "transport_tests/mod.rs"]
+mod tests;
+
 pub(super) fn redirect_target_is_new(seen: &mut HashSet<String>, target: &str) -> bool {
     seen.insert(target.to_string())
 }
@@ -32,7 +36,7 @@ pub(crate) async fn request_with_safe_redirects(
         let response = client.get(&requested_url).send().await?;
         let response_time_ms = request_started_at.elapsed().as_millis() as u64;
         let status = response.status().as_u16();
-        if !(300..400).contains(&status) {
+        if !matches!(status, 301 | 302 | 303 | 307 | 308) {
             return Ok(FetchedResponse {
                 response: FetchedPageBody::Http(response),
                 final_url: requested_url,

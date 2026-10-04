@@ -116,3 +116,7 @@ Both public worker headless_launch_context functions and public scheduler::sched
 ### Direct resource fetching
 
 `fetch_resource_candidate` now has ten direct HTTP/result contracts in `resource_fetch_tests/{responses,limits,failures}.rs`: candidate ownership, observed status/type/length/timing, optional headers, image dimensions and absence of invented measurements, exact/over 8 MiB bounds, chunked binary responses, truncated reads and explicitly signalled accepted-connection timeout. Full 741 all-target stable/nightly PASS; production fetcher 55/55 lines, 8/8 source-grouped functions, 8/8 branches. Global >=95% and complete direct assertions remain OPEN. Fresh exact1a45ce9 CI37204121612 also verifies the earlier explicit-unlock fix on both desktop platforms; new heads need their own CI.
+
+### Safe HTTP redirect transport
+
+`request_with_safe_redirects` has direct response, hop and actual requested-path assertions in `transport_tests/{redirects,boundaries}.rs` for supported/non-redirect statuses, normalized relative hops, invalid/unusable/rejected targets, host/path scope, loop and hop budgets. `crawler_client_builder`, `crawl_deadline_reached` and `redirect_target_is_new` have direct build/error/boundary/set assertions in `helpers.rs`. Six new cases, 747 all-target stable/nightly PASS; transport 103/103 lines, 8/8 source-grouped functions, 10/10 branches after a fresh validated measurement. Global >=95% and complete public assertions remain OPEN.
