@@ -152,3 +152,7 @@ createGscSlice's seven returned actions have34new expanded direct contracts via 
 ### Accessibility metadata presentation helpers
 
 All five exported helper functions in metadataHelpers have46new expanded direct tests in metadataHelperMessagesDirect/metadataHelperCountsDirect. Exact translation calls, count evidence/fallback, original unknown content, prefix stripping, manual review ordering and technology category mapping are asserted.3670frontendtestsPASS; helper100%allmeasures; global95%targetFAIL. Presentation contracts do not prove live DOM accessibility compliance. Full assertion inventory remainsOPEN.
+
+### Crawl execution hook actions/effects
+
+useCrawlExecution has24new expanded direct renderHook cases in crawlExecutionHookActions/Comparison/Events asserting public handlers, selection/comparison, errors/retries, preferences, events and listener cleanup. Actual state/effects run with synthetic crawl fixtures and injected store actions;3694frontendtestsPASS and module100%allmetrics. Neither native rendering nor asynchronous project-switch cancellation is proved by this batch. Global95%coverage and complete assertion inventory remainOPEN.
