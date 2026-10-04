@@ -1,36 +1,31 @@
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { DataForSEOClient } from '@/services/dataforseo';
 import { useSettingsStore } from '@/stores/settingsStore';
 import { useAuthStore } from '@/stores/authStore';
 import { useProjectStore } from '@/stores/projectStore';
-import { useAuditStore } from '@/stores/auditStore';
-import { useToolsStore } from '@/stores/toolsStore';
 import { areAuditNotificationsEnabled, disableAuditNotifications, enableAuditNotifications } from '@/services/desktopNotifications';
-import { createProjectBackup, parseProjectBackup, restoreProjectBackup, serializeProjectBackup } from '@/services/projectBackup';
-import { downloadBlob } from '@/services/download';
 import { useAsyncOperationScope } from '@/hooks/useAsyncOperationScope';
 import { useSettingsUpdateHandlers } from './useSettingsUpdateHandlers';
+import { useSettingsBackupHandlers } from './useSettingsBackupHandlers';
 
 export const useSettingsHandlers = () => {
   const { t } = useTranslation();
   const updates = useSettingsUpdateHandlers();
+  const backups = useSettingsBackupHandlers();
   const dataForSeoCredentials = useSettingsStore((s) => s.dataForSeoCredentials);
   const googleMetricsApiKey = useSettingsStore((s) => s.googleMetricsApiKey);
   const activeProjectId = useProjectStore((s) => s.activeProjectId);
-  const projects = useProjectStore((s) => s.projects);
-  const activeProject = projects.find((p) => p.id === activeProjectId) || null;
   const setApiKey = useAuthStore((s) => s.setApiKey);
 
   const [state, setState] = useState({
     dataforseoLogin: dataForSeoCredentials.login, dataforseoPass: dataForSeoCredentials.password,
     googleMetricsKey: googleMetricsApiKey, savedSuccess: false, testingDataForSeo: false,
     dataForSeoTestStatus: null as string | null, auditNotificationsEnabled: false,
-    notificationStatus: null as string | null, backupStatus: null as string | null
+    notificationStatus: null as string | null
   });
 
   const updateState = (u: Partial<typeof state>) => setState(prev => ({ ...prev, ...u }));
-  const backupFileInput = useRef<HTMLInputElement>(null);
   const beginCredentials = useAsyncOperationScope(activeProjectId);
   const beginNotifications = useAsyncOperationScope(activeProjectId);
   const updateCredentialDraft = (patch: Partial<typeof state>) => {
@@ -87,39 +82,11 @@ export const useSettingsHandlers = () => {
     } finally { if (isCurrent()) updateState({ testingDataForSeo: false }); }
   };
 
-  const handleExportProject = async () => {
-    if (!activeProject) return updateState({ backupStatus: t('legacyUi.settings.chooseProjectBackup') });
-    updateState({ backupStatus: t('legacyUi.settings.preparingBackup') });
-    try {
-      const backup = await createProjectBackup(activeProject);
-      const filename = `seomi-${activeProject.name.toLocaleLowerCase().replace(/[^a-z0-9]+/gi, '-').replace(/^-|-$/g, '') || activeProject.id}-backup.json`;
-      downloadBlob(filename, new Blob([serializeProjectBackup(backup)], { type: 'application/json' }));
-      updateState({ backupStatus: t('legacyUi.settings.backupReady', { runs: backup.crawlRuns.length, entries: Object.keys(backup.localStorage).length }) });
-    } catch (error) { updateState({ backupStatus: error instanceof Error ? t('legacyUi.settings.backupError', { error: error.message }) : t('legacyUi.settings.backupErrorGeneric') }); }
-  };
-
-  const handleImportProject = async (event: React.ChangeEvent<HTMLInputElement>) => {
-    const file = event.target.files?.[0]; event.target.value = '';
-    if (!file) return;
-    updateState({ backupStatus: t('legacyUi.settings.readingBackup') });
-    try {
-      const backup = parseProjectBackup(await file.text());
-      const importedProject = useProjectStore.getState().createProject({ name: `${backup.project.name} (import)`.slice(0, 80), rootUrl: backup.project.rootUrl });
-      const summary = await restoreProjectBackup(backup, importedProject.id);
-      useProjectStore.getState().selectProject(importedProject.id);
-      useAuditStore.getState().hydrateProject(importedProject.id);
-      await useToolsStore.getState().hydrateProject(importedProject.id);
-      await Promise.all([useSettingsStore.getState().loadDataForSeoCredentials(), useSettingsStore.getState().loadGoogleMetricsApiKey()]);
-      updateState({ backupStatus: t('legacyUi.settings.restoredBackup', { name: importedProject.name, runs: summary.crawlRuns, entries: summary.storageEntries }) });
-    } catch (error) { updateState({ backupStatus: error instanceof Error ? t('legacyUi.settings.restoreError', { error: error.message }) : t('legacyUi.settings.restoreErrorGeneric') }); }
-  };
-
   return {
-    ...state, ...updates, setDataforseoLogin: (v: string) => updateCredentialDraft({ dataforseoLogin: v }),
+    ...state, ...updates, ...backups, setDataforseoLogin: (v: string) => updateCredentialDraft({ dataforseoLogin: v }),
     setDataforseoPass: (v: string) => updateCredentialDraft({ dataforseoPass: v }),
     setGoogleMetricsKey: (v: string) => updateCredentialDraft({ googleMetricsKey: v }),
-    backupFileInput, activeProject, handleAuditNotificationsChange, handleSaveGeneral,
+    handleAuditNotificationsChange, handleSaveGeneral,
     handleAiKeyChange, handleTestDataForSeo,
-    handleExportProject, handleImportProject
   };
 };
