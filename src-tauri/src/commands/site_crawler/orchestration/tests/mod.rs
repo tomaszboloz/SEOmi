@@ -39,6 +39,7 @@ fn failure(kind: &str) -> CrawlFetchFailure {
 }
 
 mod discovery;
+mod discovery_http_fixture;
 mod frontier;
 mod page_assembly;
 mod page_directives;
@@ -51,6 +52,10 @@ mod page_metadata;
 mod page_signals;
 mod page_summary;
 mod page_text;
+mod robots_contracts;
 mod setup_contracts;
 mod setup_lifecycle;
+mod sitemap_contracts;
+mod sitemap_limits;
+mod sitemap_regressions;
 mod state;

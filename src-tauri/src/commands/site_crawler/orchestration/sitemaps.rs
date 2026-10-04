@@ -24,6 +24,7 @@ pub async fn discover_and_parse_sitemaps(
 ) -> Result<CrawlSitemapsOutcome, String> {
     let mut timed_out = false;
     let mut sitemap_urls = Vec::new();
+    let mut unique_urls = HashSet::new();
     let mut discovery_sources_by_url: HashMap<String, Vec<CrawledDiscoverySource>> = HashMap::new();
     let mut discovery_provenance_truncated = false;
 
@@ -84,16 +85,24 @@ pub async fn discover_and_parse_sitemaps(
                                 &url,
                                 &setup.base_host,
                                 setup.config.allow_subdomains,
-                                setup.config.scope_path.as_deref(),
+                                if is_index {
+                                    None
+                                } else {
+                                    setup.config.scope_path.as_deref()
+                                },
                                 &setup.config.allowed_hosts,
                             ) {
                                 if is_index {
                                     sitemap_queue.push_back(url.to_string());
                                 } else {
                                     let normalized = normalize_crawl_url(url, &setup.config);
-                                    if sitemap_urls.len() < 10_000 {
-                                        let normalized_url = normalized.to_string();
-                                        sitemap_urls.push(normalized_url.clone());
+                                    let normalized_url = normalized.to_string();
+                                    if unique_urls.contains(&normalized_url)
+                                        || sitemap_urls.len() < 10_000
+                                    {
+                                        if unique_urls.insert(normalized_url.clone()) {
+                                            sitemap_urls.push(normalized_url.clone());
+                                        }
                                         discovery_provenance_truncated |= !record_discovery_source(
                                             &mut discovery_sources_by_url,
                                             &normalized_url,
