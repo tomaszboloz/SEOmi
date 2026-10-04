@@ -1,5 +1,6 @@
 mod models;
 mod network;
+mod request;
 
 pub use models::{ExternalLinkCheck, ExternalLinkCheckBatch, ExternalLinkCheckProgress};
 use models::{
@@ -102,3 +103,7 @@ mod ipc_tests;
 #[cfg(test)]
 #[path = "external_link_checker/network_tests.rs"]
 mod network_tests;
+
+#[cfg(test)]
+#[path = "external_link_checker/http_tests/mod.rs"]
+mod http_tests;

@@ -136,3 +136,7 @@ All five public crawl-storage load/save/delete functions have direct FS/result a
 ### Broken storage versus missing data
 
 A new direct read_bytes_bounded assertion distinguishes genuine missing multi-level directories from regular-file ancestors and preserves the ancestor bytes. Existing public queue error assertions are retained; Windows CI37208034106 exposed its accidental Ok(Null). Shared NotFound handling now checks ancestors without changing the MSRV.778all-target stable/nightlyPASS, strictClippyPASS. macOS does not prove the Windows open-error mapping; platform CI remains required.
+
+### External-link HTTP pipeline
+
+The private production check_with pipeline has direct real-TCP request/result assertions in http_tests: HEAD status ownership, single-byte GET405/501 fallback, observed timing, nonfollowing redirects and Location decoding, validation/resolve/build short circuits and malformed HEAD/GET failures. Actual reqwest error objects assert DNS source classification and exclusion of false DNS classification from URL text during a TLS-record connection closure. Seven cases;785all-target stable/nightlyPASS; pipeline47/47lines5/5functions12/12branches. Public check_one retains direct rejection assertions; successful pipeline tests inject resolver dependencies and do not prove real public DNS/HTTP or all platform TLS providers. Global>=95% and complete public assertions remain OPEN.
