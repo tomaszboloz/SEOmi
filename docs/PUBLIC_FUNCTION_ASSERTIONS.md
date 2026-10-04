@@ -132,3 +132,7 @@ All five public crawl-storage load/save/delete functions have direct FS/result a
 ### External-link command and resolver contracts
 
 `check_external_crawl_links` has direct batch/event assertions in command_tests.rs and generated IPC contracts in ipc_tests.rs under an isolated MockRuntime. Cases assert input and selected limits, deduplication, sorting, worker replenishment, owned progress and noninvented measurements for rejected targets. network_tests.rs directly asserts checked_public_addresses/client_for_url/rejected/check_one/error_kind using typed public/private IP resolution, URL errors, actual pinned TCP transport and signalled timeout. Nine new cases;777all-target stable/nightlyPASS. This does not prove live HTTP check_one success, HEAD405/501 GET fallback or every error classification. Global>=95% and complete assertions remain OPEN.
+
+### Broken storage versus missing data
+
+A new direct read_bytes_bounded assertion distinguishes genuine missing multi-level directories from regular-file ancestors and preserves the ancestor bytes. Existing public queue error assertions are retained; Windows CI37208034106 exposed its accidental Ok(Null). Shared NotFound handling now checks ancestors without changing the MSRV.778all-target stable/nightlyPASS, strictClippyPASS. macOS does not prove the Windows open-error mapping; platform CI remains required.

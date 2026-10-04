@@ -60,3 +60,22 @@ fn bounded_reader_distinguishes_exact_empty_missing_and_oversized_files() {
     assert_eq!(std::fs::read(&path).unwrap(), b"1234");
     std::fs::remove_dir_all(directory).unwrap();
 }
+
+#[test]
+fn bounded_reader_distinguishes_missing_directories_from_file_ancestors() {
+    let directory = directory();
+    assert_eq!(
+        read_bytes_bounded(&directory.join("missing/deeper/data.json"), 10)
+            .unwrap_err()
+            .kind(),
+        io::ErrorKind::NotFound
+    );
+    let file = directory.join("blocked");
+    std::fs::write(&file, b"owned file").unwrap();
+    for suffix in ["data.json", "deeper/data.json"] {
+        let error = read_bytes_bounded(&file.join(suffix), 10).unwrap_err();
+        assert_ne!(error.kind(), io::ErrorKind::NotFound);
+    }
+    assert_eq!(std::fs::read(&file).unwrap(), b"owned file");
+    std::fs::remove_dir_all(directory).unwrap();
+}
