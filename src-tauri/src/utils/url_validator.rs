@@ -28,11 +28,12 @@ pub fn validate_and_normalize_url(input: &str) -> Result<Url, UrlValidationError
         return Err(UrlValidationError::EmptyUrl);
     }
 
-    // Auto-prepend https:// only if no scheme is specified (no ://)
-    let target = if !trimmed.contains("://") {
-        format!("https://{}", trimmed)
-    } else {
+    // Auto-prepend https:// only when the input does not start with a scheme;
+    // a "://" later in the path or query is not a scheme.
+    let target = if has_explicit_scheme(trimmed) {
         trimmed.to_string()
+    } else {
+        format!("https://{}", trimmed)
     };
 
     let parsed =
@@ -49,7 +50,8 @@ pub fn validate_and_normalize_url(input: &str) -> Result<Url, UrlValidationError
     if !parsed.username().is_empty() || parsed.password().is_some() {
         return Err(UrlValidationError::CredentialsNotAllowed);
     }
-    let host_lower = host_str.to_lowercase();
+    // "localhost." and "printer.local." are the same names as without the root dot.
+    let host_lower = host_str.trim_end_matches('.').to_lowercase();
 
     // Check for localhost or local domain names
     if host_lower == "localhost"
@@ -74,6 +76,18 @@ pub fn validate_and_normalize_url(input: &str) -> Result<Url, UrlValidationError
     }
 
     Ok(parsed)
+}
+
+/// RFC 3986 scheme: a letter followed by letters, digits, "+", "-" or ".", then "://".
+fn has_explicit_scheme(input: &str) -> bool {
+    let Some((scheme, _)) = input.split_once("://") else {
+        return false;
+    };
+    let mut chars = scheme.chars();
+    chars
+        .next()
+        .is_some_and(|first| first.is_ascii_alphabetic())
+        && chars.all(|c| c.is_ascii_alphanumeric() || matches!(c, '+' | '-' | '.'))
 }
 
 /// Returns whether an address is safe to contact as a public internet target.

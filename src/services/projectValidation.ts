@@ -60,7 +60,8 @@ const isPrivateIpv6 = (hostname: string): boolean => {
 };
 
 const isPrivateHost = (hostname: string): boolean => {
-  const value = hostname.toLowerCase().replace(/^\[|\]$/g, '');
+  // A trailing root dot names the same host: "localhost." is localhost.
+  const value = hostname.toLowerCase().replace(/^\[|\]$/g, '').replace(/\.+$/, '');
   return value === 'localhost'
     || value.endsWith('.localhost')
     || value.endsWith('.local')

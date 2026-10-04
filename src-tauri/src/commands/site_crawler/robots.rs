@@ -29,7 +29,7 @@ pub(super) fn parse_robots_rules(content: &str, crawler_agent: &str) -> Vec<Robo
             }
             let requested = value.to_ascii_lowercase();
             let matches = if use_specific_group {
-                requested != "*" && agent.contains(&requested)
+                !requested.is_empty() && requested != "*" && agent.contains(&requested)
             } else {
                 requested == "*"
             };
@@ -98,8 +98,12 @@ pub(super) fn robots_has_specific_agent_group(content: &str, crawler_agent: &str
         let Some((key, value)) = line.split_once(':') else {
             return false;
         };
+        let value = value.trim();
+        // An empty User-agent value names no crawler (RFC 9309), and every
+        // string "contains" the empty string.
         key.trim().eq_ignore_ascii_case("user-agent")
-            && !value.trim().eq_ignore_ascii_case("*")
-            && crawler_agent.contains(&value.trim().to_ascii_lowercase())
+            && !value.is_empty()
+            && value != "*"
+            && crawler_agent.contains(&value.to_ascii_lowercase())
     })
 }
