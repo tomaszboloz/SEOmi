@@ -4,7 +4,7 @@ import { useToolsStore } from '@/stores/toolsStore';
 import { useAuditStore } from '@/stores/auditStore';
 import { useProjectStore } from '@/stores/projectStore';
 import { csv } from '@/services/export/csv';
-import { downloadBlob } from '@/services/download';
+import { downloadText } from '@/services/export/download';
 
 export const useSavedKeywordsSession = () => {
   const { t } = useTranslation();
@@ -65,16 +65,11 @@ export const useSavedKeywordsSession = () => {
       k.tags.join(', '),
       k.addedAt,
     ]);
-    // csv() quotes every cell, doubles embedded quotes and defuses spreadsheet
-    // formulas; a Blob download also keeps '#' in a keyword from truncating the file.
-    downloadBlob(
-      `seomi_saved_keywords_${new Date().toISOString().split('T')[0]}.csv`,
-      new Blob(['\uFEFF' + csv([headers, ...rows])], { type: 'text/csv;charset=utf-8' }),
-    );
+    downloadText(`seomi_saved_keywords_${new Date().toISOString().split('T')[0]}.csv`, csv([headers, ...rows]), 'text/csv');
   };
 
   const handleAddTag = (id: string) => {
-    if (!newTagInput || !newTagInput.tag.trim()) return;
+    if (!newTagInput || newTagInput.id !== id || !newTagInput.tag.trim()) return;
     const target = savedKeywords.find((k) => k.id === id);
     if (!target) return;
     const tagClean = newTagInput.tag.trim();

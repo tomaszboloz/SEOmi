@@ -1,14 +1,16 @@
-import { useEffect, useRef, useState } from 'react';
+import { useLayoutEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useUIStore } from '@/stores/uiStore';
 import { useAuditStore } from '@/stores/auditStore';
 import { useAuthStore } from '@/stores/authStore';
 import type { AiSuggestionResponse } from '@/services/ai';
-import { copyText } from '@/services/clipboard';
-import { useTransientValue } from '@/hooks/useTransientValue';
+import { useProjectStore } from '@/stores/projectStore';
+import { useAsyncOperationScope } from '@/hooks/useAsyncOperationScope';
+import { useAIAssistantActions } from './useAIAssistantActions';
 
 export const useAIAssistantSession = () => {
   const { t } = useTranslation();
+  const activeProjectId = useProjectStore((s) => s.activeProjectId);
   const closeModal = useUIStore((s) => s.closeModal);
   const openModal = useUIStore((s) => s.openModal);
   const currentAudit = useAuditStore((s) => s.currentAudit);
@@ -28,87 +30,53 @@ export const useAIAssistantSession = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [suggestions, setSuggestions] = useState<AiSuggestionResponse | null>(null);
-  const [copiedJson, setCopiedJson] = useTransientValue(false, 2000);
-  const [appliedField, setAppliedField] = useTransientValue<'title' | 'desc' | null>(null, 2000);
-  const generationRequestToken = useRef(0);
 
   const currentKey = apiKeys[provider] || '';
+  const ownerKey = JSON.stringify([activeProjectId, provider, model, currentAudit?.url, currentAudit?.timestamp, connectionMethod[provider], currentKey, promptInstruction]);
+  const beginOperation = useAsyncOperationScope(ownerKey);
+  const actions = useAIAssistantActions({ ownerKey, currentAudit, suggestions, setAuditData, setError, beginOperation });
 
-  useEffect(() => {
-    generationRequestToken.current += 1;
+  useLayoutEffect(() => {
     setLoading(false);
     setSuggestions(null);
-  }, [provider, currentAudit?.timestamp]);
+    setError(null);
+  }, [ownerKey]);
 
   const handleApiKeyChange = (value: string) => {
+    const isCurrent = beginOperation('key-write');
+    const isErrorCurrent = beginOperation('error');
+    beginOperation('generate');
+    setLoading(false);
+    setSuggestions(null);
+    setError(null);
     void setApiKey(provider, value).catch((cause) => {
-      setError(cause instanceof Error ? cause.message : String(cause));
+      if (isCurrent() && isErrorCurrent()) setError(cause instanceof Error ? cause.message : String(cause));
     });
   };
 
   const handleGenerate = async () => {
+    const isCurrent = beginOperation('generate');
+    const isErrorCurrent = beginOperation('error');
+    setLoading(false);
+    setError(null);
+    setSuggestions(null);
     if (!currentAudit) return;
     if (!isProviderConnected()) {
       setError(t('ai.connectBeforeGenerate', { provider: provider.toUpperCase() }));
       return;
     }
 
-    const requestToken = ++generationRequestToken.current;
     setLoading(true);
-    setError(null);
 
     try {
       const res = await generateSuggestions(currentAudit, promptInstruction);
-      if (generationRequestToken.current === requestToken) setSuggestions(res);
+      if (isCurrent()) setSuggestions(res);
     } catch (err: unknown) {
       const msg = err instanceof Error ? err.message : String(err);
-      if (generationRequestToken.current === requestToken) setError(msg);
+      if (isCurrent() && isErrorCurrent()) setError(msg);
     } finally {
-      if (generationRequestToken.current === requestToken) setLoading(false);
+      if (isCurrent()) setLoading(false);
     }
-  };
-
-  const applyTitle = () => {
-    if (!currentAudit || !suggestions) return;
-    const updated = {
-      ...currentAudit,
-      meta_tags: {
-        ...currentAudit.meta_tags,
-        title: suggestions.suggestedTitle,
-        title_length: suggestions.suggestedTitle.length,
-      },
-      open_graph: {
-        ...currentAudit.open_graph,
-        og_title: suggestions.suggestedTitle,
-      },
-    };
-    setAuditData(updated);
-    setAppliedField('title');
-  };
-
-  const applyDescription = () => {
-    if (!currentAudit || !suggestions) return;
-    const updated = {
-      ...currentAudit,
-      meta_tags: {
-        ...currentAudit.meta_tags,
-        description: suggestions.suggestedDescription,
-        description_length: suggestions.suggestedDescription.length,
-      },
-      open_graph: {
-        ...currentAudit.open_graph,
-        og_description: suggestions.suggestedDescription,
-      },
-    };
-    setAuditData(updated);
-    setAppliedField('desc');
-  };
-
-  const copySchema = async () => {
-    if (!suggestions?.schemaJsonLd) return;
-    const copied = await copyText(JSON.stringify(suggestions.schemaJsonLd, null, 2));
-    if (!copied) return;
-    setCopiedJson(true);
   };
 
   return {
@@ -128,11 +96,7 @@ export const useAIAssistantSession = () => {
     loading,
     error,
     suggestions,
-    copiedJson,
-    appliedField,
     handleGenerate,
-    applyTitle,
-    applyDescription,
-    copySchema,
+    ...actions,
   };
 };
