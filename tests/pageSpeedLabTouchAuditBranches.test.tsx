@@ -5,7 +5,7 @@ import { PageSpeedLabTouchAudit } from '@/components/Performance/pagespeed/PageS
 
 const audit = (over: object = {}) => ({ score: 1, scoreDisplayMode: 'binary', displayValue: '', title: 'Tap targets', description: 'desc', evidenceCount: 2, evidence: [], evidenceTruncated: false, ...over });
 const report = (over: object = {}, a: object | null = {}) => ({ strategy: 'mobile', lighthouseVersion: '12.0.0', touchTargetAudit: a === null ? null : audit(a), ...over });
-const ui = (k: string, o?: object) => i18n.t(`pageSpeedUi.${k}`, o);
+const ui = (k: string, o?: Record<string, unknown>) => i18n.t(`pageSpeedUi.${k}`, o);
 
 describe('PageSpeedLabTouchAudit', () => {
   beforeEach(async () => { await i18n.changeLanguage('en'); });

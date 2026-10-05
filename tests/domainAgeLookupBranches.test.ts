@@ -8,7 +8,7 @@ import { useProjectStore } from '@/stores/projectStore';
 const fetchMock = vi.fn();
 const ok = (body: unknown) => Promise.resolve({ ok: true, status: 200, json: () => Promise.resolve(body) });
 const select = (id: string | null, rootUrl = 'https://root.test/') => useProjectStore.setState({ activeProjectId: id, projects: id ? [{ id, rootUrl }] : [] } as never);
-const tt = (k: string, o?: object) => i18n.t(`seoTools.${k}`, o);
+const tt = (k: string, o?: Record<string, unknown>) => i18n.t(`seoTools.${k}`, o);
 
 describe('useDomainAgeLookup', () => {
   beforeEach(async () => {

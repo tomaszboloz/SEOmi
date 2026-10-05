@@ -10,7 +10,7 @@ const show = (over: Record<string, unknown> = {}, evidenceUrl: string | null = n
   const { container } = render(<CrawlPageEvidenceDetails page={{ ...base, ...over } as unknown as CrawledPageSummary} evidenceUrl={evidenceUrl} t={t as never} />);
   return { text: container.textContent ?? '', details: container.querySelector('details') as HTMLDetailsElement, container };
 };
-const ui = (k: string, o?: object) => i18n.t(`crawl.ui.${k}`, o);
+const ui = (k: string, o?: Record<string, unknown>) => i18n.t(`crawl.ui.${k}`, o);
 
 describe('CrawlPageEvidenceDetails', () => {
   beforeEach(async () => { await i18n.changeLanguage('en'); });

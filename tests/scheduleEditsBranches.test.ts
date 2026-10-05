@@ -5,7 +5,7 @@ import { saveScheduledAudits } from '@/services/schedules/persistence';
 import { MAX_SCHEDULES_PER_PROJECT } from '@/services/schedules/policy';
 
 const NOW = Date.UTC(2026, 0, 1);
-const err = (key: string, o?: object) => i18n.t(`runtimeErrors.schedules.${key}`, o);
+const err = (key: string, o?: Record<string, unknown>) => i18n.t(`runtimeErrors.schedules.${key}`, o);
 const add = (url: string, extra: object = {}, project = 'proj') => addScheduledAudit(project, url, 24, NOW, extra);
 
 describe('schedule edits', () => {
