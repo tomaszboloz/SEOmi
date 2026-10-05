@@ -12,10 +12,10 @@
 | EXT-006 | PageSpeed / CrUX | EXISTING/PARTIAL: rozdzielić pomiar laboratoryjny/terenowy, okno zbierania i brak próby; zweryfikować integracje na aktualnym kodzie |
 | EXT-007 | Trending now | OPEN: trendy krajowe z rzeczywistym źródłem, krajem i czasem; darmowy feed/import, limitowany provider opcjonalny, bez fikcyjnego wolumenu |
 | EXT-008 | Darmowy SERP | OPEN: adaptery/import rzeczywistych TOP10, źródło/czas/rynek/język; obsługa limitów i blokad, brak automatycznego przejścia na płatne API |
-| EXT-009 | Embeddingi + SERP overlap | OPEN: zastąpić domyślne płatne klastrowanie lokalnymi embeddingami i wspólnymi URL; wersja/model/rynek, osobne progi, uzasadnienia par |
+| EXT-009 | Embeddingi + SERP overlap | PARTIAL: scalono darmowy domyślny tryb lokalnych wektorów cech, embeddingi Ollamy/hybrid i metrykę spójności; brak połączonego scoringu z rzeczywistym SERP overlap, wersji/rynku i uzasadnień par; nie utożsamiać lokalnych wektorów cech z modelem semantycznym |
 | EXT-010 | Audyt frazy docelowej | OPEN: fraza+konkretny URL, tytuł/H1/treść/intencja/linki, dowody z audytu, bez obietnic pozycji |
 | EXT-011 | Luki treści TOP10 | OPEN: faktycznie pobrane strony TOP10, dostępność i daty, tematy/dowody/udział stron; brak danych nie oznacza luki |
-| EXT-012 | Ollama | OPEN: modele lokalne/LAN, konfiguracja endpoint/model, test połączenia, generate/chat/embed, timeouts, walidacja odpowiedzi i jawne błędy |
+| EXT-012 | Ollama | PARTIAL: scalono embed/generate w usługach embeddingów i ustawienia modelu w panelu klastrów; CLI ma endpoint, desktop używa loopback11434. Pełne połączenie z asystentem/chat, test połączenia, konfiguracja LAN w desktopie, limity transportu i weryfikacja live pozostają OPEN |
 | EXT-013 | Crawl w czasie | OPEN: porównanie dwóch ukończonych crawlów jednego projektu/zakresu; dodane/usunięte/zmienione strony i dowody |
 | EXT-014 | Graf ważony GSC | OPEN: wewnętrzny PageRank + osobne rzeczywiste metryki GSC, rozróżnienie struktury od ruchu |
 | EXT-015 | Darmowe odkrywanie fraz/intencja | OPEN: autocomplete/import, pochodzenie sugestii, dopasowanie fraz do stron i sygnały intencji z niepewnością |
