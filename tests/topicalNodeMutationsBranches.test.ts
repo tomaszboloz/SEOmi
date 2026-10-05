@@ -1,3 +1,4 @@
+import type { TFunction } from 'i18next';
 import { act, renderHook } from '@testing-library/react';
 import { beforeEach, expect, it, vi } from 'vitest';
 import type { DragEvent } from 'react';
@@ -9,7 +10,7 @@ import type { TopicalMapDocument, TopicalNode } from '@/services/topicalMap';
 const mocks = vi.hoisted(() => ({ assess: vi.fn() }));
 vi.mock('@/services/contentBrief', () => ({ assessContentBrief: mocks.assess }));
 
-const t = i18n.t.bind(i18n) as never;
+const t = ((k: string, o?: object) => String(i18n.t(k, o as never))) as unknown as TFunction;
 const node = (id: string, patch: Partial<TopicalNode> = {}): TopicalNode => ({ ...createTopicalNode(id), id, parentId: null, ...patch });
 const setup = (nodes: TopicalNode[]) => {
   const documentRef = { current: { ...createEmptyTopicalMap(), nodes } as TopicalMapDocument };

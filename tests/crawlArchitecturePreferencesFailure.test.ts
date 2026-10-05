@@ -9,7 +9,7 @@ vi.mock('@/services/storageContracts', () => ({
 
 describe('readPreferences failure handling', () => {
   it('falls back to defaults when no record is stored', () => {
-    vi.mocked(readJsonRecord).mockReturnValue(null);
+    vi.mocked(readJsonRecord).mockReturnValue(null as never);
     expect(readPreferences('any-key')).toEqual(emptyPreferences());
   });
 

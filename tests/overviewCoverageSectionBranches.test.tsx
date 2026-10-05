@@ -23,8 +23,8 @@ afterEach(() => { useAuditStore.setState({ showOnlyProblems: false }); });
 it('paginates 24 per page and clamps previous and next at the edges', () => {
   render(<OverviewCoverageSection audit={audit} />);
   expect(screen.getAllByTitle(/^Label /)).toHaveLength(24);
-  const next = screen.getByRole('button', { name: t('legacyUi.overview.next') });
-  const prev = screen.getByRole('button', { name: t('legacyUi.overview.previous') });
+  const next = screen.getByRole<HTMLButtonElement>('button', { name: t('legacyUi.overview.next') });
+  const prev = screen.getByRole<HTMLButtonElement>('button', { name: t('legacyUi.overview.previous') });
   expect(prev.disabled).toBe(true);
   fireEvent.click(next);
   expect(screen.getAllByTitle(/^Label /)).toHaveLength(9);

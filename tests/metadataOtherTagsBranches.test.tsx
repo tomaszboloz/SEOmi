@@ -7,7 +7,7 @@ import { createAuditFixture } from './fixtures/audit';
 const mocks = vi.hoisted(() => ({ copyText: vi.fn() }));
 vi.mock('@/services/clipboard', () => ({ copyText: mocks.copyText }));
 
-const t = (k: string, o?: object) => i18n.t(k, o);
+const t = (k: string, o?: object): string => String(i18n.t(k, o as never));
 const show = (tags: unknown) => render(<MetadataOtherTags audit={createAuditFixture({ meta_tags: { ...createAuditFixture().meta_tags, other_tags: tags as never } })} />);
 beforeEach(async () => { await i18n.changeLanguage('en'); mocks.copyText.mockReset().mockResolvedValue(true); });
 

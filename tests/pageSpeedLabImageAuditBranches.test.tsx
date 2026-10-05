@@ -3,7 +3,7 @@ import { beforeEach, expect, it } from 'vitest';
 import i18n from '@/i18n';
 import { PageSpeedLabImageAudit } from '@/components/Performance/pagespeed/PageSpeedLabImageAudit';
 
-const t = (k: string, o?: object) => i18n.t(k, o);
+const t = (k: string, o?: object): string => String(i18n.t(k, o as never));
 const audit = (over: object = {}) => ({ id: 'a1', title: 'Audit', score: 1, scoreDisplayMode: 'binary', displayValue: '', description: 'Plain text', overallSavingsBytes: null, evidence: [], evidenceTruncated: false, evidenceCount: 0, ...over });
 const show = (audits?: object[]) => render(<PageSpeedLabImageAudit psiReport={{ imageOptimizationAudits: audits }} />);
 beforeEach(async () => { await i18n.changeLanguage('en'); });

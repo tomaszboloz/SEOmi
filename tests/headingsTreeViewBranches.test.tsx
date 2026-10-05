@@ -10,7 +10,7 @@ vi.mock('@/components/Results/ShowOnPageButton', () => ({
   ShowOnPageButton: (p: { url: string; selector: string; needle?: string; label: string }) => <i data-testid="show" data-url={p.url} data-selector={p.selector} data-needle={p.needle ?? ''} data-label={p.label} />,
 }));
 
-const t = (k: string, o?: object) => i18n.t(k, o);
+const t = (k: string, o?: object): string => String(i18n.t(k, o as never));
 const nodes = [1, 2, 3, 4, 5].map((level) => ({ level, text: `Title ${level}` })) as HeadingNode[];
 beforeEach(async () => { await i18n.changeLanguage('en'); mocks.copyText.mockReset().mockResolvedValue(true); });
 

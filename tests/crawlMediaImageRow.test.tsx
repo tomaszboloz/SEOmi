@@ -13,7 +13,7 @@ const renderRow = (patch: Partial<CrawledImage> = {}) => {
   render(<table><tbody><CrawlMediaImageRow item={{ page, image: image(patch), key: 'k' }} t={i18n.t.bind(i18n)} /></tbody></table>);
   return screen.getAllByRole('cell');
 };
-const t = (k: string, o?: object) => i18n.t(k, o as never);
+const t = (k: string, o?: object): string => String(i18n.t(k, o as never));
 
 describe('CrawlMediaImageRow', () => {
   beforeEach(() => i18n.changeLanguage('en'));

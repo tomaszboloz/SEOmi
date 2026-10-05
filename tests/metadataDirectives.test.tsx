@@ -8,7 +8,7 @@ vi.mock('@/services/clipboard', () => ({ copyText: copy }));
 
 const render_ = (meta: Record<string, unknown> = {}, indexability?: Record<string, unknown>) =>
   render(<MetadataDirectives audit={{ meta_tags: meta, indexability } as never} />);
-const tx = (key: string, o?: object) => i18n.t(`legacyUi.metadata.${key}`, o);
+const tx = (key: string, o?: object): string => String(i18n.t(`legacyUi.metadata.${key}`, o as never));
 
 beforeEach(async () => {
   await i18n.changeLanguage('en');

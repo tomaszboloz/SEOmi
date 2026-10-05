@@ -7,7 +7,7 @@ import { useUIStore } from '@/stores/uiStore';
 import type { MapView } from '@/components/Charts/crawlArchitecture/CrawlArchitectureTypes';
 
 const ui = useUIStore.getState();
-const t = (k: string, o?: object) => i18n.t(k, o);
+const t = (k: string, o?: object): string => String(i18n.t(k, o as never));
 const ids: MapView[] = ['graph', 'directory', 'plan'];
 const show = (activeView: MapView = 'graph', collapsed = false) => {
   useUIStore.setState({ sidebarCollapsed: collapsed });

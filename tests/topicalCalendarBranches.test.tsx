@@ -4,7 +4,7 @@ import { TopicalCalendar, type TopicalCalendarFilters } from '@/components/Chart
 import { createTopicalNode, type TopicalNode } from '@/services/topicalMap';
 import i18n from '@/i18n';
 
-const t = (k: string, o?: object) => i18n.t(k, o);
+const t = (k: string, o?: object): string => String(i18n.t(k, o as never));
 const mk = (id: string, patch: Partial<TopicalNode>): TopicalNode => ({ ...createTopicalNode(id), id, scheduledDate: '2026-09-10', ...patch });
 const base: TopicalCalendarFilters = { lifecycle: 'all', kind: 'all', boundary: 'all' };
 const show = (nodes: TopicalNode[], over: Partial<{ month: string; filters: TopicalCalendarFilters; search: string }> = {}) => {

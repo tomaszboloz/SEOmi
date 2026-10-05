@@ -10,7 +10,7 @@ vi.mock('@/components/Charts/crawlArchitecture/CrawlArchitectureControls', () =>
 vi.mock('@/components/Charts/crawlArchitecture/CrawlArchitectureSidebar', () => ({ CrawlArchitectureSidebar: (p: object) => { m.sidebar(p); return <div data-testid="sidebar" />; } }));
 
 const node = (id: string, count: number, orphan = false) => ({ id, page: { url: `https://x.test/${id}` }, clusterLabel: `cl-${id}`, semanticSignalCount: count, orphan });
-const t = (k: string, o?: object) => i18n.t(k, o);
+const t = (k: string, o?: object): string => String(i18n.t(k, o as never));
 const make = (nodes: unknown[], linkMode = 'content') => ({ visibleNodes: nodes, setSelectedId: vi.fn(), graph: { clusters: [] }, preferences: { linkMode }, setPreferences: vi.fn() });
 beforeEach(async () => { await i18n.changeLanguage('en'); vi.clearAllMocks(); m.zoom.current = null; });
 

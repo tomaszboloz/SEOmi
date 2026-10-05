@@ -4,7 +4,6 @@ import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { useSearchConsoleSession } from '@/components/AgentWorkflows/searchConsole/useSearchConsoleSession';
 import { useProjectStore } from '@/stores/projectStore';
 import { useToolsStore } from '@/stores/toolsStore';
-import type { GscPerformanceData } from '@/types';
 import i18n from '@/i18n';
 
 const acts = {
@@ -12,15 +11,6 @@ const acts = {
   inspectGscUrl: vi.fn(), setGscFilters: vi.fn(),
 };
 const ev = { preventDefault: vi.fn() } as unknown as FormEvent;
-const data = (clicks = 10, site = 'sc-domain:a.test'): GscPerformanceData => ({
-  site_url: site, start_date: '2026-09-01', end_date: '2026-09-28', total_clicks: clicks,
-  total_impressions: 1000, avg_ctr: 0.01, avg_position: 8,
-  queries: [{ query: 'seo', clicks, impressions: 500, ctr: 0.02, position: 9 }],
-  pages: [{ page: 'https://a.test/', clicks, impressions: 500, ctr: 0.02, position: 9 }],
-  daily: [{ date: '2026-09-01', clicks, impressions: 1000, ctr: 0.01, position: 8 }],
-  queries_may_be_truncated: false, pages_may_be_truncated: false, daily_may_be_truncated: false,
-  max_rows_per_dimension: 25000,
-});
 
 describe('useSearchConsoleSession', () => {
   beforeEach(async () => {

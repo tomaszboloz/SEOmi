@@ -3,7 +3,7 @@ import { beforeEach, describe, expect, it } from 'vitest';
 import { CrawlArchitectureSidebar } from '@/components/Charts/crawlArchitecture/CrawlArchitectureSidebar';
 import i18n from '@/i18n';
 
-const t = (k: string, o?: object) => i18n.t(k, o as never);
+const t = (k: string, o?: object): string => String(i18n.t(k, o as never));
 const page = (patch: Record<string, unknown> = {}) => ({
   url: 'https://a.test/one?x=1', title: 'Page One', semantic_content_source: 'primary-root',
   semantic_content_provenance: 'http', ...patch,

@@ -58,7 +58,7 @@ describe('SerpSimulatorPanel', () => {
     render(<SerpSimulatorPanel />);
     expect(label('seoTools.serpUrl').value).toBe('https://saved.test');
     select('p2');
-    return screen.findByDisplayValue('', { selector: 'input' }).then(() => {
+    return screen.findAllByDisplayValue('').then(() => {
       expect(label('seoTools.serpUrl').value).toBe('');
       expect(label('seoTools.serpDescription').value).toBe('');
     });

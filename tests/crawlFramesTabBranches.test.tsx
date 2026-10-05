@@ -4,7 +4,7 @@ import i18n from '@/i18n';
 import { CrawlFramesTab } from '@/components/Domain/crawlResults/CrawlFramesTab';
 import { createCrawlPageFixture, createCrawlResultFixture } from './fixtures/crawl';
 
-const t = (k: string, o?: object) => i18n.t(k, o);
+const t = (k: string, o?: object): string => String(i18n.t(k, o as never));
 const show = (pages: object[]) => render(<CrawlFramesTab session={{ result: createCrawlResultFixture({ pages: pages as never }), t: i18n.t.bind(i18n) } as never} />);
 const row = (index: number) => screen.getAllByRole('row')[index + 1];
 beforeEach(async () => { await i18n.changeLanguage('en'); });
