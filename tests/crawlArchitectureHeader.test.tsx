@@ -28,6 +28,16 @@ describe('CrawlArchitectureHeader', () => {
     expect(live.textContent).toBe(`${i18n.t('mapUi.active')}: ${i18n.t('mapUi.tabs.directory')}`);
   });
 
+  it('styles each selected view with its own accent', () => {
+    for (const [view, cls] of [['graph', 'bg-slate-800'], ['directory', 'bg-sky-500/15'], ['plan', 'bg-emerald-500/15']] as const) {
+      const { unmount } = render(
+        <CrawlArchitectureHeader activeView={view} setActiveView={vi.fn()} mapTabsRef={createRef<HTMLDivElement>()} />,
+      );
+      expect(tab(view).className).toContain(cls);
+      unmount();
+    }
+  });
+
   it('switches view on click', () => {
     const { setActiveView } = setup();
     fireEvent.click(tab('plan'));
