@@ -28,13 +28,17 @@ export function useCommandPaletteSession({ open, close, filteredItems }: UseComm
     document.body.style.overflow = 'hidden';
     setQuery('');
     setActiveIndex(0);
-    const focus = () => inputRef.current?.focus();
+    let current = true;
+    let frame: number | undefined;
+    const focus = () => { if (current) inputRef.current?.focus(); };
     if (typeof window.requestAnimationFrame === 'function') {
-      window.requestAnimationFrame(focus);
+      frame = window.requestAnimationFrame(focus);
     } else {
       focus();
     }
     return () => {
+      current = false;
+      if (frame !== undefined && typeof window.cancelAnimationFrame === 'function') window.cancelAnimationFrame(frame);
       document.body.style.overflow = previousOverflow;
       restoreFocusRef.current?.focus();
       restoreFocusRef.current = null;
