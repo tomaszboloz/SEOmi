@@ -61,7 +61,7 @@ export const useCrawlResultsSession = (
     filterState.setLinkDescending(nextLinks.descending);
   }, [linkNavigationKey, navigationStorageKey]);
 
-  const mapState = useCrawlMapState(mapNavigationRequest, tabNav.setActiveTab, tabNav.resultsRef);
+  const mapState = useCrawlMapState(mapNavigationRequest, tabNav.setActiveTab, tabNav.resultsRef, navigationStorageKey);
 
   useEffect(() => {
     if (!navigationStorageKey || loadedNavigationKey !== navigationStorageKey) return;
