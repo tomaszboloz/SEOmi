@@ -588,7 +588,8 @@
       "localClientRequired": "{{provider}} is not configured to use its local subscription client.",
       "responseHidden": "Provider response withheld.",
       "invalidResponse": "The AI provider returned an invalid response.",
-      "responseTooLarge": "The AI provider response exceeds the 1 MiB limit."
+      "responseTooLarge": "The AI provider response exceeds the 1 MiB limit.",
+      "refused": "{{provider}} 拒绝了此请求。请换种说法或选择其他模型。"
     },
     "pagespeed": {
       "projectRequired": "Choose a project before starting the measurement."
@@ -3334,7 +3335,11 @@
     "currentTier": "当前版本",
     "upgradePro": "升级到 Pro 专业版",
     "creditsLeft": "剩余 AI 算力额度",
-    "connectAccount": "绑定账户"
+    "connectAccount": "绑定账户",
+    "refreshModels": "刷新模型列表",
+    "modelsFromProvider": "来自提供商 API 的 {{count}} 个模型",
+    "modelsDefault": "默认模型——测试 API 密钥即可加载你的模型",
+    "modelsUnavailable": "无法从提供商加载模型；显示上次获取的列表。"
   },
   "schedules": {
     "saveError": "Unable to save the schedule.",
@@ -3503,16 +3508,7 @@
     "ai": {
       "openai": "OpenAI / Codex",
       "claude": "Anthropic Claude",
-      "gemini": "Google Gemini",
-      "gpt4o": "GPT-4o (high-converting copy)",
-      "gpt4oMini": "GPT-4o Mini (fast and lightweight)",
-      "o3Mini": "o3-mini (reasoning model)",
-      "claude37": "Claude 3.7 Sonnet (latest)",
-      "claude35": "Claude 3.5 Sonnet",
-      "claudeHaiku": "Claude 3.5 Haiku",
-      "geminiFlash": "Gemini 2.0 Flash (fastest)",
-      "geminiPro": "Gemini 2.0 Pro",
-      "gemini15": "Gemini 1.5 Pro"
+      "gemini": "Google Gemini"
     },
     "renderWorker": {
       "title": "本地渲染工作器",
@@ -4699,5 +4695,70 @@
     "limited": "Google 或本地存储可能截断数据。占比仅针对观测到的行。",
     "previous": "上一页",
     "next": "下一页"
+  },
+  "embeddingClusteringUi": {
+    "methodLabel": "分组方法",
+    "methods": {
+      "embeddings": {
+        "title": "本地嵌入（免费）",
+        "description": "在本机按含义对短语分组。无需 API 密钥，无费用；Ollama 可选。"
+      },
+      "serp": {
+        "title": "SERP 重合（DataForSEO，付费）",
+        "description": "将 Google 结果共享 URL 的短语分为一组。需要 DataForSEO 凭据；每个新短语都是一次付费请求。"
+      }
+    },
+    "settingsTitle": "嵌入设置",
+    "description": "短语会被转换为嵌入并按相似度分组。本地模型可离线处理波兰语和英语；Ollama 可添加在本机运行的神经网络模型。",
+    "provider": "嵌入模型",
+    "providers": {
+      "local": "本地（离线）",
+      "ollama": "Ollama",
+      "hybrid": "本地 + Ollama"
+    },
+    "threshold": "相似度阈值：{{value}}",
+    "ollamaModel": "Ollama 嵌入模型",
+    "labelModel": "用于组名的 Ollama 模型（可选）",
+    "labelModelPlaceholder": "例如 llama3.2 — 留空则跳过",
+    "ollamaHint": "Ollama 必须在本机 127.0.0.1:11434 运行，并已拉取模型（ollama pull <model>）。",
+    "run": "对短语分组",
+    "running": "正在分组…",
+    "free": "{{count}} 个短语 · 免费，不请求付费 API",
+    "tooMany": "每次最多 {{max}} 个短语",
+    "resultTitle": "嵌入分组",
+    "resultMeta": "{{model}} · 阈值 {{threshold}} · {{date}}",
+    "keywordCount": "{{count}} 个短语",
+    "cohesion": "凝聚度 {{value}}%"
+  },
+  "dataforseoCost": {
+    "meterLabel": "DataForSEO 费用",
+    "lastCall": "上次调用：{{cost}}（{{endpoint}}）",
+    "noCallsYet": "本月尚无 DataForSEO 调用",
+    "monthNoLimit": "本月：{{spent}} · {{calls}} 次调用 · 上限 = 账户余额",
+    "monthWithLimit": "本月：{{spent}} / {{limit}}（{{percent}}%）",
+    "balance": "余额 ≈ {{balance}}",
+    "warning": "即将达到月度上限",
+    "exceeded": "已达到月度上限——付费请求已被阻止",
+    "invalidLimit": "月度上限必须是 0 到 100,000 美元之间的数字。",
+    "invalidWarn": "警告阈值必须是 1 到 100 之间的整数。",
+    "limitReached": "已达到 DataForSEO 月度上限：已使用 {{spent}} 美元（上限 {{limit}} 美元）；下一次请求预计约 {{expected}} 美元。请在 设置 → API 中提高上限，或等到下个月。",
+    "selectProject": "请选择项目以查看 DataForSEO 费用并设置上限。",
+    "limitRemoved": "已移除月度上限。",
+    "limitSaved": "已保存月度上限：{{limit}}。",
+    "balanceUnavailable": "DataForSEO 未返回账户余额。",
+    "settingsTitle": "费用、余额与月度上限",
+    "balanceLabel": "账户余额（估算）",
+    "balanceChecked": "{{date}} 读取的 {{balance}}，减去之后的调用",
+    "monthLabel": "{{month}} 已花费",
+    "calls": "{{count}} 次调用",
+    "remainingLabel": "本月剩余",
+    "noLimit": "以账户余额为限",
+    "checkBalance": "检查余额",
+    "limitLabel": "月度上限（美元）",
+    "warnLabel": "提醒阈值（上限的 %）",
+    "limitHelp": "上限适用于此项目，并在每月 1 日重置。未设置月度上限时，账户余额即为上限：当估算余额不足以支付下一次调用时，请求会在发送前被阻止。每次调用的费用为 DataForSEO 报告的金额。",
+    "saveLimit": "保存上限",
+    "noLimitOption": "无上限——以账户余额为限",
+    "balanceExhausted": "DataForSEO 账户余额已用完（剩余 ≈ {{balance}} 美元，下一次请求约需 {{expected}} 美元）。请充值后点击“检查余额”。"
   }
 }

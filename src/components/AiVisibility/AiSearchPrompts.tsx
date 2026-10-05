@@ -4,6 +4,7 @@ import { AiSearchPromptsHeader } from './searchPrompts/AiSearchPromptsHeader';
 import { AiSearchPromptForm } from './searchPrompts/AiSearchPromptForm';
 import { AiSearchHistoryAndContext } from './searchPrompts/AiSearchHistoryAndContext';
 import { AiSearchResultCard } from './searchPrompts/AiSearchResultCard';
+import { appLocale } from '@/services/localeFormat';
 
 export const AiSearchPrompts: React.FC = () => {
   const {
@@ -73,7 +74,7 @@ export const AiSearchPrompts: React.FC = () => {
               </h3>
               <p className="mt-1 text-[10px] text-slate-500">
                 {t('aiVisibility.search.promptStarted', {
-                  date: new Date(aiPromptComparison.captured_at).toLocaleString(),
+                  date: new Date(aiPromptComparison.captured_at).toLocaleString(appLocale()),
                 })}
               </p>
             </div>

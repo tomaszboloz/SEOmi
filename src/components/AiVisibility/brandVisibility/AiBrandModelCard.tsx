@@ -3,6 +3,7 @@ import { Bot } from 'lucide-react';
 import type { TFunction } from 'i18next';
 import type { BrandAiVisibilityReport } from '@/types';
 import { getSentimentBadge } from './brandVisibilityTypes';
+import { appLocale } from '@/services/localeFormat';
 
 type BrandModelResponse = BrandAiVisibilityReport['models'][number];
 
@@ -82,7 +83,7 @@ export const AiBrandModelCard: React.FC<AiBrandModelCardProps> = ({ model: m, t 
         )}
         <p className="text-[10px] text-slate-600">
           {t('aiVisibility.brand.savedResponse', {
-            date: new Date(m.captured_at).toLocaleString(),
+            date: new Date(m.captured_at).toLocaleString(appLocale()),
             provider: m.provider,
           })}
         </p>

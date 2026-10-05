@@ -1,6 +1,7 @@
 import type { CrawledDiscoverySource, CrawledPageSummary, RenderedPageArtifact } from '@/types';
 import type { CrawlResourceProvenanceStatus } from '@/services/crawlResources';
 import { downloadBlob } from '@/services/download';
+import { appLocale } from '@/services/localeFormat';
 
 export type CrawlSegment = 'all' | '2xx' | '3xx' | '4xx' | '5xx' | 'transport';
 
@@ -41,7 +42,7 @@ export const downloadRenderedArtifact = (artifact: RenderedPageArtifact): void =
 };
 
 export const formatNumber = (value: number): string =>
-  Math.round(value).toLocaleString();
+  Math.round(value).toLocaleString(appLocale());
 
 export const normalizeLinkUrl = (value: string): string => {
   try {

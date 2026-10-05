@@ -1,0 +1,402 @@
+[
+ {
+  "text": "robots.txt disallow all pages",
+  "label": "robots"
+ },
+ {
+  "text": "jak zablokować stronę w robots.txt",
+  "label": "robots"
+ },
+ {
+  "text": "robots txt user-agent googlebot rules",
+  "label": "robots"
+ },
+ {
+  "text": "plik robots.txt blokuje indeksowanie",
+  "label": "robots"
+ },
+ {
+  "text": "test robots.txt file online",
+  "label": "robots"
+ },
+ {
+  "text": "robots.txt allow and disallow order",
+  "label": "robots"
+ },
+ {
+  "text": "czy robots.txt blokuje googlebota",
+  "label": "robots"
+ },
+ {
+  "text": "robots.txt crawl-delay directive",
+  "label": "robots"
+ },
+ {
+  "text": "generator pliku robots.txt",
+  "label": "robots"
+ },
+ {
+  "text": "robots.txt wildcard disallow parameters",
+  "label": "robots"
+ },
+ {
+  "text": "xml sitemap generator for website",
+  "label": "sitemap"
+ },
+ {
+  "text": "jak dodać mapę strony xml do google",
+  "label": "sitemap"
+ },
+ {
+  "text": "sitemap index file limit 50000 urls",
+  "label": "sitemap"
+ },
+ {
+  "text": "mapa strony xml nie jest pobierana",
+  "label": "sitemap"
+ },
+ {
+  "text": "submit sitemap in search console",
+  "label": "sitemap"
+ },
+ {
+  "text": "sitemap.xml lastmod date format",
+  "label": "sitemap"
+ },
+ {
+  "text": "błędy w mapie witryny sitemap",
+  "label": "sitemap"
+ },
+ {
+  "text": "image sitemap xml example",
+  "label": "sitemap"
+ },
+ {
+  "text": "gdzie umieścić plik sitemap.xml",
+  "label": "sitemap"
+ },
+ {
+  "text": "sitemap xml for large websites",
+  "label": "sitemap"
+ },
+ {
+  "text": "improve core web vitals lcp",
+  "label": "speed"
+ },
+ {
+  "text": "jak poprawić szybkość ładowania strony",
+  "label": "speed"
+ },
+ {
+  "text": "largest contentful paint too slow",
+  "label": "speed"
+ },
+ {
+  "text": "core web vitals inp poor score",
+  "label": "speed"
+ },
+ {
+  "text": "pagespeed insights wynik mobilny niski",
+  "label": "speed"
+ },
+ {
+  "text": "reduce cumulative layout shift cls",
+  "label": "speed"
+ },
+ {
+  "text": "przyspieszenie strony wordpress pagespeed",
+  "label": "speed"
+ },
+ {
+  "text": "time to first byte server response slow",
+  "label": "speed"
+ },
+ {
+  "text": "optymalizacja lcp obrazów na stronie",
+  "label": "speed"
+ },
+ {
+  "text": "page speed score mobile vs desktop",
+  "label": "speed"
+ },
+ {
+  "text": "how to build quality backlinks",
+  "label": "backlinks"
+ },
+ {
+  "text": "darmowe linki zwrotne do strony",
+  "label": "backlinks"
+ },
+ {
+  "text": "backlink checker referring domains",
+  "label": "backlinks"
+ },
+ {
+  "text": "link building strategia dla sklepu",
+  "label": "backlinks"
+ },
+ {
+  "text": "toxic backlinks disavow file",
+  "label": "backlinks"
+ },
+ {
+  "text": "sprawdzanie profilu linków zwrotnych",
+  "label": "backlinks"
+ },
+ {
+  "text": "guest post link building outreach",
+  "label": "backlinks"
+ },
+ {
+  "text": "ile linków zwrotnych potrzeba do top 10",
+  "label": "backlinks"
+ },
+ {
+  "text": "broken link building opportunities",
+  "label": "backlinks"
+ },
+ {
+  "text": "analiza backlinków konkurencji",
+  "label": "backlinks"
+ },
+ {
+  "text": "keyword research tool free",
+  "label": "keywords"
+ },
+ {
+  "text": "jak dobrać słowa kluczowe do strony",
+  "label": "keywords"
+ },
+ {
+  "text": "long tail keywords search volume",
+  "label": "keywords"
+ },
+ {
+  "text": "analiza słów kluczowych konkurencji",
+  "label": "keywords"
+ },
+ {
+  "text": "keyword difficulty score explained",
+  "label": "keywords"
+ },
+ {
+  "text": "narzędzie do wyszukiwania fraz kluczowych",
+  "label": "keywords"
+ },
+ {
+  "text": "find low competition keywords",
+  "label": "keywords"
+ },
+ {
+  "text": "słowa kluczowe z długiego ogona sklep",
+  "label": "keywords"
+ },
+ {
+  "text": "keyword search intent informational",
+  "label": "keywords"
+ },
+ {
+  "text": "planer słów kluczowych google ads",
+  "label": "keywords"
+ },
+ {
+  "text": "canonical tag duplicate content",
+  "label": "canonical"
+ },
+ {
+  "text": "jak ustawić link kanoniczny rel canonical",
+  "label": "canonical"
+ },
+ {
+  "text": "duplicate content same page parameters",
+  "label": "canonical"
+ },
+ {
+  "text": "zduplikowana treść na stronie produktu",
+  "label": "canonical"
+ },
+ {
+  "text": "self referencing canonical url",
+  "label": "canonical"
+ },
+ {
+  "text": "canonical wskazuje na inną stronę",
+  "label": "canonical"
+ },
+ {
+  "text": "google chose different canonical than user",
+  "label": "canonical"
+ },
+ {
+  "text": "duplikacja treści parametry url filtrowanie",
+  "label": "canonical"
+ },
+ {
+  "text": "rel canonical cross domain",
+  "label": "canonical"
+ },
+ {
+  "text": "strona alternatywna z prawidłowym tagiem kanonicznym",
+  "label": "canonical"
+ },
+ {
+  "text": "hreflang tags for multilingual site",
+  "label": "hreflang"
+ },
+ {
+  "text": "jak wdrożyć hreflang na stronie wielojęzycznej",
+  "label": "hreflang"
+ },
+ {
+  "text": "hreflang x-default meaning",
+  "label": "hreflang"
+ },
+ {
+  "text": "hreflang return tag errors",
+  "label": "hreflang"
+ },
+ {
+  "text": "wersje językowe strony i hreflang",
+  "label": "hreflang"
+ },
+ {
+  "text": "hreflang en-gb vs en-us",
+  "label": "hreflang"
+ },
+ {
+  "text": "błąd brak tagu zwrotnego hreflang",
+  "label": "hreflang"
+ },
+ {
+  "text": "international seo hreflang sitemap",
+  "label": "hreflang"
+ },
+ {
+  "text": "hreflang dla polskiej i niemieckiej wersji",
+  "label": "hreflang"
+ },
+ {
+  "text": "hreflang language region codes",
+  "label": "hreflang"
+ },
+ {
+  "text": "schema markup product rich results",
+  "label": "schema"
+ },
+ {
+  "text": "dane strukturalne json-ld dla sklepu",
+  "label": "schema"
+ },
+ {
+  "text": "faq schema structured data",
+  "label": "schema"
+ },
+ {
+  "text": "jak dodać schema org do strony",
+  "label": "schema"
+ },
+ {
+  "text": "structured data testing tool errors",
+  "label": "schema"
+ },
+ {
+  "text": "dane strukturalne recenzje gwiazdki w google",
+  "label": "schema"
+ },
+ {
+  "text": "organization schema json-ld example",
+  "label": "schema"
+ },
+ {
+  "text": "breadcrumb schema markup",
+  "label": "schema"
+ },
+ {
+  "text": "schema markup local business",
+  "label": "schema"
+ },
+ {
+  "text": "błędy danych strukturalnych w search console",
+  "label": "schema"
+ },
+ {
+  "text": "meta description length 2026",
+  "label": "meta"
+ },
+ {
+  "text": "jak napisać meta title pod seo",
+  "label": "meta"
+ },
+ {
+  "text": "title tag too long truncated",
+  "label": "meta"
+ },
+ {
+  "text": "meta opis strony nie wyświetla się w google",
+  "label": "meta"
+ },
+ {
+  "text": "optimal title tag length pixels",
+  "label": "meta"
+ },
+ {
+  "text": "duplikaty meta title na wielu stronach",
+  "label": "meta"
+ },
+ {
+  "text": "meta description click through rate",
+  "label": "meta"
+ },
+ {
+  "text": "google zmienia mój title tag",
+  "label": "meta"
+ },
+ {
+  "text": "write seo title tags examples",
+  "label": "meta"
+ },
+ {
+  "text": "brak meta description na podstronach",
+  "label": "meta"
+ },
+ {
+  "text": "301 redirect vs 302 redirect seo",
+  "label": "redirects"
+ },
+ {
+  "text": "jak zrobić przekierowanie 301 htaccess",
+  "label": "redirects"
+ },
+ {
+  "text": "redirect chain too many redirects",
+  "label": "redirects"
+ },
+ {
+  "text": "przekierowanie po zmianie domeny seo",
+  "label": "redirects"
+ },
+ {
+  "text": "fix redirect loop wordpress",
+  "label": "redirects"
+ },
+ {
+  "text": "łańcuch przekierowań wpływ na seo",
+  "label": "redirects"
+ },
+ {
+  "text": "meta refresh redirect seo impact",
+  "label": "redirects"
+ },
+ {
+  "text": "przekierowanie http na https 301",
+  "label": "redirects"
+ },
+ {
+  "text": "redirect old urls after migration",
+  "label": "redirects"
+ },
+ {
+  "text": "błąd zbyt wiele przekierowań",
+  "label": "redirects"
+ }
+]

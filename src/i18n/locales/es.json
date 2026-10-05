@@ -588,7 +588,8 @@
       "localClientRequired": "{{provider}} is not configured to use its local subscription client.",
       "responseHidden": "Provider response withheld.",
       "invalidResponse": "The AI provider returned an invalid response.",
-      "responseTooLarge": "The AI provider response exceeds the 1 MiB limit."
+      "responseTooLarge": "The AI provider response exceeds the 1 MiB limit.",
+      "refused": "{{provider}} rechazó esta solicitud. Reformúlala o elige otro modelo."
     },
     "pagespeed": {
       "projectRequired": "Choose a project before starting the measurement."
@@ -3334,7 +3335,11 @@
     "currentTier": "Plan Actual",
     "upgradePro": "Actualizar a Pro",
     "creditsLeft": "Créditos IA Restantes",
-    "connectAccount": "Conectar Cuenta"
+    "connectAccount": "Conectar Cuenta",
+    "refreshModels": "Actualizar lista de modelos",
+    "modelsFromProvider": "{{count}} modelos de la API del proveedor",
+    "modelsDefault": "Modelos predeterminados: prueba la clave de API para cargar tus modelos",
+    "modelsUnavailable": "No se pudieron cargar los modelos del proveedor; se muestra la última lista conocida."
   },
   "schedules": {
     "saveError": "Unable to save the schedule.",
@@ -3503,16 +3508,7 @@
     "ai": {
       "openai": "OpenAI / Codex",
       "claude": "Anthropic Claude",
-      "gemini": "Google Gemini",
-      "gpt4o": "GPT-4o (high-converting copy)",
-      "gpt4oMini": "GPT-4o Mini (fast and lightweight)",
-      "o3Mini": "o3-mini (reasoning model)",
-      "claude37": "Claude 3.7 Sonnet (latest)",
-      "claude35": "Claude 3.5 Sonnet",
-      "claudeHaiku": "Claude 3.5 Haiku",
-      "geminiFlash": "Gemini 2.0 Flash (fastest)",
-      "geminiPro": "Gemini 2.0 Pro",
-      "gemini15": "Gemini 1.5 Pro"
+      "gemini": "Google Gemini"
     },
     "renderWorker": {
       "title": "Worker de renderizado local",
@@ -4699,5 +4695,70 @@
     "limited": "Google o el almacenamiento local pueden truncar los datos. Los porcentajes solo incluyen filas observadas.",
     "previous": "Anterior",
     "next": "Siguiente"
+  },
+  "embeddingClusteringUi": {
+    "methodLabel": "Método de agrupación",
+    "methods": {
+      "embeddings": {
+        "title": "Embeddings locales (gratis)",
+        "description": "Agrupa frases por significado en este ordenador. Sin clave de API ni coste; Ollama es opcional."
+      },
+      "serp": {
+        "title": "Coincidencia de SERP (DataForSEO, de pago)",
+        "description": "Agrupa frases cuyos resultados de Google comparten URL. Requiere credenciales de DataForSEO; cada frase nueva es una solicitud de pago."
+      }
+    },
+    "settingsTitle": "Ajustes de embeddings",
+    "description": "Las frases se convierten en embeddings y se agrupan por similitud. El modelo local funciona sin conexión para polaco e inglés; Ollama añade un modelo neuronal en este ordenador.",
+    "provider": "Modelo de embeddings",
+    "providers": {
+      "local": "Local (sin conexión)",
+      "ollama": "Ollama",
+      "hybrid": "Local + Ollama"
+    },
+    "threshold": "Umbral de similitud: {{value}}",
+    "ollamaModel": "Modelo de embeddings de Ollama",
+    "labelModel": "Modelo de Ollama para nombrar grupos (opcional)",
+    "labelModelPlaceholder": "p. ej. llama3.2 — déjalo vacío para omitir",
+    "ollamaHint": "Ollama debe ejecutarse en este ordenador en 127.0.0.1:11434 con el modelo descargado (ollama pull <model>).",
+    "run": "Agrupar frases",
+    "running": "Agrupando…",
+    "free": "{{count}} frases · gratis, sin solicitudes a API de pago",
+    "tooMany": "Hasta {{max}} frases por ejecución",
+    "resultTitle": "Grupos por embeddings",
+    "resultMeta": "{{model}} · umbral {{threshold}} · {{date}}",
+    "keywordCount": "{{count}} frases",
+    "cohesion": "cohesión {{value}} %"
+  },
+  "dataforseoCost": {
+    "meterLabel": "Costes de DataForSEO",
+    "lastCall": "Última llamada: {{cost}} ({{endpoint}})",
+    "noCallsYet": "Aún no hay llamadas a DataForSEO este mes",
+    "monthNoLimit": "Este mes: {{spent}} · {{calls}} llamadas · límite = saldo de la cuenta",
+    "monthWithLimit": "Este mes: {{spent}} de {{limit}} ({{percent}} %)",
+    "balance": "Saldo ≈ {{balance}}",
+    "warning": "Te acercas al límite mensual",
+    "exceeded": "Límite mensual alcanzado: las solicitudes de pago están bloqueadas",
+    "invalidLimit": "El límite mensual debe ser un número entre 0 y 100 000 USD.",
+    "invalidWarn": "El umbral de aviso debe ser un número entero entre 1 y 100.",
+    "limitReached": "Límite mensual de DataForSEO alcanzado: se han usado {{spent}} USD de {{limit}} USD; la siguiente solicitud costará unos {{expected}} USD. Aumenta el límite en Ajustes → API o espera al próximo mes.",
+    "selectProject": "Elige un proyecto para ver los costes de DataForSEO y fijar un límite.",
+    "limitRemoved": "Límite mensual eliminado.",
+    "limitSaved": "Límite mensual guardado: {{limit}}.",
+    "balanceUnavailable": "DataForSEO no devolvió el saldo de la cuenta.",
+    "settingsTitle": "Costes, saldo y límite mensual",
+    "balanceLabel": "Saldo de la cuenta (estimado)",
+    "balanceChecked": "{{balance}} según la consulta del {{date}}, menos las llamadas posteriores",
+    "monthLabel": "Gastado en {{month}}",
+    "calls": "{{count}} llamadas",
+    "remainingLabel": "Restante este mes",
+    "noLimit": "Hasta el saldo de la cuenta",
+    "checkBalance": "Comprobar saldo",
+    "limitLabel": "Límite mensual (USD)",
+    "warnLabel": "Avisar desde (% del límite)",
+    "limitHelp": "El límite se aplica a este proyecto y se reinicia el día 1 de cada mes. Sin límite mensual, el saldo de la cuenta es el límite: si el saldo estimado no cubre la siguiente llamada, las solicitudes se bloquean antes de enviarse. El coste de cada llamada es el importe que informa DataForSEO.",
+    "saveLimit": "Guardar límite",
+    "noLimitOption": "Sin límite: hasta el saldo de la cuenta",
+    "balanceExhausted": "El saldo de DataForSEO se ha agotado (quedan ≈ {{balance}} USD y la siguiente solicitud necesita unos {{expected}} USD). Recarga la cuenta y pulsa «Comprobar saldo»."
   }
 }

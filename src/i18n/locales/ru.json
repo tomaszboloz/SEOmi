@@ -588,7 +588,8 @@
       "localClientRequired": "{{provider}} is not configured to use its local subscription client.",
       "responseHidden": "Provider response withheld.",
       "invalidResponse": "The AI provider returned an invalid response.",
-      "responseTooLarge": "The AI provider response exceeds the 1 MiB limit."
+      "responseTooLarge": "The AI provider response exceeds the 1 MiB limit.",
+      "refused": "{{provider}} отклонил этот запрос. Переформулируйте его или выберите другую модель."
     },
     "pagespeed": {
       "projectRequired": "Choose a project before starting the measurement."
@@ -3334,7 +3335,11 @@
     "currentTier": "Текущий план",
     "upgradePro": "Перейти на Pro",
     "creditsLeft": "Остаток кредитов ИИ",
-    "connectAccount": "Подключить аккаунт"
+    "connectAccount": "Подключить аккаунт",
+    "refreshModels": "Обновить список моделей",
+    "modelsFromProvider": "{{count}} моделей из API провайдера",
+    "modelsDefault": "Модели по умолчанию — проверьте ключ API, чтобы загрузить ваши модели",
+    "modelsUnavailable": "Не удалось загрузить модели провайдера; показан последний известный список."
   },
   "schedules": {
     "saveError": "Unable to save the schedule.",
@@ -3503,16 +3508,7 @@
     "ai": {
       "openai": "OpenAI / Codex",
       "claude": "Anthropic Claude",
-      "gemini": "Google Gemini",
-      "gpt4o": "GPT-4o (high-converting copy)",
-      "gpt4oMini": "GPT-4o Mini (fast and lightweight)",
-      "o3Mini": "o3-mini (reasoning model)",
-      "claude37": "Claude 3.7 Sonnet (latest)",
-      "claude35": "Claude 3.5 Sonnet",
-      "claudeHaiku": "Claude 3.5 Haiku",
-      "geminiFlash": "Gemini 2.0 Flash (fastest)",
-      "geminiPro": "Gemini 2.0 Pro",
-      "gemini15": "Gemini 1.5 Pro"
+      "gemini": "Google Gemini"
     },
     "renderWorker": {
       "title": "Локальный модуль рендеринга",
@@ -4699,5 +4695,70 @@
     "limited": "Google или локальное хранилище могут обрезать данные. Доли относятся только к наблюдаемым строкам.",
     "previous": "Назад",
     "next": "Далее"
+  },
+  "embeddingClusteringUi": {
+    "methodLabel": "Метод группировки",
+    "methods": {
+      "embeddings": {
+        "title": "Локальные эмбеддинги (бесплатно)",
+        "description": "Группирует фразы по смыслу на этом компьютере. Без ключа API и затрат; Ollama — по желанию."
+      },
+      "serp": {
+        "title": "Пересечение SERP (DataForSEO, платно)",
+        "description": "Группирует фразы, у которых в выдаче Google есть общие URL. Нужны учётные данные DataForSEO; каждая новая фраза — платный запрос."
+      }
+    },
+    "settingsTitle": "Настройки эмбеддингов",
+    "description": "Фразы преобразуются в эмбеддинги и группируются по сходству. Локальная модель работает офлайн для польского и английского; Ollama добавляет нейросетевую модель на этом компьютере.",
+    "provider": "Модель эмбеддингов",
+    "providers": {
+      "local": "Локальная (офлайн)",
+      "ollama": "Ollama",
+      "hybrid": "Локальная + Ollama"
+    },
+    "threshold": "Порог сходства: {{value}}",
+    "ollamaModel": "Модель эмбеддингов Ollama",
+    "labelModel": "Модель Ollama для названий групп (необязательно)",
+    "labelModelPlaceholder": "например, llama3.2 — оставьте пустым, чтобы пропустить",
+    "ollamaHint": "Ollama должна работать на этом компьютере по адресу 127.0.0.1:11434 с загруженной моделью (ollama pull <model>).",
+    "run": "Сгруппировать фразы",
+    "running": "Группировка…",
+    "free": "{{count}} фраз · бесплатно, без запросов к платным API",
+    "tooMany": "Не более {{max}} фраз за запуск",
+    "resultTitle": "Группы по эмбеддингам",
+    "resultMeta": "{{model}} · порог {{threshold}} · {{date}}",
+    "keywordCount": "{{count}} фраз",
+    "cohesion": "связность {{value}}%"
+  },
+  "dataforseoCost": {
+    "meterLabel": "Расходы DataForSEO",
+    "lastCall": "Последний вызов: {{cost}} ({{endpoint}})",
+    "noCallsYet": "В этом месяце вызовов DataForSEO ещё не было",
+    "monthNoLimit": "Этот месяц: {{spent}} · {{calls}} вызовов · лимит = баланс аккаунта",
+    "monthWithLimit": "Этот месяц: {{spent}} из {{limit}} ({{percent}}%)",
+    "balance": "Баланс ≈ {{balance}}",
+    "warning": "Приближается месячный лимит",
+    "exceeded": "Месячный лимит исчерпан — платные запросы заблокированы",
+    "invalidLimit": "Месячный лимит должен быть числом от 0 до 100 000 USD.",
+    "invalidWarn": "Порог предупреждения должен быть целым числом от 1 до 100.",
+    "limitReached": "Достигнут месячный лимит DataForSEO: израсходовано {{spent}} USD из {{limit}} USD; следующий запрос обойдётся примерно в {{expected}} USD. Увеличьте лимит в Настройки → API или дождитесь следующего месяца.",
+    "selectProject": "Выберите проект, чтобы увидеть расходы DataForSEO и задать лимит.",
+    "limitRemoved": "Месячный лимит удалён.",
+    "limitSaved": "Месячный лимит сохранён: {{limit}}.",
+    "balanceUnavailable": "DataForSEO не вернул баланс аккаунта.",
+    "settingsTitle": "Расходы, баланс и месячный лимит",
+    "balanceLabel": "Баланс аккаунта (оценка)",
+    "balanceChecked": "{{balance}} по данным на {{date}} минус последующие вызовы",
+    "monthLabel": "Потрачено в {{month}}",
+    "calls": "{{count}} вызовов",
+    "remainingLabel": "Осталось в этом месяце",
+    "noLimit": "До суммы баланса аккаунта",
+    "checkBalance": "Проверить баланс",
+    "limitLabel": "Месячный лимит (USD)",
+    "warnLabel": "Предупреждать с (% лимита)",
+    "limitHelp": "Лимит действует для этого проекта и обнуляется 1-го числа каждого месяца. Без месячного лимита лимитом служит баланс аккаунта: если оценочного баланса не хватает на следующий вызов, запросы блокируются до отправки. Стоимость каждого вызова — сумма, которую сообщает DataForSEO.",
+    "saveLimit": "Сохранить лимит",
+    "noLimitOption": "Без лимита — до суммы баланса аккаунта",
+    "balanceExhausted": "Баланс DataForSEO исчерпан (осталось ≈ {{balance}} USD, следующему запросу нужно около {{expected}} USD). Пополните аккаунт и нажмите «Проверить баланс»."
   }
 }

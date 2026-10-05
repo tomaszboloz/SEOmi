@@ -588,7 +588,8 @@
       "localClientRequired": "{{provider}} is not configured to use its local subscription client.",
       "responseHidden": "Provider response withheld.",
       "invalidResponse": "The AI provider returned an invalid response.",
-      "responseTooLarge": "The AI provider response exceeds the 1 MiB limit."
+      "responseTooLarge": "The AI provider response exceeds the 1 MiB limit.",
+      "refused": "{{provider}} hat diese Anfrage abgelehnt. Formuliere sie um oder wähle ein anderes Modell."
     },
     "pagespeed": {
       "projectRequired": "Choose a project before starting the measurement."
@@ -3334,7 +3335,11 @@
     "currentTier": "Aktueller Plan",
     "upgradePro": "Auf Pro upgraden",
     "creditsLeft": "Verbleibende KI-Guthaben",
-    "connectAccount": "Konto verbinden"
+    "connectAccount": "Konto verbinden",
+    "refreshModels": "Modellliste aktualisieren",
+    "modelsFromProvider": "{{count}} Modelle aus der Anbieter-API",
+    "modelsDefault": "Standardmodelle – teste den API-Schlüssel, um deine Modelle zu laden",
+    "modelsUnavailable": "Modelle konnten nicht vom Anbieter geladen werden; die zuletzt bekannte Liste wird angezeigt."
   },
   "schedules": {
     "saveError": "Unable to save the schedule.",
@@ -3503,16 +3508,7 @@
     "ai": {
       "openai": "OpenAI / Codex",
       "claude": "Anthropic Claude",
-      "gemini": "Google Gemini",
-      "gpt4o": "GPT-4o (high-converting copy)",
-      "gpt4oMini": "GPT-4o Mini (fast and lightweight)",
-      "o3Mini": "o3-mini (reasoning model)",
-      "claude37": "Claude 3.7 Sonnet (latest)",
-      "claude35": "Claude 3.5 Sonnet",
-      "claudeHaiku": "Claude 3.5 Haiku",
-      "geminiFlash": "Gemini 2.0 Flash (fastest)",
-      "geminiPro": "Gemini 2.0 Pro",
-      "gemini15": "Gemini 1.5 Pro"
+      "gemini": "Google Gemini"
     },
     "renderWorker": {
       "title": "Lokaler Rendering-Worker",
@@ -4699,5 +4695,70 @@
     "limited": "Google oder der lokale Speicher können Daten kürzen. Anteile beziehen sich nur auf beobachtete Zeilen.",
     "previous": "Zurück",
     "next": "Weiter"
+  },
+  "embeddingClusteringUi": {
+    "methodLabel": "Gruppierungsmethode",
+    "methods": {
+      "embeddings": {
+        "title": "Lokale Embeddings (kostenlos)",
+        "description": "Gruppiert Phrasen nach Bedeutung auf diesem Computer. Kein API-Schlüssel, keine Kosten; Ollama ist optional."
+      },
+      "serp": {
+        "title": "SERP-Überschneidung (DataForSEO, kostenpflichtig)",
+        "description": "Gruppiert Phrasen, deren Google-Ergebnisse gemeinsame URLs haben. Benötigt DataForSEO-Zugangsdaten; jede neue Phrase ist eine kostenpflichtige Anfrage."
+      }
+    },
+    "settingsTitle": "Embedding-Einstellungen",
+    "description": "Phrasen werden eingebettet und nach Ähnlichkeit gruppiert. Das lokale Modell arbeitet offline für Polnisch und Englisch; Ollama ergänzt ein neuronales Modell auf diesem Computer.",
+    "provider": "Embedding-Modell",
+    "providers": {
+      "local": "Lokal (offline)",
+      "ollama": "Ollama",
+      "hybrid": "Lokal + Ollama"
+    },
+    "threshold": "Ähnlichkeitsschwelle: {{value}}",
+    "ollamaModel": "Ollama-Embedding-Modell",
+    "labelModel": "Ollama-Modell für Gruppennamen (optional)",
+    "labelModelPlaceholder": "z. B. llama3.2 – leer lassen zum Überspringen",
+    "ollamaHint": "Ollama muss auf diesem Computer unter 127.0.0.1:11434 laufen und das Modell geladen haben (ollama pull <model>).",
+    "run": "Phrasen gruppieren",
+    "running": "Gruppiere…",
+    "free": "{{count}} Phrasen · kostenlos, keine Anfragen an kostenpflichtige APIs",
+    "tooMany": "Höchstens {{max}} Phrasen pro Durchlauf",
+    "resultTitle": "Embedding-Gruppen",
+    "resultMeta": "{{model}} · Schwelle {{threshold}} · {{date}}",
+    "keywordCount": "{{count}} Phrasen",
+    "cohesion": "Kohäsion {{value}} %"
+  },
+  "dataforseoCost": {
+    "meterLabel": "DataForSEO-Kosten",
+    "lastCall": "Letzter Aufruf: {{cost}} ({{endpoint}})",
+    "noCallsYet": "Diesen Monat noch keine DataForSEO-Aufrufe",
+    "monthNoLimit": "Dieser Monat: {{spent}} · {{calls}} Aufrufe · Limit = Kontoguthaben",
+    "monthWithLimit": "Dieser Monat: {{spent}} von {{limit}} ({{percent}} %)",
+    "balance": "Guthaben ≈ {{balance}}",
+    "warning": "Monatslimit bald erreicht",
+    "exceeded": "Monatslimit erreicht – kostenpflichtige Anfragen sind blockiert",
+    "invalidLimit": "Das Monatslimit muss eine Zahl von 0 bis 100.000 USD sein.",
+    "invalidWarn": "Die Warnschwelle muss eine ganze Zahl von 1 bis 100 sein.",
+    "limitReached": "DataForSEO-Monatslimit erreicht: {{spent}} USD von {{limit}} USD verbraucht; die nächste Anfrage kostet etwa {{expected}} USD. Erhöhe das Limit unter Einstellungen → API oder warte bis zum nächsten Monat.",
+    "selectProject": "Wähle ein Projekt, um DataForSEO-Kosten zu sehen und ein Limit festzulegen.",
+    "limitRemoved": "Monatslimit entfernt.",
+    "limitSaved": "Monatslimit gespeichert: {{limit}}.",
+    "balanceUnavailable": "DataForSEO hat kein Kontoguthaben zurückgegeben.",
+    "settingsTitle": "Kosten, Guthaben und Monatslimit",
+    "balanceLabel": "Kontoguthaben (geschätzt)",
+    "balanceChecked": "{{balance}} laut Abruf vom {{date}}, abzüglich späterer Aufrufe",
+    "monthLabel": "Ausgegeben im {{month}}",
+    "calls": "{{count}} Aufrufe",
+    "remainingLabel": "Diesen Monat übrig",
+    "noLimit": "Bis zum Kontoguthaben",
+    "checkBalance": "Guthaben prüfen",
+    "limitLabel": "Monatslimit (USD)",
+    "warnLabel": "Warnen ab (% des Limits)",
+    "limitHelp": "Das Limit gilt für dieses Projekt und wird am 1. jedes Monats zurückgesetzt. Ohne Monatslimit ist das Kontoguthaben das Limit: Reicht das geschätzte Guthaben nicht für den nächsten Aufruf, werden Anfragen vor dem Senden blockiert. Die Kosten jedes Aufrufs sind der von DataForSEO gemeldete Betrag.",
+    "saveLimit": "Limit speichern",
+    "noLimitOption": "Kein Limit – bis zum Kontoguthaben",
+    "balanceExhausted": "Das DataForSEO-Guthaben ist aufgebraucht (≈ {{balance}} USD übrig, die nächste Anfrage benötigt etwa {{expected}} USD). Lade das Konto auf und klicke dann auf „Guthaben prüfen“."
   }
 }

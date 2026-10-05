@@ -51,7 +51,9 @@ export function useValidationFilter(
       .filter(
         ({ findings, pageMatches }) =>
           (!normalizedValidationQuery && validationSeverity === 'all') ||
-          pageMatches ||
+          // With an empty query every page "matches"; only a real query match
+          // may keep a page that has no finding of the selected severity.
+          (Boolean(normalizedValidationQuery) && pageMatches) ||
           findings.length > 0,
       );
 

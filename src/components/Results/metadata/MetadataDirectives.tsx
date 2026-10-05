@@ -1,19 +1,19 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { Copy, Check } from 'lucide-react';
 import { copyText } from '@/services/clipboard';
 import { MetadataTableProps } from './metadataTypes';
+import { useTransientValue } from '@/hooks/useTransientValue';
 
 export const MetadataDirectives: React.FC<MetadataTableProps> = ({ audit }) => {
   const { t } = useTranslation();
-  const [copiedKey, setCopiedKey] = useState<string | null>(null);
+  const [copiedKey, setCopiedKey] = useTransientValue<string | null>(null, 1500);
   const { meta_tags } = audit;
 
   const copyToClipboard = async (text: string, key: string) => {
     const copied = await copyText(text);
     if (!copied) return;
     setCopiedKey(key);
-    setTimeout(() => setCopiedKey(null), 1500);
   };
 
   return (

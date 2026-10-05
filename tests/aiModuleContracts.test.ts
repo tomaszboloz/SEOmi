@@ -22,9 +22,9 @@ it('calls the OpenAI suggestion contract with a structured response format',asyn
  const body=JSON.parse(String(fetch.mock.calls[0][1]?.body));expect(body.response_format).toEqual({type:'json_object'});expect(body.model).toBe('selected-model');
 });
 it('calls the Claude suggestion contract and preserves its selected model',async()=>{
- const fetch=vi.spyOn(globalThis,'fetch').mockResolvedValue(new Response(JSON.stringify({content:[{text:JSON.stringify(suggestion)}]})));
+ const fetch=vi.spyOn(globalThis,'fetch').mockResolvedValue(new Response(JSON.stringify({content:[{type:'text',text:JSON.stringify(suggestion)}]})));
  expect(await callClaude('dummy-key','selected-model','literal prompt')).toEqual(suggestion);
- const body=JSON.parse(String(fetch.mock.calls[0][1]?.body));expect(body.max_tokens).toBe(1024);expect(body.messages[0].content).toBe('literal prompt');
+ const body=JSON.parse(String(fetch.mock.calls[0][1]?.body));expect(body.max_tokens).toBe(16000);expect(body.messages[0].content).toBe('literal prompt');
 });
 it('encodes Gemini model/key values and requires a JSON suggestion response',async()=>{
  const fetch=vi.spyOn(globalThis,'fetch').mockResolvedValue(new Response(JSON.stringify({candidates:[{content:{parts:[{text:JSON.stringify(suggestion)}]}}]})));

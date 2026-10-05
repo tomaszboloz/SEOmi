@@ -47,6 +47,8 @@ export const createAuthConnection = (set: AuthSet, get: AuthGet): Pick<AuthState
       connectionStatus: { ...state.connectionStatus, [provider]: response.success ? 'connected' : 'error' },
       statusMessages: { ...state.statusMessages, [provider]: response.message },
     }));
+    // A working API key can list the provider's own models for the selector.
+    if (response.success && method === 'api_key') void get().refreshProviderModels(provider);
     return response;
   },
 });

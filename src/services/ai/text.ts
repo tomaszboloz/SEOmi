@@ -3,6 +3,8 @@ import { invokeTauriCommand } from '@/services/tauri';
 import i18n from '@/i18n';
 import { aiProviderLabel } from './labels';
 import { aiResponseError, readAiResponseText } from './response';
+import { requestClaude } from './claude';
+import { GEMINI_DEFAULT_MODEL, currentModel } from './modelCatalog';
 
 export async function generateAiText(provider: AiProvider, apiKey: string, model: string, prompt: string, method: AiConnectionMethod = 'api_key'): Promise<string> {
   // A subscription CLI owns its own model selection and authentication.
@@ -17,11 +19,11 @@ export async function generateAiText(provider: AiProvider, apiKey: string, model
     return readAiResponseText(response, provider);
   }
   if (provider === 'claude') {
-    const response = await fetch('https://api.anthropic.com/v1/messages', { method: 'POST', headers: { 'Content-Type': 'application/json', 'x-api-key': apiKey, 'anthropic-version': '2023-06-01' }, body: JSON.stringify({ model, max_tokens: 1200, messages: [{ role: 'user', content: prompt }] }) });
+    const response = await requestClaude(apiKey, model, prompt);
     if (!response.ok) throw aiResponseError(provider, response.status);
     return readAiResponseText(response, provider);
   }
-  const endpoint = `https://generativelanguage.googleapis.com/v1beta/models/${encodeURIComponent(model)}:generateContent?key=${encodeURIComponent(apiKey)}`;
+  const endpoint = `https://generativelanguage.googleapis.com/v1beta/models/${encodeURIComponent(currentModel(model || GEMINI_DEFAULT_MODEL))}:generateContent?key=${encodeURIComponent(apiKey)}`;
   const response = await fetch(endpoint, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ contents: [{ parts: [{ text: prompt }] }] }) });
   if (!response.ok) throw aiResponseError(provider, response.status);
   return readAiResponseText(response, provider);

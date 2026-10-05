@@ -1,6 +1,7 @@
 import React from 'react';
 import { Bookmark, BarChart2, TrendingUp, DollarSign } from 'lucide-react';
 import type { TFunction } from 'i18next';
+import { appLocale } from '@/services/localeFormat';
 
 interface SavedKeywordsMetricsCardsProps {
   totalKeywords: number;
@@ -33,7 +34,7 @@ export const SavedKeywordsMetricsCards: React.FC<SavedKeywordsMetricsCardsProps>
           <BarChart2 className="w-3.5 h-3.5 text-blue-400" />
           <span>{t('savedKeywordsUi.aggregateVolume')}</span>
         </div>
-        <div className="text-2xl font-bold text-white font-mono">{totalVolume.toLocaleString()}</div>
+        <div className="text-2xl font-bold text-white font-mono">{totalVolume.toLocaleString(appLocale())}</div>
         <span className="text-[11px] text-slate-500">{t('savedKeywordsUi.potentialImpressions')}</span>
       </div>
 
@@ -52,7 +53,7 @@ export const SavedKeywordsMetricsCards: React.FC<SavedKeywordsMetricsCardsProps>
           <span>{t('savedKeywordsUi.trafficValue')}</span>
         </div>
         <div className="text-2xl font-bold text-white font-mono">
-          ${Math.round(estMonthlyValue).toLocaleString()}
+          ${Math.round(estMonthlyValue).toLocaleString(appLocale())}
         </div>
         <span className="text-[11px] text-slate-500">{t('savedKeywordsUi.organicValue')}</span>
       </div>

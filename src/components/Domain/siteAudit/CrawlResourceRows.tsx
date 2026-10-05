@@ -1,4 +1,5 @@
 import type { useSiteAuditSession } from './useSiteAuditSession';
+import { appLocale } from '@/services/localeFormat';
 
 type Session = ReturnType<typeof useSiteAuditSession>;
 export const CrawlResourceRows = ({ session }: { session: Session }) => {
@@ -33,7 +34,7 @@ return (<tbody>
                             <td className="px-3 py-2 text-slate-500">
                               {resource.content_type || t("siteAudit.none")}{" "}
                               {resource.content_length !== undefined
-                                ? ` · ${resource.content_length.toLocaleString()} B`
+                                ? ` · ${resource.content_length.toLocaleString(appLocale())} B`
                                 : ""}
                             </td>
                             <td className="px-3 py-2 font-mono text-slate-500">

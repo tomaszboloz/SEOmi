@@ -6,7 +6,7 @@ import i18n from '@/i18n';
 const invoke = vi.hoisted(()=>vi.fn());
 vi.mock('@/services/tauri',()=>({invokeTauriCommand:invoke}));
 const suggestions = {suggestedTitle:'Observed title',suggestedDescription:'Observed description',keyImprovements:['Describe actual content'],schemaJsonLd:{'@type':'WebPage'}};
-const responseFor = (provider:AiProvider, content:string) => provider==='openai'?{choices:[{message:{content}}]}:provider==='claude'?{content:[{text:content}]}:{candidates:[{content:{parts:[{text:content}]}}]};
+const responseFor = (provider:AiProvider, content:string) => provider==='openai'?{choices:[{message:{content}}]}:provider==='claude'?{content:[{type:'thinking',thinking:''},{type:'text',text:content}]}:{candidates:[{content:{parts:[{text:content}]}}]};
 beforeEach(()=>invoke.mockReset());
 afterEach(()=>vi.restoreAllMocks());
 
@@ -30,7 +30,7 @@ it.each(['openai','claude','gemini'] as const)('generates %s metadata through th
   expect(prompt).toContain('Observed heading');
   expect(prompt).toContain('observed (2)');
   expect(prompt).toContain('Keep the evidence');
-  expect(body.model??new URL(String(fetchMock.mock.calls[0][0])).pathname).toContain(provider==='openai'?'gpt-4o':provider==='claude'?'claude-3-7-sonnet':'gemini-2.0-flash');
+  expect(body.model??new URL(String(fetchMock.mock.calls[0][0])).pathname).toContain(provider==='openai'?'gpt-4o':provider==='claude'?'claude-opus-5':'gemini-3.8-flash');
 });
 
 it.each(['openai','claude','gemini'] as const)('routes %s CLI metadata without API credentials or forcing an API model',async provider=>{

@@ -588,7 +588,8 @@
       "localClientRequired": "{{provider}} is not configured to use its local subscription client.",
       "responseHidden": "Provider response withheld.",
       "invalidResponse": "The AI provider returned an invalid response.",
-      "responseTooLarge": "The AI provider response exceeds the 1 MiB limit."
+      "responseTooLarge": "The AI provider response exceeds the 1 MiB limit.",
+      "refused": "{{provider}} declined this request. Rephrase it or choose another model."
     },
     "pagespeed": {
       "projectRequired": "Choose a project before starting the measurement."
@@ -3334,7 +3335,11 @@
     "currentTier": "Current Plan",
     "upgradePro": "Upgrade to Pro",
     "creditsLeft": "AI Credits Left",
-    "connectAccount": "Connect Account"
+    "connectAccount": "Connect Account",
+    "refreshModels": "Refresh model list",
+    "modelsFromProvider": "{{count}} models from the provider API",
+    "modelsDefault": "Default models — test the API key to load your models",
+    "modelsUnavailable": "Could not load models from the provider; showing the last known list."
   },
   "schedules": {
     "saveError": "Unable to save the schedule.",
@@ -3503,16 +3508,7 @@
     "ai": {
       "openai": "OpenAI / Codex",
       "claude": "Anthropic Claude",
-      "gemini": "Google Gemini",
-      "gpt4o": "GPT-4o (high-converting copy)",
-      "gpt4oMini": "GPT-4o Mini (fast and lightweight)",
-      "o3Mini": "o3-mini (reasoning model)",
-      "claude37": "Claude 3.7 Sonnet (latest)",
-      "claude35": "Claude 3.5 Sonnet",
-      "claudeHaiku": "Claude 3.5 Haiku",
-      "geminiFlash": "Gemini 2.0 Flash (fastest)",
-      "geminiPro": "Gemini 2.0 Pro",
-      "gemini15": "Gemini 1.5 Pro"
+      "gemini": "Google Gemini"
     },
     "renderWorker": {
       "title": "Local rendering worker",
@@ -4699,5 +4695,70 @@
     "limited": "Observations may be truncated by Google or local storage. Shares describe only observed rows.",
     "previous": "Previous",
     "next": "Next"
+  },
+  "embeddingClusteringUi": {
+    "methodLabel": "Clustering method",
+    "methods": {
+      "embeddings": {
+        "title": "Local embeddings (free)",
+        "description": "Groups phrases by meaning on this computer. No API key and no cost; Ollama is optional."
+      },
+      "serp": {
+        "title": "SERP overlap (DataForSEO, paid)",
+        "description": "Groups phrases whose Google results share URLs. Needs DataForSEO credentials; each new phrase is a paid request."
+      }
+    },
+    "settingsTitle": "Embedding settings",
+    "description": "Phrases are embedded and grouped by similarity. The local model works offline for Polish and English; Ollama adds a neural model running on this computer.",
+    "provider": "Embedding model",
+    "providers": {
+      "local": "Local (offline)",
+      "ollama": "Ollama",
+      "hybrid": "Local + Ollama"
+    },
+    "threshold": "Similarity threshold: {{value}}",
+    "ollamaModel": "Ollama embedding model",
+    "labelModel": "Ollama model for group names (optional)",
+    "labelModelPlaceholder": "e.g. llama3.2 — leave empty to skip",
+    "ollamaHint": "Ollama must run on this computer at 127.0.0.1:11434 with the model pulled (ollama pull <model>).",
+    "run": "Group phrases",
+    "running": "Grouping…",
+    "free": "{{count}} phrases · free, no requests to paid APIs",
+    "tooMany": "Up to {{max}} phrases per run",
+    "resultTitle": "Embedding groups",
+    "resultMeta": "{{model}} · threshold {{threshold}} · {{date}}",
+    "keywordCount": "{{count}} phrases",
+    "cohesion": "cohesion {{value}}%"
+  },
+  "dataforseoCost": {
+    "meterLabel": "DataForSEO costs",
+    "lastCall": "Last call: {{cost}} ({{endpoint}})",
+    "noCallsYet": "No DataForSEO calls this month yet",
+    "monthNoLimit": "This month: {{spent}} · {{calls}} calls · limit = account balance",
+    "monthWithLimit": "This month: {{spent}} of {{limit}} ({{percent}}%)",
+    "balance": "Balance ≈ {{balance}}",
+    "warning": "Approaching the monthly limit",
+    "exceeded": "Monthly limit reached — paid requests are blocked",
+    "invalidLimit": "The monthly limit must be a number from 0 to 100,000 USD.",
+    "invalidWarn": "The warning threshold must be a whole number from 1 to 100.",
+    "limitReached": "DataForSEO monthly limit reached: {{spent}} USD of {{limit}} USD used; the next request is expected to cost about {{expected}} USD. Raise the limit in Settings → API or wait until next month.",
+    "selectProject": "Choose a project to see DataForSEO costs and set a limit.",
+    "limitRemoved": "Monthly limit removed.",
+    "limitSaved": "Monthly limit saved: {{limit}}.",
+    "balanceUnavailable": "DataForSEO did not return an account balance.",
+    "settingsTitle": "Costs, balance and monthly limit",
+    "balanceLabel": "Account balance (estimated)",
+    "balanceChecked": "{{balance}} reported on {{date}}, minus later calls",
+    "monthLabel": "Spent in {{month}}",
+    "calls": "{{count}} calls",
+    "remainingLabel": "Left this month",
+    "noLimit": "Up to the account balance",
+    "checkBalance": "Check balance",
+    "limitLabel": "Monthly limit (USD)",
+    "warnLabel": "Warn at (% of limit)",
+    "limitHelp": "The limit applies to this project and resets on the 1st of each month. Without a monthly limit the account balance is the limit: once the estimated balance cannot cover the next call, requests are blocked before they are sent. The cost of each call is the amount DataForSEO reports.",
+    "saveLimit": "Save limit",
+    "noLimitOption": "No limit — up to the account balance",
+    "balanceExhausted": "DataForSEO account balance is used up (≈ {{balance}} USD left, the next request needs about {{expected}} USD). Top up the account, then click \"Check balance\"."
   }
 }

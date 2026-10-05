@@ -1,3 +1,4 @@
+import { useAuthStore } from '@/stores/authStore';
 import { describe, expect, it, vi } from 'vitest';
 import { render, screen, fireEvent } from '@testing-library/react';
 import { AIAssistantModalHeader } from '@/components/AI/assistant/AIAssistantModalHeader';
@@ -38,14 +39,11 @@ describe('AIAssistant modular architecture', () => {
 
   it('renders AIAssistantEngineSelect and responds to engine change', () => {
     const setProvider = vi.fn();
-    const setModel = vi.fn();
 
     render(
       <AIAssistantEngineSelect
         provider="openai"
         setProvider={setProvider}
-        model="gpt-4o"
-        setModel={setModel}
         connectionMethod={{ openai: 'api_key', claude: 'api_key', gemini: 'api_key' }}
         t={mockT}
       />,
@@ -55,9 +53,10 @@ describe('AIAssistant modular architecture', () => {
     fireEvent.click(claudeBtn);
     expect(setProvider).toHaveBeenCalledWith('claude');
 
+    // The model selector is a store-backed component with its own tests.
     const select = screen.getByRole('combobox');
     fireEvent.change(select, { target: { value: 'gpt-4o-mini' } });
-    expect(setModel).toHaveBeenCalledWith('gpt-4o-mini');
+    expect(useAuthStore.getState().model).toBe('gpt-4o-mini');
   });
 
   it('renders AIAssistantApiKeyInput and responds to input and modal trigger', () => {

@@ -3,15 +3,14 @@ import { Loader2 } from 'lucide-react';
 import type { TFunction } from 'i18next';
 import type { AiProvider, AiConnectionState } from '@/types';
 import type { ProviderDefinition } from './subscriptionModalTypes';
+import { ProviderModelSelect } from '@/components/AI/ProviderModelSelect';
 
 interface ProviderActiveControlsProps {
   item: ProviderDefinition;
   method: 'local_cli' | 'api_key';
   status: AiConnectionState;
   statusMessage: string | undefined;
-  model: string;
   saving: boolean;
-  onSetModel: (model: string) => void;
   onTestConnection: (id: AiProvider) => void;
   t: TFunction;
 }
@@ -21,27 +20,18 @@ export const ProviderActiveControls: React.FC<ProviderActiveControlsProps> = ({
   method,
   status,
   statusMessage,
-  model,
   saving,
-  onSetModel,
   onTestConnection,
   t,
 }) => {
   return (
     <div className="mt-3 flex flex-col gap-2 sm:flex-row sm:items-center">
       {method === 'api_key' ? (
-        <select
-          aria-label={t('auth.modelLabel')}
-          value={model}
-          onChange={(event) => onSetModel(event.target.value)}
-          className="h-8 rounded-lg border border-slate-700 bg-slate-950 px-2 text-xs text-white"
-        >
-          {item.models.map((choice) => (
-            <option key={choice.id} value={choice.id}>
-              {t(choice.labelKey)}
-            </option>
-          ))}
-        </select>
+        <ProviderModelSelect
+          provider={item.id}
+          ariaLabel={t('auth.modelLabel')}
+          className="h-8 min-w-0 rounded-lg border border-slate-700 bg-slate-950 px-2 text-xs text-white"
+        />
       ) : (
         <span className="text-[11px] text-slate-400">
           {t('auth.localModelNote')}

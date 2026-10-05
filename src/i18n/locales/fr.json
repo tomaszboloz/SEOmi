@@ -588,7 +588,8 @@
       "localClientRequired": "{{provider}} is not configured to use its local subscription client.",
       "responseHidden": "Provider response withheld.",
       "invalidResponse": "The AI provider returned an invalid response.",
-      "responseTooLarge": "The AI provider response exceeds the 1 MiB limit."
+      "responseTooLarge": "The AI provider response exceeds the 1 MiB limit.",
+      "refused": "{{provider}} a refusé cette requête. Reformulez-la ou choisissez un autre modèle."
     },
     "pagespeed": {
       "projectRequired": "Choose a project before starting the measurement."
@@ -3334,7 +3335,11 @@
     "currentTier": "Formule Actuelle",
     "upgradePro": "Passer à Pro",
     "creditsLeft": "Crédits IA Restants",
-    "connectAccount": "Connecter un Compte"
+    "connectAccount": "Connecter un Compte",
+    "refreshModels": "Actualiser la liste des modèles",
+    "modelsFromProvider": "{{count}} modèles depuis l’API du fournisseur",
+    "modelsDefault": "Modèles par défaut — testez la clé API pour charger vos modèles",
+    "modelsUnavailable": "Impossible de charger les modèles du fournisseur ; la dernière liste connue est affichée."
   },
   "schedules": {
     "saveError": "Unable to save the schedule.",
@@ -3503,16 +3508,7 @@
     "ai": {
       "openai": "OpenAI / Codex",
       "claude": "Anthropic Claude",
-      "gemini": "Google Gemini",
-      "gpt4o": "GPT-4o (high-converting copy)",
-      "gpt4oMini": "GPT-4o Mini (fast and lightweight)",
-      "o3Mini": "o3-mini (reasoning model)",
-      "claude37": "Claude 3.7 Sonnet (latest)",
-      "claude35": "Claude 3.5 Sonnet",
-      "claudeHaiku": "Claude 3.5 Haiku",
-      "geminiFlash": "Gemini 2.0 Flash (fastest)",
-      "geminiPro": "Gemini 2.0 Pro",
-      "gemini15": "Gemini 1.5 Pro"
+      "gemini": "Google Gemini"
     },
     "renderWorker": {
       "title": "Worker de rendu local",
@@ -4699,5 +4695,70 @@
     "limited": "Google ou le stockage local peuvent tronquer les données. Les parts concernent les lignes observées.",
     "previous": "Précédent",
     "next": "Suivant"
+  },
+  "embeddingClusteringUi": {
+    "methodLabel": "Méthode de regroupement",
+    "methods": {
+      "embeddings": {
+        "title": "Embeddings locaux (gratuit)",
+        "description": "Regroupe les expressions par sens sur cet ordinateur. Sans clé API ni coût ; Ollama est facultatif."
+      },
+      "serp": {
+        "title": "Chevauchement des SERP (DataForSEO, payant)",
+        "description": "Regroupe les expressions dont les résultats Google partagent des URL. Nécessite des identifiants DataForSEO ; chaque nouvelle expression est une requête payante."
+      }
+    },
+    "settingsTitle": "Paramètres des embeddings",
+    "description": "Les expressions sont vectorisées puis regroupées par similarité. Le modèle local fonctionne hors ligne pour le polonais et l’anglais ; Ollama ajoute un modèle neuronal sur cet ordinateur.",
+    "provider": "Modèle d’embeddings",
+    "providers": {
+      "local": "Local (hors ligne)",
+      "ollama": "Ollama",
+      "hybrid": "Local + Ollama"
+    },
+    "threshold": "Seuil de similarité : {{value}}",
+    "ollamaModel": "Modèle d’embeddings Ollama",
+    "labelModel": "Modèle Ollama pour nommer les groupes (facultatif)",
+    "labelModelPlaceholder": "p. ex. llama3.2 — laisser vide pour ignorer",
+    "ollamaHint": "Ollama doit tourner sur cet ordinateur à 127.0.0.1:11434 avec le modèle téléchargé (ollama pull <model>).",
+    "run": "Regrouper les expressions",
+    "running": "Regroupement…",
+    "free": "{{count}} expressions · gratuit, aucune requête vers des API payantes",
+    "tooMany": "{{max}} expressions maximum par exécution",
+    "resultTitle": "Groupes par embeddings",
+    "resultMeta": "{{model}} · seuil {{threshold}} · {{date}}",
+    "keywordCount": "{{count}} expressions",
+    "cohesion": "cohésion {{value}} %"
+  },
+  "dataforseoCost": {
+    "meterLabel": "Coûts DataForSEO",
+    "lastCall": "Dernier appel : {{cost}} ({{endpoint}})",
+    "noCallsYet": "Aucun appel DataForSEO ce mois-ci",
+    "monthNoLimit": "Ce mois-ci : {{spent}} · {{calls}} appels · limite = solde du compte",
+    "monthWithLimit": "Ce mois-ci : {{spent}} sur {{limit}} ({{percent}} %)",
+    "balance": "Solde ≈ {{balance}}",
+    "warning": "Limite mensuelle bientôt atteinte",
+    "exceeded": "Limite mensuelle atteinte — les requêtes payantes sont bloquées",
+    "invalidLimit": "La limite mensuelle doit être un nombre entre 0 et 100 000 USD.",
+    "invalidWarn": "Le seuil d’alerte doit être un entier entre 1 et 100.",
+    "limitReached": "Limite mensuelle DataForSEO atteinte : {{spent}} USD utilisés sur {{limit}} USD ; la prochaine requête coûtera environ {{expected}} USD. Augmentez la limite dans Paramètres → API ou attendez le mois prochain.",
+    "selectProject": "Choisissez un projet pour voir les coûts DataForSEO et définir une limite.",
+    "limitRemoved": "Limite mensuelle supprimée.",
+    "limitSaved": "Limite mensuelle enregistrée : {{limit}}.",
+    "balanceUnavailable": "DataForSEO n’a pas renvoyé de solde de compte.",
+    "settingsTitle": "Coûts, solde et limite mensuelle",
+    "balanceLabel": "Solde du compte (estimé)",
+    "balanceChecked": "{{balance}} relevé le {{date}}, moins les appels suivants",
+    "monthLabel": "Dépensé en {{month}}",
+    "calls": "{{count}} appels",
+    "remainingLabel": "Restant ce mois-ci",
+    "noLimit": "Jusqu’au solde du compte",
+    "checkBalance": "Vérifier le solde",
+    "limitLabel": "Limite mensuelle (USD)",
+    "warnLabel": "Alerter à partir de (% de la limite)",
+    "limitHelp": "La limite s’applique à ce projet et repart à zéro le 1er de chaque mois. Sans limite mensuelle, le solde du compte sert de limite : si le solde estimé ne couvre pas le prochain appel, les requêtes sont bloquées avant l’envoi. Le coût de chaque appel est le montant indiqué par DataForSEO.",
+    "saveLimit": "Enregistrer la limite",
+    "noLimitOption": "Sans limite — jusqu’au solde du compte",
+    "balanceExhausted": "Le solde DataForSEO est épuisé (≈ {{balance}} USD restants, la prochaine requête nécessite environ {{expected}} USD). Rechargez le compte, puis cliquez sur « Vérifier le solde »."
   }
 }

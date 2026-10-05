@@ -13,6 +13,7 @@ import { useCrawlMapState } from "./session/useCrawlMapState";
 import { useCrawlExportHandlers } from "./session/useCrawlExportHandlers";
 import { useCrawlEvidenceRouting } from "./session/useCrawlEvidenceRouting";
 import { calculateTabCounts, buildHistoryMetrics } from "./session/crawlResultsMetrics";
+import { useTransientValue } from '@/hooks/useTransientValue';
 
 export type { CrawlResultsDependencies } from "./session/crawlResultsSessionTypes";
 
@@ -36,7 +37,7 @@ export const useCrawlResultsSession = (
   const isCrawling = useToolsStore((state) => state.isCrawling);
 
   const [externalLinkLimit, setExternalLinkLimit] = useState(250);
-  const [copiedLinkSourceKey, setCopiedLinkSourceKey] = useState<string | null>(null);
+  const [copiedLinkSourceKey, setCopiedLinkSourceKey] = useTransientValue<string | null>(null, 1600);
   const [loadedNavigationKey, setLoadedNavigationKey] = useState(navigationStorageKey);
 
   const tabNav = useCrawlTabNavigation(initialNavigation);
@@ -110,7 +111,6 @@ export const useCrawlResultsSession = (
     const copied = await dependencies.copyText(source);
     if (!copied) return;
     setCopiedLinkSourceKey(key);
-    window.setTimeout(() => setCopiedLinkSourceKey((current) => (current === key ? null : current)), 1600);
   };
 
   const evidenceHref = (url: string) => `#crawl-evidence?${new URLSearchParams({ project: activeProjectId || "", run: currentRun?.id || "", url }).toString()}`;

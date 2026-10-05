@@ -2,7 +2,6 @@ use super::extraction::failed_result;
 use super::models::{
     CrawledCustomSearchResult, CustomSearchDefinition, MAX_MATCHES_PER_SEARCH, MAX_VALUE_CHARS,
 };
-use regex::Regex;
 
 pub fn extract_regex(
     source_html: Option<&str>,
@@ -15,7 +14,7 @@ pub fn extract_regex(
             "Wynik regex wymaga źródłowego HTML tego dokumentu.".into(),
         );
     };
-    let regex = match Regex::new(search.query.trim()) {
+    let regex = match super::regex_cache::cached_regex(search.query.trim()) {
         Ok(regex) => regex,
         Err(error) => return failed_result(search, format!("Nie można wykonać regex: {error}.")),
     };

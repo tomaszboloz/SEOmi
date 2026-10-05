@@ -5,6 +5,7 @@ import { DomainOverviewMetrics } from './domainOverview/DomainOverviewMetrics';
 import { DomainTopOrganic } from './domainOverview/DomainTopOrganic';
 import { DomainCompetitors } from './domainOverview/DomainCompetitors';
 import { DomainComparisonSection } from './domainOverview/DomainComparisonSection';
+import { DataForSeoCostMeter } from '@/components/DataForSEO/cost/DataForSeoCostMeter';
 
 export const DomainOverview: React.FC = () => {
   const session = useDomainOverviewSession();
@@ -13,6 +14,7 @@ export const DomainOverview: React.FC = () => {
   return (
     <div className="max-w-7xl mx-auto px-4 py-8 space-y-8">
       <DomainOverviewHeader session={session} />
+      <DataForSeoCostMeter />
 
       {domainOverview && (
         <div className="space-y-8">

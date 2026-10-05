@@ -1,6 +1,7 @@
 import React from 'react';
 import type { TFunction } from 'i18next';
 import type { AiPromptComparison, CrawlRunRecord } from '@/types';
+import { appLocale } from '@/services/localeFormat';
 
 interface AiSearchHistoryAndContextProps {
   comparison: AiPromptComparison | null;
@@ -43,7 +44,7 @@ export const AiSearchHistoryAndContext: React.FC<AiSearchHistoryAndContextProps>
           >
             {history.map((item) => (
               <option key={item.captured_at} value={item.captured_at}>
-                {new Date(item.captured_at).toLocaleString()} · {item.prompt}
+                {new Date(item.captured_at).toLocaleString(appLocale())} · {item.prompt}
               </option>
             ))}
           </select>
@@ -74,7 +75,7 @@ export const AiSearchHistoryAndContext: React.FC<AiSearchHistoryAndContextProps>
               <option value="">{t('aiVisibility.search.noSnapshot')}</option>
               {crawlRuns.map((run) => (
                 <option key={run.id} value={run.id}>
-                  {new Date(run.completedAt).toLocaleString()} · {run.startUrl} ·{' '}
+                  {new Date(run.completedAt).toLocaleString(appLocale())} · {run.startUrl} ·{' '}
                   {t('crawl.ui.urlsCount', { count: run.result.pages_crawled })}
                 </option>
               ))}
@@ -90,7 +91,7 @@ export const AiSearchHistoryAndContext: React.FC<AiSearchHistoryAndContextProps>
           <p className="mt-2 text-[10px] text-slate-500">
             {t('aiVisibility.search.evidenceRun', {
               id: sourceContextRun.id,
-              date: new Date(sourceContextRun.completedAt).toLocaleString(),
+              date: new Date(sourceContextRun.completedAt).toLocaleString(appLocale()),
               count: sourceContextRun.result.pages.length,
             })}
           </p>

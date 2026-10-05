@@ -1,9 +1,10 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { Heading, Copy, Check } from 'lucide-react';
 import { ShowOnPageButton } from '@/components/Results/ShowOnPageButton';
 import { copyText } from '@/services/clipboard';
 import type { HeadingNode } from '@/types';
+import { useTransientValue } from '@/hooks/useTransientValue';
 
 interface HeadingsTreeViewProps {
   flatHeadings: HeadingNode[];
@@ -27,14 +28,13 @@ const getLevelBadgeClass = (level: number) => {
 
 export const HeadingsTreeView: React.FC<HeadingsTreeViewProps> = ({ flatHeadings, auditUrl }) => {
   const { t } = useTranslation();
-  const [copied, setCopied] = useState(false);
+  const [copied, setCopied] = useTransientValue(false, 2000);
 
   const handleCopyMarkdownTree = async () => {
     const lines = flatHeadings.map((node) => `${'#'.repeat(node.level)} ${node.text}`);
     const ok = await copyText(lines.join('\n'));
     if (!ok) return;
     setCopied(true);
-    setTimeout(() => setCopied(false), 2000);
   };
 
   return (

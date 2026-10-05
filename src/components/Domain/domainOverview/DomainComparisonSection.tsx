@@ -3,6 +3,7 @@ import { BarChart3, Loader2 } from 'lucide-react';
 import { DomainComparisonTable } from './DomainComparisonTable';
 import { DomainComparisonHistory } from './DomainComparisonHistory';
 import type { DomainOverviewSession } from './useDomainOverviewSession';
+import { appLocale } from '@/services/localeFormat';
 
 export const DomainComparisonSection: React.FC<{
   session: DomainOverviewSession;
@@ -45,7 +46,7 @@ export const DomainComparisonSection: React.FC<{
           <span className="shrink-0 text-[11px] text-slate-500">
             {t('domainResearchUi.domainCount', {
               count: domainComparison.rows.length,
-              date: new Date(domainComparison.retrieved_at).toLocaleString(),
+              date: new Date(domainComparison.retrieved_at).toLocaleString(appLocale()),
             })}
           </span>
         )}

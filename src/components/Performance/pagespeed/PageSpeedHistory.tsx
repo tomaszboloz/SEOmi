@@ -5,6 +5,7 @@ import { PageSpeedSnapshot, clearPageSpeedSnapshots, pageSpeedHistoryCsv } from 
 import { downloadText } from "@/services/export";
 import { PageSpeedHistoryCharts } from "./PageSpeedHistoryCharts";
 import { PageSpeedHistoryComparison } from "./PageSpeedHistoryComparison";
+import { appLocale } from '@/services/localeFormat';
 
 interface Props {
   history: PageSpeedSnapshot[];
@@ -46,11 +47,11 @@ export const PageSpeedHistory: React.FC<Props> = ({
               <select aria-label={t("pageSpeedUi.baselineAria")} value={compareId} onChange={(e) => setCompareId(e.target.value)} className="rounded-md border border-slate-700 bg-slate-950 px-2.5 py-2 text-xs text-slate-200">
                 <option value="">{t("pageSpeedUi.chooseSnapshot")}</option>
                 {history.filter((item) => item.id !== latestSnapshot?.id).map((item) => (
-                  <option key={item.id} value={item.id}>{new Date(item.capturedAt).toLocaleString()} · {item.strategy} · {item.pageSpeed ? t("pageSpeedUi.lab") : ""}{item.pageSpeed && item.crux ? " + " : ""}{item.crux ? t("pageSpeedUi.field") : ""}</option>
+                  <option key={item.id} value={item.id}>{new Date(item.capturedAt).toLocaleString(appLocale())} · {item.strategy} · {item.pageSpeed ? t("pageSpeedUi.lab") : ""}{item.pageSpeed && item.crux ? " + " : ""}{item.crux ? t("pageSpeedUi.field") : ""}</option>
                 ))}
               </select>
             </label>
-            {latestSnapshot && <span className="text-[11px] text-slate-500">{t("pageSpeedUi.latest")}: {new Date(latestSnapshot.capturedAt).toLocaleString()} · {latestSnapshot.url}</span>}
+            {latestSnapshot && <span className="text-[11px] text-slate-500">{t("pageSpeedUi.latest")}: {new Date(latestSnapshot.capturedAt).toLocaleString(appLocale())} · {latestSnapshot.url}</span>}
           </div>
           <PageSpeedHistoryComparison comparison={comparison} />
           <div className="overflow-x-auto rounded-lg border border-slate-800">
@@ -60,7 +61,7 @@ export const PageSpeedHistory: React.FC<Props> = ({
               </thead>
               <tbody className="divide-y divide-slate-800/80">
                 {history.map((item) => (
-                  <tr key={item.id}><td className="whitespace-nowrap px-3 py-2 text-slate-400">{new Date(item.capturedAt).toLocaleString()}</td><td className="max-w-[20rem] truncate px-3 py-2 text-slate-300" title={item.url}>{item.url}</td><td className="px-3 py-2 text-slate-400">{item.strategy} / {item.formFactor} / {item.scope}</td><td className="px-3 py-2 font-mono text-slate-200">{item.pageSpeed?.categories.performance ?? "—"}</td><td className="px-3 py-2 text-slate-500">{item.pageSpeed ? t("pageSpeedUi.pageSpeed") : ""}{item.pageSpeed && item.crux ? " + " : ""}{item.crux ? t("pageSpeedUi.cruxPrefix") : ""}</td></tr>
+                  <tr key={item.id}><td className="whitespace-nowrap px-3 py-2 text-slate-400">{new Date(item.capturedAt).toLocaleString(appLocale())}</td><td className="max-w-[20rem] truncate px-3 py-2 text-slate-300" title={item.url}>{item.url}</td><td className="px-3 py-2 text-slate-400">{item.strategy} / {item.formFactor} / {item.scope}</td><td className="px-3 py-2 font-mono text-slate-200">{item.pageSpeed?.categories.performance ?? "—"}</td><td className="px-3 py-2 text-slate-500">{item.pageSpeed ? t("pageSpeedUi.pageSpeed") : ""}{item.pageSpeed && item.crux ? " + " : ""}{item.crux ? t("pageSpeedUi.cruxPrefix") : ""}</td></tr>
                 ))}
               </tbody>
             </table>

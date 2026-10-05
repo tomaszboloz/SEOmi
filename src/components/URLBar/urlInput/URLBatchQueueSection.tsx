@@ -2,6 +2,7 @@ import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { Play, Square, X } from 'lucide-react';
 import { useAuditStore } from '@/stores/auditStore';
+import { appLocale } from '@/services/localeFormat';
 
 export const URLBatchQueueSection: React.FC = () => {
   const { t } = useTranslation();
@@ -52,7 +53,7 @@ export const URLBatchQueueSection: React.FC = () => {
         {runLabel && (
           <span className="ml-1 text-slate-400">
             ({runLabel}
-            {batchRun?.updatedAt ? ` · ${new Date(batchRun.updatedAt).toLocaleString()}` : ''})
+            {batchRun?.updatedAt ? ` · ${new Date(batchRun.updatedAt).toLocaleString(appLocale())}` : ''})
           </span>
         )}{' '}
         {isBatchStopping && t('legacyUi.url.cancelling')}

@@ -13,8 +13,9 @@ pub(crate) fn parse_sitemap_directives(content: &str) -> Vec<String> {
 }
 
 pub(crate) fn parse_sitemap_locations(content: &str) -> Vec<String> {
-    Regex::new(r"(?is)<loc\s*>\s*(.*?)\s*</loc>")
-        .ok()
+    static LOC: OnceLock<Option<Regex>> = OnceLock::new();
+    LOC.get_or_init(|| Regex::new(r"(?is)<loc\s*>\s*(.*?)\s*</loc>").ok())
+        .as_ref()
         .map(|pattern| {
             pattern
                 .captures_iter(content)

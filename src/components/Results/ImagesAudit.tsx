@@ -9,12 +9,13 @@ import { ImageMetrics } from './images/ImageMetrics';
 import { ImageControls } from './images/ImageControls';
 import { ImageCard } from './images/ImageCard';
 import { filterAuditImages, isLegacyImage, isModernImage, type ImageFilter } from './images/imagePolicy';
+import { useTransientValue } from '@/hooks/useTransientValue';
 
 export const ImagesAudit = ({audit}:{audit:PageAuditData}) => {
  const {t} = useTranslation();
  const [filter,setFilter] = useState<ImageFilter>('all');
  const [search,setSearch] = useState('');
- const [copiedUrl,setCopiedUrl] = useState<string|null>(null);
+ const [copiedUrl, setCopiedUrl] = useTransientValue<string|null>(null, 1500);
  const problems = useAuditStore(state => state.showOnlyProblems);
  const images = audit.images;
  const missingAltCount = images.filter(img => !img.has_alt).length;
@@ -24,8 +25,7 @@ export const ImagesAudit = ({audit}:{audit:PageAuditData}) => {
  const filtered = filterAuditImages(images,filter,search,problems);
  const handleCopy = async (url:string) => {
    if (!await copyText(url)) return;
-   setCopiedUrl(url); setTimeout(() => setCopiedUrl(null),1500);
- };
+   setCopiedUrl(url); };
  return <div className="space-y-6 max-w-5xl mx-auto p-4 md:p-6 animate-in fade-in duration-200">
    <ImageMetrics total={images.length} missingAltCount={missingAltCount} missingDimCount={missingDimCount} modernCount={modernCount} />
    <ImageControls total={images.length} missingAltCount={missingAltCount} missingDimCount={missingDimCount} modernCount={modernCount} legacyCount={legacyCount} filter={filter} setFilter={setFilter} search={search} setSearch={setSearch} exportCsv={()=>downloadAuditImagesCsv(audit)} />

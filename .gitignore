@@ -7,6 +7,8 @@ release/
 
 # Node
 node_modules/
+/node_modules
+/mcp-server/node_modules
 dist/
 dist-ssr/
 *.local
@@ -14,6 +16,7 @@ dist-ssr/
 .yarn/
 .pnpm-store/
 .vite/
+.vitest/
 .turbo/
 .next/
 .output/

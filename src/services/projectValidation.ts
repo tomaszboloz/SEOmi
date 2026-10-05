@@ -42,6 +42,15 @@ const isPrivateIpv4 = (hostname: string): boolean => {
     || a >= 224;
 };
 
+// URL parsing rewrites ::ffff:10.0.0.1 as ::ffff:a00:1, so embedded IPv4 must
+// also be recovered from the two trailing hextets of mapped, compatible and NAT64 forms.
+const embeddedIpv4Hex = (value: string): string[] => {
+  const match = value.match(/^(?:::ffff:|::|64:ff9b::)([0-9a-f]{1,4}):([0-9a-f]{1,4})$/);
+  if (!match) return [];
+  const [high, low] = [parseInt(match[1], 16), parseInt(match[2], 16)];
+  return [`${high >> 8}.${high & 255}.${low >> 8}.${low & 255}`];
+};
+
 const isPrivateIpv6 = (hostname: string): boolean => {
   const value = hostname.replace(/^\[|\]$/g, '').toLowerCase();
   if (!value.includes(':')) return false;
@@ -49,6 +58,7 @@ const isPrivateIpv6 = (hostname: string): boolean => {
   // IPv4-mapped addresses must follow the same SSRF policy as IPv4.
   const mappedIpv4 = value.match(/(?:^|:)ffff:(\d+\.\d+\.\d+\.\d+)$/);
   if (mappedIpv4 && isPrivateIpv4(mappedIpv4[1])) return true;
+  if (embeddedIpv4Hex(value).some(isPrivateIpv4)) return true;
 
   return value === '::'
     || value === '::1'
@@ -60,7 +70,8 @@ const isPrivateIpv6 = (hostname: string): boolean => {
 };
 
 const isPrivateHost = (hostname: string): boolean => {
-  const value = hostname.toLowerCase().replace(/^\[|\]$/g, '');
+  // A trailing root dot names the same host: "localhost." is localhost.
+  const value = hostname.toLowerCase().replace(/^\[|\]$/g, '').replace(/\.+$/, '');
   return value === 'localhost'
     || value.endsWith('.localhost')
     || value.endsWith('.local')

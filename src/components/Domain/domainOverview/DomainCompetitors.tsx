@@ -2,6 +2,7 @@ import React from 'react';
 import { Users } from 'lucide-react';
 import type { DomainOverviewData } from '@/types';
 import type { TFunction } from 'i18next';
+import { appLocale } from '@/services/localeFormat';
 
 interface DomainCompetitorsProps {
   overview: DomainOverviewData;
@@ -35,7 +36,7 @@ export const DomainCompetitors: React.FC<DomainCompetitorsProps> = ({
                 {c.domain}
               </div>
               <div className="text-xs text-slate-400 mt-1">
-                {c.common_keywords?.toLocaleString() ?? '—'}{' '}
+                {c.common_keywords?.toLocaleString(appLocale()) ?? '—'}{' '}
                 {t('domainResearchUi.overlappingKeywords')}
               </div>
             </div>

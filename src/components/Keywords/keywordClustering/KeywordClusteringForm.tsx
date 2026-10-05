@@ -1,8 +1,9 @@
 import React from 'react';
-import { AlertTriangle, Loader2, Plus, RefreshCw } from 'lucide-react';
+import { AlertTriangle, Loader2, RefreshCw } from 'lucide-react';
 import type { TFunction } from 'i18next';
 import { type ClusteringSession, MAX_KEYWORDS } from './keywordClusteringTypes';
 import { KeywordClusteringPickers } from './KeywordClusteringPickers';
+import { KeywordInput } from './KeywordInput';
 
 interface KeywordClusteringFormProps {
   session: ClusteringSession;
@@ -37,38 +38,7 @@ export const KeywordClusteringForm: React.FC<KeywordClusteringFormProps> = ({
 }) => {
   return (
     <section className="space-y-4 rounded-xl border border-slate-800 bg-slate-900/70 p-5">
-      <div className="flex flex-wrap items-center justify-between gap-2">
-        <label htmlFor="cluster-keywords" className="text-sm font-semibold text-slate-100">
-          {t('keywordClusteringUi.keywordsLabel')}
-        </label>
-        <div className="flex flex-wrap gap-2">
-          <button
-            type="button"
-            onClick={() => appendKeywords(currentResearch.map((item) => item.keyword))}
-            disabled={!currentResearch.length || isRunning}
-            className="inline-flex items-center gap-1.5 rounded-lg border border-slate-700 px-3 py-2 text-xs text-slate-300 transition hover:border-emerald-500/50 hover:text-white disabled:opacity-50"
-          >
-            <Plus className="h-3.5 w-3.5" /> {t('keywordClusteringUi.addFromResearch')}
-          </button>
-          <button
-            type="button"
-            onClick={() => appendKeywords(savedKeywords.map((item) => item.keyword))}
-            disabled={!savedKeywords.length || isRunning}
-            className="inline-flex items-center gap-1.5 rounded-lg border border-slate-700 px-3 py-2 text-xs text-slate-300 transition hover:border-emerald-500/50 hover:text-white disabled:opacity-50"
-          >
-            <Plus className="h-3.5 w-3.5" /> {t('keywordClusteringUi.addSaved')}
-          </button>
-        </div>
-      </div>
-      <textarea
-        id="cluster-keywords"
-        value={session.input}
-        onChange={(event) => updateSession({ input: event.target.value, result: null })}
-        disabled={isRunning}
-        rows={8}
-        placeholder={t('keywordClusteringUi.placeholder')}
-        className="w-full resize-y rounded-lg border border-slate-700 bg-slate-950 px-3 py-3 font-mono text-sm text-slate-100 outline-none transition placeholder:text-slate-600 focus:border-emerald-500 disabled:opacity-70"
-      />
+      <KeywordInput session={session} isRunning={isRunning} currentResearch={currentResearch} savedKeywords={savedKeywords} updateSession={updateSession} appendKeywords={appendKeywords} t={t} />
       <p className="text-xs text-amber-200">
         {t('dataforseo.paidRequests', {
           count: keywords.filter((keyword) => !session.result?.snapshots.some((item) => item.keyword === keyword)).length,

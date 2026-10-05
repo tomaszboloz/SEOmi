@@ -93,6 +93,8 @@ mod resources_2;
 mod robots_1;
 #[path = "tests/robots_2.rs"]
 mod robots_2;
+#[path = "tests/robots_regressions.rs"]
+mod robots_regressions;
 #[path = "tests/runtime_1.rs"]
 mod runtime_1;
 #[path = "tests/runtime_2.rs"]
@@ -107,3 +109,5 @@ mod scope;
 mod social_1;
 #[path = "tests/social_2.rs"]
 mod social_2;
+#[path = "tests/social_bounds.rs"]
+mod social_bounds;

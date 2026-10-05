@@ -1,5 +1,11 @@
 use super::*;
 
+/// Real pages declare a handful of icons and a few dozen og:/twitter: tags.
+/// Hostile pages can declare thousands; each would be stored, deduplicated in
+/// quadratic time and, for image tags, queued for a resource check.
+pub(super) const MAX_FAVICONS_PER_PAGE: usize = 50;
+pub(super) const MAX_SOCIAL_META_TAGS_PER_PAGE: usize = 200;
+
 pub(super) fn crawl_social_metadata(
     document: &Html,
     base_url: &url::Url,
@@ -44,6 +50,9 @@ pub(super) fn crawl_social_metadata(
         };
         if !favicons.contains(&icon_url) {
             favicons.push(icon_url);
+            if favicons.len() >= MAX_FAVICONS_PER_PAGE {
+                break;
+            }
         }
     }
 
@@ -76,6 +85,7 @@ pub(super) fn crawl_social_metadata(
                     })
                 })
         })
+        .take(MAX_SOCIAL_META_TAGS_PER_PAGE)
         .collect();
 
     (favicons, social_meta_tags)

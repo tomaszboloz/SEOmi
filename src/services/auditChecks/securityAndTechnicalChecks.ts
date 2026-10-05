@@ -34,13 +34,14 @@ export const buildStructuredDataChecks = (audit: PageAuditData): LocalAuditCheck
   const structuredErrors = structuredFindings.filter((issue) => issue.severity === 'error').length;
   const structuredWarnings = structuredFindings.filter((issue) => issue.severity === 'warning').length;
 
+  const jsonLd = structured.filter((item) => item.format === 'JSON-LD');
   return [
     check('structured-present', 'daneStrukturalne', 'structured-present', structured.length > 0 ? 'pass' : 'warning', structured.length ? evidence('countDeclarations', { count: structured.length }) : evidence('noStructured')),
     check('structured-errors', 'daneStrukturalne', 'structured-errors', structured.length === 0 ? 'not_applicable' : structuredErrors === 0 ? 'pass' : 'error', structured.length ? evidence('countErrors', { count: structuredErrors }) : evidence('noDeclarations')),
     check('structured-warnings', 'daneStrukturalne', 'structured-warnings', structured.length === 0 ? 'not_applicable' : structuredWarnings === 0 ? 'pass' : 'warning', structured.length ? evidence('countWarnings', { count: structuredWarnings }) : evidence('noDeclarations')),
     check('structured-format-coverage', 'daneStrukturalne', 'structured-format-coverage', structured.every((item) => ['JSON-LD', 'Microdata', 'RDFa'].includes(item.format)) ? 'pass' : 'warning', evidence('countFormats', { count: uniqueCount(structured.map((item) => item.format)) })),
     check('structured-type-coverage', 'daneStrukturalne', 'structured-type-coverage', structured.length === 0 ? 'not_applicable' : structured.every((item) => present(item.data_type)) ? 'pass' : 'warning', `${structured.filter((item) => present(item.data_type)).length}/${structured.length}`),
-    check('structured-jsonld-valid', 'daneStrukturalne', 'structured-jsonld-valid', structured.filter((item) => item.format === 'JSON-LD').every((item) => item.content && typeof item.content === 'object') ? 'pass' : structured.some((item) => item.format === 'JSON-LD') ? 'warning' : 'not_applicable', evidence('localShapeCheck')),
+    check('structured-jsonld-valid', 'daneStrukturalne', 'structured-jsonld-valid', jsonLd.length === 0 ? 'not_applicable' : jsonLd.every((item) => item.content && typeof item.content === 'object') ? 'pass' : 'warning', evidence('localShapeCheck')),
     check('structured-unique-types', 'daneStrukturalne', 'structured-unique-types', structured.length === 0 ? 'not_applicable' : uniqueCount(structured.map((item) => item.data_type)) === structured.length ? 'pass' : 'warning', evidence('countUniqueTypes', { count: uniqueCount(structured.map((item) => item.data_type)) })),
     check('structured-finding-paths', 'daneStrukturalne', 'structured-finding-paths', structuredFindings.every((issue) => issue.path || issue.message) ? 'pass' : 'warning', evidence('countFindings', { count: structuredFindings.length })),
   ];

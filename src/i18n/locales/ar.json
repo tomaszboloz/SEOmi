@@ -588,7 +588,8 @@
       "localClientRequired": "{{provider}} is not configured to use its local subscription client.",
       "responseHidden": "Provider response withheld.",
       "invalidResponse": "The AI provider returned an invalid response.",
-      "responseTooLarge": "The AI provider response exceeds the 1 MiB limit."
+      "responseTooLarge": "The AI provider response exceeds the 1 MiB limit.",
+      "refused": "رفض {{provider}} هذا الطلب. أعد صياغته أو اختر نموذجًا آخر."
     },
     "pagespeed": {
       "projectRequired": "Choose a project before starting the measurement."
@@ -3334,7 +3335,11 @@
     "currentTier": "الخطة الحالية",
     "upgradePro": "الترقية إلى Pro",
     "creditsLeft": "رصيد الائتمان المتبقي",
-    "connectAccount": "ربط الحساب"
+    "connectAccount": "ربط الحساب",
+    "refreshModels": "تحديث قائمة النماذج",
+    "modelsFromProvider": "{{count}} نموذجًا من واجهة برمجة المزوّد",
+    "modelsDefault": "النماذج الافتراضية — اختبر مفتاح API لتحميل نماذجك",
+    "modelsUnavailable": "تعذّر تحميل النماذج من المزوّد؛ تُعرض آخر قائمة معروفة."
   },
   "schedules": {
     "saveError": "Unable to save the schedule.",
@@ -3503,16 +3508,7 @@
     "ai": {
       "openai": "OpenAI / Codex",
       "claude": "Anthropic Claude",
-      "gemini": "Google Gemini",
-      "gpt4o": "GPT-4o (high-converting copy)",
-      "gpt4oMini": "GPT-4o Mini (fast and lightweight)",
-      "o3Mini": "o3-mini (reasoning model)",
-      "claude37": "Claude 3.7 Sonnet (latest)",
-      "claude35": "Claude 3.5 Sonnet",
-      "claudeHaiku": "Claude 3.5 Haiku",
-      "geminiFlash": "Gemini 2.0 Flash (fastest)",
-      "geminiPro": "Gemini 2.0 Pro",
-      "gemini15": "Gemini 1.5 Pro"
+      "gemini": "Google Gemini"
     },
     "renderWorker": {
       "title": "عامل التصيير المحلي",
@@ -4699,5 +4695,70 @@
     "limited": "قد يقتطع Google أو التخزين المحلي البيانات. النسب تخص الصفوف المرصودة فقط.",
     "previous": "السابق",
     "next": "التالي"
+  },
+  "embeddingClusteringUi": {
+    "methodLabel": "طريقة التجميع",
+    "methods": {
+      "embeddings": {
+        "title": "تضمينات محلية (مجانية)",
+        "description": "تجمع العبارات حسب المعنى على هذا الحاسوب. بلا مفتاح API وبلا تكلفة؛ Ollama اختياري."
+      },
+      "serp": {
+        "title": "تداخل نتائج SERP ‏(DataForSEO، مدفوع)",
+        "description": "تجمع العبارات التي تتشارك نتائج Google عناوين URL. تتطلب بيانات اعتماد DataForSEO؛ كل عبارة جديدة طلب مدفوع."
+      }
+    },
+    "settingsTitle": "إعدادات التضمينات",
+    "description": "تُحوَّل العبارات إلى تضمينات وتُجمَّع حسب التشابه. يعمل النموذج المحلي دون اتصال للبولندية والإنجليزية؛ ويضيف Ollama نموذجًا عصبيًا يعمل على هذا الحاسوب.",
+    "provider": "نموذج التضمين",
+    "providers": {
+      "local": "محلي (دون اتصال)",
+      "ollama": "Ollama",
+      "hybrid": "محلي + Ollama"
+    },
+    "threshold": "عتبة التشابه: {{value}}",
+    "ollamaModel": "نموذج تضمين Ollama",
+    "labelModel": "نموذج Ollama لتسمية المجموعات (اختياري)",
+    "labelModelPlaceholder": "مثل llama3.2 — اتركه فارغًا للتخطي",
+    "ollamaHint": "يجب أن يعمل Ollama على هذا الحاسوب على 127.0.0.1:11434 مع تنزيل النموذج (ollama pull <model>).",
+    "run": "تجميع العبارات",
+    "running": "جارٍ التجميع…",
+    "free": "{{count}} عبارة · مجانًا، دون طلبات إلى واجهات برمجة مدفوعة",
+    "tooMany": "حتى {{max}} عبارة في كل تشغيل",
+    "resultTitle": "مجموعات التضمينات",
+    "resultMeta": "{{model}} · العتبة {{threshold}} · {{date}}",
+    "keywordCount": "{{count}} عبارة",
+    "cohesion": "التماسك {{value}}%"
+  },
+  "dataforseoCost": {
+    "meterLabel": "تكاليف DataForSEO",
+    "lastCall": "آخر استدعاء: {{cost}} ‏({{endpoint}})",
+    "noCallsYet": "لا توجد استدعاءات DataForSEO هذا الشهر بعد",
+    "monthNoLimit": "هذا الشهر: {{spent}} · {{calls}} استدعاء · الحد = رصيد الحساب",
+    "monthWithLimit": "هذا الشهر: {{spent}} من {{limit}} ‏({{percent}}%)",
+    "balance": "الرصيد ≈ {{balance}}",
+    "warning": "تقترب من الحد الشهري",
+    "exceeded": "تم بلوغ الحد الشهري — الطلبات المدفوعة محظورة",
+    "invalidLimit": "يجب أن يكون الحد الشهري رقمًا بين 0 و100000 دولار.",
+    "invalidWarn": "يجب أن تكون عتبة التحذير عددًا صحيحًا بين 1 و100.",
+    "limitReached": "تم بلوغ الحد الشهري لـ DataForSEO: استُخدم {{spent}} دولار من {{limit}} دولار؛ ستكلّف الطلبية التالية نحو {{expected}} دولار. ارفع الحد في الإعدادات ← API أو انتظر الشهر القادم.",
+    "selectProject": "اختر مشروعًا لعرض تكاليف DataForSEO وتعيين حد.",
+    "limitRemoved": "تمت إزالة الحد الشهري.",
+    "limitSaved": "تم حفظ الحد الشهري: {{limit}}.",
+    "balanceUnavailable": "لم يُرجع DataForSEO رصيد الحساب.",
+    "settingsTitle": "التكاليف والرصيد والحد الشهري",
+    "balanceLabel": "رصيد الحساب (تقديري)",
+    "balanceChecked": "{{balance}} بحسب قراءة {{date}} مطروحًا منه الاستدعاءات اللاحقة",
+    "monthLabel": "المُنفق في {{month}}",
+    "calls": "{{count}} استدعاء",
+    "remainingLabel": "المتبقي هذا الشهر",
+    "noLimit": "حتى رصيد الحساب",
+    "checkBalance": "التحقق من الرصيد",
+    "limitLabel": "الحد الشهري (دولار)",
+    "warnLabel": "التحذير عند (% من الحد)",
+    "limitHelp": "ينطبق الحد على هذا المشروع ويُعاد ضبطه في اليوم الأول من كل شهر. من دون حد شهري يكون رصيد الحساب هو الحد: إذا لم يغطِّ الرصيد التقديري الاستدعاء التالي تُحظر الطلبات قبل إرسالها. تكلفة كل استدعاء هي المبلغ الذي يُبلغ عنه DataForSEO.",
+    "saveLimit": "حفظ الحد",
+    "noLimitOption": "بلا حد — حتى رصيد الحساب",
+    "balanceExhausted": "نفد رصيد DataForSEO (المتبقي ≈ {{balance}} دولار، والطلب التالي يحتاج نحو {{expected}} دولار). اشحن الحساب ثم انقر «التحقق من الرصيد»."
   }
 }

@@ -5,6 +5,7 @@ import { RankTrackingHeader } from './rankTracking/RankTrackingHeader';
 import { RankTrackingStatsCards } from './rankTracking/RankTrackingStatsCards';
 import { RankTrackingTable } from './rankTracking/RankTrackingTable';
 import { RankTrackingAddModal } from './rankTracking/RankTrackingAddModal';
+import { DataForSeoCostMeter } from '@/components/DataForSEO/cost/DataForSeoCostMeter';
 
 export { normalizeRankTrackingMarketDraft } from './rankTracking/rankTrackingTypes';
 
@@ -31,6 +32,7 @@ export const RankTracking: React.FC = () => {
 
   return (
     <div className="max-w-7xl mx-auto px-4 py-8 space-y-8">
+      <DataForSeoCostMeter />
       <RankTrackingHeader
         totalTracked={totalTracked}
         isRankLoading={isRankLoading}

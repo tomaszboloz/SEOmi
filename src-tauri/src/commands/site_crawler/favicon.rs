@@ -1,3 +1,4 @@
+use super::social::MAX_FAVICONS_PER_PAGE;
 use super::*;
 
 /// Extract the same favicon declaration metadata as the single-page audit,
@@ -72,9 +73,11 @@ pub(super) fn crawl_favicon_metadata(document: &Html, base_url: &url::Url) -> Ve
             })
         })
         .fold(Vec::new(), |mut unique, favicon| {
-            if !unique.iter().any(|existing: &FaviconData| {
-                existing.href == favicon.href && existing.rel == favicon.rel
-            }) {
+            if unique.len() < MAX_FAVICONS_PER_PAGE
+                && !unique.iter().any(|existing: &FaviconData| {
+                    existing.href == favicon.href && existing.rel == favicon.rel
+                })
+            {
                 unique.push(favicon);
             }
             unique

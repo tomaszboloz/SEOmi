@@ -83,7 +83,9 @@ export const createSettingsCredentials = (set: SettingsSet, _get: SettingsGet): 
         throw error;
       } finally {
         if (secureSaveQueues.get(queueKey) === save) secureSaveQueues.delete(queueKey);
-        if (activeProjectId() === projectId && !hasPendingSave(projectId)) set({ isSaving: false });
+        // Clear for whichever project is active now; a switch mid-save must not leave the spinner on.
+        const active = activeProjectId();
+        if (!active || !hasPendingSave(active)) set({ isSaving: false });
       }
     },
 
@@ -107,7 +109,9 @@ export const createSettingsCredentials = (set: SettingsSet, _get: SettingsGet): 
         throw error;
       } finally {
         if (secureSaveQueues.get(queueKey) === save) secureSaveQueues.delete(queueKey);
-        if (activeProjectId() === projectId && !hasPendingSave(projectId)) set({ isSaving: false });
+        // Clear for whichever project is active now; a switch mid-save must not leave the spinner on.
+        const active = activeProjectId();
+        if (!active || !hasPendingSave(active)) set({ isSaving: false });
       }
     },
 

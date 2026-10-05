@@ -4,6 +4,7 @@ import { KeywordResearchHeader } from './keywordResearch/KeywordResearchHeader';
 import { KeywordResearchSearchForm } from './keywordResearch/KeywordResearchSearchForm';
 import { KeywordPrimaryCard } from './keywordResearch/KeywordPrimaryCard';
 import { KeywordIdeasTable } from './keywordResearch/KeywordIdeasTable';
+import { DataForSeoCostMeter } from '@/components/DataForSEO/cost/DataForSeoCostMeter';
 
 export const KeywordResearch: React.FC = () => {
   const {
@@ -29,6 +30,7 @@ export const KeywordResearch: React.FC = () => {
   return (
     <div className="max-w-7xl mx-auto px-4 py-8 space-y-8">
       <KeywordResearchHeader t={t} />
+      <DataForSeoCostMeter />
 
       <KeywordResearchSearchForm
         inputQuery={inputQuery}

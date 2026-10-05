@@ -10,6 +10,9 @@ import { DataForSeoPage } from './dataforseo/dataforseoTypes';
 export * from './dataforseo/dataforseoTypes';
 export * from './dataforseo/dataforseoMarkets';
 export * from './dataforseo/dataforseoTaskLog';
+export * from './dataforseo/dataforseoBudget';
+export * from './dataforseo/dataforseoBudgetGuard';
+export * from './dataforseo/dataforseoAccount';
 export { normalizeDataForSeoDomain } from './dataforseo/dataforseoHelpers';
 export { DATAFORSEO_LOCATION_CATALOG };
 

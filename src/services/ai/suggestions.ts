@@ -1,4 +1,5 @@
 import { aiResponseError, readAiResponseText } from './response';
+import { requestClaude } from './claude';
 import { parseAiSuggestionResponse, type AiSuggestionResponse } from './parsing';
 
 export async function callOpenAI(
@@ -30,20 +31,7 @@ export async function callClaude(
   model: string,
   prompt: string
 ): Promise<AiSuggestionResponse> {
-  const res = await fetch('https://api.anthropic.com/v1/messages', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-      'x-api-key': apiKey,
-      'anthropic-version': '2023-06-01',
-    },
-    body: JSON.stringify({
-      model,
-      max_tokens: 1024,
-      messages: [{ role: 'user', content: prompt }],
-    }),
-  });
-
+  const res = await requestClaude(apiKey, model, prompt);
   if (!res.ok) throw aiResponseError('claude', res.status, true);
 
   return parseAiSuggestionResponse(await readAiResponseText(res, 'claude'));

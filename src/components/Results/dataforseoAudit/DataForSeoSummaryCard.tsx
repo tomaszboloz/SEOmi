@@ -2,6 +2,7 @@ import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { Link2, Globe2, TrendingUp, AlertCircle } from 'lucide-react';
 import { useAuditStore } from '@/stores/auditStore';
+import { appLocale } from '@/services/localeFormat';
 
 export const DataForSeoSummaryCard: React.FC = () => {
   const { t } = useTranslation();
@@ -26,7 +27,7 @@ export const DataForSeoSummaryCard: React.FC = () => {
           </div>
         </div>
         <div className="text-2xl font-black text-white tracking-tight">
-          {backlinks === undefined ? '—' : backlinks.toLocaleString()}
+          {backlinks === undefined ? '—' : backlinks.toLocaleString(appLocale())}
         </div>
         <div className="mt-2 text-[11px] text-slate-400 flex items-center space-x-1">
           {dofollowRatio === null ? <span>{t('dataforseo.runLiveMetric')}</span> : <><span className="text-emerald-400 font-semibold">{dofollowRatio}%</span><span>{t('dataforseo.dofollowBacklinks', { count: dofollow ?? undefined })}</span></>}
@@ -42,7 +43,7 @@ export const DataForSeoSummaryCard: React.FC = () => {
           </div>
         </div>
         <div className="text-2xl font-black text-white tracking-tight">
-          {referringDomains === undefined ? '—' : referringDomains.toLocaleString()}
+          {referringDomains === undefined ? '—' : referringDomains.toLocaleString(appLocale())}
         </div>
         <div className="mt-2 text-[11px] text-slate-400">
           {t('dataforseo.mainDomains')}: {dataforseoData ? dataforseoData.referring_main_domains : '—'}

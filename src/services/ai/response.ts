@@ -2,11 +2,12 @@ import { z } from 'zod';
 import type { AiProvider } from '@/types';
 import i18n from '@/i18n';
 import { aiProviderLabel } from './labels';
+import { claudeMessageText } from './claude';
 
 export const MAX_AI_RESPONSE_BYTES = 1024 * 1024;
 const schemas = {
   openai: z.object({ choices: z.array(z.object({ message: z.object({ content: z.string().nullish() }) })).optional() }),
-  claude: z.object({ content: z.array(z.object({ text: z.string().nullish() })).optional() }),
+  claude: z.object({ stop_reason: z.string().nullish(), content: z.array(z.object({ type: z.string().nullish(), text: z.string().nullish() })).optional() }),
   gemini: z.object({ candidates: z.array(z.object({ content: z.object({ parts: z.array(z.object({ text: z.string().nullish() })) }) })).optional() }),
 };
 
@@ -53,6 +54,6 @@ export async function readAiResponseText(response: Response, provider: AiProvide
   const parsed = schemas[provider].safeParse(value);
   if (!parsed.success) throw new Error(i18n.t('runtimeErrors.ai.invalidResponse'));
   if (provider === 'openai') return schemas.openai.parse(value).choices?.[0]?.message.content ?? '';
-  if (provider === 'claude') return schemas.claude.parse(value).content?.[0]?.text ?? '';
+  if (provider === 'claude') return claudeMessageText(schemas.claude.parse(value));
   return schemas.gemini.parse(value).candidates?.[0]?.content.parts[0]?.text ?? '';
 }

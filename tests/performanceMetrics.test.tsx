@@ -41,7 +41,7 @@ describe('native HTTP performance measurement', () => {
     expect(screen.getByText(/To nie jest przeglądarkowy TTFB/)).toBeTruthy();
     expect(screen.getByText('8 ms')).toBeTruthy();
     expect(screen.getByText('128 ms')).toBeTruthy();
-    expect(screen.getByText('2,048 B')).toBeTruthy();
+    expect(screen.getByText('2048 B')).toBeTruthy();
     expect(screen.getByText('—')).toBeTruthy();
     expect(screen.queryByText('0 B')).toBeNull();
   });
