@@ -30,5 +30,6 @@ mod errors;
 mod handoffs;
 mod ipc;
 mod limits;
+mod mutations;
 mod paths;
 mod snapshots;

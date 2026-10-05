@@ -2,6 +2,7 @@
 
 mod cleanup;
 mod executions;
+mod mutation;
 mod paths;
 
 pub use executions::{
@@ -16,10 +17,11 @@ pub use executions::{
     list_project_audit_queue_executions, list_project_audit_queue_results,
 };
 pub(crate) use executions::{write_queue_execution, write_queue_result};
+pub(crate) use mutation::{read_queue_state, update_queue_if_current};
 pub(crate) use paths::queue_path;
 
 use crate::commands::crawl_storage;
-use paths::{write_atomic, MAX_QUEUE_BYTES};
+use paths::MAX_QUEUE_BYTES;
 use serde_json::Value;
 use std::fs;
 use std::io::ErrorKind;
@@ -66,7 +68,9 @@ pub(crate) fn write_queue_snapshot<R: tauri::Runtime>(
     if !snapshot.is_object() {
         return Err("Audit queue storage expects a JSON object.".into());
     }
-    write_atomic(&queue_path(app, project_id)?, snapshot)
+    let _lock = mutation::lock_queue(app, project_id)?;
+    mutation::renew_generation(app, project_id)?;
+    mutation::write_snapshot_unlocked(app, project_id, snapshot)
 }
 
 #[tauri::command]
@@ -84,12 +88,17 @@ pub fn delete_project_audit_queue<R: tauri::Runtime>(
     project_id: String,
 ) -> Result<(), String> {
     let path = queue_path(&app, &project_id)?;
+    let directory = crawl_storage::project_directory(&app, &project_id)?;
+    if !directory.exists() {
+        return Ok(());
+    }
+    let _lock = mutation::lock_queue(&app, &project_id)?;
+    mutation::renew_generation(&app, &project_id)?;
     match fs::remove_file(path) {
         Ok(()) => Ok(()),
         Err(error) if error.kind() == ErrorKind::NotFound => Ok(()),
         Err(error) => Err(format!("Unable to remove audit queue: {error}")),
     }?;
-    let directory = crawl_storage::project_directory(&app, &project_id)?;
     let entries = match fs::read_dir(&directory) {
         Ok(entries) => entries,
         Err(error) if error.kind() == ErrorKind::NotFound => return Ok(()),
