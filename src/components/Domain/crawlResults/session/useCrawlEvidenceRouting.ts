@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useLayoutEffect, useRef } from "react";
 import { useProjectStore } from "@/stores/projectStore";
 import type { CrawlRunRecord } from "@/types";
 
@@ -36,8 +36,18 @@ export const useCrawlEvidenceRouting = ({
   navigationRunId,
   pages,
 }: EvidenceRoutingParams) => {
+  const selectedRun = useRef({ id: navigationRunId, revision: 0 });
+  useLayoutEffect(() => {
+    if (selectedRun.current.id !== navigationRunId) selectedRun.current = { id: navigationRunId, revision: selectedRun.current.revision + 1 };
+  }, [navigationRunId]);
   useEffect(() => {
+    let current = true;
+    let revision = 0;
+    let frame: number | undefined;
     const openEvidence = () => {
+      const request = ++revision;
+      if (frame !== undefined && typeof window.cancelAnimationFrame === "function") window.cancelAnimationFrame(frame);
+      frame = undefined;
       const prefix = "#crawl-evidence?";
       if (!window.location.hash.startsWith(prefix)) return;
       const params = new URLSearchParams(window.location.hash.slice(prefix.length));
@@ -72,23 +82,49 @@ export const useCrawlEvidenceRouting = ({
       filterState.setOnlyProblems(false);
       filterState.setQuery(url);
       filterState.setEvidenceUrl(url);
+      const owner = selectedRun.current;
       onSelectRun(run.id);
-      window.requestAnimationFrame(() => document.getElementById(`crawl-row-${encodeURIComponent(url)}`)?.scrollIntoView?.({ block: "center" }));
+      const scrollToRow = () => {
+        const selected = selectedRun.current;
+        const ownedTransition = selected.revision === owner.revision || (owner.id !== runId && selected.revision === owner.revision + 1);
+        if (current && request === revision && selected.id === runId && ownedTransition) {
+          document.getElementById(`crawl-row-${encodeURIComponent(url)}`)?.scrollIntoView?.({ block: "center" });
+        }
+      };
+      if (typeof window.requestAnimationFrame === "function") frame = window.requestAnimationFrame(scrollToRow);
+      else scrollToRow();
     };
     openEvidence();
     window.addEventListener("hashchange", openEvidence);
-    return () => window.removeEventListener("hashchange", openEvidence);
+    return () => {
+      current = false;
+      if (frame !== undefined && typeof window.cancelAnimationFrame === "function") window.cancelAnimationFrame(frame);
+      window.removeEventListener("hashchange", openEvidence);
+    };
   }, [activeProjectId, onSelectRun, runs]);
 
   useEffect(() => {
     if (tabNav.activeTab !== "links" || !filterState.linkEvidence || typeof window === "undefined") return;
+    let current = true;
+    let secondFrame: number | undefined;
     const scrollToLink = () => {
+      if (!current) return;
       const row = Array.from(document.querySelectorAll<HTMLElement>("[data-crawl-link-row]")).find(
         (element) => element.dataset.sourceUrl === filterState.linkEvidence!.source && element.dataset.targetUrl === filterState.linkEvidence!.target
       );
       row?.scrollIntoView?.({ block: "center" });
     };
-    const firstFrame = window.requestAnimationFrame(() => window.requestAnimationFrame(scrollToLink));
-    return () => window.cancelAnimationFrame(firstFrame);
-  }, [tabNav.activeTab, filterState.linkEvidence, navigationRunId, pages]);
+    const firstFrame = typeof window.requestAnimationFrame === "function"
+      ? window.requestAnimationFrame(() => {
+        if (current) secondFrame = window.requestAnimationFrame(scrollToLink);
+      })
+      : undefined;
+    if (firstFrame === undefined) scrollToLink();
+    return () => {
+      current = false;
+      if (typeof window.cancelAnimationFrame !== "function") return;
+      if (firstFrame !== undefined) window.cancelAnimationFrame(firstFrame);
+      if (secondFrame !== undefined) window.cancelAnimationFrame(secondFrame);
+    };
+  }, [activeProjectId, tabNav.activeTab, filterState.linkEvidence, navigationRunId, pages]);
 };
