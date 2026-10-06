@@ -27,6 +27,9 @@ mod server_tests;
 #[cfg(test)]
 mod server_fixture;
 
+#[cfg(test)]
+mod upstream_tests;
+
 use server::serve_connection;
 use types::MAX_CONCURRENT_CONNECTIONS;
 use upstream::reject;

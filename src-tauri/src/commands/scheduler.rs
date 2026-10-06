@@ -6,6 +6,8 @@ mod macos;
 mod models;
 #[cfg(target_os = "macos")]
 mod plist;
+#[cfg(target_os = "macos")]
+mod process;
 mod shared;
 mod time;
 #[cfg(not(any(target_os = "macos", target_os = "windows")))]
