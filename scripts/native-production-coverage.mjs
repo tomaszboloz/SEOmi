@@ -2,6 +2,7 @@ import { createHash } from 'node:crypto';
 import { readFileSync, writeFileSync } from 'node:fs';
 import { resolve } from 'node:path';
 import { pathToFileURL } from 'node:url';
+import { assertNativeCoveragePaths } from './native-coverage-paths.mjs';
 
 const count = value => {
   if (!/^\d+$/.test(value) || !Number.isSafeInteger(Number(value))) throw new Error('Invalid LCOV count');
@@ -110,7 +111,9 @@ export function productionCoverage(raw, sources, readSource = file => readFileSy
 if (process.argv[1] && import.meta.url === pathToFileURL(resolve(process.argv[1])).href) {
   const [raw, manifest, output, json] = process.argv.slice(2);
   if (!raw || !manifest || !output || !json) throw new Error('Pass raw LCOV, source manifest, output path and LLVM JSON');
-  const result = productionCoverage(readFileSync(raw, 'utf8'), JSON.parse(readFileSync(manifest, 'utf8')), undefined, JSON.parse(readFileSync(json, 'utf8')));
+  const rawCoverage = readFileSync(raw, 'utf8');
+  assertNativeCoveragePaths(rawCoverage);
+  const result = productionCoverage(rawCoverage, JSON.parse(readFileSync(manifest, 'utf8')), undefined, JSON.parse(readFileSync(json, 'utf8')));
   writeFileSync(output, result.lcov);
   writeFileSync(`${output}.summary.json`, JSON.stringify(result.summary, null, 2) + '\n');
   process.stdout.write(JSON.stringify(result.summary.totals) + '\n');

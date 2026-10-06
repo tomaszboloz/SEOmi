@@ -1504,6 +1504,37 @@
     "save": "Zapisz",
     "researchTag": "Research"
   },
+  "trendingNowUi": {
+    "badge": "Trending Now",
+    "title": "Trendy w kraju",
+    "description": "Użyj darmowego feedu RSS Google Trends albo zaimportuj rzeczywisty eksport CSV/JSON. Etykiety ruchu pozostają tekstem źródłowym; nie wyliczamy wolumenu.",
+    "freeSource": "Darmowy RSS / import",
+    "countryLabel": "Kraj",
+    "refresh": "Odśwież feed",
+    "importFile": "Importuj CSV lub JSON",
+    "importLimit": "Pliki do {{size}}",
+    "clear": "Wyczyść zapisany snapshot",
+    "empty": "Brak snapshotu dla tego projektu.",
+    "selectProjectError": "Wybierz projekt, aby użyć Trending Now.",
+    "storageUnavailable": "Snapshot jest widoczny w pamięci, ale zapis projektu jest niedostępny.",
+    "payloadTooLarge": "Wybrany plik przekracza limit 1 MiB.",
+    "unsupportedImport": "Wybierz plik .csv lub .json.",
+    "fetchError": "Nie udało się wczytać darmowego feedu Trends.",
+    "importError": "Nie udało się odczytać importu.",
+    "countryValue": "Kraj: {{geo}}",
+    "sourceValue": "Źródło: {{source}}",
+    "capturedValue": "Pobrano: {{time}}",
+    "entryCount": "Wpisy: {{count}}",
+    "keyword": "Trend",
+    "trafficLabel": "Źródłowa etykieta ruchu",
+    "startedAt": "Czas źródłowy",
+    "notProvided": "Nie podano",
+    "source": {
+      "rss": "Google Trends RSS",
+      "csv": "Import CSV",
+      "json": "Import JSON"
+    }
+  },
   "mapUi": {
     "edgeSimilarityAria": "Podobieństwo treści {{percent}}%, wspólne terminy: {{terms}}",
     "nodeAria": "{{label}}, klaster {{cluster}}",
@@ -1915,6 +1946,8 @@
     "exportJson": "JSON",
     "exportCsv": "CSV",
     "exportPdf": "PDF",
+    "exportHtml": "HTML",
+    "exportHelp": "Eksportuj zapisaną migawkę audytu jako JSON, CSV, PDF lub oczyszczony HTML.",
     "healthScore": "Ocena Zdrowia SEO",
     "criticalIssues": "Błędy Krytyczne",
     "warnings": "Ostrzeżenia",
@@ -2318,8 +2351,10 @@
     "remove": "Usuń",
     "reportSectionsLegend": "Sekcje JSON/PDF",
     "reportTemplateDescription": "Podsumowanie jest zawsze dołączone. Szablon wpływa na JSON i PDF; eksporty CSV pozostają pełnymi tabelami dowodów.",
+    "reportTemplateHelp": "Szablon określa, które zapisane sekcje dowodów są dołączane do eksportów JSON, PDF i HTML. Nie jest wykonywane nowe żądanie sieciowe.",
     "exportTitle": "Eksportuj ten run crawla",
     "exportDescription": "Każdy plik zawiera rzeczywisty czas, zakres i konfigurację runu. Pola CSV są neutralizowane przed otwarciem w arkuszu.",
+    "exportHtml": "Raport HTML",
     "urlCsv": "CSV URL",
     "linksCsv": "CSV linków",
     "imagesCsv": "CSV obrazów",
@@ -2754,6 +2789,8 @@
     "sentenceCount": "{{count}} zdań",
     "exportJson": "JSON",
     "exportPdf": "Raport PDF",
+    "exportHtml": "Raport HTML",
+    "exportHelp": "HTML ułatwia odczyt zapisanych metadanych crawla, dowodów i odnotowanych ograniczeń w przeglądarce.",
     "exportUrlsCsv": "URL CSV",
     "exportLinksCsv": "Linki CSV",
     "exportImagesCsv": "Obrazy CSV",
@@ -3309,6 +3346,31 @@
     "applyTitle": "Zastosuj Tytuł",
     "applyDesc": "Zastosuj Opis",
     "copyJsonLd": "Kopiuj JSON-LD"
+  },
+  "ollamaAssistantUi": {
+    "title": "Lokalny Ollama",
+    "description": "Generuj sugestie metadanych na podstawie modeli Ollama wykrytych na tym urządzeniu.",
+    "endpoint": "Adres loopback",
+    "status": {
+      "idle": "Nie sprawdzono",
+      "loading": "Sprawdzanie Ollama…",
+      "ready": "Połączono · {{version}}",
+      "error": "Niedostępny"
+    },
+    "refresh": "Odśwież",
+    "model": "Wykryty model",
+    "chooseModel": "Wybierz wykryty model",
+    "noModels": "Ollama nie zgłosił żadnych modeli",
+    "maxOutputTokens": "Maksymalna liczba tokenów wyjściowych",
+    "instruction": "Instrukcja lokalna (opcjonalnie)",
+    "instructionPlaceholder": "Dodaj krótką, ukierunkowaną instrukcję…",
+    "generate": "Generuj przez Ollama",
+    "errors": {
+      "projectRequired": "Wybierz projekt przed użyciem lokalnego Ollama.",
+      "auditRequired": "Uruchom audyt strony przed wygenerowaniem lokalnych sugestii.",
+      "modelRequired": "Wybierz model zgłoszony przez Ollama.",
+      "promptTooLarge": "Prompt audytu jest zbyt duży dla ograniczonego żądania lokalnego."
+    }
   },
   "auth": {
     "loginTitle": "Konto SEOmi Cloud",
@@ -4323,6 +4385,22 @@
     }
   },
   "exportUi": {
+    "html": {
+      "auditTitle": "Raport audytu SEOmi",
+      "crawlTitle": "Raport crawla SEOmi",
+      "summary": "Podsumowanie",
+      "evidence": "Zapisane dowody",
+      "auditEvidence": "Dowody audytu",
+      "issues": "Problemy",
+      "configuration": "Konfiguracja",
+      "limitations": "Odnotowane ograniczenia",
+      "sourceLocal": "Źródło: zapisana lokalna migawka; nie wykonano nowego żądania sieciowego.",
+      "exportedAt": "Wyeksportowano",
+      "reportTemplate": "Szablon raportu",
+      "fullSnapshot": "Pełna zapisana migawka",
+      "unknown": "Nieznane / niepodane",
+      "noLimitations": "W tej migawce nie odnotowano ograniczeń."
+    },
     "invalidPdf": "Generator zwrócił nieprawidłowe dane PDF. Spróbuj ponownie.",
     "labels": {
       "field": "Field",
@@ -4760,5 +4838,115 @@
     "saveLimit": "Zapisz limit",
     "noLimitOption": "Bez limitu — do wysokości salda konta",
     "balanceExhausted": "Saldo konta DataForSEO wyczerpane (zostało ≈ {{balance}} USD, następne zapytanie wymaga około {{expected}} USD). Doładuj konto, potem kliknij „Sprawdź saldo”."
+  },
+  "serpImportUi": {
+    "title": "Darmowe dane SERP",
+    "description": "Zaimportuj zaobserwowane wyniki organiczne lub pobierz darmowe, częściowe dane Bing RSS. Bez wywoływania płatnego API.",
+    "fetchTitle": "Pobierz bezpłatne dane Bing RSS",
+    "fetchHelp": "Bing RSS jest źródłem częściowym i nigdy nie jest traktowany jako kompletny Google SERP.",
+    "query": "Fraza",
+    "country": "Kraj",
+    "language": "Język",
+    "fetch": "Pobierz Bing RSS",
+    "fetching": "Pobieranie…",
+    "feedBlocked": "Bing RSS zostało zablokowane",
+    "feedError": "Pobranie Bing RSS nie powiodło się",
+    "formatHelp": "CSV: keyword,rank,url. JSON: records i metadata. Pełny scoring wymaga jawnych countryCode, locationCode, languageCode oraz dostępności complete.",
+    "format": "Format",
+    "payload": "Zaobserwowane dane SERP",
+    "import": "Importuj SERP",
+    "clear": "Usuń import",
+    "summary": "Migawki dla {{count}} fraz; odrzucone rekordy: {{rejected}}",
+    "source": "Źródło: {{provider}} · {{status}}",
+    "context": "Rynek: {{country}} · język: {{language}}",
+    "times": "Obserwacja: {{captured}} · import: {{imported}}",
+    "partialNotice": "Bing RSS jest częściowym dowodem; grupowanie używa wyłącznie semantycznej oceny, dopóki nie podasz kompletnych i zgodnych danych SERP.",
+    "unknown": "Nieznane",
+    "pairs": "Pary spełniające próg: {{count}}",
+    "pairHelp": "Grupy powstają z połączonych par spełniających próg. Brak lub niezgodność SERP pozostawia wyłącznie ocenę semantyczną. Wyświetlamy do 100 par.",
+    "scores": "Semantyka: {{semantic}} · SERP: {{serp}} · ocena: {{score}}",
+    "weights": "Użyte wagi: semantyka {{semantic}}, SERP {{serp}}",
+    "pairSources": "Źródła: {{a}} / {{b}}",
+    "visiblePairs": "Wyświetlamy pierwsze {{count}} par.",
+    "retrieved": "Pobrano: {{retrieved}}"
+  },
+  "targetPhraseAuditUi": {
+    "title": "Audyt frazy docelowej",
+    "description": "Literalne dowody z bieżącego audytu strony oraz zaimportowana migawka TOP10. Sprawdzanie URL-i rozpoczyna się dopiero po kliknięciu przycisku.",
+    "phraseLabel": "Fraza docelowa",
+    "phrasePlaceholder": "np. audyt SEO",
+    "evidenceTitle": "Dowody frazy w bieżącym audycie",
+    "evidenceDescription": "Liczby i fragmenty pochodzą z zapisanego tytułu, H1, treści i tekstów kotwic.",
+    "completeness": {
+      "complete": "Kompletny",
+      "partial": "Częściowy"
+    },
+    "enterPhrase": "Wpisz frazę docelową, aby sprawdzić literalne dowody.",
+    "fields": {
+      "title": "Tytuł",
+      "h1": "H1",
+      "body": "Treść",
+      "anchors": "Kotwice"
+    },
+    "occurrences": "{{count}} wystąpień",
+    "noLiteralEvidence": "W tym polu nie znaleziono literalnego wystąpienia.",
+    "intent": "Intencja",
+    "intentUnavailable": "Niedostępna (brak dokładnej wartości dostawcy)",
+    "intents": {
+      "informational": "Informacyjna",
+      "commercial": "Komercyjna",
+      "transactional": "Transakcyjna",
+      "navigational": "Nawigacyjna"
+    },
+    "auditUrl": "URL audytu",
+    "partialReason": "Dowód treści jest nieobecny lub obcięty; wynik jest częściowy.",
+    "topTenTitle": "Luka treściowa TOP10",
+    "topTenDescription": "Źródłem jest pasująca zaimportowana migawka SERP. Każdy URL jest sprawdzany lokalnie dopiero po kliknięciu przycisku.",
+    "auditRunning": "Sprawdzanie TOP10…",
+    "auditTopTen": "Sprawdź TOP10 lokalnie",
+    "sourceProvider": "Dostawca",
+    "sourceAvailability": "Dostępność",
+    "sourceContext": "Rynek / lokalizacja / język",
+    "sourceCaptured": "Przechwycono",
+    "sourceRetrieved": "Pobrano",
+    "sourceReason": "Powód",
+    "unknown": "Nieznane",
+    "sourceStatus": {
+      "complete": "Kompletna",
+      "partial": "Częściowa",
+      "blocked": "Zablokowana",
+      "missing": "Brak"
+    },
+    "status": {
+      "available": "Dostępne",
+      "unavailable": "Niedostępne",
+      "error": "Błąd"
+    },
+    "unavailable": {
+      "no-project": "Wybierz projekt, aby użyć projektowego dowodu SERP.",
+      "no-phrase": "Wpisz frazę, aby dopasować zaimportowaną migawkę SERP.",
+      "no-import": "Dla tego projektu nie ma zaimportowanej migawki SERP.",
+      "phrase-not-found": "Importowany SERP nie zawiera dokładnego, bez względu na wielkość liter, dopasowania tej frazy.",
+      "no-results": "Pasująca migawka nie zawiera poprawnych organicznych wyników TOP10."
+    },
+    "reportStatus": "Status raportu",
+    "reportStatuses": {
+      "unavailable": "Niedostępny",
+      "partial": "Częściowy",
+      "complete": "Kompletny"
+    },
+    "availablePages": "{{count}} stron z użytecznym dowodem",
+    "noRows": "Pasująca migawka nie dostarczyła organicznych wierszy TOP10.",
+    "topicsTitle": "Zaobserwowane tematy i pokrycie celu",
+    "noTopics": "Tematy wymagają co najmniej jednej pomyślnie sprawdzonej strony.",
+    "topicStatus": {
+      "gap": "Luka",
+      "covered": "Pokryte",
+      "unknown": "Nieznane"
+    },
+    "topicShare": "{{observed}} z {{total}} stron · {{share}}%",
+    "targetOccurrencesUnknown": "Wystąpienia celu: nieznane",
+    "targetOccurrences": "Wystąpienia celu: {{count}}",
+    "finalUrl": "Końcowy URL"
   }
 }

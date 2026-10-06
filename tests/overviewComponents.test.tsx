@@ -1,5 +1,6 @@
-import { render, screen } from "@testing-library/react";
-import { describe, expect, it } from "vitest";
+import { fireEvent, render, screen } from "@testing-library/react";
+import { describe, expect, it, vi } from "vitest";
+import i18n from "@/i18n";
 import { OverviewScoreGauge } from "@/components/Results/overview/OverviewScoreGauge";
 import { OverviewIssuesSummary } from "@/components/Results/overview/OverviewIssuesSummary";
 import { OverviewServerCard } from "@/components/Results/overview/OverviewServerCard";
@@ -8,6 +9,11 @@ import { OverviewQuickWins } from "@/components/Results/overview/OverviewQuickWi
 import { OverviewIssuesList } from "@/components/Results/overview/OverviewIssuesList";
 import { OverviewExportBar } from "@/components/Results/overview/OverviewExportBar";
 import type { PageAuditData } from "@/types";
+
+const overviewExports = vi.hoisted(() => ({
+  downloadAuditJson: vi.fn(), downloadAuditCsv: vi.fn(), downloadAuditHtml: vi.fn(), downloadAuditPdf: vi.fn(),
+}));
+vi.mock("@/services/export", () => overviewExports);
 
 const mockAudit: PageAuditData = {
   url: "https://example.com",
@@ -128,7 +134,13 @@ describe("Overview subcomponents", () => {
 
   it("renders OverviewExportBar buttons", () => {
     render(<OverviewExportBar audit={mockAudit} />);
-    const buttons = screen.getAllByRole("button");
-    expect(buttons.length).toBe(3);
+    const buttons = ["exportJson", "exportCsv", "exportHtml", "exportPdf"].map((key) =>
+      screen.getByRole("button", { name: i18n.t(`overview.${key}`) }));
+    expect(buttons).toHaveLength(4);
+    fireEvent.click(screen.getByRole("button", { name: i18n.t("overview.exportHtml") }));
+    expect(overviewExports.downloadAuditHtml).toHaveBeenCalledWith(mockAudit);
+    expect(overviewExports.downloadAuditJson).not.toHaveBeenCalled();
+    expect(overviewExports.downloadAuditCsv).not.toHaveBeenCalled();
+    expect(overviewExports.downloadAuditPdf).not.toHaveBeenCalled();
   });
 });

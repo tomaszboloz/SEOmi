@@ -81,14 +81,20 @@ mod hreflang_2;
 mod html_1;
 #[path = "tests/html_2.rs"]
 mod html_2;
+#[path = "tests/html_attribute_locator_contracts.rs"]
+mod html_attribute_locator_contracts;
 #[path = "tests/ipc.rs"]
 mod ipc;
+#[path = "tests/js_redirects_contracts.rs"]
+mod js_redirects_contracts;
 #[path = "tests/navigation_1.rs"]
 mod navigation_1;
 #[path = "tests/navigation_2.rs"]
 mod navigation_2;
 #[path = "tests/relations.rs"]
 mod relations;
+#[path = "tests/resource_apply_contracts.rs"]
+mod resource_apply_contracts;
 #[path = "tests/resource_contracts.rs"]
 mod resource_contracts;
 #[path = "tests/resources_1.rs"]
