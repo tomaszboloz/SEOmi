@@ -6,6 +6,10 @@ use tokio::io::AsyncWriteExt;
 use tokio::net::TcpStream;
 use tokio::time::timeout;
 
+#[cfg(test)]
+#[path = "forwarding_tests.rs"]
+mod forwarding_tests;
+
 pub(super) async fn serve_connection(client: TcpStream) {
     serve_connection_with(
         client,

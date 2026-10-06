@@ -1,5 +1,4 @@
 use crate::models::audit_data::PageAuditData;
-use crate::services::{http_client, seo_analyzer};
 use crate::utils::{url_validator, user_agents};
 use std::time::{SystemTime, UNIX_EPOCH};
 use tauri::State;
@@ -8,9 +7,11 @@ use uuid::Uuid;
 mod control;
 mod rate_limiter;
 mod request;
+mod transport;
 
 pub use control::AuditControl;
 use rate_limiter::audit_rate_limiter;
+use transport::fetch_and_analyze;
 
 fn normalize_request_id(value: Option<String>) -> String {
     value
@@ -69,32 +70,6 @@ pub async fn inspect_url_headless(
         .map_err(|error| error.to_string())
 }
 
-async fn fetch_and_analyze(
-    validated_url: &url::Url,
-    user_agent: &str,
-    timeout_secs: u64,
-    max_redirects: usize,
-    verify_ssl: bool,
-) -> Result<PageAuditData, anyhow::Error> {
-    let request = if max_redirects == 10 && verify_ssl {
-        http_client::fetch_page(validated_url, user_agent, timeout_secs).await
-    } else {
-        http_client::fetch_page_with_options(
-            validated_url,
-            user_agent,
-            timeout_secs,
-            max_redirects,
-            verify_ssl,
-        )
-        .await
-    };
-    let fetch_result =
-        request.map_err(|error| anyhow::anyhow!("Network request failed: {error}"))?;
-    seo_analyzer::analyze_page(fetch_result)
-        .await
-        .map_err(|error| anyhow::anyhow!("SEO analysis failed: {error}"))
-}
-
 #[tauri::command]
 pub fn cancel_inspect_url(
     request_id: String,
@@ -107,3 +82,6 @@ pub fn cancel_inspect_url(
 #[cfg(test)]
 #[path = "seo_audit/tests.rs"]
 mod tests;
+#[cfg(test)]
+#[path = "seo_audit/transport_tests.rs"]
+mod transport_tests;

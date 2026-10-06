@@ -1,3 +1,4 @@
+/* global console, process, URL */
 import { spawnSync } from 'node:child_process';
 import { readFileSync, writeFileSync, mkdirSync, mkdtempSync, readdirSync, rmSync, realpathSync } from 'node:fs';
 import { resolve, dirname, relative, join } from 'node:path';
@@ -12,11 +13,26 @@ import { sourceFiles, sourceHashes } from './public-function-inventory.mjs';
 
 const normalize = file => relative(process.cwd(), resolve(file)).replaceAll('\\', '/');
 
+const fileUrlPath = value => {
+  try { const parsed = new URL(value); return parsed.protocol === 'file:' ? parsed.pathname : null; } catch { return null; }
+};
+
+const mergeRuntimeRecords = (records, runtimeUrl, alternateUrl) => {
+  const paths = new Set([fileUrlPath(runtimeUrl), fileUrlPath(alternateUrl)].filter(Boolean));
+  const variants = records.filter(record => paths.has(fileUrlPath(record.url)));
+  if (!variants.length) return undefined;
+  const canonical = variants.map(record => ({
+    ...record,
+    url: runtimeUrl,
+    functions: record.functions.map(fn => ({ ...fn, ranges: fn.ranges.map(range => ({ ...range })) })),
+  }));
+  return mergeProcessCovs([{ result: canonical }]).result[0];
+};
+
 /** Reject changed source/runtime bytes before accepting remapped V8 evidence. */
 export async function mapRuntimeCoverage(processCoverage, runtimeFiles, expectedSources, expectedRuntime) {
   if (JSON.stringify(sourceHashes(Object.keys(expectedSources))) !== JSON.stringify(expectedSources)) throw new Error('Source changed during MCP coverage measurement');
   if (JSON.stringify(sourceHashes(Object.keys(expectedRuntime))) !== JSON.stringify(expectedRuntime)) throw new Error('Runtime changed during MCP coverage measurement');
-  const records = new Map(processCoverage.result.map(record => [record.url, record]));
   const output = {};
   for (const file of runtimeFiles) {
     const code = readFileSync(file, 'utf8');
@@ -27,7 +43,7 @@ export async function mapRuntimeCoverage(processCoverage, runtimeFiles, expected
       if (!expectedSources[normalize(original)] || readFileSync(original, 'utf8') !== sourceMap.sourcesContent[index]) throw new Error('MCP source map does not match measured source');
     }
     const url = pathToFileURL(resolve(file)).href;
-    const measured = records.get(url) || records.get(pathToFileURL(realpathSync(file)).href);
+    const measured = mergeRuntimeRecords(processCoverage.result, url, pathToFileURL(realpathSync(file)).href);
     const coverage = measured ? {...measured, url} : {url, functions:[{functionName:'', ranges:[{startOffset:0,endOffset:code.length,count:0}],isBlockCoverage:true}]};
     const mapped = await convert({code, ast:parseAstAsync(code), sourceMap, coverage, wrapperLength:0});
     for (const [path, record] of Object.entries(mapped)) {

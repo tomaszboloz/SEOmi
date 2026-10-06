@@ -140,3 +140,7 @@ mod tests {
         assert_eq!(unique.len(), directories.len());
     }
 }
+
+#[cfg(test)]
+#[path = "file_export_edge_tests.rs"]
+mod edge_tests;

@@ -87,7 +87,7 @@ jobs:
       - name: Lint TypeScript and React
         run: npm run lint
       - name: Run Vitest with full frontend coverage
-        run: npm run test:coverage
+        run: npm run test:coverage:target
       - name: Install MCP coverage dependencies
         run: npm ci --prefix mcp-server --ignore-scripts
       - name: Measure MCP source execution through Node tests
