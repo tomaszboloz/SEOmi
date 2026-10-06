@@ -143,3 +143,8 @@ fn text_helpers_preserve_pdf_escaping_and_page_summary_fallbacks() {
         .iter()
         .any(|line| line.contains("[Warning] Missing alt")));
 }
+
+#[test]
+fn rejects_audit_pdf_without_final_url() {
+    assert!(super::generate_audit_pdf(json!({})).is_err());
+}

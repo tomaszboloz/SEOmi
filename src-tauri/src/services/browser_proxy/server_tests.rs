@@ -26,7 +26,10 @@ where
         serve_connection_with(stream, connector, request_timeout, tunnel_timeout).await;
     });
     let mut client = TcpStream::connect(address).await.unwrap();
-    client.write_all(request).await.unwrap();
+    for chunk in request.chunks(7) {
+        client.write_all(chunk).await.unwrap();
+        tokio::task::yield_now().await;
+    }
     client.shutdown().await.unwrap();
     let mut response = Vec::new();
     timeout(Duration::from_secs(2), client.read_to_end(&mut response))
