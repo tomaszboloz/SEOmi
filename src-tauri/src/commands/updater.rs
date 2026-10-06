@@ -1,4 +1,5 @@
 use serde::Serialize;
+use tauri::{AppHandle, Runtime};
 use tauri_plugin_updater::UpdaterExt;
 
 #[derive(Debug, Serialize)]
@@ -28,7 +29,11 @@ fn check_error(error: tauri_plugin_updater::Error) -> Result<UpdateStatus, Strin
 }
 
 #[tauri::command]
-pub async fn check_for_updates(app: tauri::AppHandle) -> Result<UpdateStatus, String> {
+pub async fn check_for_updates(app: AppHandle) -> Result<UpdateStatus, String> {
+    check_for_updates_with(app).await
+}
+
+async fn check_for_updates_with<R: Runtime>(app: AppHandle<R>) -> Result<UpdateStatus, String> {
     let updater = match app.updater() {
         Ok(u) => u,
         Err(e) => return Err(format!("Updater initialization: {}", e)),
@@ -72,7 +77,11 @@ mod tests {
 }
 
 #[tauri::command]
-pub async fn install_update(app: tauri::AppHandle) -> Result<UpdateStatus, String> {
+pub async fn install_update(app: AppHandle) -> Result<UpdateStatus, String> {
+    install_update_with(app).await
+}
+
+async fn install_update_with<R: Runtime>(app: AppHandle<R>) -> Result<UpdateStatus, String> {
     let updater = app
         .updater()
         .map_err(|error| format!("Updater initialization: {error}"))?;
@@ -95,3 +104,7 @@ pub async fn install_update(app: tauri::AppHandle) -> Result<UpdateStatus, Strin
         current_version: env!("CARGO_PKG_VERSION").to_string(),
     })
 }
+
+#[cfg(test)]
+#[path = "updater_contract_tests.rs"]
+mod contract_tests;

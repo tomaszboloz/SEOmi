@@ -85,3 +85,51 @@ export const postOllama = async (options: ReturnType<typeof ollamaSettings>, pat
     reader?.releaseLock();
   }
 };
+
+/** Bounded JSON GET for discovery endpoints; errors never include response bodies. */
+export const getOllama = async (options: ReturnType<typeof ollamaSettings>, path: string): Promise<Record<string, unknown>> => {
+  const controller = new AbortController();
+  const timer = setTimeout(() => controller.abort(), options.timeoutMs);
+  let reader: ReadableStreamDefaultReader<Uint8Array> | undefined;
+  let bytes = 0;
+  try {
+    const request = Promise.resolve().then(() => options.fetchImpl(`${options.baseUrl}${path}`, {
+      method: 'GET', headers: { Accept: 'application/json' }, signal: controller.signal,
+    }));
+    let response: Response;
+    void request.then((late) => { if (controller.signal.aborted) cancelBody(late.body); }, () => undefined);
+    try { response = await beforeDeadline(request, controller.signal); }
+    catch { throw new Error(`Cannot reach Ollama at ${options.baseUrl}`); }
+    if (!response.ok) {
+      cancelBody(response.body);
+      throw new Error(`Ollama ${path} returned HTTP ${response.status}`);
+    }
+    reader = response.body?.getReader();
+    if (!reader) throw new Error('Ollama returned an invalid response');
+    const chunks: Uint8Array[] = [];
+    let value: unknown;
+    try {
+      for (;;) {
+        const chunk = await beforeDeadline(reader.read(), controller.signal);
+        if (chunk.done) break;
+        bytes += chunk.value.byteLength;
+        if (bytes > MAX_OLLAMA_RESPONSE_BYTES) throw new Error('Ollama response too large');
+        chunks.push(chunk.value);
+      }
+      const buffer = new Uint8Array(bytes);
+      let offset = 0;
+      for (const chunk of chunks) { buffer.set(chunk, offset); offset += chunk.byteLength; }
+      value = JSON.parse(new TextDecoder('utf-8', { fatal: true }).decode(buffer));
+    } catch {
+      void reader.cancel().catch(() => undefined);
+      if (controller.signal.aborted) throw new Error('Ollama request timed out');
+      if (bytes > MAX_OLLAMA_RESPONSE_BYTES) throw new Error('Ollama response too large');
+      throw new Error('Ollama returned an invalid response');
+    }
+    if (value === null || typeof value !== 'object' || Array.isArray(value)) throw new Error('Ollama returned an invalid response');
+    return value as Record<string, unknown>;
+  } finally {
+    clearTimeout(timer);
+    reader?.releaseLock();
+  }
+};

@@ -6,6 +6,7 @@ import { AIAssistantModalHeader } from './assistant/AIAssistantModalHeader';
 import { AIAssistantEngineSelect } from './assistant/AIAssistantEngineSelect';
 import { AIAssistantApiKeyInput } from './assistant/AIAssistantApiKeyInput';
 import { AIAssistantSuggestions } from './assistant/AIAssistantSuggestions';
+import { OllamaAssistantPanel } from './ollama/OllamaAssistantPanel';
 
 export const AIAssistantModal: React.FC = () => {
   const session = useAIAssistantSession();
@@ -110,6 +111,8 @@ export const AIAssistantModal: React.FC = () => {
               t={t}
             />
           )}
+
+          {currentAudit && <OllamaAssistantPanel />}
         </div>
       </div>
     </div>

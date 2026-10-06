@@ -1,4 +1,5 @@
 export { auditCsv, auditLinksCsv, auditImagesCsv, downloadAuditJson, downloadAuditCsv, downloadAuditPdf, downloadAuditLinksCsv, downloadAuditImagesCsv } from './export/audit';
+export { auditHtml, crawlReportHtml, downloadAuditHtml, downloadCrawlHtml } from './export/html';
 export { downloadText } from './export/download';
 export { backlinkGapCsv, downloadBacklinkGapCsv } from './export/backlink';
 export { crawlReportPayload, downloadCrawlJson, downloadCrawlPdf } from './export/crawlReport';

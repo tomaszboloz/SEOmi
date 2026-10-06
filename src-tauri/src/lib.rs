@@ -44,6 +44,7 @@ pub fn desktop_builder() -> Builder<tauri::Wry> {
                 commands::seo_audit::cancel_inspect_url,
                 commands::http_client::check_link,
                 commands::external_link_checker::check_external_crawl_links,
+                commands::free_feeds::fetch_public_feed,
                 commands::file_export::write_mcp_config_file,
                 commands::mcp_discovery::discover_mcp_tools,
                 commands::settings::get_config,

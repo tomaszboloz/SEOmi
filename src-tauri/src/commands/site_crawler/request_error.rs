@@ -58,3 +58,7 @@ pub(super) fn request_error_kind(error: &reqwest::Error) -> String {
     }
     classify_request_error(error.is_timeout(), error.is_connect(), &detail).into()
 }
+
+#[cfg(test)]
+#[path = "request_error_tests.rs"]
+mod tests;

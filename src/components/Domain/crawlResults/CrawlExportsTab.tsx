@@ -3,7 +3,7 @@
 import { FileDown } from "lucide-react";
 import { format } from "date-fns";
 
-import { downloadCrawlCustomSearchCsv, downloadCrawlImagesCsv, downloadCrawlIssuesCsv, downloadCrawlJson, downloadCrawlLinksCsv, downloadCrawlPagesCsv, downloadCrawlResourcesCsv, downloadCrawlFramesCsv } from "@/services/export";
+import { downloadCrawlCustomSearchCsv, downloadCrawlHtml, downloadCrawlImagesCsv, downloadCrawlIssuesCsv, downloadCrawlJson, downloadCrawlLinksCsv, downloadCrawlPagesCsv, downloadCrawlResourcesCsv, downloadCrawlFramesCsv } from "@/services/export";
 
 import { Empty } from './CrawlViewPrimitives';
 
@@ -33,6 +33,7 @@ return currentRun ? (
               {[
                 [t("crawlDeepUi.exportJson"), () => downloadCrawlJson(currentRun)],
                 [t("crawlDeepUi.exportPdf"), () => void exportPdf()],
+                [t("crawlDeepUi.exportHtml"), () => downloadCrawlHtml(currentRun)],
                 [t("crawlDeepUi.exportUrlsCsv"), () => downloadCrawlPagesCsv(currentRun)],
                 [t("crawlDeepUi.exportLinksCsv"), () => downloadCrawlLinksCsv(currentRun)],
                 [t("crawlDeepUi.exportImagesCsv"), () => downloadCrawlImagesCsv(currentRun)],

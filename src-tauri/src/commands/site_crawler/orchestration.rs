@@ -62,5 +62,8 @@ pub async fn crawl_site_with_control<R: Runtime>(
 }
 
 #[cfg(test)]
+#[path = "orchestration/tests/page_media_build_contracts.rs"]
+mod page_media_build_contracts;
+#[cfg(test)]
 #[path = "orchestration/tests/mod.rs"]
 mod tests;
