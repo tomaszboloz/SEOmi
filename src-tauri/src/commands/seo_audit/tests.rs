@@ -41,6 +41,16 @@ fn rate_limiter_allows_ten_spaced_requests_and_rejects_the_eleventh() {
 }
 
 #[test]
+fn rate_limiter_rejects_a_request_before_the_minimum_interval() {
+    let limiter = AuditRateLimiter::new();
+    assert!(limiter.check(0).is_ok());
+    assert_eq!(
+        limiter.check(AUDIT_MIN_INTERVAL_MS - 1),
+        Err("Audit requests are too frequent. Please wait a moment.")
+    );
+}
+
+#[test]
 fn rate_limiter_expires_old_entries_after_one_minute() {
     let limiter = AuditRateLimiter::new();
     for index in 0..AUDIT_RATE_LIMIT {

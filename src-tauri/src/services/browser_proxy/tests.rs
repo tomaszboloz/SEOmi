@@ -1,4 +1,5 @@
 use super::parse::{find_header_end, parse_proxy_target, parse_request_head};
+use super::target::authority_contains_userinfo;
 use super::types::{is_allowed_plain_http_port, ProxyTarget};
 use super::upstream::{is_local_hostname, request_target};
 
@@ -44,6 +45,7 @@ fn request_parser_accepts_only_unambiguous_bounded_headers() {
         parse_request_head("POST http://example.com/ HTTP/1.1").unwrap_err(),
         405
     );
+    assert!(parse_request_head("GET http://example.com/ HTTP/1.1\r\n").is_ok());
 }
 
 #[test]
@@ -84,6 +86,17 @@ fn proxy_targets_reject_credentials_schemes_and_bodies() {
         &[]
     )
     .is_err());
+    assert!(matches!(
+        parse_proxy_target(
+            "PUT".into(),
+            "http://example.com/".into(),
+            Vec::new(),
+            0,
+            &[]
+        ),
+        Err(405)
+    ));
+    assert!(!authority_contains_userinfo("relative-target"));
 }
 
 #[test]
