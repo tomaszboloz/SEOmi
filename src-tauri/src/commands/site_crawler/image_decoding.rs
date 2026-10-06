@@ -59,8 +59,16 @@ pub(super) fn intrinsic_http_image_dimensions(
             if offset.saturating_add(8) > bytes.len() {
                 break;
             }
-            let width = usize::from(bytes[offset]).max(1);
-            let height = usize::from(bytes[offset + 1]).max(1);
+            let width = if bytes[offset] == 0 {
+                256
+            } else {
+                usize::from(bytes[offset])
+            };
+            let height = if bytes[offset + 1] == 0 {
+                256
+            } else {
+                usize::from(bytes[offset + 1])
+            };
             if largest.map_or(true, |(current_width, current_height)| {
                 width.saturating_mul(height) > current_width.saturating_mul(current_height)
             }) {
@@ -117,3 +125,7 @@ pub(super) fn intrinsic_http_image_dimensions(
     }
     None
 }
+
+#[cfg(test)]
+#[path = "image_decoding_tests.rs"]
+mod tests;

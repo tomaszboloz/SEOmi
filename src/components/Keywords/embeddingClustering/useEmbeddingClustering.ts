@@ -3,6 +3,7 @@ import { useAsyncOperationScope } from '@/hooks/useAsyncOperationScope';
 import { z } from 'zod';
 import { readJsonRecord } from '@/services/storageContracts';
 import { writeJsonStorage } from '@/services/storage';
+import type { SerpSnapshot } from '@/services/serpImport';
 import {
   clusterKeywordsByEmbedding, EMBEDDING_PROVIDERS, embeddingClusteringResultSchema,
   type EmbeddingClusteringResult, type EmbeddingProviderName,
@@ -40,11 +41,11 @@ export const loadEmbeddingSession = (projectId: string | null): { settings: Embe
 };
 
 /** Embedding clustering for one project: settings and last result persist per project. */
-export const useEmbeddingClustering = (projectId: string | null, keywords: string[]) => {
+export const useEmbeddingClustering = (projectId: string | null, keywords: string[], serpSnapshots: SerpSnapshot[] = []) => {
   const [state, setState] = useState(() => loadEmbeddingSession(projectId));
   const [isRunning, setIsRunning] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const ownerKey = JSON.stringify([projectId, keywords, state.settings]);
+  const ownerKey = JSON.stringify([projectId, keywords, state.settings, serpSnapshots]);
   const ownerToken = useMemo(() => Symbol(ownerKey), [ownerKey]);
   const owner = useRef<symbol | null>(null);
   const begin = useAsyncOperationScope(ownerKey);
@@ -82,7 +83,7 @@ export const useEmbeddingClustering = (projectId: string | null, keywords: strin
     setIsRunning(true);
     setError(null);
     try {
-      const result = await clusterKeywordsByEmbedding(keywords, { ...state.settings });
+      const result = await clusterKeywordsByEmbedding(keywords, { ...state.settings, ...(serpSnapshots.length ? { serpSnapshots } : {}) });
       if (isCurrent()) persist({ settings: state.settings, result });
     } catch (caught) {
       if (isCurrent()) setError(caught instanceof Error ? caught.message : String(caught));
