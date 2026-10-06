@@ -80,6 +80,12 @@ mod command_tests;
 #[path = "search_console/connect_entry_tests.rs"]
 mod connect_entry_tests;
 #[cfg(test)]
+#[path = "search_console/disconnect_transport_tests.rs"]
+mod disconnect_transport_tests;
+#[cfg(test)]
+#[path = "search_console/inspection_entry_tests.rs"]
+mod inspection_entry_tests;
+#[cfg(test)]
 mod joint_rows_tests;
 #[cfg(test)]
 #[path = "search_console/performance_entry_tests.rs"]
@@ -87,6 +93,9 @@ mod performance_entry_tests;
 #[cfg(test)]
 #[path = "search_console/performance_fixture.rs"]
 mod performance_fixture;
+#[cfg(test)]
+#[path = "search_console/properties_entry_tests.rs"]
+mod properties_entry_tests;
 #[cfg(test)]
 mod rows_entry_tests;
 #[cfg(test)]
@@ -98,6 +107,9 @@ mod rows_transport_tests;
 mod token_entry_tests;
 #[cfg(test)]
 mod token_transport_tests;
+#[cfg(test)]
+#[path = "search_console/transport_fixture.rs"]
+mod transport_fixture;
 #[cfg(test)]
 mod transport_regressions;
 #[cfg(test)]

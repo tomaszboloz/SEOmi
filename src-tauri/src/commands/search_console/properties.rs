@@ -9,7 +9,15 @@ pub(super) async fn site_properties(
     client: &reqwest::Client,
     access_token: &str,
 ) -> Result<Vec<GscSiteProperty>, String> {
-    let body = token_json(access_token, client.get(SITES_URL)).await?;
+    site_properties_at(client, access_token, SITES_URL).await
+}
+
+pub(super) async fn site_properties_at(
+    client: &reqwest::Client,
+    access_token: &str,
+    endpoint: &str,
+) -> Result<Vec<GscSiteProperty>, String> {
+    let body = token_json(access_token, client.get(endpoint)).await?;
     parse_properties(body)
 }
 

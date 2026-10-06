@@ -10,11 +10,36 @@ mod status;
 mod streams;
 mod version;
 
+use std::future::Future;
+
 pub use status::AiCliStatus;
 
 #[tauri::command]
 pub async fn detect_ai_clis() -> Vec<AiCliStatus> {
-    status::detect_ai_clis().await
+    detect_ai_clis_with(status::version_check).await
+}
+
+async fn detect_ai_clis_with<F, Fut>(mut check: F) -> Vec<AiCliStatus>
+where
+    F: FnMut(&str, &str) -> Fut,
+    Fut: Future<Output = (bool, String)>,
+{
+    let providers = [
+        ("openai", "codex"),
+        ("claude", "claude"),
+        ("gemini", "gemini"),
+    ];
+    let mut results = Vec::with_capacity(providers.len());
+    for (provider, command) in providers {
+        let (available, detail) = check(provider, command).await;
+        results.push(AiCliStatus {
+            provider: provider.to_string(),
+            command: command.to_string(),
+            available,
+            detail,
+        });
+    }
+    results
 }
 
 #[tauri::command]
@@ -35,6 +60,9 @@ pub async fn run_ai_cli(
 use {auth::authenticated_output, diagnostics::display_output, streams::MAX_CLI_OUTPUT_BYTES};
 #[cfg(test)]
 mod auth_output_tests;
+#[cfg(test)]
+#[path = "ai_cli_contract_tests.rs"]
+mod contract_tests;
 #[cfg(test)]
 mod diagnostics_tests;
 #[cfg(test)]
