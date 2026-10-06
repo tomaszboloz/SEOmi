@@ -28,14 +28,31 @@ pub async fn dataforseo_request(
     path: String,
     payload: Option<Value>,
 ) -> Result<Value, String> {
-    if !allowed_path(&path) {
-        return Err("Unsupported DataForSEO endpoint.".into());
-    }
-    let (login, password) = dataforseo_credentials(&project_id)?;
     let client = reqwest::Client::builder()
         .timeout(std::time::Duration::from_secs(30))
         .build()
         .map_err(|_| "Unable to create DataForSEO client.".to_string())?;
+    dataforseo_request_at(&project_id, &path, payload, API_BASE, &client, |project| {
+        dataforseo_credentials(project)
+    })
+    .await
+}
+
+async fn dataforseo_request_at<C>(
+    project_id: &str,
+    path: &str,
+    payload: Option<Value>,
+    base_url: &str,
+    client: &reqwest::Client,
+    read_credentials: C,
+) -> Result<Value, String>
+where
+    C: FnOnce(&str) -> Result<(String, String), String>,
+{
+    if !allowed_path(path) {
+        return Err("Unsupported DataForSEO endpoint.".into());
+    }
+    let (login, password) = read_credentials(project_id)?;
     let request = client
         .request(
             if path == "/v3/appendix/user_data" {
@@ -43,7 +60,7 @@ pub async fn dataforseo_request(
             } else {
                 reqwest::Method::POST
             },
-            format!("{API_BASE}{path}"),
+            format!("{}{path}", base_url.trim_end_matches('/')),
         )
         .basic_auth(login, Some(password));
     let response = match payload {
@@ -58,6 +75,10 @@ pub async fn dataforseo_request(
     )
     .await
 }
+
+#[cfg(test)]
+#[path = "dataforseo_contract_tests.rs"]
+mod contract_tests;
 
 #[cfg(test)]
 mod tests {
