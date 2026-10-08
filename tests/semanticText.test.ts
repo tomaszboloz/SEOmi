@@ -37,6 +37,13 @@ describe('semanticTermKey', () => {
     expect(semanticTermKey('business', 'en')).toBe('business');
   });
 
+  it('respects the minimum stem and short English plural boundaries', () => {
+    expect(semanticTermKey('testa', 'pl')).toBe('test');
+    expect(semanticTermKey('rola', 'pl')).toBe('rola');
+    expect(semanticTermKey('ties', 'en')).toBe('ties');
+    expect(semanticTermKey('plans', 'en')).toBe('plan');
+  });
+
   it('only folds diacritics when the page language is unknown', () => {
     expect(semanticTermKey('Szkolenia', undefined)).toBe('szkolenia');
     expect(semanticTermKey('Żółć', null)).toBe('zolc');

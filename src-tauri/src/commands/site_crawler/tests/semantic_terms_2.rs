@@ -41,6 +41,16 @@ fn semantic_term_key_matches_the_semantic_map_rules() {
 }
 
 #[test]
+fn semantic_term_key_respects_inflection_boundaries() {
+    // Four folded stem characters are enough; three are deliberately left intact.
+    assert_eq!(semantic_term_key("testa", Some("pl")), "test");
+    assert_eq!(semantic_term_key("rola", Some("pl")), "rola");
+    // A four-character English word ending in `ies` is not a plural candidate.
+    assert_eq!(semantic_term_key("ties", Some("en")), "ties");
+    assert_eq!(semantic_term_key("plans", Some("en")), "plan");
+}
+
+#[test]
 fn semantic_folding_matches_the_frontend_for_common_latin_characters() {
     assert_eq!(
         fold_semantic_text("café Straße øvelse encyclopædia œuf Żółć"),
