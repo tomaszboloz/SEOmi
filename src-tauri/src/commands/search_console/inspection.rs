@@ -3,6 +3,9 @@ use serde_json::{json, Value};
 use tokio::time::Duration;
 use url::Url;
 
+const INSPECTION_ENDPOINT: &str =
+    "https://searchconsole.googleapis.com/v1/urlInspection/index:inspect";
+
 pub(super) async fn inspect_search_console_url(
     project_id: String,
     client_id: String,
@@ -19,14 +22,24 @@ pub(super) async fn inspect_search_console_url(
         .timeout(Duration::from_secs(30))
         .build()
         .map_err(|error| error.to_string())?;
-    let endpoint = "https://searchconsole.googleapis.com/v1/urlInspection/index:inspect";
     authorized_json(
         &client,
         &project_id,
         &client_id,
-        client.post(endpoint).json(&json!({
-            "inspectionUrl": parsed.as_str(), "siteUrl": site_url, "languageCode": "pl-PL"
-        })),
+        inspection_request(&client, INSPECTION_ENDPOINT, &site_url, &parsed),
     )
     .await
+}
+
+pub(super) fn inspection_request(
+    client: &reqwest::Client,
+    endpoint: &str,
+    site_url: &str,
+    inspection_url: &Url,
+) -> reqwest::RequestBuilder {
+    client.post(endpoint).json(&json!({
+        "inspectionUrl": inspection_url.as_str(),
+        "siteUrl": site_url,
+        "languageCode": "pl-PL"
+    }))
 }

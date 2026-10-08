@@ -7,7 +7,7 @@ it('keeps strict static analysis, full coverage reporting and both macOS archite
   expect(tests).toContain('cargo clippy --manifest-path src-tauri/Cargo.toml --all-targets -- -D warnings');
   expect(tests).toContain('npm run lint');
   expect(tests).toContain('cargo llvm-cov --manifest-path src-tauri/Cargo.toml --lcov');
-  expect(tests).toContain('npm run test:coverage');
+  expect(tests).toContain('run: npm run test:coverage:target');
   expect(release).not.toContain('macos-13');
   expect(release).toContain("platform: 'macos-15-intel'");
   expect(release).toContain("args: '--target x86_64-apple-darwin'");
