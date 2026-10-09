@@ -96,7 +96,7 @@ startSiteCrawl: async (url, limit, configPatch, environment = 'default', notifyC
         }
       }
       if (projectId && notifyCompletion) {
-        void services.notifyCrawlCompleted(projectId, crawlResult, previousRun?.result.health_score, { runId });
+        void services.notifyCrawlCompleted(projectId, crawlResult, previousRun?.result, { runId });
       }
       if (projectId && previousRun) void monitorCrawlComparison(projectId, compareCrawlRuns(run, previousRun, { projectId }));
       return crawlResult;

@@ -88,12 +88,14 @@ pub async fn prefetch_rendered_pages<R: Runtime>(
         let base_host = setup.base_host.clone();
         let config = setup.config.clone();
         let max_redirects = setup.max_redirects;
+        let retry_context = setup.retry_context();
         let task_url = url.clone();
         let handle = tasks.spawn(async move {
             let result = fetch_rendered_page(
                 &client,
                 &url,
-                RenderRequestScope::new(&base_host, max_redirects),
+                RenderRequestScope::new(&base_host, max_redirects)
+                    .with_retry_context(retry_context),
                 &config,
                 rendering_enabled,
                 &mut renderer,

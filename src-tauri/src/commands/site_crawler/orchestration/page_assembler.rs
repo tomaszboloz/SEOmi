@@ -3,7 +3,7 @@ use tauri::Runtime;
 use url::Url;
 
 use super::super::{
-    fetch_data::read_fetched_page_data, fetch_types::FetchedResponse,
+    fetch_data::read_fetched_page_data_with_context, fetch_types::FetchedResponse,
     html_decoding::decode_crawl_html_body, models::CrawledPageIssue,
 };
 use super::page_assembler_signals::extract_page_signals;
@@ -28,12 +28,19 @@ pub async fn assemble_page_summary<R: Runtime>(
         redirect_chain,
         redirect_stopped_reason,
         request_duration_ms,
+        retry_count,
     } = fetched;
     let final_base =
         Url::parse(&final_url).map_err(|e| format!("Failed to parse final URL: {e}"))?;
     let current_parsed = Url::parse(current_url).unwrap_or_else(|_| final_base.clone());
 
-    let page_data = read_fetched_page_data(response, setup.max_response_bytes).await;
+    let retry_context = setup.retry_context();
+    let page_data = read_fetched_page_data_with_context(
+        response,
+        setup.max_response_bytes,
+        Some(&retry_context),
+    )
+    .await;
     state.render_health.observe(&page_data);
     let page_duration = page_data
         .browser_navigation_time_ms
@@ -42,6 +49,12 @@ pub async fn assemble_page_summary<R: Runtime>(
     let is_html =
         page_data.declared_html && !page_data.body_truncated && !page_data.body_read_failed;
     let mut issues: Vec<CrawledPageIssue> = Vec::new();
+    if retry_count > 0 && page_data.status < 400 {
+        issues.push(CrawledPageIssue {
+            severity: "Info".into(),
+            message: format!("Transient HTTP failure recovered after {retry_count} retry"),
+        });
+    }
 
     let (text, detected_charset, html_validation_findings) = if is_html {
         decode_crawl_html_body(&page_data.body, page_data.charset.as_deref())

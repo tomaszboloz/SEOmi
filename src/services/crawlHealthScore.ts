@@ -1,4 +1,6 @@
-import type { CrawledPageSummary } from '@/types';
+import type { CrawledPageSummary, SiteCrawlResult } from '@/types';
+
+export const CRAWL_SCORE_VERSION = 2;
 
 const MAX_FINDING_TYPES = 3;
 
@@ -26,4 +28,16 @@ export const crawlHealthScore = (pages: CrawledPageSummary[]): number => {
   const penalty = Math.min(80, Math.ceil(affectedShares(pages, 'Critical') / MAX_FINDING_TYPES * 60
     + affectedShares(pages, 'Warning') / MAX_FINDING_TYPES * 30));
   return Math.max(20, Math.min(evidenceCap, 100 - penalty));
+};
+
+/** Recompute legacy formulas only when every stored page is still available. */
+export const comparableCrawlScore = (current: SiteCrawlResult, previous?: SiteCrawlResult): number | undefined => {
+  const version = current.score_version;
+  if (!previous || !Number.isSafeInteger(version) || !version || version < 1 || version > 65535) return undefined;
+  if (!Number.isFinite(previous.health_score) || previous.health_score < 0 || previous.health_score > 100) return undefined;
+  if (version === previous.score_version) return previous.health_score;
+  if (version !== CRAWL_SCORE_VERSION || previous.storage_pages_truncated
+    || previous.pages.length !== previous.pages_crawled
+    || previous.pages.some(page => page.issues_count !== page.issues.length)) return undefined;
+  return crawlHealthScore(previous.pages);
 };

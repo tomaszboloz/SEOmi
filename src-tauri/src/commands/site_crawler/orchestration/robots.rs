@@ -3,6 +3,7 @@ use std::time::Duration;
 use super::super::{
     crawl_delay::parse_robots_crawl_delay,
     models::{CrawledRobotsAgent, CrawledRobotsRule},
+    retry::{read_bounded_text_with_retry, send_get_with_retry},
     robots::{build_robots_agent_matrix, parse_robots_rules, RobotsRule},
     sitemap::parse_sitemap_directives,
 };
@@ -25,11 +26,22 @@ pub async fn fetch_and_eval_robots(setup: &CrawlSetup) -> Result<CrawlRobotsOutc
                 .parsed_base
                 .join("/robots.txt")
                 .map_err(|error| format!("Failed to construct robots.txt URL: {error}"))?;
-            match setup.client.get(robots_url.clone()).send().await {
+            let mut retry_available = true;
+            let retry_context = setup.retry_context();
+            match send_get_with_retry(
+                &setup.client,
+                robots_url.as_str(),
+                &retry_context,
+                &mut retry_available,
+            )
+            .await
+            .map(|result| result.response)
+            {
                 Ok(response) if response.status().is_success() => {
-                    match crate::services::http_client::read_bounded_text(
+                    match read_bounded_text_with_retry(
                         response,
                         setup.max_response_bytes,
+                        &retry_context,
                     )
                     .await
                     {

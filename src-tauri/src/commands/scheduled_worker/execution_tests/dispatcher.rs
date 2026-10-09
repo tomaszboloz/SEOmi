@@ -52,3 +52,24 @@ async fn dispatcher_rejects_browser_rendered_and_unknown_tasks_before_callbacks(
     .unwrap_err();
     assert_eq!(error, "Unsupported scheduled task type.");
 }
+
+#[tokio::test]
+async fn dispatcher_preserves_executor_errors_for_audit_and_crawl() {
+    let audit_error = execute_task_with(
+        task("page-audit"),
+        |_| async { Err::<Value, _>("audit fixture failed".into()) },
+        |_| async { panic!("crawl executor must not run") },
+    )
+    .await
+    .unwrap_err();
+    assert_eq!(audit_error, "audit fixture failed");
+
+    let crawl_error = execute_task_with(
+        task("site-crawl"),
+        |_| async { panic!("audit executor must not run") },
+        |_| async { Err::<Value, _>("crawl fixture failed".into()) },
+    )
+    .await
+    .unwrap_err();
+    assert_eq!(crawl_error, "crawl fixture failed");
+}

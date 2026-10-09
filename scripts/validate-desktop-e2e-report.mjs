@@ -5,7 +5,7 @@ import { readFileSync } from 'node:fs';
 // renderer and validation contracts that the coverage job depends on.
 export const REQUIRED_TOP_LEVEL_CHECKS = 24;
 export const REQUIRED_RENDERER_CHECKS = 26 + (11 * 2);
-export const REQUIRED_VALIDATION_CHECKS = 39 + 20;
+export const REQUIRED_VALIDATION_CHECKS = 39 + 24;
 
 const isRecord = value => typeof value === 'object' && value !== null && !Array.isArray(value);
 

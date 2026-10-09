@@ -1,7 +1,9 @@
 use regex::Regex;
 use std::collections::HashSet;
+use std::sync::Arc;
 use std::time::Instant;
 
+use super::super::retry::{RetryBudget, RetryContext};
 use super::super::{
     control::CrawlControl, filter_validation::compile_filter_patterns, models::CrawlConfig,
     scope::normalize_allowed_hosts, url_normalization::normalize_crawl_url,
@@ -30,6 +32,17 @@ pub struct CrawlSetup {
     pub rendered_cookie: Option<String>,
     pub ua: String,
     pub client: reqwest::Client,
+    pub retry_budget: Arc<RetryBudget>,
+}
+
+impl CrawlSetup {
+    pub(crate) fn retry_context(&self) -> RetryContext {
+        RetryContext::new(
+            self.retry_budget.clone(),
+            self.start_time,
+            self.max_run_seconds,
+        )
+    }
 }
 
 impl CrawlSetup {
@@ -76,6 +89,7 @@ impl CrawlSetup {
         let max_run_seconds = config
             .max_run_seconds
             .map(|seconds| seconds.clamp(1, 3_600));
+        let retry_budget = RetryBudget::new(limit / 10);
         let include_patterns = compile_filter_patterns(&config.include_patterns, "include")
             .map_err(|e| format!("Invalid include filter `{}`: {}", e.pattern, e.message))?;
         let exclude_patterns = compile_filter_patterns(&config.exclude_patterns, "exclude")
@@ -105,6 +119,7 @@ impl CrawlSetup {
             rendered_cookie,
             ua,
             client,
+            retry_budget,
         })
     }
 }

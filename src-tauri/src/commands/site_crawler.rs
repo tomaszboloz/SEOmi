@@ -49,6 +49,7 @@ mod request_error;
 mod resource_apply;
 mod resource_discovery;
 mod resource_fetch;
+mod retry;
 mod robots;
 mod robots_matching;
 mod schema;
@@ -74,7 +75,7 @@ use {
     canonical::*, client_redirects::*, constants::*, content_terms::*, crawl_delay::*,
     fetch_data::*, fetch_types::*, fingerprints::*, hreflang::*, hreflang_validation::*,
     html_source_locator::*, html_validation_rules::*, image_decoding::*, inline_images::*,
-    models::*, pagination::*, readability::*, request_error::*, robots::*, robots_matching::*,
+    models::*, pagination::*, readability::*, retry::*, robots::*, robots_matching::*,
     schema_inspections::*, schema_references::*, scope::*, semantic_chrome::*, simhash::*,
     svg_dimensions::*, svg_inline::*, target_relations::*, transport::*, url_normalization::*,
 };
@@ -82,9 +83,9 @@ use {
 #[cfg(test)]
 use {
     content_metrics::*, duplicate_annotation::*, favicon::*, frames::*, html_decoding::*,
-    html_validation::*, js_redirects::*, post_processing::*, prefetch::*, resource_apply::*,
-    resource_discovery::*, schema::*, scoring::*, semantic_inflection::*, semantic_terms::*,
-    semantics::*, sitemap::*, social::*, srcset::*,
+    html_validation::*, js_redirects::*, post_processing::*, prefetch::*, request_error::*,
+    resource_apply::*, resource_discovery::*, schema::*, scoring::*, semantic_inflection::*,
+    semantic_terms::*, semantics::*, sitemap::*, social::*, srcset::*,
 };
 
 mod ipc;

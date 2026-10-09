@@ -61,11 +61,11 @@
       await reject('rendered preview selector rejected', 'open_rendered_element_preview', {
         ...previewArgs, selector: '',
       }, 'Preview selector cannot be empty.');
-      await reject('invalid settings secret rejected before secure store', 'set_secret', {
-        name: 'unsupported-e2e-secret', value: 'unused',
+      await reject('invalid settings secret name rejected before secure store', 'set_secret', {
+        name: 'invalid/name', value: 'unused',
       }, 'Unsupported secure setting.');
-      await reject('invalid settings secret read rejected before secure store', 'get_secret', {
-        name: 'unsupported-e2e-secret',
+      await reject('invalid settings secret name read rejected before secure store', 'get_secret', {
+        name: 'invalid/name',
       }, 'Unsupported secure setting.');
       await reject('invalid request profile rejected before secure store', 'save_crawl_auth_profile', {
         projectId: '../invalid', profileId: 'e2e', headers: [], cookie: null, proxyUrl: null,

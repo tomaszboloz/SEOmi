@@ -16,8 +16,8 @@ fn validation_scripts_match_the_runtime_gate() {
             .count()
     };
     assert_eq!(count(base), 39);
-    assert_eq!(count(additional), 20);
-    assert_eq!(39 + 20, super::REQUIRED_VALIDATION_CHECKS);
+    assert_eq!(count(additional), 24);
+    assert_eq!(39 + 24, super::REQUIRED_VALIDATION_CHECKS);
     assert_eq!(super::REQUIRED_RENDERER_CHECKS, 48);
     assert_eq!(crawl.matches("check(`${label}").count(), 11);
     assert!(renderer.contains("__seomiDesktopCrawlValidation"));

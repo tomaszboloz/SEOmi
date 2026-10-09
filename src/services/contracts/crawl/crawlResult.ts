@@ -8,6 +8,7 @@ export const SiteCrawlResultSchema = z.object({
   crawl_mode: z.union([z.literal('http'), z.literal('browser-rendered')]).nullable().transform(value => value ?? undefined).optional(),
   pages_crawled: z.number().finite(),
   health_score: z.number().finite(),
+  score_version: z.number().int().min(0).max(65535).nullable().transform(value => value ?? undefined).optional(),
   critical_count: z.number().finite(),
   warning_count: z.number().finite(),
   notice_count: z.number().finite(),

@@ -4,6 +4,7 @@ pub(crate) struct FetchedResponse {
     pub(crate) redirect_chain: Vec<super::CrawledRedirectHop>,
     pub(crate) redirect_stopped_reason: Option<String>,
     pub(crate) request_duration_ms: Option<u64>,
+    pub(crate) retry_count: u8,
 }
 
 pub(crate) enum FetchedPageBody {

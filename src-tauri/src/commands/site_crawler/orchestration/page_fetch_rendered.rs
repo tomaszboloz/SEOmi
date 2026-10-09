@@ -65,7 +65,8 @@ pub async fn fetch_rendered_step<R: Runtime>(
         let render = fetch_rendered_page(
             &setup.client,
             current_url,
-            RenderRequestScope::new(&setup.base_host, setup.max_redirects),
+            RenderRequestScope::new(&setup.base_host, setup.max_redirects)
+                .with_retry_context(setup.retry_context()),
             &setup.config,
             state.render_health.rendering_enabled(),
             &mut renderer,

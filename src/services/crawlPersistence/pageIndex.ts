@@ -50,6 +50,7 @@ export const compactCrawlRunsToPageIndex = (runs: CrawlRunRecord[]): CrawlRunRec
       crawl_mode: run.result.crawl_mode,
       pages_crawled: pages.length,
       health_score: run.result.health_score,
+      score_version: run.result.score_version,
       critical_count: run.result.critical_count,
       warning_count: run.result.warning_count,
       notice_count: run.result.notice_count,

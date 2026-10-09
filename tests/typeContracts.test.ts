@@ -12,6 +12,7 @@ const modules = codeFiles('src/types').map(file => relative('src/types', file)).
 const additive: Record<string, string[]> = {
   GscPerformanceData: ['query_pages', 'query_pages_may_be_truncated'],
   CrawledPageSummary: ['semantic_language'],
+  SiteCrawlResult: ['score_version'],
 };
 
 it('keeps the type barrel declaration-free and exports all domain contracts as types', () => {
@@ -63,6 +64,16 @@ it('adds only an optional semantic grouping language to the legacy crawled page 
   if (!language || !ts.isPropertySignature(language)) throw new Error('Missing additive field');
   expect(language.questionToken).toBeDefined();
   expect(language.type?.getText(source)).toBe('string | null');
+});
+
+it('adds an optional formula version without breaking legacy crawl snapshots', () => {
+  const source = parse('crawl/result.ts');
+  const declaration = source.statements.find(node => ts.isInterfaceDeclaration(node) && node.name.text === 'SiteCrawlResult');
+  if (!declaration || !ts.isInterfaceDeclaration(declaration)) throw new Error('Missing crawl result contract');
+  const version = declaration.members.find(member => member.name?.getText(source) === 'score_version');
+  if (!version || !ts.isPropertySignature(version)) throw new Error('Missing formula version');
+  expect(version.questionToken).toBeDefined();
+  expect(version.type?.getText(source)).toBe('number');
 });
 
 it('allows only declarations and direct type imports/exports, with no circular module dependency', () => {

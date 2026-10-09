@@ -35,6 +35,7 @@ async fn prefetched_response_is_consumed_without_a_second_request() {
             redirect_chain: Vec::new(),
             redirect_stopped_reason: None,
             request_duration_ms: None,
+            retry_count: 0,
         }),
     );
 

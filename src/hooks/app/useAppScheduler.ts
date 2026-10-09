@@ -49,7 +49,7 @@ export const useAppScheduler = ({ scheduledLaunchContext, setScheduledLaunchCont
           if (crawl) {
             const completedRun = useToolsStore.getState().crawlRuns.find((run) => run.result === crawl);
             const runId = completedRun?.id || `scheduled-crawl-${schedule.id}-${schedule.lastStartedAt || schedule.nextRunAt || 'unknown'}`;
-            void notifyCrawlCompleted(activeProjectId, crawl, previousRun?.result.health_score, { runId });
+            void notifyCrawlCompleted(activeProjectId, crawl, previousRun?.result, { runId });
           } else {
             failure = useToolsStore.getState().crawlError || undefined;
           }

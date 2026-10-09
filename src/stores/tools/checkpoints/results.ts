@@ -1,6 +1,6 @@
 import { SiteCrawlResult } from '@/types';
 import type { InterruptedCrawl } from '../contracts';
-import { crawlHealthScore } from '@/services/crawlHealthScore';
+import { crawlHealthScore, CRAWL_SCORE_VERSION } from '@/services/crawlHealthScore';
 
 export const checkpointUrl = (value: string): string => {
   try {
@@ -51,6 +51,7 @@ export const mergeCrawlResults = (base: SiteCrawlResult, fresh: SiteCrawlResult)
     start_url: base.start_url || fresh.start_url,
     pages_crawled: pages.length,
     health_score: healthScore,
+    score_version: CRAWL_SCORE_VERSION,
     critical_count: criticalCount,
     warning_count: warningCount,
     notice_count: noticeCount,

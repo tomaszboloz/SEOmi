@@ -6,12 +6,11 @@ pub(crate) use scope::RenderRequestScope;
 
 use super::control::CrawlControl;
 use super::crawl_delay::wait_for_crawl_delay;
-use super::fetch_data::read_fetched_page_data;
+use super::fetch_data::read_fetched_page_data_with_context;
 use super::fetch_types::{CrawlFetchFailure, FetchedPageBody, FetchedResponse};
 use super::models::CrawlConfig;
 use super::render_decision::{is_renderable_response, render_or_fallback, PageRenderer};
-use super::request_error::request_error_kind;
-use super::transport::request_with_safe_redirects;
+use super::transport::request_with_safe_redirects_with_context;
 use crate::commands::rendered_crawler::{
     RenderOptions, RenderedCrawlerSession, RenderedPageSnapshot,
 };
@@ -94,7 +93,8 @@ pub(crate) async fn fetch_rendered_page<R: PageRenderer>(
         redirect_chain,
         redirect_stopped_reason,
         request_duration_ms,
-    } = request_with_safe_redirects(
+        retry_count,
+    } = request_with_safe_redirects_with_context(
         client,
         url,
         scope.base_host,
@@ -103,13 +103,19 @@ pub(crate) async fn fetch_rendered_page<R: PageRenderer>(
         &config.allowed_hosts,
         scope.max_redirects,
         config,
+        scope.retry_context.clone(),
     )
     .await
     .map_err(|error| CrawlFetchFailure {
-        kind: request_error_kind(&error),
+        kind: error.kind(),
         message: error.to_string(),
     })?;
-    let http = read_fetched_page_data(response, max_response_bytes).await;
+    let http = read_fetched_page_data_with_context(
+        response,
+        max_response_bytes,
+        Some(&scope.retry_context),
+    )
+    .await;
     if rendering_enabled && is_renderable_response(&http) {
         if let Some((control, run_id, request_started_at, delay)) = render_gate {
             if !wait_for_crawl_delay(control, run_id, request_started_at, delay).await {
@@ -134,5 +140,6 @@ pub(crate) async fn fetch_rendered_page<R: PageRenderer>(
         redirect_chain,
         redirect_stopped_reason,
         request_duration_ms,
+        retry_count,
     })
 }

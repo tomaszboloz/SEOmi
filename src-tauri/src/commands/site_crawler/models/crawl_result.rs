@@ -15,6 +15,9 @@ pub struct SiteCrawlResult {
     pub crawl_mode: String,
     pub pages_crawled: usize,
     pub health_score: u8,
+    /// Zero identifies legacy snapshots whose formula was not recorded.
+    #[serde(default)]
+    pub score_version: u16,
     pub critical_count: usize,
     pub warning_count: usize,
     pub notice_count: usize,

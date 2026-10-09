@@ -5,8 +5,7 @@ use super::super::{
     control::CrawlControl,
     crawl_delay::wait_for_crawl_delay,
     fetch_types::{CrawlFetchFailure, FetchedResponse},
-    request_error::request_error_kind,
-    transport::request_with_safe_redirects,
+    transport::request_with_safe_redirects_with_context,
 };
 use super::page_fetch_rendered::fetch_rendered_step;
 use super::setup::CrawlSetup;
@@ -49,7 +48,7 @@ pub async fn fetch_page_step<R: Runtime>(
             )
             .await
         } else {
-            request_with_safe_redirects(
+            request_with_safe_redirects_with_context(
                 &setup.client,
                 current_url,
                 &setup.base_host,
@@ -58,10 +57,11 @@ pub async fn fetch_page_step<R: Runtime>(
                 &setup.config.allowed_hosts,
                 setup.max_redirects,
                 &setup.config,
+                setup.retry_context(),
             )
             .await
             .map_err(|error| CrawlFetchFailure {
-                kind: request_error_kind(&error),
+                kind: error.kind(),
                 message: error.to_string(),
             })
         };

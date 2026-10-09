@@ -2,7 +2,7 @@ use std::time::Duration;
 use tauri::{AppHandle, Runtime};
 
 use super::super::{
-    control::CrawlControl, models::CrawlConfig, prefetch::prefetch_http_pages,
+    control::CrawlControl, models::CrawlConfig, prefetch::prefetch_http_pages_with_context,
     render_health::MAX_RENDER_SESSIONS, robots::RobotsRule, transport::crawl_deadline_reached,
 };
 use super::rendered_prefetch::prefetch_rendered_pages;
@@ -45,7 +45,7 @@ pub async fn prefetch_next_window<R: Runtime>(
         prefetch_rendered_pages(app, control, setup, state, parallelism, robots_rules).await;
         return;
     }
-    prefetch_http_pages(
+    prefetch_http_pages_with_context(
         &mut state.queue,
         &mut state.prefetched_order,
         &mut state.prefetched_responses,
@@ -60,6 +60,7 @@ pub async fn prefetch_next_window<R: Runtime>(
         setup.max_redirects,
         &setup.config,
         robots_rules,
+        setup.retry_context(),
     )
     .await;
 }

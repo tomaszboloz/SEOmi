@@ -6,6 +6,8 @@ export interface SiteCrawlResult {
   crawl_mode?: 'http' | 'browser-rendered';
   pages_crawled: number;
   health_score: number;
+  /** Missing/zero means the stored score predates formula versioning. */
+  score_version?: number;
   critical_count: number;
   warning_count: number;
   notice_count: number;

@@ -12,7 +12,7 @@ use super::super::{
         apply_checked_frame_resources, apply_checked_image_resources,
         apply_checked_social_resources,
     },
-    scoring::{score_pages, CrawlScore},
+    scoring::{score_pages, CrawlScore, CRAWL_SCORE_VERSION},
 };
 use super::robots::CrawlRobotsOutcome;
 use super::setup::CrawlSetup;
@@ -112,6 +112,7 @@ pub fn build_crawl_result<R: Runtime>(input: BuildCrawlResultInput<'_, R>) -> Si
         pages_crawled: state.pages.len(),
         health_score,
         critical_count,
+        score_version: CRAWL_SCORE_VERSION,
         warning_count,
         notice_count,
         pages: std::mem::take(&mut state.pages),

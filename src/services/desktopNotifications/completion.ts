@@ -2,6 +2,7 @@ import type { PageAuditData, SiteCrawlResult } from '@/types';
 import { sendProjectNotification } from './delivery';
 import { reserveCompletionNotification, type CompletionNotificationType } from './dedupe';
 import i18n from '@/i18n';
+import { comparableCrawlScore } from '@/services/crawlHealthScore';
 
 export interface CompletionNotificationOptions { runId?: string }
 
@@ -39,11 +40,12 @@ export const notifyAuditCompleted = async (
 export const notifyCrawlCompleted = async (
   projectId: string,
   crawl: SiteCrawlResult,
-  previousHealthScore?: number,
+  previousResult?: SiteCrawlResult,
   options?: CompletionNotificationOptions,
 ): Promise<void> => {
   const observedRunId = (crawl as SiteCrawlResult & { runId?: string }).runId;
   await sendCompletion(projectId, options?.runId || observedRunId, 'crawl', () => {
+    const previousHealthScore = comparableCrawlScore(crawl, previousResult);
     const regression = typeof previousHealthScore === 'number' && crawl.health_score < previousHealthScore;
     const host = new URL(crawl.start_url).hostname;
     const delta = regression ? previousHealthScore - crawl.health_score : 0;

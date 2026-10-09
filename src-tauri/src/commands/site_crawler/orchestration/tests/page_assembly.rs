@@ -10,7 +10,32 @@ fn fetched(page_data: super::super::super::fetch_types::FetchedPageData) -> Fetc
         redirect_chain: vec![hop()],
         redirect_stopped_reason: None,
         request_duration_ms: None,
+        retry_count: 0,
     }
+}
+
+#[tokio::test]
+async fn recovered_transient_request_is_recorded_as_info() {
+    let setup = setup(default_crawl_config(None));
+    let mut state = state();
+    let mut response = fetched(data(HTML));
+    response.retry_count = 1;
+    assemble_page_summary(
+        response,
+        12,
+        CURRENT_URL,
+        0,
+        &CrawlSelectors::compile(),
+        &setup,
+        &mut state,
+    )
+    .await
+    .unwrap();
+    let issues = &state.pages[0].issues;
+    assert!(issues.iter().any(|issue| {
+        issue.severity == "Info" && issue.message.contains("recovered after 1 retry")
+    }));
+    assert!(!issues.iter().any(|issue| issue.severity == "Critical"));
 }
 
 #[tokio::test]

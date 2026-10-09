@@ -4,7 +4,7 @@ use tokio::task::JoinSet;
 
 use super::super::{
     control::CrawlControl, crawl_delay::wait_for_crawl_delay, models::CrawledResource,
-    resource_fetch::fetch_resource_candidate, transport::crawl_deadline_reached,
+    resource_fetch::fetch_resource_candidate_with_context, transport::crawl_deadline_reached,
 };
 use super::setup::CrawlSetup;
 use super::state::CrawlLoopState;
@@ -66,7 +66,14 @@ pub async fn crawl_secondary_resources<R: Runtime>(
                 }
             }
             state.last_page_request_at = Some(Instant::now());
-            resources.push(fetch_resource_candidate(setup.client.clone(), candidate).await);
+            resources.push(
+                fetch_resource_candidate_with_context(
+                    setup.client.clone(),
+                    candidate,
+                    setup.retry_context(),
+                )
+                .await,
+            );
         }
     } else {
         if !selected_resources.is_empty() && !can_fetch_resources(setup, control, state).await {
@@ -81,7 +88,11 @@ pub async fn crawl_secondary_resources<R: Runtime>(
         let mut tasks = JoinSet::new();
         for _ in 0..max_concurrent_requests {
             if let Some(candidate) = pending.next() {
-                tasks.spawn(fetch_resource_candidate(setup.client.clone(), candidate));
+                tasks.spawn(fetch_resource_candidate_with_context(
+                    setup.client.clone(),
+                    candidate,
+                    setup.retry_context(),
+                ));
             }
         }
         while let Some(joined) = tasks.join_next().await {
@@ -106,7 +117,11 @@ pub async fn crawl_secondary_resources<R: Runtime>(
                 }),
             }
             if let Some(candidate) = pending.next() {
-                tasks.spawn(fetch_resource_candidate(setup.client.clone(), candidate));
+                tasks.spawn(fetch_resource_candidate_with_context(
+                    setup.client.clone(),
+                    candidate,
+                    setup.retry_context(),
+                ));
             }
         }
     }

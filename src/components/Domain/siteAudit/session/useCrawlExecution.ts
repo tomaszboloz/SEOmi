@@ -110,7 +110,7 @@ export const useCrawlExecution = (
       const productionRun = useToolsStore.getState().crawlRuns.find((r) => !existingProdIds.has(r.id) && r.environment === "production" && r.startUrl === productionUrl);
       if (!productionRun) throw new Error(t("siteAudit.productionRunSaveError"));
       setComparisonRunId(stagingRun.id);
-      if (activeProjectId) void notifyCrawlCompleted(activeProjectId, productionResult, stagingResult.health_score, { runId: productionRun.id });
+      if (activeProjectId) void notifyCrawlCompleted(activeProjectId, productionResult, stagingResult, { runId: productionRun.id });
     } catch (error) { if (isCurrent()) setEnvironmentComparisonError(error instanceof Error ? error.message : t("siteAudit.environmentCompareError")); }
     finally { if (isCurrent()) setIsEnvironmentComparisonRunning(false); }
   };

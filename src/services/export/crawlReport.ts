@@ -12,6 +12,7 @@ const filteredCrawlResult = (run: CrawlRunRecord, template?: CrawlReportTemplate
     start_url: run.result.start_url,
     pages_crawled: run.result.pages_crawled,
     health_score: run.result.health_score,
+    score_version: run.result.score_version,
     critical_count: run.result.critical_count,
     warning_count: run.result.warning_count,
     notice_count: run.result.notice_count,

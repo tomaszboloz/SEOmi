@@ -40,7 +40,7 @@ it('runs crawl with exact arguments and notifies with prior matching health scor
   await mountScheduler(); await waitFor(() => expect(scheduler.finish).toHaveBeenCalled());
   expect(scheduler.audit.setActiveTab).toHaveBeenCalledExactlyOnceWith('site-audit');
   expect(scheduler.tools.startSiteCrawl).toHaveBeenCalledExactlyOnceWith(schedule.url,25,schedule.crawlConfig,'default',false);
-  expect(scheduler.complete).toHaveBeenCalledWith('project-a',result,60,{runId:'scheduled-crawl-schedule-a-unknown'});
+  expect(scheduler.complete).toHaveBeenCalledWith('project-a',result,{health_score:60},{runId:'scheduled-crawl-schedule-a-unknown'});
   expect(scheduler.audit.startAudit).not.toHaveBeenCalled();
 });
 it('notifies a first completed crawl without inventing a prior health score', async () => {

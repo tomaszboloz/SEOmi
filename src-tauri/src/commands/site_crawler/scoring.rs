@@ -2,6 +2,7 @@ use super::*;
 use std::collections::{BTreeMap, BTreeSet};
 
 const MAX_FINDING_TYPES: usize = 3;
+pub(super) const CRAWL_SCORE_VERSION: u16 = 2;
 const CRITICAL_PENALTY_POINTS: f64 = 60.0;
 const WARNING_PENALTY_POINTS: f64 = 30.0;
 const MAX_PENALTY_POINTS: f64 = 80.0;

@@ -1,3 +1,4 @@
+use super::retry::{read_response_chunk, RetryContext};
 use super::*;
 
 #[path = "fetch_data_rendered.rs"]
@@ -14,6 +15,14 @@ mod tests;
 pub(super) async fn read_fetched_page_data(
     source: FetchedPageBody,
     max_response_bytes: usize,
+) -> FetchedPageData {
+    read_fetched_page_data_with_context(source, max_response_bytes, None).await
+}
+
+pub(super) async fn read_fetched_page_data_with_context(
+    source: FetchedPageBody,
+    max_response_bytes: usize,
+    context: Option<&RetryContext>,
 ) -> FetchedPageData {
     match source {
         FetchedPageBody::Prefetched(data) => *data,
@@ -73,7 +82,18 @@ pub(super) async fn read_fetched_page_data(
             let mut body = Vec::new();
             if declared_html && !body_truncated {
                 loop {
-                    match response.chunk().await {
+                    let next_chunk = if let Some(context) = context {
+                        read_response_chunk(&mut response, context)
+                            .await
+                            .map_err(|_| ())
+                    } else {
+                        response
+                            .chunk()
+                            .await
+                            .map(|chunk| chunk.map(|value| value.to_vec()))
+                            .map_err(|_| ())
+                    };
+                    match next_chunk {
                         Ok(Some(chunk)) => {
                             if body.len().saturating_add(chunk.len()) > max_response_bytes {
                                 body_truncated = true;

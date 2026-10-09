@@ -67,6 +67,7 @@ pub(super) async fn assembled(
         redirect_chain: Vec::new(),
         redirect_stopped_reason: None,
         request_duration_ms: None,
+        retry_count: 0,
     };
     let selectors = CrawlSelectors::compile();
     assemble_page_summary(

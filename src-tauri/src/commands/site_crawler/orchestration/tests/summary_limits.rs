@@ -10,6 +10,9 @@ use crate::commands::site_crawler::orchestration::summary::{
 use crate::utils::test_app::StorageApp;
 use tauri::test::{mock_builder, MockRuntime};
 
+#[path = "summary_score_version.rs"]
+mod score_version;
+
 fn page(url: &str) -> CrawledPageSummary {
     serde_json::from_value(serde_json::json!({
         "url": url, "final_url": url, "redirect_chain": [], "depth": 0,

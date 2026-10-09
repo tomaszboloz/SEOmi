@@ -49,6 +49,7 @@ mod frontier_normalization;
 mod loop_runner_guards;
 mod loop_runner_transport;
 mod page_assembly;
+mod page_assembly_retry;
 mod page_directives;
 mod page_error;
 mod page_extra_edges;
