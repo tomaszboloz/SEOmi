@@ -54,3 +54,39 @@ fn contract_dimension_decoder_rejects_every_truncated_supported_header() {
         None
     );
 }
+
+#[test]
+fn contract_svg_and_jpeg_edge_paths_remain_bounded() {
+    assert_eq!(
+        super::super::svg_data_uri_dimensions(r#"<svg width="10"></svg>"#),
+        None
+    );
+    assert_eq!(
+        super::super::svg_data_uri_dimensions(r#"<svg viewBox="0 0 20 -1"></svg>"#),
+        None
+    );
+    assert_eq!(
+        super::super::svg_data_uri_dimensions(r#"<svg viewBox="0 0 0 20"></svg>"#),
+        None
+    );
+    let jpeg = [
+        0xff, 0xd8, 0xff, 0xd8, 0xff, 0xd9, 0xff, 0xe1, 0, 4, 0, 0, 0xff, 0xc0, 0, 7, 8, 0, 5, 0, 7,
+    ];
+    assert_eq!(
+        intrinsic_data_uri_dimensions(&format!(
+            "data:image/jpeg;base64,{}",
+            BASE64_STANDARD.encode(jpeg)
+        )),
+        Some((7, 5))
+    );
+    assert!(intrinsic_data_uri_dimensions(&format!(
+        "data:image/jpeg;base64,{}",
+        BASE64_STANDARD.encode([0xff, 0xd8, 0xff, 0xff, 0xff, 0xff])
+    ))
+    .is_none());
+    assert!(intrinsic_data_uri_dimensions(&format!(
+        "data:image/jpeg;base64,{}",
+        BASE64_STANDARD.encode([0xff, 0xd8, 0xff, 0xc0, 0, 6, 8, 0, 2, 0, 3])
+    ))
+    .is_none());
+}

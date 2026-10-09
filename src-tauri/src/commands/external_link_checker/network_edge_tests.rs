@@ -1,5 +1,5 @@
 use super::{checked_public_addresses, normalize_external_url};
-use std::net::IpAddr;
+use std::net::{IpAddr, SocketAddr};
 use url::Url;
 
 #[tokio::test]
@@ -73,6 +73,45 @@ async fn empty_and_private_resolver_results_are_rejected() {
         })
         .await
         .unwrap_err(),
+        "DNS resolved to a private or reserved address; request blocked"
+    );
+}
+
+#[tokio::test(start_paused = true)]
+async fn resolver_timeout_is_reported_after_the_configured_deadline() {
+    let url = Url::parse("https://dns.fixture/").unwrap();
+    let task = tokio::spawn(async move {
+        super::checked_public_addresses_with(&url, |_, _| async {
+            std::future::pending::<std::io::Result<Vec<SocketAddr>>>().await
+        })
+        .await
+    });
+
+    tokio::task::yield_now().await;
+    tokio::time::advance(super::DNS_TIMEOUT + std::time::Duration::from_millis(1)).await;
+    assert_eq!(task.await.unwrap().unwrap_err(), "DNS lookup timed out");
+}
+
+#[tokio::test]
+async fn resolver_fixture_receives_hostname_and_explicit_port() {
+    let url = Url::parse("https://dns.fixture:8443/a").unwrap();
+    let result = super::checked_public_addresses_with(&url, |host, port| async move {
+        assert_eq!(host, "dns.fixture");
+        assert_eq!(port, 8443);
+        Ok(vec!["8.8.8.8:8443".parse().unwrap()])
+    })
+    .await
+    .unwrap();
+
+    assert_eq!(result, vec!["8.8.8.8:8443".parse().unwrap()]);
+}
+
+#[tokio::test]
+async fn public_resolver_wrapper_uses_local_fixture_without_external_network() {
+    let url = Url::parse("http://localhost/").unwrap();
+    let error = checked_public_addresses(&url).await.unwrap_err();
+    assert_eq!(
+        error,
         "DNS resolved to a private or reserved address; request blocked"
     );
 }

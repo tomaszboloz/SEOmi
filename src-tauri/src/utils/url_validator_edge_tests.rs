@@ -54,6 +54,33 @@ fn ipv4_policy_covers_special_ranges_and_nearby_public_values() {
 }
 
 #[test]
+fn reserved_ranges_keep_public_neighbors_reachable() {
+    for (blocked, adjacent_public) in [
+        ("192.0.2.1", "192.0.1.1"),
+        ("198.51.100.1", "198.51.99.1"),
+        ("203.0.113.1", "203.0.112.1"),
+    ] {
+        let blocked_ip: IpAddr = blocked.parse().unwrap();
+        let adjacent_ip: IpAddr = adjacent_public.parse().unwrap();
+        let blocked_ipv4: std::net::Ipv4Addr = blocked.parse().unwrap();
+        assert!(blocked_ipv4.is_documentation());
+        assert!(
+            !is_public_ip(&blocked_ip),
+            "{blocked} must remain non-public"
+        );
+        assert!(
+            is_public_ip(&adjacent_ip),
+            "{adjacent_public} must remain public"
+        );
+    }
+
+    for address in ["198.18.0.1", "198.19.0.1"] {
+        assert!(!is_public_ip(&address.parse().unwrap()), "{address}");
+    }
+    assert!(is_public_ip(&"198.20.0.1".parse().unwrap()));
+}
+
+#[test]
 fn ipv6_policy_covers_mapped_and_global_boundaries() {
     for address in [
         "::ffff:127.0.0.1",

@@ -8,6 +8,7 @@ mod dispatcher;
 mod execution_runner_coverage_tests;
 mod execution_runner_outcome_tests;
 mod identity;
+mod io_failures;
 mod production_dispatch;
 mod runner_guards;
 mod runner_outcomes;

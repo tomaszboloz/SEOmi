@@ -55,8 +55,12 @@ mod navigation_1;
 mod navigation_2;
 #[path = "tests/post_processing_coverage.rs"]
 mod post_processing_coverage;
+#[path = "tests/post_processing_edges.rs"]
+mod post_processing_edges;
 #[path = "tests/prefetch_guards.rs"]
 mod prefetch_guards;
+#[path = "tests/readability_coverage.rs"]
+mod readability_coverage;
 #[path = "tests/relations.rs"]
 mod relations;
 #[path = "tests/resource_apply_contracts.rs"]

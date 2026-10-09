@@ -15,11 +15,26 @@ pub async fn check_link(
     url: String,
     timeout_secs: Option<u64>,
 ) -> Result<LinkStatusResult, String> {
+    check_link_with_status(url, timeout_secs, |url, timeout| async move {
+        check_url_status(&url, timeout).await
+    })
+    .await
+}
+
+async fn check_link_with_status<F, Fut>(
+    url: String,
+    timeout_secs: Option<u64>,
+    request: F,
+) -> Result<LinkStatusResult, String>
+where
+    F: FnOnce(String, u64) -> Fut,
+    Fut: std::future::Future<Output = anyhow::Result<(u16, u64)>>,
+{
     let validated =
         validate_and_normalize_url(&url).map_err(|e| format!("Invalid link URL: {}", e))?;
 
     let timeout = timeout_secs.unwrap_or(5).clamp(1, 15);
-    match check_url_status(validated.as_str(), timeout).await {
+    match request(validated.to_string(), timeout).await {
         Ok((status, time_ms)) => Ok(LinkStatusResult {
             url,
             status,

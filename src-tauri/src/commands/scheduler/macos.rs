@@ -130,6 +130,9 @@ fn unregister_platform_with<R: ProcessRunner>(
 }
 
 #[cfg(test)]
+#[path = "macos_additional_tests.rs"]
+mod additional_tests;
+#[cfg(test)]
 #[path = "macos_contract_tests.rs"]
 mod contract_tests;
 #[cfg(test)]
