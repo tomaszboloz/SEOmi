@@ -5,7 +5,8 @@ use super::models::{
 };
 
 pub(crate) fn cookie_bootstrap_script(cookie_header: &str) -> String {
-    let encoded = serde_json::to_string(cookie_header).unwrap_or_else(|_| "\"\"".into());
+    let encoded = serde_json::to_string(cookie_header)
+        .expect("cookie header string is always JSON serializable");
     format!(
         r#"(() => {{
   const header = {encoded};
@@ -22,9 +23,9 @@ pub(crate) fn cookie_bootstrap_script(cookie_header: &str) -> String {
 }
 
 pub(crate) fn capture_script(nonce: &str, sequence: u64, options: &RenderOptions) -> String {
-    let nonce = serde_json::to_string(nonce).unwrap_or_else(|_| "\"\"".into());
-    let selector =
-        serde_json::to_string(&options.wait_for_selector).unwrap_or_else(|_| "null".into());
+    let nonce = serde_json::to_string(nonce).expect("nonce string is always JSON serializable");
+    let selector = serde_json::to_string(&options.wait_for_selector)
+        .expect("wait_for_selector is always JSON serializable");
     let sequence = sequence.min(u64::MAX - 1);
     let wait_delay_ms = options.wait_delay_ms.min(10_000);
     let scroll_cycles = options.lazy_scroll_cycles.min(40);

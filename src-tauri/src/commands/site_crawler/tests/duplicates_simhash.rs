@@ -24,3 +24,20 @@ fn near_duplicate_annotation_adds_warning_for_similar_pages() {
     assert_eq!(pages[0].issues_count, 1);
     assert_eq!(pages[1].issues_count, 1);
 }
+
+#[test]
+fn near_duplicates_sorts_multiple_pairs() {
+    let signatures = vec![
+        (0, "0000000000000001".to_string()),
+        (1, "0000000000000003".to_string()),
+        (2, "0000000000000007".to_string()),
+    ];
+    let dups = near_duplicate_pairs(&signatures);
+    assert_eq!(dups.len(), 3);
+    assert_eq!(dups[0].0, 0);
+    assert_eq!(dups[0].1, 1);
+    assert_eq!(dups[1].0, 0);
+    assert_eq!(dups[1].1, 2);
+    assert_eq!(dups[2].0, 1);
+    assert_eq!(dups[2].1, 2);
+}

@@ -35,6 +35,8 @@ fn allowed_hosts_skip_blanks_dedupe_and_reject_every_extra_url_component() {
             "{candidate}"
         );
     }
+    let err = normalize_allowed_hosts(&["file:///".into()]).unwrap_err();
+    assert!(err.contains("Allowed host has no hostname"));
 }
 
 #[test]

@@ -80,3 +80,23 @@ fn extract_semantic_excerpts_selectors_length_bounds_and_deduplication() {
         .count();
     assert_eq!(dup_count, 1);
 }
+
+#[test]
+fn semantic_content_root_matches_role_main_and_itemprop_article_body() {
+    let document = Html::parse_document(
+        r#"<html><body>
+            <div role="main"><p>Content inside role main element.</p></div>
+            <section itemprop="articleBody"><p>Content inside itemprop articleBody.</p></section>
+        </body></html>"#,
+    );
+    let role_main_elem = document
+        .select(&Selector::parse(r#"[role="main"]"#).unwrap())
+        .next()
+        .unwrap();
+    let itemprop_elem = document
+        .select(&Selector::parse(r#"[itemprop="articleBody"]"#).unwrap())
+        .next()
+        .unwrap();
+    assert!(semantic_chrome::semantic_content_root(&role_main_elem));
+    assert!(semantic_chrome::semantic_content_root(&itemprop_elem));
+}
