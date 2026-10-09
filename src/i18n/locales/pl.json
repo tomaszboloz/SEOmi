@@ -3579,6 +3579,7 @@
     "property": "Właściwość Search Console",
     "selectedPropertyAria": "Wybrana właściwość Search Console",
     "noProperties": "Autoryzacja Google się powiodła, ale konto nie zwróciło dostępnych właściwości Search Console.",
+    "noMatchingProperty": "Żadna usługa nie pasuje do witryny projektu — wybierz ręcznie",
     "totalClicks": "Wszystkie kliknięcia",
     "totalImpressions": "Wszystkie wyświetlenia",
     "searchAppearances": "Wyświetlenia w wynikach wyszukiwania",

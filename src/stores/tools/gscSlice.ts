@@ -10,6 +10,10 @@ import { activeProjectId } from './storageKeys';
 import { beginToolRequest, isLatestToolRequest, errorMessage } from './runtime';
 
 import { gscClientIdKey, gscPropertyKey, gscFiltersKey } from './projectPreferences';
+import { selectGscProperty } from '@/services/gscPropertyMatch';
+import { useProjectStore } from '@/stores/projectStore';
+
+const projectRootUrl = (projectId: string) => useProjectStore.getState().projects.find((project) => project.id === projectId)?.rootUrl;
 
 const invalidateGscEvidence = () => {
   beginToolRequest('gsc-data');
@@ -44,7 +48,7 @@ resumeGsc: async () => {
     try {
       const properties = await services.invoke<GscSiteProperty[]>('list_search_console_properties', { projectId, clientId });
       const storedProperty = get().gscProperty;
-      const selectedProperty = properties.some((item) => item.siteUrl === storedProperty) ? storedProperty : properties[0]?.siteUrl || '';
+      const selectedProperty = selectGscProperty(properties, storedProperty, projectRootUrl(projectId));
       if (activeProjectId() !== projectId || !isLatestToolRequest('gsc-session', requestToken)) return;
       if (selectedProperty !== storedProperty) {
         invalidateGscEvidence();
@@ -74,7 +78,7 @@ connectGsc: async (clientId, clientSecret) => {
       if (normalizedSecret) connectArgs.clientSecret = normalizedSecret;
       const properties = await services.invoke<GscSiteProperty[]>('connect_search_console', connectArgs);
       const storedProperty = get().gscProperty;
-      const selectedProperty = properties.some((item) => item.siteUrl === storedProperty) ? storedProperty : properties[0]?.siteUrl || '';
+      const selectedProperty = selectGscProperty(properties, storedProperty, projectRootUrl(projectId));
       if (activeProjectId() !== projectId || !isLatestToolRequest('gsc-session', requestToken)) return;
       if (selectedProperty) writeStorage(gscPropertyKey(projectId), selectedProperty);
       else removeStorage(gscPropertyKey(projectId));

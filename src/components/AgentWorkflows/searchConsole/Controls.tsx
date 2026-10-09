@@ -52,6 +52,7 @@ export function SearchConsoleControls({ session }: { session: SearchConsoleSessi
           {gscProperties.length > 0 ? <label className="flex flex-col gap-2 rounded-xl border border-slate-800 bg-slate-900/60 p-4 text-xs text-slate-300 sm:flex-row sm:items-center sm:justify-between">
             <span>{t('searchConsole.property')}</span>
             <select aria-label={t('searchConsole.selectedPropertyAria')} value={gscProperty} onChange={(event) => setGscProperty(event.target.value)} className="min-w-0 rounded-md border border-slate-700 bg-slate-950 px-3 py-2 font-mono text-xs text-slate-100 sm:w-2/3">
+              {!gscProperty && <option value="" disabled>{t('searchConsole.noMatchingProperty')}</option>}
               {gscProperties.map((property) => <option key={property.siteUrl} value={property.siteUrl}>{property.siteUrl} · {property.permissionLevel}</option>)}
             </select>
           </label> : <p className="rounded-lg border border-amber-500/30 bg-amber-950/20 p-3 text-xs text-amber-200">{t('searchConsole.noProperties')}</p>}
