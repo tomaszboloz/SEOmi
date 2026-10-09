@@ -22,8 +22,7 @@ fn validates_real_javascript_files_case_insensitively_and_rejects_missing_or_dir
     let fixture = Fixture::new();
     let server = fixture.0.join("server.js");
     fs::write(&server, "console.log('fixture');").unwrap();
-    let expected = server
-        .canonicalize()
+    let expected = dunce::canonicalize(&server)
         .unwrap()
         .to_string_lossy()
         .into_owned();
@@ -31,12 +30,20 @@ fn validates_real_javascript_files_case_insensitively_and_rejects_missing_or_dir
         validate_server_path(&format!(" {} ", server.display())).unwrap(),
         expected
     );
+    #[cfg(windows)]
+    {
+        assert!(!expected.starts_with(r"\\?\"));
+        assert_eq!(
+            validate_server_path(&server.canonicalize().unwrap().to_string_lossy()).unwrap(),
+            expected
+        );
+    }
 
     let uppercase = fixture.0.join("SERVER.JS");
     fs::write(&uppercase, "console.log('fixture');").unwrap();
     assert_eq!(
         validate_server_path(&uppercase.to_string_lossy()).unwrap(),
-        uppercase.canonicalize().unwrap().to_string_lossy()
+        dunce::canonicalize(&uppercase).unwrap().to_string_lossy()
     );
 
     let missing = fixture.0.join("missing.js");

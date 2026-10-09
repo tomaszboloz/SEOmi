@@ -32,7 +32,7 @@ async fn resolved_research_uses_stdin_and_removes_its_isolated_directory() {
             "{provider}"
         );
         let cwd = PathBuf::from(fs::read_to_string(root.join("cwd.txt")).unwrap());
-        assert_eq!(cwd.parent(), Some(expected_root.as_path()));
+        assert_eq!(cwd.parent().unwrap().canonicalize().unwrap(), expected_root);
         assert!(cwd
             .file_name()
             .unwrap()
