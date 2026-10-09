@@ -1,5 +1,6 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import i18n from '@/i18n';
+import { useProjectStore } from '@/stores/projectStore';
 import { createGscSlice } from '@/stores/tools/gscSlice';
 import { gscClientIdKey, gscFiltersKey, gscPropertyKey } from '@/stores/tools/projectPreferences';
 import type { ToolsServices } from '@/stores/tools/contracts';
@@ -12,7 +13,7 @@ const setup = (initial: Record<string, unknown> = {}) => {
   return { state, invoke, slice };
 };
 
-beforeEach(async () => { localStorage.clear(); await i18n.changeLanguage('en'); localStorage.setItem('seomi_active_project_v1', 'p1'); });
+beforeEach(async () => { useProjectStore.setState({ projects: [] }); localStorage.clear(); await i18n.changeLanguage('en'); localStorage.setItem('seomi_active_project_v1', 'p1'); });
 
 describe('selection and filters', () => {
   it('stores the property per project and clears dependent results', () => {
@@ -43,7 +44,8 @@ describe('connecting', () => {
     expect(invoke).not.toHaveBeenCalled();
   });
 
-  it('connects with the new or stored secret and keeps the remembered property when it still exists', async () => {
+  it('connects with the new or stored secret and keeps the remembered property covering the project', async () => {
+    useProjectStore.setState({ projects: [{ id: 'p1', name: 'Site', rootUrl: 'https://b.test', createdAt: '2026-10-09T00:00:00Z', lastOpenedAt: '2026-10-09T00:00:00Z' }] });
     const { state, invoke, slice } = setup({ gscProperty: 'https://b.test/' });
     invoke.mockResolvedValueOnce(properties).mockResolvedValueOnce(properties);
     await slice.connectGsc(' id ', ' fresh ');

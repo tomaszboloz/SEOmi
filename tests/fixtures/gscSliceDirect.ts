@@ -6,7 +6,7 @@ import { isolatedToolsSlice } from './toolsSlice';
 
 export function gscSliceFixture() {
   localStorage.clear();
-  useProjectStore.setState({ activeProjectId: 'gsc-direct' });
+  useProjectStore.setState({ activeProjectId: 'gsc-direct', projects: [] });
   toolRequestTokens.clear();
   const invoke = vi.fn();
   const fixture = isolatedToolsSlice(createGscSlice, { invoke });
