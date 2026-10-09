@@ -97,3 +97,11 @@ async fn public_command_rejects_unknown_endpoint() {
         .unwrap_err();
     assert_eq!(error, "Unsupported DataForSEO endpoint.");
 }
+
+#[tokio::test]
+async fn public_command_reads_credentials_for_allowed_endpoint() {
+    let error = super::dataforseo_request("project".into(), "/v3/appendix/user_data".into(), None)
+        .await
+        .unwrap_err();
+    assert!(error.contains("DataForSEO login") || error.contains("credential store"));
+}

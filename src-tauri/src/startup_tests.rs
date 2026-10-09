@@ -55,3 +55,22 @@ fn interactive_startup_does_not_invoke_side_effects() {
     );
     assert!(result.is_ok());
 }
+
+#[tokio::test]
+async fn startup_delegates_execute_handlers_and_diagnostics() {
+    let app = mock_app();
+    let handle = app.handle().clone();
+
+    startup::hide_main_window(&handle);
+    startup::handle_startup_failure(startup::StartupFailure::AuditQueue);
+    startup::handle_startup_failure(startup::StartupFailure::ScheduledTask);
+
+    let queue_err =
+        startup::run_audit_queue_task(handle.clone(), "invalid/id".into(), "run".into()).await;
+    assert!(queue_err.is_err());
+
+    let sched_err =
+        startup::run_scheduled_worker_task(handle.clone(), "invalid/id".into(), "sched".into())
+            .await;
+    assert!(sched_err.is_err());
+}

@@ -5,6 +5,8 @@ use tauri::test::mock_builder;
 
 mod cancellation_and_corrupt_tests;
 mod dispatcher;
+mod execution_runner_coverage_tests;
+mod execution_runner_outcome_tests;
 mod identity;
 mod production_dispatch;
 mod runner_guards;

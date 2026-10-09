@@ -11,7 +11,13 @@ pub(super) fn research_fixture(
     #[cfg(windows)]
     let program = {
         let path = root.join("fixture.cmd");
-        fs::write(&path, format!("@echo off\r\nif \"%~1\"==\"--help\" (echo {flags}& exit /b 0)\r\nif \"%~2\"==\"--help\" (echo {flags}& exit /b 0)\r\npowershell.exe -NoProfile -NonInteractive -File \"%~dp0probe.ps1\" %*\r\nexit /b %errorlevel%\r\n")).unwrap();
+        fs::write(
+            &path,
+            format!(
+                "@echo off\r\nif \"%~1\"==\"--help\" (echo {flags}& exit /b 0)\r\nif \"%~2\"==\"--help\" (echo {flags}& exit /b 0)\r\nset \"SEOMI_FIXTURE_ARGS=%*\"\r\npowershell.exe -NoProfile -NonInteractive -File \"%~dp0probe.ps1\"\r\nexit /b %errorlevel%\r\n"
+            ),
+        )
+        .unwrap();
         fs::write(
             root.join("probe.ps1"),
             format!(
@@ -20,7 +26,13 @@ pub(super) fn research_fixture(
 [Console]::OutputEncoding = [Text.UTF8Encoding]::new()
 $root = $PSScriptRoot
 [IO.File]::WriteAllText((Join-Path $root 'cwd.txt'), (Get-Location).Path)
-[IO.File]::WriteAllLines((Join-Path $root 'args.txt'), [string[]]$args)
+$fixtureArgs = @()
+if ($env:SEOMI_FIXTURE_ARGS) {{
+    $fixtureArgs = [regex]::Matches($env:SEOMI_FIXTURE_ARGS, '"([^"\r\n]*)"|(\S+)') | ForEach-Object {{
+        if ($_.Groups[1].Success) {{ $_.Groups[1].Value }} else {{ $_.Groups[2].Value }}
+    }}
+}}
+[IO.File]::WriteAllLines((Join-Path $root 'args.txt'), [string[]]$fixtureArgs)
 if ($env:GEMINI_CLI_SYSTEM_SETTINGS_PATH) {{
     Copy-Item $env:GEMINI_CLI_SYSTEM_SETTINGS_PATH (Join-Path $root 'settings.json')
 }}

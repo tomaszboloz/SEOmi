@@ -93,3 +93,31 @@ async fn valid_protocol_reaches_real_url_validation_without_opening_a_webview() 
         "{response}"
     );
 }
+
+#[tokio::test]
+async fn run_worker_terminates_on_shutdown_channel_and_expiration() {
+    use super::server::run_worker;
+    let app = StorageApp::new(mock_builder());
+    let listener = TcpListener::bind(("127.0.0.1", 0)).await.unwrap();
+    let shared = WorkerShared {
+        app: app.handle(),
+        token: Arc::new(Mutex::new(Some("tok".into()))),
+        expires_at: Instant::now() + Duration::from_secs(60),
+        expires_at_text: "exp".into(),
+    };
+    let (shutdown_tx, shutdown_rx) = tokio::sync::oneshot::channel();
+    let task = tokio::spawn(run_worker(listener, shared, shutdown_rx));
+    let _ = shutdown_tx.send(());
+    assert!(task.await.is_ok());
+
+    let listener2 = TcpListener::bind(("127.0.0.1", 0)).await.unwrap();
+    let expired_shared = WorkerShared {
+        app: app.handle(),
+        token: Arc::new(Mutex::new(Some("tok".into()))),
+        expires_at: Instant::now() - Duration::from_millis(1),
+        expires_at_text: "exp".into(),
+    };
+    let (_shutdown_tx2, shutdown_rx2) = tokio::sync::oneshot::channel();
+    let task2 = tokio::spawn(run_worker(listener2, expired_shared, shutdown_rx2));
+    assert!(task2.await.is_ok());
+}

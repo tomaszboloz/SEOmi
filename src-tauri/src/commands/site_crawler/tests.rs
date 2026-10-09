@@ -19,6 +19,10 @@ mod content_3;
 mod control_svg;
 #[path = "tests/duplicates.rs"]
 mod duplicates;
+#[path = "tests/duplicates_simhash.rs"]
+mod duplicates_simhash;
+#[path = "tests/filter_validation_edges.rs"]
+mod filter_validation_edges;
 #[path = "tests/hreflang_1.rs"]
 mod hreflang_1;
 #[path = "tests/hreflang_2.rs"]
@@ -49,12 +53,18 @@ mod js_redirects_edges;
 mod navigation_1;
 #[path = "tests/navigation_2.rs"]
 mod navigation_2;
+#[path = "tests/post_processing_coverage.rs"]
+mod post_processing_coverage;
+#[path = "tests/prefetch_guards.rs"]
+mod prefetch_guards;
 #[path = "tests/relations.rs"]
 mod relations;
 #[path = "tests/resource_apply_contracts.rs"]
 mod resource_apply_contracts;
 #[path = "tests/resource_contracts.rs"]
 mod resource_contracts;
+#[path = "tests/resource_discovery_coverage.rs"]
+mod resource_discovery_coverage;
 #[path = "tests/resources_1.rs"]
 mod resources_1;
 #[path = "tests/resources_2.rs"]
@@ -87,6 +97,8 @@ mod scope_edges;
 mod semantic_terms_1;
 #[path = "tests/semantic_terms_2.rs"]
 mod semantic_terms_2;
+#[path = "tests/semantics_coverage.rs"]
+mod semantics_coverage;
 #[path = "tests/social_1.rs"]
 mod social_1;
 #[path = "tests/social_2.rs"]
@@ -99,3 +111,7 @@ mod svg_inline_contracts;
 mod url_normalization_contracts;
 #[path = "tests/url_normalization_edges.rs"]
 mod url_normalization_edges;
+#[path = "tests/wire_contracts.rs"]
+mod wire_contracts;
+#[path = "tests/wire_result_contracts.rs"]
+mod wire_result_contracts;

@@ -52,6 +52,22 @@ pub fn normalize_external_url(input: &str) -> Result<Url, String> {
 }
 
 pub async fn checked_public_addresses(url: &Url) -> Result<Vec<SocketAddr>, String> {
+    checked_public_addresses_with(url, |host, port| async move {
+        tokio::net::lookup_host((host, port))
+            .await
+            .map(|items| items.collect())
+    })
+    .await
+}
+
+async fn checked_public_addresses_with<F, Fut>(
+    url: &Url,
+    resolve: F,
+) -> Result<Vec<SocketAddr>, String>
+where
+    F: FnOnce(String, u16) -> Fut,
+    Fut: std::future::Future<Output = std::io::Result<Vec<SocketAddr>>>,
+{
     let host = url
         .host_str()
         .ok_or_else(|| "URL has no host".to_string())?;
@@ -61,11 +77,10 @@ pub async fn checked_public_addresses(url: &Url) -> Result<Vec<SocketAddr>, Stri
     let addresses = match url.host() {
         Some(url::Host::Ipv4(ip)) => vec![SocketAddr::new(ip.into(), port)],
         Some(url::Host::Ipv6(ip)) => vec![SocketAddr::new(ip.into(), port)],
-        _ => tokio::time::timeout(DNS_TIMEOUT, tokio::net::lookup_host((host, port)))
+        _ => tokio::time::timeout(DNS_TIMEOUT, resolve(host.to_owned(), port))
             .await
             .map_err(|_| "DNS lookup timed out".to_string())?
-            .map_err(|error| format!("DNS lookup failed: {error}"))?
-            .collect::<Vec<_>>(),
+            .map_err(|error| format!("DNS lookup failed: {error}"))?,
     };
     if addresses.is_empty() {
         return Err("DNS returned no addresses".into());

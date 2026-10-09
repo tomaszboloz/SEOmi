@@ -27,6 +27,7 @@ impl Fixture {
 }
 
 mod errors;
+mod execution_iteration_tests;
 mod handoffs;
 mod ipc;
 mod limits;

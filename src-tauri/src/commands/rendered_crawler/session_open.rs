@@ -1,3 +1,9 @@
+use super::models::{CaptureEvent, RenderOptions, CAPTURE_SCHEME, MAX_CAPTURE_CHANNEL_EVENTS};
+use super::navigation::{is_allowed_crawl_navigation, parse_capture_chunk, parse_transfer_failed};
+use super::scripts::{capture_script, cookie_bootstrap_script};
+use super::session::RenderedCrawlerSession;
+use super::session_open_prepare::{prepare_session_open, PreparedSessionOpen};
+use crate::services::browser_proxy::BrowserRequestProxy;
 use std::sync::{
     atomic::{AtomicU64, Ordering},
     Arc,
@@ -8,15 +14,6 @@ use tauri::{
 };
 use tokio::sync::mpsc;
 use url::Url;
-
-use super::models::{CaptureEvent, RenderOptions, CAPTURE_SCHEME, MAX_CAPTURE_CHANNEL_EVENTS};
-use super::navigation::{is_allowed_crawl_navigation, parse_capture_chunk, parse_transfer_failed};
-use super::scripts::{capture_script, cookie_bootstrap_script};
-use super::session::RenderedCrawlerSession;
-use crate::{
-    services::browser_proxy::BrowserRequestProxy, utils::url_validator::validate_and_normalize_url,
-};
-
 impl<R: Runtime> RenderedCrawlerSession<R> {
     pub async fn open(
         app: &AppHandle<R>,
@@ -26,18 +23,21 @@ impl<R: Runtime> RenderedCrawlerSession<R> {
         scope_path: Option<&str>,
         options: RenderOptions,
     ) -> Result<Self, String> {
-        let start_url = validate_and_normalize_url(start_url).map_err(|error| error.to_string())?;
+        let PreparedSessionOpen {
+            start_url,
+            base_host,
+            allow_subdomains,
+            scope_path,
+            options,
+        } = prepare_session_open(start_url, base_host, allow_subdomains, scope_path, options)?;
         let nonce = uuid::Uuid::new_v4().simple().to_string();
         let label = format!("rendered-crawl-{}", uuid::Uuid::new_v4().simple());
         let proxy = BrowserRequestProxy::start()
             .await
             .map_err(|error| format!("Unable to start isolated renderer proxy: {error}"))?;
         let proxy_url = proxy.url();
-        let base_host = base_host.to_ascii_lowercase();
-        let scope_path = scope_path.map(str::to_owned);
         let sequence = Arc::new(AtomicU64::new(0));
         let (sender, receiver) = mpsc::channel(MAX_CAPTURE_CHANNEL_EVENTS);
-
         let build_app = app.clone();
         let build_nonce = nonce.clone();
         let build_host = base_host.clone();

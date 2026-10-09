@@ -12,6 +12,9 @@ mod tests;
 mod model_tests;
 
 #[cfg(test)]
+mod wire_contract_tests;
+
+#[cfg(test)]
 mod history_tests;
 
 #[cfg(test)]

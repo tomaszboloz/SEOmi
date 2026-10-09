@@ -1,5 +1,6 @@
 use super::secret_names::is_supported_secret_name;
 
+#[cfg(not(test))]
 const KEYRING_SERVICE: &str = "so.seomi.desktop";
 
 pub(super) trait SecureStore {
@@ -21,7 +22,13 @@ pub(crate) fn secret_entry(name: &str) -> Result<keyring::Entry, String> {
     if !is_supported_secret_name(name) {
         return Err("Unsupported secure setting.".into());
     }
-    keyring::Entry::new(KEYRING_SERVICE, name)
+    #[cfg(test)]
+    let test_service = format!("so.seomi.desktop.tests.{}", std::process::id());
+    #[cfg(test)]
+    let service = test_service.as_str();
+    #[cfg(not(test))]
+    let service = KEYRING_SERVICE;
+    keyring::Entry::new(service, name)
         .map_err(|_| "Unable to access the system credential store.".into())
 }
 

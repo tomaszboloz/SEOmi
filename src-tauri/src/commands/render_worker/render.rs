@@ -4,11 +4,44 @@ use crate::commands::rendered_crawler::{
 };
 use crate::utils::url_validator::validate_and_normalize_url;
 use tauri::{AppHandle, Runtime};
+use url::Url;
+
+pub(super) struct PreparedRenderRequest {
+    pub(super) target: Url,
+    pub(super) base_host: String,
+    pub(super) scope_path: Option<String>,
+    pub(super) options: RenderOptions,
+}
 
 pub(super) async fn render_request<R: Runtime>(
     app: &AppHandle<R>,
     request: RenderWorkerRequest,
 ) -> Result<RenderedPageSnapshot, String> {
+    let allow_subdomains = request.allow_subdomains;
+    let prepared = prepare_render_request(request)?;
+    let PreparedRenderRequest {
+        target,
+        base_host,
+        scope_path,
+        options,
+    } = prepared;
+    let mut session = RenderedCrawlerSession::open(
+        app,
+        target.as_str(),
+        &base_host,
+        allow_subdomains,
+        scope_path.as_deref(),
+        options,
+    )
+    .await?;
+    let result = session.capture(target.as_str()).await;
+    session.close();
+    result
+}
+
+pub(super) fn prepare_render_request(
+    request: RenderWorkerRequest,
+) -> Result<PreparedRenderRequest, String> {
     let target = validate_and_normalize_url(&request.url).map_err(|error| error.to_string())?;
     let base_host = target
         .host_str()
@@ -28,18 +61,12 @@ pub(super) async fn render_request<R: Runtime>(
         lazy_scroll_cycles: request.lazy_scroll_cycles.min(40),
         allowed_hosts: Vec::new(),
     };
-    let mut session = RenderedCrawlerSession::open(
-        app,
-        target.as_str(),
-        &base_host,
-        request.allow_subdomains,
-        scope_path.as_deref(),
+    Ok(PreparedRenderRequest {
+        target,
+        base_host,
+        scope_path,
         options,
-    )
-    .await?;
-    let result = session.capture(target.as_str()).await;
-    session.close();
-    result
+    })
 }
 
 pub(super) fn normalize_scope_path(value: Option<&str>) -> Result<Option<String>, String> {

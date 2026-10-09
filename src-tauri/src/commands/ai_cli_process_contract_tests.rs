@@ -130,19 +130,16 @@ async fn version_timeout_and_auth_process_failure_are_explicit() {
         .await;
     assert_eq!(detail, "Version check timed out.");
     let missing = std::env::temp_dir().join(format!("seomi-missing-{}", Uuid::new_v4()));
-    let (_, detail) = version_check_resolved_with(
-        "openai",
-        &command,
-        Duration::from_millis(500),
-        move |_, args| {
+    let auth_failure_deadline = Duration::from_secs(if cfg!(windows) { 30 } else { 1 });
+    let (_, detail) =
+        version_check_resolved_with("openai", &command, auth_failure_deadline, move |_, args| {
             if args.first().is_some_and(|arg| arg == "--version") {
                 fixture_process("printf '1.0'", "Write-Output '1.0'")
             } else {
                 Command::new(&missing)
             }
-        },
-    )
-    .await;
+        })
+        .await;
     assert!(detail.contains("Unable to verify CLI authentication"));
     drop(cleanup);
 }

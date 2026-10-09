@@ -29,6 +29,25 @@ async fn cancellation_wait_and_finish_clear_run_state() {
 }
 
 #[test]
+fn poisoned_mutex_defaults_safely_across_control_methods() {
+    let control = CrawlControl::new();
+    let _ = std::panic::catch_unwind(|| {
+        let _guard = control.cancelled_runs.lock().unwrap();
+        panic!("poison cancelled_runs");
+    });
+    let _ = std::panic::catch_unwind(|| {
+        let _guard = control.paused_runs.lock().unwrap();
+        panic!("poison paused_runs");
+    });
+    assert!(control.is_cancelled("any-run"));
+    assert!(!control.is_paused("any-run"));
+    control.start("any-run");
+    control.pause("any-run");
+    control.resume("any-run");
+    control.finish("any-run");
+}
+
+#[test]
 fn svg_dimensions_accept_bounded_tokens_and_viewbox_fallback() {
     assert_eq!(parse_dimension_token(" 12.9px "), Some(12));
     assert_eq!(parse_dimension_token("0"), None);

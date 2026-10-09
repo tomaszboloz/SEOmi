@@ -78,3 +78,35 @@ async fn expired_prefetch_marks_timeout_without_consuming_queue_or_http() {
     assert!(state.prefetched_order.is_empty());
     assert!(server.requests.lock().unwrap().is_empty());
 }
+
+#[tokio::test]
+async fn prefetch_rendered_pages_returns_early_when_slots_under_two_or_queue_empty() {
+    let mut config = default_crawl_config(Some(1));
+    config.crawl_mode = "browser-rendered".into();
+    let server = DiscoveryServer::new(config, vec![]).await;
+    let mut state = queued_state(&[]);
+    let app = StorageApp::new(mock_builder());
+
+    prefetch_rendered_pages(
+        &app.handle(),
+        &CrawlControl::new(),
+        &server.setup,
+        &mut state,
+        2,
+        &[],
+    )
+    .await;
+    assert!(state.prefetched_order.is_empty());
+
+    let mut state2 = queued_state(&[server.url("/one")]);
+    prefetch_rendered_pages(
+        &app.handle(),
+        &CrawlControl::new(),
+        &server.setup,
+        &mut state2,
+        1,
+        &[],
+    )
+    .await;
+    assert!(state2.prefetched_order.is_empty());
+}

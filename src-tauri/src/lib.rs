@@ -7,7 +7,7 @@ pub mod utils;
 #[cfg(test)]
 mod startup_tests;
 
-use tauri::{Builder, Manager};
+use tauri::Builder;
 
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
 pub fn run() {
@@ -26,6 +26,8 @@ pub fn desktop_builder() -> Builder<tauri::Wry> {
         .plugin(tauri_plugin_notification::init())
         .manage(commands::site_crawler::CrawlControl::new())
         .manage(commands::seo_audit::AuditControl::new())
+        .manage(commands::seo_audit::AuditRateLimiter::new())
+        .manage(commands::seo_audit::AuditTransport::production())
         .manage(commands::render_worker::RenderWorkerState::default())
         .invoke_handler({
             let handler: fn(tauri::ipc::Invoke) -> bool = tauri::generate_handler![
@@ -100,27 +102,11 @@ pub fn desktop_builder() -> Builder<tauri::Wry> {
             startup::start_with(
                 app,
                 startup::launch_context(&std::env::args().collect::<Vec<_>>()),
-                |handle, project_id, run_id| async move {
-                    commands::audit_queue_worker::run_audit_queue(handle, project_id, run_id).await
-                },
-                |handle, project_id, schedule_id| async move {
-                    commands::scheduled_worker::run_scheduled_task(handle, project_id, schedule_id)
-                        .await
-                },
-                |handle| {
-                    if let Some(window) = handle.get_webview_window("main") {
-                        let _ = window.hide();
-                    }
-                },
-                |failure| match failure {
-                    startup::StartupFailure::AuditQueue => {
-                        utils::logging::diagnostic(utils::logging::Diagnostic::AuditQueueFailed)
-                    }
-                    startup::StartupFailure::ScheduledTask => {
-                        utils::logging::diagnostic(utils::logging::Diagnostic::ScheduledTaskFailed)
-                    }
-                },
-                |handle, code| handle.exit(code),
+                startup::run_audit_queue_task,
+                startup::run_scheduled_worker_task,
+                startup::hide_main_window,
+                startup::handle_startup_failure,
+                startup::exit_app,
             )?;
             Ok(())
         })

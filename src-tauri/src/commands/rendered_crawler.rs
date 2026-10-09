@@ -6,6 +6,7 @@ pub mod scripts;
 pub mod session;
 pub mod session_capture;
 pub mod session_open;
+pub(crate) mod session_open_prepare;
 
 #[cfg(test)]
 mod tests_capture;
@@ -29,6 +30,8 @@ mod tests_scripts;
 mod tests_session_edges;
 #[cfg(test)]
 mod tests_session_lifecycle;
+#[cfg(test)]
+mod tests_session_open_advanced;
 #[cfg(test)]
 mod tests_session_open_edges;
 

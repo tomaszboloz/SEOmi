@@ -131,3 +131,7 @@ mod performance_transport_direct_tests;
 #[cfg(test)]
 #[path = "search_console/session_disconnect_coverage_tests.rs"]
 mod session_disconnect_coverage_tests;
+
+#[cfg(test)]
+#[path = "search_console/command_handler_tests.rs"]
+mod command_handler_tests;

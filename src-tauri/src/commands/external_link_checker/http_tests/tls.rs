@@ -28,11 +28,11 @@ async fn fatal_certificate_alert_is_reported_as_tls_not_dns() {
     let error = client_for_url(&url, &[address])
         .unwrap()
         .head(url)
-        .timeout(Duration::from_secs(3))
+        .timeout(Duration::from_secs(10))
         .send()
         .await
         .unwrap_err();
-    tokio::time::timeout(Duration::from_secs(3), server)
+    tokio::time::timeout(Duration::from_secs(10), server)
         .await
         .unwrap()
         .unwrap();

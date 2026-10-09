@@ -64,3 +64,44 @@ fn html_attribute_validation_stops_after_the_uri_safety_budget() {
     assert!(truncated);
     assert!(findings.is_empty());
 }
+
+#[test]
+fn percent_encoding_and_source_locator_edges() {
+    use super::html_source_locator::{
+        is_valid_percent_encoding, push_html_validation_finding, set_html_finding_source,
+    };
+
+    // 1. is_valid_percent_encoding branches
+    assert!(!is_valid_percent_encoding("abc%"));
+    assert!(!is_valid_percent_encoding("abc%a"));
+    assert!(!is_valid_percent_encoding("abc%G1"));
+    assert!(!is_valid_percent_encoding("abc%1G"));
+    assert!(is_valid_percent_encoding("abc%20def%2f"));
+    assert!(is_valid_percent_encoding("normal-text"));
+
+    // 2. set_html_finding_source with multibyte utf8
+    let mut finding = CrawledHtmlValidationFinding {
+        code: "test".into(),
+        severity: "warning".into(),
+        message: "test message".into(),
+        element: None,
+        attribute: None,
+        value: None,
+        line: None,
+        column: None,
+        source_excerpt: None,
+    };
+    let multibyte = "zażółć gęślą jaźń \n".repeat(20);
+    set_html_finding_source(&mut finding, &multibyte, 105);
+    assert!(finding.line.is_some());
+    assert!(finding.column.is_some());
+    assert!(finding.source_excerpt.is_some());
+
+    // 3. push_html_validation_finding truncation
+    let mut findings = (0..MAX_HTML_VALIDATION_FINDINGS_PER_PAGE)
+        .map(|_| finding.clone())
+        .collect::<Vec<_>>();
+    let mut truncated = false;
+    push_html_validation_finding(&mut findings, &mut truncated, finding);
+    assert!(truncated);
+}

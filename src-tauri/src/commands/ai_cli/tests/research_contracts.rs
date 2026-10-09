@@ -6,6 +6,9 @@ use std::{fs, path::PathBuf};
 async fn resolved_research_uses_stdin_and_removes_its_isolated_directory() {
     #[cfg(windows)]
     let _permit = super::fixtures::FIXTURE_PROCESS_GATE.lock().await;
+    #[cfg(windows)]
+    let prompt = "Zażółć & | $(whoami) `echo injected`\nsecond line";
+    #[cfg(not(windows))]
     let prompt = "Zażółć & | %PATH% $(whoami) `echo injected`\nsecond line";
     for provider in ["openai", "claude", "gemini"] {
         let (_cleanup, resolved, root) = research_fixture(provider, false);

@@ -82,6 +82,8 @@ pub async fn save_config<R: tauri::Runtime>(
 }
 
 #[cfg(test)]
+mod command_handler_tests;
+#[cfg(test)]
 mod config_ipc_tests;
 #[cfg(test)]
 mod config_recovery_tests;

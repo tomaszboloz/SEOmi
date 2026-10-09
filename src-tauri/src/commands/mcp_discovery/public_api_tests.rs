@@ -10,8 +10,17 @@ impl Fixture {
         fs::create_dir_all(&directory).unwrap();
         fs::write(
             directory.join("server.js"),
-            r#"console.log(JSON.stringify({id:1,result:{serverInfo:{name:'public-fixture',version:'2'}}}));
-console.log(JSON.stringify({id:2,result:{tools:[{name:'public_tool',inputSchema:{type:'object'}}]}}));
+            r#"const readline = require('readline');
+const input = readline.createInterface({ input: process.stdin });
+input.on('line', line => {
+  let request;
+  try { request = JSON.parse(line); } catch { return; }
+  if (request.id === 1 && request.method === 'initialize') {
+    process.stdout.write(JSON.stringify({jsonrpc:'2.0',id:1,result:{serverInfo:{name:'public-fixture',version:'2'}}}) + '\n');
+  } else if (request.id === 2 && request.method === 'tools/list') {
+    process.stdout.write(JSON.stringify({jsonrpc:'2.0',id:2,result:{tools:[{name:'public_tool',inputSchema:{type:'object'}}]}}) + '\n');
+  }
+});
 setInterval(()=>{},1000);"#,
         )
         .unwrap();

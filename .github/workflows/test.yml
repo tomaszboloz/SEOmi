@@ -44,10 +44,13 @@ jobs:
         run: cargo fmt --manifest-path src-tauri/Cargo.toml --check
       - name: Strict Clippy
         run: cargo clippy --manifest-path src-tauri/Cargo.toml --all-targets -- -D warnings
+      - name: Inventory source boundaries for native coverage
+        run: cargo run --quiet --manifest-path src-tauri/Cargo.toml --example coverage_sources > native-coverage-sources.json
       - name: Run Cargo Test with coverage
+        env:
+          CARGO_TARGET_DIR: ${{ runner.temp }}/seomi-native-coverage-${{ github.run_id }}-${{ github.run_attempt }}
         run: |
           rustup toolchain install nightly --profile minimal --component llvm-tools-preview
-          cargo run --quiet --manifest-path src-tauri/Cargo.toml --example coverage_sources > native-coverage-sources.json
           cargo +nightly llvm-cov clean --manifest-path src-tauri/Cargo.toml --workspace
           cargo +nightly llvm-cov --manifest-path src-tauri/Cargo.toml --branch --no-report
           mkdir -p test-results
@@ -104,6 +107,8 @@ jobs:
         run: npm ci
       - name: Verify the canonical application version
         run: npm run version:check
+      - name: Enforce the physical source and test line limit
+        run: npm run check:loc
       - name: Lint TypeScript and React
         run: npm run lint
       - name: Run Vitest with full frontend coverage

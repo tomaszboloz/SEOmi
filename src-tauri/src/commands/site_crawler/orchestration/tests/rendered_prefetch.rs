@@ -71,3 +71,19 @@ fn renderer_options_carry_the_allowlist_and_bounded_wait_settings() {
     assert_eq!(options.user_agent.as_deref(), Some(setup.ua.as_str()));
     assert!(options.cookie.is_none());
 }
+
+#[test]
+fn prefetch_window_breaks_when_queue_exhausted_and_ignores_robots_when_disabled() {
+    let mut queue = VecDeque::from([("https://example.com/one".to_string(), 1)]);
+    let mut prefetched_order = VecDeque::new();
+    let mut config = default_crawl_config(None);
+    config.respect_robots = false;
+    let rules = vec![RobotsRule {
+        allow: false,
+        path: "/one".into(),
+    }];
+    let candidates = take_prefetch_window(&mut queue, &mut prefetched_order, 5, &config, &rules);
+    assert_eq!(candidates, vec!["https://example.com/one"]);
+    assert_eq!(prefetched_order.len(), 1);
+    assert!(queue.is_empty());
+}

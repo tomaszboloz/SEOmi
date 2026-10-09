@@ -56,3 +56,53 @@ fn html_validation_distinguishes_invalid_and_duplicate_doctypes() {
         .iter()
         .any(|finding| finding.code == "html-doctype-invalid"));
 }
+
+#[test]
+fn html_decoder_bom_and_unquoted_meta_charset() {
+    let body_bom = b"\xEF\xBB\xBF<html><head><title>BOM</title></head></html>";
+    let (decoded, charset, findings) = decode_crawl_html_body(body_bom, None);
+    assert_eq!(charset.as_deref(), Some("UTF-8"));
+    assert!(decoded.contains("BOM"));
+    assert!(findings.is_empty());
+
+    let unquoted =
+        b"<meta http-equiv=content-type content=text/html;charset=windows-1252;x=y><p>caf\xe9</p>";
+    let (decoded, charset, _) = decode_crawl_html_body(unquoted, None);
+    assert_eq!(charset.as_deref(), Some("windows-1252"));
+    assert!(decoded.contains("café"));
+
+    let unquoted_bracket =
+        b"<meta http-equiv=content-type content=text/html;charset=windows-1252><p>caf\xe9</p>";
+    let (decoded, charset, _) = decode_crawl_html_body(unquoted_bracket, None);
+    assert_eq!(charset.as_deref(), Some("windows-1252"));
+    assert!(decoded.contains("café"));
+}
+
+#[test]
+fn html_validation_doctype_and_charset_edge_branches() {
+    use super::html_validation_rules::{check_html_doctype, document_declares_meta_charset};
+
+    // 1. Meta tag without charset or content-type
+    let doc_no_charset = Html::parse_document(
+        "<html><head><meta name='viewport' content='width=device-width'></head></html>",
+    );
+    assert!(!document_declares_meta_charset(&doc_no_charset));
+
+    // 2. Empty decoded HTML for check_html_doctype
+    let mut findings = Vec::new();
+    let mut truncated = false;
+    check_html_doctype("", "", &mut findings, &mut truncated);
+    assert_eq!(findings.len(), 1);
+    assert_eq!(findings[0].code, "html-doctype-missing");
+    assert!(findings[0].source_excerpt.is_none());
+
+    // 3. Various doctype prefix variants (e.g. unclosed, whitespace, invalid HTML4)
+    let mut findings2 = Vec::new();
+    check_html_doctype(
+        "<!doctype html4>",
+        "<!doctype html4>",
+        &mut findings2,
+        &mut truncated,
+    );
+    assert!(findings2.iter().any(|f| f.code == "html-doctype-invalid"));
+}

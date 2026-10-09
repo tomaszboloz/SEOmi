@@ -5,8 +5,15 @@ use tokio::time::Duration;
 const REVOKE_URL: &str = "https://oauth2.googleapis.com/revoke";
 
 pub(super) async fn disconnect_search_console(project_id: String) -> Result<String, String> {
-    let key = refresh_token_key(&project_id)?;
-    let client_secret_key = client_secret_key(&project_id)?;
+    disconnect_search_console_at(&project_id, REVOKE_URL).await
+}
+
+pub(super) async fn disconnect_search_console_at(
+    project_id: &str,
+    revoke_endpoint: &str,
+) -> Result<String, String> {
+    let key = refresh_token_key(project_id)?;
+    let client_secret_key = client_secret_key(project_id)?;
     match secret_entry(&client_secret_key)?.delete_credential() {
         Ok(()) | Err(keyring::Error::NoEntry) => (),
         Err(error) => {
@@ -33,14 +40,7 @@ pub(super) async fn disconnect_search_console(project_id: String) -> Result<Stri
         return Ok("The local Search Console token has already been removed.".into());
     };
     let client = reqwest::Client::builder().timeout(Duration::from_secs(10)).build().map_err(|error| format!("The token was removed locally, but unable to create the Google consent revocation client: {error}"))?;
-    revoke_refresh_token(&client, &refresh_token).await
-}
-
-pub(super) async fn revoke_refresh_token(
-    client: &reqwest::Client,
-    refresh_token: &str,
-) -> Result<String, String> {
-    revoke_refresh_token_at(client, REVOKE_URL, refresh_token).await
+    revoke_refresh_token_at(&client, revoke_endpoint, &refresh_token).await
 }
 
 pub(super) async fn revoke_refresh_token_at(

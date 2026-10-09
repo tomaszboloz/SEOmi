@@ -25,6 +25,9 @@ mod runtime_tests;
 mod server_tests;
 
 #[cfg(test)]
+mod server_edge_tests;
+
+#[cfg(test)]
 mod server_fixture;
 
 #[cfg(test)]
