@@ -1,3 +1,4 @@
+use super::fragments::fold_fragment_rows;
 use super::models::GscPerformanceFilters;
 use super::requests::SEARCH_ROW_MAX;
 use serde_json::{json, Value};
@@ -65,7 +66,8 @@ pub(super) fn map_joint_rows(rows: &[Value]) -> Result<Vec<Value>, String> {
             result["page"] = keys[1].clone();
             Ok(result)
         })
-        .collect()
+        .collect::<Result<Vec<_>, _>>()
+        .map(|rows| fold_fragment_rows(rows, Some("query")))
 }
 
 #[allow(clippy::too_many_arguments)]
@@ -99,6 +101,7 @@ pub(super) fn map_performance(
         .iter()
         .map(|row| map_analytics_row(row, "page"))
         .collect::<Result<Vec<_>, _>>()?;
+    let pages = fold_fragment_rows(pages, None);
     Ok(json!({
         "site_url": site_url,
         "start_date": start,

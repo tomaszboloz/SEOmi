@@ -6,6 +6,7 @@ mod credentials;
 mod dates;
 mod disconnect;
 mod filters;
+mod fragments;
 mod inspection;
 mod mapping;
 mod models;
