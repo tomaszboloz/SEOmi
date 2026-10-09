@@ -74,7 +74,8 @@ describe('semantic map term inventory', () => {
     expect(map.nodes[0].clusterId).toBe(map.nodes[1].clusterId);
     // Evidence stays readable: forms observed on the pages, never the internal key.
     expect(map.topicEdges.map((edge) => edge.sharedTerms)).toEqual([['navigator', 'sprzedaż', 'szkolenia']]);
-    expect(map.nodes[0].clusterLabel).toBe('navigator');
+    // Two characteristic terms, in observed forms.
+    expect(map.nodes[0].clusterLabel).toBe('szkolenia / navigator');
   });
 
   it('does not relate the same forms when the pages are not Polish', () => {

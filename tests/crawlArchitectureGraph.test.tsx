@@ -20,7 +20,7 @@ it('renders the content-only force map and lets users select a page from its acc
 
     expect(screen.getByRole('img', { name: 'Interaktywna mapa semantycznych klastrów i linków w treści' })).toBeTruthy();
     expect(screen.getByText(/1 relacja · 1 link treści/)).toBeTruthy();
-    expect(screen.getAllByText('brewing · 2')).toHaveLength(2);
+    expect(screen.getAllByText('coffee / brewing · 2')).toHaveLength(2);
     fireEvent.click(screen.getByRole('button', { name: '/coffee' }));
     expect(screen.getByText('Wybrana strona')).toBeTruthy();
     expect(screen.getByText('Coffee brewing')).toBeTruthy();

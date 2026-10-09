@@ -66,7 +66,7 @@ describe('semantic graph evidence responsibilities', () => {
     const rare = Math.log(4);
     expect(graph.groupMembers.size).toBe(1);
     expect(graph.find(2)).toBe(graph.find(0));
-    expect(graph.groupDetails.get(graph.find(0))).toEqual({ id: 'cluster-0', label: 'coffee' });
+    expect(graph.groupDetails.get(graph.find(0))).toEqual({ id: 'cluster-0', label: 'coffee / espresso' });
     expect(graph.topicEdges[0].weightedJaccard).toBeCloseTo(2 * common / (2 * common + rare));
     expect(graph.totalTopicEdges).toBe(3);
     expect(graph.topicEdges[0].sharedTerms).toEqual(['coffee', 'espresso']);
