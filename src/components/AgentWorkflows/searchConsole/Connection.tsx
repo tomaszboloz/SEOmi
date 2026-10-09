@@ -28,6 +28,7 @@ export function SearchConsoleConnection({ session }: { session: SearchConsoleSes
               onChange={(e) => setInputClientSecret(e.target.value)}
               placeholder={t('searchConsole.clientSecretPlaceholder')}
               aria-label={t('searchConsole.clientSecretLabel')}
+              aria-describedby="gsc-client-secret-help"
               autoComplete="off"
               className="flex-1 bg-slate-950 border border-slate-800 rounded-lg px-4 py-2.5 text-sm text-white placeholder-slate-500 focus:outline-none focus:border-emerald-500 font-mono"
             />
@@ -49,6 +50,7 @@ export function SearchConsoleConnection({ session }: { session: SearchConsoleSes
               )}
             </button>
           </form>
+          <p id="gsc-client-secret-help" className="text-xs text-slate-400">{t('searchConsole.clientSecretHelp')}</p>
           {gscError && <p className="rounded-lg border border-amber-500/30 bg-amber-950/30 p-3 text-xs text-amber-200">{gscError}</p>}
         </div>
   </>;

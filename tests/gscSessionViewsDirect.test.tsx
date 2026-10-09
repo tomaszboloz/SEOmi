@@ -75,6 +75,9 @@ it('SearchConsoleConnection handles input changes, submission, loading and error
   expect(setInputClientId).toHaveBeenCalledWith('my-client-id');
 
   const secretInput = screen.getByPlaceholderText('searchConsole.clientSecretPlaceholder');
+  const help = screen.getByText('searchConsole.clientSecretHelp');
+  expect(secretInput.getAttribute('aria-describedby')).toBe(help.id);
+  expect(secretInput.hasAttribute('required')).toBe(false); // A saved project secret can be reused.
   fireEvent.change(secretInput, { target: { value: 'my-secret' } });
   expect(setInputClientSecret).toHaveBeenCalledWith('my-secret');
 

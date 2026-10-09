@@ -3565,6 +3565,7 @@
     "clientIdPlaceholder": "123456789.apps.googleusercontent.com",
     "clientSecretLabel": "Google OAuth client secret",
     "clientSecretPlaceholder": "GOCSPX-… (stored in the system credential manager)",
+    "clientSecretHelp": "デスクトップ用 OAuth クライアントには同じクライアント ID のシークレットが必要です。このプロジェクトに保存済みのシークレットは再利用されます。",
     "connecting": "Connecting…",
     "authorize": "Authorize with Google",
     "startDate": "Period start",

@@ -3565,6 +3565,7 @@
     "clientIdPlaceholder": "123456789.apps.googleusercontent.com",
     "clientSecretLabel": "Sekret klienta Google OAuth",
     "clientSecretPlaceholder": "GOCSPX… (zapisany w systemowym magazynie poświadczeń)",
+    "clientSecretHelp": "Klient OAuth typu Desktop wymaga sekretu z tego samego identyfikatora klienta. Sekret zapisany wcześniej dla tego projektu zostanie użyty ponownie.",
     "connecting": "Łączenie…",
     "authorize": "Autoryzuj przez Google",
     "startDate": "Początek okresu",

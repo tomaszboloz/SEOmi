@@ -1,6 +1,20 @@
 import { describe, expect, it } from 'vitest';
 import { buildSemanticMap } from '@/services/semanticMap';
+import i18n from '@/i18n';
+import { clusterLabel } from '@/services/semanticGraph/labels';
+import type { SemanticTermInventory } from '@/services/semanticGraph/terms';
 import { fillerPages, topicPage } from './fixtures/semanticMapTopics';
+
+const labelInventory = (
+  termsByPage: string[][],
+  topicalTermsByPage: string[][],
+): SemanticTermInventory => ({
+  termsByPage,
+  topicalTermsByPage: topicalTermsByPage.map((terms) => new Set(terms)),
+  isTopicalTerm: (term) => topicalTermsByPage.some((terms) => terms.includes(term)),
+  inverseFrequency: () => 1,
+  displayTerm: (term) => term,
+});
 
 describe('buildSemanticMap topical clusters', () => {
   it('does not let a term present on most pages glue unrelated topics together', () => {
@@ -36,6 +50,24 @@ describe('buildSemanticMap topical clusters', () => {
 
     expect(map.nodes[0].clusterId).toBe(map.nodes[2].clusterId);
     expect(map.nodes[0].clusterLabel).toMatch(/^(ssi|wskaźnik) \/ (ssi|wskaźnik)$/);
+  });
+
+  it('uses only terms shared by multiple members for a multi-page label', () => {
+    const inventory = labelInventory(
+      [['shared', 'only-first'], ['shared', 'only-second']],
+      [['shared', 'only-first'], ['shared', 'only-second']],
+    );
+
+    expect(clusterLabel([0, 1], inventory)).toBe('shared');
+  });
+
+  it('does not revive site-wide terms when every topical term was filtered', () => {
+    const inventory = labelInventory(
+      [['brand'], ['brand']],
+      [[], []],
+    );
+
+    expect(clusterLabel([0, 1], inventory)).toBe(i18n.t('runtimeErrors.semanticMap.noSignals'));
   });
 
   it('re-evaluates a pending merge after its group grows instead of chaining to it', () => {

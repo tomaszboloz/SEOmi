@@ -56,6 +56,11 @@ async fn cancellation_and_provider_failure_return_distinct_errors() {
     for (error, expected) in [
         ("access_denied", "cancelled by the user"),
         ("server_error", "Google OAuth failed: server_error"),
+        (
+            "redirect_uri_mismatch",
+            "Use an OAuth client of type Desktop app",
+        ),
+        ("synthetic-secret%0Amalicious-error", "Google OAuth failed."),
     ] {
         let listener = TcpListener::bind(("127.0.0.1", 0)).await.unwrap();
         let address = listener.local_addr().unwrap();
@@ -65,12 +70,14 @@ async fn cancellation_and_provider_failure_return_distinct_errors() {
                 .await
                 .starts_with("HTTP/1.1 400")
         );
-        assert!(timeout(Duration::from_secs(1), task)
+        let message = timeout(Duration::from_secs(1), task)
             .await
             .unwrap()
             .unwrap()
-            .unwrap_err()
-            .contains(expected));
+            .unwrap_err();
+        assert!(message.contains(expected), "{message}");
+        assert!(!message.contains("synthetic-secret"));
+        assert!(!message.contains("malicious-error"));
     }
 }
 

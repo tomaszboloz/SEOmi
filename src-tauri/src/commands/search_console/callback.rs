@@ -65,8 +65,12 @@ pub(super) async fn receive_oauth_code(
                 .await;
                 return Err(if error == "access_denied" {
                     "Search Console authorization was cancelled by the user.".into()
+                } else if let Some((code, hint)) = crate::utils::provider_error_code::known_reason(
+                    &serde_json::json!({"error": error}),
+                ) {
+                    format!("Google OAuth failed: {code}. {hint}")
                 } else {
-                    format!("Google OAuth failed: {error}")
+                    "Google OAuth failed.".into()
                 });
             }
             let code = query

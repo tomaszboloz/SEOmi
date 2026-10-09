@@ -3565,6 +3565,7 @@
     "clientIdPlaceholder": "123456789.apps.googleusercontent.com",
     "clientSecretLabel": "Google OAuth client secret",
     "clientSecretPlaceholder": "GOCSPX-… (stored in the system credential manager)",
+    "clientSecretHelp": "데스크톱 OAuth 클라이언트에는 동일한 클라이언트 ID의 보안 비밀번호가 필요합니다. 이 프로젝트에 저장된 값은 다시 사용됩니다.",
     "connecting": "Connecting…",
     "authorize": "Authorize with Google",
     "startDate": "Period start",

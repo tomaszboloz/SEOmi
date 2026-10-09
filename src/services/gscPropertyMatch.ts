@@ -1,54 +1,77 @@
+import { parse } from 'tldts';
 import type { GscSiteProperty } from '@/types';
 
 const UNVERIFIED = 'siteUnverifiedUser';
 const DOMAIN_PREFIX = 'sc-domain:';
+type Root = { host: string; protocol: string; port: string | null; pathname: string };
 
-const hostOf = (value: string | undefined): string | null => {
+const rootOf = (value: string | undefined): Root | null => {
   if (!value?.trim()) return null;
   try {
-    return new URL(/^[a-z][a-z0-9+.-]*:\/\//i.test(value) ? value : `https://${value}`).hostname.toLowerCase().replace(/\.$/, '') || null;
+    const candidate = /^[a-z][a-z0-9+.-]*:\/\//i.test(value) ? value : `https://${value}`;
+    const parsed = new URL(candidate);
+    if (!['http:', 'https:'].includes(parsed.protocol) || !parsed.hostname || parsed.username || parsed.password) return null;
+    return { host: parsed.hostname.toLowerCase().replace(/\.$/, ''), protocol: parsed.protocol, port: parsed.port || null, pathname: parsed.pathname || '/' };
   } catch {
     return null;
   }
 };
 
-const urlPrefixHost = (siteUrl: string): string | null => (siteUrl.startsWith(DOMAIN_PREFIX) ? null : hostOf(siteUrl));
-
-/**
- * The Search Console property that covers a project's root URL, or null.
- * Domain properties win over URL-prefix ones because they include every
- * protocol and subdomain; `www` and the bare host count as the same site.
- * Properties without verified access return no data and are never matched.
- */
-export const matchGscProperty = (properties: GscSiteProperty[], rootUrl: string | undefined): string | null => {
-  const host = hostOf(rootUrl);
-  if (!host) return null;
-  const usable = properties.filter((property) => property.permissionLevel !== UNVERIFIED).map((property) => property.siteUrl);
-  const alternate = host.startsWith('www.') ? host.slice(4) : `www.${host}`;
-  const names = [host, alternate];
-  const exact = [DOMAIN_PREFIX, 'https://', 'http://'].flatMap((prefix) => names.map((name) => (prefix === DOMAIN_PREFIX ? `${prefix}${name}` : `${prefix}${name}/`)));
-  const direct = exact.find((candidate) => usable.includes(candidate));
-  if (direct) return direct;
-  // A URL-prefix property that covers only a section of the site.
-  const sameHost = usable.filter((siteUrl) => names.includes(urlPrefixHost(siteUrl) ?? ''));
-  const root = rootUrl?.trim() ?? '';
-  const covering = sameHost.filter((siteUrl) => root.startsWith(siteUrl.replace(/\/$/, ''))).sort((a, b) => b.length - a.length)[0];
-  if (covering) return covering;
-  // A domain property of a parent domain also covers this subdomain.
-  const parent = usable
-    .filter((siteUrl) => siteUrl.startsWith(DOMAIN_PREFIX) && host.endsWith(`.${siteUrl.slice(DOMAIN_PREFIX.length).toLowerCase()}`))
-    .sort((a, b) => b.length - a.length)[0];
-  return parent ?? null;
+const domainOf = (siteUrl: string): string | null => {
+  if (siteUrl.slice(0, DOMAIN_PREFIX.length).toLowerCase() !== DOMAIN_PREFIX) return null;
+  const domain = siteUrl.slice(DOMAIN_PREFIX.length).toLowerCase().replace(/\.$/, '');
+  try {
+    const parsedUrl = new URL(`https://${domain}`);
+    if (parsedUrl.hostname !== domain || parsedUrl.username || parsedUrl.password || parsedUrl.port || parsedUrl.pathname !== '/') return null;
+  } catch {
+    return null;
+  }
+  const parsed = parse(domain, { allowPrivateDomains: true });
+  return parsed.domain && !parsed.isIp ? domain : null;
 };
 
-/**
- * Keep the property the project already uses; otherwise take the one that
- * matches the project's site. A project with a root URL and no matching
- * property selects nothing rather than an unrelated site; a project without a
- * root URL keeps the first property.
- */
+const verified = (property: GscSiteProperty): boolean => property.permissionLevel !== UNVERIFIED;
+const domainNames = (host: string): string[] => host.startsWith('www.') ? [host, host.slice(4)] : [host];
+
+const prefixCovers = (siteUrl: string, root: Root): boolean => {
+  if (siteUrl.slice(0, DOMAIN_PREFIX.length).toLowerCase() === DOMAIN_PREFIX) return false;
+  try {
+    const prefix = new URL(siteUrl);
+    if (prefix.username || prefix.password || prefix.protocol !== root.protocol || (prefix.port || null) !== root.port || prefix.hostname.toLowerCase().replace(/\.$/, '') !== root.host) return false;
+    const path = prefix.pathname.endsWith('/') ? prefix.pathname : `${prefix.pathname}/`;
+    return root.pathname === path.slice(0, -1) || root.pathname.startsWith(path);
+  } catch {
+    return false;
+  }
+};
+
+const domainCovers = (siteUrl: string, host: string): boolean => {
+  const domain = domainOf(siteUrl);
+  return !!domain && (host === domain || host.endsWith(`.${domain}`));
+};
+
+/** Return the verified Search Console property that covers a project's root URL. */
+export const matchGscProperty = (properties: GscSiteProperty[], rootUrl: string | undefined): string | null => {
+  const root = rootOf(rootUrl);
+  if (!root) return null;
+  const usable = properties.filter(verified);
+  const domain = domainNames(root.host).map((name) => `${DOMAIN_PREFIX}${name}`);
+  const exact = domain.find((candidate) => usable.some((property) => property.siteUrl === candidate && domainOf(property.siteUrl)));
+  if (exact) return exact;
+  const prefixes = usable.filter((property) => prefixCovers(property.siteUrl, root)).sort((a, b) => b.siteUrl.length - a.siteUrl.length);
+  if (prefixes[0]) return prefixes[0].siteUrl;
+  const parent = usable
+    .filter((property) => domainCovers(property.siteUrl, root.host) && !domain.includes(property.siteUrl))
+    .sort((a, b) => b.siteUrl.length - a.siteUrl.length)[0];
+  return parent?.siteUrl ?? null;
+};
+
+/** Keep a stored property only when it covers the current root; without a root use the first verified property. */
 export const selectGscProperty = (properties: GscSiteProperty[], storedProperty: string, rootUrl: string | undefined): string => {
-  if (properties.some((property) => property.siteUrl === storedProperty)) return storedProperty;
-  if (!hostOf(rootUrl)) return properties[0]?.siteUrl || '';
-  return matchGscProperty(properties, rootUrl) ?? '';
+  const root = rootOf(rootUrl);
+  const usable = properties.filter(verified);
+  if (!root) return rootUrl?.trim() ? '' : usable[0]?.siteUrl || '';
+  const stored = usable.find((property) => property.siteUrl === storedProperty);
+  if (stored && matchGscProperty([stored], rootUrl) === stored.siteUrl) return stored.siteUrl;
+  return matchGscProperty(usable, rootUrl) ?? '';
 };

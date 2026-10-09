@@ -5,6 +5,7 @@ import { useProjectStore } from '@/stores/projectStore';
 import type { ToolsServices } from '@/stores/tools/contracts';
 
 const account = [
+  { siteUrl: 'sc-domain:blocked.test', permissionLevel: 'siteUnverifiedUser' },
   { siteUrl: 'sc-domain:unrelated.test', permissionLevel: 'siteOwner' },
   { siteUrl: 'sc-domain:site.test', permissionLevel: 'siteOwner' },
 ];
@@ -28,15 +29,22 @@ it('connects to the property of the project site instead of the first one in the
   expect(localStorage.getItem(gscPropertyKey('p1'))).toBe('sc-domain:site.test');
 });
 
-it('resumes with the stored property and selects nothing when the project site has no property', async () => {
+it('replaces stale properties, clears unmatched roots, and uses a verified property without a root', async () => {
   project('https://www.site.test');
   const kept = setup({ gscProperty: 'sc-domain:unrelated.test' });
   await kept.slice.resumeGsc();
-  expect(kept.state.gscProperty).toBe('sc-domain:unrelated.test');
+  expect(kept.state.gscProperty).toBe('sc-domain:site.test');
+  expect(localStorage.getItem(gscPropertyKey('p1'))).toBe('sc-domain:site.test');
 
   project('https://absent.test');
   const none = setup();
   await none.slice.resumeGsc();
   expect(none.state).toMatchObject({ isGscConnected: true, gscProperty: '' });
   expect(localStorage.getItem(gscPropertyKey('p1'))).toBeNull();
+
+  project();
+  const withoutRoot = setup();
+  await withoutRoot.slice.resumeGsc();
+  expect(withoutRoot.state.gscProperty).toBe('sc-domain:unrelated.test');
+  expect(localStorage.getItem(gscPropertyKey('p1'))).toBe('sc-domain:unrelated.test');
 });

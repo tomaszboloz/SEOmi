@@ -26,6 +26,8 @@ const KNOWN_REASONS: &[(&str, &str)] = &[
     ("invalid_client", "Google rejected the OAuth client. Paste the Client ID and the client secret of the same Desktop app OAuth client."),
     ("invalid_request", "Google rejected the sign-in request. A Desktop app OAuth client needs its client secret: paste it and connect again."),
     ("invalid_grant", "The sign-in expired or access was revoked. Connect the account again."),
+    ("server_error", "The OAuth provider could not complete the request. Try again later."),
+    ("temporarily_unavailable", "The OAuth provider is temporarily unavailable. Try again later."),
     ("redirect_uri_mismatch", "Use an OAuth client of type Desktop app. A Web application client rejects the local callback address."),
     ("unauthorized_client", "This OAuth client may not use this sign-in flow. Create an OAuth client of type Desktop app."),
     ("access_denied", "Access was denied. While the consent screen is in testing, add the Google account as a test user."),

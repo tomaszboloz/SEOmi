@@ -3565,6 +3565,7 @@
     "clientIdPlaceholder": "123456789.apps.googleusercontent.com",
     "clientSecretLabel": "Google OAuth client secret",
     "clientSecretPlaceholder": "GOCSPX-… (stored in the system credential manager)",
+    "clientSecretHelp": "桌面 OAuth 客户端需要同一客户端 ID 的密钥。此前为该项目保存的密钥将被重复使用。",
     "connecting": "Connecting…",
     "authorize": "Authorize with Google",
     "startDate": "Period start",
