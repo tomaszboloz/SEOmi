@@ -83,3 +83,38 @@ fn malformed_jpeg_segments_and_truncated_format_headers_are_unavailable() {
         None
     );
 }
+
+#[test]
+fn detects_svg_dimensions_from_xml_and_svg_prefixes_without_a_mime_type() {
+    assert_eq!(
+        intrinsic_http_image_dimensions(
+            None,
+            br#"<?xml version="1.0"?><svg width="320" height="180"></svg>"#,
+        ),
+        Some((320, 180))
+    );
+    assert_eq!(
+        intrinsic_http_image_dimensions(None, br#"<svg width="80" height="40"></svg>"#),
+        Some((80, 40))
+    );
+}
+
+#[test]
+fn six_byte_non_ico_prefix_is_not_treated_as_an_icon_directory() {
+    assert_eq!(intrinsic_http_image_dimensions(None, b"ABCDEF"), None);
+}
+
+#[test]
+fn rejects_riff_containers_with_wrong_webp_or_vp8x_markers() {
+    let mut wrong_webp = vec![0u8; 32];
+    wrong_webp[..4].copy_from_slice(b"RIFF");
+    wrong_webp[8..12].copy_from_slice(b"NOPE");
+    wrong_webp[12..16].copy_from_slice(b"VP8X");
+    assert_eq!(intrinsic_http_image_dimensions(None, &wrong_webp), None);
+
+    let mut wrong_vp8x = vec![0u8; 32];
+    wrong_vp8x[..4].copy_from_slice(b"RIFF");
+    wrong_vp8x[8..12].copy_from_slice(b"WEBP");
+    wrong_vp8x[12..16].copy_from_slice(b"VP8 ");
+    assert_eq!(intrinsic_http_image_dimensions(None, &wrong_vp8x), None);
+}

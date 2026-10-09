@@ -139,3 +139,5 @@ mod gap_tests;
 mod metadata_tests;
 #[cfg(test)]
 mod tests;
+#[cfg(test)]
+mod transport_security_contracts;

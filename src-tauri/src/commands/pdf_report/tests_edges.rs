@@ -84,7 +84,7 @@ fn pdf_rendering_escapes_labels_and_keeps_bar_widths_in_bounds() {
 
 #[test]
 fn text_helpers_preserve_pdf_escaping_and_page_summary_fallbacks() {
-    assert_eq!(ascii_pdf_text("ąĆęŁńÓśŻź\\()é\t"), "acelnoszz\\()??");
+    assert_eq!(ascii_pdf_text("ąĆęŁńÓśŻź\\()é\t"), "acelnoszz\\()e?");
     assert_eq!(pdf_literal("A(B)\\C"), "A\\(B\\)\\\\C");
     assert_eq!(wrapped_lines("", 4), vec!["-"]);
     assert_eq!(wrapped_lines("aa bb", 3), vec!["aa", "bb"]);

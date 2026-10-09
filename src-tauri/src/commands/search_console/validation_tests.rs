@@ -50,6 +50,22 @@ fn accepts_valid_requested_window_and_rejects_partial_or_invalid_dates() {
 }
 
 #[test]
+fn defaults_to_the_complete_search_console_window_when_dates_are_omitted() {
+    let before = date_range();
+    let selected = requested_date_range(None, None).unwrap();
+    let after = date_range();
+    assert!(selected == before || selected == after);
+}
+
+#[test]
+fn rejects_an_invalid_end_date_after_parsing_a_valid_start_date() {
+    assert_eq!(
+        requested_date_range(Some("2026-01-01"), Some("2026-02-30")).unwrap_err(),
+        "End date must be a valid YYYY-MM-DD date."
+    );
+}
+
+#[test]
 fn creates_rfc7636_s256_challenge_from_the_verifier() {
     assert_eq!(
         code_challenge("dBjftJeZ4CVP-mB92K27uhbUJU1p1r_wW1gFWFOEjXk"),

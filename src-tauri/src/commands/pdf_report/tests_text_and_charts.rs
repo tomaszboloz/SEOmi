@@ -8,13 +8,20 @@ fn text_utils_exhaustive_diacritics_and_specials() {
     let polish_chars = "zażółć gęślą jaźń ZAŻÓŁĆ GĘŚLĄ JAŹŃ";
     let ascii = ascii_pdf_text(polish_chars);
     assert_eq!(ascii, "zazolc gesla jazn ZAzolc GesLa JAzn");
+    assert_eq!(
+        ascii_pdf_text("Äpfel Straße déjà vu, français, příliš žluťoučký, niño"),
+        "Apfel Strasse deja vu, francais, prilis zlutoucky, nino"
+    );
+    assert_eq!(ascii_pdf_text("e\u{301} a\u{308}"), "e a");
+    assert_eq!(ascii_pdf_text("a\u{483}"), "a");
+    assert_eq!(ascii_pdf_text("ßœ ÆÞ ØĐ"), "ssoe AETH OD");
 
     // Parentheses and backslashes are escaped for PDF literal string
     let raw = r"func(arg1, \path)";
     let literal = pdf_literal(raw);
     assert_eq!(literal, r"func\(arg1, \\path\)");
 
-    // Unknown unicode chars map to question marks (one '?' per codepoint, not per byte)
+    // Unsupported scripts and symbols remain explicit placeholders.
     assert_eq!(
         ascii_pdf_text("Emoji: 🚀, Symbol: ©"),
         "Emoji: ?, Symbol: ?"
@@ -28,8 +35,10 @@ fn text_utils_exhaustive_diacritics_and_specials() {
     );
     assert_eq!(
         wrapped_lines("verylongwordthatcantfit", 5),
-        vec!["verylongwordthatcantfit"]
+        vec!["veryl", "ongwo", "rdtha", "tcant", "fit"]
     );
+    assert_eq!(wrapped_lines("ßœ", 3), vec!["sso", "e"]);
+    assert_eq!(wrapped_lines("abc", 0), vec!["a", "b", "c"]);
 }
 
 #[test]
@@ -90,4 +99,17 @@ fn renderer_produces_consistent_multipage_pdf_structures() {
     assert!(pdf_str.contains("Sample Metric: 50"));
     assert!(pdf_str.contains("startxref\n"));
     assert!(pdf_str.ends_with("%%EOF\n"));
+}
+
+#[test]
+fn renderer_wraps_long_urls_after_pdf_transliteration() {
+    let long_url = format!("Straße https://example.test/{}", "x".repeat(180));
+    let wrapped = wrapped_lines(&long_url, 96);
+    assert!(wrapped.len() > 2);
+    assert!(wrapped.iter().all(|line| line.len() <= 96));
+
+    let bytes = pdf_bytes(vec![long_url], None);
+    let report = String::from_utf8_lossy(&bytes);
+    assert!(report.matches("Tj").count() > 2);
+    assert!(report.ends_with("%%EOF\n"));
 }
