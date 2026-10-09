@@ -38,7 +38,9 @@ async fn oauth_exchange_reports_pkce_mismatch_and_preserves_error() {
     .await;
     match res {
         Err(err) => {
-            assert_eq!(err, "Google OAuth HTTP 400 Bad Request: request failed.");
+            // The fixed reason and hint are named; provider text still is not.
+            assert_eq!(err, "Google OAuth HTTP 400 Bad Request: request failed (invalid_grant). The sign-in expired or access was revoked. Connect the account again.");
+            assert!(!err.contains("PKCE verification failed"));
             assert!(!err.contains("mismatched-verifier"));
         }
         Ok(_) => panic!("expected oauth exchange error"),
