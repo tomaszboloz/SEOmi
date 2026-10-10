@@ -5083,5 +5083,34 @@
       "crawl": "Porównania crawlów",
       "semantic": "Porównania semantyczne"
     }
+  },
+  "ga4": {
+    "title": "Google Analytics 4",
+    "description": "Ruch na stronach docelowych z tego samego okresu co Search Console. Analytics obejmuje wszystkie kanały, a Search Console wyszukiwanie organiczne.",
+    "projectRequired": "Wybierz projekt z adresem witryny, aby dopasować strumień Analytics.",
+    "connectFirst": "Najpierw połącz Search Console przy użyciu klienta Google OAuth.",
+    "clientSecret": "Sekret klienta Google OAuth (opcjonalny)",
+    "clientSecretHint": "Po autoryzacji zapisywany wyłącznie w systemowym magazynie poświadczeń.",
+    "loading": "Wczytywanie…",
+    "reconnect": "Autoryzuj ponownie",
+    "authorize": "Autoryzuj dostęp do Analytics",
+    "refresh": "Odśwież dopasowanie usługi",
+    "property": "Dopasowana usługa Analytics",
+    "noProperty": "Nie znaleziono jednoznacznie dopasowanego strumienia. Sprawdź dostęp do Analytics i adres witryny projektu.",
+    "loadReport": "Wczytaj raport ruchu",
+    "truncated": "Wynik jest częściowy lub niejednoznaczny. Nie traktuj go jako kompletnego.",
+    "periodsDiffer": "Okresy raportów różnią się. Nie można połączyć metryk Search Console.",
+    "unavailable": "Raport ruchu nie został jeszcze wczytany.",
+    "unknown": "Brak danych",
+    "noRows": "Google Analytics nie zwrócił stron docelowych dla tego okresu.",
+    "landingPage": "Strona docelowa",
+    "host": "Host",
+    "sessions": "Sesje",
+    "engagedSessions": "Sesje z zaangażowaniem",
+    "keyEvents": "Kluczowe zdarzenia",
+    "clicks": "Kliknięcia GSC",
+    "impressions": "Wyświetlenia GSC",
+    "issues": "Problemy crawla",
+    "rowCount": "Wiersze: {{count}}"
   }
 }

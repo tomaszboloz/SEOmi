@@ -1,7 +1,9 @@
+mod capture_acknowledgement;
 pub mod commands;
 pub mod models;
 pub mod navigation;
 pub mod preview;
+mod preview_handlers;
 pub mod scripts;
 pub mod session;
 pub mod session_capture;
@@ -29,6 +31,8 @@ mod tests_open_edges;
 mod tests_preview_contracts;
 #[cfg(test)]
 mod tests_preview_edges;
+#[cfg(test)]
+mod tests_preview_handlers;
 #[cfg(test)]
 mod tests_scripts;
 #[cfg(test)]

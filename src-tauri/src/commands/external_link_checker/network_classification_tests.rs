@@ -104,3 +104,6 @@ async fn error_kind_classifies_connection_sources_and_timeouts() {
 
 #[path = "network_normalization_boundaries.rs"]
 mod normalization_boundaries;
+
+#[path = "network_schannel_tests.rs"]
+mod schannel;

@@ -48,8 +48,7 @@ async fn connect_reports_missing_access_token_and_write_failures() {
         dependencies(&store, &endpoint, browser_ok),
     )
     .await
-    .err()
-    .expect("missing access token must fail");
+    .expect_err("missing access token must fail");
     assert!(error.contains("no access token"));
     assert_eq!(server.await.unwrap().len(), 1);
 
@@ -66,8 +65,7 @@ async fn connect_reports_missing_access_token_and_write_failures() {
         dependencies(&store, &endpoint, browser_ok),
     )
     .await
-    .err()
-    .expect("credential write failure must fail");
+    .expect_err("credential write failure must fail");
     assert!(error.contains("save the Search Console token"));
     server.await.unwrap();
 }
@@ -82,8 +80,7 @@ async fn connect_propagates_browser_failure() {
         dependencies(&store, "http://127.0.0.1:1", browser_error),
     )
     .await
-    .err()
-    .expect("browser failure must fail");
+    .expect_err("browser failure must fail");
     assert_eq!(error, "synthetic browser failure");
 
     let error = connect_search_console_with(
@@ -93,7 +90,6 @@ async fn connect_propagates_browser_failure() {
         dependencies_with_callback(&store, "http://127.0.0.1:1", browser_ok, callback_error),
     )
     .await
-    .err()
-    .expect("callback failure must fail");
+    .expect_err("callback failure must fail");
     assert_eq!(error, "synthetic callback failure");
 }

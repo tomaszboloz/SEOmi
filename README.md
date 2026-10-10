@@ -239,6 +239,15 @@ Credentials are entered in Settings and saved per project in the native credenti
 
 ### Search Console
 
+
+#### Google Analytics 4
+
+The Analytics panel in the Search Console workspace requests a separate, explicit authorization for `analytics.readonly` alongside `webmasters.readonly`. Enable the Google Analytics Admin API and Google Analytics Data API in the Google Cloud project that owns the Desktop OAuth client. Existing Search Console authorization alone does not grant Analytics access. Refresh tokens and optional client secrets use the system credential store.
+
+Set the active project's website URL, authorize Analytics, then load its landing-page report for the selected Search Console period. SEOmi discovers web streams through the Admin API and uses a property only when the website match is unambiguous. Reports include observed sessions, engaged sessions and key events, with bounded pagination and explicit partial/empty states. The table can join matching URLs with Search Console and crawl evidence; missing observations stay unavailable. Analytics includes all acquisition channels, while Search Console represents organic search, so these metrics have different scopes.
+
+The integration has local API-fixture and regression tests. Live account permissions still depend on the connected Google account and Cloud project configuration.
+
 The connection flow identifies the account, lists available properties, and stores the chosen property in the active project. Performance queries can select date range, dimensions, filters, row limit, and search type. URL inspection is separate from performance data and reports the response received from the service.
 
 ### PageSpeed and field data

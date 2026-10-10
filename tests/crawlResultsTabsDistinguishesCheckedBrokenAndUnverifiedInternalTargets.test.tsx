@@ -1,4 +1,4 @@
-import { fireEvent, render, screen, waitFor } from "@testing-library/react";
+import { act, cleanup, fireEvent, render, screen, waitFor } from "@testing-library/react";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { CrawlResultsTabs } from "@/components/Domain/CrawlResultsTabs";
 import { useProjectStore } from "@/stores/projectStore";
@@ -9,11 +9,21 @@ import { result, run } from "./fixtures/crawlResultsTabsContracts";
 
 describe("CrawlResultsTabs", () => {
 afterEach(async () => {
-    await i18n.changeLanguage('en');
+    cleanup();
+    if (i18n.language !== 'en') {
+      await act(async () => {
+        await i18n.changeLanguage('en');
+      });
+    }
   });
 
 beforeEach(async () => {
-    await i18n.changeLanguage('en');
+    cleanup();
+    if (i18n.language !== 'en') {
+      await act(async () => {
+        await i18n.changeLanguage('en');
+      });
+    }
    localStorage.clear();
     window.history.replaceState(null, "", "/");
     useProjectStore.setState({ activeProjectId: null });

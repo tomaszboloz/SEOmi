@@ -7,6 +7,7 @@ mod dates;
 mod disconnect;
 mod filters;
 mod fragments;
+pub mod ga4;
 mod inspection;
 mod mapping;
 mod models;

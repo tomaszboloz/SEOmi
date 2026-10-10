@@ -131,3 +131,13 @@ async fn capture_invalid_base64_and_json_payloads() {
     .await;
     assert!(err.starts_with("Renderer returned invalid snapshot JSON:"));
 }
+
+#[test]
+fn format_capture_acknowledgement_matches_expected_custom_event() {
+    use super::capture_acknowledgement::format_capture_acknowledgement;
+    let ack = format_capture_acknowledgement("\"my-nonce\"", 42, 3);
+    assert_eq!(
+        ack,
+        "window.dispatchEvent(new CustomEvent('seomi-capture-ack', {detail: {nonce: \"my-nonce\", sequence: 42, index: 3}}));"
+    );
+}
