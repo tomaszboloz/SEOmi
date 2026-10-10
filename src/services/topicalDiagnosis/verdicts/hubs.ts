@@ -1,0 +1,37 @@
+import type { DiagnosisVerdict } from '../types';
+import { MAX_LISTED_PAIRS } from '../thresholds';
+import { contentDocuments, urlOf, verdict, type VerdictContext } from './context';
+
+/**
+ * A hub should link to every document of its topics, and every member should
+ * link back to its hub. Both directions come from main-content links only.
+ */
+export const hubVerdicts = (context: VerdictContext): DiagnosisVerdict[] => {
+  const { areas, byId, links, topicByDocument } = context;
+  const verdicts: DiagnosisVerdict[] = [];
+  const content = contentDocuments(context);
+  areas.forEach((area) => {
+    if (!area.hubId) return;
+    const hub = byId.get(area.hubId)!;
+    const members = area.documentIds.map((id) => byId.get(id)!);
+    const missingBacklink = members.filter((member) => !links.linksTo(member.id, hub.id));
+    missingBacklink.forEach((member) => verdicts.push(verdict(
+      'hub-missing-backlink', 'fix', 'document', member.id, [member, hub], [{ key: 'hub', params: { hub: urlOf(hub) } }], [urlOf(member)],
+    )));
+    if (members.length && !missingBacklink.length) {
+      verdicts.push(verdict('area-healthy', 'good', 'area', area.id, [hub, ...members], [{ key: 'members', params: { count: members.length } }], [urlOf(hub)]));
+    }
+    const memberTopics = new Set(area.documentIds.map((id) => topicByDocument.get(id)).filter(Boolean));
+    const memberIds = new Set(area.documentIds);
+    const unlisted = content.filter((document) => document.section === hub.section && !memberIds.has(document.id)
+      && topicByDocument.has(document.id) && memberTopics.has(topicByDocument.get(document.id)));
+    if (unlisted.length) {
+      verdicts.push(verdict(
+        'hub-missing-member-link', 'weak', 'area', area.id, [hub, ...unlisted],
+        [{ key: 'count', params: { count: unlisted.length } }, { key: 'hub', params: { hub: urlOf(hub) } }],
+        unlisted.slice(0, MAX_LISTED_PAIRS).map(urlOf),
+      ));
+    }
+  });
+  return verdicts;
+};
