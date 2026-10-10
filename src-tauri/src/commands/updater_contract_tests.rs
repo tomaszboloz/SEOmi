@@ -1,5 +1,4 @@
 use super::{check_for_updates_with, install_update_with};
-use crate::utils::test_app::invoke;
 use serde_json::json;
 use tauri::test::{mock_builder, mock_context, noop_assets, MockRuntime};
 use tokio::{

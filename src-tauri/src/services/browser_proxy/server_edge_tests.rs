@@ -107,7 +107,7 @@ async fn serve_connection_handles_timeout_with_408() {
         let (stream, _) = listener.accept().await.unwrap();
         serve_connection_with(
             stream,
-            |_, _| async { Err(io::Error::new(io::ErrorKind::Other, "err")) },
+            |_, _| async { Err(io::Error::other("err")) },
             Duration::from_millis(50),
             Duration::from_millis(50),
         )
