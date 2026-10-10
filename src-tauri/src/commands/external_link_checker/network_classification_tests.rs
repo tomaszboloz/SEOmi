@@ -40,11 +40,11 @@ async fn error_kind_classifies_connection_sources_and_timeouts() {
     ] {
         let error = error_for_cause(marker).await;
         assert!(error.is_connect());
-        assert_eq!(error_kind(&error), "tls");
+        assert_eq!(error_kind(&error), "dns"); // These are resolver failures, not TLS handshakes.
     }
     let error = error_for_cause("raw network refusal without keywords").await;
     assert!(error.is_connect());
-    assert_eq!(error_kind(&error), "connect");
+    assert_eq!(error_kind(&error), "dns");
 
     let timeout_client = reqwest::Client::builder()
         .timeout(std::time::Duration::from_millis(1))

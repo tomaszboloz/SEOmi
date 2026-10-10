@@ -5,6 +5,11 @@ use tauri::test::{mock_builder, mock_context, noop_assets, MockRuntime};
 fn app() -> tauri::App<MockRuntime> {
     let mut context = mock_context(noop_assets());
     context.config_mut().bundle.active = false;
+    context
+        .config_mut()
+        .plugins
+        .0
+        .insert("updater".into(), json!({"pubkey":"", "endpoints":[]}));
     mock_builder()
         .plugin(tauri_plugin_updater::Builder::new().build())
         .invoke_handler(tauri::generate_handler![

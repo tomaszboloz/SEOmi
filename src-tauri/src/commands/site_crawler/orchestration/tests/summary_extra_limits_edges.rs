@@ -109,7 +109,7 @@ fn summary_handles_empty_and_diverse_populated_page_lists() {
         resource_limit_reached: false,
     });
     assert_eq!(empty_res.pages_crawled, 0);
-    assert_eq!(empty_res.health_score, 100);
+    assert_eq!(empty_res.health_score, 50); // An empty crawl has no evidence of health.
 
     let mut p1 = page("https://example.test/fast");
     p1.http_status = 200;

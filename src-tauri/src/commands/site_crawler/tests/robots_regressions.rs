@@ -135,5 +135,5 @@ fn robots_path_percent_decode_malformed_and_boundary_cases() {
     assert!(robots_path_matches("*", ""));
     assert!(robots_path_matches("/*", "/"));
     assert!(robots_path_matches("/*$", "/"));
-    assert!(!robots_path_matches("/*$", "/sub"));
+    assert!(robots_path_matches("/*$", "/sub")); // * consumes the complete suffix.
 }
