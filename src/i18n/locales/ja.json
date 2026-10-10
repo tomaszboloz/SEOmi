@@ -1594,7 +1594,9 @@
       "directory": "URL tree",
       "directoryDescription": "URL hierarchy in this run",
       "plan": "Topical plan",
-      "planDescription": "Topics and semantic audit"
+      "planDescription": "Topics and semantic audit",
+      "diagnosis": "診断",
+      "diagnosisDescription": "良い点、弱い点、修正すべき点"
     },
     "graph": {
       "fullTitle": "Full link graph map",
@@ -5082,6 +5084,129 @@
       "pagespeed": "PageSpeed / CrUX",
       "crawl": "クロール比較",
       "semantic": "意味比較"
+    }
+  },
+  "topicalDiagnosis": {
+    "title": "トピック診断",
+    "description": "ドキュメント（言語版は1回だけ数える）、ハブページを中心としたエリア、コンテンツから得たトピック、具体的な対処を伴う判定。保存済みクロールから言語モデルなしで計算します。",
+    "noTerms": "このクロールにはコンテンツ用語がなく、診断の材料がありません。クロールを再実行してください。",
+    "truncated": "分析は500ページまたはペア上限で打ち切られています。一部の結果が欠けている可能性があります。",
+    "empty": "このグループに判定はありません。",
+    "stats": {
+      "documents": "ドキュメント",
+      "pages": "ページ",
+      "skipped": "スキップ",
+      "hubs": "ハブ",
+      "topics": "トピック",
+      "singletons": "単独",
+      "languages": "言語",
+      "mergedPairs": "言語ペア"
+    },
+    "severity": {
+      "fix": "修正",
+      "weak": "弱い",
+      "info": "情報",
+      "good": "良好"
+    },
+    "filter": {
+      "all": "すべて · {{count}}",
+      "fix": "修正 · {{count}}",
+      "weak": "弱い · {{count}}",
+      "info": "情報 · {{count}}",
+      "good": "良好 · {{count}}"
+    },
+    "areas": {
+      "title": "エリアとトピック",
+      "noHub": "ハブなし",
+      "hubWithoutMembers": "割り当てドキュメントのないハブ",
+      "members": "{{count}} 件",
+      "showInGraph": "グラフで表示",
+      "hub": "ハブ: {{url}}"
+    },
+    "topics": {
+      "singletons": "単独ドキュメント · {{count}}",
+      "labelFromContent": "コンテンツ由来のラベル",
+      "noLabel": "ラベルのないトピック",
+      "documents": "{{count}} 件"
+    },
+    "roles": {
+      "hub": "ハブ",
+      "utility": "補助ページ",
+      "content": "コンテンツ"
+    },
+    "scope": {
+      "area": "エリア",
+      "topic": "トピック",
+      "document": "ドキュメント"
+    },
+    "verdict": {
+      "hub-missing-backlink": {
+        "title": "ハブへのリンクがありません",
+        "action": "このページからナビゲーション、パンくず、または本文で {{hub}} へのリンクを追加してください。"
+      },
+      "hub-missing-member-link": {
+        "title": "ハブが同じトピックの一部のページにリンクしていません",
+        "action": "不足しているページ（{{count}}件）を {{hub}} の一覧に追加してください。"
+      },
+      "area-healthy": {
+        "title": "整合したエリア",
+        "action": "ハブは {{count}} 件すべてのドキュメントにリンクし、各ドキュメントもハブにリンクしています。対応は不要です。"
+      },
+      "topic-no-hub": {
+        "title": "ピラーページのないトピック",
+        "action": "このトピックのピラーページを作成または指定し、そこからすべてのドキュメントにリンクしてください。現在はコンテンツだけがそれらを結び付けています。"
+      },
+      "topic-members-unlinked": {
+        "title": "トピック内のページが相互にリンクしていません",
+        "action": "列挙されたペア間に文脈リンクを追加してください（どちらの方向にもリンクのないペアが {{count}} 件）。"
+      },
+      "topic-thin": {
+        "title": "薄いトピック",
+        "action": "このトピックにはドキュメントが2件しかありません。3件目を追加するか、同じ問いに答えるなら統合してください。"
+      },
+      "cannibalization-candidate": {
+        "title": "カニバリゼーションの候補",
+        "action": "同じ言語の2ページが {{percent}}% 重なり、タイトルの語を共有しています: {{titleTokens}}。意図を比較し、統合するかタイトルを差別化してください。"
+      },
+      "document-isolated": {
+        "title": "孤立したページ",
+        "action": "トピックがなく、一覧ページからしかリンクされていません。内容が最も近いページからリンクしてください: {{url}}（共有用語 {{percent}}%）。",
+        "actionNoNearest": "トピックがなく、一覧ページからしかリンクされていません。関連記事からリンクしてください。"
+      },
+      "document-orphan": {
+        "title": "本文からのリンクがありません",
+        "action": "どのページも本文からこのページにリンクしていません。関連ページまたはハブから文脈リンクを追加してください。"
+      },
+      "near-duplicate": {
+        "title": "ほぼ同一のコンテンツ",
+        "action": "両ページを比較してください。重複なら統合するか canonical を設定してください。"
+      },
+      "language-pair-missing": {
+        "title": "言語版がありません",
+        "action": "このドキュメントは {{language}} のみ存在します。翻訳が必要か判断してください。これは情報であり、エラーではありません。"
+      }
+    },
+    "evidence": {
+      "hub": "ハブ: {{hub}}",
+      "count": "{{count}} ページ",
+      "members": "{{count}} ドキュメント",
+      "areas": "{{count}} エリア",
+      "withoutHub": "ハブなし {{count}}",
+      "pairs": "{{count}} ペア",
+      "similarity": "類似度 {{percent}}%",
+      "titleTokens": "共有するタイトル語: {{value}}",
+      "nearest": "最も近いページ: {{url}}",
+      "hash": "同じコンテンツハッシュ",
+      "distance": "SimHash: {{value}}/64",
+      "language": "言語: {{language}}"
+    },
+    "confidence": {
+      "limited": "信頼度は限定的（コンテンツ証拠が不完全）",
+      "moderate": "信頼度は中程度"
+    },
+    "import": {
+      "button": "診断のトピックを取り込む",
+      "topicsCount": "{{count}} トピック · 実行 {{run}}"
     }
   }
 }
