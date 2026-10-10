@@ -18,10 +18,14 @@ export const SITE_WIDE_TERM_SHARE = 0.25;
 /** Below this many content documents the document frequency says nothing, so the ceiling is off. */
 export const MIN_DOCUMENTS_FOR_CEILING = 10;
 
-/** A page linking to at least this many same-section documents is a listing (category pages linked 15). */
+/** A page linking to at least this many same-section documents is a listing (categories linked 6 to 32). */
 export const HUB_MIN_LINKED_DOCUMENTS = 5;
-/** Listings have little text per link: a category page had 212 words for 15 links. */
-export const HUB_MAX_WORDS_PER_LINK = 60;
+/**
+ * Listings have little text per linked document: the portfolio index had 4
+ * words per link, blog index pages 17 to 30, categories 25 to 36. Case
+ * studies with a "see other projects" block had 55 to 69, articles 80 and up.
+ */
+export const HUB_MAX_WORDS_PER_LINK = 45;
 
 export const LABEL_MAX_TOKENS = 3;
 /** A title token must appear on this share of the members (at least two) to label a topic. */

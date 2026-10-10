@@ -25,9 +25,11 @@ export const areaLabel = (hub: DiagnosisDocument): string => {
 };
 
 /**
- * An area is a hub with the content documents it links to from its main
- * content. A document linked from several hubs belongs to the most specific
- * one: fewest members, then the deeper path, then the earlier document.
+ * An area is a hub with the content documents of its own section that it links
+ * to from its main content (a category's call-to-action link to an offer page
+ * does not make the offer part of the category). A document linked from
+ * several hubs belongs to the most specific one: fewest members, then the
+ * deeper path, then the earlier document.
  */
 export const buildAreas = (
   documents: DiagnosisDocument[], links: DocumentLinkIndex,
@@ -35,7 +37,7 @@ export const buildAreas = (
   const byId = new Map(documents.map((document) => [document.id, document]));
   const hubs = documents.filter((document) => document.role === 'hub');
   const membersByHub = new Map(hubs.map((hub) => [hub.id, [...(links.outgoing.get(hub.id) ?? [])]
-    .filter((target) => byId.get(target)?.role === 'content')]));
+    .filter((target) => byId.get(target)?.role === 'content' && byId.get(target)?.section === hub.section)]));
   const areaByDocument = new Map<string, string>();
   documents.filter((document) => document.role === 'content').forEach((document) => {
     const candidates = hubs.filter((hub) => membersByHub.get(hub.id)!.includes(document.id))

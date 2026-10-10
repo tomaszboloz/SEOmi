@@ -22,7 +22,7 @@ export interface DiagnosisDocument {
   /** First path segment without the language prefix; `(root)` for the start page. */
   section: string;
   role: DocumentRole;
-  /** `body_truncated` or `semantic_content_partial` on any page. */
+  /** `body_truncated` on any page: the crawler did not see the whole document. */
   partialEvidence: boolean;
 }
 

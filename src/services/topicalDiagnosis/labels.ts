@@ -57,13 +57,16 @@ export const topicLabel = (members: DiagnosisDocument[], allDocuments: Diagnosis
     .sort((a, b) => titleScore(b) - titleScore(a) || titleOrder.indexOf(a) - titleOrder.indexOf(b) || a.localeCompare(b));
   // Prefer the language of the members' primary pages, so a bilingual topic gets a single-language label.
   const primaryLanguage = `${semanticPageLanguage(members[0]?.primaryPage ?? {}) ?? 'und'}:`;
+  // Without any primary-language token the content terms label better than a foreign title word.
   const pick = (keys: string[]) => {
     const own = keys.filter((key) => key.startsWith(primaryLanguage));
+    if (!own.length) return [];
     return own.length >= 2 ? own : [...own, ...keys.filter((key) => !key.startsWith(primaryLanguage))];
   };
+  // Only site-wide title tokens left ("linkedin") would not tell topics apart; content terms do better then.
   const specific = covered.filter((key) => !siteWide(key));
   const displayForm = (key: string) => members.map((document) => document.titleForms.get(key)).find(Boolean) ?? key;
-  const titleLabel = dedupeForms(pick(specific.length ? specific : covered).map(displayForm)).slice(0, LABEL_MAX_TOKENS);
+  const titleLabel = dedupeForms(pick(specific).map(displayForm)).slice(0, LABEL_MAX_TOKENS);
   if (titleLabel.length) return { label: titleLabel.join(' '), source: 'title' };
 
   const contentCoverage = coverageOf(members, (document) => topicalTerms(document, stats));

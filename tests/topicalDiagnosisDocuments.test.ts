@@ -59,12 +59,14 @@ describe('buildDiagnosisDocuments', () => {
     expect(skippedPages).toBe(2);
   });
 
-  it('records partial evidence and the section of the primary page', () => {
+  it('records partial evidence only for a truncated body, not for the term cap', () => {
     const { documents } = buildDiagnosisDocuments([
       page('https://ex.test/en/oferta/x/', { semantic_language: 'en', body_truncated: true }),
+      page('https://ex.test/long/', { semantic_content_partial: true }),
     ], 'https://ex.test/');
     expect(documents[0].section).toBe('oferta');
     expect(documents[0].partialEvidence).toBe(true);
+    expect(documents[1].partialEvidence).toBe(false);
   });
 
   it('derives section and title tokens', () => {

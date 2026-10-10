@@ -121,7 +121,8 @@ const buildDocument = (group: number[], pages: CrawledPageSummary[], language: s
     titleForms,
     section: documentSection(primaryPage.url),
     role: 'content',
-    partialEvidence: memberPages.some((page) => page.body_truncated === true || page.semantic_content_partial === true),
+    // Only a truncated body weakens link and term evidence; reaching the 40-term cap is normal for long articles.
+    partialEvidence: memberPages.some((page) => page.body_truncated === true),
   };
 };
 
