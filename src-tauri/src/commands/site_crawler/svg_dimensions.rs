@@ -8,7 +8,7 @@ pub(super) fn parse_dimension_token(value: &str) -> Option<usize> {
         .trim()
         .parse::<f64>()
         .ok()?;
-    (numeric.is_finite() && numeric > 0.0 && numeric <= usize::MAX as f64)
+    (numeric.is_finite() && numeric >= 1.0 && numeric < usize::MAX as f64)
         .then_some(numeric as usize)
 }
 
@@ -28,11 +28,15 @@ pub(super) fn svg_intrinsic_dimensions(bytes: &[u8]) -> Option<(usize, usize)> {
         .or_else(|| svg.value().attr("viewbox"))?;
     let values = view_box
         .split(|character: char| character.is_ascii_whitespace() || character == ',')
-        .filter_map(|value| value.trim().parse::<f64>().ok())
-        .collect::<Vec<_>>();
-    if values.len() >= 4 && values[2] > 0.0 && values[3] > 0.0 {
-        Some((values[2] as usize, values[3] as usize))
-    } else {
-        None
+        .filter(|value| !value.trim().is_empty())
+        .map(|value| value.trim().parse::<f64>())
+        .collect::<Result<Vec<_>, _>>()
+        .ok()?;
+    if values.len() != 4 || values.iter().any(|value| !value.is_finite()) {
+        return None;
     }
+    Some((
+        parse_dimension_token(&values[2].to_string())?,
+        parse_dimension_token(&values[3].to_string())?,
+    ))
 }

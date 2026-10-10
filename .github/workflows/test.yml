@@ -31,7 +31,7 @@ jobs:
       - name: Build MCP server for native coverage
         run: npm run build --prefix mcp-server
       - name: Cache Cargo dependencies
-        uses: actions/cache@v4
+        uses: actions/cache@v6.1.0
         with:
           path: |
             ~/.cargo/bin/
@@ -72,7 +72,7 @@ jobs:
       - name: Build MCP server for native coverage
         run: npm run build --prefix mcp-server
       - name: Cache Cargo dependencies
-        uses: actions/cache@v4
+        uses: actions/cache@v6.1.0
         with:
           path: |
             ~/.cargo/bin/
@@ -240,7 +240,11 @@ jobs:
         run: npm run tauri -- build --debug --no-bundle
       - name: Launch actual desktop runtime E2E
         id: desktop-runtime
+        env:
+          SEOMI_E2E_RENDERER: '1'
         run: npm run test:desktop
+      - name: Validate actual desktop renderer evidence
+        run: node scripts/validate-desktop-e2e-report.mjs test-results/desktop-e2e.json
       - name: Diagnose Windows loader failure
         if: failure() && runner.os == 'Windows' && steps.desktop-runtime.outcome == 'failure'
         shell: pwsh
