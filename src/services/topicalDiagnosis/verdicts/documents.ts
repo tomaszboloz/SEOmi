@@ -46,7 +46,7 @@ export const documentVerdicts = (context: VerdictContext): DiagnosisVerdict[] =>
     const sources = [...(links.incoming.get(document.id) ?? [])];
     if (!sources.length && !document.urls.has(start)) {
       verdicts.push(verdict('document-orphan', 'fix', 'document', document.id, [document]));
-    } else if (!topicByDocument.has(document.id) && sources.every((source) => byId.get(source)?.role === 'hub')) {
+    } else if (sources.length > 0 && !topicByDocument.has(document.id) && sources.every((source) => byId.get(source)?.role === 'hub')) {
       const nearest = nearestDocument(document, content, context);
       verdicts.push(verdict('document-isolated', 'weak', 'document', document.id, [document], nearest ? [
         { key: 'nearest', params: { url: urlOf(nearest.document) } },

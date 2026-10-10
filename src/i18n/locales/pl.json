@@ -5196,7 +5196,7 @@
       "withoutHub": "{{count}} bez huba",
       "pairs": "{{count}} par",
       "similarity": "podobieństwo {{percent}}%",
-      "titleTokens": "wspólne słowa tytułu: {{value}}",
+      "titleTokens": "wspólne słowa tytułu: {{titleTokens}}",
       "nearest": "najbliższa strona: {{url}}",
       "hash": "ten sam hash treści",
       "distance": "SimHash: {{value}}/64",

@@ -32,6 +32,8 @@ export const CrawlArchitectureMainContent = ({
   const selectPageByUrl = (url: string) => {
     const node = graph.nodes.find((candidate: any) => candidate.page.url === url || candidate.page.final_url === url);
     if (!node) return;
+    // The page must be visible in the graph, so every restriction is lifted first.
+    state.setPreferences((previous: any) => ({ ...previous, diagnosisFilter: null, clusterFilter: 'all', orphansOnly: false, query: '' }));
     setSelectedId(node.id);
     state.setActiveView('graph');
   };

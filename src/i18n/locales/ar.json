@@ -5196,7 +5196,7 @@
       "withoutHub": "{{count}} بدون محور",
       "pairs": "{{count}} زوج",
       "similarity": "التشابه {{percent}}%",
-      "titleTokens": "كلمات العنوان المشتركة: {{value}}",
+      "titleTokens": "كلمات العنوان المشتركة: {{titleTokens}}",
       "nearest": "أقرب صفحة: {{url}}",
       "hash": "نفس تجزئة المحتوى",
       "distance": "SimHash: {{value}}/64",

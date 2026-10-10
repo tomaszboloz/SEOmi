@@ -76,6 +76,13 @@ describe('roles', () => {
     expect(doc('https://ex.test/blog/kat/').role).toBe('hub');
   });
 
+  it('never promotes a page without a word count to a hub', () => {
+    const posts = ['a', 'b', 'c', 'd', 'e'].map((slug) => `https://ex.test/blog/${slug}/`);
+    const legacy = page('https://ex.test/blog/', { semantic_links: posts.map(link), word_count: undefined as unknown as number });
+    const { doc } = prepare([legacy, ...posts.map((url) => page(url))]);
+    expect(doc('https://ex.test/blog/').role).toBe('content');
+  });
+
   it('treats paginated pages as hubs regardless of link count', () => {
     const { roles } = prepare([page('https://ex.test/blog/', { pagination_next: 'https://ex.test/blog/page/2/' })]);
     expect(roles[0].role).toBe('hub');

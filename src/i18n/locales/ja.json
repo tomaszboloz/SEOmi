@@ -5196,7 +5196,7 @@
       "withoutHub": "ハブなし {{count}}",
       "pairs": "{{count}} ペア",
       "similarity": "類似度 {{percent}}%",
-      "titleTokens": "共有するタイトル語: {{value}}",
+      "titleTokens": "共有するタイトル語: {{titleTokens}}",
       "nearest": "最も近いページ: {{url}}",
       "hash": "同じコンテンツハッシュ",
       "distance": "SimHash: {{value}}/64",

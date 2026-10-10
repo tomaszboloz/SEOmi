@@ -8,7 +8,7 @@ import { contentDocuments, urlOf, verdict, type VerdictContext } from './context
  * breadcrumb or a category link in the navigation counts).
  */
 export const hubVerdicts = (context: VerdictContext): DiagnosisVerdict[] => {
-  const { areas, byId, allLinks, topicByDocument } = context;
+  const { areas, byId, links, allLinks, topicByDocument } = context;
   const verdicts: DiagnosisVerdict[] = [];
   const content = contentDocuments(context);
   areas.forEach((area) => {
@@ -19,13 +19,13 @@ export const hubVerdicts = (context: VerdictContext): DiagnosisVerdict[] => {
     missingBacklink.forEach((member) => verdicts.push(verdict(
       'hub-missing-backlink', 'fix', 'document', member.id, [member, hub], [{ key: 'hub', params: { hub: urlOf(hub) } }], [urlOf(member)],
     )));
-    if (members.length && !missingBacklink.length) {
+    // Same-section documents of the hub's topics that the hub does not link to at all (membership in a narrower area is not a gap).
+    const memberTopics = new Set(area.documentIds.map((id) => topicByDocument.get(id)).filter(Boolean));
+    const unlisted = content.filter((document) => document.section === hub.section && !links.linksTo(hub.id, document.id)
+      && topicByDocument.has(document.id) && memberTopics.has(topicByDocument.get(document.id)));
+    if (members.length && !missingBacklink.length && !unlisted.length) {
       verdicts.push(verdict('area-healthy', 'good', 'area', area.id, [hub, ...members], [{ key: 'members', params: { count: members.length } }], [urlOf(hub)]));
     }
-    const memberTopics = new Set(area.documentIds.map((id) => topicByDocument.get(id)).filter(Boolean));
-    const memberIds = new Set(area.documentIds);
-    const unlisted = content.filter((document) => document.section === hub.section && !memberIds.has(document.id)
-      && topicByDocument.has(document.id) && memberTopics.has(topicByDocument.get(document.id)));
     if (unlisted.length) {
       verdicts.push(verdict(
         'hub-missing-member-link', 'weak', 'area', area.id, [hub, ...unlisted],

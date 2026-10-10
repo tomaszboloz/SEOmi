@@ -26,6 +26,14 @@ describe('topicLabel', () => {
     expect(result.label).toBe('sales navigator');
   });
 
+  it('reads the primary language from a regional code such as pl-PL', () => {
+    const documents = buildDiagnosisDocuments([
+      page('https://ex.test/a/', 'Psychiatria dzieci na Mazowszu', 'pl-PL', ['x']),
+      page('https://ex.test/b/', 'Psychiatria dzieci w Karpaczu', 'pl-PL', ['y']),
+    ], 'https://ex.test/').documents;
+    expect(topicLabel(documents, documents, buildTermStatistics(documents, new Set()))).toEqual({ label: 'psychiatria dzieci', source: 'title' });
+  });
+
   it('caps the label at three tokens ordered by the first member title', () => {
     const documents = buildDiagnosisDocuments([
       page('https://ex.test/a/', 'Psychiatria dzieci i młodzieży na Mazowszu', 'pl', ['x']),

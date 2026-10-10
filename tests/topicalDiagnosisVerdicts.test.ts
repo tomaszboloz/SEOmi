@@ -69,7 +69,7 @@ describe('verdicts', () => {
     const result = buildTopicalDiagnosis(pages, 'https://ex.test/blog/');
     expect(codes(result, 'cannibalization-candidate')[0]).toMatchObject({
       severity: 'fix', urls: [posts[0], posts[1]],
-      evidence: [{ key: 'similarity', params: { percent: 100 } }, { key: 'titleTokens', params: { value: 'alerty, sales, navigatora, crm' } }],
+      evidence: [{ key: 'similarity', params: { percent: 100 } }, { key: 'titleTokens', params: { titleTokens: 'alerty, sales, navigatora, crm' } }],
     });
     const duplicates = codes(result, 'near-duplicate');
     expect(duplicates[0]).toMatchObject({ severity: 'fix', urls: [posts[2], posts[3]], evidence: [{ key: 'hash', params: { value: 'abc' } }] });
@@ -95,6 +95,22 @@ describe('verdicts', () => {
     pages[5].semantic_links = [link(posts[5])];
     const result = buildTopicalDiagnosis(pages, 'https://ex.test/blog/');
     expect(codes(result, 'topic-no-hub')).toHaveLength(0);
+  });
+
+  it('does not report hub-missing-member-link for pages the hub links to but a narrower hub owns', () => {
+    const pages = site();
+    pages.push(page('https://ex.test/blog/kat/', { title: 'Kategoria', semantic_links: posts.slice(0, 4).map(link), word_count: 100, pagination_next: 'https://ex.test/blog/kat/page/2/' }));
+    pages.forEach((candidate, index) => { if (index > 0) candidate.links = [link('https://ex.test/blog/'), link('https://ex.test/blog/kat/')]; });
+    const result = buildTopicalDiagnosis(pages, 'https://ex.test/blog/');
+    expect(codes(result, 'hub-missing-member-link')).toHaveLength(0);
+    expect(codes(result, 'area-healthy')).toHaveLength(2);
+  });
+
+  it('does not call the start page isolated when nothing links to it', () => {
+    const pages = site();
+    pages.push(page('https://ex.test/', { semantic_terms: ['start', 'strona'], title: 'Start' }));
+    const result = buildTopicalDiagnosis(pages, 'https://ex.test/');
+    expect(result.verdicts.filter((candidate) => candidate.urls.includes('https://ex.test/')).map((candidate) => candidate.code)).toEqual([]);
   });
 
   it('marks verdicts of documents with partial evidence as limited', () => {

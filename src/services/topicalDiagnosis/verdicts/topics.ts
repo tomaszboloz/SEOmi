@@ -46,7 +46,7 @@ export const topicVerdicts = (context: VerdictContext): DiagnosisVerdict[] => {
       if (!sameLanguages(left, right) || titleForms.length < CANNIBALIZATION_MIN_TITLE_TOKENS) return;
       verdicts.push(verdict('cannibalization-candidate', 'fix', 'topic', `${topic.id}:${left.id}:${right.id}`, [left, right], [
         { key: 'similarity', params: { percent: Math.round(pair.similarity * 100) } },
-        { key: 'titleTokens', params: { value: titleForms.join(', ') } },
+        { key: 'titleTokens', params: { titleTokens: titleForms.join(', ') } },
       ]));
     });
   });

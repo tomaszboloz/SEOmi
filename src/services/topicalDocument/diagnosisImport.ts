@@ -4,6 +4,14 @@ import type { TopicalMapDocument } from './types';
 import { cleanText, MAX_NODES, MAX_TERMS_PER_NODE } from './primitives';
 import { createTopicalNode } from './factories';
 
+const pathOf = (url: string): string => {
+  try {
+    return new URL(url).pathname || '/';
+  } catch {
+    return url;
+  }
+};
+
 /**
  * One topical node per multi-document topic of the diagnosis. Single documents
  * are not topics and are not imported; every language version of a member
@@ -27,8 +35,9 @@ export const importDiagnosisTopics = (
       })
       .map(({ term }) => term)
       .slice(0, MAX_TERMS_PER_NODE);
+    const firstUrl = members[0]?.primaryPage.url ?? '';
     return {
-      ...createTopicalNode(topic.label || fallbackTitle),
+      ...createTopicalNode(topic.label || `${fallbackTitle} · ${pathOf(firstUrl)}`),
       kind: 'cluster' as const,
       evidenceTerms,
       sourceUrls,

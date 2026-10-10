@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { createCrawlPageFixture } from './fixtures/crawl';
-import { buildDiagnosisDocuments, documentSection, titleTokens } from '@/services/topicalDiagnosis/documents';
+import { buildDiagnosisDocuments, documentSection, paginationParent, titleTokens } from '@/services/topicalDiagnosis/documents';
 
 const page = (url: string, patch: Record<string, unknown> = {}) => createCrawlPageFixture({
   url, final_url: url, semantic_language: 'pl', semantic_terms: ['szkolenie', 'linkedin'], ...patch,
@@ -67,6 +67,15 @@ describe('buildDiagnosisDocuments', () => {
     expect(documents[0].section).toBe('oferta');
     expect(documents[0].partialEvidence).toBe(true);
     expect(documents[1].partialEvidence).toBe(false);
+  });
+
+  it('folds only real pagination paths, never product-style /p/123 URLs', () => {
+    expect(paginationParent('https://ex.test/blog/page/3/')).toBe('https://ex.test/blog/');
+    expect(paginationParent('https://ex.test/blog/strona/2')).toBe('https://ex.test/blog/');
+    expect(paginationParent('https://shop.test/p/123')).toBeNull();
+    expect(paginationParent('not a url')).toBeNull();
+    const { documents } = buildDiagnosisDocuments([page('https://shop.test/'), page('https://shop.test/p/123'), page('https://shop.test/p/456/')], 'https://shop.test/');
+    expect(documents).toHaveLength(3);
   });
 
   it('derives section and title tokens', () => {

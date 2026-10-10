@@ -6,8 +6,9 @@ import type { useSemanticTopicalSession } from './useSemanticTopicalSession';
 import { TopicalTopicList } from './TopicalTopicList';
 type Session = ReturnType<typeof useSemanticTopicalSession>;
 export const TopicalTopicBrowser = ({ session }: { session: Session }) => {
-const { addNode, diagnosis, draggingNodeId, dropTopicOn, graph, hierarchyNotice, importClusters, runId, t, updateWorkspacePreferences, workspacePreferences } = session;
-const importableCount = diagnosis ? diagnosis.topics.length : graph.clusters.length;
+const { addNode, diagnosis, document, draggingNodeId, dropTopicOn, graph, hierarchyNotice, importClusters, runId, t, updateWorkspacePreferences, workspacePreferences } = session;
+const imported = new Set(document.nodes.filter((node) => node.sourceRunId === runId).map((node) => node.sourceClusterId));
+const importableCount = diagnosis ? diagnosis.topics.filter((topic) => !imported.has(topic.id)).length : graph.clusters.length;
 
 return (<div className="flex min-h-0 flex-col rounded-xl border border-slate-800 bg-slate-900/45 p-3">
               <div className="flex flex-wrap items-center justify-between gap-2">

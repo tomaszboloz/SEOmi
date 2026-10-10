@@ -43,6 +43,13 @@ describe('graph filtered and coloured by the diagnosis', () => {
     expect(screen.getByText('Zakres z diagnozy: Blog')).toBeTruthy();
   });
 
+  it('still shows the chip for a topic without a label', () => {
+    const unlabelled = { ...report, topics: [{ ...report.topics[0], label: '', labelSource: 'none' as const }] };
+    const preferences = { query: '', clusterFilter: 'all', orphansOnly: false, linkMode: 'content', diagnosisFilter: { kind: 'topic', id: report.topics[0].id } } as SemanticMapPreferences;
+    render(<CrawlArchitectureControls preferences={preferences} setPreferences={vi.fn()} graph={graph} scaleView={vi.fn()} resetView={vi.fn()} diagnosis={unlabelled} />);
+    expect(screen.getByText('Zakres z diagnozy: Temat bez etykiety')).toBeTruthy();
+  });
+
   it('colours nodes by topic, hubs light and topic-less documents grey', () => {
     const nodes = pages.map((candidate, index) => ({ id: `page-${index}`, clusterId: 'c1', page: candidate, semanticSignalCount: 3 }));
     const built = buildSimulationNodesAndLinks(nodes, [], [], graph, { positions: {} }, report);

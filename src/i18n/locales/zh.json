@@ -5196,7 +5196,7 @@
       "withoutHub": "{{count}} 个无枢纽",
       "pairs": "{{count}} 对",
       "similarity": "相似度 {{percent}}%",
-      "titleTokens": "共享标题词：{{value}}",
+      "titleTokens": "共享标题词：{{titleTokens}}",
       "nearest": "最接近的页面：{{url}}",
       "hash": "相同的内容哈希",
       "distance": "SimHash：{{value}}/64",

@@ -11,16 +11,17 @@ interface Props {
   diagnosis?: TopicalDiagnosisReport;
 }
 
-const diagnosisScopeLabel = (filter: SemanticMapPreferences['diagnosisFilter'], diagnosis: TopicalDiagnosisReport | undefined, noHub: string): string | null => {
+const diagnosisScopeLabel = (filter: SemanticMapPreferences['diagnosisFilter'], diagnosis: TopicalDiagnosisReport | undefined, noHub: string, noLabel: string): string | null => {
   if (!filter || !diagnosis) return null;
   if (filter.kind === 'area') { const area = diagnosis.areas.find((candidate) => candidate.id === filter.id); return area ? area.label || noHub : null; }
-  return diagnosis.topics.find((candidate) => candidate.id === filter.id)?.label ?? null;
+  const topic = diagnosis.topics.find((candidate) => candidate.id === filter.id);
+  return topic ? topic.label || noLabel : null;
 };
 
 export const CrawlArchitectureControls = ({ preferences, setPreferences, graph, scaleView, resetView, diagnosis }: Props) => {
   const { t } = useTranslation();
   const { query, clusterFilter, orphansOnly, linkMode } = preferences;
-  const scopeLabel = diagnosisScopeLabel(preferences.diagnosisFilter, diagnosis, t('topicalDiagnosis.areas.noHub'));
+  const scopeLabel = diagnosisScopeLabel(preferences.diagnosisFilter, diagnosis, t('topicalDiagnosis.areas.noHub'), t('topicalDiagnosis.topics.noLabel'));
   const clearDiagnosisFilter = () => setPreferences((prev) => ({ ...prev, diagnosisFilter: null }));
 
   const setQuery = (value: string) => setPreferences((prev) => ({ ...prev, query: value }));

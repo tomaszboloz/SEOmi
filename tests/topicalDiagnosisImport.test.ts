@@ -34,6 +34,6 @@ describe('importDiagnosisTopics', () => {
     expect(importDiagnosisTopics(once, report, 'run-1', 'Temat').nodes).toHaveLength(2);
     expect(importDiagnosisTopics(once, report, 'run-2', 'Temat').nodes).toHaveLength(4);
     const unlabelled = { ...report, topics: [{ ...report.topics[0], label: '', labelSource: 'none' as const }] };
-    expect(importDiagnosisTopics(createEmptyTopicalMap(), unlabelled, 'run-3', 'Temat').nodes[0].title).toBe('Temat');
+    expect(importDiagnosisTopics(createEmptyTopicalMap(), unlabelled, 'run-3', 'Temat').nodes[0].title).toBe('Temat · /a/');
   });
 });

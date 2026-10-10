@@ -10,8 +10,8 @@ import { MAX_DIAGNOSIS_PAGES } from './thresholds';
 /** Everything after a title separator is the site name, not the subject. */
 export const TITLE_SEPARATOR = /\s[|—–-]\s.*$|\|.*$/u;
 const LANGUAGE_SEGMENT = /^[a-z]{2}(-[a-z]{2})?$/i;
-/** `/blog/page/3/`, `/blog/strona/3`: pagination without `rel=prev` still belongs to its listing. */
-export const PAGINATION_PATH = /^(.*?)\/(page|strona|seite|pagina|p)\/\d+\/?$/i;
+/** `/blog/page/3/`, `/blog/strona/3`: pagination without `rel=prev` still belongs to its listing (`/p/123` is a product, not a page). */
+export const PAGINATION_PATH = /^(.*?)\/(page|strona|seite|pagina)\/\d+\/?$/i;
 
 export const paginationParent = (url: string): string | null => {
   try {

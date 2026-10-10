@@ -56,7 +56,8 @@ export const topicLabel = (members: DiagnosisDocument[], allDocuments: Diagnosis
   const covered = [...titleCoverage.entries()].filter(([, count]) => count >= minimum).map(([key]) => key)
     .sort((a, b) => titleScore(b) - titleScore(a) || titleOrder.indexOf(a) - titleOrder.indexOf(b) || a.localeCompare(b));
   // Prefer the language of the members' primary pages, so a bilingual topic gets a single-language label.
-  const primaryLanguage = `${semanticPageLanguage(members[0]?.primaryPage ?? {}) ?? 'und'}:`;
+  // Term keys carry the bare language (`pl:`), so `pl-PL` must be reduced the same way.
+  const primaryLanguage = `${(semanticPageLanguage(members[0]?.primaryPage ?? {}) ?? 'und').split(/[-_]/)[0].toLowerCase() || 'und'}:`;
   // Without any primary-language token the content terms label better than a foreign title word.
   const pick = (keys: string[]) => {
     const own = keys.filter((key) => key.startsWith(primaryLanguage));

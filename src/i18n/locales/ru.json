@@ -5196,7 +5196,7 @@
       "withoutHub": "{{count}} без хаба",
       "pairs": "{{count}} пар",
       "similarity": "сходство {{percent}}%",
-      "titleTokens": "общие слова заголовка: {{value}}",
+      "titleTokens": "общие слова заголовка: {{titleTokens}}",
       "nearest": "ближайшая страница: {{url}}",
       "hash": "тот же хеш контента",
       "distance": "SimHash: {{value}}/64",

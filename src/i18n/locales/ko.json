@@ -5196,7 +5196,7 @@
       "withoutHub": "허브 없음 {{count}}",
       "pairs": "{{count}} 쌍",
       "similarity": "유사도 {{percent}}%",
-      "titleTokens": "공유 제목 단어: {{value}}",
+      "titleTokens": "공유 제목 단어: {{titleTokens}}",
       "nearest": "가장 가까운 페이지: {{url}}",
       "hash": "동일한 콘텐츠 해시",
       "distance": "SimHash: {{value}}/64",

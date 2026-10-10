@@ -27,7 +27,9 @@ export const assignRoles = (documents: DiagnosisDocument[]): DiagnosisDocument[]
       const target = documentByUrl.get(normalizeGraphUrl(link.target_url, page.final_url || page.url));
       if (target && target !== document && target.section === document.section) targets.add(target.id);
     });
-    return targets.size >= HUB_MIN_LINKED_DOCUMENTS && (page.word_count ?? 0) / targets.size < HUB_MAX_WORDS_PER_LINK;
+    // Legacy snapshots without a word count cannot prove a listing.
+    if (typeof page.word_count !== 'number') return false;
+    return targets.size >= HUB_MIN_LINKED_DOCUMENTS && page.word_count / targets.size < HUB_MAX_WORDS_PER_LINK;
   };
   return documents.map((document) => {
     const paginated = document.pages.some((page) => Boolean(page.pagination_next || page.pagination_prev) || PAGINATION_PATH.test(pathname(page.url)));

@@ -41,4 +41,12 @@ describe('plan import from the diagnosis', () => {
     fireEvent.click(button);
     expect(session.importClusters).toHaveBeenCalledTimes(1);
   });
+
+  it('disables the import once every topic of this run is already in the plan', () => {
+    const imported = { ...createEmptyTopicalMap(), nodes: [{ ...createEmptyTopicalMap().nodes[0], id: 'x', sourceRunId: 'run123456789012345', sourceClusterId: report.topics[0].id }] };
+    const session = topicalSession({ diagnosis: report, graph: { clusters: [] }, document: imported } as never);
+    render(<TopicalTopicBrowser session={session as never} />);
+    expect(screen.getByRole('button', { name: 'topicalDiagnosis.import.button' }).hasAttribute('disabled')).toBe(true);
+    expect(screen.getByText('topicalDiagnosis.import.topicsCount:0')).toBeTruthy();
+  });
 });
