@@ -73,18 +73,26 @@ async fn error_kind_classifies_connection_sources_and_timeouts() {
     let tport = tl.local_addr().unwrap().port();
     let srv = tokio::spawn(async move {
         if let Ok((mut s, _)) = tl.accept().await {
-            use tokio::io::AsyncWriteExt;
-            let _ = s.write_all(b"HTTP/1.1 200 OK\r\n\r\n").await;
+            use tokio::io::{AsyncReadExt, AsyncWriteExt};
+            let mut client_hello = [0; 4096];
+            let _ = s.read(&mut client_hello).await;
+            // TLS fatal handshake_failure alert, rather than an HTTP response.
+            s.write_all(&[21, 3, 3, 0, 2, 2, 40]).await.unwrap();
+            s.shutdown().await.unwrap();
         }
     });
-    let tls_err = reqwest::Client::new()
+    let tls_err = reqwest::Client::builder()
+        .no_proxy()
+        .timeout(std::time::Duration::from_secs(5))
+        .build()
+        .unwrap()
         .get(format!("https://127.0.0.1:{tport}/"))
         .send()
         .await
         .unwrap_err();
     srv.abort();
     assert!(tls_err.is_connect());
-    assert_eq!(error_kind(&tls_err), "tls");
+    assert_eq!(error_kind(&tls_err), "tls", "{tls_err:?}");
 
     let invalid_scheme_err = timeout_client
         .get("file:///invalid")
