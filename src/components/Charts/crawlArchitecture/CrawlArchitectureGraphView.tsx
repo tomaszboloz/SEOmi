@@ -34,7 +34,7 @@ export const CrawlArchitectureGraphView = ({ state, crawlMode }: any) => {
 
   return (
     <>
-      <CrawlArchitectureControls preferences={preferences} setPreferences={state.setPreferences} graph={graph} scaleView={scaleView} resetView={resetView} />
+      <CrawlArchitectureControls preferences={preferences} setPreferences={state.setPreferences} graph={graph} scaleView={scaleView} resetView={resetView} diagnosis={state.diagnosis} />
       <div className="mt-3 overflow-hidden rounded-lg border border-slate-800 bg-slate-950/70">
         <svg ref={svgRef} viewBox={`0 0 ${WIDTH} ${HEIGHT}`} role="img" aria-label={t('mapUi.svgAria')} className="h-[420px] w-full touch-none sm:h-[560px]">
           <defs><marker id={markerId} markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto" markerUnits="strokeWidth"><path d="M0,0 L0,8 L8,4 z" fill="#64748b" /></marker></defs>

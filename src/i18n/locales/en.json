@@ -1748,7 +1748,9 @@
         "out-of-scope": "outside property",
         "ambiguous": "ambiguous"
       }
-    }
+    },
+    "diagnosisFilter": "Diagnosis scope: {{label}}",
+    "clearDiagnosisFilter": "Show the whole graph"
   },
   "crawlDiff": {
     "fields": {

@@ -1748,7 +1748,9 @@
         "out-of-scope": "资源范围之外",
         "ambiguous": "不明确"
       }
-    }
+    },
+    "diagnosisFilter": "诊断范围：{{label}}",
+    "clearDiagnosisFilter": "显示整个图"
   },
   "crawlDiff": {
     "fields": {

@@ -1748,7 +1748,9 @@
         "out-of-scope": "خارج الخاصية",
         "ambiguous": "ملتبس"
       }
-    }
+    },
+    "diagnosisFilter": "نطاق التشخيص: {{label}}",
+    "clearDiagnosisFilter": "عرض الرسم كاملًا"
   },
   "crawlDiff": {
     "fields": {

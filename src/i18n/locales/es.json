@@ -1748,7 +1748,9 @@
         "out-of-scope": "fuera de la propiedad",
         "ambiguous": "ambigua"
       }
-    }
+    },
+    "diagnosisFilter": "Alcance del diagnóstico: {{label}}",
+    "clearDiagnosisFilter": "Mostrar todo el grafo"
   },
   "crawlDiff": {
     "fields": {

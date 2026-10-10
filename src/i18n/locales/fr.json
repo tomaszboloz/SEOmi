@@ -1748,7 +1748,9 @@
         "out-of-scope": "hors propriété",
         "ambiguous": "ambiguë"
       }
-    }
+    },
+    "diagnosisFilter": "Périmètre du diagnostic : {{label}}",
+    "clearDiagnosisFilter": "Afficher tout le graphe"
   },
   "crawlDiff": {
     "fields": {

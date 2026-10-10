@@ -1748,7 +1748,9 @@
         "out-of-scope": "속성 범위 밖",
         "ambiguous": "모호함"
       }
-    }
+    },
+    "diagnosisFilter": "진단 범위: {{label}}",
+    "clearDiagnosisFilter": "전체 그래프 보기"
   },
   "crawlDiff": {
     "fields": {

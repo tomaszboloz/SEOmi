@@ -1748,7 +1748,9 @@
         "out-of-scope": "вне ресурса",
         "ambiguous": "неоднозначно"
       }
-    }
+    },
+    "diagnosisFilter": "Область диагностики: {{label}}",
+    "clearDiagnosisFilter": "Показать весь граф"
   },
   "crawlDiff": {
     "fields": {

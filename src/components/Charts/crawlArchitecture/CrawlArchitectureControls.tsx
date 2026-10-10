@@ -1,5 +1,6 @@
 import { useTranslation } from 'react-i18next';
 import type { SemanticMapPreferences } from './CrawlArchitectureTypes';
+import type { TopicalDiagnosisReport } from '@/services/topicalDiagnosis';
 
 interface Props {
   preferences: SemanticMapPreferences;
@@ -7,11 +8,20 @@ interface Props {
   graph: any;
   scaleView: (factor: number) => void;
   resetView: () => void;
+  diagnosis?: TopicalDiagnosisReport;
 }
 
-export const CrawlArchitectureControls = ({ preferences, setPreferences, graph, scaleView, resetView }: Props) => {
+const diagnosisScopeLabel = (filter: SemanticMapPreferences['diagnosisFilter'], diagnosis: TopicalDiagnosisReport | undefined, noHub: string): string | null => {
+  if (!filter || !diagnosis) return null;
+  if (filter.kind === 'area') { const area = diagnosis.areas.find((candidate) => candidate.id === filter.id); return area ? area.label || noHub : null; }
+  return diagnosis.topics.find((candidate) => candidate.id === filter.id)?.label ?? null;
+};
+
+export const CrawlArchitectureControls = ({ preferences, setPreferences, graph, scaleView, resetView, diagnosis }: Props) => {
   const { t } = useTranslation();
   const { query, clusterFilter, orphansOnly, linkMode } = preferences;
+  const scopeLabel = diagnosisScopeLabel(preferences.diagnosisFilter, diagnosis, t('topicalDiagnosis.areas.noHub'));
+  const clearDiagnosisFilter = () => setPreferences((prev) => ({ ...prev, diagnosisFilter: null }));
 
   const setQuery = (value: string) => setPreferences((prev) => ({ ...prev, query: value }));
   const setClusterFilter = (value: string) => setPreferences((prev) => ({ ...prev, clusterFilter: value }));
@@ -20,6 +30,7 @@ export const CrawlArchitectureControls = ({ preferences, setPreferences, graph, 
 
   return (
     <div className="mt-3 flex flex-wrap items-center gap-2">
+      {scopeLabel && <span className="inline-flex h-8 items-center gap-2 rounded-md border border-sky-500/30 bg-sky-500/10 px-2 text-[11px] text-sky-100">{t('mapUi.diagnosisFilter', { label: scopeLabel })}<button type="button" onClick={clearDiagnosisFilter} className="rounded px-1 text-sky-200 hover:bg-sky-500/20 hover:text-white" aria-label={t('mapUi.clearDiagnosisFilter')} title={t('mapUi.clearDiagnosisFilter')}>×</button></span>}
       <div className="flex h-8 items-center gap-1 rounded-md border border-slate-700 bg-slate-950/60 p-0.5" role="group" aria-label={t('mapUi.linkScopeAria')}>
         <button type="button" onClick={() => setLinkMode('content')} aria-pressed={linkMode === 'content'} className={`h-7 rounded px-2 text-[11px] font-medium transition ${linkMode === 'content' ? 'bg-emerald-500/15 text-emerald-200' : 'text-slate-400 hover:bg-slate-800 hover:text-slate-100'}`}>{t('mapUi.contentOnly')}</button>
         <button type="button" onClick={() => setLinkMode('all')} aria-pressed={linkMode === 'all'} className={`h-7 rounded px-2 text-[11px] font-medium transition ${linkMode === 'all' ? 'bg-sky-500/15 text-sky-200' : 'text-slate-400 hover:bg-slate-800 hover:text-slate-100'}`}>{t('mapUi.allLinks')}</button>

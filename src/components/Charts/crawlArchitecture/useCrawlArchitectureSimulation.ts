@@ -9,7 +9,7 @@ import { buildSimulationNodesAndLinks, applySimulationForces, setupDragBehavior 
 
 export const useCrawlArchitectureSimulation = ({
   svgRef, graphLayerRef, graph, preferences, setPreferences, setSelectedId,
-  selectedId, visibleNodes, visibleEdges, visibleTopicEdges, t, markerId
+  selectedId, visibleNodes, visibleEdges, visibleTopicEdges, t, markerId, diagnosis
 }: any) => {
   const zoomRef = useRef<ZoomBehavior<SVGSVGElement, unknown> | null>(null);
 
@@ -18,7 +18,7 @@ export const useCrawlArchitectureSimulation = ({
     const graphLayer = graphLayerRef.current;
     if (!svgElement || !graphLayer) return;
 
-    const { nodes, links, topicLinks } = buildSimulationNodesAndLinks(visibleNodes, visibleEdges, visibleTopicEdges, graph, preferences);
+    const { nodes, links, topicLinks } = buildSimulationNodesAndLinks(visibleNodes, visibleEdges, visibleTopicEdges, graph, preferences, diagnosis);
     const root = select(graphLayer);
 
     const topicElements = root.selectAll<SVGLineElement, SimLink>('line.topic-similarity-edge')
@@ -84,7 +84,7 @@ export const useCrawlArchitectureSimulation = ({
     select(svgElement).call(zoomBehavior.transform, zoomIdentity.translate(preferences.transform.x, preferences.transform.y).scale(preferences.transform.k));
 
     return () => { simulation.stop(); select(svgElement).on('.zoom', null); };
-  }, [graph.clusters, markerId, preferences.positions, selectedId, visibleEdges, visibleNodes, visibleTopicEdges, t, setPreferences, setSelectedId]);
+  }, [diagnosis, graph.clusters, markerId, preferences.positions, selectedId, visibleEdges, visibleNodes, visibleTopicEdges, t, setPreferences, setSelectedId]);
 
   return { zoomRef };
 };

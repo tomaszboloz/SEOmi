@@ -1748,7 +1748,9 @@
         "out-of-scope": "poza property",
         "ambiguous": "niejednoznaczne"
       }
-    }
+    },
+    "diagnosisFilter": "Zakres z diagnozy: {{label}}",
+    "clearDiagnosisFilter": "Pokaż cały graf"
   },
   "crawlDiff": {
     "fields": {

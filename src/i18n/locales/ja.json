@@ -1748,7 +1748,9 @@
         "out-of-scope": "プロパティ外",
         "ambiguous": "あいまい"
       }
-    }
+    },
+    "diagnosisFilter": "診断の範囲: {{label}}",
+    "clearDiagnosisFilter": "グラフ全体を表示"
   },
   "crawlDiff": {
     "fields": {
