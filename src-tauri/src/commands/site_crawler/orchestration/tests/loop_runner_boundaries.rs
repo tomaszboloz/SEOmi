@@ -115,4 +115,3 @@ async fn loop_runner_stops_when_cancelled_before_page_fetch() {
     assert!(state.pages.is_empty());
     assert!(server.requests.lock().unwrap().is_empty());
 }
-
