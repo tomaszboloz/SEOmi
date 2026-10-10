@@ -1,4 +1,5 @@
-import { readFileSync } from 'node:fs';
+import { readFileSync, realpathSync } from 'node:fs';
+import { fileURLToPath } from 'node:url';
 
 // Keep these values aligned with the native desktop_e2e example. A smaller
 // report can otherwise make llvm-cov exit successfully without exercising the
@@ -61,7 +62,7 @@ export function readAndValidateDesktopE2eReport(path) {
   return assertDesktopE2eReport(report);
 }
 
-if (process.argv[1] === new URL(import.meta.url).pathname) {
+if (process.argv[1] && realpathSync(process.argv[1]) === fileURLToPath(import.meta.url)) {
   try {
     readAndValidateDesktopE2eReport(process.argv[2]);
     console.log('Desktop E2E report passed validation.');
