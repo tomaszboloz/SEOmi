@@ -40,7 +40,7 @@ describe('SuggestionEvidenceSummary', () => {
           suggestion: 'no cues query',
           intent: { label: 'Commercial' as const, confidence: 'uncertain' as const, cues: [] },
           pages: [
-            { url: 'https://example.test/notitle', title: '', scopes: ['terms' as const], matchedTerms: ['term'] },
+            { url: 'https://example.test/notitle', title: '', scopes: ['semantic-terms' as const], matchedTerms: ['term'] },
           ],
         },
         {

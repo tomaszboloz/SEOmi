@@ -33,7 +33,7 @@ const defaultSug = {
 
 beforeEach(async () => {
   const actual = await vi.importActual<typeof import('@/services/freeSuggestions')>('@/services/freeSuggestions');
-  mocks.importSuggestions.mockImplementation((...args) => actual.importSuggestions(...args));
+  mocks.importSuggestions.mockImplementation((...args: Parameters<typeof actual.importSuggestions>) => actual.importSuggestions(...args));
   await i18n.changeLanguage('en');
   mocks.fetch.mockReset(); mocks.add.mockReset();
   useProjectStore.setState({ activeProjectId: 'p1' });

@@ -13,7 +13,7 @@ const makePsi = (overrides: Partial<PageSpeedSnapshot> = {}): PageSpeedSnapshot 
   id: 'psi-base', capturedAt: '2026-01-01T00:00:00Z', url: 'https://example.test/', strategy: 'mobile', formFactor: 'PHONE', scope: 'url',
   pageSpeed: {
     source: 'fixture', requestedUrl: 'https://example.test/', finalUrl: 'https://example.test/', strategy: 'mobile', fetchedAt: '2026-01-01T00:00:00Z', lighthouseVersion: null,
-    categories: { performance: 0.9, accessibility: 0.9, bestPractices: 0.9, seo: 0.9 }, metrics: { 'largest-contentful-paint': { numericValue: 1000 } }, opportunities: [], fieldExperience: null, originExperience: null,
+    categories: { performance: 0.9, accessibility: 0.9, bestPractices: 0.9, seo: 0.9 }, metrics: { 'largest-contentful-paint': { id: 'largest-contentful-paint', title: 'LCP', displayValue: '1 s', score: 1, numericValue: 1000 } }, opportunities: [], fieldExperience: null, originExperience: null,
   },
   crux: null, ...overrides,
 });
@@ -41,7 +41,7 @@ describe('guardPageSpeedComparison branch coverage', () => {
     expect(guardPageSpeedComparison(base, makePsi({ strategy: 'desktop', capturedAt: future }), 35).reasons).toContain('different-scope');
     expect(guardPageSpeedComparison(base, makePsi({ formFactor: 'DESKTOP', capturedAt: future }), 35).reasons).toContain('different-scope');
     expect(guardPageSpeedComparison(base, makePsi({ scope: 'origin', capturedAt: future }), 35).reasons).toContain('different-scope');
-    const crux1 = { source: 'fixture', fetchedAt: '2026-01-01', target: 'https://example.test/', scope: 'url', formFactor: 'PHONE' as const, response: {} };
+    const crux1 = { source: 'fixture', fetchedAt: '2026-01-01', target: 'https://example.test/', scope: 'url' as const, formFactor: 'PHONE' as const, response: {} };
     const baseWithCrux = makePsi({ crux: crux1 });
     expect(guardPageSpeedComparison(baseWithCrux, makePsi({ capturedAt: future, crux: { ...crux1, target: 'https://other.test/' } }), 35).reasons).toContain('different-crux-scope');
     expect(guardPageSpeedComparison(baseWithCrux, makePsi({ capturedAt: future, crux: { ...crux1, scope: 'origin' } }), 35).reasons).toContain('different-crux-scope');
@@ -96,18 +96,18 @@ describe('evaluateGscAlert and compareGscForMonitoring branches', () => {
   it('handles pageChanges decline, slice key cap, and incompatible comparison', () => {
     const baseline = makeGsc();
     const current = makeGsc({ id: 'gsc-curr' });
-    const incompatible: GscSnapshotComparison = { compatible: false, reasons: ['different-domain'], baseline, current, queryChanges: [], pageChanges: [], newQueries: [], lostQueries: [], newPages: [], lostPages: [], uncertainBecauseTruncated: false };
+    const incompatible: GscSnapshotComparison = { compatible: false, reason: 'different-domain', queryChanges: [], pageChanges: [], uncertainBecauseTruncated: false };
     expect(evaluateGscAlert(baseline, current, incompatible)).toBeNull();
 
     const tenPageChanges = Array.from({ length: 10 }, (_, i) => ({
       key: `https://example.test/p${i}`,
       baseline: { clicks: 50, impressions: 200, ctr: 0.25, position: 2 },
       current: { clicks: 10, impressions: 50, ctr: 0.2, position: 8 },
-      clicksDelta: -40, impressionsDelta: -150, clicksDeltaPercent: null, impressionsDeltaPercent: -75,
+      potentialDecline: true, clicksDelta: -40, impressionsDelta: -150, clicksDeltaPercent: null, impressionsDeltaPercent: -75,
     }));
     const comparisonWithPages: GscSnapshotComparison = {
-      compatible: true, reasons: [], baseline, current, queryChanges: [], pageChanges: tenPageChanges,
-      newQueries: [], lostQueries: [], newPages: [], lostPages: [], uncertainBecauseTruncated: false,
+      compatible: true, queryChanges: [], pageChanges: tenPageChanges,
+      uncertainBecauseTruncated: false,
     };
     const alert = evaluateGscAlert(baseline, current, comparisonWithPages);
     expect(alert?.evidence.rows).toBe(10);
