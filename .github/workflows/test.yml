@@ -126,6 +126,22 @@ jobs:
         run: npm run check:loc
       - name: Lint TypeScript and React
         run: npm run lint
+      - name: Run required frontend regression tests
+        run: npm test
+      - name: Typecheck & Production Bundle
+        run: npm run build
+
+  coverage-frontend-mcp:
+    name: Frontend and MCP coverage (98% follow-up)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: 'npm'
+      - name: Install dependencies
+        run: npm ci
       - name: Run Vitest with full frontend coverage
         run: npm run test:coverage:target
       - name: Install MCP coverage dependencies
@@ -147,8 +163,6 @@ jobs:
             test-results/mcp-runtime-sources.json
             test-results/public-function-inventory.json
           retention-days: 14
-      - name: Typecheck & Production Bundle
-        run: npm run build
 
   desktop-platform-smoke:
     name: Desktop platform smoke (${{ matrix.os }})

@@ -30,7 +30,10 @@ it.each(['\n', '\r\n'])('keeps strict CI gates with %j line endings', (newline) 
   expect(rust.indexOf('validate-desktop-e2e-report.mjs')).toBeLessThan(rust.indexOf('llvm-cov report'));
   expect(rust.indexOf('llvm-cov report')).toBeLessThan(rust.indexOf('native-production-coverage.mjs'));
   expect(rust.indexOf('native-production-coverage.mjs')).toBeLessThan(rust.indexOf('native-coverage-threshold.mjs'));
-  const frontend = tests.split('  test-frontend:')[1].split('  desktop-platform-smoke:')[0];
+  const requiredFrontend = tests.split('  test-frontend:')[1].split('  coverage-frontend-mcp:')[0];
+  expect(requiredFrontend).toMatch(/^\s+run: npm test\s*$/m);
+  expect(requiredFrontend).not.toMatch(/continue-on-error|\|\|\s*true/);
+  const frontend = tests.split('  coverage-frontend-mcp:')[1].split('  desktop-platform-smoke:')[0];
   expect(frontend).toMatch(/^\s+run: npm run test:coverage:target\s*$/m);
   expect(frontend).toMatch(/^\s+run: npm run test:coverage:mcp\s*$/m);
   expect(frontend).toMatch(/^\s+run: npm run test:inventory\s*$/m);
