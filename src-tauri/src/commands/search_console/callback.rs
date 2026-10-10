@@ -65,8 +65,12 @@ pub(super) async fn receive_oauth_code(
                 .await;
                 return Err(if error == "access_denied" {
                     "Search Console authorization was cancelled by the user.".into()
+                } else if let Some((code, hint)) = crate::utils::provider_error_code::known_reason(
+                    &serde_json::json!({"error": error}),
+                ) {
+                    format!("Google OAuth failed: {code}. {hint}")
                 } else {
-                    format!("Google OAuth failed: {error}")
+                    "Google OAuth failed.".into()
                 });
             }
             let code = query
@@ -84,5 +88,5 @@ pub(super) async fn receive_oauth_code(
         }
     })
     .await
-    .map_err(|_| "Google sign-in did not finish within 3 minutes.".to_string())?
+    .map_err(|_| "Google sign-in did not finish within 3 minutes. If Google showed an error page instead of returning to SEOmi, its error code names the cause (access_denied: add the account as an OAuth test user; redirect_uri_mismatch: use a Desktop app OAuth client).".to_string())?
 }

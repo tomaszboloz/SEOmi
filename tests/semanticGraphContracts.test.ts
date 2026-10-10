@@ -49,7 +49,7 @@ describe('semantic graph evidence responsibilities', () => {
     const terms = ['żółć', 'zolc', '', ...Array.from({ length: 50 }, (_, index) => `term${index}`)];
     const graph = buildSemanticTopics([page('https://site.test/coffee', terms), page('https://site.test/coffee2')]);
     expect(graph.termsByPage[0]).toHaveLength(40);
-    expect(graph.termsByPage[0].slice(0, 3)).toEqual(['zolc', 'term0', 'term1']);
+    expect(graph.termsByPage[0].slice(0, 3)).toEqual(['und:zolc', 'und:term0', 'und:term1']);
     expect(graph.termsByPage[1]).toEqual([]);
     expect(graph.groupMembers.size).toBe(2);
     expect(graph.topicEdges).toEqual([]);
@@ -66,7 +66,7 @@ describe('semantic graph evidence responsibilities', () => {
     const rare = Math.log(4);
     expect(graph.groupMembers.size).toBe(1);
     expect(graph.find(2)).toBe(graph.find(0));
-    expect(graph.groupDetails.get(graph.find(0))).toEqual({ id: 'cluster-0', label: 'coffee' });
+    expect(graph.groupDetails.get(graph.find(0))).toEqual({ id: 'cluster-0', label: 'coffee / espresso' });
     expect(graph.topicEdges[0].weightedJaccard).toBeCloseTo(2 * common / (2 * common + rare));
     expect(graph.totalTopicEdges).toBe(3);
     expect(graph.topicEdges[0].sharedTerms).toEqual(['coffee', 'espresso']);

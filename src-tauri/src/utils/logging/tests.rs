@@ -21,6 +21,7 @@ mod diagnostics;
 mod dispatch;
 mod fixture;
 mod formatter;
+mod isolation;
 mod redaction;
 mod reentry;
 mod sink;

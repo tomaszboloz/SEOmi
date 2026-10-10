@@ -1,3 +1,5 @@
+pub(super) type BrowserLauncher = fn(&str) -> Result<(), String>;
+
 pub(super) fn send_browser_to(url: &str) -> Result<(), String> {
     #[cfg(target_os = "macos")]
     let result = std::process::Command::new("open").arg(url).spawn();

@@ -1,10 +1,8 @@
 use chrono::{Days, NaiveDate, Utc};
 
 pub(super) fn date_range() -> (String, String) {
-    let end = Utc::now()
-        .date_naive()
-        .checked_sub_days(Days::new(3))
-        .unwrap_or_else(|| Utc::now().date_naive());
+    let now = Utc::now().date_naive();
+    let end = now.checked_sub_days(Days::new(3)).unwrap_or(now);
     let start = end.checked_sub_days(Days::new(27)).unwrap_or(end);
     (start.to_string(), end.to_string())
 }
@@ -23,10 +21,8 @@ pub(super) fn requested_date_range(
             if start > end {
                 return Err("Start date must not be later than end date.".into());
             }
-            let latest = Utc::now()
-                .date_naive()
-                .checked_sub_days(Days::new(3))
-                .unwrap_or_else(|| Utc::now().date_naive());
+            let now = Utc::now().date_naive();
+            let latest = now.checked_sub_days(Days::new(3)).unwrap_or(now);
             if end > latest {
                 return Err(format!("Search Console usually has complete data through {latest}; choose an earlier range."));
             }

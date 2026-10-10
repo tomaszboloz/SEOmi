@@ -71,3 +71,7 @@ pub(super) fn collect_http_resource(
     resolved.set_fragment(None);
     output.insert(resolved.to_string());
 }
+
+#[cfg(test)]
+#[path = "mixed_content_tests.rs"]
+mod tests;

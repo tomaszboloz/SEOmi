@@ -9,7 +9,7 @@ pub(super) fn validate(
         return;
     };
     let questions = match main_entity {
-        Value::Object(object) => vec![object],
+        Value::Object(object) => vec![(0, object)],
         Value::Array(items) if !items.is_empty() => {
             let mut objects = Vec::new();
             for (index, item) in items.iter().enumerate() {
@@ -23,7 +23,7 @@ pub(super) fn validate(
                     ));
                     continue;
                 };
-                objects.push(object);
+                objects.push((index, object));
             }
             objects
         }
@@ -38,7 +38,7 @@ pub(super) fn validate(
             Vec::new()
         }
     };
-    for (index, question) in questions.iter().enumerate() {
+    for (index, question) in &questions {
         let question_path = format!("{path}.mainEntity[{index}]");
         if !question
             .get("@type")

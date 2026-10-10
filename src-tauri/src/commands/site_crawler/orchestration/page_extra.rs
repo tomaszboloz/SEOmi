@@ -3,6 +3,7 @@ mod inputs;
 pub use inputs::ExtractPageExtraInput;
 
 use scraper::{Html, Selector};
+use tauri::Runtime;
 use url::Url;
 
 use super::super::{
@@ -46,7 +47,7 @@ pub struct PageExtraOutcome {
     pub html_validation_truncated: bool,
 }
 
-pub fn extract_page_extra(input: ExtractPageExtraInput<'_>) -> PageExtraOutcome {
+pub fn extract_page_extra<R: Runtime>(input: ExtractPageExtraInput<'_, R>) -> PageExtraOutcome {
     let ExtractPageExtraInput {
         document,
         text,

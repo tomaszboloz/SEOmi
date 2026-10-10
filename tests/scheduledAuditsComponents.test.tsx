@@ -67,6 +67,10 @@ describe('ScheduledAudits submodules', () => {
     fireEvent.change(crawlLimitInput, { target: { value: '50' } });
     expect(setScheduledCrawlLimit).toHaveBeenCalledWith(50);
 
+    const intervalSelect = document.getElementById('scheduled-audit-interval')!;
+    fireEvent.change(intervalSelect, { target: { value: '168' } });
+    expect(setIntervalHours).toHaveBeenCalledWith(168);
+
     fireEvent.submit(urlInput.closest('form')!);
     expect(onSubmit).toHaveBeenCalled();
   });

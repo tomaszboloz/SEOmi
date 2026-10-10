@@ -4,6 +4,7 @@ import { UpdatesSettingsTab } from '@/components/Settings/settings/UpdatesSettin
 import { relaunch } from '@tauri-apps/plugin-process';
 import type { UpdateStatus } from '@/services/tauri';
 import i18n from '@/i18n';
+import { APP_VERSION } from '@/constants/app';
 
 const environment = vi.hoisted(() => ({ native: true }));
 vi.mock('@/services/tauri', () => ({ isTauriEnvironment: () => environment.native }));
@@ -18,6 +19,7 @@ describe('public updater settings view', () => {
   it('offers checking before a result and installation only for a native available update', () => {
     const handlers = props();
     const view = render(<UpdatesSettingsTab {...handlers} />);
+    expect(screen.getByText(i18n.t('legacyUi.settings.releaseVersion', { version: APP_VERSION }))).toBeTruthy();
     fireEvent.click(screen.getByRole('button', { name: i18n.t('legacyUi.settings.checkUpdates') }));
     expect(handlers.handleCheckUpdates).toHaveBeenCalledTimes(1);
     expect(screen.queryByRole('button', { name: i18n.t('legacyUi.settings.installUpdate') })).toBeNull();

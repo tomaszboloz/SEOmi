@@ -34,7 +34,7 @@ export const CrawlPaginationRow: React.FC<CrawlPaginationRowProps> = ({ page, li
   }
 
   const statusText = link.checked_in_run
-    ? link.http_status == null
+    ? !link.http_status
       ? t('crawlDeepUi.noResponse')
       : t('crawl.ui.httpStatus', { status: link.http_status })
     : t('crawlDeepUi.notCheckedThisRun');

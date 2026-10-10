@@ -1,7 +1,12 @@
 use super::{
-    arguments::build_ai_cli_arguments, auth::command_for, capabilities::check_capabilities,
-    diagnostics::cli_response, execution::process_for, paths::augmented_path,
-    resolution::resolve_command, streams::bounded_process_output,
+    arguments::build_ai_cli_arguments,
+    auth::command_for,
+    capabilities::check_capabilities,
+    diagnostics::cli_response,
+    execution::process_for,
+    paths::augmented_path,
+    resolution::{resolve_command, ResolvedCommand},
+    streams::bounded_process_output,
 };
 use std::{
     env, fs,
@@ -22,11 +27,6 @@ impl Drop for ResearchDirectory {
 
 const CLI_TIMEOUT: Duration = Duration::from_secs(120);
 
-/// Runs the CLI from an empty working directory so project files are not
-/// discovered. Provider home and config directories (CLAUDE_CONFIG_DIR,
-/// CODEX_HOME, GEMINI_CLI_HOME) are deliberately left alone: they hold the
-/// stored login, so pointing them at an empty directory logs the CLI out.
-/// Global instructions and memory are disabled through CLI flags instead.
 pub(super) fn isolate_process(process: &mut Command, working_dir: &Path) {
     process.current_dir(working_dir).kill_on_drop(true);
 }
@@ -55,33 +55,61 @@ pub(super) async fn run_ai_cli(
     }
 
     let command = command_for(&provider)?;
-    let resolved = resolve_command(command).ok_or_else(|| {
+    let resolved = resolve_ai_command(command)?;
+    validate_model(model.as_deref())?;
+    run_ai_cli_resolved(
+        provider,
+        prompt,
+        model,
+        command,
+        &resolved,
+        &env::temp_dir(),
+    )
+    .await
+}
+
+pub(super) fn resolve_ai_command(command: &str) -> Result<ResolvedCommand, String> {
+    resolve_command(command).ok_or_else(|| {
         format!("{command} is not installed on PATH or in a known user install location.")
-    })?;
-    if model.as_ref().is_some_and(|model| {
+    })
+}
+
+fn validate_model(model: Option<&str>) -> Result<(), String> {
+    if model.is_some_and(|model| {
         !model
             .chars()
             .all(|c| c.is_ascii_alphanumeric() || "-_.:/".contains(c))
     }) {
         return Err("Model identifier contains unsupported characters.".to_string());
     }
-    check_capabilities(&provider, &resolved).await?;
+    Ok(())
+}
+
+pub(super) async fn run_ai_cli_resolved(
+    provider: String,
+    prompt: String,
+    model: Option<String>,
+    command: &str,
+    resolved: &ResolvedCommand,
+    temp_root: &Path,
+) -> Result<String, String> {
+    validate_model(model.as_deref())?;
+    check_capabilities(&provider, resolved).await?;
     // The untrusted prompt is sent through stdin, never through cmd.exe's
     // command line (npm CLIs on Windows are commonly .cmd shims).
     let arguments = build_ai_cli_arguments(&provider, "-".to_string(), model)?;
 
-    let isolated_dir = env::temp_dir().join(format!("seomi-ai-{}", Uuid::new_v4().simple()));
+    let isolated_dir = temp_root.join(format!("seomi-ai-{}", Uuid::new_v4().simple()));
     fs::create_dir_all(&isolated_dir)
         .map_err(|error| format!("Unable to prepare an isolated AI working directory: {error}"))?;
     let _cleanup = ResearchDirectory(isolated_dir.clone());
-    let mut process = process_for(&resolved, &arguments);
+    let mut process = process_for(resolved, &arguments);
     isolate_process(&mut process, &isolated_dir);
     if provider == "gemini" {
-        let settings_path = isolated_dir.join("research-settings.json");
-        let settings =
-            gemini_research_settings(&format!("seomi-no-context-{}.md", Uuid::new_v4().simple()));
-        fs::write(&settings_path, settings.to_string())
-            .map_err(|_| "Unable to prepare Gemini research settings.".to_string())?;
+        let settings_path = write_gemini_settings(
+            &isolated_dir,
+            &format!("seomi-no-context-{}.md", Uuid::new_v4().simple()),
+        )?;
         process.env("GEMINI_CLI_SYSTEM_SETTINGS_PATH", settings_path);
         process.env_remove("GEMINI_SYSTEM_MD");
     }
@@ -91,6 +119,16 @@ pub(super) async fn run_ai_cli(
 
     let output = collect_research_output(process, &prompt, CLI_TIMEOUT).await?;
     cli_response(command, &output)
+}
+
+pub(super) fn write_gemini_settings(
+    directory: &Path,
+    context_file: &str,
+) -> Result<PathBuf, String> {
+    let path = directory.join("research-settings.json");
+    fs::write(&path, gemini_research_settings(context_file).to_string())
+        .map_err(|_| "Unable to prepare Gemini research settings.".to_string())?;
+    Ok(path)
 }
 
 pub(super) async fn collect_research_output(

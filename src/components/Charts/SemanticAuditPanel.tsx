@@ -1,13 +1,21 @@
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { buildSemanticAudit, type SemanticAuditFinding } from '@/services/semanticAudit';
 import type { TopicalMapDocument } from '@/services/topicalMap';
 import type { CrawlRunRecord, CrawledPageSummary } from '@/types';
 import { compareSemanticRuns, type SemanticRunChange } from '@/services/semanticRunComparison';
 import { appLocale } from '@/services/localeFormat';
+import { monitorSemanticComparison } from '@/services/monitoringAlerts';
+import { useProjectStore } from '@/stores/projectStore';
+import { guardCrawlComparison } from '@/services/crawlComparisonContract';
 
 interface Props { document: TopicalMapDocument; pages: CrawledPageSummary[]; runs?: CrawlRunRecord[]; currentRunId?: string; }
 type Filter = 'all' | 'risk' | 'review' | 'notice';
+const completionLabel = (value: string): string => {
+  const date = new Date(value);
+  return Number.isFinite(date.getTime()) ? date.toLocaleString(appLocale()) : '—';
+};
+const completionTime = (value: string): number => Number.isFinite(Date.parse(value)) ? Date.parse(value) : -Infinity;
 
 const severityStyles = {
   risk: 'border-rose-500/25 bg-rose-500/5 text-rose-200',
@@ -22,13 +30,20 @@ const provenanceStyles = {
 
 export const SemanticAuditPanel = ({ document, pages, runs = [], currentRunId }: Props) => {
   const { t } = useTranslation();
+  const projectId = useProjectStore((state) => state.activeProjectId);
   const report = useMemo(() => buildSemanticAudit(document, pages), [document, pages]);
   const [filter, setFilter] = useState<Filter>('all');
   const [search, setSearch] = useState('');
-  const baselineRuns = runs.filter((run) => run.id !== currentRunId).sort((left, right) => right.completedAt.localeCompare(left.completedAt));
+  const currentRun = currentRunId ? runs.find((run) => run.id === currentRunId) ?? null : null;
+  const baselineRuns = runs.filter((run) => run.id !== currentRun?.id).sort((left, right) => completionTime(right.completedAt) - completionTime(left.completedAt));
   const [selectedBaselineRunId, setSelectedBaselineRunId] = useState('');
   const baselineRun = baselineRuns.find((run) => run.id === selectedBaselineRunId) ?? baselineRuns[0] ?? null;
-  const comparison = baselineRun ? compareSemanticRuns(document, baselineRun, { id: currentRunId || 'current-snapshot', pages }) : null;
+  const currentSnapshotRun = currentRun ? { ...currentRun, result: { ...currentRun.result, pages } } : null;
+  const comparisonGuard = baselineRun && currentSnapshotRun ? guardCrawlComparison(currentSnapshotRun, baselineRun, { projectId: projectId ?? undefined }) : null;
+  const rawComparison = baselineRun && currentSnapshotRun ? compareSemanticRuns(document, baselineRun, { id: currentRunId || 'current-snapshot', pages }, { guard: comparisonGuard ?? undefined }) : null;
+  const comparison = rawComparison && comparisonGuard ? { ...rawComparison, guard: comparisonGuard } : rawComparison;
+  const comparisonKey = comparison ? `${comparison.baselineRunId}:${comparison.currentRunId}:${comparison.truncated}:${comparison.guard?.status}:${comparison.guard?.reasons.join(',')}:${Object.values(comparison.counts).join(',')}` : '';
+  useEffect(() => { if (projectId && comparison && comparisonKey) void monitorSemanticComparison(projectId, comparison); }, [projectId, comparisonKey]);
   const comparisonLabels: Record<(typeof comparisonCounts)[number]['code'], string> = {
     'url-added': t('semanticAudit.comparison.urlAdded'),
     'url-not-observed': t('semanticAudit.comparison.urlNotObserved'),
@@ -69,13 +84,16 @@ export const SemanticAuditPanel = ({ document, pages, runs = [], currentRunId }:
       <section aria-label={t('semanticAudit.comparisonAria')} className="rounded-xl border border-slate-800 bg-slate-900/45 p-4">
         <div className="flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
           <div><h4 className="text-xs font-semibold text-slate-200">{t('semanticAudit.comparisonTitle')}</h4><p className="mt-1 max-w-3xl text-[10px] leading-4 text-slate-500">{t('semanticAudit.comparisonDescription')}</p></div>
-          {baselineRuns.length > 0 && <label className="text-[10px] text-slate-500">{t('semanticAudit.baselineRun')}<select aria-label={t('semanticAudit.baselineRunAria')} value={baselineRun?.id ?? ''} onChange={(event) => setSelectedBaselineRunId(event.target.value)} className="mt-1 block h-9 min-w-56 rounded-md border border-slate-700 bg-slate-950 px-2 text-xs text-slate-200 outline-none focus:border-sky-400">{baselineRuns.map((run) => <option key={run.id} value={run.id}>{new Date(run.completedAt).toLocaleString(appLocale())} · {t('crawl.ui.urlsCount', { count: run.result.pages_crawled })}</option>)}</select></label>}
+          {baselineRuns.length > 0 && <label className="text-[10px] text-slate-500">{t('semanticAudit.baselineRun')}<select aria-label={t('semanticAudit.baselineRunAria')} value={baselineRun?.id ?? ''} onChange={(event) => setSelectedBaselineRunId(event.target.value)} className="mt-1 block h-9 min-w-56 rounded-md border border-slate-700 bg-slate-950 px-2 text-xs text-slate-200 outline-none focus:border-sky-400">{baselineRuns.map((run) => <option key={run.id} value={run.id}>{completionLabel(run.completedAt)} · {t('crawl.ui.urlsCount', { count: run.result.pages_crawled })}</option>)}</select></label>}
         </div>
         {!baselineRun && <p className="mt-3 rounded-md border border-dashed border-slate-800 px-3 py-5 text-center text-[10px] text-slate-500">{t('semanticAudit.noBaseline')}</p>}
         {comparison && <>
+          {comparison.guard && <p role="status" data-testid="semantic-comparison-guard" className="mt-3 rounded-md border border-slate-700 bg-slate-950/60 px-3 py-2 text-[10px] leading-4 text-slate-300">{t('siteAudit.comparisonGuard', { status: comparison.guard.status, reasons: `${comparison.guard.reasons.map((reason) => t(`siteAudit.comparisonReasons.${reason}`)).join(', ') || 'none'} [${comparison.guard.reasons.join(', ')}]` })}</p>}
+          {comparison.guard?.status === 'comparable' && <>
           <div className="mt-3 grid grid-cols-2 gap-2 sm:grid-cols-4 xl:grid-cols-7">{comparisonCounts.map((item) => <div key={item.code} className="rounded-md border border-slate-800 bg-slate-950/45 px-2 py-2"><span className="block font-mono text-lg tabular-nums text-slate-100">{comparison.counts[item.code]}</span><span className="block text-[9px] leading-3 text-slate-500">{comparisonLabels[item.code]}</span></div>)}</div>
           {comparison.changes.length > 0 ? <ul className="mt-3 max-h-[min(55vh,560px)] divide-y divide-slate-800 overflow-y-auto rounded-lg border border-slate-800 px-3">{comparison.changes.map((change) => <SemanticChange key={change.id} change={change} t={t} />)}</ul> : <p className="mt-3 rounded-md border border-dashed border-slate-800 px-3 py-5 text-center text-[10px] text-slate-500">{t('semanticAudit.noChanges')}</p>}
           {comparison.truncated && <p role="status" className="mt-2 rounded-md border border-amber-500/20 bg-amber-500/5 px-3 py-2 text-[10px] text-amber-100">{t('semanticAudit.comparisonTruncated')}</p>}
+          </>}
         </>}
       </section>
 

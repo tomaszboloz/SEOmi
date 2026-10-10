@@ -1,11 +1,7 @@
 import i18n from '@/i18n';
 import { PageSpeedSnapshot } from "./contracts";
-
-export const csvCell = (value: unknown): string => {
-  const text = String(value ?? '');
-  const safe = /^[\t\r\n ]*[=+\-@]/.test(text) ? `'${text}` : text;
-  return `"${safe.replaceAll('"', '""')}"`;
-};
+import { escapeCsv as csvCell, csv } from '../export/csv';
+export { csvCell };
 
 /** Export only values already present in local project snapshots. No API call is made. */
 export const pageSpeedHistoryCsv = (snapshots: PageSpeedSnapshot[]): string => {
@@ -33,5 +29,5 @@ export const pageSpeedHistoryCsv = (snapshots: PageSpeedSnapshot[]): string => {
     snapshot.pageSpeed?.categories.seo ?? '',
     [snapshot.pageSpeed ? 'PageSpeed' : '', snapshot.crux ? 'CrUX' : ''].filter(Boolean).join(' + '),
   ]));
-  return rows.map((row) => row.map(csvCell).join(',')).join('\r\n');
+  return csv(rows);
 };

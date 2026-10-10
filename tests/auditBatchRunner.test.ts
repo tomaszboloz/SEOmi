@@ -53,7 +53,7 @@ describe('processing the queue', () => {
     expect(queue()[0].attempts).toBe(1);
     expect(useAuditStore.getState()).toMatchObject({ isBatchRunning: false, activeBatchRequestId: null, batchRun: { status: 'completed' } });
     expect(useAuditStore.getState().history[0]).toMatchObject({ url: 'https://a.test/d' });
-    expect(mocks.notify).toHaveBeenCalledWith('p1', { completed: 3, failed: 0, queued: 0, regressionCount: 1, stopped: false });
+    expect(mocks.notify).toHaveBeenCalledWith('p1', expect.objectContaining({ completed: 3, failed: 0, queued: 0, regressionCount: 1, stopped: false, runId: expect.any(String) }));
     expect(runtimeState.activeBatchProjectId).toBeNull();
   });
 

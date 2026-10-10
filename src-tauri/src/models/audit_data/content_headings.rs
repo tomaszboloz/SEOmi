@@ -114,3 +114,7 @@ pub struct KeywordStat {
     #[serde(default)]
     pub density_percent: f32,
 }
+
+#[cfg(test)]
+#[path = "content_headings_tests.rs"]
+mod tests;

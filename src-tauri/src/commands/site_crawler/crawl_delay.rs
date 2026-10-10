@@ -66,3 +66,7 @@ pub(crate) async fn wait_for_crawl_delay(
     }
     !control.is_cancelled(run_id)
 }
+
+#[cfg(test)]
+#[path = "crawl_delay_tests.rs"]
+mod tests;

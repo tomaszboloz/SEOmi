@@ -1,6 +1,10 @@
+mod client_edge_tests;
 mod dns;
 mod failures;
+mod redirect_chain_tests;
+mod redirect_header_tests;
 mod responses;
+mod tls;
 
 use super::models::ExternalLinkCheck;
 use super::network::client_for_url;

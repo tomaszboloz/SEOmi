@@ -51,4 +51,5 @@ fn snapshot() -> RenderedPageSnapshot {
 }
 
 mod http;
+mod http_edges;
 mod rendered;

@@ -81,6 +81,9 @@ hydrateProject: async (projectId) => {
       }
     }
     if (!isCurrentHydration()) return;
+    // History is loaded through a project-scoped store; stamp legacy records
+    // so guarded comparisons can retain ownership provenance in memory.
+    crawlRuns = crawlRuns.map((run) => run.projectId === projectId ? run : { ...run, projectId });
     const parsedSettings = z.object({ url: z.string(), limit: z.number().finite().int().min(1).max(5000),
       config: z.preprocess(parseCrawlConfig, CrawlConfigSchema),
     }).safeParse(readJsonStorage(crawlSettingsKey(projectId), null));

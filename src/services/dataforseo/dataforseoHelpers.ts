@@ -52,7 +52,8 @@ export const intent = (value: unknown): SearchIntent => {
   if (normalized.includes('transaction')) return 'Transactional';
   if (normalized.includes('commercial')) return 'Commercial';
   if (normalized.includes('informational')) return 'Informational';
-  return 'Navigational';
+  if (normalized.includes('navigational') || normalized.includes('navigation')) return 'Navigational';
+  return 'Unknown';
 };
 
 export const nullableIntent = (value: unknown): SearchIntent | null => typeof value === 'string' && value.trim() ? intent(value) : null;

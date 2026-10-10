@@ -33,8 +33,8 @@ describe('semantic audit presentation controls', () => {
   it('defaults to the newest other run and changes baseline explicitly', () => {
     const document = comparisonDocument();
     const current = comparisonPage('https://site.test/coffee', ['coffee']);
-    const newest = createCrawlRunFixture({ id: 'newest', completedAt: '2026-10-02', result: createCrawlResultFixture({ pages: [current], pages_crawled: 1 }) });
-    const older = createCrawlRunFixture({ id: 'older', completedAt: '2026-10-01', result: createCrawlResultFixture({ pages: [], pages_crawled: 0 }) });
+    const newest = createCrawlRunFixture({ id: 'newest', projectId: 'semantic-project', completedAt: '2026-10-02', result: createCrawlResultFixture({ pages: [current], pages_crawled: 1 }) });
+    const older = createCrawlRunFixture({ id: 'older', projectId: 'semantic-project', completedAt: '2026-10-01', result: createCrawlResultFixture({ pages: [], pages_crawled: 0 }) });
     render(<SemanticAuditPanel document={document} pages={[current]} runs={[older, newest, { ...newest, id: 'current' }]} currentRunId="current" />);
     const select = screen.getByLabelText(label('baselineRunAria')) as HTMLSelectElement;
     expect(select.value).toBe('newest');

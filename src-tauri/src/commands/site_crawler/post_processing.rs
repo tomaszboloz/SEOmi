@@ -137,4 +137,5 @@ pub(crate) fn annotate_page_relations(pages: &mut [CrawledPageSummary], crawl_mo
         &hreflang_targets,
         &canonical_targets,
     );
+    annotate_schema_graph(pages);
 }

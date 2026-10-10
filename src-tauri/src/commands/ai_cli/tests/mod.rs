@@ -18,5 +18,8 @@ pub(super) mod binary_fixture;
 mod capabilities;
 mod fixtures;
 mod processes;
+mod research_contracts;
+mod research_fixture;
 mod settings;
+mod version_contracts;
 pub(super) use fixtures::{collect_fixture_output, fixture_process};

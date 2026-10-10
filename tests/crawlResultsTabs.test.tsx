@@ -1,4 +1,4 @@
-import { act, fireEvent, render, screen, waitFor } from "@testing-library/react";
+import { fireEvent, render, screen, waitFor } from "@testing-library/react";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { CrawlResultsTabs } from "@/components/Domain/CrawlResultsTabs";
 import { useProjectStore } from "@/stores/projectStore";
@@ -43,7 +43,12 @@ fireEvent.click(screen.getByRole("tab", { name: /Content/ }));
     );
   });
 
-it("mounts every crawl result section without a route or render error", async () => {
+it.each([
+  "overview", "visualisations", "crawlerReadiness", "urls", "issues",
+  "content", "metadata", "customSearch", "links", "media", "frames",
+  "social", "directives", "international", "structured", "validation",
+  "performance", "exports",
+])("mounts crawl result section %s without a route or render error", async (tabId) => {
     render(
       <CrawlResultsTabs
         result={result}
@@ -52,33 +57,16 @@ it("mounts every crawl result section without a route or render error", async ()
         onSelectRun={vi.fn()}
       />,
     );
-
-    const tabNames = screen
-      .getAllByRole("tab")
-      .map((tab) => tab.textContent?.replace(/\s+/g, " ").trim())
-      .filter((name): name is string => Boolean(name));
-
-    expect(tabNames).toHaveLength(18);
-
-    for (const tabName of tabNames) {
-      const tab = screen
-        .getAllByRole("tab")
-        .find((candidate) => candidate.textContent?.replace(/\s+/g, " ").trim() === tabName);
-      expect(tab, `missing crawl result tab: ${tabName}`).toBeTruthy();
-
-      await act(async () => {
-        fireEvent.click(tab as HTMLElement);
-      });
-
-      await waitFor(() => {
-        expect(
-          (tab as HTMLElement).getAttribute("aria-selected"),
-          `tab ${tabName} was not selected`,
-        ).toBe("true");
-        expect(screen.getAllByRole("tabpanel").length).toBeGreaterThan(0);
-        expect(screen.queryByRole("alert")).toBeNull();
-      });
-    }
+    const tab = screen.getAllByRole("tab").find((candidate) => candidate.id === `crawl-tab-${tabId}`);
+    expect(tab, `missing crawl result tab: ${tabId}`).toBeTruthy();
+    fireEvent.click(tab as HTMLElement);
+    await waitFor(() => {
+      expect(tab?.getAttribute("aria-selected")).toBe("true");
+      expect(screen.getAllByRole("tabpanel").some((panel) =>
+        panel.id === "crawl-tab-panel" && panel.getAttribute("aria-labelledby") === `crawl-tab-${tabId}`,
+      )).toBe(true);
+      expect(screen.queryByRole("alert")).toBeNull();
+    });
   });
 
 it("renders crawler findings in the active locale while retaining the raw evidence", async () => {

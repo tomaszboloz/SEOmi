@@ -1,4 +1,4 @@
-use tauri::WebviewWindow;
+use tauri::{Runtime, WebviewWindow};
 
 use super::rendered_crawler::RenderedArtifactKind;
 
@@ -14,10 +14,13 @@ pub(crate) use macos::capture_macos;
 #[cfg(target_os = "windows")]
 pub(crate) use windows::capture_windows;
 
-pub(crate) async fn capture_window_artifact(
-    window: &WebviewWindow,
+pub(crate) async fn capture_window_artifact<R: Runtime>(
+    window: &WebviewWindow<R>,
     kind: RenderedArtifactKind,
 ) -> Result<Vec<u8>, String> {
+    if !native_webview_runtime::<R>() {
+        return Err("Rendered artifact capture requires the native Wry runtime.".into());
+    }
     #[cfg(target_os = "macos")]
     {
         return capture_macos(window, kind).await;
@@ -44,3 +47,10 @@ pub(crate) fn renderer_platform() -> &'static str {
     #[allow(unreachable_code)]
     "unsupported-platform"
 }
+
+pub(crate) fn native_webview_runtime<R: Runtime>() -> bool {
+    std::any::TypeId::of::<R>() == std::any::TypeId::of::<tauri::Wry>()
+}
+
+#[cfg(test)]
+mod tests;

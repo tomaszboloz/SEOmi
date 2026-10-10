@@ -1,6 +1,7 @@
 import { describe, expect, it, vi } from 'vitest';
 import i18n from "@/i18n";
 import { AIService, extractJsonObject, parseAiSuggestionResponse } from '@/services/ai';
+import { createAuditFixture } from './fixtures/audit';
 
 const cliInvoke = vi.hoisted(() => vi.fn());
 vi.mock('@/services/tauri', () => ({ invokeTauriCommand: cliInvoke }));
@@ -88,4 +89,10 @@ it('does not accept non-string improvements or array-shaped Schema data', () => 
 it('skips an invalid complete object and retains the next valid escaped JSON object', () => {
   const answer={...valid,suggestedTitle:'Title with "quotes" and \\ path'};
   expect(parseAiSuggestionResponse('{invalid} followed by '+JSON.stringify(answer))).toEqual(answer);
+});
+
+it('rejects unsupported provider when generating suggestions', async () => {
+  await expect(
+    AIService.generateSuggestions('unsupported' as any, 'key', 'model', createAuditFixture())
+  ).rejects.toThrow(i18n.t('runtimeErrors.ai.unsupportedProvider', { provider: 'unsupported' }));
 });

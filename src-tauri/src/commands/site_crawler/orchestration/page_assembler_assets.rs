@@ -3,6 +3,7 @@ mod inputs;
 pub use inputs::ExtractPageAssetsInput;
 
 use scraper::Html;
+use tauri::Runtime;
 use url::Url;
 
 use super::super::models::{CrawledImage, CrawledPageIssue};
@@ -19,7 +20,9 @@ pub struct AssembledPageAssets {
     pub images: Vec<CrawledImage>,
 }
 
-pub fn extract_page_assets(input: ExtractPageAssetsInput<'_>) -> AssembledPageAssets {
+pub fn extract_page_assets<R: Runtime>(
+    input: ExtractPageAssetsInput<'_, R>,
+) -> AssembledPageAssets {
     let ExtractPageAssetsInput {
         document,
         final_base,

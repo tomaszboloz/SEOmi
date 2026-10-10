@@ -17,9 +17,13 @@ export const locateTerm = (text: string, term: string): { start: number; end: nu
   return undefined;
 };
 
-export const termEvidence = (terms: string[], responseText: string, sourceText: string | undefined): AiCitationTermEvidence[] =>
+/** `responseForm` maps a page term to the inflected form the response actually used. */
+export const termEvidence = (
+  terms: string[], responseText: string, sourceText: string | undefined,
+  responseForm: (term: string) => string = (term) => term,
+): AiCitationTermEvidence[] =>
   terms.slice(0, 12).map((term) => {
-    const response = locateTerm(responseText, term);
+    const response = locateTerm(responseText, responseForm(term));
     const source = sourceText ? locateTerm(sourceText, term) : undefined;
     return { term, ...(response ? { response } : {}), ...(source ? { source } : {}) };
   });

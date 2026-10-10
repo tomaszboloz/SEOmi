@@ -1,3 +1,4 @@
+use super::semantic_terms::SemanticTermGroups;
 use super::*;
 
 /// Return a small, safe source fragment for locating a crawled link in the
@@ -43,21 +44,14 @@ pub(super) fn semantic_content_source(
     }
 }
 
-pub(super) fn extract_semantic_terms(document: &Html) -> Vec<String> {
-    const STOP_WORDS: &[&str] = &[
-        "the", "and", "for", "with", "from", "that", "this", "your", "you", "are", "was", "have",
-        "has", "will", "into", "about", "our", "their", "they", "what", "when", "where", "which",
-        "who", "how", "can", "not", "but", "all", "one", "more", "use", "now", "get", "our",
-        "theirs", "www", "http", "https", "oraz", "jest", "się", "dla", "nie", "jak", "który",
-        "która", "które", "przez", "oraz", "aby", "ten", "tej", "jego", "jej", "czy", "lub", "bez",
-        "nad", "pod", "przy", "tym", "także", "może", "mogą",
-    ];
+/// `language` is the resolved grouping language (see `semantic_term_language`).
+pub(super) fn extract_semantic_terms(document: &Html, language: Option<&str>) -> Vec<String> {
     let body_selector = Selector::parse("body").expect("static body selector is valid");
     let Some(body) = document.select(&body_selector).next() else {
         return Vec::new();
     };
     let has_primary_root = has_semantic_content_root(document);
-    let mut frequencies: HashMap<String, usize> = HashMap::new();
+    let mut groups = SemanticTermGroups::new(language);
     for node in body.descendants() {
         let Node::Text(text) = node.value() else {
             continue;
@@ -83,19 +77,10 @@ pub(super) fn extract_semantic_terms(document: &Html) -> Vec<String> {
             continue;
         }
         for token in text.split(|character: char| !character.is_alphanumeric()) {
-            let normalized = token.trim().to_lowercase();
-            if normalized.chars().count() >= 3 && !STOP_WORDS.contains(&normalized.as_str()) {
-                *frequencies.entry(normalized).or_default() += 1;
-            }
+            groups.observe(token);
         }
     }
-    let mut terms = frequencies.into_iter().collect::<Vec<_>>();
-    terms.sort_by(|left, right| right.1.cmp(&left.1).then_with(|| left.0.cmp(&right.0)));
-    terms
-        .into_iter()
-        .take(MAX_SEMANTIC_TERMS_PER_PAGE)
-        .map(|(term, _)| term)
-        .collect()
+    groups.into_terms(MAX_SEMANTIC_TERMS_PER_PAGE)
 }
 
 pub(super) fn extract_semantic_excerpts(document: &Html) -> Vec<String> {

@@ -38,7 +38,9 @@ impl AuditControl {
             .ok()
             .and_then(|active| active.get(request_id).cloned());
         if let Some(notifier) = notifier {
-            notifier.notify_waiters();
+            // Each request has one waiter. Retain a permit if cancellation
+            // arrives after registration but before the future starts waiting.
+            notifier.notify_one();
             return true;
         }
         self.cancelled_before_start

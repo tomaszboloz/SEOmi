@@ -92,13 +92,14 @@ pub fn extract_page_metadata(input: ExtractPageMetadataInput<'_>) -> PageMetadat
     let verdicts =
         evaluate_page_verdicts(super::page_metadata_verdicts::EvaluatePageVerdictsInput {
             status: page_data.status,
+            response_headers_available: page_data.response_headers_available,
             config,
             meta_robots: directives.meta_robots.as_deref(),
             x_robots_tag: page_data.x_robots_tag.as_deref(),
             meta_noindex: directives.meta_noindex,
-            header_noindex: directives.header_noindex,
+            header_noindex: page_data.response_headers_available && directives.header_noindex,
             meta_nofollow: directives.meta_nofollow,
-            header_nofollow: directives.header_nofollow,
+            header_nofollow: page_data.response_headers_available && directives.header_nofollow,
             canonical_points_elsewhere: canon.canonical_points_elsewhere,
         });
 

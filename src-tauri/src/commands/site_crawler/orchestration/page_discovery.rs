@@ -1,11 +1,12 @@
 use super::super::models::CrawledDiscoverySource;
 use super::setup::CrawlSetup;
 use super::state::CrawlLoopState;
+use tauri::Runtime;
 
-pub fn resolve_page_discovery_sources(
+pub fn resolve_page_discovery_sources<R: Runtime>(
     current_url: &str,
     setup: &CrawlSetup,
-    state: &mut CrawlLoopState,
+    state: &mut CrawlLoopState<R>,
 ) -> Vec<CrawledDiscoverySource> {
     let is_start_url =
         !setup.config.list_mode && current_url == setup.normalized_start_url.to_string();

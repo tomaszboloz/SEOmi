@@ -30,6 +30,9 @@ pub(super) fn svg_intrinsic_dimensions(bytes: &[u8]) -> Option<(usize, usize)> {
         .split(|character: char| character.is_ascii_whitespace() || character == ',')
         .filter_map(|value| value.trim().parse::<f64>().ok())
         .collect::<Vec<_>>();
-    (values.len() >= 4 && values[2] > 0.0 && values[3] > 0.0)
-        .then_some((values[2] as usize, values[3] as usize))
+    if values.len() >= 4 && values[2] > 0.0 && values[3] > 0.0 {
+        Some((values[2] as usize, values[3] as usize))
+    } else {
+        None
+    }
 }

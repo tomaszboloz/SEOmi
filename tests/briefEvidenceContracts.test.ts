@@ -39,9 +39,9 @@ describe('brief source evidence contracts', () => {
     expect(matchParagraphToCrawlSource('unrelated', title.url, [title]))
       .toMatchObject({ matched: false, matchedTerms: [], overlapPercent: 0 });
     expect(matchParagraphToCrawlSource('coffee beans roasted', title.url, [source({})]))
-      .toMatchObject({ matched: false, scope: 'title', overlapPercent: null });
+      .toMatchObject({ matched: false, scope: 'no-signal', overlapPercent: null });
     const page = source({ semantic_terms: Array.from({ length: 20 }, (_, i) => `concept${i}`) });
     expect(matchParagraphToCrawlSource('concept0 concept1 concept2', page.url, [page]))
-      .toMatchObject({ matched: false, scope: 'no-signal', overlapPercent: 15 });
+      .toMatchObject({ matched: false, scope: 'semantic-terms', overlapPercent: 15 });
   });
 });

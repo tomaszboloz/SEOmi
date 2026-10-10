@@ -1,4 +1,5 @@
 import type { CrawledPageSummary } from '@/types';
+import type { CrawlComparisonGuard } from '@/services/crawlComparisonContract';
 
 export type SemanticRunChangeCode =
   | 'url-added'
@@ -28,6 +29,8 @@ export interface SemanticRunComparisonReport {
   changes: SemanticRunChange[];
   counts: Record<SemanticRunChangeCode, number>;
   truncated: boolean;
+  /** Present when the snapshots were checked as persisted crawl runs. */
+  guard?: CrawlComparisonGuard;
 }
 
 export interface Snapshot {

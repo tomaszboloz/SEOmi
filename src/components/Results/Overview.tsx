@@ -10,6 +10,7 @@ import { OverviewCoverageSection } from "./overview/OverviewCoverageSection";
 import { OverviewDataForSeoBar } from "./overview/OverviewDataForSeoBar";
 import { OverviewQuickWins } from "./overview/OverviewQuickWins";
 import { OverviewIssuesList } from "./overview/OverviewIssuesList";
+import { TargetPhraseAuditPanel } from "./targetPhraseAudit";
 
 export interface OverviewProps {
   audit: PageAuditData;
@@ -41,6 +42,7 @@ export const Overview: React.FC<OverviewProps> = ({ audit }) => {
       </div>
 
       <OverviewContentAnalysis audit={audit} />
+      <TargetPhraseAuditPanel audit={audit} />
       <OverviewCoverageSection audit={audit} />
       <OverviewDataForSeoBar audit={audit} />
       <OverviewQuickWins issuesCount={audit.issues.length} />

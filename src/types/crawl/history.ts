@@ -19,6 +19,8 @@ export type CrawlEnvironment = 'default' | 'staging' | 'production';
 
 export interface CrawlRunRecord {
   id: string;
+  /** Project ownership is persisted so cross-project comparisons fail closed. */
+  projectId?: string;
   completedAt: string;
   startUrl: string;
   config: CrawlConfig;

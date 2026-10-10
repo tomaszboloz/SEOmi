@@ -6,6 +6,8 @@ import { useAuthStore } from '@/stores/authStore';
 import { useWorkspaceIndicatorsStore } from '@/stores/workspaceIndicatorsStore';
 import { acknowledgeScheduledExecution, reconcileScheduledExecutions, syncAuditWakeup } from '@/services/scheduleWakeup';
 import { loadScheduledAudits } from '@/services/auditSchedule';
+import { notifyAuditCompleted, notifyCrawlCompleted } from '@/services/desktopNotifications';
+import type { PageAuditData, SiteCrawlResult } from '@/types';
 import i18n from '@/i18n';
 const loadToolsStore = () => import('@/stores/toolsStore');
 
@@ -39,10 +41,23 @@ export const useAppHydration = () => {
                 persisted = handoff.result
                   ? useAuditStore.getState().importScheduledAuditResult(handoff.result)
                   : false;
+                if (persisted && handoff.result) void notifyAuditCompleted(
+                  activeProjectId,
+                  handoff.result as PageAuditData,
+                  undefined,
+                  { runId: `${handoff.scheduleId}-${handoff.startedAt}` },
+                );
               } else if (handoff.taskType === 'site-crawl') {
+                const identity = `${handoff.scheduleId}-${handoff.completedAt}`;
                 persisted = handoff.result
-                  ? await useToolsStore.getState().importScheduledCrawlResult(handoff.result, `${handoff.scheduleId}-${handoff.completedAt}`)
+                  ? await useToolsStore.getState().importScheduledCrawlResult(handoff.result, identity)
                   : false;
+                if (persisted && handoff.result) void notifyCrawlCompleted(
+                  activeProjectId,
+                  handoff.result as SiteCrawlResult,
+                  undefined,
+                  { runId: `scheduled-crawl-${identity}` },
+                );
               }
               if (persisted || (!handoff.succeeded && !handoff.result)) {
                 await acknowledgeScheduledExecution(activeProjectId, handoff.scheduleId).catch(() => undefined);

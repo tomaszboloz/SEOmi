@@ -20,4 +20,14 @@ describe('audit user agent selector', () => {
     expect(useAuditStore.getState().selectedUserAgent).toBe('googlebot_mobile');
     expect(screen.getAllByRole('button')).toHaveLength(1);
   });
+
+  it('closes dropdown when clicking the backdrop overlay', () => {
+    useAuditStore.getState().setSelectedUserAgent('chrome_mac');
+    const { container } = render(<UserAgentSelector />);
+    fireEvent.click(screen.getByRole('button'));
+    const backdrop = container.querySelector('.fixed.inset-0')!;
+    expect(backdrop).toBeTruthy();
+    fireEvent.click(backdrop);
+    expect(screen.getAllByRole('button')).toHaveLength(1);
+  });
 });

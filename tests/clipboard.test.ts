@@ -18,4 +18,19 @@ describe('desktop clipboard adapter', () => {
     expect(await copyText('fallback text')).toBe(true);
     expect(execCommand).toHaveBeenCalledWith('copy');
   });
+
+  it('returns false when document.execCommand is unavailable or throws', async () => {
+    vi.stubGlobal('navigator', {});
+    const original = document.execCommand;
+
+    delete (document as unknown as { execCommand?: unknown }).execCommand;
+    expect(await copyText('fail')).toBe(false);
+
+    Object.defineProperty(document, 'execCommand', {
+      configurable: true,
+      value: vi.fn(() => { throw new Error('exec fail'); }),
+    });
+    expect(await copyText('throw')).toBe(false);
+    Object.defineProperty(document, 'execCommand', { configurable: true, value: original });
+  });
 });

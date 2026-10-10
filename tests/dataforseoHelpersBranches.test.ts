@@ -57,8 +57,9 @@ describe('dataforseo value coercion', () => {
     expect(intent('Transactional')).toBe('Transactional');
     expect(intent('COMMERCIAL investigation')).toBe('Commercial');
     expect(intent('informational')).toBe('Informational');
-    expect(intent('whatever')).toBe('Navigational');
-    expect(intent(5)).toBe('Navigational');
+    expect(intent('whatever')).toBe('Unknown');
+    expect(intent(5)).toBe('Unknown');
+    expect(intent('navigational query')).toBe('Navigational');
     expect(nullableIntent('commercial')).toBe('Commercial');
     expect(nullableIntent('   ')).toBeNull();
     expect(nullableIntent(7)).toBeNull();

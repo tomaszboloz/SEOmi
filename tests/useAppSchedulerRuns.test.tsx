@@ -47,7 +47,7 @@ describe('running a due schedule', () => {
     await flush();
     expect(mocks.setActiveTab).toHaveBeenCalledWith('site-audit');
     expect(mocks.startCrawl).toHaveBeenCalledWith('https://a.test/', 25, { x: 1 }, 'default', false);
-    expect(mocks.crawlDone).toHaveBeenCalledWith('p1', crawl, 70);
+    expect(mocks.crawlDone).toHaveBeenCalledWith('p1', crawl, { health_score: 70 }, { runId: 'scheduled-crawl-s2-unknown' });
     expect(mocks.finish).toHaveBeenCalledWith('p1', 's2', true, undefined);
   });
 

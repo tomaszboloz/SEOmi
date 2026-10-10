@@ -4,6 +4,7 @@ use super::*;
 #[test]
 fn successful_summary_retains_request_identity_and_observed_render_metrics() {
     let mut page_data = data(HTML);
+    page_data.rendered_diagnostics = Some((Vec::new(), Vec::new()));
     page_data.rendered_lcp_ms = Some(0);
     page_data.rendered_inp_ms = Some(27);
     page_data.rendered_cls = Some(0.125);
@@ -103,6 +104,20 @@ fn summary_marks_incomplete_bodies_without_inventing_semantic_provenance() {
         assert_eq!(page.semantic_content_provenance, "unavailable");
         assert!(page.semantic_terms.is_empty() && page.semantic_links.is_empty());
     }
+}
+
+#[test]
+fn summary_marks_raw_html_fallback_as_http_provenance() {
+    let mut page_data = data(HTML);
+    page_data.render_fallback = Some("renderer unavailable".into());
+    let signals = signals(
+        &page_data,
+        &setup(default_crawl_config(None)),
+        &mut state(),
+        &mut Vec::new(),
+    );
+    let page = summary(&page_data, signals, Vec::new(), "browser-rendered");
+    assert_eq!(page.semantic_content_provenance, "http");
 }
 
 #[test]

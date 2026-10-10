@@ -1,29 +1,37 @@
-use base64::{engine::general_purpose::URL_SAFE_NO_PAD, Engine as _};
-use std::time::Duration;
-use tokio::time::timeout;
-
 use super::models::{
     CaptureEvent, CapturedPayload, RenderedArtifactKind, RenderedPageSnapshot, MAX_CAPTURE_CHUNKS,
     MAX_CAPTURE_CHUNK_BYTES, PAGE_RENDER_TIMEOUT,
 };
-use super::navigation::{is_allowed_navigation, CLEAR_SESSION_SCRIPT};
+use super::navigation::is_allowed_crawl_navigation;
 use super::session::RenderedCrawlerSession;
 use crate::utils::url_validator::validate_and_normalize_url;
-
-impl RenderedCrawlerSession {
+use base64::{engine::general_purpose::URL_SAFE_NO_PAD, Engine as _};
+use std::time::Duration;
+use tauri::Runtime;
+use tokio::time::timeout;
+impl<R: Runtime> RenderedCrawlerSession<R> {
     pub async fn capture(&mut self, url: &str) -> Result<RenderedPageSnapshot, String> {
         let normalized = validate_and_normalize_url(url).map_err(|error| error.to_string())?;
-        if !is_allowed_navigation(
+        if !is_allowed_crawl_navigation(
             &normalized,
             &self.base_host,
             self.allow_subdomains,
             self.scope_path.as_deref(),
+            &self.allowed_hosts,
         ) {
             return Err("The rendered URL is outside the configured crawl scope.".into());
         }
 
         let requested_url = normalized.to_string();
-        if requested_url != self.requested_url {
+        // Only the document loaded by `open` is captured without navigating.
+        // Any later request navigates, even to the URL already shown, because
+        // otherwise no load event would ever arrive for it.
+        let awaits_initial_load = self.initial_load_pending && requested_url == self.requested_url;
+        self.initial_load_pending = false;
+        if !awaits_initial_load {
+            // Late events of the previous document must not be mistaken for
+            // the page requested now.
+            while self.receiver.try_recv().is_ok() {}
             self.window
                 .navigate(normalized)
                 .map_err(|error| format!("Unable to navigate renderer: {error}"))?;
@@ -106,9 +114,12 @@ impl RenderedCrawlerSession {
                         total_chunks = Some(chunk.total);
                         chunks.resize(chunk.total, None);
                     }
+                    // A nonce String is always JSON serializable; retain its escaping.
+                    let nonce_json =
+                        serde_json::to_string(&self.nonce).expect("nonce is JSON serializable");
                     let acknowledgement = format!(
                         "window.dispatchEvent(new CustomEvent('seomi-capture-ack', {{detail: {{nonce: {}, sequence: {}, index: {}}}}}));",
-                        serde_json::to_string(&self.nonce).map_err(|error| error.to_string())?, sequence, chunk.index
+                        nonce_json, sequence, chunk.index
                     );
                     if chunks[chunk.index].is_none() {
                         chunks[chunk.index] = Some(chunk.data);
@@ -123,20 +134,17 @@ impl RenderedCrawlerSession {
             }
         }
 
+        // `received == total_chunks` can only become true after every slot is
+        // filled, so a missing slot here would indicate an internal invariant
+        // violation rather than a renderer response that can be recovered.
         let encoded = chunks
             .into_iter()
-            .map(|chunk| chunk.ok_or_else(|| "Renderer snapshot is missing a chunk.".to_string()))
-            .collect::<Result<String, _>>()?;
+            .map(|chunk| chunk.expect("completed renderer capture has every chunk"))
+            .collect::<String>();
         let bytes = URL_SAFE_NO_PAD
             .decode(encoded)
             .map_err(|_| "Renderer snapshot is not valid base64url.".to_string())?;
         serde_json::from_slice(&bytes)
             .map_err(|error| format!("Renderer returned invalid snapshot JSON: {error}"))
-    }
-
-    pub fn close(mut self) {
-        let _ = self.window.eval(CLEAR_SESSION_SCRIPT);
-        let _ = self.window.close();
-        self.proxy.take();
     }
 }

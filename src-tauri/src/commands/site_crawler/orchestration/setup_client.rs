@@ -1,15 +1,27 @@
 use reqwest::header::{HeaderMap, HeaderName, HeaderValue, COOKIE, USER_AGENT};
 
 use super::super::{models::CrawlConfig, scope::rendered_profile_has_unsupported_transport};
-use crate::commands::settings::crawl_auth_profile;
+use crate::commands::settings::{crawl_auth_profile, CrawlAuthProfile};
 
 pub fn build_crawler_client(
     project_id: Option<&str>,
     config: &CrawlConfig,
     user_agent: Option<String>,
 ) -> Result<(reqwest::Client, String, Option<String>), String> {
+    build_crawler_client_with_profile_loader(project_id, config, user_agent, crawl_auth_profile)
+}
+
+pub(super) fn build_crawler_client_with_profile_loader<F>(
+    project_id: Option<&str>,
+    config: &CrawlConfig,
+    user_agent: Option<String>,
+    load_profile: F,
+) -> Result<(reqwest::Client, String, Option<String>), String>
+where
+    F: FnOnce(&str, &str) -> Result<CrawlAuthProfile, String>,
+{
     let request_profile = match (project_id, config.request_profile_id.as_deref()) {
-        (Some(project_id), Some(profile_id)) => Some(crawl_auth_profile(project_id, profile_id)?),
+        (Some(project_id), Some(profile_id)) => Some(load_profile(project_id, profile_id)?),
         (None, Some(_)) => {
             return Err("Select a project before using a saved request profile.".into())
         }
@@ -55,8 +67,8 @@ pub fn build_crawler_client(
                 continue;
             };
             if header_name == reqwest::header::AUTHORIZATION
-                || header.name.as_str().contains("token")
-                || header.name.as_str().contains("key")
+                || header_name.as_str().contains("token")
+                || header_name.as_str().contains("key")
             {
                 header_value.set_sensitive(true);
             }

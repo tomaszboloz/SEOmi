@@ -1,4 +1,5 @@
 use super::parse::{find_header_end, parse_proxy_target, parse_request_head};
+use super::target::authority_contains_userinfo;
 use super::types::{is_allowed_plain_http_port, ProxyTarget};
 use super::upstream::{is_local_hostname, request_target};
 
@@ -30,6 +31,7 @@ fn request_parser_accepts_only_unambiguous_bounded_headers() {
         "GET http://example.com/ HTTP/1.1\r\nTransfer-Encoding: chunked",
         "GET http://example.com/ HTTP/1.1\r\nExpect: 100-continue",
         "GET http://example.com/ HTTP/1.1\r\nBad Header: value",
+        "GET http://example.com/ HTTP/1.1\r\n: value",
         "GET http://example.com/ HTTP/1.1\r\nX-Test: ok\u{007f}bad",
         "GET http://example.com/ HTTP/1.1\r\nContent-Length: 1048577",
         "GET http://example.com/ HTTP/1.1 EXTRA",
@@ -44,6 +46,13 @@ fn request_parser_accepts_only_unambiguous_bounded_headers() {
         parse_request_head("POST http://example.com/ HTTP/1.1").unwrap_err(),
         405
     );
+    assert_eq!(
+        parse_request_head("HEAD http://example.com/ HTTP/1.1")
+            .unwrap()
+            .method,
+        "HEAD"
+    );
+    assert!(parse_request_head("GET http://example.com/ HTTP/1.1\r\n").is_ok());
 }
 
 #[test]
@@ -84,6 +93,39 @@ fn proxy_targets_reject_credentials_schemes_and_bodies() {
         &[]
     )
     .is_err());
+    for target in [
+        "example.com:443/path",
+        "example.com:443?query=1",
+        "example.com:443#fragment",
+    ] {
+        assert!(matches!(
+            parse_proxy_target("CONNECT".into(), target.into(), Vec::new(), 0, &[]),
+            Err(400)
+        ));
+    }
+    for (content_length, body) in [(1, &[][..]), (0, b"x".as_slice())] {
+        assert!(matches!(
+            parse_proxy_target(
+                "CONNECT".into(),
+                "example.com:443".into(),
+                Vec::new(),
+                content_length,
+                body
+            ),
+            Err(400)
+        ));
+    }
+    assert!(matches!(
+        parse_proxy_target(
+            "PUT".into(),
+            "http://example.com/".into(),
+            Vec::new(),
+            0,
+            &[]
+        ),
+        Err(405)
+    ));
+    assert!(!authority_contains_userinfo("relative-target"));
 }
 
 #[test]

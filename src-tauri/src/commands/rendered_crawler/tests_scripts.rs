@@ -12,6 +12,7 @@ fn renderer_wait_and_scroll_limits_are_applied_to_the_injected_script() {
             wait_for_selector: Some("main".into()),
             wait_delay_ms: u64::MAX,
             lazy_scroll_cycles: usize::MAX,
+            allowed_hosts: Vec::new(),
         },
     );
     assert!(script.contains("const waitDelayMs = 10000;"));

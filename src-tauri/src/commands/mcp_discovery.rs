@@ -23,9 +23,19 @@ pub async fn discover_mcp_tools(server_path: String) -> Result<McpDiscoveryResul
 }
 
 #[cfg(test)]
+#[path = "mcp_discovery/paths_tests.rs"]
+mod paths_tests;
+#[cfg(test)]
 mod process_tests;
 #[cfg(test)]
+mod process_tests_error_paths;
+#[cfg(test)]
+mod process_tests_next;
+#[cfg(test)]
 mod protocol_tests;
+#[cfg(test)]
+#[path = "mcp_discovery/public_api_tests.rs"]
+mod public_api_tests;
 #[cfg(test)]
 mod response_tests;
 #[cfg(test)]

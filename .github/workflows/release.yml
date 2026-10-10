@@ -91,7 +91,7 @@ jobs:
             Update packages are signed with the SEOmi Tauri updater key. Installers do not carry Apple Developer ID/notarization or Windows Authenticode certificates; the operating system may display security warnings.
 
             ### Thanks
-            Thank you @RafalSzy for the testing feedback and insistence on regression coverage.
+            Thank you @RafalSzy for the regression-testing feedback, crawler reports, hybrid rendering work and semantic term grouping contributions.
           releaseDraft: true
           prerelease: false
           uploadWorkflowArtifacts: true

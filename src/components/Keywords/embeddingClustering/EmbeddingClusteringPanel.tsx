@@ -4,20 +4,26 @@ import { AlertTriangle, Loader2, Sparkles } from 'lucide-react';
 import { defaultEmbeddingThreshold, EMBEDDING_PROVIDERS, MAX_EMBEDDING_KEYWORDS, type EmbeddingProviderName } from '@/services/embeddingClustering';
 import { useEmbeddingClustering } from './useEmbeddingClustering';
 import { EmbeddingClusterResults } from './EmbeddingClusterResults';
+import { useImportedSerp } from './useImportedSerp';
+import { SerpImportPanel } from './SerpImportPanel';
+import { MAX_HYBRID_KEYWORDS } from '@/services/embeddings/hybridSerp';
 
 const field = 'h-9 rounded-lg border border-slate-700 bg-slate-950 px-3 text-sm text-white disabled:opacity-50';
 
 /** Free, offline keyword grouping by embeddings; Ollama on this machine is optional. */
 export const EmbeddingClusteringPanel: React.FC<{ projectId: string | null; keywords: string[] }> = ({ projectId, keywords }) => {
   const { t } = useTranslation();
-  const { settings, result, isRunning, error, updateSettings, run } = useEmbeddingClustering(projectId, keywords);
+  const serp = useImportedSerp(projectId);
+  const { settings, result, isRunning, error, updateSettings, run } = useEmbeddingClustering(projectId, keywords, serp.imported?.result.snapshots);
   const usesOllama = settings.provider !== 'local';
   const threshold = settings.threshold ?? defaultEmbeddingThreshold(settings.provider);
   const tooFew = keywords.length < 2;
-  const tooMany = keywords.length > MAX_EMBEDDING_KEYWORDS;
+  const limit = serp.imported?.result.snapshots.length ? MAX_HYBRID_KEYWORDS : MAX_EMBEDDING_KEYWORDS;
+  const tooMany = keywords.length > limit;
 
   return (
     <>
+      <SerpImportPanel key={projectId} projectId={projectId} imported={serp.imported} error={serp.error} onImport={serp.apply} onClear={serp.clear} />
       <section className="space-y-4 rounded-xl border border-slate-800 bg-slate-900/70 p-5" aria-labelledby="embedding-settings-title">
         <h2 id="embedding-settings-title" className="text-sm font-semibold text-slate-100">{t('embeddingClusteringUi.settingsTitle')}</h2>
         <p className="text-xs leading-5 text-slate-400">{t('embeddingClusteringUi.description')}</p>
@@ -51,7 +57,7 @@ export const EmbeddingClusteringPanel: React.FC<{ projectId: string | null; keyw
             {isRunning ? t('embeddingClusteringUi.running') : t('embeddingClusteringUi.run')}
           </button>
           <span className="text-xs text-slate-500">
-            {tooMany ? t('embeddingClusteringUi.tooMany', { max: MAX_EMBEDDING_KEYWORDS }) : tooFew ? t('keywordClusteringUi.minimumKeywordsError') : t('embeddingClusteringUi.free', { count: keywords.length })}
+            {tooMany ? t('embeddingClusteringUi.tooMany', { max: limit }) : tooFew ? t('keywordClusteringUi.minimumKeywordsError') : t('embeddingClusteringUi.free', { count: keywords.length })}
           </span>
         </div>
       </section>

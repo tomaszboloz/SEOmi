@@ -8,6 +8,7 @@ export const SiteCrawlResultSchema = z.object({
   crawl_mode: z.union([z.literal('http'), z.literal('browser-rendered')]).nullable().transform(value => value ?? undefined).optional(),
   pages_crawled: z.number().finite(),
   health_score: z.number().finite(),
+  score_version: z.number().int().min(0).max(65535).nullable().transform(value => value ?? undefined).optional(),
   critical_count: z.number().finite(),
   warning_count: z.number().finite(),
   notice_count: z.number().finite(),
@@ -16,6 +17,16 @@ export const SiteCrawlResultSchema = z.object({
   cancelled: z.boolean(),
   timed_out: z.boolean().nullable().transform(value => value ?? undefined).optional(),
   robots_txt_status: z.string(),
+  robots_txt_evaluation_status: z.string().nullable().transform(value => value ?? undefined).optional(),
+  robots_txt_warning: z.string().nullable().optional(),
+  robots_txt_status_code: z.number().int().min(100).max(599).nullable().optional(),
+  robots_txt_final_url: z.string().nullable().optional(),
+  robots_txt_redirect_chain: z.array(z.object({
+    from_url: z.string(),
+    http_status: z.number().int().min(100).max(599),
+    to_url: z.string(),
+    response_time_ms: z.number().finite().nullable().optional(),
+  }).passthrough()).nullable().transform(value => value ?? undefined).optional(),
   robots_user_agent: z.string().nullable().transform(value => value ?? undefined).optional(),
   robots_applicable_rules: z.array(z.object({
     directive: z.string(),
@@ -49,6 +60,7 @@ export const SiteCrawlResultSchema = z.object({
 
 export const CrawlRunRecordSchema = z.object({
   id: z.string(),
+  projectId: z.string().optional(),
   completedAt: z.string(),
   startUrl: z.string(),
   config: CrawlConfigSchema,

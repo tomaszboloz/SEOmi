@@ -82,7 +82,7 @@ export const runBatchAudits = async (get: Getter, set: Setter): Promise<void> =>
   const stopped = sourceStopRequested();
   persistRun({ status: stopped || remaining ? 'stopped' : 'completed', activeItemId: undefined, stopRequested: false });
   const queuedCount = queueItems.filter((i) => i.status === 'queued' || i.status === 'interrupted' || i.status === 'running').length;
-  void notifyBatchCompleted(projectId, { completed: completedCount, failed: failedCount, queued: queuedCount, regressionCount, stopped: stopped || queuedCount > 0 });
+  void notifyBatchCompleted(projectId, { completed: completedCount, failed: failedCount, queued: queuedCount, regressionCount, stopped: stopped || queuedCount > 0, runId: runState.id });
   void syncAuditQueueWakeup(projectId, runState.id, false).catch((error) => { if (activeProjectId() === projectId && get().batchRun?.id === runState.id) set({ batchWakeupError: formatQueueWakeupError(error) }); });
   if (isCurrentSourceRun()) set({ isBatchRunning: false, isBatchStopping: false, activeBatchRequestId: null });
   if (state.activeBatchProjectId === projectId) state.activeBatchProjectId = null;

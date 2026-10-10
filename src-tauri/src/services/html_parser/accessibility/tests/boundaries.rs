@@ -24,6 +24,25 @@ fn attributes_and_locations_handle_truncated_tags_and_trailing_whitespace() {
 }
 
 #[test]
+fn source_attribute_reader_handles_empty_input_and_unquoted_tag_endings() {
+    assert_eq!(source_attribute_value("", "name"), None);
+    assert_eq!(source_attribute_value("<input", "name"), None);
+    assert_eq!(source_attribute_value("<input   ", "name"), None);
+    assert_eq!(
+        source_attribute_value("<input name=>", "name"),
+        Some(String::new())
+    );
+    assert_eq!(
+        source_attribute_value("<input name=x>", "name"),
+        Some("x".into())
+    );
+    assert_eq!(
+        source_attribute_value("<input name=x", "name"),
+        Some("x".into())
+    );
+}
+
+#[test]
 fn wrapped_labels_and_named_interactions_are_resolved_without_fabricated_names() {
     let source = "<label>Wrapped<input id='one'></label><label> <input id='two'></label><span id='name'>Go</span><button aria-labelledby='name'></button><button aria-labelledby='absent'></button><input type='submit' value='Go'><button title='Go'></button>";
     let document = Html::parse_document(source);

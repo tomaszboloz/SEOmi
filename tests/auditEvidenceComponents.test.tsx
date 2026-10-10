@@ -48,9 +48,11 @@ it('routes link filter, batch, export and search controls',()=>{
  const setSearch=vi.fn();const setCurrentPage=vi.fn();const setFilterType=vi.fn();const batch=vi.fn();const exportCsv=vi.fn();
  render(<LinkControls links={links} securityIssuesCount={0} search="" setSearch={setSearch} setCurrentPage={setCurrentPage} filterType="all" setFilterType={setFilterType} isVerifyingBatch={false} pageCount={3} handleVerifyBatch={batch} exportCsv={exportCsv} />);
  fireEvent.change(screen.getByRole('textbox'),{target:{value:'needle'}});expect(setSearch).toHaveBeenCalledWith('needle');expect(setCurrentPage).toHaveBeenCalledWith(1);
+ fireEvent.click(screen.getByRole('button',{name:i18n.t('legacyUi.links.all',{count:3})}));expect(setFilterType).toHaveBeenCalledWith('all');
  fireEvent.click(screen.getByRole('button',{name:i18n.t('legacyUi.links.external',{count:2})}));expect(setFilterType).toHaveBeenCalledWith('external');
  fireEvent.click(screen.getByRole('button',{name:i18n.t('legacyUi.links.verifyPage',{count:3})}));expect(batch).toHaveBeenCalledOnce();
  fireEvent.click(screen.getByTitle(i18n.t('legacyUi.links.exportTitle')));expect(exportCsv).toHaveBeenCalledOnce();
+
 });
 it('routes a link card check and renders observed error evidence',()=>{
  const check=vi.fn();const row={href:'https://example.test/link',text:'Observed',is_internal:true};

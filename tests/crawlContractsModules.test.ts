@@ -4,7 +4,9 @@ import {
   CrawledPageSummarySchema,
   SiteCrawlResultSchema,
   CrawlRunRecordSchema,
+  CustomSearchDefinitionSchema,
 } from '@/services/contracts/crawl';
+
 import { codeFiles, maxLocReport } from '../scripts/check-max-loc.mjs';
 
 describe('crawl contracts modular architecture', () => {
@@ -93,5 +95,27 @@ describe('crawl contracts modular architecture', () => {
       result,
     };
     expect(CrawlRunRecordSchema.safeParse(run).success).toBe(true);
+  });
+
+  it('validates CustomSearchDefinitionSchema with nullable and present attribute', () => {
+    const withNull = CustomSearchDefinitionSchema.parse({
+      id: 'search-1',
+      name: 'Search 1',
+      selectorType: 'css',
+      query: 'a.link',
+      resultType: 'attribute',
+      attribute: null,
+    });
+    expect(withNull.attribute).toBeUndefined();
+
+    const withAttr = CustomSearchDefinitionSchema.parse({
+      id: 'search-2',
+      name: 'Search 2',
+      selectorType: 'xpath',
+      query: '//a',
+      resultType: 'attribute',
+      attribute: 'href',
+    });
+    expect(withAttr.attribute).toBe('href');
   });
 });

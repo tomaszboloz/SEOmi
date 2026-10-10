@@ -1,8 +1,6 @@
 use super::*;
-use crate::models::audit_data::FaviconData;
-use crate::services::custom_search::CrawledCustomSearchResult;
+use crate::{models::audit_data::FaviconData, services::custom_search::CrawledCustomSearchResult};
 use serde::{Deserialize, Serialize};
-
 #[derive(Debug, Serialize, Deserialize, Clone)]
 pub struct CrawledPageSummary {
     pub url: String,
@@ -14,6 +12,8 @@ pub struct CrawledPageSummary {
     pub redirect_stop_reason: Option<String>,
     pub depth: usize,
     pub http_status: u16,
+    pub http_response_url: Option<String>,
+    pub response_url_mismatch: Option<bool>,
     pub response_time_ms: u64,
     #[serde(default)]
     pub rendered_lcp_ms: Option<u64>,
@@ -81,6 +81,7 @@ pub struct CrawledPageSummary {
     pub content_simhash: Option<String>,
     #[serde(default)]
     pub semantic_terms: Vec<String>,
+    pub semantic_language: Option<String>,
     #[serde(default)]
     pub semantic_excerpts: Vec<String>,
     #[serde(default)]

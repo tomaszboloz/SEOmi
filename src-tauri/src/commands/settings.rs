@@ -54,7 +54,7 @@ pub async fn set_secret(name: String, value: String) -> Result<(), String> {
 }
 
 #[tauri::command]
-pub async fn get_config(app: tauri::AppHandle) -> Result<AppConfig, String> {
+pub async fn get_config<R: tauri::Runtime>(app: tauri::AppHandle<R>) -> Result<AppConfig, String> {
     let path = app
         .path()
         .app_config_dir()
@@ -66,7 +66,10 @@ pub async fn get_config(app: tauri::AppHandle) -> Result<AppConfig, String> {
 }
 
 #[tauri::command]
-pub async fn save_config(app: tauri::AppHandle, config: AppConfig) -> Result<(), String> {
+pub async fn save_config<R: tauri::Runtime>(
+    app: tauri::AppHandle<R>,
+    config: AppConfig,
+) -> Result<(), String> {
     config.validate()?;
     let path = app
         .path()
@@ -78,6 +81,12 @@ pub async fn save_config(app: tauri::AppHandle, config: AppConfig) -> Result<(),
         .map_err(|_| "Configuration save task failed.")?
 }
 
+#[cfg(test)]
+mod command_handler_tests;
+#[cfg(test)]
+mod config_ipc_tests;
+#[cfg(test)]
+mod config_recovery_tests;
 #[cfg(test)]
 mod config_storage_tests;
 #[cfg(test)]

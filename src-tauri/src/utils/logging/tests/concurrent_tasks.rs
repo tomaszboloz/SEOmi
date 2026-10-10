@@ -2,6 +2,9 @@ use super::*;
 
 #[test]
 fn concurrent_native_spans_keep_their_own_request_contexts() {
+    if super::isolation::completed_in_isolated_process() {
+        return;
+    }
     let (subscriber, records) = task_fixture();
     let threads: Vec<_> = (0..16)
         .map(|_| {

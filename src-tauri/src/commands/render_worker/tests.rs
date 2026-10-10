@@ -48,3 +48,54 @@ async fn bearer_token_is_consumed_after_the_first_valid_request() {
     assert!(!bearer_matches(Some("Bearer one-shot"), &token).await);
     assert!(!bearer_matches(Some("Bearer other"), &token).await);
 }
+
+#[test]
+fn render_request_prepares_normalized_inputs_without_opening_renderer() {
+    use super::render::prepare_render_request;
+
+    assert!(prepare_render_request(RenderWorkerRequest {
+        url: "https://[".into(),
+        allow_subdomains: false,
+        scope_path: None,
+        wait_for_selector: None,
+        wait_delay_ms: 0,
+        lazy_scroll_cycles: 0,
+    })
+    .is_err());
+
+    assert!(prepare_render_request(RenderWorkerRequest {
+        url: "https://example.test/".into(),
+        allow_subdomains: false,
+        scope_path: Some("not-rooted".into()),
+        wait_for_selector: None,
+        wait_delay_ms: 0,
+        lazy_scroll_cycles: 0,
+    })
+    .is_err());
+
+    assert!(prepare_render_request(RenderWorkerRequest {
+        url: "https://example.test/".into(),
+        allow_subdomains: false,
+        scope_path: None,
+        wait_for_selector: Some("h1\0null".into()),
+        wait_delay_ms: 0,
+        lazy_scroll_cycles: 0,
+    })
+    .is_err());
+
+    let prepared = prepare_render_request(RenderWorkerRequest {
+        url: "https://example.test/".into(),
+        allow_subdomains: true,
+        scope_path: Some("/docs".into()),
+        wait_for_selector: Some("h1".into()),
+        wait_delay_ms: 10,
+        lazy_scroll_cycles: 1,
+    })
+    .unwrap();
+    assert_eq!(prepared.target.as_str(), "https://example.test/");
+    assert_eq!(prepared.base_host, "example.test");
+    assert_eq!(prepared.scope_path.as_deref(), Some("/docs"));
+    assert_eq!(prepared.options.wait_for_selector.as_deref(), Some("h1"));
+    assert_eq!(prepared.options.wait_delay_ms, 10);
+    assert_eq!(prepared.options.lazy_scroll_cycles, 1);
+}

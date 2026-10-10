@@ -10,7 +10,10 @@ const report = join(directory, 'result.json');
 const executable = resolve('src-tauri/target/debug/examples', process.platform === 'win32' ? 'desktop_e2e.exe' : 'desktop_e2e');
 const child = spawn(executable, [report], { stdio: 'inherit' });
 let timedOut = false;
-const timer = setTimeout(() => { timedOut = true; child.kill(); }, 100000);
+const rendererEnabled = process.env.SEOMI_E2E_RENDERER === '1';
+// Three renderer commands can each wait up to the native 60-second page limit.
+const timeoutMs = rendererEnabled ? 210000 : 100000;
+const timer = setTimeout(() => { timedOut = true; child.kill(); }, timeoutMs);
 child.on('error', error => { clearTimeout(timer); console.error(error.message); process.exitCode = 1; });
 child.on('exit', code => {
   clearTimeout(timer);

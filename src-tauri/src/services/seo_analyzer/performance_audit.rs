@@ -120,3 +120,7 @@ pub async fn audit_performance_and_indexability(
 
     (indexability, issues)
 }
+
+#[cfg(test)]
+#[path = "performance_audit_tests.rs"]
+mod tests;

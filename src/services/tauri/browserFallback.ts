@@ -67,6 +67,7 @@ export function handleBrowserFallback<T>(cmd: string, args?: Record<string, unkn
     'connect_search_console',
     'crawl_site',
     'dataforseo_request',
+    'fetch_public_feed',
     'delete_crawl_auth_profile',
     'discover_mcp_tools',
     'load_project_audit_queue',

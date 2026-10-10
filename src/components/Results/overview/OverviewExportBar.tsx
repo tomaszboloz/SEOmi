@@ -4,9 +4,11 @@ import { Download } from "lucide-react";
 import type { PageAuditData } from "@/types";
 import {
   downloadAuditCsv,
+  downloadAuditHtml,
   downloadAuditJson,
   downloadAuditPdf,
 } from "@/services/export";
+import { ContextHelp } from "@/components/ContextHelp";
 
 interface OverviewExportBarProps {
   audit: PageAuditData;
@@ -36,6 +38,9 @@ export const OverviewExportBar: React.FC<OverviewExportBarProps> = ({ audit }) =
           {t("legacyUi.overview.exportDescription")}
         </span>
         <div className="flex gap-2">
+          <ContextHelp id="overview-export-help" label={t("overview.exportHelp")}>
+            {t("overview.exportHelp")}
+          </ContextHelp>
           <button
             onClick={() => downloadAuditJson(audit)}
             className="inline-flex items-center gap-1.5 rounded-lg border border-slate-700 bg-slate-800 px-3 py-1.5 text-xs text-slate-200 hover:text-white"
@@ -47,6 +52,12 @@ export const OverviewExportBar: React.FC<OverviewExportBarProps> = ({ audit }) =
             className="inline-flex items-center gap-1.5 rounded-lg bg-emerald-600 px-3 py-1.5 text-xs font-semibold text-white hover:bg-emerald-500"
           >
             <Download className="h-3.5 w-3.5" /> {t("overview.exportCsv")}
+          </button>
+          <button
+            onClick={() => downloadAuditHtml(audit)}
+            className="inline-flex items-center gap-1.5 rounded-lg border border-violet-500/35 bg-violet-500/10 px-3 py-1.5 text-xs font-semibold text-violet-200 hover:bg-violet-500/20"
+          >
+            <Download className="h-3.5 w-3.5" /> {t("overview.exportHtml")}
           </button>
           <button
             onClick={() => void exportPdf()}

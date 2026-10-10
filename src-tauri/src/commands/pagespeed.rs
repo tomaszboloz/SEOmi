@@ -3,13 +3,11 @@ use mapping::map_pagespeed_response;
 use serde_json::{json, Value};
 use std::time::Duration;
 use validation::{google_metrics_key, target_url, validate_form_factor, validate_strategy};
-
 mod images;
 mod mapping;
 mod metrics;
 mod touch;
 mod validation;
-
 const PAGESPEED_ENDPOINT: &str = "https://www.googleapis.com/pagespeedonline/v5/runPagespeed";
 const CRUX_ENDPOINT: &str = "https://chromeuxreport.googleapis.com/v1/records:queryRecord";
 const FIELD_METRICS: [&str; 5] = [
@@ -22,7 +20,6 @@ const FIELD_METRICS: [&str; 5] = [
 async fn response_json(response: reqwest::Response) -> Result<Value, String> {
     read_provider_json(response, REPORT_JSON_LIMIT, "Google performance API").await
 }
-
 #[tauri::command]
 pub async fn run_pagespeed_insights(
     project_id: String,
@@ -30,19 +27,28 @@ pub async fn run_pagespeed_insights(
     strategy: String,
 ) -> Result<Value, String> {
     let api_key = google_metrics_key(&project_id)?;
-    let strategy = validate_strategy(&strategy)?;
-    let target = target_url(&url)?;
-    let target_string = target.to_string();
     let client = reqwest::Client::builder()
         .timeout(Duration::from_secs(150))
         .redirect(reqwest::redirect::Policy::limited(5))
         .build()
         .map_err(|_| "Unable to initialize the PageSpeed network client.".to_string())?;
+    run_pagespeed_request(&url, &strategy, PAGESPEED_ENDPOINT, &api_key, &client).await
+}
+async fn run_pagespeed_request(
+    url: &str,
+    strategy: &str,
+    endpoint: &str,
+    api_key: &str,
+    client: &reqwest::Client,
+) -> Result<Value, String> {
+    let strategy = validate_strategy(strategy)?;
+    let target = target_url(url)?;
+    let target_string = target.to_string();
     let response = client
-        .get(PAGESPEED_ENDPOINT)
+        .get(endpoint)
         .query(&[
             ("url", target_string.as_str()),
-            ("key", api_key.as_str()),
+            ("key", api_key),
             ("strategy", strategy),
             ("category", "performance"),
             ("category", "accessibility"),
@@ -58,7 +64,6 @@ pub async fn run_pagespeed_insights(
     let body = response_json(response).await?;
     map_pagespeed_response(body, &target_string, strategy)
 }
-
 #[tauri::command]
 pub async fn query_crux_record(
     project_id: String,
@@ -67,8 +72,30 @@ pub async fn query_crux_record(
     origin_scope: bool,
 ) -> Result<Value, String> {
     let api_key = google_metrics_key(&project_id)?;
-    let form_factor = validate_form_factor(&form_factor)?;
-    let target = target_url(&url)?;
+    let client = reqwest::Client::builder()
+        .timeout(Duration::from_secs(45))
+        .build()
+        .map_err(|_| "Unable to initialize the CrUX network client.".to_string())?;
+    query_crux_request(
+        &url,
+        &form_factor,
+        origin_scope,
+        CRUX_ENDPOINT,
+        &api_key,
+        &client,
+    )
+    .await
+}
+async fn query_crux_request(
+    url: &str,
+    form_factor: &str,
+    origin_scope: bool,
+    endpoint: &str,
+    api_key: &str,
+    client: &reqwest::Client,
+) -> Result<Value, String> {
+    let form_factor = validate_form_factor(form_factor)?;
+    let target = target_url(url)?;
     let target_string = if origin_scope {
         target.origin().ascii_serialization()
     } else {
@@ -79,13 +106,9 @@ pub async fn query_crux_record(
         "formFactor": form_factor,
         "metrics": FIELD_METRICS,
     });
-    let client = reqwest::Client::builder()
-        .timeout(Duration::from_secs(45))
-        .build()
-        .map_err(|_| "Unable to initialize the CrUX network client.".to_string())?;
     let response = client
-        .post(CRUX_ENDPOINT)
-        .query(&[("key", api_key.as_str())])
+        .post(endpoint)
+        .query(&[("key", api_key)])
         .json(&request_body)
         .send()
         .await
@@ -101,7 +124,6 @@ pub async fn query_crux_record(
     }
     response_json(response).await
 }
-
 #[cfg(test)]
 #[path = "pagespeed/image_tests.rs"]
 mod image_tests;
@@ -117,7 +139,11 @@ mod transport_tests;
 #[cfg(test)]
 #[path = "pagespeed/validation_tests.rs"]
 mod validation_tests;
-
+#[cfg(test)]
+include!("pagespeed/command_request_tests.rs");
+#[cfg(test)]
+#[path = "pagespeed/command_tests.rs"]
+mod command_tests;
 #[cfg(test)]
 #[path = "pagespeed/metric_tests.rs"]
 mod metric_tests;

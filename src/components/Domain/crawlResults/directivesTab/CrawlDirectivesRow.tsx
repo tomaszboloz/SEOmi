@@ -39,7 +39,7 @@ export const CrawlDirectivesRow: React.FC<CrawlDirectivesRowProps> = ({
                 {target.url}
                 <span className="ml-1 text-slate-400">
                   {target.checked_in_run
-                    ? target.http_status === 0
+                    ? !target.http_status
                       ? `· ${t('crawlDeepUi.noResponse')}`
                       : `· ${t('crawl.ui.httpStatus', { status: target.http_status })}`
                     : `· ${t('crawlDeepUi.notCheckedThisRun')}`}

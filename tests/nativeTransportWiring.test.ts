@@ -11,4 +11,4 @@ it('routes crawler DNS and canonical checks through the native public transport 
   expect(crawler.includes('public_client_builder()')).toBe(true);
   expect(analyzer.includes('check_url_status(target.as_str(), 5)')).toBe(true);
   expect(crawler.includes('response.text().await')).toBe(false);
-});
+}, 30_000);

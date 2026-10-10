@@ -9,7 +9,8 @@ fn loop_state_preserves_frontier_and_provenance_without_inventing_completed_work
         .collect();
     let mut sources = std::collections::HashMap::new();
     sources.insert("https://example.test/".into(), vec![source("start")]);
-    let state = CrawlLoopState::new(visited, queue, Vec::new(), sources, true, true);
+    let state: CrawlLoopState =
+        CrawlLoopState::new(visited, queue, Vec::new(), sources, true, true);
     assert!(state.visited.contains("https://example.test/"));
     assert_eq!(
         state.queue.front().unwrap(),
@@ -33,8 +34,9 @@ fn loop_state_preserves_frontier_and_provenance_without_inventing_completed_work
     assert!(!state.depth_limit_reached);
     assert!(
         state.last_page_request_at.is_none()
-            && state.rendered_session.is_none()
-            && state.rendered_init_error.is_none()
+            && state.rendered_sessions.is_empty()
+            && state.render_health.rendering_enabled()
+            && state.render_health.fallback_pages == 0
     );
     assert!(state.prefetched_order.is_empty() && state.prefetched_responses.is_empty());
 }

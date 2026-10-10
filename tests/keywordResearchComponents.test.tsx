@@ -37,11 +37,16 @@ describe('KeywordResearch modular architecture', () => {
   it('provides helpers for badges, difficulty colors, and intent labels', () => {
     expect(getIntentBadge('Commercial')).toContain('text-amber-400');
     expect(getIntentBadge('Transactional')).toContain('text-emerald-400');
+    expect(getIntentBadge('Informational')).toContain('text-blue-400');
+    expect(getIntentBadge('Navigational')).toContain('text-purple-400');
+    expect(getIntentBadge('Unknown')).toContain('text-slate-300');
     expect(getDifficultyColor(20)).toContain('text-emerald-400');
     expect(getDifficultyColor(50)).toContain('text-amber-400');
     expect(getDifficultyColor(80)).toContain('text-rose-400');
     expect(intentLabel('Informational', mockT)).toBe('keywordResearchUi.intent.informational');
+    expect(intentLabel('Unknown', mockT)).toBe('keywordResearchUi.intent.unknown');
   });
+
 
   it('renders KeywordResearchHeader correctly', () => {
     render(<KeywordResearchHeader t={mockT} />);

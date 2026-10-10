@@ -29,6 +29,7 @@ pub(super) const IPC_COMMANDS: &[&str] = &[
     "dataforseo_request",
     "run_pagespeed_insights",
     "query_crux_record",
+    "fetch_public_feed",
     "connect_search_console",
     "list_search_console_properties",
     "search_console_performance",

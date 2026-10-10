@@ -40,7 +40,7 @@ export const candidatePagePairs = (pages: CrawledPageSummary[], topicsByPage: Ma
       const topics = topicsByPage.get(page.url) ?? [];
       const terms = termsFor(page);
       for (const topic of topics) {
-        for (const term of terms) {
+        for (const term of terms.keys()) {
           const key = `${topic.id}\u0000${term}`;
           const group = topicalTerms.get(key) ?? [];
           group.push(index);

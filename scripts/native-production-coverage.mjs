@@ -2,6 +2,8 @@ import { createHash } from 'node:crypto';
 import { readFileSync, writeFileSync } from 'node:fs';
 import { resolve } from 'node:path';
 import { pathToFileURL } from 'node:url';
+import { assertNativeCoveragePaths } from './native-coverage-paths.mjs';
+import { assertLLVMLineEvidence } from './native-llvm-lines.mjs';
 
 const count = value => {
   if (!/^\d+$/.test(value) || !Number.isSafeInteger(Number(value))) throw new Error('Invalid LCOV count');
@@ -27,7 +29,8 @@ export function productionCoverage(raw, sources, readSource = file => readFileSy
     seen.add(file);
     const metadata = sources[file];
     if (!metadata) throw new Error(`Source missing AST inventory: ${file}`);
-    const hash = createHash('sha256').update(readSource(file)).digest('hex');
+    const sourceBytes = readSource(file);
+    const hash = createHash('sha256').update(sourceBytes).digest('hex');
     if (hash !== metadata.sha256) throw new Error(`Source changed during native coverage: ${file}`);
     if (!metadata.production_reachable) {
       if (!metadata.test_reachable) throw new Error(`Unclassified source: ${file}`);
@@ -69,13 +72,15 @@ export function productionCoverage(raw, sources, readSource = file => readFileSy
       const data = llvmJson.data?.[0];
       const fileReport = data?.files?.find(entry => entry.filename.replaceAll('\\', '/') === source);
       if (!fileReport) throw new Error('Missing LLVM JSON source summary');
+      assertLLVMLineEvidence(fileReport, entries.filter(entry => entry.startsWith('DA:')), sourceBytes.toString().split('\n').length);
       const groups = new Map();
       for (const fn of data.functions.filter(fn => fn.filenames[0].replaceAll('\\', '/') === source)) {
         const declaration = functions.get(fn.name);
         if (!declaration || declaration.calls !== fn.count) throw new Error('LCOV and JSON function evidence differ');
         const region = fn.regions[0];
         if (!region || region.slice(0, 4).some(value => !Number.isSafeInteger(value) || value < 1)) throw new Error('Invalid source function region');
-        const identity = JSON.stringify(region.slice(0, 4));
+        // LLVM identifies a source function by its start; generic region ends may differ.
+        const identity = JSON.stringify(region.slice(0, 2));
         const existing = groups.get(identity);
         if (existing) {
           if (existing.excluded !== declaration.excluded) throw new Error('Ambiguous source/test boundary');
@@ -110,7 +115,9 @@ export function productionCoverage(raw, sources, readSource = file => readFileSy
 if (process.argv[1] && import.meta.url === pathToFileURL(resolve(process.argv[1])).href) {
   const [raw, manifest, output, json] = process.argv.slice(2);
   if (!raw || !manifest || !output || !json) throw new Error('Pass raw LCOV, source manifest, output path and LLVM JSON');
-  const result = productionCoverage(readFileSync(raw, 'utf8'), JSON.parse(readFileSync(manifest, 'utf8')), undefined, JSON.parse(readFileSync(json, 'utf8')));
+  const rawCoverage = readFileSync(raw, 'utf8');
+  assertNativeCoveragePaths(rawCoverage);
+  const result = productionCoverage(rawCoverage, JSON.parse(readFileSync(manifest, 'utf8')), undefined, JSON.parse(readFileSync(json, 'utf8')));
   writeFileSync(output, result.lcov);
   writeFileSync(`${output}.summary.json`, JSON.stringify(result.summary, null, 2) + '\n');
   process.stdout.write(JSON.stringify(result.summary.totals) + '\n');

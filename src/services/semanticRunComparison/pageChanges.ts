@@ -6,13 +6,13 @@ export const comparePageChanges = (beforeIndex: PageIndex, afterIndex: PageIndex
     if (beforeIndex.byIdentity.has(url)) continue;
     add({ id: `url-added:${url}`, code: 'url-added', direction: 'added', title: comparisonText('urlAddedTitle'),
       detail: comparisonText('urlAddedDetail'),
-      urls: [page.url], evidence: [comparisonText('http', { status: page.http_status }), comparisonText('terms', { count: (page.semantic_terms ?? []).length })] });
+      urls: [page.url], evidence: [comparisonText('http', { status: page.http_status }), comparisonText('terms', { count: pageTerms(page).size })] });
   }
   for (const [url, page] of beforeIndex.byIdentity) {
     if (afterIndex.byIdentity.has(url)) continue;
     add({ id: `url-not-observed:${url}`, code: 'url-not-observed', direction: 'not-observed', title: comparisonText('urlMissingTitle'),
       detail: comparisonText('urlMissingDetail'),
-      urls: [page.url], evidence: [comparisonText('previousHttp', { status: page.http_status }), comparisonText('previousTerms', { count: (page.semantic_terms ?? []).length })] });
+      urls: [page.url], evidence: [comparisonText('previousHttp', { status: page.http_status }), comparisonText('previousTerms', { count: pageTerms(page).size })] });
   }
 
   for (const [url, afterPage] of afterIndex.byIdentity) {

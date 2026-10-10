@@ -1,3 +1,4 @@
+use super::concurrency::HostGates;
 use super::models::{ExternalLinkCheck, DNS_TIMEOUT, REQUEST_TIMEOUT};
 use crate::utils::url_validator::{is_public_ip, validate_and_normalize_url};
 use reqwest::header::{HeaderMap, HeaderValue, ACCEPT, USER_AGENT};
@@ -30,6 +31,7 @@ pub fn error_kind(error: &reqwest::Error) -> String {
     "network".into()
 }
 
+#[cfg(test)]
 pub fn rejected(url: String, kind: impl Into<String>) -> ExternalLinkCheck {
     ExternalLinkCheck {
         url,
@@ -52,6 +54,22 @@ pub fn normalize_external_url(input: &str) -> Result<Url, String> {
 }
 
 pub async fn checked_public_addresses(url: &Url) -> Result<Vec<SocketAddr>, String> {
+    checked_public_addresses_with(url, |host, port| async move {
+        tokio::net::lookup_host((host, port))
+            .await
+            .map(|items| items.collect())
+    })
+    .await
+}
+
+async fn checked_public_addresses_with<F, Fut>(
+    url: &Url,
+    resolve: F,
+) -> Result<Vec<SocketAddr>, String>
+where
+    F: FnOnce(String, u16) -> Fut,
+    Fut: std::future::Future<Output = std::io::Result<Vec<SocketAddr>>>,
+{
     let host = url
         .host_str()
         .ok_or_else(|| "URL has no host".to_string())?;
@@ -61,11 +79,10 @@ pub async fn checked_public_addresses(url: &Url) -> Result<Vec<SocketAddr>, Stri
     let addresses = match url.host() {
         Some(url::Host::Ipv4(ip)) => vec![SocketAddr::new(ip.into(), port)],
         Some(url::Host::Ipv6(ip)) => vec![SocketAddr::new(ip.into(), port)],
-        _ => tokio::time::timeout(DNS_TIMEOUT, tokio::net::lookup_host((host, port)))
+        _ => tokio::time::timeout(DNS_TIMEOUT, resolve(host.to_owned(), port))
             .await
             .map_err(|_| "DNS lookup timed out".to_string())?
-            .map_err(|error| format!("DNS lookup failed: {error}"))?
-            .collect::<Vec<_>>(),
+            .map_err(|error| format!("DNS lookup failed: {error}"))?,
     };
     if addresses.is_empty() {
         return Err("DNS returned no addresses".into());
@@ -97,6 +114,7 @@ pub fn client_for_url(url: &Url, addresses: &[SocketAddr]) -> Result<reqwest::Cl
         .map_err(|error| error.to_string())
 }
 
+#[cfg(test)]
 pub async fn check_one(input: String) -> ExternalLinkCheck {
     super::request::check_with(
         input,
@@ -105,3 +123,21 @@ pub async fn check_one(input: String) -> ExternalLinkCheck {
     )
     .await
 }
+
+pub async fn check_one_with_gates(input: String, gates: HostGates) -> ExternalLinkCheck {
+    super::request::check_with_gates(
+        input,
+        |url| async move { checked_public_addresses(&url).await },
+        client_for_url,
+        Some(gates),
+    )
+    .await
+}
+
+#[cfg(test)]
+#[path = "network_edge_tests.rs"]
+mod edge_tests;
+
+#[cfg(test)]
+#[path = "network_classification_tests.rs"]
+mod classification_tests;

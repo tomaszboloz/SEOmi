@@ -6,6 +6,7 @@ import { WIDTH, HEIGHT } from './CrawlArchitectureTypes';
 import { useCrawlArchitectureSimulation } from './useCrawlArchitectureSimulation';
 import { CrawlArchitectureControls } from './CrawlArchitectureControls';
 import { CrawlArchitectureSidebar } from './CrawlArchitectureSidebar';
+import { GraphEvidencePanel } from './GraphEvidencePanel';
 import { shortUrl } from './CrawlArchitectureHelpers';
 
 export const CrawlArchitectureGraphView = ({ state, crawlMode }: any) => {
@@ -50,6 +51,7 @@ export const CrawlArchitectureGraphView = ({ state, crawlMode }: any) => {
           {visibleNodes.map((node: any) => <li key={node.id} className="flex flex-wrap items-center gap-x-2 gap-y-1 py-2 text-[11px]"><button type="button" onClick={() => setSelectedId(node.id)} className="max-w-full truncate text-left font-mono text-emerald-200 hover:underline">{shortUrl(node.page.url)}</button><span className="text-slate-500">{node.clusterLabel}</span><span className="text-slate-600">· {localizedPlural(node.semanticSignalCount, 'term')}</span>{node.orphan && <span className="text-amber-300">{t(linkMode === 'all' ? 'mapUi.orphanGraph' : 'mapUi.orphanContent')}</span>}</li>)}
         </ul>
       </details>
+      <GraphEvidencePanel graph={graph} />
     </>
   );
 };

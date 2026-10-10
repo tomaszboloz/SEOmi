@@ -84,7 +84,12 @@ describe('AIAssistant modular architecture', () => {
     const keyInput = screen.getByDisplayValue('sk-test');
     fireEvent.change(keyInput, { target: { value: 'sk-new' } });
     expect(handleKeyChange).toHaveBeenCalledWith('sk-new');
+
+    const instructionInput = screen.getByLabelText('ai.customInstruction');
+    fireEvent.change(instructionInput, { target: { value: 'focus on e-commerce' } });
+    expect(setInstruction).toHaveBeenCalledWith('focus on e-commerce');
   });
+
 
   it('renders AIAssistantSuggestions and triggers apply callbacks', () => {
     const suggestions: AiSuggestionResponse = {

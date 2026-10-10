@@ -109,11 +109,9 @@ pub fn is_public_ip(ip: &IpAddr) -> bool {
                 || a >= 240 // reserved and future-use space
                 || (a == 100 && (64..=127).contains(&b)) // shared address space (100.64/10)
                 || (a == 192 && b == 0 && c == 0) // protocol assignments
-                || (a == 192 && b == 0 && c == 2) // documentation
                 || (a == 192 && b == 88 && c == 99) // 6to4 relay anycast
-                || (a == 198 && (b == 18 || b == 19)) // benchmarking
-                || (a == 198 && b == 51 && c == 100) // documentation
-                || (a == 203 && b == 0 && c == 113)) // documentation
+                // benchmarking
+                || (a == 198 && (b == 18 || b == 19)))
         }
         IpAddr::V6(ipv6) => {
             if let Some(mapped) = ipv6.to_ipv4_mapped() {
@@ -142,3 +140,7 @@ mod tests;
 #[cfg(test)]
 #[path = "url_validator_hostname_tests.rs"]
 mod hostname_tests;
+
+#[cfg(test)]
+#[path = "url_validator_edge_tests.rs"]
+mod edge_tests;

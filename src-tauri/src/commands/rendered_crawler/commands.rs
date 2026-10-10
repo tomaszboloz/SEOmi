@@ -1,5 +1,5 @@
 use base64::Engine as _;
-use tauri::AppHandle;
+use tauri::{AppHandle, Runtime};
 
 use super::models::{
     RenderOptions, RenderedArtifactKind, RenderedPageArtifact, RenderedPageSnapshot,
@@ -8,8 +8,8 @@ use super::session::RenderedCrawlerSession;
 use crate::utils::url_validator::validate_and_normalize_url;
 
 #[tauri::command]
-pub async fn render_crawl_page(
-    app: AppHandle,
+pub async fn render_crawl_page<R: Runtime>(
+    app: AppHandle<R>,
     url: String,
     allow_subdomains: bool,
     scope_path: Option<String>,
@@ -18,9 +18,10 @@ pub async fn render_crawl_page(
     lazy_scroll_cycles: Option<usize>,
 ) -> Result<RenderedPageSnapshot, String> {
     let target = validate_and_normalize_url(&url).map_err(|error| error.to_string())?;
+    // `validate_and_normalize_url` only returns web URLs with a hostname.
     let base_host = target
         .host_str()
-        .ok_or_else(|| "Rendered URL has no hostname.".to_string())?
+        .expect("validated rendered URL must have a hostname")
         .to_ascii_lowercase();
     let options = RenderOptions {
         user_agent: None,
@@ -30,6 +31,7 @@ pub async fn render_crawl_page(
             .filter(|value| !value.is_empty()),
         wait_delay_ms: wait_delay_ms.unwrap_or(0).min(10_000),
         lazy_scroll_cycles: lazy_scroll_cycles.unwrap_or(0).min(40),
+        allowed_hosts: Vec::new(),
     };
     let mut session = RenderedCrawlerSession::open(
         &app,
@@ -47,8 +49,8 @@ pub async fn render_crawl_page(
 
 #[tauri::command]
 #[allow(clippy::too_many_arguments)]
-pub async fn capture_rendered_artifact(
-    app: AppHandle,
+pub async fn capture_rendered_artifact<R: Runtime>(
+    app: AppHandle<R>,
     url: String,
     allow_subdomains: bool,
     scope_path: Option<String>,
@@ -60,9 +62,10 @@ pub async fn capture_rendered_artifact(
 ) -> Result<RenderedPageArtifact, String> {
     let target = validate_and_normalize_url(&url).map_err(|error| error.to_string())?;
     let artifact_kind = RenderedArtifactKind::parse(&kind)?;
+    // `validate_and_normalize_url` only returns web URLs with a hostname.
     let base_host = target
         .host_str()
-        .ok_or_else(|| "Rendered URL has no hostname.".to_string())?
+        .expect("validated rendered URL must have a hostname")
         .to_ascii_lowercase();
     let options = RenderOptions {
         user_agent: None,
@@ -72,6 +75,7 @@ pub async fn capture_rendered_artifact(
             .filter(|value| !value.is_empty()),
         wait_delay_ms: wait_delay_ms.unwrap_or(0).min(10_000),
         lazy_scroll_cycles: lazy_scroll_cycles.unwrap_or(0).min(40),
+        allowed_hosts: Vec::new(),
     };
     let mut session = RenderedCrawlerSession::open(
         &app,

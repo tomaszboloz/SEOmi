@@ -21,9 +21,7 @@ pub(in crate::commands::site_crawler) fn validate_element_attributes(
     findings: &mut Vec<CrawledHtmlValidationFinding>,
     truncated: &mut bool,
 ) {
-    let Ok(all_elements) = Selector::parse("*") else {
-        return;
-    };
+    let all_elements = Selector::parse("*").expect("universal HTML selector is valid");
     let mut seen_ids = HashSet::new();
     let mut id_tag_occurrences = HashMap::<(String, String), usize>::new();
     let mut uri_occurrences = HashMap::<(String, String, String), usize>::new();

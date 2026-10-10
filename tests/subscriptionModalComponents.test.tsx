@@ -3,6 +3,8 @@ import { render, screen, fireEvent } from '@testing-library/react';
 import { PROVIDERS_CONFIG } from '@/components/Auth/subscriptionModal/subscriptionModalTypes';
 import { SubscriptionModalHeader } from '@/components/Auth/subscriptionModal/SubscriptionModalHeader';
 import { SubscriptionProviderCard } from '@/components/Auth/subscriptionModal/SubscriptionProviderCard';
+import { SubscriptionModal } from '@/components/Auth/SubscriptionModal';
+import { useUIStore } from '@/stores/uiStore';
 import { codeFiles, maxLocReport } from '../scripts/check-max-loc.mjs';
 
 const mockT = ((key: string, opts?: any) => {
@@ -70,5 +72,44 @@ describe('SubscriptionModal modular architecture', () => {
     const testBtn = screen.getByRole('button', { name: /auth\.testConnection/i });
     fireEvent.click(testBtn);
     expect(onTestConnection).toHaveBeenCalledWith('openai');
+  });
+
+  it('handles inactive provider activation and api key input changes', () => {
+    const onSetProvider = vi.fn();
+    const onSaveKey = vi.fn();
+
+    render(
+      <SubscriptionProviderCard
+        item={PROVIDERS_CONFIG[0]}
+        active={false}
+        method="api_key"
+        cli={null}
+        status="unconfigured"
+        statusMessage=""
+        apiKey=""
+        saving={false}
+        onSetProvider={onSetProvider}
+        onSetMethod={vi.fn()}
+        onSaveKey={onSaveKey}
+        onTestConnection={vi.fn()}
+        t={mockT}
+      />,
+    );
+
+    const activateBtn = screen.getByRole('button', { name: 'auth.useProvider' });
+    fireEvent.click(activateBtn);
+    expect(onSetProvider).toHaveBeenCalledWith('openai');
+
+    const input = screen.getByLabelText(/auth\.apiKeyLabel/);
+    fireEvent.change(input, { target: { value: 'sk-new-key' } });
+    expect(onSaveKey).toHaveBeenCalledWith('openai', 'sk-new-key');
+  });
+
+  it('renders SubscriptionModal and closes on backdrop click', () => {
+    useUIStore.setState({ activeModal: 'ai' });
+    render(<SubscriptionModal />);
+    const backdrop = screen.getByRole('presentation');
+    fireEvent.mouseDown(backdrop);
+    expect(useUIStore.getState().activeModal).toBeNull();
   });
 });

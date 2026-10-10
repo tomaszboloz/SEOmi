@@ -11,6 +11,8 @@ export const getIntentBadge = (intent: SearchIntent): string => {
       return 'bg-emerald-500/10 text-emerald-400 border-emerald-500/30';
     case 'Navigational':
       return 'bg-purple-500/10 text-purple-400 border-purple-500/30';
+    case 'Unknown':
+      return 'bg-slate-500/10 text-slate-300 border-slate-500/30';
   }
 };
 

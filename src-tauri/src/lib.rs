@@ -1,9 +1,13 @@
 pub mod commands;
 pub mod models;
 pub mod services;
+mod startup;
 pub mod utils;
 
-use tauri::{Builder, Manager};
+#[cfg(test)]
+mod startup_tests;
+
+use tauri::Builder;
 
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
 pub fn run() {
@@ -22,6 +26,8 @@ pub fn desktop_builder() -> Builder<tauri::Wry> {
         .plugin(tauri_plugin_notification::init())
         .manage(commands::site_crawler::CrawlControl::new())
         .manage(commands::seo_audit::AuditControl::new())
+        .manage(commands::seo_audit::AuditRateLimiter::new())
+        .manage(commands::seo_audit::AuditTransport::production())
         .manage(commands::render_worker::RenderWorkerState::default())
         .invoke_handler({
             let handler: fn(tauri::ipc::Invoke) -> bool = tauri::generate_handler![
@@ -44,6 +50,7 @@ pub fn desktop_builder() -> Builder<tauri::Wry> {
                 commands::seo_audit::cancel_inspect_url,
                 commands::http_client::check_link,
                 commands::external_link_checker::check_external_crawl_links,
+                commands::free_feeds::fetch_public_feed,
                 commands::file_export::write_mcp_config_file,
                 commands::mcp_discovery::discover_mcp_tools,
                 commands::settings::get_config,
@@ -92,49 +99,15 @@ pub fn desktop_builder() -> Builder<tauri::Wry> {
             }
         })
         .setup(|app| {
-            if let Some((project_id, run_id)) =
-                commands::audit_queue_worker::headless_launch_context()
-            {
-                if let Some(window) = app.get_webview_window("main") {
-                    let _ = window.hide();
-                }
-                let handle = app.handle().clone();
-                tauri::async_runtime::spawn(async move {
-                    if commands::audit_queue_worker::run_audit_queue(
-                        handle.clone(),
-                        project_id,
-                        run_id,
-                    )
-                    .await
-                    .is_err()
-                    {
-                        utils::logging::diagnostic(utils::logging::Diagnostic::AuditQueueFailed);
-                    }
-                    handle.exit(0);
-                });
-                return Ok(());
-            }
-            if let Some((project_id, schedule_id)) =
-                commands::scheduled_worker::headless_launch_context()
-            {
-                if let Some(window) = app.get_webview_window("main") {
-                    let _ = window.hide();
-                }
-                let handle = app.handle().clone();
-                tauri::async_runtime::spawn(async move {
-                    if commands::scheduled_worker::run_scheduled_task(
-                        handle.clone(),
-                        project_id,
-                        schedule_id,
-                    )
-                    .await
-                    .is_err()
-                    {
-                        utils::logging::diagnostic(utils::logging::Diagnostic::ScheduledTaskFailed);
-                    }
-                    handle.exit(0);
-                });
-            }
+            startup::start_with(
+                app,
+                startup::launch_context(&std::env::args().collect::<Vec<_>>()),
+                startup::run_audit_queue_task,
+                startup::run_scheduled_worker_task,
+                startup::hide_main_window,
+                startup::handle_startup_failure,
+                startup::exit_app,
+            )?;
             Ok(())
         })
 }

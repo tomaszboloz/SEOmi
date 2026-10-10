@@ -3,15 +3,23 @@ import type { AiCitationContextMatch } from './types';
 import { contextTokens, normalizeContextPhrase } from './text';
 import { bestSentenceMatch } from './sentences';
 import { locateText, termEvidence } from './spans';
+import { isSemanticNoiseTerm, isSemanticTopicalStatus, semanticPageTermEntries, semanticPageLanguage, semanticTermIdentity } from '@/services/semanticText';
 
 export const buildContextMatch = (page: CrawledPageSummary, responseText: string | undefined): AiCitationContextMatch | undefined => {
   if (!responseText?.trim()) return undefined;
-  const responseTerms = new Set(contextTokens(responseText));
+  if (!isSemanticTopicalStatus(page.http_status)) return { scope: 'no-content-signal', matchedTerms: [], responseTermCount: 0, sourceTermCount: 0, coveragePercent: null, meetsMinimum: false, excerptMatch: false, sentenceMatch: false, sentenceOverlapPercent: null, matchedTermEvidence: [] };
+  const responseTerms = new Set(contextTokens(responseText).filter((term) => !isSemanticNoiseTerm(term)));
   if (!responseTerms.size) return { scope: 'no-content-signal', matchedTerms: [], responseTermCount: 0, sourceTermCount: 0, coveragePercent: null, meetsMinimum: false, excerptMatch: false, sentenceMatch: false, sentenceOverlapPercent: null, matchedTermEvidence: [] };
-  const contentTerms = [...new Set((page.semantic_terms ?? []).flatMap(contextTokens))];
-  const titleTerms = contextTokens(page.title ?? '');
+  const contentTerms = [...new Set(semanticPageTermEntries(page).flatMap(({ surface }) => contextTokens(surface)))];
+  const titleTerms = contextTokens(page.title ?? '').filter((term) => !isSemanticNoiseTerm(term));
   const sourceTerms = contentTerms.length ? contentTerms : titleTerms;
-  const allMatchedTerms = sourceTerms.filter((term) => responseTerms.has(term));
+  // Match by inflection key; evidence keeps the page's form and locates the response's form.
+  const language = semanticPageLanguage(page);
+  // Reverse insertion keeps the first response form of each inflection key.
+  const responseForms = new Map([...responseTerms].reverse().map((term) => [semanticTermIdentity(term, language), term]));
+  // Evidence terms are matched source terms or tokens of a response sentence, so the key exists.
+  const responseForm = (term: string) => responseForms.get(semanticTermIdentity(term, language))!;
+  const allMatchedTerms = sourceTerms.filter((term) => responseForms.has(semanticTermIdentity(term, language)));
   const matchedTerms = allMatchedTerms.slice(0, 12);
   const normalizedResponse = normalizeContextPhrase(responseText);
   const matchedExcerpt = (page.semantic_excerpts ?? []).find((excerpt) => {
@@ -25,6 +33,7 @@ export const buildContextMatch = (page: CrawledPageSummary, responseText: string
     sentenceMatch?.matchedTerms || matchedTerms,
     responseText,
     sourceEvidenceText,
+    responseForm,
   );
   const responseSpan = sentenceMatch
     ? { text: sentenceMatch.text, start: sentenceMatch.start, end: sentenceMatch.end, source: 'response' as const }

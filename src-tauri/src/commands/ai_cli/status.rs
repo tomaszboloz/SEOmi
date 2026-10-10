@@ -10,26 +10,6 @@ pub struct AiCliStatus {
     pub detail: String,
 }
 
-pub(super) async fn detect_ai_clis() -> Vec<AiCliStatus> {
-    let providers = [
-        ("openai", "codex"),
-        ("claude", "claude"),
-        ("gemini", "gemini"),
-    ];
-    let mut results = Vec::with_capacity(providers.len());
-
-    for (provider, command) in providers {
-        let (available, detail) = version_check(provider, command).await;
-        results.push(AiCliStatus {
-            provider: provider.to_string(),
-            command: command.to_string(),
-            available,
-            detail,
-        });
-    }
-    results
-}
-
 pub(super) async fn test_ai_cli_connection(provider: String) -> Result<AiCliStatus, String> {
     let command = command_for(&provider)?;
     let (available, detail) = if provider == "gemini" {

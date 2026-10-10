@@ -77,6 +77,6 @@ it.each(['hook-project', null])('compares two newly saved environment runs and n
   expect(fixture.startSiteCrawl).toHaveBeenNthCalledWith(1, 'https://staging.test', 25, undefined, 'staging', false);
   expect(fixture.startSiteCrawl).toHaveBeenNthCalledWith(2, 'https://production.test', 25, undefined, 'production', false);
   expect(fixture.result.current).toMatchObject({ comparisonRunId: 'staging', comparisonByPath: true, environmentComparisonError: null, isEnvironmentComparisonRunning: false });
-  if (project) expect(notifyCrawlCompleted).toHaveBeenCalledWith(project, production, 70);
+  if (project) expect(notifyCrawlCompleted).toHaveBeenCalledWith(project, production, staging, { runId: 'production' });
   else expect(notifyCrawlCompleted).not.toHaveBeenCalled();
 });

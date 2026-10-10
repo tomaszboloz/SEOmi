@@ -25,6 +25,9 @@ fn scoped_fixture_supports_prior_unscoped_request_callsite_registration() {
 
 #[tokio::test]
 async fn cancelling_a_polled_future_closes_its_native_span() {
+    if super::isolation::completed_in_isolated_process() {
+        return;
+    }
     let (subscriber, records) = task_fixture();
     let mut span = None;
     tracing::dispatcher::with_default(&subscriber, || {

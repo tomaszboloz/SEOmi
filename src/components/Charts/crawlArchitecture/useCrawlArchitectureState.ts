@@ -3,7 +3,7 @@ import { buildSemanticMap } from '@/services/semanticMap';
 import { useProjectStore } from '@/stores/projectStore';
 import { useToolsStore } from '@/stores/toolsStore';
 import { writeJsonStorage } from '@/services/storage';
-import { normalizeSemanticText } from '@/services/semanticText';
+import { normalizeSemanticText, semanticPageTermEntries } from '@/services/semanticText';
 import type { CrawlArchitectureGraphProps, MapView, SemanticMapPreferences } from './CrawlArchitectureTypes';
 import { readPreferences } from './CrawlArchitectureHelpers';
 
@@ -45,7 +45,7 @@ export const useCrawlArchitectureState = (props: CrawlArchitectureGraphProps) =>
       if (preferences.clusterFilter !== 'all' && node.clusterId !== preferences.clusterFilter) return false;
       if (preferences.orphansOnly && !node.orphan) return false;
       if (!normalizedQuery) return true;
-      return normalizeSemanticText([node.page.url, node.page.title ?? '', node.clusterLabel, ...(node.page.semantic_terms ?? [])].join(' '))
+      return normalizeSemanticText([node.page.url, node.page.title ?? '', node.clusterLabel, ...semanticPageTermEntries(node.page).map(({ surface }) => surface)].join(' '))
         .includes(normalizedQuery);
     });
   }, [preferences.clusterFilter, graph.nodes, preferences.orphansOnly, preferences.query]);

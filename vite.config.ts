@@ -55,6 +55,6 @@ export default defineConfig({
     globals: true,
     environment: 'jsdom',
     setupFiles: './tests/setup.ts',
-    exclude: ['mcp-server/**', 'node_modules/**', 'dist/**'],
+    exclude: ['mcp-server/**', 'node_modules/**', 'dist/**', 'src-tauri/target/**'],
   },
 });

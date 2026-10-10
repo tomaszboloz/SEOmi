@@ -1,6 +1,10 @@
 use super::super::{fetch_types::CrawlFetchFailure, models::CrawledDiscoverySource};
 use super::setup_config::default_crawl_config;
 use super::*;
+use super::{
+    loop_runner::run_crawl_loop, robots::fetch_and_eval_robots, selectors::CrawlSelectors,
+    sitemaps::discover_and_parse_sitemaps, state::CrawlLoopState,
+};
 
 fn setup(config: CrawlConfig) -> CrawlSetup {
     CrawlSetup::init(
@@ -41,24 +45,59 @@ fn failure(kind: &str) -> CrawlFetchFailure {
 mod discovery;
 mod discovery_http_fixture;
 mod frontier;
+mod frontier_normalization;
+mod loop_runner_boundaries;
+mod loop_runner_guards;
+mod loop_runner_transport;
 mod page_assembly;
+mod page_assembly_retry;
 mod page_directives;
 mod page_error;
+mod page_extra_edges;
 mod page_extractors;
+mod page_fetch_contracts;
+mod page_fetch_fixture;
+mod page_fetch_prefetch;
 mod page_fixture;
 mod page_frontier;
 mod page_link_contracts;
+mod page_media_direct;
 mod page_metadata;
+mod page_metadata_verdicts_direct;
+mod page_render_mismatch;
+mod page_render_status;
+mod page_resources_discovery_contracts;
+mod page_semantic_language;
 mod page_signals;
 mod page_summary;
+mod page_summary_provenance;
 mod page_text;
+mod page_type_guidance;
+mod page_type_guidance_boundaries;
+mod pipeline_runtime;
+mod pipeline_scope;
+mod rendered_prefetch;
+mod rendered_prefetch_edges;
+mod rendered_prefetch_guards;
+mod rendered_prefetch_inflight;
 mod resource_contracts;
 mod resource_deadlines;
 mod resource_regressions;
 mod robots_contracts;
+mod robots_status_regressions;
+mod runtime_generic;
+mod setup_client_contracts;
+mod setup_client_coverage;
+mod setup_client_profile_contracts;
+mod setup_client_profile_fixture;
 mod setup_contracts;
 mod setup_lifecycle;
 mod sitemap_contracts;
 mod sitemap_limits;
 mod sitemap_regressions;
 mod state;
+mod summary_extra_limits;
+mod summary_extra_limits_edges;
+mod summary_limits;
+
+mod loop_runner_depth_boundary;

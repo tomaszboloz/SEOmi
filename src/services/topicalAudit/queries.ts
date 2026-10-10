@@ -1,5 +1,5 @@
 import type { TopicalAuditContext } from './types';
-import { addFinding, semanticText, termCoverage, normalizedProviderIntent } from './evidence';
+import { addFinding, semanticText, termCoverage, termsFor, normalizedProviderIntent } from './evidence';
 
 export const auditQueryEvidence = (context: TopicalAuditContext) => {
   const { document, pagesByTopic, findings } = context;
@@ -14,7 +14,7 @@ export const auditQueryEvidence = (context: TopicalAuditContext) => {
           id: `query-unobserved-${node.id}-${query.id}-${page.url}`, code: 'query-not-observed', severity: 'notice',
           provenance: ['asserted', 'measured', 'derived'], title: semanticText('querySignal', { prefix: coveragePercent ? semanticText('partial') : semanticText('none'), query: query.text }),
           detail: semanticText('querySignalDetail', { matched: coverage.matched.length, expected: coverage.expected.length, percent: coveragePercent }),
-          urls: [page.url], topicId: node.id, evidence: [semanticText('query', { provenance: query.provenance, value: query.text }), semanticText('matchedTokens', { value: coverage.matched.join(', ') || semanticText('missingTerm') }), semanticText('missingTokens', { value: coverage.expected.filter((term) => !coverage.matched.includes(term)).join(', ') }), semanticText('contentTerms', { value: (page.semantic_terms ?? []).slice(0, 8).join(', ') || semanticText('missingTerm') })], confidence: 'limited',
+          urls: [page.url], topicId: node.id, evidence: [semanticText('query', { provenance: query.provenance, value: query.text }), semanticText('matchedTokens', { value: coverage.matched.join(', ') || semanticText('missingTerm') }), semanticText('missingTokens', { value: coverage.expected.filter((term) => !coverage.matched.includes(term)).join(', ') }), semanticText('contentTerms', { value: [...termsFor(page).values()].slice(0, 8).join(', ') || semanticText('missingTerm') })], confidence: 'limited',
         });
       }
     }

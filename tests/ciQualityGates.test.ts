@@ -1,13 +1,50 @@
 import { readFileSync } from 'node:fs';
 import { expect, it } from 'vitest';
 
-it('keeps strict static analysis, full coverage reporting and both macOS architectures in CI', () => {
-  const tests = readFileSync('.github/workflows/test.yml', 'utf8');
-  const release = readFileSync('.github/workflows/release.yml', 'utf8');
+it.each(['\n', '\r\n'])('keeps strict CI gates with %j line endings', (newline) => {
+  const readWorkflow = (name: string) => readFileSync(`.github/workflows/${name}.yml`, 'utf8')
+    .replace(/\r?\n/g, newline);
+  const tests = readWorkflow('test');
+  const release = readWorkflow('release');
+  const requiredRust = tests.split('  test-rust:')[1].split('  coverage-rust:')[0];
+  expect(requiredRust).toContain('cargo test --manifest-path src-tauri/Cargo.toml --all-targets');
+  expect(requiredRust).not.toMatch(/continue-on-error|\|\|\s*true/);
+  const rust = tests.split('  coverage-rust:')[1].split('  test-frontend:')[0];
   expect(tests).toContain('cargo clippy --manifest-path src-tauri/Cargo.toml --all-targets -- -D warnings');
   expect(tests).toContain('npm run lint');
-  expect(tests).toContain('cargo llvm-cov --manifest-path src-tauri/Cargo.toml --lcov');
-  expect(tests).toContain('npm run test:coverage');
+  expect(rust).toContain('npm ci');
+  expect(rust).toContain('npm run build');
+  expect(rust).toContain('npm ci --prefix mcp-server --ignore-scripts');
+  expect(rust).toContain('npm run build --prefix mcp-server');
+  expect(rust).toContain('cargo +nightly llvm-cov --manifest-path src-tauri/Cargo.toml --branch --no-report');
+  expect(rust).toContain('SEOMI_E2E_RENDERER=1 cargo +nightly llvm-cov run --manifest-path src-tauri/Cargo.toml --example desktop_e2e --features custom-protocol --branch --no-clean --lcov --output-path coverage-rust.lcov -- test-results/desktop-e2e-coverage.json');
+  expect(rust).toContain('node scripts/validate-desktop-e2e-report.mjs test-results/desktop-e2e-coverage.json');
+  expect(rust).not.toContain('--no-clean --no-report');
+  expect(rust).toContain('cargo +nightly llvm-cov report --manifest-path src-tauri/Cargo.toml --branch --lcov');
+  expect(rust).toContain('cargo +nightly llvm-cov report --manifest-path src-tauri/Cargo.toml --branch --json');
+  expect(rust).toContain('test-results/desktop-e2e-coverage.json');
+  expect(rust).toMatch(/- name: Upload native coverage\r?\n\s+if: always\(\)/);
+  expect(tests).toContain('node scripts/native-coverage-threshold.mjs coverage-rust-production.lcov.summary.json');
+  expect(rust.indexOf('npm run build')).toBeLessThan(rust.indexOf('coverage_sources'));
+  expect(rust.indexOf('npm run build --prefix mcp-server')).toBeLessThan(rust.indexOf('coverage_sources'));
+  expect(rust.indexOf('--no-report')).toBeLessThan(rust.indexOf('llvm-cov run'));
+  expect(rust.indexOf('llvm-cov run')).toBeLessThan(rust.indexOf('llvm-cov report'));
+  expect(rust.indexOf('llvm-cov run')).toBeLessThan(rust.indexOf('validate-desktop-e2e-report.mjs'));
+  expect(rust.indexOf('validate-desktop-e2e-report.mjs')).toBeLessThan(rust.indexOf('llvm-cov report'));
+  expect(rust.indexOf('llvm-cov report')).toBeLessThan(rust.indexOf('native-production-coverage.mjs'));
+  expect(rust.indexOf('native-production-coverage.mjs')).toBeLessThan(rust.indexOf('native-coverage-threshold.mjs'));
+  const requiredFrontend = tests.split('  test-frontend:')[1].split('  coverage-frontend-mcp:')[0];
+  expect(requiredFrontend).toMatch(/^\s+run: npm test\s*$/m);
+  expect(requiredFrontend).not.toMatch(/continue-on-error|\|\|\s*true/);
+  const frontend = tests.split('  coverage-frontend-mcp:')[1].split('  desktop-platform-smoke:')[0];
+  expect(frontend).toMatch(/^\s+run: npm run test:coverage:target\s*$/m);
+  expect(frontend).toMatch(/^\s+run: npm run test:coverage:mcp\s*$/m);
+  expect(frontend).toMatch(/^\s+run: npm run test:inventory\s*$/m);
+  expect(frontend).not.toMatch(/continue-on-error|\|\|\s*true/);
+  expect(frontend.indexOf('npm run test:coverage:target')).toBeLessThan(frontend.indexOf('npm run test:coverage:mcp'));
+  expect(frontend.indexOf('npm run test:coverage:mcp')).toBeLessThan(frontend.indexOf('npm run test:inventory'));
+  expect(frontend).toContain('if: always()');
+  expect(frontend).toContain('if-no-files-found: error');
   expect(release).not.toContain('macos-13');
   expect(release).toContain("platform: 'macos-15-intel'");
   expect(release).toContain("args: '--target x86_64-apple-darwin'");

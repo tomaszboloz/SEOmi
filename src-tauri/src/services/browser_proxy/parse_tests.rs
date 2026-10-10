@@ -77,3 +77,13 @@ async fn proxy_reader_distinguishes_truncation_oversize_and_io_failures() {
         Some(400)
     );
 }
+
+#[test]
+fn request_head_rejects_other_versions_and_control_characters_in_targets() {
+    for header in [
+        "GET http://example.test/ HTTP/2\r\n",
+        "GET http://example.test/\u{0001} HTTP/1.1\r\n",
+    ] {
+        assert!(matches!(super::parse::parse_request_head(header), Err(400)));
+    }
+}

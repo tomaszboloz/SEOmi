@@ -8,7 +8,7 @@ const number = z.number().finite().nonnegative();
 const count = number.int();
 const nullable = number.nullable();
 const percentage = number.max(100);
-const intent = z.enum(['Informational', 'Commercial', 'Transactional', 'Navigational']);
+const intent = z.enum(['Informational', 'Commercial', 'Transactional', 'Navigational', 'Unknown']);
 const keyword = z.object({
   keyword: z.string(), position: nullable, search_volume: nullable, traffic_share: nullable, intent: intent.nullable(),
 });

@@ -2,7 +2,8 @@ import type { CrawledPageSummary } from '@/types';
 import type { TopicalMapDocument } from '@/services/topicalMap';
 import i18n from '@/i18n';
 import type { EntityEvidenceGraph } from './entityEvidence/types';
-import { MAX_PAGES, MAX_FACTS, normalize } from './entityEvidence/text';
+import { MAX_PAGES, MAX_FACTS } from './entityEvidence/text';
+import { semanticPageTermInventory } from './semanticText';
 import { createEvidenceState } from './entityEvidence/state';
 import { addStructuredEvidence } from './entityEvidence/structured';
 import { entityAssertions, addAssertionEvidence } from './entityEvidence/assertions';
@@ -34,7 +35,7 @@ export const buildEntityEvidenceGraph = (
   const observedAssertions = addAssertionEvidence(state, assertions, selectedPages, entityNodeId);
   return {
     nodes: state.nodes, edges: state.edges, entityNodeId,
-    comparablePages: selectedPages.filter((page) => (page.semantic_terms ?? []).some((term) => normalize(term))).length,
+    comparablePages: selectedPages.filter((page) => semanticPageTermInventory(page).size > 0).length,
     structuredPages: state.structuredPageIndexes.size, schemaTypes: state.schemaNodeIds.size,
     observedAssertions, totalAssertions: assertions.length,
     truncated: state.truncated || pages.length > MAX_PAGES || document.entity.facts.length > MAX_FACTS,

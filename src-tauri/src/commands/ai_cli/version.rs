@@ -6,7 +6,10 @@ use super::{
     resolution::{resolve_command, ResolvedCommand},
     streams::bounded_process_output,
 };
-use tokio::time::{timeout, Duration};
+use tokio::{
+    process::Command,
+    time::{timeout, Duration},
+};
 
 pub(super) async fn version_check(provider: &str, command: &str) -> (bool, String) {
     let Some(resolved) = resolve_command(command) else {
@@ -22,8 +25,20 @@ pub(super) async fn version_check_resolved(
     provider: &str,
     resolved: &ResolvedCommand,
 ) -> (bool, String) {
-    let result = timeout(Duration::from_secs(5), {
-        let mut process = process_for(resolved, &["--version".to_string()]);
+    version_check_resolved_with(provider, resolved, Duration::from_secs(5), process_for).await
+}
+
+pub(super) async fn version_check_resolved_with<F>(
+    provider: &str,
+    resolved: &ResolvedCommand,
+    deadline: Duration,
+    make_process: F,
+) -> (bool, String)
+where
+    F: Fn(&ResolvedCommand, &[String]) -> Command,
+{
+    let result = timeout(deadline, {
+        let mut process = make_process(resolved, &["--version".to_string()]);
         process.kill_on_drop(true);
         if let Some(path) = augmented_path() {
             process.env("PATH", path);
@@ -41,16 +56,12 @@ pub(super) async fn version_check_resolved(
                     .iter()
                     .map(|argument| (*argument).to_string())
                     .collect::<Vec<_>>();
-                let mut auth_process = process_for(resolved, &auth_arguments);
+                let mut auth_process = make_process(resolved, &auth_arguments);
                 auth_process.kill_on_drop(true);
                 if let Some(path) = augmented_path() {
                     auth_process.env("PATH", path);
                 }
-                let auth_result = timeout(
-                    Duration::from_secs(5),
-                    bounded_process_output(auth_process, ""),
-                )
-                .await;
+                let auth_result = timeout(deadline, bounded_process_output(auth_process, "")).await;
                 if let Ok(Ok(auth_output)) = auth_result {
                     available = auth_output.status.success()
                         && authenticated_output(provider, &output_text(&auth_output));

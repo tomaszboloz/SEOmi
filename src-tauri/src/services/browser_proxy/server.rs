@@ -1,12 +1,31 @@
 use super::parse::*;
 use super::types::*;
 use super::upstream::*;
+use std::{future::Future, time::Duration};
 use tokio::io::AsyncWriteExt;
 use tokio::net::TcpStream;
 use tokio::time::timeout;
 
-pub(super) async fn serve_connection(mut client: TcpStream) {
-    let request = match timeout(REQUEST_TIMEOUT, read_request(&mut client)).await {
+pub(super) async fn serve_connection(client: TcpStream) {
+    serve_connection_with(
+        client,
+        |host, port| async move { connect_to_public_host(&host, port).await },
+        REQUEST_TIMEOUT,
+        TUNNEL_TIMEOUT,
+    )
+    .await;
+}
+
+pub(super) async fn serve_connection_with<F, Fut>(
+    mut client: TcpStream,
+    connect: F,
+    request_timeout: Duration,
+    tunnel_timeout: Duration,
+) where
+    F: Fn(String, u16) -> Fut,
+    Fut: Future<Output = std::io::Result<TcpStream>>,
+{
+    let request = match timeout(request_timeout, read_request(&mut client)).await {
         Ok(Ok(request)) => request,
         Ok(Err(status)) => {
             reject(client, status, "Invalid or unsupported proxy request").await;
@@ -24,7 +43,7 @@ pub(super) async fn serve_connection(mut client: TcpStream) {
                 reject(client, 403, "Only public HTTPS tunnels are allowed").await;
                 return;
             }
-            let mut upstream = match connect_to_public_host(&host, port).await {
+            let mut upstream = match connect(host, port).await {
                 Ok(stream) => stream,
                 Err(_) => {
                     reject(client, 403, "Destination is not a verified public host").await;
@@ -39,7 +58,7 @@ pub(super) async fn serve_connection(mut client: TcpStream) {
                 return;
             }
             let _ = timeout(
-                TUNNEL_TIMEOUT,
+                tunnel_timeout,
                 tokio::io::copy_bidirectional(&mut client, &mut upstream),
             )
             .await;
@@ -55,7 +74,7 @@ pub(super) async fn serve_connection(mut client: TcpStream) {
                 return;
             }
             let host = url.host_str().unwrap_or_default().to_string();
-            let mut upstream = match connect_to_public_host(&host, port).await {
+            let mut upstream = match connect(host, port).await {
                 Ok(stream) => stream,
                 Err(_) => {
                     reject(client, 403, "Destination is not a verified public host").await;
@@ -85,7 +104,7 @@ pub(super) async fn serve_connection(mut client: TcpStream) {
                 reject(client, 502, "Could not forward the public HTTP request").await;
                 return;
             }
-            let _ = timeout(REQUEST_TIMEOUT, tokio::io::copy(&mut upstream, &mut client)).await;
+            let _ = timeout(request_timeout, tokio::io::copy(&mut upstream, &mut client)).await;
         }
     }
 }

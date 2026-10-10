@@ -3,13 +3,16 @@ mod inputs;
 pub use inputs::RegisterPageResourceCandidatesInput;
 
 use scraper::{Html, Selector};
+use tauri::Runtime;
 use url::Url;
 
 use super::super::{models::CrawledFrame, resource_discovery::add_resource_candidate};
 use super::setup::CrawlSetup;
 use super::state::CrawlLoopState;
 
-pub fn register_page_resource_candidates(input: RegisterPageResourceCandidatesInput<'_>) {
+pub fn register_page_resource_candidates<R: Runtime>(
+    input: RegisterPageResourceCandidatesInput<'_, R>,
+) {
     let RegisterPageResourceCandidatesInput {
         document,
         final_base,

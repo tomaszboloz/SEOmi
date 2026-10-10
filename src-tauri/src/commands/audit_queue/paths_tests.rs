@@ -103,3 +103,21 @@ fn execution_limit_accepts_data_above_queue_limit_without_weakening_result_limit
     );
     fs::remove_dir_all(directory).unwrap();
 }
+
+#[test]
+fn queue_writer_rejects_parentless_destination_before_touching_the_filesystem() {
+    let error = write_atomic(std::path::Path::new("/"), &json!({"value": 1})).unwrap_err();
+    assert_eq!(error, "Audit queue path has no parent directory.");
+}
+
+#[test]
+fn queue_writer_reports_parent_file_without_overwriting_it() {
+    let directory = directory();
+    let parent_file = directory.join("not-a-directory");
+    fs::write(&parent_file, b"existing user data").unwrap();
+    let error = write_atomic(&parent_file.join("queue.json"), &json!({"value": 1})).unwrap_err();
+    assert!(error.starts_with("Unable to create audit queue directory:"));
+    assert_eq!(fs::read(&parent_file).unwrap(), b"existing user data");
+    assert_eq!(fs::read_dir(&directory).unwrap().count(), 1);
+    fs::remove_dir_all(directory).unwrap();
+}

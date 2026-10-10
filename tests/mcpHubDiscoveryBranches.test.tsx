@@ -130,4 +130,10 @@ describe('McpHub discovery branches', () => {
     await screen.findByText(i18n.t('mcp.discoveredSummary', { count: 0, server: 'srv', version: '2.0' }));
     expect(screen.queryByText('bare')).toBeNull();
   });
+
+  it('returns early when discover is clicked with empty or invalid server path', () => {
+    render(<McpHub />);
+    discover();
+    expect(invokeTauriCommand).not.toHaveBeenCalled();
+  });
 });

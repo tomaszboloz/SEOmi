@@ -27,13 +27,14 @@ export const useSavedKeywordsSession = () => {
   const allTags = Array.from(new Set(savedKeywords.flatMap((k) => k.tags || [])));
 
   const totalKeywords = savedKeywords.length;
-  const totalVolume = savedKeywords.reduce((acc, k) => acc + k.search_volume, 0);
-  const avgDifficulty =
-    totalKeywords > 0
-      ? Math.round(savedKeywords.reduce((acc, k) => acc + k.difficulty, 0) / totalKeywords)
-      : 0;
+  const observedVolume = savedKeywords.filter((item) => item.search_volume !== null);
+  const observedDifficulty = savedKeywords.filter((item) => item.difficulty !== null);
+  const totalVolume = observedVolume.reduce((acc, k) => acc + (k.search_volume ?? 0), 0);
+  const avgDifficulty = observedDifficulty.length > 0
+    ? Math.round(observedDifficulty.reduce((acc, k) => acc + (k.difficulty ?? 0), 0) / observedDifficulty.length)
+    : 0;
   const estMonthlyValue = savedKeywords.reduce(
-    (acc, k) => acc + k.search_volume * k.cpc * 0.05,
+    (acc, k) => acc + (k.search_volume !== null && k.cpc !== null ? k.search_volume * k.cpc * 0.05 : 0),
     0,
   );
 

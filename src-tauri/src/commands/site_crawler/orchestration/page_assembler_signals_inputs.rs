@@ -1,6 +1,6 @@
 use super::*;
 
-pub struct ExtractPageSignalsInput<'a> {
+pub struct ExtractPageSignalsInput<'a, R: tauri::Runtime = tauri::Wry> {
     pub document: &'a Html,
     pub text: &'a str,
     pub page_data: &'a FetchedPageData,
@@ -14,6 +14,6 @@ pub struct ExtractPageSignalsInput<'a> {
     pub is_html: bool,
     pub selectors: &'a CrawlSelectors,
     pub setup: &'a CrawlSetup,
-    pub state: &'a mut CrawlLoopState,
+    pub state: &'a mut CrawlLoopState<R>,
     pub issues: &'a mut Vec<CrawledPageIssue>,
 }

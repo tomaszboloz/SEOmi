@@ -3,7 +3,7 @@ import { useToolsStore } from "@/stores/toolsStore";
 import { useProjectStore } from "@/stores/projectStore";
 import { useUIStore } from "@/stores/uiStore";
 import { invokeTauriCommand, isTauriEnvironment } from "@/services/tauri";
-import { compareCrawlResults } from "@/services/crawlDiff";
+import { compareCrawlResults, compareCrawlRuns } from "@/services/crawlDiff";
 import { downloadCrawlPdf } from "@/services/export";
 import { importUrlsFromCsv } from "@/services/csvUrls";
 import type { CrawlEnvironment } from "@/types";
@@ -13,7 +13,7 @@ import { useCrawlErrorFilters } from "./session/useCrawlErrorFilters";
 import { useCrawlFormState } from "./session/useCrawlFormState";
 import { useCrawlExecution } from "./session/useCrawlExecution";
 
-const defaultServices: SiteAuditSessionDependencies = { invoke: invokeTauriCommand, importUrls: importUrlsFromCsv, compare: compareCrawlResults, downloadPdf: downloadCrawlPdf };
+const defaultServices: SiteAuditSessionDependencies = { invoke: invokeTauriCommand, importUrls: importUrlsFromCsv, compare: compareCrawlResults, compareRuns: compareCrawlRuns, downloadPdf: downloadCrawlPdf };
 
 export const useSiteAuditSession = (services: SiteAuditSessionDependencies = defaultServices) => {
   const { t } = useTranslation();

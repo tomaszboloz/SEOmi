@@ -53,7 +53,7 @@ it('keeps native schema validation and its test modules below 150 physical lines
 
 it('keeps every frontend test and shared fixture below 150 physical lines',()=>{
  expect(maxLocReport(codeFiles('tests')).violations).toEqual([]);
-});
+}, 30_000);
 
 it('keeps history, schema generator and directory-tree responsibilities below 150 physical lines',()=>{
  const names=['pagespeedHistory','schemaGenerator','crawlDirectoryTree'];

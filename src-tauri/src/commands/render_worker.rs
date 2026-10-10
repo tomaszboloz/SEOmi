@@ -17,7 +17,7 @@ mod http_body_tests;
 mod http_response_tests;
 
 use std::sync::Arc;
-use tauri::{AppHandle, State};
+use tauri::{AppHandle, Runtime, State};
 use tokio::{
     net::TcpListener,
     sync::{oneshot, Mutex},
@@ -29,8 +29,8 @@ pub use models::{RenderWorkerLease, RenderWorkerState, RENDER_WORKER_VERSION};
 use server::run_worker;
 
 #[tauri::command]
-pub async fn start_render_worker(
-    app: AppHandle,
+pub async fn start_render_worker<R: Runtime>(
+    app: AppHandle<R>,
     state: State<'_, RenderWorkerState>,
 ) -> Result<RenderWorkerLease, String> {
     let listener = TcpListener::bind(("127.0.0.1", 0))
@@ -94,3 +94,12 @@ pub async fn render_worker_status(state: State<'_, RenderWorkerState>) -> Result
     }
     Ok(active.is_some())
 }
+
+#[cfg(test)]
+mod ipc_tests;
+#[cfg(test)]
+mod lifecycle_tests;
+#[cfg(test)]
+mod server_contract_tests;
+#[cfg(test)]
+mod server_edge_tests;

@@ -6,7 +6,7 @@ fn hidden_primary_root_does_not_suppress_visible_body_fallback() {
         r#"<html><body><main hidden><p>hidden primary root term</p></main><div><p>Visible fallback article content.</p></div></body></html>"#,
     );
     assert!(!has_semantic_content_root(&document));
-    let terms = extract_semantic_terms(&document);
+    let terms = extract_semantic_terms(&document, None);
     assert!(terms.contains(&"visible".to_string()));
     assert!(!terms.contains(&"hidden".to_string()));
     assert_eq!(

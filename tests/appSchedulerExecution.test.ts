@@ -40,13 +40,13 @@ it('runs crawl with exact arguments and notifies with prior matching health scor
   await mountScheduler(); await waitFor(() => expect(scheduler.finish).toHaveBeenCalled());
   expect(scheduler.audit.setActiveTab).toHaveBeenCalledExactlyOnceWith('site-audit');
   expect(scheduler.tools.startSiteCrawl).toHaveBeenCalledExactlyOnceWith(schedule.url,25,schedule.crawlConfig,'default',false);
-  expect(scheduler.complete).toHaveBeenCalledWith('project-a',result,60);
+  expect(scheduler.complete).toHaveBeenCalledWith('project-a',result,{health_score:60},{runId:'scheduled-crawl-schedule-a-unknown'});
   expect(scheduler.audit.startAudit).not.toHaveBeenCalled();
 });
 it('notifies a first completed crawl without inventing a prior health score', async () => {
   scheduler.claim.mockReturnValueOnce(scheduleFixture('site-crawl')); scheduler.tools.startSiteCrawl.mockResolvedValue({health_score:75});
   await mountScheduler(); await waitFor(() => expect(scheduler.finish).toHaveBeenCalled());
-  expect(scheduler.complete).toHaveBeenCalledWith('project-a',{health_score:75},undefined);
+  expect(scheduler.complete).toHaveBeenCalledWith('project-a',{health_score:75},undefined,{runId:'scheduled-crawl-schedule-a-unknown'});
 });
 it.each([null, 'observed crawl failure'])('persists failed crawl error %s without completion notification', async error => {
   scheduler.claim.mockReturnValueOnce(scheduleFixture('site-crawl')); scheduler.tools.crawlError=error;

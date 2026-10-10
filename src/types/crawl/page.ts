@@ -84,6 +84,8 @@ export interface CrawledPageSummary {
   html_validation_findings?: CrawledHtmlValidationFinding[];
   html_validation_truncated?: boolean;
   document_language?: string | null;
+  /** Language the crawler used to group inflected semantic terms (declared or inferred). */
+  semantic_language?: string | null;
   hreflangs: CrawledHreflang[];
   amp_url?: string | null;
   amp_target_http_status?: number | null;

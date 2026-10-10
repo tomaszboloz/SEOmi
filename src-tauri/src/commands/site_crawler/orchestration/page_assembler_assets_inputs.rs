@@ -1,6 +1,6 @@
 use super::*;
 
-pub struct ExtractPageAssetsInput<'a> {
+pub struct ExtractPageAssetsInput<'a, R: tauri::Runtime = tauri::Wry> {
     pub document: &'a Html,
     pub final_base: &'a Url,
     pub final_url: &'a str,
@@ -10,6 +10,6 @@ pub struct ExtractPageAssetsInput<'a> {
     pub extra: &'a PageExtraOutcome,
     pub selectors: &'a CrawlSelectors,
     pub setup: &'a CrawlSetup,
-    pub state: &'a mut CrawlLoopState,
+    pub state: &'a mut CrawlLoopState<R>,
     pub issues: &'a mut Vec<CrawledPageIssue>,
 }

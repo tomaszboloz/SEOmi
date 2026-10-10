@@ -1,24 +1,24 @@
 #[path = "summary_inputs.rs"]
 mod inputs;
 pub use inputs::BuildCrawlResultInput;
-
-use tauri::{AppHandle, Emitter};
+use tauri::{Emitter, Runtime};
 
 use super::super::{
     control::{CrawlControl, CrawlProgress},
+    fetch_data::is_html_media_type,
     models::{CrawledResource, SiteCrawlResult},
     resource_apply::{
         apply_checked_frame_resources, apply_checked_image_resources,
         apply_checked_social_resources,
     },
-    scoring::{score_pages, CrawlScore},
+    scoring::{score_pages, CrawlScore, CRAWL_SCORE_VERSION},
 };
 use super::robots::CrawlRobotsOutcome;
 use super::setup::CrawlSetup;
 use super::sitemaps::CrawlSitemapsOutcome;
 use super::state::CrawlLoopState;
 
-pub fn build_crawl_result(input: BuildCrawlResultInput<'_>) -> SiteCrawlResult {
+pub fn build_crawl_result<R: Runtime>(input: BuildCrawlResultInput<'_, R>) -> SiteCrawlResult {
     let BuildCrawlResultInput {
         app,
         control,
@@ -75,11 +75,25 @@ pub fn build_crawl_result(input: BuildCrawlResultInput<'_>) -> SiteCrawlResult {
         if state.depth_limit_reached {
             reasons.push("max_depth".into());
         }
-        if state.pages.iter().any(|page| page.body_truncated) {
+        if state.pages.iter().any(|page| {
+            page.body_truncated
+                && page
+                    .content_type
+                    .as_deref()
+                    .map_or(true, is_html_media_type)
+        }) {
             reasons.push("max_response_bytes".into());
         }
         if state.timed_out {
             reasons.push("max_run_seconds".into());
+        }
+        if robots.robots_txt_evaluation_status == "unknown" {
+            reasons.push("robots_unknown".into());
+        }
+        if state.render_health.fallback_pages > 0 {
+            // Some pages were analyzed from raw HTML, so a rendered crawl is
+            // not uniformly rendered. Each affected page carries a warning.
+            reasons.push("render_fallback".into());
         }
         if state.pages.iter().any(|page| {
             page.issues
@@ -100,6 +114,7 @@ pub fn build_crawl_result(input: BuildCrawlResultInput<'_>) -> SiteCrawlResult {
         pages_crawled: state.pages.len(),
         health_score,
         critical_count,
+        score_version: CRAWL_SCORE_VERSION,
         warning_count,
         notice_count,
         pages: std::mem::take(&mut state.pages),
@@ -107,6 +122,11 @@ pub fn build_crawl_result(input: BuildCrawlResultInput<'_>) -> SiteCrawlResult {
         cancelled,
         timed_out: state.timed_out,
         robots_txt_status: robots.robots_txt_status,
+        robots_txt_evaluation_status: robots.robots_txt_evaluation_status,
+        robots_txt_warning: robots.robots_txt_warning,
+        robots_txt_status_code: robots.robots_txt_status_code,
+        robots_txt_final_url: robots.robots_txt_final_url,
+        robots_txt_redirect_chain: robots.robots_txt_redirect_chain,
         robots_user_agent: setup.ua.clone(),
         robots_applicable_rules: robots.robots_applicable_rules,
         robots_agent_matrix: robots.robots_agent_matrix,
@@ -122,7 +142,7 @@ pub fn build_crawl_result(input: BuildCrawlResultInput<'_>) -> SiteCrawlResult {
         limit_reasons,
     };
     control.finish(&setup.run_id);
-    if let Some(session) = state.rendered_session.take() {
+    for session in state.rendered_sessions.drain(..) {
         session.close();
     }
     result

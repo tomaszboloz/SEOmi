@@ -42,18 +42,29 @@ mod pagination;
 mod post_processing;
 mod prefetch;
 mod readability;
+mod render_decision;
+mod render_fetch;
+mod render_health;
 mod request_error;
 mod resource_apply;
 mod resource_discovery;
 mod resource_fetch;
+mod retry;
 mod robots;
 mod robots_matching;
 mod schema;
+mod schema_graph;
+mod schema_graph_analysis;
+mod schema_graph_analysis_helpers;
+mod schema_graph_checks;
+mod schema_graph_values;
 mod schema_inspections;
 mod schema_references;
 mod scope;
 mod scoring;
 mod semantic_chrome;
+mod semantic_inflection;
+mod semantic_terms;
 mod semantics;
 mod simhash;
 mod sitemap;
@@ -69,16 +80,19 @@ use {
     canonical::*, client_redirects::*, constants::*, content_terms::*, crawl_delay::*,
     fetch_data::*, fetch_types::*, fingerprints::*, hreflang::*, hreflang_validation::*,
     html_source_locator::*, html_validation_rules::*, image_decoding::*, inline_images::*,
-    models::*, pagination::*, readability::*, request_error::*, robots::*, robots_matching::*,
-    schema_inspections::*, schema_references::*, scope::*, semantic_chrome::*, simhash::*,
-    svg_dimensions::*, svg_inline::*, target_relations::*, transport::*, url_normalization::*,
+    models::*, pagination::*, readability::*, retry::*, robots::*, robots_matching::*,
+    schema_graph::*, schema_graph_analysis::*, schema_graph_analysis_helpers::*,
+    schema_graph_checks::*, schema_graph_values::*, schema_inspections::*, schema_references::*,
+    scope::*, semantic_chrome::*, simhash::*, svg_dimensions::*, svg_inline::*,
+    target_relations::*, transport::*, url_normalization::*,
 };
 
 #[cfg(test)]
 use {
     content_metrics::*, duplicate_annotation::*, favicon::*, frames::*, html_decoding::*,
-    html_validation::*, js_redirects::*, post_processing::*, prefetch::*, resource_apply::*,
-    resource_discovery::*, schema::*, scoring::*, semantics::*, sitemap::*, social::*, srcset::*,
+    html_validation::*, js_redirects::*, post_processing::*, prefetch::*, request_error::*,
+    resource_apply::*, resource_discovery::*, schema::*, scoring::*, semantic_inflection::*,
+    semantic_terms::*, semantics::*, sitemap::*, social::*, srcset::*,
 };
 
 mod ipc;

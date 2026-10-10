@@ -9,11 +9,14 @@ use std::path::{Path, PathBuf};
 use tauri::AppHandle;
 
 #[cfg(test)]
+#[path = "storage_edge_tests.rs"]
+mod edge_tests;
+#[cfg(test)]
 #[path = "storage_tests.rs"]
 mod tests;
 
-pub(super) fn task_path(
-    app: &AppHandle,
+pub(super) fn task_path<R: tauri::Runtime>(
+    app: &AppHandle<R>,
     project_id: &str,
     schedule_id: &str,
 ) -> Result<PathBuf, String> {
@@ -22,8 +25,8 @@ pub(super) fn task_path(
         .join(format!("scheduled_task_{schedule_id}.json")))
 }
 
-pub(super) fn execution_path(
-    app: &AppHandle,
+pub(super) fn execution_path<R: tauri::Runtime>(
+    app: &AppHandle<R>,
     project_id: &str,
     schedule_id: &str,
 ) -> Result<PathBuf, String> {
@@ -32,14 +35,27 @@ pub(super) fn execution_path(
         .join(format!("scheduled_execution_{schedule_id}.json")))
 }
 
-pub(super) fn result_path(
-    app: &AppHandle,
+pub(super) fn result_path<R: tauri::Runtime>(
+    app: &AppHandle<R>,
     project_id: &str,
     schedule_id: &str,
 ) -> Result<PathBuf, String> {
     validate_project_and_schedule(project_id, schedule_id)?;
     Ok(crawl_storage::project_directory(app, project_id)?
         .join(format!("scheduled_result_{schedule_id}.json")))
+}
+
+pub(super) fn validate_handoff_identity(
+    project_id: &str,
+    schedule_id: &str,
+    handoff: &ScheduledExecutionHandoff,
+) -> Result<(), String> {
+    validate_project_and_schedule(project_id, schedule_id)?;
+    validate_project_and_schedule(&handoff.project_id, &handoff.schedule_id)?;
+    if handoff.project_id != project_id || handoff.schedule_id != schedule_id {
+        return Err("Scheduled execution handoff does not match its storage path.".into());
+    }
+    Ok(())
 }
 
 pub(super) fn write_json_atomic(

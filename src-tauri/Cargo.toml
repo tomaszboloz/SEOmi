@@ -1,6 +1,6 @@
 [package]
 name = "seomi"
-version = "0.0.3"
+version = "0.0.4"
 description = "Lightning-fast Native Desktop SEO & Open Graph Auditor"
 authors = ["Tomasz Bołoz"]
 edition = "2021"
@@ -38,6 +38,7 @@ tauri = { version = "2", features = ["test"] }
 syn = { version = "2", features = ["full"] }
 proc-macro2 = { version = "1", features = ["span-locations"] }
 minisign-verify = "0.2.5"
+tokio = { version = "1.41", features = ["test-util"] }
 
 [dependencies]
 tauri = { version = "2", features = ["macos-proxy", "tracing"] }
@@ -47,6 +48,7 @@ tauri-plugin-process = "2"
 tauri-plugin-notification = "2.3.2"
 serde = { version = "1.0", features = ["derive"] }
 serde_json = "1.0"
+unicode-normalization = "0.1.25"
 flate2 = "1.0"
 tokio = { version = "1.41", features = ["full"] }
 reqwest = { version = "0.12", features = ["json", "cookies", "gzip", "brotli"] }
@@ -67,6 +69,7 @@ mime = "0.3"
 encoding_rs = "0.8"
 keyring = { version = "3.6", features = ["apple-native", "windows-native"] }
 fs2 = "0.4.3"
+dunce = "1.0"
 
 [target.'cfg(windows)'.dependencies]
 windows-sys = { version = "0.61", features = ["Win32_Storage_FileSystem"] }

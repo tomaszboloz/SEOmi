@@ -86,4 +86,12 @@ describe('AuditTabs keyboard navigation and scrolling', () => {
     fireEvent.click(toggle);
     expect(useAuditStore.getState().showOnlyProblems).toBe(false);
   });
+
+  it('handles moveFocus safely when tab index is not found', () => {
+    render(<AuditTabs />);
+    const spy = vi.spyOn(Array.prototype, 'findIndex').mockReturnValueOnce(-1);
+    fireEvent.keyDown(tab('overview'), { key: 'ArrowRight' });
+    expect(spy).toHaveBeenCalled();
+    spy.mockRestore();
+  });
 });

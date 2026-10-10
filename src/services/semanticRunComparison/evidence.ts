@@ -2,13 +2,14 @@ import type { CrawledPageSummary } from '@/types';
 import type { TopicalMapDocument } from '@/services/topicalMap';
 import { buildSemanticMap } from '@/services/semanticMap';
 import i18n from '@/i18n';
+import { semanticPageLanguage, semanticPageTermEntries, semanticTermIdentity } from '@/services/semanticText';
 
 export const MAX_PAGES = 5_000;
 const MAX_TERMS_PER_PAGE = 40;
 const MAX_SEMANTIC_LINKS_PER_PAGE = 1_000;
 export const comparisonText = (key: string, variables?: Record<string, unknown>): string => i18n.t(`runtimeErrors.semanticRunComparison.${key}`, variables);
 
-const normalizeText = (value: string): string => value.normalize('NFKC').toLocaleLowerCase().trim();
+const normalizeText = (value: string): string => value.normalize('NFKC').toLowerCase().trim();
 const tokenize = (value: string): string[] => [...new Set(normalizeText(value).split(/[^\p{L}\p{N}]+/u).filter((token) => token.length > 2))];
 
 const normalizeUrl = (value: string): string | null => {
@@ -24,8 +25,14 @@ const normalizeUrl = (value: string): string | null => {
 
 export const pageIdentity = (page: CrawledPageSummary): string | null => normalizeUrl(page.url) || normalizeUrl(page.final_url);
 const pageAliases = (page: CrawledPageSummary): string[] => [...new Set([page.url, page.final_url].map(normalizeUrl).filter((url): url is string => Boolean(url)))];
-export const pageTerms = (page: CrawledPageSummary): Map<string, string> => new Map((page.semantic_terms ?? []).slice(0, MAX_TERMS_PER_PAGE)
-  .map((term) => [normalizeText(term), term.trim()] as const).filter(([key, value]) => Boolean(key && value)));
+/**
+ * Page terms by inflection key, mapped to an observed form. Noise terms and
+ * non-2xx pages are dropped on both sides so a run captured before the
+ * crawler filtered them compares cleanly with a newer run.
+ */
+export const pageTerms = (page: CrawledPageSummary): Map<string, string> => {
+  return new Map(semanticPageTermEntries(page, MAX_TERMS_PER_PAGE).map(({ key, observed }) => [key, observed]));
+};
 
 export const countSemanticLinks = (pages: CrawledPageSummary[]): Map<string, { source: string; target: string; anchor: string }> => {
   const links = new Map<string, { source: string; target: string; anchor: string }>();
@@ -91,9 +98,9 @@ export const assignedPages = (node: TopicalMapDocument['nodes'][number], aliases
 
 export const queryObservation = (query: string, pages: CrawledPageSummary[]): { matched: string[]; expected: string[] } | null => {
   const expected = tokenize(query);
-  const comparable = pages.filter((page) => (page.semantic_terms ?? []).length > 0);
-  if (!expected.length || !comparable.length) return null;
-  const observed = new Set(comparable.flatMap((page) => [...pageTerms(page).keys()]));
-  return { expected, matched: expected.filter((token) => observed.has(token)) };
+  const observed = pages
+    .map((page) => ({ terms: pageTerms(page), language: semanticPageLanguage(page) }))
+    .filter(({ terms }) => terms.size > 0);
+  if (!expected.length || !observed.length) return null;
+  return { expected, matched: expected.filter((token) => observed.some(({ terms, language }) => terms.has(semanticTermIdentity(token, language)))) };
 };
-

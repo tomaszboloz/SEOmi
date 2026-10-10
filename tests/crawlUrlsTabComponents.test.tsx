@@ -27,7 +27,7 @@ describe('CrawlUrlsTab modular architecture and subcomponents', () => {
     const setQuery = vi.fn();
     const setSegment = vi.fn();
     const setSort = vi.fn();
-    const setDescending = vi.fn();
+    const setDescending = vi.fn((fn: any) => typeof fn === 'function' ? fn(true) : fn);
 
     render(
       <CrawlUrlsSearchSortBar
@@ -47,10 +47,15 @@ describe('CrawlUrlsTab modular architecture and subcomponents', () => {
     fireEvent.change(input, { target: { value: 'about' } });
     expect(setQuery).toHaveBeenCalledWith('about');
 
+    const selects = screen.getAllByRole('combobox');
+    fireEvent.change(selects[1], { target: { value: 'responseTime' } });
+    expect(setSort).toHaveBeenCalledWith('responseTime');
+
     const descBtn = screen.getByRole('button');
     fireEvent.click(descBtn);
     expect(setDescending).toHaveBeenCalled();
   });
+
 
   it('renders CrawlUrlsFilterBar and toggles filters', () => {
     const setOnlyProblems = vi.fn();

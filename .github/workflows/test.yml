@@ -1,9 +1,9 @@
 name: Test Suite & Security Audit
 on:
   push:
-    branches: [ main, master ]
+    branches: [ main ]
   pull_request:
-    branches: [ main, master ]
+    branches: [ main ]
   workflow_dispatch:
 
 jobs:
@@ -21,6 +21,15 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: 22
+          cache: 'npm'
+      - name: Install frontend dependencies for the desktop coverage harness
+        run: npm ci
+      - name: Build frontend assets for the desktop coverage harness
+        run: npm run build
+      - name: Install MCP server dependencies for native coverage
+        run: npm ci --prefix mcp-server --ignore-scripts
+      - name: Build MCP server for native coverage
+        run: npm run build --prefix mcp-server
       - name: Cache Cargo dependencies
         uses: actions/cache@v4
         with:
@@ -35,13 +44,64 @@ jobs:
         run: cargo fmt --manifest-path src-tauri/Cargo.toml --check
       - name: Strict Clippy
         run: cargo clippy --manifest-path src-tauri/Cargo.toml --all-targets -- -D warnings
+      - name: Run required native regression and tool tests
+        run: cargo test --manifest-path src-tauri/Cargo.toml --all-targets
+
+  coverage-rust:
+    name: Rust production coverage measurement
+    needs: [test-rust, test-frontend, desktop-platform-smoke, dependency-security]
+    runs-on: macos-15-intel
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dtolnay/rust-toolchain@stable
+        with:
+          components: clippy, llvm-tools-preview
+      - uses: taiki-e/install-action@v2
+        with:
+          tool: cargo-llvm-cov@0.9.1
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: 'npm'
+      - name: Install frontend dependencies for the desktop coverage harness
+        run: npm ci
+      - name: Build frontend assets for the desktop coverage harness
+        run: npm run build
+      - name: Install MCP server dependencies for native coverage
+        run: npm ci --prefix mcp-server --ignore-scripts
+      - name: Build MCP server for native coverage
+        run: npm run build --prefix mcp-server
+      - name: Cache Cargo dependencies
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.cargo/bin/
+            ~/.cargo/registry/index/
+            ~/.cargo/registry/cache/
+            ~/.cargo/git/db/
+            src-tauri/target/
+          key: ${{ runner.os }}-${{ runner.arch }}-cargo-${{ hashFiles('**/Cargo.lock') }}
+      - name: Check Rust formatting
+        run: cargo fmt --manifest-path src-tauri/Cargo.toml --check
+      - name: Strict Clippy
+        run: cargo clippy --manifest-path src-tauri/Cargo.toml --all-targets -- -D warnings
+      - name: Inventory source boundaries for native coverage
+        run: cargo run --quiet --manifest-path src-tauri/Cargo.toml --example coverage_sources > native-coverage-sources.json
       - name: Run Cargo Test with coverage
+        env:
+          CARGO_TARGET_DIR: ${{ runner.temp }}/seomi-native-coverage-${{ github.run_id }}-${{ github.run_attempt }}
         run: |
-          cargo run --quiet --manifest-path src-tauri/Cargo.toml --example coverage_sources > native-coverage-sources.json
-          cargo llvm-cov --manifest-path src-tauri/Cargo.toml --lcov --output-path coverage-rust.lcov
-          cargo llvm-cov report --manifest-path src-tauri/Cargo.toml --json --output-path coverage-rust.json
+          rustup toolchain install nightly --profile minimal --component llvm-tools-preview
+          cargo +nightly llvm-cov clean --manifest-path src-tauri/Cargo.toml --workspace
+          cargo +nightly llvm-cov --manifest-path src-tauri/Cargo.toml --branch --no-report
+          mkdir -p test-results
+          SEOMI_E2E_RENDERER=1 cargo +nightly llvm-cov run --manifest-path src-tauri/Cargo.toml --example desktop_e2e --features custom-protocol --branch --no-clean --lcov --output-path coverage-rust.lcov -- test-results/desktop-e2e-coverage.json
+          node scripts/validate-desktop-e2e-report.mjs test-results/desktop-e2e-coverage.json
+          cargo +nightly llvm-cov report --manifest-path src-tauri/Cargo.toml --branch --lcov --output-path coverage-rust.lcov
+          cargo +nightly llvm-cov report --manifest-path src-tauri/Cargo.toml --branch --json --output-path coverage-rust.json
           node scripts/native-production-coverage.mjs coverage-rust.lcov native-coverage-sources.json coverage-rust-production.lcov coverage-rust.json
       - name: Upload native coverage
+        if: always()
         uses: actions/upload-artifact@v4
         with:
           name: native-coverage
@@ -51,6 +111,7 @@ jobs:
             coverage-rust-production.lcov
             coverage-rust-production.lcov.summary.json
             native-coverage-sources.json
+            test-results/desktop-e2e-coverage.json
           retention-days: 14
       - name: Inventory declared native functions using Rust AST
         run: cargo run --quiet --manifest-path src-tauri/Cargo.toml --example function_inventory > native-function-inventory.json
@@ -60,6 +121,22 @@ jobs:
           name: native-function-inventory
           path: native-function-inventory.json
           retention-days: 14
+
+  native-coverage-threshold:
+    name: Rust production coverage (98% follow-up)
+    needs: coverage-rust
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - uses: actions/download-artifact@v4
+        with:
+          name: native-coverage
+          path: .
+      - name: Enforce unchanged production coverage target
+        run: node scripts/native-coverage-threshold.mjs coverage-rust-production.lcov.summary.json
 
   test-frontend:
     name: Frontend TypeScript, i18n & Vitest
@@ -84,10 +161,31 @@ jobs:
           cache: 'npm'
       - name: Install dependencies
         run: npm ci
+      - name: Verify the canonical application version
+        run: npm run version:check
+      - name: Enforce the physical source and test line limit
+        run: npm run check:loc
       - name: Lint TypeScript and React
         run: npm run lint
+      - name: Run required frontend regression tests
+        run: npm test
+      - name: Typecheck & Production Bundle
+        run: npm run build
+
+  coverage-frontend-mcp:
+    name: Frontend and MCP coverage (98% follow-up)
+    needs: [test-rust, test-frontend, desktop-platform-smoke, dependency-security]
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: 'npm'
+      - name: Install dependencies
+        run: npm ci
       - name: Run Vitest with full frontend coverage
-        run: npm run test:coverage
+        run: npm run test:coverage:target
       - name: Install MCP coverage dependencies
         run: npm ci --prefix mcp-server --ignore-scripts
       - name: Measure MCP source execution through Node tests
@@ -95,9 +193,11 @@ jobs:
       - name: Inventory TypeScript public functions and fresh execution evidence
         run: npm run test:inventory
       - name: Upload frontend coverage
+        if: always()
         uses: actions/upload-artifact@v4
         with:
           name: frontend-coverage
+          if-no-files-found: error
           path: |
             coverage/
             test-results/frontend-coverage-sources.json
@@ -105,8 +205,6 @@ jobs:
             test-results/mcp-runtime-sources.json
             test-results/public-function-inventory.json
           retention-days: 14
-      - name: Typecheck & Production Bundle
-        run: npm run build
 
   desktop-platform-smoke:
     name: Desktop platform smoke (${{ matrix.os }})

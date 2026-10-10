@@ -47,7 +47,9 @@ export const useAppScheduler = ({ scheduledLaunchContext, setScheduledLaunchCont
           const crawl = await useToolsStore.getState().startSiteCrawl(schedule.url, schedule.crawlLimit, schedule.crawlConfig, 'default', false);
           succeeded = Boolean(crawl);
           if (crawl) {
-            void notifyCrawlCompleted(activeProjectId, crawl, previousRun?.result.health_score);
+            const completedRun = useToolsStore.getState().crawlRuns.find((run) => run.result === crawl);
+            const runId = completedRun?.id || `scheduled-crawl-${schedule.id}-${schedule.lastStartedAt || schedule.nextRunAt || 'unknown'}`;
+            void notifyCrawlCompleted(activeProjectId, crawl, previousRun?.result, { runId });
           } else {
             failure = useToolsStore.getState().crawlError || undefined;
           }

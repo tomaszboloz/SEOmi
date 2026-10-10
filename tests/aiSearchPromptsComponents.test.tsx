@@ -4,6 +4,8 @@ import { AiSearchPromptsHeader } from '@/components/AiVisibility/searchPrompts/A
 import { AiSearchPromptForm } from '@/components/AiVisibility/searchPrompts/AiSearchPromptForm';
 import { AiSearchHistoryAndContext } from '@/components/AiVisibility/searchPrompts/AiSearchHistoryAndContext';
 import { AiSearchResultCard } from '@/components/AiVisibility/searchPrompts/AiSearchResultCard';
+import { AiSearchPrompts } from '@/components/AiVisibility/AiSearchPrompts';
+import { useToolsStore } from '@/stores/toolsStore';
 import { codeFiles, maxLocReport } from '../scripts/check-max-loc.mjs';
 
 const mockT = ((key: string, opts?: any) => {
@@ -105,5 +107,19 @@ describe('AiSearchPrompts modular architecture', () => {
     expect(screen.getByText('gpt-4o')).toBeTruthy();
     expect(screen.getByText('SEOmi is a fast desktop SEO auditor.')).toBeTruthy();
     expect(screen.getByText('https://seomi.org/overview')).toBeTruthy();
+  });
+
+  it('renders AiSearchPrompts with error state and sample selection', () => {
+    const runPrompt = vi.fn();
+    useToolsStore.setState({
+      aiPromptError: 'Sample AI prompt error',
+      runAiPromptComparison: runPrompt,
+    });
+    render(<AiSearchPrompts />);
+    expect(screen.getByText('Sample AI prompt error')).toBeTruthy();
+
+    const sampleBtn = screen.getByText(/What are the top open-source SEO/i);
+    fireEvent.click(sampleBtn);
+    expect(runPrompt).toHaveBeenCalledWith(expect.stringContaining('open-source SEO'));
   });
 });

@@ -71,4 +71,14 @@ describe('findInternalLinkOpportunities', () => {
     expect(report.pagesOmittedByLimit).toBe(1);
     expect(report.pagesWithoutCompleteEvidence).toBe(160);
   });
+
+  it('relates pages whose shared terms appear in different Polish inflections', () => {
+    const a = page('https://example.test/a', { title: 'A', document_language: 'pl', semantic_terms: ['szkolenia', 'navigatora', 'sprzedaży'] });
+    const b = page('https://example.test/b', { title: 'B', document_language: 'pl', semantic_terms: ['szkolenie', 'navigator', 'sprzedaż'] });
+
+    const report = findInternalLinkOpportunities([a, b]);
+
+    expect(report.opportunities).toHaveLength(2);
+    expect(report.opportunities.find((item) => item.sourceUrl === 'https://example.test/a')?.sharedTerms).toEqual(['navigatora', 'sprzedaży', 'szkolenia']);
+  });
 });

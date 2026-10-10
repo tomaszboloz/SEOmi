@@ -1,5 +1,5 @@
 import type { TopicalAuditContext } from './types';
-import { addFinding, semanticText } from './evidence';
+import { addFinding, semanticText, termsFor } from './evidence';
 
 export const auditPageEvidence = (context: TopicalAuditContext) => {
   const { pages, topicsByPage, findings } = context;
@@ -21,7 +21,7 @@ export const auditPageEvidence = (context: TopicalAuditContext) => {
       id: `page-unassigned-${page.url}`, code: 'unassigned-page', severity: 'notice', provenance: ['measured'],
       title: semanticText('pageUnassignedTitle'),
       detail: semanticText('pageUnassignedDetail'),
-      urls: [page.url], evidence: [semanticText('termCount', { count: (page.semantic_terms ?? []).length })], confidence: 'limited',
+      urls: [page.url], evidence: [semanticText('termCount', { count: termsFor(page).size })], confidence: 'limited',
     });
     if (assigned.length > 1) addFinding(findings, {
       id: `page-ambiguous-${page.url}`, code: 'ambiguous-page', severity: 'review', provenance: ['asserted', 'measured'],

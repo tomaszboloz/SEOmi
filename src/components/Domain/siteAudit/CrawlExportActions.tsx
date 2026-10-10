@@ -1,6 +1,6 @@
 import { Download } from "lucide-react";
 
-import { downloadCrawlImagesCsv, downloadCrawlIssuesCsv, downloadCrawlJson, downloadCrawlLinksCsv, downloadCrawlPagesCsv, downloadCrawlResourcesCsv } from "@/services/export";
+import { downloadCrawlHtml, downloadCrawlImagesCsv, downloadCrawlIssuesCsv, downloadCrawlJson, downloadCrawlLinksCsv, downloadCrawlPagesCsv, downloadCrawlResourcesCsv } from "@/services/export";
 
 import type { useSiteAuditSession } from './useSiteAuditSession';
 
@@ -27,6 +27,14 @@ return (<div className="flex flex-wrap gap-2">
                       >
                         <Download className="h-3.5 w-3.5" />
                         {t("crawlDeepUi.exportPdf")}
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => downloadCrawlHtml(selectedRun, selectedReportTemplate)}
+                        className="inline-flex items-center gap-1.5 rounded-lg border border-violet-500/35 bg-violet-500/10 px-3 py-2 text-xs font-medium text-violet-200 transition hover:bg-violet-500/20"
+                      >
+                        <Download className="h-3.5 w-3.5" />
+                        {t("crawlDeepUi.exportHtml")}
                       </button>
                       <button
                         type="button"

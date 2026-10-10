@@ -13,7 +13,7 @@ export const CrawlInternationalRow: React.FC<CrawlInternationalRowProps> = ({ pa
   const ampStatus = !page.amp_url
     ? t('crawlDeepUi.noDirectives')
     : page.amp_target_checked_in_run
-    ? page.amp_target_http_status == null
+    ? !page.amp_target_http_status
       ? t('crawlDeepUi.noResponse')
       : t('crawl.ui.httpStatus', { status: page.amp_target_http_status })
     : t('crawlDeepUi.notCheckedThisRun');

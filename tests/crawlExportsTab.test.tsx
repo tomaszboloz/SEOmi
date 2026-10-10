@@ -5,6 +5,7 @@ import { CrawlExportsTab } from '@/components/Domain/crawlResults/CrawlExportsTa
 
 const exp = vi.hoisted(() => ({
   downloadCrawlJson: vi.fn(),
+  downloadCrawlHtml: vi.fn(),
   downloadCrawlPagesCsv: vi.fn(),
   downloadCrawlLinksCsv: vi.fn(),
   downloadCrawlImagesCsv: vi.fn(),
@@ -44,6 +45,7 @@ describe('CrawlExportsTab', () => {
 
   it.each([
     ['exportJson', 'downloadCrawlJson'],
+    ['exportHtml', 'downloadCrawlHtml'],
     ['exportUrlsCsv', 'downloadCrawlPagesCsv'],
     ['exportLinksCsv', 'downloadCrawlLinksCsv'],
     ['exportImagesCsv', 'downloadCrawlImagesCsv'],

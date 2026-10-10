@@ -1,6 +1,6 @@
 use super::*;
 
-pub struct ExtractPageExtraInput<'a> {
+pub struct ExtractPageExtraInput<'a, R: tauri::Runtime = tauri::Wry> {
     pub document: &'a Html,
     pub text: &'a str,
     pub final_base: &'a Url,
@@ -11,6 +11,6 @@ pub struct ExtractPageExtraInput<'a> {
     pub canonical_selector: &'a Selector,
     pub hreflang_selector: &'a Selector,
     pub setup: &'a CrawlSetup,
-    pub state: &'a mut CrawlLoopState,
+    pub state: &'a mut CrawlLoopState<R>,
     pub issues: &'a mut Vec<CrawledPageIssue>,
 }

@@ -6,6 +6,7 @@ import { createPageSpeedSnapshot, readPageSpeedSnapshots, savePageSpeedSnapshot,
 import { writeJsonStorage } from '@/services/storage';
 import { parseCruxReport, parsePageSpeedReport } from '@/services/performanceContracts';
 import { loadSession, storageKey, type PerformanceSession } from './performanceSession';
+import { monitorPageSpeedSnapshots } from '@/services/monitoringAlerts';
 
 export interface PerformanceDependencies {
   runPsi?: typeof runPageSpeedInsights;
@@ -82,6 +83,7 @@ export const usePerformanceWorkspace = (
       pageSpeed: patch.pageSpeed,
       crux: patch.crux,
     });
+    if (history[0]) void monitorPageSpeedSnapshots(activeProjectId, history[0], snapshot);
     setHistory((current) => savePageSpeedSnapshot(activeProjectId, snapshot, current));
   };
 

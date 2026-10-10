@@ -3,6 +3,7 @@ mod inputs;
 pub use inputs::ExtractPageLinksInput;
 
 use scraper::{Html, Selector};
+use tauri::Runtime;
 use url::Url;
 
 use super::super::{
@@ -25,7 +26,7 @@ pub struct PageLinksOutcome {
     pub external_link_count: usize,
 }
 
-pub fn extract_page_links(input: ExtractPageLinksInput<'_>) -> PageLinksOutcome {
+pub fn extract_page_links<R: Runtime>(input: ExtractPageLinksInput<'_, R>) -> PageLinksOutcome {
     let ExtractPageLinksInput {
         document,
         final_base,

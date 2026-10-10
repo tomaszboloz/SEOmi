@@ -1,12 +1,14 @@
 import type { CrawlRunRecord } from '@/types';
 import type { TopicalMapDocument } from '@/services/topicalMap';
 import type { Snapshot, SemanticRunChange, SemanticRunComparisonReport } from './semanticRunComparison/types';
+import type { CrawlComparisonGuard } from './crawlComparisonContract';
 import { MAX_PAGES, indexPages } from './semanticRunComparison/evidence';
 import { comparePageChanges } from './semanticRunComparison/pageChanges';
 import { compareRelationChanges } from './semanticRunComparison/relationChanges';
 import { compareTopicChanges } from './semanticRunComparison/topicChanges';
 export type { SemanticRunChangeCode, SemanticRunChange, SemanticRunComparisonReport } from './semanticRunComparison/types';
 const MAX_CHANGES = 500;
+export interface SemanticRunComparisonOptions { guard?: CrawlComparisonGuard; }
 
 /**
  * Evidence-only comparison between two saved crawl snapshots. It compares
@@ -17,6 +19,7 @@ export const compareSemanticRuns = (
   document: TopicalMapDocument,
   baseline: Pick<CrawlRunRecord, 'id' | 'result'>,
   current: Snapshot,
+  options: SemanticRunComparisonOptions = {},
 ): SemanticRunComparisonReport => {
   const beforePages = baseline.result.pages.slice(0, MAX_PAGES);
   const afterPages = current.pages.slice(0, MAX_PAGES);
@@ -46,5 +49,5 @@ export const compareSemanticRuns = (
   if (beforePages.length > 500 || afterPages.length > 500) truncated = true;
   compareTopicChanges(document, beforeIndex, afterIndex, add);
 
-  return { baselineRunId: baseline.id, currentRunId: current.id, changes, counts, truncated };
+  return { baselineRunId: baseline.id, currentRunId: current.id, changes, counts, truncated, ...(options.guard ? { guard: options.guard } : {}) };
 };

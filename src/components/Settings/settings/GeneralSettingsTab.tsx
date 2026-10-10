@@ -5,6 +5,7 @@ import { useSettingsStore } from '@/stores/settingsStore';
 import { useProjectStore } from '@/stores/projectStore';
 import { isTauriEnvironment } from '@/services/tauri';
 import { RenderWorkerPanel } from '@/components/Settings/RenderWorkerPanel';
+import { MonitoringAlertsPanel } from '@/components/Settings/MonitoringAlertsPanel';
 
 interface GeneralSettingsTabProps {
   auditNotificationsEnabled: boolean;
@@ -59,6 +60,8 @@ export const GeneralSettingsTab: React.FC<GeneralSettingsTabProps> = ({
         </label>
         {notificationStatus && <p role="status" className="mt-2 text-[11px] text-slate-400">{notificationStatus}</p>}
       </div>
+
+      <MonitoringAlertsPanel />
 
       <RenderWorkerPanel />
 

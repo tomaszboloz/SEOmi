@@ -17,7 +17,7 @@ export const formatResourceStatus = (
     return t('crawl.social.requestError', { kind: check.request_error_kind });
   }
   return [
-    check.http_status == null
+    !check.http_status
       ? t('crawl.social.noHttpStatus')
       : t('crawl.ui.httpStatus', { status: check.http_status }),
     check.content_length == null ? null : `${formatNumber(check.content_length)} B`,

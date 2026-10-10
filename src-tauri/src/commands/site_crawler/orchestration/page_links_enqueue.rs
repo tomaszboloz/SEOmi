@@ -4,12 +4,13 @@ use super::super::{
 };
 use super::setup::CrawlSetup;
 use super::state::CrawlLoopState;
+use tauri::Runtime;
 
-pub fn record_internal_link_provenance(
+pub fn record_internal_link_provenance<R: Runtime>(
     target_for_run: &str,
     final_url: &str,
     anchor_text: &str,
-    state: &mut CrawlLoopState,
+    state: &mut CrawlLoopState<R>,
 ) {
     state.discovery_provenance_truncated |= !record_discovery_source(
         &mut state.discovery_sources_by_url,
@@ -22,12 +23,12 @@ pub fn record_internal_link_provenance(
     );
 }
 
-pub fn enqueue_frontier_link(
+pub fn enqueue_frontier_link<R: Runtime>(
     url_str: String,
     depth: usize,
     is_nofollow: bool,
     setup: &CrawlSetup,
-    state: &mut CrawlLoopState,
+    state: &mut CrawlLoopState<R>,
 ) {
     let eligible = (setup.config.follow_nofollow || !is_nofollow)
         && matches_filters(&url_str, &setup.include_patterns, &setup.exclude_patterns)

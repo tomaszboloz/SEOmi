@@ -67,4 +67,29 @@ describe('general settings propagate into the active audit controls', () => {
     expect(settingsMocks.invokeTauriCommandMock).toHaveBeenCalledWith('save_config', expect.objectContaining({ config: expect.objectContaining({ default_user_agent: 'googlebot_mobile' }) }));
     useSettingsStore.setState({ config: originalConfig });
   });
+
+  it('sets configError on save failure and recovers gracefully on subsequent saves', async () => {
+    settingsMocks.invokeTauriCommandMock.mockReset().mockRejectedValueOnce(new Error('disk full'));
+    await useSettingsStore.getState().updateConfig({ theme: 'dark' });
+    expect(useSettingsStore.getState().configError).toBeTruthy();
+
+    settingsMocks.invokeTauriCommandMock.mockReset().mockResolvedValueOnce(undefined);
+    await useSettingsStore.getState().updateConfig({ theme: 'light' });
+    expect(useSettingsStore.getState().configError).toBeNull();
+    useSettingsStore.setState({ config: originalConfig });
+  });
+
+  it('handles empty ai_model in loadConfig when no stored provider exists', async () => {
+    localStorage.removeItem('seomi_ai_provider');
+    settingsMocks.invokeTauriCommandMock.mockReset().mockResolvedValue({
+      ...originalConfig,
+      ai_provider: 'openai',
+      ai_model: null,
+    });
+    settingsMocks.getSecureValueMock.mockResolvedValue('');
+    await useSettingsStore.getState().loadConfig();
+    expect(useAuthStore.getState().provider).toBe('openai');
+    useSettingsStore.setState({ config: originalConfig });
+  });
+
 });

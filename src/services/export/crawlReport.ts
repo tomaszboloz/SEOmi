@@ -12,12 +12,15 @@ const filteredCrawlResult = (run: CrawlRunRecord, template?: CrawlReportTemplate
     start_url: run.result.start_url,
     pages_crawled: run.result.pages_crawled,
     health_score: run.result.health_score,
+    score_version: run.result.score_version,
     critical_count: run.result.critical_count,
     warning_count: run.result.warning_count,
     notice_count: run.result.notice_count,
     duration_ms: run.result.duration_ms,
     cancelled: run.result.cancelled,
     timed_out: run.result.timed_out,
+    storage_pages_truncated: run.result.storage_pages_truncated,
+    storage_pages_total: run.result.storage_pages_total,
     discovery_provenance_truncated: run.result.discovery_provenance_truncated,
     limit_reasons: run.result.limit_reasons || [],
     resource_limit_reached: run.result.resource_limit_reached,
@@ -54,7 +57,7 @@ const filteredCrawlResult = (run: CrawlRunRecord, template?: CrawlReportTemplate
   }
   // Keep crawl-level evidence that is not a selectable table in the report
   // envelope so consumers can identify the exact source snapshot.
-  for (const key of ['robots_txt_status', 'robots_user_agent', 'robots_blocked_count', 'sitemap_status', 'sitemap_urls_discovered', 'sitemap_urls']) {
+  for (const key of ['robots_txt_status', 'robots_txt_evaluation_status', 'robots_txt_warning', 'robots_txt_status_code', 'robots_txt_final_url', 'robots_txt_redirect_chain', 'robots_user_agent', 'robots_blocked_count', 'sitemap_status', 'sitemap_urls_discovered', 'sitemap_urls']) {
     if (key in result) filtered[key] = result[key];
   }
   return filtered;
@@ -69,6 +72,7 @@ export const crawlReportPayload = (run: CrawlRunRecord, template?: CrawlReportTe
     completed_at: run.completedAt,
     scope_start_url: run.startUrl,
     environment: run.environment,
+    storage_compacted: run.storage_compacted,
     configuration: run.config,
   },
   result: filteredCrawlResult(run, template),
@@ -80,6 +84,7 @@ export const downloadCrawlPdf = (run: CrawlRunRecord, template?: CrawlReportTemp
     completed_at: run.completedAt,
     scope_start_url: run.startUrl,
     environment: run.environment,
+    storage_compacted: run.storage_compacted,
     configuration: run.config,
     // The PDF renderer receives the immutable snapshot and applies the
     // section allow-list itself so a report can include issues/links without

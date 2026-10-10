@@ -41,6 +41,25 @@ describe('McpServerConfigCard', () => {
     );
     expect(screen.getByText('mcp.clientConfig')).toBeTruthy();
   });
+
+  it('returns early when export is triggered without absolute server path', () => {
+    render(
+      <McpServerConfigCard
+        mcpClientTab="claude"
+        setMcpClientTab={vi.fn()}
+        serverPath="relative/path.txt"
+        updateServerPath={vi.fn()}
+        discoverTools={vi.fn()}
+        discovering={false}
+        discoveryError=""
+      />
+    );
+    const exportBtn = screen.getByRole('button', { name: 'mcp.exportConfig' });
+    expect((exportBtn as HTMLButtonElement).disabled).toBe(true);
+    expect(screen.getByText('mcp.configMissing')).toBeTruthy();
+    fireEvent.click(exportBtn);
+    expect(screen.queryByRole('alert')).toBeNull();
+  });
 });
 
 describe('McpToolsList', () => {

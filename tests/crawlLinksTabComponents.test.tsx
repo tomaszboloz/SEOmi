@@ -61,6 +61,18 @@ describe('CrawlLinksTab modular architecture', () => {
     const setQuery = vi.fn();
     const setDescending = vi.fn();
 
+    const sampleLink = {
+      sourceUrl: 'https://site.com',
+      link: {
+        url: 'https://site.com/about',
+        target_url: 'https://site.com/about',
+        text: 'About',
+        is_internal: true,
+        target_http_status: 200,
+      } as any,
+      key: 'link-1',
+    };
+
     render(
       <CrawlLinksFilters
         linkQuery="test"
@@ -74,8 +86,8 @@ describe('CrawlLinksTab modular architecture', () => {
         linkDescending={false}
         setLinkDescending={setDescending}
         navigationRunId="run-1"
-        links={[]}
-        allLinks={[]}
+        links={[sampleLink]}
+        allLinks={[sampleLink]}
         t={mockT}
       />,
     );
@@ -87,5 +99,8 @@ describe('CrawlLinksTab modular architecture', () => {
     const descBtn = screen.getByRole('button', { name: 'crawl.ui.ascending' });
     fireEvent.click(descBtn);
     expect(setDescending).toHaveBeenCalled();
+
+    const exportBtn = screen.getByRole('button', { name: 'crawl.ui.exportViewCsv' });
+    fireEvent.click(exportBtn);
   });
 });

@@ -37,7 +37,7 @@ describe('DataForSEO Modules', () => {
       expect(intent('transactional')).toBe('Transactional');
       expect(intent('informational query')).toBe('Informational');
       expect(intent('buy product commercial')).toBe('Commercial');
-      expect(intent('other')).toBe('Navigational');
+      expect(intent('other')).toBe('Unknown');
     });
   });
 

@@ -20,16 +20,17 @@ it('guards session actions without a project or client without invoking native c
   expect(invoke).not.toHaveBeenCalled();
 });
 
-it.each(['resume', 'connect'] as const)('%s preserves an accessible selection, falls back to first property or returns empty evidence', async (kind) => {
+it.each(['resume', 'connect'] as const)('%s preserves a matching selection and clears unmatched project properties', async (kind) => {
   for (const properties of [
     [{ siteUrl: 'sc-domain:other.test', permissionLevel: 'siteOwner' }, { siteUrl: 'sc-domain:example.com', permissionLevel: 'siteFullUser' }],
     [{ siteUrl: 'sc-domain:other.test', permissionLevel: 'siteOwner' }], [],
   ]) {
     const { actions, store, invoke } = gscSliceFixture();
+    useProjectStore.setState({ projects: [{ id: 'gsc-direct', name: 'Site', rootUrl: 'https://example.com', createdAt: '2026-10-09T00:00:00Z', lastOpenedAt: '2026-10-09T00:00:00Z' }] });
     invoke.mockResolvedValue(properties);
     if (kind === 'resume') await actions.resumeGsc();
     else await actions.connectGsc(' client ');
-    const expected = properties.length === 2 ? 'sc-domain:example.com' : properties[0]?.siteUrl || '';
+    const expected = properties.length === 2 ? 'sc-domain:example.com' : '';
     expect(store.getState()).toMatchObject({ isGscConnected: true, gscProperty: expected, gscProperties: properties, isGscLoading: false, gscError: null });
     expect(localStorage.getItem('seomi_gsc_property_gsc-direct')).toBe(expected || null);
     expect(invoke).toHaveBeenCalledWith(kind === 'resume' ? 'list_search_console_properties' : 'connect_search_console', { projectId: 'gsc-direct', clientId: 'client' });

@@ -5,6 +5,7 @@ pub mod crawl_storage;
 pub mod dataforseo;
 pub mod external_link_checker;
 pub mod file_export;
+pub mod free_feeds;
 pub mod http_client;
 pub mod mcp_discovery;
 pub mod pagespeed;

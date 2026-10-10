@@ -7,9 +7,9 @@ import { normalize } from '@/services/embeddings/vector';
 const json = (body: unknown, status = 200) => new Response(JSON.stringify(body), { status });
 
 describe('Ollama URL', () => {
-  it('accepts local and LAN http(s) servers and strips paths', () => {
+  it('accepts local and LAN http(s) server origins', () => {
     expect(ollamaBaseUrl()).toBe('http://127.0.0.1:11434');
-    expect(ollamaBaseUrl('http://192.168.1.20:11434/api/')).toBe('http://192.168.1.20:11434');
+    expect(ollamaBaseUrl('http://192.168.1.20:11434/')).toBe('http://192.168.1.20:11434');
   });
 
   it('rejects other schemes and embedded credentials', () => {
@@ -46,7 +46,7 @@ describe('Ollama embeddings', () => {
 
   it('explains how to start Ollama when the server is unreachable', async () => {
     const provider = createOllamaEmbeddingProvider({ baseUrl: 'http://127.0.0.1:9', fetchImpl: vi.fn().mockRejectedValue(new TypeError('fetch failed')) });
-    await expect(provider.embed(['a'])).rejects.toThrow(/Cannot reach Ollama at http:\/\/127\.0\.0\.1:9 \(fetch failed\)\. Start it with "ollama serve"/);
+    await expect(provider.embed(['a'])).rejects.toThrow(/Cannot reach Ollama at http:\/\/127\.0\.0\.1:9\. Start it with "ollama serve"/);
   });
 
   it('reports HTTP errors with a bounded body excerpt', async () => {

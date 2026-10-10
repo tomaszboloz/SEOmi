@@ -3,6 +3,7 @@ import { useTranslation } from 'react-i18next';
 import { RefreshCw, Download, Loader2 } from 'lucide-react';
 import { type UpdateStatus, isTauriEnvironment } from '@/services/tauri';
 import { relaunch } from '@tauri-apps/plugin-process';
+import { APP_VERSION } from '@/constants/app';
 
 interface UpdatesSettingsTabProps {
   updateStatus: UpdateStatus | null;
@@ -24,7 +25,7 @@ export const UpdatesSettingsTab: React.FC<UpdatesSettingsTabProps> = ({
       <div className="p-4 bg-slate-950/80 rounded-xl border border-slate-800 flex items-center justify-between">
         <div>
           <span className="font-semibold text-white block mb-0.5">{t('legacyUi.settings.installedVersion')}</span>
-          <span className="text-slate-400 font-mono">{t('legacyUi.settings.releaseVersion')}</span>
+          <span className="text-slate-400 font-mono">{t('legacyUi.settings.releaseVersion', { version: APP_VERSION })}</span>
         </div>
         <div className="flex flex-wrap items-center gap-2">
           <button

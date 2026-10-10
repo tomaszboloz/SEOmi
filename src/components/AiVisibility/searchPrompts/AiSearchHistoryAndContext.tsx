@@ -3,6 +3,11 @@ import type { TFunction } from 'i18next';
 import type { AiPromptComparison, CrawlRunRecord } from '@/types';
 import { appLocale } from '@/services/localeFormat';
 
+const completionLabel = (value: string): string => {
+  const date = new Date(value);
+  return Number.isFinite(date.getTime()) ? date.toLocaleString(appLocale()) : '—';
+};
+
 interface AiSearchHistoryAndContextProps {
   comparison: AiPromptComparison | null;
   history: AiPromptComparison[];
@@ -75,7 +80,7 @@ export const AiSearchHistoryAndContext: React.FC<AiSearchHistoryAndContextProps>
               <option value="">{t('aiVisibility.search.noSnapshot')}</option>
               {crawlRuns.map((run) => (
                 <option key={run.id} value={run.id}>
-                  {new Date(run.completedAt).toLocaleString(appLocale())} · {run.startUrl} ·{' '}
+                  {completionLabel(run.completedAt)} · {run.startUrl} ·{' '}
                   {t('crawl.ui.urlsCount', { count: run.result.pages_crawled })}
                 </option>
               ))}
@@ -91,7 +96,7 @@ export const AiSearchHistoryAndContext: React.FC<AiSearchHistoryAndContextProps>
           <p className="mt-2 text-[10px] text-slate-500">
             {t('aiVisibility.search.evidenceRun', {
               id: sourceContextRun.id,
-              date: new Date(sourceContextRun.completedAt).toLocaleString(appLocale()),
+              date: completionLabel(sourceContextRun.completedAt),
               count: sourceContextRun.result.pages.length,
             })}
           </p>

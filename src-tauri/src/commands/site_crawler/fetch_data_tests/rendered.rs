@@ -68,3 +68,46 @@ async fn prefetched_payload_retains_read_time_limit_and_measurements() {
     assert_eq!(result.rendered_lcp_ms, Some(125));
     assert!(!result.body_truncated);
 }
+
+#[tokio::test]
+async fn rendered_non_html_snapshot_does_not_trigger_html_limit() {
+    let mut snapshot = snapshot();
+    snapshot.content_type = "image/png".into();
+    snapshot.html_truncated = true;
+    let expected = snapshot.html.as_bytes().to_vec();
+    let result = read_fetched_page_data(FetchedPageBody::Rendered(snapshot), 0).await;
+    assert!(!result.declared_html && !result.body_truncated);
+    assert_eq!(result.body, expected);
+}
+
+#[tokio::test]
+async fn rendered_document_status_code_preserves_optional_http_status() {
+    let mut snapshot_none = snapshot();
+    snapshot_none.http_status = None;
+    let result_none = read_fetched_page_data(FetchedPageBody::Rendered(snapshot_none), 100).await;
+    assert_eq!(result_none.status, 0);
+
+    let mut snapshot_some = snapshot();
+    snapshot_some.http_status = Some(500);
+    let result_some = read_fetched_page_data(FetchedPageBody::Rendered(snapshot_some), 100).await;
+    assert_eq!(result_some.status, 500);
+}
+
+#[tokio::test]
+async fn rendered_document_preserves_empty_diagnostics_and_null_metrics() {
+    let mut snapshot_clean = snapshot();
+    snapshot_clean.failed_resource_urls = Vec::new();
+    snapshot_clean.console_errors = Vec::new();
+    snapshot_clean.navigation_time_ms = None;
+    snapshot_clean.lcp_ms = None;
+    snapshot_clean.inp_ms = None;
+    snapshot_clean.cls = None;
+
+    let result = read_fetched_page_data(FetchedPageBody::Rendered(snapshot_clean), 100).await;
+    assert_eq!(result.browser_navigation_time_ms, None);
+    assert_eq!(result.rendered_lcp_ms, None);
+    assert_eq!(result.rendered_inp_ms, None);
+    assert_eq!(result.rendered_cls, None);
+    let (resources, console) = result.rendered_diagnostics.unwrap();
+    assert!(resources.is_empty() && console.is_empty());
+}

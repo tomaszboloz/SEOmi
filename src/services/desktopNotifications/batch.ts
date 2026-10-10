@@ -1,4 +1,5 @@
 import { sendProjectNotification } from './delivery';
+import { reserveCompletionNotification } from './dedupe';
 import i18n from '@/i18n';
 
 export interface BatchAuditNotificationSummary {
@@ -7,6 +8,7 @@ export interface BatchAuditNotificationSummary {
   queued: number;
   regressionCount: number;
   stopped: boolean;
+  runId?: string;
 }
 
 /**
@@ -17,7 +19,9 @@ export const notifyBatchCompleted = async (
   projectId: string,
   summary: BatchAuditNotificationSummary,
 ): Promise<void> => {
-  await sendProjectNotification(projectId, () => {
+  const reservation = summary.runId ? reserveCompletionNotification(projectId, summary.runId, 'batch') : null;
+  if (reservation?.duplicate) return;
+  const sent = await sendProjectNotification(projectId, () => {
     const title = summary.stopped
       ? i18n.t('runtimeErrors.desktop.queueStopped')
       : i18n.t('runtimeErrors.desktop.queueCompleted');
@@ -30,4 +34,5 @@ export const notifyBatchCompleted = async (
       body: i18n.t('runtimeErrors.desktop.queueBody', { completed: summary.completed, failed: summary.failed, pending, regression }),
     };
   });
+  reservation?.finish(sent);
 };

@@ -1,15 +1,16 @@
 use super::http::*;
 use super::models::*;
 use super::render::*;
+use tauri::Runtime;
 use tokio::{
     net::{TcpListener, TcpStream},
     sync::oneshot,
     time::{sleep_until, timeout, Instant},
 };
 
-pub(super) async fn run_worker(
+pub(super) async fn run_worker<R: Runtime>(
     listener: TcpListener,
-    shared: WorkerShared,
+    shared: WorkerShared<R>,
     mut shutdown: oneshot::Receiver<()>,
 ) {
     loop {
@@ -30,9 +31,9 @@ pub(super) async fn run_worker(
     }
 }
 
-pub(super) async fn handle_connection(
+pub(super) async fn handle_connection<R: Runtime>(
     mut stream: TcpStream,
-    shared: WorkerShared,
+    shared: WorkerShared<R>,
 ) -> Result<(), String> {
     let request = match read_request(&mut stream).await {
         Ok(request) => request,

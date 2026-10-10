@@ -1,45 +1,36 @@
 use std::time::Duration;
-use tauri::{AppHandle, Emitter};
+use tauri::{AppHandle, Emitter, Runtime};
 
 use super::super::{
     control::{CrawlControl, CrawlProgress},
     models::RejectedCrawlUrl,
-    prefetch::prefetch_http_pages,
     robots::RobotsRule,
-    robots_matching::{robots_allows, robots_deciding_rule},
+    robots_matching::robots_deciding_rule,
     transport::crawl_deadline_reached,
 };
 use super::page_assembler::assemble_page_summary;
 use super::page_error::handle_page_error;
 use super::page_fetch::fetch_page_step;
+use super::page_prefetch::{prefetch_next_window, prefetch_parallelism};
 use super::selectors::CrawlSelectors;
 use super::setup::CrawlSetup;
 use super::state::CrawlLoopState;
 
-pub async fn run_crawl_loop(
-    app: &AppHandle,
+pub async fn run_crawl_loop<R: Runtime>(
+    app: &AppHandle<R>,
     control: &CrawlControl,
     setup: &CrawlSetup,
-    state: &mut CrawlLoopState,
+    state: &mut CrawlLoopState<R>,
     selectors: &CrawlSelectors,
     robots_rules: &[RobotsRule],
     robots_crawl_delay: Option<Duration>,
 ) {
-    let html_parallelism = if setup.config.crawl_mode == "http" && robots_crawl_delay.is_none() {
-        setup
-            .config
-            .max_concurrent_requests
-            .unwrap_or(1)
-            .clamp(1, 16)
-    } else {
-        1
-    };
+    let parallelism = prefetch_parallelism(&setup.config, robots_crawl_delay);
 
-    while let Some((current_url, depth)) = state
-        .prefetched_order
-        .pop_front()
-        .or_else(|| state.queue.pop_front())
-    {
+    loop {
+        if state.prefetched_order.is_empty() && state.queue.is_empty() {
+            break;
+        }
         if crawl_deadline_reached(setup.start_time, setup.max_run_seconds) {
             state.timed_out = true;
             break;
@@ -50,6 +41,13 @@ pub async fn run_crawl_loop(
         if state.pages.len() >= setup.limit {
             break;
         }
+        let Some((current_url, depth)) = state
+            .prefetched_order
+            .pop_front()
+            .or_else(|| state.queue.pop_front())
+        else {
+            break;
+        };
         if setup.resume_completed_urls.contains(&current_url) {
             continue;
         }
@@ -57,16 +55,17 @@ pub async fn run_crawl_loop(
         let Ok(current_parsed) = url::Url::parse(&current_url) else {
             continue;
         };
-        if setup.config.respect_robots && !robots_allows(&current_parsed, robots_rules) {
-            state.robots_blocked_count += 1;
-            let reason = robots_deciding_rule(&current_parsed, robots_rules)
-                .map(|r| format!("Blocked by robots.txt Disallow rule: {}", r.path))
-                .unwrap_or_else(|| "Blocked by robots.txt Disallow rule".into());
-            state.rejected_urls.push(RejectedCrawlUrl {
-                url: current_url,
-                reason,
-            });
-            continue;
+        if setup.config.respect_robots {
+            if let Some(rule) = robots_deciding_rule(&current_parsed, robots_rules) {
+                if !rule.allow {
+                    state.robots_blocked_count += 1;
+                    state.rejected_urls.push(RejectedCrawlUrl {
+                        url: current_url,
+                        reason: format!("Blocked by robots.txt Disallow rule: {}", rule.path),
+                    });
+                    continue;
+                }
+            }
         }
 
         if control.is_cancelled(&setup.run_id) {
@@ -116,28 +115,6 @@ pub async fn run_crawl_loop(
             }
         }
 
-        if html_parallelism > 1
-            && !state.timed_out
-            && !control.is_cancelled(&setup.run_id)
-            && !crawl_deadline_reached(setup.start_time, setup.max_run_seconds)
-        {
-            prefetch_http_pages(
-                &mut state.queue,
-                &mut state.prefetched_order,
-                &mut state.prefetched_responses,
-                html_parallelism,
-                setup.limit,
-                state.pages.len(),
-                &setup.client,
-                &setup.base_host,
-                setup.config.allow_subdomains,
-                setup.config.scope_path.as_deref(),
-                &setup.config.allowed_hosts,
-                setup.max_redirects,
-                &setup.config,
-                robots_rules,
-            )
-            .await;
-        }
+        prefetch_next_window(app, control, setup, state, robots_rules, parallelism).await;
     }
 }

@@ -12,7 +12,7 @@ it('normalizes page identity and falls back to a valid observed final URL', () =
   expect(pageIdentity(page('https://site.test/coffee?q=1', []))).not.toBe(pageIdentity(page('https://site.test/coffee?q=2', [])));
 });
 it('bounds, normalizes and deduplicates only observed semantic terms', () => {
-  expect([...pageTerms(page('https://site.test/', ['  COFFEE  ', 'ＣＯＦＦＥＥ', '', ' ']))]).toEqual([['coffee', 'ＣＯＦＦＥＥ']]);
+  expect([...pageTerms(page('https://site.test/', ['  COFFEE  ', 'ＣＯＦＦＥＥ', '', ' ']))]).toEqual([['und:coffee', 'COFFEE']]);
   expect(pageTerms(page('https://site.test/', Array.from({ length: 45 }, (_, index) => `term${index}`))).size).toBe(40);
   expect(pageTerms({ ...page('https://site.test/', []), semantic_terms: undefined }).size).toBe(0);
 });
@@ -51,6 +51,11 @@ it('uses observed normalized terms for query tokens and keeps unavailable eviden
   expect(queryObservation('an', [page('https://site.test/', ['coffee'])])).toBeNull();
   expect(queryObservation('coffee', [page('https://site.test/', [])])).toBeNull();
   expect(queryObservation('coffee', [{ ...page('https://site.test/', []), semantic_terms: undefined }])).toBeNull();
+});
+
+it('does not use legacy noise or error-page terms as query evidence', () => {
+  expect(queryObservation('coffee', [{ ...page('https://site.test/error', ['coffee']), http_status: 404 }])).toBeNull();
+  expect(queryObservation('coffee', [{ ...page('https://site.test/noise', ['ale', '2026']) }])).toBeNull();
 });
 
 it('keeps nondefault ports distinct while URL parsing collapses default ports', () => {

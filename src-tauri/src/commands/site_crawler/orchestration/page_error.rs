@@ -4,10 +4,11 @@ use super::super::{
 };
 use super::setup::CrawlSetup;
 use super::state::CrawlLoopState;
+use tauri::Runtime;
 
-pub fn handle_page_error(
+pub fn handle_page_error<R: Runtime>(
     setup: &CrawlSetup,
-    state: &mut CrawlLoopState,
+    state: &mut CrawlLoopState<R>,
     current_url: &str,
     depth: usize,
     page_duration: u64,
@@ -50,6 +51,8 @@ pub fn handle_page_error(
         redirect_stop_reason: None,
         depth,
         http_status: 0,
+        http_response_url: None,
+        response_url_mismatch: Some(false),
         response_time_ms: page_duration,
         rendered_lcp_ms: None,
         rendered_inp_ms: None,
@@ -94,6 +97,7 @@ pub fn handle_page_error(
         content_hash: None,
         content_simhash: None,
         semantic_terms: Vec::new(),
+        semantic_language: None,
         semantic_excerpts: Vec::new(),
         semantic_links: Vec::new(),
         semantic_content_source: "none".into(),

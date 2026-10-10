@@ -72,7 +72,7 @@ describe('environment comparison', () => {
     expect(view.result.current.comparisonRunId).toBe('run-s');
     expect(view.result.current.comparisonByPath).toBe(true);
     expect(view.result.current.environmentComparisonError).toBeNull();
-    expect(notifyCrawlCompleted).toHaveBeenCalledWith('p1', { health_score: 90 }, 70);
+    expect(notifyCrawlCompleted).toHaveBeenCalledWith('p1', { health_score: 90 }, { health_score: 70 }, { runId: 'run-p' });
   });
 
   it.each([

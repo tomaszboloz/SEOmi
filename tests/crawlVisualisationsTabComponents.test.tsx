@@ -75,4 +75,13 @@ describe('CrawlVisualisationsTab submodules', () => {
     fireEvent.click(checkbox);
     expect(updateCompareByPath).toHaveBeenCalledWith(true);
   });
+
+  it('renders malformed completion dates as an unknown value', () => {
+    const runs = [
+      { id: 'current', completedAt: '2026-09-01T12:00:00Z', startUrl: 'https://example.com', result: { pages_crawled: 1 } },
+      { id: 'bad', completedAt: 'not-a-date', startUrl: 'https://example.com', result: { pages_crawled: 1 } },
+    ] as CrawlRunRecord[];
+    render(<CrawlCompareRunsSection runs={runs} currentRunId="current" comparisonRunId="" setComparisonRunId={vi.fn()} compareByPath={false} updateCompareByPath={vi.fn()} comparison={null} t={mockT} />);
+    expect(screen.getByRole('option', { name: /—/ })).toBeDefined();
+  });
 });

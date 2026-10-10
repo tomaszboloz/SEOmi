@@ -3,6 +3,10 @@ import { format } from "date-fns";
 import type { useSiteAuditSession } from './useSiteAuditSession';
 
 type Session = ReturnType<typeof useSiteAuditSession>;
+const completionLabel = (value: string): string => {
+  const date = new Date(value);
+  return Number.isFinite(date.getTime()) ? format(date, "yyyy-MM-dd HH:mm") : "—";
+};
 export const CrawlComparisonSelector = ({ session }: { session: Session }) => {
 const { comparisonByPath, comparisonRunId, crawlEnvironmentLabel, crawlRuns, selectedRun, setComparisonRunId, t, updateComparisonByPath } = session;
 
@@ -34,10 +38,7 @@ return (<div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justi
                         .map((run) => (
                           <option key={run.id} value={run.id}>
                             {crawlEnvironmentLabel(run.environment)} ·{" "}
-                            {format(
-                              new Date(run.completedAt),
-                              "yyyy-MM-dd HH:mm",
-                            )}{" "}
+                            {completionLabel(run.completedAt)}{" "}
                             · {t("crawl.ui.urlsCount", { count: run.result.pages_crawled })} · {run.startUrl}
                           </option>
                         ))}

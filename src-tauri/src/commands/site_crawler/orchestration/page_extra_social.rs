@@ -1,4 +1,5 @@
 use scraper::Html;
+use tauri::Runtime;
 use url::Url;
 
 use super::super::{
@@ -21,13 +22,13 @@ pub struct PageExtraSocialOutcome {
     pub frames_truncated: bool,
 }
 
-pub fn extract_page_social_and_frames(
+pub fn extract_page_social_and_frames<R: Runtime>(
     document: &Html,
     final_base: &Url,
     final_url: &str,
     is_html: bool,
     setup: &CrawlSetup,
-    state: &mut CrawlLoopState,
+    state: &mut CrawlLoopState<R>,
 ) -> PageExtraSocialOutcome {
     let (favicons, social_meta_tags, favicon_metadata) = if is_html {
         let (urls, social) = crawl_social_metadata(document, final_base);

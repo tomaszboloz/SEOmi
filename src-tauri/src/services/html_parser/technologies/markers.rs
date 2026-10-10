@@ -37,7 +37,7 @@ pub(in crate::services::html_parser) fn marker_signals(
             signals,
         );
     }
-    if lower_html.contains("data-reactroot") || lower_html.contains("data-react-root") {
+    if has_marker(lower_html, "data-reactroot") || has_marker(lower_html, "data-react-root") {
         push_signal(
             "React",
             "JavaScript framework",
@@ -47,7 +47,7 @@ pub(in crate::services::html_parser) fn marker_signals(
             signals,
         );
     }
-    if lower_html.contains("data-v-app") || lower_html.contains("__vue__") {
+    if has_marker(lower_html, "data-v-app") || has_marker(lower_html, "__vue__") {
         push_signal(
             "Vue.js",
             "JavaScript framework",
@@ -114,4 +114,15 @@ pub(in crate::services::html_parser) fn marker_signals(
             signals,
         );
     }
+}
+
+fn has_marker(html: &str, marker: &str) -> bool {
+    html.match_indices(marker).any(|(start, _)| {
+        let token = |ch: char| ch.is_ascii_alphanumeric() || matches!(ch, '_' | '-');
+        !html[..start].chars().next_back().is_some_and(token)
+            && !html[start + marker.len()..]
+                .chars()
+                .next()
+                .is_some_and(token)
+    })
 }

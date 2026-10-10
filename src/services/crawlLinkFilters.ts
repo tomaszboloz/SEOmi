@@ -1,8 +1,12 @@
 import type { CrawledLink } from '@/types';
 import i18n from '@/i18n';
+import { csv } from './export/csv';
 
 export type CrawlLinkKindFilter = 'all' | 'internal' | 'external';
-export type CrawlLinkStatusFilter = 'all' | 'unchecked' | 'ok' | 'redirect' | 'error' | 'blocked';
+export type CrawlLinkStatusFilter =
+  | 'all' | 'unchecked' | 'ok' | 'redirect' | 'broken' | 'unverifiable'
+  // Kept for saved filters from releases before the verification split.
+  | 'error' | 'blocked';
 export type CrawlLinkSort = 'source' | 'target' | 'anchor' | 'status';
 
 export interface CrawlLinkRecord {
@@ -21,18 +25,23 @@ export interface CrawlLinkFilters {
 
 export const crawlLinkStatus = (link: CrawledLink): CrawlLinkStatusFilter => {
   const error = link.target_request_error_kind;
-  if (error === 'blocked' || error === 'invalid') return 'blocked';
-  if (error || (link.target_http_status !== undefined && link.target_http_status >= 400)) return 'error';
+  if (error === 'dns' || error === 'broken') return 'broken';
+  if (error) return 'unverifiable';
+  if (link.target_http_status === 404 || link.target_http_status === 410) return 'broken';
+  if (link.target_http_status !== undefined && link.target_http_status >= 400) return 'unverifiable';
   if ((link.target_http_status !== undefined && link.target_http_status >= 300) || link.target_redirect_url) return 'redirect';
   if (link.target_http_status !== undefined && link.target_http_status >= 200) return 'ok';
   return 'unchecked';
 };
 
+const matchesStatus = (actual: CrawlLinkStatusFilter, selected: CrawlLinkStatusFilter): boolean =>
+  selected === 'error' ? actual === 'broken' : selected === 'blocked' ? actual === 'unverifiable' : actual === selected;
+
 export const filterAndSortCrawlLinks = (records: CrawlLinkRecord[], filters: CrawlLinkFilters): CrawlLinkRecord[] => {
   const needle = filters.query.trim().toLocaleLowerCase();
   return records
     .filter(({ link }) => filters.kind === 'all' || (filters.kind === 'internal' ? link.is_internal : !link.is_internal))
-    .filter(({ link }) => filters.status === 'all' || crawlLinkStatus(link) === filters.status)
+    .filter(({ link }) => filters.status === 'all' || matchesStatus(crawlLinkStatus(link), filters.status))
     .filter(({ sourceUrl, link }) => !needle || [sourceUrl, link.target_url, link.anchor_text, link.rel, link.source_excerpt, link.target_http_status, link.target_request_error_kind, link.target_redirect_url]
       .some((value) => String(value ?? '').toLocaleLowerCase().includes(needle)))
     .sort((left, right) => {
@@ -47,12 +56,6 @@ export const filterAndSortCrawlLinks = (records: CrawlLinkRecord[], filters: Cra
       const compared = leftValue.localeCompare(rightValue, undefined, { sensitivity: 'base', numeric: true });
       return filters.descending ? -compared : compared;
     });
-};
-
-const csvCell = (value: unknown): string => {
-  const text = String(value ?? '');
-  const safe = /^[\t\r\n ]*[=+\-@]/.test(text) ? `'${text}` : text;
-  return `"${safe.replaceAll('"', '""')}"`;
 };
 
 export const crawlLinksCsv = (records: CrawlLinkRecord[]): string => {
@@ -71,5 +74,5 @@ export const crawlLinksCsv = (records: CrawlLinkRecord[]): string => {
     link.rel ?? '',
     link.source_excerpt ?? '',
   ]));
-  return rows.map((row) => row.map(csvCell).join(',')).join('\r\n');
+  return csv(rows);
 };

@@ -5,7 +5,7 @@ use tokio::{
     net::TcpListener,
 };
 
-async fn reply(status: &str, body: &[u8], known_length: bool) -> reqwest::Response {
+pub(super) async fn reply(status: &str, body: &[u8], known_length: bool) -> reqwest::Response {
     let listener = TcpListener::bind(("127.0.0.1", 0)).await.unwrap();
     let endpoint = format!("http://{}", listener.local_addr().unwrap());
     let length = if known_length {

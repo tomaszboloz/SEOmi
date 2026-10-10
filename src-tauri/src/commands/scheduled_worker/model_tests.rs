@@ -118,3 +118,21 @@ fn manifest_rejects_each_invalid_field_with_its_own_error() {
         );
     }
 }
+
+#[test]
+fn manifest_uses_shared_url_normalization_and_ssrf_protection() {
+    let mut task = manifest();
+    task.url = "example.test/path".into();
+    assert!(validate_manifest("project-1", &task).is_ok());
+
+    for url in [
+        "http://127.0.0.1/private",
+        "http://localhost/private",
+        "http://service.internal/private",
+    ] {
+        task.url = url.into();
+        assert!(validate_manifest("project-1", &task)
+            .unwrap_err()
+            .starts_with("Invalid scheduled URL:"));
+    }
+}

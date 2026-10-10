@@ -5,7 +5,7 @@ use {
     std::fs,
     std::sync::{Arc, Mutex},
     std::time::Duration,
-    tauri::WebviewWindow,
+    tauri::{Runtime, WebviewWindow},
     tokio::sync::oneshot,
     tokio::time::timeout,
 };
@@ -14,8 +14,8 @@ use {
 type WindowsArtifactSender = Arc<Mutex<Option<oneshot::Sender<Result<Vec<u8>, String>>>>>;
 
 #[cfg(target_os = "windows")]
-pub(crate) async fn capture_windows(
-    window: &WebviewWindow,
+pub(crate) async fn capture_windows<R: Runtime>(
+    window: &WebviewWindow<R>,
     kind: RenderedArtifactKind,
 ) -> Result<Vec<u8>, String> {
     use webview2_com::Microsoft::Web::WebView2::Win32::{

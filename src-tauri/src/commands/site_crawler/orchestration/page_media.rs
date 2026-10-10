@@ -1,4 +1,5 @@
 use scraper::{Html, Selector};
+use tauri::Runtime;
 use url::Url;
 
 use super::super::{
@@ -10,13 +11,13 @@ use super::page_media_build::build_crawled_image;
 use super::setup::CrawlSetup;
 use super::state::CrawlLoopState;
 
-pub fn extract_page_images(
+pub fn extract_page_images<R: Runtime>(
     document: &Html,
     final_base: &Url,
     final_url: &str,
     image_selector: &Selector,
     setup: &CrawlSetup,
-    state: &mut CrawlLoopState,
+    state: &mut CrawlLoopState<R>,
     issues: &mut Vec<CrawledPageIssue>,
 ) -> Vec<CrawledImage> {
     let mut images = Vec::new();

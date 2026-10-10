@@ -1,6 +1,7 @@
 export interface SecurityHeaders {
   strict_transport_security?: string;
   content_security_policy?: string;
+  content_security_policy_report_only?: string;
   x_frame_options?: string;
   x_content_type_options?: string;
   referrer_policy?: string;
@@ -9,6 +10,8 @@ export interface SecurityHeaders {
   cross_origin_resource_policy?: string;
   server?: string;
   x_powered_by?: string;
+  /** Every observed response value, including repeated security headers. */
+  repeated_headers?: Record<string, string[]>;
   score: number;
 }
 

@@ -1,5 +1,5 @@
 import { describe, it, expect, vi } from 'vitest';
-import { render, screen } from '@testing-library/react';
+import { fireEvent, render, screen } from '@testing-library/react';
 import { SocialPlatformTabs } from '@/components/Results/social/SocialPlatformTabs';
 import { SocialGoogleSerp } from '@/components/Results/social/SocialGoogleSerp';
 import { SocialFacebookCard } from '@/components/Results/social/SocialFacebookCard';
@@ -31,10 +31,11 @@ describe('Social Component Extractions', () => {
 
   it('SocialGoogleSerp renders SERP preview with title and description', () => {
     const mockAudit = { technical: { favicon: '' } } as any;
+    const setSerpMode = vi.fn();
     render(
       <SocialGoogleSerp
         serpMode="desktop"
-        setSerpMode={vi.fn()}
+        setSerpMode={setSerpMode}
         audit={mockAudit}
         siteName="TestSite"
         displayUrl="https://test.com"
@@ -50,6 +51,10 @@ describe('Social Component Extractions', () => {
     );
     expect(screen.getByText('My Google Title')).toBeDefined();
     expect(screen.getByText('My Google Description')).toBeDefined();
+    fireEvent.click(screen.getByRole('button', { name: /desktop/i }));
+    expect(setSerpMode).toHaveBeenCalledWith('desktop');
+    fireEvent.click(screen.getByRole('button', { name: /mobile/i }));
+    expect(setSerpMode).toHaveBeenCalledWith('mobile');
   });
 
   it('SocialFacebookCard renders Facebook card', () => {
@@ -61,6 +66,9 @@ describe('Social Component Extractions', () => {
       />
     );
     expect(screen.getByText('FB Desc')).toBeDefined();
+    const img = screen.getByRole('img');
+    fireEvent.error(img);
+    expect(img.style.display).toBe('none');
   });
 
   it('SocialTwitterCard renders Twitter card', () => {

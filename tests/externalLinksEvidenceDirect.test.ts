@@ -28,7 +28,7 @@ it('updates only eligible links, preserves other findings and does not mutate so
   expect(result.pages[0].links[1]).toBe(source.pages[0].links[1]);
   expect(result.pages[0].links[2].target_http_status).toBe(200);
   expect(result.pages[0].links[3].target_checked_at).toBeUndefined();
-  expect(result).toMatchObject({ critical_count: 1, warning_count: 1, notice_count: 1, health_score: 80 });
+  expect(result).toMatchObject({ critical_count: 1, warning_count: 1, notice_count: 1, health_score: 70 });
   expect(result.pages[0].issues).toHaveLength(3);
   expect(JSON.stringify(source)).toBe(original);
 });
@@ -45,11 +45,23 @@ it('allows a forced healthy response to clear previous broken-link evidence', ()
   expect(result.pages[0].issues).toEqual([]);
 });
 
-it.each(['dns', 'timeout', 'tls', 'connect', 'network'])('records %s failure as a source-page warning', kind => {
+it.each(['dns', 'broken'])('records %s failure as a source-page warning', kind => {
   const result = applyExternalLinkEvidence(externalRun().result, { ...checkedBatch,
     results: [{ url: 'https://outside.example/path', requestErrorKind: kind, checkedAt: 'now' }] }, false);
   expect(result.warning_count).toBe(1);
   expect(result.pages[0].links[0].target_request_error_kind).toBe(kind);
+});
+
+it.each(['timeout', 'tls', 'connect', 'network', 'blocked'])('keeps %s failures unverifiable without a broken-link warning', kind => {
+  const result = applyExternalLinkEvidence(externalRun().result, { ...checkedBatch,
+    results: [{ url: 'https://outside.example/path', requestErrorKind: kind, checkedAt: 'now' }] }, false);
+  expect(result.warning_count).toBe(0);
+});
+
+it.each([404, 410])('records HTTP %i as a broken-link warning', httpStatus => {
+  const result = applyExternalLinkEvidence(externalRun().result, { ...checkedBatch,
+    results: [{ url: 'https://outside.example/path', httpStatus, checkedAt: 'now' }] }, false);
+  expect(result.warning_count).toBe(1);
 });
 
 it('keeps safety-blocked diagnostics distinct from broken network targets', () => {
@@ -59,10 +71,10 @@ it('keeps safety-blocked diagnostics distinct from broken network targets', () =
   expect(result.pages[0].links[0].target_request_error_kind).toBe('blocked');
 });
 
-it('bounds the health score at twenty for many existing critical findings', () => {
+it('counts repeated occurrences of one critical finding as one affected-page share', () => {
   const source = createCrawlResultFixture({ pages: [createCrawlPageFixture({
     issues: Array.from({ length: 10 }, () => ({ severity: 'Critical', message: 'Existing' })),
   })] });
   expect(applyExternalLinkEvidence(source, { ...checkedBatch, results: [] }, false))
-    .toMatchObject({ critical_count: 10, health_score: 20 });
+    .toMatchObject({ critical_count: 10, health_score: 80 });
 });

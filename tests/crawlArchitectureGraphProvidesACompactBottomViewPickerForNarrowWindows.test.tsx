@@ -6,6 +6,7 @@ import { useProjectStore } from '@/stores/projectStore';
 import { useToolsStore } from '@/stores/toolsStore';
 import i18n from '@/i18n';
 import { pages } from "./fixtures/crawlArchitectureGraphContracts";
+import { createSemanticCrawlRunFixture } from './fixtures/semanticCrawlRun';
 
 describe('CrawlArchitectureGraph', () => {
 beforeEach(async () => {
@@ -98,8 +99,9 @@ it('persists filters and zoom against the active project and saved crawl run', a
 
 it('carries saved crawl snapshots from the visualization into the semantic audit baseline selector', () => {
     useProjectStore.setState({ activeProjectId: 'project-semantic-chain' });
-    const baseline = { id: 'older-run', completedAt: '2026-09-20T10:00:00.000Z', startUrl: pages[0].url, config: {}, result: { pages_crawled: 2, pages } } as never;
-    render(<CrawlArchitectureGraph pages={pages} startUrl={pages[0].url} runId="current-run" currentRunId="current-run" runs={[baseline]} />);
+    const baseline = createSemanticCrawlRunFixture('older-run', '2026-09-20T10:00:00.000Z', 'project-semantic-chain', pages);
+    const current = createSemanticCrawlRunFixture('current-run', '2026-09-21T10:00:00.000Z', 'project-semantic-chain', pages);
+    render(<CrawlArchitectureGraph pages={pages} startUrl={pages[0].url} runId="current-run" currentRunId="current-run" runs={[baseline, current]} />);
 
     fireEvent.click(screen.getByRole('tab', { name: 'Topical plan' }));
     fireEvent.click(screen.getByRole('tab', { name: 'Audyt semantyczny' }));

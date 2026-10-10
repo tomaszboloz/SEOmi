@@ -1,16 +1,27 @@
+use super::super::{
+    models::{CrawledRedirectHop, CrawledRobotsAgent, CrawledRobotsRule},
+    robots::RobotsRule,
+    transport::request_with_safe_redirects_with_context,
+};
+use super::{
+    robots_evaluation::{error_message, evaluate_response, response_status, unknown_evaluation},
+    robots_scope::robots_allowed_hosts,
+    setup::CrawlSetup,
+};
 use std::time::Duration;
 
-use super::super::{
-    crawl_delay::parse_robots_crawl_delay,
-    models::{CrawledRobotsAgent, CrawledRobotsRule},
-    robots::{build_robots_agent_matrix, parse_robots_rules, RobotsRule},
-    sitemap::parse_sitemap_directives,
-};
-use super::setup::CrawlSetup;
+pub(super) const ROBOTS_LOADED: &str = "loaded";
+pub(super) const ROBOTS_UNKNOWN: &str = "unknown";
+pub(super) const ROBOTS_DISABLED: &str = "disabled";
 
 pub struct CrawlRobotsOutcome {
     pub robots_rules: Vec<RobotsRule>,
     pub robots_txt_status: String,
+    pub robots_txt_evaluation_status: String,
+    pub robots_txt_warning: Option<String>,
+    pub robots_txt_status_code: Option<u16>,
+    pub robots_txt_final_url: Option<String>,
+    pub robots_txt_redirect_chain: Vec<CrawledRedirectHop>,
     pub robots_sitemaps: Vec<String>,
     pub robots_crawl_delay: Option<Duration>,
     pub robots_agent_matrix: Vec<CrawledRobotsAgent>,
@@ -19,105 +30,81 @@ pub struct CrawlRobotsOutcome {
 }
 
 pub async fn fetch_and_eval_robots(setup: &CrawlSetup) -> Result<CrawlRobotsOutcome, String> {
-    let (robots_rules, robots_txt_status, robots_sitemaps, robots_crawl_delay, robots_agent_matrix) =
-        if setup.config.respect_robots || setup.config.discover_sitemaps {
-            let robots_url = setup
-                .parsed_base
-                .join("/robots.txt")
-                .map_err(|error| format!("Failed to construct robots.txt URL: {error}"))?;
-            match setup.client.get(robots_url.clone()).send().await {
-                Ok(response) if response.status().is_success() => {
-                    match crate::services::http_client::read_bounded_text(
-                        response,
-                        setup.max_response_bytes,
+    let evaluation = if !(setup.config.respect_robots || setup.config.discover_sitemaps) {
+        super::robots_evaluation::RobotsEvaluation {
+            rules: Vec::new(),
+            status: "robots.txt checking disabled by this crawl configuration".into(),
+            state: ROBOTS_DISABLED.into(),
+            warning: None,
+            status_code: None,
+            final_url: None,
+            redirect_chain: Vec::new(),
+            sitemaps: Vec::new(),
+            crawl_delay: None,
+            agent_matrix: Vec::new(),
+        }
+    } else {
+        let robots_url = setup
+            .parsed_base
+            .join("/robots.txt")
+            .map_err(|error| format!("Failed to construct robots.txt URL: {error}"))?;
+        let fetched = request_with_safe_redirects_with_context(
+            &setup.client,
+            robots_url.as_str(),
+            &setup.base_host,
+            setup.config.allow_subdomains,
+            None,
+            &robots_allowed_hosts(setup),
+            setup
+                .max_redirects
+                .max(super::robots_scope::ROBOTS_MIN_REDIRECTS),
+            &setup.config,
+            setup.retry_context(),
+        )
+        .await;
+        match fetched {
+            Ok(fetched) => {
+                let final_url = Some(fetched.final_url.clone());
+                let redirect_chain = fetched.redirect_chain;
+                if let Some(reason) = fetched.redirect_stopped_reason {
+                    unknown_evaluation(
+                        reason,
+                        response_status(&fetched.response),
+                        final_url,
+                        redirect_chain,
                     )
-                    .await
-                    {
-                        Ok(content) => {
-                            let rules = parse_robots_rules(&content, &setup.ua);
-                            let rule_count = rules.len();
-                            let crawl_delay = parse_robots_crawl_delay(&content, &setup.ua);
-                            let delay_status = crawl_delay
-                                .map(|delay| {
-                                    let seconds = delay.as_secs_f64();
-                                    if setup.config.respect_robots && setup.config.respect_crawl_delay {
-                                        format!("; crawl-delay {seconds:.3}s is enforced")
-                                    } else {
-                                        format!("; crawl-delay {seconds:.3}s is ignored by configuration")
-                                    }
-                                })
-                                .unwrap_or_default();
-                            (
-                                rules,
-                                format!(
-                                    "Loaded {rule_count} applicable robots.txt rules{delay_status}"
-                                ),
-                                parse_sitemap_directives(&content),
-                                crawl_delay.filter(|_| {
-                                    setup.config.respect_robots && setup.config.respect_crawl_delay
-                                }),
-                                build_robots_agent_matrix(&content, &setup.ua),
-                            )
-                        }
-                        Err(error) => (
-                            Vec::new(),
-                            format!("robots.txt could not be read ({error}); URLs allowed"),
-                            Vec::new(),
-                            None,
-                            Vec::new(),
-                        ),
-                    }
+                } else {
+                    evaluate_response(fetched.response, setup, final_url, redirect_chain).await
                 }
-                Ok(response) if response.status().as_u16() == 404 => (
-                    Vec::new(),
-                    "robots.txt not found; URLs allowed".into(),
-                    Vec::new(),
-                    None,
-                    Vec::new(),
-                ),
-                Ok(response) => (
-                    Vec::new(),
-                    format!(
-                        "robots.txt returned HTTP {}; URLs allowed",
-                        response.status()
-                    ),
-                    Vec::new(),
-                    None,
-                    Vec::new(),
-                ),
-                Err(error) => (
-                    Vec::new(),
-                    format!("robots.txt unavailable ({error}); URLs allowed"),
-                    Vec::new(),
-                    None,
-                    Vec::new(),
-                ),
             }
-        } else {
-            (
-                Vec::new(),
-                "robots.txt checking disabled by this crawl configuration".into(),
-                Vec::new(),
+            Err(error) => unknown_evaluation(
+                format!("unavailable: {}", error_message(error)),
+                None,
                 None,
                 Vec::new(),
-            )
-        };
-
-    let robots_applicable_rules = robots_rules
+            ),
+        }
+    };
+    let robots_applicable_rules = evaluation
+        .rules
         .iter()
         .map(|rule| CrawledRobotsRule {
             directive: if rule.allow { "allow" } else { "disallow" }.into(),
             path: rule.path.clone(),
         })
         .collect::<Vec<_>>();
-    let robots_sitemap_directives = robots_sitemaps.clone();
-
+    let robots_sitemap_directives = evaluation.sitemaps.clone();
     Ok(CrawlRobotsOutcome {
-        robots_rules,
-        robots_txt_status,
-        robots_sitemaps,
-        robots_crawl_delay,
-        robots_agent_matrix,
+        robots_rules: evaluation.rules,
+        robots_txt_status: evaluation.status,
+        robots_txt_evaluation_status: evaluation.state,
+        robots_txt_warning: evaluation.warning,
+        robots_txt_status_code: evaluation.status_code,
+        robots_txt_final_url: evaluation.final_url,
+        robots_txt_redirect_chain: evaluation.redirect_chain,
+        robots_sitemaps: evaluation.sitemaps,
+        robots_crawl_delay: evaluation.crawl_delay,
+        robots_agent_matrix: evaluation.agent_matrix,
         robots_applicable_rules,
         robots_sitemap_directives,
     })
