@@ -103,3 +103,5 @@ mod lifecycle_tests;
 mod server_contract_tests;
 #[cfg(test)]
 mod server_edge_tests;
+#[cfg(test)]
+mod server_snapshot_tests;

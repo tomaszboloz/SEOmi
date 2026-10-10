@@ -64,6 +64,14 @@ fn retry_after_parses_seconds_dates_and_invalid_values_with_a_cap() {
         retry_after_delay("Thu, 01 Jan 2026 00:01:00 GMT", now),
         Some(MAX_RETRY_AFTER)
     );
+    assert_eq!(
+        retry_after_delay("Thu, 01 Jan 2026 00:00:10 GMT", now),
+        Some(Duration::from_secs(10))
+    );
+    assert_eq!(
+        retry_after_delay("Wed, 31 Dec 2025 23:59:00 GMT", now),
+        Some(Duration::ZERO)
+    );
     assert_eq!(retry_after_delay("not-a-date", now), None);
     assert!(retryable_status(429));
     assert!(retryable_status(502));

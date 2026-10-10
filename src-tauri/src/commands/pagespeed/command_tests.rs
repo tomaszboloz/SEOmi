@@ -75,6 +75,23 @@ async fn provider_status_errors_are_redacted_for_pagespeed_and_crux() {
 }
 
 #[tokio::test]
+async fn performance_commands_reject_missing_credentials() {
+    let err = "Add a Google PageSpeed Insights / CrUX API key in this project's Settings.";
+    assert_eq!(
+        run_pagespeed_insights("no-proj".into(), "https://example.com/".into(), "mobile".into())
+            .await
+            .unwrap_err(),
+        err
+    );
+    assert_eq!(
+        query_crux_record("no-proj".into(), "https://example.com/".into(), "PHONE".into(), false)
+            .await
+            .unwrap_err(),
+        err
+    );
+}
+
+#[tokio::test]
 async fn public_metric_commands_load_project_key_before_local_validation() {
     let project = "pagespeed-wrapper-coverage";
     let entry =
@@ -91,16 +108,25 @@ async fn public_metric_commands_load_project_key_before_local_validation() {
     .unwrap_err();
     assert!(page_error.contains("local/private IP"));
 
-    let crux_error = query_crux_record(
+    assert_eq!(
+        run_pagespeed_insights(project.into(), "https://example.com/".into(), "tablet".into())
+            .await
+            .unwrap_err(),
+        "PageSpeed strategy must be mobile or desktop."
+    );
+    assert!(query_crux_record(
         project.into(),
-        "https://example.com/".into(),
-        "MOBILE".into(),
-        false,
+        "http://127.0.0.1/private".into(),
+        "PHONE".into(),
+        false
     )
     .await
-    .unwrap_err();
+    .unwrap_err()
+    .contains("local/private IP"));
     assert_eq!(
-        crux_error,
+        query_crux_record(project.into(), "https://example.com/".into(), "MOBILE".into(), false)
+            .await
+            .unwrap_err(),
         "CrUX form factor must be PHONE, DESKTOP, or TABLET."
     );
     entry.delete_credential().unwrap();

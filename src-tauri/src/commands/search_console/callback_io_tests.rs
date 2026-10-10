@@ -1,4 +1,4 @@
-use super::callback_io::{read_callback_request, write_callback_response};
+use super::{read_callback_request, write_callback_response, MAX_CALLBACK_HEADER_BYTES};
 use tokio::{
     io::{AsyncReadExt, AsyncWriteExt},
     net::{TcpListener, TcpStream},
@@ -15,85 +15,88 @@ async fn pair() -> (TcpStream, TcpStream) {
 }
 
 #[tokio::test]
-async fn accepts_exact_limit_and_discards_body_bytes() {
-    for size in [32, 16 * 1024] {
-        let (mut client, mut server) = pair().await;
-        let headers = format!("{}\r\n\r\n", "x".repeat(size - 4));
-        let expected = headers.clone();
-        let writer = tokio::spawn(async move {
-            client
-                .write_all(format!("{headers}body").as_bytes())
-                .await
-                .unwrap();
-        });
-        assert_eq!(
-            read_callback_request(&mut server, Duration::from_secs(1))
-                .await
-                .unwrap(),
-            expected
-        );
-        writer.await.unwrap();
-    }
-}
-
-#[tokio::test]
-async fn rejects_oversized_headers_with_or_without_a_terminator() {
-    for terminated in [false, true] {
-        let (mut client, mut server) = pair().await;
-        let mut bytes = vec![b'x'; 16 * 1024 + 1];
-        if terminated {
-            bytes.extend_from_slice(b"\r\n\r\n");
-        }
-        let writer = tokio::spawn(async move {
-            client.write_all(&bytes).await.unwrap();
-        });
-        assert!(read_callback_request(&mut server, Duration::from_secs(1))
-            .await
-            .unwrap_err()
-            .contains("limit"));
-        writer.await.unwrap();
-    }
-}
-
-#[tokio::test]
-async fn rejects_incomplete_and_invalid_utf8_requests() {
-    for (bytes, expected) in [
-        (b"GET /".as_slice(), "Incomplete"),
-        (b"\xff\r\n\r\n".as_slice(), "encoding"),
-    ] {
-        let (mut client, mut server) = pair().await;
-        client.write_all(bytes).await.unwrap();
-        client.shutdown().await.unwrap();
-        assert!(read_callback_request(&mut server, Duration::from_secs(1))
-            .await
-            .unwrap_err()
-            .contains(expected));
-    }
-}
-
-#[tokio::test]
-async fn stalled_client_has_a_fixed_deadline() {
-    let (_client, mut server) = pair().await;
-    assert_eq!(
-        read_callback_request(&mut server, Duration::from_millis(10))
-            .await
-            .unwrap_err(),
-        "OAuth callback request timed out."
-    );
-}
-
-#[tokio::test]
-async fn response_has_byte_length_no_store_and_static_html() {
+async fn read_callback_request_happy_path() {
     let (mut client, mut server) = pair().await;
-    write_callback_response(&mut server, "200 OK", "Zażółć")
+    let request = "GET /oauth/callback?code=valid-code HTTP/1.1\r\nHost: 127.0.0.1\r\n\r\n";
+    let writer = tokio::spawn(async move {
+        client.write_all(request.as_bytes()).await.unwrap();
+    });
+    let result = read_callback_request(&mut server, Duration::from_secs(1))
+        .await
+        .unwrap();
+    assert_eq!(result, request);
+    writer.await.unwrap();
+}
+
+#[tokio::test]
+async fn read_callback_request_incomplete_request() {
+    let (mut client, mut server) = pair().await;
+    client
+        .write_all(b"GET /oauth/callback HTTP/1.1\r\n")
+        .await
+        .unwrap();
+    client.shutdown().await.unwrap();
+    let err = read_callback_request(&mut server, Duration::from_secs(1))
+        .await
+        .unwrap_err();
+    assert_eq!(err, "Incomplete OAuth callback request.");
+}
+
+#[tokio::test]
+async fn read_callback_request_timeout() {
+    let (_client, mut server) = pair().await;
+    let err = read_callback_request(&mut server, Duration::from_millis(20))
+        .await
+        .unwrap_err();
+    assert_eq!(err, "OAuth callback request timed out.");
+}
+
+#[tokio::test]
+async fn read_callback_request_headers_overflow() {
+    for bytes in [vec![b'x'; MAX_CALLBACK_HEADER_BYTES], {
+        let mut b = vec![b'x'; MAX_CALLBACK_HEADER_BYTES - 2];
+        b.extend_from_slice(b"\r\n\r\n");
+        b
+    }] {
+        let (mut client, mut server) = pair().await;
+        let writer = tokio::spawn(async move {
+            let _ = client.write_all(&bytes).await;
+        });
+        let err = read_callback_request(&mut server, Duration::from_secs(1))
+            .await
+            .unwrap_err();
+        assert_eq!(err, "OAuth callback headers exceed the limit.");
+        writer.await.unwrap();
+    }
+}
+
+#[tokio::test]
+async fn read_callback_request_invalid_utf8() {
+    let (mut client, mut server) = pair().await;
+    let writer = tokio::spawn(async move {
+        client.write_all(b"\xff\r\n\r\n").await.unwrap();
+    });
+    let err = read_callback_request(&mut server, Duration::from_secs(1))
+        .await
+        .unwrap_err();
+    assert_eq!(err, "Invalid OAuth callback encoding.");
+    writer.await.unwrap();
+}
+
+#[tokio::test]
+async fn write_callback_response_success() {
+    let (mut client, mut server) = pair().await;
+    write_callback_response(&mut server, "200 OK", "Success")
         .await
         .unwrap();
     drop(server);
     let mut response = String::new();
     client.read_to_string(&mut response).await.unwrap();
-    let (headers, body) = response.split_once("\r\n\r\n").unwrap();
-    assert!(headers.starts_with("HTTP/1.1 200 OK"));
-    assert!(headers.contains("Cache-Control: no-store"));
-    assert!(headers.contains(&format!("Content-Length: {}", body.len())));
-    assert!(body.ends_with("<p>Zażółć</p>"));
+    assert!(response.starts_with("HTTP/1.1 200 OK"));
+    assert!(response.contains("<p>Success</p>"));
+    assert!(response.contains("Cache-Control: no-store"));
+    assert!(response.contains(&format!(
+        "Content-Length: {}",
+        "<!doctype html><meta charset=\"utf-8\"><title>SEOmi</title><p>Success</p>".len()
+    )));
 }

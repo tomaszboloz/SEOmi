@@ -38,6 +38,9 @@ mod validation_tests;
 #[path = "credentials_error_tests.rs"]
 mod credentials_error_tests;
 #[cfg(test)]
+#[path = "performance_edge_tests.rs"]
+mod performance_edge_tests;
+#[cfg(test)]
 #[path = "pkce_and_disconnect_tests.rs"]
 mod pkce_and_disconnect_tests;
 #[cfg(test)]

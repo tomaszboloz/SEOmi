@@ -98,3 +98,35 @@ async fn absent_or_empty_codes_are_rejected() {
         );
     }
 }
+
+#[tokio::test]
+async fn receiver_times_out_when_no_callback_arrives() {
+    let listener = TcpListener::bind(("127.0.0.1", 0)).await.unwrap();
+    let err = super::callback::receive_oauth_code_with_timeout(
+        listener,
+        "state",
+        Duration::from_millis(10),
+    )
+    .await
+    .unwrap_err();
+    assert!(err.contains("did not finish within 3 minutes"));
+}
+
+#[tokio::test]
+async fn malformed_url_returns_invalid_oauth_url_error() {
+    let listener = TcpListener::bind(("127.0.0.1", 0)).await.unwrap();
+    let address = listener.local_addr().unwrap();
+    let task = tokio::spawn(async move { receive_oauth_code(listener, "state").await });
+    let mut stream = TcpStream::connect(address).await.unwrap();
+    stream
+        .write_all(b"GET :bad HTTP/1.1\r\nHost: localhost\r\n\r\n")
+        .await
+        .unwrap();
+    stream.shutdown().await.unwrap();
+    let err = timeout(Duration::from_secs(1), task)
+        .await
+        .unwrap()
+        .unwrap()
+        .unwrap_err();
+    assert_eq!(err, "Google returned an invalid OAuth URL.");
+}

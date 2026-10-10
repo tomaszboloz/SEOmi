@@ -52,3 +52,7 @@ pub(super) async fn write_callback_response(
         .await
         .map_err(|error| format!("Unable to complete the OAuth callback: {error}"))
 }
+
+#[cfg(test)]
+#[path = "callback_io_tests.rs"]
+mod tests;

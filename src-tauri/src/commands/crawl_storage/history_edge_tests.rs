@@ -107,3 +107,34 @@ fn recover_backup_reports_a_real_rename_permission_error() {
     assert!(error.contains("Unable to recover previous crawl history"));
     fs::remove_dir_all(directory).unwrap();
 }
+
+#[cfg(unix)]
+#[test]
+fn load_crawl_history_surfaces_recover_backup_permission_error() {
+    use std::os::unix::fs::PermissionsExt;
+
+    let directory = directory();
+    let path = directory.join("history.json");
+    let backup = path.with_extension("json.bak");
+    fs::write(&backup, b"backup").unwrap();
+    fs::set_permissions(&directory, fs::Permissions::from_mode(0o555)).unwrap();
+    let result = load_crawl_history_with_recovery(&path);
+    fs::set_permissions(&directory, fs::Permissions::from_mode(0o755)).unwrap();
+
+    let error = result.unwrap_err();
+    assert!(error.contains("Unable to recover previous crawl history"));
+    fs::remove_dir_all(directory).unwrap();
+}
+
+#[test]
+fn load_preserves_primary_error_when_backup_is_a_directory() {
+    let directory = directory();
+    let path = directory.join("history.json");
+    let backup = path.with_extension("json.bak");
+    fs::write(&path, b"not-json").unwrap();
+    fs::create_dir(&backup).unwrap();
+
+    let error = load_crawl_history_with_recovery(&path).unwrap_err();
+    assert!(error.contains("Saved crawl data is invalid"));
+    fs::remove_dir_all(directory).unwrap();
+}

@@ -52,19 +52,19 @@ pub(super) async fn read_request<R: AsyncRead + Unpin>(
     let header_text = std::str::from_utf8(&bytes[..header_end])
         .map_err(|_| "Worker request headers are not UTF-8.".to_string())?;
     let mut lines = header_text.split("\r\n");
-    let request_line = lines
-        .next()
-        .ok_or_else(|| "Worker request line is missing.".to_string())?;
+    let request_line = lines.next().unwrap_or_default();
     let mut request_parts = request_line.split_ascii_whitespace();
-    let method = request_parts.next().unwrap_or_default().to_string();
-    let path = request_parts.next().unwrap_or_default().to_string();
-    let version = request_parts.next();
-    if !matches!(version, Some("HTTP/1.0" | "HTTP/1.1"))
-        || request_parts.next().is_some()
-        || method.is_empty()
+    let (Some(method), Some(path), Some(version), None) = (
+        request_parts.next().map(str::to_string),
+        request_parts.next().map(str::to_string),
+        request_parts.next(),
+        request_parts.next(),
+    ) else {
+        return Err("Worker request line is invalid.".into());
+    };
+    if !matches!(version, "HTTP/1.0" | "HTTP/1.1")
         || method.len() > 16
         || !method.bytes().all(is_http_token_byte)
-        || path.is_empty()
         || path.len() > 2048
         || path.bytes().any(|byte| byte.is_ascii_control())
     {
@@ -115,11 +115,13 @@ pub(super) async fn read_request<R: AsyncRead + Unpin>(
         bytes.extend_from_slice(&chunk[..read]);
     }
     Ok(HttpRequest {
-        method,
-        path,
+        method: method.to_string(),
+        path: path.to_string(),
         headers,
         body: bytes[header_length..header_length + content_length].to_vec(),
     })
 }
 
-pub(super) use super::http_response::{json_error, write_response};
+pub(super) use super::http_response::{
+    format_render_snapshot, health_response, json_error, write_response,
+};

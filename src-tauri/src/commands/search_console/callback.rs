@@ -11,7 +11,15 @@ pub(super) async fn receive_oauth_code(
     listener: TcpListener,
     expected_state: &str,
 ) -> Result<String, String> {
-    timeout(TOKEN_TIMEOUT, async move {
+    receive_oauth_code_with_timeout(listener, expected_state, TOKEN_TIMEOUT).await
+}
+
+pub(super) async fn receive_oauth_code_with_timeout(
+    listener: TcpListener,
+    expected_state: &str,
+    wait_timeout: Duration,
+) -> Result<String, String> {
+    timeout(wait_timeout, async move {
         loop {
             let (mut stream, _) = listener
                 .accept()

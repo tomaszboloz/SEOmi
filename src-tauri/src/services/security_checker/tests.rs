@@ -86,3 +86,20 @@ fn test_invalid_x_frame_options() {
         .iter()
         .any(|i| i.message.contains("non-standard")));
 }
+
+#[test]
+fn test_both_csp_and_report_only() {
+    let mut map = HashMap::new();
+    map.insert(
+        "content-security-policy".to_string(),
+        "default-src 'self'".to_string(),
+    );
+    map.insert(
+        "content-security-policy-report-only".to_string(),
+        "default-src 'self'".to_string(),
+    );
+    let res = evaluate_security_headers(&map);
+    assert!(res.issues.iter().any(|i| i
+        .message
+        .contains("Content-Security-Policy-Report-Only is also configured")));
+}

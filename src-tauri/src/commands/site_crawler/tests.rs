@@ -109,6 +109,8 @@ mod scope_edges;
 mod semantic_terms_1;
 #[path = "tests/semantic_terms_2.rs"]
 mod semantic_terms_2;
+#[path = "tests/semantics_boundaries.rs"]
+mod semantics_boundaries;
 #[path = "tests/semantics_coverage.rs"]
 mod semantics_coverage;
 #[path = "tests/social_1.rs"]

@@ -33,3 +33,34 @@ async fn response_body_reads_honor_the_crawl_deadline() {
     assert!(matches!(error, RetryError::Deadline));
     server.abort();
 }
+
+#[tokio::test]
+async fn read_response_chunk_with_zero_remaining_deadline_and_unmetered() {
+    let (client, url, server) = super::fixture(vec![
+        "HTTP/1.1 200 OK\r\nContent-Length: 5\r\nConnection: close\r\n\r\nhello",
+    ])
+    .await;
+    let context = RetryContext::new(RetryBudget::new(0), Instant::now(), None);
+    let mut retry_available = false;
+    let mut response = send_get_with_retry(&client, &url, &context, &mut retry_available)
+        .await
+        .unwrap()
+        .response;
+
+    let expired = RetryContext::new(
+        RetryBudget::new(0),
+        Instant::now() - Duration::from_secs(5),
+        Some(1),
+    );
+    let err = read_response_chunk(&mut response, &expired)
+        .await
+        .unwrap_err();
+    assert!(matches!(err, RetryError::Deadline));
+
+    let unmetered = RetryContext::new(RetryBudget::new(0), Instant::now(), None);
+    let chunk = read_response_chunk(&mut response, &unmetered)
+        .await
+        .unwrap();
+    assert_eq!(chunk, Some(b"hello".to_vec()));
+    server.await.unwrap();
+}

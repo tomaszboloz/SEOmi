@@ -76,8 +76,6 @@ mod analytics_tests;
 #[path = "search_console/browser_contract_tests.rs"]
 mod browser_contract_tests;
 #[cfg(test)]
-mod callback_io_tests;
-#[cfg(test)]
 mod callback_tests;
 #[cfg(test)]
 mod command_tests;

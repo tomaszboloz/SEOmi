@@ -90,3 +90,27 @@ fn project_directory_validates_project_id_and_resolves_path() {
     let valid = project_directory(&app.handle(), "valid_project-1").unwrap();
     assert!(valid.to_string_lossy().contains("valid_project-1"));
 }
+
+#[test]
+fn bounded_reader_fails_when_reading_a_directory() {
+    let directory = directory();
+    assert!(read_bytes_bounded(&directory, 1024).is_err());
+    std::fs::remove_dir_all(directory).unwrap();
+}
+
+#[test]
+fn replace_file_fails_when_source_is_missing() {
+    let directory = directory();
+    let source = directory.join("missing.tmp");
+    let destination = directory.join("destination.json");
+    assert!(replace_file(&source, &destination).is_err());
+    std::fs::remove_dir_all(directory).unwrap();
+}
+
+#[test]
+fn project_directory_rejects_characters_outside_charset() {
+    let app = crate::utils::test_app::StorageApp::new(tauri::test::mock_builder());
+    for invalid in ["proj space", "proj@id", "proj.id", "proj:id", "prój"] {
+        assert!(project_directory(&app.handle(), invalid).is_err());
+    }
+}

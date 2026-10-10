@@ -76,6 +76,26 @@ fn html_decoder_bom_and_unquoted_meta_charset() {
     let (decoded, charset, _) = decode_crawl_html_body(unquoted_bracket, None);
     assert_eq!(charset.as_deref(), Some("windows-1252"));
     assert!(decoded.contains("café"));
+
+    let unquoted_direct = b"<meta charset=iso-8859-1><p>caf\xe9</p>";
+    let (decoded, charset, _) = decode_crawl_html_body(unquoted_direct, None);
+    assert_eq!(charset.as_deref(), Some("windows-1252"));
+    assert!(decoded.contains("café"));
+
+    let doc_unsupported = b"<html><head><meta charset=unknown-xyz></head><body>body</body></html>";
+    let (_, _, findings) = decode_crawl_html_body(doc_unsupported, None);
+    assert_eq!(findings[0].code, "encoding-unsupported-label");
+    assert!(findings[0]
+        .source_excerpt
+        .as_deref()
+        .unwrap()
+        .contains("charset=unknown-xyz"));
+
+    let invalid_seq = b"<meta charset=utf-8><p>bad \xff byte</p>";
+    let (decoded, _, findings) = decode_crawl_html_body(invalid_seq, None);
+    assert!(decoded.contains('\u{FFFD}'));
+    assert_eq!(findings[0].code, "encoding-invalid-byte-sequence");
+    assert!(findings[0].source_excerpt.is_some());
 }
 
 #[test]

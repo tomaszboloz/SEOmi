@@ -14,6 +14,8 @@ mod tests_capture;
 #[cfg(test)]
 mod tests_capture_advanced;
 #[cfg(test)]
+mod tests_capture_errors;
+#[cfg(test)]
 mod tests_capture_timeouts;
 #[cfg(test)]
 mod tests_commands;
@@ -23,6 +25,8 @@ mod tests_navigation;
 mod tests_navigation_boundaries;
 #[cfg(test)]
 mod tests_open_edges;
+#[cfg(test)]
+mod tests_preview_contracts;
 #[cfg(test)]
 mod tests_preview_edges;
 #[cfg(test)]
