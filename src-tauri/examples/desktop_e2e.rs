@@ -6,9 +6,9 @@ use uuid::Uuid;
 
 // 26 renderer checks plus 11 live-page checks for each of HTTP and browser-rendered modes.
 const REQUIRED_RENDERER_CHECKS: usize = 26 + (11 * 2);
-// The validation scripts contain 39 base checks and 24 additional checks.
+// Validation includes 39 base, 24 additional and 126 malformed IPC checks.
 // Keep this explicit so adding a script without extending the gate fails.
-const REQUIRED_VALIDATION_CHECKS: usize = 39 + 24;
+const REQUIRED_VALIDATION_CHECKS: usize = 39 + 24 + 126;
 
 fn main() {
     let report = PathBuf::from(std::env::args_os().nth(1).expect("report path argument"));
@@ -35,8 +35,9 @@ fn main() {
     let validation_script = include_str!("desktop_e2e_validation.js");
     let additional_validation_script = include_str!("desktop_e2e_additional.js");
     let crawl_validation_script = include_str!("desktop_e2e_crawl.js");
+    let ipc_validation_script = include_str!("desktop_e2e_ipc.js");
     let main_script = format!(
-        "window.__seomiE2eRendererEnabled = {renderer_enabled};\n{additional_validation_script}\n{validation_script}\n{crawl_validation_script}\n{renderer_script}\n{script}"
+        "window.__seomiE2eRendererEnabled = {renderer_enabled};\n{ipc_validation_script}\n{additional_validation_script}\n{validation_script}\n{crawl_validation_script}\n{renderer_script}\n{script}"
     );
     let plugin = tauri::plugin::Builder::<tauri::Wry, ()>::new("desktop-e2e")
         .setup(move |app, _| {

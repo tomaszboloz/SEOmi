@@ -6,6 +6,7 @@ pub mod scripts;
 pub mod session;
 pub mod session_capture;
 pub mod session_open;
+pub(crate) mod session_open_handlers;
 pub(crate) mod session_open_prepare;
 
 #[cfg(test)]
@@ -34,6 +35,8 @@ mod tests_session_lifecycle;
 mod tests_session_open_advanced;
 #[cfg(test)]
 mod tests_session_open_edges;
+#[cfg(test)]
+mod tests_session_open_handlers;
 
 pub use commands::*;
 pub use models::*;

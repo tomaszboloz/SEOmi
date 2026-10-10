@@ -93,6 +93,8 @@ mod schema_edges;
 mod schema_graph;
 #[path = "tests/schema_graph_edges.rs"]
 mod schema_graph_edges;
+#[path = "tests/schema_graph_helper_tests.rs"]
+mod schema_graph_helper_tests;
 #[path = "tests/schema_references_contracts.rs"]
 mod schema_references_contracts;
 #[path = "tests/scope.rs"]

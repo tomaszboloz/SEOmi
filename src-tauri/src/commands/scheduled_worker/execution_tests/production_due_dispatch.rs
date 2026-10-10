@@ -61,3 +61,36 @@ async fn actual_worker_executes_due_site_crawl_task_rejecting_private_url() {
         "schedule-1".into(),
     );
 }
+
+#[tokio::test]
+async fn actual_worker_executes_due_task_reaching_browser_mode_guard_and_rescheduling() {
+    let app = fixture();
+    let mut manifest = task("site-crawl");
+    manifest.next_run_at = "2020-01-01T00:00:00Z".into();
+    manifest.url = "https://example.com/".into();
+    manifest.interval_hours = 12;
+    manifest.crawl_config = Some(
+        serde_json::from_value(serde_json::json!({
+            "crawlMode": "browser-rendered"
+        }))
+        .unwrap(),
+    );
+    store(&app, &manifest);
+
+    let res =
+        super::super::run_scheduled_task(app.handle(), "project-1".into(), "schedule-1".into())
+            .await;
+    assert!(res.is_ok());
+
+    let updated = read_task(&app, "schedule-1");
+    assert_eq!(updated.status, "failed");
+    assert!(updated
+        .last_error
+        .unwrap()
+        .contains("interactive desktop WebView"));
+
+    let _ = crate::commands::scheduler::unregister_audit_wakeup(
+        "project-1".into(),
+        "schedule-1".into(),
+    );
+}

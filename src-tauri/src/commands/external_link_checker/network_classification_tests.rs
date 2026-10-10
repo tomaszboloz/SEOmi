@@ -33,18 +33,20 @@ async fn error_kind_classifies_connection_sources_and_timeouts() {
         assert!(error.is_connect());
         assert_eq!(error_kind(&error), "dns");
     }
-    for marker in [
-        "tls alert fatal",
-        "bad certificate signature",
-        "handshake failure occurred",
-    ] {
-        let error = error_for_cause(marker).await;
-        assert!(error.is_connect());
-        assert_eq!(error_kind(&error), "dns"); // These are resolver failures, not TLS handshakes.
-    }
-    let error = error_for_cause("raw network refusal without keywords").await;
-    assert!(error.is_connect());
-    assert_eq!(error_kind(&error), "dns");
+
+    let closed_listener = tokio::net::TcpListener::bind("127.0.0.1:0").await.unwrap();
+    let closed_port = closed_listener.local_addr().unwrap().port();
+    drop(closed_listener);
+    let closed_err = reqwest::Client::builder()
+        .connect_timeout(std::time::Duration::from_millis(500))
+        .build()
+        .unwrap()
+        .get(format!("http://127.0.0.1:{closed_port}/"))
+        .send()
+        .await
+        .unwrap_err();
+    assert!(closed_err.is_connect());
+    assert_eq!(error_kind(&closed_err), "connect");
 
     let timeout_client = reqwest::Client::builder()
         .timeout(std::time::Duration::from_millis(1))

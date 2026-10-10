@@ -54,3 +54,5 @@ pub(crate) fn native_webview_runtime<R: Runtime>() -> bool {
 
 #[cfg(test)]
 mod tests;
+#[cfg(test)]
+mod tests_timeout;

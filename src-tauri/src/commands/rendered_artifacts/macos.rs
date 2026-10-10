@@ -72,7 +72,15 @@ pub(crate) async fn capture_macos<R: Runtime>(
         })
         .map_err(|error| format!("Unable to schedule native macOS capture: {error}"))?;
 
-    timeout(Duration::from_secs(30), receiver)
+    wait_for_artifact(receiver, Duration::from_secs(30)).await
+}
+
+#[cfg(target_os = "macos")]
+pub(crate) async fn wait_for_artifact(
+    receiver: oneshot::Receiver<Result<Vec<u8>, String>>,
+    limit: Duration,
+) -> Result<Vec<u8>, String> {
+    timeout(limit, receiver)
         .await
         .map_err(|_| "macOS rendered artifact capture timed out after 30 seconds.".to_string())?
         .map_err(|_| "macOS rendered artifact capture channel closed.".to_string())?
