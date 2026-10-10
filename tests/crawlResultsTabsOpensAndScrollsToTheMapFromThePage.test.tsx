@@ -36,11 +36,7 @@ it("opens and scrolls to the map from the page-level navigation request", async 
 .getByRole("tab", { name: /Mapa i klastry/ })
         .getAttribute("aria-selected"),
     ).toBe("true");
-    expect(
-      screen.getByRole("img", {
-        name: "Interaktywna mapa semantycznych klastrów i linków w treści",
-      }),
-    ).not.toBeNull();
+    expect(screen.getByTestId("topical-diagnosis-view")).not.toBeNull();
   });
 
 it("exposes the local crawler and AI readiness panel from the grouped results tabs", () => {

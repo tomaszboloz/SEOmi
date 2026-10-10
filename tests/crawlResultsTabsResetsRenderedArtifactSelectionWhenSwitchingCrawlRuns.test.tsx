@@ -97,11 +97,7 @@ fireEvent.click(screen.getByRole("button", { name: "Mapa i klastry" }));
 .getByRole("tab", { name: /Mapa i klastry/ })
         .getAttribute("aria-selected"),
     ).toBe("true");
-    expect(
-      screen.getByRole("img", {
-        name: "Interaktywna mapa semantycznych klastrów i linków w treści",
-      }),
-    ).not.toBeNull();
+    expect(screen.getByTestId("topical-diagnosis-view")).not.toBeNull();
     expect(
         screen
         .getByRole("tablist", { name: i18n.t("crawl.navigation.resultsTitle") })
