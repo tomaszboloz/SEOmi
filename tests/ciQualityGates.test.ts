@@ -6,7 +6,10 @@ it.each(['\n', '\r\n'])('keeps strict CI gates with %j line endings', (newline) 
     .replace(/\r?\n/g, newline);
   const tests = readWorkflow('test');
   const release = readWorkflow('release');
-  const rust = tests.split('  test-rust:')[1].split('  test-frontend:')[0];
+  const requiredRust = tests.split('  test-rust:')[1].split('  coverage-rust:')[0];
+  expect(requiredRust).toContain('cargo test --manifest-path src-tauri/Cargo.toml --all-targets');
+  expect(requiredRust).not.toMatch(/continue-on-error|\|\|\s*true/);
+  const rust = tests.split('  coverage-rust:')[1].split('  test-frontend:')[0];
   expect(tests).toContain('cargo clippy --manifest-path src-tauri/Cargo.toml --all-targets -- -D warnings');
   expect(tests).toContain('npm run lint');
   expect(rust).toContain('npm ci');

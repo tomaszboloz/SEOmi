@@ -44,6 +44,46 @@ jobs:
         run: cargo fmt --manifest-path src-tauri/Cargo.toml --check
       - name: Strict Clippy
         run: cargo clippy --manifest-path src-tauri/Cargo.toml --all-targets -- -D warnings
+      - name: Run required native regression and tool tests
+        run: cargo test --manifest-path src-tauri/Cargo.toml --all-targets
+
+  coverage-rust:
+    name: Rust production coverage measurement
+    runs-on: macos-15-intel
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dtolnay/rust-toolchain@stable
+        with:
+          components: clippy, llvm-tools-preview
+      - uses: taiki-e/install-action@v2
+        with:
+          tool: cargo-llvm-cov@0.9.1
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: 'npm'
+      - name: Install frontend dependencies for the desktop coverage harness
+        run: npm ci
+      - name: Build frontend assets for the desktop coverage harness
+        run: npm run build
+      - name: Install MCP server dependencies for native coverage
+        run: npm ci --prefix mcp-server --ignore-scripts
+      - name: Build MCP server for native coverage
+        run: npm run build --prefix mcp-server
+      - name: Cache Cargo dependencies
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.cargo/bin/
+            ~/.cargo/registry/index/
+            ~/.cargo/registry/cache/
+            ~/.cargo/git/db/
+            src-tauri/target/
+          key: ${{ runner.os }}-${{ runner.arch }}-cargo-${{ hashFiles('**/Cargo.lock') }}
+      - name: Check Rust formatting
+        run: cargo fmt --manifest-path src-tauri/Cargo.toml --check
+      - name: Strict Clippy
+        run: cargo clippy --manifest-path src-tauri/Cargo.toml --all-targets -- -D warnings
       - name: Inventory source boundaries for native coverage
         run: cargo run --quiet --manifest-path src-tauri/Cargo.toml --example coverage_sources > native-coverage-sources.json
       - name: Run Cargo Test with coverage
@@ -83,7 +123,7 @@ jobs:
 
   native-coverage-threshold:
     name: Rust production coverage (98% follow-up)
-    needs: test-rust
+    needs: coverage-rust
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
