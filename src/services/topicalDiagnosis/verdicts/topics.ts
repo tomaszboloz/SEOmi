@@ -20,7 +20,9 @@ export const topicVerdicts = (context: VerdictContext): DiagnosisVerdict[] => {
   topics.forEach((topic) => {
     const members = topic.documentIds.map((id) => byId.get(id)!);
     const withoutHub = members.filter((member) => (areaByDocument.get(member.id) ?? NO_HUB_AREA_ID) === NO_HUB_AREA_ID).length;
-    if (topic.areaIds.length >= 2 || withoutHub > 0) {
+    // A member that links to every other member already acts as the topic's pillar page.
+    const hasPillar = members.some((candidate) => members.every((other) => other === candidate || links.linksTo(candidate.id, other.id)));
+    if ((topic.areaIds.length >= 2 || withoutHub > 0) && !hasPillar) {
       verdicts.push(verdict('topic-no-hub', 'weak', 'topic', topic.id, members, [
         { key: 'areas', params: { count: topic.areaIds.filter((area) => area !== NO_HUB_AREA_ID).length } },
         { key: 'withoutHub', params: { count: withoutHub } },

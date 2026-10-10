@@ -1,7 +1,7 @@
-import { normalizeSemanticText, semanticPageTermEntries } from '@/services/semanticText';
+import { normalizeSemanticText, semanticPageLanguage, semanticPageTermEntries } from '@/services/semanticText';
 import type { DiagnosisDocument } from './types';
 import { topicalTerms, type TermStatistics } from './similarity';
-import { LABEL_MAX_TOKENS, LABEL_MIN_COVERAGE_SHARE } from './thresholds';
+import { LABEL_MAX_TOKENS, LABEL_MIN_COVERAGE_SHARE, MIN_DOCUMENTS_FOR_CEILING, SITE_WIDE_TERM_SHARE } from './thresholds';
 
 export interface TopicLabel {
   label: string;
@@ -51,10 +51,19 @@ export const topicLabel = (members: DiagnosisDocument[], allDocuments: Diagnosis
   const titleCoverage = coverageOf(members, (document) => document.titleTerms);
   const titleOrder = [...members[0]?.titleTerms ?? []];
   const titleScore = (key: string) => (titleCoverage.get(key)! / members.length) * Math.log(1 + total / (titleFrequency.get(key) ?? 1));
-  const titleKeys = [...titleCoverage.entries()].filter(([, count]) => count >= minimum).map(([key]) => key)
+  // A token in most titles ("linkedin" on a LinkedIn blog) names the site; it labels a topic only when nothing else does.
+  const siteWide = (key: string) => allDocuments.length >= MIN_DOCUMENTS_FOR_CEILING && (titleFrequency.get(key) ?? 0) / total > SITE_WIDE_TERM_SHARE;
+  const covered = [...titleCoverage.entries()].filter(([, count]) => count >= minimum).map(([key]) => key)
     .sort((a, b) => titleScore(b) - titleScore(a) || titleOrder.indexOf(a) - titleOrder.indexOf(b) || a.localeCompare(b));
+  // Prefer the language of the members' primary pages, so a bilingual topic gets a single-language label.
+  const primaryLanguage = `${semanticPageLanguage(members[0]?.primaryPage ?? {}) ?? 'und'}:`;
+  const pick = (keys: string[]) => {
+    const own = keys.filter((key) => key.startsWith(primaryLanguage));
+    return own.length >= 2 ? own : [...own, ...keys.filter((key) => !key.startsWith(primaryLanguage))];
+  };
+  const specific = covered.filter((key) => !siteWide(key));
   const displayForm = (key: string) => members.map((document) => document.titleForms.get(key)).find(Boolean) ?? key;
-  const titleLabel = dedupeForms(titleKeys.map(displayForm)).slice(0, LABEL_MAX_TOKENS);
+  const titleLabel = dedupeForms(pick(specific.length ? specific : covered).map(displayForm)).slice(0, LABEL_MAX_TOKENS);
   if (titleLabel.length) return { label: titleLabel.join(' '), source: 'title' };
 
   const contentCoverage = coverageOf(members, (document) => topicalTerms(document, stats));

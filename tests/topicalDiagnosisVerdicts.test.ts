@@ -88,6 +88,15 @@ describe('verdicts', () => {
     expect(codes(result, 'document-isolated')).toHaveLength(0);
   });
 
+  it('does not report a topic without a hub when one member links to all the others', () => {
+    const pages = site();
+    pages[0].semantic_links = posts.slice(0, 5).map(link);
+    pages[6].semantic_terms = ['wordpress', 'kraków', 'bilety'];
+    pages[5].semantic_links = [link(posts[5])];
+    const result = buildTopicalDiagnosis(pages, 'https://ex.test/blog/');
+    expect(codes(result, 'topic-no-hub')).toHaveLength(0);
+  });
+
   it('marks verdicts of documents with partial evidence as limited', () => {
     const pages = site();
     pages[2].body_truncated = true;

@@ -6,7 +6,10 @@ import type { TermStatistics } from '../similarity';
 export interface VerdictContext {
   documents: DiagnosisDocument[];
   byId: Map<string, DiagnosisDocument>;
+  /** Main-content links. */
   links: DocumentLinkIndex;
+  /** Every captured link, navigation and breadcrumbs included. */
+  allLinks: DocumentLinkIndex;
   areas: DiagnosisArea[];
   areaByDocument: Map<string, string>;
   topics: DiagnosisTopic[];

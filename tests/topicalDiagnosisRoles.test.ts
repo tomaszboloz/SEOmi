@@ -23,7 +23,7 @@ const site = () => {
 const prepare = (pages: ReturnType<typeof page>[]) => {
   const { documents } = buildDiagnosisDocuments(pages, 'https://ex.test/');
   const links = indexDocumentLinks(documents);
-  const roles = assignRoles(documents, links);
+  const roles = assignRoles(documents);
   const doc = (url: string) => roles.find((document) => document.primaryPage.url === url)!;
   return { roles, links, doc };
 };

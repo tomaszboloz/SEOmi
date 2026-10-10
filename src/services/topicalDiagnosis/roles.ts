@@ -1,5 +1,7 @@
+import type { CrawledPageSummary } from '@/types';
+import { normalizeGraphUrl } from '@/services/semanticGraph/urls';
 import type { DiagnosisDocument } from './types';
-import type { DocumentLinkIndex } from './links';
+import { PAGINATION_PATH } from './documents';
 import { HUB_MAX_WORDS_PER_LINK, HUB_MIN_LINKED_DOCUMENTS, UTILITY_PATH_PATTERN } from './thresholds';
 
 const pathname = (url: string): string => {
@@ -15,14 +17,21 @@ const pathname = (url: string): string => {
  * many documents of its own section with little text per link. Utility pages
  * (contact, legal, press) are neither topics nor hubs.
  */
-export const assignRoles = (documents: DiagnosisDocument[], links: DocumentLinkIndex): DiagnosisDocument[] => {
-  const sectionById = new Map(documents.map((document) => [document.id, document.section]));
+export const assignRoles = (documents: DiagnosisDocument[]): DiagnosisDocument[] => {
+  const documentByUrl = new Map<string, DiagnosisDocument>();
+  documents.forEach((document) => document.urls.forEach((url) => documentByUrl.set(url, document)));
+  // Each language version is judged on its own: a bilingual document doubles the words, not the targets.
+  const isListingPage = (page: CrawledPageSummary, document: DiagnosisDocument): boolean => {
+    const targets = new Set<string>();
+    (page.semantic_links ?? []).filter((link) => link.is_internal).forEach((link) => {
+      const target = documentByUrl.get(normalizeGraphUrl(link.target_url, page.final_url || page.url));
+      if (target && target !== document && target.section === document.section) targets.add(target.id);
+    });
+    return targets.size >= HUB_MIN_LINKED_DOCUMENTS && (page.word_count ?? 0) / targets.size < HUB_MAX_WORDS_PER_LINK;
+  };
   return documents.map((document) => {
-    const paginated = document.pages.some((page) => Boolean(page.pagination_next || page.pagination_prev));
-    const sameSectionTargets = [...(links.outgoing.get(document.id) ?? [])]
-      .filter((target) => sectionById.get(target) === document.section).length;
-    const words = document.pages.reduce((sum, page) => sum + (page.word_count ?? 0), 0);
-    const listing = sameSectionTargets >= HUB_MIN_LINKED_DOCUMENTS && words / sameSectionTargets < HUB_MAX_WORDS_PER_LINK;
+    const paginated = document.pages.some((page) => Boolean(page.pagination_next || page.pagination_prev) || PAGINATION_PATH.test(pathname(page.url)));
+    const listing = document.pages.some((page) => isListingPage(page, document));
     const role = paginated || listing ? 'hub' : UTILITY_PATH_PATTERN.test(pathname(document.primaryPage.url)) ? 'utility' : 'content';
     return { ...document, role };
   });

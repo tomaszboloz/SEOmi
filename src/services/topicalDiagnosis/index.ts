@@ -21,14 +21,15 @@ export const buildTopicalDiagnosis = (
   pages: CrawledPageSummary[], startUrl: string, options: TopicalDiagnosisOptions = {},
 ): TopicalDiagnosisReport => {
   const { documents: rawDocuments, skippedPages, mergedPairs } = buildDiagnosisDocuments(pages, startUrl);
-  const documents = assignRoles(rawDocuments, indexDocumentLinks(rawDocuments));
+  const documents = assignRoles(rawDocuments);
   const links = indexDocumentLinks(documents);
+  const allLinks = indexDocumentLinks(documents, 'all');
   const { areas, areaByDocument } = buildAreas(documents, links);
   const stats = buildTermStatistics(documents, brandKeysFor(startUrl, documents));
   const { topics, topicByDocument, pairs, singletons, truncated } = buildTopics(documents, areaByDocument, stats, options.similarity);
   const languages = [...new Set(documents.flatMap((document) => document.languages))].sort();
   const verdicts = buildVerdicts({
-    documents, byId: new Map(documents.map((document) => [document.id, document])), links, areas, areaByDocument,
+    documents, byId: new Map(documents.map((document) => [document.id, document])), links, allLinks, areas, areaByDocument,
     topics, topicByDocument, pairs, stats, startUrl, languages,
   });
   return {
