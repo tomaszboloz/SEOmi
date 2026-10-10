@@ -2,6 +2,7 @@ import { useTranslation } from 'react-i18next';
 import { SemanticTopicalWorkspace } from '@/components/Charts/SemanticTopicalWorkspace';
 import { CrawlDirectoryTree } from '@/components/Charts/CrawlDirectoryTree';
 import { CrawlArchitectureGraphView } from './CrawlArchitectureGraphView';
+import { TopicalDiagnosisView } from './topicalDiagnosis/TopicalDiagnosisView';
 
 export const CrawlArchitectureMainContent = ({
   pages, crawlMode, sitemapUrls, runs, currentRunId, state
@@ -27,6 +28,15 @@ export const CrawlArchitectureMainContent = ({
     const form = count === 1 ? 'one' : mod10 >= 2 && mod10 <= 4 && !(mod100 >= 12 && mod100 <= 14) ? 'few' : 'many';
     return t(`mapUi.plural.${key}.${form}`, { count });
   };
+
+  const selectPageByUrl = (url: string) => {
+    const node = graph.nodes.find((candidate: any) => candidate.page.url === url || candidate.page.final_url === url);
+    if (!node) return;
+    setSelectedId(node.id);
+    state.setActiveView('graph');
+  };
+
+  if (activeView === 'diagnosis') return <TopicalDiagnosisView report={state.diagnosis} onShowInGraph={state.setDiagnosisFilter} onOpenPage={selectPageByUrl} />;
 
   if (activeView === 'plan') return <SemanticTopicalWorkspace projectId={activeProjectId} pages={pages} graph={contentGraph} runId={effectiveRunId} sitemapUrls={sitemapUrls} runs={runs} currentRunId={currentRunId ?? effectiveRunId} />;
   

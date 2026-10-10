@@ -50,7 +50,7 @@ describe('CrawlArchitectureHeader', () => {
     expect(setActiveView).toHaveBeenLastCalledWith('directory');
     expect(document.activeElement).toBe(tab('directory'));
     fireEvent.keyDown(tab('graph'), { key: 'ArrowLeft' });
-    expect(setActiveView).toHaveBeenLastCalledWith('plan');
+    expect(setActiveView).toHaveBeenLastCalledWith('diagnosis');
   });
 
   it('jumps to first and last with Home and End', () => {
@@ -58,7 +58,7 @@ describe('CrawlArchitectureHeader', () => {
     fireEvent.keyDown(tab('directory'), { key: 'End' });
     expect(setActiveView).toHaveBeenLastCalledWith('plan');
     fireEvent.keyDown(tab('directory'), { key: 'Home' });
-    expect(setActiveView).toHaveBeenLastCalledWith('graph');
+    expect(setActiveView).toHaveBeenLastCalledWith('diagnosis');
   });
 
   it('ignores other keys and events from select elements', () => {

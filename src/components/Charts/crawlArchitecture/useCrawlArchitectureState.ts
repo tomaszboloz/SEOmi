@@ -1,10 +1,12 @@
 import { useEffect, useMemo, useState } from 'react';
 import { buildSemanticMap } from '@/services/semanticMap';
+import { buildTopicalDiagnosis } from '@/services/topicalDiagnosis';
+import { normalizeGraphUrl } from '@/services/semanticGraph/urls';
 import { useProjectStore } from '@/stores/projectStore';
 import { useToolsStore } from '@/stores/toolsStore';
 import { writeJsonStorage } from '@/services/storage';
 import { normalizeSemanticText, semanticPageTermEntries } from '@/services/semanticText';
-import type { CrawlArchitectureGraphProps, MapView, SemanticMapPreferences } from './CrawlArchitectureTypes';
+import type { CrawlArchitectureGraphProps, DiagnosisFilter, MapView, SemanticMapPreferences } from './CrawlArchitectureTypes';
 import { readPreferences } from './CrawlArchitectureHelpers';
 
 export const useCrawlArchitectureState = (props: CrawlArchitectureGraphProps) => {
@@ -19,6 +21,17 @@ export const useCrawlArchitectureState = (props: CrawlArchitectureGraphProps) =>
   
   const graph = useMemo(() => buildSemanticMap(pages, startUrl, { includeAllInternalLinks: preferences.linkMode === 'all' }), [pages, preferences.linkMode, startUrl]);
   const contentGraph = useMemo(() => buildSemanticMap(pages, startUrl), [pages, startUrl]);
+  const diagnosis = useMemo(() => buildTopicalDiagnosis(pages, startUrl), [pages, startUrl]);
+  // URLs of the area or topic the graph is restricted to; null means no restriction.
+  const diagnosisFilterUrls = useMemo(() => {
+    const filter = preferences.diagnosisFilter;
+    if (!filter) return null;
+    const scope = filter.kind === 'area' ? diagnosis.areas.find((area) => area.id === filter.id) : diagnosis.topics.find((topic) => topic.id === filter.id);
+    if (!scope) return null;
+    const ids = new Set(scope.documentIds);
+    if (filter.kind === 'area' && 'hubId' in scope && scope.hubId) ids.add(scope.hubId);
+    return new Set(diagnosis.documents.filter((document) => ids.has(document.id)).flatMap((document) => [...document.urls]));
+  }, [diagnosis, preferences.diagnosisFilter]);
   
   const nodeById = useMemo(() => new Map(graph.nodes.map((node) => [node.id, node])), [graph.nodes]);
   const selectedId = graph.nodes.find((node) => node.page.url === preferences.selectedUrl)?.id ?? null;
@@ -42,13 +55,14 @@ export const useCrawlArchitectureState = (props: CrawlArchitectureGraphProps) =>
   const visibleNodes = useMemo(() => {
     const normalizedQuery = normalizeSemanticText(preferences.query);
     return graph.nodes.filter((node) => {
+      if (diagnosisFilterUrls && !diagnosisFilterUrls.has(normalizeGraphUrl(node.page.url)) && !diagnosisFilterUrls.has(normalizeGraphUrl(node.page.final_url))) return false;
       if (preferences.clusterFilter !== 'all' && node.clusterId !== preferences.clusterFilter) return false;
       if (preferences.orphansOnly && !node.orphan) return false;
       if (!normalizedQuery) return true;
       return normalizeSemanticText([node.page.url, node.page.title ?? '', node.clusterLabel, ...semanticPageTermEntries(node.page).map(({ surface }) => surface)].join(' '))
         .includes(normalizedQuery);
     });
-  }, [preferences.clusterFilter, graph.nodes, preferences.orphansOnly, preferences.query]);
+  }, [diagnosisFilterUrls, preferences.clusterFilter, graph.nodes, preferences.orphansOnly, preferences.query]);
 
   const visibleIds = useMemo(() => new Set(visibleNodes.map((node) => node.id)), [visibleNodes]);
   const visibleEdges = useMemo(() => graph.edges.filter((edge) => visibleIds.has(edge.source) && visibleIds.has(edge.target)), [graph.edges, visibleIds]);
@@ -62,9 +76,15 @@ export const useCrawlArchitectureState = (props: CrawlArchitectureGraphProps) =>
     setActiveViewState(view);
     setPreferences((previous) => ({ ...previous, activeView: view }));
   };
+  /** Restricts the graph to one area or topic and opens it; `null` lifts the restriction. */
+  const setDiagnosisFilter = (filter: DiagnosisFilter | null) => {
+    if (filter) setActiveViewState('graph');
+    setPreferences((previous) => ({ ...previous, diagnosisFilter: filter, activeView: filter ? 'graph' : previous.activeView }));
+  };
 
   return {
     activeProjectId, effectiveRunId, preferences, setPreferences, activeView, setActiveView,
+    diagnosis, diagnosisFilterUrls, setDiagnosisFilter,
     graph, contentGraph, nodeById, selectedId, setSelectedId,
     visibleNodes, visibleEdges, visibleTopicEdges, selectedNode, selectedOutboundEdges, selectedTopicEdges
   };

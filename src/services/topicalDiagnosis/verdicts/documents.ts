@@ -1,5 +1,4 @@
 import { normalizeGraphUrl } from '@/services/semanticGraph/urls';
-import { hammingDistance } from '@/services/topicalAudit/evidence';
 import type { DiagnosisDocument, DiagnosisVerdict } from '../types';
 import { topicalTerms, weightedJaccard } from '../similarity';
 import { NEAR_DUPLICATE_MAX_HAMMING } from '../thresholds';
@@ -16,6 +15,18 @@ const nearestDocument = (document: DiagnosisDocument, others: DiagnosisDocument[
     if (similarity > 0 && (best === null || similarity > best.similarity)) best = { document: other, similarity };
   }
   return best;
+};
+
+/** Bits that differ between two 64-bit SimHash hex strings; null when either is not a hash. */
+const hammingDistance = (left: string, right: string): number | null => {
+  if (!/^[a-f\d]{16}$/i.test(left) || !/^[a-f\d]{16}$/i.test(right)) return null;
+  let bits = BigInt(`0x${left}`) ^ BigInt(`0x${right}`);
+  let count = 0;
+  while (bits) {
+    count += Number(bits & 1n);
+    bits >>= 1n;
+  }
+  return count;
 };
 
 const sameLanguages = (left: DiagnosisDocument, right: DiagnosisDocument): boolean =>

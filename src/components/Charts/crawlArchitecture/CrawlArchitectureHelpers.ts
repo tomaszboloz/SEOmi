@@ -1,8 +1,10 @@
 import { z } from 'zod';
 import { readJsonRecord, parseRecordEntries } from '@/services/storageContracts';
-import type { SemanticMapPreferences } from './CrawlArchitectureTypes';
+import { MAP_VIEWS, type MapView, type SemanticMapPreferences } from './CrawlArchitectureTypes';
 
-export const emptyPreferences = (): SemanticMapPreferences => ({ query: '', clusterFilter: 'all', orphansOnly: false, linkMode: 'content', selectedUrl: null, activeView: 'graph', positions: {}, transform: { x: 0, y: 0, k: 1 } });
+export const emptyPreferences = (): SemanticMapPreferences => ({ query: '', clusterFilter: 'all', orphansOnly: false, linkMode: 'content', selectedUrl: null, activeView: 'diagnosis', diagnosisFilter: null, positions: {}, transform: { x: 0, y: 0, k: 1 } });
+
+const diagnosisFilterSchema = z.object({ kind: z.enum(['area', 'topic']), id: z.string().min(1).max(120) }).nullable().catch(null);
 
 export const readPreferences = (key: string | null): SemanticMapPreferences => {
   if (!key) return emptyPreferences();
@@ -18,7 +20,8 @@ export const readPreferences = (key: string | null): SemanticMapPreferences => {
       orphansOnly: parsed.orphansOnly === true,
       linkMode: parsed.linkMode === 'all' ? 'all' : 'content',
       selectedUrl: typeof parsed.selectedUrl === 'string' ? parsed.selectedUrl : null,
-      activeView: parsed.activeView === 'directory' || parsed.activeView === 'plan' ? parsed.activeView : 'graph',
+      activeView: MAP_VIEWS.includes(parsed.activeView as MapView) ? parsed.activeView as MapView : 'diagnosis',
+      diagnosisFilter: diagnosisFilterSchema.parse(parsed.diagnosisFilter ?? null),
       positions,
       transform: z.object({ x: z.number().finite(), y: z.number().finite(), k: z.number().finite().min(0.2).max(4) }).catch({ x: 0, y: 0, k: 1 }).parse(parsed.transform),
     };
