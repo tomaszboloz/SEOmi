@@ -27,7 +27,7 @@ use links::parse_links;
 use metadata::audit_meta_tags;
 use performance_audit::audit_performance_and_indexability;
 use scoring::calculate_health_score;
-use transport_audit::audit_transport;
+use transport_audit::audit_transport_with_repeated_headers;
 use transport_security::enrich_header_technologies;
 
 #[cfg(test)]
@@ -69,8 +69,9 @@ pub async fn analyze_page(fetch_result: FetchResult) -> Result<PageAuditData> {
     all_issues.append(&mut link_issues);
 
     // 6. Audit Transport & Security Headers
-    let transport_output = audit_transport(
+    let transport_output = audit_transport_with_repeated_headers(
         &fetch_result.headers,
+        &fetch_result.repeated_headers,
         &fetch_result.set_cookie_headers,
         &fetch_result.body,
         &parsed_url,

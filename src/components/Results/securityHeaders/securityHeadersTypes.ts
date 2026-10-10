@@ -13,7 +13,8 @@ export interface HeaderSpec {
 export const buildHeaderSpecs = (
   headers: PageAuditData['security_headers'],
   t: TFunction,
-): HeaderSpec[] => [
+): HeaderSpec[] => {
+  const specs: HeaderSpec[] = [
   {
     key: 'strict-transport-security',
     title: t('security.hstsTitle'),
@@ -78,4 +79,16 @@ export const buildHeaderSpecs = (
     expected: 'same-origin',
     remediation: t('legacyUi.security.corpRemediation'),
   },
-];
+  ];
+  if (headers.content_security_policy_report_only) {
+    specs.splice(2, 0, {
+      key: 'content-security-policy-report-only',
+      title: 'Content-Security-Policy-Report-Only',
+      value: headers.content_security_policy_report_only,
+      importance: 'High',
+      expected: 'Policy is report-only and is not enforced',
+      remediation: t('legacyUi.security.cspRemediation'),
+    });
+  }
+  return specs;
+};

@@ -136,3 +136,7 @@ mod session_disconnect_coverage_tests;
 #[cfg(test)]
 #[path = "search_console/command_handler_tests.rs"]
 mod command_handler_tests;
+
+#[cfg(test)]
+#[path = "search_console/command_ipc_tests.rs"]
+mod command_ipc_tests;

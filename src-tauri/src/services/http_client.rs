@@ -1,5 +1,6 @@
 pub mod entry;
 pub mod fetch;
+pub mod header_capture;
 pub mod models;
 pub mod resolver;
 pub mod status;

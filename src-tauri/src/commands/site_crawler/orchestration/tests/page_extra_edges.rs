@@ -12,6 +12,7 @@ fn schema_syntax_warning_and_hreflang_pagination_edges() {
     <link rel="alternate" hreflang=" " href="https://example.test/pl">
     <link rel="alternate" hreflang="en">
     <link rel="alternate" hreflang="de" href="https://example.test/de">
+    <link rel="alternate" hreflang="es" href="https://example.test/es">
     <link rel="prev" href="https://example.test/page/1">
     <script type="application/ld+json">{ broken json </script>
 </head>
@@ -31,8 +32,9 @@ fn schema_syntax_warning_and_hreflang_pagination_edges() {
         &mut issues,
     );
 
-    assert_eq!(result.hreflangs.len(), 1);
+    assert_eq!(result.hreflangs.len(), 2);
     assert_eq!(result.hreflangs[0].language, "de");
+    assert_eq!(result.hreflangs[1].language, "es");
     assert_eq!(
         result.pagination_prev.as_deref(),
         Some("https://example.test/page/1")

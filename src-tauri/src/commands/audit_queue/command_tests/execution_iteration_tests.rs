@@ -97,3 +97,14 @@ fn list_results_fails_when_saved_result_is_invalid_json() {
     let error = list_project_audit_queue_results(app, "proj-corrupt-res".into()).unwrap_err();
     assert!(error.contains("Saved audit queue result is invalid"));
 }
+
+#[test]
+fn list_executions_and_results_return_empty_for_nonexistent_project_directory() {
+    let fixture = Fixture::new();
+    let app = fixture.handle();
+    let executions =
+        list_project_audit_queue_executions(app.clone(), "nonexistent-proj".into()).unwrap();
+    assert!(executions.is_empty());
+    let results = list_project_audit_queue_results(app, "nonexistent-proj".into()).unwrap();
+    assert!(results.is_empty());
+}

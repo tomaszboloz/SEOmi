@@ -21,7 +21,9 @@ fn schema_inspection_marks_json_ld_microdata_and_rdfa_declaration_caps() {
 
     assert!(types.contains(&"Thing".to_string()));
     assert_eq!(syntax_errors, 0);
-    assert!(references.is_empty());
+    assert!(references
+        .iter()
+        .all(|reference| ["@type", "name"].contains(&reference.property.as_str())));
     assert!(truncated);
     assert!(findings
         .iter()

@@ -26,6 +26,7 @@ impl Fixture {
     }
 }
 
+mod corrupt_and_boundary_tests;
 mod errors;
 mod execution_iteration_tests;
 mod handoffs;

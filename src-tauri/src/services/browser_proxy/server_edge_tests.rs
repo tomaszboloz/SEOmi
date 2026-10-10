@@ -98,3 +98,26 @@ async fn serve_connection_handles_incoming_stream_directly() {
     task.await.unwrap();
     assert!(response.starts_with(b"HTTP/1.1 400 Bad Request"));
 }
+
+#[tokio::test]
+async fn serve_connection_handles_timeout_with_408() {
+    let listener = TcpListener::bind("127.0.0.1:0").await.unwrap();
+    let address = listener.local_addr().unwrap();
+    let task = tokio::spawn(async move {
+        let (stream, _) = listener.accept().await.unwrap();
+        serve_connection_with(
+            stream,
+            |_, _| async { Err(io::Error::new(io::ErrorKind::Other, "err")) },
+            Duration::from_millis(50),
+            Duration::from_millis(50),
+        )
+        .await;
+    });
+
+    let mut client = TcpStream::connect(address).await.unwrap();
+    tokio::time::sleep(Duration::from_millis(100)).await;
+    let mut response = Vec::new();
+    let _ = timeout(Duration::from_secs(2), client.read_to_end(&mut response)).await;
+    task.await.unwrap();
+    assert!(response.starts_with(b"HTTP/1.1 408 Request Timeout"));
+}

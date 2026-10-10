@@ -1,9 +1,12 @@
 use serde::{Deserialize, Serialize};
+use std::collections::HashMap;
 
 #[derive(Debug, Clone, Serialize, Deserialize, Default)]
 pub struct SecurityHeaders {
     pub strict_transport_security: Option<String>,
     pub content_security_policy: Option<String>,
+    #[serde(default)]
+    pub content_security_policy_report_only: Option<String>,
     pub x_frame_options: Option<String>,
     pub x_content_type_options: Option<String>,
     pub referrer_policy: Option<String>,
@@ -12,6 +15,9 @@ pub struct SecurityHeaders {
     pub cross_origin_resource_policy: Option<String>,
     pub server: Option<String>,
     pub x_powered_by: Option<String>,
+    /// All observed response values, retained so repeated policy headers are not lost.
+    #[serde(default)]
+    pub repeated_headers: HashMap<String, Vec<String>>,
     pub score: u8,
 }
 

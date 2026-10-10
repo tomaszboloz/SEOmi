@@ -16,7 +16,7 @@ pub(super) fn snapshot(run: &str) -> Value {
 pub(super) async fn audit(url: String) -> Result<PageAuditData, String> {
     analyze_page(FetchResult {
         url: url.clone(), final_url: url, status: 200, response_time_ms: 17,
-        headers: Default::default(), set_cookie_headers: vec![], redirect_chain: vec![],
+        headers: Default::default(), repeated_headers: Default::default(), set_cookie_headers: vec![], redirect_chain: vec![],
         body: "<html><head><title>Queue fixture</title></head><body><h1>Observed title</h1></body></html>".into(),
         http_performance: HttpPerformanceMeasurement {
             measured_at: Utc::now(), method: "GET".into(), response_headers_ms: 12,

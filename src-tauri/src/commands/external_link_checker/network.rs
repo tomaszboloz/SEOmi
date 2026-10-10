@@ -1,3 +1,4 @@
+use super::concurrency::HostGates;
 use super::models::{ExternalLinkCheck, DNS_TIMEOUT, REQUEST_TIMEOUT};
 use crate::utils::url_validator::{is_public_ip, validate_and_normalize_url};
 use reqwest::header::{HeaderMap, HeaderValue, ACCEPT, USER_AGENT};
@@ -30,6 +31,7 @@ pub fn error_kind(error: &reqwest::Error) -> String {
     "network".into()
 }
 
+#[cfg(test)]
 pub fn rejected(url: String, kind: impl Into<String>) -> ExternalLinkCheck {
     ExternalLinkCheck {
         url,
@@ -112,6 +114,7 @@ pub fn client_for_url(url: &Url, addresses: &[SocketAddr]) -> Result<reqwest::Cl
         .map_err(|error| error.to_string())
 }
 
+#[cfg(test)]
 pub async fn check_one(input: String) -> ExternalLinkCheck {
     super::request::check_with(
         input,
@@ -121,6 +124,20 @@ pub async fn check_one(input: String) -> ExternalLinkCheck {
     .await
 }
 
+pub async fn check_one_with_gates(input: String, gates: HostGates) -> ExternalLinkCheck {
+    super::request::check_with_gates(
+        input,
+        |url| async move { checked_public_addresses(&url).await },
+        client_for_url,
+        Some(gates),
+    )
+    .await
+}
+
 #[cfg(test)]
 #[path = "network_edge_tests.rs"]
 mod edge_tests;
+
+#[cfg(test)]
+#[path = "network_classification_tests.rs"]
+mod classification_tests;

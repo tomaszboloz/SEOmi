@@ -16,6 +16,18 @@ export interface SiteCrawlResult {
   cancelled: boolean;
   timed_out?: boolean;
   robots_txt_status: string;
+  /** Machine-readable robots outcome: loaded, unrestricted, unknown or disabled. */
+  robots_txt_evaluation_status?: 'loaded' | 'unrestricted' | 'unknown' | 'disabled' | string;
+  /** Prominent run-level warning when robots rules could not be evaluated. */
+  robots_txt_warning?: string | null;
+  robots_txt_status_code?: number | null;
+  robots_txt_final_url?: string | null;
+  robots_txt_redirect_chain?: Array<{
+    from_url: string;
+    http_status: number;
+    to_url: string;
+    response_time_ms?: number | null;
+  }>;
   robots_user_agent?: string;
   robots_applicable_rules?: Array<{ directive: string; path: string }>;
   /** Same robots.txt response evaluated for a bounded set of crawler identities. */

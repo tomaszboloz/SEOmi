@@ -10,6 +10,7 @@ mod execution_runner_outcome_tests;
 mod identity;
 mod io_failures;
 mod production_dispatch;
+mod production_due_dispatch;
 mod real_dispatch_guards;
 mod runner_guards;
 mod runner_outcomes;

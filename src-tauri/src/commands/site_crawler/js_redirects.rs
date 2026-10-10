@@ -7,14 +7,12 @@ pub(super) fn extract_javascript_redirects(
     document: &Html,
     base_url: &url::Url,
 ) -> Vec<CrawledClientRedirect> {
-    let Ok(script_selector) = Selector::parse("script:not([src])") else {
-        return Vec::new();
-    };
-    let Ok(event_selector) = Selector::parse(
+    let script_selector =
+        Selector::parse("script:not([src])").expect("inline script selector is a valid constant");
+    let event_selector = Selector::parse(
         "*[onclick],*[onload],*[onbeforeunload],*[onunload],*[onpageshow],*[onpopstate]",
-    ) else {
-        return Vec::new();
-    };
+    )
+    .expect("navigation event selector is a valid constant");
     static JS_LOCATION_ASSIGNMENT: OnceLock<Regex> = OnceLock::new();
     let assignment = JS_LOCATION_ASSIGNMENT.get_or_init(|| {
         Regex::new(

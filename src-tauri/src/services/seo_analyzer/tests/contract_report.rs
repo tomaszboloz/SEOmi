@@ -14,6 +14,7 @@ fn fetch_fixture(status: u16) -> FetchResult {
             ("server".into(), "nginx/1.27.4".into()),
             ("content-type".into(), "text/html; charset=utf-8".into()),
         ]),
+        repeated_headers: HashMap::new(),
         set_cookie_headers: Vec::new(),
         redirect_chain: vec![RedirectHop {
             url: "http://origin.test/old".into(),

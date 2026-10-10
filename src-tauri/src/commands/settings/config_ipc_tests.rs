@@ -1,98 +1,122 @@
 use super::*;
-use crate::models::config::AppConfig;
-use crate::utils::test_app::StorageApp;
+use crate::utils::test_app::{invoke, StorageApp};
+use serde_json::{json, Value};
 use tauri::test::mock_builder;
 
-#[tokio::test]
-async fn get_and_save_config_commands_round_trip() {
-    let fixture = StorageApp::new(mock_builder());
-    let handle = fixture.handle();
+fn setup_view() -> (StorageApp, tauri::WebviewWindow<tauri::test::MockRuntime>) {
+    let fixture = StorageApp::new(mock_builder().invoke_handler(tauri::generate_handler![
+        get_config,
+        save_config,
+        get_secret,
+        set_secret,
+        save_crawl_auth_profile,
+        delete_crawl_auth_profile
+    ]));
+    let view = tauri::WebviewWindowBuilder::new(&fixture.app, "main", Default::default())
+        .build()
+        .unwrap();
+    (fixture, view)
+}
 
-    let initial = get_config(handle.clone()).await.unwrap();
-    assert_eq!(initial.theme, "dark");
-    assert_eq!(initial.language, "en");
+#[tokio::test]
+async fn get_and_save_config_ipc_round_trip_and_validation() {
+    let (_fixture, view) = setup_view();
+
+    let initial = invoke(&view, "get_config", json!({})).unwrap();
+    assert_eq!(initial["theme"], "dark");
+    assert_eq!(initial["language"], "en");
 
     let mut updated = initial.clone();
-    updated.theme = "light".into();
-    updated.language = "pl".into();
-    updated.request_timeout_secs = 30;
+    updated["theme"] = json!("light");
+    updated["language"] = json!("pl");
+    updated["request_timeout_secs"] = json!(30);
 
-    save_config(handle.clone(), updated).await.unwrap();
-
-    let reloaded = get_config(handle.clone()).await.unwrap();
-    assert_eq!(reloaded.theme, "light");
-    assert_eq!(reloaded.language, "pl");
-    assert_eq!(reloaded.request_timeout_secs, 30);
-}
-
-#[tokio::test]
-async fn save_config_command_validates_before_persisting() {
-    let fixture = StorageApp::new(mock_builder());
-    let handle = fixture.handle();
-
-    let invalid = AppConfig {
-        theme: "unsupported".into(),
-        ..AppConfig::default()
-    };
-    let err = save_config(handle.clone(), invalid).await.unwrap_err();
-    assert_eq!(err, "Unsupported configuration theme.");
-
-    let current = get_config(handle).await.unwrap();
-    assert_eq!(current.theme, "dark");
-}
-
-#[tokio::test]
-async fn secret_commands_reject_invalid_names_without_accessing_store() {
-    assert!(get_secret("invalid/name".into()).await.is_err());
-    assert!(set_secret("invalid/name".into(), "val".into())
-        .await
-        .is_err());
-}
-
-#[tokio::test]
-async fn crawl_auth_profile_commands_reject_invalid_identifiers() {
-    assert!(save_crawl_auth_profile(
-        "invalid/project".into(),
-        "profile".into(),
-        vec![],
-        None,
-        None
-    )
-    .await
-    .is_err());
-    assert!(
-        delete_crawl_auth_profile("invalid/project".into(), "profile".into())
-            .await
-            .is_err()
-    );
-}
-
-#[tokio::test]
-async fn secret_and_auth_profile_commands_execute_valid_names() {
-    assert!(set_secret("openai_api_key".into(), "test-key-val".into())
-        .await
-        .is_ok());
     assert_eq!(
-        get_secret("openai_api_key".into()).await.unwrap(),
-        Some("test-key-val".into())
+        invoke(&view, "save_config", json!({ "config": updated })).unwrap(),
+        Value::Null
     );
-    secure_store::secret_entry("openai_api_key")
-        .unwrap()
-        .delete_credential()
-        .unwrap();
-    assert_eq!(get_secret("openai_api_key".into()).await.unwrap(), None);
-    assert!(save_crawl_auth_profile(
-        "valid-project".into(),
-        "valid-profile".into(),
-        vec![],
-        None,
-        None
+
+    let reloaded = invoke(&view, "get_config", json!({})).unwrap();
+    assert_eq!(reloaded["theme"], "light");
+    assert_eq!(reloaded["language"], "pl");
+    assert_eq!(reloaded["request_timeout_secs"], 30);
+
+    let mut invalid = initial;
+    invalid["theme"] = json!("unsupported");
+    let err = invoke(&view, "save_config", json!({ "config": invalid })).unwrap_err();
+    assert_eq!(err, json!("Unsupported configuration theme."));
+}
+
+#[tokio::test]
+async fn secret_and_auth_profile_ipc_commands_round_trip() {
+    let (_fixture, view) = setup_view();
+
+    assert!(invoke(&view, "get_secret", json!({ "name": "test_key" })).is_err());
+    assert!(invoke(
+        &view,
+        "set_secret",
+        json!({ "name": "test_key", "value": "test_val" })
     )
-    .await
-    .is_ok());
-    assert!(
-        delete_crawl_auth_profile("valid-project".into(), "valid-profile".into())
-            .await
-            .is_ok()
+    .is_err());
+
+    assert_eq!(
+        invoke(
+            &view,
+            "set_secret",
+            json!({ "name": "openai_api_key", "value": "test_val" })
+        )
+        .unwrap(),
+        Value::Null
     );
+    assert_eq!(
+        invoke(&view, "get_secret", json!({ "name": "openai_api_key" })).unwrap(),
+        json!("test_val")
+    );
+    let _ = secure_store::secret_entry("openai_api_key")
+        .unwrap()
+        .delete_credential();
+
+    assert_eq!(
+        invoke(
+            &view,
+            "save_crawl_auth_profile",
+            json!({
+                "projectId": "test-p",
+                "profileId": "test-prof",
+                "headers": [],
+                "cookie": null,
+                "proxyUrl": null
+            })
+        )
+        .unwrap(),
+        Value::Null
+    );
+    assert_eq!(
+        invoke(
+            &view,
+            "delete_crawl_auth_profile",
+            json!({ "projectId": "test-p", "profileId": "test-prof" })
+        )
+        .unwrap(),
+        Value::Null
+    );
+
+    assert!(invoke(
+        &view,
+        "save_crawl_auth_profile",
+        json!({
+            "projectId": "invalid/p",
+            "profileId": "test-prof",
+            "headers": [],
+            "cookie": null,
+            "proxyUrl": null
+        })
+    )
+    .is_err());
+    assert!(invoke(
+        &view,
+        "delete_crawl_auth_profile",
+        json!({ "projectId": "invalid/p", "profileId": "test-prof" })
+    )
+    .is_err());
 }

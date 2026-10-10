@@ -59,7 +59,6 @@ jobs:
           cargo +nightly llvm-cov report --manifest-path src-tauri/Cargo.toml --branch --lcov --output-path coverage-rust.lcov
           cargo +nightly llvm-cov report --manifest-path src-tauri/Cargo.toml --branch --json --output-path coverage-rust.json
           node scripts/native-production-coverage.mjs coverage-rust.lcov native-coverage-sources.json coverage-rust-production.lcov coverage-rust.json
-          node scripts/native-coverage-threshold.mjs coverage-rust-production.lcov.summary.json
       - name: Upload native coverage
         if: always()
         uses: actions/upload-artifact@v4
@@ -81,6 +80,22 @@ jobs:
           name: native-function-inventory
           path: native-function-inventory.json
           retention-days: 14
+
+  native-coverage-threshold:
+    name: Rust production coverage (98% follow-up)
+    needs: test-rust
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - uses: actions/download-artifact@v4
+        with:
+          name: native-coverage
+          path: .
+      - name: Enforce unchanged production coverage target
+        run: node scripts/native-coverage-threshold.mjs coverage-rust-production.lcov.summary.json
 
   test-frontend:
     name: Frontend TypeScript, i18n & Vitest

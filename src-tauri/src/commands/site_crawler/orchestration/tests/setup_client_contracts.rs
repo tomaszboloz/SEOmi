@@ -47,3 +47,57 @@ fn client_accepts_timeout_clamping_and_disabled_ssl_verification_options() {
     assert!(cookie.is_none());
     drop(client);
 }
+
+#[test]
+fn browser_rendered_rejects_unsupported_profile_transports_and_skips_malformed_headers() {
+    use super::super::setup_client::build_crawler_client_with_profile_loader;
+    use crate::commands::settings::{CrawlAuthProfile, CrawlProfileHeader};
+
+    let mut config = default_crawl_config(None);
+    config.crawl_mode = "browser-rendered".into();
+    config.request_profile_id = Some("profile-headers".into());
+
+    let err = build_crawler_client_with_profile_loader(
+        Some("p1"),
+        &config,
+        None,
+        |_project, _profile| {
+            Ok(CrawlAuthProfile {
+                headers: vec![CrawlProfileHeader {
+                    name: "X-Custom".into(),
+                    value: "v".into(),
+                }],
+                cookie: None,
+                proxy_url: None,
+            })
+        },
+    )
+    .unwrap_err();
+    assert!(err.contains("Browser-rendered crawl supports cookies from the selected profile only"));
+
+    let mut http_config = default_crawl_config(None);
+    http_config.request_profile_id = Some("profile-malformed".into());
+    let (client, _, _) = build_crawler_client_with_profile_loader(
+        Some("p1"),
+        &http_config,
+        None,
+        |_project, _profile| {
+            Ok(CrawlAuthProfile {
+                headers: vec![
+                    CrawlProfileHeader {
+                        name: "invalid\0name".into(),
+                        value: "valid_val".into(),
+                    },
+                    CrawlProfileHeader {
+                        name: "Valid-Name".into(),
+                        value: "invalid\nval".into(),
+                    },
+                ],
+                cookie: None,
+                proxy_url: None,
+            })
+        },
+    )
+    .unwrap();
+    drop(client);
+}

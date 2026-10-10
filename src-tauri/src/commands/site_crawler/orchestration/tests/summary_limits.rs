@@ -9,7 +9,6 @@ use crate::commands::site_crawler::orchestration::summary::{
 };
 use crate::utils::test_app::StorageApp;
 use tauri::test::{mock_builder, MockRuntime};
-
 #[path = "summary_score_version.rs"]
 mod score_version;
 
@@ -47,6 +46,11 @@ fn result_for_pages(pages: Vec<CrawledPageSummary>) -> SiteCrawlResult {
         robots: CrawlRobotsOutcome {
             robots_rules: Vec::new(),
             robots_txt_status: "disabled".into(),
+            robots_txt_evaluation_status: "disabled".into(),
+            robots_txt_warning: None,
+            robots_txt_status_code: None,
+            robots_txt_final_url: None,
+            robots_txt_redirect_chain: Vec::new(),
             robots_sitemaps: Vec::new(),
             robots_crawl_delay: None,
             robots_agent_matrix: Vec::new(),
@@ -98,6 +102,11 @@ fn generic_summary_reports_each_reached_limit() {
         robots: CrawlRobotsOutcome {
             robots_rules: Vec::new(),
             robots_txt_status: "disabled".into(),
+            robots_txt_evaluation_status: "disabled".into(),
+            robots_txt_warning: None,
+            robots_txt_status_code: None,
+            robots_txt_final_url: None,
+            robots_txt_redirect_chain: Vec::new(),
             robots_sitemaps: Vec::new(),
             robots_crawl_delay: None,
             robots_agent_matrix: Vec::new(),

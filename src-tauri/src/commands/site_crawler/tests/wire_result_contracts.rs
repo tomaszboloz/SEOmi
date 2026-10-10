@@ -21,6 +21,11 @@ fn site_result_wire_defaults_legacy_fields_and_drops_unknown_fields() {
     let result: SiteCrawlResult = serde_json::from_value(value).unwrap();
     assert_eq!(result.crawl_mode, "http");
     assert!(result.robots_user_agent.is_empty());
+    assert!(result.robots_txt_evaluation_status.is_empty());
+    assert!(result.robots_txt_warning.is_none());
+    assert!(result.robots_txt_status_code.is_none());
+    assert!(result.robots_txt_final_url.is_none());
+    assert!(result.robots_txt_redirect_chain.is_empty());
     assert!(result.robots_applicable_rules.is_empty());
     assert!(!result.discovery_provenance_truncated);
     assert!(result.limit_reasons.is_empty());

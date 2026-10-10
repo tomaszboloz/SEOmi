@@ -45,11 +45,23 @@ it('allows a forced healthy response to clear previous broken-link evidence', ()
   expect(result.pages[0].issues).toEqual([]);
 });
 
-it.each(['dns', 'timeout', 'tls', 'connect', 'network'])('records %s failure as a source-page warning', kind => {
+it.each(['dns', 'broken'])('records %s failure as a source-page warning', kind => {
   const result = applyExternalLinkEvidence(externalRun().result, { ...checkedBatch,
     results: [{ url: 'https://outside.example/path', requestErrorKind: kind, checkedAt: 'now' }] }, false);
   expect(result.warning_count).toBe(1);
   expect(result.pages[0].links[0].target_request_error_kind).toBe(kind);
+});
+
+it.each(['timeout', 'tls', 'connect', 'network', 'blocked'])('keeps %s failures unverifiable without a broken-link warning', kind => {
+  const result = applyExternalLinkEvidence(externalRun().result, { ...checkedBatch,
+    results: [{ url: 'https://outside.example/path', requestErrorKind: kind, checkedAt: 'now' }] }, false);
+  expect(result.warning_count).toBe(0);
+});
+
+it.each([404, 410])('records HTTP %i as a broken-link warning', httpStatus => {
+  const result = applyExternalLinkEvidence(externalRun().result, { ...checkedBatch,
+    results: [{ url: 'https://outside.example/path', httpStatus, checkedAt: 'now' }] }, false);
+  expect(result.warning_count).toBe(1);
 });
 
 it('keeps safety-blocked diagnostics distinct from broken network targets', () => {

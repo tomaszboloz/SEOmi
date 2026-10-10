@@ -96,6 +96,8 @@ pub async fn render_worker_status(state: State<'_, RenderWorkerState>) -> Result
 }
 
 #[cfg(test)]
+mod ipc_tests;
+#[cfg(test)]
 mod lifecycle_tests;
 #[cfg(test)]
 mod server_contract_tests;

@@ -53,6 +53,11 @@ mod retry;
 mod robots;
 mod robots_matching;
 mod schema;
+mod schema_graph;
+mod schema_graph_analysis;
+mod schema_graph_analysis_helpers;
+mod schema_graph_checks;
+mod schema_graph_values;
 mod schema_inspections;
 mod schema_references;
 mod scope;
@@ -76,8 +81,10 @@ use {
     fetch_data::*, fetch_types::*, fingerprints::*, hreflang::*, hreflang_validation::*,
     html_source_locator::*, html_validation_rules::*, image_decoding::*, inline_images::*,
     models::*, pagination::*, readability::*, retry::*, robots::*, robots_matching::*,
-    schema_inspections::*, schema_references::*, scope::*, semantic_chrome::*, simhash::*,
-    svg_dimensions::*, svg_inline::*, target_relations::*, transport::*, url_normalization::*,
+    schema_graph::*, schema_graph_analysis::*, schema_graph_analysis_helpers::*,
+    schema_graph_checks::*, schema_graph_values::*, schema_inspections::*, schema_references::*,
+    scope::*, semantic_chrome::*, simhash::*, svg_dimensions::*, svg_inline::*,
+    target_relations::*, transport::*, url_normalization::*,
 };
 
 #[cfg(test)]

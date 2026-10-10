@@ -57,7 +57,7 @@ const filteredCrawlResult = (run: CrawlRunRecord, template?: CrawlReportTemplate
   }
   // Keep crawl-level evidence that is not a selectable table in the report
   // envelope so consumers can identify the exact source snapshot.
-  for (const key of ['robots_txt_status', 'robots_user_agent', 'robots_blocked_count', 'sitemap_status', 'sitemap_urls_discovered', 'sitemap_urls']) {
+  for (const key of ['robots_txt_status', 'robots_txt_evaluation_status', 'robots_txt_warning', 'robots_txt_status_code', 'robots_txt_final_url', 'robots_txt_redirect_chain', 'robots_user_agent', 'robots_blocked_count', 'sitemap_status', 'sitemap_urls_discovered', 'sitemap_urls']) {
     if (key in result) filtered[key] = result[key];
   }
   return filtered;

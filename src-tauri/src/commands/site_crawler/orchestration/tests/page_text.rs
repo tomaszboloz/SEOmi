@@ -56,6 +56,8 @@ fn content_extractor_reports_missing_language_and_thin_text_without_inventing_ro
     let mut issues = Vec::new();
     let result = extract_page_content(ExtractPageContentInput {
         document: &document,
+        page_url: "https://example.test/article",
+        crawl_mode: "http",
         body_len: text.len(),
         status: 200,
         is_html: true,

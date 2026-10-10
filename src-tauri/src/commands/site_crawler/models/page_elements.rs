@@ -23,6 +23,8 @@ pub struct CrawledSchemaReference {
     pub declaration_index: usize,
     pub property: String,
     pub value: String,
+    #[serde(default)]
+    pub node_path: Option<String>,
 }
 
 #[derive(Debug, Serialize, Deserialize, Clone)]

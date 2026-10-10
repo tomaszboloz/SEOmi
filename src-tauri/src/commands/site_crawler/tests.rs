@@ -89,6 +89,10 @@ mod runtime_3;
 mod schema;
 #[path = "tests/schema_edges.rs"]
 mod schema_edges;
+#[path = "tests/schema_graph.rs"]
+mod schema_graph;
+#[path = "tests/schema_graph_edges.rs"]
+mod schema_graph_edges;
 #[path = "tests/schema_references_contracts.rs"]
 mod schema_references_contracts;
 #[path = "tests/scope.rs"]

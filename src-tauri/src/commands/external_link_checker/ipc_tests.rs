@@ -41,3 +41,17 @@ fn generated_ipc_preserves_camel_case_types_and_optional_budget() {
     )
     .is_err());
 }
+
+#[test]
+fn generated_ipc_handles_urls_invocation_via_cmd() {
+    let app = fixture();
+    let view = tauri::WebviewWindowBuilder::new(&app.app, "main", Default::default())
+        .build()
+        .unwrap();
+    assert!(invoke(
+        &view,
+        "check_external_crawl_links",
+        json!({"urls": ["https://example.test"]}),
+    )
+    .is_err());
+}

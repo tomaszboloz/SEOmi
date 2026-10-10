@@ -5,13 +5,11 @@ use tokio::{
     net::TcpListener,
     task::JoinHandle,
 };
-
 pub struct DiscoveryServer {
     pub setup: CrawlSetup,
     pub requests: Arc<Mutex<Vec<String>>>,
     task: JoinHandle<()>,
 }
-
 #[derive(Clone)]
 pub struct Route {
     path: String,
@@ -20,7 +18,6 @@ pub struct Route {
     headers: Vec<String>,
     delay_ms: u64,
 }
-
 impl DiscoveryServer {
     pub async fn new(config: CrawlConfig, routes: Vec<Route>) -> Self {
         let listener = TcpListener::bind(("127.0.0.1", 0)).await.unwrap();
@@ -33,6 +30,7 @@ impl DiscoveryServer {
             .no_proxy()
             .redirect(reqwest::redirect::Policy::none())
             .resolve("example.test", address)
+            .resolve("www.example.test", address)
             .timeout(std::time::Duration::from_secs(2))
             .build()
             .unwrap();
@@ -62,7 +60,10 @@ impl DiscoveryServer {
                         (
                             route.status,
                             route.body.replace("{BASE}", &base),
-                            route.headers.join("\r\n"),
+                            route
+                                .headers
+                                .join("\r\n")
+                                .replace("{PORT}", &address.port().to_string()),
                             route.delay_ms,
                         )
                     })
@@ -92,7 +93,6 @@ impl DiscoveryServer {
         self.setup.parsed_base.join(path).unwrap().to_string()
     }
 }
-
 impl Drop for DiscoveryServer {
     fn drop(&mut self) {
         self.task.abort();

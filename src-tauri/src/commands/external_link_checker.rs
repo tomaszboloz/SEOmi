@@ -1,12 +1,16 @@
+mod concurrency;
 mod models;
 mod network;
 mod request;
+mod request_flow;
+mod result;
 
+use concurrency::new_host_gates;
 pub use models::{ExternalLinkCheck, ExternalLinkCheckBatch, ExternalLinkCheckProgress};
 use models::{
     DEFAULT_EXTERNAL_LINK_LIMIT, MAX_CONCURRENT_EXTERNAL_LINKS, MAX_EXTERNAL_LINKS_PER_RUN,
 };
-use network::{check_one, normalize_external_url};
+use network::{check_one_with_gates, normalize_external_url};
 use tauri::{AppHandle, Emitter};
 use tokio::task::JoinSet;
 
@@ -50,9 +54,11 @@ pub async fn check_external_crawl_links<R: tauri::Runtime>(
     let mut tasks: JoinSet<ExternalLinkCheck> = JoinSet::new();
     let mut pending = selected.into_iter();
     let mut results = Vec::with_capacity(scheduled);
+    let host_gates = new_host_gates();
     for _ in 0..MAX_CONCURRENT_EXTERNAL_LINKS.min(scheduled) {
         if let Some(url) = pending.next() {
-            tasks.spawn(check_one(url));
+            let gates = host_gates.clone();
+            tasks.spawn(async move { check_one_with_gates(url, gates).await });
         }
     }
     while let Some(joined) = tasks.join_next().await {
@@ -76,7 +82,8 @@ pub async fn check_external_crawl_links<R: tauri::Runtime>(
             Err(_) => return Err("An external link check task failed unexpectedly".into()),
         }
         if let Some(url) = pending.next() {
-            tasks.spawn(check_one(url));
+            let gates = host_gates.clone();
+            tasks.spawn(async move { check_one_with_gates(url, gates).await });
         }
     }
     results.sort_by(|left, right| left.url.cmp(&right.url));
@@ -115,3 +122,11 @@ mod network_error_path_tests;
 #[cfg(test)]
 #[path = "external_link_checker/batch_and_edge_error_tests.rs"]
 mod batch_and_edge_error_tests;
+
+#[cfg(test)]
+#[path = "external_link_checker/request_edge_tests.rs"]
+mod request_edge_tests;
+
+#[cfg(test)]
+#[path = "external_link_checker/concurrency_tests.rs"]
+mod concurrency_tests;

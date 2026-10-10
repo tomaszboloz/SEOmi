@@ -27,8 +27,8 @@ export const applyExternalLinkEvidence = (result: SiteCrawlResult, batch: Extern
     });
     const existing = page.issues.filter((issue) => issue.code !== 'external-link-check');
     const failedTargets = new Set(links.filter((link) => !link.is_internal && (
-      (link.target_http_status !== undefined && link.target_http_status >= 400)
-      || ['dns', 'timeout', 'tls', 'connect', 'network'].includes(link.target_request_error_kind || '')
+      link.target_http_status === 404 || link.target_http_status === 410
+      || ['dns', 'broken'].includes(link.target_request_error_kind || '')
     )).map((link) => normalizeCrawlLinkUrl(link.target_url)));
     if (failedTargets.size) existing.push({
       severity: 'Warning',

@@ -1,7 +1,6 @@
 #[path = "summary_inputs.rs"]
 mod inputs;
 pub use inputs::BuildCrawlResultInput;
-
 use tauri::{Emitter, Runtime};
 
 use super::super::{
@@ -88,6 +87,9 @@ pub fn build_crawl_result<R: Runtime>(input: BuildCrawlResultInput<'_, R>) -> Si
         if state.timed_out {
             reasons.push("max_run_seconds".into());
         }
+        if robots.robots_txt_evaluation_status == "unknown" {
+            reasons.push("robots_unknown".into());
+        }
         if state.render_health.fallback_pages > 0 {
             // Some pages were analyzed from raw HTML, so a rendered crawl is
             // not uniformly rendered. Each affected page carries a warning.
@@ -120,6 +122,11 @@ pub fn build_crawl_result<R: Runtime>(input: BuildCrawlResultInput<'_, R>) -> Si
         cancelled,
         timed_out: state.timed_out,
         robots_txt_status: robots.robots_txt_status,
+        robots_txt_evaluation_status: robots.robots_txt_evaluation_status,
+        robots_txt_warning: robots.robots_txt_warning,
+        robots_txt_status_code: robots.robots_txt_status_code,
+        robots_txt_final_url: robots.robots_txt_final_url,
+        robots_txt_redirect_chain: robots.robots_txt_redirect_chain,
         robots_user_agent: setup.ua.clone(),
         robots_applicable_rules: robots.robots_applicable_rules,
         robots_agent_matrix: robots.robots_agent_matrix,

@@ -31,3 +31,19 @@ it('keeps formula metadata in full and section-filtered report exports', () => {
   expect(crawlReportPayload(source, { ...DEFAULT_CRAWL_REPORT_TEMPLATE, sections: ['summary'] }).result)
     .toMatchObject({ score_version: 2 });
 });
+
+it('retains structured robots outcome evidence through compaction and export', () => {
+  const source = run({ result: result({
+    robots_txt_evaluation_status: 'unknown',
+    robots_txt_warning: 'Rules unavailable',
+    robots_txt_status_code: 503,
+    robots_txt_final_url: 'https://example.test/robots.txt',
+    robots_txt_redirect_chain: [{ from_url: 'https://example.test/robots.txt', http_status: 302, to_url: 'https://www.example.test/robots.txt' }],
+  }) });
+  expect(compactCrawlRunsToPageIndex([source])[0].result).toMatchObject({
+    robots_txt_evaluation_status: 'unknown', robots_txt_status_code: 503,
+  });
+  expect(crawlReportPayload(source).result).toMatchObject({
+    robots_txt_warning: 'Rules unavailable', robots_txt_redirect_chain: expect.any(Array),
+  });
+});

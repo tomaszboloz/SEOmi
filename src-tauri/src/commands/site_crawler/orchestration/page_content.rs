@@ -14,6 +14,7 @@ use super::super::{
 };
 use super::page_headings::extract_page_headings;
 use super::page_title_meta::extract_page_title_and_meta;
+use super::page_type_guidance::thin_content_issue;
 
 pub struct PageContentOutcome {
     pub document_language: Option<String>,
@@ -39,6 +40,8 @@ pub struct PageContentOutcome {
 pub fn extract_page_content(input: ExtractPageContentInput<'_>) -> PageContentOutcome {
     let ExtractPageContentInput {
         document,
+        page_url,
+        crawl_mode,
         body_len,
         status,
         is_html,
@@ -91,11 +94,15 @@ pub fn extract_page_content(input: ExtractPageContentInput<'_>) -> PageContentOu
     let has_primary_content_root = is_html && has_semantic_content_root(document);
     let semantic_content_source =
         semantic_content_source(document, is_html, body_truncated, body_read_failed);
-    if is_html && cm.word_count < 50 {
-        issues.push(CrawledPageIssue {
-            severity: "Info".into(),
-            message: format!("Thin text content: {} words", cm.word_count),
-        });
+    if let Some(issue) = thin_content_issue(
+        document,
+        page_url,
+        crawl_mode,
+        status,
+        is_html && !body_truncated && !body_read_failed,
+        cm.word_count,
+    ) {
+        issues.push(issue);
     }
 
     let tm = extract_page_title_and_meta(

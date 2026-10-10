@@ -10,9 +10,10 @@ const parse = (name: string) => ts.createSourceFile(name, readFileSync(`src/type
 const modules = codeFiles('src/types').map(file => relative('src/types', file)).filter(file => file !== 'index.ts');
 // Optional fields added after the refactor; each has its own additive-contract test below.
 const additive: Record<string, string[]> = {
+  SecurityHeaders: ['content_security_policy_report_only', 'repeated_headers'],
   GscPerformanceData: ['query_pages', 'query_pages_may_be_truncated'],
   CrawledPageSummary: ['semantic_language'],
-  SiteCrawlResult: ['score_version'],
+  SiteCrawlResult: ['score_version', 'robots_txt_evaluation_status', 'robots_txt_warning', 'robots_txt_status_code', 'robots_txt_final_url', 'robots_txt_redirect_chain'],
 };
 
 it('keeps the type barrel declaration-free and exports all domain contracts as types', () => {
@@ -22,6 +23,18 @@ it('keeps the type barrel declaration-free and exports all domain contracts as t
   for (const statement of barrel.statements) {
     expect(ts.isExportDeclaration(statement)).toBe(true);
     if (ts.isExportDeclaration(statement)) expect(statement.isTypeOnly).toBe(true);
+  }
+});
+
+it('adds optional report-only and repeated header evidence to legacy security reports', () => {
+  const source = parse('audit/security.ts');
+  const declaration = source.statements.find(node => ts.isInterfaceDeclaration(node) && node.name.text === 'SecurityHeaders');
+  if (!declaration || !ts.isInterfaceDeclaration(declaration)) throw new Error('Missing security header contract');
+  for (const [name, type] of [['content_security_policy_report_only', 'string'], ['repeated_headers', 'Record<string, string[]>']]) {
+    const field = declaration.members.find(member => member.name?.getText(source) === name);
+    if (!field || !ts.isPropertySignature(field)) throw new Error(`Missing observed field ${name}`);
+    expect(field.questionToken).toBeDefined();
+    expect(field.type?.getText(source)).toBe(type);
   }
 });
 
@@ -74,6 +87,16 @@ it('adds an optional formula version without breaking legacy crawl snapshots', (
   if (!version || !ts.isPropertySignature(version)) throw new Error('Missing formula version');
   expect(version.questionToken).toBeDefined();
   expect(version.type?.getText(source)).toBe('number');
+});
+
+it('keeps structured robots evidence optional for legacy crawl snapshots', () => {
+  const source = parse('crawl/result.ts');
+  const declaration = source.statements.find(node => ts.isInterfaceDeclaration(node) && node.name.text === 'SiteCrawlResult');
+  if (!declaration || !ts.isInterfaceDeclaration(declaration)) throw new Error('Missing crawl result contract');
+  for (const name of ['robots_txt_evaluation_status', 'robots_txt_warning', 'robots_txt_status_code', 'robots_txt_final_url', 'robots_txt_redirect_chain']) {
+    const field = declaration.members.find(member => member.name?.getText(source) === name);
+    expect(field && ts.isPropertySignature(field) && field.questionToken, `${name} must remain optional`).toBeTruthy();
+  }
 });
 
 it('allows only declarations and direct type imports/exports, with no circular module dependency', () => {

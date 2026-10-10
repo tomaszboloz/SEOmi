@@ -26,7 +26,9 @@ fn crawl_schema_inventory_includes_static_validation_findings_for_all_formats() 
     let (types, syntax_errors, findings, references, truncated) = inspect_page_schema(&document);
     assert!(types.contains(&"Product".to_string()));
     assert!(types.contains(&"Article".to_string()));
-    assert!(references.is_empty());
+    assert!(references
+        .iter()
+        .all(|reference| ["@type", "name"].contains(&reference.property.as_str())));
     assert_eq!(syntax_errors, 1);
     assert!(!truncated);
     assert!(findings
@@ -53,7 +55,7 @@ fn schema_inventory_retains_only_bounded_declared_identifiers_and_relations() {
     let document = Html::parse_document(
         r#"<html><head>
               <script type="application/ld+json">
-                {"@context":"https://schema.org","@type":"Organization","@id":"https://example.com/#org","url":"https://example.com/","sameAs":["https://social.example/acme",{"@id":"https://example.com/about"}],"publisher":{"@id":"https://example.com/#org"}}
+                {"@context":"https://schema.org","@type":"Organization","@id":"https://example.com/#org","url":"https://example.com/","sameAs":["https://social.example/acme",{"@id":"https://example.com/about"}],"publisher":{"name":"Acme"}}
               </script>
             </head><body>
               <div itemscope itemtype="https://schema.org/Article" itemid="https://example.com/article#item" itemref="author-node"></div>

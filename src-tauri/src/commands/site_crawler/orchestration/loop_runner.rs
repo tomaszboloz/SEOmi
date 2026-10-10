@@ -5,7 +5,7 @@ use super::super::{
     control::{CrawlControl, CrawlProgress},
     models::RejectedCrawlUrl,
     robots::RobotsRule,
-    robots_matching::{robots_allows, robots_deciding_rule},
+    robots_matching::robots_deciding_rule,
     transport::crawl_deadline_reached,
 };
 use super::page_assembler::assemble_page_summary;
@@ -55,16 +55,17 @@ pub async fn run_crawl_loop<R: Runtime>(
         let Ok(current_parsed) = url::Url::parse(&current_url) else {
             continue;
         };
-        if setup.config.respect_robots && !robots_allows(&current_parsed, robots_rules) {
-            state.robots_blocked_count += 1;
-            let reason = robots_deciding_rule(&current_parsed, robots_rules)
-                .map(|r| format!("Blocked by robots.txt Disallow rule: {}", r.path))
-                .unwrap_or_else(|| "Blocked by robots.txt Disallow rule".into());
-            state.rejected_urls.push(RejectedCrawlUrl {
-                url: current_url,
-                reason,
-            });
-            continue;
+        if setup.config.respect_robots {
+            if let Some(rule) = robots_deciding_rule(&current_parsed, robots_rules) {
+                if !rule.allow {
+                    state.robots_blocked_count += 1;
+                    state.rejected_urls.push(RejectedCrawlUrl {
+                        url: current_url,
+                        reason: format!("Blocked by robots.txt Disallow rule: {}", rule.path),
+                    });
+                    continue;
+                }
+            }
         }
 
         if control.is_cancelled(&setup.run_id) {

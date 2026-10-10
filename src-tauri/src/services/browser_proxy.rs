@@ -33,6 +33,9 @@ mod server_fixture;
 #[cfg(test)]
 mod upstream_tests;
 
+#[cfg(test)]
+mod target_boundary_tests;
+
 use server::serve_connection;
 use types::MAX_CONCURRENT_CONNECTIONS;
 use upstream::reject;

@@ -57,6 +57,13 @@ async fn fallback_get_supports_redirect_with_location_header() {
             .write_all(b"HTTP/1.1 302 Found\r\nLocation: /redirected\r\nContent-Length: 0\r\nConnection: close\r\n\r\n")
             .await
             .unwrap();
+        let (mut stream3, _) = listener.accept().await.unwrap();
+        let mut req3 = [0u8; 1024];
+        let _ = stream3.read(&mut req3).await.unwrap();
+        stream3
+            .write_all(b"HTTP/1.1 200 OK\r\nContent-Length: 0\r\nConnection: close\r\n\r\n")
+            .await
+            .unwrap();
     });
     let input = format!("http://seomi.test:{}/fallback-redirect", address.port());
     let result = check_with(
@@ -66,7 +73,7 @@ async fn fallback_get_supports_redirect_with_location_header() {
     )
     .await;
     server.await.unwrap();
-    assert_eq!(result.http_status, Some(302));
+    assert_eq!(result.http_status, Some(200));
     assert_eq!(
         result.redirect_url.as_deref(),
         Some(&format!("http://seomi.test:{}/redirected", address.port())[..])

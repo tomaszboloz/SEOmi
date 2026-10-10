@@ -27,6 +27,17 @@ describe('unreferenced components batch 7 direct assertions', () => {
     expect(screen.getByText(/Crawl and AI-system readiness/i)).toBeDefined();
   });
 
+  it('CrawlerReadinessPanel promotes an unknown robots result to a run warning', () => {
+    const result = {
+      start_url: 'https://example.com/', pages_crawled: 0, health_score: 90,
+      critical_count: 0, warning_count: 0, notice_count: 0, pages: [], duration_ms: 100,
+      robots_txt_status: 'robots.txt could not be evaluated', robots_txt_evaluation_status: 'unknown',
+      robots_txt_warning: 'Robots rules could not be evaluated.', robots_blocked_count: 0,
+    } as unknown as SiteCrawlResult;
+    render(<CrawlerReadinessPanel result={result} />);
+    expect(screen.getByRole('alert').textContent).toContain('Robots rules could not be evaluated.');
+  });
+
   it('KeywordClusteringForm renders clustering controls', () => {
     const runClustering = vi.fn();
     const { rerender } = render(

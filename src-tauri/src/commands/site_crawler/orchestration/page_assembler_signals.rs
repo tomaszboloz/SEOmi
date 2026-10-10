@@ -68,6 +68,8 @@ pub fn extract_page_signals<R: Runtime>(
 
     let content = extract_page_content(super::page_content::ExtractPageContentInput {
         document,
+        page_url: final_url,
+        crawl_mode: &setup.config.crawl_mode,
         body_len: page_data.body.len(),
         status: page_data.status,
         is_html,

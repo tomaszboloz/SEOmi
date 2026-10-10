@@ -131,6 +131,7 @@ async fn transport_seam_maps_timeout_and_analyzer_results() {
         status: 200,
         response_time_ms: 0,
         headers: HashMap::new(),
+        repeated_headers: HashMap::new(),
         set_cookie_headers: Vec::new(),
         redirect_chain: Vec::new(),
         body: String::new(),

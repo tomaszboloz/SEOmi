@@ -99,6 +99,7 @@ pub(super) fn inspect_page_schema(
             .then(left.declaration_index.cmp(&right.declaration_index))
             .then(left.property.cmp(&right.property))
             .then(left.value.cmp(&right.value))
+            .then(left.node_path.cmp(&right.node_path))
     });
     (
         schema_types,

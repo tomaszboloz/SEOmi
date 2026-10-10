@@ -105,3 +105,37 @@ async fn public_command_reads_credentials_for_allowed_endpoint() {
         .unwrap_err();
     assert!(error.contains("DataForSEO login") || error.contains("credential store"));
 }
+
+#[tokio::test]
+async fn reports_request_failure_on_network_error() {
+    let error = dataforseo_request_at(
+        "project",
+        "/v3/appendix/user_data",
+        None,
+        "http://127.0.0.1:1",
+        &client(),
+        |_| Ok(("u".into(), "p".into())),
+    )
+    .await
+    .unwrap_err();
+    assert_eq!(error, "DataForSEO request failed.");
+}
+
+#[tokio::test]
+async fn dataforseo_ipc_command_handles_payload() {
+    use crate::utils::test_app::{invoke, StorageApp};
+    use tauri::test::mock_builder;
+    let app = StorageApp::new(
+        mock_builder().invoke_handler(tauri::generate_handler![super::dataforseo_request]),
+    );
+    let view = tauri::WebviewWindowBuilder::new(&app.app, "main", Default::default())
+        .build()
+        .unwrap();
+    let err = invoke(
+        &view,
+        "dataforseo_request",
+        json!({"projectId":"p","path":"/v3/bad","payload":null}),
+    )
+    .unwrap_err();
+    assert!(err.as_str().unwrap().contains("Unsupported DataForSEO"));
+}

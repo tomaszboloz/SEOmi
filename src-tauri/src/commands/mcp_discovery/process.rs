@@ -32,16 +32,8 @@ pub(super) fn discover_from_process_blocking_with_program(
                     .to_string()
             })?,
     );
-    let stdin = child
-        .0
-        .stdin
-        .take()
-        .ok_or_else(|| "Could not open MCP server input.".to_string())?;
-    let stdout = child
-        .0
-        .stdout
-        .take()
-        .ok_or_else(|| "Could not open MCP server output.".to_string())?;
+    let stdin = child.0.stdin.take().expect("child stdin is piped");
+    let stdout = child.0.stdout.take().expect("child stdout is piped");
     let line_receiver = protocol_receiver(stdout);
 
     write_requests(stdin)?;
@@ -123,8 +115,7 @@ pub(super) fn write_requests<W: Write>(mut stdin: W) -> Result<(), String> {
         json!({ "jsonrpc": "2.0", "id": 2, "method": "tools/list", "params": {} }),
     ];
     for request in requests {
-        let mut line = serde_json::to_vec(&request)
-            .map_err(|_| "Could not encode MCP request.".to_string())?;
+        let mut line = serde_json::to_vec(&request).expect("static json request is serializable");
         line.push(b'\n');
         stdin
             .write_all(&line)
