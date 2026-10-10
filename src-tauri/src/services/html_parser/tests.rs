@@ -15,3 +15,5 @@ use fixture::SAMPLE_HTML;
 mod content_regressions;
 mod extraction_contracts;
 mod parser_regressions;
+
+mod control_boundaries;

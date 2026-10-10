@@ -125,25 +125,4 @@ async fn query_crux_request(
     response_json(response).await
 }
 #[cfg(test)]
-#[path = "pagespeed/image_tests.rs"]
-mod image_tests;
-#[cfg(test)]
-#[path = "pagespeed/mapping_tests.rs"]
-mod mapping_tests;
-#[cfg(test)]
-#[path = "pagespeed/touch_tests.rs"]
-mod touch_tests;
-#[cfg(test)]
-#[path = "pagespeed/transport_tests.rs"]
-mod transport_tests;
-#[cfg(test)]
-#[path = "pagespeed/validation_tests.rs"]
-mod validation_tests;
-#[cfg(test)]
-include!("pagespeed/command_request_tests.rs");
-#[cfg(test)]
-#[path = "pagespeed/command_tests.rs"]
-mod command_tests;
-#[cfg(test)]
-#[path = "pagespeed/metric_tests.rs"]
-mod metric_tests;
+include!("pagespeed/test_modules.rs");

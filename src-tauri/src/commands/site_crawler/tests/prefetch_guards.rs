@@ -52,3 +52,35 @@ async fn prefetch_http_pages_handles_insufficient_slots_and_empty_queue() {
     assert_eq!(queue.len(), 1);
     assert!(prefetched_order.is_empty());
 }
+
+#[tokio::test]
+async fn prefetch_http_pages_respect_robots_false_skips_robots_filter() {
+    let mut queue = VecDeque::new();
+    queue.push_back(("http://127.0.0.1:9/one".into(), 0));
+    queue.push_back(("http://127.0.0.1:9/two".into(), 0));
+    let mut prefetched_order = VecDeque::new();
+    let mut prefetched_responses = HashMap::new();
+    let client = reqwest::Client::new();
+    let mut config = crawl_config_for_test();
+    config.respect_robots = false;
+
+    prefetch_http_pages(
+        &mut queue,
+        &mut prefetched_order,
+        &mut prefetched_responses,
+        2,
+        10,
+        0,
+        &client,
+        "127.0.0.1",
+        false,
+        None,
+        &[],
+        10,
+        &config,
+        &[],
+    )
+    .await;
+    assert_eq!(prefetched_order.len(), 2);
+    assert_eq!(prefetched_responses.len(), 2);
+}

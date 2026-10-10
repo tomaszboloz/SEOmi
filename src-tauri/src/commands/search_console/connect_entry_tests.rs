@@ -76,3 +76,24 @@ async fn blank_client_secret_is_not_persisted_as_a_credential() {
     );
     assert_eq!(server.finish().await.len(), 2);
 }
+
+#[tokio::test]
+async fn connect_rejects_oauth_without_an_access_token() {
+    let store = Store::default();
+    let server = Server::new(&[("200 OK", r#"{"refresh_token":"fixture-refresh"}"#)]).await;
+    let result = connect_search_console_with(
+        "fixture-project".into(),
+        "fixture.apps.googleusercontent.com".into(),
+        None,
+        dependencies(&store, &server.endpoint, &server.endpoint),
+    )
+    .await;
+    match result {
+        Err(error) => assert_eq!(
+            error,
+            "Google OAuth returned no access token. Connect your account again."
+        ),
+        Ok(_) => panic!("missing access token must fail"),
+    }
+    assert_eq!(server.finish().await.len(), 1);
+}

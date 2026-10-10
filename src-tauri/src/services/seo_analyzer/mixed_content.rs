@@ -75,3 +75,7 @@ pub(super) fn collect_http_resource(
 #[cfg(test)]
 #[path = "mixed_content_tests.rs"]
 mod tests;
+
+#[cfg(test)]
+#[path = "mixed_content_boundary_tests.rs"]
+mod boundary_tests;

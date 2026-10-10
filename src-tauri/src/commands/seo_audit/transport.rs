@@ -128,3 +128,7 @@ pub(super) async fn analyze_fetch_result(
         .await
         .map_err(|error| anyhow!("SEO analysis failed: {error}"))
 }
+
+#[cfg(test)]
+#[path = "transport_resolver_tests.rs"]
+mod resolver_tests;

@@ -54,3 +54,24 @@ async fn site_properties_rejects_provider_status_and_malformed_json() {
         .unwrap()
         .is_empty());
 }
+
+struct FailingResolver;
+impl reqwest::dns::Resolve for FailingResolver {
+    fn resolve(&self, _: reqwest::dns::Name) -> reqwest::dns::Resolving {
+        Box::pin(async { Err(std::io::Error::other("offline").into()) })
+    }
+}
+
+#[tokio::test]
+async fn site_properties_fails_cleanly_on_network_error() {
+    let client = reqwest::Client::builder()
+        .dns_resolver(std::sync::Arc::new(FailingResolver))
+        .no_proxy()
+        .build()
+        .unwrap();
+    let err = super::properties::site_properties(&client, "token")
+        .await
+        .err()
+        .expect("connection must fail");
+    assert_eq!(err, "Google Search Console request failed.");
+}

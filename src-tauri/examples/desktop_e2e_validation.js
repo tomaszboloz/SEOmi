@@ -105,6 +105,7 @@
       check('reject-first validation preserves crawl checkpoint', JSON.stringify(checkpointBefore) === JSON.stringify(checkpointAfter));
       check('reject-first validation preserves audit queue', JSON.stringify(queueBefore) === JSON.stringify(queueAfter));
       await window.__seomiDesktopAdditionalValidation.run({ invoke, projectId, check, reject });
+      await window.__seomiDesktopIpcValidation.run({ invoke, check });
       const workerInitiallyActive = await invoke('render_worker_status');
       check('render worker starts inactive', workerInitiallyActive === false);
       const lease = await invoke('start_render_worker');

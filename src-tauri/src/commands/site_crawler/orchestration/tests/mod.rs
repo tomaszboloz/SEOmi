@@ -100,4 +100,7 @@ mod summary_extra_limits;
 mod summary_extra_limits_edges;
 mod summary_limits;
 
+mod loop_runner_coverage;
 mod loop_runner_depth_boundary;
+
+mod loop_runner_resume_and_cancel;

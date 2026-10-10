@@ -11,14 +11,14 @@ jobs:
     name: Rust Backend Unit & Security Tests
     runs-on: macos-15-intel
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7.0.1
       - uses: dtolnay/rust-toolchain@stable
         with:
           components: clippy, llvm-tools-preview
       - uses: taiki-e/install-action@v2
         with:
           tool: cargo-llvm-cov@0.9.1
-      - uses: actions/setup-node@v4
+      - uses: actions/setup-node@v7.1.0
         with:
           node-version: 22
           cache: 'npm'
@@ -31,7 +31,7 @@ jobs:
       - name: Build MCP server for native coverage
         run: npm run build --prefix mcp-server
       - name: Cache Cargo dependencies
-        uses: actions/cache@v4
+        uses: actions/cache@v6.1.0
         with:
           path: |
             ~/.cargo/bin/
@@ -52,14 +52,14 @@ jobs:
     needs: [test-rust, test-frontend, desktop-platform-smoke, dependency-security]
     runs-on: macos-15-intel
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7.0.1
       - uses: dtolnay/rust-toolchain@stable
         with:
           components: clippy, llvm-tools-preview
       - uses: taiki-e/install-action@v2
         with:
           tool: cargo-llvm-cov@0.9.1
-      - uses: actions/setup-node@v4
+      - uses: actions/setup-node@v7.1.0
         with:
           node-version: 22
           cache: 'npm'
@@ -72,7 +72,7 @@ jobs:
       - name: Build MCP server for native coverage
         run: npm run build --prefix mcp-server
       - name: Cache Cargo dependencies
-        uses: actions/cache@v4
+        uses: actions/cache@v6.1.0
         with:
           path: |
             ~/.cargo/bin/
@@ -102,7 +102,7 @@ jobs:
           node scripts/native-production-coverage.mjs coverage-rust.lcov native-coverage-sources.json coverage-rust-production.lcov coverage-rust.json
       - name: Upload native coverage
         if: always()
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7.0.2
         with:
           name: native-coverage
           path: |
@@ -116,7 +116,7 @@ jobs:
       - name: Inventory declared native functions using Rust AST
         run: cargo run --quiet --manifest-path src-tauri/Cargo.toml --example function_inventory > native-function-inventory.json
       - name: Upload native function inventory
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7.0.2
         with:
           name: native-function-inventory
           path: native-function-inventory.json
@@ -127,11 +127,11 @@ jobs:
     needs: coverage-rust
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
+      - uses: actions/checkout@v7.0.1
+      - uses: actions/setup-node@v7.1.0
         with:
           node-version: 22
-      - uses: actions/download-artifact@v4
+      - uses: actions/download-artifact@v8.0.2
         with:
           name: native-coverage
           path: .
@@ -142,7 +142,7 @@ jobs:
     name: Frontend TypeScript, i18n & Vitest
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7.0.1
       - name: Verify independent product sources
         shell: bash
         run: |
@@ -155,7 +155,7 @@ jobs:
             echo 'Planning or AI instruction files must not be tracked.' >&2
             exit 1
           fi
-      - uses: actions/setup-node@v4
+      - uses: actions/setup-node@v7.1.0
         with:
           node-version: 22
           cache: 'npm'
@@ -177,8 +177,8 @@ jobs:
     needs: [test-rust, test-frontend, desktop-platform-smoke, dependency-security]
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
+      - uses: actions/checkout@v7.0.1
+      - uses: actions/setup-node@v7.1.0
         with:
           node-version: 22
           cache: 'npm'
@@ -194,7 +194,7 @@ jobs:
         run: npm run test:inventory
       - name: Upload frontend coverage
         if: always()
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7.0.2
         with:
           name: frontend-coverage
           if-no-files-found: error
@@ -214,8 +214,8 @@ jobs:
         os: [macos-15-intel, windows-latest]
     runs-on: ${{ matrix.os }}
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
+      - uses: actions/checkout@v7.0.1
+      - uses: actions/setup-node@v7.1.0
         with:
           node-version: 22
           cache: 'npm'
@@ -240,14 +240,18 @@ jobs:
         run: npm run tauri -- build --debug --no-bundle
       - name: Launch actual desktop runtime E2E
         id: desktop-runtime
+        env:
+          SEOMI_E2E_RENDERER: '1'
         run: npm run test:desktop
+      - name: Validate actual desktop renderer evidence
+        run: node scripts/validate-desktop-e2e-report.mjs test-results/desktop-e2e.json
       - name: Diagnose Windows loader failure
         if: failure() && runner.os == 'Windows' && steps.desktop-runtime.outcome == 'failure'
         shell: pwsh
         run: ./scripts/diagnose-windows-loader.ps1 -Executable src-tauri/target/debug/examples/desktop_e2e.exe
       - name: Upload desktop runtime evidence
         if: always()
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7.0.2
         with:
           name: desktop-e2e-${{ matrix.os }}
           path: test-results/desktop-e2e.json
@@ -260,9 +264,9 @@ jobs:
     permissions:
       contents: read
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7.0.1
 
-      - uses: actions/setup-node@v4
+      - uses: actions/setup-node@v7.1.0
         with:
           node-version: 22
           cache: 'npm'
@@ -299,7 +303,7 @@ jobs:
         run: cargo cyclonedx --manifest-path src-tauri/Cargo.toml --format json --target all --override-filename sbom-rust
 
       - name: Upload dependency reports
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7.0.2
         with:
           name: dependency-sbom-${{ github.run_id }}
           if-no-files-found: error

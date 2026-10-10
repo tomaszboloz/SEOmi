@@ -15,6 +15,8 @@ mod content_1;
 mod content_2;
 #[path = "tests/content_3.rs"]
 mod content_3;
+#[path = "tests/content_boundary_contracts.rs"]
+mod content_boundary_contracts;
 #[path = "tests/control_svg.rs"]
 mod control_svg;
 #[path = "tests/duplicates.rs"]
@@ -93,6 +95,8 @@ mod schema_edges;
 mod schema_graph;
 #[path = "tests/schema_graph_edges.rs"]
 mod schema_graph_edges;
+#[path = "tests/schema_graph_helper_tests.rs"]
+mod schema_graph_helper_tests;
 #[path = "tests/schema_references_contracts.rs"]
 mod schema_references_contracts;
 #[path = "tests/scope.rs"]
@@ -115,6 +119,8 @@ mod social_2;
 mod social_bounds;
 #[path = "tests/svg_inline_contracts.rs"]
 mod svg_inline_contracts;
+#[path = "tests/svg_numeric_boundaries.rs"]
+mod svg_numeric_boundaries;
 #[path = "tests/url_normalization_contracts.rs"]
 mod url_normalization_contracts;
 #[path = "tests/url_normalization_edges.rs"]
@@ -123,3 +129,6 @@ mod url_normalization_edges;
 mod wire_contracts;
 #[path = "tests/wire_result_contracts.rs"]
 mod wire_result_contracts;
+
+#[path = "tests/additional_pure_boundaries.rs"]
+mod additional_pure_boundaries;
