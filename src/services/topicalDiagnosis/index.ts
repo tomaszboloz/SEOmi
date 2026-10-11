@@ -33,6 +33,8 @@ export const buildTopicalDiagnosis = (
   const verdicts = buildVerdicts({
     documents, byId: new Map(documents.map((document) => [document.id, document])), links, allLinks, areas, areaByDocument,
     topics, topicByDocument, pairs, stats, startUrl, languages, contentLinks,
+    incompleteLinkEvidence: pages.length > MAX_DIAGNOSIS_PAGES
+      || documents.some((document) => document.pages.some((page) => page.body_truncated || !Array.isArray(page.semantic_links))),
   });
   return {
     documents,

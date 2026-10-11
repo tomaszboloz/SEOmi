@@ -1,4 +1,5 @@
 import { semanticTermIdentity } from '@/services/semanticText';
+import { getDomainWithoutSuffix } from 'tldts';
 import type { DiagnosisDocument } from './types';
 import { BRAND_TOKEN_PATTERN, MIN_DOCUMENTS_FOR_CEILING, SITE_WIDE_TERM_SHARE } from './thresholds';
 
@@ -16,7 +17,7 @@ const localPart = (key: string): string => key.slice(key.indexOf(':') + 1);
 export const brandKeysFor = (startUrl: string, documents: DiagnosisDocument[]): Set<string> => {
   const host = (() => {
     try {
-      return new URL(startUrl).hostname.replace(/^www\./, '');
+      return getDomainWithoutSuffix(new URL(startUrl).hostname, { allowPrivateDomains: true }) ?? '';
     } catch {
       return '';
     }

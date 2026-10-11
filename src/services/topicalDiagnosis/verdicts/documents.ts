@@ -30,7 +30,9 @@ export const documentVerdicts = (context: VerdictContext): DiagnosisVerdict[] =>
     const sources = [...(links.incoming.get(document.id) ?? [])];
     // Without captured content links nothing can be said about who links to a document.
     if (contentLinks && !sources.length && !document.urls.has(start)) {
-      verdicts.push(verdict('document-orphan', 'fix', 'document', document.id, [document]));
+      const orphan = verdict('document-orphan', context.incompleteLinkEvidence ? 'weak' : 'fix', 'document', document.id, [document]);
+      if (context.incompleteLinkEvidence) orphan.confidence = 'limited';
+      verdicts.push(orphan);
     } else if (sources.length > 0 && !topicByDocument.has(document.id) && sources.every((source) => byId.get(source)?.role === 'hub')) {
       const nearest = nearestDocument(document, content, context);
       verdicts.push(verdict('document-isolated', 'weak', 'document', document.id, [document], nearest ? [
