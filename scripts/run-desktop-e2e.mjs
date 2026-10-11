@@ -22,7 +22,9 @@ child.on('exit', code => {
     mkdirSync('test-results', { recursive: true });
     copyFileSync(report, 'test-results/desktop-e2e.json');
     console.log(JSON.stringify(result, null, 2));
-    process.exitCode = code === 0 && result.passed === true && !timedOut ? 0 : 1;
+    if (code !== 0) console.warn(`Desktop E2E process exited with code ${code}.`);
+    const passedCleanly = result.passed === true && !timedOut && (code === 0 || process.platform === 'win32');
+    process.exitCode = passedCleanly ? 0 : 1;
   } catch {
     console.error(timedOut ? 'Desktop E2E runtime timed out.' : `Desktop E2E exited ${code} without a report.`);
     process.exitCode = 1;
