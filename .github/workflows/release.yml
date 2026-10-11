@@ -76,6 +76,10 @@ jobs:
       - name: Install Frontend Dependencies
         run: npm ci
 
+      - name: Prepare verified release notes
+        id: notes
+        run: node scripts/release-notes.mjs
+
       - name: Build Desktop Application with Tauri
         uses: tauri-apps/tauri-action@v0
         env:
@@ -85,13 +89,7 @@ jobs:
         with:
           tagName: ${{ github.event_name == 'push' && github.ref_name || '' }}
           releaseName: 'SEOmi v__VERSION__'
-          releaseBody: |
-            SEOmi desktop release for macOS and Windows.
-
-            Update packages are signed with the SEOmi Tauri updater key. Installers do not carry Apple Developer ID/notarization or Windows Authenticode certificates; the operating system may display security warnings.
-
-            ### Thanks
-            Thank you @RafalSzy for the regression-testing feedback, crawler reports, hybrid rendering work and semantic term grouping contributions.
+          releaseBody: ${{ steps.notes.outputs.body }}
           releaseDraft: true
           prerelease: false
           uploadWorkflowArtifacts: true
