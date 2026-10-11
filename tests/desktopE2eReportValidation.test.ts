@@ -1,6 +1,7 @@
-import { mkdtempSync, rmSync, writeFileSync } from 'node:fs';
+import { copyFileSync, mkdtempSync, rmSync, writeFileSync } from 'node:fs';
+import { spawnSync } from 'node:child_process';
 import { tmpdir } from 'node:os';
-import { join } from 'node:path';
+import { join, resolve } from 'node:path';
 import { expect, it } from 'vitest';
 import {
   assertDesktopE2eReport,
@@ -43,4 +44,24 @@ it('rejects failed validation evidence', () => {
 
 it('accepts the complete executed renderer and validation report', () => {
   expect(assertDesktopE2eReport(report()).passed).toBe(true);
+});
+
+it('executes CLI validation from paths with spaces and propagates report failures', () => {
+  const directory = mkdtempSync(join(tmpdir(), 'seomi validation cli '));
+  try {
+    const script = join(directory, 'validate report.mjs');
+    const path = join(directory, 'report.json');
+    copyFileSync(resolve('scripts/validate-desktop-e2e-report.mjs'), script);
+    writeFileSync(path, JSON.stringify({ ...report(), passed: false }));
+    const failed = spawnSync(process.execPath, [script, path], { encoding: 'utf8', timeout: 5000 });
+    expect(failed.error).toBeUndefined();
+    expect(failed.status).toBe(1);
+    expect(failed.stderr).toContain('report.passed must be true');
+    writeFileSync(path, JSON.stringify(report()));
+    const passed = spawnSync(process.execPath, [script, path], { encoding: 'utf8', timeout: 5000 });
+    expect(passed.status).toBe(0);
+    expect(passed.stdout).toContain('Desktop E2E report passed validation.');
+  } finally {
+    rmSync(directory, { recursive: true, force: true });
+  }
 });

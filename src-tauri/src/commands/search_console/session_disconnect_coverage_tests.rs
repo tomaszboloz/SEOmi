@@ -48,7 +48,10 @@ async fn disconnect_search_console_rejects_invalid_project_id() {
 
 #[tokio::test]
 async fn revoke_refresh_token_at_covers_success_error_and_failure_responses() {
-    let client = reqwest::Client::new();
+    let client = reqwest::Client::builder()
+        .no_proxy()
+        .build()
+        .expect("local revocation fixture client must build");
 
     let listener = TcpListener::bind(("127.0.0.1", 0)).await.unwrap();
     let addr = listener.local_addr().unwrap();

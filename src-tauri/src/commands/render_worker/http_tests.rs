@@ -61,3 +61,18 @@ async fn header_names_must_be_http_tokens_without_whitespace() {
         );
     }
 }
+
+#[tokio::test]
+async fn header_values_reject_control_characters_under_32_except_tab() {
+    for byte in [0u8, 1, 31] {
+        let mut raw = b"GET /health HTTP/1.1\r\nX-Bad: val".to_vec();
+        raw.push(byte);
+        raw.extend_from_slice(b"\r\n\r\n");
+        assert_eq!(
+            parse(&raw).await.unwrap_err(),
+            "Worker request header is invalid."
+        );
+    }
+    let ok = b"GET /health HTTP/1.1\r\nX-Tab: val\tue\r\n\r\n";
+    assert_eq!(parse(ok).await.unwrap().headers["x-tab"], "val\tue");
+}

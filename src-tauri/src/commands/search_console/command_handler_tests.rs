@@ -46,7 +46,7 @@ async fn list_properties_command_handler_validates_and_checks_store() {
     );
 
     let res = list_search_console_properties(VALID_PROJ.into(), VALID_CLIENT.into()).await;
-    let err = res.err().expect("must fail without credentials");
+    let err = res.expect_err("must fail without credentials");
     assert!(err.contains("Search Console refresh token") || err.contains("credential store"));
 }
 

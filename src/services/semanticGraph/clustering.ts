@@ -63,11 +63,13 @@ class MergeQueue {
 /**
  * Average-linkage agglomeration: two groups merge only while the mean
  * similarity over all their page pairs (missing pairs count as 0) stays at or
- * above the topic-edge floor. Unlike connected components, one page that
+ * above the floor (the topic-edge floor by default). Unlike connected components, one page that
  * shares terms with two topics cannot chain them into a single cluster.
  * Returns each page's cluster root, which is the lowest page index in it.
  */
-export const clusterByAverageLinkage = (pageCount: number, similarities: PageSimilarity[]): number[] => {
+export const clusterByAverageLinkage = (
+  pageCount: number, similarities: PageSimilarity[], floor: number = MIN_TOPIC_SIMILARITY,
+): number[] => {
   const root = Array.from({ length: pageCount }, (_, index) => index);
   const size = new Array<number>(pageCount).fill(1);
   const version = new Array<number>(pageCount).fill(0);
@@ -78,7 +80,7 @@ export const clusterByAverageLinkage = (pageCount: number, similarities: PageSim
     const [left, right] = a < b ? [a, b] : [b, a];
     // Only linked groups are enqueued, so the summed similarity exists.
     const average = links[left].get(right)! / (size[left] * size[right]);
-    if (average >= MIN_TOPIC_SIMILARITY) {
+    if (average >= floor) {
       queue.push({ average, left, right, leftVersion: version[left], rightVersion: version[right] });
     }
   };

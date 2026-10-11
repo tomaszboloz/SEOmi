@@ -16,6 +16,9 @@ mod http_body_tests;
 #[cfg(test)]
 mod http_response_tests;
 
+#[cfg(test)]
+mod tests_http_response;
+
 use std::sync::Arc;
 use tauri::{AppHandle, Runtime, State};
 use tokio::{
@@ -96,6 +99,8 @@ pub async fn render_worker_status(state: State<'_, RenderWorkerState>) -> Result
 }
 
 #[cfg(test)]
+mod ipc_direct_coverage;
+#[cfg(test)]
 mod ipc_tests;
 #[cfg(test)]
 mod lifecycle_tests;
@@ -103,3 +108,5 @@ mod lifecycle_tests;
 mod server_contract_tests;
 #[cfg(test)]
 mod server_edge_tests;
+#[cfg(test)]
+mod server_snapshot_tests;

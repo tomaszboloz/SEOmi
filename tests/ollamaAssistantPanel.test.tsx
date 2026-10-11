@@ -56,6 +56,7 @@ describe('local Ollama assistant panel', () => {
     fireEvent.click(screen.getByRole('button', { name: i18n.t('ai.applyTitle') }));
     expect(useAuditStore.getState().currentAudit?.meta_tags.title).toBe(answer.suggestedTitle);
     fireEvent.click(screen.getByRole('button', { name: i18n.t('ai.copyJson') }));
+    await screen.findByRole('button', { name: i18n.t('ai.copied') });
   });
 
   it('reports a real discovery failure without inventing a model or falling back', async () => {
@@ -75,13 +76,13 @@ describe('local Ollama assistant panel', () => {
     await screen.findByRole('alert');
     expect(screen.getByRole('alert').textContent).toBe(i18n.t('ollamaAssistantUi.errors.projectRequired'));
 
-    useProjectStore.setState({ activeProjectId: 'project-one' });
+    act(() => useProjectStore.setState({ activeProjectId: 'project-one' }));
     cleanup();
     await open();
     fireEvent.change(screen.getByRole('spinbutton', { name: i18n.t('ollamaAssistantUi.maxOutputTokens') }), { target: { value: '4097' } });
     expect(screen.getByRole('alert').textContent).toMatch(/output tokens/);
 
-    useAuditStore.setState({ currentAudit: createAuditFixture({ content_stats: { word_count: 0, reading_time_minutes: 0, text_ratio_percent: 0, top_keywords: Array.from({ length: 700 }, (_, index) => ({ keyword: `keyword-${index}-${'x'.repeat(20)}`, count: index })) } }) });
+    act(() => useAuditStore.setState({ currentAudit: createAuditFixture({ content_stats: { word_count: 0, reading_time_minutes: 0, text_ratio_percent: 0, top_keywords: Array.from({ length: 700 }, (_, index) => ({ keyword: `keyword-${index}-${'x'.repeat(20)}`, count: index })) } }) }));
     fireEvent.change(screen.getByRole('combobox', { name: i18n.t('ollamaAssistantUi.model') }), { target: { value: 'llama3.2:latest' } });
     fireEvent.click(screen.getByRole('button', { name: i18n.t('ollamaAssistantUi.generate') }));
     await waitFor(() => expect(screen.getByRole('alert').textContent).toBe(i18n.t('ollamaAssistantUi.errors.promptTooLarge')));

@@ -10,15 +10,19 @@ const initialTools = useToolsStore.getState();
 const initialProjects = useProjectStore.getState();
 
 beforeEach(async () => {
-  await i18n.changeLanguage('en');
+  await act(async () => { await i18n.changeLanguage('en'); });
   localStorage.clear();
-  useProjectStore.setState({ activeProjectId: 'session-coverage' });
-  useToolsStore.setState({ crawlRuns: [], crawlResult: null, crawlRequestProfiles: [] });
+  act(() => {
+    useProjectStore.setState({ activeProjectId: 'session-coverage' });
+    useToolsStore.setState({ crawlRuns: [], crawlResult: null, crawlRequestProfiles: [] });
+  });
 });
 
 afterEach(() => {
-  useToolsStore.setState(initialTools);
-  useProjectStore.setState(initialProjects);
+  act(() => {
+    useToolsStore.setState(initialTools);
+    useProjectStore.setState(initialProjects);
+  });
 });
 
 describe('useSiteAuditSession coverage edges', () => {

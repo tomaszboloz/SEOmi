@@ -17,9 +17,9 @@ const template = { id: 't' } as unknown as CrawlReportTemplate;
 const mount = (project: string | null = 'p1', validate = vi.fn().mockResolvedValue({ valid: true })) =>
   ({ validate, ...renderHook(({ id }) => useCrawlExecution(id, services, ' https://a.test/ ', 25, validate, template), { initialProps: { id: project } }) });
 const run = (id: string, environment: string, startUrl: string) => ({ id, environment, startUrl, result: { health_score: 80 } });
-const seedTools = (patch: Record<string, unknown> = {}) => useToolsStore.setState({ crawlResult: null, crawlRuns: [], isCrawling: false, selectedCrawlRunId: null, crawlError: null, ...patch } as never);
+const seedTools = (patch: Record<string, unknown> = {}) => act(() => useToolsStore.setState({ crawlResult: null, crawlRuns: [], isCrawling: false, selectedCrawlRunId: null, crawlError: null, ...patch } as never));
 
-beforeEach(async () => { localStorage.clear(); sessionStorage.clear(); desktop.value = true; await i18n.changeLanguage('en'); seedTools(); });
+beforeEach(async () => { localStorage.clear(); sessionStorage.clear(); desktop.value = true; await act(async () => { await i18n.changeLanguage('en'); }); seedTools(); });
 afterEach(() => vi.clearAllMocks());
 
 describe('starting a crawl', () => {

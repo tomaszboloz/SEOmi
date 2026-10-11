@@ -1,4 +1,4 @@
-import { fireEvent, render, screen, waitFor } from '@testing-library/react';
+import { act, fireEvent, render, screen, waitFor } from '@testing-library/react';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { FreeSuggestionsPanel } from '@/components/KeywordResearch/freeSuggestions/FreeSuggestionsPanel';
 import { useProjectStore } from '@/stores/projectStore';
@@ -41,7 +41,7 @@ describe('FreeSuggestionsPanel', () => {
     render(<FreeSuggestionsPanel query="seo" geo="PL" language="pl" />);
     fireEvent.click(screen.getByRole('button', { name: /Fetch suggestions/i }));
     await waitFor(() => expect(screen.getByRole('alert').textContent).toContain('HTTP 429'));
-    useProjectStore.setState({ activeProjectId: null });
+    act(() => { useProjectStore.setState({ activeProjectId: null }); });
     await waitFor(() => expect((screen.getByRole('button', { name: /Fetch suggestions/i }) as HTMLButtonElement).disabled).toBe(true));
     expect(screen.getByText(/Select a project/i)).toBeTruthy();
   });

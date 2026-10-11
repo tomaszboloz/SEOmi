@@ -1,8 +1,8 @@
 use super::models::{PREVIEW_NEEDLE_MAX_CHARS, PREVIEW_SELECTOR_MAX_CHARS};
-use super::navigation::is_allowed_navigation;
+use super::preview_handlers::{handle_preview_navigation, handle_preview_page_load};
 use crate::utils::url_validator::validate_and_normalize_url;
 use tauri::{
-    webview::{NewWindowResponse, PageLoadEvent, WebviewWindowBuilder},
+    webview::{NewWindowResponse, WebviewWindowBuilder},
     AppHandle, Runtime,
 };
 
@@ -53,11 +53,9 @@ pub async fn open_rendered_element_preview<R: Runtime>(
         "Preview not-found message",
         PREVIEW_NEEDLE_MAX_CHARS,
     )?;
-    // `validate_and_normalize_url` only returns web URLs with a hostname, so
-    // this invariant cannot fail for a value accepted above.
     let base_host = target
         .host_str()
-        .expect("validated preview URL must have a hostname")
+        .ok_or_else(|| "Preview URL has no hostname.".to_string())?
         .to_ascii_lowercase();
     let label = format!("audit-preview-{}", uuid::Uuid::new_v4().simple());
     let title = preview_title;
@@ -75,12 +73,12 @@ pub async fn open_rendered_element_preview<R: Runtime>(
                 .inner_size(1200.0, 800.0)
                 .on_new_window(|_, _| NewWindowResponse::Deny)
                 .on_navigation(move |navigation_url| {
-                    is_allowed_navigation(navigation_url, &navigation_host, false, None)
+                    handle_preview_navigation(navigation_url, &navigation_host)
                 })
                 .on_page_load(move |window, payload| {
-                    if payload.event() == PageLoadEvent::Finished {
+                    handle_preview_page_load(payload.event(), || {
                         let _ = window.eval(&preview_script);
-                    }
+                    });
                 })
                 .build()
                 .map(|_| ())

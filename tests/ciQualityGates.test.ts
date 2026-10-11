@@ -50,3 +50,12 @@ it.each(['\n', '\r\n'])('keeps strict CI gates with %j line endings', (newline) 
   expect(release).toContain("args: '--target x86_64-apple-darwin'");
   expect(release).toContain("args: '--target aarch64-apple-darwin'");
 });
+
+it('requires actual rendering on both desktop platforms', () => {
+  const workflow = readFileSync('.github/workflows/test.yml', 'utf8');
+  const desktop = workflow.split('  desktop-platform-smoke:')[1].split('  dependency-security:')[0];
+  expect(desktop).toContain('os: [macos-15-intel, windows-latest]');
+  expect(desktop).toMatch(/- name: Launch actual desktop runtime E2E\r?\n\s+id: desktop-runtime\r?\n\s+env:\r?\n\s+SEOMI_E2E_RENDERER: '1'/);
+  expect(desktop).toContain('node scripts/validate-desktop-e2e-report.mjs test-results/desktop-e2e.json');
+  expect(desktop).not.toMatch(/continue-on-error|\|\|\s*true/);
+});

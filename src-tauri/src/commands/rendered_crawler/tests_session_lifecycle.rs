@@ -1,6 +1,6 @@
 use super::{
     models::{CaptureEvent, RenderedArtifactKind},
-    session::RenderedCrawlerSession,
+    session::{notify_window_destroyed, RenderedCrawlerSession},
 };
 use crate::utils::test_app::StorageApp;
 use tauri::{
@@ -8,6 +8,7 @@ use tauri::{
     Manager, WebviewWindowBuilder,
 };
 use tokio::sync::mpsc;
+use tokio::sync::oneshot;
 
 fn fixture() -> (StorageApp, RenderedCrawlerSession<MockRuntime>) {
     let app = StorageApp::new(mock_builder());
@@ -52,6 +53,17 @@ fn close_is_safe_on_the_mock_runtime() {
     // close(), while native Wry removes the actual window. The assertion above
     // and the successful consuming call still cover the lifecycle boundary.
     assert!(app.app.get_webview_window("lifecycle-test").is_some());
+}
+
+#[tokio::test]
+async fn destroyed_event_notifies_close_waiter_once() {
+    let (sender, receiver) = oneshot::channel();
+    let sender = std::sync::Arc::new(std::sync::Mutex::new(Some(sender)));
+    notify_window_destroyed(&tauri::WindowEvent::Focused(true), &sender);
+    notify_window_destroyed(&tauri::WindowEvent::Destroyed, &sender);
+    notify_window_destroyed(&tauri::WindowEvent::Destroyed, &sender);
+    assert!(receiver.await.is_ok());
+    assert!(sender.lock().unwrap().is_none());
 }
 
 #[tokio::test]

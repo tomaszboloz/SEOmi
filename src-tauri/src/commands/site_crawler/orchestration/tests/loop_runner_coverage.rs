@@ -1,11 +1,12 @@
-use super::super::{loop_runner::run_crawl_loop, robots::parse_robots_rules, selectors::CrawlSelectors};
+use super::super::{loop_runner::run_crawl_loop, selectors::CrawlSelectors};
 use super::discovery_http_fixture::{html_route, DiscoveryServer};
 use super::setup_config::default_crawl_config;
 use super::*;
+use crate::commands::site_crawler::robots::parse_robots_rules;
 use crate::utils::test_app::StorageApp;
 use tauri::test::{mock_builder, MockRuntime};
 
-fn empty_state() -> CrawlLoopState<MockRuntime> {
+pub(super) fn empty_state() -> CrawlLoopState<MockRuntime> {
     CrawlLoopState::new(
         Default::default(),
         Default::default(),
@@ -50,7 +51,9 @@ async fn loop_runner_respects_robots_disallow_rules_and_tracks_rejected_urls() {
     assert_eq!(state.robots_blocked_count, 1);
     assert_eq!(state.rejected_urls.len(), 1);
     assert_eq!(state.rejected_urls[0].url, server.url("/disallowed"));
-    assert!(state.rejected_urls[0].reason.contains("Blocked by robots.txt Disallow rule"));
+    assert!(state.rejected_urls[0]
+        .reason
+        .contains("Blocked by robots.txt Disallow rule"));
     assert_eq!(state.pages.len(), 1);
     assert_eq!(state.pages[0].url, server.url("/"));
 }
@@ -94,7 +97,10 @@ async fn loop_runner_prioritizes_prefetched_order_over_queue() {
         default_crawl_config(Some(1)),
         vec![
             html_route("/from_queue", "<html><body><p>Queue</p></body></html>"),
-            html_route("/from_prefetch", "<html><body><p>Prefetch</p></body></html>"),
+            html_route(
+                "/from_prefetch",
+                "<html><body><p>Prefetch</p></body></html>",
+            ),
         ],
     )
     .await;
@@ -102,7 +108,9 @@ async fn loop_runner_prioritizes_prefetched_order_over_queue() {
     let app = StorageApp::new(mock_builder());
     let mut state = empty_state();
     state.queue.push_back((server.url("/from_queue"), 0));
-    state.prefetched_order.push_back((server.url("/from_prefetch"), 0));
+    state
+        .prefetched_order
+        .push_back((server.url("/from_prefetch"), 0));
 
     run_crawl_loop(
         &app.handle(),

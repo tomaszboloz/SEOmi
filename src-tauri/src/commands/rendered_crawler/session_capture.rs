@@ -1,3 +1,4 @@
+use super::capture_acknowledgement::format_capture_acknowledgement;
 use super::models::{
     CaptureEvent, CapturedPayload, RenderedArtifactKind, RenderedPageSnapshot, MAX_CAPTURE_CHUNKS,
     MAX_CAPTURE_CHUNK_BYTES, PAGE_RENDER_TIMEOUT,
@@ -117,10 +118,8 @@ impl<R: Runtime> RenderedCrawlerSession<R> {
                     // A nonce String is always JSON serializable; retain its escaping.
                     let nonce_json =
                         serde_json::to_string(&self.nonce).expect("nonce is JSON serializable");
-                    let acknowledgement = format!(
-                        "window.dispatchEvent(new CustomEvent('seomi-capture-ack', {{detail: {{nonce: {}, sequence: {}, index: {}}}}}));",
-                        nonce_json, sequence, chunk.index
-                    );
+                    let acknowledgement =
+                        format_capture_acknowledgement(&nonce_json, sequence, chunk.index);
                     if chunks[chunk.index].is_none() {
                         chunks[chunk.index] = Some(chunk.data);
                         received += 1;

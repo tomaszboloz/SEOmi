@@ -91,3 +91,7 @@ pub(crate) fn update_queue_if_current<R: Runtime>(
     write_snapshot_unlocked(app, project_id, &next)?;
     Ok(true)
 }
+
+#[cfg(test)]
+#[path = "mutation_tests.rs"]
+mod tests;

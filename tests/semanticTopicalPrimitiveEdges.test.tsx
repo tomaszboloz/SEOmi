@@ -1,5 +1,6 @@
 import { act, fireEvent, render, renderHook, screen } from '@testing-library/react';
-import { describe, expect, it, vi } from 'vitest';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
+import i18n from '@/i18n';
 import { FactReuseToggle, Metric } from '@/components/Charts/semanticTopical/workspacePrimitives';
 import { useTopicalFacts } from '@/components/Charts/semanticTopical/session/useTopicalFacts';
 import type { TopicalMapDocument, TopicalNode } from '@/services/topicalMap';
@@ -12,6 +13,8 @@ const node = (id = 'topic-1'): TopicalNode => ({
 });
 
 const makeDocument = (): TopicalMapDocument => ({ schemaVersion: 1, entity: { name: 'Acme', description: '', facts: [] }, nodes: [], updatedAt: '2026-10-05' });
+
+beforeEach(async () => { await i18n.changeLanguage('en'); });
 
 describe('semantic topical primitive and fact edges', () => {
   it('renders metric values and makes sourced facts toggleable while unsourced facts stay locked', () => {

@@ -30,7 +30,9 @@ pub(crate) fn write_bytes_atomic(destination: &Path, bytes: &[u8]) -> Result<(),
 
 pub(crate) fn read_bytes_bounded(path: &Path, max_bytes: usize) -> io::Result<Vec<u8>> {
     use std::io::Read;
-    let file = std::fs::File::open(path).map_err(|error| {
+    let file = std::fs::File::open(path);
+    #[cfg(windows)]
+    let file = file.map_err(|error| {
         // Windows can report PATH_NOT_FOUND when an ancestor is a regular file.
         // Callers must not confuse broken storage with genuinely absent data.
         if error.kind() == io::ErrorKind::NotFound {
@@ -49,7 +51,8 @@ pub(crate) fn read_bytes_bounded(path: &Path, max_bytes: usize) -> io::Result<Ve
             }
         }
         error
-    })?;
+    });
+    let file = file?;
     let mut bytes = Vec::new();
     file.take((max_bytes as u64).saturating_add(1))
         .read_to_end(&mut bytes)?;

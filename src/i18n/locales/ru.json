@@ -1594,7 +1594,9 @@
       "directory": "URL tree",
       "directoryDescription": "URL hierarchy in this run",
       "plan": "Topical plan",
-      "planDescription": "Topics and semantic audit"
+      "planDescription": "Topics and semantic audit",
+      "diagnosis": "Диагностика",
+      "diagnosisDescription": "Что в порядке, что слабо и что исправить"
     },
     "graph": {
       "fullTitle": "Full link graph map",
@@ -1746,7 +1748,10 @@
         "out-of-scope": "вне ресурса",
         "ambiguous": "неоднозначно"
       }
-    }
+    },
+    "diagnosisFilter": "Область диагностики: {{label}}",
+    "clearDiagnosisFilter": "Показать весь граф",
+    "allTopics": "Все темы ({{count}})"
   },
   "crawlDiff": {
     "fields": {
@@ -5082,6 +5087,158 @@
       "pagespeed": "PageSpeed / CrUX",
       "crawl": "Сравнения обходов",
       "semantic": "Семантические сравнения"
+    }
+  },
+  "ga4": {
+    "title": "Google Analytics 4",
+    "description": "Landing page traffic for the same date range as Search Console. Analytics includes all channels; Search Console covers organic search.",
+    "projectRequired": "Select a project with a website URL to match its Analytics web stream.",
+    "connectFirst": "Connect Search Console with your Google OAuth client first.",
+    "clientSecret": "Google OAuth client secret (optional)",
+    "clientSecretHint": "Stored only in the system credential store after authorization.",
+    "loading": "Loading…",
+    "reconnect": "Authorize again",
+    "authorize": "Authorize Analytics access",
+    "refresh": "Refresh matching property",
+    "property": "Matched Analytics property",
+    "noProperty": "No unique matching web stream was found. Check Analytics access and the project website URL.",
+    "loadReport": "Load traffic report",
+    "truncated": "This result is partial or ambiguous. Do not treat it as complete.",
+    "periodsDiffer": "The report periods differ. Search Console metrics cannot be joined.",
+    "unavailable": "No traffic report has been loaded.",
+    "unknown": "Unavailable",
+    "noRows": "Google Analytics returned no landing page rows for this period.",
+    "landingPage": "Landing page",
+    "host": "Hostname",
+    "sessions": "Sessions",
+    "engagedSessions": "Engaged sessions",
+    "keyEvents": "Key events",
+    "clicks": "GSC clicks",
+    "impressions": "GSC impressions",
+    "issues": "Crawl issues",
+    "rowCount": "Rows: {{count}}"
+  },
+  "topicalDiagnosis": {
+    "title": "Тематическая диагностика",
+    "description": "Документы (языковые версии считаются один раз), области вокруг хаб-страниц, темы из контента и вердикты с конкретным действием. Рассчитано по сохранённому обходу, без языковых моделей.",
+    "noTerms": "В этом обходе нет терминов контента, диагностике нечего обрабатывать. Запустите обход снова.",
+    "truncated": "Анализ ограничен 500 страницами или лимитом пар; часть результатов может отсутствовать.",
+    "empty": "В этой группе нет вердиктов.",
+    "stats": {
+      "documents": "Документы",
+      "pages": "Страницы",
+      "skipped": "Пропущено",
+      "hubs": "Хабы",
+      "topics": "Темы",
+      "singletons": "Одиночные",
+      "languages": "Языки",
+      "mergedPairs": "Языковые пары"
+    },
+    "severity": {
+      "fix": "Исправить",
+      "weak": "Слабо",
+      "info": "Инфо",
+      "good": "Хорошо"
+    },
+    "filter": {
+      "all": "Все · {{count}}",
+      "fix": "Исправить · {{count}}",
+      "weak": "Слабо · {{count}}",
+      "info": "Инфо · {{count}}",
+      "good": "Хорошо · {{count}}"
+    },
+    "areas": {
+      "title": "Области и темы",
+      "noHub": "Без хаба",
+      "hubWithoutMembers": "Хаб без привязанных документов",
+      "members": "{{count}} док.",
+      "showInGraph": "Показать на графе",
+      "hub": "Хаб: {{url}}"
+    },
+    "topics": {
+      "singletons": "Одиночные документы · {{count}}",
+      "labelFromContent": "метка из контента",
+      "noLabel": "Тема без метки",
+      "documents": "{{count}} док."
+    },
+    "roles": {
+      "hub": "хаб",
+      "utility": "служебная страница",
+      "content": "контент"
+    },
+    "scope": {
+      "area": "область",
+      "topic": "тема",
+      "document": "документ"
+    },
+    "verdict": {
+      "hub-missing-backlink": {
+        "title": "Нет ссылки на хаб",
+        "action": "Добавьте на этой странице ссылку на {{hub}}: в навигации, в «хлебных крошках» или в контенте."
+      },
+      "hub-missing-member-link": {
+        "title": "Хаб не ссылается на часть страниц своей темы",
+        "action": "Добавьте недостающие страницы ({{count}}) в список {{hub}}."
+      },
+      "area-healthy": {
+        "title": "Связная область",
+        "action": "Хаб ссылается на все {{count}} документов, и каждый ссылается обратно на хаб. Делать ничего не нужно."
+      },
+      "topic-no-hub": {
+        "title": "Тема без опорной страницы",
+        "action": "Создайте или назначьте опорную страницу для этой темы и свяжите с неё все документы; сейчас их объединяет только контент."
+      },
+      "topic-members-unlinked": {
+        "title": "Страницы темы не ссылаются друг на друга",
+        "action": "Добавьте контекстные ссылки между перечисленными парами ({{count}} пар без ссылки в обе стороны)."
+      },
+      "topic-thin": {
+        "title": "Тонкая тема",
+        "action": "В теме только два документа. Добавьте третий материал или объедините оба, если они отвечают на один вопрос."
+      },
+      "cannibalization-candidate": {
+        "title": "Кандидаты на каннибализацию",
+        "action": "Две страницы на одном языке пересекаются на {{percent}}% и делят слова заголовка: {{titleTokens}}. Сравните интент и объедините их или разведите заголовки."
+      },
+      "document-isolated": {
+        "title": "Изолированная страница",
+        "action": "У неё нет темы, и на неё ссылаются только списки. Добавьте ссылку с ближайшей по контенту страницы: {{url}} ({{percent}}% общих терминов).",
+        "actionNoNearest": "У неё нет темы, и на неё ссылаются только списки. Поставьте ссылку из связанной статьи."
+      },
+      "document-orphan": {
+        "title": "Нет ни одной ссылки из контента",
+        "action": "Ни одна страница не ссылается на неё из основного контента. Добавьте контекстную ссылку со связанной страницы или с хаба."
+      },
+      "near-duplicate": {
+        "title": "Почти идентичный контент",
+        "action": "Сравните обе страницы. Если это дубликат, объедините их или задайте canonical."
+      },
+      "language-pair-missing": {
+        "title": "Нет языковой версии",
+        "action": "Документ существует только на языке {{language}}. Решите, нужен ли перевод; это информация, а не ошибка."
+      }
+    },
+    "evidence": {
+      "hub": "хаб: {{hub}}",
+      "count": "{{count}} страниц",
+      "members": "{{count}} документов",
+      "areas": "{{count}} областей",
+      "withoutHub": "{{count}} без хаба",
+      "pairs": "{{count}} пар",
+      "similarity": "сходство {{percent}}%",
+      "titleTokens": "общие слова заголовка: {{titleTokens}}",
+      "nearest": "ближайшая страница: {{url}}",
+      "hash": "тот же хеш контента",
+      "distance": "SimHash: {{value}}/64",
+      "language": "язык: {{language}}"
+    },
+    "confidence": {
+      "limited": "ограниченная уверенность (неполные данные о контенте)",
+      "moderate": "умеренная уверенность"
+    },
+    "import": {
+      "button": "Импортировать темы диагностики",
+      "topicsCount": "{{count}} тем · запуск {{run}}"
     }
   }
 }

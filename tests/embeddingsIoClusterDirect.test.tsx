@@ -1,11 +1,14 @@
-import { describe, expect, it } from 'vitest';
+import { beforeEach, describe, expect, it } from 'vitest';
 import { render, screen } from '@testing-library/react';
+import i18n from '@/i18n';
 import { writeFileSync, unlinkSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { clusterLabelPrompt } from '@/services/embeddings/cluster';
 import { readInputs } from '@/services/embeddings/io';
 import { SettingsHeader } from '@/components/Settings/settings/SettingsHeader';
+
+beforeEach(async () => { await i18n.changeLanguage('en'); });
 
 describe('embeddings and settings direct assertions', () => {
   it('clusterLabelPrompt formats list of texts into prompt', () => {
@@ -34,6 +37,6 @@ describe('embeddings and settings direct assertions', () => {
 
   it('SettingsHeader renders settings modal title', () => {
     render(<SettingsHeader />);
-    expect(screen.getByText('sidebar.settings')).toBeDefined();
+    expect(screen.getByText(i18n.t('sidebar.settings'))).toBeDefined();
   });
 });

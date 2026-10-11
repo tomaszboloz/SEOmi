@@ -9,3 +9,4 @@ export type { TopicalCalendarDay } from './topicalDocument/calendar';
 export { shiftTopicalCalendarMonth, topicalCalendarDays } from './topicalDocument/calendar';
 export { setTopicalNodeParent, toggleTopicalLateralRelation, setNodeParentFromInput } from './topicalDocument/relations';
 export { importCrawlClusters } from './topicalDocument/clusters';
+export { importDiagnosisTopics } from './topicalDocument/diagnosisImport';

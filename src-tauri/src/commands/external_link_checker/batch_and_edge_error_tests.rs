@@ -96,16 +96,18 @@ async fn mixed_batch_handles_valid_blocked_invalid_and_duplicate_urls() {
         "https://user:pass@example.com/creds".to_string(),
         "http://127.0.0.1/private".to_string(), // duplicate
         "   ".to_string(),                      // whitespace
+        "http://[bad".to_string(),              // unparseable URL
+        "http://[bad".to_string(),              // duplicate unparseable
     ];
     let batch = check_external_crawl_links(app.handle(), "mixed-batch".into(), targets, Some(10))
         .await
         .unwrap();
 
-    assert_eq!(batch.requested, 4);
-    assert_eq!(batch.checked, 4);
+    assert_eq!(batch.requested, 5);
+    assert_eq!(batch.checked, 5);
     assert_eq!(batch.omitted, 0);
-    assert_eq!(batch.results.len(), 4);
-    assert!(events.lock().unwrap().len() >= 4);
+    assert_eq!(batch.results.len(), 5);
+    assert!(events.lock().unwrap().len() >= 5);
 
     for result in &batch.results {
         assert!(result.request_error_kind.is_some());

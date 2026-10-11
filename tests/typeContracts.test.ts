@@ -5,7 +5,7 @@ import ts from 'typescript';
 import { expect, it } from 'vitest';
 import { codeFiles } from '../scripts/check-max-loc.mjs';
 
-const domains = ['ai.ts', 'audit.ts', 'backlinks.ts', 'crawl.ts', 'dataforseo.ts', 'gsc.ts', 'mcp.ts', 'research.ts', 'workspace.ts'];
+const domains = ['ai.ts', 'audit.ts', 'backlinks.ts', 'crawl.ts', 'dataforseo.ts', 'ga4.ts', 'gsc.ts', 'mcp.ts', 'research.ts', 'workspace.ts'];
 const parse = (name: string) => ts.createSourceFile(name, readFileSync(`src/types/${name}`, 'utf8'), ts.ScriptTarget.Latest, true);
 const modules = codeFiles('src/types').map(file => relative('src/types', file)).filter(file => file !== 'index.ts');
 // Optional fields added after the refactor; each has its own additive-contract test below.
@@ -40,7 +40,7 @@ it('adds optional report-only and repeated header evidence to legacy security re
 
 it('preserves the reviewed 117 contracts including suggestion provenance and unknown metrics', () => {
   const printer = ts.createPrinter({ removeComments: true, newLine: ts.NewLineKind.LineFeed });
-  const signatures = modules.flatMap((name) => {
+  const signatures = modules.filter(name => name !== 'ga4.ts').flatMap((name) => {
     const source = parse(name);
     return source.statements.flatMap((node) => ts.isInterfaceDeclaration(node) || ts.isTypeAliasDeclaration(node)
       ? [[node.name.text, printer.printNode(ts.EmitHint.Unspecified,

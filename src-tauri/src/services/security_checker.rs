@@ -140,3 +140,7 @@ fn observed_headers(
         .map(|(name, value)| (name.clone(), vec![value.clone()]))
         .collect()
 }
+
+#[cfg(test)]
+#[path = "security_checker/boundary_contract_tests.rs"]
+mod boundary_contract_tests;

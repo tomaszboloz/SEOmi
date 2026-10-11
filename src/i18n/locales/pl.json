@@ -1594,7 +1594,9 @@
       "directory": "Drzewo URL",
       "directoryDescription": "Hierarchia adresów w runie",
       "plan": "Topical plan",
-      "planDescription": "Tematy i audyt semantyczny"
+      "planDescription": "Tematy i audyt semantyczny",
+      "diagnosis": "Diagnoza",
+      "diagnosisDescription": "Co jest dobrze, co słabo i co poprawić"
     },
     "graph": {
       "fullTitle": "Mapa pełnego grafu linków",
@@ -1746,7 +1748,10 @@
         "out-of-scope": "poza property",
         "ambiguous": "niejednoznaczne"
       }
-    }
+    },
+    "diagnosisFilter": "Zakres z diagnozy: {{label}}",
+    "clearDiagnosisFilter": "Pokaż cały graf",
+    "allTopics": "Wszystkie tematy ({{count}})"
   },
   "crawlDiff": {
     "fields": {
@@ -5082,6 +5087,158 @@
       "pagespeed": "PageSpeed / CrUX",
       "crawl": "Porównania crawlów",
       "semantic": "Porównania semantyczne"
+    }
+  },
+  "ga4": {
+    "title": "Google Analytics 4",
+    "description": "Ruch na stronach docelowych z tego samego okresu co Search Console. Analytics obejmuje wszystkie kanały, a Search Console wyszukiwanie organiczne.",
+    "projectRequired": "Wybierz projekt z adresem witryny, aby dopasować strumień Analytics.",
+    "connectFirst": "Najpierw połącz Search Console przy użyciu klienta Google OAuth.",
+    "clientSecret": "Sekret klienta Google OAuth (opcjonalny)",
+    "clientSecretHint": "Po autoryzacji zapisywany wyłącznie w systemowym magazynie poświadczeń.",
+    "loading": "Wczytywanie…",
+    "reconnect": "Autoryzuj ponownie",
+    "authorize": "Autoryzuj dostęp do Analytics",
+    "refresh": "Odśwież dopasowanie usługi",
+    "property": "Dopasowana usługa Analytics",
+    "noProperty": "Nie znaleziono jednoznacznie dopasowanego strumienia. Sprawdź dostęp do Analytics i adres witryny projektu.",
+    "loadReport": "Wczytaj raport ruchu",
+    "truncated": "Wynik jest częściowy lub niejednoznaczny. Nie traktuj go jako kompletnego.",
+    "periodsDiffer": "Okresy raportów różnią się. Nie można połączyć metryk Search Console.",
+    "unavailable": "Raport ruchu nie został jeszcze wczytany.",
+    "unknown": "Brak danych",
+    "noRows": "Google Analytics nie zwrócił stron docelowych dla tego okresu.",
+    "landingPage": "Strona docelowa",
+    "host": "Host",
+    "sessions": "Sesje",
+    "engagedSessions": "Sesje z zaangażowaniem",
+    "keyEvents": "Kluczowe zdarzenia",
+    "clicks": "Kliknięcia GSC",
+    "impressions": "Wyświetlenia GSC",
+    "issues": "Problemy crawla",
+    "rowCount": "Wiersze: {{count}}"
+  },
+  "topicalDiagnosis": {
+    "title": "Diagnoza tematyczna",
+    "description": "Dokumenty (wersje językowe liczone raz), obszary wokół stron-hubów, tematy z treści i werdykty z konkretną czynnością. Liczone z zapisanego crawla, bez modeli językowych.",
+    "noTerms": "Ten crawl nie ma terminów treści, więc diagnoza nie ma na czym pracować. Uruchom crawl ponownie.",
+    "truncated": "Analiza ograniczona do 500 stron albo limitu par; część wyników może brakować.",
+    "empty": "Brak werdyktów w tej grupie.",
+    "stats": {
+      "documents": "Dokumenty",
+      "pages": "Strony",
+      "skipped": "Pominięte",
+      "hubs": "Huby",
+      "topics": "Tematy",
+      "singletons": "Pojedyncze",
+      "languages": "Języki",
+      "mergedPairs": "Pary językowe"
+    },
+    "severity": {
+      "fix": "Do poprawy",
+      "weak": "Słabo",
+      "info": "Informacja",
+      "good": "Dobrze"
+    },
+    "filter": {
+      "all": "Wszystkie · {{count}}",
+      "fix": "Do poprawy · {{count}}",
+      "weak": "Słabo · {{count}}",
+      "info": "Informacje · {{count}}",
+      "good": "Dobrze · {{count}}"
+    },
+    "areas": {
+      "title": "Obszary i tematy",
+      "noHub": "Bez huba",
+      "hubWithoutMembers": "Hub bez przypisanych dokumentów",
+      "members": "{{count}} dok.",
+      "showInGraph": "Pokaż w grafie",
+      "hub": "Hub: {{url}}"
+    },
+    "topics": {
+      "singletons": "Pojedyncze dokumenty · {{count}}",
+      "labelFromContent": "etykieta z treści",
+      "noLabel": "Temat bez etykiety",
+      "documents": "{{count}} dok."
+    },
+    "roles": {
+      "hub": "hub",
+      "utility": "strona pomocnicza",
+      "content": "treść"
+    },
+    "scope": {
+      "area": "obszar",
+      "topic": "temat",
+      "document": "dokument"
+    },
+    "verdict": {
+      "hub-missing-backlink": {
+        "title": "Brak linku do huba",
+        "action": "Dodaj na tej stronie link do {{hub}}: w nawigacji, ścieżce okruszków albo w treści."
+      },
+      "hub-missing-member-link": {
+        "title": "Hub nie linkuje do części stron swojego tematu",
+        "action": "Dodaj do listy huba {{hub}} brakujące strony ({{count}})."
+      },
+      "area-healthy": {
+        "title": "Obszar spójny",
+        "action": "Hub linkuje do wszystkich {{count}} dokumentów, a każdy z nich linkuje do huba. Nic do zrobienia."
+      },
+      "topic-no-hub": {
+        "title": "Temat bez strony-filaru",
+        "action": "Utwórz lub wskaż stronę-filar tego tematu i podlinkuj z niej wszystkie dokumenty; dziś łączy je tylko treść."
+      },
+      "topic-members-unlinked": {
+        "title": "Strony tematu nie linkują do siebie",
+        "action": "Dodaj linki kontekstowe między wymienionymi parami ({{count}} par bez linku w żadną stronę)."
+      },
+      "topic-thin": {
+        "title": "Cienki temat",
+        "action": "Temat ma tylko dwa dokumenty. Dopisz trzeci materiał albo scal oba, jeśli odpowiadają na to samo pytanie."
+      },
+      "cannibalization-candidate": {
+        "title": "Kandydaci do kanibalizacji",
+        "action": "Dwie strony w tym samym języku pokrywają się w {{percent}}% i dzielą słowa tytułu: {{titleTokens}}. Porównaj intencję i scal je albo rozróżnij tytuły."
+      },
+      "document-isolated": {
+        "title": "Strona odizolowana",
+        "action": "Nie ma tematu i linkują do niej tylko listy. Dodaj link z najbliższej treściowo strony: {{url}} ({{percent}}% wspólnych terminów).",
+        "actionNoNearest": "Nie ma tematu i linkują do niej tylko listy. Podlinkuj ją z pokrewnego artykułu."
+      },
+      "document-orphan": {
+        "title": "Brak jakiegokolwiek linku z treści",
+        "action": "Żadna strona nie linkuje do niej z głównej treści. Dodaj link kontekstowy z pokrewnej strony albo z huba."
+      },
+      "near-duplicate": {
+        "title": "Niemal identyczna treść",
+        "action": "Porównaj obie strony. Jeśli to duplikat, scal je albo ustaw canonical."
+      },
+      "language-pair-missing": {
+        "title": "Brak wersji językowej",
+        "action": "Dokument istnieje tylko w języku {{language}}. Zdecyduj, czy ma mieć tłumaczenie; to informacja, nie błąd."
+      }
+    },
+    "evidence": {
+      "hub": "hub: {{hub}}",
+      "count": "{{count}} stron",
+      "members": "{{count}} dokumentów",
+      "areas": "{{count}} obszarów",
+      "withoutHub": "{{count}} bez huba",
+      "pairs": "{{count}} par",
+      "similarity": "podobieństwo {{percent}}%",
+      "titleTokens": "wspólne słowa tytułu: {{titleTokens}}",
+      "nearest": "najbliższa strona: {{url}}",
+      "hash": "ten sam hash treści",
+      "distance": "SimHash: {{value}}/64",
+      "language": "język: {{language}}"
+    },
+    "confidence": {
+      "limited": "pewność ograniczona (niepełny dowód treści)",
+      "moderate": "pewność umiarkowana"
+    },
+    "import": {
+      "button": "Importuj tematy diagnozy",
+      "topicsCount": "{{count}} tematów · przebieg {{run}}"
     }
   }
 }

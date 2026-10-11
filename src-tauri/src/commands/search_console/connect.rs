@@ -10,7 +10,7 @@ use tokio::{net::TcpListener, time::Duration};
 use url::Url;
 use uuid::Uuid;
 
-const OAUTH_SCOPE: &str = "https://www.googleapis.com/auth/webmasters.readonly";
+pub(super) const OAUTH_SCOPE: &str = "https://www.googleapis.com/auth/webmasters.readonly";
 
 pub(super) async fn connect_search_console(
     project_id: String,
@@ -33,6 +33,23 @@ pub(super) async fn connect_search_console_with<'a>(
     client_secret: Option<String>,
     dependencies: ConnectDependencies<'a>,
 ) -> Result<Vec<GscSiteProperty>, String> {
+    connect_with_scope(
+        project_id,
+        client_id,
+        client_secret,
+        dependencies,
+        OAUTH_SCOPE,
+    )
+    .await
+}
+
+pub(super) async fn connect_with_scope<'a>(
+    project_id: String,
+    client_id: String,
+    client_secret: Option<String>,
+    dependencies: ConnectDependencies<'a>,
+    scope: &str,
+) -> Result<Vec<GscSiteProperty>, String> {
     let client_id = validate_client_id(&client_id)?;
     let refresh_key = refresh_token_key(&project_id)?;
     let old_refresh_token = dependencies.credentials.read(&refresh_key).ok().flatten();
@@ -43,7 +60,8 @@ pub(super) async fn connect_search_console_with<'a>(
         .local_addr()
         .map_err(|error| format!("Unable to determine the OAuth port: {error}"))?
         .port();
-    let (redirect_uri, state, verifier, auth_url) = oauth_request(&client_id, port)?;
+    let (redirect_uri, state, verifier, auth_url) =
+        oauth_request_with_scope(&client_id, port, scope)?;
     (dependencies.open_browser)(auth_url.as_str())?;
     let code = (dependencies.receive_code)(listener, &state).await?;
     let client = reqwest::Client::builder()
@@ -91,9 +109,18 @@ pub(super) async fn connect_search_console_with<'a>(
     Ok(properties)
 }
 
+#[cfg(test)]
 pub(super) fn oauth_request(
     client_id: &str,
     port: u16,
+) -> Result<(String, String, String, Url), String> {
+    oauth_request_with_scope(client_id, port, OAUTH_SCOPE)
+}
+
+pub(super) fn oauth_request_with_scope(
+    client_id: &str,
+    port: u16,
+    scope: &str,
 ) -> Result<(String, String, String, Url), String> {
     let redirect_uri = format!("http://127.0.0.1:{port}/oauth2callback");
     let state = Uuid::new_v4().simple().to_string();
@@ -106,7 +133,7 @@ pub(super) fn oauth_request(
         .append_pair("client_id", client_id)
         .append_pair("redirect_uri", &redirect_uri)
         .append_pair("response_type", "code")
-        .append_pair("scope", OAUTH_SCOPE)
+        .append_pair("scope", scope)
         .append_pair("state", &state)
         .append_pair("code_challenge", &challenge)
         .append_pair("code_challenge_method", "S256")

@@ -3,6 +3,7 @@ export type * from './audit';
 export type * from './backlinks';
 export type * from './crawl';
 export type * from './dataforseo';
+export type * from './ga4';
 export type * from './gsc';
 export type * from './mcp';
 export type * from './research';

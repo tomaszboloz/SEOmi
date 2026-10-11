@@ -13,11 +13,22 @@ const fetchDataForSEO = vi.fn();
 const saveDataForSeoCredentials = vi.fn().mockResolvedValue(undefined);
 const t = (k: string) => i18n.t(k);
 const setup = (patch: object = {}, creds = { login: '', password: '' }) => {
-  useAuditStore.setState({ isDataForSEOLoading: false, dataforseoError: null, fetchDataForSEO, ...patch } as never);
-  useSettingsStore.setState({ dataForSeoCredentials: creds, saveDataForSeoCredentials } as never);
+  act(() => {
+    useAuditStore.setState({ isDataForSEOLoading: false, dataforseoError: null, fetchDataForSEO, ...patch } as never);
+    useSettingsStore.setState({ dataForSeoCredentials: creds, saveDataForSeoCredentials } as never);
+  });
 };
-beforeEach(async () => { await i18n.changeLanguage('en'); vi.clearAllMocks(); });
-afterEach(() => { useAuditStore.setState(audit); useSettingsStore.setState(settings); useProjectStore.setState(projects); });
+beforeEach(async () => {
+  await act(async () => { await i18n.changeLanguage('en'); });
+  vi.clearAllMocks();
+});
+afterEach(() => {
+  act(() => {
+    useAuditStore.setState(audit);
+    useSettingsStore.setState(settings);
+    useProjectStore.setState(projects);
+  });
+});
 
 it('shows required state, placeholder domain and disables fetching without a domain', () => {
   setup();

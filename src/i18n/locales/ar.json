@@ -1594,7 +1594,9 @@
       "directory": "URL tree",
       "directoryDescription": "URL hierarchy in this run",
       "plan": "Topical plan",
-      "planDescription": "Topics and semantic audit"
+      "planDescription": "Topics and semantic audit",
+      "diagnosis": "التشخيص",
+      "diagnosisDescription": "ما هو جيد، وما هو ضعيف، وما يجب إصلاحه"
     },
     "graph": {
       "fullTitle": "Full link graph map",
@@ -1746,7 +1748,10 @@
         "out-of-scope": "خارج الخاصية",
         "ambiguous": "ملتبس"
       }
-    }
+    },
+    "diagnosisFilter": "نطاق التشخيص: {{label}}",
+    "clearDiagnosisFilter": "عرض الرسم كاملًا",
+    "allTopics": "كل المواضيع ({{count}})"
   },
   "crawlDiff": {
     "fields": {
@@ -5082,6 +5087,158 @@
       "pagespeed": "PageSpeed / CrUX",
       "crawl": "مقارنات الزحف",
       "semantic": "المقارنات الدلالية"
+    }
+  },
+  "ga4": {
+    "title": "Google Analytics 4",
+    "description": "Landing page traffic for the same date range as Search Console. Analytics includes all channels; Search Console covers organic search.",
+    "projectRequired": "Select a project with a website URL to match its Analytics web stream.",
+    "connectFirst": "Connect Search Console with your Google OAuth client first.",
+    "clientSecret": "Google OAuth client secret (optional)",
+    "clientSecretHint": "Stored only in the system credential store after authorization.",
+    "loading": "Loading…",
+    "reconnect": "Authorize again",
+    "authorize": "Authorize Analytics access",
+    "refresh": "Refresh matching property",
+    "property": "Matched Analytics property",
+    "noProperty": "No unique matching web stream was found. Check Analytics access and the project website URL.",
+    "loadReport": "Load traffic report",
+    "truncated": "This result is partial or ambiguous. Do not treat it as complete.",
+    "periodsDiffer": "The report periods differ. Search Console metrics cannot be joined.",
+    "unavailable": "No traffic report has been loaded.",
+    "unknown": "Unavailable",
+    "noRows": "Google Analytics returned no landing page rows for this period.",
+    "landingPage": "Landing page",
+    "host": "Hostname",
+    "sessions": "Sessions",
+    "engagedSessions": "Engaged sessions",
+    "keyEvents": "Key events",
+    "clicks": "GSC clicks",
+    "impressions": "GSC impressions",
+    "issues": "Crawl issues",
+    "rowCount": "Rows: {{count}}"
+  },
+  "topicalDiagnosis": {
+    "title": "التشخيص الموضوعي",
+    "description": "المستندات (تُحسب النسخ اللغوية مرة واحدة)، والمناطق حول صفحات المحور، والمواضيع من المحتوى، وأحكام مع إجراء محدد. يُحسب من الزحف المحفوظ دون نماذج لغوية.",
+    "noTerms": "لا يحتوي هذا الزحف على مصطلحات محتوى، فلا شيء يعمل عليه التشخيص. أعد تشغيل الزحف.",
+    "truncated": "اقتصر التحليل على 500 صفحة أو على حد الأزواج؛ قد تكون بعض النتائج مفقودة.",
+    "empty": "لا أحكام في هذه المجموعة.",
+    "stats": {
+      "documents": "المستندات",
+      "pages": "الصفحات",
+      "skipped": "المتجاوَزة",
+      "hubs": "المحاور",
+      "topics": "المواضيع",
+      "singletons": "منفردة",
+      "languages": "اللغات",
+      "mergedPairs": "أزواج اللغات"
+    },
+    "severity": {
+      "fix": "للإصلاح",
+      "weak": "ضعيف",
+      "info": "معلومة",
+      "good": "جيد"
+    },
+    "filter": {
+      "all": "الكل · {{count}}",
+      "fix": "للإصلاح · {{count}}",
+      "weak": "ضعيف · {{count}}",
+      "info": "معلومات · {{count}}",
+      "good": "جيد · {{count}}"
+    },
+    "areas": {
+      "title": "المناطق والمواضيع",
+      "noHub": "بدون محور",
+      "hubWithoutMembers": "محور بدون مستندات مرتبطة",
+      "members": "{{count}} مستند",
+      "showInGraph": "عرض في الرسم",
+      "hub": "المحور: {{url}}"
+    },
+    "topics": {
+      "singletons": "مستندات منفردة · {{count}}",
+      "labelFromContent": "تسمية من المحتوى",
+      "noLabel": "موضوع بلا تسمية",
+      "documents": "{{count}} مستند"
+    },
+    "roles": {
+      "hub": "محور",
+      "utility": "صفحة مساعدة",
+      "content": "محتوى"
+    },
+    "scope": {
+      "area": "منطقة",
+      "topic": "موضوع",
+      "document": "مستند"
+    },
+    "verdict": {
+      "hub-missing-backlink": {
+        "title": "لا رابط إلى المحور",
+        "action": "أضف في هذه الصفحة رابطًا إلى {{hub}}: في التنقل أو مسار التنقل أو المحتوى."
+      },
+      "hub-missing-member-link": {
+        "title": "المحور لا يربط ببعض صفحات موضوعه",
+        "action": "أضف الصفحات المفقودة ({{count}}) إلى قائمة {{hub}}."
+      },
+      "area-healthy": {
+        "title": "منطقة متماسكة",
+        "action": "يربط المحور بجميع المستندات ({{count}}) ويربط كل منها بالمحور. لا شيء مطلوب."
+      },
+      "topic-no-hub": {
+        "title": "موضوع بلا صفحة ركيزة",
+        "action": "أنشئ أو عيّن صفحة ركيزة لهذا الموضوع واربط منها جميع المستندات؛ اليوم لا يجمعها سوى المحتوى."
+      },
+      "topic-members-unlinked": {
+        "title": "صفحات الموضوع لا تربط ببعضها",
+        "action": "أضف روابط سياقية بين الأزواج المذكورة ({{count}} زوجًا بلا رابط في أي اتجاه)."
+      },
+      "topic-thin": {
+        "title": "موضوع ضعيف",
+        "action": "يحتوي الموضوع على مستندَين فقط. أضف مادة ثالثة أو ادمجهما إن كانا يجيبان عن السؤال نفسه."
+      },
+      "cannibalization-candidate": {
+        "title": "مرشحان للتنافس الذاتي",
+        "action": "صفحتان بنفس اللغة تتداخلان بنسبة {{percent}}% وتتشاركان كلمات العنوان: {{titleTokens}}. قارن النية وادمجهما أو ميّز العنوانين."
+      },
+      "document-isolated": {
+        "title": "صفحة معزولة",
+        "action": "ليس لها موضوع ولا تربط بها سوى صفحات القوائم. أضف رابطًا من أقرب صفحة في المحتوى: {{url}} ({{percent}}% مصطلحات مشتركة).",
+        "actionNoNearest": "ليس لها موضوع ولا تربط بها سوى صفحات القوائم. اربطها من مقال ذي صلة."
+      },
+      "document-orphan": {
+        "title": "لا رابط من المحتوى إطلاقًا",
+        "action": "لا تربط بها أي صفحة من المحتوى الرئيسي. أضف رابطًا سياقيًا من صفحة ذات صلة أو من المحور."
+      },
+      "near-duplicate": {
+        "title": "محتوى شبه متطابق",
+        "action": "قارن الصفحتين. إن كان تكرارًا فادمجهما أو عيّن canonical."
+      },
+      "language-pair-missing": {
+        "title": "نسخة لغوية مفقودة",
+        "action": "المستند موجود بلغة {{language}} فقط. قرر إن كان يحتاج ترجمة؛ هذه معلومة وليست خطأ."
+      }
+    },
+    "evidence": {
+      "hub": "المحور: {{hub}}",
+      "count": "{{count}} صفحة",
+      "members": "{{count}} مستند",
+      "areas": "{{count}} منطقة",
+      "withoutHub": "{{count}} بدون محور",
+      "pairs": "{{count}} زوج",
+      "similarity": "التشابه {{percent}}%",
+      "titleTokens": "كلمات العنوان المشتركة: {{titleTokens}}",
+      "nearest": "أقرب صفحة: {{url}}",
+      "hash": "نفس تجزئة المحتوى",
+      "distance": "SimHash: {{value}}/64",
+      "language": "اللغة: {{language}}"
+    },
+    "confidence": {
+      "limited": "ثقة محدودة (دليل محتوى غير كامل)",
+      "moderate": "ثقة متوسطة"
+    },
+    "import": {
+      "button": "استيراد مواضيع التشخيص",
+      "topicsCount": "{{count}} موضوعًا · التشغيل {{run}}"
     }
   }
 }

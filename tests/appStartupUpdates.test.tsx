@@ -1,4 +1,4 @@
-import { renderHook } from '@testing-library/react';
+import { act, renderHook } from '@testing-library/react';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { useAppStartup } from '@/hooks/app/useAppStartup';
 import { useSettingsStore } from '@/stores/settingsStore';
@@ -14,7 +14,12 @@ vi.mock('@/services/tauri', () => ({ isTauriEnvironment: mocks.isTauri, invokeTa
 vi.mock('@/services/settingsComposition', () => ({ connectSettingsStores: mocks.connect }));
 
 const setConfig = (auto_check_updates: boolean, auto_install_updates: boolean, loadConfig = vi.fn()) =>
-  useSettingsStore.setState({ loadConfig, config: { ...useSettingsStore.getState().config, auto_check_updates, auto_install_updates } } as never);
+  act(() => useSettingsStore.setState({ loadConfig, config: { ...useSettingsStore.getState().config, auto_check_updates, auto_install_updates } } as never));
+const renderStartup = async () => {
+  let hook: ReturnType<typeof renderHook> | undefined;
+  await act(async () => { hook = renderHook(() => useAppStartup()); });
+  return hook!;
+};
 
 describe('useAppStartup', () => {
   beforeEach(() => {
@@ -26,10 +31,10 @@ describe('useAppStartup', () => {
   });
   afterEach(() => vi.useRealTimers());
 
-  it('connects stores, loads config and disconnects on unmount', () => {
+  it('connects stores, loads config and disconnects on unmount', async () => {
     const loadConfig = vi.fn();
     setConfig(false, false, loadConfig);
-    const { unmount } = renderHook(() => useAppStartup());
+    const { unmount } = await renderStartup();
     expect(mocks.connect).toHaveBeenCalledTimes(1);
     expect(loadConfig).toHaveBeenCalledTimes(1);
     unmount();
@@ -39,10 +44,10 @@ describe('useAppStartup', () => {
   it('does not schedule an update check outside Tauri or when disabled', async () => {
     mocks.isTauri.mockReturnValue(false);
     setConfig(true, true);
-    renderHook(() => useAppStartup());
+    await renderStartup();
     setConfig(false, true);
     mocks.isTauri.mockReturnValue(true);
-    renderHook(() => useAppStartup());
+    await renderStartup();
     await vi.advanceTimersByTimeAsync(5000);
     expect(mocks.invoke).not.toHaveBeenCalled();
   });
@@ -50,7 +55,7 @@ describe('useAppStartup', () => {
   it('only checks, without installing, when auto-install is off', async () => {
     setConfig(true, false);
     mocks.invoke.mockResolvedValue({ available: true });
-    renderHook(() => useAppStartup());
+    await renderStartup();
     await vi.advanceTimersByTimeAsync(3499);
     expect(mocks.invoke).not.toHaveBeenCalled();
     await vi.advanceTimersByTimeAsync(1);
@@ -60,7 +65,7 @@ describe('useAppStartup', () => {
   it('skips installing when no update is available', async () => {
     setConfig(true, true);
     mocks.invoke.mockResolvedValue({ available: false });
-    renderHook(() => useAppStartup());
+    await renderStartup();
     await vi.advanceTimersByTimeAsync(4000);
     expect(mocks.invoke.mock.calls).toEqual([['check_for_updates']]);
   });
@@ -72,7 +77,7 @@ describe('useAppStartup', () => {
     const events: unknown[] = [];
     const handler = (e: Event) => events.push((e as CustomEvent).detail);
     window.addEventListener('seomi-update-installed', handler);
-    renderHook(() => useAppStartup());
+    await renderStartup();
     await vi.advanceTimersByTimeAsync(4000);
     window.removeEventListener('seomi-update-installed', handler);
     expect(events).toEqual([installed]);
@@ -84,13 +89,13 @@ describe('useAppStartup', () => {
     const handler = (e: Event) => events.push(e);
     window.addEventListener('seomi-update-installed', handler);
     mocks.invoke.mockImplementation((cmd: string) => cmd === 'install_update' ? Promise.reject(new Error('no')) : Promise.resolve({ available: true }));
-    renderHook(() => useAppStartup());
+    await renderStartup();
     await vi.advanceTimersByTimeAsync(4000);
     mocks.invoke.mockImplementation((cmd: string) => Promise.resolve(cmd === 'install_update' ? { installed: false } : { available: true }));
-    renderHook(() => useAppStartup());
+    await renderStartup();
     await vi.advanceTimersByTimeAsync(4000);
     mocks.invoke.mockRejectedValue(new Error('offline'));
-    renderHook(() => useAppStartup());
+    await renderStartup();
     await vi.advanceTimersByTimeAsync(4000);
     window.removeEventListener('seomi-update-installed', handler);
     expect(events).toHaveLength(0);
@@ -98,13 +103,13 @@ describe('useAppStartup', () => {
 
   it('cancels the pending check and drops late results after unmount', async () => {
     setConfig(true, true);
-    const { unmount } = renderHook(() => useAppStartup());
+    const { unmount } = await renderStartup();
     unmount();
     await vi.advanceTimersByTimeAsync(5000);
     expect(mocks.invoke).not.toHaveBeenCalled();
     let resolve!: (v: unknown) => void;
     mocks.invoke.mockReturnValueOnce(new Promise((r) => { resolve = r; }));
-    const second = renderHook(() => useAppStartup());
+    const second = await renderStartup();
     await vi.advanceTimersByTimeAsync(3500);
     second.unmount();
     resolve({ available: true });

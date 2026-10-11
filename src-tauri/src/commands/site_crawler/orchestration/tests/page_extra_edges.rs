@@ -1,5 +1,7 @@
 use super::super::page_extra_schema_pagination::extract_page_schema_and_pagination;
+use super::super::page_extra_social::extract_page_social_and_frames;
 use super::super::selectors::CrawlSelectors;
+use super::*;
 use scraper::Html;
 use url::Url;
 
@@ -44,4 +46,63 @@ fn schema_syntax_warning_and_hreflang_pagination_edges() {
         .iter()
         .any(|i| i.message.contains("invalid JSON-LD block")));
     assert!(result.amp_url.is_none());
+}
+
+#[test]
+fn social_meta_image_candidates_added_to_resource_candidates() {
+    let html = r#"<!DOCTYPE html>
+<html>
+<head>
+    <meta property="og:image" content="https://example.test/social.png">
+    <link rel="icon" href="/favicon.ico">
+</head>
+<body></body>
+</html>"#;
+    let document = Html::parse_document(html);
+    let base = Url::parse("https://example.test/page").unwrap();
+    let mut config = default_crawl_config(None);
+    config.crawl_images = true;
+    let setup = setup(config);
+    let mut state = state();
+
+    let outcome = extract_page_social_and_frames(
+        &document,
+        &base,
+        "https://example.test/page",
+        true,
+        &setup,
+        &mut state,
+    );
+
+    assert_eq!(outcome.favicons.len(), 1);
+    assert_eq!(outcome.social_meta_tags.len(), 1);
+    assert!(state
+        .resource_candidates
+        .contains_key("https://example.test/social.png"));
+    assert!(state
+        .resource_candidates
+        .contains_key("https://example.test/favicon.ico"));
+}
+
+#[test]
+fn extract_page_social_and_frames_non_html_returns_empty() {
+    let document = Html::parse_document("not html content");
+    let base = Url::parse("https://example.test/page").unwrap();
+    let setup = setup(default_crawl_config(None));
+    let mut state = state();
+
+    let outcome = extract_page_social_and_frames(
+        &document,
+        &base,
+        "https://example.test/page",
+        false,
+        &setup,
+        &mut state,
+    );
+
+    assert!(outcome.favicons.is_empty());
+    assert!(outcome.social_meta_tags.is_empty());
+    assert!(outcome.frames.is_empty());
+    assert!(!outcome.frames_truncated);
+    assert!(state.resource_candidates.is_empty());
 }

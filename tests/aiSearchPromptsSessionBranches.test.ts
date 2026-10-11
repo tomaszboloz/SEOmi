@@ -1,4 +1,4 @@
-import { act, renderHook, waitFor } from '@testing-library/react';
+import { act, cleanup, renderHook, waitFor } from '@testing-library/react';
 import { afterEach, beforeEach, expect, it, vi } from 'vitest';
 import type { FormEvent } from 'react';
 import { useAiSearchPromptsSession } from '@/components/AiVisibility/searchPrompts/useAiSearchPromptsSession';
@@ -20,33 +20,49 @@ beforeEach(() => {
   vi.clearAllMocks();
   mocks.read.mockReturnValue(null); mocks.write.mockReturnValue(true); mocks.remove.mockReturnValue(true); mocks.copyText.mockResolvedValue(true);
   mocks.match.mockImplementation((c: { id: string }) => ({ id: c.id, matched: c.id !== 'x', context: c.id === 'a' ? { meetsMinimum: true, sentenceMatch: true } : undefined }));
-  useProjectStore.setState({ activeProjectId: 'proj' });
-  useToolsStore.setState({ crawlRuns: runs, selectedCrawlRunId: null, aiSearchPrompt: '', aiPromptComparison: null, ...spies } as never);
+  act(() => {
+    useProjectStore.setState({ activeProjectId: 'proj' });
+    useToolsStore.setState({ crawlRuns: runs, selectedCrawlRunId: null, aiSearchPrompt: '', aiPromptComparison: null, ...spies } as never);
+  });
 });
-afterEach(() => { useToolsStore.setState(tools); useProjectStore.setState(projects); });
+afterEach(() => {
+  cleanup();
+  act(() => { useToolsStore.setState(tools); useProjectStore.setState(projects); });
+});
 
 it('defaults the source run to the first run, then to the selected run, then to a saved run', () => {
   const first = renderHook(() => useAiSearchPromptsSession());
   expect(first.result.current.sourceContextRunId).toBe('r1');
   expect(first.result.current.sourceContextRun?.id).toBe('r1');
   first.unmount();
-  useToolsStore.setState({ selectedCrawlRunId: 'r2' });
-  expect(renderHook(() => useAiSearchPromptsSession()).result.current.sourceContextRunId).toBe('r2');
+  act(() => { useToolsStore.setState({ selectedCrawlRunId: 'r2' }); });
+  const selected = renderHook(() => useAiSearchPromptsSession());
+  expect(selected.result.current.sourceContextRunId).toBe('r2');
+  selected.unmount();
   mocks.read.mockReturnValue('r1');
-  expect(renderHook(() => useAiSearchPromptsSession()).result.current.sourceContextRunId).toBe('r1');
+  const saved = renderHook(() => useAiSearchPromptsSession());
+  expect(saved.result.current.sourceContextRunId).toBe('r1');
+  saved.unmount();
   mocks.read.mockReturnValue('gone');
-  expect(renderHook(() => useAiSearchPromptsSession()).result.current.sourceContextRunId).toBe('r2');
+  const missing = renderHook(() => useAiSearchPromptsSession());
+  expect(missing.result.current.sourceContextRunId).toBe('r2');
+  missing.unmount();
 });
 
 it('has no source run without a project or runs', () => {
-  useProjectStore.setState({ activeProjectId: null });
+  act(() => { useProjectStore.setState({ activeProjectId: null }); });
   const none = renderHook(() => useAiSearchPromptsSession());
   expect(none.result.current.sourceContextRunId).toBe('');
   act(() => none.result.current.selectSourceContextRun('r2'));
   expect(mocks.write).not.toHaveBeenCalled();
-  useProjectStore.setState({ activeProjectId: 'proj' });
-  useToolsStore.setState({ crawlRuns: [] });
-  expect(renderHook(() => useAiSearchPromptsSession()).result.current.sourceContextRunId).toBe('');
+  none.unmount();
+  act(() => {
+    useProjectStore.setState({ activeProjectId: 'proj' });
+    useToolsStore.setState({ crawlRuns: [] });
+  });
+  const empty = renderHook(() => useAiSearchPromptsSession());
+  expect(empty.result.current.sourceContextRunId).toBe('');
+  empty.unmount();
 });
 
 it('persists, clears and reports storage failures for the chosen source run', () => {
@@ -64,7 +80,7 @@ it('persists, clears and reports storage failures for the chosen source run', ()
 
 it('summarises citation evidence per result', () => {
   const cit = (id: string) => ({ id });
-  useToolsStore.setState({ aiPromptComparison: { results: [{ response_text: 'txt', citations: [cit('a'), cit('b'), cit('x')] }, { response_text: '', citations: [] }] } as never });
+  act(() => { useToolsStore.setState({ aiPromptComparison: { results: [{ response_text: 'txt', citations: [cit('a'), cit('b'), cit('x')] }, { response_text: '', citations: [] }] } as never }); });
   const { result } = renderHook(() => useAiSearchPromptsSession());
   expect(result.current.citationSummaries).toEqual([{ total: 3, matched: 2, contextual: 1, sentenceMatches: 1 }, { total: 0, matched: 0, contextual: 0, sentenceMatches: 0 }]);
   expect(mocks.match).toHaveBeenCalledWith({ id: 'a' }, expect.objectContaining({ id: 'r1' }), 'txt');
@@ -72,18 +88,20 @@ it('summarises citation evidence per result', () => {
 });
 
 it('compares only a non-blank prompt, trimmed', () => {
-  useToolsStore.setState({ aiSearchPrompt: '   ' });
+  act(() => { useToolsStore.setState({ aiSearchPrompt: '   ' }); });
   const blank = renderHook(() => useAiSearchPromptsSession());
   const e = evt();
   act(() => blank.result.current.handleCompare(e));
   expect(e.preventDefault).toHaveBeenCalled();
   expect(spies.runAiPromptComparison).not.toHaveBeenCalled();
-  useToolsStore.setState({ aiSearchPrompt: ' best crm ' });
+  act(() => { useToolsStore.setState({ aiSearchPrompt: ' best crm ' }); });
   const filled = renderHook(() => useAiSearchPromptsSession());
   act(() => filled.result.current.handleCompare(evt()));
   expect(spies.setAiSearchPrompt).toHaveBeenCalledWith('best crm');
   expect(spies.runAiPromptComparison).toHaveBeenCalledWith('best crm');
   expect(Array.isArray(filled.result.current.samplePrompts)).toBe(true);
+  blank.unmount();
+  filled.unmount();
 });
 
 it('marks a prompt as copied only when the clipboard succeeds', async () => {
@@ -97,7 +115,7 @@ it('marks a prompt as copied only when the clipboard succeeds', async () => {
 });
 
 it('falls back to an empty id when the selected run has a blank id', () => {
-  useToolsStore.setState({ crawlRuns: [createCrawlRunFixture({ id: '' })], selectedCrawlRunId: '' });
+  act(() => { useToolsStore.setState({ crawlRuns: [createCrawlRunFixture({ id: '' })], selectedCrawlRunId: '' }); });
   const { result } = renderHook(() => useAiSearchPromptsSession());
   expect(result.current.sourceContextRunId).toBe('');
 });

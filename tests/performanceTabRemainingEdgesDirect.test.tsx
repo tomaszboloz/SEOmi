@@ -42,7 +42,12 @@ describe('crawl performance edge contracts', () => {
     expect(screen.getByText('https://example.test/final')).toBeTruthy();
     const downloadBtn = screen.getByRole('button', { name: 'crawlDeepUi.downloadAgain' });
     expect(downloadBtn).toBeTruthy();
-    fireEvent.click(downloadBtn);
+    const filenames: string[] = [];
+    const download = vi.spyOn(HTMLAnchorElement.prototype, 'click').mockImplementation(function (this: HTMLAnchorElement) { filenames.push(this.download); });
+    try {
+      fireEvent.click(downloadBtn);
+      expect(filenames).toEqual(['page.pdf']);
+    } finally { download.mockRestore(); }
   });
 
 

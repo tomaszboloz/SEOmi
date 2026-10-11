@@ -99,3 +99,12 @@ async fn invalid_links_never_invoke_the_status_transport() {
     assert!(error.starts_with("Invalid link URL:"));
     assert!(!called.get());
 }
+
+#[tokio::test]
+async fn check_link_executes_outer_transport_wrapper() {
+    let result = check_link("https://nonexistent.invalid".into(), Some(1))
+        .await
+        .unwrap();
+    assert_eq!(result.status, 0);
+    assert!(result.is_broken);
+}

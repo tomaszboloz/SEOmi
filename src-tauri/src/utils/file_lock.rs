@@ -4,6 +4,7 @@ use std::{
     path::Path,
 };
 
+#[derive(Debug)]
 pub(crate) struct FileLock {
     _file: File,
 }

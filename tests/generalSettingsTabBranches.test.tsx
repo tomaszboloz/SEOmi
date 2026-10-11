@@ -1,4 +1,4 @@
-import { render, screen, fireEvent } from '@testing-library/react';
+import { render, screen, fireEvent, act, cleanup } from '@testing-library/react';
 import { afterEach, beforeEach, expect, it, vi } from 'vitest';
 import i18n from '@/i18n';
 import { GeneralSettingsTab } from '@/components/Settings/settings/GeneralSettingsTab';
@@ -20,8 +20,22 @@ const setup = (props: Partial<{ enabled: boolean; status: string | null }> = {},
   render(<GeneralSettingsTab auditNotificationsEnabled={props.enabled ?? false} notificationStatus={props.status ?? null} handleAuditNotificationsChange={onChange} />);
   return onChange;
 };
-beforeEach(async () => { await i18n.changeLanguage('en'); vi.clearAllMocks(); mocks.tauri = true; useProjectStore.setState({ activeProjectId: 'p1' }); });
-afterEach(() => { useSettingsStore.setState(settings); useProjectStore.setState(projects); });
+beforeEach(async () => {
+  cleanup();
+  if (i18n.language !== 'en') {
+    await act(async () => {
+      await i18n.changeLanguage('en');
+    });
+  }
+  vi.clearAllMocks();
+  mocks.tauri = true;
+  useProjectStore.setState({ activeProjectId: 'p1' });
+});
+afterEach(() => {
+  cleanup();
+  useSettingsStore.setState(settings);
+  useProjectStore.setState(projects);
+});
 
 it('switches theme and highlights the active one', () => {
   setup();

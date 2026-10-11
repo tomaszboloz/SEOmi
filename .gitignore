@@ -28,6 +28,9 @@ out/
 .eslintcache
 .stylelintcache
 coverage/
+/coverage-rust*.lcov*
+/coverage-rust.json
+/native-coverage-sources.json
 .nyc_output/
 playwright-report/
 blob-report/

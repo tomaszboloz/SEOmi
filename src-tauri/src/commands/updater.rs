@@ -34,10 +34,9 @@ pub async fn check_for_updates<R: Runtime>(app: AppHandle<R>) -> Result<UpdateSt
 }
 
 async fn check_for_updates_with<R: Runtime>(app: AppHandle<R>) -> Result<UpdateStatus, String> {
-    let updater = match app.updater() {
-        Ok(u) => u,
-        Err(e) => return Err(format!("Updater initialization: {}", e)),
-    };
+    let updater = app
+        .updater()
+        .map_err(|error| format!("Updater initialization: {error}"))?;
 
     match updater.check().await {
         Ok(Some(update)) => {
@@ -82,6 +81,24 @@ pub async fn install_update<R: Runtime>(app: AppHandle<R>) -> Result<UpdateStatu
 }
 
 async fn install_update_with<R: Runtime>(app: AppHandle<R>) -> Result<UpdateStatus, String> {
+    install_update_step(app, |update| async move {
+        update
+            .restart_after_install(false)
+            .download_and_install(|_, _| {}, || {})
+            .await
+            .map_err(|error| format!("Update installation failed: {error}"))
+    })
+    .await
+}
+
+async fn install_update_step<R: Runtime, F, Fut>(
+    app: AppHandle<R>,
+    installer: F,
+) -> Result<UpdateStatus, String>
+where
+    F: FnOnce(tauri_plugin_updater::Update) -> Fut,
+    Fut: std::future::Future<Output = Result<(), String>>,
+{
     let updater = app
         .updater()
         .map_err(|error| format!("Updater initialization: {error}"))?;
@@ -91,11 +108,7 @@ async fn install_update_with<R: Runtime>(app: AppHandle<R>) -> Result<UpdateStat
         .map_err(|error| format!("Update check failed: {error}"))?
         .ok_or_else(|| "No update is available".to_string())?;
     let version = update.version.clone();
-    update
-        .restart_after_install(false)
-        .download_and_install(|_, _| {}, || {})
-        .await
-        .map_err(|error| format!("Update installation failed: {error}"))?;
+    installer(update).await?;
     Ok(UpdateStatus {
         available: true,
         installed: true,
@@ -104,6 +117,10 @@ async fn install_update_with<R: Runtime>(app: AppHandle<R>) -> Result<UpdateStat
         current_version: env!("CARGO_PKG_VERSION").to_string(),
     })
 }
+
+#[cfg(test)]
+#[path = "updater_contract_fixture.rs"]
+mod fixture;
 
 #[cfg(test)]
 #[path = "updater_contract_tests.rs"]
@@ -115,3 +132,7 @@ mod ipc_tests;
 #[cfg(test)]
 #[path = "updater_status_tests.rs"]
 mod updater_status_tests;
+
+#[cfg(test)]
+#[path = "updater_endpoint_tests.rs"]
+mod endpoint_tests;

@@ -59,6 +59,8 @@ pub async fn run_ai_cli(
 #[cfg(test)]
 use {auth::authenticated_output, diagnostics::display_output, streams::MAX_CLI_OUTPUT_BYTES};
 #[cfg(test)]
+mod arguments_and_streams_coverage;
+#[cfg(test)]
 mod auth_output_tests;
 #[cfg(test)]
 #[path = "ai_cli_contract_tests.rs"]

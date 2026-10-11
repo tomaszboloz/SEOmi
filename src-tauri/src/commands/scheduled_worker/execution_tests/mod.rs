@@ -12,6 +12,8 @@ mod io_failures;
 mod production_dispatch;
 mod production_due_dispatch;
 mod real_dispatch_guards;
+mod runner_branch_edges;
+mod runner_branches;
 mod runner_guards;
 mod runner_outcomes;
 

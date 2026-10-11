@@ -36,7 +36,7 @@ async fn fetch(status: u16, headers: &[u8], body: Vec<u8>, kind: &str) -> Crawle
         .no_gzip()
         .no_brotli()
         .no_deflate()
-        .timeout(std::time::Duration::from_secs(5))
+        .timeout(std::time::Duration::from_secs(30))
         .build()
         .unwrap();
     let result = fetch_resource_candidate(

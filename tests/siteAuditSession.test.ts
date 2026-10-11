@@ -11,8 +11,20 @@ import { downloadCrawlPdf } from '@/services/export';
 
 const tools = useToolsStore.getState();
 const projects = useProjectStore.getState();
-beforeEach(() => { localStorage.clear(); useProjectStore.setState({ activeProjectId: 'session-test' }); useToolsStore.setState({ crawlRuns: [], crawlResult: null }); });
-afterEach(() => { useToolsStore.setState(tools); useProjectStore.setState(projects); vi.unstubAllGlobals(); });
+beforeEach(() => {
+  localStorage.clear();
+  act(() => {
+    useProjectStore.setState({ activeProjectId: 'session-test' });
+    useToolsStore.setState({ crawlRuns: [], crawlResult: null });
+  });
+});
+afterEach(() => {
+  act(() => {
+    useToolsStore.setState(tools);
+    useProjectStore.setState(projects);
+  });
+  vi.unstubAllGlobals();
+});
 
 it.each([[undefined, '0:00'], [-1, '0:00'], [61_200, '1:01']])('formats elapsed time %s', (value, expected) => {
   expect(formatCrawlElapsed(value)).toBe(expected);

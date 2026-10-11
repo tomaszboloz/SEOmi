@@ -22,7 +22,6 @@ pub(crate) fn write_queue_execution<R: tauri::Runtime>(
     let path = queue_execution_path(app, project_id, run_id)?;
     write_atomic_with_limit(&path, execution, MAX_QUEUE_EXECUTION_BYTES)
 }
-
 pub(crate) fn write_queue_result<R: tauri::Runtime>(
     app: &AppHandle<R>,
     project_id: &str,
@@ -82,6 +81,13 @@ pub fn list_project_audit_queue_results<R: tauri::Runtime>(
     app: AppHandle<R>,
     project_id: String,
 ) -> Result<Vec<Value>, String> {
+    list_project_audit_queue_results_bounded(app, project_id, 50_000)
+}
+pub(crate) fn list_project_audit_queue_results_bounded<R: tauri::Runtime>(
+    app: AppHandle<R>,
+    project_id: String,
+    max_results: usize,
+) -> Result<Vec<Value>, String> {
     let directory = crawl_storage::project_directory(&app, &project_id)?;
     let entries = match fs::read_dir(directory) {
         Ok(entries) => entries,
@@ -105,7 +111,7 @@ pub fn list_project_audit_queue_results<R: tauri::Runtime>(
             serde_json::from_slice(&bytes)
                 .map_err(|error| format!("Saved audit queue result is invalid: {error}"))?,
         );
-        if results.len() >= 50_000 {
+        if results.len() >= max_results {
             break;
         }
     }

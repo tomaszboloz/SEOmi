@@ -1,4 +1,4 @@
-import { fireEvent, render, screen } from '@testing-library/react';
+import { act, fireEvent, render, screen } from '@testing-library/react';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import i18n from '@/i18n';
 import { DataForSeoSerpCard } from '@/components/Results/dataforseoAudit/DataForSeoSerpCard';
@@ -92,7 +92,7 @@ describe('DataForSeoSerpCard persistence and results', () => {
     expect((screen.getByLabelText(i18n.t('dataforseo.keywordLabel')) as HTMLInputElement).value).toBe('');
     expect(screen.getByTestId('lang').textContent).toBe(defaultLanguageCode);
     localStorage.setItem(serpInputKey('p1'), JSON.stringify({ locationCode: market('PL').locationCode, languageCode: 'nope' }));
-    useProjectStore.setState({ activeProjectId: null });
+    act(() => { useProjectStore.setState({ activeProjectId: null }); });
     rerender(<DataForSeoSerpCard />);
     expect(screen.getByTestId('loc').textContent).toBe('US');
     expect(localStorage.getItem(serpInputKey('p1'))).toContain('nope');

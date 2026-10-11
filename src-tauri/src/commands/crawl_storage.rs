@@ -111,3 +111,7 @@ mod command_tests;
 #[cfg(test)]
 #[path = "crawl_storage/history_edge_tests.rs"]
 mod history_edge_tests;
+
+#[cfg(test)]
+#[path = "crawl_storage/coverage_boundary_tests.rs"]
+mod coverage_boundary_tests;

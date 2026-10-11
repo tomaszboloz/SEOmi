@@ -59,3 +59,39 @@ fn validates_real_javascript_files_case_insensitively_and_rejects_missing_or_dir
         "The selected MCP server path is not a file."
     );
 }
+
+#[test]
+fn node_program_prefers_explicit_existing_runtime_before_default() {
+    use super::paths::node_program;
+    const EXPECTED: &str = "SEOMI_NODE_PATH_TEST_EXPECTED";
+    if let Some(expected) = std::env::var_os(EXPECTED) {
+        assert_eq!(node_program(), expected);
+        return;
+    }
+    let fixture = Fixture::new();
+    let candidate = fixture.0.join("node-bin");
+    fs::write(&candidate, "fixture").unwrap();
+    for (seomi, codex, expected) in [
+        (
+            "relative/node".into(),
+            fixture.0.join("missing-node"),
+            "node".into(),
+        ),
+        (fixture.0.clone(), candidate.clone(), candidate.clone()),
+        (candidate.clone(), fixture.0.join("missing-node"), candidate),
+    ] {
+        // Each case has its own process; concurrent MCP tests keep their PATH.
+        let output = std::process::Command::new(std::env::current_exe().unwrap())
+            .args(["--exact", "commands::mcp_discovery::paths_tests::node_program_prefers_explicit_existing_runtime_before_default", "--nocapture"])
+            .env("SEOMI_NODE_PATH", seomi)
+            .env("CODEX_MCP_NODE_PATH", codex)
+            .env_remove("NODE")
+            .env(EXPECTED, expected)
+            .output().unwrap();
+        assert!(
+            output.status.success(),
+            "{}",
+            String::from_utf8_lossy(&output.stderr)
+        );
+    }
+}

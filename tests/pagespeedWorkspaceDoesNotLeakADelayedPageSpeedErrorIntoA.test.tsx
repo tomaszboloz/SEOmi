@@ -32,10 +32,10 @@ it('does not leak a delayed PageSpeed error into a newly selected project', asyn
     render(<PageSpeedWorkspace />);
 
     fireEvent.click(screen.getByRole('button', { name: /Run PageSpeed/ }));
-    useProjectStore.setState({ activeProjectId: otherProject.id });
+    act(() => { useProjectStore.setState({ activeProjectId: otherProject.id }); });
     await waitFor(() => expect(screen.getByLabelText('Page URL')).toHaveProperty('value', 'https://other.example/'));
 
-    rejectPsi?.(new Error('stale PageSpeed failure'));
+    await act(async () => { rejectPsi?.(new Error('stale PageSpeed failure')); });
     await waitFor(() => expect(screen.queryByText('stale PageSpeed failure')).toBeNull());
     expect(screen.getByLabelText('Page URL')).toHaveProperty('value', 'https://other.example/');
   });
@@ -47,7 +47,7 @@ it('discards a delayed PageSpeed result after the requested URL changes', async 
 
     fireEvent.click(screen.getByRole('button', { name: /Run PageSpeed/ }));
     fireEvent.change(screen.getByLabelText('Page URL'), { target: { value: 'https://example.com/new-page' } });
-    resolvePsi?.({ ...psiFixture, requestedUrl: 'https://example.com/' });
+    await act(async () => { resolvePsi?.({ ...psiFixture, requestedUrl: 'https://example.com/' }); });
     await waitFor(() => expect(screen.getByLabelText('Page URL')).toHaveProperty('value', 'https://example.com/new-page'));
     expect(screen.queryByText('Laboratory data — PageSpeed Insights')).toBeNull();
     expect(screen.getByRole('button', { name: /Run PageSpeed/ })).toHaveProperty('disabled', false);

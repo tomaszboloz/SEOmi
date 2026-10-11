@@ -64,3 +64,51 @@ async fn a_request_chain_retries_only_once_when_status_stays_transient() {
     assert!(!retry_available);
     assert_eq!(server.await.unwrap().len(), 2);
 }
+
+#[tokio::test]
+async fn send_get_with_retry_skips_when_retry_not_available_or_deadline_zero() {
+    let (client, url, server) = super::fixture(vec![
+        "HTTP/1.1 503 Service Unavailable\r\nContent-Length: 0\r\nConnection: close\r\n\r\n",
+    ])
+    .await;
+    let context = RetryContext::new(RetryBudget::new(5), Instant::now(), None);
+    let mut retry_available = false;
+    let res = send_get_with_retry(&client, &url, &context, &mut retry_available)
+        .await
+        .unwrap();
+    assert_eq!(res.response.status(), 503);
+    assert_eq!(res.retries, 0);
+    assert_eq!(server.await.unwrap().len(), 1);
+
+    let expired = RetryContext::new(
+        RetryBudget::new(5),
+        Instant::now() - std::time::Duration::from_secs(10),
+        Some(1),
+    );
+    let err = send_get_with_retry(&client, &url, &expired, &mut retry_available)
+        .await
+        .unwrap_err();
+    assert!(matches!(err, RetryError::Deadline));
+}
+
+#[tokio::test]
+async fn send_get_with_retry_fails_immediately_on_network_error_without_retry() {
+    let client = reqwest::Client::builder()
+        .no_proxy()
+        .timeout(std::time::Duration::from_secs(2))
+        .build()
+        .unwrap();
+    let url = "http://127.0.0.1:1/invalid";
+    let context = RetryContext::new(RetryBudget::new(0), Instant::now(), None);
+    let mut retry_available = false;
+    let err = send_get_with_retry(&client, url, &context, &mut retry_available)
+        .await
+        .unwrap_err();
+    assert!(matches!(err, RetryError::Request(_)));
+
+    let mut retry_available_true = true;
+    let err2 = send_get_with_retry(&client, url, &context, &mut retry_available_true)
+        .await
+        .unwrap_err();
+    assert!(matches!(err2, RetryError::Request(_)));
+}

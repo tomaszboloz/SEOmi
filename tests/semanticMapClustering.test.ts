@@ -2,6 +2,7 @@ import { describe, expect, it } from 'vitest';
 import { buildSemanticMap } from '@/services/semanticMap';
 import i18n from '@/i18n';
 import { clusterLabel } from '@/services/semanticGraph/labels';
+import { clusterByAverageLinkage } from '@/services/semanticGraph/clustering';
 import type { SemanticTermInventory } from '@/services/semanticGraph/terms';
 import { fillerPages, topicPage } from './fixtures/semanticMapTopics';
 
@@ -84,5 +85,11 @@ describe('buildSemanticMap topical clusters', () => {
     expect(map.topicEdges).toHaveLength(2);
     expect(map.nodes[0].clusterId).toBe(map.nodes[1].clusterId);
     expect(map.nodes[2].clusterId).not.toBe(map.nodes[0].clusterId);
+  });
+
+  it('merges below the default floor only when a lower floor is passed', () => {
+    const similarities = [{ left: 0, right: 1, similarity: 0.1 }];
+    expect(clusterByAverageLinkage(2, similarities)).toEqual([0, 1]);
+    expect(clusterByAverageLinkage(2, similarities, 0.08)).toEqual([0, 0]);
   });
 });

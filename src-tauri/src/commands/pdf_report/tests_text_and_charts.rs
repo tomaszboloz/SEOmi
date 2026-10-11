@@ -15,6 +15,10 @@ fn text_utils_exhaustive_diacritics_and_specials() {
     assert_eq!(ascii_pdf_text("e\u{301} a\u{308}"), "e a");
     assert_eq!(ascii_pdf_text("a\u{483}"), "a");
     assert_eq!(ascii_pdf_text("ßœ ÆÞ ØĐ"), "ssoe AETH OD");
+    assert_eq!(
+        ascii_pdf_text("ẞæŒþ đðħı ĸłŧø ÐĦŦ"),
+        "SSaeOEth ddhi klto DHT"
+    );
 
     // Parentheses and backslashes are escaped for PDF literal string
     let raw = r"func(arg1, \path)";
@@ -96,7 +100,7 @@ fn renderer_produces_consistent_multipage_pdf_structures() {
 
     assert!(bytes.starts_with(b"%PDF-1.4"));
     assert!(pdf_str.contains("/Count 4")); // 3 text pages + 1 chart page
-    assert!(pdf_str.contains("Sample Metric: 50"));
+    assert!(super::tests::pdf_has_text(&bytes, "Sample Metric: 50"));
     assert!(pdf_str.contains("startxref\n"));
     assert!(pdf_str.ends_with("%%EOF\n"));
 }

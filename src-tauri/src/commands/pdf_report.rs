@@ -4,6 +4,8 @@ pub mod crawl_page_summary;
 pub mod crawl_resources_table;
 pub mod crawl_tables;
 pub mod crawl_text;
+pub mod font;
+pub mod font_pdf;
 pub mod renderer;
 pub mod text_utils;
 
@@ -21,6 +23,9 @@ mod tests_generator;
 
 #[cfg(test)]
 mod tests_text_and_charts;
+
+#[cfg(test)]
+mod tests_unicode;
 
 use base64::Engine;
 use serde_json::Value;

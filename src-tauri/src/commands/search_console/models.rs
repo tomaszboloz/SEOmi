@@ -27,7 +27,7 @@ pub(super) struct SitesResponse {
     pub(super) site_entry: Option<Vec<GscSiteProperty>>,
 }
 
-#[derive(Deserialize, serde::Serialize, Clone)]
+#[derive(Debug, Deserialize, serde::Serialize, Clone)]
 #[serde(rename_all = "camelCase")]
 pub struct GscSiteProperty {
     pub site_url: String,

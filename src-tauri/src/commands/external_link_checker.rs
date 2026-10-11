@@ -130,3 +130,7 @@ mod request_edge_tests;
 #[cfg(test)]
 #[path = "external_link_checker/concurrency_tests.rs"]
 mod concurrency_tests;
+
+#[cfg(test)]
+#[path = "external_link_checker/redirect_and_dns_edge_tests.rs"]
+mod redirect_and_dns_edge_tests;

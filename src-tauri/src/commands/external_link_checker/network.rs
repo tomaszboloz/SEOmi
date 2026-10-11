@@ -5,31 +5,9 @@ use reqwest::header::{HeaderMap, HeaderValue, ACCEPT, USER_AGENT};
 use std::net::SocketAddr;
 use url::Url;
 
-pub fn error_kind(error: &reqwest::Error) -> String {
-    if error.is_timeout() {
-        return "timeout".into();
-    }
-    if error.is_connect() {
-        let mut message = String::new();
-        let mut cause = std::error::Error::source(error);
-        while let Some(current) = cause {
-            message.push_str(&current.to_string().to_ascii_lowercase());
-            message.push(' ');
-            cause = current.source();
-        }
-        if message.contains("dns") || message.contains("resolve") || message.contains("lookup") {
-            return "dns".into();
-        }
-        if message.contains("tls")
-            || message.contains("certificate")
-            || message.contains("handshake")
-        {
-            return "tls".into();
-        }
-        return "connect".into();
-    }
-    "network".into()
-}
+#[path = "network_error_kind.rs"]
+mod classification;
+pub use classification::error_kind;
 
 #[cfg(test)]
 pub fn rejected(url: String, kind: impl Into<String>) -> ExternalLinkCheck {
@@ -141,3 +119,11 @@ mod edge_tests;
 #[cfg(test)]
 #[path = "network_classification_tests.rs"]
 mod classification_tests;
+
+#[cfg(test)]
+#[path = "network_coverage_tests.rs"]
+mod coverage_tests;
+
+#[cfg(test)]
+#[path = "network_branch_tests.rs"]
+mod network_branch_tests;

@@ -1,4 +1,4 @@
-import { fireEvent, render, screen, waitFor } from '@testing-library/react';
+import { act, fireEvent, render, screen, waitFor } from '@testing-library/react';
 import { beforeEach, describe, expect, it } from 'vitest';
 import { HeadingsTree } from '@/components/Results/HeadingsTree';
 import { useAuditStore } from '@/stores/auditStore';
@@ -53,9 +53,9 @@ describe('headings keyphrase project persistence', () => {
     render(<HeadingsTree audit={audit} />);
     expect((screen.getByPlaceholderText('e.g. SEO audit') as HTMLInputElement).value).toBe('technical seo');
 
-    useProjectStore.setState({ activeProjectId: 'headings-b' });
+    act(() => useProjectStore.setState({ activeProjectId: 'headings-b' }));
     await waitFor(() => expect((screen.getByPlaceholderText('e.g. SEO audit') as HTMLInputElement).value).toBe(''));
-    useProjectStore.setState({ activeProjectId: 'headings-a' });
+    act(() => useProjectStore.setState({ activeProjectId: 'headings-a' }));
     await waitFor(() => expect((screen.getByPlaceholderText('e.g. SEO audit') as HTMLInputElement).value).toBe('technical seo'));
   });
 });

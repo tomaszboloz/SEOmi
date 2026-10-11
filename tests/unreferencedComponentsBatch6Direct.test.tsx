@@ -1,11 +1,14 @@
-import { describe, expect, it } from 'vitest';
+import { beforeEach, describe, expect, it } from 'vitest';
 import { render, screen } from '@testing-library/react';
+import i18n from '@/i18n';
 import { SecurityHeaderCard } from '@/components/Results/securityHeaders/SecurityHeaderCard';
 import { SocialLinkedInCard } from '@/components/Results/social/SocialLinkedInCard';
 import { TargetPhraseTopTenRow } from '@/components/Results/targetPhraseAudit/TargetPhraseTopTenRow';
 import { SeoToolsPanelHeader } from '@/components/SeoTools/workspace/SeoToolsPanelHeader';
 import type { HeaderSpec } from '@/components/Results/securityHeaders/securityHeadersTypes';
 import type { TopTenPageObservation } from '@/services/targetPhraseAudit';
+
+beforeEach(async () => { await i18n.changeLanguage('en'); });
 
 describe('unreferenced components batch 6 direct assertions', () => {
   it('SecurityHeaderCard renders header title and status', () => {

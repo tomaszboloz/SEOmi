@@ -135,7 +135,7 @@ export const usePerformanceWorkspace = (
       if ((dependencies.activeProjectId ?? (() => useProjectStore.getState().activeProjectId))() === projectId && cruxRequestToken.current === requestToken) {
         const message = error instanceof Error ? error.message : String(error);
         setCruxError(message.includes("CRUX_NOT_ENOUGH_DATA")
-          ? t("pageSpeedUi.cruxNotEnoughData", "Not enough real user data is available for this URL or origin.")
+          ? t("pageSpeedUi.cruxNotEnoughData")
           : message || t("pageSpeedUi.cruxError"));
       }
     } finally {

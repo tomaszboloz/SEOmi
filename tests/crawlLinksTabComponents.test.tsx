@@ -100,7 +100,12 @@ describe('CrawlLinksTab modular architecture', () => {
     fireEvent.click(descBtn);
     expect(setDescending).toHaveBeenCalled();
 
+    const filenames: string[] = [];
+    const download = vi.spyOn(HTMLAnchorElement.prototype, 'click').mockImplementation(function (this: HTMLAnchorElement) { filenames.push(this.download); });
     const exportBtn = screen.getByRole('button', { name: 'crawl.ui.exportViewCsv' });
-    fireEvent.click(exportBtn);
+    try {
+      fireEvent.click(exportBtn);
+      expect(filenames).toEqual(['seomi-crawl-links-run-1.csv']);
+    } finally { download.mockRestore(); }
   });
 });

@@ -123,3 +123,9 @@ fn system_runner_propagates_spawn_errors_and_reports_command_status() {
     assert!(runner.status("/usr/bin/true", &[]).unwrap());
     assert!(!runner.status("/usr/bin/false", &[]).unwrap());
 }
+
+#[test]
+fn register_platform_validates_date_before_launchctl() {
+    let err = super::register_platform("proj", "sched", "invalid-date", false).unwrap_err();
+    assert_eq!(err, "Schedule next run must be an RFC3339 timestamp.");
+}

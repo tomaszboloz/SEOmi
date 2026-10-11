@@ -1,5 +1,7 @@
-import { render, screen, waitFor } from '@testing-library/react';
+import { act, render, screen, waitFor } from '@testing-library/react';
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
+import '@/components/Results/Overview';
+import '@/components/Results/AuditTabs';
 import { MainContent } from '@/components/Layout/MainContent';
 import { useAuditStore } from '@/stores/auditStore';
 import { useProjectStore } from '@/stores/projectStore';
@@ -44,11 +46,11 @@ describe('overview localization', () => {
   });
 
   afterEach(async () => {
-    await i18n.changeLanguage('en');
+    await act(async () => { await i18n.changeLanguage('en'); });
   });
 
   it('renders the localized severity instead of an unresolved translation key', async () => {
-    render(<MainContent />);
+    await act(async () => { render(<MainContent />); });
 
     await waitFor(() => expect(screen.getAllByText('Krytyczne').length).toBeGreaterThan(0));
     expect(screen.queryByText('PROJECTS.VALIDATION.SEVERITYVALUES.CRITICAL')).toBeNull();
@@ -57,7 +59,7 @@ describe('overview localization', () => {
   });
 
   it('renders localized backend issue text and recommendation by stable code', async () => {
-    render(<MainContent />);
+    await act(async () => { render(<MainContent />); });
 
     await waitFor(() => {
       expect(screen.getByText('Brak tagu meta description')).toBeTruthy();
@@ -101,7 +103,7 @@ describe('overview localization', () => {
       },
     };
     useAuditStore.setState({ currentAudit: accessibilityAudit, activeTab: 'overview', isLoading: false, error: null, showOnlyProblems: false });
-    render(<MainContent />);
+    await act(async () => { render(<MainContent />); });
 
     await waitFor(() => expect(screen.getByText('Lokalizacje problemu (1)')).toBeTruthy());
     expect(screen.getByText("document.querySelectorAll('input, select, textarea')[1]")).toBeTruthy();

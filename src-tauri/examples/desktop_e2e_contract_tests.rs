@@ -17,7 +17,25 @@ fn validation_scripts_match_the_runtime_gate() {
     };
     assert_eq!(count(base), 39);
     assert_eq!(count(additional), 24);
-    assert_eq!(39 + 24, super::REQUIRED_VALIDATION_CHECKS);
+    let ipc = include_str!("desktop_e2e_ipc.js");
+    let ipc_count: usize = ipc
+        .lines()
+        .filter(|line| line.trim_start().starts_with("['"))
+        .map(|line| {
+            line.split("', '")
+                .nth(1)
+                .unwrap()
+                .split('\'')
+                .next()
+                .unwrap()
+                .split_whitespace()
+                .filter(|field| !field.ends_with(":v"))
+                .count()
+        })
+        .sum();
+    assert_eq!(ipc_count, 126);
+    assert_eq!(39 + 24 + ipc_count, super::REQUIRED_VALIDATION_CHECKS);
+    assert!(base.contains("__seomiDesktopIpcValidation.run"));
     assert_eq!(super::REQUIRED_RENDERER_CHECKS, 48);
     assert_eq!(crawl.matches("check(`${label}").count(), 11);
     assert!(renderer.contains("__seomiDesktopCrawlValidation"));

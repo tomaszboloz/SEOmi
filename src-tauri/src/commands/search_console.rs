@@ -7,6 +7,7 @@ mod dates;
 mod disconnect;
 mod filters;
 mod fragments;
+pub mod ga4;
 mod inspection;
 mod mapping;
 mod models;
@@ -75,8 +76,6 @@ mod analytics_tests;
 #[cfg(test)]
 #[path = "search_console/browser_contract_tests.rs"]
 mod browser_contract_tests;
-#[cfg(test)]
-mod callback_io_tests;
 #[cfg(test)]
 mod callback_tests;
 #[cfg(test)]

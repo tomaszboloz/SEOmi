@@ -54,7 +54,9 @@ pub(super) fn svg_numeric_dimension(value: &str) -> Option<usize> {
     }
     let value = value.strip_suffix("px").unwrap_or(value).trim();
     let parsed = value.parse::<f64>().ok()?;
-    (parsed.is_finite() && parsed > 0.0).then_some(parsed.round() as usize)
+    let rounded = parsed.round();
+    (rounded.is_finite() && rounded >= 1.0 && rounded < usize::MAX as f64)
+        .then_some(rounded as usize)
 }
 
 pub(super) fn svg_inline_dimensions(src: &str) -> Option<(usize, usize)> {
@@ -74,9 +76,11 @@ pub(super) fn svg_inline_dimensions(src: &str) -> Option<(usize, usize)> {
     let view_box = svg_attribute(&svg, "viewbox")?;
     let values = view_box
         .split(|character: char| character.is_ascii_whitespace() || character == ',')
-        .filter_map(|value| value.parse::<f64>().ok())
-        .collect::<Vec<_>>();
-    if values.len() < 4 || !values[2].is_finite() || !values[3].is_finite() {
+        .filter(|value| !value.trim().is_empty())
+        .map(|value| value.parse::<f64>())
+        .collect::<Result<Vec<_>, _>>()
+        .ok()?;
+    if values.len() != 4 || values.iter().any(|value| !value.is_finite()) {
         return None;
     }
     svg_numeric_dimension(&values[2].to_string()).and_then(|width| {

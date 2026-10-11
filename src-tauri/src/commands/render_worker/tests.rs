@@ -99,3 +99,38 @@ fn render_request_prepares_normalized_inputs_without_opening_renderer() {
     assert_eq!(prepared.options.wait_delay_ms, 10);
     assert_eq!(prepared.options.lazy_scroll_cycles, 1);
 }
+
+#[test]
+fn format_render_snapshot_serializes_and_enforces_safety_limit() {
+    use super::server::format_render_snapshot;
+    use crate::commands::rendered_crawler::RenderedPageSnapshot;
+
+    let snapshot = RenderedPageSnapshot {
+        requested_url: "https://example.test".into(),
+        final_url: "https://example.test".into(),
+        http_status: Some(200),
+        content_type: "text/html".into(),
+        charset: "utf-8".into(),
+        html: "<html></html>".into(),
+        html_truncated: false,
+        navigation_time_ms: Some(10),
+        lcp_ms: None,
+        inp_ms: None,
+        cls: None,
+        failed_resource_urls: vec![],
+        console_errors: vec![],
+    };
+    let (status, ct, body) = format_render_snapshot(&snapshot).unwrap();
+    assert_eq!(status, 200);
+    assert_eq!(ct, "application/json");
+    assert!(!body.is_empty());
+
+    let giant_snapshot = RenderedPageSnapshot {
+        html: "x".repeat(9 * 1024 * 1024),
+        ..snapshot
+    };
+    let (status, ct, body) = format_render_snapshot(&giant_snapshot).unwrap();
+    assert_eq!(status, 413);
+    assert_eq!(ct, "application/json");
+    assert!(String::from_utf8_lossy(&body).contains("exceeds the response safety limit"));
+}

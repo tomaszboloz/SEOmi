@@ -35,7 +35,7 @@ it('remembers the selected map view and supports Home/End in the bottom dock', (
     expect(localStorage.getItem('seomi_project_project-map-navigation_semantic_map_navigation-run_v1')).toContain('"activeView":"plan"');
 
     fireEvent.keyDown(bottomDock, { key: 'Home' });
-    expect(screen.getByRole('tab', { name: 'Graf crawla' }).getAttribute('aria-selected')).toBe('true');
+    expect(screen.getByRole('tab', { name: 'Diagnoza' }).getAttribute('aria-selected')).toBe('true');
     fireEvent.keyDown(bottomDock, { key: 'End' });
     expect(screen.getByRole('tab', { name: 'Topical plan' }).getAttribute('aria-selected')).toBe('true');
 
@@ -78,6 +78,7 @@ it('paginates large directory nodes while retaining all-run metrics', () => {
 it('persists filters and zoom against the active project and saved crawl run', async () => {
     useProjectStore.setState({ activeProjectId: 'project-semantic' });
     const view = render(<CrawlArchitectureGraph pages={pages} startUrl={pages[0].url} runId="run-semantic" />);
+    fireEvent.click(screen.getByRole('tab', { name: 'Graf crawla' }));
     fireEvent.change(screen.getByLabelText('Szukaj strony lub terminu na mapie'), { target: { value: 'burr' } });
     const preferenceKey = 'seomi_project_project-semantic_semantic_map_run-semantic_v1';
     expect(localStorage.getItem(preferenceKey)).toContain('burr');
@@ -122,6 +123,7 @@ it('uses the controlled current run when the global store still points at an old
         currentRunId="current-run"
       />,
     );
+    fireEvent.click(screen.getByRole('tab', { name: 'Graf crawla' }));
     fireEvent.change(screen.getByLabelText('Szukaj strony lub terminu na mapie'), {
       target: { value: 'burr' },
     });

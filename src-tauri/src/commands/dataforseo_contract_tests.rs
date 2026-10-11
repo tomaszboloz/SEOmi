@@ -100,10 +100,18 @@ async fn public_command_rejects_unknown_endpoint() {
 
 #[tokio::test]
 async fn public_command_reads_credentials_for_allowed_endpoint() {
-    let error = super::dataforseo_request("project".into(), "/v3/appendix/user_data".into(), None)
-        .await
-        .unwrap_err();
-    assert!(error.contains("DataForSEO login") || error.contains("credential store"));
+    for (path, payload) in [
+        ("/v3/appendix/user_data", None),
+        (
+            "/v3/serp/google/organic/live/regular",
+            Some(json!({"kw": 1})),
+        ),
+    ] {
+        let error = super::dataforseo_request("project".into(), path.into(), payload)
+            .await
+            .unwrap_err();
+        assert!(error.contains("DataForSEO login") || error.contains("credential store"));
+    }
 }
 
 #[tokio::test]

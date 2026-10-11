@@ -1,5 +1,6 @@
 import { fireEvent, render, screen } from '@testing-library/react';
 import { beforeEach, describe, expect, it } from 'vitest';
+import i18n from '@/i18n';
 import { OverviewContentCard } from '@/components/Results/overview/OverviewContentCard';
 import { OverviewQuickWins } from '@/components/Results/overview/OverviewQuickWins';
 import { useUIStore } from '@/stores/uiStore';
@@ -14,7 +15,8 @@ const mockAudit = {
 } as unknown as PageAuditData;
 
 describe('OverviewContentCard and OverviewQuickWins actions', () => {
-  beforeEach(() => {
+  beforeEach(async () => {
+    await i18n.changeLanguage('en');
     useUIStore.setState({ activeModal: null });
   });
 

@@ -6,12 +6,13 @@ import { createAuditFixture } from './fixtures/audit';
 import i18n from '@/i18n';
 
 const original = useAuditStore.getState();
-afterEach(() => useAuditStore.setState(original));
+const setAuditState = (state: Partial<ReturnType<typeof useAuditStore.getState>>) => act(() => useAuditStore.setState(state));
+afterEach(() => setAuditState(original));
 const label = (key: string) => i18n.t(`legacyUi.overview.${key}`);
 
 describe('provider overview evidence boundaries', () => {
   it('shows unavailable metrics, connection errors and explicit navigation', () => {
-    useAuditStore.setState({ dataforseoData: null, dataforseoError: null });
+    setAuditState({ dataforseoData: null, dataforseoError: null });
     render(<OverviewDataForSeoBar audit={createAuditFixture()} />);
     expect(screen.getAllByText('—')).toHaveLength(3);
     expect(screen.getByText(label('connectionRequired'))).toBeTruthy();
@@ -22,7 +23,7 @@ describe('provider overview evidence boundaries', () => {
     expect(useAuditStore.getState().activeTab).toBe('dataforseo');
   });
   it('preserves measured zero values and uses requested or malformed URL fallbacks', () => {
-    useAuditStore.setState({ dataforseoError: 'old error', dataforseoData: {
+    setAuditState({ dataforseoError: 'old error', dataforseoData: {
       target: 'example.test', total_backlinks: 0, referring_domains: 0, referring_main_domains: 0,
       rank: 0, dofollow_backlinks: 0, broken_backlinks: 0,
     } });

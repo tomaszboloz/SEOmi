@@ -64,3 +64,7 @@ impl Default for AuditControl {
         Self::new()
     }
 }
+
+#[cfg(test)]
+#[path = "control_poison_tests.rs"]
+mod poison_tests;

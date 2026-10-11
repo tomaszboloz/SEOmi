@@ -35,8 +35,17 @@ mod transport_regressions;
 mod validation_tests;
 
 #[cfg(test)]
+#[path = "connect_coverage_tests.rs"]
+mod connect_coverage_tests;
+#[cfg(test)]
+#[path = "connect_regressions.rs"]
+mod connect_regressions;
+#[cfg(test)]
 #[path = "credentials_error_tests.rs"]
 mod credentials_error_tests;
+#[cfg(test)]
+#[path = "performance_edge_tests.rs"]
+mod performance_edge_tests;
 #[cfg(test)]
 #[path = "pkce_and_disconnect_tests.rs"]
 mod pkce_and_disconnect_tests;

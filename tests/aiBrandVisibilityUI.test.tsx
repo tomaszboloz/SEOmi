@@ -1,5 +1,5 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
-import { cleanup, fireEvent, render, screen } from '@testing-library/react';
+import { act, cleanup, fireEvent, render, screen } from '@testing-library/react';
 import { AiBrandVisibility } from '@/components/AiVisibility/AiBrandVisibility';
 import { useToolsStore } from '@/stores/toolsStore';
 import { useProjectStore } from '@/stores/projectStore';
@@ -16,13 +16,21 @@ const report = (extra: Partial<BrandAiVisibilityReport> = {}): BrandAiVisibility
 describe('AI brand visibility research controls', () => {
   beforeEach(() => {
     localStorage.clear();
-    useProjectStore.setState({ projects: [], activeProjectId: 'brand-ui' });
-    useToolsStore.setState({ aiBrandQuery: 'SEOmi', aiBrandDomain: 'seomi.test', aiBrandReport: null,
-      aiBrandHistory: [], aiBrandError: null, isAiBrandLoading: false,
-      aiResearchSettings: { prompts: [], competitors: [], repetitions: 1 }, analyzeAiBrandVisibility: vi.fn() });
+    act(() => {
+      useProjectStore.setState({ projects: [], activeProjectId: 'brand-ui' });
+      useToolsStore.setState({ aiBrandQuery: 'SEOmi', aiBrandDomain: 'seomi.test', aiBrandReport: null,
+        aiBrandHistory: [], aiBrandError: null, isAiBrandLoading: false,
+        aiResearchSettings: { prompts: [], competitors: [], repetitions: 1 }, analyzeAiBrandVisibility: vi.fn() });
+    });
     localStorage.setItem('seomi_active_project_v1', 'brand-ui');
   });
-  afterEach(() => { cleanup(); useToolsStore.setState(originalTools); useProjectStore.setState(originalProjects); });
+  afterEach(() => {
+    cleanup();
+    act(() => {
+      useToolsStore.setState(originalTools);
+      useProjectStore.setState(originalProjects);
+    });
+  });
 
   it('does not run subscription research on mount and submits project-owned questions and competitors', () => {
     render(<AiBrandVisibility />);
@@ -40,7 +48,7 @@ describe('AI brand visibility research controls', () => {
   });
 
   it('keeps historical branded recognition reports readable without displaying their score as visibility', () => {
-    useToolsStore.setState({ aiBrandReport: report() });
+    act(() => useToolsStore.setState({ aiBrandReport: report() }));
     render(<AiBrandVisibility />);
     expect(screen.getByText(i18n.t('aiResearch.legacyRecognition'))).toBeTruthy();
     expect(screen.getByText(i18n.t('aiResearch.legacyNote'))).toBeTruthy();
@@ -48,13 +56,13 @@ describe('AI brand visibility research controls', () => {
   });
 
   it('shows per-run search mode, tracked position, competitors and own-domain citations', () => {
-    useToolsStore.setState({ aiBrandReport: report({ methodology: 'unbranded_prompts', share_of_voice: 50, models: [{
+    act(() => useToolsStore.setState({ aiBrandReport: report({ methodology: 'unbranded_prompts', share_of_voice: 50, models: [{
       model_name: 'Claude local', model_id: null, provider: 'claude', connection_method: 'local_cli',
       captured_at: '2026-10-01T10:00:00Z', is_present: true, visibility_percentage: 100, sentiment: 'not_assessed',
       summary: 'OtherBrand and SEOmi', cited_sources: ['https://seomi.test/source'], prompt: 'Which audit tool?',
       repetition: 2, search_mode: 'web_enabled', mention_position: 2, own_domain_cited: true,
       competitors_mentioned: ['OtherBrand'], response_status: 'success',
-    }] }) });
+    }] }) }));
     render(<AiBrandVisibility />);
     expect(screen.getByText('100%')).toBeTruthy();
     expect(screen.getByText(i18n.t('aiResearch.shareOfVoice', { value: '50%' }))).toBeTruthy();
@@ -65,7 +73,7 @@ describe('AI brand visibility research controls', () => {
   });
 
   it('disables duplicate submissions while a run is loading', () => {
-    useToolsStore.setState({ isAiBrandLoading: true });
+    act(() => useToolsStore.setState({ isAiBrandLoading: true }));
     render(<AiBrandVisibility />);
     const button = screen.getByRole('button', { name: i18n.t('aiVisibility.brand.queryLoading') }) as HTMLButtonElement;
     expect(button.disabled).toBe(true);
@@ -74,11 +82,13 @@ describe('AI brand visibility research controls', () => {
   });
 
   it('replaces research drafts when the active project changes', () => {
-    useToolsStore.setState({ aiResearchSettings: { prompts: ['First project question'], competitors: ['First competitor'], repetitions: 2 } });
+    act(() => useToolsStore.setState({ aiResearchSettings: { prompts: ['First project question'], competitors: ['First competitor'], repetitions: 2 } }));
     const view = render(<AiBrandVisibility />);
     expect((screen.getByLabelText(i18n.t('aiResearch.prompts')) as HTMLTextAreaElement).value).toBe('First project question');
-    useProjectStore.setState({ activeProjectId: 'brand-ui-two' });
-    useToolsStore.setState({ aiResearchSettings: { prompts: ['Second project question'], competitors: [], repetitions: 1 } });
+    act(() => {
+      useProjectStore.setState({ activeProjectId: 'brand-ui-two' });
+      useToolsStore.setState({ aiResearchSettings: { prompts: ['Second project question'], competitors: [], repetitions: 1 } });
+    });
     view.rerender(<AiBrandVisibility />);
     expect((screen.getByLabelText(i18n.t('aiResearch.prompts')) as HTMLTextAreaElement).value).toBe('Second project question');
     expect((screen.getByLabelText(i18n.t('aiResearch.competitors')) as HTMLTextAreaElement).value).toBe('');
