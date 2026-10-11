@@ -36,3 +36,7 @@ pub(super) fn semantic_style_hides(value: &str) -> bool {
         )
     })
 }
+
+#[cfg(test)]
+#[path = "markup_branch_tests.rs"]
+mod branch_tests;

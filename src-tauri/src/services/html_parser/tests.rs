@@ -17,3 +17,4 @@ mod extraction_contracts;
 mod parser_regressions;
 
 mod control_boundaries;
+mod gap_favicon;

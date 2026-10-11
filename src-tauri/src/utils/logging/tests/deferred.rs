@@ -6,7 +6,7 @@ async fn async_span_retains_dispatch_id_until_the_deferred_native_future_settles
     let mut task_span = None;
     tracing::dispatcher::with_default(&subscriber, || {
         assert!(dispatch_with_sink(
-            "get_secret",
+            "has_secret",
             || {
                 task_span = Some(tracing::debug_span!(
                     "ipc::request::run",
@@ -46,7 +46,7 @@ async fn async_span_retains_dispatch_id_until_the_deferred_native_future_settles
     assert!(records
         .iter()
         .all(|entry| entry["request_id"] == records[0]["request_id"]
-            && entry["route"] == "get_secret"));
+            && entry["route"] == "has_secret"));
     let json = serde_json::to_string(&*records).unwrap();
     assert!(!json.contains("token=secret") && !json.contains("private result"));
 }

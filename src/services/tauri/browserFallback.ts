@@ -8,6 +8,7 @@ export function handleBrowserFallback<T>(cmd: string, args?: Record<string, unkn
   // preview must stay usable without pretending local storage is secure: return
   // an empty value and keep writes as an explicit no-op until the desktop shell
   // is available.
+  if (cmd === 'has_secret') return Promise.resolve(false as T);
   if (cmd === 'get_secret') return Promise.resolve(null as T);
   if (cmd === 'set_secret') return Promise.resolve(undefined as T);
   if (cmd === 'detect_ai_clis') {
@@ -61,6 +62,10 @@ export function handleBrowserFallback<T>(cmd: string, args?: Record<string, unkn
   // "unknown command" error to the user.
   const desktopOnlyCommands = new Set([
     'cancel_inspect_url',
+    'ai_generate_text',
+    'ai_generate_suggestions',
+    'ai_list_models',
+    'ai_test_connection',
     'cancel_site_crawl',
     'check_link',
     'check_external_crawl_links',

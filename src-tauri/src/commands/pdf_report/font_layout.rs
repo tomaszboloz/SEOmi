@@ -3,7 +3,7 @@ use rustybuzz::{Direction, UnicodeBuffer};
 use ttf_parser::GlyphId;
 
 impl FontSet {
-    fn is_arabic(character: char) -> bool {
+    pub(super) fn is_arabic_character(character: char) -> bool {
         matches!(u32::from(character), 0x600..=0x6ff | 0x750..=0x77f | 0x8a0..=0x8ff | 0xfb50..=0xfdff | 0xfe70..=0xfeff)
     }
 
@@ -39,7 +39,7 @@ impl FontSet {
 
     fn encode_arabic(&mut self, text: &str, runs: &mut Vec<EncodedRun>) {
         let Some(face) = self.arabic_shaper.as_ref() else {
-            for character in text.chars() {
+            for character in text.chars().rev() {
                 self.encode_scalar(character, runs);
             }
             return;
@@ -104,21 +104,23 @@ impl FontSet {
 
     pub fn encode(&mut self, text: &str) -> Vec<EncodedRun> {
         let mut runs = Vec::new();
-        let mut index = 0;
-        while index < text.len() {
-            let character = text[index..].chars().next().unwrap_or('?');
-            if Self::is_arabic(character) {
-                let end = text[index..]
-                    .char_indices()
-                    .find_map(|(offset, next)| (!Self::is_arabic(next)).then_some(index + offset))
-                    .unwrap_or(text.len());
-                self.encode_arabic(&text[index..end], &mut runs);
-                index = end;
+        for visual in super::font_bidi::visual_runs(text) {
+            if visual.rtl && visual.arabic {
+                self.encode_arabic(visual.text, &mut runs);
+            } else if visual.reverse {
+                for character in visual.text.chars().rev() {
+                    self.encode_scalar(character, &mut runs);
+                }
             } else {
-                self.encode_scalar(character, &mut runs);
-                index += character.len_utf8();
+                for character in visual.text.chars() {
+                    self.encode_scalar(character, &mut runs);
+                }
             }
         }
         runs
     }
 }
+
+#[cfg(test)]
+#[path = "font_layout_private_tests.rs"]
+mod private_tests;

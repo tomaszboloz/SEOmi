@@ -144,3 +144,6 @@ fn observed_headers(
 #[cfg(test)]
 #[path = "security_checker/boundary_contract_tests.rs"]
 mod boundary_contract_tests;
+#[cfg(test)]
+#[path = "security_checker/csp_blank_tests.rs"]
+mod csp_blank_tests;

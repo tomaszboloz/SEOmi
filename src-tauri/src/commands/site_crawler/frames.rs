@@ -34,3 +34,6 @@ pub(super) fn crawl_frames(document: &Html, base_url: &url::Url) -> (Vec<Crawled
     }
     (frames, truncated)
 }
+#[cfg(test)]
+#[path = "frames_gap_tests.rs"]
+mod gap_tests;

@@ -71,15 +71,15 @@ export const ApiSettingsTab: React.FC<ApiSettingsTabProps> = ({
         <div className="space-y-2">
           <div>
             <label className="text-slate-400 block mb-1">{t('legacyUi.settings.openaiApiKey')}</label>
-            <input type="password" value={apiKeys.openai} onChange={(e) => handleAiKeyChange('openai', e.target.value)} className="w-full h-9 px-3 bg-slate-900 border border-slate-800 rounded-lg text-white font-mono" />
+          <input type="password" value={apiKeys.openai === '__seomi_secret_present__' ? '' : apiKeys.openai} onChange={(e) => handleAiKeyChange('openai', e.target.value)} className="w-full h-9 px-3 bg-slate-900 border border-slate-800 rounded-lg text-white font-mono" />
           </div>
           <div>
             <label className="text-slate-400 block mb-1">{t('legacyUi.settings.claudeApiKey')}</label>
-            <input type="password" value={apiKeys.claude} onChange={(e) => handleAiKeyChange('claude', e.target.value)} className="w-full h-9 px-3 bg-slate-900 border border-slate-800 rounded-lg text-white font-mono" />
+          <input type="password" value={apiKeys.claude === '__seomi_secret_present__' ? '' : apiKeys.claude} onChange={(e) => handleAiKeyChange('claude', e.target.value)} className="w-full h-9 px-3 bg-slate-900 border border-slate-800 rounded-lg text-white font-mono" />
           </div>
           <div>
             <label className="text-slate-400 block mb-1">{t('legacyUi.settings.geminiApiKey')}</label>
-            <input type="password" value={apiKeys.gemini} onChange={(e) => handleAiKeyChange('gemini', e.target.value)} className="w-full h-9 px-3 bg-slate-900 border border-slate-800 rounded-lg text-white font-mono" />
+          <input type="password" value={apiKeys.gemini === '__seomi_secret_present__' ? '' : apiKeys.gemini} onChange={(e) => handleAiKeyChange('gemini', e.target.value)} className="w-full h-9 px-3 bg-slate-900 border border-slate-800 rounded-lg text-white font-mono" />
           </div>
         </div>
       </div>

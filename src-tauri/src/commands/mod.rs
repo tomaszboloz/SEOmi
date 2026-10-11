@@ -1,4 +1,5 @@
 pub mod ai_cli;
+pub mod ai_provider;
 pub mod audit_queue;
 pub mod audit_queue_worker;
 pub mod crawl_storage;

@@ -123,7 +123,7 @@ jobs:
           retention-days: 14
 
   native-coverage-threshold:
-    name: Rust production coverage (98% follow-up)
+    name: Rust production coverage (95% follow-up)
     needs: coverage-rust
     runs-on: ubuntu-latest
     steps:

@@ -1,12 +1,14 @@
 import { aiResponseError, readAiResponseText } from './response';
 import { requestClaude } from './claude';
 import { parseAiSuggestionResponse, type AiSuggestionResponse } from './parsing';
+import { isDesktopAi, nativeSuggestions } from './native';
 
 export async function callOpenAI(
   apiKey: string,
   model: string,
   prompt: string
 ): Promise<AiSuggestionResponse> {
+  if (isDesktopAi()) return parseAiSuggestionResponse(await nativeSuggestions('openai', model, prompt));
   const res = await fetch('https://api.openai.com/v1/chat/completions', {
     method: 'POST',
     headers: {
@@ -31,6 +33,7 @@ export async function callClaude(
   model: string,
   prompt: string
 ): Promise<AiSuggestionResponse> {
+  if (isDesktopAi()) return parseAiSuggestionResponse(await nativeSuggestions('claude', model, prompt));
   const res = await requestClaude(apiKey, model, prompt);
   if (!res.ok) throw aiResponseError('claude', res.status, true);
 
@@ -42,6 +45,7 @@ export async function callGemini(
   model: string,
   prompt: string
 ): Promise<AiSuggestionResponse> {
+  if (isDesktopAi()) return parseAiSuggestionResponse(await nativeSuggestions('gemini', model, prompt));
   const endpoint = `https://generativelanguage.googleapis.com/v1beta/models/${encodeURIComponent(model)}:generateContent?key=${encodeURIComponent(apiKey)}`;
   const res = await fetch(endpoint, {
     method: 'POST',

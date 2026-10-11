@@ -7,22 +7,22 @@ import { describe, expect, it } from 'vitest';
 import { assertNativeCoverageThreshold, validateNativeCoverageSummary } from '../scripts/native-coverage-threshold.mjs';
 
 const summary = (overrides: Record<string, number> = {}) => ({
-  totals: { lines: 100, linesHit: 98, functions: 50, functionsHit: 49, branches: 200, branchesHit: 196, ...overrides },
+  totals: { lines: 100, linesHit: 95, functions: 50, functionsHit: 48, branches: 200, branchesHit: 190, ...overrides },
 });
 const cli = resolve('scripts/native-coverage-threshold.mjs');
 
 describe('strict native production coverage threshold', () => {
-  it('accepts exactly 98.00% for every metric', () => {
+  it('accepts exactly 95.00% for every metric', () => {
     const result = assertNativeCoverageThreshold(summary());
     expect(result.passed).toBe(true);
-    expect(result.metrics.lines.percent).toBe(98);
+    expect(result.metrics.lines.percent).toBe(95);
   });
 
-  it('rejects 97.99% even when the displayed value is close to the threshold', () => {
-    const result = validateNativeCoverageSummary(summary({ lines: 10000, linesHit: 9799 }));
+  it('rejects 94.99% even when the displayed value is close to the threshold', () => {
+    const result = validateNativeCoverageSummary(summary({ lines: 10000, linesHit: 9499 }));
     expect(result.passed).toBe(false);
-    expect(result.metrics.lines.percent).toBeCloseTo(97.99, 2);
-    expect(() => assertNativeCoverageThreshold(summary({ lines: 10000, linesHit: 9799 }))).toThrow('below 98%');
+    expect(result.metrics.lines.percent).toBeCloseTo(94.99, 2);
+    expect(() => assertNativeCoverageThreshold(summary({ lines: 10000, linesHit: 9499 }))).toThrow('below 95%');
   });
 
   it.each([

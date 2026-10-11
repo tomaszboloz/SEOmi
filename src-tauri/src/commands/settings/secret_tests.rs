@@ -1,6 +1,6 @@
 use super::{
     fixture::MemoryStore,
-    secret_commands::{read_secret, write_secret},
+    secret_commands::{has_secret, write_secret},
 };
 
 #[test]
@@ -12,14 +12,11 @@ fn secure_settings_preserve_values_delete_blank_values_and_report_missing_honest
         "gemini_api_key",
         "gsc_client_secret_project-1",
     ] {
-        assert_eq!(read_secret(name, &store).unwrap(), None);
+        assert!(!has_secret(name, &store).unwrap());
         write_secret(name, " synthetic-token żółć ", &store).unwrap();
-        assert_eq!(
-            read_secret(name, &store).unwrap().as_deref(),
-            Some(" synthetic-token żółć ")
-        );
+        assert!(has_secret(name, &store).unwrap());
         write_secret(name, " \n\t", &store).unwrap();
-        assert_eq!(read_secret(name, &store).unwrap(), None);
+        assert!(!has_secret(name, &store).unwrap());
         write_secret(name, "", &store).unwrap();
     }
 }
@@ -34,7 +31,7 @@ fn invalid_names_and_refresh_tokens_never_access_the_store() {
         "unknown",
         "crawl_auth_p_p_extra",
     ] {
-        assert!(read_secret(name, &store).is_err());
+        assert!(has_secret(name, &store).is_err());
         assert!(write_secret(name, "synthetic-token", &store).is_err());
     }
     assert!(store.calls.borrow().is_empty());
@@ -49,7 +46,7 @@ fn secure_store_failures_have_local_errors_and_preserve_existing_values() {
     };
     store.seed("openai_api_key", "preserved");
     assert_eq!(
-        read_secret("openai_api_key", &store).unwrap_err(),
+        has_secret("openai_api_key", &store).unwrap_err(),
         "Unable to read secure setting."
     );
     assert_eq!(
@@ -66,7 +63,7 @@ fn secure_store_failures_have_local_errors_and_preserve_existing_values() {
 #[tokio::test]
 async fn public_secret_commands_reject_native_tokens_and_unknown_names_before_keychain_access() {
     for name in ["gsc_refresh_token_project-1", "unknown"] {
-        assert!(super::get_secret(name.into()).await.is_err());
+        assert!(super::has_secret(name.into()).await.is_err());
         assert!(super::set_secret(name.into(), "synthetic".into())
             .await
             .is_err());

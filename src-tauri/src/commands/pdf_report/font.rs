@@ -49,6 +49,9 @@ pub struct FontSet {
 #[path = "font_layout.rs"]
 mod font_layout;
 
+#[path = "font_bidi.rs"]
+mod font_bidi;
+
 #[path = "font_resources.rs"]
 mod font_resources;
 

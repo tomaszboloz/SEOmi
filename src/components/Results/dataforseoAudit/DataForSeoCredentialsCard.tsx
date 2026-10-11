@@ -20,13 +20,14 @@ export const DataForSeoCredentialsCard: React.FC<Props> = ({ currentDomain }) =>
   const activeProjectId = useProjectStore((s) => s.activeProjectId);
 
   const [showCredentials, setShowCredentials] = useState(false);
-  const [login, setLogin] = useState(credentials.login);
-  const [password, setPassword] = useState(credentials.password);
+  const redact = (value: string) => value === '__seomi_secret_present__' ? '' : value;
+  const [login, setLogin] = useState(redact(credentials.login));
+  const [password, setPassword] = useState(redact(credentials.password));
   const [savedSuccess, setSavedSuccess] = useTransientValue(false, 2000);
 
   useEffect(() => {
-    setLogin(credentials.login);
-    setPassword(credentials.password);
+    setLogin(redact(credentials.login));
+    setPassword(redact(credentials.password));
   }, [activeProjectId, credentials.login, credentials.password]);
 
   const isConfigured = Boolean(credentials.login && credentials.password);

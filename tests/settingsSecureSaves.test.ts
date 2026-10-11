@@ -1,5 +1,6 @@
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import { createSettingsStore } from '@/stores/settingsStore';
+import { STORED_SECRET_MARKER } from '@/services/tauri/secrets';
 
 const transport = vi.hoisted(() => ({ invoke: vi.fn(), getSecret: vi.fn().mockResolvedValue(''), setSecret: vi.fn() }));
 vi.mock('@/services/tauri', () => ({ invokeTauriCommand: transport.invoke, getSecureValue: transport.getSecret, setSecureValue: transport.setSecret }));
@@ -43,6 +44,26 @@ describe('secure credential saves', () => {
     await expect(store.getState().saveDataForSeoCredentials({ login: 'l', password: 'p' })).rejects.toThrow('keychain locked');
     expect(store.getState().secureStorageError).toBe('keychain locked');
     expect(store.getState().isSaving).toBe(false);
+  });
+
+  it('does not erase native credentials when redacted fields are saved unchanged', async () => {
+    localStorage.setItem('seomi_active_project_v1', 'project-a');
+    Object.defineProperty(window, '__TAURI_INTERNALS__', { configurable: true, value: {} });
+    try {
+      transport.setSecret.mockResolvedValue(undefined);
+      const store = createSettingsStore();
+      store.setState({
+        dataForSeoCredentials: { login: STORED_SECRET_MARKER, password: STORED_SECRET_MARKER },
+        googleMetricsApiKey: STORED_SECRET_MARKER,
+      });
+      await store.getState().saveDataForSeoCredentials({ login: '', password: '' });
+      await store.getState().saveGoogleMetricsApiKey('');
+      expect(transport.setSecret).not.toHaveBeenCalled();
+      expect(store.getState().dataForSeoCredentials).toEqual({ login: STORED_SECRET_MARKER, password: STORED_SECRET_MARKER });
+      expect(store.getState().googleMetricsApiKey).toBe(STORED_SECRET_MARKER);
+    } finally {
+      delete (window as Window & { __TAURI_INTERNALS__?: unknown }).__TAURI_INTERNALS__;
+    }
   });
 });
 

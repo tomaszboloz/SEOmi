@@ -139,3 +139,7 @@ mod command_handler_tests;
 #[cfg(test)]
 #[path = "search_console/command_ipc_tests.rs"]
 mod command_ipc_tests;
+
+#[cfg(test)]
+#[path = "search_console/mapping_gap_tests.rs"]
+mod mapping_gap_tests;

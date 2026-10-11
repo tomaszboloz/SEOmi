@@ -6,7 +6,7 @@ fn dispatch_preserves_outcome_and_correlates_json_without_input_payloads() {
         let mut records = Vec::new();
         let mut calls = 0;
         let result = dispatch_with_sink(
-            "get_secret",
+            "has_secret",
             || {
                 calls += 1;
                 accepted

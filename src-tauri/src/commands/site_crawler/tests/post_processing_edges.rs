@@ -73,3 +73,37 @@ fn post_processing_does_not_use_zero_status_from_rendered_pages() {
         .iter()
         .any(|issue| issue.message.contains("Canonical target returned HTTP")));
 }
+
+fn next_link(target: &str) -> CrawledPaginationLink {
+    CrawledPaginationLink {
+        relation: "next".into(),
+        target_url: target.into(),
+        query_parameter_changes: Vec::new(),
+        http_status: None,
+        checked_in_run: false,
+        reciprocal_in_run: None,
+    }
+}
+
+#[test]
+fn post_processing_flags_zero_status_pagination_and_skips_invalid_targets() {
+    let mut source = post_processing_page("https://example.com/source");
+    source
+        .pagination_links
+        .push(next_link("https://example.com/p2"));
+    source
+        .pagination_links
+        .push(next_link("mailto:owner@example.com"));
+    let mut dead = post_processing_page("https://example.com/p2");
+    dead.http_status = 0;
+
+    let mut pages = vec![source, dead];
+    annotate_page_relations(&mut pages, "http");
+
+    assert_eq!(pages[0].pagination_links[0].http_status, Some(0));
+    assert!(pages[0]
+        .issues
+        .iter()
+        .any(|issue| issue.message.contains("target returned HTTP 0")));
+    assert_eq!(pages[0].pagination_links[1].reciprocal_in_run, None);
+}

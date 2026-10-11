@@ -23,3 +23,14 @@ fn relative_resources_use_the_page_origin_and_keep_only_http() {
     "#;
     assert!(detect_mixed_content_resources(html, &page).is_empty());
 }
+
+#[test]
+fn elements_without_the_resource_attribute_are_skipped() {
+    let page = Url::parse("https://example.test/").unwrap();
+    let html = r#"<img alt="no source"><script></script><object></object>
+        <img src="http://insecure.test/a.png">"#;
+    assert_eq!(
+        detect_mixed_content_resources(html, &page),
+        vec!["http://insecure.test/a.png".to_string()]
+    );
+}

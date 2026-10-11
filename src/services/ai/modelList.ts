@@ -2,6 +2,8 @@ import { z } from 'zod';
 import type { AiProvider } from '@/types';
 import { CLAUDE_DEFAULT_MODEL } from './claude';
 import { GEMINI_DEFAULT_MODEL, isHiddenModel } from './modelCatalog';
+import { invokeTauriCommand } from '@/services/tauri';
+import { isDesktopAi } from './native';
 
 export interface AiModelOption {
   id: string;
@@ -100,6 +102,10 @@ const listers: Record<AiProvider, (apiKey: string, fetchImpl: ModelListFetch) =>
 
 /** Text-generation models the API key can use, newest first where the provider reports dates. */
 export const listProviderModels = async (provider: AiProvider, apiKey: string, fetchImpl: ModelListFetch = fetch): Promise<AiModelOption[]> => {
+  if (isDesktopAi()) {
+    const models = await invokeTauriCommand<AiModelOption[]>('ai_list_models', { provider });
+    return models.filter((model) => !isHiddenModel(model.id)).slice(0, MAX_MODELS);
+  }
   if (!apiKey.trim()) return [];
   const seen = new Set<string>();
   return (await listers[provider](apiKey.trim(), fetchImpl))

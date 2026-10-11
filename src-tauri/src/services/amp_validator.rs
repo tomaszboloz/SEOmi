@@ -58,5 +58,7 @@ mod document_tests;
 #[cfg(test)]
 mod edge_tests;
 #[cfg(test)]
+mod head_branch_tests;
+#[cfg(test)]
 #[path = "amp_regression_tests.rs"]
 mod regressions;

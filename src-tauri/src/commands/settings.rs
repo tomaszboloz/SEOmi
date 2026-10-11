@@ -44,8 +44,8 @@ pub async fn delete_crawl_auth_profile(
 }
 
 #[tauri::command]
-pub async fn get_secret(name: String) -> Result<Option<String>, String> {
-    secret_commands::read_secret(&name, &NATIVE_STORE)
+pub async fn has_secret(name: String) -> Result<bool, String> {
+    secret_commands::has_secret(&name, &NATIVE_STORE)
 }
 
 #[tauri::command]

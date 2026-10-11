@@ -105,6 +105,8 @@ mod ipc_tests;
 #[cfg(test)]
 mod lifecycle_tests;
 #[cfg(test)]
+mod render_request_tests;
+#[cfg(test)]
 mod server_contract_tests;
 #[cfg(test)]
 mod server_edge_tests;

@@ -2,14 +2,16 @@ import { readFileSync } from 'node:fs';
 import { runInNewContext } from 'node:vm';
 import { describe, expect, it, vi } from 'vitest';
 
-const source = readFileSync('scripts/run-desktop-e2e.mjs', 'utf8').replace(/^import .*;\r?\n/gm, '');
+const script = readFileSync('scripts/run-desktop-e2e.mjs', 'utf8');
+const withoutImports = (source: string) => source.split(/\r?\n/)
+  .filter(line => !/^\uFEFF?\s*import\b/.test(line)).join('\n');
 
-function run(platform: string, code: number | null, passed: boolean, timedOut = false) {
+function run(platform: string, code: number | null, passed: boolean, timedOut = false, source = script) {
   const callbacks: Record<string, (...args: unknown[]) => void> = {};
   let timeout: (() => void) | undefined;
   const runtime = { platform, env: {}, exit: vi.fn(), exitCode: undefined as number | undefined };
   const child = { on: (event: string, callback: (...args: unknown[]) => void) => { callbacks[event] = callback; }, kill: vi.fn() };
-  runInNewContext(source, {
+  runInNewContext(withoutImports(source), {
     process: runtime,
     console: { log: vi.fn(), warn: vi.fn(), error: vi.fn() },
     spawnSync: () => ({ status: 0 }), spawn: () => child,
@@ -25,6 +27,11 @@ function run(platform: string, code: number | null, passed: boolean, timedOut = 
 }
 
 describe('desktop runner process boundary', () => {
+  it('executes a Windows CRLF script with a UTF-8 BOM', () => {
+    const windowsSource = '\uFEFF' + script.replace(/\r?\n/g, '\r\n');
+    expect(run('win32', 0, true, false, windowsSource)).toBe(0);
+    expect(run('win32', 3221225785, true, false, windowsSource)).toBe(1);
+  });
   it.each(['win32', 'darwin', 'linux'])('requires a successful report and clean exit on %s', platform => {
     expect(run(platform, 0, true)).toBe(0);
     expect(run(platform, 0, false)).toBe(1);

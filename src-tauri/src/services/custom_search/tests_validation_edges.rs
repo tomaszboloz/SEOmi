@@ -77,3 +77,15 @@ fn attributes_and_xpath_terminal_outputs_are_explicit_contracts() {
         Ok(())
     );
 }
+
+#[test]
+fn xpath_attribute_results_do_not_need_a_separate_attribute_name() {
+    let mut search = query("xpath", "//a/@href", "attribute");
+    search.attribute = None;
+    assert_eq!(validate_custom_searches(&[search]), Ok(()));
+    let mut css = query("css", "a", "attribute");
+    css.attribute = None;
+    assert!(validate_custom_searches(&[css])
+        .unwrap_err()
+        .contains("nazwy atrybutu"));
+}
