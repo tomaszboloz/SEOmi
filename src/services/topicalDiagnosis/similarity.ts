@@ -65,3 +65,17 @@ export const weightedJaccard = (
   });
   return { similarity: union ? intersection / union : 0, shared: shared.sort() };
 };
+
+/**
+ * The shared keys of the one language that shares the most. Keys are
+ * namespaced by language, so two bilingual documents repeat every shared word
+ * once per version; a threshold on shared words must not count it twice.
+ */
+export const sharedInOneLanguage = (keys: string[]): string[] => {
+  const byLanguage = new Map<string, string[]>();
+  keys.forEach((key) => {
+    const language = key.slice(0, key.indexOf(':'));
+    byLanguage.set(language, [...(byLanguage.get(language) ?? []), key]);
+  });
+  return [...byLanguage.values()].reduce<string[]>((best, group) => (group.length > best.length ? group : best), []);
+};

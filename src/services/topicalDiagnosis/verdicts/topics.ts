@@ -1,10 +1,12 @@
 import type { DiagnosisDocument, DiagnosisVerdict } from '../types';
 import { NO_HUB_AREA_ID } from '../areas';
 import { CANNIBALIZATION_MIN_JACCARD, CANNIBALIZATION_MIN_TITLE_TOKENS, MAX_LISTED_PAIRS } from '../thresholds';
+import { sharedInOneLanguage } from '../similarity';
 import { urlOf, verdict, type VerdictContext } from './context';
 
+/** Title words both documents share in one language; a bilingual pair repeats each word once per version. */
 const sharedTitleForms = (left: DiagnosisDocument, right: DiagnosisDocument): string[] =>
-  [...left.titleTerms].filter((key) => right.titleTerms.has(key)).map((key) => left.titleForms.get(key) ?? key);
+  sharedInOneLanguage([...left.titleTerms].filter((key) => right.titleTerms.has(key))).map((key) => left.titleForms.get(key) ?? key);
 
 const sameLanguages = (left: DiagnosisDocument, right: DiagnosisDocument): boolean =>
   left.languages.join(',') === right.languages.join(',');
