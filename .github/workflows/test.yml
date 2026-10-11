@@ -246,7 +246,7 @@ jobs:
       - name: Validate actual desktop renderer evidence
         run: node scripts/validate-desktop-e2e-report.mjs test-results/desktop-e2e.json
       - name: Diagnose Windows loader failure
-        if: failure() && runner.os == 'Windows' && steps.desktop-runtime.outcome == 'failure'
+        if: failure() && runner.os == 'Windows' && steps.desktop-runtime.outcome == 'failure' && hashFiles('test-results/desktop-e2e.json') == ''
         shell: pwsh
         run: ./scripts/diagnose-windows-loader.ps1 -Executable src-tauri/target/debug/examples/desktop_e2e.exe
       - name: Upload desktop runtime evidence
