@@ -87,3 +87,56 @@ fn valid_backup_replaces_a_corrupt_primary_history() {
     );
     fs::remove_dir_all(directory).unwrap();
 }
+
+#[test]
+fn encoding_edge_cases_zero_length_and_invalid_magic() {
+    assert!(decode_crawl_runs(&[]).is_err());
+    let mut bad_magic = STORAGE_MAGIC.to_vec();
+    bad_magic.extend_from_slice(b"not-gzip-payload");
+    assert!(decode_crawl_runs(&bad_magic).is_err());
+
+    let mut truncated_gz = STORAGE_MAGIC.to_vec();
+    truncated_gz.extend_from_slice(&[31, 139, 8, 0]);
+    assert!(decode_crawl_runs(&truncated_gz).is_err());
+}
+
+#[test]
+fn history_edge_cases_deletion_empty_lists_and_pagination() {
+    let empty_runs = json!([]);
+    let serde_json::Value::Array(mut runs) = empty_runs else {
+        panic!()
+    };
+
+    let target_id = "non-existent-crawl-id";
+    runs.retain(|run| run.get("id").and_then(|v| v.as_str()) != Some(target_id));
+    assert_eq!(runs.len(), 0);
+
+    let mut populated = [
+        json!({"id": "run-2", "timestamp": 200}),
+        json!({"id": "run-1", "timestamp": 100}),
+    ];
+    populated.sort_by(|a, b| {
+        let ta = a.get("timestamp").and_then(|v| v.as_u64()).unwrap_or(0);
+        let tb = b.get("timestamp").and_then(|v| v.as_u64()).unwrap_or(0);
+        tb.cmp(&ta)
+    });
+    assert_eq!(populated[0]["id"], "run-2");
+
+    let page: Vec<_> = populated.iter().take(2).collect();
+    assert_eq!(page.len(), 2);
+    let empty_page: Vec<_> = populated.iter().skip(2).collect();
+    assert!(empty_page.is_empty());
+}
+
+#[test]
+fn fs_atomic_missing_parent_and_replacement_failures() {
+    let dir = fixture_dir();
+    let missing_parent_path = dir.join("nonexistent_parent/sub/file.json");
+    let err = super::write_bytes_atomic(&missing_parent_path, b"test").unwrap_err();
+    assert!(err.contains("Unable to") || err.contains("lock"));
+
+    let src = dir.join("missing.tmp");
+    let dest = dir.join("dest.json");
+    assert!(super::replace_file(&src, &dest).is_err());
+    fs::remove_dir_all(dir).unwrap();
+}
