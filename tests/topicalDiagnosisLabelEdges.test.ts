@@ -25,6 +25,18 @@ describe('topic labels with bounded or missing evidence', () => {
       .toEqual({ label: 'astronomia', source: 'title' });
   });
 
+  it('uses the unknown-language namespace for legacy empty language fields', () => {
+    const docs = documents();
+    docs.forEach(doc => {
+      doc.primaryPage.semantic_language = '';
+      doc.primaryPage.document_language = null;
+      doc.titleTerms = new Set(['und:orbita']);
+      doc.titleForms = new Map([['und:orbita', 'orbita']]);
+    });
+    expect(topicLabel(docs, docs, buildTermStatistics(docs, new Set())))
+      .toEqual({ label: 'orbita', source: 'title' });
+  });
+
   it('keeps a primary-language word before the shared foreign word', () => {
     const docs = documents();
     docs.forEach(doc => {
