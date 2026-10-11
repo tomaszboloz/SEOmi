@@ -1,3 +1,4 @@
+import i18n from '@/i18n';
 import { act, renderHook, render, screen } from '@testing-library/react';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { useSavedKeywordsSession } from '@/components/Keywords/savedKeywords/useSavedKeywordsSession';
@@ -32,7 +33,6 @@ describe('savedKeywords deep branches', () => {
     expect(downloads.downloadBlob).toHaveBeenCalled();
 
     const item = result.current.savedKeywords[0];
-    const t = (k: string) => k;
     render(<table><tbody>
       <SavedKeywordsTableRow
         item={item}
@@ -42,7 +42,7 @@ describe('savedKeywords deep branches', () => {
         onRemoveTag={vi.fn()}
         onDeleteKeyword={vi.fn()}
         intentLabel={(i) => i}
-        t={t}
+        t={i18n.t}
       />
     </tbody></table>);
 

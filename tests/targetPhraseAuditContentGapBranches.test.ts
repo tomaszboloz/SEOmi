@@ -7,7 +7,7 @@ describe('contentGap deep branches', () => {
     const report = buildTopTenContentGap({
       phrase: 'seo optimization',
       rows: [
-        { type: 'organic', rank: 1, url: 'https://site.test/p1', title: null, description: null },
+        { type: 'organic', rank: 1, url: 'https://site.test/p1', title: undefined, description: undefined },
         { type: 'organic', rank: 2, url: 'https://site.test/p2' },
       ],
       evidence: [

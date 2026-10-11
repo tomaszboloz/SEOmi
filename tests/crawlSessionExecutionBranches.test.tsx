@@ -1,6 +1,6 @@
 import { render, screen, fireEvent } from '@testing-library/react';
 import { describe, it, expect, vi, beforeEach } from 'vitest';
-import React, { act } from 'react';
+import { act } from 'react';
 import { useCrawlExecution } from '@/components/Domain/siteAudit/session/useCrawlExecution';
 import { CrawlProgressStatus } from '@/components/Domain/siteAudit/CrawlProgressStatus';
 import { useToolsStore } from '@/stores/toolsStore';
