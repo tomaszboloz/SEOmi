@@ -10,7 +10,7 @@ pub struct AiModelOption {
     pub label: String,
 }
 
-fn openai_models(body: &Value) -> Vec<AiModelOption> {
+pub(super) fn openai_models(body: &Value) -> Vec<AiModelOption> {
     body["data"]
         .as_array()
         .into_iter()
@@ -43,7 +43,7 @@ fn openai_models(body: &Value) -> Vec<AiModelOption> {
         .collect()
 }
 
-fn claude_models(body: &Value) -> Vec<AiModelOption> {
+pub(super) fn claude_models(body: &Value) -> Vec<AiModelOption> {
     body["data"]
         .as_array()
         .into_iter()
@@ -60,7 +60,7 @@ fn claude_models(body: &Value) -> Vec<AiModelOption> {
         .collect()
 }
 
-fn gemini_models(body: &Value) -> Vec<AiModelOption> {
+pub(super) fn gemini_models(body: &Value) -> Vec<AiModelOption> {
     body["models"]
         .as_array()
         .into_iter()

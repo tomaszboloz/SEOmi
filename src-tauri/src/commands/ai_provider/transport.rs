@@ -44,7 +44,7 @@ fn checked_prompt(prompt: &str) -> Result<(), String> {
     Ok(())
 }
 
-fn gemini_url(model: &str, key: &str) -> Result<String, String> {
+pub(super) fn gemini_url(model: &str, key: &str) -> Result<String, String> {
     let mut url =
         Url::parse(GEMINI_MODELS).map_err(|_| "Unable to build AI provider URL.".to_string())?;
     {

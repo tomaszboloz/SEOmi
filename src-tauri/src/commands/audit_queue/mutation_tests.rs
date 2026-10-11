@@ -56,7 +56,7 @@ fn lock_queue_rejects_invalid_project_identifier() {
 
 #[test]
 fn snapshot_writer_rejects_non_object_values_and_result_paths_check_every_identifier() {
-    use super::paths::queue_result_path;
+    use crate::commands::audit_queue::paths::queue_result_path;
     let fixture = StorageApp::new(mock_builder());
     let app = fixture.handle();
     for value in [

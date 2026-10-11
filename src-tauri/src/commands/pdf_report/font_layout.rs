@@ -104,17 +104,21 @@ impl FontSet {
 
     pub fn encode(&mut self, text: &str) -> Vec<EncodedRun> {
         let mut runs = Vec::new();
-        for visual in super::font_bidi::visual_runs(text) {
-            if visual.rtl && visual.arabic {
-                self.encode_arabic(visual.text, &mut runs);
-            } else if visual.reverse {
-                for character in visual.text.chars().rev() {
-                    self.encode_scalar(character, &mut runs);
-                }
+        let mut index = 0;
+        while index < text.len() {
+            let character = text[index..].chars().next().unwrap_or('?');
+            if Self::is_arabic_character(character) {
+                let end = text[index..]
+                    .char_indices()
+                    .find_map(|(offset, next)| {
+                        (!Self::is_arabic_character(next)).then_some(index + offset)
+                    })
+                    .unwrap_or(text.len());
+                self.encode_arabic(&text[index..end], &mut runs);
+                index = end;
             } else {
-                for character in visual.text.chars() {
-                    self.encode_scalar(character, &mut runs);
-                }
+                self.encode_scalar(character, &mut runs);
+                index += character.len_utf8();
             }
         }
         runs

@@ -1,6 +1,6 @@
 use super::*;
 use crate::commands::site_crawler::html_source_locator::set_html_finding_source;
-use base64::{prelude::BASE64_STANDARD, Engine as _};
+use base64::prelude::BASE64_STANDARD;
 
 fn data_uri(mime: &str, bytes: &[u8]) -> String {
     format!("data:{mime};base64,{}", BASE64_STANDARD.encode(bytes))
@@ -53,7 +53,8 @@ fn source_excerpts_never_split_multibyte_characters() {
 
 #[test]
 fn resource_candidates_at_capacity_still_merge_known_urls() {
-    let config = crawl_config_for_test();
+    let mut config = crawl_config_for_test();
+    config.crawl_images = true;
     let base = url::Url::parse("https://example.com/page").unwrap();
     let mut candidates = HashMap::new();
     for index in 0..constants::MAX_RESOURCE_DISCOVERY_CANDIDATES {

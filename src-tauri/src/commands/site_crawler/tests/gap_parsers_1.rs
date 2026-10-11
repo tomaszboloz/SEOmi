@@ -34,7 +34,7 @@ fn robots_agent_matrix_drops_blank_and_duplicate_identities() {
     let blank = build_robots_agent_matrix("User-agent: *\nDisallow: /a\n", "   ");
     assert_eq!(blank.len(), ROBOTS_AGENT_MATRIX.len());
     let duplicate = build_robots_agent_matrix("User-agent: *\nDisallow: /a\n", "googlebot");
-    assert_eq!(duplicate.len(), ROBOTS_AGENT_MATRIX.len() + 1);
+    assert_eq!(duplicate.len(), ROBOTS_AGENT_MATRIX.len());
     assert_eq!(duplicate[0].user_agent, "googlebot");
     assert!(
         duplicate

@@ -30,14 +30,14 @@ fn favicon_with_blank_href_is_ignored() {
 fn empty_documents_still_report_missing_language_and_charset() {
     let document = Html::parse_document("");
     let (mut findings, mut truncated) = (Vec::new(), false);
-    crate::commands::site_crawler::html_metadata_rules::check_html_language(
+    crate::commands::site_crawler::html_validation_rules::check_html_language(
         &document,
         "",
         "",
         &mut findings,
         &mut truncated,
     );
-    crate::commands::site_crawler::html_metadata_rules::check_html_meta_charset(
+    crate::commands::site_crawler::html_validation_rules::check_html_meta_charset(
         &document,
         "",
         "",
