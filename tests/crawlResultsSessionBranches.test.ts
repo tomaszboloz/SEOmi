@@ -50,7 +50,7 @@ describe('useCrawlResultsSession', () => {
     expect(new URLSearchParams(href.split('?')[1]).get('run')).toBe('run-a');
     const link = new URLSearchParams(r.current.linkEvidenceHref('s', 't').split('?')[1]);
     expect([link.get('tab'), link.get('source'), link.get('target'), link.get('url')]).toEqual(['links', 's', 't', 's']);
-    useProjectStore.setState({ activeProjectId: null } as never);
+    act(() => { useProjectStore.setState({ activeProjectId: null } as never); });
     const bare = setup({ selectedRun: undefined, runs: [] });
     expect(new URLSearchParams(bare.result.current.evidenceHref('u').split('?')[1]).get('project')).toBe('');
     expect(new URLSearchParams(bare.result.current.linkEvidenceHref('s', 't').split('?')[1]).get('run')).toBe('');
@@ -65,7 +65,7 @@ describe('useCrawlResultsSession', () => {
   });
 
   it('does not persist anything without an active project', () => {
-    useProjectStore.setState({ activeProjectId: null } as never);
+    act(() => { useProjectStore.setState({ activeProjectId: null } as never); });
     const { result: r } = setup();
     act(() => r.current.setLinkQuery('q'));
     expect(localStorage.length).toBe(0);

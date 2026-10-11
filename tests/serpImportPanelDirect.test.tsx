@@ -1,5 +1,6 @@
 import { fireEvent, render, screen } from '@testing-library/react';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
+import i18n from '@/i18n';
 import { SerpImportPanel } from '@/components/Keywords/embeddingClustering/SerpImportPanel';
 import { useFreeSerpSession } from '@/components/Keywords/embeddingClustering/useFreeSerpSession';
 
@@ -15,7 +16,8 @@ const mockFeed = {
 };
 
 describe('SerpImportPanel direct contracts', () => {
-  beforeEach(() => {
+  beforeEach(async () => {
+    await i18n.changeLanguage('en');
     vi.clearAllMocks();
     vi.mocked(useFreeSerpSession).mockReturnValue(mockFeed as never);
   });
@@ -34,11 +36,11 @@ describe('SerpImportPanel direct contracts', () => {
       />,
     );
 
-    const queryInput = screen.getByLabelText(/serpImportUi\.query/i);
-    const countryInput = screen.getByLabelText(/serpImportUi\.country/i);
-    const languageInput = screen.getByLabelText(/serpImportUi\.language/i);
-    const formatSelect = screen.getByLabelText(/serpImportUi\.format/i);
-    const payloadInput = screen.getByLabelText(/serpImportUi\.payload/i);
+    const queryInput = screen.getByLabelText(i18n.t('serpImportUi.query'));
+    const countryInput = screen.getByLabelText(i18n.t('serpImportUi.country'));
+    const languageInput = screen.getByLabelText(i18n.t('serpImportUi.language'));
+    const formatSelect = screen.getByLabelText(i18n.t('serpImportUi.format'));
+    const payloadInput = screen.getByLabelText(i18n.t('serpImportUi.payload'));
 
     fireEvent.change(queryInput, { target: { value: 'best headphones' } });
     fireEvent.change(countryInput, { target: { value: 'US' } });
@@ -46,11 +48,11 @@ describe('SerpImportPanel direct contracts', () => {
     fireEvent.change(formatSelect, { target: { value: 'csv' } });
     fireEvent.change(payloadInput, { target: { value: 'keyword,url\na,https://a.test' } });
 
-    const fetchBtn = screen.getByRole('button', { name: 'serpImportUi.fetch' });
+    const fetchBtn = screen.getByRole('button', { name: i18n.t('serpImportUi.fetch') });
     fireEvent.click(fetchBtn);
     expect(mockFeed.fetchBing).toHaveBeenCalled();
 
-    const importBtn = screen.getByRole('button', { name: 'serpImportUi.import' });
+    const importBtn = screen.getByRole('button', { name: i18n.t('serpImportUi.import') });
     fireEvent.click(importBtn);
     expect(onImport).toHaveBeenCalledWith('keyword,url\na,https://a.test', 'csv');
   });
@@ -89,11 +91,11 @@ describe('SerpImportPanel direct contracts', () => {
       />,
     );
 
-    expect(screen.getByText(/serpImportUi\.feedBlocked/i)).toBeTruthy();
+    expect(screen.getByText(new RegExp(i18n.t('serpImportUi.feedBlocked')))).toBeTruthy();
     expect(screen.getByText('Invalid payload')).toBeTruthy();
-    expect(screen.getByText('serpImportUi.partialNotice')).toBeTruthy();
+    expect(screen.getByText(i18n.t('serpImportUi.partialNotice'))).toBeTruthy();
 
-    const clearBtn = screen.getByRole('button', { name: 'serpImportUi.clear' });
+    const clearBtn = screen.getByRole('button', { name: i18n.t('serpImportUi.clear') });
     fireEvent.click(clearBtn);
     expect(onClear).toHaveBeenCalled();
   });

@@ -13,8 +13,8 @@ async fn serve_responses(responses: Vec<String>) -> (String, tokio::task::JoinHa
                     "HTTP/1.1 200 OK\r\nContent-Type: application/json\r\nContent-Length: {}\r\nConnection: close\r\n\r\n{body}",
                     body.len()
                 );
-                let _ = stream.write_all(resp.as_bytes()).await;
-                let _ = stream.shutdown().await;
+                stream.write_all(resp.as_bytes()).await.unwrap();
+                stream.shutdown().await.unwrap();
             }
         }
     });

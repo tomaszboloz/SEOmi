@@ -1,4 +1,4 @@
-import { fireEvent, render, screen } from '@testing-library/react';
+import { act, fireEvent, render, screen } from '@testing-library/react';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import i18n from '@/i18n';
 import { SocialPreview } from '@/components/Results/SocialPreview';
@@ -104,10 +104,10 @@ describe('SocialPreview length hints, problems-only mode and project switches', 
   it('loads each project draft separately without overwriting the previous one', () => {
     const { rerender } = render(<SocialPreview audit={audit()} />);
     fireEvent.change(field('legacyUi.social.titlePlaceholder'), { target: { value: 'Draft for p1' } });
-    useProjectStore.setState({ activeProjectId: 'p2' });
+    act(() => useProjectStore.setState({ activeProjectId: 'p2' }));
     rerender(<SocialPreview audit={audit()} />);
     expect(field('legacyUi.social.titlePlaceholder').value).toBe('Meta title');
-    useProjectStore.setState({ activeProjectId: 'p1' });
+    act(() => useProjectStore.setState({ activeProjectId: 'p1' }));
     rerender(<SocialPreview audit={audit()} />);
     expect(field('legacyUi.social.titlePlaceholder').value).toBe('Draft for p1');
   });

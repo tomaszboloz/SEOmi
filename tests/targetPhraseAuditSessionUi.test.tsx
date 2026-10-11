@@ -13,7 +13,7 @@ const audit = (patch: Partial<PageAuditData> = {}): PageAuditData => createAudit
 const importHookSnapshot = (metadata = '"provider":"fixture"') => saveImportedSerp(project.id, `{"metadata":{${metadata}},"records":[{"keyword":"SEO","rank":1,"url":"https://result.example/one"}]}`, 'json', '2026-10-06T10:00:00Z');
 
 afterEach(() => {
-  useProjectStore.setState({ projects: [], activeProjectId: null });
+  act(() => { useProjectStore.setState({ projects: [], activeProjectId: null }); });
   vi.restoreAllMocks();
 });
 
@@ -87,8 +87,7 @@ describe('target phrase audit session ownership', () => {
     expect(session.result.current.isLoading).toBe(true);
     act(() => { session.result.current.setPhrase('Other phrase'); });
     await waitFor(() => expect(session.result.current.isLoading).toBe(false));
-    rejectInspection('late');
-    await act(async () => { await auditRun; });
+    await act(async () => { rejectInspection('late'); await auditRun; });
     expect(session.result.current.error).toBeNull();
     expect(collect).toHaveBeenCalledTimes(1);
   });

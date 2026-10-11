@@ -121,7 +121,7 @@ it('surfaces a timed-out registry request as a controlled error', async () => {
     render(<SeoToolsWorkspace />);
     fireEvent.click(screen.getAllByRole('tab')[4]);
     fireEvent.click(screen.getByRole('button', { name: /Check domain/i }));
-    await vi.advanceTimersByTimeAsync(10_000);
+    await act(async () => { await vi.advanceTimersByTimeAsync(10_000); });
     vi.useRealTimers();
     await waitFor(() => expect(screen.getByRole('alert')).toBeTruthy());
   });

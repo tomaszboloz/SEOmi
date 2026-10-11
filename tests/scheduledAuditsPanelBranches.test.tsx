@@ -129,7 +129,8 @@ describe('ScheduledAuditsPanel wake-up and error handling', () => {
     Object.defineProperty(i18n, 'language', { value: '', configurable: true });
     try {
       render(<ScheduledAuditsPanel projectId="pw12" initialUrl="https://example.com/" />);
-      open(); add();
+      await act(async () => { open(); add(); });
+      expect(syncMock).toHaveBeenCalledTimes(1);
       expect(loadScheduledAudits('pw12')).toHaveLength(1);
     } finally {
       if (original) Object.defineProperty(i18n, 'language', original);

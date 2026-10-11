@@ -64,7 +64,7 @@ it('shows the full rank refresh fan-out count before submitting', () => {
     render(<RankTracking />);
     expect(screen.getByText(i18n.t('dataforseo.paidRequests', { count: 2 }))).toBeTruthy();
     expect(fetch).not.toHaveBeenCalled();
-    useToolsStore.setState({ trackedRanks: original });
+    act(() => useToolsStore.setState({ trackedRanks: original }));
   });
 
 it('does not spend a DataForSEO request when opening Domain Overview', () => {
@@ -90,16 +90,20 @@ it('persists competitor drafts immediately for comparison and backlink-gap workf
     });
     useToolsStore.setState({ domainOverview: comparisonOverview, domainComparisonTargets: ['example.com'] });
     render(<DomainOverview />);
+    await waitFor(() => expect(screen.getByRole('textbox', { name: 'Competitor domains to compare' })).toBeTruthy());
 
     fireEvent.change(screen.getByRole('textbox', { name: 'Competitor domains to compare' }), { target: { value: 'one.example\ntwo.example' } });
     expect(JSON.parse(localStorage.getItem('seomi_project_domain-research-project_domain_comparison_targets_v1') || '[]')).toEqual(['example.com', 'one.example', 'two.example']);
 
     render(<BacklinkChecker />);
+    await waitFor(() => expect(screen.getByRole('textbox', { name: 'Competitor domains for backlink gap analysis' })).toBeTruthy());
     fireEvent.change(screen.getByRole('textbox', { name: 'Competitor domains for backlink gap analysis' }), { target: { value: 'one.example\ntwo.example' } });
     expect(JSON.parse(localStorage.getItem('seomi_backlink_gap_settings_domain-research-project') || '{}')).toMatchObject({ competitors: ['one.example', 'two.example'], includeSubdomains: true });
 
-    act(() => useProjectStore.setState({ activeProjectId: 'domain-research-second' }));
-    await useToolsStore.getState().hydrateProject('domain-research-second');
+    await act(async () => {
+      useProjectStore.setState({ activeProjectId: 'domain-research-second' });
+      await useToolsStore.getState().hydrateProject('domain-research-second');
+    });
     expect(useToolsStore.getState().domainComparisonTargets).toEqual([]);
     expect(useToolsStore.getState().backlinkGapCompetitors).toEqual([]);
   });

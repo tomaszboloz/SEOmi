@@ -69,7 +69,7 @@ describe('FreeSuggestionsPanel branches', () => {
     fireEvent.click(screen.getByRole('button', { name: /Fetch suggestions/i }));
     await waitFor(() => expect(screen.getByRole('alert').textContent).toContain('Network timeout'));
 
-    useToolsStore.setState({ savedKeywords: [{ keyword: 'seo audit' }] as never });
+    act(() => { useToolsStore.setState({ savedKeywords: [{ keyword: 'seo audit' }] as never }); });
     mocks.fetch.mockResolvedValueOnce({ status: 'ok', response: { status: 'ok', sourceUrl: 'u', fetchedAt: 't', body: '[]', httpStatus: 200, error: null }, result: { ...defaultSug, suggestions: ['seo audit', 'seo tips'] } });
     rerender(<FreeSuggestionsPanel query="seo" geo="PL" language="pl" />);
     fireEvent.click(screen.getByRole('button', { name: /Fetch suggestions/i }));
@@ -79,7 +79,7 @@ describe('FreeSuggestionsPanel branches', () => {
     fireEvent.click(screen.getByRole('button', { name: /^Save$/i }));
     expect(mocks.add).toHaveBeenCalledWith(expect.objectContaining({ keyword: 'seo tips', tags: ['Google Suggest'] }));
 
-    mocks.onSaveWithoutProvenance?.('unlinked kw');
+    act(() => { mocks.onSaveWithoutProvenance?.('unlinked kw'); });
     expect(mocks.add).toHaveBeenCalledWith(expect.not.objectContaining({ provenance: expect.anything() }));
   });
 
@@ -104,7 +104,7 @@ describe('FreeSuggestionsPanel branches', () => {
     fireEvent.click(saveButtons[1]);
     expect(mocks.add).toHaveBeenCalledWith(expect.objectContaining({ keyword: 'seo guide', tags: ['User import'] }));
 
-    useProjectStore.setState({ activeProjectId: null });
+    act(() => { useProjectStore.setState({ activeProjectId: null }); });
     fireEvent.change(screen.getByRole('textbox', { name: /Suggestions payload/i }), { target: { value: 'seo tips' } });
     importBtn.removeAttribute('disabled');
     fireEvent.click(importBtn);

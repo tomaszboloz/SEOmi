@@ -1,4 +1,4 @@
-import { fireEvent, render, screen, waitFor } from '@testing-library/react';
+import { act, fireEvent, render, screen, waitFor } from '@testing-library/react';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { McpHub } from '@/components/AgentWorkflows/McpHub';
 import { useProjectStore } from '@/stores/projectStore';
@@ -75,13 +75,13 @@ it('accepts an absolute Windows server path regardless of extension casing', () 
     expect(screen.getByRole('button', { name: /Copy config/ }).hasAttribute('disabled')).toBe(false);
   });
 
-it('exports only the selected client configuration after an explicit click', () => {
+it('exports only the selected client configuration after an explicit click', async () => {
     vi.mocked(saveTextFile).mockResolvedValue('saved');
     render(<McpHub />);
     fireEvent.change(screen.getByRole('textbox', { name: /Absolute MCP server path/ }), {
       target: { value: '/Users/test/mcp-server/dist/index.js' },
     });
-    fireEvent.click(screen.getByRole('button', { name: 'Save configuration file' }));
+    await act(async () => { fireEvent.click(screen.getByRole('button', { name: 'Save configuration file' })); });
 
     expect(saveTextFile).toHaveBeenCalledWith({
       defaultPath: 'seomi-mcp-claude.json',
@@ -94,14 +94,14 @@ it('exports only the selected client configuration after an explicit click', () 
     }));
   });
 
-it('exports Codex configuration as TOML when that client is selected', () => {
+it('exports Codex configuration as TOML when that client is selected', async () => {
     vi.mocked(saveTextFile).mockResolvedValue('saved');
     render(<McpHub />);
     fireEvent.change(screen.getByRole('textbox', { name: /Absolute MCP server path/ }), {
       target: { value: '/Users/test/mcp-server/dist/index.js' },
     });
     fireEvent.click(screen.getByRole('button', { name: 'Codex' }));
-    fireEvent.click(screen.getByRole('button', { name: 'Save configuration file' }));
+    await act(async () => { fireEvent.click(screen.getByRole('button', { name: 'Save configuration file' })); });
 
     expect(saveTextFile).toHaveBeenCalledWith({
       defaultPath: 'seomi-mcp-codex.toml',
@@ -117,7 +117,7 @@ it('shows a translated error instead of throwing when the file export is rejecte
     fireEvent.change(screen.getByRole('textbox', { name: /Absolute MCP server path/ }), {
       target: { value: '/Users/test/mcp-server/dist/index.js' },
     });
-    fireEvent.click(screen.getByRole('button', { name: 'Save configuration file' }));
+    await act(async () => { fireEvent.click(screen.getByRole('button', { name: 'Save configuration file' })); });
 
     await waitFor(() => {
       expect(screen.getByRole('alert').textContent).toContain('The configuration file could not be exported.');

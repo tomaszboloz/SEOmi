@@ -1,4 +1,4 @@
-import { act, fireEvent, render, screen, waitFor } from '@testing-library/react';
+import { act, cleanup, fireEvent, render, screen, waitFor } from '@testing-library/react';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import i18n from '@/i18n';
 import { TargetPhraseAuditPanel } from '@/components/Results/targetPhraseAudit';
@@ -26,7 +26,8 @@ const importSnapshot = (records = [{ rank: 1, url: 'https://result.example/one' 
 const selectProject = () => useProjectStore.setState({ projects: [project], activeProjectId: project.id });
 
 afterEach(() => {
-  useProjectStore.setState({ projects: [], activeProjectId: null });
+  cleanup();
+  act(() => { useProjectStore.setState({ projects: [], activeProjectId: null }); });
   vi.restoreAllMocks();
 });
 

@@ -1,4 +1,4 @@
-import { act, fireEvent, render, screen, waitFor } from '@testing-library/react';
+import { act, cleanup, fireEvent, render, screen, waitFor } from '@testing-library/react';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 vi.mock('@/services/scheduleWakeup', () => ({
@@ -20,13 +20,17 @@ describe('ScheduledAuditsPanel', () => {
   });
 
   afterEach(() => {
+    cleanup();
     Reflect.deleteProperty(window, '__TAURI_INTERNALS__');
   });
 
   it('creates a project-local schedule and updates its live status', async () => {
     render(<ScheduledAuditsPanel projectId="project-ui" initialUrl="https://example.com/page" />);
     fireEvent.click(screen.getByText('Harmonogram audytów projektu'));
-    fireEvent.click(screen.getByRole('button', { name: 'Dodaj' }));
+    await act(async () => {
+      fireEvent.click(screen.getByRole('button', { name: 'Dodaj' }));
+      await Promise.resolve();
+    });
 
     const [schedule] = loadScheduledAudits('project-ui');
     expect(schedule).toBeDefined();
@@ -41,13 +45,19 @@ describe('ScheduledAuditsPanel', () => {
     act(() => { finishScheduledAudit('project-ui', schedule.id, true, undefined, Date.parse(schedule.nextRunAt) + 1000); });
     await waitFor(() => expect(screen.getByText(/· ostatni:/)).toBeTruthy());
 
-    fireEvent.click(screen.getByRole('button', { name: 'Wstrzymaj harmonogram' }));
+    await act(async () => {
+      fireEvent.click(screen.getByRole('button', { name: 'Wstrzymaj harmonogram' }));
+      await Promise.resolve();
+    });
     expect(loadScheduledAudits('project-ui')[0].enabled).toBe(false);
-    fireEvent.click(screen.getByRole('button', { name: 'Usuń harmonogram' }));
+    await act(async () => {
+      fireEvent.click(screen.getByRole('button', { name: 'Usuń harmonogram' }));
+      await Promise.resolve();
+    });
     expect(loadScheduledAudits('project-ui')).toEqual([]);
   });
 
-  it('creates a persisted multi-page crawl schedule from the current crawl configuration', () => {
+  it('creates a persisted multi-page crawl schedule from the current crawl configuration', async () => {
     render(
       <ScheduledAuditsPanel
         projectId="project-crawl"
@@ -60,7 +70,10 @@ describe('ScheduledAuditsPanel', () => {
     fireEvent.change(screen.getByLabelText('Typ zaplanowanego audytu'), { target: { value: 'site-crawl' } });
     expect((screen.getByLabelText('Limit URL zaplanowanego crawla') as HTMLInputElement).value).toBe('40');
     fireEvent.change(screen.getByLabelText('Limit URL zaplanowanego crawla'), { target: { value: '60' } });
-    fireEvent.click(screen.getByRole('button', { name: 'Dodaj' }));
+    await act(async () => {
+      fireEvent.click(screen.getByRole('button', { name: 'Dodaj' }));
+      await Promise.resolve();
+    });
 
     expect(loadScheduledAudits('project-crawl')[0]).toMatchObject({
       taskType: 'site-crawl',
@@ -70,15 +83,19 @@ describe('ScheduledAuditsPanel', () => {
     expect(screen.getByText(/Multi-page crawl · 60 URL/)).toBeTruthy();
   });
 
-  it('exposes a manual run action that makes the schedule due', () => {
+  it('exposes a manual run action that makes the schedule due', async () => {
     render(<ScheduledAuditsPanel projectId="project-now" initialUrl="https://example.com/page" />);
     fireEvent.click(screen.getByText('Harmonogram audytów projektu'));
-    fireEvent.click(screen.getByRole('button', { name: 'Dodaj' }));
+    await act(async () => {
+      fireEvent.click(screen.getByRole('button', { name: 'Dodaj' }));
+      await Promise.resolve();
+    });
     const schedule = loadScheduledAudits('project-now')[0];
     vi.mocked(syncAuditWakeup).mockClear();
 
-    act(() => {
+    await act(async () => {
       fireEvent.click(screen.getByRole('button', { name: 'Uruchom harmonogram teraz' }));
+      await Promise.resolve();
     });
 
     expect(loadScheduledAudits('project-now')[0].nextRunAt).toBeTruthy();

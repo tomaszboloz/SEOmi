@@ -1,4 +1,4 @@
-import { act, fireEvent, render, screen, waitFor } from '@testing-library/react';
+import { act, cleanup, fireEvent, render, screen, waitFor } from '@testing-library/react';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { StructuredDataView } from '@/components/Results/StructuredDataView';
 import { useAuditStore } from '@/stores/auditStore';
@@ -16,9 +16,12 @@ describe('direct structured data view contracts', () => {
   beforeEach(async () => {
     await i18n.changeLanguage('en');
     vi.mocked(copyText).mockReset().mockResolvedValue(true);
-    useAuditStore.setState({ showOnlyProblems: false });
+    act(() => { useAuditStore.setState({ showOnlyProblems: false }); });
   });
-  afterEach(() => useAuditStore.setState({ showOnlyProblems: false }));
+  afterEach(() => {
+    cleanup();
+    act(() => { useAuditStore.setState({ showOnlyProblems: false }); });
+  });
 
   it('renders validation evidence and confirms only a successful copy', async () => {
     render(<StructuredDataView audit={createAuditFixture({ structured_data: [item] })} />);
@@ -26,7 +29,10 @@ describe('direct structured data view contracts', () => {
     expect(screen.getByText('Author is missing.')).toBeTruthy();
     expect(screen.getByText('$.author')).toBeTruthy();
     const copy = screen.getByRole('button', { name: i18n.t('legacyUi.structured.copy') });
-    fireEvent.click(copy);
+    await act(async () => {
+      fireEvent.click(copy);
+      await Promise.resolve();
+    });
     await waitFor(() => expect(copyText).toHaveBeenCalledWith(JSON.stringify(item.content, null, 2)));
     await waitFor(() => expect(screen.getByRole('button', { name: i18n.t('legacyUi.structured.copied') })).toBeTruthy());
   });
@@ -34,7 +40,10 @@ describe('direct structured data view contracts', () => {
   it('does not show copied feedback when clipboard rejects and exposes problem-only output', async () => {
     vi.mocked(copyText).mockResolvedValue(false);
     const view = render(<StructuredDataView audit={createAuditFixture({ structured_data: [item] })} />);
-    fireEvent.click(screen.getByRole('button', { name: i18n.t('legacyUi.structured.copy') }));
+    await act(async () => {
+      fireEvent.click(screen.getByRole('button', { name: i18n.t('legacyUi.structured.copy') }));
+      await Promise.resolve();
+    });
     await waitFor(() => expect(copyText).toHaveBeenCalled());
     expect(screen.getByRole('button', { name: i18n.t('legacyUi.structured.copy') })).toBeTruthy();
     act(() => useAuditStore.setState({ showOnlyProblems: true }));

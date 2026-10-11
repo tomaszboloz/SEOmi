@@ -1,9 +1,12 @@
-import { describe, expect, it, vi } from 'vitest';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { render, screen } from '@testing-library/react';
+import i18n from '@/i18n';
 import { CrawlResultsContent } from '@/components/Domain/crawlResults/CrawlResultsContent';
 import { CrawlLanguageHreflangSection } from '@/components/Domain/crawlResults/internationalTab/CrawlLanguageHreflangSection';
 import { DomainComparisonHistory } from '@/components/Domain/domainOverview/DomainComparisonHistory';
 import type { CrawledPageSummary } from '@/types';
+
+beforeEach(async () => { await i18n.changeLanguage('en'); });
 
 vi.mock('@/components/Domain/crawlResults/CrawlOverviewTab', () => ({ CrawlOverviewTab: () => <div>overview-tab</div> }));
 vi.mock('@/components/Domain/crawlResults/CrawlCrawlerReadinessTab', () => ({ CrawlCrawlerReadinessTab: () => <div>readiness-tab</div> }));

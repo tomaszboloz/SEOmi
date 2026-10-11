@@ -26,6 +26,7 @@ pub(super) async fn server() -> (String, tokio::task::JoinHandle<Vec<Request>>) 
             );
             stream.write_all(head.as_bytes()).await.unwrap();
             stream.write_all(body.as_bytes()).await.unwrap();
+            stream.shutdown().await.unwrap();
             requests.push(request);
         }
         requests
@@ -43,6 +44,7 @@ pub(super) async fn server_empty() -> (String, tokio::task::JoinHandle<Vec<Reque
         let head = format!("HTTP/1.1 200 OK\r\nContent-Type: application/json\r\nContent-Length: {}\r\nConnection: close\r\n\r\n", body.len());
         stream.write_all(head.as_bytes()).await.unwrap();
         stream.write_all(body).await.unwrap();
+        stream.shutdown().await.unwrap();
         vec![request]
     });
     (endpoint, task)

@@ -38,7 +38,7 @@ describe('project export', () => {
     const none = mount();
     await act(async () => { await none.result.current.handleExportProject(); });
     expect(none.result.current.backupStatus).toBe(i18n.t('legacyUi.settings.chooseProjectBackup'));
-    useProjectStore.setState({ activeProjectId: 'p1' });
+    act(() => { useProjectStore.setState({ activeProjectId: 'p1' }); });
     mocks.createBackup.mockResolvedValueOnce({ crawlRuns: [1, 2], localStorage: { a: '1' } });
     const view = mount();
     await act(async () => { await view.result.current.handleExportProject(); });

@@ -1,4 +1,4 @@
-import { fireEvent, render, screen } from '@testing-library/react';
+import { act, fireEvent, render, screen } from '@testing-library/react';
 import { beforeEach, describe, expect, it } from 'vitest';
 import i18n from '@/i18n';
 import { SerpSimulatorPanel } from '@/components/SeoTools/workspace/SerpSimulatorPanel';
@@ -10,10 +10,10 @@ const projects = [
   { id: 'p2', name: 'Two' },
 ];
 const label = (key: string) => screen.getByLabelText(i18n.t(key)) as HTMLInputElement;
-const select = (id: string | null) => useProjectStore.setState({ projects: projects as never, activeProjectId: id });
+const select = (id: string | null) => act(() => useProjectStore.setState({ projects: projects as never, activeProjectId: id }));
 
 beforeEach(async () => {
-  await i18n.changeLanguage('en');
+  await act(async () => { await i18n.changeLanguage('en'); });
   localStorage.clear();
   select('p1');
 });

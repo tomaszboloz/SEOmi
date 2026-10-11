@@ -1,4 +1,4 @@
-import { render, screen, fireEvent, waitFor } from '@testing-library/react';
+import { act, render, screen, fireEvent, waitFor } from '@testing-library/react';
 import { afterEach, beforeEach, expect, it, vi } from 'vitest';
 import i18n from '@/i18n';
 import { OverviewCoverageSection } from '@/components/Results/overview/OverviewCoverageSection';
@@ -18,7 +18,7 @@ beforeEach(async () => {
   mocks.copyText.mockReset().mockResolvedValue(true);
   mocks.checks = [...make(30, 'pass', 'seo'), ...make(1, 'warning', 'links'), ...make(1, 'error', 'media'), ...make(1, 'not_applicable', 'media')];
 });
-afterEach(() => { useAuditStore.setState({ showOnlyProblems: false }); });
+afterEach(() => { act(() => { useAuditStore.setState({ showOnlyProblems: false }); }); });
 
 it('paginates 24 per page and clamps previous and next at the edges', () => {
   render(<OverviewCoverageSection audit={audit} />);

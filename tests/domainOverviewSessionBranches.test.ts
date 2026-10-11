@@ -1,4 +1,4 @@
-import { act, renderHook } from '@testing-library/react';
+import { act, renderHook, type RenderHookResult } from '@testing-library/react';
 import { afterEach, beforeEach, expect, it, vi } from 'vitest';
 import type { FormEvent } from 'react';
 import { useDomainOverviewSession } from '@/components/Domain/domainOverview/useDomainOverviewSession';
@@ -12,16 +12,24 @@ const audit = useAuditStore.getState();
 const evt = () => ({ preventDefault: vi.fn() }) as unknown as FormEvent;
 const spies = { analyzeDomain: vi.fn(), setDomainQuery: vi.fn(), setBacklinkQuery: vi.fn(), setCrawlUrl: vi.fn(), compareDomains: vi.fn().mockResolvedValue(undefined), setDomainComparisonTargets: vi.fn(), setActiveTab: vi.fn() };
 const project = (rootUrl: string) => ({ id: 'p1', name: 'P', rootUrl }) as never;
+type DomainOverviewHook = ReturnType<typeof useDomainOverviewSession>;
+const renderDomain = async (): Promise<RenderHookResult<DomainOverviewHook, undefined>> => {
+  let hook!: RenderHookResult<DomainOverviewHook, undefined>;
+  await act(async () => { hook = renderHook(() => useDomainOverviewSession()); });
+  return hook;
+};
 beforeEach(() => {
-  Object.values(spies).forEach((s) => s.mockClear());
-  useProjectStore.setState({ projects: [project('')], activeProjectId: 'p1' });
-  useToolsStore.setState({ domainQuery: '', domainOverview: null, domainComparisonTargets: [], ...spies } as never);
-  useAuditStore.setState({ setActiveTab: spies.setActiveTab } as never);
+  act(() => {
+    Object.values(spies).forEach((s) => s.mockClear());
+    useProjectStore.setState({ projects: [project('')], activeProjectId: 'p1' });
+    useToolsStore.setState({ domainQuery: '', domainOverview: null, domainComparisonTargets: [], ...spies } as never);
+    useAuditStore.setState({ setActiveTab: spies.setActiveTab } as never);
+  });
 });
-afterEach(() => { useToolsStore.setState(tools); useProjectStore.setState(projects); useAuditStore.setState(audit); });
+afterEach(() => act(() => { useToolsStore.setState(tools); useProjectStore.setState(projects); useAuditStore.setState(audit); }));
 
-it('ignores blank analyze input but analyzes the trimmed domain', () => {
-  const { result } = renderHook(() => useDomainOverviewSession());
+it('ignores blank analyze input but analyzes the trimmed domain', async () => {
+  const { result } = await renderDomain();
   const blank = evt();
   act(() => result.current.handleAnalyze(blank));
   expect(blank.preventDefault).toHaveBeenCalled();
@@ -33,34 +41,36 @@ it('ignores blank analyze input but analyzes the trimmed domain', () => {
   expect(spies.analyzeDomain).toHaveBeenCalledWith('example.com', useToolsStore.getState().domainCountry, useToolsStore.getState().domainLanguage);
 });
 
-it('prefills the project root url once when no domain query exists', () => {
-  useProjectStore.setState({ projects: [project(' https://root.test ')] });
-  const { result, rerender } = renderHook(() => useDomainOverviewSession());
+it('prefills the project root url once when no domain query exists', async () => {
+  act(() => useProjectStore.setState({ projects: [project(' https://root.test ')] }));
+  const { result, rerender } = await renderDomain();
   expect(spies.setDomainQuery).toHaveBeenCalledWith('https://root.test');
   expect(result.current.inputDomain).toBe('https://root.test');
-  rerender();
+  await act(async () => rerender());
   expect(spies.setDomainQuery).toHaveBeenCalledTimes(1);
 });
 
-it('does not prefill when a query already exists or the project has no root', () => {
-  useToolsStore.setState({ domainQuery: 'kept.test' });
-  useProjectStore.setState({ projects: [project('https://root.test')] });
-  const { result } = renderHook(() => useDomainOverviewSession());
+it('does not prefill when a query already exists or the project has no root', async () => {
+  act(() => {
+    useToolsStore.setState({ domainQuery: 'kept.test' });
+    useProjectStore.setState({ projects: [project('https://root.test')] });
+  });
+  const { result } = await renderDomain();
   expect(spies.setDomainQuery).not.toHaveBeenCalled();
   expect(result.current.inputDomain).toBe('kept.test');
-  act(() => useProjectStore.setState({ activeProjectId: null }));
+  await act(async () => useProjectStore.setState({ activeProjectId: null }));
   expect(spies.setDomainQuery).not.toHaveBeenCalled();
 });
 
-it('navigates using the overview domain, falling back to the input', () => {
-  const { result, rerender } = renderHook(() => useDomainOverviewSession());
+it('navigates using the overview domain, falling back to the input', async () => {
+  const { result, rerender } = await renderDomain();
   act(() => result.current.setInputDomain('typed.test'));
   act(() => result.current.handleNavigateBacklinks());
   act(() => result.current.handleNavigateSiteAudit());
   expect(spies.setBacklinkQuery).toHaveBeenCalledWith('typed.test');
   expect(spies.setCrawlUrl).toHaveBeenCalledWith('https://typed.test');
   act(() => useToolsStore.setState({ domainOverview: { domain: 'real.test' } as never }));
-  rerender();
+  await act(async () => rerender());
   act(() => result.current.handleNavigateBacklinks());
   act(() => result.current.handleNavigateSiteAudit());
   expect(spies.setBacklinkQuery).toHaveBeenLastCalledWith('real.test');
@@ -69,9 +79,9 @@ it('navigates using the overview domain, falling back to the input', () => {
   expect(spies.setActiveTab).toHaveBeenCalledWith('site-audit');
 });
 
-it('compares the target with split, trimmed competitors and hides the target from the input', () => {
-  useToolsStore.setState({ domainOverview: { domain: 'me.test' } as never, domainComparisonTargets: ['me.test', 'a.test', 'b.test'] });
-  const { result } = renderHook(() => useDomainOverviewSession());
+it('compares the target with split, trimmed competitors and hides the target from the input', async () => {
+  act(() => useToolsStore.setState({ domainOverview: { domain: 'me.test' } as never, domainComparisonTargets: ['me.test', 'a.test', 'b.test'] }));
+  const { result } = await renderDomain();
   expect(result.current.comparisonInput).toBe('a.test\nb.test');
   act(() => result.current.setComparisonInput('x.test, y.test;\n\n z.test ,'));
   const e = evt();
@@ -82,8 +92,8 @@ it('compares the target with split, trimmed competitors and hides the target fro
   expect(spies.compareDomains).toHaveBeenCalledWith(expected);
 });
 
-it('compares against the typed domain when no overview is loaded', () => {
-  const { result } = renderHook(() => useDomainOverviewSession());
+it('compares against the typed domain when no overview is loaded', async () => {
+  const { result } = await renderDomain();
   act(() => result.current.setInputDomain('typed.test'));
   act(() => result.current.setComparisonInput(''));
   act(() => result.current.handleCompareDomains(evt()));

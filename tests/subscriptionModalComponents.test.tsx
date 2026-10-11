@@ -1,5 +1,5 @@
 import { describe, it, expect, vi } from 'vitest';
-import { render, screen, fireEvent } from '@testing-library/react';
+import { act, render, screen, fireEvent } from '@testing-library/react';
 import { PROVIDERS_CONFIG } from '@/components/Auth/subscriptionModal/subscriptionModalTypes';
 import { SubscriptionModalHeader } from '@/components/Auth/subscriptionModal/SubscriptionModalHeader';
 import { SubscriptionProviderCard } from '@/components/Auth/subscriptionModal/SubscriptionProviderCard';
@@ -105,9 +105,13 @@ describe('SubscriptionModal modular architecture', () => {
     expect(onSaveKey).toHaveBeenCalledWith('openai', 'sk-new-key');
   });
 
-  it('renders SubscriptionModal and closes on backdrop click', () => {
+  it('renders SubscriptionModal and closes on backdrop click', async () => {
     useUIStore.setState({ activeModal: 'ai' });
     render(<SubscriptionModal />);
+    await act(async () => {
+      await Promise.resolve();
+      await Promise.resolve();
+    });
     const backdrop = screen.getByRole('presentation');
     fireEvent.mouseDown(backdrop);
     expect(useUIStore.getState().activeModal).toBeNull();

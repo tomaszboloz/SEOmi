@@ -53,6 +53,9 @@ it('warns only when some page truncated its frame list', () => {
   const { unmount } = show([createCrawlPageFixture({ frames })]);
   expect(screen.queryByText(t('crawl.ui.framesTruncated'))).toBeNull();
   unmount();
-  show([createCrawlPageFixture({ frames }), createCrawlPageFixture({ frames, frames_truncated: true } as never)]);
+  show([
+    createCrawlPageFixture({ frames }),
+    createCrawlPageFixture({ url: 'https://example.test/second', frames, frames_truncated: true } as never),
+  ]);
   expect(screen.getByText(t('crawl.ui.framesTruncated'))).toBeTruthy();
 });

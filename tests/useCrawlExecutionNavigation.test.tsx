@@ -14,9 +14,9 @@ const downloadPdf = vi.fn();
 const compare = vi.fn(() => ({ added: [] }));
 const mount = (project: string | null = 'p1') => renderHook(({ id }) => useCrawlExecution(id, { downloadPdf, compare } as never, 'https://a.test/', 25, vi.fn(), { id: 't' } as never), { initialProps: { id: project } });
 const result = (score: number) => ({ health_score: score });
-const seed = (patch: Record<string, unknown> = {}) => useToolsStore.setState({ crawlResult: null, crawlRuns: [], isCrawling: false, selectedCrawlRunId: null, ...patch } as never);
+const seed = (patch: Record<string, unknown> = {}) => act(() => useToolsStore.setState({ crawlResult: null, crawlRuns: [], isCrawling: false, selectedCrawlRunId: null, ...patch } as never));
 
-beforeEach(async () => { localStorage.clear(); sessionStorage.clear(); await i18n.changeLanguage('en'); seed(); });
+beforeEach(async () => { localStorage.clear(); sessionStorage.clear(); await act(async () => { await i18n.changeLanguage('en'); }); seed(); });
 afterEach(() => { vi.clearAllMocks(); document.body.innerHTML = ''; });
 
 describe('crawl map requests', () => {

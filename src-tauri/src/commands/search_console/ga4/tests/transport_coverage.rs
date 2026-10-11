@@ -8,11 +8,13 @@ async fn serve_status(status: u16, body: &'static str) -> (String, tokio::task::
     let addr = format!("http://{}", listener.local_addr().unwrap());
     let handle = tokio::spawn(async move {
         if let Ok((mut stream, _)) = listener.accept().await {
+            let _ = super::http_fixture::read_request(&mut stream).await;
             let resp = format!(
                 "HTTP/1.1 {status} Error\r\nContent-Type: application/json\r\nContent-Length: {}\r\nConnection: close\r\n\r\n{body}",
                 body.len()
             );
-            let _ = stream.write_all(resp.as_bytes()).await;
+            stream.write_all(resp.as_bytes()).await.unwrap();
+            stream.shutdown().await.unwrap();
         }
     });
     (addr, handle)

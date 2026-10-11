@@ -1,4 +1,4 @@
-import { fireEvent, render, screen, waitFor } from '@testing-library/react';
+import { act, fireEvent, render, screen, waitFor } from '@testing-library/react';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { McpHub } from '@/components/AgentWorkflows/McpHub';
 import { useProjectStore } from '@/stores/projectStore';
@@ -88,8 +88,8 @@ describe('McpHub discovery branches', () => {
     render(<McpHub />);
     fireEvent.change(pathBox(), { target: { value: PATH } });
     discover();
-    useProjectStore.setState({ activeProjectId: 'mcp-b' });
-    reject(new Error('stale failure'));
+    act(() => { useProjectStore.setState({ activeProjectId: 'mcp-b' }); });
+    await act(async () => { reject(new Error('stale failure')); });
     await waitFor(() => expect(screen.queryByText(/stale failure/)).toBeNull());
     expect(screen.queryByRole('alert')).toBeNull();
   });
@@ -112,8 +112,8 @@ describe('McpHub discovery branches', () => {
     render(<McpHub />);
     fireEvent.change(pathBox(), { target: { value: PATH } });
     discover();
-    useProjectStore.setState({ activeProjectId: 'mcp-b' });
-    resolve(server(['late_tool']));
+    act(() => { useProjectStore.setState({ activeProjectId: 'mcp-b' }); });
+    await act(async () => { resolve(server(['late_tool'])); });
     await waitFor(() => expect(screen.queryByText('late_tool')).toBeNull());
     expect(screen.queryByText(/srv/)).toBeNull();
   });

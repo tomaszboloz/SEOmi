@@ -1,5 +1,6 @@
 import { fireEvent, render, screen } from '@testing-library/react';
-import { describe, expect, it, vi } from 'vitest';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
+import i18n from '@/i18n';
 import { SearchConsoleComparison } from '@/components/AgentWorkflows/searchConsole/Comparison';
 import type { SearchConsoleSession } from '@/components/AgentWorkflows/searchConsole/useSearchConsoleSession';
 import { gscData } from './fixtures/gscTracker';
@@ -23,6 +24,8 @@ const session = (patch: Record<string, unknown> = {}): SearchConsoleSession => (
   snapshots: [{ id: 'current' }, { id: 'baseline', start_date: '2026-08-01', end_date: '2026-08-28', filters: { search_type: 'web' } }],
   baselineId: 'baseline', setBaselineId: vi.fn(), ...patch,
 } as unknown as SearchConsoleSession);
+
+beforeEach(async () => { await i18n.changeLanguage('en'); });
 
 describe('Search Console comparison direct edges', () => {
   it('renders nullable and numeric decline deltas, truncation, and empty opportunities', () => {

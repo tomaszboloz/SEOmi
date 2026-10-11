@@ -1,10 +1,13 @@
 import { fireEvent, render, screen } from '@testing-library/react';
-import { describe, expect, it, vi } from 'vitest';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
+import i18n from '@/i18n';
 import { CrawlHistoryMetricsSection } from '@/components/Domain/crawlResults/visualisationsTab/CrawlHistoryMetricsSection';
 import { ComparisonChangesList } from '@/components/Domain/crawlResults/visualisationsTab/ComparisonChangesList';
 import { CrawlCompareRunsSection } from '@/components/Domain/crawlResults/visualisationsTab/CrawlCompareRunsSection';
 import type { CrawlRunRecord } from '@/types';
 import type { CrawlDiff } from '@/services/crawlDiff';
+
+beforeEach(async () => { await i18n.changeLanguage('en'); });
 
 const mockT = (key: string, params?: Record<string, unknown>) => {
   if (params?.count !== undefined) return `${key}:${params.count}`;

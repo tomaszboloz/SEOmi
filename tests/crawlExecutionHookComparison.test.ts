@@ -67,7 +67,7 @@ it.each(['hook-project', null])('compares two newly saved environment runs and n
   const fixture = executionHook(project); urls(fixture);
   const staging = createCrawlResultFixture({ health_score: 70 });
   const production = createCrawlResultFixture({ health_score: 90 });
-  useToolsStore.setState({ crawlRuns: [createCrawlRunFixture({ id: 'existing', environment: 'staging' })] });
+  act(() => useToolsStore.setState({ crawlRuns: [createCrawlRunFixture({ id: 'existing', environment: 'staging' })] }));
   fixture.startSiteCrawl.mockImplementation(async (url, _limit, _config, environment) => {
     const result = environment === 'staging' ? staging : production;
     useToolsStore.setState({ crawlRuns: [...useToolsStore.getState().crawlRuns, createCrawlRunFixture({ id: environment, environment, startUrl: url, result })] });
