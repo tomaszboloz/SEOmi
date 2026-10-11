@@ -45,7 +45,7 @@ async fn collect_at_report_missing_and_partial_statuses() {
     })
     .await;
 
-    let client = reqwest::Client::new();
+    let client = super::http_fixture::test_client();
     let snapshot = collect_at(
         &client,
         "tok",
@@ -82,7 +82,7 @@ async fn collect_at_discovery_partial_with_report_complete_yields_partial() {
     })
     .await;
 
-    let client = reqwest::Client::new();
+    let client = super::http_fixture::test_client();
     let snapshot = collect_at(
         &client,
         "tok",

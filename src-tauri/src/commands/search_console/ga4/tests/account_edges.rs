@@ -44,7 +44,7 @@ async fn serve_twice(
 #[tokio::test]
 async fn account_candidates_error_response() {
     let (addr, handle) = serve_once(500, "{\"error\": \"failed\"}").await;
-    let client = reqwest::Client::new();
+    let client = super::http_fixture::test_client();
     let res = account_candidates(&client, "tok", &addr).await;
     assert!(res.is_err());
     handle.await.unwrap();
@@ -54,7 +54,7 @@ async fn account_candidates_error_response() {
 async fn account_candidates_invalid_property_name() {
     let body = "{\"accountSummaries\":[{\"propertySummaries\":[{\"property\":\"invalid\"}]}]}";
     let (addr, handle) = serve_once(200, body).await;
-    let client = reqwest::Client::new();
+    let client = super::http_fixture::test_client();
     let res = account_candidates(&client, "tok", &addr).await;
     assert!(res.is_err());
     handle.await.unwrap();
@@ -67,7 +67,7 @@ async fn account_candidates_dedup_and_empty_display_name() {
         {"propertySummaries":[{"property":"properties/123","displayName":"Main"}]}
     ]}"#;
     let (addr, handle) = serve_once(200, body).await;
-    let client = reqwest::Client::new();
+    let client = super::http_fixture::test_client();
     let (candidates, pages, truncated) = account_candidates(&client, "tok", &addr).await.unwrap();
     assert_eq!(candidates.len(), 1);
     assert_eq!(candidates[0].property, "properties/123");
@@ -82,7 +82,7 @@ async fn account_candidates_pagination_loop_protection() {
     let page1 = r#"{"accountSummaries":[{"propertySummaries":[{"property":"properties/1"}]}],"nextPageToken":"loop"}"#;
     let page2 = r#"{"accountSummaries":[{"propertySummaries":[{"property":"properties/2"}]}],"nextPageToken":"loop"}"#;
     let (addr, handle) = serve_twice(page1, page2).await;
-    let client = reqwest::Client::new();
+    let client = super::http_fixture::test_client();
     let (candidates, pages, truncated) = account_candidates(&client, "tok", &addr).await.unwrap();
     assert_eq!(pages, 2);
     assert!(truncated);
@@ -107,7 +107,7 @@ async fn account_candidates_invalid_pagination_token() {
             stream.shutdown().await.unwrap();
         }
     });
-    let client = reqwest::Client::new();
+    let client = super::http_fixture::test_client();
     let res = account_candidates(&client, "tok", &addr).await;
     assert!(res.is_err());
     handle.await.unwrap();

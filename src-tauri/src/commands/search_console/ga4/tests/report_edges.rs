@@ -21,7 +21,7 @@ async fn serve_once(status: u16, body: &'static str) -> (String, tokio::task::Jo
 
 #[tokio::test]
 async fn run_at_input_validation_errors() {
-    let client = reqwest::Client::new();
+    let client = super::http_fixture::test_client();
     let err = run_at(
         &client,
         "",
@@ -99,7 +99,7 @@ async fn run_at_input_validation_errors() {
 #[tokio::test]
 async fn run_at_server_error_and_invalid_json() {
     let (addr, handle) = serve_once(500, r#"{"error":"fail"}"#).await;
-    let client = reqwest::Client::new();
+    let client = super::http_fixture::test_client();
     let res = run_at(
         &client,
         "tok",

@@ -5,7 +5,7 @@ async fn inconsistent_row_count_across_pages() {
     let p1 = format!(r#"{{"rowCount":10,"rows":[{}]}}"#, sample_row("/1"));
     let p2 = format!(r#"{{"rowCount":20,"rows":[{}]}}"#, sample_row("/2"));
     let (addr, handle) = serve_responses(vec![p1, p2]).await;
-    let client = reqwest::Client::new();
+    let client = super::super::http_fixture::test_client();
     let res = run_at(
         &client,
         "tok",
@@ -28,7 +28,7 @@ async fn inconsistent_row_count_across_pages() {
 async fn row_count_none_returned_less_than_limit() {
     let p1 = format!(r#"{{"rows":[{}]}}"#, sample_row("/solo"));
     let (addr, handle) = serve_responses(vec![p1]).await;
-    let client = reqwest::Client::new();
+    let client = super::super::http_fixture::test_client();
     let report = run_at(
         &client,
         "tok",
@@ -53,7 +53,7 @@ async fn page_row_count_none_on_subsequent_page() {
     let p1 = format!(r#"{{"rowCount":5,"rows":[{}]}}"#, sample_row("/a"));
     let p2 = format!(r#"{{"rows":[{}]}}"#, sample_row("/b"));
     let (addr, handle) = serve_responses(vec![p1, p2]).await;
-    let client = reqwest::Client::new();
+    let client = super::super::http_fixture::test_client();
     let report = run_at(
         &client,
         "tok",
@@ -77,7 +77,7 @@ async fn page_row_count_none_on_subsequent_page() {
 async fn empty_rows_with_positive_row_count_marks_truncated() {
     let p1 = r#"{"rowCount":5,"rows":[]}"#.to_string();
     let (addr, handle) = serve_responses(vec![p1]).await;
-    let client = reqwest::Client::new();
+    let client = super::super::http_fixture::test_client();
     let report = run_at(
         &client,
         "tok",
@@ -107,7 +107,7 @@ async fn max_pages_reached_marks_truncated() {
         })
         .collect();
     let (addr, handle) = serve_responses(pages).await;
-    let client = reqwest::Client::new();
+    let client = super::super::http_fixture::test_client();
     let report = run_at(
         &client,
         "tok",

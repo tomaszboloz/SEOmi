@@ -1,3 +1,11 @@
+#[path = "tests_pdf_extract.rs"]
+mod tests_pdf_extract;
+
+#[path = "font_layout_branch_tests.rs"]
+mod font_layout_branch_tests;
+
+pub(super) use tests_pdf_extract::pdf_has_text;
+
 use crate::commands::pdf_report::{generate_audit_pdf, generate_crawl_pdf};
 use base64::Engine;
 
@@ -8,8 +16,8 @@ fn creates_a_valid_pdf_payload_from_an_audit() {
         .decode(encoded)
         .unwrap();
     assert!(bytes.starts_with(b"%PDF-1.4"));
-    assert!(String::from_utf8_lossy(&bytes).contains("Missing title"));
-    assert!(String::from_utf8_lossy(&bytes).contains("Crawl metrics - saved run"));
+    assert!(pdf_has_text(&bytes, "Missing title"));
+    assert!(pdf_has_text(&bytes, "Crawl metrics - saved run"));
 }
 
 #[test]
@@ -34,16 +42,25 @@ fn creates_a_crawl_pdf_from_the_saved_run_without_refetching_pages() {
         .unwrap();
     let report = String::from_utf8_lossy(&bytes);
     assert!(bytes.starts_with(b"%PDF-1.4"));
-    assert!(report.contains("Missing canonical"));
-    assert!(report.contains("Pages table \\(all saved pages\\):"));
-    assert!(report.contains("Redirect stop reason: redirect limit of 10 exceeded"));
-    assert!(report.contains("Redirect stop reason"));
-    assert!(report.contains("Links table \\(all saved page links\\):"));
-    assert!(report.contains("Images table \\(all saved page images\\):"));
-    assert!(report.contains("Resources table \\(all saved resources\\):"));
-    assert!(report.contains("https://example.com/app.css"));
-    assert!(report.contains("Configuration:"));
-    assert!(report.contains("Crawl metrics - saved run"));
+    assert!(pdf_has_text(&bytes, "Missing canonical"));
+    assert!(pdf_has_text(&bytes, "Pages table (all saved pages):"));
+    assert!(pdf_has_text(
+        &bytes,
+        "Redirect stop reason: redirect limit of 10 exceeded"
+    ));
+    assert!(pdf_has_text(&bytes, "Redirect stop reason"));
+    assert!(pdf_has_text(&bytes, "Links table (all saved page links):"));
+    assert!(pdf_has_text(
+        &bytes,
+        "Images table (all saved page images):"
+    ));
+    assert!(pdf_has_text(
+        &bytes,
+        "Resources table (all saved resources):"
+    ));
+    assert!(pdf_has_text(&bytes, "https://example.com/app.css"));
+    assert!(pdf_has_text(&bytes, "Configuration:"));
+    assert!(pdf_has_text(&bytes, "Crawl metrics - saved run"));
     assert!(report.contains("re f"));
 }
 
@@ -66,11 +83,13 @@ fn applies_report_template_sections_to_the_pdf_tables() {
     let bytes = base64::engine::general_purpose::STANDARD
         .decode(encoded)
         .unwrap();
-    let report = String::from_utf8_lossy(&bytes);
-    assert!(report.contains("Issues table \\(all saved findings\\):"));
-    assert!(!report.contains("Pages table \\(all saved pages\\):"));
-    assert!(!report.contains("Links table \\(all saved page links\\):"));
-    assert!(!report.contains("Images table \\(all saved page images\\):"));
+    assert!(pdf_has_text(&bytes, "Issues table (all saved findings):"));
+    assert!(!pdf_has_text(&bytes, "Pages table (all saved pages):"));
+    assert!(!pdf_has_text(&bytes, "Links table (all saved page links):"));
+    assert!(!pdf_has_text(
+        &bytes,
+        "Images table (all saved page images):"
+    ));
 }
 
 #[test]

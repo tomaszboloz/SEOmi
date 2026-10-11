@@ -4,6 +4,16 @@ use tokio::{
     net::{TcpListener, TcpStream},
 };
 
+/// Local HTTP fixtures must never inherit a runner-wide proxy. Hosted Windows
+/// runners can expose proxy variables that would route `127.0.0.1` away from
+/// the fixture and turn a deterministic test into a network failure.
+pub(super) fn test_client() -> reqwest::Client {
+    reqwest::Client::builder()
+        .no_proxy()
+        .build()
+        .expect("local fixture client must build")
+}
+
 #[derive(Debug)]
 pub(super) struct Request {
     pub(super) path: String,

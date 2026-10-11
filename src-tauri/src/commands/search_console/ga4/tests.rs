@@ -6,6 +6,8 @@ mod collect_edges;
 mod collect_partial_edges;
 #[path = "tests/command_edges.rs"]
 mod command_edges;
+#[path = "tests/command_regressions.rs"]
+mod command_regressions;
 #[path = "tests/http_fixture.rs"]
 mod http_fixture;
 #[path = "tests/mapping_branch_edges.rs"]

@@ -45,7 +45,7 @@ async fn serve_twice(
 async fn run_at_empty_rows_and_partial_rows() {
     let empty_body = r#"{"rowCount":0,"rows":[]}"#;
     let (addr, handle) = serve_once(200, empty_body).await;
-    let client = reqwest::Client::new();
+    let client = super::http_fixture::test_client();
     let report = run_at(
         &client,
         "tok",
@@ -90,7 +90,7 @@ async fn run_at_invalid_row_count() {
         "dimensionValues":[{"value":"/"},{"value":"example.com"}],"metricValues":[{"value":"5"},{"value":"2"},{"value":"1"}]
     }]}"#;
     let (addr, handle) = serve_once(200, invalid_count_body).await;
-    let client = reqwest::Client::new();
+    let client = super::http_fixture::test_client();
     let res = run_at(
         &client,
         "tok",

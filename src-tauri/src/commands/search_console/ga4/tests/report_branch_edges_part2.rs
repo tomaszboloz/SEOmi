@@ -8,7 +8,7 @@ async fn offset_reaches_report_row_max() {
         format!(r#"{{"rowCount":30000,"rows":[{rows}]}}"#)
     });
     let (addr, handle) = serve_responses(responses.into()).await;
-    let client = reqwest::Client::new();
+    let client = super::super::http_fixture::test_client();
     let report = run_at(
         &client,
         "tok",

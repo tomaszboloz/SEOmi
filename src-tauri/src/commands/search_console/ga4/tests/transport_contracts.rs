@@ -50,7 +50,7 @@ async fn discovers_matching_stream_and_paginates_landing_page_report() {
 async fn missing_account_evidence_is_reported_without_fabricated_report_metrics() {
     let (base, server) = super::http_fixture::server_empty().await;
     let result = collect_at(
-        &reqwest::Client::new(),
+        &super::http_fixture::test_client(),
         "token",
         "https://example.com",
         "2026-09-01",

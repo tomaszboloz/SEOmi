@@ -123,3 +123,7 @@ mod classification_tests;
 #[cfg(test)]
 #[path = "network_coverage_tests.rs"]
 mod coverage_tests;
+
+#[cfg(test)]
+#[path = "network_branch_tests.rs"]
+mod network_branch_tests;

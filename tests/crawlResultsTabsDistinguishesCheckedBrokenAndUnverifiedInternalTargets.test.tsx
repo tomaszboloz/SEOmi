@@ -29,7 +29,7 @@ beforeEach(async () => {
     useProjectStore.setState({ activeProjectId: null });
   });
 
-it("distinguishes checked, broken, and unverified internal targets", () => {
+it("distinguishes checked, broken, and unverified internal targets", async () => {
     const internalResult = {
       ...result,
       pages: [
@@ -52,7 +52,9 @@ it("distinguishes checked, broken, and unverified internal targets", () => {
         onSelectRun={vi.fn()}
       />,
     );
-    fireEvent.click(screen.getByRole("tab", { name: /Links/ }));
+    await act(async () => {
+      fireEvent.click(screen.getByRole("tab", { name: /Links/ }));
+    });
 
     expect(screen.getByText(i18n.t("crawl.ui.internalTargetSummary", { unique: 2, checked: 1, broken: 1, unchecked: 1 }))).not.toBeNull();
     expect(screen.getByText(i18n.t("crawl.ui.uncheckedTargetNote"))).not.toBeNull();
@@ -72,12 +74,16 @@ it("offers a confirmed action to free storage by deleting the selected crawl run
       />,
     );
 
-    fireEvent.click(screen.getByRole("button", { name: "Delete run" }));
+    await act(async () => {
+      fireEvent.click(screen.getByRole("button", { name: "Delete run" }));
+    });
     expect(confirm).toHaveBeenCalledOnce();
     expect(onDeleteRun).not.toHaveBeenCalled();
 
     confirm.mockReturnValue(true);
-    fireEvent.click(screen.getByRole("button", { name: "Delete run" }));
+    await act(async () => {
+      fireEvent.click(screen.getByRole("button", { name: "Delete run" }));
+    });
     await waitFor(() => expect(onDeleteRun).toHaveBeenCalledWith("run-1"));
     confirm.mockRestore();
   });

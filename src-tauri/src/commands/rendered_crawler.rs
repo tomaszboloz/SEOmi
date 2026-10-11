@@ -12,6 +12,8 @@ pub(crate) mod session_open_handlers;
 pub(crate) mod session_open_prepare;
 
 #[cfg(test)]
+mod session_open_tests;
+#[cfg(test)]
 mod tests_capture;
 #[cfg(test)]
 mod tests_capture_advanced;

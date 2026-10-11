@@ -100,7 +100,7 @@ fn renderer_produces_consistent_multipage_pdf_structures() {
 
     assert!(bytes.starts_with(b"%PDF-1.4"));
     assert!(pdf_str.contains("/Count 4")); // 3 text pages + 1 chart page
-    assert!(pdf_str.contains("Sample Metric: 50"));
+    assert!(super::tests::pdf_has_text(&bytes, "Sample Metric: 50"));
     assert!(pdf_str.contains("startxref\n"));
     assert!(pdf_str.ends_with("%%EOF\n"));
 }

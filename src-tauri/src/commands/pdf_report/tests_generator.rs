@@ -1,13 +1,12 @@
+use super::tests::pdf_has_text;
 use super::{generate_audit_pdf, generate_crawl_pdf};
 use base64::Engine;
 use serde_json::json;
 
-fn decode_pdf(encoded: String) -> (Vec<u8>, String) {
-    let bytes = base64::engine::general_purpose::STANDARD
+fn decode_pdf(encoded: String) -> Vec<u8> {
+    base64::engine::general_purpose::STANDARD
         .decode(encoded)
-        .unwrap();
-    let text = String::from_utf8_lossy(&bytes).to_string();
-    (bytes, text)
+        .unwrap()
 }
 
 #[test]
@@ -21,13 +20,16 @@ fn generate_audit_pdf_error_paths_and_fallbacks() {
         "The audit has no final URL to report."
     );
 
-    let (bytes, text) =
+    let bytes =
         decode_pdf(generate_audit_pdf(json!({"final_url": "https://example.test"})).unwrap());
     assert!(bytes.starts_with(b"%PDF-1.4"));
-    assert!(text.contains("Audited URL: https://example.test"));
-    assert!(text.contains("No issues were reported by this audit."));
+    assert!(pdf_has_text(&bytes, "Audited URL: https://example.test"));
+    assert!(pdf_has_text(
+        &bytes,
+        "No issues were reported by this audit."
+    ));
 
-    let (_, issue_text) = decode_pdf(
+    let issue_bytes = decode_pdf(
         generate_audit_pdf(json!({
             "final_url": "https://example.test",
             "issues": [
@@ -38,8 +40,8 @@ fn generate_audit_pdf_error_paths_and_fallbacks() {
         }))
         .unwrap(),
     );
-    assert!(issue_text.contains("[Critical] SEO: Bad title"));
-    assert!(issue_text.contains("[Info] Technical: -"));
+    assert!(pdf_has_text(&issue_bytes, "[Critical] SEO: Bad title"));
+    assert!(pdf_has_text(&issue_bytes, "[Info] Technical: -"));
 }
 
 #[test]
@@ -53,17 +55,20 @@ fn generate_crawl_pdf_error_paths_and_fallbacks() {
         "The crawl run has no scope URL to report."
     );
 
-    let (_, text) = decode_pdf(
+    let bytes = decode_pdf(
         generate_crawl_pdf(json!({
             "scope_start_url": "https://example.test"
         }))
         .unwrap(),
     );
-    assert!(text.contains("Pages crawled: -"));
-    assert!(text.contains("Health score: - / 100"));
-    assert!(text.contains("No page records were present in this crawl run."));
+    assert!(pdf_has_text(&bytes, "Pages crawled: -"));
+    assert!(pdf_has_text(&bytes, "Health score: - / 100"));
+    assert!(pdf_has_text(
+        &bytes,
+        "No page records were present in this crawl run."
+    ));
 
-    let (_, limited_text) = decode_pdf(
+    let limited_bytes = decode_pdf(
         generate_crawl_pdf(json!({
             "scope_start_url": "https://example.test",
             "result": {
@@ -74,8 +79,14 @@ fn generate_crawl_pdf_error_paths_and_fallbacks() {
         }))
         .unwrap(),
     );
-    assert!(limited_text.contains("Limits observed: depth_limit, max_pages"));
-    assert!(limited_text.contains("Discovery provenance: partial at the configured safety cap."));
+    assert!(pdf_has_text(
+        &limited_bytes,
+        "Limits observed: depth_limit, max_pages"
+    ));
+    assert!(pdf_has_text(
+        &limited_bytes,
+        "Discovery provenance: partial at the configured safety cap."
+    ));
 }
 
 #[test]
@@ -96,23 +107,35 @@ fn generate_crawl_pdf_individual_template_sections() {
 
     let mut resources_only = payload.clone();
     resources_only["report_template_sections"] = json!(["resources"]);
-    let (_, res_text) = decode_pdf(generate_crawl_pdf(resources_only).unwrap());
-    assert!(res_text.contains("Resources table \\(all saved resources\\):"));
-    assert!(!res_text.contains("Pages table \\(all saved pages\\):"));
-    assert!(!res_text.contains("Issues table \\(all saved findings\\):"));
+    let res_bytes = decode_pdf(generate_crawl_pdf(resources_only).unwrap());
+    assert!(pdf_has_text(
+        &res_bytes,
+        "Resources table (all saved resources):"
+    ));
+    assert!(!pdf_has_text(&res_bytes, "Pages table (all saved pages):"));
+    assert!(!pdf_has_text(
+        &res_bytes,
+        "Issues table (all saved findings):"
+    ));
 
     let mut links_only = payload.clone();
     links_only["report_template_sections"] = json!(["links"]);
-    let (_, links_text) = decode_pdf(generate_crawl_pdf(links_only).unwrap());
-    assert!(links_text.contains("Links table \\(all saved page links\\):"));
-    assert!(!links_text.contains("Images table \\(all saved page images\\):"));
+    let links_bytes = decode_pdf(generate_crawl_pdf(links_only).unwrap());
+    assert!(pdf_has_text(
+        &links_bytes,
+        "Links table (all saved page links):"
+    ));
+    assert!(!pdf_has_text(
+        &links_bytes,
+        "Images table (all saved page images):"
+    ));
 
     let mut none_only = payload;
     none_only["report_template_sections"] = json!([]);
-    let (_, none_text) = decode_pdf(generate_crawl_pdf(none_only).unwrap());
-    assert!(!none_text.contains("Pages table"));
-    assert!(!none_text.contains("Issues table"));
-    assert!(!none_text.contains("Links table"));
-    assert!(!none_text.contains("Images table"));
-    assert!(!none_text.contains("Resources table"));
+    let none_bytes = decode_pdf(generate_crawl_pdf(none_only).unwrap());
+    assert!(!pdf_has_text(&none_bytes, "Pages table"));
+    assert!(!pdf_has_text(&none_bytes, "Issues table"));
+    assert!(!pdf_has_text(&none_bytes, "Links table"));
+    assert!(!pdf_has_text(&none_bytes, "Images table"));
+    assert!(!pdf_has_text(&none_bytes, "Resources table"));
 }

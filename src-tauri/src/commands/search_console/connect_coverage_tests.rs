@@ -104,3 +104,15 @@ async fn connect_with_scope_secret_write_failure_reports_error() {
     );
     assert_eq!(server.finish().await.len(), 2);
 }
+
+#[tokio::test]
+async fn connect_search_console_production_entry_validates_client_id() {
+    let err = super::connect::connect_search_console(
+        "proj-prod".into(),
+        "invalid client id".into(),
+        None,
+    )
+    .await
+    .unwrap_err();
+    assert!(err.contains("OAuth Client ID"));
+}

@@ -29,7 +29,7 @@ beforeEach(async () => {
     useProjectStore.setState({ activeProjectId: null });
   });
 
-it("resets rendered artifact selection when switching crawl runs", () => {
+it("resets rendered artifact selection when switching crawl runs", async () => {
     const firstRenderedResult = {
       ...result,
       crawl_mode: "browser-rendered",
@@ -64,23 +64,29 @@ it("resets rendered artifact selection when switching crawl runs", () => {
         onSelectRun={vi.fn()}
       />,
     );
-    fireEvent.click(screen.getByRole("tab", { name: /Performance/ }));
+    await act(async () => {
+      fireEvent.click(screen.getByRole("tab", { name: /Performance/ }));
+    });
     const artifactSelect = screen.getByLabelText(
       i18n.t("crawl.ui.renderedUrlForArtifact"),
     ) as HTMLSelectElement;
-    fireEvent.change(artifactSelect, {
-      target: { value: "https://example.com/missing" },
+    await act(async () => {
+      fireEvent.change(artifactSelect, {
+        target: { value: "https://example.com/missing" },
+      });
     });
     expect(artifactSelect.value).toBe("https://example.com/missing");
 
-    view.rerender(
-      <CrawlResultsTabs
-        result={secondRenderedResult}
-        runs={[secondRenderedRun]}
-        selectedRun={secondRenderedRun}
-        onSelectRun={vi.fn()}
-      />,
-    );
+    await act(async () => {
+      view.rerender(
+        <CrawlResultsTabs
+          result={secondRenderedResult}
+          runs={[secondRenderedRun]}
+          selectedRun={secondRenderedRun}
+          onSelectRun={vi.fn()}
+        />,
+      );
+    });
 
     expect(
       (screen.getByLabelText(

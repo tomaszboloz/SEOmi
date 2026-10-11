@@ -35,7 +35,7 @@ pub(super) async fn render_request<R: Runtime>(
     )
     .await?;
     let result = session.capture(target.as_str()).await;
-    session.close();
+    session.close_and_wait().await;
     result
 }
 

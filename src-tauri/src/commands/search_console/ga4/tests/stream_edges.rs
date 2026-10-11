@@ -44,7 +44,7 @@ async fn serve_twice(
 #[tokio::test]
 async fn stream_candidates_error_response() {
     let (addr, handle) = serve_once(500, r#"{"error":"boom"}"#.into()).await;
-    let client = reqwest::Client::new();
+    let client = super::http_fixture::test_client();
     let scope = site_scope("https://example.com").unwrap();
     let res = stream_candidates(&client, "tok", &addr, &scope).await;
     assert!(res.is_err());
@@ -55,7 +55,7 @@ async fn stream_candidates_error_response() {
 async fn stream_candidates_invalid_web_stream_uri() {
     let body = r#"{"dataStreams":[{"type":"WEB_DATA_STREAM","webStreamData":{"defaultUri":"ftp://example.com"}}]}"#;
     let (addr, handle) = serve_once(200, body.into()).await;
-    let client = reqwest::Client::new();
+    let client = super::http_fixture::test_client();
     let scope = site_scope("https://example.com").unwrap();
     let res = stream_candidates(&client, "tok", &addr, &scope).await;
     assert!(res.is_err());
@@ -67,7 +67,7 @@ async fn stream_candidates_pagination_loop_protection() {
     let page1 = r#"{"dataStreams":[{"type":"WEB_DATA_STREAM","webStreamData":{"defaultUri":"https://example.com"}}],"nextPageToken":"loop"}"#;
     let page2 = r#"{"dataStreams":[],"nextPageToken":"loop"}"#;
     let (addr, handle) = serve_twice(page1, page2).await;
-    let client = reqwest::Client::new();
+    let client = super::http_fixture::test_client();
     let scope = site_scope("https://example.com").unwrap();
     let (streams, pages, truncated) = stream_candidates(&client, "tok", &addr, &scope)
         .await
@@ -83,7 +83,7 @@ async fn stream_candidates_invalid_pagination_token() {
     let long_token = "a".repeat(2049);
     let body = format!(r#"{{"dataStreams":[],"nextPageToken":"{long_token}"}}"#);
     let (addr, handle) = serve_once(200, body).await;
-    let client = reqwest::Client::new();
+    let client = super::http_fixture::test_client();
     let scope = site_scope("https://example.com").unwrap();
     let res = stream_candidates(&client, "tok", &addr, &scope).await;
     assert!(res.is_err());

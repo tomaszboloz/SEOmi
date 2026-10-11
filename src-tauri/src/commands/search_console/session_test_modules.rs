@@ -38,6 +38,9 @@ mod validation_tests;
 #[path = "connect_coverage_tests.rs"]
 mod connect_coverage_tests;
 #[cfg(test)]
+#[path = "connect_regressions.rs"]
+mod connect_regressions;
+#[cfg(test)]
 #[path = "credentials_error_tests.rs"]
 mod credentials_error_tests;
 #[cfg(test)]

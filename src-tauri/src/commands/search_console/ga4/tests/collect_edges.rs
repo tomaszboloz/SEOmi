@@ -27,7 +27,7 @@ async fn dispatch(
 
 #[tokio::test]
 async fn discover_and_collect_validation_shortcuts() {
-    let client = reqwest::Client::new();
+    let client = super::http_fixture::test_client();
     let err = discover(&client, "", "https://example.com")
         .await
         .unwrap_err();
@@ -56,7 +56,7 @@ async fn collect_at_discovery_multiple_matching_streams_yields_partial() {
         }
     }).await;
 
-    let client = reqwest::Client::new();
+    let client = super::http_fixture::test_client();
     let snapshot = collect_at(
         &client,
         "tok",
@@ -89,7 +89,7 @@ async fn collect_at_report_missing_status() {
     })
     .await;
 
-    let client = reqwest::Client::new();
+    let client = super::http_fixture::test_client();
     let snapshot = collect_at(
         &client,
         "tok",

@@ -1,77 +1,134 @@
 use super::charts::PdfChartBar;
-use super::text_utils::{pdf_literal, wrapped_lines};
+use super::font::FontSet;
+use super::font_pdf::{resource_refs, FontRefs};
 
-pub fn chart_stream(bars: &[PdfChartBar]) -> String {
-    let mut stream = String::from("BT\n/F1 16 Tf\n50 780 Td\n(Crawl metrics - saved run) Tj\nET\n");
+#[path = "renderer_chart.rs"]
+mod renderer_chart;
+
+pub use renderer_chart::chart_stream;
+
+fn encoded_text(fonts: &mut FontSet, size: u8, text: &str) -> String {
+    fonts
+        .encode(text)
+        .into_iter()
+        .map(|run| {
+            let actual = run
+                .actual_text
+                .filter(|value| !value.is_empty())
+                .map(|value| format!("/Span << /ActualText <{}> >> BDC\n", utf16_hex(&value)))
+                .unwrap_or_default();
+            let end = if actual.is_empty() { "" } else { "EMC\n" };
+            format!(
+                "{actual}/{} {size} Tf\n<{}> Tj\n{end}",
+                run.kind.resource(),
+                run.hex
+            )
+        })
+        .collect()
+}
+
+fn utf16_hex(value: &str) -> String {
+    std::iter::once("FEFF".to_owned())
+        .chain(value.encode_utf16().map(|unit| format!("{unit:04X}")))
+        .collect()
+}
+
+fn chart_stream_unicode(fonts: &mut FontSet, bars: &[PdfChartBar]) -> String {
+    let mut stream = String::from("BT\n50 780 Td\n");
+    stream.push_str(&encoded_text(fonts, 16, "Crawl metrics - saved run"));
+    stream.push_str("ET\n");
     for (index, bar) in bars.iter().enumerate() {
         let y = 690_i32 - (index as i32 * 82);
         let width = 360_u64.saturating_mul(bar.value.min(bar.scale)) / bar.scale.max(1);
-        let text_y = y + 30;
-        stream.push_str(&format!(
-            "BT\n/F1 10 Tf\n50 {text_y} Td\n({}: {}) Tj\nET\n",
-            pdf_literal(&bar.label),
-            bar.value
+        stream.push_str("BT\n50 ");
+        stream.push_str(&(y + 30).to_string());
+        stream.push_str(" Td\n");
+        stream.push_str(&encoded_text(
+            fonts,
+            10,
+            &format!("{}: {}", bar.label, bar.value),
         ));
-        stream.push_str("0.10 0.65 0.43 rg\n");
-        stream.push_str(&format!("190 {y} {width} 24 re f\n"));
-        stream.push_str("0.35 0.40 0.47 RG\n1 w\n190 ");
-        stream.push_str(&format!("{y} 360 24 re S\n"));
+        stream.push_str("ET\n0.10 0.65 0.43 rg\n");
+        stream.push_str(&format!(
+            "190 {y} {width} 24 re f\n0.35 0.40 0.47 RG\n1 w\n190 {y} 360 24 re S\n"
+        ));
     }
     stream
 }
 
-pub fn pdf_bytes(lines: Vec<String>, chart: Option<Vec<PdfChartBar>>) -> Vec<u8> {
-    let mut visual_lines = Vec::new();
-    for line in lines {
-        visual_lines.extend(wrapped_lines(&line, 96));
+fn page_stream(fonts: &mut FontSet, lines: &[String]) -> String {
+    let mut stream = String::from("BT\n50 792 Td\n");
+    for (index, line) in lines.iter().enumerate() {
+        if index > 0 {
+            stream.push_str("0 -15 Td\n");
+        }
+        stream.push_str(&encoded_text(fonts, 10, line));
     }
+    stream.push_str("ET\n");
+    stream
+}
+
+fn stream_object(stream: &str) -> Vec<u8> {
+    format!(
+        "<< /Length {} >>\nstream\n{}endstream",
+        stream.len(),
+        stream
+    )
+    .into_bytes()
+}
+
+fn page_object(content: usize, refs: &FontRefs) -> Vec<u8> {
+    let latin = refs
+        .latin
+        .map(|id| format!("/F1 {id} 0 R "))
+        .unwrap_or_default();
+    let cjk = refs
+        .cjk
+        .map(|id| format!("/F2 {id} 0 R "))
+        .unwrap_or_default();
+    let arabic = refs
+        .arabic
+        .map(|id| format!("/F3 {id} 0 R "))
+        .unwrap_or_default();
+    format!("<< /Type /Page /Parent 2 0 R /MediaBox [0 0 612 842] /Resources << /Font << {latin}{cjk}{arabic}>> >> /Contents {content} 0 R >>").into_bytes()
+}
+
+pub fn pdf_bytes(lines: Vec<String>, chart: Option<Vec<PdfChartBar>>) -> Vec<u8> {
+    let mut fonts = FontSet::new();
+    let visual_lines = lines
+        .iter()
+        .flat_map(|line| fonts.wrapped_lines(line, 512.0, 10.0))
+        .collect::<Vec<_>>();
     let page_chunks = visual_lines.chunks(48).collect::<Vec<_>>();
     let text_page_count = page_chunks.len().max(1);
-    let chart_page_count = usize::from(chart.is_some());
-    let page_count = text_page_count + chart_page_count;
-    let mut objects = vec![
-        "<< /Type /Catalog /Pages 2 0 R >>".to_string(),
-        format!(
-            "<< /Type /Pages /Kids [{}] /Count {page_count} >>",
-            (0..page_count)
-                .map(|index| format!("{} 0 R", 4 + index * 2))
-                .collect::<Vec<_>>()
-                .join(" ")
-        ),
-        "<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica >>".to_string(),
-    ];
-    for chunk in page_chunks {
-        let mut stream = String::from("BT\n/F1 10 Tf\n50 792 Td\n");
-        for (index, line) in chunk.iter().enumerate() {
-            if index > 0 {
-                stream.push_str("0 -15 Td\n");
-            }
-            stream.push_str(&format!("({}) Tj\n", pdf_literal(line)));
-        }
-        stream.push_str("ET\n");
-        let content_id = objects.len() + 2;
-        objects.push(format!("<< /Type /Page /Parent 2 0 R /MediaBox [0 0 612 842] /Resources << /Font << /F1 3 0 R >> >> /Contents {content_id} 0 R >>"));
-        objects.push(format!(
-            "<< /Length {} >>\nstream\n{}endstream",
-            stream.len(),
-            stream
-        ));
-    }
+    let page_count = text_page_count + usize::from(chart.is_some());
+    let mut streams = page_chunks
+        .iter()
+        .map(|chunk| page_stream(&mut fonts, chunk))
+        .collect::<Vec<_>>();
     if let Some(bars) = chart.as_deref() {
-        let stream = chart_stream(bars);
-        let content_id = objects.len() + 2;
-        objects.push(format!("<< /Type /Page /Parent 2 0 R /MediaBox [0 0 612 842] /Resources << /Font << /F1 3 0 R >> >> /Contents {content_id} 0 R >>"));
-        objects.push(format!(
-            "<< /Length {} >>\nstream\n{}endstream",
-            stream.len(),
-            stream
-        ));
+        streams.push(chart_stream_unicode(&mut fonts, bars));
+    }
+    let mut objects = vec![b"<< /Type /Catalog /Pages 2 0 R >>".to_vec(), Vec::new()];
+    let refs = resource_refs(&fonts, &mut objects);
+    let first_page = objects.len() + 1;
+    let kids = (0..page_count)
+        .map(|index| format!("{} 0 R", first_page + index * 2))
+        .collect::<Vec<_>>()
+        .join(" ");
+    objects[1] = format!("<< /Type /Pages /Kids [{kids}] /Count {page_count} >>").into_bytes();
+    for stream in &streams {
+        let content = objects.len() + 2;
+        objects.push(page_object(content, &refs));
+        objects.push(stream_object(stream));
     }
     let mut bytes = b"%PDF-1.4\n%\xE2\xE3\xCF\xD3\n".to_vec();
     let mut offsets = vec![0usize];
     for (index, object) in objects.iter().enumerate() {
         offsets.push(bytes.len());
-        bytes.extend_from_slice(format!("{} 0 obj\n{}\nendobj\n", index + 1, object).as_bytes());
+        bytes.extend_from_slice(format!("{} 0 obj\n", index + 1).as_bytes());
+        bytes.extend_from_slice(object);
+        bytes.extend_from_slice(b"\nendobj\n");
     }
     let xref_offset = bytes.len();
     bytes.extend_from_slice(

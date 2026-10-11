@@ -22,7 +22,7 @@ async fn serve_status(status: u16, body: &'static str) -> (String, tokio::task::
 
 #[tokio::test]
 async fn get_json_network_failure_and_non_200_status() {
-    let client = reqwest::Client::new();
+    let client = super::http_fixture::test_client();
     let err = get_json(
         &client,
         "token",
@@ -44,7 +44,7 @@ async fn get_json_network_failure_and_non_200_status() {
 
 #[tokio::test]
 async fn post_json_network_failure_and_non_200_status() {
-    let client = reqwest::Client::new();
+    let client = super::http_fixture::test_client();
     let payload = json!({"test": "data"});
     let err = post_json(
         &client,

@@ -3,6 +3,9 @@ pub fn error_kind(error: &reqwest::Error) -> String {
         return "timeout".into();
     }
     if error.is_connect() {
+        if schannel_debug_error(&format!("{error:?}")) {
+            return "tls".into();
+        }
         let mut message = String::new();
         let mut cause = std::error::Error::source(error);
         while let Some(current) = cause {
@@ -44,19 +47,8 @@ fn schannel_debug_error(value: &str) -> bool {
 
 // Schannel exposes localized OS errors rather than TLS words on Windows.
 fn is_schannel_tls_error(code: i32) -> bool {
-    matches!(
-        code as u32,
-        0x8009030f
-            | 0x80090310
-            | 0x80090318
-            | 0x80090322
-            | 0x80090325
-            | 0x80090326
-            | 0x80090327
-            | 0x80090328
-            | 0x80090330
-            | 0x80090331
-    )
+    let unsigned = code as u32;
+    (0x80090300..=0x800903ff).contains(&unsigned) || (0x80092000..=0x800920ff).contains(&unsigned)
 }
 
 #[cfg(test)]
