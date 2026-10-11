@@ -48,7 +48,7 @@ pub(super) async fn server_empty() -> (String, tokio::task::JoinHandle<Vec<Reque
     (endpoint, task)
 }
 
-async fn read_request(stream: &mut TcpStream) -> Request {
+pub(super) async fn read_request(stream: &mut TcpStream) -> Request {
     let mut bytes = Vec::new();
     loop {
         let mut byte = [0u8; 1];

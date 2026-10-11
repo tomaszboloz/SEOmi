@@ -94,6 +94,9 @@ pub fn cancel_inspect_url(
 }
 
 #[cfg(test)]
+#[path = "seo_audit/coverage_tests.rs"]
+mod coverage_tests;
+#[cfg(test)]
 #[path = "seo_audit/ipc_transport_tests.rs"]
 mod ipc_transport_tests;
 #[cfg(test)]

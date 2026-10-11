@@ -304,3 +304,9 @@ Fresh inventory generated on the current source reports 1,486 public TypeScript 
 | `monitorGscSnapshots`, `monitorPageSpeedSnapshots`, `monitorCrawlComparison`, `monitorSemanticComparison` | `tests/publicCallableAssertions.test.ts` | alert type, delivery, persistence and notification count |
 | `readMonitoringSettings`, `monitoringSettingsKey`, `validMonitoringProject` | `tests/publicCallableAssertions.test.ts` | project key, valid/invalid identifiers and persisted opt-in |
 | `alertFingerprint`, `frequencyWindowMs`, `validAlert` | `tests/publicCallableAssertions.test.ts` | canonical evidence ordering, weekly bound and accepted/rejected alert shape |
+
+## 2026-10-10 — Consolidated callable verification
+
+At b7c3930, the regenerated source-matched inventory reports1509 public TypeScript/MCP callables:1477 executed under the verified suites and32 factory-returned. Static reference gaps are0; the32 generated route/store callables retain their separate observable-contract tests. Fresh MCP158/158 passes all98%metrics. This inventory is execution/reference evidence, not a blanket assertion-quality claim for native APIs.
+
+`tests/averageLinkageDirect.test.ts` adds five direct behavioral tests for `clusterByAverageLinkage`: empty/isolated pages, inclusive similarity floor, missing pairs counted as zero, recomputed group averages with lowest-index roots, and deterministic tie handling. All five pass; no production helper or threshold was changed. Native direct assertion review and GAP026 remain pending.

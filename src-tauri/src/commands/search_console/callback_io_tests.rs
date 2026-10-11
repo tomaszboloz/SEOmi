@@ -54,7 +54,7 @@ async fn read_callback_request_timeout() {
 #[tokio::test]
 async fn read_callback_request_headers_overflow() {
     for bytes in [vec![b'x'; MAX_CALLBACK_HEADER_BYTES], {
-        let mut b = vec![b'x'; MAX_CALLBACK_HEADER_BYTES - 2];
+        let mut b = vec![b'x'; MAX_CALLBACK_HEADER_BYTES - 3];
         b.extend_from_slice(b"\r\n\r\n");
         b
     }] {
@@ -84,6 +84,19 @@ async fn read_callback_request_invalid_utf8() {
 }
 
 #[tokio::test]
+async fn read_callback_request_connection_reset() {
+    let (client, mut server) = pair().await;
+    server.write_all(b"data-pending-read").await.unwrap();
+    tokio::time::sleep(Duration::from_millis(20)).await;
+    drop(client);
+    tokio::time::sleep(Duration::from_millis(20)).await;
+    let err = read_callback_request(&mut server, Duration::from_secs(1))
+        .await
+        .unwrap_err();
+    assert!(err.starts_with("Unable to read the OAuth response:"));
+}
+
+#[tokio::test]
 async fn write_callback_response_success() {
     let (mut client, mut server) = pair().await;
     write_callback_response(&mut server, "200 OK", "Success")
@@ -99,4 +112,14 @@ async fn write_callback_response_success() {
         "Content-Length: {}",
         "<!doctype html><meta charset=\"utf-8\"><title>SEOmi</title><p>Success</p>".len()
     )));
+}
+
+#[tokio::test]
+async fn write_callback_response_failure() {
+    let (_client, mut server) = pair().await;
+    server.shutdown().await.unwrap();
+    let err = write_callback_response(&mut server, "200 OK", "test")
+        .await
+        .unwrap_err();
+    assert!(err.starts_with("Unable to complete the OAuth callback:"));
 }

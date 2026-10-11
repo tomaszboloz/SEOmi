@@ -16,6 +16,9 @@ mod http_body_tests;
 #[cfg(test)]
 mod http_response_tests;
 
+#[cfg(test)]
+mod tests_http_response;
+
 use std::sync::Arc;
 use tauri::{AppHandle, Runtime, State};
 use tokio::{

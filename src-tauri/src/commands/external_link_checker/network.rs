@@ -119,3 +119,7 @@ mod edge_tests;
 #[cfg(test)]
 #[path = "network_classification_tests.rs"]
 mod classification_tests;
+
+#[cfg(test)]
+#[path = "network_coverage_tests.rs"]
+mod coverage_tests;

@@ -10,6 +10,7 @@ pub fn error_kind(error: &reqwest::Error) -> String {
                 .downcast_ref::<std::io::Error>()
                 .and_then(std::io::Error::raw_os_error)
                 .is_some_and(is_schannel_tls_error)
+                || schannel_debug_error(&format!("{current:?}"))
             {
                 return "tls".into();
             }
@@ -31,6 +32,16 @@ pub fn error_kind(error: &reqwest::Error) -> String {
     "network".into()
 }
 
+// native-tls can hide the Schannel io::Error behind its opaque Error wrapper.
+// Its Debug representation retains the numeric OS code; Display is localized.
+fn schannel_debug_error(value: &str) -> bool {
+    value
+        .split("Os { code: ")
+        .skip(1)
+        .filter_map(|part| part.split(',').next()?.trim().parse::<i32>().ok())
+        .any(is_schannel_tls_error)
+}
+
 // Schannel exposes localized OS errors rather than TLS words on Windows.
 fn is_schannel_tls_error(code: i32) -> bool {
     matches!(
@@ -50,7 +61,23 @@ fn is_schannel_tls_error(code: i32) -> bool {
 
 #[cfg(test)]
 mod tests {
-    use super::is_schannel_tls_error;
+    use super::{is_schannel_tls_error, schannel_debug_error};
+
+    #[test]
+    fn opaque_schannel_errors_require_an_exact_os_code() {
+        assert!(schannel_debug_error(
+            "Os { code: -2146893018, kind: Uncategorized }"
+        ));
+        for message in [
+            "badly formatted",
+            "schannel",
+            "-2146893018",
+            "Os { code: 10061, kind: Other }",
+            "Os { code: invalid, kind: Other }",
+        ] {
+            assert!(!schannel_debug_error(message), "{message}");
+        }
+    }
 
     #[test]
     fn localized_schannel_failures_are_tls_and_socket_errors_remain_connect() {
@@ -73,3 +100,7 @@ mod tests {
         }
     }
 }
+
+#[cfg(test)]
+#[path = "network_error_kind_coverage_tests.rs"]
+mod coverage_tests;

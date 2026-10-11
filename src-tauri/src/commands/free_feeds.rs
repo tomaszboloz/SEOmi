@@ -44,3 +44,7 @@ mod contract_tests;
 #[cfg(test)]
 #[path = "free_feeds_fixture.rs"]
 mod fixture;
+
+#[cfg(test)]
+#[path = "free_feeds_validation_tests.rs"]
+mod validation_tests;

@@ -93,3 +93,12 @@ async fn connect_propagates_browser_failure() {
     .expect_err("callback failure must fail");
     assert_eq!(error, "synthetic callback failure");
 }
+
+#[tokio::test]
+async fn connect_search_console_production_entry_validates_client_id() {
+    use super::connect::connect_search_console;
+    let error = connect_search_console("fixture-project".into(), "invalid-client".into(), None)
+        .await
+        .expect_err("invalid client id must fail");
+    assert!(error.contains("OAuth Client ID"));
+}

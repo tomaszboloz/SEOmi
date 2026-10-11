@@ -51,8 +51,8 @@ fn app(endpoint: Option<&str>) -> tauri::App<MockRuntime> {
     mock_builder()
         .plugin(tauri_plugin_updater::Builder::new().build())
         .invoke_handler(tauri::generate_handler![
-            super::super::check_for_updates,
-            super::super::install_update
+            super::check_for_updates,
+            super::install_update
         ])
         .build(context)
         .unwrap()

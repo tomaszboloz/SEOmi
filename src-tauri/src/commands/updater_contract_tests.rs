@@ -1,7 +1,5 @@
+use super::fixture::{handle, serve};
 use super::{check_for_updates_with, install_update_with};
-#[path = "updater_contract_fixture.rs"]
-mod fixture;
-use fixture::{handle, serve};
 
 #[tokio::test]
 async fn check_command_maps_empty_and_available_responses() {

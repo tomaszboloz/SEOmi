@@ -16,6 +16,8 @@ mod tests_capture;
 #[cfg(test)]
 mod tests_capture_advanced;
 #[cfg(test)]
+mod tests_capture_coverage;
+#[cfg(test)]
 mod tests_capture_errors;
 #[cfg(test)]
 mod tests_capture_timeouts;
@@ -32,6 +34,8 @@ mod tests_preview_contracts;
 #[cfg(test)]
 mod tests_preview_edges;
 #[cfg(test)]
+mod tests_preview_functions;
+#[cfg(test)]
 mod tests_preview_handlers;
 #[cfg(test)]
 mod tests_scripts;
@@ -41,6 +45,8 @@ mod tests_session_edges;
 mod tests_session_lifecycle;
 #[cfg(test)]
 mod tests_session_open_advanced;
+#[cfg(test)]
+mod tests_session_open_coverage;
 #[cfg(test)]
 mod tests_session_open_edges;
 #[cfg(test)]

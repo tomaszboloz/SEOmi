@@ -1,4 +1,4 @@
-import { render, screen, fireEvent, act } from '@testing-library/react';
+import { render, screen, fireEvent, act, cleanup } from '@testing-library/react';
 import { afterEach, beforeEach, expect, it, vi } from 'vitest';
 import i18n from '@/i18n';
 import { TrafficCheckerPanel } from '@/components/SeoTools/workspace/TrafficCheckerPanel';
@@ -18,8 +18,20 @@ const setup = (patch: object = {}, rootUrl?: string) => {
   useToolsStore.setState({ domainQuery: '', domainOverview: null, isDomainLoading: false, domainError: null, analyzeDomain, setDomainQuery, ...patch } as never);
   return render(<TrafficCheckerPanel />);
 };
-beforeEach(async () => { await i18n.changeLanguage('en'); vi.clearAllMocks(); });
-afterEach(() => { useToolsStore.setState(tools); useProjectStore.setState(projects); });
+beforeEach(async () => {
+  cleanup();
+  if (i18n.language !== 'en') {
+    await act(async () => {
+      await i18n.changeLanguage('en');
+    });
+  }
+  vi.clearAllMocks();
+});
+afterEach(() => {
+  cleanup();
+  useToolsStore.setState(tools);
+  useProjectStore.setState(projects);
+});
 
 it('prefills the domain from the project root and shows the empty hint', () => {
   setup({}, 'https://root.test');

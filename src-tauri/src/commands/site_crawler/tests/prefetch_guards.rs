@@ -84,3 +84,55 @@ async fn prefetch_http_pages_respect_robots_false_skips_robots_filter() {
     assert_eq!(prefetched_order.len(), 2);
     assert_eq!(prefetched_responses.len(), 2);
 }
+
+#[tokio::test]
+async fn prefetch_http_pages_reads_and_converts_http_body() {
+    use tokio::{io::AsyncWriteExt, net::TcpListener};
+
+    let listener = TcpListener::bind(("127.0.0.1", 0)).await.unwrap();
+    let port = listener.local_addr().unwrap().port();
+    let server = tokio::spawn(async move {
+        for _ in 0..2 {
+            if let Ok((mut stream, _)) = listener.accept().await {
+                let _ = stream
+                    .write_all(b"HTTP/1.1 200 OK\r\nContent-Length: 4\r\n\r\ntest")
+                    .await;
+            }
+        }
+    });
+
+    let mut queue = VecDeque::new();
+    queue.push_back((format!("http://127.0.0.1:{port}/a"), 0));
+    queue.push_back((format!("http://127.0.0.1:{port}/b"), 0));
+    let mut prefetched_order = VecDeque::new();
+    let mut prefetched_responses = HashMap::new();
+    let client = reqwest::Client::new();
+    let mut config = crawl_config_for_test();
+    config.respect_robots = false;
+
+    prefetch_http_pages(
+        &mut queue,
+        &mut prefetched_order,
+        &mut prefetched_responses,
+        2,
+        10,
+        0,
+        &client,
+        "127.0.0.1",
+        false,
+        None,
+        &[],
+        10,
+        &config,
+        &[],
+    )
+    .await;
+
+    assert_eq!(prefetched_order.len(), 2);
+    assert_eq!(prefetched_responses.len(), 2);
+    for entry in prefetched_responses.values() {
+        let fetched = entry.as_ref().unwrap();
+        assert!(matches!(fetched.response, FetchedPageBody::Prefetched(_)));
+    }
+    server.await.unwrap();
+}
