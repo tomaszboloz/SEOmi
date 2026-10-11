@@ -23,7 +23,7 @@ child.on('exit', code => {
     copyFileSync(report, 'test-results/desktop-e2e.json');
     console.log(JSON.stringify(result, null, 2));
     if (code !== 0) console.warn(`Desktop E2E process exited with code ${code}.`);
-    const passedCleanly = result.passed === true && !timedOut && (code === 0 || process.platform === 'win32');
+    const passedCleanly = result.passed === true && !timedOut && code === 0;
     process.exitCode = passedCleanly ? 0 : 1;
   } catch {
     console.error(timedOut ? 'Desktop E2E runtime timed out.' : `Desktop E2E exited ${code} without a report.`);
