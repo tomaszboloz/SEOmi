@@ -8,7 +8,7 @@ import type { MapView } from '@/components/Charts/crawlArchitecture/CrawlArchite
 
 const ui = useUIStore.getState();
 const t = (k: string, o?: object): string => String(i18n.t(k, o as never));
-const ids: MapView[] = ['graph', 'directory', 'plan'];
+const ids: MapView[] = ['diagnosis', 'graph', 'directory', 'plan'];
 const show = (activeView: MapView = 'graph', collapsed = false) => {
   useUIStore.setState({ sidebarCollapsed: collapsed });
   const setActiveView = vi.fn();
@@ -28,7 +28,7 @@ it('marks the active view and switches views from the tab buttons', () => {
   expect(tab('graph').hasAttribute('aria-current')).toBe(false);
   fireEvent.click(tab('plan'));
   expect(setActiveView).toHaveBeenCalledWith('plan');
-  expect(screen.getByText(/2\/3/).textContent).toContain('2/3');
+  expect(screen.getByText(/3\/4/).textContent).toContain('3/4');
 });
 
 it('switches views from the compact select', () => {
@@ -38,7 +38,7 @@ it('switches views from the compact select', () => {
 });
 
 it.each([
-  ['ArrowRight', 'graph', 'directory'], ['ArrowLeft', 'graph', 'plan'], ['Home', 'plan', 'graph'], ['End', 'graph', 'plan'],
+  ['ArrowRight', 'graph', 'directory'], ['ArrowLeft', 'diagnosis', 'plan'], ['Home', 'plan', 'diagnosis'], ['End', 'graph', 'plan'],
 ])('navigates with %s from %s to %s', (key, from, to) => {
   const { setActiveView, ref } = show(from as MapView);
   fireEvent.keyDown(ref.current!, { key });

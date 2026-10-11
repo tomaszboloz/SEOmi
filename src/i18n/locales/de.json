@@ -1594,7 +1594,9 @@
       "directory": "URL tree",
       "directoryDescription": "URL hierarchy in this run",
       "plan": "Topical plan",
-      "planDescription": "Topics and semantic audit"
+      "planDescription": "Topics and semantic audit",
+      "diagnosis": "Diagnose",
+      "diagnosisDescription": "Was gut ist, was schwach ist und was zu beheben ist"
     },
     "graph": {
       "fullTitle": "Full link graph map",
@@ -1746,7 +1748,10 @@
         "out-of-scope": "außerhalb der Property",
         "ambiguous": "mehrdeutig"
       }
-    }
+    },
+    "diagnosisFilter": "Diagnosebereich: {{label}}",
+    "clearDiagnosisFilter": "Ganzen Graph zeigen",
+    "allTopics": "Alle Themen ({{count}})"
   },
   "crawlDiff": {
     "fields": {
@@ -5112,5 +5117,128 @@
     "impressions": "GSC impressions",
     "issues": "Crawl issues",
     "rowCount": "Rows: {{count}}"
+  },
+  "topicalDiagnosis": {
+    "title": "Thematische Diagnose",
+    "description": "Dokumente (Sprachversionen einmal gezählt), Bereiche um Hub-Seiten, Themen aus dem Inhalt und Urteile mit konkreter Maßnahme. Aus dem gespeicherten Crawl berechnet, ohne Sprachmodelle.",
+    "noTerms": "Dieser Crawl enthält keine Inhaltsbegriffe, die Diagnose hat nichts zu bearbeiten. Führen Sie den Crawl erneut aus.",
+    "truncated": "Analyse auf 500 Seiten oder das Paarlimit begrenzt; einige Ergebnisse können fehlen.",
+    "empty": "Keine Urteile in dieser Gruppe.",
+    "stats": {
+      "documents": "Dokumente",
+      "pages": "Seiten",
+      "skipped": "Übersprungen",
+      "hubs": "Hubs",
+      "topics": "Themen",
+      "singletons": "Einzelne",
+      "languages": "Sprachen",
+      "mergedPairs": "Sprachpaare"
+    },
+    "severity": {
+      "fix": "Beheben",
+      "weak": "Schwach",
+      "info": "Info",
+      "good": "Gut"
+    },
+    "filter": {
+      "all": "Alle · {{count}}",
+      "fix": "Beheben · {{count}}",
+      "weak": "Schwach · {{count}}",
+      "info": "Info · {{count}}",
+      "good": "Gut · {{count}}"
+    },
+    "areas": {
+      "title": "Bereiche und Themen",
+      "noHub": "Ohne Hub",
+      "hubWithoutMembers": "Hub ohne zugeordnete Dokumente",
+      "members": "{{count}} Dok.",
+      "showInGraph": "Im Graph zeigen",
+      "hub": "Hub: {{url}}"
+    },
+    "topics": {
+      "singletons": "Einzelne Dokumente · {{count}}",
+      "labelFromContent": "Bezeichnung aus dem Inhalt",
+      "noLabel": "Thema ohne Bezeichnung",
+      "documents": "{{count}} Dok."
+    },
+    "roles": {
+      "hub": "Hub",
+      "utility": "Hilfsseite",
+      "content": "Inhalt"
+    },
+    "scope": {
+      "area": "Bereich",
+      "topic": "Thema",
+      "document": "Dokument"
+    },
+    "verdict": {
+      "hub-missing-backlink": {
+        "title": "Kein Link zum Hub",
+        "action": "Fügen Sie auf dieser Seite einen Link zu {{hub}} hinzu: in der Navigation, der Breadcrumb oder im Inhalt."
+      },
+      "hub-missing-member-link": {
+        "title": "Der Hub verlinkt nicht alle Seiten seines Themas",
+        "action": "Fügen Sie die fehlenden Seiten ({{count}}) zur Liste von {{hub}} hinzu."
+      },
+      "area-healthy": {
+        "title": "Zusammenhängender Bereich",
+        "action": "Der Hub verlinkt alle {{count}} Dokumente und jedes verlinkt zurück zum Hub. Nichts zu tun."
+      },
+      "topic-no-hub": {
+        "title": "Thema ohne Pillar-Seite",
+        "action": "Erstellen oder bestimmen Sie eine Pillar-Seite für dieses Thema und verlinken Sie von ihr alle Dokumente; heute verbindet sie nur der Inhalt."
+      },
+      "topic-members-unlinked": {
+        "title": "Seiten des Themas verlinken sich nicht gegenseitig",
+        "action": "Fügen Sie kontextuelle Links zwischen den aufgeführten Paaren hinzu ({{count}} Paare ohne Link in beide Richtungen)."
+      },
+      "topic-thin": {
+        "title": "Dünnes Thema",
+        "action": "Das Thema hat nur zwei Dokumente. Ergänzen Sie ein drittes oder führen Sie beide zusammen, wenn sie dieselbe Frage beantworten."
+      },
+      "cannibalization-candidate": {
+        "title": "Kannibalisierungskandidaten",
+        "action": "Zwei Seiten derselben Sprache überlappen sich zu {{percent}}% und teilen Titelwörter: {{titleTokens}}. Vergleichen Sie die Absicht und führen Sie sie zusammen oder unterscheiden Sie die Titel."
+      },
+      "document-isolated": {
+        "title": "Isolierte Seite",
+        "action": "Sie hat kein Thema und nur Listen verlinken sie. Fügen Sie einen Link von der inhaltlich nächsten Seite hinzu: {{url}} ({{percent}}% gemeinsame Begriffe).",
+        "actionNoNearest": "Sie hat kein Thema und nur Listen verlinken sie. Verlinken Sie sie aus einem verwandten Artikel."
+      },
+      "document-orphan": {
+        "title": "Kein Inhaltslink",
+        "action": "Keine Seite verlinkt sie aus dem Hauptinhalt. Fügen Sie einen kontextuellen Link von einer verwandten Seite oder vom Hub hinzu."
+      },
+      "near-duplicate": {
+        "title": "Nahezu identischer Inhalt",
+        "action": "Vergleichen Sie beide Seiten. Falls es ein Duplikat ist, führen Sie sie zusammen oder setzen Sie ein Canonical."
+      },
+      "language-pair-missing": {
+        "title": "Fehlende Sprachversion",
+        "action": "Das Dokument existiert nur in {{language}}. Entscheiden Sie, ob es eine Übersetzung braucht; das ist eine Information, kein Fehler."
+      }
+    },
+    "evidence": {
+      "hub": "Hub: {{hub}}",
+      "count": "{{count}} Seiten",
+      "members": "{{count}} Dokumente",
+      "areas": "{{count}} Bereiche",
+      "withoutHub": "{{count}} ohne Hub",
+      "pairs": "{{count}} Paare",
+      "similarity": "Ähnlichkeit {{percent}}%",
+      "titleTokens": "gemeinsame Titelwörter: {{titleTokens}}",
+      "nearest": "nächste Seite: {{url}}",
+      "hash": "gleicher Inhalts-Hash",
+      "distance": "SimHash: {{value}}/64",
+      "language": "Sprache: {{language}}"
+    },
+    "confidence": {
+      "limited": "begrenzte Sicherheit (unvollständiger Inhaltsnachweis)",
+      "moderate": "mittlere Sicherheit"
+    },
+    "import": {
+      "button": "Diagnosethemen importieren",
+      "topicsCount": "{{count}} Themen · Lauf {{run}}"
+    }
   }
 }

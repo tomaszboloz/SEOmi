@@ -2,6 +2,7 @@ import { useTranslation } from 'react-i18next';
 import { SemanticTopicalWorkspace } from '@/components/Charts/SemanticTopicalWorkspace';
 import { CrawlDirectoryTree } from '@/components/Charts/CrawlDirectoryTree';
 import { CrawlArchitectureGraphView } from './CrawlArchitectureGraphView';
+import { TopicalDiagnosisView } from './topicalDiagnosis/TopicalDiagnosisView';
 
 export const CrawlArchitectureMainContent = ({
   pages, crawlMode, sitemapUrls, runs, currentRunId, state
@@ -28,7 +29,18 @@ export const CrawlArchitectureMainContent = ({
     return t(`mapUi.plural.${key}.${form}`, { count });
   };
 
-  if (activeView === 'plan') return <SemanticTopicalWorkspace projectId={activeProjectId} pages={pages} graph={contentGraph} runId={effectiveRunId} sitemapUrls={sitemapUrls} runs={runs} currentRunId={currentRunId ?? effectiveRunId} />;
+  const selectPageByUrl = (url: string) => {
+    const node = graph.nodes.find((candidate: any) => candidate.page.url === url || candidate.page.final_url === url);
+    if (!node) return;
+    // The page must be visible in the graph, so every restriction is lifted first.
+    state.setPreferences((previous: any) => ({ ...previous, diagnosisFilter: null, clusterFilter: 'all', orphansOnly: false, query: '' }));
+    setSelectedId(node.id);
+    state.setActiveView('graph');
+  };
+
+  if (activeView === 'diagnosis') return <TopicalDiagnosisView report={state.diagnosis} onShowInGraph={state.setDiagnosisFilter} onOpenPage={selectPageByUrl} />;
+
+  if (activeView === 'plan') return <SemanticTopicalWorkspace projectId={activeProjectId} pages={pages} graph={contentGraph} diagnosis={state.diagnosis} runId={effectiveRunId} sitemapUrls={sitemapUrls} runs={runs} currentRunId={currentRunId ?? effectiveRunId} />;
   
   if (activeView === 'directory') return <CrawlDirectoryTree pages={pages} projectId={activeProjectId} runId={effectiveRunId} onSelectPage={(url) => {
     const node = graph.nodes.find((candidate: any) => candidate.page.url === url);

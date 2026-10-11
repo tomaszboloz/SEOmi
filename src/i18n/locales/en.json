@@ -1594,7 +1594,9 @@
       "directory": "URL tree",
       "directoryDescription": "URL hierarchy in this run",
       "plan": "Topical plan",
-      "planDescription": "Topics and semantic audit"
+      "planDescription": "Topics and semantic audit",
+      "diagnosis": "Diagnosis",
+      "diagnosisDescription": "What is fine, what is weak and what to fix"
     },
     "graph": {
       "fullTitle": "Full link graph map",
@@ -1746,7 +1748,10 @@
         "out-of-scope": "outside property",
         "ambiguous": "ambiguous"
       }
-    }
+    },
+    "diagnosisFilter": "Diagnosis scope: {{label}}",
+    "clearDiagnosisFilter": "Show the whole graph",
+    "allTopics": "All topics ({{count}})"
   },
   "crawlDiff": {
     "fields": {
@@ -5112,5 +5117,128 @@
     "impressions": "GSC impressions",
     "issues": "Crawl issues",
     "rowCount": "Rows: {{count}}"
+  },
+  "topicalDiagnosis": {
+    "title": "Topical diagnosis",
+    "description": "Documents (language versions counted once), areas around hub pages, topics from the content and verdicts with a concrete action. Computed from the saved crawl, without language models.",
+    "noTerms": "This crawl has no content terms, so the diagnosis has nothing to work on. Run the crawl again.",
+    "truncated": "Analysis bounded to 500 pages or the pair limit; some results may be missing.",
+    "empty": "No verdicts in this group.",
+    "stats": {
+      "documents": "Documents",
+      "pages": "Pages",
+      "skipped": "Skipped",
+      "hubs": "Hubs",
+      "topics": "Topics",
+      "singletons": "Singletons",
+      "languages": "Languages",
+      "mergedPairs": "Language pairs"
+    },
+    "severity": {
+      "fix": "Fix",
+      "weak": "Weak",
+      "info": "Info",
+      "good": "Good"
+    },
+    "filter": {
+      "all": "All · {{count}}",
+      "fix": "Fix · {{count}}",
+      "weak": "Weak · {{count}}",
+      "info": "Info · {{count}}",
+      "good": "Good · {{count}}"
+    },
+    "areas": {
+      "title": "Areas and topics",
+      "noHub": "No hub",
+      "hubWithoutMembers": "Hub without assigned documents",
+      "members": "{{count}} docs",
+      "showInGraph": "Show in graph",
+      "hub": "Hub: {{url}}"
+    },
+    "topics": {
+      "singletons": "Single documents · {{count}}",
+      "labelFromContent": "label from content",
+      "noLabel": "Unlabelled topic",
+      "documents": "{{count}} docs"
+    },
+    "roles": {
+      "hub": "hub",
+      "utility": "utility page",
+      "content": "content"
+    },
+    "scope": {
+      "area": "area",
+      "topic": "topic",
+      "document": "document"
+    },
+    "verdict": {
+      "hub-missing-backlink": {
+        "title": "No link to the hub",
+        "action": "Add a link from this page to {{hub}}: in the navigation, the breadcrumb or the content."
+      },
+      "hub-missing-member-link": {
+        "title": "The hub does not link to some pages of its topic",
+        "action": "Add the missing pages ({{count}}) to the listing of {{hub}}."
+      },
+      "area-healthy": {
+        "title": "Coherent area",
+        "action": "The hub links to all {{count}} documents and each of them links back to the hub. Nothing to do."
+      },
+      "topic-no-hub": {
+        "title": "Topic without a pillar page",
+        "action": "Create or designate a pillar page for this topic and link every document from it; today only the content connects them."
+      },
+      "topic-members-unlinked": {
+        "title": "Topic pages do not link to each other",
+        "action": "Add contextual links between the listed pairs ({{count}} pairs without a link in either direction)."
+      },
+      "topic-thin": {
+        "title": "Thin topic",
+        "action": "The topic has only two documents. Add a third piece or merge both if they answer the same question."
+      },
+      "cannibalization-candidate": {
+        "title": "Cannibalization candidates",
+        "action": "Two pages in the same language overlap by {{percent}}% and share title words: {{titleTokens}}. Compare the intent and merge them or differentiate the titles."
+      },
+      "document-isolated": {
+        "title": "Isolated page",
+        "action": "It has no topic and only listings link to it. Add a link from the closest page by content: {{url}} ({{percent}}% shared terms).",
+        "actionNoNearest": "It has no topic and only listings link to it. Link it from a related article."
+      },
+      "document-orphan": {
+        "title": "No content link at all",
+        "action": "No page links to it from the main content. Add a contextual link from a related page or from the hub."
+      },
+      "near-duplicate": {
+        "title": "Nearly identical content",
+        "action": "Compare both pages. If it is a duplicate, merge them or set a canonical."
+      },
+      "language-pair-missing": {
+        "title": "Missing language version",
+        "action": "The document exists only in {{language}}. Decide whether it needs a translation; this is information, not an error."
+      }
+    },
+    "evidence": {
+      "hub": "hub: {{hub}}",
+      "count": "{{count}} pages",
+      "members": "{{count}} documents",
+      "areas": "{{count}} areas",
+      "withoutHub": "{{count}} without a hub",
+      "pairs": "{{count}} pairs",
+      "similarity": "similarity {{percent}}%",
+      "titleTokens": "shared title words: {{titleTokens}}",
+      "nearest": "closest page: {{url}}",
+      "hash": "same content hash",
+      "distance": "SimHash: {{value}}/64",
+      "language": "language: {{language}}"
+    },
+    "confidence": {
+      "limited": "limited confidence (partial content evidence)",
+      "moderate": "moderate confidence"
+    },
+    "import": {
+      "button": "Import diagnosis topics",
+      "topicsCount": "{{count}} topics · run {{run}}"
+    }
   }
 }

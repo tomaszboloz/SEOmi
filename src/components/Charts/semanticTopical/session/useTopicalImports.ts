@@ -8,6 +8,8 @@ import {
   type TopicalNode,
 } from '@/services/topicalMap';
 import type { SemanticMap } from '@/services/semanticMap';
+import type { TopicalDiagnosisReport } from '@/services/topicalDiagnosis';
+import { importDiagnosisTopics } from '@/services/topicalDocument/diagnosisImport';
 import type { CrawledPageSummary } from '@/types';
 import { useToolsStore } from '@/stores/toolsStore';
 
@@ -15,6 +17,7 @@ interface Props {
   documentRef: MutableRefObject<TopicalMapDocument>;
   selectedNode: TopicalNode | null;
   graph: SemanticMap;
+  diagnosis?: TopicalDiagnosisReport;
   pages: CrawledPageSummary[];
   runId: string;
   persist: (next: TopicalMapDocument) => void;
@@ -27,6 +30,7 @@ export const useTopicalImports = ({
   documentRef,
   selectedNode,
   graph,
+  diagnosis,
   pages,
   runId,
   persist,
@@ -44,7 +48,9 @@ export const useTopicalImports = ({
   const gscProperty = useToolsStore((state) => state.gscProperty);
 
   const importClusters = () => {
-    const next = importCrawlClusters(documentRef.current, graph, pages, runId);
+    const next = diagnosis
+      ? importDiagnosisTopics(documentRef.current, diagnosis, runId, t('semanticWorkspace.topic'))
+      : importCrawlClusters(documentRef.current, graph, pages, runId);
     const imported = next.nodes.find(
       (node) =>
         !documentRef.current.nodes.some((current) => current.id === node.id),

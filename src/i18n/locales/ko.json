@@ -1594,7 +1594,9 @@
       "directory": "URL tree",
       "directoryDescription": "URL hierarchy in this run",
       "plan": "Topical plan",
-      "planDescription": "Topics and semantic audit"
+      "planDescription": "Topics and semantic audit",
+      "diagnosis": "진단",
+      "diagnosisDescription": "잘된 것, 약한 것, 고칠 것"
     },
     "graph": {
       "fullTitle": "Full link graph map",
@@ -1746,7 +1748,10 @@
         "out-of-scope": "속성 범위 밖",
         "ambiguous": "모호함"
       }
-    }
+    },
+    "diagnosisFilter": "진단 범위: {{label}}",
+    "clearDiagnosisFilter": "전체 그래프 보기",
+    "allTopics": "모든 토픽 ({{count}})"
   },
   "crawlDiff": {
     "fields": {
@@ -5112,5 +5117,128 @@
     "impressions": "GSC impressions",
     "issues": "Crawl issues",
     "rowCount": "Rows: {{count}}"
+  },
+  "topicalDiagnosis": {
+    "title": "토픽 진단",
+    "description": "문서(언어 버전은 한 번만 계산), 허브 페이지 중심의 영역, 콘텐츠에서 얻은 토픽, 구체적인 조치가 담긴 판정. 저장된 크롤에서 언어 모델 없이 계산합니다.",
+    "noTerms": "이 크롤에는 콘텐츠 용어가 없어 진단할 자료가 없습니다. 크롤을 다시 실행하세요.",
+    "truncated": "분석이 500페이지 또는 쌍 한도에서 제한되었습니다. 일부 결과가 빠질 수 있습니다.",
+    "empty": "이 그룹에는 판정이 없습니다.",
+    "stats": {
+      "documents": "문서",
+      "pages": "페이지",
+      "skipped": "건너뜀",
+      "hubs": "허브",
+      "topics": "토픽",
+      "singletons": "단독",
+      "languages": "언어",
+      "mergedPairs": "언어 쌍"
+    },
+    "severity": {
+      "fix": "수정",
+      "weak": "약함",
+      "info": "정보",
+      "good": "양호"
+    },
+    "filter": {
+      "all": "전체 · {{count}}",
+      "fix": "수정 · {{count}}",
+      "weak": "약함 · {{count}}",
+      "info": "정보 · {{count}}",
+      "good": "양호 · {{count}}"
+    },
+    "areas": {
+      "title": "영역과 토픽",
+      "noHub": "허브 없음",
+      "hubWithoutMembers": "할당된 문서가 없는 허브",
+      "members": "{{count}}개 문서",
+      "showInGraph": "그래프에서 보기",
+      "hub": "허브: {{url}}"
+    },
+    "topics": {
+      "singletons": "단독 문서 · {{count}}",
+      "labelFromContent": "콘텐츠에서 만든 라벨",
+      "noLabel": "라벨 없는 토픽",
+      "documents": "{{count}}개 문서"
+    },
+    "roles": {
+      "hub": "허브",
+      "utility": "보조 페이지",
+      "content": "콘텐츠"
+    },
+    "scope": {
+      "area": "영역",
+      "topic": "토픽",
+      "document": "문서"
+    },
+    "verdict": {
+      "hub-missing-backlink": {
+        "title": "허브로 가는 링크가 없음",
+        "action": "이 페이지에서 {{hub}}로 가는 링크를 내비게이션, 브레드크럼 또는 본문에 추가하세요."
+      },
+      "hub-missing-member-link": {
+        "title": "허브가 같은 토픽의 일부 페이지에 링크하지 않음",
+        "action": "누락된 페이지({{count}}개)를 {{hub}} 목록에 추가하세요."
+      },
+      "area-healthy": {
+        "title": "일관된 영역",
+        "action": "허브가 {{count}}개 문서 모두에 링크하고 각 문서도 허브로 링크합니다. 할 일이 없습니다."
+      },
+      "topic-no-hub": {
+        "title": "필러 페이지가 없는 토픽",
+        "action": "이 토픽의 필러 페이지를 만들거나 지정하고 거기서 모든 문서로 링크하세요. 지금은 콘텐츠만 이들을 연결합니다."
+      },
+      "topic-members-unlinked": {
+        "title": "토픽의 페이지들이 서로 링크하지 않음",
+        "action": "나열된 쌍 사이에 문맥 링크를 추가하세요(어느 방향으로도 링크가 없는 쌍 {{count}}개)."
+      },
+      "topic-thin": {
+        "title": "빈약한 토픽",
+        "action": "이 토픽에는 문서가 두 개뿐입니다. 세 번째 글을 추가하거나, 같은 질문에 답한다면 둘을 합치세요."
+      },
+      "cannibalization-candidate": {
+        "title": "카니발리제이션 후보",
+        "action": "같은 언어의 두 페이지가 {{percent}}% 겹치고 제목 단어를 공유합니다: {{titleTokens}}. 의도를 비교해 합치거나 제목을 차별화하세요."
+      },
+      "document-isolated": {
+        "title": "고립된 페이지",
+        "action": "토픽이 없고 목록 페이지만 링크합니다. 내용이 가장 가까운 페이지에서 링크를 추가하세요: {{url}} (공유 용어 {{percent}}%).",
+        "actionNoNearest": "토픽이 없고 목록 페이지만 링크합니다. 관련 글에서 링크하세요."
+      },
+      "document-orphan": {
+        "title": "본문 링크가 전혀 없음",
+        "action": "어떤 페이지도 본문에서 이 페이지로 링크하지 않습니다. 관련 페이지나 허브에서 문맥 링크를 추가하세요."
+      },
+      "near-duplicate": {
+        "title": "거의 동일한 콘텐츠",
+        "action": "두 페이지를 비교하세요. 중복이면 합치거나 canonical을 설정하세요."
+      },
+      "language-pair-missing": {
+        "title": "언어 버전 누락",
+        "action": "이 문서는 {{language}}로만 존재합니다. 번역이 필요한지 결정하세요. 이것은 정보이며 오류가 아닙니다."
+      }
+    },
+    "evidence": {
+      "hub": "허브: {{hub}}",
+      "count": "{{count}} 페이지",
+      "members": "{{count}} 문서",
+      "areas": "{{count}} 영역",
+      "withoutHub": "허브 없음 {{count}}",
+      "pairs": "{{count}} 쌍",
+      "similarity": "유사도 {{percent}}%",
+      "titleTokens": "공유 제목 단어: {{titleTokens}}",
+      "nearest": "가장 가까운 페이지: {{url}}",
+      "hash": "동일한 콘텐츠 해시",
+      "distance": "SimHash: {{value}}/64",
+      "language": "언어: {{language}}"
+    },
+    "confidence": {
+      "limited": "신뢰도 제한적(콘텐츠 증거 불완전)",
+      "moderate": "신뢰도 보통"
+    },
+    "import": {
+      "button": "진단 토픽 가져오기",
+      "topicsCount": "{{count}} 토픽 · 실행 {{run}}"
+    }
   }
 }

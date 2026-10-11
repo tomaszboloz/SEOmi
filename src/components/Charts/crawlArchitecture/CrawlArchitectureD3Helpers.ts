@@ -2,14 +2,35 @@ import { forceCenter, forceCollide, forceLink, forceManyBody } from 'd3-force';
 import { drag } from 'd3-drag';
 import type { SimNode, SimLink } from './CrawlArchitectureTypes';
 import { WIDTH, HEIGHT, CLUSTER_COLORS } from './CrawlArchitectureTypes';
+import type { TopicalDiagnosisReport } from '@/services/topicalDiagnosis';
+import { normalizeGraphUrl } from '@/services/semanticGraph/urls';
+
+export const HUB_COLOR = '#e2e8f0';
+export const NO_TOPIC_COLOR = '#64748b';
+
+/** Node colour by diagnosis topic (hubs light, documents outside every topic grey); falls back to graph clusters. */
+export const nodeColorsByUrl = (diagnosis: TopicalDiagnosisReport): Map<string, string> => {
+  const topicColor = new Map(diagnosis.topics.map((topic, index) => [topic.id, CLUSTER_COLORS[index % CLUSTER_COLORS.length]]));
+  const topicOfDocument = new Map(diagnosis.topics.flatMap((topic) => topic.documentIds.map((id) => [id, topic.id])));
+  const colors = new Map<string, string>();
+  diagnosis.documents.forEach((document) => {
+    const color = document.role === 'hub' ? HUB_COLOR : topicColor.get(topicOfDocument.get(document.id) ?? '') ?? NO_TOPIC_COLOR;
+    document.urls.forEach((url) => colors.set(url, color));
+  });
+  return colors;
+};
 
 export const buildSimulationNodesAndLinks = (
-  visibleNodes: any[], visibleEdges: any[], visibleTopicEdges: any[], graph: any, preferences: any
+  visibleNodes: any[], visibleEdges: any[], visibleTopicEdges: any[], graph: any, preferences: any, diagnosis?: TopicalDiagnosisReport
 ) => {
   const clusterColors = new Map<string, string>(graph.clusters.map((cluster: any, index: number) => [cluster.id, CLUSTER_COLORS[index % CLUSTER_COLORS.length]]));
+  const diagnosisColors = diagnosis ? nodeColorsByUrl(diagnosis) : null;
   const nodes: SimNode[] = visibleNodes.map((node) => {
     const savedPosition = preferences.positions[node.page.url];
-    return { id: node.id, semanticNode: node, color: clusterColors.get(node.clusterId) ?? '#94a3b8', x: savedPosition?.x, y: savedPosition?.y };
+    const color = diagnosisColors
+      ? diagnosisColors.get(normalizeGraphUrl(node.page.url)) ?? diagnosisColors.get(normalizeGraphUrl(node.page.final_url)) ?? NO_TOPIC_COLOR
+      : clusterColors.get(node.clusterId) ?? '#94a3b8';
+    return { id: node.id, semanticNode: node, color, x: savedPosition?.x, y: savedPosition?.y };
   });
   const nodeById = new Map(nodes.map((node) => [node.id, node]));
   const links: SimLink[] = visibleEdges.map((edge) => ({

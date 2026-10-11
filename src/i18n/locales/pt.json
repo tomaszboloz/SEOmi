@@ -1594,7 +1594,9 @@
       "directory": "URL tree",
       "directoryDescription": "URL hierarchy in this run",
       "plan": "Topical plan",
-      "planDescription": "Topics and semantic audit"
+      "planDescription": "Topics and semantic audit",
+      "diagnosis": "Diagnóstico",
+      "diagnosisDescription": "O que está bem, o que está fraco e o que corrigir"
     },
     "graph": {
       "fullTitle": "Full link graph map",
@@ -1746,7 +1748,10 @@
         "out-of-scope": "fora da propriedade",
         "ambiguous": "ambígua"
       }
-    }
+    },
+    "diagnosisFilter": "Escopo do diagnóstico: {{label}}",
+    "clearDiagnosisFilter": "Mostrar todo o grafo",
+    "allTopics": "Todos os temas ({{count}})"
   },
   "crawlDiff": {
     "fields": {
@@ -5112,5 +5117,128 @@
     "impressions": "GSC impressions",
     "issues": "Crawl issues",
     "rowCount": "Rows: {{count}}"
+  },
+  "topicalDiagnosis": {
+    "title": "Diagnóstico temático",
+    "description": "Documentos (versões de idioma contadas uma vez), áreas em torno de páginas hub, temas do conteúdo e veredictos com uma ação concreta. Calculado a partir do rastreamento salvo, sem modelos de linguagem.",
+    "noTerms": "Este rastreamento não tem termos de conteúdo, então o diagnóstico não tem com o que trabalhar. Execute o rastreamento novamente.",
+    "truncated": "Análise limitada a 500 páginas ou ao limite de pares; alguns resultados podem faltar.",
+    "empty": "Nenhum veredicto neste grupo.",
+    "stats": {
+      "documents": "Documentos",
+      "pages": "Páginas",
+      "skipped": "Ignoradas",
+      "hubs": "Hubs",
+      "topics": "Temas",
+      "singletons": "Isolados",
+      "languages": "Idiomas",
+      "mergedPairs": "Pares de idioma"
+    },
+    "severity": {
+      "fix": "Corrigir",
+      "weak": "Fraco",
+      "info": "Info",
+      "good": "Bom"
+    },
+    "filter": {
+      "all": "Todos · {{count}}",
+      "fix": "Corrigir · {{count}}",
+      "weak": "Fraco · {{count}}",
+      "info": "Info · {{count}}",
+      "good": "Bom · {{count}}"
+    },
+    "areas": {
+      "title": "Áreas e temas",
+      "noHub": "Sem hub",
+      "hubWithoutMembers": "Hub sem documentos atribuídos",
+      "members": "{{count}} doc.",
+      "showInGraph": "Mostrar no grafo",
+      "hub": "Hub: {{url}}"
+    },
+    "topics": {
+      "singletons": "Documentos isolados · {{count}}",
+      "labelFromContent": "rótulo do conteúdo",
+      "noLabel": "Tema sem rótulo",
+      "documents": "{{count}} doc."
+    },
+    "roles": {
+      "hub": "hub",
+      "utility": "página auxiliar",
+      "content": "conteúdo"
+    },
+    "scope": {
+      "area": "área",
+      "topic": "tema",
+      "document": "documento"
+    },
+    "verdict": {
+      "hub-missing-backlink": {
+        "title": "Sem link para o hub",
+        "action": "Adicione nesta página um link para {{hub}}: na navegação, no breadcrumb ou no conteúdo."
+      },
+      "hub-missing-member-link": {
+        "title": "O hub não aponta para algumas páginas do seu tema",
+        "action": "Adicione as páginas que faltam ({{count}}) à lista de {{hub}}."
+      },
+      "area-healthy": {
+        "title": "Área coerente",
+        "action": "O hub aponta para todos os {{count}} documentos e cada um aponta de volta para o hub. Nada a fazer."
+      },
+      "topic-no-hub": {
+        "title": "Tema sem página pilar",
+        "action": "Crie ou designe uma página pilar para este tema e aponte dela para todos os documentos; hoje só o conteúdo os liga."
+      },
+      "topic-members-unlinked": {
+        "title": "As páginas do tema não se ligam entre si",
+        "action": "Adicione links contextuais entre os pares listados ({{count}} pares sem link em nenhuma direção)."
+      },
+      "topic-thin": {
+        "title": "Tema raso",
+        "action": "O tema tem apenas dois documentos. Acrescente um terceiro ou funda os dois se respondem à mesma pergunta."
+      },
+      "cannibalization-candidate": {
+        "title": "Candidatos a canibalização",
+        "action": "Duas páginas no mesmo idioma se sobrepõem em {{percent}}% e compartilham palavras do título: {{titleTokens}}. Compare a intenção e funda-as ou diferencie os títulos."
+      },
+      "document-isolated": {
+        "title": "Página isolada",
+        "action": "Não tem tema e só listagens apontam para ela. Adicione um link da página mais próxima por conteúdo: {{url}} ({{percent}}% de termos em comum).",
+        "actionNoNearest": "Não tem tema e só listagens apontam para ela. Aponte para ela a partir de um artigo relacionado."
+      },
+      "document-orphan": {
+        "title": "Nenhum link a partir do conteúdo",
+        "action": "Nenhuma página aponta para ela a partir do conteúdo principal. Adicione um link contextual de uma página relacionada ou do hub."
+      },
+      "near-duplicate": {
+        "title": "Conteúdo quase idêntico",
+        "action": "Compare as duas páginas. Se for duplicado, funda-as ou defina um canonical."
+      },
+      "language-pair-missing": {
+        "title": "Versão de idioma ausente",
+        "action": "O documento existe apenas em {{language}}. Decida se precisa de tradução; é uma informação, não um erro."
+      }
+    },
+    "evidence": {
+      "hub": "hub: {{hub}}",
+      "count": "{{count}} páginas",
+      "members": "{{count}} documentos",
+      "areas": "{{count}} áreas",
+      "withoutHub": "{{count}} sem hub",
+      "pairs": "{{count}} pares",
+      "similarity": "similaridade {{percent}}%",
+      "titleTokens": "palavras do título em comum: {{titleTokens}}",
+      "nearest": "página mais próxima: {{url}}",
+      "hash": "mesmo hash de conteúdo",
+      "distance": "SimHash: {{value}}/64",
+      "language": "idioma: {{language}}"
+    },
+    "confidence": {
+      "limited": "confiança limitada (evidência de conteúdo parcial)",
+      "moderate": "confiança moderada"
+    },
+    "import": {
+      "button": "Importar temas do diagnóstico",
+      "topicsCount": "{{count}} temas · execução {{run}}"
+    }
   }
 }

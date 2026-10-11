@@ -20,7 +20,7 @@ describe('crawl architecture pure helpers direct assertions', () => {
     expect(prefs.query).toBe('');
     expect(prefs.clusterFilter).toBe('all');
     expect(prefs.orphansOnly).toBe(false);
-    expect(prefs.activeView).toBe('graph');
+    expect(prefs.activeView).toBe('diagnosis');
     expect(prefs.transform).toEqual({ x: 0, y: 0, k: 1 });
   });
 
@@ -33,7 +33,7 @@ describe('crawl architecture pure helpers direct assertions', () => {
       validKey,
       JSON.stringify({
         query: 'test-query',
-        activeView: 'directory',
+        activeView: 'directory', diagnosisFilter: null,
         transform: { x: 10, y: 20, k: 1.5 },
       }),
     );
@@ -54,9 +54,9 @@ describe('crawl architecture pure helpers direct assertions', () => {
   it('buildMapViewTabs returns configured tab items with icons', () => {
     const translate = (key: string) => `label:${key}`;
     const tabs = buildMapViewTabs(translate);
-    expect(tabs).toHaveLength(3);
-    expect(tabs.map((t) => t.id)).toEqual(['graph', 'directory', 'plan']);
-    expect(tabs[0].label).toBe('label:mapUi.tabs.graph');
+    expect(tabs).toHaveLength(4);
+    expect(tabs.map((t) => t.id)).toEqual(['diagnosis', 'graph', 'directory', 'plan']);
+    expect(tabs[0].label).toBe('label:mapUi.tabs.diagnosis');
   });
 
   it('returnToMapStart scrolls map section into view without error', () => {

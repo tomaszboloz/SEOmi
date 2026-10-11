@@ -41,7 +41,7 @@ it("shows HTTP error filters and a genuine empty-history state", () => {
     expect(pageUrlCells).not.toContain("https://example.com/");
 
 fireEvent.click(screen.getByRole("tab", { name: /Map & clusters/ }));
-    expect(screen.getByRole("img", { name: i18n.t("mapUi.svgAria") })).not.toBeNull();
+    expect(screen.getByTestId("topical-diagnosis-view")).not.toBeNull();
   });
 
 it("segments and searches URLs, and persists named filter presets per project", () => {

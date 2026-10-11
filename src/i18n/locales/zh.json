@@ -1594,7 +1594,9 @@
       "directory": "URL tree",
       "directoryDescription": "URL hierarchy in this run",
       "plan": "Topical plan",
-      "planDescription": "Topics and semantic audit"
+      "planDescription": "Topics and semantic audit",
+      "diagnosis": "诊断",
+      "diagnosisDescription": "哪些好、哪些弱、该修什么"
     },
     "graph": {
       "fullTitle": "Full link graph map",
@@ -1746,7 +1748,10 @@
         "out-of-scope": "资源范围之外",
         "ambiguous": "不明确"
       }
-    }
+    },
+    "diagnosisFilter": "诊断范围：{{label}}",
+    "clearDiagnosisFilter": "显示整个图",
+    "allTopics": "全部主题（{{count}}）"
   },
   "crawlDiff": {
     "fields": {
@@ -5112,5 +5117,128 @@
     "impressions": "GSC impressions",
     "issues": "Crawl issues",
     "rowCount": "Rows: {{count}}"
+  },
+  "topicalDiagnosis": {
+    "title": "主题诊断",
+    "description": "文档（语言版本只计一次）、围绕枢纽页的区域、来自内容的主题以及带具体行动的判定。基于已保存的抓取计算，不使用语言模型。",
+    "noTerms": "此次抓取没有内容词项，诊断没有可处理的数据。请重新运行抓取。",
+    "truncated": "分析限于 500 个页面或配对上限，部分结果可能缺失。",
+    "empty": "此组没有判定。",
+    "stats": {
+      "documents": "文档",
+      "pages": "页面",
+      "skipped": "已跳过",
+      "hubs": "枢纽",
+      "topics": "主题",
+      "singletons": "单独",
+      "languages": "语言",
+      "mergedPairs": "语言配对"
+    },
+    "severity": {
+      "fix": "需修复",
+      "weak": "较弱",
+      "info": "信息",
+      "good": "良好"
+    },
+    "filter": {
+      "all": "全部 · {{count}}",
+      "fix": "需修复 · {{count}}",
+      "weak": "较弱 · {{count}}",
+      "info": "信息 · {{count}}",
+      "good": "良好 · {{count}}"
+    },
+    "areas": {
+      "title": "区域与主题",
+      "noHub": "无枢纽",
+      "hubWithoutMembers": "没有分配文档的枢纽",
+      "members": "{{count}} 篇",
+      "showInGraph": "在图中显示",
+      "hub": "枢纽：{{url}}"
+    },
+    "topics": {
+      "singletons": "单独文档 · {{count}}",
+      "labelFromContent": "来自内容的标签",
+      "noLabel": "无标签主题",
+      "documents": "{{count}} 篇"
+    },
+    "roles": {
+      "hub": "枢纽",
+      "utility": "辅助页面",
+      "content": "内容"
+    },
+    "scope": {
+      "area": "区域",
+      "topic": "主题",
+      "document": "文档"
+    },
+    "verdict": {
+      "hub-missing-backlink": {
+        "title": "没有指向枢纽的链接",
+        "action": "在此页面添加指向 {{hub}} 的链接：放在导航、面包屑或正文中。"
+      },
+      "hub-missing-member-link": {
+        "title": "枢纽未链接到其主题的部分页面",
+        "action": "把缺失的页面（{{count}} 个）加入 {{hub}} 的列表。"
+      },
+      "area-healthy": {
+        "title": "区域连贯",
+        "action": "枢纽链接到全部 {{count}} 篇文档，每篇也链接回枢纽。无需处理。"
+      },
+      "topic-no-hub": {
+        "title": "主题没有支柱页",
+        "action": "为该主题创建或指定一个支柱页，并从它链接到所有文档；目前只有内容把它们联系在一起。"
+      },
+      "topic-members-unlinked": {
+        "title": "主题内的页面互不链接",
+        "action": "在列出的配对之间添加上下文链接（{{count}} 对双向均无链接）。"
+      },
+      "topic-thin": {
+        "title": "主题薄弱",
+        "action": "该主题只有两篇文档。补充第三篇，或在回答同一问题时将两篇合并。"
+      },
+      "cannibalization-candidate": {
+        "title": "关键词蚕食候选",
+        "action": "同一语言的两个页面重叠 {{percent}}%，且共享标题词：{{titleTokens}}。比较意图后合并，或区分标题。"
+      },
+      "document-isolated": {
+        "title": "孤立页面",
+        "action": "没有主题，且只有列表页链接到它。请从内容最接近的页面添加链接：{{url}}（共享词项 {{percent}}%）。",
+        "actionNoNearest": "没有主题，且只有列表页链接到它。请从相关文章链接到它。"
+      },
+      "document-orphan": {
+        "title": "没有任何正文链接",
+        "action": "没有页面从正文链接到它。请从相关页面或枢纽添加上下文链接。"
+      },
+      "near-duplicate": {
+        "title": "内容几乎相同",
+        "action": "比较两个页面。若为重复，请合并或设置 canonical。"
+      },
+      "language-pair-missing": {
+        "title": "缺少语言版本",
+        "action": "该文档只有 {{language}} 版本。请决定是否需要翻译；这是信息，不是错误。"
+      }
+    },
+    "evidence": {
+      "hub": "枢纽：{{hub}}",
+      "count": "{{count}} 个页面",
+      "members": "{{count}} 篇文档",
+      "areas": "{{count}} 个区域",
+      "withoutHub": "{{count}} 个无枢纽",
+      "pairs": "{{count}} 对",
+      "similarity": "相似度 {{percent}}%",
+      "titleTokens": "共享标题词：{{titleTokens}}",
+      "nearest": "最接近的页面：{{url}}",
+      "hash": "相同的内容哈希",
+      "distance": "SimHash：{{value}}/64",
+      "language": "语言：{{language}}"
+    },
+    "confidence": {
+      "limited": "置信度有限（内容证据不完整）",
+      "moderate": "置信度中等"
+    },
+    "import": {
+      "button": "导入诊断主题",
+      "topicsCount": "{{count}} 个主题 · 运行 {{run}}"
+    }
   }
 }
