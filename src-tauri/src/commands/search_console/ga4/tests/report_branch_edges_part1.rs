@@ -98,7 +98,7 @@ async fn empty_rows_with_positive_row_count_marks_truncated() {
 
 #[tokio::test]
 async fn max_pages_reached_marks_truncated() {
-    let pages = (0..10)
+    let pages = (0..super::super::super::validation::MAX_PAGES)
         .map(|i| {
             format!(
                 r#"{{"rowCount":100,"rows":[{}]}}"#,
@@ -122,7 +122,10 @@ async fn max_pages_reached_marks_truncated() {
     .unwrap();
     assert_eq!(report.status, Ga4Status::Partial);
     assert!(report.may_be_truncated);
-    assert_eq!(report.pages, 10);
-    assert_eq!(report.rows.len(), 10);
+    assert_eq!(report.pages, super::super::super::validation::MAX_PAGES);
+    assert_eq!(
+        report.rows.len(),
+        super::super::super::validation::MAX_PAGES
+    );
     handle.await.unwrap();
 }

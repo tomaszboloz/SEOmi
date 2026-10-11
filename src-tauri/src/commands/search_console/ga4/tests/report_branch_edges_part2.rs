@@ -3,9 +3,11 @@ use super::*;
 #[tokio::test]
 async fn offset_reaches_report_row_max() {
     let row = sample_row("/item");
-    let rows = vec![row; 10_000].join(",");
-    let p1 = format!(r#"{{"rowCount":20000,"rows":[{rows}]}}"#);
-    let (addr, handle) = serve_responses(vec![p1]).await;
+    let responses = [10_000, 10_000, 5_000].map(|count| {
+        let rows = vec![row.clone(); count].join(",");
+        format!(r#"{{"rowCount":30000,"rows":[{rows}]}}"#)
+    });
+    let (addr, handle) = serve_responses(responses.into()).await;
     let client = reqwest::Client::new();
     let report = run_at(
         &client,
@@ -21,6 +23,10 @@ async fn offset_reaches_report_row_max() {
     .unwrap();
     assert_eq!(report.status, Ga4Status::Partial);
     assert!(report.may_be_truncated);
-    assert_eq!(report.rows.len(), 10_000);
+    assert_eq!(
+        report.rows.len(),
+        super::super::super::validation::REPORT_ROW_MAX
+    );
+    assert_eq!(report.pages, 3);
     handle.await.unwrap();
 }

@@ -34,7 +34,7 @@ async fn normalization_distinguishes_blocked_and_invalid_kinds() {
         ("http://printer.local/status", "blocked"),
         ("http://router.internal/admin", "blocked"),
         ("https://user:pass@example.com/", "invalid"),
-        ("not-a-valid-url", "invalid"),
+        ("http://", "invalid"),
         ("ftp://example.com/file", "invalid"),
     ] {
         let state = new_chain_state();
@@ -80,13 +80,17 @@ async fn run_fallback_to_get_on_403_and_500() {
             let (mut s1, _) = listener.accept().await.unwrap();
             let mut req1 = [0u8; 1024];
             let _ = s1.read(&mut req1).await.unwrap();
-            let h_res = format!("HTTP/1.1 {head_status} Err\r\nContent-Length: 0\r\n\r\n");
+            let h_res = format!(
+                "HTTP/1.1 {head_status} Err\r\nContent-Length: 0\r\nConnection: close\r\n\r\n"
+            );
             s1.write_all(h_res.as_bytes()).await.unwrap();
 
             let (mut s2, _) = listener.accept().await.unwrap();
             let mut req2 = [0u8; 1024];
             let _ = s2.read(&mut req2).await.unwrap();
-            let g_res = format!("HTTP/1.1 {get_status} OK\r\nContent-Length: 0\r\n\r\n");
+            let g_res = format!(
+                "HTTP/1.1 {get_status} OK\r\nContent-Length: 0\r\nConnection: close\r\n\r\n"
+            );
             s2.write_all(g_res.as_bytes()).await.unwrap();
         }
     });
@@ -114,7 +118,7 @@ async fn run_handles_redirect_to_private_target() {
         let (mut s, _) = listener.accept().await.unwrap();
         let mut req = [0u8; 1024];
         let _ = s.read(&mut req).await.unwrap();
-        s.write_all(b"HTTP/1.1 302 Found\r\nLocation: http://127.0.0.1/private\r\nContent-Length: 0\r\n\r\n").await.unwrap();
+        s.write_all(b"HTTP/1.1 302 Found\r\nLocation: http://127.0.0.1/private\r\nContent-Length: 0\r\nConnection: close\r\n\r\n").await.unwrap();
     });
 
     let state = new_chain_state();

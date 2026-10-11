@@ -43,7 +43,7 @@ async fn connect_with_scope_custom_scope_and_client_secret_persisted() {
     assert_eq!(properties.len(), 1);
     assert_eq!(properties[0].site_url, "sc-domain:example.com");
 
-    let writes = store.writes.lock().unwrap();
+    let writes = store.writes.lock().unwrap().clone();
     assert!(writes
         .iter()
         .any(|(k, v)| k == "gsc_refresh_token_proj-1" && v == "token-ref"));
@@ -71,7 +71,7 @@ async fn connect_with_scope_falls_back_to_old_refresh_token() {
     .await
     .unwrap();
     assert!(properties.is_empty());
-    let writes = store.writes.lock().unwrap();
+    let writes = store.writes.lock().unwrap().clone();
     assert!(writes
         .iter()
         .any(|(k, v)| k == "gsc_refresh_token_proj-old" && v == "existing-refresh"));

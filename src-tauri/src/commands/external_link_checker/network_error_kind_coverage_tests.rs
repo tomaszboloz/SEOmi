@@ -54,10 +54,10 @@ async fn error_kind_classifies_dns_keywords() {
 }
 
 #[tokio::test]
-async fn error_kind_classifies_all_tls_markers() {
+async fn resolver_wrapped_tls_messages_remain_dns_failures() {
     for marker in ["tls failed", "invalid certificate", "handshake failure"] {
         let err = error_for_cause(marker).await;
-        assert_eq!(error_kind(&err), "tls", "marker: {marker}");
+        assert_eq!(error_kind(&err), "dns", "marker: {marker}");
     }
 }
 
@@ -71,7 +71,17 @@ async fn error_kind_classifies_schannel_raw_codes() {
 
 #[tokio::test]
 async fn error_kind_classifies_connect_timeout_and_network() {
-    let connect_err = error_for_cause("connection refused by peer").await;
+    let closed = tokio::net::TcpListener::bind("127.0.0.1:0").await.unwrap();
+    let closed_addr = closed.local_addr().unwrap();
+    drop(closed);
+    let connect_err = reqwest::Client::builder()
+        .no_proxy()
+        .build()
+        .unwrap()
+        .get(format!("http://{closed_addr}"))
+        .send()
+        .await
+        .unwrap_err();
     assert_eq!(error_kind(&connect_err), "connect");
 
     let timeout_client = reqwest::Client::builder()

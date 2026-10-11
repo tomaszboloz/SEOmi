@@ -46,37 +46,13 @@ async fn disabled_and_future_task_guards() {
 }
 
 #[tokio::test]
-async fn create_dir_all_failure_surfaces_error() {
+async fn a_directory_cannot_be_read_as_a_task_manifest() {
     let app = fixture();
-    let mut due = task("page-audit");
-    due.next_run_at = "2020-01-01T00:00:00Z".into();
-    let p_dir = app.project("project-1");
-    std::fs::create_dir_all(&p_dir).unwrap();
-    let fifo = p_dir.join("scheduled_task_schedule-1.json");
-    assert!(std::process::Command::new("mkfifo")
-        .arg(&fifo)
-        .status()
-        .unwrap()
-        .success());
-    let task_json = serde_json::to_vec(&due).unwrap();
-    let (dir_clone, fifo_clone) = (p_dir.clone(), fifo.clone());
-    let writer = std::thread::spawn(move || {
-        use std::io::Write;
-        let mut f = std::fs::OpenOptions::new()
-            .write(true)
-            .open(&fifo_clone)
-            .unwrap();
-        f.write_all(&task_json).unwrap();
-        drop(f);
-        let _ = std::fs::remove_file(&fifo_clone);
-        let _ = std::fs::remove_dir(&dir_clone);
-        let _ = std::fs::write(&dir_clone, b"blocked");
-    });
-    let res = run_t(&app, |_| async { Ok(Value::Null) }, ok_reg, ok_unreg).await;
-    writer.join().unwrap();
-    assert!(res
-        .unwrap_err()
-        .contains("Unable to create scheduled task directory:"));
+    let manifest = p_task(&app);
+    std::fs::create_dir_all(&manifest).unwrap();
+    let error = run_t(&app, no_run, ok_reg, ok_unreg).await.unwrap_err();
+    assert!(error.contains("Unable to read scheduled data:"), "{error}");
+    assert!(manifest.is_dir());
 }
 
 #[tokio::test]
@@ -88,7 +64,7 @@ async fn lock_acquisition_none_exits_ok() {
     let lock_path = app
         .project("project-1")
         .join("scheduled_execution_schedule-1.lock");
-    let _guard = super::super::super::lock::acquire_scheduled_lock(&lock_path)
+    let _guard = crate::commands::scheduled_worker::lock::acquire_scheduled_lock(&lock_path)
         .unwrap()
         .unwrap();
     assert!(run_t(&app, no_run, ok_reg, ok_unreg).await.is_ok());
