@@ -5222,11 +5222,11 @@
     },
     "evidence": {
       "hub": "المحور: {{hub}}",
-      "count": "{{count}} صفحة",
+      "count": "عدد الصفحات: {{count}}",
       "members": "{{count}} مستند",
       "areas": "{{count}} منطقة",
       "withoutHub": "{{count}} بدون محور",
-      "pairs": "{{count}} زوج",
+      "pairs": "عدد الأزواج: {{count}}",
       "similarity": "التشابه {{percent}}%",
       "titleTokens": "كلمات العنوان المشتركة: {{titleTokens}}",
       "nearest": "أقرب صفحة: {{url}}",

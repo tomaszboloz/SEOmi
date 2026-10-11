@@ -5222,11 +5222,11 @@
     },
     "evidence": {
       "hub": "枢纽：{{hub}}",
-      "count": "{{count}} 个页面",
+      "count": "页面数：{{count}}",
       "members": "{{count}} 篇文档",
       "areas": "{{count}} 个区域",
       "withoutHub": "{{count}} 个无枢纽",
-      "pairs": "{{count}} 对",
+      "pairs": "配对数：{{count}}",
       "similarity": "相似度 {{percent}}%",
       "titleTokens": "共享标题词：{{titleTokens}}",
       "nearest": "最接近的页面：{{url}}",

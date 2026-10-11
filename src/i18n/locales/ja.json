@@ -5222,11 +5222,11 @@
     },
     "evidence": {
       "hub": "ハブ: {{hub}}",
-      "count": "{{count}} ページ",
+      "count": "ページ数: {{count}}",
       "members": "{{count}} ドキュメント",
       "areas": "{{count}} エリア",
       "withoutHub": "ハブなし {{count}}",
-      "pairs": "{{count}} ペア",
+      "pairs": "ペア数: {{count}}",
       "similarity": "類似度 {{percent}}%",
       "titleTokens": "共有するタイトル語: {{titleTokens}}",
       "nearest": "最も近いページ: {{url}}",

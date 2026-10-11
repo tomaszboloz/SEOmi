@@ -5222,11 +5222,11 @@
     },
     "evidence": {
       "hub": "hub: {{hub}}",
-      "count": "{{count}} stron",
+      "count": "Liczba stron: {{count}}",
       "members": "{{count}} dokumentów",
       "areas": "{{count}} obszarów",
       "withoutHub": "{{count}} bez huba",
-      "pairs": "{{count}} par",
+      "pairs": "Liczba par: {{count}}",
       "similarity": "podobieństwo {{percent}}%",
       "titleTokens": "wspólne słowa tytułu: {{titleTokens}}",
       "nearest": "najbliższa strona: {{url}}",
