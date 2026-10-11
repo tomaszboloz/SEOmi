@@ -17,7 +17,10 @@ This release has not been published. Final coverage, platform checks and package
 - Comparable health-score versions, cross-page structured-data checks and page-specific content guidance.
 - Security-header interpretation and repeated-header handling.
 - Windows TLS error classification and desktop regression fixtures.
-- Latin PDF character transliteration and long URL wrapping; full non-Latin font support remains open.
+- Embedded Unicode PDF fonts for Latin, Cyrillic, CJK and Arabic text, with long URL wrapping. Fonts are included only when used; the CJK font is currently embedded in full.
+- Isolated Windows renderer profiles prevent one WebView2 session from losing the next session’s capture callbacks.
+- Topical diagnosis distinguishes post navigation from listing pagination, folds redirect aliases, avoids unsupported link verdicts in legacy crawls and groups duplicate content.
+- Complete topic-pair evaluation within the 500-page bound, expandable verdict lists and migration of obsolete graph filters.
 
 ## Quality
 
