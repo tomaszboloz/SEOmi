@@ -5125,6 +5125,7 @@
     "noContentLinks": "This crawl was saved without main-content links, so verdicts about links (pages without a content link, hubs, topic pages that do not link to each other) are not shown. Run the crawl again.",
     "truncated": "Analysis bounded to 500 pages or the pair limit; some results may be missing.",
     "empty": "No verdicts in this group.",
+    "showRemaining": "Show the remaining verdicts ({{count}})",
     "stats": {
       "documents": "Documents",
       "pages": "Pages",

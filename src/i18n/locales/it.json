@@ -5125,6 +5125,7 @@
     "noContentLinks": "Questo crawl è stato salvato senza i link del contenuto principale, quindi i verdetti sui link (pagine senza link dal contenuto, hub, pagine del tema che non si collegano tra loro) non vengono mostrati. Esegui di nuovo il crawl.",
     "truncated": "Analisi limitata a 500 pagine o al limite di coppie; alcuni risultati potrebbero mancare.",
     "empty": "Nessun verdetto in questo gruppo.",
+    "showRemaining": "Mostra i verdetti rimanenti ({{count}})",
     "stats": {
       "documents": "Documenti",
       "pages": "Pagine",

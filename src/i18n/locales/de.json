@@ -5125,6 +5125,7 @@
     "noContentLinks": "Dieser Crawl wurde ohne Links aus dem Hauptinhalt gespeichert, daher werden Urteile zu Links (Seiten ohne Inhaltslink, Hubs, Seiten eines Themas ohne gegenseitige Links) nicht angezeigt. Führen Sie den Crawl erneut aus.",
     "truncated": "Analyse auf 500 Seiten oder das Paarlimit begrenzt; einige Ergebnisse können fehlen.",
     "empty": "Keine Urteile in dieser Gruppe.",
+    "showRemaining": "Übrige Urteile anzeigen ({{count}})",
     "stats": {
       "documents": "Dokumente",
       "pages": "Seiten",

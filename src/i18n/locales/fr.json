@@ -5125,6 +5125,7 @@
     "noContentLinks": "Ce crawl a été enregistré sans les liens du contenu principal ; les verdicts sur les liens (pages sans lien depuis le contenu, hubs, pages du thème qui ne se lient pas entre elles) ne sont donc pas affichés. Relancez le crawl.",
     "truncated": "Analyse limitée à 500 pages ou à la limite de paires ; certains résultats peuvent manquer.",
     "empty": "Aucun verdict dans ce groupe.",
+    "showRemaining": "Afficher les verdicts restants ({{count}})",
     "stats": {
       "documents": "Documents",
       "pages": "Pages",

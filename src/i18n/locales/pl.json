@@ -5125,6 +5125,7 @@
     "noContentLinks": "Ten crawl zapisano bez linków z głównej treści, więc werdykty o linkach (strony bez linku z treści, huby, strony tematu, które nie linkują do siebie) nie są pokazywane. Uruchom crawl ponownie.",
     "truncated": "Analiza ograniczona do 500 stron albo limitu par; część wyników może brakować.",
     "empty": "Brak werdyktów w tej grupie.",
+    "showRemaining": "Pokaż pozostałe werdykty ({{count}})",
     "stats": {
       "documents": "Dokumenty",
       "pages": "Strony",
