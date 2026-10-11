@@ -1,5 +1,5 @@
 use super::models::{claude_models, gemini_models, openai_models};
-use super::transport::{connection_succeeded, gemini_url};
+use super::transport::{connection_succeeded, gemini_url, provider_status_error};
 use reqwest::StatusCode;
 use serde_json::json;
 
@@ -16,6 +16,18 @@ fn connection_requires_a_success_status_and_valid_json() {
     assert!(connection_succeeded(StatusCode::OK, true));
     assert!(!connection_succeeded(StatusCode::OK, false));
     assert!(!connection_succeeded(StatusCode::UNAUTHORIZED, true));
+}
+
+#[test]
+fn provider_failures_are_status_only() {
+    assert_eq!(
+        provider_status_error(StatusCode::UNAUTHORIZED),
+        "AI provider request failed with HTTP 401."
+    );
+    assert_eq!(
+        provider_status_error(StatusCode::TOO_MANY_REQUESTS),
+        "AI provider request failed with HTTP 429."
+    );
 }
 
 #[test]

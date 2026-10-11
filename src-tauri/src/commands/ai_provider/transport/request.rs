@@ -13,6 +13,13 @@ pub(crate) fn connection_succeeded(status: StatusCode, body_valid: bool) -> bool
     status.is_success() && body_valid
 }
 
+/// Return a bounded status-only error. Provider error bodies may contain
+/// credentials echoed by an upstream proxy or other sensitive diagnostics, so
+/// generation and model discovery reject before consuming those bodies.
+pub(crate) fn provider_status_error(status: StatusCode) -> String {
+    format!("AI provider request failed with HTTP {}.", status.as_u16())
+}
+
 fn request(
     provider: &str,
     key: &str,
@@ -89,6 +96,9 @@ pub(crate) async fn send(
         .await
         .map_err(|_| "AI provider request failed.".to_string())?;
     let status = response.status();
+    if !status.is_success() {
+        return Err(provider_status_error(status));
+    }
     let body = read_provider_json(response, REPORT_JSON_LIMIT, "AI provider").await?;
     Ok((status, body))
 }
@@ -117,6 +127,12 @@ pub(crate) async fn test_connection(
         .await
         .map_err(|_| "AI provider request failed.".to_string())?;
     let status = response.status();
+    if !status.is_success() {
+        return Ok(super::super::AiConnectionResult {
+            success: false,
+            status: Some(status.as_u16()),
+        });
+    }
     let body_valid = read_provider_json(response, REPORT_JSON_LIMIT, "AI provider")
         .await
         .is_ok();

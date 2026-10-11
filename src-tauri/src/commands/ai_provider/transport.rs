@@ -3,7 +3,7 @@ use url::Url;
 
 mod request;
 #[cfg(test)]
-pub(super) use request::connection_succeeded;
+pub(super) use request::{connection_succeeded, provider_status_error};
 pub(crate) use request::{generate, send, test_connection};
 
 const GEMINI_MODELS: &str = "https://generativelanguage.googleapis.com/v1beta/models";
