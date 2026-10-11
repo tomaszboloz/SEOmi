@@ -10,8 +10,12 @@ export const MAX_DIAGNOSIS_PAGES = 500;
 /** Weighted-Jaccard floor for topic edges. 0.16 left 101 of 211 pages alone; 0.08 formed 55 topics. */
 export const TOPIC_SIMILARITY_FLOOR = 0.08;
 export const TOPIC_MIN_SHARED_TERMS = 2;
-/** Pairs above the floor kept for clustering; more than this marks the report truncated. */
-export const MAX_TOPIC_PAIRS = 5_000;
+/**
+ * Pairs above the floor kept for clustering: every pair of the pages a
+ * diagnosis reads (500 * 499 / 2). A lower bound cut pairs in crawl order, so
+ * the documents crawled last lost their topics; all pairs cluster in ~0.5 s.
+ */
+export const MAX_TOPIC_PAIRS = 124_750;
 
 /** A term on more than this share of content documents describes the site ("linkedin" was on 40%). */
 export const SITE_WIDE_TERM_SHARE = 0.25;
