@@ -2,7 +2,7 @@ import { clusterByAverageLinkage, type PageSimilarity } from '@/services/semanti
 import type { DiagnosisDocument, DiagnosisTopic, SimilarityFn } from './types';
 import { NO_HUB_AREA_ID } from './areas';
 import { topicLabel } from './labels';
-import { topicalTerms, weightedJaccard, type TermStatistics } from './similarity';
+import { sharedInOneLanguage, topicalTerms, weightedJaccard, type TermStatistics } from './similarity';
 import { MAX_TOPIC_PAIRS, TOPIC_MIN_SHARED_TERMS, TOPIC_SIMILARITY_FLOOR } from './thresholds';
 
 export interface TopicPair {
@@ -41,7 +41,7 @@ export const buildTopics = (
     for (let right = left + 1; right < content.length; right += 1) {
       const lexical = weightedJaccard(sets[left], sets[right], stats.idf);
       const score = similarity ? similarity(content[left], content[right]) : lexical.similarity;
-      if (score < TOPIC_SIMILARITY_FLOOR || (!similarity && lexical.shared.length < TOPIC_MIN_SHARED_TERMS)) continue;
+      if (score < TOPIC_SIMILARITY_FLOOR || (!similarity && sharedInOneLanguage(lexical.shared).length < TOPIC_MIN_SHARED_TERMS)) continue;
       candidatePairs += 1;
       if (pairs.length >= MAX_TOPIC_PAIRS) continue;
       pairs.push({ left: content[left].id, right: content[right].id, similarity: score, shared: lexical.shared });

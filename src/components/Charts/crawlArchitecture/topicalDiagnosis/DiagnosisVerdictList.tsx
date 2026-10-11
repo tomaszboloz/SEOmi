@@ -4,7 +4,7 @@ import type { DiagnosisVerdict, VerdictSeverity } from '@/services/topicalDiagno
 import { SEVERITY_CLASSES, shortPath, verdictText } from './verdictText';
 
 const SEVERITIES: VerdictSeverity[] = ['fix', 'weak', 'info', 'good'];
-/** Cards rendered at once; the filter buttons still show the full counts. */
+/** Cards rendered before the user asks for the rest; the filter buttons always show the full counts. */
 const MAX_RENDERED = 120;
 
 interface Props {
@@ -17,7 +17,9 @@ export const DiagnosisVerdictList = ({ verdicts, onOpenPage }: Props) => {
   const translate = (key: string, values?: Record<string, unknown>) => t(key, values as Record<string, unknown>) as string;
   const [filter, setFilter] = useState<VerdictSeverity | 'all'>('all');
   const counts = Object.fromEntries(SEVERITIES.map((severity) => [severity, verdicts.filter((verdict) => verdict.severity === severity).length])) as Record<VerdictSeverity, number>;
-  const visible = (filter === 'all' ? verdicts : verdicts.filter((verdict) => verdict.severity === filter)).slice(0, MAX_RENDERED);
+  const [showAll, setShowAll] = useState(false);
+  const matching = filter === 'all' ? verdicts : verdicts.filter((verdict) => verdict.severity === filter);
+  const visible = showAll ? matching : matching.slice(0, MAX_RENDERED);
 
   return (
     <section aria-label={t('topicalDiagnosis.filter.all', { count: verdicts.length })} className="space-y-3">
@@ -63,6 +65,11 @@ export const DiagnosisVerdictList = ({ verdicts, onOpenPage }: Props) => {
           );
         })}
       </ul>
+      {matching.length > visible.length && (
+        <button type="button" onClick={() => setShowAll(true)} className="rounded-md border border-slate-700 px-2 py-1 text-[11px] text-slate-300 hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-400">
+          {t('topicalDiagnosis.showRemaining', { count: matching.length - visible.length })}
+        </button>
+      )}
     </section>
   );
 };

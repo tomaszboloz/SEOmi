@@ -28,9 +28,13 @@ export const buildTopicalDiagnosis = (
   const stats = buildTermStatistics(documents, brandKeysFor(startUrl, documents));
   const { topics, topicByDocument, pairs, singletons, truncated } = buildTopics(documents, areaByDocument, stats, options.similarity);
   const languages = [...new Set(documents.flatMap((document) => document.languages))].sort();
+  // Crawls saved before main-content links were captured have no `semantic_links` on any page.
+  const contentLinks = documents.some((document) => document.pages.some((page) => Array.isArray(page.semantic_links)));
   const verdicts = buildVerdicts({
     documents, byId: new Map(documents.map((document) => [document.id, document])), links, allLinks, areas, areaByDocument,
-    topics, topicByDocument, pairs, stats, startUrl, languages,
+    topics, topicByDocument, pairs, stats, startUrl, languages, contentLinks,
+    incompleteLinkEvidence: pages.length > MAX_DIAGNOSIS_PAGES
+      || documents.some((document) => document.pages.some((page) => page.body_truncated || !Array.isArray(page.semantic_links))),
   });
   return {
     documents,
@@ -49,6 +53,7 @@ export const buildTopicalDiagnosis = (
       mergedPairs,
     },
     noTerms: documents.every((document) => document.terms.size === 0),
+    noContentLinks: documents.length > 0 && !contentLinks,
     truncated: pages.length > MAX_DIAGNOSIS_PAGES || truncated,
   };
 };

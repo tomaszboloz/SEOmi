@@ -6,26 +6,13 @@ import {
 } from '@/services/semanticText';
 import type { DiagnosisDocument } from './types';
 import { MAX_DIAGNOSIS_PAGES } from './thresholds';
+import { listingNeighbour, paginationParent } from './pagination';
+
+export { PAGINATION_PATH, paginationParent } from './pagination';
 
 /** Everything after a title separator is the site name, not the subject. */
 export const TITLE_SEPARATOR = /\s[|—–-]\s.*$|\|.*$/u;
 const LANGUAGE_SEGMENT = /^[a-z]{2}(-[a-z]{2})?$/i;
-/** `/blog/page/3/`, `/blog/strona/3`: pagination without `rel=prev` still belongs to its listing (`/p/123` is a product, not a page). */
-export const PAGINATION_PATH = /^(.*?)\/(page|strona|seite|pagina)\/\d+\/?$/i;
-
-export const paginationParent = (url: string): string | null => {
-  try {
-    const parsed = new URL(url);
-    const match = PAGINATION_PATH.exec(parsed.pathname);
-    if (!match) return null;
-    parsed.pathname = `${match[1]}/`;
-    parsed.search = '';
-    return parsed.toString();
-  } catch {
-    return null;
-  }
-};
-
 const isHtml = (page: CrawledPageSummary): boolean =>
   !page.content_type || page.content_type.toLowerCase().startsWith('text/html');
 
@@ -52,9 +39,21 @@ export const titleTokens = (title: string | null | undefined, language: string |
   });
 };
 
-/** Union-find over page indexes: reciprocal hreflang pairs and pagination chains become one document. */
+const isRedirected = (page: CrawledPageSummary): boolean =>
+  Boolean(page.final_url) && normalizeGraphUrl(page.final_url) !== normalizeGraphUrl(page.url);
+
+/**
+ * Union-find over page indexes: reciprocal hreflang pairs, pagination chains
+ * and the aliases of one address (a redirect source crawled next to its
+ * target, the same URL with and without a trailing slash) become one document.
+ */
 const groupPages = (pages: CrawledPageSummary[]) => {
   const owners = pageOwnersByUrl(pages);
+  const firstRequest = new Map<string, number>();
+  pages.forEach((page, index) => {
+    const key = normalizeGraphUrl(page.url);
+    if (!firstRequest.has(key)) firstRequest.set(key, index);
+  });
   const indexOf = (url: string | null | undefined, base: string): number | null => {
     const id = owners.get(normalizeGraphUrl(url, base));
     return id ? Number(id.slice(5)) : null;
@@ -78,8 +77,13 @@ const groupPages = (pages: CrawledPageSummary[]) => {
       union(index, other);
       mergedPairs += 1;
     });
-    const previous = indexOf(page.pagination_prev ?? paginationParent(page.url), page.url);
+    const previous = indexOf(listingNeighbour(page, page.pagination_prev) ?? paginationParent(page.url), page.url);
     if (previous !== null && previous !== index) union(index, previous);
+    // The response of a redirected request is the content of its target, not a second document.
+    [page.url, page.final_url].forEach((address) => {
+      const alias = firstRequest.get(normalizeGraphUrl(address));
+      if (alias !== undefined && alias !== index) union(index, alias);
+    });
   });
   return { find, mergedPairs };
 };
@@ -100,9 +104,10 @@ const hasLanguagePrefix = (url: string): boolean => {
 };
 
 const buildDocument = (group: number[], pages: CrawledPageSummary[], language: string | null | undefined): DiagnosisDocument => {
-  // The first page of a pagination chain leads; otherwise crawl order.
-  const isPaginated = (index: number) => Boolean(pages[index].pagination_prev) || PAGINATION_PATH.test(pages[index].url);
-  const members = [...group].sort((a, b) => Number(isPaginated(a)) - Number(isPaginated(b)) || a - b);
+  // The first page of a pagination chain leads and a redirect source never does; otherwise crawl order.
+  const isPaginated = (index: number) => listingNeighbour(pages[index], pages[index].pagination_prev) !== null || paginationParent(pages[index].url) !== null;
+  const members = [...group].sort((a, b) => Number(isPaginated(a)) - Number(isPaginated(b))
+    || Number(isRedirected(pages[a])) - Number(isRedirected(pages[b])) || a - b);
   const memberPages = members.map((index) => pages[index]);
   const primaryIndex = (language ? members.find((index) => semanticPageLanguage(pages[index]) === language) : undefined)
     ?? members.find((index) => !hasLanguagePrefix(pages[index].url)) ?? members[0];
