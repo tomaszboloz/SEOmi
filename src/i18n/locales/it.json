@@ -5122,6 +5122,7 @@
     "title": "Diagnosi tematica",
     "description": "Documenti (versioni linguistiche contate una volta), aree intorno alle pagine hub, temi dal contenuto e verdetti con un’azione concreta. Calcolata dal crawl salvato, senza modelli linguistici.",
     "noTerms": "Questo crawl non ha termini di contenuto, quindi la diagnosi non ha nulla su cui lavorare. Esegui di nuovo il crawl.",
+    "noContentLinks": "Questo crawl è stato salvato senza i link del contenuto principale, quindi i verdetti sui link (pagine senza link dal contenuto, hub, pagine del tema che non si collegano tra loro) non vengono mostrati. Esegui di nuovo il crawl.",
     "truncated": "Analisi limitata a 500 pagine o al limite di coppie; alcuni risultati potrebbero mancare.",
     "empty": "Nessun verdetto in questo gruppo.",
     "stats": {

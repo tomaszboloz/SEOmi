@@ -38,13 +38,14 @@ const sameLanguages = (left: DiagnosisDocument, right: DiagnosisDocument): boole
  * missing language version on a multilingual site.
  */
 export const documentVerdicts = (context: VerdictContext): DiagnosisVerdict[] => {
-  const { links, topicByDocument, byId, languages, startUrl } = context;
+  const { links, topicByDocument, byId, languages, startUrl, contentLinks } = context;
   const verdicts: DiagnosisVerdict[] = [];
   const content = contentDocuments(context);
   const start = normalizeGraphUrl(startUrl);
   content.forEach((document) => {
     const sources = [...(links.incoming.get(document.id) ?? [])];
-    if (!sources.length && !document.urls.has(start)) {
+    // Without captured content links nothing can be said about who links to a document.
+    if (contentLinks && !sources.length && !document.urls.has(start)) {
       verdicts.push(verdict('document-orphan', 'fix', 'document', document.id, [document]));
     } else if (sources.length > 0 && !topicByDocument.has(document.id) && sources.every((source) => byId.get(source)?.role === 'hub')) {
       const nearest = nearestDocument(document, content, context);

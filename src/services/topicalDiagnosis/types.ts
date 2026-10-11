@@ -84,6 +84,8 @@ export interface TopicalDiagnosisReport {
   verdicts: DiagnosisVerdict[];
   stats: DiagnosisStats;
   noTerms: boolean;
+  /** No page carries main-content links (a crawl saved before they were captured): link verdicts are withheld. */
+  noContentLinks: boolean;
   truncated: boolean;
 }
 

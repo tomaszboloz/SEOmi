@@ -15,14 +15,14 @@ const sameLanguages = (left: DiagnosisDocument, right: DiagnosisDocument): boole
  * very similar documents in one language may compete for the same query.
  */
 export const topicVerdicts = (context: VerdictContext): DiagnosisVerdict[] => {
-  const { topics, byId, links, areaByDocument, pairs } = context;
+  const { topics, byId, links, areaByDocument, pairs, contentLinks } = context;
   const verdicts: DiagnosisVerdict[] = [];
   topics.forEach((topic) => {
     const members = topic.documentIds.map((id) => byId.get(id)!);
     const withoutHub = members.filter((member) => (areaByDocument.get(member.id) ?? NO_HUB_AREA_ID) === NO_HUB_AREA_ID).length;
     // A member that links to every other member already acts as the topic's pillar page.
     const hasPillar = members.some((candidate) => members.every((other) => other === candidate || links.linksTo(candidate.id, other.id)));
-    if ((topic.areaIds.length >= 2 || withoutHub > 0) && !hasPillar) {
+    if (contentLinks && (topic.areaIds.length >= 2 || withoutHub > 0) && !hasPillar) {
       verdicts.push(verdict('topic-no-hub', 'weak', 'topic', topic.id, members, [
         { key: 'areas', params: { count: topic.areaIds.filter((area) => area !== NO_HUB_AREA_ID).length } },
         { key: 'withoutHub', params: { count: withoutHub } },
@@ -32,7 +32,7 @@ export const topicVerdicts = (context: VerdictContext): DiagnosisVerdict[] => {
     members.forEach((left, index) => members.slice(index + 1).forEach((right) => {
       if (!links.linksTo(left.id, right.id) && !links.linksTo(right.id, left.id)) unlinked.push([left, right]);
     }));
-    if (unlinked.length) {
+    if (contentLinks && unlinked.length) {
       verdicts.push(verdict('topic-members-unlinked', 'weak', 'topic', topic.id, members,
         [{ key: 'pairs', params: { count: unlinked.length } }],
         unlinked.slice(0, MAX_LISTED_PAIRS).flatMap(([left, right]) => [urlOf(left), urlOf(right)])));
