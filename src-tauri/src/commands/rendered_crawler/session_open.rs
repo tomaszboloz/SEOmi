@@ -54,7 +54,7 @@ impl<R: Runtime> RenderedCrawlerSession<R> {
         app.run_on_main_thread(move || {
             let mut builder = WebviewWindowBuilder::new(
                 &build_app,
-                label,
+                label.clone(),
                 tauri::WebviewUrl::External(start_url_for_window),
             )
             .title("SEOmi renderer")
@@ -101,7 +101,9 @@ impl<R: Runtime> RenderedCrawlerSession<R> {
                     proxy_url.host_str().unwrap_or("127.0.0.1"),
                     proxy_url.port().unwrap_or_default()
                 );
-                builder = builder.additional_browser_args(&args);
+                builder = builder
+                    .additional_browser_args(&args)
+                    .data_directory(super::session::windows_profile_dir(&label));
             }
 
             #[cfg(target_os = "macos")]

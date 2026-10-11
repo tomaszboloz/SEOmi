@@ -37,6 +37,15 @@ pub(crate) fn notify_window_destroyed(
     }
 }
 
+/// Every renderer gets its own WebView2 user data folder. Sessions differ in
+/// their `--proxy-server` port, and WebView2 refuses a second environment with
+/// different browser arguments on a folder still held by the previous browser
+/// process, which closed the capture channel of the next session.
+#[cfg(target_os = "windows")]
+pub(crate) fn windows_profile_dir(label: &str) -> std::path::PathBuf {
+    std::env::temp_dir().join("seomi-renderer").join(label)
+}
+
 impl<R: Runtime> RenderedCrawlerSession<R> {
     pub fn close(self) {
         drop(self);
@@ -85,6 +94,10 @@ impl<R: Runtime> Drop for RenderedCrawlerSession<R> {
     /// Closing on drop keeps hidden renderer windows from outliving a crawl
     /// that returned early, was cancelled or abandoned a failed session.
     fn drop(&mut self) {
+        // Best effort: WebView2 may still hold files, in which case the
+        // temporary profile is left for the OS temp cleanup.
+        #[cfg(target_os = "windows")]
+        let _ = std::fs::remove_dir_all(windows_profile_dir(self.window.label()));
         // An explicit close_and_wait already destroyed the native window.
         if self.proxy.is_none() {
             return;
