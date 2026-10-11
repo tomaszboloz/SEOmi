@@ -6,26 +6,13 @@ import {
 } from '@/services/semanticText';
 import type { DiagnosisDocument } from './types';
 import { MAX_DIAGNOSIS_PAGES } from './thresholds';
+import { listingNeighbour, paginationParent } from './pagination';
+
+export { PAGINATION_PATH, paginationParent } from './pagination';
 
 /** Everything after a title separator is the site name, not the subject. */
 export const TITLE_SEPARATOR = /\s[|—–-]\s.*$|\|.*$/u;
 const LANGUAGE_SEGMENT = /^[a-z]{2}(-[a-z]{2})?$/i;
-/** `/blog/page/3/`, `/blog/strona/3`: pagination without `rel=prev` still belongs to its listing (`/p/123` is a product, not a page). */
-export const PAGINATION_PATH = /^(.*?)\/(page|strona|seite|pagina)\/\d+\/?$/i;
-
-export const paginationParent = (url: string): string | null => {
-  try {
-    const parsed = new URL(url);
-    const match = PAGINATION_PATH.exec(parsed.pathname);
-    if (!match) return null;
-    parsed.pathname = `${match[1]}/`;
-    parsed.search = '';
-    return parsed.toString();
-  } catch {
-    return null;
-  }
-};
-
 const isHtml = (page: CrawledPageSummary): boolean =>
   !page.content_type || page.content_type.toLowerCase().startsWith('text/html');
 
@@ -78,7 +65,7 @@ const groupPages = (pages: CrawledPageSummary[]) => {
       union(index, other);
       mergedPairs += 1;
     });
-    const previous = indexOf(page.pagination_prev ?? paginationParent(page.url), page.url);
+    const previous = indexOf(listingNeighbour(page, page.pagination_prev) ?? paginationParent(page.url), page.url);
     if (previous !== null && previous !== index) union(index, previous);
   });
   return { find, mergedPairs };
@@ -101,7 +88,7 @@ const hasLanguagePrefix = (url: string): boolean => {
 
 const buildDocument = (group: number[], pages: CrawledPageSummary[], language: string | null | undefined): DiagnosisDocument => {
   // The first page of a pagination chain leads; otherwise crawl order.
-  const isPaginated = (index: number) => Boolean(pages[index].pagination_prev) || PAGINATION_PATH.test(pages[index].url);
+  const isPaginated = (index: number) => listingNeighbour(pages[index], pages[index].pagination_prev) !== null || paginationParent(pages[index].url) !== null;
   const members = [...group].sort((a, b) => Number(isPaginated(a)) - Number(isPaginated(b)) || a - b);
   const memberPages = members.map((index) => pages[index]);
   const primaryIndex = (language ? members.find((index) => semanticPageLanguage(pages[index]) === language) : undefined)

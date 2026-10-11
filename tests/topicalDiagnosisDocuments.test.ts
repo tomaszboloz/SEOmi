@@ -39,8 +39,8 @@ describe('buildDiagnosisDocuments', () => {
     const root = page('https://ex.test/blog/', { pagination_next: 'https://ex.test/blog/page/2/' });
     const second = page('https://ex.test/blog/page/2/', { pagination_prev: 'https://ex.test/blog/', pagination_next: 'https://ex.test/blog/page/3/' });
     const third = page('https://ex.test/blog/page/3/', { pagination_prev: 'https://ex.test/blog/page/2/' });
-    const loopA = page('https://ex.test/x/', { pagination_prev: 'https://ex.test/y/' });
-    const loopB = page('https://ex.test/y/', { pagination_prev: 'https://ex.test/x/' });
+    const loopA = page('https://ex.test/x/?page=2', { pagination_prev: 'https://ex.test/x/?page=3' });
+    const loopB = page('https://ex.test/x/?page=3', { pagination_prev: 'https://ex.test/x/?page=2' });
     const { documents } = buildDiagnosisDocuments([third, second, root, loopA, loopB], 'https://ex.test/');
     const blog = documents.find((document) => document.primaryPage.url === 'https://ex.test/blog/')!;
     expect(blog.pages.map((candidate) => candidate.url)).toEqual([
