@@ -1,7 +1,7 @@
 import type { CrawledPageSummary } from '@/types';
 import { normalizeGraphUrl } from '@/services/semanticGraph/urls';
 import type { DiagnosisDocument } from './types';
-import { PAGINATION_PATH } from './documents';
+import { isPaginationPage } from './pagination';
 import { HUB_MAX_WORDS_PER_LINK, HUB_MIN_LINKED_DOCUMENTS, UTILITY_PATH_PATTERN } from './thresholds';
 
 const pathname = (url: string): string => {
@@ -32,7 +32,7 @@ export const assignRoles = (documents: DiagnosisDocument[]): DiagnosisDocument[]
     return targets.size >= HUB_MIN_LINKED_DOCUMENTS && page.word_count / targets.size < HUB_MAX_WORDS_PER_LINK;
   };
   return documents.map((document) => {
-    const paginated = document.pages.some((page) => Boolean(page.pagination_next || page.pagination_prev) || PAGINATION_PATH.test(pathname(page.url)));
+    const paginated = document.pages.some(isPaginationPage);
     const listing = document.pages.some((page) => isListingPage(page, document));
     const role = paginated || listing ? 'hub' : UTILITY_PATH_PATTERN.test(pathname(document.primaryPage.url)) ? 'utility' : 'content';
     return { ...document, role };

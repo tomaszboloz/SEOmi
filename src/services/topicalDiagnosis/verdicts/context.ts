@@ -8,6 +8,8 @@ export interface VerdictContext {
   byId: Map<string, DiagnosisDocument>;
   /** Main-content links. */
   links: DocumentLinkIndex;
+  /** False when no page of the run carries main-content links; link verdicts then have no evidence. */
+  contentLinks: boolean;
   /** Every captured link, navigation and breadcrumbs included. */
   allLinks: DocumentLinkIndex;
   areas: DiagnosisArea[];

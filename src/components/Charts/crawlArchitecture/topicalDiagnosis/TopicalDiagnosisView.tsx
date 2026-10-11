@@ -22,6 +22,7 @@ export const TopicalDiagnosisView = ({ report, onShowInGraph, onOpenPage }: Prop
       </div>
       <DiagnosisStats stats={report.stats} />
       {report.noTerms && <p role="status" className="rounded-lg border border-amber-500/25 bg-amber-500/5 px-3 py-2 text-xs text-amber-100">{t('topicalDiagnosis.noTerms')}</p>}
+      {report.noContentLinks && <p role="status" className="rounded-lg border border-amber-500/25 bg-amber-500/5 px-3 py-2 text-xs text-amber-100">{t('topicalDiagnosis.noContentLinks')}</p>}
       {report.truncated && <p className="rounded-lg border border-sky-500/25 bg-sky-500/5 px-3 py-2 text-xs text-sky-100">{t('topicalDiagnosis.truncated')}</p>}
       <div className="grid gap-4 xl:grid-cols-[minmax(0,3fr)_minmax(280px,2fr)]">
         <DiagnosisVerdictList verdicts={report.verdicts} onOpenPage={onOpenPage} />

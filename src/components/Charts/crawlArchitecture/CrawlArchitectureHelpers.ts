@@ -16,7 +16,8 @@ export const readPreferences = (key: string | null): SemanticMapPreferences => {
     ).slice(0, 160));
     return {
       query: typeof parsed.query === 'string' ? parsed.query.slice(0, 200) : '',
-      clusterFilter: typeof parsed.clusterFilter === 'string' ? parsed.clusterFilter : 'all',
+      // The topic list replaced the cluster list: a cluster filter saved before that could never be lifted again.
+      clusterFilter: parsed.diagnosisFilter !== undefined && typeof parsed.clusterFilter === 'string' ? parsed.clusterFilter : 'all',
       orphansOnly: parsed.orphansOnly === true,
       linkMode: parsed.linkMode === 'all' ? 'all' : 'content',
       selectedUrl: typeof parsed.selectedUrl === 'string' ? parsed.selectedUrl : null,

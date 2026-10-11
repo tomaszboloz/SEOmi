@@ -5122,8 +5122,10 @@
     "title": "Topical diagnosis",
     "description": "Documents (language versions counted once), areas around hub pages, topics from the content and verdicts with a concrete action. Computed from the saved crawl, without language models.",
     "noTerms": "This crawl has no content terms, so the diagnosis has nothing to work on. Run the crawl again.",
+    "noContentLinks": "This crawl was saved without main-content links, so verdicts about links (pages without a content link, hubs, topic pages that do not link to each other) are not shown. Run the crawl again.",
     "truncated": "Analysis bounded to 500 pages or the pair limit; some results may be missing.",
     "empty": "No verdicts in this group.",
+    "showRemaining": "Show the remaining verdicts ({{count}})",
     "stats": {
       "documents": "Documents",
       "pages": "Pages",

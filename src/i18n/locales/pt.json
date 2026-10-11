@@ -5122,8 +5122,10 @@
     "title": "Diagnóstico temático",
     "description": "Documentos (versões de idioma contadas uma vez), áreas em torno de páginas hub, temas do conteúdo e veredictos com uma ação concreta. Calculado a partir do rastreamento salvo, sem modelos de linguagem.",
     "noTerms": "Este rastreamento não tem termos de conteúdo, então o diagnóstico não tem com o que trabalhar. Execute o rastreamento novamente.",
+    "noContentLinks": "Este rastreamento foi salvo sem os links do conteúdo principal, então os veredictos sobre links (páginas sem link a partir do conteúdo, hubs, páginas do tema que não se ligam entre si) não são mostrados. Execute o rastreamento novamente.",
     "truncated": "Análise limitada a 500 páginas ou ao limite de pares; alguns resultados podem faltar.",
     "empty": "Nenhum veredicto neste grupo.",
+    "showRemaining": "Mostrar os veredictos restantes ({{count}})",
     "stats": {
       "documents": "Documentos",
       "pages": "Páginas",

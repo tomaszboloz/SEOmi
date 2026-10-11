@@ -5122,8 +5122,10 @@
     "title": "Diagnoza tematyczna",
     "description": "Dokumenty (wersje językowe liczone raz), obszary wokół stron-hubów, tematy z treści i werdykty z konkretną czynnością. Liczone z zapisanego crawla, bez modeli językowych.",
     "noTerms": "Ten crawl nie ma terminów treści, więc diagnoza nie ma na czym pracować. Uruchom crawl ponownie.",
+    "noContentLinks": "Ten crawl zapisano bez linków z głównej treści, więc werdykty o linkach (strony bez linku z treści, huby, strony tematu, które nie linkują do siebie) nie są pokazywane. Uruchom crawl ponownie.",
     "truncated": "Analiza ograniczona do 500 stron albo limitu par; część wyników może brakować.",
     "empty": "Brak werdyktów w tej grupie.",
+    "showRemaining": "Pokaż pozostałe werdykty ({{count}})",
     "stats": {
       "documents": "Dokumenty",
       "pages": "Strony",
