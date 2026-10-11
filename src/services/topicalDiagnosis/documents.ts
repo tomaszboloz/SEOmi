@@ -39,9 +39,21 @@ export const titleTokens = (title: string | null | undefined, language: string |
   });
 };
 
-/** Union-find over page indexes: reciprocal hreflang pairs and pagination chains become one document. */
+const isRedirected = (page: CrawledPageSummary): boolean =>
+  Boolean(page.final_url) && normalizeGraphUrl(page.final_url) !== normalizeGraphUrl(page.url);
+
+/**
+ * Union-find over page indexes: reciprocal hreflang pairs, pagination chains
+ * and the aliases of one address (a redirect source crawled next to its
+ * target, the same URL with and without a trailing slash) become one document.
+ */
 const groupPages = (pages: CrawledPageSummary[]) => {
   const owners = pageOwnersByUrl(pages);
+  const firstRequest = new Map<string, number>();
+  pages.forEach((page, index) => {
+    const key = normalizeGraphUrl(page.url);
+    if (!firstRequest.has(key)) firstRequest.set(key, index);
+  });
   const indexOf = (url: string | null | undefined, base: string): number | null => {
     const id = owners.get(normalizeGraphUrl(url, base));
     return id ? Number(id.slice(5)) : null;
@@ -67,6 +79,11 @@ const groupPages = (pages: CrawledPageSummary[]) => {
     });
     const previous = indexOf(listingNeighbour(page, page.pagination_prev) ?? paginationParent(page.url), page.url);
     if (previous !== null && previous !== index) union(index, previous);
+    // The response of a redirected request is the content of its target, not a second document.
+    [page.url, page.final_url].forEach((address) => {
+      const alias = firstRequest.get(normalizeGraphUrl(address));
+      if (alias !== undefined && alias !== index) union(index, alias);
+    });
   });
   return { find, mergedPairs };
 };
@@ -87,9 +104,10 @@ const hasLanguagePrefix = (url: string): boolean => {
 };
 
 const buildDocument = (group: number[], pages: CrawledPageSummary[], language: string | null | undefined): DiagnosisDocument => {
-  // The first page of a pagination chain leads; otherwise crawl order.
+  // The first page of a pagination chain leads and a redirect source never does; otherwise crawl order.
   const isPaginated = (index: number) => listingNeighbour(pages[index], pages[index].pagination_prev) !== null || paginationParent(pages[index].url) !== null;
-  const members = [...group].sort((a, b) => Number(isPaginated(a)) - Number(isPaginated(b)) || a - b);
+  const members = [...group].sort((a, b) => Number(isPaginated(a)) - Number(isPaginated(b))
+    || Number(isRedirected(pages[a])) - Number(isRedirected(pages[b])) || a - b);
   const memberPages = members.map((index) => pages[index]);
   const primaryIndex = (language ? members.find((index) => semanticPageLanguage(pages[index]) === language) : undefined)
     ?? members.find((index) => !hasLanguagePrefix(pages[index].url)) ?? members[0];
