@@ -1675,7 +1675,7 @@
     "clusterLegend": "Semantic cluster legend",
     "moreClusters": "+{{count}} clusters",
     "selectedPage": "Selected page",
-    "topicLabel": "Topic",
+    "topicLabel": "الموضوع",
     "incomingLinks": "{{count}} incoming {{label}}",
     "internalLinks": "internal links",
     "contentLinks": "content links",
@@ -1750,7 +1750,8 @@
       }
     },
     "diagnosisFilter": "نطاق التشخيص: {{label}}",
-    "clearDiagnosisFilter": "عرض الرسم كاملًا"
+    "clearDiagnosisFilter": "عرض الرسم كاملًا",
+    "allTopics": "كل المواضيع ({{count}})"
   },
   "crawlDiff": {
     "fields": {

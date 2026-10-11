@@ -20,7 +20,8 @@ export const readPreferences = (key: string | null): SemanticMapPreferences => {
       orphansOnly: parsed.orphansOnly === true,
       linkMode: parsed.linkMode === 'all' ? 'all' : 'content',
       selectedUrl: typeof parsed.selectedUrl === 'string' ? parsed.selectedUrl : null,
-      activeView: MAP_VIEWS.includes(parsed.activeView as MapView) ? parsed.activeView as MapView : 'diagnosis',
+      // Preferences saved before the diagnosis view existed have no `diagnosisFilter`; they open on the diagnosis once.
+      activeView: parsed.diagnosisFilter !== undefined && MAP_VIEWS.includes(parsed.activeView as MapView) ? parsed.activeView as MapView : 'diagnosis',
       diagnosisFilter: diagnosisFilterSchema.parse(parsed.diagnosisFilter ?? null),
       positions,
       transform: z.object({ x: z.number().finite(), y: z.number().finite(), k: z.number().finite().min(0.2).max(4) }).catch({ x: 0, y: 0, k: 1 }).parse(parsed.transform),

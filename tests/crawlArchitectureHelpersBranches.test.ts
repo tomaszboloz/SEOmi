@@ -22,7 +22,7 @@ describe('readPreferences', () => {
   it('restores valid preferences', () => {
     store({
       query: 'seo', clusterFilter: 'c1', orphansOnly: true, linkMode: 'all',
-      selectedUrl: 'https://a.test/', activeView: 'plan',
+      selectedUrl: 'https://a.test/', activeView: 'plan', diagnosisFilter: null,
       positions: { 'https://a.test/': { x: 1, y: 2 } }, transform: { x: 5, y: 6, k: 2 },
     });
     expect(readPreferences(KEY)).toEqual({
@@ -30,7 +30,7 @@ describe('readPreferences', () => {
       selectedUrl: 'https://a.test/', activeView: 'plan', diagnosisFilter: null,
       positions: { 'https://a.test/': { x: 1, y: 2 } }, transform: { x: 5, y: 6, k: 2 },
     });
-    store({ activeView: 'directory' });
+    store({ activeView: 'directory', diagnosisFilter: null });
     expect(readPreferences(KEY).activeView).toBe('directory');
   });
 

@@ -43,6 +43,22 @@ describe('graph filtered and coloured by the diagnosis', () => {
     expect(screen.getByText('Zakres z diagnozy: Blog')).toBeTruthy();
   });
 
+  it('replaces the cluster dropdown with the diagnosis topics', () => {
+    let latest: SemanticMapPreferences | null = null;
+    const Harness = () => {
+      const [preferences, setPreferences] = useState({ query: '', clusterFilter: 'all', orphansOnly: false, linkMode: 'content', diagnosisFilter: null } as SemanticMapPreferences);
+      latest = preferences;
+      return <CrawlArchitectureControls preferences={preferences} setPreferences={setPreferences} graph={graph} scaleView={vi.fn()} resetView={vi.fn()} diagnosis={report} />;
+    };
+    render(<Harness />);
+    const select = screen.getByLabelText('Temat') as HTMLSelectElement;
+    expect([...select.options].map((option) => option.text)).toEqual([`Wszystkie tematy (${report.topics.length})`, `${report.topics[0].label} · 2`]);
+    fireEvent.change(select, { target: { value: report.topics[0].id } });
+    expect(latest!.diagnosisFilter).toEqual({ kind: 'topic', id: report.topics[0].id });
+    fireEvent.change(select, { target: { value: 'all' } });
+    expect(latest!.diagnosisFilter).toBeNull();
+  });
+
   it('still shows the chip for a topic without a label', () => {
     const unlabelled = { ...report, topics: [{ ...report.topics[0], label: '', labelSource: 'none' as const }] };
     const preferences = { query: '', clusterFilter: 'all', orphansOnly: false, linkMode: 'content', diagnosisFilter: { kind: 'topic', id: report.topics[0].id } } as SemanticMapPreferences;

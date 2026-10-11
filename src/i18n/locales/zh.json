@@ -1675,7 +1675,7 @@
     "clusterLegend": "Semantic cluster legend",
     "moreClusters": "+{{count}} clusters",
     "selectedPage": "Selected page",
-    "topicLabel": "Topic",
+    "topicLabel": "主题",
     "incomingLinks": "{{count}} incoming {{label}}",
     "internalLinks": "internal links",
     "contentLinks": "content links",
@@ -1750,7 +1750,8 @@
       }
     },
     "diagnosisFilter": "诊断范围：{{label}}",
-    "clearDiagnosisFilter": "显示整个图"
+    "clearDiagnosisFilter": "显示整个图",
+    "allTopics": "全部主题（{{count}}）"
   },
   "crawlDiff": {
     "fields": {

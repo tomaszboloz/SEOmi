@@ -1675,7 +1675,7 @@
     "clusterLegend": "Semantic cluster legend",
     "moreClusters": "+{{count}} clusters",
     "selectedPage": "Selected page",
-    "topicLabel": "Topic",
+    "topicLabel": "Тема",
     "incomingLinks": "{{count}} incoming {{label}}",
     "internalLinks": "internal links",
     "contentLinks": "content links",
@@ -1750,7 +1750,8 @@
       }
     },
     "diagnosisFilter": "Область диагностики: {{label}}",
-    "clearDiagnosisFilter": "Показать весь граф"
+    "clearDiagnosisFilter": "Показать весь граф",
+    "allTopics": "Все темы ({{count}})"
   },
   "crawlDiff": {
     "fields": {

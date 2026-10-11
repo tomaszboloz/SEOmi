@@ -1675,7 +1675,7 @@
     "clusterLegend": "Semantic cluster legend",
     "moreClusters": "+{{count}} clusters",
     "selectedPage": "Selected page",
-    "topicLabel": "Topic",
+    "topicLabel": "Thème",
     "incomingLinks": "{{count}} incoming {{label}}",
     "internalLinks": "internal links",
     "contentLinks": "content links",
@@ -1750,7 +1750,8 @@
       }
     },
     "diagnosisFilter": "Périmètre du diagnostic : {{label}}",
-    "clearDiagnosisFilter": "Afficher tout le graphe"
+    "clearDiagnosisFilter": "Afficher tout le graphe",
+    "allTopics": "Tous les thèmes ({{count}})"
   },
   "crawlDiff": {
     "fields": {

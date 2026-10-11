@@ -17,6 +17,13 @@ describe('diagnosis preferences', () => {
     expect(readPreferences(KEY)).toMatchObject({ activeView: 'graph', diagnosisFilter: { kind: 'topic', id: 'topic-3' } });
   });
 
+  it('opens the diagnosis once for preferences saved before the view existed', () => {
+    localStorage.setItem(KEY, JSON.stringify({ activeView: 'plan' }));
+    expect(readPreferences(KEY).activeView).toBe('diagnosis');
+    localStorage.setItem(KEY, JSON.stringify({ activeView: 'plan', diagnosisFilter: null }));
+    expect(readPreferences(KEY).activeView).toBe('plan');
+  });
+
   it('drops an invalid filter and an unknown view', () => {
     localStorage.setItem(KEY, JSON.stringify({ activeView: 'nonsense', diagnosisFilter: { kind: 'cluster', id: '' } }));
     expect(readPreferences(KEY)).toMatchObject({ activeView: 'diagnosis', diagnosisFilter: null });

@@ -1675,7 +1675,7 @@
     "clusterLegend": "Semantic cluster legend",
     "moreClusters": "+{{count}} clusters",
     "selectedPage": "Selected page",
-    "topicLabel": "Topic",
+    "topicLabel": "토픽",
     "incomingLinks": "{{count}} incoming {{label}}",
     "internalLinks": "internal links",
     "contentLinks": "content links",
@@ -1750,7 +1750,8 @@
       }
     },
     "diagnosisFilter": "진단 범위: {{label}}",
-    "clearDiagnosisFilter": "전체 그래프 보기"
+    "clearDiagnosisFilter": "전체 그래프 보기",
+    "allTopics": "모든 토픽 ({{count}})"
   },
   "crawlDiff": {
     "fields": {

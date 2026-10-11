@@ -33,7 +33,7 @@ describe('crawl architecture pure helpers direct assertions', () => {
       validKey,
       JSON.stringify({
         query: 'test-query',
-        activeView: 'directory',
+        activeView: 'directory', diagnosisFilter: null,
         transform: { x: 10, y: 20, k: 1.5 },
       }),
     );

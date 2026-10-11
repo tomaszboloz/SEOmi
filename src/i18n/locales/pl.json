@@ -1750,7 +1750,8 @@
       }
     },
     "diagnosisFilter": "Zakres z diagnozy: {{label}}",
-    "clearDiagnosisFilter": "Pokaż cały graf"
+    "clearDiagnosisFilter": "Pokaż cały graf",
+    "allTopics": "Wszystkie tematy ({{count}})"
   },
   "crawlDiff": {
     "fields": {
