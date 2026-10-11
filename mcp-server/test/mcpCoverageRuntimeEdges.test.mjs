@@ -56,6 +56,10 @@ test('IP safety rejects malformed values after a family-positive resolver', () =
 
 const loader = `data:text/javascript,${encodeURIComponent(`
   export async function resolve(specifier, context, nextResolve) {
+    if (specifier.endsWith('localApi.js')) {
+      const source = 'export const startLocalApi=async()=>{throw "api-string-error"};';
+      return { url: 'data:text/javascript,' + encodeURIComponent(source), shortCircuit: true };
+    }
     if (!specifier.endsWith('auditWorkflow.js')) return nextResolve(specifier, context);
     const mode = process.env.SEOMI_COVERAGE_LOADER_MODE;
     const source = mode === 'cli-success'
@@ -120,5 +124,16 @@ test('API evaluates its absent-port default before reporting a missing token', (
     try { await import('./mcp-server/dist/api.js?missing-token'); } catch (error) { console.log(error.message); }
     process.exit = exit;
   `);
+  assert.equal(output, 'exit:1');
+});
+
+test('API formats a non-Error startup failure without losing the original message', () => {
+  const output = runChild(`
+    process.env.SEOMI_LOCAL_API_TOKEN = 'mcp-api-string-error-token';
+    const exit = process.exit;
+    process.exit = (code) => { throw new Error('exit:' + code); };
+    try { await import('./mcp-server/dist/api.js?string-error'); } catch (error) { console.log(error.message); }
+    process.exit = exit;
+  `, { SEOMI_COVERAGE_LOADER_MODE: 'api-string' }, ['--loader', loader]);
   assert.equal(output, 'exit:1');
 });

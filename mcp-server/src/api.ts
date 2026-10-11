@@ -11,10 +11,10 @@ if (!token) {
 
 try {
   const api = await startLocalApi({ token, port });
-  process.stdout.write(`${JSON.stringify({ ok: true, url: `http://${api.host}:${api.port}`, health: '/health', audit: '/v1/audit' })}\n`);
   const shutdown = () => { void api.close().finally(() => process.exit(0)); };
   process.once('SIGINT', shutdown);
   process.once('SIGTERM', shutdown);
+  process.stdout.write(`${JSON.stringify({ ok: true, url: `http://${api.host}:${api.port}`, health: '/health', audit: '/v1/audit' })}\n`);
 } catch (error) {
   process.stderr.write(`${error instanceof Error ? error.message : String(error)}\n`);
   process.exit(1);
