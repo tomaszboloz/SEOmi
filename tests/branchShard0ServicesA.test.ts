@@ -83,7 +83,7 @@ describe('branch shard 0 services', () => {
     expect(uniqueSemanticTerms(['  ', '', 'szkolenie'], 'pl')).toEqual(['szkolenie']);
   });
 
-  it('keeps counting but stops recording topic pairs at the pair cap', () => {
+  it('retains every qualifying pair inside the supported document bound', () => {
     const count = 110;
     const pages = Array.from({ length: count }, (_, index) => createCrawlPageFixture({
       url: `https://ex.test/blog/p${index}/`, final_url: `https://ex.test/blog/p${index}/`, semantic_language: 'pl', semantic_terms: ['alfa', 'beta', 'gamma', `u${index}`],
@@ -92,7 +92,8 @@ describe('branch shard 0 services', () => {
     const stats = buildTermStatistics(documents, new Set());
     const similarity = vi.fn(() => 0.5);
     const build = buildTopics(documents, new Map(), stats, similarity);
-    expect(build.pairs.length).toBe(MAX_TOPIC_PAIRS);
-    expect(build.truncated).toBe(true);
+    expect(build.pairs.length).toBe(count * (count - 1) / 2);
+    expect(build.pairs.length).toBeLessThanOrEqual(MAX_TOPIC_PAIRS);
+    expect(build.truncated).toBe(false);
   });
 });

@@ -108,7 +108,7 @@ it('counts members missing from the area map as hub-less and falls back to raw t
   left.titleTerms = new Set(['pl:a', 'pl:b', 'pl:c']); right.titleTerms = new Set(['pl:a', 'pl:b', 'pl:c']);
   const noLinks: DocumentLinkIndex = { outgoing: new Map(), incoming: new Map(), linksTo: () => false };
   const context = {
-    byId: new Map([[left.id, left], [right.id, right]]), links: noLinks, areaByDocument: new Map(),
+    byId: new Map([[left.id, left], [right.id, right]]), links: noLinks, contentLinks: true, areaByDocument: new Map(),
     topics: [{ id: 'topic-0', label: '', labelSource: 'none', documentIds: ['doc-0', 'doc-1'], areaIds: [] }],
     pairs: [{ left: 'doc-0', right: 'doc-1', similarity: 0.9, shared: [] }],
   } as unknown as VerdictContext;
