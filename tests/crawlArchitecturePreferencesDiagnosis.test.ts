@@ -24,6 +24,14 @@ describe('diagnosis preferences', () => {
     expect(readPreferences(KEY).activeView).toBe('plan');
   });
 
+  it('drops a cluster filter saved before the topic list replaced the cluster list', () => {
+    // The graph no longer offers the cluster list, so a restored cluster filter could never be lifted.
+    localStorage.setItem(KEY, JSON.stringify({ activeView: 'graph', clusterFilter: 'cluster-3', orphansOnly: true }));
+    expect(readPreferences(KEY)).toMatchObject({ clusterFilter: 'all', orphansOnly: true });
+    localStorage.setItem(KEY, JSON.stringify({ activeView: 'graph', clusterFilter: 'cluster-3', diagnosisFilter: null }));
+    expect(readPreferences(KEY).clusterFilter).toBe('cluster-3');
+  });
+
   it('drops an invalid filter and an unknown view', () => {
     localStorage.setItem(KEY, JSON.stringify({ activeView: 'nonsense', diagnosisFilter: { kind: 'cluster', id: '' } }));
     expect(readPreferences(KEY)).toMatchObject({ activeView: 'diagnosis', diagnosisFilter: null });
