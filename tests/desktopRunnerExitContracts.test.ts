@@ -2,7 +2,7 @@ import { readFileSync } from 'node:fs';
 import { runInNewContext } from 'node:vm';
 import { describe, expect, it, vi } from 'vitest';
 
-const source = readFileSync('scripts/run-desktop-e2e.mjs', 'utf8').replace(/^import .*;\n/gm, '');
+const source = readFileSync('scripts/run-desktop-e2e.mjs', 'utf8').replace(/^import .*;\r?\n/gm, '');
 
 function run(platform: string, code: number | null, passed: boolean, timedOut = false) {
   const callbacks: Record<string, (...args: unknown[]) => void> = {};
