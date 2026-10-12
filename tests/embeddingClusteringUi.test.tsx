@@ -58,12 +58,12 @@ describe('embedding clustering panel', () => {
 describe('clustering method switch', () => {
   it('defaults to free embeddings and remembers the chosen method per project', async () => {
     render(<KeywordClustering />);
-    const embeddings = screen.getByRole('radio', { name: new RegExp(i18n.t('embeddingClusteringUi.methods.embeddings.title').replace(/[\\()]/g, '\\$&')) });
+    const embeddings = screen.getByRole('radio', { name: new RegExp(i18n.t('embeddingClusteringUi.methods.embeddings.title').replace(/[.*+?^${}()|[\]\\]/g, '\\$&')) });
     expect(embeddings.getAttribute('aria-checked')).toBe('true');
     const textarea = screen.getByLabelText(i18n.t('keywordClusteringUi.keywordsLabel'));
     fireEvent.change(textarea, { target: { value: 'shoes\nboots' } });
     expect(screen.queryByText(i18n.t('keywordClusteringUi.costNotice'))).toBeNull();
-    fireEvent.click(screen.getByRole('radio', { name: new RegExp(i18n.t('embeddingClusteringUi.methods.serp.title').replace(/[\\()]/g, '\\$&')) }));
+    fireEvent.click(screen.getByRole('radio', { name: new RegExp(i18n.t('embeddingClusteringUi.methods.serp.title').replace(/[.*+?^${}()|[\]\\]/g, '\\$&')) }));
     await waitFor(() => expect(screen.getByText(i18n.t('keywordClusteringUi.costNotice'))).toBeTruthy());
     expect(localStorage.getItem('seomi_project_p1_keyword_clustering_method_v1')).toBe('serp');
   });
