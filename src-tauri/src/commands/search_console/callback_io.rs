@@ -64,5 +64,8 @@ pub(super) async fn write_callback_response(
 }
 
 #[cfg(test)]
+#[path = "callback_io_more_tests.rs"]
+mod more_tests;
+#[cfg(test)]
 #[path = "callback_io_tests.rs"]
 mod tests;

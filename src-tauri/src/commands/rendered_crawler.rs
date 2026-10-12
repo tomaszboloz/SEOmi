@@ -29,6 +29,8 @@ mod tests_commands;
 #[cfg(test)]
 mod tests_commands_flow;
 #[cfg(test)]
+mod tests_commands_flow_more;
+#[cfg(test)]
 mod tests_navigation;
 #[cfg(test)]
 mod tests_navigation_boundaries;

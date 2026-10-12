@@ -14,7 +14,6 @@ pub(super) enum Admission {
     Skip,
     Stop,
 }
-
 /// Only loopback peers may talk to the worker; an accept failure stops the listener.
 pub(super) fn admit_connection(
     accepted: std::io::Result<(TcpStream, std::net::SocketAddr)>,
