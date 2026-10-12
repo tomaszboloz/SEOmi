@@ -19,8 +19,8 @@ it.each(['\n', '\r\n'])('keeps strict CI gates with %j line endings', (newline) 
   expect(rust).toContain('cargo +nightly llvm-cov --manifest-path src-tauri/Cargo.toml --branch --no-report');
   expect(rust).toContain('SEOMI_E2E_RENDERER=1 cargo +nightly llvm-cov run --manifest-path src-tauri/Cargo.toml --example desktop_e2e --features custom-protocol --branch --no-clean --lcov --output-path coverage-rust.lcov -- test-results/desktop-e2e-coverage.json');
   expect(rust).toContain('node scripts/validate-desktop-e2e-report.mjs test-results/desktop-e2e-coverage.json');
-  expect(rust).toContain('--bin seomi --features custom-protocol --branch --no-clean --no-report -- --seomi-scheduled-headless');
-  expect(rust).toContain('--bin seomi --features custom-protocol --branch --no-clean --no-report -- --seomi-audit-queue-headless');
+  expect(rust).toContain('--bin seomi --features custom-protocol --branch --no-clean -- --seomi-scheduled-headless');
+  expect(rust).toContain('--bin seomi --features custom-protocol --branch --no-clean -- --seomi-audit-queue-headless');
   expect(rust.indexOf('--seomi-audit-queue-headless')).toBeLessThan(rust.indexOf('llvm-cov report'));
   expect(rust.indexOf('validate-desktop-e2e-report.mjs')).toBeLessThan(rust.indexOf('--seomi-scheduled-headless'));
   expect(rust).toContain('cargo +nightly llvm-cov report --manifest-path src-tauri/Cargo.toml --branch --lcov');
