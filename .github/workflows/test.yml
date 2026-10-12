@@ -130,7 +130,7 @@ jobs:
   native-coverage-threshold:
     name: Rust production coverage (95% follow-up)
     needs: coverage-rust
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     steps:
       - uses: actions/checkout@v7.0.1
       - uses: actions/setup-node@v7.1.0
@@ -145,7 +145,7 @@ jobs:
 
   test-frontend:
     name: Frontend TypeScript, i18n & Vitest
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     steps:
       - uses: actions/checkout@v7.0.1
       - name: Verify independent product sources
@@ -180,7 +180,7 @@ jobs:
   coverage-frontend-mcp:
     name: Frontend and MCP coverage (98% follow-up)
     needs: [test-rust, test-frontend, desktop-platform-smoke, dependency-security]
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     steps:
       - uses: actions/checkout@v7.0.1
       - uses: actions/setup-node@v7.1.0
@@ -265,7 +265,7 @@ jobs:
 
   dependency-security:
     name: Dependency Vulnerability Scan & SBOM
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     permissions:
       contents: read
     steps:

@@ -50,8 +50,13 @@ it.each(['\n', '\r\n'])('keeps strict CI gates with %j line endings', (newline) 
   expect(frontend).toContain('if-no-files-found: error');
   expect(release).not.toContain('macos-13');
   expect(release).toContain("platform: 'macos-15-intel'");
-  expect(release).toContain("args: '--target x86_64-apple-darwin'");
-  expect(release).toContain("args: '--target aarch64-apple-darwin'");
+  expect(release).toContain("args: '--target x86_64-apple-darwin --bundles app,dmg'");
+  expect(release).toContain("args: '--target aarch64-apple-darwin --bundles app,dmg'");
+  expect(release).not.toContain('uploadWorkflowArtifacts');
+  expect(release).toContain('branches: [ main ]');
+  expect(release).toContain('git ls-remote --exit-code --tags origin');
+  expect(release).toContain('releaseCommitish: ${{ github.sha }}');
+  expect(release).toContain('gh release edit "${{ needs.release-preflight.outputs.tag }}" --draft=false');
 });
 
 it('requires actual rendering on both desktop platforms', () => {

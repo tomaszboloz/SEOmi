@@ -36,10 +36,19 @@ export default defineConfig({
           'react-vendor': ['react', 'react-dom'],
           'i18n-vendor': ['i18next', 'react-i18next'],
           'icons-vendor': ['lucide-react'],
+          'graph-vendor': ['d3-drag', 'd3-force', 'd3-selection', 'd3-zoom'],
+          'tauri-vendor': [
+            '@tauri-apps/api',
+            '@tauri-apps/plugin-dialog',
+            '@tauri-apps/plugin-notification',
+            '@tauri-apps/plugin-process',
+            '@tauri-apps/plugin-updater',
+          ],
+          'data-vendor': ['zod', 'zustand', 'date-fns', 'tldts', 'clsx'],
         },
       },
     },
-    chunkSizeWarningLimit: 600,
+    chunkSizeWarningLimit: 700,
   },
   test: {
     // Coverage plus large DOM fixtures can saturate shared desktop/CI hosts.
