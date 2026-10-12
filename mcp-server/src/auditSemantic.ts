@@ -55,11 +55,12 @@ const removeHiddenBlocks = (html: string): string => {
 
 export const decodeText = (value: string): string => value
   .replace(/&nbsp;|&#160;/gi, ' ')
-  .replace(/&amp;/gi, '&')
   .replace(/&lt;/gi, '<')
   .replace(/&gt;/gi, '>')
   .replace(/&quot;|&#34;/gi, '"')
-  .replace(/&#39;|&apos;/gi, "'");
+  .replace(/&#39;|&apos;/gi, "'")
+  // Last, so "&amp;lt;" decodes once to "&lt;" instead of being unescaped twice.
+  .replace(/&amp;/gi, '&');
 
 export const extractSemanticSignals = (html: string, baseUrl: URL): {
   terms: string[];

@@ -11,6 +11,11 @@ test('decodeText decodes named and numeric HTML entities without changing unknow
   assert.equal(decodeText('plain & text'), 'plain & text');
 });
 
+test('decodeText unescapes an encoded entity only once', () => {
+  assert.equal(decodeText('&amp;lt;script&amp;gt;'), '&lt;script&gt;');
+  assert.equal(decodeText('&amp;amp;'), '&amp;');
+});
+
 test('monthKey uses local calendar years and zero-padded months', () => {
   assert.equal(monthKey(new Date(2026, 0, 1, 0, 0, 0)), '2026-01');
   assert.equal(monthKey(new Date(2026, 8, 30, 23, 59, 59)), '2026-09');

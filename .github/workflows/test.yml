@@ -6,16 +6,19 @@ on:
     branches: [ main ]
   workflow_dispatch:
 
+permissions:
+  contents: read
+
 jobs:
   test-rust:
     name: Rust Backend Unit & Security Tests
     runs-on: macos-15-intel
     steps:
       - uses: actions/checkout@v7.0.1
-      - uses: dtolnay/rust-toolchain@stable
+      - uses: dtolnay/rust-toolchain@686976e191b89faba57d3206551f0f330d8cb249 # stable
         with:
           components: clippy, llvm-tools-preview
-      - uses: taiki-e/install-action@v2
+      - uses: taiki-e/install-action@1168f6810a3cb30a3514bf5756a3b7f0422c6df8 # v2
         with:
           tool: cargo-llvm-cov@0.9.1
       - uses: actions/setup-node@v7.1.0
@@ -53,10 +56,10 @@ jobs:
     runs-on: macos-15-intel
     steps:
       - uses: actions/checkout@v7.0.1
-      - uses: dtolnay/rust-toolchain@stable
+      - uses: dtolnay/rust-toolchain@686976e191b89faba57d3206551f0f330d8cb249 # stable
         with:
           components: clippy, llvm-tools-preview
-      - uses: taiki-e/install-action@v2
+      - uses: taiki-e/install-action@1168f6810a3cb30a3514bf5756a3b7f0422c6df8 # v2
         with:
           tool: cargo-llvm-cov@0.9.1
       - uses: actions/setup-node@v7.1.0
@@ -221,7 +224,7 @@ jobs:
         with:
           node-version: 22
           cache: 'npm'
-      - uses: dtolnay/rust-toolchain@stable
+      - uses: dtolnay/rust-toolchain@686976e191b89faba57d3206551f0f330d8cb249 # stable
       - name: Install frontend dependencies
         run: npm ci
       - name: Build frontend
@@ -291,7 +294,7 @@ jobs:
       - name: Generate Node SBOM
         run: npx --yes @cyclonedx/cyclonedx-npm@1.19.0 --output-file sbom-node.json --output-format json
 
-      - uses: dtolnay/rust-toolchain@stable
+      - uses: dtolnay/rust-toolchain@686976e191b89faba57d3206551f0f330d8cb249 # stable
 
       - name: Install Rust dependency security tools
         run: |
