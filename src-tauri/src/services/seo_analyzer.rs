@@ -137,6 +137,8 @@ mod cookie_name_tests;
 #[cfg(test)]
 mod gap_contracts;
 #[cfg(test)]
+mod gap_remaining_tests;
+#[cfg(test)]
 mod gap_tests;
 #[cfg(test)]
 mod metadata_tests;

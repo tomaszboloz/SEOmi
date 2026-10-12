@@ -14,6 +14,7 @@ mod versions_are_extracted_only_from_known_explicit_generator_declarations;
 use fixture::SAMPLE_HTML;
 mod content_regressions;
 mod extraction_contracts;
+mod gap_remaining;
 mod parser_regressions;
 
 mod control_boundaries;

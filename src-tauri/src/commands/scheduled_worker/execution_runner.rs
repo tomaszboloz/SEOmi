@@ -2,8 +2,13 @@ use super::super::{lock::acquire_scheduled_lock, models::*, storage::*};
 use crate::commands::crawl_storage;
 use chrono::Utc;
 use serde_json::Value;
-use std::{fs, future::Future};
+use std::{fs, future::Future, path::Path};
 use tauri::{AppHandle, Runtime};
+
+pub(super) fn ensure_project_directory(path: &Path) -> Result<(), String> {
+    fs::create_dir_all(path)
+        .map_err(|error| format!("Unable to create scheduled task directory: {error}"))
+}
 
 pub(super) async fn run_scheduled_task_with<R, Execute, Register, Unregister, TaskFuture>(
     app: AppHandle<R>,
@@ -38,8 +43,7 @@ where
     }
     let project_dir = crawl_storage::project_directory(&app, &project_id)?;
     let lock_path = project_dir.join(format!("scheduled_execution_{schedule_id}.lock"));
-    fs::create_dir_all(&project_dir)
-        .map_err(|error| format!("Unable to create scheduled task directory: {error}"))?;
+    ensure_project_directory(&project_dir)?;
     let Some(_lock_guard) = acquire_scheduled_lock(&lock_path)? else {
         return Ok(());
     };
