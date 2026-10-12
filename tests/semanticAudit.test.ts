@@ -106,7 +106,7 @@ it('surfaces asserted lifecycle updates and published URLs with measured non-2xx
     ];
     const report = buildSemanticAudit(document, [page('https://site.test/coffee', ['coffee', 'beans'], { http_status: 404 })], new Date('2026-09-23T12:00:00.000Z'));
 
-    expect(report.findings.some((item) => item.code === 'topic-url-unhealthy' && item.evidence.split(' · ').some((part) => part === 'https://site.test/coffee') && item.evidence.split(' · ').some((part) => part === 'HTTP 404'))).toBe(true);
+    expect(report.findings.some((item) => item.code === 'topic-url-unhealthy' && item.evidence.includes('https://site.test/coffee · HTTP 404'))).toBe(true);
     expect(report.findings.some((item) => item.code === 'lifecycle-review' && item.evidence.includes(i18n.t('runtimeErrors.semanticAudit.plannedDate', { value: '2026-09-01' })))).toBe(true);
     expect(report.findings.every((item) => item.action.trim().length > 0)).toBe(true);
   });
