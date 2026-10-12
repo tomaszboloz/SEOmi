@@ -138,3 +138,7 @@ mod redirect_and_dns_edge_tests;
 #[cfg(test)]
 #[path = "external_link_checker/gap_tests.rs"]
 mod gap_tests;
+
+#[cfg(test)]
+#[path = "external_link_checker/normalized_dedup_tests.rs"]
+mod normalized_dedup_tests;

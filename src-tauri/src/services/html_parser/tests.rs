@@ -17,5 +17,6 @@ mod extraction_contracts;
 mod gap_remaining;
 mod parser_regressions;
 
+mod aria_reference_cap;
 mod control_boundaries;
 mod gap_favicon;

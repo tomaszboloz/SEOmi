@@ -76,3 +76,7 @@ mod tests {
 #[cfg(test)]
 #[path = "user_agents_branch_tests.rs"]
 mod branch_tests;
+
+#[cfg(test)]
+#[path = "user_agents_preset_tests.rs"]
+mod preset_tests;

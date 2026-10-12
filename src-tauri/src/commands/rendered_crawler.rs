@@ -42,6 +42,8 @@ mod tests_preview_handlers;
 #[cfg(test)]
 mod tests_scripts;
 #[cfg(test)]
+mod tests_session_close;
+#[cfg(test)]
 mod tests_session_edges;
 #[cfg(test)]
 mod tests_session_lifecycle;

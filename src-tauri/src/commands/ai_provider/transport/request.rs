@@ -141,3 +141,6 @@ pub(crate) async fn test_connection(
         status: Some(status.as_u16()),
     })
 }
+
+#[cfg(test)]
+mod tests;

@@ -47,6 +47,8 @@ mod html_evidence_edges;
 mod inline_images_contracts;
 #[path = "tests/ipc.rs"]
 mod ipc;
+#[path = "tests/ipc_crawl.rs"]
+mod ipc_crawl;
 #[path = "tests/js_redirects_contracts.rs"]
 mod js_redirects_contracts;
 #[path = "tests/js_redirects_edges.rs"]

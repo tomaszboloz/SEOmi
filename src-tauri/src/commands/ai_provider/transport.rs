@@ -66,3 +66,6 @@ fn gemini_models_url(key: &str) -> Result<String, String> {
     url.query_pairs_mut().append_pair("key", key);
     Ok(url.into())
 }
+
+#[cfg(test)]
+mod tests;

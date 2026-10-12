@@ -115,3 +115,7 @@ impl FontSet {
         None
     }
 }
+
+#[cfg(test)]
+#[path = "font_gap_tests.rs"]
+mod gap_tests;

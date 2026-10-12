@@ -138,3 +138,6 @@ mod body;
 mod budget;
 #[path = "retry_tests_timeout.rs"]
 mod timeout;
+
+#[path = "retry_tests_bounded.rs"]
+mod bounded;

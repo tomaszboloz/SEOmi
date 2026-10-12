@@ -26,3 +26,4 @@ mod redaction;
 mod reentry;
 mod sink;
 mod unknown;
+mod unknown_fields;

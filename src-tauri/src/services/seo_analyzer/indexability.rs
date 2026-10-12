@@ -111,3 +111,7 @@ pub(super) async fn verify_canonical_target(
         }
     }
 }
+
+#[cfg(test)]
+#[path = "indexability_target_tests.rs"]
+mod target_tests;

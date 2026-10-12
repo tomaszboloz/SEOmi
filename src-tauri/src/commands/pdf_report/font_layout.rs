@@ -128,3 +128,7 @@ impl FontSet {
 #[cfg(test)]
 #[path = "font_layout_private_tests.rs"]
 mod private_tests;
+
+#[cfg(test)]
+#[path = "font_layout_run_tests.rs"]
+mod run_tests;

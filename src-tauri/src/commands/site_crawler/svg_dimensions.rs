@@ -40,3 +40,6 @@ pub(super) fn svg_intrinsic_dimensions(bytes: &[u8]) -> Option<(usize, usize)> {
         parse_dimension_token(&values[3].to_string())?,
     ))
 }
+#[cfg(test)]
+#[path = "svg_dimension_gap_tests.rs"]
+mod gap_tests;

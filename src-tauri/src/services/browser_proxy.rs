@@ -31,6 +31,12 @@ mod server_edge_tests;
 mod server_fixture;
 
 #[cfg(test)]
+mod parse_header_tests;
+
+#[cfg(test)]
+mod upstream_resolver_tests;
+
+#[cfg(test)]
 mod upstream_tests;
 
 #[cfg(test)]
