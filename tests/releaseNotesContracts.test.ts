@@ -8,6 +8,14 @@ import { spawnSync } from 'node:child_process';
 const notes = '# SEOmi 0.0.4 — release notes\n\n## Fixed\n\n- GA4 property matching.\n\n## Thanks\n\nThank you @RafalSzy.';
 
 describe('release notes publication contract', () => {
+  it('validates the actual release notes against the canonical application version', () => {
+    const { version } = JSON.parse(readFileSync(resolve('package.json'), 'utf8'));
+    const actualNotes = readFileSync(resolve('RELEASE_NOTES.md'), 'utf8');
+    const body = releaseBody(version, actualNotes, `v${version}`);
+    expect(body).toContain('## Thanks');
+    expect(body).toContain('@RafalSzy');
+    expect(body).toContain('## Fixed');
+  });
   it('uses the concrete changes and contributor credit as the release body', () => {
     expect(releaseBody('0.0.4', notes, 'v0.0.4')).toBe('## Fixed\n\n- GA4 property matching.\n\n## Thanks\n\nThank you @RafalSzy.');
     expect(releaseBody('0.0.4', notes.replaceAll('\n', '\r\n'))).toBe(releaseBody('0.0.4', notes));
