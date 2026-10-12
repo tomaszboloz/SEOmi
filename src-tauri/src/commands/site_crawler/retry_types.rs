@@ -22,11 +22,19 @@ impl RetryBudget {
     }
 
     pub(super) fn take(&self) -> bool {
-        self.remaining
-            .fetch_update(Ordering::AcqRel, Ordering::Acquire, |remaining| {
-                remaining.checked_sub(1)
-            })
-            .is_ok()
+        let mut current = self.remaining.load(Ordering::Acquire);
+        while current > 0 {
+            match self.remaining.compare_exchange_weak(
+                current,
+                current - 1,
+                Ordering::AcqRel,
+                Ordering::Acquire,
+            ) {
+                Ok(_) => return true,
+                Err(actual) => current = actual,
+            }
+        }
+        false
     }
 
     #[cfg(test)]

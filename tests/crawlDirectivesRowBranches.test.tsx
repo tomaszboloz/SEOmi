@@ -21,7 +21,7 @@ it('keeps absent transport and old canonical data unavailable', () => {
 it('renders old canonical URL without inventing target status', () => {
   show({ http_status: 0, request_error_kind: 'timeout', canonical: 'https://canonical.test' });
   expect(screen.getByText('timeout')).toBeTruthy();
-  expect(screen.getByText((text) => text.split(/\s+/).includes('https://canonical.test') && text.includes(i18n.t('crawlDeepUi.targetStatusUnavailable')))).toBeTruthy();
+  expect(screen.getByText((text) => text.split(/\s+/).some((part) => part === 'https://canonical.test') && text.includes(i18n.t('crawlDeepUi.targetStatusUnavailable')))).toBeTruthy();
 });
 
 it.each([undefined, null, 0])('shows no response for checked canonical target status %s', (http_status) => {
