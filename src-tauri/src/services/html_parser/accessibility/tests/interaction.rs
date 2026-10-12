@@ -48,3 +48,15 @@ fn interaction_names_accept_text_image_and_aria_labels_and_distinguish_decorativ
         .html_snippet
         .contains("id=\"missing\""));
 }
+
+#[test]
+fn hidden_inputs_with_unnormalized_type_values_are_not_focus_candidates() {
+    let source = "<main aria-hidden='true'><input type=' HIDDEN ' name='token'></main>";
+    let doc = Html::parse_document(source);
+    let mut codes = Vec::new();
+    let elements = focus_elements(&doc, source, &mut |code, _, _, _, _| {
+        codes.push(code.to_string())
+    });
+    assert!(codes.is_empty());
+    assert!(elements.is_empty());
+}

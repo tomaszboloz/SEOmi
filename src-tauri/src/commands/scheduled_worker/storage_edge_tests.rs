@@ -34,3 +34,15 @@ fn atomic_writer_reports_a_non_empty_directory_at_the_destination() {
     assert!(error.starts_with("Unable to persist scheduled data:"));
     fs::remove_dir_all(directory).unwrap();
 }
+
+#[test]
+fn directory_entry_failures_are_reported_with_context() {
+    let error = entry_path(Err(std::io::Error::other("disk gone"))).unwrap_err();
+    assert_eq!(error, "Unable to read scheduled execution entry: disk gone");
+    let directory = std::env::temp_dir().join(format!("seomi-entry-{}", uuid::Uuid::new_v4()));
+    fs::create_dir_all(&directory).unwrap();
+    fs::write(directory.join("a.json"), b"{}").unwrap();
+    let entry = fs::read_dir(&directory).unwrap().next().unwrap();
+    assert_eq!(entry_path(entry).unwrap(), directory.join("a.json"));
+    fs::remove_dir_all(directory).unwrap();
+}

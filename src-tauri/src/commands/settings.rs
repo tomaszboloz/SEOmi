@@ -94,6 +94,8 @@ mod credentials_tests;
 #[cfg(test)]
 mod fixture;
 #[cfg(test)]
+mod ipc_argument_tests;
+#[cfg(test)]
 mod profile_storage_tests;
 #[cfg(test)]
 mod profile_validation_tests;

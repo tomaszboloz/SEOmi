@@ -51,16 +51,21 @@ pub async fn google_analytics_performance(
     collect(&client, &access_token, &site_url, &start, &end).await
 }
 
+fn analytics_client(built: reqwest::Result<reqwest::Client>) -> Result<reqwest::Client, String> {
+    built.map_err(|_| "Unable to initialize the Google Analytics client.".to_string())
+}
+
 async fn access_context(
     project_id: &str,
     client_id: &str,
 ) -> Result<(reqwest::Client, String), String> {
     let client_id = credentials::validate_client_id(client_id)?;
     credentials::refresh_token_key(project_id)?;
-    let client = reqwest::Client::builder()
-        .timeout(Duration::from_secs(30))
-        .build()
-        .map_err(|_| "Unable to initialize the Google Analytics client.".to_string())?;
+    let client = analytics_client(
+        reqwest::Client::builder()
+            .timeout(Duration::from_secs(30))
+            .build(),
+    )?;
     let store = NativeCredentialStore;
     let access_token = tokens::refresh_access_token_with_store(
         &client,
@@ -71,4 +76,19 @@ async fn access_context(
     )
     .await?;
     Ok((client, access_token))
+}
+
+#[cfg(test)]
+mod tests {
+    #[test]
+    fn a_failed_client_build_is_reported_without_provider_detail() {
+        let failed = reqwest::Client::new()
+            .get("not a url")
+            .build()
+            .map(|_| reqwest::Client::new());
+        assert_eq!(
+            super::analytics_client(failed).unwrap_err(),
+            "Unable to initialize the Google Analytics client."
+        );
+    }
 }

@@ -43,4 +43,6 @@ mod tests;
 #[cfg(test)]
 mod tests_commands;
 #[cfg(test)]
+mod tests_ipc;
+#[cfg(test)]
 mod tests_models;

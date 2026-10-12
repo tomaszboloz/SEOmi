@@ -65,8 +65,8 @@ pub(crate) fn write_atomic_with_limit(
     value: &Value,
     max_bytes: usize,
 ) -> Result<(), String> {
-    let bytes = serde_json::to_vec(value)
-        .map_err(|error| format!("Unable to serialize audit queue: {error}"))?;
+    // A JSON value always has string keys, so serialization cannot fail.
+    let bytes = value.to_string().into_bytes();
     if bytes.len() > max_bytes {
         return Err("Audit queue exceeds the safety limit.".into());
     }

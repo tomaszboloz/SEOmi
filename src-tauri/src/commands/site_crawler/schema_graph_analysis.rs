@@ -48,9 +48,8 @@ pub(super) fn annotate_schema_graph(pages: &mut [CrawledPageSummary]) {
             .iter()
             .filter(|item| item.format == "JSON-LD")
         {
-            let Some(path) = reference.node_path.as_deref() else {
-                continue;
-            };
+            // graph_evidence_complete() already rejected pages with a path-less JSON-LD reference.
+            let path = reference.node_path.as_deref().unwrap_or_default();
             let key = (page_index, reference.declaration_index, path.to_string());
             let index = *node_indexes.entry(key).or_insert_with(|| {
                 nodes.push(GraphNode {

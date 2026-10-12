@@ -96,3 +96,31 @@ fn schema_graph_values_covers_arrays_duplicates_and_controls() {
     schema_graph_values::push_node_values(&bad_map, "", 0, &mut refs, "0");
     assert_eq!(refs.len(), 4);
 }
+
+#[test]
+fn graph_evidence_is_incomplete_after_a_request_error_or_a_full_reference_list() {
+    let complete = post_processing_page("https://example.test/ok");
+    assert!(schema_graph_analysis_helpers::graph_evidence_complete(
+        &complete
+    ));
+
+    let mut failed = complete.clone();
+    failed.request_error_kind = Some("network".into());
+    assert!(!schema_graph_analysis_helpers::graph_evidence_complete(
+        &failed
+    ));
+
+    let mut full = complete;
+    full.schema_references = (0..MAX_SCHEMA_REFERENCES_PER_PAGE)
+        .map(|index| CrawledSchemaReference {
+            format: "Microdata".into(),
+            declaration_index: index,
+            property: "sameAs".into(),
+            value: format!("https://example.test/{index}"),
+            node_path: None,
+        })
+        .collect();
+    assert!(!schema_graph_analysis_helpers::graph_evidence_complete(
+        &full
+    ));
+}

@@ -70,3 +70,24 @@ async fn send_and_test_connection_reject_unknown_providers() {
     );
     assert!(connection_succeeded(StatusCode::OK, true));
 }
+
+#[test]
+fn client_initialisation_failures_use_the_fixed_message() {
+    let broken = reqwest::Client::builder()
+        .min_tls_version(reqwest::tls::Version::TLS_1_3)
+        .max_tls_version(reqwest::tls::Version::TLS_1_2);
+    assert_eq!(
+        super::network_client(broken).unwrap_err(),
+        "Unable to initialize the AI network client."
+    );
+}
+
+#[test]
+fn retarget_keeps_path_and_query_only_when_an_origin_is_given() {
+    let url = "https://h.test/a/b?key=1".to_string();
+    assert_eq!(super::retarget(url.clone(), None), url);
+    assert_eq!(
+        super::retarget(url, Some("http://127.0.0.1:9")),
+        "http://127.0.0.1:9/a/b?key=1"
+    );
+}

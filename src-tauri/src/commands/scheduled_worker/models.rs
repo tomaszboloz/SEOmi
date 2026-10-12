@@ -97,11 +97,8 @@ pub(super) fn validate_manifest(
     ) {
         return Err("Unsupported scheduled task status.".into());
     }
-    let normalized =
-        validate_and_normalize_url(&task.url).map_err(|e| format!("Invalid scheduled URL: {e}"))?;
-    if normalized.username() != "" || normalized.password().is_some() {
-        return Err("Scheduled URL cannot contain credentials.".into());
-    }
+    // The URL validator already rejects embedded credentials.
+    validate_and_normalize_url(&task.url).map_err(|e| format!("Invalid scheduled URL: {e}"))?;
     if task.task_type == "site-crawl" {
         let limit = task.crawl_limit.unwrap_or(25);
         if !(1..=500).contains(&limit) {

@@ -124,7 +124,7 @@ it('writes imported batch URLs to the native project snapshot', async () => {
 
     await vi.waitFor(() => expect(vi.mocked(invokeTauriCommand).mock.calls.some(([command, args]) => (
       command === 'save_project_audit_queue'
-      && JSON.stringify(args).includes('https://example.com/native')
+      && /"https:\/\/example\.com\/native"/.test(JSON.stringify(args))
     ))).toBe(true));
   });
 });

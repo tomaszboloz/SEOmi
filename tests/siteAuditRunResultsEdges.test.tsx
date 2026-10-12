@@ -49,7 +49,7 @@ describe('CrawlRunNotices coverage edges', () => {
     const { container } = render(<CrawlRunNotices session={session} />);
     expect(screen.getByText('siteAudit.cancelledNotice')).toBeTruthy();
     expect(container.querySelector('details')).not.toBeNull();
-    expect(screen.getByText(/https:\/\/example\.com\/blocked/)).toBeTruthy();
+    expect(screen.getByText((text) => text.split(/\s+/).includes('https://example.com/blocked'))).toBeTruthy();
   });
 });
 

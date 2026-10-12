@@ -1,3 +1,4 @@
+use super::cleanup::{entry_path, name_matches};
 use super::paths::{
     queue_execution_path, queue_result_path, write_atomic_with_limit, MAX_QUEUE_EXECUTION_BYTES,
     MAX_QUEUE_RESULT_BYTES,
@@ -14,8 +15,7 @@ pub(crate) fn write_queue_execution<R: tauri::Runtime>(
     run_id: &str,
     execution: &Value,
 ) -> Result<(), String> {
-    let bytes = serde_json::to_vec(execution)
-        .map_err(|error| format!("Unable to serialize audit queue execution: {error}"))?;
+    let bytes = serde_json::to_vec(execution).expect("a JSON value is always serializable");
     if bytes.len() > MAX_QUEUE_EXECUTION_BYTES {
         return Err("Audit queue execution exceeds the safety limit.".into());
     }
@@ -29,8 +29,7 @@ pub(crate) fn write_queue_result<R: tauri::Runtime>(
     item_id: &str,
     result: &Value,
 ) -> Result<(), String> {
-    let bytes = serde_json::to_vec(result)
-        .map_err(|error| format!("Unable to serialize audit queue result: {error}"))?;
+    let bytes = serde_json::to_vec(result).expect("a JSON value is always serializable");
     if bytes.len() > MAX_QUEUE_RESULT_BYTES {
         return Err("Audit queue result exceeds the safety limit.".into());
     }
@@ -54,13 +53,10 @@ pub fn list_project_audit_queue_executions<R: tauri::Runtime>(
     };
     let mut executions = Vec::new();
     for entry in entries {
-        let path = entry
-            .map_err(|error| format!("Unable to read audit queue execution entry: {error}"))?
-            .path();
-        let Some(name) = path.file_name().and_then(|value| value.to_str()) else {
-            continue;
-        };
-        if !name.starts_with("audit_queue_execution_") || !name.ends_with(".json") {
+        let path = entry_path(entry, "Unable to read audit queue execution entry")?;
+        if !name_matches(&path, |name| {
+            name.starts_with("audit_queue_execution_") && name.ends_with(".json")
+        }) {
             continue;
         }
         let bytes = crawl_storage::read_bytes_bounded(&path, MAX_QUEUE_EXECUTION_BYTES)
@@ -96,13 +92,10 @@ pub(crate) fn list_project_audit_queue_results_bounded<R: tauri::Runtime>(
     };
     let mut results = Vec::new();
     for entry in entries {
-        let path = entry
-            .map_err(|error| format!("Unable to read audit queue result entry: {error}"))?
-            .path();
-        let Some(name) = path.file_name().and_then(|value| value.to_str()) else {
-            continue;
-        };
-        if !name.starts_with("audit_queue_result_") || !name.ends_with(".json") {
+        let path = entry_path(entry, "Unable to read audit queue result entry")?;
+        if !name_matches(&path, |name| {
+            name.starts_with("audit_queue_result_") && name.ends_with(".json")
+        }) {
             continue;
         }
         let bytes = crawl_storage::read_bytes_bounded(&path, MAX_QUEUE_RESULT_BYTES)

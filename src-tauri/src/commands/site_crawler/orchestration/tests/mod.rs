@@ -66,6 +66,7 @@ mod page_media_direct;
 mod page_metadata;
 mod page_metadata_verdicts_direct;
 mod page_prefetch_contracts;
+mod page_render_headerless;
 mod page_render_mismatch;
 mod page_render_status;
 mod page_resources_discovery_contracts;

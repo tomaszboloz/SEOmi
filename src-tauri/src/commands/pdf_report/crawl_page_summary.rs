@@ -67,3 +67,31 @@ pub fn append_page_summary(
     }
     lines.push("".into());
 }
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use serde_json::json;
+
+    fn summary(page: Value) -> Vec<String> {
+        let read = |value: &Value, key: &str| value[key].as_str().unwrap_or_default().to_string();
+        let number = |value: &Value, key: &str| value[key].to_string();
+        let mut lines = Vec::new();
+        append_page_summary(&mut lines, &page, &read, &number);
+        lines
+    }
+
+    #[test]
+    fn verdict_reasons_and_redirect_stop_reason_are_optional_suffixes() {
+        let bare = summary(json!({ "indexability_verdict": { "status": "indexable" } }));
+        assert!(bare.contains(&"Indexability verdict: indexable".to_string()));
+        assert!(!bare.iter().any(|line| line.starts_with("Redirect stop")));
+
+        let detailed = summary(json!({
+            "indexability_verdict": { "status": "blocked", "reasons": ["noindex", "robots"] },
+            "redirect_stop_reason": "loop",
+        }));
+        assert!(detailed.contains(&"Indexability verdict: blocked (noindex, robots)".to_string()));
+        assert!(detailed.contains(&"Redirect stop reason: loop".to_string()));
+    }
+}

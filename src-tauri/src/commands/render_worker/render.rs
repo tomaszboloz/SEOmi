@@ -45,7 +45,7 @@ pub(super) fn prepare_render_request(
     let target = validate_and_normalize_url(&request.url).map_err(|error| error.to_string())?;
     let base_host = target
         .host_str()
-        .ok_or_else(|| "Rendered URL has no hostname.".to_string())?
+        .expect("validated rendered URL must have a hostname")
         .to_ascii_lowercase();
     let scope_path = normalize_scope_path(request.scope_path.as_deref())?;
     let wait_for_selector = request
@@ -74,7 +74,8 @@ pub(super) fn normalize_scope_path(value: Option<&str>) -> Result<Option<String>
         return Ok(None);
     };
     let value = normalize_bounded_text(value, "scopePath", MAX_SCOPE_PATH_CHARS)?;
-    if !value.starts_with('/') || value.contains('\0') {
+    // `normalize_bounded_text` already rejected null characters.
+    if !value.starts_with('/') {
         return Err("scopePath must be an absolute URL path without null characters.".into());
     }
     Ok(Some(value.trim_end_matches('/').to_string()))

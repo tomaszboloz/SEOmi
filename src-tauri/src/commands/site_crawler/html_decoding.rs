@@ -11,10 +11,11 @@ pub(super) fn html_meta_charset(body: &[u8]) -> Option<String> {
     let quote = tail.chars().next().filter(|c| *c == '\'' || *c == '"');
     let value = if let Some(quote) = quote {
         let value = &tail[quote.len_utf8()..];
-        value.split(quote).next()?
+        value.split(quote).next().unwrap_or_default()
     } else {
         tail.split(|c: char| c.is_ascii_whitespace() || c == ';' || c == '>')
-            .next()?
+            .next()
+            .unwrap_or_default()
     };
     (!value.is_empty()).then(|| value.to_string())
 }
@@ -64,9 +65,9 @@ pub(super) fn decode_crawl_html_body(
                     if document_declared_charset_source.is_some() {
                         let source = String::from_utf8_lossy(body).into_owned();
                         let source_lower = source.to_ascii_lowercase();
-                        if let Some(offset) = source_lower.find("charset") {
-                            set_html_finding_source(&mut finding, &source, offset);
-                        }
+                        // The declaration was found in this very body, so the offset always exists.
+                        let offset = source_lower.find("charset").unwrap_or_default();
+                        set_html_finding_source(&mut finding, &source, offset);
                     }
                     findings.push(finding);
                     (encoding_rs::UTF_8, 0)
@@ -82,9 +83,9 @@ pub(super) fn decode_crawl_html_body(
             "encoding-invalid-byte-sequence",
             format!("Dekodowanie {} zawierało nieprawidłową sekwencję bajtów; dekoder zastąpił ją znakiem zastępczym.", encoding.name()),
         );
-        if let Some(offset) = decoded.find('\u{FFFD}') {
-            set_html_finding_source(&mut finding, &decoded, offset);
-        }
+        // had_errors guarantees the decoder emitted at least one replacement character.
+        let offset = decoded.find('\u{FFFD}').unwrap_or_default();
+        set_html_finding_source(&mut finding, &decoded, offset);
         findings.push(finding);
     }
     (decoded, Some(encoding.name().to_string()), findings)

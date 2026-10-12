@@ -8,6 +8,7 @@ mod dispatcher;
 mod execution_runner_coverage_tests;
 mod execution_runner_outcome_tests;
 mod identity;
+mod into_json;
 mod io_failures;
 mod production_dispatch;
 mod production_due_dispatch;

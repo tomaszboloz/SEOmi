@@ -26,7 +26,7 @@ describe('importDiagnosisTopics', () => {
     expect(navigator).toMatchObject({ kind: 'cluster', sourceRunId: 'run-1', sourceClusterId: report.topics.find((topic) => /navigator/i.test(topic.label))!.id });
     expect(navigator.sourceUrls.sort()).toEqual(['https://ex.test/a/', 'https://ex.test/b/', 'https://ex.test/en/a/', 'https://ex.test/en/b/']);
     expect(navigator.evidenceTerms).toEqual(expect.arrayContaining(['navigator', 'alerty', 'crm', 'teams', 'navigatoren']));
-    expect(next.nodes.some((node) => node.sourceUrls.includes('https://ex.test/solo/'))).toBe(false);
+    expect(next.nodes.some((node) => node.sourceUrls.some((url) => new URL(url).href === 'https://ex.test/solo/'))).toBe(false);
   });
 
   it('does not import the same topic twice for one run and uses the fallback title when a topic has no label', () => {

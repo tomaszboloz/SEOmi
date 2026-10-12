@@ -9,7 +9,7 @@ pub(super) fn json_error(message: &str) -> Vec<u8> {
     serde_json::to_vec(&ErrorResponse {
         error: message.to_string(),
     })
-    .unwrap_or_else(|_| b"{\"error\":\"worker error\"}".to_vec())
+    .expect("a struct holding one string always serializes")
 }
 
 pub(super) fn health_response<R: Runtime>(
@@ -26,14 +26,14 @@ pub(super) fn health_response<R: Runtime>(
     Ok((
         if expired { 410 } else { 200 },
         "application/json",
-        serde_json::to_vec(&body).map_err(|error| error.to_string())?,
+        body.to_string().into_bytes(),
     ))
 }
 
 pub(super) fn format_render_snapshot(
     snapshot: &crate::commands::rendered_crawler::RenderedPageSnapshot,
 ) -> Result<(u16, &'static str, Vec<u8>), String> {
-    let body = serde_json::to_vec(snapshot).map_err(|error| error.to_string())?;
+    let body = serde_json::to_vec(snapshot).expect("snapshot fields always serialize to JSON");
     Ok(if body.len() > 8 * 1024 * 1024 {
         (
             413,

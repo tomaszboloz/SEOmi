@@ -22,6 +22,10 @@ fn allowed_path(path: &str) -> bool {
     )
 }
 
+pub(crate) fn client_unavailable(_: reqwest::Error) -> String {
+    "Unable to create DataForSEO client.".to_string()
+}
+
 #[tauri::command]
 pub async fn dataforseo_request(
     project_id: String,
@@ -31,7 +35,7 @@ pub async fn dataforseo_request(
     let client = reqwest::Client::builder()
         .timeout(std::time::Duration::from_secs(30))
         .build()
-        .map_err(|_| "Unable to create DataForSEO client.".to_string())?;
+        .map_err(client_unavailable)?;
     dataforseo_request_at(&project_id, &path, payload, API_BASE, &client, |project| {
         dataforseo_credentials(project)
     })
@@ -78,7 +82,10 @@ where
 
 #[cfg(test)]
 #[path = "dataforseo_contract_tests.rs"]
-mod contract_tests;
+pub(crate) mod contract_tests;
+#[cfg(test)]
+#[path = "dataforseo_ipc_tests.rs"]
+mod ipc_tests;
 
 #[cfg(test)]
 mod tests {

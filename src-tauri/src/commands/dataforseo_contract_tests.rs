@@ -1,7 +1,7 @@
 use super::dataforseo_request_at;
 use serde_json::{json, Value};
 #[path = "dataforseo_fixture.rs"]
-mod fixture;
+pub(crate) mod fixture;
 use fixture::{client, server};
 
 #[tokio::test]

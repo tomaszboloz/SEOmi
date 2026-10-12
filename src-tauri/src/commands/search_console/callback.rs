@@ -14,6 +14,10 @@ pub(super) async fn receive_oauth_code(
     receive_oauth_code_with_timeout(listener, expected_state, TOKEN_TIMEOUT).await
 }
 
+pub(super) fn accept_failure(error: std::io::Error) -> String {
+    format!("Unable to receive the OAuth response: {error}")
+}
+
 pub(super) async fn receive_oauth_code_with_timeout(
     listener: TcpListener,
     expected_state: &str,
@@ -24,7 +28,7 @@ pub(super) async fn receive_oauth_code_with_timeout(
             let (mut stream, _) = listener
                 .accept()
                 .await
-                .map_err(|error| format!("Unable to receive the OAuth response: {error}"))?;
+                .map_err(accept_failure)?;
             let request = match read_callback_request(&mut stream, Duration::from_secs(5)).await {
                 Ok(request) => request,
                 Err(_) => {

@@ -1,7 +1,7 @@
 use std::io;
 use std::net::SocketAddr;
 use std::sync::Arc;
-use tokio::net::TcpListener;
+use tokio::net::{TcpListener, TcpStream};
 use tokio::sync::{watch, Semaphore};
 use tokio::task::JoinHandle;
 use url::Url;
@@ -48,9 +48,28 @@ mod server_forwarding_tests;
 #[cfg(test)]
 mod proxy_edge_branch_tests;
 
+#[cfg(test)]
+mod loop_decision_tests;
+
+#[cfg(test)]
+mod stream_failure_tests;
+
 use server::serve_connection;
 use types::MAX_CONCURRENT_CONNECTIONS;
 use upstream::reject;
+
+/// A dropped sender or a `true` flag both mean the proxy must stop.
+fn stop_signalled(
+    changed: Result<(), watch::error::RecvError>,
+    shutdown: &watch::Receiver<bool>,
+) -> bool {
+    changed.is_err() || *shutdown.borrow()
+}
+
+/// An accept failure ends the listener loop.
+fn accepted_stream(accepted: io::Result<(TcpStream, SocketAddr)>) -> Option<TcpStream> {
+    accepted.ok().map(|(stream, _)| stream)
+}
 
 pub struct BrowserRequestProxy {
     address: SocketAddr,
@@ -68,10 +87,10 @@ impl BrowserRequestProxy {
             loop {
                 tokio::select! {
                     changed = shutdown_rx.changed() => {
-                        if changed.is_err() || *shutdown_rx.borrow() { break; }
+                        if stop_signalled(changed, &shutdown_rx) { break; }
                     }
                     accepted = listener.accept() => {
-                        let Ok((stream, _)) = accepted else { break; };
+                        let Some(stream) = accepted_stream(accepted) else { break; };
                         let Ok(permit) = permits.clone().try_acquire_owned() else {
                             reject(stream, 503, "Proxy connection limit reached").await;
                             continue;

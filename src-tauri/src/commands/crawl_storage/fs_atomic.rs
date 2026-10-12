@@ -123,6 +123,13 @@ pub(crate) fn project_directory<R: tauri::Runtime>(
     app: &AppHandle<R>,
     project_id: &str,
 ) -> Result<PathBuf, String> {
+    project_path(project_id, || app.path().app_data_dir())
+}
+
+fn project_path(
+    project_id: &str,
+    data_dir: impl FnOnce() -> tauri::Result<PathBuf>,
+) -> Result<PathBuf, String> {
     if project_id.is_empty()
         || project_id.len() > 80
         || !project_id
@@ -131,9 +138,7 @@ pub(crate) fn project_directory<R: tauri::Runtime>(
     {
         return Err("Invalid project identifier for crawl storage.".into());
     }
-    Ok(app
-        .path()
-        .app_data_dir()
+    Ok(data_dir()
         .map_err(|error| format!("Unable to locate application data folder: {error}"))?
         .join("projects")
         .join(project_id))

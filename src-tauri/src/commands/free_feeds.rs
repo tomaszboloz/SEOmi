@@ -21,6 +21,10 @@ pub struct PublicFeedResponse {
     pub error: Option<String>,
 }
 
+fn client_unavailable(_: reqwest::Error) -> String {
+    "Unable to create public feed client.".to_string()
+}
+
 #[tauri::command]
 pub async fn fetch_public_feed(
     feed: String,
@@ -33,7 +37,7 @@ pub async fn fetch_public_feed(
         .timeout(std::time::Duration::from_secs(PUBLIC_FEED_TIMEOUT_SECS))
         .redirect(Policy::none())
         .build()
-        .map_err(|_| "Unable to create public feed client.".to_string())?;
+        .map_err(client_unavailable)?;
     Ok(fetch_public_feed_at(&client, url).await)
 }
 
@@ -48,3 +52,7 @@ mod fixture;
 #[cfg(test)]
 #[path = "free_feeds_validation_tests.rs"]
 mod validation_tests;
+
+#[cfg(test)]
+#[path = "free_feeds_ipc_tests.rs"]
+mod ipc_tests;

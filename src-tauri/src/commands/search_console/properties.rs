@@ -5,6 +5,7 @@ use tokio::time::Duration;
 
 const SITES_URL: &str = "https://searchconsole.googleapis.com/webmasters/v3/sites";
 
+#[cfg(test)]
 pub(super) async fn site_properties(
     client: &reqwest::Client,
     access_token: &str,
@@ -32,10 +33,24 @@ pub(super) async fn list_search_console_properties(
     client_id: String,
 ) -> Result<Vec<GscSiteProperty>, String> {
     let client_id = validate_client_id(&client_id)?;
-    let client = reqwest::Client::builder()
+    let client = properties_client(reqwest::Client::builder())?;
+    let access_token = refresh_access_token(&client, &project_id, &client_id).await;
+    list_with_token(&client, access_token, SITES_URL).await
+}
+
+pub(super) fn properties_client(
+    builder: reqwest::ClientBuilder,
+) -> Result<reqwest::Client, String> {
+    builder
         .timeout(Duration::from_secs(20))
         .build()
-        .map_err(|_| "Unable to initialize the Search Console client.".to_string())?;
-    let access_token = refresh_access_token(&client, &project_id, &client_id).await?;
-    site_properties(&client, &access_token).await
+        .map_err(|_| "Unable to initialize the Search Console client.".to_string())
+}
+
+pub(super) async fn list_with_token(
+    client: &reqwest::Client,
+    access_token: Result<String, String>,
+    endpoint: &str,
+) -> Result<Vec<GscSiteProperty>, String> {
+    site_properties_at(client, &access_token?, endpoint).await
 }

@@ -76,8 +76,7 @@ pub fn save_project_crawl_checkpoint<R: tauri::Runtime>(
     if !checkpoint.is_object() {
         return Err("Crawl checkpoint storage expects a JSON object.".into());
     }
-    let bytes = serde_json::to_vec(&checkpoint)
-        .map_err(|error| format!("Unable to serialize crawl checkpoint: {error}"))?;
+    let bytes = serde_json::to_vec(&checkpoint).expect("a JSON value always serializes");
     if bytes.len() > MAX_CHECKPOINT_BYTES {
         return Err("Crawl checkpoint exceeds the 32 MiB safety limit.".into());
     }

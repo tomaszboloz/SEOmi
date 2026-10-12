@@ -40,17 +40,6 @@ pub(super) fn canonical_identity_url(input: &str) -> Option<url::Url> {
         return None;
     }
     url.set_fragment(None);
-    if url.path().is_empty() {
-        url.set_path("/");
-    }
-    let default_port = match url.scheme() {
-        "http" => Some(80),
-        "https" => Some(443),
-        _ => None,
-    };
-    if default_port.is_some_and(|port| url.port() == Some(port)) {
-        let _ = url.set_port(None);
-    }
     let normalized = canonicalize_unreserved_percent_encoding(url.as_str());
     url::Url::parse(&normalized).ok()
 }
@@ -59,9 +48,7 @@ pub(super) fn crawl_canonical_declarations(
     document: &Html,
     final_url: &url::Url,
 ) -> (usize, Vec<String>) {
-    let Ok(selector) = Selector::parse("link[rel]") else {
-        return (0, Vec::new());
-    };
+    let selector = Selector::parse("link[rel]").expect("static canonical selector is valid");
     let canonical_links = document
         .select(&selector)
         .filter(|element| {

@@ -1,10 +1,7 @@
 use super::models::{PREVIEW_NEEDLE_MAX_CHARS, PREVIEW_SELECTOR_MAX_CHARS};
-use super::preview_handlers::{handle_preview_navigation, handle_preview_page_load};
+use super::preview_window::{open_preview_window, schedule_on_main_thread, PreviewWindow};
 use crate::utils::url_validator::validate_and_normalize_url;
-use tauri::{
-    webview::{NewWindowResponse, WebviewWindowBuilder},
-    AppHandle, Runtime,
-};
+use tauri::{AppHandle, Runtime};
 
 pub(crate) fn normalize_preview_value(
     value: &str,
@@ -55,41 +52,17 @@ pub async fn open_rendered_element_preview<R: Runtime>(
     )?;
     let base_host = target
         .host_str()
-        .ok_or_else(|| "Preview URL has no hostname.".to_string())?
+        .expect("validated preview URLs always carry a host")
         .to_ascii_lowercase();
-    let label = format!("audit-preview-{}", uuid::Uuid::new_v4().simple());
-    let title = preview_title;
-    let preview_script =
-        build_preview_script(&selector, needle.as_deref(), dom_index, &not_found_message);
-    let (sender, receiver) = tokio::sync::oneshot::channel::<Result<(), String>>();
-    let build_app = app.clone();
-    let navigation_host = base_host.clone();
-    let build_url = target.clone();
-    app.run_on_main_thread(move || {
-        let result =
-            WebviewWindowBuilder::new(&build_app, label, tauri::WebviewUrl::External(build_url))
-                .title(title)
-                .visible(true)
-                .inner_size(1200.0, 800.0)
-                .on_new_window(|_, _| NewWindowResponse::Deny)
-                .on_navigation(move |navigation_url| {
-                    handle_preview_navigation(navigation_url, &navigation_host)
-                })
-                .on_page_load(move |window, payload| {
-                    handle_preview_page_load(payload.event(), || {
-                        let _ = window.eval(&preview_script);
-                    });
-                })
-                .build()
-                .map(|_| ())
-                .map_err(|error| format!("Unable to open rendered element preview: {error}"));
-        let _ = sender.send(result);
-    })
-    .map_err(|error| format!("Unable to schedule rendered element preview: {error}"))?;
-    receiver
-        .await
-        .map_err(|_| "Rendered element preview was interrupted.".to_string())??;
-    Ok(())
+    let script = build_preview_script(&selector, needle.as_deref(), dom_index, &not_found_message);
+    let spec = PreviewWindow {
+        label: format!("audit-preview-{}", uuid::Uuid::new_v4().simple()),
+        title: preview_title,
+        url: target,
+        host: base_host,
+        script,
+    };
+    open_preview_window(&app, spec, schedule_on_main_thread).await
 }
 
 /// Builds the browser-side preview script from JSON literals. `String`,

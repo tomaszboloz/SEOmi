@@ -15,6 +15,8 @@ mod tests_fetch;
 #[cfg(test)]
 mod tests_resolver;
 #[cfg(test)]
+mod tests_resolver_seams;
+#[cfg(test)]
 mod tests_stream;
 
 pub use entry::{fetch_page, fetch_page_with_options};

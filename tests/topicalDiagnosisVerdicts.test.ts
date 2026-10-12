@@ -110,7 +110,7 @@ describe('verdicts', () => {
     const pages = site();
     pages.push(page('https://ex.test/', { semantic_terms: ['start', 'strona'], title: 'Start' }));
     const result = buildTopicalDiagnosis(pages, 'https://ex.test/');
-    expect(result.verdicts.filter((candidate) => candidate.urls.includes('https://ex.test/')).map((candidate) => candidate.code)).toEqual([]);
+    expect(result.verdicts.filter((candidate) => candidate.urls.some((url) => new URL(url).href === 'https://ex.test/')).map((candidate) => candidate.code)).toEqual([]);
   });
 
   it('marks verdicts of documents with partial evidence as limited', () => {

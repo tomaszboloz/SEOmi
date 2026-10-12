@@ -4,7 +4,7 @@ use tokio::{
     sync::oneshot,
 };
 
-pub(super) async fn server(status: &str, body: &str) -> (String, oneshot::Receiver<String>) {
+pub(crate) async fn server(status: &str, body: &str) -> (String, oneshot::Receiver<String>) {
     let listener = TcpListener::bind("127.0.0.1:0").await.unwrap();
     let address = listener.local_addr().unwrap();
     let (sender, received) = oneshot::channel();
@@ -51,6 +51,6 @@ pub(super) async fn server(status: &str, body: &str) -> (String, oneshot::Receiv
     (format!("http://{address}"), received)
 }
 
-pub(super) fn client() -> reqwest::Client {
+pub(crate) fn client() -> reqwest::Client {
     reqwest::Client::builder().no_proxy().build().unwrap()
 }

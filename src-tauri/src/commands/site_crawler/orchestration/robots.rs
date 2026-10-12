@@ -47,7 +47,7 @@ pub async fn fetch_and_eval_robots(setup: &CrawlSetup) -> Result<CrawlRobotsOutc
         let robots_url = setup
             .parsed_base
             .join("/robots.txt")
-            .map_err(|error| format!("Failed to construct robots.txt URL: {error}"))?;
+            .expect("an absolute path always joins onto an http(s) base URL");
         let fetched = request_with_safe_redirects_with_context(
             &setup.client,
             robots_url.as_str(),

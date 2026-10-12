@@ -100,22 +100,9 @@ pub async fn crawl_secondary_resources<R: Runtime>(
                 tasks.abort_all();
                 break;
             }
-            match joined {
-                Ok(resource) => resources.push(resource),
-                Err(_) => resources.push(CrawledResource {
-                    source_urls: Vec::new(),
-                    url: String::new(),
-                    resource_type: "other".into(),
-                    http_status: None,
-                    content_type: None,
-                    content_length: None,
-                    intrinsic_width: None,
-                    intrinsic_height: None,
-                    dimensions_source: None,
-                    response_time_ms: None,
-                    request_error_kind: Some("resource_task".into()),
-                }),
-            }
+            // A panicked or cancelled task has no resource to report; the former
+            // placeholder carried an empty URL and was dropped by `retain` below.
+            resources.extend(joined.ok());
             if let Some(candidate) = pending.next() {
                 tasks.spawn(fetch_resource_candidate_with_context(
                     setup.client.clone(),

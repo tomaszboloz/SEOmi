@@ -1,3 +1,4 @@
+const collectCapture = async ({ nonce, sequence, consoleErrors, failedResourceUrls, originalConsoleError, onError, wait }) => {
     let largestContentfulPaintMs = null;
     let interactionToNextPaintMs = null;
     const layoutShiftEntries = [];
@@ -73,6 +74,4 @@
     })();
     __TRANSPORT__
     await sendCaptureChunks(encoded, nonce, sequence, __MAX_CAPTURE_CHUNK_BYTES__, __MAX_CAPTURE_CHUNKS__);
-  })().catch(() => {
-    location.href = 'seomi-capture://' + nonce + '/' + sequence + '/error';
-  });
+};

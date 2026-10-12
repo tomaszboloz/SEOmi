@@ -18,7 +18,7 @@ describe('unreferenced crawl subcomponents batch 10 direct assertions', () => {
   it('renders CrawlHreflangList directly', () => {
     const hreflangs = [{ language: 'en', target_url: 'https://example.com/en', target_checked_in_run: true, target_http_status: 200, reciprocal_in_run: true, target_canonical_alignment: 'aligned' }] as any;
     render(<CrawlHreflangList hreflangs={hreflangs} t={t} />);
-    expect(screen.getByText(/example\.com\/en/i)).toBeDefined();
+    expect(screen.getByText('https://example.com/en')).toBeDefined();
     expect(screen.getByText(/crawl\.ui\.httpStatus/)).toBeDefined();
     expect(screen.getByText(/crawlDeepUi\.yes/)).toBeDefined();
   });

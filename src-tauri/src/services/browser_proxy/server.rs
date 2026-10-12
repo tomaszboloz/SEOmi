@@ -2,7 +2,7 @@ use super::parse::*;
 use super::types::*;
 use super::upstream::*;
 use std::{future::Future, time::Duration};
-use tokio::io::AsyncWriteExt;
+use tokio::io::{AsyncRead, AsyncWrite, AsyncWriteExt};
 use tokio::net::TcpStream;
 use tokio::time::timeout;
 
@@ -17,13 +17,27 @@ pub(super) async fn serve_connection(client: TcpStream) {
 }
 
 pub(super) async fn serve_connection_with<F, Fut>(
-    mut client: TcpStream,
+    client: TcpStream,
     connect: F,
     request_timeout: Duration,
     tunnel_timeout: Duration,
 ) where
     F: Fn(String, u16) -> Fut,
     Fut: Future<Output = std::io::Result<TcpStream>>,
+{
+    serve_streams(client, connect, request_timeout, tunnel_timeout).await;
+}
+
+pub(super) async fn serve_streams<C, U, F, Fut>(
+    mut client: C,
+    connect: F,
+    request_timeout: Duration,
+    tunnel_timeout: Duration,
+) where
+    C: AsyncRead + AsyncWrite + Unpin,
+    U: AsyncRead + AsyncWrite + Unpin,
+    F: Fn(String, u16) -> Fut,
+    Fut: Future<Output = std::io::Result<U>>,
 {
     let request = match timeout(request_timeout, read_request(&mut client)).await {
         Ok(Ok(request)) => request,

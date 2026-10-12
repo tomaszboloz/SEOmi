@@ -9,6 +9,9 @@ use tracing::{
 };
 use tracing_subscriber::{layer::Context, registry::LookupSpan, Layer};
 
+/// The registry only invokes layer callbacks for spans it still stores.
+const SPAN_INVARIANT: &str = "span callbacks receive ids the registry knows";
+
 type EventSink = Arc<dyn Fn(&NativeEvent) -> io::Result<()> + Send + Sync>;
 pub(super) struct NativeTaskLayer {
     pub(super) sink: EventSink,
@@ -19,9 +22,7 @@ where
     S: Subscriber + for<'lookup> LookupSpan<'lookup>,
 {
     fn on_new_span(&self, attributes: &Attributes<'_>, id: &Id, context: Context<'_, S>) {
-        let Some(span) = context.span(id) else {
-            return;
-        };
+        let span = context.span(id).expect(SPAN_INVARIANT);
         if attributes.metadata().name() == "seomi.ipc" {
             let mut fields = RequestFields::default();
             attributes.record(&mut fields);
@@ -47,9 +48,7 @@ where
     }
 
     fn on_enter(&self, id: &Id, context: Context<'_, S>) {
-        let Some(span) = context.span(id) else {
-            return;
-        };
+        let span = context.span(id).expect(SPAN_INVARIANT);
         let request = {
             let mut extensions = span.extensions_mut();
             let Some(task) = extensions.get_mut::<TaskContext>() else {
@@ -70,9 +69,7 @@ where
     }
 
     fn on_close(&self, id: Id, context: Context<'_, S>) {
-        let Some(span) = context.span(&id) else {
-            return;
-        };
+        let span = context.span(&id).expect(SPAN_INVARIANT);
         let extensions = span.extensions();
         let Some(task) = extensions.get::<TaskContext>() else {
             return;

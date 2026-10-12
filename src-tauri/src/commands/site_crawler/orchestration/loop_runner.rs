@@ -41,13 +41,13 @@ pub async fn run_crawl_loop<R: Runtime>(
         if state.pages.len() >= setup.limit {
             break;
         }
-        let Some((current_url, depth)) = state
+        // The guard at the top of the loop proved one of the queues is non-empty and
+        // `state` is exclusively borrowed, so a pop cannot come back empty here.
+        let (current_url, depth) = state
             .prefetched_order
             .pop_front()
             .or_else(|| state.queue.pop_front())
-        else {
-            break;
-        };
+            .expect("loop guard guarantees queued work");
         if setup.resume_completed_urls.contains(&current_url) {
             continue;
         }

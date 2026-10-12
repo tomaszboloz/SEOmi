@@ -5,10 +5,11 @@ use serde_json::{json, Value};
 
 const INVALID_METRICS: &str = "Google returned invalid Search Console metrics.";
 
+// JSON numbers are always finite, so only the sign needs checking.
 fn metric(row: &Value, name: &str) -> Result<f64, String> {
     row.get(name)
         .and_then(Value::as_f64)
-        .filter(|value| value.is_finite() && *value >= 0.0)
+        .filter(|value| *value >= 0.0)
         .ok_or_else(|| INVALID_METRICS.into())
 }
 
@@ -56,7 +57,7 @@ pub(super) fn map_joint_rows(rows: &[Value]) -> Result<Vec<Value>, String> {
                 .any(|key| {
                     !row.get(key)
                         .and_then(Value::as_f64)
-                        .is_some_and(|n| n.is_finite() && n >= 0.0)
+                        .is_some_and(|n| n >= 0.0)
                 })
             {
                 return Err("Google returned invalid query/page metrics.".into());

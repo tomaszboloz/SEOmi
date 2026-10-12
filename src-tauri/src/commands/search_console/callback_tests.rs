@@ -130,3 +130,11 @@ async fn malformed_url_returns_invalid_oauth_url_error() {
         .unwrap_err();
     assert_eq!(err, "Google returned an invalid OAuth URL.");
 }
+
+#[test]
+fn accept_failures_are_reported_with_their_cause() {
+    assert_eq!(
+        super::callback::accept_failure(std::io::Error::other("closed")),
+        "Unable to receive the OAuth response: closed"
+    );
+}

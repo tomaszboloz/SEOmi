@@ -69,3 +69,17 @@ fn refuses_a_symbolic_link_without_touching_its_target() {
     assert_eq!(fs::read_to_string(target).unwrap(), "original");
     fs::remove_dir_all(directory).unwrap();
 }
+
+#[test]
+fn allows_overwriting_an_existing_regular_file() {
+    let directory = temp_directory();
+    let destination = directory.join("existing.json");
+    fs::write(&destination, "old").unwrap();
+    assert_eq!(
+        validate_export_path(destination.to_str().unwrap()).unwrap(),
+        directory.canonicalize().unwrap().join("existing.json")
+    );
+    write_mcp_config_file(destination.to_str().unwrap().into(), "{}".into()).unwrap();
+    assert_eq!(fs::read_to_string(&destination).unwrap(), "{}");
+    fs::remove_dir_all(directory).unwrap();
+}
