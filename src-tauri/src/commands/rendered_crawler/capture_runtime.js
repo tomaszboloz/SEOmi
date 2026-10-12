@@ -1,3 +1,4 @@
+const prepareCapture = () => {
   const nonce = __NONCE__;
   const sequence = __SEQUENCE__;
   const waitSelector = __WAIT_SELECTOR__;
@@ -41,7 +42,7 @@
     }
     observer.disconnect();
   };
-  (async () => {
+  return (async () => {
     const consoleErrors = [];
     const failedResourceUrls = [];
     const originalConsoleError = typeof console !== 'undefined' && typeof console.error === 'function'
@@ -108,3 +109,6 @@
       await waitForDomIdle();
     }
     window.scrollTo(0, 0);
+    return { nonce, sequence, consoleErrors, failedResourceUrls, originalConsoleError, onError, wait };
+  })();
+};

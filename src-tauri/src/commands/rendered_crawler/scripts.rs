@@ -69,5 +69,5 @@ pub(crate) fn capture_script(nonce: &str, sequence: u64, options: &RenderOptions
         )
         .replace("__MAX_CAPTURE_CHUNKS__", &MAX_CAPTURE_CHUNKS.to_string());
 
-    format!("(() => {{\n{runtime}\n{collector}\n}})();")
+    format!("(() => {{\n{runtime}\n{collector}\nprepareCapture()?.then(collectCapture).catch(() => {{ location.href = 'seomi-capture://' + {nonce} + '/' + {sequence} + '/error'; }});\n}})();")
 }

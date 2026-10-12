@@ -19,12 +19,16 @@
 - Isolated Windows renderer profiles prevent one WebView2 session from losing the next session’s capture callbacks.
 - Topical diagnosis distinguishes post navigation from listing pagination, folds redirect aliases, avoids unsupported link verdicts in legacy crawls and groups duplicate content.
 - Complete topic-pair evaluation within the 500-page bound, expandable verdict lists and migration of obsolete graph filters.
+- Stored credentials stay on the native side for desktop cloud AI; settings read credential presence rather than stored values.
+- MCP shutdown handlers are registered before the server announces readiness.
+- Renderer capture sources have standalone JavaScript syntax while retaining acknowledged transfers and duplicate-capture protection.
 
 ## Quality
 
 - Expanded frontend, native and MCP regression coverage.
 - Preserved fallible production errors, bounded history reads and the 150-line code/test limit.
 - One application version source in `package.json`.
+- A security reporting policy and extended CodeQL scanning for JavaScript/TypeScript and GitHub Actions.
 
 ## Downloads and updates
 
