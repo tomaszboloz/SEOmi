@@ -1,6 +1,4 @@
-# SEOmi 0.0.4 — release notes draft
-
-This release has not been published. Final coverage, platform checks and package verification remain in progress.
+# SEOmi 0.0.4 — release notes
 
 ## Added
 
@@ -30,7 +28,7 @@ This release has not been published. Final coverage, platform checks and package
 
 ## Downloads and updates
 
-The selected distribution uses signed Tauri updates and installers without Apple/Windows system certificates. Operating systems may show publisher warnings. Download links will be added after release artifacts are verified.
+The selected distribution uses signed Tauri updates and installers without Apple/Windows system certificates. Operating systems may show publisher warnings. Download packages are listed in the release assets.
 
 ## Thanks
 
