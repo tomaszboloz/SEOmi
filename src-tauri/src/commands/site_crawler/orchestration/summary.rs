@@ -1,5 +1,6 @@
 #[path = "summary_inputs.rs"]
 mod inputs;
+pub(super) use inputs::pages_per_second;
 pub use inputs::BuildCrawlResultInput;
 use tauri::{Emitter, Runtime};
 
@@ -54,14 +55,10 @@ pub fn build_crawl_result<R: Runtime>(input: BuildCrawlResultInput<'_, R>) -> Si
             cancelled,
             paused: false,
             elapsed_ms: setup.start_time.elapsed().as_millis() as u64,
-            pages_per_second: {
-                let elapsed_seconds = setup.start_time.elapsed().as_secs_f64();
-                if elapsed_seconds > 0.0 {
-                    state.pages.len() as f64 / elapsed_seconds
-                } else {
-                    0.0
-                }
-            },
+            pages_per_second: pages_per_second(
+                state.pages.len(),
+                setup.start_time.elapsed().as_secs_f64(),
+            ),
         },
     );
 

@@ -28,3 +28,16 @@ async fn accepted_stream_keeps_connections_and_drops_accept_failures() {
     assert!(accepted_stream(accepted).is_some());
     assert!(accepted_stream(Err(std::io::Error::other("accept failed"))).is_none());
 }
+
+#[tokio::test]
+async fn running_proxy_keeps_serving_after_a_spurious_shutdown_notification() {
+    let proxy = super::BrowserRequestProxy::start().await.unwrap();
+    let sender = proxy.shutdown.as_ref().unwrap();
+    sender.send(false).unwrap();
+    tokio::task::yield_now().await;
+    let address = proxy.url();
+    let host = address.host_str().unwrap();
+    let port = address.port().unwrap();
+    assert!(tokio::net::TcpStream::connect((host, port)).await.is_ok());
+    proxy.stop().await;
+}

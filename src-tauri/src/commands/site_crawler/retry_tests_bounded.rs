@@ -24,3 +24,14 @@ async fn bounded_text_reads_surface_deadline_errors_as_text() {
     assert!(!error.is_empty());
     server.await.unwrap();
 }
+
+#[tokio::test]
+async fn waiting_reports_a_deadline_that_expires_during_the_pause() {
+    let exhausted = RetryContext::new(RetryBudget::new(1), Instant::now(), Some(0));
+    assert!(matches!(
+        wait_for_retry(&exhausted, Duration::ZERO).await,
+        Err(RetryError::Deadline)
+    ));
+    let open = RetryContext::new(RetryBudget::new(1), Instant::now(), None);
+    assert!(wait_for_retry(&open, Duration::ZERO).await.is_ok());
+}

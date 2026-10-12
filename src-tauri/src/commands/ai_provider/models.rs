@@ -1,4 +1,5 @@
 use super::transport;
+use reqwest::StatusCode;
 use serde::Serialize;
 use serde_json::Value;
 
@@ -79,7 +80,14 @@ pub(super) fn gemini_models(body: &Value) -> Vec<AiModelOption> {
 }
 
 pub async fn list(provider: &str) -> Result<Vec<AiModelOption>, String> {
-    let (_, body) = transport::send(provider, "", None, false).await?;
+    select_models(provider, transport::send(provider, "", None, false).await)
+}
+
+pub(super) fn select_models(
+    provider: &str,
+    sent: Result<(StatusCode, Value), String>,
+) -> Result<Vec<AiModelOption>, String> {
+    let (_, body) = sent?;
     let mut models = match provider {
         "openai" => openai_models(&body),
         "claude" => claude_models(&body),

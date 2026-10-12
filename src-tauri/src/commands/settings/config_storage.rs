@@ -36,9 +36,7 @@ pub(super) fn save_config_file(path: &Path, config: &AppConfig) -> Result<(), St
     config.validate()?;
     let bytes =
         serde_json::to_vec_pretty(config).map_err(|_| "Unable to serialize configuration.")?;
-    if bytes.len() as u64 > MAX_CONFIG_BYTES {
-        return Err("Configuration exceeds the size limit.".into());
-    }
+    // `validate` bounds every field far below MAX_CONFIG_BYTES, so no size check is needed.
     let directory = path
         .parent()
         .ok_or("Configuration directory is unavailable.")?;

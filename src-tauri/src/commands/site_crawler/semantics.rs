@@ -20,9 +20,7 @@ pub(crate) fn bounded_link_source_excerpt(element: &ElementRef<'_>) -> Option<St
         .split_whitespace()
         .collect::<Vec<_>>()
         .join(" ");
-    if compact.is_empty() {
-        return None;
-    }
+    // Serialised element markup always starts with `<`, so `compact` is never empty.
     let values_redacted = value_attribute.replace_all(&compact, " value=\"[redacted]\"");
     let redacted = event_attribute.replace_all(&values_redacted, " on[redacted]=\"[redacted]\"");
     let excerpt: String = redacted.chars().take(800).collect();

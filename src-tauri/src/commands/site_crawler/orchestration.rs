@@ -38,6 +38,7 @@ mod page_type_guidance;
 mod page_type_links;
 mod pipeline;
 mod rendered_prefetch;
+mod rendered_prefetch_failure;
 mod resource_crawler;
 mod robots;
 mod robots_evaluation;

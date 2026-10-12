@@ -70,6 +70,8 @@ mod diagnostics_tests;
 #[cfg(test)]
 mod output_limit_tests;
 #[cfg(test)]
+mod paths_tests;
+#[cfg(test)]
 #[path = "ai_cli_process_contract_tests.rs"]
 mod process_contract_tests;
 #[cfg(test)]

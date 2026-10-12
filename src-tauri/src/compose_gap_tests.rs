@@ -58,3 +58,8 @@ fn composed_search_console_updater_and_link_commands_answer_over_ipc() {
     let root = app.path().app_data_dir().unwrap();
     let _ = std::fs::remove_dir_all(root);
 }
+
+#[test]
+fn desktop_builder_assembles_the_shipped_plugins_without_an_event_loop() {
+    let _builder: tauri::Builder<tauri::Wry> = super::desktop_builder();
+}

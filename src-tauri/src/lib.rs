@@ -5,6 +5,12 @@ mod startup;
 pub mod utils;
 
 #[cfg(test)]
+mod compose_arg_more_tests;
+#[cfg(test)]
+mod compose_arg_tests;
+#[cfg(test)]
+mod compose_command_tests;
+#[cfg(test)]
 mod compose_gap_tests;
 #[cfg(test)]
 mod compose_tests;

@@ -80,3 +80,11 @@ fn entry_creation_failures_stop_operations_and_native_factory_rejects_unsupporte
         .is_err());
     assert!(NATIVE_STORE.delete("unsupported").is_err());
 }
+
+#[test]
+fn entry_creation_failures_are_reported_without_backend_details() {
+    assert_eq!(
+        super::secure_store::entry_error(keyring::Error::NoEntry),
+        "Unable to access the system credential store."
+    );
+}

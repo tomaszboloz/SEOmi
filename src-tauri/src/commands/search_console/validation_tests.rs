@@ -72,3 +72,11 @@ fn creates_rfc7636_s256_challenge_from_the_verifier() {
         "E9Melhoa2OwvFrEMTJguCHaoeK1t8URWbuGJSstw-cM"
     );
 }
+
+#[test]
+fn client_id_rejects_oversized_suffixless_and_whitespace_values() {
+    let long = format!("{}.apps.googleusercontent.com", "a".repeat(240));
+    assert!(validate_client_id(&long).is_err());
+    assert!(validate_client_id("123.example.com").is_err());
+    assert!(validate_client_id("12 3.apps.googleusercontent.com").is_err());
+}

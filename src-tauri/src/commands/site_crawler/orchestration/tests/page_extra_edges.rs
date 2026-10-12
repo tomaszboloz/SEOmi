@@ -106,3 +106,22 @@ fn extract_page_social_and_frames_non_html_returns_empty() {
     assert!(!outcome.frames_truncated);
     assert!(state.resource_candidates.is_empty());
 }
+
+#[test]
+fn hreflang_entries_without_a_usable_href_are_skipped() {
+    let document = Html::parse_document(
+        r#"<head><link hreflang="en"><link hreflang="de" href="http://[bad"></head>"#,
+    );
+    let base = Url::parse("https://example.test/").unwrap();
+    let selectors = CrawlSelectors::compile();
+    let loose = scraper::Selector::parse("link").unwrap();
+    let result = extract_page_schema_and_pagination(
+        &document,
+        &base,
+        true,
+        &selectors.canonical,
+        &loose,
+        &mut Vec::new(),
+    );
+    assert!(result.hreflangs.is_empty());
+}

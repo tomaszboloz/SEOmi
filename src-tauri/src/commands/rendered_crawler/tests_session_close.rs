@@ -52,3 +52,10 @@ async fn dropping_a_session_with_a_proxy_closes_the_window() {
     let (_app, session) = fixture("drop-proxy", true).await;
     drop(session);
 }
+
+#[tokio::test(start_paused = true)]
+async fn close_and_wait_tolerates_a_window_that_is_already_gone() {
+    let (_app, session) = fixture("close-wait-gone", true).await;
+    let _ = session.window.clone().destroy();
+    session.close_and_wait().await;
+}

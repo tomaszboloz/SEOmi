@@ -2,6 +2,7 @@ mod browser;
 mod callback;
 mod callback_io;
 mod connect;
+mod connect_errors;
 mod credentials;
 mod dates;
 mod disconnect;

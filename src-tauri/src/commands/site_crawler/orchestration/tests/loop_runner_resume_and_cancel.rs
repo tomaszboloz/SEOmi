@@ -1,5 +1,5 @@
 use super::super::{loop_runner::run_crawl_loop, selectors::CrawlSelectors};
-use super::discovery_http_fixture::{html_route, DiscoveryServer};
+use super::discovery_http_fixture::{delayed_route, html_route, DiscoveryServer};
 use super::loop_runner_coverage::empty_state;
 use super::setup_config::default_crawl_config;
 use super::*;
@@ -73,4 +73,49 @@ async fn resumed_completed_and_malformed_urls_are_skipped() {
     assert_eq!(state.pages[0].url, server.url("/valid"));
     assert!(state.queue.is_empty());
     assert!(state.rejected_urls.is_empty());
+}
+
+#[tokio::test]
+async fn cancellation_during_a_fetch_stops_before_the_next_queue_item() {
+    let body = "<html><body><p>OK</p></body></html>";
+    let server = DiscoveryServer::new(
+        default_crawl_config(Some(5)),
+        vec![
+            delayed_route("/slow", 200, body, 300),
+            html_route("/next", body),
+        ],
+    )
+    .await;
+    let app = StorageApp::new(mock_builder());
+    let mut state = empty_state();
+    state.queue.push_back((server.url("/slow"), 0));
+    state.queue.push_back((server.url("/next"), 0));
+    let control = CrawlControl::new();
+    let run_id = server.setup.run_id.clone();
+    let cancel = async {
+        tokio::time::sleep(std::time::Duration::from_millis(100)).await;
+        control
+            .cancelled_runs
+            .lock()
+            .unwrap()
+            .insert(run_id.clone());
+    };
+    let handle = app.handle();
+    let selectors = CrawlSelectors::compile();
+    let crawl = run_crawl_loop(
+        &handle,
+        &control,
+        &server.setup,
+        &mut state,
+        &selectors,
+        &[],
+        None,
+    );
+    tokio::join!(crawl, cancel);
+    assert!(state.pages.len() <= 1);
+    assert!(!server
+        .requests
+        .lock()
+        .unwrap()
+        .contains(&"/next".to_string()));
 }

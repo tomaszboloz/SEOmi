@@ -29,11 +29,12 @@ impl FontSet {
                 actual_text: Some(String::new()),
             });
         }
-        if let Some(run) = runs.last_mut() {
-            run.hex.push_str(&format!("{id:04X}"));
-            if let Some(value) = run.actual_text.as_mut() {
-                value.push_str(actual);
-            }
+        let run = runs
+            .last_mut()
+            .expect("a run was pushed above when none matched");
+        run.hex.push_str(&format!("{id:04X}"));
+        if let Some(value) = run.actual_text.as_mut() {
+            value.push_str(actual);
         }
     }
 

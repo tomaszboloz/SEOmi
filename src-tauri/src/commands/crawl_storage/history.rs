@@ -25,16 +25,15 @@ pub(crate) fn read_crawl_history_file(path: &Path) -> Result<Value, String> {
     let mut header = [0u8; STORAGE_MAGIC.len()];
     let mut file = fs::File::open(path)
         .map_err(|error| format!("Unable to open saved crawl runs: {error}"))?;
-    let file_size = file
-        .metadata()
-        .map_err(|error| format!("Unable to inspect saved crawl runs: {error}"))?
-        .len();
-    let header_len = file
-        .read(&mut header)
-        .map_err(|error| format!("Unable to inspect saved crawl runs: {error}"))?;
+    let file_size = file.metadata().map_err(inspect_error)?.len();
+    let header_len = file.read(&mut header).map_err(inspect_error)?;
     let compressed = header_len == STORAGE_MAGIC.len() && header == STORAGE_MAGIC;
     let bytes = read_history_payload(file, file_size, compressed)?;
     decode_crawl_runs(&bytes)
+}
+
+fn inspect_error(error: std::io::Error) -> String {
+    format!("Unable to inspect saved crawl runs: {error}")
 }
 
 fn read_history_payload<R: Read + Seek>(

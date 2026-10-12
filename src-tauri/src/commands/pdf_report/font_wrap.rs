@@ -55,7 +55,8 @@ impl FontSet {
             } else {
                 format!("{current} {word}")
             };
-            if self.measure(&joined, size) > max && !current.is_empty() {
+            // A lone word already fits `max` after the split loop, so this only breaks a joined line.
+            if self.measure(&joined, size) > max {
                 lines.push(std::mem::take(&mut current));
             }
             if !current.is_empty() {

@@ -74,3 +74,16 @@ async fn startup_delegates_execute_handlers_and_diagnostics() {
             .await;
     assert!(sched_err.is_err());
 }
+
+#[test]
+fn hide_main_window_hides_an_existing_main_window() {
+    use tauri::Manager;
+    let app = mock_app();
+    let handle = app.handle().clone();
+    let window = tauri::WebviewWindowBuilder::new(&app, "main", Default::default())
+        .build()
+        .unwrap();
+    startup::hide_main_window(&handle);
+    assert!(handle.get_webview_window("main").is_some());
+    drop(window);
+}

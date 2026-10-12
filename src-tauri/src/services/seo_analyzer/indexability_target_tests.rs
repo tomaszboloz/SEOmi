@@ -59,3 +59,17 @@ async fn unresolvable_canonical_target_records_the_check_outcome() {
     assert_eq!(failed, !assessment.canonical_target_checked);
     assert_eq!(failed, assessment.canonical_target_status.is_none());
 }
+
+#[tokio::test]
+async fn reachable_canonical_target_records_its_status() {
+    use super::verify_canonical_target_with;
+    let mut assessment =
+        assessment_with_canonical(Some("https://other.example/page"), "https://audit.example/");
+    verify_canonical_target_with(&mut assessment, 200, |url| async move {
+        assert_eq!(url, "https://other.example/page");
+        Ok((404, 0))
+    })
+    .await;
+    assert!(assessment.canonical_target_checked);
+    assert_eq!(assessment.canonical_target_status, Some(404));
+}

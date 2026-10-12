@@ -4,7 +4,6 @@ use tokio::task::JoinSet;
 
 use super::super::{
     control::{wait_for_crawl_cancellation, CrawlControl},
-    fetch_types::CrawlFetchFailure,
     models::CrawlConfig,
     render_fetch::{fetch_rendered_page, RenderRequestScope, WebviewRenderer},
     render_health::remaining_run_time,
@@ -12,6 +11,7 @@ use super::super::{
     robots_matching::robots_allows,
 };
 use super::page_fetch_rendered::render_options;
+use super::rendered_prefetch_failure::record_task_failure;
 use super::setup::CrawlSetup;
 use super::state::CrawlLoopState;
 
@@ -130,16 +130,7 @@ pub async fn prefetch_rendered_pages<R: Runtime>(
                 state.prefetched_responses.insert(url, result);
             }
             Some(Err(error)) if error.is_cancelled() => continue,
-            Some(Err(error)) => {
-                log::error!("rendered prefetch task failed: {error}");
-                if let Some(url) = task_urls.remove(&error.id()) {
-                    let failure = CrawlFetchFailure {
-                        kind: "prefetch_task".into(),
-                        message: error.to_string(),
-                    };
-                    state.prefetched_responses.insert(url, Err(failure));
-                }
-            }
+            Some(Err(error)) => record_task_failure(state, &mut task_urls, &error),
         }
     }
 }
