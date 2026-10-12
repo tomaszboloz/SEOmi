@@ -34,7 +34,7 @@ hydrateProject: async (projectId) => {
     // WebView and keeps all secrets desktop-only.
     const desktop = isTauriEnvironment();
     const storedGscClientSecret = desktop
-      ? await services.secureValue(gscClientSecretKey(projectId)).catch(() => '')
+      ? await services.secureValue(gscClientSecretKey(projectId)).then(() => '').catch(() => '')
       : '';
     if (desktop && !isCurrentHydration()) return;
     const storedGscProperty = readStorage(gscPropertyKey(projectId)) || '';

@@ -88,3 +88,7 @@ pub(crate) fn matches_filters(url: &str, include: &[Regex], exclude: &[Regex]) -
 pub(crate) fn rendered_profile_has_unsupported_transport(profile: &CrawlAuthProfile) -> bool {
     !profile.headers.is_empty() || profile.proxy_url.is_some()
 }
+
+#[cfg(test)]
+#[path = "scope_branch_tests.rs"]
+mod branch_tests;

@@ -107,3 +107,4 @@ mod loop_runner_coverage;
 mod loop_runner_depth_boundary;
 
 mod loop_runner_resume_and_cancel;
+mod page_type_branch_gaps;

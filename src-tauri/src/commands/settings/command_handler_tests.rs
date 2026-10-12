@@ -55,15 +55,15 @@ async fn secret_commands_validate_names_and_read_write() {
     let write_res = set_secret(key.into(), val.into()).await;
     assert!(write_res.is_ok());
 
-    let read_res = get_secret(key.into()).await.unwrap();
-    assert_eq!(read_res.as_deref(), Some(val));
+    let read_res = has_secret(key.into()).await.unwrap();
+    assert!(read_res);
     secure_store::secret_entry(key)
         .unwrap()
         .delete_credential()
         .unwrap();
-    assert_eq!(get_secret(key.into()).await.unwrap(), None);
+    assert!(!has_secret(key.into()).await.unwrap());
 
-    assert!(get_secret("invalid key with spaces".into()).await.is_err());
+    assert!(has_secret("invalid key with spaces".into()).await.is_err());
     assert!(set_secret("invalid key with spaces".into(), "val".into())
         .await
         .is_err());

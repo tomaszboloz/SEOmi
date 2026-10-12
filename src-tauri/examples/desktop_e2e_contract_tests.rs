@@ -15,7 +15,7 @@ fn validation_scripts_match_the_runtime_gate() {
             })
             .count()
     };
-    assert_eq!(count(base), 39);
+    assert_eq!(count(base), 40);
     assert_eq!(count(additional), 24);
     let ipc = include_str!("desktop_e2e_ipc.js");
     let ipc_count: usize = ipc
@@ -33,8 +33,8 @@ fn validation_scripts_match_the_runtime_gate() {
                 .count()
         })
         .sum();
-    assert_eq!(ipc_count, 126);
-    assert_eq!(39 + 24 + ipc_count, super::REQUIRED_VALIDATION_CHECKS);
+    assert_eq!(ipc_count, 134);
+    assert_eq!(40 + 24 + ipc_count, super::REQUIRED_VALIDATION_CHECKS);
     assert!(base.contains("__seomiDesktopIpcValidation.run"));
     assert_eq!(super::REQUIRED_RENDERER_CHECKS, 48);
     assert_eq!(crawl.matches("check(`${label}").count(), 11);

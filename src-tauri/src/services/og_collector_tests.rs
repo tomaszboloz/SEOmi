@@ -106,3 +106,14 @@ fn collects_case_insensitive_social_tags_and_preserves_first_images() {
     assert_eq!(meta.og_tags.len(), 9);
     assert_eq!(meta.twitter_tags.len(), 8);
 }
+
+#[test]
+fn anonymous_meta_elements_are_skipped_but_content_only_ones_are_inspected() {
+    let meta = collect_social_meta(
+        r#"<head><meta charset="utf-8"><meta content="orphan value">
+        <meta property="og:title" content="Kept"></head>"#,
+        "https://example.com/",
+    );
+    assert_eq!(meta.og_title.as_deref(), Some("Kept"));
+    assert!(meta.og_description.is_none());
+}

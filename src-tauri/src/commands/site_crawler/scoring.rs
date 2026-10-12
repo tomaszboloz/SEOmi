@@ -140,6 +140,9 @@ pub(super) fn score_pages(pages: &[CrawledPageSummary]) -> CrawlScore {
 }
 
 #[cfg(test)]
+#[path = "scoring_gap_tests.rs"]
+mod gap_tests;
+#[cfg(test)]
 #[path = "scoring_scale_tests.rs"]
 mod scale_tests;
 #[cfg(test)]

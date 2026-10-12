@@ -92,7 +92,7 @@ export const SubscriptionProviderCard: React.FC<SubscriptionProviderCardProps> =
           <input
             aria-label={t('auth.apiKeyLabel', { provider: t(item.nameKey) })}
             type="password"
-            value={apiKey}
+            value={apiKey === '__seomi_secret_present__' ? '' : apiKey}
             onChange={(event) => void onSaveKey(item.id, event.target.value)}
             placeholder={t('auth.apiKeyPlaceholder')}
             className="h-9 flex-1 rounded-lg border border-slate-700 bg-slate-950 px-3 font-mono text-xs text-white"

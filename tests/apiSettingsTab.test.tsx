@@ -87,4 +87,15 @@ describe('ApiSettingsTab', () => {
     for (const v of ['o', 'c', 'g']) expect((screen.getByDisplayValue(v) as HTMLInputElement).type).toBe('password');
     expect(screen.queryByRole('alert')).toBeNull();
   });
+
+  it('does not render native secret presence markers into AI inputs', () => {
+    useAuthStore.setState({ apiKeys: {
+      openai: '__seomi_secret_present__',
+      claude: '__seomi_secret_present__',
+      gemini: '__seomi_secret_present__',
+    } } as never);
+    render(<ApiSettingsTab {...props()} />);
+    const passwordInputs = [...document.querySelectorAll<HTMLInputElement>('input[type="password"]')];
+    expect(passwordInputs.slice(-3).map((input) => input.value)).toEqual(['', '', '']);
+  });
 });

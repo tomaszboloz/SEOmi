@@ -2,16 +2,32 @@ import type { AiProvider } from '@/types';
 import i18n from '@/i18n';
 import { aiProviderLabel } from './labels';
 import { CLAUDE_CONNECTION_PROBE_MODEL, CLAUDE_MESSAGES_URL, claudeHeaders } from './claude';
+import { invokeTauriCommand } from '@/services/tauri';
+import { isDesktopAi } from './native';
 
 export async function testAiConnection(
   provider: AiProvider,
   apiKey: string
 ): Promise<{ success: boolean; message: string }> {
   if (!apiKey.trim()) {
+    if (isDesktopAi()) {
+      try {
+        const result = await invokeTauriCommand<{ success: boolean; status: number | null }>('ai_test_connection', { provider });
+        if (result.success) return { success: true, message: i18n.t('runtimeErrors.ai.connected', { provider: aiProviderLabel(provider) }) };
+      } catch { /* The localized missing-key message below is safer than native details. */ }
+    }
     return { success: false, message: i18n.t('runtimeErrors.ai.keyRequired') };
   }
 
   try {
+    if (isDesktopAi()) {
+      const result = await invokeTauriCommand<{ success: boolean; status: number | null }>('ai_test_connection', { provider });
+      if (result.success) return { success: true, message: i18n.t('runtimeErrors.ai.connected', { provider: aiProviderLabel(provider) }) };
+      const status = result.status ?? 0;
+      if (status === 401 || (provider === 'gemini' && (status === 400 || status === 403))) return { success: false, message: i18n.t('runtimeErrors.ai.invalidKey', { provider: aiProviderLabel(provider) }) };
+      if (status === 429) return { success: false, message: i18n.t('runtimeErrors.ai.quotaExceeded', { provider: aiProviderLabel(provider) }) };
+      return { success: false, message: i18n.t('runtimeErrors.ai.responded', { provider: aiProviderLabel(provider), status }) };
+    }
     if (provider === 'openai') {
       const res = await fetch('https://api.openai.com/v1/models', {
         headers: { Authorization: `Bearer ${apiKey}` },

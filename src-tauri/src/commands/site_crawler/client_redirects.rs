@@ -55,3 +55,6 @@ pub(super) fn parse_client_redirect(
         target_url,
     }
 }
+#[cfg(test)]
+#[path = "client_redirects_gap_tests.rs"]
+mod gap_tests;

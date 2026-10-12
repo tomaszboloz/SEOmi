@@ -1,9 +1,9 @@
-import { act, render, screen } from '@testing-library/react';
+import { act, fireEvent, render, screen, waitFor } from '@testing-library/react';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { RenderWorkerPanel } from '@/components/Settings/RenderWorkerPanel';
 import {
   getRenderWorkerStatus,
-  isTauriEnvironment,
+  isTauriEnvironment, startRenderWorker, stopRenderWorker,
 } from '@/services/tauri';
 import i18n from '@/i18n';
 
@@ -44,3 +44,23 @@ describe('RenderWorkerPanel polling', () => {
     expect(screen.queryByTestId('render-worker-panel')).toBeNull();
   });
 });
+
+ it.each([true, false])('ignores a stale status probe after explicit stop: %s', async (status) => {
+  let resolve!: (value: boolean) => void;
+  vi.mocked(isTauriEnvironment).mockReturnValue(true);
+  vi.mocked(getRenderWorkerStatus).mockReset().mockResolvedValueOnce(false)
+    .mockReturnValueOnce(new Promise<boolean>((done) => { resolve = done; }))
+    .mockResolvedValue(false);
+  vi.mocked(startRenderWorker).mockResolvedValue({ baseUrl: 'http://127.0.0.1', token: 'test-token',
+    version: '1', expiresAt: new Date(Date.now() + 60_000).toISOString(), oneShot: true });
+  vi.mocked(stopRenderWorker).mockResolvedValue(undefined);
+  render(<RenderWorkerPanel />);
+  fireEvent.click(screen.getByRole('button', { name: i18n.t('legacyUi.renderWorker.start') }));
+  await screen.findByText('test-token');
+  await waitFor(() => expect(resolve).toBeTypeOf('function'));
+  fireEvent.click(screen.getByRole('button', { name: i18n.t('legacyUi.renderWorker.stop') }));
+  await waitFor(() => expect(screen.getByRole('status').textContent).toBe(i18n.t('legacyUi.renderWorker.stopped')));
+  await act(async () => resolve(status));
+  expect(screen.getByRole('status').textContent).toBe(i18n.t('legacyUi.renderWorker.stopped'));
+  expect(screen.queryByText('test-token')).toBeNull();
+ });

@@ -68,5 +68,8 @@ pub(crate) async fn wait_for_crawl_delay(
 }
 
 #[cfg(test)]
+#[path = "crawl_delay_gap_tests.rs"]
+mod gap_tests;
+#[cfg(test)]
 #[path = "crawl_delay_tests.rs"]
 mod tests;

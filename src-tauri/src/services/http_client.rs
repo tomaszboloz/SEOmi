@@ -26,4 +26,7 @@ pub use stream::read_bounded_text;
 #[cfg(test)]
 mod tests_error_paths_extended;
 #[cfg(test)]
+#[path = "http_client/tests_gap_remaining.rs"]
+mod tests_gap_remaining;
+#[cfg(test)]
 mod tests_transport_error_paths;

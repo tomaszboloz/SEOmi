@@ -18,10 +18,11 @@ fn validate_frontend_secret(name: &str, write: bool) -> Result<(), String> {
     Ok(())
 }
 
-pub(super) fn read_secret(name: &str, store: &impl SecureStore) -> Result<Option<String>, String> {
+pub(super) fn has_secret(name: &str, store: &impl SecureStore) -> Result<bool, String> {
     validate_frontend_secret(name, false)?;
     store
         .read(name)
+        .map(|value| value.is_some_and(|secret| !secret.trim().is_empty()))
         .map_err(|_| "Unable to read secure setting.".into())
 }
 

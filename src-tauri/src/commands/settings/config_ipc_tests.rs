@@ -7,7 +7,7 @@ fn setup_view() -> (StorageApp, tauri::WebviewWindow<tauri::test::MockRuntime>) 
     let fixture = StorageApp::new(mock_builder().invoke_handler(tauri::generate_handler![
         get_config,
         save_config,
-        get_secret,
+        has_secret,
         set_secret,
         save_crawl_auth_profile,
         delete_crawl_auth_profile
@@ -51,7 +51,7 @@ async fn get_and_save_config_ipc_round_trip_and_validation() {
 async fn secret_and_auth_profile_ipc_commands_round_trip() {
     let (_fixture, view) = setup_view();
 
-    assert!(invoke(&view, "get_secret", json!({ "name": "test_key" })).is_err());
+    assert!(invoke(&view, "has_secret", json!({ "name": "test_key" })).is_err());
     assert!(invoke(
         &view,
         "set_secret",
@@ -69,8 +69,8 @@ async fn secret_and_auth_profile_ipc_commands_round_trip() {
         Value::Null
     );
     assert_eq!(
-        invoke(&view, "get_secret", json!({ "name": "openai_api_key" })).unwrap(),
-        json!("test_val")
+        invoke(&view, "has_secret", json!({ "name": "openai_api_key" })).unwrap(),
+        json!(true)
     );
     let _ = secure_store::secret_entry("openai_api_key")
         .unwrap()

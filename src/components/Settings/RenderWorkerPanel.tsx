@@ -1,5 +1,5 @@
 import { Copy, Loader2, Play, Server, ShieldCheck, Square } from 'lucide-react';
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import {
   getRenderWorkerStatus,
@@ -10,28 +10,28 @@ import {
 } from '@/services/tauri';
 import { copyText } from '@/services/clipboard';
 import { renderWorkerLeaseDelay } from '@/services/renderWorkerLease';
-
 export const RenderWorkerPanel = () => {
   const { t } = useTranslation();
+  const operation = useRef(0);
   const [lease, setLease] = useState<RenderWorkerLease | null>(null);
   const [active, setActive] = useState(false);
   const [busy, setBusy] = useState(false);
   const [message, setMessage] = useState<string | null>(null);
-
   useEffect(() => {
     if (!isTauriEnvironment()) return;
     let disposed = false;
     const refreshStatus = async () => {
+      const revision = operation.current;
       try {
         const nextActive = await getRenderWorkerStatus();
-        if (disposed) return;
+        if (disposed || revision !== operation.current) return;
         setActive(nextActive);
         if (!nextActive && lease) {
           setLease(null);
           setMessage(t('legacyUi.renderWorker.sessionExpired')); 
         }
       } catch {
-        if (!disposed) setActive(false);
+        if (!disposed && revision === operation.current) setActive(false);
       }
     };
     void refreshStatus();
@@ -41,7 +41,6 @@ export const RenderWorkerPanel = () => {
       window.clearInterval(interval);
     };
   }, [lease]);
-
   useEffect(() => {
     if (!lease) return;
     const delay = renderWorkerLeaseDelay(lease.expiresAt);
@@ -53,12 +52,12 @@ export const RenderWorkerPanel = () => {
     }, delay);
     return () => window.clearTimeout(timer);
   }, [lease]);
-
   const start = async () => {
     if (!isTauriEnvironment()) {
       setMessage(t('legacyUi.renderWorker.desktopRequired'));
       return;
     }
+    operation.current += 1;
     setBusy(true);
     setMessage(null);
     try {
@@ -71,8 +70,8 @@ export const RenderWorkerPanel = () => {
       setBusy(false);
     }
   };
-
   const stop = async () => {
+    operation.current += 1;
     setBusy(true);
     try {
       await stopRenderWorker();

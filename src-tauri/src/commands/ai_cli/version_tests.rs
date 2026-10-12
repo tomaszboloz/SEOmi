@@ -112,3 +112,10 @@ async fn absent_command_and_disappeared_executable_are_distinct_failures() {
     assert!(!available);
     assert!(detail.starts_with("Unable to start local CLI:"));
 }
+
+#[tokio::test]
+async fn version_check_resolves_a_command_found_on_path() {
+    let (available, detail) = version_check("gemini", "cargo").await;
+    assert!(available, "{detail}");
+    assert!(detail.to_ascii_lowercase().contains("cargo"), "{detail}");
+}

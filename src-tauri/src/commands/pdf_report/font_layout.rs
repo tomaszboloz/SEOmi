@@ -3,7 +3,7 @@ use rustybuzz::{Direction, UnicodeBuffer};
 use ttf_parser::GlyphId;
 
 impl FontSet {
-    fn is_arabic(character: char) -> bool {
+    pub(super) fn is_arabic_character(character: char) -> bool {
         matches!(u32::from(character), 0x600..=0x6ff | 0x750..=0x77f | 0x8a0..=0x8ff | 0xfb50..=0xfdff | 0xfe70..=0xfeff)
     }
 
@@ -39,7 +39,7 @@ impl FontSet {
 
     fn encode_arabic(&mut self, text: &str, runs: &mut Vec<EncodedRun>) {
         let Some(face) = self.arabic_shaper.as_ref() else {
-            for character in text.chars() {
+            for character in text.chars().rev() {
                 self.encode_scalar(character, runs);
             }
             return;
@@ -107,10 +107,12 @@ impl FontSet {
         let mut index = 0;
         while index < text.len() {
             let character = text[index..].chars().next().unwrap_or('?');
-            if Self::is_arabic(character) {
+            if Self::is_arabic_character(character) {
                 let end = text[index..]
                     .char_indices()
-                    .find_map(|(offset, next)| (!Self::is_arabic(next)).then_some(index + offset))
+                    .find_map(|(offset, next)| {
+                        (!Self::is_arabic_character(next)).then_some(index + offset)
+                    })
                     .unwrap_or(text.len());
                 self.encode_arabic(&text[index..end], &mut runs);
                 index = end;
@@ -122,3 +124,7 @@ impl FontSet {
         runs
     }
 }
+
+#[cfg(test)]
+#[path = "font_layout_private_tests.rs"]
+mod private_tests;

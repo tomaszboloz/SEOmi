@@ -63,3 +63,6 @@ pub fn generate_crawl_pdf(run: Value) -> Result<String, String> {
         )),
     )
 }
+
+#[cfg(test)]
+mod tests_gaps;

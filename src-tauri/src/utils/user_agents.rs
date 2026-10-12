@@ -72,3 +72,7 @@ mod tests {
         assert_eq!(cleaned, "GooglebotX-Injected-Header: evilAnother-Line");
     }
 }
+
+#[cfg(test)]
+#[path = "user_agents_branch_tests.rs"]
+mod branch_tests;

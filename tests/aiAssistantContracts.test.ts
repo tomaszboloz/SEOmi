@@ -1,7 +1,7 @@
 import { act, renderHook } from '@testing-library/react';
 import { afterEach, beforeEach, expect, it, vi } from 'vitest';
 import { useAIAssistantSession } from '@/components/AI/assistant/useAIAssistantSession';
-import { audit, generate, connected, setApiKey, clipboard, setAuditData, openModal, closeModal, suggestion, resetAssistant, deferred } from './fixtures/aiAssistantSession';
+import { audit, auth, generate, connected, setApiKey, clipboard, setAuditData, openModal, closeModal, suggestion, resetAssistant, deferred } from './fixtures/aiAssistantSession';
 
 vi.mock('@/stores/auditStore', async () => ({ useAuditStore: (await import('./fixtures/aiAssistantSession')).audit }));
 vi.mock('@/stores/authStore', async () => ({ useAuthStore: (await import('./fixtures/aiAssistantSession')).auth }));
@@ -11,6 +11,16 @@ vi.mock('@/services/clipboard', async () => ({ copyText: (await import('./fixtur
 vi.mock('react-i18next', () => ({ useTranslation: () => ({ t: (key: string, options?: { provider?: string }) => options?.provider ? `${key}:${options.provider}` : key }) }));
 beforeEach(resetAssistant);
 afterEach(() => vi.useRealTimers());
+
+it('keeps a stored credential marker out of the editable key and still generates natively', async () => {
+  auth.setState({ apiKeys: { openai: '__seomi_secret_present__', claude: '', gemini: '' } });
+  const { result } = renderHook(useAIAssistantSession);
+  expect(result.current.currentKey).toBe('');
+  await act(async () => { await result.current.handleGenerate(); });
+  expect(generate).toHaveBeenCalledExactlyOnceWith(audit.getState().currentAudit, '');
+  expect(result.current.suggestions).toEqual(suggestion);
+  expect(setApiKey).not.toHaveBeenCalled();
+});
 
 it('forwards modal/provider/model actions and exposes current or absent provider keys', () => {
   const { result } = renderHook(useAIAssistantSession);

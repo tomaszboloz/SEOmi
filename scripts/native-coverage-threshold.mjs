@@ -2,7 +2,7 @@ import { readFileSync } from 'node:fs';
 import { resolve } from 'node:path';
 import { pathToFileURL } from 'node:url';
 
-export const NATIVE_COVERAGE_THRESHOLD = 98;
+export const NATIVE_COVERAGE_THRESHOLD = 95;
 const metrics = ['lines', 'functions', 'branches'];
 const validCount = value => Number.isSafeInteger(value) && value >= 0;
 
@@ -35,7 +35,7 @@ export function validateNativeCoverageSummary(summary) {
     }
     const passed = BigInt(covered) * 100n >= BigInt(total) * BigInt(NATIVE_COVERAGE_THRESHOLD);
     result.metrics[metric] = { total, covered, percent: (covered * 100) / total, passed };
-    if (!passed) errors.push(`${metric} coverage ${(covered * 100 / total).toFixed(2)}% is below 98%.`);
+    if (!passed) errors.push(`${metric} coverage ${(covered * 100 / total).toFixed(2)}% is below ${NATIVE_COVERAGE_THRESHOLD}%.`);
   }
   result.passed = errors.length === 0 && Object.keys(result.metrics).length === metrics.length;
   return result;

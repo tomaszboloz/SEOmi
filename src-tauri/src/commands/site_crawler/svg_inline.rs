@@ -87,3 +87,6 @@ pub(super) fn svg_inline_dimensions(src: &str) -> Option<(usize, usize)> {
         svg_numeric_dimension(&values[3].to_string()).map(|height| (width, height))
     })
 }
+#[cfg(test)]
+#[path = "svg_inline_gap_tests.rs"]
+mod gap_tests;

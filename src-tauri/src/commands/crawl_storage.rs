@@ -115,3 +115,7 @@ mod history_edge_tests;
 #[cfg(test)]
 #[path = "crawl_storage/coverage_boundary_tests.rs"]
 mod coverage_boundary_tests;
+
+#[cfg(test)]
+#[path = "crawl_storage/encoding_error_tests.rs"]
+mod encoding_error_tests;

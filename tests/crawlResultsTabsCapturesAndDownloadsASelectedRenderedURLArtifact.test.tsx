@@ -89,7 +89,7 @@ it("captures and downloads a selected rendered URL artifact", async () => {
         }),
       ),
     );
-    expect(screen.getByText(i18n.t("crawl.ui.createdAndDownloaded"))).not.toBeNull();
-    expect(screen.getByText("macos-wkwebview")).not.toBeNull();
+    expect(await screen.findByText(i18n.t("crawl.ui.createdAndDownloaded"))).not.toBeNull();
+    expect(await screen.findByText("macos-wkwebview")).not.toBeNull();
   });
 });

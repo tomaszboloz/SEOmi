@@ -59,3 +59,19 @@ fn hreflang_annotation_keeps_status_zero_reciprocity_and_unknown_canonical_expli
 fn hreflang_accepts_a_primary_language_longer_than_three_letters() {
     assert!(is_valid_hreflang_code("abcd"));
 }
+
+#[test]
+fn hreflang_target_without_its_own_declarations_leaves_reciprocity_unknown() {
+    let target_url = "https://example.test/en".to_string();
+    let mut target = declaration("en", &target_url);
+    let issues = annotate_hreflang_target(
+        "https://example.test/pl",
+        "https://example.test/pl",
+        &mut target,
+        &HashMap::from([(target_url, 200)]),
+        &HashMap::new(),
+        &HashMap::new(),
+    );
+    assert!(issues.is_empty());
+    assert_eq!(target.reciprocal_in_run, None);
+}

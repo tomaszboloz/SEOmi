@@ -31,7 +31,7 @@ export const useAIAssistantSession = () => {
   const [error, setError] = useState<string | null>(null);
   const [suggestions, setSuggestions] = useState<AiSuggestionResponse | null>(null);
 
-  const currentKey = apiKeys[provider] || '';
+  const currentKey = apiKeys[provider] === '__seomi_secret_present__' ? '' : apiKeys[provider] || '';
   const ownerKey = JSON.stringify([activeProjectId, provider, model, currentAudit?.url, currentAudit?.timestamp, connectionMethod[provider], currentKey, promptInstruction]);
   const beginOperation = useAsyncOperationScope(ownerKey);
   const actions = useAIAssistantActions({ ownerKey, currentAudit, suggestions, setAuditData, setError, beginOperation });

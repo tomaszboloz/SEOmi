@@ -134,3 +134,10 @@ mod wire_result_contracts;
 
 #[path = "tests/additional_pure_boundaries.rs"]
 mod additional_pure_boundaries;
+#[path = "tests/branch_gaps.rs"]
+mod branch_gaps;
+#[cfg(test)]
+#[path = "tests/gap_parsers_1.rs"]
+mod gap_parsers_1;
+#[path = "tests/gap_pure.rs"]
+mod gap_pure;

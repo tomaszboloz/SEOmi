@@ -99,3 +99,7 @@ pub(in crate::services::html_parser) fn document_elements(
         .collect::<Vec<_>>();
     (html_elements, main_landmark_elements)
 }
+
+#[cfg(test)]
+#[path = "metadata_branch_tests.rs"]
+mod branch_tests;

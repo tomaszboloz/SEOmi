@@ -53,3 +53,36 @@ fn lock_queue_rejects_invalid_project_identifier() {
     };
     assert!(err.contains("Invalid project identifier"));
 }
+
+#[test]
+fn snapshot_writer_rejects_non_object_values_and_result_paths_check_every_identifier() {
+    use crate::commands::audit_queue::paths::queue_result_path;
+    let fixture = StorageApp::new(mock_builder());
+    let app = fixture.handle();
+    for value in [
+        serde_json::json!([]),
+        serde_json::json!("text"),
+        Value::Null,
+    ] {
+        assert_eq!(
+            write_snapshot_unlocked(&app, "project-1", &value).unwrap_err(),
+            "Audit queue storage expects a JSON object."
+        );
+    }
+    write_snapshot_unlocked(&app, "project-1", &serde_json::json!({})).unwrap();
+    let path = queue_result_path(&app, "project-1", "run-1_a", "item-2_b").unwrap();
+    assert!(path.ends_with("audit_queue_result_run-1_a_item-2_b.json"));
+    let too_long = "a".repeat(81);
+    for (run, item) in [
+        ("", "i"),
+        ("r", ""),
+        ("r/x", "i"),
+        ("r", "i.j"),
+        ("r", &too_long[..]),
+    ] {
+        assert_eq!(
+            queue_result_path(&app, "project-1", run, item).unwrap_err(),
+            "Invalid audit queue result identifier."
+        );
+    }
+}

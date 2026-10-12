@@ -64,9 +64,11 @@
       await reject('invalid settings secret name rejected before secure store', 'set_secret', {
         name: 'invalid/name', value: 'unused',
       }, 'Unsupported secure setting.');
-      await reject('invalid settings secret name read rejected before secure store', 'get_secret', {
+      await reject('invalid settings secret name presence rejected before secure store', 'has_secret', {
         name: 'invalid/name',
       }, 'Unsupported secure setting.');
+      const providerSecretPresent = await invoke('has_secret', { name: 'openai_api_key' });
+      check('secure secret presence returns a boolean', typeof providerSecretPresent === 'boolean');
       await reject('invalid request profile rejected before secure store', 'save_crawl_auth_profile', {
         projectId: '../invalid', profileId: 'e2e', headers: [], cookie: null, proxyUrl: null,
       }, 'Invalid project or request-profile identifier.');
