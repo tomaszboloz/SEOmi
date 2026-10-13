@@ -15,3 +15,4 @@ mod microdata_iri_edges;
 mod profile_required_properties;
 mod property_shapes_boundaries;
 mod traversal_contracts;
+mod type_edges;

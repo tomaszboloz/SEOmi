@@ -111,3 +111,14 @@ fn owner_drop_releases_lock_even_when_open_description_has_another_handle() {
     drop(next);
     fs::remove_dir_all(directory).unwrap();
 }
+
+#[test]
+fn lock_errors_other_than_contention_are_propagated() {
+    let error = std::io::Error::from(std::io::ErrorKind::PermissionDenied);
+    assert_eq!(
+        classify_lock_error(error).unwrap_err().kind(),
+        std::io::ErrorKind::PermissionDenied
+    );
+    let contended = fs2::lock_contended_error();
+    assert!(classify_lock_error(contended).unwrap().is_none());
+}

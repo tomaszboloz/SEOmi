@@ -51,12 +51,7 @@ pub(super) fn extract_javascript_redirects(
         }
         for captures in [&assignment, &call] {
             for matched in captures.captures_iter(source) {
-                let (Some(full), Some(target)) = (
-                    matched.get(0).map(|v| v.as_str().trim()),
-                    matched.get(2).map(|v| v.as_str().trim()),
-                ) else {
-                    continue;
-                };
+                let (full, target) = (matched[0].trim(), matched[2].trim());
                 let target_url = base_url
                     .join(target)
                     .ok()
@@ -78,12 +73,7 @@ pub(super) fn extract_javascript_redirects(
         }
         for captures in [&assignment_template, &call_template] {
             for matched in captures.captures_iter(source) {
-                let (Some(full), Some(target)) = (
-                    matched.get(0).map(|v| v.as_str().trim()),
-                    matched.get(1).map(|v| v.as_str().trim()),
-                ) else {
-                    continue;
-                };
+                let (full, target) = (matched[0].trim(), matched[1].trim());
                 let target_url = base_url
                     .join(target)
                     .ok()

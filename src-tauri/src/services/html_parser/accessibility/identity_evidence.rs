@@ -53,7 +53,7 @@ pub(in crate::services::html_parser) fn identity_elements(
                 element.value().attr(attribute).is_some_and(|value| {
                     value
                         .split_ascii_whitespace()
-                        .any(|reference| !reference.is_empty() && !ids.contains(reference))
+                        .any(|reference| !ids.contains(reference))
                 })
             });
             has_unresolved_reference.then(|| {

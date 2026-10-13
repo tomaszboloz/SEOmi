@@ -33,15 +33,18 @@ fn registration(
     interval_hours: u32,
 ) -> SchedulerRegistration {
     SchedulerRegistration {
-        platform: if cfg!(target_os = "macos") {
-            "macos"
-        } else {
-            "windows"
-        }
-        .into(),
+        platform: platform_label(cfg!(target_os = "macos")).into(),
         task_name,
         next_run_at,
         interval_hours,
+    }
+}
+
+fn platform_label(is_macos: bool) -> &'static str {
+    if is_macos {
+        "macos"
+    } else {
+        "windows"
     }
 }
 

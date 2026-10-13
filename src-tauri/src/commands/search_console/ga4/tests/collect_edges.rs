@@ -1,4 +1,4 @@
-use super::super::{collect, collect_at, discover, models::Ga4Status};
+use super::super::{admin::discover_at, collect_at, models::Ga4Status};
 use tokio::io::AsyncWriteExt;
 use tokio::net::TcpListener;
 
@@ -28,17 +28,21 @@ async fn dispatch(
 #[tokio::test]
 async fn discover_and_collect_validation_shortcuts() {
     let client = super::http_fixture::test_client();
-    let err = discover(&client, "", "https://example.com")
+    let unused = "http://127.0.0.1:1";
+    let err = discover_at(&client, "", "https://example.com", unused, unused)
         .await
         .unwrap_err();
     assert_eq!(err, "Google Analytics access token is missing.");
 
-    let err = collect(
+    let err = collect_at(
         &client,
         "tok",
         "https://example.com",
         "2026-01-05",
         "2026-01-02",
+        unused,
+        unused,
+        unused,
     )
     .await
     .unwrap_err();

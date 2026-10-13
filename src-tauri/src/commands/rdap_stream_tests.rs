@@ -35,3 +35,23 @@ async fn truncated_and_oversized_streams_are_rejected() {
         "RDAP response exceeds byte limit."
     );
 }
+
+#[tokio::test]
+async fn requests_identify_the_application() {
+    // rdap.org answers 403 to a request without a User-Agent header.
+    let listener = tokio::net::TcpListener::bind("127.0.0.1:0").await.unwrap();
+    let base = format!("http://{}", listener.local_addr().unwrap());
+    let request = tokio::spawn(async move {
+        use tokio::io::{AsyncReadExt, AsyncWriteExt};
+        let (mut socket, _) = listener.accept().await.unwrap();
+        let mut buffer = [0u8; 2048];
+        let read = socket.read(&mut buffer).await.unwrap();
+        let reply = b"HTTP/1.1 200 OK\r\nContent-Length: 2\r\nConnection: close\r\n\r\n{}";
+        let _ = socket.write_all(reply).await;
+        String::from_utf8_lossy(&buffer[..read]).to_ascii_lowercase()
+    });
+    let client = rdap_client().unwrap();
+    rdap_lookup_at(&client, &base, "example.com").await.unwrap();
+    let expected = format!("user-agent: seomi/{}", env!("CARGO_PKG_VERSION"));
+    assert!(request.await.unwrap().contains(&expected));
+}

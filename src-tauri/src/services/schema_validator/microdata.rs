@@ -53,9 +53,7 @@ pub fn validate_microdata(content: &Value) -> Vec<StructuredDataValidationIssue>
     }
     if let Some(itemid) = content.get("itemid").and_then(Value::as_str) {
         let itemid = itemid.trim();
-        if !itemid.is_empty()
-            && !Url::parse(itemid).is_ok_and(|url| !url.scheme().is_empty() && url.has_host())
-        {
+        if !itemid.is_empty() && !Url::parse(itemid).is_ok_and(|url| url.has_host()) {
             issues.push(issue(
                 "microdata-itemid-not-absolute",
                 "error",
@@ -95,8 +93,7 @@ pub fn validate_microdata(content: &Value) -> Vec<StructuredDataValidationIssue>
     }
     for (index, value) in types.iter().enumerate() {
         let path = format!("itemtype[{index}]");
-        let valid_absolute_iri =
-            Url::parse(value).is_ok_and(|url| !url.scheme().is_empty() && url.has_host());
+        let valid_absolute_iri = Url::parse(value).is_ok_and(|url| url.has_host());
         if !valid_absolute_iri {
             issues.push(issue(
                 "microdata-itemtype-not-absolute",

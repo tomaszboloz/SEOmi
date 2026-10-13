@@ -45,15 +45,12 @@ pub(super) fn crawl_pagination_links(
     document: &Html,
     final_url: &url::Url,
 ) -> (Vec<CrawledPaginationLink>, usize, usize) {
-    let Ok(selector) = Selector::parse("link[rel], a[rel]") else {
-        return (Vec::new(), 0, 0);
-    };
+    let selector =
+        Selector::parse("link[rel], a[rel]").expect("pagination selector is a valid constant");
     let mut links = Vec::new();
     let (mut declaration_count, mut invalid_declaration_count) = (0, 0);
     for element in document.select(&selector) {
-        let Some(rel) = element.value().attr("rel") else {
-            continue;
-        };
+        let rel = element.value().attr("rel").unwrap_or_default();
         for relation in rel
             .split_ascii_whitespace()
             .filter(|v| v.eq_ignore_ascii_case("next") || v.eq_ignore_ascii_case("prev"))

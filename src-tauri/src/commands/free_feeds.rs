@@ -32,7 +32,16 @@ pub async fn fetch_public_feed(
     keyword: String,
     language: String,
 ) -> Result<PublicFeedResponse, String> {
-    let url = public_feed_url(&feed, geo.trim(), &keyword, language.trim())?;
+    fetch_public_feed_from(public_feed_url(
+        &feed,
+        geo.trim(),
+        &keyword,
+        language.trim(),
+    )?)
+    .await
+}
+
+async fn fetch_public_feed_from(url: url::Url) -> Result<PublicFeedResponse, String> {
     let client = Client::builder()
         .timeout(std::time::Duration::from_secs(PUBLIC_FEED_TIMEOUT_SECS))
         .redirect(Policy::none())
@@ -56,3 +65,7 @@ mod validation_tests;
 #[cfg(test)]
 #[path = "free_feeds_ipc_tests.rs"]
 mod ipc_tests;
+
+#[cfg(test)]
+#[path = "free_feeds_fetch_tests.rs"]
+mod fetch_tests;
