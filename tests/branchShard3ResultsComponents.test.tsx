@@ -1,5 +1,5 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest';
-import { render, screen } from '@testing-library/react';
+import { act, render, screen } from '@testing-library/react';
 import i18n from '@/i18n';
 import { filterAuditImages } from '@/components/Results/images/imagePolicy';
 import { OverviewContentAnalysis } from '@/components/Results/overview/OverviewContentAnalysis';
@@ -64,6 +64,6 @@ describe('DataForSeoSummaryCard', () => {
     useAuditStore.setState({ dataforseoData: { total_backlinks: 100, referring_domains: 50, dofollow_backlinks: 80, rank: 60, broken_backlinks: 0 } } as never);
     render(<DataForSeoSummaryCard />);
     expect(screen.getByText(new RegExp(i18n.t('dataforseo.noBrokenLinks')))).toBeTruthy();
-    useAuditStore.setState({ dataforseoData: null });
+    act(() => { useAuditStore.setState({ dataforseoData: null }); });
   });
 });

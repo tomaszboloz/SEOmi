@@ -1,5 +1,5 @@
 import type React from 'react';
-import { fireEvent, render, screen } from '@testing-library/react';
+import { act, cleanup, fireEvent, render, screen } from '@testing-library/react';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import type { TFunction } from 'i18next';
 import { SearchConsoleHeader } from '@/components/AgentWorkflows/searchConsole/Header';
@@ -14,8 +14,11 @@ import { useProjectStore } from '@/stores/projectStore';
 import { useUIStore } from '@/stores/uiStore';
 
 afterEach(() => {
-  useProjectStore.setState({ projects: [], activeProjectId: null });
-  useUIStore.setState({ activeModal: null });
+  cleanup();
+  act(() => {
+    useProjectStore.setState({ projects: [], activeProjectId: null });
+    useUIStore.setState({ activeModal: null });
+  });
 });
 
 describe('SearchConsoleHeader', () => {
