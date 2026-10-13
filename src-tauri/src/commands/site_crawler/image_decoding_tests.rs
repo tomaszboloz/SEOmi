@@ -118,3 +118,8 @@ fn rejects_riff_containers_with_wrong_webp_or_vp8x_markers() {
     wrong_vp8x[12..16].copy_from_slice(b"VP8 ");
     assert_eq!(intrinsic_http_image_dimensions(None, &wrong_vp8x), None);
 }
+
+#[test]
+fn an_ico_signature_shorter_than_the_header_has_no_dimensions() {
+    assert_eq!(intrinsic_http_image_dimensions(None, &[0, 0, 1, 0]), None);
+}

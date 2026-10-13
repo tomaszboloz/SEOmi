@@ -15,6 +15,29 @@ fn symbol_only_anchors_without_body_words_are_not_a_listing() {
 }
 
 #[test]
+fn mostly_external_links_are_not_a_listing() {
+    let external: String = (0..4)
+        .map(|n| format!("<a href='https://other.test/p{n}.html'>go</a>"))
+        .collect();
+    let html = format!("<html><body>{}{external}</body></html>", links(4, "go"));
+    let document = Html::parse_document(&html);
+    assert!(!mostly_internal_links(&document, "https://example.test/a"));
+    let internal_only =
+        Html::parse_document(&format!("<html><body>{}</body></html>", links(4, "go")));
+    assert!(mostly_internal_links(
+        &internal_only,
+        "https://example.test/a"
+    ));
+}
+
+#[test]
+fn fewer_than_four_internal_links_are_not_a_listing() {
+    let html = format!("<html><body>{}</body></html>", links(3, "go"));
+    let document = Html::parse_document(&html);
+    assert!(!mostly_internal_links(&document, "https://example.test/a"));
+}
+
+#[test]
 fn long_prose_around_few_anchor_words_is_not_a_listing() {
     let prose = "word ".repeat(200);
     let html = format!("<html><body><p>{prose}</p>{}</body></html>", links(4, "go"));

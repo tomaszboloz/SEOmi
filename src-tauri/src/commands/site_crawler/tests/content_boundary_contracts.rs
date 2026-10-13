@@ -67,3 +67,11 @@ fn literal_redirect_cap_preserves_first_declarations_and_ignores_later_events() 
         .iter()
         .all(|redirect| redirect.source == "javascript"));
 }
+
+#[test]
+fn unquoted_meta_charset_ends_at_whitespace() {
+    assert_eq!(
+        html_meta_charset(b"<meta charset=utf-8 data-x>").as_deref(),
+        Some("utf-8")
+    );
+}

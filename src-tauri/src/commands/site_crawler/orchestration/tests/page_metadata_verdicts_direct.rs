@@ -118,3 +118,28 @@ fn page_verdicts_cover_status_directives_canonical_redirect_and_rendered_uncerta
         ("Eligible from this response only", "indexable"),
     );
 }
+
+#[test]
+fn page_verdicts_status_zero_over_http_and_meta_nofollow_are_not_rendered_unavailable() {
+    let http = default_crawl_config(None);
+    let status_of = |status: u16, meta_nofollow: bool| {
+        evaluate_page_verdicts(EvaluatePageVerdictsInput {
+            status,
+            response_headers_available: true,
+            config: &http,
+            meta_robots: None,
+            x_robots_tag: None,
+            meta_noindex: false,
+            header_noindex: false,
+            meta_nofollow,
+            header_nofollow: false,
+            canonical_points_elsewhere: false,
+        })
+        .indexability_status
+    };
+    assert_eq!(status_of(0, false), "Eligible from this response only");
+    assert_eq!(
+        status_of(200, true),
+        "Eligible from this response only; link following is restricted"
+    );
+}
