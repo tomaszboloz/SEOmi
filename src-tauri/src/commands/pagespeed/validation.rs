@@ -36,14 +36,19 @@ pub(super) fn google_metrics_key_with(
     Ok(key)
 }
 
+pub(super) fn reject_credentials(target: &Url) -> Result<(), String> {
+    if !target.username().is_empty() || target.password().is_some() {
+        return Err("Target URL must not contain a username or password.".into());
+    }
+    Ok(())
+}
+
 pub(super) fn target_url(input: &str) -> Result<Url, String> {
     if input.len() > 4_096 {
         return Err("Target URL cannot exceed 4096 characters.".into());
     }
     let mut target = validate_and_normalize_url(input).map_err(|error| error.to_string())?;
-    if !target.username().is_empty() || target.password().is_some() {
-        return Err("Target URL must not contain a username or password.".into());
-    }
+    reject_credentials(&target)?;
     target.set_fragment(None);
     Ok(target)
 }

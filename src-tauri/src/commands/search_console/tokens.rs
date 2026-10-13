@@ -115,8 +115,15 @@ pub(super) async fn authorized_json(
     client_id: &str,
     request: reqwest::RequestBuilder,
 ) -> Result<Value, String> {
-    let access_token = refresh_access_token(client, project_id, client_id).await?;
-    authorized_json_with_access_token(&access_token, request).await
+    let refreshed = refresh_access_token(client, project_id, client_id).await;
+    authorized_json_after_refresh(refreshed, request).await
+}
+
+pub(super) async fn authorized_json_after_refresh(
+    refreshed: Result<String, String>,
+    request: reqwest::RequestBuilder,
+) -> Result<Value, String> {
+    authorized_json_with_access_token(&refreshed?, request).await
 }
 
 pub(super) async fn authorized_json_with_access_token(

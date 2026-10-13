@@ -97,3 +97,7 @@ mod tests;
 #[cfg(test)]
 #[path = "seo_audit/transport_tests.rs"]
 mod transport_tests;
+
+#[cfg(test)]
+#[path = "seo_audit/transport_verify_tests.rs"]
+mod transport_verify_tests;

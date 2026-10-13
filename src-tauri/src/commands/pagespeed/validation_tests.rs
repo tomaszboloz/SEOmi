@@ -47,3 +47,15 @@ fn project_and_credential_validation_rejects_invalid_scope_before_reading_secret
     );
     assert!(target_url(&"a".repeat(4097)).is_err());
 }
+
+#[test]
+fn credentials_in_a_target_url_are_rejected_without_echoing_them() {
+    use super::validation::reject_credentials;
+    let message = "Target URL must not contain a username or password.";
+    for value in ["https://user@example.com/", "https://:secret@example.com/"] {
+        let url = url::Url::parse(value).unwrap();
+        assert_eq!(reject_credentials(&url).unwrap_err(), message);
+    }
+    let plain = url::Url::parse("https://example.com/").unwrap();
+    assert!(reject_credentials(&plain).is_ok());
+}

@@ -15,13 +15,14 @@ pub(super) async fn inspect_search_console_url(
     let client_id = validate_client_id(&client_id)?;
     let parsed = Url::parse(&inspection_url)
         .map_err(|_| "Enter a complete HTTP or HTTPS URL for inspection.".to_string())?;
-    if !["http", "https"].contains(&parsed.scheme()) || parsed.host_str().is_none() {
+    if !is_inspectable(parsed.scheme(), parsed.host_str()) {
         return Err("Enter a complete HTTP or HTTPS URL for inspection.".into());
     }
-    let client = reqwest::Client::builder()
-        .timeout(Duration::from_secs(30))
-        .build()
-        .map_err(|error| error.to_string())?;
+    let client = inspection_client(
+        reqwest::Client::builder()
+            .timeout(Duration::from_secs(30))
+            .build(),
+    )?;
     authorized_json(
         &client,
         &project_id,
@@ -29,6 +30,16 @@ pub(super) async fn inspect_search_console_url(
         inspection_request(&client, INSPECTION_ENDPOINT, &site_url, &parsed),
     )
     .await
+}
+
+pub(super) fn is_inspectable(scheme: &str, host: Option<&str>) -> bool {
+    ["http", "https"].contains(&scheme) && host.is_some()
+}
+
+pub(super) fn inspection_client(
+    built: reqwest::Result<reqwest::Client>,
+) -> Result<reqwest::Client, String> {
+    built.map_err(|error| error.to_string())
 }
 
 pub(super) fn inspection_request(

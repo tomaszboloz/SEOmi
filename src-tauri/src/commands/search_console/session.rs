@@ -24,18 +24,26 @@ pub(super) struct NativeCredentialStore;
 impl CredentialStore for NativeCredentialStore {
     fn read(&self, name: &str) -> Result<Option<String>, CredentialReadError> {
         let entry = secret_entry(name).map_err(CredentialReadError::Store)?;
-        match entry.get_password() {
-            Ok(value) => Ok(Some(value)),
-            Err(keyring::Error::NoEntry) => Ok(None),
-            Err(_) => Err(CredentialReadError::Value),
-        }
+        read_result(entry.get_password())
     }
 
     fn write(&self, name: &str, value: &str) -> Result<(), String> {
-        secret_entry(name)?
-            .set_password(value)
-            .map_err(|error| error.to_string())
+        write_result(secret_entry(name)?.set_password(value))
     }
+}
+
+pub(super) fn read_result(
+    result: Result<String, keyring::Error>,
+) -> Result<Option<String>, CredentialReadError> {
+    match result {
+        Ok(value) => Ok(Some(value)),
+        Err(keyring::Error::NoEntry) => Ok(None),
+        Err(_) => Err(CredentialReadError::Value),
+    }
+}
+
+pub(super) fn write_result(result: Result<(), keyring::Error>) -> Result<(), String> {
+    result.map_err(|error| error.to_string())
 }
 
 pub(super) type ReceiveCode =
