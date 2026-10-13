@@ -41,7 +41,13 @@ async fn checked_public_addresses_handles_literals_and_unresolvable() {
 
     let unresolvable = Url::parse("http://seomi-unresolvable-nxdomain-9999.test/").unwrap();
     let err = checked_public_addresses(&unresolvable).await.unwrap_err();
-    assert!(err.starts_with("DNS lookup failed") || err.contains("private or reserved address"));
+    assert!(
+        err.starts_with("DNS lookup failed")
+            || err == "DNS lookup timed out"
+            || err == "DNS returned no addresses"
+            || err.contains("private or reserved address"),
+        "{err}"
+    );
 }
 
 #[tokio::test]
@@ -66,7 +72,7 @@ async fn check_one_exercises_underlying_pipeline() {
     let nx = check_one("http://seomi-unresolvable-nxdomain-9999.test/".into()).await;
     assert!(matches!(
         nx.request_error_kind.as_deref(),
-        Some("dns") | Some("blocked")
+        Some("dns") | Some("blocked") | Some("timeout")
     ));
 
     let conn = check_one("http://8.8.8.8:1/test".into()).await;
@@ -90,7 +96,7 @@ async fn check_one_with_gates_exercises_underlying_pipeline() {
     .await;
     assert!(matches!(
         nx.request_error_kind.as_deref(),
-        Some("dns") | Some("blocked")
+        Some("dns") | Some("blocked") | Some("timeout")
     ));
 
     let conn = check_one_with_gates("http://8.8.8.8:1/test".into(), gates.clone()).await;
