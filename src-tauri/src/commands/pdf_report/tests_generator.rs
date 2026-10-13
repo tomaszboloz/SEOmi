@@ -23,7 +23,8 @@ fn generate_audit_pdf_error_paths_and_fallbacks() {
     let bytes =
         decode_pdf(generate_audit_pdf(json!({"final_url": "https://example.test"})).unwrap());
     assert!(bytes.starts_with(b"%PDF-1.4"));
-    assert!(pdf_has_text(&bytes, "Audited URL: https://example.test"));
+    assert!(pdf_has_text(&bytes, "https://example.test"));
+    assert!(pdf_has_text(&bytes, "AUDITED AT"));
     assert!(pdf_has_text(
         &bytes,
         "No issues were reported by this audit."
@@ -40,8 +41,12 @@ fn generate_audit_pdf_error_paths_and_fallbacks() {
         }))
         .unwrap(),
     );
-    assert!(pdf_has_text(&issue_bytes, "[Critical] SEO: Bad title"));
-    assert!(pdf_has_text(&issue_bytes, "[Info] Technical: -"));
+    assert!(pdf_has_text(&issue_bytes, "Bad title"));
+    assert!(pdf_has_text(&issue_bytes, "Critical (1)"));
+    assert!(pdf_has_text(&issue_bytes, "SEO"));
+    assert!(pdf_has_text(&issue_bytes, "No description was provided"));
+    assert!(pdf_has_text(&issue_bytes, "Info (2)"));
+    assert!(pdf_has_text(&issue_bytes, "General"));
 }
 
 #[test]
@@ -61,12 +66,10 @@ fn generate_crawl_pdf_error_paths_and_fallbacks() {
         }))
         .unwrap(),
     );
-    assert!(pdf_has_text(&bytes, "Pages crawled: -"));
-    assert!(pdf_has_text(&bytes, "Health score: - / 100"));
-    assert!(pdf_has_text(
-        &bytes,
-        "No page records were present in this crawl run."
-    ));
+    assert!(bytes.starts_with(b"%PDF-1.4"));
+    assert!(pdf_has_text(&bytes, "Site crawl report"));
+    assert!(pdf_has_text(&bytes, "Not scored"));
+    assert!(pdf_has_text(&bytes, "No issues were found"));
 
     let limited_bytes = decode_pdf(
         generate_crawl_pdf(json!({
@@ -81,12 +84,9 @@ fn generate_crawl_pdf_error_paths_and_fallbacks() {
     );
     assert!(pdf_has_text(
         &limited_bytes,
-        "Limits observed: depth_limit, max_pages"
+        "Limits reached: depth_limit, max_pages."
     ));
-    assert!(pdf_has_text(
-        &limited_bytes,
-        "Discovery provenance: partial at the configured safety cap."
-    ));
+    assert!(pdf_has_text(&limited_bytes, "Discovery provenance partial"));
 }
 
 #[test]
@@ -108,34 +108,27 @@ fn generate_crawl_pdf_individual_template_sections() {
     let mut resources_only = payload.clone();
     resources_only["report_template_sections"] = json!(["resources"]);
     let res_bytes = decode_pdf(generate_crawl_pdf(resources_only).unwrap());
-    assert!(pdf_has_text(
-        &res_bytes,
-        "Resources table (all saved resources):"
-    ));
-    assert!(!pdf_has_text(&res_bytes, "Pages table (all saved pages):"));
-    assert!(!pdf_has_text(
-        &res_bytes,
-        "Issues table (all saved findings):"
-    ));
+    assert!(pdf_has_text(&res_bytes, "https://example.test/style.css"));
+    assert!(!pdf_has_text(&res_bytes, "All crawled pages"));
+    assert!(!pdf_has_text(&res_bytes, "What to fix first"));
 
     let mut links_only = payload.clone();
     links_only["report_template_sections"] = json!(["links"]);
     let links_bytes = decode_pdf(generate_crawl_pdf(links_only).unwrap());
-    assert!(pdf_has_text(
-        &links_bytes,
-        "Links table (all saved page links):"
-    ));
-    assert!(!pdf_has_text(
-        &links_bytes,
-        "Images table (all saved page images):"
-    ));
+    assert!(pdf_has_text(&links_bytes, "External links summary"));
+    assert!(!pdf_has_text(&links_bytes, "Image problems"));
 
     let mut none_only = payload;
     none_only["report_template_sections"] = json!([]);
     let none_bytes = decode_pdf(generate_crawl_pdf(none_only).unwrap());
-    assert!(!pdf_has_text(&none_bytes, "Pages table"));
-    assert!(!pdf_has_text(&none_bytes, "Issues table"));
-    assert!(!pdf_has_text(&none_bytes, "Links table"));
-    assert!(!pdf_has_text(&none_bytes, "Images table"));
-    assert!(!pdf_has_text(&none_bytes, "Resources table"));
+    for hidden in [
+        "All crawled pages",
+        "What to fix first",
+        "Broken links",
+        "Image problems",
+        "Frames (iframes)",
+    ] {
+        assert!(!pdf_has_text(&none_bytes, hidden), "unexpected {hidden}");
+    }
+    assert!(pdf_has_text(&none_bytes, "Report coverage"));
 }
