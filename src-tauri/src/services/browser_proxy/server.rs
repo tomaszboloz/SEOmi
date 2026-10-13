@@ -112,9 +112,9 @@ pub(super) async fn serve_streams<C, U, F, Fut>(
             outbound.push_str("Host: ");
             outbound.push_str(&authority_for(&url));
             outbound.push_str("\r\nConnection: close\r\n\r\n");
-            if upstream.write_all(outbound.as_bytes()).await.is_err()
-                || (!request.body.is_empty() && upstream.write_all(&request.body).await.is_err())
-            {
+            // `parse_proxy_target` rejects any plain-HTTP request with a body,
+            // so only the request head is forwarded.
+            if upstream.write_all(outbound.as_bytes()).await.is_err() {
                 reject(client, 502, "Could not forward the public HTTP request").await;
                 return;
             }

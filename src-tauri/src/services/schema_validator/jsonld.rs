@@ -14,7 +14,7 @@ fn walk_jsonld(
     issues: &mut IssueCollector,
     context: &JsonLdContext,
 ) {
-    if depth > MAX_JSONLD_DEPTH || budget.visited_nodes >= MAX_JSONLD_NODES {
+    if depth > MAX_JSONLD_DEPTH {
         budget.truncated = true;
         return;
     }

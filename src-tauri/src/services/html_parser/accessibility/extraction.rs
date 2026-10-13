@@ -9,16 +9,14 @@ pub(in crate::services::html_parser) fn extract_accessibility(
     let mut findings = Vec::new();
     let mut add_finding =
         |code: &str, severity: &str, message: String, evidence: String, recommendation: &str| {
-            if findings.len() < 500 {
-                findings.push(AccessibilityFinding {
-                    code: code.to_string(),
-                    severity: severity.to_string(),
-                    message,
-                    evidence,
-                    recommendation: recommendation.to_string(),
-                    elements: Vec::new(),
-                });
-            }
+            findings.push(AccessibilityFinding {
+                code: code.to_string(),
+                severity: severity.to_string(),
+                message,
+                evidence,
+                recommendation: recommendation.to_string(),
+                elements: Vec::new(),
+            });
         };
     document_findings(
         document_language.as_deref(),

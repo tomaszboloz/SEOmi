@@ -18,7 +18,6 @@ async fn proxy_header_limit_includes_split_terminator() {
         .await
         .unwrap();
     assert!(matches!(parsed.target, ProxyTarget::Http { .. }));
-    assert!(parsed.body.is_empty());
     let oversized = header(MAX_HEADER_BYTES + 1);
     let packets = [
         Ok(oversized[..MAX_HEADER_BYTES - 4].to_vec()),

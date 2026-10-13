@@ -23,7 +23,6 @@ pub(super) enum ProxyTarget {
 
 pub(super) struct ParsedRequest {
     pub(super) target: ProxyTarget,
-    pub(super) body: Vec<u8>,
 }
 
 #[derive(Debug)]
