@@ -1,4 +1,4 @@
-# SEOmi 0.0.5 — release notes
+# SEOmi 0.0.6 — release notes
 
 ## Added
 
@@ -22,6 +22,12 @@
 - Stored credentials stay on the native side for desktop cloud AI; settings read credential presence rather than stored values.
 - MCP shutdown handlers are registered before the server announces readiness.
 - Renderer capture sources have standalone JavaScript syntax while retaining acknowledged transfers and duplicate-capture protection.
+
+## Changes since 0.0.5
+
+- Domain age lookup runs through a native RDAP command (validated hostname, HTTPS-only redirects, 1 MiB limit); the WebView policy no longer allows connections to arbitrary `https:` hosts (#35).
+- PDF reports draw multiword Arabic and mixed-direction text in right-to-left visual order while text extraction still returns the logical string (#30).
+- The release workflow's publish step passes `--repo`, so a finished build is published automatically.
 
 ## Release and security
 
