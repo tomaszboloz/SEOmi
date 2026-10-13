@@ -14,11 +14,13 @@ pub(super) fn robots_allowed_hosts(setup: &CrawlSetup) -> Vec<String> {
     if base_host.parse::<IpAddr>().is_ok() {
         return hosts;
     }
+    // The alias is the host with `www.` removed or prepended, so it can never
+    // equal the base host.
     let canonical_alias = base_host
         .strip_prefix("www.")
         .map(str::to_owned)
         .unwrap_or_else(|| format!("www.{base_host}"));
-    if canonical_alias != base_host && !hosts.iter().any(|host| host == &canonical_alias) {
+    if !hosts.iter().any(|host| host == &canonical_alias) {
         hosts.push(canonical_alias);
     }
     hosts

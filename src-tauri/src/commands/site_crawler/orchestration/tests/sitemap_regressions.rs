@@ -51,3 +51,14 @@ async fn repeated_locations_do_not_consume_unique_url_capacity() {
     );
     assert!(!result.discovery_provenance_truncated);
 }
+
+#[tokio::test]
+async fn default_sitemap_url_construction_failure_is_reported() {
+    let mut server = DiscoveryServer::new(default_crawl_config(None), vec![]).await;
+    server.setup.parsed_base = url::Url::parse("mailto:owner@example.com").unwrap();
+    let error = match discover_and_parse_sitemaps(&server.setup, &[]).await {
+        Err(error) => error,
+        Ok(_) => panic!("a non-hierarchical base cannot host /sitemap.xml"),
+    };
+    assert!(error.starts_with("Failed to construct sitemap URL: "));
+}

@@ -35,3 +35,30 @@ async fn final_transient_status_keeps_critical_issue_after_retry() {
         .iter()
         .any(|issue| issue.message.contains("recovered after")));
 }
+
+#[tokio::test]
+async fn truncated_html_bodies_are_reported_as_truncated_pages() {
+    let mut page_data = data(HTML);
+    page_data.body_truncated = true;
+    let fetched = FetchedResponse {
+        response: FetchedPageBody::Prefetched(Box::new(page_data)),
+        final_url: FINAL_URL.into(),
+        redirect_chain: vec![hop()],
+        redirect_stopped_reason: None,
+        request_duration_ms: None,
+        retry_count: 0,
+    };
+    let mut state = state();
+    assemble_page_summary(
+        fetched,
+        12,
+        CURRENT_URL,
+        0,
+        &CrawlSelectors::compile(),
+        &setup(default_crawl_config(None)),
+        &mut state,
+    )
+    .await
+    .unwrap();
+    assert!(state.pages[0].body_truncated);
+}
