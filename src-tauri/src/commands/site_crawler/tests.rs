@@ -65,6 +65,8 @@ mod post_processing_edges;
 mod prefetch_guards;
 #[path = "tests/prefetch_task_failure.rs"]
 mod prefetch_task_failure;
+#[path = "tests/prefetch_task_join.rs"]
+mod prefetch_task_join;
 #[path = "tests/readability_coverage.rs"]
 mod readability_coverage;
 #[path = "tests/relations.rs"]

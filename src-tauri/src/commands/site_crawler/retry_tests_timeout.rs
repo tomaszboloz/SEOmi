@@ -65,3 +65,17 @@ fn retry_error_and_context_contract_edges() {
     );
     assert_eq!(expired.remaining(), Some(Duration::ZERO));
 }
+
+#[test]
+#[should_panic(expected = "the compatibility request has no deadline")]
+fn into_request_rejects_a_deadline_error() {
+    let _ = RetryError::Deadline.into_request();
+}
+
+#[test]
+fn retry_budget_never_goes_below_zero() {
+    let budget = RetryBudget::new(1);
+    assert!(budget.take());
+    assert!(!budget.take());
+    assert_eq!(budget.remaining(), 0);
+}

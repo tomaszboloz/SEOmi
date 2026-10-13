@@ -82,3 +82,9 @@ fn unregister_rejects_invalid_identifiers_before_platform_and_preserves_errors()
         "cannot remove queue"
     );
 }
+
+#[test]
+fn platform_label_names_both_supported_platforms() {
+    assert_eq!(platform_label(true), "macos");
+    assert_eq!(platform_label(false), "windows");
+}

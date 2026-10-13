@@ -24,7 +24,7 @@ pub fn rejected(url: String, kind: impl Into<String>) -> ExternalLinkCheck {
 pub fn normalize_external_url(input: &str) -> Result<Url, String> {
     let url = validate_and_normalize_url(input).map_err(|error| error.to_string())?;
     // The shared validator already rejects userinfo, so none can reach this point.
-    debug_assert!(url.username().is_empty() && url.password().is_none());
+    debug_assert!(url.username().is_empty() & url.password().is_none());
     let mut url = url;
     url.set_fragment(None);
     Ok(url)

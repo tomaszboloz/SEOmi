@@ -72,24 +72,49 @@ pub async fn fetch_rendered_step<R: Runtime>(
             &mut renderer,
             crawl_delay.map(|delay| (control, setup.run_id.as_str(), page_started_at, delay)),
         );
-        tokio::select! {
-            result = render => result,
-            _ = wait_for_crawl_cancellation(control, &setup.run_id) => Err(CrawlFetchFailure {
-                kind: "cancelled".into(),
-                message: "Crawl was cancelled during page rendering.".into(),
-            }),
-            // A single page is already bounded by the capture timeout. This
-            // branch only enforces the remaining run budget, so a slow page
-            // cannot be mistaken for an exhausted crawl.
-            _ = tokio::time::sleep(remaining) => {
-                state.timed_out = true;
-                Err(CrawlFetchFailure {
-                    kind: "timeout".into(),
-                    message: "Rendered page exceeded the remaining crawl time.".into(),
-                })
-            }
-        }
+        race_render(
+            render,
+            control,
+            &setup.run_id,
+            remaining,
+            &mut state.timed_out,
+        )
+        .await
     };
     state.rendered_sessions.extend(renderer.session.take());
     outcome
 }
+
+/// Races one rendered fetch against cancellation and the remaining run budget.
+pub(super) async fn race_render<F>(
+    render: F,
+    control: &CrawlControl,
+    run_id: &str,
+    remaining: Duration,
+    timed_out: &mut bool,
+) -> Result<FetchedResponse, CrawlFetchFailure>
+where
+    F: std::future::Future<Output = Result<FetchedResponse, CrawlFetchFailure>>,
+{
+    tokio::select! {
+        result = render => result,
+        _ = wait_for_crawl_cancellation(control, run_id) => Err(CrawlFetchFailure {
+            kind: "cancelled".into(),
+            message: "Crawl was cancelled during page rendering.".into(),
+        }),
+        // A single page is already bounded by the capture timeout. This
+        // branch only enforces the remaining run budget, so a slow page
+        // cannot be mistaken for an exhausted crawl.
+        _ = tokio::time::sleep(remaining) => {
+            *timed_out = true;
+            Err(CrawlFetchFailure {
+                kind: "timeout".into(),
+                message: "Rendered page exceeded the remaining crawl time.".into(),
+            })
+        }
+    }
+}
+
+#[cfg(test)]
+#[path = "page_fetch_rendered_tests.rs"]
+mod page_fetch_rendered_tests;

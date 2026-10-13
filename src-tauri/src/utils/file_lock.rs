@@ -25,10 +25,16 @@ pub(crate) fn acquire_file_lock(path: &Path) -> io::Result<Option<FileLock>> {
     let file = open_lock_file(path)?;
     match fs2::FileExt::try_lock_exclusive(&file) {
         Ok(()) => Ok(Some(FileLock { _file: file })),
-        Err(error) if error.raw_os_error() == fs2::lock_contended_error().raw_os_error() => {
-            Ok(None)
-        }
-        Err(error) => Err(error),
+        Err(error) => classify_lock_error(error),
+    }
+}
+
+/// A contended lock means another owner holds it; any other failure is real.
+fn classify_lock_error(error: io::Error) -> io::Result<Option<FileLock>> {
+    if error.raw_os_error() == fs2::lock_contended_error().raw_os_error() {
+        Ok(None)
+    } else {
+        Err(error)
     }
 }
 

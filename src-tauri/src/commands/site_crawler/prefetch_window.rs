@@ -74,18 +74,7 @@ pub(crate) async fn prefetch_http_pages_with_context(
                 message: error.to_string(),
             });
             let result = match result {
-                Ok(mut fetched) => {
-                    if let FetchedPageBody::Http(response) = fetched.response {
-                        let data = read_fetched_page_data_with_context(
-                            FetchedPageBody::Http(response),
-                            max_response_bytes,
-                            Some(&body_context),
-                        )
-                        .await;
-                        fetched.response = FetchedPageBody::Prefetched(Box::new(data));
-                    }
-                    Ok(fetched)
-                }
+                Ok(fetched) => Ok(read_http_body(fetched, max_response_bytes, &body_context).await),
                 Err(error) => Err(error),
             };
             (url, result)
@@ -93,15 +82,40 @@ pub(crate) async fn prefetch_http_pages_with_context(
     }
 
     while let Some(joined) = tasks.join_next().await {
-        match joined {
-            Ok((url, result)) => {
-                prefetched_responses.insert(url, result);
-            }
-            Err(error) => {
-                record_task_failure(prefetched_order, prefetched_responses, error.to_string())
-            }
-        }
+        absorb_joined(joined, prefetched_order, prefetched_responses);
     }
+}
+
+/// Store a finished prefetch task, or attribute its panic to a queued page.
+pub(crate) fn absorb_joined(
+    joined: Result<(String, Result<FetchedResponse, CrawlFetchFailure>), tokio::task::JoinError>,
+    order: &VecDeque<(String, usize)>,
+    responses: &mut HashMap<String, Result<FetchedResponse, CrawlFetchFailure>>,
+) {
+    match joined {
+        Ok((url, result)) => {
+            responses.insert(url, result);
+        }
+        Err(error) => record_task_failure(order, responses, error.to_string()),
+    }
+}
+
+/// Read an unread HTTP body inside the prefetch task; other bodies pass through.
+pub(crate) async fn read_http_body(
+    mut fetched: FetchedResponse,
+    max_response_bytes: usize,
+    context: &RetryContext,
+) -> FetchedResponse {
+    if let FetchedPageBody::Http(response) = fetched.response {
+        let data = read_fetched_page_data_with_context(
+            FetchedPageBody::Http(response),
+            max_response_bytes,
+            Some(context),
+        )
+        .await;
+        fetched.response = FetchedPageBody::Prefetched(Box::new(data));
+    }
+    fetched
 }
 
 /// Attribute a panicked or cancelled prefetch task to the first queued page
