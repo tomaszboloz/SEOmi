@@ -1,21 +1,10 @@
 use super::ctx::{format_number, Ctx};
 use super::strings::{report as s, t};
-use crate::commands::pdf_report::layout::color::{
-    Rgb, CRITICAL, MUTED, OK, PANEL, RULE, TEXT, WARNING,
-};
-use crate::commands::pdf_report::layout::doc::{Doc, CONTENT_W, MARGIN};
-use crate::commands::pdf_report::layout::text::{Style, EMPTY};
+use crate::commands::pdf_report::layout::color::{Rgb, CRITICAL, MUTED, OK, TEXT, WARNING};
+use crate::commands::pdf_report::layout::text::EMPTY;
+use crate::commands::pdf_report::layout::widgets::Kpi;
 
-const GAP: f32 = 8.0;
-const HEIGHT: f32 = 50.0;
 const SLOW_MS: f64 = 800.0;
-
-pub struct Kpi {
-    pub label: &'static str,
-    pub value: String,
-    pub note: String,
-    pub color: Rgb,
-}
 
 fn kpi(label: &'static str, value: Option<String>, note: String, color: Rgb) -> Kpi {
     let note = if value.is_some() { note } else { String::new() };
@@ -116,28 +105,4 @@ pub fn kpis(ctx: &Ctx) -> Vec<Kpi> {
             TEXT,
         ),
     ]
-}
-
-impl Doc {
-    pub fn kpi_grid(&mut self, items: &[Kpi]) {
-        let width = (CONTENT_W - 3.0 * GAP) / 4.0;
-        for row in items.chunks(4) {
-            self.ensure(HEIGHT + GAP);
-            for (index, item) in row.iter().enumerate() {
-                let x = MARGIN + index as f32 * (width + GAP);
-                self.rect(x, self.y, width, HEIGHT, PANEL);
-                self.frame(x, self.y, width, HEIGHT, RULE);
-                self.text(x + 8.0, self.y + 13.0, Style::CAPTION, item.label);
-                self.text(
-                    x + 8.0,
-                    self.y + 31.0,
-                    Style::new(15.0, item.color, true),
-                    &item.value,
-                );
-                let note = self.fit_line(&item.note, width - 14.0, Style::CAPTION);
-                self.text(x + 8.0, self.y + 44.0, Style::CAPTION, &note);
-            }
-            self.skip(HEIGHT + GAP);
-        }
-    }
 }

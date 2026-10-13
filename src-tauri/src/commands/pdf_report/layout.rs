@@ -8,6 +8,7 @@ pub mod doc;
 pub mod draw;
 pub mod table;
 pub mod text;
+pub mod widgets;
 
 #[cfg(test)]
 mod tests_card;
@@ -15,3 +16,5 @@ mod tests_card;
 mod tests_doc;
 #[cfg(test)]
 mod tests_table;
+#[cfg(test)]
+mod tests_widgets;

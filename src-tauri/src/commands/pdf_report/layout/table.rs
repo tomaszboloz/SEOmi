@@ -21,6 +21,7 @@ impl Column {
     }
 }
 
+#[derive(Clone)]
 pub struct Cell {
     pub text: String,
     pub style: Style,
@@ -50,15 +51,21 @@ pub(super) fn widths(columns: &[Column]) -> Vec<f32> {
 }
 
 impl Doc {
-    /// Draws a table that repeats its header on every page and never cuts a
-    /// row in the middle unless the row is taller than a whole page.
-    pub fn table(&mut self, columns: &[Column], rows: &[Vec<Cell>]) {
+    /// Height the table needs before it may start on the current page.
+    pub fn table_need(&self, columns: &[Column], rows: &[Vec<Cell>]) -> f32 {
         let widths = widths(columns);
         let lead = Style::BODY.leading();
         let first = rows.first().map_or(1, |row| self.row_lines(row, &widths).0);
         let capacity = self.limit() - TOP - HEAD_H;
         let whole = first as f32 * lead + 2.0 * PAD_Y;
-        self.ensure(HEAD_H + if whole <= capacity { whole } else { 3.0 * lead });
+        HEAD_H + if whole <= capacity { whole } else { 3.0 * lead }
+    }
+
+    /// Draws a table that repeats its header on every page and never cuts a
+    /// row in the middle unless the row is taller than a whole page.
+    pub fn table(&mut self, columns: &[Column], rows: &[Vec<Cell>]) {
+        let widths = widths(columns);
+        self.ensure(self.table_need(columns, rows));
         self.table_header(columns, &widths);
         for (index, row) in rows.iter().enumerate() {
             self.table_row(columns, &widths, index, row);

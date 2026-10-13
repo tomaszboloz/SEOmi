@@ -1,16 +1,16 @@
 //! Styled single-page audit report built on the layout engine.
 
 mod check;
-mod ctx;
+pub(super) mod ctx;
 mod detail;
 mod issues;
 mod kpi;
 mod locate;
 mod locate_evidence;
 mod locate_tech;
-mod model;
+pub(super) mod model;
 mod sections;
-mod strings;
+pub(super) mod strings;
 mod summary;
 
 #[cfg(test)]

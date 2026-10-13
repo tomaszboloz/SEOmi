@@ -2,7 +2,7 @@ use super::ctx::Ctx;
 use super::model::{Finding, Sev};
 use super::strings::{report as s, t};
 use crate::commands::pdf_report::layout::card::{Card, CardRow};
-use crate::commands::pdf_report::layout::color::{BRAND, OK, RULE};
+use crate::commands::pdf_report::layout::color::OK;
 use crate::commands::pdf_report::layout::doc::{Doc, CONTENT_W, MARGIN};
 use crate::commands::pdf_report::layout::text::Style;
 
@@ -29,15 +29,6 @@ fn card_for(finding: &Finding) -> Card {
 }
 
 impl Doc {
-    /// Section heading with a thin brand rule; kept together with what follows.
-    pub fn heading(&mut self, text: &str) {
-        self.ensure(KEEP_WITH_NEXT);
-        self.skip(6.0);
-        self.text(MARGIN, self.y + 13.0, Style::new(14.0, BRAND, true), text);
-        self.hline(MARGIN, MARGIN + CONTENT_W, self.y + 20.0, RULE, 0.8);
-        self.skip(30.0);
-    }
-
     pub fn issues_section(&mut self, ctx: &Ctx) {
         self.heading(s::FIX_FIRST);
         if ctx.findings.is_empty() {

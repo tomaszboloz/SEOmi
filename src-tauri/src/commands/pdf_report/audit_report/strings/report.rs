@@ -25,7 +25,6 @@ pub const HTTP_STATUS: &str = "HTTP STATUS";
 pub const RESPONSE_TIME: &str = "RESPONSE TIME";
 pub const MS: &str = "{0} ms";
 pub const HEALTH_SCORE: &str = "Health score";
-pub const OUT_OF: &str = "/ 100";
 pub const RATING_GOOD: &str = "Good";
 pub const RATING_FAIR: &str = "Needs improvement";
 pub const RATING_POOR: &str = "Poor";

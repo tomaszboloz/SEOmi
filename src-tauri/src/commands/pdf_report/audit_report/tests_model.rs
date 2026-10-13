@@ -3,8 +3,8 @@ use super::ctx::{format_number, pretty_time};
 use super::fixture::fixture;
 use super::model::{category_label, findings, Sev};
 use super::strings::t;
-use super::summary::score_color;
 use crate::commands::pdf_report::layout::color::{CRITICAL, MUTED, OK, WARNING};
+use crate::commands::pdf_report::layout::widgets::score_color;
 use serde_json::json;
 
 #[test]

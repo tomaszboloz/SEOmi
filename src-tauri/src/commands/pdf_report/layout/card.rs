@@ -7,6 +7,7 @@ const STRIPE: f32 = 4.0;
 const HEADER: f32 = 18.0;
 const LABEL_W: f32 = 62.0;
 const ROW_GAP: f32 = 3.5;
+const BULLET_W: f32 = 8.0;
 const HEADLINE: Style = Style::new(10.0, super::color::TEXT, true);
 
 /// A labelled block of text; several items are drawn as a bullet list.
@@ -54,12 +55,13 @@ impl Doc {
             let bullets = row.items.len() > 1;
             let mut first = true;
             for item in &row.items {
-                let shown = if bullets {
-                    format!("\u{2022} {item}")
-                } else {
-                    item.clone()
-                };
-                for text in self.wrap(&shown, inner - LABEL_W, Style::BODY) {
+                let width = inner - LABEL_W - if bullets { BULLET_W } else { 0.0 };
+                for (index, text) in self.wrap(item, width, Style::BODY).into_iter().enumerate() {
+                    let text = match (bullets, index) {
+                        (false, _) => text,
+                        (true, 0) => format!("\u{2022} {text}"),
+                        (true, _) => format!("   {text}"),
+                    };
                     let label = first.then(|| row.label.clone());
                     let gap = if first { ROW_GAP } else { 0.0 };
                     lines.push(VLine {
