@@ -24,7 +24,9 @@ const MAX_PAGES = 5;
 
 // Models listed by OpenAI include embeddings, audio, image and moderation
 // models that cannot answer a chat request; only text generation is offered.
-const OPENAI_NON_CHAT = /(embedding|whisper|tts|dall-e|image|audio|realtime|transcribe|moderation|search|davinci|babbage|computer-use)/i;
+// `-pro`, `codex` and `gpt-live` are served by other endpoints, `instruct` by legacy completions.
+const OPENAI_NON_CHAT = /(embedding|whisper|tts|dall-e|image|audio|realtime|transcribe|moderation|search|davinci|babbage|computer-use|-pro|codex|gpt-live|instruct)/i;
+const GEMINI_NON_TEXT = /(tts|image|transcribe|embedding|robotics|computer-use)/i;
 const isOpenAiChatModel = (id: string): boolean => /^(gpt-|o\d|chatgpt-)/i.test(id) && !OPENAI_NON_CHAT.test(id);
 
 const OpenAiList = z.object({ data: z.array(z.object({ id: z.string().min(1), created: z.number().optional() })) });
@@ -84,7 +86,7 @@ const listGemini = async (apiKey: string, fetchImpl: ModelListFetch): Promise<Ai
     const body = GeminiList.parse(await readJson(await fetchImpl(`https://generativelanguage.googleapis.com/v1beta/models?${query}`)));
     for (const model of body.models) {
       const id = model.name.replace(/^models\//, '');
-      if (!id.startsWith('gemini') || /embedding/i.test(id)) continue;
+      if (!id.startsWith('gemini') || GEMINI_NON_TEXT.test(id)) continue;
       if (!(model.supportedGenerationMethods ?? []).includes('generateContent')) continue;
       models.push({ id, label: model.displayName || id });
     }
