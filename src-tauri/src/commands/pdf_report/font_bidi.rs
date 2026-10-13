@@ -75,8 +75,8 @@ impl FontSet {
         let slice = &text[segment.range.clone()];
         if segment.arabic {
             self.encode_arabic(slice, runs);
-        } else if let Some(character) = slice.chars().next() {
-            self.encode_scalar(character, runs);
+        } else {
+            self.encode_scalar(slice.chars().next().unwrap_or('?'), runs);
         }
     }
 }

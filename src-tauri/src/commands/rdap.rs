@@ -30,12 +30,16 @@ fn registrable_hostname(domain: &str) -> Result<String, String> {
     Ok(host)
 }
 
+fn may_follow(previous_hops: usize, scheme: &str) -> bool {
+    previous_hops < MAX_RDAP_REDIRECTS && scheme == "https"
+}
+
 fn rdap_client() -> Result<Client, String> {
     let policy = Policy::custom(|attempt| {
-        if attempt.previous().len() >= MAX_RDAP_REDIRECTS || attempt.url().scheme() != "https" {
-            attempt.stop()
-        } else {
+        if may_follow(attempt.previous().len(), attempt.url().scheme()) {
             attempt.follow()
+        } else {
+            attempt.stop()
         }
     });
     Client::builder()
@@ -89,3 +93,7 @@ pub async fn rdap_domain_lookup(domain: String) -> Result<Value, String> {
 #[cfg(test)]
 #[path = "rdap_tests.rs"]
 mod tests;
+
+#[cfg(test)]
+#[path = "rdap_stream_tests.rs"]
+mod stream_tests;
