@@ -26,6 +26,7 @@
 ## Changes since 0.0.7
 
 - Native code gained test seams without changing behaviour: injected endpoints and credential store for Google Analytics 4 commands, the rendered-fetch cancel/timeout race, the external-link runner, file-lock error classification and the public-feed client. These make previously unreachable error paths testable.
+- Domain age lookup sends a `User-Agent`, so rdap.org no longer answers HTTP 403 (fix by @RafalSzy, #43).
 - Removed defensive branches that could never run (always-true URL checks, an unreachable findings cap, a plain-HTTP proxy body write the parser already rejects).
 
 ## Changes since 0.0.6
