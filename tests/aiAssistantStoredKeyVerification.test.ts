@@ -68,3 +68,18 @@ it('returns the key write so the field can report the outcome', async () => {
   await act(async () => { await expect(result.current.handleApiKeyChange('sk-2')).rejects.toThrow('vault failed'); });
   expect(result.current.error).toBe('vault failed');
 });
+
+it('keeps a newer error scope when a failed verification finishes after another action took it', async () => {
+  testConnection.mockResolvedValueOnce({ success: true, message: 'ok' });
+  const { result } = renderHook(useAIAssistantSession);
+  await act(async () => { await result.current.handleGenerate(); });
+  const copyFromEarlierResult = result.current.copySchema;
+  const pending = deferred<{ success: boolean; message: string }>();
+  testConnection.mockReturnValueOnce(pending.promise);
+  let job!: Promise<void>;
+  act(() => { job = result.current.handleGenerate(); });
+  await act(async () => { await copyFromEarlierResult(); });
+  await act(async () => { pending.resolve({ success: false, message: 'Invalid OpenAI API key' }); await job; });
+  expect(result.current.error).toBeNull();
+  expect(generate).toHaveBeenCalledTimes(1);
+});
