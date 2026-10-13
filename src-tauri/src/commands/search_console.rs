@@ -2,10 +2,13 @@ mod browser;
 mod callback;
 mod callback_io;
 mod connect;
+mod connect_errors;
 mod credentials;
 mod dates;
 mod disconnect;
 mod filters;
+#[cfg(test)]
+mod filters_country_tests;
 mod fragments;
 pub mod ga4;
 mod inspection;

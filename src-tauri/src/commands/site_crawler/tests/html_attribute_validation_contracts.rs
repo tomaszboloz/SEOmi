@@ -70,3 +70,11 @@ fn attribute_validation_keeps_each_bad_uri_occurrence_and_applies_page_caps() {
         .windows(2)
         .all(|pair| pair[0].source_excerpt != pair[1].source_excerpt));
 }
+
+#[test]
+fn uri_attributes_with_blank_values_are_not_counted_or_validated() {
+    let (findings, truncated) =
+        validate(r#"<a href="   ">blank</a><a title="x" href="">empty</a>"#);
+    assert!(findings.is_empty());
+    assert!(!truncated);
+}

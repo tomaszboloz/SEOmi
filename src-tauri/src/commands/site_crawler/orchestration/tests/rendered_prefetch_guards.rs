@@ -110,3 +110,36 @@ async fn prefetch_rendered_pages_returns_early_when_slots_under_two_or_queue_emp
     .await;
     assert!(state2.prefetched_order.is_empty());
 }
+
+#[tokio::test]
+async fn prefetch_with_an_empty_queue_returns_without_work() {
+    let mut config = default_crawl_config(Some(4));
+    config.crawl_mode = "browser-rendered".into();
+    let server = DiscoveryServer::new(config, vec![]).await;
+    let mut state = queued_state(&[]);
+    let app = StorageApp::new(mock_builder());
+    let control = CrawlControl::new();
+    prefetch_rendered_pages(&app.handle(), &control, &server.setup, &mut state, 4, &[]).await;
+    assert!(state.prefetched_order.is_empty());
+    assert!(server.requests.lock().unwrap().is_empty());
+}
+
+#[tokio::test]
+async fn panicked_prefetch_tasks_become_fetch_failures_for_their_url() {
+    use super::super::rendered_prefetch_failure::record_task_failure;
+    let mut tasks = tokio::task::JoinSet::new();
+    let handle = tasks.spawn(async { panic!("renderer exploded") });
+    let mut urls = std::collections::HashMap::new();
+    urls.insert(handle.id(), "https://example.test/a".to_string());
+    let error = tasks.join_next().await.unwrap().unwrap_err();
+    let mut state = queued_state(&[]);
+    record_task_failure(&mut state, &mut urls, &error);
+    let failure = state.prefetched_responses["https://example.test/a"]
+        .as_ref()
+        .err()
+        .unwrap();
+    assert_eq!(failure.kind, "prefetch_task");
+    assert!(urls.is_empty());
+    record_task_failure(&mut state, &mut urls, &error);
+    assert_eq!(state.prefetched_responses.len(), 1);
+}

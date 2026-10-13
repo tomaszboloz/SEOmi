@@ -1,6 +1,19 @@
 use super::current_state::finish_if_stopped_or_changed;
 use super::*;
 
+/// Points where another process may legitimately change the queue between
+/// two reads; tests use them to reproduce those races deterministically.
+#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+pub(super) enum Checkpoint {
+    Locked,
+    Started,
+}
+
+pub(super) fn ensure_directory(path: &std::path::Path) -> Result<(), String> {
+    fs::create_dir_all(path)
+        .map_err(|error| format!("Unable to create audit queue directory: {error}"))
+}
+
 /// Execute one stale queue run. The OS scheduler supplies only opaque IDs;
 /// all URLs and state are loaded from the project-scoped native snapshot.
 pub(super) async fn run_audit_queue_with<R, F, Fut>(
@@ -9,6 +22,22 @@ pub(super) async fn run_audit_queue_with<R, F, Fut>(
     run_id: String,
     inspect: F,
     retire: impl Fn(String, String) + Send + Sync + 'static,
+) -> Result<(), String>
+where
+    R: tauri::Runtime,
+    F: Fn(String, Option<String>) -> Fut,
+    Fut: std::future::Future<Output = Result<crate::models::audit_data::PageAuditData, String>>,
+{
+    run_audit_queue_checked(app, project_id, run_id, inspect, retire, |_| {}).await
+}
+
+pub(super) async fn run_audit_queue_checked<R, F, Fut>(
+    app: AppHandle<R>,
+    project_id: String,
+    run_id: String,
+    inspect: F,
+    retire: impl Fn(String, String) + Send + Sync + 'static,
+    checkpoint: impl Fn(Checkpoint),
 ) -> Result<(), String>
 where
     R: tauri::Runtime,
@@ -34,13 +63,13 @@ where
     }
 
     let project_dir = crawl_storage::project_directory(&app, &project_id)?;
-    fs::create_dir_all(&project_dir)
-        .map_err(|error| format!("Unable to create audit queue directory: {error}"))?;
+    ensure_directory(&project_dir)?;
     let lock_path = project_dir.join(format!("audit_queue_execution_{run_id}.lock"));
     let Some(_lock) = acquire_lock(&lock_path)? else {
         return Ok(());
     };
 
+    checkpoint(Checkpoint::Locked);
     let owner = QueueOwner {
         app,
         project_id,
@@ -57,6 +86,7 @@ where
         return Ok(());
     }
 
+    checkpoint(Checkpoint::Started);
     let mut first_error: Option<String> = None;
     for item_index in 0..snapshot.items.len() {
         if finish_if_stopped_or_changed(&owner, &snapshot, &first_error)? {

@@ -9,6 +9,22 @@ use tokio::{
     time::{sleep_until, timeout, Instant},
 };
 
+pub(super) enum Admission {
+    Serve(TcpStream),
+    Skip,
+    Stop,
+}
+/// Only loopback peers may talk to the worker; an accept failure stops the listener.
+pub(super) fn admit_connection(
+    accepted: std::io::Result<(TcpStream, std::net::SocketAddr)>,
+) -> Admission {
+    match accepted {
+        Ok((stream, peer)) if peer.ip().is_loopback() => Admission::Serve(stream),
+        Ok(_) => Admission::Skip,
+        Err(_) => Admission::Stop,
+    }
+}
+
 pub(super) async fn run_worker<R: Runtime>(
     listener: TcpListener,
     shared: WorkerShared<R>,
@@ -19,10 +35,11 @@ pub(super) async fn run_worker<R: Runtime>(
             _ = &mut shutdown => break,
             _ = sleep_until(shared.expires_at) => break,
             accepted = listener.accept() => {
-                let Ok((stream, peer)) = accepted else { break; };
-                if !peer.ip().is_loopback() {
-                    continue;
-                }
+                let stream = match admit_connection(accepted) {
+                    Admission::Serve(stream) => stream,
+                    Admission::Skip => continue,
+                    Admission::Stop => break,
+                };
                 let connection_shared = shared.clone();
                 tokio::spawn(async move {
                     let _ = timeout(REQUEST_TIMEOUT, handle_connection(stream, connection_shared)).await;

@@ -103,3 +103,13 @@ fn explicit_names_populate_identity_and_control_inventories() {
         .html_snippet
         .contains("empty"));
 }
+
+#[test]
+fn trailing_whitespace_after_a_finished_value_ends_the_scan() {
+    assert_eq!(source_attribute_value("<input a='b'   ", "name"), None);
+    assert_eq!(source_attribute_value("<input a=b  ", "name"), None);
+    assert_eq!(
+        source_attribute_value("<input a='b' name=c", "name"),
+        Some("c".into())
+    );
+}

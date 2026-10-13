@@ -87,3 +87,17 @@ fn resource_candidates_at_capacity_still_merge_known_urls() {
     assert_eq!(candidates[known].source_urls, ["https://example.com/page"]);
     assert!(!candidates.contains_key("https://example.com/brand-new.png"));
 }
+
+#[test]
+fn unterminated_html_doctype_is_still_recognised() {
+    let mut findings = Vec::new();
+    let mut truncated = false;
+    check_html_doctype(
+        "<!doctype html",
+        "<!doctype html",
+        &mut findings,
+        &mut truncated,
+    );
+    assert!(findings.is_empty());
+    assert!(!truncated);
+}

@@ -19,7 +19,10 @@ it.each(['\n', '\r\n'])('keeps strict CI gates with %j line endings', (newline) 
   expect(rust).toContain('cargo +nightly llvm-cov --manifest-path src-tauri/Cargo.toml --branch --no-report');
   expect(rust).toContain('SEOMI_E2E_RENDERER=1 cargo +nightly llvm-cov run --manifest-path src-tauri/Cargo.toml --example desktop_e2e --features custom-protocol --branch --no-clean --lcov --output-path coverage-rust.lcov -- test-results/desktop-e2e-coverage.json');
   expect(rust).toContain('node scripts/validate-desktop-e2e-report.mjs test-results/desktop-e2e-coverage.json');
-  expect(rust).not.toContain('--no-clean --no-report');
+  expect(rust).toContain('--bin seomi --features custom-protocol --branch --no-clean -- --seomi-scheduled-headless');
+  expect(rust).toContain('--bin seomi --features custom-protocol --branch --no-clean -- --seomi-audit-queue-headless');
+  expect(rust.indexOf('--seomi-audit-queue-headless')).toBeLessThan(rust.indexOf('llvm-cov report'));
+  expect(rust.indexOf('validate-desktop-e2e-report.mjs')).toBeLessThan(rust.indexOf('--seomi-scheduled-headless'));
   expect(rust).toContain('cargo +nightly llvm-cov report --manifest-path src-tauri/Cargo.toml --branch --lcov');
   expect(rust).toContain('cargo +nightly llvm-cov report --manifest-path src-tauri/Cargo.toml --branch --json');
   expect(rust).toContain('test-results/desktop-e2e-coverage.json');
@@ -47,8 +50,13 @@ it.each(['\n', '\r\n'])('keeps strict CI gates with %j line endings', (newline) 
   expect(frontend).toContain('if-no-files-found: error');
   expect(release).not.toContain('macos-13');
   expect(release).toContain("platform: 'macos-15-intel'");
-  expect(release).toContain("args: '--target x86_64-apple-darwin'");
-  expect(release).toContain("args: '--target aarch64-apple-darwin'");
+  expect(release).toContain("args: '--target x86_64-apple-darwin --bundles app,dmg'");
+  expect(release).toContain("args: '--target aarch64-apple-darwin --bundles app,dmg'");
+  expect(release).not.toContain('uploadWorkflowArtifacts');
+  expect(release).toContain('branches: [ main ]');
+  expect(release).toContain('git ls-remote --exit-code --tags origin');
+  expect(release).toContain('releaseCommitish: ${{ github.sha }}');
+  expect(release).toContain('gh release edit "${{ needs.release-preflight.outputs.tag }}" --draft=false');
 });
 
 it('requires actual rendering on both desktop platforms', () => {

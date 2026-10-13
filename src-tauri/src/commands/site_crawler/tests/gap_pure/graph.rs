@@ -50,3 +50,32 @@ fn repeated_entity_on_one_page_is_not_flagged_but_across_pages_is() {
     ]);
     assert_eq!(across.len(), 2);
 }
+
+fn reference(property: &str, value: &str) -> CrawledSchemaReference {
+    CrawledSchemaReference {
+        format: "JSON-LD".into(),
+        declaration_index: 0,
+        property: property.into(),
+        value: value.into(),
+        node_path: Some("0".into()),
+    }
+}
+
+#[test]
+fn a_url_property_makes_an_identified_node_a_definition() {
+    let issues = |with_url: bool| {
+        let mut page = common_fixture::post_processing_page("https://example.test/");
+        page.schema_references = vec![reference("@id", "https://example.test/#org")];
+        if with_url {
+            page.schema_references
+                .push(reference("url", "https://example.test/"));
+        }
+        page.schema_references
+            .push(reference("publisher", "https://example.test/#org"));
+        let mut pages = vec![page];
+        annotate_schema_graph(&mut pages);
+        pages[0].issues.len()
+    };
+    assert_eq!(issues(true), 0);
+    assert_eq!(issues(false), 1);
+}

@@ -49,10 +49,7 @@ pub(super) async fn search_console_performance_with(
     if site_url.trim().is_empty() {
         return Err("Wybierz property Search Console.".into());
     }
-    let client = reqwest::Client::builder()
-        .timeout(Duration::from_secs(30))
-        .build()
-        .map_err(|error| error.to_string())?;
+    let client = performance_client(reqwest::Client::builder())?;
     let (start, end) = requested_date_range(start_date.as_deref(), end_date.as_deref())?;
     let filters = normalize_filters(filters)?;
     let access_token =
@@ -93,4 +90,13 @@ pub(super) async fn search_console_performance_at(
         filters,
     )
     .await
+}
+
+pub(super) fn performance_client(
+    builder: reqwest::ClientBuilder,
+) -> Result<reqwest::Client, String> {
+    builder
+        .timeout(Duration::from_secs(30))
+        .build()
+        .map_err(|error| error.to_string())
 }

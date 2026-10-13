@@ -113,7 +113,7 @@ pub(super) async fn run_ai_cli_resolved(
         process.env("GEMINI_CLI_SYSTEM_SETTINGS_PATH", settings_path);
         process.env_remove("GEMINI_SYSTEM_MD");
     }
-    if let Some(path) = augmented_path() {
+    for path in augmented_path().into_iter() {
         process.env("PATH", path);
     }
 

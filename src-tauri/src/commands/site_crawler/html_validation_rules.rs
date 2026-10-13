@@ -1,9 +1,7 @@
 use super::*;
 
 pub(super) fn document_declares_meta_charset(document: &Html) -> bool {
-    let Ok(meta_selector) = Selector::parse("meta") else {
-        return false;
-    };
+    let meta_selector = Selector::parse("meta").expect("static meta selector is valid");
     document.select(&meta_selector).any(|meta| {
         if meta
             .value()

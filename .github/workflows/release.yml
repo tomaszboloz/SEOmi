@@ -2,20 +2,56 @@ name: Multi-Platform Release (macOS & Windows)
 on:
   workflow_dispatch:
   push:
+    branches: [ main ]
     tags:
       - 'v*'
 
+concurrency:
+  group: release-${{ github.ref }}
+  cancel-in-progress: false
+
+permissions:
+  contents: read
+
 jobs:
   release-preflight:
-    name: Verify release signing credentials
-    runs-on: ubuntu-latest
+    name: Resolve release tag and verify signing credentials
+    runs-on: ubuntu-24.04
     permissions:
       contents: read
     outputs:
+      publish: ${{ steps.resolve.outputs.publish }}
+      tag: ${{ steps.resolve.outputs.tag }}
       ready: ${{ steps.credentials.outputs.ready }}
     steps:
+      - name: Checkout repository
+        uses: actions/checkout@v7.0.1
+
+      - name: Resolve the release tag from the application version
+        id: resolve
+        shell: bash
+        run: |
+          set -euo pipefail
+          version="$(node -p "require('./package.json').version")"
+          if [[ "$GITHUB_REF_TYPE" == 'tag' ]]; then
+            tag="$GITHUB_REF_NAME"
+            publish=true
+          else
+            tag="v${version}"
+            if git ls-remote --exit-code --tags origin "refs/tags/${tag}" >/dev/null 2>&1; then
+              publish=false
+              echo "Tag ${tag} already exists; nothing to release." >> "$GITHUB_STEP_SUMMARY"
+            else
+              publish=true
+              echo "Tag ${tag} is new; the release publishes it automatically." >> "$GITHUB_STEP_SUMMARY"
+            fi
+          fi
+          echo "tag=${tag}" >> "$GITHUB_OUTPUT"
+          echo "publish=${publish}" >> "$GITHUB_OUTPUT"
+
       - name: Check updater signing credentials
         id: credentials
+        if: steps.resolve.outputs.publish == 'true'
         env:
           TAURI_SIGNING_PRIVATE_KEY: ${{ secrets.TAURI_SIGNING_PRIVATE_KEY }}
         shell: bash
@@ -30,7 +66,7 @@ jobs:
 
   release:
     needs: release-preflight
-    if: needs.release-preflight.outputs.ready == 'true'
+    if: needs.release-preflight.outputs.publish == 'true' && needs.release-preflight.outputs.ready == 'true'
     permissions:
       contents: write
     strategy:
@@ -38,9 +74,9 @@ jobs:
       matrix:
         include:
           - platform: 'macos-15'
-            args: '--target aarch64-apple-darwin'
+            args: '--target aarch64-apple-darwin --bundles app,dmg'
           - platform: 'macos-15-intel'
-            args: '--target x86_64-apple-darwin'
+            args: '--target x86_64-apple-darwin --bundles app,dmg'
           - platform: 'windows-latest'
             args: ''
 
@@ -69,7 +105,7 @@ jobs:
           cache: 'npm'
 
       - name: Setup Rust Toolchain
-        uses: dtolnay/rust-toolchain@stable
+        uses: dtolnay/rust-toolchain@686976e191b89faba57d3206551f0f330d8cb249 # stable
         with:
           targets: ${{ matrix.platform == 'macos-15' && 'aarch64-apple-darwin' || matrix.platform == 'macos-15-intel' && 'x86_64-apple-darwin' || '' }}
 
@@ -78,21 +114,23 @@ jobs:
 
       - name: Prepare verified release notes
         id: notes
+        env:
+          RELEASE_TAG: ${{ needs.release-preflight.outputs.tag }}
         run: node scripts/release-notes.mjs
 
       - name: Build Desktop Application with Tauri
-        uses: tauri-apps/tauri-action@v0
+        uses: tauri-apps/tauri-action@84b9d35b5fc46c1e45415bdb6144030364f7ebc5 # v0
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           TAURI_SIGNING_PRIVATE_KEY: ${{ secrets.TAURI_SIGNING_PRIVATE_KEY }}
           TAURI_SIGNING_PRIVATE_KEY_PASSWORD: ${{ secrets.TAURI_SIGNING_PRIVATE_KEY_PASSWORD }}
         with:
-          tagName: ${{ github.event_name == 'push' && github.ref_name || '' }}
+          tagName: ${{ needs.release-preflight.outputs.tag }}
+          releaseCommitish: ${{ github.sha }}
           releaseName: 'SEOmi v__VERSION__'
           releaseBody: ${{ steps.notes.outputs.body }}
           releaseDraft: true
           prerelease: false
-          uploadWorkflowArtifacts: true
           args: ${{ matrix.args }} --config src-tauri/tauri.release.conf.json
 
       - name: Verify every generated updater signature
@@ -100,13 +138,13 @@ jobs:
 
   publish-release:
     name: Publish verified release
-    needs: release
-    if: github.event_name == 'push'
-    runs-on: ubuntu-latest
+    needs: [release-preflight, release]
+    if: needs.release-preflight.outputs.publish == 'true'
+    runs-on: ubuntu-24.04
     permissions:
       contents: write
     steps:
       - name: Publish draft after platform verification
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: gh release edit "${{ github.ref_name }}" --draft=false
+        run: gh release edit "${{ needs.release-preflight.outputs.tag }}" --draft=false

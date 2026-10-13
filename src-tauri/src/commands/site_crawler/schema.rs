@@ -109,3 +109,7 @@ pub(super) fn inspect_page_schema(
         truncated,
     )
 }
+
+#[cfg(test)]
+#[path = "schema_cap_tests.rs"]
+mod cap_tests;

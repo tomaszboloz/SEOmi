@@ -107,3 +107,7 @@ pub(super) fn percent_decode_robots_path(value: &str) -> String {
 pub(super) fn robots_allows(url: &url::Url, rules: &[RobotsRule]) -> bool {
     robots_deciding_rule(url, rules).map_or(true, |rule| rule.allow)
 }
+
+#[cfg(test)]
+#[path = "robots_matching_hex_tests.rs"]
+mod hex_tests;

@@ -38,6 +38,9 @@ mod validation_tests;
 #[path = "connect_coverage_tests.rs"]
 mod connect_coverage_tests;
 #[cfg(test)]
+#[path = "connect_error_tests.rs"]
+mod connect_error_tests;
+#[cfg(test)]
 #[path = "connect_regressions.rs"]
 mod connect_regressions;
 #[cfg(test)]
@@ -57,3 +60,6 @@ mod session_request_helpers;
 mod session_secret_persistence_tests;
 
 pub(super) use session_edge_fixture::{dependencies, Server, Store};
+#[cfg(test)]
+#[path = "properties_client_tests.rs"]
+mod properties_client_tests;

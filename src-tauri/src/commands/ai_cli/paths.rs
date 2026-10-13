@@ -5,11 +5,15 @@ use std::{collections::HashSet, env, ffi::OsString, fs, path::PathBuf};
 /// the normal PATH and in the conventional per-user install locations, while
 /// never accepting a user-provided executable path from IPC.
 pub(super) fn command_directories() -> Vec<PathBuf> {
-    let mut directories: Vec<PathBuf> = env::var_os("PATH")
+    directories_for(env::var_os("PATH"), home_directory())
+}
+
+pub(super) fn directories_for(path: Option<OsString>, home: Option<PathBuf>) -> Vec<PathBuf> {
+    let mut directories: Vec<PathBuf> = path
         .map(|value| env::split_paths(&value).collect())
         .unwrap_or_default();
 
-    if let Some(home) = home_directory() {
+    if let Some(home) = home {
         directories.extend([
             home.join(".local/bin"),
             home.join(".npm-global/bin"),

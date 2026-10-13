@@ -117,3 +117,10 @@ async fn loop_reports_zero_rate_and_stops_on_delay_cancellation() {
     assert!(state.pages.is_empty());
     assert!(server.requests.lock().unwrap().is_empty());
 }
+
+#[test]
+fn throughput_is_zero_until_time_has_elapsed() {
+    use super::super::summary::pages_per_second;
+    assert_eq!(pages_per_second(5, 0.0), 0.0);
+    assert_eq!(pages_per_second(5, 2.0), 2.5);
+}

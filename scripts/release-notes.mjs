@@ -21,7 +21,7 @@ export function releaseBody(version, notes, tag = null) {
 
 if (process.argv[1] && import.meta.url === pathToFileURL(resolve(process.argv[1])).href) {
   const { version } = JSON.parse(readFileSync('package.json', 'utf8'));
-  const tag = process.env.GITHUB_EVENT_NAME === 'push' ? process.env.GITHUB_REF_NAME : null;
+  const tag = process.env.RELEASE_TAG || null;
   const body = releaseBody(version, readFileSync('RELEASE_NOTES.md', 'utf8'), tag);
   const delimiter = `release_${randomUUID()}`;
   appendFileSync(process.env.GITHUB_OUTPUT, `body<<${delimiter}\n${body}\n${delimiter}\n`);

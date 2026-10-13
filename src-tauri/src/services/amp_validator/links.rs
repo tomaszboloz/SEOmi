@@ -17,9 +17,8 @@ pub(super) fn alternates(
         .select(&amphtml_selector)
         .take(MAX_AMPHTML_TARGETS + 1)
     {
-        let Some(href) = link.value().attr("href").map(str::trim) else {
-            continue;
-        };
+        // The selector requires an href attribute.
+        let href = link.value().attr("href").map(str::trim).unwrap_or_default();
         if href.is_empty() {
             add_finding(
                 findings,

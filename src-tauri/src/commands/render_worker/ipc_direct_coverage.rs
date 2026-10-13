@@ -62,3 +62,12 @@ async fn test_direct_rust_calls_coverage() {
     let finished_status = render_worker_status(state.clone()).await.unwrap();
     assert!(!finished_status);
 }
+
+#[test]
+fn io_failures_are_prefixed_with_their_context() {
+    let error = std::io::Error::other("denied");
+    assert_eq!(
+        super::io_failure("Unable to bind")(error),
+        "Unable to bind: denied"
+    );
+}

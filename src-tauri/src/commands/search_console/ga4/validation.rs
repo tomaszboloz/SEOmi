@@ -56,9 +56,7 @@ pub(super) fn site_scope(value: &str) -> Result<SiteScope, String> {
     {
         return Err("Google Analytics site URL is invalid.".into());
     }
-    let host = url
-        .host_str()
-        .ok_or_else(|| "Google Analytics site URL is invalid.".to_string())?;
+    let host = url.host_str().expect("http(s) URLs always have a host");
     Ok(SiteScope {
         host: normalize_host(host)?,
         domain_property: false,
@@ -94,9 +92,7 @@ pub(super) fn stream_host(uri: &str) -> Result<String, String> {
     if !matches!(url.scheme(), "http" | "https") {
         return Err("Google Analytics returned an invalid web stream URI.".into());
     }
-    let host = url
-        .host_str()
-        .ok_or_else(|| "Google Analytics returned an invalid web stream URI.".to_string())?;
+    let host = url.host_str().expect("http(s) URLs always have a host");
     normalize_host(host)
 }
 

@@ -47,6 +47,8 @@ mod html_evidence_edges;
 mod inline_images_contracts;
 #[path = "tests/ipc.rs"]
 mod ipc;
+#[path = "tests/ipc_crawl.rs"]
+mod ipc_crawl;
 #[path = "tests/js_redirects_contracts.rs"]
 mod js_redirects_contracts;
 #[path = "tests/js_redirects_edges.rs"]
@@ -61,6 +63,8 @@ mod post_processing_coverage;
 mod post_processing_edges;
 #[path = "tests/prefetch_guards.rs"]
 mod prefetch_guards;
+#[path = "tests/prefetch_task_failure.rs"]
+mod prefetch_task_failure;
 #[path = "tests/readability_coverage.rs"]
 mod readability_coverage;
 #[path = "tests/relations.rs"]

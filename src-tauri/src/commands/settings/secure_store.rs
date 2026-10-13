@@ -28,8 +28,11 @@ pub(crate) fn secret_entry(name: &str) -> Result<keyring::Entry, String> {
     let service = test_service.as_str();
     #[cfg(not(test))]
     let service = KEYRING_SERVICE;
-    keyring::Entry::new(service, name)
-        .map_err(|_| "Unable to access the system credential store.".into())
+    keyring::Entry::new(service, name).map_err(entry_error)
+}
+
+pub(super) fn entry_error(_: keyring::Error) -> String {
+    "Unable to access the system credential store.".into()
 }
 
 impl<F: Fn(&str) -> Result<keyring::Entry, String>> SecureStore for KeyringStore<F> {

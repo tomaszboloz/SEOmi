@@ -12,15 +12,8 @@ pub(super) fn parse_headings(html_str: &str) -> (HeadingsStructure, Vec<Issue>) 
     let heading_selector = Selector::parse("h1, h2, h3, h4, h5, h6").unwrap();
     for el in document.select(&heading_selector) {
         let tag = el.value().name();
-        let level = match tag {
-            "h1" => 1,
-            "h2" => 2,
-            "h3" => 3,
-            "h4" => 4,
-            "h5" => 5,
-            "h6" => 6,
-            _ => 1,
-        };
+        // The selector only matches h1-h6, so the second byte is the level digit.
+        let level = tag.as_bytes()[1] - b'0';
 
         let text = el.text().collect::<Vec<_>>().join(" ").trim().to_string();
         if level == 1 {

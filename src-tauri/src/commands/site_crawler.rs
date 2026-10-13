@@ -109,3 +109,9 @@ pub use orchestration::crawl_site_with_control;
 #[cfg(test)]
 #[path = "site_crawler/tests.rs"]
 mod tests;
+
+#[cfg(test)]
+mod semantic_fold_tests;
+
+#[cfg(test)]
+mod hreflang_region_tests;

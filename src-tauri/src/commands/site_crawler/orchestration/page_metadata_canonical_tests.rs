@@ -53,3 +53,17 @@ fn absent_declarations_and_self_targets_keep_existing_diagnostics() {
     assert!(!result.canonical_points_elsewhere);
     assert!(issues.is_empty());
 }
+
+#[test]
+fn invalid_pagination_declarations_are_reported_for_html_only() {
+    let document = Html::parse_document("<title>Page</title>");
+    let base = Url::parse("https://example.test/page").unwrap();
+    let mut issues = Vec::new();
+    extract_page_canonical(&document, &base, base.as_str(), true, 0, 2, &mut issues);
+    assert!(issues.iter().any(|issue| issue
+        .message
+        .starts_with("2 pagination declaration(s) have a missing or invalid")));
+    let mut issues = Vec::new();
+    extract_page_canonical(&document, &base, base.as_str(), false, 0, 2, &mut issues);
+    assert!(issues.is_empty());
+}

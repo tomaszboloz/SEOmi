@@ -29,9 +29,11 @@ pub(crate) fn is_allowed_navigation(
     let Ok(validated) = validate_and_normalize_url(url.as_str()) else {
         return false;
     };
-    let Some(host) = validated.host_str().map(str::to_ascii_lowercase) else {
-        return false;
-    };
+    // `validate_and_normalize_url` rejects URLs without a host.
+    let host = validated
+        .host_str()
+        .unwrap_or_default()
+        .to_ascii_lowercase();
     let base_host = base_host.to_ascii_lowercase();
     let host_in_scope =
         host == base_host || (allow_subdomains && host.ends_with(&format!(".{base_host}")));

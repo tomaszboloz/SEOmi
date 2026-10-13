@@ -10,7 +10,7 @@ pub(super) fn rendered_config() -> CrawlConfig {
     config
 }
 
-fn status_issues(
+pub(super) fn status_issues(
     page_data: &super::super::super::fetch_types::FetchedPageData,
     final_url: &str,
     redirects: usize,

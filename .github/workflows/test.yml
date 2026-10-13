@@ -6,16 +6,19 @@ on:
     branches: [ main ]
   workflow_dispatch:
 
+permissions:
+  contents: read
+
 jobs:
   test-rust:
     name: Rust Backend Unit & Security Tests
     runs-on: macos-15-intel
     steps:
       - uses: actions/checkout@v7.0.1
-      - uses: dtolnay/rust-toolchain@stable
+      - uses: dtolnay/rust-toolchain@686976e191b89faba57d3206551f0f330d8cb249 # stable
         with:
           components: clippy, llvm-tools-preview
-      - uses: taiki-e/install-action@v2
+      - uses: taiki-e/install-action@1168f6810a3cb30a3514bf5756a3b7f0422c6df8 # v2
         with:
           tool: cargo-llvm-cov@0.9.1
       - uses: actions/setup-node@v7.1.0
@@ -53,10 +56,10 @@ jobs:
     runs-on: macos-15-intel
     steps:
       - uses: actions/checkout@v7.0.1
-      - uses: dtolnay/rust-toolchain@stable
+      - uses: dtolnay/rust-toolchain@686976e191b89faba57d3206551f0f330d8cb249 # stable
         with:
           components: clippy, llvm-tools-preview
-      - uses: taiki-e/install-action@v2
+      - uses: taiki-e/install-action@1168f6810a3cb30a3514bf5756a3b7f0422c6df8 # v2
         with:
           tool: cargo-llvm-cov@0.9.1
       - uses: actions/setup-node@v7.1.0
@@ -97,6 +100,8 @@ jobs:
           mkdir -p test-results
           SEOMI_E2E_RENDERER=1 cargo +nightly llvm-cov run --manifest-path src-tauri/Cargo.toml --example desktop_e2e --features custom-protocol --branch --no-clean --lcov --output-path coverage-rust.lcov -- test-results/desktop-e2e-coverage.json
           node scripts/validate-desktop-e2e-report.mjs test-results/desktop-e2e-coverage.json
+          cargo +nightly llvm-cov run --manifest-path src-tauri/Cargo.toml --bin seomi --features custom-protocol --branch --no-clean -- --seomi-scheduled-headless --seomi-scheduled-project coverage-smoke --seomi-scheduled-id missing-task
+          cargo +nightly llvm-cov run --manifest-path src-tauri/Cargo.toml --bin seomi --features custom-protocol --branch --no-clean -- --seomi-audit-queue-headless --seomi-scheduled-project coverage-smoke --seomi-scheduled-id missing-run
           cargo +nightly llvm-cov report --manifest-path src-tauri/Cargo.toml --branch --lcov --output-path coverage-rust.lcov
           cargo +nightly llvm-cov report --manifest-path src-tauri/Cargo.toml --branch --json --output-path coverage-rust.json
           node scripts/native-production-coverage.mjs coverage-rust.lcov native-coverage-sources.json coverage-rust-production.lcov coverage-rust.json
@@ -125,7 +130,7 @@ jobs:
   native-coverage-threshold:
     name: Rust production coverage (95% follow-up)
     needs: coverage-rust
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     steps:
       - uses: actions/checkout@v7.0.1
       - uses: actions/setup-node@v7.1.0
@@ -140,7 +145,7 @@ jobs:
 
   test-frontend:
     name: Frontend TypeScript, i18n & Vitest
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     steps:
       - uses: actions/checkout@v7.0.1
       - name: Verify independent product sources
@@ -175,7 +180,7 @@ jobs:
   coverage-frontend-mcp:
     name: Frontend and MCP coverage (98% follow-up)
     needs: [test-rust, test-frontend, desktop-platform-smoke, dependency-security]
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     steps:
       - uses: actions/checkout@v7.0.1
       - uses: actions/setup-node@v7.1.0
@@ -219,7 +224,7 @@ jobs:
         with:
           node-version: 22
           cache: 'npm'
-      - uses: dtolnay/rust-toolchain@stable
+      - uses: dtolnay/rust-toolchain@686976e191b89faba57d3206551f0f330d8cb249 # stable
       - name: Install frontend dependencies
         run: npm ci
       - name: Build frontend
@@ -260,7 +265,7 @@ jobs:
 
   dependency-security:
     name: Dependency Vulnerability Scan & SBOM
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     permissions:
       contents: read
     steps:
@@ -289,7 +294,7 @@ jobs:
       - name: Generate Node SBOM
         run: npx --yes @cyclonedx/cyclonedx-npm@1.19.0 --output-file sbom-node.json --output-format json
 
-      - uses: dtolnay/rust-toolchain@stable
+      - uses: dtolnay/rust-toolchain@686976e191b89faba57d3206551f0f330d8cb249 # stable
 
       - name: Install Rust dependency security tools
         run: |

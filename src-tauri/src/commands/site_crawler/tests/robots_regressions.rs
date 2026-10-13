@@ -137,3 +137,13 @@ fn robots_path_percent_decode_malformed_and_boundary_cases() {
     assert!(robots_path_matches("/*$", "/"));
     assert!(robots_path_matches("/*$", "/sub")); // * consumes the complete suffix.
 }
+
+#[test]
+fn a_specific_group_ignores_wildcard_empty_and_foreign_user_agent_lines() {
+    let content = "User-agent: *\nDisallow: /wild\n\nUser-agent:\nDisallow: /empty\n\n\
+                   User-agent: otherbot\nDisallow: /other\n\nUser-agent: seomibot\nDisallow: /own\n";
+    assert!(robots_has_specific_agent_group(content, "seomibot/1.0"));
+    let rules = parse_robots_rules(content, "SEOmiBot/1.0");
+    let paths: Vec<_> = rules.iter().map(|rule| rule.path.as_str()).collect();
+    assert_eq!(paths, ["/own"]);
+}

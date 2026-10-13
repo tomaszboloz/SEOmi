@@ -61,18 +61,18 @@ pub(super) fn content_metrics(
         .iter()
         .map(|word| estimate_syllables(word))
         .sum::<usize>();
-    let (readability_ease_score, readability_grade, readability_method) =
-        if sentence_count > 0 && measured_word_count > 0 {
-            let (ease, grade, method) = readability_formula(
-                effective_language,
-                measured_word_count,
-                sentence_count,
-                syllable_count,
-            );
-            (Some(ease), Some(grade), Some(method.to_string()))
-        } else {
-            (None, None, None)
-        };
+    // A sentence needs an alphanumeric character, which also makes it a measured word.
+    let (readability_ease_score, readability_grade, readability_method) = if sentence_count > 0 {
+        let (ease, grade, method) = readability_formula(
+            effective_language,
+            measured_word_count,
+            sentence_count,
+            syllable_count,
+        );
+        (Some(ease), Some(grade), Some(method.to_string()))
+    } else {
+        (None, None, None)
+    };
     let complexity_score = average_words_per_sentence
         .zip(average_characters_per_word)
         .map(|(words_per_sentence, characters_per_word)| {

@@ -52,11 +52,7 @@ where
     task.status = "running".into();
     task.last_started_at = Some(started_at.to_rfc3339());
     task.last_error = None;
-    write_json_atomic(
-        &path,
-        &serde_json::to_value(&task).map_err(|error| error.to_string())?,
-        MAX_EXECUTION_BYTES,
-    )?;
+    write_json_atomic(&path, &value_of(&task)?, MAX_EXECUTION_BYTES)?;
     let outcome = execute(task.clone()).await;
     let completed_at = Utc::now();
     let succeeded = outcome.is_ok();
@@ -80,11 +76,7 @@ where
         return Err("Scheduled task manifest does not match requested schedule.".into());
     }
     let next_run_at = finalize_task(&mut latest_task, execution.clone(), succeeded)?;
-    write_json_atomic(
-        &path,
-        &serde_json::to_value(&latest_task).map_err(|error| error.to_string())?,
-        MAX_EXECUTION_BYTES,
-    )?;
+    write_json_atomic(&path, &value_of(&latest_task)?, MAX_EXECUTION_BYTES)?;
     let scheduler_error = if latest_task.enabled {
         register(
             project_id.clone(),
@@ -115,9 +107,9 @@ where
     } else {
         let _ = fs::remove_file(&result_path);
     }
-    write_json_atomic(
-        &metadata_path,
-        &serde_json::to_value(handoff).map_err(|error| error.to_string())?,
-        MAX_EXECUTION_BYTES,
-    )
+    write_json_atomic(&metadata_path, &value_of(&handoff)?, MAX_EXECUTION_BYTES)
+}
+
+pub(super) fn value_of<T: serde::Serialize>(value: &T) -> Result<serde_json::Value, String> {
+    serde_json::to_value(value).map_err(|error| error.to_string())
 }

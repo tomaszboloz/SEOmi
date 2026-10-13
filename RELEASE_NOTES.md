@@ -1,4 +1,4 @@
-# SEOmi 0.0.4 — release notes
+# SEOmi 0.0.5 — release notes
 
 ## Added
 
@@ -23,9 +23,17 @@
 - MCP shutdown handlers are registered before the server announces readiness.
 - Renderer capture sources have standalone JavaScript syntax while retaining acknowledged transfers and duplicate-capture protection.
 
+## Release and security
+
+- Releases publish automatically: when `main` carries an application version without a tag, the release workflow builds the macOS and Windows packages, creates the tag and publishes the release.
+- macOS packages now include the signed updater archive (`.app.tar.gz`), so in-app updates work on Apple Silicon and Intel; the release job no longer fails with "No signed updater artifacts were produced".
+- Third-party GitHub Actions are pinned to commit SHAs and workflows run with a read-only default token.
+- HTML entities are unescaped once in the MCP semantic audit (`&amp;lt;` stays `&lt;`).
+- Test files no longer trigger CodeQL findings for URL checks, regular expressions or temporary files.
+
 ## Quality
 
-- Expanded frontend, native and MCP regression coverage.
+- Expanded frontend, native and MCP regression coverage: frontend branches 99.6%, native lines 99.3%, functions 98.8%, branches 98.9% (unit tests only).
 - Preserved fallible production errors, bounded history reads and the 150-line code/test limit.
 - One application version source in `package.json`.
 - A security reporting policy and extended CodeQL scanning for JavaScript/TypeScript and GitHub Actions.

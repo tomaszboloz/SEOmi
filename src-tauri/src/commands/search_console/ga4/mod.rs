@@ -2,6 +2,8 @@ mod account;
 mod admin;
 pub mod commands;
 #[cfg(test)]
+mod commands_ipc_tests;
+#[cfg(test)]
 mod commands_tests;
 mod mapping;
 mod models;

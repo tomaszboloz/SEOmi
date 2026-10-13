@@ -1,3 +1,4 @@
+use super::connect_errors::{failed, text};
 use super::credentials::{client_secret_key, refresh_token_key, validate_client_id};
 use super::models::GscSiteProperty;
 use super::{
@@ -55,10 +56,10 @@ pub(super) async fn connect_with_scope<'a>(
     let old_refresh_token = dependencies.credentials.read(&refresh_key).ok().flatten();
     let listener = TcpListener::bind(("127.0.0.1", 0))
         .await
-        .map_err(|error| format!("Unable to start the local OAuth callback: {error}"))?;
+        .map_err(failed("Unable to start the local OAuth callback"))?;
     let port = listener
         .local_addr()
-        .map_err(|error| format!("Unable to determine the OAuth port: {error}"))?
+        .map_err(failed("Unable to determine the OAuth port"))?
         .port();
     let (redirect_uri, state, verifier, auth_url) =
         oauth_request_with_scope(&client_id, port, scope)?;
@@ -67,7 +68,7 @@ pub(super) async fn connect_with_scope<'a>(
     let client = reqwest::Client::builder()
         .timeout(Duration::from_secs(20))
         .build()
-        .map_err(|error| format!("Unable to create the Google OAuth client: {error}"))?;
+        .map_err(failed("Unable to create the Google OAuth client"))?;
     let client_secret = client_secret
         .filter(|value| !value.trim().is_empty())
         .or_else(|| {
@@ -85,9 +86,8 @@ pub(super) async fn connect_with_scope<'a>(
         client_secret.as_deref(),
     )
     .await?;
-    let access_token = token
-        .access_token
-        .ok_or_else(|| "Google OAuth did not return an access token.".to_string())?;
+    // `oauth_response` already rejects a missing or blank access token.
+    let access_token = token.access_token.unwrap_or_default();
     let refresh_token = token.refresh_token.or(old_refresh_token)
         .ok_or_else(|| "Google did not return a refresh token. Revoke SEOmi access in your Google account and connect again.".to_string())?;
     let properties =
@@ -126,8 +126,7 @@ pub(super) fn oauth_request_with_scope(
     let state = Uuid::new_v4().simple().to_string();
     let verifier = format!("{}{}", Uuid::new_v4().simple(), Uuid::new_v4().simple());
     let challenge = code_challenge(&verifier);
-    let mut auth_url = Url::parse("https://accounts.google.com/o/oauth2/v2/auth")
-        .map_err(|error| error.to_string())?;
+    let mut auth_url = Url::parse("https://accounts.google.com/o/oauth2/v2/auth").map_err(text)?;
     auth_url
         .query_pairs_mut()
         .append_pair("client_id", client_id)

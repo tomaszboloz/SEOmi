@@ -89,3 +89,16 @@ async fn stream_candidates_invalid_pagination_token() {
     assert!(res.is_err());
     handle.await.unwrap();
 }
+
+#[tokio::test]
+async fn stream_candidates_reject_a_malformed_stream_list() {
+    let (addr, handle) = serve_once(200, r#"{"dataStreams":"not-a-list"}"#.into()).await;
+    let client = super::http_fixture::test_client();
+    let scope = site_scope("https://example.com").unwrap();
+    let res = stream_candidates(&client, "tok", &addr, &scope).await;
+    assert_eq!(
+        res.unwrap_err(),
+        "Google Analytics returned an invalid data stream list."
+    );
+    handle.await.unwrap();
+}

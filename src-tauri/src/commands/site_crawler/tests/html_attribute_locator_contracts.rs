@@ -56,3 +56,14 @@ fn rejects_attribute_substrings_missing_equals_and_unquoted_boundaries() {
         Some(source.find("no").unwrap())
     );
 }
+
+#[test]
+fn element_names_may_end_at_a_slash_or_a_closing_bracket() {
+    let source = r#"<div/><div><div data-id=hit>"#;
+    let hit = source.find("hit").unwrap();
+    assert_eq!(locate(source, "div", "data-id", "hit", 0), Some(hit));
+    assert_eq!(
+        locate("<div/ data-id=a>", "div", "data-id", "a", 0),
+        Some(14)
+    );
+}

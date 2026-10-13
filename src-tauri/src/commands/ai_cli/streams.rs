@@ -39,15 +39,15 @@ pub(super) async fn bounded_process_output(
     let mut stdin = child
         .stdin
         .take()
-        .ok_or_else(|| std::io::Error::other("Missing CLI stdin"))?;
+        .expect("stdin is configured as piped above");
     let stdout = child
         .stdout
         .take()
-        .ok_or_else(|| std::io::Error::other("Missing CLI stdout"))?;
+        .expect("stdout is configured as piped above");
     let stderr = child
         .stderr
         .take()
-        .ok_or_else(|| std::io::Error::other("Missing CLI stderr"))?;
+        .expect("stderr is configured as piped above");
     // Drain both pipes while writing input: providers may emit output before
     // consuming the prompt. try_join cancels on overflow; child drop kills it.
     let (_, stdout, stderr, status) = tokio::try_join!(

@@ -17,18 +17,37 @@ pub(super) async fn disconnect_search_console_at(
 }
 
 fn delete_secret(key: &str) -> Result<(), String> {
-    match secret_entry(key)?.delete_credential() {
+    deletion_outcome(secret_entry(key)?.delete_credential())
+}
+
+fn read_secret(key: &str) -> Result<Option<String>, String> {
+    read_outcome(secret_entry(key)?.get_password())
+}
+
+pub(super) fn deletion_outcome(result: Result<(), keyring::Error>) -> Result<(), String> {
+    match result {
         Ok(()) | Err(keyring::Error::NoEntry) => Ok(()),
         Err(error) => Err(error.to_string()),
     }
 }
 
-fn read_secret(key: &str) -> Result<Option<String>, String> {
-    match secret_entry(key)?.get_password() {
+pub(super) fn read_outcome(
+    result: Result<String, keyring::Error>,
+) -> Result<Option<String>, String> {
+    match result {
         Ok(token) => Ok(Some(token)),
         Err(keyring::Error::NoEntry) => Ok(None),
         Err(error) => Err(error.to_string()),
     }
+}
+
+pub(super) fn revocation_client(
+    builder: reqwest::ClientBuilder,
+) -> Result<reqwest::Client, String> {
+    builder
+        .timeout(Duration::from_secs(10))
+        .build()
+        .map_err(|error| format!("The token was removed locally, but unable to create the Google consent revocation client: {error}"))
 }
 
 pub(super) async fn disconnect_search_console_internal<D, G>(
@@ -53,10 +72,7 @@ where
     let Some(refresh_token) = refresh_token else {
         return Ok("The local Search Console token has already been removed.".into());
     };
-    let client = reqwest::Client::builder()
-        .timeout(Duration::from_secs(10))
-        .build()
-        .map_err(|error| format!("The token was removed locally, but unable to create the Google consent revocation client: {error}"))?;
+    let client = revocation_client(reqwest::Client::builder())?;
     revoke_refresh_token_at(&client, revoke_endpoint, &refresh_token).await
 }
 

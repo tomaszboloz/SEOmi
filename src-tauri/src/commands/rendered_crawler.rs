@@ -4,6 +4,7 @@ pub mod models;
 pub mod navigation;
 pub mod preview;
 mod preview_handlers;
+mod preview_window;
 pub mod scripts;
 pub mod session;
 pub mod session_capture;
@@ -26,6 +27,10 @@ mod tests_capture_timeouts;
 #[cfg(test)]
 mod tests_commands;
 #[cfg(test)]
+mod tests_commands_flow;
+#[cfg(test)]
+mod tests_commands_flow_more;
+#[cfg(test)]
 mod tests_navigation;
 #[cfg(test)]
 mod tests_navigation_boundaries;
@@ -40,7 +45,11 @@ mod tests_preview_functions;
 #[cfg(test)]
 mod tests_preview_handlers;
 #[cfg(test)]
+mod tests_preview_window;
+#[cfg(test)]
 mod tests_scripts;
+#[cfg(test)]
+mod tests_session_close;
 #[cfg(test)]
 mod tests_session_edges;
 #[cfg(test)]
@@ -53,6 +62,8 @@ mod tests_session_open_coverage;
 mod tests_session_open_edges;
 #[cfg(test)]
 mod tests_session_open_handlers;
+#[cfg(test)]
+mod tests_session_seams;
 
 pub use commands::*;
 pub use models::*;

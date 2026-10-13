@@ -4,7 +4,7 @@ use std::future::Future;
 use std::io;
 use std::net::{IpAddr, SocketAddr};
 use std::time::Duration;
-use tokio::io::AsyncWriteExt;
+use tokio::io::{AsyncWrite, AsyncWriteExt};
 use tokio::net::{lookup_host, TcpStream};
 use tokio::time::timeout;
 use url::Url;
@@ -13,14 +13,16 @@ pub(super) async fn connect_to_public_host(host: &str, port: u16) -> io::Result<
     connect_to_public_host_with(
         host,
         port,
-        |host, port| async move {
-            let addresses = lookup_host((host.as_str(), port)).await?;
-            Ok(addresses.collect::<Vec<_>>())
-        },
+        resolve_host,
         TcpStream::connect,
         CONNECT_TIMEOUT,
     )
     .await
+}
+
+pub(super) async fn resolve_host(host: String, port: u16) -> io::Result<Vec<SocketAddr>> {
+    let addresses = lookup_host((host.as_str(), port)).await?;
+    Ok(addresses.collect::<Vec<_>>())
 }
 
 pub(super) async fn connect_to_public_host_with<R, RFut, C, CFut>(
@@ -89,7 +91,7 @@ pub(super) fn authority_for(url: &Url) -> String {
     }
 }
 
-pub(super) async fn reject(mut stream: TcpStream, status: u16, message: &str) {
+pub(super) async fn reject<W: AsyncWrite + Unpin>(mut stream: W, status: u16, message: &str) {
     let body = message.as_bytes();
     let response = format!(
         "HTTP/1.1 {status} {}\r\nConnection: close\r\nContent-Length: {}\r\nContent-Type: text/plain; charset=utf-8\r\n\r\n",

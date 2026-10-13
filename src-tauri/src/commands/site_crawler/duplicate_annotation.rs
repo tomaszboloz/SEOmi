@@ -74,3 +74,7 @@ pub(crate) fn annotate_duplicates(pages: &mut [CrawledPageSummary]) {
         pages[right].issues_count = pages[right].issues.len();
     }
 }
+
+#[cfg(test)]
+#[path = "duplicate_annotation_same_hash_tests.rs"]
+mod same_hash_tests;

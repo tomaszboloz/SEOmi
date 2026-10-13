@@ -18,7 +18,7 @@ it('lists pages with localized plural forms and selects a node on click', () => 
   const state = make([node('a', 1), node('b', 3), node('c', 5), node('d', 12), node('e', 22)]);
   render(<CrawlArchitectureGraphView state={state} crawlMode="full" />);
   const forms: [number, string][] = [[1, 'one'], [3, 'few'], [5, 'many'], [12, 'many'], [22, 'few']];
-  for (const [count, form] of forms) expect(screen.getAllByText(new RegExp(`· ${t(`mapUi.plural.term.${form}`, { count }).replace(/[()]/g, '\\$&')}$`)).length).toBeGreaterThan(0);
+  for (const [count, form] of forms) expect(screen.getAllByText(new RegExp(`· ${t(`mapUi.plural.term.${form}`, { count }).replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}$`)).length).toBeGreaterThan(0);
   expect(screen.getByText(t('mapUi.pageList', { count: 5 }))).toBeTruthy();
   fireEvent.click(screen.getByRole('button', { name: '/a' }));
   expect(state.setSelectedId).toHaveBeenCalledWith('a');

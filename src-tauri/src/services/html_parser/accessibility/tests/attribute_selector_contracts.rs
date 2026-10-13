@@ -100,3 +100,11 @@ fn accessibility_snippet_keeps_safe_attributes_redacts_values_and_escapes_markup
     assert!(snippet.contains("required"));
     assert!(!snippet.contains("secret"));
 }
+
+#[test]
+fn image_without_alt_selector_needs_an_img_element_without_alt_attribute() {
+    let selector = "img:not([alt])";
+    assert!(source_tag_matches_selector("<img src=a>", "IMG", selector));
+    assert!(!source_tag_matches_selector("<img alt=a>", "img", selector));
+    assert!(!source_tag_matches_selector("<div>", "div", selector));
+}

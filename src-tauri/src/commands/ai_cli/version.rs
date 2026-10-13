@@ -40,9 +40,7 @@ where
     let result = timeout(deadline, {
         let mut process = make_process(resolved, &["--version".to_string()]);
         process.kill_on_drop(true);
-        if let Some(path) = augmented_path() {
-            process.env("PATH", path);
-        }
+        process.envs(augmented_path().map(|path| ("PATH", path)));
         bounded_process_output(process, "")
     })
     .await;
@@ -58,9 +56,7 @@ where
                     .collect::<Vec<_>>();
                 let mut auth_process = make_process(resolved, &auth_arguments);
                 auth_process.kill_on_drop(true);
-                if let Some(path) = augmented_path() {
-                    auth_process.env("PATH", path);
-                }
+                auth_process.envs(augmented_path().map(|path| ("PATH", path)));
                 let auth_result = timeout(deadline, bounded_process_output(auth_process, "")).await;
                 if let Ok(Ok(auth_output)) = auth_result {
                     available = auth_output.status.success()

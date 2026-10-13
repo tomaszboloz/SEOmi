@@ -57,10 +57,10 @@ impl CrawlSetup {
     ) -> Result<Self, String> {
         let start_time = Instant::now();
         let parsed_base = validate_and_normalize_url(&start_url).map_err(|e| e.to_string())?;
-        let base_host = match parsed_base.host_str() {
-            Some(h) => h.to_string(),
-            None => return Err("URL has no valid hostname".into()),
-        };
+        let base_host = parsed_base
+            .host_str()
+            .expect("validated HTTP(S) URLs always have a host")
+            .to_string();
         let mut config = config.unwrap_or_else(|| default_crawl_config(max_pages));
         config.allowed_hosts = normalize_allowed_hosts(&config.allowed_hosts)?;
         config.focus_phrase = config

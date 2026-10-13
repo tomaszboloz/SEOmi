@@ -35,15 +35,20 @@ where
     }
 }
 
+fn into_json<T: serde::Serialize>(result: Result<T, String>, what: &str) -> Result<Value, String> {
+    serde_json::to_value(result?).map_err(|error| format!("Unable to serialize {what}: {error}"))
+}
+
 async fn execute_task<R: Runtime>(
     app: &AppHandle<R>,
     project_id: &str,
     task: &ScheduledTaskManifest,
 ) -> Result<Value, String> {
     let audit = |url: String| async move {
-        let result = seo_audit::inspect_url_headless(&url, None, 15).await?;
-        serde_json::to_value(result)
-            .map_err(|error| format!("Unable to serialize page audit: {error}"))
+        into_json(
+            seo_audit::inspect_url_headless(&url, None, 15).await,
+            "page audit",
+        )
     };
     let crawl_app = app.clone();
     let crawl_project = project_id.to_owned();
@@ -64,9 +69,8 @@ async fn execute_task<R: Runtime>(
                 Some(project_id),
                 config,
             )
-            .await?;
-            serde_json::to_value(result)
-                .map_err(|error| format!("Unable to serialize site crawl: {error}"))
+            .await;
+            into_json(result, "site crawl")
         }
     };
     execute_task_with(task.clone(), audit, crawl).await

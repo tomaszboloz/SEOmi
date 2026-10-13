@@ -40,3 +40,9 @@ pub async fn ai_test_connection(provider: String) -> Result<AiConnectionResult, 
 
 #[cfg(test)]
 mod tests;
+#[cfg(test)]
+mod tests_commands;
+#[cfg(test)]
+mod tests_ipc;
+#[cfg(test)]
+mod tests_models;

@@ -100,3 +100,12 @@ fn unreadable_config_path_is_reported_without_falling_back_to_defaults() {
     );
     fs::remove_dir_all(directory).unwrap();
 }
+
+#[test]
+fn config_path_that_cannot_be_opened_is_reported_as_unreadable() {
+    let path = std::path::Path::new("bad\0name.json");
+    assert_eq!(
+        load_config_file(path).unwrap_err(),
+        "Unable to read configuration file."
+    );
+}

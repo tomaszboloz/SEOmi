@@ -112,3 +112,11 @@ async fn send_get_with_retry_fails_immediately_on_network_error_without_retry() 
         .unwrap_err();
     assert!(matches!(err2, RetryError::Request(_)));
 }
+
+#[test]
+fn retry_error_describes_a_missed_crawl_deadline() {
+    assert_eq!(
+        RetryError::Deadline.to_string(),
+        "HTTP operation exceeded the crawl deadline"
+    );
+}

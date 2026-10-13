@@ -80,3 +80,6 @@ pub(super) fn annotate_hreflang_relations(
         page.issues_count = page.issues.len();
     }
 }
+#[cfg(test)]
+#[path = "relation_gap_tests.rs"]
+mod gap_tests;

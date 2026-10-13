@@ -11,3 +11,11 @@ pub struct BuildCrawlResultInput<'a, R: Runtime = tauri::Wry> {
     pub resources: Vec<CrawledResource>,
     pub resource_limit_reached: bool,
 }
+
+pub(in super::super) fn pages_per_second(pages: usize, elapsed_seconds: f64) -> f64 {
+    if elapsed_seconds > 0.0 {
+        pages as f64 / elapsed_seconds
+    } else {
+        0.0
+    }
+}

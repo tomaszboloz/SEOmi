@@ -117,3 +117,14 @@ fn anonymous_meta_elements_are_skipped_but_content_only_ones_are_inspected() {
     assert_eq!(meta.og_title.as_deref(), Some("Kept"));
     assert!(meta.og_description.is_none());
 }
+
+#[test]
+fn meta_tags_skip_only_when_content_property_and_name_are_all_missing() {
+    let meta = collect_social_meta(
+        r#"<meta><meta property="og:title"><meta name="og:type"><meta content="x">"#,
+        "https://example.test/",
+    );
+    assert_eq!(meta.og_tags.len(), 2);
+    assert_eq!(meta.og_title.as_deref(), Some(""));
+    assert_eq!(meta.og_type.as_deref(), Some(""));
+}

@@ -1,7 +1,7 @@
 import { beforeEach, describe, expect, it } from 'vitest';
 import { render, screen } from '@testing-library/react';
 import i18n from '@/i18n';
-import { writeFileSync, unlinkSync } from 'node:fs';
+import { mkdtempSync, rmSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { clusterLabelPrompt } from '@/services/embeddings/cluster';
@@ -19,7 +19,8 @@ describe('embeddings and settings direct assertions', () => {
   });
 
   it('readInputs parses input texts from file path', () => {
-    const tmpPath = join(tmpdir(), `test-inputs-${Date.now()}.txt`);
+    const tmpDir = mkdtempSync(join(tmpdir(), 'test-inputs-'));
+    const tmpPath = join(tmpDir, 'inputs.txt');
     writeFileSync(tmpPath, 'keyword 1\nkeyword 2\n', 'utf8');
 
     try {
@@ -28,7 +29,7 @@ describe('embeddings and settings direct assertions', () => {
       expect(inputs[0].text).toBe('keyword 1');
     } finally {
       try {
-        unlinkSync(tmpPath);
+        rmSync(tmpDir, { recursive: true, force: true });
       } catch {
         // cleanup
       }

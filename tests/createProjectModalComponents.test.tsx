@@ -74,7 +74,7 @@ describe('CreateProjectModal modular subcomponents and architecture', () => {
       />,
     );
 
-    const input = screen.getByPlaceholderText(/example\.com/i);
+    const input = screen.getByPlaceholderText(i18n.t('projects.startingDomainPlaceholder'));
     expect((input as HTMLInputElement).value).toBe('https://example.com');
     fireEvent.change(input, { target: { value: 'https://new.example' } });
     expect(onChange).toHaveBeenCalledWith('https://new.example');

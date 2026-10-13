@@ -10,8 +10,6 @@ mod request;
 mod transport;
 
 pub use control::AuditControl;
-#[cfg(not(test))]
-pub(crate) use rate_limiter::audit_rate_limiter;
 pub use rate_limiter::AuditRateLimiter;
 use transport::fetch_and_analyze;
 pub use transport::AuditTransport;
@@ -40,13 +38,7 @@ pub async fn inspect_url(
         .duration_since(UNIX_EPOCH)
         .map(|d| d.as_millis() as i64)
         .unwrap_or(0);
-    #[cfg(test)]
     rate_limiter.check(now_ms).map_err(str::to_owned)?;
-    #[cfg(not(test))]
-    {
-        let _ = &rate_limiter;
-        audit_rate_limiter().check(now_ms).map_err(str::to_owned)?;
-    }
 
     let validated_url = url_validator::validate_and_normalize_url(&url)
         .map_err(|e| format!("URL validation failed: {}", e))?;

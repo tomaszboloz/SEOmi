@@ -33,3 +33,13 @@ fn empty_or_non_string_limit_reasons_do_not_add_a_limits_line() {
             .any(|line| line.starts_with("Limits observed")));
     }
 }
+
+#[test]
+fn glyphs_without_a_font_mapping_fall_back_to_a_question_mark_actual_text() {
+    let mut fonts = FontSet::new();
+    let unmapped = super::renderer::encoded_text(&mut fonts, 10, "\u{0378}");
+    assert!(unmapped.contains("Tj"));
+    assert!(unmapped.contains("<FEFF003F>") && unmapped.contains("EMC"));
+    let mapped = super::renderer::encoded_text(&mut fonts, 10, "A");
+    assert!(mapped.contains("BDC") && mapped.contains("EMC"));
+}

@@ -20,9 +20,11 @@ fn key_name(provider: &str) -> Result<&'static str, String> {
 
 fn provider_key(provider: &str) -> Result<String, String> {
     let entry = secret_entry(key_name(provider)?)?;
-    let key = entry
-        .get_password()
-        .map_err(|_| "Unable to read the AI provider credential.".to_string())?;
+    configured_key(entry.get_password())
+}
+
+fn configured_key<E>(stored: Result<String, E>) -> Result<String, String> {
+    let key = stored.map_err(|_| "Unable to read the AI provider credential.".to_string())?;
     if key.trim().is_empty() {
         return Err("AI provider credential is not configured.".into());
     }
@@ -44,13 +46,16 @@ fn checked_prompt(prompt: &str) -> Result<(), String> {
     Ok(())
 }
 
+fn models_url() -> Url {
+    Url::parse(GEMINI_MODELS).expect("the Gemini models endpoint is a valid URL")
+}
+
 pub(super) fn gemini_url(model: &str, key: &str) -> Result<String, String> {
-    let mut url =
-        Url::parse(GEMINI_MODELS).map_err(|_| "Unable to build AI provider URL.".to_string())?;
+    let mut url = models_url();
     {
         let mut segments = url
             .path_segments_mut()
-            .map_err(|_| "Unable to build AI provider URL.".to_string())?;
+            .expect("an https base URL has path segments");
         // Gemini's method suffix belongs to the model path segment. Adding it
         // as a second segment would produce `/models/<model>/:generateContent`
         // and the API responds with a 404.
@@ -61,8 +66,12 @@ pub(super) fn gemini_url(model: &str, key: &str) -> Result<String, String> {
 }
 
 fn gemini_models_url(key: &str) -> Result<String, String> {
-    let mut url =
-        Url::parse(GEMINI_MODELS).map_err(|_| "Unable to build AI provider URL.".to_string())?;
+    let mut url = models_url();
     url.query_pairs_mut().append_pair("key", key);
     Ok(url.into())
 }
+
+#[cfg(test)]
+mod key_tests;
+#[cfg(test)]
+mod tests;

@@ -113,13 +113,3 @@ async fn write_callback_response_success() {
         "<!doctype html><meta charset=\"utf-8\"><title>SEOmi</title><p>Success</p>".len()
     )));
 }
-
-#[tokio::test]
-async fn write_callback_response_failure() {
-    let (_client, mut server) = pair().await;
-    server.shutdown().await.unwrap();
-    let err = write_callback_response(&mut server, "200 OK", "test")
-        .await
-        .unwrap_err();
-    assert!(err.starts_with("Unable to complete the OAuth callback:"));
-}

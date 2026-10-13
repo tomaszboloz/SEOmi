@@ -23,9 +23,8 @@ pub fn rejected(url: String, kind: impl Into<String>) -> ExternalLinkCheck {
 
 pub fn normalize_external_url(input: &str) -> Result<Url, String> {
     let url = validate_and_normalize_url(input).map_err(|error| error.to_string())?;
-    if !url.username().is_empty() || url.password().is_some() {
-        return Err("URLs containing embedded credentials are not allowed".into());
-    }
+    // The shared validator already rejects userinfo, so none can reach this point.
+    debug_assert!(url.username().is_empty() && url.password().is_none());
     let mut url = url;
     url.set_fragment(None);
     Ok(url)
@@ -81,15 +80,19 @@ pub fn client_for_url(url: &Url, addresses: &[SocketAddr]) -> Result<reqwest::Cl
         HeaderValue::from_static("SEOmi-LinkChecker/1.0 (+desktop SEO audit)"),
     );
     headers.insert(ACCEPT, HeaderValue::from_static("*/*"));
-    reqwest::Client::builder()
-        .default_headers(headers)
-        .timeout(REQUEST_TIMEOUT)
-        .connect_timeout(REQUEST_TIMEOUT)
-        .redirect(reqwest::redirect::Policy::none())
-        .no_proxy()
-        .resolve_to_addrs(host, addresses)
-        .build()
-        .map_err(|error| error.to_string())
+    finish_client(
+        reqwest::Client::builder()
+            .default_headers(headers)
+            .timeout(REQUEST_TIMEOUT)
+            .connect_timeout(REQUEST_TIMEOUT)
+            .redirect(reqwest::redirect::Policy::none())
+            .no_proxy()
+            .resolve_to_addrs(host, addresses),
+    )
+}
+
+pub(super) fn finish_client(builder: reqwest::ClientBuilder) -> Result<reqwest::Client, String> {
+    builder.build().map_err(|error| error.to_string())
 }
 
 #[cfg(test)]

@@ -22,7 +22,8 @@ pub fn detect_mixed_content_resources(html: &str, page_url: &Url) -> Vec<String>
         } else {
             "src"
         };
-        if let Some(value) = element.value().attr(attribute) {
+        // The selector requires this attribute, so the iterator always yields one value.
+        for value in element.value().attr(attribute).into_iter() {
             collect_http_resource(value, page_url, &mut found);
         }
         if matches!(element.value().name(), "img" | "source") {
@@ -37,7 +38,8 @@ pub fn detect_mixed_content_resources(html: &str, page_url: &Url) -> Vec<String>
     }
     let style_selector = Selector::parse("[style]").expect("static style selector is valid");
     for element in document.select(&style_selector) {
-        if let Some(style) = element.value().attr("style") {
+        // `[style]` guarantees the attribute is present.
+        for style in element.value().attr("style").into_iter() {
             for candidate in style.split("url(").skip(1) {
                 let value = candidate
                     .trim_start_matches([' ', '\'', '"'])

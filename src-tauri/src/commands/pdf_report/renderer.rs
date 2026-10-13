@@ -7,7 +7,7 @@ mod renderer_chart;
 
 pub use renderer_chart::chart_stream;
 
-fn encoded_text(fonts: &mut FontSet, size: u8, text: &str) -> String {
+pub(super) fn encoded_text(fonts: &mut FontSet, size: u8, text: &str) -> String {
     fonts
         .encode(text)
         .into_iter()

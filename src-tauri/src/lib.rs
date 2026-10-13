@@ -5,6 +5,16 @@ mod startup;
 pub mod utils;
 
 #[cfg(test)]
+mod compose_arg_more_tests;
+#[cfg(test)]
+mod compose_arg_tests;
+#[cfg(test)]
+mod compose_command_tests;
+#[cfg(test)]
+mod compose_gap_tests;
+#[cfg(test)]
+mod compose_tests;
+#[cfg(test)]
 mod startup_tests;
 
 use tauri::Builder;
@@ -19,18 +29,26 @@ pub fn run() {
 
 /// Shared production composition root, also exercised by the real desktop E2E binary.
 pub fn desktop_builder() -> Builder<tauri::Wry> {
-    Builder::default()
-        .plugin(tauri_plugin_dialog::init())
-        .plugin(tauri_plugin_updater::Builder::new().build())
-        .plugin(tauri_plugin_process::init())
-        .plugin(tauri_plugin_notification::init())
+    compose(
+        Builder::default()
+            .plugin(tauri_plugin_dialog::init())
+            .plugin(tauri_plugin_updater::Builder::new().build())
+            .plugin(tauri_plugin_process::init())
+            .plugin(tauri_plugin_notification::init()),
+    )
+}
+
+/// Runtime-generic state, command handlers and startup hook, so MockRuntime
+/// tests can drive the same IPC surface the desktop binary ships.
+pub(crate) fn compose<R: tauri::Runtime>(builder: Builder<R>) -> Builder<R> {
+    builder
         .manage(commands::site_crawler::CrawlControl::new())
         .manage(commands::seo_audit::AuditControl::new())
         .manage(commands::seo_audit::AuditRateLimiter::new())
         .manage(commands::seo_audit::AuditTransport::production())
         .manage(commands::render_worker::RenderWorkerState::default())
         .invoke_handler({
-            let handler: fn(tauri::ipc::Invoke) -> bool = tauri::generate_handler![
+            let handler: fn(tauri::ipc::Invoke<R>) -> bool = tauri::generate_handler![
                 commands::ai_cli::detect_ai_clis,
                 commands::ai_cli::test_ai_cli_connection,
                 commands::ai_cli::run_ai_cli,
@@ -100,7 +118,7 @@ pub fn desktop_builder() -> Builder<tauri::Wry> {
                 commands::site_crawler::pause_site_crawl,
                 commands::site_crawler::resume_site_crawl,
             ];
-            move |invoke: tauri::ipc::Invoke| {
+            move |invoke: tauri::ipc::Invoke<R>| {
                 let command = invoke.message.command().to_owned();
                 utils::logging::dispatch(&command, || handler(invoke))
             }

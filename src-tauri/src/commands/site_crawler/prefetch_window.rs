@@ -98,19 +98,29 @@ pub(crate) async fn prefetch_http_pages_with_context(
                 prefetched_responses.insert(url, result);
             }
             Err(error) => {
-                if let Some((url, _)) = prefetched_order
-                    .iter()
-                    .find(|(candidate, _)| !prefetched_responses.contains_key(candidate))
-                {
-                    prefetched_responses.insert(
-                        url.clone(),
-                        Err(CrawlFetchFailure {
-                            kind: "prefetch_task".into(),
-                            message: error.to_string(),
-                        }),
-                    );
-                }
+                record_task_failure(prefetched_order, prefetched_responses, error.to_string())
             }
         }
+    }
+}
+
+/// Attribute a panicked or cancelled prefetch task to the first queued page
+/// that has no result yet, so the sequential loop still sees a failure.
+pub(crate) fn record_task_failure(
+    order: &VecDeque<(String, usize)>,
+    responses: &mut HashMap<String, Result<FetchedResponse, CrawlFetchFailure>>,
+    message: String,
+) {
+    if let Some((url, _)) = order
+        .iter()
+        .find(|(candidate, _)| !responses.contains_key(candidate))
+    {
+        responses.insert(
+            url.clone(),
+            Err(CrawlFetchFailure {
+                kind: "prefetch_task".into(),
+                message,
+            }),
+        );
     }
 }

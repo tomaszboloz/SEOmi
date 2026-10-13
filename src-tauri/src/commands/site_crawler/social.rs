@@ -10,12 +10,9 @@ pub(super) fn crawl_social_metadata(
     document: &Html,
     base_url: &url::Url,
 ) -> (Vec<String>, Vec<CrawledSocialMetaTag>) {
-    let Ok(link_selector) = Selector::parse("link[rel][href]") else {
-        return (Vec::new(), Vec::new());
-    };
-    let Ok(meta_selector) = Selector::parse("meta[property], meta[name]") else {
-        return (Vec::new(), Vec::new());
-    };
+    let link_selector = Selector::parse("link[rel][href]").expect("static link selector is valid");
+    let meta_selector =
+        Selector::parse("meta[property], meta[name]").expect("static meta selector is valid");
 
     let mut favicons = Vec::new();
     for element in document.select(&link_selector) {
