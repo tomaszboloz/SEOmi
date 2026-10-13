@@ -13,6 +13,12 @@ const RETIRED_MODELS: Record<string, string> = {
   // o3-mini shuts down on 2026-10-23; it is no longer offered.
   'o3-mini': 'gpt-4o-mini',
   'o3-mini-2025-01-31': 'gpt-4o-mini',
+  // Still listed by OpenAI on 2026-10-13, but every request answers model_not_found (deprecated).
+  'gpt-5-chat-latest': 'gpt-5.4',
+  'gpt-5.1-chat-latest': 'gpt-5.4',
+  'gpt-5.2-chat-latest': 'gpt-5.4',
+  'gpt-5.3-chat-latest': 'gpt-5.4',
+  'gpt-3.5-turbo-1106': 'gpt-3.5-turbo',
 };
 
 export const GEMINI_DEFAULT_MODEL = 'gemini-3.8-flash';

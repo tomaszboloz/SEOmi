@@ -13,8 +13,26 @@ fn openai_models_skip_missing_ids_excluded_families_and_non_chat_ids() {
         { "id": "chatgpt-4o-latest" }
     ] });
     let ids: Vec<_> = openai_models(&body).into_iter().map(|m| m.id).collect();
-    assert_eq!(ids, ["o3-mini", "chatgpt-4o-latest"]);
+    assert_eq!(ids, ["chatgpt-4o-latest", "o3-mini"]);
     assert!(openai_models(&json!({})).is_empty());
+}
+
+#[test]
+fn openai_models_are_newest_first_without_models_chat_completions_rejects() {
+    let body = json!({ "data": [
+        { "id": "gpt-4o", "created": 10 },
+        { "id": "gpt-6.1-sol", "created": 30 },
+        { "id": "gpt-5.5-pro", "created": 40 },
+        { "id": "gpt-5.3-codex", "created": 40 },
+        { "id": "gpt-3.5-turbo-instruct", "created": 40 },
+        { "id": "gpt-live-1", "created": 40 },
+        { "id": "gpt-5.4-mini", "created": 20 },
+        { "id": "gpt-5.4", "created": 20 },
+        { "id": "gpt-4" }
+    ] });
+    let ids: Vec<_> = openai_models(&body).into_iter().map(|m| m.id).collect();
+    let expected = ["gpt-6.1-sol", "gpt-5.4", "gpt-5.4-mini", "gpt-4o", "gpt-4"];
+    assert_eq!(ids, expected);
 }
 
 #[test]
@@ -39,6 +57,12 @@ fn gemini_models_require_name_methods_prefix_and_generation() {
     ] });
     let models = gemini_models(&body);
     assert_eq!(models.len(), 1);
+    let speech = json!({ "models": [
+        { "name": "models/gemini-3.8-flash-tts", "supportedGenerationMethods": ["generateContent"] },
+        { "name": "models/gemini-3.1-flash-image", "supportedGenerationMethods": ["generateContent"] },
+        { "name": "models/gemini-3.5-transcribe", "supportedGenerationMethods": ["generateContent"] }
+    ] });
+    assert!(gemini_models(&speech).is_empty());
     assert_eq!(
         (models[0].id.as_str(), models[0].label.as_str()),
         ("gemini-c", "gemini-c")

@@ -25,14 +25,19 @@ fn openai_requests_use_bearer_auth_and_toggle_json_mode() {
     assert_eq!(chat.headers()["content-type"], "application/json");
     assert_eq!(body(&chat)["response_format"]["type"], "json_object");
     let plain = build("openai", Some("hi"), false);
-    assert!(body(&plain)["response_format"].is_null());
+    assert!(body(&plain).get("response_format").is_none());
     assert_eq!(body(&plain)["messages"][0]["content"], "hi");
+    // Reasoning models answer 400 to any temperature other than the default.
+    assert!(body(&chat).get("temperature").is_none());
+    assert!(body(&plain).get("temperature").is_none());
 }
 
 #[test]
 fn claude_requests_use_api_key_headers() {
     let models = build("claude", None, false);
-    assert_eq!(models.url().as_str(), "https://api.anthropic.com/v1/models");
+    // The default page holds 20 models; one request asks for the whole list.
+    let listing = "https://api.anthropic.com/v1/models?limit=1000";
+    assert_eq!(models.url().as_str(), listing);
     assert_eq!(models.headers()["x-api-key"], "k e");
     let chat = build("claude", Some("hi"), false);
     assert_eq!(chat.headers()["anthropic-version"], "2023-06-01");
@@ -43,7 +48,10 @@ fn claude_requests_use_api_key_headers() {
 #[test]
 fn gemini_requests_carry_the_key_in_the_query() {
     let models = build("gemini", None, false);
-    assert!(models.url().as_str().ends_with("/models?key=k+e"));
+    assert!(models
+        .url()
+        .as_str()
+        .ends_with("/models?pageSize=1000&key=k+e"));
     assert!(models.headers().get("authorization").is_none());
     let chat = build("gemini", Some("hi"), true);
     assert!(chat.url().path().ends_with("m1:generateContent"));

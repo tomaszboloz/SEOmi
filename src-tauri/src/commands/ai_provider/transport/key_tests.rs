@@ -27,5 +27,7 @@ fn provider_keys_are_read_only_for_supported_providers() {
 fn gemini_urls_carry_the_model_suffix_and_the_key_as_query() {
     let generate = gemini_url("gemini-2.0-flash", "k&y").unwrap();
     assert!(generate.contains("/models/gemini-2.0-flash:generateContent?key=k%26y"));
-    assert!(gemini_models_url("k").unwrap().ends_with("/models?key=k"));
+    assert!(gemini_models_url("k")
+        .unwrap()
+        .ends_with("/models?pageSize=1000&key=k"));
 }
