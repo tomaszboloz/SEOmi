@@ -1,4 +1,4 @@
-# SEOmi 0.0.7 — release notes
+# SEOmi 0.1.0 — release notes
 
 ## Added
 
@@ -22,6 +22,11 @@
 - Stored credentials stay on the native side for desktop cloud AI; settings read credential presence rather than stored values.
 - MCP shutdown handlers are registered before the server announces readiness.
 - Renderer capture sources have standalone JavaScript syntax while retaining acknowledged transfers and duplicate-capture protection.
+
+## Changes since 0.0.7
+
+- Native code gained test seams without changing behaviour: injected endpoints and credential store for Google Analytics 4 commands, the rendered-fetch cancel/timeout race, the external-link runner, file-lock error classification and the public-feed client. These make previously unreachable error paths testable.
+- Removed defensive branches that could never run (always-true URL checks, an unreachable findings cap, a plain-HTTP proxy body write the parser already rejects).
 
 ## Changes since 0.0.6
 
