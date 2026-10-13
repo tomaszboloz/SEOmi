@@ -14,7 +14,6 @@ pub(super) fn encoded_text(fonts: &mut FontSet, size: u8, text: &str) -> String 
         .map(|run| {
             let actual = run
                 .actual_text
-                .filter(|value| !value.is_empty())
                 .map(|value| format!("/Span << /ActualText <{}> >> BDC\n", utf16_hex(&value)))
                 .unwrap_or_default();
             let end = if actual.is_empty() { "" } else { "EMC\n" };

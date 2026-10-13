@@ -2,6 +2,9 @@ use super::{EncodedRun, FontKind, FontSet, Glyph};
 use rustybuzz::{Direction, UnicodeBuffer};
 use ttf_parser::GlyphId;
 
+#[path = "font_bidi.rs"]
+mod font_bidi;
+
 impl FontSet {
     pub(super) fn is_arabic_character(character: char) -> bool {
         matches!(u32::from(character), 0x600..=0x6ff | 0x750..=0x77f | 0x8a0..=0x8ff | 0xfb50..=0xfdff | 0xfe70..=0xfeff)
@@ -38,7 +41,7 @@ impl FontSet {
         }
     }
 
-    fn encode_arabic(&mut self, text: &str, runs: &mut Vec<EncodedRun>) {
+    pub(super) fn encode_arabic(&mut self, text: &str, runs: &mut Vec<EncodedRun>) {
         let Some(face) = self.arabic_shaper.as_ref() else {
             for character in text.chars().rev() {
                 self.encode_scalar(character, runs);
@@ -75,7 +78,7 @@ impl FontSet {
         }
     }
 
-    fn encode_scalar(&mut self, character: char, runs: &mut Vec<EncodedRun>) {
+    pub(super) fn encode_scalar(&mut self, character: char, runs: &mut Vec<EncodedRun>) {
         let resolved = self.glyph(character);
         let glyph = resolved.unwrap_or_else(|| self.glyph_or_placeholder('?'));
         let actual = if resolved.is_some() {
@@ -102,28 +105,6 @@ impl FontSet {
                 width: 600,
             })
     }
-
-    pub fn encode(&mut self, text: &str) -> Vec<EncodedRun> {
-        let mut runs = Vec::new();
-        let mut index = 0;
-        while index < text.len() {
-            let character = text[index..].chars().next().unwrap_or('?');
-            if Self::is_arabic_character(character) {
-                let end = text[index..]
-                    .char_indices()
-                    .find_map(|(offset, next)| {
-                        (!Self::is_arabic_character(next)).then_some(index + offset)
-                    })
-                    .unwrap_or(text.len());
-                self.encode_arabic(&text[index..end], &mut runs);
-                index = end;
-            } else {
-                self.encode_scalar(character, &mut runs);
-                index += character.len_utf8();
-            }
-        }
-        runs
-    }
 }
 
 #[cfg(test)]
@@ -133,3 +114,7 @@ mod private_tests;
 #[cfg(test)]
 #[path = "font_layout_run_tests.rs"]
 mod run_tests;
+
+#[cfg(test)]
+#[path = "font_bidi_tests.rs"]
+mod bidi_tests;
