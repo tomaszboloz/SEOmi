@@ -52,10 +52,9 @@ async fn test_direct_rust_calls_coverage() {
         .unwrap();
     {
         let mut active = state.active.lock().await;
-        if let Some(handle) = active.take() {
-            handle.task.abort();
-            *active = Some(handle);
-        }
+        let handle = active.take().expect("the worker was just started");
+        handle.task.abort();
+        *active = Some(handle);
     }
     tokio::time::sleep(std::time::Duration::from_millis(20)).await;
 

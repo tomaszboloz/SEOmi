@@ -1,12 +1,34 @@
 use super::tests::serve;
-use super::{may_follow, rdap_client, rdap_lookup_at, MAX_RDAP_BYTES};
+use super::{build_client, may_follow, rdap_client, rdap_lookup_at, MAX_RDAP_BYTES};
 
 #[test]
 fn redirects_need_https_and_a_hop_budget() {
-    assert!(may_follow(0, "https"));
-    assert!(may_follow(2, "https"));
-    assert!(!may_follow(3, "https"));
-    assert!(!may_follow(0, "http"));
+    assert!(may_follow(0, "https", "https"));
+    assert!(may_follow(2, "https", "https"));
+    assert!(!may_follow(3, "https", "https"));
+    assert!(!may_follow(0, "http", "https"));
+}
+
+#[test]
+fn client_build_failure_is_reported() {
+    let builder = reqwest::Client::builder().user_agent("bad\nagent");
+    assert_eq!(
+        build_client(builder, "https").unwrap_err(),
+        "Unable to create RDAP client."
+    );
+}
+
+#[tokio::test]
+async fn permitted_redirects_are_followed() {
+    let ok = b"HTTP/1.1 200 OK\r\nContent-Length: 11\r\nConnection: close\r\n\r\n{\"ok\":true}";
+    let target = serve(ok.to_vec()).await;
+    let redirect = format!(
+        "HTTP/1.1 302 Found\r\nLocation: {target}/domain/example.com\r\nContent-Length: 0\r\nConnection: close\r\n\r\n"
+    );
+    let base = serve(redirect.into_bytes()).await;
+    let client = build_client(reqwest::Client::builder(), "http").unwrap();
+    let value = rdap_lookup_at(&client, &base, "example.com").await.unwrap();
+    assert_eq!(value["ok"], true);
 }
 
 #[tokio::test]
