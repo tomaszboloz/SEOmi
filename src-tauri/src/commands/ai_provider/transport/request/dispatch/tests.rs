@@ -1,4 +1,4 @@
-use super::{probe, send_to};
+use super::{probe, probe_keyed, rendered, send_keyed, send_to};
 use crate::commands::dataforseo::contract_tests::fixture::server;
 use reqwest::StatusCode;
 
@@ -77,4 +77,38 @@ async fn probe_reports_status_and_body_validity() {
     let down = probe(Some("http://127.0.0.1:1"), "openai", "k").await;
     assert_eq!(down.unwrap_err(), "AI provider request failed.");
     assert!(probe(None, "nope", "k").await.is_err());
+}
+
+#[tokio::test]
+async fn keyed_helpers_stop_on_a_missing_key_and_use_a_present_one() {
+    let missing = Err("AI provider credential is not configured.".to_string());
+    assert_eq!(
+        send_keyed(missing.clone(), None, "openai", OPTS)
+            .await
+            .unwrap_err(),
+        "AI provider credential is not configured."
+    );
+    assert_eq!(
+        probe_keyed(missing, None, "openai").await.unwrap_err(),
+        "AI provider credential is not configured."
+    );
+    let (origin, _) = server("200 OK", r#"{"ok":1}"#).await;
+    let (status, body) = send_keyed(Ok("k".into()), Some(&origin), "openai", OPTS)
+        .await
+        .unwrap();
+    assert_eq!((status, body["ok"].clone()), (StatusCode::OK, 1.into()));
+    let (origin, _) = server("200 OK", "{}").await;
+    let probed = probe_keyed(Ok("k".into()), Some(&origin), "openai")
+        .await
+        .unwrap();
+    assert!(probed.success);
+}
+
+#[test]
+fn generated_text_is_the_serialized_provider_body() {
+    assert_eq!(
+        rendered(Ok((StatusCode::OK, serde_json::json!({"a": 1})))).unwrap(),
+        r#"{"a":1}"#
+    );
+    assert_eq!(rendered(Err("denied".into())).unwrap_err(), "denied");
 }

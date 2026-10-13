@@ -12,9 +12,9 @@ use tokio::{
 };
 use url::Url;
 
-const HTML: &str = "<!doctype html><html><head><title>Fixture SEO page</title><meta name=\"description\" content=\"A stable local fixture page for the SEO audit transport contract.\"><link rel=\"canonical\" href=\"/\"></head><body><main><h1>Fixture</h1><p>Content for the local audit.</p></main></body></html>";
+pub(super) const HTML: &str = "<!doctype html><html><head><title>Fixture SEO page</title><meta name=\"description\" content=\"A stable local fixture page for the SEO audit transport contract.\"><link rel=\"canonical\" href=\"/\"></head><body><main><h1>Fixture</h1><p>Content for the local audit.</p></main></body></html>";
 
-async fn fixture(status: &str, body: &str) -> SocketAddr {
+pub(super) async fn fixture(status: &str, body: &str) -> SocketAddr {
     let listener = TcpListener::bind("127.0.0.1:0").await.unwrap();
     let address = listener.local_addr().unwrap();
     let location = if status.starts_with("302") {

@@ -13,42 +13,7 @@ mod streams;
 mod transport;
 mod validation;
 
-pub(crate) use models::{Ga4Discovery, Ga4Snapshot, Ga4Status};
-
-pub(crate) async fn discover(
-    client: &reqwest::Client,
-    access_token: &str,
-    site_url: &str,
-) -> Result<Ga4Discovery, String> {
-    admin::discover_at(
-        client,
-        access_token,
-        site_url,
-        admin::ACCOUNT_SUMMARIES_ENDPOINT,
-        admin::ADMIN_API_BASE,
-    )
-    .await
-}
-
-pub(crate) async fn collect(
-    client: &reqwest::Client,
-    access_token: &str,
-    site_url: &str,
-    start: &str,
-    end: &str,
-) -> Result<Ga4Snapshot, String> {
-    collect_at(
-        client,
-        access_token,
-        site_url,
-        start,
-        end,
-        admin::ACCOUNT_SUMMARIES_ENDPOINT,
-        admin::ADMIN_API_BASE,
-        report::DATA_API_BASE,
-    )
-    .await
-}
+pub(crate) use models::{Ga4Snapshot, Ga4Status};
 
 #[allow(clippy::too_many_arguments)]
 pub(crate) async fn collect_at(

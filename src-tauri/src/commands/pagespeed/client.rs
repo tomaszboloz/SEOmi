@@ -14,10 +14,7 @@ mod tests {
 
     #[test]
     fn a_failed_build_reports_the_caller_supplied_failure() {
-        let failed = Client::new()
-            .get("not a url")
-            .build()
-            .map(|_| Client::new());
+        let failed = Err(Client::new().get("not a url").build().unwrap_err());
         assert_eq!(
             google_client(failed, "Unable to initialize the test client.").unwrap_err(),
             "Unable to initialize the test client."

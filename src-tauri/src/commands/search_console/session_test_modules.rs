@@ -61,5 +61,8 @@ mod session_secret_persistence_tests;
 
 pub(super) use session_edge_fixture::{dependencies, Server, Store};
 #[cfg(test)]
+#[path = "keychain_outcome_tests.rs"]
+mod keychain_outcome_tests;
+#[cfg(test)]
 #[path = "properties_client_tests.rs"]
 mod properties_client_tests;

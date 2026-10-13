@@ -11,8 +11,22 @@ pub(crate) async fn send(
     prompt: Option<&str>,
     suggestions: bool,
 ) -> Result<(StatusCode, Value), String> {
-    let key = provider_key(provider)?;
-    send_to(None, provider, &key, (model, prompt, suggestions)).await
+    send_keyed(
+        provider_key(provider),
+        None,
+        provider,
+        (model, prompt, suggestions),
+    )
+    .await
+}
+
+pub(super) async fn send_keyed(
+    key: Result<String, String>,
+    origin: Option<&str>,
+    provider: &str,
+    options: (&str, Option<&str>, bool),
+) -> Result<(StatusCode, Value), String> {
+    send_to(origin, provider, &key?, options).await
 }
 
 pub(super) async fn send_to(
@@ -54,13 +68,24 @@ pub(crate) async fn generate(
     prompt: &str,
     suggestions: bool,
 ) -> Result<String, String> {
-    let (_, body) = send(provider, model, Some(prompt), suggestions).await?;
+    rendered(send(provider, model, Some(prompt), suggestions).await)
+}
+
+pub(super) fn rendered(sent: Result<(StatusCode, Value), String>) -> Result<String, String> {
+    let (_, body) = sent?;
     Ok(body.to_string())
 }
 
 pub(crate) async fn test_connection(provider: &str) -> Result<AiConnectionResult, String> {
-    let key = provider_key(provider)?;
-    probe(None, provider, &key).await
+    probe_keyed(provider_key(provider), None, provider).await
+}
+
+pub(super) async fn probe_keyed(
+    key: Result<String, String>,
+    origin: Option<&str>,
+    provider: &str,
+) -> Result<AiConnectionResult, String> {
+    probe(origin, provider, &key?).await
 }
 
 pub(super) async fn probe(

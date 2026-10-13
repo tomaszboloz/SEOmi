@@ -18,6 +18,8 @@ mod mapping_branch_edges;
 mod mapping_contracts;
 #[path = "tests/mapping_edges.rs"]
 mod mapping_edges;
+#[path = "tests/page_limit_edges.rs"]
+mod page_limit_edges;
 #[path = "tests/report_branch_edges.rs"]
 mod report_branch_edges;
 #[path = "tests/report_edges.rs"]
