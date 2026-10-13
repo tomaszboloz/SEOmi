@@ -1,4 +1,4 @@
-# SEOmi 0.0.6 — release notes
+# SEOmi 0.0.7 — release notes
 
 ## Added
 
@@ -22,6 +22,10 @@
 - Stored credentials stay on the native side for desktop cloud AI; settings read credential presence rather than stored values.
 - MCP shutdown handlers are registered before the server announces readiness.
 - Renderer capture sources have standalone JavaScript syntax while retaining acknowledged transfers and duplicate-capture protection.
+
+## Changes since 0.0.6
+
+- Test runs no longer print React `act(...)` warnings.
 
 ## Changes since 0.0.5
 
