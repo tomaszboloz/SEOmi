@@ -33,6 +33,30 @@ async fn rendered_fetch_restarts_the_crawl_delay_interval_after_navigation() {
 }
 
 #[tokio::test]
+async fn an_elapsed_crawl_delay_lets_the_fetch_proceed() {
+    let (app, _session, _) = session(Vec::new(), true);
+    let mut state = empty_state();
+    state.last_page_request_at = Some(Instant::now() - Duration::from_secs(5));
+    let url = "https://example.test/page";
+    let failure = CrawlFetchFailure {
+        kind: "prefetched".into(),
+        message: "stored".into(),
+    };
+    state.prefetched_responses.insert(url.into(), Err(failure));
+    let setup = super::page_fetch_fixture::rendered_setup();
+    let (result, _) = fetch_page_step(
+        &app.handle(),
+        &CrawlControl::new(),
+        &setup,
+        &mut state,
+        Some(Duration::from_millis(1)),
+        url,
+    )
+    .await;
+    assert_eq!(result.err().expect("stored failure").kind, "prefetched");
+}
+
+#[tokio::test]
 async fn cancellation_during_the_crawl_delay_pause_aborts_before_any_request() {
     let (app, _session, _) = session(Vec::new(), true);
     let mut state = empty_state();
