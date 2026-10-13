@@ -9,17 +9,21 @@ pub(crate) fn write_bytes_atomic(destination: &Path, bytes: &[u8]) -> Result<(),
     let _write_lock = crate::utils::file_lock::lock_file(&lock_path)
         .map_err(|error| format!("Unable to lock destination: {error}"))?;
     let temporary = destination.with_extension(format!("json.{}.tmp", uuid::Uuid::new_v4()));
-    let file = std::fs::OpenOptions::new()
-        .create_new(true)
-        .write(true)
-        .open(&temporary)
-        .map_err(|error| format!("Unable to create temporary file: {error}"))?;
+    let file = create_temporary(&temporary)?;
     write_temporary_bytes(file, &temporary, bytes)?;
     if let Err(error) = replace_file(&temporary, destination) {
         let _ = std::fs::remove_file(&temporary);
         return Err(format!("Unable to finalize file: {error}"));
     }
     Ok(())
+}
+
+fn create_temporary(temporary: &Path) -> Result<std::fs::File, String> {
+    std::fs::OpenOptions::new()
+        .create_new(true)
+        .write(true)
+        .open(temporary)
+        .map_err(|error| format!("Unable to create temporary file: {error}"))
 }
 
 fn write_temporary_bytes<W: std::io::Write>(

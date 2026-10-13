@@ -5,7 +5,7 @@ mod window;
 
 pub(crate) use window::prefetch_http_pages_with_context;
 #[cfg(test)]
-pub(crate) use window::record_task_failure;
+pub(crate) use window::{absorb_joined, read_http_body, record_task_failure};
 
 #[allow(clippy::too_many_arguments)]
 #[cfg(test)]

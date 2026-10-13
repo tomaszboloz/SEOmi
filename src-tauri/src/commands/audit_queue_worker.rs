@@ -58,6 +58,9 @@ mod execution_checkpoint_tests;
 #[cfg(test)]
 mod execution_skip_tests;
 
+#[cfg(test)]
+mod item_processor_tests;
+
 use item_processor::process_queue_item;
 use lock::*;
 use models::*;

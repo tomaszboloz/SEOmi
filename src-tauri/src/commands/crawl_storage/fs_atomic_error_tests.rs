@@ -1,4 +1,4 @@
-use super::{project_path, write_bytes_atomic, write_temporary_bytes};
+use super::{create_temporary, project_path, write_bytes_atomic, write_temporary_bytes};
 use std::io::{self, Write};
 
 struct RejectingWriter;
@@ -33,4 +33,14 @@ fn lock_failures_and_missing_data_folders_are_reported() {
     assert!(project_path("a/b", || Err(tauri::Error::UnknownPath))
         .unwrap_err()
         .contains("Invalid project identifier"));
+}
+
+#[test]
+fn an_existing_temporary_file_is_never_overwritten() {
+    let path = std::env::temp_dir().join(format!("seomi-temp-exists-{}", uuid::Uuid::new_v4()));
+    std::fs::write(&path, b"keep").unwrap();
+    let error = create_temporary(&path).unwrap_err();
+    assert!(error.starts_with("Unable to create temporary file: "));
+    assert_eq!(std::fs::read(&path).unwrap(), b"keep");
+    std::fs::remove_file(path).unwrap();
 }
