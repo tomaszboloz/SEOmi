@@ -11,6 +11,7 @@ pub mod http_client;
 pub mod mcp_discovery;
 pub mod pagespeed;
 pub mod pdf_report;
+pub mod rdap;
 pub mod render_worker;
 pub mod rendered_artifacts;
 pub mod rendered_crawler;
