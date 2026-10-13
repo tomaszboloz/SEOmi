@@ -589,7 +589,8 @@
       "responseHidden": "Provider response withheld.",
       "invalidResponse": "The AI provider returned an invalid response.",
       "responseTooLarge": "The AI provider response exceeds the 1 MiB limit.",
-      "refused": "{{provider}} はこのリクエストを拒否しました。言い換えるか、別のモデルを選択してください。"
+      "refused": "{{provider}} はこのリクエストを拒否しました。言い換えるか、別のモデルを選択してください。",
+      "modelRejected": "{{provider}} はモデル {{model}} へのリクエストを受け付けませんでした（HTTP {{status}}）。別のモデルを選択してください。"
     },
     "pagespeed": {
       "projectRequired": "Choose a project before starting the measurement."
@@ -3499,7 +3500,12 @@
     "refreshModels": "モデル一覧を更新",
     "modelsFromProvider": "プロバイダー API のモデル {{count}} 件",
     "modelsDefault": "既定のモデル — API キーをテストすると利用可能なモデルを読み込みます",
-    "modelsUnavailable": "プロバイダーからモデルを読み込めませんでした。最後に取得した一覧を表示しています。"
+    "modelsUnavailable": "プロバイダーからモデルを読み込めませんでした。最後に取得した一覧を表示しています。",
+    "apiKeyStoredPlaceholder": "•••••••• キーは保存済みです。置き換えるには新しいキーを貼り付けてください",
+    "saveApiKey": "キーを保存",
+    "removeApiKey": "キーを削除",
+    "apiKeyRemoved": "キーを削除しました。",
+    "apiKeySaveFailed": "キーを保存できませんでした。"
   },
   "schedules": {
     "saveError": "Unable to save the schedule.",

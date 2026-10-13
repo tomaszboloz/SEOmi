@@ -14,13 +14,14 @@ export const audit = create<{ currentAudit: PageAuditData | null; setAuditData: 
 export const setApiKey = vi.fn<(provider: AiProvider, key: string) => Promise<void>>();
 export const generate = vi.fn<(data: PageAuditData, instruction?: string) => Promise<AiSuggestionResponse>>();
 export const connected = vi.fn<() => boolean>();
+export const testConnection = vi.fn<(provider: AiProvider) => Promise<{ success: boolean; message: string }>>();
 export const setProvider = vi.fn<(provider: AiProvider) => void>();
 export const setModel = vi.fn<(model: string) => void>();
 export const auth = create(() => ({
   provider: 'openai' as AiProvider, model: 'gpt-4o',
   apiKeys: { openai: 'fixture-key', claude: '', gemini: '' },
   connectionMethod: { openai: 'api_key', claude: 'api_key', gemini: 'api_key' },
-  setApiKey, generateSuggestions: generate, isProviderConnected: connected, setProvider, setModel,
+  setApiKey, generateSuggestions: generate, isProviderConnected: connected, testProviderConnection: testConnection, setProvider, setModel,
 }));
 export const openModal = vi.fn();
 export const closeModal = vi.fn();
@@ -31,6 +32,7 @@ export function resetAssistant() {
   audit.setState({ currentAudit: createAuditFixture() });
   auth.setState({ provider: 'openai', model: 'gpt-4o', apiKeys: { openai: 'fixture-key', claude: '', gemini: '' }, connectionMethod: { openai: 'api_key', claude: 'api_key', gemini: 'api_key' } });
   generate.mockReset().mockResolvedValue(suggestion); connected.mockReset().mockReturnValue(true);
+  testConnection.mockReset().mockResolvedValue({ success: false, message: '' });
   setApiKey.mockReset().mockResolvedValue(); clipboard.mockReset().mockResolvedValue(true);
   setAuditData.mockReset().mockImplementation(data => audit.setState({ currentAudit: data }));
   setProvider.mockReset().mockImplementation(provider => auth.setState({ provider }));

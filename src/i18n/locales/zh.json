@@ -589,7 +589,8 @@
       "responseHidden": "Provider response withheld.",
       "invalidResponse": "The AI provider returned an invalid response.",
       "responseTooLarge": "The AI provider response exceeds the 1 MiB limit.",
-      "refused": "{{provider}} 拒绝了此请求。请换种说法或选择其他模型。"
+      "refused": "{{provider}} 拒绝了此请求。请换种说法或选择其他模型。",
+      "modelRejected": "{{provider}} 未接受针对模型 {{model}} 的请求（HTTP {{status}}）。请选择其他模型。"
     },
     "pagespeed": {
       "projectRequired": "Choose a project before starting the measurement."
@@ -3499,7 +3500,12 @@
     "refreshModels": "刷新模型列表",
     "modelsFromProvider": "来自提供商 API 的 {{count}} 个模型",
     "modelsDefault": "默认模型——测试 API 密钥即可加载你的模型",
-    "modelsUnavailable": "无法从提供商加载模型；显示上次获取的列表。"
+    "modelsUnavailable": "无法从提供商加载模型；显示上次获取的列表。",
+    "apiKeyStoredPlaceholder": "•••••••• 密钥已保存；粘贴新密钥即可替换",
+    "saveApiKey": "保存密钥",
+    "removeApiKey": "删除密钥",
+    "apiKeyRemoved": "密钥已删除。",
+    "apiKeySaveFailed": "无法保存密钥。"
   },
   "schedules": {
     "saveError": "Unable to save the schedule.",

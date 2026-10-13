@@ -4,6 +4,7 @@ import { Loader2 } from 'lucide-react';
 import { useAuthStore } from '@/stores/authStore';
 import { useSettingsStore } from '@/stores/settingsStore';
 import { DataForSeoBudgetSettings } from '@/components/DataForSEO/cost/DataForSeoBudgetSettings';
+import { SecretKeyField } from '@/components/Auth/SecretKeyField';
 
 interface ApiSettingsTabProps {
   dataforseoLogin: string;
@@ -15,7 +16,7 @@ interface ApiSettingsTabProps {
   handleTestDataForSeo: () => void;
   googleMetricsKey: string;
   setGoogleMetricsKey: (v: string) => void;
-  handleAiKeyChange: (provider: 'openai' | 'claude' | 'gemini', value: string) => void;
+  handleAiKeyChange: (provider: 'openai' | 'claude' | 'gemini', value: string) => Promise<void>;
   handleSaveGeneral: (e: React.SyntheticEvent) => void;
   savedSuccess: boolean;
 }
@@ -31,6 +32,10 @@ export const ApiSettingsTab: React.FC<ApiSettingsTabProps> = ({
   const apiKeys = useAuthStore((s) => s.apiKeys);
   const secureStorageError = useSettingsStore((s) => s.secureStorageError);
   const isSaving = useSettingsStore((s) => s.isSaving);
+  const dataForSeoStored = useSettingsStore((s) => s.dataForSeoCredentials);
+  const googleKeyStored = useSettingsStore((s) => s.googleMetricsApiKey);
+  // Stored values never reach this form; the placeholder says one exists instead of looking empty.
+  const hint = (stored: string, empty: string) => stored.trim() ? t('auth.apiKeyStoredPlaceholder') : empty;
 
   return (
     <div className="space-y-4 text-xs">
@@ -40,11 +45,11 @@ export const ApiSettingsTab: React.FC<ApiSettingsTabProps> = ({
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
           <div>
             <label className="text-slate-400 block mb-1">{t('dataforseo.loginLabel')}</label>
-            <input type="text" value={dataforseoLogin} onChange={(e) => setDataforseoLogin(e.target.value)} placeholder={t('dataforseo.loginPlaceholder')} className="w-full h-9 px-3 bg-slate-900 border border-slate-800 rounded-lg text-white" />
+            <input type="text" value={dataforseoLogin} onChange={(e) => setDataforseoLogin(e.target.value)} placeholder={hint(dataForSeoStored.login, t('dataforseo.loginPlaceholder'))} className="w-full h-9 px-3 bg-slate-900 border border-slate-800 rounded-lg text-white" />
           </div>
           <div>
             <label className="text-slate-400 block mb-1">{t('dataforseo.passwordLabel')}</label>
-            <input type="password" value={dataforseoPass} onChange={(e) => setDataforseoPass(e.target.value)} placeholder={t('dataforseo.passwordPlaceholder')} className="w-full h-9 px-3 bg-slate-900 border border-slate-800 rounded-lg text-white" />
+            <input type="password" value={dataforseoPass} onChange={(e) => setDataforseoPass(e.target.value)} placeholder={hint(dataForSeoStored.password, t('dataforseo.passwordPlaceholder'))} className="w-full h-9 px-3 bg-slate-900 border border-slate-800 rounded-lg text-white" />
           </div>
         </div>
         <div className="flex flex-wrap items-center gap-3 pt-1">
@@ -62,25 +67,19 @@ export const ApiSettingsTab: React.FC<ApiSettingsTabProps> = ({
         <p className="text-[11px] leading-5 text-slate-400">{t('legacyUi.settings.googleDescription')}</p>
         <div>
           <label className="text-slate-400 block mb-1">{t('legacyUi.settings.googleApiKey')}</label>
-          <input type="password" value={googleMetricsKey} onChange={(e) => setGoogleMetricsKey(e.target.value)} placeholder={t('legacyUi.settings.googlePlaceholder')} autoComplete="new-password" className="w-full h-9 px-3 bg-slate-900 border border-slate-800 rounded-lg text-white font-mono" />
+          <input type="password" value={googleMetricsKey} onChange={(e) => setGoogleMetricsKey(e.target.value)} placeholder={hint(googleKeyStored, t('legacyUi.settings.googlePlaceholder'))} autoComplete="new-password" className="w-full h-9 px-3 bg-slate-900 border border-slate-800 rounded-lg text-white font-mono" />
         </div>
       </div>
 
       <div className="space-y-3 p-4 bg-slate-950/80 rounded-xl border border-slate-800">
         <h4 className="font-bold text-white">{t('legacyUi.settings.aiProviderKeys')}</h4>
         <div className="space-y-2">
-          <div>
-            <label className="text-slate-400 block mb-1">{t('legacyUi.settings.openaiApiKey')}</label>
-          <input type="password" value={apiKeys.openai === '__seomi_secret_present__' ? '' : apiKeys.openai} onChange={(e) => handleAiKeyChange('openai', e.target.value)} className="w-full h-9 px-3 bg-slate-900 border border-slate-800 rounded-lg text-white font-mono" />
-          </div>
-          <div>
-            <label className="text-slate-400 block mb-1">{t('legacyUi.settings.claudeApiKey')}</label>
-          <input type="password" value={apiKeys.claude === '__seomi_secret_present__' ? '' : apiKeys.claude} onChange={(e) => handleAiKeyChange('claude', e.target.value)} className="w-full h-9 px-3 bg-slate-900 border border-slate-800 rounded-lg text-white font-mono" />
-          </div>
-          <div>
-            <label className="text-slate-400 block mb-1">{t('legacyUi.settings.geminiApiKey')}</label>
-          <input type="password" value={apiKeys.gemini === '__seomi_secret_present__' ? '' : apiKeys.gemini} onChange={(e) => handleAiKeyChange('gemini', e.target.value)} className="w-full h-9 px-3 bg-slate-900 border border-slate-800 rounded-lg text-white font-mono" />
-          </div>
+          {(['openai', 'claude', 'gemini'] as const).map((provider) => (
+            <div key={provider}>
+              <label htmlFor={`settings-${provider}-api-key`} className="text-slate-400 block mb-1">{t(`legacyUi.settings.${provider}ApiKey`)}</label>
+              <SecretKeyField id={`settings-${provider}-api-key`} label={t(`legacyUi.settings.${provider}ApiKey`)} stored={Boolean(apiKeys[provider].trim())} onSave={(value) => handleAiKeyChange(provider, value)} inputClassName="h-9 min-w-0 flex-1 px-3 bg-slate-900 border border-slate-800 rounded-lg text-white font-mono" />
+            </div>
+          ))}
         </div>
       </div>
 

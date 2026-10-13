@@ -589,7 +589,8 @@
       "responseHidden": "Treść odpowiedzi dostawcy została ukryta.",
       "invalidResponse": "Dostawca AI zwrócił niepoprawną odpowiedź.",
       "responseTooLarge": "Odpowiedź dostawcy AI przekracza limit 1 MiB.",
-      "refused": "{{provider}} odmówił wykonania tego żądania. Przeformułuj je lub wybierz inny model."
+      "refused": "{{provider}} odmówił wykonania tego żądania. Przeformułuj je lub wybierz inny model.",
+      "modelRejected": "{{provider}} nie przyjął zapytania dla modelu {{model}} (HTTP {{status}}). Wybierz inny model."
     },
     "pagespeed": {
       "projectRequired": "Wybierz projekt przed uruchomieniem pomiaru."
@@ -3499,7 +3500,12 @@
     "refreshModels": "Odśwież listę modeli",
     "modelsFromProvider": "{{count}} modeli z API dostawcy",
     "modelsDefault": "Modele domyślne — przetestuj klucz API, aby wczytać swoje modele",
-    "modelsUnavailable": "Nie udało się pobrać modeli od dostawcy; pokazano ostatnią znaną listę."
+    "modelsUnavailable": "Nie udało się pobrać modeli od dostawcy; pokazano ostatnią znaną listę.",
+    "apiKeyStoredPlaceholder": "•••••••• klucz zapisany; wklej nowy, aby go zastąpić",
+    "saveApiKey": "Zapisz klucz",
+    "removeApiKey": "Usuń klucz",
+    "apiKeyRemoved": "Klucz usunięty.",
+    "apiKeySaveFailed": "Nie udało się zapisać klucza."
   },
   "schedules": {
     "saveError": "Nie udało się zapisać harmonogramu.",

@@ -23,7 +23,7 @@ afterEach(() => { cleanup(); vi.restoreAllMocks(); vi.unstubAllGlobals(); });
 describe('AI assistant API key input', () => {
   const render_ = (method: string) => render(
     <AIAssistantApiKeyInput
-      provider="openai" currentKey="" handleApiKeyChange={vi.fn()} connectionMethod={{ openai: method, claude: 'api_key', gemini: 'api_key' } as Record<AiProvider, string>}
+      provider="openai" keyStored={false} handleApiKeyChange={vi.fn()} connectionMethod={{ openai: method, claude: 'api_key', gemini: 'api_key' } as Record<AiProvider, string>}
       openSubscriptionModal={vi.fn()} promptInstruction="" setPromptInstruction={vi.fn()} t={t}
     />,
   );
