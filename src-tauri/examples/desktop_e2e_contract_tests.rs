@@ -33,7 +33,7 @@ fn validation_scripts_match_the_runtime_gate() {
                 .count()
         })
         .sum();
-    assert_eq!(ipc_count, 134);
+    assert_eq!(ipc_count, 135);
     assert_eq!(40 + 24 + ipc_count, super::REQUIRED_VALIDATION_CHECKS);
     assert!(base.contains("__seomiDesktopIpcValidation.run"));
     assert_eq!(super::REQUIRED_RENDERER_CHECKS, 48);

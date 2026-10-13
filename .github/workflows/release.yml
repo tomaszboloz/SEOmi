@@ -147,4 +147,4 @@ jobs:
       - name: Publish draft after platform verification
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: gh release edit "${{ needs.release-preflight.outputs.tag }}" --draft=false
+        run: gh release edit "${{ needs.release-preflight.outputs.tag }}" --repo "$GITHUB_REPOSITORY" --draft=false

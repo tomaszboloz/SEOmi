@@ -24,6 +24,7 @@
     ['check_link', 'url:s timeoutSecs:o'],
     ['check_external_crawl_links', 'requestId:s urls:a maxUrls:o'],
     ['fetch_public_feed', 'feed:s geo:s keyword:s language:s'],
+    ['rdap_domain_lookup', 'domain:s'],
     ['write_mcp_config_file', 'path:s contents:s'],
     ['discover_mcp_tools', 'serverPath:s'],
     ['save_config', 'config:j'],

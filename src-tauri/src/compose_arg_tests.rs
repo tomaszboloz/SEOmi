@@ -17,6 +17,7 @@ fn composed_commands_reject_payloads_missing_required_arguments() {
         "run_pagespeed_insights",
         "query_crux_record",
         "fetch_public_feed",
+        "rdap_domain_lookup",
         "inspect_url",
         "check_link",
     ] {

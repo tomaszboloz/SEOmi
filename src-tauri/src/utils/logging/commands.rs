@@ -34,6 +34,7 @@ pub(super) const IPC_COMMANDS: &[&str] = &[
     "run_pagespeed_insights",
     "query_crux_record",
     "fetch_public_feed",
+    "rdap_domain_lookup",
     "connect_google_analytics",
     "list_google_analytics_properties",
     "google_analytics_performance",

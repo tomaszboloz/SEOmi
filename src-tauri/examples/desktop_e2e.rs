@@ -6,9 +6,9 @@ use uuid::Uuid;
 
 // 26 renderer checks plus 11 live-page checks for each of HTTP and browser-rendered modes.
 const REQUIRED_RENDERER_CHECKS: usize = 26 + (11 * 2);
-// Validation includes 40 base, 24 additional and 134 malformed IPC checks.
+// Validation includes 40 base, 24 additional and 135 malformed IPC checks.
 // Keep this explicit so adding a script without extending the gate fails.
-const REQUIRED_VALIDATION_CHECKS: usize = 40 + 24 + 134;
+const REQUIRED_VALIDATION_CHECKS: usize = 40 + 24 + 135;
 
 fn main() {
     let report = PathBuf::from(std::env::args_os().nth(1).expect("report path argument"));
