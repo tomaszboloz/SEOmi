@@ -114,9 +114,9 @@ describe('AiCitationEvidenceItem label fallback', () => {
 });
 
 describe('overlay mouse-down handling', () => {
-  it('keeps the subscription modal open when the press starts inside the dialog', () => {
+  it('keeps the subscription modal open when the press starts inside the dialog', async () => {
     act(() => { useUIStore.setState({ activeModal: 'subscription' }); });
-    render(<SubscriptionModal />);
+    await act(async () => { render(<SubscriptionModal />); });
     fireEvent.mouseDown(screen.getByRole('dialog'));
     expect(useUIStore.getState().activeModal).toBe('subscription');
     act(() => { useUIStore.setState({ activeModal: null }); });

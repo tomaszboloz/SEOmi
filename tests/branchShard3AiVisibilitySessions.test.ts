@@ -1,10 +1,13 @@
-import { act, renderHook } from '@testing-library/react';
+import { act, cleanup, renderHook } from '@testing-library/react';
 import { afterEach, expect, it } from 'vitest';
 import { useAiBrandVisibilitySession } from '@/components/AiVisibility/brandVisibility/useAiBrandVisibilitySession';
 import { useAuthStore } from '@/stores/authStore';
 
 const initial = useAuthStore.getState();
-afterEach(() => useAuthStore.setState(initial));
+afterEach(() => {
+  cleanup();
+  act(() => { useAuthStore.setState(initial); });
+});
 
 it('lists only providers that use a local CLI and are connected', () => {
   act(() => {

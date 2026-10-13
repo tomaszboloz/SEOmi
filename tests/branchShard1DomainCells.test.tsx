@@ -1,4 +1,4 @@
-import { cleanup, render, screen } from '@testing-library/react';
+import { act, cleanup, render, screen } from '@testing-library/react';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import i18n from '@/i18n';
 import { BacklinkChecker } from '@/components/Domain/BacklinkChecker';
@@ -100,6 +100,6 @@ describe('backlink checker error banner', () => {
     useToolsStore.setState({ backlinkError: 'Backlink service unavailable' });
     render(<BacklinkChecker />);
     expect(screen.getByText('Backlink service unavailable')).toBeTruthy();
-    useToolsStore.setState({ backlinkError: null });
+    act(() => { useToolsStore.setState({ backlinkError: null }); });
   });
 });
