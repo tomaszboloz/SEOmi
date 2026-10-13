@@ -1,4 +1,4 @@
-# SEOmi 0.1.2 — release notes
+# SEOmi 0.2.0 — release notes
 
 ## Added
 
@@ -22,6 +22,13 @@
 - Stored credentials stay on the native side for desktop cloud AI; settings read credential presence rather than stored values.
 - MCP shutdown handlers are registered before the server announces readiness.
 - Renderer capture sources have standalone JavaScript syntax while retaining acknowledged transfers and duplicate-capture protection.
+
+## Changes since 0.1.2
+
+- **New PDF reports.** Audit and crawl reports are now styled A4 documents built on a new layout engine: header and footer with page numbers, a coloured health score, severity counts and KPI cards, and every finding as a card with **where** it applies (page, element, current value, affected URLs) and **how to fix** it. Nothing is silently omitted: missing values show "—" and a coverage table lists every section. Latin, Cyrillic, CJK and right-to-left Arabic text keep working and the text stays searchable.
+- The audit report adds a "Passed checks" summary and a detail table per audit area (meta tags, headings, content, images, links, redirects, indexability, security headers, structured data, Open Graph, accessibility, AMP, performance).
+- The crawl report adds the full pages table, issues grouped by type with the affected URLs and advice for every crawler issue code, and detailed sections for duplicates, redirects, broken links, canonicals, hreflang, structured data, images, resources and robots.txt/sitemap. Report templates still select which sections are included.
+- PDFs previously dropped each finding's recommendation and showed stray "-" lines for blanks; both are fixed.
 
 ## Changes since 0.1.1
 
