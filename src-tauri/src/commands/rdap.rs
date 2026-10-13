@@ -6,6 +6,8 @@ const RDAP_BOOTSTRAP_URL: &str = "https://rdap.org";
 const MAX_RDAP_BYTES: usize = 1_048_576;
 const RDAP_TIMEOUT_SECS: u64 = 10;
 const MAX_RDAP_REDIRECTS: usize = 3;
+// rdap.org rejects requests that carry no User-Agent header with 403.
+const RDAP_USER_AGENT: &str = concat!("SEOmi/", env!("CARGO_PKG_VERSION"));
 
 fn valid_label(label: &str) -> bool {
     !label.is_empty()
@@ -44,6 +46,7 @@ fn rdap_client() -> Result<Client, String> {
     });
     Client::builder()
         .timeout(Duration::from_secs(RDAP_TIMEOUT_SECS))
+        .user_agent(RDAP_USER_AGENT)
         .redirect(policy)
         .build()
         .map_err(|_| "Unable to create RDAP client.".to_string())
