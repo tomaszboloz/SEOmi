@@ -1,4 +1,4 @@
-use super::charts::{audit_chart, crawl_chart, PdfChartBar};
+use super::charts::{crawl_chart, PdfChartBar};
 use super::crawl_page_summary::append_page_summary;
 use super::renderer::{chart_stream, pdf_bytes};
 use super::text_utils::{ascii_pdf_text, pdf_literal, wrapped_lines};
@@ -24,15 +24,6 @@ fn chart_builders_cover_missing_values_and_http_boundaries() {
     assert_eq!(
         bars.iter().map(|bar| bar.value).collect::<Vec<_>>(),
         [100, 7, 2, 3, 2, 2]
-    );
-    assert!(audit_chart(&json!({})).is_none());
-    let audit = audit_chart(&json!({"health_score": 140,
-        "security_headers": {"score": 101}, "headings": {"h1_count": 2},
-        "images": [{"src": "local.svg"}], "links": {"total_links": 4}}))
-    .unwrap();
-    assert_eq!(
-        audit.iter().map(|bar| bar.value).collect::<Vec<_>>(),
-        [100, 100, 2, 1, 4]
     );
 }
 

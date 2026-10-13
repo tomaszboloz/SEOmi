@@ -54,7 +54,7 @@ fn hex_text(token: &str) -> Option<String> {
     )
 }
 
-fn extract_pdf_text(bytes: &[u8]) -> String {
+pub(crate) fn extract_pdf_text(bytes: &[u8]) -> String {
     let objects = pdf_objects(bytes);
     let by_id = objects
         .iter()

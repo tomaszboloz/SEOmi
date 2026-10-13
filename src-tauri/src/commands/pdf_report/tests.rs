@@ -4,7 +4,7 @@ mod tests_pdf_extract;
 #[path = "font_layout_branch_tests.rs"]
 mod font_layout_branch_tests;
 
-pub(super) use tests_pdf_extract::pdf_has_text;
+pub(super) use tests_pdf_extract::{extract_pdf_text, pdf_has_text};
 
 use crate::commands::pdf_report::{generate_audit_pdf, generate_crawl_pdf};
 use base64::Engine;
@@ -17,7 +17,7 @@ fn creates_a_valid_pdf_payload_from_an_audit() {
         .unwrap();
     assert!(bytes.starts_with(b"%PDF-1.4"));
     assert!(pdf_has_text(&bytes, "Missing title"));
-    assert!(pdf_has_text(&bytes, "Crawl metrics - saved run"));
+    assert!(pdf_has_text(&bytes, "Page 1 of"));
 }
 
 #[test]

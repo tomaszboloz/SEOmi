@@ -1,4 +1,3 @@
-use super::audit_text::audit_text_lines;
 use super::crawl_resources_table::append_resources_table;
 use super::crawl_tables::{
     append_images_table, append_issues_table, append_links_table, append_pages_table,
@@ -94,12 +93,4 @@ fn crawl_text_honors_selected_sections_and_saved_limits() {
     );
     assert!(minimal.iter().any(|line| line.contains("No page records")));
     assert!(minimal.iter().any(|line| line == "Configuration: -"));
-}
-
-#[test]
-fn audit_text_reports_empty_issue_sets() {
-    let lines = audit_text_lines(&json!({"final_url": "https://local.test", "issues": []}));
-    assert!(lines
-        .iter()
-        .any(|line| line == "No issues were reported by this audit."));
 }

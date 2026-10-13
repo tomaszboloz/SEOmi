@@ -23,7 +23,8 @@ fn generate_audit_pdf_error_paths_and_fallbacks() {
     let bytes =
         decode_pdf(generate_audit_pdf(json!({"final_url": "https://example.test"})).unwrap());
     assert!(bytes.starts_with(b"%PDF-1.4"));
-    assert!(pdf_has_text(&bytes, "Audited URL: https://example.test"));
+    assert!(pdf_has_text(&bytes, "https://example.test"));
+    assert!(pdf_has_text(&bytes, "AUDITED AT"));
     assert!(pdf_has_text(
         &bytes,
         "No issues were reported by this audit."
@@ -40,8 +41,12 @@ fn generate_audit_pdf_error_paths_and_fallbacks() {
         }))
         .unwrap(),
     );
-    assert!(pdf_has_text(&issue_bytes, "[Critical] SEO: Bad title"));
-    assert!(pdf_has_text(&issue_bytes, "[Info] Technical: -"));
+    assert!(pdf_has_text(&issue_bytes, "Bad title"));
+    assert!(pdf_has_text(&issue_bytes, "Critical (1)"));
+    assert!(pdf_has_text(&issue_bytes, "SEO"));
+    assert!(pdf_has_text(&issue_bytes, "No description was provided"));
+    assert!(pdf_has_text(&issue_bytes, "Info (2)"));
+    assert!(pdf_has_text(&issue_bytes, "General"));
 }
 
 #[test]

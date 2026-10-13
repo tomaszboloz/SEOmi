@@ -1,13 +1,17 @@
 use super::charts::PdfChartBar;
 use super::font::FontSet;
-use super::font_pdf::{resource_refs, FontRefs};
+use super::layout::assemble::assemble;
 
 #[path = "renderer_chart.rs"]
 mod renderer_chart;
 
 pub use renderer_chart::chart_stream;
 
-pub(super) fn encoded_text(fonts: &mut FontSet, size: u8, text: &str) -> String {
+pub(super) fn encoded_text(
+    fonts: &mut FontSet,
+    size: impl std::fmt::Display,
+    text: &str,
+) -> String {
     fonts
         .encode(text)
         .into_iter()
@@ -67,40 +71,16 @@ fn page_stream(fonts: &mut FontSet, lines: &[String]) -> String {
     stream
 }
 
-fn stream_object(stream: &str) -> Vec<u8> {
-    format!(
-        "<< /Length {} >>\nstream\n{}endstream",
-        stream.len(),
-        stream
-    )
-    .into_bytes()
-}
-
-fn page_object(content: usize, refs: &FontRefs) -> Vec<u8> {
-    let latin = refs
-        .latin
-        .map(|id| format!("/F1 {id} 0 R "))
-        .unwrap_or_default();
-    let cjk = refs
-        .cjk
-        .map(|id| format!("/F2 {id} 0 R "))
-        .unwrap_or_default();
-    let arabic = refs
-        .arabic
-        .map(|id| format!("/F3 {id} 0 R "))
-        .unwrap_or_default();
-    format!("<< /Type /Page /Parent 2 0 R /MediaBox [0 0 612 842] /Resources << /Font << {latin}{cjk}{arabic}>> >> /Contents {content} 0 R >>").into_bytes()
-}
-
 pub fn pdf_bytes(lines: Vec<String>, chart: Option<Vec<PdfChartBar>>) -> Vec<u8> {
     let mut fonts = FontSet::new();
     let visual_lines = lines
         .iter()
         .flat_map(|line| fonts.wrapped_lines(line, 512.0, 10.0))
         .collect::<Vec<_>>();
-    let page_chunks = visual_lines.chunks(48).collect::<Vec<_>>();
-    let text_page_count = page_chunks.len().max(1);
-    let page_count = text_page_count + usize::from(chart.is_some());
+    let mut page_chunks = visual_lines.chunks(48).collect::<Vec<_>>();
+    if page_chunks.is_empty() {
+        page_chunks.push(&[]);
+    }
     let mut streams = page_chunks
         .iter()
         .map(|chunk| page_stream(&mut fonts, chunk))
@@ -108,40 +88,5 @@ pub fn pdf_bytes(lines: Vec<String>, chart: Option<Vec<PdfChartBar>>) -> Vec<u8>
     if let Some(bars) = chart.as_deref() {
         streams.push(chart_stream_unicode(&mut fonts, bars));
     }
-    let mut objects = vec![b"<< /Type /Catalog /Pages 2 0 R >>".to_vec(), Vec::new()];
-    let refs = resource_refs(&fonts, &mut objects);
-    let first_page = objects.len() + 1;
-    let kids = (0..page_count)
-        .map(|index| format!("{} 0 R", first_page + index * 2))
-        .collect::<Vec<_>>()
-        .join(" ");
-    objects[1] = format!("<< /Type /Pages /Kids [{kids}] /Count {page_count} >>").into_bytes();
-    for stream in &streams {
-        let content = objects.len() + 2;
-        objects.push(page_object(content, &refs));
-        objects.push(stream_object(stream));
-    }
-    let mut bytes = b"%PDF-1.4\n%\xE2\xE3\xCF\xD3\n".to_vec();
-    let mut offsets = vec![0usize];
-    for (index, object) in objects.iter().enumerate() {
-        offsets.push(bytes.len());
-        bytes.extend_from_slice(format!("{} 0 obj\n", index + 1).as_bytes());
-        bytes.extend_from_slice(object);
-        bytes.extend_from_slice(b"\nendobj\n");
-    }
-    let xref_offset = bytes.len();
-    bytes.extend_from_slice(
-        format!("xref\n0 {}\n0000000000 65535 f \n", objects.len() + 1).as_bytes(),
-    );
-    for offset in offsets.iter().skip(1) {
-        bytes.extend_from_slice(format!("{offset:010} 00000 n \n").as_bytes());
-    }
-    bytes.extend_from_slice(
-        format!(
-            "trailer\n<< /Size {} /Root 1 0 R >>\nstartxref\n{xref_offset}\n%%EOF\n",
-            objects.len() + 1
-        )
-        .as_bytes(),
-    );
-    bytes
+    assemble(&fonts, &streams, (612.0, 842.0))
 }

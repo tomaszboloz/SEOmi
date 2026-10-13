@@ -1,4 +1,4 @@
-use super::charts::{audit_chart, crawl_chart, PdfChartBar};
+use super::charts::{crawl_chart, PdfChartBar};
 use super::renderer::pdf_bytes;
 use super::text_utils::{ascii_pdf_text, pdf_literal, wrapped_lines};
 use serde_json::json;
@@ -47,17 +47,6 @@ fn text_utils_exhaustive_diacritics_and_specials() {
 
 #[test]
 fn charts_cover_partial_metrics_and_error_distributions() {
-    // Audit chart with only partial fields
-    let audit_h1_only = audit_chart(&json!({"headings": {"h1_count": 3}})).unwrap();
-    assert_eq!(audit_h1_only.len(), 1);
-    assert_eq!(audit_h1_only[0].label, "H1 count");
-    assert_eq!(audit_h1_only[0].value, 3);
-
-    let audit_links_only = audit_chart(&json!({"links": {"total_links": 15}})).unwrap();
-    assert_eq!(audit_links_only.len(), 1);
-    assert_eq!(audit_links_only[0].label, "Links");
-    assert_eq!(audit_links_only[0].value, 15);
-
     // Crawl chart with only 2xx pages
     let crawl_2xx = crawl_chart(&json!({
         "result": {
