@@ -1,6 +1,6 @@
 import { readStorage, writeStorage } from '@/services/storage';
 import type { AiConnectionMethod, AiConnectionState } from '@/types';
-import { PROVIDERS, providerMap, defaultModel, statusFromDetectedCli, isAiProvider, isConnectionMethod, projectPreferenceKey, AI_PROJECT_MIGRATION_KEY, beginAuthRequest } from './runtime';
+import { PROVIDERS, providerMap, initialModel, providerModelKey, statusFromDetectedCli, isAiProvider, isConnectionMethod, projectPreferenceKey, AI_PROJECT_MIGRATION_KEY, beginAuthRequest } from './runtime';
 import type { AuthState, AuthSet, AuthGet } from './types';
 import { currentModel } from '@/services/ai/modelCatalog';
 export const createAuthPreferences = (set: AuthSet, get: AuthGet): Pick<AuthState, 'setProvider' | 'setModel' | 'setConnectionMethod' | 'hydrateProject'> => ({
@@ -8,15 +8,20 @@ export const createAuthPreferences = (set: AuthSet, get: AuthGet): Pick<AuthStat
     writeStorage('seomi_ai_provider', provider);
     const projectId = get().activeProjectId;
     if (projectId) writeStorage(projectPreferenceKey(projectId, 'provider'), provider);
-    const model = defaultModel(provider);
+    const remembered = (projectId && readStorage(projectPreferenceKey(projectId, `model_${provider}`))) || readStorage(providerModelKey(provider));
+    const model = currentModel(remembered?.trim() || initialModel(provider, get().availableModels[provider]));
     writeStorage('seomi_ai_model', model);
     if (projectId) writeStorage(projectPreferenceKey(projectId, 'model'), model);
     set({ provider, model });
   },
   setModel: (model) => {
     writeStorage('seomi_ai_model', model);
-    const projectId = get().activeProjectId;
-    if (projectId) writeStorage(projectPreferenceKey(projectId, 'model'), model);
+    const { activeProjectId: projectId, provider } = get();
+    writeStorage(providerModelKey(provider), model);
+    if (projectId) {
+      writeStorage(projectPreferenceKey(projectId, 'model'), model);
+      writeStorage(projectPreferenceKey(projectId, `model_${provider}`), model);
+    }
     set({ model });
   },
   setConnectionMethod: (provider, method) => {
@@ -45,7 +50,7 @@ export const createAuthPreferences = (set: AuthSet, get: AuthGet): Pick<AuthStat
     const storedModel = readStorage(projectPreferenceKey(projectId, 'model'));
     const legacyModel = readStorage('seomi_ai_model');
     // Retired model IDs saved by older versions are rewritten to supported successors.
-    const model = currentModel(storedModel?.trim() || (migrateLegacyPreferences && provider === (legacyProvider || '') ? legacyModel?.trim() : '') || defaultModel(provider));
+    const model = currentModel(storedModel?.trim() || (migrateLegacyPreferences && provider === (legacyProvider || '') ? legacyModel?.trim() : '') || initialModel(provider, get().availableModels[provider]));
     const connectionMethod = PROVIDERS.reduce((all, item) => {
       const projectValue = readStorage(projectPreferenceKey(projectId, `connection_${item}`));
       const legacyValue = readStorage(`seomi_ai_connection_${item}`);

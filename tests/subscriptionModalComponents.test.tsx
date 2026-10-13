@@ -102,7 +102,10 @@ describe('SubscriptionModal modular architecture', () => {
 
     const input = screen.getByLabelText(/auth\.apiKeyLabel/);
     fireEvent.change(input, { target: { value: 'sk-new-key' } });
-    expect(onSaveKey).toHaveBeenCalledWith('openai', 'sk-new-key');
+    // Typing only fills the draft; the key is written once, on save.
+    expect(onSaveKey).not.toHaveBeenCalled();
+    fireEvent.keyDown(input, { key: 'Enter' });
+    expect(onSaveKey).toHaveBeenCalledExactlyOnceWith('openai', 'sk-new-key');
   });
 
   it('renders SubscriptionModal and closes on backdrop click', async () => {

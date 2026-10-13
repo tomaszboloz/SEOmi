@@ -67,7 +67,7 @@ describe('AIAssistant modular architecture', () => {
     render(
       <AIAssistantApiKeyInput
         provider="openai"
-        currentKey="sk-test"
+        keyStored
         handleApiKeyChange={handleKeyChange}
         connectionMethod={{ openai: 'api_key', claude: 'api_key', gemini: 'api_key' }}
         openSubscriptionModal={openSub}
@@ -81,9 +81,12 @@ describe('AIAssistant modular architecture', () => {
     fireEvent.click(subBtn);
     expect(openSub).toHaveBeenCalledTimes(1);
 
-    const keyInput = screen.getByDisplayValue('sk-test');
+    const keyInput = screen.getByLabelText(/ai\.apiKeyLabel/);
+    expect((keyInput as HTMLInputElement).value).toBe('');
     fireEvent.change(keyInput, { target: { value: 'sk-new' } });
-    expect(handleKeyChange).toHaveBeenCalledWith('sk-new');
+    expect(handleKeyChange).not.toHaveBeenCalled();
+    fireEvent.keyDown(keyInput, { key: 'Enter' });
+    expect(handleKeyChange).toHaveBeenCalledExactlyOnceWith('sk-new');
 
     const instructionInput = screen.getByLabelText('ai.customInstruction');
     fireEvent.change(instructionInput, { target: { value: 'focus on e-commerce' } });

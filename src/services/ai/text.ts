@@ -16,7 +16,7 @@ export async function generateAiText(provider: AiProvider, apiKey: string, model
   if (isDesktopAi()) return nativeText(provider, model, prompt);
   if (!apiKey.trim()) throw new Error(i18n.t('runtimeErrors.ai.credentialMissing', { provider: aiProviderLabel(provider) }));
   if (provider === 'openai') {
-    const response = await fetch('https://api.openai.com/v1/chat/completions', { method: 'POST', headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${apiKey}` }, body: JSON.stringify({ model, messages: [{ role: 'user', content: prompt }], temperature: 0 }) });
+    const response = await fetch('https://api.openai.com/v1/chat/completions', { method: 'POST', headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${apiKey}` }, body: JSON.stringify({ model, messages: [{ role: 'user', content: prompt }] }) });
     if (!response.ok) throw aiResponseError(provider, response.status);
     return readAiResponseText(response, provider);
   }

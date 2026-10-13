@@ -12,6 +12,14 @@ export const SECRET_NAMES: Record<AiProvider, string> = {
 };
 export const providerMap = <T,>(value: T): Record<AiProvider, T> => ({ openai: value, claude: value, gemini: value });
 export const defaultModel = (provider: AiProvider): string => ({ openai: 'gpt-4o', claude: CLAUDE_DEFAULT_MODEL, gemini: GEMINI_DEFAULT_MODEL })[provider];
+/** Each provider keeps its own last choice, so switching provider and back does not reset it. */
+export const providerModelKey = (provider: AiProvider): string => `seomi_ai_model_${provider}`;
+/**
+ * The model a provider starts with when nothing is remembered. OpenAI's listing
+ * is sorted newest first, so its first entry replaces a hard-coded name that ages.
+ */
+export const initialModel = (provider: AiProvider, listed: { id: string }[] = []): string =>
+  (provider === 'openai' && listed[0]?.id) || defaultModel(provider);
 // Detection runs the same version and sign-in check as the explicit test for
 // Codex and Claude, so a detected CLI is a working connection. Gemini has no
 // sign-in check; only its explicit test (one real request) proves it.

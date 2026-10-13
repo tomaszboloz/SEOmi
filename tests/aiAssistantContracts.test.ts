@@ -77,7 +77,7 @@ it.each([new Error('provider failed'), 'provider rejected'])('reports a current 
 it.each([new Error('vault failed'), 'vault rejected'])('reports a current key write failure: %s', async failure => {
   const pending = deferred<void>(); setApiKey.mockReturnValueOnce(pending.promise);
   const { result } = renderHook(useAIAssistantSession);
-  act(() => result.current.handleApiKeyChange('new-key'));
+  act(() => { void result.current.handleApiKeyChange('new-key').catch(() => {}); });
   expect(setApiKey).toHaveBeenCalledExactlyOnceWith('openai', 'new-key');
   await act(async () => { pending.reject(failure); await pending.promise.catch(() => {}); });
   expect(result.current.error).toBe(failure instanceof Error ? failure.message : failure);
@@ -86,7 +86,7 @@ it.each([new Error('vault failed'), 'vault rejected'])('reports a current key wr
 it('ignores an older key rejection after a newer successful generation', async () => {
   const pending = deferred<void>(); setApiKey.mockReturnValueOnce(pending.promise);
   const { result } = renderHook(useAIAssistantSession);
-  act(() => result.current.handleApiKeyChange('new-key'));
+  act(() => { void result.current.handleApiKeyChange('new-key').catch(() => {}); });
   await act(async () => { await result.current.handleGenerate(); });
   await act(async () => { pending.reject(new Error('old failure')); await pending.promise.catch(() => {}); });
   expect(result.current.error).toBeNull(); expect(result.current.suggestions).toEqual(suggestion);

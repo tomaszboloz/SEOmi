@@ -35,6 +35,6 @@ fn prompts_must_be_non_empty_and_bounded() {
 fn gemini_models_url_carries_the_encoded_key() {
     assert_eq!(
         gemini_models_url("a b").unwrap(),
-        "https://generativelanguage.googleapis.com/v1beta/models?key=a+b"
+        "https://generativelanguage.googleapis.com/v1beta/models?pageSize=1000&key=a+b"
     );
 }

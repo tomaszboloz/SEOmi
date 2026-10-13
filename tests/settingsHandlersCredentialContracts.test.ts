@@ -63,9 +63,9 @@ it.each([new Error('provider unavailable'), 'unknown failure'])('reports current
   expect(f.result.current.testingDataForSeo).toBe(false);
 });
 
-it.each(['openai', 'claude', 'gemini'] as const)('routes %s key changes and handles store failure', async (provider) => {
+it.each(['openai', 'claude', 'gemini'] as const)('routes %s key changes and passes a store failure to the field', async (provider) => {
   const f = settingsHandlersHook(); f.setApiKey.mockRejectedValueOnce(new Error('store owns failure'));
-  await act(async () => f.result.current.handleAiKeyChange(provider, 'key'));
+  await act(async () => { await expect(f.result.current.handleAiKeyChange(provider, 'key')).rejects.toThrow('store owns failure'); });
   expect(f.setApiKey).toHaveBeenCalledWith(provider, 'key');
 });
 

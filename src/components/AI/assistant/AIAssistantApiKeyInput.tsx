@@ -2,11 +2,12 @@ import React from 'react';
 import type { TFunction } from 'i18next';
 import { Key } from 'lucide-react';
 import type { AiProvider } from '@/types';
+import { SecretKeyField } from '@/components/Auth/SecretKeyField';
 
 interface Props {
   provider: AiProvider;
-  currentKey: string;
-  handleApiKeyChange: (key: string) => void;
+  keyStored: boolean;
+  handleApiKeyChange: (key: string) => Promise<void>;
   connectionMethod: Record<AiProvider, string>;
   openSubscriptionModal: () => void;
   promptInstruction: string;
@@ -16,7 +17,7 @@ interface Props {
 
 export const AIAssistantApiKeyInput: React.FC<Props> = ({
   provider,
-  currentKey,
+  keyStored,
   handleApiKeyChange,
   connectionMethod,
   openSubscriptionModal,
@@ -39,18 +40,18 @@ export const AIAssistantApiKeyInput: React.FC<Props> = ({
         </button>
       </div>
       <div className="relative">
-        <input
+        <SecretKeyField
           id="ai-api-key"
-          type="password"
-          value={currentKey}
-          onChange={(e) => handleApiKeyChange(e.target.value)}
+          label={t('ai.apiKeyLabel', { provider: provider.toUpperCase() })}
+          stored={keyStored && connectionMethod[provider] !== 'local_cli'}
+          onSave={handleApiKeyChange}
           placeholder={
             connectionMethod[provider] === 'local_cli'
               ? t('ai.localCliPlaceholder')
               : t('ai.apiKeyPlaceholder', { provider: provider.toUpperCase() })
           }
           disabled={connectionMethod[provider] === 'local_cli'}
-          className="w-full h-9 pl-8 pr-3 bg-slate-950 border border-slate-800 rounded-lg text-xs text-white placeholder-slate-600 focus:outline-none focus:ring-1 focus:ring-emerald-500"
+          inputClassName="h-9 min-w-0 flex-1 pl-8 pr-3 bg-slate-950 border border-slate-800 rounded-lg text-xs text-white placeholder-slate-600 focus:outline-none focus:ring-1 focus:ring-emerald-500"
         />
         <Key className="w-3.5 h-3.5 text-slate-500 absolute left-2.5 top-2.5" />
       </div>

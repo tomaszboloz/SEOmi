@@ -67,7 +67,10 @@ pub(super) fn gemini_url(model: &str, key: &str) -> Result<String, String> {
 
 fn gemini_models_url(key: &str) -> Result<String, String> {
     let mut url = models_url();
-    url.query_pairs_mut().append_pair("key", key);
+    // The default page holds 50 models; one request asks for the whole list.
+    url.query_pairs_mut()
+        .append_pair("pageSize", "1000")
+        .append_pair("key", key);
     Ok(url.into())
 }
 

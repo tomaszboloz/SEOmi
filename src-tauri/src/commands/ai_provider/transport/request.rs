@@ -9,7 +9,8 @@ pub(crate) use dispatch::{generate, send, test_connection};
 
 const OPENAI_MODELS: &str = "https://api.openai.com/v1/models";
 const OPENAI_CHAT: &str = "https://api.openai.com/v1/chat/completions";
-const CLAUDE_MODELS: &str = "https://api.anthropic.com/v1/models";
+// One page of up to 1000 models; the default page holds only 20.
+const CLAUDE_MODELS: &str = "https://api.anthropic.com/v1/models?limit=1000";
 const CLAUDE_MESSAGES: &str = "https://api.anthropic.com/v1/messages";
 
 pub(crate) fn connection_succeeded(status: StatusCode, body_valid: bool) -> bool {
@@ -35,6 +36,16 @@ fn retarget(url: String, origin: Option<&str>) -> String {
     let Some(origin) = origin else { return url };
     let live = Url::parse(&url).expect("provider endpoints are valid URLs");
     format!("{origin}{}?{}", live.path(), live.query().unwrap_or(""))
+}
+
+/// No temperature is sent: reasoning models (gpt-5, gpt-6, o-series) accept
+/// only the default and answer any other value with HTTP 400.
+fn openai_chat(model: &str, prompt: &str, suggestions: bool) -> Value {
+    let mut body = json!({"model": model, "messages": [{"role": "user", "content": prompt}]});
+    if suggestions {
+        body["response_format"] = json!({"type": "json_object"});
+    }
+    body
 }
 
 #[cfg(test)]
@@ -67,9 +78,7 @@ fn request_at(
         ("openai", Some(prompt)) => (
             Method::POST,
             OPENAI_CHAT.to_string(),
-            Some(
-                json!({"model": model, "messages": [{"role": "user", "content": prompt}], "temperature": if suggestions { 0.7 } else { 0.0 }, "response_format": if suggestions { json!({"type": "json_object"}) } else { Value::Null }}),
-            ),
+            Some(openai_chat(model, prompt, suggestions)),
         ),
         ("claude", None) => (Method::GET, CLAUDE_MODELS.to_string(), None),
         ("claude", Some(prompt)) => (

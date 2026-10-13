@@ -105,10 +105,10 @@ describe('useSubscriptionModalSession', () => {
     expect(result.current.saving).toBeNull();
   });
 
-  it('saveKey swallows store errors and still clears saving', async () => {
+  it('saveKey passes store errors on and still clears saving', async () => {
     setApiKey.mockRejectedValueOnce(new Error('keychain'));
     const { result } = renderHook(() => useSubscriptionModalSession());
-    await act(async () => { await result.current.saveKey('openai', 'x'); });
+    await act(async () => { await expect(result.current.saveKey('openai', 'x')).rejects.toThrow('keychain'); });
     await waitFor(() => expect(result.current.saving).toBeNull());
   });
 

@@ -11,35 +11,61 @@ pub struct AiModelOption {
     pub label: String,
 }
 
+/// Families that cannot answer a chat completion. The last four are listed
+/// by the API but served only by other endpoints (`-pro`, `codex`,
+/// `gpt-live`) or by the legacy completions endpoint (`instruct`).
+const OPENAI_NON_CHAT: [&str; 17] = [
+    "embedding",
+    "whisper",
+    "tts",
+    "dall-e",
+    "image",
+    "audio",
+    "realtime",
+    "transcribe",
+    "moderation",
+    "search",
+    "davinci",
+    "babbage",
+    "computer-use",
+    "-pro",
+    "codex",
+    "gpt-live",
+    "instruct",
+];
+const GEMINI_NON_TEXT: [&str; 6] = [
+    "tts",
+    "image",
+    "transcribe",
+    "embedding",
+    "robotics",
+    "computer-use",
+];
+
+fn names_any(id: &str, parts: &[&str]) -> bool {
+    let id = id.to_ascii_lowercase();
+    parts.iter().any(|part| id.contains(part))
+}
+
+/// Chat models, newest first; the API returns them in no particular order.
 pub(super) fn openai_models(body: &Value) -> Vec<AiModelOption> {
-    body["data"]
+    let mut dated: Vec<(i64, String)> = body["data"]
         .as_array()
         .into_iter()
         .flatten()
         .filter_map(|model| {
             let id = model["id"].as_str()?.to_string();
-            let excluded = [
-                "embedding",
-                "whisper",
-                "tts",
-                "dall-e",
-                "image",
-                "audio",
-                "realtime",
-                "transcribe",
-                "moderation",
-                "search",
-                "davinci",
-                "babbage",
-                "computer-use",
-            ]
-            .iter()
-            .any(|part| id.to_ascii_lowercase().contains(part));
             let chat = id.starts_with("gpt-") || id.starts_with('o') || id.starts_with("chatgpt-");
-            (!excluded && chat).then(|| AiModelOption {
-                label: id.clone(),
-                id,
-            })
+            let created = model["created"].as_i64().unwrap_or(0);
+            (chat && !names_any(&id, &OPENAI_NON_CHAT)).then_some((created, id))
+        })
+        .collect();
+    dated.sort_by(|left, right| right.0.cmp(&left.0).then_with(|| left.1.cmp(&right.1)));
+    dated
+        .into_iter()
+        .map(|(_, id)| AiModelOption {
+            label: id.clone(),
+            id,
         })
         .collect()
 }
@@ -70,11 +96,13 @@ pub(super) fn gemini_models(body: &Value) -> Vec<AiModelOption> {
             let raw = model["name"].as_str()?;
             let id = raw.strip_prefix("models/").unwrap_or(raw).to_string();
             let methods = model["supportedGenerationMethods"].as_array()?;
-            (id.starts_with("gemini") && methods.iter().any(|method| method == "generateContent"))
-                .then(|| AiModelOption {
+            let text = id.starts_with("gemini") && !names_any(&id, &GEMINI_NON_TEXT);
+            (text && methods.iter().any(|method| method == "generateContent")).then(|| {
+                AiModelOption {
                     label: model["displayName"].as_str().unwrap_or(&id).to_string(),
                     id,
-                })
+                }
+            })
         })
         .collect()
 }

@@ -1,4 +1,4 @@
-# SEOmi 0.1.0 — release notes
+# SEOmi 0.1.1 — release notes
 
 ## Added
 
@@ -22,6 +22,11 @@
 - Stored credentials stay on the native side for desktop cloud AI; settings read credential presence rather than stored values.
 - MCP shutdown handlers are registered before the server announces readiness.
 - Renderer capture sources have standalone JavaScript syntax while retaining acknowledged transfers and duplicate-capture protection.
+
+## Changes since 0.1.0
+
+- OpenAI requests no longer send `temperature`, so newer models (gpt-5.x, gpt-6.x, o-series) stop failing with HTTP 400; provider model lists are sorted newest first and skip models that chat completions rejects (fix by @RafalSzy).
+- API keys are entered in a shared field that keeps the typed text as a draft until "Save key" or Enter, shows when a key is saved, offers "Remove key", and no longer stores only the last typed character; the chosen model is remembered per provider, provider errors are readable and translated, and the Optimizer no longer asks for a manual connection test after a restart (fix by @RafalSzy).
 
 ## Changes since 0.0.7
 
