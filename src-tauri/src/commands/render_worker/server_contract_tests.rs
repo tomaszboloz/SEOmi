@@ -96,7 +96,7 @@ async fn valid_protocol_reaches_real_url_validation_without_opening_a_webview() 
 
 #[tokio::test]
 async fn run_worker_terminates_on_shutdown_channel_and_expiration() {
-    use super::server::run_worker;
+    use super::admission::run_worker;
     let app = StorageApp::new(mock_builder());
     let listener = TcpListener::bind(("127.0.0.1", 0)).await.unwrap();
     let shared = WorkerShared {

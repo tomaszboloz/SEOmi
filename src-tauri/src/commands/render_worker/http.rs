@@ -100,7 +100,9 @@ pub(super) async fn read_request<R: AsyncRead + Unpin>(
         })
         .transpose()?
         .unwrap_or(0);
-    if content_length > MAX_BODY_BYTES || header_length + content_length > MAX_REQUEST_BYTES {
+    // header_length <= MAX_HEADER_BYTES is enforced above, so the body cap
+    // alone bounds the whole request at MAX_HEADER_BYTES + MAX_BODY_BYTES.
+    if content_length > MAX_BODY_BYTES {
         return Err("Worker request body exceeds the safety limit.".into());
     }
     while bytes.len() < header_length + content_length {

@@ -1,4 +1,4 @@
-use reqwest::{redirect::Policy, Client};
+use reqwest::{redirect::Policy, Client, ClientBuilder};
 use serde_json::Value;
 use std::time::Duration;
 
@@ -32,19 +32,23 @@ fn registrable_hostname(domain: &str) -> Result<String, String> {
     Ok(host)
 }
 
-fn may_follow(previous_hops: usize, scheme: &str) -> bool {
-    previous_hops < MAX_RDAP_REDIRECTS && scheme == "https"
+fn may_follow(previous_hops: usize, scheme: &str, allowed: &str) -> bool {
+    previous_hops < MAX_RDAP_REDIRECTS && scheme == allowed
 }
 
 fn rdap_client() -> Result<Client, String> {
-    let policy = Policy::custom(|attempt| {
-        if may_follow(attempt.previous().len(), attempt.url().scheme()) {
+    build_client(Client::builder(), "https")
+}
+
+fn build_client(builder: ClientBuilder, allowed: &'static str) -> Result<Client, String> {
+    let policy = Policy::custom(move |attempt| {
+        if may_follow(attempt.previous().len(), attempt.url().scheme(), allowed) {
             attempt.follow()
         } else {
             attempt.stop()
         }
     });
-    Client::builder()
+    builder
         .timeout(Duration::from_secs(RDAP_TIMEOUT_SECS))
         .user_agent(RDAP_USER_AGENT)
         .redirect(policy)

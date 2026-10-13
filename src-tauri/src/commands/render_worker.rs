@@ -1,3 +1,4 @@
+mod admission;
 mod http;
 mod http_response;
 mod models;
@@ -27,9 +28,9 @@ use tokio::{
     time::Instant,
 };
 
+use admission::run_worker;
 use models::*;
 pub use models::{RenderWorkerLease, RenderWorkerState, RENDER_WORKER_VERSION};
-use server::run_worker;
 
 pub(super) fn io_failure(context: &'static str) -> impl FnOnce(std::io::Error) -> String {
     move |error| format!("{context}: {error}")

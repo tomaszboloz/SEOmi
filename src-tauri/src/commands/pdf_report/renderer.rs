@@ -12,11 +12,13 @@ pub(super) fn encoded_text(fonts: &mut FontSet, size: u8, text: &str) -> String 
         .encode(text)
         .into_iter()
         .map(|run| {
-            let actual = run
+            let (actual, end) = run
                 .actual_text
-                .map(|value| format!("/Span << /ActualText <{}> >> BDC\n", utf16_hex(&value)))
+                .map(|value| {
+                    let span = format!("/Span << /ActualText <{}> >> BDC\n", utf16_hex(&value));
+                    (span, "EMC\n")
+                })
                 .unwrap_or_default();
-            let end = if actual.is_empty() { "" } else { "EMC\n" };
             format!(
                 "{actual}/{} {size} Tf\n<{}> Tj\n{end}",
                 run.kind.resource(),
