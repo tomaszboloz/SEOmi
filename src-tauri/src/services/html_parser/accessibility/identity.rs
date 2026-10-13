@@ -71,7 +71,7 @@ pub(in crate::services::html_parser) fn identity_inventory(document: &Html) -> I
         ] {
             if let Some(value) = element.value().attr(attribute) {
                 for reference in value.split_ascii_whitespace() {
-                    if !reference.is_empty() && !ids.contains(reference) {
+                    if !ids.contains(reference) {
                         unresolved_aria_reference_count += 1;
                         if unresolved_aria_references.len() < 10 {
                             unresolved_aria_references.push((attribute, reference.to_string()));

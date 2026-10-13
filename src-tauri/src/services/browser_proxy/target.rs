@@ -16,8 +16,6 @@ pub(super) fn parse_proxy_target(
             || parsed.query().is_some()
             || parsed.fragment().is_some()
             || target.contains('@')
-            || !parsed.username().is_empty()
-            || parsed.password().is_some()
             || content_length != 0
             || !body.is_empty()
         {
