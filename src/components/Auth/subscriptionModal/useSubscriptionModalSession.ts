@@ -69,9 +69,9 @@ export const useSubscriptionModalSession = () => {
   const saveKey = async (id: AiProvider, value: string) => {
     setSaving(id);
     try {
+      // The store records the translated keychain error in the provider row;
+      // the rejection still reaches the field so it can say the save failed.
       await setApiKey(id, value);
-    } catch {
-      // The store records the translated keychain error in the provider row.
     } finally {
       setSaving(null);
     }

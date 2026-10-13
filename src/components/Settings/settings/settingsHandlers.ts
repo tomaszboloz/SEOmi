@@ -70,7 +70,7 @@ export const useSettingsHandlers = () => {
     } catch {}
   };
 
-  const handleAiKeyChange = (provider: 'openai' | 'claude' | 'gemini', value: string) => void setApiKey(provider, value).catch(() => undefined);
+  const handleAiKeyChange = (provider: 'openai' | 'claude' | 'gemini', value: string) => setApiKey(provider, value);
 
   const handleTestDataForSeo = async () => {
     const isCurrent = beginCredentials('test');

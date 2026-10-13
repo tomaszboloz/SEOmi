@@ -18,7 +18,7 @@ export const AIAssistantModal: React.FC = () => {
     provider,
     setProvider,
     connectionMethod,
-    currentKey,
+    keyStored,
     handleApiKeyChange,
     promptInstruction,
     setPromptInstruction,
@@ -64,7 +64,7 @@ export const AIAssistantModal: React.FC = () => {
 
           <AIAssistantApiKeyInput
             provider={provider}
-            currentKey={currentKey}
+            keyStored={keyStored}
             handleApiKeyChange={handleApiKeyChange}
             connectionMethod={connectionMethod}
             openSubscriptionModal={openSubscriptionModal}

@@ -16,7 +16,9 @@ vi.mock('@/stores/settingsStore', () => ({
       language: 'en',
       setLanguage: vi.fn(),
       secureStorageError: null,
-      isSaving: false
+      isSaving: false,
+      dataForSeoCredentials: { login: '', password: '' },
+      googleMetricsApiKey: ''
     };
     return selector(mockStore);
   })

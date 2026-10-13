@@ -589,7 +589,8 @@
       "responseHidden": "Provider response withheld.",
       "invalidResponse": "The AI provider returned an invalid response.",
       "responseTooLarge": "The AI provider response exceeds the 1 MiB limit.",
-      "refused": "{{provider}} rechazó esta solicitud. Reformúlala o elige otro modelo."
+      "refused": "{{provider}} rechazó esta solicitud. Reformúlala o elige otro modelo.",
+      "modelRejected": "{{provider}} no aceptó la solicitud para el modelo {{model}} (HTTP {{status}}). Elige otro modelo."
     },
     "pagespeed": {
       "projectRequired": "Choose a project before starting the measurement."
@@ -3499,7 +3500,12 @@
     "refreshModels": "Actualizar lista de modelos",
     "modelsFromProvider": "{{count}} modelos de la API del proveedor",
     "modelsDefault": "Modelos predeterminados: prueba la clave de API para cargar tus modelos",
-    "modelsUnavailable": "No se pudieron cargar los modelos del proveedor; se muestra la última lista conocida."
+    "modelsUnavailable": "No se pudieron cargar los modelos del proveedor; se muestra la última lista conocida.",
+    "apiKeyStoredPlaceholder": "•••••••• clave guardada; pega una nueva para reemplazarla",
+    "saveApiKey": "Guardar clave",
+    "removeApiKey": "Eliminar clave",
+    "apiKeyRemoved": "Clave eliminada.",
+    "apiKeySaveFailed": "No se pudo guardar la clave."
   },
   "schedules": {
     "saveError": "Unable to save the schedule.",

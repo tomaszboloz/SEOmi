@@ -2,7 +2,8 @@ import type { AiProvider } from '@/types';
 import { invokeTauriCommand } from '@/services/tauri';
 import i18n from '@/i18n';
 import { currentModel, GEMINI_DEFAULT_MODEL } from './modelCatalog';
-import { readAiResponseText } from './response';
+import { aiResponseError, readAiResponseText } from './response';
+import { aiProviderLabel } from './labels';
 
 export const isDesktopAi = (): boolean =>
   typeof window !== 'undefined' && '__TAURI_INTERNALS__' in window;
@@ -25,14 +26,30 @@ const rejectProviderErrorEnvelope = (raw: string): void => {
   }
 };
 
+const PROVIDER_STATUS = /HTTP (\d{3})/;
+
+/** Turn the status-only native error into the translated message the WebView transport used to show. */
+const invokeProvider = async (command: string, provider: AiProvider, model: string, prompt: string, suggestion: boolean): Promise<string> => {
+  const sent = nativeModel(provider, model);
+  try {
+    return await invokeTauriCommand<string>(command, { provider, model: sent, prompt });
+  } catch (cause) {
+    const text = cause instanceof Error ? cause.message : String(cause);
+    const status = Number(PROVIDER_STATUS.exec(text)?.[1]);
+    if (status) throw aiResponseError(provider, status, suggestion, sent);
+    if (text.includes('credential is not configured')) throw new Error(i18n.t('runtimeErrors.ai.credentialMissing', { provider: aiProviderLabel(provider) }), { cause });
+    throw cause instanceof Error ? cause : new Error(text);
+  }
+};
+
 export async function nativeText(provider: AiProvider, model: string, prompt: string): Promise<string> {
-  const raw = await invokeTauriCommand<string>('ai_generate_text', { provider, model: nativeModel(provider, model), prompt });
+  const raw = await invokeProvider('ai_generate_text', provider, model, prompt, false);
   rejectProviderErrorEnvelope(raw);
   return readAiResponseText(nativeResponse(raw), provider);
 }
 
 export async function nativeSuggestions(provider: AiProvider, model: string, prompt: string): Promise<string> {
-  const raw = await invokeTauriCommand<string>('ai_generate_suggestions', { provider, model: nativeModel(provider, model), prompt });
+  const raw = await invokeProvider('ai_generate_suggestions', provider, model, prompt, true);
   rejectProviderErrorEnvelope(raw);
   return readAiResponseText(nativeResponse(raw), provider);
 }
