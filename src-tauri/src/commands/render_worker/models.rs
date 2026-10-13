@@ -12,7 +12,6 @@ pub(super) const WORKER_TTL: Duration = Duration::from_secs(90);
 pub(super) const REQUEST_TIMEOUT: Duration = Duration::from_secs(75);
 pub(super) const MAX_HEADER_BYTES: usize = 16 * 1024;
 pub(super) const MAX_BODY_BYTES: usize = 64 * 1024;
-pub(super) const MAX_REQUEST_BYTES: usize = MAX_HEADER_BYTES + MAX_BODY_BYTES;
 pub(super) const MAX_SCOPE_PATH_CHARS: usize = 2_048;
 
 #[derive(Debug, Clone, Serialize, Deserialize)]

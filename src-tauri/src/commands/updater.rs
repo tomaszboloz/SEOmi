@@ -61,7 +61,9 @@ mod tests {
     #[test]
     fn missing_release_is_no_update() {
         let status = check_error(tauri_plugin_updater::Error::ReleaseNotFound).unwrap();
-        assert!(!status.available && !status.installed && !status.restart_required);
+        assert!(!status.available);
+        assert!(!status.installed);
+        assert!(!status.restart_required);
         assert!(status.version.is_none());
     }
 

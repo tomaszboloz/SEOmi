@@ -1,4 +1,4 @@
-# SEOmi 0.1.1 — release notes
+# SEOmi 0.1.2 — release notes
 
 ## Added
 
@@ -22,6 +22,11 @@
 - Stored credentials stay on the native side for desktop cloud AI; settings read credential presence rather than stored values.
 - MCP shutdown handlers are registered before the server announces readiness.
 - Renderer capture sources have standalone JavaScript syntax while retaining acknowledged transfers and duplicate-capture protection.
+
+## Changes since 0.1.1
+
+- More native error paths are covered by tests: crawler delay and cancellation, sitemap and robots scope, redirect and metadata verdicts, RDAP client construction, the render worker's accept loop (now in `render_worker/admission.rs`) and request-size checks.
+- Removed branches that could never run (an always-true render-worker request-size sum, a redundant empty-host check on proxy URLs, a redundant alias comparison in robots scope).
 
 ## Changes since 0.1.0
 

@@ -42,7 +42,8 @@ pub(super) fn validate_crawl_auth_profile(profile: &CrawlAuthProfile) -> Result<
         }
         let proxy =
             url::Url::parse(proxy_url).map_err(|_| "Invalid proxy URL in request profile.")?;
-        if !matches!(proxy.scheme(), "http" | "https") || proxy.host_str().is_none() {
+        // http(s) URLs always carry a host: `Url::parse` rejects an empty one.
+        if !matches!(proxy.scheme(), "http" | "https") {
             return Err("Proxy URL must use HTTP or HTTPS and include a hostname.".into());
         }
     }

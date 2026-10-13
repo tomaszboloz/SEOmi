@@ -42,3 +42,14 @@ fn amp_targets_with_zero_status_are_flagged_as_warnings() {
         .iter()
         .any(|issue| issue.severity == "Warning" && issue.message.contains("HTTP 0")));
 }
+
+#[test]
+fn amp_targets_with_healthy_status_get_no_warning() {
+    let mut page = page("https://example.com/a");
+    page.amp_url = Some("https://example.com/amp".into());
+    let mut pages = [page];
+    let statuses = HashMap::from([("https://example.com/amp".to_string(), 200u16)]);
+    annotate_amp_targets(&mut pages, &statuses, &HashMap::new());
+    assert_eq!(pages[0].amp_target_http_status, Some(200));
+    assert!(pages[0].issues.iter().all(|i| i.severity != "Warning"));
+}

@@ -124,3 +124,19 @@ fn graph_evidence_is_incomplete_after_a_request_error_or_a_full_reference_list()
         &full
     ));
 }
+
+#[test]
+fn node_values_ignore_non_string_and_non_array_properties() {
+    let object = serde_json::json!({ "sameAs": 7, "url": { "@id": "x" } });
+    let mut references = Vec::new();
+    for property in ["sameAs", "url", "missing"] {
+        schema_graph_values::push_node_values(
+            object.as_object().unwrap(),
+            property,
+            0,
+            &mut references,
+            "$",
+        );
+    }
+    assert!(references.is_empty());
+}
