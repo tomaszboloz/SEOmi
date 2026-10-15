@@ -118,6 +118,7 @@ describe('crawl results metric contracts', () => {
       validation: 2,
       performance: 1,
       visualisations: 3,
+      focus: 3,
       exports: 9,
     });
 

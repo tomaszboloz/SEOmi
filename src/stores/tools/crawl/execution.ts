@@ -9,6 +9,7 @@ import { crawlResultKey, crawlRunsKey, activeProjectId } from '../storageKeys';
 import { formatCrawlPersistenceNotice, formatCrawlRuntimeError } from '../runtime';
 import { activeCrawlRuns, persistInterruptedCrawl, buildCrawlCheckpoint, mergeCrawlResults } from '../crawlPersistence';
 import { monitorCrawlComparison } from '@/services/monitoringAlerts';
+import { runScheduledFocus } from '@/services/siteFocusMonitoring';
 import { compareCrawlRuns } from '@/services/crawlDiff';
 
 export const createCrawlExecutionActions = (set: ToolsSet, get: ToolsGet, services: ToolsServices): Pick<ToolsState, "startSiteCrawl"> => ({
@@ -99,6 +100,7 @@ startSiteCrawl: async (url, limit, configPatch, environment = 'default', notifyC
         void services.notifyCrawlCompleted(projectId, crawlResult, previousRun?.result, { runId });
       }
       if (projectId && previousRun) void monitorCrawlComparison(projectId, compareCrawlRuns(run, previousRun, { projectId }));
+      if (projectId) void runScheduledFocus(projectId, run, previousRun);
       return crawlResult;
     } catch (err: unknown) {
       const msg = formatCrawlRuntimeError(err);

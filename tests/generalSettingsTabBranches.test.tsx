@@ -68,7 +68,7 @@ it.each([[false, 'p1'], [true, null]])('disables notifications when tauri=%s pro
 it('updates numeric limits, user agent and ssl verification through updateConfig', () => {
   setup({}, { request_timeout_secs: 10, max_redirects: 5, default_user_agent: 'chrome_mac', verify_ssl: true });
   fireEvent.change(screen.getByDisplayValue('10'), { target: { value: '25' } });
-  fireEvent.change(screen.getByDisplayValue('5'), { target: { value: '9' } });
+  fireEvent.change(document.querySelector('input[type="number"][max="15"]') as HTMLInputElement, { target: { value: '9' } });
   fireEvent.change(screen.getByLabelText(t('settings.defaultUserAgent')), { target: { value: 'bingbot' } });
   fireEvent.click(screen.getByRole('checkbox', { name: new RegExp(t('settings.verifySsl')) }));
   expect(updateConfig.mock.calls.map((c) => c[0])).toEqual([{ request_timeout_secs: 25 }, { max_redirects: 9 }, { default_user_agent: 'bingbot' }, { verify_ssl: false }]);

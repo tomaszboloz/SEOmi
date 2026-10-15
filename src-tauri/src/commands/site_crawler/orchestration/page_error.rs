@@ -103,6 +103,7 @@ pub fn handle_page_error<R: Runtime>(
         semantic_content_source: "none".into(),
         semantic_content_provenance: "none".into(),
         semantic_content_partial: false,
+        focus: Default::default(),
         schema_types: Vec::new(),
         schema_references: Vec::new(),
         schema_syntax_errors: 0,

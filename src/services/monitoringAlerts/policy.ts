@@ -5,12 +5,13 @@ export const MONITORING_HISTORY_LIMIT = 128;
 export const defaultMonitoringAlertSettings = (): MonitoringAlertSettings => ({
   enabled: false,
   frequency: 'daily',
-  types: { gsc: true, pagespeed: true, crawl: true, semantic: true },
+  types: { gsc: true, pagespeed: true, crawl: true, semantic: true, focus: true },
   thresholds: {
     gsc: { declinePercent: 20, minImpressions: 100 },
     pagespeed: { categoryDrop: 0.1, metricIncrease: 250, maxWindowDays: 35 },
     crawl: { changedPages: 1 },
     semantic: { changes: 1 },
+    focus: { dropPoints: 5 },
   },
 });
 
@@ -27,16 +28,18 @@ export const normalizeMonitoringSettings = (value: unknown): MonitoringAlertSett
   const psi = ((thresholds as Partial<MonitoringAlertSettings['thresholds']>).pagespeed || {}) as Partial<MonitoringAlertSettings['thresholds']['pagespeed']>;
   const crawl = ((thresholds as Partial<MonitoringAlertSettings['thresholds']>).crawl || {}) as Partial<MonitoringAlertSettings['thresholds']['crawl']>;
   const semantic = ((thresholds as Partial<MonitoringAlertSettings['thresholds']>).semantic || {}) as Partial<MonitoringAlertSettings['thresholds']['semantic']>;
+  const focus = ((thresholds as Partial<MonitoringAlertSettings['thresholds']>).focus || {}) as Partial<MonitoringAlertSettings['thresholds']['focus']>;
   const frequency: MonitoringAlertFrequency = raw.frequency === 'run' || raw.frequency === 'weekly' ? raw.frequency : 'daily';
   return {
     enabled: raw.enabled === true,
     frequency,
-    types: { gsc: read('gsc'), pagespeed: read('pagespeed'), crawl: read('crawl'), semantic: read('semantic') },
+    types: { gsc: read('gsc'), pagespeed: read('pagespeed'), crawl: read('crawl'), semantic: read('semantic'), focus: read('focus') },
     thresholds: {
       gsc: { declinePercent: finite(gsc.declinePercent, 20, 1, 100), minImpressions: finite(gsc.minImpressions, 100, 1, 1_000_000) },
       pagespeed: { categoryDrop: finite(psi.categoryDrop, 0.1, 0.01, 1), metricIncrease: finite(psi.metricIncrease, 250, 1, 60_000), maxWindowDays: finite(psi.maxWindowDays, 35, 1, 366) },
       crawl: { changedPages: Math.ceil(finite(crawl.changedPages, 1, 1, 10_000)) },
       semantic: { changes: Math.ceil(finite(semantic.changes, 1, 1, 10_000)) },
+      focus: { dropPoints: finite(focus.dropPoints, 5, 0.5, 100) },
     },
   };
 };
@@ -51,7 +54,7 @@ export const alertFingerprint = (type: MonitoringAlertType, sourceId: string, ev
 };
 export const frequencyWindowMs = (frequency: MonitoringAlertFrequency): number => frequency === 'weekly' ? 7 * 86_400_000 : frequency === 'daily' ? 86_400_000 : 0;
 export const validAlert = (value: unknown): value is MonitoringAlert => Boolean(value && typeof value === 'object'
-  && ['gsc', 'pagespeed', 'crawl', 'semantic'].includes((value as MonitoringAlert).type)
+  && ['gsc', 'pagespeed', 'crawl', 'semantic', 'focus'].includes((value as MonitoringAlert).type)
   && typeof (value as MonitoringAlert).fingerprint === 'string' && typeof (value as MonitoringAlert).sourceId === 'string'
   && typeof (value as MonitoringAlert).title === 'string' && typeof (value as MonitoringAlert).body === 'string'
   && typeof (value as MonitoringAlert).occurredAt === 'string');

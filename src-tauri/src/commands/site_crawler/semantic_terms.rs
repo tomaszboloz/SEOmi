@@ -15,6 +15,24 @@ pub(super) fn semantic_term_language(document: &Html, declared: Option<&str>) ->
         .or_else(|| infer_content_language(&semantic_content_text(document)).map(str::to_owned))
 }
 
+/// Grouping key and lowercase surface form of a topical token, or `None`
+/// for noise (short words, stopwords, mostly-digit tokens).
+pub(super) fn semantic_token(token: &str, language: Option<&str>) -> Option<(String, String)> {
+    let token = token.trim();
+    let char_count = token.chars().count();
+    // Two-letter tokens are almost always function words; keep them
+    // only as uppercase acronyms such as AI, HR or PR.
+    let acronym = char_count == 2 && token.chars().all(|character| character.is_uppercase());
+    if char_count < 3 && !acronym {
+        return None;
+    }
+    let normalized = token.to_lowercase();
+    if semantic_noise_token(&fold_semantic_text(&normalized)) {
+        return None;
+    }
+    Some((semantic_term_key(&normalized, language), normalized))
+}
+
 /// Term frequencies of one page. Inflected forms share one entry:
 /// (total count, count per surface form).
 pub(super) struct SemanticTermGroups<'a> {
@@ -32,22 +50,10 @@ impl<'a> SemanticTermGroups<'a> {
     }
 
     pub(super) fn observe(&mut self, token: &str) {
-        let token = token.trim();
-        let char_count = token.chars().count();
-        // Two-letter tokens are almost always function words; keep them
-        // only as uppercase acronyms such as AI, HR or PR.
-        let acronym = char_count == 2 && token.chars().all(|character| character.is_uppercase());
-        if char_count < 3 && !acronym {
+        let Some((key, normalized)) = semantic_token(token, self.language) else {
             return;
-        }
-        let normalized = token.to_lowercase();
-        if semantic_noise_token(&fold_semantic_text(&normalized)) {
-            return;
-        }
-        let group = self
-            .groups
-            .entry(semantic_term_key(&normalized, self.language))
-            .or_default();
+        };
+        let group = self.groups.entry(key).or_default();
         group.0 += 1;
         *group.1.entry(normalized).or_default() += 1;
     }

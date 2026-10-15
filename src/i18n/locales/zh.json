@@ -2233,7 +2233,8 @@
       "resources": "资源",
       "frames": "框架",
       "custom-search": "自定义搜索",
-      "semantic": "语义分析"
+      "semantic": "语义分析",
+      "focus": "站点聚焦度"
     },
     "environmentStaging": "test/staging",
     "environmentProduction": "production",
@@ -3047,7 +3048,8 @@
       "structured": "结构化数据",
       "validation": "HTML 验证",
       "performance": "性能",
-      "exports": "导出"
+      "exports": "导出",
+      "focus": "站点聚焦度"
     },
     "groups": {
       "core": "概览",
@@ -5092,8 +5094,10 @@
       "gsc": "Search Console",
       "pagespeed": "PageSpeed / CrUX",
       "crawl": "抓取比较",
-      "semantic": "语义比较"
-    }
+      "semantic": "语义比较",
+      "focus": "Site Focus Score"
+    },
+    "focusDrop": "Site Focus Score 下降(分)"
   },
   "ga4": {
     "title": "Google Analytics 4",
@@ -5714,6 +5718,109 @@
         "colDiscovered": "发现途径",
         "colArea": "范围",
         "colResult": "结果"
+      },
+      "focus": {
+        "title": "站点聚焦度",
+        "intro": "已爬取页面在多大程度上始终围绕同一个核心主题。评分来自已保存的运行结果,不会重新抓取页面。",
+        "scoreTitle": "Site Focus Score",
+        "legend": "分级:90-100 优秀,75-89 良好,60-74 中等,40-59 较弱,0-39 严重。",
+        "kConfidence": "核心主题置信度",
+        "kOnTopic": "主题相关占比",
+        "kScored": "已评分页面",
+        "kSkipped": "已跳过页面",
+        "kOffTopic": "偏离主题的页面",
+        "kBorderline": "临界页面",
+        "kStrong": "高相关页面",
+        "nConfidence": "核心主题簇占比",
+        "nOnTopic": "TRS 达到 60 及以上的页面",
+        "nScored": "共爬取 {{0}} 个",
+        "nSkipped": "未评分",
+        "nOffTopic": "TRS 低于 40",
+        "nBorderline": "TRS 60-74",
+        "nStrong": "TRS 75 及以上",
+        "percent": "{{0}}%",
+        "coreBadge": "核心主题",
+        "coreTerms": "高频词",
+        "coreTerm": "{{0}}(占页面 {{1}}%)",
+        "coreConfidence": "置信度 {{0}}%",
+        "coreManual": "手动指定的主题:{{0}}",
+        "coreDetected": "根据已爬取页面自动识别",
+        "tPages": "主题相关度最低的页面",
+        "pagesIntro": "最多列出 25 个主题相关度评分(Topical Relevance Score,TRS)最低的内容页面。技术页面和已跳过的页面不包含在内。",
+        "colTrs": "TRS",
+        "colType": "类型",
+        "colSimilarity": "相似度",
+        "colOverlap": "重合度",
+        "colDrift": "偏移",
+        "colPlaybook": "处理方案",
+        "playbook": "{{0}}:{{1}}",
+        "tRecs": "优化建议",
+        "recsIntro": "按每预估工时可模拟获得的评分提升从高到低排序。提升幅度为估算值。",
+        "colNo": "#",
+        "colAction": "建议",
+        "colGain": "提升",
+        "gain": "+{{0}}",
+        "tSub": "子站点评分",
+        "subIntro": "多主题站点的各个主题板块,分别按其自身的核心主题评分。",
+        "colArea": "主题板块",
+        "colPrefix": "路径",
+        "colShare": "页面占比",
+        "colScore": "评分",
+        "tGaps": "主题缺口",
+        "colGap": "缺口",
+        "band": {
+          "excellent": "聚焦度优秀",
+          "good": "聚焦度良好",
+          "moderate": "聚焦度中等",
+          "weak": "聚焦度较弱",
+          "critical": "聚焦度严重不足"
+        },
+        "status": {
+          "strong": "强",
+          "moderate": "中等",
+          "borderline": "临界",
+          "weak": "较弱",
+          "off-topic": "严重偏离主题"
+        },
+        "type": {
+          "homepage": "首页",
+          "category": "分类页",
+          "article": "文章",
+          "technical": "技术页"
+        },
+        "note": {
+          "lowConfidence": "样本较小(共 {{0}} 个页面),结果仅供参考;要获得可靠的核心主题,请至少爬取 10 个页面。删除建议受到限制。",
+          "multiTopic": "检测到 {{0}} 个主题板块。该站点没有单一的主导主题。下方显示各子站点的评分。",
+          "lexicalFallback": "所选语言的分析使用 TF-IDF 统计算法。深度语义相似度部分不可用,评分基于关键词覆盖率和分布。",
+          "skippedRender": "因 JavaScript 渲染超时,有 {{0}} 个页面未纳入分析。",
+          "degraded": "部分页面的数据有限,因此其评分可能不够精确。",
+          "unmatchedTopic": "没有页面与主题“{{0}}”匹配,将改用自动识别的主题。"
+        },
+        "rec": {
+          "remove-offtopic": "删除或迁移 {{0}} 个偏离主题的页面:对最差的页面做重定向、设置 noindex 或直接删除,并移除指向它们的内部链接。潜在提升:+{{1}} 分。",
+          "strengthen-borderline": "强化 {{0}} 个临界页面:补充缺失的核心词和章节,将其提升到约 {{1}} 分。潜在提升:+{{2}} 分。",
+          "expand-core-cluster": "扩充核心主题簇:为内容单薄的子主题撰写 {{0}} 个新页面。潜在提升:+{{1}} 分。",
+          "add-internal-links": "向枢纽页面添加内部链接:{{0}} 条链接建议可将较弱的页面导向强枢纽页。",
+          "collect-more-pages": "收集更多页面:仅分析了 {{0}} 个页面。在删除任何内容之前,请先爬取更多页面。",
+          "split-subsites": "考虑拆分站点:发现 {{0}} 个不同的主题板块。拆分为独立栏目或子域名可能有帮助。",
+          "review-skipped-pages": "检查 {{0}} 个被跳过的页面:其中 {{1}} 个在渲染 JavaScript 时超时。",
+          "monitor-strong-pages": "监控 {{0}} 个高相关页面:保持其主题不偏离,并定期复查。"
+        },
+        "option": {
+          "remove-redirect": "删除并 301 重定向(+{{0}} 分)",
+          "noindex-isolate": "设置 noindex 并隔离(+{{0}} 分)",
+          "rewrite-on-topic": "按内容简报围绕主题重写(目标 TRS 约 {{0}})",
+          "add-missing-terms": "补充缺失的词:{{0}}",
+          "reinforce-headings": "强化 H2 和 H3 标题",
+          "deepen-coverage": "加深主题覆盖",
+          "serve-as-hub": "用作枢纽页面",
+          "build-satellite-cluster": "建立卫星内容簇",
+          "monitor-periodically": "每 {{0}} 周监控一次"
+        },
+        "gap": {
+          "thin-subtopic": "内容单薄的子主题“{{0}}”:仅有 {{1}}% 的页面涉及(共 {{2}} 个页面)。相关词:{{3}}。",
+          "competitor-terms": "竞争对手使用而你的站点缺失的词:{{3}}。"
+        }
       }
     },
     "recs": {
@@ -5864,6 +5971,92 @@
         "action": "Turn the switch on if you run crawls or schedules.\nWhen your system asks for permission, choose Allow. If you refused earlier, enable notifications for SEOmi in the system settings.\nTurn it off if you find the pop-ups distracting.\nThe text below the switch shows whether permission was granted.",
         "example": "Start a 5000-page crawl, switch to your email, and get a notification when it is done."
       }
+    },
+    "focus": {
+      "siteFocusScore": {
+        "title": "Site Focus Score(SFS)",
+        "what": "一个 0-100 的指标,衡量站点页面在多大程度上始终围绕同一个核心主题。它是所有页面主题相关度评分(Topical Relevance Score,TRS)的加权平均:首页权重为 3 倍,分类和栏目页为 2 倍,文章为 1 倍。",
+        "why": "搜索引擎和读者都更青睐明确聚焦于单一主题的站点。SFS 偏低意味着有许多页面稀释了这一信号。",
+        "action": "对照分级查看:90-100 优秀,75-89 良好,60-74 中等,40-59 较弱,0-39 严重。\n打开热力图,优先修复得分最低的页面。",
+        "example": "一个糖尿病博客有 40 篇糖尿病文章和 8 篇旅行文章,得分约为 80。"
+      },
+      "topicRelevance": {
+        "title": "主题相关度评分(TRS)",
+        "what": "针对单个 URL 的 0-100 评分:该页面与站点核心主题的契合程度。综合了语义相似度、关键词重合度和语义偏移。",
+        "why": "它能显示是哪些具体页面把整个站点拉离了主题。",
+        "action": "目标是 75 分及以上。\n改进 60 到 74 分之间的页面。\n对低于 40 分的页面进行删除、重定向或重写。",
+        "example": "糖尿病站点上一篇关于血糖仪的页面:TRS 88。一篇关于廉价机票的页面:TRS 12。"
+      },
+      "coreTopicConfidence": {
+        "title": "核心主题置信度",
+        "what": "检测到的核心主题相对于站点上其他主题的主导程度,范围为 0 到 100%。",
+        "why": "置信度较低时,说明站点没有清晰的主要主题,或分析的页面太少,评分的可靠性会下降。",
+        "action": "高于 60%:可以信任该主题。\n低于此值时,请检查主题名称,若有误则使用手动指定。",
+        "example": "如果最主要的主题占总词权重的 70%,则置信度为 70%。"
+      },
+      "onTopicRatio": {
+        "title": "主题相关占比",
+        "what": "TRS 达到 60 及以上的内容页面所占比例。登录、购物车等技术页面不计入。",
+        "why": "它告诉你有多少个页面(而不是加权后的分数)在支撑核心主题。",
+        "action": "通过修复临界页面(60-74 分及以下)和移除偏离主题的页面来提高该占比。",
+        "example": "50 个内容页面中有 42 个 TRS 达到 60 及以上:占比为 84%。"
+      },
+      "semanticSimilarity": {
+        "title": "语义相似度",
+        "what": "页面用词与站点核心主题画像的接近程度(余弦相似度,以百分比显示)。",
+        "why": "它是 TRS 公式中占比最大的部分。",
+        "action": "80-100% 为强,50-79% 为中等,低于 50% 为弱。\n补充属于核心主题的词语和章节。",
+        "example": "核心主题为糖尿病的站点上,一篇关于胰岛素泵的页面:86%。"
+      },
+      "keywordOverlap": {
+        "title": "关键词重合度",
+        "what": "核心主题最重要的 30-50 个关键词中,出现在该页面上的比例。",
+        "why": "即使写得很好,漏掉大部分核心关键词的页面也无法支撑该主题。",
+        "action": "超过 60% 为强;低于 30% 属于偏离主题。\n在合适且自然的位置补充缺失的核心关键词。",
+        "example": "核心词集有 40 个关键词,页面使用了其中 28 个:重合度为 70%。"
+      },
+      "semanticDrift": {
+        "title": "语义偏移",
+        "what": "页面词权重中属于其他主题、而非核心主题的比例。",
+        "why": "偏移较高说明页面把篇幅花在了别的话题上。",
+        "action": "偏移超过 50% 是危险信号。\n删减或移走无关章节,或将其拆分到站点的独立板块。",
+        "example": "一个糖尿病页面中有大段关于度假套餐的内容:偏移 55%。"
+      },
+      "keywordAlignment": {
+        "title": "关键词契合度",
+        "what": "显示页面上每个高频关键词与核心主题的关系。符号含义:对勾表示相关度高于 70%,波浪号表示 40% 到 70%,叉号表示低于 40%。",
+        "why": "让你一眼看出页面上哪些词有助于主题,哪些词在分散注意力。",
+        "action": "保留并扩展标有对勾的关键词。\n减少或删除标有叉号的词。",
+        "example": "“血糖” - 92% - 对勾;“酒店” - 8% - 叉号。"
+      },
+      "deltaScore": {
+        "title": "分数变化量",
+        "what": "执行某项操作后 Site Focus Score 的模拟变化。模拟会用新的页面分值重新计算加权平均。",
+        "why": "让你按每投入一份精力的收益对操作排序,而不是凭感觉猜测。",
+        "action": "优先从收益最高、投入最小的操作开始。\n完成后重新爬取,以确认实际提升。",
+        "example": "移除 6 个偏离主题的页面:提高 4.2 分。"
+      },
+      "lowConfidence": {
+        "title": "置信度低",
+        "what": "当分析的页面太少,或没有哪个主题明显领先时显示,此时检测到的核心主题可能有误。",
+        "why": "样本较小时,一个特殊页面就可能改变整个结果。",
+        "action": "爬取更多页面。\n检查主题名称,若有误请手动指定。\n对删除建议要谨慎对待。",
+        "example": "只爬取 6 个页面,只能得到一个粗略的结果。"
+      },
+      "benchmark": {
+        "title": "竞争对手基准",
+        "what": "把你的 Site Focus Score 与在搜索中针对你的核心主题排名靠前的站点放在一起对比。每个竞争对手只抽取少量页面样本进行爬取,并使用与你的站点相同的公式评分。",
+        "why": "分数只有与参照物比较才有意义。了解领先者的聚焦程度,就能知道自己还有多少提升空间,以及什么是现实的目标。",
+        "action": "在已连接搜索结果数据源的情况下运行基准。\n将你的主题相关占比和偏离主题的页面与前 3 名对比。\n打开缺口列表,针对多数竞争对手使用的词规划内容。",
+        "example": "如果前 3 名平均 82 分而你是 64 分,先通过修复偏离主题的页面把目标定在 80 分。",
+        "learnMore": "竞争对手的数据来自有限的爬取样本,因此请把微小差异视为噪声。"
+      },
+      "benchmarkTarget": {
+        "title": "目标分数",
+        "what": "建议的目标:至少 80 分;若前 3 名竞争对手的平均分更高,则取该平均分。",
+        "why": "把对比结果变成一个可以努力达成的数字。",
+        "action": "把它作为规划目标。\n完成修复后重新运行基准,查看变化。"
+      }
     }
   },
   "helpUi": {
@@ -5872,5 +6065,382 @@
     "action": "怎么做",
     "example": "示例",
     "learnMore": "了解更多"
+  },
+  "siteFocusMonitoring": {
+    "alert": {
+      "title": "SEOmi · Site Focus Score 提醒",
+      "sfsDrop": "两次完整分析之间,Site Focus Score 下降了 {{points}} 分(从 {{from}} 降至 {{to}})。",
+      "contentGuard": "过去 24 小时内首次发现的 {{count}} 个新页面偏离主题(TRS 低于 40):{{urls}}。"
+    },
+    "weekly": {
+      "title": "SEOmi · 站点聚焦度周报",
+      "body": "Site Focus Score {{score}}(较上周 {{delta}})。主要任务:{{tasks}}",
+      "noPrevious": "首份报告",
+      "task": "{{code}}(+{{gain}} 分)",
+      "noTasks": "没有紧急任务"
+    }
+  },
+  "focus": {
+    "title": "站点聚焦度",
+    "subtitle": "已爬取页面在多大程度上始终围绕同一个核心主题。",
+    "band": {
+      "excellent": "聚焦度优秀",
+      "good": "聚焦度良好",
+      "moderate": "聚焦度中等",
+      "weak": "聚焦度较弱",
+      "critical": "聚焦度严重不足"
+    },
+    "bandRange": {
+      "excellent": "90-100",
+      "good": "75-89",
+      "moderate": "60-74",
+      "weak": "40-59",
+      "critical": "0-39"
+    },
+    "empty": "没有可分析的含内容页面。请先运行爬取。",
+    "status": {
+      "strong": "强",
+      "moderate": "中等",
+      "borderline": "临界",
+      "weak": "较弱",
+      "off-topic": "严重偏离主题"
+    },
+    "type": {
+      "homepage": "首页",
+      "category": "分类页",
+      "article": "文章",
+      "technical": "技术页"
+    },
+    "effort": "工作量:{{min}}-{{max}} 小时(估算)",
+    "banner": {
+      "lowConfidence": "样本较小(共 {{count}} 个页面),结果仅供参考;要获得可靠的核心主题,请至少爬取 10 个页面。删除建议受到限制。",
+      "multiTopic": "检测到 {{count}} 个主题板块。该站点没有单一的主导主题。下方显示各子站点的评分。",
+      "lexicalFallback": "所选语言的分析使用 TF-IDF 统计算法。深度语义相似度部分不可用,评分基于关键词覆盖率和分布。",
+      "skippedRender": "因 JavaScript 渲染超时,有 {{count}} 个页面未纳入分析。",
+      "degraded": "部分页面的数据有限,因此其评分可能不够精确。",
+      "unmatchedTopic": "没有页面与主题“{{topic}}”匹配,将改用自动识别的主题。"
+    },
+    "skip": {
+      "render-timeout": "JavaScript 渲染超时",
+      "request-error": "请求失败",
+      "non-topical-status": "非内容类 HTTP 状态",
+      "non-html": "不是 HTML 页面",
+      "no-content": "没有文本内容"
+    },
+    "hero": {
+      "label": "Site Focus Score",
+      "outOf": "满分 100",
+      "summaryAll": "所有 {{count}} 个已分析页面都围绕主题。",
+      "summaryOff": "{{count}} 个页面中有 {{off}} 个明显偏离核心主题。",
+      "metaButton": "分析详情",
+      "metaPages": "已分析页面:{{count}}",
+      "metaAge": "更新时间:{{date}}",
+      "recalc": "重新计算",
+      "howItWorks": "它是如何运作的?",
+      "change": "较上次分析 {{delta}} 分",
+      "progressAria": "Site Focus Score {{score}} 分(满分 100),{{band}}",
+      "recalcBudget": "今天还剩 {{remaining}} 次完整重新计算机会(共 {{limit}} 次)。",
+      "recalcExhausted": "已达到每日 {{limit}} 次完整重新计算的上限。请明天再试。"
+    },
+    "drawer": {
+      "title": "Site Focus Score 的工作原理",
+      "close": "关闭",
+      "weights": "评分中的页面权重",
+      "weightHome": "首页:权重 3",
+      "weightCategory": "分类、栏目、支柱页面和枢纽页面:权重 2",
+      "weightArticle": "文章、帖子和卡片:权重 1",
+      "sfsFormula": "SFS = sum(权重 x TRS) / sum(权重),对所有已分析页面求和",
+      "trsTitle": "主题相关度评分(TRS)",
+      "trsFormula": "TRS = clamp(0..100, (0.5 x 相似度 + 0.3 x 重合度 - 0.2 x 偏移) x 125)",
+      "trsLexical": "不含语义部分时:TRS = clamp(0..100, (0.75 x 重合度 - 0.25 x 词汇偏移) x 125)",
+      "bands": "分级:90-100 优秀,75-89 良好,60-74 中等,40-59 较弱,0-39 严重。",
+      "onTopic": "TRS 达到 60 的页面计为主题相关。"
+    },
+    "core": {
+      "title": "核心主题",
+      "label": "识别出的主题",
+      "terms": "高频词",
+      "termAria": "{{term}}:{{pct}}%",
+      "coverage": "覆盖率:站点 {{pct}}% 的内容与该主题密切相关。",
+      "wrong": "主题不对?",
+      "inputLabel": "你的主题(词语或短语)",
+      "placeholder": "例如:糖尿病治疗",
+      "reset": "恢复为识别出的主题",
+      "manualActive": "手动指定的主题:{{input}}",
+      "confidenceLine": "核心主题置信度:{{pct}}%"
+    },
+    "metrics": {
+      "title": "关键指标",
+      "confidence": "核心主题置信度",
+      "onTopic": "主题相关占比",
+      "pages": "已评分页面",
+      "skipped": "已跳过页面",
+      "offTopic": "偏离主题的页面(TRS 低于 40)",
+      "borderline": "临界页面(60-74)"
+    },
+    "heatmap": {
+      "title": "主题分布",
+      "treeAria": "按 URL 排列的页面及其主题相关度",
+      "ignoreTechnical": "忽略技术页面",
+      "empty": "没有符合此筛选条件的页面。",
+      "filter": {
+        "all": "全部({{count}})",
+        "critical": "严重 <40({{count}})",
+        "borderline": "临界 60-74({{count}})",
+        "strong": "强 >=75({{count}})"
+      },
+      "filtersAria": "按相关度筛选页面",
+      "warning": "低于 60:存在偏离主题的风险",
+      "trsBar": "TRS {{trs}}",
+      "open": "打开 {{url}} 的页面分析",
+      "section": "栏目 {{name}}",
+      "home": "首页"
+    },
+    "detail": {
+      "title": "页面分析",
+      "back": "返回列表",
+      "close": "关闭页面分析",
+      "trs": "TRS",
+      "status": "状态",
+      "why": "为什么是这个分数?",
+      "similarity": "语义相似度:{{value}}%",
+      "overlap": "关键词重合度:{{value}}%",
+      "drift": "语义偏移:{{value}}%",
+      "driftFlag": "危险信号:页面一半以上的内容在谈论其他主题。",
+      "similarityStrong": "强",
+      "similarityModerate": "中等",
+      "similarityWeak": "弱",
+      "foreign": "其他主题:{{label}}({{pct}}%)",
+      "noForeign": "未检测到其他主题。",
+      "matched": "与核心主题匹配的关键词",
+      "unmatched": "属于其他主题的关键词",
+      "none": "未找到。",
+      "count": "{{count}}x",
+      "context": "上下文:{{text}}",
+      "clusterOf": "主题:{{cluster}}",
+      "skipped": "该页面未评分:{{reason}}。",
+      "degraded": "该页面数据有限,因此评分不够精确。"
+    },
+    "matrix": {
+      "title": "关键词契合度矩阵",
+      "keyword": "关键词",
+      "freq": "频次",
+      "relevance": "与核心主题的相关度",
+      "alignment": "契合度",
+      "match": "匹配(高于 70%)",
+      "partial": "部分匹配(40-70%)",
+      "miss": "不匹配(低于 40%)",
+      "empty": "没有可显示的关键词。"
+    },
+    "playbook": {
+      "title": "如何处理这个页面",
+      "typeA": "A 类:偏离主题的页面",
+      "typeB": "B 类:临界页面",
+      "typeC": "C 类:高相关页面",
+      "options": "可选方案",
+      "steps": "步骤",
+      "potential": "预期 TRS:{{min}}-{{max}}(估算)",
+      "gain": "站点提升:+{{gain}} 分"
+    },
+    "brief": {
+      "title": "重写简报",
+      "target": "目标 TRS:{{target}}(当前 {{current}})",
+      "mustInclude": "必须包含",
+      "avoid": "避免",
+      "headings": "标题思路",
+      "words": "篇幅:{{min}}-{{max}} 词",
+      "copy": "复制 AI 提示词",
+      "copied": "提示词已复制",
+      "copyFailed": "复制失败。请手动选择并复制。"
+    },
+    "site": {
+      "title": "优化建议",
+      "empty": "暂无建议。站点始终围绕主题。",
+      "delta": "分数变化量:+{{value}}",
+      "deltaZero": "分数变化量:0",
+      "pagesList": "页面",
+      "gaps": "主题缺口",
+      "gapsEmpty": "未发现主题缺口。",
+      "links": "内部链接建议",
+      "linksEmpty": "暂无链接建议。",
+      "terms": "词语"
+    },
+    "subsites": {
+      "title": "子站点评分",
+      "item": "{{label}}({{prefix}}):占页面的 {{share}}%",
+      "score": "评分 {{score}}"
+    },
+    "recommendation": {
+      "remove-offtopic": {
+        "title": "删除或迁移 {{count}} 个偏离主题的页面",
+        "detail": "对最差的页面做重定向、设置 noindex 或直接删除,并移除指向它们的内部链接。潜在提升:+{{gain}} 分。"
+      },
+      "strengthen-borderline": {
+        "title": "强化 {{count}} 个临界页面",
+        "detail": "补充缺失的核心词和章节,将其提升到约 {{target}} 分。潜在提升:+{{gain}} 分。"
+      },
+      "expand-core-cluster": {
+        "title": "扩充核心主题簇",
+        "detail": "为内容单薄的子主题撰写 {{count}} 个新页面。潜在提升:+{{gain}} 分。"
+      },
+      "add-internal-links": {
+        "title": "向枢纽页面添加内部链接",
+        "detail": "{{count}} 条链接建议可将较弱的页面导向强枢纽页。"
+      },
+      "collect-more-pages": {
+        "title": "收集更多页面",
+        "detail": "仅分析了 {{pageCount}} 个页面。在删除任何内容之前,请先爬取更多页面。"
+      },
+      "split-subsites": {
+        "title": "考虑拆分站点",
+        "detail": "发现 {{count}} 个不同的主题板块。拆分为独立栏目或子域名可能有帮助。"
+      },
+      "review-skipped-pages": {
+        "title": "检查 {{count}} 个被跳过的页面",
+        "detail": "其中 {{timeouts}} 个在渲染 JavaScript 时超时。"
+      },
+      "monitor-strong-pages": {
+        "title": "监控 {{count}} 个高相关页面",
+        "detail": "保持其主题不偏离,并定期复查。"
+      }
+    },
+    "playbookOption": {
+      "remove-redirect": {
+        "title": "删除并 301 重定向",
+        "detail": "请先检查流量和外链。站点提升:+{{gain}} 分。"
+      },
+      "noindex-isolate": {
+        "title": "设置 noindex 并隔离",
+        "detail": "为用户保留该页面,但对搜索隐藏并减少内部链接。站点提升:+{{gain}} 分。"
+      },
+      "rewrite-on-topic": {
+        "title": "按简报围绕主题重写",
+        "detail": "把该页面改写为核心主题内容。目标 TRS 约 {{target}}。"
+      },
+      "add-missing-terms": {
+        "title": "补充缺失的词",
+        "detail": "自然地融入缺失的核心词:{{terms}}。"
+      },
+      "reinforce-headings": {
+        "title": "强化 H2 和 H3 标题",
+        "detail": "在标题中使用核心主题的措辞。"
+      },
+      "deepen-coverage": {
+        "title": "加深主题覆盖",
+        "detail": "围绕核心主题补充章节、示例和深度内容。"
+      },
+      "serve-as-hub": {
+        "title": "用作枢纽页面",
+        "detail": "与相关页面互相链接,让该页面成为内容簇的核心。"
+      },
+      "build-satellite-cluster": {
+        "title": "建立卫星内容簇",
+        "detail": "规划链接回该页面的辅助页面。"
+      },
+      "monitor-periodically": {
+        "title": "监控",
+        "detail": "每 {{weeks}} 周复查一次。"
+      }
+    },
+    "playbookStep": {
+      "check-traffic-and-backlinks": "检查该页面的流量和外链。",
+      "redirect-301-to-closest-page": "用 301 重定向到最接近的主题相关页面。",
+      "remove-internal-links": "移除指向该页面的内部链接。",
+      "add-noindex": "添加 noindex 指令。",
+      "rewrite-with-brief": "按简报重写该页面。缺失的词:{{terms}}。",
+      "add-terms": "补充缺失的词:{{terms}}。",
+      "expand-h2-h3": "用核心主题的措辞扩充 H2 和 H3 标题。",
+      "add-examples": "补充示例和深度内容。",
+      "link-from-weak-pages": "从较弱的页面链接到该页面。",
+      "plan-satellite-pages": "围绕该页面规划卫星页面。",
+      "recheck-in-six-weeks": "{{weeks}} 周后复查。"
+    },
+    "gap": {
+      "thin-subtopic": "内容单薄的子主题“{{label}}”:仅有 {{coveragePct}}% 的页面涉及(共 {{pagesCovering}} 个页面)。相关词:{{terms}}。",
+      "competitor-terms": "竞争对手使用而你的站点缺失的词:{{terms}}。",
+      "competitorActive": "主题簇缺口分析正在使用 {{count}} 个竞争对手词。",
+      "competitorClear": "清除竞争对手词"
+    },
+    "link": {
+      "link-to-hub": "从 {{from}} 链接到枢纽页面 {{to}}。建议锚文本:{{anchors}}。"
+    },
+    "history": {
+      "removed-offtopic": "已移除 {{count}} 个偏离主题的页面({{delta}} 分)。",
+      "new-cluster": "新的主题簇“{{label}}”(新增 {{count}} 个,{{delta}} 分)。",
+      "optimized-borderline": "已优化 {{count}} 个临界页面({{delta}} 分)。",
+      "core-topic-changed": "核心主题已从“{{from}}”变为“{{to}}”({{delta}} 分)。",
+      "title": "评分历史",
+      "empty": "至少运行两次完整分析后才能看到趋势。",
+      "aria": "{{count}} 次分析中的 Site Focus Score,从 {{from}} 到 {{to}}",
+      "point": "{{date}}:{{score}}",
+      "annotations": "关键变化"
+    },
+    "alert": {
+      "sfs-drop": "Site Focus Score 从 {{from}} 降至 {{to}}({{points}} 分)。",
+      "content-guard": "新增偏离主题的页面 {{url}}(TRS {{trs}})。"
+    },
+    "weekly": {
+      "title": "每周摘要",
+      "summary": "评分 {{score}}(较上次分析 {{delta}})。",
+      "noPrevious": "首次分析",
+      "noTasks": "没有紧急任务。",
+      "gain": "(+{{value}} 分)"
+    }
+  },
+  "focusBenchmark": {
+    "title": "竞争对手基准",
+    "intro": "将你的 Site Focus Score 与针对核心主题排名靠前的站点进行比较。SEOmi 会查询搜索结果,以友好的方式(遵守 robots.txt)爬取每个竞争对手的少量页面样本,并用同一套引擎为它们评分。",
+    "run": "运行基准",
+    "rerun": "重新运行",
+    "cancel": "取消",
+    "cancelled": "基准已取消。未保存任何内容。",
+    "sources": "搜索结果数据源:{{source}}",
+    "queries": "查询词:{{queries}}",
+    "sample": "每个竞争对手最多爬取 {{count}} 个页面。",
+    "progress": {
+      "serp": "正在查询搜索结果({{done}}/{{total}})",
+      "crawl": "正在爬取竞争对手({{done}}/{{total}}),当前为 {{domain}}:{{pages}} 个页面",
+      "analyze": "正在为竞争对手评分"
+    },
+    "unavailable": {
+      "title": "基准不可用",
+      "no-serp-source": "未连接搜索结果数据源。请在设置中添加 DataForSEO 凭据,以便与真实竞争对手对比。",
+      "no-queries": "核心主题暂时没有可供搜索的词。请先爬取更多页面。",
+      "serp-failed": "无法获取搜索结果:{{error}}",
+      "no-competitors": "搜索结果中除你自己的站点外,没有其他竞争对手站点。"
+    },
+    "error": "基准运行失败:{{error}}",
+    "ranking": {
+      "title": "排名",
+      "you": "你",
+      "pages": "{{count}} 个页面",
+      "onTopic": "{{pct}}% 主题相关",
+      "offTopic": "{{count}} 个偏离主题",
+      "score": "SFS {{score}}",
+      "average": "行业平均",
+      "target": "目标分数",
+      "position": "你的排名:第 {{rank}} 位,共 {{total}} 个",
+      "chart": "各站点的 Site Focus Score"
+    },
+    "failure": {
+      "title": "未评分",
+      "crawl-error": "爬取失败:{{error}}",
+      "no-pages": "没有可爬取的页面(被 robots.txt 屏蔽或无法访问)。",
+      "analysis-failed": "分析失败:{{error}}",
+      "cancelled": "在评分前已取消。"
+    },
+    "insights": {
+      "title": "洞察",
+      "on-topic-share": "你的内容中有 {{own}}% 与主题相关,前 3 名为 {{leaders}}%(相差 {{delta}} 分)。",
+      "off-topic-pages": "你有 {{own}} 个偏离主题的页面;前 3 名平均为 {{leaders}} 个。",
+      "keyword-coverage": "你的站点覆盖了前 3 名所用核心主题关键词的 {{pct}}%({{total}} 个中的 {{covered}} 个)。",
+      "versus-average": "你的分数与行业平均 {{average}} 相差 {{delta}} 分。"
+    },
+    "gaps": {
+      "title": "竞争对手中出现的主题簇缺口",
+      "coverage": "{{pct}}% 的竞争对手({{count}} 个)",
+      "empty": "你的站点没有缺失任何竞争对手的主题。",
+      "apply": "将这些词加入缺口分析"
+    }
   }
 }

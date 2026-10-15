@@ -2233,7 +2233,8 @@
       "resources": "リソース",
       "frames": "フレーム",
       "custom-search": "カスタム検索",
-      "semantic": "セマンティック分析"
+      "semantic": "セマンティック分析",
+      "focus": "サイトフォーカス"
     },
     "environmentStaging": "test/staging",
     "environmentProduction": "production",
@@ -3047,7 +3048,8 @@
       "structured": "構造化データ",
       "validation": "HTML検証",
       "performance": "パフォーマンス",
-      "exports": "エクスポート"
+      "exports": "エクスポート",
+      "focus": "サイトフォーカス"
     },
     "groups": {
       "core": "概要",
@@ -5092,8 +5094,10 @@
       "gsc": "Search Console",
       "pagespeed": "PageSpeed / CrUX",
       "crawl": "クロール比較",
-      "semantic": "意味比較"
-    }
+      "semantic": "意味比較",
+      "focus": "Site Focus Score"
+    },
+    "focusDrop": "Site Focus Score の低下(ポイント)"
   },
   "ga4": {
     "title": "Google Analytics 4",
@@ -5714,6 +5718,109 @@
         "colDiscovered": "検出経路",
         "colArea": "領域",
         "colResult": "結果"
+      },
+      "focus": {
+        "title": "サイトフォーカス",
+        "intro": "クロールしたページがどれだけ一貫して1つの中心トピックにとどまっているかを示します。スコアは保存済みの実行結果から算出され、ページは再取得されません。",
+        "scoreTitle": "Site Focus Score",
+        "legend": "区分: 90-100 優秀、75-89 良好、60-74 普通、40-59 弱い、0-39 危険。",
+        "kConfidence": "中心トピックの信頼度",
+        "kOnTopic": "トピック適合率",
+        "kScored": "評価したページ",
+        "kSkipped": "スキップしたページ",
+        "kOffTopic": "トピック外のページ",
+        "kBorderline": "境界線上のページ",
+        "kStrong": "強いページ",
+        "nConfidence": "中心クラスターの割合",
+        "nOnTopic": "TRS 60 以上のページ",
+        "nScored": "クロール済み {{0}} ページ中",
+        "nSkipped": "未評価",
+        "nOffTopic": "TRS 40 未満",
+        "nBorderline": "TRS 60-74",
+        "nStrong": "TRS 75 以上",
+        "percent": "{{0}}%",
+        "coreBadge": "中心トピック",
+        "coreTerms": "上位の用語",
+        "coreTerm": "{{0}}(ページの {{1}}%)",
+        "coreConfidence": "信頼度 {{0}}%",
+        "coreManual": "手動指定のトピック: {{0}}",
+        "coreDetected": "クロールしたページから検出",
+        "tPages": "トピック関連性が最も低いページ",
+        "pagesIntro": "トピック関連性スコア(Topical Relevance Score、TRS)が低いコンテンツページを最大25件表示します。技術ページとスキップしたページは除外されます。",
+        "colTrs": "TRS",
+        "colType": "種類",
+        "colSimilarity": "類似度",
+        "colOverlap": "重複度",
+        "colDrift": "ドリフト",
+        "colPlaybook": "対応方針",
+        "playbook": "{{0}}: {{1}}",
+        "tRecs": "推奨事項",
+        "recsIntro": "想定作業1時間あたりのシミュレーション上のスコア上昇幅が大きい順に並べています。上昇幅は推定値です。",
+        "colNo": "#",
+        "colAction": "推奨事項",
+        "colGain": "上昇幅",
+        "gain": "+{{0}}",
+        "tSub": "サブサイトのスコア",
+        "subIntro": "複数トピックのサイトにおける各トピック領域を、それぞれの中心トピックに対して評価したものです。",
+        "colArea": "トピック領域",
+        "colPrefix": "パス",
+        "colShare": "ページの割合",
+        "colScore": "スコア",
+        "tGaps": "トピックのギャップ",
+        "colGap": "ギャップ",
+        "band": {
+          "excellent": "フォーカス優秀",
+          "good": "フォーカス良好",
+          "moderate": "フォーカス普通",
+          "weak": "フォーカス弱い",
+          "critical": "フォーカス危険"
+        },
+        "status": {
+          "strong": "強い",
+          "moderate": "普通",
+          "borderline": "境界線上",
+          "weak": "弱い",
+          "off-topic": "大きくトピック外"
+        },
+        "type": {
+          "homepage": "ホームページ",
+          "category": "カテゴリ",
+          "article": "記事",
+          "technical": "技術ページ"
+        },
+        "note": {
+          "lowConfidence": "サンプルが少ないため({{0}} ページ)、結果は参考値です。信頼できる中心トピックを得るには10ページ以上クロールしてください。削除に関する助言は限定的です。",
+          "multiTopic": "{{0}} 個のトピック領域を検出しました。サイトに支配的なトピックはありません。サブサイトのスコアを下に示します。",
+          "lexicalFallback": "選択した言語の分析には統計的アルゴリズムの TF-IDF を使用しています。深い意味的類似度の要素は利用できないため、スコアはキーワードのカバー率と分布に基づきます。",
+          "skippedRender": "JavaScript のレンダリングがタイムアウトしたため、{{0}} ページを分析からスキップしました。",
+          "degraded": "一部のページはデータが限られていたため、スコアの精度が低い可能性があります。",
+          "unmatchedTopic": "トピック「{{0}}」に一致するページはありませんでした。代わりに検出されたトピックを使用します。"
+        },
+        "rec": {
+          "remove-offtopic": "トピック外のページ {{0}} 件を削除または移動してください。最も低いものはリダイレクト、noindex、削除のいずれかで対応し、それらへの内部リンクも外します。見込み: +{{1}} ポイント。",
+          "strengthen-borderline": "境界線上のページ {{0}} 件を強化してください。不足している中心用語やセクションを追加し、約 {{1}} まで引き上げます。見込み: +{{2}} ポイント。",
+          "expand-core-cluster": "中心トピックのクラスターを拡張してください。薄いサブトピック向けに新しいページを {{0}} 件作成します。見込み: +{{1}} ポイント。",
+          "add-internal-links": "ハブページへの内部リンクを追加してください。{{0}} 件のリンク候補が、弱いページを強いハブへ誘導します。",
+          "collect-more-pages": "より多くのページを収集してください。分析したのは {{0}} ページのみです。何かを削除する前にさらにクロールしましょう。",
+          "split-subsites": "サイトの分割を検討してください。{{0}} 個の異なるトピック領域が見つかりました。セクションやサブドメインを分けると効果的な場合があります。",
+          "review-skipped-pages": "スキップした {{0}} ページを確認してください。そのうち {{1}} ページは JavaScript のレンダリング中にタイムアウトしました。",
+          "monitor-strong-pages": "強いページ {{0}} 件を監視してください。トピックから外れないよう保ち、定期的に再確認します。"
+        },
+        "option": {
+          "remove-redirect": "削除して 301 でリダイレクト(+{{0}} ポイント)",
+          "noindex-isolate": "noindex にして隔離(+{{0}} ポイント)",
+          "rewrite-on-topic": "ブリーフに沿ってトピックに合わせて書き直す(目標 TRS 約 {{0}})",
+          "add-missing-terms": "不足している用語を追加: {{0}}",
+          "reinforce-headings": "H2 と H3 の見出しを強化",
+          "deepen-coverage": "トピックのカバー範囲を深める",
+          "serve-as-hub": "ハブとして活用",
+          "build-satellite-cluster": "サテライトクラスターを構築",
+          "monitor-periodically": "{{0}} 週間ごとに監視"
+        },
+        "gap": {
+          "thin-subtopic": "薄いサブトピック「{{0}}」: 扱っているのはページの {{1}}%({{2}} ページ)のみです。用語: {{3}}。",
+          "competitor-terms": "自社サイトにない競合の用語: {{3}}。"
+        }
       }
     },
     "recs": {
@@ -5864,6 +5971,92 @@
         "action": "Turn the switch on if you run crawls or schedules.\nWhen your system asks for permission, choose Allow. If you refused earlier, enable notifications for SEOmi in the system settings.\nTurn it off if you find the pop-ups distracting.\nThe text below the switch shows whether permission was granted.",
         "example": "Start a 5000-page crawl, switch to your email, and get a notification when it is done."
       }
+    },
+    "focus": {
+      "siteFocusScore": {
+        "title": "Site Focus Score(SFS)",
+        "what": "サイトのページがどれだけ一貫して1つの中心トピックにとどまっているかを示す0〜100の指標です。全ページのトピック関連性スコア(Topical Relevance Score、TRS)の加重平均で、ホームページは3倍、カテゴリやセクションのページは2倍、記事は1倍として計算します。",
+        "why": "検索エンジンも読者も、1つのテーマを明確に扱うサイトを評価します。SFS が低い場合、多くのページがそのシグナルを薄めていることを意味します。",
+        "action": "区分を確認してください。90-100 優秀、75-89 良好、60-74 普通、40-59 弱い、0-39 危険。\nヒートマップを開き、スコアが最も低いページから修正しましょう。",
+        "example": "糖尿病に関する記事が40本、旅行に関する記事が8本ある糖尿病ブログのスコアは約80になります。"
+      },
+      "topicRelevance": {
+        "title": "トピック関連性スコア(TRS)",
+        "what": "1つの URL について、そのページがサイトの中心トピックにどれだけ合っているかを示す0〜100のスコアです。意味的類似度、キーワードの重複、意味的ドリフトを組み合わせて算出します。",
+        "why": "サイト全体をトピックから引き離している個々のページがわかります。",
+        "action": "75以上を目指しましょう。\n60〜74のページは改善します。\n40未満のページは削除、リダイレクト、または書き直します。",
+        "example": "糖尿病サイトにある血糖測定器のページは TRS 88、格安航空券のページは TRS 12 です。"
+      },
+      "coreTopicConfidence": {
+        "title": "中心トピックの信頼度",
+        "what": "検出された中心トピックが、サイト内の他のトピックと比べてどれだけ支配的かを0〜100パーセントで示します。",
+        "why": "信頼度が低い場合、サイトに明確な主題がないか、分析したページが少なすぎるため、スコアの信頼性が下がります。",
+        "action": "60パーセント超ならトピックを信頼できます。\nそれ未満の場合はトピック名を確認し、誤っていれば手動指定を使ってください。",
+        "example": "最上位のトピックが用語の総重みの70パーセントを占める場合、信頼度は70パーセントです。"
+      },
+      "onTopicRatio": {
+        "title": "トピック適合率",
+        "what": "TRS が60以上のコンテンツページの割合です。ログインやカートなどの技術ページは含まれません。",
+        "why": "加重スコアではなく、何ページが中心トピックを支えているかがわかります。",
+        "action": "境界線上のページ(60-74以下)を修正し、トピック外のページを削除すると向上します。",
+        "example": "コンテンツページ50件のうち42件が TRS 60以上の場合、適合率は84パーセントです。"
+      },
+      "semanticSimilarity": {
+        "title": "意味的類似度",
+        "what": "ページの語彙が、サイトの中心トピックのプロファイルにどれだけ近いかを示します(コサイン類似度、パーセントで表示)。",
+        "why": "TRS の計算式で最も大きな比重を占める要素です。",
+        "action": "80-100パーセントは強い、50-79は普通、50未満は弱いと判断します。\n中心トピックに属する用語やセクションを追加しましょう。",
+        "example": "中心トピックが糖尿病のサイトで、インスリンポンプのページは86パーセントです。"
+      },
+      "keywordOverlap": {
+        "title": "キーワードの重複度",
+        "what": "中心トピックの重要キーワード30〜50個のうち、ページに登場するものの割合です。",
+        "why": "中心キーワードの大半が抜けているページは、文章がよく書けていてもトピックを支えられません。",
+        "action": "60パーセント超は強い、30パーセント未満はトピック外です。\n不足している中心キーワードを、自然に収まる箇所に追加しましょう。",
+        "example": "中心キーワードが40個あり、ページで28個使われている場合、重複度は70パーセントです。"
+      },
+      "semanticDrift": {
+        "title": "意味的ドリフト",
+        "what": "ページの用語の重みのうち、中心トピックではなく別のトピックに属する部分の割合です。",
+        "why": "ドリフトが大きいと、ページが別の話題に言葉を費やしていることになります。",
+        "action": "ドリフトが50パーセントを超えたら要注意です。\n関係のないセクションを削除または移動するか、サイト内の別の領域に分けましょう。",
+        "example": "旅行プランについての長い段落がある糖尿病のページは、ドリフト55パーセントです。"
+      },
+      "keywordAlignment": {
+        "title": "キーワードの整合性",
+        "what": "ページ内の頻出キーワードそれぞれが、中心トピックとどう関係するかを示します。記号の意味: チェックマークは関連度70パーセント超、チルダは40〜70パーセント、バツは40パーセント未満です。",
+        "why": "ページ内のどの語がトピックに貢献し、どの語が妨げになっているかが見えます。",
+        "action": "チェックマークの付いたキーワードは残して充実させましょう。\nバツの付いた語は減らすか削除します。",
+        "example": "「グルコース」- 92パーセント - チェックマーク、「ホテル」- 8パーセント - バツ。"
+      },
+      "deltaScore": {
+        "title": "スコア変化量",
+        "what": "ある対策を実施した場合の Site Focus Score の変化をシミュレーションした値です。新しいページの値で加重平均を再計算します。",
+        "why": "勘に頼らず、労力あたりの効果で対策に優先順位をつけられます。",
+        "action": "効果が最も大きく、労力が最も小さい対策から始めましょう。\n作業後に再クロールして、実際の効果を確認します。",
+        "example": "トピック外のページ6件を削除すると、4.2ポイント上昇します。"
+      },
+      "lowConfidence": {
+        "title": "信頼度が低い",
+        "what": "分析したページが少なすぎる場合や、明確に優位なトピックがない場合に表示されます。検出された中心トピックが誤っている可能性があります。",
+        "why": "サンプルが小さいと、1つの特殊なページが全体の結果を変えてしまうことがあります。",
+        "action": "より多くのページをクロールしてください。\nトピック名を確認し、誤っている場合は手動で指定しましょう。\n削除に関する助言は慎重に扱ってください。",
+        "example": "6ページのクロールでは、おおまかな傾向しかわかりません。"
+      },
+      "benchmark": {
+        "title": "競合ベンチマーク",
+        "what": "あなたの Site Focus Score を、中心トピックで検索上位に表示されているサイトと並べて比較します。各競合サイトは少数のページをサンプルとしてクロールし、あなたのサイトと同じ計算式でスコア化します。",
+        "why": "スコアは基準と比べて初めて意味を持ちます。上位サイトのフォーカスの高さを知れば、改善の余地と現実的な目標がわかります。",
+        "action": "検索結果ソースを接続した状態でベンチマークを実行してください。\nトピック適合率とトピック外ページを、上位3サイトと比較します。\nギャップ一覧を開き、多くの競合が使っている用語に向けたコンテンツを計画しましょう。",
+        "example": "上位3サイトの平均が82であなたが64の場合、まずトピック外ページを修正して80を目指しましょう。",
+        "learnMore": "競合の数値は限られたクロールのサンプルに基づくため、小さな差は誤差として扱ってください。"
+      },
+      "benchmarkTarget": {
+        "title": "目標スコア",
+        "what": "推奨される目標です。80以上、または上位3競合の平均がそれより高い場合はその平均値です。",
+        "why": "比較結果を、目指すべき1つの数値に落とし込みます。",
+        "action": "計画上の目標として使ってください。\n修正後にベンチマークを再実行して変化を確認しましょう。"
+      }
     }
   },
   "helpUi": {
@@ -5872,5 +6065,382 @@
     "action": "対処方法",
     "example": "例",
     "learnMore": "詳細"
+  },
+  "siteFocusMonitoring": {
+    "alert": {
+      "title": "SEOmi · Site Focus Score アラート",
+      "sfsDrop": "Site Focus Score が、完全分析の間で {{points}} ポイント低下しました({{from}} から {{to}})。",
+      "contentGuard": "過去24時間に初めて確認された新規ページ {{count}} 件がトピック外です(TRS 40未満): {{urls}}。"
+    },
+    "weekly": {
+      "title": "SEOmi · 週次サイトフォーカスレポート",
+      "body": "Site Focus Score {{score}}(先週比 {{delta}})。主なタスク: {{tasks}}",
+      "noPrevious": "初回レポート",
+      "task": "{{code}}(+{{gain}} pt)",
+      "noTasks": "緊急のタスクはありません"
+    }
+  },
+  "focus": {
+    "title": "サイトフォーカス",
+    "subtitle": "クロールしたページがどれだけ一貫して1つの中心トピックにとどまっているかを示します。",
+    "band": {
+      "excellent": "フォーカス優秀",
+      "good": "フォーカス良好",
+      "moderate": "フォーカス普通",
+      "weak": "フォーカス弱い",
+      "critical": "フォーカス危険"
+    },
+    "bandRange": {
+      "excellent": "90-100",
+      "good": "75-89",
+      "moderate": "60-74",
+      "weak": "40-59",
+      "critical": "0-39"
+    },
+    "empty": "分析できるコンテンツ付きのページがありません。先にクロールを実行してください。",
+    "status": {
+      "strong": "強い",
+      "moderate": "普通",
+      "borderline": "境界線上",
+      "weak": "弱い",
+      "off-topic": "大きくトピック外"
+    },
+    "type": {
+      "homepage": "ホームページ",
+      "category": "カテゴリ",
+      "article": "記事",
+      "technical": "技術ページ"
+    },
+    "effort": "作業量: {{min}}-{{max}} 時間(目安)",
+    "banner": {
+      "lowConfidence": "サンプルが少ないため({{count}} ページ)、結果は参考値です。信頼できる中心トピックを得るには10ページ以上クロールしてください。削除に関する助言は限定的です。",
+      "multiTopic": "{{count}} 個のトピック領域を検出しました。サイトに支配的なトピックはありません。サブサイトのスコアを下に示します。",
+      "lexicalFallback": "選択した言語の分析には統計的アルゴリズムの TF-IDF を使用しています。深い意味的類似度の要素は利用できないため、スコアはキーワードのカバー率と分布に基づきます。",
+      "skippedRender": "JavaScript のレンダリングがタイムアウトしたため、{{count}} ページを分析からスキップしました。",
+      "degraded": "一部のページはデータが限られていたため、スコアの精度が低い可能性があります。",
+      "unmatchedTopic": "トピック「{{topic}}」に一致するページはありませんでした。代わりに検出されたトピックを使用します。"
+    },
+    "skip": {
+      "render-timeout": "JavaScript のレンダリングがタイムアウトしました",
+      "request-error": "リクエストに失敗しました",
+      "non-topical-status": "コンテンツ以外の HTTP ステータス",
+      "non-html": "HTML ページではありません",
+      "no-content": "テキストコンテンツなし"
+    },
+    "hero": {
+      "label": "Site Focus Score",
+      "outOf": "/ 100",
+      "summaryAll": "分析した {{count}} ページすべてがトピックに沿っています。",
+      "summaryOff": "{{count}} ページ中 {{off}} ページが中心トピックから大きく外れています。",
+      "metaButton": "分析の詳細",
+      "metaPages": "分析したページ数: {{count}}",
+      "metaAge": "更新日: {{date}}",
+      "recalc": "再計算",
+      "howItWorks": "しくみを見る",
+      "change": "前回の分析から {{delta}} ポイント",
+      "progressAria": "Site Focus Score {{score}} / 100、{{band}}",
+      "recalcBudget": "本日の完全再計算の残り回数: {{remaining}} / {{limit}}。",
+      "recalcExhausted": "完全再計算の1日の上限({{limit}} 回)に達しました。明日もう一度お試しください。"
+    },
+    "drawer": {
+      "title": "Site Focus Score のしくみ",
+      "close": "閉じる",
+      "weights": "スコアにおけるページの重み",
+      "weightHome": "ホームページ: 重み 3",
+      "weightCategory": "カテゴリ、セクション、ピラーページ、ハブページ: 重み 2",
+      "weightArticle": "記事、投稿、カード: 重み 1",
+      "sfsFormula": "SFS = 分析した全ページの sum(重み x TRS) / sum(重み)",
+      "trsTitle": "トピック関連性スコア(TRS)",
+      "trsFormula": "TRS = clamp(0..100, (0.5 x 類似度 + 0.3 x 重複度 - 0.2 x ドリフト) x 125)",
+      "trsLexical": "意味的要素がない場合: TRS = clamp(0..100, (0.75 x 重複度 - 0.25 x 語彙ドリフト) x 125)",
+      "bands": "区分: 90-100 優秀、75-89 良好、60-74 普通、40-59 弱い、0-39 危険。",
+      "onTopic": "TRS 60 以上のページはトピックに適合しているとみなされます。"
+    },
+    "core": {
+      "title": "中心トピック",
+      "label": "検出されたトピック",
+      "terms": "上位の用語",
+      "termAria": "{{term}}: {{pct}} パーセント",
+      "coverage": "カバー率: サイトコンテンツの {{pct}}% が密接に関連しています。",
+      "wrong": "トピックが違いますか?",
+      "inputLabel": "あなたのトピック(単語またはフレーズ)",
+      "placeholder": "例: 糖尿病の治療",
+      "reset": "検出されたトピックに戻す",
+      "manualActive": "手動指定のトピック: {{input}}",
+      "confidenceLine": "中心トピックの信頼度: {{pct}}%"
+    },
+    "metrics": {
+      "title": "主要指標",
+      "confidence": "中心トピックの信頼度",
+      "onTopic": "トピック適合率",
+      "pages": "評価したページ",
+      "skipped": "スキップしたページ",
+      "offTopic": "トピック外のページ(TRS 40未満)",
+      "borderline": "境界線上のページ(60-74)"
+    },
+    "heatmap": {
+      "title": "トピックの分布",
+      "treeAria": "URL 別のページとトピック関連性",
+      "ignoreTechnical": "技術ページを除外",
+      "empty": "このフィルターに一致するページはありません。",
+      "filter": {
+        "all": "すべて({{count}})",
+        "critical": "危険 <40({{count}})",
+        "borderline": "境界線上 60-74({{count}})",
+        "strong": "強い >=75({{count}})"
+      },
+      "filtersAria": "関連性でページを絞り込む",
+      "warning": "60未満: トピック外のリスク",
+      "trsBar": "TRS {{trs}}",
+      "open": "{{url}} のページ分析を開く",
+      "section": "セクション {{name}}",
+      "home": "ホームページ"
+    },
+    "detail": {
+      "title": "ページ分析",
+      "back": "一覧に戻る",
+      "close": "ページ分析を閉じる",
+      "trs": "TRS",
+      "status": "ステータス",
+      "why": "このスコアの理由",
+      "similarity": "意味的類似度: {{value}}%",
+      "overlap": "キーワードの重複度: {{value}}%",
+      "drift": "意味的ドリフト: {{value}}%",
+      "driftFlag": "要注意: ページの半分以上が他のトピックについて書かれています。",
+      "similarityStrong": "強い",
+      "similarityModerate": "普通",
+      "similarityWeak": "弱い",
+      "foreign": "別のトピック: {{label}}({{pct}}%)",
+      "noForeign": "別のトピックは検出されませんでした。",
+      "matched": "中心トピックに一致するキーワード",
+      "unmatched": "他のトピックのキーワード",
+      "none": "見つかりませんでした。",
+      "count": "{{count}}x",
+      "context": "文脈: {{text}}",
+      "clusterOf": "トピック: {{cluster}}",
+      "skipped": "このページは評価されませんでした: {{reason}}。",
+      "degraded": "このページはデータが限られているため、スコアの精度が低くなります。"
+    },
+    "matrix": {
+      "title": "キーワード整合性マトリクス",
+      "keyword": "キーワード",
+      "freq": "出現頻度",
+      "relevance": "中心トピックとの関連度",
+      "alignment": "整合性",
+      "match": "一致(70%超)",
+      "partial": "部分一致(40-70%)",
+      "miss": "不一致(40%未満)",
+      "empty": "表示できるキーワードがありません。"
+    },
+    "playbook": {
+      "title": "このページへの対応",
+      "typeA": "タイプ A: トピック外のページ",
+      "typeB": "タイプ B: 境界線上のページ",
+      "typeC": "タイプ C: 強いページ",
+      "options": "選択肢",
+      "steps": "手順",
+      "potential": "期待される TRS: {{min}}-{{max}}(推定)",
+      "gain": "サイト全体の上昇幅: +{{gain}} ポイント"
+    },
+    "brief": {
+      "title": "書き直しブリーフ",
+      "target": "目標 TRS: {{target}}(現在 {{current}})",
+      "mustInclude": "必ず含める",
+      "avoid": "避ける",
+      "headings": "見出しのアイデア",
+      "words": "文字数の目安: {{min}}-{{max}} 語",
+      "copy": "AI プロンプトをコピー",
+      "copied": "プロンプトをコピーしました",
+      "copyFailed": "コピーに失敗しました。手動で選択してコピーしてください。"
+    },
+    "site": {
+      "title": "推奨事項",
+      "empty": "推奨事項はありません。サイトはトピックに沿っています。",
+      "delta": "スコア変化量: +{{value}}",
+      "deltaZero": "スコア変化量: 0",
+      "pagesList": "ページ",
+      "gaps": "トピックのギャップ",
+      "gapsEmpty": "トピックのギャップは見つかりませんでした。",
+      "links": "内部リンクの提案",
+      "linksEmpty": "リンクの提案はありません。",
+      "terms": "用語"
+    },
+    "subsites": {
+      "title": "サブサイトのスコア",
+      "item": "{{label}}({{prefix}}): ページの {{share}}%",
+      "score": "スコア {{score}}"
+    },
+    "recommendation": {
+      "remove-offtopic": {
+        "title": "トピック外のページ {{count}} 件を削除または移動",
+        "detail": "最も低いページはリダイレクト、noindex、削除のいずれかで対応し、それらへの内部リンクも外します。見込み: +{{gain}} ポイント。"
+      },
+      "strengthen-borderline": {
+        "title": "境界線上のページ {{count}} 件を強化",
+        "detail": "不足している中心用語やセクションを追加し、約 {{target}} まで引き上げます。見込み: +{{gain}} ポイント。"
+      },
+      "expand-core-cluster": {
+        "title": "中心トピックのクラスターを拡張",
+        "detail": "薄いサブトピック向けに新しいページを {{count}} 件作成します。見込み: +{{gain}} ポイント。"
+      },
+      "add-internal-links": {
+        "title": "ハブページへの内部リンクを追加",
+        "detail": "{{count}} 件のリンク候補が、弱いページを強いハブへ誘導します。"
+      },
+      "collect-more-pages": {
+        "title": "より多くのページを収集",
+        "detail": "分析したのは {{pageCount}} ページのみです。何かを削除する前にさらにクロールしましょう。"
+      },
+      "split-subsites": {
+        "title": "サイトの分割を検討",
+        "detail": "{{count}} 個の異なるトピック領域が見つかりました。セクションやサブドメインを分けると効果的な場合があります。"
+      },
+      "review-skipped-pages": {
+        "title": "スキップした {{count}} ページを確認",
+        "detail": "そのうち {{timeouts}} ページは JavaScript のレンダリング中にタイムアウトしました。"
+      },
+      "monitor-strong-pages": {
+        "title": "強いページ {{count}} 件を監視",
+        "detail": "トピックから外れないよう保ち、定期的に再確認します。"
+      }
+    },
+    "playbookOption": {
+      "remove-redirect": {
+        "title": "削除して 301 でリダイレクト",
+        "detail": "まずトラフィックと被リンクを確認してください。サイト全体の上昇幅: +{{gain}} ポイント。"
+      },
+      "noindex-isolate": {
+        "title": "noindex にして隔離",
+        "detail": "ユーザー向けにはページを残しつつ、検索結果からは非表示にして内部リンクを減らします。サイト全体の上昇幅: +{{gain}} ポイント。"
+      },
+      "rewrite-on-topic": {
+        "title": "ブリーフに沿ってトピックに合わせて書き直す",
+        "detail": "ページを中心トピックのコンテンツに作り替えます。目標 TRS は約 {{target}} です。"
+      },
+      "add-missing-terms": {
+        "title": "不足している用語を追加",
+        "detail": "不足している中心用語を自然に盛り込みます: {{terms}}。"
+      },
+      "reinforce-headings": {
+        "title": "H2 と H3 の見出しを強化",
+        "detail": "見出しに中心トピックの表現を使います。"
+      },
+      "deepen-coverage": {
+        "title": "トピックのカバー範囲を深める",
+        "detail": "中心トピックに関するセクション、事例、深みを加えます。"
+      },
+      "serve-as-hub": {
+        "title": "ハブとして活用",
+        "detail": "関連ページと相互にリンクし、このページがクラスターの中心になるようにします。"
+      },
+      "build-satellite-cluster": {
+        "title": "サテライトクラスターを構築",
+        "detail": "このページへリンクを返す補助ページを計画します。"
+      },
+      "monitor-periodically": {
+        "title": "監視",
+        "detail": "{{weeks}} 週間ごとに再確認します。"
+      }
+    },
+    "playbookStep": {
+      "check-traffic-and-backlinks": "ページのトラフィックと被リンクを確認します。",
+      "redirect-301-to-closest-page": "最も近いトピックのページへ 301 でリダイレクトします。",
+      "remove-internal-links": "このページへ向かう内部リンクを削除します。",
+      "add-noindex": "noindex ディレクティブを追加します。",
+      "rewrite-with-brief": "ブリーフに沿ってページを書き直します。不足している用語: {{terms}}。",
+      "add-terms": "不足している用語を追加します: {{terms}}。",
+      "expand-h2-h3": "H2 と H3 の見出しを、中心トピックの表現で拡充します。",
+      "add-examples": "事例と深みを加えます。",
+      "link-from-weak-pages": "より弱いページからこのページへリンクします。",
+      "plan-satellite-pages": "このページを中心にサテライトページを計画します。",
+      "recheck-in-six-weeks": "{{weeks}} 週間後に再確認します。"
+    },
+    "gap": {
+      "thin-subtopic": "薄いサブトピック「{{label}}」: 扱っているのはページの {{coveragePct}}%({{pagesCovering}} ページ)のみです。用語: {{terms}}。",
+      "competitor-terms": "自社サイトにない競合の用語: {{terms}}。",
+      "competitorActive": "トピッククラスターのギャップ分析では、競合の用語 {{count}} 件を使用しています。",
+      "competitorClear": "競合の用語をクリア"
+    },
+    "link": {
+      "link-to-hub": "{{from}} からハブ {{to}} へリンクします。推奨アンカー: {{anchors}}。"
+    },
+    "history": {
+      "removed-offtopic": "トピック外のページ {{count}} 件を削除しました({{delta}} ポイント)。",
+      "new-cluster": "新しいトピッククラスター「{{label}}」(新規 {{count}} 件、{{delta}} ポイント)。",
+      "optimized-borderline": "境界線上のページ {{count}} 件を最適化しました({{delta}} ポイント)。",
+      "core-topic-changed": "中心トピックが「{{from}}」から「{{to}}」に変わりました({{delta}} ポイント)。",
+      "title": "スコア履歴",
+      "empty": "推移を見るには、完全分析を2回以上実行してください。",
+      "aria": "{{count}} 回の分析における Site Focus Score の推移({{from}} から {{to}})",
+      "point": "{{date}}: {{score}}",
+      "annotations": "主な変更点"
+    },
+    "alert": {
+      "sfs-drop": "Site Focus Score が {{from}} から {{to}} に低下しました({{points}} ポイント)。",
+      "content-guard": "トピック外の新しいページ {{url}}(TRS {{trs}})。"
+    },
+    "weekly": {
+      "title": "週次サマリー",
+      "summary": "スコア {{score}}(前回の分析から {{delta}})。",
+      "noPrevious": "初回の分析",
+      "noTasks": "緊急のタスクはありません。",
+      "gain": "(+{{value}} pt)"
+    }
+  },
+  "focusBenchmark": {
+    "title": "競合ベンチマーク",
+    "intro": "あなたの Site Focus Score を、中心トピックで上位表示されているサイトと比較します。SEOmi は検索結果を取得し、各競合サイトの少数のページを(robots.txt を尊重して)配慮しながらクロールし、同じエンジンでスコア化します。",
+    "run": "ベンチマークを実行",
+    "rerun": "再実行",
+    "cancel": "キャンセル",
+    "cancelled": "ベンチマークをキャンセルしました。何も保存されていません。",
+    "sources": "検索結果ソース: {{source}}",
+    "queries": "クエリ: {{queries}}",
+    "sample": "競合サイトごとに最大 {{count}} ページをクロールします。",
+    "progress": {
+      "serp": "検索結果を取得中({{done}}/{{total}})",
+      "crawl": "競合サイトをクロール中({{done}}/{{total}})、現在 {{domain}}: {{pages}} ページ",
+      "analyze": "競合サイトをスコア化中"
+    },
+    "unavailable": {
+      "title": "ベンチマークを利用できません",
+      "no-serp-source": "検索結果ソースが接続されていません。実際の競合と比較するには、設定で DataForSEO の認証情報を追加してください。",
+      "no-queries": "中心トピックにはまだ検索に使える用語がありません。先にさらに多くのページをクロールしてください。",
+      "serp-failed": "検索結果を取得できませんでした: {{error}}",
+      "no-competitors": "検索結果に、あなた自身以外の競合サイトが含まれていませんでした。"
+    },
+    "error": "ベンチマークに失敗しました: {{error}}",
+    "ranking": {
+      "title": "ランキング",
+      "you": "あなた",
+      "pages": "{{count}} ページ",
+      "onTopic": "トピック適合 {{pct}}%",
+      "offTopic": "トピック外 {{count}} 件",
+      "score": "SFS {{score}}",
+      "average": "業界平均",
+      "target": "目標スコア",
+      "position": "あなたの順位: {{total}} 中 {{rank}} 位",
+      "chart": "サイト別の Site Focus Score"
+    },
+    "failure": {
+      "title": "未評価",
+      "crawl-error": "クロールに失敗しました: {{error}}",
+      "no-pages": "クロール可能なページがありません(robots.txt でブロックされているか、到達できません)。",
+      "analysis-failed": "分析に失敗しました: {{error}}",
+      "cancelled": "スコア化の前にキャンセルされました。"
+    },
+    "insights": {
+      "title": "インサイト",
+      "on-topic-share": "あなたのコンテンツのトピック適合率は {{own}}% で、上位3サイトの {{leaders}}% と比べて {{delta}} ポイントの差があります。",
+      "off-topic-pages": "トピック外のページはあなたが {{own}} 件、上位3サイトの平均は {{leaders}} 件です。",
+      "keyword-coverage": "上位3サイトが使う中心トピックのキーワードのうち、あなたのサイトがカバーしているのは {{pct}}%({{total}} 件中 {{covered}} 件)です。",
+      "versus-average": "あなたのスコアは業界平均 {{average}} に対して {{delta}} ポイントです。"
+    },
+    "gaps": {
+      "title": "競合サイトに見られるクラスターのギャップ",
+      "coverage": "競合の {{pct}}%({{count}} 件)",
+      "empty": "あなたのサイトに欠けている競合のトピックはありません。",
+      "apply": "これらの用語をギャップ分析に追加"
+    }
   }
 }

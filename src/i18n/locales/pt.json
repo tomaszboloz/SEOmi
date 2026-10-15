@@ -2233,7 +2233,8 @@
       "resources": "Recursos",
       "frames": "Frames",
       "custom-search": "Pesquisa personalizada",
-      "semantic": "Análise semântica"
+      "semantic": "Análise semântica",
+      "focus": "Foco do site"
     },
     "environmentStaging": "test/staging",
     "environmentProduction": "production",
@@ -3047,7 +3048,8 @@
       "structured": "Estruturado",
       "validation": "Validação HTML",
       "performance": "Desempenho",
-      "exports": "Exportações"
+      "exports": "Exportações",
+      "focus": "Foco do site"
     },
     "groups": {
       "core": "Visão geral",
@@ -5092,8 +5094,10 @@
       "gsc": "Search Console",
       "pagespeed": "PageSpeed / CrUX",
       "crawl": "Comparações de rastreios",
-      "semantic": "Comparações semânticas"
-    }
+      "semantic": "Comparações semânticas",
+      "focus": "Site Focus Score"
+    },
+    "focusDrop": "Queda do Site Focus Score (pontos)"
   },
   "ga4": {
     "title": "Google Analytics 4",
@@ -5470,11 +5474,11 @@
         "duration": "DURAÇÃO",
         "pagesCrawled": "PÁGINAS RASTREADAS",
         "mode": "MODO DE RASTREAMENTO",
-        "modeDefault": "AMBIENTE",
-        "environment": "padrão",
-        "envDefault": "VERSÃO DA PONTUAÇÃO",
-        "scoreVersion": "sem versão",
-        "versionNone": "http",
+        "modeDefault": "http",
+        "environment": "AMBIENTE",
+        "envDefault": "padrão",
+        "scoreVersion": "VERSÃO DA PONTUAÇÃO",
+        "versionNone": "sem versão",
         "seconds": "{{0}} s",
         "minSec": "{{0}} min {{1}} s",
         "ms": "{{0}} ms",
@@ -5714,6 +5718,109 @@
         "colDiscovered": "Descoberta via",
         "colArea": "Área",
         "colResult": "Resultado"
+      },
+      "focus": {
+        "title": "Foco do site",
+        "intro": "Com que consistência as páginas rastreadas se mantêm em um único tema principal. As pontuações vêm do rastreamento salvo; nenhuma página é baixada novamente.",
+        "scoreTitle": "Site Focus Score",
+        "legend": "Faixas: 90-100 excelente, 75-89 bom, 60-74 moderado, 40-59 fraco, 0-39 crítico.",
+        "kConfidence": "Confiança do tema principal",
+        "kOnTopic": "Proporção on-topic",
+        "kScored": "Páginas pontuadas",
+        "kSkipped": "Páginas ignoradas",
+        "kOffTopic": "Páginas off-topic",
+        "kBorderline": "Páginas limítrofes",
+        "kStrong": "Páginas fortes",
+        "nConfidence": "Peso do cluster principal",
+        "nOnTopic": "Páginas com TRS 60 ou mais",
+        "nScored": "de {{0}} rastreadas",
+        "nSkipped": "Sem pontuação",
+        "nOffTopic": "TRS abaixo de 40",
+        "nBorderline": "TRS 60-74",
+        "nStrong": "TRS 75 ou mais",
+        "percent": "{{0}}%",
+        "coreBadge": "TEMA PRINCIPAL",
+        "coreTerms": "Termos principais",
+        "coreTerm": "{{0}} ({{1}}% das páginas)",
+        "coreConfidence": "Confiança {{0}}%",
+        "coreManual": "Tema manual: {{0}}",
+        "coreDetected": "Detectado a partir das páginas rastreadas",
+        "tPages": "Páginas mais fracas por relevância temática",
+        "pagesIntro": "Até 25 páginas de conteúdo com a menor Pontuação de relevância temática (TRS). Páginas técnicas e páginas ignoradas ficam de fora.",
+        "colTrs": "TRS",
+        "colType": "Tipo",
+        "colSimilarity": "Similaridade",
+        "colOverlap": "Sobreposição",
+        "colDrift": "Desvio",
+        "colPlaybook": "Plano de ação",
+        "playbook": "{{0}}: {{1}}",
+        "tRecs": "Recomendações",
+        "recsIntro": "Ordenadas pelo ganho de pontuação simulado por hora de esforço estimada. Os ganhos são estimativas.",
+        "colNo": "#",
+        "colAction": "Recomendação",
+        "colGain": "Ganho",
+        "gain": "+{{0}}",
+        "tSub": "Pontuações por subsite",
+        "subIntro": "Áreas temáticas de um site multitemático, cada uma pontuada em relação ao seu próprio tema principal.",
+        "colArea": "Área temática",
+        "colPrefix": "Caminho",
+        "colShare": "Parcela das páginas",
+        "colScore": "Pontuação",
+        "tGaps": "Lacunas temáticas",
+        "colGap": "Lacuna",
+        "band": {
+          "excellent": "Foco excelente",
+          "good": "Bom foco",
+          "moderate": "Foco moderado",
+          "weak": "Foco fraco",
+          "critical": "Foco crítico"
+        },
+        "status": {
+          "strong": "Forte",
+          "moderate": "Moderada",
+          "borderline": "Limítrofe",
+          "weak": "Fraca",
+          "off-topic": "Muito off-topic"
+        },
+        "type": {
+          "homepage": "Página inicial",
+          "category": "Categoria",
+          "article": "Artigo",
+          "technical": "Técnica"
+        },
+        "note": {
+          "lowConfidence": "Amostra pequena ({{0}} páginas). Os resultados são indicativos; rastreie pelo menos 10 páginas para obter um tema principal confiável. As recomendações de remoção são limitadas.",
+          "multiTopic": "{{0}} áreas temáticas detectadas. O site não tem um tema dominante. As pontuações por subsite são exibidas abaixo.",
+          "lexicalFallback": "A análise do idioma selecionado usa o algoritmo estatístico TF-IDF. O componente de similaridade semântica profunda não está disponível; a pontuação se baseia na cobertura e na distribuição das palavras-chave.",
+          "skippedRender": "{{0}} páginas foram ignoradas na análise porque a renderização de JavaScript excedeu o tempo limite.",
+          "degraded": "Algumas páginas tinham dados limitados, então suas pontuações podem ser menos precisas.",
+          "unmatchedTopic": "Nenhuma página correspondeu ao tema \"{{0}}\". O tema detectado é usado no lugar."
+        },
+        "rec": {
+          "remove-offtopic": "Remova ou mova {{0}} páginas off-topic: redirecione, aplique noindex ou exclua as piores e remova os links internos que apontam para elas. Potencial: +{{1}} pontos.",
+          "strengthen-borderline": "Reforce {{0}} páginas limítrofes: adicione os termos e as seções do tema principal que faltam para levá-las a cerca de {{1}}. Potencial: +{{2}} pontos.",
+          "expand-core-cluster": "Amplie o cluster do tema principal: escreva {{0}} páginas novas para subtemas pouco cobertos. Potencial: +{{1}} pontos.",
+          "add-internal-links": "Adicione links internos para páginas hub: {{0}} sugestões de link levam páginas fracas a hubs fortes.",
+          "collect-more-pages": "Reúna mais páginas: apenas {{0}} foram analisadas. Rastreie mais antes de remover qualquer coisa.",
+          "split-subsites": "Considere dividir o site: foram encontradas {{0}} áreas temáticas distintas. Separar seções ou subdomínios pode ajudar.",
+          "review-skipped-pages": "Revise {{0}} páginas ignoradas: {{1}} delas excederam o tempo limite ao renderizar JavaScript.",
+          "monitor-strong-pages": "Monitore {{0}} páginas fortes: mantenha-as no tema e reavalie com regularidade."
+        },
+        "option": {
+          "remove-redirect": "Excluir e redirecionar com 301 (+{{0}} pontos)",
+          "noindex-isolate": "Aplicar noindex e isolar (+{{0}} pontos)",
+          "rewrite-on-topic": "Reescrever no tema com um briefing (TRS alvo: cerca de {{0}})",
+          "add-missing-terms": "Adicionar os termos que faltam: {{0}}",
+          "reinforce-headings": "Reforçar os títulos H2 e H3",
+          "deepen-coverage": "Aprofundar a cobertura temática",
+          "serve-as-hub": "Usar como hub",
+          "build-satellite-cluster": "Criar um cluster satélite",
+          "monitor-periodically": "Monitorar a cada {{0}} semanas"
+        },
+        "gap": {
+          "thin-subtopic": "Subtema pouco coberto \"{{0}}\": apenas {{1}}% das páginas o abordam ({{2}} páginas). Termos: {{3}}.",
+          "competitor-terms": "Termos dos concorrentes ausentes no seu site: {{3}}."
+        }
       }
     },
     "recs": {
@@ -5864,6 +5971,92 @@
         "action": "Turn the switch on if you run crawls or schedules.\nWhen your system asks for permission, choose Allow. If you refused earlier, enable notifications for SEOmi in the system settings.\nTurn it off if you find the pop-ups distracting.\nThe text below the switch shows whether permission was granted.",
         "example": "Start a 5000-page crawl, switch to your email, and get a notification when it is done."
       }
+    },
+    "focus": {
+      "siteFocusScore": {
+        "title": "Site Focus Score (SFS)",
+        "what": "Uma medida de 0 a 100 de quão consistentemente suas páginas se mantêm em um único tema principal. É a média ponderada da Pontuação de relevância temática (TRS) de cada página: a página inicial conta 3x, as páginas de categoria e de seção 2x e os artigos 1x.",
+        "why": "Os buscadores e os leitores premiam sites que cobrem claramente um só assunto. Um SFS baixo indica que muitas páginas diluem esse sinal.",
+        "action": "Consulte a faixa: 90-100 excelente, 75-89 bom, 60-74 moderado, 40-59 fraco, 0-39 crítico.\nAbra o mapa de calor e corrija primeiro as páginas com a menor pontuação.",
+        "example": "Um blog sobre diabetes com 40 artigos sobre diabetes e 8 sobre viagens obtém cerca de 80 pontos."
+      },
+      "topicRelevance": {
+        "title": "Pontuação de relevância temática (TRS)",
+        "what": "Uma pontuação de 0 a 100 para uma URL: o quanto aquela página se encaixa no tema principal do site. Combina similaridade semântica, sobreposição de palavras-chave e desvio semântico.",
+        "why": "Mostra quais páginas específicas afastam o site inteiro do seu tema.",
+        "action": "Mire em 75 ou mais.\nMelhore as páginas entre 60 e 74.\nRemova, redirecione ou reescreva as páginas abaixo de 40.",
+        "example": "Uma página sobre glicosímetros em um site de diabetes: TRS 88. Uma página sobre passagens aéreas baratas: TRS 12."
+      },
+      "coreTopicConfidence": {
+        "title": "Confiança do tema principal",
+        "what": "O quanto o tema principal detectado predomina sobre os demais temas encontrados no site, de 0 a 100 por cento.",
+        "why": "Se a confiança for baixa, o site não tem um assunto principal claro ou poucas páginas foram analisadas, então as pontuações são menos confiáveis.",
+        "action": "Acima de 60 por cento: confie no tema.\nAbaixo disso, confira o rótulo do tema e use o ajuste manual se estiver errado.",
+        "example": "Se o tema principal concentra 70 por cento do peso total dos termos, a confiança é de 70 por cento."
+      },
+      "onTopicRatio": {
+        "title": "Proporção on-topic",
+        "what": "A parcela das páginas de conteúdo com TRS igual ou superior a 60. Páginas técnicas, como login ou carrinho, não são contadas.",
+        "why": "Mostra quantas páginas, e não quanta pontuação ponderada, sustentam o tema principal.",
+        "action": "Aumente-a corrigindo as páginas limítrofes (60-74 e abaixo) e removendo as off-topic.",
+        "example": "42 de 50 páginas de conteúdo têm TRS de 60 ou mais: proporção de 84 por cento."
+      },
+      "semanticSimilarity": {
+        "title": "Similaridade semântica",
+        "what": "O quanto o vocabulário de uma página se aproxima do perfil do tema principal do site (similaridade do cosseno, exibida em porcentagem).",
+        "why": "É a maior parte da fórmula do TRS.",
+        "action": "80-100 por cento é forte, 50-79 moderada, abaixo de 50 fraca.\nAdicione termos e seções que pertençam ao tema principal.",
+        "example": "Uma página sobre bombas de insulina ao lado de um tema principal de diabetes: 86 por cento."
+      },
+      "keywordOverlap": {
+        "title": "Sobreposição de palavras-chave",
+        "what": "A parcela das 30-50 palavras-chave mais importantes do tema principal que aparecem na página.",
+        "why": "Uma página que ignora a maioria das palavras-chave principais não consegue sustentar o tema, mesmo bem escrita.",
+        "action": "Acima de 60 por cento é forte; abaixo de 30 por cento é off-topic.\nAdicione as palavras-chave principais que faltam onde couberem de forma natural.",
+        "example": "O conjunto principal tem 40 palavras-chave e a página usa 28: sobreposição de 70 por cento."
+      },
+      "semanticDrift": {
+        "title": "Desvio semântico",
+        "what": "A parcela do peso dos termos da página que pertence a temas estranhos, e não ao tema principal.",
+        "why": "Um desvio alto significa que a página gasta suas palavras com outro assunto.",
+        "action": "Um desvio acima de 50 por cento é um sinal de alerta.\nCorte ou mova as seções estranhas, ou separe-as em uma área própria do site.",
+        "example": "Uma página sobre diabetes com longos parágrafos sobre ofertas de férias: desvio de 55 por cento."
+      },
+      "keywordAlignment": {
+        "title": "Alinhamento de palavras-chave",
+        "what": "Mostra como cada palavra-chave frequente da página se relaciona com o tema principal. Símbolos: um sinal de visto acima de 70 por cento de relevância, um til de 40 a 70 por cento e uma cruz abaixo de 40 por cento.",
+        "why": "Deixa visível quais palavras da página ajudam o tema e quais distraem.",
+        "action": "Mantenha e amplie as palavras-chave marcadas com sinal de visto.\nReduza ou remova as palavras marcadas com cruz.",
+        "example": "\"glicose\" - 92 por cento - sinal de visto; \"hotel\" - 8 por cento - cruz."
+      },
+      "deltaScore": {
+        "title": "Delta Score",
+        "what": "Uma variação simulada do Site Focus Score caso você execute uma ação. A simulação recalcula a média ponderada com os novos valores das páginas.",
+        "why": "Permite ordenar as ações pelo ganho em relação ao esforço, em vez de adivinhar.",
+        "action": "Comece pelas ações com maior ganho e menor esforço.\nRastreie de novo depois do trabalho para confirmar o ganho real.",
+        "example": "Remover 6 páginas off-topic: mais 4,2 pontos."
+      },
+      "lowConfidence": {
+        "title": "Confiança baixa",
+        "what": "Exibida quando poucas páginas foram analisadas ou nenhum tema lidera com clareza, então o tema principal detectado pode estar errado.",
+        "why": "Com uma amostra pequena, uma única página incomum pode mudar o resultado inteiro.",
+        "action": "Rastreie mais páginas.\nConfira o rótulo do tema e altere-o manualmente se estiver errado.\nTrate as recomendações de remoção com cautela.",
+        "example": "Um rastreamento de 6 páginas dá apenas um retrato aproximado."
+      },
+      "benchmark": {
+        "title": "Benchmark competitivo",
+        "what": "Seu Site Focus Score ao lado dos sites que aparecem nas buscas pelo seu tema principal. Cada concorrente é rastreado em uma pequena amostra de páginas e pontuado com a mesma fórmula do seu site.",
+        "why": "Uma pontuação só tem significado diante de uma referência. Ver quão focados são os líderes mostra quanta margem você tem e como é uma meta realista.",
+        "action": "Execute o benchmark com uma fonte de resultados de busca conectada.\nCompare sua parcela on-topic e as páginas off-topic com o top 3.\nAbra a lista de lacunas e planeje conteúdo para os termos que a maioria dos concorrentes usa.",
+        "example": "Se o top 3 tem média de 82 e você tem 64, mire primeiro em 80 corrigindo suas páginas off-topic.",
+        "learnMore": "Os números dos concorrentes vêm de uma amostra de rastreamento limitada, então trate pequenas diferenças como ruído."
+      },
+      "benchmarkTarget": {
+        "title": "Pontuação alvo",
+        "what": "Uma meta sugerida: pelo menos 80, ou a média do top 3 de concorrentes quando for maior.",
+        "why": "Transforma a comparação em um único número para trabalhar.",
+        "action": "Use-a como meta de planejamento.\nExecute o benchmark de novo depois das correções para ver a mudança."
+      }
     }
   },
   "helpUi": {
@@ -5872,5 +6065,382 @@
     "action": "O que fazer",
     "example": "Exemplo",
     "learnMore": "Saiba mais"
+  },
+  "siteFocusMonitoring": {
+    "alert": {
+      "title": "SEOmi · Alerta de Site Focus Score",
+      "sfsDrop": "O Site Focus Score caiu {{points}} pontos entre análises completas (de {{from}} para {{to}}).",
+      "contentGuard": "{{count}} página(s) nova(s) vista(s) pela primeira vez nas últimas 24 horas está(ão) off-topic (TRS abaixo de 40): {{urls}}."
+    },
+    "weekly": {
+      "title": "SEOmi · Relatório semanal de Site Focus",
+      "body": "Site Focus Score {{score}} ({{delta}} em relação à semana passada). Principais tarefas: {{tasks}}",
+      "noPrevious": "primeiro relatório",
+      "task": "{{code}} (+{{gain}} pts)",
+      "noTasks": "sem tarefas urgentes"
+    }
+  },
+  "focus": {
+    "title": "Foco do site",
+    "subtitle": "Com que consistência as páginas rastreadas se mantêm em um único tema principal.",
+    "band": {
+      "excellent": "Foco excelente",
+      "good": "Bom foco",
+      "moderate": "Foco moderado",
+      "weak": "Foco fraco",
+      "critical": "Foco crítico"
+    },
+    "bandRange": {
+      "excellent": "90-100",
+      "good": "75-89",
+      "moderate": "60-74",
+      "weak": "40-59",
+      "critical": "0-39"
+    },
+    "empty": "Nenhuma página com conteúdo para analisar. Execute um rastreamento primeiro.",
+    "status": {
+      "strong": "Forte",
+      "moderate": "Moderada",
+      "borderline": "Limítrofe",
+      "weak": "Fraca",
+      "off-topic": "Muito off-topic"
+    },
+    "type": {
+      "homepage": "Página inicial",
+      "category": "Categoria",
+      "article": "Artigo",
+      "technical": "Técnica"
+    },
+    "effort": "Esforço: {{min}}-{{max}} h (estimativa)",
+    "banner": {
+      "lowConfidence": "Amostra pequena ({{count}} páginas). Os resultados são indicativos; rastreie pelo menos 10 páginas para obter um tema principal confiável. As recomendações de remoção são limitadas.",
+      "multiTopic": "{{count}} áreas temáticas detectadas. O site não tem um tema dominante. As pontuações por subsite são exibidas abaixo.",
+      "lexicalFallback": "A análise do idioma selecionado usa o algoritmo estatístico TF-IDF. O componente de similaridade semântica profunda não está disponível; a pontuação se baseia na cobertura e na distribuição das palavras-chave.",
+      "skippedRender": "{{count}} páginas foram ignoradas na análise porque a renderização de JavaScript excedeu o tempo limite.",
+      "degraded": "Algumas páginas tinham dados limitados, então suas pontuações podem ser menos precisas.",
+      "unmatchedTopic": "Nenhuma página correspondeu ao tema \"{{topic}}\". O tema detectado é usado no lugar."
+    },
+    "skip": {
+      "render-timeout": "A renderização de JavaScript excedeu o tempo limite",
+      "request-error": "A requisição falhou",
+      "non-topical-status": "Status HTTP sem conteúdo",
+      "non-html": "Não é uma página HTML",
+      "no-content": "Sem conteúdo de texto"
+    },
+    "hero": {
+      "label": "Site Focus Score",
+      "outOf": "de 100",
+      "summaryAll": "Todas as {{count}} páginas analisadas se mantêm no tema.",
+      "summaryOff": "{{off}} de {{count}} páginas se desviam de forma significativa do tema principal.",
+      "metaButton": "Detalhes da análise",
+      "metaPages": "Páginas analisadas: {{count}}",
+      "metaAge": "Atualizado: {{date}}",
+      "recalc": "Recalcular",
+      "howItWorks": "Como funciona?",
+      "change": "{{delta}} pontos desde a análise anterior",
+      "progressAria": "Site Focus Score {{score}} de 100, {{band}}",
+      "recalcBudget": "Restam {{remaining}} de {{limit}} recálculos completos hoje.",
+      "recalcExhausted": "Limite diário de {{limit}} recálculos completos atingido. Tente novamente amanhã."
+    },
+    "drawer": {
+      "title": "Como funciona o Site Focus Score",
+      "close": "Fechar",
+      "weights": "Peso das páginas na pontuação",
+      "weightHome": "Página inicial: peso 3",
+      "weightCategory": "Categorias, seções, páginas pilar e hub: peso 2",
+      "weightArticle": "Artigos, posts e cards: peso 1",
+      "sfsFormula": "SFS = soma(peso x TRS) / soma(peso), sobre todas as páginas analisadas",
+      "trsTitle": "Pontuação de relevância temática (TRS)",
+      "trsFormula": "TRS = clamp(0..100, (0.5 x Similaridade + 0.3 x Sobreposição - 0.2 x Desvio) x 125)",
+      "trsLexical": "Sem o componente semântico: TRS = clamp(0..100, (0.75 x Sobreposição - 0.25 x DesvioLéxico) x 125)",
+      "bands": "Faixas: 90-100 excelente, 75-89 bom, 60-74 moderado, 40-59 fraco, 0-39 crítico.",
+      "onTopic": "Uma página conta como on-topic a partir de um TRS de 60."
+    },
+    "core": {
+      "title": "Tema principal",
+      "label": "Tema detectado",
+      "terms": "Termos principais",
+      "termAria": "{{term}}: {{pct}} por cento",
+      "coverage": "Cobertura: {{pct}}% do conteúdo do site está estreitamente relacionado.",
+      "wrong": "O tema está errado?",
+      "inputLabel": "Seu tema (palavras ou frase)",
+      "placeholder": "por exemplo: tratamento do diabetes",
+      "reset": "Voltar ao tema detectado",
+      "manualActive": "Tema manual: {{input}}",
+      "confidenceLine": "Confiança do tema principal: {{pct}}%"
+    },
+    "metrics": {
+      "title": "Métricas principais",
+      "confidence": "Confiança do tema principal",
+      "onTopic": "Proporção on-topic",
+      "pages": "Páginas pontuadas",
+      "skipped": "Páginas ignoradas",
+      "offTopic": "Páginas off-topic (TRS abaixo de 40)",
+      "borderline": "Páginas limítrofes (60-74)"
+    },
+    "heatmap": {
+      "title": "Distribuição temática",
+      "treeAria": "Páginas por URL com relevância temática",
+      "ignoreTechnical": "Ignorar páginas técnicas",
+      "empty": "Nenhuma página corresponde a este filtro.",
+      "filter": {
+        "all": "Todas ({{count}})",
+        "critical": "Críticas <40 ({{count}})",
+        "borderline": "Limítrofes 60-74 ({{count}})",
+        "strong": "Fortes >=75 ({{count}})"
+      },
+      "filtersAria": "Filtrar páginas por relevância",
+      "warning": "Abaixo de 60: risco de off-topic",
+      "trsBar": "TRS {{trs}}",
+      "open": "Abrir a análise da página {{url}}",
+      "section": "Seção {{name}}",
+      "home": "Página inicial"
+    },
+    "detail": {
+      "title": "Análise da página",
+      "back": "Voltar à lista",
+      "close": "Fechar a análise da página",
+      "trs": "TRS",
+      "status": "Status",
+      "why": "Por que essa pontuação?",
+      "similarity": "Similaridade semântica: {{value}}%",
+      "overlap": "Sobreposição de palavras-chave: {{value}}%",
+      "drift": "Desvio semântico: {{value}}%",
+      "driftFlag": "Sinal de alerta: mais da metade da página trata de outros temas.",
+      "similarityStrong": "alta",
+      "similarityModerate": "moderada",
+      "similarityWeak": "baixa",
+      "foreign": "Temas estranhos: {{label}} ({{pct}}%)",
+      "noForeign": "Nenhum tema estranho detectado.",
+      "matched": "Palavras-chave que combinam com o tema principal",
+      "unmatched": "Palavras-chave de outros temas",
+      "none": "Nenhuma encontrada.",
+      "count": "{{count}}x",
+      "context": "Contexto: {{text}}",
+      "clusterOf": "tema: {{cluster}}",
+      "skipped": "Esta página não foi pontuada: {{reason}}.",
+      "degraded": "Esta página tem dados limitados, então a pontuação é menos precisa."
+    },
+    "matrix": {
+      "title": "Matriz de alinhamento de palavras-chave",
+      "keyword": "Palavra-chave",
+      "freq": "Frequência",
+      "relevance": "Relevância para o tema principal",
+      "alignment": "Alinhamento",
+      "match": "Combina (acima de 70%)",
+      "partial": "Parcial (40-70%)",
+      "miss": "Não combina (abaixo de 40%)",
+      "empty": "Nenhuma palavra-chave para exibir."
+    },
+    "playbook": {
+      "title": "O que fazer com esta página",
+      "typeA": "Tipo A: página off-topic",
+      "typeB": "Tipo B: página limítrofe",
+      "typeC": "Tipo C: página forte",
+      "options": "Opções",
+      "steps": "Passos",
+      "potential": "TRS esperado: {{min}}-{{max}} (estimativa)",
+      "gain": "Ganho para o site: +{{gain}} pontos"
+    },
+    "brief": {
+      "title": "Briefing de reescrita",
+      "target": "TRS alvo: {{target}} (agora {{current}})",
+      "mustInclude": "Deve incluir",
+      "avoid": "Evitar",
+      "headings": "Ideias de títulos",
+      "words": "Extensão: {{min}}-{{max}} palavras",
+      "copy": "Copiar prompt de IA",
+      "copied": "Prompt copiado",
+      "copyFailed": "Falha ao copiar. Selecione e copie manualmente."
+    },
+    "site": {
+      "title": "Recomendações",
+      "empty": "Nenhuma recomendação. O site se mantém no tema.",
+      "delta": "Delta Score: +{{value}}",
+      "deltaZero": "Delta Score: 0",
+      "pagesList": "Páginas",
+      "gaps": "Lacunas temáticas",
+      "gapsEmpty": "Nenhuma lacuna temática encontrada.",
+      "links": "Sugestões de links internos",
+      "linksEmpty": "Nenhuma sugestão de link.",
+      "terms": "Termos"
+    },
+    "subsites": {
+      "title": "Pontuações por subsite",
+      "item": "{{label}} ({{prefix}}): {{share}}% das páginas",
+      "score": "Pontuação {{score}}"
+    },
+    "recommendation": {
+      "remove-offtopic": {
+        "title": "Remova ou mova {{count}} páginas off-topic",
+        "detail": "Redirecione, aplique noindex ou exclua as piores páginas e remova os links internos que apontam para elas. Potencial: +{{gain}} pontos."
+      },
+      "strengthen-borderline": {
+        "title": "Reforce {{count}} páginas limítrofes",
+        "detail": "Adicione os termos e as seções do tema principal que faltam para levá-las a cerca de {{target}}. Potencial: +{{gain}} pontos."
+      },
+      "expand-core-cluster": {
+        "title": "Amplie o cluster do tema principal",
+        "detail": "Escreva {{count}} páginas novas para subtemas pouco cobertos. Potencial: +{{gain}} pontos."
+      },
+      "add-internal-links": {
+        "title": "Adicione links internos para páginas hub",
+        "detail": "{{count}} sugestões de link levam páginas fracas a hubs fortes."
+      },
+      "collect-more-pages": {
+        "title": "Reúna mais páginas",
+        "detail": "Apenas {{pageCount}} páginas foram analisadas. Rastreie mais antes de remover qualquer coisa."
+      },
+      "split-subsites": {
+        "title": "Considere dividir o site",
+        "detail": "Foram encontradas {{count}} áreas temáticas distintas. Separar seções ou subdomínios pode ajudar."
+      },
+      "review-skipped-pages": {
+        "title": "Revise {{count}} páginas ignoradas",
+        "detail": "{{timeouts}} delas excederam o tempo limite ao renderizar JavaScript."
+      },
+      "monitor-strong-pages": {
+        "title": "Monitore {{count}} páginas fortes",
+        "detail": "Mantenha-as no tema e reavalie com regularidade."
+      }
+    },
+    "playbookOption": {
+      "remove-redirect": {
+        "title": "Excluir e redirecionar com 301",
+        "detail": "Verifique antes o tráfego e os backlinks. Ganho para o site: +{{gain}} pontos."
+      },
+      "noindex-isolate": {
+        "title": "Aplicar noindex e isolar",
+        "detail": "Mantenha a página para os usuários, mas oculte-a da busca e reduza os links internos. Ganho para o site: +{{gain}} pontos."
+      },
+      "rewrite-on-topic": {
+        "title": "Reescrever no tema com um briefing",
+        "detail": "Transforme a página em conteúdo do tema principal. TRS alvo: cerca de {{target}}."
+      },
+      "add-missing-terms": {
+        "title": "Adicionar os termos que faltam",
+        "detail": "Incorpore os termos principais que faltam: {{terms}}."
+      },
+      "reinforce-headings": {
+        "title": "Reforçar os títulos H2 e H3",
+        "detail": "Use a terminologia do tema principal nos títulos."
+      },
+      "deepen-coverage": {
+        "title": "Aprofundar a cobertura temática",
+        "detail": "Adicione seções, exemplos e profundidade sobre o tema principal."
+      },
+      "serve-as-hub": {
+        "title": "Usar como hub",
+        "detail": "Crie links de e para páginas relacionadas para que esta página lidere um cluster."
+      },
+      "build-satellite-cluster": {
+        "title": "Criar um cluster satélite",
+        "detail": "Planeje páginas de apoio que apontem de volta para esta página."
+      },
+      "monitor-periodically": {
+        "title": "Monitorar",
+        "detail": "Reavalie a cada {{weeks}} semanas."
+      }
+    },
+    "playbookStep": {
+      "check-traffic-and-backlinks": "Verifique o tráfego e os backlinks da página.",
+      "redirect-301-to-closest-page": "Redirecione com 301 para a página on-topic mais próxima.",
+      "remove-internal-links": "Remova os links internos que apontam para a página.",
+      "add-noindex": "Adicione uma diretiva noindex.",
+      "rewrite-with-brief": "Reescreva a página seguindo o briefing. Termos que faltam: {{terms}}.",
+      "add-terms": "Adicione os termos que faltam: {{terms}}.",
+      "expand-h2-h3": "Amplie os títulos H2 e H3 com a terminologia do tema principal.",
+      "add-examples": "Adicione exemplos e profundidade.",
+      "link-from-weak-pages": "Crie links para esta página a partir de páginas mais fracas.",
+      "plan-satellite-pages": "Planeje páginas satélite em torno desta página.",
+      "recheck-in-six-weeks": "Reavalie em {{weeks}} semanas."
+    },
+    "gap": {
+      "thin-subtopic": "Subtema pouco coberto \"{{label}}\": apenas {{coveragePct}}% das páginas o abordam ({{pagesCovering}} páginas). Termos: {{terms}}.",
+      "competitor-terms": "Termos dos concorrentes ausentes no seu site: {{terms}}.",
+      "competitorActive": "A análise de lacunas do cluster temático usa {{count}} termos dos concorrentes.",
+      "competitorClear": "Limpar termos dos concorrentes"
+    },
+    "link": {
+      "link-to-hub": "Crie um link de {{from}} para o hub {{to}}. Âncoras sugeridas: {{anchors}}."
+    },
+    "history": {
+      "removed-offtopic": "{{count}} páginas off-topic removidas ({{delta}} pontos).",
+      "new-cluster": "Novo cluster temático \"{{label}}\" ({{count}} novas, {{delta}} pontos).",
+      "optimized-borderline": "{{count}} páginas limítrofes otimizadas ({{delta}} pontos).",
+      "core-topic-changed": "O tema principal mudou de \"{{from}}\" para \"{{to}}\" ({{delta}} pontos).",
+      "title": "Histórico de pontuação",
+      "empty": "Execute pelo menos duas análises completas para ver a tendência.",
+      "aria": "Site Focus Score ao longo de {{count}} análises, de {{from}} a {{to}}",
+      "point": "{{date}}: {{score}}",
+      "annotations": "Mudanças principais"
+    },
+    "alert": {
+      "sfs-drop": "O Site Focus Score caiu de {{from}} para {{to}} ({{points}} pontos).",
+      "content-guard": "Nova página off-topic {{url}} (TRS {{trs}})."
+    },
+    "weekly": {
+      "title": "Resumo semanal",
+      "summary": "Pontuação {{score}} ({{delta}} desde a análise anterior).",
+      "noPrevious": "primeira análise",
+      "noTasks": "Sem tarefas urgentes.",
+      "gain": "(+{{value}} pts)"
+    }
+  },
+  "focusBenchmark": {
+    "title": "Benchmark competitivo",
+    "intro": "Compare seu Site Focus Score com o dos sites que aparecem para o seu tema principal. O SEOmi consulta os resultados de busca, rastreia com cortesia uma pequena amostra de cada concorrente (respeitando o robots.txt) e os pontua com o mesmo mecanismo.",
+    "run": "Executar benchmark",
+    "rerun": "Executar de novo",
+    "cancel": "Cancelar",
+    "cancelled": "Benchmark cancelado. Nada foi salvo.",
+    "sources": "Fonte dos resultados de busca: {{source}}",
+    "queries": "Consultas: {{queries}}",
+    "sample": "Até {{count}} páginas rastreadas por concorrente.",
+    "progress": {
+      "serp": "Consultando resultados de busca ({{done}}/{{total}})",
+      "crawl": "Rastreando concorrentes ({{done}}/{{total}}), agora {{domain}}: {{pages}} páginas",
+      "analyze": "Pontuando concorrentes"
+    },
+    "unavailable": {
+      "title": "Benchmark indisponível",
+      "no-serp-source": "Nenhuma fonte de resultados de busca está conectada. Adicione as credenciais da DataForSEO em Configurações para comparar com concorrentes reais.",
+      "no-queries": "O tema principal ainda não tem termos para pesquisar. Rastreie mais páginas primeiro.",
+      "serp-failed": "Não foi possível obter os resultados de busca: {{error}}",
+      "no-competitors": "Os resultados de busca não continham sites concorrentes além do seu."
+    },
+    "error": "O benchmark falhou: {{error}}",
+    "ranking": {
+      "title": "Classificação",
+      "you": "Você",
+      "pages": "{{count}} páginas",
+      "onTopic": "{{pct}}% on-topic",
+      "offTopic": "{{count}} off-topic",
+      "score": "SFS {{score}}",
+      "average": "Média do setor",
+      "target": "Pontuação alvo",
+      "position": "Sua posição: {{rank}} de {{total}}",
+      "chart": "Site Focus Score por site"
+    },
+    "failure": {
+      "title": "Sem pontuação",
+      "crawl-error": "O rastreamento falhou: {{error}}",
+      "no-pages": "Nenhuma página rastreável (bloqueada pelo robots.txt ou inacessível).",
+      "analysis-failed": "A análise falhou: {{error}}",
+      "cancelled": "Cancelado antes da pontuação."
+    },
+    "insights": {
+      "title": "Insights",
+      "on-topic-share": "{{own}}% do seu conteúdo é on-topic, contra {{leaders}}% do top 3 ({{delta}} pontos).",
+      "off-topic-pages": "Você tem {{own}} páginas off-topic; o top 3 tem média de {{leaders}}.",
+      "keyword-coverage": "Seu site cobre {{pct}}% ({{covered}} de {{total}}) das palavras-chave do tema principal usadas pelo top 3.",
+      "versus-average": "Sua pontuação está {{delta}} pontos em relação à média do setor de {{average}}."
+    },
+    "gaps": {
+      "title": "Lacunas de cluster observadas nos concorrentes",
+      "coverage": "{{pct}}% dos concorrentes ({{count}})",
+      "empty": "Nenhum tema dos concorrentes está faltando no seu site.",
+      "apply": "Adicionar estes termos à análise de lacunas"
+    }
   }
 }

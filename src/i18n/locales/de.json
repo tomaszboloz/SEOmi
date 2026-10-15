@@ -2233,7 +2233,8 @@
       "resources": "Ressourcen",
       "frames": "Frames",
       "custom-search": "Benutzerdefinierte Suche",
-      "semantic": "Semantische Analyse"
+      "semantic": "Semantische Analyse",
+      "focus": "Site Focus"
     },
     "environmentStaging": "test/staging",
     "environmentProduction": "production",
@@ -3047,7 +3048,8 @@
       "structured": "Strukturiert",
       "validation": "HTML-Validierung",
       "performance": "Leistung",
-      "exports": "Exporte"
+      "exports": "Exporte",
+      "focus": "Site Focus"
     },
     "groups": {
       "core": "Übersicht",
@@ -5092,8 +5094,10 @@
       "gsc": "Search Console",
       "pagespeed": "PageSpeed / CrUX",
       "crawl": "Crawl-Vergleiche",
-      "semantic": "Semantische Vergleiche"
-    }
+      "semantic": "Semantische Vergleiche",
+      "focus": "Site Focus Score"
+    },
+    "focusDrop": "Rückgang des Site Focus Score (Punkte)"
   },
   "ga4": {
     "title": "Google Analytics 4",
@@ -5714,6 +5718,109 @@
         "colDiscovered": "Entdeckt über",
         "colArea": "Bereich",
         "colResult": "Ergebnis"
+      },
+      "focus": {
+        "title": "Site Focus",
+        "intro": "Wie konsequent die gecrawlten Seiten bei einem Kernthema bleiben. Die Werte stammen aus dem gespeicherten Lauf; es werden keine Seiten erneut abgerufen.",
+        "scoreTitle": "Site Focus Score",
+        "legend": "Bereiche: 90-100 ausgezeichnet, 75-89 gut, 60-74 mittel, 40-59 schwach, 0-39 kritisch.",
+        "kConfidence": "Konfidenz des Kernthemas",
+        "kOnTopic": "Anteil themenrelevanter Seiten",
+        "kScored": "Bewertete Seiten",
+        "kSkipped": "Übersprungene Seiten",
+        "kOffTopic": "Seiten abseits des Themas",
+        "kBorderline": "Grenzfall-Seiten",
+        "kStrong": "Starke Seiten",
+        "nConfidence": "Anteil des Kernclusters",
+        "nOnTopic": "Seiten mit TRS 60 oder mehr",
+        "nScored": "von {{0}} gecrawlten",
+        "nSkipped": "Nicht bewertet",
+        "nOffTopic": "TRS unter 40",
+        "nBorderline": "TRS 60-74",
+        "nStrong": "TRS 75 oder mehr",
+        "percent": "{{0}} %",
+        "coreBadge": "KERNTHEMA",
+        "coreTerms": "Wichtigste Begriffe",
+        "coreTerm": "{{0}} ({{1}} % der Seiten)",
+        "coreConfidence": "Konfidenz {{0}} %",
+        "coreManual": "Manuelles Thema: {{0}}",
+        "coreDetected": "Aus den gecrawlten Seiten erkannt",
+        "tPages": "Schwächste Seiten nach Themenrelevanz",
+        "pagesIntro": "Bis zu 25 Inhaltsseiten mit dem niedrigsten Topical Relevance Score (TRS). Technische und übersprungene Seiten sind ausgeschlossen.",
+        "colTrs": "TRS",
+        "colType": "Typ",
+        "colSimilarity": "Ähnlichkeit",
+        "colOverlap": "Überschneidung",
+        "colDrift": "Drift",
+        "colPlaybook": "Playbook",
+        "playbook": "{{0}}: {{1}}",
+        "tRecs": "Empfehlungen",
+        "recsIntro": "Sortiert nach simuliertem Punktgewinn pro geschätzter Arbeitsstunde. Die Gewinne sind Schätzungen.",
+        "colNo": "#",
+        "colAction": "Empfehlung",
+        "colGain": "Gewinn",
+        "gain": "+{{0}}",
+        "tSub": "Werte der Teilbereiche",
+        "subIntro": "Themenbereiche einer Website mit mehreren Themen, jeweils anhand des eigenen Kernthemas bewertet.",
+        "colArea": "Themenbereich",
+        "colPrefix": "Pfad",
+        "colShare": "Anteil der Seiten",
+        "colScore": "Wert",
+        "tGaps": "Themenlücken",
+        "colGap": "Lücke",
+        "band": {
+          "excellent": "Ausgezeichneter Fokus",
+          "good": "Guter Fokus",
+          "moderate": "Mittlerer Fokus",
+          "weak": "Schwacher Fokus",
+          "critical": "Kritischer Fokus"
+        },
+        "status": {
+          "strong": "Stark",
+          "moderate": "Mittel",
+          "borderline": "Grenzfall",
+          "weak": "Schwach",
+          "off-topic": "Deutlich themenfremd"
+        },
+        "type": {
+          "homepage": "Startseite",
+          "category": "Kategorie",
+          "article": "Artikel",
+          "technical": "Technisch"
+        },
+        "note": {
+          "lowConfidence": "Kleine Stichprobe ({{0}} Seiten). Die Ergebnisse sind nur Richtwerte; crawle mindestens 10 Seiten, um ein verlässliches Kernthema zu erhalten. Empfehlungen zum Entfernen sind eingeschränkt.",
+          "multiTopic": "{{0}} Themenbereiche erkannt. Die Website hat kein dominierendes Thema. Die Werte der Teilbereiche stehen unten.",
+          "lexicalFallback": "Die Analyse für die gewählte Sprache nutzt den statistischen TF-IDF-Algorithmus. Die tiefe semantische Ähnlichkeitskomponente ist nicht verfügbar; der Wert basiert auf Abdeckung und Verteilung der Keywords.",
+          "skippedRender": "{{0}} Seiten wurden in der Analyse übersprungen, weil das JavaScript-Rendering ein Zeitlimit überschritten hat.",
+          "degraded": "Bei einigen Seiten waren die Daten begrenzt, daher können ihre Werte ungenauer sein.",
+          "unmatchedTopic": "Keine Seite passt zum Thema „{{0}}“. Stattdessen wird das erkannte Thema verwendet."
+        },
+        "rec": {
+          "remove-offtopic": "{{0}} themenfremde Seiten entfernen oder verschieben: die schlechtesten weiterleiten, auf noindex setzen oder löschen und interne Links darauf entfernen. Potenzial: +{{1}} Punkte.",
+          "strengthen-borderline": "{{0}} Grenzfall-Seiten stärken: fehlende Kernbegriffe und Abschnitte ergänzen, um sie auf etwa {{1}} zu heben. Potenzial: +{{2}} Punkte.",
+          "expand-core-cluster": "Das Kernthema-Cluster ausbauen: {{0}} neue Seiten für dünn abgedeckte Unterthemen schreiben. Potenzial: +{{1}} Punkte.",
+          "add-internal-links": "Interne Links zu Hub-Seiten ergänzen: {{0}} Linkvorschläge führen schwache Seiten zu starken Hubs.",
+          "collect-more-pages": "Mehr Seiten erfassen: Es wurden nur {{0}} Seiten analysiert. Crawle mehr, bevor du etwas entfernst.",
+          "split-subsites": "Eine Aufteilung der Website erwägen: {{0}} unterschiedliche Themenbereiche gefunden. Getrennte Bereiche oder Subdomains können helfen.",
+          "review-skipped-pages": "{{0}} übersprungene Seiten prüfen: {{1}} davon haben beim Rendern von JavaScript ein Zeitlimit überschritten.",
+          "monitor-strong-pages": "{{0}} starke Seiten überwachen: Halte sie beim Thema und prüfe sie regelmäßig erneut."
+        },
+        "option": {
+          "remove-redirect": "Löschen und mit 301 weiterleiten (+{{0}} Punkte)",
+          "noindex-isolate": "Auf noindex setzen und isolieren (+{{0}} Punkte)",
+          "rewrite-on-topic": "Mit einem Briefing themenbezogen neu schreiben (Ziel-TRS etwa {{0}})",
+          "add-missing-terms": "Fehlende Begriffe ergänzen: {{0}}",
+          "reinforce-headings": "H2- und H3-Überschriften stärken",
+          "deepen-coverage": "Themenabdeckung vertiefen",
+          "serve-as-hub": "Als Hub nutzen",
+          "build-satellite-cluster": "Ein Satelliten-Cluster aufbauen",
+          "monitor-periodically": "Alle {{0}} Wochen überwachen"
+        },
+        "gap": {
+          "thin-subtopic": "Dünn abgedecktes Unterthema „{{0}}“: nur {{1}} % der Seiten behandeln es ({{2}} Seiten). Begriffe: {{3}}.",
+          "competitor-terms": "Begriffe der Konkurrenz, die auf deiner Website fehlen: {{3}}."
+        }
       }
     },
     "recs": {
@@ -5864,6 +5971,92 @@
         "action": "Turn the switch on if you run crawls or schedules.\nWhen your system asks for permission, choose Allow. If you refused earlier, enable notifications for SEOmi in the system settings.\nTurn it off if you find the pop-ups distracting.\nThe text below the switch shows whether permission was granted.",
         "example": "Start a 5000-page crawl, switch to your email, and get a notification when it is done."
       }
+    },
+    "focus": {
+      "siteFocusScore": {
+        "title": "Site Focus Score (SFS)",
+        "what": "Ein Wert von 0 bis 100, der zeigt, wie konsequent deine Seiten bei einem Kernthema bleiben. Er ist der gewichtete Durchschnitt des Topical Relevance Score (TRS) jeder Seite: Die Startseite zählt dreifach, Kategorie- und Bereichsseiten doppelt, Artikel einfach.",
+        "why": "Suchmaschinen und Leser belohnen Websites, die ein Thema klar abdecken. Ein niedriger SFS bedeutet, dass viele Seiten dieses Signal verwässern.",
+        "action": "Lies den Bereich ab: 90-100 ausgezeichnet, 75-89 gut, 60-74 mittel, 40-59 schwach, 0-39 kritisch.\nÖffne die Heatmap und behebe zuerst die schwächsten Seiten.",
+        "example": "Ein Diabetes-Blog mit 40 Artikeln zu Diabetes und 8 zu Reisen kommt auf etwa 80."
+      },
+      "topicRelevance": {
+        "title": "Topical Relevance Score (TRS)",
+        "what": "Ein Wert von 0 bis 100 für eine einzelne URL: wie gut diese Seite zum Kernthema der Website passt. Er kombiniert semantische Ähnlichkeit, Keyword-Überschneidung und semantische Drift.",
+        "why": "Er zeigt, welche einzelnen Seiten die ganze Website vom Thema wegziehen.",
+        "action": "Strebe 75 oder mehr an.\nVerbessere Seiten zwischen 60 und 74.\nEntferne, leite weiter oder überarbeite Seiten unter 40.",
+        "example": "Eine Seite über Blutzuckermessgeräte auf einer Diabetes-Website: TRS 88. Eine Seite über Billigflüge: TRS 12."
+      },
+      "coreTopicConfidence": {
+        "title": "Konfidenz des Kernthemas",
+        "what": "Wie dominant das erkannte Kernthema im Vergleich zu allen anderen auf der Website gefundenen Themen ist, von 0 bis 100 Prozent.",
+        "why": "Bei niedriger Konfidenz hat die Website kein klares Hauptthema oder es wurden zu wenige Seiten analysiert, sodass die Werte weniger verlässlich sind.",
+        "action": "Über 60 Prozent: Du kannst dem Thema vertrauen.\nDarunter prüfst du die Themenbezeichnung und nutzt bei Fehlern die manuelle Vorgabe.",
+        "example": "Hat das Top-Thema 70 Prozent des gesamten Begriffsgewichts, beträgt die Konfidenz 70 Prozent."
+      },
+      "onTopicRatio": {
+        "title": "Anteil themenrelevanter Seiten",
+        "what": "Der Anteil der Inhaltsseiten mit einem TRS von 60 oder höher. Technische Seiten wie Login oder Warenkorb werden nicht mitgezählt.",
+        "why": "Er zeigt, wie viele Seiten das Kernthema stützen, nicht wie hoch der gewichtete Wert ist.",
+        "action": "Steigere ihn, indem du Grenzfall-Seiten (60-74 und darunter) verbesserst und themenfremde entfernst.",
+        "example": "42 von 50 Inhaltsseiten haben einen TRS von 60 oder mehr: Der Anteil beträgt 84 Prozent."
+      },
+      "semanticSimilarity": {
+        "title": "Semantische Ähnlichkeit",
+        "what": "Wie nah das Vokabular einer Seite am Kernthema-Profil der Website liegt (Kosinus-Ähnlichkeit, als Prozentwert angezeigt).",
+        "why": "Sie ist der größte Teil der TRS-Formel.",
+        "action": "80-100 Prozent sind stark, 50-79 mittel, unter 50 schwach.\nErgänze Begriffe und Abschnitte, die zum Kernthema gehören.",
+        "example": "Eine Seite über Insulinpumpen bei einem Kernthema Diabetes: 86 Prozent."
+      },
+      "keywordOverlap": {
+        "title": "Keyword-Überschneidung",
+        "what": "Der Anteil der 30-50 wichtigsten Kernthema-Keywords, die auf der Seite vorkommen.",
+        "why": "Eine Seite, die die meisten Kern-Keywords auslässt, kann das Thema nicht stützen, auch wenn sie gut geschrieben ist.",
+        "action": "Über 60 Prozent sind stark; unter 30 Prozent ist die Seite themenfremd.\nErgänze fehlende Kern-Keywords dort, wo sie natürlich passen.",
+        "example": "Das Kernset hat 40 Keywords und die Seite verwendet 28: Überschneidung 70 Prozent."
+      },
+      "semanticDrift": {
+        "title": "Semantische Drift",
+        "what": "Der Anteil des Begriffsgewichts der Seite, der zu fremden Themen statt zum Kernthema gehört.",
+        "why": "Hohe Drift bedeutet, dass die Seite ihre Worte für etwas anderes verwendet.",
+        "action": "Drift über 50 Prozent ist ein Warnsignal.\nKürze oder verschiebe die fremden Abschnitte oder lagere sie in einen eigenen Bereich der Website aus.",
+        "example": "Eine Diabetes-Seite mit langen Absätzen über Urlaubsangebote: Drift 55 Prozent."
+      },
+      "keywordAlignment": {
+        "title": "Keyword-Ausrichtung",
+        "what": "Zeigt, wie sich jedes häufige Keyword der Seite zum Kernthema verhält. Symbole: ein Häkchen über 70 Prozent Relevanz, eine Tilde von 40 bis 70 Prozent, ein Kreuz unter 40 Prozent.",
+        "why": "Sie macht sichtbar, welche Wörter auf der Seite dem Thema helfen und welche ablenken.",
+        "action": "Behalte die mit Häkchen markierten Keywords und baue sie aus.\nReduziere oder entferne Wörter mit Kreuz.",
+        "example": "„Glukose“ - 92 Prozent - Häkchen; „Hotel“ - 8 Prozent - Kreuz."
+      },
+      "deltaScore": {
+        "title": "Delta Score",
+        "what": "Eine simulierte Veränderung des Site Focus Score, wenn du eine Maßnahme umsetzt. Die Simulation berechnet den gewichteten Durchschnitt mit den neuen Seitenwerten neu.",
+        "why": "So kannst du Maßnahmen nach Gewinn pro Aufwand ordnen, statt zu raten.",
+        "action": "Beginne mit Maßnahmen mit dem höchsten Gewinn und dem geringsten Aufwand.\nCrawle nach der Arbeit erneut, um den tatsächlichen Gewinn zu bestätigen.",
+        "example": "6 themenfremde Seiten entfernen: plus 4,2 Punkte."
+      },
+      "lowConfidence": {
+        "title": "Niedrige Konfidenz",
+        "what": "Wird angezeigt, wenn zu wenige Seiten analysiert wurden oder kein Thema klar führt, sodass das erkannte Kernthema falsch sein kann.",
+        "why": "Bei einer kleinen Stichprobe kann eine einzige ungewöhnliche Seite das ganze Ergebnis verändern.",
+        "action": "Crawle mehr Seiten.\nPrüfe die Themenbezeichnung und überschreibe sie, wenn sie falsch ist.\nGehe mit Empfehlungen zum Entfernen vorsichtig um.",
+        "example": "Ein Crawl von 6 Seiten ergibt nur ein grobes Bild."
+      },
+      "benchmark": {
+        "title": "Wettbewerbs-Benchmark",
+        "what": "Dein Site Focus Score neben den Websites, die in der Suche für dein Kernthema ranken. Jeder Wettbewerber wird anhand einer kleinen Stichprobe von Seiten gecrawlt und mit derselben Formel wie deine Website bewertet.",
+        "why": "Ein Wert hat nur im Vergleich mit einer Referenz Aussagekraft. Wenn du siehst, wie fokussiert die Spitzenreiter sind, weißt du, wie viel Luft nach oben du hast und wie ein realistisches Ziel aussieht.",
+        "action": "Führe den Benchmark mit einer angebundenen Quelle für Suchergebnisse aus.\nVergleiche deinen Anteil themenrelevanter und themenfremder Seiten mit den Top 3.\nÖffne die Lückenliste und plane Inhalte für Begriffe, die die meisten Wettbewerber nutzen.",
+        "example": "Liegen die Top 3 im Schnitt bei 82 und du bei 64, peile zuerst 80 an, indem du deine themenfremden Seiten behebst.",
+        "learnMore": "Die Zahlen der Wettbewerber stammen aus einer begrenzten Crawl-Stichprobe, daher sind kleine Unterschiede als Rauschen zu betrachten."
+      },
+      "benchmarkTarget": {
+        "title": "Zielwert",
+        "what": "Ein vorgeschlagenes Ziel: mindestens 80 oder der Durchschnitt der Top-3-Wettbewerber, wenn diese höher liegen.",
+        "why": "Er macht den Vergleich zu einer einzigen Zahl, auf die du hinarbeiten kannst.",
+        "action": "Nutze ihn als Planungsziel.\nFühre den Benchmark nach deinen Korrekturen erneut aus, um die Veränderung zu sehen."
+      }
     }
   },
   "helpUi": {
@@ -5872,5 +6065,382 @@
     "action": "Was zu tun ist",
     "example": "Beispiel",
     "learnMore": "Mehr erfahren"
+  },
+  "siteFocusMonitoring": {
+    "alert": {
+      "title": "SEOmi · Site Focus Score-Warnung",
+      "sfsDrop": "Der Site Focus Score ist zwischen vollständigen Analysen um {{points}} Punkte gefallen ({{from}} auf {{to}}).",
+      "contentGuard": "{{count}} neue Seite(n), die in den letzten 24 Stunden erstmals gesehen wurden, sind themenfremd (TRS unter 40): {{urls}}."
+    },
+    "weekly": {
+      "title": "SEOmi · Wöchentlicher Site Focus-Bericht",
+      "body": "Site Focus Score {{score}} ({{delta}} ggü. Vorwoche). Wichtigste Aufgaben: {{tasks}}",
+      "noPrevious": "erster Bericht",
+      "task": "{{code}} (+{{gain}} Pkt.)",
+      "noTasks": "keine dringenden Aufgaben"
+    }
+  },
+  "focus": {
+    "title": "Site Focus",
+    "subtitle": "Wie konsequent die gecrawlten Seiten bei einem Kernthema bleiben.",
+    "band": {
+      "excellent": "Ausgezeichneter Fokus",
+      "good": "Guter Fokus",
+      "moderate": "Mittlerer Fokus",
+      "weak": "Schwacher Fokus",
+      "critical": "Kritischer Fokus"
+    },
+    "bandRange": {
+      "excellent": "90-100",
+      "good": "75-89",
+      "moderate": "60-74",
+      "weak": "40-59",
+      "critical": "0-39"
+    },
+    "empty": "Keine Seiten mit Inhalt zur Analyse. Starte zuerst einen Crawl.",
+    "status": {
+      "strong": "Stark",
+      "moderate": "Mittel",
+      "borderline": "Grenzfall",
+      "weak": "Schwach",
+      "off-topic": "Deutlich themenfremd"
+    },
+    "type": {
+      "homepage": "Startseite",
+      "category": "Kategorie",
+      "article": "Artikel",
+      "technical": "Technisch"
+    },
+    "effort": "Aufwand: {{min}}-{{max}} Std. (Schätzung)",
+    "banner": {
+      "lowConfidence": "Kleine Stichprobe ({{count}} Seiten). Die Ergebnisse sind nur Richtwerte; crawle mindestens 10 Seiten, um ein verlässliches Kernthema zu erhalten. Empfehlungen zum Entfernen sind eingeschränkt.",
+      "multiTopic": "{{count}} Themenbereiche erkannt. Die Website hat kein dominierendes Thema. Die Werte der Teilbereiche stehen unten.",
+      "lexicalFallback": "Die Analyse für die gewählte Sprache nutzt den statistischen TF-IDF-Algorithmus. Die tiefe semantische Ähnlichkeitskomponente ist nicht verfügbar; der Wert basiert auf Abdeckung und Verteilung der Keywords.",
+      "skippedRender": "{{count}} Seiten wurden in der Analyse übersprungen, weil das JavaScript-Rendering ein Zeitlimit überschritten hat.",
+      "degraded": "Bei einigen Seiten waren die Daten begrenzt, daher können ihre Werte ungenauer sein.",
+      "unmatchedTopic": "Keine Seite passt zum Thema „{{topic}}“. Stattdessen wird das erkannte Thema verwendet."
+    },
+    "skip": {
+      "render-timeout": "JavaScript-Rendering hat das Zeitlimit überschritten",
+      "request-error": "Anfrage fehlgeschlagen",
+      "non-topical-status": "HTTP-Status ohne Inhalt",
+      "non-html": "Keine HTML-Seite",
+      "no-content": "Kein Textinhalt"
+    },
+    "hero": {
+      "label": "Site Focus Score",
+      "outOf": "von 100",
+      "summaryAll": "Alle {{count}} analysierten Seiten bleiben beim Thema.",
+      "summaryOff": "{{off}} von {{count}} Seiten weichen deutlich vom Kernthema ab.",
+      "metaButton": "Analysedetails",
+      "metaPages": "Analysierte Seiten: {{count}}",
+      "metaAge": "Aktualisiert: {{date}}",
+      "recalc": "Neu berechnen",
+      "howItWorks": "Wie funktioniert das?",
+      "change": "{{delta}} Punkte seit der vorherigen Analyse",
+      "progressAria": "Site Focus Score {{score}} von 100, {{band}}",
+      "recalcBudget": "Heute noch {{remaining}} von {{limit}} vollständigen Neuberechnungen übrig.",
+      "recalcExhausted": "Das Tageslimit von {{limit}} vollständigen Neuberechnungen ist erreicht. Versuche es morgen erneut."
+    },
+    "drawer": {
+      "title": "So funktioniert der Site Focus Score",
+      "close": "Schließen",
+      "weights": "Seitengewichte im Score",
+      "weightHome": "Startseite: Gewicht 3",
+      "weightCategory": "Kategorien, Bereiche, Pillar- und Hub-Seiten: Gewicht 2",
+      "weightArticle": "Artikel, Beiträge und Karten: Gewicht 1",
+      "sfsFormula": "SFS = Summe(Gewicht x TRS) / Summe(Gewicht), über alle analysierten Seiten",
+      "trsTitle": "Topical Relevance Score (TRS)",
+      "trsFormula": "TRS = clamp(0..100, (0.5 x Ähnlichkeit + 0.3 x Überschneidung - 0.2 x Drift) x 125)",
+      "trsLexical": "Ohne die semantische Komponente: TRS = clamp(0..100, (0.75 x Überschneidung - 0.25 x LexikalischeDrift) x 125)",
+      "bands": "Bereiche: 90-100 ausgezeichnet, 75-89 gut, 60-74 mittel, 40-59 schwach, 0-39 kritisch.",
+      "onTopic": "Eine Seite gilt ab einem TRS von 60 als themenrelevant."
+    },
+    "core": {
+      "title": "Kernthema",
+      "label": "Erkanntes Thema",
+      "terms": "Wichtigste Begriffe",
+      "termAria": "{{term}}: {{pct}} Prozent",
+      "coverage": "Abdeckung: {{pct}} % der Website-Inhalte sind eng verwandt.",
+      "wrong": "Ist das das falsche Thema?",
+      "inputLabel": "Dein Thema (Wörter oder Wortgruppe)",
+      "placeholder": "zum Beispiel: Diabetes-Behandlung",
+      "reset": "Auf erkanntes Thema zurücksetzen",
+      "manualActive": "Manuelles Thema: {{input}}",
+      "confidenceLine": "Konfidenz des Kernthemas: {{pct}} %"
+    },
+    "metrics": {
+      "title": "Wichtige Kennzahlen",
+      "confidence": "Konfidenz des Kernthemas",
+      "onTopic": "Anteil themenrelevanter Seiten",
+      "pages": "Bewertete Seiten",
+      "skipped": "Übersprungene Seiten",
+      "offTopic": "Seiten abseits des Themas (TRS unter 40)",
+      "borderline": "Grenzfall-Seiten (60-74)"
+    },
+    "heatmap": {
+      "title": "Themenverteilung",
+      "treeAria": "Seiten nach URL mit Themenrelevanz",
+      "ignoreTechnical": "Technische Seiten ignorieren",
+      "empty": "Keine Seiten entsprechen diesem Filter.",
+      "filter": {
+        "all": "Alle ({{count}})",
+        "critical": "Kritisch <40 ({{count}})",
+        "borderline": "Grenzfall 60-74 ({{count}})",
+        "strong": "Stark >=75 ({{count}})"
+      },
+      "filtersAria": "Seiten nach Relevanz filtern",
+      "warning": "Unter 60: Risiko, vom Thema abzuweichen",
+      "trsBar": "TRS {{trs}}",
+      "open": "Seitenanalyse für {{url}} öffnen",
+      "section": "Bereich {{name}}",
+      "home": "Startseite"
+    },
+    "detail": {
+      "title": "Seitenanalyse",
+      "back": "Zurück zur Liste",
+      "close": "Seitenanalyse schließen",
+      "trs": "TRS",
+      "status": "Status",
+      "why": "Warum dieser Wert?",
+      "similarity": "Semantische Ähnlichkeit: {{value}} %",
+      "overlap": "Keyword-Überschneidung: {{value}} %",
+      "drift": "Semantische Drift: {{value}} %",
+      "driftFlag": "Warnsignal: Mehr als die Hälfte der Seite behandelt andere Themen.",
+      "similarityStrong": "hoch",
+      "similarityModerate": "mittel",
+      "similarityWeak": "niedrig",
+      "foreign": "Fremde Themen: {{label}} ({{pct}} %)",
+      "noForeign": "Keine fremden Themen erkannt.",
+      "matched": "Keywords, die zum Kernthema passen",
+      "unmatched": "Keywords aus anderen Themen",
+      "none": "Keine gefunden.",
+      "count": "{{count}}x",
+      "context": "Kontext: {{text}}",
+      "clusterOf": "Thema: {{cluster}}",
+      "skipped": "Diese Seite wurde nicht bewertet: {{reason}}.",
+      "degraded": "Zu dieser Seite liegen nur begrenzte Daten vor, daher ist der Wert ungenauer."
+    },
+    "matrix": {
+      "title": "Keyword-Ausrichtungsmatrix",
+      "keyword": "Keyword",
+      "freq": "Häufigkeit",
+      "relevance": "Relevanz für das Kernthema",
+      "alignment": "Ausrichtung",
+      "match": "Passt (über 70 %)",
+      "partial": "Teilweise (40-70 %)",
+      "miss": "Passt nicht (unter 40 %)",
+      "empty": "Keine Keywords zum Anzeigen."
+    },
+    "playbook": {
+      "title": "Was du mit dieser Seite tun kannst",
+      "typeA": "Typ A: themenfremde Seite",
+      "typeB": "Typ B: Grenzfall-Seite",
+      "typeC": "Typ C: starke Seite",
+      "options": "Optionen",
+      "steps": "Schritte",
+      "potential": "Erwarteter TRS: {{min}}-{{max}} (Schätzung)",
+      "gain": "Gewinn für die Website: +{{gain}} Punkte"
+    },
+    "brief": {
+      "title": "Briefing zum Umschreiben",
+      "target": "Ziel-TRS: {{target}} (aktuell {{current}})",
+      "mustInclude": "Muss enthalten",
+      "avoid": "Vermeiden",
+      "headings": "Ideen für Überschriften",
+      "words": "Länge: {{min}}-{{max}} Wörter",
+      "copy": "KI-Prompt kopieren",
+      "copied": "Prompt kopiert",
+      "copyFailed": "Kopieren fehlgeschlagen. Markiere den Text und kopiere ihn manuell."
+    },
+    "site": {
+      "title": "Empfehlungen",
+      "empty": "Keine Empfehlungen. Die Website bleibt beim Thema.",
+      "delta": "Delta Score: +{{value}}",
+      "deltaZero": "Delta Score: 0",
+      "pagesList": "Seiten",
+      "gaps": "Themenlücken",
+      "gapsEmpty": "Keine Themenlücken gefunden.",
+      "links": "Vorschläge für interne Links",
+      "linksEmpty": "Keine Linkvorschläge.",
+      "terms": "Begriffe"
+    },
+    "subsites": {
+      "title": "Werte der Teilbereiche",
+      "item": "{{label}} ({{prefix}}): {{share}} % der Seiten",
+      "score": "Wert {{score}}"
+    },
+    "recommendation": {
+      "remove-offtopic": {
+        "title": "{{count}} themenfremde Seiten entfernen oder verschieben",
+        "detail": "Leite die schlechtesten Seiten weiter, setze sie auf noindex oder lösche sie und entferne interne Links darauf. Potenzial: +{{gain}} Punkte."
+      },
+      "strengthen-borderline": {
+        "title": "{{count}} Grenzfall-Seiten stärken",
+        "detail": "Ergänze fehlende Kernbegriffe und Abschnitte, um sie auf etwa {{target}} zu heben. Potenzial: +{{gain}} Punkte."
+      },
+      "expand-core-cluster": {
+        "title": "Das Kernthema-Cluster ausbauen",
+        "detail": "Schreibe {{count}} neue Seiten für dünn abgedeckte Unterthemen. Potenzial: +{{gain}} Punkte."
+      },
+      "add-internal-links": {
+        "title": "Interne Links zu Hub-Seiten ergänzen",
+        "detail": "{{count}} Linkvorschläge führen schwache Seiten zu starken Hubs."
+      },
+      "collect-more-pages": {
+        "title": "Mehr Seiten erfassen",
+        "detail": "Es wurden nur {{pageCount}} Seiten analysiert. Crawle mehr, bevor du etwas entfernst."
+      },
+      "split-subsites": {
+        "title": "Eine Aufteilung der Website erwägen",
+        "detail": "{{count}} unterschiedliche Themenbereiche gefunden. Getrennte Bereiche oder Subdomains können helfen."
+      },
+      "review-skipped-pages": {
+        "title": "{{count}} übersprungene Seiten prüfen",
+        "detail": "{{timeouts}} davon haben beim Rendern von JavaScript ein Zeitlimit überschritten."
+      },
+      "monitor-strong-pages": {
+        "title": "{{count}} starke Seiten überwachen",
+        "detail": "Halte sie beim Thema und prüfe sie regelmäßig erneut."
+      }
+    },
+    "playbookOption": {
+      "remove-redirect": {
+        "title": "Löschen und mit 301 weiterleiten",
+        "detail": "Prüfe zuerst Traffic und Backlinks. Gewinn für die Website: +{{gain}} Punkte."
+      },
+      "noindex-isolate": {
+        "title": "Auf noindex setzen und isolieren",
+        "detail": "Behalte die Seite für Nutzer, blende sie aber in der Suche aus und kappe interne Links. Gewinn für die Website: +{{gain}} Punkte."
+      },
+      "rewrite-on-topic": {
+        "title": "Mit einem Briefing themenbezogen neu schreiben",
+        "detail": "Mache die Seite zu Inhalt zum Kernthema. Ziel-TRS etwa {{target}}."
+      },
+      "add-missing-terms": {
+        "title": "Fehlende Begriffe ergänzen",
+        "detail": "Arbeite die fehlenden Kernbegriffe ein: {{terms}}."
+      },
+      "reinforce-headings": {
+        "title": "H2- und H3-Überschriften stärken",
+        "detail": "Verwende in den Überschriften Formulierungen des Kernthemas."
+      },
+      "deepen-coverage": {
+        "title": "Themenabdeckung vertiefen",
+        "detail": "Ergänze Abschnitte, Beispiele und Tiefe zum Kernthema."
+      },
+      "serve-as-hub": {
+        "title": "Als Hub nutzen",
+        "detail": "Verlinke verwandte Seiten mit dieser Seite und umgekehrt, damit sie ein Cluster anführt."
+      },
+      "build-satellite-cluster": {
+        "title": "Ein Satelliten-Cluster aufbauen",
+        "detail": "Plane unterstützende Seiten, die auf diese Seite zurückverlinken."
+      },
+      "monitor-periodically": {
+        "title": "Überwachen",
+        "detail": "Alle {{weeks}} Wochen erneut prüfen."
+      }
+    },
+    "playbookStep": {
+      "check-traffic-and-backlinks": "Prüfe Traffic und Backlinks der Seite.",
+      "redirect-301-to-closest-page": "Leite per 301 auf die nächstliegende themenrelevante Seite weiter.",
+      "remove-internal-links": "Entferne interne Links, die auf die Seite zeigen.",
+      "add-noindex": "Füge die Direktive noindex hinzu.",
+      "rewrite-with-brief": "Schreibe die Seite anhand des Briefings neu. Fehlende Begriffe: {{terms}}.",
+      "add-terms": "Ergänze die fehlenden Begriffe: {{terms}}.",
+      "expand-h2-h3": "Erweitere die H2- und H3-Überschriften um Formulierungen des Kernthemas.",
+      "add-examples": "Ergänze Beispiele und Tiefe.",
+      "link-from-weak-pages": "Verlinke von schwächeren Seiten auf diese Seite.",
+      "plan-satellite-pages": "Plane Satellitenseiten rund um diese Seite.",
+      "recheck-in-six-weeks": "In {{weeks}} Wochen erneut prüfen."
+    },
+    "gap": {
+      "thin-subtopic": "Dünn abgedecktes Unterthema „{{label}}“: nur {{coveragePct}} % der Seiten behandeln es ({{pagesCovering}} Seiten). Begriffe: {{terms}}.",
+      "competitor-terms": "Begriffe der Konkurrenz, die auf deiner Website fehlen: {{terms}}.",
+      "competitorActive": "Die Topic-Cluster-Lückenanalyse berücksichtigt {{count}} Begriffe der Konkurrenz.",
+      "competitorClear": "Begriffe der Konkurrenz löschen"
+    },
+    "link": {
+      "link-to-hub": "Von {{from}} auf den Hub {{to}} verlinken. Vorgeschlagene Ankertexte: {{anchors}}."
+    },
+    "history": {
+      "removed-offtopic": "{{count}} themenfremde Seiten entfernt ({{delta}} Punkte).",
+      "new-cluster": "Neues Themencluster „{{label}}“ ({{count}} neu, {{delta}} Punkte).",
+      "optimized-borderline": "{{count}} Grenzfall-Seiten optimiert ({{delta}} Punkte).",
+      "core-topic-changed": "Kernthema von „{{from}}“ zu „{{to}}“ geändert ({{delta}} Punkte).",
+      "title": "Verlauf des Werts",
+      "empty": "Führe mindestens zwei vollständige Analysen durch, um den Trend zu sehen.",
+      "aria": "Site Focus Score über {{count}} Analysen, von {{from}} bis {{to}}",
+      "point": "{{date}}: {{score}}",
+      "annotations": "Wichtige Änderungen"
+    },
+    "alert": {
+      "sfs-drop": "Der Site Focus Score ist von {{from}} auf {{to}} gefallen ({{points}} Punkte).",
+      "content-guard": "Neue themenfremde Seite {{url}} (TRS {{trs}})."
+    },
+    "weekly": {
+      "title": "Wochenübersicht",
+      "summary": "Wert {{score}} ({{delta}} seit der vorherigen Analyse).",
+      "noPrevious": "erste Analyse",
+      "noTasks": "Keine dringenden Aufgaben.",
+      "gain": "(+{{value}} Pkt.)"
+    }
+  },
+  "focusBenchmark": {
+    "title": "Wettbewerbs-Benchmark",
+    "intro": "Vergleiche deinen Site Focus Score mit den Websites, die für dein Kernthema ranken. SEOmi ruft die Suchergebnisse ab, crawlt von jedem Wettbewerber rücksichtsvoll eine kleine Stichprobe (robots.txt wird beachtet) und bewertet sie mit derselben Engine.",
+    "run": "Benchmark starten",
+    "rerun": "Erneut ausführen",
+    "cancel": "Abbrechen",
+    "cancelled": "Benchmark abgebrochen. Es wurde nichts gespeichert.",
+    "sources": "Quelle der Suchergebnisse: {{source}}",
+    "queries": "Suchanfragen: {{queries}}",
+    "sample": "Bis zu {{count}} Seiten pro Wettbewerber gecrawlt.",
+    "progress": {
+      "serp": "Suchergebnisse werden abgerufen ({{done}}/{{total}})",
+      "crawl": "Wettbewerber werden gecrawlt ({{done}}/{{total}}), gerade {{domain}}: {{pages}} Seiten",
+      "analyze": "Wettbewerber werden bewertet"
+    },
+    "unavailable": {
+      "title": "Benchmark nicht verfügbar",
+      "no-serp-source": "Es ist keine Quelle für Suchergebnisse verbunden. Hinterlege in den Einstellungen DataForSEO-Zugangsdaten, um dich mit echten Wettbewerbern zu vergleichen.",
+      "no-queries": "Das Kernthema hat noch keine Begriffe zum Suchen. Crawle zuerst mehr Seiten.",
+      "serp-failed": "Suchergebnisse konnten nicht abgerufen werden: {{error}}",
+      "no-competitors": "Die Suchergebnisse enthielten keine Wettbewerber-Websites außer deiner eigenen."
+    },
+    "error": "Der Benchmark ist fehlgeschlagen: {{error}}",
+    "ranking": {
+      "title": "Ranking",
+      "you": "Du",
+      "pages": "{{count}} Seiten",
+      "onTopic": "{{pct}} % themenrelevant",
+      "offTopic": "{{count}} themenfremd",
+      "score": "SFS {{score}}",
+      "average": "Branchendurchschnitt",
+      "target": "Zielwert",
+      "position": "Deine Position: {{rank}} von {{total}}",
+      "chart": "Site Focus Score nach Website"
+    },
+    "failure": {
+      "title": "Nicht bewertet",
+      "crawl-error": "Crawl fehlgeschlagen: {{error}}",
+      "no-pages": "Keine crawlbaren Seiten (durch robots.txt blockiert oder nicht erreichbar).",
+      "analysis-failed": "Analyse fehlgeschlagen: {{error}}",
+      "cancelled": "Vor der Bewertung abgebrochen."
+    },
+    "insights": {
+      "title": "Erkenntnisse",
+      "on-topic-share": "{{own}} % deiner Inhalte sind themenrelevant, bei den Top 3 sind es {{leaders}} % (Abstand: {{delta}} Punkte).",
+      "off-topic-pages": "Du hast {{own}} themenfremde Seiten; die Top 3 haben durchschnittlich {{leaders}}.",
+      "keyword-coverage": "Deine Website deckt {{pct}} % ({{covered}} von {{total}}) der Kernthema-Keywords ab, die die Top 3 verwenden.",
+      "versus-average": "Dein Wert weicht um {{delta}} Punkte vom Branchendurchschnitt von {{average}} ab."
+    },
+    "gaps": {
+      "title": "Cluster-Lücken, die bei Wettbewerbern sichtbar sind",
+      "coverage": "{{pct}} % der Wettbewerber ({{count}})",
+      "empty": "Auf deiner Website fehlt kein Thema der Wettbewerber.",
+      "apply": "Diese Begriffe in die Lückenanalyse übernehmen"
+    }
   }
 }
