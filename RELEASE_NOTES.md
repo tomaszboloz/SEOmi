@@ -1,4 +1,11 @@
-# SEOmi 0.2.0 — release notes
+# SEOmi 0.2.1 — release notes
+
+## Added
+
+- PDF audit and crawl reports follow the interface language (all 12 UI languages, right-to-left included), falling back to English per missing label.
+- Contextual help bubbles (?) next to key metrics in Overview, Metadata, Headings, Images, Links and Settings: what it is, why it matters, what to do.
+
+## 0.2.0
 
 ## Added
 
