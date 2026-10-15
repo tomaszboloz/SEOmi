@@ -3,6 +3,7 @@ import { useTranslation } from "react-i18next";
 import { Clock, Sparkles } from "lucide-react";
 import type { PageAuditData } from "@/types";
 import { useUIStore } from "@/stores/uiStore";
+import { HelpTip } from '@/components/Help/HelpTip';
 
 interface OverviewContentCardProps {
   audit: PageAuditData;
@@ -17,8 +18,9 @@ export const OverviewContentCard: React.FC<OverviewContentCardProps> = ({
   return (
     <div className="p-5 rounded-2xl bg-slate-900/60 border border-slate-800 flex flex-col justify-between">
       <div className="flex items-center justify-between">
-        <span className="text-xs font-semibold text-slate-400 uppercase tracking-wider">
+        <span className="inline-flex items-center gap-1 text-xs font-semibold text-slate-400 uppercase tracking-wider">
           {t("overview.wordCount")}
+          <HelpTip id="overview.wordCount" />
         </span>
         <button
           onClick={() => openModal("ai")}

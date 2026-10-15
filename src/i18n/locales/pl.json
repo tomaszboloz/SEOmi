@@ -5766,5 +5766,111 @@
       "genericWarning": "Sprawdź dotknięte strony i popraw zgłoszony element.",
       "genericNotice": "Opcjonalne usprawnienie: sprawdź dotknięte strony, gdy będzie czas."
     }
+  },
+  "help": {
+    "overview": {
+      "healthScore": {
+        "title": "Wynik zdrowia strony",
+        "what": "Jedna liczba od 0 do 100, która podsumowuje, ile problemów technicznych i on-page SEO SEOmi znalazł na tej jednej stronie. 100 oznacza, że niczego nie wykryto. Każdy problem odejmuje punkty, a poważne odejmują więcej niż drobne.",
+        "why": "Wyszukiwarki i użytkownicy wolą strony, które się ładują, da się je przeczytać i łatwo zrozumieć. Niski wynik zwykle oznacza, że coś blokuje pozycjonowanie, na przykład brak tytułu, błędny kod odpowiedzi albo znacznik noindex. Wynik to szybka ocena stanu, a nie czynnik rankingowy, który czyta Google.",
+        "action": "Sprawdź kolor: 85 i więcej (zielony) to dobry stan, 65 do 84 (żółty) wymaga uwagi, poniżej 65 (czerwony) trzeba działać od razu.\nOtwórz listę problemów niżej na tym ekranie i zacznij od pozycji Krytycznych.\nNapraw jeden problem, uruchom audyt ponownie i zobacz, jak rośnie wynik.\nNie goń za 100 za wszelką cenę: 90 punktów i świetna treść są lepsze niż 100 na stronie z cienką treścią.",
+        "example": "Strona bez tytułu (Krytyczny), bez meta description (Ostrzeżenie) i z dwoma obrazami bez tekstu alternatywnego (Info) może dostać około 68 punktów. Dodanie tytułu i opisu zwykle podnosi wynik powyżej 85.",
+        "learnMore": "Wynik obejmuje tylko to, co SEOmi potrafi zmierzyć na tej jednej stronie. Nie ocenia jakości treści, linków przychodzących ani konkurencji."
+      },
+      "httpStatus": {
+        "title": "Kod odpowiedzi HTTP",
+        "what": "Trzycyfrowa odpowiedź, którą serwer WWW daje na każde zapytanie i która mówi, czy strona została dostarczona. 200 oznacza, że wszystko w porządku, 301 i 302 że strona została przeniesiona, 404 że nie znaleziono, 410 że usunięto na stałe, a 500 i więcej że zawiódł sam serwer.",
+        "why": "Google indeksuje tylko strony odpowiadające kodem 200 (albo przekierowane na taką stronę). Strona z kodem 404 lub 5xx znika z wyników wyszukiwania, a użytkownik widzi błąd. Nawet krótka awaria 500 może sprawić, że Googlebot rzadziej odwiedza witrynę.",
+        "action": "200: nic nie rób, to poprawny wynik.\n301 lub 302: sprawdź, czy adres docelowy to strona, na którą mają trafiać ludzie. Do stałych zmian używaj 301.\n404 lub 410: przywróć stronę albo przekieruj stary adres kodem 301 na najbardziej pasującą stronę.\n5xx: poproś firmę hostingową lub programistę o sprawdzenie logów serwera, potem uruchom audyt ponownie.\nPo naprawie sprawdź ponownie, czy status to 200.",
+        "example": "Zmieniasz adres /blog/porady-seo na /blog/poradnik-seo i zapominasz o przekierowaniu. Stary adres zwraca 404, więc każdy link i wynik w Google prowadzi do błędu. Przekierowanie 301 ze starego adresu na nowy naprawia sprawę."
+      },
+      "responseTime": {
+        "title": "Czas odpowiedzi serwera",
+        "what": "Liczba milisekund (1000 ms to 1 sekunda), której serwer potrzebował, żeby zacząć wysyłać tę stronę po zapytaniu SEOmi. To pomiar serwera, a nie czasu wyświetlenia strony w przeglądarce.",
+        "why": "Wolny serwer opóźnia wszystko, co dzieje się potem, więc użytkownicy wychodzą, a Google skanuje mniej Twoich stron. Google zaleca odpowiedź serwera poniżej około 200 ms. Powyżej 1000 ms jest wyraźnie wolno.",
+        "action": "Poniżej 200 ms: świetnie, nic nie zmieniaj.\n200 do 600 ms: akceptowalnie; rozważ cache, jeśli strona jest głównie statyczna.\nPowyżej 600 ms: włącz cache stron (lub CDN) i kompresję odpowiedzi.\nPowyżej 1000 ms: sprawdź jakość hostingu, ciężkie zapytania do bazy i wolne wtyczki.\nZmierz 2 lub 3 razy, bo pojedynczy odczyt może być jednorazowym skokiem.",
+        "example": "Wpis blogowy, który na współdzielonym hostingu odpowiada w 1800 ms, po włączeniu wtyczki z pełnym cache często schodzi do 150 do 300 ms."
+      },
+      "severityCounts": {
+        "title": "Liczba problemów według wagi",
+        "what": "Problemy znalezione na tej stronie, pogrupowane według powagi. Krytyczne mogą uniemożliwić pozycjonowanie albo działanie strony. Ostrzeżenia to realne słabości, które kosztują ruch lub kliknięcia. Info to drobne usprawnienia lub informacje warte uwagi.",
+        "why": "Podział mówi, co naprawiać najpierw. Dziesięć pozycji Info znaczy mniej niż jedna Krytyczna, więc nie stracisz dnia na kosmetykę, kiedy błędny znacznik canonical ukrywa stronę przed Google.",
+        "action": "Najpierw napraw wszystkie problemy Krytyczne, potem uruchom audyt ponownie.\nPrzejdź przez Ostrzeżenia, zaczynając od tych, które dotyczą wielu stron.\nPozycje Info traktuj jak zaległości na czas, gdy będzie wolna chwila.\nCelem jest 0 przy Krytycznych, a nie 0 wszędzie.",
+        "example": "3 Krytyczne, 5 Ostrzeżeń, 9 Info: zacznij od trzech Krytycznych, na przykład braku tytułu, znacznika noindex i błędu 404 na głównym obrazie."
+      },
+      "wordCount": {
+        "title": "Liczba słów",
+        "what": "Liczba słów widocznego tekstu, które SEOmi znalazł w głównej treści strony. Menu, skrypty i ukryty kod nie są liczone. Czas czytania jest szacowany na około 200 słów na minutę.",
+        "why": "Strony z bardzo małą ilością tekstu dają wyszukiwarkom mało do zrozumienia, co nazywa się cienką treścią. Dłużej nie znaczy automatycznie lepiej: strona musi w pełni odpowiadać na to, po co przyszedł użytkownik.",
+        "action": "Poniżej 300 słów: zapytaj siebie, czy strona naprawdę odpowiada na pytanie. Jeśli nie, dodaj konkretne informacje.\n300 do 1000 słów: normalne dla większości stron usług i produktów.\nPowyżej 1500 słów: typowe dla pogłębionych poradników; podziel tekst nagłówkami na łatwe do przejrzenia części.\nPorównuj się z najlepszymi wynikami Google dla swojej frazy, a nie z magiczną liczbą.",
+        "example": "Karta produktu z 80 słowami zwykle przegrywa z konkurencją, która w 400 słowach opisuje materiały, rozmiary, dostawę i zwroty."
+      }
+    },
+    "metadata": {
+      "titleLength": {
+        "title": "Długość tytułu strony",
+        "what": "Tytuł to niebieski, klikalny nagłówek w wynikach Google oraz napis na karcie przeglądarki. Długość liczymy w znakach, razem ze spacjami.",
+        "why": "Google pokazuje około 50 do 60 znaków (mniej więcej 580 pikseli). Dłuższe tytuły są ucinane wielokropkiem, więc słowa kluczowe i marka mogą zniknąć. Zbyt krótki tytuł marnuje szansę na opisanie strony i zachęcenie do kliknięcia.",
+        "action": "Celuj w 40 do 65 znaków (w tym zakresie SEOmi pokazuje kolor zielony).\nUmieść główną frazę blisko początku.\nKażda strona powinna mieć unikalny tytuł.\nDodaj nazwę marki na końcu, jeśli się mieści, na przykład po myślniku.\nPisz dla ludzi: obiecaj to, co użytkownik dostanie.\nZapisz zmianę i uruchom audyt ponownie, żeby zobaczyć zielony licznik.",
+        "example": "\"Tanie buty\" (10 znaków) to za mało. \"Buty do biegania męskie online | Darmowy zwrot | SportSklep\" ma 56 znaków i się mieści."
+      },
+      "metaDescription": {
+        "title": "Meta description (opis strony)",
+        "what": "Jedno lub dwa zdania podsumowujące stronę, ukryte w kodzie, które Google często pokazuje pod tytułem w wynikach wyszukiwania. Na samej stronie nie jest widoczne.",
+        "why": "Nie wpływa bezpośrednio na pozycję, ale czytelny, zachęcający opis zwiększa odsetek osób klikających Twój wynik (CTR), czyli daje więcej odwiedzin z tej samej pozycji. Gdy go brakuje, Google układa własny fragment, często przypadkowy kawałek tekstu.",
+        "action": "Napisz unikalny opis dla każdej strony.\nMieść się między 120 a 160 znakami, żeby nie został ucięty.\nUżyj głównej frazy naturalnie, bo Google pogrubia słowa pasujące do zapytania.\nPowiedz, co zyska użytkownik, i dodaj wezwanie do działania, na przykład \"Sprawdź ceny\" lub \"Dowiedz się jak\".\nNie kopiuj pierwszego akapitu strony.",
+        "example": "\"Jak wybrać buty do biegania w 5 krokach: dopasowanie, amortyzacja, waga, cena i teren. Zawiera darmową tabelę rozmiarów i porady zakupowe.\" (około 140 znaków)."
+      }
+    },
+    "headings": {
+      "h1Count": {
+        "title": "Liczba nagłówków H1",
+        "what": "H1 to główny nagłówek strony, największy tytuł widoczny na górze treści. To coś innego niż tag title na karcie przeglądarki. Nagłówki H2 do H6 to mniejsze śródtytuły poniżej niego.",
+        "why": "H1 jednym zdaniem mówi użytkownikom i wyszukiwarkom, o czym jest strona. Brak H1 sprawia, że strona wygląda na nieuporządkowaną dla czytników ekranu. Kilka H1 nie jest błędem dla Google, ale rozmywa przekaz i myli narzędzia dostępności.",
+        "action": "Celem jest dokładnie jeden H1 na stronę.\nJeśli jest 0: dodaj na górze treści jeden, który opisuje stronę i zawiera główną frazę.\nJeśli jest 2 lub więcej: zostaw najlepszy, a pozostałe zmień na H2 lub H3.\nNie używaj H1 tylko do ozdoby; do rozmiaru użyj CSS.",
+        "example": "Na stronie z przepisem H1 to \"Łatwe domowe ciasto na pizzę\", a kroki niżej to nagłówki H2: \"Składniki\", \"Sposób przygotowania\", \"Wskazówki\"."
+      }
+    },
+    "images": {
+      "overview": {
+        "title": "Znalezione obrazy",
+        "what": "Liczba obrazów wykrytych na stronie wraz z kontrolą każdego z nich: tekst alternatywny alt (krótki opis dla osób, które nie widzą obrazu), atrybuty rozmiaru, format i waga pliku.",
+        "why": "Obrazy są zwykle najcięższą częścią strony, więc ją spowalniają. Brak tekstu alt krzywdzi osoby niewidome i odbiera szansę na pojawienie się w Grafice Google. Brak szerokości i wysokości powoduje skakanie strony podczas ładowania (przesunięcie układu).",
+        "action": "Dla każdego istotnego obrazu napisz krótki, trafny tekst alt. Dla ozdobnych zostaw pusty alt.\nUstaw atrybuty width i height, żeby przeglądarka zarezerwowała miejsce.\nSkompresuj zdjęcia; staraj się, by każde miało poniżej 150 KB.\nUżywaj nowoczesnych formatów, takich jak WebP lub AVIF.\nWłącz leniwe ładowanie dla obrazów poniżej pierwszego ekranu.",
+        "example": "alt=\"Czerwony but do biegania, widok z boku\" jest dobry. alt=\"image1.jpg\" albo upchana lista fraz już nie."
+      }
+    },
+    "links": {
+      "overview": {
+        "title": "Linki na stronie",
+        "what": "Liczba wszystkich linków znalezionych przez SEOmi, podzielona na wewnętrzne (do Twojej witryny), zewnętrzne (do innych witryn) i nofollow (oznaczone tak, by wyszukiwarki nie przekazywały przez nie zaufania).",
+        "why": "Linki wewnętrzne pomagają Google odkrywać strony i rozumieć, które są ważne. Linki zewnętrzne do dobrych źródeł zwiększają wiarygodność treści. Zepsute linki irytują użytkowników i marnują budżet skanowania.",
+        "action": "Sprawdź, czy strona linkuje do ważnych powiązanych stron opisowym tekstem, a nie \"kliknij tutaj\".\nNapraw lub usuń każdy link zwracający 404.\nLinkuj na zewnątrz tylko do wiarygodnych źródeł; dla płatnych lub niepewnych dodaj nofollow.\nZachowaj rozsądną liczbę: kilkadziesiąt na zwykłej stronie, a nie setki.\nSprawdź ryzyka bezpieczeństwa, na przykład linki otwierające nową kartę bez rel=\"noopener\".",
+        "example": "Poradnik o butach do biegania powinien linkować do strony \"tabela rozmiarów\" z tekstem kotwicy \"tabela rozmiarów\"."
+      }
+    },
+    "settings": {
+      "theme": {
+        "title": "Motyw",
+        "what": "Wybiera wygląd SEOmi: Ciemny, Jasny albo Systemowy, który podąża za ustawieniem Twojego komputera.",
+        "why": "Nie zmienia żadnego wyniku audytu. Wybierz to, co jest najwygodniejsze dla oczu: ciemny motyw zmniejsza olśnienie w słabo oświetlonym pokoju, jasny jest czytelniejszy w pełnym słońcu, a Systemowy przełącza się sam wieczorem.",
+        "action": "Kliknij Ciemny, Jasny lub Systemowy.\nZmiana działa od razu i jest zapamiętywana przy następnym uruchomieniu.\nJeśli udostępniasz ekran lub drukujesz raporty, Jasny jest zwykle czytelniejszy na projektorze.",
+        "example": "Wybierz Systemowy, jeśli Twój komputer wieczorem przechodzi w tryb ciemny i chcesz, by SEOmi robił to samo."
+      },
+      "auditNotifications": {
+        "title": "Powiadomienia o audycie",
+        "what": "Po włączeniu SEOmi wysyła powiadomienie na pulpit, gdy tylko skończy się długi audyt, skanowanie lub zaplanowane sprawdzenie, nawet jeśli aplikacja działa w tle.",
+        "why": "Duże skanowania trwają minuty lub godziny. Powiadomienia pozwalają zająć się czymś innym i wrócić w odpowiednim momencie. Informują też o zaplanowanych sprawdzeniach zakończonych pod Twoją nieobecność.",
+        "action": "Włącz przełącznik, jeśli uruchamiasz skanowania lub harmonogramy.\nGdy system zapyta o zgodę, wybierz Zezwól. Jeśli wcześniej odmówiono, włącz powiadomienia dla SEOmi w ustawieniach systemu.\nWyłącz, jeśli wyskakujące okienka Cię rozpraszają.\nTekst pod przełącznikiem pokazuje, czy zgoda została udzielona.",
+        "example": "Uruchom skanowanie 5000 stron, przejdź do poczty i dostań powiadomienie, gdy będzie gotowe."
+      }
+    }
+  },
+  "helpUi": {
+    "what": "Co to jest",
+    "why": "Dlaczego to ważne",
+    "action": "Co zrobić",
+    "example": "Przykład",
+    "learnMore": "Dowiedz się więcej"
   }
 }

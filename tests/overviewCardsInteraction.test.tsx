@@ -22,7 +22,7 @@ describe('OverviewContentCard and OverviewQuickWins actions', () => {
 
   it('triggers openModal("ai") when clicking AI fix button in OverviewContentCard', () => {
     render(<OverviewContentCard audit={mockAudit} />);
-    const aiButton = screen.getByRole('button');
+    const aiButton = screen.getByRole('button', { name: /ai/i });
     fireEvent.click(aiButton);
     expect(useUIStore.getState().activeModal).toBe('ai');
   });
