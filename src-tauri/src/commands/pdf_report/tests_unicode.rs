@@ -10,7 +10,7 @@ fn pdf_of(lines: &[&str]) -> Vec<u8> {
         date: "d".into(),
         note: "n".into(),
         brand: "b".into(),
-        page_label: "{page}/{total}".into(),
+        page_label: "{{page}}/{{total}}".into(),
     };
     let mut doc = Doc::new(chrome);
     for line in lines {

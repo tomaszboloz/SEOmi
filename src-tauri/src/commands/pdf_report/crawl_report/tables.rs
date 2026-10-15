@@ -1,4 +1,4 @@
-use super::strings::{report as s, t};
+use super::strings::{report as s, t, tf};
 use crate::commands::pdf_report::layout::color::{CRITICAL, MUTED, OK, WARNING};
 use crate::commands::pdf_report::layout::doc::{Doc, CONTENT_W, MARGIN};
 use crate::commands::pdf_report::layout::table::{Cell, Column};
@@ -90,12 +90,12 @@ impl Doc {
             self.skip(4.0);
         }
         if table.rows.is_empty() {
-            self.paragraph(MARGIN, CONTENT_W, Style::BODY.colored(OK), s::NONE_FOUND);
+            self.paragraph(MARGIN, CONTENT_W, Style::BODY.colored(OK), t(s::NONE_FOUND));
             return self.skip(10.0);
         }
         let mut rows = table.rows.clone();
         if table.omitted > 0 {
-            let note = t(s::MORE_ROWS, &[&table.omitted.to_string()]);
+            let note = tf(t(s::MORE_ROWS), &[&table.omitted.to_string()]);
             let mut row = vec![Cell::styled(note, Style::BODY.colored(MUTED), None)];
             row.extend((1..table.columns.len()).map(|_| Cell::new(dash(""))));
             rows.push(row);

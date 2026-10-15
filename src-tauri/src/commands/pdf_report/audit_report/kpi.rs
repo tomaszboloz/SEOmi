@@ -1,5 +1,5 @@
 use super::ctx::{format_number, Ctx};
-use super::strings::{report as s, t};
+use super::strings::{report as s, t, tf};
 use crate::commands::pdf_report::layout::color::{Rgb, CRITICAL, MUTED, OK, TEXT, WARNING};
 use crate::commands::pdf_report::layout::text::EMPTY;
 use crate::commands::pdf_report::layout::widgets::Kpi;
@@ -41,21 +41,21 @@ pub fn kpis(ctx: &Ctx) -> Vec<Kpi> {
     let note = |has: bool, ok: &str, bad: &str| if has { ok } else { bad }.to_owned();
     vec![
         kpi(
-            s::KPI_HTTP,
+            t(s::KPI_HTTP),
             ctx.count("/http_status"),
-            s::HTTP_NOTE.into(),
+            t(s::HTTP_NOTE).into(),
             http_color(ctx.number("/http_status")),
         ),
         kpi(
-            s::KPI_TIME,
-            time.map(|v| t(s::MS, &[&format_number(v)])),
-            note(slow, s::SLOW, s::FAST),
+            t(s::KPI_TIME),
+            time.map(|v| tf(t(s::MS), &[&format_number(v)])),
+            note(slow, t(s::SLOW), t(s::FAST)),
             if slow { WARNING } else { OK },
         ),
         kpi(
-            s::KPI_TITLE,
+            t(s::KPI_TITLE),
             title,
-            s::CHARACTERS.into(),
+            t(s::CHARACTERS).into(),
             if ctx.issue(&["meta_title"]).is_some() {
                 WARNING
             } else {
@@ -63,34 +63,34 @@ pub fn kpis(ctx: &Ctx) -> Vec<Kpi> {
             },
         ),
         kpi(
-            s::KPI_DESCRIPTION,
+            t(s::KPI_DESCRIPTION),
             ctx.audit
                 .get("meta_tags")
-                .map(|_| note(description.is_some(), s::PRESENT, s::MISSING)),
+                .map(|_| note(description.is_some(), t(s::PRESENT), t(s::MISSING))),
             description
                 .as_ref()
                 .and(ctx.count("/meta_tags/description_length"))
-                .map(|n| t(s::CHARS_NOTE, &[&n]))
+                .map(|n| tf(t(s::CHARS_NOTE), &[&n]))
                 .unwrap_or_default(),
             if description.is_some() { OK } else { CRITICAL },
         ),
         kpi(
-            s::KPI_H1,
+            t(s::KPI_H1),
             h1.map(format_number),
-            s::H1_NOTE.into(),
+            t(s::H1_NOTE).into(),
             if h1 == Some(1.0) { OK } else { WARNING },
         ),
         kpi(
-            s::KPI_IMAGES,
+            t(s::KPI_IMAGES),
             ctx.audit.get("images").map(|_| images.len().to_string()),
-            t(s::NO_ALT_NOTE, &[&without_alt.to_string()]),
+            tf(t(s::NO_ALT_NOTE), &[&without_alt.to_string()]),
             if without_alt == 0 { OK } else { WARNING },
         ),
         kpi(
-            s::KPI_LINKS,
+            t(s::KPI_LINKS),
             ctx.count("/links/total_links"),
-            t(
-                s::LINKS_NOTE,
+            tf(
+                t(s::LINKS_NOTE),
                 &[
                     &ctx.count("/links/internal_links").unwrap_or_default(),
                     &ctx.count("/links/external_links").unwrap_or_default(),
@@ -99,9 +99,9 @@ pub fn kpis(ctx: &Ctx) -> Vec<Kpi> {
             TEXT,
         ),
         kpi(
-            s::KPI_WORDS,
+            t(s::KPI_WORDS),
             ctx.count("/content_stats/word_count"),
-            s::WORDS_NOTE.into(),
+            t(s::WORDS_NOTE).into(),
             TEXT,
         ),
     ]

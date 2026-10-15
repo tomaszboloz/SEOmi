@@ -1,6 +1,6 @@
 use super::ctx::{field, list_at, text_at};
 use super::locate_tech::tech_items;
-use super::strings::{loc as l, t};
+use super::strings::{loc as l, t, tf};
 use serde_json::Value;
 
 /// Where a finding applies: the page plus every location datum available.
@@ -11,18 +11,18 @@ pub fn where_items(audit: &Value, code: &str, params: Option<&Value>) -> Vec<Str
         specific = tech_items(audit, code, params);
     }
     let head = if specific.is_empty() {
-        l::WHOLE_PAGE
+        t(l::WHOLE_PAGE)
     } else {
-        l::PAGE
+        t(l::PAGE)
     };
-    let mut items = vec![t(head, &[&url])];
+    let mut items = vec![tf(head, &[&url])];
     items.extend(specific);
     items
 }
 
 fn element(tag: &str, current: Option<String>) -> Vec<String> {
-    let mut items = vec![t(l::ELEMENT, &[tag])];
-    items.extend(current.map(|value| t(l::CURRENT, &[&value])));
+    let mut items = vec![tf(t(l::ELEMENT), &[tag])];
+    items.extend(current.map(|value| tf(t(l::CURRENT), &[&value])));
     items
 }
 
@@ -30,7 +30,7 @@ fn images_where(audit: &Value, keep: impl Fn(&Value) -> bool) -> Vec<String> {
     list_at(audit, "/images")
         .iter()
         .filter(|image| keep(image))
-        .map(|image| t(l::IMAGE, &[&field(image, "src").unwrap_or_default()]))
+        .map(|image| tf(t(l::IMAGE), &[&field(image, "src").unwrap_or_default()]))
         .collect()
 }
 
@@ -39,11 +39,11 @@ fn links_where(audit: &Value, keep: impl Fn(&Value) -> bool) -> Vec<String> {
         .iter()
         .filter(|link| keep(link))
         .map(|link| match field(link, "text") {
-            Some(anchor) => t(
-                l::LINK_TEXT,
+            Some(anchor) => tf(
+                t(l::LINK_TEXT),
                 &[&field(link, "href").unwrap_or_default(), &anchor],
             ),
-            None => t(l::LINK, &[&field(link, "href").unwrap_or_default()]),
+            None => tf(t(l::LINK), &[&field(link, "href").unwrap_or_default()]),
         })
         .collect()
 }
@@ -57,7 +57,7 @@ fn headings_where(audit: &Value, code: &str) -> Vec<String> {
     }
     let found: Vec<String> = list_at(audit, "/headings/h1_texts")
         .iter()
-        .filter_map(|text| text.as_str().map(|text| t(l::H1, &[text])))
+        .filter_map(|text| text.as_str().map(|text| tf(t(l::H1), &[text])))
         .collect();
     if found.is_empty() {
         element("<h1>", None)
@@ -100,9 +100,9 @@ fn page_items(audit: &Value, code: &str) -> Vec<String> {
         })
     } else if is("indexability_xrobots") {
         let header = text_at(audit, "/indexability/x_robots_tag");
-        vec![t(l::HEADER, &["X-Robots-Tag"])]
+        vec![tf(t(l::HEADER), &["X-Robots-Tag"])]
             .into_iter()
-            .chain(header.map(|value| t(l::CURRENT, &[&value])))
+            .chain(header.map(|value| tf(t(l::CURRENT), &[&value])))
             .collect()
     } else {
         Vec::new()

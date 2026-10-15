@@ -1,5 +1,5 @@
 use super::ctx::Ctx;
-use super::strings::report as s;
+use super::strings::{report as s, t};
 use crate::commands::pdf_report::layout::color::{Rgb, MUTED, OK, WARNING};
 use crate::commands::pdf_report::layout::text::EMPTY;
 
@@ -13,9 +13,9 @@ pub enum Status {
 impl Status {
     pub fn label(self) -> &'static str {
         match self {
-            Status::Ok => s::STATUS_OK,
-            Status::Attention => s::STATUS_ATTENTION,
-            Status::Info => s::STATUS_INFO,
+            Status::Ok => t(s::STATUS_OK),
+            Status::Attention => t(s::STATUS_ATTENTION),
+            Status::Info => t(s::STATUS_INFO),
         }
     }
 
@@ -58,7 +58,7 @@ impl Check {
     /// Passes unless the value is missing, which needs the given advice.
     pub fn required(name: &str, value: Option<String>, advice: &str) -> Check {
         match value {
-            Some(_) => Check::new(name, value, Status::Ok, s::NO_ACTION),
+            Some(_) => Check::new(name, value, Status::Ok, t(s::NO_ACTION)),
             None => Check::new(name, None, Status::Attention, advice),
         }
     }
@@ -69,7 +69,7 @@ impl Ctx<'_> {
     pub fn judged(&self, name: &str, value: Option<String>, prefixes: &[&str]) -> Check {
         match self.issue(prefixes) {
             Some(found) => Check::new(name, value, Status::Attention, &found.recommendation),
-            None if value.is_some() => Check::new(name, value, Status::Ok, s::NO_ACTION),
+            None if value.is_some() => Check::new(name, value, Status::Ok, t(s::NO_ACTION)),
             None => Check::info(name, None),
         }
     }
@@ -89,11 +89,11 @@ impl Ctx<'_> {
         match self.issue(prefixes) {
             Some(found) => Check::new(name, value, Status::Attention, &found.recommendation),
             None if count > 0 => Check::new(name, value, Status::Attention, fallback),
-            None => Check::new(name, value, Status::Ok, s::NO_ACTION),
+            None => Check::new(name, value, Status::Ok, t(s::NO_ACTION)),
         }
     }
 }
 
 pub fn yes_no(flag: Option<bool>) -> Option<String> {
-    flag.map(|value| if value { s::YES } else { s::NO }.to_owned())
+    flag.map(|value| if value { t(s::YES) } else { t(s::NO) }.to_owned())
 }

@@ -1,5 +1,5 @@
 use super::data::{f, joined, list, Crawl};
-use super::strings::report as s;
+use super::strings::{report as s, t};
 use super::tables::Table;
 use serde_json::Value;
 
@@ -22,9 +22,9 @@ pub fn robots_rules(c: &Crawl) -> Vec<Table> {
         .iter()
         .map(|agent| {
             let group = if agent.get("specific_group").and_then(Value::as_bool) == Some(true) {
-                s::YES
+                t(s::YES)
             } else {
-                s::NO
+                t(s::NO)
             };
             vec![
                 f(agent, "user_agent"),
@@ -52,24 +52,29 @@ pub fn robots_rules(c: &Crawl) -> Vec<Table> {
             ]
         })
         .collect();
-    let rule_cols = [(s::COL_DIRECTIVE, 25.0), (s::COL_PATH, 75.0)];
+    let rule_cols = [(t(s::COL_DIRECTIVE), 25.0), (t(s::COL_PATH), 75.0)];
     let matrix_cols = [
-        (s::COL_AGENT, 38.0),
-        (s::COL_GROUP, 12.0),
-        (s::COL_RULES, 38.0),
-        (s::COL_DELAY_MS, 12.0),
+        (t(s::COL_AGENT), 38.0),
+        (t(s::COL_GROUP), 12.0),
+        (t(s::COL_RULES), 38.0),
+        (t(s::COL_DELAY_MS), 12.0),
     ];
     let chain_cols = [
-        (s::COL_FROM, 38.0),
-        (s::COL_STATUS, 10.0),
-        (s::COL_TO, 38.0),
-        (s::COL_TIME, 14.0),
+        (t(s::COL_FROM), 38.0),
+        (t(s::COL_STATUS), 10.0),
+        (t(s::COL_TO), 38.0),
+        (t(s::COL_TIME), 14.0),
     ];
     vec![
-        Table::text(s::T_RULES, None, &rule_cols, applicable),
-        Table::text(s::T_AGENTS, None, &matrix_cols, matrix),
-        Table::text(s::T_DIRECTIVES, None, &[(s::COL_URL, 100.0)], directives),
-        Table::text(s::T_ROBOTS_CHAIN, None, &chain_cols, chain),
+        Table::text(t(s::T_RULES), None, &rule_cols, applicable),
+        Table::text(t(s::T_AGENTS), None, &matrix_cols, matrix),
+        Table::text(
+            t(s::T_DIRECTIVES),
+            None,
+            &[(t(s::COL_URL), 100.0)],
+            directives,
+        ),
+        Table::text(t(s::T_ROBOTS_CHAIN), None, &chain_cols, chain),
     ]
 }
 
@@ -86,11 +91,11 @@ pub fn sitemap_and_rejected(c: &Crawl) -> Vec<Table> {
         .map(|r| vec![f(r, "url"), f(r, "reason")])
         .collect();
     vec![
-        Table::text(s::T_SITEMAP_URLS, None, &[(s::COL_URL, 100.0)], urls),
+        Table::text(t(s::T_SITEMAP_URLS), None, &[(t(s::COL_URL), 100.0)], urls),
         Table::text(
-            s::T_REJECTED,
+            t(s::T_REJECTED),
             None,
-            &[(s::COL_URL, 55.0), (s::COL_REASON, 45.0)],
+            &[(t(s::COL_URL), 55.0), (t(s::COL_REASON), 45.0)],
             rejected,
         ),
     ]
@@ -108,9 +113,14 @@ pub fn indexability_reasons(c: &Crawl) -> Table {
         })
         .collect();
     let columns = [
-        (s::COL_URL, 34.0),
-        (s::COL_VERDICT, 12.0),
-        (s::COL_REASONS, 54.0),
+        (t(s::COL_URL), 34.0),
+        (t(s::COL_VERDICT), 12.0),
+        (t(s::COL_REASONS), 54.0),
     ];
-    Table::text(s::T_REASONS, Some(s::REASONS_INTRO.into()), &columns, rows)
+    Table::text(
+        t(s::T_REASONS),
+        Some(t(s::REASONS_INTRO).into()),
+        &columns,
+        rows,
+    )
 }

@@ -1,5 +1,5 @@
 use super::check::{Check, Section, Status};
-use super::strings::{report as s, t};
+use super::strings::{report as s, t, tf};
 use crate::commands::pdf_report::layout::color::{MUTED, OK};
 use crate::commands::pdf_report::layout::doc::{Doc, CONTENT_W, MARGIN};
 use crate::commands::pdf_report::layout::table::{Cell, Column};
@@ -27,12 +27,12 @@ fn rows(checks: &[Check]) -> Vec<Vec<Cell>> {
 
 impl Doc {
     pub fn details(&mut self, sections: &[Section]) {
-        self.heading(s::DETAILS);
+        self.heading(t(s::DETAILS));
         let columns = [
-            Column::new(s::COL_CHECK, 22.0),
-            Column::new(s::COL_VALUE, 29.0),
-            Column::new(s::COL_STATUS, 15.0),
-            Column::new(s::COL_ADVICE, 34.0),
+            Column::new(t(s::COL_CHECK), 22.0),
+            Column::new(t(s::COL_VALUE), 29.0),
+            Column::new(t(s::COL_STATUS), 15.0),
+            Column::new(t(s::COL_ADVICE), 34.0),
         ];
         for section in sections {
             self.ensure(70.0);
@@ -57,14 +57,20 @@ impl Doc {
             .filter(|(_, names): &(&str, Vec<&str>)| !names.is_empty())
             .collect();
         let count: usize = passed.iter().map(|(_, names)| names.len()).sum();
-        self.heading(s::PASSED);
+        self.heading(t(s::PASSED));
         if count == 0 {
-            return self.paragraph(MARGIN, CONTENT_W, Style::BODY, s::NOTHING_PASSED);
+            return self.paragraph(MARGIN, CONTENT_W, Style::BODY, t(s::NOTHING_PASSED));
         }
-        let summary = t(s::PASSED_SUMMARY, &[&count.to_string(), &total.to_string()]);
+        let summary = tf(
+            t(s::PASSED_SUMMARY),
+            &[&count.to_string(), &total.to_string()],
+        );
         self.paragraph(MARGIN, CONTENT_W, Style::BODY.colored(OK).bold(), &summary);
         self.skip(6.0);
-        let table = [Column::new(s::COL_AREA, 26.0), Column::new(s::PASSED, 74.0)];
+        let table = [
+            Column::new(t(s::COL_AREA), 26.0),
+            Column::new(t(s::PASSED), 74.0),
+        ];
         let body = passed
             .iter()
             .map(|(title, names)| {

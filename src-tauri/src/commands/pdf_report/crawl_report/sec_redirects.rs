@@ -1,5 +1,5 @@
 use super::data::{list, num, Crawl};
-use super::strings::{report as s, t};
+use super::strings::{report as s, t, tf};
 use super::tables::Table;
 use crate::commands::pdf_report::audit_report::ctx::{field, format_number};
 use crate::commands::pdf_report::layout::text::EMPTY;
@@ -9,8 +9,8 @@ fn hops(page: &serde_json::Value) -> String {
         .iter()
         .map(|hop| {
             let status = num(hop, "http_status").map_or_else(|| EMPTY.into(), format_number);
-            t(
-                s::HOP,
+            tf(
+                t(s::HOP),
                 &[&status, &field(hop, "to_url").unwrap_or_default()],
             )
         })
@@ -36,15 +36,15 @@ pub fn redirects(c: &Crawl) -> Table {
         })
         .collect();
     let columns = [
-        (s::COL_URL, 22.0),
-        (s::COL_HOPS, 6.0),
-        (s::COL_CHAIN, 36.0),
-        (s::COL_FINAL, 22.0),
-        (s::COL_STOP, 14.0),
+        (t(s::COL_URL), 22.0),
+        (t(s::COL_HOPS), 6.0),
+        (t(s::COL_CHAIN), 36.0),
+        (t(s::COL_FINAL), 22.0),
+        (t(s::COL_STOP), 14.0),
     ];
     Table::text(
-        s::T_REDIRECTS,
-        Some(s::REDIRECT_INTRO.into()),
+        t(s::T_REDIRECTS),
+        Some(t(s::REDIRECT_INTRO).into()),
         &columns,
         rows,
     )
@@ -64,11 +64,11 @@ pub fn client_redirects(c: &Crawl) -> Table {
         }
     }
     let columns = [
-        (s::COL_URL, 28.0),
-        (s::COL_SOURCE, 14.0),
-        (s::COL_DECLARATION, 28.0),
-        (s::COL_TARGET, 22.0),
-        (s::COL_DELAY, 8.0),
+        (t(s::COL_URL), 28.0),
+        (t(s::COL_SOURCE), 14.0),
+        (t(s::COL_DECLARATION), 28.0),
+        (t(s::COL_TARGET), 22.0),
+        (t(s::COL_DELAY), 8.0),
     ];
-    Table::text(s::T_CLIENT_REDIRECTS, None, &columns, rows)
+    Table::text(t(s::T_CLIENT_REDIRECTS), None, &columns, rows)
 }

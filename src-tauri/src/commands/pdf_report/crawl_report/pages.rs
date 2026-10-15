@@ -1,5 +1,5 @@
 use super::data::{list, num, page_url};
-use super::strings::report as s;
+use super::strings::{report as s, t};
 use super::tables::{status_cell, Table};
 use crate::commands::pdf_report::audit_report::ctx::{field, format_number};
 use crate::commands::pdf_report::audit_report::model::Sev;
@@ -7,16 +7,18 @@ use crate::commands::pdf_report::layout::table::Cell;
 use crate::commands::pdf_report::layout::text::dash;
 use serde_json::Value;
 
-const COLUMNS: [(&str, f32); 8] = [
-    (s::COL_URL, 22.0),
-    (s::COL_STATUS, 7.0),
-    (s::COL_INDEXABILITY, 20.0),
-    (s::COL_TITLE, 20.0),
-    (s::COL_DEPTH, 6.0),
-    (s::COL_TIME, 8.0),
-    (s::COL_WORDS, 8.0),
-    (s::COL_ISSUES, 9.0),
-];
+fn columns() -> [(&'static str, f32); 8] {
+    [
+        (t(s::COL_URL), 22.0),
+        (t(s::COL_STATUS), 7.0),
+        (t(s::COL_INDEXABILITY), 20.0),
+        (t(s::COL_TITLE), 20.0),
+        (t(s::COL_DEPTH), 6.0),
+        (t(s::COL_TIME), 8.0),
+        (t(s::COL_WORDS), 8.0),
+        (t(s::COL_ISSUES), 9.0),
+    ]
+}
 
 fn number(page: &Value, key: &str) -> String {
     num(page, key).map(format_number).unwrap_or_default()
@@ -43,7 +45,12 @@ pub fn pages_table(pages: &[Value]) -> Table {
             ]
         })
         .collect();
-    let mut table = Table::new(s::T_PAGES, Some(s::PAGES_INTRO.into()), &COLUMNS, rows);
+    let mut table = Table::new(
+        t(s::T_PAGES),
+        Some(t(s::PAGES_INTRO).into()),
+        &columns(),
+        rows,
+    );
     table.omitted = 0;
     table
 }
@@ -69,14 +76,14 @@ pub fn critical_table(pages: &[Value]) -> Table {
         })
         .collect();
     let columns = [
-        (s::COL_URL, 36.0),
-        (s::COL_STATUS, 8.0),
-        (s::COL_DEPTH, 8.0),
-        (s::COL_CRITICAL, 48.0),
+        (t(s::COL_URL), 36.0),
+        (t(s::COL_STATUS), 8.0),
+        (t(s::COL_DEPTH), 8.0),
+        (t(s::COL_CRITICAL), 48.0),
     ];
     let mut table = Table::new(
-        s::CRITICAL_PAGES,
-        Some(s::CRITICAL_INTRO.into()),
+        t(s::CRITICAL_PAGES),
+        Some(t(s::CRITICAL_INTRO).into()),
         &columns,
         rows,
     );

@@ -1,5 +1,5 @@
 use super::data::{f, list, Crawl};
-use super::strings::report as s;
+use super::strings::{report as s, t};
 use super::tables::Table;
 use crate::commands::pdf_report::audit_report::ctx::field;
 use serde_json::Value;
@@ -34,19 +34,19 @@ pub fn frames_and_searches(c: &Crawl) -> Vec<Table> {
         }
     }
     let fc = [
-        (s::COL_URL, 30.0),
-        (s::COL_FRAME, 40.0),
-        (s::COL_TITLE, 20.0),
-        (s::COL_STATUS, 10.0),
+        (t(s::COL_URL), 30.0),
+        (t(s::COL_FRAME), 40.0),
+        (t(s::COL_TITLE), 20.0),
+        (t(s::COL_STATUS), 10.0),
     ];
     let sc = [
-        (s::COL_URL, 30.0),
-        (s::COL_SEARCH, 14.0),
-        (s::COL_FOUND, 40.0),
-        (s::COL_ERROR, 16.0),
+        (t(s::COL_URL), 30.0),
+        (t(s::COL_SEARCH), 14.0),
+        (t(s::COL_FOUND), 40.0),
+        (t(s::COL_ERROR), 16.0),
     ];
     vec![
-        Table::text(s::T_FRAMES, None, &fc, frames),
-        Table::text(s::T_SEARCHES, None, &sc, searches),
+        Table::text(t(s::T_FRAMES), None, &fc, frames),
+        Table::text(t(s::T_SEARCHES), None, &sc, searches),
     ]
 }

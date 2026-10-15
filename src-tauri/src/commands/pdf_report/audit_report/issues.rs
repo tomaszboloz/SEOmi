@@ -1,6 +1,6 @@
 use super::ctx::Ctx;
 use super::model::{Finding, Sev};
-use super::strings::{report as s, t};
+use super::strings::{report as s, t, tf};
 use crate::commands::pdf_report::layout::card::{Card, CardRow};
 use crate::commands::pdf_report::layout::color::OK;
 use crate::commands::pdf_report::layout::doc::{Doc, CONTENT_W, MARGIN};
@@ -17,11 +17,11 @@ fn card_for(finding: &Finding) -> Card {
         headline: finding.message.clone(),
         rows: vec![
             CardRow {
-                label: s::WHERE.into(),
+                label: t(s::WHERE).into(),
                 items: finding.location.clone(),
             },
             CardRow {
-                label: s::HOW_TO_FIX.into(),
+                label: t(s::HOW_TO_FIX).into(),
                 items: vec![finding.recommendation.clone()],
             },
         ],
@@ -30,25 +30,25 @@ fn card_for(finding: &Finding) -> Card {
 
 impl Doc {
     pub fn issues_section(&mut self, ctx: &Ctx) {
-        self.heading(s::FIX_FIRST);
+        self.heading(t(s::FIX_FIRST));
         if ctx.findings.is_empty() {
             self.paragraph(
                 MARGIN,
                 CONTENT_W,
                 Style::BODY.colored(OK).bold(),
-                s::NO_ISSUES,
+                t(s::NO_ISSUES),
             );
             return self.skip(10.0);
         }
-        self.paragraph(MARGIN, CONTENT_W, Style::CAPTION, s::FIX_INTRO);
+        self.paragraph(MARGIN, CONTENT_W, Style::CAPTION, t(s::FIX_INTRO));
         self.skip(6.0);
         let mut current: Option<(Sev, &str)> = None;
         for finding in &ctx.findings {
             if current.map(|(sev, _)| sev) != Some(finding.sev) {
                 let count = ctx.findings.iter().filter(|f| f.sev == finding.sev).count();
                 self.ensure(KEEP_WITH_NEXT);
-                let label = t(
-                    s::SEVERITY_GROUP,
+                let label = tf(
+                    t(s::SEVERITY_GROUP),
                     &[finding.sev.label(), &count.to_string()],
                 );
                 self.text(

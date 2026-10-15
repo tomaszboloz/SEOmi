@@ -1,5 +1,5 @@
 use super::agg::IssueType;
-use super::strings::{report as s, t};
+use super::strings::{report as s, t, tf};
 use crate::commands::pdf_report::audit_report::model::Sev;
 use crate::commands::pdf_report::layout::card::{Card, CardRow};
 use crate::commands::pdf_report::layout::color::OK;
@@ -11,9 +11,9 @@ pub const LISTED_PAGES: usize = 8;
 
 pub fn sev_label(sev: Sev) -> &'static str {
     match sev {
-        Sev::Critical => s::CRITICAL,
-        Sev::Warning => s::WARNING,
-        Sev::Info => s::NOTICE,
+        Sev::Critical => t(s::CRITICAL),
+        Sev::Warning => t(s::WARNING),
+        Sev::Info => t(s::NOTICE),
     }
 }
 
@@ -28,30 +28,30 @@ fn card_for(item: &IssueType, total: usize) -> Card {
             if evidence.is_empty() {
                 url.clone()
             } else {
-                t(s::WHERE_PAGE, &[url, evidence])
+                tf(t(s::WHERE_PAGE), &[url, evidence])
             }
         })
         .collect();
     if count > LISTED_PAGES {
-        where_items.push(t(s::MORE_PAGES, &[&(count - LISTED_PAGES).to_string()]));
+        where_items.push(tf(t(s::MORE_PAGES), &[&(count - LISTED_PAGES).to_string()]));
     }
     Card {
         accent: item.sev.color(),
         badge: sev_label(item.sev).to_uppercase(),
         meta: if count == 1 {
-            s::AFFECTED_ONE.into()
+            t(s::AFFECTED_ONE).into()
         } else {
-            t(s::AFFECTED, &[&count.to_string(), &percent.to_string()])
+            tf(t(s::AFFECTED), &[&count.to_string(), &percent.to_string()])
         },
         tag: item.code.clone().unwrap_or_default(),
         headline: item.headline.clone(),
         rows: vec![
             CardRow {
-                label: s::WHERE.into(),
+                label: t(s::WHERE).into(),
                 items: where_items,
             },
             CardRow {
-                label: s::HOW_TO_FIX.into(),
+                label: t(s::HOW_TO_FIX).into(),
                 items: vec![item.advice.clone()],
             },
         ],
@@ -61,25 +61,25 @@ fn card_for(item: &IssueType, total: usize) -> Card {
 impl Doc {
     pub fn crawl_issues(&mut self, types: &[IssueType], total: usize) {
         self.ensure(260.0);
-        self.heading(s::FIX_FIRST);
+        self.heading(t(s::FIX_FIRST));
         if types.is_empty() {
             self.paragraph(
                 MARGIN,
                 CONTENT_W,
                 Style::BODY.colored(OK).bold(),
-                s::NO_ISSUES,
+                t(s::NO_ISSUES),
             );
             return self.skip(10.0);
         }
-        self.paragraph(MARGIN, CONTENT_W, Style::CAPTION, s::FIX_INTRO);
+        self.paragraph(MARGIN, CONTENT_W, Style::CAPTION, t(s::FIX_INTRO));
         self.skip(6.0);
         let mut current = None;
         for item in types {
             if current != Some(item.sev) {
                 let count = types.iter().filter(|other| other.sev == item.sev).count();
                 self.ensure(200.0);
-                let label = t(
-                    s::SEVERITY_GROUP,
+                let label = tf(
+                    t(s::SEVERITY_GROUP),
                     &[sev_label(item.sev), &count.to_string()],
                 );
                 self.text(

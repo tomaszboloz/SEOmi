@@ -1,29 +1,29 @@
 use super::super::check::{yes_no, Check, Section, Status};
 use super::super::ctx::{field, Ctx};
-use super::super::strings::{checks as c, t};
+use super::super::strings::{checks as c, t, tf};
 use crate::commands::pdf_report::layout::text::EMPTY;
 
 pub fn redirects(ctx: &Ctx) -> Section {
     let chain = ctx.list("/redirect_chain");
     let mut checks = vec![ctx.judged(
-        c::REDIRECT_HOPS,
+        t(c::REDIRECT_HOPS),
         Some(chain.len().to_string()),
         &["performance_redirect"],
     )];
     for (index, hop) in chain.iter().enumerate() {
         let status = field(hop, "status_code").unwrap_or_default();
         let to = field(hop, "location").unwrap_or_else(|| EMPTY.into());
-        let value = t(
-            c::HOP_VALUE,
+        let value = tf(
+            t(c::HOP_VALUE),
             &[&status, &field(hop, "url").unwrap_or_default(), &to],
         );
         checks.push(Check::info(
-            &t(c::HOP, &[&(index + 1).to_string()]),
+            &tf(t(c::HOP), &[&(index + 1).to_string()]),
             Some(value),
         ));
     }
     Section {
-        title: c::REDIRECT_TITLE.into(),
+        title: t(c::REDIRECT_TITLE).into(),
         checks,
     }
 }
@@ -37,13 +37,13 @@ pub fn indexability(ctx: &Ctx) -> Section {
         .collect();
     let mut verdict = match status.as_deref() {
         Some("indexable") => Check::new(
-            c::INDEX_STATUS,
+            t(c::INDEX_STATUS),
             status,
             Status::Ok,
-            super::super::strings::report::NO_ACTION,
+            t(super::super::strings::report::NO_ACTION),
         ),
         _ => Check::new(
-            c::INDEX_STATUS,
+            t(c::INDEX_STATUS),
             status,
             Status::Attention,
             &reasons.join(" "),
@@ -54,35 +54,35 @@ pub fn indexability(ctx: &Ctx) -> Section {
     }
     let target = ctx.count("/indexability/canonical_target_status");
     Section {
-        title: c::INDEX_TITLE.into(),
+        title: t(c::INDEX_TITLE).into(),
         checks: vec![
             verdict,
             ctx.judged(
-                c::ROBOTS_META,
+                t(c::ROBOTS_META),
                 ctx.text("/indexability/meta_robots"),
                 &["meta_robots"],
             ),
             ctx.judged(
-                c::X_ROBOTS,
+                t(c::X_ROBOTS),
                 ctx.text("/indexability/x_robots_tag"),
                 &["indexability_xrobots"],
             ),
             ctx.judged(
-                c::CANONICAL,
+                t(c::CANONICAL),
                 ctx.text("/indexability/canonical"),
                 &["meta_canonical"],
             ),
             Check::info(
-                c::CANONICAL_MATCH,
+                t(c::CANONICAL_MATCH),
                 yes_no(ctx.flag("/indexability/canonical_matches_final_url")),
             ),
             Check::info(
-                c::CANONICAL_CHECKED,
+                t(c::CANONICAL_CHECKED),
                 yes_no(ctx.flag("/indexability/canonical_target_checked")),
             ),
-            Check::info(c::CANONICAL_STATUS, target),
+            Check::info(t(c::CANONICAL_STATUS), target),
             Check::info(
-                c::CANONICAL_ERROR,
+                t(c::CANONICAL_ERROR),
                 ctx.text("/indexability/canonical_target_check_error"),
             ),
         ],

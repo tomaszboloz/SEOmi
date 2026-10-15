@@ -89,8 +89,8 @@ impl Doc {
         let label = self
             .chrome
             .page_label
-            .replace("{page}", &page.to_string())
-            .replace("{total}", &total.to_string());
+            .replace("{{page}}", &page.to_string())
+            .replace("{{total}}", &total.to_string());
         self.text_right(PAGE_W - MARGIN, base + 13.0, small, &label);
         let note = self.chrome.note.clone();
         let line = self.fit_line(&note, CONTENT_W - 90.0, small);

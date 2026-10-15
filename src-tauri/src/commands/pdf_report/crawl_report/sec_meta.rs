@@ -1,13 +1,13 @@
 use super::data::{f, flag, list, Crawl};
-use super::strings::{report as s, t};
+use super::strings::{report as s, t, tf};
 use super::tables::Table;
 use crate::commands::pdf_report::layout::text::{dash, EMPTY};
 use serde_json::Value;
 
 pub(super) fn tri(value: &Value, key: &str) -> String {
     match value.get(key).and_then(Value::as_bool) {
-        Some(true) => s::YES,
-        Some(false) => s::NO,
+        Some(true) => t(s::YES),
+        Some(false) => t(s::NO),
         None => EMPTY,
     }
     .into()
@@ -22,16 +22,16 @@ pub fn canonicals(c: &Crawl) -> Table {
             let targets: Vec<String> = list(page, "canonical_targets")
                 .iter()
                 .map(|target| {
-                    t(
-                        s::TARGET_STATUS,
+                    tf(
+                        t(s::TARGET_STATUS),
                         &[&f(target, "url"), &dash(&f(target, "http_status"))],
                     )
                 })
                 .collect();
             let conflict = if flag(page, "canonical_robots_conflict") {
-                s::YES
+                t(s::YES)
             } else {
-                s::NO
+                t(s::NO)
             };
             vec![
                 f(page, "url"),
@@ -43,15 +43,15 @@ pub fn canonicals(c: &Crawl) -> Table {
         })
         .collect();
     let columns = [
-        (s::COL_URL, 26.0),
-        (s::COL_CANONICAL, 36.0),
-        (s::COL_RELATION, 14.0),
-        (s::COL_DECLARATIONS, 11.0),
-        (s::COL_CONFLICT, 13.0),
+        (t(s::COL_URL), 26.0),
+        (t(s::COL_CANONICAL), 36.0),
+        (t(s::COL_RELATION), 14.0),
+        (t(s::COL_DECLARATIONS), 11.0),
+        (t(s::COL_CONFLICT), 13.0),
     ];
     Table::text(
-        s::T_CANONICAL,
-        Some(s::CANONICAL_INTRO.into()),
+        t(s::T_CANONICAL),
+        Some(t(s::CANONICAL_INTRO).into()),
         &columns,
         rows,
     )
@@ -65,7 +65,7 @@ pub fn hreflang(c: &Crawl) -> Table {
                 .parse::<u32>()
                 .is_ok_and(|code| code >= 400)
                 || tag.get("reciprocal_in_run").and_then(Value::as_bool) == Some(false);
-            let verdict = if problem { s::PROBLEM } else { s::OK };
+            let verdict = if problem { t(s::PROBLEM) } else { t(s::OK) };
             rows.push(vec![
                 f(page, "url"),
                 f(tag, "language"),
@@ -77,12 +77,12 @@ pub fn hreflang(c: &Crawl) -> Table {
         }
     }
     let columns = [
-        (s::COL_URL, 26.0),
-        (s::COL_LANG, 8.0),
-        (s::COL_TARGET, 34.0),
-        (s::COL_STATUS, 9.0),
-        (s::COL_RECIPROCAL, 11.0),
-        (s::COL_VERDICT, 12.0),
+        (t(s::COL_URL), 26.0),
+        (t(s::COL_LANG), 8.0),
+        (t(s::COL_TARGET), 34.0),
+        (t(s::COL_STATUS), 9.0),
+        (t(s::COL_RECIPROCAL), 11.0),
+        (t(s::COL_VERDICT), 12.0),
     ];
-    Table::text(s::T_HREFLANG, None, &columns, rows)
+    Table::text(t(s::T_HREFLANG), None, &columns, rows)
 }

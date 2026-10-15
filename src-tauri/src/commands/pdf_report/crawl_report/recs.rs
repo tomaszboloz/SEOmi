@@ -1,4 +1,5 @@
 use super::strings::recs::{GENERIC_CRITICAL, GENERIC_NOTICE, GENERIC_WARNING, RECOMMENDATIONS};
+use super::strings::t;
 use crate::commands::pdf_report::audit_report::model::Sev;
 
 /// Actionable advice for an issue, found by code first and message second.
@@ -14,12 +15,12 @@ pub fn recommendation(code: Option<&str>, message: &str, sev: Sev) -> String {
             .find(|(fragment, _)| message.contains(fragment))
     });
     match found {
-        Some((_, advice)) => (*advice).to_owned(),
-        None => match sev {
+        Some((_, advice)) => t(advice).to_owned(),
+        None => t(match sev {
             Sev::Critical => GENERIC_CRITICAL,
             Sev::Warning => GENERIC_WARNING,
             Sev::Info => GENERIC_NOTICE,
-        }
+        })
         .to_owned(),
     }
 }

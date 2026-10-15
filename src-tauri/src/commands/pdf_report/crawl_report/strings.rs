@@ -1,9 +1,10 @@
-//! Every user-visible string of the crawl report lives under this module so
-//! the report can be localised later. Templates use `{0}`, `{1}` placeholders.
+//! Every user-visible string of the crawl report is a `pdfReport` label key
+//! (see `labels.rs`); the constants in these modules hold the keys and the text
+//! lives in the locale files. Templates use `{{0}}`, `{{1}}` placeholders.
 
 mod labels;
 mod labels_cols;
 pub mod recs;
 pub mod report;
 
-pub use crate::commands::pdf_report::audit_report::strings::t;
+pub use crate::commands::pdf_report::labels::{t, tf};
