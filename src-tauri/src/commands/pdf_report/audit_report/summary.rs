@@ -1,23 +1,28 @@
 use super::ctx::{pretty_time, Ctx};
 use super::kpi::kpis;
 use super::model::Sev;
-use super::strings::{report as s, t};
+use super::strings::{report as s, t, tf};
 use crate::commands::pdf_report::layout::color::BRAND;
 use crate::commands::pdf_report::layout::doc::{Doc, CONTENT_W, MARGIN};
 use crate::commands::pdf_report::layout::text::{dash, Style};
 
 fn rating(score: Option<f64>) -> &'static str {
     match score {
-        Some(value) if value >= 80.0 => s::RATING_GOOD,
-        Some(value) if value >= 50.0 => s::RATING_FAIR,
-        Some(_) => s::RATING_POOR,
-        None => s::RATING_NONE,
+        Some(value) if value >= 80.0 => t(s::RATING_GOOD),
+        Some(value) if value >= 50.0 => t(s::RATING_FAIR),
+        Some(_) => t(s::RATING_POOR),
+        None => t(s::RATING_NONE),
     }
 }
 
 impl Doc {
     fn title_block(&mut self, ctx: &Ctx) {
-        self.text(MARGIN, self.y + 18.0, Style::TITLE.colored(BRAND), s::TITLE);
+        self.text(
+            MARGIN,
+            self.y + 18.0,
+            Style::TITLE.colored(BRAND),
+            t(s::TITLE),
+        );
         self.skip(28.0);
         let url = Style::new(11.0, super::super::layout::color::TEXT, true);
         self.paragraph(
@@ -29,13 +34,14 @@ impl Doc {
         self.skip(4.0);
         let facts = [
             (
-                s::AUDITED_AT,
+                t(s::AUDITED_AT),
                 ctx.text("/timestamp").map(|raw| pretty_time(&raw)),
             ),
-            (s::HTTP_STATUS, ctx.count("/http_status")),
+            (t(s::HTTP_STATUS), ctx.count("/http_status")),
             (
-                s::RESPONSE_TIME,
-                ctx.count("/response_time_ms").map(|ms| t(s::MS, &[&ms])),
+                t(s::RESPONSE_TIME),
+                ctx.count("/response_time_ms")
+                    .map(|ms| tf(t(s::MS), &[&ms])),
             ),
         ];
         for (index, (label, value)) in facts.iter().enumerate() {
@@ -53,7 +59,7 @@ impl Doc {
 
     fn audit_score(&mut self, ctx: &Ctx) {
         let score = ctx.number("/health_score");
-        self.score_panel(score, rating(score), s::HEALTH_SCORE, s::LEGEND);
+        self.score_panel(score, rating(score), t(s::HEALTH_SCORE), t(s::LEGEND));
     }
 
     fn audit_counts(&mut self, ctx: &Ctx) {
@@ -64,7 +70,7 @@ impl Doc {
                 (sev.color(), sev.label(), count)
             })
             .collect();
-        self.count_cards(&items, s::FINDINGS);
+        self.count_cards(&items, t(s::FINDINGS));
     }
 
     pub fn summary(&mut self, ctx: &Ctx) {

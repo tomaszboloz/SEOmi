@@ -22,8 +22,7 @@ const rememberDelivered = (projectId: string, entriesToRemember: DeliveredCacheE
   deliveredCache.delete(projectId);
   deliveredCache.set(projectId, entries.slice(-MONITORING_HISTORY_LIMIT));
   while (deliveredCache.size > MONITORING_HISTORY_LIMIT) {
-    const oldest = deliveredCache.keys().next().value;
-    if (typeof oldest !== 'string') break;
+    const [oldest] = deliveredCache.keys();
     deliveredCache.delete(oldest);
   }
 };

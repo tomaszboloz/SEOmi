@@ -1,4 +1,22 @@
-# SEOmi 0.2.0 — release notes
+# SEOmi 0.3.0 — release notes
+
+## Added
+
+- Site Focus Score (SFS): topical-coherence score 0–100 for the whole crawl, in a new Focus tab. Core Topic detection with confidence and manual override, per-page Topic Relevance Score (similarity, keyword overlap, semantic drift), weighted aggregation by page type, URL-tree heatmap with filters, keyword alignment matrix, page diagnosis with A/B/C playbooks, rewrite briefs (copyable AI prompt) and Delta Score simulation.
+- Multi-topic sites (sub-site scores), low-confidence and lexical-fallback handling, skipped JS-render pages.
+- Site Focus history chart with annotated changes, weekly summary, SFS-drop and Content Guard alerts, daily incremental scoring and weekly full re-analysis, 3 manual recalculations per day.
+- Competitive benchmark against the top 10 SERP results (DataForSEO or free Bing RSS), competitor topic gaps, internal-linking suggestions and AI-written rewrite briefs.
+- Site Focus section in the crawl PDF report and report templates.
+- Crawler records focus terms (1–4-gram, zone-weighted), heading texts, and stop words for de, es, fr, it, pt, ru.
+
+## Included from 0.2.1
+
+## Added
+
+- PDF audit and crawl reports follow the interface language (all 12 UI languages, right-to-left included), falling back to English per missing label.
+- Contextual help bubbles (?) next to key metrics in Overview, Metadata, Headings, Images, Links and Settings: what it is, why it matters, what to do.
+
+## 0.2.0
 
 ## Added
 

@@ -1,11 +1,12 @@
 import { useTranslation } from 'react-i18next';
 import type { LinksAnalysis } from '@/types';
+import { HelpTip } from '@/components/Help/HelpTip';
 export const LinkMetrics = ({links,securityIssuesCount}: {links:LinksAnalysis;securityIssuesCount:number}) => {
  const {t}=useTranslation();
  return (<div className="grid grid-cols-2 sm:grid-cols-5 gap-3">
         <div className="p-3 bg-slate-900/80 border border-slate-800 rounded-xl">
           <span className="text-[10px] text-slate-400 uppercase font-semibold block">
-            {t("links.totalLinks")}
+            {t("links.totalLinks")} <HelpTip id="links.overview" />
           </span>
           <span className="text-xl font-bold text-white font-mono">
             {links.total_links}

@@ -2,6 +2,7 @@ use super::agg::{aggregate, finding_key};
 use super::evidence::page_evidence;
 use super::recs::recommendation;
 use super::strings::recs::{GENERIC_CRITICAL, GENERIC_NOTICE, GENERIC_WARNING, RECOMMENDATIONS};
+use super::strings::t;
 use crate::commands::pdf_report::audit_report::model::Sev;
 use serde_json::json;
 
@@ -56,9 +57,15 @@ fn findings_aggregate_by_type_sorted_by_severity_then_reach() {
 
 #[test]
 fn every_issue_code_has_advice_and_unknown_ones_fall_back_by_severity() {
-    assert_eq!(recommendation(None, "zzz", Sev::Critical), GENERIC_CRITICAL);
-    assert_eq!(recommendation(None, "zzz", Sev::Warning), GENERIC_WARNING);
-    assert_eq!(recommendation(None, "zzz", Sev::Info), GENERIC_NOTICE);
+    assert_eq!(
+        recommendation(None, "zzz", Sev::Critical),
+        t(GENERIC_CRITICAL)
+    );
+    assert_eq!(
+        recommendation(None, "zzz", Sev::Warning),
+        t(GENERIC_WARNING)
+    );
+    assert_eq!(recommendation(None, "zzz", Sev::Info), t(GENERIC_NOTICE));
     for code in [
         "crawl-missing-language",
         "crawl-duplicate-content",
@@ -81,7 +88,7 @@ fn every_issue_code_has_advice_and_unknown_ones_fall_back_by_severity() {
         assert_eq!(*fragment, fragment.to_lowercase());
         assert_ne!(
             recommendation(None, fragment, Sev::Info),
-            GENERIC_NOTICE,
+            t(GENERIC_NOTICE),
             "{advice}"
         );
     }

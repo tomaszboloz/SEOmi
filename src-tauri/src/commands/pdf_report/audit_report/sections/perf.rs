@@ -1,38 +1,44 @@
 use super::super::check::{Check, Section};
 use super::super::ctx::{field, Ctx};
-use super::super::strings::{checks as c, t};
+use super::super::strings::{checks as c, t, tf};
 
 fn unit(value: Option<String>, template: &str) -> Option<String> {
-    value.map(|value| t(template, &[&value]))
+    value.map(|value| tf(template, &[&value]))
 }
 
 pub fn performance(ctx: &Ctx) -> Section {
     let perf = |key: &str| ctx.count(&format!("/http_performance/{key}"));
     Section {
-        title: c::PERF_TITLE.into(),
+        title: t(c::PERF_TITLE).into(),
         checks: vec![
             ctx.judged(
-                c::HTTP_STATUS,
+                t(c::HTTP_STATUS),
                 ctx.count("/http_status"),
                 &["performance_http"],
             ),
             ctx.judged(
-                c::RESPONSE_TIME,
-                unit(ctx.count("/response_time_ms"), c::MS),
+                t(c::RESPONSE_TIME),
+                unit(ctx.count("/response_time_ms"), t(c::MS)),
                 &["performance_response"],
             ),
-            Check::info(c::HEADERS_TIME, unit(perf("response_headers_ms"), c::MS)),
-            Check::info(c::BODY_TIME, unit(perf("body_read_ms"), c::MS)),
-            Check::info(c::TOTAL_TIME, unit(perf("total_request_ms"), c::MS)),
-            Check::info(c::BODY_BYTES, unit(perf("decoded_body_bytes"), c::BYTES)),
             Check::info(
-                c::LENGTH_HEADER,
-                unit(perf("content_length_header_bytes"), c::BYTES),
+                t(c::HEADERS_TIME),
+                unit(perf("response_headers_ms"), t(c::MS)),
             ),
-            Check::info(c::REDIRECT_COUNT, perf("redirect_hops")),
-            Check::info(c::METHOD, ctx.text("/http_performance/method")),
-            Check::info(c::MEASURED_AT, ctx.text("/http_performance/measured_at")),
-            Check::info(c::SCOPE, ctx.text("/http_performance/scope")),
+            Check::info(t(c::BODY_TIME), unit(perf("body_read_ms"), t(c::MS))),
+            Check::info(t(c::TOTAL_TIME), unit(perf("total_request_ms"), t(c::MS))),
+            Check::info(
+                t(c::BODY_BYTES),
+                unit(perf("decoded_body_bytes"), t(c::BYTES)),
+            ),
+            Check::info(
+                t(c::LENGTH_HEADER),
+                unit(perf("content_length_header_bytes"), t(c::BYTES)),
+            ),
+            Check::info(t(c::REDIRECT_COUNT), perf("redirect_hops")),
+            Check::info(t(c::METHOD), ctx.text("/http_performance/method")),
+            Check::info(t(c::MEASURED_AT), ctx.text("/http_performance/measured_at")),
+            Check::info(t(c::SCOPE), ctx.text("/http_performance/scope")),
         ],
     }
 }
@@ -47,8 +53,8 @@ pub fn technical(ctx: &Ctx) -> Section {
         let version = field(item, "version")
             .map(|v| format!(" {v}"))
             .unwrap_or_default();
-        t(
-            c::SIGNAL,
+        tf(
+            t(c::SIGNAL),
             &[
                 &field(item, "name").unwrap_or_default(),
                 &version,
@@ -58,8 +64,8 @@ pub fn technical(ctx: &Ctx) -> Section {
         )
     };
     let hreflang = |item: &serde_json::Value| {
-        t(
-            c::HREFLANG,
+        tf(
+            t(c::HREFLANG),
             &[
                 &field(item, "hreflang").unwrap_or_default(),
                 &field(item, "href").unwrap_or_default(),
@@ -67,19 +73,19 @@ pub fn technical(ctx: &Ctx) -> Section {
         )
     };
     Section {
-        title: c::TECH_TITLE.into(),
+        title: t(c::TECH_TITLE).into(),
         checks: vec![
-            Check::info(c::CONTENT_TYPE, tech("content_type")),
-            Check::info(c::SERVER, tech("server")),
-            Check::info(c::FAVICON, tech("favicon")),
-            Check::info(c::ROBOTS_TXT, tech("robots_txt_url")),
-            Check::info(c::SITEMAP, tech("sitemap_url")),
+            Check::info(t(c::CONTENT_TYPE), tech("content_type")),
+            Check::info(t(c::SERVER), tech("server")),
+            Check::info(t(c::FAVICON), tech("favicon")),
+            Check::info(t(c::ROBOTS_TXT), tech("robots_txt_url")),
+            Check::info(t(c::SITEMAP), tech("sitemap_url")),
             Check::info(
-                c::HREFLANG_TAGS,
+                t(c::HREFLANG_TAGS),
                 joined("/technical/hreflang_tags", &hreflang),
             ),
             Check::info(
-                c::TECH_SIGNALS,
+                t(c::TECH_SIGNALS),
                 joined("/technical/technology_signals", &signal),
             ),
         ],

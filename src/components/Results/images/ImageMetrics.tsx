@@ -1,5 +1,6 @@
 import { useTranslation } from 'react-i18next';
 import { Image as ImageIcon, AlertCircle, AlertTriangle, Sparkles } from 'lucide-react';
+import { HelpTip } from '@/components/Help/HelpTip';
 export const ImageMetrics = ({total, missingAltCount, missingDimCount, modernCount}: {total:number;missingAltCount:number;missingDimCount:number;modernCount:number}) => {
   const { t } = useTranslation();
   return (<div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
@@ -9,7 +10,7 @@ export const ImageMetrics = ({total, missingAltCount, missingDimCount, modernCou
           </div>
           <div>
             <span className="text-[10px] text-slate-400 uppercase font-semibold block">
-              {t("images.imagesFound")}
+              {t("images.imagesFound")} <HelpTip id="images.overview" />
             </span>
             <span className="text-lg font-bold text-white font-mono">
               {total}

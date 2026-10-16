@@ -1,6 +1,6 @@
 use super::data::{f, list, Crawl};
 use super::sec_meta::tri;
-use super::strings::report as s;
+use super::strings::{report as s, t};
 use super::tables::Table;
 use crate::commands::pdf_report::audit_report::ctx::field;
 use serde_json::Value;
@@ -30,15 +30,15 @@ pub fn pagination(c: &Crawl) -> Table {
         }
     }
     let columns = [
-        (s::COL_URL, 22.0),
-        (s::COL_RELATION, 8.0),
-        (s::COL_TARGET, 28.0),
-        (s::COL_STATUS, 8.0),
-        (s::COL_RECIPROCAL, 10.0),
-        (s::COL_PARAMS, 12.0),
-        (s::COL_ALIGNMENT, 12.0),
+        (t(s::COL_URL), 22.0),
+        (t(s::COL_RELATION), 8.0),
+        (t(s::COL_TARGET), 28.0),
+        (t(s::COL_STATUS), 8.0),
+        (t(s::COL_RECIPROCAL), 10.0),
+        (t(s::COL_PARAMS), 12.0),
+        (t(s::COL_ALIGNMENT), 12.0),
     ];
-    Table::text(s::T_PAGINATION, None, &columns, rows)
+    Table::text(t(s::T_PAGINATION), None, &columns, rows)
 }
 
 pub fn amp(c: &Crawl) -> Table {
@@ -57,11 +57,11 @@ pub fn amp(c: &Crawl) -> Table {
         })
         .collect();
     let columns = [
-        (s::COL_URL, 28.0),
-        (s::COL_AMP, 30.0),
-        (s::COL_STATUS, 10.0),
-        (s::COL_CHECKED, 12.0),
-        (s::COL_ALIGNMENT, 20.0),
+        (t(s::COL_URL), 28.0),
+        (t(s::COL_AMP), 30.0),
+        (t(s::COL_STATUS), 10.0),
+        (t(s::COL_CHECKED), 12.0),
+        (t(s::COL_ALIGNMENT), 20.0),
     ];
-    Table::text(s::T_AMP, None, &columns, rows)
+    Table::text(t(s::T_AMP), None, &columns, rows)
 }

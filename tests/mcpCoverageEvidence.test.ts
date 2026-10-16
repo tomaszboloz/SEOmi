@@ -1,6 +1,7 @@
 // @vitest-environment node
 import { mkdirSync, mkdtempSync, readFileSync, readdirSync, rmSync, writeFileSync } from 'node:fs';
 import { spawnSync } from 'node:child_process';
+import { createRequire } from 'node:module';
 import { pathToFileURL } from 'node:url';
 import { tmpdir } from 'node:os';
 import { join, resolve } from 'node:path';
@@ -87,7 +88,7 @@ it('links compiled test imports only with fresh matching source and runtime mani
     writeFileSync(runtime,compiled.outputText); writeFileSync(`${runtime}.map`,JSON.stringify(map));
     writeFileSync(testFile,'import { observed } from "../dist/fixture.js"; observed(2);');
     const inventoryUrl = pathToFileURL(resolve('scripts/public-function-inventory.mjs')).href;
-    const typescriptUrl = pathToFileURL(resolve('node_modules/typescript/lib/typescript.js')).href;
+    const typescriptUrl = pathToFileURL(createRequire(import.meta.url).resolve('typescript/lib/typescript.js')).href;
     const child = `import ts from ${JSON.stringify(typescriptUrl)};
       import { sourceAwareCompilerHost, sourceHashes } from ${JSON.stringify(inventoryUrl)};
       import { resolve } from 'node:path';

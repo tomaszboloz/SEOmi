@@ -113,3 +113,30 @@ pub(super) fn semantic_term_key(term: &str, language: Option<&str>) -> String {
         _ => folded,
     }
 }
+
+/// Stopwords of one language from the shared JSON (de, es, fr, it, pt, ru;
+/// pl and en are already part of `semantic_noise_token`). Used by the Site
+/// Focus n-gram extractor only; the TypeScript semantic map keeps pl + en.
+pub(super) fn focus_language_stopword(folded: &str, language: Option<&str>) -> bool {
+    static LISTS: OnceLock<HashMap<String, HashSet<String>>> = OnceLock::new();
+    let Some(code) = normalized_language(language).map(str::to_ascii_lowercase) else {
+        return false;
+    };
+    LISTS
+        .get_or_init(|| {
+            let lists: HashMap<String, Vec<String>> =
+                serde_json::from_str::<HashMap<String, serde_json::Value>>(include_str!(
+                    "../../../../src/constants/semanticStopwords.json"
+                ))
+                .expect("bundled semantic stopword list is valid JSON")
+                .into_iter()
+                .filter_map(|(code, words)| serde_json::from_value(words).ok().map(|w| (code, w)))
+                .collect();
+            lists
+                .into_iter()
+                .map(|(code, words)| (code, words.iter().map(|w| fold_semantic_text(w)).collect()))
+                .collect()
+        })
+        .get(&code)
+        .is_some_and(|words| words.contains(folded))
+}

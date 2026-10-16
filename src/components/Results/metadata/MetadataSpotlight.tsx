@@ -5,6 +5,7 @@ import { useUIStore } from '@/stores/uiStore';
 import { copyText } from '@/services/clipboard';
 import { MetadataTableProps } from './metadataTypes';
 import { useTransientValue } from '@/hooks/useTransientValue';
+import { HelpTip } from '@/components/Help/HelpTip';
 
 export const MetadataSpotlight: React.FC<MetadataTableProps> = ({ audit }) => {
   const { t } = useTranslation();
@@ -43,7 +44,7 @@ export const MetadataSpotlight: React.FC<MetadataTableProps> = ({ audit }) => {
 
       <div className="space-y-2">
         <div className="flex items-center justify-between text-xs">
-          <span className="font-semibold text-slate-300">{t('legacyUi.metadata.pageTitle')}</span>
+          <span className="font-semibold text-slate-300">{t('legacyUi.metadata.pageTitle')} <HelpTip id="metadata.titleLength" /></span>
           <div className="flex items-center space-x-2">
             <span className={`font-mono text-[11px] ${isTitleOptimal ? 'text-emerald-400' : 'text-amber-400'}`}>
               {titleLength} / 60 {t('metadata.characters')}
@@ -72,7 +73,7 @@ export const MetadataSpotlight: React.FC<MetadataTableProps> = ({ audit }) => {
 
       <div className="space-y-2">
         <div className="flex items-center justify-between text-xs">
-          <span className="font-semibold text-slate-300">{t('legacyUi.metadata.description')}</span>
+          <span className="font-semibold text-slate-300">{t('legacyUi.metadata.description')} <HelpTip id="metadata.metaDescription" /></span>
           <div className="flex items-center space-x-2">
             <span className={`font-mono text-[11px] ${isDescOptimal ? 'text-emerald-400' : 'text-amber-400'}`}>
               {descLength} / 160 {t('metadata.characters')}

@@ -58,7 +58,18 @@ impl Doc {
 
     /// Big score number, rating and a coloured bar.
     pub fn score_panel(&mut self, score: Option<f64>, rating: &str, title: &str, legend: &str) {
-        let color = score_color(score);
+        self.score_panel_colored(score_color(score), score, rating, title, legend);
+    }
+
+    /// Score panel drawn in a caller-chosen colour, e.g. a score band.
+    pub fn score_panel_colored(
+        &mut self,
+        color: Rgb,
+        score: Option<f64>,
+        rating: &str,
+        title: &str,
+        legend: &str,
+    ) {
         let top = self.y;
         self.rect(MARGIN, top, CONTENT_W, 74.0, PANEL);
         self.rect(MARGIN, top, 4.0, 74.0, color);

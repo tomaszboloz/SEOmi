@@ -1,5 +1,5 @@
 use super::data::{f, joined, list, num, Crawl};
-use super::strings::{report as s, t};
+use super::strings::{report as s, t, tf};
 use super::tables::Table;
 use crate::commands::pdf_report::audit_report::ctx::{field, format_number};
 
@@ -13,8 +13,8 @@ pub fn structured_data(c: &Crawl) -> Table {
             .map(|item| {
                 let finding = item.get("finding").unwrap_or(item);
                 let place = format!("{} #{}", f(item, "format"), f(item, "declaration_index"));
-                t(
-                    s::SCHEMA_FINDING,
+                tf(
+                    t(s::SCHEMA_FINDING),
                     &[&place, &f(finding, "path"), &f(finding, "message")],
                 )
             })
@@ -30,12 +30,12 @@ pub fn structured_data(c: &Crawl) -> Table {
         ]);
     }
     let columns = [
-        (s::COL_URL, 26.0),
-        (s::COL_TYPES, 20.0),
-        (s::COL_SYNTAX, 9.0),
-        (s::COL_FINDINGS, 45.0),
+        (t(s::COL_URL), 26.0),
+        (t(s::COL_TYPES), 20.0),
+        (t(s::COL_SYNTAX), 9.0),
+        (t(s::COL_FINDINGS), 45.0),
     ];
-    Table::text(s::T_SCHEMA, None, &columns, rows)
+    Table::text(t(s::T_SCHEMA), None, &columns, rows)
 }
 
 pub fn html_validation(c: &Crawl) -> Table {
@@ -43,7 +43,7 @@ pub fn html_validation(c: &Crawl) -> Table {
     for page in c.pages {
         for item in list(page, "html_validation_findings") {
             let place = match (field(item, "line"), field(item, "column")) {
-                (Some(line), Some(column)) => t(s::LINE_COLUMN, &[&line, &column]),
+                (Some(line), Some(column)) => tf(t(s::LINE_COLUMN), &[&line, &column]),
                 _ => String::new(),
             };
             let element = format!("{} {place}", f(item, "element"));
@@ -57,11 +57,11 @@ pub fn html_validation(c: &Crawl) -> Table {
         }
     }
     let columns = [
-        (s::COL_URL, 24.0),
-        (s::COL_SEVERITY, 9.0),
-        (s::COL_CODE, 17.0),
-        (s::COL_FINDING, 32.0),
-        (s::COL_ELEMENT, 18.0),
+        (t(s::COL_URL), 24.0),
+        (t(s::COL_SEVERITY), 9.0),
+        (t(s::COL_CODE), 17.0),
+        (t(s::COL_FINDING), 32.0),
+        (t(s::COL_ELEMENT), 18.0),
     ];
-    Table::text(s::T_HTML, None, &columns, rows)
+    Table::text(t(s::T_HTML), None, &columns, rows)
 }

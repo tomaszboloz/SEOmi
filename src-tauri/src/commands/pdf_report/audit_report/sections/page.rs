@@ -1,12 +1,12 @@
 use super::super::check::{yes_no, Check, Section, Status};
 use super::super::ctx::{field, Ctx};
-use super::super::strings::{checks as c, t};
+use super::super::strings::{checks as c, t, tf};
 use crate::commands::pdf_report::layout::text::EMPTY;
 
 fn with_length(value: Option<String>, length: Option<String>) -> Option<String> {
     let value = value?;
     Some(match length {
-        Some(length) => t(c::CHARS, &[&value, &length]),
+        Some(length) => tf(t(c::CHARS), &[&value, &length]),
         None => value,
     })
 }
@@ -15,26 +15,26 @@ pub fn meta_tags(ctx: &Ctx) -> Section {
     let meta = |key: &str| ctx.text(&format!("/meta_tags/{key}"));
     let length = |key: &str| ctx.count(&format!("/meta_tags/{key}"));
     Section {
-        title: c::META_TITLE.into(),
+        title: t(c::META_TITLE).into(),
         checks: vec![
             ctx.judged(
-                c::TITLE,
+                t(c::TITLE),
                 with_length(meta("title"), length("title_length")),
                 &["meta_title"],
             ),
             ctx.judged(
-                c::DESCRIPTION,
+                t(c::DESCRIPTION),
                 with_length(meta("description"), length("description_length")),
                 &["meta_description"],
             ),
-            ctx.judged(c::CANONICAL, meta("canonical"), &["meta_canonical"]),
-            ctx.judged(c::ROBOTS_META, meta("robots"), &["meta_robots"]),
-            ctx.judged(c::VIEWPORT, meta("viewport"), &["meta_viewport"]),
-            Check::info(c::CHARSET, meta("charset")),
-            Check::info(c::KEYWORDS, meta("keywords")),
-            Check::info(c::AUTHOR, meta("author")),
-            Check::info(c::GENERATOR, meta("generator")),
-            Check::info(c::THEME_COLOR, meta("theme_color")),
+            ctx.judged(t(c::CANONICAL), meta("canonical"), &["meta_canonical"]),
+            ctx.judged(t(c::ROBOTS_META), meta("robots"), &["meta_robots"]),
+            ctx.judged(t(c::VIEWPORT), meta("viewport"), &["meta_viewport"]),
+            Check::info(t(c::CHARSET), meta("charset")),
+            Check::info(t(c::KEYWORDS), meta("keywords")),
+            Check::info(t(c::AUTHOR), meta("author")),
+            Check::info(t(c::GENERATOR), meta("generator")),
+            Check::info(t(c::THEME_COLOR), meta("theme_color")),
         ],
     }
 }
@@ -63,18 +63,18 @@ pub fn headings(ctx: &Ctx) -> Section {
         .filter_map(|text| text.as_str().map(str::to_owned))
         .collect();
     let valid = ctx.flag("/headings/has_valid_hierarchy");
-    let mut hierarchy = ctx.judged(c::HIERARCHY, yes_no(valid), &["headings_hierarchy"]);
+    let mut hierarchy = ctx.judged(t(c::HIERARCHY), yes_no(valid), &["headings_hierarchy"]);
     if valid == Some(false) && hierarchy.status == Status::Ok {
         hierarchy.status = Status::Attention;
     }
     let lines = outline(ctx);
     Section {
-        title: c::HEADINGS_TITLE.into(),
+        title: t(c::HEADINGS_TITLE).into(),
         checks: vec![
-            ctx.judged(c::H1_COUNT, h1, &["headings_h1"]),
-            Check::info(c::H1_TEXT, (!texts.is_empty()).then(|| texts.join("; "))),
+            ctx.judged(t(c::H1_COUNT), h1, &["headings_h1"]),
+            Check::info(t(c::H1_TEXT), (!texts.is_empty()).then(|| texts.join("; "))),
             hierarchy,
-            Check::info(c::OUTLINE, (!lines.is_empty()).then(|| lines.join("; "))),
+            Check::info(t(c::OUTLINE), (!lines.is_empty()).then(|| lines.join("; "))),
         ],
     }
 }
@@ -86,8 +86,8 @@ pub fn content(ctx: &Ctx) -> Section {
         .iter()
         .map(|item| {
             let word = field(item, "keyword").unwrap_or_default();
-            t(
-                c::KEYWORD,
+            tf(
+                t(c::KEYWORD),
                 &[&word, &field(item, "count").unwrap_or_default()],
             )
         })
@@ -95,30 +95,30 @@ pub fn content(ctx: &Ctx) -> Section {
     let readability = ctx.text("/content_stats/readability_label");
     let score = stat("readability_ease_score");
     Section {
-        title: c::CONTENT_TITLE.into(),
+        title: t(c::CONTENT_TITLE).into(),
         checks: vec![
-            Check::info(c::WORDS, stat("word_count")),
-            Check::info(c::SENTENCES, stat("sentence_count")),
+            Check::info(t(c::WORDS), stat("word_count")),
+            Check::info(t(c::SENTENCES), stat("sentence_count")),
             Check::info(
-                c::READING_TIME,
-                stat("reading_time_minutes").map(|m| t(c::MINUTES, &[&m])),
+                t(c::READING_TIME),
+                stat("reading_time_minutes").map(|m| tf(t(c::MINUTES), &[&m])),
             ),
             Check::info(
-                c::READABILITY,
+                t(c::READABILITY),
                 readability.map(|label| {
-                    t(
-                        c::READABILITY_VALUE,
+                    tf(
+                        t(c::READABILITY_VALUE),
                         &[&label, &score.unwrap_or_else(|| EMPTY.into())],
                     )
                 }),
             ),
-            Check::info(c::WORDS_PER_SENTENCE, stat("average_words_per_sentence")),
+            Check::info(t(c::WORDS_PER_SENTENCE), stat("average_words_per_sentence")),
             Check::info(
-                c::TEXT_RATIO,
+                t(c::TEXT_RATIO),
                 stat("text_ratio_percent").map(|v| format!("{v}%")),
             ),
             Check::info(
-                c::TOP_KEYWORDS,
+                t(c::TOP_KEYWORDS),
                 (!keywords.is_empty()).then(|| keywords.join(", ")),
             ),
         ],

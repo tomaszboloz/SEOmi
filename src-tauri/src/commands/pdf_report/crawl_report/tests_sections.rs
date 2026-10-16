@@ -131,7 +131,7 @@ fn long_lists_state_how_many_rows_were_left_out() {
         date: "d".into(),
         note: "n".into(),
         brand: "b".into(),
-        page_label: "{page}".into(),
+        page_label: "{{page}}".into(),
     };
     let mut doc = Doc::new(chrome);
     let rows = (0..MAX_ROWS + 7).map(|i| vec![format!("row{i}")]).collect();

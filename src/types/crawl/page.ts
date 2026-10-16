@@ -5,6 +5,24 @@ import type { CrawledImage, CrawledFrame, CrawledSocialResourceCheck, CrawledSoc
 import type { FaviconData } from '../audit/technical';
 import type { CrawledCustomSearchResult } from './configuration';
 
+/** Weighted n-gram of a page for the Site Focus Score engine. */
+export interface FocusTerm {
+  /** Folded, lemmatized key (same keying as semanticTermKey); n-grams are space-joined. */
+  term: string;
+  /** Most frequent surface form on the page. */
+  surface: string;
+  /** Raw occurrences, not zone weighted. */
+  count: number;
+  /** Zone-weighted occurrences: title/H1 x2.5, H2-H3 x1.5, body/alt/meta x1. */
+  weight: number;
+}
+
+export interface HeadingTexts {
+  h1: string[];
+  h2: string[];
+  h3: string[];
+}
+
 export interface CrawledPageSummary {
   url: string;
   final_url: string;
@@ -64,6 +82,12 @@ export interface CrawledPageSummary {
   content_simhash?: string | null;
   /** Bounded topical terms from main content, excluding header/footer/nav/sidebar. */
   semantic_terms?: string[];
+  /** Top 120 zone-weighted 1-4-gram terms for Site Focus Score; absent in older saved runs. */
+  focus_terms?: FocusTerm[];
+  /** H1-H3 texts (max 20 per level, 160 chars each); absent in older saved runs. */
+  heading_texts?: HeadingTexts;
+  /** Characters of cleaned main-content text behind focus_terms. */
+  focus_text_chars?: number;
   /** Bounded semantic-content excerpts retained only for local source-context checks. */
   semantic_excerpts?: string[];
   /** Internal links discovered in main content only for semantic architecture analysis. */

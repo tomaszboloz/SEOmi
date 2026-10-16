@@ -6,7 +6,8 @@ use scraper::{Html, Selector};
 
 use super::super::{
     content_metrics::{content_metrics, ContentMetrics},
-    models::{CrawledDuplicateHeading, CrawledPageIssue},
+    focus_terms::extract_page_focus,
+    models::{CrawledDuplicateHeading, CrawledPageFocus, CrawledPageIssue},
     semantic_chrome::has_semantic_content_root,
     semantic_terms::{semantic_status_is_topical, semantic_term_language},
     semantics::{extract_semantic_excerpts, extract_semantic_terms, semantic_content_source},
@@ -26,6 +27,7 @@ pub struct PageContentOutcome {
     pub semantic_terms: Vec<String>,
     pub semantic_language: Option<String>,
     pub semantic_excerpts: Vec<String>,
+    pub focus: CrawledPageFocus,
     pub has_primary_content_root: bool,
     pub semantic_content_source: String,
     pub title: Option<String>,
@@ -113,6 +115,16 @@ pub fn extract_page_content(input: ExtractPageContentInput<'_>) -> PageContentOu
         issues,
     );
     let hd = extract_page_headings(document, is_html, h1_selector, headings_selector, issues);
+    let focus = if is_html && semantic_status_is_topical(status) {
+        extract_page_focus(
+            document,
+            semantic_language.as_deref(),
+            tm.title.as_deref(),
+            tm.meta_description.as_deref(),
+        )
+    } else {
+        Default::default()
+    };
 
     PageContentOutcome {
         document_language,
@@ -124,6 +136,7 @@ pub fn extract_page_content(input: ExtractPageContentInput<'_>) -> PageContentOu
         semantic_terms,
         semantic_language,
         semantic_excerpts,
+        focus,
         has_primary_content_root,
         semantic_content_source,
         title: tm.title,

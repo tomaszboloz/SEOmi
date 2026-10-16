@@ -5,12 +5,15 @@ import type { GscPerformanceSnapshot } from '@/services/gscPerformanceTracker';
 import type { PageSpeedSnapshot } from '@/services/pagespeedHistory';
 import type { CrawlDiffReport } from '@/services/crawlDiff';
 import type { SemanticRunComparisonReport } from '@/services/semanticRunComparison';
+import { evaluateFocusAlert } from './focus';
+import type { AlertEvent } from '@/services/siteFocus';
 import type { MonitoringAlert } from './types';
 
 export * from './types';
 export * from './policy';
 export * from './persistence';
 export * from './evaluators';
+export * from './focus';
 
 export interface MonitoringDelivery { email?: (alert: MonitoringAlert) => Promise<boolean>; }
 export interface MonitoringDeliveryResult { alert: MonitoringAlert | null; delivered: boolean; persisted: boolean; duplicate: boolean; emailConfigured: boolean; }
@@ -31,3 +34,4 @@ export const monitorGscSnapshots = (projectId: string, baseline: GscPerformanceS
 export const monitorPageSpeedSnapshots = (projectId: string, baseline: PageSpeedSnapshot, current: PageSpeedSnapshot, delivery?: MonitoringDelivery) => deliverMonitoringAlert(projectId, comparePageSpeedForMonitoring(baseline, current, readMonitoringSettings(projectId)), delivery);
 export const monitorCrawlComparison = (projectId: string, report: CrawlDiffReport, delivery?: MonitoringDelivery) => deliverMonitoringAlert(projectId, evaluateCrawlAlert(report, readMonitoringSettings(projectId)), delivery);
 export const monitorSemanticComparison = (projectId: string, report: SemanticRunComparisonReport, delivery?: MonitoringDelivery) => deliverMonitoringAlert(projectId, evaluateSemanticAlert(report, readMonitoringSettings(projectId)), delivery);
+export const monitorSiteFocus = (projectId: string, events: AlertEvent[], sourceId: string, delivery?: MonitoringDelivery) => deliverMonitoringAlert(projectId, evaluateFocusAlert(events, sourceId), delivery);

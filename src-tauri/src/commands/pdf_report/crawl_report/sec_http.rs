@@ -1,5 +1,5 @@
 use super::data::{f, list, Crawl};
-use super::strings::{report as s, t};
+use super::strings::{report as s, t, tf};
 use super::tables::Table;
 
 /// Response headers and how each URL was discovered.
@@ -10,7 +10,7 @@ pub fn http_details(c: &Crawl) -> Table {
         .map(|page| {
             let sources: Vec<String> = list(page, "discovery_sources")
                 .iter()
-                .map(|src| t(s::DISCOVERED, &[&f(src, "kind"), &f(src, "source_url")]))
+                .map(|src| tf(t(s::DISCOVERED), &[&f(src, "kind"), &f(src, "source_url")]))
                 .collect();
             vec![
                 f(page, "url"),
@@ -23,17 +23,17 @@ pub fn http_details(c: &Crawl) -> Table {
         })
         .filter(|row| row[1..].iter().any(|value| !value.is_empty()))
         .collect();
-    let intro = t(
-        s::HTTP_INTRO,
+    let intro = tf(
+        t(s::HTTP_INTRO),
         &[&rows.len().to_string(), &c.pages.len().to_string()],
     );
     let columns = [
-        (s::COL_URL, 22.0),
-        (s::COL_CONTENT_TYPE, 15.0),
-        (s::COL_ENCODING, 9.0),
-        (s::COL_CACHE, 16.0),
-        (s::COL_XROBOTS, 12.0),
-        (s::COL_DISCOVERED, 26.0),
+        (t(s::COL_URL), 22.0),
+        (t(s::COL_CONTENT_TYPE), 15.0),
+        (t(s::COL_ENCODING), 9.0),
+        (t(s::COL_CACHE), 16.0),
+        (t(s::COL_XROBOTS), 12.0),
+        (t(s::COL_DISCOVERED), 26.0),
     ];
-    Table::text(s::T_HTTP, Some(intro), &columns, rows)
+    Table::text(t(s::T_HTTP), Some(intro), &columns, rows)
 }

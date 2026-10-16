@@ -10,7 +10,7 @@ pub(super) fn chrome() -> Chrome {
         date: "2026-01-01".into(),
         note: "A method note".into(),
         brand: "Made by tests".into(),
-        page_label: "Page {page} of {total}".into(),
+        page_label: "Page {{page}} of {{total}}".into(),
     }
 }
 

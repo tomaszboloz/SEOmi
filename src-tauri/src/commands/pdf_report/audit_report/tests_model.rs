@@ -2,7 +2,7 @@ use super::check::yes_no;
 use super::ctx::{format_number, pretty_time};
 use super::fixture::fixture;
 use super::model::{category_label, findings, Sev};
-use super::strings::t;
+use super::strings::tf;
 use crate::commands::pdf_report::layout::color::{CRITICAL, MUTED, OK, WARNING};
 use crate::commands::pdf_report::layout::widgets::score_color;
 use serde_json::json;
@@ -64,7 +64,7 @@ fn helpers_format_numbers_times_and_flags() {
     );
     assert_eq!(pretty_time("yesterday"), "yesterday");
     assert_eq!(pretty_time("2026-10-13 17:30:39Z"), "2026-10-13 17:30:39Z");
-    assert_eq!(t("{0}-{1}", &["a", "b"]), "a-b");
+    assert_eq!(tf("{{0}}-{{1}}", &["a", "b"]), "a-b");
     assert_eq!(yes_no(Some(true)).as_deref(), Some("Yes"));
     assert_eq!(yes_no(Some(false)).as_deref(), Some("No"));
     assert_eq!(yes_no(None), None);

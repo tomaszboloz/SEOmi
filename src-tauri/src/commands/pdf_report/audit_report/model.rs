@@ -1,6 +1,6 @@
 use super::ctx::text_at;
 use super::locate::where_items;
-use super::strings::report as s;
+use super::strings::{report as s, t};
 use crate::commands::pdf_report::layout::color::{Rgb, CRITICAL, INFO, WARNING};
 use serde_json::Value;
 
@@ -30,9 +30,9 @@ impl Sev {
 
     pub fn label(self) -> &'static str {
         match self {
-            Sev::Critical => s::SEV_CRITICAL,
-            Sev::Warning => s::SEV_WARNING,
-            Sev::Info => s::SEV_INFO,
+            Sev::Critical => t(s::SEV_CRITICAL),
+            Sev::Warning => t(s::SEV_WARNING),
+            Sev::Info => t(s::SEV_INFO),
         }
     }
 }
@@ -58,9 +58,9 @@ pub fn findings(audit: &Value) -> Vec<Finding> {
             Finding {
                 sev: Sev::parse(&text_at(issue, "/severity").unwrap_or_default()),
                 category: category_label(&text_at(issue, "/category").unwrap_or_default()),
-                message: text_at(issue, "/message").unwrap_or_else(|| s::NO_MESSAGE.into()),
+                message: text_at(issue, "/message").unwrap_or_else(|| t(s::NO_MESSAGE).into()),
                 recommendation: text_at(issue, "/recommendation")
-                    .unwrap_or_else(|| s::NO_RECOMMENDATION.into()),
+                    .unwrap_or_else(|| t(s::NO_RECOMMENDATION).into()),
                 location: where_items(audit, &code, issue.get("params")),
                 code,
             }
@@ -73,7 +73,7 @@ pub fn findings(audit: &Value) -> Vec<Finding> {
 /// Turns identifiers such as `MetaTags` into readable labels.
 pub fn category_label(raw: &str) -> String {
     if raw.is_empty() {
-        return s::CATEGORY_FALLBACK.into();
+        return t(s::CATEGORY_FALLBACK).into();
     }
     let mut label = String::new();
     for (index, character) in raw.chars().enumerate() {

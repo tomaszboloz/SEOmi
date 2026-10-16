@@ -49,7 +49,6 @@ pub fn build_crawled_page_summary(input: BuildCrawledPageSummaryInput<'_>) -> Cr
         .map_or("http", |_| crawl_mode);
     let semantic_content_provenance =
         semantic_provenance_for_mode(evidence_mode, &content.semantic_content_source);
-    let issues_count = issues.len();
 
     CrawledPageSummary {
         url: current_url.to_string(),
@@ -107,6 +106,7 @@ pub fn build_crawled_page_summary(input: BuildCrawledPageSummaryInput<'_>) -> Cr
         semantic_terms: content.semantic_terms,
         semantic_language: content.semantic_language,
         semantic_excerpts: content.semantic_excerpts,
+        focus: content.focus,
         semantic_links: links.semantic_links,
         semantic_content_source: content.semantic_content_source,
         semantic_content_provenance,
@@ -144,7 +144,7 @@ pub fn build_crawled_page_summary(input: BuildCrawledPageSummaryInput<'_>) -> Cr
         favicon_resource_checks: extra.favicon_resource_checks,
         social_meta_tags: extra.social_meta_tags,
         custom_search_results: extra.custom_search_results,
-        issues_count,
+        issues_count: issues.len(),
         issues,
     }
 }

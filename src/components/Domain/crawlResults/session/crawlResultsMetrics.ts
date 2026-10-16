@@ -22,6 +22,7 @@ export const calculateTabCounts = (
   validation: result.pages.reduce((count, page) => count + (page.html_validation_findings?.length || 0), 0),
   performance: result.pages.filter((page) => Number.isFinite(page.response_time_ms)).length,
   visualisations: result.pages.length,
+  focus: result.pages.length,
   exports: currentRun ? 9 : 0,
 });
 

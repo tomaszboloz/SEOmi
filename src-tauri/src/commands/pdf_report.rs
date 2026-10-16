@@ -2,6 +2,7 @@ pub mod audit_report;
 pub mod crawl_report;
 pub mod font;
 pub mod font_pdf;
+pub mod labels;
 pub mod layout;
 pub mod renderer;
 
@@ -10,6 +11,9 @@ mod tests;
 
 #[cfg(test)]
 mod tests_generator;
+
+#[cfg(test)]
+mod tests_labels;
 
 #[cfg(test)]
 mod tests_unicode;

@@ -3,7 +3,7 @@ import type { PageSpeedComparison, PageSpeedSnapshot } from '@/services/pagespee
 import type { CrawlDiffReport } from '@/services/crawlDiff';
 import type { SemanticRunComparisonReport } from '@/services/semanticRunComparison';
 
-export type MonitoringAlertType = 'gsc' | 'pagespeed' | 'crawl' | 'semantic';
+export type MonitoringAlertType = 'gsc' | 'pagespeed' | 'crawl' | 'semantic' | 'focus';
 export type MonitoringAlertFrequency = 'run' | 'daily' | 'weekly';
 
 export interface MonitoringAlertSettings {
@@ -14,7 +14,7 @@ export interface MonitoringAlertSettings {
     gsc: { declinePercent: number; minImpressions: number };
     pagespeed: { categoryDrop: number; metricIncrease: number; maxWindowDays: number };
     crawl: { changedPages: number };
-    semantic: { changes: number };
+    semantic: { changes: number }; focus: { dropPoints: number };
   };
 }
 

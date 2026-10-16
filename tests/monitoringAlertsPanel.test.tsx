@@ -15,6 +15,9 @@ describe('MonitoringAlertsPanel', () => {
     expect((screen.getByRole('combobox', { name: 'Monitoring alert frequency' }) as HTMLSelectElement).value).toBe('daily');
     expect((screen.getByRole('spinbutton', { name: 'GSC decline percent' }) as HTMLInputElement).value).toBe('20');
     expect((screen.getByRole('spinbutton', { name: 'PageSpeed category drop' }) as HTMLInputElement).value).toBe('0.1');
+    expect((screen.getByRole('spinbutton', { name: 'Site Focus Score drop (points)' }) as HTMLInputElement).value).toBe('5');
+    fireEvent.change(screen.getByRole('spinbutton', { name: 'Site Focus Score drop (points)' }), { target: { value: '8' } });
+    expect(JSON.parse(localStorage.getItem('seomi_project_p1_monitoring_alert_settings_v1') || '{}')).toMatchObject({ thresholds: { focus: { dropPoints: 8 } } });
   });
   it('persists bounded controls per active project', async () => {
     await act(async () => { render(<MonitoringAlertsPanel />); });
@@ -22,5 +25,15 @@ describe('MonitoringAlertsPanel', () => {
     fireEvent.change(screen.getByRole('spinbutton', { name: 'GSC decline percent' }), { target: { value: '42' } });
     expect(JSON.parse(localStorage.getItem('seomi_project_p1_monitoring_alert_settings_v1') || '{}')).toMatchObject({ frequency: 'weekly', thresholds: { gsc: { declinePercent: 42 } } });
   });
+  it('persists every threshold input', async () => {
+    await act(async () => { render(<MonitoringAlertsPanel />); });
+    for (const [name, value] of [['GSC minimum impressions', '300'], ['PageSpeed category drop', '0.2'], ['Crawl changed pages', '7'], ['Semantic changes', '9'], ['Site Focus Score drop (points)', '6']]) {
+      fireEvent.change(screen.getByRole('spinbutton', { name }), { target: { value } });
+    }
+    screen.getAllByRole('checkbox').forEach((box) => fireEvent.click(box));
+    const saved = JSON.parse(localStorage.getItem('seomi_project_p1_monitoring_alert_settings_v1') || '{}');
+    expect(saved.thresholds).toMatchObject({ gsc: { minImpressions: 300 }, pagespeed: { categoryDrop: 0.2 }, crawl: { changedPages: 7 }, semantic: { changes: 9 }, focus: { dropPoints: 6 } });
+  });
+
   it('does not render without an active project', async () => { act(() => useProjectStore.setState({ activeProjectId: null })); await act(async () => { render(<MonitoringAlertsPanel />); }); expect(screen.queryByRole('checkbox', { name: 'Enable change monitoring alerts' })).toBeNull(); });
 });

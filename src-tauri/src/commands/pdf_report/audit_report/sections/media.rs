@@ -1,6 +1,6 @@
 use super::super::check::{Check, Section};
 use super::super::ctx::{field, Ctx};
-use super::super::strings::{checks as c, t};
+use super::super::strings::{checks as c, t, tf};
 use serde_json::Value;
 
 fn count_where(items: &[Value], keep: impl Fn(&Value) -> bool) -> usize {
@@ -15,7 +15,7 @@ pub fn images(ctx: &Ctx) -> Section {
     });
     let formats: std::collections::BTreeMap<String, usize> =
         images.iter().fold(Default::default(), |mut acc, image| {
-            *acc.entry(field(image, "format").unwrap_or_else(|| c::UNKNOWN.into()))
+            *acc.entry(field(image, "format").unwrap_or_else(|| t(c::UNKNOWN).into()))
                 .or_default() += 1;
             acc
         });
@@ -24,25 +24,25 @@ pub fn images(ctx: &Ctx) -> Section {
         .map(|(name, n)| format!("{name} ({n})"))
         .collect();
     Section {
-        title: c::IMAGES_TITLE.into(),
+        title: t(c::IMAGES_TITLE).into(),
         checks: vec![
-            Check::info(c::IMAGE_TOTAL, Some(images.len().to_string())),
+            Check::info(t(c::IMAGE_TOTAL), Some(images.len().to_string())),
             ctx.counted(
-                c::IMAGE_ALT,
-                t(c::MISSING_COUNT, &[&missing_alt.to_string()]),
+                t(c::IMAGE_ALT),
+                tf(t(c::MISSING_COUNT), &[&missing_alt.to_string()]),
                 missing_alt,
                 &["images_alt"],
-                c::FIX_ALT,
+                t(c::FIX_ALT),
             ),
             ctx.counted(
-                c::IMAGE_SIZE,
-                t(c::MISSING_COUNT, &[&no_size.to_string()]),
+                t(c::IMAGE_SIZE),
+                tf(t(c::MISSING_COUNT), &[&no_size.to_string()]),
                 no_size,
                 &["images_dimensions"],
-                c::FIX_SIZE,
+                t(c::FIX_SIZE),
             ),
             Check::info(
-                c::IMAGE_FORMATS,
+                t(c::IMAGE_FORMATS),
                 (!formats.is_empty()).then(|| formats.join(", ")),
             ),
         ],
@@ -54,20 +54,20 @@ pub fn links(ctx: &Ctx) -> Section {
     let insecure = count_where(links, |l| l.get("is_insecure") == Some(&Value::Bool(true)));
     let blank = count_where(links, |l| field(l, "target").as_deref() == Some("_blank")).to_string();
     Section {
-        title: c::LINKS_TITLE.into(),
+        title: t(c::LINKS_TITLE).into(),
         checks: vec![
-            Check::info(c::LINK_TOTAL, ctx.count("/links/total_links")),
-            Check::info(c::LINK_INTERNAL, ctx.count("/links/internal_links")),
-            Check::info(c::LINK_EXTERNAL, ctx.count("/links/external_links")),
-            Check::info(c::LINK_NOFOLLOW, ctx.count("/links/nofollow_links")),
+            Check::info(t(c::LINK_TOTAL), ctx.count("/links/total_links")),
+            Check::info(t(c::LINK_INTERNAL), ctx.count("/links/internal_links")),
+            Check::info(t(c::LINK_EXTERNAL), ctx.count("/links/external_links")),
+            Check::info(t(c::LINK_NOFOLLOW), ctx.count("/links/nofollow_links")),
             ctx.counted(
-                c::LINK_INSECURE,
+                t(c::LINK_INSECURE),
                 insecure.to_string(),
                 insecure,
                 &["links_insecure"],
-                c::FIX_INSECURE,
+                t(c::FIX_INSECURE),
             ),
-            ctx.judged(c::LINK_BLANK, Some(blank), &["links_target_blank"]),
+            ctx.judged(t(c::LINK_BLANK), Some(blank), &["links_target_blank"]),
         ],
     }
 }
