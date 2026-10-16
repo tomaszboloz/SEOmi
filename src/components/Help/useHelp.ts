@@ -11,7 +11,7 @@ export const useHelp = (id: HelpId): HelpContent | null => {
   const raw: unknown = t(key, { returnObjects: true });
   const entry = raw as Partial<Record<keyof HelpContent, unknown>> | null;
   if (!entry || typeof entry !== 'object' || ![entry.title, entry.what, entry.why, entry.action].every(isText)) {
-    if (import.meta.env.DEV) console.warn(`[help] missing or incomplete help entry "${key}"`);
+    if (import.meta.env.DEV && import.meta.env.MODE !== 'test') console.warn(`[help] missing or incomplete help entry "${key}"`);
     return null;
   }
   return {
