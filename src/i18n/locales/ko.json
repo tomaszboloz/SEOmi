@@ -2234,7 +2234,8 @@
       "frames": "프레임",
       "custom-search": "사용자 검색",
       "semantic": "시맨틱 분석",
-      "focus": "사이트 포커스"
+      "focus": "사이트 포커스",
+      "trust": "엔터티 신뢰도"
     },
     "environmentStaging": "test/staging",
     "environmentProduction": "production",
@@ -3049,7 +3050,8 @@
       "validation": "HTML 검증",
       "performance": "성능",
       "exports": "내보내기",
-      "focus": "사이트 포커스"
+      "focus": "사이트 포커스",
+      "trust": "엔터티 신뢰도"
     },
     "groups": {
       "core": "개요",
@@ -5821,6 +5823,81 @@
           "thin-subtopic": "내용이 빈약한 하위 주제 \"{{0}}\": 페이지의 {{1}}%만 다룹니다({{2}}페이지). 용어: {{3}}.",
           "competitor-terms": "내 사이트에 없는 경쟁사 용어: {{3}}."
         }
+      },
+      "trust": {
+        "title": "엔터티 신뢰도 (E-E-A-T)",
+        "intro": "사이트의 발행자, 저자, 출처를 얼마나 확인할 수 있는지 보여 줍니다. 점수는 저장된 실행 결과에서 가져오며 페이지를 다시 가져오지 않습니다.",
+        "scoreTitle": "엔터티 신뢰 점수",
+        "legend": "수준: 75-100 높음, 60-74 충분, 40-59 낮음, 0-39 심각.",
+        "kSchema": "엔터티 그래프",
+        "kAuthor": "저자 적합도",
+        "kCitation": "출처 품질",
+        "kTransparency": "투명성",
+        "kArticles": "문서 페이지",
+        "kAuthors": "저자 엔터티",
+        "nLayer": "점수 0-100",
+        "nNoData": "이 크롤에는 데이터 없음",
+        "nArticles": "크롤 {{0}}개 중",
+        "nAuthors": "sameAs 있음 {{0}}",
+        "ymylNote": "YMYL 카테고리: {{0}}. 문서의 {{1}}%에 실명 저자나 검토자가 없습니다.",
+        "tAuthors": "저자 엔터티",
+        "authorsIntro": "구조화 데이터에서 찾은 저자와 sameAs 링크, 핵심 주제와의 적합도입니다.",
+        "colAuthor": "저자",
+        "colArticles": "문서 수",
+        "colSameAs": "sameAs",
+        "colAlignment": "적합도",
+        "generic": "{{0}} (익명 서명)",
+        "tPages": "신뢰 페이지",
+        "pagesIntro": "편집 및 회사 투명성을 보여 주는 페이지입니다.",
+        "colPage": "페이지",
+        "colState": "상태",
+        "found": "발견됨: {{0}}",
+        "missing": "없음",
+        "tFindings": "신뢰 점검 결과",
+        "findingsIntro": "심각도 순으로 정렬했습니다. 심각 항목부터 고치세요.",
+        "colSeverity": "심각도",
+        "colFinding": "점검 결과",
+        "level": {
+          "strong": "신뢰도 높음",
+          "adequate": "신뢰도 충분",
+          "weak": "신뢰도 낮음",
+          "critical": "신뢰 부족이 심각함"
+        },
+        "severity": {
+          "critical": "심각",
+          "warning": "경고",
+          "info": "정보"
+        },
+        "kind": {
+          "editorial": "편집 정책",
+          "about": "회사 소개",
+          "contact": "문의",
+          "registry": "회사 등기 정보"
+        },
+        "ymyl": {
+          "health": "건강",
+          "finance": "금융",
+          "legal": "법률"
+        },
+        "find": {
+          "ymyl-unattributed": "YMYL 주제 문서 {{0}}개({{1}}%)에 실명 저자나 검토자가 없습니다.",
+          "ymyl-no-reviewer": "의료 문서 {{0}}개 중 검토자(reviewedBy)를 밝힌 문서가 없습니다.",
+          "no-bylines": "문서 {{0}}개 중 구조화 데이터에 저자를 밝힌 문서가 없습니다.",
+          "generic-author": "문서 {{0}}개가 익명 서명으로 되어 있습니다.",
+          "org-missing": "구조화 데이터에서 Organization 엔터티를 찾지 못했습니다.",
+          "org-no-same-as": "발행자 {{0}}에는 sameAs 링크가 없습니다.",
+          "author-no-same-as": "저자 {{0}}명에게 sameAs 링크가 없습니다({{1}}).",
+          "author-no-id": "저자 {{0}}명에게 안정적인 @id가 없습니다.",
+          "author-off-topic": "{{0}}의 프로필은 핵심 주제와 {{1}}%만 일치합니다.",
+          "low-citations": "문서 페이지 {{1}}개 중 신뢰할 수 있는 출처를 인용한 페이지는 {{0}}%뿐입니다.",
+          "dead-citations": "외부로 나가는 링크 {{0}}개가 오류를 반환합니다.",
+          "missing-editorial": "편집 정책 또는 팩트체크 페이지를 찾지 못했습니다.",
+          "missing-contact": "문의 페이지를 찾지 못했습니다.",
+          "missing-registry": "회사 등기 정보 또는 법적 고지 페이지를 찾지 못했습니다.",
+          "missing-about": "회사 소개 페이지를 찾지 못했습니다.",
+          "missing-dates": "수정일 또는 검토일이 표시된 문서는 {{0}}%뿐입니다.",
+          "no-articles": "문서 페이지가 감지되지 않아 저자 및 인용 계층은 점수를 매기지 않았습니다."
+        }
       }
     },
     "recs": {
@@ -6056,6 +6133,50 @@
         "what": "권장 목표는 최소 80점이며, 상위 3개 경쟁사의 평균이 더 높으면 그 평균입니다.",
         "why": "비교 결과를 하나의 목표 숫자로 바꿔 줍니다.",
         "action": "계획 단계의 목표로 활용하세요.\n수정 후 벤치마크를 다시 실행해 변화를 확인하세요."
+      }
+    },
+    "trust": {
+      "trustScore": {
+        "title": "엔터티 신뢰 점수",
+        "what": "검색엔진이 콘텐츠를 누가 발행하고 작성했는지 얼마나 확인할 수 있는지를 0~100으로 나타냅니다. 엔터티 그래프, 저자 주제 적합도, 출처 품질, 편집 투명성 네 계층의 평균입니다.",
+        "why": "건강, 금융, 법률 주제에서는 주제 집중만으로는 부족합니다. 검증 가능한 저자와 발행자가 없는 페이지는 상위 결과에 오르기 어렵습니다.",
+        "action": "목록에서 심각 항목부터 확인하세요.\n가장 낮은 계층을 고친 뒤 다시 크롤해 점수 변화를 확인하세요."
+      },
+      "schemaGraph": {
+        "title": "엔터티 그래프 (JSON-LD)",
+        "what": "구조화 데이터가 발행자와 각 저자를 안정적인 @id와 sameAs 링크가 있는 엔터티로 표시하는지, 문서에 저자, 날짜, 검토자, 인용이 있는지 확인합니다.",
+        "why": "엔터티가 연결되어 있으면 검색엔진이 텍스트로 추측하지 않고 저자를 알려진 인물과 조직에 대응시킬 수 있습니다.",
+        "action": "@id가 있는 Organization과 Person 마크업을 추가하세요.\nsameAs로 각 인물과 발행자를 Wikidata, ORCID, LinkedIn 또는 공식 등록부에 연결하세요.\n저자 목록 아래의 JSON-LD 생성기를 사용하세요."
+      },
+      "authorAlignment": {
+        "title": "저자 주제 적합도",
+        "what": "각 저자가 밝힌 전문성(직책, knowsAbout, 프로필 페이지)을 사이트의 핵심 주제와 비교합니다.",
+        "why": "인슐린 치료에 관한 문서에 마케팅 카피라이터가 서명하면 전문성 신호가 약합니다.",
+        "action": "프로필이 주제와 맞는 저자에게 문서를 배정하세요.\nPerson 마크업에 jobTitle과 knowsAbout을 추가하세요.\n모든 저자의 프로필 페이지를 게시하세요."
+      },
+      "citationQuality": {
+        "title": "출처 품질",
+        "what": "문서 페이지 중 .gov, .edu, PubMed, NCBI, WHO, 학술 출판사 같은 신뢰할 수 있는 출처로 연결되는 페이지 수와 끊어진 외부 링크 수를 보여 줍니다.",
+        "why": "1차 출처를 인용하면 주장을 검증할 수 있음을 보여 줍니다. 끊어진 참조는 이 신호를 약하게 합니다.",
+        "action": "전문 문서마다 1차 출처에 대한 참조를 추가하세요.\n끊어진 외부 링크를 교체하거나 삭제하세요.\n링크 탭에서 외부 링크를 확인해 상태 코드를 갱신하세요."
+      },
+      "transparency": {
+        "title": "편집 투명성",
+        "what": "편집 정책, 회사 소개 페이지, 문의 페이지, 회사 등기 정보, 문서에 표시된 수정일 또는 검토일이 있는지 찾습니다.",
+        "why": "독자와 검색엔진은 사이트 뒤에 누가 있고 콘텐츠를 어떻게 검증하는지 알아야 합니다.",
+        "action": "편집 및 팩트체크 정책을 게시하세요.\n연락처와 회사 등기 정보를 추가하세요.\n모든 문서에 최종 업데이트 날짜를 표시하세요."
+      },
+      "ymyl": {
+        "title": "YMYL 주제",
+        "what": "Your Money or Your Life: 건강, 금융, 법률처럼 잘못된 정보가 독자에게 해를 줄 수 있는 주제입니다.",
+        "why": "검색 품질 가이드라인은 이런 주제에 가장 높은 신뢰 요건을 적용하므로 저자나 검토자가 없으면 심각한 부족으로 봅니다.",
+        "action": "모든 문서에 자격을 갖춘 저자를 표시하세요.\n의료 또는 법률 콘텐츠에는 자격을 갖춘 검토자를 추가하세요.\n1차 출처를 인용하세요."
+      },
+      "sameAs": {
+        "title": "sameAs 링크",
+        "what": "사람이나 조직에서 Wikidata, ORCID, LinkedIn, 공식 등록부 등 다른 곳의 동일한 엔터티를 가리키는 schema.org 속성입니다.",
+        "why": "검색엔진이 해당 저자가 그 자격을 가진 실제 인물임을 확인할 수 있게 합니다.",
+        "action": "저자마다, 그리고 발행자에 대해 신뢰할 수 있는 sameAs URL을 하나 이상 추가하세요.\n해당 프로필과 같은 이름과 표기를 사용하세요."
       }
     }
   },
@@ -6441,6 +6562,119 @@
       "coverage": "경쟁사의 {{pct}}%({{count}}개)",
       "empty": "내 사이트에 없는 경쟁사 주제가 없습니다.",
       "apply": "이 용어를 공백 분석에 추가"
+    }
+  },
+  "trust": {
+    "title": "E-E-A-T 및 엔터티 신뢰도",
+    "subtitle": "저자, 발행자, 출처를 얼마나 확인할 수 있는지 보여 줍니다. 저장된 크롤 결과로 계산하며 페이지를 다시 가져오지 않습니다.",
+    "empty": "신뢰 신호를 평가하려면 먼저 크롤을 실행하세요.",
+    "hero": {
+      "label": "엔터티 신뢰 점수",
+      "articles": "크롤한 {{pages}}개 페이지 중 문서 페이지 {{articles}}개",
+      "previous": "이전 실행: {{score}} ({{delta}})",
+      "ymyl": "YMYL 카테고리: {{category}}. 검색엔진은 이런 페이지에 가장 엄격한 신뢰 기준을 적용합니다.",
+      "unattributed": "문서의 {{pct}}%에 실명 저자나 검토자가 없습니다."
+    },
+    "level": {
+      "strong": "신뢰도 높음",
+      "adequate": "신뢰도 충분",
+      "weak": "신뢰도 낮음",
+      "critical": "신뢰 부족이 심각함"
+    },
+    "ymyl": {
+      "health": "건강",
+      "finance": "금융",
+      "legal": "법률"
+    },
+    "layers": {
+      "title": "신뢰 계층",
+      "schemaGraph": "엔터티 그래프 (JSON-LD)",
+      "authorAlignment": "저자 주제 적합도",
+      "citationQuality": "출처 품질",
+      "transparency": "편집 투명성",
+      "noData": "해당 없음"
+    },
+    "entities": {
+      "title": "발행자와 저자",
+      "orgPresent": "발행자: {{name}}. 안정적인 @id: {{id}}. sameAs 링크: {{sameAs}}.",
+      "orgMissing": "구조화 데이터에서 Organization 엔터티를 찾지 못했습니다.",
+      "none": "구조화 데이터에서 저자 엔터티를 찾지 못했습니다.",
+      "colAuthor": "저자",
+      "colArticles": "문서 수",
+      "colSameAs": "sameAs 링크",
+      "colAlignment": "주제 적합도",
+      "generic": "익명 서명"
+    },
+    "signals": {
+      "title": "출처와 투명성",
+      "citations": "문서 페이지 {{pages}}개 중 {{trusted}}개가 신뢰할 수 있는 출처(.gov, .edu, PubMed, WHO)로 연결됩니다.",
+      "dead": "외부로 나가는 링크 {{count}}개가 끊어졌습니다",
+      "dated": "문서 {{articles}}개 중 {{dated}}개에 수정일 또는 검토일이 표시됩니다.",
+      "pagesTitle": "신뢰 페이지",
+      "page": {
+        "editorial": "편집 정책",
+        "about": "회사 소개",
+        "contact": "문의",
+        "registry": "회사 등기 정보"
+      },
+      "found": "발견됨",
+      "missing": "없음"
+    },
+    "severity": {
+      "critical": "심각",
+      "warning": "경고",
+      "info": "정보"
+    },
+    "findings": {
+      "title": "먼저 고칠 사항",
+      "none": "신뢰 부족은 발견되지 않았습니다.",
+      "code": {
+        "ymyl-unattributed": "YMYL 주제 문서 {{count}}개({{pct}}%)에 실명 저자나 검토자가 없습니다. 검증 가능한 자격을 갖춘 사람을 추가하세요.",
+        "ymyl-no-reviewer": "의료 문서 {{count}}개 중 검토자(reviewedBy)를 밝힌 문서가 없습니다. 자격을 갖춘 의료 검토자를 추가하세요.",
+        "no-bylines": "문서 {{count}}개 중 구조화 데이터에 저자를 밝힌 문서가 없습니다.",
+        "generic-author": "문서 {{count}}개가 편집팀 같은 익명 서명으로 되어 있습니다.",
+        "org-missing": "Organization 엔터티를 찾지 못했습니다. 안정적인 @id가 있는 발행자 마크업을 추가하세요.",
+        "org-no-same-as": "발행자 {{name}}에는 Wikidata, 기업 등록부, 소셜 프로필로 연결되는 sameAs 링크가 없습니다.",
+        "author-no-same-as": "저자 {{count}}명에게 sameAs 링크가 없습니다({{names}}). ORCID, LinkedIn 또는 전문직 등록부에 연결하세요.",
+        "author-no-id": "저자 {{count}}명에게 안정적인 @id가 없어 검색엔진이 페이지 간에 같은 사람으로 연결할 수 없습니다.",
+        "author-off-topic": "{{name}}의 프로필은 핵심 주제와 {{pct}}%만 일치합니다. 전문성이 맞는 저자를 우선하세요.",
+        "low-citations": "문서 페이지 {{pages}}개 중 신뢰할 수 있는 출처(.gov, .edu, PubMed, WHO)를 인용한 페이지는 {{pct}}%뿐입니다.",
+        "dead-citations": "외부로 나가는 링크 {{count}}개가 오류를 반환합니다. 교체하거나 삭제하세요.",
+        "missing-editorial": "편집 정책 또는 팩트체크 페이지를 찾지 못했습니다.",
+        "missing-contact": "문의 페이지를 찾지 못했습니다.",
+        "missing-registry": "회사 등기 정보 또는 법적 고지 페이지를 찾지 못했습니다.",
+        "missing-about": "회사 소개 페이지를 찾지 못했습니다.",
+        "missing-dates": "수정일 또는 검토일이 표시된 문서는 {{pct}}%뿐입니다.",
+        "no-articles": "문서 페이지가 감지되지 않아 저자 및 인용 계층은 점수를 매기지 않았습니다."
+      }
+    },
+    "generator": {
+      "open": "JSON-LD로 수정",
+      "title": "JSON-LD 생성기",
+      "intro": "sameAs 링크가 있는 Organization, Person, 페이지 그래프를 만듭니다. 검토한 뒤 페이지의 head에 붙여 넣으세요.",
+      "close": "닫기",
+      "field": {
+        "personName": "저자 이름",
+        "jobTitle": "직책",
+        "personUrl": "저자 프로필 URL",
+        "organizationName": "발행자 이름",
+        "organizationUrl": "발행자 URL",
+        "pageUrl": "페이지 URL",
+        "dateModified": "수정일 (YYYY-MM-DD)",
+        "lastReviewed": "최종 검토일 (YYYY-MM-DD)",
+        "sameAs": "sameAs 프로필 (한 줄에 URL 하나: Wikidata, ORCID, LinkedIn, 전문직 등록부)",
+        "asReviewer": "저자 대신 전문가 검토자로 표시"
+      },
+      "issue": {
+        "missing-name": "저자 이름을 입력하세요.",
+        "invalid-organization-url": "올바른 발행자 URL을 입력하세요 (https://...).",
+        "invalid-page-url": "올바른 페이지 URL을 입력하세요 (https://...).",
+        "invalid-same-as": "올바른 URL이 아닌 sameAs 항목은 제외했습니다."
+      },
+      "preview": "생성된 JSON-LD",
+      "copy": "script 태그 복사",
+      "copied": "복사했습니다.",
+      "copyFailed": "복사하지 못했습니다. 텍스트를 선택해 직접 복사하세요."
     }
   }
 }

@@ -2234,7 +2234,8 @@
       "frames": "框架",
       "custom-search": "自定义搜索",
       "semantic": "语义分析",
-      "focus": "站点聚焦度"
+      "focus": "站点聚焦度",
+      "trust": "实体信任度"
     },
     "environmentStaging": "test/staging",
     "environmentProduction": "production",
@@ -3049,7 +3050,8 @@
       "validation": "HTML 验证",
       "performance": "性能",
       "exports": "导出",
-      "focus": "站点聚焦度"
+      "focus": "站点聚焦度",
+      "trust": "实体信任度"
     },
     "groups": {
       "core": "概览",
@@ -5821,6 +5823,81 @@
           "thin-subtopic": "内容单薄的子主题“{{0}}”:仅有 {{1}}% 的页面涉及(共 {{2}} 个页面)。相关词:{{3}}。",
           "competitor-terms": "竞争对手使用而你的站点缺失的词:{{3}}。"
         }
+      },
+      "trust": {
+        "title": "实体信任度（E-E-A-T）",
+        "intro": "网站发布者、作者和来源的可验证程度。得分来自已保存的运行结果，不会重新获取任何页面。",
+        "scoreTitle": "实体信任得分",
+        "legend": "等级：75-100 高，60-74 足够，40-59 弱，0-39 严重。",
+        "kSchema": "实体图谱",
+        "kAuthor": "作者契合度",
+        "kCitation": "来源质量",
+        "kTransparency": "透明度",
+        "kArticles": "文章页面",
+        "kAuthors": "作者实体",
+        "nLayer": "得分 0-100",
+        "nNoData": "此次抓取无数据",
+        "nArticles": "共抓取 {{0}} 个",
+        "nAuthors": "{{0}} 个带 sameAs",
+        "ymylNote": "YMYL 类别：{{0}}。{{1}}% 的文章没有署名作者或审核者。",
+        "tAuthors": "作者实体",
+        "authorsIntro": "在结构化数据中找到的作者，含 sameAs 链接及与核心主题的契合度。",
+        "colAuthor": "作者",
+        "colArticles": "文章数",
+        "colSameAs": "sameAs",
+        "colAlignment": "契合度",
+        "generic": "{{0}}（匿名署名）",
+        "tPages": "信任页面",
+        "pagesIntro": "体现编辑和公司透明度的页面。",
+        "colPage": "页面",
+        "colState": "状态",
+        "found": "已找到：{{0}}",
+        "missing": "缺失",
+        "tFindings": "信任问题",
+        "findingsIntro": "按严重程度排序；请先修复严重事项。",
+        "colSeverity": "严重程度",
+        "colFinding": "问题",
+        "level": {
+          "strong": "信任度高",
+          "adequate": "信任度足够",
+          "weak": "信任度弱",
+          "critical": "信任存在严重缺口"
+        },
+        "severity": {
+          "critical": "严重",
+          "warning": "警告",
+          "info": "信息"
+        },
+        "kind": {
+          "editorial": "编辑政策",
+          "about": "关于我们",
+          "contact": "联系方式",
+          "registry": "公司注册信息"
+        },
+        "ymyl": {
+          "health": "健康",
+          "finance": "金融",
+          "legal": "法律"
+        },
+        "find": {
+          "ymyl-unattributed": "YMYL 主题下有 {{0}} 篇文章（{{1}}%）没有署名作者或审核者。",
+          "ymyl-no-reviewer": "{{0}} 篇医学文章均未声明审核者（reviewedBy）。",
+          "no-bylines": "{{0}} 篇文章均未在结构化数据中声明作者。",
+          "generic-author": "有 {{0}} 篇文章以匿名方式署名。",
+          "org-missing": "结构化数据中未找到 Organization 实体。",
+          "org-no-same-as": "发布者 {{0}} 没有 sameAs 链接。",
+          "author-no-same-as": "{{0}} 位作者没有 sameAs 链接（{{1}}）。",
+          "author-no-id": "{{0}} 位作者没有稳定的 @id。",
+          "author-off-topic": "{{0}} 的资料与核心主题的契合度仅为 {{1}}%。",
+          "low-citations": "{{1}} 个文章页面中只有 {{0}}% 引用了可信来源。",
+          "dead-citations": "{{0}} 个出站链接返回错误。",
+          "missing-editorial": "未找到编辑政策或事实核查页面。",
+          "missing-contact": "未找到联系页面。",
+          "missing-registry": "未找到公司注册信息或法律声明页面。",
+          "missing-about": "未找到“关于我们”页面。",
+          "missing-dates": "只有 {{0}}% 的文章显示了修改或审核日期。",
+          "no-articles": "未检测到文章页面；未对作者和引用层级评分。"
+        }
       }
     },
     "recs": {
@@ -6056,6 +6133,50 @@
         "what": "建议的目标:至少 80 分;若前 3 名竞争对手的平均分更高,则取该平均分。",
         "why": "把对比结果变成一个可以努力达成的数字。",
         "action": "把它作为规划目标。\n完成修复后重新运行基准,查看变化。"
+      }
+    },
+    "trust": {
+      "trustScore": {
+        "title": "实体信任得分",
+        "what": "0 到 100 的得分，表示搜索引擎能在多大程度上验证谁发布并撰写了你的内容。它是四个层级的平均值：实体图谱、作者主题契合度、来源质量和编辑透明度。",
+        "why": "在健康、金融和法律主题中，仅有主题聚焦是不够的。缺少可验证作者和发布者的页面很少能进入前列。",
+        "action": "先看列表中的严重事项。\n修复最低的层级，然后重新抓取以查看得分变化。"
+      },
+      "schemaGraph": {
+        "title": "实体图谱（JSON-LD）",
+        "what": "检查结构化数据是否将发布者和每位作者标明为带有稳定 @id 和 sameAs 链接的实体，以及文章是否包含作者、日期、审核者和引用。",
+        "why": "实体相互关联后，搜索引擎可以把你的作者与已知的人物和组织对应起来，而不是只靠文本猜测。",
+        "action": "添加带 @id 的 Organization 和 Person 标记。\n用 sameAs 把每位人员和发布者链接到 Wikidata、ORCID、LinkedIn 或官方注册库。\n使用作者列表下方的 JSON-LD 生成器。"
+      },
+      "authorAlignment": {
+        "title": "作者主题契合度",
+        "what": "将每位作者声明的专业能力（职位、knowsAbout 和个人主页）与网站的核心主题进行比较。",
+        "why": "一篇关于胰岛素治疗的文章如果由营销文案撰稿人署名，专业性信号就很弱。",
+        "action": "把文章分配给资料与主题相符的作者。\n在 Person 标记中添加 jobTitle 和 knowsAbout。\n为每位作者发布个人主页。"
+      },
+      "citationQuality": {
+        "title": "来源质量",
+        "what": "显示有多少文章页面链接到 .gov、.edu、PubMed、NCBI、WHO 或学术出版社等可信来源，以及有多少出站链接已失效。",
+        "why": "引用一手来源表明观点可以验证。失效的引用会削弱这一信号。",
+        "action": "在每篇专业文章中添加一手来源的引用。\n替换或删除失效的出站链接。\n在“链接”标签页检查外部链接以刷新状态码。"
+      },
+      "transparency": {
+        "title": "编辑透明度",
+        "what": "查找编辑政策、“关于我们”页面、联系页面、公司注册信息，以及文章上可见的修改或审核日期。",
+        "why": "读者和搜索引擎需要知道网站背后是谁，以及内容如何核查。",
+        "action": "发布编辑与事实核查政策。\n添加联系方式和公司注册信息。\n在每篇文章上显示最近更新日期。"
+      },
+      "ymyl": {
+        "title": "YMYL 主题",
+        "what": "Your Money or Your Life：健康、金融和法律等主题，错误信息可能伤害读者。",
+        "why": "搜索质量指南对这些主题提出最高的信任要求，因此缺少作者或审核者属于严重缺口。",
+        "action": "每篇文章都标明合格的作者。\n医学或法律内容请添加具备资质的审核者。\n引用一手来源。"
+      },
+      "sameAs": {
+        "title": "sameAs 链接",
+        "what": "schema.org 属性，用于从某个人或组织指向其他地方的同一实体：Wikidata、ORCID、LinkedIn 或官方注册库。",
+        "why": "它让搜索引擎能够确认你的作者就是具备这些资质的真实人物。",
+        "action": "为每位作者和发布者至少添加一个权威的 sameAs URL。\n使用与该主页一致的姓名和拼写。"
       }
     }
   },
@@ -6441,6 +6562,119 @@
       "coverage": "{{pct}}% 的竞争对手({{count}} 个)",
       "empty": "你的站点没有缺失任何竞争对手的主题。",
       "apply": "将这些词加入缺口分析"
+    }
+  },
+  "trust": {
+    "title": "E-E-A-T 与实体信任度",
+    "subtitle": "作者、发布者和来源的可验证程度。基于已保存的抓取结果计算，不会重新获取任何页面。",
+    "empty": "请先运行一次抓取，以评估信任信号。",
+    "hero": {
+      "label": "实体信任得分",
+      "articles": "在 {{pages}} 个已抓取页面中有 {{articles}} 个文章页面",
+      "previous": "上次运行：{{score}}（{{delta}}）",
+      "ymyl": "YMYL 类别：{{category}}。搜索引擎对这类页面采用最严格的信任标准。",
+      "unattributed": "{{pct}}% 的文章没有署名作者或审核者。"
+    },
+    "level": {
+      "strong": "信任度高",
+      "adequate": "信任度足够",
+      "weak": "信任度弱",
+      "critical": "信任存在严重缺口"
+    },
+    "ymyl": {
+      "health": "健康",
+      "finance": "金融",
+      "legal": "法律"
+    },
+    "layers": {
+      "title": "信任层级",
+      "schemaGraph": "实体图谱（JSON-LD）",
+      "authorAlignment": "作者主题契合度",
+      "citationQuality": "来源质量",
+      "transparency": "编辑透明度",
+      "noData": "无"
+    },
+    "entities": {
+      "title": "发布者与作者",
+      "orgPresent": "发布者：{{name}}。稳定的 @id：{{id}}。sameAs 链接：{{sameAs}}。",
+      "orgMissing": "结构化数据中未找到 Organization 实体。",
+      "none": "结构化数据中未找到作者实体。",
+      "colAuthor": "作者",
+      "colArticles": "文章数",
+      "colSameAs": "sameAs 链接",
+      "colAlignment": "主题契合度",
+      "generic": "匿名署名"
+    },
+    "signals": {
+      "title": "来源与透明度",
+      "citations": "{{pages}} 个文章页面中有 {{trusted}} 个链接到可信来源（.gov、.edu、PubMed、WHO）。",
+      "dead": "{{count}} 个出站链接已失效",
+      "dated": "{{articles}} 篇文章中有 {{dated}} 篇显示了修改或审核日期。",
+      "pagesTitle": "信任页面",
+      "page": {
+        "editorial": "编辑政策",
+        "about": "关于我们",
+        "contact": "联系方式",
+        "registry": "公司注册信息"
+      },
+      "found": "已找到",
+      "missing": "缺失"
+    },
+    "severity": {
+      "critical": "严重",
+      "warning": "警告",
+      "info": "信息"
+    },
+    "findings": {
+      "title": "优先修复事项",
+      "none": "未发现信任缺口。",
+      "code": {
+        "ymyl-unattributed": "YMYL 主题下有 {{count}} 篇文章（{{pct}}%）没有署名作者或审核者。请添加具备可验证资质的人员。",
+        "ymyl-no-reviewer": "{{count}} 篇医学文章均未声明审核者（reviewedBy）。请添加具备资质的医学审核者。",
+        "no-bylines": "{{count}} 篇文章均未在结构化数据中声明作者。",
+        "generic-author": "有 {{count}} 篇文章以编辑部等匿名方式署名。",
+        "org-missing": "未找到 Organization 实体。请添加带有稳定 @id 的发布者标记。",
+        "org-no-same-as": "发布者 {{name}} 没有指向 Wikidata、企业注册库或社交主页的 sameAs 链接。",
+        "author-no-same-as": "{{count}} 位作者没有 sameAs 链接（{{names}}）。请将他们链接到 ORCID、LinkedIn 或职业注册库。",
+        "author-no-id": "{{count}} 位作者没有稳定的 @id，搜索引擎无法跨页面识别他们。",
+        "author-off-topic": "{{name}} 的资料与核心主题的契合度仅为 {{pct}}%。请优先选择专业背景相符的作者。",
+        "low-citations": "{{pages}} 个文章页面中只有 {{pct}}% 引用了可信来源（.gov、.edu、PubMed、WHO）。",
+        "dead-citations": "{{count}} 个出站链接返回错误。请替换或删除。",
+        "missing-editorial": "未找到编辑政策或事实核查页面。",
+        "missing-contact": "未找到联系页面。",
+        "missing-registry": "未找到公司注册信息或法律声明页面。",
+        "missing-about": "未找到“关于我们”页面。",
+        "missing-dates": "只有 {{pct}}% 的文章显示了修改或审核日期。",
+        "no-articles": "未检测到文章页面，因此未对作者和引用层级评分。"
+      }
+    },
+    "generator": {
+      "open": "用 JSON-LD 修复",
+      "title": "JSON-LD 生成器",
+      "intro": "生成包含 sameAs 链接的 Organization、Person 和页面图谱。检查后粘贴到页面的 head 中。",
+      "close": "关闭",
+      "field": {
+        "personName": "作者姓名",
+        "jobTitle": "职位",
+        "personUrl": "作者主页 URL",
+        "organizationName": "发布者名称",
+        "organizationUrl": "发布者 URL",
+        "pageUrl": "页面 URL",
+        "dateModified": "修改日期（YYYY-MM-DD）",
+        "lastReviewed": "最近审核日期（YYYY-MM-DD）",
+        "sameAs": "sameAs 资料（每行一个 URL：Wikidata、ORCID、LinkedIn、职业注册库）",
+        "asReviewer": "声明为专家审核者而非作者"
+      },
+      "issue": {
+        "missing-name": "请输入作者姓名。",
+        "invalid-organization-url": "请输入有效的发布者 URL（https://...）。",
+        "invalid-page-url": "请输入有效的页面 URL（https://...）。",
+        "invalid-same-as": "部分 sameAs 条目不是有效 URL，已被忽略。"
+      },
+      "preview": "生成的 JSON-LD",
+      "copy": "复制 script 标签",
+      "copied": "已复制。",
+      "copyFailed": "复制失败。请选中文本并手动复制。"
     }
   }
 }

@@ -2234,7 +2234,8 @@
       "frames": "フレーム",
       "custom-search": "カスタム検索",
       "semantic": "セマンティック分析",
-      "focus": "サイトフォーカス"
+      "focus": "サイトフォーカス",
+      "trust": "エンティティの信頼性"
     },
     "environmentStaging": "test/staging",
     "environmentProduction": "production",
@@ -3049,7 +3050,8 @@
       "validation": "HTML検証",
       "performance": "パフォーマンス",
       "exports": "エクスポート",
-      "focus": "サイトフォーカス"
+      "focus": "サイトフォーカス",
+      "trust": "エンティティの信頼性"
     },
     "groups": {
       "core": "概要",
@@ -5821,6 +5823,81 @@
           "thin-subtopic": "薄いサブトピック「{{0}}」: 扱っているのはページの {{1}}%({{2}} ページ)のみです。用語: {{3}}。",
           "competitor-terms": "自社サイトにない競合の用語: {{3}}。"
         }
+      },
+      "trust": {
+        "title": "エンティティの信頼性（E-E-A-T）",
+        "intro": "サイトの発行者、著者、情報源をどの程度確認できるかを示します。スコアは保存済みの実行結果から算出し、ページは再取得しません。",
+        "scoreTitle": "エンティティ信頼スコア",
+        "legend": "レベル: 75-100 高い、60-74 十分、40-59 低い、0-39 重大。",
+        "kSchema": "エンティティグラフ",
+        "kAuthor": "著者の適合度",
+        "kCitation": "情報源の品質",
+        "kTransparency": "透明性",
+        "kArticles": "記事ページ",
+        "kAuthors": "著者エンティティ",
+        "nLayer": "スコア 0-100",
+        "nNoData": "このクロールにはデータなし",
+        "nArticles": "クロール{{0}}ページ中",
+        "nAuthors": "sameAsあり: {{0}}",
+        "ymylNote": "YMYLカテゴリ: {{0}}。記事の{{1}}%に、氏名のある著者または監修者がいません。",
+        "tAuthors": "著者エンティティ",
+        "authorsIntro": "構造化データで見つかった著者と、そのsameAsリンクおよび中心テーマとの適合度です。",
+        "colAuthor": "著者",
+        "colArticles": "記事数",
+        "colSameAs": "sameAs",
+        "colAlignment": "適合度",
+        "generic": "{{0}}（匿名の署名）",
+        "tPages": "信頼性ページ",
+        "pagesIntro": "編集と会社の透明性を示すページです。",
+        "colPage": "ページ",
+        "colState": "状態",
+        "found": "検出: {{0}}",
+        "missing": "なし",
+        "tFindings": "信頼性の検出事項",
+        "findingsIntro": "重要度順に並べています。重大なものから先に修正してください。",
+        "colSeverity": "重要度",
+        "colFinding": "検出事項",
+        "level": {
+          "strong": "信頼性が高い",
+          "adequate": "信頼性は十分",
+          "weak": "信頼性が低い",
+          "critical": "信頼性に重大な欠落あり"
+        },
+        "severity": {
+          "critical": "重大",
+          "warning": "警告",
+          "info": "情報"
+        },
+        "kind": {
+          "editorial": "編集方針",
+          "about": "会社概要",
+          "contact": "お問い合わせ",
+          "registry": "会社の登記情報"
+        },
+        "ymyl": {
+          "health": "健康",
+          "finance": "金融",
+          "legal": "法律"
+        },
+        "find": {
+          "ymyl-unattributed": "YMYLテーマの記事{{0}}件（{{1}}%）に、氏名のある著者または監修者がいません。",
+          "ymyl-no-reviewer": "医療記事{{0}}件のいずれにも監修者（reviewedBy）の宣言がありません。",
+          "no-bylines": "記事{{0}}件のいずれも、構造化データで著者を宣言していません。",
+          "generic-author": "{{0}}件の記事が匿名の署名になっています。",
+          "org-missing": "構造化データにOrganizationエンティティが見つかりませんでした。",
+          "org-no-same-as": "発行者{{0}}にはsameAsリンクがありません。",
+          "author-no-same-as": "著者{{0}}人にsameAsリンクがありません（{{1}}）。",
+          "author-no-id": "著者{{0}}人に安定した@idがありません。",
+          "author-off-topic": "{{0}}さんのプロフィールは、中心テーマとの適合度が{{1}}%にとどまります。",
+          "low-citations": "記事{{1}}ページのうち、信頼できる情報源を引用しているのは{{0}}%だけです。",
+          "dead-citations": "外部リンク{{0}}件がエラーを返します。",
+          "missing-editorial": "編集方針またはファクトチェックのページが見つかりません。",
+          "missing-contact": "お問い合わせページが見つかりません。",
+          "missing-registry": "会社の登記情報または法的表示のページが見つかりません。",
+          "missing-about": "会社概要ページが見つかりません。",
+          "missing-dates": "更新日または監修日を表示している記事は{{0}}%だけです。",
+          "no-articles": "記事ページが検出されませんでした。著者と引用のレイヤーは採点されていません。"
+        }
       }
     },
     "recs": {
@@ -6056,6 +6133,50 @@
         "what": "推奨される目標です。80以上、または上位3競合の平均がそれより高い場合はその平均値です。",
         "why": "比較結果を、目指すべき1つの数値に落とし込みます。",
         "action": "計画上の目標として使ってください。\n修正後にベンチマークを再実行して変化を確認しましょう。"
+      }
+    },
+    "trust": {
+      "trustScore": {
+        "title": "エンティティ信頼スコア",
+        "what": "検索エンジンが、コンテンツの発行者と執筆者をどの程度確認できるかを0〜100で示します。エンティティグラフ、著者のテーマ適合度、情報源の品質、編集の透明性の4つのレイヤーの平均です。",
+        "why": "健康、金融、法律のテーマでは、テーマの一貫性だけでは足りません。確認可能な著者と発行者がないページは、上位に表示されにくくなります。",
+        "action": "まず一覧の重大な項目を確認します。\n最も低いレイヤーを修正し、再クロールしてスコアの変化を確認します。"
+      },
+      "schemaGraph": {
+        "title": "エンティティグラフ（JSON-LD）",
+        "what": "構造化データが、発行者と各著者を安定した@idとsameAsリンクを持つエンティティとして示しているか、記事に著者、日付、監修者、引用が含まれているかを確認します。",
+        "why": "エンティティがつながっていると、検索エンジンは本文から推測せずに、著者を既知の人物や組織と結び付けられます。",
+        "action": "@id付きのOrganizationとPersonのマークアップを追加します。\n各人物と発行者を、sameAsでWikidata、ORCID、LinkedIn、公的な登録簿にリンクします。\n著者一覧の下のJSON-LDジェネレーターを使います。"
+      },
+      "authorAlignment": {
+        "title": "著者のテーマ適合度",
+        "what": "各著者が申告している専門性（役職、knowsAbout、プロフィールページ）を、サイトの中心テーマと比較します。",
+        "why": "インスリン療法の記事に、マーケティング担当のコピーライターが署名していては、専門性の根拠として弱くなります。",
+        "action": "プロフィールがテーマに合う著者に記事を割り当てます。\nPersonのマークアップにjobTitleとknowsAboutを追加します。\n全著者のプロフィールページを公開します。"
+      },
+      "citationQuality": {
+        "title": "情報源の品質",
+        "what": "記事ページのうち、.gov、.edu、PubMed、NCBI、WHO、学術出版社などの信頼できる情報源へリンクしているページ数と、切れている外部リンク数を示します。",
+        "why": "一次情報源を引用すると、主張を検証できることを示せます。リンク切れの参照はその根拠を弱めます。",
+        "action": "専門記事ごとに一次情報源への参照を追加します。\n切れている外部リンクを置き換えるか削除します。\nリンクタブで外部リンクを確認し、ステータスコードを更新します。"
+      },
+      "transparency": {
+        "title": "編集の透明性",
+        "what": "編集方針、会社概要ページ、お問い合わせページ、会社の登記情報、記事に表示された更新日または監修日の有無を調べます。",
+        "why": "読者も検索エンジンも、サイトの運営者と、コンテンツの確認方法を知る必要があります。",
+        "action": "編集方針とファクトチェックの方針を公開します。\n連絡先と会社の登記情報を追加します。\nすべての記事に最終更新日を表示します。"
+      },
+      "ymyl": {
+        "title": "YMYLテーマ",
+        "what": "Your Money or Your Life: 健康、金融、法律など、誤った情報が読者に害を及ぼしかねないテーマです。",
+        "why": "検索品質ガイドラインは、これらのテーマに最も高い信頼性を求めます。そのため、著者や監修者の欠落は重大な欠落として扱われます。",
+        "action": "すべての記事に資格のある著者を明記します。\n医療や法律の内容には、資格を持つ監修者を追加します。\n一次情報源を引用します。"
+      },
+      "sameAs": {
+        "title": "sameAsリンク",
+        "what": "人物や組織から、Wikidata、ORCID、LinkedIn、公的な登録簿など、別の場所にある同一のエンティティを指すschema.orgのプロパティです。",
+        "why": "検索エンジンが、その著者が実在し、その資格を持つ本人だと確認できるようになります。",
+        "action": "各著者と発行者に、信頼できるsameAsのURLを少なくとも1つ追加します。\nそのプロフィールと同じ名前と表記を使います。"
       }
     }
   },
@@ -6441,6 +6562,119 @@
       "coverage": "競合の {{pct}}%({{count}} 件)",
       "empty": "あなたのサイトに欠けている競合のトピックはありません。",
       "apply": "これらの用語をギャップ分析に追加"
+    }
+  },
+  "trust": {
+    "title": "E-E-A-Tとエンティティの信頼性",
+    "subtitle": "著者、発行者、情報源をどの程度確認できるかを示します。保存済みのクロール結果から計算し、ページは再取得しません。",
+    "empty": "信頼性シグナルを評価するには、先にクロールを実行してください。",
+    "hero": {
+      "label": "エンティティ信頼スコア",
+      "articles": "クロールした{{pages}}ページのうち記事ページは{{articles}}ページ",
+      "previous": "前回の実行: {{score}}（{{delta}}）",
+      "ymyl": "YMYLカテゴリ: {{category}}。検索エンジンはこれらのページに最も厳しい信頼基準を適用します。",
+      "unattributed": "記事の{{pct}}%に、氏名のある著者または監修者がいません。"
+    },
+    "level": {
+      "strong": "信頼性が高い",
+      "adequate": "信頼性は十分",
+      "weak": "信頼性が低い",
+      "critical": "信頼性に重大な欠落あり"
+    },
+    "ymyl": {
+      "health": "健康",
+      "finance": "金融",
+      "legal": "法律"
+    },
+    "layers": {
+      "title": "信頼性のレイヤー",
+      "schemaGraph": "エンティティグラフ（JSON-LD）",
+      "authorAlignment": "著者のテーマ適合度",
+      "citationQuality": "情報源の品質",
+      "transparency": "編集の透明性",
+      "noData": "なし"
+    },
+    "entities": {
+      "title": "発行者と著者",
+      "orgPresent": "発行者: {{name}}。安定した@id: {{id}}。sameAsリンク: {{sameAs}}。",
+      "orgMissing": "構造化データにOrganizationエンティティが見つかりませんでした。",
+      "none": "構造化データに著者エンティティが見つかりませんでした。",
+      "colAuthor": "著者",
+      "colArticles": "記事数",
+      "colSameAs": "sameAsリンク",
+      "colAlignment": "テーマ適合度",
+      "generic": "匿名の署名"
+    },
+    "signals": {
+      "title": "情報源と透明性",
+      "citations": "記事{{pages}}ページのうち{{trusted}}ページが信頼できる情報源（.gov、.edu、PubMed、WHO）へリンクしています。",
+      "dead": "外部リンク{{count}}件が切れています",
+      "dated": "記事{{articles}}件のうち{{dated}}件に更新日または監修日が表示されています。",
+      "pagesTitle": "信頼性ページ",
+      "page": {
+        "editorial": "編集方針",
+        "about": "会社概要",
+        "contact": "お問い合わせ",
+        "registry": "会社の登記情報"
+      },
+      "found": "検出",
+      "missing": "なし"
+    },
+    "severity": {
+      "critical": "重大",
+      "warning": "警告",
+      "info": "情報"
+    },
+    "findings": {
+      "title": "最初に修正すべき点",
+      "none": "信頼性の欠落は検出されませんでした。",
+      "code": {
+        "ymyl-unattributed": "YMYLテーマの記事{{count}}件（{{pct}}%）に、氏名のある著者または監修者がいません。確認可能な資格を持つ人物を追加してください。",
+        "ymyl-no-reviewer": "医療記事{{count}}件のいずれにも監修者（reviewedBy）の宣言がありません。資格のある医療監修者を追加してください。",
+        "no-bylines": "記事{{count}}件のいずれも、構造化データで著者を宣言していません。",
+        "generic-author": "{{count}}件の記事が、編集部などの匿名の署名になっています。",
+        "org-missing": "Organizationエンティティが見つかりません。安定した@idを持つ発行者のマークアップを追加してください。",
+        "org-no-same-as": "発行者{{name}}には、Wikidata、企業登記、SNSプロフィールへのsameAsリンクがありません。",
+        "author-no-same-as": "著者{{count}}人にsameAsリンクがありません（{{names}}）。ORCID、LinkedIn、専門職の登録簿などにリンクしてください。",
+        "author-no-id": "著者{{count}}人に安定した@idがないため、検索エンジンがページをまたいで同一人物と判断できません。",
+        "author-off-topic": "{{name}}さんのプロフィールは、中心テーマとの適合度が{{pct}}%にとどまります。テーマに合った専門性を持つ著者を優先してください。",
+        "low-citations": "記事{{pages}}ページのうち、信頼できる情報源（.gov、.edu、PubMed、WHO）を引用しているのは{{pct}}%だけです。",
+        "dead-citations": "外部リンク{{count}}件がエラーを返します。置き換えるか削除してください。",
+        "missing-editorial": "編集方針またはファクトチェックのページが見つかりません。",
+        "missing-contact": "お問い合わせページが見つかりません。",
+        "missing-registry": "会社の登記情報または法的表示のページが見つかりません。",
+        "missing-about": "会社概要ページが見つかりません。",
+        "missing-dates": "更新日または監修日を表示している記事は{{pct}}%だけです。",
+        "no-articles": "記事ページが検出されなかったため、著者と引用のレイヤーは採点されませんでした。"
+      }
+    },
+    "generator": {
+      "open": "JSON-LDで修正",
+      "title": "JSON-LDジェネレーター",
+      "intro": "Organization、Person、ページをsameAsリンクでつないだグラフを作成します。内容を確認し、ページのheadに貼り付けてください。",
+      "close": "閉じる",
+      "field": {
+        "personName": "著者名",
+        "jobTitle": "役職",
+        "personUrl": "著者プロフィールのURL",
+        "organizationName": "発行者名",
+        "organizationUrl": "発行者のURL",
+        "pageUrl": "ページのURL",
+        "dateModified": "更新日（YYYY-MM-DD）",
+        "lastReviewed": "最終監修日（YYYY-MM-DD）",
+        "sameAs": "sameAsプロフィール（1行に1つのURL: Wikidata、ORCID、LinkedIn、専門職の登録簿）",
+        "asReviewer": "著者ではなく専門家の監修者として宣言する"
+      },
+      "issue": {
+        "missing-name": "著者名を入力してください。",
+        "invalid-organization-url": "有効な発行者URLを入力してください（https://...）。",
+        "invalid-page-url": "有効なページURLを入力してください（https://...）。",
+        "invalid-same-as": "有効なURLではないsameAsの項目は除外しました。"
+      },
+      "preview": "生成されたJSON-LD",
+      "copy": "scriptタグをコピー",
+      "copied": "コピーしました。",
+      "copyFailed": "コピーできませんでした。テキストを選択して手動でコピーしてください。"
     }
   }
 }

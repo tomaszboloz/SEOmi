@@ -11,6 +11,7 @@ fn every_crawl_report_label_key_exists_in_english() {
         include_str!("crawl_report/strings/labels_cols.rs"),
         include_str!("crawl_report/strings/focus.rs"),
         include_str!("crawl_report/strings/recs.rs"),
+        include_str!("crawl_report/strings/trust.rs"),
     ];
     let mut checked = 0;
     for source in sources {

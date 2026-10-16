@@ -2234,7 +2234,8 @@
       "frames": "Cadres",
       "custom-search": "Recherche personnalisée",
       "semantic": "Analyse sémantique",
-      "focus": "Site Focus"
+      "focus": "Site Focus",
+      "trust": "Confiance des entités"
     },
     "environmentStaging": "test/staging",
     "environmentProduction": "production",
@@ -3049,7 +3050,8 @@
       "validation": "Validation HTML",
       "performance": "Performance",
       "exports": "Exports",
-      "focus": "Site Focus"
+      "focus": "Site Focus",
+      "trust": "Confiance des entités"
     },
     "groups": {
       "core": "Aperçu",
@@ -5821,6 +5823,81 @@
           "thin-subtopic": "Sous-thème peu couvert « {{0}} » : seulement {{1}} % des pages le traitent ({{2}} pages). Termes : {{3}}.",
           "competitor-terms": "Termes des concurrents absents de votre site : {{3}}."
         }
+      },
+      "trust": {
+        "title": "Confiance des entités (E-E-A-T)",
+        "intro": "Dans quelle mesure l'éditeur, les auteurs et les sources du site sont vérifiables. Les scores proviennent de l'exécution enregistrée ; aucune page n'est téléchargée à nouveau.",
+        "scoreTitle": "Score de confiance des entités",
+        "legend": "Niveaux : 75-100 fort, 60-74 suffisant, 40-59 faible, 0-39 critique.",
+        "kSchema": "Graphe d'entités",
+        "kAuthor": "Adéquation de l'auteur",
+        "kCitation": "Qualité des sources",
+        "kTransparency": "Transparence",
+        "kArticles": "Pages d'articles",
+        "kAuthors": "Entités auteur",
+        "nLayer": "Score 0-100",
+        "nNoData": "Aucune donnée dans ce crawl",
+        "nArticles": "sur {{0}} explorées",
+        "nAuthors": "{{0}} avec sameAs",
+        "ymylNote": "Catégorie YMYL : {{0}}. {{1}} % des articles n'ont ni auteur ni relecteur nommé.",
+        "tAuthors": "Entités auteur",
+        "authorsIntro": "Auteurs trouvés dans les données structurées, avec leurs liens sameAs et leur adéquation au sujet principal.",
+        "colAuthor": "Auteur",
+        "colArticles": "Articles",
+        "colSameAs": "sameAs",
+        "colAlignment": "Adéquation",
+        "generic": "{{0}} (signature anonyme)",
+        "tPages": "Pages de confiance",
+        "pagesIntro": "Pages qui montrent la transparence éditoriale et celle de l'entreprise.",
+        "colPage": "Page",
+        "colState": "Statut",
+        "found": "Trouvée : {{0}}",
+        "missing": "Manquante",
+        "tFindings": "Constats de confiance",
+        "findingsIntro": "Classés par gravité ; corrigez d'abord les éléments critiques.",
+        "colSeverity": "Gravité",
+        "colFinding": "Constat",
+        "level": {
+          "strong": "Confiance forte",
+          "adequate": "Confiance suffisante",
+          "weak": "Confiance faible",
+          "critical": "Lacunes de confiance critiques"
+        },
+        "severity": {
+          "critical": "Critique",
+          "warning": "Avertissement",
+          "info": "Info"
+        },
+        "kind": {
+          "editorial": "Politique éditoriale",
+          "about": "À propos",
+          "contact": "Contact",
+          "registry": "Données du registre de l'entreprise"
+        },
+        "ymyl": {
+          "health": "santé",
+          "finance": "finance",
+          "legal": "droit"
+        },
+        "find": {
+          "ymyl-unattributed": "{{0}} articles ({{1}} %) sur un sujet YMYL n'ont ni auteur ni relecteur nommé.",
+          "ymyl-no-reviewer": "Aucun des {{0}} articles médicaux ne déclare de relecteur (reviewedBy).",
+          "no-bylines": "Aucun des {{0}} articles ne déclare d'auteur dans les données structurées.",
+          "generic-author": "{{0}} articles sont signés d'une mention anonyme.",
+          "org-missing": "Aucune entité Organization n'a été trouvée dans les données structurées.",
+          "org-no-same-as": "L'éditeur {{0}} n'a pas de liens sameAs.",
+          "author-no-same-as": "{{0}} auteurs n'ont pas de liens sameAs ({{1}}).",
+          "author-no-id": "{{0}} auteurs n'ont pas d'@id stable.",
+          "author-off-topic": "Le profil de {{0}} ne correspond au sujet principal qu'à {{1}} %.",
+          "low-citations": "Seulement {{0}} % des {{1}} pages d'articles citent une source fiable.",
+          "dead-citations": "{{0}} liens sortants renvoient une erreur.",
+          "missing-editorial": "Aucune politique éditoriale ni page de vérification des faits n'a été trouvée.",
+          "missing-contact": "Aucune page de contact n'a été trouvée.",
+          "missing-registry": "Aucune page de registre d'entreprise ou de mentions légales n'a été trouvée.",
+          "missing-about": "Aucune page À propos n'a été trouvée.",
+          "missing-dates": "Seulement {{0}} % des articles affichent une date de modification ou de relecture.",
+          "no-articles": "Aucune page d'article n'a été détectée ; les couches auteurs et citations n'ont pas été notées."
+        }
       }
     },
     "recs": {
@@ -6056,6 +6133,50 @@
         "what": "Un objectif suggéré : au moins 80, ou la moyenne du top 3 des concurrents lorsqu'elle est plus élevée.",
         "why": "Il transforme la comparaison en un seul chiffre vers lequel travailler.",
         "action": "Utilisez-le comme objectif de planification.\nRelancez le benchmark après vos corrections pour voir l'évolution."
+      }
+    },
+    "trust": {
+      "trustScore": {
+        "title": "Score de confiance des entités",
+        "what": "Un score de 0 à 100 qui indique dans quelle mesure les moteurs de recherche peuvent vérifier qui publie et rédige vos contenus. Il fait la moyenne de quatre couches : graphe d'entités, adéquation thématique des auteurs, qualité des sources et transparence éditoriale.",
+        "why": "Pour la santé, la finance et le droit, une bonne cohérence thématique ne suffit pas. Les pages sans auteur ni éditeur vérifiables atteignent rarement les premiers résultats.",
+        "action": "Lisez d'abord les éléments critiques de la liste.\nCorrigez la couche la plus faible, puis relancez un crawl pour voir le score évoluer."
+      },
+      "schemaGraph": {
+        "title": "Graphe d'entités (JSON-LD)",
+        "what": "Vérifie que vos données structurées nomment l'éditeur et chaque auteur comme des entités avec un @id stable et des liens sameAs, et que les articles portent auteur, dates, relecteur et citations.",
+        "why": "Des entités reliées permettent aux moteurs de rapprocher vos auteurs de personnes et d'organisations connues au lieu de deviner à partir du texte.",
+        "action": "Ajoutez un balisage Organization et Person avec @id.\nReliez chaque personne et l'éditeur par sameAs à Wikidata, ORCID, LinkedIn ou un registre officiel.\nUtilisez le générateur JSON-LD sous la liste des auteurs."
+      },
+      "authorAlignment": {
+        "title": "Adéquation thématique des auteurs",
+        "what": "Compare l'expertise déclarée de chaque auteur (fonction, knowsAbout et page de profil) au sujet principal du site.",
+        "why": "Un article sur l'insulinothérapie signé par un rédacteur marketing est un signal d'expertise faible.",
+        "action": "Attribuez les articles à des auteurs dont le profil correspond au sujet.\nAjoutez jobTitle et knowsAbout au balisage Person.\nPubliez une page de profil pour chaque auteur."
+      },
+      "citationQuality": {
+        "title": "Qualité des sources",
+        "what": "Montre combien de pages d'articles renvoient vers des sources fiables comme .gov, .edu, PubMed, NCBI, l'OMS ou des éditeurs scientifiques, et combien de liens sortants sont cassés.",
+        "why": "Citer des sources primaires montre que les affirmations sont vérifiables. Les références mortes affaiblissent ce signal.",
+        "action": "Ajoutez des références à des sources primaires dans chaque article expert.\nRemplacez ou supprimez les liens sortants cassés.\nVérifiez les liens externes dans l'onglet Liens pour actualiser les codes de statut."
+      },
+      "transparency": {
+        "title": "Transparence éditoriale",
+        "what": "Recherche une politique éditoriale, une page À propos, une page de contact, les données du registre de l'entreprise et des dates de modification ou de relecture visibles sur les articles.",
+        "why": "Les lecteurs et les moteurs de recherche doivent savoir qui est derrière le site et comment les contenus sont vérifiés.",
+        "action": "Publiez une politique éditoriale et de vérification des faits.\nAjoutez les coordonnées et les données du registre de l'entreprise.\nAffichez la date de dernière mise à jour sur chaque article."
+      },
+      "ymyl": {
+        "title": "Sujets YMYL",
+        "what": "Your Money or Your Life : des sujets comme la santé, la finance et le droit, où une information erronée peut nuire aux lecteurs.",
+        "why": "Les consignes de qualité de la recherche imposent à ces sujets les exigences de confiance les plus élevées ; l'absence d'auteurs ou de relecteurs est donc une lacune critique.",
+        "action": "Nommez un auteur qualifié sur chaque article.\nAjoutez un relecteur qualifié pour les contenus médicaux ou juridiques.\nCitez des sources primaires."
+      },
+      "sameAs": {
+        "title": "Liens sameAs",
+        "what": "Une propriété schema.org qui renvoie d'une personne ou d'une organisation vers la même entité ailleurs : Wikidata, ORCID, LinkedIn ou un registre officiel.",
+        "why": "Elle permet aux moteurs de recherche de confirmer que votre auteur est bien la personne réelle ayant ces qualifications.",
+        "action": "Ajoutez au moins une URL sameAs faisant autorité par auteur et pour l'éditeur.\nUtilisez le même nom et la même orthographe que sur ce profil."
       }
     }
   },
@@ -6441,6 +6562,119 @@
       "coverage": "{{pct}} % des concurrents ({{count}})",
       "empty": "Aucun sujet des concurrents ne manque à votre site.",
       "apply": "Ajouter ces termes à l'analyse des lacunes"
+    }
+  },
+  "trust": {
+    "title": "E-E-A-T et confiance des entités",
+    "subtitle": "Dans quelle mesure vos auteurs, votre éditeur et vos sources sont vérifiables. Calculé à partir du crawl enregistré ; aucune page n'est téléchargée à nouveau.",
+    "empty": "Lancez d'abord un crawl pour évaluer les signaux de confiance.",
+    "hero": {
+      "label": "Score de confiance des entités",
+      "articles": "{{articles}} pages d'articles parmi {{pages}} pages explorées",
+      "previous": "Exécution précédente : {{score}} ({{delta}})",
+      "ymyl": "Catégorie YMYL : {{category}}. Les moteurs de recherche appliquent à ces pages le niveau de confiance le plus strict.",
+      "unattributed": "{{pct}} % des articles n'ont ni auteur ni relecteur nommé."
+    },
+    "level": {
+      "strong": "Confiance forte",
+      "adequate": "Confiance suffisante",
+      "weak": "Confiance faible",
+      "critical": "Lacunes de confiance critiques"
+    },
+    "ymyl": {
+      "health": "santé",
+      "finance": "finance",
+      "legal": "droit"
+    },
+    "layers": {
+      "title": "Couches de confiance",
+      "schemaGraph": "Graphe d'entités (JSON-LD)",
+      "authorAlignment": "Adéquation thématique des auteurs",
+      "citationQuality": "Qualité des sources",
+      "transparency": "Transparence éditoriale",
+      "noData": "n/d"
+    },
+    "entities": {
+      "title": "Éditeur et auteurs",
+      "orgPresent": "Éditeur : {{name}}. @id stable : {{id}}. Liens sameAs : {{sameAs}}.",
+      "orgMissing": "Aucune entité Organization n'a été trouvée dans les données structurées.",
+      "none": "Aucune entité auteur n'a été trouvée dans les données structurées.",
+      "colAuthor": "Auteur",
+      "colArticles": "Articles",
+      "colSameAs": "Liens sameAs",
+      "colAlignment": "Adéquation thématique",
+      "generic": "signature anonyme"
+    },
+    "signals": {
+      "title": "Sources et transparence",
+      "citations": "{{trusted}} pages d'articles sur {{pages}} renvoient vers une source fiable (.gov, .edu, PubMed, OMS).",
+      "dead": "{{count}} liens sortants sont cassés",
+      "dated": "{{dated}} articles sur {{articles}} affichent une date de modification ou de relecture.",
+      "pagesTitle": "Pages de confiance",
+      "page": {
+        "editorial": "Politique éditoriale",
+        "about": "À propos",
+        "contact": "Contact",
+        "registry": "Données du registre de l'entreprise"
+      },
+      "found": "trouvée",
+      "missing": "manquante"
+    },
+    "severity": {
+      "critical": "Critique",
+      "warning": "Avertissement",
+      "info": "Info"
+    },
+    "findings": {
+      "title": "À corriger en priorité",
+      "none": "Aucune lacune de confiance n'a été détectée.",
+      "code": {
+        "ymyl-unattributed": "{{count}} articles ({{pct}} %) sur un sujet YMYL n'ont ni auteur ni relecteur nommé. Ajoutez une personne aux qualifications vérifiables.",
+        "ymyl-no-reviewer": "Aucun des {{count}} articles médicaux ne déclare de relecteur (reviewedBy). Ajoutez un relecteur médical qualifié.",
+        "no-bylines": "Aucun des {{count}} articles ne déclare d'auteur dans les données structurées.",
+        "generic-author": "{{count}} articles sont signés d'une mention anonyme, comme une équipe éditoriale.",
+        "org-missing": "Aucune entité Organization n'a été trouvée. Ajoutez le balisage de l'éditeur avec un @id stable.",
+        "org-no-same-as": "L'éditeur {{name}} n'a pas de liens sameAs vers Wikidata, un registre d'entreprises ou des profils sociaux.",
+        "author-no-same-as": "{{count}} auteurs n'ont pas de liens sameAs ({{names}}). Reliez-les à ORCID, LinkedIn ou un registre professionnel.",
+        "author-no-id": "{{count}} auteurs n'ont pas d'@id stable : les moteurs de recherche ne peuvent pas les rapprocher d'une page à l'autre.",
+        "author-off-topic": "Le profil de {{name}} ne correspond au sujet principal qu'à {{pct}} %. Privilégiez des auteurs dont l'expertise correspond.",
+        "low-citations": "Seulement {{pct}} % des {{pages}} pages d'articles citent une source fiable (.gov, .edu, PubMed, OMS).",
+        "dead-citations": "{{count}} liens sortants renvoient une erreur. Remplacez-les ou supprimez-les.",
+        "missing-editorial": "Aucune politique éditoriale ni page de vérification des faits n'a été trouvée.",
+        "missing-contact": "Aucune page de contact n'a été trouvée.",
+        "missing-registry": "Aucune page de registre d'entreprise ou de mentions légales n'a été trouvée.",
+        "missing-about": "Aucune page À propos n'a été trouvée.",
+        "missing-dates": "Seulement {{pct}} % des articles affichent une date de modification ou de relecture.",
+        "no-articles": "Aucune page d'article n'a été détectée ; les couches auteurs et citations n'ont pas été notées."
+      }
+    },
+    "generator": {
+      "open": "Corriger avec JSON-LD",
+      "title": "Générateur JSON-LD",
+      "intro": "Crée un graphe Organization, Person et page avec des liens sameAs. Vérifiez-le, puis collez-le dans le head de la page.",
+      "close": "Fermer",
+      "field": {
+        "personName": "Nom de l'auteur",
+        "jobTitle": "Fonction",
+        "personUrl": "URL du profil de l'auteur",
+        "organizationName": "Nom de l'éditeur",
+        "organizationUrl": "URL de l'éditeur",
+        "pageUrl": "URL de la page",
+        "dateModified": "Date de modification (AAAA-MM-JJ)",
+        "lastReviewed": "Dernière relecture (AAAA-MM-JJ)",
+        "sameAs": "Profils sameAs (une URL par ligne : Wikidata, ORCID, LinkedIn, registre professionnel)",
+        "asReviewer": "Déclarer comme relecteur expert plutôt que comme auteur"
+      },
+      "issue": {
+        "missing-name": "Saisissez le nom de l'auteur.",
+        "invalid-organization-url": "Saisissez une URL d'éditeur valide (https://...).",
+        "invalid-page-url": "Saisissez une URL de page valide (https://...).",
+        "invalid-same-as": "Certaines entrées sameAs ne sont pas des URL valides et ont été ignorées."
+      },
+      "preview": "JSON-LD généré",
+      "copy": "Copier la balise script",
+      "copied": "Copié.",
+      "copyFailed": "Échec de la copie. Sélectionnez le texte et copiez-le manuellement."
     }
   }
 }

@@ -7,5 +7,6 @@ mod labels;
 mod labels_cols;
 pub mod recs;
 pub mod report;
+pub mod trust;
 
 pub use crate::commands::pdf_report::labels::{t, tf};

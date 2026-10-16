@@ -2234,7 +2234,8 @@
       "frames": "Ramki",
       "custom-search": "Własne wyszukiwanie",
       "semantic": "Analiza semantyczna",
-      "focus": "Site Focus"
+      "focus": "Site Focus",
+      "trust": "Zaufanie do encji"
     },
     "environmentStaging": "test/staging",
     "environmentProduction": "produkcja",
@@ -3049,7 +3050,8 @@
       "validation": "Walidacja HTML",
       "performance": "Wydajność",
       "exports": "Eksporty",
-      "focus": "Site Focus"
+      "focus": "Site Focus",
+      "trust": "Zaufanie do encji"
     },
     "groups": {
       "core": "Przegląd",
@@ -5821,6 +5823,81 @@
           "thin-subtopic": "Słabo pokryty podtemat „{{0}}”: porusza go tylko {{1}}% stron ({{2}} stron). Terminy: {{3}}.",
           "competitor-terms": "Terminy konkurencji, których brakuje w Twoim serwisie: {{3}}."
         }
+      },
+      "trust": {
+        "title": "Zaufanie do encji (E-E-A-T)",
+        "intro": "Jak łatwo zweryfikować wydawcę, autorów i źródła witryny. Wyniki pochodzą z zapisanego przebiegu; żadne strony nie są pobierane ponownie.",
+        "scoreTitle": "Wynik zaufania do encji",
+        "legend": "Poziomy: 75-100 silne, 60-74 wystarczające, 40-59 słabe, 0-39 krytyczne.",
+        "kSchema": "Graf encji",
+        "kAuthor": "Dopasowanie autora",
+        "kCitation": "Jakość źródeł",
+        "kTransparency": "Transparentność",
+        "kArticles": "Strony artykułów",
+        "kAuthors": "Encje autorów",
+        "nLayer": "Wynik 0-100",
+        "nNoData": "Brak danych w tym crawlu",
+        "nArticles": "z {{0}} przeskanowanych",
+        "nAuthors": "{{0}} z sameAs",
+        "ymylNote": "Kategoria YMYL: {{0}}. {{1}}% artykułów nie ma imiennego autora ani recenzenta.",
+        "tAuthors": "Encje autorów",
+        "authorsIntro": "Autorzy znalezieni w danych strukturalnych, z linkami sameAs i dopasowaniem do tematu głównego.",
+        "colAuthor": "Autor",
+        "colArticles": "Artykuły",
+        "colSameAs": "sameAs",
+        "colAlignment": "Dopasowanie",
+        "generic": "{{0}} (anonimowa sygnatura)",
+        "tPages": "Strony zaufania",
+        "pagesIntro": "Strony pokazujące transparentność redakcyjną i firmową.",
+        "colPage": "Strona",
+        "colState": "Status",
+        "found": "Znaleziono: {{0}}",
+        "missing": "Brak",
+        "tFindings": "Ustalenia o zaufaniu",
+        "findingsIntro": "Posortowane według wagi; najpierw popraw pozycje krytyczne.",
+        "colSeverity": "Waga",
+        "colFinding": "Ustalenie",
+        "level": {
+          "strong": "Silne zaufanie",
+          "adequate": "Wystarczające zaufanie",
+          "weak": "Słabe zaufanie",
+          "critical": "Krytyczne braki zaufania"
+        },
+        "severity": {
+          "critical": "Krytyczne",
+          "warning": "Ostrzeżenie",
+          "info": "Info"
+        },
+        "kind": {
+          "editorial": "Polityka redakcyjna",
+          "about": "O nas",
+          "contact": "Kontakt",
+          "registry": "Dane rejestrowe firmy"
+        },
+        "ymyl": {
+          "health": "zdrowie",
+          "finance": "finanse",
+          "legal": "prawo"
+        },
+        "find": {
+          "ymyl-unattributed": "{{0}} artykułów ({{1}}%) w temacie YMYL nie ma imiennego autora ani recenzenta.",
+          "ymyl-no-reviewer": "Żaden z {{0}} artykułów medycznych nie wskazuje recenzenta (reviewedBy).",
+          "no-bylines": "Żaden z {{0}} artykułów nie wskazuje autora w danych strukturalnych.",
+          "generic-author": "{{0}} artykułów jest podpisanych anonimowo.",
+          "org-missing": "W danych strukturalnych nie znaleziono encji Organization.",
+          "org-no-same-as": "Wydawca {{0}} nie ma linków sameAs.",
+          "author-no-same-as": "{{0}} autorów nie ma linków sameAs ({{1}}).",
+          "author-no-id": "{{0}} autorów nie ma stabilnego @id.",
+          "author-off-topic": "Profil autora {{0}} pasuje do tematu głównego tylko w {{1}}%.",
+          "low-citations": "Tylko {{0}}% z {{1}} stron artykułów cytuje zaufane źródło.",
+          "dead-citations": "{{0}} linków wychodzących zwraca błąd.",
+          "missing-editorial": "Nie znaleziono polityki redakcyjnej ani strony o weryfikacji faktów.",
+          "missing-contact": "Nie znaleziono strony kontaktowej.",
+          "missing-registry": "Nie znaleziono strony z danymi rejestrowymi firmy ani informacji prawnej.",
+          "missing-about": "Nie znaleziono strony O nas.",
+          "missing-dates": "Tylko {{0}}% artykułów pokazuje datę modyfikacji lub recenzji.",
+          "no-articles": "Nie wykryto stron artykułów; warstwy autorów i cytowań nie zostały ocenione."
+        }
       }
     },
     "recs": {
@@ -6056,6 +6133,50 @@
         "what": "Sugerowany cel: co najmniej 80 lub średnia top 3 konkurentów, jeśli ich wynik jest wyższy.",
         "why": "Zamienia porównanie w jedną liczbę, do której możesz dążyć.",
         "action": "Traktuj go jako cel planistyczny.\nUruchom benchmark ponownie po poprawkach, aby zobaczyć zmianę."
+      }
+    },
+    "trust": {
+      "trustScore": {
+        "title": "Wynik zaufania do encji",
+        "what": "Wynik 0-100 pokazujący, jak dobrze wyszukiwarki mogą zweryfikować, kto publikuje i pisze Twoje treści. To średnia czterech warstw: grafu encji, dopasowania autora do tematu, jakości źródeł i transparentności redakcyjnej.",
+        "why": "W tematach zdrowia, finansów i prawa samo skupienie tematyczne nie wystarcza. Strony bez sprawdzalnego autora i wydawcy rzadko trafiają na szczyt wyników.",
+        "action": "Zacznij od krytycznych pozycji na liście.\nPopraw najniższą warstwę, a potem skanuj ponownie, aby zobaczyć zmianę wyniku."
+      },
+      "schemaGraph": {
+        "title": "Graf encji (JSON-LD)",
+        "what": "Sprawdza, czy dane strukturalne nazywają wydawcę i każdego autora jako encje ze stabilnym @id i linkami sameAs oraz czy artykuły zawierają autora, daty, recenzenta i cytowania.",
+        "why": "Powiązane encje pozwalają wyszukiwarkom dopasować autorów do znanych osób i organizacji zamiast zgadywać z samego tekstu.",
+        "action": "Dodaj znaczniki Organization i Person z @id.\nPołącz każdą osobę i wydawcę przez sameAs z Wikidata, ORCID, LinkedIn lub oficjalnym rejestrem.\nSkorzystaj z generatora JSON-LD pod listą autorów."
+      },
+      "authorAlignment": {
+        "title": "Dopasowanie autora do tematu",
+        "what": "Porównuje deklarowaną wiedzę każdego autora (stanowisko, knowsAbout i strona profilu) z tematem głównym witryny.",
+        "why": "Artykuł o insulinoterapii podpisany przez copywritera marketingowego to słaby sygnał eksperckości.",
+        "action": "Przypisuj artykuły autorom, których profil pasuje do tematu.\nDodaj jobTitle i knowsAbout do znaczników Person.\nOpublikuj stronę profilu każdego autora."
+      },
+      "citationQuality": {
+        "title": "Jakość źródeł",
+        "what": "Pokazuje, ile stron artykułów linkuje do zaufanych źródeł, takich jak .gov, .edu, PubMed, NCBI, WHO lub wydawcy naukowi, oraz ile linków wychodzących jest uszkodzonych.",
+        "why": "Cytowanie źródeł pierwotnych pokazuje, że twierdzenia można zweryfikować. Martwe odsyłacze osłabiają ten sygnał.",
+        "action": "Dodaj odsyłacze do źródeł pierwotnych w każdym artykule eksperckim.\nZastąp lub usuń uszkodzone linki wychodzące.\nSprawdź linki zewnętrzne w zakładce Linki, aby odświeżyć kody statusu."
+      },
+      "transparency": {
+        "title": "Transparentność redakcyjna",
+        "what": "Szuka polityki redakcyjnej, strony O nas, strony kontaktowej, danych rejestrowych firmy oraz widocznych dat modyfikacji lub recenzji w artykułach.",
+        "why": "Czytelnicy i wyszukiwarki muszą wiedzieć, kto stoi za witryną i jak sprawdzane są treści.",
+        "action": "Opublikuj politykę redakcyjną i weryfikacji faktów.\nDodaj dane kontaktowe i rejestrowe firmy.\nPokaż datę ostatniej aktualizacji w każdym artykule."
+      },
+      "ymyl": {
+        "title": "Tematy YMYL",
+        "what": "Your Money or Your Life: tematy takie jak zdrowie, finanse i prawo, w których błędne informacje mogą zaszkodzić czytelnikom.",
+        "why": "Wytyczne jakości wyszukiwania stawiają tym tematom najwyższe wymagania zaufania, dlatego brak autorów lub recenzentów to krytyczne braki.",
+        "action": "Podpisz każdy artykuł wykwalifikowanym autorem.\nDodaj recenzenta z kwalifikacjami do treści medycznych lub prawnych.\nCytuj źródła pierwotne."
+      },
+      "sameAs": {
+        "title": "Linki sameAs",
+        "what": "Właściwość schema.org wskazująca z osoby lub organizacji tę samą encję w innym miejscu: Wikidata, ORCID, LinkedIn lub oficjalny rejestr.",
+        "why": "Pozwala wyszukiwarkom potwierdzić, że Twój autor to prawdziwa osoba z tymi kwalifikacjami.",
+        "action": "Dodaj co najmniej jeden wiarygodny adres sameAs dla każdego autora i dla wydawcy.\nUżyj tego samego imienia i pisowni co w tym profilu."
       }
     }
   },
@@ -6441,6 +6562,119 @@
       "coverage": "{{pct}}% konkurentów ({{count}})",
       "empty": "Żadnego tematu konkurentów nie brakuje w Twoim serwisie.",
       "apply": "Dodaj te terminy do analizy luk"
+    }
+  },
+  "trust": {
+    "title": "E-E-A-T i zaufanie do encji",
+    "subtitle": "Jak łatwo zweryfikować autorów, wydawcę i źródła. Wynik liczony z zapisanego crawla; żadna strona nie jest pobierana ponownie.",
+    "empty": "Najpierw uruchom crawl, aby ocenić sygnały zaufania.",
+    "hero": {
+      "label": "Wynik zaufania do encji",
+      "articles": "{{articles}} stron artykułów wśród {{pages}} przeskanowanych stron",
+      "previous": "Poprzedni przebieg: {{score}} ({{delta}})",
+      "ymyl": "Kategoria YMYL: {{category}}. Wyszukiwarki stosują do tych stron najostrzejsze kryteria zaufania.",
+      "unattributed": "{{pct}}% artykułów nie ma imiennego autora ani recenzenta."
+    },
+    "level": {
+      "strong": "Silne zaufanie",
+      "adequate": "Wystarczające zaufanie",
+      "weak": "Słabe zaufanie",
+      "critical": "Krytyczne braki zaufania"
+    },
+    "ymyl": {
+      "health": "zdrowie",
+      "finance": "finanse",
+      "legal": "prawo"
+    },
+    "layers": {
+      "title": "Warstwy zaufania",
+      "schemaGraph": "Graf encji (JSON-LD)",
+      "authorAlignment": "Dopasowanie autora do tematu",
+      "citationQuality": "Jakość źródeł",
+      "transparency": "Transparentność redakcyjna",
+      "noData": "brak"
+    },
+    "entities": {
+      "title": "Wydawca i autorzy",
+      "orgPresent": "Wydawca: {{name}}. Stabilny @id: {{id}}. Linki sameAs: {{sameAs}}.",
+      "orgMissing": "W danych strukturalnych nie znaleziono encji Organization.",
+      "none": "W danych strukturalnych nie znaleziono encji autorów.",
+      "colAuthor": "Autor",
+      "colArticles": "Artykuły",
+      "colSameAs": "Linki sameAs",
+      "colAlignment": "Dopasowanie do tematu",
+      "generic": "anonimowa sygnatura"
+    },
+    "signals": {
+      "title": "Źródła i transparentność",
+      "citations": "{{trusted}} z {{pages}} stron artykułów linkuje do zaufanego źródła (.gov, .edu, PubMed, WHO).",
+      "dead": "{{count}} linków wychodzących jest uszkodzonych",
+      "dated": "{{dated}} z {{articles}} artykułów pokazuje datę modyfikacji lub recenzji.",
+      "pagesTitle": "Strony zaufania",
+      "page": {
+        "editorial": "Polityka redakcyjna",
+        "about": "O nas",
+        "contact": "Kontakt",
+        "registry": "Dane rejestrowe firmy"
+      },
+      "found": "znaleziono",
+      "missing": "brak"
+    },
+    "severity": {
+      "critical": "Krytyczne",
+      "warning": "Ostrzeżenie",
+      "info": "Info"
+    },
+    "findings": {
+      "title": "Co poprawić najpierw",
+      "none": "Nie wykryto braków w zaufaniu.",
+      "code": {
+        "ymyl-unattributed": "{{count}} artykułów ({{pct}}%) w temacie YMYL nie ma imiennego autora ani recenzenta. Dodaj osobę ze sprawdzalnymi kwalifikacjami.",
+        "ymyl-no-reviewer": "Żaden z {{count}} artykułów medycznych nie wskazuje recenzenta (reviewedBy). Dodaj wykwalifikowanego recenzenta medycznego.",
+        "no-bylines": "Żaden z {{count}} artykułów nie wskazuje autora w danych strukturalnych.",
+        "generic-author": "{{count}} artykułów jest podpisanych anonimowo, np. jako zespół redakcyjny.",
+        "org-missing": "Nie znaleziono encji Organization. Dodaj znaczniki wydawcy ze stabilnym @id.",
+        "org-no-same-as": "Wydawca {{name}} nie ma linków sameAs do Wikidata, rejestru firm ani profili społecznościowych.",
+        "author-no-same-as": "{{count}} autorów nie ma linków sameAs ({{names}}). Połącz ich z ORCID, LinkedIn lub rejestrem zawodowym.",
+        "author-no-id": "{{count}} autorów nie ma stabilnego @id, więc wyszukiwarki nie mogą ich powiązać między stronami.",
+        "author-off-topic": "Profil autora {{name}} pasuje do tematu głównego tylko w {{pct}}%. Wybieraj autorów z dopasowaną wiedzą.",
+        "low-citations": "Tylko {{pct}}% z {{pages}} stron artykułów cytuje zaufane źródło (.gov, .edu, PubMed, WHO).",
+        "dead-citations": "{{count}} linków wychodzących zwraca błąd. Zastąp je lub usuń.",
+        "missing-editorial": "Nie znaleziono polityki redakcyjnej ani strony o weryfikacji faktów.",
+        "missing-contact": "Nie znaleziono strony kontaktowej.",
+        "missing-registry": "Nie znaleziono strony z danymi rejestrowymi firmy ani informacji prawnej.",
+        "missing-about": "Nie znaleziono strony O nas.",
+        "missing-dates": "Tylko {{pct}}% artykułów pokazuje datę modyfikacji lub recenzji.",
+        "no-articles": "Nie wykryto stron artykułów, więc warstwy autorów i cytowań nie zostały ocenione."
+      }
+    },
+    "generator": {
+      "open": "Napraw w JSON-LD",
+      "title": "Generator JSON-LD",
+      "intro": "Tworzy graf Organization, Person i strony z linkami sameAs. Sprawdź go i wklej do sekcji head strony.",
+      "close": "Zamknij",
+      "field": {
+        "personName": "Imię i nazwisko autora",
+        "jobTitle": "Stanowisko",
+        "personUrl": "Adres profilu autora",
+        "organizationName": "Nazwa wydawcy",
+        "organizationUrl": "Adres wydawcy",
+        "pageUrl": "Adres strony",
+        "dateModified": "Data modyfikacji (RRRR-MM-DD)",
+        "lastReviewed": "Ostatnia recenzja (RRRR-MM-DD)",
+        "sameAs": "Profile sameAs (jeden adres w linii: Wikidata, ORCID, LinkedIn, rejestr zawodowy)",
+        "asReviewer": "Wskaż jako recenzenta merytorycznego zamiast autora"
+      },
+      "issue": {
+        "missing-name": "Podaj imię i nazwisko autora.",
+        "invalid-organization-url": "Podaj poprawny adres wydawcy (https://...).",
+        "invalid-page-url": "Podaj poprawny adres strony (https://...).",
+        "invalid-same-as": "Niektóre wpisy sameAs nie są poprawnymi adresami i zostały pominięte."
+      },
+      "preview": "Wygenerowany JSON-LD",
+      "copy": "Kopiuj znacznik script",
+      "copied": "Skopiowano.",
+      "copyFailed": "Nie udało się skopiować. Zaznacz tekst i skopiuj go ręcznie."
     }
   }
 }

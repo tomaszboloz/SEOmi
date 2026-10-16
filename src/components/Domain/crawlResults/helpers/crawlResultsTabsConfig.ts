@@ -1,5 +1,6 @@
 import {
   Activity,
+  BadgeCheck,
   Bot,
   Braces,
   CircleAlert,
@@ -38,6 +39,7 @@ export type CrawlTab =
   | 'performance'
   | 'visualisations'
   | 'focus'
+  | 'trust'
   | 'exports';
 
 export type CrawlTabGroup = 'core' | 'content' | 'technical' | 'export';
@@ -55,6 +57,7 @@ export const tabs: Array<{ id: CrawlTab; labelKey: string; icon: typeof Rows3 }>
   { id: 'overview', labelKey: 'tabs.overview', icon: Radar },
   { id: 'visualisations', labelKey: 'tabs.visualisations', icon: Map },
   { id: 'focus', labelKey: 'tabs.focus', icon: Target },
+  { id: 'trust', labelKey: 'tabs.trust', icon: BadgeCheck },
   { id: 'crawlerReadiness', labelKey: 'tabs.crawlerReadiness', icon: Bot },
   { id: 'urls', labelKey: 'tabs.urls', icon: Rows3 },
   { id: 'issues', labelKey: 'tabs.issues', icon: CircleAlert },
@@ -83,7 +86,7 @@ export const tabGroups: Array<{
     id: 'core',
     labelKey: 'groups.core',
     shortLabelKey: 'groups.coreShort',
-    tabs: ['overview', 'visualisations', 'focus', 'crawlerReadiness', 'urls', 'issues'],
+    tabs: ['overview', 'visualisations', 'focus', 'trust', 'crawlerReadiness', 'urls', 'issues'],
   },
   {
     id: 'content',

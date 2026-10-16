@@ -2234,7 +2234,8 @@
       "frames": "Frames",
       "custom-search": "Custom search",
       "semantic": "Semantic analysis",
-      "focus": "Site Focus"
+      "focus": "Site Focus",
+      "trust": "Entity trust"
     },
     "environmentStaging": "test/staging",
     "environmentProduction": "production",
@@ -3049,7 +3050,8 @@
       "validation": "HTML validation",
       "performance": "Performance",
       "exports": "Exports",
-      "focus": "Site focus"
+      "focus": "Site focus",
+      "trust": "Entity trust"
     },
     "groups": {
       "core": "Overview",
@@ -5821,6 +5823,81 @@
           "thin-subtopic": "Thin subtopic \"{{0}}\": only {{1}}% of pages cover it ({{2}} pages). Terms: {{3}}.",
           "competitor-terms": "Competitor terms missing on your site: {{3}}."
         }
+      },
+      "trust": {
+        "title": "Entity Trust (E-E-A-T)",
+        "intro": "How verifiable the publisher, authors and sources of the site are. Scores come from the saved run; no pages are fetched again.",
+        "scoreTitle": "Entity Trust Score",
+        "legend": "Levels: 75-100 strong, 60-74 adequate, 40-59 weak, 0-39 critical.",
+        "kSchema": "Entity graph",
+        "kAuthor": "Author topic fit",
+        "kCitation": "Source quality",
+        "kTransparency": "Transparency",
+        "kArticles": "Article pages",
+        "kAuthors": "Author entities",
+        "nLayer": "Score 0-100",
+        "nNoData": "No data in this crawl",
+        "nArticles": "of {{0}} crawled",
+        "nAuthors": "{{0}} with sameAs",
+        "ymylNote": "YMYL category: {{0}}. {{1}}% of articles have no named author or reviewer.",
+        "tAuthors": "Author entities",
+        "authorsIntro": "Authors found in structured data, with sameAs links and fit to the core topic.",
+        "colAuthor": "Author",
+        "colArticles": "Articles",
+        "colSameAs": "sameAs",
+        "colAlignment": "Topic fit",
+        "generic": "{{0}} (anonymous byline)",
+        "tPages": "Trust pages",
+        "pagesIntro": "Pages that show editorial and company transparency.",
+        "colPage": "Page",
+        "colState": "Status",
+        "found": "Found: {{0}}",
+        "missing": "Missing",
+        "tFindings": "Trust findings",
+        "findingsIntro": "Ordered by severity; fix critical items first.",
+        "colSeverity": "Severity",
+        "colFinding": "Finding",
+        "level": {
+          "strong": "Strong trust",
+          "adequate": "Adequate trust",
+          "weak": "Weak trust",
+          "critical": "Critical trust gaps"
+        },
+        "severity": {
+          "critical": "Critical",
+          "warning": "Warning",
+          "info": "Info"
+        },
+        "kind": {
+          "editorial": "Editorial policy",
+          "about": "About us",
+          "contact": "Contact",
+          "registry": "Company registry data"
+        },
+        "ymyl": {
+          "health": "health",
+          "finance": "finance",
+          "legal": "legal"
+        },
+        "find": {
+          "ymyl-unattributed": "{{0}} articles ({{1}}%) on a YMYL topic have no named author or reviewer.",
+          "ymyl-no-reviewer": "None of the {{0}} medical articles declares a reviewer (reviewedBy).",
+          "no-bylines": "None of the {{0}} articles declares an author in structured data.",
+          "generic-author": "{{0}} articles are signed with an anonymous byline.",
+          "org-missing": "No Organization entity was found in the structured data.",
+          "org-no-same-as": "The publisher {{0}} has no sameAs links.",
+          "author-no-same-as": "{{0}} authors have no sameAs links ({{1}}).",
+          "author-no-id": "{{0}} authors have no stable @id.",
+          "author-off-topic": "The profile of {{0}} fits the core topic only {{1}}%.",
+          "low-citations": "Only {{0}}% of {{1}} article pages cite a trusted source.",
+          "dead-citations": "{{0}} outbound links return an error.",
+          "missing-editorial": "No editorial policy or fact-checking page was found.",
+          "missing-contact": "No contact page was found.",
+          "missing-registry": "No company registry or legal notice page was found.",
+          "missing-about": "No About page was found.",
+          "missing-dates": "Only {{0}}% of articles show a modified or review date.",
+          "no-articles": "No article pages were detected; author and citation layers were not scored."
+        }
       }
     },
     "recs": {
@@ -6056,6 +6133,50 @@
         "what": "A suggested goal: at least 80, or the average of the top 3 competitors when they score higher.",
         "why": "It turns the comparison into one number to work toward.",
         "action": "Use it as a planning goal.\nRe-run the benchmark after your fixes to see the change."
+      }
+    },
+    "trust": {
+      "trustScore": {
+        "title": "Entity Trust Score",
+        "what": "A 0-100 score of how well search engines can verify who publishes and writes your content. It averages four layers: entity graph, author topic fit, source quality and editorial transparency.",
+        "why": "For health, finance and legal topics, strong topical focus is not enough. Pages without a verifiable author and publisher rarely reach the top results.",
+        "action": "Read the critical items in the list first.\nFix the lowest layer, then re-crawl to see the score move."
+      },
+      "schemaGraph": {
+        "title": "Entity graph (JSON-LD)",
+        "what": "Checks that your structured data names the publisher and each author as entities with a stable @id and sameAs links, and that articles carry author, dates, reviewer and citations.",
+        "why": "Linked entities let search engines match your authors to known people and organizations instead of guessing from plain text.",
+        "action": "Add Organization and Person markup with @id.\nLink each person and the publisher to Wikidata, ORCID, LinkedIn or an official register with sameAs.\nUse the JSON-LD generator below the author list."
+      },
+      "authorAlignment": {
+        "title": "Author topic fit",
+        "what": "Compares each author's declared expertise (job title, knowsAbout and profile page) with the core topic of the site.",
+        "why": "An article on insulin therapy signed by a marketing copywriter is a weak expertise signal.",
+        "action": "Assign articles to authors whose profile matches the topic.\nAdd jobTitle and knowsAbout to the Person markup.\nPublish a profile page for every author."
+      },
+      "citationQuality": {
+        "title": "Source quality",
+        "what": "Shows how many article pages link out to trusted sources such as .gov, .edu, PubMed, NCBI, WHO or scientific publishers, and how many outbound links are broken.",
+        "why": "Citing primary sources shows that claims are verifiable. Dead references weaken that signal.",
+        "action": "Add references to primary sources in each expert article.\nReplace or remove broken outbound links.\nCheck external links in the Links tab to refresh status codes."
+      },
+      "transparency": {
+        "title": "Editorial transparency",
+        "what": "Looks for an editorial policy, an About page, a contact page, company registry data and visible modified or review dates on articles.",
+        "why": "Readers and search engines need to know who is behind the site and how content is checked.",
+        "action": "Publish an editorial and fact-checking policy.\nAdd contact details and company registry data.\nShow the last update date on every article."
+      },
+      "ymyl": {
+        "title": "YMYL topics",
+        "what": "Your Money or Your Life: subjects such as health, finance and law, where wrong information can harm readers.",
+        "why": "Search quality guidelines apply the highest trust requirements to these topics, so missing authors or reviewers count as critical gaps.",
+        "action": "Name a qualified author on every article.\nAdd a reviewer with credentials for medical or legal content.\nCite primary sources."
+      },
+      "sameAs": {
+        "title": "sameAs links",
+        "what": "A schema.org property that points from a person or organization to the same entity elsewhere: Wikidata, ORCID, LinkedIn or an official register.",
+        "why": "It lets search engines confirm that your author is the real person with those credentials.",
+        "action": "Add at least one authoritative sameAs URL per author and for the publisher.\nUse the same name and spelling as on that profile."
       }
     }
   },
@@ -6441,6 +6562,119 @@
       "coverage": "{{pct}}% of competitors ({{count}})",
       "empty": "No competitor topics are missing from your site.",
       "apply": "Add these terms to the gap analysis"
+    }
+  },
+  "trust": {
+    "title": "E-E-A-T & Entity Trust",
+    "subtitle": "How verifiable your authors, publisher and sources are. Computed from the saved crawl; no page is fetched again.",
+    "empty": "Run a crawl first to assess trust signals.",
+    "hero": {
+      "label": "Entity Trust Score",
+      "articles": "{{articles}} article pages among {{pages}} crawled pages",
+      "previous": "Previous run: {{score}} ({{delta}})",
+      "ymyl": "YMYL category: {{category}}. Search engines hold these pages to the strictest trust standard.",
+      "unattributed": "{{pct}}% of articles have no named author or reviewer."
+    },
+    "level": {
+      "strong": "Strong trust",
+      "adequate": "Adequate trust",
+      "weak": "Weak trust",
+      "critical": "Critical trust gaps"
+    },
+    "ymyl": {
+      "health": "health",
+      "finance": "finance",
+      "legal": "legal"
+    },
+    "layers": {
+      "title": "Trust layers",
+      "schemaGraph": "Entity graph (JSON-LD)",
+      "authorAlignment": "Author topic fit",
+      "citationQuality": "Source quality",
+      "transparency": "Editorial transparency",
+      "noData": "n/a"
+    },
+    "entities": {
+      "title": "Publisher and authors",
+      "orgPresent": "Publisher: {{name}}. Stable @id: {{id}}. sameAs links: {{sameAs}}.",
+      "orgMissing": "No Organization entity was found in the structured data.",
+      "none": "No author entities were found in the structured data.",
+      "colAuthor": "Author",
+      "colArticles": "Articles",
+      "colSameAs": "sameAs links",
+      "colAlignment": "Topic fit",
+      "generic": "anonymous byline"
+    },
+    "signals": {
+      "title": "Sources and transparency",
+      "citations": "{{trusted}} of {{pages}} article pages link to a trusted source (.gov, .edu, PubMed, WHO).",
+      "dead": "{{count}} outbound links are broken",
+      "dated": "{{dated}} of {{articles}} articles show a modified or review date.",
+      "pagesTitle": "Trust pages",
+      "page": {
+        "editorial": "Editorial policy",
+        "about": "About us",
+        "contact": "Contact",
+        "registry": "Company registry data"
+      },
+      "found": "found",
+      "missing": "missing"
+    },
+    "severity": {
+      "critical": "Critical",
+      "warning": "Warning",
+      "info": "Info"
+    },
+    "findings": {
+      "title": "What to fix first",
+      "none": "No trust gaps were detected.",
+      "code": {
+        "ymyl-unattributed": "{{count}} articles ({{pct}}%) on a YMYL topic have no named author or reviewer. Add a person with verifiable credentials.",
+        "ymyl-no-reviewer": "None of the {{count}} medical articles declares a reviewer (reviewedBy). Add a qualified medical reviewer.",
+        "no-bylines": "None of the {{count}} articles declares an author in structured data.",
+        "generic-author": "{{count}} articles are signed with an anonymous byline such as an editorial team.",
+        "org-missing": "No Organization entity was found. Add publisher markup with a stable @id.",
+        "org-no-same-as": "The publisher {{name}} has no sameAs links to Wikidata, a company register or social profiles.",
+        "author-no-same-as": "{{count}} authors have no sameAs links ({{names}}). Link them to ORCID, LinkedIn or a professional register.",
+        "author-no-id": "{{count}} authors have no stable @id, so search engines cannot reconcile them across pages.",
+        "author-off-topic": "The profile of {{name}} fits the core topic only {{pct}}%. Prefer authors with matching expertise.",
+        "low-citations": "Only {{pct}}% of {{pages}} article pages cite a trusted source (.gov, .edu, PubMed, WHO).",
+        "dead-citations": "{{count}} outbound links return an error. Replace or remove them.",
+        "missing-editorial": "No editorial policy or fact-checking page was found.",
+        "missing-contact": "No contact page was found.",
+        "missing-registry": "No company registry or legal notice page was found.",
+        "missing-about": "No About page was found.",
+        "missing-dates": "Only {{pct}}% of articles show a modified or review date.",
+        "no-articles": "No article pages were detected, so the author and citation layers were not scored."
+      }
+    },
+    "generator": {
+      "open": "Fix with JSON-LD",
+      "title": "JSON-LD generator",
+      "intro": "Builds an Organization, Person and page graph with sameAs links. Review it, then paste it into the page head.",
+      "close": "Close",
+      "field": {
+        "personName": "Author name",
+        "jobTitle": "Job title",
+        "personUrl": "Author profile URL",
+        "organizationName": "Publisher name",
+        "organizationUrl": "Publisher URL",
+        "pageUrl": "Page URL",
+        "dateModified": "Date modified (YYYY-MM-DD)",
+        "lastReviewed": "Last reviewed (YYYY-MM-DD)",
+        "sameAs": "sameAs profiles (one URL per line: Wikidata, ORCID, LinkedIn, professional register)",
+        "asReviewer": "Declare as expert reviewer instead of author"
+      },
+      "issue": {
+        "missing-name": "Enter the author name.",
+        "invalid-organization-url": "Enter a valid publisher URL (https://...).",
+        "invalid-page-url": "Enter a valid page URL (https://...).",
+        "invalid-same-as": "Some sameAs entries are not valid URLs and were left out."
+      },
+      "preview": "Generated JSON-LD",
+      "copy": "Copy script tag",
+      "copied": "Copied.",
+      "copyFailed": "Copy failed. Select the text and copy it manually."
     }
   }
 }
