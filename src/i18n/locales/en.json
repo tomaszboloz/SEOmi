@@ -2234,7 +2234,8 @@
       "frames": "Frames",
       "custom-search": "Custom search",
       "semantic": "Semantic analysis",
-      "focus": "Site Focus"
+      "focus": "Site Focus",
+      "authority": "Topical Authority"
     },
     "environmentStaging": "test/staging",
     "environmentProduction": "production",
@@ -3049,7 +3050,8 @@
       "validation": "HTML validation",
       "performance": "Performance",
       "exports": "Exports",
-      "focus": "Site focus"
+      "focus": "Site focus",
+      "authority": "Topical authority"
     },
     "groups": {
       "core": "Overview",
@@ -5821,6 +5823,55 @@
           "thin-subtopic": "Thin subtopic \"{{0}}\": only {{1}}% of pages cover it ({{2}} pages). Terms: {{3}}.",
           "competitor-terms": "Competitor terms missing on your site: {{3}}."
         }
+      },
+      "authority": {
+        "title": "Topical Authority",
+        "intro": "How completely and deeply the site covers its Core Topic compared with the market. Scores come from the saved run and the cached reference map; no pages are fetched again.",
+        "scoreTitle": "Topical Authority Score",
+        "legend": "TAS = 0.35 coverage + 0.30 entity depth + 0.25 silo cohesion + 0.10 freshness, scaled by the Site Focus Score (0.7 to 1.0).",
+        "kTcr": "Topic coverage",
+        "kCdes": "Entity depth",
+        "kSilc": "Silo cohesion",
+        "kCvff": "Freshness",
+        "unavailable": "n/a",
+        "noReference": "No reference map was built for this project, so coverage and depth are not measured and TAS is not calculated.",
+        "reference": "Reference map: {{0}} sub-topics in {{1}} pillars from {{2}} competitors ({{3}}).",
+        "quadrant": {
+          "dominant_authority": "Dominant authority",
+          "boutique_specialist": "Boutique specialist",
+          "diluted_giant": "Diluted giant",
+          "unfocused_generalist": "Unfocused generalist"
+        },
+        "warning": {
+          "empty-authority": "Empty authority: many topics are touched but their average depth is very low. Deepen existing pages before publishing more.",
+          "template-duplicates": "Template clones were merged into their strongest page: they do not raise coverage and waste crawl budget.",
+          "no-dates": "No publication or update dates were found, so freshness is not measured.",
+          "no-links": "No in-content internal links between analysed pages were found, so silo cohesion rests on orphan pages only."
+        },
+        "tCoverage": "Pillar coverage",
+        "colPillar": "Pillar",
+        "colCoverage": "Coverage",
+        "colGaps": "Missing sub-topics",
+        "tGaps": "Content gaps",
+        "colGap": "Missing sub-topic",
+        "colLevel": "Severity",
+        "tCannibal": "Semantic cannibalization",
+        "colCanonical": "Page to keep",
+        "colPages": "Pages",
+        "tRecs": "Topical expansion plan",
+        "tBench": "Topical gap matrix vs top competitors",
+        "level": {
+          "critical": "critical",
+          "high": "high",
+          "medium": "medium"
+        },
+        "rec": {
+          "fill-gaps": "Fill the gaps in “{{0}}”: {{1}} missing sub-topics",
+          "merge-cannibalized": "Merge {{0}} groups of cannibalizing pages",
+          "fix-linking": "Fix internal linking: {{0}} orphan pages, {{1}} links to off-topic pages",
+          "deepen-shallow": "Deepen {{0}} shallow sub-topics",
+          "refresh-stale": "Refresh {{0}} pages not updated for over a year"
+        }
       }
     },
     "recs": {
@@ -6056,6 +6107,44 @@
         "what": "A suggested goal: at least 80, or the average of the top 3 competitors when they score higher.",
         "why": "It turns the comparison into one number to work toward.",
         "action": "Use it as a planning goal.\nRe-run the benchmark after your fixes to see the change."
+      }
+    },
+    "authority": {
+      "tas": {
+        "title": "Topical Authority Score",
+        "what": "A 0-100 score of how completely, deeply and coherently the site covers its Core Topic compared with the market. It combines topic coverage (35%), entity depth (30%), silo cohesion (25%) and freshness (10%), then scales the result by your Site Focus Score.",
+        "why": "SFS only measures purity. A site with three perfect articles scores a high SFS yet has almost no authority, because it covers a sliver of the field. TAS measures how much of the field you cover.",
+        "action": "Aim for 80+ on both SFS and TAS. Low TAS with high SFS: add content. High TAS with low SFS: prune or split off-topic sections. Start with the top item in the expansion plan."
+      },
+      "tcr": {
+        "title": "Topic coverage (TCR)",
+        "what": "The share of the market’s sub-topics your site covers with a dedicated, on-topic page. Each sub-topic counts by its importance; a close match counts fully, a partial match counts half.",
+        "why": "Search engines treat sites that answer the whole range of questions in a field as references. Gaps send visitors, and ranking signals, to competitors.",
+        "action": "Above 80%: full authority. Below 40%: fragmentary knowledge. Open the coverage map, filter gaps and publish the most important missing sub-topics first."
+      },
+      "esd": {
+        "title": "Entity depth",
+        "what": "Checks whether a page really covers its sub-topic: the named concepts and attributes the leading pages use, the user questions it answers under their own headings, and how much original material it adds.",
+        "why": "A long article that misses the key concepts of its field loses to shorter but more complete sources. Length alone does not count.",
+        "action": "Open a shallow sub-topic: add the missing entities and attributes, answer the listed questions under their own H2 and add data or a table that competitors lack."
+      },
+      "scs": {
+        "title": "Silo cohesion",
+        "what": "Measures how well articles of one theme are tied together by internal links: a pillar page linked both ways with its articles, descriptive anchor texts, no orphan pages and no links from expert pages to off-topic ones.",
+        "why": "Orphan pages neither pass nor receive topical authority. “Click here” anchors say nothing, so they count only a tenth.",
+        "action": "Link each orphan from its pillar and related articles, use anchors that describe the target (“diabetic neuropathy symptoms”) and drop links to off-topic pages."
+      },
+      "matrix": {
+        "title": "SFS × TAS matrix",
+        "what": "Places the site by purity (SFS, horizontal) and completeness (TAS, vertical). The four quadrants are dominant authority, boutique specialist, diluted giant and unfocused generalist.",
+        "why": "Why do you have high focus but low authority? Five perfect articles on diabetes give SFS 95 but TAS 14: nothing off-topic, yet 90% of the field is missing.",
+        "action": "Keep SFS above 80 while you add new clusters to raise TAS above 80. The highlighted quadrant tells you whether to expand, prune or restructure."
+      },
+      "cannibalization": {
+        "title": "Semantic cannibalization",
+        "what": "Two or more of your pages answer the same search intent: their content and headings are almost identical (cosine similarity from 88%), or both fully cover one reference sub-topic.",
+        "why": "Internal link signals and relevance are split between the duplicates, so none of them reaches the top positions.",
+        "action": "Keep the strongest page, move the unique sections into it, 301-redirect the others and update internal links. Use the draft checker before publishing to avoid new overlaps."
       }
     }
   },
@@ -6441,6 +6530,204 @@
       "coverage": "{{pct}}% of competitors ({{count}})",
       "empty": "No competitor topics are missing from your site.",
       "apply": "Add these terms to the gap analysis"
+    }
+  },
+  "authority": {
+    "title": "Topical Authority",
+    "empty": "Run a crawl to measure topical authority.",
+    "hero": {
+      "sfs": "Site Focus Score",
+      "tas": "Topical Authority Score",
+      "sfsRole": "Purity: how much of the content stays on topic",
+      "tasRole": "Completeness: how fully the topic is covered",
+      "target": "Target: {{value}}+",
+      "pending": "build the reference map to calculate it"
+    },
+    "quadrant": {
+      "dominant_authority": "Dominant authority",
+      "boutique_specialist": "Boutique specialist",
+      "diluted_giant": "Diluted giant",
+      "unfocused_generalist": "Unfocused generalist"
+    },
+    "quadrantHint": {
+      "dominant_authority": "Focused and nearly complete. Defend the position, keep data fresh and expand into long-tail queries.",
+      "boutique_specialist": "On topic but covers only part of the field. Expand content and build new topic clusters.",
+      "diluted_giant": "Plenty of content on the topic, but off-topic sections dilute it. Prune or move them to subdomains.",
+      "unfocused_generalist": "No clear focus and shallow coverage. Pick one Core Topic, clean up the index and build the first solid silo."
+    },
+    "matrix": {
+      "title": "Topical maturity matrix (SFS × TAS)",
+      "pending": "The matrix appears once TAS is calculated.",
+      "aria": "You: SFS {{sfs}}, TAS {{tas}}, quadrant {{quadrant}}",
+      "you": "You",
+      "axisX": "SFS",
+      "axisY": "TAS"
+    },
+    "pillars": {
+      "title": "Components of the Topical Authority Score",
+      "tcr": "Topic coverage",
+      "cdes": "Entity depth",
+      "silc": "Silo cohesion",
+      "cvff": "Freshness and uniqueness",
+      "tcrNote": "{{covered}} of {{total}} reference sub-topics covered",
+      "cdesNote": "Average entity depth of the sub-topics you cover",
+      "silcNote": "{{orphans}} orphan pages, {{weak}} weak anchors, {{bleed}} links to off-topic pages",
+      "cvffNote": "{{stale}} stale pages, {{groups}} cannibalization groups",
+      "unavailable": "not measurable",
+      "multiplier": "Focus multiplier ×{{value}} from SFS {{sfs}}"
+    },
+    "warning": {
+      "empty-authority": "Empty authority: the site touches {{tcr}}% of the topics but their average depth is only {{depth}}/100. Deepen existing pages with hard data and entities before publishing more.",
+      "template-duplicates": "{{count}} template clones were merged into their strongest page and do not raise coverage. They waste crawl budget.",
+      "no-dates": "No publication or update dates were found, so freshness is not measured. Add dates in meta tags or JSON-LD.",
+      "no-links": "No in-content internal links between analysed pages were found, so silo cohesion is based on orphan pages only.",
+      "no-pillars": "No reference map yet: coverage and depth are not measured."
+    },
+    "reference": {
+      "title": "Reference map",
+      "intro": "Builds the market map of your topic from real data: headings, entities and questions of the pages ranking for your Core Topic, plus Google Suggest. Nothing is invented; without a SERP source the map stays empty.",
+      "build": "Build reference map",
+      "rebuild": "Rebuild map",
+      "cancel": "Cancel",
+      "clear": "Discard map",
+      "info": "{{subtopics}} sub-topics in {{pillars}} pillars from {{competitors}} competitors ({{source}}), built {{date}}",
+      "progress": {
+        "serp": "Fetching rankings ({{done}}/{{total}})",
+        "crawl": "Crawling {{domain}} ({{done}}/{{total}})",
+        "build": "Building the map"
+      },
+      "error": "Building the map failed: {{error}}",
+      "cancelled": "Map building was cancelled.",
+      "unavailableTitle": "The reference map is unavailable",
+      "unavailable": {
+        "no-serp-source": "Connect a SERP source (DataForSEO or the free Bing RSS feed) to build the map from real rankings.",
+        "no-queries": "The Core Topic has no usable search phrase yet. Run a larger crawl first.",
+        "serp-failed": "The ranking lookup failed: {{error}}",
+        "no-competitors": "No competing domains were found in the rankings.",
+        "no-pages": "No competitor pages could be crawled (robots.txt, blocking or timeouts).",
+        "no-taxonomy": "The competitor pages share too few headings to form a reliable map. Try again later or with more competitors."
+      }
+    },
+    "coverage": {
+      "title": "Topic coverage map",
+      "filters": "Filter sub-topics",
+      "filter": {
+        "all": "All ({{count}})",
+        "gaps": "Gaps only ({{count}})",
+        "shallow": "Shallow ({{count}})",
+        "cannibalized": "Cannibalized ({{count}})"
+      },
+      "general": "General topics",
+      "empty": "No sub-topics match this filter.",
+      "row": "{{similarity}}% match · depth {{depth}}",
+      "status": {
+        "covered_strong": "Covered in depth",
+        "covered_shallow": "Shallow coverage",
+        "missing_gap": "Missing",
+        "cannibalized": "Cannibalized"
+      },
+      "gap": {
+        "critical": "critical gap",
+        "high": "high gap",
+        "medium": "medium gap"
+      }
+    },
+    "drill": {
+      "title": "Sub-topic analysis",
+      "back": "Back to the map",
+      "url": "Assigned page",
+      "none": "No page covers this sub-topic yet.",
+      "depth": "Entity depth {{value}}/100",
+      "entitiesPresent": "Entities present ({{count}}/{{total}})",
+      "entitiesMissing": "Entities missing (used by the leaders)",
+      "questions": "User questions the page does not answer",
+      "links": "Internal linking audit",
+      "noPillarLink": "No link to the pillar page {{url}}",
+      "almostOrphan": "Only {{count}} incoming link(s): almost an orphan page",
+      "bleed": "Links to the off-topic page {{url}}",
+      "linksOk": "Internal linking looks healthy."
+    },
+    "brief": {
+      "title": "Article brief",
+      "path": "Suggested URL",
+      "h1": "Suggested H1",
+      "entities": "Entity checklist",
+      "questions": "Questions to answer",
+      "linkFrom": "Link to it from",
+      "linkTo": "It should link to",
+      "impact": "Estimated TAS impact: +{{value}}",
+      "generate": "Generate AI brief",
+      "generating": "Generating…",
+      "noKey": "Connect an AI provider in Settings to generate briefs.",
+      "empty": "The AI returned no text. Try again.",
+      "error": "Brief generation failed: {{error}}"
+    },
+    "cannibal": {
+      "title": "Semantic cannibalization",
+      "index": "Cannibalization index: {{value}}%",
+      "empty": "No pages compete for the same search intent.",
+      "group": "{{count}} pages, {{similarity}}% intent similarity, {{shared}}% shared entities",
+      "canonical": "Keep: {{url}}",
+      "steps": "Move the unique sections into the page to keep, 301-redirect the others to it and update the internal links."
+    },
+    "draft": {
+      "title": "Check a draft before publishing",
+      "titleField": "Draft title",
+      "bodyField": "Draft text",
+      "check": "Check overlap",
+      "none": "No overlap above 85% with existing pages.",
+      "hit": "{{similarity}}% overlap with {{url}}"
+    },
+    "rec": {
+      "title": "Topical expansion plan",
+      "empty": "No actions to recommend yet. Build the reference map to see coverage gaps.",
+      "delta": "+{{value}} TAS",
+      "fill-gaps": "Fill the gaps in “{{pillar}}”: {{count}} missing sub-topics",
+      "merge-cannibalized": "Merge {{count}} groups of cannibalizing pages",
+      "fix-linking": "Fix internal linking: {{orphans}} orphan pages, {{bleed}} links to off-topic pages",
+      "deepen-shallow": "Deepen {{count}} shallow sub-topics",
+      "refresh-stale": "Refresh {{count}} pages not updated for over a year",
+      "how": {
+        "fill-gaps": "Publish one article per missing sub-topic: use the brief (URL, H1, entity checklist, questions) and link it into its pillar.",
+        "merge-cannibalized": "Keep the strongest page, move unique sections into it, 301-redirect the rest and update internal links.",
+        "fix-linking": "Link every orphan page from its pillar and related articles, and remove links from expert pages to off-topic pages.",
+        "deepen-shallow": "Add the missing entities and attributes, and answer the open user questions under their own headings.",
+        "refresh-stale": "Update figures, models and guidelines, add new entities and refresh the published date."
+      }
+    },
+    "benchmark": {
+      "title": "Topical gap matrix vs top competitors",
+      "empty": "Build the reference map to compare with the top-ranking competitors. Only real crawled data is shown.",
+      "domain": "Domain",
+      "pillars": "Pillar coverage",
+      "pillar": "Pillar",
+      "insight": {
+        "rank": "You rank {{rank}} of {{total}} by TAS.",
+        "lead-pillar": "You lead in “{{pillar}}”: {{own}}% against {{best}}% for the best competitor.",
+        "trailing-pillars": "You trail the leaders in: {{pillars}}."
+      }
+    },
+    "history": {
+      "title": "SFS and TAS over time",
+      "empty": "The timeline appears after at least two full analyses.",
+      "aria": "Chart of SFS and TAS over {{count}} analyses",
+      "point": "{{date}}: SFS {{sfs}}, TAS {{tas}}",
+      "sfs": "SFS (solid)",
+      "tas": "TAS (dashed)",
+      "milestones": "Milestones",
+      "cleanup": "Cleanup: SFS rose by {{delta}}",
+      "architecture": "Architecture: linking and cannibalization improved by {{delta}}",
+      "expansion": "Expansion: topic coverage rose by {{delta}}",
+      "regression": "Regression: TAS changed by {{delta}}"
+    }
+  },
+  "authorityMonitoring": {
+    "alert": {
+      "title": "SEOmi · Topical Authority alert",
+      "tas-drop": "Topical Authority Score fell by {{points}} points between full analyses ({{from}} to {{to}}).",
+      "cannibalization": "A page published within the last 24 hours competes with {{canonical}} for the same intent ({{similarity}}% similar): {{url}}.",
+      "competitor-expansion": "{{domain}} expanded its coverage of “{{pillar}}” from {{from}}% to {{to}}%, opening a new gap for you.",
+      "content-decay": "Pillar page {{url}} is over a year old and misses {{missing}} entities the market now uses."
     }
   }
 }

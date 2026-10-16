@@ -57,6 +57,11 @@ pub(super) async fn read_fetched_page_data_with_context(
                 .get(reqwest::header::CACHE_CONTROL)
                 .and_then(|value| value.to_str().ok())
                 .map(str::to_owned);
+            let last_modified = response
+                .headers()
+                .get(reqwest::header::LAST_MODIFIED)
+                .and_then(|value| value.to_str().ok())
+                .map(str::to_owned);
             let charset = content_type.as_deref().and_then(|value| {
                 value.split(';').find_map(|part| {
                     let (name, value) = part.trim().split_once('=')?;
@@ -119,6 +124,7 @@ pub(super) async fn read_fetched_page_data_with_context(
                 content_encoding,
                 http_refresh,
                 cache_control,
+                last_modified,
                 charset,
                 x_robots_tag,
                 declared_html,

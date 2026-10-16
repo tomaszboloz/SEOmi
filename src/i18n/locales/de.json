@@ -2234,7 +2234,8 @@
       "frames": "Frames",
       "custom-search": "Benutzerdefinierte Suche",
       "semantic": "Semantische Analyse",
-      "focus": "Site Focus"
+      "focus": "Site Focus",
+      "authority": "Thematische Autorität"
     },
     "environmentStaging": "test/staging",
     "environmentProduction": "production",
@@ -3049,7 +3050,8 @@
       "validation": "HTML-Validierung",
       "performance": "Leistung",
       "exports": "Exporte",
-      "focus": "Site Focus"
+      "focus": "Site Focus",
+      "authority": "Thematische Autorität"
     },
     "groups": {
       "core": "Übersicht",
@@ -5821,6 +5823,55 @@
           "thin-subtopic": "Dünn abgedecktes Unterthema „{{0}}“: nur {{1}} % der Seiten behandeln es ({{2}} Seiten). Begriffe: {{3}}.",
           "competitor-terms": "Begriffe der Konkurrenz, die auf deiner Website fehlen: {{3}}."
         }
+      },
+      "authority": {
+        "title": "Thematische Autorität",
+        "intro": "Wie vollständig und tief die Seite ihr Kernthema im Vergleich zum Markt abdeckt. Die Werte stammen aus dem gespeicherten Lauf und der zwischengespeicherten Referenzkarte; es werden keine Seiten erneut abgerufen.",
+        "scoreTitle": "Topical Authority Score",
+        "legend": "TAS = 0,35 Abdeckung + 0,30 Entitätstiefe + 0,25 Silo-Kohäsion + 0,10 Aktualität, skaliert mit dem Site Focus Score (0,7 bis 1,0).",
+        "kTcr": "Themenabdeckung",
+        "kCdes": "Entitätstiefe",
+        "kSilc": "Silo-Kohäsion",
+        "kCvff": "Aktualität",
+        "unavailable": "k. A.",
+        "noReference": "Für dieses Projekt wurde keine Referenzkarte erstellt; Abdeckung und Tiefe werden nicht gemessen und der TAS nicht berechnet.",
+        "reference": "Referenzkarte: {{0}} Unterthemen in {{1}} Säulen von {{2}} Wettbewerbern ({{3}}).",
+        "quadrant": {
+          "dominant_authority": "Dominante Autorität",
+          "boutique_specialist": "Nischenspezialist",
+          "diluted_giant": "Verwässerter Riese",
+          "unfocused_generalist": "Unfokussierter Generalist"
+        },
+        "warning": {
+          "empty-authority": "Leere Autorität: Viele Themen werden berührt, aber die durchschnittliche Tiefe ist sehr gering. Bestehende Seiten vertiefen, bevor Neues erscheint.",
+          "template-duplicates": "Template-Klone wurden mit der stärksten Seite zusammengefasst: Sie erhöhen die Abdeckung nicht und verschwenden Crawl-Budget.",
+          "no-dates": "Keine Veröffentlichungs- oder Aktualisierungsdaten gefunden; die Aktualität wird nicht gemessen.",
+          "no-links": "Keine redaktionellen internen Links zwischen den analysierten Seiten gefunden; die Silo-Kohäsion beruht nur auf verwaisten Seiten."
+        },
+        "tCoverage": "Säulenabdeckung",
+        "colPillar": "Säule",
+        "colCoverage": "Abdeckung",
+        "colGaps": "Fehlende Unterthemen",
+        "tGaps": "Inhaltslücken",
+        "colGap": "Fehlendes Unterthema",
+        "colLevel": "Schwere",
+        "tCannibal": "Semantische Kannibalisierung",
+        "colCanonical": "Zu behaltende Seite",
+        "colPages": "Seiten",
+        "tRecs": "Plan zum Ausbau der thematischen Autorität",
+        "tBench": "Themenlücken-Matrix vs. Top-Wettbewerber",
+        "level": {
+          "critical": "kritisch",
+          "high": "hoch",
+          "medium": "mittel"
+        },
+        "rec": {
+          "fill-gaps": "Lücken in „{{0}}“ schließen: {{1}} Unterthemen fehlen",
+          "merge-cannibalized": "{{0}} Gruppen kannibalisierender Seiten zusammenführen",
+          "fix-linking": "Interne Verlinkung reparieren: {{0}} verwaiste Seiten, {{1}} Links auf Themenfremdes",
+          "deepen-shallow": "{{0}} oberflächliche Unterthemen vertiefen",
+          "refresh-stale": "{{0}} seit über einem Jahr nicht aktualisierte Seiten auffrischen"
+        }
       }
     },
     "recs": {
@@ -6056,6 +6107,44 @@
         "what": "Ein vorgeschlagenes Ziel: mindestens 80 oder der Durchschnitt der Top-3-Wettbewerber, wenn diese höher liegen.",
         "why": "Er macht den Vergleich zu einer einzigen Zahl, auf die du hinarbeiten kannst.",
         "action": "Nutze ihn als Planungsziel.\nFühre den Benchmark nach deinen Korrekturen erneut aus, um die Veränderung zu sehen."
+      }
+    },
+    "authority": {
+      "tas": {
+        "title": "Topical Authority Score",
+        "what": "Ein Wert von 0 bis 100, der zeigt, wie vollständig, tief und stimmig die Seite ihr Kernthema im Vergleich zum Markt abdeckt. Er kombiniert Themenabdeckung (35%), Entitätstiefe (30%), Silo-Kohäsion (25%) und Aktualität (10%) und wird mit dem Site Focus Score skaliert.",
+        "why": "Der SFS misst nur Reinheit. Eine Seite mit drei perfekten Artikeln hat einen hohen SFS, aber kaum Autorität, weil sie nur einen Bruchteil des Feldes abdeckt. Der TAS misst, wie viel du abdeckst.",
+        "action": "Ziel: 80+ bei SFS und TAS. Niedriger TAS bei hohem SFS: Inhalte ergänzen. Hoher TAS bei niedrigem SFS: fremde Bereiche entfernen oder auslagern. Mit dem ersten Punkt des Plans beginnen."
+      },
+      "tcr": {
+        "title": "Themenabdeckung (TCR)",
+        "what": "Der Anteil der Markt-Unterthemen, die deine Seite mit einer eigenen, themenbezogenen Seite abdeckt. Jedes Unterthema zählt nach Wichtigkeit; ein klarer Treffer voll, ein teilweiser zur Hälfte.",
+        "why": "Suchmaschinen sehen Seiten als Referenz, die das gesamte Fragenspektrum eines Feldes beantworten. Lücken schicken Besucher und Ranking-Signale zur Konkurrenz.",
+        "action": "Über 80%: volle Autorität. Unter 40%: lückenhaftes Wissen. Abdeckungskarte öffnen, Lücken filtern und die wichtigsten fehlenden Unterthemen zuerst veröffentlichen."
+      },
+      "esd": {
+        "title": "Entitätstiefe",
+        "what": "Prüft, ob eine Seite ihr Unterthema wirklich abdeckt: die von Spitzenreitern genutzten Begriffe und Attribute, unter eigenen Überschriften beantwortete Nutzerfragen und wie viel Eigenes sie beiträgt.",
+        "why": "Ein langer Artikel ohne die Kernbegriffe des Feldes verliert gegen kürzere, aber vollständigere Quellen. Länge allein zählt nicht.",
+        "action": "Ein oberflächliches Unterthema öffnen: fehlende Entitäten und Attribute ergänzen, genannte Fragen unter eigenem H2 beantworten und Daten oder Tabellen ergänzen, die der Konkurrenz fehlen."
+      },
+      "scs": {
+        "title": "Silo-Kohäsion",
+        "what": "Misst, wie gut Artikel eines Themas durch interne Links verbunden sind: Pillar-Seite in beide Richtungen verlinkt, beschreibende Ankertexte, keine verwaisten Seiten und keine Links von Fachseiten auf Themenfremdes.",
+        "why": "Verwaiste Seiten geben keine thematische Autorität weiter und erhalten keine. „Hier klicken“-Anker sagen nichts aus und zählen nur ein Zehntel.",
+        "action": "Jede verwaiste Seite aus ihrer Säule und verwandten Artikeln verlinken, beschreibende Anker nutzen („Symptome der diabetischen Neuropathie“) und Links auf Themenfremdes entfernen."
+      },
+      "matrix": {
+        "title": "SFS-×-TAS-Matrix",
+        "what": "Ordnet die Seite nach Reinheit (SFS, horizontal) und Vollständigkeit (TAS, vertikal) ein. Die vier Quadranten: dominante Autorität, Nischenspezialist, verwässerter Riese, unfokussierter Generalist.",
+        "why": "Warum hoher Fokus, aber niedrige Autorität? Fünf perfekte Diabetes-Artikel ergeben SFS 95, aber TAS 14: nichts Themenfremdes, doch 90% des Feldes fehlen.",
+        "action": "SFS über 80 halten und neue Cluster aufbauen, um TAS über 80 zu heben. Der markierte Quadrant zeigt, ob ausbauen, bereinigen oder umbauen."
+      },
+      "cannibalization": {
+        "title": "Semantische Kannibalisierung",
+        "what": "Zwei oder mehr deiner Seiten beantworten dieselbe Suchintention: Inhalt und Überschriften sind fast identisch (Kosinus-Ähnlichkeit ab 88%) oder beide decken ein Referenz-Unterthema vollständig ab.",
+        "why": "Interne Link-Signale und Relevanz verteilen sich auf die Dubletten, sodass keine Seite die Spitzenplätze erreicht.",
+        "action": "Die stärkste Seite behalten, einzigartige Abschnitte dorthin verschieben, die anderen per 301 umleiten, interne Links anpassen. Vor der Veröffentlichung den Entwurfs-Check nutzen, um neue Überschneidungen zu vermeiden."
       }
     }
   },
@@ -6441,6 +6530,204 @@
       "coverage": "{{pct}} % der Wettbewerber ({{count}})",
       "empty": "Auf deiner Website fehlt kein Thema der Wettbewerber.",
       "apply": "Diese Begriffe in die Lückenanalyse übernehmen"
+    }
+  },
+  "authority": {
+    "title": "Thematische Autorität",
+    "empty": "Starte einen Crawl, um die thematische Autorität zu messen.",
+    "hero": {
+      "sfs": "Site Focus Score",
+      "tas": "Topical Authority Score",
+      "sfsRole": "Reinheit: wie viel Inhalt beim Thema bleibt",
+      "tasRole": "Vollständigkeit: wie umfassend das Thema abgedeckt ist",
+      "target": "Ziel: {{value}}+",
+      "pending": "erstelle die Referenzkarte, um ihn zu berechnen"
+    },
+    "quadrant": {
+      "dominant_authority": "Dominante Autorität",
+      "boutique_specialist": "Nischenspezialist",
+      "diluted_giant": "Verwässerter Riese",
+      "unfocused_generalist": "Unfokussierter Generalist"
+    },
+    "quadrantHint": {
+      "dominant_authority": "Fokussiert und fast vollständig. Position verteidigen, Daten aktuell halten und Long-Tail erschließen.",
+      "boutique_specialist": "Beim Thema, deckt aber nur einen Teil des Feldes ab. Inhalte ausbauen und neue Themencluster aufbauen.",
+      "diluted_giant": "Viel Inhalt zum Thema, aber fremde Bereiche verwässern ihn. Entfernen oder auf Subdomains auslagern.",
+      "unfocused_generalist": "Kein klarer Fokus, oberflächliche Abdeckung. Ein Kernthema wählen, Index bereinigen, ersten soliden Silo aufbauen."
+    },
+    "matrix": {
+      "title": "Matrix der thematischen Reife (SFS × TAS)",
+      "pending": "Die Matrix erscheint, sobald der TAS berechnet ist.",
+      "aria": "Du: SFS {{sfs}}, TAS {{tas}}, Quadrant {{quadrant}}",
+      "you": "Du",
+      "axisX": "SFS",
+      "axisY": "TAS"
+    },
+    "pillars": {
+      "title": "Bestandteile des Topical Authority Score",
+      "tcr": "Themenabdeckung",
+      "cdes": "Entitätstiefe",
+      "silc": "Silo-Kohäsion",
+      "cvff": "Aktualität und Eindeutigkeit",
+      "tcrNote": "{{covered}} von {{total}} Referenz-Unterthemen abgedeckt",
+      "cdesNote": "Durchschnittliche Entitätstiefe der abgedeckten Unterthemen",
+      "silcNote": "{{orphans}} verwaiste Seiten, {{weak}} schwache Anker, {{bleed}} Links auf themenfremde Seiten",
+      "cvffNote": "{{stale}} veraltete Seiten, {{groups}} Kannibalisierungsgruppen",
+      "unavailable": "nicht messbar",
+      "multiplier": "Fokus-Multiplikator ×{{value}} aus SFS {{sfs}}"
+    },
+    "warning": {
+      "empty-authority": "Leere Autorität: Die Seite berührt {{tcr}}% der Themen, die durchschnittliche Tiefe beträgt aber nur {{depth}}/100. Bestehende Seiten mit Fakten und Entitäten vertiefen, bevor Neues erscheint.",
+      "template-duplicates": "{{count}} Template-Klone wurden mit der stärksten Seite zusammengefasst; sie erhöhen die Abdeckung nicht und verschwenden Crawl-Budget.",
+      "no-dates": "Keine Veröffentlichungs- oder Aktualisierungsdaten gefunden, daher wird die Aktualität nicht gemessen. Daten in Meta-Tags oder JSON-LD ergänzen.",
+      "no-links": "Keine redaktionellen internen Links zwischen den analysierten Seiten gefunden; die Silo-Kohäsion beruht nur auf verwaisten Seiten.",
+      "no-pillars": "Noch keine Referenzkarte: Abdeckung und Tiefe werden nicht gemessen."
+    },
+    "reference": {
+      "title": "Referenzkarte",
+      "intro": "Erstellt die Marktkarte deines Themas aus echten Daten: Überschriften, Entitäten und Fragen der für dein Kernthema rankenden Seiten plus Google Suggest. Nichts wird erfunden; ohne SERP-Quelle bleibt die Karte leer.",
+      "build": "Referenzkarte erstellen",
+      "rebuild": "Karte neu erstellen",
+      "cancel": "Abbrechen",
+      "clear": "Karte verwerfen",
+      "info": "{{subtopics}} Unterthemen in {{pillars}} Säulen von {{competitors}} Wettbewerbern ({{source}}), erstellt {{date}}",
+      "progress": {
+        "serp": "Rankings werden abgerufen ({{done}}/{{total}})",
+        "crawl": "{{domain}} wird gecrawlt ({{done}}/{{total}})",
+        "build": "Karte wird erstellt"
+      },
+      "error": "Kartenerstellung fehlgeschlagen: {{error}}",
+      "cancelled": "Die Kartenerstellung wurde abgebrochen.",
+      "unavailableTitle": "Die Referenzkarte ist nicht verfügbar",
+      "unavailable": {
+        "no-serp-source": "Verbinde eine SERP-Quelle (DataForSEO oder den kostenlosen Bing-RSS-Feed), um die Karte aus echten Rankings zu bauen.",
+        "no-queries": "Das Kernthema hat noch keine brauchbare Suchphrase. Führe zuerst einen größeren Crawl aus.",
+        "serp-failed": "Die Ranking-Abfrage ist fehlgeschlagen: {{error}}",
+        "no-competitors": "In den Rankings wurden keine konkurrierenden Domains gefunden.",
+        "no-pages": "Keine Wettbewerberseiten konnten gecrawlt werden (robots.txt, Sperren oder Timeouts).",
+        "no-taxonomy": "Die Wettbewerberseiten teilen zu wenige Überschriften für eine verlässliche Karte. Später oder mit mehr Wettbewerbern erneut versuchen."
+      }
+    },
+    "coverage": {
+      "title": "Themenabdeckungskarte",
+      "filters": "Unterthemen filtern",
+      "filter": {
+        "all": "Alle ({{count}})",
+        "gaps": "Nur Lücken ({{count}})",
+        "shallow": "Oberflächlich ({{count}})",
+        "cannibalized": "Kannibalisiert ({{count}})"
+      },
+      "general": "Allgemeine Themen",
+      "empty": "Kein Unterthema entspricht dem Filter.",
+      "row": "{{similarity}}% Übereinstimmung · Tiefe {{depth}}",
+      "status": {
+        "covered_strong": "Gründlich abgedeckt",
+        "covered_shallow": "Oberflächliche Abdeckung",
+        "missing_gap": "Fehlt",
+        "cannibalized": "Kannibalisiert"
+      },
+      "gap": {
+        "critical": "kritische Lücke",
+        "high": "große Lücke",
+        "medium": "mittlere Lücke"
+      }
+    },
+    "drill": {
+      "title": "Unterthema-Analyse",
+      "back": "Zurück zur Karte",
+      "url": "Zugeordnete Seite",
+      "none": "Noch keine Seite deckt dieses Unterthema ab.",
+      "depth": "Entitätstiefe {{value}}/100",
+      "entitiesPresent": "Vorhandene Entitäten ({{count}}/{{total}})",
+      "entitiesMissing": "Fehlende Entitäten (von den Spitzenreitern genutzt)",
+      "questions": "Nutzerfragen, die die Seite nicht beantwortet",
+      "links": "Audit der internen Verlinkung",
+      "noPillarLink": "Kein Link zur Pillar-Seite {{url}}",
+      "almostOrphan": "Nur {{count}} eingehende Link(s): fast verwaist",
+      "bleed": "Verlinkt auf die themenfremde Seite {{url}}",
+      "linksOk": "Die interne Verlinkung wirkt gesund."
+    },
+    "brief": {
+      "title": "Artikel-Briefing",
+      "path": "Vorgeschlagene URL",
+      "h1": "Vorgeschlagenes H1",
+      "entities": "Entitäten-Checkliste",
+      "questions": "Zu beantwortende Fragen",
+      "linkFrom": "Verlinke sie von",
+      "linkTo": "Sie sollte verlinken auf",
+      "impact": "Geschätzter TAS-Effekt: +{{value}}",
+      "generate": "KI-Briefing erzeugen",
+      "generating": "Wird erzeugt…",
+      "noKey": "Verbinde in den Einstellungen einen KI-Anbieter, um Briefings zu erzeugen.",
+      "empty": "Die KI lieferte keinen Text. Bitte erneut versuchen.",
+      "error": "Briefing-Erzeugung fehlgeschlagen: {{error}}"
+    },
+    "cannibal": {
+      "title": "Semantische Kannibalisierung",
+      "index": "Kannibalisierungsindex: {{value}}%",
+      "empty": "Keine Seiten konkurrieren um dieselbe Suchintention.",
+      "group": "{{count}} Seiten, {{similarity}}% Intentions-Ähnlichkeit, {{shared}}% gemeinsame Entitäten",
+      "canonical": "Behalten: {{url}}",
+      "steps": "Einzigartige Abschnitte in die behaltene Seite übernehmen, die anderen per 301 darauf umleiten und interne Links anpassen."
+    },
+    "draft": {
+      "title": "Entwurf vor der Veröffentlichung prüfen",
+      "titleField": "Entwurfstitel",
+      "bodyField": "Entwurfstext",
+      "check": "Überschneidung prüfen",
+      "none": "Keine Überschneidung über 85% mit bestehenden Seiten.",
+      "hit": "{{similarity}}% Überschneidung mit {{url}}"
+    },
+    "rec": {
+      "title": "Plan zum Ausbau der thematischen Autorität",
+      "empty": "Noch keine Empfehlungen. Erstelle die Referenzkarte, um Lücken zu sehen.",
+      "delta": "+{{value}} TAS",
+      "fill-gaps": "Lücken in „{{pillar}}“ schließen: {{count}} Unterthemen fehlen",
+      "merge-cannibalized": "{{count}} Gruppen kannibalisierender Seiten zusammenführen",
+      "fix-linking": "Interne Verlinkung reparieren: {{orphans}} verwaiste Seiten, {{bleed}} Links auf themenfremde Seiten",
+      "deepen-shallow": "{{count}} oberflächliche Unterthemen vertiefen",
+      "refresh-stale": "{{count}} seit über einem Jahr nicht aktualisierte Seiten auffrischen",
+      "how": {
+        "fill-gaps": "Pro fehlendem Unterthema einen Artikel veröffentlichen: Briefing (URL, H1, Entitäten, Fragen) nutzen und in die Säule verlinken.",
+        "merge-cannibalized": "Die stärkste Seite behalten, einzigartige Abschnitte dorthin verschieben, den Rest per 301 umleiten, interne Links anpassen.",
+        "fix-linking": "Jede verwaiste Seite aus ihrer Säule und verwandten Artikeln verlinken und Links von Fachseiten auf themenfremde Seiten entfernen.",
+        "deepen-shallow": "Fehlende Entitäten und Attribute ergänzen und offene Nutzerfragen unter eigenen Überschriften beantworten.",
+        "refresh-stale": "Zahlen, Modelle und Richtlinien aktualisieren, neue Entitäten ergänzen und das Datum erneuern."
+      }
+    },
+    "benchmark": {
+      "title": "Themenlücken-Matrix im Vergleich zu den Top-Wettbewerbern",
+      "empty": "Erstelle die Referenzkarte, um dich mit den Top-Wettbewerbern zu vergleichen. Es werden nur echte Crawl-Daten gezeigt.",
+      "domain": "Domain",
+      "pillars": "Säulenabdeckung",
+      "pillar": "Säule",
+      "insight": {
+        "rank": "Du liegst nach TAS auf Platz {{rank}} von {{total}}.",
+        "lead-pillar": "Du führst bei „{{pillar}}“: {{own}}% gegenüber {{best}}% beim besten Wettbewerber.",
+        "trailing-pillars": "Hinter den Spitzenreitern liegst du bei: {{pillars}}."
+      }
+    },
+    "history": {
+      "title": "SFS und TAS im Zeitverlauf",
+      "empty": "Der Zeitverlauf erscheint nach mindestens zwei vollständigen Analysen.",
+      "aria": "Diagramm von SFS und TAS über {{count}} Analysen",
+      "point": "{{date}}: SFS {{sfs}}, TAS {{tas}}",
+      "sfs": "SFS (durchgezogen)",
+      "tas": "TAS (gestrichelt)",
+      "milestones": "Meilensteine",
+      "cleanup": "Bereinigung: SFS stieg um {{delta}}",
+      "architecture": "Architektur: Verlinkung und Kannibalisierung um {{delta}} verbessert",
+      "expansion": "Ausbau: Themenabdeckung stieg um {{delta}}",
+      "regression": "Rückgang: TAS änderte sich um {{delta}}"
+    }
+  },
+  "authorityMonitoring": {
+    "alert": {
+      "title": "SEOmi · Alarm zur thematischen Autorität",
+      "tas-drop": "Der Topical Authority Score fiel zwischen vollständigen Analysen um {{points}} Punkte ({{from}} auf {{to}}).",
+      "cannibalization": "Eine in den letzten 24 Stunden veröffentlichte Seite konkurriert mit {{canonical}} um dieselbe Intention ({{similarity}}% ähnlich): {{url}}.",
+      "competitor-expansion": "{{domain}} hat die Abdeckung von „{{pillar}}“ von {{from}}% auf {{to}}% ausgebaut und eine neue Lücke für dich geöffnet.",
+      "content-decay": "Die Pillar-Seite {{url}} ist über ein Jahr alt und es fehlen {{missing}} Entitäten, die der Markt heute nutzt."
     }
   }
 }

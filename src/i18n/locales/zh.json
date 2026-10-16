@@ -2234,7 +2234,8 @@
       "frames": "框架",
       "custom-search": "自定义搜索",
       "semantic": "语义分析",
-      "focus": "站点聚焦度"
+      "focus": "站点聚焦度",
+      "authority": "主题权威度"
     },
     "environmentStaging": "test/staging",
     "environmentProduction": "production",
@@ -3049,7 +3050,8 @@
       "validation": "HTML 验证",
       "performance": "性能",
       "exports": "导出",
-      "focus": "站点聚焦度"
+      "focus": "站点聚焦度",
+      "authority": "主题权威"
     },
     "groups": {
       "core": "概览",
@@ -5821,6 +5823,55 @@
           "thin-subtopic": "内容单薄的子主题“{{0}}”:仅有 {{1}}% 的页面涉及(共 {{2}} 个页面)。相关词:{{3}}。",
           "competitor-terms": "竞争对手使用而你的站点缺失的词:{{3}}。"
         }
+      },
+      "authority": {
+        "title": "主题权威度",
+        "intro": "网站相对市场对核心主题覆盖得多完整、多深入。分数来自已保存的运行结果和缓存的参考图谱，不会重新抓取页面。",
+        "scoreTitle": "Topical Authority Score",
+        "legend": "TAS = 0.35 覆盖率 + 0.30 实体深度 + 0.25 孤岛内聚 + 0.10 时效，并按 Site Focus Score 缩放（0.7 至 1.0）。",
+        "kTcr": "主题覆盖率",
+        "kCdes": "实体深度",
+        "kSilc": "孤岛内聚",
+        "kCvff": "时效",
+        "unavailable": "不适用",
+        "noReference": "该项目未构建参考图谱，因此未衡量覆盖率与深度，也未计算 TAS。",
+        "reference": "参考图谱：来自 {{2}} 个竞争对手（{{3}}）的 {{1}} 个支柱、{{0}} 个子主题。",
+        "quadrant": {
+          "dominant_authority": "主导权威",
+          "boutique_specialist": "精品专家型",
+          "diluted_giant": "被稀释的巨头",
+          "unfocused_generalist": "缺乏焦点的泛化者"
+        },
+        "warning": {
+          "empty-authority": "空洞权威：涉及许多主题，但平均深度很低。发布新内容前请先深化现有页面。",
+          "template-duplicates": "模板克隆页已并入最强页面：不会提高覆盖率，还会浪费抓取预算。",
+          "no-dates": "未找到发布或更新日期，因此未衡量时效。",
+          "no-links": "分析页面之间未发现正文内链，因此内聚度仅依据孤立页面。"
+        },
+        "tCoverage": "各支柱覆盖率",
+        "colPillar": "支柱",
+        "colCoverage": "覆盖率",
+        "colGaps": "缺失子主题",
+        "tGaps": "内容缺口",
+        "colGap": "缺失子主题",
+        "colLevel": "严重程度",
+        "tCannibal": "语义内部竞争",
+        "colCanonical": "保留页面",
+        "colPages": "页面数",
+        "tRecs": "主题扩展计划",
+        "tBench": "与头部竞争对手的主题缺口矩阵",
+        "level": {
+          "critical": "关键",
+          "high": "较高",
+          "medium": "中等"
+        },
+        "rec": {
+          "fill-gaps": "填补“{{0}}”的缺口：缺少 {{1}} 个子主题",
+          "merge-cannibalized": "合并 {{0}} 组相互竞争的页面",
+          "fix-linking": "修复内部链接：{{0}} 个孤立页面，{{1}} 条指向无关页面的链接",
+          "deepen-shallow": "深化 {{0}} 个覆盖较浅的子主题",
+          "refresh-stale": "更新 {{0}} 个超过一年未更新的页面"
+        }
       }
     },
     "recs": {
@@ -6056,6 +6107,44 @@
         "what": "建议的目标:至少 80 分;若前 3 名竞争对手的平均分更高,则取该平均分。",
         "why": "把对比结果变成一个可以努力达成的数字。",
         "action": "把它作为规划目标。\n完成修复后重新运行基准,查看变化。"
+      }
+    },
+    "authority": {
+      "tas": {
+        "title": "Topical Authority Score",
+        "what": "0-100 分，衡量网站相对市场对核心主题覆盖得多完整、多深入、多连贯。综合主题覆盖（35%）、实体深度（30%）、孤岛内聚（25%）和时效（10%），再按 Site Focus Score 缩放。",
+        "why": "SFS 只衡量纯度。只有三篇完美文章的网站 SFS 很高，但因为只覆盖领域的一小部分，权威度几乎为零。TAS 衡量您覆盖了领域的多少。",
+        "action": "目标是 SFS 与 TAS 都达到 80 以上。SFS 高而 TAS 低：增加内容；TAS 高而 SFS 低：清理或拆分无关板块。先做扩展计划中的第一项。"
+      },
+      "tcr": {
+        "title": "主题覆盖率（TCR）",
+        "what": "网站用专门且切题的页面覆盖的市场子主题占比。每个子主题按重要性加权，明确匹配计全分，部分匹配计一半。",
+        "why": "搜索引擎会把能回答领域内全部问题的网站视为权威来源。缺口会把访客和排名信号让给竞争对手。",
+        "action": "高于 80% 为权威完整；低于 40% 为知识零散。打开覆盖图谱，筛选缺口，优先发布最重要的缺失子主题。"
+      },
+      "esd": {
+        "title": "实体深度",
+        "what": "检查页面是否真正覆盖其子主题：头部页面使用的概念和属性、在专属标题下回答的用户问题，以及原创内容的多少。",
+        "why": "缺少领域关键概念的长文会输给更短但更完整的来源。篇幅本身不算数。",
+        "action": "打开覆盖较浅的子主题：补充缺失的实体和属性，在独立 H2 下回答列出的问题，并加入竞争对手没有的数据或表格。"
+      },
+      "scs": {
+        "title": "孤岛内聚度",
+        "what": "衡量同一主题的文章通过内链联系得多紧密：支柱页与文章双向链接、描述性锚文本、没有孤立页面，专业页面不链接到无关页面。",
+        "why": "孤立页面既不传递也不接收主题权威。“点击这里”之类的锚文本没有信息，只计十分之一权重。",
+        "action": "从支柱页和相关文章链接每个孤立页面，使用描述目标的锚文本（如“糖尿病神经病变症状”），并移除指向无关页面的链接。"
+      },
+      "matrix": {
+        "title": "SFS × TAS 矩阵",
+        "what": "按纯度（SFS，横轴）与完整度（TAS，纵轴）定位网站。四个象限：主导权威、精品专家型、被稀释的巨头、缺乏焦点的泛化者。",
+        "why": "为什么聚焦高而权威低？五篇完美的糖尿病文章 SFS 为 95，TAS 却只有 14：没有跑题内容，但缺少 90% 的领域知识。",
+        "action": "保持 SFS 在 80 以上，同时新增集群，把 TAS 提升到 80 以上。高亮象限会告诉您应扩展、清理还是重构。"
+      },
+      "cannibalization": {
+        "title": "语义内部竞争",
+        "what": "您的两个或多个页面回答同一搜索意图：内容与标题几乎相同（余弦相似度 ≥ 88%），或都完整覆盖同一参考子主题。",
+        "why": "内链信号和相关性被重复页面分摊，因此没有一个页面能进入前列。",
+        "action": "保留最强页面，把独有内容并入，其余做 301 重定向并更新内链。发布前用草稿检查，避免产生新的重叠。"
       }
     }
   },
@@ -6441,6 +6530,204 @@
       "coverage": "{{pct}}% 的竞争对手({{count}} 个)",
       "empty": "你的站点没有缺失任何竞争对手的主题。",
       "apply": "将这些词加入缺口分析"
+    }
+  },
+  "authority": {
+    "title": "主题权威度",
+    "empty": "运行抓取以衡量主题权威度。",
+    "hero": {
+      "sfs": "Site Focus Score",
+      "tas": "Topical Authority Score",
+      "sfsRole": "纯度：内容围绕主题的程度",
+      "tasRole": "完整度：主题被覆盖的充分程度",
+      "target": "目标：{{value}}+",
+      "pending": "构建参考图谱后即可计算"
+    },
+    "quadrant": {
+      "dominant_authority": "主导权威",
+      "boutique_specialist": "精品专家型",
+      "diluted_giant": "被稀释的巨头",
+      "unfocused_generalist": "缺乏焦点的泛化者"
+    },
+    "quadrantHint": {
+      "dominant_authority": "专注且接近完整。巩固地位，保持数据新鲜，并拓展长尾查询。",
+      "boutique_specialist": "内容紧扣主题，但只覆盖了领域的一部分。请扩充内容并建立新的主题集群。",
+      "diluted_giant": "主题内容很多，但无关板块稀释了它。请清理或迁移到子域名。",
+      "unfocused_generalist": "缺乏明确焦点且覆盖浅薄。请选定一个核心主题，清理索引，并建立第一个扎实的内容孤岛。"
+    },
+    "matrix": {
+      "title": "主题成熟度矩阵（SFS × TAS）",
+      "pending": "计算出 TAS 后将显示矩阵。",
+      "aria": "您：SFS {{sfs}}，TAS {{tas}}，象限 {{quadrant}}",
+      "you": "您",
+      "axisX": "SFS",
+      "axisY": "TAS"
+    },
+    "pillars": {
+      "title": "Topical Authority Score 的构成",
+      "tcr": "主题覆盖率",
+      "cdes": "实体深度",
+      "silc": "孤岛内聚度",
+      "cvff": "时效与唯一性",
+      "tcrNote": "已覆盖 {{total}} 个参考子主题中的 {{covered}} 个",
+      "cdesNote": "已覆盖子主题的平均实体深度",
+      "silcNote": "{{orphans}} 个孤立页面，{{weak}} 个弱锚文本，{{bleed}} 条指向无关页面的链接",
+      "cvffNote": "{{stale}} 个过时页面，{{groups}} 个内部竞争组",
+      "unavailable": "无法衡量",
+      "multiplier": "来自 SFS {{sfs}} 的聚焦系数 ×{{value}}"
+    },
+    "warning": {
+      "empty-authority": "空洞权威：网站涉及 {{tcr}}% 的主题，但平均深度仅 {{depth}}/100。发布新内容前，请先用数据和实体深化现有页面。",
+      "template-duplicates": "{{count}} 个模板克隆页已并入最强页面，不会提高覆盖率，还会浪费抓取预算。",
+      "no-dates": "未找到发布或更新日期，因此未衡量时效。请在 meta 标签或 JSON-LD 中添加日期。",
+      "no-links": "分析页面之间未发现正文内链，因此内聚度仅依据孤立页面。",
+      "no-pillars": "尚无参考图谱，未衡量覆盖率与深度。"
+    },
+    "reference": {
+      "title": "参考图谱",
+      "intro": "基于真实数据构建主题的市场图谱：主主题排名靠前页面的标题、实体和问题，外加 Google Suggest。不会编造任何内容；没有 SERP 数据源时图谱保持为空。",
+      "build": "构建参考图谱",
+      "rebuild": "重新构建图谱",
+      "cancel": "取消",
+      "clear": "丢弃图谱",
+      "info": "来自 {{competitors}} 个竞争对手（{{source}}）的 {{pillars}} 个支柱、{{subtopics}} 个子主题，构建于 {{date}}",
+      "progress": {
+        "serp": "正在获取排名（{{done}}/{{total}}）",
+        "crawl": "正在抓取 {{domain}}（{{done}}/{{total}}）",
+        "build": "正在构建图谱"
+      },
+      "error": "构建图谱失败：{{error}}",
+      "cancelled": "图谱构建已取消。",
+      "unavailableTitle": "参考图谱不可用",
+      "unavailable": {
+        "no-serp-source": "请连接 SERP 数据源（DataForSEO 或免费的 Bing RSS），以便基于真实排名构建图谱。",
+        "no-queries": "核心主题尚无可用搜索短语。请先运行更大规模的抓取。",
+        "serp-failed": "排名查询失败：{{error}}",
+        "no-competitors": "排名中未找到竞争域名。",
+        "no-pages": "无法抓取任何竞争对手页面（robots.txt、拦截或超时）。",
+        "no-taxonomy": "竞争对手页面共有的标题太少，无法形成可靠图谱。请稍后重试或增加竞争对手。"
+      }
+    },
+    "coverage": {
+      "title": "主题覆盖图谱",
+      "filters": "筛选子主题",
+      "filter": {
+        "all": "全部（{{count}}）",
+        "gaps": "仅缺口（{{count}}）",
+        "shallow": "浅层（{{count}}）",
+        "cannibalized": "内部竞争（{{count}}）"
+      },
+      "general": "通用主题",
+      "empty": "没有符合筛选条件的子主题。",
+      "row": "匹配 {{similarity}}% · 深度 {{depth}}",
+      "status": {
+        "covered_strong": "已深入覆盖",
+        "covered_shallow": "覆盖较浅",
+        "missing_gap": "缺失",
+        "cannibalized": "内部竞争"
+      },
+      "gap": {
+        "critical": "关键缺口",
+        "high": "较大缺口",
+        "medium": "中等缺口"
+      }
+    },
+    "drill": {
+      "title": "子主题分析",
+      "back": "返回图谱",
+      "url": "对应页面",
+      "none": "尚无页面覆盖此子主题。",
+      "depth": "实体深度 {{value}}/100",
+      "entitiesPresent": "已包含的实体（{{count}}/{{total}}）",
+      "entitiesMissing": "缺失的实体（头部网站都在使用）",
+      "questions": "页面未回答的用户问题",
+      "links": "内部链接审计",
+      "noPillarLink": "没有指向支柱页 {{url}} 的链接",
+      "almostOrphan": "仅有 {{count}} 条入链：近乎孤立页面",
+      "bleed": "链接到无关页面 {{url}}",
+      "linksOk": "内部链接状况良好。"
+    },
+    "brief": {
+      "title": "文章简报",
+      "path": "建议 URL",
+      "h1": "建议 H1",
+      "entities": "实体清单",
+      "questions": "需要回答的问题",
+      "linkFrom": "从此页面链接",
+      "linkTo": "应链接到",
+      "impact": "预计对 TAS 的影响：+{{value}}",
+      "generate": "生成 AI 简报",
+      "generating": "生成中…",
+      "noKey": "请在设置中连接 AI 提供商以生成简报。",
+      "empty": "AI 未返回文本，请重试。",
+      "error": "生成简报失败：{{error}}"
+    },
+    "cannibal": {
+      "title": "语义内部竞争",
+      "index": "内部竞争指数：{{value}}%",
+      "empty": "没有页面竞争同一搜索意图。",
+      "group": "{{count}} 个页面，意图相似度 {{similarity}}%，共享实体 {{shared}}%",
+      "canonical": "保留：{{url}}",
+      "steps": "将独有内容并入保留页面，其余页面做 301 重定向，并更新内部链接。"
+    },
+    "draft": {
+      "title": "发布前检查草稿",
+      "titleField": "草稿标题",
+      "bodyField": "草稿正文",
+      "check": "检查重叠",
+      "none": "与现有页面的重叠未超过 85%。",
+      "hit": "与 {{url}} 重叠 {{similarity}}%"
+    },
+    "rec": {
+      "title": "主题扩展计划",
+      "empty": "暂无建议。构建参考图谱后可查看覆盖缺口。",
+      "delta": "+{{value}} TAS",
+      "fill-gaps": "填补“{{pillar}}”的缺口：缺少 {{count}} 个子主题",
+      "merge-cannibalized": "合并 {{count}} 组相互竞争的页面",
+      "fix-linking": "修复内部链接：{{orphans}} 个孤立页面，{{bleed}} 条指向无关页面的链接",
+      "deepen-shallow": "深化 {{count}} 个覆盖较浅的子主题",
+      "refresh-stale": "更新 {{count}} 个超过一年未更新的页面",
+      "how": {
+        "fill-gaps": "为每个缺失的子主题发布一篇文章：使用简报（URL、H1、实体清单、问题），并链接到所属支柱。",
+        "merge-cannibalized": "保留最强页面，把独有内容并入，其余做 301 重定向并更新内部链接。",
+        "fix-linking": "从支柱页和相关文章链接到每个孤立页面，并移除专业页面指向无关页面的链接。",
+        "deepen-shallow": "补充缺失的实体和属性，并在各自的标题下回答尚未解答的用户问题。",
+        "refresh-stale": "更新数据、型号和指南，加入新实体并刷新发布日期。"
+      }
+    },
+    "benchmark": {
+      "title": "与头部竞争对手的主题缺口矩阵",
+      "empty": "构建参考图谱后即可与排名靠前的竞争对手比较。仅显示真实抓取数据。",
+      "domain": "域名",
+      "pillars": "各支柱覆盖率",
+      "pillar": "支柱",
+      "insight": {
+        "rank": "按 TAS 排名，您位列 {{total}} 个站点中的第 {{rank}} 名。",
+        "lead-pillar": "您在“{{pillar}}”领先：{{own}}%，最佳竞争对手为 {{best}}%。",
+        "trailing-pillars": "在以下方面落后于领先者：{{pillars}}。"
+      }
+    },
+    "history": {
+      "title": "SFS 与 TAS 的变化",
+      "empty": "至少完成两次完整分析后将显示时间线。",
+      "aria": "{{count}} 次分析的 SFS 与 TAS 图表",
+      "point": "{{date}}：SFS {{sfs}}，TAS {{tas}}",
+      "sfs": "SFS（实线）",
+      "tas": "TAS（虚线）",
+      "milestones": "里程碑",
+      "cleanup": "清理：SFS 上升 {{delta}}",
+      "architecture": "架构：链接与内部竞争改善 {{delta}}",
+      "expansion": "扩展：主题覆盖率上升 {{delta}}",
+      "regression": "退步：TAS 变化 {{delta}}"
+    }
+  },
+  "authorityMonitoring": {
+    "alert": {
+      "title": "SEOmi · 主题权威度提醒",
+      "tas-drop": "两次完整分析之间，Topical Authority Score 下降了 {{points}} 分（{{from}} → {{to}}）。",
+      "cannibalization": "过去 24 小时内发布的页面与 {{canonical}} 争夺同一意图（相似度 {{similarity}}%）：{{url}}。",
+      "competitor-expansion": "{{domain}} 将“{{pillar}}”的覆盖率从 {{from}}% 提升到 {{to}}%，为您带来新的缺口。",
+      "content-decay": "支柱页 {{url}} 已超过一年，且缺少市场现用的 {{missing}} 个实体。"
     }
   }
 }

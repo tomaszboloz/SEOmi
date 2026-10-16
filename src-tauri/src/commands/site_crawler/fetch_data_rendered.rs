@@ -24,6 +24,7 @@ pub(super) fn read_rendered_page_data(
         content_encoding: None,
         http_refresh: None,
         cache_control: None,
+        last_modified: None,
         charset: Some(snapshot.charset),
         x_robots_tag: None,
         declared_html,

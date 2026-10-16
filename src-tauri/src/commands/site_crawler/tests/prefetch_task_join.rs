@@ -16,6 +16,7 @@ fn prefetched(url: &str) -> FetchedResponse {
         content_encoding: None,
         http_refresh: None,
         cache_control: None,
+        last_modified: None,
         charset: None,
         x_robots_tag: None,
         declared_html: true,

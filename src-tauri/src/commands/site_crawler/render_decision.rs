@@ -55,6 +55,7 @@ pub(crate) fn merge_rendered_with_http(
     rendered.content_encoding = http.content_encoding;
     rendered.http_refresh = http.http_refresh;
     rendered.cache_control = http.cache_control;
+    rendered.last_modified = http.last_modified;
     rendered.x_robots_tag = http.x_robots_tag;
     rendered.response_headers_available = http.response_headers_available;
     rendered

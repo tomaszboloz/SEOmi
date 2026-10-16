@@ -1,6 +1,7 @@
 //! Styled crawl report built on the layout engine.
 
 mod agg;
+mod authority_tables;
 mod cover;
 mod data;
 mod detail_tables;
@@ -14,6 +15,7 @@ mod metrics;
 mod pages;
 mod recs;
 mod run_tables;
+mod sec_authority;
 mod sec_dupes;
 mod sec_extra;
 mod sec_focus;
@@ -36,6 +38,8 @@ mod fixture_run;
 mod tests;
 #[cfg(test)]
 mod tests_agg;
+#[cfg(test)]
+mod tests_authority;
 #[cfg(test)]
 mod tests_data;
 #[cfg(test)]
@@ -111,6 +115,9 @@ pub fn crawl_pdf(run: &Value) -> Vec<u8> {
         doc.crawl_focus(&run["focus"]);
         focus_tables::pages(&run["focus"])
     });
+    if sec_authority::present(run) {
+        doc.crawl_authority(&run["authority"]);
+    }
     doc.heading(t(s::DETAILS));
     let details = detail_tables::detail_tables(&c);
     details.iter().for_each(|table| doc.data_table(table));

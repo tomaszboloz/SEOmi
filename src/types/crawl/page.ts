@@ -88,6 +88,8 @@ export interface CrawledPageSummary {
   heading_texts?: HeadingTexts;
   /** Characters of cleaned main-content text behind focus_terms. */
   focus_text_chars?: number;
+  /** Latest YYYY-MM-DD date the page declares (meta, JSON-LD, time, Last-Modified); absent when none. */
+  content_date?: string;
   /** Bounded semantic-content excerpts retained only for local source-context checks. */
   semantic_excerpts?: string[];
   /** Internal links discovered in main content only for semantic architecture analysis. */

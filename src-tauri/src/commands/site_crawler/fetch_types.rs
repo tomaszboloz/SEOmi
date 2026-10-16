@@ -34,6 +34,8 @@ pub(crate) struct FetchedPageData {
     pub(crate) content_encoding: Option<String>,
     pub(crate) http_refresh: Option<String>,
     pub(crate) cache_control: Option<String>,
+    /// Raw `Last-Modified` response header.
+    pub(crate) last_modified: Option<String>,
     pub(crate) charset: Option<String>,
     pub(crate) x_robots_tag: Option<String>,
     pub(crate) declared_html: bool,

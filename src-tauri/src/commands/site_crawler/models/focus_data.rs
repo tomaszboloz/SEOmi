@@ -34,4 +34,8 @@ pub struct CrawledPageFocus {
     /// Characters of cleaned main-content text the focus terms came from.
     #[serde(default)]
     pub focus_text_chars: u32,
+    /// Latest `YYYY-MM-DD` date the page declares (modified, else published;
+    /// falls back to the HTTP `Last-Modified` header). Feeds topical freshness.
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub content_date: Option<String>,
 }

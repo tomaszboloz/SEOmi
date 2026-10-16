@@ -2234,7 +2234,8 @@
       "frames": "프레임",
       "custom-search": "사용자 검색",
       "semantic": "시맨틱 분석",
-      "focus": "사이트 포커스"
+      "focus": "사이트 포커스",
+      "authority": "주제 권위도"
     },
     "environmentStaging": "test/staging",
     "environmentProduction": "production",
@@ -3049,7 +3050,8 @@
       "validation": "HTML 검증",
       "performance": "성능",
       "exports": "내보내기",
-      "focus": "사이트 포커스"
+      "focus": "사이트 포커스",
+      "authority": "주제 권위도"
     },
     "groups": {
       "core": "개요",
@@ -5821,6 +5823,55 @@
           "thin-subtopic": "내용이 빈약한 하위 주제 \"{{0}}\": 페이지의 {{1}}%만 다룹니다({{2}}페이지). 용어: {{3}}.",
           "competitor-terms": "내 사이트에 없는 경쟁사 용어: {{3}}."
         }
+      },
+      "authority": {
+        "title": "주제 권위도",
+        "intro": "사이트가 핵심 주제를 시장 대비 얼마나 완전하고 깊게 다루는지 보여 줍니다. 점수는 저장된 실행과 캐시된 참조 지도에서 가져오며 페이지를 다시 가져오지 않습니다.",
+        "scoreTitle": "Topical Authority Score",
+        "legend": "TAS = 0.35 커버리지 + 0.30 엔티티 깊이 + 0.25 사일로 응집도 + 0.10 최신성, Site Focus Score(0.7~1.0)로 보정.",
+        "kTcr": "주제 커버리지",
+        "kCdes": "엔티티 깊이",
+        "kSilc": "사일로 응집도",
+        "kCvff": "최신성",
+        "unavailable": "해당 없음",
+        "noReference": "이 프로젝트에는 참조 지도가 없어 커버리지와 깊이를 측정하지 않고 TAS도 계산하지 않았습니다.",
+        "reference": "참조 지도: 경쟁사 {{2}}곳({{3}})에서 얻은 기둥 {{1}}개, 하위 주제 {{0}}개.",
+        "quadrant": {
+          "dominant_authority": "지배적 권위",
+          "boutique_specialist": "부티크 전문가",
+          "diluted_giant": "희석된 거인",
+          "unfocused_generalist": "초점 없는 제너럴리스트"
+        },
+        "warning": {
+          "empty-authority": "빈 권위: 많은 주제를 다루지만 평균 깊이가 매우 낮습니다. 새 글보다 기존 페이지를 먼저 보강하세요.",
+          "template-duplicates": "템플릿 복제 페이지는 가장 강한 페이지로 병합했습니다. 커버리지를 높이지 않고 크롤 예산을 낭비합니다.",
+          "no-dates": "게시일·수정일을 찾지 못해 최신성을 측정하지 않았습니다.",
+          "no-links": "분석된 페이지 간 본문 내부 링크가 없어 응집도는 고아 페이지만 기준입니다."
+        },
+        "tCoverage": "기둥별 커버리지",
+        "colPillar": "기둥",
+        "colCoverage": "커버리지",
+        "colGaps": "빠진 하위 주제",
+        "tGaps": "콘텐츠 공백",
+        "colGap": "빠진 하위 주제",
+        "colLevel": "심각도",
+        "tCannibal": "의미적 카니발라이제이션",
+        "colCanonical": "유지할 페이지",
+        "colPages": "페이지",
+        "tRecs": "주제 확장 계획",
+        "tBench": "상위 경쟁사 대비 격차 매트릭스",
+        "level": {
+          "critical": "치명적",
+          "high": "높음",
+          "medium": "중간"
+        },
+        "rec": {
+          "fill-gaps": "“{{0}}”의 공백 메우기: 하위 주제 {{1}}개 부족",
+          "merge-cannibalized": "카니발라이제이션 페이지 {{0}}그룹 병합",
+          "fix-linking": "내부 링크 수정: 고아 페이지 {{0}}개, 주제 밖 링크 {{1}}개",
+          "deepen-shallow": "얕은 하위 주제 {{0}}개 보강",
+          "refresh-stale": "1년 넘게 수정되지 않은 페이지 {{0}}개 갱신"
+        }
       }
     },
     "recs": {
@@ -6056,6 +6107,44 @@
         "what": "권장 목표는 최소 80점이며, 상위 3개 경쟁사의 평균이 더 높으면 그 평균입니다.",
         "why": "비교 결과를 하나의 목표 숫자로 바꿔 줍니다.",
         "action": "계획 단계의 목표로 활용하세요.\n수정 후 벤치마크를 다시 실행해 변화를 확인하세요."
+      }
+    },
+    "authority": {
+      "tas": {
+        "title": "Topical Authority Score",
+        "what": "사이트가 핵심 주제를 시장 대비 얼마나 완전하고 깊고 일관되게 다루는지 보여 주는 0~100 점수입니다. 주제 커버리지(35%), 엔티티 깊이(30%), 사일로 응집도(25%), 최신성(10%)을 합친 뒤 Site Focus Score로 보정합니다.",
+        "why": "SFS는 순도만 측정합니다. 완벽한 글 세 편뿐인 사이트는 SFS가 높아도 분야의 일부만 다루므로 권위도는 거의 0입니다. TAS는 분야를 얼마나 다루는지 측정합니다.",
+        "action": "SFS와 TAS 모두 80 이상을 목표로 하세요. SFS는 높고 TAS가 낮으면 콘텐츠를 추가하고, TAS는 높고 SFS가 낮으면 무관한 영역을 정리·분리하세요. 확장 계획의 첫 항목부터 시작하세요."
+      },
+      "tcr": {
+        "title": "주제 커버리지 (TCR)",
+        "what": "전담 페이지로 시장의 하위 주제를 얼마나 다루는지 나타내는 비율입니다. 하위 주제는 중요도로 가중하며 뚜렷한 일치는 전부, 부분 일치는 절반으로 계산합니다.",
+        "why": "검색엔진은 한 분야의 질문 전반에 답하는 사이트를 기준 출처로 봅니다. 공백은 방문자와 랭킹 신호를 경쟁사에 넘깁니다.",
+        "action": "80% 이상이면 완전한 권위, 40% 미만이면 단편적 지식입니다. 커버리지 지도에서 공백을 필터링해 가장 중요한 빠진 하위 주제부터 게시하세요."
+      },
+      "esd": {
+        "title": "엔티티 깊이",
+        "what": "페이지가 하위 주제를 실제로 충분히 다루는지 확인합니다. 상위 페이지가 쓰는 개념·속성, 별도 제목으로 답한 사용자 질문, 독창적 자료의 양을 봅니다.",
+        "why": "분야의 핵심 개념이 빠진 긴 글은 짧아도 더 완전한 출처에 밀립니다. 분량만으로는 평가되지 않습니다.",
+        "action": "얕은 하위 주제를 열어 빠진 엔티티와 속성을 추가하고, 나열된 질문에 별도 H2로 답하며, 경쟁사에 없는 데이터나 표를 넣으세요."
+      },
+      "scs": {
+        "title": "사일로 응집도",
+        "what": "같은 주제의 글이 내부 링크로 얼마나 잘 연결됐는지 측정합니다. 필러 페이지와 양방향 링크, 설명적인 앵커, 고아 페이지 없음, 전문 페이지에서 무관한 페이지로의 링크 없음이 기준입니다.",
+        "why": "고아 페이지는 주제 권위를 주지도 받지도 못합니다. “여기를 클릭” 같은 앵커는 정보가 없어 10분의 1만 반영됩니다.",
+        "action": "고아 페이지마다 필러와 관련 글에서 링크하고, 대상을 설명하는 앵커(“당뇨병성 신경병증 증상”)를 쓰며, 주제 밖 페이지 링크는 제거하세요."
+      },
+      "matrix": {
+        "title": "SFS × TAS 매트릭스",
+        "what": "사이트를 순도(SFS, 가로)와 완전성(TAS, 세로)으로 배치합니다. 네 사분면은 지배적 권위, 부티크 전문가, 희석된 거인, 초점 없는 제너럴리스트입니다.",
+        "why": "왜 포커스는 높은데 권위는 낮을까요? 당뇨병 글 다섯 편이 완벽하면 SFS 95여도 TAS는 14입니다. 무관한 내용은 없지만 분야의 90%가 빠져 있습니다.",
+        "action": "SFS는 80 이상으로 유지하면서 새 클러스터를 추가해 TAS도 80 이상으로 올리세요. 강조된 사분면이 확장·정리·재구성 중 무엇이 필요한지 알려 줍니다."
+      },
+      "cannibalization": {
+        "title": "의미적 카니발라이제이션",
+        "what": "두 개 이상의 페이지가 같은 검색 의도에 답합니다. 내용과 제목이 거의 같거나(코사인 유사도 88% 이상) 둘 다 같은 참조 하위 주제를 완전히 다룹니다.",
+        "why": "내부 링크 신호와 관련성이 중복 페이지에 나뉘어 어느 페이지도 상위에 오르지 못합니다.",
+        "action": "가장 강한 페이지를 남기고 고유 섹션을 옮긴 뒤 나머지는 301로 리디렉션하고 내부 링크를 갱신하세요. 게시 전 초안 검사로 새 중복을 막으세요."
       }
     }
   },
@@ -6441,6 +6530,204 @@
       "coverage": "경쟁사의 {{pct}}%({{count}}개)",
       "empty": "내 사이트에 없는 경쟁사 주제가 없습니다.",
       "apply": "이 용어를 공백 분석에 추가"
+    }
+  },
+  "authority": {
+    "title": "주제 권위도",
+    "empty": "크롤링을 실행해 주제 권위도를 측정하세요.",
+    "hero": {
+      "sfs": "Site Focus Score",
+      "tas": "Topical Authority Score",
+      "sfsRole": "순도: 콘텐츠가 주제에 머무는 정도",
+      "tasRole": "완전성: 주제를 얼마나 충분히 다루는지",
+      "target": "목표: {{value}}+",
+      "pending": "참조 지도를 만들면 계산됩니다"
+    },
+    "quadrant": {
+      "dominant_authority": "지배적 권위",
+      "boutique_specialist": "부티크 전문가",
+      "diluted_giant": "희석된 거인",
+      "unfocused_generalist": "초점 없는 제너럴리스트"
+    },
+    "quadrantHint": {
+      "dominant_authority": "집중되어 있고 거의 완전합니다. 순위를 지키고 데이터를 최신으로 유지하며 롱테일로 확장하세요.",
+      "boutique_specialist": "주제에는 맞지만 분야의 일부만 다룹니다. 콘텐츠를 확장하고 새 주제 클러스터를 만드세요.",
+      "diluted_giant": "주제 콘텐츠는 많지만 무관한 영역이 희석합니다. 정리하거나 서브도메인으로 옮기세요.",
+      "unfocused_generalist": "초점이 불분명하고 얕게 다룹니다. 핵심 주제를 하나 정하고 인덱스를 정리해 첫 사일로를 구축하세요."
+    },
+    "matrix": {
+      "title": "주제 성숙도 매트릭스 (SFS × TAS)",
+      "pending": "TAS가 계산되면 매트릭스가 표시됩니다.",
+      "aria": "내 사이트: SFS {{sfs}}, TAS {{tas}}, 사분면 {{quadrant}}",
+      "you": "나",
+      "axisX": "SFS",
+      "axisY": "TAS"
+    },
+    "pillars": {
+      "title": "Topical Authority Score 구성 요소",
+      "tcr": "주제 커버리지",
+      "cdes": "엔티티 깊이",
+      "silc": "사일로 응집도",
+      "cvff": "최신성과 고유성",
+      "tcrNote": "참조 하위 주제 {{total}}개 중 {{covered}}개 다룸",
+      "cdesNote": "다룬 하위 주제의 평균 엔티티 깊이",
+      "silcNote": "고아 페이지 {{orphans}}개, 약한 앵커 {{weak}}개, 주제 밖 페이지로의 링크 {{bleed}}개",
+      "cvffNote": "오래된 페이지 {{stale}}개, 카니발라이제이션 그룹 {{groups}}개",
+      "unavailable": "측정 불가",
+      "multiplier": "SFS {{sfs}}에 따른 포커스 배수 ×{{value}}"
+    },
+    "warning": {
+      "empty-authority": "빈 권위: 주제의 {{tcr}}%를 다루지만 평균 깊이는 {{depth}}/100에 불과합니다. 새 글보다 기존 페이지를 데이터와 엔티티로 보강하세요.",
+      "template-duplicates": "템플릿 복제 페이지 {{count}}개를 가장 강한 페이지로 병합했습니다. 커버리지를 높이지 않고 크롤 예산만 낭비합니다.",
+      "no-dates": "게시일·수정일을 찾지 못해 최신성을 측정하지 않습니다. 메타 태그나 JSON-LD에 날짜를 추가하세요.",
+      "no-links": "분석된 페이지 간 본문 내부 링크가 없어 응집도는 고아 페이지만 기준으로 합니다.",
+      "no-pillars": "참조 지도가 아직 없어 커버리지와 깊이를 측정하지 않습니다."
+    },
+    "reference": {
+      "title": "참조 지도",
+      "intro": "실제 데이터로 주제의 시장 지도를 만듭니다. 핵심 주제 상위 페이지의 제목·엔티티·질문과 Google Suggest를 사용하며 지어내지 않습니다. SERP 소스가 없으면 지도는 비어 있습니다.",
+      "build": "참조 지도 만들기",
+      "rebuild": "지도 다시 만들기",
+      "cancel": "취소",
+      "clear": "지도 삭제",
+      "info": "경쟁사 {{competitors}}곳({{source}})에서 얻은 기둥 {{pillars}}개, 하위 주제 {{subtopics}}개, 생성일 {{date}}",
+      "progress": {
+        "serp": "순위 가져오는 중 ({{done}}/{{total}})",
+        "crawl": "{{domain}} 크롤링 중 ({{done}}/{{total}})",
+        "build": "지도 생성 중"
+      },
+      "error": "지도 생성 실패: {{error}}",
+      "cancelled": "지도 생성이 취소되었습니다.",
+      "unavailableTitle": "참조 지도를 사용할 수 없습니다",
+      "unavailable": {
+        "no-serp-source": "SERP 소스(DataForSEO 또는 무료 Bing RSS)를 연결하면 실제 순위로 지도를 만들 수 있습니다.",
+        "no-queries": "핵심 주제에 쓸 만한 검색어가 아직 없습니다. 먼저 더 큰 크롤링을 실행하세요.",
+        "serp-failed": "순위 조회 실패: {{error}}",
+        "no-competitors": "순위에서 경쟁 도메인을 찾지 못했습니다.",
+        "no-pages": "경쟁사 페이지를 크롤링하지 못했습니다(robots.txt, 차단 또는 시간 초과).",
+        "no-taxonomy": "경쟁사 페이지의 공통 제목이 너무 적어 신뢰할 지도를 만들 수 없습니다. 나중에 또는 경쟁사를 늘려 다시 시도하세요."
+      }
+    },
+    "coverage": {
+      "title": "주제 커버리지 지도",
+      "filters": "하위 주제 필터",
+      "filter": {
+        "all": "전체 ({{count}})",
+        "gaps": "공백만 ({{count}})",
+        "shallow": "얕음 ({{count}})",
+        "cannibalized": "카니발라이제이션 ({{count}})"
+      },
+      "general": "일반 주제",
+      "empty": "필터에 맞는 하위 주제가 없습니다.",
+      "row": "일치 {{similarity}}% · 깊이 {{depth}}",
+      "status": {
+        "covered_strong": "깊이 다룸",
+        "covered_shallow": "얕은 커버리지",
+        "missing_gap": "없음",
+        "cannibalized": "카니발라이제이션"
+      },
+      "gap": {
+        "critical": "치명적 공백",
+        "high": "큰 공백",
+        "medium": "중간 공백"
+      }
+    },
+    "drill": {
+      "title": "하위 주제 분석",
+      "back": "지도로 돌아가기",
+      "url": "배정된 페이지",
+      "none": "이 하위 주제를 다루는 페이지가 아직 없습니다.",
+      "depth": "엔티티 깊이 {{value}}/100",
+      "entitiesPresent": "포함된 엔티티 ({{count}}/{{total}})",
+      "entitiesMissing": "빠진 엔티티 (상위 사이트가 사용)",
+      "questions": "페이지가 답하지 않는 사용자 질문",
+      "links": "내부 링크 감사",
+      "noPillarLink": "필러 페이지 {{url}}(으)로의 링크가 없습니다",
+      "almostOrphan": "들어오는 링크 {{count}}개뿐: 사실상 고아 페이지",
+      "bleed": "주제와 무관한 페이지 {{url}}(으)로 링크합니다",
+      "linksOk": "내부 링크 상태가 양호합니다."
+    },
+    "brief": {
+      "title": "문서 브리프",
+      "path": "권장 URL",
+      "h1": "권장 H1",
+      "entities": "엔티티 체크리스트",
+      "questions": "답해야 할 질문",
+      "linkFrom": "링크를 걸 페이지",
+      "linkTo": "링크해야 할 페이지",
+      "impact": "TAS 예상 영향: +{{value}}",
+      "generate": "AI 브리프 생성",
+      "generating": "생성 중…",
+      "noKey": "설정에서 AI 제공자를 연결하면 브리프를 생성할 수 있습니다.",
+      "empty": "AI가 텍스트를 반환하지 않았습니다. 다시 시도하세요.",
+      "error": "브리프 생성 실패: {{error}}"
+    },
+    "cannibal": {
+      "title": "의미적 카니발라이제이션",
+      "index": "카니발라이제이션 지수: {{value}}%",
+      "empty": "같은 검색 의도를 두고 경쟁하는 페이지가 없습니다.",
+      "group": "{{count}}개 페이지, 의도 유사도 {{similarity}}%, 공통 엔티티 {{shared}}%",
+      "canonical": "유지: {{url}}",
+      "steps": "고유한 섹션을 유지할 페이지로 옮기고 나머지는 301로 리디렉션한 뒤 내부 링크를 갱신하세요."
+    },
+    "draft": {
+      "title": "게시 전 초안 확인",
+      "titleField": "초안 제목",
+      "bodyField": "초안 본문",
+      "check": "중복 확인",
+      "none": "기존 페이지와 85% 넘는 중복이 없습니다.",
+      "hit": "{{url}}와(과) {{similarity}}% 중복"
+    },
+    "rec": {
+      "title": "주제 확장 계획",
+      "empty": "추천할 작업이 아직 없습니다. 참조 지도를 만들면 공백을 볼 수 있습니다.",
+      "delta": "+{{value}} TAS",
+      "fill-gaps": "“{{pillar}}”의 공백 메우기: 하위 주제 {{count}}개 부족",
+      "merge-cannibalized": "카니발라이제이션 페이지 {{count}}그룹 병합",
+      "fix-linking": "내부 링크 수정: 고아 페이지 {{orphans}}개, 주제 밖 페이지 링크 {{bleed}}개",
+      "deepen-shallow": "얕은 하위 주제 {{count}}개 보강",
+      "refresh-stale": "1년 넘게 수정되지 않은 페이지 {{count}}개 갱신",
+      "how": {
+        "fill-gaps": "빠진 하위 주제마다 글 한 편을 게시하세요. 브리프(URL, H1, 엔티티, 질문)를 활용하고 필러 페이지로 링크하세요.",
+        "merge-cannibalized": "가장 강한 페이지를 남기고 고유 섹션을 옮긴 뒤 나머지는 301 리디렉션하고 내부 링크를 갱신하세요.",
+        "fix-linking": "고아 페이지마다 필러와 관련 글에서 링크를 걸고, 전문 페이지에서 주제 밖 페이지로 가는 링크는 제거하세요.",
+        "deepen-shallow": "빠진 엔티티와 속성을 추가하고 답하지 않은 질문은 별도 제목 아래에서 답하세요.",
+        "refresh-stale": "수치·모델·지침을 갱신하고 새 엔티티를 추가한 뒤 게시일을 새로 고치세요."
+      }
+    },
+    "benchmark": {
+      "title": "상위 경쟁사 대비 주제 격차 매트릭스",
+      "empty": "참조 지도를 만들면 상위 경쟁사와 비교할 수 있습니다. 실제 크롤링 데이터만 표시합니다.",
+      "domain": "도메인",
+      "pillars": "기둥별 커버리지",
+      "pillar": "기둥",
+      "insight": {
+        "rank": "TAS 기준 {{total}}곳 중 {{rank}}위입니다.",
+        "lead-pillar": "“{{pillar}}”에서 앞서 있습니다: {{own}}% 대 최고 경쟁사 {{best}}%.",
+        "trailing-pillars": "다음 분야에서 선두에 뒤처집니다: {{pillars}}."
+      }
+    },
+    "history": {
+      "title": "시간에 따른 SFS와 TAS",
+      "empty": "전체 분석이 두 번 이상 있어야 타임라인이 표시됩니다.",
+      "aria": "분석 {{count}}회에 걸친 SFS와 TAS 차트",
+      "point": "{{date}}: SFS {{sfs}}, TAS {{tas}}",
+      "sfs": "SFS (실선)",
+      "tas": "TAS (점선)",
+      "milestones": "마일스톤",
+      "cleanup": "정리: SFS가 {{delta}} 상승",
+      "architecture": "구조: 링크와 카니발라이제이션이 {{delta}} 개선",
+      "expansion": "확장: 주제 커버리지가 {{delta}} 상승",
+      "regression": "하락: TAS가 {{delta}} 변동"
+    }
+  },
+  "authorityMonitoring": {
+    "alert": {
+      "title": "SEOmi · 주제 권위도 알림",
+      "tas-drop": "전체 분석 사이에 Topical Authority Score가 {{points}}점 하락했습니다 ({{from}} → {{to}}).",
+      "cannibalization": "최근 24시간 내 게시된 페이지가 {{canonical}}와 같은 의도로 경쟁합니다 (유사도 {{similarity}}%): {{url}}.",
+      "competitor-expansion": "{{domain}}이(가) “{{pillar}}” 커버리지를 {{from}}%에서 {{to}}%로 확대해 새로운 공백이 생겼습니다.",
+      "content-decay": "필러 페이지 {{url}}은(는) 1년이 넘었고 시장에서 쓰는 엔티티 {{missing}}개가 빠져 있습니다."
     }
   }
 }

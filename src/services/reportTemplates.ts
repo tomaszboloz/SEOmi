@@ -10,6 +10,7 @@ export const REPORT_TEMPLATE_SECTIONS = [
   'custom-search',
   'semantic',
   'focus',
+  'authority',
 ] as const;
 import { readJsonStorage, readStorage, removeStorage, writeJsonStorage, writeStorage } from '@/services/storage';
 import i18n from '@/i18n';

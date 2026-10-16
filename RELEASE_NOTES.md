@@ -1,4 +1,17 @@
-# SEOmi 0.3.0 — release notes
+# SEOmi 0.4.0 — release notes
+
+## Added
+
+- Topical Authority Score (TAS): a 0–100 score of how completely and deeply the site covers its Core Topic, in a new Topical authority tab next to Site Focus. Dual hero (SFS purity next to TAS completeness) and the SFS × TAS maturity matrix with four strategic quadrants.
+- Reference map built only from real data: headings, entities and questions of the pages ranking for your Core Topic (DataForSEO or free Bing RSS), plus Google Suggest. Cached for 30 days per project; without a SERP source the tab says so instead of inventing numbers.
+- TAS components: topic coverage, entity depth, silo cohesion (pillar links, anchor quality, orphan pages, links to off-topic pages) and freshness with cannibalization, coupled to the Site Focus Score.
+- Coverage map with filters and a sub-topic drill-down (missing entities, unanswered questions, internal-link audit), article briefs for missing sub-topics with optional AI outlines.
+- Semantic cannibalization groups with a canonical page, a pre-publish draft checker, programmatic-SEO clone detection and an empty-authority warning.
+- Topical expansion plan with simulated TAS gain and effort, topical gap matrix against the top 3 competitors, SFS and TAS timeline with milestones.
+- Alerts for TAS drops, new cannibalizing pages, competitor expansion and content decay; Topical Authority section in the crawl PDF and report templates.
+- Crawler records the page date (meta tags, JSON-LD, time elements, Last-Modified).
+
+## Included from 0.3.0
 
 ## Added
 

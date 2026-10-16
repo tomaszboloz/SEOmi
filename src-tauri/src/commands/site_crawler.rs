@@ -27,6 +27,7 @@ mod fetch_types;
 mod filter_validation;
 mod fingerprints;
 mod focus_counter;
+mod focus_date;
 mod focus_terms;
 mod frames;
 mod hreflang;

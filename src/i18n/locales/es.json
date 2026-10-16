@@ -2234,7 +2234,8 @@
       "frames": "Marcos",
       "custom-search": "Búsqueda personalizada",
       "semantic": "Análisis semántico",
-      "focus": "Enfoque del sitio"
+      "focus": "Enfoque del sitio",
+      "authority": "Autoridad temática"
     },
     "environmentStaging": "test/staging",
     "environmentProduction": "production",
@@ -3049,7 +3050,8 @@
       "validation": "Validación HTML",
       "performance": "Rendimiento",
       "exports": "Exportaciones",
-      "focus": "Enfoque del sitio"
+      "focus": "Enfoque del sitio",
+      "authority": "Autoridad temática"
     },
     "groups": {
       "core": "Resumen",
@@ -5821,6 +5823,55 @@
           "thin-subtopic": "Subtema poco cubierto \"{{0}}\": solo el {{1}}% de las páginas lo trata ({{2}} páginas). Términos: {{3}}.",
           "competitor-terms": "Términos de la competencia que faltan en tu sitio: {{3}}."
         }
+      },
+      "authority": {
+        "title": "Autoridad temática",
+        "intro": "Con qué completitud y profundidad el sitio cubre su tema principal frente al mercado. Las notas provienen de la ejecución guardada y del mapa de referencia en caché; no se vuelve a descargar ninguna página.",
+        "scoreTitle": "Topical Authority Score",
+        "legend": "TAS = 0,35 cobertura + 0,30 profundidad de entidades + 0,25 cohesión de silos + 0,10 frescura, escalado por el Site Focus Score (0,7 a 1,0).",
+        "kTcr": "Cobertura del tema",
+        "kCdes": "Profundidad de entidades",
+        "kSilc": "Cohesión de silos",
+        "kCvff": "Frescura",
+        "unavailable": "n/d",
+        "noReference": "No se creó un mapa de referencia para este proyecto, así que no se miden cobertura ni profundidad y no se calcula el TAS.",
+        "reference": "Mapa de referencia: {{0}} subtemas en {{1}} pilares de {{2}} competidores ({{3}}).",
+        "quadrant": {
+          "dominant_authority": "Autoridad dominante",
+          "boutique_specialist": "Especialista boutique",
+          "diluted_giant": "Gigante diluido",
+          "unfocused_generalist": "Generalista sin foco"
+        },
+        "warning": {
+          "empty-authority": "Autoridad vacía: se tocan muchos temas pero con profundidad media muy baja. Profundiza las páginas actuales antes de publicar más.",
+          "template-duplicates": "Los clones de plantilla se fusionaron con su página más fuerte: no elevan la cobertura y gastan presupuesto de rastreo.",
+          "no-dates": "No se hallaron fechas de publicación ni actualización, así que no se mide la frescura.",
+          "no-links": "No se hallaron enlaces internos en el contenido entre las páginas analizadas; la cohesión se basa solo en páginas huérfanas."
+        },
+        "tCoverage": "Cobertura por pilar",
+        "colPillar": "Pilar",
+        "colCoverage": "Cobertura",
+        "colGaps": "Subtemas ausentes",
+        "tGaps": "Lagunas de contenido",
+        "colGap": "Subtema ausente",
+        "colLevel": "Gravedad",
+        "tCannibal": "Canibalización semántica",
+        "colCanonical": "Página a conservar",
+        "colPages": "Páginas",
+        "tRecs": "Plan de expansión temática",
+        "tBench": "Matriz de lagunas frente a los mejores competidores",
+        "level": {
+          "critical": "crítica",
+          "high": "alta",
+          "medium": "media"
+        },
+        "rec": {
+          "fill-gaps": "Llena las lagunas de «{{0}}»: faltan {{1}} subtemas",
+          "merge-cannibalized": "Fusiona {{0}} grupos de páginas que se canibalizan",
+          "fix-linking": "Corrige los enlaces internos: {{0}} páginas huérfanas, {{1}} enlaces a páginas fuera de tema",
+          "deepen-shallow": "Profundiza {{0}} subtemas superficiales",
+          "refresh-stale": "Actualiza {{0}} páginas sin cambios desde hace más de un año"
+        }
       }
     },
     "recs": {
@@ -6056,6 +6107,44 @@
         "what": "Un objetivo sugerido: al menos 80, o la media del top 3 de competidores cuando esta sea mayor.",
         "why": "Convierte la comparación en un único número hacia el que trabajar.",
         "action": "Úsala como objetivo de planificación.\nVuelve a ejecutar el benchmark tras tus correcciones para ver el cambio."
+      }
+    },
+    "authority": {
+      "tas": {
+        "title": "Topical Authority Score",
+        "what": "Una nota de 0 a 100 que indica con qué completitud, profundidad y coherencia el sitio cubre su tema principal frente al mercado. Combina cobertura (35%), profundidad de entidades (30%), cohesión de silos (25%) y frescura (10%), y escala el resultado con tu Site Focus Score.",
+        "why": "El SFS solo mide pureza. Un sitio con tres artículos perfectos tiene un SFS alto pero casi ninguna autoridad, porque cubre una fracción del campo. El TAS mide cuánto del campo cubres.",
+        "action": "Apunta a 80+ en SFS y TAS. TAS bajo con SFS alto: añade contenido. TAS alto con SFS bajo: poda o separa las secciones ajenas. Empieza por la primera acción del plan."
+      },
+      "tcr": {
+        "title": "Cobertura del tema (TCR)",
+        "what": "La proporción de subtemas del mercado que tu sitio cubre con una página dedicada y del tema. Cada subtema pesa según su importancia; una coincidencia clara cuenta completa y una parcial, la mitad.",
+        "why": "Los buscadores tratan como referencia a los sitios que responden a todo el abanico de preguntas de un campo. Las lagunas envían visitantes y señales de ranking a la competencia.",
+        "action": "Más del 80 %: autoridad plena. Menos del 40 %: conocimiento fragmentario. Abre el mapa, filtra las lagunas y publica primero los subtemas ausentes más importantes."
+      },
+      "esd": {
+        "title": "Profundidad de entidades",
+        "what": "Comprueba si una página cubre de verdad su subtema: los conceptos y atributos que usan los líderes, las preguntas de usuarios respondidas bajo sus encabezados y cuánto material original aporta.",
+        "why": "Un artículo largo sin los conceptos clave del campo pierde frente a fuentes más cortas pero más completas. La longitud por sí sola no cuenta.",
+        "action": "Abre un subtema superficial: añade las entidades y atributos que faltan, responde las preguntas listadas bajo su propio H2 y suma datos o una tabla que falte a la competencia."
+      },
+      "scs": {
+        "title": "Cohesión de silos",
+        "what": "Mide qué tan bien se enlazan los artículos de un mismo tema: página pilar enlazada en ambos sentidos, anchors descriptivos, sin páginas huérfanas y sin enlaces de páginas expertas a páginas ajenas.",
+        "why": "Las páginas huérfanas no transmiten ni reciben autoridad temática. Los anchors «haz clic aquí» no dicen nada, así que cuentan solo una décima parte.",
+        "action": "Enlaza cada huérfana desde su pilar y artículos relacionados, usa anchors que describan el destino («síntomas de la neuropatía diabética») y elimina enlaces a páginas fuera de tema."
+      },
+      "matrix": {
+        "title": "Matriz SFS × TAS",
+        "what": "Sitúa el sitio por pureza (SFS, horizontal) y completitud (TAS, vertical). Los cuatro cuadrantes son autoridad dominante, especialista boutique, gigante diluido y generalista sin foco.",
+        "why": "¿Por qué foco alto y autoridad baja? Cinco artículos perfectos sobre diabetes dan SFS 95 pero TAS 14: nada fuera de tema, pero falta el 90 % del campo.",
+        "action": "Mantén el SFS sobre 80 mientras añades clústeres para subir el TAS sobre 80. El cuadrante resaltado indica si ampliar, podar o reestructurar."
+      },
+      "cannibalization": {
+        "title": "Canibalización semántica",
+        "what": "Dos o más de tus páginas responden a la misma intención: contenido y encabezados casi idénticos (similitud coseno desde el 88 %) o ambas cubren por completo un subtema de referencia.",
+        "why": "Las señales de enlaces internos y la relevancia se reparten entre los duplicados, por lo que ninguna llega a las primeras posiciones.",
+        "action": "Conserva la página más fuerte, mueve a ella las secciones únicas, redirige las demás con 301 y actualiza los enlaces internos. Usa el verificador de borradores antes de publicar para evitar nuevos solapamientos."
       }
     }
   },
@@ -6441,6 +6530,204 @@
       "coverage": "{{pct}}% de los competidores ({{count}})",
       "empty": "A tu sitio no le falta ningún tema de la competencia.",
       "apply": "Añadir estos términos al análisis de lagunas"
+    }
+  },
+  "authority": {
+    "title": "Autoridad temática",
+    "empty": "Ejecuta un rastreo para medir la autoridad temática.",
+    "hero": {
+      "sfs": "Site Focus Score",
+      "tas": "Topical Authority Score",
+      "sfsRole": "Pureza: cuánto contenido se mantiene en el tema",
+      "tasRole": "Completitud: qué tan a fondo se cubre el tema",
+      "target": "Objetivo: {{value}}+",
+      "pending": "crea el mapa de referencia para calcularlo"
+    },
+    "quadrant": {
+      "dominant_authority": "Autoridad dominante",
+      "boutique_specialist": "Especialista boutique",
+      "diluted_giant": "Gigante diluido",
+      "unfocused_generalist": "Generalista sin foco"
+    },
+    "quadrantHint": {
+      "dominant_authority": "Enfocado y casi completo. Defiende la posición, mantén los datos al día y amplía a consultas de cola larga.",
+      "boutique_specialist": "Se centra en el tema pero cubre solo una parte. Amplía el contenido y crea nuevos clústeres temáticos.",
+      "diluted_giant": "Mucho contenido del tema, pero otras secciones lo diluyen. Pódalas o muévelas a subdominios.",
+      "unfocused_generalist": "Sin foco claro y cobertura superficial. Elige un tema principal, limpia el índice y construye el primer silo sólido."
+    },
+    "matrix": {
+      "title": "Matriz de madurez temática (SFS × TAS)",
+      "pending": "La matriz aparece cuando se calcula el TAS.",
+      "aria": "Tú: SFS {{sfs}}, TAS {{tas}}, cuadrante {{quadrant}}",
+      "you": "Tú",
+      "axisX": "SFS",
+      "axisY": "TAS"
+    },
+    "pillars": {
+      "title": "Componentes del Topical Authority Score",
+      "tcr": "Cobertura del tema",
+      "cdes": "Profundidad de entidades",
+      "silc": "Cohesión de silos",
+      "cvff": "Frescura y unicidad",
+      "tcrNote": "{{covered}} de {{total}} subtemas de referencia cubiertos",
+      "cdesNote": "Profundidad media de entidades en los subtemas cubiertos",
+      "silcNote": "{{orphans}} páginas huérfanas, {{weak}} anchors débiles, {{bleed}} enlaces a páginas fuera de tema",
+      "cvffNote": "{{stale}} páginas desactualizadas, {{groups}} grupos de canibalización",
+      "unavailable": "no medible",
+      "multiplier": "Multiplicador de foco ×{{value}} por SFS {{sfs}}"
+    },
+    "warning": {
+      "empty-authority": "Autoridad vacía: el sitio toca el {{tcr}}% de los temas pero su profundidad media es solo {{depth}}/100. Profundiza las páginas actuales con datos y entidades antes de publicar más.",
+      "template-duplicates": "Se fusionaron {{count}} clones de plantilla con su página más fuerte; no elevan la cobertura y gastan presupuesto de rastreo.",
+      "no-dates": "No se hallaron fechas de publicación ni actualización, así que no se mide la frescura. Añade fechas en meta etiquetas o JSON-LD.",
+      "no-links": "No se hallaron enlaces internos en el contenido entre las páginas analizadas; la cohesión se basa solo en páginas huérfanas.",
+      "no-pillars": "Aún no hay mapa de referencia: no se miden cobertura ni profundidad."
+    },
+    "reference": {
+      "title": "Mapa de referencia",
+      "intro": "Crea el mapa de mercado de tu tema con datos reales: encabezados, entidades y preguntas de las páginas que posicionan para tu tema principal, más Google Suggest. Nada se inventa; sin fuente SERP el mapa queda vacío.",
+      "build": "Crear mapa de referencia",
+      "rebuild": "Recrear mapa",
+      "cancel": "Cancelar",
+      "clear": "Descartar mapa",
+      "info": "{{subtopics}} subtemas en {{pillars}} pilares de {{competitors}} competidores ({{source}}), creado {{date}}",
+      "progress": {
+        "serp": "Obteniendo posiciones ({{done}}/{{total}})",
+        "crawl": "Rastreando {{domain}} ({{done}}/{{total}})",
+        "build": "Creando el mapa"
+      },
+      "error": "No se pudo crear el mapa: {{error}}",
+      "cancelled": "Se canceló la creación del mapa.",
+      "unavailableTitle": "El mapa de referencia no está disponible",
+      "unavailable": {
+        "no-serp-source": "Conecta una fuente SERP (DataForSEO o el feed gratuito de Bing RSS) para crear el mapa con posiciones reales.",
+        "no-queries": "El tema principal aún no tiene una frase de búsqueda utilizable. Haz primero un rastreo mayor.",
+        "serp-failed": "Falló la consulta de posiciones: {{error}}",
+        "no-competitors": "No se encontraron dominios competidores en las posiciones.",
+        "no-pages": "No se pudo rastrear ninguna página de competidores (robots.txt, bloqueos o tiempos de espera).",
+        "no-taxonomy": "Las páginas de la competencia comparten muy pocos encabezados para formar un mapa fiable. Inténtalo más tarde o con más competidores."
+      }
+    },
+    "coverage": {
+      "title": "Mapa de cobertura del tema",
+      "filters": "Filtrar subtemas",
+      "filter": {
+        "all": "Todos ({{count}})",
+        "gaps": "Solo lagunas ({{count}})",
+        "shallow": "Superficiales ({{count}})",
+        "cannibalized": "Canibalizados ({{count}})"
+      },
+      "general": "Temas generales",
+      "empty": "Ningún subtema coincide con el filtro.",
+      "row": "coincidencia {{similarity}}% · profundidad {{depth}}",
+      "status": {
+        "covered_strong": "Cubierto a fondo",
+        "covered_shallow": "Cobertura superficial",
+        "missing_gap": "Sin contenido",
+        "cannibalized": "Canibalizado"
+      },
+      "gap": {
+        "critical": "laguna crítica",
+        "high": "laguna alta",
+        "medium": "laguna media"
+      }
+    },
+    "drill": {
+      "title": "Análisis del subtema",
+      "back": "Volver al mapa",
+      "url": "Página asignada",
+      "none": "Ninguna página cubre aún este subtema.",
+      "depth": "Profundidad de entidades {{value}}/100",
+      "entitiesPresent": "Entidades presentes ({{count}}/{{total}})",
+      "entitiesMissing": "Entidades que faltan (las usan los líderes)",
+      "questions": "Preguntas de usuarios que la página no responde",
+      "links": "Auditoría de enlaces internos",
+      "noPillarLink": "Sin enlace a la página pilar {{url}}",
+      "almostOrphan": "Solo {{count}} enlace(s) entrante(s): casi huérfana",
+      "bleed": "Enlaza a la página fuera de tema {{url}}",
+      "linksOk": "Los enlaces internos se ven sanos."
+    },
+    "brief": {
+      "title": "Brief del artículo",
+      "path": "URL sugerida",
+      "h1": "H1 sugerido",
+      "entities": "Lista de entidades",
+      "questions": "Preguntas a responder",
+      "linkFrom": "Enlázala desde",
+      "linkTo": "Debe enlazar a",
+      "impact": "Impacto estimado en TAS: +{{value}}",
+      "generate": "Generar brief con IA",
+      "generating": "Generando…",
+      "noKey": "Conecta un proveedor de IA en Ajustes para generar briefs.",
+      "empty": "La IA no devolvió texto. Inténtalo de nuevo.",
+      "error": "Falló la generación del brief: {{error}}"
+    },
+    "cannibal": {
+      "title": "Canibalización semántica",
+      "index": "Índice de canibalización: {{value}}%",
+      "empty": "Ninguna página compite por la misma intención de búsqueda.",
+      "group": "{{count}} páginas, similitud de intención {{similarity}}%, {{shared}}% de entidades compartidas",
+      "canonical": "Conserva: {{url}}",
+      "steps": "Traslada las secciones únicas a la página que conservas, redirige las demás con 301 y actualiza los enlaces internos."
+    },
+    "draft": {
+      "title": "Comprueba un borrador antes de publicar",
+      "titleField": "Título del borrador",
+      "bodyField": "Texto del borrador",
+      "check": "Comprobar solapamiento",
+      "none": "Sin solapamiento superior al 85% con las páginas existentes.",
+      "hit": "{{similarity}}% de solapamiento con {{url}}"
+    },
+    "rec": {
+      "title": "Plan de expansión temática",
+      "empty": "Aún no hay acciones que recomendar. Crea el mapa de referencia para ver las lagunas.",
+      "delta": "+{{value}} TAS",
+      "fill-gaps": "Llena las lagunas de «{{pillar}}»: faltan {{count}} subtemas",
+      "merge-cannibalized": "Fusiona {{count}} grupos de páginas que se canibalizan",
+      "fix-linking": "Corrige los enlaces internos: {{orphans}} páginas huérfanas, {{bleed}} enlaces a páginas fuera de tema",
+      "deepen-shallow": "Profundiza {{count}} subtemas superficiales",
+      "refresh-stale": "Actualiza {{count}} páginas sin cambios desde hace más de un año",
+      "how": {
+        "fill-gaps": "Publica un artículo por subtema ausente: usa el brief (URL, H1, lista de entidades, preguntas) y enlázalo a su pilar.",
+        "merge-cannibalized": "Conserva la página más fuerte, mueve a ella las secciones únicas, redirige el resto con 301 y actualiza los enlaces internos.",
+        "fix-linking": "Enlaza cada página huérfana desde su pilar y artículos relacionados y elimina los enlaces de páginas expertas a páginas fuera de tema.",
+        "deepen-shallow": "Añade las entidades y atributos que faltan y responde las preguntas abiertas bajo sus propios encabezados.",
+        "refresh-stale": "Actualiza cifras, modelos y pautas, añade entidades nuevas y refresca la fecha de publicación."
+      }
+    },
+    "benchmark": {
+      "title": "Matriz de lagunas temáticas frente a los mejores competidores",
+      "empty": "Crea el mapa de referencia para compararte con los mejores competidores. Solo se muestran datos reales rastreados.",
+      "domain": "Dominio",
+      "pillars": "Cobertura por pilar",
+      "pillar": "Pilar",
+      "insight": {
+        "rank": "Ocupas el puesto {{rank}} de {{total}} según el TAS.",
+        "lead-pillar": "Lideras en «{{pillar}}»: {{own}}% frente a {{best}}% del mejor competidor.",
+        "trailing-pillars": "Vas por detrás de los líderes en: {{pillars}}."
+      }
+    },
+    "history": {
+      "title": "SFS y TAS a lo largo del tiempo",
+      "empty": "La línea de tiempo aparece tras al menos dos análisis completos.",
+      "aria": "Gráfico de SFS y TAS en {{count}} análisis",
+      "point": "{{date}}: SFS {{sfs}}, TAS {{tas}}",
+      "sfs": "SFS (continua)",
+      "tas": "TAS (discontinua)",
+      "milestones": "Hitos",
+      "cleanup": "Limpieza: el SFS subió {{delta}}",
+      "architecture": "Arquitectura: enlaces y canibalización mejoraron {{delta}}",
+      "expansion": "Expansión: la cobertura del tema subió {{delta}}",
+      "regression": "Retroceso: el TAS cambió {{delta}}"
+    }
+  },
+  "authorityMonitoring": {
+    "alert": {
+      "title": "SEOmi · alerta de autoridad temática",
+      "tas-drop": "El Topical Authority Score cayó {{points}} puntos entre análisis completos ({{from}} a {{to}}).",
+      "cannibalization": "Una página publicada en las últimas 24 horas compite con {{canonical}} por la misma intención ({{similarity}}% de similitud): {{url}}.",
+      "competitor-expansion": "{{domain}} amplió su cobertura de «{{pillar}}» del {{from}}% al {{to}}%, abriéndote una nueva laguna.",
+      "content-decay": "La página pilar {{url}} tiene más de un año y le faltan {{missing}} entidades que el mercado usa hoy."
     }
   }
 }
