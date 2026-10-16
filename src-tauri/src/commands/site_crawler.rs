@@ -43,6 +43,7 @@ mod orchestration;
 mod pagination;
 mod post_processing;
 mod prefetch;
+mod rag_sections;
 mod readability;
 mod render_decision;
 mod render_fetch;

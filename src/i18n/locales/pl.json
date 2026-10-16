@@ -2234,7 +2234,8 @@
       "frames": "Ramki",
       "custom-search": "Własne wyszukiwanie",
       "semantic": "Analiza semantyczna",
-      "focus": "Site Focus"
+      "focus": "Site Focus",
+      "aio": "Gotowość na AI"
     },
     "environmentStaging": "test/staging",
     "environmentProduction": "produkcja",
@@ -3049,7 +3050,8 @@
       "validation": "Walidacja HTML",
       "performance": "Wydajność",
       "exports": "Eksporty",
-      "focus": "Site Focus"
+      "focus": "Site Focus",
+      "aio": "Gotowość na AI"
     },
     "groups": {
       "core": "Przegląd",
@@ -5821,6 +5823,48 @@
           "thin-subtopic": "Słabo pokryty podtemat „{{0}}”: porusza go tylko {{1}}% stron ({{2}} stron). Terminy: {{3}}.",
           "competitor-terms": "Terminy konkurencji, których brakuje w Twoim serwisie: {{3}}."
         }
+      },
+      "aio": {
+        "title": "Gotowość na AI Overviews i RAG",
+        "intro": "Jak łatwo silniki odpowiedzi AI wyciągną i zacytują fragmenty Twoich stron. Wynik łączy samowystarczalne fragmenty (45%), gęstość faktów (35%) i strukturę łatwą do ekstrakcji (20%).",
+        "scoreTitle": "Wynik gotowości na AI",
+        "legend": "Pasma: 90-100 doskonała, 75-89 dobra, 60-74 umiarkowana, 40-59 słaba, 0-39 krytyczna.",
+        "kSelf": "Samowystarczalność",
+        "kSpo": "Gęstość faktów",
+        "kExtract": "Łatwość ekstrakcji",
+        "kScored": "Ocenione strony",
+        "nSelf": "Fragmenty rozumiane samodzielnie",
+        "nSpo": "Fakty podmiot-orzeczenie-dopełnienie",
+        "nExtract": "Tabele, listy, nagłówki",
+        "nScored": "Pominięto stron: {{0}}",
+        "noteBasic": "Reguły językowe dla {{0}} są podstawowe: wykrywanie zaimków i faktów jest tam mniej precyzyjne.",
+        "tPages": "Strony wg gotowości na AI",
+        "pagesIntro": "Do 25 stron, od najniższego wyniku.",
+        "colScore": "Wynik",
+        "colSelf": "Samowystarczalne",
+        "colSpo": "Fakty",
+        "colExtract": "Struktura",
+        "colChunks": "Fragmenty",
+        "tPassages": "Najsłabsze fragmenty",
+        "passagesIntro": "Fragmenty, które indeks RAG miałby trudność zacytować, wraz ze znalezionymi problemami.",
+        "colHeading": "Strona i nagłówek",
+        "colExcerpt": "Fragment",
+        "colIssues": "Problemy",
+        "percent": "{{0}}%",
+        "band": {
+          "excellent": "Doskonała gotowość",
+          "good": "Dobra gotowość",
+          "moderate": "Umiarkowana gotowość",
+          "weak": "Słaba gotowość",
+          "critical": "Krytyczna gotowość"
+        },
+        "issue": {
+          "dangling-pronoun": "Niejasne odniesienie",
+          "no-answer-first": "Brak bezpośredniej odpowiedzi na początku",
+          "filler-opening": "Wodnisty początek",
+          "no-facts": "Brak konkretnych faktów",
+          "too-long": "Za długi na jeden fragment"
+        }
       }
     },
     "recs": {
@@ -6056,6 +6100,50 @@
         "what": "Sugerowany cel: co najmniej 80 lub średnia top 3 konkurentów, jeśli ich wynik jest wyższy.",
         "why": "Zamienia porównanie w jedną liczbę, do której możesz dążyć.",
         "action": "Traktuj go jako cel planistyczny.\nUruchom benchmark ponownie po poprawkach, aby zobaczyć zmianę."
+      }
+    },
+    "aio": {
+      "aioReadiness": {
+        "title": "Wynik gotowości na AI (AIO-R)",
+        "what": "Miara 0-100 tego, jak łatwo silniki odpowiedzi AI (Google AI Overviews, Perplexity, Copilot) wyciągną i zacytują fragmenty Twoich stron. Łączy samowystarczalne fragmenty (45%), gęstość faktów (35%) i strukturę łatwą do ekstrakcji (20%).",
+        "why": "Silniki AI tną strony na fragmenty i cytują tylko ten, który odpowiada na pytanie. Mętne lub zależne od kontekstu fragmenty są pomijane.",
+        "action": "Otwórz najsłabsze fragmenty i popraw wskazane problemy.\nPrzepisz je tak, by odpowiedź była na początku, z jawnymi nazwami i liczbami.",
+        "example": "Sekcja „Jaka jest norma cukru?”, która zaczyna się od „To zależy od wielu czynników”, dostaje niski wynik."
+      },
+      "selfContainment": {
+        "title": "Samowystarczalność",
+        "what": "Czy fragment ma sens po wycięciu ze strony: nazywa swój podmiot i nie zaczyna się od „to”, „ten” ani „jak wspomniano wyżej”.",
+        "why": "Fragment jest indeksowany osobno. Wiszący zaimek zostawia model bez podmiotu, więc fragment pasuje do mniejszej liczby pytań.",
+        "action": "Zamień „to” i „ten” na początku akapitów na właściwą nazwę.\nUmieść odpowiedź w pierwszych 40-60 słowach pod każdym nagłówkiem.",
+        "example": "„Ta wartość powinna być poniżej 140.” zmienia się w „Glikemia po posiłku powinna być poniżej 140 mg/dl.”"
+      },
+      "spoDensity": {
+        "title": "Gęstość faktów",
+        "what": "Ile jednoznacznych faktów podmiot-orzeczenie-dopełnienie tekst podaje na 100 słów, np. „Glikemia na czczo wynosi 70-99 mg/dl”. Cel to około 3 na 100 słów.",
+        "why": "Modele cytują sprawdzalne stwierdzenia. Wodolejstwo nie daje im czego wyciągnąć.",
+        "action": "Zamień ogólniki w zdania z podmiotem, orzeczeniem i wartością.\nDodaj jednostki i liczby tam, gdzie je masz.",
+        "example": "„Wiele czynników ma znaczenie” nie zawiera faktu. „HbA1c poniżej 7% to typowy cel leczenia” zawiera."
+      },
+      "extractability": {
+        "title": "Łatwość ekstrakcji",
+        "what": "Czy strona używa struktur, które parsery łatwo wyciągają: tabel, list numerowanych, list definicji i czytelnego układu H2/H3.",
+        "why": "Silniki generatywne chętnie budują odpowiedzi z tabel i list kroków, bo ich znaczenie jest jawne.",
+        "action": "Porównania podawaj w tabeli, a procedury na liście numerowanej.\nPisz nagłówki H2/H3 jako pytania, które zadają ludzie.",
+        "example": "Poradnik krok po kroku w jednym długim akapicie dostaje niższy wynik niż ten sam poradnik jako lista numerowana."
+      },
+      "answerFirst": {
+        "title": "Odpowiedź na początku",
+        "what": "Pierwsze 40-60 słów pod nagłówkiem powinno bezpośrednio odpowiadać na nagłówek, nazywać podmiot i podawać fakt.",
+        "why": "Wyszukiwanie RAG porównuje pytanie z początkiem fragmentu. Długi wstęp obniża dopasowanie.",
+        "action": "Najpierw napisz bezpośrednią odpowiedź, potem kontekst.\nPowtórz kluczowy termin z nagłówka w pierwszym zdaniu.",
+        "example": "Nagłówek „Jak długo działa sensor CGM?” i odpowiedź „Sensor CGM działa 10-15 dni, zależnie od modelu.”"
+      },
+      "chunking": {
+        "title": "Symulacja podziału na fragmenty",
+        "what": "SEOmi tnie każdą stronę tak jak indeks RAG: jeden fragment na sekcję H2/H3, a długie sekcje na okna po około 300 tokenów.",
+        "why": "Widzisz stronę tak jak system wyszukujący: jako zbiór osobnych fragmentów, z których każdy jest oceniany osobno.",
+        "action": "Sprawdź wynik każdego słabego fragmentu.\nTrzymaj sekcje na tyle krótkie, by mieściły się w jednym fragmencie.",
+        "example": "Sekcja 900 tokenów to około trzech fragmentów; tylko pierwszy leży bezpośrednio pod nagłówkiem."
       }
     }
   },
@@ -6441,6 +6529,75 @@
       "coverage": "{{pct}}% konkurentów ({{count}})",
       "empty": "Żadnego tematu konkurentów nie brakuje w Twoim serwisie.",
       "apply": "Dodaj te terminy do analizy luk"
+    }
+  },
+  "aio": {
+    "title": "Gotowość na AI Overviews i RAG",
+    "subtitle": "Jak łatwo silniki odpowiedzi AI znajdą, wyciągną i zacytują fragmenty Twoich stron.",
+    "empty": "Brak danych stron z sekcjami treści. Uruchom nowy crawl, aby przeanalizować gotowość na AI.",
+    "band": {
+      "excellent": "Doskonała gotowość",
+      "good": "Dobra gotowość",
+      "moderate": "Umiarkowana gotowość",
+      "weak": "Słaba gotowość",
+      "critical": "Krytyczna gotowość"
+    },
+    "hero": {
+      "label": "Wynik cytowalności w AI",
+      "outOf": "na 100",
+      "summary": "Znaleziono {{weak}} słabych fragmentów na {{count}} przeanalizowanych stronach.",
+      "summaryNone": "Nie znaleziono słabych fragmentów na {{count}} przeanalizowanych stronach.",
+      "change": "Zmiana od poprzedniej analizy: {{delta}}",
+      "skipped": "Pominięto {{count}} stron (brak użytecznych sekcji treści)."
+    },
+    "components": {
+      "self": "Samowystarczalność",
+      "spo": "Gęstość faktów",
+      "extract": "Łatwość ekstrakcji"
+    },
+    "basicNote": "Reguły językowe dla {{languages}} są podstawowe: wykrywanie zaimków i faktów jest w tych językach mniej precyzyjne.",
+    "pages": {
+      "title": "Strony",
+      "url": "URL",
+      "score": "Wynik",
+      "chunks": "Fragmenty",
+      "facts": "Fakty",
+      "language": "Język",
+      "empty": "Brak stron do wyświetlenia."
+    },
+    "skip": {
+      "no-sections": "Brak sekcji treści (crawl sprzed tej funkcji)",
+      "non-html": "To nie jest strona HTML",
+      "request-error": "Żądanie nie powiodło się",
+      "no-content": "Brak czytelnego tekstu"
+    },
+    "passage": {
+      "title": "Najsłabsze fragmenty",
+      "intro": "Symulowane fragmenty RAG, które najtrudniej zacytować. Najpierw popraw wskazane problemy.",
+      "chunk": "Fragment {{n}} · {{tokens}} tokenów · wynik {{score}}",
+      "noHeading": "(wstęp bez nagłówka)",
+      "current": "Obecny fragment",
+      "optimized": "Fragment po optymalizacji",
+      "generate": "Przepisz z AI",
+      "generating": "Przepisuję…",
+      "copy": "Kopiuj",
+      "copied": "Skopiowano",
+      "noKey": "Połącz dostawcę AI w Ustawieniach, aby przepisywać fragmenty.",
+      "error": "Zapytanie do AI nie powiodło się: {{message}}",
+      "empty": "AI nie zwróciło tekstu.",
+      "none": "Nie znaleziono słabych fragmentów."
+    },
+    "issue": {
+      "dangling-pronoun": "Niejasne odniesienie",
+      "no-answer-first": "Brak bezpośredniej odpowiedzi na początku",
+      "filler-opening": "Wodnisty początek",
+      "no-facts": "Brak konkretnych faktów",
+      "too-long": "Za długi na jeden fragment"
+    },
+    "history": {
+      "title": "Historia",
+      "empty": "Historia pojawi się po drugiej analizie tego projektu.",
+      "row": "{{date}}: {{score}}"
     }
   }
 }

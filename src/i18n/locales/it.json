@@ -2234,7 +2234,8 @@
       "frames": "Frame",
       "custom-search": "Ricerca personalizzata",
       "semantic": "Analisi semantica",
-      "focus": "Focus del sito"
+      "focus": "Focus del sito",
+      "aio": "Prontezza per l'IA"
     },
     "environmentStaging": "test/staging",
     "environmentProduction": "production",
@@ -3049,7 +3050,8 @@
       "validation": "Validazione HTML",
       "performance": "Prestazioni",
       "exports": "Esportazioni",
-      "focus": "Focus del sito"
+      "focus": "Focus del sito",
+      "aio": "Prontezza per l'IA"
     },
     "groups": {
       "core": "Panoramica",
@@ -5821,6 +5823,48 @@
           "thin-subtopic": "Sotto-argomento poco coperto \"{{0}}\": solo il {{1}}% delle pagine lo tratta ({{2}} pagine). Termini: {{3}}.",
           "competitor-terms": "Termini dei concorrenti assenti dal tuo sito: {{3}}."
         }
+      },
+      "aio": {
+        "title": "Prontezza per AI Overviews e RAG",
+        "intro": "Con quanta facilità i motori di risposta IA estraggono e citano passaggi delle tue pagine. Il punteggio combina passaggi autosufficienti (45%), densità di fatti (35%) e struttura estraibile (20%).",
+        "scoreTitle": "Punteggio di prontezza per l'IA",
+        "legend": "Fasce: 90-100 eccellente, 75-89 buona, 60-74 moderata, 40-59 debole, 0-39 critica.",
+        "kSelf": "Autosufficienza",
+        "kSpo": "Densità di fatti",
+        "kExtract": "Estraibilità",
+        "kScored": "Pagine valutate",
+        "nSelf": "Passaggi comprensibili da soli",
+        "nSpo": "Fatti soggetto-predicato-oggetto",
+        "nExtract": "Tabelle, elenchi, titoli",
+        "nScored": "{{0}} pagine saltate",
+        "noteBasic": "Le regole linguistiche per {{0}} sono di base: il rilevamento di pronomi e fatti è lì meno preciso.",
+        "tPages": "Pagine per prontezza IA",
+        "pagesIntro": "Fino a 25 pagine, dal punteggio più basso.",
+        "colScore": "Punteggio",
+        "colSelf": "Autosufficiente",
+        "colSpo": "Fatti",
+        "colExtract": "Struttura",
+        "colChunks": "Frammenti",
+        "tPassages": "Passaggi più deboli",
+        "passagesIntro": "Passaggi che un indice RAG farebbe fatica a citare, con i problemi rilevati.",
+        "colHeading": "Pagina e titolo",
+        "colExcerpt": "Passaggio",
+        "colIssues": "Problemi",
+        "percent": "{{0}}%",
+        "band": {
+          "excellent": "Prontezza eccellente",
+          "good": "Buona prontezza",
+          "moderate": "Prontezza moderata",
+          "weak": "Prontezza debole",
+          "critical": "Prontezza critica"
+        },
+        "issue": {
+          "dangling-pronoun": "Riferimento poco chiaro",
+          "no-answer-first": "Nessuna risposta diretta all'inizio",
+          "filler-opening": "Apertura di riempimento",
+          "no-facts": "Nessun fatto concreto",
+          "too-long": "Troppo lungo per un frammento"
+        }
       }
     },
     "recs": {
@@ -6056,6 +6100,50 @@
         "what": "Un obiettivo suggerito: almeno 80, oppure la media dei primi 3 concorrenti quando è più alta.",
         "why": "Trasforma il confronto in un unico numero verso cui lavorare.",
         "action": "Usalo come obiettivo di pianificazione.\nRiavvia il benchmark dopo le correzioni per vedere la variazione."
+      }
+    },
+    "aio": {
+      "aioReadiness": {
+        "title": "Punteggio di prontezza per l'IA (AIO-R)",
+        "what": "Una misura da 0 a 100 di quanto facilmente i motori di risposta IA (Google AI Overviews, Perplexity, Copilot) estraggono e citano passaggi delle tue pagine. Combina passaggi autosufficienti (45%), densità di fatti (35%) e struttura estraibile (20%).",
+        "why": "I motori IA dividono le pagine in frammenti e citano solo quello che risponde alla domanda. I passaggi vaghi o dipendenti dal contesto vengono scartati.",
+        "action": "Apri i passaggi più deboli e correggi i problemi indicati.\nRiscrivili mettendo prima la risposta, con nomi e numeri espliciti.",
+        "example": "Una sezione intitolata «Qual è la glicemia normale?» che inizia con «Dipende da molti fattori» ottiene un punteggio basso."
+      },
+      "selfContainment": {
+        "title": "Autosufficienza",
+        "what": "Se un passaggio ha ancora senso fuori dalla pagina: nomina il suo soggetto e non inizia con «esso», «questo» o «come detto sopra».",
+        "why": "Un frammento viene indicizzato da solo. Un pronome senza riferimento lascia il modello senza soggetto, quindi il frammento corrisponde a meno domande.",
+        "action": "Sostituisci «esso» e «questo» a inizio paragrafo con il nome reale.\nMetti la risposta nelle prime 40-60 parole sotto ogni titolo.",
+        "example": "«Questo valore deve restare sotto 140.» diventa «La glicemia postprandiale deve restare sotto 140 mg/dl.»"
+      },
+      "spoDensity": {
+        "title": "Densità di fatti",
+        "what": "Quanti fatti chiari soggetto-predicato-oggetto il testo enuncia ogni 100 parole, ad esempio «La glicemia a digiuno è di 70-99 mg/dl». L'obiettivo è circa 3 ogni 100 parole.",
+        "why": "I modelli citano affermazioni verificabili. Il testo di riempimento non offre nulla da estrarre.",
+        "action": "Trasforma le frasi vaghe in affermazioni con soggetto, verbo e valore.\nAggiungi unità e numeri dove li hai.",
+        "example": "«Molti fattori contano» non contiene alcun fatto. «Una HbA1c sotto il 7% è l'obiettivo abituale della terapia» sì."
+      },
+      "extractability": {
+        "title": "Estraibilità",
+        "what": "Se la pagina usa strutture che i parser estraggono facilmente: tabelle, elenchi numerati, elenchi di definizioni e uno schema H2/H3 chiaro.",
+        "why": "I motori generativi preferiscono costruire risposte da tabelle ed elenchi di passaggi perché il loro significato è esplicito.",
+        "action": "Presenta i confronti in una tabella e le procedure in un elenco numerato.\nScrivi i titoli H2/H3 come le domande che fa la gente.",
+        "example": "Una guida passo passo scritta come un lungo paragrafo ottiene meno della stessa guida come elenco numerato."
+      },
+      "answerFirst": {
+        "title": "Risposta per prima",
+        "what": "Le prime 40-60 parole sotto un titolo devono rispondere direttamente al titolo, nominando il soggetto e dando un fatto.",
+        "why": "Il recupero RAG confronta la domanda con l'inizio del frammento. Un lungo preambolo abbassa la corrispondenza.",
+        "action": "Scrivi prima la risposta diretta, poi il contesto.\nRipeti il termine chiave del titolo nella prima frase.",
+        "example": "Titolo «Quanto dura un sensore CGM?» seguito da «Un sensore CGM dura 10-15 giorni, a seconda del modello.»"
+      },
+      "chunking": {
+        "title": "Simulazione della suddivisione",
+        "what": "SEOmi divide ogni pagina come un indice RAG: un frammento per sezione H2/H3, le sezioni lunghe in finestre di circa 300 token.",
+        "why": "Vedi la pagina come la vede il sistema di recupero: un insieme di passaggi separati, ciascuno valutato da solo.",
+        "action": "Controlla il punteggio di ogni passaggio debole.\nTieni le sezioni abbastanza brevi da essere un solo frammento.",
+        "example": "Una sezione da 900 token diventa circa tre frammenti; solo il primo si trova subito sotto il titolo."
       }
     }
   },
@@ -6441,6 +6529,75 @@
       "coverage": "{{pct}}% dei concorrenti ({{count}})",
       "empty": "Al tuo sito non manca alcun argomento dei concorrenti.",
       "apply": "Aggiungi questi termini all'analisi delle lacune"
+    }
+  },
+  "aio": {
+    "title": "Prontezza per AI Overviews e RAG",
+    "subtitle": "Con quanta facilità i motori di risposta IA trovano, estraggono e citano i tuoi passaggi.",
+    "empty": "Ancora nessun dato di pagina con sezioni di contenuto. Avvia una nuova scansione per analizzare la prontezza per l'IA.",
+    "band": {
+      "excellent": "Prontezza eccellente",
+      "good": "Buona prontezza",
+      "moderate": "Prontezza moderata",
+      "weak": "Prontezza debole",
+      "critical": "Prontezza critica"
+    },
+    "hero": {
+      "label": "Punteggio di citabilità IA",
+      "outOf": "su 100",
+      "summary": "Trovati {{weak}} passaggi deboli su {{count}} pagine analizzate.",
+      "summaryNone": "Nessun passaggio debole trovato su {{count}} pagine analizzate.",
+      "change": "Variazione rispetto all'analisi precedente: {{delta}}",
+      "skipped": "{{count}} pagine saltate (nessuna sezione di contenuto utilizzabile)."
+    },
+    "components": {
+      "self": "Autosufficienza",
+      "spo": "Densità di fatti",
+      "extract": "Estraibilità"
+    },
+    "basicNote": "Le regole linguistiche per {{languages}} sono di base: il rilevamento di pronomi e fatti è meno preciso per queste lingue.",
+    "pages": {
+      "title": "Pagine",
+      "url": "URL",
+      "score": "Punteggio",
+      "chunks": "Frammenti",
+      "facts": "Fatti",
+      "language": "Lingua",
+      "empty": "Nessuna pagina da mostrare."
+    },
+    "skip": {
+      "no-sections": "Nessuna sezione di contenuto (scansionata prima di questa funzione)",
+      "non-html": "Non è una pagina HTML",
+      "request-error": "Richiesta non riuscita",
+      "no-content": "Nessun testo leggibile"
+    },
+    "passage": {
+      "title": "Passaggi più deboli",
+      "intro": "Frammenti RAG simulati più difficili da citare. Correggi prima i problemi indicati.",
+      "chunk": "Frammento {{n}} · {{tokens}} token · punteggio {{score}}",
+      "noHeading": "(introduzione senza titolo)",
+      "current": "Passaggio attuale",
+      "optimized": "Passaggio ottimizzato",
+      "generate": "Riscrivi con l'IA",
+      "generating": "Riscrittura in corso…",
+      "copy": "Copia",
+      "copied": "Copiato",
+      "noKey": "Collega un provider IA nelle Impostazioni per riscrivere i passaggi.",
+      "error": "Richiesta all'IA non riuscita: {{message}}",
+      "empty": "L'IA non ha restituito testo.",
+      "none": "Nessun passaggio debole trovato."
+    },
+    "issue": {
+      "dangling-pronoun": "Riferimento poco chiaro",
+      "no-answer-first": "Nessuna risposta diretta all'inizio",
+      "filler-opening": "Apertura di riempimento",
+      "no-facts": "Nessun fatto concreto",
+      "too-long": "Troppo lungo per un frammento"
+    },
+    "history": {
+      "title": "Cronologia",
+      "empty": "La cronologia compare dopo la seconda analisi di questo progetto.",
+      "row": "{{date}}: {{score}}"
     }
   }
 }

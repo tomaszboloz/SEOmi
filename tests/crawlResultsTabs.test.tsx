@@ -39,7 +39,7 @@ it("exposes all result sections as keyboard-accessible tabs", () => {
       />,
     );
 
-    expect(screen.getAllByRole("tab")).toHaveLength(19);
+    expect(screen.getAllByRole("tab")).toHaveLength(20);
     expect(
       screen
 .getByRole("tab", { name: /Overview/ })

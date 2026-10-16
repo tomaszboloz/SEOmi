@@ -34,4 +34,29 @@ pub struct CrawledPageFocus {
     /// Characters of cleaned main-content text the focus terms came from.
     #[serde(default)]
     pub focus_text_chars: u32,
+    /// H1-H3 sections with text and list/table counts for AI/RAG readiness.
+    #[serde(default)]
+    pub rag_sections: Vec<RagSection>,
+}
+
+/// One heading-delimited section of main content (AI Overviews / RAG chunking).
+#[derive(Debug, Serialize, Deserialize, Clone, Default, PartialEq)]
+pub struct RagSection {
+    /// Heading text; empty for content before the first heading.
+    #[serde(default)]
+    pub heading: String,
+    /// Heading level 1-3; 0 for the lead section.
+    #[serde(default)]
+    pub level: u8,
+    /// Paragraph/list-item texts in document order, bounded.
+    #[serde(default)]
+    pub paragraphs: Vec<String>,
+    #[serde(default)]
+    pub tables: u16,
+    #[serde(default)]
+    pub ordered_lists: u16,
+    #[serde(default)]
+    pub unordered_lists: u16,
+    #[serde(default)]
+    pub definition_lists: u16,
 }

@@ -2,6 +2,7 @@ import type { CrawlRunRecord } from '@/types';
 import type { CrawlReportTemplate } from '@/services/reportTemplates';
 import { downloadPdf, downloadText } from './download';
 import { crawlFilename } from './filenames';
+import { crawlAioSummary } from '@/services/aioReadiness/summary';
 import { crawlFocusSummary } from './focusSummary';
 
 const filteredCrawlResult = (run: CrawlRunRecord, template?: CrawlReportTemplate): Record<string, unknown> => {
@@ -81,6 +82,7 @@ export const crawlReportPayload = (run: CrawlRunRecord, template?: CrawlReportTe
 
 export const downloadCrawlPdf = (run: CrawlRunRecord, template?: CrawlReportTemplate): Promise<void> => {
   const focus = !template || template.sections.includes('focus') ? crawlFocusSummary(run) : undefined;
+  const aio = !template || template.sections.includes('aio') ? crawlAioSummary(run) : undefined;
   return downloadPdf('generate_crawl_pdf', {
   run: {
     id: run.id,
@@ -96,6 +98,7 @@ export const downloadCrawlPdf = (run: CrawlRunRecord, template?: CrawlReportTemp
     report_template_sections: template?.sections || null,
     report_template_name: template?.name || null,
     ...(focus ? { focus } : {}),
+    ...(aio ? { aio } : {}),
   },
 }, crawlFilename(run, 'report', 'pdf'));
 };

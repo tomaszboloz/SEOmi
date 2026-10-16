@@ -2234,7 +2234,8 @@
       "frames": "Frames",
       "custom-search": "Custom search",
       "semantic": "Semantic analysis",
-      "focus": "Site Focus"
+      "focus": "Site Focus",
+      "aio": "AI readiness"
     },
     "environmentStaging": "test/staging",
     "environmentProduction": "production",
@@ -3049,7 +3050,8 @@
       "validation": "HTML validation",
       "performance": "Performance",
       "exports": "Exports",
-      "focus": "Site focus"
+      "focus": "Site focus",
+      "aio": "AI readiness"
     },
     "groups": {
       "core": "Overview",
@@ -5821,6 +5823,48 @@
           "thin-subtopic": "Thin subtopic \"{{0}}\": only {{1}}% of pages cover it ({{2}} pages). Terms: {{3}}.",
           "competitor-terms": "Competitor terms missing on your site: {{3}}."
         }
+      },
+      "aio": {
+        "title": "AI Overviews & RAG readiness",
+        "intro": "How easily AI answer engines can lift and quote passages of your pages. The score combines self-contained passages (45%), fact density (35%) and extractable structure (20%).",
+        "scoreTitle": "AI readiness score",
+        "legend": "Bands: 90-100 excellent, 75-89 good, 60-74 moderate, 40-59 weak, 0-39 critical.",
+        "kSelf": "Self-containment",
+        "kSpo": "Fact density",
+        "kExtract": "Extractability",
+        "kScored": "Pages scored",
+        "nSelf": "Passages that stand alone",
+        "nSpo": "Subject-predicate-object facts",
+        "nExtract": "Tables, lists, headings",
+        "nScored": "{{0}} pages skipped",
+        "noteBasic": "Language rules for {{0}} are basic: pronoun and fact detection is less precise there.",
+        "tPages": "Pages by AI readiness",
+        "pagesIntro": "Up to 25 pages, lowest score first.",
+        "colScore": "Score",
+        "colSelf": "Self-contained",
+        "colSpo": "Facts",
+        "colExtract": "Structure",
+        "colChunks": "Chunks",
+        "tPassages": "Weakest passages",
+        "passagesIntro": "Passages a RAG index would struggle to cite, with the problems found.",
+        "colHeading": "Page and heading",
+        "colExcerpt": "Passage",
+        "colIssues": "Problems",
+        "percent": "{{0}}%",
+        "band": {
+          "excellent": "Excellent readiness",
+          "good": "Good readiness",
+          "moderate": "Moderate readiness",
+          "weak": "Weak readiness",
+          "critical": "Critical readiness"
+        },
+        "issue": {
+          "dangling-pronoun": "Unclear reference",
+          "no-answer-first": "No direct answer first",
+          "filler-opening": "Filler opening",
+          "no-facts": "No concrete facts",
+          "too-long": "Too long for one chunk"
+        }
       }
     },
     "recs": {
@@ -6056,6 +6100,50 @@
         "what": "A suggested goal: at least 80, or the average of the top 3 competitors when they score higher.",
         "why": "It turns the comparison into one number to work toward.",
         "action": "Use it as a planning goal.\nRe-run the benchmark after your fixes to see the change."
+      }
+    },
+    "aio": {
+      "aioReadiness": {
+        "title": "AI readiness score (AIO-R)",
+        "what": "A 0-100 measure of how easily AI answer engines (Google AI Overviews, Perplexity, Copilot) can lift and quote passages of your pages. It combines self-contained passages (45%), fact density (35%) and extractable structure (20%).",
+        "why": "AI engines cut pages into chunks and quote only the chunk that answers the question. Vague or dependent passages are skipped.",
+        "action": "Open the weakest passages and fix the listed problems.\nRewrite them answer-first with explicit names and numbers.",
+        "example": "A section titled 'What is a normal blood sugar?' that opens with 'This depends on many factors' scores low."
+      },
+      "selfContainment": {
+        "title": "Self-containment",
+        "what": "Whether a passage still makes sense when cut out of the page: it names its subject and does not start with 'it', 'this' or 'as mentioned above'.",
+        "why": "A chunk is indexed alone. A dangling pronoun leaves the model without the subject, so the chunk matches fewer questions.",
+        "action": "Replace 'it' and 'this' at the start of paragraphs with the real name.\nPut the answer in the first 40-60 words under each heading.",
+        "example": "'This value should stay under 140.' becomes 'Post-meal blood glucose should stay under 140 mg/dl.'"
+      },
+      "spoDensity": {
+        "title": "Fact density",
+        "what": "How many clear subject-predicate-object facts the text states per 100 words, such as 'Fasting glucose is 70-99 mg/dl'. The target is about 3 per 100 words.",
+        "why": "Models quote verifiable statements. Filler text gives them nothing to extract.",
+        "action": "Turn vague sentences into statements with a subject, a verb and a value.\nAdd units and numbers where you have them.",
+        "example": "'Many factors matter' has no fact. 'HbA1c below 7% is the usual treatment target' has one."
+      },
+      "extractability": {
+        "title": "Extractability",
+        "what": "Whether the page uses structures that parsers lift easily: tables, numbered lists, definition lists and a clear H2/H3 outline.",
+        "why": "Generative engines prefer to build answers from tables and step lists because their meaning is explicit.",
+        "action": "Present comparisons as a table and procedures as a numbered list.\nUse H2/H3 headings phrased as the questions people ask.",
+        "example": "A step-by-step guide written as one long paragraph scores lower than the same guide as an ordered list."
+      },
+      "answerFirst": {
+        "title": "Answer-first",
+        "what": "The first 40-60 words under a heading should answer the heading directly, naming the subject and giving a fact.",
+        "why": "RAG retrieval compares the question with the start of the chunk. A long preamble lowers the match.",
+        "action": "Write the direct answer first, then the context.\nRepeat the heading's key term in the opening sentence.",
+        "example": "Heading 'How long does a CGM sensor last?' followed by 'A CGM sensor lasts 10-15 days, depending on the model.'"
+      },
+      "chunking": {
+        "title": "Chunking simulation",
+        "what": "SEOmi cuts every page the way a RAG index does: one chunk per H2/H3 section, long sections split into windows of about 300 tokens.",
+        "why": "You see the page as the retrieval system sees it: a set of separate passages, each judged on its own.",
+        "action": "Check the chunk score of each weak passage.\nKeep sections short enough to be one chunk.",
+        "example": "A 900-token section becomes about three chunks; only the first one sits directly under the heading."
       }
     }
   },
@@ -6441,6 +6529,75 @@
       "coverage": "{{pct}}% of competitors ({{count}})",
       "empty": "No competitor topics are missing from your site.",
       "apply": "Add these terms to the gap analysis"
+    }
+  },
+  "aio": {
+    "title": "AI Overviews & RAG readiness",
+    "subtitle": "How easily AI answer engines can find, lift and quote your passages.",
+    "empty": "No page data with content sections yet. Run a new crawl to analyse AI readiness.",
+    "band": {
+      "excellent": "Excellent readiness",
+      "good": "Good readiness",
+      "moderate": "Moderate readiness",
+      "weak": "Weak readiness",
+      "critical": "Critical readiness"
+    },
+    "hero": {
+      "label": "AI citability score",
+      "outOf": "out of 100",
+      "summary": "{{weak}} weak passages found across {{count}} analysed pages.",
+      "summaryNone": "No weak passages found across {{count}} analysed pages.",
+      "change": "Change since the previous analysis: {{delta}}",
+      "skipped": "{{count}} pages skipped (no usable content sections)."
+    },
+    "components": {
+      "self": "Self-containment",
+      "spo": "Fact density",
+      "extract": "Extractability"
+    },
+    "basicNote": "Language rules for {{languages}} are basic: pronoun and fact detection is less precise for these languages.",
+    "pages": {
+      "title": "Pages",
+      "url": "URL",
+      "score": "Score",
+      "chunks": "Chunks",
+      "facts": "Facts",
+      "language": "Language",
+      "empty": "No pages to show."
+    },
+    "skip": {
+      "no-sections": "No content sections (crawled before this feature)",
+      "non-html": "Not an HTML page",
+      "request-error": "Request failed",
+      "no-content": "No readable text"
+    },
+    "passage": {
+      "title": "Weakest passages",
+      "intro": "Simulated RAG chunks that are hardest to cite. Fix the listed problems first.",
+      "chunk": "Chunk {{n}} · {{tokens}} tokens · score {{score}}",
+      "noHeading": "(intro without heading)",
+      "current": "Current passage",
+      "optimized": "Optimized passage",
+      "generate": "Rewrite with AI",
+      "generating": "Rewriting…",
+      "copy": "Copy",
+      "copied": "Copied",
+      "noKey": "Connect an AI provider in Settings to rewrite passages.",
+      "error": "AI request failed: {{message}}",
+      "empty": "The AI returned no text.",
+      "none": "No weak passages found."
+    },
+    "issue": {
+      "dangling-pronoun": "Unclear reference",
+      "no-answer-first": "No direct answer first",
+      "filler-opening": "Filler opening",
+      "no-facts": "No concrete facts",
+      "too-long": "Too long for one chunk"
+    },
+    "history": {
+      "title": "History",
+      "empty": "History appears after the second analysis of this project.",
+      "row": "{{date}}: {{score}}"
     }
   }
 }

@@ -2234,7 +2234,8 @@
       "frames": "Marcos",
       "custom-search": "Búsqueda personalizada",
       "semantic": "Análisis semántico",
-      "focus": "Enfoque del sitio"
+      "focus": "Enfoque del sitio",
+      "aio": "Preparación para IA"
     },
     "environmentStaging": "test/staging",
     "environmentProduction": "production",
@@ -3049,7 +3050,8 @@
       "validation": "Validación HTML",
       "performance": "Rendimiento",
       "exports": "Exportaciones",
-      "focus": "Enfoque del sitio"
+      "focus": "Enfoque del sitio",
+      "aio": "Preparación para IA"
     },
     "groups": {
       "core": "Resumen",
@@ -5821,6 +5823,48 @@
           "thin-subtopic": "Subtema poco cubierto \"{{0}}\": solo el {{1}}% de las páginas lo trata ({{2}} páginas). Términos: {{3}}.",
           "competitor-terms": "Términos de la competencia que faltan en tu sitio: {{3}}."
         }
+      },
+      "aio": {
+        "title": "Preparación para AI Overviews y RAG",
+        "intro": "Con qué facilidad los motores de respuesta de IA extraen y citan pasajes de tus páginas. La puntuación combina pasajes autónomos (45 %), densidad de datos (35 %) y estructura extraíble (20 %).",
+        "scoreTitle": "Puntuación de preparación para IA",
+        "legend": "Rangos: 90-100 excelente, 75-89 buena, 60-74 moderada, 40-59 débil, 0-39 crítica.",
+        "kSelf": "Autonomía",
+        "kSpo": "Densidad de datos",
+        "kExtract": "Extraibilidad",
+        "kScored": "Páginas puntuadas",
+        "nSelf": "Pasajes que se entienden solos",
+        "nSpo": "Datos sujeto-predicado-objeto",
+        "nExtract": "Tablas, listas, encabezados",
+        "nScored": "{{0}} páginas omitidas",
+        "noteBasic": "Las reglas de idioma para {{0}} son básicas: la detección de pronombres y datos es menos precisa allí.",
+        "tPages": "Páginas por preparación para IA",
+        "pagesIntro": "Hasta 25 páginas, de menor a mayor puntuación.",
+        "colScore": "Puntuación",
+        "colSelf": "Autónomo",
+        "colSpo": "Datos",
+        "colExtract": "Estructura",
+        "colChunks": "Fragmentos",
+        "tPassages": "Pasajes más débiles",
+        "passagesIntro": "Pasajes que un índice RAG tendría dificultad para citar, con los problemas detectados.",
+        "colHeading": "Página y encabezado",
+        "colExcerpt": "Pasaje",
+        "colIssues": "Problemas",
+        "percent": "{{0}} %",
+        "band": {
+          "excellent": "Preparación excelente",
+          "good": "Buena preparación",
+          "moderate": "Preparación moderada",
+          "weak": "Preparación débil",
+          "critical": "Preparación crítica"
+        },
+        "issue": {
+          "dangling-pronoun": "Referencia poco clara",
+          "no-answer-first": "Sin respuesta directa al inicio",
+          "filler-opening": "Inicio de relleno",
+          "no-facts": "Sin datos concretos",
+          "too-long": "Demasiado largo para un fragmento"
+        }
       }
     },
     "recs": {
@@ -6056,6 +6100,50 @@
         "what": "Un objetivo sugerido: al menos 80, o la media del top 3 de competidores cuando esta sea mayor.",
         "why": "Convierte la comparación en un único número hacia el que trabajar.",
         "action": "Úsala como objetivo de planificación.\nVuelve a ejecutar el benchmark tras tus correcciones para ver el cambio."
+      }
+    },
+    "aio": {
+      "aioReadiness": {
+        "title": "Puntuación de preparación para IA (AIO-R)",
+        "what": "Una medida de 0 a 100 de lo fácil que es para los motores de respuesta de IA (Google AI Overviews, Perplexity, Copilot) extraer y citar pasajes de tus páginas. Combina pasajes autónomos (45 %), densidad de datos (35 %) y estructura extraíble (20 %).",
+        "why": "Los motores de IA dividen las páginas en fragmentos y citan solo el que responde a la pregunta. Los pasajes vagos o dependientes del contexto se descartan.",
+        "action": "Abre los pasajes más débiles y corrige los problemas indicados.\nReescríbelos con la respuesta primero, con nombres y cifras explícitos.",
+        "example": "Una sección titulada «¿Cuál es el nivel normal de azúcar?» que empieza con «Esto depende de muchos factores» obtiene una puntuación baja."
+      },
+      "selfContainment": {
+        "title": "Autonomía",
+        "what": "Si un pasaje sigue teniendo sentido fuera de la página: nombra su sujeto y no empieza con «esto», «ello» ni «como se mencionó arriba».",
+        "why": "Un fragmento se indexa por separado. Un pronombre suelto deja al modelo sin sujeto, así que el fragmento encaja con menos preguntas.",
+        "action": "Sustituye «esto» y «ello» al inicio de los párrafos por el nombre real.\nPon la respuesta en las primeras 40-60 palabras bajo cada encabezado.",
+        "example": "«Este valor debe mantenerse por debajo de 140.» pasa a «La glucemia posprandial debe mantenerse por debajo de 140 mg/dl.»"
+      },
+      "spoDensity": {
+        "title": "Densidad de datos",
+        "what": "Cuántos datos claros sujeto-predicado-objeto aporta el texto por cada 100 palabras, como «La glucemia en ayunas es de 70-99 mg/dl». El objetivo es de unos 3 por 100 palabras.",
+        "why": "Los modelos citan afirmaciones verificables. El texto de relleno no les da nada que extraer.",
+        "action": "Convierte las frases vagas en afirmaciones con sujeto, verbo y valor.\nAñade unidades y cifras donde las tengas.",
+        "example": "«Importan muchos factores» no contiene ningún dato. «Una HbA1c inferior al 7 % es el objetivo habitual del tratamiento» sí."
+      },
+      "extractability": {
+        "title": "Extraibilidad",
+        "what": "Si la página usa estructuras que los analizadores extraen con facilidad: tablas, listas numeradas, listas de definiciones y un esquema H2/H3 claro.",
+        "why": "Los motores generativos prefieren construir respuestas a partir de tablas y listas de pasos porque su significado es explícito.",
+        "action": "Presenta las comparaciones en una tabla y los procedimientos en una lista numerada.\nRedacta los encabezados H2/H3 como las preguntas que hace la gente.",
+        "example": "Una guía paso a paso escrita como un párrafo largo puntúa menos que la misma guía como lista ordenada."
+      },
+      "answerFirst": {
+        "title": "Respuesta primero",
+        "what": "Las primeras 40-60 palabras bajo un encabezado deben responderlo directamente, nombrando el sujeto y aportando un dato.",
+        "why": "La recuperación RAG compara la pregunta con el inicio del fragmento. Un preámbulo largo reduce la coincidencia.",
+        "action": "Escribe primero la respuesta directa y después el contexto.\nRepite el término clave del encabezado en la primera frase.",
+        "example": "Encabezado «¿Cuánto dura un sensor CGM?» seguido de «Un sensor CGM dura de 10 a 15 días, según el modelo.»"
+      },
+      "chunking": {
+        "title": "Simulación de fragmentación",
+        "what": "SEOmi divide cada página como lo hace un índice RAG: un fragmento por sección H2/H3 y las secciones largas en ventanas de unos 300 tokens.",
+        "why": "Ves la página como la ve el sistema de recuperación: un conjunto de pasajes independientes, cada uno evaluado por separado.",
+        "action": "Revisa la puntuación de cada pasaje débil.\nMantén las secciones lo bastante cortas para ser un solo fragmento.",
+        "example": "Una sección de 900 tokens se convierte en unos tres fragmentos; solo el primero queda justo bajo el encabezado."
       }
     }
   },
@@ -6441,6 +6529,75 @@
       "coverage": "{{pct}}% de los competidores ({{count}})",
       "empty": "A tu sitio no le falta ningún tema de la competencia.",
       "apply": "Añadir estos términos al análisis de lagunas"
+    }
+  },
+  "aio": {
+    "title": "Preparación para AI Overviews y RAG",
+    "subtitle": "Con qué facilidad los motores de respuesta de IA encuentran, extraen y citan tus pasajes.",
+    "empty": "Aún no hay datos de páginas con secciones de contenido. Lanza un nuevo rastreo para analizar la preparación para IA.",
+    "band": {
+      "excellent": "Preparación excelente",
+      "good": "Buena preparación",
+      "moderate": "Preparación moderada",
+      "weak": "Preparación débil",
+      "critical": "Preparación crítica"
+    },
+    "hero": {
+      "label": "Puntuación de citabilidad en IA",
+      "outOf": "sobre 100",
+      "summary": "Se encontraron {{weak}} pasajes débiles en {{count}} páginas analizadas.",
+      "summaryNone": "No se encontraron pasajes débiles en {{count}} páginas analizadas.",
+      "change": "Cambio desde el análisis anterior: {{delta}}",
+      "skipped": "{{count}} páginas omitidas (sin secciones de contenido utilizables)."
+    },
+    "components": {
+      "self": "Autonomía",
+      "spo": "Densidad de datos",
+      "extract": "Extraibilidad"
+    },
+    "basicNote": "Las reglas de idioma para {{languages}} son básicas: la detección de pronombres y datos es menos precisa en estos idiomas.",
+    "pages": {
+      "title": "Páginas",
+      "url": "URL",
+      "score": "Puntuación",
+      "chunks": "Fragmentos",
+      "facts": "Datos",
+      "language": "Idioma",
+      "empty": "No hay páginas que mostrar."
+    },
+    "skip": {
+      "no-sections": "Sin secciones de contenido (rastreada antes de esta función)",
+      "non-html": "No es una página HTML",
+      "request-error": "La solicitud falló",
+      "no-content": "Sin texto legible"
+    },
+    "passage": {
+      "title": "Pasajes más débiles",
+      "intro": "Fragmentos RAG simulados más difíciles de citar. Corrige primero los problemas indicados.",
+      "chunk": "Fragmento {{n}} · {{tokens}} tokens · puntuación {{score}}",
+      "noHeading": "(introducción sin encabezado)",
+      "current": "Pasaje actual",
+      "optimized": "Pasaje optimizado",
+      "generate": "Reescribir con IA",
+      "generating": "Reescribiendo…",
+      "copy": "Copiar",
+      "copied": "Copiado",
+      "noKey": "Conecta un proveedor de IA en Ajustes para reescribir pasajes.",
+      "error": "La solicitud a la IA falló: {{message}}",
+      "empty": "La IA no devolvió texto.",
+      "none": "No se encontraron pasajes débiles."
+    },
+    "issue": {
+      "dangling-pronoun": "Referencia poco clara",
+      "no-answer-first": "Sin respuesta directa al inicio",
+      "filler-opening": "Inicio de relleno",
+      "no-facts": "Sin datos concretos",
+      "too-long": "Demasiado largo para un fragmento"
+    },
+    "history": {
+      "title": "Historial",
+      "empty": "El historial aparece tras el segundo análisis de este proyecto.",
+      "row": "{{date}}: {{score}}"
     }
   }
 }

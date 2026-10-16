@@ -2234,7 +2234,8 @@
       "frames": "Frames",
       "custom-search": "Benutzerdefinierte Suche",
       "semantic": "Semantische Analyse",
-      "focus": "Site Focus"
+      "focus": "Site Focus",
+      "aio": "KI-Bereitschaft"
     },
     "environmentStaging": "test/staging",
     "environmentProduction": "production",
@@ -3049,7 +3050,8 @@
       "validation": "HTML-Validierung",
       "performance": "Leistung",
       "exports": "Exporte",
-      "focus": "Site Focus"
+      "focus": "Site Focus",
+      "aio": "KI-Bereitschaft"
     },
     "groups": {
       "core": "Übersicht",
@@ -5821,6 +5823,48 @@
           "thin-subtopic": "Dünn abgedecktes Unterthema „{{0}}“: nur {{1}} % der Seiten behandeln es ({{2}} Seiten). Begriffe: {{3}}.",
           "competitor-terms": "Begriffe der Konkurrenz, die auf deiner Website fehlen: {{3}}."
         }
+      },
+      "aio": {
+        "title": "Bereitschaft für AI Overviews & RAG",
+        "intro": "Wie leicht KI-Antwortmaschinen Textstellen Ihrer Seiten entnehmen und zitieren können. Der Wert kombiniert eigenständige Textstellen (45 %), Faktendichte (35 %) und extrahierbare Struktur (20 %).",
+        "scoreTitle": "KI-Bereitschaftswert",
+        "legend": "Bereiche: 90-100 hervorragend, 75-89 gut, 60-74 mittel, 40-59 schwach, 0-39 kritisch.",
+        "kSelf": "Eigenständigkeit",
+        "kSpo": "Faktendichte",
+        "kExtract": "Extrahierbarkeit",
+        "kScored": "Bewertete Seiten",
+        "nSelf": "Für sich verständliche Textstellen",
+        "nSpo": "Subjekt-Prädikat-Objekt-Fakten",
+        "nExtract": "Tabellen, Listen, Überschriften",
+        "nScored": "{{0}} Seiten übersprungen",
+        "noteBasic": "Die Sprachregeln für {{0}} sind einfach: Pronomen- und Faktenerkennung sind dort weniger präzise.",
+        "tPages": "Seiten nach KI-Bereitschaft",
+        "pagesIntro": "Bis zu 25 Seiten, niedrigster Wert zuerst.",
+        "colScore": "Wert",
+        "colSelf": "Eigenständig",
+        "colSpo": "Fakten",
+        "colExtract": "Struktur",
+        "colChunks": "Chunks",
+        "tPassages": "Schwächste Textstellen",
+        "passagesIntro": "Textstellen, die ein RAG-Index nur schwer zitieren könnte, mit den gefundenen Problemen.",
+        "colHeading": "Seite und Überschrift",
+        "colExcerpt": "Textstelle",
+        "colIssues": "Probleme",
+        "percent": "{{0}} %",
+        "band": {
+          "excellent": "Hervorragende Bereitschaft",
+          "good": "Gute Bereitschaft",
+          "moderate": "Mittlere Bereitschaft",
+          "weak": "Schwache Bereitschaft",
+          "critical": "Kritische Bereitschaft"
+        },
+        "issue": {
+          "dangling-pronoun": "Unklarer Bezug",
+          "no-answer-first": "Keine direkte Antwort am Anfang",
+          "filler-opening": "Füllende Einleitung",
+          "no-facts": "Keine konkreten Fakten",
+          "too-long": "Zu lang für einen Chunk"
+        }
       }
     },
     "recs": {
@@ -6056,6 +6100,50 @@
         "what": "Ein vorgeschlagenes Ziel: mindestens 80 oder der Durchschnitt der Top-3-Wettbewerber, wenn diese höher liegen.",
         "why": "Er macht den Vergleich zu einer einzigen Zahl, auf die du hinarbeiten kannst.",
         "action": "Nutze ihn als Planungsziel.\nFühre den Benchmark nach deinen Korrekturen erneut aus, um die Veränderung zu sehen."
+      }
+    },
+    "aio": {
+      "aioReadiness": {
+        "title": "KI-Bereitschaftswert (AIO-R)",
+        "what": "Ein Maß von 0-100 dafür, wie leicht KI-Antwortmaschinen (Google AI Overviews, Perplexity, Copilot) Textstellen Ihrer Seiten entnehmen und zitieren können. Es kombiniert eigenständige Textstellen (45 %), Faktendichte (35 %) und extrahierbare Struktur (20 %).",
+        "why": "KI-Maschinen zerlegen Seiten in Chunks und zitieren nur den Chunk, der die Frage beantwortet. Vage oder vom Kontext abhängige Textstellen werden übergangen.",
+        "action": "Öffnen Sie die schwächsten Textstellen und beheben Sie die genannten Probleme.\nSchreiben Sie sie mit der Antwort zuerst, mit klaren Namen und Zahlen.",
+        "example": "Ein Abschnitt „Was ist ein normaler Blutzucker?“, der mit „Das hängt von vielen Faktoren ab“ beginnt, erhält einen niedrigen Wert."
+      },
+      "selfContainment": {
+        "title": "Eigenständigkeit",
+        "what": "Ob eine Textstelle auch herausgelöst Sinn ergibt: Sie nennt ihr Subjekt und beginnt nicht mit „es“, „dies“ oder „wie oben erwähnt“.",
+        "why": "Ein Chunk wird einzeln indexiert. Ein loses Pronomen lässt dem Modell kein Subjekt, daher passt der Chunk zu weniger Fragen.",
+        "action": "Ersetzen Sie „es“ und „dies“ am Absatzanfang durch den echten Namen.\nPlatzieren Sie die Antwort in den ersten 40-60 Wörtern unter jeder Überschrift.",
+        "example": "„Dieser Wert sollte unter 140 bleiben.“ wird zu „Der Blutzucker nach dem Essen sollte unter 140 mg/dl bleiben.“"
+      },
+      "spoDensity": {
+        "title": "Faktendichte",
+        "what": "Wie viele klare Subjekt-Prädikat-Objekt-Fakten der Text pro 100 Wörter nennt, etwa „Nüchternglukose beträgt 70-99 mg/dl“. Ziel sind etwa 3 pro 100 Wörter.",
+        "why": "Modelle zitieren überprüfbare Aussagen. Füllprosa gibt ihnen nichts zum Entnehmen.",
+        "action": "Machen Sie aus vagen Sätzen Aussagen mit Subjekt, Verb und Wert.\nFügen Sie Einheiten und Zahlen hinzu, wo Sie sie haben.",
+        "example": "„Viele Faktoren spielen eine Rolle“ enthält keinen Fakt. „Ein HbA1c unter 7 % ist das übliche Behandlungsziel“ schon."
+      },
+      "extractability": {
+        "title": "Extrahierbarkeit",
+        "what": "Ob die Seite Strukturen nutzt, die Parser leicht übernehmen: Tabellen, nummerierte Listen, Definitionslisten und eine klare H2/H3-Gliederung.",
+        "why": "Generative Maschinen bauen Antworten gern aus Tabellen und Schrittlisten, weil deren Bedeutung eindeutig ist.",
+        "action": "Stellen Sie Vergleiche als Tabelle und Abläufe als nummerierte Liste dar.\nFormulieren Sie H2/H3-Überschriften als die Fragen, die Menschen stellen.",
+        "example": "Eine Schritt-für-Schritt-Anleitung als langer Absatz erhält einen niedrigeren Wert als dieselbe Anleitung als nummerierte Liste."
+      },
+      "answerFirst": {
+        "title": "Antwort zuerst",
+        "what": "Die ersten 40-60 Wörter unter einer Überschrift sollten diese direkt beantworten, das Subjekt nennen und einen Fakt liefern.",
+        "why": "Das RAG-Retrieval vergleicht die Frage mit dem Anfang des Chunks. Eine lange Einleitung senkt die Übereinstimmung.",
+        "action": "Schreiben Sie zuerst die direkte Antwort, dann den Kontext.\nWiederholen Sie den Schlüsselbegriff der Überschrift im ersten Satz.",
+        "example": "Überschrift „Wie lange hält ein CGM-Sensor?“ gefolgt von „Ein CGM-Sensor hält je nach Modell 10-15 Tage.“"
+      },
+      "chunking": {
+        "title": "Chunking-Simulation",
+        "what": "SEOmi zerlegt jede Seite wie ein RAG-Index: ein Chunk pro H2/H3-Abschnitt, lange Abschnitte in Fenster von etwa 300 Tokens.",
+        "why": "Sie sehen die Seite so, wie das Retrieval-System sie sieht: als Menge einzelner Textstellen, jede für sich bewertet.",
+        "action": "Prüfen Sie den Chunk-Wert jeder schwachen Textstelle.\nHalten Sie Abschnitte so kurz, dass sie ein Chunk sind.",
+        "example": "Ein Abschnitt mit 900 Tokens wird zu etwa drei Chunks; nur der erste steht direkt unter der Überschrift."
       }
     }
   },
@@ -6441,6 +6529,75 @@
       "coverage": "{{pct}} % der Wettbewerber ({{count}})",
       "empty": "Auf deiner Website fehlt kein Thema der Wettbewerber.",
       "apply": "Diese Begriffe in die Lückenanalyse übernehmen"
+    }
+  },
+  "aio": {
+    "title": "Bereitschaft für AI Overviews & RAG",
+    "subtitle": "Wie leicht KI-Antwortmaschinen Ihre Textstellen finden, entnehmen und zitieren können.",
+    "empty": "Noch keine Seitendaten mit Inhaltsabschnitten. Starten Sie einen neuen Crawl, um die KI-Bereitschaft zu analysieren.",
+    "band": {
+      "excellent": "Hervorragende Bereitschaft",
+      "good": "Gute Bereitschaft",
+      "moderate": "Mittlere Bereitschaft",
+      "weak": "Schwache Bereitschaft",
+      "critical": "Kritische Bereitschaft"
+    },
+    "hero": {
+      "label": "KI-Zitierbarkeitswert",
+      "outOf": "von 100",
+      "summary": "{{weak}} schwache Textstellen auf {{count}} analysierten Seiten gefunden.",
+      "summaryNone": "Keine schwachen Textstellen auf {{count}} analysierten Seiten gefunden.",
+      "change": "Veränderung seit der letzten Analyse: {{delta}}",
+      "skipped": "{{count}} Seiten übersprungen (keine verwertbaren Inhaltsabschnitte)."
+    },
+    "components": {
+      "self": "Eigenständigkeit",
+      "spo": "Faktendichte",
+      "extract": "Extrahierbarkeit"
+    },
+    "basicNote": "Die Sprachregeln für {{languages}} sind einfach: Pronomen- und Faktenerkennung sind für diese Sprachen weniger präzise.",
+    "pages": {
+      "title": "Seiten",
+      "url": "URL",
+      "score": "Wert",
+      "chunks": "Chunks",
+      "facts": "Fakten",
+      "language": "Sprache",
+      "empty": "Keine Seiten anzuzeigen."
+    },
+    "skip": {
+      "no-sections": "Keine Inhaltsabschnitte (vor dieser Funktion gecrawlt)",
+      "non-html": "Keine HTML-Seite",
+      "request-error": "Anfrage fehlgeschlagen",
+      "no-content": "Kein lesbarer Text"
+    },
+    "passage": {
+      "title": "Schwächste Textstellen",
+      "intro": "Simulierte RAG-Chunks, die sich am schwersten zitieren lassen. Beheben Sie zuerst die genannten Probleme.",
+      "chunk": "Chunk {{n}} · {{tokens}} Tokens · Wert {{score}}",
+      "noHeading": "(Einleitung ohne Überschrift)",
+      "current": "Aktuelle Textstelle",
+      "optimized": "Optimierte Textstelle",
+      "generate": "Mit KI umschreiben",
+      "generating": "Wird umgeschrieben…",
+      "copy": "Kopieren",
+      "copied": "Kopiert",
+      "noKey": "Verbinden Sie in den Einstellungen einen KI-Anbieter, um Textstellen umzuschreiben.",
+      "error": "KI-Anfrage fehlgeschlagen: {{message}}",
+      "empty": "Die KI hat keinen Text geliefert.",
+      "none": "Keine schwachen Textstellen gefunden."
+    },
+    "issue": {
+      "dangling-pronoun": "Unklarer Bezug",
+      "no-answer-first": "Keine direkte Antwort am Anfang",
+      "filler-opening": "Füllende Einleitung",
+      "no-facts": "Keine konkreten Fakten",
+      "too-long": "Zu lang für einen Chunk"
+    },
+    "history": {
+      "title": "Verlauf",
+      "empty": "Der Verlauf erscheint nach der zweiten Analyse dieses Projekts.",
+      "row": "{{date}}: {{score}}"
     }
   }
 }

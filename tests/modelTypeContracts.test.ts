@@ -5,8 +5,8 @@ import { exportedTypeContract } from './fixtures/typeContracts';
 
 it('preserves the reviewed crawler contract including optional project ownership and semantic language', () => {
   expect(exportedTypeContract('src/types/crawl.ts')).toEqual({
-    exports: 39,
-    sha256: 'c002f65b8d7cd56277a485386dd806506e5efbc1743a420d379aaac75cac0de4',
+    exports: 40,
+    sha256: '37bcfaa1b7330f2435b8773ec8df9e8ce2c0f395498a508e073c2268f208c876',
   });
 });
 
@@ -25,7 +25,7 @@ it('resolves the complete type graph without loading unrelated ambient declarati
     return readFile(path);
   });
   try {
-    expect(exportedTypeContract('src/types/crawl.ts').exports).toBe(39);
+    expect(exportedTypeContract('src/types/crawl.ts').exports).toBe(40);
     expect(reads.filter(path => path.includes('/node_modules/') && path.endsWith('.d.ts'))).toEqual([]);
     expect(reads.some(path => path.endsWith('/types/crawl/page.ts'))).toBe(true);
   } finally { spy.mockRestore(); }

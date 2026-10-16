@@ -2234,7 +2234,8 @@
       "frames": "框架",
       "custom-search": "自定义搜索",
       "semantic": "语义分析",
-      "focus": "站点聚焦度"
+      "focus": "站点聚焦度",
+      "aio": "AI 就绪度"
     },
     "environmentStaging": "test/staging",
     "environmentProduction": "production",
@@ -3049,7 +3050,8 @@
       "validation": "HTML 验证",
       "performance": "性能",
       "exports": "导出",
-      "focus": "站点聚焦度"
+      "focus": "站点聚焦度",
+      "aio": "AI 就绪度"
     },
     "groups": {
       "core": "概览",
@@ -5821,6 +5823,48 @@
           "thin-subtopic": "内容单薄的子主题“{{0}}”:仅有 {{1}}% 的页面涉及(共 {{2}} 个页面)。相关词:{{3}}。",
           "competitor-terms": "竞争对手使用而你的站点缺失的词:{{3}}。"
         }
+      },
+      "aio": {
+        "title": "AI Overviews 与 RAG 就绪度",
+        "intro": "AI 回答引擎提取并引用你页面段落的难易程度。得分综合了自成一体的段落（45%）、事实密度（35%）和可提取的结构（20%）。",
+        "scoreTitle": "AI 就绪度得分",
+        "legend": "分级：90-100 优秀，75-89 良好，60-74 中等，40-59 较弱，0-39 危急。",
+        "kSelf": "自成一体",
+        "kSpo": "事实密度",
+        "kExtract": "可提取性",
+        "kScored": "已评分页面",
+        "nSelf": "可独立理解的段落",
+        "nSpo": "主谓宾事实",
+        "nExtract": "表格、列表、标题",
+        "nScored": "已跳过 {{0}} 个页面",
+        "noteBasic": "{{0}} 的语言规则较为基础：该语言的代词和事实检测精度较低。",
+        "tPages": "按 AI 就绪度排序的页面",
+        "pagesIntro": "最多 25 个页面，得分最低的在前。",
+        "colScore": "得分",
+        "colSelf": "自成一体",
+        "colSpo": "事实",
+        "colExtract": "结构",
+        "colChunks": "分块",
+        "tPassages": "最薄弱的段落",
+        "passagesIntro": "RAG 索引难以引用的段落及发现的问题。",
+        "colHeading": "页面与标题",
+        "colExcerpt": "段落",
+        "colIssues": "问题",
+        "percent": "{{0}}%",
+        "band": {
+          "excellent": "就绪度优秀",
+          "good": "就绪度良好",
+          "moderate": "就绪度中等",
+          "weak": "就绪度较弱",
+          "critical": "就绪度危急"
+        },
+        "issue": {
+          "dangling-pronoun": "指代不清",
+          "no-answer-first": "开头没有直接回答",
+          "filler-opening": "开头空洞",
+          "no-facts": "缺少具体事实",
+          "too-long": "对单个分块来说太长"
+        }
       }
     },
     "recs": {
@@ -6056,6 +6100,50 @@
         "what": "建议的目标:至少 80 分;若前 3 名竞争对手的平均分更高,则取该平均分。",
         "why": "把对比结果变成一个可以努力达成的数字。",
         "action": "把它作为规划目标。\n完成修复后重新运行基准,查看变化。"
+      }
+    },
+    "aio": {
+      "aioReadiness": {
+        "title": "AI 就绪度得分（AIO-R）",
+        "what": "以 0-100 衡量 AI 回答引擎（Google AI Overviews、Perplexity、Copilot）提取并引用你页面段落的难易程度。综合了自成一体的段落（45%）、事实密度（35%）和可提取的结构（20%）。",
+        "why": "AI 引擎会把页面切分为分块，只引用能回答问题的那一块。含糊或依赖上下文的段落会被忽略。",
+        "action": "打开最薄弱的段落并修复列出的问题。\n以答案优先的方式改写，使用明确的名称和数字。",
+        "example": "标题为“正常血糖是多少？”的章节若以“这取决于许多因素”开头，得分会很低。"
+      },
+      "selfContainment": {
+        "title": "自成一体",
+        "what": "段落脱离页面后是否仍然成立：明确写出主语，不以“它”“这”或“如上所述”开头。",
+        "why": "分块是单独索引的。悬空的代词会让模型缺少主语，分块能匹配的问题就更少。",
+        "action": "把段落开头的“它”“这”换成真实名称。\n把答案放在每个标题下的前 40-60 个词内。",
+        "example": "“这个值应保持在 140 以下。”改为“餐后血糖应保持在 140 mg/dl 以下。”"
+      },
+      "spoDensity": {
+        "title": "事实密度",
+        "what": "每 100 个词中有多少条清晰的主谓宾事实，例如“空腹血糖为 70-99 mg/dl”。目标约为每 100 词 3 条。",
+        "why": "模型引用可验证的陈述。空洞的文字没有可提取的内容。",
+        "action": "把含糊的句子改成含主语、动词和数值的陈述。\n有单位和数字时请补上。",
+        "example": "“许多因素都很重要”没有事实。“糖化血红蛋白低于 7% 是常见的治疗目标”则有事实。"
+      },
+      "extractability": {
+        "title": "可提取性",
+        "what": "页面是否使用解析器容易提取的结构：表格、编号列表、定义列表以及清晰的 H2/H3 大纲。",
+        "why": "生成式引擎更倾向于用表格和步骤列表组织答案，因为它们的含义明确。",
+        "action": "对比用表格呈现，流程用编号列表呈现。\n把 H2/H3 标题写成人们会问的问题。",
+        "example": "写成一个长段落的分步指南，得分低于同一指南改写成有序列表。"
+      },
+      "answerFirst": {
+        "title": "答案优先",
+        "what": "标题下的前 40-60 个词应直接回答标题，写明主语并给出事实。",
+        "why": "RAG 检索会把问题与分块开头比较。冗长的开场会降低匹配度。",
+        "action": "先写直接答案，再写背景。\n在第一句重复标题中的关键词。",
+        "example": "标题“CGM 传感器能用多久？”之后写“CGM 传感器可用 10-15 天，视型号而定。”"
+      },
+      "chunking": {
+        "title": "分块模拟",
+        "what": "SEOmi 按 RAG 索引的方式切分页面：每个 H2/H3 章节一个分块，较长章节按约 300 个 token 的窗口拆分。",
+        "why": "你看到的就是检索系统看到的页面：一组彼此独立、各自被评估的段落。",
+        "action": "查看每个薄弱段落的分块得分。\n让章节足够短，能放进一个分块。",
+        "example": "900 个 token 的章节会变成约三个分块，只有第一个紧跟在标题下。"
       }
     }
   },
@@ -6441,6 +6529,75 @@
       "coverage": "{{pct}}% 的竞争对手({{count}} 个)",
       "empty": "你的站点没有缺失任何竞争对手的主题。",
       "apply": "将这些词加入缺口分析"
+    }
+  },
+  "aio": {
+    "title": "AI Overviews 与 RAG 就绪度",
+    "subtitle": "AI 回答引擎找到、提取并引用你页面段落的难易程度。",
+    "empty": "暂无包含内容分区的页面数据。请运行新的抓取以分析 AI 就绪度。",
+    "band": {
+      "excellent": "就绪度优秀",
+      "good": "就绪度良好",
+      "moderate": "就绪度中等",
+      "weak": "就绪度较弱",
+      "critical": "就绪度危急"
+    },
+    "hero": {
+      "label": "AI 可引用性得分",
+      "outOf": "满分 100",
+      "summary": "在 {{count}} 个已分析页面中发现 {{weak}} 个薄弱段落。",
+      "summaryNone": "在 {{count}} 个已分析页面中未发现薄弱段落。",
+      "change": "与上次分析相比的变化：{{delta}}",
+      "skipped": "已跳过 {{count}} 个页面（没有可用的内容分区）。"
+    },
+    "components": {
+      "self": "自成一体",
+      "spo": "事实密度",
+      "extract": "可提取性"
+    },
+    "basicNote": "{{languages}} 的语言规则较为基础：这些语言的代词和事实检测精度较低。",
+    "pages": {
+      "title": "页面",
+      "url": "URL",
+      "score": "得分",
+      "chunks": "分块",
+      "facts": "事实",
+      "language": "语言",
+      "empty": "没有可显示的页面。"
+    },
+    "skip": {
+      "no-sections": "没有内容分区（在此功能之前抓取）",
+      "non-html": "不是 HTML 页面",
+      "request-error": "请求失败",
+      "no-content": "没有可读文本"
+    },
+    "passage": {
+      "title": "最薄弱的段落",
+      "intro": "模拟的最难被引用的 RAG 分块。请先修复列出的问题。",
+      "chunk": "分块 {{n}} · {{tokens}} 个 token · 得分 {{score}}",
+      "noHeading": "（无标题的开头部分）",
+      "current": "当前段落",
+      "optimized": "优化后的段落",
+      "generate": "用 AI 改写",
+      "generating": "正在改写…",
+      "copy": "复制",
+      "copied": "已复制",
+      "noKey": "请在设置中连接 AI 提供商以改写段落。",
+      "error": "AI 请求失败：{{message}}",
+      "empty": "AI 没有返回文本。",
+      "none": "未发现薄弱段落。"
+    },
+    "issue": {
+      "dangling-pronoun": "指代不清",
+      "no-answer-first": "开头没有直接回答",
+      "filler-opening": "开头空洞",
+      "no-facts": "缺少具体事实",
+      "too-long": "对单个分块来说太长"
+    },
+    "history": {
+      "title": "历史",
+      "empty": "此项目完成第二次分析后会显示历史记录。",
+      "row": "{{date}}：{{score}}"
     }
   }
 }
