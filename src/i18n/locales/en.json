@@ -7043,7 +7043,8 @@
       "authorAlignment": "Author topic fit",
       "citationQuality": "Source quality",
       "transparency": "Editorial transparency",
-      "noData": "n/a"
+      "noData": "n/a",
+      "unverified": "unverified"
     },
     "entities": {
       "title": "Publisher and authors",

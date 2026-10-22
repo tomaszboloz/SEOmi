@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { buildTrustReport, combineLayers, isGenericAuthor, isTrustedHost, levelFor } from '@/services/eeatTrust';
-import { analyzeCitations, citationScore } from '@/services/eeatTrust/citations';
+import { analyzeCitations, citationScore, citationsUnverified } from '@/services/eeatTrust/citations';
 import { buildRegistry, nodesOf } from '@/services/eeatTrust/graph';
 import { analyzeTransparency, transparencyScore } from '@/services/eeatTrust/transparency';
 import { detectYmyl } from '@/services/eeatTrust/ymyl';
@@ -49,7 +49,11 @@ describe('citations', () => {
     expect(detail.deadLinks).toHaveLength(2);
     expect(citationScore(detail)).toBe(75);
     expect(citationScore({ ...detail, pagesAnalyzed: 0 })).toBeUndefined();
-    expect(citationScore({ ...detail, checkedLinks: 0, deadLinks: [] })).toBe(100);
+    expect(citationScore({ ...detail, checkedLinks: 0, deadLinks: [] })).toBe(75);
+    expect(citationsUnverified({ ...detail, checkedLinks: 0, deadLinks: [] })).toBe(true);
+    expect(citationsUnverified(detail)).toBe(false);
+    expect(citationsUnverified({ ...detail, pagesAnalyzed: 0, checkedLinks: 0 })).toBe(false);
+    expect(citationScore({ ...detail, pagesWithTrusted: 1, pagesAnalyzed: 2, checkedLinks: 0, deadLinks: [] })).toBe(50);
   });
 
   it('skips pages outside the article set and pages without external links', () => {
@@ -93,6 +97,8 @@ describe('YMYL detection', () => {
     expect(detectYmyl([{ page: 'p', decl: 0, path: '$', types: ['LegalService'], props: {} }], undefined, [])).toBe('legal');
     expect(detectYmyl([], undefined, ['Best recipes', 'Cooking tips'])).toBeUndefined();
     expect(detectYmyl([], undefined, ['health', 'health'])).toBeUndefined();
+    expect(detectYmyl([], undefined, Array.from({ length: 10 }, () => 'Health tips'))).toBe('health');
+    expect(detectYmyl([], undefined, [...Array.from({ length: 3 }, () => 'Health tips'), ...Array.from({ length: 17 }, (_, i) => `Cooking ${i}`)])).toBeUndefined();
   });
 });
 

@@ -7043,7 +7043,8 @@
       "authorAlignment": "Dopasowanie autora do tematu",
       "citationQuality": "Jakość źródeł",
       "transparency": "Transparentność redakcyjna",
-      "noData": "brak"
+      "noData": "brak",
+      "unverified": "niezweryfikowane"
     },
     "entities": {
       "title": "Wydawca i autorzy",

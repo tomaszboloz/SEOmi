@@ -27,7 +27,10 @@ const nextStepKey: Record<SemanticAuditFindingCode, string> = {
 };
 export const nextStep = (code: SemanticAuditFindingCode): string => semanticText(nextStepKey[code]);
 const normalize = normalizeSemanticText;
-export const tokens = (value: string) => normalize(value).split(/[^\p{L}\p{N}]+/u).filter((token) => token.length > 2);
+const split = (value: string) => value.split(/[^\p{L}\p{N}]+/u).filter((token) => token.length > 2);
+export const tokens = (value: string) => split(normalize(value));
+// Matching keys come from unfolded words: the language-aware key folds, so German "ö" and a typed "oe" meet.
+const rawTokens = (value: string) => split(value.normalize('NFKC').toLowerCase());
 /** Page terms keyed by inflection key, mapped to the first observed (normalized) form. */
 export const termsFor = (page: CrawledPageSummary): Map<string, string> => {
   return semanticPageTermInventory(page, MAX_TERMS_PER_PAGE);
@@ -46,11 +49,13 @@ export const urlKey = (value: string | null | undefined, base?: string) => {
   } catch { return trimmed; }
 };
 export const termCoverage = (query: string, page: CrawledPageSummary) => {
+  const raw = rawTokens(query);
   const expected = [...new Set(tokens(query))];
   if (!expected.length) return null;
   const observed = termsFor(page);
   const language = semanticPageLanguage(page);
-  return { expected, matched: expected.filter((term) => observed.has(semanticTermIdentity(term, language))) };
+  const matched = new Set(raw.filter((word) => observed.has(semanticTermIdentity(word, language))).map((word) => normalize(word)));
+  return { expected, matched: expected.filter((term) => matched.has(term)) };
 };
 
 export const normalizedProviderIntent = (value: string | null | undefined): string | null => {

@@ -7043,7 +7043,8 @@
       "authorAlignment": "Afinidade temática dos autores",
       "citationQuality": "Qualidade das fontes",
       "transparency": "Transparência editorial",
-      "noData": "n/d"
+      "noData": "n/d",
+      "unverified": "não verificado"
     },
     "entities": {
       "title": "Editor e autores",

@@ -7043,7 +7043,8 @@
       "authorAlignment": "Соответствие авторов теме",
       "citationQuality": "Качество источников",
       "transparency": "Редакционная прозрачность",
-      "noData": "н/д"
+      "noData": "н/д",
+      "unverified": "не проверено"
     },
     "entities": {
       "title": "Издатель и авторы",
