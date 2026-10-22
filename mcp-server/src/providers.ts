@@ -28,7 +28,8 @@ export const createProviderClient = (dependencies: ProviderDependencies = {}) =>
     const login = env.DATAFORSEO_LOGIN;
     const password = env.DATAFORSEO_PASSWORD;
     if (!login || !password) throw new Error('Set DATAFORSEO_LOGIN and DATAFORSEO_PASSWORD before calling DataForSEO tools.');
-    assertMcpBudget(env);
+    const releaseBudget = assertMcpBudget(env);
+    try {
     const response = await request(`https://api.dataforseo.com${path}`, {
       method: 'POST', redirect: 'error',
       headers: { authorization: `Basic ${Buffer.from(`${login}:${password}`).toString('base64')}`, 'content-type': 'application/json' },
@@ -42,6 +43,7 @@ export const createProviderClient = (dependencies: ProviderDependencies = {}) =>
     const record = task as JsonObject;
     if (record.status_code !== 20000) throw new Error(`DataForSEO task failed (${typeof record.status_code === 'number' ? record.status_code : 'unknown'}).`);
     return record;
+    } finally { releaseBudget(); }
   };
   const googleApiKey = (): string => {
     const key = env.GOOGLE_API_KEY?.trim() || env.GOOGLE_PAGESPEED_API_KEY?.trim();
