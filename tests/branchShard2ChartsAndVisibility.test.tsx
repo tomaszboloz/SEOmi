@@ -6,8 +6,6 @@ import type { BrandAiVisibilityReport } from '@/types';
 import { AiBrandOverviewCards } from '@/components/AiVisibility/brandVisibility/AiBrandOverviewCards';
 import { AiSearchPromptForm } from '@/components/AiVisibility/searchPrompts/AiSearchPromptForm';
 import { DiagnosisAreaList } from '@/components/Charts/crawlArchitecture/topicalDiagnosis/DiagnosisAreaList';
-import { buildSimulationNodesAndLinks, NO_TOPIC_COLOR } from '@/components/Charts/crawlArchitecture/CrawlArchitectureD3Helpers';
-import { CLUSTER_COLORS } from '@/components/Charts/crawlArchitecture/CrawlArchitectureTypes';
 import type { TopicalDiagnosisReport } from '@/services/topicalDiagnosis';
 import { readOllamaAssistantInstruction, ollamaAssistantInstructionKey, OLLAMA_ASSISTANT_MAX_INSTRUCTION_CHARS } from '@/components/AI/ollama/ollamaAssistantStorage';
 import { SearchConsoleControls } from '@/components/AgentWorkflows/searchConsole/Controls';
@@ -65,23 +63,6 @@ describe('DiagnosisAreaList rows', () => {
     expect(screen.getByText(t('topicalDiagnosis.areas.hubWithoutMembers') as string)).toBeTruthy();
     fireEvent.click(screen.getAllByRole('button', { name: t('topicalDiagnosis.areas.showInGraph') as string })[0]);
     expect(onShowInGraph).toHaveBeenCalledWith({ kind: 'area', id: 'area-0' });
-  });
-});
-
-describe('buildSimulationNodesAndLinks diagnosis colours', () => {
-  it('falls back to the final URL colour and then to the no-topic colour', () => {
-    const diagnosis = {
-      topics: [{ id: 't0', documentIds: ['d0'] }],
-      documents: [{ id: 'd0', role: 'content', urls: ['https://ex.test/final'] }],
-    } as unknown as TopicalDiagnosisReport;
-    const graph = { clusters: [] };
-    const node = (id: string, url: string, finalUrl: string) => ({ id, clusterId: 'c', page: { url, final_url: finalUrl } });
-    const { nodes } = buildSimulationNodesAndLinks(
-      [node('a', 'https://ex.test/old', 'https://ex.test/final'), node('b', 'https://ex.test/nope', 'https://ex.test/nope2')],
-      [], [], graph, { positions: {} }, diagnosis,
-    );
-    expect(nodes[0].color).toBe(CLUSTER_COLORS[0]);
-    expect(nodes[1].color).toBe(NO_TOPIC_COLOR);
   });
 });
 

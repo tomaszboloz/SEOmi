@@ -5,7 +5,7 @@ import { CrawlArchitectureGraphView } from './CrawlArchitectureGraphView';
 import { TopicalDiagnosisView } from './topicalDiagnosis/TopicalDiagnosisView';
 
 export const CrawlArchitectureMainContent = ({
-  pages, crawlMode, sitemapUrls, runs, currentRunId, state
+  pages, startUrl, crawlMode, sitemapUrls, runs, currentRunId, state
 }: any) => {
   const { t } = useTranslation();
   const {
@@ -65,7 +65,7 @@ export const CrawlArchitectureMainContent = ({
       {!graph.hasSemanticTerms && <p role="status" className="mt-3 rounded-lg border border-amber-500/25 bg-amber-500/5 px-3 py-2 text-xs text-amber-100">{t('mapUi.noterms')}</p>}
       {graph.truncated && <p className="mt-3 rounded-lg border border-sky-500/25 bg-sky-500/5 px-3 py-2 text-xs text-sky-100">{t('mapUi.truncated')}</p>}
       
-      <CrawlArchitectureGraphView state={state} crawlMode={crawlMode} />
+      <CrawlArchitectureGraphView state={state} crawlMode={crawlMode} pages={pages} startUrl={startUrl} />
     </>
   );
 };
