@@ -7036,7 +7036,8 @@
       "authorAlignment": "作者主题契合度",
       "citationQuality": "来源质量",
       "transparency": "编辑透明度",
-      "noData": "无"
+      "noData": "无",
+      "unverified": "未验证"
     },
     "entities": {
       "title": "发布者与作者",

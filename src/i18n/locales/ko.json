@@ -7036,7 +7036,8 @@
       "authorAlignment": "저자 주제 적합도",
       "citationQuality": "출처 품질",
       "transparency": "편집 투명성",
-      "noData": "해당 없음"
+      "noData": "해당 없음",
+      "unverified": "미검증"
     },
     "entities": {
       "title": "발행자와 저자",

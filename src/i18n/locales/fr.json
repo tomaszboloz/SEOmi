@@ -7036,7 +7036,8 @@
       "authorAlignment": "Adéquation thématique des auteurs",
       "citationQuality": "Qualité des sources",
       "transparency": "Transparence éditoriale",
-      "noData": "n/d"
+      "noData": "n/d",
+      "unverified": "non vérifié"
     },
     "entities": {
       "title": "Éditeur et auteurs",

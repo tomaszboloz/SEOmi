@@ -31,6 +31,12 @@ describe('CrawlTrustTab', () => {
     expect(screen.getByText(/of \d+ article pages link to a trusted source/)).toBeTruthy();
   });
 
+  it('labels the source quality layer as unverified while no external link was checked', () => {
+    const unchecked = trusted.map((page) => ({ ...page, links: page.links.map((link) => ({ ...link, target_http_status: undefined, target_request_error_kind: undefined })) }));
+    render(<CrawlTrustTab pages={unchecked} startUrl={START} run={makeRun('r1u', unchecked)} projectId="p1" />);
+    expect(screen.getByText('unverified')).toBeTruthy();
+  });
+
   it('flags anonymous YMYL bylines and lists dead links', () => {
     const pages = anonymous.map((page, index) => (index === 2
       ? { ...page, links: [...page.links, { target_url: 'https://gone.example/x', anchor_text: 'x', is_internal: false, target_http_status: 404 }] }

@@ -7036,7 +7036,8 @@
       "authorAlignment": "著者のテーマ適合度",
       "citationQuality": "情報源の品質",
       "transparency": "編集の透明性",
-      "noData": "なし"
+      "noData": "なし",
+      "unverified": "未検証"
     },
     "entities": {
       "title": "発行者と著者",

@@ -1,5 +1,6 @@
 import { useTranslation } from 'react-i18next';
 import { HelpTip } from '@/components/Help/HelpTip';
+import { citationsUnverified } from '@/services/eeatTrust/citations';
 import type { TrustReport, TrustSnapshot } from '@/services/eeatTrust';
 import { LAYERS, LEVEL_BAR, LEVEL_TEXT } from './trustHelpers';
 
@@ -40,6 +41,7 @@ export const TrustHero = ({ report, previous }: { report: TrustReport; previous?
                 </span>
                 <span className="w-10 text-end tabular-nums">{value === undefined ? t('trust.layers.noData') : `${value}`}</span>
               </span>
+              {layer === 'citationQuality' && citationsUnverified(report.citations) && <span className="block text-amber-300">{t('trust.layers.unverified')}</span>}
             </li>
           );
         })}
