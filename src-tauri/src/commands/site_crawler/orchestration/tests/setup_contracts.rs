@@ -18,7 +18,7 @@ fn defaults_preserve_safe_crawl_transport_and_resource_bounds() {
 
 #[test]
 fn setup_applies_config_precedence_clamps_bounds_and_trims_unicode_focus_phrase() {
-    let mut config = default_crawl_config(Some(500_000));
+    let mut config = default_crawl_config(Some(5_000_000));
     config.max_depth = Some(999);
     config.max_redirects = Some(999);
     config.max_response_bytes = Some(1);
@@ -42,7 +42,7 @@ fn setup_applies_config_precedence_clamps_bounds_and_trims_unicode_focus_phrase(
             setup.max_redirects,
             setup.max_response_bytes
         ),
-        (10_000, 100, 50, 1_024)
+        (1_000_000, 100, 50, 1_024)
     );
     assert_eq!(setup.max_run_seconds, Some(1));
     assert_eq!(
