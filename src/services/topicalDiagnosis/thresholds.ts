@@ -43,8 +43,7 @@ export const NEAR_DUPLICATE_MAX_HAMMING = 7;
 /** Pairs or URLs listed in one verdict before the count takes over. */
 export const MAX_LISTED_PAIRS = 10;
 
-export const UTILITY_PATH_PATTERN =
-  /(^|\/)(kontakt|contact|regulamin|terms(-and)?-conditions|polityka-prywatnosci|privacy(-policy)?|cookies?|dla-mediow|press(-pack)?|404)(\/|$)/i;
+export { UTILITY_PATH_PATTERN } from '@/services/utilityPages';
 
 /** Social networks named by share buttons that sit inside the main content. */
 export const BRAND_TOKEN_PATTERN = /^(facebook|twitter|instagram|youtube|tiktok)$/;

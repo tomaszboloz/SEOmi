@@ -169,7 +169,7 @@
       "urlTooLong": "The URL cannot exceed 2048 characters.",
       "urlInvalid": "Enter a complete URL beginning with http:// or https://.",
       "urlPublicOnly": "Schedules accept only a public HTTP(S) URL without credentials.",
-      "crawlLimit": "The scheduled crawl limit must be between 1 and 500 URLs.",
+      "crawlLimit": "The scheduled crawl limit must be between 1 and {{max}} URLs.",
       "maxReached": "A project can have at most {{count}} schedules.",
       "duplicate": "This URL already has a schedule in the project.",
       "auditFailed": "The audit failed."
@@ -1752,7 +1752,42 @@
     },
     "diagnosisFilter": "Alcance del diagnóstico: {{label}}",
     "clearDiagnosisFilter": "Mostrar todo el grafo",
-    "allTopics": "Todos los temas ({{count}})"
+    "allTopics": "Todos los temas ({{count}})",
+    "cy": {
+      "layoutLabel": "Diseño",
+      "layoutHierarchy": "Jerarquía",
+      "layoutForce": "Fuerzas",
+      "sectionsLabel": "Secciones de URL",
+      "expandAll": "Expandir todo",
+      "collapseAll": "Contraer todo",
+      "highlightLabel": "Resaltar URL",
+      "highlightPlaceholder": "Parte de una URL o título",
+      "matches": "Coincidencias: {{count}}",
+      "depthLabel": "Profundidad",
+      "depthAll": "Todas las profundidades",
+      "problemsOnly": "Solo problemas",
+      "statusLabel": "Estado HTTP",
+      "colorTrs": "Color: relevancia temática (TRS)",
+      "colorStatus": "Color: estado HTTP (sin TRS)",
+      "sizeHint": "tamaño = enlaces entrantes",
+      "mapAria": "Mapa interactivo de la arquitectura del sitio agrupado por secciones de URL",
+      "mapHelp": "Haz clic en una sección para expandirla o contraerla, en una página para ver detalles; arrastra para desplazar, usa la rueda o el gesto de pellizco para hacer zoom. Los sitios grandes empiezan con las secciones contraídas. Debajo del mapa hay una tabla con las mismas páginas.",
+      "tooltip": "HTTP {{status}} · profundidad {{depth}} · {{inlinks}} enlaces entrantes",
+      "detailsHint": "Selecciona una página en el mapa o en la tabla para ver sus detalles.",
+      "detailsTitle": "Detalles de la página",
+      "colUrl": "URL",
+      "colStatus": "Estado HTTP",
+      "colDepth": "Profundidad",
+      "colInlinks": "Enlaces entrantes",
+      "colTrs": "TRS",
+      "colSection": "Sección",
+      "colProblem": "Problema",
+      "noTrs": "n/d",
+      "yes": "sí",
+      "no": "no",
+      "tableSummary": "Tabla de páginas ({{count}})",
+      "tableCaption": "Páginas mostradas en el mapa de arquitectura con estado, profundidad, enlaces entrantes, TRS y sección"
+    }
   },
   "crawlDiff": {
     "fields": {
@@ -2512,7 +2547,8 @@
       "current-incomplete": "ejecución actual incompleta",
       "path-key-collision": "clave de ruta duplicada",
       "url-key-collision": "clave URL duplicada"
-    }
+    },
+    "pageLimitUnlimited": "Sin límite"
   },
   "mcp": {
     "badge": "AI agent workflows",
@@ -3656,7 +3692,13 @@
       "currentQueries": "Consultas solo en el periodo actual: {{count}}",
       "baselinePages": "URL solo en el periodo base: {{count}}",
       "currentPages": "URL solo en el periodo actual: {{count}}"
-    }
+    },
+    "sortBy": "Ordenar por {{column}}",
+    "showingRows": "Mostrando {{from}}–{{to}} de {{total}}",
+    "rowsPerPage": "Filas por página",
+    "pagePrevious": "Anterior",
+    "pageNext": "Siguiente",
+    "pageOf": "Página {{page}} de {{total}}"
   },
   "settings": {
     "close": "Close settings",
@@ -7036,7 +7078,8 @@
       "authorAlignment": "Afinidad temática del autor",
       "citationQuality": "Calidad de las fuentes",
       "transparency": "Transparencia editorial",
-      "noData": "n/d"
+      "noData": "n/d",
+      "unverified": "sin verificar"
     },
     "entities": {
       "title": "Editor y autores",

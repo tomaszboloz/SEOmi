@@ -169,7 +169,7 @@
       "urlTooLong": "The URL cannot exceed 2048 characters.",
       "urlInvalid": "Enter a complete URL beginning with http:// or https://.",
       "urlPublicOnly": "Schedules accept only a public HTTP(S) URL without credentials.",
-      "crawlLimit": "The scheduled crawl limit must be between 1 and 500 URLs.",
+      "crawlLimit": "The scheduled crawl limit must be between 1 and {{max}} URLs.",
       "maxReached": "A project can have at most {{count}} schedules.",
       "duplicate": "This URL already has a schedule in the project.",
       "auditFailed": "The audit failed."
@@ -1752,7 +1752,42 @@
     },
     "diagnosisFilter": "Diagnosebereich: {{label}}",
     "clearDiagnosisFilter": "Ganzen Graph zeigen",
-    "allTopics": "Alle Themen ({{count}})"
+    "allTopics": "Alle Themen ({{count}})",
+    "cy": {
+      "layoutLabel": "Layout",
+      "layoutHierarchy": "Hierarchie",
+      "layoutForce": "Kräfte",
+      "sectionsLabel": "URL-Bereiche",
+      "expandAll": "Alle ausklappen",
+      "collapseAll": "Alle einklappen",
+      "highlightLabel": "URL hervorheben",
+      "highlightPlaceholder": "Teil einer URL oder eines Titels",
+      "matches": "Treffer: {{count}}",
+      "depthLabel": "Tiefe",
+      "depthAll": "Alle Tiefen",
+      "problemsOnly": "Nur Probleme",
+      "statusLabel": "HTTP-Status",
+      "colorTrs": "Farbe: thematische Relevanz (TRS)",
+      "colorStatus": "Farbe: HTTP-Status (kein TRS)",
+      "sizeHint": "Größe = eingehende Links",
+      "mapAria": "Interaktive Architekturkarte der Website, gruppiert nach URL-Bereichen",
+      "mapHelp": "Klicken Sie auf einen Bereich, um ihn auf- oder zuzuklappen, auf eine Seite für Details; ziehen zum Verschieben, scrollen oder zoomen per Pinch. Große Websites starten mit eingeklappten Bereichen. Unter der Karte steht eine Tabelle mit denselben Seiten.",
+      "tooltip": "HTTP {{status}} · Tiefe {{depth}} · {{inlinks}} eingehende Links",
+      "detailsHint": "Wählen Sie eine Seite auf der Karte oder in der Tabelle, um Details zu sehen.",
+      "detailsTitle": "Seitendetails",
+      "colUrl": "URL",
+      "colStatus": "HTTP-Status",
+      "colDepth": "Tiefe",
+      "colInlinks": "Eingehende Links",
+      "colTrs": "TRS",
+      "colSection": "Bereich",
+      "colProblem": "Problem",
+      "noTrs": "k. A.",
+      "yes": "ja",
+      "no": "nein",
+      "tableSummary": "Seitentabelle ({{count}})",
+      "tableCaption": "Auf der Architekturkarte gezeigte Seiten mit Status, Tiefe, eingehenden Links, TRS und Bereich"
+    }
   },
   "crawlDiff": {
     "fields": {
@@ -2512,7 +2547,8 @@
       "current-incomplete": "aktueller Lauf unvollständig",
       "path-key-collision": "doppelter Pfadschlüssel",
       "url-key-collision": "doppelter URL-Schlüssel"
-    }
+    },
+    "pageLimitUnlimited": "Kein Limit"
   },
   "mcp": {
     "badge": "AI agent workflows",
@@ -3656,7 +3692,13 @@
       "currentQueries": "Suchanfragen nur im aktuellen Zeitraum: {{count}}",
       "baselinePages": "URLs nur im Basiszeitraum: {{count}}",
       "currentPages": "URLs nur im aktuellen Zeitraum: {{count}}"
-    }
+    },
+    "sortBy": "Sortieren nach {{column}}",
+    "showingRows": "Zeilen {{from}}–{{to}} von {{total}}",
+    "rowsPerPage": "Zeilen pro Seite",
+    "pagePrevious": "Zurück",
+    "pageNext": "Weiter",
+    "pageOf": "Seite {{page}} von {{total}}"
   },
   "settings": {
     "close": "Close settings",
@@ -7036,7 +7078,8 @@
       "authorAlignment": "Themenpassung der Autoren",
       "citationQuality": "Quellenqualität",
       "transparency": "Redaktionelle Transparenz",
-      "noData": "k. A."
+      "noData": "k. A.",
+      "unverified": "nicht geprüft"
     },
     "entities": {
       "title": "Herausgeber und Autoren",

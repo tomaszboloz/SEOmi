@@ -20,6 +20,24 @@ describe('aggregate helpers', () => {
   });
 });
 
+describe('footer and navigation pages', () => {
+  it.each(['kariera', 'regulamin-promocji', 'reklama', 'dla-mediow', 'faq', 'rodo', 'gdpr', 'careers', 'jobs', 'press', 'login', 'register', 'koszyk', 'cart', 'checkout', 'cookies'])('types /%s as technical even when linked from everywhere', (slug) => {
+    const url = `https://a.test/${slug}`;
+    const page = createCrawlPageFixture({ url, final_url: url, depth: 1, links: [] });
+    const graph = { inlinks: new Map([[url, 50]]), targets: new Map([[url, 6]]), downward: new Map([[url, 6]]) };
+    expect(classifyPage(page, { startUrl: 'https://a.test/', pageCount: 100, graph })).toBe('technical');
+  });
+
+  it('ignores footer links absent from semantic_links when counting targets', () => {
+    const hub = createCrawlPageFixture({ url: 'https://a.test/blog', final_url: 'https://a.test/blog', depth: 1, links: [], semantic_links: [] });
+    const kids = Array.from({ length: 4 }, (_, i) => createCrawlPageFixture({ url: `https://a.test/blog/${i}`, final_url: `https://a.test/blog/${i}`, depth: 2, links: [] }));
+    hub.links = kids.map((kid) => ({ target_url: kid.url, anchor_text: '', is_internal: true }));
+    expect(linkGraph([hub, ...kids]).downward.get('https://a.test/blog')).toBe(0);
+    hub.semantic_links = hub.links;
+    expect(linkGraph([hub, ...kids]).downward.get('https://a.test/blog')).toBe(4);
+  });
+});
+
 describe('page typing', () => {
   const pages = [
     createCrawlPageFixture({ url: 'https://a.test/', final_url: 'https://a.test/', links: [] }),
@@ -37,8 +55,12 @@ describe('page typing', () => {
     expect(classifyPage(pages[3], context)).toBe('article');
     expect(classifyPage({ ...pages[3], url: 'https://a.test/privacy-policy', final_url: 'https://a.test/privacy-policy' }, context)).toBe('technical');
     expect(classifyPage({ ...pages[3], title: 'Kontakt z nami' }, context)).toBe('technical');
-    expect(classifyPage({ ...pages[3], url: 'https://a.test/blog', final_url: '' }, context)).toBe('category');
-    const crowded = { ...context, graph: { inlinks: new Map([['https://a.test/p2', 9]]), targets: new Map<string, number>() } };
+    const blog = { ...pages[3], url: 'https://a.test/blog', final_url: '' };
+    const withDownward = (count: number) => ({ ...context, graph: { ...context.graph, downward: new Map([['https://a.test/blog', count]]) } });
+    expect(classifyPage(blog, withDownward(3))).toBe('category');
+    // A category-looking name without articles below it stays an article.
+    expect(classifyPage(blog, withDownward(2))).toBe('article');
+    const crowded = { ...context, graph: { inlinks: new Map([['https://a.test/p2', 9]]), targets: new Map<string, number>(), downward: new Map([['https://a.test/p2', 3]]) } };
     expect(classifyPage(pages[3], crowded)).toBe('category');
     expect(classifyPage({ ...pages[3], depth: 3 }, crowded)).toBe('article');
   });

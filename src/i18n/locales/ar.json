@@ -169,7 +169,7 @@
       "urlTooLong": "The URL cannot exceed 2048 characters.",
       "urlInvalid": "Enter a complete URL beginning with http:// or https://.",
       "urlPublicOnly": "Schedules accept only a public HTTP(S) URL without credentials.",
-      "crawlLimit": "The scheduled crawl limit must be between 1 and 500 URLs.",
+      "crawlLimit": "The scheduled crawl limit must be between 1 and {{max}} URLs.",
       "maxReached": "A project can have at most {{count}} schedules.",
       "duplicate": "This URL already has a schedule in the project.",
       "auditFailed": "The audit failed."
@@ -1752,7 +1752,42 @@
     },
     "diagnosisFilter": "نطاق التشخيص: {{label}}",
     "clearDiagnosisFilter": "عرض الرسم كاملًا",
-    "allTopics": "كل المواضيع ({{count}})"
+    "allTopics": "كل المواضيع ({{count}})",
+    "cy": {
+      "layoutLabel": "التخطيط",
+      "layoutHierarchy": "هرمي",
+      "layoutForce": "قوى",
+      "sectionsLabel": "أقسام URL",
+      "expandAll": "توسيع الكل",
+      "collapseAll": "طي الكل",
+      "highlightLabel": "تمييز URL",
+      "highlightPlaceholder": "جزء من عنوان URL أو العنوان",
+      "matches": "التطابقات: {{count}}",
+      "depthLabel": "العمق",
+      "depthAll": "كل الأعماق",
+      "problemsOnly": "المشكلات فقط",
+      "statusLabel": "حالة HTTP",
+      "colorTrs": "اللون: الصلة الموضوعية (TRS)",
+      "colorStatus": "اللون: حالة HTTP (لا يتوفر TRS)",
+      "sizeHint": "الحجم = الروابط الواردة",
+      "mapAria": "خريطة تفاعلية لبنية الموقع مجمّعة حسب أقسام URL",
+      "mapHelp": "انقر على قسم لتوسيعه أو طيه، وعلى صفحة لعرض تفاصيلها؛ اسحب للتحريك، ومرّر أو اقرص للتكبير. تبدأ المواقع الكبيرة بأقسام مطوية. يوجد أسفل الخريطة جدول بالصفحات نفسها.",
+      "tooltip": "HTTP {{status}} · العمق {{depth}} · {{inlinks}} رابط وارد",
+      "detailsHint": "اختر صفحة على الخريطة أو في الجدول لعرض تفاصيلها.",
+      "detailsTitle": "تفاصيل الصفحة",
+      "colUrl": "URL",
+      "colStatus": "حالة HTTP",
+      "colDepth": "العمق",
+      "colInlinks": "الروابط الواردة",
+      "colTrs": "TRS",
+      "colSection": "القسم",
+      "colProblem": "مشكلة",
+      "noTrs": "غير متاح",
+      "yes": "نعم",
+      "no": "لا",
+      "tableSummary": "جدول الصفحات ({{count}})",
+      "tableCaption": "الصفحات المعروضة على خريطة البنية مع الحالة والعمق والروابط الواردة وTRS والقسم"
+    }
   },
   "crawlDiff": {
     "fields": {
@@ -2512,7 +2547,8 @@
       "current-incomplete": "التشغيل الحالي غير مكتمل",
       "path-key-collision": "مفتاح مسار مكرر",
       "url-key-collision": "مفتاح URL مكرر"
-    }
+    },
+    "pageLimitUnlimited": "بدون حد"
   },
   "mcp": {
     "badge": "AI agent workflows",
@@ -3656,7 +3692,13 @@
       "currentQueries": "استعلامات ظهرت في الفترة الحالية فقط: {{count}}",
       "baselinePages": "روابط ظهرت في الفترة المرجعية فقط: {{count}}",
       "currentPages": "روابط ظهرت في الفترة الحالية فقط: {{count}}"
-    }
+    },
+    "sortBy": "الترتيب حسب {{column}}",
+    "showingRows": "عرض الصفوف {{from}}–{{to}} من {{total}}",
+    "rowsPerPage": "عدد الصفوف في الصفحة",
+    "pagePrevious": "السابق",
+    "pageNext": "التالي",
+    "pageOf": "صفحة {{page}} من {{total}}"
   },
   "settings": {
     "close": "Close settings",
@@ -7036,7 +7078,8 @@
       "authorAlignment": "ملاءمة المؤلف للموضوع",
       "citationQuality": "جودة المصادر",
       "transparency": "الشفافية التحريرية",
-      "noData": "غير متاح"
+      "noData": "غير متاح",
+      "unverified": "غير متحقق منه"
     },
     "entities": {
       "title": "الناشر والمؤلفون",

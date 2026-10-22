@@ -4,8 +4,7 @@ import { beforeEach, describe, expect, it, vi } from 'vitest';
 import i18n from '@/i18n';
 import { CrawlArchitectureControls } from '@/components/Charts/crawlArchitecture/CrawlArchitectureControls';
 import { CrawlArchitectureSidebar } from '@/components/Charts/crawlArchitecture/CrawlArchitectureSidebar';
-import { buildSimulationNodesAndLinks, HUB_COLOR, NO_TOPIC_COLOR } from '@/components/Charts/crawlArchitecture/CrawlArchitectureD3Helpers';
-import { CLUSTER_COLORS, type SemanticMapPreferences } from '@/components/Charts/crawlArchitecture/CrawlArchitectureTypes';
+import type { SemanticMapPreferences } from '@/components/Charts/crawlArchitecture/CrawlArchitectureTypes';
 import { buildTopicalDiagnosis } from '@/services/topicalDiagnosis';
 import { createCrawlPageFixture } from './fixtures/crawl';
 
@@ -64,16 +63,6 @@ describe('graph filtered and coloured by the diagnosis', () => {
     const preferences = { query: '', clusterFilter: 'all', orphansOnly: false, linkMode: 'content', diagnosisFilter: { kind: 'topic', id: report.topics[0].id } } as SemanticMapPreferences;
     render(<CrawlArchitectureControls preferences={preferences} setPreferences={vi.fn()} graph={graph} scaleView={vi.fn()} resetView={vi.fn()} diagnosis={unlabelled} />);
     expect(screen.getByText('Zakres z diagnozy: Temat bez etykiety')).toBeTruthy();
-  });
-
-  it('colours nodes by topic, hubs light and topic-less documents grey', () => {
-    const nodes = pages.map((candidate, index) => ({ id: `page-${index}`, clusterId: 'c1', page: candidate, semanticSignalCount: 3 }));
-    const built = buildSimulationNodesAndLinks(nodes, [], [], graph, { positions: {} }, report);
-    expect(built.nodes[0].color).toBe(HUB_COLOR);
-    expect(built.nodes[1].color).toBe(CLUSTER_COLORS[0]);
-    expect(built.nodes[2].color).toBe(CLUSTER_COLORS[0]);
-    expect(built.nodes[3].color).toBe(NO_TOPIC_COLOR);
-    expect(buildSimulationNodesAndLinks(nodes, [], [], graph, { positions: {} }).nodes[1].color).toBe(CLUSTER_COLORS[0]);
   });
 
   it('builds the legend from diagnosis topics when the report is present', () => {

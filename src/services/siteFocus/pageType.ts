@@ -1,17 +1,11 @@
 import { normalizeSemanticText } from '@/services/semanticText';
+import { UTILITY_SEGMENT_PATTERN } from '@/services/utilityPages';
 import { HUB_MAX_WORDS_PER_LINK, HUB_MIN_LINKED_DOCUMENTS } from '@/services/topicalDiagnosis/thresholds';
 import type { FocusPage, PageType } from './types';
 
 export const TYPE_WEIGHT: Record<PageType, number> = { homepage: 3, category: 2, article: 1, technical: 0.1 };
 
-/** Legal, account, contact and utility pages in the languages the app ships. */
-const TECHNICAL_SEGMENT = new RegExp(`^(${[
-  'privacy[a-z-]*', 'polityka[a-z-]*', 'regulamin[a-z-]*', 'terms[a-z-]*', 'cookies?[a-z-]*', 'rodo', 'gdpr', 'kontakt[a-z-]*',
-  'contact[a-z-]*', 'o-nas', 'about', 'about-us', 'impressum', 'datenschutz', 'agb', 'mentions-legales', 'cgv', 'aviso-legal',
-  'privacidad', 'politica[a-z-]*', 'login', 'logowanie', 'signin', 'sign-in', 'register', 'rejestracja', 'cart', 'koszyk',
-  'checkout', 'zamowienie', 'account', 'my-account', 'konto', 'wishlist', 'search', 'szukaj', 'sitemap', 'mapa-strony',
-].join('|')})$`);
-const TECHNICAL_TITLE = /^(privacy|polityka|regulamin|terms|contact|kontakt|o nas|about us|login|logowanie|cookie|impressum|datenschutz|cart|koszyk|checkout)/;
+const TECHNICAL_TITLE = /^(privacy|polityka|regulamin|terms|contact|kontakt|o nas|about us|login|logowanie|cookie|impressum|datenschutz|cart|koszyk|checkout|rodo|gdpr|kariera|career|jobs|reklama|register|rejestracja)/;
 const CATEGORY_SEGMENT = /^(category|categories|kategoria|kategorie|tag|tags|temat|tematy|blog|produkty|products|shop|sklep|collections?|archiwum)$/;
 const TAXONOMY_SEGMENT = /^(category|categories|kategoria|kategorie|tag|tags|temat|tematy|collections?)$/;
 
@@ -34,33 +28,52 @@ export const pathSegments = (url: string): string[] => {
   }
 };
 
-/** Internal inlink counts and distinct crawled targets per page, from the pages' own links. */
-export const linkGraph = (pages: FocusPage[]): { inlinks: Map<string, number>; targets: Map<string, number> } => {
-  const known = new Set(pages.map((page) => normalizeUrl(page.final_url || page.url)));
+export interface LinkGraph {
+  inlinks: Map<string, number>;
+  /** Distinct crawled targets of the page's main content. */
+  targets: Map<string, number>;
+  /** Of those, targets at the page's own depth or deeper: what a category leads down to. */
+  downward: Map<string, number>;
+}
+
+/** Internal inlink counts and own-content targets; footer and menu links (absent from semantic_links) do not make a page a hub. */
+export const linkGraph = (pages: FocusPage[]): LinkGraph => {
+  const depths = new Map(pages.map((page) => [normalizeUrl(page.final_url || page.url), page.depth] as const));
   const inlinks = new Map<string, number>();
   const targets = new Map<string, number>();
+  const downward = new Map<string, number>();
   pages.forEach((page) => {
     const self = normalizeUrl(page.final_url || page.url);
     const seen = new Set<string>();
     page.links.filter((link) => link.is_internal).forEach((link) => {
       const target = normalizeUrl(link.target_url);
-      if (target === self || seen.has(target) || !known.has(target)) return;
+      if (target === self || !depths.has(target)) return;
+      inlinks.set(target, (inlinks.get(target) ?? 0) + (seen.has(target) ? 0 : 1));
       seen.add(target);
-      inlinks.set(target, (inlinks.get(target) ?? 0) + 1);
     });
-    targets.set(self, seen.size);
+    const own = new Set<string>();
+    (page.semantic_links ?? page.links).filter((link) => link.is_internal).forEach((link) => {
+      const target = normalizeUrl(link.target_url);
+      if (target !== self && depths.has(target)) own.add(target);
+    });
+    targets.set(self, own.size);
+    downward.set(self, [...own].filter((target) => (depths.get(target) ?? 0) >= page.depth).length);
   });
-  return { inlinks, targets };
+  return { inlinks, targets, downward };
 };
 
-export interface TypeContext { startUrl: string; pageCount: number; graph: ReturnType<typeof linkGraph> }
+export interface TypeContext { startUrl: string; pageCount: number; graph: LinkGraph }
+
+/** A category is a hub: it leads from its own content to several downward articles. A name or many inlinks alone do not make one. */
+export const MIN_DOWNWARD_ARTICLES = 3;
 
 export const classifyPage = (page: FocusPage, context: TypeContext): PageType => {
   const url = normalizeUrl(page.final_url || page.url);
   const segments = pathSegments(url);
   if (!segments.length || url === normalizeUrl(context.startUrl)) return 'homepage';
   const title = normalizeSemanticText(page.title ?? '');
-  if (segments.some((segment) => TECHNICAL_SEGMENT.test(normalizeSemanticText(segment))) || TECHNICAL_TITLE.test(title)) return 'technical';
+  if (segments.some((segment) => UTILITY_SEGMENT_PATTERN.test(normalizeSemanticText(segment))) || TECHNICAL_TITLE.test(title)) return 'technical';
+  if ((context.graph.downward.get(url) ?? 0) < MIN_DOWNWARD_ARTICLES) return 'article';
   const linked = context.graph.targets.get(url) ?? 0;
   const listing = linked >= HUB_MIN_LINKED_DOCUMENTS && page.word_count / linked < HUB_MAX_WORDS_PER_LINK;
   const popular = page.depth <= 1 && (context.graph.inlinks.get(url) ?? 0) >= Math.max(5, Math.ceil(context.pageCount * 0.15));

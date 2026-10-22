@@ -2,6 +2,7 @@ import React, { FormEvent } from 'react';
 import { Plus } from 'lucide-react';
 import type { AuditIntervalHours, ScheduledTaskType } from '@/services/auditSchedule';
 import { intervalOptions } from './scheduledAuditHelpers';
+import { MAX_CRAWL_LIMIT } from '@/constants/crawlLimits';
 
 interface ScheduledAuditFormProps {
   url: string;
@@ -86,9 +87,9 @@ export const ScheduledAuditForm: React.FC<ScheduledAuditFormProps> = ({
           aria-label={t('schedules.crawlLimit')}
           type="number"
           min={1}
-          max={500}
+          max={MAX_CRAWL_LIMIT}
           value={scheduledCrawlLimit}
-          onChange={(e) => setScheduledCrawlLimit(Math.min(500, Math.max(1, Number(e.target.value) || 1)))}
+          onChange={(e) => setScheduledCrawlLimit(Math.min(MAX_CRAWL_LIMIT, Math.max(1, Number(e.target.value) || 1)))}
           disabled={!isTauri}
           className="h-9 w-24 rounded-md border border-slate-700 bg-slate-950 px-2 text-xs text-white outline-none focus:border-emerald-400 disabled:opacity-50"
         />

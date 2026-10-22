@@ -66,7 +66,7 @@ describe('trafficEvidence deep branches', () => {
         pages_may_be_truncated: true,
         pages: [
           { page: 'https://site.test/unique', clicks: 10, impressions: 100, ctr: 0.1, position: 2 },
-          { page: 'https://site.test/unique', clicks: 5, impressions: 50, ctr: 0.1, position: 3 }, // duplicate collision -> deleted!
+          { page: 'https://site.test/unique', clicks: 5, impressions: 50, ctr: 0.1, position: 3 }, // normalization collision -> aggregated
           { page: 'invalid url', clicks: 1, impressions: 1, ctr: 1, position: 1 },
           { page: 'https://other.test/ignore', clicks: 1, impressions: 1, ctr: 1, position: 1 },
         ],
@@ -76,7 +76,9 @@ describe('trafficEvidence deep branches', () => {
     expect(res.outOfScopeNodeIds).toContain('n1');
     expect(res.ambiguousNodeIds).toContain('n2');
     expect(res.ambiguousNodeIds).toContain('n3');
-    expect(res.uncertainNodeIds).toContain('n4');
+    expect(res.uncertainNodeIds).not.toContain('n4');
+    expect(res.matchedNodeIds).toContain('n4');
+    expect(res.nodes.find((node) => node.nodeId === 'n4')!.metrics).toEqual({ clicks: 15, impressions: 150, ctr: 0.1, position: 2.33 });
     expect(res.invalidRows).toBeGreaterThan(0);
     expect(res.ignoredRows).toBeGreaterThan(0);
   });

@@ -37,10 +37,17 @@ export const analyzeCitations = (pages: CrawledPageSummary[], articleUrls: Set<s
   return detail;
 };
 
-/** 0-100: article pages citing trusted sources, reduced by the share of dead checked links. Undefined without articles. */
+/** Ceiling while no outbound link was status-checked: the absence of dead links is then unmeasured. */
+export const UNVERIFIED_CITATION_CAP = 75;
+
+/** True when citations exist to score but no outbound link was status-checked (crawl without checkCrawlExternalLinks). */
+export const citationsUnverified = (detail: CitationDetail): boolean => detail.pagesAnalyzed > 0 && detail.checkedLinks === 0;
+
+/** 0-100: article pages citing trusted sources, reduced by share of dead checked links, capped while unverified. Undefined without articles. */
 export const citationScore = (detail: CitationDetail): number | undefined => {
   if (!detail.pagesAnalyzed) return undefined;
   const cited = detail.pagesWithTrusted / detail.pagesAnalyzed;
   const dead = detail.checkedLinks ? detail.deadLinks.length / detail.checkedLinks : 0;
-  return Math.round(Math.max(0, Math.min(1, cited * (1 - 0.5 * dead))) * 100);
+  const score = Math.round(Math.max(0, Math.min(1, cited * (1 - 0.5 * dead))) * 100);
+  return citationsUnverified(detail) ? Math.min(score, UNVERIFIED_CITATION_CAP) : score;
 };

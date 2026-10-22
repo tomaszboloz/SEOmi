@@ -4,6 +4,8 @@ use chrono::DateTime;
 use serde::{Deserialize, Serialize};
 use serde_json::Value;
 
+const MAX_SCHEDULED_CRAWL_PAGES: usize = 1_000_000;
+
 pub(super) const MAX_IDENTIFIER_LENGTH: usize = 80;
 pub(super) const MAX_RESULT_BYTES: usize = 256 * 1024 * 1024;
 pub(super) const MAX_EXECUTION_BYTES: usize = 256 * 1024;
@@ -101,8 +103,8 @@ pub(super) fn validate_manifest(
     validate_and_normalize_url(&task.url).map_err(|e| format!("Invalid scheduled URL: {e}"))?;
     if task.task_type == "site-crawl" {
         let limit = task.crawl_limit.unwrap_or(25);
-        if !(1..=500).contains(&limit) {
-            return Err("Scheduled crawl limit must be between 1 and 500 pages.".into());
+        if !(1..=MAX_SCHEDULED_CRAWL_PAGES).contains(&limit) {
+            return Err("Scheduled crawl limit must be between 1 and 1000000 pages.".into());
         }
     }
     DateTime::parse_from_rfc3339(&task.next_run_at)

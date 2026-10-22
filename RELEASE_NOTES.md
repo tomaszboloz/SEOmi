@@ -1,3 +1,22 @@
+# SEOmi 0.4.1 — release notes
+
+## Added
+
+- Search Console: every query and page row is now listed in a paginated table (25 / 50 / 100 / 250 rows per page) with sorting by phrase, clicks, impressions, CTR and position.
+- Crawl page limit: presets now go up to 50,000 pages and there is a "No limit" option (ceiling 1,000,000 pages); scheduled crawls accept the same range.
+- Footer: the Updates button checks for updates in place, shows the result, installs the update and offers a restart without opening Settings.
+- Crawl architecture map rebuilt on Cytoscape.js: sections as groups with collapse, hierarchy and force layouts, colour from the Site Focus TRS (HTTP status when there is none), URL search, status/depth/problem filters, a details panel and a table for screen readers.
+
+## Fixed
+
+- MCP server: meta tags with apostrophes and `<link>` tags with any attribute order are read correctly; nested `<article>` no longer truncates the content; `discovered_urls` counts every URL in scope and pages are audited with bounded concurrency; the DataForSEO budget reserves in-flight cost and writes its ledger atomically; the pinned DNS lookup falls back from IPv6 to a verified IPv4 address and rejects more special-purpose IPv6 ranges.
+- Search Console traffic rows that collide after URL normalisation are now summed (clicks, impressions, CTR, impression-weighted position) instead of both being dropped.
+- Entity trust: citations that were never checked no longer score 100 (capped at 75 and labelled "unverified"); YMYL is detected by document frequency over page titles.
+- Site Focus: footer and utility pages (careers, terms, cookies, advertising, FAQ, ...) no longer count as categories with double weight; one utility-page dictionary is shared with the topical diagnosis.
+- German umlauts fold consistently (ö to oe) so a manual topic typed without diacritics matches the page terms.
+- Test runs no longer print "Not implemented: navigation", help-entry and `act(...)` warnings; `sanitizeBrief` strips nested tags (CodeQL #34).
+
+
 # SEOmi 0.4.0 — release notes
 
 ## Added

@@ -169,7 +169,7 @@
       "urlTooLong": "The URL cannot exceed 2048 characters.",
       "urlInvalid": "Enter a complete URL beginning with http:// or https://.",
       "urlPublicOnly": "Schedules accept only a public HTTP(S) URL without credentials.",
-      "crawlLimit": "The scheduled crawl limit must be between 1 and 500 URLs.",
+      "crawlLimit": "The scheduled crawl limit must be between 1 and {{max}} URLs.",
       "maxReached": "A project can have at most {{count}} schedules.",
       "duplicate": "This URL already has a schedule in the project.",
       "auditFailed": "The audit failed."
@@ -1752,7 +1752,42 @@
     },
     "diagnosisFilter": "진단 범위: {{label}}",
     "clearDiagnosisFilter": "전체 그래프 보기",
-    "allTopics": "모든 토픽 ({{count}})"
+    "allTopics": "모든 토픽 ({{count}})",
+    "cy": {
+      "layoutLabel": "레이아웃",
+      "layoutHierarchy": "계층",
+      "layoutForce": "힘 기반",
+      "sectionsLabel": "URL 섹션",
+      "expandAll": "모두 펼치기",
+      "collapseAll": "모두 접기",
+      "highlightLabel": "URL 강조",
+      "highlightPlaceholder": "URL 또는 제목의 일부",
+      "matches": "일치: {{count}}",
+      "depthLabel": "깊이",
+      "depthAll": "모든 깊이",
+      "problemsOnly": "문제만",
+      "statusLabel": "HTTP 상태",
+      "colorTrs": "색상: 주제 관련도 (TRS)",
+      "colorStatus": "색상: HTTP 상태 (TRS 없음)",
+      "sizeHint": "크기 = 내부 인바운드 링크",
+      "mapAria": "URL 섹션별로 묶은 사이트 구조 대화형 지도",
+      "mapHelp": "섹션을 클릭하면 펼치거나 접고, 페이지를 클릭하면 상세 정보를 봅니다. 드래그로 이동하고 스크롤이나 핀치로 확대/축소합니다. 대형 사이트는 섹션이 접힌 상태로 시작합니다. 지도 아래에 같은 페이지의 표가 있습니다.",
+      "tooltip": "HTTP {{status}} · 깊이 {{depth}} · 인바운드 링크 {{inlinks}}개",
+      "detailsHint": "지도 또는 표에서 페이지를 선택하면 상세 정보가 표시됩니다.",
+      "detailsTitle": "페이지 상세",
+      "colUrl": "URL",
+      "colStatus": "HTTP 상태",
+      "colDepth": "깊이",
+      "colInlinks": "인바운드 링크",
+      "colTrs": "TRS",
+      "colSection": "섹션",
+      "colProblem": "문제",
+      "noTrs": "없음",
+      "yes": "예",
+      "no": "아니요",
+      "tableSummary": "페이지 표 ({{count}})",
+      "tableCaption": "상태, 깊이, 인바운드 링크, TRS, 섹션과 함께 구조 지도에 표시된 페이지"
+    }
   },
   "crawlDiff": {
     "fields": {
@@ -2512,7 +2547,8 @@
       "current-incomplete": "현재 실행 불완전",
       "path-key-collision": "중복 경로 키",
       "url-key-collision": "중복 URL 키"
-    }
+    },
+    "pageLimitUnlimited": "제한 없음"
   },
   "mcp": {
     "badge": "AI agent workflows",
@@ -3656,7 +3692,13 @@
       "currentQueries": "현재 기간에만 관측된 검색어: {{count}}",
       "baselinePages": "기준 기간에만 관측된 URL: {{count}}",
       "currentPages": "현재 기간에만 관측된 URL: {{count}}"
-    }
+    },
+    "sortBy": "{{column}} 기준 정렬",
+    "showingRows": "{{total}}행 중 {{from}}–{{to}}행",
+    "rowsPerPage": "페이지당 행 수",
+    "pagePrevious": "이전",
+    "pageNext": "다음",
+    "pageOf": "{{page}} / {{total}} 페이지"
   },
   "settings": {
     "close": "Close settings",
@@ -7036,7 +7078,8 @@
       "authorAlignment": "저자 주제 적합도",
       "citationQuality": "출처 품질",
       "transparency": "편집 투명성",
-      "noData": "해당 없음"
+      "noData": "해당 없음",
+      "unverified": "미검증"
     },
     "entities": {
       "title": "발행자와 저자",

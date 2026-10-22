@@ -169,7 +169,7 @@
       "urlTooLong": "The URL cannot exceed 2048 characters.",
       "urlInvalid": "Enter a complete URL beginning with http:// or https://.",
       "urlPublicOnly": "Schedules accept only a public HTTP(S) URL without credentials.",
-      "crawlLimit": "The scheduled crawl limit must be between 1 and 500 URLs.",
+      "crawlLimit": "The scheduled crawl limit must be between 1 and {{max}} URLs.",
       "maxReached": "A project can have at most {{count}} schedules.",
       "duplicate": "This URL already has a schedule in the project.",
       "auditFailed": "The audit failed."
@@ -1752,7 +1752,42 @@
     },
     "diagnosisFilter": "诊断范围：{{label}}",
     "clearDiagnosisFilter": "显示整个图",
-    "allTopics": "全部主题（{{count}}）"
+    "allTopics": "全部主题（{{count}}）",
+    "cy": {
+      "layoutLabel": "布局",
+      "layoutHierarchy": "层级",
+      "layoutForce": "力导向",
+      "sectionsLabel": "URL 分区",
+      "expandAll": "全部展开",
+      "collapseAll": "全部折叠",
+      "highlightLabel": "高亮 URL",
+      "highlightPlaceholder": "URL 或标题的一部分",
+      "matches": "匹配：{{count}}",
+      "depthLabel": "深度",
+      "depthAll": "所有深度",
+      "problemsOnly": "仅问题页",
+      "statusLabel": "HTTP 状态",
+      "colorTrs": "颜色：主题相关性 (TRS)",
+      "colorStatus": "颜色：HTTP 状态（无 TRS）",
+      "sizeHint": "大小 = 入站链接",
+      "mapAria": "按 URL 分区分组的交互式网站架构图",
+      "mapHelp": "点击分区可展开或折叠，点击页面查看详情；拖动平移，滚轮或双指缩放。大型网站默认折叠各分区。地图下方提供包含相同页面的表格。",
+      "tooltip": "HTTP {{status}} · 深度 {{depth}} · {{inlinks}} 个入站链接",
+      "detailsHint": "在地图或表格中选择页面以查看详情。",
+      "detailsTitle": "页面详情",
+      "colUrl": "URL",
+      "colStatus": "HTTP 状态",
+      "colDepth": "深度",
+      "colInlinks": "入站链接",
+      "colTrs": "TRS",
+      "colSection": "分区",
+      "colProblem": "问题",
+      "noTrs": "无",
+      "yes": "是",
+      "no": "否",
+      "tableSummary": "页面表格（{{count}}）",
+      "tableCaption": "架构图中显示的页面，含状态、深度、入站链接、TRS 与分区"
+    }
   },
   "crawlDiff": {
     "fields": {
@@ -2512,7 +2547,8 @@
       "current-incomplete": "当前运行不完整",
       "path-key-collision": "路径键重复",
       "url-key-collision": "URL 键重复"
-    }
+    },
+    "pageLimitUnlimited": "不限制"
   },
   "mcp": {
     "badge": "AI agent workflows",
@@ -3656,7 +3692,13 @@
       "currentQueries": "仅在当前时段观测到的查询：{{count}}",
       "baselinePages": "仅在基准时段观测到的URL：{{count}}",
       "currentPages": "仅在当前时段观测到的URL：{{count}}"
-    }
+    },
+    "sortBy": "按{{column}}排序",
+    "showingRows": "显示第 {{from}}–{{to}} 行，共 {{total}} 行",
+    "rowsPerPage": "每页行数",
+    "pagePrevious": "上一页",
+    "pageNext": "下一页",
+    "pageOf": "第 {{page}} / {{total}} 页"
   },
   "settings": {
     "close": "Close settings",
@@ -7036,7 +7078,8 @@
       "authorAlignment": "作者主题契合度",
       "citationQuality": "来源质量",
       "transparency": "编辑透明度",
-      "noData": "无"
+      "noData": "无",
+      "unverified": "未验证"
     },
     "entities": {
       "title": "发布者与作者",

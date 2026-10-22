@@ -1,3 +1,4 @@
+import { MAX_CRAWL_LIMIT } from "@/constants/crawlLimits";
 import { parseCrawlConfig } from '@/services/crawlContracts';
 import { readJsonStorage } from '@/services/storage';
 import type { InterruptedCrawl } from '../contracts';
@@ -28,7 +29,7 @@ export const normalizeInterruptedCrawl = (value: unknown): InterruptedCrawl | nu
     : startedAt;
   return {
     url: candidate.url,
-    limit: Math.max(1, Math.min(5000, Math.floor(candidate.limit))),
+    limit: Math.max(1, Math.min(MAX_CRAWL_LIMIT, Math.floor(candidate.limit))),
     config,
     environment,
     startedAt,

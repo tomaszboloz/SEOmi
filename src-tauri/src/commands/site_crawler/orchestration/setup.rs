@@ -5,8 +5,8 @@ use std::time::Instant;
 
 use super::super::retry::{RetryBudget, RetryContext};
 use super::super::{
-    control::CrawlControl, filter_validation::compile_filter_patterns, models::CrawlConfig,
-    scope::normalize_allowed_hosts, url_normalization::normalize_crawl_url,
+    constants::MAX_CRAWL_PAGES, control::CrawlControl, filter_validation::compile_filter_patterns,
+    models::CrawlConfig, scope::normalize_allowed_hosts, url_normalization::normalize_crawl_url,
 };
 use super::setup_client::build_crawler_client;
 use super::setup_config::{default_crawl_config, resolve_resume_urls};
@@ -79,7 +79,7 @@ impl CrawlSetup {
             .max_pages
             .or(max_pages)
             .unwrap_or(25)
-            .clamp(1, 10_000);
+            .clamp(1, MAX_CRAWL_PAGES);
         let max_depth = config.max_depth.unwrap_or(usize::MAX).min(100);
         let max_redirects = config.max_redirects.unwrap_or(10).min(50);
         let max_response_bytes = config

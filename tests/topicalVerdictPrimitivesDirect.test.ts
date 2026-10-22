@@ -1,8 +1,6 @@
 import { describe, expect, it } from 'vitest';
-import { HUB_COLOR, NO_TOPIC_COLOR, nodeColorsByUrl } from '@/components/Charts/crawlArchitecture/CrawlArchitectureD3Helpers';
-import { CLUSTER_COLORS } from '@/components/Charts/crawlArchitecture/CrawlArchitectureTypes';
 import { createCrawlPageFixture } from './fixtures/crawl';
-import type { DiagnosisDocument, TopicalDiagnosisReport } from '@/services/topicalDiagnosis/types';
+import type { DiagnosisDocument } from '@/services/topicalDiagnosis/types';
 import { listingNeighbour } from '@/services/topicalDiagnosis/pagination';
 import { topicalTerms, type TermStatistics } from '@/services/topicalDiagnosis/similarity';
 import { buildVerdicts, type VerdictContext } from '@/services/topicalDiagnosis/verdicts';
@@ -86,17 +84,5 @@ describe('direct topical diagnosis callable assertions', () => {
     expect(buildVerdicts(context([first, second], { contentLinks: false })).map((entry) => entry.code)).toEqual(['near-duplicate']);
   });
 
-  it('colors hubs, topic documents and documents outside topics', () => {
-    const diagnosis: TopicalDiagnosisReport = {
-      documents: [document('hub', 'https://example.test/', 'hub'), document('doc-1', 'https://example.test/a/'), document('doc-2', 'https://example.test/b/')],
-      areas: [], verdicts: [], noTerms: false, noContentLinks: false, truncated: false,
-      topics: [{ id: 'topic-1', label: 'Topic', labelSource: 'none', documentIds: ['doc-1'], areaIds: [] }],
-      stats: { pages: 3, skippedPages: 0, documents: 3, hubs: 1, utilities: 0, topics: 1, singletons: 1, languages: ['pl'], mergedPairs: 0 },
-    };
-    const colors = nodeColorsByUrl(diagnosis);
-    expect(colors.get('https://example.test/')).toBe(HUB_COLOR);
-    expect(colors.get('https://example.test/a/')).toBe(CLUSTER_COLORS[0]);
-    expect(colors.get('https://example.test/b/')).toBe(NO_TOPIC_COLOR);
-  });
 
 });

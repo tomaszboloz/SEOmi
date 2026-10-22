@@ -39,14 +39,17 @@ const MIN_POLISH_STEM_CHARS = 4;
 const primaryLanguage = (language: string | null | undefined): string =>
   (language ?? '').split(/[-_]/)[0].trim().toLowerCase();
 
+/** German umlauts become their digraphs, so "Größe" and a manual "Groesse" share one key. */
+const germanDigraphs = (term: string): string => term.normalize('NFC').replace(/[äÄ]/g, 'ae').replace(/[öÖ]/g, 'oe').replace(/[üÜ]/g, 'ue');
+
 /**
  * Comparison key for a semantic term: diacritics are folded and regular
  * Polish/English inflection is stripped for pages in those languages. The key
  * is an internal identity for clustering, never shown to users.
  */
 export const semanticTermKey = (term: string, language: string | null | undefined): string => {
-  const folded = normalizeSemanticText(term);
   const lang = primaryLanguage(language);
+  const folded = normalizeSemanticText(lang === 'de' ? germanDigraphs(term) : term);
   if (lang === 'pl') {
     const suffix = POLISH_SUFFIXES.find((candidate) =>
       folded.endsWith(candidate) && folded.length - candidate.length >= MIN_POLISH_STEM_CHARS);
@@ -114,7 +117,8 @@ export interface SemanticPageTermSource {
 export interface SemanticPageTermEntry { key: string; surface: string; observed: string }
 
 const semanticSurface = (value: string): string => value.normalize('NFKC').trim().toLowerCase();
-const semanticComparable = (value: string): string => normalizeSemanticText(value).replace(/[^\p{L}\p{N}]+/gu, '');
+// Letters stay unfolded: semanticTermKey folds them per language (German umlauts become digraphs).
+const semanticComparable = (value: string): string => value.normalize('NFKC').toLowerCase().replace(/[^\p{L}\p{N}]+/gu, '');
 
 /** One bounded, filtered inventory shared by every evidence consumer. */
 export const semanticPageTermEntries = (page: SemanticPageTermSource, limit = 40): SemanticPageTermEntry[] => {

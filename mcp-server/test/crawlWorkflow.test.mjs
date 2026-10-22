@@ -84,7 +84,7 @@ test('crawl reports explicit truncation when the page limit prevents queued URLs
 
   assert.equal(result.pages.length, 1);
   assert.equal(result.truncated, true);
-  assert.equal(result.discovered_urls, 2);
+  assert.equal(result.discovered_urls, 3);
 });
 
 test('crawl returns a structured root error instead of inventing an empty page', async () => {

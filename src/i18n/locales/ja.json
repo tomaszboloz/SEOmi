@@ -169,7 +169,7 @@
       "urlTooLong": "The URL cannot exceed 2048 characters.",
       "urlInvalid": "Enter a complete URL beginning with http:// or https://.",
       "urlPublicOnly": "Schedules accept only a public HTTP(S) URL without credentials.",
-      "crawlLimit": "The scheduled crawl limit must be between 1 and 500 URLs.",
+      "crawlLimit": "The scheduled crawl limit must be between 1 and {{max}} URLs.",
       "maxReached": "A project can have at most {{count}} schedules.",
       "duplicate": "This URL already has a schedule in the project.",
       "auditFailed": "The audit failed."
@@ -1752,7 +1752,42 @@
     },
     "diagnosisFilter": "診断の範囲: {{label}}",
     "clearDiagnosisFilter": "グラフ全体を表示",
-    "allTopics": "すべてのトピック（{{count}}）"
+    "allTopics": "すべてのトピック（{{count}}）",
+    "cy": {
+      "layoutLabel": "レイアウト",
+      "layoutHierarchy": "階層",
+      "layoutForce": "力学",
+      "sectionsLabel": "URL セクション",
+      "expandAll": "すべて展開",
+      "collapseAll": "すべて折りたたむ",
+      "highlightLabel": "URL をハイライト",
+      "highlightPlaceholder": "URL またはタイトルの一部",
+      "matches": "一致: {{count}}",
+      "depthLabel": "階層の深さ",
+      "depthAll": "すべての深さ",
+      "problemsOnly": "問題のみ",
+      "statusLabel": "HTTP ステータス",
+      "colorTrs": "色: トピック関連度 (TRS)",
+      "colorStatus": "色: HTTP ステータス（TRS なし）",
+      "sizeHint": "サイズ = 内部被リンク数",
+      "mapAria": "URL セクションごとにまとめたサイト構造のインタラクティブマップ",
+      "mapHelp": "セクションをクリックして展開・折りたたみ、ページをクリックして詳細を表示します。ドラッグで移動、スクロールまたはピンチで拡大縮小。大規模サイトではセクションが折りたたまれた状態で始まります。マップの下に同じページの表があります。",
+      "tooltip": "HTTP {{status}} · 深さ {{depth}} · 被リンク {{inlinks}} 件",
+      "detailsHint": "マップまたは表でページを選択すると詳細が表示されます。",
+      "detailsTitle": "ページの詳細",
+      "colUrl": "URL",
+      "colStatus": "HTTP ステータス",
+      "colDepth": "深さ",
+      "colInlinks": "被リンク",
+      "colTrs": "TRS",
+      "colSection": "セクション",
+      "colProblem": "問題",
+      "noTrs": "なし",
+      "yes": "はい",
+      "no": "いいえ",
+      "tableSummary": "ページ表（{{count}}）",
+      "tableCaption": "構造マップに表示されるページ（ステータス、深さ、被リンク、TRS、セクション付き）"
+    }
   },
   "crawlDiff": {
     "fields": {
@@ -2512,7 +2547,8 @@
       "current-incomplete": "現在の実行が不完全",
       "path-key-collision": "パスキーが重複",
       "url-key-collision": "URLキーが重複"
-    }
+    },
+    "pageLimitUnlimited": "無制限"
   },
   "mcp": {
     "badge": "AI agent workflows",
@@ -3656,7 +3692,13 @@
       "currentQueries": "現在の期間でのみ観測されたクエリ: {{count}}",
       "baselinePages": "基準期間でのみ観測されたURL: {{count}}",
       "currentPages": "現在の期間でのみ観測されたURL: {{count}}"
-    }
+    },
+    "sortBy": "{{column}}で並べ替え",
+    "showingRows": "{{total}}件中 {{from}}–{{to}}件を表示",
+    "rowsPerPage": "1ページの行数",
+    "pagePrevious": "前へ",
+    "pageNext": "次へ",
+    "pageOf": "{{page}} / {{total}} ページ"
   },
   "settings": {
     "close": "Close settings",
@@ -7036,7 +7078,8 @@
       "authorAlignment": "著者のテーマ適合度",
       "citationQuality": "情報源の品質",
       "transparency": "編集の透明性",
-      "noData": "なし"
+      "noData": "なし",
+      "unverified": "未検証"
     },
     "entities": {
       "title": "発行者と著者",
