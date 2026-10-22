@@ -1,5 +1,8 @@
 import { describe, expect, it } from 'vitest';
 import { isSemanticNoiseTerm, isSemanticTopicalStatus, normalizeSemanticText, semanticPageLanguage, semanticPageTermEntries, semanticTermIdentity, semanticTermKey, uniqueSemanticTerms } from '@/services/semanticText';
+import { manualKeys } from '@/services/siteFocus/coreTopic';
+import { termCoverage, tokens } from '@/services/topicalAudit/evidence';
+import { createCrawlPageFixture } from './fixtures/crawl';
 import foldFixtures from '@/constants/semanticFoldFixtures.json';
 
 describe('normalizeSemanticText', () => {
@@ -104,5 +107,34 @@ describe('semantic page helpers', () => {
     expect(semanticPageTermEntries({ http_status: 200, semantic_terms: ['coffee', 42 as unknown as string] })).toEqual([
       { key: 'und:coffee', surface: 'coffee', observed: 'coffee' },
     ]);
+  });
+});
+
+describe('one canonical key for typed and observed terms', () => {
+  const cases: Array<[string, string, string, string]> = [
+    ['pl', 'Żółć', 'zolc', 'żółć'],
+    ['de', 'Größe', 'Groesse', 'größe'],
+    ['de', 'Müller', 'Mueller', 'müller'],
+    ['es', 'Cañón', 'canon', 'cañón'],
+  ];
+  it.each(cases)('%s: %s matches %s in keys, identities and page inventories', (language, observed, typed, surface) => {
+    expect(semanticTermKey(typed, language)).toBe(semanticTermKey(observed, language));
+    expect(semanticTermIdentity(typed, language)).toBe(semanticTermIdentity(observed, language));
+    const entries = semanticPageTermEntries({ semantic_terms: [observed], semantic_language: language });
+    expect(entries[0].surface).toBe(surface);
+    expect(entries[0].key).toBe(semanticTermIdentity(typed, language));
+    expect(manualKeys(typed, language)).toEqual(manualKeys(observed, language));
+  });
+
+  it('leaves genuine ue/oe/ae sequences of non-German words untouched', () => {
+    expect(semanticTermKey('queue', 'en')).toBe('queue');
+    expect(semanticTermKey('Steuer', 'de')).toBe('steuer');
+  });
+
+  it('matches a manual query without diacritics against audited page terms', () => {
+    const page = createCrawlPageFixture({ semantic_terms: ['Größe', 'Żółć'], semantic_language: 'de' });
+    expect(termCoverage('Groesse', page)).toEqual({ expected: ['groesse'], matched: ['groesse'] });
+    expect(termCoverage('Größe', page)).toEqual({ expected: ['grosse'], matched: ['grosse'] });
+    expect(tokens('Żółć Größe')).toEqual(['zolc', 'grosse']);
   });
 });
