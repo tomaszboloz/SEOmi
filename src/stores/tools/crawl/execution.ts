@@ -1,3 +1,4 @@
+import { MAX_CRAWL_LIMIT } from "@/constants/crawlLimits";
 import { SiteCrawlResult, CrawlConfig, CrawlProgress, CrawlRunRecord } from '@/types';
 import { isStorageQuotaError, usesDedicatedCrawlStorage } from '@/services/crawlPersistence';
 import { createId } from '@/services/ids';
@@ -43,7 +44,7 @@ startSiteCrawl: async (url, limit, configPatch, environment = 'default', notifyC
     };
     const interruptedCrawl: InterruptedCrawl = {
       url: targetUrl,
-      limit: Math.max(1, Math.min(5000, Math.floor(maxLimit))),
+      limit: Math.max(1, Math.min(MAX_CRAWL_LIMIT, Math.floor(maxLimit))),
       config: persistedCrawlConfig,
       environment,
       startedAt: new Date().toISOString(),

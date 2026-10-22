@@ -169,7 +169,7 @@
       "urlTooLong": "The URL cannot exceed 2048 characters.",
       "urlInvalid": "Enter a complete URL beginning with http:// or https://.",
       "urlPublicOnly": "Schedules accept only a public HTTP(S) URL without credentials.",
-      "crawlLimit": "The scheduled crawl limit must be between 1 and 500 URLs.",
+      "crawlLimit": "The scheduled crawl limit must be between 1 and {{max}} URLs.",
       "maxReached": "A project can have at most {{count}} schedules.",
       "duplicate": "This URL already has a schedule in the project.",
       "auditFailed": "The audit failed."
@@ -2512,7 +2512,8 @@
       "current-incomplete": "التشغيل الحالي غير مكتمل",
       "path-key-collision": "مفتاح مسار مكرر",
       "url-key-collision": "مفتاح URL مكرر"
-    }
+    },
+    "pageLimitUnlimited": "بدون حد"
   },
   "mcp": {
     "badge": "AI agent workflows",

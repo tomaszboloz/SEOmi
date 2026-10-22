@@ -169,7 +169,7 @@
       "urlTooLong": "Adres URL nie może przekraczać 2048 znaków.",
       "urlInvalid": "Podaj pełny adres URL zaczynający się od http:// lub https://.",
       "urlPublicOnly": "Harmonogram obsługuje wyłącznie publiczny adres HTTP(S) bez danych logowania w URL.",
-      "crawlLimit": "Limit crawla w harmonogramie musi mieścić się w zakresie 1–500 URL.",
+      "crawlLimit": "Limit crawla w harmonogramie musi mieścić się w zakresie 1–{{max}} URL.",
       "maxReached": "Projekt może mieć maksymalnie {{count}} harmonogramów.",
       "duplicate": "Ten adres URL ma już harmonogram w tym projekcie.",
       "auditFailed": "Audyt zakończył się błędem."
@@ -2512,7 +2512,8 @@
       "current-incomplete": "bieżący run niekompletny",
       "path-key-collision": "zduplikowany klucz ścieżki",
       "url-key-collision": "zduplikowany klucz URL"
-    }
+    },
+    "pageLimitUnlimited": "Bez limitu"
   },
   "mcp": {
     "badge": "Workflowy agentów AI",

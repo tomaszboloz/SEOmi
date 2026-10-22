@@ -1,4 +1,5 @@
 import { Layers, Play, Loader2 } from "lucide-react";
+import { CRAWL_LIMIT_PRESETS, isUnlimitedCrawlLimit } from "@/constants/crawlLimits";
 
 import type { useSiteAuditSession } from './useSiteAuditSession';
 
@@ -31,9 +32,9 @@ return (<form
             onChange={(e) => setSelectedLimit(Number(e.target.value))}
             className="w-full bg-slate-950/80 border border-slate-700/80 rounded-lg px-3 py-2.5 text-sm text-slate-300 focus:outline-none focus:border-emerald-500 transition cursor-pointer"
           >
-            {[25, 50, 100, 250, 500].map((limit) => (
+            {CRAWL_LIMIT_PRESETS.map((limit) => (
               <option key={limit} value={limit}>
-                {t("siteAudit.pageLimitOption", { count: limit })}
+                {isUnlimitedCrawlLimit(limit) ? t("siteAudit.pageLimitUnlimited") : t("siteAudit.pageLimitOption", { count: limit })}
               </option>
             ))}
           </select>

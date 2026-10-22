@@ -1,4 +1,5 @@
 import type { ScheduledAudit, ScheduledTaskType, ScheduledAuditExecution } from './types';
+import { MAX_CRAWL_LIMIT } from '@/constants/crawlLimits';
 export const MAX_SCHEDULES_PER_PROJECT = 20;
 
 export const validProjectId = (projectId: string) => /^[a-zA-Z0-9-]{1,80}$/.test(projectId);
@@ -23,7 +24,7 @@ export const parseSchedules = (value: unknown): ScheduledAudit[] => {
       && Number.isFinite(Date.parse(item.nextRunAt))
   )).map((item) => {
     const taskType: ScheduledTaskType = item.taskType === 'site-crawl' ? 'site-crawl' : 'page-audit';
-    const crawlLimit = Number.isFinite(item.crawlLimit) ? Math.min(500, Math.max(1, Math.trunc(item.crawlLimit!))) : undefined;
+    const crawlLimit = Number.isFinite(item.crawlLimit) ? Math.min(MAX_CRAWL_LIMIT, Math.max(1, Math.trunc(item.crawlLimit!))) : undefined;
     const runHistory = Array.isArray(item.runHistory)
       ? item.runHistory.filter((entry): entry is ScheduledAuditExecution => Boolean(
         entry && typeof entry.startedAt === 'string' && typeof entry.completedAt === 'string'
