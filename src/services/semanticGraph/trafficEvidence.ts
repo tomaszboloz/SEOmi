@@ -1,5 +1,6 @@
 import type { GscMetricRow, GscPerformanceData, GscPerformanceFilters } from '@/types';
 import type { TrafficDateRange, TrafficPropertyScope } from './trafficEvidenceNormalization';
+import { mergeGscPageRows } from './trafficMerge';
 import { normalizeTrafficDateRange, normalizeTrafficFilters, normalizeTrafficMetric, normalizeTrafficProperty, normalizeTrafficUrl, sameTrafficFilters, trafficPropertyMatchesUrl } from './trafficEvidenceNormalization';
 
 export interface TrafficGraphNode {
@@ -116,8 +117,8 @@ const joinRows = (initial: TrafficNodeEvidence[], data: GscPerformanceData, meta
     if (invalidUrls.has(url)) { invalidRows += 1; return; }
     const metrics = rowMetrics(row);
     if (!metrics) { rows.delete(url); invalidUrls.add(url); invalidRows += 1; return; }
-    if (rows.has(url)) { rows.delete(url); invalidUrls.add(url); invalidRows += 1; return; }
-    rows.set(url, metrics);
+    const previous = rows.get(url);
+    rows.set(url, previous ? mergeGscPageRows(previous, metrics) : metrics);
   });
   const nodes = initial.map((node) => {
     const matches = [...new Set(node.urls.flatMap((url) => aliases.get(url) ?? []))];

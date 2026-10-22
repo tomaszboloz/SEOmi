@@ -97,10 +97,21 @@ describe('semantic graph traffic evidence', () => {
     expect(result.ambiguousNodeIds).toEqual(['page-2', 'page-3']);
   });
 
-  it('does not restore a row after a duplicate URL has invalidated its evidence', () => {
+  it('aggregates rows that collide after URL normalization instead of dropping them', () => {
     const result = buildTrafficEvidence(request({ gscData: baseData({ pages: [
       { page: 'https://example.com/missing', clicks: 1, impressions: 2, ctr: 0.5, position: 2 },
-      { page: 'https://example.com/missing', clicks: 2, impressions: 4, ctr: 0.5, position: 2 },
+      { page: 'https://EXAMPLE.com/missing#top', clicks: 2, impressions: 4, ctr: 0.5, position: 2 },
+      { page: 'https://example.com/missing', clicks: 3, impressions: 6, ctr: 0.5, position: 2 },
+    ] }) }));
+    expect(result.nodes.find((node) => node.nodeId === 'page-b')).toMatchObject({ observed: true, observation: 'gsc', metrics: { clicks: 6, impressions: 12, ctr: 0.5, position: 2 } });
+    expect(result.invalidRows).toBe(0);
+    expect(result.uncertainNodeIds).toEqual([]);
+  });
+
+  it('does not restore a row after an invalid-metric row poisoned its URL', () => {
+    const result = buildTrafficEvidence(request({ gscData: baseData({ pages: [
+      { page: 'https://example.com/missing', clicks: 1, impressions: 2, ctr: 0.5, position: 2 },
+      { page: 'https://example.com/missing', clicks: -1, impressions: 4, ctr: 0.5, position: 2 },
       { page: 'https://example.com/missing', clicks: 3, impressions: 6, ctr: 0.5, position: 2 },
     ] }) }));
     expect(result.nodes.find((node) => node.nodeId === 'page-b')).toMatchObject({ observed: false, observation: 'missing', metrics: { clicks: null } });
