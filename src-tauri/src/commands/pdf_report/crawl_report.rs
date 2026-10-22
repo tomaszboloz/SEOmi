@@ -1,6 +1,8 @@
 //! Styled crawl report built on the layout engine.
 
 mod agg;
+mod aio_tables;
+mod authority_tables;
 mod cover;
 mod data;
 mod detail_tables;
@@ -14,6 +16,8 @@ mod metrics;
 mod pages;
 mod recs;
 mod run_tables;
+mod sec_aio;
+mod sec_authority;
 mod sec_dupes;
 mod sec_extra;
 mod sec_focus;
@@ -25,8 +29,10 @@ mod sec_nav;
 mod sec_redirects;
 mod sec_robots;
 mod sec_schema;
+mod sec_trust;
 mod strings;
 mod tables;
+mod trust_tables;
 
 #[cfg(test)]
 mod fixture;
@@ -37,6 +43,10 @@ mod tests;
 #[cfg(test)]
 mod tests_agg;
 #[cfg(test)]
+mod tests_aio;
+#[cfg(test)]
+mod tests_authority;
+#[cfg(test)]
 mod tests_data;
 #[cfg(test)]
 mod tests_focus;
@@ -46,6 +56,8 @@ mod tests_focus_more;
 mod tests_more;
 #[cfg(test)]
 mod tests_sections;
+#[cfg(test)]
+mod tests_trust;
 
 use super::audit_report::ctx::{field, pretty_time};
 use super::layout::doc::{Chrome, Doc, CONTENT_W, MARGIN};
@@ -55,9 +67,9 @@ use serde_json::Value;
 use strings::{report as s, t, tf};
 use tables::Table;
 
-fn coverage(tables: &[Table], focus: Option<&Table>) -> Table {
-    let mut rows: Vec<Vec<String>> = focus
-        .into_iter()
+fn coverage(tables: &[Table], sections: &[Table]) -> Table {
+    let mut rows: Vec<Vec<String>> = sections
+        .iter()
         .chain(tables)
         .map(|table| {
             let count = table.rows.len() + table.omitted;
@@ -107,14 +119,25 @@ pub fn crawl_pdf(run: &Value) -> Vec<u8> {
     if detail_tables::allows(run, "issues") {
         doc.data_table(&pages::critical_table(c.pages));
     }
-    let focus_table = sec_focus::present(run).then(|| {
+    let mut sections = Vec::new();
+    if sec_focus::present(run) {
         doc.crawl_focus(&run["focus"]);
-        focus_tables::pages(&run["focus"])
-    });
+        sections.push(focus_tables::pages(&run["focus"]));
+    }
+    if sec_authority::present(run) {
+        doc.crawl_authority(&run["authority"]);
+    }
+    if sec_aio::present(run) {
+        doc.crawl_aio(&run["aio"]);
+    }
+    if sec_trust::present(run) {
+        doc.crawl_trust(&run["trust"]);
+        sections.push(trust_tables::findings(&run["trust"]));
+    }
     doc.heading(t(s::DETAILS));
     let details = detail_tables::detail_tables(&c);
     details.iter().for_each(|table| doc.data_table(table));
-    doc.data_table(&coverage(&details, focus_table.as_ref()));
+    doc.data_table(&coverage(&details, &sections));
     doc.paragraph(MARGIN, CONTENT_W, Style::CAPTION, t(s::METHOD_FULL));
     doc.finish()
 }

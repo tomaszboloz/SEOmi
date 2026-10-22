@@ -1,6 +1,6 @@
 import { useAuthStore } from '@/stores/authStore';
 import { describe, expect, it, vi } from 'vitest';
-import { render, screen, fireEvent } from '@testing-library/react';
+import { act, render, screen, fireEvent } from '@testing-library/react';
 import { AIAssistantModalHeader } from '@/components/AI/assistant/AIAssistantModalHeader';
 import { AIAssistantEngineSelect } from '@/components/AI/assistant/AIAssistantEngineSelect';
 import { AIAssistantApiKeyInput } from '@/components/AI/assistant/AIAssistantApiKeyInput';
@@ -59,7 +59,7 @@ describe('AIAssistant modular architecture', () => {
     expect(useAuthStore.getState().model).toBe('gpt-4o-mini');
   });
 
-  it('renders AIAssistantApiKeyInput and responds to input and modal trigger', () => {
+  it('renders AIAssistantApiKeyInput and responds to input and modal trigger', async () => {
     const handleKeyChange = vi.fn();
     const openSub = vi.fn();
     const setInstruction = vi.fn();
@@ -85,7 +85,7 @@ describe('AIAssistant modular architecture', () => {
     expect((keyInput as HTMLInputElement).value).toBe('');
     fireEvent.change(keyInput, { target: { value: 'sk-new' } });
     expect(handleKeyChange).not.toHaveBeenCalled();
-    fireEvent.keyDown(keyInput, { key: 'Enter' });
+    await act(async () => { fireEvent.keyDown(keyInput, { key: 'Enter' }); });
     expect(handleKeyChange).toHaveBeenCalledExactlyOnceWith('sk-new');
 
     const instructionInput = screen.getByLabelText('ai.customInstruction');

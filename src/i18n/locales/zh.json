@@ -2234,7 +2234,10 @@
       "frames": "框架",
       "custom-search": "自定义搜索",
       "semantic": "语义分析",
-      "focus": "站点聚焦度"
+      "focus": "站点聚焦度",
+      "authority": "主题权威度",
+      "aio": "AI 就绪度",
+      "trust": "实体信任度"
     },
     "environmentStaging": "test/staging",
     "environmentProduction": "production",
@@ -3049,7 +3052,10 @@
       "validation": "HTML 验证",
       "performance": "性能",
       "exports": "导出",
-      "focus": "站点聚焦度"
+      "focus": "站点聚焦度",
+      "authority": "主题权威",
+      "aio": "AI 就绪度",
+      "trust": "实体信任度"
     },
     "groups": {
       "core": "概览",
@@ -5821,6 +5827,172 @@
           "thin-subtopic": "内容单薄的子主题“{{0}}”:仅有 {{1}}% 的页面涉及(共 {{2}} 个页面)。相关词:{{3}}。",
           "competitor-terms": "竞争对手使用而你的站点缺失的词:{{3}}。"
         }
+      },
+      "authority": {
+        "title": "主题权威度",
+        "intro": "网站相对市场对核心主题覆盖得多完整、多深入。分数来自已保存的运行结果和缓存的参考图谱，不会重新抓取页面。",
+        "scoreTitle": "Topical Authority Score",
+        "legend": "TAS = 0.35 覆盖率 + 0.30 实体深度 + 0.25 孤岛内聚 + 0.10 时效，并按 Site Focus Score 缩放（0.7 至 1.0）。",
+        "kTcr": "主题覆盖率",
+        "kCdes": "实体深度",
+        "kSilc": "孤岛内聚",
+        "kCvff": "时效",
+        "unavailable": "不适用",
+        "noReference": "该项目未构建参考图谱，因此未衡量覆盖率与深度，也未计算 TAS。",
+        "reference": "参考图谱：来自 {{2}} 个竞争对手（{{3}}）的 {{1}} 个支柱、{{0}} 个子主题。",
+        "quadrant": {
+          "dominant_authority": "主导权威",
+          "boutique_specialist": "精品专家型",
+          "diluted_giant": "被稀释的巨头",
+          "unfocused_generalist": "缺乏焦点的泛化者"
+        },
+        "warning": {
+          "empty-authority": "空洞权威：涉及许多主题，但平均深度很低。发布新内容前请先深化现有页面。",
+          "template-duplicates": "模板克隆页已并入最强页面：不会提高覆盖率，还会浪费抓取预算。",
+          "no-dates": "未找到发布或更新日期，因此未衡量时效。",
+          "no-links": "分析页面之间未发现正文内链，因此内聚度仅依据孤立页面。"
+        },
+        "tCoverage": "各支柱覆盖率",
+        "colPillar": "支柱",
+        "colCoverage": "覆盖率",
+        "colGaps": "缺失子主题",
+        "tGaps": "内容缺口",
+        "colGap": "缺失子主题",
+        "colLevel": "严重程度",
+        "tCannibal": "语义内部竞争",
+        "colCanonical": "保留页面",
+        "colPages": "页面数",
+        "tRecs": "主题扩展计划",
+        "tBench": "与头部竞争对手的主题缺口矩阵",
+        "level": {
+          "critical": "关键",
+          "high": "较高",
+          "medium": "中等"
+        },
+        "rec": {
+          "fill-gaps": "填补“{{0}}”的缺口：缺少 {{1}} 个子主题",
+          "merge-cannibalized": "合并 {{0}} 组相互竞争的页面",
+          "fix-linking": "修复内部链接：{{0}} 个孤立页面，{{1}} 条指向无关页面的链接",
+          "deepen-shallow": "深化 {{0}} 个覆盖较浅的子主题",
+          "refresh-stale": "更新 {{0}} 个超过一年未更新的页面"
+        }
+      },
+      "aio": {
+        "title": "AI Overviews 与 RAG 就绪度",
+        "intro": "AI 回答引擎提取并引用你页面段落的难易程度。得分综合了自成一体的段落（45%）、事实密度（35%）和可提取的结构（20%）。",
+        "scoreTitle": "AI 就绪度得分",
+        "legend": "分级：90-100 优秀，75-89 良好，60-74 中等，40-59 较弱，0-39 危急。",
+        "kSelf": "自成一体",
+        "kSpo": "事实密度",
+        "kExtract": "可提取性",
+        "kScored": "已评分页面",
+        "nSelf": "可独立理解的段落",
+        "nSpo": "主谓宾事实",
+        "nExtract": "表格、列表、标题",
+        "nScored": "已跳过 {{0}} 个页面",
+        "noteBasic": "{{0}} 的语言规则较为基础：该语言的代词和事实检测精度较低。",
+        "tPages": "按 AI 就绪度排序的页面",
+        "pagesIntro": "最多 25 个页面，得分最低的在前。",
+        "colScore": "得分",
+        "colSelf": "自成一体",
+        "colSpo": "事实",
+        "colExtract": "结构",
+        "colChunks": "分块",
+        "tPassages": "最薄弱的段落",
+        "passagesIntro": "RAG 索引难以引用的段落及发现的问题。",
+        "colHeading": "页面与标题",
+        "colExcerpt": "段落",
+        "colIssues": "问题",
+        "percent": "{{0}}%",
+        "band": {
+          "excellent": "就绪度优秀",
+          "good": "就绪度良好",
+          "moderate": "就绪度中等",
+          "weak": "就绪度较弱",
+          "critical": "就绪度危急"
+        },
+        "issue": {
+          "dangling-pronoun": "指代不清",
+          "no-answer-first": "开头没有直接回答",
+          "filler-opening": "开头空洞",
+          "no-facts": "缺少具体事实",
+          "too-long": "对单个分块来说太长"
+        }
+      },
+      "trust": {
+        "title": "实体信任度（E-E-A-T）",
+        "intro": "网站发布者、作者和来源的可验证程度。得分来自已保存的运行结果，不会重新获取任何页面。",
+        "scoreTitle": "实体信任得分",
+        "legend": "等级：75-100 高，60-74 足够，40-59 弱，0-39 严重。",
+        "kSchema": "实体图谱",
+        "kAuthor": "作者契合度",
+        "kCitation": "来源质量",
+        "kTransparency": "透明度",
+        "kArticles": "文章页面",
+        "kAuthors": "作者实体",
+        "nLayer": "得分 0-100",
+        "nNoData": "此次抓取无数据",
+        "nArticles": "共抓取 {{0}} 个",
+        "nAuthors": "{{0}} 个带 sameAs",
+        "ymylNote": "YMYL 类别：{{0}}。{{1}}% 的文章没有署名作者或审核者。",
+        "tAuthors": "作者实体",
+        "authorsIntro": "在结构化数据中找到的作者，含 sameAs 链接及与核心主题的契合度。",
+        "colAuthor": "作者",
+        "colArticles": "文章数",
+        "colSameAs": "sameAs",
+        "colAlignment": "契合度",
+        "generic": "{{0}}（匿名署名）",
+        "tPages": "信任页面",
+        "pagesIntro": "体现编辑和公司透明度的页面。",
+        "colPage": "页面",
+        "colState": "状态",
+        "found": "已找到：{{0}}",
+        "missing": "缺失",
+        "tFindings": "信任问题",
+        "findingsIntro": "按严重程度排序；请先修复严重事项。",
+        "colSeverity": "严重程度",
+        "colFinding": "问题",
+        "level": {
+          "strong": "信任度高",
+          "adequate": "信任度足够",
+          "weak": "信任度弱",
+          "critical": "信任存在严重缺口"
+        },
+        "severity": {
+          "critical": "严重",
+          "warning": "警告",
+          "info": "信息"
+        },
+        "kind": {
+          "editorial": "编辑政策",
+          "about": "关于我们",
+          "contact": "联系方式",
+          "registry": "公司注册信息"
+        },
+        "ymyl": {
+          "health": "健康",
+          "finance": "金融",
+          "legal": "法律"
+        },
+        "find": {
+          "ymyl-unattributed": "YMYL 主题下有 {{0}} 篇文章（{{1}}%）没有署名作者或审核者。",
+          "ymyl-no-reviewer": "{{0}} 篇医学文章均未声明审核者（reviewedBy）。",
+          "no-bylines": "{{0}} 篇文章均未在结构化数据中声明作者。",
+          "generic-author": "有 {{0}} 篇文章以匿名方式署名。",
+          "org-missing": "结构化数据中未找到 Organization 实体。",
+          "org-no-same-as": "发布者 {{0}} 没有 sameAs 链接。",
+          "author-no-same-as": "{{0}} 位作者没有 sameAs 链接（{{1}}）。",
+          "author-no-id": "{{0}} 位作者没有稳定的 @id。",
+          "author-off-topic": "{{0}} 的资料与核心主题的契合度仅为 {{1}}%。",
+          "low-citations": "{{1}} 个文章页面中只有 {{0}}% 引用了可信来源。",
+          "dead-citations": "{{0}} 个出站链接返回错误。",
+          "missing-editorial": "未找到编辑政策或事实核查页面。",
+          "missing-contact": "未找到联系页面。",
+          "missing-registry": "未找到公司注册信息或法律声明页面。",
+          "missing-about": "未找到“关于我们”页面。",
+          "missing-dates": "只有 {{0}}% 的文章显示了修改或审核日期。",
+          "no-articles": "未检测到文章页面；未对作者和引用层级评分。"
+        }
       }
     },
     "recs": {
@@ -6056,6 +6228,132 @@
         "what": "建议的目标:至少 80 分;若前 3 名竞争对手的平均分更高,则取该平均分。",
         "why": "把对比结果变成一个可以努力达成的数字。",
         "action": "把它作为规划目标。\n完成修复后重新运行基准,查看变化。"
+      }
+    },
+    "authority": {
+      "tas": {
+        "title": "Topical Authority Score",
+        "what": "0-100 分，衡量网站相对市场对核心主题覆盖得多完整、多深入、多连贯。综合主题覆盖（35%）、实体深度（30%）、孤岛内聚（25%）和时效（10%），再按 Site Focus Score 缩放。",
+        "why": "SFS 只衡量纯度。只有三篇完美文章的网站 SFS 很高，但因为只覆盖领域的一小部分，权威度几乎为零。TAS 衡量您覆盖了领域的多少。",
+        "action": "目标是 SFS 与 TAS 都达到 80 以上。SFS 高而 TAS 低：增加内容；TAS 高而 SFS 低：清理或拆分无关板块。先做扩展计划中的第一项。"
+      },
+      "tcr": {
+        "title": "主题覆盖率（TCR）",
+        "what": "网站用专门且切题的页面覆盖的市场子主题占比。每个子主题按重要性加权，明确匹配计全分，部分匹配计一半。",
+        "why": "搜索引擎会把能回答领域内全部问题的网站视为权威来源。缺口会把访客和排名信号让给竞争对手。",
+        "action": "高于 80% 为权威完整；低于 40% 为知识零散。打开覆盖图谱，筛选缺口，优先发布最重要的缺失子主题。"
+      },
+      "esd": {
+        "title": "实体深度",
+        "what": "检查页面是否真正覆盖其子主题：头部页面使用的概念和属性、在专属标题下回答的用户问题，以及原创内容的多少。",
+        "why": "缺少领域关键概念的长文会输给更短但更完整的来源。篇幅本身不算数。",
+        "action": "打开覆盖较浅的子主题：补充缺失的实体和属性，在独立 H2 下回答列出的问题，并加入竞争对手没有的数据或表格。"
+      },
+      "scs": {
+        "title": "孤岛内聚度",
+        "what": "衡量同一主题的文章通过内链联系得多紧密：支柱页与文章双向链接、描述性锚文本、没有孤立页面，专业页面不链接到无关页面。",
+        "why": "孤立页面既不传递也不接收主题权威。“点击这里”之类的锚文本没有信息，只计十分之一权重。",
+        "action": "从支柱页和相关文章链接每个孤立页面，使用描述目标的锚文本（如“糖尿病神经病变症状”），并移除指向无关页面的链接。"
+      },
+      "matrix": {
+        "title": "SFS × TAS 矩阵",
+        "what": "按纯度（SFS，横轴）与完整度（TAS，纵轴）定位网站。四个象限：主导权威、精品专家型、被稀释的巨头、缺乏焦点的泛化者。",
+        "why": "为什么聚焦高而权威低？五篇完美的糖尿病文章 SFS 为 95，TAS 却只有 14：没有跑题内容，但缺少 90% 的领域知识。",
+        "action": "保持 SFS 在 80 以上，同时新增集群，把 TAS 提升到 80 以上。高亮象限会告诉您应扩展、清理还是重构。"
+      },
+      "cannibalization": {
+        "title": "语义内部竞争",
+        "what": "您的两个或多个页面回答同一搜索意图：内容与标题几乎相同（余弦相似度 ≥ 88%），或都完整覆盖同一参考子主题。",
+        "why": "内链信号和相关性被重复页面分摊，因此没有一个页面能进入前列。",
+        "action": "保留最强页面，把独有内容并入，其余做 301 重定向并更新内链。发布前用草稿检查，避免产生新的重叠。"
+      }
+    },
+    "aio": {
+      "aioReadiness": {
+        "title": "AI 就绪度得分（AIO-R）",
+        "what": "以 0-100 衡量 AI 回答引擎（Google AI Overviews、Perplexity、Copilot）提取并引用你页面段落的难易程度。综合了自成一体的段落（45%）、事实密度（35%）和可提取的结构（20%）。",
+        "why": "AI 引擎会把页面切分为分块，只引用能回答问题的那一块。含糊或依赖上下文的段落会被忽略。",
+        "action": "打开最薄弱的段落并修复列出的问题。\n以答案优先的方式改写，使用明确的名称和数字。",
+        "example": "标题为“正常血糖是多少？”的章节若以“这取决于许多因素”开头，得分会很低。"
+      },
+      "selfContainment": {
+        "title": "自成一体",
+        "what": "段落脱离页面后是否仍然成立：明确写出主语，不以“它”“这”或“如上所述”开头。",
+        "why": "分块是单独索引的。悬空的代词会让模型缺少主语，分块能匹配的问题就更少。",
+        "action": "把段落开头的“它”“这”换成真实名称。\n把答案放在每个标题下的前 40-60 个词内。",
+        "example": "“这个值应保持在 140 以下。”改为“餐后血糖应保持在 140 mg/dl 以下。”"
+      },
+      "spoDensity": {
+        "title": "事实密度",
+        "what": "每 100 个词中有多少条清晰的主谓宾事实，例如“空腹血糖为 70-99 mg/dl”。目标约为每 100 词 3 条。",
+        "why": "模型引用可验证的陈述。空洞的文字没有可提取的内容。",
+        "action": "把含糊的句子改成含主语、动词和数值的陈述。\n有单位和数字时请补上。",
+        "example": "“许多因素都很重要”没有事实。“糖化血红蛋白低于 7% 是常见的治疗目标”则有事实。"
+      },
+      "extractability": {
+        "title": "可提取性",
+        "what": "页面是否使用解析器容易提取的结构：表格、编号列表、定义列表以及清晰的 H2/H3 大纲。",
+        "why": "生成式引擎更倾向于用表格和步骤列表组织答案，因为它们的含义明确。",
+        "action": "对比用表格呈现，流程用编号列表呈现。\n把 H2/H3 标题写成人们会问的问题。",
+        "example": "写成一个长段落的分步指南，得分低于同一指南改写成有序列表。"
+      },
+      "answerFirst": {
+        "title": "答案优先",
+        "what": "标题下的前 40-60 个词应直接回答标题，写明主语并给出事实。",
+        "why": "RAG 检索会把问题与分块开头比较。冗长的开场会降低匹配度。",
+        "action": "先写直接答案，再写背景。\n在第一句重复标题中的关键词。",
+        "example": "标题“CGM 传感器能用多久？”之后写“CGM 传感器可用 10-15 天，视型号而定。”"
+      },
+      "chunking": {
+        "title": "分块模拟",
+        "what": "SEOmi 按 RAG 索引的方式切分页面：每个 H2/H3 章节一个分块，较长章节按约 300 个 token 的窗口拆分。",
+        "why": "你看到的就是检索系统看到的页面：一组彼此独立、各自被评估的段落。",
+        "action": "查看每个薄弱段落的分块得分。\n让章节足够短，能放进一个分块。",
+        "example": "900 个 token 的章节会变成约三个分块，只有第一个紧跟在标题下。"
+      }
+    },
+    "trust": {
+      "trustScore": {
+        "title": "实体信任得分",
+        "what": "0 到 100 的得分，表示搜索引擎能在多大程度上验证谁发布并撰写了你的内容。它是四个层级的平均值：实体图谱、作者主题契合度、来源质量和编辑透明度。",
+        "why": "在健康、金融和法律主题中，仅有主题聚焦是不够的。缺少可验证作者和发布者的页面很少能进入前列。",
+        "action": "先看列表中的严重事项。\n修复最低的层级，然后重新抓取以查看得分变化。"
+      },
+      "schemaGraph": {
+        "title": "实体图谱（JSON-LD）",
+        "what": "检查结构化数据是否将发布者和每位作者标明为带有稳定 @id 和 sameAs 链接的实体，以及文章是否包含作者、日期、审核者和引用。",
+        "why": "实体相互关联后，搜索引擎可以把你的作者与已知的人物和组织对应起来，而不是只靠文本猜测。",
+        "action": "添加带 @id 的 Organization 和 Person 标记。\n用 sameAs 把每位人员和发布者链接到 Wikidata、ORCID、LinkedIn 或官方注册库。\n使用作者列表下方的 JSON-LD 生成器。"
+      },
+      "authorAlignment": {
+        "title": "作者主题契合度",
+        "what": "将每位作者声明的专业能力（职位、knowsAbout 和个人主页）与网站的核心主题进行比较。",
+        "why": "一篇关于胰岛素治疗的文章如果由营销文案撰稿人署名，专业性信号就很弱。",
+        "action": "把文章分配给资料与主题相符的作者。\n在 Person 标记中添加 jobTitle 和 knowsAbout。\n为每位作者发布个人主页。"
+      },
+      "citationQuality": {
+        "title": "来源质量",
+        "what": "显示有多少文章页面链接到 .gov、.edu、PubMed、NCBI、WHO 或学术出版社等可信来源，以及有多少出站链接已失效。",
+        "why": "引用一手来源表明观点可以验证。失效的引用会削弱这一信号。",
+        "action": "在每篇专业文章中添加一手来源的引用。\n替换或删除失效的出站链接。\n在“链接”标签页检查外部链接以刷新状态码。"
+      },
+      "transparency": {
+        "title": "编辑透明度",
+        "what": "查找编辑政策、“关于我们”页面、联系页面、公司注册信息，以及文章上可见的修改或审核日期。",
+        "why": "读者和搜索引擎需要知道网站背后是谁，以及内容如何核查。",
+        "action": "发布编辑与事实核查政策。\n添加联系方式和公司注册信息。\n在每篇文章上显示最近更新日期。"
+      },
+      "ymyl": {
+        "title": "YMYL 主题",
+        "what": "Your Money or Your Life：健康、金融和法律等主题，错误信息可能伤害读者。",
+        "why": "搜索质量指南对这些主题提出最高的信任要求，因此缺少作者或审核者属于严重缺口。",
+        "action": "每篇文章都标明合格的作者。\n医学或法律内容请添加具备资质的审核者。\n引用一手来源。"
+      },
+      "sameAs": {
+        "title": "sameAs 链接",
+        "what": "schema.org 属性，用于从某个人或组织指向其他地方的同一实体：Wikidata、ORCID、LinkedIn 或官方注册库。",
+        "why": "它让搜索引擎能够确认你的作者就是具备这些资质的真实人物。",
+        "action": "为每位作者和发布者至少添加一个权威的 sameAs URL。\n使用与该主页一致的姓名和拼写。"
       }
     }
   },
@@ -6441,6 +6739,386 @@
       "coverage": "{{pct}}% 的竞争对手({{count}} 个)",
       "empty": "你的站点没有缺失任何竞争对手的主题。",
       "apply": "将这些词加入缺口分析"
+    }
+  },
+  "authority": {
+    "title": "主题权威度",
+    "empty": "运行抓取以衡量主题权威度。",
+    "hero": {
+      "sfs": "Site Focus Score",
+      "tas": "Topical Authority Score",
+      "sfsRole": "纯度：内容围绕主题的程度",
+      "tasRole": "完整度：主题被覆盖的充分程度",
+      "target": "目标：{{value}}+",
+      "pending": "构建参考图谱后即可计算"
+    },
+    "quadrant": {
+      "dominant_authority": "主导权威",
+      "boutique_specialist": "精品专家型",
+      "diluted_giant": "被稀释的巨头",
+      "unfocused_generalist": "缺乏焦点的泛化者"
+    },
+    "quadrantHint": {
+      "dominant_authority": "专注且接近完整。巩固地位，保持数据新鲜，并拓展长尾查询。",
+      "boutique_specialist": "内容紧扣主题，但只覆盖了领域的一部分。请扩充内容并建立新的主题集群。",
+      "diluted_giant": "主题内容很多，但无关板块稀释了它。请清理或迁移到子域名。",
+      "unfocused_generalist": "缺乏明确焦点且覆盖浅薄。请选定一个核心主题，清理索引，并建立第一个扎实的内容孤岛。"
+    },
+    "matrix": {
+      "title": "主题成熟度矩阵（SFS × TAS）",
+      "pending": "计算出 TAS 后将显示矩阵。",
+      "aria": "您：SFS {{sfs}}，TAS {{tas}}，象限 {{quadrant}}",
+      "you": "您",
+      "axisX": "SFS",
+      "axisY": "TAS"
+    },
+    "pillars": {
+      "title": "Topical Authority Score 的构成",
+      "tcr": "主题覆盖率",
+      "cdes": "实体深度",
+      "silc": "孤岛内聚度",
+      "cvff": "时效与唯一性",
+      "tcrNote": "已覆盖 {{total}} 个参考子主题中的 {{covered}} 个",
+      "cdesNote": "已覆盖子主题的平均实体深度",
+      "silcNote": "{{orphans}} 个孤立页面，{{weak}} 个弱锚文本，{{bleed}} 条指向无关页面的链接",
+      "cvffNote": "{{stale}} 个过时页面，{{groups}} 个内部竞争组",
+      "unavailable": "无法衡量",
+      "multiplier": "来自 SFS {{sfs}} 的聚焦系数 ×{{value}}"
+    },
+    "warning": {
+      "empty-authority": "空洞权威：网站涉及 {{tcr}}% 的主题，但平均深度仅 {{depth}}/100。发布新内容前，请先用数据和实体深化现有页面。",
+      "template-duplicates": "{{count}} 个模板克隆页已并入最强页面，不会提高覆盖率，还会浪费抓取预算。",
+      "no-dates": "未找到发布或更新日期，因此未衡量时效。请在 meta 标签或 JSON-LD 中添加日期。",
+      "no-links": "分析页面之间未发现正文内链，因此内聚度仅依据孤立页面。",
+      "no-pillars": "尚无参考图谱，未衡量覆盖率与深度。"
+    },
+    "reference": {
+      "title": "参考图谱",
+      "intro": "基于真实数据构建主题的市场图谱：主主题排名靠前页面的标题、实体和问题，外加 Google Suggest。不会编造任何内容；没有 SERP 数据源时图谱保持为空。",
+      "build": "构建参考图谱",
+      "rebuild": "重新构建图谱",
+      "cancel": "取消",
+      "clear": "丢弃图谱",
+      "info": "来自 {{competitors}} 个竞争对手（{{source}}）的 {{pillars}} 个支柱、{{subtopics}} 个子主题，构建于 {{date}}",
+      "progress": {
+        "serp": "正在获取排名（{{done}}/{{total}}）",
+        "crawl": "正在抓取 {{domain}}（{{done}}/{{total}}）",
+        "build": "正在构建图谱"
+      },
+      "error": "构建图谱失败：{{error}}",
+      "cancelled": "图谱构建已取消。",
+      "unavailableTitle": "参考图谱不可用",
+      "unavailable": {
+        "no-serp-source": "请连接 SERP 数据源（DataForSEO 或免费的 Bing RSS），以便基于真实排名构建图谱。",
+        "no-queries": "核心主题尚无可用搜索短语。请先运行更大规模的抓取。",
+        "serp-failed": "排名查询失败：{{error}}",
+        "no-competitors": "排名中未找到竞争域名。",
+        "no-pages": "无法抓取任何竞争对手页面（robots.txt、拦截或超时）。",
+        "no-taxonomy": "竞争对手页面共有的标题太少，无法形成可靠图谱。请稍后重试或增加竞争对手。"
+      }
+    },
+    "coverage": {
+      "title": "主题覆盖图谱",
+      "filters": "筛选子主题",
+      "filter": {
+        "all": "全部（{{count}}）",
+        "gaps": "仅缺口（{{count}}）",
+        "shallow": "浅层（{{count}}）",
+        "cannibalized": "内部竞争（{{count}}）"
+      },
+      "general": "通用主题",
+      "empty": "没有符合筛选条件的子主题。",
+      "row": "匹配 {{similarity}}% · 深度 {{depth}}",
+      "status": {
+        "covered_strong": "已深入覆盖",
+        "covered_shallow": "覆盖较浅",
+        "missing_gap": "缺失",
+        "cannibalized": "内部竞争"
+      },
+      "gap": {
+        "critical": "关键缺口",
+        "high": "较大缺口",
+        "medium": "中等缺口"
+      }
+    },
+    "drill": {
+      "title": "子主题分析",
+      "back": "返回图谱",
+      "url": "对应页面",
+      "none": "尚无页面覆盖此子主题。",
+      "depth": "实体深度 {{value}}/100",
+      "entitiesPresent": "已包含的实体（{{count}}/{{total}}）",
+      "entitiesMissing": "缺失的实体（头部网站都在使用）",
+      "questions": "页面未回答的用户问题",
+      "links": "内部链接审计",
+      "noPillarLink": "没有指向支柱页 {{url}} 的链接",
+      "almostOrphan": "仅有 {{count}} 条入链：近乎孤立页面",
+      "bleed": "链接到无关页面 {{url}}",
+      "linksOk": "内部链接状况良好。"
+    },
+    "brief": {
+      "title": "文章简报",
+      "path": "建议 URL",
+      "h1": "建议 H1",
+      "entities": "实体清单",
+      "questions": "需要回答的问题",
+      "linkFrom": "从此页面链接",
+      "linkTo": "应链接到",
+      "impact": "预计对 TAS 的影响：+{{value}}",
+      "generate": "生成 AI 简报",
+      "generating": "生成中…",
+      "noKey": "请在设置中连接 AI 提供商以生成简报。",
+      "empty": "AI 未返回文本，请重试。",
+      "error": "生成简报失败：{{error}}"
+    },
+    "cannibal": {
+      "title": "语义内部竞争",
+      "index": "内部竞争指数：{{value}}%",
+      "empty": "没有页面竞争同一搜索意图。",
+      "group": "{{count}} 个页面，意图相似度 {{similarity}}%，共享实体 {{shared}}%",
+      "canonical": "保留：{{url}}",
+      "steps": "将独有内容并入保留页面，其余页面做 301 重定向，并更新内部链接。"
+    },
+    "draft": {
+      "title": "发布前检查草稿",
+      "titleField": "草稿标题",
+      "bodyField": "草稿正文",
+      "check": "检查重叠",
+      "none": "与现有页面的重叠未超过 85%。",
+      "hit": "与 {{url}} 重叠 {{similarity}}%"
+    },
+    "rec": {
+      "title": "主题扩展计划",
+      "empty": "暂无建议。构建参考图谱后可查看覆盖缺口。",
+      "delta": "+{{value}} TAS",
+      "fill-gaps": "填补“{{pillar}}”的缺口：缺少 {{count}} 个子主题",
+      "merge-cannibalized": "合并 {{count}} 组相互竞争的页面",
+      "fix-linking": "修复内部链接：{{orphans}} 个孤立页面，{{bleed}} 条指向无关页面的链接",
+      "deepen-shallow": "深化 {{count}} 个覆盖较浅的子主题",
+      "refresh-stale": "更新 {{count}} 个超过一年未更新的页面",
+      "how": {
+        "fill-gaps": "为每个缺失的子主题发布一篇文章：使用简报（URL、H1、实体清单、问题），并链接到所属支柱。",
+        "merge-cannibalized": "保留最强页面，把独有内容并入，其余做 301 重定向并更新内部链接。",
+        "fix-linking": "从支柱页和相关文章链接到每个孤立页面，并移除专业页面指向无关页面的链接。",
+        "deepen-shallow": "补充缺失的实体和属性，并在各自的标题下回答尚未解答的用户问题。",
+        "refresh-stale": "更新数据、型号和指南，加入新实体并刷新发布日期。"
+      }
+    },
+    "benchmark": {
+      "title": "与头部竞争对手的主题缺口矩阵",
+      "empty": "构建参考图谱后即可与排名靠前的竞争对手比较。仅显示真实抓取数据。",
+      "domain": "域名",
+      "pillars": "各支柱覆盖率",
+      "pillar": "支柱",
+      "insight": {
+        "rank": "按 TAS 排名，您位列 {{total}} 个站点中的第 {{rank}} 名。",
+        "lead-pillar": "您在“{{pillar}}”领先：{{own}}%，最佳竞争对手为 {{best}}%。",
+        "trailing-pillars": "在以下方面落后于领先者：{{pillars}}。"
+      }
+    },
+    "history": {
+      "title": "SFS 与 TAS 的变化",
+      "empty": "至少完成两次完整分析后将显示时间线。",
+      "aria": "{{count}} 次分析的 SFS 与 TAS 图表",
+      "point": "{{date}}：SFS {{sfs}}，TAS {{tas}}",
+      "sfs": "SFS（实线）",
+      "tas": "TAS（虚线）",
+      "milestones": "里程碑",
+      "cleanup": "清理：SFS 上升 {{delta}}",
+      "architecture": "架构：链接与内部竞争改善 {{delta}}",
+      "expansion": "扩展：主题覆盖率上升 {{delta}}",
+      "regression": "退步：TAS 变化 {{delta}}"
+    }
+  },
+  "authorityMonitoring": {
+    "alert": {
+      "title": "SEOmi · 主题权威度提醒",
+      "tas-drop": "两次完整分析之间，Topical Authority Score 下降了 {{points}} 分（{{from}} → {{to}}）。",
+      "cannibalization": "过去 24 小时内发布的页面与 {{canonical}} 争夺同一意图（相似度 {{similarity}}%）：{{url}}。",
+      "competitor-expansion": "{{domain}} 将“{{pillar}}”的覆盖率从 {{from}}% 提升到 {{to}}%，为您带来新的缺口。",
+      "content-decay": "支柱页 {{url}} 已超过一年，且缺少市场现用的 {{missing}} 个实体。"
+    }
+  },
+  "aio": {
+    "title": "AI Overviews 与 RAG 就绪度",
+    "subtitle": "AI 回答引擎找到、提取并引用你页面段落的难易程度。",
+    "empty": "暂无包含内容分区的页面数据。请运行新的抓取以分析 AI 就绪度。",
+    "band": {
+      "excellent": "就绪度优秀",
+      "good": "就绪度良好",
+      "moderate": "就绪度中等",
+      "weak": "就绪度较弱",
+      "critical": "就绪度危急"
+    },
+    "hero": {
+      "label": "AI 可引用性得分",
+      "outOf": "满分 100",
+      "summary": "在 {{count}} 个已分析页面中发现 {{weak}} 个薄弱段落。",
+      "summaryNone": "在 {{count}} 个已分析页面中未发现薄弱段落。",
+      "change": "与上次分析相比的变化：{{delta}}",
+      "skipped": "已跳过 {{count}} 个页面（没有可用的内容分区）。"
+    },
+    "components": {
+      "self": "自成一体",
+      "spo": "事实密度",
+      "extract": "可提取性"
+    },
+    "basicNote": "{{languages}} 的语言规则较为基础：这些语言的代词和事实检测精度较低。",
+    "pages": {
+      "title": "页面",
+      "url": "URL",
+      "score": "得分",
+      "chunks": "分块",
+      "facts": "事实",
+      "language": "语言",
+      "empty": "没有可显示的页面。"
+    },
+    "skip": {
+      "no-sections": "没有内容分区（在此功能之前抓取）",
+      "non-html": "不是 HTML 页面",
+      "request-error": "请求失败",
+      "no-content": "没有可读文本"
+    },
+    "passage": {
+      "title": "最薄弱的段落",
+      "intro": "模拟的最难被引用的 RAG 分块。请先修复列出的问题。",
+      "chunk": "分块 {{n}} · {{tokens}} 个 token · 得分 {{score}}",
+      "noHeading": "（无标题的开头部分）",
+      "current": "当前段落",
+      "optimized": "优化后的段落",
+      "generate": "用 AI 改写",
+      "generating": "正在改写…",
+      "copy": "复制",
+      "copied": "已复制",
+      "noKey": "请在设置中连接 AI 提供商以改写段落。",
+      "error": "AI 请求失败：{{message}}",
+      "empty": "AI 没有返回文本。",
+      "none": "未发现薄弱段落。"
+    },
+    "issue": {
+      "dangling-pronoun": "指代不清",
+      "no-answer-first": "开头没有直接回答",
+      "filler-opening": "开头空洞",
+      "no-facts": "缺少具体事实",
+      "too-long": "对单个分块来说太长"
+    },
+    "history": {
+      "title": "历史",
+      "empty": "此项目完成第二次分析后会显示历史记录。",
+      "row": "{{date}}：{{score}}"
+    }
+  },
+  "trust": {
+    "title": "E-E-A-T 与实体信任度",
+    "subtitle": "作者、发布者和来源的可验证程度。基于已保存的抓取结果计算，不会重新获取任何页面。",
+    "empty": "请先运行一次抓取，以评估信任信号。",
+    "hero": {
+      "label": "实体信任得分",
+      "articles": "在 {{pages}} 个已抓取页面中有 {{articles}} 个文章页面",
+      "previous": "上次运行：{{score}}（{{delta}}）",
+      "ymyl": "YMYL 类别：{{category}}。搜索引擎对这类页面采用最严格的信任标准。",
+      "unattributed": "{{pct}}% 的文章没有署名作者或审核者。"
+    },
+    "level": {
+      "strong": "信任度高",
+      "adequate": "信任度足够",
+      "weak": "信任度弱",
+      "critical": "信任存在严重缺口"
+    },
+    "ymyl": {
+      "health": "健康",
+      "finance": "金融",
+      "legal": "法律"
+    },
+    "layers": {
+      "title": "信任层级",
+      "schemaGraph": "实体图谱（JSON-LD）",
+      "authorAlignment": "作者主题契合度",
+      "citationQuality": "来源质量",
+      "transparency": "编辑透明度",
+      "noData": "无"
+    },
+    "entities": {
+      "title": "发布者与作者",
+      "orgPresent": "发布者：{{name}}。稳定的 @id：{{id}}。sameAs 链接：{{sameAs}}。",
+      "orgMissing": "结构化数据中未找到 Organization 实体。",
+      "none": "结构化数据中未找到作者实体。",
+      "colAuthor": "作者",
+      "colArticles": "文章数",
+      "colSameAs": "sameAs 链接",
+      "colAlignment": "主题契合度",
+      "generic": "匿名署名"
+    },
+    "signals": {
+      "title": "来源与透明度",
+      "citations": "{{pages}} 个文章页面中有 {{trusted}} 个链接到可信来源（.gov、.edu、PubMed、WHO）。",
+      "dead": "{{count}} 个出站链接已失效",
+      "dated": "{{articles}} 篇文章中有 {{dated}} 篇显示了修改或审核日期。",
+      "pagesTitle": "信任页面",
+      "page": {
+        "editorial": "编辑政策",
+        "about": "关于我们",
+        "contact": "联系方式",
+        "registry": "公司注册信息"
+      },
+      "found": "已找到",
+      "missing": "缺失"
+    },
+    "severity": {
+      "critical": "严重",
+      "warning": "警告",
+      "info": "信息"
+    },
+    "findings": {
+      "title": "优先修复事项",
+      "none": "未发现信任缺口。",
+      "code": {
+        "ymyl-unattributed": "YMYL 主题下有 {{count}} 篇文章（{{pct}}%）没有署名作者或审核者。请添加具备可验证资质的人员。",
+        "ymyl-no-reviewer": "{{count}} 篇医学文章均未声明审核者（reviewedBy）。请添加具备资质的医学审核者。",
+        "no-bylines": "{{count}} 篇文章均未在结构化数据中声明作者。",
+        "generic-author": "有 {{count}} 篇文章以编辑部等匿名方式署名。",
+        "org-missing": "未找到 Organization 实体。请添加带有稳定 @id 的发布者标记。",
+        "org-no-same-as": "发布者 {{name}} 没有指向 Wikidata、企业注册库或社交主页的 sameAs 链接。",
+        "author-no-same-as": "{{count}} 位作者没有 sameAs 链接（{{names}}）。请将他们链接到 ORCID、LinkedIn 或职业注册库。",
+        "author-no-id": "{{count}} 位作者没有稳定的 @id，搜索引擎无法跨页面识别他们。",
+        "author-off-topic": "{{name}} 的资料与核心主题的契合度仅为 {{pct}}%。请优先选择专业背景相符的作者。",
+        "low-citations": "{{pages}} 个文章页面中只有 {{pct}}% 引用了可信来源（.gov、.edu、PubMed、WHO）。",
+        "dead-citations": "{{count}} 个出站链接返回错误。请替换或删除。",
+        "missing-editorial": "未找到编辑政策或事实核查页面。",
+        "missing-contact": "未找到联系页面。",
+        "missing-registry": "未找到公司注册信息或法律声明页面。",
+        "missing-about": "未找到“关于我们”页面。",
+        "missing-dates": "只有 {{pct}}% 的文章显示了修改或审核日期。",
+        "no-articles": "未检测到文章页面，因此未对作者和引用层级评分。"
+      }
+    },
+    "generator": {
+      "open": "用 JSON-LD 修复",
+      "title": "JSON-LD 生成器",
+      "intro": "生成包含 sameAs 链接的 Organization、Person 和页面图谱。检查后粘贴到页面的 head 中。",
+      "close": "关闭",
+      "field": {
+        "personName": "作者姓名",
+        "jobTitle": "职位",
+        "personUrl": "作者主页 URL",
+        "organizationName": "发布者名称",
+        "organizationUrl": "发布者 URL",
+        "pageUrl": "页面 URL",
+        "dateModified": "修改日期（YYYY-MM-DD）",
+        "lastReviewed": "最近审核日期（YYYY-MM-DD）",
+        "sameAs": "sameAs 资料（每行一个 URL：Wikidata、ORCID、LinkedIn、职业注册库）",
+        "asReviewer": "声明为专家审核者而非作者"
+      },
+      "issue": {
+        "missing-name": "请输入作者姓名。",
+        "invalid-organization-url": "请输入有效的发布者 URL（https://...）。",
+        "invalid-page-url": "请输入有效的页面 URL（https://...）。",
+        "invalid-same-as": "部分 sameAs 条目不是有效 URL，已被忽略。"
+      },
+      "preview": "生成的 JSON-LD",
+      "copy": "复制 script 标签",
+      "copied": "已复制。",
+      "copyFailed": "复制失败。请选中文本并手动复制。"
     }
   }
 }

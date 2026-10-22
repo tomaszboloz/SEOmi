@@ -1,0 +1,11 @@
+# Reviewed exceptions for `cargo audit`. Every entry needs a reason and a review date.
+[advisories]
+ignore = [
+  # zip 4.6.1 is pulled in only by tauri-plugin-updater (2.14.0, the latest release), and only on Windows.
+  # The plugin calls ZipArchive::extract on an update bundle after verifying its minisign signature, so the
+  # SUID/SGID and symlink issues need a validly signed malicious bundle. SEOmi's own zip dependency is 9.x.
+  # Review when tauri-plugin-updater moves to zip >= 9, and no later than 2026-12-31.
+  "RUSTSEC-2026-0367",
+  "RUSTSEC-2026-0368",
+  "RUSTSEC-2026-0369",
+]

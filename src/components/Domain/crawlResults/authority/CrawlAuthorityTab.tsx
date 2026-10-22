@@ -1,0 +1,52 @@
+import { useMemo, useState } from 'react';
+import { useTranslation } from 'react-i18next';
+import { useSiteFocus } from '@/hooks/useSiteFocus';
+import { useTopicalAuthority, type ReferenceRunner } from '@/hooks/useTopicalAuthority';
+import { buildSiteFocusReport, type FocusPage } from '@/services/siteFocus';
+import type { CrawledPageSummary, CrawlRunRecord } from '@/types';
+import { Empty } from '../CrawlViewPrimitives';
+import { AuthorityBenchmark } from './AuthorityBenchmark';
+import { AuthorityHero } from './AuthorityHero';
+import { AuthorityHistoryChart } from './AuthorityHistoryChart';
+import { AuthorityPillars } from './AuthorityPillars';
+import { AuthorityRecommendations } from './AuthorityRecommendations';
+import { CannibalizationPanel } from './CannibalizationPanel';
+import { CoverageMap } from './CoverageMap';
+import { ReferenceMapPanel } from './ReferenceMapPanel';
+import { SubtopicDrilldown } from './SubtopicDrilldown';
+
+export interface CrawlAuthorityTabProps {
+  pages: CrawledPageSummary[];
+  startUrl: string;
+  run?: CrawlRunRecord | null;
+  projectId?: string | null;
+  /** Injectable reference-map runner for tests. */
+  runner?: ReferenceRunner;
+}
+
+/** Topical Authority tab: dual hero, TAS components, coverage map, cannibalization, plan, benchmark and history. */
+export const CrawlAuthorityTab = ({ pages, startUrl, run, projectId, runner }: CrawlAuthorityTabProps) => {
+  const { t } = useTranslation();
+  const focus = useSiteFocus(run, projectId);
+  const local = useMemo(() => (!focus.report && pages.length ? buildSiteFocusReport(pages, startUrl, { now: new Date().toISOString() }) : null), [focus.report, pages, startUrl]);
+  const sfs = focus.report ?? local;
+  const authority = useTopicalAuthority({ pages, startUrl, sfs, run, projectId, runner });
+  const [selected, setSelected] = useState<string | undefined>();
+  const { report } = authority;
+  if (!report) return <Empty>{t('authority.empty')}</Empty>;
+  const row = selected ? report.coverage.find((item) => item.subtopicId === selected) : undefined;
+  return (
+    <div className="space-y-4">
+      <AuthorityHero report={report} />
+      <ReferenceMapPanel taxonomy={authority.taxonomy} state={authority.state} onBuild={() => void authority.build()} onCancel={authority.cancel} onClear={authority.clear} />
+      <AuthorityPillars report={report} />
+      {report.taxonomy && (row ? (
+        <SubtopicDrilldown report={report} row={row} onBack={() => setSelected(undefined)} />
+      ) : <CoverageMap report={report} onSelect={setSelected} />)}
+      <CannibalizationPanel report={report} pages={pages as FocusPage[]} startUrl={startUrl} language={sfs?.model.language || undefined} />
+      <AuthorityRecommendations report={report} />
+      <AuthorityBenchmark benchmark={authority.benchmark} />
+      <AuthorityHistoryChart entries={authority.history} />
+    </div>
+  );
+};

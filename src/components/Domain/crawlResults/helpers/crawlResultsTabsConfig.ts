@@ -1,5 +1,6 @@
 import {
   Activity,
+  BadgeCheck,
   Bot,
   Braces,
   CircleAlert,
@@ -7,6 +8,7 @@ import {
   FileText,
   FileWarning,
   Image,
+  Landmark,
   Languages,
   Link2,
   Map,
@@ -15,6 +17,7 @@ import {
   ScanSearch,
   Share2,
   ShieldCheck,
+  Sparkles,
   Target,
 } from 'lucide-react';
 import type { CrawlRunRecord, SiteCrawlResult } from '@/types';
@@ -38,6 +41,9 @@ export type CrawlTab =
   | 'performance'
   | 'visualisations'
   | 'focus'
+  | 'authority'
+  | 'aio'
+  | 'trust'
   | 'exports';
 
 export type CrawlTabGroup = 'core' | 'content' | 'technical' | 'export';
@@ -55,6 +61,9 @@ export const tabs: Array<{ id: CrawlTab; labelKey: string; icon: typeof Rows3 }>
   { id: 'overview', labelKey: 'tabs.overview', icon: Radar },
   { id: 'visualisations', labelKey: 'tabs.visualisations', icon: Map },
   { id: 'focus', labelKey: 'tabs.focus', icon: Target },
+  { id: 'authority', labelKey: 'tabs.authority', icon: Landmark },
+  { id: 'aio', labelKey: 'tabs.aio', icon: Sparkles },
+  { id: 'trust', labelKey: 'tabs.trust', icon: BadgeCheck },
   { id: 'crawlerReadiness', labelKey: 'tabs.crawlerReadiness', icon: Bot },
   { id: 'urls', labelKey: 'tabs.urls', icon: Rows3 },
   { id: 'issues', labelKey: 'tabs.issues', icon: CircleAlert },
@@ -83,7 +92,7 @@ export const tabGroups: Array<{
     id: 'core',
     labelKey: 'groups.core',
     shortLabelKey: 'groups.coreShort',
-    tabs: ['overview', 'visualisations', 'focus', 'crawlerReadiness', 'urls', 'issues'],
+    tabs: ['overview', 'visualisations', 'focus', 'authority', 'aio', 'trust', 'crawlerReadiness', 'urls', 'issues'],
   },
   {
     id: 'content',

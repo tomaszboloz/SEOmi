@@ -2234,7 +2234,10 @@
       "frames": "Cadres",
       "custom-search": "Recherche personnalisée",
       "semantic": "Analyse sémantique",
-      "focus": "Site Focus"
+      "focus": "Site Focus",
+      "authority": "Autorité thématique",
+      "aio": "Préparation à l'IA",
+      "trust": "Confiance des entités"
     },
     "environmentStaging": "test/staging",
     "environmentProduction": "production",
@@ -3049,7 +3052,10 @@
       "validation": "Validation HTML",
       "performance": "Performance",
       "exports": "Exports",
-      "focus": "Site Focus"
+      "focus": "Site Focus",
+      "authority": "Autorité thématique",
+      "aio": "Préparation à l'IA",
+      "trust": "Confiance des entités"
     },
     "groups": {
       "core": "Aperçu",
@@ -5821,6 +5827,172 @@
           "thin-subtopic": "Sous-thème peu couvert « {{0}} » : seulement {{1}} % des pages le traitent ({{2}} pages). Termes : {{3}}.",
           "competitor-terms": "Termes des concurrents absents de votre site : {{3}}."
         }
+      },
+      "authority": {
+        "title": "Autorité thématique",
+        "intro": "Dans quelle mesure le site couvre son thème principal, de façon complète et profonde, par rapport au marché. Les scores viennent de l’exécution enregistrée et de la carte de référence en cache ; aucune page n’est de nouveau téléchargée.",
+        "scoreTitle": "Topical Authority Score",
+        "legend": "TAS = 0,35 couverture + 0,30 profondeur des entités + 0,25 cohésion des silos + 0,10 fraîcheur, modulé par le Site Focus Score (0,7 à 1,0).",
+        "kTcr": "Couverture du sujet",
+        "kCdes": "Profondeur des entités",
+        "kSilc": "Cohésion des silos",
+        "kCvff": "Fraîcheur",
+        "unavailable": "n/d",
+        "noReference": "Aucune carte de référence n’a été créée pour ce projet : couverture et profondeur ne sont pas mesurées et le TAS n’est pas calculé.",
+        "reference": "Carte de référence : {{0}} sous-thèmes dans {{1}} piliers issus de {{2}} concurrents ({{3}}).",
+        "quadrant": {
+          "dominant_authority": "Autorité dominante",
+          "boutique_specialist": "Spécialiste de niche",
+          "diluted_giant": "Géant dilué",
+          "unfocused_generalist": "Généraliste dispersé"
+        },
+        "warning": {
+          "empty-authority": "Autorité creuse : de nombreux sujets sont abordés mais leur profondeur moyenne est très faible. Approfondissez les pages existantes avant d’en publier d’autres.",
+          "template-duplicates": "Les clones de modèle ont été fusionnés avec leur meilleure page : ils n’augmentent pas la couverture et gaspillent le budget de crawl.",
+          "no-dates": "Aucune date de publication ou de mise à jour trouvée : la fraîcheur n’est pas mesurée.",
+          "no-links": "Aucun lien interne dans le contenu entre les pages analysées : la cohésion repose uniquement sur les pages orphelines."
+        },
+        "tCoverage": "Couverture par pilier",
+        "colPillar": "Pilier",
+        "colCoverage": "Couverture",
+        "colGaps": "Sous-thèmes manquants",
+        "tGaps": "Lacunes de contenu",
+        "colGap": "Sous-thème manquant",
+        "colLevel": "Gravité",
+        "tCannibal": "Cannibalisation sémantique",
+        "colCanonical": "Page à conserver",
+        "colPages": "Pages",
+        "tRecs": "Plan d’expansion thématique",
+        "tBench": "Matrice des lacunes face aux meilleurs concurrents",
+        "level": {
+          "critical": "critique",
+          "high": "élevée",
+          "medium": "moyenne"
+        },
+        "rec": {
+          "fill-gaps": "Comblez les lacunes de « {{0}} » : {{1}} sous-thèmes manquants",
+          "merge-cannibalized": "Fusionnez {{0}} groupes de pages qui se cannibalisent",
+          "fix-linking": "Corrigez le maillage : {{0}} pages orphelines, {{1}} liens vers des pages hors sujet",
+          "deepen-shallow": "Approfondissez {{0}} sous-thèmes superficiels",
+          "refresh-stale": "Actualisez {{0}} pages inchangées depuis plus d’un an"
+        }
+      },
+      "aio": {
+        "title": "Préparation à AI Overviews et au RAG",
+        "intro": "La facilité avec laquelle les moteurs de réponse IA extraient et citent des passages de vos pages. Le score combine passages autonomes (45 %), densité de faits (35 %) et structure extractible (20 %).",
+        "scoreTitle": "Score de préparation à l'IA",
+        "legend": "Paliers : 90-100 excellent, 75-89 bon, 60-74 modéré, 40-59 faible, 0-39 critique.",
+        "kSelf": "Autonomie",
+        "kSpo": "Densité de faits",
+        "kExtract": "Extractibilité",
+        "kScored": "Pages évaluées",
+        "nSelf": "Passages compréhensibles seuls",
+        "nSpo": "Faits sujet-prédicat-objet",
+        "nExtract": "Tableaux, listes, titres",
+        "nScored": "{{0}} pages ignorées",
+        "noteBasic": "Les règles linguistiques pour {{0}} sont basiques : la détection des pronoms et des faits y est moins précise.",
+        "tPages": "Pages par préparation à l'IA",
+        "pagesIntro": "Jusqu'à 25 pages, score le plus bas en premier.",
+        "colScore": "Score",
+        "colSelf": "Autonome",
+        "colSpo": "Faits",
+        "colExtract": "Structure",
+        "colChunks": "Segments",
+        "tPassages": "Passages les plus faibles",
+        "passagesIntro": "Passages qu'un index RAG aurait du mal à citer, avec les problèmes détectés.",
+        "colHeading": "Page et titre",
+        "colExcerpt": "Passage",
+        "colIssues": "Problèmes",
+        "percent": "{{0}} %",
+        "band": {
+          "excellent": "Préparation excellente",
+          "good": "Bonne préparation",
+          "moderate": "Préparation modérée",
+          "weak": "Préparation faible",
+          "critical": "Préparation critique"
+        },
+        "issue": {
+          "dangling-pronoun": "Référence floue",
+          "no-answer-first": "Pas de réponse directe en premier",
+          "filler-opening": "Début de remplissage",
+          "no-facts": "Aucun fait concret",
+          "too-long": "Trop long pour un segment"
+        }
+      },
+      "trust": {
+        "title": "Confiance des entités (E-E-A-T)",
+        "intro": "Dans quelle mesure l'éditeur, les auteurs et les sources du site sont vérifiables. Les scores proviennent de l'exécution enregistrée ; aucune page n'est téléchargée à nouveau.",
+        "scoreTitle": "Score de confiance des entités",
+        "legend": "Niveaux : 75-100 fort, 60-74 suffisant, 40-59 faible, 0-39 critique.",
+        "kSchema": "Graphe d'entités",
+        "kAuthor": "Adéquation de l'auteur",
+        "kCitation": "Qualité des sources",
+        "kTransparency": "Transparence",
+        "kArticles": "Pages d'articles",
+        "kAuthors": "Entités auteur",
+        "nLayer": "Score 0-100",
+        "nNoData": "Aucune donnée dans ce crawl",
+        "nArticles": "sur {{0}} explorées",
+        "nAuthors": "{{0}} avec sameAs",
+        "ymylNote": "Catégorie YMYL : {{0}}. {{1}} % des articles n'ont ni auteur ni relecteur nommé.",
+        "tAuthors": "Entités auteur",
+        "authorsIntro": "Auteurs trouvés dans les données structurées, avec leurs liens sameAs et leur adéquation au sujet principal.",
+        "colAuthor": "Auteur",
+        "colArticles": "Articles",
+        "colSameAs": "sameAs",
+        "colAlignment": "Adéquation",
+        "generic": "{{0}} (signature anonyme)",
+        "tPages": "Pages de confiance",
+        "pagesIntro": "Pages qui montrent la transparence éditoriale et celle de l'entreprise.",
+        "colPage": "Page",
+        "colState": "Statut",
+        "found": "Trouvée : {{0}}",
+        "missing": "Manquante",
+        "tFindings": "Constats de confiance",
+        "findingsIntro": "Classés par gravité ; corrigez d'abord les éléments critiques.",
+        "colSeverity": "Gravité",
+        "colFinding": "Constat",
+        "level": {
+          "strong": "Confiance forte",
+          "adequate": "Confiance suffisante",
+          "weak": "Confiance faible",
+          "critical": "Lacunes de confiance critiques"
+        },
+        "severity": {
+          "critical": "Critique",
+          "warning": "Avertissement",
+          "info": "Info"
+        },
+        "kind": {
+          "editorial": "Politique éditoriale",
+          "about": "À propos",
+          "contact": "Contact",
+          "registry": "Données du registre de l'entreprise"
+        },
+        "ymyl": {
+          "health": "santé",
+          "finance": "finance",
+          "legal": "droit"
+        },
+        "find": {
+          "ymyl-unattributed": "{{0}} articles ({{1}} %) sur un sujet YMYL n'ont ni auteur ni relecteur nommé.",
+          "ymyl-no-reviewer": "Aucun des {{0}} articles médicaux ne déclare de relecteur (reviewedBy).",
+          "no-bylines": "Aucun des {{0}} articles ne déclare d'auteur dans les données structurées.",
+          "generic-author": "{{0}} articles sont signés d'une mention anonyme.",
+          "org-missing": "Aucune entité Organization n'a été trouvée dans les données structurées.",
+          "org-no-same-as": "L'éditeur {{0}} n'a pas de liens sameAs.",
+          "author-no-same-as": "{{0}} auteurs n'ont pas de liens sameAs ({{1}}).",
+          "author-no-id": "{{0}} auteurs n'ont pas d'@id stable.",
+          "author-off-topic": "Le profil de {{0}} ne correspond au sujet principal qu'à {{1}} %.",
+          "low-citations": "Seulement {{0}} % des {{1}} pages d'articles citent une source fiable.",
+          "dead-citations": "{{0}} liens sortants renvoient une erreur.",
+          "missing-editorial": "Aucune politique éditoriale ni page de vérification des faits n'a été trouvée.",
+          "missing-contact": "Aucune page de contact n'a été trouvée.",
+          "missing-registry": "Aucune page de registre d'entreprise ou de mentions légales n'a été trouvée.",
+          "missing-about": "Aucune page À propos n'a été trouvée.",
+          "missing-dates": "Seulement {{0}} % des articles affichent une date de modification ou de relecture.",
+          "no-articles": "Aucune page d'article n'a été détectée ; les couches auteurs et citations n'ont pas été notées."
+        }
       }
     },
     "recs": {
@@ -6056,6 +6228,132 @@
         "what": "Un objectif suggéré : au moins 80, ou la moyenne du top 3 des concurrents lorsqu'elle est plus élevée.",
         "why": "Il transforme la comparaison en un seul chiffre vers lequel travailler.",
         "action": "Utilisez-le comme objectif de planification.\nRelancez le benchmark après vos corrections pour voir l'évolution."
+      }
+    },
+    "authority": {
+      "tas": {
+        "title": "Topical Authority Score",
+        "what": "Une note de 0 à 100 indiquant dans quelle mesure le site couvre son thème principal de façon complète, profonde et cohérente par rapport au marché. Elle combine couverture (35%), profondeur des entités (30%), cohésion des silos (25%) et fraîcheur (10%), puis est modulée par le Site Focus Score.",
+        "why": "Le SFS ne mesure que la pureté. Un site avec trois articles parfaits obtient un SFS élevé mais presque aucune autorité, car il couvre une fraction du domaine. Le TAS mesure l’étendue couverte.",
+        "action": "Visez 80+ pour le SFS et le TAS. TAS bas, SFS haut : ajoutez du contenu. TAS haut, SFS bas : élaguez ou séparez les rubriques hors sujet. Commencez par la première action du plan."
+      },
+      "tcr": {
+        "title": "Couverture du sujet (TCR)",
+        "what": "La part des sous-thèmes du marché que votre site couvre par une page dédiée et pertinente. Chaque sous-thème compte selon son importance ; une correspondance nette compte pleinement, une partielle pour moitié.",
+        "why": "Les moteurs voient comme références les sites qui répondent à tout l’éventail de questions d’un domaine. Les lacunes envoient visiteurs et signaux de classement aux concurrents.",
+        "action": "Au-dessus de 80% : autorité pleine. Sous 40% : connaissance fragmentaire. Ouvrez la carte, filtrez les lacunes et publiez d’abord les sous-thèmes manquants les plus importants."
+      },
+      "esd": {
+        "title": "Profondeur des entités",
+        "what": "Vérifie qu’une page couvre vraiment son sous-thème : concepts et attributs des pages leaders, questions d’utilisateurs traitées sous leurs propres titres et part de contenu original.",
+        "why": "Un long article sans les concepts clés du domaine perd face à des sources plus courtes mais plus complètes. La longueur seule ne compte pas.",
+        "action": "Ouvrez un sous-thème superficiel : ajoutez entités et attributs manquants, répondez aux questions listées sous leur propre H2 et ajoutez des données ou un tableau absents chez les concurrents."
+      },
+      "scs": {
+        "title": "Cohésion des silos",
+        "what": "Mesure à quel point les articles d’un même thème sont reliés : page pilier liée dans les deux sens, ancres descriptives, aucune page orpheline et aucun lien des pages expertes vers du hors-sujet.",
+        "why": "Les pages orphelines ne transmettent ni ne reçoivent d’autorité thématique. Les ancres « cliquez ici » n’apportent rien et ne comptent que pour un dixième.",
+        "action": "Reliez chaque orpheline depuis son pilier et ses articles voisins, utilisez des ancres qui décrivent la cible (« symptômes de la neuropathie diabétique ») et retirez les liens vers du hors-sujet."
+      },
+      "matrix": {
+        "title": "Matrice SFS × TAS",
+        "what": "Situe le site selon la pureté (SFS, horizontal) et l’exhaustivité (TAS, vertical). Quatre quadrants : autorité dominante, spécialiste de niche, géant dilué, généraliste dispersé.",
+        "why": "Pourquoi un focus élevé mais une autorité faible ? Cinq articles parfaits sur le diabète donnent SFS 95 mais TAS 14 : rien de hors sujet, mais 90% du domaine manque.",
+        "action": "Gardez le SFS au-dessus de 80 tout en ajoutant des clusters pour porter le TAS au-delà de 80. Le quadrant surligné indique s’il faut étendre, élaguer ou restructurer."
+      },
+      "cannibalization": {
+        "title": "Cannibalisation sémantique",
+        "what": "Au moins deux de vos pages répondent à la même intention : contenu et titres presque identiques (similarité cosinus dès 88%) ou couverture complète d’un même sous-thème de référence.",
+        "why": "Les signaux de liens internes et la pertinence se répartissent entre les doublons, si bien qu’aucune page n’atteint le haut du classement.",
+        "action": "Gardez la page la plus forte, déplacez-y les sections uniques, redirigez les autres en 301 et mettez à jour les liens internes. Utilisez le contrôle de brouillon avant publication pour éviter de nouveaux chevauchements."
+      }
+    },
+    "aio": {
+      "aioReadiness": {
+        "title": "Score de préparation à l'IA (AIO-R)",
+        "what": "Une mesure de 0 à 100 de la facilité avec laquelle les moteurs de réponse IA (Google AI Overviews, Perplexity, Copilot) extraient et citent des passages de vos pages. Elle combine des passages autonomes (45 %), la densité de faits (35 %) et une structure extractible (20 %).",
+        "why": "Les moteurs IA découpent les pages en segments et ne citent que celui qui répond à la question. Les passages vagues ou dépendants du contexte sont ignorés.",
+        "action": "Ouvrez les passages les plus faibles et corrigez les problèmes indiqués.\nRéécrivez-les en plaçant la réponse en premier, avec des noms et des chiffres explicites.",
+        "example": "Une section « Quelle est la glycémie normale ? » qui commence par « Cela dépend de nombreux facteurs » obtient un score bas."
+      },
+      "selfContainment": {
+        "title": "Autonomie",
+        "what": "Un passage garde-t-il un sens une fois extrait de la page : il nomme son sujet et ne commence pas par « il », « cela » ou « comme mentionné ci-dessus ».",
+        "why": "Un segment est indexé seul. Un pronom sans référent prive le modèle du sujet, donc le segment correspond à moins de questions.",
+        "action": "Remplacez « il » et « cela » en début de paragraphe par le vrai nom.\nPlacez la réponse dans les 40 à 60 premiers mots sous chaque titre.",
+        "example": "« Cette valeur doit rester sous 140. » devient « La glycémie postprandiale doit rester sous 140 mg/dl. »"
+      },
+      "spoDensity": {
+        "title": "Densité de faits",
+        "what": "Combien de faits clairs sujet-prédicat-objet le texte énonce pour 100 mots, par exemple « La glycémie à jeun est de 70-99 mg/dl ». L'objectif est d'environ 3 pour 100 mots.",
+        "why": "Les modèles citent des affirmations vérifiables. Le texte de remplissage ne leur donne rien à extraire.",
+        "action": "Transformez les phrases vagues en affirmations avec un sujet, un verbe et une valeur.\nAjoutez unités et chiffres quand vous les avez.",
+        "example": "« De nombreux facteurs comptent » ne contient aucun fait. « Une HbA1c inférieure à 7 % est l'objectif habituel du traitement » en contient un."
+      },
+      "extractability": {
+        "title": "Extractibilité",
+        "what": "La page utilise-t-elle des structures que les analyseurs extraient facilement : tableaux, listes numérotées, listes de définitions et un plan H2/H3 clair.",
+        "why": "Les moteurs génératifs préfèrent construire leurs réponses à partir de tableaux et de listes d'étapes, dont le sens est explicite.",
+        "action": "Présentez les comparaisons en tableau et les procédures en liste numérotée.\nFormulez les titres H2/H3 comme les questions que les gens posent.",
+        "example": "Un guide pas à pas rédigé en un long paragraphe obtient un score plus bas que le même guide en liste numérotée."
+      },
+      "answerFirst": {
+        "title": "Réponse d'abord",
+        "what": "Les 40 à 60 premiers mots sous un titre doivent y répondre directement, en nommant le sujet et en donnant un fait.",
+        "why": "La recherche RAG compare la question au début du segment. Un long préambule réduit la correspondance.",
+        "action": "Écrivez d'abord la réponse directe, puis le contexte.\nReprenez le terme clé du titre dans la première phrase.",
+        "example": "Titre « Combien de temps dure un capteur CGM ? » suivi de « Un capteur CGM dure 10 à 15 jours selon le modèle. »"
+      },
+      "chunking": {
+        "title": "Simulation du découpage",
+        "what": "SEOmi découpe chaque page comme un index RAG : un segment par section H2/H3, les longues sections étant scindées en fenêtres d'environ 300 tokens.",
+        "why": "Vous voyez la page comme le système de recherche : un ensemble de passages distincts, chacun jugé séparément.",
+        "action": "Vérifiez le score de chaque passage faible.\nGardez les sections assez courtes pour tenir en un segment.",
+        "example": "Une section de 900 tokens donne environ trois segments ; seul le premier se trouve juste sous le titre."
+      }
+    },
+    "trust": {
+      "trustScore": {
+        "title": "Score de confiance des entités",
+        "what": "Un score de 0 à 100 qui indique dans quelle mesure les moteurs de recherche peuvent vérifier qui publie et rédige vos contenus. Il fait la moyenne de quatre couches : graphe d'entités, adéquation thématique des auteurs, qualité des sources et transparence éditoriale.",
+        "why": "Pour la santé, la finance et le droit, une bonne cohérence thématique ne suffit pas. Les pages sans auteur ni éditeur vérifiables atteignent rarement les premiers résultats.",
+        "action": "Lisez d'abord les éléments critiques de la liste.\nCorrigez la couche la plus faible, puis relancez un crawl pour voir le score évoluer."
+      },
+      "schemaGraph": {
+        "title": "Graphe d'entités (JSON-LD)",
+        "what": "Vérifie que vos données structurées nomment l'éditeur et chaque auteur comme des entités avec un @id stable et des liens sameAs, et que les articles portent auteur, dates, relecteur et citations.",
+        "why": "Des entités reliées permettent aux moteurs de rapprocher vos auteurs de personnes et d'organisations connues au lieu de deviner à partir du texte.",
+        "action": "Ajoutez un balisage Organization et Person avec @id.\nReliez chaque personne et l'éditeur par sameAs à Wikidata, ORCID, LinkedIn ou un registre officiel.\nUtilisez le générateur JSON-LD sous la liste des auteurs."
+      },
+      "authorAlignment": {
+        "title": "Adéquation thématique des auteurs",
+        "what": "Compare l'expertise déclarée de chaque auteur (fonction, knowsAbout et page de profil) au sujet principal du site.",
+        "why": "Un article sur l'insulinothérapie signé par un rédacteur marketing est un signal d'expertise faible.",
+        "action": "Attribuez les articles à des auteurs dont le profil correspond au sujet.\nAjoutez jobTitle et knowsAbout au balisage Person.\nPubliez une page de profil pour chaque auteur."
+      },
+      "citationQuality": {
+        "title": "Qualité des sources",
+        "what": "Montre combien de pages d'articles renvoient vers des sources fiables comme .gov, .edu, PubMed, NCBI, l'OMS ou des éditeurs scientifiques, et combien de liens sortants sont cassés.",
+        "why": "Citer des sources primaires montre que les affirmations sont vérifiables. Les références mortes affaiblissent ce signal.",
+        "action": "Ajoutez des références à des sources primaires dans chaque article expert.\nRemplacez ou supprimez les liens sortants cassés.\nVérifiez les liens externes dans l'onglet Liens pour actualiser les codes de statut."
+      },
+      "transparency": {
+        "title": "Transparence éditoriale",
+        "what": "Recherche une politique éditoriale, une page À propos, une page de contact, les données du registre de l'entreprise et des dates de modification ou de relecture visibles sur les articles.",
+        "why": "Les lecteurs et les moteurs de recherche doivent savoir qui est derrière le site et comment les contenus sont vérifiés.",
+        "action": "Publiez une politique éditoriale et de vérification des faits.\nAjoutez les coordonnées et les données du registre de l'entreprise.\nAffichez la date de dernière mise à jour sur chaque article."
+      },
+      "ymyl": {
+        "title": "Sujets YMYL",
+        "what": "Your Money or Your Life : des sujets comme la santé, la finance et le droit, où une information erronée peut nuire aux lecteurs.",
+        "why": "Les consignes de qualité de la recherche imposent à ces sujets les exigences de confiance les plus élevées ; l'absence d'auteurs ou de relecteurs est donc une lacune critique.",
+        "action": "Nommez un auteur qualifié sur chaque article.\nAjoutez un relecteur qualifié pour les contenus médicaux ou juridiques.\nCitez des sources primaires."
+      },
+      "sameAs": {
+        "title": "Liens sameAs",
+        "what": "Une propriété schema.org qui renvoie d'une personne ou d'une organisation vers la même entité ailleurs : Wikidata, ORCID, LinkedIn ou un registre officiel.",
+        "why": "Elle permet aux moteurs de recherche de confirmer que votre auteur est bien la personne réelle ayant ces qualifications.",
+        "action": "Ajoutez au moins une URL sameAs faisant autorité par auteur et pour l'éditeur.\nUtilisez le même nom et la même orthographe que sur ce profil."
       }
     }
   },
@@ -6441,6 +6739,386 @@
       "coverage": "{{pct}} % des concurrents ({{count}})",
       "empty": "Aucun sujet des concurrents ne manque à votre site.",
       "apply": "Ajouter ces termes à l'analyse des lacunes"
+    }
+  },
+  "authority": {
+    "title": "Autorité thématique",
+    "empty": "Lancez un crawl pour mesurer l’autorité thématique.",
+    "hero": {
+      "sfs": "Site Focus Score",
+      "tas": "Topical Authority Score",
+      "sfsRole": "Pureté : part du contenu qui reste sur le sujet",
+      "tasRole": "Exhaustivité : degré de couverture du sujet",
+      "target": "Objectif : {{value}}+",
+      "pending": "créez la carte de référence pour le calculer"
+    },
+    "quadrant": {
+      "dominant_authority": "Autorité dominante",
+      "boutique_specialist": "Spécialiste de niche",
+      "diluted_giant": "Géant dilué",
+      "unfocused_generalist": "Généraliste dispersé"
+    },
+    "quadrantHint": {
+      "dominant_authority": "Ciblé et presque complet. Défendez la position, gardez les données à jour et visez la longue traîne.",
+      "boutique_specialist": "Sur le sujet mais ne couvre qu’une partie du domaine. Étoffez le contenu et créez de nouveaux clusters.",
+      "diluted_giant": "Beaucoup de contenu sur le sujet, mais des rubriques hors sujet le diluent. Élaguez ou déplacez-les en sous-domaines.",
+      "unfocused_generalist": "Pas de focus clair, couverture superficielle. Choisissez un thème principal, nettoyez l’index et bâtissez un premier silo solide."
+    },
+    "matrix": {
+      "title": "Matrice de maturité thématique (SFS × TAS)",
+      "pending": "La matrice apparaît une fois le TAS calculé.",
+      "aria": "Vous : SFS {{sfs}}, TAS {{tas}}, quadrant {{quadrant}}",
+      "you": "Vous",
+      "axisX": "SFS",
+      "axisY": "TAS"
+    },
+    "pillars": {
+      "title": "Composantes du Topical Authority Score",
+      "tcr": "Couverture du sujet",
+      "cdes": "Profondeur des entités",
+      "silc": "Cohésion des silos",
+      "cvff": "Fraîcheur et unicité",
+      "tcrNote": "{{covered}} sous-thèmes de référence sur {{total}} couverts",
+      "cdesNote": "Profondeur moyenne des entités des sous-thèmes couverts",
+      "silcNote": "{{orphans}} pages orphelines, {{weak}} ancres faibles, {{bleed}} liens vers des pages hors sujet",
+      "cvffNote": "{{stale}} pages obsolètes, {{groups}} groupes de cannibalisation",
+      "unavailable": "non mesurable",
+      "multiplier": "Multiplicateur de focus ×{{value}} issu du SFS {{sfs}}"
+    },
+    "warning": {
+      "empty-authority": "Autorité creuse : le site touche {{tcr}}% des sujets mais la profondeur moyenne n’est que de {{depth}}/100. Approfondissez les pages existantes avant d’en publier de nouvelles.",
+      "template-duplicates": "{{count}} clones de modèle ont été fusionnés avec leur meilleure page ; ils n’augmentent pas la couverture et gaspillent le budget de crawl.",
+      "no-dates": "Aucune date de publication ou de mise à jour trouvée : la fraîcheur n’est pas mesurée. Ajoutez des dates en balises meta ou JSON-LD.",
+      "no-links": "Aucun lien interne dans le contenu entre les pages analysées : la cohésion repose uniquement sur les pages orphelines.",
+      "no-pillars": "Pas encore de carte de référence : couverture et profondeur ne sont pas mesurées."
+    },
+    "reference": {
+      "title": "Carte de référence",
+      "intro": "Construit la carte de marché de votre sujet à partir de données réelles : titres, entités et questions des pages bien classées sur votre thème principal, plus Google Suggest. Rien n’est inventé ; sans source SERP, la carte reste vide.",
+      "build": "Créer la carte de référence",
+      "rebuild": "Recréer la carte",
+      "cancel": "Annuler",
+      "clear": "Supprimer la carte",
+      "info": "{{subtopics}} sous-thèmes dans {{pillars}} piliers issus de {{competitors}} concurrents ({{source}}), créée le {{date}}",
+      "progress": {
+        "serp": "Récupération des classements ({{done}}/{{total}})",
+        "crawl": "Exploration de {{domain}} ({{done}}/{{total}})",
+        "build": "Construction de la carte"
+      },
+      "error": "Échec de la création de la carte : {{error}}",
+      "cancelled": "La création de la carte a été annulée.",
+      "unavailableTitle": "La carte de référence est indisponible",
+      "unavailable": {
+        "no-serp-source": "Connectez une source SERP (DataForSEO ou le flux gratuit Bing RSS) pour créer la carte à partir de vrais classements.",
+        "no-queries": "Le thème principal n’a pas encore de requête exploitable. Lancez d’abord un crawl plus large.",
+        "serp-failed": "La récupération des classements a échoué : {{error}}",
+        "no-competitors": "Aucun domaine concurrent trouvé dans les classements.",
+        "no-pages": "Aucune page concurrente n’a pu être explorée (robots.txt, blocages ou délais dépassés).",
+        "no-taxonomy": "Les pages concurrentes partagent trop peu de titres pour former une carte fiable. Réessayez plus tard ou avec plus de concurrents."
+      }
+    },
+    "coverage": {
+      "title": "Carte de couverture du sujet",
+      "filters": "Filtrer les sous-thèmes",
+      "filter": {
+        "all": "Tous ({{count}})",
+        "gaps": "Lacunes seulement ({{count}})",
+        "shallow": "Superficiels ({{count}})",
+        "cannibalized": "Cannibalisés ({{count}})"
+      },
+      "general": "Sujets généraux",
+      "empty": "Aucun sous-thème ne correspond au filtre.",
+      "row": "correspondance {{similarity}}% · profondeur {{depth}}",
+      "status": {
+        "covered_strong": "Couvert en profondeur",
+        "covered_shallow": "Couverture superficielle",
+        "missing_gap": "Manquant",
+        "cannibalized": "Cannibalisé"
+      },
+      "gap": {
+        "critical": "lacune critique",
+        "high": "lacune élevée",
+        "medium": "lacune moyenne"
+      }
+    },
+    "drill": {
+      "title": "Analyse du sous-thème",
+      "back": "Retour à la carte",
+      "url": "Page associée",
+      "none": "Aucune page ne couvre encore ce sous-thème.",
+      "depth": "Profondeur des entités {{value}}/100",
+      "entitiesPresent": "Entités présentes ({{count}}/{{total}})",
+      "entitiesMissing": "Entités manquantes (utilisées par les leaders)",
+      "questions": "Questions d’utilisateurs sans réponse sur la page",
+      "links": "Audit du maillage interne",
+      "noPillarLink": "Aucun lien vers la page pilier {{url}}",
+      "almostOrphan": "Seulement {{count}} lien(s) entrant(s) : presque orpheline",
+      "bleed": "Renvoie vers la page hors sujet {{url}}",
+      "linksOk": "Le maillage interne semble sain."
+    },
+    "brief": {
+      "title": "Brief de l’article",
+      "path": "URL suggérée",
+      "h1": "H1 suggéré",
+      "entities": "Liste d’entités",
+      "questions": "Questions à traiter",
+      "linkFrom": "Faire un lien vers elle depuis",
+      "linkTo": "Elle doit pointer vers",
+      "impact": "Impact estimé sur le TAS : +{{value}}",
+      "generate": "Générer un brief IA",
+      "generating": "Génération…",
+      "noKey": "Connectez un fournisseur d’IA dans les Réglages pour générer des briefs.",
+      "empty": "L’IA n’a renvoyé aucun texte. Réessayez.",
+      "error": "Échec de la génération du brief : {{error}}"
+    },
+    "cannibal": {
+      "title": "Cannibalisation sémantique",
+      "index": "Indice de cannibalisation : {{value}}%",
+      "empty": "Aucune page ne vise la même intention de recherche.",
+      "group": "{{count}} pages, similarité d’intention {{similarity}}%, {{shared}}% d’entités communes",
+      "canonical": "À conserver : {{url}}",
+      "steps": "Déplacez les sections uniques vers la page conservée, redirigez les autres en 301 et mettez à jour les liens internes."
+    },
+    "draft": {
+      "title": "Vérifier un brouillon avant publication",
+      "titleField": "Titre du brouillon",
+      "bodyField": "Texte du brouillon",
+      "check": "Vérifier le chevauchement",
+      "none": "Aucun chevauchement supérieur à 85% avec les pages existantes.",
+      "hit": "{{similarity}}% de chevauchement avec {{url}}"
+    },
+    "rec": {
+      "title": "Plan d’expansion thématique",
+      "empty": "Aucune action à recommander pour l’instant. Créez la carte de référence pour voir les lacunes.",
+      "delta": "+{{value}} TAS",
+      "fill-gaps": "Comblez les lacunes de « {{pillar}} » : {{count}} sous-thèmes manquants",
+      "merge-cannibalized": "Fusionnez {{count}} groupes de pages qui se cannibalisent",
+      "fix-linking": "Corrigez le maillage interne : {{orphans}} pages orphelines, {{bleed}} liens vers des pages hors sujet",
+      "deepen-shallow": "Approfondissez {{count}} sous-thèmes superficiels",
+      "refresh-stale": "Actualisez {{count}} pages inchangées depuis plus d’un an",
+      "how": {
+        "fill-gaps": "Publiez un article par sous-thème manquant : suivez le brief (URL, H1, entités, questions) et reliez-le à son pilier.",
+        "merge-cannibalized": "Gardez la page la plus forte, déplacez-y les sections uniques, redirigez le reste en 301 et mettez à jour les liens internes.",
+        "fix-linking": "Reliez chaque page orpheline depuis son pilier et ses articles voisins, et supprimez les liens des pages expertes vers des pages hors sujet.",
+        "deepen-shallow": "Ajoutez les entités et attributs manquants et répondez aux questions ouvertes sous leurs propres titres.",
+        "refresh-stale": "Mettez à jour chiffres, modèles et recommandations, ajoutez de nouvelles entités et rafraîchissez la date."
+      }
+    },
+    "benchmark": {
+      "title": "Matrice des lacunes thématiques face aux meilleurs concurrents",
+      "empty": "Créez la carte de référence pour vous comparer aux meilleurs concurrents. Seules des données explorées réelles sont affichées.",
+      "domain": "Domaine",
+      "pillars": "Couverture par pilier",
+      "pillar": "Pilier",
+      "insight": {
+        "rank": "Vous êtes {{rank}}ᵉ sur {{total}} selon le TAS.",
+        "lead-pillar": "Vous êtes en tête sur « {{pillar}} » : {{own}}% contre {{best}}% pour le meilleur concurrent.",
+        "trailing-pillars": "Vous êtes derrière les leaders sur : {{pillars}}."
+      }
+    },
+    "history": {
+      "title": "SFS et TAS dans le temps",
+      "empty": "La chronologie apparaît après au moins deux analyses complètes.",
+      "aria": "Graphique du SFS et du TAS sur {{count}} analyses",
+      "point": "{{date}} : SFS {{sfs}}, TAS {{tas}}",
+      "sfs": "SFS (trait plein)",
+      "tas": "TAS (pointillé)",
+      "milestones": "Jalons",
+      "cleanup": "Nettoyage : le SFS a gagné {{delta}}",
+      "architecture": "Architecture : maillage et cannibalisation améliorés de {{delta}}",
+      "expansion": "Expansion : la couverture du sujet a gagné {{delta}}",
+      "regression": "Régression : le TAS a varié de {{delta}}"
+    }
+  },
+  "authorityMonitoring": {
+    "alert": {
+      "title": "SEOmi · alerte d’autorité thématique",
+      "tas-drop": "Le Topical Authority Score a perdu {{points}} points entre deux analyses complètes ({{from}} à {{to}}).",
+      "cannibalization": "Une page publiée ces dernières 24 heures concurrence {{canonical}} sur la même intention ({{similarity}}% de similarité) : {{url}}.",
+      "competitor-expansion": "{{domain}} a étendu sa couverture de « {{pillar}} » de {{from}}% à {{to}}%, ouvrant une nouvelle lacune pour vous.",
+      "content-decay": "La page pilier {{url}} a plus d’un an et il lui manque {{missing}} entités utilisées par le marché."
+    }
+  },
+  "aio": {
+    "title": "Préparation à AI Overviews et au RAG",
+    "subtitle": "La facilité avec laquelle les moteurs de réponse IA trouvent, extraient et citent vos passages.",
+    "empty": "Aucune donnée de page avec sections de contenu pour l'instant. Lancez un nouveau crawl pour analyser la préparation à l'IA.",
+    "band": {
+      "excellent": "Préparation excellente",
+      "good": "Bonne préparation",
+      "moderate": "Préparation modérée",
+      "weak": "Préparation faible",
+      "critical": "Préparation critique"
+    },
+    "hero": {
+      "label": "Score de citabilité par l'IA",
+      "outOf": "sur 100",
+      "summary": "{{weak}} passages faibles trouvés sur {{count}} pages analysées.",
+      "summaryNone": "Aucun passage faible trouvé sur {{count}} pages analysées.",
+      "change": "Évolution depuis la précédente analyse : {{delta}}",
+      "skipped": "{{count}} pages ignorées (aucune section de contenu exploitable)."
+    },
+    "components": {
+      "self": "Autonomie",
+      "spo": "Densité de faits",
+      "extract": "Extractibilité"
+    },
+    "basicNote": "Les règles linguistiques pour {{languages}} sont basiques : la détection des pronoms et des faits est moins précise pour ces langues.",
+    "pages": {
+      "title": "Pages",
+      "url": "URL",
+      "score": "Score",
+      "chunks": "Segments",
+      "facts": "Faits",
+      "language": "Langue",
+      "empty": "Aucune page à afficher."
+    },
+    "skip": {
+      "no-sections": "Aucune section de contenu (crawlée avant cette fonction)",
+      "non-html": "Ce n'est pas une page HTML",
+      "request-error": "Échec de la requête",
+      "no-content": "Aucun texte lisible"
+    },
+    "passage": {
+      "title": "Passages les plus faibles",
+      "intro": "Segments RAG simulés les plus difficiles à citer. Corrigez d'abord les problèmes indiqués.",
+      "chunk": "Segment {{n}} · {{tokens}} tokens · score {{score}}",
+      "noHeading": "(introduction sans titre)",
+      "current": "Passage actuel",
+      "optimized": "Passage optimisé",
+      "generate": "Réécrire avec l'IA",
+      "generating": "Réécriture…",
+      "copy": "Copier",
+      "copied": "Copié",
+      "noKey": "Connectez un fournisseur d'IA dans les Réglages pour réécrire les passages.",
+      "error": "Échec de la requête IA : {{message}}",
+      "empty": "L'IA n'a renvoyé aucun texte.",
+      "none": "Aucun passage faible trouvé."
+    },
+    "issue": {
+      "dangling-pronoun": "Référence floue",
+      "no-answer-first": "Pas de réponse directe en premier",
+      "filler-opening": "Début de remplissage",
+      "no-facts": "Aucun fait concret",
+      "too-long": "Trop long pour un segment"
+    },
+    "history": {
+      "title": "Historique",
+      "empty": "L'historique apparaît après la deuxième analyse de ce projet.",
+      "row": "{{date}} : {{score}}"
+    }
+  },
+  "trust": {
+    "title": "E-E-A-T et confiance des entités",
+    "subtitle": "Dans quelle mesure vos auteurs, votre éditeur et vos sources sont vérifiables. Calculé à partir du crawl enregistré ; aucune page n'est téléchargée à nouveau.",
+    "empty": "Lancez d'abord un crawl pour évaluer les signaux de confiance.",
+    "hero": {
+      "label": "Score de confiance des entités",
+      "articles": "{{articles}} pages d'articles parmi {{pages}} pages explorées",
+      "previous": "Exécution précédente : {{score}} ({{delta}})",
+      "ymyl": "Catégorie YMYL : {{category}}. Les moteurs de recherche appliquent à ces pages le niveau de confiance le plus strict.",
+      "unattributed": "{{pct}} % des articles n'ont ni auteur ni relecteur nommé."
+    },
+    "level": {
+      "strong": "Confiance forte",
+      "adequate": "Confiance suffisante",
+      "weak": "Confiance faible",
+      "critical": "Lacunes de confiance critiques"
+    },
+    "ymyl": {
+      "health": "santé",
+      "finance": "finance",
+      "legal": "droit"
+    },
+    "layers": {
+      "title": "Couches de confiance",
+      "schemaGraph": "Graphe d'entités (JSON-LD)",
+      "authorAlignment": "Adéquation thématique des auteurs",
+      "citationQuality": "Qualité des sources",
+      "transparency": "Transparence éditoriale",
+      "noData": "n/d"
+    },
+    "entities": {
+      "title": "Éditeur et auteurs",
+      "orgPresent": "Éditeur : {{name}}. @id stable : {{id}}. Liens sameAs : {{sameAs}}.",
+      "orgMissing": "Aucune entité Organization n'a été trouvée dans les données structurées.",
+      "none": "Aucune entité auteur n'a été trouvée dans les données structurées.",
+      "colAuthor": "Auteur",
+      "colArticles": "Articles",
+      "colSameAs": "Liens sameAs",
+      "colAlignment": "Adéquation thématique",
+      "generic": "signature anonyme"
+    },
+    "signals": {
+      "title": "Sources et transparence",
+      "citations": "{{trusted}} pages d'articles sur {{pages}} renvoient vers une source fiable (.gov, .edu, PubMed, OMS).",
+      "dead": "{{count}} liens sortants sont cassés",
+      "dated": "{{dated}} articles sur {{articles}} affichent une date de modification ou de relecture.",
+      "pagesTitle": "Pages de confiance",
+      "page": {
+        "editorial": "Politique éditoriale",
+        "about": "À propos",
+        "contact": "Contact",
+        "registry": "Données du registre de l'entreprise"
+      },
+      "found": "trouvée",
+      "missing": "manquante"
+    },
+    "severity": {
+      "critical": "Critique",
+      "warning": "Avertissement",
+      "info": "Info"
+    },
+    "findings": {
+      "title": "À corriger en priorité",
+      "none": "Aucune lacune de confiance n'a été détectée.",
+      "code": {
+        "ymyl-unattributed": "{{count}} articles ({{pct}} %) sur un sujet YMYL n'ont ni auteur ni relecteur nommé. Ajoutez une personne aux qualifications vérifiables.",
+        "ymyl-no-reviewer": "Aucun des {{count}} articles médicaux ne déclare de relecteur (reviewedBy). Ajoutez un relecteur médical qualifié.",
+        "no-bylines": "Aucun des {{count}} articles ne déclare d'auteur dans les données structurées.",
+        "generic-author": "{{count}} articles sont signés d'une mention anonyme, comme une équipe éditoriale.",
+        "org-missing": "Aucune entité Organization n'a été trouvée. Ajoutez le balisage de l'éditeur avec un @id stable.",
+        "org-no-same-as": "L'éditeur {{name}} n'a pas de liens sameAs vers Wikidata, un registre d'entreprises ou des profils sociaux.",
+        "author-no-same-as": "{{count}} auteurs n'ont pas de liens sameAs ({{names}}). Reliez-les à ORCID, LinkedIn ou un registre professionnel.",
+        "author-no-id": "{{count}} auteurs n'ont pas d'@id stable : les moteurs de recherche ne peuvent pas les rapprocher d'une page à l'autre.",
+        "author-off-topic": "Le profil de {{name}} ne correspond au sujet principal qu'à {{pct}} %. Privilégiez des auteurs dont l'expertise correspond.",
+        "low-citations": "Seulement {{pct}} % des {{pages}} pages d'articles citent une source fiable (.gov, .edu, PubMed, OMS).",
+        "dead-citations": "{{count}} liens sortants renvoient une erreur. Remplacez-les ou supprimez-les.",
+        "missing-editorial": "Aucune politique éditoriale ni page de vérification des faits n'a été trouvée.",
+        "missing-contact": "Aucune page de contact n'a été trouvée.",
+        "missing-registry": "Aucune page de registre d'entreprise ou de mentions légales n'a été trouvée.",
+        "missing-about": "Aucune page À propos n'a été trouvée.",
+        "missing-dates": "Seulement {{pct}} % des articles affichent une date de modification ou de relecture.",
+        "no-articles": "Aucune page d'article n'a été détectée ; les couches auteurs et citations n'ont pas été notées."
+      }
+    },
+    "generator": {
+      "open": "Corriger avec JSON-LD",
+      "title": "Générateur JSON-LD",
+      "intro": "Crée un graphe Organization, Person et page avec des liens sameAs. Vérifiez-le, puis collez-le dans le head de la page.",
+      "close": "Fermer",
+      "field": {
+        "personName": "Nom de l'auteur",
+        "jobTitle": "Fonction",
+        "personUrl": "URL du profil de l'auteur",
+        "organizationName": "Nom de l'éditeur",
+        "organizationUrl": "URL de l'éditeur",
+        "pageUrl": "URL de la page",
+        "dateModified": "Date de modification (AAAA-MM-JJ)",
+        "lastReviewed": "Dernière relecture (AAAA-MM-JJ)",
+        "sameAs": "Profils sameAs (une URL par ligne : Wikidata, ORCID, LinkedIn, registre professionnel)",
+        "asReviewer": "Déclarer comme relecteur expert plutôt que comme auteur"
+      },
+      "issue": {
+        "missing-name": "Saisissez le nom de l'auteur.",
+        "invalid-organization-url": "Saisissez une URL d'éditeur valide (https://...).",
+        "invalid-page-url": "Saisissez une URL de page valide (https://...).",
+        "invalid-same-as": "Certaines entrées sameAs ne sont pas des URL valides et ont été ignorées."
+      },
+      "preview": "JSON-LD généré",
+      "copy": "Copier la balise script",
+      "copied": "Copié.",
+      "copyFailed": "Échec de la copie. Sélectionnez le texte et copiez-le manuellement."
     }
   }
 }

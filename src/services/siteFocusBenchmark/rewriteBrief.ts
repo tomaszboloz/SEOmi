@@ -18,12 +18,25 @@ const cache = new Map<string, { prompt: string; text: string }>();
 
 export const clearBriefCache = (): void => cache.clear();
 
+const TAG = /<\/?[a-z][^>]*>/gi;
+
+/** Removes tags until none remain, so nested input such as `<scr<script>ipt>` cannot rebuild one. */
+const stripTags = (text: string): string => {
+  let out = text;
+  for (let prev = ''; prev !== out; ) {
+    prev = out;
+    out = out.replace(TAG, '');
+  }
+  return out.replace(/[<>]/g, '');
+};
+
 /** Strips fences, markup and control characters from model output; the text is shown as plain text. */
 export const sanitizeBrief = (raw: string): string =>
-  raw
-    .replace(/^```[a-z]*\s*$/gim, '')
-    .replace(/[\u0000-\u0008\u000B\u000C\u000E-\u001F\u007F]/g, '')
-    .replace(/<\/?[a-z][^>]*>/gi, '')
+  stripTags(
+    raw
+      .replace(/^```[a-z]*\s*$/gim, '')
+      .replace(/[\u0000-\u0008\u000B\u000C\u000E-\u001F\u007F]/g, ''),
+  )
     .replace(/\r\n?/g, '\n')
     .replace(/\n{3,}/g, '\n\n')
     .trim()
