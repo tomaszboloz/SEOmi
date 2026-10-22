@@ -3656,7 +3656,13 @@
       "currentQueries": "Frazy widoczne tylko w bieżącym okresie: {{count}}",
       "baselinePages": "Adresy URL widoczne tylko w okresie bazowym: {{count}}",
       "currentPages": "Adresy URL widoczne tylko w bieżącym okresie: {{count}}"
-    }
+    },
+    "sortBy": "Sortuj według: {{column}}",
+    "showingRows": "Wiersze {{from}}–{{to}} z {{total}}",
+    "rowsPerPage": "Wierszy na stronie",
+    "pagePrevious": "Poprzednia",
+    "pageNext": "Następna",
+    "pageOf": "Strona {{page}} z {{total}}"
   },
   "settings": {
     "close": "Zamknij ustawienia",

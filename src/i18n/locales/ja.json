@@ -3656,7 +3656,13 @@
       "currentQueries": "現在の期間でのみ観測されたクエリ: {{count}}",
       "baselinePages": "基準期間でのみ観測されたURL: {{count}}",
       "currentPages": "現在の期間でのみ観測されたURL: {{count}}"
-    }
+    },
+    "sortBy": "{{column}}で並べ替え",
+    "showingRows": "{{total}}件中 {{from}}–{{to}}件を表示",
+    "rowsPerPage": "1ページの行数",
+    "pagePrevious": "前へ",
+    "pageNext": "次へ",
+    "pageOf": "{{page}} / {{total}} ページ"
   },
   "settings": {
     "close": "Close settings",

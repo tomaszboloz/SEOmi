@@ -3656,7 +3656,13 @@
       "currentQueries": "Запросы только в текущем периоде: {{count}}",
       "baselinePages": "URL только в базовом периоде: {{count}}",
       "currentPages": "URL только в текущем периоде: {{count}}"
-    }
+    },
+    "sortBy": "Сортировать по: {{column}}",
+    "showingRows": "Строки {{from}}–{{to}} из {{total}}",
+    "rowsPerPage": "Строк на странице",
+    "pagePrevious": "Назад",
+    "pageNext": "Далее",
+    "pageOf": "Страница {{page}} из {{total}}"
   },
   "settings": {
     "close": "Close settings",

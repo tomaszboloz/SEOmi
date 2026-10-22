@@ -3656,7 +3656,13 @@
       "currentQueries": "استعلامات ظهرت في الفترة الحالية فقط: {{count}}",
       "baselinePages": "روابط ظهرت في الفترة المرجعية فقط: {{count}}",
       "currentPages": "روابط ظهرت في الفترة الحالية فقط: {{count}}"
-    }
+    },
+    "sortBy": "الترتيب حسب {{column}}",
+    "showingRows": "عرض الصفوف {{from}}–{{to}} من {{total}}",
+    "rowsPerPage": "عدد الصفوف في الصفحة",
+    "pagePrevious": "السابق",
+    "pageNext": "التالي",
+    "pageOf": "صفحة {{page}} من {{total}}"
   },
   "settings": {
     "close": "Close settings",

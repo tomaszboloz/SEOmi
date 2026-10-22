@@ -3656,7 +3656,13 @@
       "currentQueries": "Consultas apenas no período atual: {{count}}",
       "baselinePages": "URLs apenas no período de referência: {{count}}",
       "currentPages": "URLs apenas no período atual: {{count}}"
-    }
+    },
+    "sortBy": "Ordenar por {{column}}",
+    "showingRows": "Linhas {{from}}–{{to}} de {{total}}",
+    "rowsPerPage": "Linhas por página",
+    "pagePrevious": "Anterior",
+    "pageNext": "Seguinte",
+    "pageOf": "Página {{page}} de {{total}}"
   },
   "settings": {
     "close": "Close settings",

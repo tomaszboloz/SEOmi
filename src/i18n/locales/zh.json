@@ -3656,7 +3656,13 @@
       "currentQueries": "仅在当前时段观测到的查询：{{count}}",
       "baselinePages": "仅在基准时段观测到的URL：{{count}}",
       "currentPages": "仅在当前时段观测到的URL：{{count}}"
-    }
+    },
+    "sortBy": "按{{column}}排序",
+    "showingRows": "显示第 {{from}}–{{to}} 行，共 {{total}} 行",
+    "rowsPerPage": "每页行数",
+    "pagePrevious": "上一页",
+    "pageNext": "下一页",
+    "pageOf": "第 {{page}} / {{total}} 页"
   },
   "settings": {
     "close": "Close settings",

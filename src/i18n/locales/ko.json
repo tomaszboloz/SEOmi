@@ -3656,7 +3656,13 @@
       "currentQueries": "현재 기간에만 관측된 검색어: {{count}}",
       "baselinePages": "기준 기간에만 관측된 URL: {{count}}",
       "currentPages": "현재 기간에만 관측된 URL: {{count}}"
-    }
+    },
+    "sortBy": "{{column}} 기준 정렬",
+    "showingRows": "{{total}}행 중 {{from}}–{{to}}행",
+    "rowsPerPage": "페이지당 행 수",
+    "pagePrevious": "이전",
+    "pageNext": "다음",
+    "pageOf": "{{page}} / {{total}} 페이지"
   },
   "settings": {
     "close": "Close settings",
