@@ -54,9 +54,12 @@ export const isPublicAddress = (address: string): boolean => {
     const ipv4 = [words[6] >> 8, words[6] & 0xff, words[7] >> 8, words[7] & 0xff].join('.');
     return isPublicAddress(ipv4);
   }
-  const first = words[0];
-  const second = words[1];
+  const [first, second, third] = words;
+  // Only global unicast 2000::/3 is routable. That excludes NAT64 64:ff9b::/96 and 64:ff9b:1::/48 by
+  // prefix; the IANA special-purpose carve-outs inside 2000::/3 are listed below.
   return first >= 0x2000 && first <= 0x3fff
+    && !(first === 0x2620 && second === 0x004f && third === 0x8000)
+    && !(first === 0x3fff && second <= 0x0fff)
     && !(first === 0x2001 && second <= 0x01ff)
     && !(first === 0x2001 && second === 0x0db8)
     && first !== 0x2002;

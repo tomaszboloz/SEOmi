@@ -1,9 +1,10 @@
 import { lookup } from 'node:dns/promises';
-import { request as requestHttp, type RequestOptions as HttpRequestOptions } from 'node:http';
+import { request as requestHttp } from 'node:http';
 import { request as requestHttps } from 'node:https';
 import { isIP, type LookupFunction } from 'node:net';
 import { Readable } from 'node:stream';
 import { isPublicAddress } from './ipSafety.js';
+import { pinnedLookup } from './pinnedLookup.js';
 
 export { isPublicAddress } from './ipSafety.js';
 export const MAX_AUDIT_URL_LENGTH = 2048;
@@ -16,6 +17,8 @@ export interface ValidatedPublicTarget {
   url: URL;
   address: string;
   family: 4 | 6;
+  /** Every verified address, in resolver order; the pinned lookup offers all of them (RFC 8305). */
+  addresses?: Array<{ address: string; family: 4 | 6 }>;
 }
 
 export const validatePublicTarget = async (value: string, resolve: AddressResolver = resolveAll): Promise<ValidatedPublicTarget> => {
@@ -33,10 +36,10 @@ export const validatePublicTarget = async (value: string, resolve: AddressResolv
   if (!addresses.length || addresses.some(({ address }) => !isPublicAddress(address))) {
     throw new Error('Private, loopback, and special-purpose network targets are blocked.');
   }
-  const address = addresses[0].address;
-  const family = isIP(address);
-  if (family !== 4 && family !== 6) throw new Error('Hostname resolution did not return a valid IP address.');
-  return { url, address, family };
+  const verified = addresses.map(({ address }) => ({ address, family: isIP(address) }));
+  if (verified.some(({ family }) => family !== 4 && family !== 6)) throw new Error('Hostname resolution did not return a valid IP address.');
+  const list = verified as NonNullable<ValidatedPublicTarget['addresses']>;
+  return { url, address: list[0].address, family: list[0].family, addresses: list };
 };
 
 export const validatePublicUrl = async (value: string, resolve: AddressResolver = resolveAll): Promise<URL> => (
@@ -45,21 +48,14 @@ export const validatePublicUrl = async (value: string, resolve: AddressResolver 
 
 export const requestPinnedPublicTarget = async (target: ValidatedPublicTarget, timeoutMs: number): Promise<Response> => {
   const transport = target.url.protocol === 'https:' ? requestHttps : requestHttp;
-  const lookupPinned = ((
-    _hostname: string,
-    options: { all?: boolean } | undefined,
-    callback: (...args: unknown[]) => void,
-  ) => {
-    const result = { address: target.address, family: target.family };
-    if (options?.all) callback(null, [result]);
-    else callback(null, result.address, result.family);
-  }) as NonNullable<HttpRequestOptions['lookup']>;
+  const lookupPinned = pinnedLookup(target.addresses ?? [{ address: target.address, family: target.family }]);
 
   return new Promise((resolve, reject) => {
     const request = transport(target.url, {
       method: 'GET',
       headers: { 'user-agent': 'SEOmi-MCP/1.0 (+local desktop workflow)' },
       signal: AbortSignal.timeout(timeoutMs),
+      ...({ autoSelectFamily: true } as object),
       lookup: lookupPinned as LookupFunction,
     }, (incoming) => {
       const headers = new Headers();
