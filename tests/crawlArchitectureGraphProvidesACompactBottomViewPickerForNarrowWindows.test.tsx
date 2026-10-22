@@ -1,4 +1,4 @@
-import { fireEvent, render, screen, waitFor, within } from '@testing-library/react';
+import { fireEvent, render, screen, within } from '@testing-library/react';
 import { beforeEach, describe, expect, it } from 'vitest';
 import type { CrawledPageSummary } from '@/types';
 import { CrawlArchitectureGraph } from '@/components/Charts/CrawlArchitectureGraph';
@@ -75,23 +75,13 @@ it('paginates large directory nodes while retaining all-run metrics', () => {
     expect(localStorage.getItem('seomi_project_project-wide-crawl_crawl_directory_wide-run_v1')).toContain('visibleCounts');
   });
 
-it('persists filters and zoom against the active project and saved crawl run', async () => {
+it('persists filters against the active project and saved crawl run', async () => {
     useProjectStore.setState({ activeProjectId: 'project-semantic' });
     const view = render(<CrawlArchitectureGraph pages={pages} startUrl={pages[0].url} runId="run-semantic" />);
     fireEvent.click(screen.getByRole('tab', { name: 'Graf crawla' }));
     fireEvent.change(screen.getByLabelText('Szukaj strony lub terminu na mapie'), { target: { value: 'burr' } });
     const preferenceKey = 'seomi_project_project-semantic_semantic_map_run-semantic_v1';
     expect(localStorage.getItem(preferenceKey)).toContain('burr');
-    fireEvent.wheel(screen.getByRole('img', { name: 'Interaktywna mapa semantycznych klastrów i linków w treści' }), {
-      deltaY: -100,
-      clientX: 300,
-      clientY: 220,
-    });
-    await waitFor(() => {
-      const saved = JSON.parse(localStorage.getItem(preferenceKey) ?? '{}');
-      expect(saved.transform.k).toBeGreaterThan(1);
-    });
-
     view.unmount();
     render(<CrawlArchitectureGraph pages={pages} startUrl={pages[0].url} runId="run-semantic" />);
     expect(screen.getByLabelText('Szukaj strony lub terminu na mapie').getAttribute('value')).toBe('burr');

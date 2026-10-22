@@ -36,7 +36,7 @@ export default defineConfig({
           'react-vendor': ['react', 'react-dom'],
           'i18n-vendor': ['i18next', 'react-i18next'],
           'icons-vendor': ['lucide-react'],
-          'graph-vendor': ['d3-drag', 'd3-force', 'd3-selection', 'd3-zoom'],
+          'graph-vendor': ['cytoscape', 'cytoscape-fcose', 'cytoscape-dagre'],
           'tauri-vendor': [
             '@tauri-apps/api',
             '@tauri-apps/plugin-dialog',

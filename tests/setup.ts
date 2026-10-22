@@ -1,5 +1,8 @@
 // Vitest setup file
-import { afterEach } from 'vitest';
+import { afterEach, vi } from 'vitest';
+
+// jsdom has no canvas: Cytoscape is replaced by a recorder in every test file.
+vi.mock('cytoscape', () => import('./fixtures/fakeCytoscape'));
 
 // jsdom cannot navigate. Following a link would log "Not implemented: navigation" on every anchor click,
 // so cancel the default action of real links here; handlers and tests still observe the click.
