@@ -97,7 +97,7 @@ describe('CrawlHistoryMetricsSection', () => {
 });
 
 describe('ScheduledAuditForm crawl limit', () => {
-  it.each([['0', 1], ['', 1], ['abc', 1], ['9999', 500], ['42', 42]])('normalizes %j to %i', (typed, expected) => {
+  it.each([['0', 1], ['', 1], ['abc', 1], ['9999', 9999], ['2000000', 1000000], ['42', 42]])('normalizes %j to %i', (typed, expected) => {
     const setLimit = vi.fn();
     render(<ScheduledAuditForm url="" setUrl={vi.fn()} taskType="site-crawl" setTaskType={vi.fn()} intervalHours={24 as never}
       setIntervalHours={vi.fn()} scheduledCrawlLimit={10} setScheduledCrawlLimit={setLimit} isTauri schedulesCount={0} onSubmit={vi.fn()} t={plainT} />);

@@ -1,3 +1,11 @@
+# SEOmi 0.4.1 — release notes
+
+## Added
+
+- Search Console: every query and page row is now listed in a paginated table (25 / 50 / 100 / 250 rows per page) with sorting by phrase, clicks, impressions, CTR and position.
+- Crawl page limit: presets now go up to 50,000 pages and there is a "No limit" option (ceiling 1,000,000 pages); scheduled crawls accept the same range.
+- Footer: the Updates button checks for updates in place, shows the result, installs the update and offers a restart without opening Settings.
+
 # SEOmi 0.4.0 — release notes
 
 ## Added
