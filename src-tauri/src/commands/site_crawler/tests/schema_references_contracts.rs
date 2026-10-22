@@ -115,3 +115,32 @@ fn schema_findings_append_stops_at_page_limit_and_marks_truncation() {
     assert!(truncated);
     assert_eq!(output[0].finding.code, "issue-0");
 }
+
+#[test]
+fn json_ld_reference_collection_captures_trust_signals() {
+    let value = serde_json::json!({
+        "@type": "MedicalWebPage",
+        "dateModified": "2026-01-02",
+        "lastReviewed": "2026-01-03",
+        "reviewedBy": {"@id": "https://example.test/#doc", "name": "Dr Doe"},
+        "citation": ["https://pubmed.ncbi.nlm.nih.gov/1/"],
+        "author": {"@type": "Person", "name": "Ann", "jobTitle": "Diabetologist", "knowsAbout": ["insulin"]}
+    });
+    let mut references = Vec::new();
+    collect_json_ld_references(&value, 0, &mut references, 0);
+    for (property, expected) in [
+        ("dateModified", "2026-01-02"),
+        ("lastReviewed", "2026-01-03"),
+        ("reviewedBy", "https://example.test/#doc"),
+        ("citation", "https://pubmed.ncbi.nlm.nih.gov/1/"),
+        ("jobTitle", "Diabetologist"),
+        ("knowsAbout", "insulin"),
+    ] {
+        assert!(
+            references
+                .iter()
+                .any(|item| item.property == property && item.value == expected),
+            "missing {property}"
+        );
+    }
+}

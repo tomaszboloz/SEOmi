@@ -106,7 +106,7 @@ pub fn build_crawled_page_summary(input: BuildCrawledPageSummaryInput<'_>) -> Cr
         semantic_terms: content.semantic_terms,
         semantic_language: content.semantic_language,
         semantic_excerpts: content.semantic_excerpts,
-        focus: content.focus,
+        focus: content.focus.dated(page_data.last_modified.as_deref()),
         semantic_links: links.semantic_links,
         semantic_content_source: content.semantic_content_source,
         semantic_content_provenance,

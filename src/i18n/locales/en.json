@@ -2234,7 +2234,10 @@
       "frames": "Frames",
       "custom-search": "Custom search",
       "semantic": "Semantic analysis",
-      "focus": "Site Focus"
+      "focus": "Site Focus",
+      "authority": "Topical Authority",
+      "aio": "AI readiness",
+      "trust": "Entity trust"
     },
     "environmentStaging": "test/staging",
     "environmentProduction": "production",
@@ -3049,7 +3052,10 @@
       "validation": "HTML validation",
       "performance": "Performance",
       "exports": "Exports",
-      "focus": "Site focus"
+      "focus": "Site focus",
+      "authority": "Topical authority",
+      "aio": "AI readiness",
+      "trust": "Entity trust"
     },
     "groups": {
       "core": "Overview",
@@ -5821,6 +5827,172 @@
           "thin-subtopic": "Thin subtopic \"{{0}}\": only {{1}}% of pages cover it ({{2}} pages). Terms: {{3}}.",
           "competitor-terms": "Competitor terms missing on your site: {{3}}."
         }
+      },
+      "authority": {
+        "title": "Topical Authority",
+        "intro": "How completely and deeply the site covers its Core Topic compared with the market. Scores come from the saved run and the cached reference map; no pages are fetched again.",
+        "scoreTitle": "Topical Authority Score",
+        "legend": "TAS = 0.35 coverage + 0.30 entity depth + 0.25 silo cohesion + 0.10 freshness, scaled by the Site Focus Score (0.7 to 1.0).",
+        "kTcr": "Topic coverage",
+        "kCdes": "Entity depth",
+        "kSilc": "Silo cohesion",
+        "kCvff": "Freshness",
+        "unavailable": "n/a",
+        "noReference": "No reference map was built for this project, so coverage and depth are not measured and TAS is not calculated.",
+        "reference": "Reference map: {{0}} sub-topics in {{1}} pillars from {{2}} competitors ({{3}}).",
+        "quadrant": {
+          "dominant_authority": "Dominant authority",
+          "boutique_specialist": "Boutique specialist",
+          "diluted_giant": "Diluted giant",
+          "unfocused_generalist": "Unfocused generalist"
+        },
+        "warning": {
+          "empty-authority": "Empty authority: many topics are touched but their average depth is very low. Deepen existing pages before publishing more.",
+          "template-duplicates": "Template clones were merged into their strongest page: they do not raise coverage and waste crawl budget.",
+          "no-dates": "No publication or update dates were found, so freshness is not measured.",
+          "no-links": "No in-content internal links between analysed pages were found, so silo cohesion rests on orphan pages only."
+        },
+        "tCoverage": "Pillar coverage",
+        "colPillar": "Pillar",
+        "colCoverage": "Coverage",
+        "colGaps": "Missing sub-topics",
+        "tGaps": "Content gaps",
+        "colGap": "Missing sub-topic",
+        "colLevel": "Severity",
+        "tCannibal": "Semantic cannibalization",
+        "colCanonical": "Page to keep",
+        "colPages": "Pages",
+        "tRecs": "Topical expansion plan",
+        "tBench": "Topical gap matrix vs top competitors",
+        "level": {
+          "critical": "critical",
+          "high": "high",
+          "medium": "medium"
+        },
+        "rec": {
+          "fill-gaps": "Fill the gaps in “{{0}}”: {{1}} missing sub-topics",
+          "merge-cannibalized": "Merge {{0}} groups of cannibalizing pages",
+          "fix-linking": "Fix internal linking: {{0}} orphan pages, {{1}} links to off-topic pages",
+          "deepen-shallow": "Deepen {{0}} shallow sub-topics",
+          "refresh-stale": "Refresh {{0}} pages not updated for over a year"
+        }
+      },
+      "aio": {
+        "title": "AI Overviews & RAG readiness",
+        "intro": "How easily AI answer engines can lift and quote passages of your pages. The score combines self-contained passages (45%), fact density (35%) and extractable structure (20%).",
+        "scoreTitle": "AI readiness score",
+        "legend": "Bands: 90-100 excellent, 75-89 good, 60-74 moderate, 40-59 weak, 0-39 critical.",
+        "kSelf": "Self-containment",
+        "kSpo": "Fact density",
+        "kExtract": "Extractability",
+        "kScored": "Pages scored",
+        "nSelf": "Passages that stand alone",
+        "nSpo": "Subject-predicate-object facts",
+        "nExtract": "Tables, lists, headings",
+        "nScored": "{{0}} pages skipped",
+        "noteBasic": "Language rules for {{0}} are basic: pronoun and fact detection is less precise there.",
+        "tPages": "Pages by AI readiness",
+        "pagesIntro": "Up to 25 pages, lowest score first.",
+        "colScore": "Score",
+        "colSelf": "Self-contained",
+        "colSpo": "Facts",
+        "colExtract": "Structure",
+        "colChunks": "Chunks",
+        "tPassages": "Weakest passages",
+        "passagesIntro": "Passages a RAG index would struggle to cite, with the problems found.",
+        "colHeading": "Page and heading",
+        "colExcerpt": "Passage",
+        "colIssues": "Problems",
+        "percent": "{{0}}%",
+        "band": {
+          "excellent": "Excellent readiness",
+          "good": "Good readiness",
+          "moderate": "Moderate readiness",
+          "weak": "Weak readiness",
+          "critical": "Critical readiness"
+        },
+        "issue": {
+          "dangling-pronoun": "Unclear reference",
+          "no-answer-first": "No direct answer first",
+          "filler-opening": "Filler opening",
+          "no-facts": "No concrete facts",
+          "too-long": "Too long for one chunk"
+        }
+      },
+      "trust": {
+        "title": "Entity Trust (E-E-A-T)",
+        "intro": "How verifiable the publisher, authors and sources of the site are. Scores come from the saved run; no pages are fetched again.",
+        "scoreTitle": "Entity Trust Score",
+        "legend": "Levels: 75-100 strong, 60-74 adequate, 40-59 weak, 0-39 critical.",
+        "kSchema": "Entity graph",
+        "kAuthor": "Author topic fit",
+        "kCitation": "Source quality",
+        "kTransparency": "Transparency",
+        "kArticles": "Article pages",
+        "kAuthors": "Author entities",
+        "nLayer": "Score 0-100",
+        "nNoData": "No data in this crawl",
+        "nArticles": "of {{0}} crawled",
+        "nAuthors": "{{0}} with sameAs",
+        "ymylNote": "YMYL category: {{0}}. {{1}}% of articles have no named author or reviewer.",
+        "tAuthors": "Author entities",
+        "authorsIntro": "Authors found in structured data, with sameAs links and fit to the core topic.",
+        "colAuthor": "Author",
+        "colArticles": "Articles",
+        "colSameAs": "sameAs",
+        "colAlignment": "Topic fit",
+        "generic": "{{0}} (anonymous byline)",
+        "tPages": "Trust pages",
+        "pagesIntro": "Pages that show editorial and company transparency.",
+        "colPage": "Page",
+        "colState": "Status",
+        "found": "Found: {{0}}",
+        "missing": "Missing",
+        "tFindings": "Trust findings",
+        "findingsIntro": "Ordered by severity; fix critical items first.",
+        "colSeverity": "Severity",
+        "colFinding": "Finding",
+        "level": {
+          "strong": "Strong trust",
+          "adequate": "Adequate trust",
+          "weak": "Weak trust",
+          "critical": "Critical trust gaps"
+        },
+        "severity": {
+          "critical": "Critical",
+          "warning": "Warning",
+          "info": "Info"
+        },
+        "kind": {
+          "editorial": "Editorial policy",
+          "about": "About us",
+          "contact": "Contact",
+          "registry": "Company registry data"
+        },
+        "ymyl": {
+          "health": "health",
+          "finance": "finance",
+          "legal": "legal"
+        },
+        "find": {
+          "ymyl-unattributed": "{{0}} articles ({{1}}%) on a YMYL topic have no named author or reviewer.",
+          "ymyl-no-reviewer": "None of the {{0}} medical articles declares a reviewer (reviewedBy).",
+          "no-bylines": "None of the {{0}} articles declares an author in structured data.",
+          "generic-author": "{{0}} articles are signed with an anonymous byline.",
+          "org-missing": "No Organization entity was found in the structured data.",
+          "org-no-same-as": "The publisher {{0}} has no sameAs links.",
+          "author-no-same-as": "{{0}} authors have no sameAs links ({{1}}).",
+          "author-no-id": "{{0}} authors have no stable @id.",
+          "author-off-topic": "The profile of {{0}} fits the core topic only {{1}}%.",
+          "low-citations": "Only {{0}}% of {{1}} article pages cite a trusted source.",
+          "dead-citations": "{{0}} outbound links return an error.",
+          "missing-editorial": "No editorial policy or fact-checking page was found.",
+          "missing-contact": "No contact page was found.",
+          "missing-registry": "No company registry or legal notice page was found.",
+          "missing-about": "No About page was found.",
+          "missing-dates": "Only {{0}}% of articles show a modified or review date.",
+          "no-articles": "No article pages were detected; author and citation layers were not scored."
+        }
       }
     },
     "recs": {
@@ -6056,6 +6228,132 @@
         "what": "A suggested goal: at least 80, or the average of the top 3 competitors when they score higher.",
         "why": "It turns the comparison into one number to work toward.",
         "action": "Use it as a planning goal.\nRe-run the benchmark after your fixes to see the change."
+      }
+    },
+    "authority": {
+      "tas": {
+        "title": "Topical Authority Score",
+        "what": "A 0-100 score of how completely, deeply and coherently the site covers its Core Topic compared with the market. It combines topic coverage (35%), entity depth (30%), silo cohesion (25%) and freshness (10%), then scales the result by your Site Focus Score.",
+        "why": "SFS only measures purity. A site with three perfect articles scores a high SFS yet has almost no authority, because it covers a sliver of the field. TAS measures how much of the field you cover.",
+        "action": "Aim for 80+ on both SFS and TAS. Low TAS with high SFS: add content. High TAS with low SFS: prune or split off-topic sections. Start with the top item in the expansion plan."
+      },
+      "tcr": {
+        "title": "Topic coverage (TCR)",
+        "what": "The share of the market’s sub-topics your site covers with a dedicated, on-topic page. Each sub-topic counts by its importance; a close match counts fully, a partial match counts half.",
+        "why": "Search engines treat sites that answer the whole range of questions in a field as references. Gaps send visitors, and ranking signals, to competitors.",
+        "action": "Above 80%: full authority. Below 40%: fragmentary knowledge. Open the coverage map, filter gaps and publish the most important missing sub-topics first."
+      },
+      "esd": {
+        "title": "Entity depth",
+        "what": "Checks whether a page really covers its sub-topic: the named concepts and attributes the leading pages use, the user questions it answers under their own headings, and how much original material it adds.",
+        "why": "A long article that misses the key concepts of its field loses to shorter but more complete sources. Length alone does not count.",
+        "action": "Open a shallow sub-topic: add the missing entities and attributes, answer the listed questions under their own H2 and add data or a table that competitors lack."
+      },
+      "scs": {
+        "title": "Silo cohesion",
+        "what": "Measures how well articles of one theme are tied together by internal links: a pillar page linked both ways with its articles, descriptive anchor texts, no orphan pages and no links from expert pages to off-topic ones.",
+        "why": "Orphan pages neither pass nor receive topical authority. “Click here” anchors say nothing, so they count only a tenth.",
+        "action": "Link each orphan from its pillar and related articles, use anchors that describe the target (“diabetic neuropathy symptoms”) and drop links to off-topic pages."
+      },
+      "matrix": {
+        "title": "SFS × TAS matrix",
+        "what": "Places the site by purity (SFS, horizontal) and completeness (TAS, vertical). The four quadrants are dominant authority, boutique specialist, diluted giant and unfocused generalist.",
+        "why": "Why do you have high focus but low authority? Five perfect articles on diabetes give SFS 95 but TAS 14: nothing off-topic, yet 90% of the field is missing.",
+        "action": "Keep SFS above 80 while you add new clusters to raise TAS above 80. The highlighted quadrant tells you whether to expand, prune or restructure."
+      },
+      "cannibalization": {
+        "title": "Semantic cannibalization",
+        "what": "Two or more of your pages answer the same search intent: their content and headings are almost identical (cosine similarity from 88%), or both fully cover one reference sub-topic.",
+        "why": "Internal link signals and relevance are split between the duplicates, so none of them reaches the top positions.",
+        "action": "Keep the strongest page, move the unique sections into it, 301-redirect the others and update internal links. Use the draft checker before publishing to avoid new overlaps."
+      }
+    },
+    "aio": {
+      "aioReadiness": {
+        "title": "AI readiness score (AIO-R)",
+        "what": "A 0-100 measure of how easily AI answer engines (Google AI Overviews, Perplexity, Copilot) can lift and quote passages of your pages. It combines self-contained passages (45%), fact density (35%) and extractable structure (20%).",
+        "why": "AI engines cut pages into chunks and quote only the chunk that answers the question. Vague or dependent passages are skipped.",
+        "action": "Open the weakest passages and fix the listed problems.\nRewrite them answer-first with explicit names and numbers.",
+        "example": "A section titled 'What is a normal blood sugar?' that opens with 'This depends on many factors' scores low."
+      },
+      "selfContainment": {
+        "title": "Self-containment",
+        "what": "Whether a passage still makes sense when cut out of the page: it names its subject and does not start with 'it', 'this' or 'as mentioned above'.",
+        "why": "A chunk is indexed alone. A dangling pronoun leaves the model without the subject, so the chunk matches fewer questions.",
+        "action": "Replace 'it' and 'this' at the start of paragraphs with the real name.\nPut the answer in the first 40-60 words under each heading.",
+        "example": "'This value should stay under 140.' becomes 'Post-meal blood glucose should stay under 140 mg/dl.'"
+      },
+      "spoDensity": {
+        "title": "Fact density",
+        "what": "How many clear subject-predicate-object facts the text states per 100 words, such as 'Fasting glucose is 70-99 mg/dl'. The target is about 3 per 100 words.",
+        "why": "Models quote verifiable statements. Filler text gives them nothing to extract.",
+        "action": "Turn vague sentences into statements with a subject, a verb and a value.\nAdd units and numbers where you have them.",
+        "example": "'Many factors matter' has no fact. 'HbA1c below 7% is the usual treatment target' has one."
+      },
+      "extractability": {
+        "title": "Extractability",
+        "what": "Whether the page uses structures that parsers lift easily: tables, numbered lists, definition lists and a clear H2/H3 outline.",
+        "why": "Generative engines prefer to build answers from tables and step lists because their meaning is explicit.",
+        "action": "Present comparisons as a table and procedures as a numbered list.\nUse H2/H3 headings phrased as the questions people ask.",
+        "example": "A step-by-step guide written as one long paragraph scores lower than the same guide as an ordered list."
+      },
+      "answerFirst": {
+        "title": "Answer-first",
+        "what": "The first 40-60 words under a heading should answer the heading directly, naming the subject and giving a fact.",
+        "why": "RAG retrieval compares the question with the start of the chunk. A long preamble lowers the match.",
+        "action": "Write the direct answer first, then the context.\nRepeat the heading's key term in the opening sentence.",
+        "example": "Heading 'How long does a CGM sensor last?' followed by 'A CGM sensor lasts 10-15 days, depending on the model.'"
+      },
+      "chunking": {
+        "title": "Chunking simulation",
+        "what": "SEOmi cuts every page the way a RAG index does: one chunk per H2/H3 section, long sections split into windows of about 300 tokens.",
+        "why": "You see the page as the retrieval system sees it: a set of separate passages, each judged on its own.",
+        "action": "Check the chunk score of each weak passage.\nKeep sections short enough to be one chunk.",
+        "example": "A 900-token section becomes about three chunks; only the first one sits directly under the heading."
+      }
+    },
+    "trust": {
+      "trustScore": {
+        "title": "Entity Trust Score",
+        "what": "A 0-100 score of how well search engines can verify who publishes and writes your content. It averages four layers: entity graph, author topic fit, source quality and editorial transparency.",
+        "why": "For health, finance and legal topics, strong topical focus is not enough. Pages without a verifiable author and publisher rarely reach the top results.",
+        "action": "Read the critical items in the list first.\nFix the lowest layer, then re-crawl to see the score move."
+      },
+      "schemaGraph": {
+        "title": "Entity graph (JSON-LD)",
+        "what": "Checks that your structured data names the publisher and each author as entities with a stable @id and sameAs links, and that articles carry author, dates, reviewer and citations.",
+        "why": "Linked entities let search engines match your authors to known people and organizations instead of guessing from plain text.",
+        "action": "Add Organization and Person markup with @id.\nLink each person and the publisher to Wikidata, ORCID, LinkedIn or an official register with sameAs.\nUse the JSON-LD generator below the author list."
+      },
+      "authorAlignment": {
+        "title": "Author topic fit",
+        "what": "Compares each author's declared expertise (job title, knowsAbout and profile page) with the core topic of the site.",
+        "why": "An article on insulin therapy signed by a marketing copywriter is a weak expertise signal.",
+        "action": "Assign articles to authors whose profile matches the topic.\nAdd jobTitle and knowsAbout to the Person markup.\nPublish a profile page for every author."
+      },
+      "citationQuality": {
+        "title": "Source quality",
+        "what": "Shows how many article pages link out to trusted sources such as .gov, .edu, PubMed, NCBI, WHO or scientific publishers, and how many outbound links are broken.",
+        "why": "Citing primary sources shows that claims are verifiable. Dead references weaken that signal.",
+        "action": "Add references to primary sources in each expert article.\nReplace or remove broken outbound links.\nCheck external links in the Links tab to refresh status codes."
+      },
+      "transparency": {
+        "title": "Editorial transparency",
+        "what": "Looks for an editorial policy, an About page, a contact page, company registry data and visible modified or review dates on articles.",
+        "why": "Readers and search engines need to know who is behind the site and how content is checked.",
+        "action": "Publish an editorial and fact-checking policy.\nAdd contact details and company registry data.\nShow the last update date on every article."
+      },
+      "ymyl": {
+        "title": "YMYL topics",
+        "what": "Your Money or Your Life: subjects such as health, finance and law, where wrong information can harm readers.",
+        "why": "Search quality guidelines apply the highest trust requirements to these topics, so missing authors or reviewers count as critical gaps.",
+        "action": "Name a qualified author on every article.\nAdd a reviewer with credentials for medical or legal content.\nCite primary sources."
+      },
+      "sameAs": {
+        "title": "sameAs links",
+        "what": "A schema.org property that points from a person or organization to the same entity elsewhere: Wikidata, ORCID, LinkedIn or an official register.",
+        "why": "It lets search engines confirm that your author is the real person with those credentials.",
+        "action": "Add at least one authoritative sameAs URL per author and for the publisher.\nUse the same name and spelling as on that profile."
       }
     }
   },
@@ -6441,6 +6739,386 @@
       "coverage": "{{pct}}% of competitors ({{count}})",
       "empty": "No competitor topics are missing from your site.",
       "apply": "Add these terms to the gap analysis"
+    }
+  },
+  "authority": {
+    "title": "Topical Authority",
+    "empty": "Run a crawl to measure topical authority.",
+    "hero": {
+      "sfs": "Site Focus Score",
+      "tas": "Topical Authority Score",
+      "sfsRole": "Purity: how much of the content stays on topic",
+      "tasRole": "Completeness: how fully the topic is covered",
+      "target": "Target: {{value}}+",
+      "pending": "build the reference map to calculate it"
+    },
+    "quadrant": {
+      "dominant_authority": "Dominant authority",
+      "boutique_specialist": "Boutique specialist",
+      "diluted_giant": "Diluted giant",
+      "unfocused_generalist": "Unfocused generalist"
+    },
+    "quadrantHint": {
+      "dominant_authority": "Focused and nearly complete. Defend the position, keep data fresh and expand into long-tail queries.",
+      "boutique_specialist": "On topic but covers only part of the field. Expand content and build new topic clusters.",
+      "diluted_giant": "Plenty of content on the topic, but off-topic sections dilute it. Prune or move them to subdomains.",
+      "unfocused_generalist": "No clear focus and shallow coverage. Pick one Core Topic, clean up the index and build the first solid silo."
+    },
+    "matrix": {
+      "title": "Topical maturity matrix (SFS × TAS)",
+      "pending": "The matrix appears once TAS is calculated.",
+      "aria": "You: SFS {{sfs}}, TAS {{tas}}, quadrant {{quadrant}}",
+      "you": "You",
+      "axisX": "SFS",
+      "axisY": "TAS"
+    },
+    "pillars": {
+      "title": "Components of the Topical Authority Score",
+      "tcr": "Topic coverage",
+      "cdes": "Entity depth",
+      "silc": "Silo cohesion",
+      "cvff": "Freshness and uniqueness",
+      "tcrNote": "{{covered}} of {{total}} reference sub-topics covered",
+      "cdesNote": "Average entity depth of the sub-topics you cover",
+      "silcNote": "{{orphans}} orphan pages, {{weak}} weak anchors, {{bleed}} links to off-topic pages",
+      "cvffNote": "{{stale}} stale pages, {{groups}} cannibalization groups",
+      "unavailable": "not measurable",
+      "multiplier": "Focus multiplier ×{{value}} from SFS {{sfs}}"
+    },
+    "warning": {
+      "empty-authority": "Empty authority: the site touches {{tcr}}% of the topics but their average depth is only {{depth}}/100. Deepen existing pages with hard data and entities before publishing more.",
+      "template-duplicates": "{{count}} template clones were merged into their strongest page and do not raise coverage. They waste crawl budget.",
+      "no-dates": "No publication or update dates were found, so freshness is not measured. Add dates in meta tags or JSON-LD.",
+      "no-links": "No in-content internal links between analysed pages were found, so silo cohesion is based on orphan pages only.",
+      "no-pillars": "No reference map yet: coverage and depth are not measured."
+    },
+    "reference": {
+      "title": "Reference map",
+      "intro": "Builds the market map of your topic from real data: headings, entities and questions of the pages ranking for your Core Topic, plus Google Suggest. Nothing is invented; without a SERP source the map stays empty.",
+      "build": "Build reference map",
+      "rebuild": "Rebuild map",
+      "cancel": "Cancel",
+      "clear": "Discard map",
+      "info": "{{subtopics}} sub-topics in {{pillars}} pillars from {{competitors}} competitors ({{source}}), built {{date}}",
+      "progress": {
+        "serp": "Fetching rankings ({{done}}/{{total}})",
+        "crawl": "Crawling {{domain}} ({{done}}/{{total}})",
+        "build": "Building the map"
+      },
+      "error": "Building the map failed: {{error}}",
+      "cancelled": "Map building was cancelled.",
+      "unavailableTitle": "The reference map is unavailable",
+      "unavailable": {
+        "no-serp-source": "Connect a SERP source (DataForSEO or the free Bing RSS feed) to build the map from real rankings.",
+        "no-queries": "The Core Topic has no usable search phrase yet. Run a larger crawl first.",
+        "serp-failed": "The ranking lookup failed: {{error}}",
+        "no-competitors": "No competing domains were found in the rankings.",
+        "no-pages": "No competitor pages could be crawled (robots.txt, blocking or timeouts).",
+        "no-taxonomy": "The competitor pages share too few headings to form a reliable map. Try again later or with more competitors."
+      }
+    },
+    "coverage": {
+      "title": "Topic coverage map",
+      "filters": "Filter sub-topics",
+      "filter": {
+        "all": "All ({{count}})",
+        "gaps": "Gaps only ({{count}})",
+        "shallow": "Shallow ({{count}})",
+        "cannibalized": "Cannibalized ({{count}})"
+      },
+      "general": "General topics",
+      "empty": "No sub-topics match this filter.",
+      "row": "{{similarity}}% match · depth {{depth}}",
+      "status": {
+        "covered_strong": "Covered in depth",
+        "covered_shallow": "Shallow coverage",
+        "missing_gap": "Missing",
+        "cannibalized": "Cannibalized"
+      },
+      "gap": {
+        "critical": "critical gap",
+        "high": "high gap",
+        "medium": "medium gap"
+      }
+    },
+    "drill": {
+      "title": "Sub-topic analysis",
+      "back": "Back to the map",
+      "url": "Assigned page",
+      "none": "No page covers this sub-topic yet.",
+      "depth": "Entity depth {{value}}/100",
+      "entitiesPresent": "Entities present ({{count}}/{{total}})",
+      "entitiesMissing": "Entities missing (used by the leaders)",
+      "questions": "User questions the page does not answer",
+      "links": "Internal linking audit",
+      "noPillarLink": "No link to the pillar page {{url}}",
+      "almostOrphan": "Only {{count}} incoming link(s): almost an orphan page",
+      "bleed": "Links to the off-topic page {{url}}",
+      "linksOk": "Internal linking looks healthy."
+    },
+    "brief": {
+      "title": "Article brief",
+      "path": "Suggested URL",
+      "h1": "Suggested H1",
+      "entities": "Entity checklist",
+      "questions": "Questions to answer",
+      "linkFrom": "Link to it from",
+      "linkTo": "It should link to",
+      "impact": "Estimated TAS impact: +{{value}}",
+      "generate": "Generate AI brief",
+      "generating": "Generating…",
+      "noKey": "Connect an AI provider in Settings to generate briefs.",
+      "empty": "The AI returned no text. Try again.",
+      "error": "Brief generation failed: {{error}}"
+    },
+    "cannibal": {
+      "title": "Semantic cannibalization",
+      "index": "Cannibalization index: {{value}}%",
+      "empty": "No pages compete for the same search intent.",
+      "group": "{{count}} pages, {{similarity}}% intent similarity, {{shared}}% shared entities",
+      "canonical": "Keep: {{url}}",
+      "steps": "Move the unique sections into the page to keep, 301-redirect the others to it and update the internal links."
+    },
+    "draft": {
+      "title": "Check a draft before publishing",
+      "titleField": "Draft title",
+      "bodyField": "Draft text",
+      "check": "Check overlap",
+      "none": "No overlap above 85% with existing pages.",
+      "hit": "{{similarity}}% overlap with {{url}}"
+    },
+    "rec": {
+      "title": "Topical expansion plan",
+      "empty": "No actions to recommend yet. Build the reference map to see coverage gaps.",
+      "delta": "+{{value}} TAS",
+      "fill-gaps": "Fill the gaps in “{{pillar}}”: {{count}} missing sub-topics",
+      "merge-cannibalized": "Merge {{count}} groups of cannibalizing pages",
+      "fix-linking": "Fix internal linking: {{orphans}} orphan pages, {{bleed}} links to off-topic pages",
+      "deepen-shallow": "Deepen {{count}} shallow sub-topics",
+      "refresh-stale": "Refresh {{count}} pages not updated for over a year",
+      "how": {
+        "fill-gaps": "Publish one article per missing sub-topic: use the brief (URL, H1, entity checklist, questions) and link it into its pillar.",
+        "merge-cannibalized": "Keep the strongest page, move unique sections into it, 301-redirect the rest and update internal links.",
+        "fix-linking": "Link every orphan page from its pillar and related articles, and remove links from expert pages to off-topic pages.",
+        "deepen-shallow": "Add the missing entities and attributes, and answer the open user questions under their own headings.",
+        "refresh-stale": "Update figures, models and guidelines, add new entities and refresh the published date."
+      }
+    },
+    "benchmark": {
+      "title": "Topical gap matrix vs top competitors",
+      "empty": "Build the reference map to compare with the top-ranking competitors. Only real crawled data is shown.",
+      "domain": "Domain",
+      "pillars": "Pillar coverage",
+      "pillar": "Pillar",
+      "insight": {
+        "rank": "You rank {{rank}} of {{total}} by TAS.",
+        "lead-pillar": "You lead in “{{pillar}}”: {{own}}% against {{best}}% for the best competitor.",
+        "trailing-pillars": "You trail the leaders in: {{pillars}}."
+      }
+    },
+    "history": {
+      "title": "SFS and TAS over time",
+      "empty": "The timeline appears after at least two full analyses.",
+      "aria": "Chart of SFS and TAS over {{count}} analyses",
+      "point": "{{date}}: SFS {{sfs}}, TAS {{tas}}",
+      "sfs": "SFS (solid)",
+      "tas": "TAS (dashed)",
+      "milestones": "Milestones",
+      "cleanup": "Cleanup: SFS rose by {{delta}}",
+      "architecture": "Architecture: linking and cannibalization improved by {{delta}}",
+      "expansion": "Expansion: topic coverage rose by {{delta}}",
+      "regression": "Regression: TAS changed by {{delta}}"
+    }
+  },
+  "authorityMonitoring": {
+    "alert": {
+      "title": "SEOmi · Topical Authority alert",
+      "tas-drop": "Topical Authority Score fell by {{points}} points between full analyses ({{from}} to {{to}}).",
+      "cannibalization": "A page published within the last 24 hours competes with {{canonical}} for the same intent ({{similarity}}% similar): {{url}}.",
+      "competitor-expansion": "{{domain}} expanded its coverage of “{{pillar}}” from {{from}}% to {{to}}%, opening a new gap for you.",
+      "content-decay": "Pillar page {{url}} is over a year old and misses {{missing}} entities the market now uses."
+    }
+  },
+  "aio": {
+    "title": "AI Overviews & RAG readiness",
+    "subtitle": "How easily AI answer engines can find, lift and quote your passages.",
+    "empty": "No page data with content sections yet. Run a new crawl to analyse AI readiness.",
+    "band": {
+      "excellent": "Excellent readiness",
+      "good": "Good readiness",
+      "moderate": "Moderate readiness",
+      "weak": "Weak readiness",
+      "critical": "Critical readiness"
+    },
+    "hero": {
+      "label": "AI citability score",
+      "outOf": "out of 100",
+      "summary": "{{weak}} weak passages found across {{count}} analysed pages.",
+      "summaryNone": "No weak passages found across {{count}} analysed pages.",
+      "change": "Change since the previous analysis: {{delta}}",
+      "skipped": "{{count}} pages skipped (no usable content sections)."
+    },
+    "components": {
+      "self": "Self-containment",
+      "spo": "Fact density",
+      "extract": "Extractability"
+    },
+    "basicNote": "Language rules for {{languages}} are basic: pronoun and fact detection is less precise for these languages.",
+    "pages": {
+      "title": "Pages",
+      "url": "URL",
+      "score": "Score",
+      "chunks": "Chunks",
+      "facts": "Facts",
+      "language": "Language",
+      "empty": "No pages to show."
+    },
+    "skip": {
+      "no-sections": "No content sections (crawled before this feature)",
+      "non-html": "Not an HTML page",
+      "request-error": "Request failed",
+      "no-content": "No readable text"
+    },
+    "passage": {
+      "title": "Weakest passages",
+      "intro": "Simulated RAG chunks that are hardest to cite. Fix the listed problems first.",
+      "chunk": "Chunk {{n}} · {{tokens}} tokens · score {{score}}",
+      "noHeading": "(intro without heading)",
+      "current": "Current passage",
+      "optimized": "Optimized passage",
+      "generate": "Rewrite with AI",
+      "generating": "Rewriting…",
+      "copy": "Copy",
+      "copied": "Copied",
+      "noKey": "Connect an AI provider in Settings to rewrite passages.",
+      "error": "AI request failed: {{message}}",
+      "empty": "The AI returned no text.",
+      "none": "No weak passages found."
+    },
+    "issue": {
+      "dangling-pronoun": "Unclear reference",
+      "no-answer-first": "No direct answer first",
+      "filler-opening": "Filler opening",
+      "no-facts": "No concrete facts",
+      "too-long": "Too long for one chunk"
+    },
+    "history": {
+      "title": "History",
+      "empty": "History appears after the second analysis of this project.",
+      "row": "{{date}}: {{score}}"
+    }
+  },
+  "trust": {
+    "title": "E-E-A-T & Entity Trust",
+    "subtitle": "How verifiable your authors, publisher and sources are. Computed from the saved crawl; no page is fetched again.",
+    "empty": "Run a crawl first to assess trust signals.",
+    "hero": {
+      "label": "Entity Trust Score",
+      "articles": "{{articles}} article pages among {{pages}} crawled pages",
+      "previous": "Previous run: {{score}} ({{delta}})",
+      "ymyl": "YMYL category: {{category}}. Search engines hold these pages to the strictest trust standard.",
+      "unattributed": "{{pct}}% of articles have no named author or reviewer."
+    },
+    "level": {
+      "strong": "Strong trust",
+      "adequate": "Adequate trust",
+      "weak": "Weak trust",
+      "critical": "Critical trust gaps"
+    },
+    "ymyl": {
+      "health": "health",
+      "finance": "finance",
+      "legal": "legal"
+    },
+    "layers": {
+      "title": "Trust layers",
+      "schemaGraph": "Entity graph (JSON-LD)",
+      "authorAlignment": "Author topic fit",
+      "citationQuality": "Source quality",
+      "transparency": "Editorial transparency",
+      "noData": "n/a"
+    },
+    "entities": {
+      "title": "Publisher and authors",
+      "orgPresent": "Publisher: {{name}}. Stable @id: {{id}}. sameAs links: {{sameAs}}.",
+      "orgMissing": "No Organization entity was found in the structured data.",
+      "none": "No author entities were found in the structured data.",
+      "colAuthor": "Author",
+      "colArticles": "Articles",
+      "colSameAs": "sameAs links",
+      "colAlignment": "Topic fit",
+      "generic": "anonymous byline"
+    },
+    "signals": {
+      "title": "Sources and transparency",
+      "citations": "{{trusted}} of {{pages}} article pages link to a trusted source (.gov, .edu, PubMed, WHO).",
+      "dead": "{{count}} outbound links are broken",
+      "dated": "{{dated}} of {{articles}} articles show a modified or review date.",
+      "pagesTitle": "Trust pages",
+      "page": {
+        "editorial": "Editorial policy",
+        "about": "About us",
+        "contact": "Contact",
+        "registry": "Company registry data"
+      },
+      "found": "found",
+      "missing": "missing"
+    },
+    "severity": {
+      "critical": "Critical",
+      "warning": "Warning",
+      "info": "Info"
+    },
+    "findings": {
+      "title": "What to fix first",
+      "none": "No trust gaps were detected.",
+      "code": {
+        "ymyl-unattributed": "{{count}} articles ({{pct}}%) on a YMYL topic have no named author or reviewer. Add a person with verifiable credentials.",
+        "ymyl-no-reviewer": "None of the {{count}} medical articles declares a reviewer (reviewedBy). Add a qualified medical reviewer.",
+        "no-bylines": "None of the {{count}} articles declares an author in structured data.",
+        "generic-author": "{{count}} articles are signed with an anonymous byline such as an editorial team.",
+        "org-missing": "No Organization entity was found. Add publisher markup with a stable @id.",
+        "org-no-same-as": "The publisher {{name}} has no sameAs links to Wikidata, a company register or social profiles.",
+        "author-no-same-as": "{{count}} authors have no sameAs links ({{names}}). Link them to ORCID, LinkedIn or a professional register.",
+        "author-no-id": "{{count}} authors have no stable @id, so search engines cannot reconcile them across pages.",
+        "author-off-topic": "The profile of {{name}} fits the core topic only {{pct}}%. Prefer authors with matching expertise.",
+        "low-citations": "Only {{pct}}% of {{pages}} article pages cite a trusted source (.gov, .edu, PubMed, WHO).",
+        "dead-citations": "{{count}} outbound links return an error. Replace or remove them.",
+        "missing-editorial": "No editorial policy or fact-checking page was found.",
+        "missing-contact": "No contact page was found.",
+        "missing-registry": "No company registry or legal notice page was found.",
+        "missing-about": "No About page was found.",
+        "missing-dates": "Only {{pct}}% of articles show a modified or review date.",
+        "no-articles": "No article pages were detected, so the author and citation layers were not scored."
+      }
+    },
+    "generator": {
+      "open": "Fix with JSON-LD",
+      "title": "JSON-LD generator",
+      "intro": "Builds an Organization, Person and page graph with sameAs links. Review it, then paste it into the page head.",
+      "close": "Close",
+      "field": {
+        "personName": "Author name",
+        "jobTitle": "Job title",
+        "personUrl": "Author profile URL",
+        "organizationName": "Publisher name",
+        "organizationUrl": "Publisher URL",
+        "pageUrl": "Page URL",
+        "dateModified": "Date modified (YYYY-MM-DD)",
+        "lastReviewed": "Last reviewed (YYYY-MM-DD)",
+        "sameAs": "sameAs profiles (one URL per line: Wikidata, ORCID, LinkedIn, professional register)",
+        "asReviewer": "Declare as expert reviewer instead of author"
+      },
+      "issue": {
+        "missing-name": "Enter the author name.",
+        "invalid-organization-url": "Enter a valid publisher URL (https://...).",
+        "invalid-page-url": "Enter a valid page URL (https://...).",
+        "invalid-same-as": "Some sameAs entries are not valid URLs and were left out."
+      },
+      "preview": "Generated JSON-LD",
+      "copy": "Copy script tag",
+      "copied": "Copied.",
+      "copyFailed": "Copy failed. Select the text and copy it manually."
     }
   }
 }

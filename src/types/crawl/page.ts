@@ -5,23 +5,7 @@ import type { CrawledImage, CrawledFrame, CrawledSocialResourceCheck, CrawledSoc
 import type { FaviconData } from '../audit/technical';
 import type { CrawledCustomSearchResult } from './configuration';
 
-/** Weighted n-gram of a page for the Site Focus Score engine. */
-export interface FocusTerm {
-  /** Folded, lemmatized key (same keying as semanticTermKey); n-grams are space-joined. */
-  term: string;
-  /** Most frequent surface form on the page. */
-  surface: string;
-  /** Raw occurrences, not zone weighted. */
-  count: number;
-  /** Zone-weighted occurrences: title/H1 x2.5, H2-H3 x1.5, body/alt/meta x1. */
-  weight: number;
-}
-
-export interface HeadingTexts {
-  h1: string[];
-  h2: string[];
-  h3: string[];
-}
+import type { FocusTerm, HeadingTexts, RagSection } from './focus';
 
 export interface CrawledPageSummary {
   url: string;
@@ -88,6 +72,10 @@ export interface CrawledPageSummary {
   heading_texts?: HeadingTexts;
   /** Characters of cleaned main-content text behind focus_terms. */
   focus_text_chars?: number;
+  /** Latest YYYY-MM-DD date the page declares (meta, JSON-LD, time, Last-Modified); absent when none. */
+  content_date?: string;
+  /** H1-H3 sections (max 40) for AI Overviews / RAG readiness; absent in older saved runs. */
+  rag_sections?: RagSection[];
   /** Bounded semantic-content excerpts retained only for local source-context checks. */
   semantic_excerpts?: string[];
   /** Internal links discovered in main content only for semantic architecture analysis. */

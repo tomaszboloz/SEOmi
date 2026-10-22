@@ -2,7 +2,10 @@ import type { CrawlRunRecord } from '@/types';
 import type { CrawlReportTemplate } from '@/services/reportTemplates';
 import { downloadPdf, downloadText } from './download';
 import { crawlFilename } from './filenames';
+import { crawlAuthoritySummary } from './authoritySummary';
+import { crawlAioSummary } from '@/services/aioReadiness/summary';
 import { crawlFocusSummary } from './focusSummary';
+import { crawlTrustSummary } from '@/services/eeatTrust';
 
 const filteredCrawlResult = (run: CrawlRunRecord, template?: CrawlReportTemplate): Record<string, unknown> => {
   if (!template) return run.result as unknown as Record<string, unknown>;
@@ -81,6 +84,9 @@ export const crawlReportPayload = (run: CrawlRunRecord, template?: CrawlReportTe
 
 export const downloadCrawlPdf = (run: CrawlRunRecord, template?: CrawlReportTemplate): Promise<void> => {
   const focus = !template || template.sections.includes('focus') ? crawlFocusSummary(run) : undefined;
+  const authority = !template || template.sections.includes('authority') ? crawlAuthoritySummary(run) : undefined;
+  const aio = !template || template.sections.includes('aio') ? crawlAioSummary(run) : undefined;
+  const trust = !template || template.sections.includes('trust') ? crawlTrustSummary(run) : undefined;
   return downloadPdf('generate_crawl_pdf', {
   run: {
     id: run.id,
@@ -96,6 +102,9 @@ export const downloadCrawlPdf = (run: CrawlRunRecord, template?: CrawlReportTemp
     report_template_sections: template?.sections || null,
     report_template_name: template?.name || null,
     ...(focus ? { focus } : {}),
+    ...(authority ? { authority } : {}),
+    ...(aio ? { aio } : {}),
+    ...(trust ? { trust } : {}),
   },
 }, crawlFilename(run, 'report', 'pdf'));
 };

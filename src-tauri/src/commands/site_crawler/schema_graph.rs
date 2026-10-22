@@ -20,6 +20,13 @@ const GRAPH_VALUE_PROPERTIES: &[&str] = &[
     "publisher",
     "image",
     "logo",
+    "reviewedBy",
+    "citation",
+    "lastReviewed",
+    "dateModified",
+    "datePublished",
+    "jobTitle",
+    "knowsAbout",
 ];
 
 pub(super) fn collect_json_ld_references(

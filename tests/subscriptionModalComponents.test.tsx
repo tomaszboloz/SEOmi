@@ -74,7 +74,7 @@ describe('SubscriptionModal modular architecture', () => {
     expect(onTestConnection).toHaveBeenCalledWith('openai');
   });
 
-  it('handles inactive provider activation and api key input changes', () => {
+  it('handles inactive provider activation and api key input changes', async () => {
     const onSetProvider = vi.fn();
     const onSaveKey = vi.fn();
 
@@ -104,7 +104,7 @@ describe('SubscriptionModal modular architecture', () => {
     fireEvent.change(input, { target: { value: 'sk-new-key' } });
     // Typing only fills the draft; the key is written once, on save.
     expect(onSaveKey).not.toHaveBeenCalled();
-    fireEvent.keyDown(input, { key: 'Enter' });
+    await act(async () => { fireEvent.keyDown(input, { key: 'Enter' }); });
     expect(onSaveKey).toHaveBeenCalledExactlyOnceWith('openai', 'sk-new-key');
   });
 

@@ -2234,7 +2234,10 @@
       "frames": "프레임",
       "custom-search": "사용자 검색",
       "semantic": "시맨틱 분석",
-      "focus": "사이트 포커스"
+      "focus": "사이트 포커스",
+      "authority": "주제 권위도",
+      "aio": "AI 준비도",
+      "trust": "엔터티 신뢰도"
     },
     "environmentStaging": "test/staging",
     "environmentProduction": "production",
@@ -3049,7 +3052,10 @@
       "validation": "HTML 검증",
       "performance": "성능",
       "exports": "내보내기",
-      "focus": "사이트 포커스"
+      "focus": "사이트 포커스",
+      "authority": "주제 권위도",
+      "aio": "AI 준비도",
+      "trust": "엔터티 신뢰도"
     },
     "groups": {
       "core": "개요",
@@ -5821,6 +5827,172 @@
           "thin-subtopic": "내용이 빈약한 하위 주제 \"{{0}}\": 페이지의 {{1}}%만 다룹니다({{2}}페이지). 용어: {{3}}.",
           "competitor-terms": "내 사이트에 없는 경쟁사 용어: {{3}}."
         }
+      },
+      "authority": {
+        "title": "주제 권위도",
+        "intro": "사이트가 핵심 주제를 시장 대비 얼마나 완전하고 깊게 다루는지 보여 줍니다. 점수는 저장된 실행과 캐시된 참조 지도에서 가져오며 페이지를 다시 가져오지 않습니다.",
+        "scoreTitle": "Topical Authority Score",
+        "legend": "TAS = 0.35 커버리지 + 0.30 엔티티 깊이 + 0.25 사일로 응집도 + 0.10 최신성, Site Focus Score(0.7~1.0)로 보정.",
+        "kTcr": "주제 커버리지",
+        "kCdes": "엔티티 깊이",
+        "kSilc": "사일로 응집도",
+        "kCvff": "최신성",
+        "unavailable": "해당 없음",
+        "noReference": "이 프로젝트에는 참조 지도가 없어 커버리지와 깊이를 측정하지 않고 TAS도 계산하지 않았습니다.",
+        "reference": "참조 지도: 경쟁사 {{2}}곳({{3}})에서 얻은 기둥 {{1}}개, 하위 주제 {{0}}개.",
+        "quadrant": {
+          "dominant_authority": "지배적 권위",
+          "boutique_specialist": "부티크 전문가",
+          "diluted_giant": "희석된 거인",
+          "unfocused_generalist": "초점 없는 제너럴리스트"
+        },
+        "warning": {
+          "empty-authority": "빈 권위: 많은 주제를 다루지만 평균 깊이가 매우 낮습니다. 새 글보다 기존 페이지를 먼저 보강하세요.",
+          "template-duplicates": "템플릿 복제 페이지는 가장 강한 페이지로 병합했습니다. 커버리지를 높이지 않고 크롤 예산을 낭비합니다.",
+          "no-dates": "게시일·수정일을 찾지 못해 최신성을 측정하지 않았습니다.",
+          "no-links": "분석된 페이지 간 본문 내부 링크가 없어 응집도는 고아 페이지만 기준입니다."
+        },
+        "tCoverage": "기둥별 커버리지",
+        "colPillar": "기둥",
+        "colCoverage": "커버리지",
+        "colGaps": "빠진 하위 주제",
+        "tGaps": "콘텐츠 공백",
+        "colGap": "빠진 하위 주제",
+        "colLevel": "심각도",
+        "tCannibal": "의미적 카니발라이제이션",
+        "colCanonical": "유지할 페이지",
+        "colPages": "페이지",
+        "tRecs": "주제 확장 계획",
+        "tBench": "상위 경쟁사 대비 격차 매트릭스",
+        "level": {
+          "critical": "치명적",
+          "high": "높음",
+          "medium": "중간"
+        },
+        "rec": {
+          "fill-gaps": "“{{0}}”의 공백 메우기: 하위 주제 {{1}}개 부족",
+          "merge-cannibalized": "카니발라이제이션 페이지 {{0}}그룹 병합",
+          "fix-linking": "내부 링크 수정: 고아 페이지 {{0}}개, 주제 밖 링크 {{1}}개",
+          "deepen-shallow": "얕은 하위 주제 {{0}}개 보강",
+          "refresh-stale": "1년 넘게 수정되지 않은 페이지 {{0}}개 갱신"
+        }
+      },
+      "aio": {
+        "title": "AI Overviews 및 RAG 준비도",
+        "intro": "AI 답변 엔진이 페이지의 문단을 얼마나 쉽게 추출하고 인용할 수 있는지 보여 줍니다. 점수는 독립적인 문단(45%), 사실 밀도(35%), 추출하기 쉬운 구조(20%)를 합산합니다.",
+        "scoreTitle": "AI 준비도 점수",
+        "legend": "구간: 90~100 매우 높음, 75~89 높음, 60~74 보통, 40~59 낮음, 0~39 위험.",
+        "kSelf": "독립성",
+        "kSpo": "사실 밀도",
+        "kExtract": "추출 용이성",
+        "kScored": "점수를 매긴 페이지",
+        "nSelf": "단독으로 이해되는 문단",
+        "nSpo": "주어·서술어·목적어 사실",
+        "nExtract": "표, 목록, 제목",
+        "nScored": "{{0}}개 페이지 건너뜀",
+        "noteBasic": "{{0}}의 언어 규칙은 기본 수준이며 대명사와 사실 감지 정확도가 낮습니다.",
+        "tPages": "AI 준비도별 페이지",
+        "pagesIntro": "최대 25개 페이지, 점수가 낮은 순.",
+        "colScore": "점수",
+        "colSelf": "독립적",
+        "colSpo": "사실",
+        "colExtract": "구조",
+        "colChunks": "청크",
+        "tPassages": "가장 약한 문단",
+        "passagesIntro": "RAG 색인이 인용하기 어려운 문단과 발견된 문제입니다.",
+        "colHeading": "페이지와 제목",
+        "colExcerpt": "문단",
+        "colIssues": "문제",
+        "percent": "{{0}}%",
+        "band": {
+          "excellent": "준비도 매우 높음",
+          "good": "준비도 높음",
+          "moderate": "준비도 보통",
+          "weak": "준비도 낮음",
+          "critical": "준비도 위험"
+        },
+        "issue": {
+          "dangling-pronoun": "지시 대상이 불분명함",
+          "no-answer-first": "처음에 직접적인 답이 없음",
+          "filler-opening": "군더더기 도입",
+          "no-facts": "구체적인 사실 없음",
+          "too-long": "청크 하나에 담기엔 너무 김"
+        }
+      },
+      "trust": {
+        "title": "엔터티 신뢰도 (E-E-A-T)",
+        "intro": "사이트의 발행자, 저자, 출처를 얼마나 확인할 수 있는지 보여 줍니다. 점수는 저장된 실행 결과에서 가져오며 페이지를 다시 가져오지 않습니다.",
+        "scoreTitle": "엔터티 신뢰 점수",
+        "legend": "수준: 75-100 높음, 60-74 충분, 40-59 낮음, 0-39 심각.",
+        "kSchema": "엔터티 그래프",
+        "kAuthor": "저자 적합도",
+        "kCitation": "출처 품질",
+        "kTransparency": "투명성",
+        "kArticles": "문서 페이지",
+        "kAuthors": "저자 엔터티",
+        "nLayer": "점수 0-100",
+        "nNoData": "이 크롤에는 데이터 없음",
+        "nArticles": "크롤 {{0}}개 중",
+        "nAuthors": "sameAs 있음 {{0}}",
+        "ymylNote": "YMYL 카테고리: {{0}}. 문서의 {{1}}%에 실명 저자나 검토자가 없습니다.",
+        "tAuthors": "저자 엔터티",
+        "authorsIntro": "구조화 데이터에서 찾은 저자와 sameAs 링크, 핵심 주제와의 적합도입니다.",
+        "colAuthor": "저자",
+        "colArticles": "문서 수",
+        "colSameAs": "sameAs",
+        "colAlignment": "적합도",
+        "generic": "{{0}} (익명 서명)",
+        "tPages": "신뢰 페이지",
+        "pagesIntro": "편집 및 회사 투명성을 보여 주는 페이지입니다.",
+        "colPage": "페이지",
+        "colState": "상태",
+        "found": "발견됨: {{0}}",
+        "missing": "없음",
+        "tFindings": "신뢰 점검 결과",
+        "findingsIntro": "심각도 순으로 정렬했습니다. 심각 항목부터 고치세요.",
+        "colSeverity": "심각도",
+        "colFinding": "점검 결과",
+        "level": {
+          "strong": "신뢰도 높음",
+          "adequate": "신뢰도 충분",
+          "weak": "신뢰도 낮음",
+          "critical": "신뢰 부족이 심각함"
+        },
+        "severity": {
+          "critical": "심각",
+          "warning": "경고",
+          "info": "정보"
+        },
+        "kind": {
+          "editorial": "편집 정책",
+          "about": "회사 소개",
+          "contact": "문의",
+          "registry": "회사 등기 정보"
+        },
+        "ymyl": {
+          "health": "건강",
+          "finance": "금융",
+          "legal": "법률"
+        },
+        "find": {
+          "ymyl-unattributed": "YMYL 주제 문서 {{0}}개({{1}}%)에 실명 저자나 검토자가 없습니다.",
+          "ymyl-no-reviewer": "의료 문서 {{0}}개 중 검토자(reviewedBy)를 밝힌 문서가 없습니다.",
+          "no-bylines": "문서 {{0}}개 중 구조화 데이터에 저자를 밝힌 문서가 없습니다.",
+          "generic-author": "문서 {{0}}개가 익명 서명으로 되어 있습니다.",
+          "org-missing": "구조화 데이터에서 Organization 엔터티를 찾지 못했습니다.",
+          "org-no-same-as": "발행자 {{0}}에는 sameAs 링크가 없습니다.",
+          "author-no-same-as": "저자 {{0}}명에게 sameAs 링크가 없습니다({{1}}).",
+          "author-no-id": "저자 {{0}}명에게 안정적인 @id가 없습니다.",
+          "author-off-topic": "{{0}}의 프로필은 핵심 주제와 {{1}}%만 일치합니다.",
+          "low-citations": "문서 페이지 {{1}}개 중 신뢰할 수 있는 출처를 인용한 페이지는 {{0}}%뿐입니다.",
+          "dead-citations": "외부로 나가는 링크 {{0}}개가 오류를 반환합니다.",
+          "missing-editorial": "편집 정책 또는 팩트체크 페이지를 찾지 못했습니다.",
+          "missing-contact": "문의 페이지를 찾지 못했습니다.",
+          "missing-registry": "회사 등기 정보 또는 법적 고지 페이지를 찾지 못했습니다.",
+          "missing-about": "회사 소개 페이지를 찾지 못했습니다.",
+          "missing-dates": "수정일 또는 검토일이 표시된 문서는 {{0}}%뿐입니다.",
+          "no-articles": "문서 페이지가 감지되지 않아 저자 및 인용 계층은 점수를 매기지 않았습니다."
+        }
       }
     },
     "recs": {
@@ -6056,6 +6228,132 @@
         "what": "권장 목표는 최소 80점이며, 상위 3개 경쟁사의 평균이 더 높으면 그 평균입니다.",
         "why": "비교 결과를 하나의 목표 숫자로 바꿔 줍니다.",
         "action": "계획 단계의 목표로 활용하세요.\n수정 후 벤치마크를 다시 실행해 변화를 확인하세요."
+      }
+    },
+    "authority": {
+      "tas": {
+        "title": "Topical Authority Score",
+        "what": "사이트가 핵심 주제를 시장 대비 얼마나 완전하고 깊고 일관되게 다루는지 보여 주는 0~100 점수입니다. 주제 커버리지(35%), 엔티티 깊이(30%), 사일로 응집도(25%), 최신성(10%)을 합친 뒤 Site Focus Score로 보정합니다.",
+        "why": "SFS는 순도만 측정합니다. 완벽한 글 세 편뿐인 사이트는 SFS가 높아도 분야의 일부만 다루므로 권위도는 거의 0입니다. TAS는 분야를 얼마나 다루는지 측정합니다.",
+        "action": "SFS와 TAS 모두 80 이상을 목표로 하세요. SFS는 높고 TAS가 낮으면 콘텐츠를 추가하고, TAS는 높고 SFS가 낮으면 무관한 영역을 정리·분리하세요. 확장 계획의 첫 항목부터 시작하세요."
+      },
+      "tcr": {
+        "title": "주제 커버리지 (TCR)",
+        "what": "전담 페이지로 시장의 하위 주제를 얼마나 다루는지 나타내는 비율입니다. 하위 주제는 중요도로 가중하며 뚜렷한 일치는 전부, 부분 일치는 절반으로 계산합니다.",
+        "why": "검색엔진은 한 분야의 질문 전반에 답하는 사이트를 기준 출처로 봅니다. 공백은 방문자와 랭킹 신호를 경쟁사에 넘깁니다.",
+        "action": "80% 이상이면 완전한 권위, 40% 미만이면 단편적 지식입니다. 커버리지 지도에서 공백을 필터링해 가장 중요한 빠진 하위 주제부터 게시하세요."
+      },
+      "esd": {
+        "title": "엔티티 깊이",
+        "what": "페이지가 하위 주제를 실제로 충분히 다루는지 확인합니다. 상위 페이지가 쓰는 개념·속성, 별도 제목으로 답한 사용자 질문, 독창적 자료의 양을 봅니다.",
+        "why": "분야의 핵심 개념이 빠진 긴 글은 짧아도 더 완전한 출처에 밀립니다. 분량만으로는 평가되지 않습니다.",
+        "action": "얕은 하위 주제를 열어 빠진 엔티티와 속성을 추가하고, 나열된 질문에 별도 H2로 답하며, 경쟁사에 없는 데이터나 표를 넣으세요."
+      },
+      "scs": {
+        "title": "사일로 응집도",
+        "what": "같은 주제의 글이 내부 링크로 얼마나 잘 연결됐는지 측정합니다. 필러 페이지와 양방향 링크, 설명적인 앵커, 고아 페이지 없음, 전문 페이지에서 무관한 페이지로의 링크 없음이 기준입니다.",
+        "why": "고아 페이지는 주제 권위를 주지도 받지도 못합니다. “여기를 클릭” 같은 앵커는 정보가 없어 10분의 1만 반영됩니다.",
+        "action": "고아 페이지마다 필러와 관련 글에서 링크하고, 대상을 설명하는 앵커(“당뇨병성 신경병증 증상”)를 쓰며, 주제 밖 페이지 링크는 제거하세요."
+      },
+      "matrix": {
+        "title": "SFS × TAS 매트릭스",
+        "what": "사이트를 순도(SFS, 가로)와 완전성(TAS, 세로)으로 배치합니다. 네 사분면은 지배적 권위, 부티크 전문가, 희석된 거인, 초점 없는 제너럴리스트입니다.",
+        "why": "왜 포커스는 높은데 권위는 낮을까요? 당뇨병 글 다섯 편이 완벽하면 SFS 95여도 TAS는 14입니다. 무관한 내용은 없지만 분야의 90%가 빠져 있습니다.",
+        "action": "SFS는 80 이상으로 유지하면서 새 클러스터를 추가해 TAS도 80 이상으로 올리세요. 강조된 사분면이 확장·정리·재구성 중 무엇이 필요한지 알려 줍니다."
+      },
+      "cannibalization": {
+        "title": "의미적 카니발라이제이션",
+        "what": "두 개 이상의 페이지가 같은 검색 의도에 답합니다. 내용과 제목이 거의 같거나(코사인 유사도 88% 이상) 둘 다 같은 참조 하위 주제를 완전히 다룹니다.",
+        "why": "내부 링크 신호와 관련성이 중복 페이지에 나뉘어 어느 페이지도 상위에 오르지 못합니다.",
+        "action": "가장 강한 페이지를 남기고 고유 섹션을 옮긴 뒤 나머지는 301로 리디렉션하고 내부 링크를 갱신하세요. 게시 전 초안 검사로 새 중복을 막으세요."
+      }
+    },
+    "aio": {
+      "aioReadiness": {
+        "title": "AI 준비도 점수(AIO-R)",
+        "what": "AI 답변 엔진(Google AI Overviews, Perplexity, Copilot)이 페이지의 문단을 얼마나 쉽게 추출하고 인용할 수 있는지를 0~100으로 나타냅니다. 독립적인 문단(45%), 사실 밀도(35%), 추출하기 쉬운 구조(20%)를 합산합니다.",
+        "why": "AI 엔진은 페이지를 청크로 나누고 질문에 답하는 청크만 인용합니다. 모호하거나 맥락에 의존하는 문단은 건너뜁니다.",
+        "action": "가장 약한 문단을 열어 표시된 문제를 고치세요.\n결론을 먼저 쓰고 이름과 숫자를 분명히 밝혀 다시 쓰세요.",
+        "example": "'정상 혈당은 얼마인가요?'라는 제목의 섹션이 '이는 여러 요인에 따라 다릅니다'로 시작하면 점수가 낮습니다."
+      },
+      "selfContainment": {
+        "title": "독립성",
+        "what": "페이지에서 떼어 내도 문단이 의미가 통하는지 봅니다. 주어를 밝히고 '그것', '이것', '앞서 말했듯이'로 시작하지 않아야 합니다.",
+        "why": "청크는 따로 색인됩니다. 대상이 불분명한 대명사는 모델에서 주어를 빼앗아 청크가 일치하는 질문을 줄입니다.",
+        "action": "문단 처음의 '그것', '이것'을 실제 이름으로 바꾸세요.\n각 제목 아래 처음 40~60단어에 답을 넣으세요.",
+        "example": "'이 수치는 140 미만이어야 합니다.'를 '식후 혈당은 140 mg/dl 미만이어야 합니다.'로 바꿉니다."
+      },
+      "spoDensity": {
+        "title": "사실 밀도",
+        "what": "'공복 혈당은 70~99 mg/dl입니다'처럼 주어·서술어·목적어가 분명한 사실이 100단어당 몇 개인지 나타냅니다. 목표는 100단어당 약 3개입니다.",
+        "why": "모델은 검증 가능한 진술을 인용합니다. 군더더기 글에서는 뽑아낼 것이 없습니다.",
+        "action": "모호한 문장을 주어, 동사, 값이 있는 진술로 바꾸세요.\n단위와 숫자가 있으면 추가하세요.",
+        "example": "'여러 요인이 중요합니다'에는 사실이 없습니다. 'HbA1c 7% 미만이 일반적인 치료 목표입니다'에는 사실이 있습니다."
+      },
+      "extractability": {
+        "title": "추출 용이성",
+        "what": "파서가 쉽게 추출하는 구조를 쓰는지 봅니다: 표, 번호 목록, 정의 목록, 명확한 H2/H3 개요.",
+        "why": "생성형 엔진은 의미가 명확한 표와 단계 목록으로 답변을 만들기를 선호합니다.",
+        "action": "비교는 표로, 절차는 번호 목록으로 보여 주세요.\nH2/H3 제목은 사람들이 묻는 질문 형태로 쓰세요.",
+        "example": "단계별 안내를 긴 문단 하나로 쓰면 같은 내용을 번호 목록으로 쓴 것보다 점수가 낮습니다."
+      },
+      "answerFirst": {
+        "title": "답변 우선",
+        "what": "제목 아래 처음 40~60단어는 제목에 직접 답하고, 주어를 밝히며 사실을 제시해야 합니다.",
+        "why": "RAG 검색은 질문과 청크의 시작 부분을 비교합니다. 긴 서두는 일치도를 낮춥니다.",
+        "action": "직접적인 답을 먼저 쓰고 배경은 그다음에 쓰세요.\n첫 문장에서 제목의 핵심어를 반복하세요.",
+        "example": "제목 'CGM 센서는 얼마나 오래 쓰나요?' 다음에 'CGM 센서는 모델에 따라 10~15일 사용합니다.'가 이어집니다."
+      },
+      "chunking": {
+        "title": "청킹 시뮬레이션",
+        "what": "SEOmi는 RAG 색인과 같은 방식으로 페이지를 나눕니다. H2/H3 섹션마다 청크 하나, 긴 섹션은 약 300토큰 창으로 나눕니다.",
+        "why": "검색 시스템이 보는 대로 페이지를 봅니다. 서로 분리된 문단의 집합이며 각각 따로 평가됩니다.",
+        "action": "약한 문단마다 청크 점수를 확인하세요.\n섹션은 청크 하나에 들어갈 만큼 짧게 유지하세요.",
+        "example": "900토큰 섹션은 약 세 개의 청크가 되며, 제목 바로 아래에 있는 것은 첫 번째뿐입니다."
+      }
+    },
+    "trust": {
+      "trustScore": {
+        "title": "엔터티 신뢰 점수",
+        "what": "검색엔진이 콘텐츠를 누가 발행하고 작성했는지 얼마나 확인할 수 있는지를 0~100으로 나타냅니다. 엔터티 그래프, 저자 주제 적합도, 출처 품질, 편집 투명성 네 계층의 평균입니다.",
+        "why": "건강, 금융, 법률 주제에서는 주제 집중만으로는 부족합니다. 검증 가능한 저자와 발행자가 없는 페이지는 상위 결과에 오르기 어렵습니다.",
+        "action": "목록에서 심각 항목부터 확인하세요.\n가장 낮은 계층을 고친 뒤 다시 크롤해 점수 변화를 확인하세요."
+      },
+      "schemaGraph": {
+        "title": "엔터티 그래프 (JSON-LD)",
+        "what": "구조화 데이터가 발행자와 각 저자를 안정적인 @id와 sameAs 링크가 있는 엔터티로 표시하는지, 문서에 저자, 날짜, 검토자, 인용이 있는지 확인합니다.",
+        "why": "엔터티가 연결되어 있으면 검색엔진이 텍스트로 추측하지 않고 저자를 알려진 인물과 조직에 대응시킬 수 있습니다.",
+        "action": "@id가 있는 Organization과 Person 마크업을 추가하세요.\nsameAs로 각 인물과 발행자를 Wikidata, ORCID, LinkedIn 또는 공식 등록부에 연결하세요.\n저자 목록 아래의 JSON-LD 생성기를 사용하세요."
+      },
+      "authorAlignment": {
+        "title": "저자 주제 적합도",
+        "what": "각 저자가 밝힌 전문성(직책, knowsAbout, 프로필 페이지)을 사이트의 핵심 주제와 비교합니다.",
+        "why": "인슐린 치료에 관한 문서에 마케팅 카피라이터가 서명하면 전문성 신호가 약합니다.",
+        "action": "프로필이 주제와 맞는 저자에게 문서를 배정하세요.\nPerson 마크업에 jobTitle과 knowsAbout을 추가하세요.\n모든 저자의 프로필 페이지를 게시하세요."
+      },
+      "citationQuality": {
+        "title": "출처 품질",
+        "what": "문서 페이지 중 .gov, .edu, PubMed, NCBI, WHO, 학술 출판사 같은 신뢰할 수 있는 출처로 연결되는 페이지 수와 끊어진 외부 링크 수를 보여 줍니다.",
+        "why": "1차 출처를 인용하면 주장을 검증할 수 있음을 보여 줍니다. 끊어진 참조는 이 신호를 약하게 합니다.",
+        "action": "전문 문서마다 1차 출처에 대한 참조를 추가하세요.\n끊어진 외부 링크를 교체하거나 삭제하세요.\n링크 탭에서 외부 링크를 확인해 상태 코드를 갱신하세요."
+      },
+      "transparency": {
+        "title": "편집 투명성",
+        "what": "편집 정책, 회사 소개 페이지, 문의 페이지, 회사 등기 정보, 문서에 표시된 수정일 또는 검토일이 있는지 찾습니다.",
+        "why": "독자와 검색엔진은 사이트 뒤에 누가 있고 콘텐츠를 어떻게 검증하는지 알아야 합니다.",
+        "action": "편집 및 팩트체크 정책을 게시하세요.\n연락처와 회사 등기 정보를 추가하세요.\n모든 문서에 최종 업데이트 날짜를 표시하세요."
+      },
+      "ymyl": {
+        "title": "YMYL 주제",
+        "what": "Your Money or Your Life: 건강, 금융, 법률처럼 잘못된 정보가 독자에게 해를 줄 수 있는 주제입니다.",
+        "why": "검색 품질 가이드라인은 이런 주제에 가장 높은 신뢰 요건을 적용하므로 저자나 검토자가 없으면 심각한 부족으로 봅니다.",
+        "action": "모든 문서에 자격을 갖춘 저자를 표시하세요.\n의료 또는 법률 콘텐츠에는 자격을 갖춘 검토자를 추가하세요.\n1차 출처를 인용하세요."
+      },
+      "sameAs": {
+        "title": "sameAs 링크",
+        "what": "사람이나 조직에서 Wikidata, ORCID, LinkedIn, 공식 등록부 등 다른 곳의 동일한 엔터티를 가리키는 schema.org 속성입니다.",
+        "why": "검색엔진이 해당 저자가 그 자격을 가진 실제 인물임을 확인할 수 있게 합니다.",
+        "action": "저자마다, 그리고 발행자에 대해 신뢰할 수 있는 sameAs URL을 하나 이상 추가하세요.\n해당 프로필과 같은 이름과 표기를 사용하세요."
       }
     }
   },
@@ -6441,6 +6739,386 @@
       "coverage": "경쟁사의 {{pct}}%({{count}}개)",
       "empty": "내 사이트에 없는 경쟁사 주제가 없습니다.",
       "apply": "이 용어를 공백 분석에 추가"
+    }
+  },
+  "authority": {
+    "title": "주제 권위도",
+    "empty": "크롤링을 실행해 주제 권위도를 측정하세요.",
+    "hero": {
+      "sfs": "Site Focus Score",
+      "tas": "Topical Authority Score",
+      "sfsRole": "순도: 콘텐츠가 주제에 머무는 정도",
+      "tasRole": "완전성: 주제를 얼마나 충분히 다루는지",
+      "target": "목표: {{value}}+",
+      "pending": "참조 지도를 만들면 계산됩니다"
+    },
+    "quadrant": {
+      "dominant_authority": "지배적 권위",
+      "boutique_specialist": "부티크 전문가",
+      "diluted_giant": "희석된 거인",
+      "unfocused_generalist": "초점 없는 제너럴리스트"
+    },
+    "quadrantHint": {
+      "dominant_authority": "집중되어 있고 거의 완전합니다. 순위를 지키고 데이터를 최신으로 유지하며 롱테일로 확장하세요.",
+      "boutique_specialist": "주제에는 맞지만 분야의 일부만 다룹니다. 콘텐츠를 확장하고 새 주제 클러스터를 만드세요.",
+      "diluted_giant": "주제 콘텐츠는 많지만 무관한 영역이 희석합니다. 정리하거나 서브도메인으로 옮기세요.",
+      "unfocused_generalist": "초점이 불분명하고 얕게 다룹니다. 핵심 주제를 하나 정하고 인덱스를 정리해 첫 사일로를 구축하세요."
+    },
+    "matrix": {
+      "title": "주제 성숙도 매트릭스 (SFS × TAS)",
+      "pending": "TAS가 계산되면 매트릭스가 표시됩니다.",
+      "aria": "내 사이트: SFS {{sfs}}, TAS {{tas}}, 사분면 {{quadrant}}",
+      "you": "나",
+      "axisX": "SFS",
+      "axisY": "TAS"
+    },
+    "pillars": {
+      "title": "Topical Authority Score 구성 요소",
+      "tcr": "주제 커버리지",
+      "cdes": "엔티티 깊이",
+      "silc": "사일로 응집도",
+      "cvff": "최신성과 고유성",
+      "tcrNote": "참조 하위 주제 {{total}}개 중 {{covered}}개 다룸",
+      "cdesNote": "다룬 하위 주제의 평균 엔티티 깊이",
+      "silcNote": "고아 페이지 {{orphans}}개, 약한 앵커 {{weak}}개, 주제 밖 페이지로의 링크 {{bleed}}개",
+      "cvffNote": "오래된 페이지 {{stale}}개, 카니발라이제이션 그룹 {{groups}}개",
+      "unavailable": "측정 불가",
+      "multiplier": "SFS {{sfs}}에 따른 포커스 배수 ×{{value}}"
+    },
+    "warning": {
+      "empty-authority": "빈 권위: 주제의 {{tcr}}%를 다루지만 평균 깊이는 {{depth}}/100에 불과합니다. 새 글보다 기존 페이지를 데이터와 엔티티로 보강하세요.",
+      "template-duplicates": "템플릿 복제 페이지 {{count}}개를 가장 강한 페이지로 병합했습니다. 커버리지를 높이지 않고 크롤 예산만 낭비합니다.",
+      "no-dates": "게시일·수정일을 찾지 못해 최신성을 측정하지 않습니다. 메타 태그나 JSON-LD에 날짜를 추가하세요.",
+      "no-links": "분석된 페이지 간 본문 내부 링크가 없어 응집도는 고아 페이지만 기준으로 합니다.",
+      "no-pillars": "참조 지도가 아직 없어 커버리지와 깊이를 측정하지 않습니다."
+    },
+    "reference": {
+      "title": "참조 지도",
+      "intro": "실제 데이터로 주제의 시장 지도를 만듭니다. 핵심 주제 상위 페이지의 제목·엔티티·질문과 Google Suggest를 사용하며 지어내지 않습니다. SERP 소스가 없으면 지도는 비어 있습니다.",
+      "build": "참조 지도 만들기",
+      "rebuild": "지도 다시 만들기",
+      "cancel": "취소",
+      "clear": "지도 삭제",
+      "info": "경쟁사 {{competitors}}곳({{source}})에서 얻은 기둥 {{pillars}}개, 하위 주제 {{subtopics}}개, 생성일 {{date}}",
+      "progress": {
+        "serp": "순위 가져오는 중 ({{done}}/{{total}})",
+        "crawl": "{{domain}} 크롤링 중 ({{done}}/{{total}})",
+        "build": "지도 생성 중"
+      },
+      "error": "지도 생성 실패: {{error}}",
+      "cancelled": "지도 생성이 취소되었습니다.",
+      "unavailableTitle": "참조 지도를 사용할 수 없습니다",
+      "unavailable": {
+        "no-serp-source": "SERP 소스(DataForSEO 또는 무료 Bing RSS)를 연결하면 실제 순위로 지도를 만들 수 있습니다.",
+        "no-queries": "핵심 주제에 쓸 만한 검색어가 아직 없습니다. 먼저 더 큰 크롤링을 실행하세요.",
+        "serp-failed": "순위 조회 실패: {{error}}",
+        "no-competitors": "순위에서 경쟁 도메인을 찾지 못했습니다.",
+        "no-pages": "경쟁사 페이지를 크롤링하지 못했습니다(robots.txt, 차단 또는 시간 초과).",
+        "no-taxonomy": "경쟁사 페이지의 공통 제목이 너무 적어 신뢰할 지도를 만들 수 없습니다. 나중에 또는 경쟁사를 늘려 다시 시도하세요."
+      }
+    },
+    "coverage": {
+      "title": "주제 커버리지 지도",
+      "filters": "하위 주제 필터",
+      "filter": {
+        "all": "전체 ({{count}})",
+        "gaps": "공백만 ({{count}})",
+        "shallow": "얕음 ({{count}})",
+        "cannibalized": "카니발라이제이션 ({{count}})"
+      },
+      "general": "일반 주제",
+      "empty": "필터에 맞는 하위 주제가 없습니다.",
+      "row": "일치 {{similarity}}% · 깊이 {{depth}}",
+      "status": {
+        "covered_strong": "깊이 다룸",
+        "covered_shallow": "얕은 커버리지",
+        "missing_gap": "없음",
+        "cannibalized": "카니발라이제이션"
+      },
+      "gap": {
+        "critical": "치명적 공백",
+        "high": "큰 공백",
+        "medium": "중간 공백"
+      }
+    },
+    "drill": {
+      "title": "하위 주제 분석",
+      "back": "지도로 돌아가기",
+      "url": "배정된 페이지",
+      "none": "이 하위 주제를 다루는 페이지가 아직 없습니다.",
+      "depth": "엔티티 깊이 {{value}}/100",
+      "entitiesPresent": "포함된 엔티티 ({{count}}/{{total}})",
+      "entitiesMissing": "빠진 엔티티 (상위 사이트가 사용)",
+      "questions": "페이지가 답하지 않는 사용자 질문",
+      "links": "내부 링크 감사",
+      "noPillarLink": "필러 페이지 {{url}}(으)로의 링크가 없습니다",
+      "almostOrphan": "들어오는 링크 {{count}}개뿐: 사실상 고아 페이지",
+      "bleed": "주제와 무관한 페이지 {{url}}(으)로 링크합니다",
+      "linksOk": "내부 링크 상태가 양호합니다."
+    },
+    "brief": {
+      "title": "문서 브리프",
+      "path": "권장 URL",
+      "h1": "권장 H1",
+      "entities": "엔티티 체크리스트",
+      "questions": "답해야 할 질문",
+      "linkFrom": "링크를 걸 페이지",
+      "linkTo": "링크해야 할 페이지",
+      "impact": "TAS 예상 영향: +{{value}}",
+      "generate": "AI 브리프 생성",
+      "generating": "생성 중…",
+      "noKey": "설정에서 AI 제공자를 연결하면 브리프를 생성할 수 있습니다.",
+      "empty": "AI가 텍스트를 반환하지 않았습니다. 다시 시도하세요.",
+      "error": "브리프 생성 실패: {{error}}"
+    },
+    "cannibal": {
+      "title": "의미적 카니발라이제이션",
+      "index": "카니발라이제이션 지수: {{value}}%",
+      "empty": "같은 검색 의도를 두고 경쟁하는 페이지가 없습니다.",
+      "group": "{{count}}개 페이지, 의도 유사도 {{similarity}}%, 공통 엔티티 {{shared}}%",
+      "canonical": "유지: {{url}}",
+      "steps": "고유한 섹션을 유지할 페이지로 옮기고 나머지는 301로 리디렉션한 뒤 내부 링크를 갱신하세요."
+    },
+    "draft": {
+      "title": "게시 전 초안 확인",
+      "titleField": "초안 제목",
+      "bodyField": "초안 본문",
+      "check": "중복 확인",
+      "none": "기존 페이지와 85% 넘는 중복이 없습니다.",
+      "hit": "{{url}}와(과) {{similarity}}% 중복"
+    },
+    "rec": {
+      "title": "주제 확장 계획",
+      "empty": "추천할 작업이 아직 없습니다. 참조 지도를 만들면 공백을 볼 수 있습니다.",
+      "delta": "+{{value}} TAS",
+      "fill-gaps": "“{{pillar}}”의 공백 메우기: 하위 주제 {{count}}개 부족",
+      "merge-cannibalized": "카니발라이제이션 페이지 {{count}}그룹 병합",
+      "fix-linking": "내부 링크 수정: 고아 페이지 {{orphans}}개, 주제 밖 페이지 링크 {{bleed}}개",
+      "deepen-shallow": "얕은 하위 주제 {{count}}개 보강",
+      "refresh-stale": "1년 넘게 수정되지 않은 페이지 {{count}}개 갱신",
+      "how": {
+        "fill-gaps": "빠진 하위 주제마다 글 한 편을 게시하세요. 브리프(URL, H1, 엔티티, 질문)를 활용하고 필러 페이지로 링크하세요.",
+        "merge-cannibalized": "가장 강한 페이지를 남기고 고유 섹션을 옮긴 뒤 나머지는 301 리디렉션하고 내부 링크를 갱신하세요.",
+        "fix-linking": "고아 페이지마다 필러와 관련 글에서 링크를 걸고, 전문 페이지에서 주제 밖 페이지로 가는 링크는 제거하세요.",
+        "deepen-shallow": "빠진 엔티티와 속성을 추가하고 답하지 않은 질문은 별도 제목 아래에서 답하세요.",
+        "refresh-stale": "수치·모델·지침을 갱신하고 새 엔티티를 추가한 뒤 게시일을 새로 고치세요."
+      }
+    },
+    "benchmark": {
+      "title": "상위 경쟁사 대비 주제 격차 매트릭스",
+      "empty": "참조 지도를 만들면 상위 경쟁사와 비교할 수 있습니다. 실제 크롤링 데이터만 표시합니다.",
+      "domain": "도메인",
+      "pillars": "기둥별 커버리지",
+      "pillar": "기둥",
+      "insight": {
+        "rank": "TAS 기준 {{total}}곳 중 {{rank}}위입니다.",
+        "lead-pillar": "“{{pillar}}”에서 앞서 있습니다: {{own}}% 대 최고 경쟁사 {{best}}%.",
+        "trailing-pillars": "다음 분야에서 선두에 뒤처집니다: {{pillars}}."
+      }
+    },
+    "history": {
+      "title": "시간에 따른 SFS와 TAS",
+      "empty": "전체 분석이 두 번 이상 있어야 타임라인이 표시됩니다.",
+      "aria": "분석 {{count}}회에 걸친 SFS와 TAS 차트",
+      "point": "{{date}}: SFS {{sfs}}, TAS {{tas}}",
+      "sfs": "SFS (실선)",
+      "tas": "TAS (점선)",
+      "milestones": "마일스톤",
+      "cleanup": "정리: SFS가 {{delta}} 상승",
+      "architecture": "구조: 링크와 카니발라이제이션이 {{delta}} 개선",
+      "expansion": "확장: 주제 커버리지가 {{delta}} 상승",
+      "regression": "하락: TAS가 {{delta}} 변동"
+    }
+  },
+  "authorityMonitoring": {
+    "alert": {
+      "title": "SEOmi · 주제 권위도 알림",
+      "tas-drop": "전체 분석 사이에 Topical Authority Score가 {{points}}점 하락했습니다 ({{from}} → {{to}}).",
+      "cannibalization": "최근 24시간 내 게시된 페이지가 {{canonical}}와 같은 의도로 경쟁합니다 (유사도 {{similarity}}%): {{url}}.",
+      "competitor-expansion": "{{domain}}이(가) “{{pillar}}” 커버리지를 {{from}}%에서 {{to}}%로 확대해 새로운 공백이 생겼습니다.",
+      "content-decay": "필러 페이지 {{url}}은(는) 1년이 넘었고 시장에서 쓰는 엔티티 {{missing}}개가 빠져 있습니다."
+    }
+  },
+  "aio": {
+    "title": "AI Overviews 및 RAG 준비도",
+    "subtitle": "AI 답변 엔진이 내 문단을 얼마나 쉽게 찾아 추출하고 인용할 수 있는지 보여 줍니다.",
+    "empty": "콘텐츠 섹션이 있는 페이지 데이터가 아직 없습니다. 새 크롤을 실행해 AI 준비도를 분석하세요.",
+    "band": {
+      "excellent": "준비도 매우 높음",
+      "good": "준비도 높음",
+      "moderate": "준비도 보통",
+      "weak": "준비도 낮음",
+      "critical": "준비도 위험"
+    },
+    "hero": {
+      "label": "AI 인용 가능성 점수",
+      "outOf": "/ 100",
+      "summary": "분석한 {{count}}개 페이지에서 약한 문단 {{weak}}개를 찾았습니다.",
+      "summaryNone": "분석한 {{count}}개 페이지에서 약한 문단을 찾지 못했습니다.",
+      "change": "이전 분석 대비 변화: {{delta}}",
+      "skipped": "{{count}}개 페이지를 건너뛰었습니다(사용 가능한 콘텐츠 섹션 없음)."
+    },
+    "components": {
+      "self": "독립성",
+      "spo": "사실 밀도",
+      "extract": "추출 용이성"
+    },
+    "basicNote": "{{languages}}의 언어 규칙은 기본 수준입니다. 이 언어들에서는 대명사와 사실 감지 정확도가 낮습니다.",
+    "pages": {
+      "title": "페이지",
+      "url": "URL",
+      "score": "점수",
+      "chunks": "청크",
+      "facts": "사실",
+      "language": "언어",
+      "empty": "표시할 페이지가 없습니다."
+    },
+    "skip": {
+      "no-sections": "콘텐츠 섹션 없음(이 기능 이전에 크롤됨)",
+      "non-html": "HTML 페이지가 아닙니다",
+      "request-error": "요청에 실패했습니다",
+      "no-content": "읽을 수 있는 텍스트 없음"
+    },
+    "passage": {
+      "title": "가장 약한 문단",
+      "intro": "인용하기 가장 어려운 RAG 청크를 시뮬레이션한 결과입니다. 표시된 문제부터 고치세요.",
+      "chunk": "청크 {{n}} · 토큰 {{tokens}}개 · 점수 {{score}}",
+      "noHeading": "(제목 없는 도입부)",
+      "current": "현재 문단",
+      "optimized": "최적화된 문단",
+      "generate": "AI로 다시 쓰기",
+      "generating": "다시 쓰는 중…",
+      "copy": "복사",
+      "copied": "복사됨",
+      "noKey": "문단을 다시 쓰려면 설정에서 AI 제공자를 연결하세요.",
+      "error": "AI 요청 실패: {{message}}",
+      "empty": "AI가 텍스트를 반환하지 않았습니다.",
+      "none": "약한 문단을 찾지 못했습니다."
+    },
+    "issue": {
+      "dangling-pronoun": "지시 대상이 불분명함",
+      "no-answer-first": "처음에 직접적인 답이 없음",
+      "filler-opening": "군더더기 도입",
+      "no-facts": "구체적인 사실 없음",
+      "too-long": "청크 하나에 담기엔 너무 김"
+    },
+    "history": {
+      "title": "기록",
+      "empty": "기록은 이 프로젝트의 두 번째 분석 이후에 표시됩니다.",
+      "row": "{{date}}: {{score}}"
+    }
+  },
+  "trust": {
+    "title": "E-E-A-T 및 엔터티 신뢰도",
+    "subtitle": "저자, 발행자, 출처를 얼마나 확인할 수 있는지 보여 줍니다. 저장된 크롤 결과로 계산하며 페이지를 다시 가져오지 않습니다.",
+    "empty": "신뢰 신호를 평가하려면 먼저 크롤을 실행하세요.",
+    "hero": {
+      "label": "엔터티 신뢰 점수",
+      "articles": "크롤한 {{pages}}개 페이지 중 문서 페이지 {{articles}}개",
+      "previous": "이전 실행: {{score}} ({{delta}})",
+      "ymyl": "YMYL 카테고리: {{category}}. 검색엔진은 이런 페이지에 가장 엄격한 신뢰 기준을 적용합니다.",
+      "unattributed": "문서의 {{pct}}%에 실명 저자나 검토자가 없습니다."
+    },
+    "level": {
+      "strong": "신뢰도 높음",
+      "adequate": "신뢰도 충분",
+      "weak": "신뢰도 낮음",
+      "critical": "신뢰 부족이 심각함"
+    },
+    "ymyl": {
+      "health": "건강",
+      "finance": "금융",
+      "legal": "법률"
+    },
+    "layers": {
+      "title": "신뢰 계층",
+      "schemaGraph": "엔터티 그래프 (JSON-LD)",
+      "authorAlignment": "저자 주제 적합도",
+      "citationQuality": "출처 품질",
+      "transparency": "편집 투명성",
+      "noData": "해당 없음"
+    },
+    "entities": {
+      "title": "발행자와 저자",
+      "orgPresent": "발행자: {{name}}. 안정적인 @id: {{id}}. sameAs 링크: {{sameAs}}.",
+      "orgMissing": "구조화 데이터에서 Organization 엔터티를 찾지 못했습니다.",
+      "none": "구조화 데이터에서 저자 엔터티를 찾지 못했습니다.",
+      "colAuthor": "저자",
+      "colArticles": "문서 수",
+      "colSameAs": "sameAs 링크",
+      "colAlignment": "주제 적합도",
+      "generic": "익명 서명"
+    },
+    "signals": {
+      "title": "출처와 투명성",
+      "citations": "문서 페이지 {{pages}}개 중 {{trusted}}개가 신뢰할 수 있는 출처(.gov, .edu, PubMed, WHO)로 연결됩니다.",
+      "dead": "외부로 나가는 링크 {{count}}개가 끊어졌습니다",
+      "dated": "문서 {{articles}}개 중 {{dated}}개에 수정일 또는 검토일이 표시됩니다.",
+      "pagesTitle": "신뢰 페이지",
+      "page": {
+        "editorial": "편집 정책",
+        "about": "회사 소개",
+        "contact": "문의",
+        "registry": "회사 등기 정보"
+      },
+      "found": "발견됨",
+      "missing": "없음"
+    },
+    "severity": {
+      "critical": "심각",
+      "warning": "경고",
+      "info": "정보"
+    },
+    "findings": {
+      "title": "먼저 고칠 사항",
+      "none": "신뢰 부족은 발견되지 않았습니다.",
+      "code": {
+        "ymyl-unattributed": "YMYL 주제 문서 {{count}}개({{pct}}%)에 실명 저자나 검토자가 없습니다. 검증 가능한 자격을 갖춘 사람을 추가하세요.",
+        "ymyl-no-reviewer": "의료 문서 {{count}}개 중 검토자(reviewedBy)를 밝힌 문서가 없습니다. 자격을 갖춘 의료 검토자를 추가하세요.",
+        "no-bylines": "문서 {{count}}개 중 구조화 데이터에 저자를 밝힌 문서가 없습니다.",
+        "generic-author": "문서 {{count}}개가 편집팀 같은 익명 서명으로 되어 있습니다.",
+        "org-missing": "Organization 엔터티를 찾지 못했습니다. 안정적인 @id가 있는 발행자 마크업을 추가하세요.",
+        "org-no-same-as": "발행자 {{name}}에는 Wikidata, 기업 등록부, 소셜 프로필로 연결되는 sameAs 링크가 없습니다.",
+        "author-no-same-as": "저자 {{count}}명에게 sameAs 링크가 없습니다({{names}}). ORCID, LinkedIn 또는 전문직 등록부에 연결하세요.",
+        "author-no-id": "저자 {{count}}명에게 안정적인 @id가 없어 검색엔진이 페이지 간에 같은 사람으로 연결할 수 없습니다.",
+        "author-off-topic": "{{name}}의 프로필은 핵심 주제와 {{pct}}%만 일치합니다. 전문성이 맞는 저자를 우선하세요.",
+        "low-citations": "문서 페이지 {{pages}}개 중 신뢰할 수 있는 출처(.gov, .edu, PubMed, WHO)를 인용한 페이지는 {{pct}}%뿐입니다.",
+        "dead-citations": "외부로 나가는 링크 {{count}}개가 오류를 반환합니다. 교체하거나 삭제하세요.",
+        "missing-editorial": "편집 정책 또는 팩트체크 페이지를 찾지 못했습니다.",
+        "missing-contact": "문의 페이지를 찾지 못했습니다.",
+        "missing-registry": "회사 등기 정보 또는 법적 고지 페이지를 찾지 못했습니다.",
+        "missing-about": "회사 소개 페이지를 찾지 못했습니다.",
+        "missing-dates": "수정일 또는 검토일이 표시된 문서는 {{pct}}%뿐입니다.",
+        "no-articles": "문서 페이지가 감지되지 않아 저자 및 인용 계층은 점수를 매기지 않았습니다."
+      }
+    },
+    "generator": {
+      "open": "JSON-LD로 수정",
+      "title": "JSON-LD 생성기",
+      "intro": "sameAs 링크가 있는 Organization, Person, 페이지 그래프를 만듭니다. 검토한 뒤 페이지의 head에 붙여 넣으세요.",
+      "close": "닫기",
+      "field": {
+        "personName": "저자 이름",
+        "jobTitle": "직책",
+        "personUrl": "저자 프로필 URL",
+        "organizationName": "발행자 이름",
+        "organizationUrl": "발행자 URL",
+        "pageUrl": "페이지 URL",
+        "dateModified": "수정일 (YYYY-MM-DD)",
+        "lastReviewed": "최종 검토일 (YYYY-MM-DD)",
+        "sameAs": "sameAs 프로필 (한 줄에 URL 하나: Wikidata, ORCID, LinkedIn, 전문직 등록부)",
+        "asReviewer": "저자 대신 전문가 검토자로 표시"
+      },
+      "issue": {
+        "missing-name": "저자 이름을 입력하세요.",
+        "invalid-organization-url": "올바른 발행자 URL을 입력하세요 (https://...).",
+        "invalid-page-url": "올바른 페이지 URL을 입력하세요 (https://...).",
+        "invalid-same-as": "올바른 URL이 아닌 sameAs 항목은 제외했습니다."
+      },
+      "preview": "생성된 JSON-LD",
+      "copy": "script 태그 복사",
+      "copied": "복사했습니다.",
+      "copyFailed": "복사하지 못했습니다. 텍스트를 선택해 직접 복사하세요."
     }
   }
 }

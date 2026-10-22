@@ -45,6 +45,7 @@ pub(super) fn data(text: &str) -> FetchedPageData {
         content_encoding: Some("gzip".into()),
         http_refresh: None,
         cache_control: Some("max-age=60".into()),
+        last_modified: None,
         charset: Some("utf-8".into()),
         x_robots_tag: None,
         declared_html: true,
