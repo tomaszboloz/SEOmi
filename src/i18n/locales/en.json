@@ -6424,6 +6424,12 @@
         "what": "Keeps each recommended change as a task: planned, implemented, then verified or failed.",
         "why": "The next crawl checks the real result and shows how the module score changed since the baseline.",
         "action": "Add a task from a recommendation.\nMark it implemented after you deploy.\nRun a new crawl and click Verify."
+      },
+      "sla": {
+        "title": "Owner and SLA",
+        "what": "Who is responsible for the task, how urgent it is and the date it must be done.",
+        "why": "Tasks with an owner and a date do not get lost, and overdue ones are easy to filter.",
+        "action": "Type the owner name.\nPick the priority and the SLA date.\nUse the filters to see your tasks or the overdue ones."
       }
     }
   },
@@ -7287,6 +7293,21 @@
         "entities-missing": "DEPLOYMENT ERROR: only {{found}} of {{total}} required entities present (60% needed)",
         "index-ok": "VERIFIED: page is indexable",
         "still-noindex": "DEPLOYMENT ERROR: noindex is still present"
+      },
+      "owner": "Owner",
+      "priority": "Priority",
+      "dueDate": "SLA date",
+      "overdue": "Overdue",
+      "me": "My name",
+      "filter": {
+        "all": "All",
+        "mine": "My tasks",
+        "overdue": "Overdue"
+      },
+      "priorityLevel": {
+        "high": "High",
+        "medium": "Medium",
+        "low": "Low"
       }
     }
   },

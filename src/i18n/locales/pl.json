@@ -6424,6 +6424,12 @@
         "what": "Każda rekomendowana zmiana jest zadaniem: zaplanowane, wdrożone, potem zweryfikowane lub nieudane.",
         "why": "Kolejny crawl sprawdza realny efekt i pokazuje, jak zmienił się wynik modułu względem punktu wyjścia.",
         "action": "Dodaj zadanie z rekomendacji.\nOznacz je jako wdrożone po publikacji.\nUruchom nowy crawl i kliknij Zweryfikuj."
+      },
+      "sla": {
+        "title": "Właściciel i SLA",
+        "what": "Kto odpowiada za zadanie, jak pilne jest i do kiedy trzeba je wykonać.",
+        "why": "Zadania z właścicielem i terminem nie giną, a przeterminowane łatwo odfiltrować.",
+        "action": "Wpisz nazwę właściciela.\nWybierz priorytet i termin SLA.\nUżyj filtrów, by zobaczyć swoje lub przeterminowane zadania."
       }
     }
   },
@@ -7287,6 +7293,21 @@
         "entities-missing": "BŁĄD WDROŻENIA: obecnych tylko {{found}} z {{total}} wymaganych encji (potrzeba 60%)",
         "index-ok": "ZWERYFIKOWANO: strona jest indeksowalna",
         "still-noindex": "BŁĄD WDROŻENIA: noindex nadal obecny"
+      },
+      "owner": "Właściciel",
+      "priority": "Priorytet",
+      "dueDate": "Termin SLA",
+      "overdue": "Po terminie",
+      "me": "Moje imię",
+      "filter": {
+        "all": "Wszystkie",
+        "mine": "Moje zadania",
+        "overdue": "Po terminie"
+      },
+      "priorityLevel": {
+        "high": "Wysoki",
+        "medium": "Średni",
+        "low": "Niski"
       }
     }
   },

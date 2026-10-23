@@ -6424,6 +6424,12 @@
         "what": "Jede empfohlene Änderung wird eine Aufgabe: geplant, umgesetzt, dann verifiziert oder fehlgeschlagen.",
         "why": "Der nächste Crawl prüft das echte Ergebnis und zeigt, wie sich der Modul-Score gegenüber dem Ausgangswert verändert hat.",
         "action": "Aufgabe aus einer Empfehlung hinzufügen.\nNach dem Deployment als umgesetzt markieren.\nNeuen Crawl starten und Prüfen klicken."
+      },
+      "sla": {
+        "title": "Verantwortlicher und SLA",
+        "what": "Wer für die Aufgabe zuständig ist, wie dringend sie ist und bis wann sie erledigt sein muss.",
+        "why": "Aufgaben mit Verantwortlichem und Datum gehen nicht verloren, überfällige lassen sich leicht filtern.",
+        "action": "Namen des Verantwortlichen eingeben.\nPriorität und SLA-Datum wählen.\nMit den Filtern eigene oder überfällige Aufgaben anzeigen."
       }
     }
   },
@@ -7287,6 +7293,21 @@
         "entities-missing": "UMSETZUNGSFEHLER: nur {{found}} von {{total}} Pflichtentitäten vorhanden (60 % nötig)",
         "index-ok": "VERIFIZIERT: Seite ist indexierbar",
         "still-noindex": "UMSETZUNGSFEHLER: noindex ist weiterhin gesetzt"
+      },
+      "owner": "Verantwortlich",
+      "priority": "Priorität",
+      "dueDate": "SLA-Datum",
+      "overdue": "Überfällig",
+      "me": "Mein Name",
+      "filter": {
+        "all": "Alle",
+        "mine": "Meine Aufgaben",
+        "overdue": "Überfällig"
+      },
+      "priorityLevel": {
+        "high": "Hoch",
+        "medium": "Mittel",
+        "low": "Niedrig"
       }
     }
   },

@@ -6424,6 +6424,12 @@
         "what": "Chaque changement recommandé devient une tâche : planifiée, déployée, puis vérifiée ou échouée.",
         "why": "Le prochain crawl contrôle le résultat réel et montre l'évolution du score du module depuis la référence.",
         "action": "Ajoutez une tâche depuis une recommandation.\nMarquez-la comme déployée après la mise en ligne.\nLancez un nouveau crawl et cliquez sur Vérifier."
+      },
+      "sla": {
+        "title": "Responsable et SLA",
+        "what": "Qui est responsable de la tâche, son urgence et la date limite.",
+        "why": "Les tâches avec responsable et date ne se perdent pas et les retards se filtrent facilement.",
+        "action": "Saisissez le nom du responsable.\nChoisissez la priorité et la date SLA.\nUtilisez les filtres pour voir vos tâches ou celles en retard."
       }
     }
   },
@@ -7287,6 +7293,21 @@
         "entities-missing": "ERREUR DE DÉPLOIEMENT : seulement {{found}} entités requises sur {{total}} présentes (60 % nécessaires)",
         "index-ok": "VÉRIFIÉ : la page est indexable",
         "still-noindex": "ERREUR DE DÉPLOIEMENT : noindex est toujours présent"
+      },
+      "owner": "Responsable",
+      "priority": "Priorité",
+      "dueDate": "Date SLA",
+      "overdue": "En retard",
+      "me": "Mon nom",
+      "filter": {
+        "all": "Toutes",
+        "mine": "Mes tâches",
+        "overdue": "En retard"
+      },
+      "priorityLevel": {
+        "high": "Haute",
+        "medium": "Moyenne",
+        "low": "Basse"
       }
     }
   },

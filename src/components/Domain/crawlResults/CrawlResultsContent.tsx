@@ -1,3 +1,4 @@
+import { BriefNavigationContext } from '@/components/Charts/BriefCardButton';
 import type { useCrawlResultsSession } from './useCrawlResultsSession';
 import { CrawlOverviewTab } from './CrawlOverviewTab';
 import { CrawlCrawlerReadinessTab } from './CrawlCrawlerReadinessTab';
@@ -21,7 +22,7 @@ import { CrawlFocusTab } from './focus/CrawlFocusTab';
 import { CrawlAuthorityTab } from './authority/CrawlAuthorityTab';
 import { CrawlTrustTab } from './trust/CrawlTrustTab';
 import { CrawlExportsTab } from './CrawlExportsTab';
-export const CrawlResultsContent = ({ session }: { session: ReturnType<typeof useCrawlResultsSession> }) => {
+const renderTab = (session: ReturnType<typeof useCrawlResultsSession>) => {
 switch (session.activeTab) {
 case 'overview': return <CrawlOverviewTab session={session} />;
 case 'crawlerReadiness': return <CrawlCrawlerReadinessTab session={session} />;
@@ -48,3 +49,4 @@ case 'exports': return <CrawlExportsTab session={session} />;
 default: return null;
 }
 };
+export const CrawlResultsContent = ({ session }: { session: ReturnType<typeof useCrawlResultsSession> }) => <BriefNavigationContext.Provider value={session.openMapSection}>{renderTab(session)}</BriefNavigationContext.Provider>;
