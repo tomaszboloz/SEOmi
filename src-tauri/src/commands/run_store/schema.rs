@@ -1,7 +1,8 @@
-use rusqlite::{Connection, Result};
-use std::path::Path;
+use rusqlite::{Connection, Result, TransactionBehavior};
+use std::{path::Path, time::Duration};
 
 pub const SCHEMA_VERSION: i64 = 2;
+const SQLITE_BUSY_TIMEOUT: Duration = Duration::from_secs(2);
 
 const V1: &str = "
 CREATE TABLE crawl_runs (
@@ -63,11 +64,11 @@ CREATE TABLE erasure_log (
 /// Apply pending migrations atomically: a crash mid-migration rolls back and
 /// the next open retries from the previous `user_version`.
 pub fn migrate(conn: &mut Connection) -> Result<()> {
-    let current: i64 = conn.query_row("PRAGMA user_version", [], |row| row.get(0))?;
+    let tx = conn.transaction_with_behavior(TransactionBehavior::Immediate)?;
+    let current: i64 = tx.query_row("PRAGMA user_version", [], |row| row.get(0))?;
     if current >= SCHEMA_VERSION {
-        return Ok(());
+        return tx.commit();
     }
-    let tx = conn.transaction()?;
     if current < 1 {
         tx.execute_batch(V1)?;
     }
@@ -78,19 +79,26 @@ pub fn migrate(conn: &mut Connection) -> Result<()> {
     tx.commit()
 }
 
-pub fn open(path: &Path) -> Result<Connection> {
-    let mut conn = Connection::open(path)?;
+fn configure(conn: &mut Connection, wal: bool) -> Result<()> {
+    conn.busy_timeout(SQLITE_BUSY_TIMEOUT)?;
     conn.pragma_update(None, "foreign_keys", true)?;
     conn.pragma_update(None, "secure_delete", true)?;
-    conn.pragma_update(None, "journal_mode", "WAL")?;
+    if wal {
+        conn.pragma_update(None, "journal_mode", "WAL")?;
+    }
+    Ok(())
+}
+
+pub fn open(path: &Path) -> Result<Connection> {
+    let mut conn = Connection::open(path)?;
+    configure(&mut conn, true)?;
     migrate(&mut conn)?;
     Ok(conn)
 }
 
 pub fn open_memory() -> Result<Connection> {
     let mut conn = Connection::open_in_memory()?;
-    conn.pragma_update(None, "foreign_keys", true)?;
-    conn.pragma_update(None, "secure_delete", true)?;
+    configure(&mut conn, false)?;
     migrate(&mut conn)?;
     Ok(conn)
 }

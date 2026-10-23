@@ -8,7 +8,11 @@ afterEach(() => { native.invokeTauriCommand.mockReset(); localStorage.clear(); }
 const report = { auditId: 1, projectId: 'p', subjectId: 's', action: 'forget_subject', keyId: 'k', recordsDeleted: 2, runsDeleted: 0, atMs: 1 };
 
 it('routes subject writes, forget and log through the native store commands', async () => {
-  native.invokeTauriCommand.mockResolvedValue(report);
+  native.invokeTauriCommand.mockImplementation(async (command: string) => {
+    if (command === 'load_project_crawl_runs') return [];
+    if (command === 'store_import_legacy_runs') return 0;
+    return report;
+  });
   await putSubjectRecord('p', 'author', 'a1', 's', [1, 2]);
   expect(native.invokeTauriCommand).toHaveBeenLastCalledWith('store_put_record', { projectId: 'p', kind: 'author', key: 'a1', subjectId: 's', data: [1, 2] });
   expect(await forgetSubject('p', 's')).toEqual(report);

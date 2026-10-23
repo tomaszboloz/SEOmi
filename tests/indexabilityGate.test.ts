@@ -17,7 +17,9 @@ describe('classifyIndexability', () => {
     expect(classifyIndexability(page({ canonical: 'https://a.com/p/' }))).toBe('indexable');
     expect(classifyIndexability(page({ canonical: '  ' }))).toBe('indexable');
     expect(classifyIndexability(page({ http_status: 0 }))).toBe('unknown');
-    expect(classifyIndexability(page({ http_status: 0, indexability_verdict: { status: 'uncertain', reasons: [] } }))).toBe('indexable');
+    expect(classifyIndexability(page({ http_status: 0, indexability_verdict: { status: 'uncertain', reasons: [] } }))).toBe('unknown');
+    expect(classifyIndexability(page({ http_status: 0, indexability_verdict: { status: 'indexable', reasons: [] } }))).toBe('indexable');
+    expect(classifyIndexability(page({ http_status: 0, robots_decision: { indexability: 'index', link_following: 'follow', response_headers_available: true } }))).toBe('indexable');
   });
   it('helpers', () => {
     expect(hasNoindex(page())).toBe(false);

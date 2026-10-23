@@ -1,7 +1,7 @@
-use rusqlite::{params, Connection, OptionalExtension, Result};
+use rusqlite::{params, Connection, OptionalExtension, Result, TransactionBehavior};
 use serde_json::Value;
 
-use super::runs::save_run;
+use super::write::write_run;
 
 /// Generic keyed blob store for embeddings and history. `subject_id` and
 /// `key_id` are carried per record so subject erasure can target them.
@@ -61,7 +61,8 @@ pub fn import_legacy_runs(
     let mut imported = 0;
     for run in runs {
         let run_id = run.get("id").and_then(Value::as_str).unwrap_or("");
-        let seen: bool = conn.query_row(
+        let tx = conn.transaction_with_behavior(TransactionBehavior::Immediate)?;
+        let seen: bool = tx.query_row(
             "SELECT EXISTS(SELECT 1 FROM import_log WHERE project_id = ?1 AND source = ?2 AND run_id = ?3)",
             params![project_id, source, run_id],
             |row| row.get(0),
@@ -69,12 +70,20 @@ pub fn import_legacy_runs(
         if seen || run_id.is_empty() {
             continue;
         }
-        save_run(conn, project_id, run)?;
-        conn.execute(
+        let exists: bool = tx.query_row(
+            "SELECT EXISTS(SELECT 1 FROM crawl_runs WHERE project_id = ?1 AND run_id = ?2)",
+            params![project_id, run_id],
+            |row| row.get(0),
+        )?;
+        if !exists {
+            write_run(&tx, project_id, run)?;
+        }
+        tx.execute(
             "INSERT INTO import_log VALUES (?1, ?2, ?3)",
             params![project_id, source, run_id],
         )?;
-        imported += 1;
+        tx.commit()?;
+        imported += usize::from(!exists);
     }
     Ok(imported)
 }

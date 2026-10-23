@@ -51,6 +51,9 @@ export default defineConfig({
     chunkSizeWarningLimit: 700,
   },
   test: {
+    // Worktrees may contain older copies of the suite. Only this checkout's
+    // canonical tests may import this checkout's production modules.
+    include: ['tests/**/*.{test,spec}.{ts,tsx,js,jsx,mjs,cjs,mts,cts}'],
     // Coverage plus large DOM fixtures can saturate shared desktop/CI hosts.
     // Bound parallelism while keeping every test and its existing timeout.
     maxWorkers: 2,

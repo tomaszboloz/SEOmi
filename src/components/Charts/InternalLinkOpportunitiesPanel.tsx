@@ -2,7 +2,7 @@ import { useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import type { CrawledPageSummary } from '@/types';
 import { findInternalLinkOpportunities } from '@/services/internalLinkOpportunities';
-import { excludeQuarantined, type BusConflict, type QuarantineEntry } from '@/services/recommendationBus';
+import { excludeQuarantined, excludeQuarantinedPages, type BusConflict, type QuarantineEntry } from '@/services/recommendationBus';
 import { QuarantineConflicts } from './QuarantineConflicts';
 
 interface Props { pages: CrawledPageSummary[]; quarantine?: QuarantineEntry[]; conflicts?: BusConflict[]; }
@@ -17,7 +17,8 @@ const NO_QUARANTINE: QuarantineEntry[] = [];
 export const InternalLinkOpportunitiesPanel = ({ pages, quarantine = NO_QUARANTINE, conflicts }: Props) => {
   const { t } = useTranslation();
   const [query, setQuery] = useState('');
-  const base = useMemo(() => findInternalLinkOpportunities(pages), [pages]);
+  const safePages = useMemo(() => excludeQuarantinedPages(pages, quarantine), [pages, quarantine]);
+  const base = useMemo(() => findInternalLinkOpportunities(safePages), [safePages]);
   const split = useMemo(() => excludeQuarantined(base.opportunities, quarantine), [base, quarantine]);
   const report = useMemo(() => ({ ...base, opportunities: split.kept }), [base, split]);
   const filtered = useMemo(() => {

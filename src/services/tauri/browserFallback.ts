@@ -98,6 +98,7 @@ export function handleBrowserFallback<T>(cmd: string, args?: Record<string, unkn
     'save_project_audit_queue',
     'save_project_crawl_checkpoint',
     'store_save_crawl_run',
+    'store_replace_crawl_runs',
     'store_list_crawl_runs',
     'store_load_crawl_run',
     'store_load_crawl_pages',

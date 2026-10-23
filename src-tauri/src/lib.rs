@@ -16,7 +16,6 @@ mod compose_gap_tests;
 mod compose_tests;
 #[cfg(test)]
 mod startup_tests;
-
 use tauri::Builder;
 
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
@@ -69,6 +68,7 @@ pub(crate) fn compose<R: tauri::Runtime>(builder: Builder<R>) -> Builder<R> {
                 commands::crawl_storage::save_project_crawl_checkpoint,
                 commands::crawl_storage::delete_project_crawl_checkpoint,
                 commands::run_store::commands::store_save_crawl_run,
+                commands::run_store::commands::store_replace_crawl_runs,
                 commands::run_store::commands::store_list_crawl_runs,
                 commands::run_store::commands::store_load_crawl_run,
                 commands::run_store::commands::store_load_crawl_pages,

@@ -20,13 +20,15 @@ it('keeps deletion durable after a delayed external-check write using the produc
   Object.defineProperty(window, '__TAURI_INTERNALS__', { value: {}, configurable: true });
   let release!: () => void;
   const durable = new Map<string, Record<string, unknown>>();
-  native.invoke.mockImplementation(async (command: string, args: { run?: CrawlRunRecord; runId?: string }) => {
-    if (command === "store_list_crawl_runs") return [...durable.values()];
-    if (command === "store_save_crawl_run") {
+  native.invoke.mockImplementation(async (command: string, args: { runs?: CrawlRunRecord[] }) => {
+    if (command === 'load_project_crawl_runs') return [];
+    if (command === "store_replace_crawl_runs" && args.runs!.length) {
       await new Promise<void>(resolve => { release = resolve; });
-      durable.set(args.run!.id, { id: args.run!.id });
     }
-    if (command === "store_delete_crawl_run") durable.delete(args.runId!);
+    if (command === "store_replace_crawl_runs") {
+      durable.clear();
+      args.runs!.forEach(run => durable.set(run.id, { id: run.id }));
+    }
   });
   const calls = (name: string) => native.invoke.mock.calls.filter(([command]) => command === name).length;
   const { store, actions } = isolatedToolsSlice((set, get, services) => ({
@@ -35,13 +37,13 @@ it('keeps deletion durable after a delayed external-check write using the produc
   const run = externalRun();
   store.setState({ crawlRuns: [run], crawlResult: run.result, selectedCrawlRunId: run.id });
   const checking = actions.checkCrawlExternalLinks(run.id, 10);
-  await vi.waitFor(() => expect(calls("store_save_crawl_run")).toBe(1));
+  await vi.waitFor(() => expect(calls("store_replace_crawl_runs")).toBe(1));
   const deleting = actions.deleteCrawlRun(run.id);
   expect(store.getState().crawlRuns).toEqual([]);
-  expect(calls("store_delete_crawl_run")).toBe(0);
+  expect(calls("store_replace_crawl_runs")).toBe(1);
   release();
   await Promise.all([checking, deleting]);
-  expect(calls("store_delete_crawl_run")).toBe(1);
+  expect(calls("store_replace_crawl_runs")).toBe(2);
   expect(durable.size).toBe(0);
   expect(store.getState()).toMatchObject({ crawlRuns: [], crawlResult: null, selectedCrawlRunId: null });
 });

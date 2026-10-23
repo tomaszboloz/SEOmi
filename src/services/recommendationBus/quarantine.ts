@@ -19,7 +19,10 @@ export const runRecommendationBus = (input: BusInput): BusResult => {
   for (const group of input.cannibal ?? []) {
     const canonical = busUrlKey(group.canonical);
     if (!canonical) continue;
-    if (byUrl.get(canonical)?.reason === 'remove') conflicts.push({ kind: 'canonical-removed', url: canonical });
+    if (byUrl.get(canonical)?.reason === 'remove') {
+      conflicts.push({ kind: 'canonical-removed', url: canonical });
+      continue;
+    }
     for (const raw of group.urls) {
       const url = busUrlKey(raw);
       if (!url || url === canonical || byUrl.has(url) || guarded.has(url)) continue;
@@ -31,11 +34,20 @@ export const runRecommendationBus = (input: BusInput): BusResult => {
 
 /** Drops every opportunity whose source or target is quarantined. */
 export const excludeQuarantined = <T extends { sourceUrl: string; targetUrl: string }>(items: T[], quarantine: QuarantineEntry[]): { kept: T[]; dropped: T[] } => {
-  const blocked = new Set(quarantine.map((entry) => entry.url));
+  const blocked = new Set(quarantine.map((entry) => busUrlKey(entry.url)).filter(Boolean));
   const kept: T[] = [];
   const dropped: T[] = [];
-  for (const item of items) (blocked.has(busUrlKey(item.sourceUrl)) || blocked.has(busUrlKey(item.targetUrl)) ? dropped : kept).push(item);
+  for (const item of items) {
+    (blocked.has(busUrlKey(item.sourceUrl)) || blocked.has(busUrlKey(item.targetUrl)) ? dropped : kept).push(item);
+  }
   return { kept, dropped };
+};
+
+/** Removes quarantined pages before contextual link evidence is generated. */
+export const excludeQuarantinedPages = <T extends { url: string; final_url?: string | null }>(pages: T[], quarantine: QuarantineEntry[]): T[] => {
+  const blocked = new Set(quarantine.map((entry) => busUrlKey(entry.url)).filter(Boolean));
+  const keys = (page: T) => [page.url, page.final_url ?? ''].map(busUrlKey).filter(Boolean);
+  return pages.filter((page) => !keys(page).some((url) => blocked.has(url)));
 };
 
 export const isQuarantined = (quarantine: QuarantineEntry[], url: string): boolean => quarantine.some((entry) => entry.url === busUrlKey(url));

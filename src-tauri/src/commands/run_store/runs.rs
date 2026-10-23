@@ -1,48 +1,11 @@
+pub use super::write::{replace_runs, save_run};
 use rusqlite::{params, Connection, OptionalExtension, Result};
 use serde_json::{json, Value};
 
-fn text<'a>(run: &'a Value, key: &str) -> &'a str {
-    run.get(key).and_then(Value::as_str).unwrap_or("")
-}
-
-/// Split a run into a metadata row plus one row per page. No page cap.
-pub fn save_run(conn: &mut Connection, project_id: &str, run: &Value) -> Result<()> {
-    let run_id = text(run, "id");
-    let mut meta = run.clone();
-    let pages = meta
-        .pointer_mut("/result/pages")
-        .map(Value::take)
-        .and_then(|value| value.as_array().cloned())
-        .unwrap_or_default();
-    let tx = conn.transaction()?;
-    tx.execute(
-        "DELETE FROM crawl_runs WHERE project_id = ?1 AND run_id = ?2",
-        params![project_id, run_id],
-    )?;
-    tx.execute(
-        "INSERT INTO crawl_runs VALUES (?1, ?2, ?3, ?4, ?5, ?6)",
-        params![
-            run_id,
-            project_id,
-            text(run, "completedAt"),
-            text(run, "startUrl"),
-            meta.to_string(),
-            pages.len() as i64
-        ],
-    )?;
-    {
-        let mut insert = tx.prepare("INSERT INTO crawl_pages VALUES (?1, ?2, ?3, ?4, ?5)")?;
-        for (idx, page) in pages.iter().enumerate() {
-            insert.execute(params![
-                project_id,
-                run_id,
-                idx as i64,
-                text(page, "url"),
-                page.to_string()
-            ])?;
-        }
-    }
-    tx.commit()
+fn decode_json(raw: &str) -> Result<Value> {
+    serde_json::from_str(raw).map_err(|error| {
+        rusqlite::Error::FromSqlConversionFailure(0, rusqlite::types::Type::Text, Box::new(error))
+    })
 }
 
 /// Run metadata without pages, newest first; `pageCount` carries the real total.
@@ -55,7 +18,10 @@ pub fn list_runs(conn: &Connection, project_id: &str) -> Result<Vec<Value>> {
     })?;
     rows.map(|row| {
         let (meta, count) = row?;
-        let mut value: Value = serde_json::from_str(&meta).unwrap_or(Value::Null);
+        let mut value = decode_json(&meta)?;
+        if !value.is_object() {
+            return Err(rusqlite::Error::InvalidQuery);
+        }
         value["pageCount"] = json!(count);
         Ok(value)
     })
@@ -75,8 +41,7 @@ fn pages_query(
     let rows = stmt.query_map(params![project_id, run_id, limit, offset], |row| {
         row.get::<_, String>(0)
     })?;
-    rows.map(|row| Ok(serde_json::from_str(&row?).unwrap_or(Value::Null)))
-        .collect()
+    rows.map(|row| decode_json(&row?)).collect()
 }
 
 /// One page slice (offset/limit, limit capped at 5000) for lazy loading.
@@ -97,18 +62,52 @@ pub fn load_pages(
 }
 
 /// Fully reassembled run (every page), or None.
-pub fn load_run(conn: &Connection, project_id: &str, run_id: &str) -> Result<Option<Value>> {
-    let meta: Option<String> = conn
+fn load_run_snapshot<F>(
+    conn: &Connection,
+    project_id: &str,
+    run_id: &str,
+    after_meta: F,
+) -> Result<Option<Value>>
+where
+    F: FnOnce() -> Result<()>,
+{
+    let tx = conn.unchecked_transaction()?;
+    let meta: Option<String> = tx
         .query_row(
             "SELECT meta FROM crawl_runs WHERE project_id = ?1 AND run_id = ?2",
             params![project_id, run_id],
             |row| row.get(0),
         )
         .optional()?;
-    let Some(meta) = meta else { return Ok(None) };
-    let mut run: Value = serde_json::from_str(&meta).unwrap_or(Value::Null);
-    run["result"]["pages"] = Value::Array(pages_query(conn, project_id, run_id, 0, -1)?);
+    let Some(meta) = meta else {
+        tx.commit()?;
+        return Ok(None);
+    };
+    let mut run = decode_json(&meta)?;
+    if !run.get("result").is_some_and(Value::is_object) {
+        return Err(rusqlite::Error::InvalidQuery);
+    }
+    after_meta()?;
+    run["result"]["pages"] = Value::Array(pages_query(&tx, project_id, run_id, 0, -1)?);
+    tx.commit()?;
     Ok(Some(run))
+}
+
+pub fn load_run(conn: &Connection, project_id: &str, run_id: &str) -> Result<Option<Value>> {
+    load_run_snapshot(conn, project_id, run_id, || Ok(()))
+}
+
+#[cfg(test)]
+pub(crate) fn load_run_after_meta<F>(
+    conn: &Connection,
+    project_id: &str,
+    run_id: &str,
+    after_meta: F,
+) -> Result<Option<Value>>
+where
+    F: FnOnce() -> Result<()>,
+{
+    load_run_snapshot(conn, project_id, run_id, after_meta)
 }
 
 pub fn delete_run(conn: &Connection, project_id: &str, run_id: &str) -> Result<usize> {

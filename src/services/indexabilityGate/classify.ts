@@ -41,5 +41,9 @@ export const classifyIndexability = (page: GatePage): IndexState => {
   if (hasNoindex(page)) return 'noindex';
   if (canonicalTarget(page)) return 'canonicalized';
   if (page.indexability_verdict?.status === 'blocked') return 'noindex';
-  return page.indexability_verdict || page.robots_decision || page.http_status >= 200 ? 'indexable' : 'unknown';
+  const verdict = page.indexability_verdict?.status;
+  if (verdict) return verdict === 'indexable' ? 'indexable' : 'unknown';
+  const robots = page.robots_decision?.indexability;
+  if (robots) return robots === 'index' ? 'indexable' : 'unknown';
+  return page.http_status >= 200 ? 'indexable' : 'unknown';
 };

@@ -1,4 +1,15 @@
-# SEOmi 0.4.5 — release notes
+# SEOmi 0.4.6 — release notes
+
+## Added
+
+- Copilot Patcher review UI with human approval ownership checks.
+
+## Fixed
+
+- Crawl history is replaced in one SQLite transaction, so a failed save preserves the previous project snapshot. Legacy imports commit each run and its migration journal together and preserve newer SQLite data.
+- Migration stops on unreadable or malformed legacy history, retains its backup and retries safely. Incomplete stored runs produce a read error instead of disappearing from history. Save and restore complete migration before replacing the snapshot.
+
+## Included from 0.4.5
 
 ## Added
 
@@ -7,6 +18,7 @@
 - Contextual AI Copilot Patcher service: before/after proposals that need human approval, local provider preferred.
 - TAS: menu and footer links are excluded by crawler link zones; People Also Ask only from a real SERP source.
 - Local multimodal services: perceptual image hash and alt text checks (OCR/CLIP reported as unavailable).
+
 
 ## Included from 0.4.4
 

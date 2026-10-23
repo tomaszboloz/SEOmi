@@ -31,9 +31,14 @@ export const detectConflicts = (input: ConflictInput): IndexConflict[] => {
     const state = classifyIndexability(page);
     if (state === 'noindex') {
       if (pillars.has(id)) out.push({ code: 'pillar-noindex', url: page.url, detail: {} });
-      const clicks = input.clicks?.get(id) ?? 0;
-      const domains = input.referringDomains?.get(id) ?? 0;
-      if (clicks > 0 || domains > 0) out.push({ code: 'noindex-with-traffic', url: page.url, detail: { clicks, referringDomains: domains } });
+      const clicks = input.clicks?.get(id);
+      const domains = input.referringDomains?.get(id);
+      if ((clicks ?? 0) > 0 || (domains ?? 0) > 0) {
+        out.push({
+          code: 'noindex-with-traffic', url: page.url,
+          detail: { ...(clicks === undefined ? {} : { clicks }), ...(domains === undefined ? {} : { referringDomains: domains }) },
+        });
+      }
       if (sitemap.has(id)) out.push({ code: 'sitemap-noindex', url: page.url, detail: {} });
     }
     const target = state === 'canonicalized' ? canonicalTarget(page) : null;

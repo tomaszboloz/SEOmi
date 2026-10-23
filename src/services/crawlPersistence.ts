@@ -4,7 +4,11 @@ import { indexedDbWrite } from './crawlPersistence/browser';
 import { indexedDbRead } from './crawlPersistence/indexedDb';
 import { clearLegacyCrawlStorage } from './crawlPersistence/legacy';
 import { loadStoredRuns, migrateLegacyCrawlRuns, saveStoredRuns } from './crawlStore';
-import { withCrawlWriteLock } from './crawlPersistence/writeLock';
+import {
+  assertCrawlWriteGeneration,
+  crawlWriteGeneration,
+  withCrawlWriteLock,
+} from './crawlPersistence/writeLock';
 import type { CrawlSaveResult } from './crawlPersistence/contracts';
 
 export type { CrawlSaveResult } from './crawlPersistence/contracts';
@@ -21,16 +25,26 @@ export const usesDedicatedCrawlStorage = (): boolean => isTauriEnvironment() || 
 
 export const loadCrawlRuns = async (projectId: string): Promise<CrawlRunRecord[]> => {
   if (!isTauriEnvironment()) return indexedDbRead(projectId);
-  await migrateLegacyCrawlRuns(projectId);
-  return loadStoredRuns(projectId);
+  return withCrawlWriteLock(projectId, async () => {
+    await migrateLegacyCrawlRuns(projectId);
+    return loadStoredRuns(projectId);
+  });
 };
 
 const saveUnlocked = async (projectId: string, runs: CrawlRunRecord[]): Promise<CrawlSaveResult> => {
   if (!isTauriEnvironment()) return indexedDbWrite(projectId, runs);
+  // A save can be the first action after restoring a backup or a failed load.
+  // Finish migration before replacement or legacy cleanup can discard v1 data.
+  await migrateLegacyCrawlRuns(projectId);
   await saveStoredRuns(projectId, runs);
   clearLegacyCrawlStorage(projectId);
   return { prunedRuns: Math.max(0, runs.length - 50) };
 };
 
-export const saveCrawlRuns = (projectId: string, runs: CrawlRunRecord[]): Promise<CrawlSaveResult> =>
-  withCrawlWriteLock(projectId, () => saveUnlocked(projectId, runs));
+export const saveCrawlRuns = (projectId: string, runs: CrawlRunRecord[]): Promise<CrawlSaveResult> => {
+  const generation = crawlWriteGeneration(projectId);
+  return withCrawlWriteLock(projectId, () => {
+    assertCrawlWriteGeneration(projectId, generation);
+    return saveUnlocked(projectId, runs);
+  });
+};

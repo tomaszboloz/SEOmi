@@ -36,6 +36,15 @@ pub fn store_save_crawl_run<R: tauri::Runtime>(
 }
 
 #[tauri::command]
+pub fn store_replace_crawl_runs<R: tauri::Runtime>(
+    app: AppHandle<R>,
+    project_id: String,
+    runs: Vec<Value>,
+) -> Result<(), String> {
+    runs::replace_runs(&mut open_store(&app, &project_id)?, &project_id, &runs).map_err(err)
+}
+
+#[tauri::command]
 pub fn store_list_crawl_runs<R: tauri::Runtime>(
     app: AppHandle<R>,
     project_id: String,

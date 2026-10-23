@@ -23,7 +23,6 @@ describe('recommendation bus', () => {
     expect(result.quarantine.map((e) => [e.url, e.reason, e.target])).toEqual([
       ['https://a.test/off', 'remove', undefined],
       ['https://a.test/b', 'redirect', 'https://a.test/a'],
-      ['https://a.test/c', 'redirect', 'https://a.test/off'],
     ]);
     expect(result.quarantine.every((e) => e.quarantined)).toBe(true);
     expect(result.conflicts).toEqual([

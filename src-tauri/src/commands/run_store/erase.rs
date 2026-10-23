@@ -1,11 +1,24 @@
 use rusqlite::{params, Connection, OptionalExtension};
+use std::{thread, time::Duration};
 
 use super::report::{log, ErasureReport};
 use super::shred::db;
 
 pub(super) fn flush(conn: &Connection) -> Result<(), String> {
-    conn.query_row("PRAGMA wal_checkpoint(TRUNCATE)", [], |_| Ok(()))
-        .map_err(db)
+    const ATTEMPTS: usize = 3;
+
+    for attempt in 0..ATTEMPTS {
+        let busy: i64 = conn
+            .query_row("PRAGMA wal_checkpoint(TRUNCATE)", [], |row| row.get(0))
+            .map_err(db)?;
+        if busy == 0 {
+            return Ok(());
+        }
+        if attempt + 1 < ATTEMPTS {
+            thread::sleep(Duration::from_millis(10));
+        }
+    }
+    Err("SQLite WAL checkpoint is busy; retry after active readers finish.".into())
 }
 
 /// Right to be forgotten: rotate (destroy) the subject key, delete the

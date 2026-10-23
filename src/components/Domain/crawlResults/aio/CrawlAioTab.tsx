@@ -33,7 +33,7 @@ export const CrawlAioTab = ({ pages, run, projectId }: CrawlAioTabProps) => {
         <p className="text-xs text-slate-400">{t('aio.passage.intro')}</p>
         {report.weakPassages.length ? (
           <ul className="space-y-2">
-            {report.weakPassages.map((passage, index) => <AioPassageCard key={`${passage.url}#${passage.heading}#${passage.windowIndex}`} passage={passage} index={index} />)}
+            {report.weakPassages.map((passage, index) => <AioPassageCard key={`${passage.url}#${passage.heading}#${passage.windowIndex}`} passage={passage} index={index} projectId={projectId} page={pages.find((page) => page.url === passage.url || page.final_url === passage.url)} />)}
           </ul>
         ) : (
           <p className="text-sm text-slate-300">{t('aio.passage.none')}</p>

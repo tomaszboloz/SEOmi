@@ -1,27 +1,33 @@
 import type { CrawlRunRecord } from '@/types';
 import { invokeTauriCommand } from '@/services/tauri';
 import { readStorage, writeStorage } from '@/services/storage';
-import { parseCrawlRuns } from '../crawlContracts';
+import { parseCrawlRunsStrict } from '../crawlContracts';
 import { indexedDbRead } from '../crawlPersistence/indexedDb';
+import { decodeCrawlRunsFromStorage } from '../crawlPersistence/codec';
+import i18n from '@/i18n';
 
 const doneKey = (projectId: string) => `seomi_store_v2_migrated_${projectId}`;
 const backupKey = (projectId: string) => `seomi_project_${projectId}_crawl_runs_v1_backup`;
 const inFlight = new Map<string, Promise<number>>();
 
 const collectLegacy = async (projectId: string): Promise<CrawlRunRecord[]> => {
-  const [file, web] = await Promise.all([
-    invokeTauriCommand<unknown>('load_project_crawl_runs', { projectId }).then(parseCrawlRuns).catch(() => []),
-    indexedDbRead(projectId).catch(() => []),
+  const raw = readStorage(`seomi_project_${projectId}_crawl_runs`);
+  const [file, web, local] = await Promise.all([
+    invokeTauriCommand<unknown>('load_project_crawl_runs', { projectId }).then(parseCrawlRunsStrict),
+    indexedDbRead(projectId, true),
+    raw === null ? [] : decodeCrawlRunsFromStorage(JSON.parse(raw), true),
   ]);
   const seen = new Set<string>();
-  return [...file, ...web].filter((run) => !seen.has(run.id) && seen.add(run.id));
+  return [...file, ...web, ...local].filter((run) => !seen.has(run.id) && seen.add(run.id));
 };
 
 const run = async (projectId: string): Promise<number> => {
   if (readStorage(doneKey(projectId)) === '1') return 0;
   const raw = readStorage(`seomi_project_${projectId}_crawl_runs`);
   // Keep a copy of the v1 slot so a failed or interrupted migration is recoverable.
-  if (raw && readStorage(backupKey(projectId)) === null) writeStorage(backupKey(projectId), raw);
+  if (raw && readStorage(backupKey(projectId)) === null && !writeStorage(backupKey(projectId), raw)) {
+    throw new Error(i18n.t('runtimeErrors.persistence.historyWriteFailed'));
+  }
   const legacy = await collectLegacy(projectId);
   const imported = legacy.length
     ? await invokeTauriCommand<number>('store_import_legacy_runs', { projectId, source: 'v1', runs: legacy })

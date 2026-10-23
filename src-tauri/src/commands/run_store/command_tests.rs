@@ -30,7 +30,7 @@ fn commands_round_trip_through_the_sqlite_file_and_validate_ids() {
         app.clone(),
         "p1".into(),
         "ls".into(),
-        vec![json!({"id": "r2"})],
+        vec![json!({"id": "r2", "completedAt": "2026-01-01", "startUrl": "https://e.test/", "result": {"pages": []}})],
     )
     .unwrap();
     assert_eq!(imported, 1);
