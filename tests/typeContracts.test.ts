@@ -13,6 +13,7 @@ const additive: Record<string, string[]> = {
   SecurityHeaders: ['content_security_policy_report_only', 'repeated_headers'],
   GscPerformanceData: ['query_pages', 'query_pages_may_be_truncated'],
   CrawledPageSummary: ['semantic_language', 'focus_terms', 'heading_texts', 'focus_text_chars', 'content_date', 'rag_sections'],
+  CrawledLink: ['zone', 'zone_method', 'context_before', 'context_after'],
   SiteCrawlResult: ['score_version', 'robots_txt_evaluation_status', 'robots_txt_warning', 'robots_txt_status_code', 'robots_txt_final_url', 'robots_txt_redirect_chain'],
 };
 
