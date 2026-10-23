@@ -1,3 +1,10 @@
+# SEOmi 0.4.22 — release notes
+
+## Added
+
+- Signals workspace works on a frozen graph snapshot (issue #138). A crawl that finishes while the user explores shows "Newer crawl data is available" with a Refresh button instead of changing the numbers under them.
+- Semantic PageRank What-If link simulator: pick a source page, target page and add/remove link, and see the ranked score changes on the frozen graph. Invalid choices (same page, duplicate link, removing a missing link) are blocked; the input graph is never mutated. Translated in 12 languages; tests cover simulation, validation, the no-change state, snapshot freezing/refresh and locale parity.
+
 # SEOmi 0.4.21 — release notes
 
 ## Added

@@ -7552,7 +7552,20 @@
     "underLinked": "링크 부족",
     "leak": "누수",
     "unknown": "{{count}}개 링크는 유사도를 알 수 없어 누수로 세지 않습니다.",
-    "notConverged": "솔버가 수렴하지 않았습니다. 점수는 근삿값입니다."
+    "notConverged": "솔버가 수렴하지 않았습니다. 점수는 근삿값입니다.",
+    "whatIf": {
+      "title": "링크 What-If 시뮬레이터",
+      "source": "출발 페이지",
+      "target": "도착 페이지",
+      "action": "변경",
+      "add": "링크 추가",
+      "remove": "링크 제거",
+      "run": "시뮬레이션",
+      "noChange": "점수 변화가 없습니다.",
+      "before": "이전",
+      "after": "이후",
+      "delta": "변화"
+    }
   },
   "decayUi": {
     "title": "시맨틱 디케이 레이더",

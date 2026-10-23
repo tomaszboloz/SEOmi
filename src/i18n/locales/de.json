@@ -7552,7 +7552,20 @@
     "underLinked": "Zu wenig verlinkt",
     "leak": "Leck",
     "unknown": "{{count}} Links haben unbekannte Ähnlichkeit und zählen nicht als Leck.",
-    "notConverged": "Der Solver ist nicht konvergiert; die Werte sind ungefähr."
+    "notConverged": "Der Solver ist nicht konvergiert; die Werte sind ungefähr.",
+    "whatIf": {
+      "title": "What-If-Linksimulator",
+      "source": "Von Seite",
+      "target": "Zu Seite",
+      "action": "Änderung",
+      "add": "Link hinzufügen",
+      "remove": "Link entfernen",
+      "run": "Simulieren",
+      "noChange": "Keine Änderung der Werte.",
+      "before": "Vorher",
+      "after": "Nachher",
+      "delta": "Änderung"
+    }
   },
   "decayUi": {
     "title": "Semantic-Decay-Radar",

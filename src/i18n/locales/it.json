@@ -7552,7 +7552,20 @@
     "underLinked": "Pochi link",
     "leak": "Perdita",
     "unknown": "{{count}} link hanno similarità sconosciuta e non contano come perdita.",
-    "notConverged": "Il solver non è convergente; i punteggi sono approssimati."
+    "notConverged": "Il solver non è convergente; i punteggi sono approssimati.",
+    "whatIf": {
+      "title": "Simulatore di link What-If",
+      "source": "Dalla pagina",
+      "target": "Alla pagina",
+      "action": "Modifica",
+      "add": "Aggiungi link",
+      "remove": "Rimuovi link",
+      "run": "Simula",
+      "noChange": "Nessuna variazione dei punteggi.",
+      "before": "Prima",
+      "after": "Dopo",
+      "delta": "Variazione"
+    }
   },
   "decayUi": {
     "title": "Radar del decadimento semantico",

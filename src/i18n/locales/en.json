@@ -7552,7 +7552,20 @@
     "underLinked": "Under-linked",
     "leak": "Leak",
     "unknown": "{{count}} links have unknown similarity and are not counted as leaks.",
-    "notConverged": "The solver did not converge; scores are approximate."
+    "notConverged": "The solver did not converge; scores are approximate.",
+    "whatIf": {
+      "title": "What-If link simulator",
+      "source": "From page",
+      "target": "To page",
+      "action": "Change",
+      "add": "Add link",
+      "remove": "Remove link",
+      "run": "Simulate",
+      "noChange": "No score changes.",
+      "before": "Before",
+      "after": "After",
+      "delta": "Change"
+    }
   },
   "decayUi": {
     "title": "Semantic Decay Radar",

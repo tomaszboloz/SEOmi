@@ -7552,7 +7552,20 @@
     "underLinked": "内链不足",
     "leak": "泄漏",
     "unknown": "{{count}} 个链接的相似度未知，不计为泄漏。",
-    "notConverged": "求解器未收敛，分数为近似值。"
+    "notConverged": "求解器未收敛，分数为近似值。",
+    "whatIf": {
+      "title": "链接 What-If 模拟器",
+      "source": "来源页面",
+      "target": "目标页面",
+      "action": "变更",
+      "add": "添加链接",
+      "remove": "移除链接",
+      "run": "模拟",
+      "noChange": "分数无变化。",
+      "before": "之前",
+      "after": "之后",
+      "delta": "变化"
+    }
   },
   "decayUi": {
     "title": "语义衰减雷达",

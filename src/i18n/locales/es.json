@@ -7552,7 +7552,20 @@
     "underLinked": "Pocos enlaces",
     "leak": "Fuga",
     "unknown": "{{count}} enlaces tienen similitud desconocida y no cuentan como fuga.",
-    "notConverged": "El solver no convergió; las puntuaciones son aproximadas."
+    "notConverged": "El solver no convergió; las puntuaciones son aproximadas.",
+    "whatIf": {
+      "title": "Simulador de enlaces What-If",
+      "source": "Desde la página",
+      "target": "Hacia la página",
+      "action": "Cambio",
+      "add": "Añadir enlace",
+      "remove": "Quitar enlace",
+      "run": "Simular",
+      "noChange": "Sin cambios en las puntuaciones.",
+      "before": "Antes",
+      "after": "Después",
+      "delta": "Cambio"
+    }
   },
   "decayUi": {
     "title": "Radar de decaimiento semántico",

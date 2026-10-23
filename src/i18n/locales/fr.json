@@ -7552,7 +7552,20 @@
     "underLinked": "Peu de liens",
     "leak": "Fuite",
     "unknown": "{{count}} liens ont une similarité inconnue et ne comptent pas comme fuite.",
-    "notConverged": "Le solveur n'a pas convergé ; les scores sont approximatifs."
+    "notConverged": "Le solveur n'a pas convergé ; les scores sont approximatifs.",
+    "whatIf": {
+      "title": "Simulateur de liens What-If",
+      "source": "Depuis la page",
+      "target": "Vers la page",
+      "action": "Modification",
+      "add": "Ajouter un lien",
+      "remove": "Retirer un lien",
+      "run": "Simuler",
+      "noChange": "Aucun changement de score.",
+      "before": "Avant",
+      "after": "Après",
+      "delta": "Variation"
+    }
   },
   "decayUi": {
     "title": "Radar de déclin sémantique",
