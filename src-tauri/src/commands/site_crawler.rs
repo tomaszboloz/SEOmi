@@ -48,6 +48,9 @@ mod orchestration;
 mod pagination;
 mod post_processing;
 mod prefetch;
+// Pool is complete and tested; wiring into the request profile/UI is tracked in issue #142.
+#[cfg_attr(not(test), allow(dead_code))]
+mod proxy_pool;
 mod rag_sections;
 mod readability;
 mod render_decision;

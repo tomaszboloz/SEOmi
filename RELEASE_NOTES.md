@@ -1,3 +1,9 @@
+# SEOmi 0.4.12 — release notes
+
+## Added
+
+- Crawler proxy pool foundation (issue #142): validated user-supplied proxy list (HTTP/HTTPS only, max 64, no duplicates), round-robin rotation, ban after consecutive failures with cool-down re-entry, and credential redaction for reports. Unit-tested with injected time; wiring into request profiles and UI follows. No bot-protection bypass.
+
 # SEOmi 0.4.11 — release notes
 
 ## Added
