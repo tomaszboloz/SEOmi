@@ -73,11 +73,11 @@ async fn waiting_honours_pause_and_cancellation() {
             &waiting_control,
             "run",
             Instant::now(),
-            Duration::from_millis(1),
+            Duration::from_secs(3600),
         )
         .await
     });
-    tokio::time::sleep(Duration::from_millis(10)).await;
+    tokio::task::yield_now().await;
     control.cancelled_runs.lock().unwrap().insert("run".into());
     assert!(!waiter.await.unwrap());
 
