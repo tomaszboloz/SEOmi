@@ -6424,6 +6424,12 @@
         "what": "Cada alteração recomendada é uma tarefa: planeada, implementada e depois verificada ou falhada.",
         "why": "O rastreio seguinte confirma o resultado real e mostra como a pontuação do módulo mudou desde a base.",
         "action": "Adicione uma tarefa a partir de uma recomendação.\nMarque-a como implementada após publicar.\nExecute novo rastreio e clique em Verificar."
+      },
+      "sla": {
+        "title": "Responsável e SLA",
+        "what": "Quem é responsável pela tarefa, a urgência e a data limite.",
+        "why": "Tarefas com responsável e data não se perdem e as atrasadas são fáceis de filtrar.",
+        "action": "Digite o nome do responsável.\nEscolha a prioridade e a data SLA.\nUse os filtros para ver suas tarefas ou as atrasadas."
       }
     }
   },
@@ -7287,6 +7293,21 @@
         "entities-missing": "ERRO DE IMPLEMENTAÇÃO: só {{found}} de {{total}} entidades obrigatórias presentes (são precisos 60%)",
         "index-ok": "VERIFICADO: a página é indexável",
         "still-noindex": "ERRO DE IMPLEMENTAÇÃO: o noindex continua presente"
+      },
+      "owner": "Responsável",
+      "priority": "Prioridade",
+      "dueDate": "Data SLA",
+      "overdue": "Atrasada",
+      "me": "Meu nome",
+      "filter": {
+        "all": "Todas",
+        "mine": "Minhas tarefas",
+        "overdue": "Atrasadas"
+      },
+      "priorityLevel": {
+        "high": "Alta",
+        "medium": "Média",
+        "low": "Baixa"
       }
     }
   },

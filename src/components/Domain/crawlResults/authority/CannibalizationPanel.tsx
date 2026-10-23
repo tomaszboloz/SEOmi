@@ -3,6 +3,7 @@ import { useTranslation } from 'react-i18next';
 import { HelpTip } from '@/components/Help/HelpTip';
 import type { FocusPage } from '@/services/siteFocus';
 import { checkDraftOverlap, type DraftOverlap, type TopicalAuthorityReport } from '@/services/topicalAuthority';
+import { BriefCardButton } from '@/components/Charts/BriefCardButton';
 import { host } from './authorityText';
 
 export interface CannibalizationPanelProps { report: TopicalAuthorityReport; pages: FocusPage[]; startUrl: string; language?: string }
@@ -28,6 +29,7 @@ export const CannibalizationPanel = ({ report, pages, startUrl, language }: Cann
                 {group.edges.map((edge) => <li key={`${edge.from}|${edge.to}`} className="break-all">{t('authority.cannibal.edge', { from: host(edge.from), to: host(edge.to), similarity: edge.similarity, basis: t(`authority.cannibal.basis.${edge.basis}`) })}</li>)}
               </ul>
               <p className="mt-1 text-slate-400">{t('authority.cannibal.steps')}</p>
+              <BriefCardButton input={{ origin: 'tas', title: host(group.canonical), sourceUrl: group.canonical, links: { donorUrls: group.urls.filter((url) => url !== group.canonical), targetPillarUrl: group.canonical } }} />
             </li>
           ))}
         </ul>

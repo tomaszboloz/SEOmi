@@ -6424,6 +6424,12 @@
         "what": "Ogni modifica raccomandata diventa un'attività: pianificata, implementata, poi verificata o fallita.",
         "why": "Il crawl successivo controlla il risultato reale e mostra come è cambiato il punteggio del modulo rispetto alla base.",
         "action": "Aggiungi un'attività da una raccomandazione.\nSegnala come implementata dopo la pubblicazione.\nAvvia un nuovo crawl e clicca Verifica."
+      },
+      "sla": {
+        "title": "Responsabile e SLA",
+        "what": "Chi è responsabile dell'attività, quanto è urgente e la data entro cui va completata.",
+        "why": "Le attività con responsabile e data non si perdono e quelle in ritardo si filtrano facilmente.",
+        "action": "Scrivi il nome del responsabile.\nScegli priorità e data SLA.\nUsa i filtri per vedere le tue attività o quelle in ritardo."
       }
     }
   },
@@ -7287,6 +7293,21 @@
         "entities-missing": "ERRORE DI DEPLOYMENT: solo {{found}} entità richieste su {{total}} presenti (serve il 60%)",
         "index-ok": "VERIFICATO: la pagina è indicizzabile",
         "still-noindex": "ERRORE DI DEPLOYMENT: noindex è ancora presente"
+      },
+      "owner": "Responsabile",
+      "priority": "Priorità",
+      "dueDate": "Data SLA",
+      "overdue": "In ritardo",
+      "me": "Il mio nome",
+      "filter": {
+        "all": "Tutte",
+        "mine": "Le mie attività",
+        "overdue": "In ritardo"
+      },
+      "priorityLevel": {
+        "high": "Alta",
+        "medium": "Media",
+        "low": "Bassa"
       }
     }
   },

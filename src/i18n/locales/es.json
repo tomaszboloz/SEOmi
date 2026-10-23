@@ -6424,6 +6424,12 @@
         "what": "Cada cambio recomendado es una tarea: planificada, implementada y luego verificada o fallida.",
         "why": "El siguiente rastreo comprueba el resultado real y muestra cómo cambió la puntuación del módulo desde la línea base.",
         "action": "Añade una tarea desde una recomendación.\nMárcala como implementada tras desplegar.\nLanza un nuevo rastreo y pulsa Verificar."
+      },
+      "sla": {
+        "title": "Responsable y SLA",
+        "what": "Quién es responsable de la tarea, qué urgencia tiene y la fecha límite.",
+        "why": "Las tareas con responsable y fecha no se pierden y las vencidas se filtran fácilmente.",
+        "action": "Escribe el nombre del responsable.\nElige la prioridad y la fecha SLA.\nUsa los filtros para ver tus tareas o las vencidas."
       }
     }
   },
@@ -7287,6 +7293,21 @@
         "entities-missing": "ERROR DE DESPLIEGUE: solo {{found}} de {{total}} entidades requeridas presentes (se necesita 60 %)",
         "index-ok": "VERIFICADO: la página es indexable",
         "still-noindex": "ERROR DE DESPLIEGUE: noindex sigue presente"
+      },
+      "owner": "Responsable",
+      "priority": "Prioridad",
+      "dueDate": "Fecha SLA",
+      "overdue": "Vencida",
+      "me": "Mi nombre",
+      "filter": {
+        "all": "Todas",
+        "mine": "Mis tareas",
+        "overdue": "Vencidas"
+      },
+      "priorityLevel": {
+        "high": "Alta",
+        "medium": "Media",
+        "low": "Baja"
       }
     }
   },

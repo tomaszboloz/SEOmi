@@ -11,6 +11,7 @@ import { formatCrawlPersistenceNotice, formatCrawlRuntimeError } from '../runtim
 import { activeCrawlRuns, persistInterruptedCrawl, buildCrawlCheckpoint, mergeCrawlResults } from '../crawlPersistence';
 import { monitorCrawlComparison } from '@/services/monitoringAlerts';
 import { runScheduledFocus } from '@/services/siteFocusMonitoring';
+import { runTaskVerification } from '@/services/optimizationTasks/runVerification';
 import { compareCrawlRuns } from '@/services/crawlDiff';
 
 export const createCrawlExecutionActions = (set: ToolsSet, get: ToolsGet, services: ToolsServices): Pick<ToolsState, "startSiteCrawl"> => ({
@@ -102,6 +103,7 @@ startSiteCrawl: async (url, limit, configPatch, environment = 'default', notifyC
       }
       if (projectId && previousRun) void monitorCrawlComparison(projectId, compareCrawlRuns(run, previousRun, { projectId }));
       if (projectId) void runScheduledFocus(projectId, run, previousRun);
+      if (projectId) { try { runTaskVerification(projectId, run); } catch { /* verification is best-effort */ } }
       return crawlResult;
     } catch (err: unknown) {
       const msg = formatCrawlRuntimeError(err);
