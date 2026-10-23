@@ -84,9 +84,27 @@ fn configure(conn: &mut Connection, wal: bool) -> Result<()> {
     conn.pragma_update(None, "foreign_keys", true)?;
     conn.pragma_update(None, "secure_delete", true)?;
     if wal {
-        conn.pragma_update(None, "journal_mode", "WAL")?;
+        enable_wal(conn)?;
     }
     Ok(())
+}
+
+/// Switching a fresh database to WAL can fail with SQLITE_BUSY while another
+/// first open holds the lock; the busy handler is not consulted for that
+/// switch, so retry until the busy timeout elapses.
+fn enable_wal(conn: &Connection) -> Result<()> {
+    let deadline = std::time::Instant::now() + SQLITE_BUSY_TIMEOUT;
+    loop {
+        match conn.pragma_update(None, "journal_mode", "WAL") {
+            Err(rusqlite::Error::SqliteFailure(e, _))
+                if e.code == rusqlite::ErrorCode::DatabaseBusy
+                    && std::time::Instant::now() < deadline =>
+            {
+                std::thread::sleep(Duration::from_millis(10));
+            }
+            other => return other,
+        }
+    }
 }
 
 pub fn open(path: &Path) -> Result<Connection> {

@@ -23,8 +23,9 @@ fn simultaneous_first_opens_and_writers_wait_for_each_other() {
     let first_opened = Arc::clone(&opened);
     let first = thread::spawn(move || -> rusqlite::Result<()> {
         first_start.wait();
-        let mut conn = schema::open(first_path.as_ref())?;
+        let opened_conn = schema::open(first_path.as_ref());
         first_opened.wait();
+        let mut conn = opened_conn?;
         let tx = conn.transaction_with_behavior(TransactionBehavior::Immediate)?;
         tx.execute("INSERT INTO import_log VALUES ('p', 'first', 'r')", [])?;
         held_tx.send(()).unwrap();
@@ -37,8 +38,9 @@ fn simultaneous_first_opens_and_writers_wait_for_each_other() {
     let second_opened = Arc::clone(&opened);
     let second = thread::spawn(move || -> rusqlite::Result<()> {
         second_start.wait();
-        let mut conn = schema::open(second_path.as_ref())?;
+        let opened_conn = schema::open(second_path.as_ref());
         second_opened.wait();
+        let mut conn = opened_conn?;
         held_rx.recv().unwrap();
         attempt_tx.send(()).unwrap();
         let tx = conn.transaction_with_behavior(TransactionBehavior::Immediate)?;
