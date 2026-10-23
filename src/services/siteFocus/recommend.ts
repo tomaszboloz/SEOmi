@@ -36,7 +36,8 @@ export const buildRecommendations = (
   const content = contentPages(pages);
   const worst = (list: PageFocus[]) => [...list].sort((a, b) => a.trs - b.trs || (a.url < b.url ? -1 : 1)).map((page) => page.url);
   const off = content.filter((page) => page.trs < 40);
-  const borderline = content.filter((page) => page.trs >= 60 && page.trs < 75);
+  // Every page between off-topic (<40) and strong (>=75) gets an action: weak and borderline pages are not left without advice.
+  const borderline = content.filter((page) => page.trs >= 40 && page.trs < 75);
   const recs: Recommendation[] = [];
   if (off.length && !flags.isLowConfidence) {
     const gain = simulateRemoval(pages, off.map((page) => page.url)) - score;

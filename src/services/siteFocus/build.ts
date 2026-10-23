@@ -70,5 +70,7 @@ export const buildSiteFocusReport = (pages: FocusPage[], startUrl: string, optio
     recommendations: buildRecommendations(focus, score, flags, gaps, linkSuggestions.length, subSites),
     gaps, linkSuggestions, model: modelState, generatedAt: options.now ?? new Date().toISOString(),
     pageCount: pages.length, version: SITE_FOCUS_VERSION,
+    // No scored page means no measurement: the 0 above is a placeholder, not a result.
+    ...(focus.some((page) => !page.skipped) ? {} : { unavailable: true }),
   };
 };

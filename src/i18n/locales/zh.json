@@ -6470,6 +6470,7 @@
     "hero": {
       "label": "Site Focus Score",
       "outOf": "满分 100",
+      "unavailable": "暂无得分：抓取的页面均无法评分。请重新抓取或检查来源；这不是 0 分的结果。",
       "summaryAll": "所有 {{count}} 个已分析页面都围绕主题。",
       "summaryOff": "{{count}} 个页面中有 {{off}} 个明显偏离核心主题。",
       "metaButton": "分析详情",

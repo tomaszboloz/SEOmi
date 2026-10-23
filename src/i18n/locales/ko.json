@@ -6470,6 +6470,7 @@
     "hero": {
       "label": "Site Focus Score",
       "outOf": "/ 100",
+      "unavailable": "점수 없음: 크롤링한 페이지를 하나도 평가하지 못했습니다. 다시 크롤링하거나 소스를 확인하세요. 0점이라는 결과가 아닙니다.",
       "summaryAll": "분석된 {{count}}개 페이지 모두 주제를 유지하고 있습니다.",
       "summaryOff": "{{count}}개 페이지 중 {{off}}개가 핵심 주제에서 크게 벗어났습니다.",
       "metaButton": "분석 세부 정보",

@@ -6470,6 +6470,7 @@
     "hero": {
       "label": "Site Focus Score",
       "outOf": "out of 100",
+      "unavailable": "No score yet: none of the crawled pages could be scored. Re-run the crawl or check the source; this is not a result of 0.",
       "summaryAll": "All {{count}} analysed pages stay on topic.",
       "summaryOff": "{{off}} of {{count}} pages deviate significantly from the core topic.",
       "metaButton": "Analysis details",

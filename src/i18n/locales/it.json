@@ -6470,6 +6470,7 @@
     "hero": {
       "label": "Site Focus Score",
       "outOf": "su 100",
+      "unavailable": "Nessun punteggio: nessuna delle pagine analizzate ha potuto essere valutata. Ripeti la scansione o controlla la fonte; non è un risultato pari a 0.",
       "summaryAll": "Tutte le {{count}} pagine analizzate restano in tema.",
       "summaryOff": "{{off}} pagine su {{count}} si discostano in modo significativo dall'argomento principale.",
       "metaButton": "Dettagli dell'analisi",

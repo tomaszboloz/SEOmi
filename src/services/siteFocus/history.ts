@@ -6,6 +6,8 @@ export interface SfsSnapshot {
   at: string;
   score: number;
   pageCount: number;
+  /** No page was scored: the score is not a measurement and must not drive alerts. */
+  unavailable?: boolean;
   coreTopic: { label: string; clusterId: string };
   clusterLabels: string[];
   pages: Record<string, { trs: number; weight: number; type: PageFocus['type'] }>;
@@ -21,6 +23,7 @@ const round1 = (value: number): number => Math.round(value * 10) / 10;
 
 export const makeSnapshot = (report: SiteFocusReport, runId: string, at: string = report.generatedAt): SfsSnapshot => ({
   runId, at, score: report.score, pageCount: report.pageCount,
+  ...(report.unavailable ? { unavailable: true } : {}),
   coreTopic: { label: report.coreTopic.label, clusterId: report.coreTopic.clusterId },
   clusterLabels: report.clusters.map((cluster) => cluster.label),
   pages: Object.fromEntries(report.pages.filter((page) => !page.skipped).map((page) => [page.url, { trs: page.trs, weight: page.weight, type: page.type }])),
@@ -61,7 +64,7 @@ export const contentGuard = (page: Pick<PageFocus, 'trs' | 'skipped'>, threshold
 
 export const evaluateAlerts = (prev: SfsSnapshot | undefined, next: SfsSnapshot, newPages: PageFocus[] = []): AlertEvent[] => {
   const alerts: AlertEvent[] = [];
-  if (prev && dropMoreThan(prev.score, next.score)) alerts.push({ code: 'sfs-drop', params: { from: prev.score, to: next.score, points: round1(prev.score - next.score) } });
+  if (prev && !prev.unavailable && !next.unavailable && dropMoreThan(prev.score, next.score)) alerts.push({ code: 'sfs-drop', params: { from: prev.score, to: next.score, points: round1(prev.score - next.score) } });
   newPages.filter((page) => contentGuard(page)).forEach((page) => alerts.push({ code: 'content-guard', params: { url: page.url, trs: page.trs } }));
   return alerts;
 };

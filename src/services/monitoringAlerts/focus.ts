@@ -14,7 +14,7 @@ export const focusAlertEvents = (
   previous: SfsSnapshot | undefined, next: SfsSnapshot, freshPages: PageFocus[] = [], settings: MonitoringAlertSettings = defaultMonitoringAlertSettings(),
 ): AlertEvent[] => {
   const events: AlertEvent[] = [];
-  if (previous && dropMoreThan(previous.score, next.score, settings.thresholds.focus.dropPoints)) {
+  if (previous && !previous.unavailable && !next.unavailable && dropMoreThan(previous.score, next.score, settings.thresholds.focus.dropPoints)) {
     events.push({ code: 'sfs-drop', params: { from: previous.score, to: next.score, points: round1(previous.score - next.score) } });
   }
   return [...events, ...contentGuardEvents(freshPages)];
