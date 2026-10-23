@@ -6470,6 +6470,7 @@
     "hero": {
       "label": "Site Focus Score",
       "outOf": "de 100",
+      "unavailable": "Sem pontuação: nenhuma das páginas rastreadas pôde ser avaliada. Repita o rastreamento ou verifique a fonte; isso não é um resultado 0.",
       "summaryAll": "Todas as {{count}} páginas analisadas se mantêm no tema.",
       "summaryOff": "{{off}} de {{count}} páginas se desviam de forma significativa do tema principal.",
       "metaButton": "Detalhes da análise",

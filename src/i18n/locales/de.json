@@ -6470,6 +6470,7 @@
     "hero": {
       "label": "Site Focus Score",
       "outOf": "von 100",
+      "unavailable": "Noch kein Ergebnis: Keine der gecrawlten Seiten konnte bewertet werden. Crawl erneut starten oder die Quelle prüfen; das ist kein Ergebnis von 0.",
       "summaryAll": "Alle {{count}} analysierten Seiten bleiben beim Thema.",
       "summaryOff": "{{off}} von {{count}} Seiten weichen deutlich vom Kernthema ab.",
       "metaButton": "Analysedetails",

@@ -6470,6 +6470,7 @@
     "hero": {
       "label": "Site Focus Score",
       "outOf": "sur 100",
+      "unavailable": "Pas de score : aucune des pages explorées n'a pu être évaluée. Relancez l'exploration ou vérifiez la source ; ce n'est pas un résultat de 0.",
       "summaryAll": "Les {{count}} pages analysées restent dans le sujet.",
       "summaryOff": "{{off}} pages sur {{count}} s'écartent nettement du sujet principal.",
       "metaButton": "Détails de l'analyse",

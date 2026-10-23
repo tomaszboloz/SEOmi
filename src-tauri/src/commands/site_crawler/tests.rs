@@ -2,7 +2,6 @@ use super::*;
 #[path = "tests/common_fixture.rs"]
 mod common_fixture;
 use common_fixture::{crawl_config_for_test, post_processing_page};
-
 #[path = "tests/amp.rs"]
 mod amp;
 #[path = "tests/canonical_1.rs"]
@@ -101,6 +100,8 @@ mod schema_edges;
 mod schema_graph;
 #[path = "tests/schema_graph_edges.rs"]
 mod schema_graph_edges;
+#[path = "tests/schema_graph_same_as.rs"]
+mod schema_graph_same_as;
 #[path = "tests/schema_graph_helper_tests.rs"]
 mod schema_graph_helper_tests;
 #[path = "tests/schema_references_contracts.rs"]

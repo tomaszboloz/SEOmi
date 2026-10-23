@@ -33,6 +33,8 @@ export interface SiteFocusReport {
   generatedAt: string;
   pageCount: number;
   version: number;
+  /** True when no page could be scored: `score` is a placeholder, not a measured 0. */
+  unavailable?: boolean;
 }
 
 export type TermSimilarity = (left: string, right: string) => number | null | undefined;

@@ -6470,6 +6470,7 @@
     "hero": {
       "label": "Site Focus Score",
       "outOf": "na 100",
+      "unavailable": "Brak wyniku: żadnej z przeskanowanych stron nie dało się ocenić. Uruchom crawl ponownie lub sprawdź źródło; to nie jest wynik 0.",
       "summaryAll": "Wszystkie przeanalizowane strony ({{count}}) pozostają w temacie.",
       "summaryOff": "{{off}} z {{count}} stron znacząco odbiega od tematu głównego.",
       "metaButton": "Szczegóły analizy",
