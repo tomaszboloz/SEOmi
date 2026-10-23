@@ -18,6 +18,8 @@ mod tests_resolver;
 mod tests_resolver_seams;
 #[cfg(test)]
 mod tests_stream;
+#[cfg(test)]
+mod tests_stream_contracts;
 
 pub use entry::{fetch_page, fetch_page_with_options};
 pub use models::FetchResult;
