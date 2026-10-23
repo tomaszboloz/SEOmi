@@ -1,4 +1,15 @@
 {
+  "dataErasureUi": {
+    "title": "Wymaż dane projektu (RODO)",
+    "description": "Trwale usuwa z lokalnego magazynu przebiegi crawla, embeddingi i historię tego projektu, niszcząc ich klucze szyfrujące. Tej operacji nie można cofnąć.",
+    "confirm": "Wpisz ID projektu, aby potwierdzić: {{id}}",
+    "button": "Wymaż dane projektu",
+    "run": "Wymaż trwale",
+    "cancel": "Anuluj",
+    "done": "Wymazano: {{records}} rekordów i {{runs}} przebiegów crawla.",
+    "failed": "Wymazywanie nie powiodło się: {{message}}",
+    "desktopOnly": "Dostępne tylko w aplikacji desktopowej."
+  },
   "schemaFindings": {
     "messageMissing": "Reguła danych strukturalnych {{code}} wykryła brak właściwości lub elementu struktury dla typu {{type}}.",
     "messageInvalid": "Reguła danych strukturalnych {{code}} wykryła nieprawidłową wartość lub kształt typu {{type}}.",

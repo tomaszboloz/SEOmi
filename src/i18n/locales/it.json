@@ -1,4 +1,15 @@
 {
+  "dataErasureUi": {
+    "title": "Cancella i dati del progetto (GDPR)",
+    "description": "Elimina in modo permanente dall'archivio locale le scansioni, gli embedding e la cronologia di questo progetto distruggendo le chiavi di cifratura. L'operazione non è reversibile.",
+    "confirm": "Digita l'ID del progetto per confermare: {{id}}",
+    "button": "Cancella i dati del progetto",
+    "run": "Cancella definitivamente",
+    "cancel": "Annulla",
+    "done": "Cancellati: {{records}} record e {{runs}} scansioni.",
+    "failed": "Cancellazione non riuscita: {{message}}",
+    "desktopOnly": "Disponibile solo nell'app desktop."
+  },
   "schemaFindings": {
     "messageMissing": "La regola dei dati strutturati {{code}} segnala una proprietà o un elemento strutturale mancante per {{type}}.",
     "messageInvalid": "La regola dei dati strutturati {{code}} segnala un valore o una forma non valida per {{type}}.",

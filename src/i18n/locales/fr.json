@@ -1,4 +1,15 @@
 {
+  "dataErasureUi": {
+    "title": "Effacer les données du projet (RGPD)",
+    "description": "Supprime définitivement du stockage local les analyses, embeddings et l'historique de ce projet en détruisant leurs clés de chiffrement. Action irréversible.",
+    "confirm": "Saisissez l'ID du projet pour confirmer : {{id}}",
+    "button": "Effacer les données du projet",
+    "run": "Effacer définitivement",
+    "cancel": "Annuler",
+    "done": "Effacé : {{records}} enregistrements et {{runs}} analyses.",
+    "failed": "Échec de l'effacement : {{message}}",
+    "desktopOnly": "Disponible uniquement dans l'application de bureau."
+  },
   "schemaFindings": {
     "messageMissing": "La règle de données structurées {{code}} signale une propriété ou un élément de structure manquant pour {{type}}.",
     "messageInvalid": "La règle de données structurées {{code}} signale une valeur ou une forme invalide pour {{type}}.",

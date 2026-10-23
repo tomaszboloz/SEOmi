@@ -1,4 +1,15 @@
 {
+  "dataErasureUi": {
+    "title": "Erase project data (GDPR)",
+    "description": "Permanently deletes this project's crawl runs, embeddings and history from the local store by destroying their encryption keys. This cannot be undone.",
+    "confirm": "Type the project ID to confirm: {{id}}",
+    "button": "Erase project data",
+    "run": "Erase permanently",
+    "cancel": "Cancel",
+    "done": "Erased: {{records}} records and {{runs}} crawl runs.",
+    "failed": "Erasure failed: {{message}}",
+    "desktopOnly": "Available in the desktop app only."
+  },
   "schemaFindings": {
     "messageMissing": "Structured-data rule {{code}} reports a missing property or structural element for {{type}}.",
     "messageInvalid": "Structured-data rule {{code}} reports an invalid value or shape for {{type}}.",

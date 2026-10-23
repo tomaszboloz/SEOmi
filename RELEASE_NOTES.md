@@ -1,3 +1,9 @@
+# SEOmi 0.4.17 — release notes
+
+## Added
+
+- Settings → General: "Erase project data (GDPR)" panel (issue #136). It calls the existing crypto-shredding erasure for the active project after the project ID is typed to confirm, reports deleted records and crawl runs, shows failures, and is disabled without a project or outside the desktop app. Translated in all 12 languages; tests cover confirmation, success, failure, cancel, disabled states and locale parity.
+
 # SEOmi 0.4.16 — release notes
 
 ## Added

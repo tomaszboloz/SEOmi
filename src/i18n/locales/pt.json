@@ -1,4 +1,15 @@
 {
+  "dataErasureUi": {
+    "title": "Apagar dados do projeto (RGPD)",
+    "description": "Elimina permanentemente as execuções de rastreio, os embeddings e o histórico deste projeto do armazenamento local, destruindo as respetivas chaves de cifra. Não pode ser desfeito.",
+    "confirm": "Introduza o ID do projeto para confirmar: {{id}}",
+    "button": "Apagar dados do projeto",
+    "run": "Apagar definitivamente",
+    "cancel": "Cancelar",
+    "done": "Apagado: {{records}} registos e {{runs}} execuções de rastreio.",
+    "failed": "Falha ao apagar: {{message}}",
+    "desktopOnly": "Disponível apenas na aplicação de ambiente de trabalho."
+  },
   "schemaFindings": {
     "messageMissing": "A regra de dados estruturados {{code}} encontrou uma propriedade ou elemento estrutural ausente para {{type}}.",
     "messageInvalid": "A regra de dados estruturados {{code}} encontrou um valor ou formato inválido para {{type}}.",

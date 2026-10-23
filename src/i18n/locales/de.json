@@ -1,4 +1,15 @@
 {
+  "dataErasureUi": {
+    "title": "Projektdaten löschen (DSGVO)",
+    "description": "Löscht Crawl-Läufe, Embeddings und Verlauf dieses Projekts dauerhaft aus dem lokalen Speicher, indem die Verschlüsselungsschlüssel vernichtet werden. Dies kann nicht rückgängig gemacht werden.",
+    "confirm": "Projekt-ID zur Bestätigung eingeben: {{id}}",
+    "button": "Projektdaten löschen",
+    "run": "Endgültig löschen",
+    "cancel": "Abbrechen",
+    "done": "Gelöscht: {{records}} Datensätze und {{runs}} Crawl-Läufe.",
+    "failed": "Löschen fehlgeschlagen: {{message}}",
+    "desktopOnly": "Nur in der Desktop-App verfügbar."
+  },
   "schemaFindings": {
     "messageMissing": "Die strukturierte-Daten-Regel {{code}} meldet eine fehlende Eigenschaft oder Struktur für {{type}}.",
     "messageInvalid": "Die strukturierte-Daten-Regel {{code}} meldet einen ungültigen Wert oder eine ungültige Form für {{type}}.",

@@ -1,4 +1,15 @@
 {
+  "dataErasureUi": {
+    "title": "Borrar datos del proyecto (RGPD)",
+    "description": "Elimina de forma permanente las ejecuciones de rastreo, los embeddings y el historial de este proyecto del almacén local destruyendo sus claves de cifrado. No se puede deshacer.",
+    "confirm": "Escribe el ID del proyecto para confirmar: {{id}}",
+    "button": "Borrar datos del proyecto",
+    "run": "Borrar definitivamente",
+    "cancel": "Cancelar",
+    "done": "Borrado: {{records}} registros y {{runs}} ejecuciones de rastreo.",
+    "failed": "Error al borrar: {{message}}",
+    "desktopOnly": "Disponible solo en la aplicación de escritorio."
+  },
   "schemaFindings": {
     "messageMissing": "La regla de datos estructurados {{code}} detectó una propiedad o elemento estructural ausente para {{type}}.",
     "messageInvalid": "La regla de datos estructurados {{code}} detectó un valor o una forma no válida para {{type}}.",

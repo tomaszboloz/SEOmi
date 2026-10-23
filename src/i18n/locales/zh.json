@@ -1,4 +1,15 @@
 {
+  "dataErasureUi": {
+    "title": "清除项目数据（GDPR）",
+    "description": "通过销毁加密密钥，从本地存储中永久删除此项目的抓取记录、嵌入向量和历史。此操作无法撤销。",
+    "confirm": "请输入项目 ID 以确认：{{id}}",
+    "button": "清除项目数据",
+    "run": "永久清除",
+    "cancel": "取消",
+    "done": "已清除：{{records}} 条记录和 {{runs}} 次抓取。",
+    "failed": "清除失败：{{message}}",
+    "desktopOnly": "仅在桌面应用中可用。"
+  },
   "schemaFindings": {
     "messageMissing": "结构化数据规则 {{code}} 检测到 {{type}} 缺少属性或结构元素。",
     "messageInvalid": "结构化数据规则 {{code}} 检测到 {{type}} 的值或形状无效。",

@@ -1,4 +1,15 @@
 {
+  "dataErasureUi": {
+    "title": "프로젝트 데이터 삭제(GDPR)",
+    "description": "암호화 키를 폐기하여 이 프로젝트의 크롤 실행, 임베딩, 기록을 로컬 저장소에서 영구 삭제합니다. 되돌릴 수 없습니다.",
+    "confirm": "확인을 위해 프로젝트 ID를 입력하세요: {{id}}",
+    "button": "프로젝트 데이터 삭제",
+    "run": "영구 삭제",
+    "cancel": "취소",
+    "done": "삭제됨: 레코드 {{records}}개, 크롤 실행 {{runs}}개.",
+    "failed": "삭제 실패: {{message}}",
+    "desktopOnly": "데스크톱 앱에서만 사용할 수 있습니다."
+  },
   "schemaFindings": {
     "messageMissing": "구조화 데이터 규칙 {{code}}에서 {{type}}의 속성 또는 구조 요소가 누락되었습니다.",
     "messageInvalid": "구조화 데이터 규칙 {{code}}에서 {{type}}의 값 또는 형식이 잘못되었습니다.",
