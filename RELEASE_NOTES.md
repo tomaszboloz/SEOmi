@@ -1,6 +1,25 @@
-# SEOmi 0.4.1 — release notes
+# SEOmi 0.4.2 — release notes
 
 ## Added
+
+- Execution Card building blocks: Unified Recommendation Bus (URL quarantine), 1-click ContentBrief injection, deployment artifacts (Apache, Nginx, Cloudflare Bulk CSV, WordPress Redirection) and a closed-loop task tracker.
+- Crawler: JS-shell detection flag, WAF block detection with vendor name and adaptive backoff (detection only, no bypass).
+- EETV: syntax-only sameAs profile evidence (ORCID, Wikidata) and DOI/PMID citation identifiers.
+- Monitoring: alerts when the AI readiness or E-E-A-T trust score drops.
+- TAS: cannibalization groups list each pair with its cosine and basis.
+- Docs: ADRs 0001-0004, test acceptance matrix, governance files, pinned CI actions and Dependabot config.
+
+## Fixed
+
+- Schema graph: absent sameAs no longer causes false @id conflicts.
+- SFS: pages with TRS 40-74 get advice; runs with no scored page show "unavailable" instead of 0.
+- Diacritic folding is unified between topical audit tokens and semantic term keys.
+- Flaky crawl delay test made deterministic; pause time no longer consumes the crawl delay.
+- Security: hono 4.13.13, ip-address 10.7.4, vitest 5.0.5 (Dependabot alerts 4-7).
+
+## 0.4.1
+
+### Added
 
 - Search Console: every query and page row is now listed in a paginated table (25 / 50 / 100 / 250 rows per page) with sorting by phrase, clicks, impressions, CTR and position.
 - Crawl page limit: presets now go up to 50,000 pages and there is a "No limit" option (ceiling 1,000,000 pages); scheduled crawls accept the same range.
