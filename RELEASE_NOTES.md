@@ -3,6 +3,7 @@
 ## Added
 
 - Rust unit tests for PDF report label locale/RTL helpers and for crypto-shredding store error, missing-key and tampered-ciphertext paths (GAP-023 coverage work). No production code changed.
+- Rust unit tests for run-store `open_store` failure paths (uncreatable data folder, unopenable database, rejected plain record insert). Removed the unused PDF label `locale()` / `is_rtl()` helpers and the `pdf_locale` payload parsing (no production callers; the payload field is now ignored).
 
 ## Included from 0.4.8
 

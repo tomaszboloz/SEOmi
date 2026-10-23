@@ -13,6 +13,8 @@ mod erase_tests;
 #[cfg(test)]
 mod erasure_regression_tests;
 #[cfg(test)]
+mod open_store_failure_tests;
+#[cfg(test)]
 mod read_consistency_tests;
 pub mod records;
 #[cfg(test)]

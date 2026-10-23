@@ -16,7 +16,7 @@ mod tests_generator;
 mod tests_labels;
 
 #[cfg(test)]
-mod tests_labels_locale;
+mod tests_labels_overlay;
 
 #[cfg(test)]
 mod tests_unicode;
