@@ -1135,6 +1135,7 @@
     "tabEntity": "Graf encji",
     "tabLinks": "Linki wewnętrzne",
     "tabSchema": "Schemat JSON-LD",
+    "tabSignals": "Sygnały",
     "saveError": "Nie udało się zapisać topical mapy w pamięci lokalnej. Pozostaje widoczna do zamknięcia widoku; sprawdź dostępność pamięci aplikacji.",
     "preferencesSaveError": "Nie udało się zapamiętać widoku topical mapy i filtrów w tym projekcie.",
     "entityTitle": "Encja projektu",

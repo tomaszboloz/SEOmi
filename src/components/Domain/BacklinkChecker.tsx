@@ -5,6 +5,9 @@ import { BacklinkGapSection } from './backlinkChecker/BacklinkGapSection';
 import { BacklinkMetricsGrid } from './backlinkChecker/BacklinkMetricsGrid';
 import { BacklinkEquityAndAnchors } from './backlinkChecker/BacklinkEquityAndAnchors';
 import { BacklinkInboundTable } from './backlinkChecker/BacklinkInboundTable';
+import { BacklinkOutreachSection } from './backlinkChecker/BacklinkOutreachSection';
+import { useOffPageReports } from './backlinkChecker/useOffPageReports';
+import { OffPagePanel } from '@/components/Charts/OffPagePanel';
 import { DataForSeoCostMeter } from '@/components/DataForSEO/cost/DataForSeoCostMeter';
 
 export const BacklinkChecker: React.FC = () => {
@@ -18,12 +21,14 @@ export const BacklinkChecker: React.FC = () => {
     loadMoreBacklinks,
     loadMoreBacklinkAnchors,
   } = session;
+  const offPage = useOffPageReports(backlinkProfile);
 
   return (
     <div className="max-w-7xl mx-auto px-4 py-8 space-y-8">
       <BacklinkHeader session={session} />
       <DataForSeoCostMeter />
       <BacklinkGapSection session={session} />
+      <BacklinkOutreachSection report={session.backlinkGapReport} />
 
       {error && (
         <div className="p-4 rounded-xl bg-rose-950/40 border border-rose-800/60 text-rose-300 text-sm">
@@ -44,6 +49,7 @@ export const BacklinkChecker: React.FC = () => {
             loadMoreBacklinkAnchors={loadMoreBacklinkAnchors}
             t={t}
           />
+          <OffPagePanel tbva={offPage.tbva} coCitation={offPage.coCitation} />
           <BacklinkInboundTable
             profile={backlinkProfile}
             isLoading={isLoading}

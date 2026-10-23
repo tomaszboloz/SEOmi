@@ -20,6 +20,7 @@ export const SemanticWorkspaceNav: React.FC<SemanticWorkspaceNavProps> = ({
     ['entity', t('semanticWorkspace.tabEntity')],
     ['links', t('semanticWorkspace.tabLinks')],
     ['schema', t('semanticWorkspace.tabSchema')],
+    ['signals', t('semanticWorkspace.tabSignals')],
   ] as const;
 
   return (

@@ -4,6 +4,7 @@ import { TopicalCalendar } from '@/components/Charts/TopicalCalendar';
 import { SemanticAuditPanel } from '@/components/Charts/SemanticAuditPanel';
 import { SchemaGraphBuilder } from '@/components/Charts/SchemaGraphBuilder';
 import { LinksWorkspace } from './LinksWorkspace';
+import { SignalsWorkspace } from './signals/SignalsWorkspace';
 import { EntityEvidenceGraph } from '@/components/Charts/EntityEvidenceGraph';
 import type { useSemanticTopicalSession } from './useSemanticTopicalSession';
 import { TopicalTopicBrowser } from './TopicalTopicBrowser';
@@ -69,6 +70,10 @@ export const SemanticWorkspacePanels: React.FC<{ session: Session }> = ({ sessio
         }
       />
     );
+  }
+
+  if (workspacePreferences.view === 'signals') {
+    return <SignalsWorkspace pages={pages} graph={session.graph} />;
   }
 
   if (workspacePreferences.view === 'links') {

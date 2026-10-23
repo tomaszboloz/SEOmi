@@ -4,6 +4,8 @@ import { Loader2 } from 'lucide-react';
 import { useAuthStore } from '@/stores/authStore';
 import { useSettingsStore } from '@/stores/settingsStore';
 import { DataForSeoBudgetSettings } from '@/components/DataForSEO/cost/DataForSeoBudgetSettings';
+import { LlmEconomyPanel } from '@/components/AI/LlmEconomyPanel';
+import { summarizeUsage } from '@/services/llmEconomy';
 import { SecretKeyField } from '@/components/Auth/SecretKeyField';
 
 interface ApiSettingsTabProps {
@@ -83,7 +85,10 @@ export const ApiSettingsTab: React.FC<ApiSettingsTabProps> = ({
         </div>
       </div>
 
-      {secureStorageError && <p role="alert" className="text-[11px] leading-4 text-rose-300">{secureStorageError}</p>}
+      {/* No usage ledger is persisted yet: the panel shows its empty state, never estimated cost. */}
+      <LlmEconomyPanel summary={summarizeUsage([], null)} providerId="" />
+
+      {secureStorageError &&<p role="alert" className="text-[11px] leading-4 text-rose-300">{secureStorageError}</p>}
       <button type="button" onClick={handleSaveGeneral} disabled={isSaving} aria-busy={isSaving} className="w-full h-9 bg-emerald-600 hover:bg-emerald-500 text-white rounded-lg font-semibold transition disabled:cursor-not-allowed disabled:opacity-60">
         {savedSuccess ? t('legacyUi.settings.saved') : t('legacyUi.settings.saveApi')}
       </button>

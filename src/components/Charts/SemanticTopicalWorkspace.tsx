@@ -57,7 +57,7 @@ export const SemanticTopicalWorkspace: React.FC<Props> = (props) => {
         </p>
       )}
 
-      {workspacePreferences.view !== 'audit' && (
+      {workspacePreferences.view !== 'audit' && workspacePreferences.view !== 'signals' && (
         <TopicalEntityEditor session={session} />
       )}
 
