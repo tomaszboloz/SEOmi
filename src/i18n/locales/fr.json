@@ -6433,6 +6433,14 @@
         "why": "Il montre où l'autorité des liens s'accumule ou s'échappe dans votre site.",
         "action": "Ajoutez des liens sortants aux impasses.\nLiez les pages peu liées depuis des pages fortes et proches.\nExaminez les fuites."
       }
+    },
+    "decay": {
+      "radar": {
+        "title": "Radar de déclin sémantique",
+        "what": "Compare des captures SERP enregistrées pour la même requête, le même marché, fournisseur et modèle : décalage du centroïde, entités de consensus nouvelles ou perdues, changements d'intention et de format.",
+        "why": "Les premiers résultats peuvent s'éloigner de votre page bien avant une chute de position.",
+        "action": "Ouvrez les URL citées.\nDécidez manuellement s'il faut actualiser la page."
+      }
     }
   },
   "helpUi": {
@@ -7318,5 +7326,22 @@
     "leak": "Fuite",
     "unknown": "{{count}} liens ont une similarité inconnue et ne comptent pas comme fuite.",
     "notConverged": "Le solveur n'a pas convergé ; les scores sont approximatifs."
+  },
+  "decayUi": {
+    "title": "Radar de déclin sémantique",
+    "verdict": {
+      "too-few-samples": "Pas encore assez de captures SERP comparables. Rien à signaler.",
+      "incompatible": "Les captures ne sont pas comparables : aucune dérive n'est affirmée.",
+      "stable": "Aucun changement notable par rapport à la référence.",
+      "not-persistent": "Un changement est apparu mais ne dure pas. En attente.",
+      "cooldown": "La dérive persiste ; une alerte a déjà été émise récemment.",
+      "alert": "Dérive persistante par rapport à la référence. Vérifiez manuellement."
+    },
+    "shift": "Décalage du centroïde : {{value}} %",
+    "newEntities": "Nouvelles entités",
+    "lostEntities": "Entités perdues",
+    "intent": "Intention : {{from}} vers {{to}}",
+    "format": "Format : {{from}} vers {{to}}",
+    "incompatible": "Différent : {{fields}}. Ce n'est pas un changement de marché."
   }
 }

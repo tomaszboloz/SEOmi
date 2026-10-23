@@ -6433,6 +6433,14 @@
         "why": "Pokazuje, gdzie autorytet linków gromadzi się lub ucieka w obrębie witryny.",
         "action": "Dodaj linki wychodzące ze ślepych uliczek.\nLinkuj do słabo podlinkowanych stron z mocnych, powiązanych.\nSprawdź wycieki."
       }
+    },
+    "decay": {
+      "radar": {
+        "title": "Radar zaniku semantycznego",
+        "what": "Porównuje zapisane zrzuty SERP tego samego zapytania, rynku, dostawcy i modelu: przesunięcie centroidu, nowe lub utracone encje konsensusu, zmiany intencji i formatu.",
+        "why": "Czołówka wyników może oddalić się od Twojej strony na długo przed spadkiem pozycji.",
+        "action": "Otwórz wskazane adresy URL.\nZdecyduj ręcznie, czy odświeżyć stronę."
+      }
     }
   },
   "helpUi": {
@@ -7318,5 +7326,22 @@
     "leak": "Wyciek",
     "unknown": "{{count}} linków ma nieznane podobieństwo i nie liczy się jako wyciek.",
     "notConverged": "Solver nie zbiegł; wyniki są przybliżone."
+  },
+  "decayUi": {
+    "title": "Radar zaniku semantycznego",
+    "verdict": {
+      "too-few-samples": "Za mało porównywalnych zrzutów SERP. Nie ma czego raportować.",
+      "incompatible": "Zrzuty nie są porównywalne, więc nie twierdzimy, że wystąpił dryf.",
+      "stable": "Brak istotnej zmiany względem punktu odniesienia.",
+      "not-persistent": "Zmiana się pojawiła, ale nie utrzymuje się. Czekamy.",
+      "cooldown": "Dryf się utrzymuje; alert wysłano niedawno.",
+      "alert": "Utrzymujący się dryf względem punktu odniesienia. Sprawdź ręcznie."
+    },
+    "shift": "Przesunięcie centroidu: {{value}}%",
+    "newEntities": "Nowe encje",
+    "lostEntities": "Utracone encje",
+    "intent": "Intencja: {{from}} na {{to}}",
+    "format": "Format: {{from}} na {{to}}",
+    "incompatible": "Różne pola: {{fields}}. To nie jest zmiana rynku."
   }
 }

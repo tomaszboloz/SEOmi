@@ -6433,6 +6433,14 @@
         "why": "Er zeigt, wo Link-Autorität auf der eigenen Website zusammenläuft oder abfließt.",
         "action": "Füge Sackgassen ausgehende Links hinzu.\nVerlinke schwach verlinkte Seiten von starken, verwandten Seiten.\nPrüfe Lecks."
       }
+    },
+    "decay": {
+      "radar": {
+        "title": "Semantic-Decay-Radar",
+        "what": "Vergleicht gespeicherte SERP-Snapshots derselben Suchanfrage, desselben Marktes, Anbieters und Modells: Centroid-Verschiebung, neue oder verlorene Konsens-Entitäten, Intent- und Formatwechsel.",
+        "why": "Die Top-Ergebnisse können sich von deiner Seite entfernen, lange bevor Rankings fallen.",
+        "action": "Öffne die genannten URLs.\nEntscheide manuell, ob die Seite aktualisiert wird."
+      }
     }
   },
   "helpUi": {
@@ -7318,5 +7326,22 @@
     "leak": "Leck",
     "unknown": "{{count}} Links haben unbekannte Ähnlichkeit und zählen nicht als Leck.",
     "notConverged": "Der Solver ist nicht konvergiert; die Werte sind ungefähr."
+  },
+  "decayUi": {
+    "title": "Semantic-Decay-Radar",
+    "verdict": {
+      "too-few-samples": "Noch nicht genug vergleichbare SERP-Snapshots. Nichts zu melden.",
+      "incompatible": "Snapshots sind nicht vergleichbar, daher wird keine Drift behauptet.",
+      "stable": "Keine wesentliche Änderung gegenüber der Basis.",
+      "not-persistent": "Eine Änderung trat auf, hält aber nicht an. Wir warten.",
+      "cooldown": "Drift besteht fort; ein Alarm wurde kürzlich ausgelöst.",
+      "alert": "Anhaltende Drift gegenüber der Basis. Manuell prüfen."
+    },
+    "shift": "Centroid-Verschiebung: {{value}} %",
+    "newEntities": "Neue Entitäten",
+    "lostEntities": "Verlorene Entitäten",
+    "intent": "Intent: {{from}} zu {{to}}",
+    "format": "Format: {{from}} zu {{to}}",
+    "incompatible": "Abweichend: {{fields}}. Das ist keine Marktveränderung."
   }
 }

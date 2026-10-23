@@ -6433,6 +6433,14 @@
         "why": "It shows where link authority pools or drains inside your own site.",
         "action": "Add outgoing links to dead ends.\nLink to under-linked pages from strong related pages.\nReview leaks."
       }
+    },
+    "decay": {
+      "radar": {
+        "title": "Semantic Decay Radar",
+        "what": "Compares saved SERP snapshots of the same query, market, provider and model: centroid shift, new or lost consensus entities, intent and format changes.",
+        "why": "The top results can drift away from your page long before rankings drop.",
+        "action": "Open the cited URLs.\nDecide manually whether to refresh the page."
+      }
     }
   },
   "helpUi": {
@@ -7318,5 +7326,22 @@
     "leak": "Leak",
     "unknown": "{{count}} links have unknown similarity and are not counted as leaks.",
     "notConverged": "The solver did not converge; scores are approximate."
+  },
+  "decayUi": {
+    "title": "Semantic Decay Radar",
+    "verdict": {
+      "too-few-samples": "Not enough comparable SERP snapshots yet. Nothing to report.",
+      "incompatible": "Snapshots are not comparable, so no drift is claimed.",
+      "stable": "No material change against the baseline.",
+      "not-persistent": "A change appeared but has not persisted. Waiting.",
+      "cooldown": "Drift persists; an alert was already raised recently.",
+      "alert": "Persistent drift against the baseline. Review manually."
+    },
+    "shift": "Centroid shift: {{value}}%",
+    "newEntities": "New entities",
+    "lostEntities": "Lost entities",
+    "intent": "Intent: {{from}} to {{to}}",
+    "format": "Format: {{from}} to {{to}}",
+    "incompatible": "Different {{fields}}: not a market change."
   }
 }

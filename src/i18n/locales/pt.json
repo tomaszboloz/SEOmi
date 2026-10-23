@@ -6433,6 +6433,14 @@
         "why": "Mostra onde a autoridade de links se acumula ou se perde dentro do seu site.",
         "action": "Adicione links de saída aos becos sem saída.\nLinke páginas com poucos links a partir de páginas fortes e relacionadas.\nRevise os vazamentos."
       }
+    },
+    "decay": {
+      "radar": {
+        "title": "Radar de decaimento semântico",
+        "what": "Compara capturas SERP salvas da mesma consulta, mercado, provedor e modelo: deslocamento do centroide, entidades de consenso novas ou perdidas, mudanças de intenção e formato.",
+        "why": "Os primeiros resultados podem se afastar da sua página muito antes de as posições caírem.",
+        "action": "Abra as URLs citadas.\nDecida manualmente se atualiza a página."
+      }
     }
   },
   "helpUi": {
@@ -7318,5 +7326,22 @@
     "leak": "Vazamento",
     "unknown": "{{count}} links têm similaridade desconhecida e não contam como vazamento.",
     "notConverged": "O solver não convergiu; as pontuações são aproximadas."
+  },
+  "decayUi": {
+    "title": "Radar de decaimento semântico",
+    "verdict": {
+      "too-few-samples": "Ainda não há capturas SERP comparáveis suficientes. Nada a relatar.",
+      "incompatible": "As capturas não são comparáveis, então nenhuma deriva é afirmada.",
+      "stable": "Sem mudança relevante em relação à base.",
+      "not-persistent": "Surgiu uma mudança, mas ela não persiste. Aguardando.",
+      "cooldown": "A deriva persiste; um alerta já foi emitido recentemente.",
+      "alert": "Deriva persistente em relação à base. Revise manualmente."
+    },
+    "shift": "Deslocamento do centroide: {{value}}%",
+    "newEntities": "Entidades novas",
+    "lostEntities": "Entidades perdidas",
+    "intent": "Intenção: {{from}} para {{to}}",
+    "format": "Formato: {{from}} para {{to}}",
+    "incompatible": "Diferente: {{fields}}. Não é uma mudança de mercado."
   }
 }
