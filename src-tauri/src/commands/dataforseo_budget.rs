@@ -10,7 +10,7 @@ const ACCOUNT_PATH: &str = "/v3/appendix/user_data";
 /// Monthly cap sent by the WebView with each request; absent = no cap.
 #[derive(Debug, Clone, Deserialize)]
 #[serde(rename_all = "camelCase")]
-pub(crate) struct BudgetInput {
+pub struct BudgetInput {
     pub limit_usd: f64,
     pub spent_usd: f64,
     pub month: String,
