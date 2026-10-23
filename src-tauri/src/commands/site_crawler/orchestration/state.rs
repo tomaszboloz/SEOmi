@@ -3,6 +3,7 @@ use std::time::Instant;
 use tauri::Runtime;
 
 use super::super::{
+    adaptive_backoff::AdaptiveBackoff,
     fetch_types::{CrawlFetchFailure, FetchedResponse},
     models::{CrawledDiscoverySource, CrawledPageSummary, RejectedCrawlUrl, ResourceCandidate},
     render_health::RenderHealth,
@@ -22,6 +23,7 @@ pub struct CrawlLoopState<R: Runtime = tauri::Wry> {
     pub robots_blocked_count: usize,
     pub depth_limit_reached: bool,
     pub timed_out: bool,
+    pub backoff: AdaptiveBackoff,
     pub last_page_request_at: Option<Instant>,
     /// Idle renderer windows. Each one is an isolated browser context that
     /// renders a single page at a time; several render a window of queued
@@ -53,6 +55,7 @@ impl<R: Runtime> CrawlLoopState<R> {
             robots_blocked_count: 0,
             depth_limit_reached: false,
             timed_out,
+            backoff: AdaptiveBackoff::default(),
             last_page_request_at: None,
             rendered_sessions: Vec::new(),
             render_health: RenderHealth::default(),

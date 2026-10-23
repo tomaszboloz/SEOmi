@@ -4,7 +4,7 @@ use tauri::{AppHandle, Runtime};
 use super::super::{
     control::CrawlControl,
     crawl_delay::wait_for_crawl_delay,
-    fetch_types::{CrawlFetchFailure, FetchedResponse},
+    fetch_types::{CrawlFetchFailure, FetchedPageBody, FetchedResponse},
     transport::request_with_safe_redirects_with_context,
 };
 use super::page_fetch_rendered::fetch_rendered_step;
@@ -19,7 +19,8 @@ pub async fn fetch_page_step<R: Runtime>(
     robots_crawl_delay: Option<Duration>,
     current_url: &str,
 ) -> (Result<FetchedResponse, CrawlFetchFailure>, u64) {
-    if let (Some(delay), Some(last_request_at)) = (robots_crawl_delay, state.last_page_request_at) {
+    let delay = state.backoff.effective_delay(robots_crawl_delay);
+    if let (Some(delay), Some(last_request_at)) = (delay, state.last_page_request_at) {
         if !wait_for_crawl_delay(control, &setup.run_id, last_request_at, delay).await {
             return (
                 Err(CrawlFetchFailure {
@@ -65,6 +66,18 @@ pub async fn fetch_page_step<R: Runtime>(
                 message: error.to_string(),
             })
         };
+    if let Ok(FetchedResponse {
+        response: FetchedPageBody::Http(http),
+        ..
+    }) = &resp
+    {
+        if let Some(waf) = state
+            .backoff
+            .observe(http.status().as_u16(), http.headers())
+        {
+            log::warn!("{waf} answered {current_url} with a block; slowing the crawl down");
+        }
+    }
     if setup.config.crawl_mode == "browser-rendered" && robots_crawl_delay.is_some() {
         // The browser navigation is a second transport request. Start the
         // next crawl-delay interval after that request has been gated.

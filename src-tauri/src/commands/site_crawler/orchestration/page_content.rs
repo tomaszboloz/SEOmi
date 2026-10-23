@@ -136,7 +136,7 @@ pub fn extract_page_content(input: ExtractPageContentInput<'_>) -> PageContentOu
         semantic_terms,
         semantic_language,
         semantic_excerpts,
-        focus,
+        focus: focus.with_js_shell(document, is_html.then_some(cm.word_count)),
         has_primary_content_root,
         semantic_content_source,
         title: tm.title,
