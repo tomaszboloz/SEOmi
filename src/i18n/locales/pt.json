@@ -6272,6 +6272,20 @@
         "what": "Uma meta sugerida: pelo menos 80, ou a média do top 3 de concorrentes quando for maior.",
         "why": "Transforma a comparação em um único número para trabalhar.",
         "action": "Use-a como meta de planejamento.\nExecute o benchmark de novo depois das correções para ver a mudança."
+      },
+      "indexGate": {
+        "title": "Filtro de indexabilidade",
+        "what": "Páginas com noindex ou com canonical para outra URL ficam fora da pontuação, que reflete as páginas que podem ranquear.",
+        "why": "Contar páginas que o Google não indexará reduz a pontuação e pode levar a recomendar noindex em páginas que já o têm.",
+        "action": "Veja o contador de ignoradas.\nCorrija os conflitos abaixo da pontuação, como um pilar com noindex.\nUse «Incluí-las» só para ver a pontuação com todas as páginas.",
+        "example": "Uma página de tag com noindex é ignorada, não pontuada como fora do tema."
+      },
+      "protection": {
+        "title": "Proteção de URL",
+        "what": "Para páginas de baixa relevância temática, mostra se cliques, conversões, receita ou domínios de referência reais justificam mantê-las.",
+        "why": "Uma pontuação baixa sozinha não justifica excluir, redirecionar ou pôr em noindex uma página com tráfego ou links.",
+        "action": "Conecte GSC e GA4 para que os dados possam ser medidos.\nTrate «Faltam dados» como desconhecido, não zero.\nDecida manualmente; um 301 precisa de destino relevante.",
+        "example": "Uma página com TRS 30 e 80 cliques em 90 dias fica protegida."
       }
     },
     "authority": {
@@ -6492,14 +6506,19 @@
       "lexicalFallback": "A análise do idioma selecionado usa o algoritmo estatístico TF-IDF. O componente de similaridade semântica profunda não está disponível; a pontuação se baseia na cobertura e na distribuição das palavras-chave.",
       "skippedRender": "{{count}} páginas foram ignoradas na análise porque a renderização de JavaScript excedeu o tempo limite.",
       "degraded": "Algumas páginas tinham dados limitados, então suas pontuações podem ser menos precisas.",
-      "unmatchedTopic": "Nenhuma página correspondeu ao tema \"{{topic}}\". O tema detectado é usado no lugar."
+      "unmatchedTopic": "Nenhuma página correspondeu ao tema \"{{topic}}\". O tema detectado é usado no lugar.",
+      "gateSkipped": "{{count}} páginas ignoradas (noindex/canonical).",
+      "gateInclude": "Incluí-las",
+      "gateExclude": "Excluí-las novamente"
     },
     "skip": {
       "render-timeout": "A renderização de JavaScript excedeu o tempo limite",
       "request-error": "A requisição falhou",
       "non-topical-status": "Status HTTP sem conteúdo",
       "non-html": "Não é uma página HTML",
-      "no-content": "Sem conteúdo de texto"
+      "no-content": "Sem conteúdo de texto",
+      "noindex": "Excluída: noindex",
+      "canonicalized": "Excluída: o canonical aponta para outra URL"
     },
     "hero": {
       "label": "Site Focus Score",
@@ -6760,6 +6779,32 @@
       "noPrevious": "primeira análise",
       "noTasks": "Sem tarefas urgentes.",
       "gain": "(+{{value}} pts)"
+    },
+    "conflict": {
+      "pillar-noindex": "A página pilar está com noindex: {{url}}",
+      "inlinked-foreign-canonical": "{{url}} tem {{inlinks}} links internos, mas o canonical aponta para outro host",
+      "noindex-with-traffic": "{{url}} está com noindex mas tem {{clicks}} cliques no GSC e {{domains}} domínios de referência",
+      "sitemap-noindex": "{{url}} está no sitemap mas com noindex"
+    },
+    "protection": {
+      "title": "Verificação de proteção de URL",
+      "empty": "Sem snapshot de GSC/GA4/backlinks para este projeto; tráfego e valor dos links são desconhecidos.",
+      "advisory": "Apenas orientação. Nada é excluído, redirecionado ou colocado em noindex automaticamente.",
+      "pri": "PRI {{value}}",
+      "decision": {
+        "keep": "Manter",
+        "shield": "Proteger",
+        "needs-data": "Faltam dados",
+        "semantic-bridge": "Ponte semântica",
+        "prune-candidate": "Revisar para poda"
+      },
+      "reason": {
+        "trs-above-threshold": "O TRS é alto o bastante",
+        "revenue": "Receita medida",
+        "pri-above-threshold": "Tráfego, conversões ou links atingem o limite de proteção",
+        "telemetry-incomplete": "Telemetria ausente, desatualizada ou amostrada",
+        "low-pri-measured": "Os sinais medidos são baixos; verifique primeiro o valor de negócio"
+      }
     }
   },
   "focusBenchmark": {

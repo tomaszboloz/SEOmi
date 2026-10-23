@@ -6272,6 +6272,20 @@
         "what": "建议的目标:至少 80 分;若前 3 名竞争对手的平均分更高,则取该平均分。",
         "why": "把对比结果变成一个可以努力达成的数字。",
         "action": "把它作为规划目标。\n完成修复后重新运行基准,查看变化。"
+      },
+      "indexGate": {
+        "title": "可索引性过滤",
+        "what": "带 noindex 或 canonical 指向其他 URL 的页面不计入得分，因此得分反映能参与排名的页面。",
+        "why": "计入 Google 不会索引的页面会拉低得分，还可能建议对已是 noindex 的页面再设置 noindex。",
+        "action": "查看被跳过的页面数。\n修复得分下方列出的冲突，例如 noindex 的支柱页面。\n仅在想查看包含全部页面的得分时才使用“纳入这些页面”。",
+        "example": "带 noindex 的标签页会被跳过，而不是被判为偏题。"
+      },
+      "protection": {
+        "title": "URL 保护",
+        "what": "对主题相关度低的页面，显示真实的点击、转化、收入或引荐域名是否支持保留。",
+        "why": "仅凭得分低，不足以删除、重定向或对有流量或外链的页面设置 noindex。",
+        "action": "连接 GSC 和 GA4 以便获得测量数据。\n把“需要数据”视为未知，而不是零。\n手动决定；301 需要相关的目标页面。",
+        "example": "TRS 为 30 且 90 天内有 80 次点击的页面会受到保护。"
       }
     },
     "authority": {
@@ -6492,14 +6506,19 @@
       "lexicalFallback": "所选语言的分析使用 TF-IDF 统计算法。深度语义相似度部分不可用,评分基于关键词覆盖率和分布。",
       "skippedRender": "因 JavaScript 渲染超时,有 {{count}} 个页面未纳入分析。",
       "degraded": "部分页面的数据有限,因此其评分可能不够精确。",
-      "unmatchedTopic": "没有页面与主题“{{topic}}”匹配,将改用自动识别的主题。"
+      "unmatchedTopic": "没有页面与主题“{{topic}}”匹配,将改用自动识别的主题。",
+      "gateSkipped": "已跳过 {{count}} 个页面（noindex/canonical）。",
+      "gateInclude": "纳入这些页面",
+      "gateExclude": "重新排除"
     },
     "skip": {
       "render-timeout": "JavaScript 渲染超时",
       "request-error": "请求失败",
       "non-topical-status": "非内容类 HTTP 状态",
       "non-html": "不是 HTML 页面",
-      "no-content": "没有文本内容"
+      "no-content": "没有文本内容",
+      "noindex": "已排除：noindex",
+      "canonicalized": "已排除：canonical 指向其他 URL"
     },
     "hero": {
       "label": "Site Focus Score",
@@ -6760,6 +6779,32 @@
       "noPrevious": "首次分析",
       "noTasks": "没有紧急任务。",
       "gain": "(+{{value}} 分)"
+    },
+    "conflict": {
+      "pillar-noindex": "支柱页面设置了 noindex：{{url}}",
+      "inlinked-foreign-canonical": "{{url}} 有 {{inlinks}} 个内部链接，但 canonical 指向其他主机",
+      "noindex-with-traffic": "{{url}} 为 noindex，却有 {{clicks}} 次 GSC 点击和 {{domains}} 个引荐域名",
+      "sitemap-noindex": "{{url}} 在站点地图中，但被标记为 noindex"
+    },
+    "protection": {
+      "title": "URL 保护检查",
+      "empty": "此项目没有 GSC/GA4/外链快照，因此流量和链接价值未知。",
+      "advisory": "仅供建议。不会自动删除、重定向或设置 noindex。",
+      "pri": "PRI {{value}}",
+      "decision": {
+        "keep": "保留",
+        "shield": "保护",
+        "needs-data": "需要数据",
+        "semantic-bridge": "语义桥接",
+        "prune-candidate": "待审查（可修剪）"
+      },
+      "reason": {
+        "trs-above-threshold": "TRS 足够高",
+        "revenue": "已测得收入",
+        "pri-above-threshold": "流量、转化或链接达到保护阈值",
+        "telemetry-incomplete": "遥测数据缺失、过期或经过抽样",
+        "low-pri-measured": "已测信号偏低；请先评估业务价值"
+      }
     }
   },
   "focusBenchmark": {

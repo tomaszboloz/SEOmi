@@ -6272,6 +6272,20 @@
         "what": "Sugerowany cel: co najmniej 80 lub średnia top 3 konkurentów, jeśli ich wynik jest wyższy.",
         "why": "Zamienia porównanie w jedną liczbę, do której możesz dążyć.",
         "action": "Traktuj go jako cel planistyczny.\nUruchom benchmark ponownie po poprawkach, aby zobaczyć zmianę."
+      },
+      "indexGate": {
+        "title": "Bramka indeksowalności",
+        "what": "Strony z noindex lub z canonical wskazującym inny URL nie wchodzą do wyniku, więc wynik dotyczy stron, które mogą się pozycjonować.",
+        "why": "Liczenie stron, których Google nie zaindeksuje, obniża wynik i może prowadzić do porad noindex dla stron, które już go mają.",
+        "action": "Sprawdź licznik pominiętych.\nNapraw konflikty pod wynikiem, np. filar z noindex.\n„Uwzględnij je” użyj tylko, by zobaczyć wynik dla wszystkich stron.",
+        "example": "Strona tagu z noindex jest pomijana, a nie oceniana jako poza tematem."
+      },
+      "protection": {
+        "title": "Ochrona URL",
+        "what": "Dla stron o niskiej trafności tematycznej pokazuje, czy prawdziwe kliknięcia, konwersje, przychód lub domeny linkujące przemawiają za ich zachowaniem.",
+        "why": "Sam niski wynik nie uzasadnia usunięcia, przekierowania ani noindex strony, która ma ruch lub linki.",
+        "action": "Połącz GSC i GA4, aby dane dało się zmierzyć.\n„Potrzebne dane” traktuj jako nieznane, nie zero.\nDecyduj ręcznie; 301 wymaga trafnego celu.",
+        "example": "Strona z TRS 30 i 80 kliknięciami w 90 dni jest chroniona."
       }
     },
     "authority": {
@@ -6492,14 +6506,19 @@
       "lexicalFallback": "Analiza dla wybranego języka korzysta z algorytmu statystycznego TF-IDF. Komponent głębokiego podobieństwa semantycznego jest niedostępny; wynik opiera się na pokryciu i rozkładzie słów kluczowych.",
       "skippedRender": "Pominięto {{count}} stron w analizie, ponieważ renderowanie JavaScript przekroczyło limit czasu.",
       "degraded": "Niektóre strony miały ograniczone dane, więc ich wyniki mogą być mniej precyzyjne.",
-      "unmatchedTopic": "Żadna strona nie pasuje do tematu „{{topic}}”. Zamiast niego użyto wykrytego tematu."
+      "unmatchedTopic": "Żadna strona nie pasuje do tematu „{{topic}}”. Zamiast niego użyto wykrytego tematu.",
+      "gateSkipped": "Pominięto {{count}} stron (noindex/canonical).",
+      "gateInclude": "Uwzględnij je",
+      "gateExclude": "Znów pomiń"
     },
     "skip": {
       "render-timeout": "Renderowanie JavaScript przekroczyło limit czasu",
       "request-error": "Żądanie nie powiodło się",
       "non-topical-status": "Status HTTP bez treści",
       "non-html": "To nie jest strona HTML",
-      "no-content": "Brak treści tekstowej"
+      "no-content": "Brak treści tekstowej",
+      "noindex": "Pominięta: noindex",
+      "canonicalized": "Pominięta: canonical wskazuje inny URL"
     },
     "hero": {
       "label": "Site Focus Score",
@@ -6760,6 +6779,32 @@
       "noPrevious": "pierwsza analiza",
       "noTasks": "Brak pilnych zadań.",
       "gain": "(+{{value}} pkt)"
+    },
+    "conflict": {
+      "pillar-noindex": "Strona filarowa ma noindex: {{url}}",
+      "inlinked-foreign-canonical": "{{url}} ma {{inlinks}} linków wewnętrznych, a canonical wskazuje inny host",
+      "noindex-with-traffic": "{{url}} ma noindex, ale ma {{clicks}} kliknięć GSC i {{domains}} domen linkujących",
+      "sitemap-noindex": "{{url}} jest w mapie witryny, ale ma noindex"
+    },
+    "protection": {
+      "title": "Kontrola ochrony URL",
+      "empty": "Brak snapshotu GSC/GA4/linków dla tego projektu, więc ruch i wartość linków są nieznane.",
+      "advisory": "Tylko porada. Nic nie jest usuwane, przekierowywane ani oznaczane noindex automatycznie.",
+      "pri": "PRI {{value}}",
+      "decision": {
+        "keep": "Zachowaj",
+        "shield": "Chroń",
+        "needs-data": "Potrzebne dane",
+        "semantic-bridge": "Most semantyczny",
+        "prune-candidate": "Do przeglądu pod kątem usunięcia"
+      },
+      "reason": {
+        "trs-above-threshold": "TRS jest wystarczająco wysoki",
+        "revenue": "Zmierzono przychód",
+        "pri-above-threshold": "Ruch, konwersje lub linki osiągają próg ochrony",
+        "telemetry-incomplete": "Brak danych, są nieaktualne lub próbkowane",
+        "low-pri-measured": "Zmierzone sygnały są niskie; najpierw oceń wartość biznesową"
+      }
     }
   },
   "focusBenchmark": {

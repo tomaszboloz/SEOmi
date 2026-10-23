@@ -6272,6 +6272,20 @@
         "what": "Ein vorgeschlagenes Ziel: mindestens 80 oder der Durchschnitt der Top-3-Wettbewerber, wenn diese höher liegen.",
         "why": "Er macht den Vergleich zu einer einzigen Zahl, auf die du hinarbeiten kannst.",
         "action": "Nutze ihn als Planungsziel.\nFühre den Benchmark nach deinen Korrekturen erneut aus, um die Veränderung zu sehen."
+      },
+      "indexGate": {
+        "title": "Indexierbarkeits-Filter",
+        "what": "Seiten mit noindex oder mit Canonical auf eine andere URL fließen nicht in den Wert ein, damit er Seiten widerspiegelt, die ranken können.",
+        "why": "Seiten, die Google nicht indexiert, senken den Wert und können zu noindex-Empfehlungen für bereits noindex-Seiten führen.",
+        "action": "Zähler der übersprungenen Seiten prüfen.\nKonflikte unter dem Wert beheben, z. B. eine noindex-Pillar-Seite.\n„Einbeziehen“ nur nutzen, um den Wert mit allen Seiten zu sehen.",
+        "example": "Eine Tag-Seite mit noindex wird übersprungen, nicht als themenfremd bewertet."
+      },
+      "protection": {
+        "title": "URL-Schutz",
+        "what": "Zeigt bei Seiten mit geringer thematischer Nähe, ob echte Klicks, Conversions, Umsatz oder verweisende Domains für ein Behalten sprechen.",
+        "why": "Ein niedriger Wert allein ist kein Grund, eine Seite mit Traffic oder Links zu löschen, umzuleiten oder auf noindex zu setzen.",
+        "action": "GSC und GA4 verbinden, damit Daten gemessen werden können.\n„Daten nötig“ als unbekannt behandeln, nicht als null.\nManuell entscheiden; ein 301 braucht ein passendes Ziel.",
+        "example": "Eine Seite mit TRS 30 und 80 Klicks in 90 Tagen wird geschützt."
       }
     },
     "authority": {
@@ -6492,14 +6506,19 @@
       "lexicalFallback": "Die Analyse für die gewählte Sprache nutzt den statistischen TF-IDF-Algorithmus. Die tiefe semantische Ähnlichkeitskomponente ist nicht verfügbar; der Wert basiert auf Abdeckung und Verteilung der Keywords.",
       "skippedRender": "{{count}} Seiten wurden in der Analyse übersprungen, weil das JavaScript-Rendering ein Zeitlimit überschritten hat.",
       "degraded": "Bei einigen Seiten waren die Daten begrenzt, daher können ihre Werte ungenauer sein.",
-      "unmatchedTopic": "Keine Seite passt zum Thema „{{topic}}“. Stattdessen wird das erkannte Thema verwendet."
+      "unmatchedTopic": "Keine Seite passt zum Thema „{{topic}}“. Stattdessen wird das erkannte Thema verwendet.",
+      "gateSkipped": "{{count}} Seiten übersprungen (noindex/canonical).",
+      "gateInclude": "Einbeziehen",
+      "gateExclude": "Wieder ausschließen"
     },
     "skip": {
       "render-timeout": "JavaScript-Rendering hat das Zeitlimit überschritten",
       "request-error": "Anfrage fehlgeschlagen",
       "non-topical-status": "HTTP-Status ohne Inhalt",
       "non-html": "Keine HTML-Seite",
-      "no-content": "Kein Textinhalt"
+      "no-content": "Kein Textinhalt",
+      "noindex": "Ausgeschlossen: noindex",
+      "canonicalized": "Ausgeschlossen: Canonical zeigt auf eine andere URL"
     },
     "hero": {
       "label": "Site Focus Score",
@@ -6760,6 +6779,32 @@
       "noPrevious": "erste Analyse",
       "noTasks": "Keine dringenden Aufgaben.",
       "gain": "(+{{value}} Pkt.)"
+    },
+    "conflict": {
+      "pillar-noindex": "Pillar-Seite ist noindex: {{url}}",
+      "inlinked-foreign-canonical": "{{url}} hat {{inlinks}} interne Links, aber der Canonical zeigt auf einen anderen Host",
+      "noindex-with-traffic": "{{url}} ist noindex, hat aber {{clicks}} GSC-Klicks und {{domains}} verweisende Domains",
+      "sitemap-noindex": "{{url}} steht in der Sitemap, ist aber noindex"
+    },
+    "protection": {
+      "title": "URL-Schutzprüfung",
+      "empty": "Kein GSC/GA4/Backlink-Snapshot für dieses Projekt, daher sind Traffic und Linkwert unbekannt.",
+      "advisory": "Nur Empfehlung. Nichts wird automatisch gelöscht, umgeleitet oder auf noindex gesetzt.",
+      "pri": "PRI {{value}}",
+      "decision": {
+        "keep": "Behalten",
+        "shield": "Schützen",
+        "needs-data": "Daten nötig",
+        "semantic-bridge": "Semantische Brücke",
+        "prune-candidate": "Zur Bereinigung prüfen"
+      },
+      "reason": {
+        "trs-above-threshold": "TRS ist hoch genug",
+        "revenue": "Umsatz gemessen",
+        "pri-above-threshold": "Traffic, Conversions oder Links erreichen die Schutzschwelle",
+        "telemetry-incomplete": "Telemetrie fehlt, ist veraltet oder gesampelt",
+        "low-pri-measured": "Gemessene Signale sind niedrig; zuerst den Geschäftswert prüfen"
+      }
     }
   },
   "focusBenchmark": {
