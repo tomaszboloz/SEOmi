@@ -6397,6 +6397,14 @@
         "why": "It lets search engines confirm that your author is the real person with those credentials.",
         "action": "Add at least one authoritative sameAs URL per author and for the publisher.\nUse the same name and spelling as on that profile."
       }
+    },
+    "llmEconomy": {
+      "costGate": {
+        "title": "LLM cost and fact gate",
+        "what": "Counts what AI calls cost and what the cache and local models saved. Medical and financial sentences with a dose or amount missing from the source are rejected.",
+        "why": "Remote providers cost money and receive your page text. Invented doses in health or finance content are dangerous.",
+        "action": "Prefer a local model for big batches.\nCheck rejected sentences against the source.\nApprove YMYL text yourself before it reaches the CMS."
+      }
     }
   },
   "helpUi": {
@@ -7163,5 +7171,13 @@
       "copied": "Copied.",
       "copyFailed": "Copy failed. Select the text and copy it manually."
     }
+  },
+  "llmEconomy": {
+    "title": "LLM cost",
+    "empty": "No AI calls recorded yet.",
+    "spent": "Spent: {{value}}",
+    "saved": "Saved by cache and local runs: {{value}}",
+    "hits": "Cache hits: {{count}}",
+    "leaves": "Page text is sent outside this device to {{provider}}."
   }
 }

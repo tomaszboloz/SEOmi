@@ -6397,6 +6397,14 @@
         "why": "Elle permet aux moteurs de recherche de confirmer que votre auteur est bien la personne réelle ayant ces qualifications.",
         "action": "Ajoutez au moins une URL sameAs faisant autorité par auteur et pour l'éditeur.\nUtilisez le même nom et la même orthographe que sur ce profil."
       }
+    },
+    "llmEconomy": {
+      "costGate": {
+        "title": "Coût LLM et barrière factuelle",
+        "what": "Compte le coût des appels IA et les économies du cache et des modèles locaux. Les phrases médicales ou financières dont la dose ou le montant est absent de la source sont rejetées.",
+        "why": "Les fournisseurs distants coûtent de l’argent et reçoivent le texte de vos pages. Des doses inventées sont dangereuses en santé et finance.",
+        "action": "Préférez un modèle local pour les gros lots.\nVérifiez les phrases rejetées avec la source.\nValidez vous-même le contenu YMYL avant le CMS."
+      }
     }
   },
   "helpUi": {
@@ -7163,5 +7171,13 @@
       "copied": "Copié.",
       "copyFailed": "Échec de la copie. Sélectionnez le texte et copiez-le manuellement."
     }
+  },
+  "llmEconomy": {
+    "title": "Coût LLM",
+    "empty": "Aucun appel IA enregistré.",
+    "spent": "Dépensé : {{value}}",
+    "saved": "Économisé par le cache et le local : {{value}}",
+    "hits": "Succès du cache : {{count}}",
+    "leaves": "Le texte des pages est envoyé hors de cet appareil vers {{provider}}."
   }
 }

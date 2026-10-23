@@ -6397,6 +6397,14 @@
         "why": "Permite a los buscadores confirmar que tu autor es la persona real con esas credenciales.",
         "action": "Añade al menos una URL sameAs fiable por autor y para el editor.\nUsa el mismo nombre y la misma grafía que en ese perfil."
       }
+    },
+    "llmEconomy": {
+      "costGate": {
+        "title": "Coste LLM y puerta de hechos",
+        "what": "Cuenta lo que cuestan las llamadas de IA y lo que ahorran la caché y los modelos locales. Se rechazan las frases médicas o financieras con una dosis o cifra que no está en la fuente.",
+        "why": "Los proveedores remotos cuestan dinero y reciben el texto de tus páginas. Las dosis inventadas son peligrosas en contenido de salud y finanzas.",
+        "action": "Prefiere un modelo local para lotes grandes.\nCompara las frases rechazadas con la fuente.\nAprueba tú mismo el texto YMYL antes de que llegue al CMS."
+      }
     }
   },
   "helpUi": {
@@ -7163,5 +7171,13 @@
       "copied": "Copiado.",
       "copyFailed": "No se pudo copiar. Selecciona el texto y cópialo manualmente."
     }
+  },
+  "llmEconomy": {
+    "title": "Coste LLM",
+    "empty": "Aún no hay llamadas de IA registradas.",
+    "spent": "Gastado: {{value}}",
+    "saved": "Ahorrado con caché y modelos locales: {{value}}",
+    "hits": "Aciertos de caché: {{count}}",
+    "leaves": "El texto de las páginas se envía fuera de este dispositivo a {{provider}}."
   }
 }

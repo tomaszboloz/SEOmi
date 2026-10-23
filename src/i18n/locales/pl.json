@@ -6397,6 +6397,14 @@
         "why": "Pozwala wyszukiwarkom potwierdzić, że Twój autor to prawdziwa osoba z tymi kwalifikacjami.",
         "action": "Dodaj co najmniej jeden wiarygodny adres sameAs dla każdego autora i dla wydawcy.\nUżyj tego samego imienia i pisowni co w tym profilu."
       }
+    },
+    "llmEconomy": {
+      "costGate": {
+        "title": "Koszt LLM i bramka faktów",
+        "what": "Liczy koszt wywołań AI oraz oszczędności z cache i modeli lokalnych. Zdania medyczne i finansowe z dawką lub kwotą, której nie ma w źródle, są odrzucane.",
+        "why": "Zdalni dostawcy kosztują i dostają treść stron. Zmyślone dawki w treściach zdrowotnych i finansowych są niebezpieczne.",
+        "action": "Przy dużych partiach wybierz model lokalny.\nSprawdź odrzucone zdania ze źródłem.\nTreść YMYL zatwierdź sam, zanim trafi do CMS."
+      }
     }
   },
   "helpUi": {
@@ -7163,5 +7171,13 @@
       "copied": "Skopiowano.",
       "copyFailed": "Nie udało się skopiować. Zaznacz tekst i skopiuj go ręcznie."
     }
+  },
+  "llmEconomy": {
+    "title": "Koszt LLM",
+    "empty": "Brak zapisanych wywołań AI.",
+    "spent": "Wydano: {{value}}",
+    "saved": "Zaoszczędzono dzięki cache i modelom lokalnym: {{value}}",
+    "hits": "Trafienia cache: {{count}}",
+    "leaves": "Treść stron jest wysyłana poza to urządzenie do: {{provider}}."
   }
 }
