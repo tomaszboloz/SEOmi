@@ -14,9 +14,9 @@ export const extractFeatures = (doc: Document): PageFeatures => {
   const heads = [...root.querySelectorAll('h1, h2, h3')];
   const formInputs = count('form input:not([type="hidden"]):not([type="submit"]), form select, form textarea');
   const calculators = [...root.querySelectorAll('form, [class], [id]')].filter((el) => CALC.test(`${el.id} ${el.getAttribute('class') ?? ''}`) && el.querySelector('input, select')).length;
-  const schema = root.innerHTML.match(/schema\.org\/(?:Product|Offer)\b/g)?.length ?? 0;
+  const schema = root.innerHTML.match(/https?:\/\/(?:www\.)?schema\.org\/(?:Product|Offer)\b/g)?.length ?? 0;
   const priced = [...root.querySelectorAll('[class*="product"], [class*="price"], [data-price]')].filter((el) => PRICE.test(el.textContent as string) || el.hasAttribute('data-price')).length;
-  const local = count('a[href^="tel:"], iframe[src*="maps"], address') + (/schema\.org\/(?:LocalBusiness|PostalAddress)/.test(root.innerHTML) ? 1 : 0) + (LOCAL_TEXT.test(text) ? 1 : 0);
+  const local = count('a[href^="tel:"], iframe[src*="maps"], address') + (/https?:\/\/(?:www\.)?schema\.org\/(?:LocalBusiness|PostalAddress)/.test(root.innerHTML) ? 1 : 0) + (LOCAL_TEXT.test(text) ? 1 : 0);
   return {
     tables: count('table'), orderedLists: count('ol'), unorderedLists: count('ul'), formInputs, calculators,
     productCards: Math.max(schema, priced), localSignals: local,

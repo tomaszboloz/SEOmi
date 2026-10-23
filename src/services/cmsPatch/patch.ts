@@ -2,7 +2,13 @@ import { CmsError } from './types';
 
 interface Heading { start: number; end: number; level: number; text: string }
 
-const plain = (html: string): string => html.replace(/<[^>]*>/g, '').replace(/&amp;/g, '&').replace(/\s+/g, ' ').trim();
+const stripTags = (html: string): string => {
+  let out = html;
+  for (let prev = ''; prev !== out;) { prev = out; out = out.replace(/<[^>]*>/g, ''); }
+  return out.replace(/[<>]/g, '');
+};
+
+const plain = (html: string): string => stripTags(html).replace(/&amp;/g, '&').replace(/\s+/g, ' ').trim();
 
 const findHeadings = (content: string): Heading[] => {
   const found: Heading[] = [];
