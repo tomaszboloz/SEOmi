@@ -1,3 +1,10 @@
+# SEOmi 0.4.23 — release notes
+
+## Added
+
+- Settings → General: safe CMS patch panel (issue #140) for WordPress, Strapi and webhooks. Preview a heading-scoped diff, approve its exact hash, run a mandatory dry run, then apply with role enforcement, backup and verification feedback. Input or project changes discard approval. All 12 languages are supported.
+- Native CMS transport validates public HTTPS destinations and DNS answers, refuses redirects, limits response size and attaches only dedicated `cms_auth_` credentials from the system store. Browser previews cannot send CMS requests.
+
 # SEOmi 0.4.22 — release notes
 
 ## Added

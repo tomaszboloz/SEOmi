@@ -33,6 +33,7 @@ pub(super) const IPC_COMMANDS: &[&str] = &[
     "inspect_url",
     "cancel_inspect_url",
     "check_link",
+    "cms_patch_request",
     "check_external_crawl_links",
     "write_mcp_config_file",
     "discover_mcp_tools",
