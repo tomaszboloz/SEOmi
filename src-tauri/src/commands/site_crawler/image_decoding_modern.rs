@@ -131,3 +131,7 @@ pub(super) fn modern_image_dimensions(bytes: &[u8]) -> Option<(usize, usize)> {
 #[cfg(test)]
 #[path = "image_decoding_modern_tests.rs"]
 mod tests;
+
+#[cfg(test)]
+#[path = "image_decoding_tiff_tests.rs"]
+mod tiff_tests;
