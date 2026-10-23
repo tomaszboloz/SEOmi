@@ -13,12 +13,17 @@ import { monitorCrawlComparison } from '@/services/monitoringAlerts';
 import { runScheduledFocus } from '@/services/siteFocusMonitoring';
 import { runTaskVerification } from '@/services/optimizationTasks/runVerification';
 import { compareCrawlRuns } from '@/services/crawlDiff';
+import { deniedMessage, enforcePermission } from '@/services/team/enforce';
 
 export const createCrawlExecutionActions = (set: ToolsSet, get: ToolsGet, services: ToolsServices): Pick<ToolsState, "startSiteCrawl"> => ({
 startSiteCrawl: async (url, limit, configPatch, environment = 'default', notifyCompletion = true, resumeBaseResult) => {
     const targetUrl = (url ?? get().crawlUrl).trim();
     const maxLimit = limit ?? get().crawlLimit;
     if (!targetUrl) return null;
+    if (!enforcePermission('run_crawl', { startUrl: targetUrl })) {
+      set({ crawlError: deniedMessage() });
+      return null;
+    }
     const projectIdAtStart = activeProjectId();
     const originalCrawlRuns = get().crawlRuns;
     const previousRun = projectIdAtStart

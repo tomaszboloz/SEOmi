@@ -3,22 +3,9 @@ import { useProjectStore } from '@/stores/projectStore';
 import { downloadText } from '@/services/export/download';
 import { exportAuditCsv, verifyChain, type AuditEntry, type ChainVerdict } from '@/services/team/auditLog';
 import { readAuditLog, recordAudit } from '@/services/team/auditStore';
-import { isRole, type Role } from '@/services/team/roles';
+import { TEAM_CONTEXT_KEY, readIdentity, type TeamIdentity } from '@/services/team/identity';
 
-export const TEAM_CONTEXT_KEY = 'seomi:team:context';
-export interface TeamIdentity { actor: string; role: Role }
-
-const DEFAULT_IDENTITY: TeamIdentity = { actor: 'local', role: 'admin' };
-
-export const readIdentity = (): TeamIdentity => {
-  try {
-    const parsed = JSON.parse(localStorage.getItem(TEAM_CONTEXT_KEY) ?? 'null') as Partial<TeamIdentity> | null;
-    const actor = typeof parsed?.actor === 'string' ? parsed.actor.trim().slice(0, 80) : '';
-    return { actor: actor || DEFAULT_IDENTITY.actor, role: isRole(parsed?.role) ? parsed.role : DEFAULT_IDENTITY.role };
-  } catch {
-    return DEFAULT_IDENTITY;
-  }
-};
+export { TEAM_CONTEXT_KEY, readIdentity, type TeamIdentity };
 
 /** Acting identity plus the hash-chained audit log; every role or actor change is appended to the log. */
 export const useTeamPanel = () => {

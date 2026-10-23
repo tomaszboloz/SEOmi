@@ -1,3 +1,4 @@
+import { requireAllowed } from '@/services/team/enforce';
 import type { CrawlRunRecord } from '@/types';
 import type { CrawlReportTemplate } from '@/services/reportTemplates';
 import { downloadPdf, downloadText } from './download';
@@ -82,7 +83,8 @@ export const crawlReportPayload = (run: CrawlRunRecord, template?: CrawlReportTe
   result: filteredCrawlResult(run, template),
 });
 
-export const downloadCrawlPdf = (run: CrawlRunRecord, template?: CrawlReportTemplate): Promise<void> => {
+export const downloadCrawlPdf = async (run: CrawlRunRecord, template?: CrawlReportTemplate): Promise<void> => {
+  requireAllowed('export_audit_pdf', { report: 'crawl' });
   const focus = !template || template.sections.includes('focus') ? crawlFocusSummary(run) : undefined;
   const authority = !template || template.sections.includes('authority') ? crawlAuthoritySummary(run) : undefined;
   const aio = !template || template.sections.includes('aio') ? crawlAioSummary(run) : undefined;

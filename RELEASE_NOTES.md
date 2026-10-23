@@ -1,3 +1,13 @@
+# SEOmi 0.4.20 — release notes
+
+## Added
+
+- Role enforcement on real actions (issue #141): starting a crawl needs `run_crawl`, and the page-audit and crawl PDF exports need `export_audit_pdf`. A denied action shows "Your role cannot perform this action." and is logged as `denied`; allowed actions are logged as `success`. The default local admin can do everything, so nothing changes until a role is switched in Settings → Team. The decision comes from the role table and never depends on audit-log health.
+
+## Changed
+
+- Audit-log writes are serialized (`recordAudit` queue, `flushAuditWrites`) so concurrent actions cannot fork the hash chain. The acting identity moved to `services/team/identity`.
+
 # SEOmi 0.4.18 — release notes
 
 ## Added
