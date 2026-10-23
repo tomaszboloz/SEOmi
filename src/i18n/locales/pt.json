@@ -6405,6 +6405,14 @@
         "why": "Provedores remotos custam dinheiro e recebem o texto das páginas. Doses inventadas são perigosas em conteúdo de saúde e finanças.",
         "action": "Prefira um modelo local para lotes grandes.\nConfira as frases rejeitadas com a fonte.\nAprove você mesmo o texto YMYL antes de ir ao CMS."
       }
+    },
+    "templateGovernor": {
+      "informationGain": {
+        "title": "Template Information Gain",
+        "what": "Parte de cada página que não é texto comum do modelo compartilhado. Ganho baixo significa milhares de cópias quase idênticas.",
+        "why": "O Google pode filtrar um segmento inteiro de modelo como conteúdo fraco. Um aviso por modelo é mais fácil de corrigir que milhares por página.",
+        "action": "Adicione dados únicos a cada página (fatos locais, números, avaliações).\nOu aplique noindex ao segmento até haver conteúdo real.\nRastreie de novo e confira se o ganho sobe."
+      }
     }
   },
   "helpUi": {
@@ -7179,5 +7187,12 @@
     "saved": "Economizado com cache e execução local: {{value}}",
     "hits": "Acertos de cache: {{count}}",
     "leaves": "O texto das páginas é enviado para fora deste dispositivo para {{provider}}."
+  },
+  "templateGovernor": {
+    "title": "Qualidade de modelos programáticos",
+    "empty": "Nenhum modelo fraco encontrado.",
+    "row": "{{pattern}}: {{count}} páginas, ganho de informação {{gain}}%",
+    "noindex": "Recomendado: noindex neste segmento",
+    "limit": "Recomendado: limitar as páginas indexadas"
   }
 }

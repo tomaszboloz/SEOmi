@@ -6405,6 +6405,14 @@
         "why": "Los proveedores remotos cuestan dinero y reciben el texto de tus páginas. Las dosis inventadas son peligrosas en contenido de salud y finanzas.",
         "action": "Prefiere un modelo local para lotes grandes.\nCompara las frases rechazadas con la fuente.\nAprueba tú mismo el texto YMYL antes de que llegue al CMS."
       }
+    },
+    "templateGovernor": {
+      "informationGain": {
+        "title": "Template Information Gain",
+        "what": "Parte de cada página que no es texto común de la plantilla compartida. Una ganancia baja significa miles de copias casi idénticas.",
+        "why": "Google puede filtrar todo un segmento de plantilla como contenido pobre. Un aviso por plantilla es más fácil de arreglar que miles por página.",
+        "action": "Añade datos únicos a cada página (datos locales, cifras, reseñas).\nO pon el segmento en noindex hasta que tenga contenido real.\nVuelve a rastrear y comprueba que la ganancia sube."
+      }
     }
   },
   "helpUi": {
@@ -7179,5 +7187,12 @@
     "saved": "Ahorrado con caché y modelos locales: {{value}}",
     "hits": "Aciertos de caché: {{count}}",
     "leaves": "El texto de las páginas se envía fuera de este dispositivo a {{provider}}."
+  },
+  "templateGovernor": {
+    "title": "Calidad de plantillas programáticas",
+    "empty": "No se encontraron plantillas débiles.",
+    "row": "{{pattern}}: {{count}} páginas, ganancia de información {{gain}}%",
+    "noindex": "Recomendado: noindex para este segmento",
+    "limit": "Recomendado: limitar las páginas indexadas"
   }
 }

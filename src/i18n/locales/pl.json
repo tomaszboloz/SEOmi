@@ -6405,6 +6405,14 @@
         "why": "Zdalni dostawcy kosztują i dostają treść stron. Zmyślone dawki w treściach zdrowotnych i finansowych są niebezpieczne.",
         "action": "Przy dużych partiach wybierz model lokalny.\nSprawdź odrzucone zdania ze źródłem.\nTreść YMYL zatwierdź sam, zanim trafi do CMS."
       }
+    },
+    "templateGovernor": {
+      "informationGain": {
+        "title": "Template Information Gain",
+        "what": "Jaka część każdej strony nie jest szablonem wspólnym dla stron z tego samego wzorca. Niski wynik oznacza tysiące niemal identycznych kopii.",
+        "why": "Google może odfiltrować cały segment szablonu jako cienką treść. Jedno ostrzeżenie o szablonie łatwiej naprawić niż tysiące ostrzeżeń o stronach.",
+        "action": "Dodaj do każdej strony unikalne dane (fakty lokalne, liczby, opinie).\nAlbo ustaw noindex dla segmentu, dopóki nie ma realnej treści.\nPrzeskanuj ponownie i sprawdź, czy wynik rośnie."
+      }
     }
   },
   "helpUi": {
@@ -7179,5 +7187,12 @@
     "saved": "Zaoszczędzono dzięki cache i modelom lokalnym: {{value}}",
     "hits": "Trafienia cache: {{count}}",
     "leaves": "Treść stron jest wysyłana poza to urządzenie do: {{provider}}."
+  },
+  "templateGovernor": {
+    "title": "Jakość szablonów programatycznych",
+    "empty": "Nie znaleziono słabych szablonów.",
+    "row": "{{pattern}}: {{count}} stron, zysk informacji {{gain}}%",
+    "noindex": "Zalecane: noindex dla segmentu",
+    "limit": "Zalecane: ogranicz liczbę indeksowanych stron"
   }
 }

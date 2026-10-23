@@ -6405,6 +6405,14 @@
         "why": "Remote providers cost money and receive your page text. Invented doses in health or finance content are dangerous.",
         "action": "Prefer a local model for big batches.\nCheck rejected sentences against the source.\nApprove YMYL text yourself before it reaches the CMS."
       }
+    },
+    "templateGovernor": {
+      "informationGain": {
+        "title": "Template Information Gain",
+        "what": "Share of each page that is not boilerplate shared with the other pages built from the same template. Low gain means thousands of near-copies.",
+        "why": "Google can filter a whole template segment as thin content. One template warning is easier to fix than thousands of page warnings.",
+        "action": "Add unique data to each page (local facts, numbers, reviews).\nOr noindex the segment until it has real content.\nRe-crawl and check that the gain rises."
+      }
     }
   },
   "helpUi": {
@@ -7179,5 +7187,12 @@
     "saved": "Saved by cache and local runs: {{value}}",
     "hits": "Cache hits: {{count}}",
     "leaves": "Page text is sent outside this device to {{provider}}."
+  },
+  "templateGovernor": {
+    "title": "Programmatic template quality",
+    "empty": "No weak templates found.",
+    "row": "{{pattern}}: {{count}} pages, information gain {{gain}}%",
+    "noindex": "Recommended: noindex this segment",
+    "limit": "Recommended: limit the number of indexed pages"
   }
 }

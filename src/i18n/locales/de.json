@@ -6405,6 +6405,14 @@
         "why": "Externe Anbieter kosten Geld und erhalten Ihren Seitentext. Erfundene Dosierungen sind in Gesundheits- und Finanzinhalten gefährlich.",
         "action": "Nutzen Sie für große Stapel ein lokales Modell.\nPrüfen Sie abgelehnte Sätze anhand der Quelle.\nGeben Sie YMYL-Texte selbst frei, bevor sie ins CMS gehen."
       }
+    },
+    "templateGovernor": {
+      "informationGain": {
+        "title": "Template Information Gain",
+        "what": "Anteil jeder Seite, der nicht Textbaustein des gemeinsamen Templates ist. Ein niedriger Wert bedeutet Tausende fast identische Kopien.",
+        "why": "Google kann ein ganzes Template-Segment als dünnen Inhalt filtern. Eine Template-Warnung ist leichter zu beheben als Tausende Seitenwarnungen.",
+        "action": "Fügen Sie jeder Seite eigene Daten hinzu (lokale Fakten, Zahlen, Bewertungen).\nOder setzen Sie das Segment auf noindex, bis echter Inhalt da ist.\nCrawlen Sie erneut und prüfen Sie, ob der Wert steigt."
+      }
     }
   },
   "helpUi": {
@@ -7179,5 +7187,12 @@
     "saved": "Gespart durch Cache und lokale Läufe: {{value}}",
     "hits": "Cache-Treffer: {{count}}",
     "leaves": "Der Seitentext wird von diesem Gerät an {{provider}} gesendet."
+  },
+  "templateGovernor": {
+    "title": "Qualität programmatischer Templates",
+    "empty": "Keine schwachen Templates gefunden.",
+    "row": "{{pattern}}: {{count}} Seiten, Informationsgewinn {{gain}} %",
+    "noindex": "Empfohlen: Segment auf noindex setzen",
+    "limit": "Empfohlen: Zahl indexierter Seiten begrenzen"
   }
 }

@@ -6405,6 +6405,14 @@
         "why": "I provider remoti costano e ricevono il testo delle pagine. Dosi inventate sono pericolose nei contenuti di salute e finanza.",
         "action": "Preferisci un modello locale per i lotti grandi.\nControlla le frasi respinte con la fonte.\nApprova tu il testo YMYL prima che arrivi al CMS."
       }
+    },
+    "templateGovernor": {
+      "informationGain": {
+        "title": "Template Information Gain",
+        "what": "Quota di ogni pagina che non è testo comune del template condiviso. Un guadagno basso significa migliaia di copie quasi identiche.",
+        "why": "Google può filtrare un intero segmento di template come contenuto scarso. Un avviso per template è più semplice da correggere di migliaia per pagina.",
+        "action": "Aggiungi dati unici a ogni pagina (fatti locali, numeri, recensioni).\nOppure metti il segmento in noindex finché non ha contenuto reale.\nRiesegui la scansione e verifica che il valore salga."
+      }
     }
   },
   "helpUi": {
@@ -7179,5 +7187,12 @@
     "saved": "Risparmiato con cache e modelli locali: {{value}}",
     "hits": "Hit della cache: {{count}}",
     "leaves": "Il testo delle pagine viene inviato fuori da questo dispositivo a {{provider}}."
+  },
+  "templateGovernor": {
+    "title": "Qualità dei template programmatici",
+    "empty": "Nessun template debole trovato.",
+    "row": "{{pattern}}: {{count}} pagine, guadagno informativo {{gain}}%",
+    "noindex": "Consigliato: noindex per questo segmento",
+    "limit": "Consigliato: limita le pagine indicizzate"
   }
 }

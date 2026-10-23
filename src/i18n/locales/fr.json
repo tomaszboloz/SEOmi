@@ -6405,6 +6405,14 @@
         "why": "Les fournisseurs distants coûtent de l’argent et reçoivent le texte de vos pages. Des doses inventées sont dangereuses en santé et finance.",
         "action": "Préférez un modèle local pour les gros lots.\nVérifiez les phrases rejetées avec la source.\nValidez vous-même le contenu YMYL avant le CMS."
       }
+    },
+    "templateGovernor": {
+      "informationGain": {
+        "title": "Template Information Gain",
+        "what": "Part de chaque page qui n’est pas du texte commun au gabarit. Un gain faible signifie des milliers de quasi-copies.",
+        "why": "Google peut filtrer tout un segment de gabarit comme contenu pauvre. Un avertissement par gabarit se corrige plus facilement que des milliers par page.",
+        "action": "Ajoutez des données uniques à chaque page (faits locaux, chiffres, avis).\nOu passez le segment en noindex jusqu’à avoir un vrai contenu.\nRelancez l’exploration et vérifiez que le gain augmente."
+      }
     }
   },
   "helpUi": {
@@ -7179,5 +7187,12 @@
     "saved": "Économisé par le cache et le local : {{value}}",
     "hits": "Succès du cache : {{count}}",
     "leaves": "Le texte des pages est envoyé hors de cet appareil vers {{provider}}."
+  },
+  "templateGovernor": {
+    "title": "Qualité des gabarits programmatiques",
+    "empty": "Aucun gabarit faible trouvé.",
+    "row": "{{pattern}} : {{count}} pages, gain d’information {{gain}} %",
+    "noindex": "Recommandé : noindex pour ce segment",
+    "limit": "Recommandé : limiter le nombre de pages indexées"
   }
 }
