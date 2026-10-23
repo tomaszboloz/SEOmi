@@ -6397,6 +6397,32 @@
         "why": "Permite a los buscadores confirmar que tu autor es la persona real con esas credenciales.",
         "action": "Añade al menos una URL sameAs fiable por autor y para el editor.\nUsa el mismo nombre y la misma grafía que en ese perfil."
       }
+    },
+    "executionCard": {
+      "bus": {
+        "title": "Cuarentena de enlaces",
+        "what": "Las URL que otro módulo quiere eliminar o redirigir con un 301 se excluyen de todas las recomendaciones de enlaces.",
+        "why": "Sin ella, un panel te dice que enlaces a una página que otro panel quiere borrar.",
+        "action": "Revisa la lista.\nResuelve los conflictos en rojo antes de desplegar."
+      },
+      "brief": {
+        "title": "Brief en 1 clic",
+        "what": "Crea o actualiza el brief de contenido de esta página con los datos del módulo que generó la recomendación.",
+        "why": "El brief empieza con entidades, enlaces, preguntas y fuentes reales en lugar de texto copiado.",
+        "action": "Haz clic en el botón.\nAbre la Estación de Briefs y edita el borrador.\nVuelve a hacer clic más tarde para actualizar los datos sin duplicar."
+      },
+      "deploy": {
+        "title": "Artefactos de despliegue",
+        "what": "Archivos de reglas listos para redirecciones y eliminaciones: Apache, Nginx, Cloudflare Bulk Redirects y WordPress Redirection.",
+        "why": "Las reglas se comprueban antes por bucles y cadenas, así no publicas una redirección que rompa el rastreo.",
+        "action": "Descarga el archivo de tu servidor.\nDespliégalo primero en una copia de pruebas.\nMarca la tarea como implementada y verifica en el siguiente rastreo."
+      },
+      "tasks": {
+        "title": "Registro de tareas",
+        "what": "Cada cambio recomendado es una tarea: planificada, implementada y luego verificada o fallida.",
+        "why": "El siguiente rastreo comprueba el resultado real y muestra cómo cambió la puntuación del módulo desde la línea base.",
+        "action": "Añade una tarea desde una recomendación.\nMárcala como implementada tras desplegar.\nLanza un nuevo rastreo y pulsa Verificar."
+      }
     }
   },
   "helpUi": {
@@ -7168,6 +7194,96 @@
       "copy": "Copiar etiqueta script",
       "copied": "Copiado.",
       "copyFailed": "No se pudo copiar. Selecciona el texto y cópialo manualmente."
+    }
+  },
+  "executionCard": {
+    "bus": {
+      "aria": "URL excluidas de las recomendaciones de enlaces",
+      "title": "URL en cuarentena",
+      "summary": "{{count}} URL se eliminan o redirigen y quedan excluidas como destino de enlaces; {{dropped}} sugerencias de enlace descartadas.",
+      "reason": {
+        "remove": "Eliminar",
+        "redirect": "Redirección 301"
+      },
+      "conflict": {
+        "protected-by-evidence": "Conservada: tiene datos de Search Console o backlinks",
+        "canonical-removed": "Conflicto: la URL canónica también está en la lista de eliminación"
+      }
+    },
+    "brief": {
+      "open": "Abrir en la Estación de Briefs",
+      "pillar": "Pilar de destino",
+      "anchors": "anclas",
+      "donor": "Página donante",
+      "entities": "Entidades que faltan",
+      "links": "Enlaces por insertar",
+      "paa": "Preguntas People Also Ask",
+      "structure": "Estructura H2",
+      "jsonLd": "Propiedades de autor que faltan en JSON-LD",
+      "footnotes": "Notas al pie requeridas",
+      "origin": {
+        "sfs": "Recomendación de Site Focus",
+        "tas": "Recomendación de Topical Authority",
+        "eetv": "Recomendación de EETV"
+      },
+      "state": {
+        "created": "Brief creado",
+        "updated": "Brief actualizado",
+        "failed": "No se pudo guardar el brief"
+      }
+    },
+    "deploy": {
+      "empty": "Aún no hay reglas de redirección o eliminación.",
+      "aria": "Artefactos de despliegue",
+      "title": "Artefactos de despliegue (301/410)",
+      "summary": "{{count}} reglas válidas, sin bucles ni cadenas.",
+      "zip": "Descargar todo (ZIP)",
+      "issuesAria": "Problemas de reglas",
+      "issue": {
+        "invalid": "Regla no válida, omitida",
+        "duplicate": "Origen duplicado, omitido",
+        "loop": "Bucle de redirección, omitido",
+        "chain-flattened": "Cadena de redirección, apuntada al destino final",
+        "dead-target": "Redirige a una página eliminada (410)",
+        "query-unsupported": "Tiene query string, no se exporta a este formato de servidor",
+        "gone-unsupported": "Cloudflare Bulk Redirects no admite 410"
+      }
+    },
+    "tasks": {
+      "aria": "Tareas de optimización",
+      "title": "Tareas de optimización",
+      "add": "Añadir al registro",
+      "added": "Tarea añadida",
+      "empty": "Aún no hay tareas. Añade una desde una recomendación.",
+      "verify": "Verificar en el último rastreo",
+      "markImplemented": "Marcar como implementada",
+      "regression": "Retroceso de puntuación",
+      "kind": {
+        "add-link": "Añadir enlace",
+        "redirect-301": "Redirección 301",
+        "remove-410": "Eliminación 410",
+        "add-entities": "Añadir entidades",
+        "remove-noindex": "Quitar noindex"
+      },
+      "status": {
+        "planned": "Planificada",
+        "implemented": "Implementada",
+        "verified": "Verificada",
+        "failed": "Fallida"
+      },
+      "verdict": {
+        "link-found": "VERIFICADO: nuevo enlace encontrado, zona {{zone}}",
+        "link-missing": "ERROR DE DESPLIEGUE: el enlace sigue sin aparecer",
+        "redirect-ok": "VERIFICADO: el 301 apunta a la página correcta",
+        "redirect-wrong-target": "ERROR DE DESPLIEGUE: la redirección apunta a otra página",
+        "still-200": "ERROR DE DESPLIEGUE: sigue en HTTP {{status}}",
+        "gone-ok": "VERIFICADO: la página devuelve HTTP 410",
+        "wrong-status": "ERROR DE DESPLIEGUE: HTTP {{status}} en lugar de 410",
+        "entities-ok": "VERIFICADO: {{found}} de {{total}} entidades requeridas presentes",
+        "entities-missing": "ERROR DE DESPLIEGUE: solo {{found}} de {{total}} entidades requeridas presentes (se necesita 60 %)",
+        "index-ok": "VERIFICADO: la página es indexable",
+        "still-noindex": "ERROR DE DESPLIEGUE: noindex sigue presente"
+      }
     }
   }
 }

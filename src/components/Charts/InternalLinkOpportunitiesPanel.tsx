@@ -2,18 +2,24 @@ import { useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import type { CrawledPageSummary } from '@/types';
 import { findInternalLinkOpportunities } from '@/services/internalLinkOpportunities';
+import { excludeQuarantined, type BusConflict, type QuarantineEntry } from '@/services/recommendationBus';
+import { QuarantineConflicts } from './QuarantineConflicts';
 
-interface Props { pages: CrawledPageSummary[]; }
+interface Props { pages: CrawledPageSummary[]; quarantine?: QuarantineEntry[]; conflicts?: BusConflict[]; }
 
 const displayUrl = (value: string) => {
   try { const url = new URL(value); return `${url.hostname}${url.pathname}${url.search}`; }
   catch { return value; }
 };
 
-export const InternalLinkOpportunitiesPanel = ({ pages }: Props) => {
+const NO_QUARANTINE: QuarantineEntry[] = [];
+
+export const InternalLinkOpportunitiesPanel = ({ pages, quarantine = NO_QUARANTINE, conflicts }: Props) => {
   const { t } = useTranslation();
   const [query, setQuery] = useState('');
-  const report = useMemo(() => findInternalLinkOpportunities(pages), [pages]);
+  const base = useMemo(() => findInternalLinkOpportunities(pages), [pages]);
+  const split = useMemo(() => excludeQuarantined(base.opportunities, quarantine), [base, quarantine]);
+  const report = useMemo(() => ({ ...base, opportunities: split.kept }), [base, split]);
   const filtered = useMemo(() => {
     const needle = query.trim().toLocaleLowerCase();
     return report.opportunities.filter((item) => !needle || `${item.sourceTitle} ${item.sourceUrl} ${item.targetTitle} ${item.targetUrl} ${item.sharedTerms.join(' ')}`.toLocaleLowerCase().includes(needle));
@@ -30,6 +36,7 @@ export const InternalLinkOpportunitiesPanel = ({ pages }: Props) => {
       <div className="rounded-lg border border-slate-800 bg-slate-950/50 px-3 py-2 text-right"><div className="text-lg font-semibold tabular-nums text-slate-100">{filtered.length}</div><div className="text-[9px] uppercase tracking-wide text-slate-500">{t('componentUi.candidates')}</div></div>
     </header>
     <div className="mt-3 flex flex-wrap items-center justify-between gap-2 text-[10px] text-slate-500"><span>{t('componentUi.eligiblePages', { count: report.eligiblePageCount })}</span><label className="sr-only" htmlFor="internal-link-candidate-filter">{t('componentUi.filterCandidates')}</label><input id="internal-link-candidate-filter" aria-label={t('componentUi.filterCandidatesAria')} value={query} onChange={(event) => setQuery(event.target.value)} placeholder={t('componentUi.filterPlaceholder')} className="h-8 w-full max-w-sm rounded-md border border-slate-700 bg-slate-950 px-2.5 text-[11px] text-slate-200 outline-none focus:border-emerald-400" /></div>
+    <div className="mt-3"><QuarantineConflicts quarantine={quarantine} conflicts={conflicts} droppedCount={split.dropped.length} /></div>
     {(report.pagesWithoutCompleteEvidence > 0 || report.pagesOmittedByLimit > 0 || report.resultsLimited) && <p role="status" className="mt-3 rounded-md border border-amber-500/20 bg-amber-500/5 p-2.5 text-[10px] leading-4 text-amber-200">{t('componentUi.partialResult', { details: partialDetails })}</p>}
     {!report.eligiblePageCount ? <p className="mt-3 rounded-md border border-dashed border-slate-800 p-5 text-center text-xs text-slate-500">{t('componentUi.noCompletePages')}</p>
       : !filtered.length ? <p className="mt-3 rounded-md border border-dashed border-slate-800 p-5 text-center text-xs text-slate-500">{t('componentUi.noCandidates')}</p>

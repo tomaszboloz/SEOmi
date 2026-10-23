@@ -6397,6 +6397,32 @@
         "why": "Elle permet aux moteurs de recherche de confirmer que votre auteur est bien la personne réelle ayant ces qualifications.",
         "action": "Ajoutez au moins une URL sameAs faisant autorité par auteur et pour l'éditeur.\nUtilisez le même nom et la même orthographe que sur ce profil."
       }
+    },
+    "executionCard": {
+      "bus": {
+        "title": "Quarantaine de liens",
+        "what": "Les URL qu'un autre module veut supprimer ou rediriger en 301 sont exclues de toutes les recommandations de liens.",
+        "why": "Sans cela, un panneau vous demande de lier une page qu'un autre panneau veut supprimer.",
+        "action": "Parcourez la liste.\nRésolvez les conflits en rouge avant de déployer."
+      },
+      "brief": {
+        "title": "Brief en 1 clic",
+        "what": "Crée ou met à jour le brief de contenu de cette page avec les données du module à l'origine de la recommandation.",
+        "why": "Le brief démarre avec de vraies entités, liens, questions et sources manquants plutôt qu'un texte copié.",
+        "action": "Cliquez sur le bouton.\nOuvrez l'atelier de briefs et modifiez le brouillon.\nCliquez de nouveau plus tard pour actualiser sans créer de doublon."
+      },
+      "deploy": {
+        "title": "Artefacts de déploiement",
+        "what": "Fichiers de règles prêts pour les redirections et suppressions : Apache, Nginx, Cloudflare Bulk Redirects et WordPress Redirection.",
+        "why": "Les règles sont d'abord vérifiées (boucles, chaînes) pour ne pas déployer une redirection qui gêne le crawl.",
+        "action": "Téléchargez le fichier de votre serveur.\nDéployez-le d'abord sur une copie de test.\nMarquez la tâche comme déployée et vérifiez au prochain crawl."
+      },
+      "tasks": {
+        "title": "Suivi des tâches",
+        "what": "Chaque changement recommandé devient une tâche : planifiée, déployée, puis vérifiée ou échouée.",
+        "why": "Le prochain crawl contrôle le résultat réel et montre l'évolution du score du module depuis la référence.",
+        "action": "Ajoutez une tâche depuis une recommandation.\nMarquez-la comme déployée après la mise en ligne.\nLancez un nouveau crawl et cliquez sur Vérifier."
+      }
     }
   },
   "helpUi": {
@@ -7168,6 +7194,96 @@
       "copy": "Copier la balise script",
       "copied": "Copié.",
       "copyFailed": "Échec de la copie. Sélectionnez le texte et copiez-le manuellement."
+    }
+  },
+  "executionCard": {
+    "bus": {
+      "aria": "URL exclues des recommandations de liens",
+      "title": "URL en quarantaine",
+      "summary": "{{count}} URL sont supprimées ou redirigées et exclues des cibles de liens ; {{dropped}} suggestions de liens écartées.",
+      "reason": {
+        "remove": "Supprimer",
+        "redirect": "Redirection 301"
+      },
+      "conflict": {
+        "protected-by-evidence": "Conservée : elle a des données Search Console ou des backlinks",
+        "canonical-removed": "Conflit : l'URL canonique figure aussi dans la liste de suppression"
+      }
+    },
+    "brief": {
+      "open": "Ouvrir dans l'atelier de briefs",
+      "pillar": "Pilier cible",
+      "anchors": "ancres",
+      "donor": "Page donneuse",
+      "entities": "Entités manquantes",
+      "links": "Liens à insérer",
+      "paa": "Questions People Also Ask",
+      "structure": "Structure H2",
+      "jsonLd": "Propriétés d'auteur JSON-LD manquantes",
+      "footnotes": "Notes de bas de page requises",
+      "origin": {
+        "sfs": "Recommandation Site Focus",
+        "tas": "Recommandation Topical Authority",
+        "eetv": "Recommandation EETV"
+      },
+      "state": {
+        "created": "Brief créé",
+        "updated": "Brief mis à jour",
+        "failed": "Impossible d'enregistrer le brief"
+      }
+    },
+    "deploy": {
+      "empty": "Aucune règle de redirection ou de suppression pour l'instant.",
+      "aria": "Artefacts de déploiement",
+      "title": "Artefacts de déploiement (301/410)",
+      "summary": "{{count}} règles valides, sans boucle ni chaîne.",
+      "zip": "Tout télécharger (ZIP)",
+      "issuesAria": "Problèmes de règles",
+      "issue": {
+        "invalid": "Règle invalide, ignorée",
+        "duplicate": "Source en double, ignorée",
+        "loop": "Boucle de redirection, ignorée",
+        "chain-flattened": "Chaîne de redirection, pointée vers la cible finale",
+        "dead-target": "Redirige vers une page supprimée (410)",
+        "query-unsupported": "Contient une query string, non exportée pour ce format de serveur",
+        "gone-unsupported": "Cloudflare Bulk Redirects ne gère pas le 410"
+      }
+    },
+    "tasks": {
+      "aria": "Tâches d'optimisation",
+      "title": "Tâches d'optimisation",
+      "add": "Ajouter au suivi",
+      "added": "Tâche ajoutée",
+      "empty": "Aucune tâche. Ajoutez-en une depuis une recommandation.",
+      "verify": "Vérifier sur le dernier crawl",
+      "markImplemented": "Marquer comme déployée",
+      "regression": "Régression du score",
+      "kind": {
+        "add-link": "Ajouter un lien",
+        "redirect-301": "Redirection 301",
+        "remove-410": "Suppression 410",
+        "add-entities": "Ajouter des entités",
+        "remove-noindex": "Retirer noindex"
+      },
+      "status": {
+        "planned": "Planifiée",
+        "implemented": "Déployée",
+        "verified": "Vérifiée",
+        "failed": "Échouée"
+      },
+      "verdict": {
+        "link-found": "VÉRIFIÉ : nouveau lien trouvé, zone {{zone}}",
+        "link-missing": "ERREUR DE DÉPLOIEMENT : le lien est toujours absent",
+        "redirect-ok": "VÉRIFIÉ : le 301 pointe vers la bonne page",
+        "redirect-wrong-target": "ERREUR DE DÉPLOIEMENT : la redirection pointe vers une autre page",
+        "still-200": "ERREUR DE DÉPLOIEMENT : toujours HTTP {{status}}",
+        "gone-ok": "VÉRIFIÉ : la page renvoie HTTP 410",
+        "wrong-status": "ERREUR DE DÉPLOIEMENT : HTTP {{status}} au lieu de 410",
+        "entities-ok": "VÉRIFIÉ : {{found}} entités requises sur {{total}} présentes",
+        "entities-missing": "ERREUR DE DÉPLOIEMENT : seulement {{found}} entités requises sur {{total}} présentes (60 % nécessaires)",
+        "index-ok": "VÉRIFIÉ : la page est indexable",
+        "still-noindex": "ERREUR DE DÉPLOIEMENT : noindex est toujours présent"
+      }
     }
   }
 }

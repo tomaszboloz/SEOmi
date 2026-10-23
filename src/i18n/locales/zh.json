@@ -6397,6 +6397,32 @@
         "why": "它让搜索引擎能够确认你的作者就是具备这些资质的真实人物。",
         "action": "为每位作者和发布者至少添加一个权威的 sameAs URL。\n使用与该主页一致的姓名和拼写。"
       }
+    },
+    "executionCard": {
+      "bus": {
+        "title": "链接隔离",
+        "what": "其他模块要删除或做301重定向的URL，会从所有链接建议中排除。",
+        "why": "否则一个面板让你链接到某页面，而另一个面板却让你删除它。",
+        "action": "查看列表。\n部署前先解决标红的冲突。"
+      },
+      "brief": {
+        "title": "一键简报",
+        "what": "用提出建议的模块的数据，创建或更新此页面的内容简报。",
+        "why": "简报以真实缺失的实体、链接、问题和来源为起点，而不是复制的文本。",
+        "action": "点击按钮。\n打开简报工作台并编辑草稿。\n稍后再次点击可刷新数据且不会产生重复。"
+      },
+      "deploy": {
+        "title": "部署产物",
+        "what": "现成的重定向和删除规则文件：Apache、Nginx、Cloudflare Bulk Redirects和WordPress Redirection。",
+        "why": "规则会先检查循环和链式重定向，避免发布影响抓取的重定向。",
+        "action": "下载适合你服务器的文件。\n先部署到预发布副本。\n将任务标记为已实施，并在下次抓取时验证。"
+      },
+      "tasks": {
+        "title": "任务跟踪器",
+        "what": "每项建议的更改都是一个任务：已计划、已实施，然后已验证或失败。",
+        "why": "下一次抓取会检查真实结果，并显示模块分数相对基线的变化。",
+        "action": "从建议中添加任务。\n部署后标记为已实施。\n运行新的抓取并点击验证。"
+      }
     }
   },
   "helpUi": {
@@ -7168,6 +7194,96 @@
       "copy": "复制 script 标签",
       "copied": "已复制。",
       "copyFailed": "复制失败。请选中文本并手动复制。"
+    }
+  },
+  "executionCard": {
+    "bus": {
+      "aria": "已从链接建议中排除的URL",
+      "title": "隔离的URL",
+      "summary": "{{count}}个URL将被删除或重定向，并已从链接目标中排除；已丢弃{{dropped}}条链接建议。",
+      "reason": {
+        "remove": "删除",
+        "redirect": "301重定向"
+      },
+      "conflict": {
+        "protected-by-evidence": "已保留：有Search Console或反向链接数据",
+        "canonical-removed": "冲突：规范URL也在删除列表中"
+      }
+    },
+    "brief": {
+      "open": "在简报工作台中打开",
+      "pillar": "目标支柱页",
+      "anchors": "锚文本",
+      "donor": "来源页面",
+      "entities": "缺失的实体",
+      "links": "待插入的链接",
+      "paa": "People Also Ask问题",
+      "structure": "H2结构",
+      "jsonLd": "缺失的JSON-LD作者属性",
+      "footnotes": "必需的脚注",
+      "origin": {
+        "sfs": "Site Focus建议",
+        "tas": "Topical Authority建议",
+        "eetv": "EETV建议"
+      },
+      "state": {
+        "created": "简报已创建",
+        "updated": "简报已更新",
+        "failed": "无法保存简报"
+      }
+    },
+    "deploy": {
+      "empty": "暂无重定向或删除规则。",
+      "aria": "部署产物",
+      "title": "部署产物 (301/410)",
+      "summary": "{{count}}条有效规则，无循环和链式重定向。",
+      "zip": "全部下载 (ZIP)",
+      "issuesAria": "规则问题",
+      "issue": {
+        "invalid": "无效规则，已跳过",
+        "duplicate": "来源重复，已跳过",
+        "loop": "重定向循环，已跳过",
+        "chain-flattened": "重定向链已改为直指最终目标",
+        "dead-target": "重定向到已删除页面 (410)",
+        "query-unsupported": "含查询字符串，未导出到此服务器格式",
+        "gone-unsupported": "Cloudflare Bulk Redirects不支持410"
+      }
+    },
+    "tasks": {
+      "aria": "优化任务",
+      "title": "优化任务",
+      "add": "添加到跟踪器",
+      "added": "任务已添加",
+      "empty": "暂无任务。请从建议中添加。",
+      "verify": "用最新抓取验证",
+      "markImplemented": "标记为已实施",
+      "regression": "分数回落",
+      "kind": {
+        "add-link": "添加链接",
+        "redirect-301": "301重定向",
+        "remove-410": "410删除",
+        "add-entities": "添加实体",
+        "remove-noindex": "移除noindex"
+      },
+      "status": {
+        "planned": "已计划",
+        "implemented": "已实施",
+        "verified": "已验证",
+        "failed": "失败"
+      },
+      "verdict": {
+        "link-found": "已验证：发现新链接，区域 {{zone}}",
+        "link-missing": "部署错误：链接仍然缺失",
+        "redirect-ok": "已验证：301指向正确页面",
+        "redirect-wrong-target": "部署错误：重定向指向了其他页面",
+        "still-200": "部署错误：仍为HTTP {{status}}",
+        "gone-ok": "已验证：页面返回HTTP 410",
+        "wrong-status": "部署错误：返回HTTP {{status}}而非410",
+        "entities-ok": "已验证：{{total}}个必需实体中有{{found}}个",
+        "entities-missing": "部署错误：{{total}}个必需实体中仅有{{found}}个（需要60%）",
+        "index-ok": "已验证：页面可被索引",
+        "still-noindex": "部署错误：noindex仍然存在"
+      }
     }
   }
 }

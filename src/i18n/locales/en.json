@@ -6397,6 +6397,32 @@
         "why": "It lets search engines confirm that your author is the real person with those credentials.",
         "action": "Add at least one authoritative sameAs URL per author and for the publisher.\nUse the same name and spelling as on that profile."
       }
+    },
+    "executionCard": {
+      "bus": {
+        "title": "Link quarantine",
+        "what": "URLs that another module wants to remove or redirect with a 301 are kept out of every link recommendation.",
+        "why": "Without it one panel tells you to link to a page another panel tells you to delete.",
+        "action": "Review the list.\nResolve any conflict shown in red before you deploy."
+      },
+      "brief": {
+        "title": "1-click brief",
+        "what": "Creates or updates the content brief for this page from the data of the module that made the recommendation.",
+        "why": "The brief starts with the real missing entities, links, questions and sources instead of copied text.",
+        "action": "Click the button.\nOpen the Brief Workstation and edit the draft.\nClick again later to refresh the data without creating a duplicate."
+      },
+      "deploy": {
+        "title": "Deployment artifacts",
+        "what": "Ready rule files for redirects and removals: Apache, Nginx, Cloudflare Bulk Redirects and WordPress Redirection.",
+        "why": "Rules are checked for loops and chains first, so you do not ship a redirect that breaks crawling.",
+        "action": "Download the file for your server.\nDeploy it on a staging copy first.\nMark the task as implemented and verify on the next crawl."
+      },
+      "tasks": {
+        "title": "Task tracker",
+        "what": "Keeps each recommended change as a task: planned, implemented, then verified or failed.",
+        "why": "The next crawl checks the real result and shows how the module score changed since the baseline.",
+        "action": "Add a task from a recommendation.\nMark it implemented after you deploy.\nRun a new crawl and click Verify."
+      }
     }
   },
   "helpUi": {
@@ -7168,6 +7194,96 @@
       "copy": "Copy script tag",
       "copied": "Copied.",
       "copyFailed": "Copy failed. Select the text and copy it manually."
+    }
+  },
+  "executionCard": {
+    "bus": {
+      "aria": "URLs excluded from link recommendations",
+      "title": "Quarantined URLs",
+      "summary": "{{count}} URLs are removed or redirected and excluded from link targets; {{dropped}} link suggestions dropped.",
+      "reason": {
+        "remove": "Remove",
+        "redirect": "301 redirect"
+      },
+      "conflict": {
+        "protected-by-evidence": "Kept: it has Search Console or backlink evidence",
+        "canonical-removed": "Conflict: the canonical URL is also on the removal list"
+      }
+    },
+    "brief": {
+      "open": "Open in Brief Workstation",
+      "pillar": "Target pillar",
+      "anchors": "anchors",
+      "donor": "Donor page",
+      "entities": "Missing entities",
+      "links": "Links to insert",
+      "paa": "People Also Ask questions",
+      "structure": "H2 structure",
+      "jsonLd": "Missing JSON-LD author properties",
+      "footnotes": "Required footnotes",
+      "origin": {
+        "sfs": "Site Focus recommendation",
+        "tas": "Topical Authority recommendation",
+        "eetv": "EETV recommendation"
+      },
+      "state": {
+        "created": "Brief created",
+        "updated": "Brief updated",
+        "failed": "Brief could not be saved"
+      }
+    },
+    "deploy": {
+      "empty": "No redirect or removal rules yet.",
+      "aria": "Deployment artifacts",
+      "title": "Deployment artifacts (301/410)",
+      "summary": "{{count}} valid rules, no loops and no chains.",
+      "zip": "Download all (ZIP)",
+      "issuesAria": "Rule problems",
+      "issue": {
+        "invalid": "Invalid rule, skipped",
+        "duplicate": "Duplicate source, skipped",
+        "loop": "Redirect loop, skipped",
+        "chain-flattened": "Redirect chain, pointed at the final target",
+        "dead-target": "Redirects to a page that is gone (410)",
+        "query-unsupported": "Has a query string, not exported to this server format",
+        "gone-unsupported": "410 is not supported by Cloudflare Bulk Redirects"
+      }
+    },
+    "tasks": {
+      "aria": "Optimization tasks",
+      "title": "Optimization tasks",
+      "add": "Add to tracker",
+      "added": "Task added",
+      "empty": "No tasks yet. Add one from a recommendation.",
+      "verify": "Verify on latest crawl",
+      "markImplemented": "Mark as implemented",
+      "regression": "Score regression",
+      "kind": {
+        "add-link": "Add link",
+        "redirect-301": "301 redirect",
+        "remove-410": "410 removal",
+        "add-entities": "Add entities",
+        "remove-noindex": "Remove noindex"
+      },
+      "status": {
+        "planned": "Planned",
+        "implemented": "Implemented",
+        "verified": "Verified",
+        "failed": "Failed"
+      },
+      "verdict": {
+        "link-found": "VERIFIED: new link found, zone {{zone}}",
+        "link-missing": "DEPLOYMENT ERROR: the link is still missing",
+        "redirect-ok": "VERIFIED: 301 points to the right page",
+        "redirect-wrong-target": "DEPLOYMENT ERROR: redirect points to a different page",
+        "still-200": "DEPLOYMENT ERROR: still HTTP {{status}}",
+        "gone-ok": "VERIFIED: page returns HTTP 410",
+        "wrong-status": "DEPLOYMENT ERROR: HTTP {{status}} instead of 410",
+        "entities-ok": "VERIFIED: {{found}} of {{total}} required entities present",
+        "entities-missing": "DEPLOYMENT ERROR: only {{found}} of {{total}} required entities present (60% needed)",
+        "index-ok": "VERIFIED: page is indexable",
+        "still-noindex": "DEPLOYMENT ERROR: noindex is still present"
+      }
     }
   }
 }

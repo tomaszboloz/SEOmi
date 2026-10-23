@@ -6397,6 +6397,32 @@
         "why": "Sie ermöglicht Suchmaschinen zu bestätigen, dass dein Autor die reale Person mit diesen Qualifikationen ist.",
         "action": "Füge mindestens eine verlässliche sameAs-URL pro Autor und für den Herausgeber hinzu.\nVerwende denselben Namen und dieselbe Schreibweise wie in diesem Profil."
       }
+    },
+    "executionCard": {
+      "bus": {
+        "title": "Link-Quarantäne",
+        "what": "URLs, die ein anderes Modul entfernen oder per 301 umleiten will, werden aus allen Link-Empfehlungen herausgehalten.",
+        "why": "Sonst empfiehlt ein Panel einen Link auf eine Seite, die ein anderes Panel löschen will.",
+        "action": "Liste prüfen.\nRot markierte Konflikte vor dem Deployment lösen."
+      },
+      "brief": {
+        "title": "Brief per Klick",
+        "what": "Erstellt oder aktualisiert den Content-Brief dieser Seite aus den Daten des Moduls, das die Empfehlung erzeugt hat.",
+        "why": "Der Brief beginnt mit echten fehlenden Entitäten, Links, Fragen und Quellen statt mit kopiertem Text.",
+        "action": "Button klicken.\nBrief-Werkstatt öffnen und den Entwurf bearbeiten.\nSpäter erneut klicken, um Daten ohne Duplikat zu aktualisieren."
+      },
+      "deploy": {
+        "title": "Deployment-Artefakte",
+        "what": "Fertige Regeldateien für Weiterleitungen und Entfernungen: Apache, Nginx, Cloudflare Bulk Redirects und WordPress Redirection.",
+        "why": "Die Regeln werden vorab auf Schleifen und Ketten geprüft, damit keine Weiterleitung das Crawling stört.",
+        "action": "Datei für den eigenen Server herunterladen.\nZuerst auf einer Staging-Kopie einspielen.\nAufgabe als umgesetzt markieren und beim nächsten Crawl prüfen."
+      },
+      "tasks": {
+        "title": "Aufgaben-Tracker",
+        "what": "Jede empfohlene Änderung wird eine Aufgabe: geplant, umgesetzt, dann verifiziert oder fehlgeschlagen.",
+        "why": "Der nächste Crawl prüft das echte Ergebnis und zeigt, wie sich der Modul-Score gegenüber dem Ausgangswert verändert hat.",
+        "action": "Aufgabe aus einer Empfehlung hinzufügen.\nNach dem Deployment als umgesetzt markieren.\nNeuen Crawl starten und Prüfen klicken."
+      }
     }
   },
   "helpUi": {
@@ -7168,6 +7194,96 @@
       "copy": "Script-Tag kopieren",
       "copied": "Kopiert.",
       "copyFailed": "Kopieren fehlgeschlagen. Markiere den Text und kopiere ihn manuell."
+    }
+  },
+  "executionCard": {
+    "bus": {
+      "aria": "Aus Link-Empfehlungen ausgeschlossene URLs",
+      "title": "URLs in Quarantäne",
+      "summary": "{{count}} URLs werden entfernt oder umgeleitet und sind als Linkziel ausgeschlossen; {{dropped}} Link-Vorschläge verworfen.",
+      "reason": {
+        "remove": "Entfernen",
+        "redirect": "301-Weiterleitung"
+      },
+      "conflict": {
+        "protected-by-evidence": "Behalten: Search-Console- oder Backlink-Daten vorhanden",
+        "canonical-removed": "Konflikt: Die kanonische URL steht ebenfalls auf der Entfernungsliste"
+      }
+    },
+    "brief": {
+      "open": "In der Brief-Werkstatt öffnen",
+      "pillar": "Ziel-Pillar",
+      "anchors": "Ankertexte",
+      "donor": "Spenderseite",
+      "entities": "Fehlende Entitäten",
+      "links": "Einzufügende Links",
+      "paa": "People-Also-Ask-Fragen",
+      "structure": "H2-Struktur",
+      "jsonLd": "Fehlende JSON-LD-Autoreneigenschaften",
+      "footnotes": "Erforderliche Fußnoten",
+      "origin": {
+        "sfs": "Site-Focus-Empfehlung",
+        "tas": "Topical-Authority-Empfehlung",
+        "eetv": "EETV-Empfehlung"
+      },
+      "state": {
+        "created": "Brief erstellt",
+        "updated": "Brief aktualisiert",
+        "failed": "Brief konnte nicht gespeichert werden"
+      }
+    },
+    "deploy": {
+      "empty": "Noch keine Weiterleitungs- oder Entfernungsregeln.",
+      "aria": "Deployment-Artefakte",
+      "title": "Deployment-Artefakte (301/410)",
+      "summary": "{{count}} gültige Regeln, keine Schleifen und keine Ketten.",
+      "zip": "Alles herunterladen (ZIP)",
+      "issuesAria": "Regelprobleme",
+      "issue": {
+        "invalid": "Ungültige Regel, übersprungen",
+        "duplicate": "Doppelte Quelle, übersprungen",
+        "loop": "Weiterleitungsschleife, übersprungen",
+        "chain-flattened": "Weiterleitungskette, auf das Endziel gesetzt",
+        "dead-target": "Leitet auf eine entfernte Seite (410) weiter",
+        "query-unsupported": "Enthält einen Query-String, wird für dieses Serverformat nicht exportiert",
+        "gone-unsupported": "Cloudflare Bulk Redirects unterstützt kein 410"
+      }
+    },
+    "tasks": {
+      "aria": "Optimierungsaufgaben",
+      "title": "Optimierungsaufgaben",
+      "add": "Zum Tracker hinzufügen",
+      "added": "Aufgabe hinzugefügt",
+      "empty": "Noch keine Aufgaben. Füge eine aus einer Empfehlung hinzu.",
+      "verify": "Mit letztem Crawl prüfen",
+      "markImplemented": "Als umgesetzt markieren",
+      "regression": "Score-Rückgang",
+      "kind": {
+        "add-link": "Link hinzufügen",
+        "redirect-301": "301-Weiterleitung",
+        "remove-410": "410-Entfernung",
+        "add-entities": "Entitäten ergänzen",
+        "remove-noindex": "Noindex entfernen"
+      },
+      "status": {
+        "planned": "Geplant",
+        "implemented": "Umgesetzt",
+        "verified": "Verifiziert",
+        "failed": "Fehlgeschlagen"
+      },
+      "verdict": {
+        "link-found": "VERIFIZIERT: neuer Link gefunden, Zone {{zone}}",
+        "link-missing": "UMSETZUNGSFEHLER: Link fehlt weiterhin",
+        "redirect-ok": "VERIFIZIERT: 301 führt auf die richtige Seite",
+        "redirect-wrong-target": "UMSETZUNGSFEHLER: Weiterleitung führt auf eine andere Seite",
+        "still-200": "UMSETZUNGSFEHLER: weiterhin HTTP {{status}}",
+        "gone-ok": "VERIFIZIERT: Seite liefert HTTP 410",
+        "wrong-status": "UMSETZUNGSFEHLER: HTTP {{status}} statt 410",
+        "entities-ok": "VERIFIZIERT: {{found}} von {{total}} Pflichtentitäten vorhanden",
+        "entities-missing": "UMSETZUNGSFEHLER: nur {{found}} von {{total}} Pflichtentitäten vorhanden (60 % nötig)",
+        "index-ok": "VERIFIZIERT: Seite ist indexierbar",
+        "still-noindex": "UMSETZUNGSFEHLER: noindex ist weiterhin gesetzt"
+      }
     }
   }
 }
