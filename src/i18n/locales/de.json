@@ -6445,6 +6445,54 @@
         "why": "Aufgaben mit Verantwortlichem und Datum gehen nicht verloren, überfällige lassen sich leicht filtern.",
         "action": "Namen des Verantwortlichen eingeben.\nPriorität und SLA-Datum wählen.\nMit den Filtern eigene oder überfällige Aufgaben anzeigen."
       }
+    },
+    "sprs": {
+      "panel": {
+        "title": "Semantischer PageRank",
+        "what": "Interner PageRank (Dämpfung 0,85) auf 0-100 skaliert, mit Markierungen für Seiten ohne ausgehende Links, mit zu wenigen eingehenden Links oder mit überwiegend themenfremden Links.",
+        "why": "Er zeigt, wo Link-Autorität auf der eigenen Website zusammenläuft oder abfließt.",
+        "action": "Füge Sackgassen ausgehende Links hinzu.\nVerlinke schwach verlinkte Seiten von starken, verwandten Seiten.\nPrüfe Lecks."
+      }
+    },
+    "decay": {
+      "radar": {
+        "title": "Semantic-Decay-Radar",
+        "what": "Vergleicht gespeicherte SERP-Snapshots derselben Suchanfrage, desselben Marktes, Anbieters und Modells: Centroid-Verschiebung, neue oder verlorene Konsens-Entitäten, Intent- und Formatwechsel.",
+        "why": "Die Top-Ergebnisse können sich von deiner Seite entfernen, lange bevor Rankings fallen.",
+        "action": "Öffne die genannten URLs.\nEntscheide manuell, ob die Seite aktualisiert wird."
+      }
+    },
+    "sija": {
+      "panel": {
+        "title": "Suchintention (SIJA)",
+        "what": "Ordnet die Seite anhand ihrer Struktur (Tabellen, Listen, Formulare, Produktkarten) einer von 8 Mikro-Intentionen zu und vergleicht sie mit dem Mittel der echten TOP-5-Seiten.",
+        "why": "Eine Seite, deren Format von der SERP abweicht, rankt für diese Suchanfrage oft schlecht.",
+        "action": "Öffne die TOP-Seiten.\nErgänze das fehlende Format, etwa eine Tabelle oder ein Tool.\nNutze es als Hinweis, nicht als Urteil."
+      }
+    },
+    "prePublish": {
+      "check": {
+        "title": "Prüfung vor Veröffentlichung",
+        "what": "Simuliert das Hinzufügen dieses Entwurfs zur Website: Änderung des Site Focus Score, Ähnlichkeit zu bestehenden Seiten und ob jeder Abschnitt allein funktioniert.",
+        "why": "Sie erkennt Duplikate oder themenfremde Seiten, bevor sie live gehen.",
+        "action": "Behebe jeden genannten Grund.\nFühre die Prüfung erneut aus.\nVeröffentliche erst nach eigener Prüfung."
+      }
+    },
+    "parity": {
+      "hreflang": {
+        "title": "Internationale Parität",
+        "what": "Vergleicht die Thementiefe der per hreflang verbundenen Sprachversionen mit einer Referenzsprache und markiert jedes Thema als abgedeckt, oberflächlich, fehlend oder bewusst lokal.",
+        "why": "Sie trennt eine echte Inhaltslücke von einem Markt, der bewusst etwas anderes anbietet.",
+        "action": "Prüfe fehlende und oberflächliche Themen.\nMarkiere Themen, die ein Markt nicht braucht, als lokal.\nDas Tool ändert hreflang nie selbst."
+      }
+    },
+    "offPage": {
+      "tbva": {
+        "title": "Thematische Off-Page-Autorität",
+        "what": "Summiert die Anbieter-Autorität von Follow-Backlinks, gewichtet nach der Nähe der Quellseite zu deinem Thema. Findet außerdem Absätze, die deine Marke und deine Kernentität zusammen nennen.",
+        "why": "Wenige passende Links können mehr zählen als viele themenfremde.",
+        "action": "Prüfe Quellen mit geringer Ähnlichkeit.\nNutze unverlinkte Erwähnungen als Outreach-Ansatz.\nLies verneinte Erwähnungen selbst."
+      }
     }
   },
   "helpUi": {
@@ -7365,5 +7413,108 @@
       "title": "Vertrauenswert gesunken",
       "body": "Der E-E-A-T-Vertrauenswert fiel von {{from}} auf {{to}} ({{points}} Punkte)."
     }
+  },
+  "sprsUi": {
+    "title": "Semantischer PageRank",
+    "empty": "Noch kein Linkgraph. Crawle zuerst die Website; ohne echte Links wird kein Wert angezeigt.",
+    "page": "Seite",
+    "score": "Wert",
+    "deadEnd": "Sackgasse",
+    "underLinked": "Zu wenig verlinkt",
+    "leak": "Leck",
+    "unknown": "{{count}} Links haben unbekannte Ähnlichkeit und zählen nicht als Leck.",
+    "notConverged": "Der Solver ist nicht konvergiert; die Werte sind ungefähr."
+  },
+  "decayUi": {
+    "title": "Semantic-Decay-Radar",
+    "verdict": {
+      "too-few-samples": "Noch nicht genug vergleichbare SERP-Snapshots. Nichts zu melden.",
+      "incompatible": "Snapshots sind nicht vergleichbar, daher wird keine Drift behauptet.",
+      "stable": "Keine wesentliche Änderung gegenüber der Basis.",
+      "not-persistent": "Eine Änderung trat auf, hält aber nicht an. Wir warten.",
+      "cooldown": "Drift besteht fort; ein Alarm wurde kürzlich ausgelöst.",
+      "alert": "Anhaltende Drift gegenüber der Basis. Manuell prüfen."
+    },
+    "shift": "Centroid-Verschiebung: {{value}} %",
+    "newEntities": "Neue Entitäten",
+    "lostEntities": "Verlorene Entitäten",
+    "intent": "Intent: {{from}} zu {{to}}",
+    "format": "Format: {{from}} zu {{to}}",
+    "incompatible": "Abweichend: {{fields}}. Das ist keine Marktveränderung."
+  },
+  "sijaUi": {
+    "title": "Suchintention (SIJA)",
+    "empty": "Aus der Seitenstruktur ergibt sich keine klare Mikro-Intention.",
+    "primary": "Beobachtete Intention: {{intent}} ({{confidence}} % Sicherheit).",
+    "mixed": "Außerdem: {{list}}.",
+    "inconclusive": "SSAS nicht aussagekräftig: {{count}} echte TOP-Seiten verfügbar, mindestens 3 nötig.",
+    "ssas": {
+      "aligned": "SSAS {{score}}: Struktur passt zu den TOP-Seiten.",
+      "mismatch": "SSAS {{score}}: Struktur weicht von den TOP-Seiten ab."
+    },
+    "intents": {
+      "definitional": "Definition",
+      "how-to": "Anleitung",
+      "troubleshooting": "Fehlerbehebung",
+      "comparison": "Vergleich",
+      "curated-list": "Kuratierte Liste",
+      "tool": "Tool oder Rechner",
+      "transactional": "Transaktional",
+      "local": "Lokal"
+    }
+  },
+  "prePublishUi": {
+    "title": "Prüfung vor Veröffentlichung",
+    "verdict": {
+      "insufficient": "Zu wenig Daten, um diesen Entwurf zu beurteilen.",
+      "blocked": "Noch nicht veröffentlichen: Der Entwurf dupliziert eine bestehende Seite.",
+      "review": "Vor der Veröffentlichung prüfen.",
+      "ok": "Keine Probleme gefunden. Das ist ein Rat, keine Freigabe."
+    },
+    "sfs": "Site Focus Score {{before}} zu {{after}} ({{delta}}). Relevanz des Entwurfs {{trs}}. Das ist keine Traffic-Prognose.",
+    "conflict": "Zu ähnlich zu {{url}} ({{value}} %).",
+    "overlap": "Überschneidung mit {{url}} ({{value}} %).",
+    "reason": {
+      "no-core": "Noch kein Kernthema.",
+      "corpus-too-small": "Weniger als 3 bewertete Seiten auf der Website.",
+      "dimension-mismatch": "Embeddings stammen aus verschiedenen Modellen.",
+      "cannibalization": "Kannibalisierungsrisiko.",
+      "overlap": "Teilweise Überschneidung mit einer bestehenden Seite.",
+      "low-trs": "Die Relevanz des Entwurfs zum Kernthema ist gering.",
+      "chunk-issues": "Einige Abschnitte funktionieren allein nicht."
+    },
+    "chunk": {
+      "leading-pronoun": "Abschnitt {{index}} beginnt mit einem Pronomen, das früheren Kontext braucht.",
+      "too-short": "Abschnitt {{index}} ist zu kurz, um allein zu bestehen."
+    }
+  },
+  "parityUi": {
+    "title": "Internationale Parität",
+    "inconclusive": "Nicht aussagekräftig: Die Parität lässt sich mit den verfügbaren Daten nicht beurteilen.",
+    "gap": {
+      "no-reference-coverage": "Die Referenzsprache hat keine Themenabdeckungsdaten.",
+      "partial-crawl": "Der Crawl ist unvollständig.",
+      "single-language": "Es wurde nur eine Sprache gefunden."
+    },
+    "language": "Sprache",
+    "topic": "Thema",
+    "status": "Status",
+    "statuses": {
+      "covered": "Abgedeckt",
+      "shallow": "Oberflächlich",
+      "missing": "Fehlt",
+      "intentionally-local": "Bewusst lokal"
+    },
+    "note": "Eine fehlende Version ist nicht immer ein Fehler. Texte müssen nicht 1:1 übereinstimmen, und die Oberflächensprache bestimmt nicht, welche Website-Sprachen analysiert werden."
+  },
+  "offPageUi": {
+    "title": "Thematische Off-Page-Autorität",
+    "empty": "Noch kein thematischer Backlink-Wert: Backlinks, Quelltext oder Autoritätsdaten fehlen. Das heißt nicht, dass es keine Backlinks gibt.",
+    "tbva": "Thematischer Backlink-Wert {{value}} aus {{count}} Quelldomains ({{coverage}} % der Follow-Links bewertet).",
+    "partial": "{{count}} Follow-Links konnten nicht bewertet werden (Quelltext oder Autorität fehlt).",
+    "nofollow": "{{count}} Nofollow-Links werden nicht gezählt.",
+    "noText": "Kein Quelltext verfügbar, daher wurden Marken-Kozitierungen nicht geprüft.",
+    "coCitation": "Marke und Kernentität in einem Absatz: {{linked}} verlinkt, {{unlinked}} unverlinkt.",
+    "note": "Der Wert nutzt die Autorität des Anbieters und bildet weder Google PageRank nach noch erklärt er Rankings. Gemeinsames Auftreten ist keine Empfehlung."
   }
 }

@@ -6445,6 +6445,54 @@
         "why": "有负责人和日期的任务不会丢失，逾期任务也便于筛选。",
         "action": "输入负责人姓名。\n选择优先级和 SLA 日期。\n使用筛选查看自己的或逾期的任务。"
       }
+    },
+    "sprs": {
+      "panel": {
+        "title": "语义 PageRank",
+        "what": "内部 PageRank（阻尼 0.85）缩放到 0-100，并标记没有出链、入链过少或把多数链接指向无关页面的页面。",
+        "why": "显示链接权重在站内哪里聚集、哪里流失。",
+        "action": "为死胡同页面添加出链。\n从相关的强页面链接到内链不足的页面。\n检查泄漏。"
+      }
+    },
+    "decay": {
+      "radar": {
+        "title": "语义衰减雷达",
+        "what": "比较同一查询、市场、提供方和模型下保存的 SERP 快照：质心偏移、共识实体的新增或消失、意图和形式变化。",
+        "why": "在排名下降之前，前排结果可能已经偏离你的页面。",
+        "action": "打开所引用的 URL。\n人工决定是否更新页面。"
+      }
+    },
+    "sija": {
+      "panel": {
+        "title": "搜索意图 (SIJA)",
+        "what": "根据表格、列表、表单、商品卡片等结构，把页面归入 8 种微意图之一，并与真实 TOP 5 页面的平均值比较。",
+        "why": "形式与搜索结果不同的页面，在该查询上往往排名较差。",
+        "action": "打开 TOP 页面。\n补上缺失的形式，如表格或工具。\n把它当作提示，而不是结论。"
+      }
+    },
+    "prePublish": {
+      "check": {
+        "title": "发布前检查",
+        "what": "模拟把此草稿加入网站：Site Focus Score 的变化、与现有页面的相似度，以及每个段落能否独立成立。",
+        "why": "在上线前发现重复或偏题的页面。",
+        "action": "修复列出的每个原因。\n重新运行检查。\n经自己复核后再发布。"
+      }
+    },
+    "parity": {
+      "hreflang": {
+        "title": "国际对等性",
+        "what": "把通过 hreflang 关联的各语言版本的主题深度与参考语言比较，并把每个主题标为已覆盖、较浅、缺失或有意本地化。",
+        "why": "它区分真正的内容缺口与有意提供不同内容的市场。",
+        "action": "检查缺失和较浅的主题。\n把某市场不需要的主题标为本地化。\n工具不会替你修改 hreflang。"
+      }
+    },
+    "offPage": {
+      "tbva": {
+        "title": "站外主题权威",
+        "what": "把 follow 外链的提供方权威度相加，并按来源页面与你主题的接近程度加权。同时找出同一段落中同时提到你的品牌和核心实体的位置。",
+        "why": "少数相关链接可能比大量无关链接更有价值。",
+        "action": "检查相似度低的来源。\n把无链接的提及当作联系线索。\n含否定的提及请自行阅读判断。"
+      }
     }
   },
   "helpUi": {
@@ -7365,5 +7413,108 @@
       "title": "信任分下降",
       "body": "E-E-A-T信任分从{{from}}降至{{to}}（{{points}}分）。"
     }
+  },
+  "sprsUi": {
+    "title": "语义 PageRank",
+    "empty": "暂无链接图。请先抓取网站；没有真实链接时不显示分数。",
+    "page": "页面",
+    "score": "分数",
+    "deadEnd": "死胡同",
+    "underLinked": "内链不足",
+    "leak": "泄漏",
+    "unknown": "{{count}} 个链接的相似度未知，不计为泄漏。",
+    "notConverged": "求解器未收敛，分数为近似值。"
+  },
+  "decayUi": {
+    "title": "语义衰减雷达",
+    "verdict": {
+      "too-few-samples": "可比较的 SERP 快照还不够，暂无可报告内容。",
+      "incompatible": "快照不可比较，因此不判定为漂移。",
+      "stable": "相对基线没有实质变化。",
+      "not-persistent": "出现过变化但未持续，继续观察。",
+      "cooldown": "漂移持续存在；近期已发出过提醒。",
+      "alert": "相对基线出现持续漂移，请人工检查。"
+    },
+    "shift": "质心偏移：{{value}}%",
+    "newEntities": "新增实体",
+    "lostEntities": "消失实体",
+    "intent": "意图：{{from}} 变为 {{to}}",
+    "format": "形式：{{from}} 变为 {{to}}",
+    "incompatible": "{{fields}} 不同，这不是市场变化。"
+  },
+  "sijaUi": {
+    "title": "搜索意图 (SIJA)",
+    "empty": "页面结构中未检测到明确的微意图。",
+    "primary": "观察到的意图：{{intent}}（置信度 {{confidence}}%）。",
+    "mixed": "另外：{{list}}。",
+    "inconclusive": "SSAS 无法判定：仅有 {{count}} 个真实 TOP 页面，至少需要 3 个。",
+    "ssas": {
+      "aligned": "SSAS {{score}}：结构与 TOP 页面一致。",
+      "mismatch": "SSAS {{score}}：结构与 TOP 页面不同。"
+    },
+    "intents": {
+      "definitional": "定义",
+      "how-to": "操作指南",
+      "troubleshooting": "故障排除",
+      "comparison": "对比",
+      "curated-list": "精选列表",
+      "tool": "工具或计算器",
+      "transactional": "交易",
+      "local": "本地"
+    }
+  },
+  "prePublishUi": {
+    "title": "发布前检查",
+    "verdict": {
+      "insufficient": "数据不足，无法评估此草稿。",
+      "blocked": "暂勿发布：草稿与现有页面重复。",
+      "review": "发布前请复查。",
+      "ok": "未发现问题。这只是建议，不是批准。"
+    },
+    "sfs": "Site Focus Score {{before}} 变为 {{after}}（{{delta}}）。草稿相关度 {{trs}}。这不是流量预测。",
+    "conflict": "与 {{url}} 过于相似（{{value}}%）。",
+    "overlap": "与 {{url}} 重叠（{{value}}%）。",
+    "reason": {
+      "no-core": "尚无核心主题。",
+      "corpus-too-small": "站内已评分页面少于 3 个。",
+      "dimension-mismatch": "嵌入来自不同模型。",
+      "cannibalization": "存在内容蚕食风险。",
+      "overlap": "与现有页面部分重叠。",
+      "low-trs": "草稿与核心主题的相关度较低。",
+      "chunk-issues": "部分段落无法独立成立。"
+    },
+    "chunk": {
+      "leading-pronoun": "第 {{index}} 段以需要上文语境的代词开头。",
+      "too-short": "第 {{index}} 段太短，无法独立成立。"
+    }
+  },
+  "parityUi": {
+    "title": "国际对等性",
+    "inconclusive": "无法判定：现有数据不足以评估对等性。",
+    "gap": {
+      "no-reference-coverage": "参考语言没有主题覆盖数据。",
+      "partial-crawl": "抓取不完整。",
+      "single-language": "只发现一种语言。"
+    },
+    "language": "语言",
+    "topic": "主题",
+    "status": "状态",
+    "statuses": {
+      "covered": "已覆盖",
+      "shallow": "较浅",
+      "missing": "缺失",
+      "intentionally-local": "有意本地化"
+    },
+    "note": "缺少某个语言版本不一定是错误。文本不必一一对应，界面语言也不决定分析哪些站点语言。"
+  },
+  "offPageUi": {
+    "title": "站外主题权威",
+    "empty": "暂无主题外链价值：缺少外链、来源文本或权威数据。这并不意味着没有外链。",
+    "tbva": "主题外链价值 {{value}}，来自 {{count}} 个来源域名（已评分 follow 链接占 {{coverage}}%）。",
+    "partial": "{{count}} 个 follow 链接无法评分（缺少来源文本或权威数据）。",
+    "nofollow": "{{count}} 个 nofollow 链接不计入。",
+    "noText": "没有来源文本，因此未检查品牌共同引用。",
+    "coCitation": "品牌与核心实体出现在同一段落：带链接 {{linked}}，无链接 {{unlinked}}。",
+    "note": "该值使用数据提供方的权威度，不复现 Google PageRank，也不解释排名。共同出现不等于背书。"
   }
 }

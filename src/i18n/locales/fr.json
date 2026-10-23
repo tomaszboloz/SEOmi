@@ -6445,6 +6445,54 @@
         "why": "Les tâches avec responsable et date ne se perdent pas et les retards se filtrent facilement.",
         "action": "Saisissez le nom du responsable.\nChoisissez la priorité et la date SLA.\nUtilisez les filtres pour voir vos tâches ou celles en retard."
       }
+    },
+    "sprs": {
+      "panel": {
+        "title": "PageRank sémantique",
+        "what": "PageRank interne (amortissement 0,85) ramené à 0-100, avec des repères pour les pages sans lien sortant, trop peu liées ou envoyant la plupart de leurs liens vers des pages sans rapport.",
+        "why": "Il montre où l'autorité des liens s'accumule ou s'échappe dans votre site.",
+        "action": "Ajoutez des liens sortants aux impasses.\nLiez les pages peu liées depuis des pages fortes et proches.\nExaminez les fuites."
+      }
+    },
+    "decay": {
+      "radar": {
+        "title": "Radar de déclin sémantique",
+        "what": "Compare des captures SERP enregistrées pour la même requête, le même marché, fournisseur et modèle : décalage du centroïde, entités de consensus nouvelles ou perdues, changements d'intention et de format.",
+        "why": "Les premiers résultats peuvent s'éloigner de votre page bien avant une chute de position.",
+        "action": "Ouvrez les URL citées.\nDécidez manuellement s'il faut actualiser la page."
+      }
+    },
+    "sija": {
+      "panel": {
+        "title": "Intention de recherche (SIJA)",
+        "what": "Classe la page dans l'une des 8 micro-intentions d'après sa structure (tableaux, listes, formulaires, fiches produit) et la compare à la moyenne des vraies pages du TOP 5.",
+        "why": "Une page dont le format diffère de la SERP se positionne souvent mal sur cette requête.",
+        "action": "Ouvrez les pages du TOP.\nAjoutez le format manquant, comme un tableau ou un outil.\nConsidérez-le comme un indice, pas un verdict."
+      }
+    },
+    "prePublish": {
+      "check": {
+        "title": "Contrôle avant publication",
+        "what": "Simule l'ajout de ce brouillon à votre site : variation du Site Focus Score, similarité avec les pages existantes et autonomie de chaque passage.",
+        "why": "Il repère un doublon ou une page hors sujet avant la mise en ligne.",
+        "action": "Corrigez chaque raison listée.\nRelancez le contrôle.\nPubliez seulement après votre propre relecture."
+      }
+    },
+    "parity": {
+      "hreflang": {
+        "title": "Parité internationale",
+        "what": "Compare la profondeur des sujets dans les versions linguistiques liées par hreflang avec une langue de référence et marque chaque sujet comme couvert, superficiel, manquant ou local volontairement.",
+        "why": "Il distingue une vraie lacune de contenu d'un marché qui propose volontairement autre chose.",
+        "action": "Vérifiez les sujets manquants et superficiels.\nMarquez comme locaux les sujets inutiles sur un marché.\nL'outil ne modifie jamais hreflang à votre place."
+      }
+    },
+    "offPage": {
+      "tbva": {
+        "title": "Autorité thématique off-page",
+        "what": "Additionne l'autorité fournisseur des backlinks follow, pondérée par la proximité de la page source avec votre sujet. Repère aussi les paragraphes qui citent ensemble votre marque et votre entité principale.",
+        "why": "Quelques liens pertinents peuvent peser plus que beaucoup de liens sans rapport.",
+        "action": "Examinez les sources peu similaires.\nExploitez les mentions sans lien comme pistes de prise de contact.\nLisez vous-même les mentions négatives."
+      }
     }
   },
   "helpUi": {
@@ -7365,5 +7413,108 @@
       "title": "Score de confiance en baisse",
       "body": "Le score de confiance E-E-A-T est passé de {{from}} à {{to}} ({{points}} points)."
     }
+  },
+  "sprsUi": {
+    "title": "PageRank sémantique",
+    "empty": "Pas encore de graphe de liens. Explorez d'abord le site ; sans vrais liens, aucun score n'est affiché.",
+    "page": "Page",
+    "score": "Score",
+    "deadEnd": "Impasse",
+    "underLinked": "Peu de liens",
+    "leak": "Fuite",
+    "unknown": "{{count}} liens ont une similarité inconnue et ne comptent pas comme fuite.",
+    "notConverged": "Le solveur n'a pas convergé ; les scores sont approximatifs."
+  },
+  "decayUi": {
+    "title": "Radar de déclin sémantique",
+    "verdict": {
+      "too-few-samples": "Pas encore assez de captures SERP comparables. Rien à signaler.",
+      "incompatible": "Les captures ne sont pas comparables : aucune dérive n'est affirmée.",
+      "stable": "Aucun changement notable par rapport à la référence.",
+      "not-persistent": "Un changement est apparu mais ne dure pas. En attente.",
+      "cooldown": "La dérive persiste ; une alerte a déjà été émise récemment.",
+      "alert": "Dérive persistante par rapport à la référence. Vérifiez manuellement."
+    },
+    "shift": "Décalage du centroïde : {{value}} %",
+    "newEntities": "Nouvelles entités",
+    "lostEntities": "Entités perdues",
+    "intent": "Intention : {{from}} vers {{to}}",
+    "format": "Format : {{from}} vers {{to}}",
+    "incompatible": "Différent : {{fields}}. Ce n'est pas un changement de marché."
+  },
+  "sijaUi": {
+    "title": "Intention de recherche (SIJA)",
+    "empty": "La structure de la page ne révèle pas de micro-intention claire.",
+    "primary": "Intention observée : {{intent}} ({{confidence}} % de confiance).",
+    "mixed": "Aussi : {{list}}.",
+    "inconclusive": "SSAS non concluant : {{count}} pages TOP réelles disponibles, 3 minimum requises.",
+    "ssas": {
+      "aligned": "SSAS {{score}} : la structure correspond aux pages TOP.",
+      "mismatch": "SSAS {{score}} : la structure diffère des pages TOP."
+    },
+    "intents": {
+      "definitional": "Définition",
+      "how-to": "Tutoriel",
+      "troubleshooting": "Dépannage",
+      "comparison": "Comparatif",
+      "curated-list": "Sélection",
+      "tool": "Outil ou calculateur",
+      "transactional": "Transactionnelle",
+      "local": "Locale"
+    }
+  },
+  "prePublishUi": {
+    "title": "Contrôle avant publication",
+    "verdict": {
+      "insufficient": "Données insuffisantes pour juger ce brouillon.",
+      "blocked": "Ne publiez pas encore : le brouillon double une page existante.",
+      "review": "À vérifier avant publication.",
+      "ok": "Aucun problème trouvé. C'est un conseil, pas une approbation."
+    },
+    "sfs": "Site Focus Score {{before}} vers {{after}} ({{delta}}). Pertinence du brouillon {{trs}}. Ce n'est pas une prévision de trafic.",
+    "conflict": "Trop proche de {{url}} ({{value}} %).",
+    "overlap": "Recoupe {{url}} ({{value}} %).",
+    "reason": {
+      "no-core": "Pas encore de sujet principal.",
+      "corpus-too-small": "Moins de 3 pages notées sur le site.",
+      "dimension-mismatch": "Les embeddings viennent de modèles différents.",
+      "cannibalization": "Risque de cannibalisation.",
+      "overlap": "Recoupement partiel avec une page existante.",
+      "low-trs": "La pertinence du brouillon par rapport au sujet principal est faible.",
+      "chunk-issues": "Certains passages ne fonctionnent pas seuls."
+    },
+    "chunk": {
+      "leading-pronoun": "Le passage {{index}} commence par un pronom qui exige un contexte antérieur.",
+      "too-short": "Le passage {{index}} est trop court pour tenir seul."
+    }
+  },
+  "parityUi": {
+    "title": "Parité internationale",
+    "inconclusive": "Non concluant : la parité ne peut pas être jugée avec les données disponibles.",
+    "gap": {
+      "no-reference-coverage": "La langue de référence n'a pas de données de couverture des sujets.",
+      "partial-crawl": "L'exploration est partielle.",
+      "single-language": "Une seule langue a été trouvée."
+    },
+    "language": "Langue",
+    "topic": "Sujet",
+    "status": "Statut",
+    "statuses": {
+      "covered": "Couvert",
+      "shallow": "Superficiel",
+      "missing": "Manquant",
+      "intentionally-local": "Local volontairement"
+    },
+    "note": "Une version manquante n'est pas toujours une erreur. Les textes n'ont pas à correspondre un à un, et la langue de l'interface ne détermine pas les langues du site analysées."
+  },
+  "offPageUi": {
+    "title": "Autorité thématique off-page",
+    "empty": "Pas encore de valeur thématique des backlinks : backlinks, texte des sources ou données d'autorité manquants. Cela ne signifie pas qu'il n'y a aucun backlink.",
+    "tbva": "Valeur thématique des backlinks {{value}} sur {{count}} domaines sources ({{coverage}} % des liens follow notés).",
+    "partial": "{{count}} liens follow n'ont pas pu être notés (texte source ou autorité manquant).",
+    "nofollow": "{{count}} liens nofollow ne sont pas comptés.",
+    "noText": "Aucun texte source disponible : les co-citations de la marque n'ont pas été vérifiées.",
+    "coCitation": "Marque et entité principale dans un même paragraphe : {{linked}} avec lien, {{unlinked}} sans lien.",
+    "note": "La valeur repose sur l'autorité du fournisseur ; elle ne reproduit pas le PageRank de Google et n'explique pas le classement. La cooccurrence n'est pas une recommandation."
   }
 }

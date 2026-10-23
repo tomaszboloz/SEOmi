@@ -6445,6 +6445,54 @@
         "why": "Zadania z właścicielem i terminem nie giną, a przeterminowane łatwo odfiltrować.",
         "action": "Wpisz nazwę właściciela.\nWybierz priorytet i termin SLA.\nUżyj filtrów, by zobaczyć swoje lub przeterminowane zadania."
       }
+    },
+    "sprs": {
+      "panel": {
+        "title": "Semantyczny PageRank",
+        "what": "Wewnętrzny PageRank (tłumienie 0,85) w skali 0-100 z flagami stron bez linków wychodzących, z za małą liczbą linków przychodzących lub wysyłających większość linków do niepowiązanych stron.",
+        "why": "Pokazuje, gdzie autorytet linków gromadzi się lub ucieka w obrębie witryny.",
+        "action": "Dodaj linki wychodzące ze ślepych uliczek.\nLinkuj do słabo podlinkowanych stron z mocnych, powiązanych.\nSprawdź wycieki."
+      }
+    },
+    "decay": {
+      "radar": {
+        "title": "Radar zaniku semantycznego",
+        "what": "Porównuje zapisane zrzuty SERP tego samego zapytania, rynku, dostawcy i modelu: przesunięcie centroidu, nowe lub utracone encje konsensusu, zmiany intencji i formatu.",
+        "why": "Czołówka wyników może oddalić się od Twojej strony na długo przed spadkiem pozycji.",
+        "action": "Otwórz wskazane adresy URL.\nZdecyduj ręcznie, czy odświeżyć stronę."
+      }
+    },
+    "sija": {
+      "panel": {
+        "title": "Intencja wyszukiwania (SIJA)",
+        "what": "Przypisuje stronę do jednej z 8 mikrointencji na podstawie struktury (tabele, listy, formularze, karty produktów) i porównuje ją ze średnią realnych stron z TOP 5.",
+        "why": "Strona o formacie innym niż w wynikach często słabo wypada na to zapytanie.",
+        "action": "Otwórz strony z TOP.\nDodaj brakujący format, np. tabelę lub narzędzie.\nTraktuj to jako wskazówkę, nie wyrok."
+      }
+    },
+    "prePublish": {
+      "check": {
+        "title": "Kontrola przed publikacją",
+        "what": "Symuluje dodanie szkicu do witryny: zmianę Site Focus Score, podobieństwo do istniejących stron i to, czy każdy fragment działa samodzielnie.",
+        "why": "Wychwytuje duplikat lub stronę nie na temat, zanim trafi na żywo.",
+        "action": "Popraw każdy wymieniony powód.\nUruchom kontrolę ponownie.\nOpublikuj dopiero po własnej weryfikacji."
+      }
+    },
+    "parity": {
+      "hreflang": {
+        "title": "Parytet międzynarodowy",
+        "what": "Porównuje głębokość tematów w wersjach językowych powiązanych przez hreflang z językiem referencyjnym i oznacza temat jako pokryty, płytki, brakujący lub celowo lokalny.",
+        "why": "Odróżnia prawdziwą lukę treści od rynku, który celowo oferuje coś innego.",
+        "action": "Sprawdź tematy brakujące i płytkie.\nOznacz jako lokalne tematy niepotrzebne na danym rynku.\nNarzędzie nigdy samo nie zmienia hreflang."
+      }
+    },
+    "offPage": {
+      "tbva": {
+        "title": "Autorytet tematyczny off-page",
+        "what": "Sumuje autorytet dostawcy dla linków follow, ważony bliskością strony źródłowej do Twojego tematu. Znajduje też akapity, które wspominają razem Twoją markę i główną encję.",
+        "why": "Kilka trafnych linków może znaczyć więcej niż wiele niezwiązanych.",
+        "action": "Sprawdź źródła o niskim podobieństwie.\nTraktuj wzmianki bez linku jako tropy do kontaktu.\nWzmianki z przeczeniem oceń samodzielnie."
+      }
     }
   },
   "helpUi": {
@@ -7365,5 +7413,108 @@
       "title": "Spadł wynik zaufania",
       "body": "Wynik zaufania E-E-A-T spadł z {{from}} do {{to}} ({{points}} pkt)."
     }
+  },
+  "sprsUi": {
+    "title": "Semantyczny PageRank",
+    "empty": "Brak grafu linków. Najpierw przeskanuj witrynę; bez prawdziwych linków nie pokazujemy wyniku.",
+    "page": "Strona",
+    "score": "Wynik",
+    "deadEnd": "Ślepa uliczka",
+    "underLinked": "Za mało linków",
+    "leak": "Wyciek",
+    "unknown": "{{count}} linków ma nieznane podobieństwo i nie liczy się jako wyciek.",
+    "notConverged": "Solver nie zbiegł; wyniki są przybliżone."
+  },
+  "decayUi": {
+    "title": "Radar zaniku semantycznego",
+    "verdict": {
+      "too-few-samples": "Za mało porównywalnych zrzutów SERP. Nie ma czego raportować.",
+      "incompatible": "Zrzuty nie są porównywalne, więc nie twierdzimy, że wystąpił dryf.",
+      "stable": "Brak istotnej zmiany względem punktu odniesienia.",
+      "not-persistent": "Zmiana się pojawiła, ale nie utrzymuje się. Czekamy.",
+      "cooldown": "Dryf się utrzymuje; alert wysłano niedawno.",
+      "alert": "Utrzymujący się dryf względem punktu odniesienia. Sprawdź ręcznie."
+    },
+    "shift": "Przesunięcie centroidu: {{value}}%",
+    "newEntities": "Nowe encje",
+    "lostEntities": "Utracone encje",
+    "intent": "Intencja: {{from}} na {{to}}",
+    "format": "Format: {{from}} na {{to}}",
+    "incompatible": "Różne pola: {{fields}}. To nie jest zmiana rynku."
+  },
+  "sijaUi": {
+    "title": "Intencja wyszukiwania (SIJA)",
+    "empty": "Struktura strony nie wskazuje wyraźnej mikrointencji.",
+    "primary": "Zaobserwowana intencja: {{intent}} (pewność {{confidence}}%).",
+    "mixed": "Także: {{list}}.",
+    "inconclusive": "SSAS nierozstrzygający: dostępne realne strony TOP: {{count}}, potrzeba co najmniej 3.",
+    "ssas": {
+      "aligned": "SSAS {{score}}: struktura zgadza się ze stronami TOP.",
+      "mismatch": "SSAS {{score}}: struktura odbiega od stron TOP."
+    },
+    "intents": {
+      "definitional": "Definicja",
+      "how-to": "Poradnik krok po kroku",
+      "troubleshooting": "Rozwiązywanie problemów",
+      "comparison": "Porównanie",
+      "curated-list": "Zestawienie",
+      "tool": "Narzędzie lub kalkulator",
+      "transactional": "Transakcyjna",
+      "local": "Lokalna"
+    }
+  },
+  "prePublishUi": {
+    "title": "Kontrola przed publikacją",
+    "verdict": {
+      "insufficient": "Za mało danych, by ocenić ten szkic.",
+      "blocked": "Nie publikuj jeszcze: szkic dubluje istniejącą stronę.",
+      "review": "Sprawdź przed publikacją.",
+      "ok": "Nie znaleziono problemów. To rada, nie zatwierdzenie."
+    },
+    "sfs": "Site Focus Score {{before}} na {{after}} ({{delta}}). Trafność szkicu {{trs}}. To nie jest prognoza ruchu.",
+    "conflict": "Zbyt podobne do {{url}} ({{value}}%).",
+    "overlap": "Częściowo pokrywa się z {{url}} ({{value}}%).",
+    "reason": {
+      "no-core": "Brak jeszcze tematu głównego.",
+      "corpus-too-small": "Mniej niż 3 ocenione strony w witrynie.",
+      "dimension-mismatch": "Embeddingi pochodzą z różnych modeli.",
+      "cannibalization": "Ryzyko kanibalizacji.",
+      "overlap": "Częściowe pokrycie z istniejącą stroną.",
+      "low-trs": "Trafność szkicu względem tematu głównego jest niska.",
+      "chunk-issues": "Niektóre fragmenty nie działają samodzielnie."
+    },
+    "chunk": {
+      "leading-pronoun": "Fragment {{index}} zaczyna się zaimkiem wymagającym wcześniejszego kontekstu.",
+      "too-short": "Fragment {{index}} jest za krótki, by działać samodzielnie."
+    }
+  },
+  "parityUi": {
+    "title": "Parytet międzynarodowy",
+    "inconclusive": "Brak rozstrzygnięcia: z dostępnych danych nie da się ocenić parytetu.",
+    "gap": {
+      "no-reference-coverage": "Język referencyjny nie ma danych o pokryciu tematów.",
+      "partial-crawl": "Crawl jest niepełny.",
+      "single-language": "Znaleziono tylko jeden język."
+    },
+    "language": "Język",
+    "topic": "Temat",
+    "status": "Status",
+    "statuses": {
+      "covered": "Pokryty",
+      "shallow": "Płytki",
+      "missing": "Brak",
+      "intentionally-local": "Celowo lokalny"
+    },
+    "note": "Brak wersji nie zawsze jest błędem. Teksty nie muszą być 1:1, a język interfejsu nie decyduje o analizowanych językach witryny."
+  },
+  "offPageUi": {
+    "title": "Autorytet tematyczny off-page",
+    "empty": "Brak wartości tematycznej linków: brakuje backlinków, tekstu źródeł lub danych o autorytecie. To nie znaczy, że backlinków nie ma.",
+    "tbva": "Tematyczna wartość linków {{value}} z {{count}} domen źródłowych (oceniono {{coverage}}% linków follow).",
+    "partial": "Nie udało się ocenić {{count}} linków follow (brak tekstu źródła lub autorytetu).",
+    "nofollow": "{{count}} linków nofollow nie jest liczonych.",
+    "noText": "Brak tekstu źródeł, więc nie sprawdzono współcytowań marki.",
+    "coCitation": "Marka i główna encja w jednym akapicie: {{linked}} z linkiem, {{unlinked}} bez linku.",
+    "note": "Wartość opiera się na autorytecie dostawcy i nie odtwarza Google PageRank ani nie wyjaśnia rankingu. Współwystępowanie to nie poparcie."
   }
 }

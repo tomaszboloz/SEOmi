@@ -6445,6 +6445,54 @@
         "why": "Tasks with an owner and a date do not get lost, and overdue ones are easy to filter.",
         "action": "Type the owner name.\nPick the priority and the SLA date.\nUse the filters to see your tasks or the overdue ones."
       }
+    },
+    "sprs": {
+      "panel": {
+        "title": "Semantic PageRank",
+        "what": "Internal PageRank (damping 0.85) scaled to 0-100, with flags for pages that pass no links, receive too few, or send most links to unrelated pages.",
+        "why": "It shows where link authority pools or drains inside your own site.",
+        "action": "Add outgoing links to dead ends.\nLink to under-linked pages from strong related pages.\nReview leaks."
+      }
+    },
+    "decay": {
+      "radar": {
+        "title": "Semantic Decay Radar",
+        "what": "Compares saved SERP snapshots of the same query, market, provider and model: centroid shift, new or lost consensus entities, intent and format changes.",
+        "why": "The top results can drift away from your page long before rankings drop.",
+        "action": "Open the cited URLs.\nDecide manually whether to refresh the page."
+      }
+    },
+    "sija": {
+      "panel": {
+        "title": "Search intent (SIJA)",
+        "what": "Classifies the page into one of 8 micro-intents from its structure (tables, lists, forms, product cards) and compares it with the average of the real TOP 5 pages.",
+        "why": "A page whose format differs from what the SERP shows often ranks poorly for that query.",
+        "action": "Open the TOP pages.\nAdd the missing format, such as a table or a tool.\nTreat this as a hint, not a verdict."
+      }
+    },
+    "prePublish": {
+      "check": {
+        "title": "Pre-publish check",
+        "what": "Simulates adding this draft to your site: change in Site Focus Score, similarity to existing pages and whether each passage works on its own.",
+        "why": "It catches a duplicate or off-topic page before it goes live.",
+        "action": "Fix every listed reason.\nRe-run the check.\nPublish only after your own review."
+      }
+    },
+    "parity": {
+      "hreflang": {
+        "title": "International parity",
+        "what": "Compares topic depth across the language versions linked by hreflang with a reference language, and marks each topic covered, shallow, missing or intentionally local.",
+        "why": "It separates a real content gap from a market that deliberately offers something different.",
+        "action": "Check the missing and shallow topics.\nMark topics a market does not need as local.\nThe tool never changes hreflang for you."
+      }
+    },
+    "offPage": {
+      "tbva": {
+        "title": "Off-page topical authority",
+        "what": "Adds up the provider authority of follow backlinks, weighted by how close each source page is to your topic. Also finds paragraphs that mention your brand and your core entity together.",
+        "why": "A few relevant links can matter more than many unrelated ones.",
+        "action": "Review the sources with low similarity.\nLook at unlinked mentions as outreach leads.\nRead negated mentions yourself."
+      }
     }
   },
   "helpUi": {
@@ -7365,5 +7413,108 @@
       "title": "Trust score dropped",
       "body": "The E-E-A-T trust score fell from {{from}} to {{to}} ({{points}} points)."
     }
+  },
+  "sprsUi": {
+    "title": "Semantic PageRank",
+    "empty": "No link graph yet. Crawl the site first; no score is shown without real links.",
+    "page": "Page",
+    "score": "Score",
+    "deadEnd": "Dead end",
+    "underLinked": "Under-linked",
+    "leak": "Leak",
+    "unknown": "{{count}} links have unknown similarity and are not counted as leaks.",
+    "notConverged": "The solver did not converge; scores are approximate."
+  },
+  "decayUi": {
+    "title": "Semantic Decay Radar",
+    "verdict": {
+      "too-few-samples": "Not enough comparable SERP snapshots yet. Nothing to report.",
+      "incompatible": "Snapshots are not comparable, so no drift is claimed.",
+      "stable": "No material change against the baseline.",
+      "not-persistent": "A change appeared but has not persisted. Waiting.",
+      "cooldown": "Drift persists; an alert was already raised recently.",
+      "alert": "Persistent drift against the baseline. Review manually."
+    },
+    "shift": "Centroid shift: {{value}}%",
+    "newEntities": "New entities",
+    "lostEntities": "Lost entities",
+    "intent": "Intent: {{from}} to {{to}}",
+    "format": "Format: {{from}} to {{to}}",
+    "incompatible": "Different {{fields}}: not a market change."
+  },
+  "sijaUi": {
+    "title": "Search intent (SIJA)",
+    "empty": "No clear micro-intent detected from the page structure.",
+    "primary": "Observed intent: {{intent}} ({{confidence}}% confidence).",
+    "mixed": "Also: {{list}}.",
+    "inconclusive": "SSAS inconclusive: {{count}} real TOP pages available, at least 3 needed.",
+    "ssas": {
+      "aligned": "SSAS {{score}}: structure matches the TOP pages.",
+      "mismatch": "SSAS {{score}}: structure differs from the TOP pages."
+    },
+    "intents": {
+      "definitional": "Definition",
+      "how-to": "How-to",
+      "troubleshooting": "Troubleshooting",
+      "comparison": "Comparison",
+      "curated-list": "Curated list",
+      "tool": "Tool or calculator",
+      "transactional": "Transactional",
+      "local": "Local"
+    }
+  },
+  "prePublishUi": {
+    "title": "Pre-publish check",
+    "verdict": {
+      "insufficient": "Not enough data to judge this draft.",
+      "blocked": "Do not publish yet: the draft duplicates an existing page.",
+      "review": "Review before publishing.",
+      "ok": "No issues found. This is advice, not approval."
+    },
+    "sfs": "Site Focus Score {{before}} to {{after}} ({{delta}}). Draft relevance {{trs}}. This is not a traffic forecast.",
+    "conflict": "Too similar to {{url}} ({{value}}%).",
+    "overlap": "Overlaps with {{url}} ({{value}}%).",
+    "reason": {
+      "no-core": "No Core Topic yet.",
+      "corpus-too-small": "Fewer than 3 scored pages on the site.",
+      "dimension-mismatch": "Embeddings come from different models.",
+      "cannibalization": "Cannibalization risk.",
+      "overlap": "Partial overlap with an existing page.",
+      "low-trs": "Draft relevance to the Core Topic is low.",
+      "chunk-issues": "Some passages would not work when retrieved alone."
+    },
+    "chunk": {
+      "leading-pronoun": "Passage {{index}} starts with a pronoun that needs earlier context.",
+      "too-short": "Passage {{index}} is too short to stand alone."
+    }
+  },
+  "parityUi": {
+    "title": "International parity",
+    "inconclusive": "Inconclusive: parity cannot be judged from the data available.",
+    "gap": {
+      "no-reference-coverage": "The reference language has no topic coverage data.",
+      "partial-crawl": "The crawl is partial.",
+      "single-language": "Only one language was found."
+    },
+    "language": "Language",
+    "topic": "Topic",
+    "status": "Status",
+    "statuses": {
+      "covered": "Covered",
+      "shallow": "Shallow",
+      "missing": "Missing",
+      "intentionally-local": "Intentionally local"
+    },
+    "note": "A missing version is not always an error. Texts need not match one to one, and the UI language does not set which site languages are analyzed."
+  },
+  "offPageUi": {
+    "title": "Off-page topical authority",
+    "empty": "No topical backlink value yet: backlinks, source text or authority data are missing. This does not mean there are no backlinks.",
+    "tbva": "Topical backlink value {{value}} from {{count}} source domains ({{coverage}}% of follow links scored).",
+    "partial": "{{count}} follow links could not be scored (source text or authority missing).",
+    "nofollow": "{{count}} nofollow links are not counted.",
+    "noText": "No source text available, so brand co-citations were not checked.",
+    "coCitation": "Brand and core entity in one paragraph: {{linked}} linked, {{unlinked}} unlinked.",
+    "note": "The value uses provider authority and does not reproduce Google PageRank or explain rankings. Co-occurrence is not endorsement."
   }
 }
