@@ -1,6 +1,9 @@
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import type { CoreTopic } from '@/services/siteFocus';
+import { can } from '@/services/team/roles';
+import { readIdentity } from '@/services/team/identity';
+import { deniedMessage, enforcePermission } from '@/services/team/enforce';
 import { formatPct } from './focusText';
 
 const TOP_TERMS = 5;
@@ -17,7 +20,10 @@ export interface CoreTopicPanelProps {
 export const CoreTopicPanel = ({ coreTopic, coveragePct, confidence, manualTopic, onManualTopicChange }: CoreTopicPanelProps) => {
   const { t } = useTranslation();
   const [editing, setEditing] = useState(false);
+  const allowed = can(readIdentity().role, 'modify_site_focus_rules');
   const open = editing || manualTopic !== '';
+  const begin = () => { if (enforcePermission('modify_site_focus_rules')) setEditing(true); };
+  const reset = () => { if (!enforcePermission('modify_site_focus_rules')) return; onManualTopicChange(''); setEditing(false); };
   const top = coreTopic.terms.slice(0, TOP_TERMS);
   const max = Math.max(1, ...top.map((term) => term.coveragePct));
 
@@ -52,23 +58,26 @@ export const CoreTopicPanel = ({ coreTopic, coveragePct, confidence, manualTopic
               type="text"
               value={manualTopic}
               placeholder={t('focus.core.placeholder')}
+              readOnly={!allowed}
               onChange={(event) => onManualTopicChange(event.target.value)}
               className="rounded border border-slate-700 bg-slate-950 px-2 py-1.5 text-sm text-slate-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-400"
             />
           </label>
           <button
             type="button"
-            onClick={() => { onManualTopicChange(''); setEditing(false); }}
+            onClick={reset}
+            disabled={!allowed}
             className="rounded border border-slate-600 px-2 py-1.5 text-xs text-slate-200 hover:bg-slate-800 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-400"
           >
             {t('focus.core.reset')}
           </button>
         </div>
       ) : (
-        <button type="button" onClick={() => setEditing(true)} className="rounded text-xs text-emerald-300 underline hover:text-emerald-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-400">
+        <button type="button" onClick={begin} disabled={!allowed} className="rounded text-xs text-emerald-300 underline hover:text-emerald-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-400">
           {t('focus.core.wrong')}
         </button>
       )}
+      {!allowed && <p role="note" className="text-xs text-amber-200">{deniedMessage()}</p>}
     </section>
   );
 };

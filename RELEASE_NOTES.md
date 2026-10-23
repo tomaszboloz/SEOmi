@@ -1,3 +1,9 @@
+# SEOmi 0.4.21 — release notes
+
+## Added
+
+- Site Focus core-topic override (the rule a user can change) now needs `modify_site_focus_rules`. Roles without it see the override button and reset disabled, a read-only manual topic and a short explanation; allowed uses are logged in the audit trail. `manage_team_roles` is deliberately not enforced on the local team panel: with no separate login, blocking role changes could lock the only user out.
+
 # SEOmi 0.4.20 — release notes
 
 ## Added
