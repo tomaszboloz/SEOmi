@@ -6919,7 +6919,12 @@
       "empty": "Aucune page ne vise la même intention de recherche.",
       "group": "{{count}} pages, similarité d’intention {{similarity}}%, {{shared}}% d’entités communes",
       "canonical": "À conserver : {{url}}",
-      "steps": "Déplacez les sections uniques vers la page conservée, redirigez les autres en 301 et mettez à jour les liens internes."
+      "steps": "Déplacez les sections uniques vers la page conservée, redirigez les autres en 301 et mettez à jour les liens internes.",
+      "edge": "Preuve : {{from}} et {{to}} à {{similarity}}% ({{basis}})",
+      "basis": {
+        "intent": "même intention",
+        "subtopic": "même sous-thème"
+      }
     },
     "draft": {
       "title": "Vérifier un brouillon avant publication",

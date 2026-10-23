@@ -6919,7 +6919,12 @@
       "empty": "没有页面竞争同一搜索意图。",
       "group": "{{count}} 个页面，意图相似度 {{similarity}}%，共享实体 {{shared}}%",
       "canonical": "保留：{{url}}",
-      "steps": "将独有内容并入保留页面，其余页面做 301 重定向，并更新内部链接。"
+      "steps": "将独有内容并入保留页面，其余页面做 301 重定向，并更新内部链接。",
+      "edge": "依据：{{from}} 与 {{to}}，相似度 {{similarity}}%（{{basis}}）",
+      "basis": {
+        "intent": "相同意图",
+        "subtopic": "相同子主题"
+      }
     },
     "draft": {
       "title": "发布前检查草稿",

@@ -41,7 +41,9 @@ export interface SiloReport {
   audits: Record<string, LinkAudit>;
 }
 
-export interface CannibalGroup { urls: string[]; canonical: string; similarity: number; sharedEntitiesPct: number; subtopicId?: string }
+/** Pair evidence that joined two pages into a group: A~B and B~C do not imply A~C. */
+export interface CannibalEdge { from: string; to: string; similarity: number; basis: 'intent' | 'subtopic' }
+export interface CannibalGroup { edges: CannibalEdge[]; urls: string[]; canonical: string; similarity: number; sharedEntitiesPct: number; subtopicId?: string }
 
 export interface FreshnessReport { ratio: number | null; dated: number; stale: string[] }
 

@@ -6919,7 +6919,12 @@
       "empty": "Nessuna pagina compete per la stessa intenzione di ricerca.",
       "group": "{{count}} pagine, similarità di intento {{similarity}}%, {{shared}}% di entità condivise",
       "canonical": "Mantieni: {{url}}",
-      "steps": "Sposta le sezioni uniche nella pagina da mantenere, reindirizza le altre con 301 e aggiorna i link interni."
+      "steps": "Sposta le sezioni uniche nella pagina da mantenere, reindirizza le altre con 301 e aggiorna i link interni.",
+      "edge": "Prova: {{from}} e {{to}} al {{similarity}}% ({{basis}})",
+      "basis": {
+        "intent": "stessa intenzione",
+        "subtopic": "stesso sottotema"
+      }
     },
     "draft": {
       "title": "Controlla una bozza prima di pubblicare",

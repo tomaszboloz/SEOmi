@@ -6919,7 +6919,12 @@
       "empty": "Żadne strony nie konkurują o tę samą intencję.",
       "group": "{{count}} strony, podobieństwo intencji {{similarity}}%, wspólne encje {{shared}}%",
       "canonical": "Zachowaj: {{url}}",
-      "steps": "Przenieś unikalne sekcje na stronę, którą zachowujesz, ustaw 301 z pozostałych i zaktualizuj linki wewnętrzne."
+      "steps": "Przenieś unikalne sekcje na stronę, którą zachowujesz, ustaw 301 z pozostałych i zaktualizuj linki wewnętrzne.",
+      "edge": "Dowód: {{from}} i {{to}} przy {{similarity}}% ({{basis}})",
+      "basis": {
+        "intent": "ta sama intencja",
+        "subtopic": "ten sam podtemat"
+      }
     },
     "draft": {
       "title": "Sprawdź szkic przed publikacją",
