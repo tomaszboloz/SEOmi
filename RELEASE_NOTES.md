@@ -1,4 +1,10 @@
-# SEOmi 0.4.8 — release notes
+# SEOmi 0.4.10 — release notes
+
+## Added
+
+- Direct unit assertions for crawl write locking, audit-log hashing and chain verification, CMS patch HTTP helpers, monitoring storage keys and deploy artifact primitives (GAP-026). No production code changed.
+
+## Included from 0.4.8
 
 ## Added
 
