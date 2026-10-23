@@ -3,6 +3,7 @@
 ## Added
 
 - Direct unit tests for the Help popover placement (`computePosition`) and the trust-tab helpers (`levelOfScore`, level/severity styles, layer list), part of GAP-022 coverage work.
+- Direct unit tests for the E-E-A-T schema graph helpers (`nodesOf`, `childNodes`, `buildRegistry`, `analyzeSchema`, `schemaScore`, `isDeadLink`) and the Site Focus core-topic/flag helpers (`chooseCore`, `describeCore`, `describeClusters`, `computeFlags`).
 
 ## Included from 0.4.7
 
