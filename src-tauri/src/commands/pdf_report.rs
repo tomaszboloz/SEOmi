@@ -49,4 +49,7 @@ pub fn generate_crawl_pdf(run: Value) -> Result<String, String> {
 }
 
 #[cfg(test)]
+#[path = "pdf_report/coverage100_tests.rs"]
+mod coverage100_tests;
+#[cfg(test)]
 mod tests_gaps;

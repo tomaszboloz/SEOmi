@@ -48,6 +48,18 @@ fn zones_come_from_dom_ancestry_and_never_claim_a_fold() {
         zone_of("<main><nav><a href=/x>x</a></nav></main>"),
         "nav_breadcrumb"
     );
+    assert_eq!(
+        zone_of("<div role='banner'><a href=/x>x</a></div>"),
+        "nav_breadcrumb"
+    );
+    assert_eq!(
+        zone_of("<div role='complementary'><a href=/x>x</a></div>"),
+        "sidebar_footer"
+    );
+    assert_eq!(
+        zone_of("<div class='sidebar'><a href=/x>x</a></div>"),
+        "sidebar_footer"
+    );
 }
 
 fn ctx(html: &str) -> (Option<String>, Option<String>) {
@@ -128,3 +140,6 @@ fn older_snapshots_without_placement_fields_still_load() {
         serde_json::from_str(old).unwrap();
     assert!(link.zone.is_none() && link.context_before.is_none());
 }
+
+#[path = "tests/coverage100_link_placement.rs"]
+mod coverage100_link_placement;

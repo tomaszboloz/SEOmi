@@ -14,6 +14,9 @@ pub(super) mod strings;
 mod summary;
 
 #[cfg(test)]
+#[path = "audit_report/coverage100_tests.rs"]
+mod coverage100_tests;
+#[cfg(test)]
 mod fixture;
 #[cfg(test)]
 mod tests;
