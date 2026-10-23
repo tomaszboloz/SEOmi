@@ -2,6 +2,9 @@ use super::*;
 
 #[test]
 fn task_sink_failure_and_untrusted_routes_cannot_change_execution_or_expose_inputs() {
+    // Production code registers the shared span callsites here without a scoped
+    // subscriber; the global one keeps their cached Interest from becoming never.
+    init();
     let records = Arc::new(Mutex::new(Vec::new()));
     let observed = records.clone();
     let subscriber = tracing_subscriber::registry().with(NativeTaskLayer {
