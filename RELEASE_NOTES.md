@@ -3,6 +3,7 @@
 ## Added
 
 - Rust unit tests for PDF report label locale/RTL helpers and for crypto-shredding store error, missing-key and tampered-ciphertext paths (GAP-023 coverage work). No production code changed.
+- Direct unit assertions for crawl write locking, audit-log hashing and chain verification, CMS patch HTTP helpers, monitoring storage keys and deploy artifact primitives (GAP-026). No production code changed.
 
 ## Included from 0.4.8
 

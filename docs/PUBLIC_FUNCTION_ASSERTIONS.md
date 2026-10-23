@@ -316,3 +316,17 @@ At b7c3930, the regenerated source-matched inventory reports1509 public TypeScri
 `tests/topicalVerdictPrimitivesDirect.test.ts` adds five focused behavioral cases for the previously unreferenced non-AI public callables: pagination-neighbour filtering, topical-term selection, verdict identity and ordering, document orphan/language diagnostics, duplicate grouping, hub-area health, the composed verdict builder, and diagnosis graph node colours. `tests/diagnosisStatsDirect.test.tsx` adds one component case that renders the public `DiagnosisStats` component and asserts every displayed metric, including the language list. The focused batch passes 6/6 tests and both files satisfy the physical 150-line limit.
 
 The inventory regenerated from the current working-tree sources reports 1,551 public TypeScript/MCP callables, 1,546 with static test references and five remaining reference gaps: `isDesktopAi`, `nativeText`, `nativeSuggestions` (`src/services/ai/native.ts`) plus `isStoredSecretMarker` and `hasSecureValue` (`src/services/tauri/secrets.ts`). Those five require their owners' boundary tests. The available frontend coverage manifest is stale for the dirty source tree, so this inventory currently reports execution as unavailable for all entries; it is not evidence of fresh suite execution or a completed GAP026 audit.
+
+## 2026-10-23 — security-relevant service direct assertions (0.4.10)
+
+Five new files add direct semantic assertions for previously reference-only or unreferenced public callables, 14 tests in total, each file under 150 lines:
+
+| Asserted behavior | Direct test | Public function |
+| --- | --- | --- |
+| per-project generation counter, stale-write rejection after erasure, FIFO serialization, failure isolation | `tests/crawlWriteLockContracts.test.ts` | `crawlWriteGeneration`, `invalidateQueuedCrawlWrites`, `assertCrawlWriteGeneration`, `withCrawlWriteLock` |
+| published SHA-256 vectors, UTF-8 input, genesis-chained entries, tamper detection | `tests/auditLogHashContracts.test.ts` | `sha256Hex`, `appendAudit`, `verifyChain` |
+| credential sent by name, no redirects, If-Match/body headers, 409/412 conflict, non-2xx errors, JSON-object-only parsing | `tests/cmsPatchHttpContracts.test.ts` | `call`, `json`, `asString`, `record` |
+| exact per-project storage keys, no cross-key collision, project id guard | `tests/focusMonitoringKeyContracts.test.ts` | `focusTopicKey`, `focusSeenKey`, `focusHistoryKey`, `focusBudgetKey`, `focusScheduleKey`, `authorityHistoryKey`, `authorityTaxonomyKey`, `authorityBenchmarkKey`, `validAuthorityProject` |
+| http(s)-only rule keys, path decoding, query refusal, CSV quoting and formula neutralization | `tests/deployArtifactsPrimitives.test.ts` | `ruleKey`, `rulePath`, `csvRows` |
+
+No production code was changed and no production bug was found. The inventory (`npm run test:inventory`) still lists 2,132 callables with execution status unavailable (no fresh coverage manifest), so GAP-026 stays PARTIAL.
