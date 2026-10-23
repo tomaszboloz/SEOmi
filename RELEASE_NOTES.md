@@ -1,3 +1,9 @@
+# SEOmi 0.4.16 — release notes
+
+## Added
+
+- Settings validation tests for proxy lists (all separators, one bad entry, duplicates, empty values, the 64-entry limit, oversized entry) and a README section describing proxy rotation, ban and the no-direct-fallback guarantee (issue #142).
+
 # SEOmi 0.4.15 — release notes
 
 ## Added
