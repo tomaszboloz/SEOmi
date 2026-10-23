@@ -41,6 +41,7 @@ mod image_decoding;
 mod inline_images;
 mod js_redirects;
 mod js_shell;
+mod link_placement;
 mod models;
 mod orchestration;
 mod pagination;
@@ -116,6 +117,9 @@ pub use orchestration::crawl_site_with_control;
 #[cfg(test)]
 #[path = "site_crawler/tests.rs"]
 mod tests;
+
+#[cfg(test)]
+mod link_placement_tests;
 
 #[cfg(test)]
 mod semantic_fold_tests;
