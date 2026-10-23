@@ -6425,6 +6425,14 @@
         "why": "Le prochain crawl contrôle le résultat réel et montre l'évolution du score du module depuis la référence.",
         "action": "Ajoutez une tâche depuis une recommandation.\nMarquez-la comme déployée après la mise en ligne.\nLancez un nouveau crawl et cliquez sur Vérifier."
       }
+    },
+    "sprs": {
+      "panel": {
+        "title": "PageRank sémantique",
+        "what": "PageRank interne (amortissement 0,85) ramené à 0-100, avec des repères pour les pages sans lien sortant, trop peu liées ou envoyant la plupart de leurs liens vers des pages sans rapport.",
+        "why": "Il montre où l'autorité des liens s'accumule ou s'échappe dans votre site.",
+        "action": "Ajoutez des liens sortants aux impasses.\nLiez les pages peu liées depuis des pages fortes et proches.\nExaminez les fuites."
+      }
     }
   },
   "helpUi": {
@@ -7299,5 +7307,16 @@
       "title": "Score de confiance en baisse",
       "body": "Le score de confiance E-E-A-T est passé de {{from}} à {{to}} ({{points}} points)."
     }
+  },
+  "sprsUi": {
+    "title": "PageRank sémantique",
+    "empty": "Pas encore de graphe de liens. Explorez d'abord le site ; sans vrais liens, aucun score n'est affiché.",
+    "page": "Page",
+    "score": "Score",
+    "deadEnd": "Impasse",
+    "underLinked": "Peu de liens",
+    "leak": "Fuite",
+    "unknown": "{{count}} liens ont une similarité inconnue et ne comptent pas comme fuite.",
+    "notConverged": "Le solveur n'a pas convergé ; les scores sont approximatifs."
   }
 }

@@ -6425,6 +6425,14 @@
         "why": "O rastreio seguinte confirma o resultado real e mostra como a pontuação do módulo mudou desde a base.",
         "action": "Adicione uma tarefa a partir de uma recomendação.\nMarque-a como implementada após publicar.\nExecute novo rastreio e clique em Verificar."
       }
+    },
+    "sprs": {
+      "panel": {
+        "title": "PageRank semântico",
+        "what": "PageRank interno (amortecimento 0,85) em escala 0-100, com marcas para páginas sem links de saída, com poucos links de entrada ou que enviam a maioria dos links a páginas não relacionadas.",
+        "why": "Mostra onde a autoridade de links se acumula ou se perde dentro do seu site.",
+        "action": "Adicione links de saída aos becos sem saída.\nLinke páginas com poucos links a partir de páginas fortes e relacionadas.\nRevise os vazamentos."
+      }
     }
   },
   "helpUi": {
@@ -7299,5 +7307,16 @@
       "title": "Queda na pontuação de confiança",
       "body": "A pontuação de confiança E-E-A-T caiu de {{from}} para {{to}} ({{points}} pontos)."
     }
+  },
+  "sprsUi": {
+    "title": "PageRank semântico",
+    "empty": "Ainda não há grafo de links. Rastreie o site primeiro; sem links reais nenhuma pontuação é mostrada.",
+    "page": "Página",
+    "score": "Pontuação",
+    "deadEnd": "Beco sem saída",
+    "underLinked": "Poucos links",
+    "leak": "Vazamento",
+    "unknown": "{{count}} links têm similaridade desconhecida e não contam como vazamento.",
+    "notConverged": "O solver não convergiu; as pontuações são aproximadas."
   }
 }

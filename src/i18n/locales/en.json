@@ -6425,6 +6425,14 @@
         "why": "The next crawl checks the real result and shows how the module score changed since the baseline.",
         "action": "Add a task from a recommendation.\nMark it implemented after you deploy.\nRun a new crawl and click Verify."
       }
+    },
+    "sprs": {
+      "panel": {
+        "title": "Semantic PageRank",
+        "what": "Internal PageRank (damping 0.85) scaled to 0-100, with flags for pages that pass no links, receive too few, or send most links to unrelated pages.",
+        "why": "It shows where link authority pools or drains inside your own site.",
+        "action": "Add outgoing links to dead ends.\nLink to under-linked pages from strong related pages.\nReview leaks."
+      }
     }
   },
   "helpUi": {
@@ -7299,5 +7307,16 @@
       "title": "Trust score dropped",
       "body": "The E-E-A-T trust score fell from {{from}} to {{to}} ({{points}} points)."
     }
+  },
+  "sprsUi": {
+    "title": "Semantic PageRank",
+    "empty": "No link graph yet. Crawl the site first; no score is shown without real links.",
+    "page": "Page",
+    "score": "Score",
+    "deadEnd": "Dead end",
+    "underLinked": "Under-linked",
+    "leak": "Leak",
+    "unknown": "{{count}} links have unknown similarity and are not counted as leaks.",
+    "notConverged": "The solver did not converge; scores are approximate."
   }
 }

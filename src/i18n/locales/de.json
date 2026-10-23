@@ -6425,6 +6425,14 @@
         "why": "Der nächste Crawl prüft das echte Ergebnis und zeigt, wie sich der Modul-Score gegenüber dem Ausgangswert verändert hat.",
         "action": "Aufgabe aus einer Empfehlung hinzufügen.\nNach dem Deployment als umgesetzt markieren.\nNeuen Crawl starten und Prüfen klicken."
       }
+    },
+    "sprs": {
+      "panel": {
+        "title": "Semantischer PageRank",
+        "what": "Interner PageRank (Dämpfung 0,85) auf 0-100 skaliert, mit Markierungen für Seiten ohne ausgehende Links, mit zu wenigen eingehenden Links oder mit überwiegend themenfremden Links.",
+        "why": "Er zeigt, wo Link-Autorität auf der eigenen Website zusammenläuft oder abfließt.",
+        "action": "Füge Sackgassen ausgehende Links hinzu.\nVerlinke schwach verlinkte Seiten von starken, verwandten Seiten.\nPrüfe Lecks."
+      }
     }
   },
   "helpUi": {
@@ -7299,5 +7307,16 @@
       "title": "Vertrauenswert gesunken",
       "body": "Der E-E-A-T-Vertrauenswert fiel von {{from}} auf {{to}} ({{points}} Punkte)."
     }
+  },
+  "sprsUi": {
+    "title": "Semantischer PageRank",
+    "empty": "Noch kein Linkgraph. Crawle zuerst die Website; ohne echte Links wird kein Wert angezeigt.",
+    "page": "Seite",
+    "score": "Wert",
+    "deadEnd": "Sackgasse",
+    "underLinked": "Zu wenig verlinkt",
+    "leak": "Leck",
+    "unknown": "{{count}} Links haben unbekannte Ähnlichkeit und zählen nicht als Leck.",
+    "notConverged": "Der Solver ist nicht konvergiert; die Werte sind ungefähr."
   }
 }

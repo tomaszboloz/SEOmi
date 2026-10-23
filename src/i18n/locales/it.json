@@ -6425,6 +6425,14 @@
         "why": "Il crawl successivo controlla il risultato reale e mostra come è cambiato il punteggio del modulo rispetto alla base.",
         "action": "Aggiungi un'attività da una raccomandazione.\nSegnala come implementata dopo la pubblicazione.\nAvvia un nuovo crawl e clicca Verifica."
       }
+    },
+    "sprs": {
+      "panel": {
+        "title": "PageRank semantico",
+        "what": "PageRank interno (smorzamento 0,85) in scala 0-100, con indicatori per pagine senza link in uscita, con pochi link in entrata o che inviano la maggior parte dei link a pagine non correlate.",
+        "why": "Mostra dove l'autorità dei link si accumula o si disperde nel tuo sito.",
+        "action": "Aggiungi link in uscita ai vicoli ciechi.\nCollega le pagine poco linkate da pagine forti e correlate.\nControlla le perdite."
+      }
     }
   },
   "helpUi": {
@@ -7299,5 +7307,16 @@
       "title": "Calo del punteggio di fiducia",
       "body": "Il punteggio di fiducia E-E-A-T è sceso da {{from}} a {{to}} ({{points}} punti)."
     }
+  },
+  "sprsUi": {
+    "title": "PageRank semantico",
+    "empty": "Nessun grafo di link. Scansiona prima il sito; senza link reali non viene mostrato alcun punteggio.",
+    "page": "Pagina",
+    "score": "Punteggio",
+    "deadEnd": "Vicolo cieco",
+    "underLinked": "Pochi link",
+    "leak": "Perdita",
+    "unknown": "{{count}} link hanno similarità sconosciuta e non contano come perdita.",
+    "notConverged": "Il solver non è convergente; i punteggi sono approssimati."
   }
 }

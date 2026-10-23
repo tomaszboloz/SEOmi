@@ -6425,6 +6425,14 @@
         "why": "Kolejny crawl sprawdza realny efekt i pokazuje, jak zmienił się wynik modułu względem punktu wyjścia.",
         "action": "Dodaj zadanie z rekomendacji.\nOznacz je jako wdrożone po publikacji.\nUruchom nowy crawl i kliknij Zweryfikuj."
       }
+    },
+    "sprs": {
+      "panel": {
+        "title": "Semantyczny PageRank",
+        "what": "Wewnętrzny PageRank (tłumienie 0,85) w skali 0-100 z flagami stron bez linków wychodzących, z za małą liczbą linków przychodzących lub wysyłających większość linków do niepowiązanych stron.",
+        "why": "Pokazuje, gdzie autorytet linków gromadzi się lub ucieka w obrębie witryny.",
+        "action": "Dodaj linki wychodzące ze ślepych uliczek.\nLinkuj do słabo podlinkowanych stron z mocnych, powiązanych.\nSprawdź wycieki."
+      }
     }
   },
   "helpUi": {
@@ -7299,5 +7307,16 @@
       "title": "Spadł wynik zaufania",
       "body": "Wynik zaufania E-E-A-T spadł z {{from}} do {{to}} ({{points}} pkt)."
     }
+  },
+  "sprsUi": {
+    "title": "Semantyczny PageRank",
+    "empty": "Brak grafu linków. Najpierw przeskanuj witrynę; bez prawdziwych linków nie pokazujemy wyniku.",
+    "page": "Strona",
+    "score": "Wynik",
+    "deadEnd": "Ślepa uliczka",
+    "underLinked": "Za mało linków",
+    "leak": "Wyciek",
+    "unknown": "{{count}} linków ma nieznane podobieństwo i nie liczy się jako wyciek.",
+    "notConverged": "Solver nie zbiegł; wyniki są przybliżone."
   }
 }
