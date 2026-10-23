@@ -6033,7 +6033,9 @@
           "missing-registry": "No se encontró una página con datos del registro mercantil o aviso legal.",
           "missing-about": "No se encontró una página Quiénes somos.",
           "missing-dates": "Solo el {{0}}% de los artículos muestra una fecha de modificación o revisión.",
-          "no-articles": "No se detectaron páginas de artículos; no se puntuaron las capas de autores y citas."
+          "no-articles": "No se detectaron páginas de artículos; no se puntuaron las capas de autores y citas.",
+          "author-invalid-profile": "{{0}} autores enlazan un perfil ORCID o Wikidata con un identificador no válido ({{1}}). Revisa la suma de control o el Q-ID.",
+          "ymyl-no-scholarly-ids": "Ninguno de los {{0}} artículos cita una fuente con DOI, PMID o PMCID. En temas YMYL, cita el estudio original."
         }
       }
     },
@@ -7138,7 +7140,9 @@
         "missing-registry": "No se encontró una página con datos del registro mercantil o aviso legal.",
         "missing-about": "No se encontró una página Quiénes somos.",
         "missing-dates": "Solo el {{pct}}% de los artículos muestra una fecha de modificación o revisión.",
-        "no-articles": "No se detectaron páginas de artículos, así que no se puntuaron las capas de autores y citas."
+        "no-articles": "No se detectaron páginas de artículos, así que no se puntuaron las capas de autores y citas.",
+        "author-invalid-profile": "{{count}} autores enlazan un perfil ORCID o Wikidata con un identificador no válido ({{names}}). Revisa la suma de control o el Q-ID.",
+        "ymyl-no-scholarly-ids": "Ninguno de los {{pages}} artículos cita una fuente con DOI, PMID o PMCID. En temas YMYL, cita el estudio original."
       }
     },
     "generator": {
@@ -7168,6 +7172,16 @@
       "copy": "Copiar etiqueta script",
       "copied": "Copiado.",
       "copyFailed": "No se pudo copiar. Selecciona el texto y cópialo manualmente."
+    }
+  },
+  "scoreDropAlert": {
+    "aio": {
+      "title": "Bajó la preparación para IA",
+      "body": "La preparación para AI Overviews bajó de {{from}} a {{to}} ({{points}} puntos)."
+    },
+    "trust": {
+      "title": "Bajó la puntuación de confianza",
+      "body": "La puntuación de confianza E-E-A-T bajó de {{from}} a {{to}} ({{points}} puntos)."
     }
   }
 }

@@ -38,7 +38,14 @@ export interface AuthorEntity {
   generic: boolean;
   /** Percent 0-100 against the Core Topic; undefined when the crawl holds no bio signal. */
   alignmentPct?: number;
+  /** Syntax-only classification of sameAs links; never fetched, so never "verified". */
+  profiles: ProfileEvidence[];
 }
+
+export type ProfileKind = 'orcid' | 'wikidata' | 'register' | 'social' | 'other';
+export type ProfileStatus = 'syntax-valid' | 'declared' | 'invalid';
+
+export interface ProfileEvidence { url: string; kind: ProfileKind; status: ProfileStatus; tier?: 1 | 2 | 3; id?: string }
 
 export interface CitationDetail {
   pagesAnalyzed: number;
@@ -48,6 +55,9 @@ export interface CitationDetail {
   externalLinks: number;
   checkedLinks: number;
   deadLinks: Array<{ page: string; target: string; status?: number }>;
+  /** Article pages citing at least one DOI/PMID/PMCID source, and unique identified sources. */
+  pagesWithScholarly: number;
+  scholarlySources: number;
 }
 
 export interface TransparencyDetail {

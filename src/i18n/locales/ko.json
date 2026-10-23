@@ -6033,7 +6033,9 @@
           "missing-registry": "회사 등기 정보 또는 법적 고지 페이지를 찾지 못했습니다.",
           "missing-about": "회사 소개 페이지를 찾지 못했습니다.",
           "missing-dates": "수정일 또는 검토일이 표시된 문서는 {{0}}%뿐입니다.",
-          "no-articles": "문서 페이지가 감지되지 않아 저자 및 인용 계층은 점수를 매기지 않았습니다."
+          "no-articles": "문서 페이지가 감지되지 않아 저자 및 인용 계층은 점수를 매기지 않았습니다.",
+          "author-invalid-profile": "{{0}}명의 저자가 유효하지 않은 식별자의 ORCID 또는 Wikidata 프로필을 연결했습니다({{1}}). 체크섬 또는 Q-ID를 확인하세요.",
+          "ymyl-no-scholarly-ids": "{{0}}개 문서 중 DOI, PMID, PMCID가 있는 출처를 인용한 문서가 없습니다. YMYL 주제에서는 1차 연구를 인용하세요."
         }
       }
     },
@@ -7138,7 +7140,9 @@
         "missing-registry": "회사 등기 정보 또는 법적 고지 페이지를 찾지 못했습니다.",
         "missing-about": "회사 소개 페이지를 찾지 못했습니다.",
         "missing-dates": "수정일 또는 검토일이 표시된 문서는 {{pct}}%뿐입니다.",
-        "no-articles": "문서 페이지가 감지되지 않아 저자 및 인용 계층은 점수를 매기지 않았습니다."
+        "no-articles": "문서 페이지가 감지되지 않아 저자 및 인용 계층은 점수를 매기지 않았습니다.",
+        "author-invalid-profile": "{{count}}명의 저자가 유효하지 않은 식별자의 ORCID 또는 Wikidata 프로필을 연결했습니다({{names}}). 체크섬 또는 Q-ID를 확인하세요.",
+        "ymyl-no-scholarly-ids": "{{pages}}개 문서 중 DOI, PMID, PMCID가 있는 출처를 인용한 문서가 없습니다. YMYL 주제에서는 1차 연구를 인용하세요."
       }
     },
     "generator": {
@@ -7168,6 +7172,16 @@
       "copy": "script 태그 복사",
       "copied": "복사했습니다.",
       "copyFailed": "복사하지 못했습니다. 텍스트를 선택해 직접 복사하세요."
+    }
+  },
+  "scoreDropAlert": {
+    "aio": {
+      "title": "AI 준비도 하락",
+      "body": "AI Overviews 준비도가 {{from}}에서 {{to}}(으)로 떨어졌습니다({{points}}점)."
+    },
+    "trust": {
+      "title": "신뢰 점수 하락",
+      "body": "E-E-A-T 신뢰 점수가 {{from}}에서 {{to}}(으)로 떨어졌습니다({{points}}점)."
     }
   }
 }
