@@ -6493,6 +6493,38 @@
         "why": "A few relevant links can matter more than many unrelated ones.",
         "action": "Review the sources with low similarity.\nLook at unlinked mentions as outreach leads.\nRead negated mentions yourself."
       }
+    },
+    "llmEconomy": {
+      "costGate": {
+        "title": "LLM cost and fact gate",
+        "what": "Counts what AI calls cost and what the cache and local models saved. Medical and financial sentences with a dose or amount missing from the source are rejected.",
+        "why": "Remote providers cost money and receive your page text. Invented doses in health or finance content are dangerous.",
+        "action": "Prefer a local model for big batches.\nCheck rejected sentences against the source.\nApprove YMYL text yourself before it reaches the CMS."
+      }
+    },
+    "templateGovernor": {
+      "informationGain": {
+        "title": "Template Information Gain",
+        "what": "Share of each page that is not boilerplate shared with the other pages built from the same template. Low gain means thousands of near-copies.",
+        "why": "Google can filter a whole template segment as thin content. One template warning is easier to fix than thousands of page warnings.",
+        "action": "Add unique data to each page (local facts, numbers, reviews).\nOr noindex the segment until it has real content.\nRe-crawl and check that the gain rises."
+      }
+    },
+    "outreach": {
+      "gapDomains": {
+        "title": "Outreach targets",
+        "what": "Sites that link to your TOP3 competitors but not to you, ranked by how many competitors they link to and by their authority.",
+        "why": "A site that already links to several competitors is the warmest place to ask for a link, as long as you bring something new.",
+        "action": "Start from the top of the list.\nOpen the draft, add a source only you can offer, and edit it.\nSend it yourself from your own mailbox. SEOmi never sends anything."
+      }
+    },
+    "causalMarket": {
+      "updateWindow": {
+        "title": "Google update window",
+        "what": "Days when Google rolled out an update or the whole market was unusually volatile. The result is shown with an uncertainty range and flagged when the period overlaps such a window.",
+        "why": "A control group on the same site suffers from an update just like the test group, so a drop or gain can be the market and not your change.",
+        "action": "Treat a flagged result as inconclusive.\nWait until the update window ends and compare again.\nUse an external market baseline when you have one."
+      }
     }
   },
   "helpUi": {
@@ -7516,5 +7548,38 @@
     "noText": "No source text available, so brand co-citations were not checked.",
     "coCitation": "Brand and core entity in one paragraph: {{linked}} linked, {{unlinked}} unlinked.",
     "note": "The value uses provider authority and does not reproduce Google PageRank or explain rankings. Co-occurrence is not endorsement."
+  },
+  "llmEconomy": {
+    "title": "LLM cost",
+    "empty": "No AI calls recorded yet.",
+    "spent": "Spent: {{value}}",
+    "saved": "Saved by cache and local runs: {{value}}",
+    "hits": "Cache hits: {{count}}",
+    "leaves": "Page text is sent outside this device to {{provider}}."
+  },
+  "templateGovernor": {
+    "title": "Programmatic template quality",
+    "empty": "No weak templates found.",
+    "row": "{{pattern}}: {{count}} pages, information gain {{gain}}%",
+    "noindex": "Recommended: noindex this segment",
+    "limit": "Recommended: limit the number of indexed pages"
+  },
+  "outreach": {
+    "title": "Outreach targets",
+    "empty": "No backlink gap data. Run a backlink gap check first.",
+    "row": "{{domain}}: priority {{priority}}, links to {{count}} competitors",
+    "export": "Export CSV",
+    "manualNote": "SEOmi never sends messages. Send drafts from your own mailbox."
+  },
+  "causalMarket": {
+    "title": "Causal impact",
+    "empty": "Not enough history: at least 7 days before the change and 1 day after.",
+    "effect": "Daily effect: {{effect}} ({{lower}} to {{upper}})",
+    "updateWindow": "Google update window: result is inconclusive.",
+    "normalized": "Normalized by market baseline",
+    "positive": "Positive effect",
+    "negative": "Negative effect",
+    "noEffect": "No measurable effect",
+    "inconclusive": "Inconclusive"
   }
 }

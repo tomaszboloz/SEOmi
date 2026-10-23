@@ -6493,6 +6493,38 @@
         "why": "Pochi link pertinenti possono contare più di molti non correlati.",
         "action": "Controlla le fonti con bassa somiglianza.\nUsa le menzioni senza link come spunti di contatto.\nLeggi tu stesso le menzioni con negazione."
       }
+    },
+    "llmEconomy": {
+      "costGate": {
+        "title": "Costo LLM e filtro dei fatti",
+        "what": "Conta il costo delle chiamate IA e il risparmio di cache e modelli locali. Le frasi mediche o finanziarie con una dose o una cifra assente dalla fonte vengono respinte.",
+        "why": "I provider remoti costano e ricevono il testo delle pagine. Dosi inventate sono pericolose nei contenuti di salute e finanza.",
+        "action": "Preferisci un modello locale per i lotti grandi.\nControlla le frasi respinte con la fonte.\nApprova tu il testo YMYL prima che arrivi al CMS."
+      }
+    },
+    "templateGovernor": {
+      "informationGain": {
+        "title": "Template Information Gain",
+        "what": "Quota di ogni pagina che non è testo comune del template condiviso. Un guadagno basso significa migliaia di copie quasi identiche.",
+        "why": "Google può filtrare un intero segmento di template come contenuto scarso. Un avviso per template è più semplice da correggere di migliaia per pagina.",
+        "action": "Aggiungi dati unici a ogni pagina (fatti locali, numeri, recensioni).\nOppure metti il segmento in noindex finché non ha contenuto reale.\nRiesegui la scansione e verifica che il valore salga."
+      }
+    },
+    "outreach": {
+      "gapDomains": {
+        "title": "Obiettivi di outreach",
+        "what": "Siti che linkano i tuoi concorrenti TOP3 ma non te, ordinati per numero di concorrenti linkati e autorevolezza.",
+        "why": "Un sito che linka già più concorrenti è il posto più adatto per chiedere un link, se offri qualcosa di nuovo.",
+        "action": "Parti dall’alto della lista.\nApri la bozza, aggiungi una fonte che solo tu puoi offrire e modificala.\nInviala tu dalla tua casella. SEOmi non invia nulla."
+      }
+    },
+    "causalMarket": {
+      "updateWindow": {
+        "title": "Finestra di aggiornamento Google",
+        "what": "Giorni in cui Google ha rilasciato un aggiornamento o il mercato era insolitamente volatile. Il risultato appare con un intervallo di incertezza e un avviso se il periodo si sovrappone a tale finestra.",
+        "why": "Un gruppo di controllo dello stesso sito subisce l’aggiornamento come quello di test, quindi un calo o un aumento può dipendere dal mercato e non dalla tua modifica.",
+        "action": "Considera un risultato segnalato come non conclusivo.\nAttendi la fine della finestra e confronta di nuovo.\nUsa una baseline di mercato esterna se disponibile."
+      }
     }
   },
   "helpUi": {
@@ -7516,5 +7548,38 @@
     "noText": "Nessun testo sorgente disponibile, quindi le co-citazioni del brand non sono state controllate.",
     "coCitation": "Brand ed entità principale nello stesso paragrafo: {{linked}} con link, {{unlinked}} senza link.",
     "note": "Il valore usa l'autorevolezza del provider e non riproduce il PageRank di Google né spiega il posizionamento. La co-occorrenza non è un'approvazione."
+  },
+  "llmEconomy": {
+    "title": "Costo LLM",
+    "empty": "Nessuna chiamata IA registrata.",
+    "spent": "Speso: {{value}}",
+    "saved": "Risparmiato con cache e modelli locali: {{value}}",
+    "hits": "Hit della cache: {{count}}",
+    "leaves": "Il testo delle pagine viene inviato fuori da questo dispositivo a {{provider}}."
+  },
+  "templateGovernor": {
+    "title": "Qualità dei template programmatici",
+    "empty": "Nessun template debole trovato.",
+    "row": "{{pattern}}: {{count}} pagine, guadagno informativo {{gain}}%",
+    "noindex": "Consigliato: noindex per questo segmento",
+    "limit": "Consigliato: limita le pagine indicizzate"
+  },
+  "outreach": {
+    "title": "Obiettivi di outreach",
+    "empty": "Nessun dato sul divario di backlink. Esegui prima l’analisi.",
+    "row": "{{domain}}: priorità {{priority}}, linka {{count}} concorrenti",
+    "export": "Esporta CSV",
+    "manualNote": "SEOmi non invia mai messaggi. Invia le bozze dalla tua casella."
+  },
+  "causalMarket": {
+    "title": "Impatto causale",
+    "empty": "Storico insufficiente: almeno 7 giorni prima della modifica e 1 dopo.",
+    "effect": "Effetto giornaliero: {{effect}} ({{lower}} a {{upper}})",
+    "updateWindow": "Finestra di aggiornamento Google: risultato non conclusivo.",
+    "normalized": "Normalizzato con la baseline di mercato",
+    "positive": "Effetto positivo",
+    "negative": "Effetto negativo",
+    "noEffect": "Nessun effetto misurabile",
+    "inconclusive": "Non conclusivo"
   }
 }
