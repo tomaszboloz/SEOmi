@@ -6272,6 +6272,13 @@
         "what": "Un objectif suggéré : au moins 80, ou la moyenne du top 3 des concurrents lorsqu'elle est plus élevée.",
         "why": "Il transforme la comparaison en un seul chiffre vers lequel travailler.",
         "action": "Utilisez-le comme objectif de planification.\nRelancez le benchmark après vos corrections pour voir l'évolution."
+      },
+      "indexGate": {
+        "title": "Filtre d'indexabilité",
+        "what": "Les pages en noindex ou dont le canonical pointe vers une autre URL sont exclues du score, qui reflète ainsi les pages pouvant se positionner.",
+        "why": "Compter des pages que Google n'indexera pas baisse le score et peut conduire à conseiller noindex pour des pages qui l'ont déjà.",
+        "action": "Vérifiez le compteur de pages ignorées.\nCorrigez les conflits sous le score, comme un pilier en noindex.\nN'utilisez « Les inclure » que pour voir le score avec toutes les pages.",
+        "example": "Une page de tag en noindex est ignorée, non notée comme hors sujet."
       }
     },
     "authority": {
@@ -6486,14 +6493,19 @@
       "lexicalFallback": "L'analyse pour la langue sélectionnée utilise l'algorithme statistique TF-IDF. Le composant de similarité sémantique approfondie est indisponible ; le score repose sur la couverture et la distribution des mots-clés.",
       "skippedRender": "{{count}} pages ont été ignorées dans l'analyse car le rendu JavaScript a dépassé le délai.",
       "degraded": "Certaines pages disposaient de données limitées ; leurs scores peuvent donc être moins précis.",
-      "unmatchedTopic": "Aucune page ne correspond au sujet « {{topic}} ». Le sujet détecté est utilisé à la place."
+      "unmatchedTopic": "Aucune page ne correspond au sujet « {{topic}} ». Le sujet détecté est utilisé à la place.",
+      "gateSkipped": "{{count}} pages ignorées (noindex/canonical).",
+      "gateInclude": "Les inclure",
+      "gateExclude": "Les exclure à nouveau"
     },
     "skip": {
       "render-timeout": "Le rendu JavaScript a dépassé le délai",
       "request-error": "Échec de la requête",
       "non-topical-status": "Statut HTTP sans contenu",
       "non-html": "Pas une page HTML",
-      "no-content": "Aucun contenu textuel"
+      "no-content": "Aucun contenu textuel",
+      "noindex": "Exclue : noindex",
+      "canonicalized": "Exclue : le canonical pointe vers une autre URL"
     },
     "hero": {
       "label": "Site Focus Score",
@@ -6754,6 +6766,12 @@
       "noPrevious": "première analyse",
       "noTasks": "Aucune tâche urgente.",
       "gain": "(+{{value}} pts)"
+    },
+    "conflict": {
+      "pillar-noindex": "La page pilier est en noindex : {{url}}",
+      "inlinked-foreign-canonical": "{{url}} reçoit {{inlinks}} liens internes mais son canonical pointe vers un autre hôte",
+      "noindex-with-traffic": "{{url}} est en noindex mais a {{clicks}} clics GSC et {{domains}} domaines référents",
+      "sitemap-noindex": "{{url}} est dans le sitemap mais en noindex"
     }
   },
   "focusBenchmark": {

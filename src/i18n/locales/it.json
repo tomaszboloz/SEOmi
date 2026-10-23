@@ -6272,6 +6272,13 @@
         "what": "Un obiettivo suggerito: almeno 80, oppure la media dei primi 3 concorrenti quando è più alta.",
         "why": "Trasforma il confronto in un unico numero verso cui lavorare.",
         "action": "Usalo come obiettivo di pianificazione.\nRiavvia il benchmark dopo le correzioni per vedere la variazione."
+      },
+      "indexGate": {
+        "title": "Filtro di indicizzabilità",
+        "what": "Le pagine noindex o con canonical verso un altro URL restano fuori dal punteggio, che riflette così le pagine che possono posizionarsi.",
+        "why": "Contare pagine che Google non indicizzerà abbassa il punteggio e può portare a consigliare noindex per pagine che lo hanno già.",
+        "action": "Controlla il contatore delle pagine saltate.\nRisolvi i conflitti sotto il punteggio, come un pilastro noindex.\nUsa «Includile» solo per vedere il punteggio con tutte le pagine.",
+        "example": "Una pagina tag noindex viene saltata, non valutata come fuori tema."
       }
     },
     "authority": {
@@ -6486,14 +6493,19 @@
       "lexicalFallback": "L'analisi per la lingua selezionata usa l'algoritmo statistico TF-IDF. Il componente di somiglianza semantica profonda non è disponibile; il punteggio si basa sulla copertura e sulla distribuzione delle parole chiave.",
       "skippedRender": "{{count}} pagine sono state escluse dall'analisi perché il rendering JavaScript è andato in timeout.",
       "degraded": "Alcune pagine avevano dati limitati, quindi i loro punteggi potrebbero essere meno precisi.",
-      "unmatchedTopic": "Nessuna pagina corrisponde all'argomento \"{{topic}}\". Viene usato l'argomento rilevato."
+      "unmatchedTopic": "Nessuna pagina corrisponde all'argomento \"{{topic}}\". Viene usato l'argomento rilevato.",
+      "gateSkipped": "{{count}} pagine saltate (noindex/canonical).",
+      "gateInclude": "Includile",
+      "gateExclude": "Escludile di nuovo"
     },
     "skip": {
       "render-timeout": "Timeout del rendering JavaScript",
       "request-error": "Richiesta non riuscita",
       "non-topical-status": "Stato HTTP senza contenuto",
       "non-html": "Non è una pagina HTML",
-      "no-content": "Nessun contenuto testuale"
+      "no-content": "Nessun contenuto testuale",
+      "noindex": "Esclusa: noindex",
+      "canonicalized": "Esclusa: il canonical punta a un altro URL"
     },
     "hero": {
       "label": "Site Focus Score",
@@ -6754,6 +6766,12 @@
       "noPrevious": "prima analisi",
       "noTasks": "Nessuna attività urgente.",
       "gain": "(+{{value}} pt)"
+    },
+    "conflict": {
+      "pillar-noindex": "La pagina pilastro è noindex: {{url}}",
+      "inlinked-foreign-canonical": "{{url}} ha {{inlinks}} link interni ma il canonical punta a un altro host",
+      "noindex-with-traffic": "{{url}} è noindex ma ha {{clicks}} clic GSC e {{domains}} domini di riferimento",
+      "sitemap-noindex": "{{url}} è nella sitemap ma è noindex"
     }
   },
   "focusBenchmark": {

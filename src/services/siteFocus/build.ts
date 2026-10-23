@@ -1,5 +1,6 @@
 import { semanticPageLanguage } from '@/services/semanticText';
 import { bandFor, computeSfs } from './aggregate';
+import { applyIndexabilityGate } from './gate';
 import { clusterTerms, siteTotals, topTerms } from './cluster';
 import { chooseCore, describeClusters, describeCore, labelOf } from './coreTopic';
 import { evaluatePage, modelFor, prepare, typeContext, type EvalContext, type Prepared } from './evaluate';
@@ -37,7 +38,7 @@ const record = <T>(map: Map<string, T>, keys: Iterable<string>): Record<string, 
 
 export const buildSiteFocusReport = (pages: FocusPage[], startUrl: string, options: SiteFocusOptions = {}): SiteFocusReport => {
   const language = options.language ?? dominantLanguage(pages);
-  const items = prepare(pages, startUrl, language);
+  const items = applyIndexabilityGate(prepare(pages, startUrl, language), options.includeNonIndexable);
   const live = items.filter((item) => !item.skipped);
   const stats = buildTermStats(live.map((item) => item.terms));
   const vectors = live.map((item) => tfidfVector(item.terms, stats));

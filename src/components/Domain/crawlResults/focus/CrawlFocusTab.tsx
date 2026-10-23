@@ -8,6 +8,7 @@ import type { CrawledPageSummary, CrawlRunRecord } from '@/types';
 import { Empty } from '../CrawlViewPrimitives';
 import { CoreTopicPanel } from './CoreTopicPanel';
 import { FocusBanners } from './FocusBanners';
+import { GateBanner } from './GateBanner';
 import { FocusHeatmapTree } from './FocusHeatmapTree';
 import { FocusHero } from './FocusHero';
 import { FocusHistoryChart } from './FocusHistoryChart';
@@ -44,6 +45,7 @@ export const CrawlFocusTab = ({ pages, startUrl, run, projectId, history, benchm
   const [draft, setDraft] = useState(() => topicText(focus.manualTopic));
   const [filter, setFilter] = useState<FocusFilter>('all');
   const [ignoreTechnical, setIgnoreTechnical] = useState(true);
+  const [includeGated, setIncludeGated] = useState(false);
   const [selectedUrl, setSelectedUrl] = useState<string | undefined>();
   const [tick, setTick] = useState(0);
   const [competitorTerms, setCompetitorTerms] = useState<string[]>([]);
@@ -61,8 +63,10 @@ export const CrawlFocusTab = ({ pages, startUrl, run, projectId, history, benchm
   );
   const base = focus.report ?? local;
   const report = useMemo(
-    () => (base && competitorTerms.length ? buildSiteFocusReport(pages, startUrl, { manualTopic: focus.manualTopic ?? (deferredTopic || undefined), competitorTerms, now: base.generatedAt }) : base),
-    [base, competitorTerms, pages, startUrl, focus.manualTopic, deferredTopic],
+    () => (base && (competitorTerms.length || includeGated)
+      ? buildSiteFocusReport(pages, startUrl, { manualTopic: focus.manualTopic ?? (deferredTopic || undefined), competitorTerms, includeNonIndexable: includeGated, now: base.generatedAt })
+      : base),
+    [base, competitorTerms, pages, startUrl, focus.manualTopic, deferredTopic, includeGated],
   );
   useEffect(() => { if (report) onReport?.(report); }, [report, onReport]);
 
@@ -90,6 +94,7 @@ export const CrawlFocusTab = ({ pages, startUrl, run, projectId, history, benchm
     <div className="space-y-4">
       <FocusHero report={report} history={prior} onRecalculate={onRecalculate} recalcDisabled={spent} recalcNote={note} />
       <FocusBanners report={report} />
+      <GateBanner report={report} pages={pages} included={includeGated} onToggle={() => setIncludeGated((value) => !value)} sitemapUrls={run?.result?.sitemap_urls} />
       {historySlot ?? <FocusHistoryChart series={series} />}
       {weekly && <WeeklySummaryCard weekly={weekly} />}
       <div className="grid gap-4 lg:grid-cols-[minmax(0,1fr)_minmax(0,1.4fr)]">

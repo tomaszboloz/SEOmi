@@ -6272,6 +6272,13 @@
         "what": "권장 목표는 최소 80점이며, 상위 3개 경쟁사의 평균이 더 높으면 그 평균입니다.",
         "why": "비교 결과를 하나의 목표 숫자로 바꿔 줍니다.",
         "action": "계획 단계의 목표로 활용하세요.\n수정 후 벤치마크를 다시 실행해 변화를 확인하세요."
+      },
+      "indexGate": {
+        "title": "색인 가능성 게이트",
+        "what": "noindex이거나 canonical이 다른 URL을 가리키는 페이지는 점수에서 빠지므로, 점수는 순위에 오를 수 있는 페이지만 반영합니다.",
+        "why": "Google이 색인하지 않을 페이지를 세면 점수가 낮아지고, 이미 noindex인 페이지에 noindex를 권하는 일이 생길 수 있습니다.",
+        "action": "건너뛴 페이지 수를 확인하세요.\nnoindex가 걸린 필러 등 점수 아래 충돌을 고치세요.\n모든 페이지 기준 점수를 볼 때만 \"포함하기\"를 사용하세요.",
+        "example": "noindex인 태그 페이지는 주제 이탈로 채점되지 않고 건너뜁니다."
       }
     },
     "authority": {
@@ -6486,14 +6493,19 @@
       "lexicalFallback": "선택한 언어의 분석은 TF-IDF 통계 알고리즘을 사용합니다. 심층 의미 유사도 구성 요소를 사용할 수 없으며, 점수는 키워드 범위와 분포를 기준으로 계산됩니다.",
       "skippedRender": "JavaScript 렌더링 시간이 초과되어 {{count}}개 페이지가 분석에서 제외되었습니다.",
       "degraded": "일부 페이지는 데이터가 제한적이어서 점수가 덜 정확할 수 있습니다.",
-      "unmatchedTopic": "\"{{topic}}\" 주제와 일치하는 페이지가 없습니다. 대신 감지된 주제를 사용합니다."
+      "unmatchedTopic": "\"{{topic}}\" 주제와 일치하는 페이지가 없습니다. 대신 감지된 주제를 사용합니다.",
+      "gateSkipped": "{{count}}개 페이지를 건너뛰었습니다(noindex/canonical).",
+      "gateInclude": "포함하기",
+      "gateExclude": "다시 제외"
     },
     "skip": {
       "render-timeout": "JavaScript 렌더링 시간 초과",
       "request-error": "요청 실패",
       "non-topical-status": "콘텐츠가 아닌 HTTP 상태",
       "non-html": "HTML 페이지가 아님",
-      "no-content": "텍스트 콘텐츠 없음"
+      "no-content": "텍스트 콘텐츠 없음",
+      "noindex": "제외됨: noindex",
+      "canonicalized": "제외됨: canonical이 다른 URL을 가리킴"
     },
     "hero": {
       "label": "Site Focus Score",
@@ -6754,6 +6766,12 @@
       "noPrevious": "첫 분석",
       "noTasks": "긴급한 작업이 없습니다.",
       "gain": "(+{{value}}점)"
+    },
+    "conflict": {
+      "pillar-noindex": "필러 페이지가 noindex입니다: {{url}}",
+      "inlinked-foreign-canonical": "{{url}}에 내부 링크가 {{inlinks}}개 있지만 canonical이 다른 호스트를 가리킵니다",
+      "noindex-with-traffic": "{{url}}은 noindex이지만 GSC 클릭 {{clicks}}회와 참조 도메인 {{domains}}개가 있습니다",
+      "sitemap-noindex": "{{url}}은 사이트맵에 있지만 noindex입니다"
     }
   },
   "focusBenchmark": {

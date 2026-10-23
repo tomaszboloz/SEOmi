@@ -6272,6 +6272,13 @@
         "what": "A suggested goal: at least 80, or the average of the top 3 competitors when they score higher.",
         "why": "It turns the comparison into one number to work toward.",
         "action": "Use it as a planning goal.\nRe-run the benchmark after your fixes to see the change."
+      },
+      "indexGate": {
+        "title": "Indexability gate",
+        "what": "Pages that are noindex or whose canonical points to another URL are left out of the score, so the score reflects pages that can rank.",
+        "why": "Counting pages Google will not index lowers the score and can lead to advice to noindex pages that are already noindex.",
+        "action": "Check the skipped count.\nFix conflicts listed below the score, such as a noindex pillar.\nUse \"Include them\" only to see the score with all pages.",
+        "example": "A noindex tag page is skipped, not scored as off-topic."
       }
     },
     "authority": {
@@ -6486,14 +6493,19 @@
       "lexicalFallback": "The analysis for the selected language uses the TF-IDF statistical algorithm. The deep semantic similarity component is unavailable; the score is based on keyword coverage and distribution.",
       "skippedRender": "{{count}} pages were skipped in the analysis because JavaScript rendering timed out.",
       "degraded": "Some pages had limited data, so their scores may be less precise.",
-      "unmatchedTopic": "No pages matched the topic \"{{topic}}\". The detected topic is used instead."
+      "unmatchedTopic": "No pages matched the topic \"{{topic}}\". The detected topic is used instead.",
+      "gateSkipped": "Skipped {{count}} pages (noindex/canonical).",
+      "gateInclude": "Include them",
+      "gateExclude": "Exclude them again"
     },
     "skip": {
       "render-timeout": "JavaScript rendering timed out",
       "request-error": "Request failed",
       "non-topical-status": "Non-content HTTP status",
       "non-html": "Not an HTML page",
-      "no-content": "No text content"
+      "no-content": "No text content",
+      "noindex": "Excluded: noindex",
+      "canonicalized": "Excluded: canonical points to another URL"
     },
     "hero": {
       "label": "Site Focus Score",
@@ -6754,6 +6766,12 @@
       "noPrevious": "first analysis",
       "noTasks": "No urgent tasks.",
       "gain": "(+{{value}} pts)"
+    },
+    "conflict": {
+      "pillar-noindex": "Pillar page is noindex: {{url}}",
+      "inlinked-foreign-canonical": "{{url}} has {{inlinks}} internal links but its canonical points to another host",
+      "noindex-with-traffic": "{{url}} is noindex but has {{clicks}} GSC clicks and {{domains}} referring domains",
+      "sitemap-noindex": "{{url}} is in the sitemap but marked noindex"
     }
   },
   "focusBenchmark": {

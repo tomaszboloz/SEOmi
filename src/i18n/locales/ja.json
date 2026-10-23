@@ -6272,6 +6272,13 @@
         "what": "推奨される目標です。80以上、または上位3競合の平均がそれより高い場合はその平均値です。",
         "why": "比較結果を、目指すべき1つの数値に落とし込みます。",
         "action": "計画上の目標として使ってください。\n修正後にベンチマークを再実行して変化を確認しましょう。"
+      },
+      "indexGate": {
+        "title": "インデックス可能性ゲート",
+        "what": "noindex のページや canonical が別 URL を指すページはスコアから除外され、順位がつき得るページだけが反映されます。",
+        "why": "Google がインデックスしないページを数えるとスコアが下がり、すでに noindex のページに noindex を勧めてしまうことがあります。",
+        "action": "スキップ数を確認します。\nnoindex のピラーなど、スコア下に表示される矛盾を直します。\n「含める」は全ページでのスコアを見たいときだけ使います。",
+        "example": "noindex のタグページはスキップされ、テーマ外とは採点されません。"
       }
     },
     "authority": {
@@ -6486,14 +6493,19 @@
       "lexicalFallback": "選択した言語の分析には統計的アルゴリズムの TF-IDF を使用しています。深い意味的類似度の要素は利用できないため、スコアはキーワードのカバー率と分布に基づきます。",
       "skippedRender": "JavaScript のレンダリングがタイムアウトしたため、{{count}} ページを分析からスキップしました。",
       "degraded": "一部のページはデータが限られていたため、スコアの精度が低い可能性があります。",
-      "unmatchedTopic": "トピック「{{topic}}」に一致するページはありませんでした。代わりに検出されたトピックを使用します。"
+      "unmatchedTopic": "トピック「{{topic}}」に一致するページはありませんでした。代わりに検出されたトピックを使用します。",
+      "gateSkipped": "{{count}} ページをスキップしました（noindex/canonical）。",
+      "gateInclude": "含める",
+      "gateExclude": "再び除外"
     },
     "skip": {
       "render-timeout": "JavaScript のレンダリングがタイムアウトしました",
       "request-error": "リクエストに失敗しました",
       "non-topical-status": "コンテンツ以外の HTTP ステータス",
       "non-html": "HTML ページではありません",
-      "no-content": "テキストコンテンツなし"
+      "no-content": "テキストコンテンツなし",
+      "noindex": "除外：noindex",
+      "canonicalized": "除外：canonical が別の URL を指しています"
     },
     "hero": {
       "label": "Site Focus Score",
@@ -6754,6 +6766,12 @@
       "noPrevious": "初回の分析",
       "noTasks": "緊急のタスクはありません。",
       "gain": "(+{{value}} pt)"
+    },
+    "conflict": {
+      "pillar-noindex": "ピラーページが noindex です：{{url}}",
+      "inlinked-foreign-canonical": "{{url}} は内部リンクが {{inlinks}} 件ありますが、canonical は別のホストを指しています",
+      "noindex-with-traffic": "{{url}} は noindex ですが、GSC クリック {{clicks}} 件と参照ドメイン {{domains}} 件があります",
+      "sitemap-noindex": "{{url}} はサイトマップにありますが noindex です"
     }
   },
   "focusBenchmark": {
