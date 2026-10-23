@@ -1,0 +1,71 @@
+use rusqlite::{Connection, Result};
+use std::path::Path;
+
+pub const SCHEMA_VERSION: i64 = 1;
+
+const V1: &str = "
+CREATE TABLE crawl_runs (
+    run_id TEXT NOT NULL,
+    project_id TEXT NOT NULL,
+    completed_at TEXT NOT NULL,
+    start_url TEXT NOT NULL,
+    meta TEXT NOT NULL,
+    page_count INTEGER NOT NULL,
+    PRIMARY KEY (project_id, run_id)
+);
+CREATE TABLE crawl_pages (
+    project_id TEXT NOT NULL,
+    run_id TEXT NOT NULL,
+    idx INTEGER NOT NULL,
+    url TEXT NOT NULL,
+    data TEXT NOT NULL,
+    PRIMARY KEY (project_id, run_id, idx),
+    FOREIGN KEY (project_id, run_id) REFERENCES crawl_runs (project_id, run_id) ON DELETE CASCADE
+);
+CREATE TABLE records (
+    project_id TEXT NOT NULL,
+    kind TEXT NOT NULL,
+    rec_key TEXT NOT NULL,
+    subject_id TEXT NOT NULL DEFAULT '',
+    key_id TEXT NOT NULL DEFAULT '',
+    data BLOB NOT NULL,
+    PRIMARY KEY (project_id, kind, rec_key)
+);
+CREATE INDEX records_subject ON records (project_id, subject_id);
+CREATE TABLE import_log (
+    project_id TEXT NOT NULL,
+    source TEXT NOT NULL,
+    run_id TEXT NOT NULL,
+    PRIMARY KEY (project_id, source, run_id)
+);
+";
+
+/// Apply pending migrations atomically: a crash mid-migration rolls back and
+/// the next open retries from the previous `user_version`.
+pub fn migrate(conn: &mut Connection) -> Result<()> {
+    let current: i64 = conn.query_row("PRAGMA user_version", [], |row| row.get(0))?;
+    if current >= SCHEMA_VERSION {
+        return Ok(());
+    }
+    let tx = conn.transaction()?;
+    if current < 1 {
+        tx.execute_batch(V1)?;
+    }
+    tx.pragma_update(None, "user_version", SCHEMA_VERSION)?;
+    tx.commit()
+}
+
+pub fn open(path: &Path) -> Result<Connection> {
+    let mut conn = Connection::open(path)?;
+    conn.pragma_update(None, "foreign_keys", true)?;
+    conn.pragma_update(None, "journal_mode", "WAL")?;
+    migrate(&mut conn)?;
+    Ok(conn)
+}
+
+pub fn open_memory() -> Result<Connection> {
+    let mut conn = Connection::open_in_memory()?;
+    conn.pragma_update(None, "foreign_keys", true)?;
+    migrate(&mut conn)?;
+    Ok(conn)
+}
