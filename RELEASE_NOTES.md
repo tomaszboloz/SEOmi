@@ -1,6 +1,12 @@
-# SEOmi 0.4.6 — release notes
+# SEOmi 0.4.7 — release notes
 
 ## Added
+
+- Direct unit tests for the Help popover placement (`computePosition`) and the trust-tab helpers (`levelOfScore`, level/severity styles, layer list), part of GAP-022 coverage work.
+
+## Included from 0.4.6
+
+### Added
 
 - Copilot Patcher review UI with human approval ownership checks.
 
