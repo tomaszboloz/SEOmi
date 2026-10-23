@@ -5,6 +5,12 @@
 - Rust unit tests for PDF report label locale/RTL helpers and for crypto-shredding store error, missing-key and tampered-ciphertext paths (GAP-023 coverage work). No production code changed.
 - Direct unit assertions for crawl write locking, audit-log hashing and chain verification, CMS patch HTTP helpers, monitoring storage keys and deploy artifact primitives (GAP-026). No production code changed.
 
+## Fixed
+
+- Opening the SQLite crawl store concurrently for the first time no longer fails with `SQLITE_BUSY` when switching to WAL: the switch is retried within the busy timeout. The concurrency test no longer deadlocks its barrier when an open fails.
+- Native logging tests no longer race on a cached disabled tracing interest (GAP-D08).
+- DataForSEO tests follow the native budget contract.
+
 ## Included from 0.4.8
 
 ## Added
