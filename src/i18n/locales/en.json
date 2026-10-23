@@ -7163,5 +7163,9 @@
       "copied": "Copied.",
       "copyFailed": "Copy failed. Select the text and copy it manually."
     }
+  },
+  "snapshots": {
+    "newerData": "Newer crawl data is available.",
+    "refresh": "Refresh"
   }
 }

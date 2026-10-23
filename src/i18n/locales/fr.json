@@ -7163,5 +7163,9 @@
       "copied": "Copié.",
       "copyFailed": "Échec de la copie. Sélectionnez le texte et copiez-le manuellement."
     }
+  },
+  "snapshots": {
+    "newerData": "Des données d'exploration plus récentes sont disponibles.",
+    "refresh": "Actualiser"
   }
 }

@@ -7163,5 +7163,9 @@
       "copied": "Copiato.",
       "copyFailed": "Copia non riuscita. Seleziona il testo e copialo manualmente."
     }
+  },
+  "snapshots": {
+    "newerData": "Sono disponibili dati di scansione più recenti.",
+    "refresh": "Aggiorna"
   }
 }
