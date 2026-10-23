@@ -17,19 +17,32 @@ fn page(url: &str, jsonld: &str) -> CrawledPageSummary {
 }
 
 fn org(url: &str, same_as: &str) -> CrawledPageSummary {
-    page(url, &format!(
-        r#"{{"@context":"https://schema.org","@id":"https://example.test/#org","@type":"Organization","name":"Acme"{same_as}}}"#
-    ))
+    page(
+        url,
+        &format!(
+            r#"{{"@context":"https://schema.org","@id":"https://example.test/#org","@type":"Organization","name":"Acme"{same_as}}}"#
+        ),
+    )
 }
 
 fn inconsistent(pages: &[CrawledPageSummary]) -> bool {
-    pages.iter().any(|p| p.issues.iter().any(|i| i.message.contains("inconsistent sameAs")))
+    pages.iter().any(|p| {
+        p.issues
+            .iter()
+            .any(|i| i.message.contains("inconsistent sameAs"))
+    })
 }
 
 #[test]
 fn missing_or_empty_same_as_is_not_a_conflict() {
     for second in ["", r#","sameAs":[]"#] {
-        let mut pages = vec![org("https://example.test/a", r#","sameAs":"https://social.test/acme""#), org("https://example.test/b", second)];
+        let mut pages = vec![
+            org(
+                "https://example.test/a",
+                r#","sameAs":"https://social.test/acme""#,
+            ),
+            org("https://example.test/b", second),
+        ];
         annotate_page_relations(&mut pages, "http");
         assert!(!inconsistent(&pages));
     }
@@ -38,8 +51,14 @@ fn missing_or_empty_same_as_is_not_a_conflict() {
 #[test]
 fn same_list_in_other_order_is_not_a_conflict() {
     let mut pages = vec![
-        org("https://example.test/a", r#","sameAs":["https://a.test","https://b.test"]"#),
-        org("https://example.test/b", r#","sameAs":["https://b.test","https://a.test"]"#),
+        org(
+            "https://example.test/a",
+            r#","sameAs":["https://a.test","https://b.test"]"#,
+        ),
+        org(
+            "https://example.test/b",
+            r#","sameAs":["https://b.test","https://a.test"]"#,
+        ),
     ];
     annotate_page_relations(&mut pages, "http");
     assert!(!inconsistent(&pages));
