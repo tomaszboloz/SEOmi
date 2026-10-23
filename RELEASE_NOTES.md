@@ -1,4 +1,11 @@
-# SEOmi 0.4.8 — release notes
+# SEOmi 0.4.11 — release notes
+
+## Fixed
+
+- Opening the SQLite crawl store concurrently for the first time no longer fails with `SQLITE_BUSY` when switching to WAL: the switch is retried within the busy timeout. The concurrency test no longer deadlocks its barrier when an open fails.
+
+## Included from 0.4.8
+
 
 ## Added
 
