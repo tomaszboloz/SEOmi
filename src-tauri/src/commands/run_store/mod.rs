@@ -16,6 +16,8 @@ mod erasure_regression_tests;
 mod open_store_failure_tests;
 #[cfg(test)]
 mod read_consistency_tests;
+#[cfg(test)]
+mod persistence_contract_tests;
 pub mod records;
 #[cfg(test)]
 mod recovery_tests;
@@ -24,6 +26,8 @@ pub mod runs;
 pub mod schema;
 #[cfg(test)]
 mod schema_concurrency_tests;
+#[cfg(test)]
+mod schema_contract_tests;
 pub mod shred;
 #[cfg(test)]
 mod shred_tests;
