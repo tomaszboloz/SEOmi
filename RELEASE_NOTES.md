@@ -1,3 +1,9 @@
+# SEOmi 0.4.7 — release notes
+
+## Fixed
+
+- Flaky native logging tests (GAP-D08): tests that run IPC dispatch without a scoped subscriber now install the global subscriber first, so tracing's process-wide callsite registry can no longer cache a disabled span for the `seomi.ipc` callsites. The subprocess isolation workaround is removed; the two tests run in-process.
+
 # SEOmi 0.4.6 — release notes
 
 ## Added
