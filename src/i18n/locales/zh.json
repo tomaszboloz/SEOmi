@@ -7585,5 +7585,42 @@
   "snapshots": {
     "newerData": "有更新的抓取数据。",
     "refresh": "刷新"
+  },
+  "teamUi": {
+    "role": {
+      "admin": "管理员",
+      "seo_strategist": "SEO 策略师",
+      "content_writer": "内容撰写者",
+      "developer": "开发者"
+    },
+    "permission": {
+      "run_crawl": "运行抓取",
+      "execute_cms_patch": "应用 CMS 补丁",
+      "modify_site_focus_rules": "修改 Site Focus 规则",
+      "export_audit_pdf": "导出审计 PDF",
+      "manage_team_roles": "管理团队角色"
+    },
+    "denied": "您的角色无权执行此操作。"
+  },
+  "cmsUi": {
+    "kind": {
+      "wordpress": "WordPress",
+      "strapi": "Strapi",
+      "webhook": "Webhook"
+    },
+    "error": {
+      "unsafe-url": "不允许该 CMS 地址（需要 HTTPS 和公共主机）。",
+      "conflict": "生成 diff 后页面已被编辑。请重新生成 diff。",
+      "http": "CMS 拒绝了请求。",
+      "bad-response": "CMS 返回了意外的格式。",
+      "heading-not-found": "页面中未找到该标题。",
+      "heading-ambiguous": "该标题出现多次。",
+      "forbidden": "您的角色无权应用 CMS 补丁。",
+      "not-approved": "写入前请批准这份确切的 diff。",
+      "fact-gate-required": "YMYL 内容在写入前需通过事实核查。"
+    },
+    "verified": "更改已写入并验证。",
+    "unverified": "更改已写入，但线上页面尚未显示。",
+    "dryRun": "试运行：未写入任何内容。"
   }
 }

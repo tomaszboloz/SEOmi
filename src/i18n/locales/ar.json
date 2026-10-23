@@ -7585,5 +7585,42 @@
   "snapshots": {
     "newerData": "تتوفر بيانات زحف أحدث.",
     "refresh": "تحديث"
+  },
+  "teamUi": {
+    "role": {
+      "admin": "مسؤول",
+      "seo_strategist": "استراتيجي SEO",
+      "content_writer": "كاتب محتوى",
+      "developer": "مطوّر"
+    },
+    "permission": {
+      "run_crawl": "تشغيل الزحف",
+      "execute_cms_patch": "تطبيق تعديل على CMS",
+      "modify_site_focus_rules": "تغيير قواعد Site Focus",
+      "export_audit_pdf": "تصدير تقرير التدقيق PDF",
+      "manage_team_roles": "إدارة أدوار الفريق"
+    },
+    "denied": "دورك لا يسمح بهذا الإجراء."
+  },
+  "cmsUi": {
+    "kind": {
+      "wordpress": "WordPress",
+      "strapi": "Strapi",
+      "webhook": "Webhook"
+    },
+    "error": {
+      "unsafe-url": "عنوان CMS غير مسموح (يلزم HTTPS ومضيف عام).",
+      "conflict": "تم تعديل الصفحة بعد إعداد الفروقات. أعدّ الفروقات من جديد.",
+      "http": "رفض CMS الطلب.",
+      "bad-response": "ردّ CMS بصيغة غير متوقعة.",
+      "heading-not-found": "لم يُعثر على العنوان في الصفحة.",
+      "heading-ambiguous": "يظهر العنوان أكثر من مرة.",
+      "forbidden": "دورك لا يسمح بتطبيق تعديلات CMS.",
+      "not-approved": "وافق على هذه الفروقات بالتحديد قبل الكتابة.",
+      "fact-gate-required": "محتوى YMYL يحتاج إلى تحقق ناجح من الحقائق قبل الكتابة."
+    },
+    "verified": "تمت كتابة التغيير والتحقق منه.",
+    "unverified": "تمت كتابة التغيير لكنه لم يظهر بعد في الصفحة المباشرة.",
+    "dryRun": "تشغيل تجريبي: لم تتم كتابة أي شيء."
   }
 }

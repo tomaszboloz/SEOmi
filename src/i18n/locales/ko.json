@@ -7585,5 +7585,42 @@
   "snapshots": {
     "newerData": "더 최신 크롤 데이터가 있습니다.",
     "refresh": "새로고침"
+  },
+  "teamUi": {
+    "role": {
+      "admin": "관리자",
+      "seo_strategist": "SEO 전략가",
+      "content_writer": "콘텐츠 작성자",
+      "developer": "개발자"
+    },
+    "permission": {
+      "run_crawl": "크롤 실행",
+      "execute_cms_patch": "CMS 패치 적용",
+      "modify_site_focus_rules": "Site Focus 규칙 변경",
+      "export_audit_pdf": "감사 PDF 내보내기",
+      "manage_team_roles": "팀 역할 관리"
+    },
+    "denied": "현재 역할로는 이 작업을 수행할 수 없습니다."
+  },
+  "cmsUi": {
+    "kind": {
+      "wordpress": "WordPress",
+      "strapi": "Strapi",
+      "webhook": "Webhook"
+    },
+    "error": {
+      "unsafe-url": "허용되지 않는 CMS 주소입니다(HTTPS와 공개 호스트가 필요합니다).",
+      "conflict": "diff를 만든 뒤 페이지가 수정되었습니다. diff를 다시 만드세요.",
+      "http": "CMS가 요청을 거부했습니다.",
+      "bad-response": "CMS가 예상치 못한 형식으로 응답했습니다.",
+      "heading-not-found": "페이지에서 제목을 찾을 수 없습니다.",
+      "heading-ambiguous": "제목이 두 번 이상 나타납니다.",
+      "forbidden": "현재 역할로는 CMS 패치를 적용할 수 없습니다.",
+      "not-approved": "쓰기 전에 이 diff를 정확히 승인하세요.",
+      "fact-gate-required": "YMYL 콘텐츠는 쓰기 전에 팩트 체크 통과가 필요합니다."
+    },
+    "verified": "변경을 기록하고 확인했습니다.",
+    "unverified": "변경을 기록했지만 라이브 페이지에는 아직 보이지 않습니다.",
+    "dryRun": "드라이 런: 아무것도 기록하지 않았습니다."
   }
 }

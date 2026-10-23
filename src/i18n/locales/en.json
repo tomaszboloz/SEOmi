@@ -7585,5 +7585,42 @@
   "snapshots": {
     "newerData": "Newer crawl data is available.",
     "refresh": "Refresh"
+  },
+  "teamUi": {
+    "role": {
+      "admin": "Admin",
+      "seo_strategist": "SEO Strategist",
+      "content_writer": "Content Writer",
+      "developer": "Developer"
+    },
+    "permission": {
+      "run_crawl": "Run crawl",
+      "execute_cms_patch": "Apply CMS patch",
+      "modify_site_focus_rules": "Change Site Focus rules",
+      "export_audit_pdf": "Export audit PDF",
+      "manage_team_roles": "Manage team roles"
+    },
+    "denied": "Your role cannot perform this action."
+  },
+  "cmsUi": {
+    "kind": {
+      "wordpress": "WordPress",
+      "strapi": "Strapi",
+      "webhook": "Webhook"
+    },
+    "error": {
+      "unsafe-url": "The CMS address is not allowed (HTTPS and a public host are required).",
+      "conflict": "The page was edited after the diff was prepared. Prepare the diff again.",
+      "http": "The CMS rejected the request.",
+      "bad-response": "The CMS answered in an unexpected format.",
+      "heading-not-found": "The heading was not found in the page.",
+      "heading-ambiguous": "The heading appears more than once.",
+      "forbidden": "Your role cannot apply CMS patches.",
+      "not-approved": "Approve this exact diff before writing.",
+      "fact-gate-required": "YMYL content needs a passed fact check before writing."
+    },
+    "verified": "Change written and verified.",
+    "unverified": "Change written, but the live page does not show it yet.",
+    "dryRun": "Dry run: nothing was written."
   }
 }

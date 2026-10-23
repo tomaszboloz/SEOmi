@@ -7585,5 +7585,42 @@
   "snapshots": {
     "newerData": "Dostępne są nowsze dane z crawla.",
     "refresh": "Odśwież"
+  },
+  "teamUi": {
+    "role": {
+      "admin": "Administrator",
+      "seo_strategist": "Strateg SEO",
+      "content_writer": "Autor treści",
+      "developer": "Programista"
+    },
+    "permission": {
+      "run_crawl": "Uruchamianie crawla",
+      "execute_cms_patch": "Stosowanie poprawek w CMS",
+      "modify_site_focus_rules": "Zmiana reguł Site Focus",
+      "export_audit_pdf": "Eksport audytu do PDF",
+      "manage_team_roles": "Zarządzanie rolami zespołu"
+    },
+    "denied": "Twoja rola nie pozwala na tę akcję."
+  },
+  "cmsUi": {
+    "kind": {
+      "wordpress": "WordPress",
+      "strapi": "Strapi",
+      "webhook": "Webhook"
+    },
+    "error": {
+      "unsafe-url": "Adres CMS jest niedozwolony (wymagany HTTPS i publiczny host).",
+      "conflict": "Strona zmieniła się po przygotowaniu diffa. Przygotuj diff ponownie.",
+      "http": "CMS odrzucił żądanie.",
+      "bad-response": "CMS odpowiedział w nieoczekiwanym formacie.",
+      "heading-not-found": "Nie znaleziono nagłówka na stronie.",
+      "heading-ambiguous": "Nagłówek występuje więcej niż raz.",
+      "forbidden": "Twoja rola nie pozwala stosować poprawek w CMS.",
+      "not-approved": "Zatwierdź dokładnie ten diff przed zapisem.",
+      "fact-gate-required": "Treści YMYL wymagają zaliczonej weryfikacji faktów przed zapisem."
+    },
+    "verified": "Zmiana zapisana i zweryfikowana.",
+    "unverified": "Zmiana zapisana, ale na żywej stronie jeszcze jej nie widać.",
+    "dryRun": "Próba na sucho: nic nie zapisano."
   }
 }

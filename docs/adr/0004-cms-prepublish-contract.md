@@ -30,3 +30,6 @@ Adapter 1: WordPress (check button, reasons card, deep links to SEOmi). Strapi, 
 
 ## Verification
 Contract round trip desktop/MCP/adapter. Unauthorized, cross-project, expired token, replay. Stale revision and publish-vs-check race. Outage, cancel, invalid payload, no write on check. Fixtures only, no real publish.
+
+## Two-way patch (issue #140)
+Implemented as pure services in `src/services/cmsPatch` with an injected transport: SSRF-checked HTTPS URLs, credential NAME only (the native transport attaches the secret), section patch by heading, line diff preview, human approval bound to the diff hash, YMYL fact gate, revision recheck plus `If-Match`, backup before write, post-write verification, audit entries (ADR 0005). No UI and no native transport yet.

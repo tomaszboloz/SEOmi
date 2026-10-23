@@ -7585,5 +7585,42 @@
   "snapshots": {
     "newerData": "Hay datos de rastreo más recientes.",
     "refresh": "Actualizar"
+  },
+  "teamUi": {
+    "role": {
+      "admin": "Administrador",
+      "seo_strategist": "Estratega SEO",
+      "content_writer": "Redactor de contenido",
+      "developer": "Desarrollador"
+    },
+    "permission": {
+      "run_crawl": "Ejecutar rastreo",
+      "execute_cms_patch": "Aplicar parche al CMS",
+      "modify_site_focus_rules": "Cambiar reglas de Site Focus",
+      "export_audit_pdf": "Exportar auditoría en PDF",
+      "manage_team_roles": "Gestionar roles del equipo"
+    },
+    "denied": "Tu rol no puede realizar esta acción."
+  },
+  "cmsUi": {
+    "kind": {
+      "wordpress": "WordPress",
+      "strapi": "Strapi",
+      "webhook": "Webhook"
+    },
+    "error": {
+      "unsafe-url": "La dirección del CMS no está permitida (se requiere HTTPS y un host público).",
+      "conflict": "La página se editó tras preparar el diff. Prepara el diff de nuevo.",
+      "http": "El CMS rechazó la solicitud.",
+      "bad-response": "El CMS respondió en un formato inesperado.",
+      "heading-not-found": "No se encontró el encabezado en la página.",
+      "heading-ambiguous": "El encabezado aparece más de una vez.",
+      "forbidden": "Tu rol no puede aplicar parches al CMS.",
+      "not-approved": "Aprueba este diff exacto antes de escribir.",
+      "fact-gate-required": "El contenido YMYL necesita una verificación de hechos superada antes de escribir."
+    },
+    "verified": "Cambio escrito y verificado.",
+    "unverified": "Cambio escrito, pero la página en vivo aún no lo muestra.",
+    "dryRun": "Simulación: no se escribió nada."
   }
 }
