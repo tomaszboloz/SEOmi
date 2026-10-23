@@ -7532,5 +7532,26 @@
       "manage_team_roles": "Gerenciar funções da equipe"
     },
     "denied": "Sua função não permite esta ação."
+  },
+  "cmsUi": {
+    "kind": {
+      "wordpress": "WordPress",
+      "strapi": "Strapi",
+      "webhook": "Webhook"
+    },
+    "error": {
+      "unsafe-url": "O endereço do CMS não é permitido (exige HTTPS e host público).",
+      "conflict": "A página foi editada após o diff ser preparado. Prepare o diff novamente.",
+      "http": "O CMS rejeitou a solicitação.",
+      "bad-response": "O CMS respondeu em um formato inesperado.",
+      "heading-not-found": "Título não encontrado na página.",
+      "heading-ambiguous": "O título aparece mais de uma vez.",
+      "forbidden": "Sua função não pode aplicar patches no CMS.",
+      "not-approved": "Aprove este diff exato antes de gravar.",
+      "fact-gate-required": "Conteúdo YMYL precisa de verificação de fatos aprovada antes de gravar."
+    },
+    "verified": "Alteração gravada e verificada.",
+    "unverified": "Alteração gravada, mas a página ao vivo ainda não a mostra.",
+    "dryRun": "Simulação: nada foi gravado."
   }
 }

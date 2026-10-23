@@ -7532,5 +7532,26 @@
       "manage_team_roles": "チームロールの管理"
     },
     "denied": "あなたのロールではこの操作はできません。"
+  },
+  "cmsUi": {
+    "kind": {
+      "wordpress": "WordPress",
+      "strapi": "Strapi",
+      "webhook": "Webhook"
+    },
+    "error": {
+      "unsafe-url": "このCMSアドレスは許可されていません（HTTPSと公開ホストが必要です）。",
+      "conflict": "差分の作成後にページが編集されました。差分を作り直してください。",
+      "http": "CMSがリクエストを拒否しました。",
+      "bad-response": "CMSが想定外の形式で応答しました。",
+      "heading-not-found": "ページ内に見出しが見つかりません。",
+      "heading-ambiguous": "見出しが複数あります。",
+      "forbidden": "あなたのロールではCMSパッチを適用できません。",
+      "not-approved": "書き込む前に、この差分そのものを承認してください。",
+      "fact-gate-required": "YMYLコンテンツは、書き込み前にファクトチェックの合格が必要です。"
+    },
+    "verified": "変更を書き込み、確認しました。",
+    "unverified": "変更を書き込みましたが、公開ページにはまだ反映されていません。",
+    "dryRun": "ドライラン：何も書き込まれていません。"
   }
 }

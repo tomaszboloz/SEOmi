@@ -7532,5 +7532,26 @@
       "manage_team_roles": "Teamrollen verwalten"
     },
     "denied": "Ihre Rolle darf diese Aktion nicht ausführen."
+  },
+  "cmsUi": {
+    "kind": {
+      "wordpress": "WordPress",
+      "strapi": "Strapi",
+      "webhook": "Webhook"
+    },
+    "error": {
+      "unsafe-url": "Die CMS-Adresse ist nicht erlaubt (HTTPS und öffentlicher Host erforderlich).",
+      "conflict": "Die Seite wurde nach Erstellung des Diffs geändert. Diff neu erstellen.",
+      "http": "Das CMS hat die Anfrage abgelehnt.",
+      "bad-response": "Das CMS antwortete in einem unerwarteten Format.",
+      "heading-not-found": "Die Überschrift wurde auf der Seite nicht gefunden.",
+      "heading-ambiguous": "Die Überschrift kommt mehrfach vor.",
+      "forbidden": "Ihre Rolle darf keine CMS-Patches anwenden.",
+      "not-approved": "Genehmigen Sie genau diesen Diff vor dem Schreiben.",
+      "fact-gate-required": "YMYL-Inhalte brauchen vor dem Schreiben eine bestandene Faktenprüfung."
+    },
+    "verified": "Änderung geschrieben und verifiziert.",
+    "unverified": "Änderung geschrieben, auf der Live-Seite aber noch nicht sichtbar.",
+    "dryRun": "Testlauf: Es wurde nichts geschrieben."
   }
 }

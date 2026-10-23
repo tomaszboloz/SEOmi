@@ -7532,5 +7532,26 @@
       "manage_team_roles": "Zarządzanie rolami zespołu"
     },
     "denied": "Twoja rola nie pozwala na tę akcję."
+  },
+  "cmsUi": {
+    "kind": {
+      "wordpress": "WordPress",
+      "strapi": "Strapi",
+      "webhook": "Webhook"
+    },
+    "error": {
+      "unsafe-url": "Adres CMS jest niedozwolony (wymagany HTTPS i publiczny host).",
+      "conflict": "Strona zmieniła się po przygotowaniu diffa. Przygotuj diff ponownie.",
+      "http": "CMS odrzucił żądanie.",
+      "bad-response": "CMS odpowiedział w nieoczekiwanym formacie.",
+      "heading-not-found": "Nie znaleziono nagłówka na stronie.",
+      "heading-ambiguous": "Nagłówek występuje więcej niż raz.",
+      "forbidden": "Twoja rola nie pozwala stosować poprawek w CMS.",
+      "not-approved": "Zatwierdź dokładnie ten diff przed zapisem.",
+      "fact-gate-required": "Treści YMYL wymagają zaliczonej weryfikacji faktów przed zapisem."
+    },
+    "verified": "Zmiana zapisana i zweryfikowana.",
+    "unverified": "Zmiana zapisana, ale na żywej stronie jeszcze jej nie widać.",
+    "dryRun": "Próba na sucho: nic nie zapisano."
   }
 }

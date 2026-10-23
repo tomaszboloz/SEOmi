@@ -7532,5 +7532,26 @@
       "manage_team_roles": "Gérer les rôles de l'équipe"
     },
     "denied": "Votre rôle ne permet pas cette action."
+  },
+  "cmsUi": {
+    "kind": {
+      "wordpress": "WordPress",
+      "strapi": "Strapi",
+      "webhook": "Webhook"
+    },
+    "error": {
+      "unsafe-url": "L'adresse du CMS n'est pas autorisée (HTTPS et hôte public requis).",
+      "conflict": "La page a été modifiée après la préparation du diff. Préparez-le à nouveau.",
+      "http": "Le CMS a rejeté la requête.",
+      "bad-response": "Le CMS a répondu dans un format inattendu.",
+      "heading-not-found": "Titre introuvable dans la page.",
+      "heading-ambiguous": "Le titre apparaît plusieurs fois.",
+      "forbidden": "Votre rôle ne permet pas d'appliquer des correctifs CMS.",
+      "not-approved": "Approuvez ce diff exact avant d'écrire.",
+      "fact-gate-required": "Le contenu YMYL exige une vérification des faits réussie avant l'écriture."
+    },
+    "verified": "Modification écrite et vérifiée.",
+    "unverified": "Modification écrite, mais la page en ligne ne l'affiche pas encore.",
+    "dryRun": "Simulation : rien n'a été écrit."
   }
 }
