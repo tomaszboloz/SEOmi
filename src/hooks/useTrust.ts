@@ -2,6 +2,7 @@ import { useEffect, useMemo, useState } from 'react';
 import type { CrawledPageSummary, CrawlRunRecord } from '@/types';
 import { buildSiteFocusReport } from '@/services/siteFocus';
 import { buildTrustReport, readTrustHistory, recordTrust, type TrustReport, type TrustSnapshot } from '@/services/eeatTrust';
+import { monitorScoreDrop } from '@/services/monitoringAlerts';
 import { readManualTopic } from '@/services/siteFocusMonitoring/topic';
 
 export interface TrustState { report: TrustReport | null; previous: TrustSnapshot | undefined }
@@ -17,7 +18,12 @@ export const useTrust = (pages: CrawledPageSummary[], startUrl: string, run: Cra
 
   useEffect(() => { setHistory(readTrustHistory(projectId)); }, [projectId]);
   useEffect(() => {
-    if (report && run && projectId) setHistory(recordTrust(projectId, report, run.id));
+    if (!report || !run || !projectId) return;
+    const before = readTrustHistory(projectId);
+    const entries = recordTrust(projectId, report, run.id);
+    setHistory(entries);
+    const previous = before.filter((item) => item.runId !== run.id).at(-1);
+    if (!before.some((item) => item.runId === run.id)) void monitorScoreDrop(projectId, 'trust', previous, report, run.id).catch(() => undefined);
   }, [report, run?.id, projectId]);
 
   const previous = [...history].reverse().find((item) => item.runId !== run?.id);
