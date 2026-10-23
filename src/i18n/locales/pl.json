@@ -6457,6 +6457,14 @@
         "why": "Wychwytuje duplikat lub stronę nie na temat, zanim trafi na żywo.",
         "action": "Popraw każdy wymieniony powód.\nUruchom kontrolę ponownie.\nOpublikuj dopiero po własnej weryfikacji."
       }
+    },
+    "parity": {
+      "hreflang": {
+        "title": "Parytet międzynarodowy",
+        "what": "Porównuje głębokość tematów w wersjach językowych powiązanych przez hreflang z językiem referencyjnym i oznacza temat jako pokryty, płytki, brakujący lub celowo lokalny.",
+        "why": "Odróżnia prawdziwą lukę treści od rynku, który celowo oferuje coś innego.",
+        "action": "Sprawdź tematy brakujące i płytkie.\nOznacz jako lokalne tematy niepotrzebne na danym rynku.\nNarzędzie nigdy samo nie zmienia hreflang."
+      }
     }
   },
   "helpUi": {
@@ -7405,5 +7413,24 @@
       "leading-pronoun": "Fragment {{index}} zaczyna się zaimkiem wymagającym wcześniejszego kontekstu.",
       "too-short": "Fragment {{index}} jest za krótki, by działać samodzielnie."
     }
+  },
+  "parityUi": {
+    "title": "Parytet międzynarodowy",
+    "inconclusive": "Brak rozstrzygnięcia: z dostępnych danych nie da się ocenić parytetu.",
+    "gap": {
+      "no-reference-coverage": "Język referencyjny nie ma danych o pokryciu tematów.",
+      "partial-crawl": "Crawl jest niepełny.",
+      "single-language": "Znaleziono tylko jeden język."
+    },
+    "language": "Język",
+    "topic": "Temat",
+    "status": "Status",
+    "statuses": {
+      "covered": "Pokryty",
+      "shallow": "Płytki",
+      "missing": "Brak",
+      "intentionally-local": "Celowo lokalny"
+    },
+    "note": "Brak wersji nie zawsze jest błędem. Teksty nie muszą być 1:1, a język interfejsu nie decyduje o analizowanych językach witryny."
   }
 }

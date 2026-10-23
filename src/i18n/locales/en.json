@@ -6457,6 +6457,14 @@
         "why": "It catches a duplicate or off-topic page before it goes live.",
         "action": "Fix every listed reason.\nRe-run the check.\nPublish only after your own review."
       }
+    },
+    "parity": {
+      "hreflang": {
+        "title": "International parity",
+        "what": "Compares topic depth across the language versions linked by hreflang with a reference language, and marks each topic covered, shallow, missing or intentionally local.",
+        "why": "It separates a real content gap from a market that deliberately offers something different.",
+        "action": "Check the missing and shallow topics.\nMark topics a market does not need as local.\nThe tool never changes hreflang for you."
+      }
     }
   },
   "helpUi": {
@@ -7405,5 +7413,24 @@
       "leading-pronoun": "Passage {{index}} starts with a pronoun that needs earlier context.",
       "too-short": "Passage {{index}} is too short to stand alone."
     }
+  },
+  "parityUi": {
+    "title": "International parity",
+    "inconclusive": "Inconclusive: parity cannot be judged from the data available.",
+    "gap": {
+      "no-reference-coverage": "The reference language has no topic coverage data.",
+      "partial-crawl": "The crawl is partial.",
+      "single-language": "Only one language was found."
+    },
+    "language": "Language",
+    "topic": "Topic",
+    "status": "Status",
+    "statuses": {
+      "covered": "Covered",
+      "shallow": "Shallow",
+      "missing": "Missing",
+      "intentionally-local": "Intentionally local"
+    },
+    "note": "A missing version is not always an error. Texts need not match one to one, and the UI language does not set which site languages are analyzed."
   }
 }

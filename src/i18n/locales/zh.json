@@ -6457,6 +6457,14 @@
         "why": "在上线前发现重复或偏题的页面。",
         "action": "修复列出的每个原因。\n重新运行检查。\n经自己复核后再发布。"
       }
+    },
+    "parity": {
+      "hreflang": {
+        "title": "国际对等性",
+        "what": "把通过 hreflang 关联的各语言版本的主题深度与参考语言比较，并把每个主题标为已覆盖、较浅、缺失或有意本地化。",
+        "why": "它区分真正的内容缺口与有意提供不同内容的市场。",
+        "action": "检查缺失和较浅的主题。\n把某市场不需要的主题标为本地化。\n工具不会替你修改 hreflang。"
+      }
     }
   },
   "helpUi": {
@@ -7405,5 +7413,24 @@
       "leading-pronoun": "第 {{index}} 段以需要上文语境的代词开头。",
       "too-short": "第 {{index}} 段太短，无法独立成立。"
     }
+  },
+  "parityUi": {
+    "title": "国际对等性",
+    "inconclusive": "无法判定：现有数据不足以评估对等性。",
+    "gap": {
+      "no-reference-coverage": "参考语言没有主题覆盖数据。",
+      "partial-crawl": "抓取不完整。",
+      "single-language": "只发现一种语言。"
+    },
+    "language": "语言",
+    "topic": "主题",
+    "status": "状态",
+    "statuses": {
+      "covered": "已覆盖",
+      "shallow": "较浅",
+      "missing": "缺失",
+      "intentionally-local": "有意本地化"
+    },
+    "note": "缺少某个语言版本不一定是错误。文本不必一一对应，界面语言也不决定分析哪些站点语言。"
   }
 }

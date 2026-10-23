@@ -6457,6 +6457,14 @@
         "why": "Sie erkennt Duplikate oder themenfremde Seiten, bevor sie live gehen.",
         "action": "Behebe jeden genannten Grund.\nFühre die Prüfung erneut aus.\nVeröffentliche erst nach eigener Prüfung."
       }
+    },
+    "parity": {
+      "hreflang": {
+        "title": "Internationale Parität",
+        "what": "Vergleicht die Thementiefe der per hreflang verbundenen Sprachversionen mit einer Referenzsprache und markiert jedes Thema als abgedeckt, oberflächlich, fehlend oder bewusst lokal.",
+        "why": "Sie trennt eine echte Inhaltslücke von einem Markt, der bewusst etwas anderes anbietet.",
+        "action": "Prüfe fehlende und oberflächliche Themen.\nMarkiere Themen, die ein Markt nicht braucht, als lokal.\nDas Tool ändert hreflang nie selbst."
+      }
     }
   },
   "helpUi": {
@@ -7405,5 +7413,24 @@
       "leading-pronoun": "Abschnitt {{index}} beginnt mit einem Pronomen, das früheren Kontext braucht.",
       "too-short": "Abschnitt {{index}} ist zu kurz, um allein zu bestehen."
     }
+  },
+  "parityUi": {
+    "title": "Internationale Parität",
+    "inconclusive": "Nicht aussagekräftig: Die Parität lässt sich mit den verfügbaren Daten nicht beurteilen.",
+    "gap": {
+      "no-reference-coverage": "Die Referenzsprache hat keine Themenabdeckungsdaten.",
+      "partial-crawl": "Der Crawl ist unvollständig.",
+      "single-language": "Es wurde nur eine Sprache gefunden."
+    },
+    "language": "Sprache",
+    "topic": "Thema",
+    "status": "Status",
+    "statuses": {
+      "covered": "Abgedeckt",
+      "shallow": "Oberflächlich",
+      "missing": "Fehlt",
+      "intentionally-local": "Bewusst lokal"
+    },
+    "note": "Eine fehlende Version ist nicht immer ein Fehler. Texte müssen nicht 1:1 übereinstimmen, und die Oberflächensprache bestimmt nicht, welche Website-Sprachen analysiert werden."
   }
 }

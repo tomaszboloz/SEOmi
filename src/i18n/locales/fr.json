@@ -6457,6 +6457,14 @@
         "why": "Il repère un doublon ou une page hors sujet avant la mise en ligne.",
         "action": "Corrigez chaque raison listée.\nRelancez le contrôle.\nPubliez seulement après votre propre relecture."
       }
+    },
+    "parity": {
+      "hreflang": {
+        "title": "Parité internationale",
+        "what": "Compare la profondeur des sujets dans les versions linguistiques liées par hreflang avec une langue de référence et marque chaque sujet comme couvert, superficiel, manquant ou local volontairement.",
+        "why": "Il distingue une vraie lacune de contenu d'un marché qui propose volontairement autre chose.",
+        "action": "Vérifiez les sujets manquants et superficiels.\nMarquez comme locaux les sujets inutiles sur un marché.\nL'outil ne modifie jamais hreflang à votre place."
+      }
     }
   },
   "helpUi": {
@@ -7405,5 +7413,24 @@
       "leading-pronoun": "Le passage {{index}} commence par un pronom qui exige un contexte antérieur.",
       "too-short": "Le passage {{index}} est trop court pour tenir seul."
     }
+  },
+  "parityUi": {
+    "title": "Parité internationale",
+    "inconclusive": "Non concluant : la parité ne peut pas être jugée avec les données disponibles.",
+    "gap": {
+      "no-reference-coverage": "La langue de référence n'a pas de données de couverture des sujets.",
+      "partial-crawl": "L'exploration est partielle.",
+      "single-language": "Une seule langue a été trouvée."
+    },
+    "language": "Langue",
+    "topic": "Sujet",
+    "status": "Statut",
+    "statuses": {
+      "covered": "Couvert",
+      "shallow": "Superficiel",
+      "missing": "Manquant",
+      "intentionally-local": "Local volontairement"
+    },
+    "note": "Une version manquante n'est pas toujours une erreur. Les textes n'ont pas à correspondre un à un, et la langue de l'interface ne détermine pas les langues du site analysées."
   }
 }

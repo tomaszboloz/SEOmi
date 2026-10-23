@@ -6457,6 +6457,14 @@
         "why": "Individua una pagina duplicata o fuori tema prima che vada online.",
         "action": "Correggi ogni motivo elencato.\nEsegui di nuovo il controllo.\nPubblica solo dopo la tua revisione."
       }
+    },
+    "parity": {
+      "hreflang": {
+        "title": "Parità internazionale",
+        "what": "Confronta la profondità degli argomenti nelle versioni linguistiche collegate da hreflang con una lingua di riferimento e segna ogni argomento come coperto, superficiale, mancante o locale di proposito.",
+        "why": "Distingue una vera lacuna di contenuto da un mercato che offre di proposito qualcosa di diverso.",
+        "action": "Controlla gli argomenti mancanti e superficiali.\nSegna come locali gli argomenti non necessari a un mercato.\nLo strumento non modifica mai hreflang al posto tuo."
+      }
     }
   },
   "helpUi": {
@@ -7405,5 +7413,24 @@
       "leading-pronoun": "Il passaggio {{index}} inizia con un pronome che richiede contesto precedente.",
       "too-short": "Il passaggio {{index}} è troppo breve per reggersi da solo."
     }
+  },
+  "parityUi": {
+    "title": "Parità internazionale",
+    "inconclusive": "Non conclusivo: con i dati disponibili la parità non si può valutare.",
+    "gap": {
+      "no-reference-coverage": "La lingua di riferimento non ha dati di copertura degli argomenti.",
+      "partial-crawl": "La scansione è parziale.",
+      "single-language": "È stata trovata una sola lingua."
+    },
+    "language": "Lingua",
+    "topic": "Argomento",
+    "status": "Stato",
+    "statuses": {
+      "covered": "Coperto",
+      "shallow": "Superficiale",
+      "missing": "Mancante",
+      "intentionally-local": "Locale di proposito"
+    },
+    "note": "Una versione mancante non è sempre un errore. I testi non devono corrispondere uno a uno e la lingua dell'interfaccia non stabilisce quali lingue del sito vengono analizzate."
   }
 }
