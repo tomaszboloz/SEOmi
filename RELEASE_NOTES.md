@@ -1,8 +1,14 @@
-# SEOmi 0.4.7 — release notes
+# SEOmi 0.4.8 — release notes
 
 ## Added
 
 - Direct unit tests for the Help popover placement (`computePosition`) and the trust-tab helpers (`levelOfScore`, level/severity styles, layer list), part of GAP-022 coverage work.
+
+## Included from 0.4.7
+
+### Fixed
+
+- DataForSEO monthly cap (GAP-C07): the native `dataforseo_request` command now enforces the cap itself (month spend, in-flight reservations) and rejects before credentials or network. Endpoints with no observed price use a conservative 0.10 USD estimate, in both the native and WebView guards.
 
 ## Included from 0.4.6
 

@@ -55,7 +55,7 @@ describe('dataforseo account, budget guard and domain direct contracts', () => {
 
     // With balance check
     writeAccount('p_budget', {
-      login: 'u', balanceUsd: 0.001, estimatedBalanceUsd: 0.001, dailyLimitUsd: null, fetchedAt: 'now',
+      login: 'u', balanceUsd: 0.3, estimatedBalanceUsd: 0.3, dailyLimitUsd: null, fetchedAt: 'now',
     });
     // First reservation leaves remaining budget
     const r1 = reserveBudget('p_budget', '/v3/custom_endpoint');

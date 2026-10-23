@@ -17,9 +17,15 @@ export type PatchCache = Map<string, string>;
 export const choosePatchProvider = (providers: PatchProvider[]): PatchProvider | null =>
   providers.find((provider) => provider.local || isLocalProvider(provider.id)) ?? providers[0] ?? null;
 
+const stripHtml = (text: string): string => {
+  let out = text;
+  for (let prev = ''; prev !== out;) { prev = out; out = out.replace(/<[^>]+>/g, ''); }
+  return out.replace(/[<>]/g, '');
+};
+
 /** Removes fences, HTML and wrapper quotes the model may add around a plain-text paragraph. */
 export const sanitizePatch = (raw: string): string =>
-  raw.replace(/```[a-z]*\n?|```/gi, '').replace(/<[^>]+>/g, '').replace(/^\s*"""|"""\s*$/g, '').replace(/\s+/g, ' ').trim();
+  stripHtml(raw.replace(/```[a-z]*\n?|```/gi, '')).replace(/^\s*"""|"""\s*$/g, '').replace(/\s+/g, ' ').trim();
 
 const abortable = <T,>(work: Promise<T>, signal?: AbortSignal): Promise<T> =>
   new Promise<T>((resolve, reject) => {
