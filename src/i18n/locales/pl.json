@@ -6033,7 +6033,9 @@
           "missing-registry": "Nie znaleziono strony z danymi rejestrowymi firmy ani informacji prawnej.",
           "missing-about": "Nie znaleziono strony O nas.",
           "missing-dates": "Tylko {{0}}% artykułów pokazuje datę modyfikacji lub recenzji.",
-          "no-articles": "Nie wykryto stron artykułów; warstwy autorów i cytowań nie zostały ocenione."
+          "no-articles": "Nie wykryto stron artykułów; warstwy autorów i cytowań nie zostały ocenione.",
+          "author-invalid-profile": "{{0}} autorów podaje profil ORCID lub Wikidata z błędnym identyfikatorem ({{1}}). Sprawdź sumę kontrolną lub Q-ID.",
+          "ymyl-no-scholarly-ids": "Żaden z {{0}} artykułów nie cytuje źródła z DOI, PMID ani PMCID. W tematyce YMYL cytuj badanie pierwotne."
         }
       }
     },
@@ -7164,7 +7166,9 @@
         "missing-registry": "Nie znaleziono strony z danymi rejestrowymi firmy ani informacji prawnej.",
         "missing-about": "Nie znaleziono strony O nas.",
         "missing-dates": "Tylko {{pct}}% artykułów pokazuje datę modyfikacji lub recenzji.",
-        "no-articles": "Nie wykryto stron artykułów, więc warstwy autorów i cytowań nie zostały ocenione."
+        "no-articles": "Nie wykryto stron artykułów, więc warstwy autorów i cytowań nie zostały ocenione.",
+        "author-invalid-profile": "{{count}} autorów podaje profil ORCID lub Wikidata z błędnym identyfikatorem ({{names}}). Sprawdź sumę kontrolną lub Q-ID.",
+        "ymyl-no-scholarly-ids": "Żaden z {{pages}} artykułów nie cytuje źródła z DOI, PMID ani PMCID. W tematyce YMYL cytuj badanie pierwotne."
       }
     },
     "generator": {
@@ -7284,6 +7288,16 @@
         "index-ok": "ZWERYFIKOWANO: strona jest indeksowalna",
         "still-noindex": "BŁĄD WDROŻENIA: noindex nadal obecny"
       }
+    }
+  },
+  "scoreDropAlert": {
+    "aio": {
+      "title": "Spadła gotowość AI",
+      "body": "Gotowość AI Overviews spadła z {{from}} do {{to}} ({{points}} pkt)."
+    },
+    "trust": {
+      "title": "Spadł wynik zaufania",
+      "body": "Wynik zaufania E-E-A-T spadł z {{from}} do {{to}} ({{points}} pkt)."
     }
   }
 }

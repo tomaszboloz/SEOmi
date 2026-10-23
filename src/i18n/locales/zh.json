@@ -6033,7 +6033,9 @@
           "missing-registry": "未找到公司注册信息或法律声明页面。",
           "missing-about": "未找到“关于我们”页面。",
           "missing-dates": "只有 {{0}}% 的文章显示了修改或审核日期。",
-          "no-articles": "未检测到文章页面；未对作者和引用层级评分。"
+          "no-articles": "未检测到文章页面；未对作者和引用层级评分。",
+          "author-invalid-profile": "{{0}}位作者链接的ORCID或Wikidata档案标识符无效（{{1}}）。请检查校验码或Q-ID。",
+          "ymyl-no-scholarly-ids": "{{0}}篇文章均未引用带DOI、PMID或PMCID的来源。YMYL主题请引用原始研究。"
         }
       }
     },
@@ -7164,7 +7166,9 @@
         "missing-registry": "未找到公司注册信息或法律声明页面。",
         "missing-about": "未找到“关于我们”页面。",
         "missing-dates": "只有 {{pct}}% 的文章显示了修改或审核日期。",
-        "no-articles": "未检测到文章页面，因此未对作者和引用层级评分。"
+        "no-articles": "未检测到文章页面，因此未对作者和引用层级评分。",
+        "author-invalid-profile": "{{count}}位作者链接的ORCID或Wikidata档案标识符无效（{{names}}）。请检查校验码或Q-ID。",
+        "ymyl-no-scholarly-ids": "{{pages}}篇文章均未引用带DOI、PMID或PMCID的来源。YMYL主题请引用原始研究。"
       }
     },
     "generator": {
@@ -7284,6 +7288,16 @@
         "index-ok": "已验证：页面可被索引",
         "still-noindex": "部署错误：noindex仍然存在"
       }
+    }
+  },
+  "scoreDropAlert": {
+    "aio": {
+      "title": "AI就绪度下降",
+      "body": "AI Overviews就绪度从{{from}}降至{{to}}（{{points}}分）。"
+    },
+    "trust": {
+      "title": "信任分下降",
+      "body": "E-E-A-T信任分从{{from}}降至{{to}}（{{points}}分）。"
     }
   }
 }

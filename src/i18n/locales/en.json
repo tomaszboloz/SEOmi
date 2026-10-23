@@ -6033,7 +6033,9 @@
           "missing-registry": "No company registry or legal notice page was found.",
           "missing-about": "No About page was found.",
           "missing-dates": "Only {{0}}% of articles show a modified or review date.",
-          "no-articles": "No article pages were detected; author and citation layers were not scored."
+          "no-articles": "No article pages were detected; author and citation layers were not scored.",
+          "author-invalid-profile": "{{0}} authors link an ORCID or Wikidata profile with an invalid identifier ({{1}}). Check the checksum or Q-ID.",
+          "ymyl-no-scholarly-ids": "None of the {{0}} article pages cite a source with a DOI, PMID or PMCID. On a YMYL topic, cite the primary study."
         }
       }
     },
@@ -7164,7 +7166,9 @@
         "missing-registry": "No company registry or legal notice page was found.",
         "missing-about": "No About page was found.",
         "missing-dates": "Only {{pct}}% of articles show a modified or review date.",
-        "no-articles": "No article pages were detected, so the author and citation layers were not scored."
+        "no-articles": "No article pages were detected, so the author and citation layers were not scored.",
+        "author-invalid-profile": "{{count}} authors link an ORCID or Wikidata profile with an invalid identifier ({{names}}). Check the checksum or Q-ID.",
+        "ymyl-no-scholarly-ids": "None of the {{pages}} article pages cite a source with a DOI, PMID or PMCID. On a YMYL topic, cite the primary study."
       }
     },
     "generator": {
@@ -7284,6 +7288,16 @@
         "index-ok": "VERIFIED: page is indexable",
         "still-noindex": "DEPLOYMENT ERROR: noindex is still present"
       }
+    }
+  },
+  "scoreDropAlert": {
+    "aio": {
+      "title": "AI readiness dropped",
+      "body": "AI Overviews readiness fell from {{from}} to {{to}} ({{points}} points)."
+    },
+    "trust": {
+      "title": "Trust score dropped",
+      "body": "The E-E-A-T trust score fell from {{from}} to {{to}} ({{points}} points)."
     }
   }
 }

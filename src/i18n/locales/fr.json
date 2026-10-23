@@ -6033,7 +6033,9 @@
           "missing-registry": "Aucune page de registre d'entreprise ou de mentions légales n'a été trouvée.",
           "missing-about": "Aucune page À propos n'a été trouvée.",
           "missing-dates": "Seulement {{0}} % des articles affichent une date de modification ou de relecture.",
-          "no-articles": "Aucune page d'article n'a été détectée ; les couches auteurs et citations n'ont pas été notées."
+          "no-articles": "Aucune page d'article n'a été détectée ; les couches auteurs et citations n'ont pas été notées.",
+          "author-invalid-profile": "{{0}} auteurs renvoient vers un profil ORCID ou Wikidata dont l’identifiant est invalide ({{1}}). Vérifiez la somme de contrôle ou le Q-ID.",
+          "ymyl-no-scholarly-ids": "Aucun des {{0}} articles ne cite de source avec DOI, PMID ou PMCID. Sur un sujet YMYL, citez l’étude primaire."
         }
       }
     },
@@ -7164,7 +7166,9 @@
         "missing-registry": "Aucune page de registre d'entreprise ou de mentions légales n'a été trouvée.",
         "missing-about": "Aucune page À propos n'a été trouvée.",
         "missing-dates": "Seulement {{pct}} % des articles affichent une date de modification ou de relecture.",
-        "no-articles": "Aucune page d'article n'a été détectée ; les couches auteurs et citations n'ont pas été notées."
+        "no-articles": "Aucune page d'article n'a été détectée ; les couches auteurs et citations n'ont pas été notées.",
+        "author-invalid-profile": "{{count}} auteurs renvoient vers un profil ORCID ou Wikidata dont l’identifiant est invalide ({{names}}). Vérifiez la somme de contrôle ou le Q-ID.",
+        "ymyl-no-scholarly-ids": "Aucun des {{pages}} articles ne cite de source avec DOI, PMID ou PMCID. Sur un sujet YMYL, citez l’étude primaire."
       }
     },
     "generator": {
@@ -7284,6 +7288,16 @@
         "index-ok": "VÉRIFIÉ : la page est indexable",
         "still-noindex": "ERREUR DE DÉPLOIEMENT : noindex est toujours présent"
       }
+    }
+  },
+  "scoreDropAlert": {
+    "aio": {
+      "title": "Préparation IA en baisse",
+      "body": "La préparation AI Overviews est passée de {{from}} à {{to}} ({{points}} points)."
+    },
+    "trust": {
+      "title": "Score de confiance en baisse",
+      "body": "Le score de confiance E-E-A-T est passé de {{from}} à {{to}} ({{points}} points)."
     }
   }
 }

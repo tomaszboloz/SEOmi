@@ -47,9 +47,12 @@ const germanDigraphs = (term: string): string => term.normalize('NFC').replace(/
  * Polish/English inflection is stripped for pages in those languages. The key
  * is an internal identity for clustering, never shown to users.
  */
+export const foldSemanticText = (term: string, language: string | null | undefined): string =>
+  normalizeSemanticText(primaryLanguage(language) === 'de' ? germanDigraphs(term) : term);
+
 export const semanticTermKey = (term: string, language: string | null | undefined): string => {
   const lang = primaryLanguage(language);
-  const folded = normalizeSemanticText(lang === 'de' ? germanDigraphs(term) : term);
+  const folded = foldSemanticText(term, language);
   if (lang === 'pl') {
     const suffix = POLISH_SUFFIXES.find((candidate) =>
       folded.endsWith(candidate) && folded.length - candidate.length >= MIN_POLISH_STEM_CHARS);

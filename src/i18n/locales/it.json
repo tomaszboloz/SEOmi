@@ -6033,7 +6033,9 @@
           "missing-registry": "Non è stata trovata una pagina con i dati del registro imprese o le note legali.",
           "missing-about": "Non è stata trovata una pagina Chi siamo.",
           "missing-dates": "Solo il {{0}}% degli articoli mostra una data di modifica o di revisione.",
-          "no-articles": "Non sono state rilevate pagine di articoli; i livelli autori e citazioni non sono stati valutati."
+          "no-articles": "Non sono state rilevate pagine di articoli; i livelli autori e citazioni non sono stati valutati.",
+          "author-invalid-profile": "{{0}} autori collegano un profilo ORCID o Wikidata con identificatore non valido ({{1}}). Controlla il checksum o il Q-ID.",
+          "ymyl-no-scholarly-ids": "Nessuno dei {{0}} articoli cita una fonte con DOI, PMID o PMCID. Su temi YMYL cita lo studio primario."
         }
       }
     },
@@ -7164,7 +7166,9 @@
         "missing-registry": "Non è stata trovata una pagina con i dati del registro imprese o le note legali.",
         "missing-about": "Non è stata trovata una pagina Chi siamo.",
         "missing-dates": "Solo il {{pct}}% degli articoli mostra una data di modifica o di revisione.",
-        "no-articles": "Non sono state rilevate pagine di articoli, quindi i livelli autori e citazioni non sono stati valutati."
+        "no-articles": "Non sono state rilevate pagine di articoli, quindi i livelli autori e citazioni non sono stati valutati.",
+        "author-invalid-profile": "{{count}} autori collegano un profilo ORCID o Wikidata con identificatore non valido ({{names}}). Controlla il checksum o il Q-ID.",
+        "ymyl-no-scholarly-ids": "Nessuno dei {{pages}} articoli cita una fonte con DOI, PMID o PMCID. Su temi YMYL cita lo studio primario."
       }
     },
     "generator": {
@@ -7284,6 +7288,16 @@
         "index-ok": "VERIFICATO: la pagina è indicizzabile",
         "still-noindex": "ERRORE DI DEPLOYMENT: noindex è ancora presente"
       }
+    }
+  },
+  "scoreDropAlert": {
+    "aio": {
+      "title": "Calo della prontezza IA",
+      "body": "La prontezza per AI Overviews è scesa da {{from}} a {{to}} ({{points}} punti)."
+    },
+    "trust": {
+      "title": "Calo del punteggio di fiducia",
+      "body": "Il punteggio di fiducia E-E-A-T è sceso da {{from}} a {{to}} ({{points}} punti)."
     }
   }
 }

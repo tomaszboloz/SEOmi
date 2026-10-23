@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useState } from 'react';
 import { buildAioReport, readAioHistory, recordAioSnapshot, validAioProject, type AioReport, type AioSnapshot } from '@/services/aioReadiness';
+import { monitorScoreDrop } from '@/services/monitoringAlerts';
 import type { CrawledPageSummary, CrawlRunRecord } from '@/types';
 
 export interface AioState {
@@ -17,7 +18,9 @@ export const useAioReadiness = (pages: CrawledPageSummary[], run: CrawlRunRecord
       setHistory(readAioHistory(projectId));
       return;
     }
-    setHistory(recordAioSnapshot(projectId, report, run.id).entries);
+    const { saved, entries } = recordAioSnapshot(projectId, report, run.id);
+    setHistory(entries);
+    if (saved && entries.length > 1) void monitorScoreDrop(projectId, 'aio', entries[entries.length - 2], entries[entries.length - 1], run.id).catch(() => undefined);
     // One snapshot per run: dedupe by run id lives in the history store.
   }, [report, run?.id, projectId]);
 

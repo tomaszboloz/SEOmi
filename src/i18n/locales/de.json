@@ -6033,7 +6033,9 @@
           "missing-registry": "Es wurde keine Seite mit Handelsregisterdaten oder Impressum gefunden.",
           "missing-about": "Es wurde keine Über-uns-Seite gefunden.",
           "missing-dates": "Nur {{0}} % der Artikel zeigen ein Änderungs- oder Prüfdatum.",
-          "no-articles": "Es wurden keine Artikelseiten erkannt; die Ebenen Autoren und Quellenangaben wurden nicht bewertet."
+          "no-articles": "Es wurden keine Artikelseiten erkannt; die Ebenen Autoren und Quellenangaben wurden nicht bewertet.",
+          "author-invalid-profile": "{{0}} Autoren verlinken ein ORCID- oder Wikidata-Profil mit ungültiger Kennung ({{1}}). Prüfsumme oder Q-ID kontrollieren.",
+          "ymyl-no-scholarly-ids": "Keiner der {{0}} Artikel zitiert eine Quelle mit DOI, PMID oder PMCID. Bei YMYL-Themen die Primärstudie zitieren."
         }
       }
     },
@@ -7164,7 +7166,9 @@
         "missing-registry": "Es wurde keine Seite mit Handelsregisterdaten oder Impressum gefunden.",
         "missing-about": "Es wurde keine Über-uns-Seite gefunden.",
         "missing-dates": "Nur {{pct}} % der Artikel zeigen ein Änderungs- oder Prüfdatum.",
-        "no-articles": "Es wurden keine Artikelseiten erkannt, daher wurden die Ebenen Autoren und Quellenangaben nicht bewertet."
+        "no-articles": "Es wurden keine Artikelseiten erkannt, daher wurden die Ebenen Autoren und Quellenangaben nicht bewertet.",
+        "author-invalid-profile": "{{count}} Autoren verlinken ein ORCID- oder Wikidata-Profil mit ungültiger Kennung ({{names}}). Prüfsumme oder Q-ID kontrollieren.",
+        "ymyl-no-scholarly-ids": "Keiner der {{pages}} Artikel zitiert eine Quelle mit DOI, PMID oder PMCID. Bei YMYL-Themen die Primärstudie zitieren."
       }
     },
     "generator": {
@@ -7284,6 +7288,16 @@
         "index-ok": "VERIFIZIERT: Seite ist indexierbar",
         "still-noindex": "UMSETZUNGSFEHLER: noindex ist weiterhin gesetzt"
       }
+    }
+  },
+  "scoreDropAlert": {
+    "aio": {
+      "title": "KI-Bereitschaft gesunken",
+      "body": "Die AI-Overviews-Bereitschaft fiel von {{from}} auf {{to}} ({{points}} Punkte)."
+    },
+    "trust": {
+      "title": "Vertrauenswert gesunken",
+      "body": "Der E-E-A-T-Vertrauenswert fiel von {{from}} auf {{to}} ({{points}} Punkte)."
     }
   }
 }

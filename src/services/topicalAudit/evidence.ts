@@ -1,7 +1,7 @@
 import type { CrawledPageSummary } from '@/types';
 import type { SemanticAuditFinding } from './types';
 import i18n from '@/i18n';
-import { normalizeSemanticText, semanticPageTermInventory, semanticPageLanguage, semanticTermIdentity } from '@/services/semanticText';
+import { foldSemanticText, normalizeSemanticText, semanticPageTermInventory, semanticPageLanguage, semanticTermIdentity } from '@/services/semanticText';
 
 export const MAX_FINDINGS = 500;
 export const MAX_PAGES = 5000;
@@ -28,7 +28,7 @@ const nextStepKey: Record<SemanticAuditFindingCode, string> = {
 export const nextStep = (code: SemanticAuditFindingCode): string => semanticText(nextStepKey[code]);
 const normalize = normalizeSemanticText;
 const split = (value: string) => value.split(/[^\p{L}\p{N}]+/u).filter((token) => token.length > 2);
-export const tokens = (value: string) => split(normalize(value));
+export const tokens = (value: string, language?: string | null) => split(foldSemanticText(value, language));
 // Matching keys come from unfolded words: the language-aware key folds, so German "ö" and a typed "oe" meet.
 const rawTokens = (value: string) => split(value.normalize('NFKC').toLowerCase());
 /** Page terms keyed by inflection key, mapped to the first observed (normalized) form. */
@@ -50,11 +50,11 @@ export const urlKey = (value: string | null | undefined, base?: string) => {
 };
 export const termCoverage = (query: string, page: CrawledPageSummary) => {
   const raw = rawTokens(query);
-  const expected = [...new Set(tokens(query))];
+  const language = semanticPageLanguage(page);
+  const expected = [...new Set(tokens(query, language))];
   if (!expected.length) return null;
   const observed = termsFor(page);
-  const language = semanticPageLanguage(page);
-  const matched = new Set(raw.filter((word) => observed.has(semanticTermIdentity(word, language))).map((word) => normalize(word)));
+  const matched = new Set(raw.filter((word) => observed.has(semanticTermIdentity(word, language))).map((word) => foldSemanticText(word, language)));
   return { expected, matched: expected.filter((term) => matched.has(term)) };
 };
 

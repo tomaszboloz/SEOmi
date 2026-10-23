@@ -80,4 +80,6 @@ pub const FINDINGS: &[Coded] = &[
     ("missing-about", &[]),
     ("missing-dates", &["pct"]),
     ("no-articles", &[]),
+    ("author-invalid-profile", &["count", "names"]),
+    ("ymyl-no-scholarly-ids", &["pages"]),
 ];

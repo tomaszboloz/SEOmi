@@ -6033,7 +6033,9 @@
           "missing-registry": "Não foi encontrada uma página com dados do registo comercial ou aviso legal.",
           "missing-about": "Não foi encontrada uma página Sobre nós.",
           "missing-dates": "Só {{0}}% dos artigos mostram uma data de modificação ou revisão.",
-          "no-articles": "Não foram detetadas páginas de artigos; as camadas de autores e citações não foram pontuadas."
+          "no-articles": "Não foram detetadas páginas de artigos; as camadas de autores e citações não foram pontuadas.",
+          "author-invalid-profile": "{{0}} autores ligam um perfil ORCID ou Wikidata com identificador inválido ({{1}}). Verifique o checksum ou o Q-ID.",
+          "ymyl-no-scholarly-ids": "Nenhum dos {{0}} artigos cita uma fonte com DOI, PMID ou PMCID. Em temas YMYL, cite o estudo primário."
         }
       }
     },
@@ -7164,7 +7166,9 @@
         "missing-registry": "Não foi encontrada uma página com dados do registo comercial ou aviso legal.",
         "missing-about": "Não foi encontrada uma página Sobre nós.",
         "missing-dates": "Só {{pct}}% dos artigos mostram uma data de modificação ou revisão.",
-        "no-articles": "Não foram detetadas páginas de artigos, por isso as camadas de autores e citações não foram pontuadas."
+        "no-articles": "Não foram detetadas páginas de artigos, por isso as camadas de autores e citações não foram pontuadas.",
+        "author-invalid-profile": "{{count}} autores ligam um perfil ORCID ou Wikidata com identificador inválido ({{names}}). Verifique o checksum ou o Q-ID.",
+        "ymyl-no-scholarly-ids": "Nenhum dos {{pages}} artigos cita uma fonte com DOI, PMID ou PMCID. Em temas YMYL, cite o estudo primário."
       }
     },
     "generator": {
@@ -7284,6 +7288,16 @@
         "index-ok": "VERIFICADO: a página é indexável",
         "still-noindex": "ERRO DE IMPLEMENTAÇÃO: o noindex continua presente"
       }
+    }
+  },
+  "scoreDropAlert": {
+    "aio": {
+      "title": "Queda na prontidão para IA",
+      "body": "A prontidão para AI Overviews caiu de {{from}} para {{to}} ({{points}} pontos)."
+    },
+    "trust": {
+      "title": "Queda na pontuação de confiança",
+      "body": "A pontuação de confiança E-E-A-T caiu de {{from}} para {{to}} ({{points}} pontos)."
     }
   }
 }
