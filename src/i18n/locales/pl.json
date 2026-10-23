@@ -6525,6 +6525,26 @@
         "why": "Grupa kontrolna w tej samej witrynie cierpi podczas aktualizacji tak samo jak testowa, więc spadek lub wzrost może wynikać z rynku, a nie ze zmiany.",
         "action": "Wynik z flagą traktuj jako niejednoznaczny.\nPoczekaj do końca okna aktualizacji i porównaj ponownie.\nJeśli masz zewnętrzną linię bazową rynku, użyj jej."
       }
+    },
+    "igos": {
+      "score": {
+        "title": "Wynik IGOS",
+        "what": "Zysk informacyjny względem tego, co mówią realne wyniki TOP: nowe encje w temacie, gęstość dowodów, znaczniki doświadczenia i rozkład podtematów, obniżony przy cienkiej bazie.",
+        "why": "Pokazuje, co strona dodaje ponad konsensus. Znaczniki wykazują tylko deklarowane doświadczenie, nie dowodzą badań ani oryginalności.",
+        "action": "Sprawdź cztery składniki.\nDodaj brakujące podstawy.\nUruchom ponownie po edycji."
+      },
+      "heatmap": {
+        "title": "Mapa cieplna akapitów",
+        "what": "Każdy akapit ma etykietę: Echo (bliska kopia fragmentu konkurencji), Zysk (w temacie i nowy), Dryf (poza tematem) lub Neutralny.",
+        "why": "Echo nic nie wnosi, a dryf rozmywa temat. Etykiety są tekstowe, nie tylko kolorem.",
+        "action": "Zacznij od akapitów Echo i Dryf.\nPoruszaj się strzałkami.\nPrzepisz je lub skup na temacie."
+      },
+      "coverage": {
+        "title": "Pokrycie bazy",
+        "what": "Odsetek encji konsensusu, które strona już pokrywa. Poniżej 50% wynik jest mnożony przez karę.",
+        "why": "Bez wspólnego fundamentu strona z odrobiną nowości nadal nie pasuje do tematu.",
+        "action": "Pokryj brakujące encje konsensusu.\nPotem dodaj nowe fakty."
+      }
     }
   },
   "helpUi": {
@@ -7622,5 +7642,46 @@
     "verified": "Zmiana zapisana i zweryfikowana.",
     "unverified": "Zmiana zapisana, ale na żywej stronie jeszcze jej nie widać.",
     "dryRun": "Próba na sucho: nic nie zapisano."
+  },
+  "igosUi": {
+    "title": "Oryginalność IGOS",
+    "empty": "Nie pobrano porównywalnych wyników TOP, więc nie ma bazy ani wyniku.",
+    "noScore": "Brak wyniku",
+    "offTopic": "Większość akapitów jest poza tematem; wyniku nie podano.",
+    "partial": "Baza częściowa: {{available}} z {{requested}} stron konkurencji.",
+    "basis": "Baza: {{available}} z {{requested}} stron konkurencji.",
+    "component": {
+      "nefr": "Nowe encje",
+      "edsi": "Gęstość dowodów",
+      "fhem": "Znaczniki doświadczenia",
+      "sdd": "Rozkład podtematów"
+    },
+    "coverage": "Pokrycie bazy {{coverage}}, mnożnik kary {{multiplier}}",
+    "novel": "Nowe encje w temacie: {{list}}",
+    "advice": "Rekomendacje",
+    "heatmap": "Mapa cieplna akapitów",
+    "heatmapEmpty": "Brak akapitów do pokazania.",
+    "noHeading": "Brak nagłówka",
+    "zone": {
+      "echo": "Echo",
+      "gain": "Zysk",
+      "drift": "Dryf",
+      "neutral": "Neutralny"
+    },
+    "detail": "Offset {{offset}}, podobieństwo do tematu {{topic}}, najbliższy fragment konkurencji {{nearest}}.",
+    "source": "Najbliższe źródło: {{url}} (pozycja {{rank}}).",
+    "noSource": "Brak najbliższego źródła.",
+    "limit": {
+      "no-comparable-documents": "Brak porównywalnych dokumentów konkurencji.",
+      "too-few-documents": "Zbyt mało dokumentów konkurencji dla wiarygodnej bazy.",
+      "some-documents-missing": "Nie udało się pobrać części stron konkurencji.",
+      "no-target-chunks": "Strona nie ma akapitów do analizy.",
+      "off-topic-below-quota": "Zbyt mało akapitów w temacie."
+    },
+    "rec": {
+      "rewrite-echo": "Akapit na offsecie {{offset}} powtarza fragment konkurencji: przepisz go własnymi słowami.",
+      "add-evidence": "Dodaj konkretne dane z jednostkami lub źródłami; żadnych nie wykryto.",
+      "refocus-drift": "Akapit na offsecie {{offset}} odpływa od tematu: skup go lub usuń."
+    }
   }
 }
