@@ -1,4 +1,10 @@
-# SEOmi 0.4.8 — release notes
+# SEOmi 0.4.9 — release notes
+
+## Added
+
+- Rust unit tests for PDF report label locale/RTL helpers and for crypto-shredding store error, missing-key and tampered-ciphertext paths (GAP-023 coverage work). No production code changed.
+
+## Included from 0.4.8
 
 ## Added
 

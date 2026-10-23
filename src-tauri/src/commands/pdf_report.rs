@@ -16,6 +16,9 @@ mod tests_generator;
 mod tests_labels;
 
 #[cfg(test)]
+mod tests_labels_locale;
+
+#[cfg(test)]
 mod tests_unicode;
 
 use base64::Engine;

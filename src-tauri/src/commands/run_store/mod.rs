@@ -24,5 +24,7 @@ pub mod schema;
 mod schema_concurrency_tests;
 pub mod shred;
 #[cfg(test)]
+mod shred_tests;
+#[cfg(test)]
 mod tests;
 mod write;
