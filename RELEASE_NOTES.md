@@ -1,3 +1,9 @@
+# SEOmi 0.4.14 — release notes
+
+## Added
+
+- Request-profile form explains the proxy list format (comma or space separated, up to 64) in all 12 languages; the proxy field accepts long lists. Tests cover the hint, the list input and locale parity.
+
 # SEOmi 0.4.13 — release notes
 
 ## Added

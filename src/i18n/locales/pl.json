@@ -2454,6 +2454,7 @@
     "profileNamePlaceholder": "np. Konto redakcyjne",
     "sessionCookies": "Cookies sesji",
     "proxyOptional": "(opcjonalnie; dane w URL pozostają w magazynie systemowym)",
+    "proxyListHint": "Kilka proxy: oddziel przecinkami lub spacjami (do 64). Żądania rotują między nimi.",
     "customHeaders": "Własne nagłówki",
     "oneHeaderPerLine": "(jeden w wierszu: Nazwa: wartość)",
     "saving": "Zapisywanie…",

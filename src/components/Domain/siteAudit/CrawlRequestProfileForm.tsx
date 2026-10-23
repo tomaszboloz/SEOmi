@@ -40,10 +40,13 @@ return (<div className="mt-4 grid gap-3 border-t border-slate-800 pt-4 md:grid-c
                 onChange={(event) =>
                   setRequestProfileProxyUrl(event.target.value)
                 }
-                maxLength={2048}
+                maxLength={16384}
                 placeholder={t('siteAudit.proxyUrlPlaceholder')}
                 className="mt-1.5 h-9 w-full rounded-md border border-slate-700 bg-slate-950 px-2 font-mono text-xs text-white outline-none placeholder:text-slate-600 focus:border-emerald-400"
               />
+              <span className="mt-1 block text-[11px] text-slate-500">
+                {t("siteAudit.proxyListHint")}
+              </span>
             </label>
             <label className="text-xs text-slate-400 md:col-span-2">
               {t("siteAudit.customHeaders")}{" "}
