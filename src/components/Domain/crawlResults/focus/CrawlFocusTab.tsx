@@ -9,6 +9,7 @@ import { Empty } from '../CrawlViewPrimitives';
 import { CoreTopicPanel } from './CoreTopicPanel';
 import { FocusBanners } from './FocusBanners';
 import { GateBanner } from './GateBanner';
+import { ProtectionPanel } from './ProtectionPanel';
 import { FocusHeatmapTree } from './FocusHeatmapTree';
 import { FocusHero } from './FocusHero';
 import { FocusHistoryChart } from './FocusHistoryChart';
@@ -95,6 +96,7 @@ export const CrawlFocusTab = ({ pages, startUrl, run, projectId, history, benchm
       <FocusHero report={report} history={prior} onRecalculate={onRecalculate} recalcDisabled={spent} recalcNote={note} />
       <FocusBanners report={report} />
       <GateBanner report={report} pages={pages} included={includeGated} onToggle={() => setIncludeGated((value) => !value)} sitemapUrls={run?.result?.sitemap_urls} />
+      <ProtectionPanel report={report} projectId={projectId} />
       {historySlot ?? <FocusHistoryChart series={series} />}
       {weekly && <WeeklySummaryCard weekly={weekly} />}
       <div className="grid gap-4 lg:grid-cols-[minmax(0,1fr)_minmax(0,1.4fr)]">

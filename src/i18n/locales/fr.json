@@ -6279,6 +6279,13 @@
         "why": "Compter des pages que Google n'indexera pas baisse le score et peut conduire à conseiller noindex pour des pages qui l'ont déjà.",
         "action": "Vérifiez le compteur de pages ignorées.\nCorrigez les conflits sous le score, comme un pilier en noindex.\nN'utilisez « Les inclure » que pour voir le score avec toutes les pages.",
         "example": "Une page de tag en noindex est ignorée, non notée comme hors sujet."
+      },
+      "protection": {
+        "title": "Protection des URL",
+        "what": "Pour les pages peu pertinentes sur le plan thématique, montre si de vrais clics, conversions, revenus ou domaines référents justifient de les garder.",
+        "why": "Un score bas ne suffit pas à supprimer, rediriger ou mettre en noindex une page qui génère du trafic ou des liens.",
+        "action": "Connectez GSC et GA4 pour pouvoir mesurer.\nTraitez « Données requises » comme inconnu, pas comme zéro.\nDécidez à la main ; une 301 exige une cible pertinente.",
+        "example": "Une page avec TRS 30 et 80 clics en 90 jours est protégée."
       }
     },
     "authority": {
@@ -6772,6 +6779,26 @@
       "inlinked-foreign-canonical": "{{url}} reçoit {{inlinks}} liens internes mais son canonical pointe vers un autre hôte",
       "noindex-with-traffic": "{{url}} est en noindex mais a {{clicks}} clics GSC et {{domains}} domaines référents",
       "sitemap-noindex": "{{url}} est dans le sitemap mais en noindex"
+    },
+    "protection": {
+      "title": "Contrôle de protection des URL",
+      "empty": "Aucun instantané GSC/GA4/backlinks pour ce projet : le trafic et la valeur des liens sont inconnus.",
+      "advisory": "Conseil uniquement. Rien n'est supprimé, redirigé ni mis en noindex automatiquement.",
+      "pri": "PRI {{value}}",
+      "decision": {
+        "keep": "Conserver",
+        "shield": "Protéger",
+        "needs-data": "Données requises",
+        "semantic-bridge": "Pont sémantique",
+        "prune-candidate": "À examiner pour élagage"
+      },
+      "reason": {
+        "trs-above-threshold": "Le TRS est assez élevé",
+        "revenue": "Revenu mesuré",
+        "pri-above-threshold": "Trafic, conversions ou liens atteignent le seuil de protection",
+        "telemetry-incomplete": "Télémétrie absente, périmée ou échantillonnée",
+        "low-pri-measured": "Les signaux mesurés sont faibles ; vérifiez d'abord la valeur métier"
+      }
     }
   },
   "focusBenchmark": {

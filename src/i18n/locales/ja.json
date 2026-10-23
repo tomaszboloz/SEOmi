@@ -6279,6 +6279,13 @@
         "why": "Google がインデックスしないページを数えるとスコアが下がり、すでに noindex のページに noindex を勧めてしまうことがあります。",
         "action": "スキップ数を確認します。\nnoindex のピラーなど、スコア下に表示される矛盾を直します。\n「含める」は全ページでのスコアを見たいときだけ使います。",
         "example": "noindex のタグページはスキップされ、テーマ外とは採点されません。"
+      },
+      "protection": {
+        "title": "URL 保護",
+        "what": "テーマの関連性が低いページについて、実際のクリック、コンバージョン、収益、参照ドメインが維持を後押しするかを示します。",
+        "why": "スコアが低いだけで、流入やリンクのあるページを削除・リダイレクト・noindex にする理由にはなりません。",
+        "action": "GSC と GA4 を接続して計測できるようにします。\n「データ必要」はゼロではなく不明として扱います。\n手動で判断します。301 には関連する転送先が必要です。",
+        "example": "TRS 30 で 90 日に 80 クリックのページは保護されます。"
       }
     },
     "authority": {
@@ -6772,6 +6779,26 @@
       "inlinked-foreign-canonical": "{{url}} は内部リンクが {{inlinks}} 件ありますが、canonical は別のホストを指しています",
       "noindex-with-traffic": "{{url}} は noindex ですが、GSC クリック {{clicks}} 件と参照ドメイン {{domains}} 件があります",
       "sitemap-noindex": "{{url}} はサイトマップにありますが noindex です"
+    },
+    "protection": {
+      "title": "URL 保護チェック",
+      "empty": "このプロジェクトには GSC/GA4/被リンクのスナップショットがないため、流入とリンクの価値は不明です。",
+      "advisory": "助言のみです。自動で削除、リダイレクト、noindex は行われません。",
+      "pri": "PRI {{value}}",
+      "decision": {
+        "keep": "維持",
+        "shield": "保護",
+        "needs-data": "データ必要",
+        "semantic-bridge": "セマンティックブリッジ",
+        "prune-candidate": "整理候補として確認"
+      },
+      "reason": {
+        "trs-above-threshold": "TRS が十分に高い",
+        "revenue": "収益を計測済み",
+        "pri-above-threshold": "流入・コンバージョン・リンクが保護しきい値に達しています",
+        "telemetry-incomplete": "テレメトリが欠落、古い、またはサンプリングされています",
+        "low-pri-measured": "計測された指標は低めです。まず事業上の価値を確認してください"
+      }
     }
   },
   "focusBenchmark": {

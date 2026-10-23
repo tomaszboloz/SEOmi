@@ -6279,6 +6279,13 @@
         "why": "Counting pages Google will not index lowers the score and can lead to advice to noindex pages that are already noindex.",
         "action": "Check the skipped count.\nFix conflicts listed below the score, such as a noindex pillar.\nUse \"Include them\" only to see the score with all pages.",
         "example": "A noindex tag page is skipped, not scored as off-topic."
+      },
+      "protection": {
+        "title": "URL protection",
+        "what": "For pages with low topical relevance, shows whether real clicks, conversions, revenue or referring domains argue for keeping them.",
+        "why": "A low score alone is no reason to delete, redirect or noindex a page that earns traffic or links.",
+        "action": "Connect GSC and GA4 so data can be measured.\nTreat \"Needs data\" as unknown, not zero.\nDecide by hand; a 301 needs a relevant target.",
+        "example": "A page with TRS 30 and 80 clicks in 90 days is protected."
       }
     },
     "authority": {
@@ -6772,6 +6779,26 @@
       "inlinked-foreign-canonical": "{{url}} has {{inlinks}} internal links but its canonical points to another host",
       "noindex-with-traffic": "{{url}} is noindex but has {{clicks}} GSC clicks and {{domains}} referring domains",
       "sitemap-noindex": "{{url}} is in the sitemap but marked noindex"
+    },
+    "protection": {
+      "title": "URL protection check",
+      "empty": "No GSC/GA4/backlink snapshot for this project, so traffic and link value are unknown.",
+      "advisory": "Advice only. Nothing is deleted, redirected or noindexed automatically.",
+      "pri": "PRI {{value}}",
+      "decision": {
+        "keep": "Keep",
+        "shield": "Protect",
+        "needs-data": "Needs data",
+        "semantic-bridge": "Semantic bridge",
+        "prune-candidate": "Review for pruning"
+      },
+      "reason": {
+        "trs-above-threshold": "TRS is high enough",
+        "revenue": "Revenue measured",
+        "pri-above-threshold": "Traffic, conversions or links reach the protection threshold",
+        "telemetry-incomplete": "Telemetry is missing, stale or sampled",
+        "low-pri-measured": "Measured signals are low; check business value first"
+      }
     }
   },
   "focusBenchmark": {

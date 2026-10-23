@@ -6279,6 +6279,13 @@
         "why": "Contare pagine che Google non indicizzerà abbassa il punteggio e può portare a consigliare noindex per pagine che lo hanno già.",
         "action": "Controlla il contatore delle pagine saltate.\nRisolvi i conflitti sotto il punteggio, come un pilastro noindex.\nUsa «Includile» solo per vedere il punteggio con tutte le pagine.",
         "example": "Una pagina tag noindex viene saltata, non valutata come fuori tema."
+      },
+      "protection": {
+        "title": "Protezione URL",
+        "what": "Per le pagine poco pertinenti, mostra se clic, conversioni, ricavi o domini di riferimento reali giustificano di mantenerle.",
+        "why": "Un punteggio basso da solo non giustifica eliminare, reindirizzare o mettere in noindex una pagina con traffico o link.",
+        "action": "Collega GSC e GA4 per poter misurare i dati.\nTratta «Servono dati» come sconosciuto, non zero.\nDecidi a mano; un 301 richiede una destinazione pertinente.",
+        "example": "Una pagina con TRS 30 e 80 clic in 90 giorni è protetta."
       }
     },
     "authority": {
@@ -6772,6 +6779,26 @@
       "inlinked-foreign-canonical": "{{url}} ha {{inlinks}} link interni ma il canonical punta a un altro host",
       "noindex-with-traffic": "{{url}} è noindex ma ha {{clicks}} clic GSC e {{domains}} domini di riferimento",
       "sitemap-noindex": "{{url}} è nella sitemap ma è noindex"
+    },
+    "protection": {
+      "title": "Controllo protezione URL",
+      "empty": "Nessuno snapshot GSC/GA4/backlink per questo progetto: traffico e valore dei link sono sconosciuti.",
+      "advisory": "Solo consiglio. Nulla viene eliminato, reindirizzato o messo in noindex automaticamente.",
+      "pri": "PRI {{value}}",
+      "decision": {
+        "keep": "Mantieni",
+        "shield": "Proteggi",
+        "needs-data": "Servono dati",
+        "semantic-bridge": "Ponte semantico",
+        "prune-candidate": "Da valutare per la potatura"
+      },
+      "reason": {
+        "trs-above-threshold": "Il TRS è abbastanza alto",
+        "revenue": "Ricavi misurati",
+        "pri-above-threshold": "Traffico, conversioni o link raggiungono la soglia di protezione",
+        "telemetry-incomplete": "Telemetria mancante, obsoleta o campionata",
+        "low-pri-measured": "I segnali misurati sono bassi; valuta prima il valore di business"
+      }
     }
   },
   "focusBenchmark": {

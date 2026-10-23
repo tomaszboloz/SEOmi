@@ -6279,6 +6279,13 @@
         "why": "Seiten, die Google nicht indexiert, senken den Wert und können zu noindex-Empfehlungen für bereits noindex-Seiten führen.",
         "action": "Zähler der übersprungenen Seiten prüfen.\nKonflikte unter dem Wert beheben, z. B. eine noindex-Pillar-Seite.\n„Einbeziehen“ nur nutzen, um den Wert mit allen Seiten zu sehen.",
         "example": "Eine Tag-Seite mit noindex wird übersprungen, nicht als themenfremd bewertet."
+      },
+      "protection": {
+        "title": "URL-Schutz",
+        "what": "Zeigt bei Seiten mit geringer thematischer Nähe, ob echte Klicks, Conversions, Umsatz oder verweisende Domains für ein Behalten sprechen.",
+        "why": "Ein niedriger Wert allein ist kein Grund, eine Seite mit Traffic oder Links zu löschen, umzuleiten oder auf noindex zu setzen.",
+        "action": "GSC und GA4 verbinden, damit Daten gemessen werden können.\n„Daten nötig“ als unbekannt behandeln, nicht als null.\nManuell entscheiden; ein 301 braucht ein passendes Ziel.",
+        "example": "Eine Seite mit TRS 30 und 80 Klicks in 90 Tagen wird geschützt."
       }
     },
     "authority": {
@@ -6772,6 +6779,26 @@
       "inlinked-foreign-canonical": "{{url}} hat {{inlinks}} interne Links, aber der Canonical zeigt auf einen anderen Host",
       "noindex-with-traffic": "{{url}} ist noindex, hat aber {{clicks}} GSC-Klicks und {{domains}} verweisende Domains",
       "sitemap-noindex": "{{url}} steht in der Sitemap, ist aber noindex"
+    },
+    "protection": {
+      "title": "URL-Schutzprüfung",
+      "empty": "Kein GSC/GA4/Backlink-Snapshot für dieses Projekt, daher sind Traffic und Linkwert unbekannt.",
+      "advisory": "Nur Empfehlung. Nichts wird automatisch gelöscht, umgeleitet oder auf noindex gesetzt.",
+      "pri": "PRI {{value}}",
+      "decision": {
+        "keep": "Behalten",
+        "shield": "Schützen",
+        "needs-data": "Daten nötig",
+        "semantic-bridge": "Semantische Brücke",
+        "prune-candidate": "Zur Bereinigung prüfen"
+      },
+      "reason": {
+        "trs-above-threshold": "TRS ist hoch genug",
+        "revenue": "Umsatz gemessen",
+        "pri-above-threshold": "Traffic, Conversions oder Links erreichen die Schutzschwelle",
+        "telemetry-incomplete": "Telemetrie fehlt, ist veraltet oder gesampelt",
+        "low-pri-measured": "Gemessene Signale sind niedrig; zuerst den Geschäftswert prüfen"
+      }
     }
   },
   "focusBenchmark": {

@@ -6279,6 +6279,13 @@
         "why": "Liczenie stron, których Google nie zaindeksuje, obniża wynik i może prowadzić do porad noindex dla stron, które już go mają.",
         "action": "Sprawdź licznik pominiętych.\nNapraw konflikty pod wynikiem, np. filar z noindex.\n„Uwzględnij je” użyj tylko, by zobaczyć wynik dla wszystkich stron.",
         "example": "Strona tagu z noindex jest pomijana, a nie oceniana jako poza tematem."
+      },
+      "protection": {
+        "title": "Ochrona URL",
+        "what": "Dla stron o niskiej trafności tematycznej pokazuje, czy prawdziwe kliknięcia, konwersje, przychód lub domeny linkujące przemawiają za ich zachowaniem.",
+        "why": "Sam niski wynik nie uzasadnia usunięcia, przekierowania ani noindex strony, która ma ruch lub linki.",
+        "action": "Połącz GSC i GA4, aby dane dało się zmierzyć.\n„Potrzebne dane” traktuj jako nieznane, nie zero.\nDecyduj ręcznie; 301 wymaga trafnego celu.",
+        "example": "Strona z TRS 30 i 80 kliknięciami w 90 dni jest chroniona."
       }
     },
     "authority": {
@@ -6772,6 +6779,26 @@
       "inlinked-foreign-canonical": "{{url}} ma {{inlinks}} linków wewnętrznych, a canonical wskazuje inny host",
       "noindex-with-traffic": "{{url}} ma noindex, ale ma {{clicks}} kliknięć GSC i {{domains}} domen linkujących",
       "sitemap-noindex": "{{url}} jest w mapie witryny, ale ma noindex"
+    },
+    "protection": {
+      "title": "Kontrola ochrony URL",
+      "empty": "Brak snapshotu GSC/GA4/linków dla tego projektu, więc ruch i wartość linków są nieznane.",
+      "advisory": "Tylko porada. Nic nie jest usuwane, przekierowywane ani oznaczane noindex automatycznie.",
+      "pri": "PRI {{value}}",
+      "decision": {
+        "keep": "Zachowaj",
+        "shield": "Chroń",
+        "needs-data": "Potrzebne dane",
+        "semantic-bridge": "Most semantyczny",
+        "prune-candidate": "Do przeglądu pod kątem usunięcia"
+      },
+      "reason": {
+        "trs-above-threshold": "TRS jest wystarczająco wysoki",
+        "revenue": "Zmierzono przychód",
+        "pri-above-threshold": "Ruch, konwersje lub linki osiągają próg ochrony",
+        "telemetry-incomplete": "Brak danych, są nieaktualne lub próbkowane",
+        "low-pri-measured": "Zmierzone sygnały są niskie; najpierw oceń wartość biznesową"
+      }
     }
   },
   "focusBenchmark": {
