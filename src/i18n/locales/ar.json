@@ -7581,5 +7581,9 @@
     "negative": "أثر سلبي",
     "noEffect": "لا أثر قابل للقياس",
     "inconclusive": "غير حاسم"
+  },
+  "snapshots": {
+    "newerData": "تتوفر بيانات زحف أحدث.",
+    "refresh": "تحديث"
   }
 }

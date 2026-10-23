@@ -7581,5 +7581,9 @@
     "negative": "Efeito negativo",
     "noEffect": "Sem efeito mensurável",
     "inconclusive": "Inconclusivo"
+  },
+  "snapshots": {
+    "newerData": "Há dados de rastreamento mais recentes.",
+    "refresh": "Atualizar"
   }
 }

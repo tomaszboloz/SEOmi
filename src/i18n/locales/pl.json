@@ -7581,5 +7581,9 @@
     "negative": "Efekt ujemny",
     "noEffect": "Brak mierzalnego efektu",
     "inconclusive": "Niejednoznaczny"
+  },
+  "snapshots": {
+    "newerData": "Dostępne są nowsze dane z crawla.",
+    "refresh": "Odśwież"
   }
 }

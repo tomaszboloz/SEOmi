@@ -15,6 +15,7 @@ pub mod rdap;
 pub mod render_worker;
 pub mod rendered_artifacts;
 pub mod rendered_crawler;
+pub mod run_store;
 pub mod scheduled_worker;
 pub mod scheduler;
 pub mod search_console;

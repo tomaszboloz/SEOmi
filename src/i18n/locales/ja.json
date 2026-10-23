@@ -7581,5 +7581,9 @@
     "negative": "マイナスの効果",
     "noEffect": "測定可能な効果なし",
     "inconclusive": "結論不可"
+  },
+  "snapshots": {
+    "newerData": "より新しいクロールデータがあります。",
+    "refresh": "更新"
   }
 }

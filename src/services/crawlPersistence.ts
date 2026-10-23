@@ -1,8 +1,9 @@
 import type { CrawlRunRecord } from '@/types';
-import { invokeTauriCommand, isTauriEnvironment } from '@/services/tauri';
-import { parseCrawlRuns } from './crawlContracts';
+import { isTauriEnvironment } from '@/services/tauri';
+import { indexedDbWrite } from './crawlPersistence/browser';
 import { indexedDbRead } from './crawlPersistence/indexedDb';
-import { saveCrawlRunsUnlocked } from './crawlPersistence/native';
+import { clearLegacyCrawlStorage } from './crawlPersistence/legacy';
+import { loadStoredRuns, migrateLegacyCrawlRuns, saveStoredRuns } from './crawlStore';
 import { withCrawlWriteLock } from './crawlPersistence/writeLock';
 import type { CrawlSaveResult } from './crawlPersistence/contracts';
 
@@ -18,9 +19,18 @@ export { crawlQuotaRetryCounts, isStorageQuotaError } from './crawlPersistence/q
  */
 export const usesDedicatedCrawlStorage = (): boolean => isTauriEnvironment() || typeof indexedDB !== 'undefined';
 
-export const loadCrawlRuns = (projectId: string): Promise<CrawlRunRecord[]> => isTauriEnvironment()
-  ? invokeTauriCommand<unknown>('load_project_crawl_runs', { projectId }).then(parseCrawlRuns)
-  : indexedDbRead(projectId);
+export const loadCrawlRuns = async (projectId: string): Promise<CrawlRunRecord[]> => {
+  if (!isTauriEnvironment()) return indexedDbRead(projectId);
+  await migrateLegacyCrawlRuns(projectId);
+  return loadStoredRuns(projectId);
+};
+
+const saveUnlocked = async (projectId: string, runs: CrawlRunRecord[]): Promise<CrawlSaveResult> => {
+  if (!isTauriEnvironment()) return indexedDbWrite(projectId, runs);
+  await saveStoredRuns(projectId, runs);
+  clearLegacyCrawlStorage(projectId);
+  return { prunedRuns: Math.max(0, runs.length - 50) };
+};
 
 export const saveCrawlRuns = (projectId: string, runs: CrawlRunRecord[]): Promise<CrawlSaveResult> =>
-  withCrawlWriteLock(projectId, () => saveCrawlRunsUnlocked(projectId, runs));
+  withCrawlWriteLock(projectId, () => saveUnlocked(projectId, runs));

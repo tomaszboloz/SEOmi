@@ -7581,5 +7581,9 @@
     "negative": "Effetto negativo",
     "noEffect": "Nessun effetto misurabile",
     "inconclusive": "Non conclusivo"
+  },
+  "snapshots": {
+    "newerData": "Sono disponibili dati di scansione più recenti.",
+    "refresh": "Aggiorna"
   }
 }

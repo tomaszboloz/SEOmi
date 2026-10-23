@@ -7581,5 +7581,9 @@
     "negative": "부정적 효과",
     "noEffect": "측정 가능한 효과 없음",
     "inconclusive": "결론 불가"
+  },
+  "snapshots": {
+    "newerData": "더 최신 크롤 데이터가 있습니다.",
+    "refresh": "새로고침"
   }
 }

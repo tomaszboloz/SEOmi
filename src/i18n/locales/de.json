@@ -7581,5 +7581,9 @@
     "negative": "Negativer Effekt",
     "noEffect": "Kein messbarer Effekt",
     "inconclusive": "Nicht aussagekräftig"
+  },
+  "snapshots": {
+    "newerData": "Neuere Crawl-Daten sind verfügbar.",
+    "refresh": "Aktualisieren"
   }
 }

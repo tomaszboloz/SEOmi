@@ -7581,5 +7581,9 @@
     "negative": "负向效果",
     "noEffect": "无可测量的效果",
     "inconclusive": "无定论"
+  },
+  "snapshots": {
+    "newerData": "有更新的抓取数据。",
+    "refresh": "刷新"
   }
 }
