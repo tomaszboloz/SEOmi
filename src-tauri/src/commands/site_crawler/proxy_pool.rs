@@ -12,8 +12,6 @@ struct Entry {
 
 /// User-supplied proxy list: round-robin rotation, ban after consecutive failures, health re-entry
 /// after a cool-down. Time is injected so behaviour is deterministic and testable.
-// Failure feedback (ban/cool-down) is wired once request errors report their proxy (issue #142).
-#[cfg_attr(not(test), allow(dead_code))]
 #[derive(Debug)]
 pub(crate) struct ProxyPool {
     entries: Vec<Entry>,
@@ -57,7 +55,6 @@ pub(crate) fn redact_proxy_url(value: &str) -> String {
     }
 }
 
-#[cfg_attr(not(test), allow(dead_code))]
 impl ProxyPool {
     pub(crate) fn new(urls: &[String], max_failures: u32, ban: Duration) -> Result<Self, String> {
         if urls.is_empty() || urls.len() > MAX_PROXIES {
@@ -108,6 +105,13 @@ impl ProxyPool {
         None
     }
 
+    /// Proxy whose ban ends first; used so traffic never falls back to a direct connection.
+    pub(crate) fn soonest(&self) -> Option<usize> {
+        let index =
+            (0..self.entries.len()).min_by_key(|index| self.entries[*index].banned_until)?;
+        Some(index)
+    }
+
     pub(crate) fn url(&self, index: usize) -> Option<&str> {
         self.entries.get(index).map(|entry| entry.url.as_str())
     }
@@ -127,6 +131,7 @@ impl ProxyPool {
         }
     }
 
+    #[cfg(test)]
     pub(crate) fn healthy_count(&mut self, now: Instant) -> usize {
         (0..self.entries.len())
             .filter(|index| self.available(*index, now))

@@ -1,3 +1,9 @@
+# SEOmi 0.4.15 — release notes
+
+## Added
+
+- Proxy list health: a proxy that fails 3 times in a row (connect error, timeout or HTTP 407) is banned for 60 s and requests rotate to the remaining ones; a success clears the streak. If every proxy is banned the crawler keeps using the one whose ban ends first and never falls back to a direct connection. Outcomes are attributed per request URL (issue #142). Tests use real local proxies (dead and live).
+
 # SEOmi 0.4.14 — release notes
 
 ## Added

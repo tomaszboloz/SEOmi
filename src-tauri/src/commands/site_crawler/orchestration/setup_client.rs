@@ -1,7 +1,8 @@
 use reqwest::header::{HeaderMap, HeaderName, HeaderValue, COOKIE, USER_AGENT};
 
 use super::super::{
-    models::CrawlConfig, proxy_pool, scope::rendered_profile_has_unsupported_transport,
+    models::CrawlConfig, proxy_feedback, proxy_pool,
+    scope::rendered_profile_has_unsupported_transport,
 };
 use crate::commands::settings::{crawl_auth_profile, CrawlAuthProfile};
 
@@ -103,23 +104,42 @@ where
     Ok((client, ua, rendered_cookie))
 }
 
-/// One saved proxy keeps `Proxy::all`; a list rotates round-robin per request through a `ProxyPool`.
+/// One saved proxy keeps `Proxy::all`; a list rotates round-robin per request through a `ProxyPool`
+/// that bans a proxy after repeated failures. A fully banned pool still uses the proxy whose ban
+/// ends first, so traffic never falls back to a direct connection.
 pub(super) fn rotating_proxy(value: &str) -> Result<reqwest::Proxy, String> {
+    rotating_proxy_with(value, 3, std::time::Duration::from_secs(60))
+}
+
+pub(super) fn rotating_proxy_with(
+    value: &str,
+    max_failures: u32,
+    ban: std::time::Duration,
+) -> Result<reqwest::Proxy, String> {
     let list = proxy_pool::parse_proxy_list(value);
     if let [single] = list.as_slice() {
         return reqwest::Proxy::all(single)
             .map_err(|error| format!("Invalid proxy configuration: {error}"));
     }
-    let pool = proxy_pool::ProxyPool::new(&list, 1, std::time::Duration::ZERO)
+    let pool = proxy_pool::ProxyPool::new(&list, max_failures, ban)
         .map_err(|error| format!("Invalid proxy configuration: {error}"))?;
-    let pool = std::sync::Mutex::new(pool);
-    Ok(reqwest::Proxy::custom(move |_| {
-        let mut pool = pool.lock().ok()?;
-        let index = pool.next(std::time::Instant::now())?;
-        pool.url(index).map(str::to_owned)
+    let pool: proxy_feedback::SharedPool = std::sync::Arc::new(std::sync::Mutex::new(pool));
+    Ok(reqwest::Proxy::custom(move |target| {
+        let mut guard = pool.lock().ok()?;
+        let index = guard
+            .next(std::time::Instant::now())
+            .or_else(|| guard.soonest())?;
+        let proxy = guard.url(index).map(str::to_owned)?;
+        drop(guard);
+        proxy_feedback::register(target.as_str(), &pool, index);
+        Some(proxy)
     }))
 }
 
 #[cfg(test)]
 #[path = "setup_client_proxy_tests.rs"]
 mod proxy_tests;
+
+#[cfg(test)]
+#[path = "setup_client_ban_tests.rs"]
+mod ban_tests;
