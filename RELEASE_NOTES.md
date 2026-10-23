@@ -1,4 +1,14 @@
-# SEOmi 0.4.4 — release notes
+# SEOmi 0.4.5 — release notes
+
+## Added
+
+- Signals tab in the semantic workspace (SPRS PageRank flags, hreflang parity, template governor, decay radar, causal impact); outreach targets and off-page panels in the backlink checker; LLM economy panel in API settings. Panels without a stored data source show empty states.
+- IGOS panel with paragraph originality heatmap.
+- Contextual AI Copilot Patcher service: before/after proposals that need human approval, local provider preferred.
+- TAS: menu and footer links are excluded by crawler link zones; People Also Ask only from a real SERP source.
+- Local multimodal services: perceptual image hash and alt text checks (OCR/CLIP reported as unavailable).
+
+## Included from 0.4.4
 
 ## Added
 
