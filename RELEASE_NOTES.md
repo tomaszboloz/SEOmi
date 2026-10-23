@@ -1,4 +1,13 @@
-# SEOmi 0.4.2 — release notes
+# SEOmi 0.4.3 — release notes
+
+## Added
+
+- Execution Card wiring: the recommendation bus feeds the links panel, brief buttons on SFS playbook and TAS cannibalization cards, 410/301 rules for deployment artifacts, task verification after each crawl, owner/SLA/priority editing.
+- Indexability gate: SFS skips noindex and canonicalized pages by default, with a banner, include toggle and conflict list.
+- URL telemetry snapshot (GSC, GA4, backlinks), PRI protection panel and log intelligence services (parser, bot verification, Crawl Efficiency Matrix).
+- Semantic services and panels: IGOS baseline and heatmap, SPRS PageRank flags, Semantic Decay Radar, SIJA micro-intents, Pre-Publish check, hreflang parity, off-page TBVA and co-citation.
+
+## Included from 0.4.2
 
 ## Added
 
