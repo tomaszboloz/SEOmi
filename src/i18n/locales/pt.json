@@ -6413,6 +6413,14 @@
         "why": "O Google pode filtrar um segmento inteiro de modelo como conteúdo fraco. Um aviso por modelo é mais fácil de corrigir que milhares por página.",
         "action": "Adicione dados únicos a cada página (fatos locais, números, avaliações).\nOu aplique noindex ao segmento até haver conteúdo real.\nRastreie de novo e confira se o ganho sobe."
       }
+    },
+    "outreach": {
+      "gapDomains": {
+        "title": "Alvos de outreach",
+        "what": "Sites que linkam para seus concorrentes do TOP3, mas não para você, ordenados pelo número de concorrentes linkados e pela autoridade.",
+        "why": "Um site que já linka vários concorrentes é o lugar mais receptivo para pedir um link, desde que você traga algo novo.",
+        "action": "Comece pelo topo da lista.\nAbra o rascunho, adicione uma fonte que só você pode oferecer e edite.\nEnvie você mesmo pelo seu e-mail. O SEOmi não envia nada."
+      }
     }
   },
   "helpUi": {
@@ -7194,5 +7202,12 @@
     "row": "{{pattern}}: {{count}} páginas, ganho de informação {{gain}}%",
     "noindex": "Recomendado: noindex neste segmento",
     "limit": "Recomendado: limitar as páginas indexadas"
+  },
+  "outreach": {
+    "title": "Alvos de outreach",
+    "empty": "Sem dados de lacuna de backlinks. Execute primeiro a análise.",
+    "row": "{{domain}}: prioridade {{priority}}, linka {{count}} concorrentes",
+    "export": "Exportar CSV",
+    "manualNote": "O SEOmi nunca envia mensagens. Envie os rascunhos pelo seu e-mail."
   }
 }

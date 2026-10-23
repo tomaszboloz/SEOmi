@@ -6413,6 +6413,14 @@
         "why": "Google può filtrare un intero segmento di template come contenuto scarso. Un avviso per template è più semplice da correggere di migliaia per pagina.",
         "action": "Aggiungi dati unici a ogni pagina (fatti locali, numeri, recensioni).\nOppure metti il segmento in noindex finché non ha contenuto reale.\nRiesegui la scansione e verifica che il valore salga."
       }
+    },
+    "outreach": {
+      "gapDomains": {
+        "title": "Obiettivi di outreach",
+        "what": "Siti che linkano i tuoi concorrenti TOP3 ma non te, ordinati per numero di concorrenti linkati e autorevolezza.",
+        "why": "Un sito che linka già più concorrenti è il posto più adatto per chiedere un link, se offri qualcosa di nuovo.",
+        "action": "Parti dall’alto della lista.\nApri la bozza, aggiungi una fonte che solo tu puoi offrire e modificala.\nInviala tu dalla tua casella. SEOmi non invia nulla."
+      }
     }
   },
   "helpUi": {
@@ -7194,5 +7202,12 @@
     "row": "{{pattern}}: {{count}} pagine, guadagno informativo {{gain}}%",
     "noindex": "Consigliato: noindex per questo segmento",
     "limit": "Consigliato: limita le pagine indicizzate"
+  },
+  "outreach": {
+    "title": "Obiettivi di outreach",
+    "empty": "Nessun dato sul divario di backlink. Esegui prima l’analisi.",
+    "row": "{{domain}}: priorità {{priority}}, linka {{count}} concorrenti",
+    "export": "Esporta CSV",
+    "manualNote": "SEOmi non invia mai messaggi. Invia le bozze dalla tua casella."
   }
 }

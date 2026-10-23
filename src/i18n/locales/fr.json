@@ -6413,6 +6413,14 @@
         "why": "Google peut filtrer tout un segment de gabarit comme contenu pauvre. Un avertissement par gabarit se corrige plus facilement que des milliers par page.",
         "action": "Ajoutez des données uniques à chaque page (faits locaux, chiffres, avis).\nOu passez le segment en noindex jusqu’à avoir un vrai contenu.\nRelancez l’exploration et vérifiez que le gain augmente."
       }
+    },
+    "outreach": {
+      "gapDomains": {
+        "title": "Cibles d’outreach",
+        "what": "Sites qui renvoient vers vos concurrents du TOP3 mais pas vers vous, classés selon le nombre de concurrents liés et leur autorité.",
+        "why": "Un site qui lie déjà plusieurs concurrents est l’endroit le plus réceptif pour demander un lien, si vous apportez du nouveau.",
+        "action": "Commencez en haut de la liste.\nOuvrez le brouillon, ajoutez une source que vous seul pouvez offrir et modifiez-le.\nEnvoyez-le vous-même depuis votre messagerie. SEOmi n’envoie rien."
+      }
     }
   },
   "helpUi": {
@@ -7194,5 +7202,12 @@
     "row": "{{pattern}} : {{count}} pages, gain d’information {{gain}} %",
     "noindex": "Recommandé : noindex pour ce segment",
     "limit": "Recommandé : limiter le nombre de pages indexées"
+  },
+  "outreach": {
+    "title": "Cibles d’outreach",
+    "empty": "Aucune donnée d’écart de backlinks. Lancez d’abord l’analyse.",
+    "row": "{{domain}} : priorité {{priority}}, lie {{count}} concurrents",
+    "export": "Exporter en CSV",
+    "manualNote": "SEOmi n’envoie jamais de messages. Envoyez les brouillons depuis votre messagerie."
   }
 }

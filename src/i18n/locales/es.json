@@ -6413,6 +6413,14 @@
         "why": "Google puede filtrar todo un segmento de plantilla como contenido pobre. Un aviso por plantilla es más fácil de arreglar que miles por página.",
         "action": "Añade datos únicos a cada página (datos locales, cifras, reseñas).\nO pon el segmento en noindex hasta que tenga contenido real.\nVuelve a rastrear y comprueba que la ganancia sube."
       }
+    },
+    "outreach": {
+      "gapDomains": {
+        "title": "Objetivos de outreach",
+        "what": "Sitios que enlazan a tus competidores del TOP3 pero no a ti, ordenados por cuántos competidores enlazan y por su autoridad.",
+        "why": "Un sitio que ya enlaza a varios competidores es el lugar más receptivo para pedir un enlace, siempre que aportes algo nuevo.",
+        "action": "Empieza por lo más alto de la lista.\nAbre el borrador, añade una fuente que solo tú puedes ofrecer y edítalo.\nEnvíalo tú desde tu correo. SEOmi no envía nada."
+      }
     }
   },
   "helpUi": {
@@ -7194,5 +7202,12 @@
     "row": "{{pattern}}: {{count}} páginas, ganancia de información {{gain}}%",
     "noindex": "Recomendado: noindex para este segmento",
     "limit": "Recomendado: limitar las páginas indexadas"
+  },
+  "outreach": {
+    "title": "Objetivos de outreach",
+    "empty": "Sin datos de brecha de enlaces. Ejecuta antes el análisis.",
+    "row": "{{domain}}: prioridad {{priority}}, enlaza a {{count}} competidores",
+    "export": "Exportar CSV",
+    "manualNote": "SEOmi nunca envía mensajes. Envía los borradores desde tu correo."
   }
 }

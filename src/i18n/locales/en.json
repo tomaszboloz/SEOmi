@@ -6413,6 +6413,14 @@
         "why": "Google can filter a whole template segment as thin content. One template warning is easier to fix than thousands of page warnings.",
         "action": "Add unique data to each page (local facts, numbers, reviews).\nOr noindex the segment until it has real content.\nRe-crawl and check that the gain rises."
       }
+    },
+    "outreach": {
+      "gapDomains": {
+        "title": "Outreach targets",
+        "what": "Sites that link to your TOP3 competitors but not to you, ranked by how many competitors they link to and by their authority.",
+        "why": "A site that already links to several competitors is the warmest place to ask for a link, as long as you bring something new.",
+        "action": "Start from the top of the list.\nOpen the draft, add a source only you can offer, and edit it.\nSend it yourself from your own mailbox. SEOmi never sends anything."
+      }
     }
   },
   "helpUi": {
@@ -7194,5 +7202,12 @@
     "row": "{{pattern}}: {{count}} pages, information gain {{gain}}%",
     "noindex": "Recommended: noindex this segment",
     "limit": "Recommended: limit the number of indexed pages"
+  },
+  "outreach": {
+    "title": "Outreach targets",
+    "empty": "No backlink gap data. Run a backlink gap check first.",
+    "row": "{{domain}}: priority {{priority}}, links to {{count}} competitors",
+    "export": "Export CSV",
+    "manualNote": "SEOmi never sends messages. Send drafts from your own mailbox."
   }
 }

@@ -6413,6 +6413,14 @@
         "why": "Google może odfiltrować cały segment szablonu jako cienką treść. Jedno ostrzeżenie o szablonie łatwiej naprawić niż tysiące ostrzeżeń o stronach.",
         "action": "Dodaj do każdej strony unikalne dane (fakty lokalne, liczby, opinie).\nAlbo ustaw noindex dla segmentu, dopóki nie ma realnej treści.\nPrzeskanuj ponownie i sprawdź, czy wynik rośnie."
       }
+    },
+    "outreach": {
+      "gapDomains": {
+        "title": "Cele outreachu",
+        "what": "Serwisy, które linkują do Twojej konkurencji z TOP3, a nie do Ciebie, uszeregowane według liczby linkowanych konkurentów i autorytetu.",
+        "why": "Serwis, który już linkuje do kilku konkurentów, to najcieplejszy adres do prośby o link, o ile oferujesz coś nowego.",
+        "action": "Zacznij od góry listy.\nOtwórz szkic, dodaj źródło, które możesz zaoferować tylko Ty, i popraw tekst.\nWyślij go sam ze swojej skrzynki. SEOmi niczego nie wysyła."
+      }
     }
   },
   "helpUi": {
@@ -7194,5 +7202,12 @@
     "row": "{{pattern}}: {{count}} stron, zysk informacji {{gain}}%",
     "noindex": "Zalecane: noindex dla segmentu",
     "limit": "Zalecane: ogranicz liczbę indeksowanych stron"
+  },
+  "outreach": {
+    "title": "Cele outreachu",
+    "empty": "Brak danych luki linkowej. Najpierw uruchom analizę luki linków.",
+    "row": "{{domain}}: priorytet {{priority}}, linkuje do {{count}} konkurentów",
+    "export": "Eksportuj CSV",
+    "manualNote": "SEOmi nie wysyła wiadomości. Szkice wysyłasz ze swojej skrzynki."
   }
 }
