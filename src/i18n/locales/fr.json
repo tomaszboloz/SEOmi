@@ -6465,6 +6465,14 @@
         "why": "Il distingue une vraie lacune de contenu d'un marché qui propose volontairement autre chose.",
         "action": "Vérifiez les sujets manquants et superficiels.\nMarquez comme locaux les sujets inutiles sur un marché.\nL'outil ne modifie jamais hreflang à votre place."
       }
+    },
+    "offPage": {
+      "tbva": {
+        "title": "Autorité thématique off-page",
+        "what": "Additionne l'autorité fournisseur des backlinks follow, pondérée par la proximité de la page source avec votre sujet. Repère aussi les paragraphes qui citent ensemble votre marque et votre entité principale.",
+        "why": "Quelques liens pertinents peuvent peser plus que beaucoup de liens sans rapport.",
+        "action": "Examinez les sources peu similaires.\nExploitez les mentions sans lien comme pistes de prise de contact.\nLisez vous-même les mentions négatives."
+      }
     }
   },
   "helpUi": {
@@ -7432,5 +7440,15 @@
       "intentionally-local": "Local volontairement"
     },
     "note": "Une version manquante n'est pas toujours une erreur. Les textes n'ont pas à correspondre un à un, et la langue de l'interface ne détermine pas les langues du site analysées."
+  },
+  "offPageUi": {
+    "title": "Autorité thématique off-page",
+    "empty": "Pas encore de valeur thématique des backlinks : backlinks, texte des sources ou données d'autorité manquants. Cela ne signifie pas qu'il n'y a aucun backlink.",
+    "tbva": "Valeur thématique des backlinks {{value}} sur {{count}} domaines sources ({{coverage}} % des liens follow notés).",
+    "partial": "{{count}} liens follow n'ont pas pu être notés (texte source ou autorité manquant).",
+    "nofollow": "{{count}} liens nofollow ne sont pas comptés.",
+    "noText": "Aucun texte source disponible : les co-citations de la marque n'ont pas été vérifiées.",
+    "coCitation": "Marque et entité principale dans un même paragraphe : {{linked}} avec lien, {{unlinked}} sans lien.",
+    "note": "La valeur repose sur l'autorité du fournisseur ; elle ne reproduit pas le PageRank de Google et n'explique pas le classement. La cooccurrence n'est pas une recommandation."
   }
 }

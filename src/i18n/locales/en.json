@@ -6465,6 +6465,14 @@
         "why": "It separates a real content gap from a market that deliberately offers something different.",
         "action": "Check the missing and shallow topics.\nMark topics a market does not need as local.\nThe tool never changes hreflang for you."
       }
+    },
+    "offPage": {
+      "tbva": {
+        "title": "Off-page topical authority",
+        "what": "Adds up the provider authority of follow backlinks, weighted by how close each source page is to your topic. Also finds paragraphs that mention your brand and your core entity together.",
+        "why": "A few relevant links can matter more than many unrelated ones.",
+        "action": "Review the sources with low similarity.\nLook at unlinked mentions as outreach leads.\nRead negated mentions yourself."
+      }
     }
   },
   "helpUi": {
@@ -7432,5 +7440,15 @@
       "intentionally-local": "Intentionally local"
     },
     "note": "A missing version is not always an error. Texts need not match one to one, and the UI language does not set which site languages are analyzed."
+  },
+  "offPageUi": {
+    "title": "Off-page topical authority",
+    "empty": "No topical backlink value yet: backlinks, source text or authority data are missing. This does not mean there are no backlinks.",
+    "tbva": "Topical backlink value {{value}} from {{count}} source domains ({{coverage}}% of follow links scored).",
+    "partial": "{{count}} follow links could not be scored (source text or authority missing).",
+    "nofollow": "{{count}} nofollow links are not counted.",
+    "noText": "No source text available, so brand co-citations were not checked.",
+    "coCitation": "Brand and core entity in one paragraph: {{linked}} linked, {{unlinked}} unlinked.",
+    "note": "The value uses provider authority and does not reproduce Google PageRank or explain rankings. Co-occurrence is not endorsement."
   }
 }

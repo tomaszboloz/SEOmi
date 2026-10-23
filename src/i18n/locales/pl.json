@@ -6465,6 +6465,14 @@
         "why": "Odróżnia prawdziwą lukę treści od rynku, który celowo oferuje coś innego.",
         "action": "Sprawdź tematy brakujące i płytkie.\nOznacz jako lokalne tematy niepotrzebne na danym rynku.\nNarzędzie nigdy samo nie zmienia hreflang."
       }
+    },
+    "offPage": {
+      "tbva": {
+        "title": "Autorytet tematyczny off-page",
+        "what": "Sumuje autorytet dostawcy dla linków follow, ważony bliskością strony źródłowej do Twojego tematu. Znajduje też akapity, które wspominają razem Twoją markę i główną encję.",
+        "why": "Kilka trafnych linków może znaczyć więcej niż wiele niezwiązanych.",
+        "action": "Sprawdź źródła o niskim podobieństwie.\nTraktuj wzmianki bez linku jako tropy do kontaktu.\nWzmianki z przeczeniem oceń samodzielnie."
+      }
     }
   },
   "helpUi": {
@@ -7432,5 +7440,15 @@
       "intentionally-local": "Celowo lokalny"
     },
     "note": "Brak wersji nie zawsze jest błędem. Teksty nie muszą być 1:1, a język interfejsu nie decyduje o analizowanych językach witryny."
+  },
+  "offPageUi": {
+    "title": "Autorytet tematyczny off-page",
+    "empty": "Brak wartości tematycznej linków: brakuje backlinków, tekstu źródeł lub danych o autorytecie. To nie znaczy, że backlinków nie ma.",
+    "tbva": "Tematyczna wartość linków {{value}} z {{count}} domen źródłowych (oceniono {{coverage}}% linków follow).",
+    "partial": "Nie udało się ocenić {{count}} linków follow (brak tekstu źródła lub autorytetu).",
+    "nofollow": "{{count}} linków nofollow nie jest liczonych.",
+    "noText": "Brak tekstu źródeł, więc nie sprawdzono współcytowań marki.",
+    "coCitation": "Marka i główna encja w jednym akapicie: {{linked}} z linkiem, {{unlinked}} bez linku.",
+    "note": "Wartość opiera się na autorytecie dostawcy i nie odtwarza Google PageRank ani nie wyjaśnia rankingu. Współwystępowanie to nie poparcie."
   }
 }

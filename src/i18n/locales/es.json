@@ -6465,6 +6465,14 @@
         "why": "Distingue una laguna real de contenido de un mercado que ofrece algo distinto a propósito.",
         "action": "Revisa los temas ausentes y superficiales.\nMarca como locales los temas que un mercado no necesita.\nLa herramienta nunca cambia hreflang por ti."
       }
+    },
+    "offPage": {
+      "tbva": {
+        "title": "Autoridad temática off-page",
+        "what": "Suma la autoridad del proveedor de los backlinks follow, ponderada por la cercanía de la página de origen a tu tema. También halla párrafos que mencionan juntas tu marca y tu entidad principal.",
+        "why": "Pocos enlaces relevantes pueden pesar más que muchos sin relación.",
+        "action": "Revisa las fuentes con poca similitud.\nUsa las menciones sin enlace como pistas de contacto.\nLee tú mismo las menciones con negación."
+      }
     }
   },
   "helpUi": {
@@ -7432,5 +7440,15 @@
       "intentionally-local": "Local a propósito"
     },
     "note": "Que falte una versión no siempre es un error. Los textos no tienen que coincidir uno a uno, y el idioma de la interfaz no define los idiomas del sitio que se analizan."
+  },
+  "offPageUi": {
+    "title": "Autoridad temática off-page",
+    "empty": "Aún no hay valor temático de backlinks: faltan backlinks, texto de las fuentes o datos de autoridad. Eso no significa que no haya backlinks.",
+    "tbva": "Valor temático de backlinks {{value}} de {{count}} dominios de origen ({{coverage}} % de enlaces follow puntuados).",
+    "partial": "No se pudieron puntuar {{count}} enlaces follow (falta texto de origen o autoridad).",
+    "nofollow": "{{count}} enlaces nofollow no se cuentan.",
+    "noText": "No hay texto de las fuentes, así que no se revisaron las cocitaciones de la marca.",
+    "coCitation": "Marca y entidad principal en un párrafo: {{linked}} con enlace, {{unlinked}} sin enlace.",
+    "note": "El valor usa la autoridad del proveedor y no reproduce el PageRank de Google ni explica el posicionamiento. La coocurrencia no es respaldo."
   }
 }

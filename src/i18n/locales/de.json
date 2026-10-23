@@ -6465,6 +6465,14 @@
         "why": "Sie trennt eine echte Inhaltslücke von einem Markt, der bewusst etwas anderes anbietet.",
         "action": "Prüfe fehlende und oberflächliche Themen.\nMarkiere Themen, die ein Markt nicht braucht, als lokal.\nDas Tool ändert hreflang nie selbst."
       }
+    },
+    "offPage": {
+      "tbva": {
+        "title": "Thematische Off-Page-Autorität",
+        "what": "Summiert die Anbieter-Autorität von Follow-Backlinks, gewichtet nach der Nähe der Quellseite zu deinem Thema. Findet außerdem Absätze, die deine Marke und deine Kernentität zusammen nennen.",
+        "why": "Wenige passende Links können mehr zählen als viele themenfremde.",
+        "action": "Prüfe Quellen mit geringer Ähnlichkeit.\nNutze unverlinkte Erwähnungen als Outreach-Ansatz.\nLies verneinte Erwähnungen selbst."
+      }
     }
   },
   "helpUi": {
@@ -7432,5 +7440,15 @@
       "intentionally-local": "Bewusst lokal"
     },
     "note": "Eine fehlende Version ist nicht immer ein Fehler. Texte müssen nicht 1:1 übereinstimmen, und die Oberflächensprache bestimmt nicht, welche Website-Sprachen analysiert werden."
+  },
+  "offPageUi": {
+    "title": "Thematische Off-Page-Autorität",
+    "empty": "Noch kein thematischer Backlink-Wert: Backlinks, Quelltext oder Autoritätsdaten fehlen. Das heißt nicht, dass es keine Backlinks gibt.",
+    "tbva": "Thematischer Backlink-Wert {{value}} aus {{count}} Quelldomains ({{coverage}} % der Follow-Links bewertet).",
+    "partial": "{{count}} Follow-Links konnten nicht bewertet werden (Quelltext oder Autorität fehlt).",
+    "nofollow": "{{count}} Nofollow-Links werden nicht gezählt.",
+    "noText": "Kein Quelltext verfügbar, daher wurden Marken-Kozitierungen nicht geprüft.",
+    "coCitation": "Marke und Kernentität in einem Absatz: {{linked}} verlinkt, {{unlinked}} unverlinkt.",
+    "note": "Der Wert nutzt die Autorität des Anbieters und bildet weder Google PageRank nach noch erklärt er Rankings. Gemeinsames Auftreten ist keine Empfehlung."
   }
 }

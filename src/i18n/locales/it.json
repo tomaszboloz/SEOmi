@@ -6465,6 +6465,14 @@
         "why": "Distingue una vera lacuna di contenuto da un mercato che offre di proposito qualcosa di diverso.",
         "action": "Controlla gli argomenti mancanti e superficiali.\nSegna come locali gli argomenti non necessari a un mercato.\nLo strumento non modifica mai hreflang al posto tuo."
       }
+    },
+    "offPage": {
+      "tbva": {
+        "title": "Autorevolezza tematica off-page",
+        "what": "Somma l'autorevolezza del provider dei backlink follow, pesata sulla vicinanza della pagina sorgente al tuo argomento. Trova anche i paragrafi che citano insieme il tuo brand e l'entità principale.",
+        "why": "Pochi link pertinenti possono contare più di molti non correlati.",
+        "action": "Controlla le fonti con bassa somiglianza.\nUsa le menzioni senza link come spunti di contatto.\nLeggi tu stesso le menzioni con negazione."
+      }
     }
   },
   "helpUi": {
@@ -7432,5 +7440,15 @@
       "intentionally-local": "Locale di proposito"
     },
     "note": "Una versione mancante non è sempre un errore. I testi non devono corrispondere uno a uno e la lingua dell'interfaccia non stabilisce quali lingue del sito vengono analizzate."
+  },
+  "offPageUi": {
+    "title": "Autorevolezza tematica off-page",
+    "empty": "Nessun valore tematico dei backlink per ora: mancano backlink, testo delle fonti o dati di autorevolezza. Non significa che non ci siano backlink.",
+    "tbva": "Valore tematico dei backlink {{value}} da {{count}} domini sorgente ({{coverage}}% dei link follow valutati).",
+    "partial": "{{count}} link follow non sono stati valutabili (testo sorgente o autorevolezza mancanti).",
+    "nofollow": "{{count}} link nofollow non vengono contati.",
+    "noText": "Nessun testo sorgente disponibile, quindi le co-citazioni del brand non sono state controllate.",
+    "coCitation": "Brand ed entità principale nello stesso paragrafo: {{linked}} con link, {{unlinked}} senza link.",
+    "note": "Il valore usa l'autorevolezza del provider e non riproduce il PageRank di Google né spiega il posizionamento. La co-occorrenza non è un'approvazione."
   }
 }

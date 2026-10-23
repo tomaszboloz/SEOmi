@@ -6465,6 +6465,14 @@
         "why": "Separa uma lacuna real de conteúdo de um mercado que oferece algo diferente de propósito.",
         "action": "Revise os temas ausentes e superficiais.\nMarque como locais os temas de que um mercado não precisa.\nA ferramenta nunca altera o hreflang por você."
       }
+    },
+    "offPage": {
+      "tbva": {
+        "title": "Autoridade temática off-page",
+        "what": "Soma a autoridade do provedor dos backlinks follow, ponderada pela proximidade da página de origem ao seu tema. Também encontra parágrafos que citam juntos sua marca e sua entidade principal.",
+        "why": "Poucos links relevantes podem valer mais que muitos sem relação.",
+        "action": "Revise as fontes com baixa similaridade.\nUse menções sem link como pistas de contato.\nLeia você mesmo as menções com negação."
+      }
     }
   },
   "helpUi": {
@@ -7432,5 +7440,15 @@
       "intentionally-local": "Local de propósito"
     },
     "note": "Uma versão ausente nem sempre é um erro. Os textos não precisam corresponder um a um, e o idioma da interface não define quais idiomas do site são analisados."
+  },
+  "offPageUi": {
+    "title": "Autoridade temática off-page",
+    "empty": "Ainda não há valor temático de backlinks: faltam backlinks, texto das fontes ou dados de autoridade. Isso não significa que não haja backlinks.",
+    "tbva": "Valor temático de backlinks {{value}} de {{count}} domínios de origem ({{coverage}}% dos links follow pontuados).",
+    "partial": "{{count}} links follow não puderam ser pontuados (falta texto de origem ou autoridade).",
+    "nofollow": "{{count}} links nofollow não são contados.",
+    "noText": "Sem texto das fontes, então as cocitações da marca não foram verificadas.",
+    "coCitation": "Marca e entidade principal no mesmo parágrafo: {{linked}} com link, {{unlinked}} sem link.",
+    "note": "O valor usa a autoridade do provedor e não reproduz o PageRank do Google nem explica o ranking. Coocorrência não é aprovação."
   }
 }
