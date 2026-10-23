@@ -6421,6 +6421,14 @@
         "why": "Un sitio que ya enlaza a varios competidores es el lugar más receptivo para pedir un enlace, siempre que aportes algo nuevo.",
         "action": "Empieza por lo más alto de la lista.\nAbre el borrador, añade una fuente que solo tú puedes ofrecer y edítalo.\nEnvíalo tú desde tu correo. SEOmi no envía nada."
       }
+    },
+    "causalMarket": {
+      "updateWindow": {
+        "title": "Ventana de actualización de Google",
+        "what": "Días en que Google desplegó una actualización o el mercado fue inusualmente volátil. El resultado se muestra con un rango de incertidumbre y una marca si el periodo se solapa con esa ventana.",
+        "why": "Un grupo de control del mismo sitio sufre la actualización igual que el de prueba, así que una subida o caída puede deberse al mercado y no a tu cambio.",
+        "action": "Trata un resultado marcado como no concluyente.\nEspera a que termine la ventana y compara de nuevo.\nUsa una línea base externa del mercado si la tienes."
+      }
     }
   },
   "helpUi": {
@@ -7209,5 +7217,16 @@
     "row": "{{domain}}: prioridad {{priority}}, enlaza a {{count}} competidores",
     "export": "Exportar CSV",
     "manualNote": "SEOmi nunca envía mensajes. Envía los borradores desde tu correo."
+  },
+  "causalMarket": {
+    "title": "Impacto causal",
+    "empty": "Historial insuficiente: al menos 7 días antes del cambio y 1 después.",
+    "effect": "Efecto diario: {{effect}} ({{lower}} a {{upper}})",
+    "updateWindow": "Ventana de actualización de Google: resultado no concluyente.",
+    "normalized": "Normalizado con la línea base del mercado",
+    "positive": "Efecto positivo",
+    "negative": "Efecto negativo",
+    "noEffect": "Sin efecto medible",
+    "inconclusive": "No concluyente"
   }
 }

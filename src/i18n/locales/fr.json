@@ -6421,6 +6421,14 @@
         "why": "Un site qui lie déjà plusieurs concurrents est l’endroit le plus réceptif pour demander un lien, si vous apportez du nouveau.",
         "action": "Commencez en haut de la liste.\nOuvrez le brouillon, ajoutez une source que vous seul pouvez offrir et modifiez-le.\nEnvoyez-le vous-même depuis votre messagerie. SEOmi n’envoie rien."
       }
+    },
+    "causalMarket": {
+      "updateWindow": {
+        "title": "Fenêtre de mise à jour Google",
+        "what": "Jours où Google a déployé une mise à jour ou où le marché était très volatil. Le résultat s’affiche avec une plage d’incertitude et un signal si la période chevauche une telle fenêtre.",
+        "why": "Un groupe témoin du même site subit la mise à jour comme le groupe test : une hausse ou une baisse peut venir du marché et non de votre changement.",
+        "action": "Considérez un résultat signalé comme non concluant.\nAttendez la fin de la fenêtre et comparez à nouveau.\nUtilisez une base de marché externe si vous en avez une."
+      }
     }
   },
   "helpUi": {
@@ -7209,5 +7217,16 @@
     "row": "{{domain}} : priorité {{priority}}, lie {{count}} concurrents",
     "export": "Exporter en CSV",
     "manualNote": "SEOmi n’envoie jamais de messages. Envoyez les brouillons depuis votre messagerie."
+  },
+  "causalMarket": {
+    "title": "Impact causal",
+    "empty": "Historique insuffisant : au moins 7 jours avant le changement et 1 après.",
+    "effect": "Effet quotidien : {{effect}} ({{lower}} à {{upper}})",
+    "updateWindow": "Fenêtre de mise à jour Google : résultat non concluant.",
+    "normalized": "Normalisé par la base de marché",
+    "positive": "Effet positif",
+    "negative": "Effet négatif",
+    "noEffect": "Aucun effet mesurable",
+    "inconclusive": "Non concluant"
   }
 }

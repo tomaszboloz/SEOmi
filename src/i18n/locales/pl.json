@@ -6421,6 +6421,14 @@
         "why": "Serwis, który już linkuje do kilku konkurentów, to najcieplejszy adres do prośby o link, o ile oferujesz coś nowego.",
         "action": "Zacznij od góry listy.\nOtwórz szkic, dodaj źródło, które możesz zaoferować tylko Ty, i popraw tekst.\nWyślij go sam ze swojej skrzynki. SEOmi niczego nie wysyła."
       }
+    },
+    "causalMarket": {
+      "updateWindow": {
+        "title": "Okno aktualizacji Google",
+        "what": "Dni, w których Google wdrażał aktualizację lub cały rynek był wyjątkowo zmienny. Wynik pokazujemy z przedziałem niepewności i flagą, gdy okres nakłada się na takie okno.",
+        "why": "Grupa kontrolna w tej samej witrynie cierpi podczas aktualizacji tak samo jak testowa, więc spadek lub wzrost może wynikać z rynku, a nie ze zmiany.",
+        "action": "Wynik z flagą traktuj jako niejednoznaczny.\nPoczekaj do końca okna aktualizacji i porównaj ponownie.\nJeśli masz zewnętrzną linię bazową rynku, użyj jej."
+      }
     }
   },
   "helpUi": {
@@ -7209,5 +7217,16 @@
     "row": "{{domain}}: priorytet {{priority}}, linkuje do {{count}} konkurentów",
     "export": "Eksportuj CSV",
     "manualNote": "SEOmi nie wysyła wiadomości. Szkice wysyłasz ze swojej skrzynki."
+  },
+  "causalMarket": {
+    "title": "Wpływ przyczynowy",
+    "empty": "Za mało danych: potrzeba min. 7 dni przed zmianą i 1 dnia po niej.",
+    "effect": "Efekt dzienny: {{effect}} ({{lower}} do {{upper}})",
+    "updateWindow": "Okno aktualizacji Google: wynik niejednoznaczny.",
+    "normalized": "Znormalizowano linią bazową rynku",
+    "positive": "Efekt dodatni",
+    "negative": "Efekt ujemny",
+    "noEffect": "Brak mierzalnego efektu",
+    "inconclusive": "Niejednoznaczny"
   }
 }

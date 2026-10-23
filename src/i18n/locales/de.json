@@ -6421,6 +6421,14 @@
         "why": "Eine Seite, die bereits mehrere Konkurrenten verlinkt, ist die beste Adresse für eine Linkanfrage, sofern Sie etwas Neues bieten.",
         "action": "Beginnen Sie oben in der Liste.\nÖffnen Sie den Entwurf, ergänzen Sie eine Quelle, die nur Sie bieten, und passen Sie ihn an.\nSenden Sie ihn selbst aus Ihrem Postfach. SEOmi sendet nichts."
       }
+    },
+    "causalMarket": {
+      "updateWindow": {
+        "title": "Google-Update-Fenster",
+        "what": "Tage, an denen Google ein Update ausrollte oder der Markt ungewöhnlich volatil war. Das Ergebnis erscheint mit Unsicherheitsbereich und Markierung, wenn der Zeitraum ein solches Fenster überlappt.",
+        "why": "Eine Kontrollgruppe derselben Website leidet bei einem Update wie die Testgruppe, daher kann ein Rückgang oder Anstieg am Markt statt an Ihrer Änderung liegen.",
+        "action": "Behandeln Sie ein markiertes Ergebnis als nicht aussagekräftig.\nWarten Sie das Ende des Update-Fensters ab und vergleichen Sie erneut.\nNutzen Sie eine externe Marktbasislinie, falls vorhanden."
+      }
     }
   },
   "helpUi": {
@@ -7209,5 +7217,16 @@
     "row": "{{domain}}: Priorität {{priority}}, verlinkt {{count}} Konkurrenten",
     "export": "CSV exportieren",
     "manualNote": "SEOmi sendet nie Nachrichten. Senden Sie Entwürfe aus Ihrem eigenen Postfach."
+  },
+  "causalMarket": {
+    "title": "Kausale Wirkung",
+    "empty": "Zu wenig Verlauf: mindestens 7 Tage vor und 1 Tag nach der Änderung.",
+    "effect": "Tageseffekt: {{effect}} ({{lower}} bis {{upper}})",
+    "updateWindow": "Google-Update-Fenster: Ergebnis nicht aussagekräftig.",
+    "normalized": "Mit Marktbasislinie normalisiert",
+    "positive": "Positiver Effekt",
+    "negative": "Negativer Effekt",
+    "noEffect": "Kein messbarer Effekt",
+    "inconclusive": "Nicht aussagekräftig"
   }
 }

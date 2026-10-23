@@ -6421,6 +6421,14 @@
         "why": "A site that already links to several competitors is the warmest place to ask for a link, as long as you bring something new.",
         "action": "Start from the top of the list.\nOpen the draft, add a source only you can offer, and edit it.\nSend it yourself from your own mailbox. SEOmi never sends anything."
       }
+    },
+    "causalMarket": {
+      "updateWindow": {
+        "title": "Google update window",
+        "what": "Days when Google rolled out an update or the whole market was unusually volatile. The result is shown with an uncertainty range and flagged when the period overlaps such a window.",
+        "why": "A control group on the same site suffers from an update just like the test group, so a drop or gain can be the market and not your change.",
+        "action": "Treat a flagged result as inconclusive.\nWait until the update window ends and compare again.\nUse an external market baseline when you have one."
+      }
     }
   },
   "helpUi": {
@@ -7209,5 +7217,16 @@
     "row": "{{domain}}: priority {{priority}}, links to {{count}} competitors",
     "export": "Export CSV",
     "manualNote": "SEOmi never sends messages. Send drafts from your own mailbox."
+  },
+  "causalMarket": {
+    "title": "Causal impact",
+    "empty": "Not enough history: at least 7 days before the change and 1 day after.",
+    "effect": "Daily effect: {{effect}} ({{lower}} to {{upper}})",
+    "updateWindow": "Google update window: result is inconclusive.",
+    "normalized": "Normalized by market baseline",
+    "positive": "Positive effect",
+    "negative": "Negative effect",
+    "noEffect": "No measurable effect",
+    "inconclusive": "Inconclusive"
   }
 }

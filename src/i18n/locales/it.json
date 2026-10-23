@@ -6421,6 +6421,14 @@
         "why": "Un sito che linka già più concorrenti è il posto più adatto per chiedere un link, se offri qualcosa di nuovo.",
         "action": "Parti dall’alto della lista.\nApri la bozza, aggiungi una fonte che solo tu puoi offrire e modificala.\nInviala tu dalla tua casella. SEOmi non invia nulla."
       }
+    },
+    "causalMarket": {
+      "updateWindow": {
+        "title": "Finestra di aggiornamento Google",
+        "what": "Giorni in cui Google ha rilasciato un aggiornamento o il mercato era insolitamente volatile. Il risultato appare con un intervallo di incertezza e un avviso se il periodo si sovrappone a tale finestra.",
+        "why": "Un gruppo di controllo dello stesso sito subisce l’aggiornamento come quello di test, quindi un calo o un aumento può dipendere dal mercato e non dalla tua modifica.",
+        "action": "Considera un risultato segnalato come non conclusivo.\nAttendi la fine della finestra e confronta di nuovo.\nUsa una baseline di mercato esterna se disponibile."
+      }
     }
   },
   "helpUi": {
@@ -7209,5 +7217,16 @@
     "row": "{{domain}}: priorità {{priority}}, linka {{count}} concorrenti",
     "export": "Esporta CSV",
     "manualNote": "SEOmi non invia mai messaggi. Invia le bozze dalla tua casella."
+  },
+  "causalMarket": {
+    "title": "Impatto causale",
+    "empty": "Storico insufficiente: almeno 7 giorni prima della modifica e 1 dopo.",
+    "effect": "Effetto giornaliero: {{effect}} ({{lower}} a {{upper}})",
+    "updateWindow": "Finestra di aggiornamento Google: risultato non conclusivo.",
+    "normalized": "Normalizzato con la baseline di mercato",
+    "positive": "Effetto positivo",
+    "negative": "Effetto negativo",
+    "noEffect": "Nessun effetto misurabile",
+    "inconclusive": "Non conclusivo"
   }
 }

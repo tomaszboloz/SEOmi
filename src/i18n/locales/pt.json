@@ -6421,6 +6421,14 @@
         "why": "Um site que já linka vários concorrentes é o lugar mais receptivo para pedir um link, desde que você traga algo novo.",
         "action": "Comece pelo topo da lista.\nAbra o rascunho, adicione uma fonte que só você pode oferecer e edite.\nEnvie você mesmo pelo seu e-mail. O SEOmi não envia nada."
       }
+    },
+    "causalMarket": {
+      "updateWindow": {
+        "title": "Janela de atualização do Google",
+        "what": "Dias em que o Google lançou uma atualização ou o mercado esteve muito volátil. O resultado aparece com um intervalo de incerteza e um aviso se o período se sobrepõe a essa janela.",
+        "why": "Um grupo de controle do mesmo site sofre com a atualização como o grupo de teste, então uma queda ou alta pode ser do mercado e não da sua mudança.",
+        "action": "Trate um resultado sinalizado como inconclusivo.\nEspere o fim da janela e compare de novo.\nUse uma linha de base externa do mercado, se tiver."
+      }
     }
   },
   "helpUi": {
@@ -7209,5 +7217,16 @@
     "row": "{{domain}}: prioridade {{priority}}, linka {{count}} concorrentes",
     "export": "Exportar CSV",
     "manualNote": "O SEOmi nunca envia mensagens. Envie os rascunhos pelo seu e-mail."
+  },
+  "causalMarket": {
+    "title": "Impacto causal",
+    "empty": "Histórico insuficiente: pelo menos 7 dias antes da mudança e 1 depois.",
+    "effect": "Efeito diário: {{effect}} ({{lower}} a {{upper}})",
+    "updateWindow": "Janela de atualização do Google: resultado inconclusivo.",
+    "normalized": "Normalizado pela linha de base do mercado",
+    "positive": "Efeito positivo",
+    "negative": "Efeito negativo",
+    "noEffect": "Sem efeito mensurável",
+    "inconclusive": "Inconclusivo"
   }
 }
