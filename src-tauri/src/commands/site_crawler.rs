@@ -38,6 +38,7 @@ mod html_source_locator;
 mod html_validation;
 mod html_validation_rules;
 mod image_decoding;
+mod image_decoding_modern;
 mod inline_images;
 mod js_redirects;
 mod js_shell;
