@@ -1,4 +1,15 @@
-# SEOmi 0.4.3 — release notes
+# SEOmi 0.4.4 — release notes
+
+## Added
+
+- SQLite crawl store on desktop (no page truncation, versioned migration, one-shot import from localStorage) with crypto-shredding for GDPR erasure and an audit log.
+- Immutable snapshots for concurrent crawl and What-If, with a stale-snapshot banner.
+- Local team mode: RBAC roles and a hash-chained audit trail (ADR 0005).
+- CMS patch services for WordPress, Strapi and webhooks: diff preview, approval bound to the diff, rollback, SSRF guard.
+- Link placement zones from the crawler (nav, sidebar/footer, widget, main) and SPRS zone weights.
+- LLM token economy (cost meter, semantic cache, fact gate), programmatic SEO template governor, outreach co-pilot targets, causal impact with market normalization.
+
+## Included from 0.4.3
 
 ## Added
 
