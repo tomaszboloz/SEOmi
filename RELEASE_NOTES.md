@@ -2,7 +2,7 @@
 
 ## Added
 
-- Intrinsic image dimension decoding for lossy and lossless WebP (`VP8 `/`VP8L`), AVIF/HEIF (`ispe`, largest extent) and BMP (core and info headers, top-down height) in the bounded crawl image decoder (GAP G114). Unit tests cover valid, malformed and foreign-brand inputs.
+- Intrinsic image dimension decoding for lossy and lossless WebP (`VP8 `/`VP8L`), AVIF/HEIF (`ispe`, largest extent), TIFF (first IFD, both byte orders) and BMP (core and info headers, top-down height) in the bounded crawl image decoder (GAP G114). Unit tests cover valid, malformed and foreign-brand inputs.
 
 # SEOmi 0.4.10 — release notes
 

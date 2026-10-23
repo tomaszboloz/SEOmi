@@ -81,11 +81,51 @@ fn bmp_dimensions(bytes: &[u8]) -> Option<(usize, usize)> {
     ))
 }
 
+/// TIFF: `ImageWidth`/`ImageLength` (SHORT or LONG) from the first IFD, either byte order.
+fn tiff_dimensions(bytes: &[u8]) -> Option<(usize, usize)> {
+    let little = match bytes.get(0..4)? {
+        b"II*\0" => true,
+        b"MM\0*" => false,
+        _ => return None,
+    };
+    let u16_at = |at: usize| {
+        if little {
+            read_le_u16(bytes, at)
+        } else {
+            read_be_u16(bytes, at)
+        }
+    };
+    let u32_at = |at: usize| {
+        if little {
+            le_u32(bytes, at)
+        } else {
+            read_be_u32(bytes, at)
+        }
+    };
+    let ifd = u32_at(4)?;
+    let (mut width, mut height) = (None, None);
+    for index in 0..u16_at(ifd)?.min(64) {
+        let entry = ifd.checked_add(2 + index * 12)?;
+        let value = match u16_at(entry + 2)? {
+            3 => u16_at(entry + 8)?,
+            4 => u32_at(entry + 8)?,
+            _ => continue,
+        };
+        match u16_at(entry)? {
+            256 => width = Some(value),
+            257 => height = Some(value),
+            _ => {}
+        }
+    }
+    nonzero((width?, height?))
+}
+
 /// Fallback decoders for formats the primary decoder does not recognise.
 pub(super) fn modern_image_dimensions(bytes: &[u8]) -> Option<(usize, usize)> {
     webp_dimensions(bytes)
         .or_else(|| avif_dimensions(bytes))
         .or_else(|| bmp_dimensions(bytes))
+        .or_else(|| tiff_dimensions(bytes))
 }
 
 #[cfg(test)]
