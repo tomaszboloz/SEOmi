@@ -55,7 +55,7 @@ unicode-bidi = "0.3.18"
 flate2 = "1.0"
 tokio = { version = "1.41", features = ["full"] }
 reqwest = { version = "0.12", features = ["json", "cookies", "gzip", "brotli"] }
-scraper = "0.26"
+scraper = "0.27"
 url = "2.5"
 regex = "1.11"
 chrono = { version = "0.4", features = ["serde"] }
