@@ -6920,7 +6920,12 @@
       "empty": "Keine Seiten konkurrieren um dieselbe Suchintention.",
       "group": "{{count}} Seiten, {{similarity}}% Intentions-Ähnlichkeit, {{shared}}% gemeinsame Entitäten",
       "canonical": "Behalten: {{url}}",
-      "steps": "Einzigartige Abschnitte in die behaltene Seite übernehmen, die anderen per 301 darauf umleiten und interne Links anpassen."
+      "steps": "Einzigartige Abschnitte in die behaltene Seite übernehmen, die anderen per 301 darauf umleiten und interne Links anpassen.",
+      "edge": "Beleg: {{from}} und {{to}} bei {{similarity}}% ({{basis}})",
+      "basis": {
+        "intent": "gleiche Absicht",
+        "subtopic": "gleiches Unterthema"
+      }
     },
     "draft": {
       "title": "Entwurf vor der Veröffentlichung prüfen",

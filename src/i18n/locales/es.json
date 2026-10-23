@@ -6920,7 +6920,12 @@
       "empty": "Ninguna página compite por la misma intención de búsqueda.",
       "group": "{{count}} páginas, similitud de intención {{similarity}}%, {{shared}}% de entidades compartidas",
       "canonical": "Conserva: {{url}}",
-      "steps": "Traslada las secciones únicas a la página que conservas, redirige las demás con 301 y actualiza los enlaces internos."
+      "steps": "Traslada las secciones únicas a la página que conservas, redirige las demás con 301 y actualiza los enlaces internos.",
+      "edge": "Evidencia: {{from}} y {{to}} con {{similarity}}% ({{basis}})",
+      "basis": {
+        "intent": "misma intención",
+        "subtopic": "mismo subtema"
+      }
     },
     "draft": {
       "title": "Comprueba un borrador antes de publicar",

@@ -6920,7 +6920,12 @@
       "empty": "Nenhuma página compete pela mesma intenção de busca.",
       "group": "{{count}} páginas, similaridade de intenção {{similarity}}%, {{shared}}% de entidades em comum",
       "canonical": "Manter: {{url}}",
-      "steps": "Mova as seções únicas para a página mantida, redirecione as outras com 301 e atualize os links internos."
+      "steps": "Mova as seções únicas para a página mantida, redirecione as outras com 301 e atualize os links internos.",
+      "edge": "Evidência: {{from}} e {{to}} a {{similarity}}% ({{basis}})",
+      "basis": {
+        "intent": "mesma intenção",
+        "subtopic": "mesmo subtópico"
+      }
     },
     "draft": {
       "title": "Verifique um rascunho antes de publicar",

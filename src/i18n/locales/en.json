@@ -6920,7 +6920,12 @@
       "empty": "No pages compete for the same search intent.",
       "group": "{{count}} pages, {{similarity}}% intent similarity, {{shared}}% shared entities",
       "canonical": "Keep: {{url}}",
-      "steps": "Move the unique sections into the page to keep, 301-redirect the others to it and update the internal links."
+      "steps": "Move the unique sections into the page to keep, 301-redirect the others to it and update the internal links.",
+      "edge": "Evidence: {{from}} and {{to}} at {{similarity}}% ({{basis}})",
+      "basis": {
+        "intent": "same intent",
+        "subtopic": "same sub-topic"
+      }
     },
     "draft": {
       "title": "Check a draft before publishing",
