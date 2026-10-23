@@ -1,7 +1,7 @@
 use rusqlite::{Connection, Result};
 use std::path::Path;
 
-pub const SCHEMA_VERSION: i64 = 1;
+pub const SCHEMA_VERSION: i64 = 2;
 
 const V1: &str = "
 CREATE TABLE crawl_runs (
@@ -40,6 +40,26 @@ CREATE TABLE import_log (
 );
 ";
 
+const V2: &str = "
+CREATE TABLE subject_keys (
+    key_id TEXT NOT NULL PRIMARY KEY,
+    project_id TEXT NOT NULL,
+    subject_id TEXT NOT NULL,
+    key BLOB NOT NULL,
+    UNIQUE (project_id, subject_id)
+);
+CREATE TABLE erasure_log (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    project_id TEXT NOT NULL,
+    subject_id TEXT NOT NULL,
+    action TEXT NOT NULL,
+    key_id TEXT NOT NULL,
+    records_deleted INTEGER NOT NULL,
+    runs_deleted INTEGER NOT NULL,
+    at_ms INTEGER NOT NULL
+);
+";
+
 /// Apply pending migrations atomically: a crash mid-migration rolls back and
 /// the next open retries from the previous `user_version`.
 pub fn migrate(conn: &mut Connection) -> Result<()> {
@@ -51,6 +71,9 @@ pub fn migrate(conn: &mut Connection) -> Result<()> {
     if current < 1 {
         tx.execute_batch(V1)?;
     }
+    if current < 2 {
+        tx.execute_batch(V2)?;
+    }
     tx.pragma_update(None, "user_version", SCHEMA_VERSION)?;
     tx.commit()
 }
@@ -58,6 +81,7 @@ pub fn migrate(conn: &mut Connection) -> Result<()> {
 pub fn open(path: &Path) -> Result<Connection> {
     let mut conn = Connection::open(path)?;
     conn.pragma_update(None, "foreign_keys", true)?;
+    conn.pragma_update(None, "secure_delete", true)?;
     conn.pragma_update(None, "journal_mode", "WAL")?;
     migrate(&mut conn)?;
     Ok(conn)
@@ -66,6 +90,7 @@ pub fn open(path: &Path) -> Result<Connection> {
 pub fn open_memory() -> Result<Connection> {
     let mut conn = Connection::open_in_memory()?;
     conn.pragma_update(None, "foreign_keys", true)?;
+    conn.pragma_update(None, "secure_delete", true)?;
     migrate(&mut conn)?;
     Ok(conn)
 }

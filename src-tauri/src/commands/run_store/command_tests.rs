@@ -1,4 +1,5 @@
 use super::commands::*;
+use super::erase_commands::*;
 use crate::utils::test_app::StorageApp;
 use serde_json::json;
 
@@ -39,7 +40,6 @@ fn commands_round_trip_through_the_sqlite_file_and_validate_ids() {
         "emb".into(),
         "k".into(),
         Some("s".into()),
-        None,
         vec![1, 2],
     )
     .unwrap();
@@ -47,14 +47,32 @@ fn commands_round_trip_through_the_sqlite_file_and_validate_ids() {
         store_get_record(app.clone(), "p1".into(), "emb".into(), "k".into()).unwrap(),
         Some(vec![1, 2])
     );
-    assert_eq!(
-        store_list_record_keys(app.clone(), "p1".into(), "emb".into()).unwrap(),
-        vec!["k"]
-    );
-    store_delete_record(app.clone(), "p1".into(), "emb".into(), "k".into()).unwrap();
     store_delete_crawl_run(app.clone(), "p1".into(), "r1".into()).unwrap();
     assert!(store_load_crawl_run(app.clone(), "p1".into(), "r1".into())
         .unwrap()
         .is_none());
-    assert!(store_list_crawl_runs(app, "../x".into()).is_err());
+    assert!(store_list_crawl_runs(app.clone(), "../x".into()).is_err());
+
+    store_put_record(
+        app.clone(),
+        "p1".into(),
+        "emb".into(),
+        "z".into(),
+        Some("s".into()),
+        vec![9],
+    )
+    .unwrap();
+    let report = store_forget_subject(app.clone(), "p1".into(), "s".into()).unwrap();
+    assert_eq!(report.records_deleted, 2);
+    assert_eq!(
+        store_get_record(app.clone(), "p1".into(), "emb".into(), "z".into()).unwrap(),
+        None
+    );
+    assert_eq!(
+        store_erase_project(app.clone(), "p1".into())
+            .unwrap()
+            .action,
+        "erase_project"
+    );
+    assert_eq!(store_erasure_log(app, "p1".into()).unwrap().len(), 2);
 }

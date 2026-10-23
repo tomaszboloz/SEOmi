@@ -3,10 +3,10 @@ use serde_json::Value;
 use std::fs;
 use tauri::AppHandle;
 
-use super::{records, runs, schema};
+use super::{records, runs, schema, shred};
 use crate::commands::crawl_storage::project_directory;
 
-fn open_store<R: tauri::Runtime>(
+pub(super) fn open_store<R: tauri::Runtime>(
     app: &AppHandle<R>,
     project_id: &str,
 ) -> Result<Connection, String> {
@@ -21,7 +21,7 @@ fn open_store<R: tauri::Runtime>(
         .map_err(|error| format!("Unable to open store: {error}"))
 }
 
-fn err(error: rusqlite::Error) -> String {
+pub(super) fn err(error: rusqlite::Error) -> String {
     format!("Store error: {error}")
 }
 
@@ -99,12 +99,13 @@ pub fn store_put_record<R: tauri::Runtime>(
     kind: String,
     key: String,
     subject_id: Option<String>,
-    key_id: Option<String>,
     data: Vec<u8>,
 ) -> Result<(), String> {
     let conn = open_store(&app, &project_id)?;
-    let (subject, key_id) = (subject_id.unwrap_or_default(), key_id.unwrap_or_default());
-    records::put_record(&conn, &project_id, &kind, &key, &subject, &key_id, &data).map_err(err)
+    match subject_id.filter(|subject| !subject.is_empty()) {
+        Some(subject) => shred::put_encrypted(&conn, &project_id, &kind, &key, &subject, &data),
+        None => records::put_record(&conn, &project_id, &kind, &key, "", "", &data).map_err(err),
+    }
 }
 
 #[tauri::command]
@@ -114,26 +115,5 @@ pub fn store_get_record<R: tauri::Runtime>(
     kind: String,
     key: String,
 ) -> Result<Option<Vec<u8>>, String> {
-    records::get_record(&open_store(&app, &project_id)?, &project_id, &kind, &key).map_err(err)
-}
-
-#[tauri::command]
-pub fn store_list_record_keys<R: tauri::Runtime>(
-    app: AppHandle<R>,
-    project_id: String,
-    kind: String,
-) -> Result<Vec<String>, String> {
-    records::list_record_keys(&open_store(&app, &project_id)?, &project_id, &kind).map_err(err)
-}
-
-#[tauri::command]
-pub fn store_delete_record<R: tauri::Runtime>(
-    app: AppHandle<R>,
-    project_id: String,
-    kind: String,
-    key: String,
-) -> Result<(), String> {
-    records::delete_record(&open_store(&app, &project_id)?, &project_id, &kind, &key)
-        .map(|_| ())
-        .map_err(err)
+    shred::read_record(&open_store(&app, &project_id)?, &project_id, &kind, &key)
 }

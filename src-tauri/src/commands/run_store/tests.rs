@@ -101,7 +101,7 @@ fn interrupted_migration_rolls_back_and_retries() {
         schema::open(&path)
             .unwrap()
             .query_row("PRAGMA user_version", [], |r| r.get(0)),
-        Ok(1)
+        Ok(schema::SCHEMA_VERSION)
     );
     std::fs::remove_dir_all(dir).unwrap();
 }

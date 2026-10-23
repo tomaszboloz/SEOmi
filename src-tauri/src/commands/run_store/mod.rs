@@ -4,8 +4,14 @@
 #[cfg(test)]
 mod command_tests;
 pub mod commands;
+pub mod erase;
+pub mod erase_commands;
+#[cfg(test)]
+mod erase_tests;
 pub mod records;
+pub mod report;
 pub mod runs;
 pub mod schema;
+pub mod shred;
 #[cfg(test)]
 mod tests;
