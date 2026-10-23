@@ -62,7 +62,7 @@ chrono = { version = "0.4", features = ["serde"] }
 anyhow = "1.0"
 thiserror = "2.0"
 base64 = "0.22"
-sha2 = "0.10"
+sha2 = "0.11"
 uuid = { version = "1.11", features = ["v4", "serde"] }
 log = "0.4"
 env_logger = "0.11"
