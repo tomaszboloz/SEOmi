@@ -54,7 +54,7 @@ describe('coverage 100 settings UI edges', () => {
     act(() => {
       fireEvent.change(numbers[0], { target: { value: '45' } });
       fireEvent.change(numbers[1], { target: { value: '9' } });
-      fireEvent.change(screen.getByRole('combobox'), { target: { value: 'custom-agent' } });
+      fireEvent.change(screen.getByLabelText(i18n.t('settings.defaultUserAgent')), { target: { value: 'custom-agent' } });
       fireEvent.click(screen.getByRole('checkbox', { name: /verify/i }));
     });
     expect(updateConfig).toHaveBeenCalledWith({ request_timeout_secs: 45 });

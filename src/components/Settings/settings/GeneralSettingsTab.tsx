@@ -7,6 +7,7 @@ import { isTauriEnvironment } from '@/services/tauri';
 import { HelpTip } from '@/components/Help/HelpTip';
 import { RenderWorkerPanel } from '@/components/Settings/RenderWorkerPanel';
 import { MonitoringAlertsPanel } from '@/components/Settings/MonitoringAlertsPanel';
+import { TeamPanel } from '@/components/Settings/TeamPanel';
 import { DataErasurePanel } from '@/components/Settings/DataErasurePanel';
 
 interface GeneralSettingsTabProps {
@@ -66,6 +67,7 @@ export const GeneralSettingsTab: React.FC<GeneralSettingsTabProps> = ({
       <MonitoringAlertsPanel />
 
       <RenderWorkerPanel />
+      <TeamPanel />
       <DataErasurePanel />
 
       <div>

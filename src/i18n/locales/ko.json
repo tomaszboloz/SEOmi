@@ -1,4 +1,43 @@
 {
+  "teamPanelUi": {
+    "title": "팀 모드 및 감사 로그",
+    "description": "누가 어떤 역할로 작업하는지 선택합니다. 모든 변경은 변조를 감지하는 해시 체인 방식의 로컬 감사 로그에 추가됩니다.",
+    "actor": "작업자",
+    "role": "역할",
+    "roles": {
+      "admin": "관리자",
+      "seo_strategist": "SEO 전략가",
+      "content_writer": "콘텐츠 작성자",
+      "developer": "개발자"
+    },
+    "permissions": {
+      "run_crawl": "크롤 실행",
+      "execute_cms_patch": "CMS 패치 실행",
+      "modify_site_focus_rules": "Site Focus 규칙 수정",
+      "export_audit_pdf": "감사 PDF 내보내기",
+      "manage_team_roles": "팀 역할 관리"
+    },
+    "permissionsTitle": "권한",
+    "auditTitle": "감사 로그",
+    "auditEmpty": "감사 항목이 아직 없습니다.",
+    "chainOk": "감사 체인이 확인되었습니다.",
+    "chainBroken": "감사 체인이 항목 {{entry}}에서 끊어졌습니다({{reason}}).",
+    "exportCsv": "CSV 내보내기",
+    "columns": {
+      "time": "시간",
+      "actor": "작업자",
+      "action": "작업",
+      "result": "결과"
+    },
+    "results": {
+      "success": "성공",
+      "denied": "거부됨",
+      "failure": "실패",
+      "dry_run": "드라이 런"
+    },
+    "allowed": "허용",
+    "notAllowed": "허용 안 됨"
+  },
   "dataErasureUi": {
     "title": "프로젝트 데이터 삭제(GDPR)",
     "description": "암호화 키를 폐기하여 이 프로젝트의 크롤 실행, 임베딩, 기록을 로컬 저장소에서 영구 삭제합니다. 되돌릴 수 없습니다.",

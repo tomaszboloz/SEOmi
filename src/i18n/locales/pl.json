@@ -1,4 +1,43 @@
 {
+  "teamPanelUi": {
+    "title": "Tryb zespołowy i dziennik audytu",
+    "description": "Wybierz, kto działa i w jakiej roli. Każda zmiana trafia do lokalnego dziennika audytu zabezpieczonego łańcuchem skrótów.",
+    "actor": "Użytkownik",
+    "role": "Rola",
+    "roles": {
+      "admin": "Administrator",
+      "seo_strategist": "Strateg SEO",
+      "content_writer": "Autor treści",
+      "developer": "Programista"
+    },
+    "permissions": {
+      "run_crawl": "Uruchamianie crawla",
+      "execute_cms_patch": "Wykonanie patcha CMS",
+      "modify_site_focus_rules": "Zmiana reguł Site Focus",
+      "export_audit_pdf": "Eksport audytu PDF",
+      "manage_team_roles": "Zarządzanie rolami"
+    },
+    "permissionsTitle": "Uprawnienie",
+    "auditTitle": "Dziennik audytu",
+    "auditEmpty": "Brak wpisów audytu.",
+    "chainOk": "Łańcuch audytu zweryfikowany.",
+    "chainBroken": "Łańcuch audytu przerwany we wpisie {{entry}} ({{reason}}).",
+    "exportCsv": "Eksportuj CSV",
+    "columns": {
+      "time": "Czas",
+      "actor": "Użytkownik",
+      "action": "Akcja",
+      "result": "Wynik"
+    },
+    "results": {
+      "success": "Sukces",
+      "denied": "Odmowa",
+      "failure": "Błąd",
+      "dry_run": "Próba bez zmian"
+    },
+    "allowed": "Dozwolone",
+    "notAllowed": "Niedozwolone"
+  },
   "dataErasureUi": {
     "title": "Wymaż dane projektu (RODO)",
     "description": "Trwale usuwa z lokalnego magazynu przebiegi crawla, embeddingi i historię tego projektu, niszcząc ich klucze szyfrujące. Tej operacji nie można cofnąć.",

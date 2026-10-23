@@ -1,4 +1,43 @@
 {
+  "teamPanelUi": {
+    "title": "团队模式与审计日志",
+    "description": "选择谁以何种角色操作。每次变更都会追加到本地防篡改的哈希链审计日志中。",
+    "actor": "操作者",
+    "role": "角色",
+    "roles": {
+      "admin": "管理员",
+      "seo_strategist": "SEO 策略师",
+      "content_writer": "内容撰写者",
+      "developer": "开发者"
+    },
+    "permissions": {
+      "run_crawl": "运行抓取",
+      "execute_cms_patch": "执行 CMS 补丁",
+      "modify_site_focus_rules": "修改 Site Focus 规则",
+      "export_audit_pdf": "导出审计 PDF",
+      "manage_team_roles": "管理团队角色"
+    },
+    "permissionsTitle": "权限",
+    "auditTitle": "审计日志",
+    "auditEmpty": "暂无审计条目。",
+    "chainOk": "审计链已验证。",
+    "chainBroken": "审计链在第 {{entry}} 条处中断（{{reason}}）。",
+    "exportCsv": "导出 CSV",
+    "columns": {
+      "time": "时间",
+      "actor": "操作者",
+      "action": "操作",
+      "result": "结果"
+    },
+    "results": {
+      "success": "成功",
+      "denied": "已拒绝",
+      "failure": "失败",
+      "dry_run": "试运行"
+    },
+    "allowed": "允许",
+    "notAllowed": "不允许"
+  },
   "dataErasureUi": {
     "title": "清除项目数据（GDPR）",
     "description": "通过销毁加密密钥，从本地存储中永久删除此项目的抓取记录、嵌入向量和历史。此操作无法撤销。",

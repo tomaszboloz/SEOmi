@@ -1,4 +1,43 @@
 {
+  "teamPanelUi": {
+    "title": "Modo de equipo y registro de auditoría",
+    "description": "Elige quién actúa y con qué rol. Cada cambio se añade a un registro de auditoría local con cadena de hashes a prueba de manipulaciones.",
+    "actor": "Actor",
+    "role": "Rol",
+    "roles": {
+      "admin": "Administrador",
+      "seo_strategist": "Estratega SEO",
+      "content_writer": "Redactor de contenido",
+      "developer": "Desarrollador"
+    },
+    "permissions": {
+      "run_crawl": "Ejecutar rastreo",
+      "execute_cms_patch": "Aplicar parche CMS",
+      "modify_site_focus_rules": "Modificar reglas de Site Focus",
+      "export_audit_pdf": "Exportar auditoría PDF",
+      "manage_team_roles": "Gestionar roles del equipo"
+    },
+    "permissionsTitle": "Permiso",
+    "auditTitle": "Registro de auditoría",
+    "auditEmpty": "Aún no hay entradas de auditoría.",
+    "chainOk": "Cadena de auditoría verificada.",
+    "chainBroken": "Cadena de auditoría rota en la entrada {{entry}} ({{reason}}).",
+    "exportCsv": "Exportar CSV",
+    "columns": {
+      "time": "Hora",
+      "actor": "Actor",
+      "action": "Acción",
+      "result": "Resultado"
+    },
+    "results": {
+      "success": "Correcto",
+      "denied": "Denegado",
+      "failure": "Error",
+      "dry_run": "Simulación"
+    },
+    "allowed": "Permitido",
+    "notAllowed": "No permitido"
+  },
   "dataErasureUi": {
     "title": "Borrar datos del proyecto (RGPD)",
     "description": "Elimina de forma permanente las ejecuciones de rastreo, los embeddings y el historial de este proyecto del almacén local destruyendo sus claves de cifrado. No se puede deshacer.",

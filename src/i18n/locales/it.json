@@ -1,4 +1,43 @@
 {
+  "teamPanelUi": {
+    "title": "Modalità team e registro di audit",
+    "description": "Scegli chi agisce e con quale ruolo. Ogni modifica viene aggiunta a un registro di audit locale a catena di hash, a prova di manomissione.",
+    "actor": "Utente",
+    "role": "Ruolo",
+    "roles": {
+      "admin": "Amministratore",
+      "seo_strategist": "Stratega SEO",
+      "content_writer": "Autore di contenuti",
+      "developer": "Sviluppatore"
+    },
+    "permissions": {
+      "run_crawl": "Avviare la scansione",
+      "execute_cms_patch": "Eseguire patch CMS",
+      "modify_site_focus_rules": "Modificare le regole Site Focus",
+      "export_audit_pdf": "Esportare l'audit PDF",
+      "manage_team_roles": "Gestire i ruoli del team"
+    },
+    "permissionsTitle": "Permesso",
+    "auditTitle": "Registro di audit",
+    "auditEmpty": "Nessuna voce di audit.",
+    "chainOk": "Catena di audit verificata.",
+    "chainBroken": "Catena di audit interrotta alla voce {{entry}} ({{reason}}).",
+    "exportCsv": "Esporta CSV",
+    "columns": {
+      "time": "Ora",
+      "actor": "Utente",
+      "action": "Azione",
+      "result": "Esito"
+    },
+    "results": {
+      "success": "Riuscito",
+      "denied": "Negato",
+      "failure": "Errore",
+      "dry_run": "Prova"
+    },
+    "allowed": "Consentito",
+    "notAllowed": "Non consentito"
+  },
   "dataErasureUi": {
     "title": "Cancella i dati del progetto (GDPR)",
     "description": "Elimina in modo permanente dall'archivio locale le scansioni, gli embedding e la cronologia di questo progetto distruggendo le chiavi di cifratura. L'operazione non è reversibile.",

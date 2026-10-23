@@ -1,4 +1,43 @@
 {
+  "teamPanelUi": {
+    "title": "チームモードと監査ログ",
+    "description": "誰がどの役割で操作するかを選択します。すべての変更は、改ざん検知可能なハッシュチェーン付きのローカル監査ログに追記されます。",
+    "actor": "操作者",
+    "role": "役割",
+    "roles": {
+      "admin": "管理者",
+      "seo_strategist": "SEO ストラテジスト",
+      "content_writer": "コンテンツライター",
+      "developer": "開発者"
+    },
+    "permissions": {
+      "run_crawl": "クロールの実行",
+      "execute_cms_patch": "CMS パッチの適用",
+      "modify_site_focus_rules": "Site Focus ルールの変更",
+      "export_audit_pdf": "監査 PDF のエクスポート",
+      "manage_team_roles": "チームロールの管理"
+    },
+    "permissionsTitle": "権限",
+    "auditTitle": "監査ログ",
+    "auditEmpty": "監査エントリはまだありません。",
+    "chainOk": "監査チェーンを検証しました。",
+    "chainBroken": "監査チェーンがエントリ {{entry}} で破損しています（{{reason}}）。",
+    "exportCsv": "CSV をエクスポート",
+    "columns": {
+      "time": "時刻",
+      "actor": "操作者",
+      "action": "アクション",
+      "result": "結果"
+    },
+    "results": {
+      "success": "成功",
+      "denied": "拒否",
+      "failure": "失敗",
+      "dry_run": "ドライラン"
+    },
+    "allowed": "許可",
+    "notAllowed": "不許可"
+  },
   "dataErasureUi": {
     "title": "プロジェクトデータの消去（GDPR）",
     "description": "暗号鍵を破棄することで、このプロジェクトのクロール実行・埋め込み・履歴をローカルストアから完全に削除します。元に戻せません。",

@@ -1,4 +1,43 @@
 {
+  "teamPanelUi": {
+    "title": "Team mode and audit trail",
+    "description": "Choose who is acting and in which role. Every change is appended to a tamper-evident, hash-chained audit log stored locally.",
+    "actor": "Actor",
+    "role": "Role",
+    "roles": {
+      "admin": "Admin",
+      "seo_strategist": "SEO Strategist",
+      "content_writer": "Content Writer",
+      "developer": "Developer"
+    },
+    "permissions": {
+      "run_crawl": "Run crawl",
+      "execute_cms_patch": "Execute CMS patch",
+      "modify_site_focus_rules": "Modify Site Focus rules",
+      "export_audit_pdf": "Export audit PDF",
+      "manage_team_roles": "Manage team roles"
+    },
+    "permissionsTitle": "Permission",
+    "auditTitle": "Audit log",
+    "auditEmpty": "No audit entries yet.",
+    "chainOk": "Audit chain verified.",
+    "chainBroken": "Audit chain broken at entry {{entry}} ({{reason}}).",
+    "exportCsv": "Export CSV",
+    "columns": {
+      "time": "Time",
+      "actor": "Actor",
+      "action": "Action",
+      "result": "Result"
+    },
+    "results": {
+      "success": "Success",
+      "denied": "Denied",
+      "failure": "Failure",
+      "dry_run": "Dry run"
+    },
+    "allowed": "Allowed",
+    "notAllowed": "Not allowed"
+  },
   "dataErasureUi": {
     "title": "Erase project data (GDPR)",
     "description": "Permanently deletes this project's crawl runs, embeddings and history from the local store by destroying their encryption keys. This cannot be undone.",

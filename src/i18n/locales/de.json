@@ -1,4 +1,43 @@
 {
+  "teamPanelUi": {
+    "title": "Teammodus und Audit-Protokoll",
+    "description": "Legen Sie fest, wer in welcher Rolle handelt. Jede Änderung wird in ein lokales, manipulationssicheres Audit-Protokoll mit Hash-Kette geschrieben.",
+    "actor": "Akteur",
+    "role": "Rolle",
+    "roles": {
+      "admin": "Admin",
+      "seo_strategist": "SEO-Stratege",
+      "content_writer": "Content-Autor",
+      "developer": "Entwickler"
+    },
+    "permissions": {
+      "run_crawl": "Crawl starten",
+      "execute_cms_patch": "CMS-Patch ausführen",
+      "modify_site_focus_rules": "Site-Focus-Regeln ändern",
+      "export_audit_pdf": "Audit-PDF exportieren",
+      "manage_team_roles": "Teamrollen verwalten"
+    },
+    "permissionsTitle": "Berechtigung",
+    "auditTitle": "Audit-Protokoll",
+    "auditEmpty": "Noch keine Audit-Einträge.",
+    "chainOk": "Audit-Kette verifiziert.",
+    "chainBroken": "Audit-Kette bei Eintrag {{entry}} unterbrochen ({{reason}}).",
+    "exportCsv": "CSV exportieren",
+    "columns": {
+      "time": "Zeit",
+      "actor": "Akteur",
+      "action": "Aktion",
+      "result": "Ergebnis"
+    },
+    "results": {
+      "success": "Erfolg",
+      "denied": "Abgelehnt",
+      "failure": "Fehler",
+      "dry_run": "Probelauf"
+    },
+    "allowed": "Erlaubt",
+    "notAllowed": "Nicht erlaubt"
+  },
   "dataErasureUi": {
     "title": "Projektdaten löschen (DSGVO)",
     "description": "Löscht Crawl-Läufe, Embeddings und Verlauf dieses Projekts dauerhaft aus dem lokalen Speicher, indem die Verschlüsselungsschlüssel vernichtet werden. Dies kann nicht rückgängig gemacht werden.",

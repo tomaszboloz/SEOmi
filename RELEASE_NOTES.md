@@ -1,3 +1,13 @@
+# SEOmi 0.4.18 — release notes
+
+## Added
+
+- Settings → General: team mode panel (issue #141). Pick the acting name and role (Admin, SEO Strategist, Content Writer, Developer), see the role/permission matrix generated from the single role table, and review the hash-chained audit log with a live chain verdict and CSV export. Every identity change is appended to the log; a tampered chain is reported and further writes are refused. Translated in all 12 languages. Tests cover the matrix, logging, persistence, tamper detection, export, fallbacks and locale parity.
+
+## Changed
+
+- The default-user-agent selector is addressed by its label in the settings test, because the tab now has more than one select.
+
 # SEOmi 0.4.17 — release notes
 
 ## Added

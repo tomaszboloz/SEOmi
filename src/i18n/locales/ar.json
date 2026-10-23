@@ -1,4 +1,43 @@
 {
+  "teamPanelUi": {
+    "title": "وضع الفريق وسجل التدقيق",
+    "description": "اختر من يعمل وبأي دور. تُضاف كل تغييرات إلى سجل تدقيق محلي محمي بسلسلة تجزئة يكشف أي تلاعب.",
+    "actor": "المستخدم",
+    "role": "الدور",
+    "roles": {
+      "admin": "مسؤول",
+      "seo_strategist": "خبير استراتيجية SEO",
+      "content_writer": "كاتب محتوى",
+      "developer": "مطوّر"
+    },
+    "permissions": {
+      "run_crawl": "تشغيل الزحف",
+      "execute_cms_patch": "تنفيذ تصحيح CMS",
+      "modify_site_focus_rules": "تعديل قواعد Site Focus",
+      "export_audit_pdf": "تصدير تدقيق PDF",
+      "manage_team_roles": "إدارة أدوار الفريق"
+    },
+    "permissionsTitle": "الصلاحية",
+    "auditTitle": "سجل التدقيق",
+    "auditEmpty": "لا توجد إدخالات تدقيق بعد.",
+    "chainOk": "تم التحقق من سلسلة التدقيق.",
+    "chainBroken": "انكسرت سلسلة التدقيق عند الإدخال {{entry}} ({{reason}}).",
+    "exportCsv": "تصدير CSV",
+    "columns": {
+      "time": "الوقت",
+      "actor": "المستخدم",
+      "action": "الإجراء",
+      "result": "النتيجة"
+    },
+    "results": {
+      "success": "نجاح",
+      "denied": "مرفوض",
+      "failure": "فشل",
+      "dry_run": "تشغيل تجريبي"
+    },
+    "allowed": "مسموح",
+    "notAllowed": "غير مسموح"
+  },
   "dataErasureUi": {
     "title": "مسح بيانات المشروع (GDPR)",
     "description": "يحذف نهائيًا عمليات الزحف والتضمينات والسجل الخاصة بهذا المشروع من التخزين المحلي عبر إتلاف مفاتيح التشفير الخاصة بها. لا يمكن التراجع عن ذلك.",

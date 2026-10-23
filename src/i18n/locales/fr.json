@@ -1,4 +1,43 @@
 {
+  "teamPanelUi": {
+    "title": "Mode équipe et journal d'audit",
+    "description": "Choisissez qui agit et avec quel rôle. Chaque changement est ajouté à un journal d'audit local, chaîné par hachage et inviolable.",
+    "actor": "Acteur",
+    "role": "Rôle",
+    "roles": {
+      "admin": "Administrateur",
+      "seo_strategist": "Stratège SEO",
+      "content_writer": "Rédacteur de contenu",
+      "developer": "Développeur"
+    },
+    "permissions": {
+      "run_crawl": "Lancer une analyse",
+      "execute_cms_patch": "Appliquer un correctif CMS",
+      "modify_site_focus_rules": "Modifier les règles Site Focus",
+      "export_audit_pdf": "Exporter l'audit PDF",
+      "manage_team_roles": "Gérer les rôles de l'équipe"
+    },
+    "permissionsTitle": "Autorisation",
+    "auditTitle": "Journal d'audit",
+    "auditEmpty": "Aucune entrée d'audit.",
+    "chainOk": "Chaîne d'audit vérifiée.",
+    "chainBroken": "Chaîne d'audit rompue à l'entrée {{entry}} ({{reason}}).",
+    "exportCsv": "Exporter en CSV",
+    "columns": {
+      "time": "Heure",
+      "actor": "Acteur",
+      "action": "Action",
+      "result": "Résultat"
+    },
+    "results": {
+      "success": "Succès",
+      "denied": "Refusé",
+      "failure": "Échec",
+      "dry_run": "Simulation"
+    },
+    "allowed": "Autorisé",
+    "notAllowed": "Non autorisé"
+  },
   "dataErasureUi": {
     "title": "Effacer les données du projet (RGPD)",
     "description": "Supprime définitivement du stockage local les analyses, embeddings et l'historique de ce projet en détruisant leurs clés de chiffrement. Action irréversible.",
