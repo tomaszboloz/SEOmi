@@ -6526,6 +6526,26 @@
         "why": "Un groupe témoin du même site subit la mise à jour comme le groupe test : une hausse ou une baisse peut venir du marché et non de votre changement.",
         "action": "Considérez un résultat signalé comme non concluant.\nAttendez la fin de la fenêtre et comparez à nouveau.\nUtilisez une base de marché externe si vous en avez une."
       }
+    },
+    "igos": {
+      "score": {
+        "title": "Score IGOS",
+        "what": "Gain d'information par rapport à ce que disent déjà les vrais résultats TOP : nouvelles entités du sujet, densité de preuves, marqueurs d'expérience et répartition des sous-thèmes, réduit si la base est mince.",
+        "why": "Montre ce que la page apporte au-delà du consensus. Les marqueurs indiquent seulement une expérience déclarée ; ils ne prouvent ni recherche ni originalité.",
+        "action": "Vérifiez les quatre composantes.\nAjoutez les fondamentaux manquants.\nRelancez après modification."
+      },
+      "heatmap": {
+        "title": "Carte de chaleur des paragraphes",
+        "what": "Chaque paragraphe est étiqueté Écho (copie proche d'un passage concurrent), Gain (sur le sujet et nouveau), Dérive (hors sujet) ou Neutre.",
+        "why": "L'écho n'apporte rien et la dérive dilue le sujet. Les étiquettes sont du texte, pas seulement de la couleur.",
+        "action": "Ouvrez d'abord les paragraphes Écho et Dérive.\nUtilisez les flèches.\nRéécrivez-les ou recentrez-les."
+      },
+      "coverage": {
+        "title": "Couverture de la base",
+        "what": "Part des entités de consensus déjà couvertes par la page. Sous 50 %, le score est multiplié par une pénalité.",
+        "why": "Sans le socle commun, une page avec un peu de nouveauté ne correspond toujours pas au sujet.",
+        "action": "Couvrez les entités de consensus manquantes.\nAjoutez ensuite des faits nouveaux."
+      }
     }
   },
   "helpUi": {
@@ -7623,5 +7643,46 @@
     "verified": "Modification écrite et vérifiée.",
     "unverified": "Modification écrite, mais la page en ligne ne l'affiche pas encore.",
     "dryRun": "Simulation : rien n'a été écrit."
+  },
+  "igosUi": {
+    "title": "Originalité IGOS",
+    "empty": "Aucun résultat TOP comparable récupéré : pas de base ni de score.",
+    "noScore": "Pas de score",
+    "offTopic": "La plupart des paragraphes sont hors sujet ; aucun score donné.",
+    "partial": "Base partielle : {{available}} pages concurrentes sur {{requested}}.",
+    "basis": "Base : {{available}} pages concurrentes sur {{requested}}.",
+    "component": {
+      "nefr": "Nouvelles entités",
+      "edsi": "Densité de preuves",
+      "fhem": "Marqueurs d'expérience",
+      "sdd": "Répartition des sous-thèmes"
+    },
+    "coverage": "Couverture de la base {{coverage}}, multiplicateur de pénalité {{multiplier}}",
+    "novel": "Nouvelles entités du sujet : {{list}}",
+    "advice": "Recommandations",
+    "heatmap": "Carte de chaleur des paragraphes",
+    "heatmapEmpty": "Aucun paragraphe à afficher.",
+    "noHeading": "Sans titre",
+    "zone": {
+      "echo": "Écho",
+      "gain": "Gain",
+      "drift": "Dérive",
+      "neutral": "Neutre"
+    },
+    "detail": "Décalage {{offset}}, similarité thématique {{topic}}, passage concurrent le plus proche {{nearest}}.",
+    "source": "Source la plus proche : {{url}} (rang {{rank}}).",
+    "noSource": "Aucune source proche.",
+    "limit": {
+      "no-comparable-documents": "Aucun document concurrent comparable.",
+      "too-few-documents": "Trop peu de documents concurrents pour une base fiable.",
+      "some-documents-missing": "Certaines pages concurrentes n'ont pas pu être récupérées.",
+      "no-target-chunks": "La page n'a aucun paragraphe analysable.",
+      "off-topic-below-quota": "Trop peu de paragraphes sur le sujet."
+    },
+    "rec": {
+      "rewrite-echo": "Le paragraphe au décalage {{offset}} répète un passage concurrent : réécrivez-le avec vos mots.",
+      "add-evidence": "Ajoutez des données concrètes avec unités ou sources ; aucune détectée.",
+      "refocus-drift": "Le paragraphe au décalage {{offset}} dérive du sujet : recentrez-le ou supprimez-le."
+    }
   }
 }

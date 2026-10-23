@@ -6526,6 +6526,26 @@
         "why": "Un grupo de control del mismo sitio sufre la actualización igual que el de prueba, así que una subida o caída puede deberse al mercado y no a tu cambio.",
         "action": "Trata un resultado marcado como no concluyente.\nEspera a que termine la ventana y compara de nuevo.\nUsa una línea base externa del mercado si la tienes."
       }
+    },
+    "igos": {
+      "score": {
+        "title": "Puntuación IGOS",
+        "what": "Ganancia de información frente a lo que ya dicen los resultados TOP reales: entidades nuevas del tema, densidad de pruebas, marcadores de experiencia y reparto de subtemas, reducida si la base es débil.",
+        "why": "Muestra qué aporta la página más allá del consenso. Los marcadores solo indican experiencia declarada; no prueban investigación ni originalidad.",
+        "action": "Revisa los cuatro componentes.\nAñade los fundamentos que faltan.\nVuelve a ejecutar tras editar."
+      },
+      "heatmap": {
+        "title": "Mapa de calor de párrafos",
+        "what": "Cada párrafo se etiqueta como Eco (copia cercana de un pasaje competidor), Ganancia (del tema y nuevo), Deriva (fuera de tema) o Neutro.",
+        "why": "El eco no aporta nada y la deriva diluye el tema. Las etiquetas son texto, no solo color.",
+        "action": "Abre primero los párrafos Eco y Deriva.\nMuévete con las flechas.\nReescríbelos o enfócalos."
+      },
+      "coverage": {
+        "title": "Cobertura de la base",
+        "what": "Parte de las entidades de consenso que la página ya cubre. Por debajo del 50 % la puntuación se multiplica por una penalización.",
+        "why": "Sin la base común, una página con algo de novedad sigue sin encajar en el tema.",
+        "action": "Cubre las entidades de consenso que faltan.\nLuego añade hechos nuevos."
+      }
     }
   },
   "helpUi": {
@@ -7623,5 +7643,46 @@
     "verified": "Cambio escrito y verificado.",
     "unverified": "Cambio escrito, pero la página en vivo aún no lo muestra.",
     "dryRun": "Simulación: no se escribió nada."
+  },
+  "igosUi": {
+    "title": "Originalidad IGOS",
+    "empty": "No se obtuvieron resultados TOP comparables: sin base ni puntuación.",
+    "noScore": "Sin puntuación",
+    "offTopic": "La mayoría de los párrafos están fuera de tema; no se da puntuación.",
+    "partial": "Base parcial: {{available}} de {{requested}} páginas de la competencia.",
+    "basis": "Base: {{available}} de {{requested}} páginas de la competencia.",
+    "component": {
+      "nefr": "Entidades nuevas",
+      "edsi": "Densidad de pruebas",
+      "fhem": "Marcadores de experiencia",
+      "sdd": "Distribución de subtemas"
+    },
+    "coverage": "Cobertura de la base {{coverage}}, multiplicador de penalización {{multiplier}}",
+    "novel": "Nuevas entidades del tema: {{list}}",
+    "advice": "Recomendaciones",
+    "heatmap": "Mapa de calor de párrafos",
+    "heatmapEmpty": "No hay párrafos que mostrar.",
+    "noHeading": "Sin encabezado",
+    "zone": {
+      "echo": "Eco",
+      "gain": "Ganancia",
+      "drift": "Deriva",
+      "neutral": "Neutro"
+    },
+    "detail": "Desplazamiento {{offset}}, similitud temática {{topic}}, pasaje competidor más cercano {{nearest}}.",
+    "source": "Fuente más cercana: {{url}} (posición {{rank}}).",
+    "noSource": "Sin fuente cercana.",
+    "limit": {
+      "no-comparable-documents": "Sin documentos comparables de la competencia.",
+      "too-few-documents": "Muy pocos documentos de la competencia para una base fiable.",
+      "some-documents-missing": "No se pudieron obtener algunas páginas de la competencia.",
+      "no-target-chunks": "La página no tiene párrafos analizables.",
+      "off-topic-below-quota": "Muy pocos párrafos dentro del tema."
+    },
+    "rec": {
+      "rewrite-echo": "El párrafo en el desplazamiento {{offset}} repite un pasaje de la competencia: reescríbelo con tus palabras.",
+      "add-evidence": "Añade datos concretos con unidades o fuentes; no se detectó ninguno.",
+      "refocus-drift": "El párrafo en el desplazamiento {{offset}} se desvía del tema: enfócalo o elimínalo."
+    }
   }
 }

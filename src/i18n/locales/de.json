@@ -6526,6 +6526,26 @@
         "why": "Eine Kontrollgruppe derselben Website leidet bei einem Update wie die Testgruppe, daher kann ein Rückgang oder Anstieg am Markt statt an Ihrer Änderung liegen.",
         "action": "Behandeln Sie ein markiertes Ergebnis als nicht aussagekräftig.\nWarten Sie das Ende des Update-Fensters ab und vergleichen Sie erneut.\nNutzen Sie eine externe Marktbasislinie, falls vorhanden."
       }
+    },
+    "igos": {
+      "score": {
+        "title": "IGOS-Wert",
+        "what": "Informationsgewinn gegenüber den realen TOP-Ergebnissen: neue themenrelevante Entitäten, Belegdichte, Erfahrungsmarker und Unterthemenverteilung, bei dünner Basis reduziert.",
+        "why": "Zeigt, was die Seite über den Konsens hinaus bietet. Marker zeigen nur erklärte Erfahrung, keine Forschung oder Originalität.",
+        "action": "Die vier Komponenten prüfen.\nFehlende Grundlagen ergänzen.\nNach der Bearbeitung erneut ausführen."
+      },
+      "heatmap": {
+        "title": "Absatz-Heatmap",
+        "what": "Jeder Absatz ist beschriftet: Echo (nahe Kopie einer Konkurrenzpassage), Gewinn (themenrelevant und neu), Drift (themenfremd) oder Neutral.",
+        "why": "Echo bringt nichts Neues, Drift verwässert das Thema. Beschriftungen sind Text, nicht nur Farbe.",
+        "action": "Zuerst Echo- und Drift-Absätze öffnen.\nMit Pfeiltasten wechseln.\nUmschreiben oder fokussieren."
+      },
+      "coverage": {
+        "title": "Basisabdeckung",
+        "what": "Anteil der Konsens-Entitäten, die die Seite schon abdeckt. Unter 50 % wird der Wert mit einer Strafe multipliziert.",
+        "why": "Ohne gemeinsame Grundlage passt eine Seite mit etwas Neuem trotzdem nicht zum Thema.",
+        "action": "Fehlende Konsens-Entitäten abdecken.\nDann neue Fakten ergänzen."
+      }
     }
   },
   "helpUi": {
@@ -7623,5 +7643,46 @@
     "verified": "Änderung geschrieben und verifiziert.",
     "unverified": "Änderung geschrieben, auf der Live-Seite aber noch nicht sichtbar.",
     "dryRun": "Testlauf: Es wurde nichts geschrieben."
+  },
+  "igosUi": {
+    "title": "IGOS-Originalität",
+    "empty": "Keine vergleichbaren TOP-Ergebnisse abgerufen, daher keine Basis und kein Wert.",
+    "noScore": "Kein Wert",
+    "offTopic": "Die meisten Absätze sind themenfremd; kein Wert vergeben.",
+    "partial": "Teilbasis: {{available}} von {{requested}} Konkurrenzseiten.",
+    "basis": "Basis: {{available}} von {{requested}} Konkurrenzseiten.",
+    "component": {
+      "nefr": "Neue Entitäten",
+      "edsi": "Belegdichte",
+      "fhem": "Erfahrungsmarker",
+      "sdd": "Unterthemenverteilung"
+    },
+    "coverage": "Basisabdeckung {{coverage}}, Strafmultiplikator {{multiplier}}",
+    "novel": "Neue themenrelevante Entitäten: {{list}}",
+    "advice": "Empfehlungen",
+    "heatmap": "Absatz-Heatmap",
+    "heatmapEmpty": "Keine Absätze zum Anzeigen.",
+    "noHeading": "Keine Überschrift",
+    "zone": {
+      "echo": "Echo",
+      "gain": "Gewinn",
+      "drift": "Drift",
+      "neutral": "Neutral"
+    },
+    "detail": "Offset {{offset}}, Themenähnlichkeit {{topic}}, nächste Konkurrenzpassage {{nearest}}.",
+    "source": "Nächste Quelle: {{url}} (Rang {{rank}}).",
+    "noSource": "Keine nächste Quelle.",
+    "limit": {
+      "no-comparable-documents": "Keine vergleichbaren Konkurrenzdokumente.",
+      "too-few-documents": "Zu wenige Konkurrenzdokumente für eine verlässliche Basis.",
+      "some-documents-missing": "Einige Konkurrenzseiten konnten nicht abgerufen werden.",
+      "no-target-chunks": "Die Seite hat keine analysierbaren Absätze.",
+      "off-topic-below-quota": "Zu wenige themenrelevante Absätze."
+    },
+    "rec": {
+      "rewrite-echo": "Der Absatz bei Offset {{offset}} wiederholt eine Konkurrenzpassage: in eigenen Worten umschreiben.",
+      "add-evidence": "Konkrete Daten mit Einheiten oder Quellen ergänzen; keine erkannt.",
+      "refocus-drift": "Der Absatz bei Offset {{offset}} driftet vom Thema ab: fokussieren oder entfernen."
+    }
   }
 }

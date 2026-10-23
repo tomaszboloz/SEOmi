@@ -6526,6 +6526,26 @@
         "why": "Un gruppo di controllo dello stesso sito subisce l’aggiornamento come quello di test, quindi un calo o un aumento può dipendere dal mercato e non dalla tua modifica.",
         "action": "Considera un risultato segnalato come non conclusivo.\nAttendi la fine della finestra e confronta di nuovo.\nUsa una baseline di mercato esterna se disponibile."
       }
+    },
+    "igos": {
+      "score": {
+        "title": "Punteggio IGOS",
+        "what": "Guadagno informativo rispetto a ciò che dicono già i veri risultati TOP: nuove entità sul tema, densità di prove, indicatori di esperienza e distribuzione dei sottotemi, ridotto se la base è debole.",
+        "why": "Mostra cosa aggiunge la pagina oltre il consenso. Gli indicatori mostrano solo esperienza dichiarata; non provano ricerca né originalità.",
+        "action": "Controlla le quattro componenti.\nAggiungi i fondamenti mancanti.\nRiesegui dopo la modifica."
+      },
+      "heatmap": {
+        "title": "Mappa di calore dei paragrafi",
+        "what": "Ogni paragrafo ha un'etichetta: Eco (copia vicina di un passaggio concorrente), Guadagno (in tema e nuovo), Deriva (fuori tema) o Neutro.",
+        "why": "L'eco non aggiunge nulla e la deriva diluisce il tema. Le etichette sono testo, non solo colore.",
+        "action": "Apri prima i paragrafi Eco e Deriva.\nUsa le frecce.\nRiscrivili o rimettili a fuoco."
+      },
+      "coverage": {
+        "title": "Copertura della base",
+        "what": "Quota di entità di consenso già coperte dalla pagina. Sotto il 50% il punteggio è moltiplicato per una penalità.",
+        "why": "Senza la base comune, una pagina con un po' di novità non è comunque in tema.",
+        "action": "Copri le entità di consenso mancanti.\nPoi aggiungi fatti nuovi."
+      }
     }
   },
   "helpUi": {
@@ -7623,5 +7643,46 @@
     "verified": "Modifica scritta e verificata.",
     "unverified": "Modifica scritta, ma la pagina live non la mostra ancora.",
     "dryRun": "Prova a secco: nulla è stato scritto."
+  },
+  "igosUi": {
+    "title": "Originalità IGOS",
+    "empty": "Nessun risultato TOP comparabile recuperato: nessuna base e nessun punteggio.",
+    "noScore": "Nessun punteggio",
+    "offTopic": "La maggior parte dei paragrafi è fuori tema; nessun punteggio assegnato.",
+    "partial": "Base parziale: {{available}} di {{requested}} pagine concorrenti.",
+    "basis": "Base: {{available}} di {{requested}} pagine concorrenti.",
+    "component": {
+      "nefr": "Entità nuove",
+      "edsi": "Densità di prove",
+      "fhem": "Indicatori di esperienza",
+      "sdd": "Distribuzione dei sottotemi"
+    },
+    "coverage": "Copertura della base {{coverage}}, moltiplicatore di penalità {{multiplier}}",
+    "novel": "Nuove entità sul tema: {{list}}",
+    "advice": "Raccomandazioni",
+    "heatmap": "Mappa di calore dei paragrafi",
+    "heatmapEmpty": "Nessun paragrafo da mostrare.",
+    "noHeading": "Nessun titolo",
+    "zone": {
+      "echo": "Eco",
+      "gain": "Guadagno",
+      "drift": "Deriva",
+      "neutral": "Neutro"
+    },
+    "detail": "Offset {{offset}}, somiglianza tematica {{topic}}, passaggio concorrente più vicino {{nearest}}.",
+    "source": "Fonte più vicina: {{url}} (posizione {{rank}}).",
+    "noSource": "Nessuna fonte vicina.",
+    "limit": {
+      "no-comparable-documents": "Nessun documento concorrente comparabile.",
+      "too-few-documents": "Troppo pochi documenti concorrenti per una base affidabile.",
+      "some-documents-missing": "Alcune pagine concorrenti non sono state recuperate.",
+      "no-target-chunks": "La pagina non ha paragrafi analizzabili.",
+      "off-topic-below-quota": "Troppo pochi paragrafi in tema."
+    },
+    "rec": {
+      "rewrite-echo": "Il paragrafo all'offset {{offset}} ripete un passaggio concorrente: riscrivilo con parole tue.",
+      "add-evidence": "Aggiungi dati concreti con unità o fonti; nessuno rilevato.",
+      "refocus-drift": "Il paragrafo all'offset {{offset}} esce dal tema: rimettilo a fuoco o rimuovilo."
+    }
   }
 }

@@ -6526,6 +6526,26 @@
         "why": "A control group on the same site suffers from an update just like the test group, so a drop or gain can be the market and not your change.",
         "action": "Treat a flagged result as inconclusive.\nWait until the update window ends and compare again.\nUse an external market baseline when you have one."
       }
+    },
+    "igos": {
+      "score": {
+        "title": "IGOS score",
+        "what": "Information gain over what the real TOP results already say: new on-topic entities, evidence density, experience markers and subtopic spread, reduced when the baseline is thin.",
+        "why": "It shows what your page adds beyond the consensus. Markers only show declared experience; they do not prove research or originality.",
+        "action": "Check the four components.\nAdd the missing fundamentals.\nRe-run after editing."
+      },
+      "heatmap": {
+        "title": "Paragraph heatmap",
+        "what": "Each paragraph is labelled Echo (close copy of a competitor passage), Gain (on-topic and new), Drift (off-topic) or Neutral.",
+        "why": "Echo adds nothing new and drift dilutes the topic. Labels use text, not only colour.",
+        "action": "Open Echo and Drift paragraphs first.\nUse arrow keys to move between paragraphs.\nRewrite or refocus them."
+      },
+      "coverage": {
+        "title": "Baseline coverage",
+        "what": "Share of consensus entities your page already covers. Below 50% the score is multiplied by a penalty.",
+        "why": "Without the common foundation a page with some novelty still does not match the topic.",
+        "action": "Cover the missing consensus entities.\nThen add the new facts."
+      }
     }
   },
   "helpUi": {
@@ -7623,5 +7643,46 @@
     "verified": "Change written and verified.",
     "unverified": "Change written, but the live page does not show it yet.",
     "dryRun": "Dry run: nothing was written."
+  },
+  "igosUi": {
+    "title": "IGOS originality",
+    "empty": "No comparable TOP results were fetched, so there is no baseline and no score.",
+    "noScore": "No score",
+    "offTopic": "Most paragraphs are off-topic; no score is given.",
+    "partial": "Partial baseline: {{available}} of {{requested}} competitor pages.",
+    "basis": "Baseline: {{available}} of {{requested}} competitor pages.",
+    "component": {
+      "nefr": "Novel entities",
+      "edsi": "Evidence density",
+      "fhem": "Experience markers",
+      "sdd": "Subtopic distribution"
+    },
+    "coverage": "Baseline coverage {{coverage}}, penalty multiplier {{multiplier}}",
+    "novel": "New on-topic entities: {{list}}",
+    "advice": "Recommendations",
+    "heatmap": "Paragraph heatmap",
+    "heatmapEmpty": "No paragraphs to show.",
+    "noHeading": "No heading",
+    "zone": {
+      "echo": "Echo",
+      "gain": "Gain",
+      "drift": "Drift",
+      "neutral": "Neutral"
+    },
+    "detail": "Offset {{offset}}, topic similarity {{topic}}, nearest competitor passage {{nearest}}.",
+    "source": "Nearest source: {{url}} (rank {{rank}}).",
+    "noSource": "No nearest source.",
+    "limit": {
+      "no-comparable-documents": "No comparable competitor documents.",
+      "too-few-documents": "Too few competitor documents for a reliable baseline.",
+      "some-documents-missing": "Some competitor pages could not be fetched.",
+      "no-target-chunks": "The page has no analysable paragraphs.",
+      "off-topic-below-quota": "Too few on-topic paragraphs."
+    },
+    "rec": {
+      "rewrite-echo": "The paragraph at offset {{offset}} repeats a competitor passage: rewrite it in your own words.",
+      "add-evidence": "Add concrete data with units or sources; none was detected.",
+      "refocus-drift": "The paragraph at offset {{offset}} drifts off the topic: refocus or remove it."
+    }
   }
 }

@@ -6526,6 +6526,26 @@
         "why": "Um grupo de controle do mesmo site sofre com a atualização como o grupo de teste, então uma queda ou alta pode ser do mercado e não da sua mudança.",
         "action": "Trate um resultado sinalizado como inconclusivo.\nEspere o fim da janela e compare de novo.\nUse uma linha de base externa do mercado, se tiver."
       }
+    },
+    "igos": {
+      "score": {
+        "title": "Pontuação IGOS",
+        "what": "Ganho de informação sobre o que os resultados TOP reais já dizem: novas entidades do tema, densidade de evidências, marcadores de experiência e distribuição de subtemas, reduzido se a base for fraca.",
+        "why": "Mostra o que a página acrescenta além do consenso. Os marcadores só indicam experiência declarada; não provam pesquisa nem originalidade.",
+        "action": "Revise os quatro componentes.\nAdicione os fundamentos que faltam.\nExecute de novo após editar."
+      },
+      "heatmap": {
+        "title": "Mapa de calor dos parágrafos",
+        "what": "Cada parágrafo é rotulado como Eco (cópia próxima de um trecho concorrente), Ganho (no tema e novo), Desvio (fora do tema) ou Neutro.",
+        "why": "O eco não acrescenta nada e o desvio dilui o tema. Os rótulos são texto, não só cor.",
+        "action": "Abra primeiro os parágrafos Eco e Desvio.\nUse as setas.\nReescreva ou refoque."
+      },
+      "coverage": {
+        "title": "Cobertura da base",
+        "what": "Parte das entidades de consenso que a página já cobre. Abaixo de 50% a pontuação é multiplicada por uma penalidade.",
+        "why": "Sem a base comum, uma página com alguma novidade continua sem se encaixar no tema.",
+        "action": "Cubra as entidades de consenso que faltam.\nDepois adicione fatos novos."
+      }
     }
   },
   "helpUi": {
@@ -7623,5 +7643,46 @@
     "verified": "Alteração gravada e verificada.",
     "unverified": "Alteração gravada, mas a página ao vivo ainda não a mostra.",
     "dryRun": "Simulação: nada foi gravado."
+  },
+  "igosUi": {
+    "title": "Originalidade IGOS",
+    "empty": "Nenhum resultado TOP comparável obtido: sem base e sem pontuação.",
+    "noScore": "Sem pontuação",
+    "offTopic": "A maioria dos parágrafos está fora do tema; sem pontuação.",
+    "partial": "Base parcial: {{available}} de {{requested}} páginas concorrentes.",
+    "basis": "Base: {{available}} de {{requested}} páginas concorrentes.",
+    "component": {
+      "nefr": "Entidades novas",
+      "edsi": "Densidade de evidências",
+      "fhem": "Marcadores de experiência",
+      "sdd": "Distribuição de subtemas"
+    },
+    "coverage": "Cobertura da base {{coverage}}, multiplicador de penalidade {{multiplier}}",
+    "novel": "Novas entidades do tema: {{list}}",
+    "advice": "Recomendações",
+    "heatmap": "Mapa de calor dos parágrafos",
+    "heatmapEmpty": "Nenhum parágrafo para mostrar.",
+    "noHeading": "Sem título",
+    "zone": {
+      "echo": "Eco",
+      "gain": "Ganho",
+      "drift": "Desvio",
+      "neutral": "Neutro"
+    },
+    "detail": "Deslocamento {{offset}}, similaridade temática {{topic}}, trecho concorrente mais próximo {{nearest}}.",
+    "source": "Fonte mais próxima: {{url}} (posição {{rank}}).",
+    "noSource": "Sem fonte próxima.",
+    "limit": {
+      "no-comparable-documents": "Nenhum documento concorrente comparável.",
+      "too-few-documents": "Poucos documentos concorrentes para uma base confiável.",
+      "some-documents-missing": "Algumas páginas concorrentes não puderam ser obtidas.",
+      "no-target-chunks": "A página não tem parágrafos analisáveis.",
+      "off-topic-below-quota": "Poucos parágrafos dentro do tema."
+    },
+    "rec": {
+      "rewrite-echo": "O parágrafo no deslocamento {{offset}} repete um trecho concorrente: reescreva com suas palavras.",
+      "add-evidence": "Adicione dados concretos com unidades ou fontes; nenhum foi detectado.",
+      "refocus-drift": "O parágrafo no deslocamento {{offset}} foge do tema: refoque ou remova."
+    }
   }
 }
