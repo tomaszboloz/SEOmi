@@ -62,6 +62,7 @@ pub(super) fn extract_page_focus(
         heading_texts: headings,
         focus_text_chars: body.chars().count().min(u32::MAX as usize) as u32,
         rag_sections: super::rag_sections::extract_rag_sections(document),
+        ..Default::default()
     }
 }
 

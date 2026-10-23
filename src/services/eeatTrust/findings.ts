@@ -4,7 +4,7 @@ export const TRUST_CODES = {
   finding: [
     'ymyl-unattributed', 'ymyl-no-reviewer', 'no-bylines', 'generic-author', 'org-missing', 'org-no-same-as', 'author-no-same-as',
     'author-no-id', 'author-off-topic', 'low-citations', 'dead-citations', 'missing-editorial', 'missing-contact', 'missing-registry',
-    'missing-about', 'missing-dates', 'no-articles',
+    'missing-about', 'missing-dates', 'no-articles', 'author-invalid-profile', 'ymyl-no-scholarly-ids',
   ],
   level: ['strong', 'adequate', 'weak', 'critical'],
   ymyl: ['health', 'finance', 'legal'],
@@ -44,6 +44,8 @@ export const buildFindings = (input: FindingInput): TrustFinding[] => {
   else if (!schema.organization.sameAs.length) add('warning', 'org-no-same-as', { name: schema.organization.name ?? '' });
   const noSameAs = named.filter((author) => !author.sameAs.length);
   if (noSameAs.length) add('warning', 'author-no-same-as', { count: noSameAs.length, names: noSameAs.slice(0, 3).map((author) => author.name).join(', ') });
+  const invalid = named.filter((author) => author.profiles.some((profile) => profile.status === 'invalid' && profile.tier === 1));
+  if (invalid.length) add('warning', 'author-invalid-profile', { count: invalid.length, names: invalid.slice(0, 3).map((author) => author.name).join(', ') });
   const noId = named.filter((author) => !author.id);
   if (noId.length) add('info', 'author-no-id', { count: noId.length });
   for (const author of named.filter((item) => item.alignmentPct !== undefined && item.alignmentPct < OFF_TOPIC_BELOW).slice(0, 3)) {
@@ -52,6 +54,7 @@ export const buildFindings = (input: FindingInput): TrustFinding[] => {
   if (citations.pagesAnalyzed && citations.pagesWithTrusted / citations.pagesAnalyzed < MIN_TRUSTED_SHARE) {
     add('warning', 'low-citations', { pct: pct(citations.pagesWithTrusted, citations.pagesAnalyzed), pages: citations.pagesAnalyzed });
   }
+  if (ymyl && citations.pagesAnalyzed && !citations.scholarlySources) add('info', 'ymyl-no-scholarly-ids', { pages: citations.pagesAnalyzed });
   if (citations.deadLinks.length) add('warning', 'dead-citations', { count: citations.deadLinks.length });
   if (!transparency.found.editorial) add('warning', 'missing-editorial');
   if (!transparency.found.contact) add('warning', 'missing-contact');

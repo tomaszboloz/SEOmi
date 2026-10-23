@@ -6033,7 +6033,9 @@
           "missing-registry": "Nie znaleziono strony z danymi rejestrowymi firmy ani informacji prawnej.",
           "missing-about": "Nie znaleziono strony O nas.",
           "missing-dates": "Tylko {{0}}% artykułów pokazuje datę modyfikacji lub recenzji.",
-          "no-articles": "Nie wykryto stron artykułów; warstwy autorów i cytowań nie zostały ocenione."
+          "no-articles": "Nie wykryto stron artykułów; warstwy autorów i cytowań nie zostały ocenione.",
+          "author-invalid-profile": "{{0}} autorów podaje profil ORCID lub Wikidata z błędnym identyfikatorem ({{1}}). Sprawdź sumę kontrolną lub Q-ID.",
+          "ymyl-no-scholarly-ids": "Żaden z {{0}} artykułów nie cytuje źródła z DOI, PMID ani PMCID. W tematyce YMYL cytuj badanie pierwotne."
         }
       }
     },
@@ -6397,6 +6399,32 @@
         "why": "Pozwala wyszukiwarkom potwierdzić, że Twój autor to prawdziwa osoba z tymi kwalifikacjami.",
         "action": "Dodaj co najmniej jeden wiarygodny adres sameAs dla każdego autora i dla wydawcy.\nUżyj tego samego imienia i pisowni co w tym profilu."
       }
+    },
+    "executionCard": {
+      "bus": {
+        "title": "Kwarantanna linków",
+        "what": "Adresy, które inny moduł chce usunąć lub przekierować 301, są wyłączone ze wszystkich rekomendacji linków.",
+        "why": "Bez tego jeden panel każe linkować do strony, którą inny panel każe usunąć.",
+        "action": "Przejrzyj listę.\nRozwiąż konflikty oznaczone na czerwono przed wdrożeniem."
+      },
+      "brief": {
+        "title": "Brief jednym kliknięciem",
+        "what": "Tworzy lub aktualizuje brief treści tej strony z danych modułu, który wygenerował rekomendację.",
+        "why": "Brief zaczyna się od realnych brakujących encji, linków, pytań i źródeł zamiast skopiowanego tekstu.",
+        "action": "Kliknij przycisk.\nOtwórz Stację Roboczą Briefu i edytuj szkic.\nKliknij ponownie później, by odświeżyć dane bez tworzenia duplikatu."
+      },
+      "deploy": {
+        "title": "Artefakty wdrożeniowe",
+        "what": "Gotowe pliki reguł przekierowań i usunięć: Apache, Nginx, Cloudflare Bulk Redirects i WordPress Redirection.",
+        "why": "Reguły są najpierw sprawdzane pod kątem pętli i łańcuchów, więc nie wdrożysz przekierowania psującego crawlowanie.",
+        "action": "Pobierz plik dla swojego serwera.\nWdróż go najpierw na kopii testowej.\nOznacz zadanie jako wdrożone i zweryfikuj przy następnym crawlu."
+      },
+      "tasks": {
+        "title": "Rejestr zadań",
+        "what": "Każda rekomendowana zmiana jest zadaniem: zaplanowane, wdrożone, potem zweryfikowane lub nieudane.",
+        "why": "Kolejny crawl sprawdza realny efekt i pokazuje, jak zmienił się wynik modułu względem punktu wyjścia.",
+        "action": "Dodaj zadanie z rekomendacji.\nOznacz je jako wdrożone po publikacji.\nUruchom nowy crawl i kliknij Zweryfikuj."
+      }
     }
   },
   "helpUi": {
@@ -6470,6 +6498,7 @@
     "hero": {
       "label": "Site Focus Score",
       "outOf": "na 100",
+      "unavailable": "Brak wyniku: żadnej z przeskanowanych stron nie dało się ocenić. Uruchom crawl ponownie lub sprawdź źródło; to nie jest wynik 0.",
       "summaryAll": "Wszystkie przeanalizowane strony ({{count}}) pozostają w temacie.",
       "summaryOff": "{{off}} z {{count}} stron znacząco odbiega od tematu głównego.",
       "metaButton": "Szczegóły analizy",
@@ -6919,7 +6948,12 @@
       "empty": "Żadne strony nie konkurują o tę samą intencję.",
       "group": "{{count}} strony, podobieństwo intencji {{similarity}}%, wspólne encje {{shared}}%",
       "canonical": "Zachowaj: {{url}}",
-      "steps": "Przenieś unikalne sekcje na stronę, którą zachowujesz, ustaw 301 z pozostałych i zaktualizuj linki wewnętrzne."
+      "steps": "Przenieś unikalne sekcje na stronę, którą zachowujesz, ustaw 301 z pozostałych i zaktualizuj linki wewnętrzne.",
+      "edge": "Dowód: {{from}} i {{to}} przy {{similarity}}% ({{basis}})",
+      "basis": {
+        "intent": "ta sama intencja",
+        "subtopic": "ten sam podtemat"
+      }
     },
     "draft": {
       "title": "Sprawdź szkic przed publikacją",
@@ -7132,7 +7166,9 @@
         "missing-registry": "Nie znaleziono strony z danymi rejestrowymi firmy ani informacji prawnej.",
         "missing-about": "Nie znaleziono strony O nas.",
         "missing-dates": "Tylko {{pct}}% artykułów pokazuje datę modyfikacji lub recenzji.",
-        "no-articles": "Nie wykryto stron artykułów, więc warstwy autorów i cytowań nie zostały ocenione."
+        "no-articles": "Nie wykryto stron artykułów, więc warstwy autorów i cytowań nie zostały ocenione.",
+        "author-invalid-profile": "{{count}} autorów podaje profil ORCID lub Wikidata z błędnym identyfikatorem ({{names}}). Sprawdź sumę kontrolną lub Q-ID.",
+        "ymyl-no-scholarly-ids": "Żaden z {{pages}} artykułów nie cytuje źródła z DOI, PMID ani PMCID. W tematyce YMYL cytuj badanie pierwotne."
       }
     },
     "generator": {
@@ -7162,6 +7198,106 @@
       "copy": "Kopiuj znacznik script",
       "copied": "Skopiowano.",
       "copyFailed": "Nie udało się skopiować. Zaznacz tekst i skopiuj go ręcznie."
+    }
+  },
+  "executionCard": {
+    "bus": {
+      "aria": "Adresy wykluczone z rekomendacji linków",
+      "title": "Adresy w kwarantannie",
+      "summary": "{{count}} adresów jest usuwanych lub przekierowywanych i wykluczonych z celów linkowania; odrzucono {{dropped}} sugestii linków.",
+      "reason": {
+        "remove": "Usuń",
+        "redirect": "Przekierowanie 301"
+      },
+      "conflict": {
+        "protected-by-evidence": "Zachowano: adres ma dane z Search Console lub linki zwrotne",
+        "canonical-removed": "Konflikt: adres kanoniczny jest też na liście do usunięcia"
+      }
+    },
+    "brief": {
+      "open": "Otwórz w Stacji Roboczej Briefu",
+      "pillar": "Docelowy filar",
+      "anchors": "anchory",
+      "donor": "Strona-donor",
+      "entities": "Brakujące encje",
+      "links": "Linki do wstawienia",
+      "paa": "Pytania People Also Ask",
+      "structure": "Struktura H2",
+      "jsonLd": "Brakujące właściwości autora w JSON-LD",
+      "footnotes": "Wymagane przypisy",
+      "origin": {
+        "sfs": "Rekomendacja Site Focus",
+        "tas": "Rekomendacja Topical Authority",
+        "eetv": "Rekomendacja EETV"
+      },
+      "state": {
+        "created": "Brief utworzony",
+        "updated": "Brief zaktualizowany",
+        "failed": "Nie udało się zapisać briefu"
+      }
+    },
+    "deploy": {
+      "empty": "Brak reguł przekierowań i usunięć.",
+      "aria": "Artefakty wdrożeniowe",
+      "title": "Artefakty wdrożeniowe (301/410)",
+      "summary": "{{count}} poprawnych reguł, bez pętli i łańcuchów.",
+      "zip": "Pobierz wszystko (ZIP)",
+      "issuesAria": "Problemy z regułami",
+      "issue": {
+        "invalid": "Niepoprawna reguła, pominięta",
+        "duplicate": "Zduplikowane źródło, pominięte",
+        "loop": "Pętla przekierowań, pominięta",
+        "chain-flattened": "Łańcuch przekierowań, skierowany na cel końcowy",
+        "dead-target": "Przekierowanie na stronę usuniętą (410)",
+        "query-unsupported": "Ma parametry zapytania, nie jest eksportowana do tego formatu serwera",
+        "gone-unsupported": "Cloudflare Bulk Redirects nie obsługuje 410"
+      }
+    },
+    "tasks": {
+      "aria": "Zadania optymalizacyjne",
+      "title": "Zadania optymalizacyjne",
+      "add": "Dodaj do rejestru",
+      "added": "Dodano zadanie",
+      "empty": "Brak zadań. Dodaj je z rekomendacji.",
+      "verify": "Zweryfikuj na ostatnim crawlu",
+      "markImplemented": "Oznacz jako wdrożone",
+      "regression": "Regres wyniku",
+      "kind": {
+        "add-link": "Dodaj link",
+        "redirect-301": "Przekierowanie 301",
+        "remove-410": "Usunięcie 410",
+        "add-entities": "Dodaj encje",
+        "remove-noindex": "Usuń noindex"
+      },
+      "status": {
+        "planned": "Zaplanowane",
+        "implemented": "Wdrożone",
+        "verified": "Zweryfikowane",
+        "failed": "Nieudane"
+      },
+      "verdict": {
+        "link-found": "ZWERYFIKOWANO: znaleziono nowy link, strefa {{zone}}",
+        "link-missing": "BŁĄD WDROŻENIA: linku nadal brak",
+        "redirect-ok": "ZWERYFIKOWANO: 301 prowadzi na właściwą stronę",
+        "redirect-wrong-target": "BŁĄD WDROŻENIA: przekierowanie prowadzi na inną stronę",
+        "still-200": "BŁĄD WDROŻENIA: nadal HTTP {{status}}",
+        "gone-ok": "ZWERYFIKOWANO: strona zwraca HTTP 410",
+        "wrong-status": "BŁĄD WDROŻENIA: HTTP {{status}} zamiast 410",
+        "entities-ok": "ZWERYFIKOWANO: {{found}} z {{total}} wymaganych encji jest obecnych",
+        "entities-missing": "BŁĄD WDROŻENIA: obecnych tylko {{found}} z {{total}} wymaganych encji (potrzeba 60%)",
+        "index-ok": "ZWERYFIKOWANO: strona jest indeksowalna",
+        "still-noindex": "BŁĄD WDROŻENIA: noindex nadal obecny"
+      }
+    }
+  },
+  "scoreDropAlert": {
+    "aio": {
+      "title": "Spadła gotowość AI",
+      "body": "Gotowość AI Overviews spadła z {{from}} do {{to}} ({{points}} pkt)."
+    },
+    "trust": {
+      "title": "Spadł wynik zaufania",
+      "body": "Wynik zaufania E-E-A-T spadł z {{from}} do {{to}} ({{points}} pkt)."
     }
   }
 }

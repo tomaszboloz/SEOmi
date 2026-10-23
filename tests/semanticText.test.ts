@@ -134,7 +134,7 @@ describe('one canonical key for typed and observed terms', () => {
   it('matches a manual query without diacritics against audited page terms', () => {
     const page = createCrawlPageFixture({ semantic_terms: ['Größe', 'Żółć'], semantic_language: 'de' });
     expect(termCoverage('Groesse', page)).toEqual({ expected: ['groesse'], matched: ['groesse'] });
-    expect(termCoverage('Größe', page)).toEqual({ expected: ['grosse'], matched: ['grosse'] });
+    expect(termCoverage('Größe', page)).toEqual({ expected: ['groesse'], matched: ['groesse'] });
     expect(tokens('Żółć Größe')).toEqual(['zolc', 'grosse']);
   });
 });

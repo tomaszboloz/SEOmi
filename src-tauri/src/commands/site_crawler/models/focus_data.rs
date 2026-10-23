@@ -41,6 +41,10 @@ pub struct CrawledPageFocus {
     /// H1-H3 sections with text and list/table counts for AI/RAG readiness.
     #[serde(default)]
     pub rag_sections: Vec<RagSection>,
+    /// Thin static HTML that looks like an unrendered SPA shell (Next/Nuxt
+    /// payload, empty app root). `None` when the page was not assessed.
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub is_js_shell_suspected: Option<bool>,
 }
 
 /// One heading-delimited section of main content (AI Overviews / RAG chunking).

@@ -6033,7 +6033,9 @@
           "missing-registry": "회사 등기 정보 또는 법적 고지 페이지를 찾지 못했습니다.",
           "missing-about": "회사 소개 페이지를 찾지 못했습니다.",
           "missing-dates": "수정일 또는 검토일이 표시된 문서는 {{0}}%뿐입니다.",
-          "no-articles": "문서 페이지가 감지되지 않아 저자 및 인용 계층은 점수를 매기지 않았습니다."
+          "no-articles": "문서 페이지가 감지되지 않아 저자 및 인용 계층은 점수를 매기지 않았습니다.",
+          "author-invalid-profile": "{{0}}명의 저자가 유효하지 않은 식별자의 ORCID 또는 Wikidata 프로필을 연결했습니다({{1}}). 체크섬 또는 Q-ID를 확인하세요.",
+          "ymyl-no-scholarly-ids": "{{0}}개 문서 중 DOI, PMID, PMCID가 있는 출처를 인용한 문서가 없습니다. YMYL 주제에서는 1차 연구를 인용하세요."
         }
       }
     },
@@ -6397,6 +6399,32 @@
         "why": "검색엔진이 해당 저자가 그 자격을 가진 실제 인물임을 확인할 수 있게 합니다.",
         "action": "저자마다, 그리고 발행자에 대해 신뢰할 수 있는 sameAs URL을 하나 이상 추가하세요.\n해당 프로필과 같은 이름과 표기를 사용하세요."
       }
+    },
+    "executionCard": {
+      "bus": {
+        "title": "링크 격리",
+        "what": "다른 모듈이 삭제하거나 301로 리디렉션하려는 URL을 모든 링크 추천에서 제외합니다.",
+        "why": "그렇지 않으면 한 패널은 링크하라고 하고 다른 패널은 삭제하라고 하는 페이지가 생깁니다.",
+        "action": "목록을 검토합니다.\n배포 전에 빨간색 충돌을 해결합니다."
+      },
+      "brief": {
+        "title": "1클릭 브리프",
+        "what": "추천을 만든 모듈의 데이터로 이 페이지의 콘텐츠 브리프를 생성하거나 업데이트합니다.",
+        "why": "복사한 텍스트가 아니라 실제 누락된 엔티티, 링크, 질문, 출처로 브리프가 시작됩니다.",
+        "action": "버튼을 클릭합니다.\n브리프 작업대를 열어 초안을 편집합니다.\n나중에 다시 클릭하면 중복 없이 데이터가 갱신됩니다."
+      },
+      "deploy": {
+        "title": "배포 산출물",
+        "what": "리디렉션과 삭제용 규칙 파일: Apache, Nginx, Cloudflare Bulk Redirects, WordPress Redirection.",
+        "why": "규칙은 먼저 루프와 체인을 검사하므로 크롤링을 방해하는 리디렉션을 배포하지 않습니다.",
+        "action": "서버에 맞는 파일을 다운로드합니다.\n먼저 스테이징 사본에 배포합니다.\n작업을 구현됨으로 표시하고 다음 크롤에서 검증합니다."
+      },
+      "tasks": {
+        "title": "작업 트래커",
+        "what": "추천된 각 변경이 작업이 됩니다: 계획됨, 구현됨, 이후 검증됨 또는 실패.",
+        "why": "다음 크롤이 실제 결과를 확인하고 기준선 대비 모듈 점수 변화를 보여줍니다.",
+        "action": "추천에서 작업을 추가합니다.\n배포 후 구현됨으로 표시합니다.\n새 크롤을 실행하고 검증을 클릭합니다."
+      }
     }
   },
   "helpUi": {
@@ -6470,6 +6498,7 @@
     "hero": {
       "label": "Site Focus Score",
       "outOf": "/ 100",
+      "unavailable": "점수 없음: 크롤링한 페이지를 하나도 평가하지 못했습니다. 다시 크롤링하거나 소스를 확인하세요. 0점이라는 결과가 아닙니다.",
       "summaryAll": "분석된 {{count}}개 페이지 모두 주제를 유지하고 있습니다.",
       "summaryOff": "{{count}}개 페이지 중 {{off}}개가 핵심 주제에서 크게 벗어났습니다.",
       "metaButton": "분석 세부 정보",
@@ -6919,7 +6948,12 @@
       "empty": "같은 검색 의도를 두고 경쟁하는 페이지가 없습니다.",
       "group": "{{count}}개 페이지, 의도 유사도 {{similarity}}%, 공통 엔티티 {{shared}}%",
       "canonical": "유지: {{url}}",
-      "steps": "고유한 섹션을 유지할 페이지로 옮기고 나머지는 301로 리디렉션한 뒤 내부 링크를 갱신하세요."
+      "steps": "고유한 섹션을 유지할 페이지로 옮기고 나머지는 301로 리디렉션한 뒤 내부 링크를 갱신하세요.",
+      "edge": "근거: {{from}} 및 {{to}}, 유사도 {{similarity}}% ({{basis}})",
+      "basis": {
+        "intent": "동일한 의도",
+        "subtopic": "동일한 하위 주제"
+      }
     },
     "draft": {
       "title": "게시 전 초안 확인",
@@ -7132,7 +7166,9 @@
         "missing-registry": "회사 등기 정보 또는 법적 고지 페이지를 찾지 못했습니다.",
         "missing-about": "회사 소개 페이지를 찾지 못했습니다.",
         "missing-dates": "수정일 또는 검토일이 표시된 문서는 {{pct}}%뿐입니다.",
-        "no-articles": "문서 페이지가 감지되지 않아 저자 및 인용 계층은 점수를 매기지 않았습니다."
+        "no-articles": "문서 페이지가 감지되지 않아 저자 및 인용 계층은 점수를 매기지 않았습니다.",
+        "author-invalid-profile": "{{count}}명의 저자가 유효하지 않은 식별자의 ORCID 또는 Wikidata 프로필을 연결했습니다({{names}}). 체크섬 또는 Q-ID를 확인하세요.",
+        "ymyl-no-scholarly-ids": "{{pages}}개 문서 중 DOI, PMID, PMCID가 있는 출처를 인용한 문서가 없습니다. YMYL 주제에서는 1차 연구를 인용하세요."
       }
     },
     "generator": {
@@ -7162,6 +7198,106 @@
       "copy": "script 태그 복사",
       "copied": "복사했습니다.",
       "copyFailed": "복사하지 못했습니다. 텍스트를 선택해 직접 복사하세요."
+    }
+  },
+  "executionCard": {
+    "bus": {
+      "aria": "링크 추천에서 제외된 URL",
+      "title": "격리된 URL",
+      "summary": "{{count}}개 URL이 삭제 또는 리디렉션되어 링크 대상에서 제외되었고, 링크 제안 {{dropped}}건을 제외했습니다.",
+      "reason": {
+        "remove": "삭제",
+        "redirect": "301 리디렉션"
+      },
+      "conflict": {
+        "protected-by-evidence": "유지: Search Console 또는 백링크 데이터가 있음",
+        "canonical-removed": "충돌: 표준 URL이 삭제 목록에도 있음"
+      }
+    },
+    "brief": {
+      "open": "브리프 작업대에서 열기",
+      "pillar": "대상 필러",
+      "anchors": "앵커",
+      "donor": "도너 페이지",
+      "entities": "누락된 엔티티",
+      "links": "삽입할 링크",
+      "paa": "People Also Ask 질문",
+      "structure": "H2 구조",
+      "jsonLd": "누락된 JSON-LD 작성자 속성",
+      "footnotes": "필수 각주",
+      "origin": {
+        "sfs": "Site Focus 추천",
+        "tas": "Topical Authority 추천",
+        "eetv": "EETV 추천"
+      },
+      "state": {
+        "created": "브리프 생성됨",
+        "updated": "브리프 업데이트됨",
+        "failed": "브리프를 저장할 수 없습니다"
+      }
+    },
+    "deploy": {
+      "empty": "아직 리디렉션 또는 삭제 규칙이 없습니다.",
+      "aria": "배포 산출물",
+      "title": "배포 산출물 (301/410)",
+      "summary": "유효한 규칙 {{count}}개, 루프와 체인 없음.",
+      "zip": "모두 다운로드 (ZIP)",
+      "issuesAria": "규칙 문제",
+      "issue": {
+        "invalid": "잘못된 규칙, 건너뜀",
+        "duplicate": "중복된 소스, 건너뜀",
+        "loop": "리디렉션 루프, 건너뜀",
+        "chain-flattened": "리디렉션 체인을 최종 대상으로 수정",
+        "dead-target": "삭제된 페이지(410)로 리디렉션",
+        "query-unsupported": "쿼리 문자열이 있어 이 서버 형식으로 내보내지 않음",
+        "gone-unsupported": "Cloudflare Bulk Redirects는 410을 지원하지 않음"
+      }
+    },
+    "tasks": {
+      "aria": "최적화 작업",
+      "title": "최적화 작업",
+      "add": "트래커에 추가",
+      "added": "작업이 추가되었습니다",
+      "empty": "작업이 없습니다. 추천에서 추가하세요.",
+      "verify": "최신 크롤로 검증",
+      "markImplemented": "구현 완료로 표시",
+      "regression": "점수 하락",
+      "kind": {
+        "add-link": "링크 추가",
+        "redirect-301": "301 리디렉션",
+        "remove-410": "410 삭제",
+        "add-entities": "엔티티 추가",
+        "remove-noindex": "noindex 제거"
+      },
+      "status": {
+        "planned": "계획됨",
+        "implemented": "구현됨",
+        "verified": "검증됨",
+        "failed": "실패"
+      },
+      "verdict": {
+        "link-found": "검증됨: 새 링크 발견, 영역 {{zone}}",
+        "link-missing": "배포 오류: 링크가 여전히 없음",
+        "redirect-ok": "검증됨: 301이 올바른 페이지를 가리킴",
+        "redirect-wrong-target": "배포 오류: 리디렉션이 다른 페이지를 가리킴",
+        "still-200": "배포 오류: 여전히 HTTP {{status}}",
+        "gone-ok": "검증됨: 페이지가 HTTP 410을 반환",
+        "wrong-status": "배포 오류: 410이 아닌 HTTP {{status}}",
+        "entities-ok": "검증됨: 필수 엔티티 {{total}}개 중 {{found}}개 존재",
+        "entities-missing": "배포 오류: 필수 엔티티 {{total}}개 중 {{found}}개만 존재 (60% 필요)",
+        "index-ok": "검증됨: 페이지가 색인 가능",
+        "still-noindex": "배포 오류: noindex가 여전히 있음"
+      }
+    }
+  },
+  "scoreDropAlert": {
+    "aio": {
+      "title": "AI 준비도 하락",
+      "body": "AI Overviews 준비도가 {{from}}에서 {{to}}(으)로 떨어졌습니다({{points}}점)."
+    },
+    "trust": {
+      "title": "신뢰 점수 하락",
+      "body": "E-E-A-T 신뢰 점수가 {{from}}에서 {{to}}(으)로 떨어졌습니다({{points}}점)."
     }
   }
 }

@@ -1,4 +1,5 @@
 import type { CrawledLink, CrawledPageSummary } from '@/types';
+import { scholarlyIds, scholarlyKey } from './citationIds';
 import type { CitationDetail } from './types';
 
 /** Time-tested seed hosts: public institutions, scholarly publishers and standards bodies. */
@@ -16,7 +17,8 @@ export const isDeadLink = (link: CrawledLink): boolean => Boolean(link.target_re
 
 /** Outbound citation quality for the given article pages (external links only). */
 export const analyzeCitations = (pages: CrawledPageSummary[], articleUrls: Set<string>, citedBySchema: Map<string, string[]>): CitationDetail => {
-  const detail: CitationDetail = { pagesAnalyzed: 0, pagesWithTrusted: 0, pagesWithAnyExternal: 0, trustedLinks: 0, externalLinks: 0, checkedLinks: 0, deadLinks: [] };
+  const detail: CitationDetail = { pagesAnalyzed: 0, pagesWithTrusted: 0, pagesWithAnyExternal: 0, trustedLinks: 0, externalLinks: 0, checkedLinks: 0, deadLinks: [], pagesWithScholarly: 0, scholarlySources: 0 };
+  const sources = new Set<string>();
   for (const page of pages) {
     const url = page.final_url || page.url;
     if (!articleUrls.has(url)) continue;
@@ -26,6 +28,9 @@ export const analyzeCitations = (pages: CrawledPageSummary[], articleUrls: Set<s
     const trusted = [...targets].filter((target) => isTrustedHost(hostOf(target)));
     if (targets.size) detail.pagesWithAnyExternal += 1;
     if (trusted.length) detail.pagesWithTrusted += 1;
+    const keys = [...targets].map((target) => scholarlyKey(scholarlyIds(target))).filter((key): key is string => Boolean(key));
+    if (keys.length) detail.pagesWithScholarly += 1;
+    keys.forEach((key) => sources.add(key));
     detail.externalLinks += external.length;
     detail.trustedLinks += trusted.length;
     for (const link of external) {
@@ -34,6 +39,7 @@ export const analyzeCitations = (pages: CrawledPageSummary[], articleUrls: Set<s
       if (isDeadLink(link)) detail.deadLinks.push({ page: url, target: link.target_url, status: link.target_http_status });
     }
   }
+  detail.scholarlySources = sources.size;
   return detail;
 };
 

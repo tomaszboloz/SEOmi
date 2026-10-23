@@ -13,6 +13,7 @@ use crate::models::audit_data::{FaviconData, StructuredDataValidationIssue};
 use crate::services::schema_validator;
 use crate::utils::url_validator::validate_and_normalize_url;
 
+mod adaptive_backoff;
 mod canonical;
 mod client_redirects;
 mod constants;
@@ -39,6 +40,7 @@ mod html_validation_rules;
 mod image_decoding;
 mod inline_images;
 mod js_redirects;
+mod js_shell;
 mod models;
 mod orchestration;
 mod pagination;
@@ -79,6 +81,7 @@ mod svg_inline;
 mod target_relations;
 mod transport;
 mod url_normalization;
+mod waf_block;
 
 use {
     canonical::*, client_redirects::*, constants::*, content_terms::*, crawl_delay::*,

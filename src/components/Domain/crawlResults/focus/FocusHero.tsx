@@ -69,6 +69,9 @@ export const FocusHero = ({ report, onRecalculate, history, recalcDisabled = fal
           )}
         </div>
       </div>
+      {report.unavailable ? (
+        <p role="status" data-testid="focus-unavailable" className="text-sm text-amber-300">{t('focus.hero.unavailable')}</p>
+      ) : (<>
       <div className="flex flex-wrap items-end gap-3">
         <p className={`text-5xl font-bold tabular-nums ${BAND_TEXT[report.band]}`} data-testid="focus-score">{report.score}</p>
         <p className="pb-1 text-sm text-slate-400">{t('focus.hero.outOf')}</p>
@@ -92,6 +95,7 @@ export const FocusHero = ({ report, onRecalculate, history, recalcDisabled = fal
           ? t('focus.hero.summaryOff', { off, count: scored.length })
           : t('focus.hero.summaryAll', { count: scored.length })}
       </p>
+      </>)}
       {drawer && <FocusDrawer onClose={closeDrawer} />}
     </section>
   );

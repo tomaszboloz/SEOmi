@@ -1,6 +1,6 @@
 import { cosine, jaccard, type AuthorityContext, type AuthorityPage } from './context';
 import { PARTIAL_COSINE } from './coverage';
-import type { CannibalGroup, SubtopicCoverage } from './types';
+import type { CannibalEdge, CannibalGroup, SubtopicCoverage } from './types';
 
 export const SAME_INTENT_COSINE = 0.88;
 export const SAME_H1_JACCARD = 0.5;
@@ -32,9 +32,12 @@ export const findCannibalization = (pages: AuthorityPage[], context: AuthorityCo
   const parents = new Map(pages.map((entry) => [entry.url, entry.url]));
   const pairSimilarity = new Map<string, number>();
   const topicOf = new Map<string, string>();
+  const evidence: CannibalEdge[] = [];
   const note = (a: AuthorityPage, b: AuthorityPage, value: number, subtopic?: string): void => {
     unite(parents, a.url, b.url);
     pairSimilarity.set([a.url, b.url].sort().join('|'), value);
+    const [from, to] = [a.url, b.url].sort();
+    evidence.push({ from, to, similarity: round1(value * 100), basis: subtopic ? 'subtopic' : 'intent' });
     if (subtopic) topicOf.set(a.url, subtopic);
   };
   pages.forEach((a, index) => pages.slice(index + 1).forEach((b) => {
@@ -54,7 +57,7 @@ export const findCannibalization = (pages: AuthorityPage[], context: AuthorityCo
     const similarity = Math.max(...others.map((entry) => pairSimilarity.get([entry.url, canonical.url].sort().join('|')) ?? cosine(entry.vector, canonical.vector)));
     const shared = others.reduce((sum, entry) => sum + sharedEntities(entry, canonical, context), 0) / others.length;
     const subtopicId = members.map((entry) => topicOf.get(entry.url)).find(Boolean);
-    return { urls: members.map((entry) => entry.url).sort(), canonical: canonical.url, similarity: round1(similarity * 100), sharedEntitiesPct: round1(shared * 100), ...(subtopicId ? { subtopicId } : {}) };
+    return { urls: members.map((entry) => entry.url).sort(), canonical: canonical.url, similarity: round1(similarity * 100), sharedEntitiesPct: round1(shared * 100), edges: evidence.filter((edge) => members.some((entry) => entry.url === edge.from)).sort((a, b) => (a.from + a.to < b.from + b.to ? -1 : 1)), ...(subtopicId ? { subtopicId } : {}) };
   }).sort((a, b) => b.urls.length - a.urls.length || b.similarity - a.similarity || (a.canonical < b.canonical ? -1 : 1));
 };
 

@@ -24,6 +24,9 @@ export const CannibalizationPanel = ({ report, pages, startUrl, language }: Cann
               <p className="font-medium text-slate-100">{t('authority.cannibal.group', { count: group.urls.length, similarity: group.similarity, shared: group.sharedEntitiesPct })}</p>
               <p className="text-emerald-300">{t('authority.cannibal.canonical', { url: host(group.canonical) })}</p>
               <ul className="list-disc ps-5">{group.urls.filter((url) => url !== group.canonical).map((url) => <li key={url} className="break-all">{host(url)}</li>)}</ul>
+              <ul className="mt-1 list-disc ps-5 text-slate-400">
+                {group.edges.map((edge) => <li key={`${edge.from}|${edge.to}`} className="break-all">{t('authority.cannibal.edge', { from: host(edge.from), to: host(edge.to), similarity: edge.similarity, basis: t(`authority.cannibal.basis.${edge.basis}`) })}</li>)}
+              </ul>
               <p className="mt-1 text-slate-400">{t('authority.cannibal.steps')}</p>
             </li>
           ))}
