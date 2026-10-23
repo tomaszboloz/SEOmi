@@ -93,9 +93,6 @@ fn redaction_removes_credentials_and_handles_garbage() {
         redact_proxy_url("http://user:secret@proxy.test:8080/"),
         "http://proxy.test:8080/"
     );
-    assert!(
-        !redact_proxy_url("https://u:p@h.test").contains('p'.to_string().repeat(1).as_str())
-            || true
-    );
+    assert_eq!(redact_proxy_url("https://u:p@h.test"), "https://h.test/");
     assert_eq!(redact_proxy_url("::bad"), "<invalid proxy>");
 }
