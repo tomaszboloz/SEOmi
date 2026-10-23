@@ -4,6 +4,7 @@ pub mod audit_queue;
 pub mod audit_queue_worker;
 pub mod crawl_storage;
 pub mod dataforseo;
+mod dataforseo_budget;
 pub mod external_link_checker;
 pub mod file_export;
 pub mod free_feeds;

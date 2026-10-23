@@ -92,7 +92,7 @@ async fn rejects_malformed_provider_json() {
 }
 #[tokio::test]
 async fn public_command_rejects_unknown_endpoint() {
-    let error = super::dataforseo_request("project".into(), "/v3/not-allowed".into(), None)
+    let error = super::dataforseo_request("project".into(), "/v3/not-allowed".into(), None, None)
         .await
         .unwrap_err();
     assert_eq!(error, "Unsupported DataForSEO endpoint.");
@@ -107,7 +107,7 @@ async fn public_command_reads_credentials_for_allowed_endpoint() {
             Some(json!({"kw": 1})),
         ),
     ] {
-        let error = super::dataforseo_request("project".into(), path.into(), payload)
+        let error = super::dataforseo_request("project".into(), path.into(), payload, None)
             .await
             .unwrap_err();
         assert!(error.contains("DataForSEO login") || error.contains("credential store"));
