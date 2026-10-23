@@ -1,6 +1,6 @@
 use std::time::{Duration, Instant};
 
-pub(super) const MAX_PROXIES: usize = 64;
+pub(crate) const MAX_PROXIES: usize = 64;
 const MAX_PROXY_URL_LEN: usize = 2_048;
 
 #[derive(Debug)]
@@ -12,8 +12,10 @@ struct Entry {
 
 /// User-supplied proxy list: round-robin rotation, ban after consecutive failures, health re-entry
 /// after a cool-down. Time is injected so behaviour is deterministic and testable.
+// Failure feedback (ban/cool-down) is wired once request errors report their proxy (issue #142).
+#[cfg_attr(not(test), allow(dead_code))]
 #[derive(Debug)]
-pub(super) struct ProxyPool {
+pub(crate) struct ProxyPool {
     entries: Vec<Entry>,
     cursor: usize,
     max_failures: u32,
@@ -21,7 +23,7 @@ pub(super) struct ProxyPool {
 }
 
 /// Validates one proxy URL: http(s) with a host, bounded length.
-pub(super) fn validate_proxy_url(value: &str) -> Result<String, String> {
+pub(crate) fn validate_proxy_url(value: &str) -> Result<String, String> {
     let trimmed = value.trim();
     if trimmed.len() > MAX_PROXY_URL_LEN {
         return Err("Proxy URL cannot exceed 2048 characters.".into());
@@ -33,8 +35,18 @@ pub(super) fn validate_proxy_url(value: &str) -> Result<String, String> {
     Ok(trimmed.to_owned())
 }
 
+/// Splits a saved proxy field into entries (comma, semicolon or whitespace separated).
+pub(crate) fn parse_proxy_list(value: &str) -> Vec<String> {
+    value
+        .split(|c: char| c == ',' || c == ';' || c.is_whitespace())
+        .filter(|part| !part.is_empty())
+        .map(str::to_owned)
+        .collect()
+}
+
+#[cfg_attr(not(test), allow(dead_code))]
 /// Hides credentials so a proxy can be shown in reports and logs.
-pub(super) fn redact_proxy_url(value: &str) -> String {
+pub(crate) fn redact_proxy_url(value: &str) -> String {
     match url::Url::parse(value) {
         Ok(mut parsed) => {
             let _ = parsed.set_username("");
@@ -45,8 +57,9 @@ pub(super) fn redact_proxy_url(value: &str) -> String {
     }
 }
 
+#[cfg_attr(not(test), allow(dead_code))]
 impl ProxyPool {
-    pub(super) fn new(urls: &[String], max_failures: u32, ban: Duration) -> Result<Self, String> {
+    pub(crate) fn new(urls: &[String], max_failures: u32, ban: Duration) -> Result<Self, String> {
         if urls.is_empty() || urls.len() > MAX_PROXIES {
             return Err(format!("Provide between 1 and {MAX_PROXIES} proxies."));
         }
@@ -84,7 +97,7 @@ impl ProxyPool {
     }
 
     /// Next healthy proxy index, or `None` while every proxy is banned.
-    pub(super) fn next(&mut self, now: Instant) -> Option<usize> {
+    pub(crate) fn next(&mut self, now: Instant) -> Option<usize> {
         for step in 0..self.entries.len() {
             let index = (self.cursor + step) % self.entries.len();
             if self.available(index, now) {
@@ -95,17 +108,17 @@ impl ProxyPool {
         None
     }
 
-    pub(super) fn url(&self, index: usize) -> Option<&str> {
+    pub(crate) fn url(&self, index: usize) -> Option<&str> {
         self.entries.get(index).map(|entry| entry.url.as_str())
     }
 
-    pub(super) fn record_success(&mut self, index: usize) {
+    pub(crate) fn record_success(&mut self, index: usize) {
         if let Some(entry) = self.entries.get_mut(index) {
             entry.failures = 0;
         }
     }
 
-    pub(super) fn record_failure(&mut self, index: usize, now: Instant) {
+    pub(crate) fn record_failure(&mut self, index: usize, now: Instant) {
         if let Some(entry) = self.entries.get_mut(index) {
             entry.failures += 1;
             if entry.failures >= self.max_failures {
@@ -114,7 +127,7 @@ impl ProxyPool {
         }
     }
 
-    pub(super) fn healthy_count(&mut self, now: Instant) -> usize {
+    pub(crate) fn healthy_count(&mut self, now: Instant) -> usize {
         (0..self.entries.len())
             .filter(|index| self.available(*index, now))
             .count()

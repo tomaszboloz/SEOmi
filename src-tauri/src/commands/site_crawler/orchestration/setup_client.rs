@@ -1,6 +1,8 @@
 use reqwest::header::{HeaderMap, HeaderName, HeaderValue, COOKIE, USER_AGENT};
 
-use super::super::{models::CrawlConfig, scope::rendered_profile_has_unsupported_transport};
+use super::super::{
+    models::CrawlConfig, proxy_pool, scope::rendered_profile_has_unsupported_transport,
+};
 use crate::commands::settings::{crawl_auth_profile, CrawlAuthProfile};
 
 pub fn build_crawler_client(
@@ -92,9 +94,7 @@ where
         client_builder = client_builder.danger_accept_invalid_certs(true);
     }
     if let Some(proxy_url) = proxy_url {
-        let proxy = reqwest::Proxy::all(&proxy_url)
-            .map_err(|error| format!("Invalid proxy configuration: {error}"))?;
-        client_builder = client_builder.proxy(proxy);
+        client_builder = client_builder.proxy(rotating_proxy(&proxy_url)?);
     }
     let client = client_builder
         .build()
@@ -102,3 +102,24 @@ where
 
     Ok((client, ua, rendered_cookie))
 }
+
+/// One saved proxy keeps `Proxy::all`; a list rotates round-robin per request through a `ProxyPool`.
+pub(super) fn rotating_proxy(value: &str) -> Result<reqwest::Proxy, String> {
+    let list = proxy_pool::parse_proxy_list(value);
+    if let [single] = list.as_slice() {
+        return reqwest::Proxy::all(single)
+            .map_err(|error| format!("Invalid proxy configuration: {error}"));
+    }
+    let pool = proxy_pool::ProxyPool::new(&list, 1, std::time::Duration::ZERO)
+        .map_err(|error| format!("Invalid proxy configuration: {error}"))?;
+    let pool = std::sync::Mutex::new(pool);
+    Ok(reqwest::Proxy::custom(move |_| {
+        let mut pool = pool.lock().ok()?;
+        let index = pool.next(std::time::Instant::now())?;
+        pool.url(index).map(str::to_owned)
+    }))
+}
+
+#[cfg(test)]
+#[path = "setup_client_proxy_tests.rs"]
+mod proxy_tests;

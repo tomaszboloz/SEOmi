@@ -1,3 +1,9 @@
+# SEOmi 0.4.13 — release notes
+
+## Added
+
+- Request-profile proxy field now accepts a list (comma, semicolon or whitespace separated). The crawler rotates requests round-robin across the list; a single proxy behaves as before. Every entry is validated on save (HTTP/HTTPS only, max 64, no duplicates). Ban and cool-down on failures follows once request errors report their proxy (issue #142).
+
 # SEOmi 0.4.12 — release notes
 
 ## Added
