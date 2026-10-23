@@ -6449,6 +6449,14 @@
         "why": "Uma página com formato diferente do da SERP costuma ranquear mal para essa consulta.",
         "action": "Abra as páginas TOP.\nAdicione o formato que falta, como uma tabela ou uma ferramenta.\nTrate como indício, não como veredito."
       }
+    },
+    "prePublish": {
+      "check": {
+        "title": "Verificação antes de publicar",
+        "what": "Simula a adição deste rascunho ao site: variação do Site Focus Score, similaridade com páginas existentes e se cada passagem funciona sozinha.",
+        "why": "Detecta uma página duplicada ou fora do tema antes de ir ao ar.",
+        "action": "Corrija cada motivo listado.\nExecute a verificação de novo.\nPublique só após sua própria revisão."
+      }
     }
   },
   "helpUi": {
@@ -7371,6 +7379,31 @@
       "tool": "Ferramenta ou calculadora",
       "transactional": "Transacional",
       "local": "Local"
+    }
+  },
+  "prePublishUi": {
+    "title": "Verificação antes de publicar",
+    "verdict": {
+      "insufficient": "Dados insuficientes para avaliar este rascunho.",
+      "blocked": "Não publique ainda: o rascunho duplica uma página existente.",
+      "review": "Revise antes de publicar.",
+      "ok": "Nenhum problema encontrado. É um conselho, não uma aprovação."
+    },
+    "sfs": "Site Focus Score {{before}} para {{after}} ({{delta}}). Relevância do rascunho {{trs}}. Não é uma previsão de tráfego.",
+    "conflict": "Muito parecido com {{url}} ({{value}}%).",
+    "overlap": "Sobrepõe-se a {{url}} ({{value}}%).",
+    "reason": {
+      "no-core": "Ainda não há tema principal.",
+      "corpus-too-small": "Menos de 3 páginas pontuadas no site.",
+      "dimension-mismatch": "Os embeddings vêm de modelos diferentes.",
+      "cannibalization": "Risco de canibalização.",
+      "overlap": "Sobreposição parcial com uma página existente.",
+      "low-trs": "A relevância do rascunho para o tema principal é baixa.",
+      "chunk-issues": "Algumas passagens não funcionam sozinhas."
+    },
+    "chunk": {
+      "leading-pronoun": "A passagem {{index}} começa com um pronome que exige contexto anterior.",
+      "too-short": "A passagem {{index}} é curta demais para se sustentar sozinha."
     }
   }
 }

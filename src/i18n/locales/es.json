@@ -6449,6 +6449,14 @@
         "why": "Una página con un formato distinto al de la SERP suele posicionar peor para esa consulta.",
         "action": "Abre las páginas TOP.\nAñade el formato que falta, como una tabla o una herramienta.\nTómalo como pista, no como veredicto."
       }
+    },
+    "prePublish": {
+      "check": {
+        "title": "Revisión previa a publicar",
+        "what": "Simula añadir este borrador a tu sitio: cambio en el Site Focus Score, similitud con páginas existentes y si cada pasaje funciona por sí solo.",
+        "why": "Detecta una página duplicada o fuera de tema antes de que salga en vivo.",
+        "action": "Corrige cada motivo indicado.\nVuelve a ejecutar la revisión.\nPublica solo tras tu propia revisión."
+      }
     }
   },
   "helpUi": {
@@ -7371,6 +7379,31 @@
       "tool": "Herramienta o calculadora",
       "transactional": "Transaccional",
       "local": "Local"
+    }
+  },
+  "prePublishUi": {
+    "title": "Revisión previa a publicar",
+    "verdict": {
+      "insufficient": "No hay datos suficientes para evaluar este borrador.",
+      "blocked": "No publiques aún: el borrador duplica una página existente.",
+      "review": "Revisa antes de publicar.",
+      "ok": "No se encontraron problemas. Es un consejo, no una aprobación."
+    },
+    "sfs": "Site Focus Score {{before}} a {{after}} ({{delta}}). Relevancia del borrador {{trs}}. No es una previsión de tráfico.",
+    "conflict": "Demasiado similar a {{url}} ({{value}} %).",
+    "overlap": "Se solapa con {{url}} ({{value}} %).",
+    "reason": {
+      "no-core": "Aún no hay tema principal.",
+      "corpus-too-small": "Menos de 3 páginas puntuadas en el sitio.",
+      "dimension-mismatch": "Los embeddings vienen de modelos distintos.",
+      "cannibalization": "Riesgo de canibalización.",
+      "overlap": "Solapamiento parcial con una página existente.",
+      "low-trs": "La relevancia del borrador respecto al tema principal es baja.",
+      "chunk-issues": "Algunos pasajes no funcionan por sí solos."
+    },
+    "chunk": {
+      "leading-pronoun": "El pasaje {{index}} empieza con un pronombre que necesita contexto previo.",
+      "too-short": "El pasaje {{index}} es demasiado corto para valerse solo."
     }
   }
 }

@@ -6449,6 +6449,14 @@
         "why": "Eine Seite, deren Format von der SERP abweicht, rankt für diese Suchanfrage oft schlecht.",
         "action": "Öffne die TOP-Seiten.\nErgänze das fehlende Format, etwa eine Tabelle oder ein Tool.\nNutze es als Hinweis, nicht als Urteil."
       }
+    },
+    "prePublish": {
+      "check": {
+        "title": "Prüfung vor Veröffentlichung",
+        "what": "Simuliert das Hinzufügen dieses Entwurfs zur Website: Änderung des Site Focus Score, Ähnlichkeit zu bestehenden Seiten und ob jeder Abschnitt allein funktioniert.",
+        "why": "Sie erkennt Duplikate oder themenfremde Seiten, bevor sie live gehen.",
+        "action": "Behebe jeden genannten Grund.\nFühre die Prüfung erneut aus.\nVeröffentliche erst nach eigener Prüfung."
+      }
     }
   },
   "helpUi": {
@@ -7371,6 +7379,31 @@
       "tool": "Tool oder Rechner",
       "transactional": "Transaktional",
       "local": "Lokal"
+    }
+  },
+  "prePublishUi": {
+    "title": "Prüfung vor Veröffentlichung",
+    "verdict": {
+      "insufficient": "Zu wenig Daten, um diesen Entwurf zu beurteilen.",
+      "blocked": "Noch nicht veröffentlichen: Der Entwurf dupliziert eine bestehende Seite.",
+      "review": "Vor der Veröffentlichung prüfen.",
+      "ok": "Keine Probleme gefunden. Das ist ein Rat, keine Freigabe."
+    },
+    "sfs": "Site Focus Score {{before}} zu {{after}} ({{delta}}). Relevanz des Entwurfs {{trs}}. Das ist keine Traffic-Prognose.",
+    "conflict": "Zu ähnlich zu {{url}} ({{value}} %).",
+    "overlap": "Überschneidung mit {{url}} ({{value}} %).",
+    "reason": {
+      "no-core": "Noch kein Kernthema.",
+      "corpus-too-small": "Weniger als 3 bewertete Seiten auf der Website.",
+      "dimension-mismatch": "Embeddings stammen aus verschiedenen Modellen.",
+      "cannibalization": "Kannibalisierungsrisiko.",
+      "overlap": "Teilweise Überschneidung mit einer bestehenden Seite.",
+      "low-trs": "Die Relevanz des Entwurfs zum Kernthema ist gering.",
+      "chunk-issues": "Einige Abschnitte funktionieren allein nicht."
+    },
+    "chunk": {
+      "leading-pronoun": "Abschnitt {{index}} beginnt mit einem Pronomen, das früheren Kontext braucht.",
+      "too-short": "Abschnitt {{index}} ist zu kurz, um allein zu bestehen."
     }
   }
 }

@@ -6449,6 +6449,14 @@
         "why": "A page whose format differs from what the SERP shows often ranks poorly for that query.",
         "action": "Open the TOP pages.\nAdd the missing format, such as a table or a tool.\nTreat this as a hint, not a verdict."
       }
+    },
+    "prePublish": {
+      "check": {
+        "title": "Pre-publish check",
+        "what": "Simulates adding this draft to your site: change in Site Focus Score, similarity to existing pages and whether each passage works on its own.",
+        "why": "It catches a duplicate or off-topic page before it goes live.",
+        "action": "Fix every listed reason.\nRe-run the check.\nPublish only after your own review."
+      }
     }
   },
   "helpUi": {
@@ -7371,6 +7379,31 @@
       "tool": "Tool or calculator",
       "transactional": "Transactional",
       "local": "Local"
+    }
+  },
+  "prePublishUi": {
+    "title": "Pre-publish check",
+    "verdict": {
+      "insufficient": "Not enough data to judge this draft.",
+      "blocked": "Do not publish yet: the draft duplicates an existing page.",
+      "review": "Review before publishing.",
+      "ok": "No issues found. This is advice, not approval."
+    },
+    "sfs": "Site Focus Score {{before}} to {{after}} ({{delta}}). Draft relevance {{trs}}. This is not a traffic forecast.",
+    "conflict": "Too similar to {{url}} ({{value}}%).",
+    "overlap": "Overlaps with {{url}} ({{value}}%).",
+    "reason": {
+      "no-core": "No Core Topic yet.",
+      "corpus-too-small": "Fewer than 3 scored pages on the site.",
+      "dimension-mismatch": "Embeddings come from different models.",
+      "cannibalization": "Cannibalization risk.",
+      "overlap": "Partial overlap with an existing page.",
+      "low-trs": "Draft relevance to the Core Topic is low.",
+      "chunk-issues": "Some passages would not work when retrieved alone."
+    },
+    "chunk": {
+      "leading-pronoun": "Passage {{index}} starts with a pronoun that needs earlier context.",
+      "too-short": "Passage {{index}} is too short to stand alone."
     }
   }
 }

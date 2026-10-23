@@ -6449,6 +6449,14 @@
         "why": "Une page dont le format diffère de la SERP se positionne souvent mal sur cette requête.",
         "action": "Ouvrez les pages du TOP.\nAjoutez le format manquant, comme un tableau ou un outil.\nConsidérez-le comme un indice, pas un verdict."
       }
+    },
+    "prePublish": {
+      "check": {
+        "title": "Contrôle avant publication",
+        "what": "Simule l'ajout de ce brouillon à votre site : variation du Site Focus Score, similarité avec les pages existantes et autonomie de chaque passage.",
+        "why": "Il repère un doublon ou une page hors sujet avant la mise en ligne.",
+        "action": "Corrigez chaque raison listée.\nRelancez le contrôle.\nPubliez seulement après votre propre relecture."
+      }
     }
   },
   "helpUi": {
@@ -7371,6 +7379,31 @@
       "tool": "Outil ou calculateur",
       "transactional": "Transactionnelle",
       "local": "Locale"
+    }
+  },
+  "prePublishUi": {
+    "title": "Contrôle avant publication",
+    "verdict": {
+      "insufficient": "Données insuffisantes pour juger ce brouillon.",
+      "blocked": "Ne publiez pas encore : le brouillon double une page existante.",
+      "review": "À vérifier avant publication.",
+      "ok": "Aucun problème trouvé. C'est un conseil, pas une approbation."
+    },
+    "sfs": "Site Focus Score {{before}} vers {{after}} ({{delta}}). Pertinence du brouillon {{trs}}. Ce n'est pas une prévision de trafic.",
+    "conflict": "Trop proche de {{url}} ({{value}} %).",
+    "overlap": "Recoupe {{url}} ({{value}} %).",
+    "reason": {
+      "no-core": "Pas encore de sujet principal.",
+      "corpus-too-small": "Moins de 3 pages notées sur le site.",
+      "dimension-mismatch": "Les embeddings viennent de modèles différents.",
+      "cannibalization": "Risque de cannibalisation.",
+      "overlap": "Recoupement partiel avec une page existante.",
+      "low-trs": "La pertinence du brouillon par rapport au sujet principal est faible.",
+      "chunk-issues": "Certains passages ne fonctionnent pas seuls."
+    },
+    "chunk": {
+      "leading-pronoun": "Le passage {{index}} commence par un pronom qui exige un contexte antérieur.",
+      "too-short": "Le passage {{index}} est trop court pour tenir seul."
     }
   }
 }

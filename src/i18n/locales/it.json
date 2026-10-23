@@ -6449,6 +6449,14 @@
         "why": "Una pagina con un formato diverso dalla SERP spesso si posiziona male per quella query.",
         "action": "Apri le pagine TOP.\nAggiungi il formato mancante, come una tabella o uno strumento.\nConsideralo un indizio, non un verdetto."
       }
+    },
+    "prePublish": {
+      "check": {
+        "title": "Controllo prima della pubblicazione",
+        "what": "Simula l'aggiunta di questa bozza al sito: variazione del Site Focus Score, somiglianza con le pagine esistenti e autonomia di ogni passaggio.",
+        "why": "Individua una pagina duplicata o fuori tema prima che vada online.",
+        "action": "Correggi ogni motivo elencato.\nEsegui di nuovo il controllo.\nPubblica solo dopo la tua revisione."
+      }
     }
   },
   "helpUi": {
@@ -7371,6 +7379,31 @@
       "tool": "Strumento o calcolatore",
       "transactional": "Transazionale",
       "local": "Locale"
+    }
+  },
+  "prePublishUi": {
+    "title": "Controllo prima della pubblicazione",
+    "verdict": {
+      "insufficient": "Dati insufficienti per valutare questa bozza.",
+      "blocked": "Non pubblicare ancora: la bozza duplica una pagina esistente.",
+      "review": "Da rivedere prima di pubblicare.",
+      "ok": "Nessun problema trovato. È un consiglio, non un'approvazione."
+    },
+    "sfs": "Site Focus Score {{before}} a {{after}} ({{delta}}). Pertinenza della bozza {{trs}}. Non è una previsione di traffico.",
+    "conflict": "Troppo simile a {{url}} ({{value}}%).",
+    "overlap": "Si sovrappone a {{url}} ({{value}}%).",
+    "reason": {
+      "no-core": "Nessun tema principale per ora.",
+      "corpus-too-small": "Meno di 3 pagine valutate nel sito.",
+      "dimension-mismatch": "Gli embedding provengono da modelli diversi.",
+      "cannibalization": "Rischio di cannibalizzazione.",
+      "overlap": "Sovrapposizione parziale con una pagina esistente.",
+      "low-trs": "La pertinenza della bozza al tema principale è bassa.",
+      "chunk-issues": "Alcuni passaggi non funzionano da soli."
+    },
+    "chunk": {
+      "leading-pronoun": "Il passaggio {{index}} inizia con un pronome che richiede contesto precedente.",
+      "too-short": "Il passaggio {{index}} è troppo breve per reggersi da solo."
     }
   }
 }

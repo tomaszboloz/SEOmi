@@ -6449,6 +6449,14 @@
         "why": "Strona o formacie innym niż w wynikach często słabo wypada na to zapytanie.",
         "action": "Otwórz strony z TOP.\nDodaj brakujący format, np. tabelę lub narzędzie.\nTraktuj to jako wskazówkę, nie wyrok."
       }
+    },
+    "prePublish": {
+      "check": {
+        "title": "Kontrola przed publikacją",
+        "what": "Symuluje dodanie szkicu do witryny: zmianę Site Focus Score, podobieństwo do istniejących stron i to, czy każdy fragment działa samodzielnie.",
+        "why": "Wychwytuje duplikat lub stronę nie na temat, zanim trafi na żywo.",
+        "action": "Popraw każdy wymieniony powód.\nUruchom kontrolę ponownie.\nOpublikuj dopiero po własnej weryfikacji."
+      }
     }
   },
   "helpUi": {
@@ -7371,6 +7379,31 @@
       "tool": "Narzędzie lub kalkulator",
       "transactional": "Transakcyjna",
       "local": "Lokalna"
+    }
+  },
+  "prePublishUi": {
+    "title": "Kontrola przed publikacją",
+    "verdict": {
+      "insufficient": "Za mało danych, by ocenić ten szkic.",
+      "blocked": "Nie publikuj jeszcze: szkic dubluje istniejącą stronę.",
+      "review": "Sprawdź przed publikacją.",
+      "ok": "Nie znaleziono problemów. To rada, nie zatwierdzenie."
+    },
+    "sfs": "Site Focus Score {{before}} na {{after}} ({{delta}}). Trafność szkicu {{trs}}. To nie jest prognoza ruchu.",
+    "conflict": "Zbyt podobne do {{url}} ({{value}}%).",
+    "overlap": "Częściowo pokrywa się z {{url}} ({{value}}%).",
+    "reason": {
+      "no-core": "Brak jeszcze tematu głównego.",
+      "corpus-too-small": "Mniej niż 3 ocenione strony w witrynie.",
+      "dimension-mismatch": "Embeddingi pochodzą z różnych modeli.",
+      "cannibalization": "Ryzyko kanibalizacji.",
+      "overlap": "Częściowe pokrycie z istniejącą stroną.",
+      "low-trs": "Trafność szkicu względem tematu głównego jest niska.",
+      "chunk-issues": "Niektóre fragmenty nie działają samodzielnie."
+    },
+    "chunk": {
+      "leading-pronoun": "Fragment {{index}} zaczyna się zaimkiem wymagającym wcześniejszego kontekstu.",
+      "too-short": "Fragment {{index}} jest za krótki, by działać samodzielnie."
     }
   }
 }
