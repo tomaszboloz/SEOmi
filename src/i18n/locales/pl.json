@@ -7516,5 +7516,21 @@
     "noText": "Brak tekstu źródeł, więc nie sprawdzono współcytowań marki.",
     "coCitation": "Marka i główna encja w jednym akapicie: {{linked}} z linkiem, {{unlinked}} bez linku.",
     "note": "Wartość opiera się na autorytecie dostawcy i nie odtwarza Google PageRank ani nie wyjaśnia rankingu. Współwystępowanie to nie poparcie."
+  },
+  "teamUi": {
+    "role": {
+      "admin": "Administrator",
+      "seo_strategist": "Strateg SEO",
+      "content_writer": "Autor treści",
+      "developer": "Programista"
+    },
+    "permission": {
+      "run_crawl": "Uruchamianie crawla",
+      "execute_cms_patch": "Stosowanie poprawek w CMS",
+      "modify_site_focus_rules": "Zmiana reguł Site Focus",
+      "export_audit_pdf": "Eksport audytu do PDF",
+      "manage_team_roles": "Zarządzanie rolami zespołu"
+    },
+    "denied": "Twoja rola nie pozwala na tę akcję."
   }
 }

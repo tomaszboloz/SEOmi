@@ -7516,5 +7516,21 @@
     "noText": "没有来源文本，因此未检查品牌共同引用。",
     "coCitation": "品牌与核心实体出现在同一段落：带链接 {{linked}}，无链接 {{unlinked}}。",
     "note": "该值使用数据提供方的权威度，不复现 Google PageRank，也不解释排名。共同出现不等于背书。"
+  },
+  "teamUi": {
+    "role": {
+      "admin": "管理员",
+      "seo_strategist": "SEO 策略师",
+      "content_writer": "内容撰写者",
+      "developer": "开发者"
+    },
+    "permission": {
+      "run_crawl": "运行抓取",
+      "execute_cms_patch": "应用 CMS 补丁",
+      "modify_site_focus_rules": "修改 Site Focus 规则",
+      "export_audit_pdf": "导出审计 PDF",
+      "manage_team_roles": "管理团队角色"
+    },
+    "denied": "您的角色无权执行此操作。"
   }
 }

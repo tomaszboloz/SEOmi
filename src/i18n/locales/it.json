@@ -7516,5 +7516,21 @@
     "noText": "Nessun testo sorgente disponibile, quindi le co-citazioni del brand non sono state controllate.",
     "coCitation": "Brand ed entità principale nello stesso paragrafo: {{linked}} con link, {{unlinked}} senza link.",
     "note": "Il valore usa l'autorevolezza del provider e non riproduce il PageRank di Google né spiega il posizionamento. La co-occorrenza non è un'approvazione."
+  },
+  "teamUi": {
+    "role": {
+      "admin": "Amministratore",
+      "seo_strategist": "Stratega SEO",
+      "content_writer": "Autore di contenuti",
+      "developer": "Sviluppatore"
+    },
+    "permission": {
+      "run_crawl": "Avviare la scansione",
+      "execute_cms_patch": "Applicare patch al CMS",
+      "modify_site_focus_rules": "Modificare le regole Site Focus",
+      "export_audit_pdf": "Esportare l'audit in PDF",
+      "manage_team_roles": "Gestire i ruoli del team"
+    },
+    "denied": "Il tuo ruolo non consente questa azione."
   }
 }

@@ -7516,5 +7516,21 @@
     "noText": "Aucun texte source disponible : les co-citations de la marque n'ont pas été vérifiées.",
     "coCitation": "Marque et entité principale dans un même paragraphe : {{linked}} avec lien, {{unlinked}} sans lien.",
     "note": "La valeur repose sur l'autorité du fournisseur ; elle ne reproduit pas le PageRank de Google et n'explique pas le classement. La cooccurrence n'est pas une recommandation."
+  },
+  "teamUi": {
+    "role": {
+      "admin": "Administrateur",
+      "seo_strategist": "Stratège SEO",
+      "content_writer": "Rédacteur de contenu",
+      "developer": "Développeur"
+    },
+    "permission": {
+      "run_crawl": "Lancer un crawl",
+      "execute_cms_patch": "Appliquer un correctif CMS",
+      "modify_site_focus_rules": "Modifier les règles Site Focus",
+      "export_audit_pdf": "Exporter l'audit en PDF",
+      "manage_team_roles": "Gérer les rôles de l'équipe"
+    },
+    "denied": "Votre rôle ne permet pas cette action."
   }
 }

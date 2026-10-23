@@ -7516,5 +7516,21 @@
     "noText": "ソーステキストがないため、ブランドの共起引用は確認していません。",
     "coCitation": "ブランドとコアエンティティが同じ段落にある数: リンクあり {{linked}}、リンクなし {{unlinked}}。",
     "note": "この値はプロバイダーの権威を使っており、Google の PageRank の再現でも順位の説明でもありません。共起は推薦ではありません。"
+  },
+  "teamUi": {
+    "role": {
+      "admin": "管理者",
+      "seo_strategist": "SEOストラテジスト",
+      "content_writer": "コンテンツライター",
+      "developer": "開発者"
+    },
+    "permission": {
+      "run_crawl": "クロールの実行",
+      "execute_cms_patch": "CMSパッチの適用",
+      "modify_site_focus_rules": "Site Focusルールの変更",
+      "export_audit_pdf": "監査PDFのエクスポート",
+      "manage_team_roles": "チームロールの管理"
+    },
+    "denied": "あなたのロールではこの操作はできません。"
   }
 }

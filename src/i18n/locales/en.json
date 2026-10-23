@@ -7516,5 +7516,21 @@
     "noText": "No source text available, so brand co-citations were not checked.",
     "coCitation": "Brand and core entity in one paragraph: {{linked}} linked, {{unlinked}} unlinked.",
     "note": "The value uses provider authority and does not reproduce Google PageRank or explain rankings. Co-occurrence is not endorsement."
+  },
+  "teamUi": {
+    "role": {
+      "admin": "Admin",
+      "seo_strategist": "SEO Strategist",
+      "content_writer": "Content Writer",
+      "developer": "Developer"
+    },
+    "permission": {
+      "run_crawl": "Run crawl",
+      "execute_cms_patch": "Apply CMS patch",
+      "modify_site_focus_rules": "Change Site Focus rules",
+      "export_audit_pdf": "Export audit PDF",
+      "manage_team_roles": "Manage team roles"
+    },
+    "denied": "Your role cannot perform this action."
   }
 }

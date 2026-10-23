@@ -7516,5 +7516,21 @@
     "noText": "출처 텍스트가 없어 브랜드 공동 인용을 확인하지 않았습니다.",
     "coCitation": "브랜드와 핵심 엔티티가 한 문단에 있는 경우: 링크 있음 {{linked}}, 링크 없음 {{unlinked}}.",
     "note": "이 값은 제공자의 권위를 사용하며 Google PageRank를 재현하거나 순위를 설명하지 않습니다. 함께 등장한다고 추천은 아닙니다."
+  },
+  "teamUi": {
+    "role": {
+      "admin": "관리자",
+      "seo_strategist": "SEO 전략가",
+      "content_writer": "콘텐츠 작성자",
+      "developer": "개발자"
+    },
+    "permission": {
+      "run_crawl": "크롤 실행",
+      "execute_cms_patch": "CMS 패치 적용",
+      "modify_site_focus_rules": "Site Focus 규칙 변경",
+      "export_audit_pdf": "감사 PDF 내보내기",
+      "manage_team_roles": "팀 역할 관리"
+    },
+    "denied": "현재 역할로는 이 작업을 수행할 수 없습니다."
   }
 }

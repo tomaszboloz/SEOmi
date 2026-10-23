@@ -7516,5 +7516,21 @@
     "noText": "Sem texto das fontes, então as cocitações da marca não foram verificadas.",
     "coCitation": "Marca e entidade principal no mesmo parágrafo: {{linked}} com link, {{unlinked}} sem link.",
     "note": "O valor usa a autoridade do provedor e não reproduz o PageRank do Google nem explica o ranking. Coocorrência não é aprovação."
+  },
+  "teamUi": {
+    "role": {
+      "admin": "Administrador",
+      "seo_strategist": "Estrategista de SEO",
+      "content_writer": "Redator de conteúdo",
+      "developer": "Desenvolvedor"
+    },
+    "permission": {
+      "run_crawl": "Executar rastreamento",
+      "execute_cms_patch": "Aplicar patch no CMS",
+      "modify_site_focus_rules": "Alterar regras do Site Focus",
+      "export_audit_pdf": "Exportar auditoria em PDF",
+      "manage_team_roles": "Gerenciar funções da equipe"
+    },
+    "denied": "Sua função não permite esta ação."
   }
 }

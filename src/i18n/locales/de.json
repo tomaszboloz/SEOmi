@@ -7516,5 +7516,21 @@
     "noText": "Kein Quelltext verfügbar, daher wurden Marken-Kozitierungen nicht geprüft.",
     "coCitation": "Marke und Kernentität in einem Absatz: {{linked}} verlinkt, {{unlinked}} unverlinkt.",
     "note": "Der Wert nutzt die Autorität des Anbieters und bildet weder Google PageRank nach noch erklärt er Rankings. Gemeinsames Auftreten ist keine Empfehlung."
+  },
+  "teamUi": {
+    "role": {
+      "admin": "Administrator",
+      "seo_strategist": "SEO-Stratege",
+      "content_writer": "Content-Autor",
+      "developer": "Entwickler"
+    },
+    "permission": {
+      "run_crawl": "Crawl starten",
+      "execute_cms_patch": "CMS-Patch anwenden",
+      "modify_site_focus_rules": "Site-Focus-Regeln ändern",
+      "export_audit_pdf": "Audit-PDF exportieren",
+      "manage_team_roles": "Teamrollen verwalten"
+    },
+    "denied": "Ihre Rolle darf diese Aktion nicht ausführen."
   }
 }

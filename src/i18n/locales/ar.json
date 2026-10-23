@@ -7516,5 +7516,21 @@
     "noText": "لا يوجد نص مصدر، لذلك لم تُفحص الاستشهادات المشتركة بالعلامة.",
     "coCitation": "العلامة والكيان الأساسي في فقرة واحدة: {{linked}} برابط، {{unlinked}} بلا رابط.",
     "note": "تستخدم القيمة سلطة المزوّد ولا تعيد إنتاج PageRank من Google ولا تفسّر الترتيب. التزامن في الذكر ليس تأييداً."
+  },
+  "teamUi": {
+    "role": {
+      "admin": "مسؤول",
+      "seo_strategist": "استراتيجي SEO",
+      "content_writer": "كاتب محتوى",
+      "developer": "مطوّر"
+    },
+    "permission": {
+      "run_crawl": "تشغيل الزحف",
+      "execute_cms_patch": "تطبيق تعديل على CMS",
+      "modify_site_focus_rules": "تغيير قواعد Site Focus",
+      "export_audit_pdf": "تصدير تقرير التدقيق PDF",
+      "manage_team_roles": "إدارة أدوار الفريق"
+    },
+    "denied": "دورك لا يسمح بهذا الإجراء."
   }
 }
