@@ -49,6 +49,8 @@ pub(super) fn collect_entity_issues(
         }
         let same_as_sets = group
             .iter()
+            // A declaration without sameAs (absent or empty) is not a conflicting claim.
+            .filter(|node| !node.same_as.is_empty())
             .map(|node| {
                 let mut values = node.same_as.iter().cloned().collect::<Vec<_>>();
                 values.sort();
