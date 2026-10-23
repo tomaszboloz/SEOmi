@@ -6441,6 +6441,14 @@
         "why": "I primi risultati possono allontanarsi dalla tua pagina molto prima che calino le posizioni.",
         "action": "Apri gli URL citati.\nDecidi manualmente se aggiornare la pagina."
       }
+    },
+    "sija": {
+      "panel": {
+        "title": "Intento di ricerca (SIJA)",
+        "what": "Classifica la pagina in uno degli 8 micro-intenti in base alla struttura (tabelle, elenchi, moduli, schede prodotto) e la confronta con la media delle pagine TOP 5 reali.",
+        "why": "Una pagina con un formato diverso dalla SERP spesso si posiziona male per quella query.",
+        "action": "Apri le pagine TOP.\nAggiungi il formato mancante, come una tabella o uno strumento.\nConsideralo un indizio, non un verdetto."
+      }
     }
   },
   "helpUi": {
@@ -7343,5 +7351,26 @@
     "intent": "Intento: {{from}} a {{to}}",
     "format": "Formato: {{from}} a {{to}}",
     "incompatible": "Diverso: {{fields}}. Non è un cambiamento di mercato."
+  },
+  "sijaUi": {
+    "title": "Intento di ricerca (SIJA)",
+    "empty": "La struttura della pagina non indica un micro-intento chiaro.",
+    "primary": "Intento osservato: {{intent}} ({{confidence}}% di confidenza).",
+    "mixed": "Anche: {{list}}.",
+    "inconclusive": "SSAS non conclusivo: {{count}} pagine TOP reali disponibili, ne servono almeno 3.",
+    "ssas": {
+      "aligned": "SSAS {{score}}: la struttura corrisponde alle pagine TOP.",
+      "mismatch": "SSAS {{score}}: la struttura differisce dalle pagine TOP."
+    },
+    "intents": {
+      "definitional": "Definizione",
+      "how-to": "Guida pratica",
+      "troubleshooting": "Risoluzione problemi",
+      "comparison": "Confronto",
+      "curated-list": "Elenco selezionato",
+      "tool": "Strumento o calcolatore",
+      "transactional": "Transazionale",
+      "local": "Locale"
+    }
   }
 }

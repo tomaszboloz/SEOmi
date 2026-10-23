@@ -6441,6 +6441,14 @@
         "why": "The top results can drift away from your page long before rankings drop.",
         "action": "Open the cited URLs.\nDecide manually whether to refresh the page."
       }
+    },
+    "sija": {
+      "panel": {
+        "title": "Search intent (SIJA)",
+        "what": "Classifies the page into one of 8 micro-intents from its structure (tables, lists, forms, product cards) and compares it with the average of the real TOP 5 pages.",
+        "why": "A page whose format differs from what the SERP shows often ranks poorly for that query.",
+        "action": "Open the TOP pages.\nAdd the missing format, such as a table or a tool.\nTreat this as a hint, not a verdict."
+      }
     }
   },
   "helpUi": {
@@ -7343,5 +7351,26 @@
     "intent": "Intent: {{from}} to {{to}}",
     "format": "Format: {{from}} to {{to}}",
     "incompatible": "Different {{fields}}: not a market change."
+  },
+  "sijaUi": {
+    "title": "Search intent (SIJA)",
+    "empty": "No clear micro-intent detected from the page structure.",
+    "primary": "Observed intent: {{intent}} ({{confidence}}% confidence).",
+    "mixed": "Also: {{list}}.",
+    "inconclusive": "SSAS inconclusive: {{count}} real TOP pages available, at least 3 needed.",
+    "ssas": {
+      "aligned": "SSAS {{score}}: structure matches the TOP pages.",
+      "mismatch": "SSAS {{score}}: structure differs from the TOP pages."
+    },
+    "intents": {
+      "definitional": "Definition",
+      "how-to": "How-to",
+      "troubleshooting": "Troubleshooting",
+      "comparison": "Comparison",
+      "curated-list": "Curated list",
+      "tool": "Tool or calculator",
+      "transactional": "Transactional",
+      "local": "Local"
+    }
   }
 }

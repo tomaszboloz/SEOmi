@@ -6441,6 +6441,14 @@
         "why": "순위가 떨어지기 훨씬 전에 상위 결과가 내 페이지에서 멀어질 수 있습니다.",
         "action": "표시된 URL을 여세요.\n페이지를 갱신할지는 직접 결정하세요."
       }
+    },
+    "sija": {
+      "panel": {
+        "title": "검색 의도 (SIJA)",
+        "what": "표, 목록, 양식, 상품 카드 등의 구조로 페이지를 8가지 마이크로 의도 중 하나로 분류하고 실제 상위 5개 페이지 평균과 비교합니다.",
+        "why": "검색 결과와 형식이 다른 페이지는 해당 쿼리에서 순위가 낮은 경우가 많습니다.",
+        "action": "상위 페이지를 여세요.\n표나 도구처럼 빠진 형식을 추가하세요.\n판정이 아니라 참고용으로 보세요."
+      }
     }
   },
   "helpUi": {
@@ -7343,5 +7351,26 @@
     "intent": "의도: {{from}} → {{to}}",
     "format": "형식: {{from}} → {{to}}",
     "incompatible": "{{fields}}이(가) 다릅니다. 시장 변화가 아닙니다."
+  },
+  "sijaUi": {
+    "title": "검색 의도 (SIJA)",
+    "empty": "페이지 구조에서 뚜렷한 마이크로 의도를 찾지 못했습니다.",
+    "primary": "관찰된 의도: {{intent}} (신뢰도 {{confidence}}%).",
+    "mixed": "그 외: {{list}}.",
+    "inconclusive": "SSAS 판단 불가: 실제 상위 페이지가 {{count}}개이며 최소 3개가 필요합니다.",
+    "ssas": {
+      "aligned": "SSAS {{score}}: 구조가 상위 페이지와 일치합니다.",
+      "mismatch": "SSAS {{score}}: 구조가 상위 페이지와 다릅니다."
+    },
+    "intents": {
+      "definitional": "정의",
+      "how-to": "방법 안내",
+      "troubleshooting": "문제 해결",
+      "comparison": "비교",
+      "curated-list": "추천 목록",
+      "tool": "도구·계산기",
+      "transactional": "거래",
+      "local": "지역"
+    }
   }
 }

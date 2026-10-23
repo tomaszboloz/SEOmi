@@ -6441,6 +6441,14 @@
         "why": "Die Top-Ergebnisse können sich von deiner Seite entfernen, lange bevor Rankings fallen.",
         "action": "Öffne die genannten URLs.\nEntscheide manuell, ob die Seite aktualisiert wird."
       }
+    },
+    "sija": {
+      "panel": {
+        "title": "Suchintention (SIJA)",
+        "what": "Ordnet die Seite anhand ihrer Struktur (Tabellen, Listen, Formulare, Produktkarten) einer von 8 Mikro-Intentionen zu und vergleicht sie mit dem Mittel der echten TOP-5-Seiten.",
+        "why": "Eine Seite, deren Format von der SERP abweicht, rankt für diese Suchanfrage oft schlecht.",
+        "action": "Öffne die TOP-Seiten.\nErgänze das fehlende Format, etwa eine Tabelle oder ein Tool.\nNutze es als Hinweis, nicht als Urteil."
+      }
     }
   },
   "helpUi": {
@@ -7343,5 +7351,26 @@
     "intent": "Intent: {{from}} zu {{to}}",
     "format": "Format: {{from}} zu {{to}}",
     "incompatible": "Abweichend: {{fields}}. Das ist keine Marktveränderung."
+  },
+  "sijaUi": {
+    "title": "Suchintention (SIJA)",
+    "empty": "Aus der Seitenstruktur ergibt sich keine klare Mikro-Intention.",
+    "primary": "Beobachtete Intention: {{intent}} ({{confidence}} % Sicherheit).",
+    "mixed": "Außerdem: {{list}}.",
+    "inconclusive": "SSAS nicht aussagekräftig: {{count}} echte TOP-Seiten verfügbar, mindestens 3 nötig.",
+    "ssas": {
+      "aligned": "SSAS {{score}}: Struktur passt zu den TOP-Seiten.",
+      "mismatch": "SSAS {{score}}: Struktur weicht von den TOP-Seiten ab."
+    },
+    "intents": {
+      "definitional": "Definition",
+      "how-to": "Anleitung",
+      "troubleshooting": "Fehlerbehebung",
+      "comparison": "Vergleich",
+      "curated-list": "Kuratierte Liste",
+      "tool": "Tool oder Rechner",
+      "transactional": "Transaktional",
+      "local": "Lokal"
+    }
   }
 }

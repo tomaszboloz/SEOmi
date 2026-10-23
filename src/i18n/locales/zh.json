@@ -6441,6 +6441,14 @@
         "why": "在排名下降之前，前排结果可能已经偏离你的页面。",
         "action": "打开所引用的 URL。\n人工决定是否更新页面。"
       }
+    },
+    "sija": {
+      "panel": {
+        "title": "搜索意图 (SIJA)",
+        "what": "根据表格、列表、表单、商品卡片等结构，把页面归入 8 种微意图之一，并与真实 TOP 5 页面的平均值比较。",
+        "why": "形式与搜索结果不同的页面，在该查询上往往排名较差。",
+        "action": "打开 TOP 页面。\n补上缺失的形式，如表格或工具。\n把它当作提示，而不是结论。"
+      }
     }
   },
   "helpUi": {
@@ -7343,5 +7351,26 @@
     "intent": "意图：{{from}} 变为 {{to}}",
     "format": "形式：{{from}} 变为 {{to}}",
     "incompatible": "{{fields}} 不同，这不是市场变化。"
+  },
+  "sijaUi": {
+    "title": "搜索意图 (SIJA)",
+    "empty": "页面结构中未检测到明确的微意图。",
+    "primary": "观察到的意图：{{intent}}（置信度 {{confidence}}%）。",
+    "mixed": "另外：{{list}}。",
+    "inconclusive": "SSAS 无法判定：仅有 {{count}} 个真实 TOP 页面，至少需要 3 个。",
+    "ssas": {
+      "aligned": "SSAS {{score}}：结构与 TOP 页面一致。",
+      "mismatch": "SSAS {{score}}：结构与 TOP 页面不同。"
+    },
+    "intents": {
+      "definitional": "定义",
+      "how-to": "操作指南",
+      "troubleshooting": "故障排除",
+      "comparison": "对比",
+      "curated-list": "精选列表",
+      "tool": "工具或计算器",
+      "transactional": "交易",
+      "local": "本地"
+    }
   }
 }

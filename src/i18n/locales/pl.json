@@ -6441,6 +6441,14 @@
         "why": "Czołówka wyników może oddalić się od Twojej strony na długo przed spadkiem pozycji.",
         "action": "Otwórz wskazane adresy URL.\nZdecyduj ręcznie, czy odświeżyć stronę."
       }
+    },
+    "sija": {
+      "panel": {
+        "title": "Intencja wyszukiwania (SIJA)",
+        "what": "Przypisuje stronę do jednej z 8 mikrointencji na podstawie struktury (tabele, listy, formularze, karty produktów) i porównuje ją ze średnią realnych stron z TOP 5.",
+        "why": "Strona o formacie innym niż w wynikach często słabo wypada na to zapytanie.",
+        "action": "Otwórz strony z TOP.\nDodaj brakujący format, np. tabelę lub narzędzie.\nTraktuj to jako wskazówkę, nie wyrok."
+      }
     }
   },
   "helpUi": {
@@ -7343,5 +7351,26 @@
     "intent": "Intencja: {{from}} na {{to}}",
     "format": "Format: {{from}} na {{to}}",
     "incompatible": "Różne pola: {{fields}}. To nie jest zmiana rynku."
+  },
+  "sijaUi": {
+    "title": "Intencja wyszukiwania (SIJA)",
+    "empty": "Struktura strony nie wskazuje wyraźnej mikrointencji.",
+    "primary": "Zaobserwowana intencja: {{intent}} (pewność {{confidence}}%).",
+    "mixed": "Także: {{list}}.",
+    "inconclusive": "SSAS nierozstrzygający: dostępne realne strony TOP: {{count}}, potrzeba co najmniej 3.",
+    "ssas": {
+      "aligned": "SSAS {{score}}: struktura zgadza się ze stronami TOP.",
+      "mismatch": "SSAS {{score}}: struktura odbiega od stron TOP."
+    },
+    "intents": {
+      "definitional": "Definicja",
+      "how-to": "Poradnik krok po kroku",
+      "troubleshooting": "Rozwiązywanie problemów",
+      "comparison": "Porównanie",
+      "curated-list": "Zestawienie",
+      "tool": "Narzędzie lub kalkulator",
+      "transactional": "Transakcyjna",
+      "local": "Lokalna"
+    }
   }
 }
