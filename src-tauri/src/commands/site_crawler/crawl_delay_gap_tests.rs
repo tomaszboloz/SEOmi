@@ -27,3 +27,19 @@ async fn waiting_continues_after_a_paused_run_is_resumed() {
     control.resume("resume");
     assert!(waiter.await.unwrap());
 }
+
+#[tokio::test(start_paused = true)]
+async fn pause_time_does_not_consume_crawl_delay() {
+    let control = std::sync::Arc::new(CrawlControl::new());
+    control.start("p");
+    control.pause("p");
+    let started = tokio::time::Instant::now();
+    let waiting = control.clone();
+    let waiter = tokio::spawn(async move {
+        wait_for_crawl_delay(&waiting, "p", started.into_std(), Duration::from_secs(1)).await
+    });
+    tokio::time::sleep(Duration::from_secs(5)).await;
+    control.resume("p");
+    assert!(waiter.await.unwrap());
+    assert!(started.elapsed() >= Duration::from_secs(5));
+}
