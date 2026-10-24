@@ -1,21 +1,9 @@
-# SEOmi 0.4.23 — release notes
-
-## Added
-
-- Settings → General: safe CMS patch panel (issue #140) for WordPress, Strapi and webhooks. Preview a heading-scoped diff, approve its exact hash, run a mandatory dry run, then apply with role enforcement, backup and verification feedback. Input or project changes discard approval. All 12 languages are supported.
-- Native CMS transport validates public HTTPS destinations and DNS answers, refuses redirects, limits response size and attaches only dedicated `cms_auth_` credentials from the system store. Browser previews cannot send CMS requests.
-# SEOmi 0.4.24 — release notes
-
-## Added
-- AIO-R drop alerts (issue #108): a dedicated AIO alert type, independent drop threshold (default 10 points, inclusive), per-project settings migration, frequency limits and persisted deduplication. Settings controls are translated in all 12 locales.
+# SEOmi 0.4.29 — release notes
 
 ## Changed
-- AIO monitoring now runs on crawl completion against the previous comparable crawl, independently of opening the AIO panel. Missing RAG score evidence returns an explicit partial skip without a fabricated zero or alert; incompatible projects, scopes, environments and incomplete runs are not compared.
-# SEOmi 0.4.25 — release notes
 
-## Fixed
-- Topical Authority freshness exposes total, dated and undated page counts. Pages without a usable date remain unscored, with a notice translated into all 12 languages; older reports default missing counts to zero.
-- Direct TAS regression tests cover previously untested branches, including cannibalization grouping and canonical selection (issue #110).
+- Integration release combining all open work of 24 Oct 2026: coverage takeover, DST scheduler fix, zod and MCP security upgrades, dependency updates (sha2 0.11, reqwest 0.13 with native TLS, i18next 26, vite 8), crawler proxy pool, team mode with role enforcement, project erasure panel, CMS patch panel, AIO drop alerts, TAS undated freshness, log intelligence with desktop DNS verification, ALT quality and the pre-publish copy action. Each feature keeps its own note below.
+
 # SEOmi 0.4.28 — release notes
 
 ## Added
@@ -26,12 +14,6 @@
 
 - Scheduler: rounding a trigger time that falls in the repeated hour when daylight saving time ends (e.g. 25 Oct 02:xx in Europe) panicked. Rounding now happens in UTC. Regression tests use a zone with an ambiguous wall clock and half-hour offsets.
 
-# SEOmi 0.4.26 — release notes
-
-## Added
-- Project-scoped Log intelligence in Crawl → Crawler readiness (issue #92, Layer A): lazy-loaded local access-log import with bounded chunk decoding, a 500 MB limit, sampled SHA-256 dedupe, progress, cancel/resume, validated local storage, and Clear logs.
-- Crawl Efficiency Matrix shows paths, bot families, verification status, hits, 4xx/5xx share, coverage window, and evidence-qualified verdicts using only saved per-path TRS scores from the latest project crawl. Missing scores or unverified bots remain inconclusive; absent logs are never reported as healthy.
-- All panel text is translated into 12 languages. Bot identities remain claimed/unknown without a desktop DNS resolver; the panel makes no DNS calls.
 # SEOmi 0.4.27 — release notes
 
 ## Added
@@ -39,6 +21,34 @@
 - Media tab: ALT quality per image (issue #96, text-only part). Uses the existing `checkAlt` rules (missing, empty, file-name-like, generic, too long, repeats caption, unrelated to context); an explicit empty ALT is shown as decorative. A summary line counts checked images and images with issues. A neutral note lists OCR, CLIP alignment and transcripts as unavailable without a local model and states that this lowers no score.
 - CSV: the crawl images export and the single-page audit images export gain an `alt_issues` column at the end (semicolon-joined codes); existing columns keep their order.
 - 12 languages (`altCheckUi`) and tests for the labels, notice, summary, column order, both CSV exports and locale completeness.
+
+# SEOmi 0.4.26 — release notes
+
+## Added
+- Project-scoped Log intelligence in Crawl → Crawler readiness (issue #92, Layer A): lazy-loaded local access-log import with bounded chunk decoding, a 500 MB limit, sampled SHA-256 dedupe, progress, cancel/resume, validated local storage, and Clear logs.
+- Crawl Efficiency Matrix shows paths, bot families, verification status, hits, 4xx/5xx share, coverage window, and evidence-qualified verdicts using only saved per-path TRS scores from the latest project crawl. Missing scores or unverified bots remain inconclusive; absent logs are never reported as healthy.
+- All panel text is translated into 12 languages. Bot identities remain claimed/unknown without a desktop DNS resolver; the panel makes no DNS calls.
+
+# SEOmi 0.4.25 — release notes
+
+## Fixed
+- Topical Authority freshness exposes total, dated and undated page counts. Pages without a usable date remain unscored, with a notice translated into all 12 languages; older reports default missing counts to zero.
+- Direct TAS regression tests cover previously untested branches, including cannibalization grouping and canonical selection (issue #110).
+
+# SEOmi 0.4.24 — release notes
+
+## Added
+- AIO-R drop alerts (issue #108): a dedicated AIO alert type, independent drop threshold (default 10 points, inclusive), per-project settings migration, frequency limits and persisted deduplication. Settings controls are translated in all 12 locales.
+
+## Changed
+- AIO monitoring now runs on crawl completion against the previous comparable crawl, independently of opening the AIO panel. Missing RAG score evidence returns an explicit partial skip without a fabricated zero or alert; incompatible projects, scopes, environments and incomplete runs are not compared.
+
+# SEOmi 0.4.23 — release notes
+
+## Added
+
+- Settings → General: safe CMS patch panel (issue #140) for WordPress, Strapi and webhooks. Preview a heading-scoped diff, approve its exact hash, run a mandatory dry run, then apply with role enforcement, backup and verification feedback. Input or project changes discard approval. All 12 languages are supported.
+- Native CMS transport validates public HTTPS destinations and DNS answers, refuses redirects, limits response size and attaches only dedicated `cms_auth_` credentials from the system store. Browser previews cannot send CMS requests.
 
 # SEOmi 0.4.22 — release notes
 
@@ -235,7 +245,6 @@
 - German umlauts fold consistently (ö to oe) so a manual topic typed without diacritics matches the page terms.
 - Test runs no longer print "Not implemented: navigation", help-entry and `act(...)` warnings; `sanitizeBrief` strips nested tags (CodeQL #34).
 
-
 # SEOmi 0.4.0 — release notes
 
 ## Added
@@ -349,3 +358,4 @@ The selected distribution uses signed Tauri updates and installers without Apple
 ## Thanks
 
 Thank you **@RafalSzy** for contributions, topical diagnosis, detailed issue reports and regression-test feedback in PR #13 and subsequent reviews.
+
