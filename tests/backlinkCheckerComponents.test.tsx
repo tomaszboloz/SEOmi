@@ -42,7 +42,7 @@ describe('BacklinkChecker modular architecture', () => {
       'src/components/Domain/BacklinkChecker.tsx',
       ...codeFiles('src/components/Domain/backlinkChecker'),
     ];
-    expect(files.length).toBe(13);
+    expect(files.length).toBe(16);
     const report = maxLocReport(files);
     expect(report.violations).toEqual([]);
   });

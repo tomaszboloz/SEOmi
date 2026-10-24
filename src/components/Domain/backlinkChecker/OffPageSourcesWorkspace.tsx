@@ -4,6 +4,7 @@ import { OffPagePanel } from '@/components/Charts/OffPagePanel';
 import { useOffPageReports } from './useOffPageReports';
 import { useOffPageSources } from './useOffPageSources';
 import { OffPageSourceResults } from './OffPageSourceResults';
+import { OffPageHistory } from './OffPageHistory';
 
 export const OffPageSourcesWorkspace = ({ profile }: { profile: BacklinkProfileData }) => {
   const { t } = useTranslation();
@@ -30,5 +31,6 @@ export const OffPageSourcesWorkspace = ({ profile }: { profile: BacklinkProfileD
       <p role="status">{t(`offPageSourcesUi.status.${session.status}`)}</p>
       <OffPageSourceResults sources={session.sources} reports={reports} />
     </>}
+    <OffPageHistory key={session.projectId ?? ''} projectId={session.projectId} current={session.record} saved={session.historySaved} />
   </div>;
 };

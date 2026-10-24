@@ -1,3 +1,11 @@
+# SEOmi 0.4.39 — release notes
+
+## Added
+- Project-local link-source analysis history (issue #93, GEM-93-08): save the last 10 completed, non-cancelled analyses with validated compact TBVA, model identity, source scores and bounded co-citation excerpts. Full page text and vectors are never persisted.
+- Newest-first history with source details, individual deletion and project-wide clearing. TBVA deltas require the same authority scale and embedding provider/model; unavailable or incompatible evidence carries an explicit reason.
+- Formula-injection-safe CSV export for the current analysis or a saved record, using the shared CSV/download helpers. No PDF export is added.
+- History erasure through the existing project/subject data-erasure flow, plus `offPageSourcesUi` history translations in all 12 locales.
+
 # SEOmi 0.4.38 — release notes
 
 ## Fixed
@@ -414,4 +422,3 @@ The selected distribution uses signed Tauri updates and installers without Apple
 ## Thanks
 
 Thank you **@RafalSzy** for contributions, topical diagnosis, detailed issue reports and regression-test feedback in PR #13 and subsequent reviews.
-

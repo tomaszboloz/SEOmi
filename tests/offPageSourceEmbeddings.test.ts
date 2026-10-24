@@ -17,6 +17,7 @@ describe('source embeddings', () => {
     expect(embed).toHaveBeenCalledWith(['SEO', 'Acme SEO', 'Other SEO']);
     expect(createProvider).toHaveBeenCalledWith(expect.objectContaining({ provider: 'local', corpus: ['SEO', 'Acme SEO', 'Other SEO'] }));
     expect(result.topic).toEqual(sourceVector(1, 0));
+    expect(result.embedding).toEqual({ provider: 'local', modelId: 'hash' });
     expect(result.sources.map((source) => source.vector)).toEqual([sourceVector(1, 0), sourceVector(0, 1), null]);
   });
   it.each(['', '   '])('does not invent a missing core %j', async (core) => {

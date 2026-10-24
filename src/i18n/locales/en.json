@@ -7940,7 +7940,7 @@
   "offPageSourcesUi": {
     "analyze": "Analyze link sources",
     "cancel": "Cancel",
-    "scope": "Session only: up to 25 follow links, one per source domain, highest provider authority first. Authority scale: 0–100; TBVA is a sum, not a percentage or Google PageRank. Limits: 3 concurrent requests, 15 s native timeout, 25 MiB response body, 20,000 visible-text characters per source.",
+    "scope": "up to 25 follow links, one per source domain, highest provider authority first. Authority scale: 0–100; TBVA is a sum, not a percentage or Google PageRank. Limits: 3 concurrent requests, 15 s native timeout, 25 MiB response body, 20,000 visible-text characters per source.",
     "provider": "Local embedding provider",
     "local": "Local hash",
     "ollama": "Local Ollama",
@@ -7977,7 +7977,46 @@
       "neutral": "Neutral co-occurrence; not endorsement",
       "unclear": "Unclear: possible negation"
     },
-    "pacing": "The native audit guard also limits starts to 10 per minute. The sample can take several minutes; other audits may reduce availability."
+    "pacing": "The native audit guard also limits starts to 10 per minute. The sample can take several minutes; other audits may reduce availability.",
+    "history": {
+      "title": "History",
+      "empty": "No completed analyses saved.",
+      "summary": "TBVA: {{value}} · Scored/requested: {{scored}}/{{requested}}",
+      "delta": "TBVA change: {{delta}}",
+      "notComparable": "Not comparable: {{reason}}",
+      "reasons": {
+        "first": "no previous record",
+        "scale": "different authority scale",
+        "model": "different embedding model",
+        "unknownModel": "embedding model unknown",
+        "unavailable": "TBVA unavailable"
+      },
+      "view": "View sources",
+      "hide": "Hide sources",
+      "delete": "Delete record",
+      "clear": "Clear project history",
+      "exportCurrent": "Export current CSV",
+      "exportRecord": "Export record CSV",
+      "storageError": "History storage is unavailable; changes were not saved.",
+      "topic": "Topic: {{topic}}",
+      "embedding": "Embedding: {{provider}} / {{model}}",
+      "details": "Saved per-source evidence",
+      "fields": {
+        "sourceUrl": "Source URL",
+        "fetchedAt": "Fetched at",
+        "availability": "Availability",
+        "authority": "Authority",
+        "similarity": "Similarity",
+        "contribution": "Contribution"
+      },
+      "unavailable": "Unavailable",
+      "status": {
+        "ready": "Ready",
+        "partial": "Partial",
+        "unavailable": "Unavailable"
+      },
+      "privacy": "The last 10 completed analyses are stored locally per project. Full page text and vectors are never saved."
+    }
   },
   "experimentsUi": {
     "title": "SEO experiments",

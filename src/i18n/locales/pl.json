@@ -7940,7 +7940,7 @@
   "offPageSourcesUi": {
     "analyze": "Analizuj źródła linków",
     "cancel": "Anuluj",
-    "scope": "Tylko w sesji: do 25 linków follow, po jednym na domenę źródłową, od najwyższego autorytetu dostawcy. Skala autorytetu: 0–100; TBVA jest sumą, nie procentem ani Google PageRank. Limity: 3 żądania równolegle, 15 s limitu natywnego, 25 MiB odpowiedzi, 20 000 znaków widocznego tekstu na źródło.",
+    "scope": "do 25 linków follow, po jednym na domenę źródłową, od najwyższego autorytetu dostawcy. Skala autorytetu: 0–100; TBVA jest sumą, nie procentem ani Google PageRank. Limity: 3 żądania równolegle, 15 s limitu natywnego, 25 MiB odpowiedzi, 20 000 znaków widocznego tekstu na źródło.",
     "provider": "Lokalny dostawca embeddingów",
     "local": "Lokalny hash",
     "ollama": "Lokalna Ollama",
@@ -7977,7 +7977,46 @@
       "neutral": "Neutralne współwystępowanie; nie rekomendacja",
       "unclear": "Niejednoznaczne: możliwa negacja"
     },
-    "pacing": "Natywny audyt ogranicza też rozpoczęcia do 10 na minutę. Analiza próbki może potrwać kilka minut; inne audyty mogą zmniejszyć dostępność."
+    "pacing": "Natywny audyt ogranicza też rozpoczęcia do 10 na minutę. Analiza próbki może potrwać kilka minut; inne audyty mogą zmniejszyć dostępność.",
+    "history": {
+      "title": "Historia",
+      "empty": "Brak zapisanych ukończonych analiz.",
+      "summary": "TBVA: {{value}} · Ocenione/żądane: {{scored}}/{{requested}}",
+      "delta": "Zmiana TBVA: {{delta}}",
+      "notComparable": "Nieporównywalne: {{reason}}",
+      "reasons": {
+        "first": "brak poprzedniego zapisu",
+        "scale": "inna skala autorytetu",
+        "model": "inny model embeddingów",
+        "unknownModel": "nieznany model embeddingów",
+        "unavailable": "TBVA niedostępne"
+      },
+      "view": "Pokaż źródła",
+      "hide": "Ukryj źródła",
+      "delete": "Usuń zapis",
+      "clear": "Wyczyść historię projektu",
+      "exportCurrent": "Eksportuj bieżącą analizę CSV",
+      "exportRecord": "Eksportuj zapis CSV",
+      "storageError": "Pamięć historii jest niedostępna; zmiany nie zostały zapisane.",
+      "topic": "Temat: {{topic}}",
+      "embedding": "Embedding: {{provider}} / {{model}}",
+      "details": "Zapisane dane poszczególnych źródeł",
+      "fields": {
+        "sourceUrl": "URL źródła",
+        "fetchedAt": "Pobrano",
+        "availability": "Dostępność",
+        "authority": "Autorytet",
+        "similarity": "Podobieństwo",
+        "contribution": "Wkład"
+      },
+      "unavailable": "Niedostępne",
+      "status": {
+        "ready": "Gotowe",
+        "partial": "Częściowe",
+        "unavailable": "Niedostępne"
+      },
+      "privacy": "Ostatnie 10 ukończonych analiz jest zapisanych lokalnie dla każdego projektu. Pełny tekst stron i wektory nigdy nie są zapisywane."
+    }
   },
   "experimentsUi": {
     "title": "Eksperymenty SEO",

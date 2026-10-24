@@ -7940,7 +7940,7 @@
   "offPageSourcesUi": {
     "analyze": "Analyser les sources des liens",
     "cancel": "Annuler",
-    "scope": "Session uniquement : jusqu’à 25 liens follow, un par domaine source, par autorité fournisseur décroissante. Échelle d’autorité : 0–100 ; TBVA est une somme, ni un pourcentage ni Google PageRank. Limites : 3 requêtes simultanées, délai natif de 15 s, réponse de 25 Mio, 20 000 caractères visibles par source.",
+    "scope": "jusqu’à 25 liens follow, un par domaine source, par autorité fournisseur décroissante. Échelle d’autorité : 0–100 ; TBVA est une somme, ni un pourcentage ni Google PageRank. Limites : 3 requêtes simultanées, délai natif de 15 s, réponse de 25 Mio, 20 000 caractères visibles par source.",
     "provider": "Fournisseur local d’embeddings",
     "local": "Hachage local",
     "ollama": "Ollama local",
@@ -7977,7 +7977,46 @@
       "neutral": "Cooccurrence neutre ; pas une recommandation",
       "unclear": "Ambigu : négation possible"
     },
-    "pacing": "La protection de l’audit natif limite aussi les démarrages à 10 par minute. L’échantillon peut prendre plusieurs minutes ; d’autres audits peuvent réduire la disponibilité."
+    "pacing": "La protection de l’audit natif limite aussi les démarrages à 10 par minute. L’échantillon peut prendre plusieurs minutes ; d’autres audits peuvent réduire la disponibilité.",
+    "history": {
+      "title": "Historique",
+      "empty": "Aucune analyse terminée enregistrée.",
+      "summary": "TBVA : {{value}} · Évaluées/demandées : {{scored}}/{{requested}}",
+      "delta": "Variation du TBVA : {{delta}}",
+      "notComparable": "Non comparable : {{reason}}",
+      "reasons": {
+        "first": "aucun enregistrement précédent",
+        "scale": "échelle d’autorité différente",
+        "model": "modèle d’embedding différent",
+        "unknownModel": "modèle d’embedding inconnu",
+        "unavailable": "TBVA indisponible"
+      },
+      "view": "Voir les sources",
+      "hide": "Masquer les sources",
+      "delete": "Supprimer l’enregistrement",
+      "clear": "Effacer l’historique du projet",
+      "exportCurrent": "Exporter l’analyse actuelle CSV",
+      "exportRecord": "Exporter l’enregistrement CSV",
+      "storageError": "Le stockage de l’historique est indisponible ; les modifications n’ont pas été enregistrées.",
+      "topic": "Sujet : {{topic}}",
+      "embedding": "Embedding : {{provider}} / {{model}}",
+      "details": "Preuves enregistrées par source",
+      "fields": {
+        "sourceUrl": "URL source",
+        "fetchedAt": "Date de récupération",
+        "availability": "Disponibilité",
+        "authority": "Autorité",
+        "similarity": "Similarité",
+        "contribution": "Contribution"
+      },
+      "unavailable": "Indisponible",
+      "status": {
+        "ready": "Prêt",
+        "partial": "Partiel",
+        "unavailable": "Indisponible"
+      },
+      "privacy": "Les 10 dernières analyses terminées sont conservées localement par projet. Le texte intégral des pages et les vecteurs ne sont jamais enregistrés."
+    }
   },
   "experimentsUi": {
     "title": "Expériences SEO",

@@ -7940,7 +7940,7 @@
   "offPageSourcesUi": {
     "analyze": "分析链接来源",
     "cancel": "取消",
-    "scope": "仅在当前会话中使用：按提供方权威值降序选择最多25条follow链接，每个来源域名一条。权威值尺度为0–100；TBVA是总和，不是百分比，也不是Google PageRank。限制：并发3个请求、原生超时15秒、响应正文25 MiB、每个来源20,000个可见文本字符。",
+    "scope": "按提供方权威值降序选择最多25条follow链接，每个来源域名一条。权威值尺度为0–100；TBVA是总和，不是百分比，也不是Google PageRank。限制：并发3个请求、原生超时15秒、响应正文25 MiB、每个来源20,000个可见文本字符。",
     "provider": "本地嵌入提供方",
     "local": "本地哈希",
     "ollama": "本地Ollama",
@@ -7977,7 +7977,46 @@
       "neutral": "中性共现；不代表认可",
       "unclear": "不明确：可能含否定"
     },
-    "pacing": "原生审计保护还将启动频率限制为每分钟10次。样本分析可能需要数分钟；其他审计可能降低可用性。"
+    "pacing": "原生审计保护还将启动频率限制为每分钟10次。样本分析可能需要数分钟；其他审计可能降低可用性。",
+    "history": {
+      "title": "历史记录",
+      "empty": "暂无已保存的已完成分析。",
+      "summary": "TBVA：{{value}} · 已评分/已请求：{{scored}}/{{requested}}",
+      "delta": "TBVA 变化：{{delta}}",
+      "notComparable": "不可比较：{{reason}}",
+      "reasons": {
+        "first": "没有上一条记录",
+        "scale": "权威值尺度不同",
+        "model": "嵌入模型不同",
+        "unknownModel": "嵌入模型未知",
+        "unavailable": "TBVA 不可用"
+      },
+      "view": "查看来源",
+      "hide": "隐藏来源",
+      "delete": "删除记录",
+      "clear": "清空项目历史",
+      "exportCurrent": "导出当前分析 CSV",
+      "exportRecord": "导出记录 CSV",
+      "storageError": "历史存储不可用；更改未保存。",
+      "topic": "主题：{{topic}}",
+      "embedding": "嵌入：{{provider}} / {{model}}",
+      "details": "已保存的各来源证据",
+      "fields": {
+        "sourceUrl": "来源 URL",
+        "fetchedAt": "获取时间",
+        "availability": "可用性",
+        "authority": "权威值",
+        "similarity": "相似度",
+        "contribution": "贡献值"
+      },
+      "unavailable": "不可用",
+      "status": {
+        "ready": "就绪",
+        "partial": "部分可用",
+        "unavailable": "不可用"
+      },
+      "privacy": "每个项目在本地保存最近 10 次已完成的分析。绝不保存页面全文或向量。"
+    }
   },
   "experimentsUi": {
     "title": "SEO实验",

@@ -7940,7 +7940,7 @@
   "offPageSourcesUi": {
     "analyze": "Linkquellen analysieren",
     "cancel": "Abbrechen",
-    "scope": "Nur in dieser Sitzung: bis zu 25 Follow-Links, einer pro Quelldomain, höchste Anbieterautorität zuerst. Autoritätsskala: 0–100; TBVA ist eine Summe, kein Prozentsatz und kein Google PageRank. Grenzen: 3 parallele Anfragen, 15 s natives Zeitlimit, 25 MiB Antwort, 20.000 sichtbare Textzeichen je Quelle.",
+    "scope": "bis zu 25 Follow-Links, einer pro Quelldomain, höchste Anbieterautorität zuerst. Autoritätsskala: 0–100; TBVA ist eine Summe, kein Prozentsatz und kein Google PageRank. Grenzen: 3 parallele Anfragen, 15 s natives Zeitlimit, 25 MiB Antwort, 20.000 sichtbare Textzeichen je Quelle.",
     "provider": "Lokaler Embedding-Anbieter",
     "local": "Lokaler Hash",
     "ollama": "Lokales Ollama",
@@ -7977,7 +7977,46 @@
       "neutral": "Neutrales gemeinsames Auftreten; keine Empfehlung",
       "unclear": "Unklar: mögliche Verneinung"
     },
-    "pacing": "Der native Auditschutz begrenzt auch die Starts auf 10 pro Minute. Die Stichprobe kann mehrere Minuten dauern; andere Audits können die Verfügbarkeit verringern."
+    "pacing": "Der native Auditschutz begrenzt auch die Starts auf 10 pro Minute. Die Stichprobe kann mehrere Minuten dauern; andere Audits können die Verfügbarkeit verringern.",
+    "history": {
+      "title": "Verlauf",
+      "empty": "Keine abgeschlossenen Analysen gespeichert.",
+      "summary": "TBVA: {{value}} · Bewertet/angefordert: {{scored}}/{{requested}}",
+      "delta": "TBVA-Änderung: {{delta}}",
+      "notComparable": "Nicht vergleichbar: {{reason}}",
+      "reasons": {
+        "first": "kein vorheriger Eintrag",
+        "scale": "andere Autoritätsskala",
+        "model": "anderes Embedding-Modell",
+        "unknownModel": "Embedding-Modell unbekannt",
+        "unavailable": "TBVA nicht verfügbar"
+      },
+      "view": "Quellen anzeigen",
+      "hide": "Quellen ausblenden",
+      "delete": "Eintrag löschen",
+      "clear": "Projektverlauf leeren",
+      "exportCurrent": "Aktuelle Analyse als CSV",
+      "exportRecord": "Eintrag als CSV",
+      "storageError": "Verlaufsspeicher nicht verfügbar; Änderungen wurden nicht gespeichert.",
+      "topic": "Thema: {{topic}}",
+      "embedding": "Embedding: {{provider}} / {{model}}",
+      "details": "Gespeicherte Quellenbelege",
+      "fields": {
+        "sourceUrl": "Quell-URL",
+        "fetchedAt": "Abgerufen am",
+        "availability": "Verfügbarkeit",
+        "authority": "Autorität",
+        "similarity": "Ähnlichkeit",
+        "contribution": "Beitrag"
+      },
+      "unavailable": "Nicht verfügbar",
+      "status": {
+        "ready": "Bereit",
+        "partial": "Teilweise",
+        "unavailable": "Nicht verfügbar"
+      },
+      "privacy": "Die letzten 10 abgeschlossenen Analysen werden lokal je Projekt gespeichert. Vollständige Seitentexte und Vektoren werden nie gespeichert."
+    }
   },
   "experimentsUi": {
     "title": "SEO-Experimente",

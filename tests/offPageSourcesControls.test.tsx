@@ -7,6 +7,7 @@ import { sourceProfile } from './fixtures/offPageSources';
 
 vi.mock('@/components/Domain/backlinkChecker/useOffPageSources', () => ({ useOffPageSources: vi.fn() }));
 const session = () => ({ status: 'idle' as const, sources: [], analysis: null,
+  projectId: null, record: null, historySaved: true,
   settings: { provider: 'ollama' }, setSettings: vi.fn(), run: vi.fn(), cancel: vi.fn(), enabled: true });
 beforeEach(async () => { await i18n.changeLanguage('en'); });
 afterEach(cleanup);

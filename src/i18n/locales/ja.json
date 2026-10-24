@@ -7940,7 +7940,7 @@
   "offPageSourcesUi": {
     "analyze": "リンク元を分析",
     "cancel": "キャンセル",
-    "scope": "セッション内のみ：提供元の権威スコア順に、各リンク元ドメインから1件、最大25件のfollowリンクを選択。権威スコアの尺度は0〜100。TBVAは合計値で、割合でもGoogle PageRankでもありません。上限：同時3件、ネイティブタイムアウト15秒、応答本文25 MiB、各ソースの可視テキスト20,000文字。",
+    "scope": "提供元の権威スコア順に、各リンク元ドメインから1件、最大25件のfollowリンクを選択。権威スコアの尺度は0〜100。TBVAは合計値で、割合でもGoogle PageRankでもありません。上限：同時3件、ネイティブタイムアウト15秒、応答本文25 MiB、各ソースの可視テキスト20,000文字。",
     "provider": "ローカル埋め込みプロバイダー",
     "local": "ローカルハッシュ",
     "ollama": "ローカルOllama",
@@ -7977,7 +7977,46 @@
       "neutral": "中立的な共起。推奨ではありません",
       "unclear": "不明確：否定表現の可能性"
     },
-    "pacing": "ネイティブ監査の保護機能により、開始は毎分10件までです。サンプルの処理に数分かかる場合があり、他の監査により取得可能性が低下する場合があります。"
+    "pacing": "ネイティブ監査の保護機能により、開始は毎分10件までです。サンプルの処理に数分かかる場合があり、他の監査により取得可能性が低下する場合があります。",
+    "history": {
+      "title": "履歴",
+      "empty": "保存された完了済み分析はありません。",
+      "summary": "TBVA: {{value}} · 評価済み/要求数: {{scored}}/{{requested}}",
+      "delta": "TBVAの変化: {{delta}}",
+      "notComparable": "比較不可: {{reason}}",
+      "reasons": {
+        "first": "前の記録がありません",
+        "scale": "権威スコアの尺度が異なります",
+        "model": "埋め込みモデルが異なります",
+        "unknownModel": "埋め込みモデルが不明です",
+        "unavailable": "TBVAを取得できません"
+      },
+      "view": "ソースを表示",
+      "hide": "ソースを非表示",
+      "delete": "記録を削除",
+      "clear": "プロジェクトの履歴を消去",
+      "exportCurrent": "現在の分析をCSV出力",
+      "exportRecord": "記録をCSV出力",
+      "storageError": "履歴ストレージを利用できないため、変更は保存されませんでした。",
+      "topic": "トピック: {{topic}}",
+      "embedding": "埋め込み: {{provider}} / {{model}}",
+      "details": "ソースごとの保存済み証拠",
+      "fields": {
+        "sourceUrl": "ソースURL",
+        "fetchedAt": "取得日時",
+        "availability": "利用可否",
+        "authority": "権威スコア",
+        "similarity": "類似度",
+        "contribution": "寄与"
+      },
+      "unavailable": "取得不可",
+      "status": {
+        "ready": "完了",
+        "partial": "一部のみ",
+        "unavailable": "取得不可"
+      },
+      "privacy": "完了した直近10件の分析をプロジェクトごとにローカル保存します。ページ全文とベクトルは保存しません。"
+    }
   },
   "experimentsUi": {
     "title": "SEO実験",

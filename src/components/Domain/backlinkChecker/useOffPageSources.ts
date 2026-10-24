@@ -7,10 +7,13 @@ import { analyzeSources } from '@/services/offPage/analyzeSources';
 import type { SourceAnalysis, SourceEvidence } from '@/services/offPage/sources';
 import type { SourceEmbeddingSettings } from '@/services/offPage/sourceEmbeddings';
 import { loadEmbeddingSession } from '@/components/Keywords/embeddingClustering/useEmbeddingClustering';
+import { createOffPageHistoryRecord } from '@/services/offPage/historyRecord';
+import { saveOffPageHistory } from '@/services/offPage/history';
+import type { OffPageHistoryRecord } from '@/services/offPage/historySchema';
 
 type Status = 'idle' | 'running' | 'done' | 'cancelled' | 'unavailable';
-interface State { status: Status; sources: SourceEvidence[]; analysis: SourceAnalysis | null }
-const idle: State = { status: 'idle', sources: [], analysis: null };
+interface State { status: Status; sources: SourceEvidence[]; analysis: SourceAnalysis | null; record: OffPageHistoryRecord | null; historySaved: boolean }
+const idle: State = { status: 'idle', sources: [], analysis: null, record: null, historySaved: true };
 
 export const useOffPageSources = (profile: BacklinkProfileData) => {
   const project = useProjectStore((store) => store.projects.find((entry) => entry.id === store.activeProjectId));
@@ -36,7 +39,7 @@ export const useOffPageSources = (profile: BacklinkProfileData) => {
   const cancel = () => {
     revision.current += 1;
     controller.current?.abort();
-    setState((previous) => ({ ...previous, status: 'cancelled', analysis: null }));
+    setState((previous) => ({ ...previous, status: 'cancelled', analysis: null, record: null }));
   };
   const run = async () => {
     if (!project || activeOwner.current !== owner) return;
@@ -44,13 +47,17 @@ export const useOffPageSources = (profile: BacklinkProfileData) => {
     const request = ++revision.current;
     const abort = new AbortController();
     controller.current = abort;
-    setState({ status: 'running', sources: [], analysis: null });
+    setState({ ...idle, status: 'running' });
     try {
       const analysis = await analyzeSources(profile, project.name, context.coreText,
         context.coreText ? context.focus!.coreTopic.label : '', settings, abort.signal, (sources) => {
-          if (request === revision.current) setState({ status: 'running', sources, analysis: null });
+          if (request === revision.current) setState({ ...idle, status: 'running', sources });
         }, project.rootUrl);
-      if (request === revision.current) setState({ status: 'done', sources: analysis.sources, analysis });
+      if (request === revision.current && !abort.signal.aborted && activeOwner.current === owner) {
+        const record = createOffPageHistoryRecord(analysis, settings);
+        const historySaved = saveOffPageHistory(project.id, record);
+        setState({ status: 'done', sources: analysis.sources, analysis, record, historySaved });
+      }
     } catch {
       if (request === revision.current) setState((previous) => ({ ...previous, status: 'unavailable', analysis: null }));
     }
@@ -61,5 +68,5 @@ export const useOffPageSources = (profile: BacklinkProfileData) => {
     setState(idle);
     updateSettings(next);
   };
-  return { ...state, settings, setSettings, run, cancel, enabled: !!project };
+  return { ...state, settings, setSettings, run, cancel, enabled: !!project, projectId: project?.id ?? null };
 };

@@ -5,6 +5,7 @@ import { useOffPageSources } from '@/components/Domain/backlinkChecker/useOffPag
 import { useProjectStore } from '@/stores/projectStore';
 import { useToolsStore } from '@/stores/toolsStore';
 import { analyzeSources } from '@/services/offPage/analyzeSources';
+import { loadOffPageHistory } from '@/services/offPage/history';
 import type { SourceAnalysis } from '@/services/offPage/sources';
 import { deferredSource, sourceAnalysis, sourceEvidence, sourceProfile } from './fixtures/offPageSources';
 import { mountRun } from './fixtures/prePublishMount';
@@ -37,6 +38,7 @@ it('cancels a run and ignores old progress, completion and errors after a newer 
   await act(async () => { oldProgress([sourceEvidence({ text: 'stale' })]); old.reject('old failure'); await older; });
   expect(result.current.status).toBe('done');
   expect(result.current.analysis?.sources).toEqual([]);
+  expect(loadOffPageHistory(project.id)).toHaveLength(1);
 });
 it.each(['project', 'profile', 'crawl', 'unmount', 'settings'])('discards late evidence when %s changes', async (change) => {
   const pending = deferredSource<SourceAnalysis>();
@@ -60,6 +62,7 @@ it.each(['project', 'profile', 'crawl', 'unmount', 'settings'])('discards late e
   });
   expect(signal.aborted).toBe(true);
   if (change !== 'unmount') expect(view.result.current.analysis).toBeNull();
+  expect(loadOffPageHistory(project.id)).toEqual([]);
 });
 it('reports a current failure and aborts an earlier run even without explicit cancel', async () => {
   const pending = deferredSource<SourceAnalysis>();
@@ -73,6 +76,7 @@ it('reports a current failure and aborts an earlier run even without explicit ca
   await waitFor(() => expect(result.current.status).toBe('unavailable'));
   await act(async () => { pending.resolve(sourceAnalysis()); await first; });
   expect(result.current.status).toBe('unavailable');
+  expect(loadOffPageHistory(project.id)).toEqual([]);
 });
 it('restores local Ollama settings but never a remote/hybrid provider', () => {
   localStorage.setItem('seomi_project_mount-project_embedding_clustering_v1', JSON.stringify({ provider: 'ollama', ollamaModel: 'model', result: null }));

@@ -16,6 +16,7 @@ export interface SourceAnalysis {
   topic: Vector | null;
   coreEntity: string;
   aliases: string[];
+  embedding?: { provider: string; modelId: string };
 }
 export const SOURCE_LIMIT = 25;
 export const SOURCE_TEXT_LIMIT = 20_000;

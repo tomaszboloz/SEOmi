@@ -7940,7 +7940,7 @@
   "offPageSourcesUi": {
     "analyze": "Analizza le fonti dei link",
     "cancel": "Annulla",
-    "scope": "Solo per la sessione: fino a 25 link follow, uno per dominio sorgente, prima la massima autorità del provider. Scala autorità: 0–100; TBVA è una somma, non una percentuale né Google PageRank. Limiti: 3 richieste simultanee, timeout nativo di 15 s, risposta di 25 MiB, 20.000 caratteri visibili per fonte.",
+    "scope": "fino a 25 link follow, uno per dominio sorgente, prima la massima autorità del provider. Scala autorità: 0–100; TBVA è una somma, non una percentuale né Google PageRank. Limiti: 3 richieste simultanee, timeout nativo di 15 s, risposta di 25 MiB, 20.000 caratteri visibili per fonte.",
     "provider": "Provider locale di embedding",
     "local": "Hash locale",
     "ollama": "Ollama locale",
@@ -7977,7 +7977,46 @@
       "neutral": "Co-occorrenza neutra; non una raccomandazione",
       "unclear": "Ambiguo: possibile negazione"
     },
-    "pacing": "La protezione dell’audit nativo limita inoltre gli avvii a 10 al minuto. Il campione può richiedere diversi minuti; altri audit possono ridurre la disponibilità."
+    "pacing": "La protezione dell’audit nativo limita inoltre gli avvii a 10 al minuto. Il campione può richiedere diversi minuti; altri audit possono ridurre la disponibilità.",
+    "history": {
+      "title": "Cronologia",
+      "empty": "Nessuna analisi completata salvata.",
+      "summary": "TBVA: {{value}} · Valutate/richieste: {{scored}}/{{requested}}",
+      "delta": "Variazione TBVA: {{delta}}",
+      "notComparable": "Non confrontabile: {{reason}}",
+      "reasons": {
+        "first": "nessun record precedente",
+        "scale": "scala di autorità diversa",
+        "model": "modello di embedding diverso",
+        "unknownModel": "modello di embedding sconosciuto",
+        "unavailable": "TBVA non disponibile"
+      },
+      "view": "Mostra fonti",
+      "hide": "Nascondi fonti",
+      "delete": "Elimina record",
+      "clear": "Svuota cronologia del progetto",
+      "exportCurrent": "Esporta analisi attuale CSV",
+      "exportRecord": "Esporta record CSV",
+      "storageError": "Archivio della cronologia non disponibile; le modifiche non sono state salvate.",
+      "topic": "Argomento: {{topic}}",
+      "embedding": "Embedding: {{provider}} / {{model}}",
+      "details": "Evidenze salvate per fonte",
+      "fields": {
+        "sourceUrl": "URL della fonte",
+        "fetchedAt": "Data di recupero",
+        "availability": "Disponibilità",
+        "authority": "Autorità",
+        "similarity": "Somiglianza",
+        "contribution": "Contributo"
+      },
+      "unavailable": "Non disponibile",
+      "status": {
+        "ready": "Pronto",
+        "partial": "Parziale",
+        "unavailable": "Non disponibile"
+      },
+      "privacy": "Le ultime 10 analisi completate vengono salvate localmente per progetto. Il testo completo delle pagine e i vettori non vengono mai salvati."
+    }
   },
   "experimentsUi": {
     "title": "Esperimenti SEO",

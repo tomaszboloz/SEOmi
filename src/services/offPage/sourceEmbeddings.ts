@@ -27,7 +27,7 @@ export const embedSources = async (
     signal.throwIfAborted();
     if (identity !== `${provider.id}:${provider.model}` || vectors.length !== texts.length || !usableVector(vectors[0])) return analysis;
     const topic = vectors[0];
-    return { ...analysis, topic, sources: analysis.sources.map((source) => {
+    return { ...analysis, topic, embedding: { provider: provider.id, modelId: provider.model }, sources: analysis.sources.map((source) => {
       const index = sources.indexOf(source);
       const vector = vectors[index + 1];
       return { ...source, vector: index >= 0 && usableVector(vector) && vector.length === topic.length ? vector : null };

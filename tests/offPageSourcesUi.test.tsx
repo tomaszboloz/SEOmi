@@ -7,6 +7,7 @@ import { useToolsStore } from '@/stores/toolsStore';
 import { invokeTauriCommand } from '@/services/tauri/transport';
 import { createProvider } from '@/services/embeddings/registry';
 import { prePublishContext } from '@/services/prePublish/context';
+import { loadOffPageHistory, offPageHistoryKey } from '@/services/offPage/history';
 import { mountRun } from './fixtures/prePublishMount';
 import { sourceAudit, sourceLink, sourceProfile, sourceVector } from './fixtures/offPageSources';
 
@@ -41,7 +42,8 @@ it('preserves empty reports until explicitly requested and shows real scores, pr
   expect(screen.getByText(/Co-occurrence is not endorsement\. Homonyms/)).toBeTruthy();
   expect(screen.getByText(/every hit has linked=false/)).toBeTruthy();
   expect(screen.getByText(/not zero backlinks/)).toBeTruthy();
-  expect({ ...localStorage }).toEqual(storageBefore);
+  expect({ ...localStorage }).toEqual({ ...storageBefore, [offPageHistoryKey(project.id)]: expect.any(String) });
+  expect(loadOffPageHistory(project.id)[0]).toMatchObject({ sourcesScored: 1, embeddingModelId: 'hash', tbva: { value: 0.8 } });
 });
 it('selects latest owned completed crawl, not an older or foreign core', async () => {
   const latest = mountRun();

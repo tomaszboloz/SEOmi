@@ -4,6 +4,7 @@ import { indexedDbWriteOnce } from '@/services/crawlPersistence/indexedDb';
 import { invalidateQueuedCrawlWrites, withCrawlWriteLock } from '@/services/crawlPersistence/writeLock';
 import { migrateLegacyCrawlRuns } from '@/services/crawlStore';
 import { forgetGa4Report, ga4ReportStorageKey } from '@/services/urlTelemetry/ga4Cache';
+import { offPageHistoryKey } from '@/services/offPage/history';
 
 /** Evidence returned by the native store after a physical erasure. */
 export interface ErasureReport {
@@ -36,6 +37,7 @@ export const forgetSubject = (projectId: string, subjectId: string): Promise<Era
 };
 
 const legacyKeys = (projectId: string): string[] => [
+  offPageHistoryKey(projectId),
   ga4ReportStorageKey(projectId),
   `seomi_project_${projectId}_crawl_runs`,
   `seomi_project_${projectId}_crawl_result`,
