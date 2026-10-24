@@ -1,2 +1,5 @@
 # A signature authenticates bytes, including line endings. Never autocrlf this fixture.
 src-tauri/examples/fixtures/updater-signed.txt -text
+
+# Locale files are compared byte-for-byte with canonical JSON.stringify output (LF) by the locale tests.
+src/i18n/locales/*.json text eol=lf
