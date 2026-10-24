@@ -67,6 +67,17 @@ it('reports a tampered chain and refuses to extend it', async () => {
   expect(JSON.parse(localStorage.getItem(TEAM_CONTEXT_KEY)!).role).toBe('content_writer');
 });
 
+it('shows a non-Error write failure as text and keeps the previous identity', async () => {
+  render(<TeamPanel />);
+  const original = Storage.prototype.setItem;
+  Storage.prototype.setItem = () => { throw 'quota exceeded'; };
+  try {
+    fireEvent.change(screen.getByLabelText('Role'), { target: { value: 'developer' } });
+    await waitFor(() => expect(screen.getByRole('alert').textContent).toBe('quota exceeded'));
+  } finally { Storage.prototype.setItem = original; }
+  expect(readIdentity().role).toBe('admin');
+});
+
 it('falls back to the default identity for missing, malformed or unknown stored values', () => {
   expect(readIdentity()).toEqual({ actor: 'local', role: 'admin' });
   localStorage.setItem(TEAM_CONTEXT_KEY, '{broken');

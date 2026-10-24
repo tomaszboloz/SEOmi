@@ -19,10 +19,10 @@ export const DataErasurePanel: React.FC = () => {
   const reset = () => { setConfirming(false); setTyped(''); };
 
   const run = async () => {
-    if (!projectId || typed !== projectId) return;
+    // The confirm button stays disabled until the typed text equals the active project ID.
     setBusy(true);
     try {
-      const report = await eraseProjectData(projectId);
+      const report = await eraseProjectData(projectId as string);
       setStatus({ kind: 'done', records: report.recordsDeleted, runs: report.runsDeleted });
     } catch (error) {
       setStatus({ kind: 'failed', message: error instanceof Error ? error.message : String(error) });

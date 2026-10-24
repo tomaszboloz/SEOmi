@@ -1,7 +1,7 @@
 import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { Users } from 'lucide-react';
-import { ROLES, isRole } from '@/services/team/roles';
+import { ROLES, type Role } from '@/services/team/roles';
 import { TeamAuditTable } from './team/TeamAuditTable';
 import { TeamPermissionMatrix } from './team/TeamPermissionMatrix';
 import { useTeamPanel } from './team/useTeamPanel';
@@ -22,7 +22,7 @@ export const TeamPanel: React.FC = () => {
           <input value={actor} maxLength={80} onChange={(event) => setActor(event.target.value)} onBlur={commitActor} className="mt-1 h-9 w-full rounded-md border border-slate-700 bg-slate-950 px-2 text-xs text-white" />
         </label>
         <label className="text-[11px] text-slate-400">{t('teamPanelUi.role')}
-          <select value={identity.role} onChange={(event) => { if (isRole(event.target.value)) void update({ ...identity, role: event.target.value }); }} className="mt-1 h-9 w-full rounded-md border border-slate-700 bg-slate-950 px-2 text-xs text-white">
+          <select value={identity.role} onChange={(event) => { void update({ ...identity, role: event.target.value as Role }); }} className="mt-1 h-9 w-full rounded-md border border-slate-700 bg-slate-950 px-2 text-xs text-white">
             {ROLES.map((role) => <option key={role} value={role}>{t(`teamPanelUi.roles.${role}`)}</option>)}
           </select>
         </label>

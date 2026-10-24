@@ -51,3 +51,20 @@ it('keeps an existing manual topic read-only and the reset disabled for a restri
   fireEvent.click(screen.getByRole('button', { name: 'Reset to detected topic' }));
   expect(change).not.toHaveBeenCalled();
 });
+
+it('re-checks the role at click time: a role switched after rendering cannot open or reset the override', async () => {
+  as('seo_strategist');
+  const change = vi.fn();
+  panel('', change);
+  as('content_writer');
+  fireEvent.click(screen.getByRole('button', { name: 'Is this the wrong topic?' }));
+  expect(screen.queryByLabelText('Your topic (words or phrase)')).toBeNull();
+  cleanup();
+  as('seo_strategist');
+  render(<CoreTopicPanel coreTopic={coreTopic} coveragePct={50} confidence={70} manualTopic="insulin" onManualTopicChange={change} />);
+  as('developer');
+  fireEvent.click(screen.getByRole('button', { name: 'Reset to detected topic' }));
+  expect(change).not.toHaveBeenCalled();
+  await flushAuditWrites();
+  expect(readAuditLog(localStorage).map((entry) => entry.result)).toEqual(['denied', 'denied']);
+});

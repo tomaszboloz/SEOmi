@@ -62,10 +62,12 @@ it('is disabled without a project or outside the desktop app', () => {
   expect(screen.getByText('Available in the desktop app only.')).toBeTruthy();
 });
 
-it('ignores a run attempt with a mismatching ID', () => {
+it('keeps the confirm button disabled until the typed ID matches', () => {
   render(<DataErasurePanel />);
   fireEvent.click(screen.getByRole('button', { name: 'Erase project data' }));
-  fireEvent.click(screen.getByRole('button', { name: 'Erase permanently' }));
+  const run = screen.getByRole('button', { name: 'Erase permanently' }) as HTMLButtonElement;
+  fireEvent.click(run);
+  expect(run.disabled).toBe(true);
   expect(erase).not.toHaveBeenCalled();
 });
 
