@@ -1,4 +1,54 @@
 {
+  "teamPanelUi": {
+    "title": "Mode équipe et journal d'audit",
+    "description": "Choisissez qui agit et avec quel rôle. Chaque changement est ajouté à un journal d'audit local, chaîné par hachage et inviolable.",
+    "actor": "Acteur",
+    "role": "Rôle",
+    "roles": {
+      "admin": "Administrateur",
+      "seo_strategist": "Stratège SEO",
+      "content_writer": "Rédacteur de contenu",
+      "developer": "Développeur"
+    },
+    "permissions": {
+      "run_crawl": "Lancer une analyse",
+      "execute_cms_patch": "Appliquer un correctif CMS",
+      "modify_site_focus_rules": "Modifier les règles Site Focus",
+      "export_audit_pdf": "Exporter l'audit PDF",
+      "manage_team_roles": "Gérer les rôles de l'équipe"
+    },
+    "permissionsTitle": "Autorisation",
+    "auditTitle": "Journal d'audit",
+    "auditEmpty": "Aucune entrée d'audit.",
+    "chainOk": "Chaîne d'audit vérifiée.",
+    "chainBroken": "Chaîne d'audit rompue à l'entrée {{entry}} ({{reason}}).",
+    "exportCsv": "Exporter en CSV",
+    "columns": {
+      "time": "Heure",
+      "actor": "Acteur",
+      "action": "Action",
+      "result": "Résultat"
+    },
+    "results": {
+      "success": "Succès",
+      "denied": "Refusé",
+      "failure": "Échec",
+      "dry_run": "Simulation"
+    },
+    "allowed": "Autorisé",
+    "notAllowed": "Non autorisé"
+  },
+  "dataErasureUi": {
+    "title": "Effacer les données du projet (RGPD)",
+    "description": "Supprime définitivement du stockage local les analyses, embeddings et l'historique de ce projet en détruisant leurs clés de chiffrement. Action irréversible.",
+    "confirm": "Saisissez l'ID du projet pour confirmer : {{id}}",
+    "button": "Effacer les données du projet",
+    "run": "Effacer définitivement",
+    "cancel": "Annuler",
+    "done": "Effacé : {{records}} enregistrements et {{runs}} analyses.",
+    "failed": "Échec de l'effacement : {{message}}",
+    "desktopOnly": "Disponible uniquement dans l'application de bureau."
+  },
   "schemaFindings": {
     "messageMissing": "La règle de données structurées {{code}} signale une propriété ou un élément de structure manquant pour {{type}}.",
     "messageInvalid": "La règle de données structurées {{code}} signale une valeur ou une forme invalide pour {{type}}.",
@@ -2454,6 +2504,7 @@
     "profileNamePlaceholder": "e.g. Editorial account",
     "sessionCookies": "Session cookies",
     "proxyOptional": "(optional; credentials in the URL remain in the system vault)",
+    "proxyListHint": "Plusieurs proxys : séparez-les par des virgules ou des espaces (jusqu'à 64). Les requêtes alternent entre eux.",
     "customHeaders": "Custom headers",
     "oneHeaderPerLine": "(one per line: Name: value)",
     "saving": "Saving…",
@@ -7501,7 +7552,20 @@
     "underLinked": "Peu de liens",
     "leak": "Fuite",
     "unknown": "{{count}} liens ont une similarité inconnue et ne comptent pas comme fuite.",
-    "notConverged": "Le solveur n'a pas convergé ; les scores sont approximatifs."
+    "notConverged": "Le solveur n'a pas convergé ; les scores sont approximatifs.",
+    "whatIf": {
+      "title": "Simulateur de liens What-If",
+      "source": "Depuis la page",
+      "target": "Vers la page",
+      "action": "Modification",
+      "add": "Ajouter un lien",
+      "remove": "Retirer un lien",
+      "run": "Simuler",
+      "noChange": "Aucun changement de score.",
+      "before": "Avant",
+      "after": "Après",
+      "delta": "Variation"
+    }
   },
   "decayUi": {
     "title": "Radar de déclin sémantique",

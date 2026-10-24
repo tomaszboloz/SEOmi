@@ -1,4 +1,54 @@
 {
+  "teamPanelUi": {
+    "title": "وضع الفريق وسجل التدقيق",
+    "description": "اختر من يعمل وبأي دور. تُضاف كل تغييرات إلى سجل تدقيق محلي محمي بسلسلة تجزئة يكشف أي تلاعب.",
+    "actor": "المستخدم",
+    "role": "الدور",
+    "roles": {
+      "admin": "مسؤول",
+      "seo_strategist": "خبير استراتيجية SEO",
+      "content_writer": "كاتب محتوى",
+      "developer": "مطوّر"
+    },
+    "permissions": {
+      "run_crawl": "تشغيل الزحف",
+      "execute_cms_patch": "تنفيذ تصحيح CMS",
+      "modify_site_focus_rules": "تعديل قواعد Site Focus",
+      "export_audit_pdf": "تصدير تدقيق PDF",
+      "manage_team_roles": "إدارة أدوار الفريق"
+    },
+    "permissionsTitle": "الصلاحية",
+    "auditTitle": "سجل التدقيق",
+    "auditEmpty": "لا توجد إدخالات تدقيق بعد.",
+    "chainOk": "تم التحقق من سلسلة التدقيق.",
+    "chainBroken": "انكسرت سلسلة التدقيق عند الإدخال {{entry}} ({{reason}}).",
+    "exportCsv": "تصدير CSV",
+    "columns": {
+      "time": "الوقت",
+      "actor": "المستخدم",
+      "action": "الإجراء",
+      "result": "النتيجة"
+    },
+    "results": {
+      "success": "نجاح",
+      "denied": "مرفوض",
+      "failure": "فشل",
+      "dry_run": "تشغيل تجريبي"
+    },
+    "allowed": "مسموح",
+    "notAllowed": "غير مسموح"
+  },
+  "dataErasureUi": {
+    "title": "مسح بيانات المشروع (GDPR)",
+    "description": "يحذف نهائيًا عمليات الزحف والتضمينات والسجل الخاصة بهذا المشروع من التخزين المحلي عبر إتلاف مفاتيح التشفير الخاصة بها. لا يمكن التراجع عن ذلك.",
+    "confirm": "اكتب معرّف المشروع للتأكيد: {{id}}",
+    "button": "مسح بيانات المشروع",
+    "run": "مسح نهائي",
+    "cancel": "إلغاء",
+    "done": "تم المسح: {{records}} سجلًا و{{runs}} من عمليات الزحف.",
+    "failed": "فشل المسح: {{message}}",
+    "desktopOnly": "متاح في تطبيق سطح المكتب فقط."
+  },
   "schemaFindings": {
     "messageMissing": "اكتشفت قاعدة البيانات المنظمة {{code}} خاصية أو عنصراً بنيوياً مفقوداً في {{type}}.",
     "messageInvalid": "اكتشفت قاعدة البيانات المنظمة {{code}} قيمة أو بنية غير صالحة في {{type}}.",
@@ -2454,6 +2504,7 @@
     "profileNamePlaceholder": "e.g. Editorial account",
     "sessionCookies": "Session cookies",
     "proxyOptional": "(optional; credentials in the URL remain in the system vault)",
+    "proxyListHint": "عدة وكلاء: افصل بينها بفواصل أو مسافات (حتى 64). تتناوب الطلبات بينها.",
     "customHeaders": "Custom headers",
     "oneHeaderPerLine": "(one per line: Name: value)",
     "saving": "Saving…",
@@ -7501,7 +7552,20 @@
     "underLinked": "روابط قليلة",
     "leak": "تسرب",
     "unknown": "{{count}} رابطاً بتشابه غير معروف ولا تُحسب كتسرب.",
-    "notConverged": "لم يتقارب الحل؛ الدرجات تقريبية."
+    "notConverged": "لم يتقارب الحل؛ الدرجات تقريبية.",
+    "whatIf": {
+      "title": "محاكي الروابط What-If",
+      "source": "من الصفحة",
+      "target": "إلى الصفحة",
+      "action": "التغيير",
+      "add": "إضافة رابط",
+      "remove": "إزالة رابط",
+      "run": "محاكاة",
+      "noChange": "لا تغيّر في الدرجات.",
+      "before": "قبل",
+      "after": "بعد",
+      "delta": "التغيّر"
+    }
   },
   "decayUi": {
     "title": "رادار التقادم الدلالي",

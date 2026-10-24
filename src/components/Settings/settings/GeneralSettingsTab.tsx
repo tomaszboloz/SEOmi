@@ -7,6 +7,8 @@ import { isTauriEnvironment } from '@/services/tauri';
 import { HelpTip } from '@/components/Help/HelpTip';
 import { RenderWorkerPanel } from '@/components/Settings/RenderWorkerPanel';
 import { MonitoringAlertsPanel } from '@/components/Settings/MonitoringAlertsPanel';
+import { TeamPanel } from '@/components/Settings/TeamPanel';
+import { DataErasurePanel } from '@/components/Settings/DataErasurePanel';
 
 interface GeneralSettingsTabProps {
   auditNotificationsEnabled: boolean;
@@ -65,6 +67,8 @@ export const GeneralSettingsTab: React.FC<GeneralSettingsTabProps> = ({
       <MonitoringAlertsPanel />
 
       <RenderWorkerPanel />
+      <TeamPanel />
+      <DataErasurePanel />
 
       <div>
         <label className="font-semibold text-slate-300 block mb-1">{t('settings.timeout')}</label>

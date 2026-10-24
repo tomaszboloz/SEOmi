@@ -1,4 +1,54 @@
 {
+  "teamPanelUi": {
+    "title": "Командный режим и журнал аудита",
+    "description": "Выберите, кто действует и в какой роли. Каждое изменение добавляется в локальный журнал аудита с цепочкой хешей, защищённый от подделки.",
+    "actor": "Пользователь",
+    "role": "Роль",
+    "roles": {
+      "admin": "Администратор",
+      "seo_strategist": "SEO-стратег",
+      "content_writer": "Автор контента",
+      "developer": "Разработчик"
+    },
+    "permissions": {
+      "run_crawl": "Запуск обхода",
+      "execute_cms_patch": "Применение патча CMS",
+      "modify_site_focus_rules": "Изменение правил Site Focus",
+      "export_audit_pdf": "Экспорт аудита в PDF",
+      "manage_team_roles": "Управление ролями команды"
+    },
+    "permissionsTitle": "Разрешение",
+    "auditTitle": "Журнал аудита",
+    "auditEmpty": "Записей аудита пока нет.",
+    "chainOk": "Цепочка аудита проверена.",
+    "chainBroken": "Цепочка аудита нарушена в записи {{entry}} ({{reason}}).",
+    "exportCsv": "Экспорт в CSV",
+    "columns": {
+      "time": "Время",
+      "actor": "Пользователь",
+      "action": "Действие",
+      "result": "Результат"
+    },
+    "results": {
+      "success": "Успех",
+      "denied": "Отказано",
+      "failure": "Ошибка",
+      "dry_run": "Пробный запуск"
+    },
+    "allowed": "Разрешено",
+    "notAllowed": "Не разрешено"
+  },
+  "dataErasureUi": {
+    "title": "Удалить данные проекта (GDPR)",
+    "description": "Безвозвратно удаляет из локального хранилища запуски обхода, эмбеддинги и историю этого проекта, уничтожая их ключи шифрования. Действие необратимо.",
+    "confirm": "Введите ID проекта для подтверждения: {{id}}",
+    "button": "Удалить данные проекта",
+    "run": "Удалить безвозвратно",
+    "cancel": "Отмена",
+    "done": "Удалено: записей — {{records}}, запусков обхода — {{runs}}.",
+    "failed": "Не удалось удалить: {{message}}",
+    "desktopOnly": "Доступно только в настольном приложении."
+  },
   "schemaFindings": {
     "messageMissing": "Правило структурированных данных {{code}} обнаружило отсутствующее свойство или элемент структуры для {{type}}.",
     "messageInvalid": "Правило структурированных данных {{code}} обнаружило недопустимое значение или форму для {{type}}.",
@@ -2454,6 +2504,7 @@
     "profileNamePlaceholder": "e.g. Editorial account",
     "sessionCookies": "Session cookies",
     "proxyOptional": "(optional; credentials in the URL remain in the system vault)",
+    "proxyListHint": "Несколько прокси: через запятую или пробел (до 64). Запросы чередуются между ними.",
     "customHeaders": "Custom headers",
     "oneHeaderPerLine": "(one per line: Name: value)",
     "saving": "Saving…",
@@ -7501,7 +7552,20 @@
     "underLinked": "Мало ссылок",
     "leak": "Утечка",
     "unknown": "У {{count}} ссылок неизвестное сходство, они не считаются утечкой.",
-    "notConverged": "Решатель не сошёлся; оценки приблизительные."
+    "notConverged": "Решатель не сошёлся; оценки приблизительные.",
+    "whatIf": {
+      "title": "Симулятор ссылок What-If",
+      "source": "С какой страницы",
+      "target": "На какую страницу",
+      "action": "Изменение",
+      "add": "Добавить ссылку",
+      "remove": "Удалить ссылку",
+      "run": "Смоделировать",
+      "noChange": "Оценки не изменились.",
+      "before": "До",
+      "after": "После",
+      "delta": "Изменение"
+    }
   },
   "decayUi": {
     "title": "Радар семантического устаревания",

@@ -1,3 +1,72 @@
+# SEOmi 0.4.22 — release notes
+
+## Added
+
+- Signals workspace works on a frozen graph snapshot (issue #138). A crawl that finishes while the user explores shows "Newer crawl data is available" with a Refresh button instead of changing the numbers under them.
+- Semantic PageRank What-If link simulator: pick a source page, target page and add/remove link, and see the ranked score changes on the frozen graph. Invalid choices (same page, duplicate link, removing a missing link) are blocked; the input graph is never mutated. Translated in 12 languages; tests cover simulation, validation, the no-change state, snapshot freezing/refresh and locale parity.
+
+# SEOmi 0.4.21 — release notes
+
+## Added
+
+- Site Focus core-topic override (the rule a user can change) now needs `modify_site_focus_rules`. Roles without it see the override button and reset disabled, a read-only manual topic and a short explanation; allowed uses are logged in the audit trail. `manage_team_roles` is deliberately not enforced on the local team panel: with no separate login, blocking role changes could lock the only user out.
+
+# SEOmi 0.4.20 — release notes
+
+## Added
+
+- Role enforcement on real actions (issue #141): starting a crawl needs `run_crawl`, and the page-audit and crawl PDF exports need `export_audit_pdf`. A denied action shows "Your role cannot perform this action." and is logged as `denied`; allowed actions are logged as `success`. The default local admin can do everything, so nothing changes until a role is switched in Settings → Team. The decision comes from the role table and never depends on audit-log health.
+
+## Changed
+
+- Audit-log writes are serialized (`recordAudit` queue, `flushAuditWrites`) so concurrent actions cannot fork the hash chain. The acting identity moved to `services/team/identity`.
+
+# SEOmi 0.4.18 — release notes
+
+## Added
+
+- Settings → General: team mode panel (issue #141). Pick the acting name and role (Admin, SEO Strategist, Content Writer, Developer), see the role/permission matrix generated from the single role table, and review the hash-chained audit log with a live chain verdict and CSV export. Every identity change is appended to the log; a tampered chain is reported and further writes are refused. Translated in all 12 languages. Tests cover the matrix, logging, persistence, tamper detection, export, fallbacks and locale parity.
+
+## Changed
+
+- The default-user-agent selector is addressed by its label in the settings test, because the tab now has more than one select.
+
+# SEOmi 0.4.17 — release notes
+
+## Added
+
+- Settings → General: "Erase project data (GDPR)" panel (issue #136). It calls the existing crypto-shredding erasure for the active project after the project ID is typed to confirm, reports deleted records and crawl runs, shows failures, and is disabled without a project or outside the desktop app. Translated in all 12 languages; tests cover confirmation, success, failure, cancel, disabled states and locale parity.
+
+# SEOmi 0.4.16 — release notes
+
+## Added
+
+- Settings validation tests for proxy lists (all separators, one bad entry, duplicates, empty values, the 64-entry limit, oversized entry) and a README section describing proxy rotation, ban and the no-direct-fallback guarantee (issue #142).
+
+# SEOmi 0.4.15 — release notes
+
+## Added
+
+- Proxy list health: a proxy that fails 3 times in a row (connect error, timeout or HTTP 407) is banned for 60 s and requests rotate to the remaining ones; a success clears the streak. If every proxy is banned the crawler keeps using the one whose ban ends first and never falls back to a direct connection. Outcomes are attributed per request URL (issue #142). Tests use real local proxies (dead and live).
+
+# SEOmi 0.4.14 — release notes
+
+## Added
+
+- Request-profile form explains the proxy list format (comma or space separated, up to 64) in all 12 languages; the proxy field accepts long lists. Tests cover the hint, the list input and locale parity.
+
+# SEOmi 0.4.13 — release notes
+
+## Added
+
+- Request-profile proxy field now accepts a list (comma, semicolon or whitespace separated). The crawler rotates requests round-robin across the list; a single proxy behaves as before. Every entry is validated on save (HTTP/HTTPS only, max 64, no duplicates). Ban and cool-down on failures follows once request errors report their proxy (issue #142).
+
+# SEOmi 0.4.12 — release notes
+
+## Added
+
+- Crawler proxy pool foundation (issue #142): validated user-supplied proxy list (HTTP/HTTPS only, max 64, no duplicates), round-robin rotation, ban after consecutive failures with cool-down re-entry, and credential redaction for reports. Unit-tested with injected time; wiring into request profiles and UI follows. No bot-protection bypass.
+
 # SEOmi 0.4.11 — release notes
 
 ## Added

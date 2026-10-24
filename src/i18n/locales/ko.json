@@ -1,4 +1,54 @@
 {
+  "teamPanelUi": {
+    "title": "팀 모드 및 감사 로그",
+    "description": "누가 어떤 역할로 작업하는지 선택합니다. 모든 변경은 변조를 감지하는 해시 체인 방식의 로컬 감사 로그에 추가됩니다.",
+    "actor": "작업자",
+    "role": "역할",
+    "roles": {
+      "admin": "관리자",
+      "seo_strategist": "SEO 전략가",
+      "content_writer": "콘텐츠 작성자",
+      "developer": "개발자"
+    },
+    "permissions": {
+      "run_crawl": "크롤 실행",
+      "execute_cms_patch": "CMS 패치 실행",
+      "modify_site_focus_rules": "Site Focus 규칙 수정",
+      "export_audit_pdf": "감사 PDF 내보내기",
+      "manage_team_roles": "팀 역할 관리"
+    },
+    "permissionsTitle": "권한",
+    "auditTitle": "감사 로그",
+    "auditEmpty": "감사 항목이 아직 없습니다.",
+    "chainOk": "감사 체인이 확인되었습니다.",
+    "chainBroken": "감사 체인이 항목 {{entry}}에서 끊어졌습니다({{reason}}).",
+    "exportCsv": "CSV 내보내기",
+    "columns": {
+      "time": "시간",
+      "actor": "작업자",
+      "action": "작업",
+      "result": "결과"
+    },
+    "results": {
+      "success": "성공",
+      "denied": "거부됨",
+      "failure": "실패",
+      "dry_run": "드라이 런"
+    },
+    "allowed": "허용",
+    "notAllowed": "허용 안 됨"
+  },
+  "dataErasureUi": {
+    "title": "프로젝트 데이터 삭제(GDPR)",
+    "description": "암호화 키를 폐기하여 이 프로젝트의 크롤 실행, 임베딩, 기록을 로컬 저장소에서 영구 삭제합니다. 되돌릴 수 없습니다.",
+    "confirm": "확인을 위해 프로젝트 ID를 입력하세요: {{id}}",
+    "button": "프로젝트 데이터 삭제",
+    "run": "영구 삭제",
+    "cancel": "취소",
+    "done": "삭제됨: 레코드 {{records}}개, 크롤 실행 {{runs}}개.",
+    "failed": "삭제 실패: {{message}}",
+    "desktopOnly": "데스크톱 앱에서만 사용할 수 있습니다."
+  },
   "schemaFindings": {
     "messageMissing": "구조화 데이터 규칙 {{code}}에서 {{type}}의 속성 또는 구조 요소가 누락되었습니다.",
     "messageInvalid": "구조화 데이터 규칙 {{code}}에서 {{type}}의 값 또는 형식이 잘못되었습니다.",
@@ -2454,6 +2504,7 @@
     "profileNamePlaceholder": "e.g. Editorial account",
     "sessionCookies": "Session cookies",
     "proxyOptional": "(optional; credentials in the URL remain in the system vault)",
+    "proxyListHint": "여러 프록시: 쉼표 또는 공백으로 구분합니다(최대 64개). 요청이 순환됩니다.",
     "customHeaders": "Custom headers",
     "oneHeaderPerLine": "(one per line: Name: value)",
     "saving": "Saving…",
@@ -7501,7 +7552,20 @@
     "underLinked": "링크 부족",
     "leak": "누수",
     "unknown": "{{count}}개 링크는 유사도를 알 수 없어 누수로 세지 않습니다.",
-    "notConverged": "솔버가 수렴하지 않았습니다. 점수는 근삿값입니다."
+    "notConverged": "솔버가 수렴하지 않았습니다. 점수는 근삿값입니다.",
+    "whatIf": {
+      "title": "링크 What-If 시뮬레이터",
+      "source": "출발 페이지",
+      "target": "도착 페이지",
+      "action": "변경",
+      "add": "링크 추가",
+      "remove": "링크 제거",
+      "run": "시뮬레이션",
+      "noChange": "점수 변화가 없습니다.",
+      "before": "이전",
+      "after": "이후",
+      "delta": "변화"
+    }
   },
   "decayUi": {
     "title": "시맨틱 디케이 레이더",

@@ -1,4 +1,54 @@
 {
+  "teamPanelUi": {
+    "title": "Modo de equipo y registro de auditoría",
+    "description": "Elige quién actúa y con qué rol. Cada cambio se añade a un registro de auditoría local con cadena de hashes a prueba de manipulaciones.",
+    "actor": "Actor",
+    "role": "Rol",
+    "roles": {
+      "admin": "Administrador",
+      "seo_strategist": "Estratega SEO",
+      "content_writer": "Redactor de contenido",
+      "developer": "Desarrollador"
+    },
+    "permissions": {
+      "run_crawl": "Ejecutar rastreo",
+      "execute_cms_patch": "Aplicar parche CMS",
+      "modify_site_focus_rules": "Modificar reglas de Site Focus",
+      "export_audit_pdf": "Exportar auditoría PDF",
+      "manage_team_roles": "Gestionar roles del equipo"
+    },
+    "permissionsTitle": "Permiso",
+    "auditTitle": "Registro de auditoría",
+    "auditEmpty": "Aún no hay entradas de auditoría.",
+    "chainOk": "Cadena de auditoría verificada.",
+    "chainBroken": "Cadena de auditoría rota en la entrada {{entry}} ({{reason}}).",
+    "exportCsv": "Exportar CSV",
+    "columns": {
+      "time": "Hora",
+      "actor": "Actor",
+      "action": "Acción",
+      "result": "Resultado"
+    },
+    "results": {
+      "success": "Correcto",
+      "denied": "Denegado",
+      "failure": "Error",
+      "dry_run": "Simulación"
+    },
+    "allowed": "Permitido",
+    "notAllowed": "No permitido"
+  },
+  "dataErasureUi": {
+    "title": "Borrar datos del proyecto (RGPD)",
+    "description": "Elimina de forma permanente las ejecuciones de rastreo, los embeddings y el historial de este proyecto del almacén local destruyendo sus claves de cifrado. No se puede deshacer.",
+    "confirm": "Escribe el ID del proyecto para confirmar: {{id}}",
+    "button": "Borrar datos del proyecto",
+    "run": "Borrar definitivamente",
+    "cancel": "Cancelar",
+    "done": "Borrado: {{records}} registros y {{runs}} ejecuciones de rastreo.",
+    "failed": "Error al borrar: {{message}}",
+    "desktopOnly": "Disponible solo en la aplicación de escritorio."
+  },
   "schemaFindings": {
     "messageMissing": "La regla de datos estructurados {{code}} detectó una propiedad o elemento estructural ausente para {{type}}.",
     "messageInvalid": "La regla de datos estructurados {{code}} detectó un valor o una forma no válida para {{type}}.",
@@ -2454,6 +2504,7 @@
     "profileNamePlaceholder": "e.g. Editorial account",
     "sessionCookies": "Session cookies",
     "proxyOptional": "(optional; credentials in the URL remain in the system vault)",
+    "proxyListHint": "Varios proxies: sepáralos con comas o espacios (hasta 64). Las solicitudes rotan entre ellos.",
     "customHeaders": "Custom headers",
     "oneHeaderPerLine": "(one per line: Name: value)",
     "saving": "Saving…",
@@ -7501,7 +7552,20 @@
     "underLinked": "Pocos enlaces",
     "leak": "Fuga",
     "unknown": "{{count}} enlaces tienen similitud desconocida y no cuentan como fuga.",
-    "notConverged": "El solver no convergió; las puntuaciones son aproximadas."
+    "notConverged": "El solver no convergió; las puntuaciones son aproximadas.",
+    "whatIf": {
+      "title": "Simulador de enlaces What-If",
+      "source": "Desde la página",
+      "target": "Hacia la página",
+      "action": "Cambio",
+      "add": "Añadir enlace",
+      "remove": "Quitar enlace",
+      "run": "Simular",
+      "noChange": "Sin cambios en las puntuaciones.",
+      "before": "Antes",
+      "after": "Después",
+      "delta": "Cambio"
+    }
   },
   "decayUi": {
     "title": "Radar de decaimiento semántico",

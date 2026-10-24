@@ -1,4 +1,54 @@
 {
+  "teamPanelUi": {
+    "title": "Modo de equipa e registo de auditoria",
+    "description": "Escolha quem atua e com que função. Cada alteração é acrescentada a um registo de auditoria local, com cadeia de hashes à prova de adulteração.",
+    "actor": "Utilizador",
+    "role": "Função",
+    "roles": {
+      "admin": "Administrador",
+      "seo_strategist": "Estratega SEO",
+      "content_writer": "Redator de conteúdo",
+      "developer": "Programador"
+    },
+    "permissions": {
+      "run_crawl": "Executar rastreio",
+      "execute_cms_patch": "Executar patch CMS",
+      "modify_site_focus_rules": "Alterar regras do Site Focus",
+      "export_audit_pdf": "Exportar auditoria PDF",
+      "manage_team_roles": "Gerir funções da equipa"
+    },
+    "permissionsTitle": "Permissão",
+    "auditTitle": "Registo de auditoria",
+    "auditEmpty": "Ainda não há entradas de auditoria.",
+    "chainOk": "Cadeia de auditoria verificada.",
+    "chainBroken": "Cadeia de auditoria quebrada na entrada {{entry}} ({{reason}}).",
+    "exportCsv": "Exportar CSV",
+    "columns": {
+      "time": "Hora",
+      "actor": "Utilizador",
+      "action": "Ação",
+      "result": "Resultado"
+    },
+    "results": {
+      "success": "Sucesso",
+      "denied": "Negado",
+      "failure": "Falha",
+      "dry_run": "Simulação"
+    },
+    "allowed": "Permitido",
+    "notAllowed": "Não permitido"
+  },
+  "dataErasureUi": {
+    "title": "Apagar dados do projeto (RGPD)",
+    "description": "Elimina permanentemente as execuções de rastreio, os embeddings e o histórico deste projeto do armazenamento local, destruindo as respetivas chaves de cifra. Não pode ser desfeito.",
+    "confirm": "Introduza o ID do projeto para confirmar: {{id}}",
+    "button": "Apagar dados do projeto",
+    "run": "Apagar definitivamente",
+    "cancel": "Cancelar",
+    "done": "Apagado: {{records}} registos e {{runs}} execuções de rastreio.",
+    "failed": "Falha ao apagar: {{message}}",
+    "desktopOnly": "Disponível apenas na aplicação de ambiente de trabalho."
+  },
   "schemaFindings": {
     "messageMissing": "A regra de dados estruturados {{code}} encontrou uma propriedade ou elemento estrutural ausente para {{type}}.",
     "messageInvalid": "A regra de dados estruturados {{code}} encontrou um valor ou formato inválido para {{type}}.",
@@ -2454,6 +2504,7 @@
     "profileNamePlaceholder": "e.g. Editorial account",
     "sessionCookies": "Session cookies",
     "proxyOptional": "(optional; credentials in the URL remain in the system vault)",
+    "proxyListHint": "Vários proxies: separe com vírgulas ou espaços (até 64). As solicitações alternam entre eles.",
     "customHeaders": "Custom headers",
     "oneHeaderPerLine": "(one per line: Name: value)",
     "saving": "Saving…",
@@ -7501,7 +7552,20 @@
     "underLinked": "Poucos links",
     "leak": "Vazamento",
     "unknown": "{{count}} links têm similaridade desconhecida e não contam como vazamento.",
-    "notConverged": "O solver não convergiu; as pontuações são aproximadas."
+    "notConverged": "O solver não convergiu; as pontuações são aproximadas.",
+    "whatIf": {
+      "title": "Simulador de links What-If",
+      "source": "Da página",
+      "target": "Para a página",
+      "action": "Alteração",
+      "add": "Adicionar link",
+      "remove": "Remover link",
+      "run": "Simular",
+      "noChange": "Sem alterações nas pontuações.",
+      "before": "Antes",
+      "after": "Depois",
+      "delta": "Variação"
+    }
   },
   "decayUi": {
     "title": "Radar de decaimento semântico",

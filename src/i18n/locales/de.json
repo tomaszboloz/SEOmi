@@ -1,4 +1,54 @@
 {
+  "teamPanelUi": {
+    "title": "Teammodus und Audit-Protokoll",
+    "description": "Legen Sie fest, wer in welcher Rolle handelt. Jede Änderung wird in ein lokales, manipulationssicheres Audit-Protokoll mit Hash-Kette geschrieben.",
+    "actor": "Akteur",
+    "role": "Rolle",
+    "roles": {
+      "admin": "Admin",
+      "seo_strategist": "SEO-Stratege",
+      "content_writer": "Content-Autor",
+      "developer": "Entwickler"
+    },
+    "permissions": {
+      "run_crawl": "Crawl starten",
+      "execute_cms_patch": "CMS-Patch ausführen",
+      "modify_site_focus_rules": "Site-Focus-Regeln ändern",
+      "export_audit_pdf": "Audit-PDF exportieren",
+      "manage_team_roles": "Teamrollen verwalten"
+    },
+    "permissionsTitle": "Berechtigung",
+    "auditTitle": "Audit-Protokoll",
+    "auditEmpty": "Noch keine Audit-Einträge.",
+    "chainOk": "Audit-Kette verifiziert.",
+    "chainBroken": "Audit-Kette bei Eintrag {{entry}} unterbrochen ({{reason}}).",
+    "exportCsv": "CSV exportieren",
+    "columns": {
+      "time": "Zeit",
+      "actor": "Akteur",
+      "action": "Aktion",
+      "result": "Ergebnis"
+    },
+    "results": {
+      "success": "Erfolg",
+      "denied": "Abgelehnt",
+      "failure": "Fehler",
+      "dry_run": "Probelauf"
+    },
+    "allowed": "Erlaubt",
+    "notAllowed": "Nicht erlaubt"
+  },
+  "dataErasureUi": {
+    "title": "Projektdaten löschen (DSGVO)",
+    "description": "Löscht Crawl-Läufe, Embeddings und Verlauf dieses Projekts dauerhaft aus dem lokalen Speicher, indem die Verschlüsselungsschlüssel vernichtet werden. Dies kann nicht rückgängig gemacht werden.",
+    "confirm": "Projekt-ID zur Bestätigung eingeben: {{id}}",
+    "button": "Projektdaten löschen",
+    "run": "Endgültig löschen",
+    "cancel": "Abbrechen",
+    "done": "Gelöscht: {{records}} Datensätze und {{runs}} Crawl-Läufe.",
+    "failed": "Löschen fehlgeschlagen: {{message}}",
+    "desktopOnly": "Nur in der Desktop-App verfügbar."
+  },
   "schemaFindings": {
     "messageMissing": "Die strukturierte-Daten-Regel {{code}} meldet eine fehlende Eigenschaft oder Struktur für {{type}}.",
     "messageInvalid": "Die strukturierte-Daten-Regel {{code}} meldet einen ungültigen Wert oder eine ungültige Form für {{type}}.",
@@ -2454,6 +2504,7 @@
     "profileNamePlaceholder": "e.g. Editorial account",
     "sessionCookies": "Session cookies",
     "proxyOptional": "(optional; credentials in the URL remain in the system vault)",
+    "proxyListHint": "Mehrere Proxys: mit Kommas oder Leerzeichen trennen (bis zu 64). Anfragen rotieren zwischen ihnen.",
     "customHeaders": "Custom headers",
     "oneHeaderPerLine": "(one per line: Name: value)",
     "saving": "Saving…",
@@ -7501,7 +7552,20 @@
     "underLinked": "Zu wenig verlinkt",
     "leak": "Leck",
     "unknown": "{{count}} Links haben unbekannte Ähnlichkeit und zählen nicht als Leck.",
-    "notConverged": "Der Solver ist nicht konvergiert; die Werte sind ungefähr."
+    "notConverged": "Der Solver ist nicht konvergiert; die Werte sind ungefähr.",
+    "whatIf": {
+      "title": "What-If-Linksimulator",
+      "source": "Von Seite",
+      "target": "Zu Seite",
+      "action": "Änderung",
+      "add": "Link hinzufügen",
+      "remove": "Link entfernen",
+      "run": "Simulieren",
+      "noChange": "Keine Änderung der Werte.",
+      "before": "Vorher",
+      "after": "Nachher",
+      "delta": "Änderung"
+    }
   },
   "decayUi": {
     "title": "Semantic-Decay-Radar",

@@ -1,3 +1,4 @@
+import { requireAllowed } from '@/services/team/enforce';
 import type { PageAuditData } from '@/types';
 import { escapeCsv, csv, exportHeaders, exportText } from './csv';
 import { downloadText, downloadPdf } from './download';
@@ -21,7 +22,10 @@ export const auditCsv = (audit: PageAuditData): string => {
 export const downloadAuditJson = (audit: PageAuditData): void => downloadText(reportFilename(audit, 'json'), JSON.stringify(audit, null, 2), 'application/json');
 export const downloadAuditCsv = (audit: PageAuditData): void => downloadText(reportFilename(audit, 'csv'), auditCsv(audit), 'text/csv');
 
-export const downloadAuditPdf = (audit: PageAuditData): Promise<void> => downloadPdf('generate_audit_pdf', { audit }, reportFilename(audit, 'pdf'));
+export const downloadAuditPdf = async (audit: PageAuditData): Promise<void> => {
+  requireAllowed('export_audit_pdf', { report: 'page-audit' });
+  return downloadPdf('generate_audit_pdf', { audit }, reportFilename(audit, 'pdf'));
+};
 
 export const auditLinksCsv = (audit: PageAuditData): string => {
   const headers = exportHeaders('auditLinks');

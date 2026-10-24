@@ -48,6 +48,8 @@ mod orchestration;
 mod pagination;
 mod post_processing;
 mod prefetch;
+pub(crate) mod proxy_feedback;
+pub(crate) mod proxy_pool;
 mod rag_sections;
 mod readability;
 mod render_decision;
