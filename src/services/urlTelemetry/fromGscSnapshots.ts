@@ -7,7 +7,7 @@ import { buildUrlTelemetrySnapshot } from './snapshot';
 import { getSnapshot, putSnapshot } from './store';
 import type { UrlTelemetrySnapshot } from './types';
 
-/** A stored snapshot keeps the aggregates and row tables; the daily series is not stored, so it is flagged unknown. */
+/** Legacy snapshots without a daily series keep that evidence explicitly unknown. */
 export const performanceDataOf = (snapshot: GscPerformanceSnapshot): GscPerformanceData => ({
   site_url: snapshot.site_url,
   start_date: snapshot.start_date,
@@ -20,8 +20,8 @@ export const performanceDataOf = (snapshot: GscPerformanceSnapshot): GscPerforma
   queries: snapshot.queries,
   pages: snapshot.pages,
   ...(snapshot.query_pages ? { query_pages: snapshot.query_pages, query_pages_may_be_truncated: snapshot.query_pages_may_be_truncated } : {}),
-  daily: [],
-  daily_may_be_truncated: true,
+  daily: snapshot.daily ?? [],
+  daily_may_be_truncated: snapshot.daily === undefined || (snapshot.daily_may_be_truncated ?? true),
   queries_may_be_truncated: snapshot.queries_may_be_truncated,
   pages_may_be_truncated: snapshot.pages_may_be_truncated,
   max_rows_per_dimension: snapshot.max_rows_per_dimension,
@@ -33,7 +33,7 @@ export const latestSnapshot = (snapshots: GscPerformanceSnapshot[]): GscPerforma
 
 /**
  * Shared telemetry for a project: the cached one when still valid, otherwise built from the newest saved
- * Search Console snapshot, the session's last Google Analytics report and the persisted backlink sample.
+ * Search Console snapshot, the last persisted Google Analytics report and the persisted backlink sample.
  * Without a saved Search Console snapshot nothing is built (no zero-filled telemetry).
  */
 export const ensureUrlTelemetry = (projectId: string, urls: string[], now: Date = new Date()): UrlTelemetrySnapshot | null => {

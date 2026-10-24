@@ -1,3 +1,10 @@
+# SEOmi 0.4.38 — release notes
+
+## Fixed
+- The last GA4 report now survives restarts in project-scoped storage, with bounded, schema-validated rows. Forgetting reports and project/subject erasure remove the persisted report and invalidate shared URL telemetry (issue #91).
+- Saved Search Console snapshots retain up to 500 sorted, calendar-valid daily observations and their truncation state. Legacy snapshots still load with daily evidence explicitly unknown; snapshot ids and deduplication stay unchanged (issues #91 and #97).
+- Added a daily-series merger for saved project snapshots: newer captures win overlapping dates, observed zeros stay measured, and missing dates are listed explicitly without interpolation or zero filling. No Causal Impact producer is included (issue #97).
+
 # SEOmi 0.4.37 — release notes
 
 ## Added
@@ -407,4 +414,3 @@ The selected distribution uses signed Tauri updates and installers without Apple
 ## Thanks
 
 Thank you **@RafalSzy** for contributions, topical diagnosis, detailed issue reports and regression-test feedback in PR #13 and subsequent reviews.
-

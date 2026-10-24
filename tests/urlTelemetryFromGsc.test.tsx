@@ -25,6 +25,7 @@ describe('urlTelemetry from saved Search Console snapshots', () => {
     expect(ensureUrlTelemetry('p1', URLS, NOW)).toBeNull();
     saveGscSnapshot('p1', data('2026-10-23', 40));
     expect(ensureUrlTelemetry('p1', [], NOW)).toBeNull();
+    expect(ensureUrlTelemetry('p1', ['not a URL'], NOW)).toBeNull();
     expect(getSnapshot('p1', NOW)).toBeNull();
   });
 
@@ -53,6 +54,8 @@ describe('urlTelemetry from saved Search Console snapshots', () => {
 
   it('maps a stored snapshot back to performance data with unknown daily history', () => {
     const { snapshot } = saveGscSnapshot('p1', data('2026-10-23', 40, { filters: { search_type: 'web' } as never, query_pages: [{ query: 'q', page: 'https://a.test/low', clicks: 1, impressions: 2, ctr: 0.5, position: 3 }] }));
+    delete snapshot.daily;
+    delete snapshot.daily_may_be_truncated;
     const restored = performanceDataOf(snapshot);
     expect(restored.daily).toEqual([]);
     expect(restored.daily_may_be_truncated).toBe(true);

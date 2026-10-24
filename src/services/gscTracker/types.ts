@@ -15,6 +15,8 @@ export interface GscPerformanceSnapshot {
   avg_position: number;
   queries: GscPerformanceData['queries'];
   pages: GscPerformanceData['pages'];
+  daily?: GscPerformanceData['daily'];
+  daily_may_be_truncated?: boolean;
   query_pages?: GscPerformanceData['query_pages'];
   query_pages_may_be_truncated?: boolean;
   stored_query_page_rows?: number;

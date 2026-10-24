@@ -3,6 +3,7 @@ import { readStorage, removeStorage, writeStorage } from '@/services/storage';
 import { indexedDbWriteOnce } from '@/services/crawlPersistence/indexedDb';
 import { invalidateQueuedCrawlWrites, withCrawlWriteLock } from '@/services/crawlPersistence/writeLock';
 import { migrateLegacyCrawlRuns } from '@/services/crawlStore';
+import { forgetGa4Report, ga4ReportStorageKey } from '@/services/urlTelemetry/ga4Cache';
 
 /** Evidence returned by the native store after a physical erasure. */
 export interface ErasureReport {
@@ -35,6 +36,7 @@ export const forgetSubject = (projectId: string, subjectId: string): Promise<Era
 };
 
 const legacyKeys = (projectId: string): string[] => [
+  ga4ReportStorageKey(projectId),
   `seomi_project_${projectId}_crawl_runs`,
   `seomi_project_${projectId}_crawl_result`,
   `seomi_project_${projectId}_crawl_runs_v1_backup`,
@@ -55,6 +57,7 @@ const clearLegacyStorage = (projectId: string): void => {
       throw new Error(`Unable to clear legacy crawl storage: ${key}`);
     }
   }
+  forgetGa4Report(projectId);
 };
 
 /** Full project wipe, including leftover Web Storage migration artifacts. */
