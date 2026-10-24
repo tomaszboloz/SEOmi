@@ -7978,5 +7978,66 @@
       "unclear": "Unklar: mögliche Verneinung"
     },
     "pacing": "Der native Auditschutz begrenzt auch die Starts auf 10 pro Minute. Die Stichprobe kann mehrere Minuten dauern; andere Audits können die Verfügbarkeit verringern."
+  },
+  "experimentsUi": {
+    "title": "SEO-Experimente",
+    "disclaimer": "Dies ist eine Beobachtung, kein Kausalitätsnachweis. Änderungen können auf Saisonalität, andere Maßnahmen oder externe Faktoren zurückgehen.",
+    "projectRequired": "Wählen Sie ein Projekt, um Maßnahmen zu erfassen.",
+    "capacity": "Bis zu {{count}} Maßnahmen werden gespeichert; weitere ersetzen die ältesten.",
+    "url": "Seiten-URL",
+    "site": "Gesamte Website",
+    "date": "Erster betroffener Tag",
+    "kind": "Art der Maßnahme",
+    "note": "Notiz (bis zu 300 Zeichen)",
+    "add": "Maßnahme hinzufügen",
+    "saveFailed": "Speichern fehlgeschlagen. Prüfen Sie die Felder und den lokalen Speicher.",
+    "removeFailed": "Die Maßnahme konnte nicht aus dem lokalen Speicher entfernt werden.",
+    "empty": "Keine Maßnahmen erfasst.",
+    "intervention": "Maßnahme",
+    "unavailable": "Nicht verfügbar",
+    "baseline": "Referenzzeitraum",
+    "followUp": "Folgezeitraum",
+    "measurements": "Beobachtete Messwerte",
+    "metric": "Kennzahl",
+    "before": "Vorher",
+    "after": "Nachher",
+    "change": "Relative Änderung",
+    "clicks": "Klicks",
+    "impressions": "Impressionen",
+    "position": "Durchschnittliche Position (Differenz mit Vorzeichen)",
+    "restOfSite": "Rest der Website (Gesamtwert minus Seite)",
+    "relativeVsSite": "Seite minus Rest der Website (Prozentpunkte)",
+    "limitations": "Einschränkungen",
+    "remove": "Maßnahme entfernen",
+    "percent": "{{value}} %",
+    "points": "{{value}} Prozentpunkte",
+    "kinds": {
+      "content": "Inhalt",
+      "internal-links": "Interne Links",
+      "title-meta": "Titel und Metadaten",
+      "technical": "Technisch",
+      "other": "Sonstiges"
+    },
+    "status": {
+      "ready": "Beobachtung verfügbar",
+      "inconclusive": "Nicht aussagekräftig",
+      "pending": "Geplant / ausstehend"
+    },
+    "reasons": {
+      "observational": "Nur Vorher-Nachher-Beobachtung; keine kausale Schlussfolgerung.",
+      "uncontrolled-factors": "Saisonalität, gleichzeitige Änderungen und externe Faktoren werden nicht kontrolliert.",
+      "zero-baseline": "Bei einem Referenzwert von null ist die relative Änderung nicht verfügbar.",
+      "no-control": "Für eine Maßnahme auf der gesamten Website gibt es keine separate Kontrollgruppe.",
+      "filtered-scope": "Für beide Zeiträume gelten dieselben gespeicherten Search-Console-Filter.",
+      "invalid-period": "Ein gespeicherter Zeitraum hat ungültige Datumswerte oder eine ungültige Dauer.",
+      "inconsistent-totals": "Seitenwerte übersteigen die gespeicherten Gesamtwerte; die Kontrolle ist nicht berechenbar.",
+      "no-baseline": "Kein gespeicherter Zeitraum endet vor der Maßnahme.",
+      "no-follow-up": "Kein gespeicherter Zeitraum beginnt am Tag der Maßnahme oder danach.",
+      "incomparable-scope": "Die nächstliegenden Zeiträume haben unterschiedliche Properties oder Filter oder decken die URL nicht ab.",
+      "period-length-mismatch": "Die Zeiträume unterscheiden sich um mehr als 10 % in ihrer Länge.",
+      "rows-truncated": "Gespeicherte Seitenzeilen sind gekürzt; der Seitenvergleich kann unvollständig sein.",
+      "low-volume": "Weniger als 30 Klicks im Referenzzeitraum; das Volumen ist für einen verlässlichen Vergleich zu gering.",
+      "pending": "Die Maßnahme liegt in der Zukunft; die Auswertung steht aus."
+    }
   }
 }

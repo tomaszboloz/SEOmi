@@ -7978,5 +7978,66 @@
       "unclear": "Niejednoznaczne: możliwa negacja"
     },
     "pacing": "Natywny audyt ogranicza też rozpoczęcia do 10 na minutę. Analiza próbki może potrwać kilka minut; inne audyty mogą zmniejszyć dostępność."
+  },
+  "experimentsUi": {
+    "title": "Eksperymenty SEO",
+    "disclaimer": "To obserwacja, a nie dowód związku przyczynowego. Zmiany mogą wynikać z sezonowości, innych interwencji lub czynników zewnętrznych.",
+    "projectRequired": "Wybierz projekt, aby rejestrować interwencje.",
+    "capacity": "Przechowujemy do {{count}} interwencji; kolejne zastępują najstarsze.",
+    "url": "Adres URL strony",
+    "site": "Cała witryna",
+    "date": "Pierwszy dzień objęty zmianą",
+    "kind": "Rodzaj interwencji",
+    "note": "Notatka (do 300 znaków)",
+    "add": "Dodaj interwencję",
+    "saveFailed": "Nie udało się zapisać. Sprawdź pola i dostępność pamięci lokalnej.",
+    "removeFailed": "Nie udało się usunąć interwencji z pamięci lokalnej.",
+    "empty": "Brak zarejestrowanych interwencji.",
+    "intervention": "Interwencja",
+    "unavailable": "Niedostępne",
+    "baseline": "Okres bazowy",
+    "followUp": "Okres po zmianie",
+    "measurements": "Zaobserwowane pomiary",
+    "metric": "Wskaźnik",
+    "before": "Przed",
+    "after": "Po",
+    "change": "Zmiana względna",
+    "clicks": "Kliknięcia",
+    "impressions": "Wyświetlenia",
+    "position": "Średnia pozycja (różnica ze znakiem)",
+    "restOfSite": "Reszta witryny (suma minus strona)",
+    "relativeVsSite": "Strona minus reszta witryny (punkty procentowe)",
+    "limitations": "Ograniczenia",
+    "remove": "Usuń interwencję",
+    "percent": "{{value}}%",
+    "points": "{{value}} p.p.",
+    "kinds": {
+      "content": "Treść",
+      "internal-links": "Linkowanie wewnętrzne",
+      "title-meta": "Tytuł i metadane",
+      "technical": "Techniczna",
+      "other": "Inna"
+    },
+    "status": {
+      "ready": "Obserwacja dostępna",
+      "inconclusive": "Nierozstrzygające",
+      "pending": "Zaplanowana / oczekuje"
+    },
+    "reasons": {
+      "observational": "Wyłącznie obserwacja przed i po; bez wnioskowania przyczynowego.",
+      "uncontrolled-factors": "Sezonowość, równoległe zmiany i czynniki zewnętrzne nie są kontrolowane.",
+      "zero-baseline": "Zerowa wartość bazowa uniemożliwia obliczenie zmiany względnej.",
+      "no-control": "Interwencja dla całej witryny nie ma oddzielnej kontroli w postaci reszty witryny.",
+      "filtered-scope": "W obu okresach obowiązują te same zapisane filtry Search Console.",
+      "invalid-period": "Zapisany okres ma nieprawidłowe daty lub długość.",
+      "inconsistent-totals": "Wskaźniki strony przekraczają zapisane sumy witryny; nie można obliczyć kontroli.",
+      "no-baseline": "Brak zapisanego okresu kończącego się przed interwencją.",
+      "no-follow-up": "Brak zapisanego okresu rozpoczynającego się w dniu interwencji lub później.",
+      "incomparable-scope": "Najbliższe okresy dotyczą różnych usług lub filtrów albo nie obejmują adresu URL.",
+      "period-length-mismatch": "Długości okresów różnią się o ponad 10%.",
+      "rows-truncated": "Zapisane wiersze stron są ucięte; porównanie strony może być niepełne.",
+      "low-volume": "Bazowa liczba kliknięć jest mniejsza niż 30; zbyt mały wolumen do wiarygodnego porównania.",
+      "pending": "Data interwencji jest w przyszłości; ocena oczekuje."
+    }
   }
 }

@@ -1,3 +1,10 @@
+# SEOmi 0.4.37 — release notes
+
+## Added
+- SEO experiments in Signals (issue #97): a validated, project-local intervention registry, bounded to 200 entries, with planned dates, crawl-page selection and removal.
+- Observational before/after evaluation using saved Search Console snapshots only. The nearest non-overlapping periods must share a property and filters, with durations within 10%. Page comparisons normalize URLs, compare clicks and impressions against the rest of the site, and report percentage-point differences and signed position changes.
+- Explicit missing-data, low-volume, truncated-row, scope and duration limitations; zero-baseline ratios and whole-site controls remain unavailable rather than fabricated. Fixed non-causality disclaimer and `experimentsUi` translations in all 12 locales. The existing Causal Impact panel is unchanged.
+
 # SEOmi 0.4.36 — release notes
 
 ## Added
@@ -400,4 +407,3 @@ The selected distribution uses signed Tauri updates and installers without Apple
 ## Thanks
 
 Thank you **@RafalSzy** for contributions, topical diagnosis, detailed issue reports and regression-test feedback in PR #13 and subsequent reviews.
-

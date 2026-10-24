@@ -7978,5 +7978,66 @@
       "unclear": "Ambiguo: possibile negazione"
     },
     "pacing": "La protezione dell’audit nativo limita inoltre gli avvii a 10 al minuto. Il campione può richiedere diversi minuti; altri audit possono ridurre la disponibilità."
+  },
+  "experimentsUi": {
+    "title": "Esperimenti SEO",
+    "disclaimer": "Questa è un’osservazione, non una prova di causalità. I cambiamenti possono dipendere da stagionalità, altri interventi o fattori esterni.",
+    "projectRequired": "Seleziona un progetto per registrare gli interventi.",
+    "capacity": "Si conservano fino a {{count}} interventi; i successivi sostituiscono i più vecchi.",
+    "url": "URL della pagina",
+    "site": "Intero sito",
+    "date": "Primo giorno interessato",
+    "kind": "Tipo di intervento",
+    "note": "Nota (massimo 300 caratteri)",
+    "add": "Aggiungi intervento",
+    "saveFailed": "Salvataggio non riuscito. Controlla i campi e l’archiviazione locale.",
+    "removeFailed": "Impossibile rimuovere l’intervento dall’archiviazione locale.",
+    "empty": "Nessun intervento registrato.",
+    "intervention": "Intervento",
+    "unavailable": "Non disponibile",
+    "baseline": "Periodo di riferimento",
+    "followUp": "Periodo successivo",
+    "measurements": "Misurazioni osservate",
+    "metric": "Metrica",
+    "before": "Prima",
+    "after": "Dopo",
+    "change": "Variazione relativa",
+    "clicks": "Clic",
+    "impressions": "Impressioni",
+    "position": "Posizione media (differenza con segno)",
+    "restOfSite": "Resto del sito (totali meno pagina)",
+    "relativeVsSite": "Pagina meno resto del sito (punti percentuali)",
+    "limitations": "Limiti",
+    "remove": "Rimuovi intervento",
+    "percent": "{{value}}%",
+    "points": "{{value}} pp",
+    "kinds": {
+      "content": "Contenuti",
+      "internal-links": "Link interni",
+      "title-meta": "Titolo e metadati",
+      "technical": "Tecnico",
+      "other": "Altro"
+    },
+    "status": {
+      "ready": "Osservazione disponibile",
+      "inconclusive": "Non conclusivo",
+      "pending": "Pianificato / in attesa"
+    },
+    "reasons": {
+      "observational": "Solo osservazione prima/dopo; nessuna inferenza causale.",
+      "uncontrolled-factors": "Stagionalità, modifiche simultanee e fattori esterni non sono controllati.",
+      "zero-baseline": "Un riferimento pari a zero rende indisponibile la variazione relativa.",
+      "no-control": "Un intervento sull’intero sito non ha un controllo separato del resto del sito.",
+      "filtered-scope": "Gli stessi filtri Search Console salvati si applicano a entrambi i periodi.",
+      "invalid-period": "Un periodo salvato ha date o durata non valide.",
+      "inconsistent-totals": "Le metriche della pagina superano i totali salvati; il controllo non è calcolabile.",
+      "no-baseline": "Nessun periodo salvato termina prima dell’intervento.",
+      "no-follow-up": "Nessun periodo salvato inizia il giorno dell’intervento o dopo.",
+      "incomparable-scope": "I periodi più vicini hanno proprietà o filtri diversi, oppure non coprono l’URL.",
+      "period-length-mismatch": "La durata dei periodi differisce di oltre il 10%.",
+      "rows-truncated": "Le righe delle pagine salvate sono troncate; il confronto può essere incompleto.",
+      "low-volume": "Meno di 30 clic di riferimento; il volume è insufficiente per un confronto affidabile.",
+      "pending": "La data dell’intervento è futura; la valutazione è in attesa."
+    }
   }
 }

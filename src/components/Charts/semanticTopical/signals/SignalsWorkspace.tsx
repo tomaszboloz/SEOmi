@@ -5,6 +5,7 @@ import { HreflangParityPanel } from '@/components/Charts/HreflangParityPanel';
 import { DecayRadarPanel } from '@/components/Charts/DecayRadarPanel';
 import { TemplateGovernorPanel } from '@/components/Results/TemplateGovernorPanel';
 import { CausalImpactPanel } from '@/components/Results/CausalImpactPanel';
+import { ExperimentsPanel } from '@/components/Charts/ExperimentsPanel';
 import type { CrawledPageSummary } from '@/types';
 import type { SemanticMap } from '@/services/semanticGraph/types';
 import { StaleSnapshotBanner } from '@/services/snapshots/StaleBanner';
@@ -32,5 +33,6 @@ export const SignalsWorkspace = ({ projectId = null, pages, graph }: { projectId
     <TemplateGovernorPanel events={templates} />
     <DecayRadarPanel evaluation={decay.evaluation} snapshotCount={decay.snapshotCount} />
     <CausalImpactPanel result={null} />
+    <ExperimentsPanel projectId={projectId} pages={pages} />
   </div>;
 };

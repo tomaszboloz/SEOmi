@@ -7978,5 +7978,66 @@
       "unclear": "불명확: 부정 표현 가능성"
     },
     "pacing": "네이티브 감사 보호 기능은 시작 횟수를 분당 10회로 제한합니다. 표본 처리에 몇 분이 걸릴 수 있으며 다른 감사로 가용성이 줄어들 수 있습니다."
+  },
+  "experimentsUi": {
+    "title": "SEO 실험",
+    "disclaimer": "이 결과는 관찰이며 인과관계의 증거가 아닙니다. 계절성, 다른 개입 또는 외부 요인으로 변화가 발생할 수 있습니다.",
+    "projectRequired": "개입을 등록할 프로젝트를 선택하세요.",
+    "capacity": "최대 {{count}}개의 개입을 보관하며 초과 시 가장 오래된 항목을 제거합니다.",
+    "url": "페이지 URL",
+    "site": "전체 사이트",
+    "date": "영향이 시작되는 날",
+    "kind": "개입 유형",
+    "note": "메모 (최대 300자)",
+    "add": "개입 추가",
+    "saveFailed": "저장하지 못했습니다. 입력값과 로컬 저장소를 확인하세요.",
+    "removeFailed": "로컬 저장소에서 개입을 삭제하지 못했습니다.",
+    "empty": "등록된 개입이 없습니다.",
+    "intervention": "개입",
+    "unavailable": "사용 불가",
+    "baseline": "기준 기간",
+    "followUp": "개입 후 기간",
+    "measurements": "관찰된 측정값",
+    "metric": "지표",
+    "before": "이전",
+    "after": "이후",
+    "change": "상대 변화",
+    "clicks": "클릭수",
+    "impressions": "노출수",
+    "position": "평균 게재순위 (부호 있는 차이)",
+    "restOfSite": "사이트의 나머지 (전체에서 해당 페이지 제외)",
+    "relativeVsSite": "페이지와 사이트 나머지의 차이 (퍼센트포인트)",
+    "limitations": "한계",
+    "remove": "개입 삭제",
+    "percent": "{{value}}%",
+    "points": "{{value}}%p",
+    "kinds": {
+      "content": "콘텐츠",
+      "internal-links": "내부 링크",
+      "title-meta": "제목 및 메타 정보",
+      "technical": "기술적 개입",
+      "other": "기타"
+    },
+    "status": {
+      "ready": "관찰 가능",
+      "inconclusive": "결론 불가",
+      "pending": "계획됨 / 대기 중"
+    },
+    "reasons": {
+      "observational": "전후 관찰일 뿐 인과관계를 추론하지 않습니다.",
+      "uncontrolled-factors": "계절성, 동시 변경 및 외부 요인은 통제되지 않습니다.",
+      "zero-baseline": "기준값이 0이면 상대 변화를 계산할 수 없습니다.",
+      "no-control": "전체 사이트 개입에는 별도의 사이트 나머지 대조군이 없습니다.",
+      "filtered-scope": "두 기간에 동일한 저장된 Search Console 필터가 적용됩니다.",
+      "invalid-period": "저장된 기간의 날짜 또는 길이가 올바르지 않습니다.",
+      "inconsistent-totals": "페이지 지표가 저장된 사이트 합계를 초과하여 대조군을 계산할 수 없습니다.",
+      "no-baseline": "개입 전에 종료되는 저장된 기간이 없습니다.",
+      "no-follow-up": "개입일 또는 그 이후에 시작하는 저장된 기간이 없습니다.",
+      "incomparable-scope": "가장 가까운 기간의 속성이나 필터가 다르거나 URL이 범위에 없습니다.",
+      "period-length-mismatch": "기간 길이가 10% 넘게 차이 납니다.",
+      "rows-truncated": "저장된 페이지 행이 잘려 있어 비교가 불완전할 수 있습니다.",
+      "low-volume": "기준 클릭수가 30 미만으로 신뢰할 수 있는 비교에 부족합니다.",
+      "pending": "개입 날짜가 미래이므로 평가를 기다리는 중입니다。"
+    }
   }
 }

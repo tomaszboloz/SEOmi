@@ -7978,5 +7978,66 @@
       "unclear": "Unclear: possible negation"
     },
     "pacing": "The native audit guard also limits starts to 10 per minute. The sample can take several minutes; other audits may reduce availability."
+  },
+  "experimentsUi": {
+    "title": "SEO experiments",
+    "disclaimer": "This is an observation, not proof of causation. Changes may reflect seasonality, other interventions or external factors.",
+    "projectRequired": "Select a project to register interventions.",
+    "capacity": "Up to {{count}} interventions are retained; adding more removes the oldest.",
+    "url": "Page URL",
+    "site": "Whole site",
+    "date": "First day affected",
+    "kind": "Intervention type",
+    "note": "Note (up to 300 characters)",
+    "add": "Add intervention",
+    "saveFailed": "Could not save. Check the fields and local storage availability.",
+    "removeFailed": "Could not remove the intervention from local storage.",
+    "empty": "No interventions registered.",
+    "intervention": "Intervention",
+    "unavailable": "Unavailable",
+    "baseline": "Baseline period",
+    "followUp": "Follow-up period",
+    "measurements": "Observed measurements",
+    "metric": "Metric",
+    "before": "Before",
+    "after": "After",
+    "change": "Relative change",
+    "clicks": "Clicks",
+    "impressions": "Impressions",
+    "position": "Average position (signed difference)",
+    "restOfSite": "Rest of site (totals minus page)",
+    "relativeVsSite": "Page minus rest of site (percentage points)",
+    "limitations": "Limitations",
+    "remove": "Remove intervention",
+    "percent": "{{value}}%",
+    "points": "{{value}} pp",
+    "kinds": {
+      "content": "Content",
+      "internal-links": "Internal links",
+      "title-meta": "Title and meta",
+      "technical": "Technical",
+      "other": "Other"
+    },
+    "status": {
+      "ready": "Observation available",
+      "inconclusive": "Inconclusive",
+      "pending": "Planned / pending"
+    },
+    "reasons": {
+      "observational": "Before/after observation only; no causal inference.",
+      "uncontrolled-factors": "Seasonality, concurrent changes and external factors are not controlled.",
+      "zero-baseline": "A zero baseline makes the relative change unavailable.",
+      "no-control": "A whole-site intervention has no separate rest-of-site control.",
+      "filtered-scope": "The same saved Search Console filters apply to both periods.",
+      "invalid-period": "A saved period has invalid dates or duration.",
+      "inconsistent-totals": "Page metrics exceed saved site totals; the control cannot be computed.",
+      "no-baseline": "No saved period ends before the intervention.",
+      "no-follow-up": "No saved period starts on or after the intervention.",
+      "incomparable-scope": "The nearest periods have different properties or filters, or do not cover the URL.",
+      "period-length-mismatch": "Period lengths differ by more than 10%.",
+      "rows-truncated": "Saved page rows are truncated; the page comparison may be incomplete.",
+      "low-volume": "Baseline clicks are below 30; the volume is too low for a reliable comparison.",
+      "pending": "The intervention date is in the future; evaluation is pending."
+    }
   }
 }

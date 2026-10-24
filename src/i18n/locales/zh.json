@@ -7978,5 +7978,66 @@
       "unclear": "不明确：可能含否定"
     },
     "pacing": "原生审计保护还将启动频率限制为每分钟10次。样本分析可能需要数分钟；其他审计可能降低可用性。"
+  },
+  "experimentsUi": {
+    "title": "SEO实验",
+    "disclaimer": "这是观察结果，而非因果关系的证明。变化可能来自季节性、其他干预或外部因素。",
+    "projectRequired": "请选择项目以登记干预。",
+    "capacity": "最多保留{{count}}项干预；新增超出上限时会移除最旧的记录。",
+    "url": "页面URL",
+    "site": "整个网站",
+    "date": "首个受影响日期",
+    "kind": "干预类型",
+    "note": "备注（最多300个字符）",
+    "add": "添加干预",
+    "saveFailed": "无法保存。请检查输入内容和本地存储。",
+    "removeFailed": "无法从本地存储中删除干预。",
+    "empty": "尚未登记干预。",
+    "intervention": "干预",
+    "unavailable": "不可用",
+    "baseline": "基准期间",
+    "followUp": "干预后期间",
+    "measurements": "观察指标",
+    "metric": "指标",
+    "before": "之前",
+    "after": "之后",
+    "change": "相对变化",
+    "clicks": "点击次数",
+    "impressions": "展示次数",
+    "position": "平均排名（带符号差值）",
+    "restOfSite": "网站其余部分（总计减去该页面）",
+    "relativeVsSite": "页面减去网站其余部分（百分点）",
+    "limitations": "局限性",
+    "remove": "删除干预",
+    "percent": "{{value}}%",
+    "points": "{{value}}个百分点",
+    "kinds": {
+      "content": "内容",
+      "internal-links": "内部链接",
+      "title-meta": "标题与元数据",
+      "technical": "技术",
+      "other": "其他"
+    },
+    "status": {
+      "ready": "可查看观察结果",
+      "inconclusive": "无法得出结论",
+      "pending": "已计划／待评估"
+    },
+    "reasons": {
+      "observational": "仅为前后观察，不作因果推断。",
+      "uncontrolled-factors": "未控制季节性、同期变更和外部因素。",
+      "zero-baseline": "基准值为零时，无法计算相对变化。",
+      "no-control": "整个网站的干预没有独立的网站其余部分对照。",
+      "filtered-scope": "两个期间使用相同的已保存Search Console筛选条件。",
+      "invalid-period": "已保存期间的日期或长度无效。",
+      "inconsistent-totals": "页面指标超过已保存的网站总计，无法计算对照。",
+      "no-baseline": "没有在干预之前结束的已保存期间。",
+      "no-follow-up": "没有在干预当日或之后开始的已保存期间。",
+      "incomparable-scope": "最近的期间使用不同的资源或筛选条件，或不涵盖此URL。",
+      "period-length-mismatch": "两个期间的长度相差超过10%。",
+      "rows-truncated": "已保存的页面行被截断，页面比较可能不完整。",
+      "low-volume": "基准点击次数少于30，数据量不足以进行可靠比较。",
+      "pending": "干预日期在未来，正在等待评估。"
+    }
   }
 }

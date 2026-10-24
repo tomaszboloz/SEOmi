@@ -7978,5 +7978,66 @@
       "unclear": "Ambiguo: posible negación"
     },
     "pacing": "La protección de auditoría nativa también limita los inicios a 10 por minuto. La muestra puede tardar varios minutos; otras auditorías pueden reducir la disponibilidad."
+  },
+  "experimentsUi": {
+    "title": "Experimentos SEO",
+    "disclaimer": "Esto es una observación, no una prueba de causalidad. Los cambios pueden reflejar estacionalidad, otras intervenciones o factores externos.",
+    "projectRequired": "Selecciona un proyecto para registrar intervenciones.",
+    "capacity": "Se conservan hasta {{count}} intervenciones; las nuevas sustituyen a las más antiguas.",
+    "url": "URL de la página",
+    "site": "Todo el sitio",
+    "date": "Primer día afectado",
+    "kind": "Tipo de intervención",
+    "note": "Nota (hasta 300 caracteres)",
+    "add": "Añadir intervención",
+    "saveFailed": "No se pudo guardar. Revisa los campos y el almacenamiento local.",
+    "removeFailed": "No se pudo eliminar la intervención del almacenamiento local.",
+    "empty": "No hay intervenciones registradas.",
+    "intervention": "Intervención",
+    "unavailable": "No disponible",
+    "baseline": "Período de referencia",
+    "followUp": "Período posterior",
+    "measurements": "Mediciones observadas",
+    "metric": "Métrica",
+    "before": "Antes",
+    "after": "Después",
+    "change": "Cambio relativo",
+    "clicks": "Clics",
+    "impressions": "Impresiones",
+    "position": "Posición media (diferencia con signo)",
+    "restOfSite": "Resto del sitio (totales menos página)",
+    "relativeVsSite": "Página menos resto del sitio (puntos porcentuales)",
+    "limitations": "Limitaciones",
+    "remove": "Eliminar intervención",
+    "percent": "{{value}} %",
+    "points": "{{value}} pp",
+    "kinds": {
+      "content": "Contenido",
+      "internal-links": "Enlaces internos",
+      "title-meta": "Título y metadatos",
+      "technical": "Técnica",
+      "other": "Otra"
+    },
+    "status": {
+      "ready": "Observación disponible",
+      "inconclusive": "No concluyente",
+      "pending": "Planificada / pendiente"
+    },
+    "reasons": {
+      "observational": "Solo observación antes y después; sin inferencia causal.",
+      "uncontrolled-factors": "No se controlan la estacionalidad, los cambios simultáneos ni los factores externos.",
+      "zero-baseline": "Una referencia de cero impide calcular el cambio relativo.",
+      "no-control": "Una intervención de todo el sitio no tiene un control separado del resto del sitio.",
+      "filtered-scope": "Se aplican los mismos filtros guardados de Search Console a ambos períodos.",
+      "invalid-period": "Un período guardado tiene fechas o duración no válidas.",
+      "inconsistent-totals": "Las métricas de la página superan los totales guardados; no se puede calcular el control.",
+      "no-baseline": "Ningún período guardado termina antes de la intervención.",
+      "no-follow-up": "Ningún período guardado comienza en la fecha de la intervención o después.",
+      "incomparable-scope": "Los períodos más próximos tienen propiedades o filtros diferentes, o no incluyen la URL.",
+      "period-length-mismatch": "La duración de los períodos difiere en más del 10 %.",
+      "rows-truncated": "Las filas de páginas guardadas están truncadas; la comparación puede estar incompleta.",
+      "low-volume": "Hay menos de 30 clics de referencia; el volumen es insuficiente para una comparación fiable.",
+      "pending": "La intervención es futura; la evaluación está pendiente."
+    }
   }
 }
