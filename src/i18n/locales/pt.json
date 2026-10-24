@@ -7892,5 +7892,22 @@
       "unavailable": "Indisponível"
     },
     "noScorePenalty": "Isto não reduz nenhuma pontuação."
+  },
+  "prePublishMountUi": {
+    "title": "Verificação antes da publicação",
+    "description": "Usa o último rastreio concluído, os excertos e termos guardados, as pontuações Site Focus e as definições de embeddings do projeto. Apenas simulação: nada é guardado ou publicado.",
+    "draft": "Texto do rascunho não publicado",
+    "url": "URL do rascunho (opcional)",
+    "urlHint": "Deixe vazio para uma página nova. Um URL já rastreado substitui essa página na simulação.",
+    "invalidUrl": "Introduza um URL HTTP ou HTTPS válido sem credenciais.",
+    "run": "Verificar rascunho",
+    "cancel": "Cancelar",
+    "loading": "A carregar a verificação…",
+    "noCrawl": "Não há rastreio concluído para o projeto ativo. Rastreie primeiro o site.",
+    "noCore": "Ainda não há tema principal. Não é possível avaliar este rascunho.",
+    "running": "A gerar embeddings do rascunho e dos dados do rastreio…",
+    "unreachable": "O fornecedor de embeddings selecionado não devolveu vetores. Verifique as definições do projeto e a ligação.",
+    "cancelled": "Verificação cancelada. Nenhum resultado aplicado.",
+    "stale": "Os dados ou o rastreio mudaram. Execute a verificação novamente."
   }
 }

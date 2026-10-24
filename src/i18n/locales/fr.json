@@ -7892,5 +7892,22 @@
       "unavailable": "Indisponible"
     },
     "noScorePenalty": "Cela n'abaisse aucun score."
+  },
+  "prePublishMountUi": {
+    "title": "Vérification avant publication",
+    "description": "Utilise le dernier crawl terminé, ses extraits et termes enregistrés, les scores Site Focus et les paramètres d’embeddings du projet. Simulation uniquement : rien n’est enregistré ni publié.",
+    "draft": "Texte du brouillon non publié",
+    "url": "URL du brouillon (facultatif)",
+    "urlHint": "Laisser vide pour une nouvelle page. Une URL déjà explorée remplace cette page dans la simulation.",
+    "invalidUrl": "Saisissez une URL HTTP ou HTTPS valide sans identifiants.",
+    "run": "Vérifier le brouillon",
+    "cancel": "Annuler",
+    "loading": "Chargement de la vérification…",
+    "noCrawl": "Aucun crawl terminé pour le projet actif. Explorez d’abord le site.",
+    "noCore": "Aucun sujet principal pour le moment. Impossible d’évaluer ce brouillon.",
+    "running": "Création des embeddings du brouillon et des données du crawl…",
+    "unreachable": "Le fournisseur d’embeddings sélectionné n’a pas renvoyé de vecteurs. Vérifiez les paramètres du projet et la connexion.",
+    "cancelled": "Vérification annulée. Aucun résultat appliqué.",
+    "stale": "Les données ou le crawl ont changé. Relancez la vérification."
   }
 }

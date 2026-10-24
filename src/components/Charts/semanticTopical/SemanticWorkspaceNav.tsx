@@ -21,6 +21,7 @@ export const SemanticWorkspaceNav: React.FC<SemanticWorkspaceNavProps> = ({
     ['links', t('semanticWorkspace.tabLinks')],
     ['schema', t('semanticWorkspace.tabSchema')],
     ['signals', t('semanticWorkspace.tabSignals')],
+    ['prepublish', t('prePublishMountUi.title')],
   ] as const;
 
   return (

@@ -7892,5 +7892,22 @@
       "unavailable": "Unavailable"
     },
     "noScorePenalty": "This does not lower any score."
+  },
+  "prePublishMountUi": {
+    "title": "Pre-publish check",
+    "description": "Uses the latest completed crawl, its saved excerpts and terms, Site Focus scores and project embedding settings. Simulation only: nothing is saved or published.",
+    "draft": "Unpublished draft text",
+    "url": "Draft URL (optional)",
+    "urlHint": "Leave blank for a new page. An existing crawl URL replaces that page in the simulation.",
+    "invalidUrl": "Enter a valid HTTP or HTTPS URL without credentials.",
+    "run": "Check draft",
+    "cancel": "Cancel",
+    "loading": "Loading pre-publish check…",
+    "noCrawl": "No completed crawl for the active project. Crawl the site first.",
+    "noCore": "No Core Topic yet. The check cannot judge this draft.",
+    "running": "Embedding the draft and crawl evidence…",
+    "unreachable": "The selected embedding provider could not return vectors. Check the project embedding settings and provider connection.",
+    "cancelled": "Check cancelled. No result was applied.",
+    "stale": "Inputs or crawl changed. Run the check again."
   }
 }

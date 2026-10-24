@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { lazy, Suspense, useEffect } from 'react';
 import { takePendingBrief } from '@/services/executionCard/openBrief';
 import { TopicalCalendar } from '@/components/Charts/TopicalCalendar';
 import { SemanticAuditPanel } from '@/components/Charts/SemanticAuditPanel';
@@ -11,6 +11,7 @@ import { TopicalTopicBrowser } from './TopicalTopicBrowser';
 import { TopicalNodeEditor } from './TopicalNodeEditor';
 
 type Session = ReturnType<typeof useSemanticTopicalSession>;
+const PrePublishWorkspace = lazy(() => import('../prePublish/PrePublishWorkspace'));
 
 export const SemanticWorkspacePanels: React.FC<{ session: Session }> = ({ session }) => {
   const {
@@ -33,6 +34,9 @@ export const SemanticWorkspacePanels: React.FC<{ session: Session }> = ({ sessio
     updateWorkspacePreferences({ view: 'topics' });
   }, [setSelectedId, updateWorkspacePreferences]);
 
+  if (workspacePreferences.view === 'prepublish') return <Suspense fallback={<p role="status">{t('prePublishMountUi.loading')}</p>}>
+    <PrePublishWorkspace key={session.projectId} projectId={session.projectId} runs={runs} />
+  </Suspense>;
   if (workspacePreferences.view === 'audit') {
     return (
       <SemanticAuditPanel

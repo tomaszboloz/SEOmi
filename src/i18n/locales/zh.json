@@ -7892,5 +7892,22 @@
       "unavailable": "不可用"
     },
     "noScorePenalty": "这不会降低任何分数。"
+  },
+  "prePublishMountUi": {
+    "title": "发布前检查",
+    "description": "使用最近完成的抓取、已保存的摘录和术语、Site Focus 评分以及项目的嵌入设置。仅进行模拟，不会保存或发布任何内容。",
+    "draft": "未发布的草稿正文",
+    "url": "草稿 URL（可选）",
+    "urlHint": "新页面请留空。抓取中已有的 URL 会在模拟中替换该页面。",
+    "invalidUrl": "请输入不含登录凭据的有效 HTTP 或 HTTPS URL。",
+    "run": "检查草稿",
+    "cancel": "取消",
+    "loading": "正在加载检查…",
+    "noCrawl": "当前项目没有已完成的抓取。请先抓取网站。",
+    "noCore": "尚无核心主题，无法评估此草稿。",
+    "running": "正在生成草稿和抓取数据的嵌入…",
+    "unreachable": "所选嵌入提供方未能返回向量。请检查项目设置和提供方连接。",
+    "cancelled": "检查已取消，未应用任何结果。",
+    "stale": "输入或抓取已更改，请重新运行检查。"
   }
 }

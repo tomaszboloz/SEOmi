@@ -7892,5 +7892,22 @@
       "unavailable": "Nicht verfügbar"
     },
     "noScorePenalty": "Dies senkt keinen Wert."
+  },
+  "prePublishMountUi": {
+    "title": "Prüfung vor Veröffentlichung",
+    "description": "Verwendet den letzten abgeschlossenen Crawl, gespeicherte Auszüge und Begriffe, Site-Focus-Werte und die Embedding-Einstellungen des Projekts. Nur Simulation: Es wird nichts gespeichert oder veröffentlicht.",
+    "draft": "Text des unveröffentlichten Entwurfs",
+    "url": "Entwurfs-URL (optional)",
+    "urlHint": "Für eine neue Seite leer lassen. Eine vorhandene Crawl-URL ersetzt diese Seite in der Simulation.",
+    "invalidUrl": "Eine gültige HTTP- oder HTTPS-URL ohne Zugangsdaten eingeben.",
+    "run": "Entwurf prüfen",
+    "cancel": "Abbrechen",
+    "loading": "Prüfung wird geladen…",
+    "noCrawl": "Kein abgeschlossener Crawl für das aktive Projekt. Zuerst die Website crawlen.",
+    "noCore": "Noch kein Kernthema. Der Entwurf kann nicht bewertet werden.",
+    "running": "Embeddings für Entwurf und Crawl-Daten werden erstellt…",
+    "unreachable": "Der gewählte Embedding-Anbieter konnte keine Vektoren liefern. Projekteinstellungen und Verbindung prüfen.",
+    "cancelled": "Prüfung abgebrochen. Kein Ergebnis wurde übernommen.",
+    "stale": "Eingaben oder Crawl geändert. Prüfung erneut starten."
   }
 }

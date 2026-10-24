@@ -46,7 +46,7 @@ export const topicalNodeDepth = (node: TopicalNode, nodes: TopicalNode[]): numbe
 };
 
 export type TopicalWorkspaceView =
-  "topics" | "calendar" | "audit" | "schema" | "links" | "entity" | "signals";
+  "topics" | "calendar" | "audit" | "schema" | "links" | "entity" | "signals" | "prepublish";
 
 export interface TopicalWorkspacePreferences {
   view: TopicalWorkspaceView;
@@ -80,7 +80,7 @@ export const readTopicalWorkspacePreferences = (projectId: string | null): Topic
   const defaults = defaultTopicalWorkspacePreferences();
   if (!projectId) return defaults;
   const schema: z.ZodType<TopicalWorkspacePreferences, unknown> = z.object({
-    view: z.enum(['topics', 'calendar', 'audit', 'schema', 'links', 'entity', 'signals']).catch('topics'),
+    view: z.enum(['topics', 'calendar', 'audit', 'schema', 'links', 'entity', 'signals', 'prepublish']).catch('topics'),
     month: z.string().regex(/^\d{4}-(0[1-9]|1[0-2])$/).catch(defaults.month),
     filters: z.object({
       lifecycle: z.enum(['all', 'planned', 'briefed', 'drafted', 'published', 'needs-update']).catch('all'),

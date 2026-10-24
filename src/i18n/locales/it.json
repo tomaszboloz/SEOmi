@@ -7892,5 +7892,22 @@
       "unavailable": "Non disponibile"
     },
     "noScorePenalty": "Questo non abbassa alcun punteggio."
+  },
+  "prePublishMountUi": {
+    "title": "Controllo prima della pubblicazione",
+    "description": "Usa l’ultima scansione completata, estratti e termini salvati, punteggi Site Focus e impostazioni degli embedding del progetto. Solo simulazione: nulla viene salvato o pubblicato.",
+    "draft": "Testo della bozza non pubblicata",
+    "url": "URL della bozza (facoltativo)",
+    "urlHint": "Lascia vuoto per una nuova pagina. Un URL già scansionato sostituisce quella pagina nella simulazione.",
+    "invalidUrl": "Inserisci un URL HTTP o HTTPS valido senza credenziali.",
+    "run": "Controlla bozza",
+    "cancel": "Annulla",
+    "loading": "Caricamento del controllo…",
+    "noCrawl": "Nessuna scansione completata per il progetto attivo. Scansiona prima il sito.",
+    "noCore": "Nessun argomento principale. Impossibile valutare questa bozza.",
+    "running": "Generazione degli embedding della bozza e dei dati della scansione…",
+    "unreachable": "Il fornitore di embedding selezionato non ha restituito vettori. Controlla le impostazioni del progetto e la connessione.",
+    "cancelled": "Controllo annullato. Nessun risultato applicato.",
+    "stale": "Dati o scansione modificati. Ripeti il controllo."
   }
 }

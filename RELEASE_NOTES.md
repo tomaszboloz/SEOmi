@@ -1,3 +1,8 @@
+# SEOmi 0.4.32 — release notes
+
+## Added
+- Mounted the pre-publish check in a lazy content-planning tab (issue #94). Drafts use the project's existing embedding settings and latest completed, project-owned crawl with Site Focus scores and Core Topic. Existing URLs replace their page in the simulation; crawl data and saved baselines stay unchanged. Includes cancellation, stale-request protection, explicit missing-data/provider states, incompatible-model checks, and UI translations in all 12 locales.
+
 # SEOmi 0.4.31 — release notes
 
 ## Fixed
@@ -370,4 +375,3 @@ The selected distribution uses signed Tauri updates and installers without Apple
 ## Thanks
 
 Thank you **@RafalSzy** for contributions, topical diagnosis, detailed issue reports and regression-test feedback in PR #13 and subsequent reviews.
-

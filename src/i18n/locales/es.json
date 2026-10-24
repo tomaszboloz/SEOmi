@@ -7892,5 +7892,22 @@
       "unavailable": "No disponible"
     },
     "noScorePenalty": "Esto no reduce ninguna puntuación."
+  },
+  "prePublishMountUi": {
+    "title": "Comprobación previa a la publicación",
+    "description": "Usa el último rastreo completado, sus extractos y términos guardados, las puntuaciones de Site Focus y la configuración de embeddings del proyecto. Solo simulación: no se guarda ni publica nada.",
+    "draft": "Texto del borrador sin publicar",
+    "url": "URL del borrador (opcional)",
+    "urlHint": "Déjalo vacío para una página nueva. Una URL ya rastreada sustituye esa página en la simulación.",
+    "invalidUrl": "Introduce una URL HTTP o HTTPS válida sin credenciales.",
+    "run": "Comprobar borrador",
+    "cancel": "Cancelar",
+    "loading": "Cargando comprobación…",
+    "noCrawl": "No hay un rastreo completado para el proyecto activo. Rastrea el sitio primero.",
+    "noCore": "Aún no hay tema principal. No se puede evaluar este borrador.",
+    "running": "Generando embeddings del borrador y de los datos del rastreo…",
+    "unreachable": "El proveedor de embeddings seleccionado no devolvió vectores. Revisa la configuración del proyecto y la conexión.",
+    "cancelled": "Comprobación cancelada. No se aplicó ningún resultado.",
+    "stale": "Han cambiado los datos o el rastreo. Repite la comprobación."
   }
 }

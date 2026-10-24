@@ -7892,5 +7892,22 @@
       "unavailable": "Niedostępne"
     },
     "noScorePenalty": "Nie obniża to żadnego wyniku."
+  },
+  "prePublishMountUi": {
+    "title": "Kontrola przed publikacją",
+    "description": "Wykorzystuje ostatni ukończony crawl, zapisane fragmenty i terminy, wyniki Site Focus oraz ustawienia embeddingów projektu. To tylko symulacja: nic nie jest zapisywane ani publikowane.",
+    "draft": "Tekst nieopublikowanego szkicu",
+    "url": "URL szkicu (opcjonalnie)",
+    "urlHint": "Pozostaw puste dla nowej strony. Istniejący URL z crawla zastępuje tę stronę w symulacji.",
+    "invalidUrl": "Podaj poprawny URL HTTP lub HTTPS bez danych logowania.",
+    "run": "Sprawdź szkic",
+    "cancel": "Anuluj",
+    "loading": "Ładowanie kontroli przed publikacją…",
+    "noCrawl": "Brak ukończonego crawla aktywnego projektu. Najpierw przeskanuj witrynę.",
+    "noCore": "Brak głównego tematu. Nie można ocenić szkicu.",
+    "running": "Tworzenie embeddingów szkicu i danych z crawla…",
+    "unreachable": "Wybrany dostawca embeddingów nie zwrócił wektorów. Sprawdź ustawienia embeddingów projektu i połączenie z dostawcą.",
+    "cancelled": "Kontrola anulowana. Nie zastosowano żadnego wyniku.",
+    "stale": "Zmieniono dane wejściowe lub crawl. Uruchom kontrolę ponownie."
   }
 }
