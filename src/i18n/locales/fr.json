@@ -7910,5 +7910,31 @@
     "unreachable": "Le fournisseur d’embeddings sélectionné n’a pas renvoyé de vecteurs. Vérifiez les paramètres du projet et la connexion.",
     "cancelled": "Vérification annulée. Aucun résultat appliqué.",
     "stale": "Les données ou le crawl ont changé. Relancez la vérification."
+  },
+  "telemetrySourcesUi": {
+    "title": "Sources",
+    "sources": {
+      "gsc": "GSC",
+      "ga4": "GA4",
+      "backlinks": "Liens entrants"
+    },
+    "states": {
+      "measured": "Mesuré",
+      "partial-history": "Historique partiel",
+      "stale": "Obsolète",
+      "sampled": "Échantillon",
+      "missing-permission": "Autorisation manquante",
+      "unavailable": "Indisponible"
+    },
+    "property": "Propriété : {{value}}",
+    "provider": "Fournisseur : {{value}}",
+    "period": "{{start}} – {{end}} ({{days}} jours)",
+    "retrievedAt": "Récupéré : {{value}}",
+    "truncated": {
+      "yes": "Données tronquées : oui",
+      "no": "Données tronquées : non"
+    },
+    "coverage": "Couverture : {{value}} %",
+    "unknownNote": "Les données inconnues ne sont jamais comptées comme zéro."
   }
 }

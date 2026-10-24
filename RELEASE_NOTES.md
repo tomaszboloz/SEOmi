@@ -1,3 +1,9 @@
+# SEOmi 0.4.35 — release notes
+
+## Added
+- Shared URL telemetry now reads the project's persisted DataForSEO backlink profile and its recorded retrieval time (issue #91). Profile updates, including pagination, invalidate only that project's cached telemetry. Backlinks remain a bounded sample: unlisted URLs stay unknown, never zero.
+- The URL protection panel now shows compact source provenance for GSC, GA4 and backlinks: localized measurement state, property/provider, period or retrieval time, truncation and coverage when available, plus the unknown-is-not-zero reminder. Includes the new `telemetrySourcesUi` translations in all 12 languages (GEM-91-08).
+
 # SEOmi 0.4.34 — release notes
 
 ## Added
@@ -387,4 +393,3 @@ The selected distribution uses signed Tauri updates and installers without Apple
 ## Thanks
 
 Thank you **@RafalSzy** for contributions, topical diagnosis, detailed issue reports and regression-test feedback in PR #13 and subsequent reviews.
-

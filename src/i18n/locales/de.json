@@ -7910,5 +7910,31 @@
     "unreachable": "Der gewählte Embedding-Anbieter konnte keine Vektoren liefern. Projekteinstellungen und Verbindung prüfen.",
     "cancelled": "Prüfung abgebrochen. Kein Ergebnis wurde übernommen.",
     "stale": "Eingaben oder Crawl geändert. Prüfung erneut starten."
+  },
+  "telemetrySourcesUi": {
+    "title": "Quellen",
+    "sources": {
+      "gsc": "GSC",
+      "ga4": "GA4",
+      "backlinks": "Backlinks"
+    },
+    "states": {
+      "measured": "Gemessen",
+      "partial-history": "Unvollständiger Verlauf",
+      "stale": "Veraltet",
+      "sampled": "Stichprobe",
+      "missing-permission": "Fehlende Berechtigung",
+      "unavailable": "Nicht verfügbar"
+    },
+    "property": "Property: {{value}}",
+    "provider": "Anbieter: {{value}}",
+    "period": "{{start}} – {{end}} ({{days}} Tage)",
+    "retrievedAt": "Abgerufen: {{value}}",
+    "truncated": {
+      "yes": "Gekürzt: ja",
+      "no": "Gekürzt: nein"
+    },
+    "coverage": "Abdeckung: {{value}}%",
+    "unknownNote": "Unbekannte Daten werden niemals als null gezählt."
   }
 }

@@ -7910,5 +7910,31 @@
     "unreachable": "Il fornitore di embedding selezionato non ha restituito vettori. Controlla le impostazioni del progetto e la connessione.",
     "cancelled": "Controllo annullato. Nessun risultato applicato.",
     "stale": "Dati o scansione modificati. Ripeti il controllo."
+  },
+  "telemetrySourcesUi": {
+    "title": "Fonti",
+    "sources": {
+      "gsc": "GSC",
+      "ga4": "GA4",
+      "backlinks": "Link in entrata"
+    },
+    "states": {
+      "measured": "Misurato",
+      "partial-history": "Cronologia parziale",
+      "stale": "Obsoleto",
+      "sampled": "Campione",
+      "missing-permission": "Autorizzazione mancante",
+      "unavailable": "Non disponibile"
+    },
+    "property": "Proprietà: {{value}}",
+    "provider": "Fornitore: {{value}}",
+    "period": "{{start}} – {{end}} ({{days}} giorni)",
+    "retrievedAt": "Recuperato: {{value}}",
+    "truncated": {
+      "yes": "Dati troncati: sì",
+      "no": "Dati troncati: no"
+    },
+    "coverage": "Copertura: {{value}}%",
+    "unknownNote": "I dati sconosciuti non vengono mai conteggiati come zero."
   }
 }

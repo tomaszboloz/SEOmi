@@ -7910,5 +7910,31 @@
     "unreachable": "所选嵌入提供方未能返回向量。请检查项目设置和提供方连接。",
     "cancelled": "检查已取消，未应用任何结果。",
     "stale": "输入或抓取已更改，请重新运行检查。"
+  },
+  "telemetrySourcesUi": {
+    "title": "数据来源",
+    "sources": {
+      "gsc": "GSC",
+      "ga4": "GA4",
+      "backlinks": "反向链接"
+    },
+    "states": {
+      "measured": "已测量",
+      "partial-history": "历史不完整",
+      "stale": "已过期",
+      "sampled": "样本",
+      "missing-permission": "缺少权限",
+      "unavailable": "不可用"
+    },
+    "property": "媒体资源：{{value}}",
+    "provider": "提供商：{{value}}",
+    "period": "{{start}} 至 {{end}}（{{days}} 天）",
+    "retrievedAt": "获取时间：{{value}}",
+    "truncated": {
+      "yes": "数据截断：是",
+      "no": "数据截断：否"
+    },
+    "coverage": "覆盖率：{{value}}%",
+    "unknownNote": "未知数据绝不会被计为零。"
   }
 }

@@ -7910,5 +7910,31 @@
     "unreachable": "Wybrany dostawca embeddingów nie zwrócił wektorów. Sprawdź ustawienia embeddingów projektu i połączenie z dostawcą.",
     "cancelled": "Kontrola anulowana. Nie zastosowano żadnego wyniku.",
     "stale": "Zmieniono dane wejściowe lub crawl. Uruchom kontrolę ponownie."
+  },
+  "telemetrySourcesUi": {
+    "title": "Źródła",
+    "sources": {
+      "gsc": "GSC",
+      "ga4": "GA4",
+      "backlinks": "Linki zwrotne"
+    },
+    "states": {
+      "measured": "Zmierzone",
+      "partial-history": "Niepełna historia",
+      "stale": "Nieaktualne",
+      "sampled": "Próbka",
+      "missing-permission": "Brak uprawnień",
+      "unavailable": "Niedostępne"
+    },
+    "property": "Usługa: {{value}}",
+    "provider": "Dostawca: {{value}}",
+    "period": "{{start}} – {{end}} ({{days}} dni)",
+    "retrievedAt": "Pobrano: {{value}}",
+    "truncated": {
+      "yes": "Dane obcięte: tak",
+      "no": "Dane obcięte: nie"
+    },
+    "coverage": "Pokrycie: {{value}}%",
+    "unknownNote": "Nieznane dane nigdy nie są liczone jako zero."
   }
 }

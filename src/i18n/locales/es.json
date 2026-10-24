@@ -7910,5 +7910,31 @@
     "unreachable": "El proveedor de embeddings seleccionado no devolvió vectores. Revisa la configuración del proyecto y la conexión.",
     "cancelled": "Comprobación cancelada. No se aplicó ningún resultado.",
     "stale": "Han cambiado los datos o el rastreo. Repite la comprobación."
+  },
+  "telemetrySourcesUi": {
+    "title": "Fuentes",
+    "sources": {
+      "gsc": "GSC",
+      "ga4": "GA4",
+      "backlinks": "Enlaces entrantes"
+    },
+    "states": {
+      "measured": "Medido",
+      "partial-history": "Historial parcial",
+      "stale": "Desactualizado",
+      "sampled": "Muestra",
+      "missing-permission": "Sin permisos",
+      "unavailable": "No disponible"
+    },
+    "property": "Propiedad: {{value}}",
+    "provider": "Proveedor: {{value}}",
+    "period": "{{start}} – {{end}} ({{days}} días)",
+    "retrievedAt": "Obtenido: {{value}}",
+    "truncated": {
+      "yes": "Datos truncados: sí",
+      "no": "Datos truncados: no"
+    },
+    "coverage": "Cobertura: {{value}}%",
+    "unknownNote": "Los datos desconocidos nunca se cuentan como cero."
   }
 }

@@ -7910,5 +7910,31 @@
     "unreachable": "選択した埋め込みプロバイダーからベクトルを取得できませんでした。プロジェクトの設定と接続を確認してください。",
     "cancelled": "チェックをキャンセルしました。結果は適用されていません。",
     "stale": "入力またはクロールが変更されました。チェックを再実行してください。"
+  },
+  "telemetrySourcesUi": {
+    "title": "データソース",
+    "sources": {
+      "gsc": "GSC",
+      "ga4": "GA4",
+      "backlinks": "被リンク"
+    },
+    "states": {
+      "measured": "計測済み",
+      "partial-history": "履歴が不完全",
+      "stale": "古いデータ",
+      "sampled": "サンプル",
+      "missing-permission": "権限なし",
+      "unavailable": "利用不可"
+    },
+    "property": "プロパティ: {{value}}",
+    "provider": "プロバイダー: {{value}}",
+    "period": "{{start}} ～ {{end}}（{{days}}日間）",
+    "retrievedAt": "取得日時: {{value}}",
+    "truncated": {
+      "yes": "データの切り詰め: あり",
+      "no": "データの切り詰め: なし"
+    },
+    "coverage": "カバレッジ: {{value}}%",
+    "unknownNote": "不明なデータをゼロとして数えることはありません。"
   }
 }

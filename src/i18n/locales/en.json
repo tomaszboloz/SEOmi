@@ -7910,5 +7910,31 @@
     "unreachable": "The selected embedding provider could not return vectors. Check the project embedding settings and provider connection.",
     "cancelled": "Check cancelled. No result was applied.",
     "stale": "Inputs or crawl changed. Run the check again."
+  },
+  "telemetrySourcesUi": {
+    "title": "Sources",
+    "sources": {
+      "gsc": "GSC",
+      "ga4": "GA4",
+      "backlinks": "Backlinks"
+    },
+    "states": {
+      "measured": "Measured",
+      "partial-history": "Partial history",
+      "stale": "Stale",
+      "sampled": "Sampled",
+      "missing-permission": "Missing permission",
+      "unavailable": "Unavailable"
+    },
+    "property": "Property: {{value}}",
+    "provider": "Provider: {{value}}",
+    "period": "{{start}} – {{end}} ({{days}} days)",
+    "retrievedAt": "Retrieved: {{value}}",
+    "truncated": {
+      "yes": "Truncated: yes",
+      "no": "Truncated: no"
+    },
+    "coverage": "Coverage: {{value}}%",
+    "unknownNote": "Unknown data is never counted as zero."
   }
 }

@@ -3,6 +3,7 @@ import { HelpTip } from '@/components/Help/HelpTip';
 import type { SiteFocusReport } from '@/services/siteFocus';
 import { decideProtection } from '@/services/urlProtection';
 import { ensureUrlTelemetry, type UrlTelemetry } from '@/services/urlTelemetry';
+import { TelemetrySources } from './TelemetrySources';
 
 const MAX_ROWS = 20;
 const NONE = { state: 'unavailable', value: null } as const;
@@ -24,6 +25,7 @@ export const ProtectionPanel = ({ report, projectId }: { report: SiteFocusReport
   return (
     <section className="space-y-2 rounded-lg border border-white/10 p-3 text-xs" data-testid="protection-panel">
       <h3 className="flex items-center gap-2 font-semibold">{t('focus.protection.title')}<HelpTip id="focus.protection" /></h3>
+      <TelemetrySources snapshot={snapshot} />
       {!snapshot && <p role="status" data-testid="protection-empty">{t('focus.protection.empty')}</p>}
       <ul className="space-y-1">
         {rows.map(({ page, result }) => (

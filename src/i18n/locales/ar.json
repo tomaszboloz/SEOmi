@@ -7910,5 +7910,31 @@
     "unreachable": "لم يُرجع مزود التضمين المحدد متجهات. تحقق من إعدادات المشروع والاتصال بالمزود.",
     "cancelled": "تم إلغاء الفحص. لم يتم تطبيق أي نتيجة.",
     "stale": "تغيرت المدخلات أو بيانات الزحف. أعد تشغيل الفحص."
+  },
+  "telemetrySourcesUi": {
+    "title": "المصادر",
+    "sources": {
+      "gsc": "GSC",
+      "ga4": "GA4",
+      "backlinks": "الروابط الخلفية"
+    },
+    "states": {
+      "measured": "تم القياس",
+      "partial-history": "سجل جزئي",
+      "stale": "بيانات قديمة",
+      "sampled": "عينة",
+      "missing-permission": "الإذن مفقود",
+      "unavailable": "غير متاح"
+    },
+    "property": "الموقع: {{value}}",
+    "provider": "المزوّد: {{value}}",
+    "period": "{{start}} – {{end}} ({{days}} يومًا)",
+    "retrievedAt": "وقت الاسترجاع: {{value}}",
+    "truncated": {
+      "yes": "البيانات مقتطعة: نعم",
+      "no": "البيانات مقتطعة: لا"
+    },
+    "coverage": "التغطية: {{value}}%",
+    "unknownNote": "لا تُحتسب البيانات المجهولة على أنها صفر أبدًا."
   }
 }
