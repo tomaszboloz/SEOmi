@@ -7862,5 +7862,31 @@
       "inconclusive": "판단 불가",
       "no-logs": "로그 없음"
     }
+  },
+  "altCheckUi": {
+    "column": "ALT 품질",
+    "csvColumn": "alt_issues",
+    "summary": "이미지 {{checked}}개를 확인했으며 {{issues}}개에 ALT 문제가 있습니다.",
+    "issues": {
+      "missing": "ALT 없음",
+      "empty": "빈 ALT",
+      "filename": "파일 이름처럼 보임",
+      "generic": "일반적인 표현",
+      "too-long": "너무 김",
+      "repeats-caption": "캡션 반복",
+      "unrelated-to-context": "문맥과 무관"
+    },
+    "noIssues": "ALT 문제 없음",
+    "decorative": "장식용(빈 ALT)",
+    "visualNotice": "시각 분석에는 로컬 모델이 필요하며 이 버전에서는 사용할 수 없습니다.",
+    "analyses": {
+      "ocr": "OCR",
+      "clip-alignment": "CLIP 정렬",
+      "transcript": "전사"
+    },
+    "statuses": {
+      "unavailable": "사용 불가"
+    },
+    "noScorePenalty": "어떤 점수도 낮추지 않습니다."
   }
 }

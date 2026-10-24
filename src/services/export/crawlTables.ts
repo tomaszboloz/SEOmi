@@ -1,3 +1,5 @@
+import i18n from '@/i18n';
+import { checkAlt } from '@/services/multimodal';
 import type { CrawlRunRecord } from '@/types';
 import { buildCrawlResourceInventory } from '@/services/crawlResources';
 import { exportHeaders, exportText } from './csv';
@@ -17,12 +19,13 @@ export const crawlLinksCsv = (run: CrawlRunRecord): string => {
 
 export const crawlImagesCsv = (run: CrawlRunRecord): string => {
   const metadata = crawlMetadata(run);
-  const headers = exportHeaders('crawlImages');
+  const headers = [...exportHeaders('crawlImages'), i18n.t('altCheckUi.csvColumn')];
   const rows = run.result.pages.flatMap((page) => page.images.map((image) => [
     metadata.run_id, metadata.completed_at, metadata.scope_start_url, metadata.crawl_configuration,
     page.url, page.final_url, image.src, image.checked_in_run ?? '', image.http_status ?? '', image.request_error_kind || '', image.content_length ?? '', image.alt || '', image.srcset || '',
     (image.srcset_resource_checks || []).map((candidate) => `${candidate.url}: ${candidate.checked_in_run ? candidate.http_status ?? candidate.request_error_kind ?? exportText('statuses.checked') : exportText('statuses.notChecked')}${candidate.content_length == null ? '' : ` (${candidate.content_length} B)`}`).join(' | '),
     image.srcset_resource_checks_truncated ?? '', image.format || '', image.width ?? '', image.height ?? '', image.dimensions_source || '', image.lazy_loaded,
+    checkAlt({ src: image.src, alt: image.alt }).issues.join(';'),
   ]));
   return crawlCsv(headers, rows, metadata);
 };

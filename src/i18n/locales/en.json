@@ -7862,5 +7862,31 @@
       "inconclusive": "Inconclusive",
       "no-logs": "No logs"
     }
+  },
+  "altCheckUi": {
+    "column": "ALT quality",
+    "csvColumn": "alt_issues",
+    "summary": "{{checked}} images checked, {{issues}} with ALT issues.",
+    "issues": {
+      "missing": "Missing ALT",
+      "empty": "Empty ALT",
+      "filename": "Looks like a file name",
+      "generic": "Generic wording",
+      "too-long": "Too long",
+      "repeats-caption": "Repeats the caption",
+      "unrelated-to-context": "Unrelated to context"
+    },
+    "noIssues": "No ALT issues",
+    "decorative": "Decorative (empty ALT)",
+    "visualNotice": "Visual analysis needs a local model and is not available in this build.",
+    "analyses": {
+      "ocr": "OCR",
+      "clip-alignment": "CLIP alignment",
+      "transcript": "Transcripts"
+    },
+    "statuses": {
+      "unavailable": "Unavailable"
+    },
+    "noScorePenalty": "This does not lower any score."
   }
 }

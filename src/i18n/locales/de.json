@@ -7862,5 +7862,31 @@
       "inconclusive": "Unklar",
       "no-logs": "Keine Logs"
     }
+  },
+  "altCheckUi": {
+    "column": "ALT-Qualität",
+    "csvColumn": "alt_issues",
+    "summary": "{{checked}} Bilder geprüft, {{issues}} mit ALT-Problemen.",
+    "issues": {
+      "missing": "ALT fehlt",
+      "empty": "ALT leer",
+      "filename": "Sieht wie ein Dateiname aus",
+      "generic": "Allgemeine Formulierung",
+      "too-long": "Zu lang",
+      "repeats-caption": "Wiederholt die Bildunterschrift",
+      "unrelated-to-context": "Ohne Bezug zum Kontext"
+    },
+    "noIssues": "Keine ALT-Probleme",
+    "decorative": "Dekorativ (leeres ALT)",
+    "visualNotice": "Die visuelle Analyse benötigt ein lokales Modell und ist in dieser Version nicht verfügbar.",
+    "analyses": {
+      "ocr": "OCR",
+      "clip-alignment": "CLIP-Abgleich",
+      "transcript": "Transkripte"
+    },
+    "statuses": {
+      "unavailable": "Nicht verfügbar"
+    },
+    "noScorePenalty": "Dies senkt keinen Wert."
   }
 }

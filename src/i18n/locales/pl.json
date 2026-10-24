@@ -7862,5 +7862,31 @@
       "inconclusive": "Nierozstrzygnięte",
       "no-logs": "Brak logów"
     }
+  },
+  "altCheckUi": {
+    "column": "Jakość ALT",
+    "csvColumn": "alt_issues",
+    "summary": "Sprawdzono {{checked}} obrazów, {{issues}} z problemami ALT.",
+    "issues": {
+      "missing": "Brak ALT",
+      "empty": "Pusty ALT",
+      "filename": "Wygląda jak nazwa pliku",
+      "generic": "Ogólnikowe sformułowanie",
+      "too-long": "Za długi",
+      "repeats-caption": "Powtarza podpis",
+      "unrelated-to-context": "Bez związku z kontekstem"
+    },
+    "noIssues": "Brak problemów z ALT",
+    "decorative": "Dekoracyjny (pusty ALT)",
+    "visualNotice": "Analiza wizualna wymaga lokalnego modelu i nie jest dostępna w tej wersji.",
+    "analyses": {
+      "ocr": "OCR",
+      "clip-alignment": "Zgodność CLIP",
+      "transcript": "Transkrypcje"
+    },
+    "statuses": {
+      "unavailable": "Niedostępne"
+    },
+    "noScorePenalty": "Nie obniża to żadnego wyniku."
   }
 }

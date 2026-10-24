@@ -7862,5 +7862,31 @@
       "inconclusive": "Неопределённо",
       "no-logs": "Нет логов"
     }
+  },
+  "altCheckUi": {
+    "column": "Качество ALT",
+    "csvColumn": "alt_issues",
+    "summary": "Проверено изображений: {{checked}}, с проблемами ALT: {{issues}}.",
+    "issues": {
+      "missing": "Нет ALT",
+      "empty": "Пустой ALT",
+      "filename": "Похоже на имя файла",
+      "generic": "Общая формулировка",
+      "too-long": "Слишком длинный",
+      "repeats-caption": "Повторяет подпись",
+      "unrelated-to-context": "Не связан с контекстом"
+    },
+    "noIssues": "Проблем с ALT нет",
+    "decorative": "Декоративное (пустой ALT)",
+    "visualNotice": "Визуальный анализ требует локальной модели и недоступен в этой версии.",
+    "analyses": {
+      "ocr": "OCR",
+      "clip-alignment": "Соответствие CLIP",
+      "transcript": "Транскрипции"
+    },
+    "statuses": {
+      "unavailable": "Недоступно"
+    },
+    "noScorePenalty": "Это не снижает ни одну оценку."
   }
 }

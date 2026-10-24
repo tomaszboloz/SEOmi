@@ -1,4 +1,6 @@
 import { requireAllowed } from '@/services/team/enforce';
+import i18n from '@/i18n';
+import { checkAlt } from '@/services/multimodal';
 import type { PageAuditData } from '@/types';
 import { escapeCsv, csv, exportHeaders, exportText } from './csv';
 import { downloadText, downloadPdf } from './download';
@@ -36,9 +38,10 @@ export const auditLinksCsv = (audit: PageAuditData): string => {
 };
 
 export const auditImagesCsv = (audit: PageAuditData): string => {
-  const headers = exportHeaders('auditImages');
+  const headers = [...exportHeaders('auditImages'), i18n.t('altCheckUi.csvColumn')];
   const rows = audit.images.map((image) => [
     audit.final_url, audit.timestamp, image.src, image.alt || '', image.has_alt, image.width ?? '', image.height ?? '', image.loading || '', image.srcset || '', image.format || '',
+    checkAlt({ src: image.src, alt: image.has_alt ? image.alt : undefined }).issues.join(';'),
   ]);
   return csv([headers, ...rows]);
 };

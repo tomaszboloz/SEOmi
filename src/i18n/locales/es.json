@@ -7862,5 +7862,31 @@
       "inconclusive": "No concluyente",
       "no-logs": "Sin registros"
     }
+  },
+  "altCheckUi": {
+    "column": "Calidad del ALT",
+    "csvColumn": "alt_issues",
+    "summary": "{{checked}} imágenes revisadas, {{issues}} con problemas de ALT.",
+    "issues": {
+      "missing": "Falta el ALT",
+      "empty": "ALT vacío",
+      "filename": "Parece un nombre de archivo",
+      "generic": "Redacción genérica",
+      "too-long": "Demasiado largo",
+      "repeats-caption": "Repite el pie de foto",
+      "unrelated-to-context": "Sin relación con el contexto"
+    },
+    "noIssues": "Sin problemas de ALT",
+    "decorative": "Decorativa (ALT vacío)",
+    "visualNotice": "El análisis visual requiere un modelo local y no está disponible en esta versión.",
+    "analyses": {
+      "ocr": "OCR",
+      "clip-alignment": "Alineación CLIP",
+      "transcript": "Transcripciones"
+    },
+    "statuses": {
+      "unavailable": "No disponible"
+    },
+    "noScorePenalty": "Esto no reduce ninguna puntuación."
   }
 }
