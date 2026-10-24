@@ -2373,7 +2373,8 @@
       "focus": "사이트 포커스",
       "authority": "주제 권위도",
       "aio": "AI 준비도",
-      "trust": "엔터티 신뢰도"
+      "trust": "엔터티 신뢰도",
+      "offPage": "오프페이지 분석"
     },
     "environmentStaging": "test/staging",
     "environmentProduction": "production",
@@ -6140,6 +6141,40 @@
           "no-articles": "문서 페이지가 감지되지 않아 저자 및 인용 계층은 점수를 매기지 않았습니다.",
           "author-invalid-profile": "{{0}}명의 저자가 유효하지 않은 식별자의 ORCID 또는 Wikidata 프로필을 연결했습니다({{1}}). 체크섬 또는 Q-ID를 확인하세요.",
           "ymyl-no-scholarly-ids": "{{0}}개 문서 중 DOI, PMID, PMCID가 있는 출처를 인용한 문서가 없습니다. YMYL 주제에서는 1차 연구를 인용하세요."
+        }
+      },
+      "offPage": {
+        "title": "오프페이지 분석",
+        "intro": "이 프로젝트에 마지막으로 저장된 분석입니다. 이 표본은 전체 백링크 프로필이 아닙니다.",
+        "topic": "주제",
+        "scale": "권위 점수 척도",
+        "model": "임베딩 모델",
+        "requested": "요청한 출처",
+        "fetched": "가져온 출처",
+        "scored": "평가한 출처",
+        "statusLabel": "상태",
+        "limitationsLabel": "제한 사항",
+        "sourcesIntro": "기여도 내림차순으로 최대 10개 출처. n/a는 데이터가 없음을 뜻합니다.",
+        "offset": "텍스트 위치",
+        "excerpt": "발췌",
+        "disclaimer": "Google PageRank가 아닙니다. 텍스트나 권위 점수가 없으면 부분적/사용 불가 데이터이며 백링크가 0개라는 뜻이 아닙니다. 동시 언급은 지지를 의미하지 않습니다.",
+        "tbva": "TBVA",
+        "tSources": "출처별 저장된 근거",
+        "authority": "권위",
+        "similarity": "유사도",
+        "contribution": "기여도",
+        "tCitations": "공동 인용 발췌",
+        "na": "n/a",
+        "status": {
+          "ready": "완료",
+          "partial": "일부",
+          "unavailable": "사용 불가"
+        },
+        "limitations": {
+          "no-topic-vector": "프로젝트의 최근 완료된 크롤링에 유효한 Core Topic 벡터가 없어 TBVA를 이용할 수 없습니다.",
+          "invalid-scale": "권위 척도가 잘못되어 TBVA를 이용할 수 없습니다.",
+          "no-follow-links": "분석할 follow 링크가 없습니다.",
+          "source-text-or-authority-missing": "일부 출처에 텍스트, 유효한 벡터 또는 제공자 권위 정보가 없습니다."
         }
       }
     },

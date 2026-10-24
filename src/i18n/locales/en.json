@@ -2373,7 +2373,8 @@
       "focus": "Site Focus",
       "authority": "Topical Authority",
       "aio": "AI readiness",
-      "trust": "Entity trust"
+      "trust": "Entity trust",
+      "offPage": "Off-page analysis"
     },
     "environmentStaging": "test/staging",
     "environmentProduction": "production",
@@ -6140,6 +6141,40 @@
           "no-articles": "No article pages were detected; author and citation layers were not scored.",
           "author-invalid-profile": "{{0}} authors link an ORCID or Wikidata profile with an invalid identifier ({{1}}). Check the checksum or Q-ID.",
           "ymyl-no-scholarly-ids": "None of the {{0}} article pages cite a source with a DOI, PMID or PMCID. On a YMYL topic, cite the primary study."
+        }
+      },
+      "offPage": {
+        "title": "Off-page analysis",
+        "intro": "Latest saved analysis for this project; this sample is not the full backlink profile.",
+        "topic": "Topic",
+        "scale": "Authority scale",
+        "model": "Embedding model",
+        "requested": "Sources requested",
+        "fetched": "Sources fetched",
+        "scored": "Sources scored",
+        "statusLabel": "Status",
+        "limitationsLabel": "Limitations",
+        "sourcesIntro": "Up to 10 sources, highest contribution first; n/a means unavailable.",
+        "offset": "Text offset",
+        "excerpt": "Excerpt",
+        "disclaimer": "Not Google PageRank; missing text or authority is partial/unavailable, not zero backlinks; co-occurrence is not endorsement.",
+        "tbva": "TBVA",
+        "tSources": "Saved per-source evidence",
+        "authority": "Authority",
+        "similarity": "Similarity",
+        "contribution": "Contribution",
+        "tCitations": "Co-citation excerpts",
+        "na": "n/a",
+        "status": {
+          "ready": "Ready",
+          "partial": "Partial",
+          "unavailable": "Unavailable"
+        },
+        "limitations": {
+          "no-topic-vector": "No usable Core Topic vector from the latest completed project crawl; TBVA is unavailable.",
+          "invalid-scale": "Invalid authority scale; TBVA is unavailable.",
+          "no-follow-links": "No follow links available for analysis.",
+          "source-text-or-authority-missing": "Some sources lack text, usable vectors or provider authority."
         }
       }
     },

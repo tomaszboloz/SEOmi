@@ -2373,7 +2373,8 @@
       "focus": "Enfoque del sitio",
       "authority": "Autoridad temática",
       "aio": "Preparación para IA",
-      "trust": "Confianza de entidad"
+      "trust": "Confianza de entidad",
+      "offPage": "Análisis off-page"
     },
     "environmentStaging": "test/staging",
     "environmentProduction": "production",
@@ -6140,6 +6141,40 @@
           "no-articles": "No se detectaron páginas de artículos; no se puntuaron las capas de autores y citas.",
           "author-invalid-profile": "{{0}} autores enlazan un perfil ORCID o Wikidata con un identificador no válido ({{1}}). Revisa la suma de control o el Q-ID.",
           "ymyl-no-scholarly-ids": "Ninguno de los {{0}} artículos cita una fuente con DOI, PMID o PMCID. En temas YMYL, cita el estudio original."
+        }
+      },
+      "offPage": {
+        "title": "Análisis off-page",
+        "intro": "Último análisis guardado de este proyecto; esta muestra no es el perfil completo de enlaces entrantes.",
+        "topic": "Tema",
+        "scale": "Escala de autoridad",
+        "model": "Modelo de embeddings",
+        "requested": "Fuentes solicitadas",
+        "fetched": "Fuentes obtenidas",
+        "scored": "Fuentes evaluadas",
+        "statusLabel": "Estado",
+        "limitationsLabel": "Limitaciones",
+        "sourcesIntro": "Hasta 10 fuentes, por contribución descendente; n/a indica datos no disponibles.",
+        "offset": "Posición en el texto",
+        "excerpt": "Extracto",
+        "disclaimer": "No es Google PageRank; la falta de texto o autoridad implica datos parciales/no disponibles, no cero enlaces entrantes; la coocurrencia no implica respaldo.",
+        "tbva": "TBVA",
+        "tSources": "Evidencia guardada por fuente",
+        "authority": "Autoridad",
+        "similarity": "Similitud",
+        "contribution": "Contribución",
+        "tCitations": "Extractos de cocitación",
+        "na": "n/a",
+        "status": {
+          "ready": "Listo",
+          "partial": "Parcial",
+          "unavailable": "No disponible"
+        },
+        "limitations": {
+          "no-topic-vector": "No hay un vector Core Topic utilizable del último rastreo completado del proyecto; TBVA no disponible.",
+          "invalid-scale": "Escala de autoridad inválida; TBVA no disponible.",
+          "no-follow-links": "No hay enlaces follow para analizar.",
+          "source-text-or-authority-missing": "Algunas fuentes carecen de texto, vectores utilizables o autoridad del proveedor."
         }
       }
     },

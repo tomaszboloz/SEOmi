@@ -2373,7 +2373,8 @@
       "focus": "Site Focus",
       "authority": "Autorytet tematyczny",
       "aio": "Gotowość na AI",
-      "trust": "Zaufanie do encji"
+      "trust": "Zaufanie do encji",
+      "offPage": "Analiza off-page"
     },
     "environmentStaging": "test/staging",
     "environmentProduction": "produkcja",
@@ -6140,6 +6141,40 @@
           "no-articles": "Nie wykryto stron artykułów; warstwy autorów i cytowań nie zostały ocenione.",
           "author-invalid-profile": "{{0}} autorów podaje profil ORCID lub Wikidata z błędnym identyfikatorem ({{1}}). Sprawdź sumę kontrolną lub Q-ID.",
           "ymyl-no-scholarly-ids": "Żaden z {{0}} artykułów nie cytuje źródła z DOI, PMID ani PMCID. W tematyce YMYL cytuj badanie pierwotne."
+        }
+      },
+      "offPage": {
+        "title": "Analiza off-page",
+        "intro": "Najnowsza zapisana analiza tego projektu; próbka nie jest pełnym profilem linków zwrotnych.",
+        "topic": "Temat",
+        "scale": "Skala autorytetu",
+        "model": "Model embeddingów",
+        "requested": "Żądane źródła",
+        "fetched": "Pobrane źródła",
+        "scored": "Ocenione źródła",
+        "statusLabel": "Status",
+        "limitationsLabel": "Ograniczenia",
+        "sourcesIntro": "Do 10 źródeł, od najwyższego wkładu; n/a oznacza brak danych.",
+        "offset": "Pozycja w tekście",
+        "excerpt": "Fragment",
+        "disclaimer": "To nie jest Google PageRank; brak tekstu lub autorytetu oznacza dane częściowe/niedostępne, a nie zero linków zwrotnych; współwystępowanie nie oznacza poparcia.",
+        "tbva": "TBVA",
+        "tSources": "Zapisane dane poszczególnych źródeł",
+        "authority": "Autorytet",
+        "similarity": "Podobieństwo",
+        "contribution": "Wkład",
+        "tCitations": "Fragmenty współcytowań",
+        "na": "n/a",
+        "status": {
+          "ready": "Gotowe",
+          "partial": "Częściowe",
+          "unavailable": "Niedostępne"
+        },
+        "limitations": {
+          "no-topic-vector": "Brak poprawnego wektora Core Topic z ostatniego ukończonego crawlu projektu; TBVA jest niedostępne.",
+          "invalid-scale": "Nieprawidłowa skala autorytetu; TBVA jest niedostępne.",
+          "no-follow-links": "Brak linków follow do analizy.",
+          "source-text-or-authority-missing": "Część źródeł nie ma tekstu, poprawnych wektorów lub autorytetu dostawcy."
         }
       }
     },

@@ -2373,7 +2373,8 @@
       "focus": "サイトフォーカス",
       "authority": "トピカルオーソリティ",
       "aio": "AI対応度",
-      "trust": "エンティティの信頼性"
+      "trust": "エンティティの信頼性",
+      "offPage": "オフページ分析"
     },
     "environmentStaging": "test/staging",
     "environmentProduction": "production",
@@ -6140,6 +6141,40 @@
           "no-articles": "記事ページが検出されませんでした。著者と引用のレイヤーは採点されていません。",
           "author-invalid-profile": "{{0}}人の著者が無効な識別子のORCIDまたはWikidataプロフィールをリンクしています（{{1}}）。チェックサムまたはQ-IDを確認してください。",
           "ymyl-no-scholarly-ids": "{{0}}件の記事のいずれもDOI、PMID、PMCIDを持つ情報源を引用していません。YMYLの話題では一次研究を引用してください。"
+        }
+      },
+      "offPage": {
+        "title": "オフページ分析",
+        "intro": "このプロジェクトの最新の保存済み分析です。このサンプルは被リンク全体を示すものではありません。",
+        "topic": "トピック",
+        "scale": "オーソリティ尺度",
+        "model": "埋め込みモデル",
+        "requested": "要求したソース数",
+        "fetched": "取得したソース数",
+        "scored": "評価したソース数",
+        "statusLabel": "状態",
+        "limitationsLabel": "制限事項",
+        "sourcesIntro": "寄与度の高い順に最大10件。n/a はデータ利用不可を意味します。",
+        "offset": "テキスト内の位置",
+        "excerpt": "抜粋",
+        "disclaimer": "Google PageRank ではありません。テキストやオーソリティがない場合は一部データのみ／利用不可であり、被リンクがゼロという意味ではありません。共起は支持を意味しません。",
+        "tbva": "TBVA",
+        "tSources": "ソースごとの保存済み証拠",
+        "authority": "権威スコア",
+        "similarity": "類似度",
+        "contribution": "寄与",
+        "tCitations": "共引用の抜粋",
+        "na": "n/a",
+        "status": {
+          "ready": "完了",
+          "partial": "一部のみ",
+          "unavailable": "取得不可"
+        },
+        "limitations": {
+          "no-topic-vector": "プロジェクトの直近完了クロールに使用可能なCore Topicベクトルがないため、TBVAは利用不可です。",
+          "invalid-scale": "権威スコアの尺度が無効なため、TBVAは利用不可です。",
+          "no-follow-links": "分析可能なfollowリンクがありません。",
+          "source-text-or-authority-missing": "一部ソースにテキスト、使用可能なベクトル、提供元の権威スコアがありません。"
         }
       }
     },

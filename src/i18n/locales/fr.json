@@ -2373,7 +2373,8 @@
       "focus": "Site Focus",
       "authority": "Autorité thématique",
       "aio": "Préparation à l'IA",
-      "trust": "Confiance des entités"
+      "trust": "Confiance des entités",
+      "offPage": "Analyse off-page"
     },
     "environmentStaging": "test/staging",
     "environmentProduction": "production",
@@ -6140,6 +6141,40 @@
           "no-articles": "Aucune page d'article n'a été détectée ; les couches auteurs et citations n'ont pas été notées.",
           "author-invalid-profile": "{{0}} auteurs renvoient vers un profil ORCID ou Wikidata dont l’identifiant est invalide ({{1}}). Vérifiez la somme de contrôle ou le Q-ID.",
           "ymyl-no-scholarly-ids": "Aucun des {{0}} articles ne cite de source avec DOI, PMID ou PMCID. Sur un sujet YMYL, citez l’étude primaire."
+        }
+      },
+      "offPage": {
+        "title": "Analyse off-page",
+        "intro": "Dernière analyse enregistrée pour ce projet ; cet échantillon ne représente pas le profil complet des liens entrants.",
+        "topic": "Sujet",
+        "scale": "Échelle d’autorité",
+        "model": "Modèle d’embeddings",
+        "requested": "Sources demandées",
+        "fetched": "Sources récupérées",
+        "scored": "Sources évaluées",
+        "statusLabel": "Statut",
+        "limitationsLabel": "Limites",
+        "sourcesIntro": "Jusqu’à 10 sources, par contribution décroissante ; n/a signifie indisponible.",
+        "offset": "Position dans le texte",
+        "excerpt": "Extrait",
+        "disclaimer": "Ce n’est pas Google PageRank ; l’absence de texte ou d’autorité indique des données partielles/indisponibles, pas zéro lien entrant ; la cooccurrence ne vaut pas approbation.",
+        "tbva": "TBVA",
+        "tSources": "Preuves enregistrées par source",
+        "authority": "Autorité",
+        "similarity": "Similarité",
+        "contribution": "Contribution",
+        "tCitations": "Extraits de cocitation",
+        "na": "n/a",
+        "status": {
+          "ready": "Prêt",
+          "partial": "Partiel",
+          "unavailable": "Indisponible"
+        },
+        "limitations": {
+          "no-topic-vector": "Aucun vecteur Core Topic utilisable du dernier crawl terminé du projet ; TBVA indisponible.",
+          "invalid-scale": "Échelle d’autorité invalide ; TBVA indisponible.",
+          "no-follow-links": "Aucun lien follow à analyser.",
+          "source-text-or-authority-missing": "Certaines sources n’ont pas de texte, de vecteurs utilisables ou d’autorité fournisseur."
         }
       }
     },

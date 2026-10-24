@@ -2373,7 +2373,8 @@
       "focus": "站点聚焦度",
       "authority": "主题权威度",
       "aio": "AI 就绪度",
-      "trust": "实体信任度"
+      "trust": "实体信任度",
+      "offPage": "站外分析"
     },
     "environmentStaging": "test/staging",
     "environmentProduction": "production",
@@ -6140,6 +6141,40 @@
           "no-articles": "未检测到文章页面；未对作者和引用层级评分。",
           "author-invalid-profile": "{{0}}位作者链接的ORCID或Wikidata档案标识符无效（{{1}}）。请检查校验码或Q-ID。",
           "ymyl-no-scholarly-ids": "{{0}}篇文章均未引用带DOI、PMID或PMCID的来源。YMYL主题请引用原始研究。"
+        }
+      },
+      "offPage": {
+        "title": "站外分析",
+        "intro": "此项目最新保存的分析；此样本并非完整的反向链接档案。",
+        "topic": "主题",
+        "scale": "权威度量表",
+        "model": "嵌入模型",
+        "requested": "请求的来源数",
+        "fetched": "获取的来源数",
+        "scored": "已评分的来源数",
+        "statusLabel": "状态",
+        "limitationsLabel": "限制",
+        "sourcesIntro": "按贡献从高到低最多列出10个来源；n/a 表示数据不可用。",
+        "offset": "文本偏移量",
+        "excerpt": "摘录",
+        "disclaimer": "这不是 Google PageRank；缺少文本或权威度表示数据部分可用或不可用，而非零反向链接；共同出现不代表认可。",
+        "tbva": "TBVA",
+        "tSources": "已保存的各来源证据",
+        "authority": "权威值",
+        "similarity": "相似度",
+        "contribution": "贡献值",
+        "tCitations": "共引摘录",
+        "na": "n/a",
+        "status": {
+          "ready": "就绪",
+          "partial": "部分可用",
+          "unavailable": "不可用"
+        },
+        "limitations": {
+          "no-topic-vector": "项目最近完成的抓取没有可用的Core Topic向量；TBVA不可用。",
+          "invalid-scale": "权威值尺度无效；TBVA不可用。",
+          "no-follow-links": "没有可分析的follow链接。",
+          "source-text-or-authority-missing": "部分来源缺少文本、可用向量或提供方权威值。"
         }
       }
     },

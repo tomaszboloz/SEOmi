@@ -2373,7 +2373,8 @@
       "focus": "Focus del sito",
       "authority": "Autorità tematica",
       "aio": "Prontezza per l'IA",
-      "trust": "Fiducia delle entità"
+      "trust": "Fiducia delle entità",
+      "offPage": "Analisi off-page"
     },
     "environmentStaging": "test/staging",
     "environmentProduction": "production",
@@ -6140,6 +6141,40 @@
           "no-articles": "Non sono state rilevate pagine di articoli; i livelli autori e citazioni non sono stati valutati.",
           "author-invalid-profile": "{{0}} autori collegano un profilo ORCID o Wikidata con identificatore non valido ({{1}}). Controlla il checksum o il Q-ID.",
           "ymyl-no-scholarly-ids": "Nessuno dei {{0}} articoli cita una fonte con DOI, PMID o PMCID. Su temi YMYL cita lo studio primario."
+        }
+      },
+      "offPage": {
+        "title": "Analisi off-page",
+        "intro": "Ultima analisi salvata per questo progetto; il campione non è il profilo completo dei backlink.",
+        "topic": "Argomento",
+        "scale": "Scala di autorevolezza",
+        "model": "Modello di embedding",
+        "requested": "Fonti richieste",
+        "fetched": "Fonti recuperate",
+        "scored": "Fonti valutate",
+        "statusLabel": "Stato",
+        "limitationsLabel": "Limitazioni",
+        "sourcesIntro": "Fino a 10 fonti, per contributo decrescente; n/a indica dati non disponibili.",
+        "offset": "Posizione nel testo",
+        "excerpt": "Estratto",
+        "disclaimer": "Non è Google PageRank; testo o autorevolezza mancanti indicano dati parziali/non disponibili, non zero backlink; la co-occorrenza non implica approvazione.",
+        "tbva": "TBVA",
+        "tSources": "Evidenze salvate per fonte",
+        "authority": "Autorità",
+        "similarity": "Somiglianza",
+        "contribution": "Contributo",
+        "tCitations": "Estratti di co-citazione",
+        "na": "n/a",
+        "status": {
+          "ready": "Pronto",
+          "partial": "Parziale",
+          "unavailable": "Non disponibile"
+        },
+        "limitations": {
+          "no-topic-vector": "Nessun vettore Core Topic utilizzabile dall’ultimo crawl completato del progetto; TBVA non disponibile.",
+          "invalid-scale": "Scala di autorità non valida; TBVA non disponibile.",
+          "no-follow-links": "Nessun link follow da analizzare.",
+          "source-text-or-authority-missing": "Alcune fonti non hanno testo, vettori utilizzabili o autorità del provider."
         }
       }
     },

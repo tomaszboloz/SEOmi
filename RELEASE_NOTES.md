@@ -1,3 +1,9 @@
+# SEOmi 0.4.40 — release notes
+
+## Added
+- Optional crawl PDF off-page section from the report project's latest saved analysis (issue #93, GEM-93-08): authority scale, embedding model, source coverage, TBVA status and limitations, top 10 source contributions and up to 5 bounded co-citation excerpts with offsets.
+- Localized PDF labels and template checkbox in all 12 languages; missing project/history omits the section. Missing metrics stay unavailable, not zero backlinks. The report explicitly distinguishes TBVA from Google PageRank and co-occurrence from endorsement.
+
 # SEOmi 0.4.39 — release notes
 
 ## Added
@@ -422,4 +428,3 @@ The selected distribution uses signed Tauri updates and installers without Apple
 ## Thanks
 
 Thank you **@RafalSzy** for contributions, topical diagnosis, detailed issue reports and regression-test feedback in PR #13 and subsequent reviews.
-
