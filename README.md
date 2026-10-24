@@ -129,6 +129,14 @@ The response contains a bounded rendered DOM snapshot and available navigation/p
 <tr><td>Exports</td><td>CSV for links, images, URLs, keywords, rank data, JSON project backup, PDF audit, PDF crawl report, MCP configuration</td><td>Files chosen by the operator</td></tr>
 <tr><td>Automation</td><td>Scheduled page audits, scheduled crawls, wake up registration, headless queue worker, desktop notifications</td><td>Yes</td></tr>
 <tr><td>Updates</td><td>Version in footer, update check, signed download, install, progress state, restart action</td><td>Local application</td></tr>
+<tr><td>Team mode</td><td>Acting name and role (Admin, SEO Strategist, Content Writer, Developer), permission matrix, role checks on crawl start, PDF exports, Site Focus topic override and CMS apply, tamper-evident hash-chained audit log with CSV export</td><td>Yes</td></tr>
+<tr><td>Data erasure</td><td>Type-to-confirm erasure of a project's local crawl runs, embeddings and history by destroying their encryption keys (GDPR), with a report of what was removed</td><td>Yes</td></tr>
+<tr><td>CMS patch</td><td>WordPress, Strapi and webhook heading patch: diff, approval of the exact diff, mandatory dry-run, HTTPS-only native transport, credentials from the secure store, verified or unverified result</td><td>Yes</td></tr>
+<tr><td>Log intelligence</td><td>Streaming import of local access logs (up to 500 MB, resume, dedupe), per-URL bot aggregates, Crawl Efficiency Matrix, desktop reverse and forward DNS bot verification</td><td>Yes</td></tr>
+<tr><td>Signals</td><td>Semantic PageRank on a frozen graph snapshot with a stale-data banner, What-If link simulator, hreflang parity, template governor, decay radar, causal impact</td><td>Computed</td></tr>
+<tr><td>Monitoring alerts</td><td>Opt-in alerts for Search Console decline, PageSpeed, crawl and semantic changes, Site Focus and AIO readiness score drops</td><td>Yes</td></tr>
+<tr><td>Proxies</td><td>Request profiles accept a list of up to 64 HTTP or HTTPS proxies with round-robin rotation, ban after three failures and no direct fallback</td><td>Yes (secure store)</td></tr>
+<tr><td>Media quality</td><td>ALT checks per image (missing, empty, file-name-like, generic, too long, repeats caption, unrelated to context) and an alt_issues CSV column; visual analysis stays marked unavailable without a local model</td><td>Computed</td></tr>
 <tr><td>Interface</td><td>Single page navigation, collapsible sidebar groups, quick navigation, keyboard shortcuts, twelve languages, dark and light themes, accessible dialogs</td><td>Local preferences</td></tr>
 </table>
 
@@ -391,6 +399,8 @@ Settings are created with `createSettingsStore(SettingsConsumers)`. Config and s
 Native URL validation uses parsed IPv4/IPv6 hosts, including bracketed IPv6 literals. Private and special ranges are rejected before transport. The audit GET and link-status HEAD helpers include DNS in the caller's total deadline; their resolver validates all addresses before pinned connections.
 
 The native crawler uses the same address policy through a validated reqwest resolver. Canonical verification uses the safe HEAD helper. Ambient proxies are disabled; a proxy explicitly selected in a user request profile remains a trusted opt-in transport, whose upstream routing is controlled by that proxy. Robots and sitemap bodies are streamed with a decoded-byte cap of the lesser of the crawl response limit and 25 MiB. Failed/oversized bodies are recorded as unavailable, never counted as successfully loaded discovery evidence.
+
+Request profiles accept one proxy or a list (comma, semicolon or whitespace separated, up to 64 HTTP/HTTPS entries, no duplicates). The crawler rotates requests round-robin; a proxy that fails three times in a row (connect error, timeout or HTTP 407) is banned for 60 seconds. When every proxy is banned, the one whose ban ends first is reused: traffic never falls back to a direct connection. Proxies are an explicit user opt-in and are not used to bypass bot protection.
 
 `src/types` contains separate audit, workspace, AI, research, backlinks, crawl, DataForSEO, Search Console and MCP contracts. The `@/types` barrel remains compatible and exports types only. Domain dependencies use direct type imports, with a cycle guard and a pre-refactor AST fingerprint for all 114 declarations. Existing consumers can keep the barrel imports; no runtime API or storage schema migration is required.
 

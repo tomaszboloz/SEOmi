@@ -1,10 +1,13 @@
-import { describe, expect, it, vi } from 'vitest';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { render, screen } from '@testing-library/react';
 import { BacklinkMetricsGrid } from '@/components/Domain/backlinkChecker/BacklinkMetricsGrid';
 import { BacklinkEquityAndAnchors } from '@/components/Domain/backlinkChecker/BacklinkEquityAndAnchors';
 import { BacklinkInboundTable } from '@/components/Domain/backlinkChecker/BacklinkInboundTable';
 import type { BacklinkProfileData } from '@/types';
 import { codeFiles, maxLocReport } from '../scripts/check-max-loc.mjs';
+import i18n from '@/i18n';
+
+beforeEach(async () => { await i18n.changeLanguage('en'); });
 
 const mockT = ((key: string) => key) as any;
 
@@ -39,7 +42,7 @@ describe('BacklinkChecker modular architecture', () => {
       'src/components/Domain/BacklinkChecker.tsx',
       ...codeFiles('src/components/Domain/backlinkChecker'),
     ];
-    expect(files.length).toBe(10);
+    expect(files.length).toBe(16);
     const report = maxLocReport(files);
     expect(report.violations).toEqual([]);
   });

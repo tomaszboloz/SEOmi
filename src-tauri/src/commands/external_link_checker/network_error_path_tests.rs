@@ -40,9 +40,7 @@ async fn failed_fallback_get_is_reported_without_invented_status() {
 
 #[test]
 fn client_build_failures_are_returned_as_text() {
-    let broken = reqwest::Client::builder()
-        .min_tls_version(reqwest::tls::Version::TLS_1_3)
-        .max_tls_version(reqwest::tls::Version::TLS_1_2);
+    let broken = reqwest::Client::builder().use_preconfigured_tls(42_u8);
     assert!(!super::network::finish_client(broken)
         .unwrap_err()
         .is_empty());

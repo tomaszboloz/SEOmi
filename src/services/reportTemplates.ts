@@ -12,6 +12,7 @@ export const REPORT_TEMPLATE_SECTIONS = [
   'focus',
   'authority',
   'aio',
+  'offPage',
   'trust',
 ] as const;
 import { readJsonStorage, readStorage, removeStorage, writeJsonStorage, writeStorage } from '@/services/storage';

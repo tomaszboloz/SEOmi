@@ -30,22 +30,24 @@ describe('score drop monitoring in hooks', () => {
     scores.trust = 80;
   });
 
-  it('AIO: first run records without alert, second run reports the previous snapshot', () => {
+  it('AIO: records snapshots but leaves alerting to crawl completion, not panel history', () => {
     renderHook(() => useAioReadiness(pages, run('r1'), 'proj-1'));
     expect(monitor).not.toHaveBeenCalled();
     scores.aio = 60;
-    renderHook(() => useAioReadiness(pages, run('r2'), 'proj-1'));
-    expect(monitor).toHaveBeenCalledWith('proj-1', 'aio', expect.objectContaining({ score: 80 }), expect.objectContaining({ score: 60 }), 'r2');
+    const { result } = renderHook(() => useAioReadiness(pages, run('r2'), 'proj-1'));
+    expect(result.current.history.map((item) => item.score)).toEqual([80, 60]);
+    expect(monitor).not.toHaveBeenCalled();
     monitor.mockClear();
     renderHook(() => useAioReadiness(pages, run('r2'), 'proj-1'));
     expect(monitor).not.toHaveBeenCalled();
   });
 
-  it('AIO: swallows a rejected delivery', () => {
+  it('AIO: does not alert when an older run is opened after a newer run', () => {
     renderHook(() => useAioReadiness(pages, run('r1'), 'proj-1'));
-    monitor.mockRejectedValue(new Error('x'));
     scores.aio = 10;
     expect(() => renderHook(() => useAioReadiness(pages, run('r2'), 'proj-1'))).not.toThrow();
+    renderHook(() => useAioReadiness(pages, run('r1'), 'proj-1'));
+    expect(monitor).not.toHaveBeenCalled();
   });
 
   it('Trust: alerts once per new run and skips repeats and missing project', () => {

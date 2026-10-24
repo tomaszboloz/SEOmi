@@ -1,5 +1,6 @@
 import { afterEach, expect, it, vi } from 'vitest';
 import { eraseProjectData, forgetSubject, loadErasureLog, putSubjectRecord } from '../src/services/dataErasure';
+import { offPageHistoryKey } from '@/services/offPage/history';
 
 const native = vi.hoisted(() => ({ invokeTauriCommand: vi.fn(), isTauriEnvironment: () => true }));
 vi.mock('../src/services/tauri', () => native);
@@ -28,4 +29,14 @@ it('project erase also clears Web Storage migration artifacts', async () => {
   expect((await eraseProjectData('p')).action).toBe('erase_project');
   expect(localStorage.length).toBe(1);
   expect(localStorage.getItem('seomi_project_q_crawl_runs')).toBe('1');
+});
+
+it.each(['project', 'subject'])('erases off-page history for only the selected %s project', async (scope) => {
+  localStorage.setItem(offPageHistoryKey('p'), '[{"id":"private"}]');
+  localStorage.setItem(offPageHistoryKey('q'), '[{"id":"keep"}]');
+  native.invokeTauriCommand.mockImplementation(async (command: string) => command === 'load_project_crawl_runs' ? [] : report);
+  if (scope === 'project') await eraseProjectData('p');
+  else await forgetSubject('p', 's');
+  expect(localStorage.getItem(offPageHistoryKey('p'))).toBeNull();
+  expect(localStorage.getItem(offPageHistoryKey('q'))).toBe('[{"id":"keep"}]');
 });

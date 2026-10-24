@@ -1,6 +1,9 @@
 use super::*;
 use std::time::{Duration, Instant};
-use tokio::{io::AsyncWriteExt, net::TcpListener};
+use tokio::{
+    io::{AsyncReadExt, AsyncWriteExt},
+    net::TcpListener,
+};
 
 #[tokio::test]
 async fn response_body_reads_honor_the_crawl_deadline() {
@@ -8,6 +11,17 @@ async fn response_body_reads_honor_the_crawl_deadline() {
     let address = listener.local_addr().unwrap();
     let server = tokio::spawn(async move {
         let (mut stream, _) = listener.accept().await.unwrap();
+        let mut buffer = [0; 512];
+        let mut request = Vec::new();
+        while let Ok(count) = stream.read(&mut buffer).await {
+            if count == 0 {
+                break;
+            }
+            request.extend_from_slice(&buffer[..count]);
+            if request.windows(4).any(|window| window == b"\r\n\r\n") {
+                break;
+            }
+        }
         stream
             .write_all(b"HTTP/1.1 200 OK\r\nContent-Length: 4\r\nConnection: close\r\n\r\n")
             .await

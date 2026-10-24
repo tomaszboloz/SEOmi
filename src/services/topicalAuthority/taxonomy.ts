@@ -44,7 +44,7 @@ const candidatesOf = (competitor: CompetitorPages, language: string): Candidate[
   return live.flatMap((page) => [...(page.heading_texts?.h2 ?? []), ...(page.heading_texts?.h3 ?? [])].flatMap((raw) => {
     const label = tidy(raw);
     const keys = unigramKeys(label, language);
-    if (!keys.size || keys.size > MAX_KEYS || (seen.get(label.toLowerCase()) ?? 0) > limit) return [];
+    if (!keys.size || keys.size > MAX_KEYS || seen.get(label.toLowerCase())! > limit) return [];
     return [{ domain: competitor.domain, label, keys, question: isQuestion(label), page }];
   }));
 };
@@ -95,7 +95,7 @@ const entitiesOf = (group: Group, language: string): string[] => {
 const commonTermsOf = (competitors: CompetitorPages[], language: string): Record<string, number> => {
   const pages = competitors.flatMap((competitor) => competitor.pages).filter((page) => page.focus_terms?.length);
   const counts = new Map<string, number>();
-  pages.forEach((page) => new Set((page.focus_terms ?? []).map((term) => phraseKey(term.surface || term.term, language)).filter((key): key is string => Boolean(key))).forEach((key) => counts.set(key, (counts.get(key) ?? 0) + 1)));
+  pages.forEach((page) => new Set(page.focus_terms!.map((term) => phraseKey(term.surface || term.term, language)).filter((key): key is string => Boolean(key))).forEach((key) => counts.set(key, (counts.get(key) ?? 0) + 1)));
   return Object.fromEntries([...counts].map(([key, count]): [string, number] => [key, count / Math.max(1, pages.length)]).filter(([, share]) => share >= COMMON_FROM).sort((a, b) => b[1] - a[1] || (a[0] < b[0] ? -1 : 1)).slice(0, MAX_COMMON).map(([key, share]) => [key, Math.round(share * 1000) / 1000]));
 };
 
@@ -105,11 +105,11 @@ const assignPillars = (rows: Array<{ keys: Set<string>; label: string }>, coreKe
   rows.forEach((row) => row.keys.forEach((key) => frequency.set(key, (frequency.get(key) ?? 0) + 1)));
   const anchors = rows.map((row) => {
     const pool = [...row.keys].filter((key) => !coreKeys.has(key));
-    return (pool.length ? pool : [...row.keys]).sort((a, b) => (frequency.get(b) ?? 0) - (frequency.get(a) ?? 0) || (a < b ? -1 : 1))[0];
+    return (pool.length ? pool : [...row.keys]).sort((a, b) => frequency.get(b)! - frequency.get(a)! || (a < b ? -1 : 1))[0];
   });
   const size = new Map<string, number>();
   anchors.forEach((anchor) => size.set(anchor, (size.get(anchor) ?? 0) + 1));
-  return anchors.map((anchor) => ((size.get(anchor) ?? 0) >= 2 ? anchor : GENERAL));
+  return anchors.map((anchor) => (size.get(anchor)! >= 2 ? anchor : GENERAL));
 };
 
 /** Builds the 3-level reference taxonomy (Core -> Pillar -> Sub-topic) from competitor headings and suggestions. */
@@ -139,7 +139,7 @@ export const buildTaxonomy = (input: TaxonomyInput): ReferenceTaxonomy | null =>
   }));
   const pillars: RefPillar[] = [...new Set(anchors)].map((id) => {
     const rows = subtopics.filter((item) => item.pillar === id);
-    return { id, label: id === GENERAL ? GENERAL : labels.get(id) ?? id, importance: Math.round((rows.reduce((sum, item) => sum + item.importance, 0) / rows.length) * 1000) / 1000 };
+    return { id, label: id === GENERAL ? GENERAL : labels.get(id)!, importance: Math.round((rows.reduce((sum, item) => sum + item.importance, 0) / rows.length) * 1000) / 1000 };
   }).sort((a, b) => b.importance - a.importance || (a.id < b.id ? -1 : 1));
   return { version: TAXONOMY_VERSION, coreLabel: input.coreLabel, language: input.language, builtAt: input.now, source: input.source, competitors: sources.map((item) => item.domain), suggestionCount: input.suggestions.length, pillars, subtopics, commonTerms: commonTermsOf(sources, input.language) };
 };

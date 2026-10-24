@@ -12,9 +12,9 @@ describe('score drop alerts (AIO readiness and trust)', () => {
     send.mockResolvedValue(true);
   });
 
-  it('alerts only when the drop exceeds the shared threshold', () => {
+  it('uses the inclusive AIO threshold while preserving the strict trust threshold', () => {
     const alert = evaluateScoreDropAlert('aio', { score: 70 }, { score: 60 }, 'aio-run2');
-    expect(alert).toMatchObject({ type: 'focus', sourceId: 'aio-run2', evidence: { kind: 'aio', from: 70, to: 60, points: 10 } });
+    expect(alert).toMatchObject({ type: 'aio', sourceId: 'aio-run2', evidence: { kind: 'aio', before: 70, after: 60, drop: 10 } });
     expect(validAlert(alert)).toBe(true);
     expect(alert?.body).toContain('70');
     expect(evaluateScoreDropAlert('trust', { score: 70 }, { score: 65 }, 's')).toBeNull();

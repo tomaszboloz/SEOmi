@@ -36,9 +36,7 @@ export const domainLanguageKey = (projectId: string) => `seomi_project_${project
 
 export const backlinkQueryKey = (projectId: string) => `seomi_project_${projectId}_backlink_query_v1`;
 
-export const backlinkProfileKey = (projectId: string) => `seomi_project_${projectId}_backlink_profile_v1`;
-
-export const backlinkProfileHistoryKey = (projectId: string) => `seomi_project_${projectId}_backlink_profile_history_v1`;
+export { backlinkProfileKey, backlinkProfileHistoryKey } from '@/services/urlTelemetry/backlinkPersistence';
 
 export const backlinkGapReportKey = (projectId: string) => `seomi_project_${projectId}_backlink_gap_report_v1`;
 

@@ -1,4 +1,79 @@
 {
+  "cmsPanelUi": {
+    "title": "Sichere CMS-Änderung",
+    "description": "Ersetzen Sie den Inhalt unter einer Überschrift. Prüfen und genehmigen Sie den exakten Diff, führen Sie einen Testlauf aus und wenden Sie ihn an. Eingabeänderungen widerrufen die Freigabe.",
+    "kind": "CMS-Typ",
+    "baseUrl": "CMS-Basisadresse (HTTPS)",
+    "contentId": "Inhalts-ID",
+    "credential": "Name gespeicherter Zugangsdaten (optional)",
+    "credentialHelp": "Verwenden Sie cms_auth_-Zugangsdaten mit dem Authorization-Header im Systemschlüsselspeicher. Leer bedeutet anonym. Geben Sie hier kein Geheimnis ein.",
+    "collection": "Strapi-Sammlung",
+    "heading": "Gesuchte Überschrift",
+    "replacement": "Neuer Abschnittsinhalt (HTML oder Markdown)",
+    "ymyl": "Gesundheits-, Finanz- oder Rechtsinhalt (YMYL)",
+    "factGate": "Die erforderliche Faktenprüfung für diesen exakten Diff ist bestanden",
+    "diff": "Vorgeschlagener Diff",
+    "revision": "Quellversion: {{revision}}",
+    "noChanges": "Keine Änderungen. Passen Sie den Ersatzinhalt vor dem Anwenden an.",
+    "prepare": "Diff vorbereiten",
+    "approve": "Ich genehmige diesen exakten Diff",
+    "dryRun": "Testlauf ausführen",
+    "apply": "Genehmigten Diff anwenden",
+    "busy": "CMS-Änderung wird verarbeitet…",
+    "noProject": "Wählen Sie ein aktives Projekt für eine CMS-Änderung.",
+    "desktopOnly": "CMS-Anfragen sind nur in der Desktop-App verfügbar.",
+    "failed": "CMS-Änderung fehlgeschlagen: {{reason}}"
+  },
+  "teamPanelUi": {
+    "title": "Teammodus und Audit-Protokoll",
+    "description": "Legen Sie fest, wer in welcher Rolle handelt. Jede Änderung wird in ein lokales, manipulationssicheres Audit-Protokoll mit Hash-Kette geschrieben.",
+    "actor": "Akteur",
+    "role": "Rolle",
+    "roles": {
+      "admin": "Admin",
+      "seo_strategist": "SEO-Stratege",
+      "content_writer": "Content-Autor",
+      "developer": "Entwickler"
+    },
+    "permissions": {
+      "run_crawl": "Crawl starten",
+      "execute_cms_patch": "CMS-Patch ausführen",
+      "modify_site_focus_rules": "Site-Focus-Regeln ändern",
+      "export_audit_pdf": "Audit-PDF exportieren",
+      "manage_team_roles": "Teamrollen verwalten"
+    },
+    "permissionsTitle": "Berechtigung",
+    "auditTitle": "Audit-Protokoll",
+    "auditEmpty": "Noch keine Audit-Einträge.",
+    "chainOk": "Audit-Kette verifiziert.",
+    "chainBroken": "Audit-Kette bei Eintrag {{entry}} unterbrochen ({{reason}}).",
+    "exportCsv": "CSV exportieren",
+    "columns": {
+      "time": "Zeit",
+      "actor": "Akteur",
+      "action": "Aktion",
+      "result": "Ergebnis"
+    },
+    "results": {
+      "success": "Erfolg",
+      "denied": "Abgelehnt",
+      "failure": "Fehler",
+      "dry_run": "Probelauf"
+    },
+    "allowed": "Erlaubt",
+    "notAllowed": "Nicht erlaubt"
+  },
+  "dataErasureUi": {
+    "title": "Projektdaten löschen (DSGVO)",
+    "description": "Löscht Crawl-Läufe, Embeddings und Verlauf dieses Projekts dauerhaft aus dem lokalen Speicher, indem die Verschlüsselungsschlüssel vernichtet werden. Dies kann nicht rückgängig gemacht werden.",
+    "confirm": "Projekt-ID zur Bestätigung eingeben: {{id}}",
+    "button": "Projektdaten löschen",
+    "run": "Endgültig löschen",
+    "cancel": "Abbrechen",
+    "done": "Gelöscht: {{records}} Datensätze und {{runs}} Crawl-Läufe.",
+    "failed": "Löschen fehlgeschlagen: {{message}}",
+    "desktopOnly": "Nur in der Desktop-App verfügbar."
+  },
   "schemaFindings": {
     "messageMissing": "Die strukturierte-Daten-Regel {{code}} meldet eine fehlende Eigenschaft oder Struktur für {{type}}.",
     "messageInvalid": "Die strukturierte-Daten-Regel {{code}} meldet einen ungültigen Wert oder eine ungültige Form für {{type}}.",
@@ -2298,7 +2373,8 @@
       "focus": "Site Focus",
       "authority": "Thematische Autorität",
       "aio": "KI-Bereitschaft",
-      "trust": "Entitätsvertrauen"
+      "trust": "Entitätsvertrauen",
+      "offPage": "Offpage-Analyse"
     },
     "environmentStaging": "test/staging",
     "environmentProduction": "production",
@@ -2454,6 +2530,7 @@
     "profileNamePlaceholder": "e.g. Editorial account",
     "sessionCookies": "Session cookies",
     "proxyOptional": "(optional; credentials in the URL remain in the system vault)",
+    "proxyListHint": "Mehrere Proxys: mit Kommas oder Leerzeichen trennen (bis zu 64). Anfragen rotieren zwischen ihnen.",
     "customHeaders": "Custom headers",
     "oneHeaderPerLine": "(one per line: Name: value)",
     "saving": "Saving…",
@@ -5169,9 +5246,11 @@
       "pagespeed": "PageSpeed / CrUX",
       "crawl": "Crawl-Vergleiche",
       "semantic": "Semantische Vergleiche",
-      "focus": "Site Focus Score"
+      "focus": "Site Focus Score",
+      "aio": "AI-Overviews-Bereitschaft"
     },
-    "focusDrop": "Rückgang des Site Focus Score (Punkte)"
+    "focusDrop": "Rückgang des Site Focus Score (Punkte)",
+    "aioDrop": "Rückgang des AIO-R-Scores (Punkte)"
   },
   "ga4": {
     "title": "Google Analytics 4",
@@ -6062,6 +6141,40 @@
           "no-articles": "Es wurden keine Artikelseiten erkannt; die Ebenen Autoren und Quellenangaben wurden nicht bewertet.",
           "author-invalid-profile": "{{0}} Autoren verlinken ein ORCID- oder Wikidata-Profil mit ungültiger Kennung ({{1}}). Prüfsumme oder Q-ID kontrollieren.",
           "ymyl-no-scholarly-ids": "Keiner der {{0}} Artikel zitiert eine Quelle mit DOI, PMID oder PMCID. Bei YMYL-Themen die Primärstudie zitieren."
+        }
+      },
+      "offPage": {
+        "title": "Offpage-Analyse",
+        "intro": "Letzte gespeicherte Analyse dieses Projekts; diese Stichprobe ist nicht das vollständige Backlink-Profil.",
+        "topic": "Thema",
+        "scale": "Autoritätsskala",
+        "model": "Embedding-Modell",
+        "requested": "Angeforderte Quellen",
+        "fetched": "Abgerufene Quellen",
+        "scored": "Bewertete Quellen",
+        "statusLabel": "Status",
+        "limitationsLabel": "Einschränkungen",
+        "sourcesIntro": "Bis zu 10 Quellen, höchster Beitrag zuerst; n/a bedeutet nicht verfügbar.",
+        "offset": "Textposition",
+        "excerpt": "Auszug",
+        "disclaimer": "Kein Google PageRank; fehlender Text oder Autoritätswert bedeutet teilweise/nicht verfügbare Daten, nicht null Backlinks; gemeinsames Auftreten ist keine Empfehlung.",
+        "tbva": "TBVA",
+        "tSources": "Gespeicherte Quellenbelege",
+        "authority": "Autorität",
+        "similarity": "Ähnlichkeit",
+        "contribution": "Beitrag",
+        "tCitations": "Kozitationsauszüge",
+        "na": "n/a",
+        "status": {
+          "ready": "Bereit",
+          "partial": "Teilweise",
+          "unavailable": "Nicht verfügbar"
+        },
+        "limitations": {
+          "no-topic-vector": "Kein brauchbarer Core-Topic-Vektor aus dem letzten abgeschlossenen Projektcrawl; TBVA nicht verfügbar.",
+          "invalid-scale": "Ungültige Autoritätsskala; TBVA nicht verfügbar.",
+          "no-follow-links": "Keine Follow-Links zur Analyse verfügbar.",
+          "source-text-or-authority-missing": "Einigen Quellen fehlen Text, brauchbare Vektoren oder Anbieterautorität."
         }
       }
     },
@@ -7020,6 +7133,9 @@
       "axisX": "SFS",
       "axisY": "TAS"
     },
+    "freshness": {
+      "undated": "{{undated}} von {{total}} Seiten haben kein Datum und werden nicht bewertet"
+    },
     "pillars": {
       "title": "Bestandteile des Topical Authority Score",
       "tcr": "Themenabdeckung",
@@ -7501,9 +7617,23 @@
     "underLinked": "Zu wenig verlinkt",
     "leak": "Leck",
     "unknown": "{{count}} Links haben unbekannte Ähnlichkeit und zählen nicht als Leck.",
-    "notConverged": "Der Solver ist nicht konvergiert; die Werte sind ungefähr."
+    "notConverged": "Der Solver ist nicht konvergiert; die Werte sind ungefähr.",
+    "whatIf": {
+      "title": "What-If-Linksimulator",
+      "source": "Von Seite",
+      "target": "Zu Seite",
+      "action": "Änderung",
+      "add": "Link hinzufügen",
+      "remove": "Link entfernen",
+      "run": "Simulieren",
+      "noChange": "Keine Änderung der Werte.",
+      "before": "Vorher",
+      "after": "Nachher",
+      "delta": "Änderung"
+    }
   },
   "decayUi": {
+    "snapshots": "Snapshots als Grundlage dieser Bewertung: {{count}}",
     "title": "Semantic-Decay-Radar",
     "verdict": {
       "too-few-samples": "Noch nicht genug vergleichbare SERP-Snapshots. Nichts zu melden.",
@@ -7543,6 +7673,9 @@
   },
   "prePublishUi": {
     "title": "Prüfung vor Veröffentlichung",
+    "copy": "Bericht kopieren",
+    "copied": "Bericht kopiert.",
+    "copyFailed": "Der Bericht konnte nicht kopiert werden.",
     "verdict": {
       "insufficient": "Zu wenig Daten, um diesen Entwurf zu beurteilen.",
       "blocked": "Noch nicht veröffentlichen: Der Entwurf dupliziert eine bestehende Seite.",
@@ -7568,6 +7701,7 @@
   },
   "parityUi": {
     "title": "Internationale Parität",
+    "summary": "{{covered}} abgedeckt, {{shallow}} oberflächlich, {{missing}} fehlend, {{local}} bewusst lokal.",
     "inconclusive": "Nicht aussagekräftig: Die Parität lässt sich mit den verfügbaren Daten nicht beurteilen.",
     "gap": {
       "no-reference-coverage": "Die Referenzsprache hat keine Themenabdeckungsdaten.",
@@ -7708,6 +7842,276 @@
       "rewrite-echo": "Der Absatz bei Offset {{offset}} wiederholt eine Konkurrenzpassage: in eigenen Worten umschreiben.",
       "add-evidence": "Konkrete Daten mit Einheiten oder Quellen ergänzen; keine erkannt.",
       "refocus-drift": "Der Absatz bei Offset {{offset}} driftet vom Thema ab: fokussieren oder entfernen."
+    }
+  },
+  "logIntelUi": {
+    "title": "Log-Analyse",
+    "description": "Lokales Zugriffslog .log oder .txt importieren (maximal 500 MB). Nur Aggregate, nie rohe IP-Adressen, werden gespeichert. Die Deduplizierung nutzt einen SHA-256-Stichprobenfingerabdruck (erstes/letztes MiB und Größe).",
+    "chooseFile": "Zugriffslog auswählen",
+    "cancel": "Abbrechen",
+    "clear": "Logs löschen",
+    "importing": "Zugriffslog wird importiert",
+    "progress": "Zeilen: {{lines}} · Fehlerhaft: {{malformed}} · Keine Bots: {{ignoredNonBot}}",
+    "cancelled": "Import abgebrochen.",
+    "duplicate": "Diese Datei wurde bereits importiert.",
+    "complete": "Import abgeschlossen.",
+    "storageFailed": "Lokaler Speicher konnte nicht aktualisiert werden. Änderungen bleiben nur im Arbeitsspeicher; gespeicherte Logs sind eventuell unverändert.",
+    "tooLarge": "Die Datei überschreitet das Limit von 500 MB.",
+    "invalidFile": "Eine .log- oder .txt-Datei auswählen.",
+    "resumeRequired": "Die unvollständige Datei fortsetzen oder Logs löschen, bevor eine andere Datei importiert wird.",
+    "importFailed": "Die Datei konnte nicht gelesen oder gehasht werden. Bitte erneut versuchen.",
+    "resume": "Dieselbe Datei auswählen, um ohne doppelte Zeilenzählung fortzusetzen.",
+    "verificationNote": "Die Bot-Identität ist eine User-Agent-Behauptung, kein Nachweis. Spoofing-Prüfungen benötigen den Desktop-DNS-Resolver; dieses Panel fragt kein DNS ab. Ungeprüfte Zeilen bleiben unklar.",
+    "verificationNoteDesktop": "Die Bot-Identität wird auf diesem Computer per Reverse- und Forward-DNS geprüft (3 s Timeout). Ein fehlgeschlagener Abruf lässt die Zeile als behauptet, nie als gefälscht.",
+    "matrix": "Crawl-Effizienzmatrix",
+    "coverage": "Abdeckung: {{days}} von {{period}} Tagen",
+    "period": "Zeitraum (UTC): {{start}} – {{end}}",
+    "insufficient": "Die Log-Abdeckung reicht für zuverlässige Bewertungen nicht aus.",
+    "noScores": "Der neueste Projekt-Crawl hat keine gespeicherten TRS-Werte pro Pfad. Es werden keine Werte erfunden.",
+    "unavailable": "Nicht verfügbar",
+    "empty": "Keine Log- oder Crawl-Pfade vorhanden.",
+    "previous": "Zurück",
+    "page": "Seite {{current}} von {{total}}",
+    "next": "Weiter",
+    "loading": "Log-Analyse wird geladen…",
+    "columns": {
+      "path": "Pfad",
+      "family": "Bot-Familie",
+      "status": "Verifizierung",
+      "hits": "Zugriffe",
+      "errors": "4xx/5xx-Anteil",
+      "verdict": "Bewertung"
+    },
+    "families": {
+      "googlebot": "Googlebot",
+      "bingbot": "Bingbot",
+      "gptbot": "GPTBot",
+      "perplexitybot": "PerplexityBot",
+      "none": "Keine Bot-Belege"
+    },
+    "statuses": {
+      "verified": "Verifiziert",
+      "claimed": "Behauptet",
+      "spoofed": "Gefälscht",
+      "unknown": "Unbekannt"
+    },
+    "verdicts": {
+      "waste": "Verschwendung",
+      "starvation": "Unterversorgung",
+      "ok": "OK",
+      "inconclusive": "Unklar",
+      "no-logs": "Keine Logs"
+    }
+  },
+  "altCheckUi": {
+    "column": "ALT-Qualität",
+    "csvColumn": "alt_issues",
+    "summary": "{{checked}} Bilder geprüft, {{issues}} mit ALT-Problemen.",
+    "issues": {
+      "missing": "ALT fehlt",
+      "empty": "ALT leer",
+      "filename": "Sieht wie ein Dateiname aus",
+      "generic": "Allgemeine Formulierung",
+      "too-long": "Zu lang",
+      "repeats-caption": "Wiederholt die Bildunterschrift",
+      "unrelated-to-context": "Ohne Bezug zum Kontext"
+    },
+    "noIssues": "Keine ALT-Probleme",
+    "decorative": "Dekorativ (leeres ALT)",
+    "visualNotice": "Die visuelle Analyse benötigt ein lokales Modell und ist in dieser Version nicht verfügbar.",
+    "analyses": {
+      "ocr": "OCR",
+      "clip-alignment": "CLIP-Abgleich",
+      "transcript": "Transkripte"
+    },
+    "statuses": {
+      "unavailable": "Nicht verfügbar"
+    },
+    "noScorePenalty": "Dies senkt keinen Wert."
+  },
+  "prePublishMountUi": {
+    "title": "Prüfung vor Veröffentlichung",
+    "description": "Verwendet den letzten abgeschlossenen Crawl, gespeicherte Auszüge und Begriffe, Site-Focus-Werte und die Embedding-Einstellungen des Projekts. Nur Simulation: Es wird nichts gespeichert oder veröffentlicht.",
+    "draft": "Text des unveröffentlichten Entwurfs",
+    "url": "Entwurfs-URL (optional)",
+    "urlHint": "Für eine neue Seite leer lassen. Eine vorhandene Crawl-URL ersetzt diese Seite in der Simulation.",
+    "invalidUrl": "Eine gültige HTTP- oder HTTPS-URL ohne Zugangsdaten eingeben.",
+    "run": "Entwurf prüfen",
+    "cancel": "Abbrechen",
+    "loading": "Prüfung wird geladen…",
+    "noCrawl": "Kein abgeschlossener Crawl für das aktive Projekt. Zuerst die Website crawlen.",
+    "noCore": "Noch kein Kernthema. Der Entwurf kann nicht bewertet werden.",
+    "running": "Embeddings für Entwurf und Crawl-Daten werden erstellt…",
+    "unreachable": "Der gewählte Embedding-Anbieter konnte keine Vektoren liefern. Projekteinstellungen und Verbindung prüfen.",
+    "cancelled": "Prüfung abgebrochen. Kein Ergebnis wurde übernommen.",
+    "stale": "Eingaben oder Crawl geändert. Prüfung erneut starten."
+  },
+  "telemetrySourcesUi": {
+    "title": "Quellen",
+    "sources": {
+      "gsc": "GSC",
+      "ga4": "GA4",
+      "backlinks": "Backlinks"
+    },
+    "states": {
+      "measured": "Gemessen",
+      "partial-history": "Unvollständiger Verlauf",
+      "stale": "Veraltet",
+      "sampled": "Stichprobe",
+      "missing-permission": "Fehlende Berechtigung",
+      "unavailable": "Nicht verfügbar"
+    },
+    "property": "Property: {{value}}",
+    "provider": "Anbieter: {{value}}",
+    "period": "{{start}} – {{end}} ({{days}} Tage)",
+    "retrievedAt": "Abgerufen: {{value}}",
+    "truncated": {
+      "yes": "Gekürzt: ja",
+      "no": "Gekürzt: nein"
+    },
+    "coverage": "Abdeckung: {{value}}%",
+    "unknownNote": "Unbekannte Daten werden niemals als null gezählt."
+  },
+  "offPageSourcesUi": {
+    "analyze": "Linkquellen analysieren",
+    "cancel": "Abbrechen",
+    "scope": "bis zu 25 Follow-Links, einer pro Quelldomain, höchste Anbieterautorität zuerst. Autoritätsskala: 0–100; TBVA ist eine Summe, kein Prozentsatz und kein Google PageRank. Grenzen: 3 parallele Anfragen, 15 s natives Zeitlimit, 25 MiB Antwort, 20.000 sichtbare Textzeichen je Quelle.",
+    "provider": "Lokaler Embedding-Anbieter",
+    "local": "Lokaler Hash",
+    "ollama": "Lokales Ollama",
+    "model": "Ollama-Embedding-Modell",
+    "scored": "Bewertete Quellen: {{scored}} / {{total}} ausgewählte (nicht das gesamte Backlinkprofil).",
+    "sources": "Abrufstatus der Quellen",
+    "fetchedAt": "Abgerufen: {{time}}",
+    "notFetched": "Nicht abgerufen",
+    "context": "Die Extraktion enthält keine Absatz- oder Ankergrenzen. Begrenzte Textblöcke werden angenähert; alle Treffer haben linked=false, da der Linkkontext im Absatz fehlt.",
+    "caveat": "Gemeinsames Auftreten ist keine Empfehlung. Homonyme können falsche Treffer erzeugen; verneinte Erwähnungen bleiben unklar.",
+    "excerpts": "Kozitationsauszüge",
+    "offset": "{{url}} — Position im extrahierten Text {{offset}}",
+    "missing": "Fehlender Text, unbrauchbare Vektoren oder fehlende Autorität bedeuten teilweise/nicht verfügbare Evidenz, nicht null Backlinks. Die Stichprobe ist nicht das gesamte Profil.",
+    "status": {
+      "running": "Quellen werden analysiert…",
+      "done": "Quellenanalyse abgeschlossen",
+      "cancelled": "Analyse abgebrochen; unfertige Quellen werden nicht bewertet",
+      "unavailable": "Analyse nicht verfügbar"
+    },
+    "fetch": {
+      "pending": "Ausstehend",
+      "ok": "Text verfügbar",
+      "unavailable": "Nicht verfügbar",
+      "too-large": "Antwort zu groß",
+      "blocked": "Vom sicheren Transport blockiert"
+    },
+    "limitations": {
+      "no-topic-vector": "Kein brauchbarer Core-Topic-Vektor aus dem letzten abgeschlossenen Projektcrawl; TBVA nicht verfügbar.",
+      "invalid-scale": "Ungültige Autoritätsskala; TBVA nicht verfügbar.",
+      "no-follow-links": "Keine Follow-Links zur Analyse verfügbar.",
+      "source-text-or-authority-missing": "Einigen Quellen fehlen Text, brauchbare Vektoren oder Anbieterautorität."
+    },
+    "polarity": {
+      "neutral": "Neutrales gemeinsames Auftreten; keine Empfehlung",
+      "unclear": "Unklar: mögliche Verneinung"
+    },
+    "pacing": "Der native Auditschutz begrenzt auch die Starts auf 10 pro Minute. Die Stichprobe kann mehrere Minuten dauern; andere Audits können die Verfügbarkeit verringern.",
+    "history": {
+      "title": "Verlauf",
+      "empty": "Keine abgeschlossenen Analysen gespeichert.",
+      "summary": "TBVA: {{value}} · Bewertet/angefordert: {{scored}}/{{requested}}",
+      "delta": "TBVA-Änderung: {{delta}}",
+      "notComparable": "Nicht vergleichbar: {{reason}}",
+      "reasons": {
+        "first": "kein vorheriger Eintrag",
+        "scale": "andere Autoritätsskala",
+        "model": "anderes Embedding-Modell",
+        "unknownModel": "Embedding-Modell unbekannt",
+        "unavailable": "TBVA nicht verfügbar"
+      },
+      "view": "Quellen anzeigen",
+      "hide": "Quellen ausblenden",
+      "delete": "Eintrag löschen",
+      "clear": "Projektverlauf leeren",
+      "exportCurrent": "Aktuelle Analyse als CSV",
+      "exportRecord": "Eintrag als CSV",
+      "storageError": "Verlaufsspeicher nicht verfügbar; Änderungen wurden nicht gespeichert.",
+      "topic": "Thema: {{topic}}",
+      "embedding": "Embedding: {{provider}} / {{model}}",
+      "details": "Gespeicherte Quellenbelege",
+      "fields": {
+        "sourceUrl": "Quell-URL",
+        "fetchedAt": "Abgerufen am",
+        "availability": "Verfügbarkeit",
+        "authority": "Autorität",
+        "similarity": "Ähnlichkeit",
+        "contribution": "Beitrag"
+      },
+      "unavailable": "Nicht verfügbar",
+      "status": {
+        "ready": "Bereit",
+        "partial": "Teilweise",
+        "unavailable": "Nicht verfügbar"
+      },
+      "privacy": "Die letzten 10 abgeschlossenen Analysen werden lokal je Projekt gespeichert. Vollständige Seitentexte und Vektoren werden nie gespeichert."
+    }
+  },
+  "experimentsUi": {
+    "title": "SEO-Experimente",
+    "disclaimer": "Dies ist eine Beobachtung, kein Kausalitätsnachweis. Änderungen können auf Saisonalität, andere Maßnahmen oder externe Faktoren zurückgehen.",
+    "projectRequired": "Wählen Sie ein Projekt, um Maßnahmen zu erfassen.",
+    "capacity": "Bis zu {{count}} Maßnahmen werden gespeichert; weitere ersetzen die ältesten.",
+    "url": "Seiten-URL",
+    "site": "Gesamte Website",
+    "date": "Erster betroffener Tag",
+    "kind": "Art der Maßnahme",
+    "note": "Notiz (bis zu 300 Zeichen)",
+    "add": "Maßnahme hinzufügen",
+    "saveFailed": "Speichern fehlgeschlagen. Prüfen Sie die Felder und den lokalen Speicher.",
+    "removeFailed": "Die Maßnahme konnte nicht aus dem lokalen Speicher entfernt werden.",
+    "empty": "Keine Maßnahmen erfasst.",
+    "intervention": "Maßnahme",
+    "unavailable": "Nicht verfügbar",
+    "baseline": "Referenzzeitraum",
+    "followUp": "Folgezeitraum",
+    "measurements": "Beobachtete Messwerte",
+    "metric": "Kennzahl",
+    "before": "Vorher",
+    "after": "Nachher",
+    "change": "Relative Änderung",
+    "clicks": "Klicks",
+    "impressions": "Impressionen",
+    "position": "Durchschnittliche Position (Differenz mit Vorzeichen)",
+    "restOfSite": "Rest der Website (Gesamtwert minus Seite)",
+    "relativeVsSite": "Seite minus Rest der Website (Prozentpunkte)",
+    "limitations": "Einschränkungen",
+    "remove": "Maßnahme entfernen",
+    "percent": "{{value}} %",
+    "points": "{{value}} Prozentpunkte",
+    "kinds": {
+      "content": "Inhalt",
+      "internal-links": "Interne Links",
+      "title-meta": "Titel und Metadaten",
+      "technical": "Technisch",
+      "other": "Sonstiges"
+    },
+    "status": {
+      "ready": "Beobachtung verfügbar",
+      "inconclusive": "Nicht aussagekräftig",
+      "pending": "Geplant / ausstehend"
+    },
+    "reasons": {
+      "observational": "Nur Vorher-Nachher-Beobachtung; keine kausale Schlussfolgerung.",
+      "uncontrolled-factors": "Saisonalität, gleichzeitige Änderungen und externe Faktoren werden nicht kontrolliert.",
+      "zero-baseline": "Bei einem Referenzwert von null ist die relative Änderung nicht verfügbar.",
+      "no-control": "Für eine Maßnahme auf der gesamten Website gibt es keine separate Kontrollgruppe.",
+      "filtered-scope": "Für beide Zeiträume gelten dieselben gespeicherten Search-Console-Filter.",
+      "invalid-period": "Ein gespeicherter Zeitraum hat ungültige Datumswerte oder eine ungültige Dauer.",
+      "inconsistent-totals": "Seitenwerte übersteigen die gespeicherten Gesamtwerte; die Kontrolle ist nicht berechenbar.",
+      "no-baseline": "Kein gespeicherter Zeitraum endet vor der Maßnahme.",
+      "no-follow-up": "Kein gespeicherter Zeitraum beginnt am Tag der Maßnahme oder danach.",
+      "incomparable-scope": "Die nächstliegenden Zeiträume haben unterschiedliche Properties oder Filter oder decken die URL nicht ab.",
+      "period-length-mismatch": "Die Zeiträume unterscheiden sich um mehr als 10 % in ihrer Länge.",
+      "rows-truncated": "Gespeicherte Seitenzeilen sind gekürzt; der Seitenvergleich kann unvollständig sein.",
+      "low-volume": "Weniger als 30 Klicks im Referenzzeitraum; das Volumen ist für einen verlässlichen Vergleich zu gering.",
+      "pending": "Die Maßnahme liegt in der Zukunft; die Auswertung steht aus."
     }
   }
 }

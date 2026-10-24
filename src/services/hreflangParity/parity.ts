@@ -13,9 +13,11 @@ export interface ParityInput {
   complete: boolean;
   /** A shallow page has less than this share of the reference depth. */
   shallowRatio?: number;
+  /** Human-readable names for reference topic ids; ids stay the keys. */
+  topicLabels?: Map<string, string>;
 }
 
-export interface ParityRow { language: string; topic: string; status: ParityStatus; depth: number; referenceDepth: number }
+export interface ParityRow { language: string; topic: string; label?: string; status: ParityStatus; depth: number; referenceDepth: number }
 
 export interface ParityReport {
   status: 'ready' | 'inconclusive';
@@ -42,7 +44,8 @@ export const compareParity = (input: ParityInput): ParityReport => {
       const depth = own.get(topic) ?? 0;
       const status: ParityStatus = input.localExceptions?.get(language)?.has(topic) ? 'intentionally-local'
         : depth <= 0 ? 'missing' : depth < referenceDepth * ratio ? 'shallow' : 'covered';
-      rows.push({ language, topic, status, depth, referenceDepth });
+      const label = input.topicLabels?.get(topic);
+      rows.push({ language, topic, ...(label ? { label } : {}), status, depth, referenceDepth });
     });
   });
   return { status: 'ready', rows, gaps };

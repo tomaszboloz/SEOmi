@@ -2,7 +2,8 @@ import { useTranslation } from 'react-i18next';
 import { HelpTip } from '@/components/Help/HelpTip';
 import type { SiteFocusReport } from '@/services/siteFocus';
 import { decideProtection } from '@/services/urlProtection';
-import { getSnapshot, type UrlTelemetry } from '@/services/urlTelemetry';
+import { ensureUrlTelemetry, type UrlTelemetry } from '@/services/urlTelemetry';
+import { TelemetrySources } from './TelemetrySources';
 
 const MAX_ROWS = 20;
 const NONE = { state: 'unavailable', value: null } as const;
@@ -12,8 +13,8 @@ const keyOf = (url: string): string => url.replace(/\/+$/, '');
 /** Advisory PRI guardrail for low-TRS pages. No snapshot means an empty state, never zeros. */
 export const ProtectionPanel = ({ report, projectId }: { report: SiteFocusReport; projectId?: string | null }) => {
   const { t } = useTranslation();
-  const snapshot = projectId ? getSnapshot(projectId) : null;
   const low = report.pages.filter((page) => !page.skipped && page.trs < 40);
+  const snapshot = projectId ? ensureUrlTelemetry(projectId, report.pages.map((page) => page.url)) : null;
   if (!low.length) return null;
   const byUrl = new Map((snapshot?.urls ?? []).map((row) => [keyOf(row.url), row]));
   const rows = low.slice(0, MAX_ROWS).map((page) => {
@@ -24,6 +25,7 @@ export const ProtectionPanel = ({ report, projectId }: { report: SiteFocusReport
   return (
     <section className="space-y-2 rounded-lg border border-white/10 p-3 text-xs" data-testid="protection-panel">
       <h3 className="flex items-center gap-2 font-semibold">{t('focus.protection.title')}<HelpTip id="focus.protection" /></h3>
+      <TelemetrySources snapshot={snapshot} />
       {!snapshot && <p role="status" data-testid="protection-empty">{t('focus.protection.empty')}</p>}
       <ul className="space-y-1">
         {rows.map(({ page, result }) => (

@@ -12,4 +12,6 @@ export const getSnapshot = (projectId: string, now: Date = new Date()): UrlTelem
   return found;
 };
 
+export const dropSnapshot = (projectId: string): void => { cache.delete(projectId); };
+
 export const clearSnapshots = (): void => cache.clear();

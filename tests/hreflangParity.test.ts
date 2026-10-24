@@ -3,6 +3,14 @@ import { buildClusters, normalizeCode, normalizeUrl, type HreflangPage } from '@
 import { compareParity, summarize } from '@/services/hreflangParity/parity';
 
 const tag = (language: string, target_url: string, extra = {}) => ({ language, target_url, ...extra });
+const expectedUrl = (host: string, pathname: string): string => new URL(pathname, `https://${host}`).href.replace(/\/$/u, '');
+const hasExactUrl = (urls: readonly string[], expected: string): boolean => urls.some((value) => {
+  try {
+    return new URL(value).href.replace(/\/$/u, '') === expected;
+  } catch {
+    return false;
+  }
+});
 
 describe('hreflang clusters', () => {
   it('normalizes urls and codes', () => {
@@ -19,11 +27,13 @@ describe('hreflang clusters', () => {
     ];
     const clusters = buildClusters(pages);
     expect(clusters).toHaveLength(2);
-    const a = clusters.find((c) => c.urls.includes('https://a.test/en'));
-    expect(a?.languages.get('en-gb')).toEqual(['https://a.test/en']);
+    const expectedA = expectedUrl('a.test', '/en');
+    const a = clusters.find((c) => hasExactUrl(c.urls, expectedA));
+    const enUrls = a?.languages.get('en-gb') ?? [];
+    expect(enUrls).toEqual([expectedA]);
     const codes = a?.issues.map((i) => i.code) ?? [];
     expect(codes).toEqual(expect.arrayContaining(['missing-x-default', 'invalid-code', 'missing-reciprocal', 'target-not-crawled']));
-    const b = clusters.find((c) => c.urls.includes('https://b.test'));
+    const b = clusters.find((c) => hasExactUrl(c.urls, expectedUrl('b.test', '/')));
     expect(b?.issues.map((i) => i.code)).toContain('missing-self');
     expect(b?.issues.map((i) => i.code)).toContain('missing-x-default');
   });

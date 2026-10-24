@@ -1,4 +1,4 @@
-import { fireEvent, render, screen, waitFor, within } from '@testing-library/react';
+import { act, fireEvent, render, screen, waitFor, within } from '@testing-library/react';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import i18n from '@/i18n';
 import { GapBriefPanel } from '@/components/Domain/crawlResults/authority/GapBriefPanel';
@@ -26,10 +26,10 @@ describe('Authority pieces', () => {
     expect(screen.getByText(/Unfocused generalist/)).toBeTruthy();
     view.rerender(<AuthorityMatrix sfs={50} tas={null} quadrant={null} />);
     expect(screen.getByText('The matrix appears once TAS is calculated.')).toBeTruthy();
-    await i18n.changeLanguage('ar');
+    await act(async () => { await i18n.changeLanguage('ar'); });
     view.rerender(<AuthorityMatrix sfs={70} tas={70} quadrant="diluted_giant" />);
     expect(view.container.querySelector('svg')).toBeTruthy();
-    await i18n.changeLanguage('en');
+    await act(async () => { await i18n.changeLanguage('en'); });
   });
 
   it('shows benchmark rows, pillars and insights, or an empty state', () => {
@@ -50,10 +50,10 @@ describe('Authority pieces', () => {
     view.rerender(<AuthorityHistoryChart entries={[entry('a', 60, 40), entry('b', 72, 55, [{ code: 'cleanup', params: { delta: 12 } }]), entry('c', 75, null)]} />);
     expect(screen.getByRole('img', { name: /3 analyses/ })).toBeTruthy();
     expect(screen.getByText(/Cleanup: SFS rose by 12/)).toBeTruthy();
-    await i18n.changeLanguage('ar');
+    await act(async () => { await i18n.changeLanguage('ar'); });
     view.rerender(<AuthorityHistoryChart entries={[entry('a', 60, 40), entry('b', 72, 55)]} />);
     expect(view.container.querySelector('polyline')).toBeTruthy();
-    await i18n.changeLanguage('en');
+    await act(async () => { await i18n.changeLanguage('en'); });
   });
 
   it('shows map status lines for every builder state', () => {

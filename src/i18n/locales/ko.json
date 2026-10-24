@@ -1,4 +1,79 @@
 {
+  "cmsPanelUi": {
+    "title": "안전한 CMS 변경",
+    "description": "한 제목 아래의 내용을 교체합니다. 정확한 차이를 준비하고 승인한 다음 모의 실행 후 적용하세요. 입력을 변경하면 승인이 취소됩니다.",
+    "kind": "CMS 종류",
+    "baseUrl": "CMS 기본 URL (HTTPS)",
+    "contentId": "콘텐츠 ID",
+    "credential": "저장된 자격 증명 이름 (선택 사항)",
+    "credentialHelp": "시스템 자격 증명 저장소에 Authorization 헤더가 포함된 cms_auth_ 자격 증명을 사용하세요. 비워 두면 익명 요청입니다. 여기에 비밀 정보를 입력하지 마세요.",
+    "collection": "Strapi 컬렉션",
+    "heading": "찾을 제목",
+    "replacement": "새 섹션 내용 (HTML 또는 Markdown)",
+    "ymyl": "건강, 금융 또는 법률 콘텐츠 (YMYL)",
+    "factGate": "이 정확한 차이에 필요한 사실 확인을 통과했습니다",
+    "diff": "제안된 차이",
+    "revision": "원본 리비전: {{revision}}",
+    "noChanges": "변경 사항이 없습니다. 적용하기 전에 교체할 내용을 수정하세요.",
+    "prepare": "차이 준비",
+    "approve": "이 정확한 차이를 승인합니다",
+    "dryRun": "모의 실행",
+    "apply": "승인된 차이 적용",
+    "busy": "CMS 변경 처리 중…",
+    "noProject": "CMS 변경을 준비하려면 활성 프로젝트를 선택하세요.",
+    "desktopOnly": "CMS 요청은 데스크톱 앱에서만 사용할 수 있습니다.",
+    "failed": "CMS 변경 실패: {{reason}}"
+  },
+  "teamPanelUi": {
+    "title": "팀 모드 및 감사 로그",
+    "description": "누가 어떤 역할로 작업하는지 선택합니다. 모든 변경은 변조를 감지하는 해시 체인 방식의 로컬 감사 로그에 추가됩니다.",
+    "actor": "작업자",
+    "role": "역할",
+    "roles": {
+      "admin": "관리자",
+      "seo_strategist": "SEO 전략가",
+      "content_writer": "콘텐츠 작성자",
+      "developer": "개발자"
+    },
+    "permissions": {
+      "run_crawl": "크롤 실행",
+      "execute_cms_patch": "CMS 패치 실행",
+      "modify_site_focus_rules": "Site Focus 규칙 수정",
+      "export_audit_pdf": "감사 PDF 내보내기",
+      "manage_team_roles": "팀 역할 관리"
+    },
+    "permissionsTitle": "권한",
+    "auditTitle": "감사 로그",
+    "auditEmpty": "감사 항목이 아직 없습니다.",
+    "chainOk": "감사 체인이 확인되었습니다.",
+    "chainBroken": "감사 체인이 항목 {{entry}}에서 끊어졌습니다({{reason}}).",
+    "exportCsv": "CSV 내보내기",
+    "columns": {
+      "time": "시간",
+      "actor": "작업자",
+      "action": "작업",
+      "result": "결과"
+    },
+    "results": {
+      "success": "성공",
+      "denied": "거부됨",
+      "failure": "실패",
+      "dry_run": "드라이 런"
+    },
+    "allowed": "허용",
+    "notAllowed": "허용 안 됨"
+  },
+  "dataErasureUi": {
+    "title": "프로젝트 데이터 삭제(GDPR)",
+    "description": "암호화 키를 폐기하여 이 프로젝트의 크롤 실행, 임베딩, 기록을 로컬 저장소에서 영구 삭제합니다. 되돌릴 수 없습니다.",
+    "confirm": "확인을 위해 프로젝트 ID를 입력하세요: {{id}}",
+    "button": "프로젝트 데이터 삭제",
+    "run": "영구 삭제",
+    "cancel": "취소",
+    "done": "삭제됨: 레코드 {{records}}개, 크롤 실행 {{runs}}개.",
+    "failed": "삭제 실패: {{message}}",
+    "desktopOnly": "데스크톱 앱에서만 사용할 수 있습니다."
+  },
   "schemaFindings": {
     "messageMissing": "구조화 데이터 규칙 {{code}}에서 {{type}}의 속성 또는 구조 요소가 누락되었습니다.",
     "messageInvalid": "구조화 데이터 규칙 {{code}}에서 {{type}}의 값 또는 형식이 잘못되었습니다.",
@@ -2298,7 +2373,8 @@
       "focus": "사이트 포커스",
       "authority": "주제 권위도",
       "aio": "AI 준비도",
-      "trust": "엔터티 신뢰도"
+      "trust": "엔터티 신뢰도",
+      "offPage": "오프페이지 분석"
     },
     "environmentStaging": "test/staging",
     "environmentProduction": "production",
@@ -2454,6 +2530,7 @@
     "profileNamePlaceholder": "e.g. Editorial account",
     "sessionCookies": "Session cookies",
     "proxyOptional": "(optional; credentials in the URL remain in the system vault)",
+    "proxyListHint": "여러 프록시: 쉼표 또는 공백으로 구분합니다(최대 64개). 요청이 순환됩니다.",
     "customHeaders": "Custom headers",
     "oneHeaderPerLine": "(one per line: Name: value)",
     "saving": "Saving…",
@@ -5169,9 +5246,11 @@
       "pagespeed": "PageSpeed / CrUX",
       "crawl": "크롤 비교",
       "semantic": "의미 비교",
-      "focus": "Site Focus Score"
+      "focus": "Site Focus Score",
+      "aio": "AI Overviews 준비도"
     },
-    "focusDrop": "Site Focus Score 하락(포인트)"
+    "focusDrop": "Site Focus Score 하락(포인트)",
+    "aioDrop": "AIO-R 점수 하락(포인트)"
   },
   "ga4": {
     "title": "Google Analytics 4",
@@ -6062,6 +6141,40 @@
           "no-articles": "문서 페이지가 감지되지 않아 저자 및 인용 계층은 점수를 매기지 않았습니다.",
           "author-invalid-profile": "{{0}}명의 저자가 유효하지 않은 식별자의 ORCID 또는 Wikidata 프로필을 연결했습니다({{1}}). 체크섬 또는 Q-ID를 확인하세요.",
           "ymyl-no-scholarly-ids": "{{0}}개 문서 중 DOI, PMID, PMCID가 있는 출처를 인용한 문서가 없습니다. YMYL 주제에서는 1차 연구를 인용하세요."
+        }
+      },
+      "offPage": {
+        "title": "오프페이지 분석",
+        "intro": "이 프로젝트에 마지막으로 저장된 분석입니다. 이 표본은 전체 백링크 프로필이 아닙니다.",
+        "topic": "주제",
+        "scale": "권위 점수 척도",
+        "model": "임베딩 모델",
+        "requested": "요청한 출처",
+        "fetched": "가져온 출처",
+        "scored": "평가한 출처",
+        "statusLabel": "상태",
+        "limitationsLabel": "제한 사항",
+        "sourcesIntro": "기여도 내림차순으로 최대 10개 출처. n/a는 데이터가 없음을 뜻합니다.",
+        "offset": "텍스트 위치",
+        "excerpt": "발췌",
+        "disclaimer": "Google PageRank가 아닙니다. 텍스트나 권위 점수가 없으면 부분적/사용 불가 데이터이며 백링크가 0개라는 뜻이 아닙니다. 동시 언급은 지지를 의미하지 않습니다.",
+        "tbva": "TBVA",
+        "tSources": "출처별 저장된 근거",
+        "authority": "권위",
+        "similarity": "유사도",
+        "contribution": "기여도",
+        "tCitations": "공동 인용 발췌",
+        "na": "n/a",
+        "status": {
+          "ready": "완료",
+          "partial": "일부",
+          "unavailable": "사용 불가"
+        },
+        "limitations": {
+          "no-topic-vector": "프로젝트의 최근 완료된 크롤링에 유효한 Core Topic 벡터가 없어 TBVA를 이용할 수 없습니다.",
+          "invalid-scale": "권위 척도가 잘못되어 TBVA를 이용할 수 없습니다.",
+          "no-follow-links": "분석할 follow 링크가 없습니다.",
+          "source-text-or-authority-missing": "일부 출처에 텍스트, 유효한 벡터 또는 제공자 권위 정보가 없습니다."
         }
       }
     },
@@ -7020,6 +7133,9 @@
       "axisX": "SFS",
       "axisY": "TAS"
     },
+    "freshness": {
+      "undated": "전체 {{total}}개 페이지 중 {{undated}}개는 날짜가 없어 평가되지 않습니다"
+    },
     "pillars": {
       "title": "Topical Authority Score 구성 요소",
       "tcr": "주제 커버리지",
@@ -7501,9 +7617,23 @@
     "underLinked": "링크 부족",
     "leak": "누수",
     "unknown": "{{count}}개 링크는 유사도를 알 수 없어 누수로 세지 않습니다.",
-    "notConverged": "솔버가 수렴하지 않았습니다. 점수는 근삿값입니다."
+    "notConverged": "솔버가 수렴하지 않았습니다. 점수는 근삿값입니다.",
+    "whatIf": {
+      "title": "링크 What-If 시뮬레이터",
+      "source": "출발 페이지",
+      "target": "도착 페이지",
+      "action": "변경",
+      "add": "링크 추가",
+      "remove": "링크 제거",
+      "run": "시뮬레이션",
+      "noChange": "점수 변화가 없습니다.",
+      "before": "이전",
+      "after": "이후",
+      "delta": "변화"
+    }
   },
   "decayUi": {
+    "snapshots": "이 판정의 근거가 되는 스냅샷 수: {{count}}",
     "title": "시맨틱 디케이 레이더",
     "verdict": {
       "too-few-samples": "비교 가능한 SERP 스냅샷이 아직 부족합니다. 보고할 내용이 없습니다.",
@@ -7543,6 +7673,9 @@
   },
   "prePublishUi": {
     "title": "게시 전 점검",
+    "copy": "보고서 복사",
+    "copied": "보고서를 복사했습니다.",
+    "copyFailed": "보고서를 복사하지 못했습니다.",
     "verdict": {
       "insufficient": "이 초안을 판단할 데이터가 부족합니다.",
       "blocked": "아직 게시하지 마세요. 초안이 기존 페이지와 중복됩니다.",
@@ -7568,6 +7701,7 @@
   },
   "parityUi": {
     "title": "국제 패리티",
+    "summary": "충족 {{covered}}개, 얕음 {{shallow}}개, 누락 {{missing}}개, 의도적 로컬 {{local}}개.",
     "inconclusive": "판단 불가: 사용 가능한 데이터로는 패리티를 판단할 수 없습니다.",
     "gap": {
       "no-reference-coverage": "기준 언어에 주제 커버리지 데이터가 없습니다.",
@@ -7708,6 +7842,276 @@
       "rewrite-echo": "오프셋 {{offset}}의 문단이 경쟁 구절을 반복합니다. 자신의 말로 다시 쓰세요.",
       "add-evidence": "단위나 출처가 있는 구체적 데이터를 추가하세요. 감지된 것이 없습니다.",
       "refocus-drift": "오프셋 {{offset}}의 문단이 주제에서 벗어납니다. 다시 집중하거나 삭제하세요."
+    }
+  },
+  "logIntelUi": {
+    "title": "로그 분석",
+    "description": "로컬 .log 또는 .txt 액세스 로그를 가져옵니다(최대 500 MB). 원본 IP 없이 집계만 저장합니다. 중복 확인은 처음/마지막 1 MiB와 크기의 표본 SHA-256을 사용합니다.",
+    "chooseFile": "액세스 로그 선택",
+    "cancel": "취소",
+    "clear": "로그 지우기",
+    "importing": "액세스 로그 가져오는 중",
+    "progress": "행: {{lines}} · 잘못된 행: {{malformed}} · 봇 아님: {{ignoredNonBot}}",
+    "cancelled": "가져오기를 취소했습니다.",
+    "duplicate": "이미 가져온 파일입니다.",
+    "complete": "가져오기 완료.",
+    "storageFailed": "로컬 저장소를 업데이트할 수 없습니다. 변경 사항은 메모리에만 남으며 저장된 로그는 그대로일 수 있습니다.",
+    "tooLarge": "파일이 500 MB 제한을 초과합니다.",
+    "invalidFile": ".log 또는 .txt 파일을 선택하세요.",
+    "resumeRequired": "다른 파일을 가져오기 전에 미완료 파일을 재개하거나 로그를 지우세요.",
+    "importFailed": "파일을 읽거나 해시를 계산할 수 없습니다. 다시 시도하세요.",
+    "resume": "같은 파일을 선택하면 행을 중복 계산하지 않고 재개합니다.",
+    "verificationNote": "봇 신원은 User-Agent의 주장일 뿐 증거가 아닙니다. 위장 확인에는 데스크톱 DNS 리졸버가 필요합니다. 이 패널은 DNS를 호출하지 않으며 미검증 행은 판단 불가로 유지됩니다.",
+    "verificationNoteDesktop": "봇 신원은 이 컴퓨터에서 역방향·정방향 DNS로 확인합니다(제한 시간 3초). 조회에 실패하면 해당 행은 '주장'으로 남고 '사칭'으로 표시되지 않습니다.",
+    "matrix": "크롤링 효율 매트릭스",
+    "coverage": "포함 범위: {{period}}일 중 {{days}}일",
+    "period": "기간(UTC): {{start}} – {{end}}",
+    "insufficient": "신뢰할 수 있는 판단을 내리기에는 로그 범위가 부족합니다.",
+    "noScores": "프로젝트의 최신 크롤링에 경로별 TRS 점수가 저장되어 있지 않습니다. 점수를 추정하지 않습니다.",
+    "unavailable": "사용 불가",
+    "empty": "표시할 로그 또는 크롤링 경로가 없습니다.",
+    "previous": "이전",
+    "page": "{{total}}페이지 중 {{current}}페이지",
+    "next": "다음",
+    "loading": "로그 분석 불러오는 중…",
+    "columns": {
+      "path": "경로",
+      "family": "봇 계열",
+      "status": "검증",
+      "hits": "요청 수",
+      "errors": "4xx/5xx 비율",
+      "verdict": "판정"
+    },
+    "families": {
+      "googlebot": "Googlebot",
+      "bingbot": "Bingbot",
+      "gptbot": "GPTBot",
+      "perplexitybot": "PerplexityBot",
+      "none": "봇 증거 없음"
+    },
+    "statuses": {
+      "verified": "검증됨",
+      "claimed": "주장됨",
+      "spoofed": "위장됨",
+      "unknown": "알 수 없음"
+    },
+    "verdicts": {
+      "waste": "낭비",
+      "starvation": "크롤링 부족",
+      "ok": "정상",
+      "inconclusive": "판단 불가",
+      "no-logs": "로그 없음"
+    }
+  },
+  "altCheckUi": {
+    "column": "ALT 품질",
+    "csvColumn": "alt_issues",
+    "summary": "이미지 {{checked}}개를 확인했으며 {{issues}}개에 ALT 문제가 있습니다.",
+    "issues": {
+      "missing": "ALT 없음",
+      "empty": "빈 ALT",
+      "filename": "파일 이름처럼 보임",
+      "generic": "일반적인 표현",
+      "too-long": "너무 김",
+      "repeats-caption": "캡션 반복",
+      "unrelated-to-context": "문맥과 무관"
+    },
+    "noIssues": "ALT 문제 없음",
+    "decorative": "장식용(빈 ALT)",
+    "visualNotice": "시각 분석에는 로컬 모델이 필요하며 이 버전에서는 사용할 수 없습니다.",
+    "analyses": {
+      "ocr": "OCR",
+      "clip-alignment": "CLIP 정렬",
+      "transcript": "전사"
+    },
+    "statuses": {
+      "unavailable": "사용 불가"
+    },
+    "noScorePenalty": "어떤 점수도 낮추지 않습니다."
+  },
+  "prePublishMountUi": {
+    "title": "게시 전 검사",
+    "description": "최근 완료된 크롤링, 저장된 발췌문과 용어, Site Focus 점수 및 프로젝트 임베딩 설정을 사용합니다. 시뮬레이션일 뿐이며 저장하거나 게시하지 않습니다.",
+    "draft": "게시하지 않은 초안 본문",
+    "url": "초안 URL(선택 사항)",
+    "urlHint": "새 페이지는 비워 두세요. 크롤링에 있는 URL은 시뮬레이션에서 해당 페이지를 대체합니다.",
+    "invalidUrl": "인증 정보가 없는 유효한 HTTP 또는 HTTPS URL을 입력하세요.",
+    "run": "초안 검사",
+    "cancel": "취소",
+    "loading": "검사 불러오는 중…",
+    "noCrawl": "활성 프로젝트에 완료된 크롤링이 없습니다. 먼저 사이트를 크롤링하세요.",
+    "noCore": "아직 핵심 주제가 없습니다. 이 초안을 평가할 수 없습니다.",
+    "running": "초안과 크롤링 데이터의 임베딩 생성 중…",
+    "unreachable": "선택한 임베딩 제공자가 벡터를 반환하지 못했습니다. 프로젝트 설정과 연결을 확인하세요.",
+    "cancelled": "검사가 취소되었습니다. 결과가 적용되지 않았습니다.",
+    "stale": "입력 또는 크롤링이 변경되었습니다. 검사를 다시 실행하세요."
+  },
+  "telemetrySourcesUi": {
+    "title": "데이터 소스",
+    "sources": {
+      "gsc": "GSC",
+      "ga4": "GA4",
+      "backlinks": "백링크"
+    },
+    "states": {
+      "measured": "측정됨",
+      "partial-history": "일부 기록",
+      "stale": "오래된 데이터",
+      "sampled": "표본",
+      "missing-permission": "권한 없음",
+      "unavailable": "사용 불가"
+    },
+    "property": "속성: {{value}}",
+    "provider": "제공업체: {{value}}",
+    "period": "{{start}} ~ {{end}} ({{days}}일)",
+    "retrievedAt": "가져온 시간: {{value}}",
+    "truncated": {
+      "yes": "데이터 잘림: 예",
+      "no": "데이터 잘림: 아니요"
+    },
+    "coverage": "포함 비율: {{value}}%",
+    "unknownNote": "알 수 없는 데이터는 절대 0으로 계산하지 않습니다."
+  },
+  "offPageSourcesUi": {
+    "analyze": "링크 출처 분석",
+    "cancel": "취소",
+    "scope": "제공자 권위 점수가 높은 순서로 출처 도메인당 하나씩 최대 25개의 follow 링크를 선택합니다. 권위 척도: 0–100. TBVA는 합계이며 백분율이나 Google PageRank가 아닙니다. 한도: 동시 요청 3개, 네이티브 제한 시간 15초, 응답 본문 25 MiB, 출처당 가시 텍스트 20,000자.",
+    "provider": "로컬 임베딩 제공자",
+    "local": "로컬 해시",
+    "ollama": "로컬 Ollama",
+    "model": "Ollama 임베딩 모델",
+    "scored": "평가한 출처: 선택한 {{total}}개 중 {{scored}}개(전체 백링크 프로필 아님).",
+    "sources": "출처 가져오기 상태",
+    "fetchedAt": "가져온 시간: {{time}}",
+    "notFetched": "아직 가져오지 않음",
+    "context": "추출 결과에는 문단이나 앵커 경계가 없습니다. 길이가 제한된 텍스트 블록을 추정하며, 문단 내 링크 문맥이 없어 모든 일치 항목은 linked=false입니다.",
+    "caveat": "동시 출현은 추천이 아닙니다. 동음이의어로 잘못 일치할 수 있으며 부정 표현이 있는 언급은 불명확합니다.",
+    "excerpts": "공동 인용 발췌",
+    "offset": "{{url}} — 추출 텍스트 오프셋 {{offset}}",
+    "missing": "텍스트, 유효한 벡터 또는 권위 정보가 없으면 증거가 부분적이거나 이용 불가한 것이며 백링크가 0개라는 뜻이 아닙니다. 이 표본은 전체 프로필이 아닙니다.",
+    "status": {
+      "running": "출처 분석 중…",
+      "done": "출처 분석 완료",
+      "cancelled": "분석 취소됨. 미완료 출처는 평가하지 않습니다",
+      "unavailable": "분석 이용 불가"
+    },
+    "fetch": {
+      "pending": "대기 중",
+      "ok": "텍스트 있음",
+      "unavailable": "이용 불가",
+      "too-large": "응답 본문이 너무 큼",
+      "blocked": "안전한 전송에서 차단됨"
+    },
+    "limitations": {
+      "no-topic-vector": "프로젝트의 최근 완료된 크롤링에 유효한 Core Topic 벡터가 없어 TBVA를 이용할 수 없습니다.",
+      "invalid-scale": "권위 척도가 잘못되어 TBVA를 이용할 수 없습니다.",
+      "no-follow-links": "분석할 follow 링크가 없습니다.",
+      "source-text-or-authority-missing": "일부 출처에 텍스트, 유효한 벡터 또는 제공자 권위 정보가 없습니다."
+    },
+    "polarity": {
+      "neutral": "중립적 동시 출현. 추천 아님",
+      "unclear": "불명확: 부정 표현 가능성"
+    },
+    "pacing": "네이티브 감사 보호 기능은 시작 횟수를 분당 10회로 제한합니다. 표본 처리에 몇 분이 걸릴 수 있으며 다른 감사로 가용성이 줄어들 수 있습니다.",
+    "history": {
+      "title": "기록",
+      "empty": "저장된 완료 분석이 없습니다.",
+      "summary": "TBVA: {{value}} · 평가/요청: {{scored}}/{{requested}}",
+      "delta": "TBVA 변화: {{delta}}",
+      "notComparable": "비교 불가: {{reason}}",
+      "reasons": {
+        "first": "이전 기록 없음",
+        "scale": "권위 척도가 다름",
+        "model": "임베딩 모델이 다름",
+        "unknownModel": "임베딩 모델을 알 수 없음",
+        "unavailable": "TBVA 사용 불가"
+      },
+      "view": "출처 보기",
+      "hide": "출처 숨기기",
+      "delete": "기록 삭제",
+      "clear": "프로젝트 기록 지우기",
+      "exportCurrent": "현재 분석 CSV 내보내기",
+      "exportRecord": "기록 CSV 내보내기",
+      "storageError": "기록 저장소를 사용할 수 없어 변경 사항이 저장되지 않았습니다.",
+      "topic": "주제: {{topic}}",
+      "embedding": "임베딩: {{provider}} / {{model}}",
+      "details": "출처별 저장된 근거",
+      "fields": {
+        "sourceUrl": "출처 URL",
+        "fetchedAt": "가져온 시간",
+        "availability": "가용성",
+        "authority": "권위",
+        "similarity": "유사도",
+        "contribution": "기여도"
+      },
+      "unavailable": "사용 불가",
+      "status": {
+        "ready": "완료",
+        "partial": "일부",
+        "unavailable": "사용 불가"
+      },
+      "privacy": "최근 완료된 분석 10개를 프로젝트별로 로컬에 저장합니다. 페이지 전체 텍스트와 벡터는 저장하지 않습니다."
+    }
+  },
+  "experimentsUi": {
+    "title": "SEO 실험",
+    "disclaimer": "이 결과는 관찰이며 인과관계의 증거가 아닙니다. 계절성, 다른 개입 또는 외부 요인으로 변화가 발생할 수 있습니다.",
+    "projectRequired": "개입을 등록할 프로젝트를 선택하세요.",
+    "capacity": "최대 {{count}}개의 개입을 보관하며 초과 시 가장 오래된 항목을 제거합니다.",
+    "url": "페이지 URL",
+    "site": "전체 사이트",
+    "date": "영향이 시작되는 날",
+    "kind": "개입 유형",
+    "note": "메모 (최대 300자)",
+    "add": "개입 추가",
+    "saveFailed": "저장하지 못했습니다. 입력값과 로컬 저장소를 확인하세요.",
+    "removeFailed": "로컬 저장소에서 개입을 삭제하지 못했습니다.",
+    "empty": "등록된 개입이 없습니다.",
+    "intervention": "개입",
+    "unavailable": "사용 불가",
+    "baseline": "기준 기간",
+    "followUp": "개입 후 기간",
+    "measurements": "관찰된 측정값",
+    "metric": "지표",
+    "before": "이전",
+    "after": "이후",
+    "change": "상대 변화",
+    "clicks": "클릭수",
+    "impressions": "노출수",
+    "position": "평균 게재순위 (부호 있는 차이)",
+    "restOfSite": "사이트의 나머지 (전체에서 해당 페이지 제외)",
+    "relativeVsSite": "페이지와 사이트 나머지의 차이 (퍼센트포인트)",
+    "limitations": "한계",
+    "remove": "개입 삭제",
+    "percent": "{{value}}%",
+    "points": "{{value}}%p",
+    "kinds": {
+      "content": "콘텐츠",
+      "internal-links": "내부 링크",
+      "title-meta": "제목 및 메타 정보",
+      "technical": "기술적 개입",
+      "other": "기타"
+    },
+    "status": {
+      "ready": "관찰 가능",
+      "inconclusive": "결론 불가",
+      "pending": "계획됨 / 대기 중"
+    },
+    "reasons": {
+      "observational": "전후 관찰일 뿐 인과관계를 추론하지 않습니다.",
+      "uncontrolled-factors": "계절성, 동시 변경 및 외부 요인은 통제되지 않습니다.",
+      "zero-baseline": "기준값이 0이면 상대 변화를 계산할 수 없습니다.",
+      "no-control": "전체 사이트 개입에는 별도의 사이트 나머지 대조군이 없습니다.",
+      "filtered-scope": "두 기간에 동일한 저장된 Search Console 필터가 적용됩니다.",
+      "invalid-period": "저장된 기간의 날짜 또는 길이가 올바르지 않습니다.",
+      "inconsistent-totals": "페이지 지표가 저장된 사이트 합계를 초과하여 대조군을 계산할 수 없습니다.",
+      "no-baseline": "개입 전에 종료되는 저장된 기간이 없습니다.",
+      "no-follow-up": "개입일 또는 그 이후에 시작하는 저장된 기간이 없습니다.",
+      "incomparable-scope": "가장 가까운 기간의 속성이나 필터가 다르거나 URL이 범위에 없습니다.",
+      "period-length-mismatch": "기간 길이가 10% 넘게 차이 납니다.",
+      "rows-truncated": "저장된 페이지 행이 잘려 있어 비교가 불완전할 수 있습니다.",
+      "low-volume": "기준 클릭수가 30 미만으로 신뢰할 수 있는 비교에 부족합니다.",
+      "pending": "개입 날짜가 미래이므로 평가를 기다리는 중입니다。"
     }
   }
 }

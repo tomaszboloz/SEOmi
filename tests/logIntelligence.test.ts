@@ -121,6 +121,6 @@ describe('Crawl Efficiency Matrix', () => {
     const state = await build(30, 30, true);
     expect(buildCrawlMatrix(state, trs).rows.find((row) => row.path === '/a')).toMatchObject({ hits: 0, verdict: 'starvation' });
     expect(buildCrawlMatrix(state, trs, { includeClaimed: true }).rows.find((row) => row.path === '/a')).toMatchObject({ hits: 30, verdict: 'waste' });
-    expect(buildCrawlMatrix(state, new Map(), { includeClaimed: true }).rows.find((row) => row.path === '/a')).toMatchObject({ trs: null, verdict: 'ok' });
+    expect(buildCrawlMatrix(state, new Map(), { includeClaimed: true }).rows.find((row) => row.path === '/a')).toMatchObject({ trs: null, verdict: 'inconclusive' });
   });
 });

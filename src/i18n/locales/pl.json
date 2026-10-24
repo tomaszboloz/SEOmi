@@ -1,4 +1,79 @@
 {
+  "cmsPanelUi": {
+    "title": "Bezpieczna zmiana w CMS",
+    "description": "Zastąp treść pod jednym nagłówkiem. Przygotuj i zatwierdź dokładny diff, wykonaj próbę, a następnie zapisz. Zmiana danych anuluje zgodę.",
+    "kind": "Rodzaj CMS",
+    "baseUrl": "Adres bazowy CMS (HTTPS)",
+    "contentId": "Identyfikator treści",
+    "credential": "Nazwa zapisanych poświadczeń (opcjonalnie)",
+    "credentialHelp": "Użyj poświadczeń cms_auth_ z nagłówkiem Authorization w systemowym magazynie. Puste pole oznacza żądania anonimowe. Nie wpisuj tutaj sekretu.",
+    "collection": "Kolekcja Strapi",
+    "heading": "Szukany nagłówek",
+    "replacement": "Nowa treść sekcji (HTML lub Markdown)",
+    "ymyl": "Treść zdrowotna, finansowa lub prawna (YMYL)",
+    "factGate": "Wymagana weryfikacja faktów zakończyła się pomyślnie dla tego diffu",
+    "diff": "Proponowane zmiany",
+    "revision": "Wersja źródłowa: {{revision}}",
+    "noChanges": "Brak zmian. Zmień treść zastępczą przed zapisem.",
+    "prepare": "Przygotuj diff",
+    "approve": "Zatwierdzam dokładnie te zmiany",
+    "dryRun": "Wykonaj próbę bez zapisu",
+    "apply": "Zapisz zatwierdzone zmiany",
+    "busy": "Przetwarzanie zmiany CMS…",
+    "noProject": "Wybierz aktywny projekt, aby przygotować zmianę CMS.",
+    "desktopOnly": "Żądania CMS są dostępne tylko w aplikacji desktopowej.",
+    "failed": "Zmiana CMS nie powiodła się: {{reason}}"
+  },
+  "teamPanelUi": {
+    "title": "Tryb zespołowy i dziennik audytu",
+    "description": "Wybierz, kto działa i w jakiej roli. Każda zmiana trafia do lokalnego dziennika audytu zabezpieczonego łańcuchem skrótów.",
+    "actor": "Użytkownik",
+    "role": "Rola",
+    "roles": {
+      "admin": "Administrator",
+      "seo_strategist": "Strateg SEO",
+      "content_writer": "Autor treści",
+      "developer": "Programista"
+    },
+    "permissions": {
+      "run_crawl": "Uruchamianie crawla",
+      "execute_cms_patch": "Wykonanie patcha CMS",
+      "modify_site_focus_rules": "Zmiana reguł Site Focus",
+      "export_audit_pdf": "Eksport audytu PDF",
+      "manage_team_roles": "Zarządzanie rolami"
+    },
+    "permissionsTitle": "Uprawnienie",
+    "auditTitle": "Dziennik audytu",
+    "auditEmpty": "Brak wpisów audytu.",
+    "chainOk": "Łańcuch audytu zweryfikowany.",
+    "chainBroken": "Łańcuch audytu przerwany we wpisie {{entry}} ({{reason}}).",
+    "exportCsv": "Eksportuj CSV",
+    "columns": {
+      "time": "Czas",
+      "actor": "Użytkownik",
+      "action": "Akcja",
+      "result": "Wynik"
+    },
+    "results": {
+      "success": "Sukces",
+      "denied": "Odmowa",
+      "failure": "Błąd",
+      "dry_run": "Próba bez zmian"
+    },
+    "allowed": "Dozwolone",
+    "notAllowed": "Niedozwolone"
+  },
+  "dataErasureUi": {
+    "title": "Wymaż dane projektu (RODO)",
+    "description": "Trwale usuwa z lokalnego magazynu przebiegi crawla, embeddingi i historię tego projektu, niszcząc ich klucze szyfrujące. Tej operacji nie można cofnąć.",
+    "confirm": "Wpisz ID projektu, aby potwierdzić: {{id}}",
+    "button": "Wymaż dane projektu",
+    "run": "Wymaż trwale",
+    "cancel": "Anuluj",
+    "done": "Wymazano: {{records}} rekordów i {{runs}} przebiegów crawla.",
+    "failed": "Wymazywanie nie powiodło się: {{message}}",
+    "desktopOnly": "Dostępne tylko w aplikacji desktopowej."
+  },
   "schemaFindings": {
     "messageMissing": "Reguła danych strukturalnych {{code}} wykryła brak właściwości lub elementu struktury dla typu {{type}}.",
     "messageInvalid": "Reguła danych strukturalnych {{code}} wykryła nieprawidłową wartość lub kształt typu {{type}}.",
@@ -2298,7 +2373,8 @@
       "focus": "Site Focus",
       "authority": "Autorytet tematyczny",
       "aio": "Gotowość na AI",
-      "trust": "Zaufanie do encji"
+      "trust": "Zaufanie do encji",
+      "offPage": "Analiza off-page"
     },
     "environmentStaging": "test/staging",
     "environmentProduction": "produkcja",
@@ -2454,6 +2530,7 @@
     "profileNamePlaceholder": "np. Konto redakcyjne",
     "sessionCookies": "Cookies sesji",
     "proxyOptional": "(opcjonalnie; dane w URL pozostają w magazynie systemowym)",
+    "proxyListHint": "Kilka proxy: oddziel przecinkami lub spacjami (do 64). Żądania rotują między nimi.",
     "customHeaders": "Własne nagłówki",
     "oneHeaderPerLine": "(jeden w wierszu: Nazwa: wartość)",
     "saving": "Zapisywanie…",
@@ -5169,9 +5246,11 @@
       "pagespeed": "PageSpeed / CrUX",
       "crawl": "Porównania crawlów",
       "semantic": "Porównania semantyczne",
-      "focus": "Site Focus Score"
+      "focus": "Site Focus Score",
+      "aio": "Gotowość do AI Overviews"
     },
-    "focusDrop": "Spadek Site Focus Score (punkty)"
+    "focusDrop": "Spadek Site Focus Score (punkty)",
+    "aioDrop": "Spadek wyniku AIO-R (punkty)"
   },
   "ga4": {
     "title": "Google Analytics 4",
@@ -6062,6 +6141,40 @@
           "no-articles": "Nie wykryto stron artykułów; warstwy autorów i cytowań nie zostały ocenione.",
           "author-invalid-profile": "{{0}} autorów podaje profil ORCID lub Wikidata z błędnym identyfikatorem ({{1}}). Sprawdź sumę kontrolną lub Q-ID.",
           "ymyl-no-scholarly-ids": "Żaden z {{0}} artykułów nie cytuje źródła z DOI, PMID ani PMCID. W tematyce YMYL cytuj badanie pierwotne."
+        }
+      },
+      "offPage": {
+        "title": "Analiza off-page",
+        "intro": "Najnowsza zapisana analiza tego projektu; próbka nie jest pełnym profilem linków zwrotnych.",
+        "topic": "Temat",
+        "scale": "Skala autorytetu",
+        "model": "Model embeddingów",
+        "requested": "Żądane źródła",
+        "fetched": "Pobrane źródła",
+        "scored": "Ocenione źródła",
+        "statusLabel": "Status",
+        "limitationsLabel": "Ograniczenia",
+        "sourcesIntro": "Do 10 źródeł, od najwyższego wkładu; n/a oznacza brak danych.",
+        "offset": "Pozycja w tekście",
+        "excerpt": "Fragment",
+        "disclaimer": "To nie jest Google PageRank; brak tekstu lub autorytetu oznacza dane częściowe/niedostępne, a nie zero linków zwrotnych; współwystępowanie nie oznacza poparcia.",
+        "tbva": "TBVA",
+        "tSources": "Zapisane dane poszczególnych źródeł",
+        "authority": "Autorytet",
+        "similarity": "Podobieństwo",
+        "contribution": "Wkład",
+        "tCitations": "Fragmenty współcytowań",
+        "na": "n/a",
+        "status": {
+          "ready": "Gotowe",
+          "partial": "Częściowe",
+          "unavailable": "Niedostępne"
+        },
+        "limitations": {
+          "no-topic-vector": "Brak poprawnego wektora Core Topic z ostatniego ukończonego crawlu projektu; TBVA jest niedostępne.",
+          "invalid-scale": "Nieprawidłowa skala autorytetu; TBVA jest niedostępne.",
+          "no-follow-links": "Brak linków follow do analizy.",
+          "source-text-or-authority-missing": "Część źródeł nie ma tekstu, poprawnych wektorów lub autorytetu dostawcy."
         }
       }
     },
@@ -7020,6 +7133,9 @@
       "axisX": "SFS",
       "axisY": "TAS"
     },
+    "freshness": {
+      "undated": "{{undated}} z {{total}} stron nie ma daty i nie podlega ocenie"
+    },
     "pillars": {
       "title": "Składowe Topical Authority Score",
       "tcr": "Pokrycie tematu",
@@ -7501,9 +7617,23 @@
     "underLinked": "Za mało linków",
     "leak": "Wyciek",
     "unknown": "{{count}} linków ma nieznane podobieństwo i nie liczy się jako wyciek.",
-    "notConverged": "Solver nie zbiegł; wyniki są przybliżone."
+    "notConverged": "Solver nie zbiegł; wyniki są przybliżone.",
+    "whatIf": {
+      "title": "Symulator What-If linków",
+      "source": "Ze strony",
+      "target": "Do strony",
+      "action": "Zmiana",
+      "add": "Dodaj link",
+      "remove": "Usuń link",
+      "run": "Symuluj",
+      "noChange": "Brak zmian wyników.",
+      "before": "Przed",
+      "after": "Po",
+      "delta": "Zmiana"
+    }
   },
   "decayUi": {
+    "snapshots": "Liczba zrzutów stanowiących podstawę oceny: {{count}}",
     "title": "Radar zaniku semantycznego",
     "verdict": {
       "too-few-samples": "Za mało porównywalnych zrzutów SERP. Nie ma czego raportować.",
@@ -7543,6 +7673,9 @@
   },
   "prePublishUi": {
     "title": "Kontrola przed publikacją",
+    "copy": "Kopiuj raport",
+    "copied": "Skopiowano raport.",
+    "copyFailed": "Nie udało się skopiować raportu.",
     "verdict": {
       "insufficient": "Za mało danych, by ocenić ten szkic.",
       "blocked": "Nie publikuj jeszcze: szkic dubluje istniejącą stronę.",
@@ -7568,6 +7701,7 @@
   },
   "parityUi": {
     "title": "Parytet międzynarodowy",
+    "summary": "Pokryte: {{covered}}, płytkie: {{shallow}}, brakujące: {{missing}}, celowo lokalne: {{local}}.",
     "inconclusive": "Brak rozstrzygnięcia: z dostępnych danych nie da się ocenić parytetu.",
     "gap": {
       "no-reference-coverage": "Język referencyjny nie ma danych o pokryciu tematów.",
@@ -7708,6 +7842,276 @@
       "rewrite-echo": "Akapit na offsecie {{offset}} powtarza fragment konkurencji: przepisz go własnymi słowami.",
       "add-evidence": "Dodaj konkretne dane z jednostkami lub źródłami; żadnych nie wykryto.",
       "refocus-drift": "Akapit na offsecie {{offset}} odpływa od tematu: skup go lub usuń."
+    }
+  },
+  "logIntelUi": {
+    "title": "Analiza logów",
+    "description": "Importuj lokalny log dostępu .log lub .txt (maksymalnie 500 MB). Zapisywane są tylko agregaty, nigdy surowe adresy IP. Deduplikacja używa próbkowanego skrótu SHA-256 (pierwszy i ostatni 1 MiB oraz rozmiar).",
+    "chooseFile": "Wybierz log dostępu",
+    "cancel": "Anuluj",
+    "clear": "Wyczyść logi",
+    "importing": "Importowanie logu dostępu",
+    "progress": "Wiersze: {{lines}} · Błędne: {{malformed}} · Pominięte inne niż boty: {{ignoredNonBot}}",
+    "cancelled": "Import anulowany.",
+    "duplicate": "Ten plik został już zaimportowany.",
+    "complete": "Import zakończony.",
+    "storageFailed": "Nie udało się zaktualizować pamięci lokalnej. Zmiany pozostają tylko w pamięci; zapisane logi mogą być bez zmian.",
+    "tooLarge": "Plik przekracza limit 500 MB.",
+    "invalidFile": "Wybierz plik .log lub .txt.",
+    "resumeRequired": "Wznów niedokończony plik lub wyczyść logi przed importem innego pliku.",
+    "importFailed": "Nie udało się odczytać pliku lub obliczyć skrótu. Spróbuj ponownie.",
+    "resume": "Wybierz ten sam plik, aby wznowić import bez podwójnego zliczania wierszy.",
+    "verificationNote": "Tożsamość bota to deklaracja User-Agent, nie dowód. Wykrywanie podszywania wymaga desktopowego resolvera DNS; panel nie odpytuje DNS. Niezweryfikowane wiersze pozostają nierozstrzygnięte.",
+    "verificationNoteDesktop": "Tożsamość bota jest sprawdzana na tym komputerze przez odwrotny i prosty DNS (limit 3 s). Nieudane zapytanie zostawia wiersz jako zadeklarowany, nigdy jako podszywanie.",
+    "matrix": "Macierz efektywności crawlowania",
+    "coverage": "Pokrycie: {{days}} z {{period}} dni",
+    "period": "Okno (UTC): {{start}} – {{end}}",
+    "insufficient": "Pokrycie logów jest niewystarczające do wiarygodnych ocen.",
+    "noScores": "Najnowszy crawl projektu nie ma zapisanych ocen TRS dla ścieżek. Oceny nie są domyślane.",
+    "unavailable": "Brak danych",
+    "empty": "Brak ścieżek logów lub crawla do wyświetlenia.",
+    "previous": "Poprzednia",
+    "page": "Strona {{current}} z {{total}}",
+    "next": "Następna",
+    "loading": "Ładowanie analizy logów…",
+    "columns": {
+      "path": "Ścieżka",
+      "family": "Rodzina bota",
+      "status": "Weryfikacja",
+      "hits": "Żądania",
+      "errors": "Udział 4xx/5xx",
+      "verdict": "Ocena"
+    },
+    "families": {
+      "googlebot": "Googlebot",
+      "bingbot": "Bingbot",
+      "gptbot": "GPTBot",
+      "perplexitybot": "PerplexityBot",
+      "none": "Brak śladów bota"
+    },
+    "statuses": {
+      "verified": "Zweryfikowany",
+      "claimed": "Deklarowany",
+      "spoofed": "Podszywający się",
+      "unknown": "Nieznany"
+    },
+    "verdicts": {
+      "waste": "Marnotrawstwo",
+      "starvation": "Niedobór crawlowania",
+      "ok": "OK",
+      "inconclusive": "Nierozstrzygnięte",
+      "no-logs": "Brak logów"
+    }
+  },
+  "altCheckUi": {
+    "column": "Jakość ALT",
+    "csvColumn": "alt_issues",
+    "summary": "Sprawdzono {{checked}} obrazów, {{issues}} z problemami ALT.",
+    "issues": {
+      "missing": "Brak ALT",
+      "empty": "Pusty ALT",
+      "filename": "Wygląda jak nazwa pliku",
+      "generic": "Ogólnikowe sformułowanie",
+      "too-long": "Za długi",
+      "repeats-caption": "Powtarza podpis",
+      "unrelated-to-context": "Bez związku z kontekstem"
+    },
+    "noIssues": "Brak problemów z ALT",
+    "decorative": "Dekoracyjny (pusty ALT)",
+    "visualNotice": "Analiza wizualna wymaga lokalnego modelu i nie jest dostępna w tej wersji.",
+    "analyses": {
+      "ocr": "OCR",
+      "clip-alignment": "Zgodność CLIP",
+      "transcript": "Transkrypcje"
+    },
+    "statuses": {
+      "unavailable": "Niedostępne"
+    },
+    "noScorePenalty": "Nie obniża to żadnego wyniku."
+  },
+  "prePublishMountUi": {
+    "title": "Kontrola przed publikacją",
+    "description": "Wykorzystuje ostatni ukończony crawl, zapisane fragmenty i terminy, wyniki Site Focus oraz ustawienia embeddingów projektu. To tylko symulacja: nic nie jest zapisywane ani publikowane.",
+    "draft": "Tekst nieopublikowanego szkicu",
+    "url": "URL szkicu (opcjonalnie)",
+    "urlHint": "Pozostaw puste dla nowej strony. Istniejący URL z crawla zastępuje tę stronę w symulacji.",
+    "invalidUrl": "Podaj poprawny URL HTTP lub HTTPS bez danych logowania.",
+    "run": "Sprawdź szkic",
+    "cancel": "Anuluj",
+    "loading": "Ładowanie kontroli przed publikacją…",
+    "noCrawl": "Brak ukończonego crawla aktywnego projektu. Najpierw przeskanuj witrynę.",
+    "noCore": "Brak głównego tematu. Nie można ocenić szkicu.",
+    "running": "Tworzenie embeddingów szkicu i danych z crawla…",
+    "unreachable": "Wybrany dostawca embeddingów nie zwrócił wektorów. Sprawdź ustawienia embeddingów projektu i połączenie z dostawcą.",
+    "cancelled": "Kontrola anulowana. Nie zastosowano żadnego wyniku.",
+    "stale": "Zmieniono dane wejściowe lub crawl. Uruchom kontrolę ponownie."
+  },
+  "telemetrySourcesUi": {
+    "title": "Źródła",
+    "sources": {
+      "gsc": "GSC",
+      "ga4": "GA4",
+      "backlinks": "Linki zwrotne"
+    },
+    "states": {
+      "measured": "Zmierzone",
+      "partial-history": "Niepełna historia",
+      "stale": "Nieaktualne",
+      "sampled": "Próbka",
+      "missing-permission": "Brak uprawnień",
+      "unavailable": "Niedostępne"
+    },
+    "property": "Usługa: {{value}}",
+    "provider": "Dostawca: {{value}}",
+    "period": "{{start}} – {{end}} ({{days}} dni)",
+    "retrievedAt": "Pobrano: {{value}}",
+    "truncated": {
+      "yes": "Dane obcięte: tak",
+      "no": "Dane obcięte: nie"
+    },
+    "coverage": "Pokrycie: {{value}}%",
+    "unknownNote": "Nieznane dane nigdy nie są liczone jako zero."
+  },
+  "offPageSourcesUi": {
+    "analyze": "Analizuj źródła linków",
+    "cancel": "Anuluj",
+    "scope": "do 25 linków follow, po jednym na domenę źródłową, od najwyższego autorytetu dostawcy. Skala autorytetu: 0–100; TBVA jest sumą, nie procentem ani Google PageRank. Limity: 3 żądania równolegle, 15 s limitu natywnego, 25 MiB odpowiedzi, 20 000 znaków widocznego tekstu na źródło.",
+    "provider": "Lokalny dostawca embeddingów",
+    "local": "Lokalny hash",
+    "ollama": "Lokalna Ollama",
+    "model": "Model embeddingów Ollama",
+    "scored": "Ocenione źródła: {{scored}} / {{total}} wybranych (nie cały profil linków).",
+    "sources": "Status pobrania źródeł",
+    "fetchedAt": "Pobrano: {{time}}",
+    "notFetched": "Nie pobrano",
+    "context": "Ekstrakcja nie zachowuje granic akapitów ani kotwic. Ograniczone bloki tekstu są przybliżeniem; każde trafienie ma linked=false, bo brak kontekstu linku w akapicie.",
+    "caveat": "Współwystępowanie nie jest rekomendacją. Homonimy mogą dawać fałszywe trafienia; wzmianki z negacją pozostają niejednoznaczne.",
+    "excerpts": "Fragmenty współcytowań",
+    "offset": "{{url}} — offset w wyodrębnionym tekście {{offset}}",
+    "missing": "Brak tekstu, poprawnych wektorów lub autorytetu oznacza dane częściowe/niedostępne, nie zero linków. Próbka nie obejmuje całego profilu.",
+    "status": {
+      "running": "Analizowanie źródeł…",
+      "done": "Analiza źródeł zakończona",
+      "cancelled": "Anulowano; niedokończone źródła nie są oceniane",
+      "unavailable": "Analiza niedostępna"
+    },
+    "fetch": {
+      "pending": "Oczekuje",
+      "ok": "Tekst dostępny",
+      "unavailable": "Niedostępne",
+      "too-large": "Zbyt duża odpowiedź",
+      "blocked": "Zablokowano przez bezpieczny transport"
+    },
+    "limitations": {
+      "no-topic-vector": "Brak poprawnego wektora Core Topic z ostatniego ukończonego crawlu projektu; TBVA jest niedostępne.",
+      "invalid-scale": "Nieprawidłowa skala autorytetu; TBVA jest niedostępne.",
+      "no-follow-links": "Brak linków follow do analizy.",
+      "source-text-or-authority-missing": "Część źródeł nie ma tekstu, poprawnych wektorów lub autorytetu dostawcy."
+    },
+    "polarity": {
+      "neutral": "Neutralne współwystępowanie; nie rekomendacja",
+      "unclear": "Niejednoznaczne: możliwa negacja"
+    },
+    "pacing": "Natywny audyt ogranicza też rozpoczęcia do 10 na minutę. Analiza próbki może potrwać kilka minut; inne audyty mogą zmniejszyć dostępność.",
+    "history": {
+      "title": "Historia",
+      "empty": "Brak zapisanych ukończonych analiz.",
+      "summary": "TBVA: {{value}} · Ocenione/żądane: {{scored}}/{{requested}}",
+      "delta": "Zmiana TBVA: {{delta}}",
+      "notComparable": "Nieporównywalne: {{reason}}",
+      "reasons": {
+        "first": "brak poprzedniego zapisu",
+        "scale": "inna skala autorytetu",
+        "model": "inny model embeddingów",
+        "unknownModel": "nieznany model embeddingów",
+        "unavailable": "TBVA niedostępne"
+      },
+      "view": "Pokaż źródła",
+      "hide": "Ukryj źródła",
+      "delete": "Usuń zapis",
+      "clear": "Wyczyść historię projektu",
+      "exportCurrent": "Eksportuj bieżącą analizę CSV",
+      "exportRecord": "Eksportuj zapis CSV",
+      "storageError": "Pamięć historii jest niedostępna; zmiany nie zostały zapisane.",
+      "topic": "Temat: {{topic}}",
+      "embedding": "Embedding: {{provider}} / {{model}}",
+      "details": "Zapisane dane poszczególnych źródeł",
+      "fields": {
+        "sourceUrl": "URL źródła",
+        "fetchedAt": "Pobrano",
+        "availability": "Dostępność",
+        "authority": "Autorytet",
+        "similarity": "Podobieństwo",
+        "contribution": "Wkład"
+      },
+      "unavailable": "Niedostępne",
+      "status": {
+        "ready": "Gotowe",
+        "partial": "Częściowe",
+        "unavailable": "Niedostępne"
+      },
+      "privacy": "Ostatnie 10 ukończonych analiz jest zapisanych lokalnie dla każdego projektu. Pełny tekst stron i wektory nigdy nie są zapisywane."
+    }
+  },
+  "experimentsUi": {
+    "title": "Eksperymenty SEO",
+    "disclaimer": "To obserwacja, a nie dowód związku przyczynowego. Zmiany mogą wynikać z sezonowości, innych interwencji lub czynników zewnętrznych.",
+    "projectRequired": "Wybierz projekt, aby rejestrować interwencje.",
+    "capacity": "Przechowujemy do {{count}} interwencji; kolejne zastępują najstarsze.",
+    "url": "Adres URL strony",
+    "site": "Cała witryna",
+    "date": "Pierwszy dzień objęty zmianą",
+    "kind": "Rodzaj interwencji",
+    "note": "Notatka (do 300 znaków)",
+    "add": "Dodaj interwencję",
+    "saveFailed": "Nie udało się zapisać. Sprawdź pola i dostępność pamięci lokalnej.",
+    "removeFailed": "Nie udało się usunąć interwencji z pamięci lokalnej.",
+    "empty": "Brak zarejestrowanych interwencji.",
+    "intervention": "Interwencja",
+    "unavailable": "Niedostępne",
+    "baseline": "Okres bazowy",
+    "followUp": "Okres po zmianie",
+    "measurements": "Zaobserwowane pomiary",
+    "metric": "Wskaźnik",
+    "before": "Przed",
+    "after": "Po",
+    "change": "Zmiana względna",
+    "clicks": "Kliknięcia",
+    "impressions": "Wyświetlenia",
+    "position": "Średnia pozycja (różnica ze znakiem)",
+    "restOfSite": "Reszta witryny (suma minus strona)",
+    "relativeVsSite": "Strona minus reszta witryny (punkty procentowe)",
+    "limitations": "Ograniczenia",
+    "remove": "Usuń interwencję",
+    "percent": "{{value}}%",
+    "points": "{{value}} p.p.",
+    "kinds": {
+      "content": "Treść",
+      "internal-links": "Linkowanie wewnętrzne",
+      "title-meta": "Tytuł i metadane",
+      "technical": "Techniczna",
+      "other": "Inna"
+    },
+    "status": {
+      "ready": "Obserwacja dostępna",
+      "inconclusive": "Nierozstrzygające",
+      "pending": "Zaplanowana / oczekuje"
+    },
+    "reasons": {
+      "observational": "Wyłącznie obserwacja przed i po; bez wnioskowania przyczynowego.",
+      "uncontrolled-factors": "Sezonowość, równoległe zmiany i czynniki zewnętrzne nie są kontrolowane.",
+      "zero-baseline": "Zerowa wartość bazowa uniemożliwia obliczenie zmiany względnej.",
+      "no-control": "Interwencja dla całej witryny nie ma oddzielnej kontroli w postaci reszty witryny.",
+      "filtered-scope": "W obu okresach obowiązują te same zapisane filtry Search Console.",
+      "invalid-period": "Zapisany okres ma nieprawidłowe daty lub długość.",
+      "inconsistent-totals": "Wskaźniki strony przekraczają zapisane sumy witryny; nie można obliczyć kontroli.",
+      "no-baseline": "Brak zapisanego okresu kończącego się przed interwencją.",
+      "no-follow-up": "Brak zapisanego okresu rozpoczynającego się w dniu interwencji lub później.",
+      "incomparable-scope": "Najbliższe okresy dotyczą różnych usług lub filtrów albo nie obejmują adresu URL.",
+      "period-length-mismatch": "Długości okresów różnią się o ponad 10%.",
+      "rows-truncated": "Zapisane wiersze stron są ucięte; porównanie strony może być niepełne.",
+      "low-volume": "Bazowa liczba kliknięć jest mniejsza niż 30; zbyt mały wolumen do wiarygodnego porównania.",
+      "pending": "Data interwencji jest w przyszłości; ocena oczekuje."
     }
   }
 }

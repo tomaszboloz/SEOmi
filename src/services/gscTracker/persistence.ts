@@ -3,9 +3,12 @@ import type { GscPerformanceSnapshot } from './types';
 import i18n from '@/i18n';
 import { readStorage, writeStorageResult } from '@/services/storage';
 import { gscSnapshotSchema } from './schema';
+import { readGscSnapshots } from './read';
 import { filtersEqual } from './filters';
 import { snapshotGscPerformance } from './snapshot';
 import { gscSnapshotStorageKey, MAX_GSC_SNAPSHOTS_PER_PROJECT } from './limits';
+
+export { readGscSnapshots };
 
 const browserGscStorage: Pick<Storage, 'getItem' | 'setItem'> = {
   getItem: readStorage,
@@ -13,20 +16,6 @@ const browserGscStorage: Pick<Storage, 'getItem' | 'setItem'> = {
     const result = writeStorageResult(key, value);
     if (!result.ok) throw result.error ?? new Error(i18n.t('runtimeErrors.gsc.unavailable'));
   },
-};
-
-export const readGscSnapshots = (projectId: string, storage: Pick<Storage, 'getItem'> = browserGscStorage): GscPerformanceSnapshot[] => {
-  try {
-    const value = JSON.parse(storage.getItem(gscSnapshotStorageKey(projectId)) || '[]') as unknown;
-    if (!Array.isArray(value)) return [];
-    return value.flatMap(item => {
-      const result = gscSnapshotSchema.safeParse(item);
-      return result.success ? [result.data] : [];
-    })
-      .slice(0, MAX_GSC_SNAPSHOTS_PER_PROJECT);
-  } catch {
-    return [];
-  }
 };
 
 export const saveGscSnapshot = (

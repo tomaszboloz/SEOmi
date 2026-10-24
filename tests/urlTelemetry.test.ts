@@ -68,7 +68,9 @@ describe('snapshot', () => {
     expect(empty.backlinks.value).toBeNull();
     expect(s.sources.backlinks).toMatchObject({ provider: 'moz', retrievedAt: '2026-10-01', coveragePct: 100 });
     expect(s.sources.gsc.searchType).toBe('web');
-    expect(s.urls.some((u) => u.url.includes('other.com'))).toBe(false);
+    expect(s.urls.some(({ url }) => {
+      try { return new URL(url).hostname === 'other.com'; } catch { return false; }
+    })).toBe(false);
     expect(Object.isFrozen(s)).toBe(true);
   });
   it('reports missing permission, unavailable and sampled states', () => {

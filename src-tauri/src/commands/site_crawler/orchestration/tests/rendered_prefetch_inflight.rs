@@ -107,7 +107,7 @@ async fn in_flight_prefetch_aborts_after_real_request_when_deadline_expires() {
     let mut config = default_crawl_config(Some(2));
     config.crawl_mode = "browser-rendered".into();
     config.max_run_seconds = Some(1);
-    let server = SignalledServer::new(config, Duration::from_millis(1_500)).await;
+    let server = SignalledServer::new(config, Duration::from_secs(10)).await;
     let urls = [server.url("/one"), server.url("/two")];
     let mut state = queued_state(&urls);
     let app = StorageApp::new(mock_builder());

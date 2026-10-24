@@ -38,13 +38,14 @@ export const emptyImportState = (): LogImportState => ({
 });
 
 export interface ImportInput {
-  lines: Iterable<string>;
+  lines: Iterable<string> | AsyncIterable<string>;
   fileHash: string;
   state?: LogImportState;
   parse?: ParseOptions;
   verify?: VerifyDeps;
   /** Checked between lines; true stops and leaves a resume point. */
   shouldCancel?: () => boolean;
+  onProgress?: (state: Readonly<LogImportState>) => void;
 }
 
 const group = (status: number): keyof UrlBotAgg['statusGroups'] | null => (status >= 200 && status < 300 ? '2xx' : status >= 300 && status < 400 ? '3xx' : status >= 400 && status < 500 ? '4xx' : status >= 500 && status < 600 ? '5xx' : null);
@@ -60,10 +61,16 @@ export const importAccessLog = async (input: ImportInput): Promise<LogImportStat
   const days = new Set(state.days);
   const cache = new Map<string, BotVerdict>();
   let offset = 0;
-  for (const line of input.lines) {
+  for await (const line of input.lines) {
     offset += 1;
+    if (input.shouldCancel?.()) {
+      state.inProgress = { hash: input.fileHash, offset: Math.max(skip, offset - 1) };
+      state.days = [...days];
+      input.onProgress?.(state);
+      return state;
+    }
     if (offset <= skip) continue;
-    if (input.shouldCancel?.()) { state.inProgress = { hash: input.fileHash, offset: offset - 1 }; state.days = [...days]; return state; }
+    if (offset === 1 || offset % 500 === 0) input.onProgress?.(state);
     state.lines += 1;
     const hit = parseLogLine(line, input.parse);
     if (!hit) { state.malformed += 1; continue; }
@@ -90,8 +97,15 @@ export const importAccessLog = async (input: ImportInput): Promise<LogImportStat
       intervalSumMs: (prev?.intervalSumMs ?? 0) + gap, intervalCount: (prev?.intervalCount ?? 0) + (prev ? 1 : 0), maxIntervalMs: Math.max(prev?.maxIntervalMs ?? 0, gap),
     };
   }
+  if (input.shouldCancel?.()) {
+    state.inProgress = { hash: input.fileHash, offset: Math.max(skip, offset) };
+    state.days = [...days];
+    input.onProgress?.(state);
+    return state;
+  }
   state.fileHashes.push(input.fileHash);
   state.inProgress = null;
   state.days = [...days].sort();
+  input.onProgress?.(state);
   return state;
 };

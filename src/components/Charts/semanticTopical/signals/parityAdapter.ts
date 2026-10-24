@@ -10,6 +10,7 @@ const langOf = (p: CrawledPageSummary): string => (p.document_language ?? '').tr
  */
 export const buildParityReport = (pages: CrawledPageSummary[], graph: SemanticMap): ParityReport => {
   const clusterOf = new Map(graph.nodes.map((n) => [n.page.url, n.clusterId]));
+  const topicLabels = new Map(graph.nodes.filter((n) => n.clusterLabel).map((n) => [n.clusterId, n.clusterLabel]));
   const coverage = new Map<string, LanguageCoverage>();
   const counts = new Map<string, number>();
   pages.forEach((p) => {
@@ -22,5 +23,5 @@ export const buildParityReport = (pages: CrawledPageSummary[], graph: SemanticMa
     coverage.set(lang, row);
   });
   const referenceLanguage = [...counts.entries()].sort((a, b) => b[1] - a[1] || (a[0] < b[0] ? -1 : 1))[0]?.[0] ?? '';
-  return compareParity({ referenceLanguage, coverage, complete: pages.length > 0 && !graph.truncated });
+  return compareParity({ referenceLanguage, coverage, topicLabels, complete: pages.length > 0 && !graph.truncated });
 };

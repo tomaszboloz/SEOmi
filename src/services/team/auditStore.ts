@@ -22,12 +22,25 @@ export const readAuditLog = (store: KeyValueStore): AuditEntry[] => {
   }
 };
 
-/** Refuses to extend a log whose chain is already broken, so tampering is never silently continued. */
-export const recordAudit = async (store: KeyValueStore, input: AuditInput, now?: Date): Promise<AuditEntry> => {
-  const log = readAuditLog(store);
-  const verdict = await verifyChain(log);
-  if (!verdict.ok) throw new Error(`Audit log tampered at entry ${verdict.brokenAt + 1} (${verdict.reason})`);
-  const next = await appendAudit(log, input, createId('audit'), now);
-  store.setItem(AUDIT_STORAGE_KEY, JSON.stringify(next));
-  return next[next.length - 1];
+let writeQueue: Promise<unknown> = Promise.resolve();
+
+/** Resolves once every queued audit write has settled (used before reading the log and in tests). */
+export const flushAuditWrites = async (): Promise<void> => { await writeQueue; };
+
+/**
+ * Refuses to extend a log whose chain is already broken, so tampering is never silently continued.
+ * Writes are serialized: concurrent callers would otherwise read the same tail and fork the chain.
+ */
+export const recordAudit = (store: KeyValueStore, input: AuditInput, now?: Date): Promise<AuditEntry> => {
+  const run = async (): Promise<AuditEntry> => {
+    const log = readAuditLog(store);
+    const verdict = await verifyChain(log);
+    if (!verdict.ok) throw new Error(`Audit log tampered at entry ${verdict.brokenAt + 1} (${verdict.reason})`);
+    const next = await appendAudit(log, input, createId('audit'), now);
+    store.setItem(AUDIT_STORAGE_KEY, JSON.stringify(next));
+    return next[next.length - 1];
+  };
+  const result = writeQueue.then(run, run);
+  writeQueue = result.catch(() => undefined);
+  return result;
 };
