@@ -5220,9 +5220,11 @@
       "pagespeed": "PageSpeed / CrUX",
       "crawl": "크롤 비교",
       "semantic": "의미 비교",
-      "focus": "Site Focus Score"
+      "focus": "Site Focus Score",
+      "aio": "AI Overviews 준비도"
     },
-    "focusDrop": "Site Focus Score 하락(포인트)"
+    "focusDrop": "Site Focus Score 하락(포인트)",
+    "aioDrop": "AIO-R 점수 하락(포인트)"
   },
   "ga4": {
     "title": "Google Analytics 4",

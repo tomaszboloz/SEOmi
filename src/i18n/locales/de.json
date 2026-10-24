@@ -5220,9 +5220,11 @@
       "pagespeed": "PageSpeed / CrUX",
       "crawl": "Crawl-Vergleiche",
       "semantic": "Semantische Vergleiche",
-      "focus": "Site Focus Score"
+      "focus": "Site Focus Score",
+      "aio": "AI-Overviews-Bereitschaft"
     },
-    "focusDrop": "Rückgang des Site Focus Score (Punkte)"
+    "focusDrop": "Rückgang des Site Focus Score (Punkte)",
+    "aioDrop": "Rückgang des AIO-R-Scores (Punkte)"
   },
   "ga4": {
     "title": "Google Analytics 4",

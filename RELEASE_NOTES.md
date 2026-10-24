@@ -1,3 +1,11 @@
+# SEOmi 0.4.24 — release notes
+
+## Added
+- AIO-R drop alerts (issue #108): a dedicated AIO alert type, independent drop threshold (default 10 points, inclusive), per-project settings migration, frequency limits and persisted deduplication. Settings controls are translated in all 12 locales.
+
+## Changed
+- AIO monitoring now runs on crawl completion against the previous comparable crawl, independently of opening the AIO panel. Missing RAG score evidence returns an explicit partial skip without a fabricated zero or alert; incompatible projects, scopes, environments and incomplete runs are not compared.
+
 # SEOmi 0.4.22 — release notes
 
 ## Added

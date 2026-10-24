@@ -9,7 +9,7 @@ import type { ToolsState, InterruptedCrawl, ToolsSet, ToolsGet, ToolsServices } 
 import { crawlResultKey, crawlRunsKey, activeProjectId } from '../storageKeys';
 import { formatCrawlPersistenceNotice, formatCrawlRuntimeError } from '../runtime';
 import { activeCrawlRuns, persistInterruptedCrawl, buildCrawlCheckpoint, mergeCrawlResults } from '../crawlPersistence';
-import { monitorCrawlComparison } from '@/services/monitoringAlerts';
+import { monitorAioCrawls, monitorCrawlComparison } from '@/services/monitoringAlerts';
 import { runScheduledFocus } from '@/services/siteFocusMonitoring';
 import { runTaskVerification } from '@/services/optimizationTasks/runVerification';
 import { compareCrawlRuns } from '@/services/crawlDiff';
@@ -107,6 +107,7 @@ startSiteCrawl: async (url, limit, configPatch, environment = 'default', notifyC
         void services.notifyCrawlCompleted(projectId, crawlResult, previousRun?.result, { runId });
       }
       if (projectId && previousRun) void monitorCrawlComparison(projectId, compareCrawlRuns(run, previousRun, { projectId }));
+      if (projectId) void monitorAioCrawls(projectId, run, projectRuns).catch(() => undefined);
       if (projectId) void runScheduledFocus(projectId, run, previousRun);
       if (projectId) { try { runTaskVerification(projectId, run); } catch { /* verification is best-effort */ } }
       return crawlResult;

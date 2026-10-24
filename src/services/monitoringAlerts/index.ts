@@ -9,6 +9,8 @@ import { evaluateFocusAlert } from './focus';
 import { evaluateScoreDropAlert, type ScoreDropKind } from './scoreDrop';
 import type { AlertEvent } from '@/services/siteFocus';
 import type { MonitoringAlert } from './types';
+import { compareAioForMonitoring, previousComparableAioCrawl } from './aio';
+import type { CrawlRunRecord } from '@/types';
 
 export * from './types';
 export * from './policy';
@@ -16,6 +18,7 @@ export * from './persistence';
 export * from './evaluators';
 export * from './focus';
 export * from './scoreDrop';
+export * from './aio';
 
 export interface MonitoringDelivery { email?: (alert: MonitoringAlert) => Promise<boolean>; }
 export interface MonitoringDeliveryResult { alert: MonitoringAlert | null; delivered: boolean; persisted: boolean; duplicate: boolean; emailConfigured: boolean; }
@@ -37,5 +40,9 @@ export const monitorPageSpeedSnapshots = (projectId: string, baseline: PageSpeed
 export const monitorCrawlComparison = (projectId: string, report: CrawlDiffReport, delivery?: MonitoringDelivery) => deliverMonitoringAlert(projectId, evaluateCrawlAlert(report, readMonitoringSettings(projectId)), delivery);
 export const monitorSemanticComparison = (projectId: string, report: SemanticRunComparisonReport, delivery?: MonitoringDelivery) => deliverMonitoringAlert(projectId, evaluateSemanticAlert(report, readMonitoringSettings(projectId)), delivery);
 export const monitorSiteFocus = (projectId: string, events: AlertEvent[], sourceId: string, delivery?: MonitoringDelivery) => deliverMonitoringAlert(projectId, evaluateFocusAlert(events, sourceId), delivery);
-/** AIO readiness and E-E-A-T trust: alert when the score fell by more than the shared drop threshold since the previous run. */
 export const monitorScoreDrop = (projectId: string, kind: ScoreDropKind, previous: { score: number } | undefined, next: { score: number }, runId: string, delivery?: MonitoringDelivery) => deliverMonitoringAlert(projectId, evaluateScoreDropAlert(kind, previous, next, `${kind}-${runId}`, readMonitoringSettings(projectId)), delivery);
+
+export const monitorAioCrawls = async (projectId: string, current: CrawlRunRecord, runs: CrawlRunRecord[], delivery?: MonitoringDelivery) => {
+  const evaluation = compareAioForMonitoring(previousComparableAioCrawl(current, runs, projectId), current, readMonitoringSettings(projectId), projectId);
+  return { ...await deliverMonitoringAlert(projectId, evaluation.alert, delivery), partial: evaluation.partial, skipped: evaluation.skipped };
+};

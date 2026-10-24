@@ -6,10 +6,6 @@ export type ScoreDropKind = 'aio' | 'trust';
 
 const round1 = (value: number): number => Math.round(value * 10) / 10;
 
-/**
- * Alert for a run-over-run score drop of the AI Overviews readiness or E-E-A-T trust report.
- * Reuses the shared "focus" alert type and its drop threshold; no previous snapshot means no alert.
- */
 export const evaluateScoreDropAlert = (
   kind: ScoreDropKind,
   previous: { score: number } | undefined,
@@ -18,17 +14,22 @@ export const evaluateScoreDropAlert = (
   settings: MonitoringAlertSettings = defaultMonitoringAlertSettings(),
 ): MonitoringAlert | null => {
   if (!previous || !Number.isFinite(previous.score) || !Number.isFinite(next.score)) return null;
-  const points = round1(previous.score - next.score);
-  if (points <= settings.thresholds.focus.dropPoints) return null;
-  const evidence = { kind, from: previous.score, to: next.score, points };
+  const difference = previous.score - next.score;
+  const points = round1(difference);
+  const tolerance = Number.EPSILON * Math.max(Math.abs(previous.score), Math.abs(next.score), 1);
+  const type = kind === 'aio' ? 'aio' : 'focus';
+  if (kind === 'aio' ? difference + tolerance < settings.thresholds.aio.dropPoints : points <= settings.thresholds.focus.dropPoints) return null;
+  const evidence: MonitoringAlert['evidence'] = kind === 'aio'
+    ? { kind, before: previous.score, after: next.score, drop: points }
+    : { kind, from: previous.score, to: next.score, points };
   return {
-    type: 'focus',
+    type,
     sourceId,
     title: i18n.t(`scoreDropAlert.${kind}.title`),
     body: i18n.t(`scoreDropAlert.${kind}.body`, { from: previous.score, to: next.score, points }),
     occurredAt: new Date().toISOString(),
     partial: false,
     evidence,
-    fingerprint: alertFingerprint('focus', sourceId, evidence),
+    fingerprint: alertFingerprint(type, sourceId, evidence),
   };
 };
