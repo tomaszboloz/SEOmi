@@ -1,3 +1,9 @@
+# SEOmi 0.4.31 — release notes
+
+## Fixed
+
+- URL protection panel (issue #91) always showed its empty state because nothing ever produced the shared URL telemetry snapshot. It is now built on demand from the newest saved Search Console period snapshot (GSC only; GA4 and backlinks stay `unavailable`, revenue unavailable), cached per project for a day, and never built without saved data. Pages missing from a complete page list are a measured zero, as designed; truncated lists stay unknown. `readGscSnapshots` moved to an i18n-free module.
+
 # SEOmi 0.4.30 — release notes
 
 ## Added
