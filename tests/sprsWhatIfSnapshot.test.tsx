@@ -40,7 +40,13 @@ it('simulates adding a link on the frozen graph and ranks rows by absolute chang
   fireEvent.click(run);
   const rows = screen.getAllByRole('row').slice(1);
   expect(rows.length).toBeGreaterThan(0);
-  expect(rows.some((row) => row.textContent?.includes(D))).toBe(true);
+  const targetCell = screen.getByRole('cell', { name: D });
+  expect(targetCell.textContent?.trim()).toBe(D);
+  const pageCells = rows.map((row) => row.querySelector('td')?.textContent?.trim());
+  expect(pageCells).toContain(D);
+  const lookalike = `${D}.attacker.com`;
+  expect(screen.queryByRole('cell', { name: lookalike })).toBeNull();
+  expect(pageCells).not.toContain(lookalike);
   expect(edges).toHaveLength(3);
   pick('To page', B);
   expect(screen.queryByRole('table')).toBeNull();
