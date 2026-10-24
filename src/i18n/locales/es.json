@@ -7598,6 +7598,7 @@
     }
   },
   "decayUi": {
+    "snapshots": "Capturas que respaldan este diagnóstico: {{count}}",
     "title": "Radar de decaimiento semántico",
     "verdict": {
       "too-few-samples": "Aún no hay suficientes capturas SERP comparables. Nada que informar.",

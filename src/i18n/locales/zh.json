@@ -7598,6 +7598,7 @@
     }
   },
   "decayUi": {
+    "snapshots": "支持此判定的快照数量：{{count}}",
     "title": "语义衰减雷达",
     "verdict": {
       "too-few-samples": "可比较的 SERP 快照还不够，暂无可报告内容。",

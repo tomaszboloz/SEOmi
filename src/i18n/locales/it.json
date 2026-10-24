@@ -7598,6 +7598,7 @@
     }
   },
   "decayUi": {
+    "snapshots": "Istantanee a supporto di questo verdetto: {{count}}",
     "title": "Radar del decadimento semantico",
     "verdict": {
       "too-few-samples": "Ancora pochi snapshot SERP confrontabili. Niente da segnalare.",

@@ -7598,6 +7598,7 @@
     }
   },
   "decayUi": {
+    "snapshots": "Liczba zrzutów stanowiących podstawę oceny: {{count}}",
     "title": "Radar zaniku semantycznego",
     "verdict": {
       "too-few-samples": "Za mało porównywalnych zrzutów SERP. Nie ma czego raportować.",

@@ -7598,6 +7598,7 @@
     }
   },
   "decayUi": {
+    "snapshots": "Instantanés à l’appui de ce verdict : {{count}}",
     "title": "Radar de déclin sémantique",
     "verdict": {
       "too-few-samples": "Pas encore assez de captures SERP comparables. Rien à signaler.",

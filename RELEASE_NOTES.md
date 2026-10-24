@@ -1,3 +1,9 @@
+# SEOmi 0.4.33 — release notes
+
+## Added
+
+- Semantic decay history producer (issue #98): successful hybrid SERP clustering saves real ranked observations per project and normalized query/country/language, validates stored data, deduplicates capture times, and retains the latest 24 snapshots. Signals load the most recent query with repeated observations and persist per-query alert cooldowns. The radar shows its backing snapshot count in all 12 languages. The existing hybrid result does not expose a SERP centroid, consensus entities, or dominant intent/format; these remain unavailable rather than being synthesized from keyword embeddings or labels.
+
 # SEOmi 0.4.31 — release notes
 
 ## Fixed
@@ -370,4 +376,3 @@ The selected distribution uses signed Tauri updates and installers without Apple
 ## Thanks
 
 Thank you **@RafalSzy** for contributions, topical diagnosis, detailed issue reports and regression-test feedback in PR #13 and subsequent reviews.
-
