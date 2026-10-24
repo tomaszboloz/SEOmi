@@ -1,4 +1,62 @@
 {
+  "logIntelUi": {
+    "title": "Log-Analyse",
+    "description": "Lokales Zugriffslog .log oder .txt importieren (maximal 500 MB). Nur Aggregate, nie rohe IP-Adressen, werden gespeichert. Die Deduplizierung nutzt einen SHA-256-Stichprobenfingerabdruck (erstes/letztes MiB und Größe).",
+    "chooseFile": "Zugriffslog auswählen",
+    "cancel": "Abbrechen",
+    "clear": "Logs löschen",
+    "importing": "Zugriffslog wird importiert",
+    "progress": "Zeilen: {{lines}} · Fehlerhaft: {{malformed}} · Keine Bots: {{ignoredNonBot}}",
+    "cancelled": "Import abgebrochen.",
+    "duplicate": "Diese Datei wurde bereits importiert.",
+    "complete": "Import abgeschlossen.",
+    "storageFailed": "Lokaler Speicher konnte nicht aktualisiert werden. Änderungen bleiben nur im Arbeitsspeicher; gespeicherte Logs sind eventuell unverändert.",
+    "tooLarge": "Die Datei überschreitet das Limit von 500 MB.",
+    "invalidFile": "Eine .log- oder .txt-Datei auswählen.",
+    "resumeRequired": "Die unvollständige Datei fortsetzen oder Logs löschen, bevor eine andere Datei importiert wird.",
+    "importFailed": "Die Datei konnte nicht gelesen oder gehasht werden. Bitte erneut versuchen.",
+    "resume": "Dieselbe Datei auswählen, um ohne doppelte Zeilenzählung fortzusetzen.",
+    "verificationNote": "Die Bot-Identität ist eine User-Agent-Behauptung, kein Nachweis. Spoofing-Prüfungen benötigen den Desktop-DNS-Resolver; dieses Panel fragt kein DNS ab. Ungeprüfte Zeilen bleiben unklar.",
+    "matrix": "Crawl-Effizienzmatrix",
+    "coverage": "Abdeckung: {{days}} von {{period}} Tagen",
+    "period": "Zeitraum (UTC): {{start}} – {{end}}",
+    "insufficient": "Die Log-Abdeckung reicht für zuverlässige Bewertungen nicht aus.",
+    "noScores": "Der neueste Projekt-Crawl hat keine gespeicherten TRS-Werte pro Pfad. Es werden keine Werte erfunden.",
+    "unavailable": "Nicht verfügbar",
+    "empty": "Keine Log- oder Crawl-Pfade vorhanden.",
+    "previous": "Zurück",
+    "page": "Seite {{current}} von {{total}}",
+    "next": "Weiter",
+    "loading": "Log-Analyse wird geladen…",
+    "columns": {
+      "path": "Pfad",
+      "family": "Bot-Familie",
+      "status": "Verifizierung",
+      "hits": "Zugriffe",
+      "errors": "4xx/5xx-Anteil",
+      "verdict": "Bewertung"
+    },
+    "families": {
+      "googlebot": "Googlebot",
+      "bingbot": "Bingbot",
+      "gptbot": "GPTBot",
+      "perplexitybot": "PerplexityBot",
+      "none": "Keine Bot-Belege"
+    },
+    "statuses": {
+      "verified": "Verifiziert",
+      "claimed": "Behauptet",
+      "spoofed": "Gefälscht",
+      "unknown": "Unbekannt"
+    },
+    "verdicts": {
+      "waste": "Verschwendung",
+      "starvation": "Unterversorgung",
+      "ok": "OK",
+      "inconclusive": "Unklar",
+      "no-logs": "Keine Logs"
+    }
+  },
   "teamPanelUi": {
     "title": "Teammodus und Audit-Protokoll",
     "description": "Legen Sie fest, wer in welcher Rolle handelt. Jede Änderung wird in ein lokales, manipulationssicheres Audit-Protokoll mit Hash-Kette geschrieben.",

@@ -1,4 +1,62 @@
 {
+  "logIntelUi": {
+    "title": "ログ分析",
+    "description": "ローカルの .log または .txt アクセスログをインポートします（最大500 MB）。生のIPアドレスではなく集計のみを保存します。重複判定には先頭・末尾各1 MiBとサイズのサンプルSHA-256を使用します。",
+    "chooseFile": "アクセスログを選択",
+    "cancel": "キャンセル",
+    "clear": "ログを消去",
+    "importing": "アクセスログをインポート中",
+    "progress": "行数: {{lines}} · 不正な行: {{malformed}} · ボット以外: {{ignoredNonBot}}",
+    "cancelled": "インポートをキャンセルしました。",
+    "duplicate": "このファイルはインポート済みです。",
+    "complete": "インポート完了。",
+    "storageFailed": "ローカルストレージを更新できませんでした。変更はメモリ内のみで、保存済みログは変わっていない可能性があります。",
+    "tooLarge": "ファイルが500 MBの上限を超えています。",
+    "invalidFile": ".log または .txt ファイルを選択してください。",
+    "resumeRequired": "別のファイルをインポートする前に未完了のファイルを再開するかログを消去してください。",
+    "importFailed": "ファイルの読み取りまたはハッシュ計算に失敗しました。再試行してください。",
+    "resume": "同じファイルを選択すると行を二重計上せず再開できます。",
+    "verificationNote": "ボットの識別はUser-Agentの自己申告であり証明ではありません。なりすまし確認にはデスクトップDNSリゾルバーが必要です。このパネルはDNSに接続しません。未検証の行は判定不能のままです。",
+    "matrix": "クロール効率マトリクス",
+    "coverage": "カバレッジ: {{period}}日中{{days}}日",
+    "period": "期間（UTC）: {{start}} – {{end}}",
+    "insufficient": "ログのカバレッジが不十分なため信頼できる判定はできません。",
+    "noScores": "プロジェクトの最新クロールにパス別TRSスコアが保存されていません。スコアは推測しません。",
+    "unavailable": "利用不可",
+    "empty": "表示するログまたはクロールのパスがありません。",
+    "previous": "前へ",
+    "page": "{{total}}ページ中{{current}}ページ",
+    "next": "次へ",
+    "loading": "ログ分析を読み込み中…",
+    "columns": {
+      "path": "パス",
+      "family": "ボットの種類",
+      "status": "検証状態",
+      "hits": "ヒット数",
+      "errors": "4xx/5xx比率",
+      "verdict": "判定"
+    },
+    "families": {
+      "googlebot": "Googlebot",
+      "bingbot": "Bingbot",
+      "gptbot": "GPTBot",
+      "perplexitybot": "PerplexityBot",
+      "none": "ボットの証拠なし"
+    },
+    "statuses": {
+      "verified": "検証済み",
+      "claimed": "自己申告",
+      "spoofed": "なりすまし",
+      "unknown": "不明"
+    },
+    "verdicts": {
+      "waste": "浪費",
+      "starvation": "クロール不足",
+      "ok": "正常",
+      "inconclusive": "判定不能",
+      "no-logs": "ログなし"
+    }
+  },
   "teamPanelUi": {
     "title": "チームモードと監査ログ",
     "description": "誰がどの役割で操作するかを選択します。すべての変更は、改ざん検知可能なハッシュチェーン付きのローカル監査ログに追記されます。",

@@ -1,4 +1,62 @@
 {
+  "logIntelUi": {
+    "title": "Log intelligence",
+    "description": "Import a local .log or .txt access log (maximum 500 MB). Only aggregates are saved, never raw IP addresses. Dedupe uses a sampled SHA-256 fingerprint (first/last 1 MiB and size).",
+    "chooseFile": "Choose access log",
+    "cancel": "Cancel",
+    "clear": "Clear logs",
+    "importing": "Importing access log",
+    "progress": "Lines: {{lines}} · Malformed: {{malformed}} · Ignored non-bot: {{ignoredNonBot}}",
+    "cancelled": "Import cancelled.",
+    "duplicate": "This file was already imported.",
+    "complete": "Import complete.",
+    "storageFailed": "Local storage could not be updated. Changes remain in memory only; saved logs may be unchanged.",
+    "tooLarge": "This file exceeds the 500 MB limit.",
+    "invalidFile": "Choose a .log or .txt file.",
+    "resumeRequired": "Resume the unfinished file or clear logs before importing a different file.",
+    "importFailed": "The file could not be read or hashed. Please try again.",
+    "resume": "Select the same file to resume without counting lines twice.",
+    "verificationNote": "Bot identity is a User-Agent claim, not proof. Spoof checks need the desktop DNS resolver; this panel does not call DNS. Unverified rows remain inconclusive.",
+    "matrix": "Crawl Efficiency Matrix",
+    "coverage": "Coverage: {{days}} of {{period}} days",
+    "period": "Window (UTC): {{start}} – {{end}}",
+    "insufficient": "Log coverage is insufficient for reliable verdicts.",
+    "noScores": "The latest project crawl has no saved per-path TRS scores. No scores are inferred.",
+    "unavailable": "Not available",
+    "empty": "No log or crawl paths to display.",
+    "previous": "Previous",
+    "page": "Page {{current}} of {{total}}",
+    "next": "Next",
+    "loading": "Loading log intelligence…",
+    "columns": {
+      "path": "Path",
+      "family": "Bot family",
+      "status": "Verification",
+      "hits": "Hits",
+      "errors": "4xx/5xx share",
+      "verdict": "Verdict"
+    },
+    "families": {
+      "googlebot": "Googlebot",
+      "bingbot": "Bingbot",
+      "gptbot": "GPTBot",
+      "perplexitybot": "PerplexityBot",
+      "none": "No bot evidence"
+    },
+    "statuses": {
+      "verified": "Verified",
+      "claimed": "Claimed",
+      "spoofed": "Spoofed",
+      "unknown": "Unknown"
+    },
+    "verdicts": {
+      "waste": "Waste",
+      "starvation": "Starvation",
+      "ok": "OK",
+      "inconclusive": "Inconclusive",
+      "no-logs": "No logs"
+    }
+  },
   "teamPanelUi": {
     "title": "Team mode and audit trail",
     "description": "Choose who is acting and in which role. Every change is appended to a tamper-evident, hash-chained audit log stored locally.",

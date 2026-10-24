@@ -1,4 +1,62 @@
 {
+  "logIntelUi": {
+    "title": "Analiza logów",
+    "description": "Importuj lokalny log dostępu .log lub .txt (maksymalnie 500 MB). Zapisywane są tylko agregaty, nigdy surowe adresy IP. Deduplikacja używa próbkowanego skrótu SHA-256 (pierwszy i ostatni 1 MiB oraz rozmiar).",
+    "chooseFile": "Wybierz log dostępu",
+    "cancel": "Anuluj",
+    "clear": "Wyczyść logi",
+    "importing": "Importowanie logu dostępu",
+    "progress": "Wiersze: {{lines}} · Błędne: {{malformed}} · Pominięte inne niż boty: {{ignoredNonBot}}",
+    "cancelled": "Import anulowany.",
+    "duplicate": "Ten plik został już zaimportowany.",
+    "complete": "Import zakończony.",
+    "storageFailed": "Nie udało się zaktualizować pamięci lokalnej. Zmiany pozostają tylko w pamięci; zapisane logi mogą być bez zmian.",
+    "tooLarge": "Plik przekracza limit 500 MB.",
+    "invalidFile": "Wybierz plik .log lub .txt.",
+    "resumeRequired": "Wznów niedokończony plik lub wyczyść logi przed importem innego pliku.",
+    "importFailed": "Nie udało się odczytać pliku lub obliczyć skrótu. Spróbuj ponownie.",
+    "resume": "Wybierz ten sam plik, aby wznowić import bez podwójnego zliczania wierszy.",
+    "verificationNote": "Tożsamość bota to deklaracja User-Agent, nie dowód. Wykrywanie podszywania wymaga desktopowego resolvera DNS; panel nie odpytuje DNS. Niezweryfikowane wiersze pozostają nierozstrzygnięte.",
+    "matrix": "Macierz efektywności crawlowania",
+    "coverage": "Pokrycie: {{days}} z {{period}} dni",
+    "period": "Okno (UTC): {{start}} – {{end}}",
+    "insufficient": "Pokrycie logów jest niewystarczające do wiarygodnych ocen.",
+    "noScores": "Najnowszy crawl projektu nie ma zapisanych ocen TRS dla ścieżek. Oceny nie są domyślane.",
+    "unavailable": "Brak danych",
+    "empty": "Brak ścieżek logów lub crawla do wyświetlenia.",
+    "previous": "Poprzednia",
+    "page": "Strona {{current}} z {{total}}",
+    "next": "Następna",
+    "loading": "Ładowanie analizy logów…",
+    "columns": {
+      "path": "Ścieżka",
+      "family": "Rodzina bota",
+      "status": "Weryfikacja",
+      "hits": "Żądania",
+      "errors": "Udział 4xx/5xx",
+      "verdict": "Ocena"
+    },
+    "families": {
+      "googlebot": "Googlebot",
+      "bingbot": "Bingbot",
+      "gptbot": "GPTBot",
+      "perplexitybot": "PerplexityBot",
+      "none": "Brak śladów bota"
+    },
+    "statuses": {
+      "verified": "Zweryfikowany",
+      "claimed": "Deklarowany",
+      "spoofed": "Podszywający się",
+      "unknown": "Nieznany"
+    },
+    "verdicts": {
+      "waste": "Marnotrawstwo",
+      "starvation": "Niedobór crawlowania",
+      "ok": "OK",
+      "inconclusive": "Nierozstrzygnięte",
+      "no-logs": "Brak logów"
+    }
+  },
   "teamPanelUi": {
     "title": "Tryb zespołowy i dziennik audytu",
     "description": "Wybierz, kto działa i w jakiej roli. Każda zmiana trafia do lokalnego dziennika audytu zabezpieczonego łańcuchem skrótów.",
