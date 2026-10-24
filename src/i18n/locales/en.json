@@ -7543,6 +7543,9 @@
   },
   "prePublishUi": {
     "title": "Pre-publish check",
+    "copy": "Copy report",
+    "copied": "Report copied.",
+    "copyFailed": "Could not copy the report.",
     "verdict": {
       "insufficient": "Not enough data to judge this draft.",
       "blocked": "Do not publish yet: the draft duplicates an existing page.",

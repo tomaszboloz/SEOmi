@@ -7543,6 +7543,9 @@
   },
   "prePublishUi": {
     "title": "Contrôle avant publication",
+    "copy": "Copier le rapport",
+    "copied": "Rapport copié.",
+    "copyFailed": "Impossible de copier le rapport.",
     "verdict": {
       "insufficient": "Données insuffisantes pour juger ce brouillon.",
       "blocked": "Ne publiez pas encore : le brouillon double une page existante.",

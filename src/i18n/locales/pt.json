@@ -7543,6 +7543,9 @@
   },
   "prePublishUi": {
     "title": "Verificação antes de publicar",
+    "copy": "Copiar relatório",
+    "copied": "Relatório copiado.",
+    "copyFailed": "Não foi possível copiar o relatório.",
     "verdict": {
       "insufficient": "Dados insuficientes para avaliar este rascunho.",
       "blocked": "Não publique ainda: o rascunho duplica uma página existente.",

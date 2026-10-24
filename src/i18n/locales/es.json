@@ -7543,6 +7543,9 @@
   },
   "prePublishUi": {
     "title": "Revisión previa a publicar",
+    "copy": "Copiar informe",
+    "copied": "Informe copiado.",
+    "copyFailed": "No se pudo copiar el informe.",
     "verdict": {
       "insufficient": "No hay datos suficientes para evaluar este borrador.",
       "blocked": "No publiques aún: el borrador duplica una página existente.",

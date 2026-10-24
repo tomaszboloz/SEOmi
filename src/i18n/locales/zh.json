@@ -7543,6 +7543,9 @@
   },
   "prePublishUi": {
     "title": "发布前检查",
+    "copy": "复制报告",
+    "copied": "报告已复制。",
+    "copyFailed": "无法复制报告。",
     "verdict": {
       "insufficient": "数据不足，无法评估此草稿。",
       "blocked": "暂勿发布：草稿与现有页面重复。",

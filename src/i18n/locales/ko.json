@@ -7543,6 +7543,9 @@
   },
   "prePublishUi": {
     "title": "게시 전 점검",
+    "copy": "보고서 복사",
+    "copied": "보고서를 복사했습니다.",
+    "copyFailed": "보고서를 복사하지 못했습니다.",
     "verdict": {
       "insufficient": "이 초안을 판단할 데이터가 부족합니다.",
       "blocked": "아직 게시하지 마세요. 초안이 기존 페이지와 중복됩니다.",

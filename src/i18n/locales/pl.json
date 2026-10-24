@@ -7543,6 +7543,9 @@
   },
   "prePublishUi": {
     "title": "Kontrola przed publikacją",
+    "copy": "Kopiuj raport",
+    "copied": "Skopiowano raport.",
+    "copyFailed": "Nie udało się skopiować raportu.",
     "verdict": {
       "insufficient": "Za mało danych, by ocenić ten szkic.",
       "blocked": "Nie publikuj jeszcze: szkic dubluje istniejącą stronę.",
