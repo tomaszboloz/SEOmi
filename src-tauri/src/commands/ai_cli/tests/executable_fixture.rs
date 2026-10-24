@@ -18,15 +18,13 @@ pub(crate) fn executable_fixture(provider: &str) -> (ResearchDirectory, Resolved
         .unwrap();
         fs::write(
             root.join("probe.ps1"),
-            format!(
-                r#"
+            r#"
 [Console]::InputEncoding = [Text.UTF8Encoding]::new()
 [Console]::OutputEncoding = [Text.UTF8Encoding]::new()
 $prompt = [Console]::In.ReadToEnd()
 [IO.File]::WriteAllText((Join-Path $PSScriptRoot 'prompt.txt'), $prompt, [Text.UTF8Encoding]::new())
 [Console]::Out.Write('answer')
-"#
-            ),
+"#,
         )
         .unwrap();
         (
