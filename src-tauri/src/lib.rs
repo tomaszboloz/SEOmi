@@ -36,7 +36,6 @@ pub fn desktop_builder() -> Builder<tauri::Wry> {
             .plugin(tauri_plugin_notification::init()),
     )
 }
-
 /// Runtime-generic state, command handlers and startup hook, so MockRuntime
 /// tests can drive the same IPC surface the desktop binary ships.
 pub(crate) fn compose<R: tauri::Runtime>(builder: Builder<R>) -> Builder<R> {
@@ -82,6 +81,7 @@ pub(crate) fn compose<R: tauri::Runtime>(builder: Builder<R>) -> Builder<R> {
                 commands::seo_audit::inspect_url,
                 commands::seo_audit::cancel_inspect_url,
                 commands::http_client::check_link,
+                commands::cms_patch::cms_patch_request,
                 commands::external_link_checker::check_external_crawl_links,
                 commands::free_feeds::fetch_public_feed,
                 commands::rdap::rdap_domain_lookup,

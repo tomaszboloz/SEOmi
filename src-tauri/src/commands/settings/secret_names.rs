@@ -27,7 +27,8 @@ pub(super) fn is_supported_secret_name(name: &str) -> bool {
         .is_some_and(|(project, profile)| valid_identifier(project) && valid_identifier(profile));
     let is_gsc_refresh_key = is_gsc_refresh_secret(name);
     let is_gsc_client_key = is_gsc_client_secret(name);
-    is_ai_key
+    valid_secret_suffix(name, "cms_auth_")
+        || is_ai_key
         || is_project_google_metrics_key
         || is_project_dataforseo_key
         || is_crawl_auth_key

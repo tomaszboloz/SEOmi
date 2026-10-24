@@ -8,6 +8,7 @@ import { HelpTip } from '@/components/Help/HelpTip';
 import { RenderWorkerPanel } from '@/components/Settings/RenderWorkerPanel';
 import { MonitoringAlertsPanel } from '@/components/Settings/MonitoringAlertsPanel';
 import { TeamPanel } from '@/components/Settings/TeamPanel';
+import { CmsPatchPanel } from '@/components/Settings/CmsPatchPanel';
 import { DataErasurePanel } from '@/components/Settings/DataErasurePanel';
 
 interface GeneralSettingsTabProps {
@@ -68,6 +69,7 @@ export const GeneralSettingsTab: React.FC<GeneralSettingsTabProps> = ({
 
       <RenderWorkerPanel />
       <TeamPanel />
+      <CmsPatchPanel />
       <DataErasurePanel />
 
       <div>
