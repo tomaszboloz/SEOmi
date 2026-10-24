@@ -7822,6 +7822,7 @@
     "importFailed": "Nie udało się odczytać pliku lub obliczyć skrótu. Spróbuj ponownie.",
     "resume": "Wybierz ten sam plik, aby wznowić import bez podwójnego zliczania wierszy.",
     "verificationNote": "Tożsamość bota to deklaracja User-Agent, nie dowód. Wykrywanie podszywania wymaga desktopowego resolvera DNS; panel nie odpytuje DNS. Niezweryfikowane wiersze pozostają nierozstrzygnięte.",
+    "verificationNoteDesktop": "Tożsamość bota jest sprawdzana na tym komputerze przez odwrotny i prosty DNS (limit 3 s). Nieudane zapytanie zostawia wiersz jako zadeklarowany, nigdy jako podszywanie.",
     "matrix": "Macierz efektywności crawlowania",
     "coverage": "Pokrycie: {{days}} z {{period}} dni",
     "period": "Okno (UTC): {{start}} – {{end}}",

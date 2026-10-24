@@ -20,6 +20,13 @@ export const DNS_SUFFIXES: Partial<Record<BotFamily, string[]>> = {
 
 const TOKENS: Array<[RegExp, BotFamily]> = [[/googlebot/i, 'googlebot'], [/bingbot/i, 'bingbot'], [/gptbot/i, 'gptbot'], [/perplexitybot/i, 'perplexitybot']];
 
+/** Canonical textual form so IPv6 spellings from logs and DNS answers compare equal; unparseable input is kept as is. */
+export const canonicalIp = (ip: string): string => {
+  const value = ip.trim();
+  if (!value.includes(':')) return value;
+  try { return new URL(`http://[${value}]`).hostname.slice(1, -1); } catch { return value; }
+};
+
 export const claimedFamily = (userAgent: string): BotFamily | null => TOKENS.find(([re]) => re.test(userAgent))?.[1] ?? null;
 
 const ipv4 = (ip: string): number | null => {
@@ -57,7 +64,7 @@ export const verifyBot = async (ip: string, userAgent: string, deps: VerifyDeps 
   try {
     const hosts = (await deps.resolver.reverse(ip)).map((h) => h.toLowerCase().replace(/\.$/, '')).filter((h) => suffixes.some((s) => h.endsWith(s)));
     for (const host of hosts) {
-      if ((await deps.resolver.forward(host)).includes(ip)) return { family, status: 'verified', method: 'reverse-forward-dns', checkedAt };
+      if ((await deps.resolver.forward(host)).map(canonicalIp).includes(canonicalIp(ip))) return { family, status: 'verified', method: 'reverse-forward-dns', checkedAt };
     }
     return { family, status: 'spoofed', method: 'reverse-forward-dns', checkedAt };
   } catch {

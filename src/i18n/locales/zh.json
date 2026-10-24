@@ -7822,6 +7822,7 @@
     "importFailed": "无法读取文件或计算哈希。请重试。",
     "resume": "选择相同文件即可继续，且不会重复计算行数。",
     "verificationNote": "机器人身份只是User-Agent声明，并非证据。伪装检查需要桌面DNS解析器；此面板不调用DNS。未经验证的行将保持无法确定状态。",
+    "verificationNoteDesktop": "机器人身份在本机通过反向和正向 DNS 验证（超时 3 秒）。查询失败时该行保持“声称”，绝不会标记为“伪造”。",
     "matrix": "抓取效率矩阵",
     "coverage": "覆盖：{{period}}天中的{{days}}天",
     "period": "时间窗口（UTC）：{{start}} – {{end}}",

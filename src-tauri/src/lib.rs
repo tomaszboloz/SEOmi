@@ -1,9 +1,4 @@
 pub mod commands;
-pub mod models;
-pub mod services;
-mod startup;
-pub mod utils;
-
 #[cfg(test)]
 mod compose_arg_more_tests;
 #[cfg(test)]
@@ -14,8 +9,12 @@ mod compose_command_tests;
 mod compose_gap_tests;
 #[cfg(test)]
 mod compose_tests;
+pub mod models;
+pub mod services;
+mod startup;
 #[cfg(test)]
 mod startup_tests;
+pub mod utils;
 use tauri::Builder;
 
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
@@ -36,8 +35,7 @@ pub fn desktop_builder() -> Builder<tauri::Wry> {
             .plugin(tauri_plugin_notification::init()),
     )
 }
-/// Runtime-generic state, command handlers and startup hook, so MockRuntime
-/// tests can drive the same IPC surface the desktop binary ships.
+/// Runtime-generic state, handlers and startup hook, so MockRuntime tests drive the shipped IPC surface.
 pub(crate) fn compose<R: tauri::Runtime>(builder: Builder<R>) -> Builder<R> {
     builder
         .manage(commands::site_crawler::CrawlControl::new())
@@ -112,6 +110,8 @@ pub(crate) fn compose<R: tauri::Runtime>(builder: Builder<R>) -> Builder<R> {
                 commands::render_worker::start_render_worker,
                 commands::render_worker::stop_render_worker,
                 commands::render_worker::render_worker_status,
+                commands::bot_dns::dns_reverse,
+                commands::bot_dns::dns_forward,
                 commands::scheduler::register_audit_wakeup,
                 commands::scheduler::unregister_audit_wakeup,
                 commands::scheduler::register_audit_queue_wakeup,

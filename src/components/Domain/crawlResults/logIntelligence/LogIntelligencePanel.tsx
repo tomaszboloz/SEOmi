@@ -1,3 +1,4 @@
+import { desktopResolver } from '@/services/logIntelligence/desktopResolver';
 import { useId, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import type { CrawlRunRecord } from '@/types';
@@ -30,7 +31,7 @@ export default function LogIntelligencePanel({ projectId, run }: { projectId: st
     <p role="status">{translate('logIntelUi.progress', importer.progress)} {importer.message && translate(`logIntelUi.${importer.message}`)}</p>
     {importer.error && <p role="alert" className="text-amber-300">{translate(`logIntelUi.${importer.error}`)}</p>}
     {importer.state.inProgress && <p>{translate('logIntelUi.resume')}</p>}
-    <p className="text-sm text-slate-400">{translate('logIntelUi.verificationNote')}</p>
+    <p className="text-sm text-slate-400">{translate(desktopResolver() ? 'logIntelUi.verificationNoteDesktop' : 'logIntelUi.verificationNote')}</p>
     <h3 className="font-semibold">{translate('logIntelUi.matrix')}</h3>
     <p>{translate('logIntelUi.coverage', { days: matrix.coverageDays, period: matrix.periodDays })}</p>
     {start !== null && end !== null && <p>{translate('logIntelUi.period', { start: date.format(start), end: date.format(end) })}</p>}

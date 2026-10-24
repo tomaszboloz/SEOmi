@@ -7822,6 +7822,7 @@
     "importFailed": "Die Datei konnte nicht gelesen oder gehasht werden. Bitte erneut versuchen.",
     "resume": "Dieselbe Datei auswählen, um ohne doppelte Zeilenzählung fortzusetzen.",
     "verificationNote": "Die Bot-Identität ist eine User-Agent-Behauptung, kein Nachweis. Spoofing-Prüfungen benötigen den Desktop-DNS-Resolver; dieses Panel fragt kein DNS ab. Ungeprüfte Zeilen bleiben unklar.",
+    "verificationNoteDesktop": "Die Bot-Identität wird auf diesem Computer per Reverse- und Forward-DNS geprüft (3 s Timeout). Ein fehlgeschlagener Abruf lässt die Zeile als behauptet, nie als gefälscht.",
     "matrix": "Crawl-Effizienzmatrix",
     "coverage": "Abdeckung: {{days}} von {{period}} Tagen",
     "period": "Zeitraum (UTC): {{start}} – {{end}}",

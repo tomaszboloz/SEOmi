@@ -16,6 +16,16 @@
 ## Fixed
 - Topical Authority freshness exposes total, dated and undated page counts. Pages without a usable date remain unscored, with a notice translated into all 12 languages; older reports default missing counts to zero.
 - Direct TAS regression tests cover previously untested branches, including cannibalization grouping and canonical selection (issue #110).
+# SEOmi 0.4.28 — release notes
+
+## Added
+
+- Log intelligence: DNS bot verification on desktop (issue #92). `dns_reverse` and `dns_forward` Tauri commands (public IPs only, 3 s timeout, host-name validation, public answers only) feed the existing reverse/forward check, so Googlebot and Bingbot rows become `verified` or `spoofed`; a failed lookup stays `claimed`. IPv6 addresses are compared in canonical form. The browser build keeps the "claimed" behaviour and says so.
+
+## Fixed
+
+- Scheduler: rounding a trigger time that falls in the repeated hour when daylight saving time ends (e.g. 25 Oct 02:xx in Europe) panicked. Rounding now happens in UTC. Regression tests use a zone with an ambiguous wall clock and half-hour offsets.
+
 # SEOmi 0.4.26 — release notes
 
 ## Added

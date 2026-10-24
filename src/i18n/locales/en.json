@@ -7822,6 +7822,7 @@
     "importFailed": "The file could not be read or hashed. Please try again.",
     "resume": "Select the same file to resume without counting lines twice.",
     "verificationNote": "Bot identity is a User-Agent claim, not proof. Spoof checks need the desktop DNS resolver; this panel does not call DNS. Unverified rows remain inconclusive.",
+    "verificationNoteDesktop": "Bot identity is checked on this computer with reverse and forward DNS (3 s timeout). A failed lookup leaves the row as claimed, never as spoofed.",
     "matrix": "Crawl Efficiency Matrix",
     "coverage": "Coverage: {{days}} of {{period}} days",
     "period": "Window (UTC): {{start}} – {{end}}",
