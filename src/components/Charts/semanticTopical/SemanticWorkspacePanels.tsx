@@ -1,14 +1,17 @@
-import React from 'react';
+import React, { lazy, Suspense, useEffect } from 'react';
+import { takePendingBrief } from '@/services/executionCard/openBrief';
 import { TopicalCalendar } from '@/components/Charts/TopicalCalendar';
 import { SemanticAuditPanel } from '@/components/Charts/SemanticAuditPanel';
 import { SchemaGraphBuilder } from '@/components/Charts/SchemaGraphBuilder';
-import { InternalLinkOpportunitiesPanel } from '@/components/Charts/InternalLinkOpportunitiesPanel';
+import { LinksWorkspace } from './LinksWorkspace';
+import { SignalsWorkspace } from './signals/SignalsWorkspace';
 import { EntityEvidenceGraph } from '@/components/Charts/EntityEvidenceGraph';
 import type { useSemanticTopicalSession } from './useSemanticTopicalSession';
 import { TopicalTopicBrowser } from './TopicalTopicBrowser';
 import { TopicalNodeEditor } from './TopicalNodeEditor';
 
 type Session = ReturnType<typeof useSemanticTopicalSession>;
+const PrePublishWorkspace = lazy(() => import('../prePublish/PrePublishWorkspace'));
 
 export const SemanticWorkspacePanels: React.FC<{ session: Session }> = ({ session }) => {
   const {
@@ -24,6 +27,16 @@ export const SemanticWorkspacePanels: React.FC<{ session: Session }> = ({ sessio
     workspacePreferences,
   } = session;
 
+  useEffect(() => {
+    const pendingId = takePendingBrief();
+    if (!pendingId) return;
+    setSelectedId(pendingId);
+    updateWorkspacePreferences({ view: 'topics' });
+  }, [setSelectedId, updateWorkspacePreferences]);
+
+  if (workspacePreferences.view === 'prepublish') return <Suspense fallback={<p role="status">{t('prePublishMountUi.loading')}</p>}>
+    <PrePublishWorkspace key={session.projectId} projectId={session.projectId} runs={runs} />
+  </Suspense>;
   if (workspacePreferences.view === 'audit') {
     return (
       <SemanticAuditPanel
@@ -63,8 +76,12 @@ export const SemanticWorkspacePanels: React.FC<{ session: Session }> = ({ sessio
     );
   }
 
+  if (workspacePreferences.view === 'signals') {
+    return <SignalsWorkspace projectId={session.projectId} pages={pages} graph={session.graph} />;
+  }
+
   if (workspacePreferences.view === 'links') {
-    return <InternalLinkOpportunitiesPanel pages={pages} />;
+    return <LinksWorkspace projectId={session.projectId} pages={pages} />;
   }
 
   return (

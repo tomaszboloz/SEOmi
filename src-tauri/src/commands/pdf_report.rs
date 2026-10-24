@@ -16,6 +16,9 @@ mod tests_generator;
 mod tests_labels;
 
 #[cfg(test)]
+mod tests_labels_overlay;
+
+#[cfg(test)]
 mod tests_unicode;
 
 use base64::Engine;
@@ -45,5 +48,8 @@ pub fn generate_crawl_pdf(run: Value) -> Result<String, String> {
     Ok(base64::engine::general_purpose::STANDARD.encode(crawl_report::crawl_pdf(&run)))
 }
 
+#[cfg(test)]
+#[path = "pdf_report/coverage100_tests.rs"]
+mod coverage100_tests;
 #[cfg(test)]
 mod tests_gaps;

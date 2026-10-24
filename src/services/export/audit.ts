@@ -1,3 +1,6 @@
+import { requireAllowed } from '@/services/team/enforce';
+import i18n from '@/i18n';
+import { checkAlt } from '@/services/multimodal';
 import type { PageAuditData } from '@/types';
 import { escapeCsv, csv, exportHeaders, exportText } from './csv';
 import { downloadText, downloadPdf } from './download';
@@ -21,7 +24,10 @@ export const auditCsv = (audit: PageAuditData): string => {
 export const downloadAuditJson = (audit: PageAuditData): void => downloadText(reportFilename(audit, 'json'), JSON.stringify(audit, null, 2), 'application/json');
 export const downloadAuditCsv = (audit: PageAuditData): void => downloadText(reportFilename(audit, 'csv'), auditCsv(audit), 'text/csv');
 
-export const downloadAuditPdf = (audit: PageAuditData): Promise<void> => downloadPdf('generate_audit_pdf', { audit }, reportFilename(audit, 'pdf'));
+export const downloadAuditPdf = async (audit: PageAuditData): Promise<void> => {
+  requireAllowed('export_audit_pdf', { report: 'page-audit' });
+  return downloadPdf('generate_audit_pdf', { audit }, reportFilename(audit, 'pdf'));
+};
 
 export const auditLinksCsv = (audit: PageAuditData): string => {
   const headers = exportHeaders('auditLinks');
@@ -32,9 +38,10 @@ export const auditLinksCsv = (audit: PageAuditData): string => {
 };
 
 export const auditImagesCsv = (audit: PageAuditData): string => {
-  const headers = exportHeaders('auditImages');
+  const headers = [...exportHeaders('auditImages'), i18n.t('altCheckUi.csvColumn')];
   const rows = audit.images.map((image) => [
     audit.final_url, audit.timestamp, image.src, image.alt || '', image.has_alt, image.width ?? '', image.height ?? '', image.loading || '', image.srcset || '', image.format || '',
+    checkAlt({ src: image.src, alt: image.has_alt ? image.alt : undefined }).issues.join(';'),
   ]);
   return csv([headers, ...rows]);
 };

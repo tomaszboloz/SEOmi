@@ -1,7 +1,7 @@
 {
   "name": "seomi",
   "private": true,
-  "version": "0.4.2",
+  "version": "0.4.40",
   "type": "module",
   "scripts": {
     "predev": "node scripts/sync-app-version.mjs",
@@ -36,14 +36,14 @@
     "cytoscape-dagre": "^4.0.1",
     "cytoscape-fcose": "^2.2.0",
     "date-fns": "^4.1.0",
-    "i18next": "^24.2.2",
+    "i18next": "^26.5.7",
     "lucide-react": "^1.16.0",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
-    "react-i18next": "^15.4.1",
+    "react-i18next": "^17.1.5",
     "tailwindcss": "^4.0.9",
     "tldts": "^7.4.18",
-    "zod": "^3.24.2",
+    "zod": "^4.6.7",
     "zustand": "^5.0.3"
   },
   "devDependencies": {
@@ -56,7 +56,7 @@
     "@types/node": "^22.13.5",
     "@types/react": "^19.0.10",
     "@types/react-dom": "^19.0.4",
-    "@vitejs/plugin-react": "^4.3.4",
+    "@vitejs/plugin-react": "^6.1.2",
     "@vitest/coverage-v8": "^5.0.5",
     "ast-v8-to-istanbul": "1.0.7",
     "eslint": "10.11.0",
@@ -65,7 +65,7 @@
     "jsdom": "^26.0.0",
     "typescript": "^5.7.3",
     "typescript-eslint": "8.71.0",
-    "vite": "^6.2.0",
+    "vite": "^8.3.5",
     "vitest": "^5.0.5"
   }
 }

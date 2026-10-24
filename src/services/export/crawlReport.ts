@@ -1,9 +1,11 @@
+import { requireAllowed } from '@/services/team/enforce';
 import type { CrawlRunRecord } from '@/types';
 import type { CrawlReportTemplate } from '@/services/reportTemplates';
 import { downloadPdf, downloadText } from './download';
 import { crawlFilename } from './filenames';
 import { crawlAuthoritySummary } from './authoritySummary';
 import { crawlAioSummary } from '@/services/aioReadiness/summary';
+import { crawlOffPageSummary } from '@/services/offPage/summary';
 import { crawlFocusSummary } from './focusSummary';
 import { crawlTrustSummary } from '@/services/eeatTrust';
 
@@ -82,10 +84,12 @@ export const crawlReportPayload = (run: CrawlRunRecord, template?: CrawlReportTe
   result: filteredCrawlResult(run, template),
 });
 
-export const downloadCrawlPdf = (run: CrawlRunRecord, template?: CrawlReportTemplate): Promise<void> => {
+export const downloadCrawlPdf = async (run: CrawlRunRecord, template?: CrawlReportTemplate): Promise<void> => {
+  requireAllowed('export_audit_pdf', { report: 'crawl' });
   const focus = !template || template.sections.includes('focus') ? crawlFocusSummary(run) : undefined;
   const authority = !template || template.sections.includes('authority') ? crawlAuthoritySummary(run) : undefined;
   const aio = !template || template.sections.includes('aio') ? crawlAioSummary(run) : undefined;
+  const offPage = !template || template.sections.includes('offPage') ? crawlOffPageSummary(run) : undefined;
   const trust = !template || template.sections.includes('trust') ? crawlTrustSummary(run) : undefined;
   return downloadPdf('generate_crawl_pdf', {
   run: {
@@ -104,6 +108,7 @@ export const downloadCrawlPdf = (run: CrawlRunRecord, template?: CrawlReportTemp
     ...(focus ? { focus } : {}),
     ...(authority ? { authority } : {}),
     ...(aio ? { aio } : {}),
+    ...(offPage ? { offPage } : {}),
     ...(trust ? { trust } : {}),
   },
 }, crawlFilename(run, 'report', 'pdf'));

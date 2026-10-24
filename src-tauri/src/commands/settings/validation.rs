@@ -37,15 +37,13 @@ pub(super) fn validate_crawl_auth_profile(profile: &CrawlAuthProfile) -> Result<
         }
     }
     if let Some(proxy_url) = &profile.proxy_url {
-        if proxy_url.len() > 2_048 {
-            return Err("Proxy URL cannot exceed 2048 characters.".into());
-        }
-        let proxy =
-            url::Url::parse(proxy_url).map_err(|_| "Invalid proxy URL in request profile.")?;
-        // http(s) URLs always carry a host: `Url::parse` rejects an empty one.
-        if !matches!(proxy.scheme(), "http" | "https") {
-            return Err("Proxy URL must use HTTP or HTTPS and include a hostname.".into());
-        }
+        let list = crate::commands::site_crawler::proxy_pool::parse_proxy_list(proxy_url);
+        crate::commands::site_crawler::proxy_pool::ProxyPool::new(
+            &list,
+            1,
+            std::time::Duration::ZERO,
+        )
+        .map_err(|error| format!("Invalid proxy configuration: {error}"))?;
     }
     Ok(())
 }

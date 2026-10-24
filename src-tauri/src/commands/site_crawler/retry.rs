@@ -44,14 +44,18 @@ async fn send_once(
     context: &RetryContext,
 ) -> Result<reqwest::Response, RetryError> {
     let request = client.get(url).send();
-    match context.remaining() {
-        Some(remaining) if remaining.is_zero() => Err(RetryError::Deadline),
+    let result = match context.remaining() {
+        Some(remaining) if remaining.is_zero() => return Err(RetryError::Deadline),
         Some(remaining) => tokio::time::timeout(remaining, request)
             .await
-            .map_err(|_| RetryError::Deadline)?
-            .map_err(RetryError::Request),
-        None => request.await.map_err(RetryError::Request),
-    }
+            .map_err(|_| RetryError::Deadline)?,
+        None => request.await,
+    };
+    super::proxy_feedback::report(
+        url,
+        &result.as_ref().map(|response| response.status().as_u16()),
+    );
+    result.map_err(RetryError::Request)
 }
 
 pub(crate) async fn send_get_with_retry(

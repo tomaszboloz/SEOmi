@@ -102,6 +102,7 @@ export const useSemanticTopicalSession = (
     pages,
     persist,
     preferencesSaveError,
+    projectId,
     runId,
     runs,
     saveError,

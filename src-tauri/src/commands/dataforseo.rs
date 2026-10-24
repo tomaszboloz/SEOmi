@@ -1,5 +1,6 @@
 use serde_json::Value;
 
+use super::dataforseo_budget::{reserve, BudgetInput};
 use crate::commands::settings::dataforseo_credentials;
 
 const API_BASE: &str = "https://api.dataforseo.com";
@@ -31,15 +32,23 @@ pub async fn dataforseo_request(
     project_id: String,
     path: String,
     payload: Option<Value>,
+    budget: Option<BudgetInput>,
 ) -> Result<Value, String> {
     let client = reqwest::Client::builder()
         .timeout(std::time::Duration::from_secs(30))
         .build()
         .map_err(client_unavailable)?;
-    dataforseo_request_at(&project_id, &path, payload, API_BASE, &client, |project| {
+    if !allowed_path(&path) {
+        return Err("Unsupported DataForSEO endpoint.".into());
+    }
+    // Native cap check: runs before credentials are read or any request is sent.
+    let reservation = reserve(&project_id, &path, budget.as_ref())?;
+    let result = dataforseo_request_at(&project_id, &path, payload, API_BASE, &client, |project| {
         dataforseo_credentials(project)
     })
-    .await
+    .await;
+    reservation.settle(result.as_ref().ok());
+    result
 }
 
 async fn dataforseo_request_at<C>(

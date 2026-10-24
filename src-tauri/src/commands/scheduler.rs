@@ -46,6 +46,8 @@ mod launch_tests;
 #[cfg(target_os = "macos")]
 mod plist_tests;
 #[cfg(test)]
+mod time_dst_tests;
+#[cfg(test)]
 mod time_tests;
 #[cfg(test)]
 mod worker_process_tests;

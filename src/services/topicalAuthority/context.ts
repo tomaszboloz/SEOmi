@@ -1,4 +1,5 @@
-import type { FocusPage, PageFocus, SiteFocusReport } from '@/services/siteFocus';
+import { buildSiteFocusReport, type FocusPage, type PageFocus, type SiteFocusReport } from '@/services/siteFocus';
+import { applyGate } from '@/services/indexabilityGate';
 import { prepare } from '@/services/siteFocus/evaluate';
 import { normalizeUrl } from '@/services/siteFocus/pageType';
 import { buildTermStats, phraseKey, tfidfVector } from '@/services/siteFocus/terms';
@@ -61,13 +62,37 @@ export const jaccard = (left: Set<string>, right: Set<string>): number => {
 
 const validDate = (value: string | undefined): string | undefined => (value && /^\d{4}-\d{2}-\d{2}$/.test(value) ? value : undefined);
 
+/** Rebuild the scoring model from the pages that pass the indexability gate. */
+export const gatedSiteFocus = (pages: FocusPage[], startUrl: string, report: SiteFocusReport): { pages: FocusPage[]; report: SiteFocusReport } => {
+  const selected = new Set(report.pages.map((page) => normalizeUrl(page.url)).filter((url): url is string => Boolean(url)));
+  const eligible = applyGate(pages).pages.filter((page) => [page.url, page.final_url].some((url) => {
+    const key = normalizeUrl(url);
+    return key !== null && selected.has(key);
+  }));
+  const manualTopic = report.coreTopic.manualOverride?.input.trim();
+  return {
+    pages: eligible,
+    report: buildSiteFocusReport(eligible, startUrl, {
+      language: report.model.language || undefined,
+      forceLexical: report.flags.fallbackMode === 'lexical',
+      now: report.generatedAt,
+      ...(manualTopic ? { manualTopic } : {}),
+    }),
+  };
+};
+
+export const coreKeysOf = (report: SiteFocusReport): Set<string> =>
+  new Set(Object.entries(report.model.termCluster).filter(([, id]) => id === report.model.coreClusterId).map(([key]) => key));
+
 /** Analysed pages of a crawl joined with their Site Focus scores, vectors and heading keys. */
 export const buildContext = (pages: FocusPage[], startUrl: string, report: SiteFocusReport): AuthorityContext => {
-  const language = report.model.language || '';
-  const items = prepare(pages, startUrl, language || undefined).filter((item) => !item.skipped);
+  const scoped = gatedSiteFocus(pages, startUrl, report);
+  const language = scoped.report.model.language || '';
+  const eligible = scoped.pages;
+  const items = prepare(eligible, startUrl, language || undefined).filter((item) => !item.skipped);
   const stats = buildTermStats(items.map((item) => item.terms));
-  const focusByUrl = new Map(report.pages.map((page) => [normalizeUrl(page.url), page]));
-  const coreKeys = new Set(Object.entries(report.model.termCluster).filter(([, id]) => id === report.model.coreClusterId).map(([key]) => key));
+  const focusByUrl = new Map(scoped.report.pages.map((page) => [normalizeUrl(page.url), page]));
+  const coreKeys = coreKeysOf(scoped.report);
   const out: AuthorityPage[] = [];
   items.forEach((item) => {
     const url = normalizeUrl(item.page.final_url || item.page.url);

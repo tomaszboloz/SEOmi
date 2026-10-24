@@ -100,6 +100,8 @@ mod profile_storage_tests;
 #[cfg(test)]
 mod profile_validation_tests;
 #[cfg(test)]
+mod proxy_list_validation_tests;
+#[cfg(test)]
 mod secret_tests;
 #[cfg(test)]
 mod secure_store_tests;

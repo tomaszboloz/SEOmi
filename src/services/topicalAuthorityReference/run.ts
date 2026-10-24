@@ -1,11 +1,15 @@
 import { pickCompetitors, type SerpHit } from '@/services/siteFocusBenchmark';
 import { benchmarkQueries, DEFAULT_COMPETITORS, DEFAULT_CONCURRENCY, DEFAULT_PAGES, DEFAULT_QUERIES } from '@/services/siteFocusBenchmark/benchmark';
 import { buildTaxonomy, type CompetitorPages } from '@/services/topicalAuthority';
+import { coreKeysOf, gatedSiteFocus } from '@/services/topicalAuthority/context';
+import type { FocusPage } from '@/services/siteFocus';
 import type { ReferenceDeps, ReferenceInput, ReferenceOutcome } from './types';
 
 const MAX_SUGGESTIONS = 100;
 
 const messageOf = (error: unknown): string => (error instanceof Error ? error.message : String(error));
+
+type ReferenceRunInput = ReferenceInput & { pages?: FocusPage[] };
 
 const pool = async <T, R>(items: T[], size: number, work: (item: T) => Promise<R>): Promise<R[]> => {
   const out: R[] = new Array(items.length);
@@ -21,10 +25,11 @@ const pool = async <T, R>(items: T[], size: number, work: (item: T) => Promise<R
  * Builds the reference taxonomy from real data: SERP leaders for the Core Topic queries are crawled (capped, polite) and
  * their headings, entities and questions become the sub-topic map; Google Suggest adds user phrasing. Nothing is invented.
  */
-export const runReference = async (deps: ReferenceDeps, input: ReferenceInput): Promise<ReferenceOutcome> => {
+export const runReference = async (deps: ReferenceDeps, input: ReferenceRunInput): Promise<ReferenceOutcome> => {
   const { fetchSerp, now = () => new Date().toISOString() } = deps;
   if (!fetchSerp) return { status: 'unavailable', reason: 'no-serp-source' };
-  const queries = benchmarkQueries({ report: input.report, startUrl: input.startUrl, maxQueries: input.maxQueries ?? DEFAULT_QUERIES });
+  const report = input.pages ? gatedSiteFocus(input.pages, input.startUrl, input.report).report : input.report;
+  const queries = benchmarkQueries({ report, startUrl: input.startUrl, maxQueries: input.maxQueries ?? DEFAULT_QUERIES });
   if (!queries.length) return { status: 'unavailable', reason: 'no-queries' };
   const hits: SerpHit[][] = [];
   const sources = new Set<string>();
@@ -57,9 +62,9 @@ export const runReference = async (deps: ReferenceDeps, input: ReferenceInput): 
   const competitors = crawled.filter((item): item is CompetitorPages => item !== null);
   if (!competitors.length) return { status: 'unavailable', reason: 'no-pages' };
   input.onProgress?.({ phase: 'build', done: 0, total: 1 });
-  const model = input.report.model;
+  const model = report.model;
   const taxonomy = buildTaxonomy({
-    coreLabel: input.report.coreTopic.label, coreKeys: new Set(Object.entries(model.termCluster).filter(([, id]) => id === model.coreClusterId).map(([key]) => key)),
+    coreLabel: report.coreTopic.label, coreKeys: coreKeysOf(report),
     language: model.language, competitors, suggestions: [...suggestions].slice(0, MAX_SUGGESTIONS), source: [...sources].sort().join(', '), now: now(),
   });
   input.onProgress?.({ phase: 'build', done: 1, total: 1 });

@@ -3,6 +3,24 @@ use serde_json::Value;
 
 static NULL: Value = Value::Null;
 
+pub struct OffPage<'a> {
+    pub summary: &'a Value,
+    pub tbva: &'a Value,
+    pub sources: &'a [Value],
+    pub co_citations: &'a [Value],
+}
+
+impl<'a> OffPage<'a> {
+    pub fn new(summary: &'a Value) -> Self {
+        Self {
+            summary,
+            tbva: summary.get("tbva").unwrap_or(&NULL),
+            sources: list(summary, "sources"),
+            co_citations: list(summary, "co_citations"),
+        }
+    }
+}
+
 /// Read-only view of a saved crawl run: the run envelope, its result and pages.
 pub struct Crawl<'a> {
     pub run: &'a Value,

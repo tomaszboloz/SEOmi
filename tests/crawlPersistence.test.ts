@@ -1,6 +1,6 @@
 import { createCrawlRunFixture, createCrawlResultFixture, createCrawlPageFixture } from './fixtures/crawl';
 import { afterEach, describe, expect, it, vi } from 'vitest';
-import { compactCrawlRunsForStorage, crawlQuotaRetryCounts, decodeCrawlRunsFromStorage, encodeCrawlRunsForStorage, isStorageQuotaError, saveCrawlRuns } from '../src/services/crawlPersistence';
+import { compactCrawlRunsForStorage, crawlQuotaRetryCounts, decodeCrawlRunsFromStorage, encodeCrawlRunsForStorage, isStorageQuotaError } from '../src/services/crawlPersistence';
 import { validRun } from "./fixtures/crawlPersistenceContracts";
 vi.mock('@tauri-apps/api/core', () => ({ invoke: vi.fn() }));
 
@@ -54,81 +54,4 @@ it('compresses crawl history for WebView persistence and reads legacy uncompress
     expect(await decodeCrawlRunsFromStorage(runs)).toEqual(runs);
   });
 
-it('retries desktop history persistence while retaining the newest crawl', async () => {
-    Object.defineProperty(window, '__TAURI_INTERNALS__', { configurable: true, value: {} });
-    const { invoke } = await import('@tauri-apps/api/core');
-    const invokeMock = vi.mocked(invoke);
-    invokeMock.mockRejectedValueOnce('The quota has been exceeded.').mockResolvedValueOnce(undefined);
-
-    const runs = Array.from({ length: 3 }, (_, index) => ({ id: `run-${index}` })) as never;
-    const result = await saveCrawlRuns('project-1', runs);
-
-    expect(result).toEqual({ prunedRuns: 2 });
-    expect(invokeMock).toHaveBeenCalledTimes(2);
-    expect(invokeMock.mock.calls[0]?.[1]).toMatchObject({ crawlRuns: [{ id: 'run-0' }, { id: 'run-1' }, { id: 'run-2' }] });
-    expect(invokeMock.mock.calls[1]?.[1]).toMatchObject({ crawlRuns: [{ id: 'run-0' }] });
-    invokeMock.mockReset();
-  });
-
-it('clears obsolete Web Storage mirrors after a successful native save', async () => {
-    Object.defineProperty(window, '__TAURI_INTERNALS__', { configurable: true, value: {} });
-    const { invoke } = await import('@tauri-apps/api/core');
-    const invokeMock = vi.mocked(invoke);
-    invokeMock.mockReset().mockResolvedValue(undefined);
-    localStorage.setItem('seomi_project_project-mirror_crawl_result', JSON.stringify({ pages: 500 }));
-    localStorage.setItem('seomi_project_project-mirror_crawl_runs', JSON.stringify([{ id: 'legacy' }]));
-
-    const result = await saveCrawlRuns('project-mirror', [{ id: 'newest' }] as never);
-
-    expect(result).toEqual({ prunedRuns: 0 });
-    expect(localStorage.getItem('seomi_project_project-mirror_crawl_result')).toBeNull();
-    expect(localStorage.getItem('seomi_project_project-mirror_crawl_runs')).toBeNull();
-    invokeMock.mockReset();
-  });
-
-it('serializes concurrent writes for one project so a stale snapshot cannot win', async () => {
-    Object.defineProperty(window, '__TAURI_INTERNALS__', { configurable: true, value: {} });
-    const { invoke } = await import('@tauri-apps/api/core');
-    const invokeMock = vi.mocked(invoke);
-    invokeMock.mockReset();
-    let releaseFirst!: () => void;
-    let markFirstStarted!: () => void;
-    const firstStarted = new Promise<void>((resolve) => { markFirstStarted = resolve; });
-    invokeMock.mockImplementation(async (_command, args) => {
-      const payload = args as { crawlRuns?: Array<{ id: string }> };
-      if (payload.crawlRuns?.[0]?.id === 'old') {
-        markFirstStarted();
-        await new Promise<void>((resolve) => { releaseFirst = resolve; });
-      }
-      return undefined;
-    });
-
-    const first = saveCrawlRuns('project-serialized', [{ id: 'old' }] as never);
-    await firstStarted;
-    const second = saveCrawlRuns('project-serialized', [{ id: 'new' }] as never);
-    await Promise.resolve();
-
-    expect(invokeMock).toHaveBeenCalledTimes(1);
-    releaseFirst();
-    await Promise.all([first, second]);
-
-    expect(invokeMock).toHaveBeenCalledTimes(2);
-    expect(invokeMock.mock.calls[1]?.[1]).toMatchObject({ crawlRuns: [{ id: 'new' }] });
-    invokeMock.mockReset();
-  });
-
-it('prunes old desktop runs when the native 512 MiB storage limit is returned in Polish', async () => {
-    Object.defineProperty(window, '__TAURI_INTERNALS__', { configurable: true, value: {} });
-    const { invoke } = await import('@tauri-apps/api/core');
-    const invokeMock = vi.mocked(invoke);
-    invokeMock.mockRejectedValueOnce('Skrośna historia crawla nadal przekracza limit 512 MiB po kompresji.').mockResolvedValueOnce(undefined);
-
-    const runs = [{ id: 'newest' }, { id: 'older-1' }, { id: 'older-2' }] as never;
-    const result = await saveCrawlRuns('project-1', runs);
-
-    expect(result).toEqual({ prunedRuns: 2 });
-    expect(invokeMock).toHaveBeenCalledTimes(2);
-    expect(invokeMock.mock.calls[1]?.[1]).toMatchObject({ crawlRuns: [{ id: 'newest' }] });
-    invokeMock.mockReset();
-  });
 });

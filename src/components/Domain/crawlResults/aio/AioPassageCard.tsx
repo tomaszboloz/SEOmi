@@ -1,17 +1,20 @@
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import { CopilotPatcherPanel, pageHasPatchContext, patchTargetForPassage } from '@/components/Results/copilotPatcher';
 import { rewritePassage, type AioChunk } from '@/services/aioReadiness';
 import { createBriefDeps } from '@/services/siteFocusBenchmark/adapter';
+import type { CrawledPageSummary } from '@/types';
 
 type Passage = AioChunk & { url: string };
 type State = { status: 'idle' | 'busy' | 'copied' } | { status: 'ok'; text: string } | { status: 'error'; message: string } | { status: 'no-key' | 'empty' };
 
 const btn = 'rounded border border-slate-600 px-2 py-1 text-xs text-slate-100 hover:bg-slate-800 disabled:opacity-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-400';
 
-export const AioPassageCard = ({ passage, index }: { passage: Passage; index: number }) => {
+export const AioPassageCard = ({ passage, index, page, projectId }: { passage: Passage; index: number; page?: CrawledPageSummary; projectId?: string | null }) => {
   const { t } = useTranslation();
   const [state, setState] = useState<State>({ status: 'idle' });
   const optimized = state.status === 'ok' ? state.text : undefined;
+  const patchTarget = useMemo(() => patchTargetForPassage(page, passage), [page, passage]);
 
   const generate = async (): Promise<void> => {
     setState({ status: 'busy' });
@@ -47,6 +50,7 @@ export const AioPassageCard = ({ passage, index }: { passage: Passage; index: nu
           <button type="button" className={btn} onClick={() => void copy()}>{t('aio.passage.copy')}</button>
         </div>
       )}
+      {pageHasPatchContext(page) ? <CopilotPatcherPanel target={patchTarget} projectId={projectId} index={index} /> : <p role="status" className="text-[11px] text-slate-500">{t('copilotPatcherUi.contextUnavailable')}</p>}
     </li>
   );
 };

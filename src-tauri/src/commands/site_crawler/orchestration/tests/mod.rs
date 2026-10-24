@@ -116,3 +116,6 @@ mod page_media_http_scheme;
 mod page_type_branch_gaps;
 mod page_type_links_ratio_gaps;
 mod summary_rendered_sessions;
+
+#[path = "coverage100_exact_gaps.rs"]
+mod coverage100_exact_gaps;

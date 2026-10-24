@@ -38,14 +38,18 @@ mod html_source_locator;
 mod html_validation;
 mod html_validation_rules;
 mod image_decoding;
+mod image_decoding_modern;
 mod inline_images;
 mod js_redirects;
 mod js_shell;
+mod link_placement;
 mod models;
 mod orchestration;
 mod pagination;
 mod post_processing;
 mod prefetch;
+pub(crate) mod proxy_feedback;
+pub(crate) mod proxy_pool;
 mod rag_sections;
 mod readability;
 mod render_decision;
@@ -116,6 +120,9 @@ pub use orchestration::crawl_site_with_control;
 #[cfg(test)]
 #[path = "site_crawler/tests.rs"]
 mod tests;
+
+#[cfg(test)]
+mod link_placement_tests;
 
 #[cfg(test)]
 mod semantic_fold_tests;

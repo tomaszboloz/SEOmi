@@ -5,6 +5,8 @@ import { BacklinkGapSection } from './backlinkChecker/BacklinkGapSection';
 import { BacklinkMetricsGrid } from './backlinkChecker/BacklinkMetricsGrid';
 import { BacklinkEquityAndAnchors } from './backlinkChecker/BacklinkEquityAndAnchors';
 import { BacklinkInboundTable } from './backlinkChecker/BacklinkInboundTable';
+import { BacklinkOutreachSection } from './backlinkChecker/BacklinkOutreachSection';
+import { OffPageSourcesWorkspace } from './backlinkChecker/OffPageSourcesWorkspace';
 import { DataForSeoCostMeter } from '@/components/DataForSEO/cost/DataForSeoCostMeter';
 
 export const BacklinkChecker: React.FC = () => {
@@ -24,6 +26,7 @@ export const BacklinkChecker: React.FC = () => {
       <BacklinkHeader session={session} />
       <DataForSeoCostMeter />
       <BacklinkGapSection session={session} />
+      <BacklinkOutreachSection report={session.backlinkGapReport} />
 
       {error && (
         <div className="p-4 rounded-xl bg-rose-950/40 border border-rose-800/60 text-rose-300 text-sm">
@@ -44,6 +47,7 @@ export const BacklinkChecker: React.FC = () => {
             loadMoreBacklinkAnchors={loadMoreBacklinkAnchors}
             t={t}
           />
+          <OffPageSourcesWorkspace profile={backlinkProfile} />
           <BacklinkInboundTable
             profile={backlinkProfile}
             isLoading={isLoading}

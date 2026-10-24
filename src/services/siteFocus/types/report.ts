@@ -47,6 +47,8 @@ export interface SiteFocusOptions {
   competitorTerms?: string[];
   /** Force the lexical formula (0.75*Overlap - 0.25*LexicalDrift). */
   forceLexical?: boolean;
+  /** Score noindex and canonicalized pages too (#132). Default excludes them. */
+  includeNonIndexable?: boolean;
   /** Average-linkage similarity below which clusters are not merged. */
   clusterCut?: number;
   now?: string;

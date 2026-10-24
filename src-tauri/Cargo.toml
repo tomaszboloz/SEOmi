@@ -1,6 +1,6 @@
 [package]
 name = "seomi"
-version = "0.4.2"
+version = "0.4.40"
 description = "Lightning-fast Native Desktop SEO & Open Graph Auditor"
 authors = ["Tomasz Bołoz"]
 edition = "2021"
@@ -54,7 +54,7 @@ rustybuzz = "0.20"
 unicode-bidi = "0.3.18"
 flate2 = "1.0"
 tokio = { version = "1.41", features = ["full"] }
-reqwest = { version = "0.12", features = ["json", "cookies", "gzip", "brotli"] }
+reqwest = { version = "0.13", default-features = false, features = ["native-tls", "http2", "charset", "system-proxy", "json", "query", "form", "cookies", "gzip", "brotli"] }
 scraper = "0.26"
 url = "2.5"
 regex = "1.11"
@@ -62,7 +62,7 @@ chrono = { version = "0.4", features = ["serde"] }
 anyhow = "1.0"
 thiserror = "2.0"
 base64 = "0.22"
-sha2 = "0.10"
+sha2 = "0.11"
 uuid = { version = "1.11", features = ["v4", "serde"] }
 log = "0.4"
 env_logger = "0.11"
@@ -73,11 +73,15 @@ encoding_rs = "0.8"
 keyring = { version = "3.6", features = ["apple-native", "windows-native"] }
 fs2 = "0.4.3"
 dunce = "1.0"
+rusqlite = { version = "0.40.2", features = ["bundled"] }
+chacha20poly1305 = "0.10.1"
+getrandom = "0.3.4"
+dns-lookup = "2"
 
 [target.'cfg(windows)'.dependencies]
 windows-sys = { version = "0.61", features = ["Win32_Storage_FileSystem"] }
-webview2-com = "0.38"
-windows = { version = "0.61", features = [
+webview2-com = "0.39"
+windows = { version = "0.62", features = [
     "Win32_System_Com",
     "Win32_System_Com_StructuredStorage",
     "Win32_UI_Shell",

@@ -3,6 +3,7 @@ import { joinGa4Evidence } from '@/services/ga4/join';
 import { matchGa4Property } from '@/services/ga4/matching';
 import { validateGa4DateRange } from '@/services/ga4/contracts';
 import { connectGoogleAnalytics, fetchGoogleAnalyticsPerformance, listGoogleAnalyticsProperties } from '@/services/ga4/transport';
+import { rememberGa4Report } from '@/services/urlTelemetry';
 import type { Ga4DateRange, Ga4Discovery, Ga4Report } from '@/types/ga4';
 import type { Ga4PanelProps, Ga4SessionState } from './types';
 
@@ -101,6 +102,7 @@ export function useGa4Session(input: Ga4PanelProps): Ga4SessionState {
       if (!isCurrent(token, projectId)) return;
       const nextReport = snapshot.report;
       setReport(nextReport);
+      if (nextReport) rememberGa4Report(projectId, nextReport);
       setJoined(nextReport ? joinGa4Evidence({ report: nextReport, gscData, crawlResult, projectRootUrl }) : null);
       setDiscovery(snapshot.discovery);
     } catch (cause) {

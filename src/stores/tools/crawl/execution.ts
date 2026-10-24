@@ -9,15 +9,21 @@ import type { ToolsState, InterruptedCrawl, ToolsSet, ToolsGet, ToolsServices } 
 import { crawlResultKey, crawlRunsKey, activeProjectId } from '../storageKeys';
 import { formatCrawlPersistenceNotice, formatCrawlRuntimeError } from '../runtime';
 import { activeCrawlRuns, persistInterruptedCrawl, buildCrawlCheckpoint, mergeCrawlResults } from '../crawlPersistence';
-import { monitorCrawlComparison } from '@/services/monitoringAlerts';
+import { monitorAioCrawls, monitorCrawlComparison } from '@/services/monitoringAlerts';
 import { runScheduledFocus } from '@/services/siteFocusMonitoring';
+import { runTaskVerification } from '@/services/optimizationTasks/runVerification';
 import { compareCrawlRuns } from '@/services/crawlDiff';
+import { deniedMessage, enforcePermission } from '@/services/team/enforce';
 
 export const createCrawlExecutionActions = (set: ToolsSet, get: ToolsGet, services: ToolsServices): Pick<ToolsState, "startSiteCrawl"> => ({
 startSiteCrawl: async (url, limit, configPatch, environment = 'default', notifyCompletion = true, resumeBaseResult) => {
     const targetUrl = (url ?? get().crawlUrl).trim();
     const maxLimit = limit ?? get().crawlLimit;
     if (!targetUrl) return null;
+    if (!enforcePermission('run_crawl', { startUrl: targetUrl })) {
+      set({ crawlError: deniedMessage() });
+      return null;
+    }
     const projectIdAtStart = activeProjectId();
     const originalCrawlRuns = get().crawlRuns;
     const previousRun = projectIdAtStart
@@ -101,7 +107,9 @@ startSiteCrawl: async (url, limit, configPatch, environment = 'default', notifyC
         void services.notifyCrawlCompleted(projectId, crawlResult, previousRun?.result, { runId });
       }
       if (projectId && previousRun) void monitorCrawlComparison(projectId, compareCrawlRuns(run, previousRun, { projectId }));
+      if (projectId) void monitorAioCrawls(projectId, run, projectRuns).catch(() => undefined);
       if (projectId) void runScheduledFocus(projectId, run, previousRun);
+      if (projectId) { try { runTaskVerification(projectId, run); } catch { /* verification is best-effort */ } }
       return crawlResult;
     } catch (err: unknown) {
       const msg = formatCrawlRuntimeError(err);

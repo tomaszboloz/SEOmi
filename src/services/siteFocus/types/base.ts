@@ -16,7 +16,7 @@ export type Playbook = 'A' | 'B' | 'C';
 export type SfsBand = 'excellent' | 'good' | 'moderate' | 'weak' | 'critical';
 export type FallbackMode = 'semantic' | 'lexical';
 export type AlignmentLevel = 'strong' | 'moderate' | 'weak';
-export type SkipReason = 'render-timeout' | 'request-error' | 'non-topical-status' | 'non-html' | 'no-content';
+export type SkipReason = 'render-timeout' | 'request-error' | 'non-topical-status' | 'non-html' | 'no-content' | 'noindex' | 'canonicalized';
 export type CodeParams = Record<string, number | string>;
 
 export interface Coded { code: string; params: CodeParams }
@@ -24,7 +24,7 @@ export interface Coded { code: string; params: CodeParams }
 /** Every code the engine can emit. The UI must provide a translation for each. */
 export const SITE_FOCUS_CODES = {
   band: ['excellent', 'good', 'moderate', 'weak', 'critical'],
-  skip: ['render-timeout', 'request-error', 'non-topical-status', 'non-html', 'no-content'],
+  skip: ['render-timeout', 'request-error', 'non-topical-status', 'non-html', 'no-content', 'noindex', 'canonicalized'],
   recommendation: [
     'remove-offtopic', 'strengthen-borderline', 'expand-core-cluster', 'add-internal-links',
     'collect-more-pages', 'split-subsites', 'review-skipped-pages', 'monitor-strong-pages',

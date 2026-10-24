@@ -1,5 +1,5 @@
 import i18n from '@/i18n';
-import { ACCOUNT_ENDPOINT, readBudget, readSpend } from './dataforseoBudget';
+import { ACCOUNT_ENDPOINT, monthKey, readBudget, readSpend } from './dataforseoBudget';
 import { readAccount } from './dataforseoAccount';
 
 export class DataForSeoBudgetError extends Error {
@@ -8,6 +8,17 @@ export class DataForSeoBudgetError extends Error {
     this.name = 'DataForSeoBudgetError';
   }
 }
+
+/** Assumed price of an endpoint with no observed cost; mirrors the native default. */
+export const UNSEEN_ENDPOINT_ESTIMATE_USD = 0.1;
+
+/** Cap sent to the native command so it can enforce it too (null = no cap). */
+export const nativeBudget = (projectId: string | null, now = new Date()): { limitUsd: number; spentUsd: number; month: string } | null => {
+  if (!projectId) return null;
+  const { monthlyLimitUsd } = readBudget(projectId);
+  if (monthlyLimitUsd === null) return null;
+  return { limitUsd: monthlyLimitUsd, spentUsd: readSpend(projectId, now).totalUsd, month: monthKey(now) };
+};
 
 // Expected cost of requests already sent but not yet answered, per project, so
 // parallel requests cannot all pass the check and overshoot the cap together.
@@ -23,7 +34,8 @@ export const reserveBudget = (projectId: string | null, endpoint: string, now = 
   if (!projectId || endpoint === ACCOUNT_ENDPOINT) return () => undefined;
   const budget = readBudget(projectId);
   const spend = readSpend(projectId, now);
-  const expected = spend.lastCostByEndpoint[endpoint] ?? 0;
+  // Unseen endpoints use a conservative estimate so the first call cannot overshoot the cap.
+  const expected = spend.lastCostByEndpoint[endpoint] ?? UNSEEN_ENDPOINT_ESTIMATE_USD;
   const pending = reserved.get(projectId) ?? 0;
   if (budget.monthlyLimitUsd === null) {
     // "No limit" means the account balance is the limit. It is enforced only

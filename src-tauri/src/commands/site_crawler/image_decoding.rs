@@ -123,7 +123,7 @@ pub(super) fn intrinsic_http_image_dimensions(
             offset += length;
         }
     }
-    None
+    super::image_decoding_modern::modern_image_dimensions(bytes)
 }
 
 #[cfg(test)]

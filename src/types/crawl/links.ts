@@ -10,6 +10,13 @@ export interface CrawledLink {
   target_redirect_url?: string;
   target_request_error_kind?: string;
   target_checked_at?: string;
+  /** DOM placement from the crawler; absent in older runs. Not a fold claim without a render. */
+  zone?: string | null;
+  /** How `zone` was decided, e.g. `dom-ancestry`. */
+  zone_method?: string | null;
+  /** Up to 15 words before/after the anchor in its block element. */
+  context_before?: string | null;
+  context_after?: string | null;
 }
 
 export interface ExternalLinkCheckBatchResult {
