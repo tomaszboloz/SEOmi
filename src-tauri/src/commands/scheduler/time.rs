@@ -13,18 +13,24 @@ pub(super) struct SchedulerTime {
 /// trigger understood by launchd and Task Scheduler. Both OS schedulers may
 /// start a process a few seconds early when seconds cannot be represented, so
 /// round forward and let the app's due-time check provide the final guard.
-pub(super) fn ceil_to_minute(
-    value: chrono::DateTime<chrono::Local>,
-) -> chrono::DateTime<chrono::Local> {
-    let minute = value
+pub(super) fn ceil_to_minute<Tz: chrono::TimeZone>(
+    value: chrono::DateTime<Tz>,
+) -> chrono::DateTime<Tz> {
+    // Truncate in UTC: a local wall-clock time inside a repeated DST hour has two valid instants, so
+    // `with_second` on the local value would return `None`. UTC minutes align with local minutes
+    // because every time-zone offset is a whole number of minutes.
+    let timezone = value.timezone();
+    let utc = value.with_timezone(&chrono::Utc);
+    let minute = utc
         .with_second(0)
         .and_then(|value| value.with_nanosecond(0))
-        .expect("a valid local time can always be normalized to a minute");
-    if value == minute {
+        .expect("UTC can always be normalized to a minute");
+    let rounded = if utc == minute {
         minute
     } else {
         minute + chrono::Duration::minutes(1)
-    }
+    };
+    rounded.with_timezone(&timezone)
 }
 
 pub(super) fn scheduler_time_at(
