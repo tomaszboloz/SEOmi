@@ -104,7 +104,10 @@ fn walk_file(path: &Path, excluded: bool, files: &mut BTreeMap<String, Source>) 
     }
     let source =
         fs::read_to_string(path).unwrap_or_else(|error| panic!("{}: {error}", path.display()));
-    entry.sha256 = format!("{:x}", Sha256::digest(source.as_bytes()));
+    entry.sha256 = Sha256::digest(source.as_bytes())
+        .iter()
+        .map(|byte| format!("{byte:02x}"))
+        .collect();
     let syntax = syn::parse_file(&source).unwrap();
     let directory = if matches!(
         path.file_name().and_then(|name| name.to_str()),
