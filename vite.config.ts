@@ -1,9 +1,25 @@
-import { defineConfig } from 'vite';
+import { defineConfig } from 'vitest/config';
 import react from '@vitejs/plugin-react';
 import tailwindcss from '@tailwindcss/vite';
 import path from 'path';
 
 // https://vitejs.dev/config/
+// Vendor chunk groups; matched by package folder name (Rolldown needs a function, not an object).
+const VENDOR_CHUNKS: Record<string, string[]> = {
+  'react-vendor': ['react', 'react-dom'],
+  'i18n-vendor': ['i18next', 'react-i18next'],
+  'icons-vendor': ['lucide-react'],
+  'graph-vendor': ['cytoscape', 'cytoscape-fcose', 'cytoscape-dagre'],
+  'tauri-vendor': [
+    '@tauri-apps/api',
+    '@tauri-apps/plugin-dialog',
+    '@tauri-apps/plugin-notification',
+    '@tauri-apps/plugin-process',
+    '@tauri-apps/plugin-updater',
+  ],
+  'data-vendor': ['zod', 'zustand', 'date-fns', 'tldts', 'clsx'],
+};
+
 export default defineConfig({
   // Tauri serves the production bundle through tauri://localhost. Relative
   // asset URLs are required there; absolute /assets paths resolve outside the
@@ -32,19 +48,10 @@ export default defineConfig({
   build: {
     rollupOptions: {
       output: {
-        manualChunks: {
-          'react-vendor': ['react', 'react-dom'],
-          'i18n-vendor': ['i18next', 'react-i18next'],
-          'icons-vendor': ['lucide-react'],
-          'graph-vendor': ['cytoscape', 'cytoscape-fcose', 'cytoscape-dagre'],
-          'tauri-vendor': [
-            '@tauri-apps/api',
-            '@tauri-apps/plugin-dialog',
-            '@tauri-apps/plugin-notification',
-            '@tauri-apps/plugin-process',
-            '@tauri-apps/plugin-updater',
-          ],
-          'data-vendor': ['zod', 'zustand', 'date-fns', 'tldts', 'clsx'],
+        manualChunks(id: string) {
+          const path = id.replace(/\\/g, '/');
+          if (!path.includes('/node_modules/')) return undefined;
+          return Object.entries(VENDOR_CHUNKS).find(([, packages]) => packages.some((name) => path.includes(`/node_modules/${name}/`)))?.[0];
         },
       },
     },
