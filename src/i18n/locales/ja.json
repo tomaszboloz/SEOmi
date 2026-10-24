@@ -5245,9 +5245,11 @@
       "pagespeed": "PageSpeed / CrUX",
       "crawl": "クロール比較",
       "semantic": "意味比較",
-      "focus": "Site Focus Score"
+      "focus": "Site Focus Score",
+      "aio": "AI Overviews 対応度"
     },
-    "focusDrop": "Site Focus Score の低下(ポイント)"
+    "focusDrop": "Site Focus Score の低下(ポイント)",
+    "aioDrop": "AIO-R スコアの低下（ポイント）"
   },
   "ga4": {
     "title": "Google Analytics 4",

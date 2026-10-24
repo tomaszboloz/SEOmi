@@ -4,6 +4,13 @@
 
 - Settings → General: safe CMS patch panel (issue #140) for WordPress, Strapi and webhooks. Preview a heading-scoped diff, approve its exact hash, run a mandatory dry run, then apply with role enforcement, backup and verification feedback. Input or project changes discard approval. All 12 languages are supported.
 - Native CMS transport validates public HTTPS destinations and DNS answers, refuses redirects, limits response size and attaches only dedicated `cms_auth_` credentials from the system store. Browser previews cannot send CMS requests.
+# SEOmi 0.4.24 — release notes
+
+## Added
+- AIO-R drop alerts (issue #108): a dedicated AIO alert type, independent drop threshold (default 10 points, inclusive), per-project settings migration, frequency limits and persisted deduplication. Settings controls are translated in all 12 locales.
+
+## Changed
+- AIO monitoring now runs on crawl completion against the previous comparable crawl, independently of opening the AIO panel. Missing RAG score evidence returns an explicit partial skip without a fabricated zero or alert; incompatible projects, scopes, environments and incomplete runs are not compared.
 
 # SEOmi 0.4.22 — release notes
 

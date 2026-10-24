@@ -5245,9 +5245,11 @@
       "pagespeed": "PageSpeed / CrUX",
       "crawl": "抓取比较",
       "semantic": "语义比较",
-      "focus": "Site Focus Score"
+      "focus": "Site Focus Score",
+      "aio": "AI Overviews 就绪度"
     },
-    "focusDrop": "Site Focus Score 下降(分)"
+    "focusDrop": "Site Focus Score 下降(分)",
+    "aioDrop": "AIO-R 分数下降（分）"
   },
   "ga4": {
     "title": "Google Analytics 4",

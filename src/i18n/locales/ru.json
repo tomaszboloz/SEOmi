@@ -5245,9 +5245,11 @@
       "pagespeed": "PageSpeed / CrUX",
       "crawl": "Сравнения обходов",
       "semantic": "Семантические сравнения",
-      "focus": "Site Focus Score"
+      "focus": "Site Focus Score",
+      "aio": "Готовность к AI Overviews"
     },
-    "focusDrop": "Падение Site Focus Score (баллы)"
+    "focusDrop": "Падение Site Focus Score (баллы)",
+    "aioDrop": "Падение оценки AIO-R (баллы)"
   },
   "ga4": {
     "title": "Google Analytics 4",
