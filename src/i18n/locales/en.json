@@ -7598,6 +7598,7 @@
     }
   },
   "decayUi": {
+    "snapshots": "Snapshots supporting this verdict: {{count}}",
     "title": "Semantic Decay Radar",
     "verdict": {
       "too-few-samples": "Not enough comparable SERP snapshots yet. Nothing to report.",

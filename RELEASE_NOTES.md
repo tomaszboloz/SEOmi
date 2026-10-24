@@ -2,6 +2,11 @@
 
 ## Added
 - Mounted the pre-publish check in a lazy content-planning tab (issue #94). Drafts use the project's existing embedding settings and latest completed, project-owned crawl with Site Focus scores and Core Topic. Existing URLs replace their page in the simulation; crawl data and saved baselines stay unchanged. Includes cancellation, stale-request protection, explicit missing-data/provider states, incompatible-model checks, and UI translations in all 12 locales.
+# SEOmi 0.4.33 — release notes
+
+## Added
+
+- Semantic decay history producer (issue #98): successful hybrid SERP clustering saves real ranked observations per project and normalized query/country/language, validates stored data, deduplicates capture times, and retains the latest 24 snapshots. Signals load the most recent query with repeated observations and persist per-query alert cooldowns. The radar shows its backing snapshot count in all 12 languages. The existing hybrid result does not expose a SERP centroid, consensus entities, or dominant intent/format; these remain unavailable rather than being synthesized from keyword embeddings or labels.
 
 # SEOmi 0.4.31 — release notes
 

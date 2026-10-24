@@ -77,7 +77,7 @@ export const SemanticWorkspacePanels: React.FC<{ session: Session }> = ({ sessio
   }
 
   if (workspacePreferences.view === 'signals') {
-    return <SignalsWorkspace pages={pages} graph={session.graph} />;
+    return <SignalsWorkspace projectId={session.projectId} pages={pages} graph={session.graph} />;
   }
 
   if (workspacePreferences.view === 'links') {

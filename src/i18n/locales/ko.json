@@ -7598,6 +7598,7 @@
     }
   },
   "decayUi": {
+    "snapshots": "이 판정의 근거가 되는 스냅샷 수: {{count}}",
     "title": "시맨틱 디케이 레이더",
     "verdict": {
       "too-few-samples": "비교 가능한 SERP 스냅샷이 아직 부족합니다. 보고할 내용이 없습니다.",
