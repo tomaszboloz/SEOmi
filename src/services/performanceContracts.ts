@@ -5,7 +5,7 @@ const text = z.string().nullable();
 const measurement = z.number().finite().nonnegative().nullable();
 const score = z.number().finite().min(0).max(1).nullable();
 const count = z.number().finite().int().nonnegative();
-const object = z.record(z.unknown());
+const object = z.record(z.string(), z.unknown());
 const metric = z.object({
   id: z.string(), title: z.string(), displayValue: text, numericValue: measurement, score,
 });
@@ -31,7 +31,7 @@ const imageOptimization = z.object({
 
 // These schemas are also checked against the native report interfaces at build
 // time. Missing evidence stays missing; validators never manufacture scores.
-const pageSpeed: z.ZodType<PageSpeedReport, z.ZodTypeDef, unknown> = z.object({
+const pageSpeed: z.ZodType<PageSpeedReport, unknown> = z.object({
   source: z.string(), requestedUrl: z.string(), finalUrl: z.string(), strategy: z.enum(['mobile', 'desktop']),
   fetchedAt: text, lighthouseVersion: text,
   categories: z.object({
@@ -40,7 +40,7 @@ const pageSpeed: z.ZodType<PageSpeedReport, z.ZodTypeDef, unknown> = z.object({
     bestPractices: z.number().finite().min(0).max(100).nullable(),
     seo: z.number().finite().min(0).max(100).nullable(),
   }),
-  metrics: z.record(metric),
+  metrics: z.record(z.string(), metric),
   opportunities: z.array(z.object({ id: z.string(), title: z.string(), description: z.string(), displayValue: text, score })),
   touchTargetAudit: touchTarget.nullable().optional(),
   imageOptimizationAudits: z.array(imageOptimization).optional(),

@@ -1,5 +1,9 @@
 # SEOmi 0.4.9 — release notes
 
+## Security
+
+- Upgraded `zod` to 4.6.7 in the app and the MCP server (high-severity memory exhaustion advisory GHSA-mrhx-c7xc-m3w5); schemas use the v4 `ZodType<Output, Input>` and `z.record(key, value)` signatures. MCP transitive `body-parser` and `fast-uri` advisories fixed with `npm audit fix`. `npm audit --omit=dev` reports 0 vulnerabilities in both packages.
+
 ## Added
 
 - Rust unit tests for PDF report label locale/RTL helpers and for crypto-shredding store error, missing-key and tampered-ciphertext paths (GAP-023 coverage work). No production code changed.

@@ -79,7 +79,7 @@ export const topicalWorkspacePreferencesKey = (projectId: string) =>
 export const readTopicalWorkspacePreferences = (projectId: string | null): TopicalWorkspacePreferences => {
   const defaults = defaultTopicalWorkspacePreferences();
   if (!projectId) return defaults;
-  const schema: z.ZodType<TopicalWorkspacePreferences, z.ZodTypeDef, unknown> = z.object({
+  const schema: z.ZodType<TopicalWorkspacePreferences, unknown> = z.object({
     view: z.enum(['topics', 'calendar', 'audit', 'schema', 'links', 'entity', 'signals']).catch('topics'),
     month: z.string().regex(/^\d{4}-(0[1-9]|1[0-2])$/).catch(defaults.month),
     filters: z.object({
