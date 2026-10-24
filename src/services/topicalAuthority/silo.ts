@@ -39,7 +39,7 @@ export const contentEdges = (context: AuthorityContext): Edge[] => {
   const sources = new Map<string, number>();
   edges.forEach((edge) => { if (edge.untagged) sources.set(edge.to, (sources.get(edge.to) ?? 0) + 1); });
   const chrome = context.pages.length >= CHROME_MIN_PAGES ? context.pages.length * CHROME_SHARE : Infinity;
-  return [...edges.values()].filter((edge) => !edge.untagged || (sources.get(edge.to) ?? 0) < chrome);
+  return [...edges.values()].filter((edge) => !edge.untagged || sources.get(edge.to)! < chrome);
 };
 
 /** Descriptive anchors score by cosine with the target's declared topic; generic ones count 0.1. */
@@ -89,7 +89,7 @@ export const auditSilo = (context: AuthorityContext, eligible: AuthorityPage[], 
     if (value !== null) connectivity.push(value);
     members.forEach((entry) => { audits[entry.url] = { pillarUrl: pillar.url, linksToPillar: entry === pillar || links.has(`${entry.url}|${pillar.url}`), inbound: inbound.get(entry.url) ?? 0, bleedTargets: [] }; });
   });
-  const bleedLinks = edges.filter((edge) => ok.has(edge.from) && (context.byUrl.get(edge.to)?.focus.trs ?? 100) < BLEED_BELOW && context.byUrl.get(edge.to)?.focus.type !== 'technical').map((edge) => ({ from: edge.from, to: edge.to }));
+  const bleedLinks = edges.filter((edge) => ok.has(edge.from) && context.byUrl.get(edge.to)!.focus.trs < BLEED_BELOW && context.byUrl.get(edge.to)!.focus.type !== 'technical').map((edge) => ({ from: edge.from, to: edge.to }));
   bleedLinks.forEach((edge) => { (audits[edge.from] ??= { linksToPillar: false, inbound: inbound.get(edge.from) ?? 0, bleedTargets: [] }).bleedTargets.push(edge.to); });
   const nonHome = eligible.filter((entry) => entry.focus.type !== 'homepage');
   const orphans = nonHome.filter((entry) => !(inbound.get(entry.url) ?? 0)).map((entry) => entry.url).sort();

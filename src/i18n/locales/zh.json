@@ -7098,6 +7098,9 @@
       "axisX": "SFS",
       "axisY": "TAS"
     },
+    "freshness": {
+      "undated": "{{total}} 个页面中有 {{undated}} 个没有日期，不参与评分"
+    },
     "pillars": {
       "title": "Topical Authority Score 的构成",
       "tcr": "主题覆盖率",

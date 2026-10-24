@@ -66,12 +66,12 @@ describe('coverage100 TAS remaining authority edges', () => {
       { ...base, url: 'https://draft.test/a', final_url: undefined, semantic_excerpts: ['coffee'] },
     ] as never;
     expect(checkDraftOverlap({ title: 'Coffee', body: 'coffee' }, pages, 'https://draft.test/').map((item) => item.url)).toEqual(['https://draft.test/a', 'https://draft.test/b']);
-    const zero = buildAuthorityRecommendations({ coverage: [row()], pillars: { tcr: Number.NaN, cdes: null, silc: null, cvff: null }, sfs: 50, silo: silo(), cannibalization: [], cannibalizationIndex: 0, freshness: { ratio: null, dated: 0, stale: [] }, pillarLabels: new Map() });
+    const zero = buildAuthorityRecommendations({ coverage: [row()], pillars: { tcr: Number.NaN, cdes: null, silc: null, cvff: null }, sfs: 50, silo: silo(), cannibalization: [], cannibalizationIndex: 0, freshness: { ratio: null, total: 0, dated: 0, undated: 0, stale: [] }, pillarLabels: new Map() });
     expect(zero[0].deltaTas).toBe(0);
     const equal = buildAuthorityRecommendations({
       coverage: [row({ subtopicId: 'a', pillar: 'a' }), row({ subtopicId: 'b', pillar: 'b' }), row({ subtopicId: 'shallow', pillar: 'a', status: 'covered_shallow', coverage: 1, depth: 80 })],
       pillars: { tcr: 100, cdes: 100, silc: 100, cvff: 100 }, sfs: 50, silo: silo(), cannibalization: [], cannibalizationIndex: 0,
-      freshness: { ratio: 1, dated: 1, stale: ['/old'] }, pillarLabels: new Map(),
+      freshness: { ratio: 1, total: 1, dated: 1, undated: 0, stale: ['/old'] }, pillarLabels: new Map(),
     });
     expect(equal.map((item) => item.code)).toEqual(expect.arrayContaining(['fill-gaps', 'deepen-shallow', 'refresh-stale']));
   });

@@ -7098,6 +7098,9 @@
       "axisX": "SFS",
       "axisY": "TAS"
     },
+    "freshness": {
+      "undated": "{{undated}} of {{total}} pages have no date and are not scored"
+    },
     "pillars": {
       "title": "Components of the Topical Authority Score",
       "tcr": "Topic coverage",

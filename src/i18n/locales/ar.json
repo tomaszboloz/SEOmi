@@ -7098,6 +7098,9 @@
       "axisX": "SFS",
       "axisY": "TAS"
     },
+    "freshness": {
+      "undated": "{{undated}} من أصل {{total}} صفحة ليس لها تاريخ ولا تُقيَّم"
+    },
     "pillars": {
       "title": "مكوّنات Topical Authority Score",
       "tcr": "تغطية الموضوع",

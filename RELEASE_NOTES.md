@@ -11,6 +11,11 @@
 
 ## Changed
 - AIO monitoring now runs on crawl completion against the previous comparable crawl, independently of opening the AIO panel. Missing RAG score evidence returns an explicit partial skip without a fabricated zero or alert; incompatible projects, scopes, environments and incomplete runs are not compared.
+# SEOmi 0.4.25 — release notes
+
+## Fixed
+- Topical Authority freshness exposes total, dated and undated page counts. Pages without a usable date remain unscored, with a notice translated into all 12 languages; older reports default missing counts to zero.
+- Direct TAS regression tests cover previously untested branches, including cannibalization grouping and canonical selection (issue #110).
 
 # SEOmi 0.4.22 — release notes
 

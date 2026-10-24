@@ -58,11 +58,11 @@ describe('coverage100 topical authority edges', () => {
   });
 
   it('builds recommendation edges with empty labels, shallow URLs and no linking work', () => {
-    const input = { coverage: [coverage({ subtopicId: 'a', label: 'Zulu' }), coverage({ subtopicId: 'b', label: 'Alpha' }), coverage({ subtopicId: 'c', pillar: 'q', label: 'Beta', status: 'covered_shallow', coverage: 0.5, depth: 20 })], pillars: { tcr: 50, cdes: 30, silc: 20, cvff: 20 }, sfs: 50, silo: silo(), cannibalization: [], cannibalizationIndex: 0, freshness: { ratio: null, dated: 0, stale: [] }, pillarLabels: new Map() };
+    const input = { coverage: [coverage({ subtopicId: 'a', label: 'Zulu' }), coverage({ subtopicId: 'b', label: 'Alpha' }), coverage({ subtopicId: 'c', pillar: 'q', label: 'Beta', status: 'covered_shallow', coverage: 0.5, depth: 20 })], pillars: { tcr: 50, cdes: 30, silc: 20, cvff: 20 }, sfs: 50, silo: silo(), cannibalization: [], cannibalizationIndex: 0, freshness: { ratio: null, total: 0, dated: 0, undated: 0, stale: [] }, pillarLabels: new Map() };
     const recs = buildAuthorityRecommendations(input);
     expect(recs.map((rec) => rec.code)).toEqual(expect.arrayContaining(['fill-gaps', 'deepen-shallow']));
     expect(buildAuthorityRecommendations({ ...input, coverage: [], pillars: { ...input.pillars, tcr: 50 } })).toEqual([]);
-    expect(buildAuthorityRecommendations({ ...input, freshness: { ratio: 1, dated: 1, stale: ['/old'] } }).map((rec) => rec.code)).toContain('refresh-stale');
+    expect(buildAuthorityRecommendations({ ...input, freshness: { ratio: 1, total: 1, dated: 1, undated: 0, stale: ['/old'] } }).map((rec) => rec.code)).toContain('refresh-stale');
   });
 
   it('retains ungrouped bleed audits and null anchor text', () => {

@@ -2,12 +2,14 @@ import { useTranslation } from 'react-i18next';
 import { HelpTip } from '@/components/Help/HelpTip';
 import type { HelpId } from '@/components/Help/helpTypes';
 import type { Pillars, TopicalAuthorityReport } from '@/services/topicalAuthority';
+import { normalizeFreshness } from '@/services/topicalAuthority/freshness';
 import { barFor, pct, toneFor } from './authorityText';
 
 const ORDER: Array<[keyof Pillars, HelpId | null]> = [['tcr', 'authority.tcr'], ['cdes', 'authority.esd'], ['silc', 'authority.scs'], ['cvff', null]];
 
 export const AuthorityPillars = ({ report }: { report: TopicalAuthorityReport }) => {
   const { t } = useTranslation();
+  const { total, undated } = normalizeFreshness(report.freshness);
   const covered = report.coverage.filter((row) => row.coverage > 0).length;
   const notes: Record<keyof Pillars, string> = {
     tcr: t('authority.pillars.tcrNote', { covered, total: report.coverage.length }),
@@ -28,7 +30,8 @@ export const AuthorityPillars = ({ report }: { report: TopicalAuthorityReport })
                 <span className={`font-semibold tabular-nums ${toneFor(value)}`}>{value === null ? t('authority.pillars.unavailable') : `${pct(value)}%`}</span>
               </p>
               <div className="h-2 overflow-hidden rounded bg-slate-800"><div className={`h-2 rounded ${barFor(value)}`} style={{ width: `${value ?? 0}%` }} /></div>
-              <p className="text-[11px] text-slate-400">{notes[key]}</p>
+            <p className="text-[11px] text-slate-400">{notes[key]}</p>
+            {key === 'cvff' && undated > 0 && <p className="text-[11px] text-amber-200">{t('authority.freshness.undated', { undated, total })}</p>}
             </li>
           );
         })}

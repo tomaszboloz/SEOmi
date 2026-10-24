@@ -63,7 +63,7 @@ describe('coverage100 topical authority primitives', () => {
     const entry = context.pages[0];
     expect(pageDepth(entry, { id: 'x', pillar: 'p', label: 'x', keys: [], importance: 1, entities: [], questions: [] }, context, referenceTaxonomy(pages)!)).toMatchObject({ depth: expect.any(Number), present: [], missing: [] });
     expect(ageDays('2020-01-01', NOW)).toBeGreaterThan(365);
-    expect(measureFreshness([], NOW)).toEqual({ ratio: null, dated: 0, stale: [] });
+    expect(measureFreshness([], NOW)).toEqual({ ratio: null, total: 0, dated: 0, undated: 0, stale: [] });
     expect(groupByDirectory([entry]).size).toBe(1);
     expect(auditSilo(context, [], new Map()).score).toBeNull();
     expect(anchorScore('click here', entry, context.language)).toBe(0.1);
