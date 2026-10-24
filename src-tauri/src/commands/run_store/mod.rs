@@ -6,6 +6,9 @@ mod atomic_tests;
 #[cfg(test)]
 mod command_tests;
 pub mod commands;
+#[cfg(test)]
+#[path = "coverage100_storage_tests.rs"]
+mod coverage100_storage_tests;
 pub mod erase;
 pub mod erase_commands;
 #[cfg(test)]

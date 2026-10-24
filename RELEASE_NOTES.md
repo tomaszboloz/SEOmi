@@ -1,3 +1,13 @@
+# SEOmi 0.4.10 — release notes
+
+## Added
+
+- Coverage-completion tests (frontend, MCP server and Rust) taking over the unfinished 100% coverage work: persistence, semantic, TAS, UI, utility and PDF/crawler edges. Thresholds unchanged.
+
+## Fixed
+
+- Schema.org detection in SIJA page features now validates URLs with the URL parser instead of regex matching on raw HTML (CodeQL alerts from PR #176); look-alike hosts and query-string mentions no longer count. Regression test added.
+
 # SEOmi 0.4.9 — release notes
 
 ## Security

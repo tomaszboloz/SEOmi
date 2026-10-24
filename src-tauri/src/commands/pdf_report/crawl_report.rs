@@ -35,6 +35,9 @@ mod tables;
 mod trust_tables;
 
 #[cfg(test)]
+#[path = "crawl_report/coverage100_tests.rs"]
+mod coverage100_tests;
+#[cfg(test)]
 mod fixture;
 #[cfg(test)]
 mod fixture_run;

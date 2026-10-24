@@ -42,6 +42,9 @@ fn main() {
     let plugin = tauri::plugin::Builder::<tauri::Wry, ()>::new("desktop-e2e")
         .setup(move |app, _| {
             eprintln!("desktop-e2e: listener setup");
+            app.listen("seomi-desktop-e2e-progress", |event| {
+                eprintln!("desktop-e2e: progress {}", event.payload());
+            });
             for path in [app.path().app_data_dir()?, app.path().app_config_dir()?] {
                 assert!(path.to_string_lossy().contains("com.seomi.desktop.e2e."));
                 roots_for_setup.lock().unwrap().push(path);
