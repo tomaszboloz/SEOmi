@@ -17,6 +17,7 @@
     "importFailed": "No se pudo leer el archivo o calcular su hash. Inténtalo de nuevo.",
     "resume": "Selecciona el mismo archivo para reanudar sin contar líneas dos veces.",
     "verificationNote": "La identidad del bot es una declaración de User-Agent, no una prueba. Detectar suplantaciones requiere el resolver DNS de escritorio; este panel no consulta DNS. Las filas no verificadas no son concluyentes.",
+    "verificationNoteDesktop": "La identidad del bot se comprueba en este equipo con DNS inverso y directo (3 s de límite). Una consulta fallida deja la fila como declarada, nunca como suplantada.",
     "matrix": "Matriz de eficiencia de rastreo",
     "coverage": "Cobertura: {{days}} de {{period}} días",
     "period": "Ventana (UTC): {{start}} – {{end}}",

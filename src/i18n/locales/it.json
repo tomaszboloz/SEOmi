@@ -17,6 +17,7 @@
     "importFailed": "Impossibile leggere il file o calcolare l’hash. Riprova.",
     "resume": "Seleziona lo stesso file per riprendere senza contare due volte le righe.",
     "verificationNote": "L’identità del bot è una dichiarazione User-Agent, non una prova. I controlli di spoofing richiedono il resolver DNS desktop; questo pannello non interroga DNS. Le righe non verificate restano inconcludenti.",
+    "verificationNoteDesktop": "L'identità del bot viene verificata su questo computer con DNS inverso e diretto (timeout 3 s). Una ricerca fallita lascia la riga come dichiarata, mai come falsificata.",
     "matrix": "Matrice di efficienza del crawl",
     "coverage": "Copertura: {{days}} su {{period}} giorni",
     "period": "Finestra (UTC): {{start}} – {{end}}",

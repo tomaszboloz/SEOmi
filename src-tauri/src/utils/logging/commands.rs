@@ -30,6 +30,8 @@ pub(super) const IPC_COMMANDS: &[&str] = &[
     "store_forget_subject",
     "store_erase_project",
     "store_erasure_log",
+    "dns_reverse",
+    "dns_forward",
     "inspect_url",
     "cancel_inspect_url",
     "check_link",

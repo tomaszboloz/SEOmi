@@ -17,6 +17,7 @@
     "importFailed": "Impossible de lire le fichier ou de calculer son empreinte. Réessayez.",
     "resume": "Sélectionnez le même fichier pour reprendre sans compter deux fois les lignes.",
     "verificationNote": "L’identité du bot est une déclaration User-Agent, pas une preuve. Les contrôles d’usurpation nécessitent le résolveur DNS de bureau ; ce panneau ne consulte pas le DNS. Les lignes non vérifiées restent indéterminées.",
+    "verificationNoteDesktop": "L'identité du bot est vérifiée sur cet ordinateur par DNS inverse puis direct (délai de 3 s). Une requête échouée laisse la ligne en « déclaré », jamais en « usurpé ».",
     "matrix": "Matrice d’efficacité du crawl",
     "coverage": "Couverture : {{days}} jours sur {{period}}",
     "period": "Fenêtre (UTC) : {{start}} – {{end}}",

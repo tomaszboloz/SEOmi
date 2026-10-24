@@ -2,6 +2,7 @@ pub mod ai_cli;
 pub mod ai_provider;
 pub mod audit_queue;
 pub mod audit_queue_worker;
+pub mod bot_dns;
 pub mod crawl_storage;
 pub mod dataforseo;
 mod dataforseo_budget;

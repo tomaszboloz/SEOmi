@@ -17,6 +17,7 @@
     "importFailed": "Não foi possível ler o arquivo ou calcular o hash. Tente novamente.",
     "resume": "Selecione o mesmo arquivo para retomar sem contar linhas duas vezes.",
     "verificationNote": "A identidade do bot é uma declaração de User-Agent, não uma prova. A verificação de falsificação exige o resolvedor DNS desktop; este painel não consulta DNS. Linhas não verificadas permanecem inconclusivas.",
+    "verificationNoteDesktop": "A identidade do bot é verificada neste computador com DNS inverso e direto (limite de 3 s). Uma consulta falhada deixa a linha como declarada, nunca como falsificada.",
     "matrix": "Matriz de eficiência de rastreamento",
     "coverage": "Cobertura: {{days}} de {{period}} dias",
     "period": "Janela (UTC): {{start}} – {{end}}",
