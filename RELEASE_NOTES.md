@@ -1,3 +1,9 @@
+# SEOmi 0.4.34 — release notes
+
+## Added
+
+- Shared URL telemetry now includes Google Analytics (issue #91): the last GA4 report loaded in the session is remembered per project and joined by landing page (sessions, engaged sessions, key events) with its property, period and sampling state. Loading a new report invalidates the cached telemetry. Without a report GA4 stays `unavailable`; GA4 alone never creates telemetry.
+
 # SEOmi 0.4.33 — release notes
 
 ## Added

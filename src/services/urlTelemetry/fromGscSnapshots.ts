@@ -1,6 +1,7 @@
 import type { GscPerformanceData } from '@/types';
 import { readGscSnapshots } from '@/services/gscTracker/read';
 import type { GscPerformanceSnapshot } from '@/services/gscTracker/types';
+import { recallGa4Report } from './ga4Cache';
 import { buildUrlTelemetrySnapshot } from './snapshot';
 import { getSnapshot, putSnapshot } from './store';
 import type { UrlTelemetrySnapshot } from './types';
@@ -31,7 +32,7 @@ export const latestSnapshot = (snapshots: GscPerformanceSnapshot[]): GscPerforma
 
 /**
  * Shared telemetry for a project: the cached one when still valid, otherwise built from the newest saved
- * Search Console snapshot. Without a saved snapshot nothing is built (no zero-filled telemetry).
+ * Search Console snapshot, plus the session's last Google Analytics report when there is one. Without a saved snapshot nothing is built (no zero-filled telemetry).
  */
 export const ensureUrlTelemetry = (projectId: string, urls: string[], now: Date = new Date()): UrlTelemetrySnapshot | null => {
   const cached = getSnapshot(projectId, now);
@@ -39,7 +40,7 @@ export const ensureUrlTelemetry = (projectId: string, urls: string[], now: Date 
   const source = latestSnapshot(readGscSnapshots(projectId));
   const root = urls[0];
   if (!source || !root) return null;
-  const built = buildUrlTelemetrySnapshot({ projectId, rootUrl: root, urls, gsc: performanceDataOf(source), now });
+  const built = buildUrlTelemetrySnapshot({ projectId, rootUrl: root, urls, gsc: performanceDataOf(source), ga4: recallGa4Report(projectId), now });
   if (built) putSnapshot(built);
   return built;
 };
