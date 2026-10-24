@@ -7936,5 +7936,47 @@
     },
     "coverage": "覆盖率：{{value}}%",
     "unknownNote": "未知数据绝不会被计为零。"
+  },
+  "offPageSourcesUi": {
+    "analyze": "分析链接来源",
+    "cancel": "取消",
+    "scope": "仅在当前会话中使用：按提供方权威值降序选择最多25条follow链接，每个来源域名一条。权威值尺度为0–100；TBVA是总和，不是百分比，也不是Google PageRank。限制：并发3个请求、原生超时15秒、响应正文25 MiB、每个来源20,000个可见文本字符。",
+    "provider": "本地嵌入提供方",
+    "local": "本地哈希",
+    "ollama": "本地Ollama",
+    "model": "Ollama嵌入模型",
+    "scored": "已评分来源：所选{{total}}个中的{{scored}}个（并非完整外链档案）。",
+    "sources": "来源抓取状态",
+    "fetchedAt": "抓取时间：{{time}}",
+    "notFetched": "尚未抓取",
+    "context": "提取结果不保留段落或锚点边界。系统推定有长度限制的文本块；由于缺少段落内链接上下文，所有匹配均为linked=false。",
+    "caveat": "共同出现不代表认可。同名异义词可能导致误匹配；含否定的提及仍标为不明确。",
+    "excerpts": "共引摘录",
+    "offset": "{{url}} — 提取文本偏移量 {{offset}}",
+    "missing": "缺少文本、可用向量或权威值意味着证据不完整或不可用，并非零外链。此样本不是完整档案。",
+    "status": {
+      "running": "正在分析来源…",
+      "done": "来源分析已完成",
+      "cancelled": "分析已取消；未完成的来源不会评分",
+      "unavailable": "分析不可用"
+    },
+    "fetch": {
+      "pending": "等待中",
+      "ok": "文本可用",
+      "unavailable": "不可用",
+      "too-large": "响应正文过大",
+      "blocked": "已被安全传输阻止"
+    },
+    "limitations": {
+      "no-topic-vector": "项目最近完成的抓取没有可用的Core Topic向量；TBVA不可用。",
+      "invalid-scale": "权威值尺度无效；TBVA不可用。",
+      "no-follow-links": "没有可分析的follow链接。",
+      "source-text-or-authority-missing": "部分来源缺少文本、可用向量或提供方权威值。"
+    },
+    "polarity": {
+      "neutral": "中性共现；不代表认可",
+      "unclear": "不明确：可能含否定"
+    },
+    "pacing": "原生审计保护还将启动频率限制为每分钟10次。样本分析可能需要数分钟；其他审计可能降低可用性。"
   }
 }

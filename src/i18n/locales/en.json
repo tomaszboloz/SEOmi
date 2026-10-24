@@ -7936,5 +7936,47 @@
     },
     "coverage": "Coverage: {{value}}%",
     "unknownNote": "Unknown data is never counted as zero."
+  },
+  "offPageSourcesUi": {
+    "analyze": "Analyze link sources",
+    "cancel": "Cancel",
+    "scope": "Session only: up to 25 follow links, one per source domain, highest provider authority first. Authority scale: 0–100; TBVA is a sum, not a percentage or Google PageRank. Limits: 3 concurrent requests, 15 s native timeout, 25 MiB response body, 20,000 visible-text characters per source.",
+    "provider": "Local embedding provider",
+    "local": "Local hash",
+    "ollama": "Local Ollama",
+    "model": "Ollama embedding model",
+    "scored": "Scored sources: {{scored}} / {{total}} selected (not the whole backlink profile).",
+    "sources": "Source fetch status",
+    "fetchedAt": "Fetched at: {{time}}",
+    "notFetched": "Not fetched",
+    "context": "Extraction has no paragraph or anchor boundaries. Bounded text blocks are inferred; every hit has linked=false because paragraph-level link context is unavailable.",
+    "caveat": "Co-occurrence is not endorsement. Homonyms can produce false matches; negated mentions remain unclear.",
+    "excerpts": "Co-citation excerpts",
+    "offset": "{{url}} — extracted-text offset {{offset}}",
+    "missing": "Missing text, usable vectors or authority means partial/unavailable evidence, not zero backlinks. This sample is not the full profile.",
+    "status": {
+      "running": "Analyzing sources…",
+      "done": "Source analysis completed",
+      "cancelled": "Analysis cancelled; unfinished sources are not scored",
+      "unavailable": "Analysis unavailable"
+    },
+    "fetch": {
+      "pending": "Pending",
+      "ok": "Text available",
+      "unavailable": "Unavailable",
+      "too-large": "Body too large",
+      "blocked": "Blocked by safe transport"
+    },
+    "limitations": {
+      "no-topic-vector": "No usable Core Topic vector from the latest completed project crawl; TBVA is unavailable.",
+      "invalid-scale": "Invalid authority scale; TBVA is unavailable.",
+      "no-follow-links": "No follow links available for analysis.",
+      "source-text-or-authority-missing": "Some sources lack text, usable vectors or provider authority."
+    },
+    "polarity": {
+      "neutral": "Neutral co-occurrence; not endorsement",
+      "unclear": "Unclear: possible negation"
+    },
+    "pacing": "The native audit guard also limits starts to 10 per minute. The sample can take several minutes; other audits may reduce availability."
   }
 }

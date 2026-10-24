@@ -7936,5 +7936,47 @@
     },
     "coverage": "Abdeckung: {{value}}%",
     "unknownNote": "Unbekannte Daten werden niemals als null gezählt."
+  },
+  "offPageSourcesUi": {
+    "analyze": "Linkquellen analysieren",
+    "cancel": "Abbrechen",
+    "scope": "Nur in dieser Sitzung: bis zu 25 Follow-Links, einer pro Quelldomain, höchste Anbieterautorität zuerst. Autoritätsskala: 0–100; TBVA ist eine Summe, kein Prozentsatz und kein Google PageRank. Grenzen: 3 parallele Anfragen, 15 s natives Zeitlimit, 25 MiB Antwort, 20.000 sichtbare Textzeichen je Quelle.",
+    "provider": "Lokaler Embedding-Anbieter",
+    "local": "Lokaler Hash",
+    "ollama": "Lokales Ollama",
+    "model": "Ollama-Embedding-Modell",
+    "scored": "Bewertete Quellen: {{scored}} / {{total}} ausgewählte (nicht das gesamte Backlinkprofil).",
+    "sources": "Abrufstatus der Quellen",
+    "fetchedAt": "Abgerufen: {{time}}",
+    "notFetched": "Nicht abgerufen",
+    "context": "Die Extraktion enthält keine Absatz- oder Ankergrenzen. Begrenzte Textblöcke werden angenähert; alle Treffer haben linked=false, da der Linkkontext im Absatz fehlt.",
+    "caveat": "Gemeinsames Auftreten ist keine Empfehlung. Homonyme können falsche Treffer erzeugen; verneinte Erwähnungen bleiben unklar.",
+    "excerpts": "Kozitationsauszüge",
+    "offset": "{{url}} — Position im extrahierten Text {{offset}}",
+    "missing": "Fehlender Text, unbrauchbare Vektoren oder fehlende Autorität bedeuten teilweise/nicht verfügbare Evidenz, nicht null Backlinks. Die Stichprobe ist nicht das gesamte Profil.",
+    "status": {
+      "running": "Quellen werden analysiert…",
+      "done": "Quellenanalyse abgeschlossen",
+      "cancelled": "Analyse abgebrochen; unfertige Quellen werden nicht bewertet",
+      "unavailable": "Analyse nicht verfügbar"
+    },
+    "fetch": {
+      "pending": "Ausstehend",
+      "ok": "Text verfügbar",
+      "unavailable": "Nicht verfügbar",
+      "too-large": "Antwort zu groß",
+      "blocked": "Vom sicheren Transport blockiert"
+    },
+    "limitations": {
+      "no-topic-vector": "Kein brauchbarer Core-Topic-Vektor aus dem letzten abgeschlossenen Projektcrawl; TBVA nicht verfügbar.",
+      "invalid-scale": "Ungültige Autoritätsskala; TBVA nicht verfügbar.",
+      "no-follow-links": "Keine Follow-Links zur Analyse verfügbar.",
+      "source-text-or-authority-missing": "Einigen Quellen fehlen Text, brauchbare Vektoren oder Anbieterautorität."
+    },
+    "polarity": {
+      "neutral": "Neutrales gemeinsames Auftreten; keine Empfehlung",
+      "unclear": "Unklar: mögliche Verneinung"
+    },
+    "pacing": "Der native Auditschutz begrenzt auch die Starts auf 10 pro Minute. Die Stichprobe kann mehrere Minuten dauern; andere Audits können die Verfügbarkeit verringern."
   }
 }

@@ -7936,5 +7936,47 @@
     },
     "coverage": "Couverture : {{value}} %",
     "unknownNote": "Les données inconnues ne sont jamais comptées comme zéro."
+  },
+  "offPageSourcesUi": {
+    "analyze": "Analyser les sources des liens",
+    "cancel": "Annuler",
+    "scope": "Session uniquement : jusqu’à 25 liens follow, un par domaine source, par autorité fournisseur décroissante. Échelle d’autorité : 0–100 ; TBVA est une somme, ni un pourcentage ni Google PageRank. Limites : 3 requêtes simultanées, délai natif de 15 s, réponse de 25 Mio, 20 000 caractères visibles par source.",
+    "provider": "Fournisseur local d’embeddings",
+    "local": "Hachage local",
+    "ollama": "Ollama local",
+    "model": "Modèle d’embeddings Ollama",
+    "scored": "Sources évaluées : {{scored}} / {{total}} sélectionnées (pas tout le profil de liens).",
+    "sources": "État de récupération des sources",
+    "fetchedAt": "Récupéré le : {{time}}",
+    "notFetched": "Non récupéré",
+    "context": "L’extraction ne conserve pas les limites des paragraphes ou des ancres. Les blocs de texte bornés sont approximatifs ; tous les résultats ont linked=false car le contexte du lien dans le paragraphe manque.",
+    "caveat": "La cooccurrence n’est pas une recommandation. Les homonymes peuvent créer de faux résultats ; les mentions niées restent ambiguës.",
+    "excerpts": "Extraits de cocitation",
+    "offset": "{{url}} — position dans le texte extrait {{offset}}",
+    "missing": "L’absence de texte, de vecteurs utilisables ou d’autorité indique des preuves partielles/indisponibles, pas zéro lien. Cet échantillon n’est pas le profil complet.",
+    "status": {
+      "running": "Analyse des sources…",
+      "done": "Analyse des sources terminée",
+      "cancelled": "Analyse annulée ; les sources inachevées ne sont pas évaluées",
+      "unavailable": "Analyse indisponible"
+    },
+    "fetch": {
+      "pending": "En attente",
+      "ok": "Texte disponible",
+      "unavailable": "Indisponible",
+      "too-large": "Réponse trop volumineuse",
+      "blocked": "Bloqué par le transport sécurisé"
+    },
+    "limitations": {
+      "no-topic-vector": "Aucun vecteur Core Topic utilisable du dernier crawl terminé du projet ; TBVA indisponible.",
+      "invalid-scale": "Échelle d’autorité invalide ; TBVA indisponible.",
+      "no-follow-links": "Aucun lien follow à analyser.",
+      "source-text-or-authority-missing": "Certaines sources n’ont pas de texte, de vecteurs utilisables ou d’autorité fournisseur."
+    },
+    "polarity": {
+      "neutral": "Cooccurrence neutre ; pas une recommandation",
+      "unclear": "Ambigu : négation possible"
+    },
+    "pacing": "La protection de l’audit natif limite aussi les démarrages à 10 par minute. L’échantillon peut prendre plusieurs minutes ; d’autres audits peuvent réduire la disponibilité."
   }
 }

@@ -1,3 +1,10 @@
+# SEOmi 0.4.36 — release notes
+
+## Added
+- Session-only link-source analysis for stored backlink profiles (issue #93, GEM-93-02/03/05/06): up to 25 highest-authority follow sources, one per domain, fetched with the existing SSRF-guarded native audit transport (three concurrent requests, bounded response and timeout, cancellation and stale-run protection).
+- Local hash or local Ollama embeddings compare extracted source text with the latest completed project crawl's Core Topic. TBVA uses provider authority scale 100; missing evidence and unusable vectors remain partial/unavailable, never zero backlinks or Google PageRank.
+- Per-source fetch provenance and co-citation excerpts with extracted-text offsets, explicit missing paragraph/anchor context, homonym and negation caveats, and `offPageSourcesUi` translations in all 12 languages. No source HTML, text or analysis results are persisted.
+
 # SEOmi 0.4.35 — release notes
 
 ## Added
@@ -393,4 +400,3 @@ The selected distribution uses signed Tauri updates and installers without Apple
 ## Thanks
 
 Thank you **@RafalSzy** for contributions, topical diagnosis, detailed issue reports and regression-test feedback in PR #13 and subsequent reviews.
-

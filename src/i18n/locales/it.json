@@ -7936,5 +7936,47 @@
     },
     "coverage": "Copertura: {{value}}%",
     "unknownNote": "I dati sconosciuti non vengono mai conteggiati come zero."
+  },
+  "offPageSourcesUi": {
+    "analyze": "Analizza le fonti dei link",
+    "cancel": "Annulla",
+    "scope": "Solo per la sessione: fino a 25 link follow, uno per dominio sorgente, prima la massima autorità del provider. Scala autorità: 0–100; TBVA è una somma, non una percentuale né Google PageRank. Limiti: 3 richieste simultanee, timeout nativo di 15 s, risposta di 25 MiB, 20.000 caratteri visibili per fonte.",
+    "provider": "Provider locale di embedding",
+    "local": "Hash locale",
+    "ollama": "Ollama locale",
+    "model": "Modello di embedding Ollama",
+    "scored": "Fonti valutate: {{scored}} / {{total}} selezionate (non l’intero profilo link).",
+    "sources": "Stato del recupero delle fonti",
+    "fetchedAt": "Recuperato: {{time}}",
+    "notFetched": "Non recuperato",
+    "context": "L’estrazione non conserva i confini di paragrafi o ancore. I blocchi di testo limitati sono approssimati; tutti i risultati hanno linked=false perché manca il contesto del link nel paragrafo.",
+    "caveat": "La co-occorrenza non è una raccomandazione. Gli omonimi possono causare falsi risultati; le menzioni negate restano ambigue.",
+    "excerpts": "Estratti di co-citazione",
+    "offset": "{{url}} — posizione nel testo estratto {{offset}}",
+    "missing": "Testo, vettori utilizzabili o autorità mancanti significano prove parziali/non disponibili, non zero backlink. Questo campione non è il profilo completo.",
+    "status": {
+      "running": "Analisi delle fonti…",
+      "done": "Analisi delle fonti completata",
+      "cancelled": "Analisi annullata; le fonti incomplete non vengono valutate",
+      "unavailable": "Analisi non disponibile"
+    },
+    "fetch": {
+      "pending": "In attesa",
+      "ok": "Testo disponibile",
+      "unavailable": "Non disponibile",
+      "too-large": "Risposta troppo grande",
+      "blocked": "Bloccato dal trasporto sicuro"
+    },
+    "limitations": {
+      "no-topic-vector": "Nessun vettore Core Topic utilizzabile dall’ultimo crawl completato del progetto; TBVA non disponibile.",
+      "invalid-scale": "Scala di autorità non valida; TBVA non disponibile.",
+      "no-follow-links": "Nessun link follow da analizzare.",
+      "source-text-or-authority-missing": "Alcune fonti non hanno testo, vettori utilizzabili o autorità del provider."
+    },
+    "polarity": {
+      "neutral": "Co-occorrenza neutra; non una raccomandazione",
+      "unclear": "Ambiguo: possibile negazione"
+    },
+    "pacing": "La protezione dell’audit nativo limita inoltre gli avvii a 10 al minuto. Il campione può richiedere diversi minuti; altri audit possono ridurre la disponibilità."
   }
 }

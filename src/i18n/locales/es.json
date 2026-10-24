@@ -7936,5 +7936,47 @@
     },
     "coverage": "Cobertura: {{value}}%",
     "unknownNote": "Los datos desconocidos nunca se cuentan como cero."
+  },
+  "offPageSourcesUi": {
+    "analyze": "Analizar fuentes de enlaces",
+    "cancel": "Cancelar",
+    "scope": "Solo en esta sesión: hasta 25 enlaces follow, uno por dominio de origen, primero la mayor autoridad del proveedor. Escala de autoridad: 0–100; TBVA es una suma, no un porcentaje ni Google PageRank. Límites: 3 solicitudes simultáneas, 15 s de espera nativa, respuesta de 25 MiB, 20.000 caracteres visibles por fuente.",
+    "provider": "Proveedor local de embeddings",
+    "local": "Hash local",
+    "ollama": "Ollama local",
+    "model": "Modelo de embeddings de Ollama",
+    "scored": "Fuentes puntuadas: {{scored}} / {{total}} seleccionadas (no todo el perfil de enlaces).",
+    "sources": "Estado de descarga de fuentes",
+    "fetchedAt": "Descargado: {{time}}",
+    "notFetched": "Sin descargar",
+    "context": "La extracción no conserva límites de párrafos ni anclas. Los bloques de texto acotados son aproximados; todos los resultados tienen linked=false porque falta el contexto del enlace en el párrafo.",
+    "caveat": "La coaparición no es un respaldo. Los homónimos pueden producir falsos resultados; las menciones negadas siguen siendo ambiguas.",
+    "excerpts": "Extractos de cocitación",
+    "offset": "{{url}} — posición en el texto extraído {{offset}}",
+    "missing": "La falta de texto, vectores utilizables o autoridad significa evidencia parcial/no disponible, no cero enlaces. Esta muestra no es el perfil completo.",
+    "status": {
+      "running": "Analizando fuentes…",
+      "done": "Análisis de fuentes completado",
+      "cancelled": "Análisis cancelado; las fuentes incompletas no se puntúan",
+      "unavailable": "Análisis no disponible"
+    },
+    "fetch": {
+      "pending": "Pendiente",
+      "ok": "Texto disponible",
+      "unavailable": "No disponible",
+      "too-large": "Respuesta demasiado grande",
+      "blocked": "Bloqueado por el transporte seguro"
+    },
+    "limitations": {
+      "no-topic-vector": "No hay un vector Core Topic utilizable del último rastreo completado del proyecto; TBVA no disponible.",
+      "invalid-scale": "Escala de autoridad inválida; TBVA no disponible.",
+      "no-follow-links": "No hay enlaces follow para analizar.",
+      "source-text-or-authority-missing": "Algunas fuentes carecen de texto, vectores utilizables o autoridad del proveedor."
+    },
+    "polarity": {
+      "neutral": "Coaparición neutral; no es un respaldo",
+      "unclear": "Ambiguo: posible negación"
+    },
+    "pacing": "La protección de auditoría nativa también limita los inicios a 10 por minuto. La muestra puede tardar varios minutos; otras auditorías pueden reducir la disponibilidad."
   }
 }

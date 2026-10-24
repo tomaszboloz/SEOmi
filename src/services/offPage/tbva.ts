@@ -1,5 +1,6 @@
 import type { Vector } from '@/services/embeddings/types';
 import { cosine } from '@/services/embeddings/vector';
+import { usableVector } from './sources';
 
 export interface OffPageLink {
   sourceUrl: string;
@@ -35,7 +36,7 @@ const domainOf = (url: string): string => {
 };
 
 const weight = (link: OffPageLink, topic: Vector, scale: number): number | null => {
-  if (!link.vector || link.authority === null || link.vector.length !== topic.length) return null;
+  if (!usableVector(link.vector) || link.authority === null || !Number.isFinite(link.authority) || link.vector.length !== topic.length) return null;
   const auth = Math.min(1, Math.max(0, link.authority / scale));
   return auth * Math.max(0, cosine(link.vector, topic));
 };
@@ -45,7 +46,8 @@ export const computeTbva = (links: OffPageLink[], options: TbvaOptions): TbvaRep
   const limitations: string[] = [];
   const follow = links.filter((l) => l.follow);
   const base = { nofollow: links.length - follow.length, duplicateDomains: 0, counted: 0, unscored: 0, coverage: null, tbva: null };
-  if (!options.topic || !(options.scale > 0)) return { ...base, status: 'unavailable', limitations: [options.topic ? 'invalid-scale' : 'no-topic-vector'] };
+  if (!usableVector(options.topic)) return { ...base, status: 'unavailable', limitations: ['no-topic-vector'] };
+  if (!Number.isFinite(options.scale) || !(options.scale > 0)) return { ...base, status: 'unavailable', limitations: ['invalid-scale'] };
   if (!follow.length) return { ...base, status: 'unavailable', limitations: ['no-follow-links'] };
   const best = new Map<string, number>();
   let unscored = 0;

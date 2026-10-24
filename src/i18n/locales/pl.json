@@ -7936,5 +7936,47 @@
     },
     "coverage": "Pokrycie: {{value}}%",
     "unknownNote": "Nieznane dane nigdy nie są liczone jako zero."
+  },
+  "offPageSourcesUi": {
+    "analyze": "Analizuj źródła linków",
+    "cancel": "Anuluj",
+    "scope": "Tylko w sesji: do 25 linków follow, po jednym na domenę źródłową, od najwyższego autorytetu dostawcy. Skala autorytetu: 0–100; TBVA jest sumą, nie procentem ani Google PageRank. Limity: 3 żądania równolegle, 15 s limitu natywnego, 25 MiB odpowiedzi, 20 000 znaków widocznego tekstu na źródło.",
+    "provider": "Lokalny dostawca embeddingów",
+    "local": "Lokalny hash",
+    "ollama": "Lokalna Ollama",
+    "model": "Model embeddingów Ollama",
+    "scored": "Ocenione źródła: {{scored}} / {{total}} wybranych (nie cały profil linków).",
+    "sources": "Status pobrania źródeł",
+    "fetchedAt": "Pobrano: {{time}}",
+    "notFetched": "Nie pobrano",
+    "context": "Ekstrakcja nie zachowuje granic akapitów ani kotwic. Ograniczone bloki tekstu są przybliżeniem; każde trafienie ma linked=false, bo brak kontekstu linku w akapicie.",
+    "caveat": "Współwystępowanie nie jest rekomendacją. Homonimy mogą dawać fałszywe trafienia; wzmianki z negacją pozostają niejednoznaczne.",
+    "excerpts": "Fragmenty współcytowań",
+    "offset": "{{url}} — offset w wyodrębnionym tekście {{offset}}",
+    "missing": "Brak tekstu, poprawnych wektorów lub autorytetu oznacza dane częściowe/niedostępne, nie zero linków. Próbka nie obejmuje całego profilu.",
+    "status": {
+      "running": "Analizowanie źródeł…",
+      "done": "Analiza źródeł zakończona",
+      "cancelled": "Anulowano; niedokończone źródła nie są oceniane",
+      "unavailable": "Analiza niedostępna"
+    },
+    "fetch": {
+      "pending": "Oczekuje",
+      "ok": "Tekst dostępny",
+      "unavailable": "Niedostępne",
+      "too-large": "Zbyt duża odpowiedź",
+      "blocked": "Zablokowano przez bezpieczny transport"
+    },
+    "limitations": {
+      "no-topic-vector": "Brak poprawnego wektora Core Topic z ostatniego ukończonego crawlu projektu; TBVA jest niedostępne.",
+      "invalid-scale": "Nieprawidłowa skala autorytetu; TBVA jest niedostępne.",
+      "no-follow-links": "Brak linków follow do analizy.",
+      "source-text-or-authority-missing": "Część źródeł nie ma tekstu, poprawnych wektorów lub autorytetu dostawcy."
+    },
+    "polarity": {
+      "neutral": "Neutralne współwystępowanie; nie rekomendacja",
+      "unclear": "Niejednoznaczne: możliwa negacja"
+    },
+    "pacing": "Natywny audyt ogranicza też rozpoczęcia do 10 na minutę. Analiza próbki może potrwać kilka minut; inne audyty mogą zmniejszyć dostępność."
   }
 }

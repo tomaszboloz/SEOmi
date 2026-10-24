@@ -7936,5 +7936,47 @@
     },
     "coverage": "포함 비율: {{value}}%",
     "unknownNote": "알 수 없는 데이터는 절대 0으로 계산하지 않습니다."
+  },
+  "offPageSourcesUi": {
+    "analyze": "링크 출처 분석",
+    "cancel": "취소",
+    "scope": "세션에서만 사용: 제공자 권위 점수가 높은 순서로 출처 도메인당 하나씩 최대 25개의 follow 링크를 선택합니다. 권위 척도: 0–100. TBVA는 합계이며 백분율이나 Google PageRank가 아닙니다. 한도: 동시 요청 3개, 네이티브 제한 시간 15초, 응답 본문 25 MiB, 출처당 가시 텍스트 20,000자.",
+    "provider": "로컬 임베딩 제공자",
+    "local": "로컬 해시",
+    "ollama": "로컬 Ollama",
+    "model": "Ollama 임베딩 모델",
+    "scored": "평가한 출처: 선택한 {{total}}개 중 {{scored}}개(전체 백링크 프로필 아님).",
+    "sources": "출처 가져오기 상태",
+    "fetchedAt": "가져온 시간: {{time}}",
+    "notFetched": "아직 가져오지 않음",
+    "context": "추출 결과에는 문단이나 앵커 경계가 없습니다. 길이가 제한된 텍스트 블록을 추정하며, 문단 내 링크 문맥이 없어 모든 일치 항목은 linked=false입니다.",
+    "caveat": "동시 출현은 추천이 아닙니다. 동음이의어로 잘못 일치할 수 있으며 부정 표현이 있는 언급은 불명확합니다.",
+    "excerpts": "공동 인용 발췌",
+    "offset": "{{url}} — 추출 텍스트 오프셋 {{offset}}",
+    "missing": "텍스트, 유효한 벡터 또는 권위 정보가 없으면 증거가 부분적이거나 이용 불가한 것이며 백링크가 0개라는 뜻이 아닙니다. 이 표본은 전체 프로필이 아닙니다.",
+    "status": {
+      "running": "출처 분석 중…",
+      "done": "출처 분석 완료",
+      "cancelled": "분석 취소됨. 미완료 출처는 평가하지 않습니다",
+      "unavailable": "분석 이용 불가"
+    },
+    "fetch": {
+      "pending": "대기 중",
+      "ok": "텍스트 있음",
+      "unavailable": "이용 불가",
+      "too-large": "응답 본문이 너무 큼",
+      "blocked": "안전한 전송에서 차단됨"
+    },
+    "limitations": {
+      "no-topic-vector": "프로젝트의 최근 완료된 크롤링에 유효한 Core Topic 벡터가 없어 TBVA를 이용할 수 없습니다.",
+      "invalid-scale": "권위 척도가 잘못되어 TBVA를 이용할 수 없습니다.",
+      "no-follow-links": "분석할 follow 링크가 없습니다.",
+      "source-text-or-authority-missing": "일부 출처에 텍스트, 유효한 벡터 또는 제공자 권위 정보가 없습니다."
+    },
+    "polarity": {
+      "neutral": "중립적 동시 출현. 추천 아님",
+      "unclear": "불명확: 부정 표현 가능성"
+    },
+    "pacing": "네이티브 감사 보호 기능은 시작 횟수를 분당 10회로 제한합니다. 표본 처리에 몇 분이 걸릴 수 있으며 다른 감사로 가용성이 줄어들 수 있습니다."
   }
 }
