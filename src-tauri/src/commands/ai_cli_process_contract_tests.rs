@@ -1,64 +1,14 @@
 use super::{
-    auth::required_capabilities,
-    research::{resolve_ai_command, run_ai_cli_resolved, write_gemini_settings, ResearchDirectory},
-    resolution::ResolvedCommand,
+    research::{resolve_ai_command, run_ai_cli_resolved, write_gemini_settings},
+    tests::{executable_fixture::executable_fixture, fixture_process},
     version::version_check_resolved_with,
 };
-use std::{fs, path::PathBuf};
-use tokio::{process::Command, time::Duration};
+use std::fs;
+use tokio::time::Duration;
 use uuid::Uuid;
 
-fn executable_fixture(provider: &str) -> (ResearchDirectory, ResolvedCommand, PathBuf) {
-    let root = std::env::temp_dir().join(format!("seomi-contract-{}", Uuid::new_v4()));
-    fs::create_dir(&root).unwrap();
-    let flags = required_capabilities(provider).join(" ");
-    #[cfg(windows)]
-    {
-        let program = root.join("fixture.cmd");
-        fs::write(
-            &program,
-            format!("@echo off\r\nif \"%~1\"==\"--help\" (echo {flags}) else (echo answer)\r\n"),
-        )
-        .unwrap();
-        return (
-            ResearchDirectory(root.clone()),
-            ResolvedCommand {
-                program,
-                use_cmd_shell: true,
-            },
-            root,
-        );
-    }
-    #[cfg(not(windows))]
-    {
-        use std::os::unix::fs::PermissionsExt;
-        let program = root.join("fixture.sh");
-        fs::write(&program, format!("#!/bin/sh\nif [ \"$1\" = \"--help\" ]; then printf '%s' '{flags}'; else printf '%s' 'answer'; fi\n")).unwrap();
-        fs::set_permissions(&program, fs::Permissions::from_mode(0o700)).unwrap();
-        (
-            ResearchDirectory(root.clone()),
-            ResolvedCommand { program },
-            root,
-        )
-    }
-}
-
-fn fixture_process(unix: &str, windows: &str) -> Command {
-    #[cfg(not(windows))]
-    {
-        let _ = windows;
-        let mut process = Command::new("sh");
-        process.args(["-c", unix]);
-        process
-    }
-    #[cfg(windows)]
-    {
-        let _ = unix;
-        let mut process = Command::new("powershell.exe");
-        process.args(["-NoProfile", "-NonInteractive", "-Command", windows]);
-        process
-    }
-}
+const COMPLEX_PROMPT: &str =
+    "test prompt with Unicode: łąka, emoji 🔍, shell: $VAR \"quotes\" 'single' & | < > `cmd` ; %TEMP%";
 
 #[tokio::test]
 async fn resolved_runner_executes_hermetic_claude_and_gemini_fixtures() {
@@ -66,7 +16,7 @@ async fn resolved_runner_executes_hermetic_claude_and_gemini_fixtures() {
     assert_eq!(
         run_ai_cli_resolved(
             "claude".into(),
-            "hello".into(),
+            COMPLEX_PROMPT.into(),
             None,
             "claude",
             &command,
@@ -76,9 +26,13 @@ async fn resolved_runner_executes_hermetic_claude_and_gemini_fixtures() {
         .unwrap(),
         "answer"
     );
+    assert_eq!(
+        fs::read_to_string(root.join("prompt.txt")).unwrap(),
+        COMPLEX_PROMPT
+    );
     let error = run_ai_cli_resolved(
         "claude".into(),
-        "hello".into(),
+        COMPLEX_PROMPT.into(),
         Some("bad model".into()),
         "claude",
         &command,
@@ -88,11 +42,12 @@ async fn resolved_runner_executes_hermetic_claude_and_gemini_fixtures() {
     .unwrap_err();
     assert!(error.contains("unsupported characters"));
     drop(cleanup);
+
     let (cleanup, command, root) = executable_fixture("gemini");
     assert_eq!(
         run_ai_cli_resolved(
             "gemini".into(),
-            "hello".into(),
+            COMPLEX_PROMPT.into(),
             None,
             "gemini",
             &command,
@@ -101,6 +56,10 @@ async fn resolved_runner_executes_hermetic_claude_and_gemini_fixtures() {
         .await
         .unwrap(),
         "answer"
+    );
+    assert_eq!(
+        fs::read_to_string(root.join("prompt.txt")).unwrap(),
+        COMPLEX_PROMPT
     );
     drop(cleanup);
 }
@@ -136,7 +95,7 @@ async fn version_timeout_and_auth_process_failure_are_explicit() {
             if args.first().is_some_and(|arg| arg == "--version") {
                 fixture_process("printf '1.0'", "Write-Output '1.0'")
             } else {
-                Command::new(&missing)
+                tokio::process::Command::new(&missing)
             }
         })
         .await;
