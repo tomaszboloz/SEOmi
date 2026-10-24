@@ -7803,5 +7803,63 @@
       "add-evidence": "Aggiungi dati concreti con unità o fonti; nessuno rilevato.",
       "refocus-drift": "Il paragrafo all'offset {{offset}} esce dal tema: rimettilo a fuoco o rimuovilo."
     }
+  },
+  "logIntelUi": {
+    "title": "Analisi dei log",
+    "description": "Importa un log di accesso locale .log o .txt (massimo 500 MB). Si salvano solo aggregati, mai IP grezzi. La deduplicazione usa un’impronta SHA-256 campionata (primo/ultimo MiB e dimensione).",
+    "chooseFile": "Scegli log di accesso",
+    "cancel": "Annulla",
+    "clear": "Cancella log",
+    "importing": "Importazione del log",
+    "progress": "Righe: {{lines}} · Non valide: {{malformed}} · Non bot ignorati: {{ignoredNonBot}}",
+    "cancelled": "Importazione annullata.",
+    "duplicate": "Questo file è già stato importato.",
+    "complete": "Importazione completata.",
+    "storageFailed": "Impossibile aggiornare l’archiviazione locale. Le modifiche restano in memoria; i log salvati potrebbero rimanere invariati.",
+    "tooLarge": "Il file supera il limite di 500 MB.",
+    "invalidFile": "Scegli un file .log o .txt.",
+    "resumeRequired": "Riprendi il file incompleto o cancella i log prima di importarne un altro.",
+    "importFailed": "Impossibile leggere il file o calcolare l’hash. Riprova.",
+    "resume": "Seleziona lo stesso file per riprendere senza contare due volte le righe.",
+    "verificationNote": "L’identità del bot è una dichiarazione User-Agent, non una prova. I controlli di spoofing richiedono il resolver DNS desktop; questo pannello non interroga DNS. Le righe non verificate restano inconcludenti.",
+    "matrix": "Matrice di efficienza del crawl",
+    "coverage": "Copertura: {{days}} su {{period}} giorni",
+    "period": "Finestra (UTC): {{start}} – {{end}}",
+    "insufficient": "La copertura dei log non basta per conclusioni affidabili.",
+    "noScores": "L’ultimo crawl del progetto non ha punteggi TRS salvati per percorso. Non vengono inventati punteggi.",
+    "unavailable": "Non disponibile",
+    "empty": "Nessun percorso di log o crawl da mostrare.",
+    "previous": "Precedente",
+    "page": "Pagina {{current}} di {{total}}",
+    "next": "Successiva",
+    "loading": "Caricamento analisi dei log…",
+    "columns": {
+      "path": "Percorso",
+      "family": "Famiglia del bot",
+      "status": "Verifica",
+      "hits": "Accessi",
+      "errors": "Quota 4xx/5xx",
+      "verdict": "Verdetto"
+    },
+    "families": {
+      "googlebot": "Googlebot",
+      "bingbot": "Bingbot",
+      "gptbot": "GPTBot",
+      "perplexitybot": "PerplexityBot",
+      "none": "Nessuna evidenza di bot"
+    },
+    "statuses": {
+      "verified": "Verificato",
+      "claimed": "Dichiarato",
+      "spoofed": "Contraffatto",
+      "unknown": "Sconosciuto"
+    },
+    "verdicts": {
+      "waste": "Spreco",
+      "starvation": "Scansione insufficiente",
+      "ok": "OK",
+      "inconclusive": "Inconcludente",
+      "no-logs": "Nessun log"
+    }
   }
 }

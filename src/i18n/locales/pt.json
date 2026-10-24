@@ -7803,5 +7803,63 @@
       "add-evidence": "Adicione dados concretos com unidades ou fontes; nenhum foi detectado.",
       "refocus-drift": "O parágrafo no deslocamento {{offset}} foge do tema: refoque ou remova."
     }
+  },
+  "logIntelUi": {
+    "title": "Análise de logs",
+    "description": "Importe um log de acesso local .log ou .txt (máximo 500 MB). Apenas agregados são salvos, nunca IPs brutos. A deduplicação usa uma impressão SHA-256 por amostragem (primeiro/último MiB e tamanho).",
+    "chooseFile": "Escolher log de acesso",
+    "cancel": "Cancelar",
+    "clear": "Limpar logs",
+    "importing": "Importando log de acesso",
+    "progress": "Linhas: {{lines}} · Inválidas: {{malformed}} · Não bots ignorados: {{ignoredNonBot}}",
+    "cancelled": "Importação cancelada.",
+    "duplicate": "Este arquivo já foi importado.",
+    "complete": "Importação concluída.",
+    "storageFailed": "Não foi possível atualizar o armazenamento local. As alterações ficam apenas na memória; os logs salvos podem permanecer iguais.",
+    "tooLarge": "O arquivo excede o limite de 500 MB.",
+    "invalidFile": "Escolha um arquivo .log ou .txt.",
+    "resumeRequired": "Retome o arquivo incompleto ou limpe os logs antes de importar outro.",
+    "importFailed": "Não foi possível ler o arquivo ou calcular o hash. Tente novamente.",
+    "resume": "Selecione o mesmo arquivo para retomar sem contar linhas duas vezes.",
+    "verificationNote": "A identidade do bot é uma declaração de User-Agent, não uma prova. A verificação de falsificação exige o resolvedor DNS desktop; este painel não consulta DNS. Linhas não verificadas permanecem inconclusivas.",
+    "matrix": "Matriz de eficiência de rastreamento",
+    "coverage": "Cobertura: {{days}} de {{period}} dias",
+    "period": "Janela (UTC): {{start}} – {{end}}",
+    "insufficient": "A cobertura dos logs é insuficiente para conclusões confiáveis.",
+    "noScores": "O último rastreamento do projeto não tem pontuações TRS salvas por caminho. Nenhuma pontuação é inventada.",
+    "unavailable": "Indisponível",
+    "empty": "Nenhum caminho de log ou rastreamento para exibir.",
+    "previous": "Anterior",
+    "page": "Página {{current}} de {{total}}",
+    "next": "Próxima",
+    "loading": "Carregando análise de logs…",
+    "columns": {
+      "path": "Caminho",
+      "family": "Família do bot",
+      "status": "Verificação",
+      "hits": "Acessos",
+      "errors": "Proporção 4xx/5xx",
+      "verdict": "Conclusão"
+    },
+    "families": {
+      "googlebot": "Googlebot",
+      "bingbot": "Bingbot",
+      "gptbot": "GPTBot",
+      "perplexitybot": "PerplexityBot",
+      "none": "Sem evidência de bot"
+    },
+    "statuses": {
+      "verified": "Verificado",
+      "claimed": "Declarado",
+      "spoofed": "Falsificado",
+      "unknown": "Desconhecido"
+    },
+    "verdicts": {
+      "waste": "Desperdício",
+      "starvation": "Rastreamento insuficiente",
+      "ok": "OK",
+      "inconclusive": "Inconclusivo",
+      "no-logs": "Sem logs"
+    }
   }
 }

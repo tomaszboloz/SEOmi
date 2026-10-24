@@ -16,6 +16,12 @@
 ## Fixed
 - Topical Authority freshness exposes total, dated and undated page counts. Pages without a usable date remain unscored, with a notice translated into all 12 languages; older reports default missing counts to zero.
 - Direct TAS regression tests cover previously untested branches, including cannibalization grouping and canonical selection (issue #110).
+# SEOmi 0.4.26 — release notes
+
+## Added
+- Project-scoped Log intelligence in Crawl → Crawler readiness (issue #92, Layer A): lazy-loaded local access-log import with bounded chunk decoding, a 500 MB limit, sampled SHA-256 dedupe, progress, cancel/resume, validated local storage, and Clear logs.
+- Crawl Efficiency Matrix shows paths, bot families, verification status, hits, 4xx/5xx share, coverage window, and evidence-qualified verdicts using only saved per-path TRS scores from the latest project crawl. Missing scores or unverified bots remain inconclusive; absent logs are never reported as healthy.
+- All panel text is translated into 12 languages. Bot identities remain claimed/unknown without a desktop DNS resolver; the panel makes no DNS calls.
 
 # SEOmi 0.4.22 — release notes
 

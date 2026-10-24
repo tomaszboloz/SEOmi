@@ -7803,5 +7803,63 @@
       "add-evidence": "Añade datos concretos con unidades o fuentes; no se detectó ninguno.",
       "refocus-drift": "El párrafo en el desplazamiento {{offset}} se desvía del tema: enfócalo o elimínalo."
     }
+  },
+  "logIntelUi": {
+    "title": "Inteligencia de registros",
+    "description": "Importa un registro de acceso local .log o .txt (máximo 500 MB). Solo se guardan agregados, nunca IP sin procesar. La deduplicación usa una huella SHA-256 muestreada (primer/último MiB y tamaño).",
+    "chooseFile": "Elegir registro de acceso",
+    "cancel": "Cancelar",
+    "clear": "Borrar registros",
+    "importing": "Importando registro de acceso",
+    "progress": "Líneas: {{lines}} · Malformadas: {{malformed}} · No bots ignorados: {{ignoredNonBot}}",
+    "cancelled": "Importación cancelada.",
+    "duplicate": "Este archivo ya se importó.",
+    "complete": "Importación completa.",
+    "storageFailed": "No se pudo actualizar el almacenamiento local. Los cambios solo quedan en memoria; los registros guardados podrían no cambiar.",
+    "tooLarge": "El archivo supera el límite de 500 MB.",
+    "invalidFile": "Elige un archivo .log o .txt.",
+    "resumeRequired": "Reanuda el archivo incompleto o borra los registros antes de importar otro.",
+    "importFailed": "No se pudo leer el archivo o calcular su hash. Inténtalo de nuevo.",
+    "resume": "Selecciona el mismo archivo para reanudar sin contar líneas dos veces.",
+    "verificationNote": "La identidad del bot es una declaración de User-Agent, no una prueba. Detectar suplantaciones requiere el resolver DNS de escritorio; este panel no consulta DNS. Las filas no verificadas no son concluyentes.",
+    "matrix": "Matriz de eficiencia de rastreo",
+    "coverage": "Cobertura: {{days}} de {{period}} días",
+    "period": "Ventana (UTC): {{start}} – {{end}}",
+    "insufficient": "La cobertura del registro es insuficiente para conclusiones fiables.",
+    "noScores": "El último rastreo del proyecto no tiene puntuaciones TRS guardadas por ruta. No se infieren puntuaciones.",
+    "unavailable": "No disponible",
+    "empty": "No hay rutas de registros ni de rastreo.",
+    "previous": "Anterior",
+    "page": "Página {{current}} de {{total}}",
+    "next": "Siguiente",
+    "loading": "Cargando inteligencia de registros…",
+    "columns": {
+      "path": "Ruta",
+      "family": "Familia del bot",
+      "status": "Verificación",
+      "hits": "Accesos",
+      "errors": "Proporción 4xx/5xx",
+      "verdict": "Conclusión"
+    },
+    "families": {
+      "googlebot": "Googlebot",
+      "bingbot": "Bingbot",
+      "gptbot": "GPTBot",
+      "perplexitybot": "PerplexityBot",
+      "none": "Sin evidencia de bots"
+    },
+    "statuses": {
+      "verified": "Verificado",
+      "claimed": "Declarado",
+      "spoofed": "Suplantado",
+      "unknown": "Desconocido"
+    },
+    "verdicts": {
+      "waste": "Desperdicio",
+      "starvation": "Rastreo insuficiente",
+      "ok": "Correcto",
+      "inconclusive": "No concluyente",
+      "no-logs": "Sin registros"
+    }
   }
 }

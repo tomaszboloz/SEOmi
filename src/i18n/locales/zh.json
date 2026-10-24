@@ -7803,5 +7803,63 @@
       "add-evidence": "请添加带单位或来源的具体数据；未检测到任何数据。",
       "refocus-drift": "偏移量 {{offset}} 处的段落偏离主题：请重新聚焦或删除。"
     }
+  },
+  "logIntelUi": {
+    "title": "日志分析",
+    "description": "导入本地 .log 或 .txt 访问日志（最大500 MB）。仅保存聚合数据，不保存原始IP。去重使用抽样SHA-256指纹（首尾各1 MiB及文件大小）。",
+    "chooseFile": "选择访问日志",
+    "cancel": "取消",
+    "clear": "清除日志",
+    "importing": "正在导入访问日志",
+    "progress": "行数：{{lines}} · 格式错误：{{malformed}} · 已忽略非机器人：{{ignoredNonBot}}",
+    "cancelled": "导入已取消。",
+    "duplicate": "此文件已导入。",
+    "complete": "导入完成。",
+    "storageFailed": "无法更新本地存储。更改仅保留在内存中，已保存的日志可能未变。",
+    "tooLarge": "文件超过500 MB限制。",
+    "invalidFile": "请选择 .log 或 .txt 文件。",
+    "resumeRequired": "导入其他文件前请恢复未完成的文件或清除日志。",
+    "importFailed": "无法读取文件或计算哈希。请重试。",
+    "resume": "选择相同文件即可继续，且不会重复计算行数。",
+    "verificationNote": "机器人身份只是User-Agent声明，并非证据。伪装检查需要桌面DNS解析器；此面板不调用DNS。未经验证的行将保持无法确定状态。",
+    "matrix": "抓取效率矩阵",
+    "coverage": "覆盖：{{period}}天中的{{days}}天",
+    "period": "时间窗口（UTC）：{{start}} – {{end}}",
+    "insufficient": "日志覆盖不足，无法得出可靠结论。",
+    "noScores": "项目最新抓取没有保存各路径的TRS评分。不会推测评分。",
+    "unavailable": "不可用",
+    "empty": "没有可显示的日志或抓取路径。",
+    "previous": "上一页",
+    "page": "第{{current}}页，共{{total}}页",
+    "next": "下一页",
+    "loading": "正在加载日志分析…",
+    "columns": {
+      "path": "路径",
+      "family": "机器人类别",
+      "status": "验证状态",
+      "hits": "请求数",
+      "errors": "4xx/5xx占比",
+      "verdict": "结论"
+    },
+    "families": {
+      "googlebot": "Googlebot",
+      "bingbot": "Bingbot",
+      "gptbot": "GPTBot",
+      "perplexitybot": "PerplexityBot",
+      "none": "无机器人证据"
+    },
+    "statuses": {
+      "verified": "已验证",
+      "claimed": "自行声明",
+      "spoofed": "伪装",
+      "unknown": "未知"
+    },
+    "verdicts": {
+      "waste": "浪费",
+      "starvation": "抓取不足",
+      "ok": "正常",
+      "inconclusive": "无法确定",
+      "no-logs": "无日志"
+    }
   }
 }

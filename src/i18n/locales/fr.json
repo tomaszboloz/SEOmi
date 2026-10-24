@@ -7803,5 +7803,63 @@
       "add-evidence": "Ajoutez des données concrètes avec unités ou sources ; aucune détectée.",
       "refocus-drift": "Le paragraphe au décalage {{offset}} dérive du sujet : recentrez-le ou supprimez-le."
     }
+  },
+  "logIntelUi": {
+    "title": "Analyse des journaux",
+    "description": "Importez un journal local .log ou .txt (500 Mo maximum). Seuls les agrégats sont enregistrés, jamais les IP brutes. La déduplication utilise une empreinte SHA-256 échantillonnée (premier/dernier Mio et taille).",
+    "chooseFile": "Choisir un journal d’accès",
+    "cancel": "Annuler",
+    "clear": "Effacer les journaux",
+    "importing": "Importation du journal",
+    "progress": "Lignes : {{lines}} · Mal formées : {{malformed}} · Hors bots ignorées : {{ignoredNonBot}}",
+    "cancelled": "Importation annulée.",
+    "duplicate": "Ce fichier a déjà été importé.",
+    "complete": "Importation terminée.",
+    "storageFailed": "Impossible de mettre à jour le stockage local. Les modifications restent en mémoire ; les journaux enregistrés peuvent rester inchangés.",
+    "tooLarge": "Le fichier dépasse la limite de 500 Mo.",
+    "invalidFile": "Choisissez un fichier .log ou .txt.",
+    "resumeRequired": "Reprenez le fichier incomplet ou effacez les journaux avant d’en importer un autre.",
+    "importFailed": "Impossible de lire le fichier ou de calculer son empreinte. Réessayez.",
+    "resume": "Sélectionnez le même fichier pour reprendre sans compter deux fois les lignes.",
+    "verificationNote": "L’identité du bot est une déclaration User-Agent, pas une preuve. Les contrôles d’usurpation nécessitent le résolveur DNS de bureau ; ce panneau ne consulte pas le DNS. Les lignes non vérifiées restent indéterminées.",
+    "matrix": "Matrice d’efficacité du crawl",
+    "coverage": "Couverture : {{days}} jours sur {{period}}",
+    "period": "Fenêtre (UTC) : {{start}} – {{end}}",
+    "insufficient": "La couverture des journaux est insuffisante pour des conclusions fiables.",
+    "noScores": "Le dernier crawl du projet ne contient aucun score TRS enregistré par chemin. Aucun score n’est inventé.",
+    "unavailable": "Indisponible",
+    "empty": "Aucun chemin de journal ou de crawl à afficher.",
+    "previous": "Précédent",
+    "page": "Page {{current}} sur {{total}}",
+    "next": "Suivant",
+    "loading": "Chargement de l’analyse des journaux…",
+    "columns": {
+      "path": "Chemin",
+      "family": "Famille de bot",
+      "status": "Vérification",
+      "hits": "Accès",
+      "errors": "Part 4xx/5xx",
+      "verdict": "Verdict"
+    },
+    "families": {
+      "googlebot": "Googlebot",
+      "bingbot": "Bingbot",
+      "gptbot": "GPTBot",
+      "perplexitybot": "PerplexityBot",
+      "none": "Aucune preuve de bot"
+    },
+    "statuses": {
+      "verified": "Vérifié",
+      "claimed": "Déclaré",
+      "spoofed": "Usurpé",
+      "unknown": "Inconnu"
+    },
+    "verdicts": {
+      "waste": "Gaspillage",
+      "starvation": "Sous-exploration",
+      "ok": "Correct",
+      "inconclusive": "Indéterminé",
+      "no-logs": "Aucun journal"
+    }
   }
 }

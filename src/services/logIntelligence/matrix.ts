@@ -52,7 +52,7 @@ export const buildCrawlMatrix = (state: LogImportState, trsByPath: ReadonlyMap<s
     const trs = trsByPath.get(path) ?? null;
     if (noLogs) return { path, trs, hits: null, verdict: 'no-logs', linkReviewCandidate: false };
     const count = hits.get(path) ?? 0;
-    if (!sufficient) return { path, trs, hits: count, verdict: 'inconclusive', linkReviewCandidate: false };
+    if (!sufficient || trs === null) return { path, trs, hits: count, verdict: 'inconclusive', linkReviewCandidate: false };
     const waste = trs !== null && trs < o.wasteMaxTrs && count > o.wasteMinHits;
     const starved = trs !== null && count < o.starvationMaxHits;
     return { path, trs, hits: count, verdict: waste ? 'waste' : starved ? 'starvation' : 'ok', linkReviewCandidate: waste || starved };
