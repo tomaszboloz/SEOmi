@@ -7665,6 +7665,7 @@
   },
   "parityUi": {
     "title": "国际对等性",
+    "summary": "已覆盖 {{covered}}，较浅 {{shallow}}，缺失 {{missing}}，有意本地化 {{local}}。",
     "inconclusive": "无法判定：现有数据不足以评估对等性。",
     "gap": {
       "no-reference-coverage": "参考语言没有主题覆盖数据。",

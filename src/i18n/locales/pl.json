@@ -7665,6 +7665,7 @@
   },
   "parityUi": {
     "title": "Parytet międzynarodowy",
+    "summary": "Pokryte: {{covered}}, płytkie: {{shallow}}, brakujące: {{missing}}, celowo lokalne: {{local}}.",
     "inconclusive": "Brak rozstrzygnięcia: z dostępnych danych nie da się ocenić parytetu.",
     "gap": {
       "no-reference-coverage": "Język referencyjny nie ma danych o pokryciu tematów.",

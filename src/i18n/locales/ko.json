@@ -7665,6 +7665,7 @@
   },
   "parityUi": {
     "title": "국제 패리티",
+    "summary": "충족 {{covered}}개, 얕음 {{shallow}}개, 누락 {{missing}}개, 의도적 로컬 {{local}}개.",
     "inconclusive": "판단 불가: 사용 가능한 데이터로는 패리티를 판단할 수 없습니다.",
     "gap": {
       "no-reference-coverage": "기준 언어에 주제 커버리지 데이터가 없습니다.",

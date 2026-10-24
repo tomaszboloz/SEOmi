@@ -7665,6 +7665,7 @@
   },
   "parityUi": {
     "title": "国際パリティ",
+    "summary": "網羅 {{covered}} 件、浅い {{shallow}} 件、不足 {{missing}} 件、意図的なローカル {{local}} 件。",
     "inconclusive": "判定不能: 利用できるデータではパリティを判断できません。",
     "gap": {
       "no-reference-coverage": "基準言語にトピックのカバレッジデータがありません。",

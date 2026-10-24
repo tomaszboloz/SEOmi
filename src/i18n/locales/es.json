@@ -7665,6 +7665,7 @@
   },
   "parityUi": {
     "title": "Paridad internacional",
+    "summary": "{{covered}} cubiertos, {{shallow}} superficiales, {{missing}} ausentes, {{local}} locales a propósito.",
     "inconclusive": "No concluyente: con los datos disponibles no se puede juzgar la paridad.",
     "gap": {
       "no-reference-coverage": "El idioma de referencia no tiene datos de cobertura de temas.",

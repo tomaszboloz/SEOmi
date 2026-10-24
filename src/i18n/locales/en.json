@@ -7665,6 +7665,7 @@
   },
   "parityUi": {
     "title": "International parity",
+    "summary": "{{covered}} covered, {{shallow}} shallow, {{missing}} missing, {{local}} intentionally local.",
     "inconclusive": "Inconclusive: parity cannot be judged from the data available.",
     "gap": {
       "no-reference-coverage": "The reference language has no topic coverage data.",

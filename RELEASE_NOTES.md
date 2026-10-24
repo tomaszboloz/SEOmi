@@ -1,3 +1,9 @@
+# SEOmi 0.4.30 — release notes
+
+## Added
+
+- Hreflang parity (issue #99): topics show their cluster label instead of the internal id, and a status summary (covered, shallow, missing, intentionally local) appears above the table when the report is ready. 12 languages and tests.
+
 # SEOmi 0.4.29 — release notes
 
 ## Changed
