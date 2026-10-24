@@ -1,3 +1,11 @@
+# SEOmi 0.4.27 — release notes
+
+## Added
+
+- Media tab: ALT quality per image (issue #96, text-only part). Uses the existing `checkAlt` rules (missing, empty, file-name-like, generic, too long, repeats caption, unrelated to context); an explicit empty ALT is shown as decorative. A summary line counts checked images and images with issues. A neutral note lists OCR, CLIP alignment and transcripts as unavailable without a local model and states that this lowers no score.
+- CSV: the crawl images export and the single-page audit images export gain an `alt_issues` column at the end (semicolon-joined codes); existing columns keep their order.
+- 12 languages (`altCheckUi`) and tests for the labels, notice, summary, column order, both CSV exports and locale completeness.
+
 # SEOmi 0.4.22 — release notes
 
 ## Added

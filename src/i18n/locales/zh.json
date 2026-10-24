@@ -1,4 +1,30 @@
 {
+  "altCheckUi": {
+    "column": "ALT 质量",
+    "csvColumn": "alt_issues",
+    "summary": "已检查 {{checked}} 张图片，其中 {{issues}} 张存在 ALT 问题。",
+    "issues": {
+      "missing": "缺少 ALT",
+      "empty": "ALT 为空",
+      "filename": "看起来像文件名",
+      "generic": "措辞笼统",
+      "too-long": "过长",
+      "repeats-caption": "重复说明文字",
+      "unrelated-to-context": "与上下文无关"
+    },
+    "noIssues": "没有 ALT 问题",
+    "decorative": "装饰性（ALT 为空）",
+    "visualNotice": "视觉分析需要本地模型，此版本中不可用。",
+    "analyses": {
+      "ocr": "OCR",
+      "clip-alignment": "CLIP 对齐",
+      "transcript": "转录"
+    },
+    "statuses": {
+      "unavailable": "不可用"
+    },
+    "noScorePenalty": "这不会降低任何分数。"
+  },
   "teamPanelUi": {
     "title": "团队模式与审计日志",
     "description": "选择谁以何种角色操作。每次变更都会追加到本地防篡改的哈希链审计日志中。",

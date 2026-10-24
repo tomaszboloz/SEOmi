@@ -2,6 +2,8 @@ import type { TFunction } from 'i18next';
 import type { CrawledImageResourceCheck } from '@/types';
 import type { FlatCrawlImageItem } from './mediaTabTypes';
 import { cell, formatNumber } from '../crawlResultsHelpers';
+import { checkAlt } from '@/services/multimodal';
+import { CrawlImageAltQuality } from './CrawlImageAltQuality';
 
 interface CrawlMediaImageRowProps {
   item: FlatCrawlImageItem;
@@ -114,6 +116,7 @@ export const CrawlMediaImageRow: React.FC<CrawlMediaImageRowProps> = ({ item, t 
       <td className={cell}>
         {image.lazy_loaded ? t('crawl.ui.lazy') : t('crawl.ui.standard')}
       </td>
+      <td className={cell}><CrawlImageAltQuality verdict={checkAlt({ src: image.src, alt: image.alt })} t={t} /></td>
     </tr>
   );
 };

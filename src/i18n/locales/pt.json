@@ -1,4 +1,30 @@
 {
+  "altCheckUi": {
+    "column": "Qualidade do ALT",
+    "csvColumn": "alt_issues",
+    "summary": "{{checked}} imagens verificadas, {{issues}} com problemas de ALT.",
+    "issues": {
+      "missing": "ALT em falta",
+      "empty": "ALT vazio",
+      "filename": "Parece um nome de ficheiro",
+      "generic": "Redação genérica",
+      "too-long": "Demasiado longo",
+      "repeats-caption": "Repete a legenda",
+      "unrelated-to-context": "Sem relação com o contexto"
+    },
+    "noIssues": "Sem problemas de ALT",
+    "decorative": "Decorativa (ALT vazio)",
+    "visualNotice": "A análise visual requer um modelo local e não está disponível nesta versão.",
+    "analyses": {
+      "ocr": "OCR",
+      "clip-alignment": "Alinhamento CLIP",
+      "transcript": "Transcrições"
+    },
+    "statuses": {
+      "unavailable": "Indisponível"
+    },
+    "noScorePenalty": "Isto não reduz nenhuma pontuação."
+  },
   "teamPanelUi": {
     "title": "Modo de equipa e registo de auditoria",
     "description": "Escolha quem atua e com que função. Cada alteração é acrescentada a um registo de auditoria local, com cadeia de hashes à prova de adulteração.",

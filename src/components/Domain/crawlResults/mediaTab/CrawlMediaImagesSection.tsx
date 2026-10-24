@@ -5,6 +5,8 @@ import { cell, tableHead } from '../crawlResultsHelpers';
 import { Empty, Table } from '../CrawlViewPrimitives';
 import { flattenPageImages } from './mediaTabTypes';
 import { CrawlMediaImageRow } from './CrawlMediaImageRow';
+import { checkAlt } from '@/services/multimodal';
+import { CrawlModelAnalysisNotice } from './CrawlModelAnalysisNotice';
 
 interface CrawlMediaImagesSectionProps {
   pages: CrawledPageSummary[];
@@ -16,6 +18,7 @@ export const CrawlMediaImagesSection: React.FC<CrawlMediaImagesSectionProps> = (
   t,
 }) => {
   const images = useMemo(() => flattenPageImages(pages), [pages]);
+  const withIssues = images.filter(({ image }) => checkAlt({ src: image.src, alt: image.alt }).issues.length > 0).length;
 
   const headers = [
     t('crawl.ui.sourcePage'),
@@ -26,6 +29,7 @@ export const CrawlMediaImagesSection: React.FC<CrawlMediaImagesSectionProps> = (
     t('crawl.ui.formatHint'),
     t('crawl.ui.dimensionsSource'),
     t('crawl.ui.loading'),
+    t('altCheckUi.column'),
   ];
 
   return (
@@ -34,6 +38,8 @@ export const CrawlMediaImagesSection: React.FC<CrawlMediaImagesSectionProps> = (
         {t('crawl.ui.imagesCount', { count: images.length })}
       </h3>
       <p className="mb-2 text-[11px] text-slate-500">{t('crawl.ui.imagesDescription')}</p>
+      <p className="mb-2 text-xs text-slate-400">{t('altCheckUi.summary', { checked: images.length, issues: withIssues })}</p>
+      <CrawlModelAnalysisNotice t={t} />
       {images.length ? (
         <Table minWidth="min-w-[1120px]">
           <thead className={tableHead}>

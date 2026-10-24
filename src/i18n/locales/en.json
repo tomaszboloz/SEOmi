@@ -1,4 +1,30 @@
 {
+  "altCheckUi": {
+    "column": "ALT quality",
+    "csvColumn": "alt_issues",
+    "summary": "{{checked}} images checked, {{issues}} with ALT issues.",
+    "issues": {
+      "missing": "Missing ALT",
+      "empty": "Empty ALT",
+      "filename": "Looks like a file name",
+      "generic": "Generic wording",
+      "too-long": "Too long",
+      "repeats-caption": "Repeats the caption",
+      "unrelated-to-context": "Unrelated to context"
+    },
+    "noIssues": "No ALT issues",
+    "decorative": "Decorative (empty ALT)",
+    "visualNotice": "Visual analysis needs a local model and is not available in this build.",
+    "analyses": {
+      "ocr": "OCR",
+      "clip-alignment": "CLIP alignment",
+      "transcript": "Transcripts"
+    },
+    "statuses": {
+      "unavailable": "Unavailable"
+    },
+    "noScorePenalty": "This does not lower any score."
+  },
   "teamPanelUi": {
     "title": "Team mode and audit trail",
     "description": "Choose who is acting and in which role. Every change is appended to a tamper-evident, hash-chained audit log stored locally.",

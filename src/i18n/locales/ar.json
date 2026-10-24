@@ -1,4 +1,30 @@
 {
+  "altCheckUi": {
+    "column": "جودة ALT",
+    "csvColumn": "alt_issues",
+    "summary": "تم فحص {{checked}} صورة، منها {{issues}} بها مشكلات ALT.",
+    "issues": {
+      "missing": "ALT مفقود",
+      "empty": "ALT فارغ",
+      "filename": "يشبه اسم ملف",
+      "generic": "صياغة عامة",
+      "too-long": "طويل جدًا",
+      "repeats-caption": "يكرر التعليق",
+      "unrelated-to-context": "لا علاقة له بالسياق"
+    },
+    "noIssues": "لا مشكلات في ALT",
+    "decorative": "زخرفية (ALT فارغ)",
+    "visualNotice": "يتطلب التحليل البصري نموذجًا محليًا وهو غير متاح في هذا الإصدار.",
+    "analyses": {
+      "ocr": "OCR",
+      "clip-alignment": "محاذاة CLIP",
+      "transcript": "النصوص المفرّغة"
+    },
+    "statuses": {
+      "unavailable": "غير متاح"
+    },
+    "noScorePenalty": "هذا لا يخفض أي درجة."
+  },
   "teamPanelUi": {
     "title": "وضع الفريق وسجل التدقيق",
     "description": "اختر من يعمل وبأي دور. تُضاف كل تغييرات إلى سجل تدقيق محلي محمي بسلسلة تجزئة يكشف أي تلاعب.",

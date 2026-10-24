@@ -1,4 +1,30 @@
 {
+  "altCheckUi": {
+    "column": "Qualité de l'ALT",
+    "csvColumn": "alt_issues",
+    "summary": "{{checked}} images vérifiées, {{issues}} avec des problèmes d'ALT.",
+    "issues": {
+      "missing": "ALT manquant",
+      "empty": "ALT vide",
+      "filename": "Ressemble à un nom de fichier",
+      "generic": "Formulation générique",
+      "too-long": "Trop long",
+      "repeats-caption": "Répète la légende",
+      "unrelated-to-context": "Sans rapport avec le contexte"
+    },
+    "noIssues": "Aucun problème d'ALT",
+    "decorative": "Décorative (ALT vide)",
+    "visualNotice": "L'analyse visuelle nécessite un modèle local et n'est pas disponible dans cette version.",
+    "analyses": {
+      "ocr": "OCR",
+      "clip-alignment": "Alignement CLIP",
+      "transcript": "Transcriptions"
+    },
+    "statuses": {
+      "unavailable": "Indisponible"
+    },
+    "noScorePenalty": "Cela n'abaisse aucun score."
+  },
   "teamPanelUi": {
     "title": "Mode équipe et journal d'audit",
     "description": "Choisissez qui agit et avec quel rôle. Chaque changement est ajouté à un journal d'audit local, chaîné par hachage et inviolable.",

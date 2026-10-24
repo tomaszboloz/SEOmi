@@ -1,4 +1,30 @@
 {
+  "altCheckUi": {
+    "column": "ALTの品質",
+    "csvColumn": "alt_issues",
+    "summary": "{{checked}}件の画像を確認、{{issues}}件にALTの問題があります。",
+    "issues": {
+      "missing": "ALTなし",
+      "empty": "ALTが空",
+      "filename": "ファイル名のように見える",
+      "generic": "一般的すぎる表現",
+      "too-long": "長すぎる",
+      "repeats-caption": "キャプションの繰り返し",
+      "unrelated-to-context": "文脈と無関係"
+    },
+    "noIssues": "ALTの問題なし",
+    "decorative": "装飾用（ALTが空）",
+    "visualNotice": "視覚分析にはローカルモデルが必要で、このバージョンでは利用できません。",
+    "analyses": {
+      "ocr": "OCR",
+      "clip-alignment": "CLIPの整合性",
+      "transcript": "文字起こし"
+    },
+    "statuses": {
+      "unavailable": "利用不可"
+    },
+    "noScorePenalty": "スコアが下がることはありません。"
+  },
   "teamPanelUi": {
     "title": "チームモードと監査ログ",
     "description": "誰がどの役割で操作するかを選択します。すべての変更は、改ざん検知可能なハッシュチェーン付きのローカル監査ログに追記されます。",
