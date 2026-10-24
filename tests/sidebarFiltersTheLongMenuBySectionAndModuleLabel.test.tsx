@@ -1,13 +1,20 @@
-import { act, fireEvent, render, screen, waitFor } from '@testing-library/react';
-import { beforeEach, describe, expect, it, vi } from 'vitest';
+import { act, cleanup, fireEvent, render, screen, waitFor } from '@testing-library/react';
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { Sidebar } from '@/components/Layout/Sidebar';
+import i18n from '@/i18n';
 
 import { useAuditStore } from '@/stores/auditStore';
 import { useProjectStore } from '@/stores/projectStore';
 import { useUIStore } from '@/stores/uiStore';
 
 describe('workspace sidebar information architecture', () => {
-beforeEach(() => {
+  afterEach(() => {
+    cleanup();
+  });
+
+  beforeEach(async () => {
+    cleanup();
+    await i18n.changeLanguage('en');
     localStorage.clear();
     useProjectStore.setState({
       projects: [{ id: 'sidebar-project', name: 'Sidebar project', createdAt: '2026-09-23T00:00:00.000Z', lastOpenedAt: '2026-09-23T00:00:00.000Z' }],
