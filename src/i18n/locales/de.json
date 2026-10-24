@@ -7637,6 +7637,9 @@
   },
   "prePublishUi": {
     "title": "Prüfung vor Veröffentlichung",
+    "copy": "Bericht kopieren",
+    "copied": "Bericht kopiert.",
+    "copyFailed": "Der Bericht konnte nicht kopiert werden.",
     "verdict": {
       "insufficient": "Zu wenig Daten, um diesen Entwurf zu beurteilen.",
       "blocked": "Noch nicht veröffentlichen: Der Entwurf dupliziert eine bestehende Seite.",

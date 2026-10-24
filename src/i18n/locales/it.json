@@ -7637,6 +7637,9 @@
   },
   "prePublishUi": {
     "title": "Controllo prima della pubblicazione",
+    "copy": "Copia il rapporto",
+    "copied": "Rapporto copiato.",
+    "copyFailed": "Impossibile copiare il rapporto.",
     "verdict": {
       "insufficient": "Dati insufficienti per valutare questa bozza.",
       "blocked": "Non pubblicare ancora: la bozza duplica una pagina esistente.",
