@@ -8,4 +8,4 @@ export { findCannibalization, cannibalizationIndex, overlapsWith, PRE_PUBLISH_CO
 export { buildGapBrief, buildAuthorityPrompt, type GapBrief } from './brief';
 export { checkDraftOverlap, type DraftOverlap } from './draft';
 export { isGenericAnchor } from './genericAnchors';
-export { measureFreshness, FRESH_DAYS } from './freshness';
+export { measureFreshness, normalizeFreshness, FRESH_DAYS } from './freshness';

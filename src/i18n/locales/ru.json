@@ -7071,6 +7071,9 @@
       "axisX": "SFS",
       "axisY": "TAS"
     },
+    "freshness": {
+      "undated": "У {{undated}} из {{total}} страниц нет даты, и они не оцениваются"
+    },
     "pillars": {
       "title": "Составляющие Topical Authority Score",
       "tcr": "Охват темы",

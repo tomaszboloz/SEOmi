@@ -7071,6 +7071,9 @@
       "axisX": "SFS",
       "axisY": "TAS"
     },
+    "freshness": {
+      "undated": "전체 {{total}}개 페이지 중 {{undated}}개는 날짜가 없어 평가되지 않습니다"
+    },
     "pillars": {
       "title": "Topical Authority Score 구성 요소",
       "tcr": "주제 커버리지",

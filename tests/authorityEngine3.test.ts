@@ -64,7 +64,7 @@ describe('freshness and templates', () => {
     expect(fresh.dated).toBe(4);
     expect(fresh.stale).toEqual([`https://${OWN_HOST}/espresso/machine-review`]);
     expect(fresh.ratio).toBe(0.75);
-    expect(measureFreshness([], NOW)).toEqual({ ratio: null, dated: 0, stale: [] });
+    expect(measureFreshness([], NOW)).toEqual({ ratio: null, total: 0, dated: 0, undated: 0, stale: [] });
   });
 
   it('collapses programmatic clones to the strongest page', () => {

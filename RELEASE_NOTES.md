@@ -1,3 +1,9 @@
+# SEOmi 0.4.25 — release notes
+
+## Fixed
+- Topical Authority freshness exposes total, dated and undated page counts. Pages without a usable date remain unscored, with a notice translated into all 12 languages; older reports default missing counts to zero.
+- Direct TAS regression tests cover previously untested branches, including cannibalization grouping and canonical selection (issue #110).
+
 # SEOmi 0.4.22 — release notes
 
 ## Added

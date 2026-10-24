@@ -7071,6 +7071,9 @@
       "axisX": "SFS",
       "axisY": "TAS"
     },
+    "freshness": {
+      "undated": "{{undated}} z {{total}} stron nie ma daty i nie podlega ocenie"
+    },
     "pillars": {
       "title": "Składowe Topical Authority Score",
       "tcr": "Pokrycie tematu",
