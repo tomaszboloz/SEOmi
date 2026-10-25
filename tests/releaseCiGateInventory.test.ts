@@ -99,15 +99,16 @@ describe('release-ci-gate-inventory pagination and schema validation', () => {
     const leakedCalls: string[] = [];
     const untrustedFetch = async (url: string | URL | Request, opts?: RequestInit) => {
       const u = String(url);
+      const parsed = new URL(u);
       leakedCalls.push(u);
-      if (opts?.headers && 'Authorization' in opts.headers && u.includes('evil.com')) {
+      if (opts?.headers && 'Authorization' in opts.headers && parsed.hostname === 'evil.com') {
         throw new Error('TOKEN LEAKED TO EVIL HOST');
       }
       return resp([], 200, { Link: '<https://evil.com/repos/owner/repo/releases?page=2>; rel="next"' });
     };
     await expect(listAllReleases({ repository: repo, token: 'secret-token', fetchImpl: untrustedFetch }))
       .rejects.toThrow('Untrusted pagination next URL: https://evil.com/repos/owner/repo/releases?page=2');
-    expect(leakedCalls.some((c) => c.includes('evil.com'))).toBe(false);
+    expect(leakedCalls.some((c) => new URL(c).hostname === 'evil.com')).toBe(false);
   });
 
   it('successfully paginates multi-page release inventory without conflict', async () => {

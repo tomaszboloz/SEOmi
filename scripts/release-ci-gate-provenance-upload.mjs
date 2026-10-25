@@ -1,7 +1,9 @@
 import { createHash } from 'node:crypto';
-import { readFileSync, writeFileSync, statSync, existsSync, realpathSync } from 'node:fs';
+import { statSync, existsSync, realpathSync } from 'node:fs';
 import { isAbsolute } from 'node:path';
 import { isPathWithin } from './release-artifact-paths.mjs';
+import { readReleaseFile, writeReleaseFileAtomically } from './release-atomic-file.mjs';
+import { validateGithubApiBase, validateRepository, validateReleaseId } from './release-input-validation.mjs';
 
 export const PROVENANCE_METADATA_NAMES = Object.freeze(
   new Set(['sbom-node.json', 'sbom-rust.json', 'SHA256SUMS.txt', 'release-provenance.json'])
@@ -18,6 +20,8 @@ export const fetchOrVerifyAsset = async ({
   asset, name, artifactDir, realDir, headers, apiUrl, repository, fetchImpl = fetch,
 }) => {
   if (name.includes('..') || isAbsolute(name)) throw new Error(`Path traversal rejected: ${name}`);
+  apiUrl = validateGithubApiBase(apiUrl); repository = validateRepository(repository);
+  const assetId = validateReleaseId(asset?.id);
   const rawDigest = asset?.digest ?? asset?.sha256;
   let expDigest = null;
   if (rawDigest !== undefined && rawDigest !== null) {
@@ -31,21 +35,23 @@ export const fetchOrVerifyAsset = async ({
   if (existsSync(p)) {
     const realFile = realpathSync(p);
     if (!isPathWithin(realDir, realFile)) throw new Error(`Path escape detected: ${name}`);
-    if (asset.size !== undefined && statSync(p).size !== asset.size) throw new Error(`Cache tamper detected for ${name}: local size mismatch`);
+    const cached = readReleaseFile(p, realDir);
+    if (asset.size !== undefined && cached.length !== asset.size) throw new Error(`Cache tamper detected for ${name}: local size mismatch`);
     if (expDigest) {
-      const localHash = createHash('sha256').update(readFileSync(p)).digest('hex');
+      const localHash = createHash('sha256').update(cached).digest('hex');
       if (localHash !== expDigest) throw new Error(`Cache tamper detected for ${name}: local hash ${localHash} !== ${expDigest}`);
-      return;
+      return { sha256: localHash, size: cached.length };
     }
   }
 
-  const aRes = await fetchImpl(`${apiUrl}/repos/${repository}/releases/assets/${asset.id}`, { headers: { ...headers, Accept: 'application/octet-stream' } });
+  const aRes = await fetchImpl(`${apiUrl}/repos/${repository}/releases/assets/${assetId}`, { headers: { ...headers, Accept: 'application/octet-stream' } });
   if (!aRes.ok) throw new Error(`Download failed for ${name}: HTTP ${aRes.status}`);
   const buf = Buffer.from(await aRes.arrayBuffer());
   if (asset.size !== undefined && buf.length !== asset.size) throw new Error(`Downloaded asset size mismatch for ${name}`);
   const dlHash = createHash('sha256').update(buf).digest('hex');
   if (expDigest && dlHash !== expDigest) throw new Error(`Downloaded asset digest mismatch for ${name}: ${dlHash} !== ${expDigest}`);
-  writeFileSync(p, buf);
+  writeReleaseFileAtomically(p, buf);
+  return { sha256: dlHash, size: buf.length };
 };
 
 export const uploadReleaseAsset = async ({
@@ -54,18 +60,21 @@ export const uploadReleaseAsset = async ({
   fetchImpl = fetch, existingAssets = [],
 }) => {
   if (!PROVENANCE_METADATA_NAMES.has(name)) throw new Error(`Managed metadata asset disallowed: ${name}`);
+  apiUrl = validateGithubApiBase(apiUrl); uploadUrl = validateGithubApiBase(uploadUrl, true);
+  repository = validateRepository(repository); releaseId = validateReleaseId(releaseId);
   const headers = { Authorization: `Bearer ${token}` };
   const contentBuf = Buffer.isBuffer(content) ? content : Buffer.from(content, 'utf8');
   const existing = (existingAssets ?? []).find((a) => a.name === name);
   if (existing) {
+    const existingId = validateReleaseId(existing.id);
     if (existing.size === contentBuf.length) {
-      const getRes = await fetchImpl(`${apiUrl}/repos/${repository}/releases/assets/${existing.id}`, { headers: { ...headers, Accept: 'application/octet-stream' } });
+      const getRes = await fetchImpl(`${apiUrl}/repos/${repository}/releases/assets/${existingId}`, { headers: { ...headers, Accept: 'application/octet-stream' } });
       if (getRes.ok) {
         const existingBuf = Buffer.from(await getRes.arrayBuffer());
         if (Buffer.compare(existingBuf, contentBuf) === 0) return existing;
       }
     }
-    await fetchImpl(`${apiUrl}/repos/${repository}/releases/assets/${existing.id}`, { method: 'DELETE', headers });
+    await fetchImpl(`${apiUrl}/repos/${repository}/releases/assets/${existingId}`, { method: 'DELETE', headers });
   }
   const postUrl = `${uploadUrl}/repos/${repository}/releases/${releaseId}/assets?name=${encodeURIComponent(name)}`;
   const res = await fetchImpl(postUrl, { method: 'POST', headers: { ...headers, 'Content-Type': contentType }, body: content });
@@ -75,7 +84,7 @@ export const uploadReleaseAsset = async ({
       if (relRes.ok) {
         const found = ((await relRes.json()).assets ?? []).find((a) => a.name === name);
         if (found) {
-          const dlRes = await fetchImpl(`${apiUrl}/repos/${repository}/releases/assets/${found.id}`, { headers: { ...headers, Accept: 'application/octet-stream' } });
+          const dlRes = await fetchImpl(`${apiUrl}/repos/${repository}/releases/assets/${validateReleaseId(found.id)}`, { headers: { ...headers, Accept: 'application/octet-stream' } });
           if (dlRes.ok && Buffer.compare(Buffer.from(await dlRes.arrayBuffer()), contentBuf) === 0) return found;
         }
       }

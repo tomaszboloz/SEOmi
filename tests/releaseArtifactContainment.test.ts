@@ -57,7 +57,7 @@ describe('canonical release artifact path containment', () => {
         artifactDir: dir, realDir: realpathSync(dir), headers: {}, apiUrl: 'https://api.github.com',
         repository: 'owner/repo', fetchImpl,
       };
-      await expect(fetchOrVerifyAsset({ ...options, name: 'app.exe' })).resolves.toBeUndefined();
+      await expect(fetchOrVerifyAsset({ ...options, name: 'app.exe' })).resolves.toEqual({ sha256: digest, size: bytes.length });
       await expect(fetchOrVerifyAsset({ ...options, name: 'escape/app.exe' })).rejects.toThrow('Path escape');
       expect(fetchImpl).not.toHaveBeenCalled();
     } finally { rmSync(base, { recursive: true, force: true }); }

@@ -1,5 +1,5 @@
 import { createHash } from 'node:crypto';
-import { readFileSync, writeFileSync, mkdirSync, rmSync, symlinkSync } from 'node:fs';
+import { readFileSync, writeFileSync, mkdirSync, mkdtempSync, rmSync, symlinkSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { describe, expect, it } from 'vitest';
@@ -63,20 +63,20 @@ function mockRelease(dir: string, {
 
 describe('release-ci-gate-provenance runtime & contract verification', () => {
   it('generates checksums and rejects symlink escapes, duplicates, and traversal', () => {
-    const dir = join(tmpdir(), `prov-test-${Date.now()}`); mkdirSync(dir, { recursive: true });
+    const root = mkdtempSync(join(tmpdir(), 'prov-test-')), dir = join(root, 'artifacts'); mkdirSync(dir);
     try {
-      const f1 = join(dir, 'test.json'), f2 = join(dir, 'app.exe'), outside = join(dir, '..', `out-${Date.now()}.txt`);
+      const f1 = join(dir, 'test.json'), f2 = join(dir, 'app.exe'), outside = join(root, 'outside', 'out.txt');
+      mkdirSync(join(root, 'outside'));
       writeFileSync(f1, '{"v":"0.4.40"}'); writeFileSync(f2, 'bin'); writeFileSync(outside, 'out'); symlinkSync(outside, join(dir, 'escape.json'));
       expect(generateArtifactChecksums({ artifactDir: dir, files: ['test.json', 'app.exe'] })).toContain('test.json');
       expect(() => generateArtifactChecksums({ artifactDir: dir, files: ['escape.json'] })).toThrow('Symlink escape');
       expect(() => generateArtifactChecksums({ artifactDir: dir, files: ['test.json', 'test.json'] })).toThrow('Duplicate checksum');
       expect(() => generateArtifactChecksums({ artifactDir: dir, files: ['../secret.txt'] })).toThrow('Path traversal');
-      rmSync(outside, { force: true });
-    } finally { rmSync(dir, { recursive: true, force: true }); }
+    } finally { rmSync(root, { recursive: true, force: true }); }
   });
 
   it('validates provenance contract and detects disk mutations and malformed SBOM arrays', () => {
-    const dir = join(tmpdir(), `prov-mut-${Date.now()}`); mkdirSync(dir, { recursive: true });
+    const root = mkdtempSync(join(tmpdir(), 'prov-mut-')), dir = join(root, 'artifacts'); mkdirSync(dir);
     try {
       for (const a of sampleArtifacts) writeFileSync(join(dir, a.name), 'content');
       const artifacts = sampleArtifacts.map((a) => ({ ...a, size: 7, sha256: 'a'.repeat(64) }));
@@ -85,7 +85,7 @@ describe('release-ci-gate-provenance runtime & contract verification', () => {
       writeFileSync(join(dir, artifacts[0].name), 'tampered content');
       expect(validateProvenanceContract({ inventory: inv, checksumsContent: checksums, sbomNode: { bomFormat: 'CycloneDX', components: [{ name: 'pkg' }] }, sbomRust: { bomFormat: 'CycloneDX', components: [] }, expectedSha: shaA, expectedVersion: '0.4.40', artifactDir: dir })).toBe(false);
       expect(() => validateProvenanceContract({ inventory: inv, checksumsContent: checksums, sbomNode: { bomFormat: 'CycloneDX', components: {} }, sbomRust: { bomFormat: 'CycloneDX', components: [] }, expectedSha: shaA, expectedVersion: '0.4.40' })).toThrow('components must be an array');
-    } finally { rmSync(dir, { recursive: true, force: true }); }
+    } finally { rmSync(root, { recursive: true, force: true }); }
   });
 
   it('rejects negatives with ZERO uploads and no mutations on wrong SHA/public', async () => {
@@ -102,18 +102,18 @@ describe('release-ci-gate-provenance runtime & contract verification', () => {
       { name: 'badDigest', opts: { badDigest: true }, err: 'Malformed asset digest' },
     ];
     for (const c of cases) {
-      const dir = join(tmpdir(), `prov-neg-${c.name}-${Date.now()}`); mkdirSync(dir, { recursive: true });
+      const root = mkdtempSync(join(tmpdir(), `prov-neg-${c.name}-`)), dir = join(root, 'artifacts'); mkdirSync(dir);
       try {
         const { uploads, fetchImpl, assets } = mockRelease(dir, c.opts); const initCount = assets.length;
         await expect(prepareReleaseProvenance({ repository: 'o/r', releaseId: 123, commitSha: shaA, tag: 'v0.4.40', token: 'tok', artifactDir: dir, fetchImpl })).rejects.toThrow(c.err);
         expect(uploads).toHaveLength(0);
         if (c.opts.draft === false || c.opts.wrongSha) expect(assets).toHaveLength(initCount);
-      } finally { rmSync(dir, { recursive: true, force: true }); }
+      } finally { rmSync(root, { recursive: true, force: true }); }
     }
   });
 
   it('handles idempotence: two consecutive runs, partial retry, 3rd upload failure retry, absent digest', async () => {
-    const dir = join(tmpdir(), `prov-idem-${Date.now()}`); mkdirSync(dir, { recursive: true });
+    const root = mkdtempSync(join(tmpdir(), 'prov-idem-')), dir = join(root, 'artifacts'); mkdirSync(dir);
     try {
       const t1 = mockRelease(dir);
       const res1 = await prepareReleaseProvenance({ repository: 'o/r', releaseId: 123, commitSha: shaA, tag: 'v0.4.40', token: 'tok', artifactDir: dir, fetchImpl: t1.fetchImpl });
@@ -130,7 +130,7 @@ describe('release-ci-gate-provenance runtime & contract verification', () => {
       const t3 = mockRelease(dir, { noDigest: true });
       const resNoDigest = await prepareReleaseProvenance({ repository: 'o/r', releaseId: 123, commitSha: shaA, tag: 'v0.4.40', token: 'tok', artifactDir: dir, fetchImpl: t3.fetchImpl });
       expect(resNoDigest.inventory.subjects).toHaveLength(7);
-    } finally { rmSync(dir, { recursive: true, force: true }); }
+    } finally { rmSync(root, { recursive: true, force: true }); }
   });
 
   it('verifies release workflow provenance integration contract and strict permissions', () => {

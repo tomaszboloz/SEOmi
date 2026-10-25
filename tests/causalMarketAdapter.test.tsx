@@ -21,11 +21,12 @@ beforeEach(async () => {
   await i18n.changeLanguage('en');
   vi.spyOn(globalThis, 'fetch').mockImplementation(async (input) => {
     const url = String(input);
-    if (url.includes('dataforseo')) {
+    const parsed = new URL(url);
+    if (parsed.protocol === 'https:' && parsed.hostname === 'dataforseo.com' && parsed.pathname === '/wp-admin/admin-ajax.php') {
       const payload = dates.map((date) => ({ date: `${date}T00:00:00`, main_metric: { volatility: 100 } }));
       return { ok: true, json: async () => payload } as Response;
     }
-    if (url.includes('status.search.google.com')) {
+    if (parsed.protocol === 'https:' && parsed.hostname === 'status.search.google.com' && parsed.pathname === '/incidents.json') {
       return { ok: true, json: async () => [{ service_name: 'Ranking', begin: '2025-01-01T00:00:00Z', end: '2025-01-02T00:00:00Z' }] } as Response;
     }
     return { ok: false, status: 500, json: async () => ({}) } as Response;

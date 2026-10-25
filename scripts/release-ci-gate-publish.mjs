@@ -1,5 +1,6 @@
 import { validateReleaseAssetsAndPlatforms } from './release-ci-gate-assets.mjs';
 import { listAllReleases } from './release-ci-gate-inventory.mjs';
+import { validateGithubApiBase, validateRepository, validateReleaseId, validateReleaseTag, validateReleaseVersion } from './release-input-validation.mjs';
 
 const resolveRefCommitSha = async (refData, headers, apiUrl, repository, fetchImpl) => {
   let commitSha = refData?.object?.sha;
@@ -43,7 +44,7 @@ const verifyPlatformSignatures = async (release, latestJsonContent, headers, api
     const fileName = decodeURIComponent(new URL(entry.url).pathname.split('/').pop() ?? '');
     const sigAsset = (release.assets ?? []).find((a) => a.name === `${fileName}.sig`);
     if (!sigAsset) throw new Error(`Platform ${p} missing paired signature asset ${fileName}.sig`);
-    const sigRes = await fetchImpl(`${apiUrl}/repos/${repository}/releases/assets/${sigAsset.id}`, {
+    const sigRes = await fetchImpl(`${apiUrl}/repos/${repository}/releases/assets/${validateReleaseId(sigAsset.id)}`, {
       headers: { ...headers, Accept: 'application/octet-stream' },
     });
     if (!sigRes.ok) throw new Error(`Failed to download signature asset ${sigAsset.name}: HTTP ${sigRes.status}`);
@@ -59,7 +60,8 @@ export const createOrGetDraftRelease = async ({
   candidateVersion, name, body, token, fetchImpl = fetch,
 }) => {
   if (!repository || !token) throw new Error('GITHUB_REPOSITORY and GITHUB_TOKEN are required.');
-  const expectedVer = candidateVersion ? candidateVersion.replace(/^v/, '') : null;
+  apiUrl = validateGithubApiBase(apiUrl); repository = validateRepository(repository); tag = validateReleaseTag(tag);
+  const expectedVer = candidateVersion ? validateReleaseVersion(candidateVersion.replace(/^v/, '')) : null;
   if (expectedVer && tag !== `v${expectedVer}`) {
     throw new Error(`Release tag ${tag} does not match local package version v${expectedVer}.`);
   }
@@ -73,7 +75,7 @@ export const createOrGetDraftRelease = async ({
     if (matching[0].target_commitish !== commitSha) {
       throw new Error(`Existing draft release ${matching[0].id} points to ${matching[0].target_commitish}, expected ${commitSha}.`);
     }
-    return matching[0].id;
+    return validateReleaseId(matching[0].id);
   }
   const createRes = await fetchImpl(`${apiUrl}/repos/${repository}/releases`, {
     method: 'POST',
@@ -81,7 +83,7 @@ export const createOrGetDraftRelease = async ({
     body: JSON.stringify({ tag_name: tag, target_commitish: commitSha, name: name ?? `SEOmi ${tag}`, body: body ?? '', draft: true, prerelease: false }),
   });
   if (!createRes.ok) throw new Error(`Failed to create draft release: HTTP ${createRes.status}`);
-  return (await createRes.json()).id;
+  return validateReleaseId((await createRes.json()).id);
 };
 
 export const verifyAndPublishDraftRelease = async ({
@@ -91,7 +93,8 @@ export const verifyAndPublishDraftRelease = async ({
   if (!repository || !token || !releaseId || !expectedSha || !candidateVersion) {
     throw new Error('repository, token, releaseId, expectedSha and candidateVersion are required.');
   }
-  const expectedTag = `v${candidateVersion.replace(/^v/, '')}`;
+  apiUrl = validateGithubApiBase(apiUrl); repository = validateRepository(repository); releaseId = validateReleaseId(releaseId);
+  const expectedTag = `v${validateReleaseVersion(candidateVersion.replace(/^v/, ''))}`;
   const headers = { Accept: 'application/vnd.github+json', Authorization: `Bearer ${token}`, 'X-GitHub-Api-Version': '2022-11-28' };
   const getRes = await fetchImpl(`${apiUrl}/repos/${repository}/releases/${releaseId}`, { headers });
   if (!getRes.ok) throw new Error(`Failed to fetch release ${releaseId}: HTTP ${getRes.status}`);
@@ -114,7 +117,7 @@ export const verifyAndPublishDraftRelease = async ({
 
   const latestAsset = (release.assets ?? []).find((a) => a.name === 'latest.json');
   if (!latestAsset) throw new Error(`Release ${releaseId} missing latest.json asset.`);
-  const assetRes = await fetchImpl(`${apiUrl}/repos/${repository}/releases/assets/${latestAsset.id}`, {
+  const assetRes = await fetchImpl(`${apiUrl}/repos/${repository}/releases/assets/${validateReleaseId(latestAsset.id)}`, {
     headers: { ...headers, Accept: 'application/octet-stream' },
   });
   if (!assetRes.ok) throw new Error(`Failed to download draft asset latest.json: HTTP ${assetRes.status}`);

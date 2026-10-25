@@ -1,13 +1,14 @@
 import { createHash } from 'node:crypto';
-import { readFileSync, writeFileSync, statSync, existsSync, realpathSync } from 'node:fs';
-import { basename, isAbsolute } from 'node:path';
+import { existsSync, realpathSync } from 'node:fs';
+import { basename, dirname, isAbsolute } from 'node:path';
 import { isPathWithin } from './release-artifact-paths.mjs';
+import { readReleaseFile, writeReleaseFileAtomically } from './release-atomic-file.mjs';
+import { validateGitHubReleaseContext, validateReleaseTag } from './release-input-validation.mjs';
 import { uploadReleaseAsset, fetchOrVerifyAsset } from './release-ci-gate-provenance-upload.mjs';
-
 const ALLOWED_EXT = ['.dmg', '.tar.gz', '.exe', '.msi', '.json', '.txt'];
 const REQUIRED_ROLES = ['darwin-aarch64-app', 'darwin-x86_64-app', 'windows-x86_64-setup', 'windows-x86_64-msi', 'manifest'];
 
-export const computeFileSha256 = (filePath) => createHash('sha256').update(readFileSync(filePath)).digest('hex');
+export const computeFileSha256 = (filePath, artifactDir = dirname(filePath)) => createHash('sha256').update(readReleaseFile(filePath, artifactDir)).digest('hex');
 
 export const generateArtifactChecksums = ({ artifactDir, files, outputPath }) => {
   if (!Array.isArray(files) || files.length === 0) throw new Error('files must be a non-empty array.');
@@ -19,18 +20,18 @@ export const generateArtifactChecksums = ({ artifactDir, files, outputPath }) =>
     if (realDir && !isPathWithin(realDir, realpathSync(fullPath))) {
       throw new Error(`Symlink escape detected: ${file}`);
     }
-    if (statSync(fullPath).size === 0) throw new Error(`Artifact file is empty: ${file}`);
+    const bytes = readReleaseFile(fullPath, realDir ?? dirname(fullPath));
+    if (bytes.length === 0) throw new Error(`Artifact file is empty: ${file}`);
     const name = basename(file);
     if (!ALLOWED_EXT.some((ext) => name.endsWith(ext))) throw new Error(`File extension not allowed: ${name}`);
     if (seen.has(name)) throw new Error(`Duplicate checksum subject detected: ${name}`);
     seen.add(name);
-    lines.push(`${computeFileSha256(fullPath)}  ${name}`);
+    lines.push(`${createHash('sha256').update(bytes).digest('hex')}  ${name}`);
   }
   const content = `${lines.join('\n')}\n`;
-  if (outputPath) writeFileSync(outputPath, content, 'utf8');
+  if (outputPath) writeReleaseFileAtomically(outputPath, content);
   return content;
 };
-
 export const buildProvenanceInventory = ({ repository, tag, commitSha, version, artifacts, sboms }) => {
   if (!repository || !tag || !commitSha || !version) throw new Error('repository, tag, commitSha and version are required.');
   if (!/^[0-9a-f]{40}$/i.test(commitSha)) throw new Error(`Invalid commit SHA format: ${commitSha}`);
@@ -67,7 +68,7 @@ export const validateProvenanceContract = ({ inventory, checksumsContent, sbomNo
     if (!expectedHash || expectedHash !== subj.sha256) throw new Error(`Checksum mismatch for ${subj.name}`);
     if (artifactDir) {
       const fullPath = `${artifactDir}/${subj.name}`;
-      if (!existsSync(fullPath) || statSync(fullPath).size !== subj.size || computeFileSha256(fullPath) !== subj.sha256) return false;
+      if (!existsSync(fullPath) || readReleaseFile(fullPath, artifactDir).length !== subj.size || computeFileSha256(fullPath, artifactDir) !== subj.sha256) return false;
     }
   }
   if (!Array.isArray(sbomNode?.components) || sbomNode?.bomFormat !== 'CycloneDX') {
@@ -86,6 +87,7 @@ export const prepareReleaseProvenance = async ({
   token = process.env.GITHUB_TOKEN, artifactDir = '.', fetchImpl = fetch,
 }) => {
   if (!repository || !releaseId || !token || !commitSha || !tag) throw new Error('Missing required release environment.');
+  ({ apiUrl, uploadUrl, repository, releaseId } = validateGitHubReleaseContext({ apiUrl, uploadUrl, repository, releaseId })); tag = validateReleaseTag(tag);
   if (!/^[0-9a-f]{40}$/i.test(commitSha)) throw new Error(`Invalid commit SHA format: ${commitSha}`);
   const headers = { Accept: 'application/vnd.github+json', Authorization: `Bearer ${token}`, 'X-GitHub-Api-Version': '2022-11-28' };
   const getRes = await fetchImpl(`${apiUrl}/repos/${repository}/releases/${releaseId}`, { headers });
@@ -96,7 +98,7 @@ export const prepareReleaseProvenance = async ({
   if (release.tag_name !== tag) throw new Error(`Release tag mismatch: ${release.tag_name} vs ${tag}`);
   if (release.target_commitish !== commitSha) throw new Error(`Release target_commitish mismatch: ${release.target_commitish} vs ${commitSha}`);
 
-  const seenRemote = new Set();
+  const seenRemote = new Set(), verified = new Map();
   for (const a of release.assets ?? []) {
     if (seenRemote.has(a.name)) throw new Error(`Duplicate remote release asset name detected: ${a.name}`);
     seenRemote.add(a.name);
@@ -110,34 +112,34 @@ export const prepareReleaseProvenance = async ({
   for (const name of required) {
     const asset = (release.assets ?? []).find((a) => a.name === name);
     if (!asset) throw new Error(`Missing release asset ${name} in draft release ${releaseId}`);
-    await fetchOrVerifyAsset({ asset, name, artifactDir, realDir, headers, apiUrl, repository, fetchImpl });
+    verified.set(name, await fetchOrVerifyAsset({ asset, name, artifactDir, realDir, headers, apiUrl, repository, fetchImpl }));
   }
 
   const nodePath = `${artifactDir}/sbom-node.json`;
   const rustPath = existsSync(`${artifactDir}/sbom-rust.json`) ? `${artifactDir}/sbom-rust.json` : `${artifactDir}/src-tauri/sbom-rust.json`;
   if (!existsSync(nodePath)) throw new Error('Missing required Node CycloneDX SBOM: sbom-node.json');
   if (!existsSync(rustPath)) throw new Error('Missing required Rust CycloneDX SBOM: sbom-rust.json');
-  const sbomNode = JSON.parse(readFileSync(nodePath, 'utf8')), sbomRust = JSON.parse(readFileSync(rustPath, 'utf8'));
-
+  const nodeBytes = readReleaseFile(nodePath, realDir), rustBytes = readReleaseFile(rustPath, realDir);
+  const sbomNode = JSON.parse(nodeBytes.toString('utf8')), sbomRust = JSON.parse(rustBytes.toString('utf8'));
   const checksums = generateArtifactChecksums({ artifactDir, files: required, outputPath: `${artifactDir}/SHA256SUMS.txt` });
   const roleMap = {
     'SEOmi_aarch64.app.tar.gz': 'darwin-aarch64-app', 'SEOmi_x64.app.tar.gz': 'darwin-x86_64-app',
     [`SEOmi_${ver}_x64-setup.exe`]: 'windows-x86_64-setup', [`SEOmi_${ver}_x64_en-US.msi`]: 'windows-x86_64-msi',
     'latest.json': 'manifest', [`SEOmi_${ver}_aarch64.dmg`]: 'darwin-aarch64-dmg', [`SEOmi_${ver}_x64.dmg`]: 'darwin-x86_64-dmg',
   };
-  const artifacts = required.map((name) => ({ name, role: roleMap[name], sha256: computeFileSha256(`${artifactDir}/${name}`), size: statSync(`${artifactDir}/${name}`).size }));
+  const artifacts = required.map((name) => ({ name, role: roleMap[name], ...verified.get(name) }));
   const sboms = [
-    { name: 'sbom-node.json', sha256: computeFileSha256(nodePath), format: 'CycloneDX', target: 'npm' },
-    { name: 'sbom-rust.json', sha256: computeFileSha256(rustPath), format: 'CycloneDX', target: 'cargo' },
+    { name: 'sbom-node.json', sha256: createHash('sha256').update(nodeBytes).digest('hex'), format: 'CycloneDX', target: 'npm' },
+    { name: 'sbom-rust.json', sha256: createHash('sha256').update(rustBytes).digest('hex'), format: 'CycloneDX', target: 'cargo' },
   ];
   const inventory = buildProvenanceInventory({ repository, tag, commitSha, version: ver, artifacts, sboms });
   const valid = validateProvenanceContract({ inventory, checksumsContent: checksums, sbomNode, sbomRust, expectedSha: commitSha, expectedVersion: ver, artifactDir });
   if (!valid) throw new Error('Provenance contract validation failed');
 
-  writeFileSync(`${artifactDir}/release-provenance.json`, JSON.stringify(inventory, null, 2), 'utf8');
+  writeReleaseFileAtomically(`${artifactDir}/release-provenance.json`, JSON.stringify(inventory, null, 2));
   const uploadOpts = { uploadUrl, apiUrl, repository, releaseId, token, fetchImpl, existingAssets: release.assets };
-  await uploadReleaseAsset({ ...uploadOpts, name: 'sbom-node.json', content: readFileSync(nodePath, 'utf8'), contentType: 'application/json' });
-  await uploadReleaseAsset({ ...uploadOpts, name: 'sbom-rust.json', content: readFileSync(rustPath, 'utf8'), contentType: 'application/json' });
+  await uploadReleaseAsset({ ...uploadOpts, name: 'sbom-node.json', content: nodeBytes, contentType: 'application/json' });
+  await uploadReleaseAsset({ ...uploadOpts, name: 'sbom-rust.json', content: rustBytes, contentType: 'application/json' });
   await uploadReleaseAsset({ ...uploadOpts, name: 'SHA256SUMS.txt', content: checksums, contentType: 'text/plain' });
   await uploadReleaseAsset({ ...uploadOpts, name: 'release-provenance.json', content: JSON.stringify(inventory, null, 2), contentType: 'application/json' });
   return { checksums, inventory };

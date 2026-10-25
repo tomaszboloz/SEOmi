@@ -60,7 +60,7 @@ export interface PrepareProvenanceOptions {
   fetchImpl?: typeof fetch;
 }
 
-export declare function computeFileSha256(filePath: string): string;
+export declare function computeFileSha256(filePath: string, artifactDir?: string): string;
 
 export declare function generateArtifactChecksums(options: GenerateChecksumsOptions): string;
 

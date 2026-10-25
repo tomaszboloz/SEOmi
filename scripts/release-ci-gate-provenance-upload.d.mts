@@ -28,6 +28,6 @@ export declare function parseAuthoritativeDigest(asset: unknown): string | null;
 
 export declare function extractAssetDigest(asset: unknown): string | null;
 
-export declare function fetchOrVerifyAsset(options: FetchOrVerifyAssetOptions): Promise<void>;
+export declare function fetchOrVerifyAsset(options: FetchOrVerifyAssetOptions): Promise<{ sha256: string; size: number }>;
 
 export declare function uploadReleaseAsset(options: UploadReleaseAssetOptions): Promise<Record<string, unknown>>;

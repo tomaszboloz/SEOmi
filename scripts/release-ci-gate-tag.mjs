@@ -1,14 +1,15 @@
-import { appendFileSync, readFileSync } from 'node:fs';
+import { readFileSync } from 'node:fs';
 import { createOrGetDraftRelease, verifyAndPublishDraftRelease } from './release-ci-gate-assets.mjs';
+import { validateReleaseVersion, validateReleaseTag, validateRepository, validateGithubApiBase, writeGithubOutput } from './release-input-validation.mjs';
 
 export const resolveExpectedTag = (packageJsonPath = './package.json') => {
   const pkg = JSON.parse(readFileSync(packageJsonPath, 'utf8'));
   if (!pkg?.version) throw new Error('package.json does not define a version.');
-  return `v${pkg.version}`;
+  return `v${validateReleaseVersion(pkg.version)}`;
 };
 
 export const resolveReleaseTag = ({ refType, refName, packageVersion, tagExistsRemote = false }) => {
-  const expectedTag = `v${packageVersion}`;
+  const expectedTag = `v${validateReleaseVersion(packageVersion)}`;
   if (refType === 'tag') {
     if (refName !== expectedTag) {
       throw new Error(`Release tag ${refName} does not match expected version tag ${expectedTag}.`);
@@ -22,7 +23,7 @@ export const checkTagExistsRemote = async ({
   apiUrl = 'https://api.github.com', repository, tag, token, fetchImpl = fetch,
 }) => {
   if (!repository || !token) throw new Error('GITHUB_REPOSITORY and GITHUB_TOKEN are required.');
-  const response = await fetchImpl(`${apiUrl}/repos/${repository}/git/ref/tags/${tag}`, {
+  const response = await fetchImpl(`${validateGithubApiBase(apiUrl)}/repos/${validateRepository(repository)}/git/ref/tags/${encodeURIComponent(validateReleaseTag(tag))}`, {
     headers: { Accept: 'application/vnd.github+json', Authorization: `Bearer ${token}`, 'X-GitHub-Api-Version': '2022-11-28' },
   });
   if (response.status === 404) return false;
@@ -35,8 +36,9 @@ export const verifyTagTargetCommit = async ({
 }) => {
   if (!/^[\da-f]{40}$/u.test(expectedSha ?? '')) throw new Error(`Invalid release commit SHA: ${expectedSha}`);
   if (!repository || !token) throw new Error('GITHUB_REPOSITORY and GITHUB_TOKEN are required.');
+  apiUrl = validateGithubApiBase(apiUrl); repository = validateRepository(repository); tag = validateReleaseTag(tag);
   const headers = { Accept: 'application/vnd.github+json', Authorization: `Bearer ${token}`, 'X-GitHub-Api-Version': '2022-11-28' };
-  const response = await fetchImpl(`${apiUrl}/repos/${repository}/git/ref/tags/${tag}`, { headers });
+  const response = await fetchImpl(`${validateGithubApiBase(apiUrl)}/repos/${validateRepository(repository)}/git/ref/tags/${encodeURIComponent(validateReleaseTag(tag))}`, { headers });
   if (response.status === 404) throw new Error(`Release tag ${tag} not found in remote repository.`);
   if (!response.ok) throw new Error(`GitHub tag ref request failed: HTTP ${response.status}`);
   const refData = await response.json();
@@ -55,8 +57,10 @@ export const verifyTagTargetCommit = async ({
 export const ensureTagRefTarget = async ({
   apiUrl = 'https://api.github.com', repository, tag, expectedSha, token, fetchImpl = fetch,
 }) => {
+  if (!/^[\da-f]{40}$/u.test(expectedSha ?? '')) throw new Error(`Invalid release commit SHA: ${expectedSha}`);
+  apiUrl = validateGithubApiBase(apiUrl); repository = validateRepository(repository); tag = validateReleaseTag(tag);
   const headers = { Accept: 'application/vnd.github+json', Authorization: `Bearer ${token}`, 'X-GitHub-Api-Version': '2022-11-28' };
-  const res = await fetchImpl(`${apiUrl}/repos/${repository}/git/ref/tags/${tag}`, { headers });
+  const res = await fetchImpl(`${validateGithubApiBase(apiUrl)}/repos/${validateRepository(repository)}/git/ref/tags/${encodeURIComponent(validateReleaseTag(tag))}`, { headers });
   if (res.status === 404) {
     const create = await fetchImpl(`${apiUrl}/repos/${repository}/git/refs`, {
       method: 'POST',
@@ -80,14 +84,10 @@ export const validateReleaseGateTag = async ({
   return { tag, publish };
 };
 
-const writeGithubOutput = (key, value, outputPath = process.env.GITHUB_OUTPUT) => {
-  if (outputPath) appendFileSync(outputPath, `${key}=${value}\n`);
-};
-
 export const runReleaseGateTagCli = async (
   env = process.env, args = process.argv.slice(2), fetchImpl = fetch, packageJsonPath = './package.json',
 ) => {
-  const pkgVersion = JSON.parse(readFileSync(packageJsonPath, 'utf8')).version;
+  const pkgVersion = validateReleaseVersion(JSON.parse(readFileSync(packageJsonPath, 'utf8')).version);
   const refType = env.GITHUB_REF_TYPE;
   const refName = env.GITHUB_REF_NAME;
   const expectedSha = env.RELEASE_COMMIT_SHA ?? env.GITHUB_SHA;
