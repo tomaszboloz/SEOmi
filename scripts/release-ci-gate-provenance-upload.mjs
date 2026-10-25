@@ -1,6 +1,7 @@
 import { createHash } from 'node:crypto';
 import { readFileSync, writeFileSync, statSync, existsSync, realpathSync } from 'node:fs';
 import { isAbsolute } from 'node:path';
+import { isPathWithin } from './release-artifact-paths.mjs';
 
 export const PROVENANCE_METADATA_NAMES = Object.freeze(
   new Set(['sbom-node.json', 'sbom-rust.json', 'SHA256SUMS.txt', 'release-provenance.json'])
@@ -29,7 +30,7 @@ export const fetchOrVerifyAsset = async ({
   const p = `${artifactDir}/${name}`;
   if (existsSync(p)) {
     const realFile = realpathSync(p);
-    if (!realFile.startsWith(realDir + '/') && realFile !== realDir) throw new Error(`Path escape detected: ${name}`);
+    if (!isPathWithin(realDir, realFile)) throw new Error(`Path escape detected: ${name}`);
     if (asset.size !== undefined && statSync(p).size !== asset.size) throw new Error(`Cache tamper detected for ${name}: local size mismatch`);
     if (expDigest) {
       const localHash = createHash('sha256').update(readFileSync(p)).digest('hex');

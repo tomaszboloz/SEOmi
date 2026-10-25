@@ -1,6 +1,7 @@
 import { createHash } from 'node:crypto';
 import { readFileSync, writeFileSync, statSync, existsSync, realpathSync } from 'node:fs';
 import { basename, isAbsolute } from 'node:path';
+import { isPathWithin } from './release-artifact-paths.mjs';
 import { uploadReleaseAsset, fetchOrVerifyAsset } from './release-ci-gate-provenance-upload.mjs';
 
 const ALLOWED_EXT = ['.dmg', '.tar.gz', '.exe', '.msi', '.json', '.txt'];
@@ -15,7 +16,7 @@ export const generateArtifactChecksums = ({ artifactDir, files, outputPath }) =>
     if (file.includes('..') || (artifactDir && isAbsolute(file))) throw new Error(`Path traversal rejected: ${file}`);
     const fullPath = artifactDir ? `${artifactDir}/${file}` : file;
     if (!existsSync(fullPath)) throw new Error(`Artifact file does not exist: ${file}`);
-    if (realDir && !realpathSync(fullPath).startsWith(realDir + '/') && realpathSync(fullPath) !== realDir) {
+    if (realDir && !isPathWithin(realDir, realpathSync(fullPath))) {
       throw new Error(`Symlink escape detected: ${file}`);
     }
     if (statSync(fullPath).size === 0) throw new Error(`Artifact file is empty: ${file}`);

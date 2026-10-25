@@ -134,7 +134,7 @@ describe('release-ci-gate-provenance runtime & contract verification', () => {
   });
 
   it('verifies release workflow provenance integration contract and strict permissions', () => {
-    const wf = readFileSync('.github/workflows/release.yml', 'utf8');
+    const wf = readFileSync('.github/workflows/release.yml', 'utf8').replace(/\r\n/g, '\n');
     expect(wf.split('jobs:')[0]).toContain('permissions:\n  contents: read');
     const pJob = wf.split('publish-release:')[1];
     expect(pJob).toContain('id-token: write');
