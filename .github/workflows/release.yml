@@ -120,10 +120,6 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          if rg -n -i '\bopen[ -]?seo\b|every-app|openseo\.so' src src-tauri mcp-server public README.md package.json; then
-            echo 'Forbidden source branding/reference found in product files.' >&2
-            exit 1
-          fi
           node scripts/release-source-policy.mjs
 
       - name: Setup Node.js

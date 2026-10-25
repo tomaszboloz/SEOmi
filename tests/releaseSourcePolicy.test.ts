@@ -62,8 +62,9 @@ describe('release input policy', () => {
     for (const path of ['.github/workflows/test.yml', '.github/workflows/release.yml']) {
       const workflow = readFileSync(path, 'utf8');
       expect(workflow).toContain('node scripts/release-source-policy.mjs');
-      expect(workflow).toContain("if rg -n -i '\\bopen[ -]?seo\\b|every-app|openseo\\.so'");
-      expect(workflow).toContain("echo 'Forbidden source branding/reference found in product files.'");
+      expect(workflow).not.toContain('if rg ');
     }
+    const validator = readFileSync('scripts/release-source-policy.mjs', 'utf8');
+    expect(validator).toContain('assertIndependentProductSources(files)');
   });
 });

@@ -1,6 +1,7 @@
 import { execFileSync } from 'node:child_process';
 import { resolve } from 'node:path';
 import { pathToFileURL } from 'node:url';
+import { assertIndependentProductSources } from './release-product-branding.mjs';
 
 const TOKENS = 'PRD|GAP|PARITY_MATRIX|MATRIX|AGENTS|CLAUDE|GEMINI|COPILOT|AI_NOTES|AI_CONTEXT|AI_PLAN';
 const DOCUMENT = new RegExp(`^(?:${TOKENS})(?:[_.-][^/]*)?\\.(?:md|markdown|mdx|txt|rst|adoc|json|ya?ml)$`, 'i');
@@ -20,5 +21,6 @@ export const assertIndependentReleaseFiles = (files) => {
 if (process.argv[1] && import.meta.url === pathToFileURL(resolve(process.argv[1])).href) {
   const files = execFileSync('git', ['ls-files', '-z'], { encoding: 'utf8' }).split('\0').filter(Boolean);
   assertIndependentReleaseFiles(files);
+  assertIndependentProductSources(files);
   console.log(`Verified ${files.length} tracked release input paths.`);
 }
