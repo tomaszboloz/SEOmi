@@ -124,10 +124,7 @@ jobs:
             echo 'Forbidden source branding/reference found in product files.' >&2
             exit 1
           fi
-          if git ls-files | rg -n -i '(^|/)(PRD|GAP|PARITY_MATRIX|MATRIX|AGENTS|CLAUDE|GEMINI|COPILOT|AI_NOTES|AI_CONTEXT|AI_PLAN)([^/]*$|/)' ; then
-            echo 'Planning or AI instruction files must not be tracked.' >&2
-            exit 1
-          fi
+          node scripts/release-source-policy.mjs
 
       - name: Setup Node.js
         uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
