@@ -7753,14 +7753,20 @@
   },
   "causalMarket": {
     "title": "Impacto causal",
-    "empty": "Histórico insuficiente: pelo menos 7 dias antes da mudança e 1 depois.",
+    "empty": "Não estimável: são necessários pelo menos 7 dias antes e 1 depois, uma série externa real do mercado e evidência de controle independente.",
     "effect": "Efeito diário: {{effect}} ({{lower}} a {{upper}})",
     "updateWindow": "Janela de atualização do Google: resultado inconclusivo.",
     "normalized": "Normalizado pela linha de base do mercado",
     "positive": "Efeito positivo",
     "negative": "Efeito negativo",
     "noEffect": "Sem efeito mensurável",
-    "inconclusive": "Inconclusivo"
+    "inconclusive": "Inconclusivo",
+    "evidence": "Evidência: mercado {{market}}; controle {{control}}",
+    "unknown": "desconhecido",
+    "marketUnavailable": "A linha de base externa do mercado está indisponível ou inválida; nenhum sucesso ou falha causal é inferido.",
+    "controlUnavailable": "Não há evidência de controle independente; nenhum sucesso ou falha causal é inferido.",
+    "updateWindowReason": "A análise coincide com uma atualização confirmada do ranking do Google; o resultado é inconclusivo.",
+    "disclaimer": "Estimativa com dados externos de mercado e controle; não é prova de causalidade."
   },
   "snapshots": {
     "newerData": "Há dados de rastreamento mais recentes.",
