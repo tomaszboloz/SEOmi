@@ -18,6 +18,11 @@ pub(super) trait CredentialEntry {
 pub(crate) struct NativeCredentialEntry(keyring::Entry);
 
 impl NativeCredentialEntry {
+    #[cfg(test)]
+    pub(crate) fn new(service: &str, user: &str) -> Result<Self, keyring::Error> {
+        keyring::Entry::new(service, user).map(Self)
+    }
+
     pub(crate) fn get_password(&self) -> Result<String, keyring::Error> {
         self.0.get_password()
     }

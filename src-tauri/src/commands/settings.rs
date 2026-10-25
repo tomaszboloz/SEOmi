@@ -90,6 +90,8 @@ mod config_recovery_tests;
 #[cfg(test)]
 mod config_storage_tests;
 #[cfg(test)]
+mod credential_interop_tests;
+#[cfg(test)]
 mod credentials_tests;
 #[cfg(test)]
 mod fixture;

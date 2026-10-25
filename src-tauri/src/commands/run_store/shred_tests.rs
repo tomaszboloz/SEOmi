@@ -105,3 +105,40 @@ fn corrupted_key_or_nonce_in_database_reads_as_none() {
     .unwrap();
     assert_eq!(shred::read_record(&conn, "p", "k", "r2").unwrap(), None);
 }
+
+#[test]
+fn legacy_chacha010_ciphertext_reads_and_rejects_tamper_and_missing_key() {
+    let conn = full();
+    conn.execute(
+        "INSERT INTO subject_keys VALUES ('k_leg', 'p_leg', 's_leg', \
+         x'1111111111111111111111111111111111111111111111111111111111111111')",
+        [],
+    )
+    .unwrap();
+    conn.execute(
+        "INSERT INTO records VALUES ('p_leg', 'k_leg', 'r_leg', 's_leg', 'k_leg', \
+         x'222222222222222222222222e00dbc6d49f9c310fd01988c9367b81b428535b838bdbf861f294683dcf8c323331486476721e711952c8e3c196322443b')",
+        [],
+    )
+    .unwrap();
+    let read = shred::read_record(&conn, "p_leg", "k_leg", "r_leg").unwrap();
+    assert_eq!(read, Some(b"existing ciphertext compatibility".to_vec()));
+
+    conn.execute(
+        "UPDATE records SET data = x'222222222222222222222222e00dbc6d49f9c310fd01988c9367b81b428535b838bdbf861f294683dcf8c323331486476721e711952c8e3c196322443c' \
+         WHERE rec_key = 'r_leg'",
+        [],
+    )
+    .unwrap();
+    assert_eq!(
+        shred::read_record(&conn, "p_leg", "k_leg", "r_leg").unwrap(),
+        None
+    );
+
+    conn.execute("DELETE FROM subject_keys WHERE key_id = 'k_leg'", [])
+        .unwrap();
+    assert_eq!(
+        shred::read_record(&conn, "p_leg", "k_leg", "r_leg").unwrap(),
+        None
+    );
+}
