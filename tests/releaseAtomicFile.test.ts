@@ -55,11 +55,12 @@ describe('atomic release files', () => {
           return new Response('new');
         },
       });
+      const downloaded = readReleaseFile(destination, dir);
       expect(readFileSync(outside, 'utf8')).toBe('preserved');
       expect(lstatSync(destination).isSymbolicLink()).toBe(false);
-      expect(readFileSync(destination, 'utf8')).toBe('new');
+      expect(downloaded.toString('utf8')).toBe('new');
       expect(readdirSync(dir)).toEqual(['app.exe']);
-      expect(createHash('sha256').update(readFileSync(destination)).digest('hex')).toBe(createHash('sha256').update('new').digest('hex'));
+      expect(createHash('sha256').update(downloaded).digest('hex')).toBe(createHash('sha256').update('new').digest('hex'));
       expect(existsSync(outside)).toBe(true);
     } finally { rmSync(root, { recursive: true, force: true }); }
   });
