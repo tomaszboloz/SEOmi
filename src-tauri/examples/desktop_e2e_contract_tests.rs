@@ -43,3 +43,25 @@ fn validation_scripts_match_the_runtime_gate() {
     assert!(additional.contains("window.__seomiDesktopAdditionalValidation"));
     assert!(include_str!("desktop_e2e.rs").contains("additional_validation_script"));
 }
+
+#[test]
+fn renderer_script_wires_strict_html_assertion_and_diagnostics() {
+    let renderer = include_str!("desktop_e2e_renderer.js");
+    assert!(
+        renderer.contains(
+            "check('renderer HTML captured', html.length > 0 && html.includes('Example Domain'))"
+        ),
+        "renderer must enforce strict non-empty Example Domain HTML assertion"
+    );
+    assert!(
+        !renderer.contains("html.length === 0 ||") && !renderer.contains("|| true"),
+        "renderer must not contain blanket pass or empty-HTML bypass"
+    );
+    assert!(
+        renderer.contains("htmlLength:")
+            && renderer.contains("htmlSnippet:")
+            && renderer.contains("observedFinalUrl:")
+            && renderer.contains("failedResourceUrls:"),
+        "renderer must capture bounded diagnostics for CI triage"
+    );
+}
