@@ -17,7 +17,7 @@ it.each(['\n', '\r\n'])('keeps strict CI gates with %j line endings', (newline) 
   expect(rust).toContain('npm ci --prefix mcp-server --ignore-scripts');
   expect(rust).toContain('npm run build --prefix mcp-server');
   expect(rust).toContain('cargo +nightly llvm-cov --manifest-path src-tauri/Cargo.toml --branch --no-report');
-  expect(rust).toContain('SEOMI_E2E_RENDERER=1 cargo +nightly llvm-cov run --manifest-path src-tauri/Cargo.toml --example desktop_e2e --features custom-protocol --branch --no-clean --lcov --output-path coverage-rust.lcov -- test-results/desktop-e2e-coverage.json');
+  expect(rust).toContain('SEOMI_E2E_RENDERER=1 cargo +nightly llvm-cov run --manifest-path src-tauri/Cargo.toml --example desktop_e2e --features custom-protocol,test-fixture --branch --no-clean --lcov --output-path coverage-rust.lcov -- test-results/desktop-e2e-coverage.json');
   expect(rust).toContain('node scripts/validate-desktop-e2e-report.mjs test-results/desktop-e2e-coverage.json');
   expect(rust).toContain('--bin seomi --features custom-protocol --branch --no-clean -- --seomi-scheduled-headless');
   expect(rust).toContain('--bin seomi --features custom-protocol --branch --no-clean -- --seomi-audit-queue-headless');
@@ -56,7 +56,7 @@ it.each(['\n', '\r\n'])('keeps strict CI gates with %j line endings', (newline) 
   expect(release).toContain("branches: [ main, 'release/**' ]");
   expect(release).toContain('git ls-remote --exit-code --tags origin');
   expect(release).toContain('releaseCommitish: ${{ github.sha }}');
-  expect(release).toContain('gh release edit "${{ needs.release-preflight.outputs.tag }}" --repo "$GITHUB_REPOSITORY" --draft=false');
+  expect(release).toContain('node scripts/release-ci-gate-tag.mjs --publish-draft');
 });
 
 it('requires actual rendering on both desktop platforms', () => {

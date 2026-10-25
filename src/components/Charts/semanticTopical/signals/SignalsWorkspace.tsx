@@ -16,10 +16,12 @@ import { useGraphSnapshot } from './useGraphSnapshot';
 import { buildParityReport } from './parityAdapter';
 import { buildTemplateEvents } from './templateAdapter';
 import { useDecayHistory } from './useDecayHistory';
+import { useCausalImpact } from './useCausalImpact';
 
 export const SignalsWorkspace = ({ projectId = null, pages, graph }: { projectId?: string | null; pages: CrawledPageSummary[]; graph: SemanticMap }) => {
   const { t } = useTranslation();
   const decay = useDecayHistory(projectId);
+  const causalImpact = useCausalImpact(projectId, pages[0]?.url);
   const { snapshot, stale, refresh } = useGraphSnapshot(graph);
   const sprsInput = useMemo(() => buildSprsInput(snapshot), [snapshot]);
   const sprs = useMemo(() => computeSprs(sprsInput.nodes, sprsInput.edges), [sprsInput]);
@@ -32,7 +34,7 @@ export const SignalsWorkspace = ({ projectId = null, pages, graph }: { projectId
     <HreflangParityPanel report={parity} />
     <TemplateGovernorPanel events={templates} />
     <DecayRadarPanel evaluation={decay.evaluation} snapshotCount={decay.snapshotCount} />
-    <CausalImpactPanel result={null} />
+    <CausalImpactPanel result={causalImpact} />
     <ExperimentsPanel projectId={projectId} pages={pages} />
   </div>;
 };

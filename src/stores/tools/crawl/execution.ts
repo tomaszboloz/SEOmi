@@ -80,7 +80,7 @@ startSiteCrawl: async (url, limit, configPatch, environment = 'default', notifyC
       const freshCrawlResult = await services.invoke<SiteCrawlResult>('crawl_site', { startUrl: targetUrl, maxPages: maxLimit, runId, projectId: projectIdAtStart || undefined, config: effectiveCrawlConfig });
       if (!freshCrawlResult.pages.length && !freshCrawlResult.cancelled && !resumeBaseResult) throw new Error(i18n.t('runtimeErrors.tools.crawlerNoPages'));
       const crawlResult = resumeBaseResult ? mergeCrawlResults(resumeBaseResult, freshCrawlResult) : freshCrawlResult;
-      const run: CrawlRunRecord = { id: runId, projectId: projectIdAtStart || undefined, completedAt: new Date().toISOString(), startUrl: targetUrl, config: persistedCrawlConfig, result: crawlResult, environment };
+      const run: CrawlRunRecord = { id: runId, projectId: projectIdAtStart || undefined, startedAt: interruptedCrawl.startedAt, completedAt: new Date().toISOString(), startUrl: targetUrl, config: persistedCrawlConfig, result: crawlResult, environment };
       const projectRuns = activeProjectId() === projectIdAtStart ? get().crawlRuns : originalCrawlRuns;
       const crawlRuns = [run, ...projectRuns.filter((item) => item.id !== run.id)].slice(0, 50);
       const projectId = projectIdAtStart;

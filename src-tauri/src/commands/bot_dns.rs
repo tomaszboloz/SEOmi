@@ -45,7 +45,10 @@ async fn bounded<T: Send + 'static>(
 #[tauri::command]
 pub async fn dns_reverse(ip: String) -> Result<Vec<String>, String> {
     let ip = parse_public_ip(&ip)?;
-    let name = bounded(move || dns_lookup::lookup_addr(&ip)).await?;
+    let name = bounded(move || {
+        dns_lookup::lookup_addr(&ip).map_err(|error| std::io::Error::other(error.to_string()))
+    })
+    .await?;
     Ok(vec![name])
 }
 
@@ -56,7 +59,12 @@ pub async fn dns_forward(host: String) -> Result<Vec<String>, String> {
         return Err("Invalid host name".into());
     }
     let host = host.trim().to_owned();
-    let addresses = bounded(move || dns_lookup::lookup_host(&host)).await?;
+    let addresses = bounded(move || {
+        dns_lookup::lookup_host(&host)
+            .map(|addresses| addresses.collect::<Vec<_>>())
+            .map_err(|error| std::io::Error::other(error.to_string()))
+    })
+    .await?;
     Ok(addresses
         .into_iter()
         .filter(is_public_ip)

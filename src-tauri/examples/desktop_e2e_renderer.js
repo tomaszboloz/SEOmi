@@ -1,7 +1,7 @@
 // Optional online renderer checks for the desktop E2E harness.
 // This file is intentionally separate until the native harness opts in.
 (() => {
-  const target = 'https://example.com/';
+  const target = (typeof window !== 'undefined' && window.__seomiE2eFixtureUrl) || 'https://example.com/';
   const baseArgs = {
     url: target,
     allowSubdomains: false,
@@ -22,16 +22,14 @@
   const decode = value => {
     if (typeof value !== 'string' || typeof atob !== 'function') return null;
     try {
-      const binary = atob(value);
-      return Uint8Array.from(binary, character => character.charCodeAt(0));
+      return Uint8Array.from(atob(value), character => character.charCodeAt(0));
     } catch (_) {
       return null;
     }
   };
-  const startsWith = (bytes, signature) => bytes?.length >= signature.length
-    && signature.every((value, index) => bytes[index] === value);
+  const startsWith = (bytes, sig) => bytes?.length >= sig.length && sig.every((v, i) => bytes[i] === v);
   const artifactArgs = kind => ({ ...baseArgs, kind, runId: expectedRunId });
-  const artifactFileName = (kind, extension) => new RegExp(`^rendered-page-[0-9]{8}T[0-9]{6}Z-${kind}\\.${extension}$`);
+  const artifactFileName = (k, ext) => new RegExp(`^rendered-page-[0-9]{8}T[0-9]{6}Z-${k}\\.${ext}$`);
   const checkArtifact = (kind, artifact, check) => {
     const contract = artifactContracts[kind];
     const bytes = decode(artifact?.dataBase64);
@@ -48,23 +46,32 @@
     check(`${kind} artifact byte count is exact`, bytes?.length === artifact?.bytes);
   };
   const statusEvidence = snapshot => {
-    const fieldPresent = snapshot !== null && typeof snapshot === 'object'
+    const present = snapshot !== null && typeof snapshot === 'object'
       && Object.prototype.hasOwnProperty.call(snapshot, 'httpStatus');
-    const httpStatus = fieldPresent ? snapshot.httpStatus : undefined;
-    const available = Number.isInteger(httpStatus) && httpStatus > 0;
-    const reason = !fieldPresent
-      ? 'Snapshot omitted httpStatus.'
-      : httpStatus === undefined
-        ? 'Snapshot exposed an undefined httpStatus.'
-        : httpStatus === null
-          ? 'Navigation Timing responseStatus is unavailable in this WebKit runtime.'
-          : httpStatus === 200 ? null : `Unexpected renderer HTTP status: ${String(httpStatus)}.`;
+    const httpStatus = present ? snapshot.httpStatus : undefined;
+    const reason = !present ? 'Snapshot omitted httpStatus.'
+      : httpStatus === undefined ? 'Snapshot exposed an undefined httpStatus.'
+      : httpStatus === null ? 'Navigation Timing responseStatus is unavailable in this WebKit runtime.'
+      : httpStatus === 200 ? null : `Unexpected renderer HTTP status: ${String(httpStatus)}.`;
     return {
       httpStatus: httpStatus === undefined ? null : httpStatus,
       observedHttpStatus: httpStatus === undefined ? 'undefined' : httpStatus,
-      httpStatusAvailable: available,
+      httpStatusAvailable: Number.isInteger(httpStatus) && httpStatus > 0,
       httpStatusReason: reason,
-      httpStatusFieldPresent: fieldPresent,
+      httpStatusFieldPresent: present,
+    };
+  };
+  const failureDiagnostics = (snapshot, html) => {
+    const rawHtml = typeof html === 'string' ? html : (typeof snapshot?.html === 'string' ? snapshot.html : '');
+    const errors = Array.isArray(snapshot?.consoleErrors) ? snapshot.consoleErrors : [];
+    const resources = Array.isArray(snapshot?.failedResourceUrls) ? snapshot.failedResourceUrls : [];
+    return {
+      htmlLength: rawHtml.length,
+      htmlSnippet: rawHtml.slice(0, 256),
+      observedFinalUrl: typeof snapshot?.finalUrl === 'string' ? snapshot.finalUrl.slice(0, 2048) : null,
+      observedContentType: typeof snapshot?.contentType === 'string' ? snapshot.contentType.slice(0, 256) : null,
+      consoleErrors: errors.filter(e => typeof e === 'string').slice(0, 10).map(e => e.slice(0, 512)),
+      failedResourceUrls: resources.filter(u => typeof u === 'string').slice(0, 10).map(u => u.slice(0, 2048)),
     };
   };
 
@@ -85,7 +92,7 @@
         status.httpStatusFieldPresent && (status.httpStatus === 200 || status.httpStatus === null));
       let finalUrl;
       try { finalUrl = new URL(snapshot?.finalUrl); } catch (_) { finalUrl = null; }
-      check('renderer final URL remains example.com', finalUrl?.hostname === 'example.com');
+      check('renderer final URL remains expected host', finalUrl?.origin === new URL(target).origin);
 
       const screenshot = await invoke('capture_rendered_artifact', artifactArgs('screenshot'));
       checkArtifact('screenshot', screenshot, check);
@@ -94,12 +101,8 @@
       checkArtifact('pdf', pdf, check);
 
       await invoke('open_rendered_element_preview', {
-        url: target,
-        selector: 'h1',
-        needle: 'Example Domain',
-        domIndex: null,
-        previewTitle: 'SEOmi renderer preview',
-        notFoundMessage: 'Example Domain heading was not found.',
+        url: target, selector: 'h1', needle: 'Example Domain', domIndex: null,
+        previewTitle: 'SEOmi renderer preview', notFoundMessage: 'Example Domain heading was not found.',
       });
       previewEvidence = 'ipc-success';
       check('renderer preview IPC returned', previewEvidence === 'ipc-success');
@@ -115,6 +118,7 @@
         ...status,
       };
     } catch (error) {
+      const capturedHtml = typeof snapshot?.html === 'string' ? snapshot.html : '';
       return {
         status: 'executed',
         passed: false,
@@ -122,7 +126,10 @@
         failure: String(error),
         target,
         previewEvidence,
-        snapshot: statusEvidence(snapshot),
+        snapshot: {
+          ...statusEvidence(snapshot),
+          ...failureDiagnostics(snapshot, capturedHtml),
+        },
       };
     }
   };
@@ -135,5 +142,5 @@
     target,
   });
 
-  window.__seomiRendererE2e = { run, skipped, target };
+  window.__seomiRendererE2e = { run, skipped, target, failureDiagnostics };
 })();

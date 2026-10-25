@@ -1,7 +1,7 @@
 name: Test Suite & Security Audit
 on:
   push:
-    branches: [ main ]
+    branches: [ main, 'release/**' ]
   pull_request:
     branches: [ main, 'release/**' ]
   workflow_dispatch:
@@ -15,10 +15,10 @@ jobs:
     runs-on: macos-15-intel
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
-      - uses: dtolnay/rust-toolchain@686976e191b89faba57d3206551f0f330d8cb249 # stable
+      - uses: dtolnay/rust-toolchain@b725eda525362e7cf34af9a7243cac1e3f01a7ec # stable
         with:
           components: clippy, llvm-tools-preview
-      - uses: taiki-e/install-action@1168f6810a3cb30a3514bf5756a3b7f0422c6df8 # v2
+      - uses: taiki-e/install-action@1e29709c0ec63babbe8f266397a465f29a825f91 # v2.87.31
         with:
           tool: cargo-llvm-cov@0.9.1
       - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
@@ -56,10 +56,10 @@ jobs:
     runs-on: macos-15-intel
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
-      - uses: dtolnay/rust-toolchain@686976e191b89faba57d3206551f0f330d8cb249 # stable
+      - uses: dtolnay/rust-toolchain@b725eda525362e7cf34af9a7243cac1e3f01a7ec # stable
         with:
           components: clippy, llvm-tools-preview
-      - uses: taiki-e/install-action@1168f6810a3cb30a3514bf5756a3b7f0422c6df8 # v2
+      - uses: taiki-e/install-action@1e29709c0ec63babbe8f266397a465f29a825f91 # v2.87.31
         with:
           tool: cargo-llvm-cov@0.9.1
       - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
@@ -98,7 +98,7 @@ jobs:
           cargo +nightly llvm-cov clean --manifest-path src-tauri/Cargo.toml --workspace
           cargo +nightly llvm-cov --manifest-path src-tauri/Cargo.toml --branch --no-report
           mkdir -p test-results
-          SEOMI_E2E_RENDERER=1 cargo +nightly llvm-cov run --manifest-path src-tauri/Cargo.toml --example desktop_e2e --features custom-protocol --branch --no-clean --lcov --output-path coverage-rust.lcov -- test-results/desktop-e2e-coverage.json
+          SEOMI_E2E_RENDERER=1 cargo +nightly llvm-cov run --manifest-path src-tauri/Cargo.toml --example desktop_e2e --features custom-protocol,test-fixture --branch --no-clean --lcov --output-path coverage-rust.lcov -- test-results/desktop-e2e-coverage.json
           node scripts/validate-desktop-e2e-report.mjs test-results/desktop-e2e-coverage.json
           cargo +nightly llvm-cov run --manifest-path src-tauri/Cargo.toml --bin seomi --features custom-protocol --branch --no-clean -- --seomi-scheduled-headless --seomi-scheduled-project coverage-smoke --seomi-scheduled-id missing-task
           cargo +nightly llvm-cov run --manifest-path src-tauri/Cargo.toml --bin seomi --features custom-protocol --branch --no-clean -- --seomi-audit-queue-headless --seomi-scheduled-project coverage-smoke --seomi-scheduled-id missing-run
@@ -152,14 +152,7 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          if rg -n -i '\bopen[ -]?seo\b|every-app|openseo\.so' src src-tauri mcp-server public README.md package.json; then
-            echo 'Forbidden source branding/reference found in product files.' >&2
-            exit 1
-          fi
-          if git ls-files | rg -n -i '(^|/)(PRD|GAP|PARITY_MATRIX|MATRIX|AGENTS|CLAUDE|GEMINI|COPILOT|AI_NOTES|AI_CONTEXT|AI_PLAN)([^/]*$|/)' ; then
-            echo 'Planning or AI instruction files must not be tracked.' >&2
-            exit 1
-          fi
+          node scripts/release-source-policy.mjs
       - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
         with:
           node-version: 22
@@ -224,7 +217,7 @@ jobs:
         with:
           node-version: 22
           cache: 'npm'
-      - uses: dtolnay/rust-toolchain@686976e191b89faba57d3206551f0f330d8cb249 # stable
+      - uses: dtolnay/rust-toolchain@b725eda525362e7cf34af9a7243cac1e3f01a7ec # stable
       - name: Install frontend dependencies
         run: npm ci
       - name: Build frontend
@@ -292,9 +285,9 @@ jobs:
         run: npm test --prefix mcp-server
 
       - name: Generate Node SBOM
-        run: npx --yes @cyclonedx/cyclonedx-npm@1.19.0 --output-file sbom-node.json --output-format json
+        run: npx --yes @cyclonedx/cyclonedx-npm@6.0.1 --spec-version 1.6 --output-file sbom-node.json --output-format json
 
-      - uses: dtolnay/rust-toolchain@686976e191b89faba57d3206551f0f330d8cb249 # stable
+      - uses: dtolnay/rust-toolchain@b725eda525362e7cf34af9a7243cac1e3f01a7ec # stable
 
       - name: Install Rust dependency security tools
         run: |

@@ -70,7 +70,9 @@ export async function runMcpCoverage() {
     'coverage/mcp-coverage-final.json', 'coverage/mcp-v8-raw.json', 'coverage/mcp-coverage-summary.json',
   ]) writeFileSync(artifact, '{}');
   rmSync('mcp-server/dist', {recursive:true,force:true});
-  const build = spawnSync(process.execPath, [createRequire(resolve('mcp-server/package.json')).resolve('typescript/bin/tsc'), '-p', 'mcp-server/tsconfig.json'], {stdio:'inherit'});
+  const mcpRequire = createRequire(resolve('mcp-server/package.json'));
+  const typeScriptPackage = dirname(mcpRequire.resolve('typescript/package.json'));
+  const build = spawnSync(process.execPath, [join(typeScriptPackage, 'lib', 'tsc.js'), '-p', 'mcp-server/tsconfig.json'], {stdio:'inherit'});
   if (build.status !== 0) throw new Error('MCP coverage build failed');
   const generatedFiles = directory => readdirSync(directory, {withFileTypes:true}).flatMap(entry => {
     const file = join(directory, entry.name);

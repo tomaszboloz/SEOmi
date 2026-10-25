@@ -87,7 +87,10 @@ pub fn validate_addresses(addresses: Vec<SocketAddr>) -> Result<Vec<SocketAddr>>
     if addresses.is_empty() {
         return Err(anyhow!("DNS returned no addresses"));
     }
-    if addresses.iter().any(|address| !is_public_ip(&address.ip())) {
+    if addresses.iter().any(|addr| {
+        !is_public_ip(&addr.ip())
+            && !crate::utils::test_fixture::is_allowed_test_fixture_socket(addr)
+    }) {
         return Err(anyhow!(
             "DNS resolved to a private or reserved address; request blocked"
         ));

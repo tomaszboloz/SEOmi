@@ -7753,14 +7753,20 @@
   },
   "causalMarket": {
     "title": "Kausale Wirkung",
-    "empty": "Zu wenig Verlauf: mindestens 7 Tage vor und 1 Tag nach der Änderung.",
+    "empty": "Nicht schätzbar: mindestens 7 Tage davor und 1 Tag danach, eine echte externe Marktserie und unabhängige Kontrolldaten sind nötig.",
     "effect": "Tageseffekt: {{effect}} ({{lower}} bis {{upper}})",
     "updateWindow": "Google-Update-Fenster: Ergebnis nicht aussagekräftig.",
     "normalized": "Mit Marktbasislinie normalisiert",
     "positive": "Positiver Effekt",
     "negative": "Negativer Effekt",
     "noEffect": "Kein messbarer Effekt",
-    "inconclusive": "Nicht aussagekräftig"
+    "inconclusive": "Nicht aussagekräftig",
+    "evidence": "Nachweis: Markt {{market}}; Kontrolle {{control}}",
+    "unknown": "unbekannt",
+    "marketUnavailable": "Die externe Markt-Baseline ist nicht verfügbar oder ungültig; es wird kein kausaler Erfolg oder Misserfolg abgeleitet.",
+    "controlUnavailable": "Unabhängige Kontrollnachweise fehlen; es wird kein kausaler Erfolg oder Misserfolg abgeleitet.",
+    "updateWindowReason": "Die Analyse überschneidet sich mit einem bestätigten Google-Ranking-Update; das Ergebnis ist nicht schlüssig.",
+    "disclaimer": "Schätzung mit externen Markt- und Kontrolldaten; kein Kausalitätsnachweis."
   },
   "snapshots": {
     "newerData": "Neuere Crawl-Daten sind verfügbar.",

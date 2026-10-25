@@ -55,9 +55,7 @@ fn avif_dimensions(bytes: &[u8]) -> Option<(usize, usize)> {
         let width = read_be_u32(bytes, position + 8)?;
         let height = read_be_u32(bytes, position + 12)?;
         if nonzero((width, height)).is_some()
-            && largest.map_or(true, |(w, h)| {
-                width.saturating_mul(height) > w.saturating_mul(h)
-            })
+            && largest.is_none_or(|(w, h)| width.saturating_mul(height) > w.saturating_mul(h))
         {
             largest = Some((width, height));
         }

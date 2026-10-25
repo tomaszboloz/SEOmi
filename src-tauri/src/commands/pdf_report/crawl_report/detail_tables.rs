@@ -10,9 +10,7 @@ use serde_json::Value;
 pub fn allows(run: &Value, section: &str) -> bool {
     run.get("report_template_sections")
         .and_then(Value::as_array)
-        .map_or(true, |sections| {
-            sections.iter().any(|item| item.as_str() == Some(section))
-        })
+        .is_none_or(|sections| sections.iter().any(|item| item.as_str() == Some(section)))
 }
 
 /// Dedicated section tables allowed by the template, in report order.

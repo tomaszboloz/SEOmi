@@ -14,6 +14,6 @@ pub(in crate::services::html_parser) fn parse_declared_version(value: &str) -> O
         && value
             .chars()
             .nth(version.len())
-            .map_or(true, char::is_whitespace);
+            .is_none_or(char::is_whitespace);
     valid.then_some(version)
 }

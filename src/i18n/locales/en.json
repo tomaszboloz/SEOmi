@@ -7753,14 +7753,20 @@
   },
   "causalMarket": {
     "title": "Causal impact",
-    "empty": "Not enough history: at least 7 days before the change and 1 day after.",
+    "empty": "Not estimable. Not enough history: need at least 7 days before and 1 after, a real external market series, and independent control evidence.",
     "effect": "Daily effect: {{effect}} ({{lower}} to {{upper}})",
     "updateWindow": "Google update window: result is inconclusive.",
     "normalized": "Normalized by market baseline",
     "positive": "Positive effect",
     "negative": "Negative effect",
     "noEffect": "No measurable effect",
-    "inconclusive": "Inconclusive"
+    "inconclusive": "Inconclusive",
+    "evidence": "Evidence: market {{market}}; control {{control}}",
+    "unknown": "unknown",
+    "marketUnavailable": "External market baseline is unavailable or invalid; no causal success or failure is inferred.",
+    "controlUnavailable": "Independent control evidence is unavailable; no causal success or failure is inferred.",
+    "updateWindowReason": "The analysis overlaps a confirmed Google ranking update; the result is inconclusive.",
+    "disclaimer": "Estimate with external market and control evidence; it is not proof of causation."
   },
   "snapshots": {
     "newerData": "Newer crawl data is available.",

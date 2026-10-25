@@ -1,5 +1,5 @@
 import { fireEvent, render, screen } from '@testing-library/react';
-import { describe, expect, it, vi } from 'vitest';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { CrawlDirectoryTree } from '@/components/Charts/CrawlDirectoryTree';
 import { createCrawlPageFixture as page } from './fixtures/crawl';
 import i18n from '@/i18n';
@@ -8,6 +8,10 @@ const label = (key: string, values?: Record<string, unknown>) => i18n.t(`crawlDi
 const key = (project: string, run = 'run') => `seomi_project_${project}_crawl_directory_${run}_v1`;
 
 describe('crawl directory interactions', () => {
+  beforeEach(async () => {
+    localStorage.clear();
+    await i18n.changeLanguage('en');
+  });
   it('filters actual pages, selects a URL, displays observed metrics and persists selection', () => {
     const onSelectPage = vi.fn();
     const pages = [page({ url: 'https://site.test/?alpha', title: 'Alpha', http_status: 404, indexability_status: 'Excluded by response' }), page({ url: 'https://site.test/?beta', title: 'Beta', indexability_status: undefined })];

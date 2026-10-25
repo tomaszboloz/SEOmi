@@ -16,6 +16,7 @@ use uuid::Uuid;
 mod arguments;
 pub(super) mod binary_fixture;
 mod capabilities;
+pub(super) mod executable_fixture;
 mod fixtures;
 mod processes;
 mod research_contracts;
