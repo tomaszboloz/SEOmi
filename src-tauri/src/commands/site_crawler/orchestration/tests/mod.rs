@@ -84,6 +84,7 @@ mod rendered_prefetch;
 mod rendered_prefetch_edges;
 mod rendered_prefetch_guards;
 mod rendered_prefetch_inflight;
+mod rendered_prefetch_join_tests;
 mod resource_abort_and_timeout;
 mod resource_contracts;
 mod resource_deadlines;

@@ -57,9 +57,12 @@ pub fn put_encrypted(
 ) -> Result<(), String> {
     let (key_id, secret) = subject_key(conn, project, subject)?;
     let nonce = random::<12>()?;
-    let cipher = ChaCha20Poly1305::new(Key::from_slice(&secret));
+    let encryption_key =
+        Key::try_from(secret.as_slice()).map_err(|_| "Encryption failed.".to_string())?;
+    let nonce = Nonce::try_from(nonce.as_slice()).map_err(|_| "Encryption failed.".to_string())?;
+    let cipher = ChaCha20Poly1305::new(&encryption_key);
     let sealed = cipher
-        .encrypt(Nonce::from_slice(&nonce), data)
+        .encrypt(&nonce, data)
         .map_err(|_| "Encryption failed.".to_string())?;
     let blob = [nonce.as_slice(), sealed.as_slice()].concat();
     records::put_record(conn, project, kind, key, subject, &key_id, &blob).map_err(db)
@@ -97,8 +100,12 @@ pub fn read_record(
     let Some(secret) = secret.filter(|_| data.len() > 12) else {
         return Ok(None);
     };
-    let cipher = ChaCha20Poly1305::new(Key::from_slice(&secret));
-    Ok(cipher
-        .decrypt(Nonce::from_slice(&data[..12]), &data[12..])
-        .ok())
+    let Some(encryption_key) = Key::try_from(secret.as_slice()).ok() else {
+        return Ok(None);
+    };
+    let Some(nonce) = Nonce::try_from(&data[..12]).ok() else {
+        return Ok(None);
+    };
+    let cipher = ChaCha20Poly1305::new(&encryption_key);
+    Ok(cipher.decrypt(&nonce, &data[12..]).ok())
 }

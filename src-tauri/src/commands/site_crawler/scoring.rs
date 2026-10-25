@@ -86,10 +86,7 @@ fn evidence_score_cap(pages: &[CrawledPageSummary]) -> u8 {
     }
     let html_pages = pages.iter().filter(|page| {
         page.request_error_kind.is_none()
-            && page
-                .content_type
-                .as_deref()
-                .map_or(true, is_html_media_type)
+            && page.content_type.as_deref().is_none_or(is_html_media_type)
     });
     let mut html_count = 0;
     let mut partial = false;

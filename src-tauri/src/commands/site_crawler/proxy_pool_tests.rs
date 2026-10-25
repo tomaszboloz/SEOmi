@@ -96,3 +96,13 @@ fn redaction_removes_credentials_and_handles_garbage() {
     assert_eq!(redact_proxy_url("https://u:p@h.test"), "https://h.test/");
     assert_eq!(redact_proxy_url("::bad"), "<invalid proxy>");
 }
+
+#[test]
+fn soonest_identifies_first_recovering_proxy() {
+    let mut pool = pool(2, 1);
+    let now = Instant::now();
+    assert_eq!(pool.soonest(), Some(0));
+    pool.record_failure(0, now);
+    pool.record_failure(1, now + Duration::from_secs(10));
+    assert_eq!(pool.soonest(), Some(0));
+}

@@ -55,7 +55,7 @@ pub fn validate_custom_searches(searches: &[CustomSearchDefinition]) -> Result<(
             && search
                 .attribute
                 .as_deref()
-                .map_or(true, |attribute| !is_valid_attribute_name(attribute.trim()))
+                .is_none_or(|attribute| !is_valid_attribute_name(attribute.trim()))
             && mode == "css"
         {
             return Err(format!(

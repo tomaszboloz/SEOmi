@@ -64,3 +64,10 @@ fn simultaneous_first_opens_and_writers_wait_for_each_other() {
     drop(conn);
     fs::remove_dir_all(dir).unwrap();
 }
+
+#[test]
+fn schema_migrate_idempotent_on_current_version() {
+    let mut conn = rusqlite::Connection::open_in_memory().unwrap();
+    conn.execute_batch("PRAGMA user_version = 2;").unwrap();
+    assert!(schema::migrate(&mut conn).is_ok());
+}
