@@ -56,7 +56,7 @@ it.each(['\n', '\r\n'])('keeps strict CI gates with %j line endings', (newline) 
   expect(release).toContain("branches: [ main, 'release/**' ]");
   expect(release).toContain('git ls-remote --exit-code --tags origin');
   expect(release).toContain('releaseCommitish: ${{ github.sha }}');
-  expect(release).toContain('gh release edit "${{ needs.release-preflight.outputs.tag }}" --repo "$GITHUB_REPOSITORY" --draft=false');
+  expect(release).toContain('node scripts/release-ci-gate-tag.mjs --publish-draft');
 });
 
 it('requires actual rendering on both desktop platforms', () => {
