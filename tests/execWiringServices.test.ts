@@ -13,7 +13,7 @@ vi.mock('@/services/siteFocus', () => ({ buildSiteFocusReport: () => ({ score: 7
 vi.mock('@/services/topicalAuthority', () => ({ buildAuthorityReport: () => ({ tas: 65 }) }));
 
 const A = 'https://s.test/a';
-const task = (patch: Partial<OptimizationTask> = {}): OptimizationTask => ({ id: 't1', kind: 'remove-410', module: 'sfs', status: 'implemented', url: A, baselineScore: 60, priority: 'high', createdAt: 'x', ...patch });
+const task = (patch: Partial<OptimizationTask> = {}): OptimizationTask => ({ id: 't1', kind: 'remove-410', module: 'sfs', status: 'implemented', url: A, baselineScore: 60, priority: 'high', createdAt: 'x', implementedAt: '2026-10-01T10:00:00Z', ...patch });
 
 describe('bus input and rules', () => {
   it('uses TRS < 40 non-technical pages and cannibal groups', () => {
@@ -68,7 +68,7 @@ describe('metric history and verification', () => {
     expect(readMetricHistory('q')).toEqual([]);
   });
   it('verifies after a crawl and writes deltas', () => {
-    const run = { result: { start_url: A, pages: [page({ url: A, final_url: A, http_status: 410 })] } } as never;
+    const run = { startedAt: '2026-10-01T12:00:00Z', result: { start_url: A, pages: [page({ url: A, final_url: A, http_status: 410 })] } } as never;
     expect(runTaskVerification('p', run)).toEqual([]);
     writeTasks('p', [task(), task({ id: 't2', module: 'tas', baselineScore: 60 }), task({ id: 't3', module: 'eetv' as never, baselineScore: 1 })]);
     runTaskVerification('p', run);
