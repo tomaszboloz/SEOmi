@@ -3,7 +3,7 @@ import { mkdtempSync, readFileSync, rmSync, copyFileSync, mkdirSync } from 'node
 import { tmpdir } from 'node:os';
 import { join, resolve } from 'node:path';
 
-const compile = spawnSync('cargo', ['build', '--manifest-path', 'src-tauri/Cargo.toml', '--example', 'desktop_e2e', '--features', 'custom-protocol'], { stdio: 'inherit' });
+const compile = spawnSync('cargo', ['build', '--manifest-path', 'src-tauri/Cargo.toml', '--example', 'desktop_e2e', '--features', 'custom-protocol,test-fixture'], { stdio: 'inherit' });
 if (compile.status !== 0) process.exit(compile.status ?? 1);
 const directory = mkdtempSync(join(tmpdir(), 'seomi-desktop-e2e-'));
 const report = join(directory, 'result.json');

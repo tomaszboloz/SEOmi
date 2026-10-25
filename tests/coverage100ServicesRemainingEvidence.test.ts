@@ -10,10 +10,12 @@ import { createCrawlPageFixture } from './fixtures/crawl';
 import { createAuditFixture } from './fixtures/audit';
 
 describe('remaining evidence service branches', () => {
-  it('returns a zero relative effect when the expected post level is zero', () => {
+  it('omits percentage estimation when the expected post level is zero', () => {
     const dates = Array.from({ length: 8 }, (_, index) => `2026-01-${String(index + 1).padStart(2, '0')}`);
     const result = estimateImpact({ dates, test: [1, 2, 3, 4, 5, 6, 7, 1], control: [1, 2, 3, 4, 5, 6, 7, 0], market: null, interventionDate: dates[7], updateWindows: [] });
-    expect(result?.relativeEffect).toBe(0);
+    expect(result).not.toBeNull();
+    expect(result?.effect).toBe(1);
+    expect(result?.relativeEffect).toBeNull();
   });
 
   it('uses the zero fallback for a missing reported page count', () => {

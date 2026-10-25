@@ -98,7 +98,7 @@ jobs:
           cargo +nightly llvm-cov clean --manifest-path src-tauri/Cargo.toml --workspace
           cargo +nightly llvm-cov --manifest-path src-tauri/Cargo.toml --branch --no-report
           mkdir -p test-results
-          SEOMI_E2E_RENDERER=1 cargo +nightly llvm-cov run --manifest-path src-tauri/Cargo.toml --example desktop_e2e --features custom-protocol --branch --no-clean --lcov --output-path coverage-rust.lcov -- test-results/desktop-e2e-coverage.json
+          SEOMI_E2E_RENDERER=1 cargo +nightly llvm-cov run --manifest-path src-tauri/Cargo.toml --example desktop_e2e --features custom-protocol,test-fixture --branch --no-clean --lcov --output-path coverage-rust.lcov -- test-results/desktop-e2e-coverage.json
           node scripts/validate-desktop-e2e-report.mjs test-results/desktop-e2e-coverage.json
           cargo +nightly llvm-cov run --manifest-path src-tauri/Cargo.toml --bin seomi --features custom-protocol --branch --no-clean -- --seomi-scheduled-headless --seomi-scheduled-project coverage-smoke --seomi-scheduled-id missing-task
           cargo +nightly llvm-cov run --manifest-path src-tauri/Cargo.toml --bin seomi --features custom-protocol --branch --no-clean -- --seomi-audit-queue-headless --seomi-scheduled-project coverage-smoke --seomi-scheduled-id missing-run

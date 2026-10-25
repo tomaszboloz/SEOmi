@@ -1,102 +1,78 @@
 import { describe, expect, it } from 'vitest';
 import { runReleaseCiGateCli } from '../scripts/release-ci-gate.mjs';
 import { runReleaseGateTagCli } from '../scripts/release-ci-gate-tag.mjs';
-
-const shaA = 'a'.repeat(40);
-const shaB = 'b'.repeat(40);
-
-const mockFetch = (handlers: Record<string, { status?: number; data: unknown }>): typeof fetch => {
-  return async (input: RequestInfo | URL) => {
-    const url = String(input);
-    const handler = Object.entries(handlers).find(([k]) => url.includes(k));
-    if (!handler) return { ok: false, status: 404, json: async () => ({}) } as Response;
-    const { status = 200, data } = handler[1];
-    return { ok: status >= 200 && status < 300, status, json: async () => data } as Response;
-  };
-};
+import { createPackageFixture, mockFetch, shaA, shaB } from './releaseCiGateCliHelpers.js';
 
 describe('release CI and Tag CLI execution', () => {
-  it('preflight CLI treats branch push for an existing older tag as no-op publish=false', async () => {
-    const fetchImpl = mockFetch({
-      '/git/ref/tags/': { status: 200, data: { object: { sha: shaB, type: 'commit' } } },
-    });
-    const result = await runReleaseGateTagCli(
-      {
-        GITHUB_REF_TYPE: 'branch', GITHUB_REF_NAME: 'main',
-        RELEASE_COMMIT_SHA: shaA, GITHUB_REPOSITORY: 'owner/repo', GH_TOKEN: 'secret',
-      },
-      ['--preflight'],
-      fetchImpl,
-    );
-    expect(result).toMatchObject({ publish: false });
+  it.each(['0.4.40', '0.4.41'])('preflight CLI treats branch push for existing tag as no-op for %s', async (ver) => {
+    const fix = createPackageFixture(ver);
+    try {
+      const fetchImpl = mockFetch({ '/git/ref/tags/': { status: 200, data: { object: { sha: shaB, type: 'commit' } } } });
+      const res = await runReleaseGateTagCli(
+        { GITHUB_REF_TYPE: 'branch', GITHUB_REF_NAME: 'main', RELEASE_COMMIT_SHA: shaA, GITHUB_REPOSITORY: 'o/r', GH_TOKEN: 'sec' },
+        ['--preflight'], fetchImpl, fix.pkgPath,
+      );
+      expect(res).toMatchObject({ publish: false });
+    } finally { fix.cleanup(); }
   });
 
-  it('preflight CLI resolves fresh branch push to publish=true when tag is new', async () => {
-    const fetchImpl = mockFetch({
-      '/git/ref/tags/': { status: 404, data: {} },
-    });
-    const result = await runReleaseGateTagCli(
-      {
-        GITHUB_REF_TYPE: 'branch', GITHUB_REF_NAME: 'main',
-        RELEASE_COMMIT_SHA: shaA, GITHUB_REPOSITORY: 'owner/repo', GH_TOKEN: 'secret',
-      },
-      ['--preflight'],
-      fetchImpl,
-    );
-    expect(result).toMatchObject({ publish: true });
+  it.each(['0.4.40', '0.4.41'])('preflight CLI resolves fresh branch push to publish=true for %s', async (ver) => {
+    const fix = createPackageFixture(ver);
+    try {
+      const fetchImpl = mockFetch({ '/git/ref/tags/': { status: 404, data: {} } });
+      const res = await runReleaseGateTagCli(
+        { GITHUB_REF_TYPE: 'branch', GITHUB_REF_NAME: 'main', RELEASE_COMMIT_SHA: shaA, GITHUB_REPOSITORY: 'o/r', GH_TOKEN: 'sec' },
+        ['--preflight'], fetchImpl, fix.pkgPath,
+      );
+      expect(res).toMatchObject({ publish: true });
+    } finally { fix.cleanup(); }
   });
 
-  it('preflight CLI verifies matching tag push against remote target SHA', async () => {
-    const fetchImpl = mockFetch({
-      '/git/ref/tags/': { status: 200, data: { object: { sha: shaA, type: 'commit' } } },
-    });
-    const result = await runReleaseGateTagCli(
-      {
-        GITHUB_REF_TYPE: 'tag', GITHUB_REF_NAME: 'v0.4.40',
-        RELEASE_COMMIT_SHA: shaA, GITHUB_REPOSITORY: 'owner/repo', GH_TOKEN: 'secret',
-      },
-      ['--preflight'],
-      fetchImpl,
-    );
-    expect(result).toEqual({ tag: 'v0.4.40', publish: true });
+  it.each(['0.4.40', '0.4.41'])('preflight CLI verifies matching tag push against remote target SHA for %s', async (ver) => {
+    const fix = createPackageFixture(ver);
+    try {
+      const tag = `v${ver}`;
+      const fetchImpl = mockFetch({ [`/git/ref/tags/${tag}`]: { status: 200, data: { object: { sha: shaA, type: 'commit' } } } });
+      const res = await runReleaseGateTagCli(
+        { GITHUB_REF_TYPE: 'tag', GITHUB_REF_NAME: tag, RELEASE_COMMIT_SHA: shaA, GITHUB_REPOSITORY: 'o/r', GH_TOKEN: 'sec' },
+        ['--preflight'], fetchImpl, fix.pkgPath,
+      );
+      expect(res).toEqual({ tag, publish: true });
+    } finally { fix.cleanup(); }
   });
 
   it('preflight CLI rejects mismatched tag name before builders start', async () => {
-    await expect(runReleaseGateTagCli(
-      {
-        GITHUB_REF_TYPE: 'tag', GITHUB_REF_NAME: 'v0.9.99',
-        RELEASE_COMMIT_SHA: shaA, GITHUB_REPOSITORY: 'owner/repo', GH_TOKEN: 'secret',
-      },
-      ['--preflight'],
-    )).rejects.toThrow('does not match expected version tag');
+    const fix = createPackageFixture('0.4.41');
+    try {
+      await expect(runReleaseGateTagCli(
+        { GITHUB_REF_TYPE: 'tag', GITHUB_REF_NAME: 'v0.9.99', RELEASE_COMMIT_SHA: shaA, GITHUB_REPOSITORY: 'o/r', GH_TOKEN: 'sec' },
+        ['--preflight'], mockFetch({}), fix.pkgPath,
+      )).rejects.toThrow('does not match expected version tag');
+    } finally { fix.cleanup(); }
   });
 
-  it('preflight CLI rejects tag trigger pointing to a different commit', async () => {
-    const fetchImpl = mockFetch({
-      '/git/ref/tags/v0.4.40': { status: 200, data: { object: { sha: shaB, type: 'commit' } } },
-    });
-    await expect(runReleaseGateTagCli(
-      {
-        GITHUB_REF_TYPE: 'tag', GITHUB_REF_NAME: 'v0.4.40',
-        RELEASE_COMMIT_SHA: shaA, GITHUB_REPOSITORY: 'owner/repo', GH_TOKEN: 'secret',
-      },
-      ['--preflight'],
-      fetchImpl,
-    )).rejects.toThrow(`points to ${shaB}, expected ${shaA}`);
+  it.each(['0.4.40', '0.4.41'])('preflight CLI rejects tag trigger pointing to a different commit for %s', async (ver) => {
+    const fix = createPackageFixture(ver);
+    try {
+      const tag = `v${ver}`;
+      const fetchImpl = mockFetch({ [`/git/ref/tags/${tag}`]: { status: 200, data: { object: { sha: shaB, type: 'commit' } } } });
+      await expect(runReleaseGateTagCli(
+        { GITHUB_REF_TYPE: 'tag', GITHUB_REF_NAME: tag, RELEASE_COMMIT_SHA: shaA, GITHUB_REPOSITORY: 'o/r', GH_TOKEN: 'sec' },
+        ['--preflight'], fetchImpl, fix.pkgPath,
+      )).rejects.toThrow(`points to ${shaB}, expected ${shaA}`);
+    } finally { fix.cleanup(); }
   });
 
-  it('verify CLI rejects release tag pointing to wrong target commit', async () => {
-    const fetchImpl = mockFetch({
-      '/git/ref/tags/v0.4.40': { status: 200, data: { object: { sha: shaB, type: 'commit' } } },
-    });
-    await expect(runReleaseGateTagCli(
-      {
-        RELEASE_TAG: 'v0.4.40',
-        RELEASE_COMMIT_SHA: shaA, GITHUB_REPOSITORY: 'owner/repo', GH_TOKEN: 'secret',
-      },
-      ['--verify'],
-      fetchImpl,
-    )).rejects.toThrow(`points to ${shaB}, expected ${shaA}`);
+  it.each(['0.4.40', '0.4.41'])('verify CLI rejects release tag pointing to wrong target commit for %s', async (ver) => {
+    const fix = createPackageFixture(ver);
+    try {
+      const tag = `v${ver}`;
+      const fetchImpl = mockFetch({ [`/git/ref/tags/${tag}`]: { status: 200, data: { object: { sha: shaB, type: 'commit' } } } });
+      await expect(runReleaseGateTagCli(
+        { RELEASE_TAG: tag, RELEASE_COMMIT_SHA: shaA, GITHUB_REPOSITORY: 'o/r', GH_TOKEN: 'sec' },
+        ['--verify'], fetchImpl, fix.pkgPath,
+      )).rejects.toThrow(`points to ${shaB}, expected ${shaA}`);
+    } finally { fix.cleanup(); }
   });
 
   it('runs release CI gate CLI and logs success message on all checks', async () => {

@@ -1,6 +1,6 @@
 [package]
 name = "seomi"
-version = "0.4.40"
+version = "0.4.41"
 description = "Lightning-fast Native Desktop SEO & Open Graph Auditor"
 authors = ["Tomasz Bołoz"]
 edition = "2021"
@@ -16,10 +16,11 @@ tauri-build = { version = "2.7.4", features = [] }
 
 [features]
 custom-protocol = ["tauri/custom-protocol"]
+test-fixture = []
 
 [[example]]
 name = "desktop_e2e"
-required-features = ["custom-protocol"]
+required-features = ["custom-protocol", "test-fixture"]
 
 [[example]]
 name = "function_inventory"

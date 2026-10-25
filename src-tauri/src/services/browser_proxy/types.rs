@@ -36,5 +36,5 @@ pub(super) struct RequestHead {
 pub(super) use crate::utils::http_syntax::is_http_token_byte;
 
 pub(super) fn is_allowed_plain_http_port(port: u16) -> bool {
-    ALLOWED_HTTP_PORTS.contains(&port)
+    ALLOWED_HTTP_PORTS.contains(&port) || crate::utils::test_fixture::is_allowed_fixture_port(port)
 }

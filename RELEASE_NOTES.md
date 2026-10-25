@@ -1,3 +1,27 @@
+# SEOmi 0.4.41 — release notes
+
+## Added
+- Release provenance and supply-chain integrity: CycloneDX SBOM generation for Node (spec 1.6) and Rust (spec 1.3), cryptographic SHA256SUMS attestation input, multi-platform artifact inventory binding, idempotent retry/rerun handling with fail-closed digest verification, and deterministic toolchain setup in release workflows (#102).
+- Observational Causal Market Impact panel in Signals: project-scoped analysis with full UI localization across all 12 supported locales, explicit non-causal observational disclaimers, and data boundary validations.
+- Desktop renderer and crawler tests use a deterministic local HTTP fixture. Exact-origin assertions reject an unexpected scheme, host or port.
+- Compatibility regressions verify reading existing ChaCha20-Poly1305 ciphertext, rejecting tampering and using isolated credential-store test identities.
+
+## Fixed
+- AI CLI fixtures read piped input to EOF before replying; regressions cover Unicode and shell metacharacters.
+- Proxy overload regressions require a complete HTTP 503 response with correct Content-Length, including fragmented reads.
+- A late polling response no longer overwrites the confirmed stopped worker state.
+
+## Changed
+- Candidate version bump to 0.4.41 across application metadata (`package.json`, `package-lock.json`, `Cargo.toml`, `Cargo.lock`).
+
+## Notes & Limitations
+- Publication criteria: candidate preparation only; release publication requires successful exact-SHA CI verification on remote builders.
+- Dependency upgrade scope: TypeScript 7 remains blocked by the current typescript-eslint peer dependency; updating every package to latest is deferred pending upstream ecosystem compatibility.
+- Scope boundary: pending workstreams (#137, #138) are not included in this release baseline.
+
+## Thanks
+- Thank you @RafalSzy and all contributors.
+
 # SEOmi 0.4.40 — release notes
 
 ## Added

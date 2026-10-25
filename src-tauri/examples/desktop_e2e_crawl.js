@@ -1,6 +1,6 @@
 // Live crawl checks run only when the renderer-enabled desktop E2E is requested.
 (() => {
-  const target = 'https://example.com/';
+  const target = (typeof window !== 'undefined' && window.__seomiE2eFixtureUrl) || 'https://example.com/';
   const nonce = () => globalThis.crypto?.randomUUID?.() || `${Date.now()}-${Math.random().toString(36).slice(2)}`;
   const crawlConfig = mode => ({
     crawlMode: mode,
@@ -24,7 +24,7 @@
     check(`${label} crawl completed without cancellation or timeout`, result?.cancelled === false && result?.timed_out === false);
     let finalUrl;
     try { finalUrl = new URL(page?.final_url); } catch (_) { finalUrl = null; }
-    check(`${label} observed final URL is example.com`, finalUrl?.hostname === 'example.com');
+    check(`${label} observed final URL is expected host`, finalUrl?.origin === new URL(target).origin);
     check(`${label} observed HTTP status is positive`, Number.isInteger(page?.http_status) && page.http_status > 0);
     check(`${label} observed response time is an integer`, Number.isInteger(page?.response_time_ms) && page.response_time_ms >= 0);
     check(`${label} live HTML content type is present`, typeof page?.content_type === 'string' && page.content_type.toLowerCase().includes('text/html'));

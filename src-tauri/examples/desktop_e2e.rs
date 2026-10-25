@@ -4,23 +4,25 @@ use std::{fs, path::PathBuf, sync::Mutex, time::Duration};
 use tauri::{Listener, Manager};
 use uuid::Uuid;
 
-// 26 renderer checks plus 11 live-page checks for each of HTTP and browser-rendered modes.
+#[path = "desktop_e2e_fixture.rs"]
+mod fixture;
+
+// 26 renderer + (11 * 2) crawl checks; validation is 40 base + 24 additional + 135 IPC.
 const REQUIRED_RENDERER_CHECKS: usize = 26 + (11 * 2);
-// Validation includes 40 base, 24 additional and 135 malformed IPC checks.
-// Keep this explicit so adding a script without extending the gate fails.
 const REQUIRED_VALIDATION_CHECKS: usize = 40 + 24 + 135;
 
 fn main() {
     let report = PathBuf::from(std::env::args_os().nth(1).expect("report path argument"));
     let renderer_enabled = std::env::var("SEOMI_E2E_RENDERER").ok().as_deref() == Some("1");
+    let fixture = fixture::DesktopFixture::start();
+    let fixture_url = fixture.url();
     let session = Uuid::new_v4();
     let mut context = tauri::generate_context!();
-    context.config_mut().plugins.0.insert(
-        "updater".into(),
-        serde_json::json!({ "pubkey": "", "endpoints": [] }),
-    );
-    context.config_mut().identifier = format!("com.seomi.desktop.e2e.{}", session.simple());
-    context.config_mut().product_name = Some("SEOmi Desktop E2E".into());
+    let updater_cfg = serde_json::json!({ "pubkey": "", "endpoints": [] });
+    let cfg = context.config_mut();
+    cfg.plugins.0.insert("updater".into(), updater_cfg);
+    cfg.identifier = format!("com.seomi.desktop.e2e.{}", session.simple());
+    cfg.product_name = Some("SEOmi Desktop E2E".into());
     let profile = std::env::temp_dir().join(format!("seomi-e2e-webview-{session}"));
     let mut window = context.config().app.windows[0].clone();
     window.title = "SEOmi Desktop E2E".into();
@@ -37,7 +39,7 @@ fn main() {
     let crawl_validation_script = include_str!("desktop_e2e_crawl.js");
     let ipc_validation_script = include_str!("desktop_e2e_ipc.js");
     let main_script = format!(
-        "window.__seomiE2eRendererEnabled = {renderer_enabled};\n{ipc_validation_script}\n{additional_validation_script}\n{validation_script}\n{crawl_validation_script}\n{renderer_script}\n{script}"
+        "window.__seomiE2eRendererEnabled = {renderer_enabled};\nwindow.__seomiE2eFixtureUrl = '{fixture_url}';\n{ipc_validation_script}\n{additional_validation_script}\n{validation_script}\n{crawl_validation_script}\n{renderer_script}\n{script}"
     );
     let plugin = tauri::plugin::Builder::<tauri::Wry, ()>::new("desktop-e2e")
         .setup(move |app, _| {
@@ -138,6 +140,7 @@ fn main() {
         let _ = fs::remove_dir_all(root);
     }
     let _ = fs::remove_dir_all(&profile);
+    drop(fixture);
     std::process::exit(code);
 }
 
