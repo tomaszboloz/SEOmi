@@ -1,4 +1,5 @@
 import { validateGithubApiBase, validateRepository } from './release-input-validation.mjs';
+import { readMainCodeqlPages } from './release-codeql-pages.mjs';
 
 const MAIN_REF = 'refs/heads/main';
 const CATEGORIES = ['/language:actions', '/language:javascript-typescript'];
@@ -48,38 +49,21 @@ export const loadMainCodeqlEvidence = async ({
       redirect: 'error',
     });
     if (!response.ok) throw new Error(`CodeQL evidence request failed: HTTP ${response.status}`);
-    return response.json();
+    return { data: await response.json(), link: response.headers.get('link') };
   };
-  const head = await request('git/ref/heads/main');
+  const { data: head } = await request('git/ref/heads/main');
   if (head?.ref !== MAIN_REF || head?.object?.type !== 'commit' || head.object.sha !== sha) {
     throw new Error('CodeQL main ref does not point to the release SHA');
   }
-  // GitHub returns newest first. Missing categories fail closed; older pages
-  // cannot supply a newer analysis for a release that is absent from this page.
-  const analyses = await request('code-scanning/analyses?ref=refs%2Fheads%2Fmain&sort=created&direction=desc&per_page=100');
-  if (!Array.isArray(analyses) || analyses.length > 100) throw new Error('Invalid CodeQL analysis list');
+  const baseUrl = `${base}/repos/${repo}`;
+  const analyses = await readMainCodeqlPages({ request, baseUrl, resource: 'analyses' });
   let previousTime = Infinity;
-  const analysisIds = new Set();
   for (const analysis of analyses) {
     const time = Date.parse(analysis?.created_at ?? '');
-    if (!validId(analysis?.id) || analysisIds.has(analysis.id)) throw new Error('Invalid or duplicate CodeQL analysis');
     if (!Number.isFinite(time) || time > previousTime) throw new Error('CodeQL analyses must be newest first');
-    analysisIds.add(analysis.id);
     previousTime = time;
   }
-  const alerts = [];
-  const seen = new Set();
-  for (let page = 1; ; page += 1) {
-    if (page > 100) throw new Error('CodeQL alert pagination exceeded its bound');
-    const batch = await request(`code-scanning/alerts?ref=refs%2Fheads%2Fmain&state=open&per_page=100&page=${page}`);
-    if (!Array.isArray(batch) || batch.length > 100) throw new Error('Invalid CodeQL alert list');
-    for (const alert of batch) {
-      if (!validId(alert?.number) || seen.has(alert.number)) throw new Error('Invalid or duplicate CodeQL alert page');
-      seen.add(alert.number);
-      alerts.push(alert);
-    }
-    if (batch.length < 100) break;
-  }
-  const finalHead = await request('git/ref/heads/main');
+  const alerts = await readMainCodeqlPages({ request, baseUrl, resource: 'alerts' });
+  const { data: finalHead } = await request('git/ref/heads/main');
   return evaluateMainCodeqlEvidence({ sha, head: finalHead, analyses, alerts });
 };
