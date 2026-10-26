@@ -17,8 +17,8 @@ const fragment = (platform: string, signature = 's1') => ({
 
 describe('release manifest validation', () => {
   it('reconstructs only the canonical role-specific asset names', () => {
-    expect(expectedManifestFileName('darwin-aarch64', version)).toBe('SEOmi_aarch64.app.tar.gz');
-    expect(expectedManifestFileName('darwin-x86_64', version)).toBe('SEOmi_x64.app.tar.gz');
+    expect(expectedManifestFileName('darwin-aarch64', version)).toBe('SEOmi_0.4.40_aarch64.app.tar.gz');
+    expect(expectedManifestFileName('darwin-x86_64', version)).toBe('SEOmi_0.4.40_x64.app.tar.gz');
     expect(expectedManifestFileName('windows-x86_64', version)).toBe('SEOmi_0.4.40_x64-setup.exe');
   });
 
@@ -33,6 +33,15 @@ describe('release manifest validation', () => {
     ['wrong filename', 'https://github.com/owner/repo/releases/download/v0.4.40/SEOmi_x64.app.tar.gz'],
   ])('rejects %s', (_label, url) => {
     expect(() => validateManifestFragment({ ...fragment('darwin-aarch64'), entry: { signature: 's1', url } }, { version, repository })).toThrow('Manifest URL');
+  });
+
+  it('accepts the legacy macOS names but rejects stale or deceptive versioned names', () => {
+    const legacy = 'https://github.com/owner/repo/releases/download/v0.4.40/SEOmi_aarch64.app.tar.gz';
+    expect(validateManifestFragment({ ...fragment('darwin-aarch64'), entry: { signature: 's1', url: legacy } }, { version, repository }).entry.url).toBe(legacy);
+    for (const fileName of ['SEOmi_0.4.39_aarch64.app.tar.gz', 'other_0.4.40_aarch64.app.tar.gz']) {
+      const url = `https://github.com/${repository}/releases/download/v${version}/${fileName}`;
+      expect(() => validateManifestFragment({ ...fragment('darwin-aarch64'), entry: { signature: 's1', url } }, { version, repository })).toThrow('Manifest URL');
+    }
   });
 
   it('rejects unsafe or empty signatures and extra fields', () => {
