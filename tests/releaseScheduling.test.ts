@@ -10,8 +10,13 @@ const release = readFileSync('.github/workflows/release.yml', 'utf8');
 const dispatcher = () => readFileSync('.github/workflows/release-after-ci.yml', 'utf8');
 const bash = process.platform === 'win32'
   ? join(process.env.ProgramFiles ?? 'C:\\Program Files', 'Git', 'bin', 'bash.exe') : '/bin/bash';
+const runScript = (workflow: string) => {
+  const block = workflow.replace(/\r\n/g, '\n').split('        run: |\n')[1];
+  if (!block) throw new Error('Missing Bash run block');
+  return block.split('\n').map(line => line.startsWith('          ') ? line.slice(10) : line).join('\n');
+};
 
-function runDispatch({ branch = 'main', sha = shaA, current = shaA, apiExit = '0', dispatchExit = '0' } = {}) {
+function runDispatch({ branch = 'main', sha = shaA, current = shaA, apiExit = '0', dispatchExit = '0', newline = '\n' } = {}) {
   const dir = mkdtempSync(join(tmpdir(), 'release-dispatch-'));
   try {
     const calls = join(dir, 'calls.jsonl'), fakeGh = join(dir, 'gh');
@@ -21,8 +26,7 @@ fs.appendFileSync(process.env.TEST_CALLS, JSON.stringify(process.argv.slice(2)) 
 if (process.argv[2] === 'api') { console.log(process.env.TEST_CURRENT); process.exit(Number(process.env.TEST_API_EXIT)); }
 process.exit(Number(process.env.TEST_DISPATCH_EXIT));
 `);
-    const script = dispatcher().split('        run: |\n')[1].split('\n')
-      .map(line => line.startsWith('          ') ? line.slice(10) : line).join('\n');
+    const script = runScript(dispatcher().replace(/\r?\n/g, newline));
     const result = spawnSync(bash, ['-c', 'gh() { "$TEST_NODE" "$TEST_GH" "$@"; }\n' + script], { encoding: 'utf8', env: {
       ...process.env, TEST_NODE: process.execPath, TEST_GH: fakeGh, SOURCE_BRANCH: branch, SOURCE_SHA: sha,
       GITHUB_REPOSITORY: 'owner/repo', TEST_CALLS: calls, TEST_CURRENT: current,
@@ -51,6 +55,7 @@ describe('release scheduling after complete CI', () => {
     expect(release).toContain('expected_sha:');
     expect(release).toContain("- 'v*'");
     expect(release).toContain('RELEASE_EXPECTED_SHA: ${{ inputs.expected_sha }}');
+    expect(readFileSync('.github/workflows/test.yml', 'utf8')).toMatch(/run: npm test -- tests\/releaseScheduling\.test\.ts\s+- name: Run full frontend test suite/);
   });
 
   it.each(['release-preflight', 'publish-release'])('allows %s to read actual CodeQL evidence', job => {
@@ -82,10 +87,14 @@ describe('release scheduling after complete CI', () => {
     expect(result.commands).toHaveLength(1);
   });
 
-  it('rejects a dispatch race before shell preflight performs reads', () => {
-    const script = release.split('      - name: Check updater signing credentials')[0]
-      .split('        run: |\n')[1].split('\n')
-      .map(line => line.startsWith('          ') ? line.slice(10) : line).join('\n');
+  it.each(['\n', '\r\n'])('executes actual dispatch Bash from YAML with %j line endings', newline => {
+    const result = runDispatch({ newline });
+    expect(result.status).toBe(0);
+    expect(result.commands.at(-1)?.at(-1)).toBe(`expected_sha=${shaA}`);
+  });
+
+  it.each(['\n', '\r\n'])('rejects a dispatch race before shell reads with %j line endings', newline => {
+    const script = runScript(release.split('      - name: Check updater signing credentials')[0].replace(/\r?\n/g, newline));
     const noRead = 'node() { echo forbidden-read >&2; exit 99; }; git() { echo forbidden-read >&2; exit 99; };\n';
     const result = spawnSync(bash, ['-c', noRead + script], { encoding: 'utf8',
       env: { ...process.env, RELEASE_EXPECTED_SHA: shaB, RELEASE_COMMIT_SHA: shaA } });
