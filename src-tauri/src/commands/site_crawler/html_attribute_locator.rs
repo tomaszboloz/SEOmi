@@ -51,7 +51,7 @@ pub(in crate::commands::site_crawler) fn locate_html_attribute(
             let after_ok = tag
                 .as_bytes()
                 .get(name_end)
-                .map_or(true, |b| b.is_ascii_whitespace() || *b == b'=');
+                .is_none_or(|b| b.is_ascii_whitespace() || *b == b'=');
             if !before_ok || !after_ok {
                 cursor = name_end;
                 continue;

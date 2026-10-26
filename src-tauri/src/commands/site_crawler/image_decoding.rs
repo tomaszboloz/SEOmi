@@ -69,7 +69,7 @@ pub(super) fn intrinsic_http_image_dimensions(
             } else {
                 usize::from(bytes[offset + 1])
             };
-            if largest.map_or(true, |(current_width, current_height)| {
+            if largest.is_none_or(|(current_width, current_height)| {
                 width.saturating_mul(height) > current_width.saturating_mul(current_height)
             }) {
                 largest = Some((width, height));

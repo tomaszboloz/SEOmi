@@ -8,7 +8,7 @@ pub(super) async fn oauth_response(response: reqwest::Response) -> Result<TokenR
     if token
         .access_token
         .as_ref()
-        .map_or(true, |value| value.trim().is_empty())
+        .is_none_or(|value| value.trim().is_empty())
     {
         return Err("Google OAuth returned no access token. Connect your account again.".into());
     }

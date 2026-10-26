@@ -65,3 +65,60 @@ fn refuses_redirects_methods_headers_oversize_and_unrelated_credentials() {
     input.credential = "openai_api_key".into();
     assert!(validate(&input).is_err());
 }
+
+#[tokio::test]
+async fn cms_patch_request_validates_and_handles_credentials_and_network() {
+    let mut input = request();
+    input.url = "https://127.0.0.1".into();
+    assert_eq!(
+        cms_patch_request(input).await.unwrap_err(),
+        "Unsafe CMS URL"
+    );
+
+    let mut input = request();
+    input.url = "http://example.com".into();
+    assert_eq!(
+        cms_patch_request(input).await.unwrap_err(),
+        "CMS URL must use HTTPS"
+    );
+
+    let mut input = request();
+    input.credential = "cms_auth_missing-cred".into();
+    assert_eq!(
+        cms_patch_request(input).await.unwrap_err(),
+        "CMS credential unavailable"
+    );
+
+    let _ = crate::commands::settings::set_secret(
+        "cms_auth_bad-header".into(),
+        "invalid\nnewline".into(),
+    )
+    .await;
+    let mut input = request();
+    input.credential = "cms_auth_bad-header".into();
+    assert_eq!(
+        cms_patch_request(input).await.unwrap_err(),
+        "CMS credential is not a valid header value"
+    );
+
+    let builder =
+        crate::services::http_client::resolver::public_client_builder_with_lookup(|_| async {
+            Err(std::io::Error::new(
+                std::io::ErrorKind::ConnectionRefused,
+                "transport connection refused",
+            ))
+        });
+    let mut input = request();
+    input.url = "https://example.com/cms".into();
+    input
+        .headers
+        .insert("Accept".into(), "application/json".into());
+    input.body = Some("{\"patch\": true}".into());
+    let err = cms_patch_request_with_builder(input, builder)
+        .await
+        .unwrap_err();
+    assert_eq!(err, "CMS request failed");
+}
+
+#[path = "nativeCmsPatchResponse.rs"]
+mod response;

@@ -105,7 +105,7 @@ pub(super) fn percent_decode_robots_path(value: &str) -> String {
 }
 
 pub(super) fn robots_allows(url: &url::Url, rules: &[RobotsRule]) -> bool {
-    robots_deciding_rule(url, rules).map_or(true, |rule| rule.allow)
+    robots_deciding_rule(url, rules).is_none_or(|rule| rule.allow)
 }
 
 #[cfg(test)]
