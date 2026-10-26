@@ -91,6 +91,8 @@ export const runReleaseGateTagCli = async (
   const refType = env.GITHUB_REF_TYPE;
   const refName = env.GITHUB_REF_NAME;
   const expectedSha = env.RELEASE_COMMIT_SHA ?? env.GITHUB_SHA;
+  if (env.RELEASE_EXPECTED_SHA && (!/^[a-f0-9]{40}$/u.test(env.RELEASE_EXPECTED_SHA)
+    || env.RELEASE_EXPECTED_SHA !== expectedSha)) throw new Error('Expected CI commit does not match release SHA');
   const repository = env.GITHUB_REPOSITORY;
   const token = env.GITHUB_TOKEN ?? env.GH_TOKEN;
   const apiUrl = env.GITHUB_API_URL ?? 'https://api.github.com';

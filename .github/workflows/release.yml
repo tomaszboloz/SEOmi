@@ -1,8 +1,12 @@
 name: Multi-Platform Release (macOS & Windows)
 on:
   workflow_dispatch:
+    inputs:
+      expected_sha:
+        description: 'Successful CI commit expected by the automatic dispatcher'
+        required: false
+        type: string
   push:
-    branches: [ main, 'release/**' ]
     tags:
       - 'v*'
 
@@ -36,9 +40,14 @@ jobs:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           RELEASE_COMMIT_SHA: ${{ github.sha }}
+          RELEASE_EXPECTED_SHA: ${{ inputs.expected_sha }}
         shell: bash
         run: |
           set -euo pipefail
+          if [[ -n "$RELEASE_EXPECTED_SHA" && "$RELEASE_EXPECTED_SHA" != "$RELEASE_COMMIT_SHA" ]]; then
+            echo 'Expected CI commit does not match release SHA.' >&2
+            exit 1
+          fi
           version="$(node -p "require('./package.json').version")"
           if [[ "$GITHUB_REF_TYPE" == 'tag' ]]; then
             expected_tag="v${version}"
@@ -186,6 +195,7 @@ jobs:
       checks: read
       id-token: write
       attestations: write
+      security-events: read
     steps:
       - name: Checkout repository
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1

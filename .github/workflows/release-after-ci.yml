@@ -1,0 +1,43 @@
+name: Release after successful CI
+on:
+  workflow_run:
+    workflows: ['Test Suite & Security Audit']
+    types: [completed]
+    branches: [ main, 'release/**' ]
+
+permissions:
+  contents: read
+
+concurrency:
+  group: release-ci-${{ github.event.workflow_run.head_branch }}
+  cancel-in-progress: false
+
+jobs:
+  dispatch:
+    if: >-
+      github.event.workflow_run.conclusion == 'success' &&
+      github.event.workflow_run.event == 'push' &&
+      github.event.workflow_run.head_repository.full_name == github.repository
+    runs-on: ubuntu-24.04
+    permissions:
+      contents: read
+      actions: write
+    steps:
+      - name: Dispatch release for the successful branch commit
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          SOURCE_BRANCH: ${{ github.event.workflow_run.head_branch }}
+          SOURCE_SHA: ${{ github.event.workflow_run.head_sha }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          [[ "$SOURCE_SHA" =~ ^[0-9a-f]{40}$ ]] || exit 1
+          case "$SOURCE_BRANCH" in main|release/*) ;; *) exit 1 ;; esac
+          git check-ref-format "refs/heads/$SOURCE_BRANCH"
+          current_sha="$(gh api "repos/${GITHUB_REPOSITORY}/git/ref/heads/${SOURCE_BRANCH}" --jq '.object.sha')"
+          [[ "$current_sha" =~ ^[0-9a-f]{40}$ ]] || exit 1
+          if [[ "$current_sha" != "$SOURCE_SHA" ]]; then
+            echo 'Branch advanced after CI; wait for its current commit to pass.'
+            exit 0
+          fi
+          gh workflow run release.yml --repo "$GITHUB_REPOSITORY" --ref "$SOURCE_BRANCH" -f "expected_sha=$SOURCE_SHA"
