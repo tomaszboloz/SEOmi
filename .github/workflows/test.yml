@@ -222,7 +222,9 @@ jobs:
         run: npm ci
       - name: Build frontend
         run: npm run build
-      - name: Run frontend test suite
+      - name: Check release scheduling on the desktop platform
+        run: npm test -- tests/releaseScheduling.test.ts
+      - name: Run full frontend test suite
         run: npm test -- --run --maxWorkers=2
       - name: Run Rust backend tests
         id: desktop-rust-tests

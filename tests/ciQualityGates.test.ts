@@ -53,7 +53,7 @@ it.each(['\n', '\r\n'])('keeps strict CI gates with %j line endings', (newline) 
   expect(release).toContain("args: '--target x86_64-apple-darwin --bundles app,dmg'");
   expect(release).toContain("args: '--target aarch64-apple-darwin --bundles app,dmg'");
   expect(release).not.toContain('uploadWorkflowArtifacts');
-  expect(release).toContain("branches: [ main, 'release/**' ]");
+  expect(readWorkflow('release-after-ci')).toContain("branches: [ main, 'release/**' ]");
   expect(release).toContain('git ls-remote --exit-code --tags origin');
   expect(release).toContain('releaseCommitish: ${{ github.sha }}');
   expect(release).toContain('node scripts/release-ci-gate-tag.mjs --publish-draft');
