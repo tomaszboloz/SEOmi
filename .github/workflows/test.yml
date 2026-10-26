@@ -245,16 +245,30 @@ jobs:
         run: npm run test:desktop
       - name: Validate actual desktop renderer evidence
         run: node scripts/validate-desktop-e2e-report.mjs test-results/desktop-e2e.json
+      - name: Launch production profile desktop runtime E2E
+        id: desktop-release-runtime
+        env:
+          SEOMI_E2E_RENDERER: '1'
+          SEOMI_E2E_PROFILE: release
+        run: npm run test:desktop
+      - name: Validate production profile desktop evidence
+        run: node scripts/validate-desktop-e2e-report.mjs test-results/desktop-e2e-release.json
       - name: Diagnose Windows loader failure
         if: failure() && runner.os == 'Windows' && steps.desktop-runtime.outcome == 'failure' && hashFiles('test-results/desktop-e2e.json') == ''
         shell: pwsh
         run: ./scripts/diagnose-windows-loader.ps1 -Executable src-tauri/target/debug/examples/desktop_e2e.exe
+      - name: Diagnose Windows production loader failure
+        if: failure() && runner.os == 'Windows' && steps.desktop-release-runtime.outcome == 'failure' && hashFiles('test-results/desktop-e2e-release.json') == ''
+        shell: pwsh
+        run: ./scripts/diagnose-windows-loader.ps1 -Executable src-tauri/target/release/examples/desktop_e2e.exe
       - name: Upload desktop runtime evidence
         if: always()
         uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
         with:
           name: desktop-e2e-${{ matrix.os }}
-          path: test-results/desktop-e2e.json
+          path: |
+            test-results/desktop-e2e.json
+            test-results/desktop-e2e-release.json
           if-no-files-found: warn
           retention-days: 14
 

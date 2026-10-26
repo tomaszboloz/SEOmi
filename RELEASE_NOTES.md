@@ -1,3 +1,17 @@
+# SEOmi 0.4.42 — release notes
+
+## Fixed
+- Settings and other workflows can load their shared PDF export module in the native desktop runtime. PDF header validation now compares decoded bytes, preventing content sniffing from serving the JavaScript module as a PDF document (#216).
+- Release provenance accepts the versioned macOS updater archives produced by packaging and retains compatibility with earlier archive names.
+
+## Quality
+- Mandatory desktop smoke checks open all six lazy dialogs and navigate fifteen workspace routes using real bundled modules.
+- Embedded JavaScript and CSS assets are checked with the native MIME detector. Desktop CI also runs the production build profile on macOS and Windows.
+- Existing coverage thresholds, twelve supported languages, security checks and the 150-line code limit are preserved.
+
+## Thanks
+- Thank you @RafalSzy and all contributors.
+
 # SEOmi 0.4.41 — release notes
 
 ## Added

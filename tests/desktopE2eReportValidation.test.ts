@@ -8,12 +8,14 @@ import {
   readAndValidateDesktopE2eReport,
   REQUIRED_RENDERER_CHECKS,
   REQUIRED_VALIDATION_CHECKS,
+  REQUIRED_UI_CHECKS,
 } from '../scripts/validate-desktop-e2e-report.mjs';
 
 const checks = (length: number) => Array.from({ length }, () => ({ passed: true }));
 const report = () => ({
   passed: true,
   checks: checks(24),
+  ui: { status: 'executed', passed: true, checks: checks(REQUIRED_UI_CHECKS) },
   validation: { status: 'executed', passed: true, checks: checks(REQUIRED_VALIDATION_CHECKS) },
   renderer: { status: 'executed', passed: true, previewEvidence: 'ipc-success', checks: checks(REQUIRED_RENDERER_CHECKS) },
 });
@@ -32,6 +34,16 @@ it('rejects malformed JSON before validating the report contract', () => {
 
 it('rejects a report marked as failed', () => {
   expect(() => assertDesktopE2eReport({ ...report(), passed: false })).toThrow('report.passed');
+});
+
+it('rejects omitted lazy UI smoke evidence', () => {
+  const invalid = report();
+  delete (invalid as { ui?: unknown }).ui;
+  expect(() => assertDesktopE2eReport(invalid)).toThrow('ui must be an object');
+});
+
+it('rejects failed lazy UI smoke evidence', () => {
+  expect(() => assertDesktopE2eReport({ ...report(), ui: { ...report().ui, passed: false } })).toThrow('ui.passed');
 });
 
 it('rejects a renderer that was skipped even when the rest passed', () => {

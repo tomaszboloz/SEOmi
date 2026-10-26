@@ -1,3 +1,6 @@
+#[path = "desktop_e2e_assets.rs"]
+mod assets;
+
 #[test]
 fn validation_scripts_match_the_runtime_gate() {
     let base = include_str!("desktop_e2e_validation.js");
@@ -41,7 +44,30 @@ fn validation_scripts_match_the_runtime_gate() {
     assert!(renderer.contains("__seomiDesktopCrawlValidation"));
     assert!(crawl.contains("crawlMode: mode"));
     assert!(additional.contains("window.__seomiDesktopAdditionalValidation"));
+    let ui = include_str!("desktop_e2e_ui.js");
+    for tab in [
+        "settings-modal-title",
+        "ai-assistant-title",
+        "ai-connections-title",
+        "audit-history-title",
+        "create-project-title",
+        "keyword-research",
+        "mcp-hub",
+        "seo-tools",
+    ] {
+        assert!(ui.contains(tab), "UI smoke must cover {tab}");
+    }
+    assert!(include_str!("desktop_e2e.rs").contains("desktop_e2e_ui.js"));
     assert!(include_str!("desktop_e2e.rs").contains("additional_validation_script"));
+}
+
+#[test]
+fn embedded_frontend_assets_use_browser_mime_types() {
+    let context = assets::verified_context();
+    let summary = assets::assert_embedded_frontend_mime(&context);
+
+    assert!(summary.script_count > 0);
+    assert!(summary.stylesheet_count > 0);
 }
 
 #[test]

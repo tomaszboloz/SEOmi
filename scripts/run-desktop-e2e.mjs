@@ -3,11 +3,15 @@ import { mkdtempSync, readFileSync, rmSync, copyFileSync, mkdirSync } from 'node
 import { tmpdir } from 'node:os';
 import { join, resolve } from 'node:path';
 
-const compile = spawnSync('cargo', ['build', '--manifest-path', 'src-tauri/Cargo.toml', '--example', 'desktop_e2e', '--features', 'custom-protocol,test-fixture'], { stdio: 'inherit' });
+const profile = process.env.SEOMI_E2E_PROFILE ?? 'debug';
+if (!['debug', 'release'].includes(profile)) throw new Error(`Unsupported desktop E2E profile: ${profile}`);
+const compileArgs = ['build', '--manifest-path', 'src-tauri/Cargo.toml', '--example', 'desktop_e2e', '--features', 'custom-protocol,test-fixture'];
+if (profile === 'release') compileArgs.push('--release');
+const compile = spawnSync('cargo', compileArgs, { stdio: 'inherit' });
 if (compile.status !== 0) process.exit(compile.status ?? 1);
 const directory = mkdtempSync(join(tmpdir(), 'seomi-desktop-e2e-'));
 const report = join(directory, 'result.json');
-const executable = resolve('src-tauri/target/debug/examples', process.platform === 'win32' ? 'desktop_e2e.exe' : 'desktop_e2e');
+const executable = resolve(process.env.CARGO_TARGET_DIR || 'src-tauri/target', profile, 'examples', process.platform === 'win32' ? 'desktop_e2e.exe' : 'desktop_e2e');
 const child = spawn(executable, [report], { stdio: 'inherit' });
 let timedOut = false;
 const rendererEnabled = process.env.SEOMI_E2E_RENDERER === '1';
@@ -20,7 +24,7 @@ child.on('exit', code => {
   try {
     const result = JSON.parse(readFileSync(report, 'utf8'));
     mkdirSync('test-results', { recursive: true });
-    copyFileSync(report, 'test-results/desktop-e2e.json');
+    copyFileSync(report, profile === 'release' ? 'test-results/desktop-e2e-release.json' : 'test-results/desktop-e2e.json');
     console.log(JSON.stringify(result, null, 2));
     if (code !== 0) console.warn(`Desktop E2E process exited with code ${code}.`);
     const passedCleanly = result.passed === true && !timedOut && code === 0;
