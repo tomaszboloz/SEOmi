@@ -25,6 +25,7 @@ describe('desktop_e2e_renderer script execution and diagnostics', () => {
     ['HTTP error page', '<html>Error404</html>'],
     ['WebKit error page', '<html><title>Cannot Open Page</title></html>'],
     ['about blank', '<html>about:blank</html>'],
+    ['Cloudflare rate limit', '<title>Rate Limited | example.com | Cloudflare</title>'],
   ])('rejects invalid HTML (%s) and retains diagnostics', async (_, html) => {
     const api = loadScript();
     const result = await api.run({

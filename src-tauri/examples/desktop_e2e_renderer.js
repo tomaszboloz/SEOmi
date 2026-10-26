@@ -1,7 +1,7 @@
 // Optional online renderer checks for the desktop E2E harness.
 // This file is intentionally separate until the native harness opts in.
 (() => {
-  const target = 'https://example.com/';
+  const target = (typeof window !== 'undefined' && window.__seomiE2eFixtureUrl) || 'https://example.com/';
   const baseArgs = {
     url: target,
     allowSubdomains: false,
@@ -92,7 +92,7 @@
         status.httpStatusFieldPresent && (status.httpStatus === 200 || status.httpStatus === null));
       let finalUrl;
       try { finalUrl = new URL(snapshot?.finalUrl); } catch (_) { finalUrl = null; }
-      check('renderer final URL remains example.com', finalUrl?.hostname === 'example.com');
+      check('renderer final URL remains expected host', finalUrl?.origin === new URL(target).origin);
 
       const screenshot = await invoke('capture_rendered_artifact', artifactArgs('screenshot'));
       checkArtifact('screenshot', screenshot, check);

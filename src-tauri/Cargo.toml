@@ -16,10 +16,11 @@ tauri-build = { version = "2", features = [] }
 
 [features]
 custom-protocol = ["tauri/custom-protocol"]
+test-fixture = []
 
 [[example]]
 name = "desktop_e2e"
-required-features = ["custom-protocol"]
+required-features = ["custom-protocol", "test-fixture"]
 
 [[example]]
 name = "function_inventory"
