@@ -1,13 +1,13 @@
-//! An actual desktop runtime, sharing production plugins, state and IPC.
-//! Test JavaScript exists only in this example; it is never bundled into SEOmi.
 use std::{fs, path::PathBuf, sync::Mutex, time::Duration};
 use tauri::{Listener, Manager};
 use uuid::Uuid;
 
+#[path = "desktop_e2e_assets.rs"]
+mod assets;
 #[path = "desktop_e2e_fixture.rs"]
 mod fixture;
 
-// 26 renderer + (11 * 2) crawl checks; validation is 40 base + 24 additional + 135 IPC.
+// 26 renderer + (11 * 2) crawl checks; validation is 40 base + 24 additional + 135 IPC; UI is 6 modals + 15 sidebar routes.
 const REQUIRED_RENDERER_CHECKS: usize = 26 + (11 * 2);
 const REQUIRED_VALIDATION_CHECKS: usize = 40 + 24 + 135;
 
@@ -17,7 +17,7 @@ fn main() {
     let fixture = fixture::DesktopFixture::start();
     let fixture_url = fixture.url();
     let session = Uuid::new_v4();
-    let mut context = tauri::generate_context!();
+    let mut context = assets::verified_context();
     let updater_cfg = serde_json::json!({ "pubkey": "", "endpoints": [] });
     let cfg = context.config_mut();
     cfg.plugins.0.insert("updater".into(), updater_cfg);
@@ -33,13 +33,14 @@ fn main() {
     let roots = std::sync::Arc::new(Mutex::new(Vec::<PathBuf>::new()));
     let roots_for_setup = roots.clone();
     let script = include_str!("desktop_e2e.js");
+    let ui_script = include_str!("desktop_e2e_ui.js");
     let renderer_script = include_str!("desktop_e2e_renderer.js");
     let validation_script = include_str!("desktop_e2e_validation.js");
     let additional_validation_script = include_str!("desktop_e2e_additional.js");
     let crawl_validation_script = include_str!("desktop_e2e_crawl.js");
     let ipc_validation_script = include_str!("desktop_e2e_ipc.js");
     let main_script = format!(
-        "window.__seomiE2eRendererEnabled = {renderer_enabled};\nwindow.__seomiE2eFixtureUrl = '{fixture_url}';\n{ipc_validation_script}\n{additional_validation_script}\n{validation_script}\n{crawl_validation_script}\n{renderer_script}\n{script}"
+        "window.__seomiE2eRendererEnabled = {renderer_enabled};\nwindow.__seomiE2eFixtureUrl = '{fixture_url}';\n{ipc_validation_script}\n{additional_validation_script}\n{validation_script}\n{crawl_validation_script}\n{renderer_script}\n{ui_script}\n{script}"
     );
     let plugin = tauri::plugin::Builder::<tauri::Wry, ()>::new("desktop-e2e")
         .setup(move |app, _| {

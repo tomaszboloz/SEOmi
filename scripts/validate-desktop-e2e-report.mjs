@@ -7,6 +7,7 @@ import { fileURLToPath } from 'node:url';
 export const REQUIRED_TOP_LEVEL_CHECKS = 24;
 export const REQUIRED_RENDERER_CHECKS = 26 + (11 * 2);
 export const REQUIRED_VALIDATION_CHECKS = 40 + 24 + 135;
+export const REQUIRED_UI_CHECKS = 6 + 15;
 
 const isRecord = value => typeof value === 'object' && value !== null && !Array.isArray(value);
 
@@ -16,6 +17,17 @@ export function validateDesktopE2eReport(report) {
   if (report.passed !== true) errors.push('report.passed must be true');
   if (!Array.isArray(report.checks) || report.checks.length < REQUIRED_TOP_LEVEL_CHECKS) {
     errors.push(`report.checks must contain at least ${REQUIRED_TOP_LEVEL_CHECKS} checks`);
+  }
+
+  const ui = report.ui;
+  if (!isRecord(ui)) {
+    errors.push('ui must be an object');
+  } else {
+    if (ui.status !== 'executed') errors.push('ui.status must be executed');
+    if (ui.passed !== true) errors.push('ui.passed must be true');
+    if (!Array.isArray(ui.checks) || ui.checks.length < REQUIRED_UI_CHECKS) {
+      errors.push(`ui.checks must contain at least ${REQUIRED_UI_CHECKS} checks`);
+    }
   }
 
   const validation = report.validation;

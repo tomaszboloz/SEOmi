@@ -5,6 +5,7 @@ import { isPathWithin } from './release-artifact-paths.mjs';
 import { readReleaseFile, writeReleaseFileAtomically } from './release-atomic-file.mjs';
 import { validateGitHubReleaseContext, validateReleaseTag } from './release-input-validation.mjs';
 import { uploadReleaseAsset, fetchOrVerifyAsset } from './release-ci-gate-provenance-upload.mjs';
+import { resolveProvenanceArtifacts } from './release-provenance-subjects.mjs';
 const ALLOWED_EXT = ['.dmg', '.tar.gz', '.exe', '.msi', '.json', '.txt'];
 const REQUIRED_ROLES = ['darwin-aarch64-app', 'darwin-x86_64-app', 'windows-x86_64-setup', 'windows-x86_64-msi', 'manifest'];
 
@@ -105,10 +106,8 @@ export const prepareReleaseProvenance = async ({
   }
 
   const ver = tag.replace(/^v/, ''), realDir = realpathSync(artifactDir);
-  const required = [
-    'SEOmi_aarch64.app.tar.gz', 'SEOmi_x64.app.tar.gz', `SEOmi_${ver}_x64-setup.exe`,
-    `SEOmi_${ver}_x64_en-US.msi`, 'latest.json', `SEOmi_${ver}_aarch64.dmg`, `SEOmi_${ver}_x64.dmg`,
-  ];
+  const subjects = resolveProvenanceArtifacts(release.assets, ver);
+  const required = subjects.map(({ name }) => name);
   for (const name of required) {
     const asset = (release.assets ?? []).find((a) => a.name === name);
     if (!asset) throw new Error(`Missing release asset ${name} in draft release ${releaseId}`);
@@ -122,12 +121,7 @@ export const prepareReleaseProvenance = async ({
   const nodeBytes = readReleaseFile(nodePath, realDir), rustBytes = readReleaseFile(rustPath, realDir);
   const sbomNode = JSON.parse(nodeBytes.toString('utf8')), sbomRust = JSON.parse(rustBytes.toString('utf8'));
   const checksums = generateArtifactChecksums({ artifactDir, files: required, outputPath: `${artifactDir}/SHA256SUMS.txt` });
-  const roleMap = {
-    'SEOmi_aarch64.app.tar.gz': 'darwin-aarch64-app', 'SEOmi_x64.app.tar.gz': 'darwin-x86_64-app',
-    [`SEOmi_${ver}_x64-setup.exe`]: 'windows-x86_64-setup', [`SEOmi_${ver}_x64_en-US.msi`]: 'windows-x86_64-msi',
-    'latest.json': 'manifest', [`SEOmi_${ver}_aarch64.dmg`]: 'darwin-aarch64-dmg', [`SEOmi_${ver}_x64.dmg`]: 'darwin-x86_64-dmg',
-  };
-  const artifacts = required.map((name) => ({ name, role: roleMap[name], ...verified.get(name) }));
+  const artifacts = subjects.map(({ name, role }) => ({ name, role, ...verified.get(name) }));
   const sboms = [
     { name: 'sbom-node.json', sha256: createHash('sha256').update(nodeBytes).digest('hex'), format: 'CycloneDX', target: 'npm' },
     { name: 'sbom-rust.json', sha256: createHash('sha256').update(rustBytes).digest('hex'), format: 'CycloneDX', target: 'cargo' },

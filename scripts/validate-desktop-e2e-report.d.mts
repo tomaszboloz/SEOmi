@@ -1,10 +1,12 @@
 export const REQUIRED_TOP_LEVEL_CHECKS: number;
 export const REQUIRED_RENDERER_CHECKS: number;
 export const REQUIRED_VALIDATION_CHECKS: number;
+export const REQUIRED_UI_CHECKS: number;
 
 export interface DesktopE2eReport {
   passed: boolean;
   checks: unknown[];
+  ui: Record<string, unknown>;
   validation: Record<string, unknown>;
   renderer: Record<string, unknown>;
   [key: string]: unknown;
