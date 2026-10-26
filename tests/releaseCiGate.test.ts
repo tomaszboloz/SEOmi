@@ -74,10 +74,10 @@ describe('release CI gate', () => {
       return { ok: true, status: 200, json: async () => ({ total_count: 0, check_runs: [] }) } as Response;
     };
     await expect(waitForRequiredChecks({
-      apiUrl: 'https://api.example.test', repository: 'owner/repo', sha, token: 'secret',
+      apiUrl: 'https://api.github.com', repository: 'owner/repo', sha, token: 'secret',
       timeoutMs: 0, fetchImpl,
     })).rejects.toThrow('Timed out waiting');
-    expect(requestUrl).toBe(`https://api.example.test/repos/owner/repo/commits/${sha}/check-runs?per_page=100`);
+    expect(requestUrl).toBe(`https://api.github.com/repos/owner/repo/commits/${sha}/check-runs?per_page=100`);
     expect(requestHeaders?.Authorization).toBe('Bearer secret');
   });
 

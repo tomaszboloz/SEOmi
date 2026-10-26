@@ -30,6 +30,7 @@ export function waitForRequiredChecks(options: {
   repository: string;
   sha: string;
   token: string;
+  ref?: string;
   required?: readonly string[];
   timeoutMs?: number;
   pollIntervalMs?: number;

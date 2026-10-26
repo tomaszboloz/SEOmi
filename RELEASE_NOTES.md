@@ -7,6 +7,7 @@
 - Compatibility regressions verify reading existing ChaCha20-Poly1305 ciphertext, rejecting tampering and using isolated credential-store test identities.
 
 ## Fixed
+- Release verification on main reads exact-commit CodeQL language analyses and the complete open-alert inventory when GitHub's PR-only aggregate check is absent. Missing scans, API errors, open alerts and a failed aggregate check still block publication; all ten required CI checks remain mandatory.
 - AI CLI fixtures read piped input to EOF before replying; regressions cover Unicode and shell metacharacters.
 - Proxy overload regressions require a complete HTTP 503 response with correct Content-Length, including fragmented reads.
 - A late polling response no longer overwrites the confirmed stopped worker state.
