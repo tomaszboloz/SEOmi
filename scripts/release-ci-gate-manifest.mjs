@@ -2,6 +2,7 @@ import { readdirSync, readFileSync } from 'node:fs';
 import { basename, join } from 'node:path';
 import { REQUIRED_PLATFORMS } from './release-ci-gate-assets.mjs';
 import { manifestRepository, validateManifestFragment, expectedManifestFileNames } from './release-manifest-validation.mjs';
+import { remoteMacAssetName, selectSignedMacBundle } from './release-manifest-naming.mjs';
 import { validateGithubApiBase, validateReleaseId, validateReleaseTag, validateReleaseVersion, validateRepository } from './release-input-validation.mjs';
 import { readReleaseFile, writeReleaseFileAtomically } from './release-atomic-file.mjs';
 export const PLATFORM_KEY_MAP = Object.freeze({
@@ -9,16 +10,11 @@ export const PLATFORM_KEY_MAP = Object.freeze({
   'macos-15-intel': 'darwin-x86_64',
   'windows-latest': 'windows-x86_64',
 });
-export const computeRemoteAssetName = (localPath, platformKey) => {
+export const computeRemoteAssetName = (localPath, platformKey, version) => {
   const localName = basename(localPath);
-  if (platformKey === 'darwin-aarch64') {
-    if (localName.includes('aarch64') || localName.includes('arm64')) return localName;
-    return localName.replace(/\.app\.tar\.gz$/, '_aarch64.app.tar.gz');
-  }
-  if (platformKey === 'darwin-x86_64') {
-    if (localName.includes('x64') || localName.includes('x86_64')) return localName;
-    return localName.replace(/\.app\.tar\.gz$/, '_x64.app.tar.gz');
-  }
+  if (platformKey === 'darwin-aarch64' || platformKey === 'darwin-x86_64') return remoteMacAssetName(localPath, platformKey, version);
+  const expectedNames = expectedManifestFileNames(platformKey, version);
+  if (!expectedNames.includes(localName)) throw new Error(`Unexpected updater artifact for ${platformKey}: ${localName}`);
   return localName;
 };
 export const findFiles = (dir) => {
@@ -43,26 +39,16 @@ export const extractPlatformFragment = ({
   if (platformKey === 'windows-x86_64') {
     bundlePath = expectedNames.map((name) => files.find((f) => basename(f) === name && files.includes(`${f}.sig`))).find(Boolean) ?? null;
     sigPath = bundlePath ? `${bundlePath}.sig` : null;
-  } else for (const s of sigFiles) {
-    const candidate = s.slice(0, -4);
-    if (!files.includes(candidate)) continue;
-    const norm = candidate.replace(/\\/g, '/');
-    if (platformKey === 'darwin-aarch64') {
-      if (norm.endsWith('.app.tar.gz') && (norm.includes('aarch64') || norm.includes('arm64') || platform === 'macos-15')) {
-        bundlePath = candidate; sigPath = s; break;
-      }
-    } else if (platformKey === 'darwin-x86_64') {
-      if (norm.endsWith('.app.tar.gz') && (norm.includes('x64') || norm.includes('x86_64') || platform === 'macos-15-intel') && !norm.includes('aarch64')) {
-        bundlePath = candidate; sigPath = s; break;
-      }
-    }
+  } else {
+    const selected = selectSignedMacBundle({ files, sigFiles, platform: platformKey, version });
+    if (selected) ({ bundlePath, sigPath } = selected);
   }
 
   if (!bundlePath || !sigPath) {
     throw new Error(`No signed updater artifact found for platform ${platform} in ${targetDir}`);
   }
   const signature = readReleaseFile(sigPath, targetDir).toString('utf8').trim();
-  const remoteFileName = computeRemoteAssetName(bundlePath, platformKey);
+  const remoteFileName = computeRemoteAssetName(bundlePath, platformKey, version);
   const entry = {
     signature,
     url: `https://github.com/${validRepository}/releases/download/${validTag}/${remoteFileName}`,

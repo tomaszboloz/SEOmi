@@ -96,6 +96,13 @@ jobs:
           RELEASE_CI_POLL_MS: '30000'
         run: node scripts/release-ci-gate.mjs
 
+      - name: Prepare verified release notes for the shared draft
+        id: notes
+        if: steps.resolve.outputs.publish == 'true' && steps.credentials.outputs.ready == 'true'
+        env:
+          RELEASE_TAG: ${{ steps.resolve.outputs.tag }}
+        run: node scripts/release-notes.mjs
+
       - name: Create or find shared draft release
         id: draft
         if: steps.resolve.outputs.publish == 'true' && steps.credentials.outputs.ready == 'true'
@@ -103,6 +110,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           RELEASE_COMMIT_SHA: ${{ github.sha }}
           RELEASE_TAG: ${{ steps.resolve.outputs.tag }}
+          RELEASE_BODY: ${{ steps.notes.outputs.body }}
         run: node scripts/release-ci-gate-tag.mjs --create-draft
 
   release:

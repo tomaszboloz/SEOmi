@@ -115,7 +115,7 @@ export const runReleaseGateTagCli = async (
     const tag = env.RELEASE_TAG ?? (refType === 'tag' ? refName : `v${pkgVersion}`);
     if (tag !== `v${pkgVersion}`) throw new Error(`Release tag ${tag} does not match local package version v${pkgVersion}.`);
     const releaseId = await createOrGetDraftRelease({
-      apiUrl, repository, tag, commitSha: expectedSha, candidateVersion: pkgVersion, token, fetchImpl,
+      apiUrl, repository, tag, commitSha: expectedSha, candidateVersion: pkgVersion, token, fetchImpl, body: env.RELEASE_BODY,
     });
     writeGithubOutput('release_id', releaseId, env.GITHUB_OUTPUT);
     return { releaseId };

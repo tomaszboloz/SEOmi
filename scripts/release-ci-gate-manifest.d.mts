@@ -16,7 +16,7 @@ export interface ConsolidateOptions {
 }
 
 export declare const PLATFORM_KEY_MAP: Record<string, string>;
-export declare function computeRemoteAssetName(localPath: string, platformKey: string): string;
+export declare function computeRemoteAssetName(localPath: string, platformKey: string, version: string): string;
 export declare function findFiles(dir: string): string[];
 export declare function extractPlatformFragment(options: ExtractOptions): { platform: string; entry: { signature: string; url: string } };
 export declare function consolidateManifests(options: ConsolidateOptions): Promise<Record<string, unknown>>;

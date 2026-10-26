@@ -10,10 +10,10 @@ import {
 } from '../scripts/release-ci-gate-manifest.mjs';
 
 describe('release updater manifest extractor and consolidator with real Tauri layout', () => {
-  it('maps un-architected local macOS bundles to remote architecture-qualified asset names', () => {
-    expect(computeRemoteAssetName('/path/to/SEOmi.app.tar.gz', 'darwin-aarch64')).toBe('SEOmi_aarch64.app.tar.gz');
-    expect(computeRemoteAssetName('/path/to/SEOmi.app.tar.gz', 'darwin-x86_64')).toBe('SEOmi_x64.app.tar.gz');
-    expect(computeRemoteAssetName('/path/to/SEOmi_0.4.40_x64-setup.exe', 'windows-x86_64')).toBe('SEOmi_0.4.40_x64-setup.exe');
+  it('maps un-architected local macOS bundles to versioned remote asset names', () => {
+    expect(computeRemoteAssetName('/path/to/SEOmi.app.tar.gz', 'darwin-aarch64', '0.4.40')).toBe('SEOmi_0.4.40_aarch64.app.tar.gz');
+    expect(computeRemoteAssetName('/path/to/SEOmi.app.tar.gz', 'darwin-x86_64', '0.4.40')).toBe('SEOmi_0.4.40_x64.app.tar.gz');
+    expect(computeRemoteAssetName('/path/to/SEOmi_0.4.40_x64-setup.exe', 'windows-x86_64', '0.4.40')).toBe('SEOmi_0.4.40_x64-setup.exe');
   });
 
   it('extracts platform fragment from target/arch/bundle/macos/SEOmi.app.tar.gz + sig', () => {
@@ -33,8 +33,24 @@ describe('release updater manifest extractor and consolidator with real Tauri la
       });
       expect(fragment.platform).toBe('darwin-aarch64');
       expect(fragment.entry.signature).toBe('test-signature-aarch64');
-      expect(fragment.entry.url).toBe('https://github.com/owner/repo/releases/download/v0.4.40/SEOmi_aarch64.app.tar.gz');
+      expect(fragment.entry.url).toBe('https://github.com/owner/repo/releases/download/v0.4.40/SEOmi_0.4.40_aarch64.app.tar.gz');
       expect(existsSync('updater-manifest-macos-15.json')).toBe(true);
+    } finally {
+      rmSync('updater-manifest-macos-15.json', { force: true });
+      rmSync(root, { recursive: true, force: true });
+    }
+  });
+
+  it('rejects stale versioned or cross-architecture signed macOS bundles', () => {
+    const root = mkdtempSync(join(tmpdir(), 'seomi-manifest-stale-'));
+    const testDir = join(root, 'target');
+    try {
+      const intelDir = `${testDir}/x86_64-apple-darwin/release/bundle/macos`;
+      mkdirSync(intelDir, { recursive: true });
+      writeFileSync(`${intelDir}/SEOmi_0.4.39_aarch64.app.tar.gz`, 'stale');
+      writeFileSync(`${intelDir}/SEOmi_0.4.39_aarch64.app.tar.gz.sig`, 'stale-signature');
+      expect(() => extractPlatformFragment({ platform: 'macos-15', targetDir: testDir, repository: 'owner/repo', tag: 'v0.4.40' })).toThrow('No signed updater artifact');
+      expect(() => computeRemoteAssetName('/path/to/SEOmi_0.4.40_aarch64.app.tar.gz', 'darwin-x86_64', '0.4.40')).toThrow('Unexpected macOS updater artifact');
     } finally {
       rmSync('updater-manifest-macos-15.json', { force: true });
       rmSync(root, { recursive: true, force: true });

@@ -28,6 +28,18 @@ describe('release manifest IO boundaries', () => {
     } finally { process.chdir(cwd); rmSync(root, { recursive: true, force: true }); }
   });
 
+  it('maps an unversioned signed local macOS bundle to the versioned remote asset', () => {
+    const root = mkdtempSync(join(tmpdir(), 'seomi-manifest-versioned-mac-')), targetDir = join(root, 'target', 'aarch64-apple-darwin');
+    const cwd = process.cwd(); process.chdir(root);
+    try {
+      mkdirSync(targetDir, { recursive: true });
+      writeFileSync(join(targetDir, 'SEOmi.app.tar.gz'), 'bundle');
+      writeFileSync(join(targetDir, 'SEOmi.app.tar.gz.sig'), 'arm-signature');
+      const fragment = extractPlatformFragment({ platform: 'macos-15', targetDir: join(root, 'target'), repository: 'owner/repo', tag: 'v0.4.42' });
+      expect(fragment.entry.url).toContain('SEOmi_0.4.42_aarch64.app.tar.gz');
+    } finally { process.chdir(cwd); rmSync(root, { recursive: true, force: true }); }
+  });
+
   it('rejects signature symlinks outside target before writing output', () => {
     const root = mkdtempSync(join(tmpdir(), 'seomi-manifest-sig-link-')), targetDir = join(root, 'target');
     const bundle = join(targetDir, 'aarch64-apple-darwin', 'SEOmi.app.tar.gz'), output = 'updater-manifest-macos-15.json';
