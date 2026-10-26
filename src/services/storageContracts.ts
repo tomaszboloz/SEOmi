@@ -13,7 +13,7 @@ export const parseJsonRecord = (value: unknown): Record<string, unknown> => {
 
 export const readJsonRecord = (key: string): Record<string, unknown> => parseJsonRecord(readJsonStorage(key, null));
 
-export const parseRecordEntries = <T>(value: unknown, schema: z.ZodType<T, z.ZodTypeDef, unknown>, limit = 500): Record<string, T> => {
+export const parseRecordEntries = <T>(value: unknown, schema: z.ZodType<T, unknown>, limit = 500): Record<string, T> => {
   const record: Record<string, T> = {};
   for (const [key, entry] of Object.entries(parseJsonRecord(value)).slice(-limit)) {
     const result = schema.safeParse(entry);

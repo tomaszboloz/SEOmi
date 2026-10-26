@@ -25,7 +25,7 @@ const psi = (id: string, performance: number, capturedAt = '2026-01-08T00:00:00Z
   id, capturedAt, url: 'https://example.test/', strategy: 'mobile', formFactor: 'PHONE', scope: 'url',
   pageSpeed: { source: 'fixture', requestedUrl: 'https://example.test/', finalUrl: 'https://example.test/', strategy: 'mobile', fetchedAt: '2026-01-08T00:00:00Z', lighthouseVersion: null, categories: { performance, accessibility: .9, bestPractices: .9, seo: .9 }, metrics: {}, opportunities: [], fieldExperience: null, originExperience: null }, crux: null,
 });
-const settings = { enabled: true, frequency: 'run' as const, types: { gsc: true, pagespeed: true, crawl: true, semantic: true, focus: true }, thresholds: { gsc: { declinePercent: 20, minImpressions: 1 }, pagespeed: { categoryDrop: .1, metricIncrease: 250, maxWindowDays: 35 }, crawl: { changedPages: 1 }, semantic: { changes: 1 }, focus: { dropPoints: 5 } } };
+const settings = { enabled: true, frequency: 'run' as const, types: { gsc: true, pagespeed: true, crawl: true, semantic: true, focus: true, aio: true }, thresholds: { gsc: { declinePercent: 20, minImpressions: 1 }, pagespeed: { categoryDrop: .1, metricIncrease: 250, maxWindowDays: 35 }, crawl: { changedPages: 1 }, semantic: { changes: 1 }, focus: { dropPoints: 5 }, aio: { dropPoints: 10 } } };
 const crawl = (type: 'comparable' | 'partial' = 'comparable') => ({ status: type, reasons: [], added: [{ kind: 'added', url: 'https://example.test/new', fields: [] }], removed: [], changed: [], provenance: { current: { runId: 'current' } } } as any);
 const semantic = () => ({ currentRunId: 'current', changes: [{ id: 'change' }], truncated: false, guard: { status: 'comparable' } } as any);
 

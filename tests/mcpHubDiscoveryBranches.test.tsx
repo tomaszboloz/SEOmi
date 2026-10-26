@@ -1,5 +1,5 @@
-import { act, fireEvent, render, screen, waitFor } from '@testing-library/react';
-import { beforeEach, describe, expect, it, vi } from 'vitest';
+import { act, cleanup, fireEvent, render, screen, waitFor } from '@testing-library/react';
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { McpHub } from '@/components/AgentWorkflows/McpHub';
 import { useProjectStore } from '@/stores/projectStore';
 import { useToolsStore } from '@/stores/toolsStore';
@@ -22,7 +22,12 @@ const server = (names: string[]) => ({
 });
 
 describe('McpHub discovery branches', () => {
+  afterEach(() => {
+    cleanup();
+  });
+
   beforeEach(async () => {
+    cleanup();
     await i18n.changeLanguage('en');
     localStorage.clear();
     useProjectStore.setState({ activeProjectId: 'mcp-a' });

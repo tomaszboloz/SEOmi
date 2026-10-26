@@ -8,7 +8,7 @@ export const CustomSearchDefinitionSchema = z.object({
   query: z.string(),
   resultType: z.union([z.literal('text'), z.literal('html'), z.literal('attribute')]),
   attribute: z.string().nullable().transform(value => value ?? undefined).optional(),
-}).passthrough() satisfies z.ZodType<CustomSearchDefinition, z.ZodTypeDef, unknown>;
+}).passthrough() satisfies z.ZodType<CustomSearchDefinition, unknown>;
 
 export const CrawlConfigSchema = z.object({
   crawlMode: z.union([z.literal('http'), z.literal('browser-rendered')]).nullable().transform(value => value ?? undefined).optional(),
@@ -51,4 +51,4 @@ export const CrawlConfigSchema = z.object({
   maxConcurrentRequests: z.number().finite().nullable().transform(value => value ?? undefined).optional(),
   resumeCompletedUrls: z.array(z.string()).nullable().transform(value => value ?? undefined).optional(),
   resumeFrontierUrls: z.array(z.string()).nullable().transform(value => value ?? undefined).optional(),
-}).passthrough() satisfies z.ZodType<CrawlConfig, z.ZodTypeDef, unknown>;
+}).passthrough() satisfies z.ZodType<CrawlConfig, unknown>;

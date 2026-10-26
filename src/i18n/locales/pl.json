@@ -1,4 +1,79 @@
 {
+  "cmsPanelUi": {
+    "title": "Bezpieczna zmiana w CMS",
+    "description": "Zastąp treść pod jednym nagłówkiem. Przygotuj i zatwierdź dokładny diff, wykonaj próbę, a następnie zapisz. Zmiana danych anuluje zgodę.",
+    "kind": "Rodzaj CMS",
+    "baseUrl": "Adres bazowy CMS (HTTPS)",
+    "contentId": "Identyfikator treści",
+    "credential": "Nazwa zapisanych poświadczeń (opcjonalnie)",
+    "credentialHelp": "Użyj poświadczeń cms_auth_ z nagłówkiem Authorization w systemowym magazynie. Puste pole oznacza żądania anonimowe. Nie wpisuj tutaj sekretu.",
+    "collection": "Kolekcja Strapi",
+    "heading": "Szukany nagłówek",
+    "replacement": "Nowa treść sekcji (HTML lub Markdown)",
+    "ymyl": "Treść zdrowotna, finansowa lub prawna (YMYL)",
+    "factGate": "Wymagana weryfikacja faktów zakończyła się pomyślnie dla tego diffu",
+    "diff": "Proponowane zmiany",
+    "revision": "Wersja źródłowa: {{revision}}",
+    "noChanges": "Brak zmian. Zmień treść zastępczą przed zapisem.",
+    "prepare": "Przygotuj diff",
+    "approve": "Zatwierdzam dokładnie te zmiany",
+    "dryRun": "Wykonaj próbę bez zapisu",
+    "apply": "Zapisz zatwierdzone zmiany",
+    "busy": "Przetwarzanie zmiany CMS…",
+    "noProject": "Wybierz aktywny projekt, aby przygotować zmianę CMS.",
+    "desktopOnly": "Żądania CMS są dostępne tylko w aplikacji desktopowej.",
+    "failed": "Zmiana CMS nie powiodła się: {{reason}}"
+  },
+  "teamPanelUi": {
+    "title": "Tryb zespołowy i dziennik audytu",
+    "description": "Wybierz, kto działa i w jakiej roli. Każda zmiana trafia do lokalnego dziennika audytu zabezpieczonego łańcuchem skrótów.",
+    "actor": "Użytkownik",
+    "role": "Rola",
+    "roles": {
+      "admin": "Administrator",
+      "seo_strategist": "Strateg SEO",
+      "content_writer": "Autor treści",
+      "developer": "Programista"
+    },
+    "permissions": {
+      "run_crawl": "Uruchamianie crawla",
+      "execute_cms_patch": "Wykonanie patcha CMS",
+      "modify_site_focus_rules": "Zmiana reguł Site Focus",
+      "export_audit_pdf": "Eksport audytu PDF",
+      "manage_team_roles": "Zarządzanie rolami"
+    },
+    "permissionsTitle": "Uprawnienie",
+    "auditTitle": "Dziennik audytu",
+    "auditEmpty": "Brak wpisów audytu.",
+    "chainOk": "Łańcuch audytu zweryfikowany.",
+    "chainBroken": "Łańcuch audytu przerwany we wpisie {{entry}} ({{reason}}).",
+    "exportCsv": "Eksportuj CSV",
+    "columns": {
+      "time": "Czas",
+      "actor": "Użytkownik",
+      "action": "Akcja",
+      "result": "Wynik"
+    },
+    "results": {
+      "success": "Sukces",
+      "denied": "Odmowa",
+      "failure": "Błąd",
+      "dry_run": "Próba bez zmian"
+    },
+    "allowed": "Dozwolone",
+    "notAllowed": "Niedozwolone"
+  },
+  "dataErasureUi": {
+    "title": "Wymaż dane projektu (RODO)",
+    "description": "Trwale usuwa z lokalnego magazynu przebiegi crawla, embeddingi i historię tego projektu, niszcząc ich klucze szyfrujące. Tej operacji nie można cofnąć.",
+    "confirm": "Wpisz ID projektu, aby potwierdzić: {{id}}",
+    "button": "Wymaż dane projektu",
+    "run": "Wymaż trwale",
+    "cancel": "Anuluj",
+    "done": "Wymazano: {{records}} rekordów i {{runs}} przebiegów crawla.",
+    "failed": "Wymazywanie nie powiodło się: {{message}}",
+    "desktopOnly": "Dostępne tylko w aplikacji desktopowej."
+  },
   "schemaFindings": {
     "messageMissing": "Reguła danych strukturalnych {{code}} wykryła brak właściwości lub elementu struktury dla typu {{type}}.",
     "messageInvalid": "Reguła danych strukturalnych {{code}} wykryła nieprawidłową wartość lub kształt typu {{type}}.",
@@ -15,6 +90,31 @@
     "severityWarning": "Ostrzeżenie",
     "severityInfo": "Informacja",
     "sourceEvidence": "Dowód źródłowy"
+  },
+  "copilotPatcherUi": {
+    "title": "Kontekstowy patcher Copilota",
+    "description": "Tworzy propozycję Przed/Po z dowodów crawl tej strony. Sprawdź ją przed skopiowaniem; CMS nie jest zmieniany.",
+    "contextUnavailable": "Brakuje dowodów nagłówków strony, więc patcher czeka na nowy crawl.",
+    "generate": "Zaproponuj patch",
+    "generating": "Generowanie...",
+    "cancel": "Anuluj",
+    "before": "Przed",
+    "after": "Po",
+    "pending": "Oczekuje na sprawdzenie; nic nie zostało zmienione.",
+    "factGate": "Bramka faktów usunęła {{count}} zdań, bo strona nie dostarczyła pasującego źródła.",
+    "remote": "Wybrany dostawca AI otrzymał tekst tej strony.",
+    "local": "Wybrany runner AI działał na tym urządzeniu.",
+    "approve": "Akceptuj do skopiowania",
+    "reject": "Odrzuć",
+    "approved": "Zaakceptowano do skopiowania; CMS nie został zmieniony.",
+    "copy": "Kopiuj zaakceptowany tekst",
+    "rejected": "Propozycja odrzucona.",
+    "keyboard": "Klawiatura: Tab przechodzi między kontrolkami, Enter uruchamia aktywną kontrolkę.",
+    "no-provider": "Połącz dostawcę AI przed zamówieniem patcha.",
+    "empty-response": "AI nie zwróciło użytecznego patcha.",
+    "provider-error": "Żądanie AI nie powiodło się: {{message}}",
+    "ownership": "Projekt nie jest już aktywny; żądanie zatrzymano.",
+    "unavailable": "Akapit nie ma użytecznego tekstu źródłowego."
   },
   "app": {
     "name": "SEOmi",
@@ -1135,6 +1235,7 @@
     "tabEntity": "Graf encji",
     "tabLinks": "Linki wewnętrzne",
     "tabSchema": "Schemat JSON-LD",
+    "tabSignals": "Sygnały",
     "saveError": "Nie udało się zapisać topical mapy w pamięci lokalnej. Pozostaje widoczna do zamknięcia widoku; sprawdź dostępność pamięci aplikacji.",
     "preferencesSaveError": "Nie udało się zapamiętać widoku topical mapy i filtrów w tym projekcie.",
     "entityTitle": "Encja projektu",
@@ -2272,7 +2373,8 @@
       "focus": "Site Focus",
       "authority": "Autorytet tematyczny",
       "aio": "Gotowość na AI",
-      "trust": "Zaufanie do encji"
+      "trust": "Zaufanie do encji",
+      "offPage": "Analiza off-page"
     },
     "environmentStaging": "test/staging",
     "environmentProduction": "produkcja",
@@ -2428,6 +2530,7 @@
     "profileNamePlaceholder": "np. Konto redakcyjne",
     "sessionCookies": "Cookies sesji",
     "proxyOptional": "(opcjonalnie; dane w URL pozostają w magazynie systemowym)",
+    "proxyListHint": "Kilka proxy: oddziel przecinkami lub spacjami (do 64). Żądania rotują między nimi.",
     "customHeaders": "Własne nagłówki",
     "oneHeaderPerLine": "(jeden w wierszu: Nazwa: wartość)",
     "saving": "Zapisywanie…",
@@ -5143,9 +5246,11 @@
       "pagespeed": "PageSpeed / CrUX",
       "crawl": "Porównania crawlów",
       "semantic": "Porównania semantyczne",
-      "focus": "Site Focus Score"
+      "focus": "Site Focus Score",
+      "aio": "Gotowość do AI Overviews"
     },
-    "focusDrop": "Spadek Site Focus Score (punkty)"
+    "focusDrop": "Spadek Site Focus Score (punkty)",
+    "aioDrop": "Spadek wyniku AIO-R (punkty)"
   },
   "ga4": {
     "title": "Google Analytics 4",
@@ -6037,6 +6142,40 @@
           "author-invalid-profile": "{{0}} autorów podaje profil ORCID lub Wikidata z błędnym identyfikatorem ({{1}}). Sprawdź sumę kontrolną lub Q-ID.",
           "ymyl-no-scholarly-ids": "Żaden z {{0}} artykułów nie cytuje źródła z DOI, PMID ani PMCID. W tematyce YMYL cytuj badanie pierwotne."
         }
+      },
+      "offPage": {
+        "title": "Analiza off-page",
+        "intro": "Najnowsza zapisana analiza tego projektu; próbka nie jest pełnym profilem linków zwrotnych.",
+        "topic": "Temat",
+        "scale": "Skala autorytetu",
+        "model": "Model embeddingów",
+        "requested": "Żądane źródła",
+        "fetched": "Pobrane źródła",
+        "scored": "Ocenione źródła",
+        "statusLabel": "Status",
+        "limitationsLabel": "Ograniczenia",
+        "sourcesIntro": "Do 10 źródeł, od najwyższego wkładu; n/a oznacza brak danych.",
+        "offset": "Pozycja w tekście",
+        "excerpt": "Fragment",
+        "disclaimer": "To nie jest Google PageRank; brak tekstu lub autorytetu oznacza dane częściowe/niedostępne, a nie zero linków zwrotnych; współwystępowanie nie oznacza poparcia.",
+        "tbva": "TBVA",
+        "tSources": "Zapisane dane poszczególnych źródeł",
+        "authority": "Autorytet",
+        "similarity": "Podobieństwo",
+        "contribution": "Wkład",
+        "tCitations": "Fragmenty współcytowań",
+        "na": "n/a",
+        "status": {
+          "ready": "Gotowe",
+          "partial": "Częściowe",
+          "unavailable": "Niedostępne"
+        },
+        "limitations": {
+          "no-topic-vector": "Brak poprawnego wektora Core Topic z ostatniego ukończonego crawlu projektu; TBVA jest niedostępne.",
+          "invalid-scale": "Nieprawidłowa skala autorytetu; TBVA jest niedostępne.",
+          "no-follow-links": "Brak linków follow do analizy.",
+          "source-text-or-authority-missing": "Część źródeł nie ma tekstu, poprawnych wektorów lub autorytetu dostawcy."
+        }
       }
     },
     "recs": {
@@ -6272,6 +6411,20 @@
         "what": "Sugerowany cel: co najmniej 80 lub średnia top 3 konkurentów, jeśli ich wynik jest wyższy.",
         "why": "Zamienia porównanie w jedną liczbę, do której możesz dążyć.",
         "action": "Traktuj go jako cel planistyczny.\nUruchom benchmark ponownie po poprawkach, aby zobaczyć zmianę."
+      },
+      "indexGate": {
+        "title": "Bramka indeksowalności",
+        "what": "Strony z noindex lub z canonical wskazującym inny URL nie wchodzą do wyniku, więc wynik dotyczy stron, które mogą się pozycjonować.",
+        "why": "Liczenie stron, których Google nie zaindeksuje, obniża wynik i może prowadzić do porad noindex dla stron, które już go mają.",
+        "action": "Sprawdź licznik pominiętych.\nNapraw konflikty pod wynikiem, np. filar z noindex.\n„Uwzględnij je” użyj tylko, by zobaczyć wynik dla wszystkich stron.",
+        "example": "Strona tagu z noindex jest pomijana, a nie oceniana jako poza tematem."
+      },
+      "protection": {
+        "title": "Ochrona URL",
+        "what": "Dla stron o niskiej trafności tematycznej pokazuje, czy prawdziwe kliknięcia, konwersje, przychód lub domeny linkujące przemawiają za ich zachowaniem.",
+        "why": "Sam niski wynik nie uzasadnia usunięcia, przekierowania ani noindex strony, która ma ruch lub linki.",
+        "action": "Połącz GSC i GA4, aby dane dało się zmierzyć.\n„Potrzebne dane” traktuj jako nieznane, nie zero.\nDecyduj ręcznie; 301 wymaga trafnego celu.",
+        "example": "Strona z TRS 30 i 80 kliknięciami w 90 dni jest chroniona."
       }
     },
     "authority": {
@@ -6424,6 +6577,112 @@
         "what": "Każda rekomendowana zmiana jest zadaniem: zaplanowane, wdrożone, potem zweryfikowane lub nieudane.",
         "why": "Kolejny crawl sprawdza realny efekt i pokazuje, jak zmienił się wynik modułu względem punktu wyjścia.",
         "action": "Dodaj zadanie z rekomendacji.\nOznacz je jako wdrożone po publikacji.\nUruchom nowy crawl i kliknij Zweryfikuj."
+      },
+      "sla": {
+        "title": "Właściciel i SLA",
+        "what": "Kto odpowiada za zadanie, jak pilne jest i do kiedy trzeba je wykonać.",
+        "why": "Zadania z właścicielem i terminem nie giną, a przeterminowane łatwo odfiltrować.",
+        "action": "Wpisz nazwę właściciela.\nWybierz priorytet i termin SLA.\nUżyj filtrów, by zobaczyć swoje lub przeterminowane zadania."
+      }
+    },
+    "sprs": {
+      "panel": {
+        "title": "Semantyczny PageRank",
+        "what": "Wewnętrzny PageRank (tłumienie 0,85) w skali 0-100 z flagami stron bez linków wychodzących, z za małą liczbą linków przychodzących lub wysyłających większość linków do niepowiązanych stron.",
+        "why": "Pokazuje, gdzie autorytet linków gromadzi się lub ucieka w obrębie witryny.",
+        "action": "Dodaj linki wychodzące ze ślepych uliczek.\nLinkuj do słabo podlinkowanych stron z mocnych, powiązanych.\nSprawdź wycieki."
+      }
+    },
+    "decay": {
+      "radar": {
+        "title": "Radar zaniku semantycznego",
+        "what": "Porównuje zapisane zrzuty SERP tego samego zapytania, rynku, dostawcy i modelu: przesunięcie centroidu, nowe lub utracone encje konsensusu, zmiany intencji i formatu.",
+        "why": "Czołówka wyników może oddalić się od Twojej strony na długo przed spadkiem pozycji.",
+        "action": "Otwórz wskazane adresy URL.\nZdecyduj ręcznie, czy odświeżyć stronę."
+      }
+    },
+    "sija": {
+      "panel": {
+        "title": "Intencja wyszukiwania (SIJA)",
+        "what": "Przypisuje stronę do jednej z 8 mikrointencji na podstawie struktury (tabele, listy, formularze, karty produktów) i porównuje ją ze średnią realnych stron z TOP 5.",
+        "why": "Strona o formacie innym niż w wynikach często słabo wypada na to zapytanie.",
+        "action": "Otwórz strony z TOP.\nDodaj brakujący format, np. tabelę lub narzędzie.\nTraktuj to jako wskazówkę, nie wyrok."
+      }
+    },
+    "prePublish": {
+      "check": {
+        "title": "Kontrola przed publikacją",
+        "what": "Symuluje dodanie szkicu do witryny: zmianę Site Focus Score, podobieństwo do istniejących stron i to, czy każdy fragment działa samodzielnie.",
+        "why": "Wychwytuje duplikat lub stronę nie na temat, zanim trafi na żywo.",
+        "action": "Popraw każdy wymieniony powód.\nUruchom kontrolę ponownie.\nOpublikuj dopiero po własnej weryfikacji."
+      }
+    },
+    "parity": {
+      "hreflang": {
+        "title": "Parytet międzynarodowy",
+        "what": "Porównuje głębokość tematów w wersjach językowych powiązanych przez hreflang z językiem referencyjnym i oznacza temat jako pokryty, płytki, brakujący lub celowo lokalny.",
+        "why": "Odróżnia prawdziwą lukę treści od rynku, który celowo oferuje coś innego.",
+        "action": "Sprawdź tematy brakujące i płytkie.\nOznacz jako lokalne tematy niepotrzebne na danym rynku.\nNarzędzie nigdy samo nie zmienia hreflang."
+      }
+    },
+    "offPage": {
+      "tbva": {
+        "title": "Autorytet tematyczny off-page",
+        "what": "Sumuje autorytet dostawcy dla linków follow, ważony bliskością strony źródłowej do Twojego tematu. Znajduje też akapity, które wspominają razem Twoją markę i główną encję.",
+        "why": "Kilka trafnych linków może znaczyć więcej niż wiele niezwiązanych.",
+        "action": "Sprawdź źródła o niskim podobieństwie.\nTraktuj wzmianki bez linku jako tropy do kontaktu.\nWzmianki z przeczeniem oceń samodzielnie."
+      }
+    },
+    "llmEconomy": {
+      "costGate": {
+        "title": "Koszt LLM i bramka faktów",
+        "what": "Liczy koszt wywołań AI oraz oszczędności z cache i modeli lokalnych. Zdania medyczne i finansowe z dawką lub kwotą, której nie ma w źródle, są odrzucane.",
+        "why": "Zdalni dostawcy kosztują i dostają treść stron. Zmyślone dawki w treściach zdrowotnych i finansowych są niebezpieczne.",
+        "action": "Przy dużych partiach wybierz model lokalny.\nSprawdź odrzucone zdania ze źródłem.\nTreść YMYL zatwierdź sam, zanim trafi do CMS."
+      }
+    },
+    "templateGovernor": {
+      "informationGain": {
+        "title": "Template Information Gain",
+        "what": "Jaka część każdej strony nie jest szablonem wspólnym dla stron z tego samego wzorca. Niski wynik oznacza tysiące niemal identycznych kopii.",
+        "why": "Google może odfiltrować cały segment szablonu jako cienką treść. Jedno ostrzeżenie o szablonie łatwiej naprawić niż tysiące ostrzeżeń o stronach.",
+        "action": "Dodaj do każdej strony unikalne dane (fakty lokalne, liczby, opinie).\nAlbo ustaw noindex dla segmentu, dopóki nie ma realnej treści.\nPrzeskanuj ponownie i sprawdź, czy wynik rośnie."
+      }
+    },
+    "outreach": {
+      "gapDomains": {
+        "title": "Cele outreachu",
+        "what": "Serwisy, które linkują do Twojej konkurencji z TOP3, a nie do Ciebie, uszeregowane według liczby linkowanych konkurentów i autorytetu.",
+        "why": "Serwis, który już linkuje do kilku konkurentów, to najcieplejszy adres do prośby o link, o ile oferujesz coś nowego.",
+        "action": "Zacznij od góry listy.\nOtwórz szkic, dodaj źródło, które możesz zaoferować tylko Ty, i popraw tekst.\nWyślij go sam ze swojej skrzynki. SEOmi niczego nie wysyła."
+      }
+    },
+    "causalMarket": {
+      "updateWindow": {
+        "title": "Okno aktualizacji Google",
+        "what": "Dni, w których Google wdrażał aktualizację lub cały rynek był wyjątkowo zmienny. Wynik pokazujemy z przedziałem niepewności i flagą, gdy okres nakłada się na takie okno.",
+        "why": "Grupa kontrolna w tej samej witrynie cierpi podczas aktualizacji tak samo jak testowa, więc spadek lub wzrost może wynikać z rynku, a nie ze zmiany.",
+        "action": "Wynik z flagą traktuj jako niejednoznaczny.\nPoczekaj do końca okna aktualizacji i porównaj ponownie.\nJeśli masz zewnętrzną linię bazową rynku, użyj jej."
+      }
+    },
+    "igos": {
+      "score": {
+        "title": "Wynik IGOS",
+        "what": "Zysk informacyjny względem tego, co mówią realne wyniki TOP: nowe encje w temacie, gęstość dowodów, znaczniki doświadczenia i rozkład podtematów, obniżony przy cienkiej bazie.",
+        "why": "Pokazuje, co strona dodaje ponad konsensus. Znaczniki wykazują tylko deklarowane doświadczenie, nie dowodzą badań ani oryginalności.",
+        "action": "Sprawdź cztery składniki.\nDodaj brakujące podstawy.\nUruchom ponownie po edycji."
+      },
+      "heatmap": {
+        "title": "Mapa cieplna akapitów",
+        "what": "Każdy akapit ma etykietę: Echo (bliska kopia fragmentu konkurencji), Zysk (w temacie i nowy), Dryf (poza tematem) lub Neutralny.",
+        "why": "Echo nic nie wnosi, a dryf rozmywa temat. Etykiety są tekstowe, nie tylko kolorem.",
+        "action": "Zacznij od akapitów Echo i Dryf.\nPoruszaj się strzałkami.\nPrzepisz je lub skup na temacie."
+      },
+      "coverage": {
+        "title": "Pokrycie bazy",
+        "what": "Odsetek encji konsensusu, które strona już pokrywa. Poniżej 50% wynik jest mnożony przez karę.",
+        "why": "Bez wspólnego fundamentu strona z odrobiną nowości nadal nie pasuje do tematu.",
+        "action": "Pokryj brakujące encje konsensusu.\nPotem dodaj nowe fakty."
       }
     }
   },
@@ -6486,14 +6745,19 @@
       "lexicalFallback": "Analiza dla wybranego języka korzysta z algorytmu statystycznego TF-IDF. Komponent głębokiego podobieństwa semantycznego jest niedostępny; wynik opiera się na pokryciu i rozkładzie słów kluczowych.",
       "skippedRender": "Pominięto {{count}} stron w analizie, ponieważ renderowanie JavaScript przekroczyło limit czasu.",
       "degraded": "Niektóre strony miały ograniczone dane, więc ich wyniki mogą być mniej precyzyjne.",
-      "unmatchedTopic": "Żadna strona nie pasuje do tematu „{{topic}}”. Zamiast niego użyto wykrytego tematu."
+      "unmatchedTopic": "Żadna strona nie pasuje do tematu „{{topic}}”. Zamiast niego użyto wykrytego tematu.",
+      "gateSkipped": "Pominięto {{count}} stron (noindex/canonical).",
+      "gateInclude": "Uwzględnij je",
+      "gateExclude": "Znów pomiń"
     },
     "skip": {
       "render-timeout": "Renderowanie JavaScript przekroczyło limit czasu",
       "request-error": "Żądanie nie powiodło się",
       "non-topical-status": "Status HTTP bez treści",
       "non-html": "To nie jest strona HTML",
-      "no-content": "Brak treści tekstowej"
+      "no-content": "Brak treści tekstowej",
+      "noindex": "Pominięta: noindex",
+      "canonicalized": "Pominięta: canonical wskazuje inny URL"
     },
     "hero": {
       "label": "Site Focus Score",
@@ -6754,6 +7018,32 @@
       "noPrevious": "pierwsza analiza",
       "noTasks": "Brak pilnych zadań.",
       "gain": "(+{{value}} pkt)"
+    },
+    "conflict": {
+      "pillar-noindex": "Strona filarowa ma noindex: {{url}}",
+      "inlinked-foreign-canonical": "{{url}} ma {{inlinks}} linków wewnętrznych, a canonical wskazuje inny host",
+      "noindex-with-traffic": "{{url}} ma noindex, ale ma {{clicks}} kliknięć GSC i {{domains}} domen linkujących",
+      "sitemap-noindex": "{{url}} jest w mapie witryny, ale ma noindex"
+    },
+    "protection": {
+      "title": "Kontrola ochrony URL",
+      "empty": "Brak snapshotu GSC/GA4/linków dla tego projektu, więc ruch i wartość linków są nieznane.",
+      "advisory": "Tylko porada. Nic nie jest usuwane, przekierowywane ani oznaczane noindex automatycznie.",
+      "pri": "PRI {{value}}",
+      "decision": {
+        "keep": "Zachowaj",
+        "shield": "Chroń",
+        "needs-data": "Potrzebne dane",
+        "semantic-bridge": "Most semantyczny",
+        "prune-candidate": "Do przeglądu pod kątem usunięcia"
+      },
+      "reason": {
+        "trs-above-threshold": "TRS jest wystarczająco wysoki",
+        "revenue": "Zmierzono przychód",
+        "pri-above-threshold": "Ruch, konwersje lub linki osiągają próg ochrony",
+        "telemetry-incomplete": "Brak danych, są nieaktualne lub próbkowane",
+        "low-pri-measured": "Zmierzone sygnały są niskie; najpierw oceń wartość biznesową"
+      }
     }
   },
   "focusBenchmark": {
@@ -6842,6 +7132,9 @@
       "you": "Ty",
       "axisX": "SFS",
       "axisY": "TAS"
+    },
+    "freshness": {
+      "undated": "{{undated}} z {{total}} stron nie ma daty i nie podlega ocenie"
     },
     "pillars": {
       "title": "Składowe Topical Authority Score",
@@ -7287,6 +7580,21 @@
         "entities-missing": "BŁĄD WDROŻENIA: obecnych tylko {{found}} z {{total}} wymaganych encji (potrzeba 60%)",
         "index-ok": "ZWERYFIKOWANO: strona jest indeksowalna",
         "still-noindex": "BŁĄD WDROŻENIA: noindex nadal obecny"
+      },
+      "owner": "Właściciel",
+      "priority": "Priorytet",
+      "dueDate": "Termin SLA",
+      "overdue": "Po terminie",
+      "me": "Moje imię",
+      "filter": {
+        "all": "Wszystkie",
+        "mine": "Moje zadania",
+        "overdue": "Po terminie"
+      },
+      "priorityLevel": {
+        "high": "Wysoki",
+        "medium": "Średni",
+        "low": "Niski"
       }
     }
   },
@@ -7298,6 +7606,518 @@
     "trust": {
       "title": "Spadł wynik zaufania",
       "body": "Wynik zaufania E-E-A-T spadł z {{from}} do {{to}} ({{points}} pkt)."
+    }
+  },
+  "sprsUi": {
+    "title": "Semantyczny PageRank",
+    "empty": "Brak grafu linków. Najpierw przeskanuj witrynę; bez prawdziwych linków nie pokazujemy wyniku.",
+    "page": "Strona",
+    "score": "Wynik",
+    "deadEnd": "Ślepa uliczka",
+    "underLinked": "Za mało linków",
+    "leak": "Wyciek",
+    "unknown": "{{count}} linków ma nieznane podobieństwo i nie liczy się jako wyciek.",
+    "notConverged": "Solver nie zbiegł; wyniki są przybliżone.",
+    "whatIf": {
+      "title": "Symulator What-If linków",
+      "source": "Ze strony",
+      "target": "Do strony",
+      "action": "Zmiana",
+      "add": "Dodaj link",
+      "remove": "Usuń link",
+      "run": "Symuluj",
+      "noChange": "Brak zmian wyników.",
+      "before": "Przed",
+      "after": "Po",
+      "delta": "Zmiana"
+    }
+  },
+  "decayUi": {
+    "snapshots": "Liczba zrzutów stanowiących podstawę oceny: {{count}}",
+    "title": "Radar zaniku semantycznego",
+    "verdict": {
+      "too-few-samples": "Za mało porównywalnych zrzutów SERP. Nie ma czego raportować.",
+      "incompatible": "Zrzuty nie są porównywalne, więc nie twierdzimy, że wystąpił dryf.",
+      "stable": "Brak istotnej zmiany względem punktu odniesienia.",
+      "not-persistent": "Zmiana się pojawiła, ale nie utrzymuje się. Czekamy.",
+      "cooldown": "Dryf się utrzymuje; alert wysłano niedawno.",
+      "alert": "Utrzymujący się dryf względem punktu odniesienia. Sprawdź ręcznie."
+    },
+    "shift": "Przesunięcie centroidu: {{value}}%",
+    "newEntities": "Nowe encje",
+    "lostEntities": "Utracone encje",
+    "intent": "Intencja: {{from}} na {{to}}",
+    "format": "Format: {{from}} na {{to}}",
+    "incompatible": "Różne pola: {{fields}}. To nie jest zmiana rynku."
+  },
+  "sijaUi": {
+    "title": "Intencja wyszukiwania (SIJA)",
+    "empty": "Struktura strony nie wskazuje wyraźnej mikrointencji.",
+    "primary": "Zaobserwowana intencja: {{intent}} (pewność {{confidence}}%).",
+    "mixed": "Także: {{list}}.",
+    "inconclusive": "SSAS nierozstrzygający: dostępne realne strony TOP: {{count}}, potrzeba co najmniej 3.",
+    "ssas": {
+      "aligned": "SSAS {{score}}: struktura zgadza się ze stronami TOP.",
+      "mismatch": "SSAS {{score}}: struktura odbiega od stron TOP."
+    },
+    "intents": {
+      "definitional": "Definicja",
+      "how-to": "Poradnik krok po kroku",
+      "troubleshooting": "Rozwiązywanie problemów",
+      "comparison": "Porównanie",
+      "curated-list": "Zestawienie",
+      "tool": "Narzędzie lub kalkulator",
+      "transactional": "Transakcyjna",
+      "local": "Lokalna"
+    }
+  },
+  "prePublishUi": {
+    "title": "Kontrola przed publikacją",
+    "copy": "Kopiuj raport",
+    "copied": "Skopiowano raport.",
+    "copyFailed": "Nie udało się skopiować raportu.",
+    "verdict": {
+      "insufficient": "Za mało danych, by ocenić ten szkic.",
+      "blocked": "Nie publikuj jeszcze: szkic dubluje istniejącą stronę.",
+      "review": "Sprawdź przed publikacją.",
+      "ok": "Nie znaleziono problemów. To rada, nie zatwierdzenie."
+    },
+    "sfs": "Site Focus Score {{before}} na {{after}} ({{delta}}). Trafność szkicu {{trs}}. To nie jest prognoza ruchu.",
+    "conflict": "Zbyt podobne do {{url}} ({{value}}%).",
+    "overlap": "Częściowo pokrywa się z {{url}} ({{value}}%).",
+    "reason": {
+      "no-core": "Brak jeszcze tematu głównego.",
+      "corpus-too-small": "Mniej niż 3 ocenione strony w witrynie.",
+      "dimension-mismatch": "Embeddingi pochodzą z różnych modeli.",
+      "cannibalization": "Ryzyko kanibalizacji.",
+      "overlap": "Częściowe pokrycie z istniejącą stroną.",
+      "low-trs": "Trafność szkicu względem tematu głównego jest niska.",
+      "chunk-issues": "Niektóre fragmenty nie działają samodzielnie."
+    },
+    "chunk": {
+      "leading-pronoun": "Fragment {{index}} zaczyna się zaimkiem wymagającym wcześniejszego kontekstu.",
+      "too-short": "Fragment {{index}} jest za krótki, by działać samodzielnie."
+    }
+  },
+  "parityUi": {
+    "title": "Parytet międzynarodowy",
+    "summary": "Pokryte: {{covered}}, płytkie: {{shallow}}, brakujące: {{missing}}, celowo lokalne: {{local}}.",
+    "inconclusive": "Brak rozstrzygnięcia: z dostępnych danych nie da się ocenić parytetu.",
+    "gap": {
+      "no-reference-coverage": "Język referencyjny nie ma danych o pokryciu tematów.",
+      "partial-crawl": "Crawl jest niepełny.",
+      "single-language": "Znaleziono tylko jeden język."
+    },
+    "language": "Język",
+    "topic": "Temat",
+    "status": "Status",
+    "statuses": {
+      "covered": "Pokryty",
+      "shallow": "Płytki",
+      "missing": "Brak",
+      "intentionally-local": "Celowo lokalny"
+    },
+    "note": "Brak wersji nie zawsze jest błędem. Teksty nie muszą być 1:1, a język interfejsu nie decyduje o analizowanych językach witryny."
+  },
+  "offPageUi": {
+    "title": "Autorytet tematyczny off-page",
+    "empty": "Brak wartości tematycznej linków: brakuje backlinków, tekstu źródeł lub danych o autorytecie. To nie znaczy, że backlinków nie ma.",
+    "tbva": "Tematyczna wartość linków {{value}} z {{count}} domen źródłowych (oceniono {{coverage}}% linków follow).",
+    "partial": "Nie udało się ocenić {{count}} linków follow (brak tekstu źródła lub autorytetu).",
+    "nofollow": "{{count}} linków nofollow nie jest liczonych.",
+    "noText": "Brak tekstu źródeł, więc nie sprawdzono współcytowań marki.",
+    "coCitation": "Marka i główna encja w jednym akapicie: {{linked}} z linkiem, {{unlinked}} bez linku.",
+    "note": "Wartość opiera się na autorytecie dostawcy i nie odtwarza Google PageRank ani nie wyjaśnia rankingu. Współwystępowanie to nie poparcie."
+  },
+  "llmEconomy": {
+    "title": "Koszt LLM",
+    "empty": "Brak zapisanych wywołań AI.",
+    "spent": "Wydano: {{value}}",
+    "saved": "Zaoszczędzono dzięki cache i modelom lokalnym: {{value}}",
+    "hits": "Trafienia cache: {{count}}",
+    "leaves": "Treść stron jest wysyłana poza to urządzenie do: {{provider}}."
+  },
+  "templateGovernor": {
+    "title": "Jakość szablonów programatycznych",
+    "empty": "Nie znaleziono słabych szablonów.",
+    "row": "{{pattern}}: {{count}} stron, zysk informacji {{gain}}%",
+    "noindex": "Zalecane: noindex dla segmentu",
+    "limit": "Zalecane: ogranicz liczbę indeksowanych stron"
+  },
+  "outreach": {
+    "title": "Cele outreachu",
+    "empty": "Brak danych luki linkowej. Najpierw uruchom analizę luki linków.",
+    "row": "{{domain}}: priorytet {{priority}}, linkuje do {{count}} konkurentów",
+    "export": "Eksportuj CSV",
+    "manualNote": "SEOmi nie wysyła wiadomości. Szkice wysyłasz ze swojej skrzynki."
+  },
+  "causalMarket": {
+    "title": "Wpływ przyczynowy",
+    "empty": "Nie można oszacować: potrzeba min. 7 dni przed zmianą, 1 dnia po niej, rzeczywistej zewnętrznej serii rynku i niezależnych dowodów kontroli.",
+    "effect": "Efekt dzienny: {{effect}} ({{lower}} do {{upper}})",
+    "updateWindow": "Okno aktualizacji Google: wynik niejednoznaczny.",
+    "normalized": "Znormalizowano linią bazową rynku",
+    "positive": "Efekt dodatni",
+    "negative": "Efekt ujemny",
+    "noEffect": "Brak mierzalnego efektu",
+    "inconclusive": "Niejednoznaczny",
+    "evidence": "Dowody: rynek {{market}}; kontrola {{control}}",
+    "unknown": "nieznane",
+    "marketUnavailable": "Zewnętrzna linia bazowa rynku jest niedostępna lub nieprawidłowa; nie wnioskujemy o sukcesie ani porażce przyczynowej.",
+    "controlUnavailable": "Brakuje niezależnych dowodów kontroli; nie wnioskujemy o sukcesie ani porażce przyczynowej.",
+    "updateWindowReason": "Analiza nakłada się na potwierdzoną aktualizację rankingu Google; wynik jest niejednoznaczny.",
+    "disclaimer": "Szacunek z użyciem zewnętrznego rynku i kontroli; nie jest dowodem związku przyczynowego."
+  },
+  "snapshots": {
+    "newerData": "Dostępne są nowsze dane z crawla.",
+    "refresh": "Odśwież"
+  },
+  "teamUi": {
+    "role": {
+      "admin": "Administrator",
+      "seo_strategist": "Strateg SEO",
+      "content_writer": "Autor treści",
+      "developer": "Programista"
+    },
+    "permission": {
+      "run_crawl": "Uruchamianie crawla",
+      "execute_cms_patch": "Stosowanie poprawek w CMS",
+      "modify_site_focus_rules": "Zmiana reguł Site Focus",
+      "export_audit_pdf": "Eksport audytu do PDF",
+      "manage_team_roles": "Zarządzanie rolami zespołu"
+    },
+    "denied": "Twoja rola nie pozwala na tę akcję."
+  },
+  "cmsUi": {
+    "kind": {
+      "wordpress": "WordPress",
+      "strapi": "Strapi",
+      "webhook": "Webhook"
+    },
+    "error": {
+      "unsafe-url": "Adres CMS jest niedozwolony (wymagany HTTPS i publiczny host).",
+      "conflict": "Strona zmieniła się po przygotowaniu diffa. Przygotuj diff ponownie.",
+      "http": "CMS odrzucił żądanie.",
+      "bad-response": "CMS odpowiedział w nieoczekiwanym formacie.",
+      "heading-not-found": "Nie znaleziono nagłówka na stronie.",
+      "heading-ambiguous": "Nagłówek występuje więcej niż raz.",
+      "forbidden": "Twoja rola nie pozwala stosować poprawek w CMS.",
+      "not-approved": "Zatwierdź dokładnie ten diff przed zapisem.",
+      "fact-gate-required": "Treści YMYL wymagają zaliczonej weryfikacji faktów przed zapisem."
+    },
+    "verified": "Zmiana zapisana i zweryfikowana.",
+    "unverified": "Zmiana zapisana, ale na żywej stronie jeszcze jej nie widać.",
+    "dryRun": "Próba na sucho: nic nie zapisano."
+  },
+  "igosUi": {
+    "title": "Oryginalność IGOS",
+    "empty": "Nie pobrano porównywalnych wyników TOP, więc nie ma bazy ani wyniku.",
+    "noScore": "Brak wyniku",
+    "offTopic": "Większość akapitów jest poza tematem; wyniku nie podano.",
+    "partial": "Baza częściowa: {{available}} z {{requested}} stron konkurencji.",
+    "basis": "Baza: {{available}} z {{requested}} stron konkurencji.",
+    "component": {
+      "nefr": "Nowe encje",
+      "edsi": "Gęstość dowodów",
+      "fhem": "Znaczniki doświadczenia",
+      "sdd": "Rozkład podtematów"
+    },
+    "coverage": "Pokrycie bazy {{coverage}}, mnożnik kary {{multiplier}}",
+    "novel": "Nowe encje w temacie: {{list}}",
+    "advice": "Rekomendacje",
+    "heatmap": "Mapa cieplna akapitów",
+    "heatmapEmpty": "Brak akapitów do pokazania.",
+    "noHeading": "Brak nagłówka",
+    "zone": {
+      "echo": "Echo",
+      "gain": "Zysk",
+      "drift": "Dryf",
+      "neutral": "Neutralny"
+    },
+    "detail": "Offset {{offset}}, podobieństwo do tematu {{topic}}, najbliższy fragment konkurencji {{nearest}}.",
+    "source": "Najbliższe źródło: {{url}} (pozycja {{rank}}).",
+    "noSource": "Brak najbliższego źródła.",
+    "limit": {
+      "no-comparable-documents": "Brak porównywalnych dokumentów konkurencji.",
+      "too-few-documents": "Zbyt mało dokumentów konkurencji dla wiarygodnej bazy.",
+      "some-documents-missing": "Nie udało się pobrać części stron konkurencji.",
+      "no-target-chunks": "Strona nie ma akapitów do analizy.",
+      "off-topic-below-quota": "Zbyt mało akapitów w temacie."
+    },
+    "rec": {
+      "rewrite-echo": "Akapit na offsecie {{offset}} powtarza fragment konkurencji: przepisz go własnymi słowami.",
+      "add-evidence": "Dodaj konkretne dane z jednostkami lub źródłami; żadnych nie wykryto.",
+      "refocus-drift": "Akapit na offsecie {{offset}} odpływa od tematu: skup go lub usuń."
+    }
+  },
+  "logIntelUi": {
+    "title": "Analiza logów",
+    "description": "Importuj lokalny log dostępu .log lub .txt (maksymalnie 500 MB). Zapisywane są tylko agregaty, nigdy surowe adresy IP. Deduplikacja używa próbkowanego skrótu SHA-256 (pierwszy i ostatni 1 MiB oraz rozmiar).",
+    "chooseFile": "Wybierz log dostępu",
+    "cancel": "Anuluj",
+    "clear": "Wyczyść logi",
+    "importing": "Importowanie logu dostępu",
+    "progress": "Wiersze: {{lines}} · Błędne: {{malformed}} · Pominięte inne niż boty: {{ignoredNonBot}}",
+    "cancelled": "Import anulowany.",
+    "duplicate": "Ten plik został już zaimportowany.",
+    "complete": "Import zakończony.",
+    "storageFailed": "Nie udało się zaktualizować pamięci lokalnej. Zmiany pozostają tylko w pamięci; zapisane logi mogą być bez zmian.",
+    "tooLarge": "Plik przekracza limit 500 MB.",
+    "invalidFile": "Wybierz plik .log lub .txt.",
+    "resumeRequired": "Wznów niedokończony plik lub wyczyść logi przed importem innego pliku.",
+    "importFailed": "Nie udało się odczytać pliku lub obliczyć skrótu. Spróbuj ponownie.",
+    "resume": "Wybierz ten sam plik, aby wznowić import bez podwójnego zliczania wierszy.",
+    "verificationNote": "Tożsamość bota to deklaracja User-Agent, nie dowód. Wykrywanie podszywania wymaga desktopowego resolvera DNS; panel nie odpytuje DNS. Niezweryfikowane wiersze pozostają nierozstrzygnięte.",
+    "verificationNoteDesktop": "Tożsamość bota jest sprawdzana na tym komputerze przez odwrotny i prosty DNS (limit 3 s). Nieudane zapytanie zostawia wiersz jako zadeklarowany, nigdy jako podszywanie.",
+    "matrix": "Macierz efektywności crawlowania",
+    "coverage": "Pokrycie: {{days}} z {{period}} dni",
+    "period": "Okno (UTC): {{start}} – {{end}}",
+    "insufficient": "Pokrycie logów jest niewystarczające do wiarygodnych ocen.",
+    "noScores": "Najnowszy crawl projektu nie ma zapisanych ocen TRS dla ścieżek. Oceny nie są domyślane.",
+    "unavailable": "Brak danych",
+    "empty": "Brak ścieżek logów lub crawla do wyświetlenia.",
+    "previous": "Poprzednia",
+    "page": "Strona {{current}} z {{total}}",
+    "next": "Następna",
+    "loading": "Ładowanie analizy logów…",
+    "columns": {
+      "path": "Ścieżka",
+      "family": "Rodzina bota",
+      "status": "Weryfikacja",
+      "hits": "Żądania",
+      "errors": "Udział 4xx/5xx",
+      "verdict": "Ocena"
+    },
+    "families": {
+      "googlebot": "Googlebot",
+      "bingbot": "Bingbot",
+      "gptbot": "GPTBot",
+      "perplexitybot": "PerplexityBot",
+      "none": "Brak śladów bota"
+    },
+    "statuses": {
+      "verified": "Zweryfikowany",
+      "claimed": "Deklarowany",
+      "spoofed": "Podszywający się",
+      "unknown": "Nieznany"
+    },
+    "verdicts": {
+      "waste": "Marnotrawstwo",
+      "starvation": "Niedobór crawlowania",
+      "ok": "OK",
+      "inconclusive": "Nierozstrzygnięte",
+      "no-logs": "Brak logów"
+    }
+  },
+  "altCheckUi": {
+    "column": "Jakość ALT",
+    "csvColumn": "alt_issues",
+    "summary": "Sprawdzono {{checked}} obrazów, {{issues}} z problemami ALT.",
+    "issues": {
+      "missing": "Brak ALT",
+      "empty": "Pusty ALT",
+      "filename": "Wygląda jak nazwa pliku",
+      "generic": "Ogólnikowe sformułowanie",
+      "too-long": "Za długi",
+      "repeats-caption": "Powtarza podpis",
+      "unrelated-to-context": "Bez związku z kontekstem"
+    },
+    "noIssues": "Brak problemów z ALT",
+    "decorative": "Dekoracyjny (pusty ALT)",
+    "visualNotice": "Analiza wizualna wymaga lokalnego modelu i nie jest dostępna w tej wersji.",
+    "analyses": {
+      "ocr": "OCR",
+      "clip-alignment": "Zgodność CLIP",
+      "transcript": "Transkrypcje"
+    },
+    "statuses": {
+      "unavailable": "Niedostępne"
+    },
+    "noScorePenalty": "Nie obniża to żadnego wyniku."
+  },
+  "prePublishMountUi": {
+    "title": "Kontrola przed publikacją",
+    "description": "Wykorzystuje ostatni ukończony crawl, zapisane fragmenty i terminy, wyniki Site Focus oraz ustawienia embeddingów projektu. To tylko symulacja: nic nie jest zapisywane ani publikowane.",
+    "draft": "Tekst nieopublikowanego szkicu",
+    "url": "URL szkicu (opcjonalnie)",
+    "urlHint": "Pozostaw puste dla nowej strony. Istniejący URL z crawla zastępuje tę stronę w symulacji.",
+    "invalidUrl": "Podaj poprawny URL HTTP lub HTTPS bez danych logowania.",
+    "run": "Sprawdź szkic",
+    "cancel": "Anuluj",
+    "loading": "Ładowanie kontroli przed publikacją…",
+    "noCrawl": "Brak ukończonego crawla aktywnego projektu. Najpierw przeskanuj witrynę.",
+    "noCore": "Brak głównego tematu. Nie można ocenić szkicu.",
+    "running": "Tworzenie embeddingów szkicu i danych z crawla…",
+    "unreachable": "Wybrany dostawca embeddingów nie zwrócił wektorów. Sprawdź ustawienia embeddingów projektu i połączenie z dostawcą.",
+    "cancelled": "Kontrola anulowana. Nie zastosowano żadnego wyniku.",
+    "stale": "Zmieniono dane wejściowe lub crawl. Uruchom kontrolę ponownie."
+  },
+  "telemetrySourcesUi": {
+    "title": "Źródła",
+    "sources": {
+      "gsc": "GSC",
+      "ga4": "GA4",
+      "backlinks": "Linki zwrotne"
+    },
+    "states": {
+      "measured": "Zmierzone",
+      "partial-history": "Niepełna historia",
+      "stale": "Nieaktualne",
+      "sampled": "Próbka",
+      "missing-permission": "Brak uprawnień",
+      "unavailable": "Niedostępne"
+    },
+    "property": "Usługa: {{value}}",
+    "provider": "Dostawca: {{value}}",
+    "period": "{{start}} – {{end}} ({{days}} dni)",
+    "retrievedAt": "Pobrano: {{value}}",
+    "truncated": {
+      "yes": "Dane obcięte: tak",
+      "no": "Dane obcięte: nie"
+    },
+    "coverage": "Pokrycie: {{value}}%",
+    "unknownNote": "Nieznane dane nigdy nie są liczone jako zero."
+  },
+  "offPageSourcesUi": {
+    "analyze": "Analizuj źródła linków",
+    "cancel": "Anuluj",
+    "scope": "do 25 linków follow, po jednym na domenę źródłową, od najwyższego autorytetu dostawcy. Skala autorytetu: 0–100; TBVA jest sumą, nie procentem ani Google PageRank. Limity: 3 żądania równolegle, 15 s limitu natywnego, 25 MiB odpowiedzi, 20 000 znaków widocznego tekstu na źródło.",
+    "provider": "Lokalny dostawca embeddingów",
+    "local": "Lokalny hash",
+    "ollama": "Lokalna Ollama",
+    "model": "Model embeddingów Ollama",
+    "scored": "Ocenione źródła: {{scored}} / {{total}} wybranych (nie cały profil linków).",
+    "sources": "Status pobrania źródeł",
+    "fetchedAt": "Pobrano: {{time}}",
+    "notFetched": "Nie pobrano",
+    "context": "Ekstrakcja nie zachowuje granic akapitów ani kotwic. Ograniczone bloki tekstu są przybliżeniem; każde trafienie ma linked=false, bo brak kontekstu linku w akapicie.",
+    "caveat": "Współwystępowanie nie jest rekomendacją. Homonimy mogą dawać fałszywe trafienia; wzmianki z negacją pozostają niejednoznaczne.",
+    "excerpts": "Fragmenty współcytowań",
+    "offset": "{{url}} — offset w wyodrębnionym tekście {{offset}}",
+    "missing": "Brak tekstu, poprawnych wektorów lub autorytetu oznacza dane częściowe/niedostępne, nie zero linków. Próbka nie obejmuje całego profilu.",
+    "status": {
+      "running": "Analizowanie źródeł…",
+      "done": "Analiza źródeł zakończona",
+      "cancelled": "Anulowano; niedokończone źródła nie są oceniane",
+      "unavailable": "Analiza niedostępna"
+    },
+    "fetch": {
+      "pending": "Oczekuje",
+      "ok": "Tekst dostępny",
+      "unavailable": "Niedostępne",
+      "too-large": "Zbyt duża odpowiedź",
+      "blocked": "Zablokowano przez bezpieczny transport"
+    },
+    "limitations": {
+      "no-topic-vector": "Brak poprawnego wektora Core Topic z ostatniego ukończonego crawlu projektu; TBVA jest niedostępne.",
+      "invalid-scale": "Nieprawidłowa skala autorytetu; TBVA jest niedostępne.",
+      "no-follow-links": "Brak linków follow do analizy.",
+      "source-text-or-authority-missing": "Część źródeł nie ma tekstu, poprawnych wektorów lub autorytetu dostawcy."
+    },
+    "polarity": {
+      "neutral": "Neutralne współwystępowanie; nie rekomendacja",
+      "unclear": "Niejednoznaczne: możliwa negacja"
+    },
+    "pacing": "Natywny audyt ogranicza też rozpoczęcia do 10 na minutę. Analiza próbki może potrwać kilka minut; inne audyty mogą zmniejszyć dostępność.",
+    "history": {
+      "title": "Historia",
+      "empty": "Brak zapisanych ukończonych analiz.",
+      "summary": "TBVA: {{value}} · Ocenione/żądane: {{scored}}/{{requested}}",
+      "delta": "Zmiana TBVA: {{delta}}",
+      "notComparable": "Nieporównywalne: {{reason}}",
+      "reasons": {
+        "first": "brak poprzedniego zapisu",
+        "scale": "inna skala autorytetu",
+        "model": "inny model embeddingów",
+        "unknownModel": "nieznany model embeddingów",
+        "unavailable": "TBVA niedostępne"
+      },
+      "view": "Pokaż źródła",
+      "hide": "Ukryj źródła",
+      "delete": "Usuń zapis",
+      "clear": "Wyczyść historię projektu",
+      "exportCurrent": "Eksportuj bieżącą analizę CSV",
+      "exportRecord": "Eksportuj zapis CSV",
+      "storageError": "Pamięć historii jest niedostępna; zmiany nie zostały zapisane.",
+      "topic": "Temat: {{topic}}",
+      "embedding": "Embedding: {{provider}} / {{model}}",
+      "details": "Zapisane dane poszczególnych źródeł",
+      "fields": {
+        "sourceUrl": "URL źródła",
+        "fetchedAt": "Pobrano",
+        "availability": "Dostępność",
+        "authority": "Autorytet",
+        "similarity": "Podobieństwo",
+        "contribution": "Wkład"
+      },
+      "unavailable": "Niedostępne",
+      "status": {
+        "ready": "Gotowe",
+        "partial": "Częściowe",
+        "unavailable": "Niedostępne"
+      },
+      "privacy": "Ostatnie 10 ukończonych analiz jest zapisanych lokalnie dla każdego projektu. Pełny tekst stron i wektory nigdy nie są zapisywane."
+    }
+  },
+  "experimentsUi": {
+    "title": "Eksperymenty SEO",
+    "disclaimer": "To obserwacja, a nie dowód związku przyczynowego. Zmiany mogą wynikać z sezonowości, innych interwencji lub czynników zewnętrznych.",
+    "projectRequired": "Wybierz projekt, aby rejestrować interwencje.",
+    "capacity": "Przechowujemy do {{count}} interwencji; kolejne zastępują najstarsze.",
+    "url": "Adres URL strony",
+    "site": "Cała witryna",
+    "date": "Pierwszy dzień objęty zmianą",
+    "kind": "Rodzaj interwencji",
+    "note": "Notatka (do 300 znaków)",
+    "add": "Dodaj interwencję",
+    "saveFailed": "Nie udało się zapisać. Sprawdź pola i dostępność pamięci lokalnej.",
+    "removeFailed": "Nie udało się usunąć interwencji z pamięci lokalnej.",
+    "empty": "Brak zarejestrowanych interwencji.",
+    "intervention": "Interwencja",
+    "unavailable": "Niedostępne",
+    "baseline": "Okres bazowy",
+    "followUp": "Okres po zmianie",
+    "measurements": "Zaobserwowane pomiary",
+    "metric": "Wskaźnik",
+    "before": "Przed",
+    "after": "Po",
+    "change": "Zmiana względna",
+    "clicks": "Kliknięcia",
+    "impressions": "Wyświetlenia",
+    "position": "Średnia pozycja (różnica ze znakiem)",
+    "restOfSite": "Reszta witryny (suma minus strona)",
+    "relativeVsSite": "Strona minus reszta witryny (punkty procentowe)",
+    "limitations": "Ograniczenia",
+    "remove": "Usuń interwencję",
+    "percent": "{{value}}%",
+    "points": "{{value}} p.p.",
+    "kinds": {
+      "content": "Treść",
+      "internal-links": "Linkowanie wewnętrzne",
+      "title-meta": "Tytuł i metadane",
+      "technical": "Techniczna",
+      "other": "Inna"
+    },
+    "status": {
+      "ready": "Obserwacja dostępna",
+      "inconclusive": "Nierozstrzygające",
+      "pending": "Zaplanowana / oczekuje"
+    },
+    "reasons": {
+      "observational": "Wyłącznie obserwacja przed i po; bez wnioskowania przyczynowego.",
+      "uncontrolled-factors": "Sezonowość, równoległe zmiany i czynniki zewnętrzne nie są kontrolowane.",
+      "zero-baseline": "Zerowa wartość bazowa uniemożliwia obliczenie zmiany względnej.",
+      "no-control": "Interwencja dla całej witryny nie ma oddzielnej kontroli w postaci reszty witryny.",
+      "filtered-scope": "W obu okresach obowiązują te same zapisane filtry Search Console.",
+      "invalid-period": "Zapisany okres ma nieprawidłowe daty lub długość.",
+      "inconsistent-totals": "Wskaźniki strony przekraczają zapisane sumy witryny; nie można obliczyć kontroli.",
+      "no-baseline": "Brak zapisanego okresu kończącego się przed interwencją.",
+      "no-follow-up": "Brak zapisanego okresu rozpoczynającego się w dniu interwencji lub później.",
+      "incomparable-scope": "Najbliższe okresy dotyczą różnych usług lub filtrów albo nie obejmują adresu URL.",
+      "period-length-mismatch": "Długości okresów różnią się o ponad 10%.",
+      "rows-truncated": "Zapisane wiersze stron są ucięte; porównanie strony może być niepełne.",
+      "low-volume": "Bazowa liczba kliknięć jest mniejsza niż 30; zbyt mały wolumen do wiarygodnego porównania.",
+      "pending": "Data interwencji jest w przyszłości; ocena oczekuje."
     }
   }
 }

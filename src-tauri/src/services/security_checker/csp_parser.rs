@@ -37,7 +37,7 @@ impl CspPolicy {
         } else {
             (self.script_scope(), self.strict_dynamic_script)
         };
-        sources.map_or(true, |sources| {
+        sources.is_none_or(|sources| {
             let trusted_script = sources.iter().any(|source| is_nonce_or_hash(source));
             if token == "'unsafe-inline'" && trusted_script {
                 return false;

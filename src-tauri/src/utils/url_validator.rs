@@ -70,7 +70,10 @@ pub fn validate_and_normalize_url(input: &str) -> Result<Url, UrlValidationError
         _ => None,
     };
     if let Some(ip) = literal_ip {
-        if is_private_or_loopback(&ip) {
+        let socket = std::net::SocketAddr::new(ip, parsed.port_or_known_default().unwrap_or(80));
+        if is_private_or_loopback(&ip)
+            && !crate::utils::test_fixture::is_allowed_test_fixture_socket(&socket)
+        {
             return Err(UrlValidationError::BlockedPrivateIp);
         }
     }

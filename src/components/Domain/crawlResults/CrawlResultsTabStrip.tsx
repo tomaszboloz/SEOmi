@@ -41,12 +41,15 @@ return (
             >
               {tabs.map((tab) => {
                 const Icon = tab.icon;
+                const label = localizedTabLabel(tab);
+                const count = tabCounts[tab.id];
                 return (
                   <button
                     key={tab.id}
                     id={`crawl-tab-${tab.id}`}
                     type="button"
                     role="tab"
+                    aria-label={`${label} ${count}`}
                     aria-selected={activeTab === tab.id}
                     aria-controls="crawl-tab-panel"
                     tabIndex={activeTab === tab.id ? 0 : -1}
@@ -54,11 +57,11 @@ return (
                     className={`flex shrink-0 items-center gap-1.5 rounded-lg px-2.5 py-2 text-xs transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-400 ${activeTab === tab.id ? "bg-emerald-400/10 text-emerald-200 shadow-inner shadow-emerald-300/5" : "text-slate-400 hover:bg-slate-800/70 hover:text-slate-200"}`}
                   >
                     <Icon className="h-3.5 w-3.5" />
-                    <span>{localizedTabLabel(tab)}</span>
+                    <span>{label}</span>
                     <span
                       className={`rounded px-1 py-0.5 font-mono text-[10px] ${activeTab === tab.id ? "bg-emerald-400/10 text-emerald-100" : "bg-slate-800 text-slate-500"}`}
                     >
-                      {tabCounts[tab.id]}
+                      {count}
                     </span>
                   </button>
                 );

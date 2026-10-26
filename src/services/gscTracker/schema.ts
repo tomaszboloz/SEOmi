@@ -1,6 +1,6 @@
 import { z } from 'zod';
 import type { GscPerformanceSnapshot } from './types';
-import { MAX_STORED_GSC_ROWS_PER_DIMENSION } from './limits';
+import { MAX_STORED_GSC_DAILY_ROWS, MAX_STORED_GSC_ROWS_PER_DIMENSION } from './limits';
 
 const gscMetric = z.number().finite().nonnegative();
 const gscRowMetrics = { clicks: gscMetric, impressions: gscMetric, ctr: gscMetric, position: gscMetric };
@@ -14,6 +14,9 @@ export const gscSnapshotSchema: z.ZodType<GscPerformanceSnapshot> = z.object({
   total_clicks: gscMetric, total_impressions: gscMetric, avg_ctr: gscMetric, avg_position: gscMetric,
   queries: z.array(z.object({ query: z.string(), ...gscRowMetrics })).max(MAX_STORED_GSC_ROWS_PER_DIMENSION),
   pages: z.array(z.object({ page: z.string(), ...gscRowMetrics })).max(MAX_STORED_GSC_ROWS_PER_DIMENSION),
+  daily: z.array(z.object({ date: z.iso.date(), ...gscRowMetrics }))
+    .max(MAX_STORED_GSC_DAILY_ROWS).transform(rows => rows.sort((left, right) => left.date.localeCompare(right.date))).optional(),
+  daily_may_be_truncated: z.boolean().optional(),
   query_pages: z.array(z.object({ query: z.string().refine(value => value.trim().length > 0), page: z.string().url(),
     ...gscRowMetrics })).max(MAX_STORED_GSC_ROWS_PER_DIMENSION).optional(),
   query_pages_may_be_truncated: z.boolean().optional(), stored_query_page_rows: gscMetric.int().optional(),

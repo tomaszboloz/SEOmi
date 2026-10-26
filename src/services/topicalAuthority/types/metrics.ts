@@ -45,7 +45,7 @@ export interface SiloReport {
 export interface CannibalEdge { from: string; to: string; similarity: number; basis: 'intent' | 'subtopic' }
 export interface CannibalGroup { edges: CannibalEdge[]; urls: string[]; canonical: string; similarity: number; sharedEntitiesPct: number; subtopicId?: string }
 
-export interface FreshnessReport { ratio: number | null; dated: number; stale: string[] }
+export interface FreshnessReport { ratio: number | null; dated: number; total: number; undated: number; stale: string[] }
 
 export interface Pillars { tcr: number | null; cdes: number | null; silc: number | null; cvff: number | null }
 

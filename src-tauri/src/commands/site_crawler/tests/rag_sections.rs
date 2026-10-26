@@ -41,3 +41,18 @@ fn counts_unordered_lists_and_skips_empty_headings() {
     assert_eq!(s.len(), 1);
     assert_eq!(s[0].unordered_lists, 1);
 }
+
+#[test]
+fn skips_empty_and_overflowing_paragraphs() {
+    let mut html = String::from("<body><main><p></p>");
+    for index in 0..31 {
+        html.push_str(&format!("<p>Paragraph {index}</p>"));
+    }
+    html.push_str("</main></body>");
+    let result = sections(&html);
+    assert_eq!(result.len(), 1);
+    assert_eq!(result[0].paragraphs.len(), 30);
+}
+
+#[path = "coverage100_rag_sections.rs"]
+mod coverage100_rag_sections;

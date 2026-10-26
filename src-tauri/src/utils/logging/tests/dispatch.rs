@@ -2,6 +2,9 @@ use super::*;
 
 #[test]
 fn dispatch_preserves_outcome_and_correlates_json_without_input_payloads() {
+    // Production code registers the shared span callsites here without a scoped
+    // subscriber; the global one keeps their cached Interest from becoming never.
+    init();
     for accepted in [true, false] {
         let mut records = Vec::new();
         let mut calls = 0;

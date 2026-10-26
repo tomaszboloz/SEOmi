@@ -81,9 +81,7 @@ async fn send_and_test_connection_reject_unknown_providers() {
 
 #[test]
 fn client_initialisation_failures_use_the_fixed_message() {
-    let broken = reqwest::Client::builder()
-        .min_tls_version(reqwest::tls::Version::TLS_1_3)
-        .max_tls_version(reqwest::tls::Version::TLS_1_2);
+    let broken = reqwest::Client::builder().use_preconfigured_tls(42_u8);
     assert_eq!(
         super::network_client(broken).unwrap_err(),
         "Unable to initialize the AI network client."

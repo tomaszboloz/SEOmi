@@ -39,7 +39,7 @@ pub(super) async fn run_at(
     let mut truncated = false;
     for _ in 0..super::validation::MAX_PAGES {
         if offset >= REPORT_ROW_MAX {
-            truncated = row_count.map_or(true, |count| count > REPORT_ROW_MAX);
+            truncated = row_count.is_none_or(|count| count > REPORT_ROW_MAX);
             break;
         }
         pages += 1;

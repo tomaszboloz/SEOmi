@@ -84,6 +84,7 @@ mod rendered_prefetch;
 mod rendered_prefetch_edges;
 mod rendered_prefetch_guards;
 mod rendered_prefetch_inflight;
+mod rendered_prefetch_join_tests;
 mod resource_abort_and_timeout;
 mod resource_contracts;
 mod resource_deadlines;
@@ -116,3 +117,6 @@ mod page_media_http_scheme;
 mod page_type_branch_gaps;
 mod page_type_links_ratio_gaps;
 mod summary_rendered_sessions;
+
+#[path = "coverage100_exact_gaps.rs"]
+mod coverage100_exact_gaps;

@@ -101,7 +101,7 @@ describe('CrawlFocusTab', () => {
   });
 
   it('computes the report, opens a page, goes back, applies an override and recalculates', () => {
-    const pages = diabetesSite();
+    const pages = diabetesSite(undefined, 6);
     const onReport = vi.fn();
     render(<CrawlFocusTab pages={pages} startUrl={START} onReport={onReport} benchmark={<p>bench</p>} historySlot={<p>hist</p>} />);
     expect(screen.getByText('bench')).toBeTruthy();

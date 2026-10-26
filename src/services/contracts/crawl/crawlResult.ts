@@ -56,15 +56,16 @@ export const SiteCrawlResultSchema = z.object({
   storage_pages_total: z.number().finite().nullable().transform(value => value ?? undefined).optional(),
   discovery_provenance_truncated: z.boolean().nullable().transform(value => value ?? undefined).optional(),
   limit_reasons: z.array(z.string()).nullable().transform(value => value ?? undefined).optional(),
-}).passthrough() satisfies z.ZodType<SiteCrawlResult, z.ZodTypeDef, unknown>;
+}).passthrough() satisfies z.ZodType<SiteCrawlResult, unknown>;
 
 export const CrawlRunRecordSchema = z.object({
   id: z.string(),
   projectId: z.string().optional(),
   completedAt: z.string(),
+  startedAt: z.string().optional(),
   startUrl: z.string(),
   config: CrawlConfigSchema,
   result: SiteCrawlResultSchema,
   environment: z.union([z.literal('default'), z.literal('staging'), z.literal('production')]).nullable().transform(value => value ?? undefined).optional(),
   storage_compacted: z.boolean().nullable().transform(value => value ?? undefined).optional(),
-}).passthrough() satisfies z.ZodType<CrawlRunRecord, z.ZodTypeDef, unknown>;
+}).passthrough() satisfies z.ZodType<CrawlRunRecord, unknown>;

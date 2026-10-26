@@ -124,7 +124,7 @@ export const CrawledPageSummarySchema = z.object({
   custom_search_results: z.array(CrawledCustomSearchResultSchema).nullable().transform(value => value ?? undefined).optional(),
   issues_count: z.number().finite(),
   issues: z.array(CrawledPageIssueSchema),
-}).passthrough() satisfies z.ZodType<CrawledPageSummary, z.ZodTypeDef, unknown>;
+}).passthrough() satisfies z.ZodType<CrawledPageSummary, unknown>;
 
 export const CrawledResourceSchema = z.object({
   source_urls: z.array(z.string()),
@@ -138,4 +138,4 @@ export const CrawledResourceSchema = z.object({
   dimensions_source: z.string().nullable().transform(value => value ?? undefined).optional(),
   response_time_ms: z.number().finite().nullable().transform(value => value ?? undefined).optional(),
   request_error_kind: z.string().nullable().transform(value => value ?? undefined).optional(),
-}).passthrough() satisfies z.ZodType<CrawledResource, z.ZodTypeDef, unknown>;
+}).passthrough() satisfies z.ZodType<CrawledResource, unknown>;

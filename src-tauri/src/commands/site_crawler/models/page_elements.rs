@@ -70,6 +70,19 @@ pub struct CrawledLink {
     pub target_request_error_kind: Option<String>,
     #[serde(default)]
     pub target_checked_at: Option<String>,
+    /// DOM placement: nav_breadcrumb, sidebar_footer, widget, main or unknown.
+    /// Never above/below fold from HTTP HTML; absent in older saved runs.
+    #[serde(default)]
+    pub zone: Option<String>,
+    /// How `zone` was decided, e.g. `dom-ancestry`.
+    #[serde(default)]
+    pub zone_method: Option<String>,
+    /// Up to 15 words before the anchor in its block element.
+    #[serde(default)]
+    pub context_before: Option<String>,
+    /// Up to 15 words after the anchor in its block element.
+    #[serde(default)]
+    pub context_after: Option<String>,
 }
 
 #[derive(Debug, Serialize, Deserialize, Clone)]

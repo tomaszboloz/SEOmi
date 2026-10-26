@@ -13,6 +13,9 @@ pub(crate) mod session_open_handlers;
 pub(crate) mod session_open_prepare;
 
 #[cfg(test)]
+#[path = "rendered_crawler/coverage100_tests.rs"]
+mod coverage100_tests;
+#[cfg(test)]
 mod session_open_tests;
 #[cfg(test)]
 mod tests_capture;

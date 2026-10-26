@@ -1,4 +1,4 @@
-import { saveCrawlRuns } from '@/services/crawlPersistence';
+import { loadCrawlRuns, saveCrawlRuns } from '@/services/crawlPersistence';
 import { readStorage, removeStorage, writeStorage } from '@/services/storage';
 import { assertBackupShape, isProjectId } from './validation';
 import { restoreProjectStorageKey } from './storage';
@@ -6,6 +6,7 @@ import type { ProjectBackup, ProjectBackupSummary } from './types';
 import i18n from '@/i18n';
 
 const restoreValidatedBackup = async (validated: ProjectBackup, targetProjectId: string): Promise<ProjectBackupSummary> => {
+  await loadCrawlRuns(targetProjectId);
   let storageEntries = 0;
   const previousValues = new Map<string, string | null>();
   const writtenKeys: string[] = [];

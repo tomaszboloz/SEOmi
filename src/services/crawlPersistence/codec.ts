@@ -1,5 +1,5 @@
 import type { CrawlRunRecord } from '@/types';
-import { parseCrawlRuns } from '../crawlContracts';
+import { parseCrawlRuns, parseCrawlRunsStrict } from '../crawlContracts';
 const GZIP_FORMAT = 'seomi-crawl-gzip-json-v1';
 export type StoredCrawlRuns = CrawlRunRecord[] | { format: typeof GZIP_FORMAT; bytes: ArrayBuffer };
 
@@ -31,18 +31,22 @@ export const encodeCrawlRunsForStorage = async (runs: CrawlRunRecord[]): Promise
   return { format: GZIP_FORMAT, bytes: compressed };
 };
 
-export const decodeCrawlRunsFromStorage = async (value: unknown): Promise<CrawlRunRecord[]> => {
-  if (Array.isArray(value)) return parseCrawlRuns(value);
-  if (typeof value !== 'object' || value === null || !('format' in value) || !('bytes' in value)) return [];
+export const decodeCrawlRunsFromStorage = async (value: unknown, strict = false): Promise<CrawlRunRecord[]> => {
+  const parse = strict ? parseCrawlRunsStrict : parseCrawlRuns;
+  const invalid = () => parse(strict ? undefined : []);
+  if (value === undefined) return [];
+  if (value === null) return strict ? invalid() : [];
+  if (Array.isArray(value)) return parse(value);
+  if (typeof value !== 'object' || !('format' in value) || !('bytes' in value)) return invalid();
   const stored = value as { format?: unknown; bytes?: unknown };
-  if (stored.format !== GZIP_FORMAT || typeof DecompressionStream === 'undefined' || typeof Blob.prototype.stream !== 'function' || typeof Response === 'undefined') return [];
+  if (stored.format !== GZIP_FORMAT || typeof DecompressionStream === 'undefined' || typeof Blob.prototype.stream !== 'function' || typeof Response === 'undefined') return invalid();
   const bytes = stored.bytes instanceof ArrayBuffer
     ? stored.bytes
     : typeof stored.bytes === 'string'
       ? base64ToArrayBuffer(stored.bytes)
       : null;
-  if (!bytes) return [];
+  if (!bytes) return invalid();
   const stream = new Blob([bytes]).stream().pipeThrough(new DecompressionStream('gzip'));
   const parsed: unknown = JSON.parse(await new Response(stream).text());
-  return parseCrawlRuns(parsed);
+  return parse(parsed);
 };

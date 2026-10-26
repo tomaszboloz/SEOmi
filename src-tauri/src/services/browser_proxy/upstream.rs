@@ -55,7 +55,10 @@ where
     };
     let public = destinations
         .into_iter()
-        .find(|addr| is_public_ip(&addr.ip()))
+        .find(|addr| {
+            is_public_ip(&addr.ip())
+                || crate::utils::test_fixture::is_allowed_test_fixture_socket(addr)
+        })
         .ok_or_else(|| io::Error::new(io::ErrorKind::PermissionDenied, "no public DNS result"))?;
     timeout(connect_timeout, connect(public))
         .await

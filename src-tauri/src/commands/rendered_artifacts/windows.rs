@@ -34,7 +34,6 @@ pub(crate) async fn capture_windows<R: Runtime>(
         uuid::Uuid::new_v4().simple()
     ));
     let pdf_path_for_callback = pdf_path.clone();
-
     window
         .with_webview(move |webview| {
             let controller = webview.controller();
@@ -48,7 +47,6 @@ pub(crate) async fn capture_windows<R: Runtime>(
                     return;
                 }
             };
-
             match kind {
                 RenderedArtifactKind::Screenshot => {
                     let callback_sender = Arc::clone(&sender);
@@ -146,3 +144,7 @@ fn send_windows_artifact_result(sender: &WindowsArtifactSender, result: Result<V
         }
     }
 }
+
+#[cfg(test)]
+#[path = "windows_tests.rs"]
+mod tests;

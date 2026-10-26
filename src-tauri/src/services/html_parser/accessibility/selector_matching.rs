@@ -47,7 +47,7 @@ pub(in crate::services::html_parser) fn source_tag_matches_selector(
             (element_name == "a" && source_attribute_value(tag, "href").is_some())
                 || element_name == "button"
                 || (element_name == "input"
-                    && source_attribute_value(tag, "type").map_or(true, |value| {
+                    && source_attribute_value(tag, "type").is_none_or(|value| {
                         !value.trim().eq_ignore_ascii_case("hidden")
                     }))
                 || matches!(element_name.as_str(), "select" | "textarea")

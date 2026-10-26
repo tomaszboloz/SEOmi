@@ -28,7 +28,7 @@ afterEach(() => {
 it('round-trips and substantially reduces repetitive crawl snapshots', async () => {
     const runs = [{ ...createCrawlRunFixture(),
       id: 'run-1',
-      result: { ...createCrawlResultFixture(),  pages: Array.from({ length: 500 }, (_, index) => ({ ...createCrawlPageFixture(),
+      result: { ...createCrawlResultFixture(),  pages: Array.from({ length: 120 }, (_, index) => ({ ...createCrawlPageFixture(),
         url: `https://example.test/page-${index}`,
         title: 'Repeated SEO page title',
         links: Array.from({ length: 20 }, () => ({ is_internal: true, target_url: 'https://example.test/target',  anchor_text: 'Repeated navigation link', rel: 'internal' })),

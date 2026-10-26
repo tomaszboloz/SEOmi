@@ -3,6 +3,7 @@ import { useAsyncOperationScope } from '@/hooks/useAsyncOperationScope';
 import { z } from 'zod';
 import { readJsonRecord } from '@/services/storageContracts';
 import { writeJsonStorage } from '@/services/storage';
+import { recordSerpSnapshot } from '@/services/semanticDecay/recordSerpSnapshot';
 import type { SerpSnapshot } from '@/services/serpImport';
 import {
   clusterKeywordsByEmbedding, EMBEDDING_PROVIDERS, embeddingClusteringResultSchema,
@@ -84,7 +85,10 @@ export const useEmbeddingClustering = (projectId: string | null, keywords: strin
     setError(null);
     try {
       const result = await clusterKeywordsByEmbedding(keywords, { ...state.settings, ...(serpSnapshots.length ? { serpSnapshots } : {}) });
-      if (isCurrent()) persist({ settings: state.settings, result });
+      if (isCurrent()) {
+        persist({ settings: state.settings, result });
+        recordSerpSnapshot(projectId, result, serpSnapshots);
+      }
     } catch (caught) {
       if (isCurrent()) setError(caught instanceof Error ? caught.message : String(caught));
     } finally {

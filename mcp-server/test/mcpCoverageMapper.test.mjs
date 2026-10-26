@@ -1,26 +1,31 @@
 import assert from 'node:assert/strict';
 import { spawnSync } from 'node:child_process';
-import { mkdtempSync, readFileSync, readdirSync, realpathSync, rmSync, writeFileSync } from 'node:fs';
+import { mkdirSync, mkdtempSync, readFileSync, readdirSync, realpathSync, rmSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
-import { join } from 'node:path';
+import { dirname, join } from 'node:path';
 import process from 'node:process';
 import test from 'node:test';
-import ts from 'typescript';
+import { createRequire } from 'node:module';
 import { pathToFileURL } from 'node:url';
 import { mapRuntimeCoverage } from '../../scripts/run-mcp-coverage.mjs';
 import { sourceHashes } from '../../scripts/public-function-inventory.mjs';
 
 const fixture = (sourceCode = 'export function observed(value: number) { return value * 2; }\nobserved(2);\n') => {
   const directory = mkdtempSync(join(tmpdir(), 'seomi-mcp-map-'));
-  const source = join(directory, 'fixture.ts');
-  const runtime = join(directory, 'fixture.js');
-  const compiled = ts.transpileModule(sourceCode, {
-    fileName: source,
-    compilerOptions: { target: ts.ScriptTarget.ES2022, module: ts.ModuleKind.ESNext, sourceMap: true, inlineSources: true },
-  });
+  const sourceDirectory = join(directory, 'src');
+  const outputDirectory = join(directory, 'dist');
+  const source = join(sourceDirectory, 'fixture.ts');
+  const runtime = join(outputDirectory, 'fixture.js');
+  const require = createRequire(import.meta.url);
+  const typeScriptPackage = dirname(require.resolve('typescript/package.json'));
+  mkdirSync(sourceDirectory, { recursive: true });
   writeFileSync(source, sourceCode);
-  writeFileSync(runtime, compiled.outputText);
-  writeFileSync(`${runtime}.map`, compiled.sourceMapText);
+  const compileResult = spawnSync(process.execPath, [
+    join(typeScriptPackage, 'lib', 'tsc.js'),
+    '--target', 'ES2022', '--module', 'ESNext', '--sourceMap', '--inlineSources',
+    '--outDir', outputDirectory, '--ignoreConfig', source,
+  ], { encoding: 'utf8' });
+  assert.equal(compileResult.status, 0, compileResult.stderr);
   return { directory, source, runtime };
 };
 

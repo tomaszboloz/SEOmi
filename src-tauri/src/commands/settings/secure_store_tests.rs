@@ -1,19 +1,51 @@
-use super::secure_store::{KeyringStore, SecureStore, NATIVE_STORE};
-use keyring::{mock::MockCredential, Entry, Error};
+use super::secure_store::{CredentialEntry, KeyringStore, SecureStore, NATIVE_STORE};
+use keyring::Error;
+use std::cell::RefCell;
 
-fn entry(password: Option<&str>, error: Option<Error>) -> Entry {
-    let entry = Entry::new_with_credential(Box::new(MockCredential::default()));
-    if let Some(password) = password {
-        entry.set_password(password).unwrap();
+struct MockCredential {
+    password: RefCell<Option<String>>,
+    error: RefCell<Option<Error>>,
+}
+
+impl MockCredential {
+    fn new(password: Option<&str>, error: Option<Error>) -> Self {
+        Self {
+            password: RefCell::new(password.map(str::to_owned)),
+            error: RefCell::new(error),
+        }
     }
-    if let Some(error) = error {
-        entry
-            .get_credential()
-            .downcast_ref::<MockCredential>()
-            .unwrap()
-            .set_error(error);
+}
+
+impl CredentialEntry for MockCredential {
+    fn get_password(&self) -> Result<String, Error> {
+        if let Some(error) = self.error.borrow_mut().take() {
+            return Err(error);
+        }
+        self.password.borrow().clone().ok_or(Error::NoEntry)
     }
-    entry
+
+    fn set_password(&self, password: &str) -> Result<(), Error> {
+        if let Some(error) = self.error.borrow_mut().take() {
+            return Err(error);
+        }
+        *self.password.borrow_mut() = Some(password.to_owned());
+        Ok(())
+    }
+
+    fn delete_credential(&self) -> Result<(), Error> {
+        if let Some(error) = self.error.borrow_mut().take() {
+            return Err(error);
+        }
+        if self.password.borrow_mut().take().is_some() {
+            Ok(())
+        } else {
+            Err(Error::NoEntry)
+        }
+    }
+}
+
+fn entry(password: Option<&str>, error: Option<Error>) -> MockCredential {
+    MockCredential::new(password, error)
 }
 
 #[test]
@@ -69,7 +101,7 @@ fn adapter_write_and_delete_map_backend_failures_without_raw_messages() {
 #[test]
 fn entry_creation_failures_stop_operations_and_native_factory_rejects_unsupported_names() {
     let failed = KeyringStore {
-        factory: |_: &str| Err("synthetic-private".into()),
+        factory: |_: &str| -> Result<MockCredential, String> { Err("synthetic-private".into()) },
     };
     assert!(failed.read("openai_api_key").is_err());
     assert!(failed.write("openai_api_key", "synthetic-token").is_err());

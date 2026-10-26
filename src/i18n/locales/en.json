@@ -1,4 +1,79 @@
 {
+  "cmsPanelUi": {
+    "title": "Safe CMS patch",
+    "description": "Replace the content under one heading. Prepare and approve the exact diff, run a dry run, then apply. Editing any input cancels approval.",
+    "kind": "CMS kind",
+    "baseUrl": "CMS base URL (HTTPS)",
+    "contentId": "Content ID",
+    "credential": "Stored credential name (optional)",
+    "credentialHelp": "Use a cms_auth_ credential containing the Authorization header in the system credential store. Leave blank for anonymous requests. Never enter a secret here.",
+    "collection": "Strapi collection",
+    "heading": "Heading to find",
+    "replacement": "New section content (HTML or Markdown)",
+    "ymyl": "Health, finance or legal content (YMYL)",
+    "factGate": "The required fact check has passed for this exact diff",
+    "diff": "Proposed diff",
+    "revision": "Source revision: {{revision}}",
+    "noChanges": "No changes. Update the replacement before applying.",
+    "prepare": "Prepare diff",
+    "approve": "I approve this exact diff",
+    "dryRun": "Run dry run",
+    "apply": "Apply approved diff",
+    "busy": "Processing CMS patch…",
+    "noProject": "Select an active project to prepare a CMS patch.",
+    "desktopOnly": "CMS requests are available only in the desktop app.",
+    "failed": "CMS patch failed: {{reason}}"
+  },
+  "teamPanelUi": {
+    "title": "Team mode and audit trail",
+    "description": "Choose who is acting and in which role. Every change is appended to a tamper-evident, hash-chained audit log stored locally.",
+    "actor": "Actor",
+    "role": "Role",
+    "roles": {
+      "admin": "Admin",
+      "seo_strategist": "SEO Strategist",
+      "content_writer": "Content Writer",
+      "developer": "Developer"
+    },
+    "permissions": {
+      "run_crawl": "Run crawl",
+      "execute_cms_patch": "Execute CMS patch",
+      "modify_site_focus_rules": "Modify Site Focus rules",
+      "export_audit_pdf": "Export audit PDF",
+      "manage_team_roles": "Manage team roles"
+    },
+    "permissionsTitle": "Permission",
+    "auditTitle": "Audit log",
+    "auditEmpty": "No audit entries yet.",
+    "chainOk": "Audit chain verified.",
+    "chainBroken": "Audit chain broken at entry {{entry}} ({{reason}}).",
+    "exportCsv": "Export CSV",
+    "columns": {
+      "time": "Time",
+      "actor": "Actor",
+      "action": "Action",
+      "result": "Result"
+    },
+    "results": {
+      "success": "Success",
+      "denied": "Denied",
+      "failure": "Failure",
+      "dry_run": "Dry run"
+    },
+    "allowed": "Allowed",
+    "notAllowed": "Not allowed"
+  },
+  "dataErasureUi": {
+    "title": "Erase project data (GDPR)",
+    "description": "Permanently deletes this project's crawl runs, embeddings and history from the local store by destroying their encryption keys. This cannot be undone.",
+    "confirm": "Type the project ID to confirm: {{id}}",
+    "button": "Erase project data",
+    "run": "Erase permanently",
+    "cancel": "Cancel",
+    "done": "Erased: {{records}} records and {{runs}} crawl runs.",
+    "failed": "Erasure failed: {{message}}",
+    "desktopOnly": "Available in the desktop app only."
+  },
   "schemaFindings": {
     "messageMissing": "Structured-data rule {{code}} reports a missing property or structural element for {{type}}.",
     "messageInvalid": "Structured-data rule {{code}} reports an invalid value or shape for {{type}}.",
@@ -15,6 +90,31 @@
     "severityWarning": "Warning",
     "severityInfo": "Info",
     "sourceEvidence": "Source evidence"
+  },
+  "copilotPatcherUi": {
+    "title": "Contextual Copilot patch",
+    "description": "Builds a before/after proposal from this page's crawl evidence. Review it before copying; no CMS change is sent.",
+    "contextUnavailable": "Page heading evidence is unavailable, so this patcher is waiting for a new crawl.",
+    "generate": "Suggest patch",
+    "generating": "Generating...",
+    "cancel": "Cancel",
+    "before": "Before",
+    "after": "After",
+    "pending": "Pending review; nothing has changed.",
+    "factGate": "{{count}} sentence(s) removed by the fact gate because the page supplied no matching source.",
+    "remote": "The selected AI provider received this page text.",
+    "local": "The selected AI runner stayed on this device.",
+    "approve": "Approve for copy",
+    "reject": "Reject",
+    "approved": "Approved for copy; the CMS was not changed.",
+    "copy": "Copy approved text",
+    "rejected": "Proposal rejected.",
+    "keyboard": "Keyboard: Tab moves through controls; Enter activates the focused control.",
+    "no-provider": "Connect an AI provider before requesting a patch.",
+    "empty-response": "The AI returned no usable patch.",
+    "provider-error": "AI request failed: {{message}}",
+    "ownership": "The project is no longer active; this request was stopped.",
+    "unavailable": "The passage has no usable source text."
   },
   "app": {
     "name": "SEOmi",
@@ -1135,6 +1235,7 @@
     "tabEntity": "Entity graph",
     "tabLinks": "Internal links",
     "tabSchema": "JSON-LD schema",
+    "tabSignals": "Signals",
     "saveError": "Unable to save the topical map in local storage. It remains visible until the view closes; check application storage availability.",
     "preferencesSaveError": "Unable to remember the topical map view and filters in this project.",
     "entityTitle": "Project entity",
@@ -2272,7 +2373,8 @@
       "focus": "Site Focus",
       "authority": "Topical Authority",
       "aio": "AI readiness",
-      "trust": "Entity trust"
+      "trust": "Entity trust",
+      "offPage": "Off-page analysis"
     },
     "environmentStaging": "test/staging",
     "environmentProduction": "production",
@@ -2428,6 +2530,7 @@
     "profileNamePlaceholder": "e.g. Editorial account",
     "sessionCookies": "Session cookies",
     "proxyOptional": "(optional; credentials in the URL remain in the system vault)",
+    "proxyListHint": "Several proxies: separate with commas or spaces (up to 64). Requests rotate across them.",
     "customHeaders": "Custom headers",
     "oneHeaderPerLine": "(one per line: Name: value)",
     "saving": "Saving…",
@@ -5143,9 +5246,11 @@
       "pagespeed": "PageSpeed / CrUX",
       "crawl": "Crawl comparisons",
       "semantic": "Semantic comparisons",
-      "focus": "Site Focus Score"
+      "focus": "Site Focus Score",
+      "aio": "AI Overviews readiness"
     },
-    "focusDrop": "Site Focus Score drop (points)"
+    "focusDrop": "Site Focus Score drop (points)",
+    "aioDrop": "AIO-R score drop (points)"
   },
   "ga4": {
     "title": "Google Analytics 4",
@@ -6037,6 +6142,40 @@
           "author-invalid-profile": "{{0}} authors link an ORCID or Wikidata profile with an invalid identifier ({{1}}). Check the checksum or Q-ID.",
           "ymyl-no-scholarly-ids": "None of the {{0}} article pages cite a source with a DOI, PMID or PMCID. On a YMYL topic, cite the primary study."
         }
+      },
+      "offPage": {
+        "title": "Off-page analysis",
+        "intro": "Latest saved analysis for this project; this sample is not the full backlink profile.",
+        "topic": "Topic",
+        "scale": "Authority scale",
+        "model": "Embedding model",
+        "requested": "Sources requested",
+        "fetched": "Sources fetched",
+        "scored": "Sources scored",
+        "statusLabel": "Status",
+        "limitationsLabel": "Limitations",
+        "sourcesIntro": "Up to 10 sources, highest contribution first; n/a means unavailable.",
+        "offset": "Text offset",
+        "excerpt": "Excerpt",
+        "disclaimer": "Not Google PageRank; missing text or authority is partial/unavailable, not zero backlinks; co-occurrence is not endorsement.",
+        "tbva": "TBVA",
+        "tSources": "Saved per-source evidence",
+        "authority": "Authority",
+        "similarity": "Similarity",
+        "contribution": "Contribution",
+        "tCitations": "Co-citation excerpts",
+        "na": "n/a",
+        "status": {
+          "ready": "Ready",
+          "partial": "Partial",
+          "unavailable": "Unavailable"
+        },
+        "limitations": {
+          "no-topic-vector": "No usable Core Topic vector from the latest completed project crawl; TBVA is unavailable.",
+          "invalid-scale": "Invalid authority scale; TBVA is unavailable.",
+          "no-follow-links": "No follow links available for analysis.",
+          "source-text-or-authority-missing": "Some sources lack text, usable vectors or provider authority."
+        }
       }
     },
     "recs": {
@@ -6272,6 +6411,20 @@
         "what": "A suggested goal: at least 80, or the average of the top 3 competitors when they score higher.",
         "why": "It turns the comparison into one number to work toward.",
         "action": "Use it as a planning goal.\nRe-run the benchmark after your fixes to see the change."
+      },
+      "indexGate": {
+        "title": "Indexability gate",
+        "what": "Pages that are noindex or whose canonical points to another URL are left out of the score, so the score reflects pages that can rank.",
+        "why": "Counting pages Google will not index lowers the score and can lead to advice to noindex pages that are already noindex.",
+        "action": "Check the skipped count.\nFix conflicts listed below the score, such as a noindex pillar.\nUse \"Include them\" only to see the score with all pages.",
+        "example": "A noindex tag page is skipped, not scored as off-topic."
+      },
+      "protection": {
+        "title": "URL protection",
+        "what": "For pages with low topical relevance, shows whether real clicks, conversions, revenue or referring domains argue for keeping them.",
+        "why": "A low score alone is no reason to delete, redirect or noindex a page that earns traffic or links.",
+        "action": "Connect GSC and GA4 so data can be measured.\nTreat \"Needs data\" as unknown, not zero.\nDecide by hand; a 301 needs a relevant target.",
+        "example": "A page with TRS 30 and 80 clicks in 90 days is protected."
       }
     },
     "authority": {
@@ -6424,6 +6577,112 @@
         "what": "Keeps each recommended change as a task: planned, implemented, then verified or failed.",
         "why": "The next crawl checks the real result and shows how the module score changed since the baseline.",
         "action": "Add a task from a recommendation.\nMark it implemented after you deploy.\nRun a new crawl and click Verify."
+      },
+      "sla": {
+        "title": "Owner and SLA",
+        "what": "Who is responsible for the task, how urgent it is and the date it must be done.",
+        "why": "Tasks with an owner and a date do not get lost, and overdue ones are easy to filter.",
+        "action": "Type the owner name.\nPick the priority and the SLA date.\nUse the filters to see your tasks or the overdue ones."
+      }
+    },
+    "sprs": {
+      "panel": {
+        "title": "Semantic PageRank",
+        "what": "Internal PageRank (damping 0.85) scaled to 0-100, with flags for pages that pass no links, receive too few, or send most links to unrelated pages.",
+        "why": "It shows where link authority pools or drains inside your own site.",
+        "action": "Add outgoing links to dead ends.\nLink to under-linked pages from strong related pages.\nReview leaks."
+      }
+    },
+    "decay": {
+      "radar": {
+        "title": "Semantic Decay Radar",
+        "what": "Compares saved SERP snapshots of the same query, market, provider and model: centroid shift, new or lost consensus entities, intent and format changes.",
+        "why": "The top results can drift away from your page long before rankings drop.",
+        "action": "Open the cited URLs.\nDecide manually whether to refresh the page."
+      }
+    },
+    "sija": {
+      "panel": {
+        "title": "Search intent (SIJA)",
+        "what": "Classifies the page into one of 8 micro-intents from its structure (tables, lists, forms, product cards) and compares it with the average of the real TOP 5 pages.",
+        "why": "A page whose format differs from what the SERP shows often ranks poorly for that query.",
+        "action": "Open the TOP pages.\nAdd the missing format, such as a table or a tool.\nTreat this as a hint, not a verdict."
+      }
+    },
+    "prePublish": {
+      "check": {
+        "title": "Pre-publish check",
+        "what": "Simulates adding this draft to your site: change in Site Focus Score, similarity to existing pages and whether each passage works on its own.",
+        "why": "It catches a duplicate or off-topic page before it goes live.",
+        "action": "Fix every listed reason.\nRe-run the check.\nPublish only after your own review."
+      }
+    },
+    "parity": {
+      "hreflang": {
+        "title": "International parity",
+        "what": "Compares topic depth across the language versions linked by hreflang with a reference language, and marks each topic covered, shallow, missing or intentionally local.",
+        "why": "It separates a real content gap from a market that deliberately offers something different.",
+        "action": "Check the missing and shallow topics.\nMark topics a market does not need as local.\nThe tool never changes hreflang for you."
+      }
+    },
+    "offPage": {
+      "tbva": {
+        "title": "Off-page topical authority",
+        "what": "Adds up the provider authority of follow backlinks, weighted by how close each source page is to your topic. Also finds paragraphs that mention your brand and your core entity together.",
+        "why": "A few relevant links can matter more than many unrelated ones.",
+        "action": "Review the sources with low similarity.\nLook at unlinked mentions as outreach leads.\nRead negated mentions yourself."
+      }
+    },
+    "llmEconomy": {
+      "costGate": {
+        "title": "LLM cost and fact gate",
+        "what": "Counts what AI calls cost and what the cache and local models saved. Medical and financial sentences with a dose or amount missing from the source are rejected.",
+        "why": "Remote providers cost money and receive your page text. Invented doses in health or finance content are dangerous.",
+        "action": "Prefer a local model for big batches.\nCheck rejected sentences against the source.\nApprove YMYL text yourself before it reaches the CMS."
+      }
+    },
+    "templateGovernor": {
+      "informationGain": {
+        "title": "Template Information Gain",
+        "what": "Share of each page that is not boilerplate shared with the other pages built from the same template. Low gain means thousands of near-copies.",
+        "why": "Google can filter a whole template segment as thin content. One template warning is easier to fix than thousands of page warnings.",
+        "action": "Add unique data to each page (local facts, numbers, reviews).\nOr noindex the segment until it has real content.\nRe-crawl and check that the gain rises."
+      }
+    },
+    "outreach": {
+      "gapDomains": {
+        "title": "Outreach targets",
+        "what": "Sites that link to your TOP3 competitors but not to you, ranked by how many competitors they link to and by their authority.",
+        "why": "A site that already links to several competitors is the warmest place to ask for a link, as long as you bring something new.",
+        "action": "Start from the top of the list.\nOpen the draft, add a source only you can offer, and edit it.\nSend it yourself from your own mailbox. SEOmi never sends anything."
+      }
+    },
+    "causalMarket": {
+      "updateWindow": {
+        "title": "Google update window",
+        "what": "Days when Google rolled out an update or the whole market was unusually volatile. The result is shown with an uncertainty range and flagged when the period overlaps such a window.",
+        "why": "A control group on the same site suffers from an update just like the test group, so a drop or gain can be the market and not your change.",
+        "action": "Treat a flagged result as inconclusive.\nWait until the update window ends and compare again.\nUse an external market baseline when you have one."
+      }
+    },
+    "igos": {
+      "score": {
+        "title": "IGOS score",
+        "what": "Information gain over what the real TOP results already say: new on-topic entities, evidence density, experience markers and subtopic spread, reduced when the baseline is thin.",
+        "why": "It shows what your page adds beyond the consensus. Markers only show declared experience; they do not prove research or originality.",
+        "action": "Check the four components.\nAdd the missing fundamentals.\nRe-run after editing."
+      },
+      "heatmap": {
+        "title": "Paragraph heatmap",
+        "what": "Each paragraph is labelled Echo (close copy of a competitor passage), Gain (on-topic and new), Drift (off-topic) or Neutral.",
+        "why": "Echo adds nothing new and drift dilutes the topic. Labels use text, not only colour.",
+        "action": "Open Echo and Drift paragraphs first.\nUse arrow keys to move between paragraphs.\nRewrite or refocus them."
+      },
+      "coverage": {
+        "title": "Baseline coverage",
+        "what": "Share of consensus entities your page already covers. Below 50% the score is multiplied by a penalty.",
+        "why": "Without the common foundation a page with some novelty still does not match the topic.",
+        "action": "Cover the missing consensus entities.\nThen add the new facts."
       }
     }
   },
@@ -6486,14 +6745,19 @@
       "lexicalFallback": "The analysis for the selected language uses the TF-IDF statistical algorithm. The deep semantic similarity component is unavailable; the score is based on keyword coverage and distribution.",
       "skippedRender": "{{count}} pages were skipped in the analysis because JavaScript rendering timed out.",
       "degraded": "Some pages had limited data, so their scores may be less precise.",
-      "unmatchedTopic": "No pages matched the topic \"{{topic}}\". The detected topic is used instead."
+      "unmatchedTopic": "No pages matched the topic \"{{topic}}\". The detected topic is used instead.",
+      "gateSkipped": "Skipped {{count}} pages (noindex/canonical).",
+      "gateInclude": "Include them",
+      "gateExclude": "Exclude them again"
     },
     "skip": {
       "render-timeout": "JavaScript rendering timed out",
       "request-error": "Request failed",
       "non-topical-status": "Non-content HTTP status",
       "non-html": "Not an HTML page",
-      "no-content": "No text content"
+      "no-content": "No text content",
+      "noindex": "Excluded: noindex",
+      "canonicalized": "Excluded: canonical points to another URL"
     },
     "hero": {
       "label": "Site Focus Score",
@@ -6754,6 +7018,32 @@
       "noPrevious": "first analysis",
       "noTasks": "No urgent tasks.",
       "gain": "(+{{value}} pts)"
+    },
+    "conflict": {
+      "pillar-noindex": "Pillar page is noindex: {{url}}",
+      "inlinked-foreign-canonical": "{{url}} has {{inlinks}} internal links but its canonical points to another host",
+      "noindex-with-traffic": "{{url}} is noindex but has {{clicks}} GSC clicks and {{domains}} referring domains",
+      "sitemap-noindex": "{{url}} is in the sitemap but marked noindex"
+    },
+    "protection": {
+      "title": "URL protection check",
+      "empty": "No GSC/GA4/backlink snapshot for this project, so traffic and link value are unknown.",
+      "advisory": "Advice only. Nothing is deleted, redirected or noindexed automatically.",
+      "pri": "PRI {{value}}",
+      "decision": {
+        "keep": "Keep",
+        "shield": "Protect",
+        "needs-data": "Needs data",
+        "semantic-bridge": "Semantic bridge",
+        "prune-candidate": "Review for pruning"
+      },
+      "reason": {
+        "trs-above-threshold": "TRS is high enough",
+        "revenue": "Revenue measured",
+        "pri-above-threshold": "Traffic, conversions or links reach the protection threshold",
+        "telemetry-incomplete": "Telemetry is missing, stale or sampled",
+        "low-pri-measured": "Measured signals are low; check business value first"
+      }
     }
   },
   "focusBenchmark": {
@@ -6842,6 +7132,9 @@
       "you": "You",
       "axisX": "SFS",
       "axisY": "TAS"
+    },
+    "freshness": {
+      "undated": "{{undated}} of {{total}} pages have no date and are not scored"
     },
     "pillars": {
       "title": "Components of the Topical Authority Score",
@@ -7287,6 +7580,21 @@
         "entities-missing": "DEPLOYMENT ERROR: only {{found}} of {{total}} required entities present (60% needed)",
         "index-ok": "VERIFIED: page is indexable",
         "still-noindex": "DEPLOYMENT ERROR: noindex is still present"
+      },
+      "owner": "Owner",
+      "priority": "Priority",
+      "dueDate": "SLA date",
+      "overdue": "Overdue",
+      "me": "My name",
+      "filter": {
+        "all": "All",
+        "mine": "My tasks",
+        "overdue": "Overdue"
+      },
+      "priorityLevel": {
+        "high": "High",
+        "medium": "Medium",
+        "low": "Low"
       }
     }
   },
@@ -7298,6 +7606,518 @@
     "trust": {
       "title": "Trust score dropped",
       "body": "The E-E-A-T trust score fell from {{from}} to {{to}} ({{points}} points)."
+    }
+  },
+  "sprsUi": {
+    "title": "Semantic PageRank",
+    "empty": "No link graph yet. Crawl the site first; no score is shown without real links.",
+    "page": "Page",
+    "score": "Score",
+    "deadEnd": "Dead end",
+    "underLinked": "Under-linked",
+    "leak": "Leak",
+    "unknown": "{{count}} links have unknown similarity and are not counted as leaks.",
+    "notConverged": "The solver did not converge; scores are approximate.",
+    "whatIf": {
+      "title": "What-If link simulator",
+      "source": "From page",
+      "target": "To page",
+      "action": "Change",
+      "add": "Add link",
+      "remove": "Remove link",
+      "run": "Simulate",
+      "noChange": "No score changes.",
+      "before": "Before",
+      "after": "After",
+      "delta": "Change"
+    }
+  },
+  "decayUi": {
+    "snapshots": "Snapshots supporting this verdict: {{count}}",
+    "title": "Semantic Decay Radar",
+    "verdict": {
+      "too-few-samples": "Not enough comparable SERP snapshots yet. Nothing to report.",
+      "incompatible": "Snapshots are not comparable, so no drift is claimed.",
+      "stable": "No material change against the baseline.",
+      "not-persistent": "A change appeared but has not persisted. Waiting.",
+      "cooldown": "Drift persists; an alert was already raised recently.",
+      "alert": "Persistent drift against the baseline. Review manually."
+    },
+    "shift": "Centroid shift: {{value}}%",
+    "newEntities": "New entities",
+    "lostEntities": "Lost entities",
+    "intent": "Intent: {{from}} to {{to}}",
+    "format": "Format: {{from}} to {{to}}",
+    "incompatible": "Different {{fields}}: not a market change."
+  },
+  "sijaUi": {
+    "title": "Search intent (SIJA)",
+    "empty": "No clear micro-intent detected from the page structure.",
+    "primary": "Observed intent: {{intent}} ({{confidence}}% confidence).",
+    "mixed": "Also: {{list}}.",
+    "inconclusive": "SSAS inconclusive: {{count}} real TOP pages available, at least 3 needed.",
+    "ssas": {
+      "aligned": "SSAS {{score}}: structure matches the TOP pages.",
+      "mismatch": "SSAS {{score}}: structure differs from the TOP pages."
+    },
+    "intents": {
+      "definitional": "Definition",
+      "how-to": "How-to",
+      "troubleshooting": "Troubleshooting",
+      "comparison": "Comparison",
+      "curated-list": "Curated list",
+      "tool": "Tool or calculator",
+      "transactional": "Transactional",
+      "local": "Local"
+    }
+  },
+  "prePublishUi": {
+    "title": "Pre-publish check",
+    "copy": "Copy report",
+    "copied": "Report copied.",
+    "copyFailed": "Could not copy the report.",
+    "verdict": {
+      "insufficient": "Not enough data to judge this draft.",
+      "blocked": "Do not publish yet: the draft duplicates an existing page.",
+      "review": "Review before publishing.",
+      "ok": "No issues found. This is advice, not approval."
+    },
+    "sfs": "Site Focus Score {{before}} to {{after}} ({{delta}}). Draft relevance {{trs}}. This is not a traffic forecast.",
+    "conflict": "Too similar to {{url}} ({{value}}%).",
+    "overlap": "Overlaps with {{url}} ({{value}}%).",
+    "reason": {
+      "no-core": "No Core Topic yet.",
+      "corpus-too-small": "Fewer than 3 scored pages on the site.",
+      "dimension-mismatch": "Embeddings come from different models.",
+      "cannibalization": "Cannibalization risk.",
+      "overlap": "Partial overlap with an existing page.",
+      "low-trs": "Draft relevance to the Core Topic is low.",
+      "chunk-issues": "Some passages would not work when retrieved alone."
+    },
+    "chunk": {
+      "leading-pronoun": "Passage {{index}} starts with a pronoun that needs earlier context.",
+      "too-short": "Passage {{index}} is too short to stand alone."
+    }
+  },
+  "parityUi": {
+    "title": "International parity",
+    "summary": "{{covered}} covered, {{shallow}} shallow, {{missing}} missing, {{local}} intentionally local.",
+    "inconclusive": "Inconclusive: parity cannot be judged from the data available.",
+    "gap": {
+      "no-reference-coverage": "The reference language has no topic coverage data.",
+      "partial-crawl": "The crawl is partial.",
+      "single-language": "Only one language was found."
+    },
+    "language": "Language",
+    "topic": "Topic",
+    "status": "Status",
+    "statuses": {
+      "covered": "Covered",
+      "shallow": "Shallow",
+      "missing": "Missing",
+      "intentionally-local": "Intentionally local"
+    },
+    "note": "A missing version is not always an error. Texts need not match one to one, and the UI language does not set which site languages are analyzed."
+  },
+  "offPageUi": {
+    "title": "Off-page topical authority",
+    "empty": "No topical backlink value yet: backlinks, source text or authority data are missing. This does not mean there are no backlinks.",
+    "tbva": "Topical backlink value {{value}} from {{count}} source domains ({{coverage}}% of follow links scored).",
+    "partial": "{{count}} follow links could not be scored (source text or authority missing).",
+    "nofollow": "{{count}} nofollow links are not counted.",
+    "noText": "No source text available, so brand co-citations were not checked.",
+    "coCitation": "Brand and core entity in one paragraph: {{linked}} linked, {{unlinked}} unlinked.",
+    "note": "The value uses provider authority and does not reproduce Google PageRank or explain rankings. Co-occurrence is not endorsement."
+  },
+  "llmEconomy": {
+    "title": "LLM cost",
+    "empty": "No AI calls recorded yet.",
+    "spent": "Spent: {{value}}",
+    "saved": "Saved by cache and local runs: {{value}}",
+    "hits": "Cache hits: {{count}}",
+    "leaves": "Page text is sent outside this device to {{provider}}."
+  },
+  "templateGovernor": {
+    "title": "Programmatic template quality",
+    "empty": "No weak templates found.",
+    "row": "{{pattern}}: {{count}} pages, information gain {{gain}}%",
+    "noindex": "Recommended: noindex this segment",
+    "limit": "Recommended: limit the number of indexed pages"
+  },
+  "outreach": {
+    "title": "Outreach targets",
+    "empty": "No backlink gap data. Run a backlink gap check first.",
+    "row": "{{domain}}: priority {{priority}}, links to {{count}} competitors",
+    "export": "Export CSV",
+    "manualNote": "SEOmi never sends messages. Send drafts from your own mailbox."
+  },
+  "causalMarket": {
+    "title": "Causal impact",
+    "empty": "Not estimable. Not enough history: need at least 7 days before and 1 after, a real external market series, and independent control evidence.",
+    "effect": "Daily effect: {{effect}} ({{lower}} to {{upper}})",
+    "updateWindow": "Google update window: result is inconclusive.",
+    "normalized": "Normalized by market baseline",
+    "positive": "Positive effect",
+    "negative": "Negative effect",
+    "noEffect": "No measurable effect",
+    "inconclusive": "Inconclusive",
+    "evidence": "Evidence: market {{market}}; control {{control}}",
+    "unknown": "unknown",
+    "marketUnavailable": "External market baseline is unavailable or invalid; no causal success or failure is inferred.",
+    "controlUnavailable": "Independent control evidence is unavailable; no causal success or failure is inferred.",
+    "updateWindowReason": "The analysis overlaps a confirmed Google ranking update; the result is inconclusive.",
+    "disclaimer": "Estimate with external market and control evidence; it is not proof of causation."
+  },
+  "snapshots": {
+    "newerData": "Newer crawl data is available.",
+    "refresh": "Refresh"
+  },
+  "teamUi": {
+    "role": {
+      "admin": "Admin",
+      "seo_strategist": "SEO Strategist",
+      "content_writer": "Content Writer",
+      "developer": "Developer"
+    },
+    "permission": {
+      "run_crawl": "Run crawl",
+      "execute_cms_patch": "Apply CMS patch",
+      "modify_site_focus_rules": "Change Site Focus rules",
+      "export_audit_pdf": "Export audit PDF",
+      "manage_team_roles": "Manage team roles"
+    },
+    "denied": "Your role cannot perform this action."
+  },
+  "cmsUi": {
+    "kind": {
+      "wordpress": "WordPress",
+      "strapi": "Strapi",
+      "webhook": "Webhook"
+    },
+    "error": {
+      "unsafe-url": "The CMS address is not allowed (HTTPS and a public host are required).",
+      "conflict": "The page was edited after the diff was prepared. Prepare the diff again.",
+      "http": "The CMS rejected the request.",
+      "bad-response": "The CMS answered in an unexpected format.",
+      "heading-not-found": "The heading was not found in the page.",
+      "heading-ambiguous": "The heading appears more than once.",
+      "forbidden": "Your role cannot apply CMS patches.",
+      "not-approved": "Approve this exact diff before writing.",
+      "fact-gate-required": "YMYL content needs a passed fact check before writing."
+    },
+    "verified": "Change written and verified.",
+    "unverified": "Change written, but the live page does not show it yet.",
+    "dryRun": "Dry run: nothing was written."
+  },
+  "igosUi": {
+    "title": "IGOS originality",
+    "empty": "No comparable TOP results were fetched, so there is no baseline and no score.",
+    "noScore": "No score",
+    "offTopic": "Most paragraphs are off-topic; no score is given.",
+    "partial": "Partial baseline: {{available}} of {{requested}} competitor pages.",
+    "basis": "Baseline: {{available}} of {{requested}} competitor pages.",
+    "component": {
+      "nefr": "Novel entities",
+      "edsi": "Evidence density",
+      "fhem": "Experience markers",
+      "sdd": "Subtopic distribution"
+    },
+    "coverage": "Baseline coverage {{coverage}}, penalty multiplier {{multiplier}}",
+    "novel": "New on-topic entities: {{list}}",
+    "advice": "Recommendations",
+    "heatmap": "Paragraph heatmap",
+    "heatmapEmpty": "No paragraphs to show.",
+    "noHeading": "No heading",
+    "zone": {
+      "echo": "Echo",
+      "gain": "Gain",
+      "drift": "Drift",
+      "neutral": "Neutral"
+    },
+    "detail": "Offset {{offset}}, topic similarity {{topic}}, nearest competitor passage {{nearest}}.",
+    "source": "Nearest source: {{url}} (rank {{rank}}).",
+    "noSource": "No nearest source.",
+    "limit": {
+      "no-comparable-documents": "No comparable competitor documents.",
+      "too-few-documents": "Too few competitor documents for a reliable baseline.",
+      "some-documents-missing": "Some competitor pages could not be fetched.",
+      "no-target-chunks": "The page has no analysable paragraphs.",
+      "off-topic-below-quota": "Too few on-topic paragraphs."
+    },
+    "rec": {
+      "rewrite-echo": "The paragraph at offset {{offset}} repeats a competitor passage: rewrite it in your own words.",
+      "add-evidence": "Add concrete data with units or sources; none was detected.",
+      "refocus-drift": "The paragraph at offset {{offset}} drifts off the topic: refocus or remove it."
+    }
+  },
+  "logIntelUi": {
+    "title": "Log intelligence",
+    "description": "Import a local .log or .txt access log (maximum 500 MB). Only aggregates are saved, never raw IP addresses. Dedupe uses a sampled SHA-256 fingerprint (first/last 1 MiB and size).",
+    "chooseFile": "Choose access log",
+    "cancel": "Cancel",
+    "clear": "Clear logs",
+    "importing": "Importing access log",
+    "progress": "Lines: {{lines}} · Malformed: {{malformed}} · Ignored non-bot: {{ignoredNonBot}}",
+    "cancelled": "Import cancelled.",
+    "duplicate": "This file was already imported.",
+    "complete": "Import complete.",
+    "storageFailed": "Local storage could not be updated. Changes remain in memory only; saved logs may be unchanged.",
+    "tooLarge": "This file exceeds the 500 MB limit.",
+    "invalidFile": "Choose a .log or .txt file.",
+    "resumeRequired": "Resume the unfinished file or clear logs before importing a different file.",
+    "importFailed": "The file could not be read or hashed. Please try again.",
+    "resume": "Select the same file to resume without counting lines twice.",
+    "verificationNote": "Bot identity is a User-Agent claim, not proof. Spoof checks need the desktop DNS resolver; this panel does not call DNS. Unverified rows remain inconclusive.",
+    "verificationNoteDesktop": "Bot identity is checked on this computer with reverse and forward DNS (3 s timeout). A failed lookup leaves the row as claimed, never as spoofed.",
+    "matrix": "Crawl Efficiency Matrix",
+    "coverage": "Coverage: {{days}} of {{period}} days",
+    "period": "Window (UTC): {{start}} – {{end}}",
+    "insufficient": "Log coverage is insufficient for reliable verdicts.",
+    "noScores": "The latest project crawl has no saved per-path TRS scores. No scores are inferred.",
+    "unavailable": "Not available",
+    "empty": "No log or crawl paths to display.",
+    "previous": "Previous",
+    "page": "Page {{current}} of {{total}}",
+    "next": "Next",
+    "loading": "Loading log intelligence…",
+    "columns": {
+      "path": "Path",
+      "family": "Bot family",
+      "status": "Verification",
+      "hits": "Hits",
+      "errors": "4xx/5xx share",
+      "verdict": "Verdict"
+    },
+    "families": {
+      "googlebot": "Googlebot",
+      "bingbot": "Bingbot",
+      "gptbot": "GPTBot",
+      "perplexitybot": "PerplexityBot",
+      "none": "No bot evidence"
+    },
+    "statuses": {
+      "verified": "Verified",
+      "claimed": "Claimed",
+      "spoofed": "Spoofed",
+      "unknown": "Unknown"
+    },
+    "verdicts": {
+      "waste": "Waste",
+      "starvation": "Starvation",
+      "ok": "OK",
+      "inconclusive": "Inconclusive",
+      "no-logs": "No logs"
+    }
+  },
+  "altCheckUi": {
+    "column": "ALT quality",
+    "csvColumn": "alt_issues",
+    "summary": "{{checked}} images checked, {{issues}} with ALT issues.",
+    "issues": {
+      "missing": "Missing ALT",
+      "empty": "Empty ALT",
+      "filename": "Looks like a file name",
+      "generic": "Generic wording",
+      "too-long": "Too long",
+      "repeats-caption": "Repeats the caption",
+      "unrelated-to-context": "Unrelated to context"
+    },
+    "noIssues": "No ALT issues",
+    "decorative": "Decorative (empty ALT)",
+    "visualNotice": "Visual analysis needs a local model and is not available in this build.",
+    "analyses": {
+      "ocr": "OCR",
+      "clip-alignment": "CLIP alignment",
+      "transcript": "Transcripts"
+    },
+    "statuses": {
+      "unavailable": "Unavailable"
+    },
+    "noScorePenalty": "This does not lower any score."
+  },
+  "prePublishMountUi": {
+    "title": "Pre-publish check",
+    "description": "Uses the latest completed crawl, its saved excerpts and terms, Site Focus scores and project embedding settings. Simulation only: nothing is saved or published.",
+    "draft": "Unpublished draft text",
+    "url": "Draft URL (optional)",
+    "urlHint": "Leave blank for a new page. An existing crawl URL replaces that page in the simulation.",
+    "invalidUrl": "Enter a valid HTTP or HTTPS URL without credentials.",
+    "run": "Check draft",
+    "cancel": "Cancel",
+    "loading": "Loading pre-publish check…",
+    "noCrawl": "No completed crawl for the active project. Crawl the site first.",
+    "noCore": "No Core Topic yet. The check cannot judge this draft.",
+    "running": "Embedding the draft and crawl evidence…",
+    "unreachable": "The selected embedding provider could not return vectors. Check the project embedding settings and provider connection.",
+    "cancelled": "Check cancelled. No result was applied.",
+    "stale": "Inputs or crawl changed. Run the check again."
+  },
+  "telemetrySourcesUi": {
+    "title": "Sources",
+    "sources": {
+      "gsc": "GSC",
+      "ga4": "GA4",
+      "backlinks": "Backlinks"
+    },
+    "states": {
+      "measured": "Measured",
+      "partial-history": "Partial history",
+      "stale": "Stale",
+      "sampled": "Sampled",
+      "missing-permission": "Missing permission",
+      "unavailable": "Unavailable"
+    },
+    "property": "Property: {{value}}",
+    "provider": "Provider: {{value}}",
+    "period": "{{start}} – {{end}} ({{days}} days)",
+    "retrievedAt": "Retrieved: {{value}}",
+    "truncated": {
+      "yes": "Truncated: yes",
+      "no": "Truncated: no"
+    },
+    "coverage": "Coverage: {{value}}%",
+    "unknownNote": "Unknown data is never counted as zero."
+  },
+  "offPageSourcesUi": {
+    "analyze": "Analyze link sources",
+    "cancel": "Cancel",
+    "scope": "up to 25 follow links, one per source domain, highest provider authority first. Authority scale: 0–100; TBVA is a sum, not a percentage or Google PageRank. Limits: 3 concurrent requests, 15 s native timeout, 25 MiB response body, 20,000 visible-text characters per source.",
+    "provider": "Local embedding provider",
+    "local": "Local hash",
+    "ollama": "Local Ollama",
+    "model": "Ollama embedding model",
+    "scored": "Scored sources: {{scored}} / {{total}} selected (not the whole backlink profile).",
+    "sources": "Source fetch status",
+    "fetchedAt": "Fetched at: {{time}}",
+    "notFetched": "Not fetched",
+    "context": "Extraction has no paragraph or anchor boundaries. Bounded text blocks are inferred; every hit has linked=false because paragraph-level link context is unavailable.",
+    "caveat": "Co-occurrence is not endorsement. Homonyms can produce false matches; negated mentions remain unclear.",
+    "excerpts": "Co-citation excerpts",
+    "offset": "{{url}} — extracted-text offset {{offset}}",
+    "missing": "Missing text, usable vectors or authority means partial/unavailable evidence, not zero backlinks. This sample is not the full profile.",
+    "status": {
+      "running": "Analyzing sources…",
+      "done": "Source analysis completed",
+      "cancelled": "Analysis cancelled; unfinished sources are not scored",
+      "unavailable": "Analysis unavailable"
+    },
+    "fetch": {
+      "pending": "Pending",
+      "ok": "Text available",
+      "unavailable": "Unavailable",
+      "too-large": "Body too large",
+      "blocked": "Blocked by safe transport"
+    },
+    "limitations": {
+      "no-topic-vector": "No usable Core Topic vector from the latest completed project crawl; TBVA is unavailable.",
+      "invalid-scale": "Invalid authority scale; TBVA is unavailable.",
+      "no-follow-links": "No follow links available for analysis.",
+      "source-text-or-authority-missing": "Some sources lack text, usable vectors or provider authority."
+    },
+    "polarity": {
+      "neutral": "Neutral co-occurrence; not endorsement",
+      "unclear": "Unclear: possible negation"
+    },
+    "pacing": "The native audit guard also limits starts to 10 per minute. The sample can take several minutes; other audits may reduce availability.",
+    "history": {
+      "title": "History",
+      "empty": "No completed analyses saved.",
+      "summary": "TBVA: {{value}} · Scored/requested: {{scored}}/{{requested}}",
+      "delta": "TBVA change: {{delta}}",
+      "notComparable": "Not comparable: {{reason}}",
+      "reasons": {
+        "first": "no previous record",
+        "scale": "different authority scale",
+        "model": "different embedding model",
+        "unknownModel": "embedding model unknown",
+        "unavailable": "TBVA unavailable"
+      },
+      "view": "View sources",
+      "hide": "Hide sources",
+      "delete": "Delete record",
+      "clear": "Clear project history",
+      "exportCurrent": "Export current CSV",
+      "exportRecord": "Export record CSV",
+      "storageError": "History storage is unavailable; changes were not saved.",
+      "topic": "Topic: {{topic}}",
+      "embedding": "Embedding: {{provider}} / {{model}}",
+      "details": "Saved per-source evidence",
+      "fields": {
+        "sourceUrl": "Source URL",
+        "fetchedAt": "Fetched at",
+        "availability": "Availability",
+        "authority": "Authority",
+        "similarity": "Similarity",
+        "contribution": "Contribution"
+      },
+      "unavailable": "Unavailable",
+      "status": {
+        "ready": "Ready",
+        "partial": "Partial",
+        "unavailable": "Unavailable"
+      },
+      "privacy": "The last 10 completed analyses are stored locally per project. Full page text and vectors are never saved."
+    }
+  },
+  "experimentsUi": {
+    "title": "SEO experiments",
+    "disclaimer": "This is an observation, not proof of causation. Changes may reflect seasonality, other interventions or external factors.",
+    "projectRequired": "Select a project to register interventions.",
+    "capacity": "Up to {{count}} interventions are retained; adding more removes the oldest.",
+    "url": "Page URL",
+    "site": "Whole site",
+    "date": "First day affected",
+    "kind": "Intervention type",
+    "note": "Note (up to 300 characters)",
+    "add": "Add intervention",
+    "saveFailed": "Could not save. Check the fields and local storage availability.",
+    "removeFailed": "Could not remove the intervention from local storage.",
+    "empty": "No interventions registered.",
+    "intervention": "Intervention",
+    "unavailable": "Unavailable",
+    "baseline": "Baseline period",
+    "followUp": "Follow-up period",
+    "measurements": "Observed measurements",
+    "metric": "Metric",
+    "before": "Before",
+    "after": "After",
+    "change": "Relative change",
+    "clicks": "Clicks",
+    "impressions": "Impressions",
+    "position": "Average position (signed difference)",
+    "restOfSite": "Rest of site (totals minus page)",
+    "relativeVsSite": "Page minus rest of site (percentage points)",
+    "limitations": "Limitations",
+    "remove": "Remove intervention",
+    "percent": "{{value}}%",
+    "points": "{{value}} pp",
+    "kinds": {
+      "content": "Content",
+      "internal-links": "Internal links",
+      "title-meta": "Title and meta",
+      "technical": "Technical",
+      "other": "Other"
+    },
+    "status": {
+      "ready": "Observation available",
+      "inconclusive": "Inconclusive",
+      "pending": "Planned / pending"
+    },
+    "reasons": {
+      "observational": "Before/after observation only; no causal inference.",
+      "uncontrolled-factors": "Seasonality, concurrent changes and external factors are not controlled.",
+      "zero-baseline": "A zero baseline makes the relative change unavailable.",
+      "no-control": "A whole-site intervention has no separate rest-of-site control.",
+      "filtered-scope": "The same saved Search Console filters apply to both periods.",
+      "invalid-period": "A saved period has invalid dates or duration.",
+      "inconsistent-totals": "Page metrics exceed saved site totals; the control cannot be computed.",
+      "no-baseline": "No saved period ends before the intervention.",
+      "no-follow-up": "No saved period starts on or after the intervention.",
+      "incomparable-scope": "The nearest periods have different properties or filters, or do not cover the URL.",
+      "period-length-mismatch": "Period lengths differ by more than 10%.",
+      "rows-truncated": "Saved page rows are truncated; the page comparison may be incomplete.",
+      "low-volume": "Baseline clicks are below 30; the volume is too low for a reliable comparison.",
+      "pending": "The intervention date is in the future; evaluation is pending."
     }
   }
 }

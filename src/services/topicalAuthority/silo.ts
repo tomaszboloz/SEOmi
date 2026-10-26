@@ -1,5 +1,6 @@
 import { normalizeUrl } from '@/services/siteFocus/pageType';
 import { pathSegments } from '@/services/siteFocus/pageType';
+import { isChromeOrigin, linkOrigin } from './chrome';
 import { unigramKeys, type AuthorityContext, type AuthorityPage } from './context';
 import { blend } from './depth';
 import { isGenericAnchor } from './genericAnchors';
@@ -14,24 +15,31 @@ const WEAK_ANCHOR = 0.5;
 const BLEED_BELOW = 40;
 const CONN = { toPillar: 0.5, fromPillar: 0.3, siblings: 0.2 } as const;
 
-interface Edge { from: string; to: string; anchors: string[] }
+/** `untagged`: every link of this edge lacks crawler zone data, so only the shared-target heuristic can judge it. */
+interface Edge { from: string; to: string; anchors: string[]; untagged: boolean }
 
 const round3 = (value: number): number => Math.round(value * 1000) / 1000;
 
-/** In-content internal links between analysed pages. Links most pages share (menu, footer) are chrome and dropped. */
+/**
+ * In-content internal links between analysed pages. Links the crawler placed in a menu or sidebar/footer
+ * are dropped by their zone. Only links without zone data fall back to the guess that a target
+ * most pages link to is site chrome.
+ */
 export const contentEdges = (context: AuthorityContext): Edge[] => {
   const edges = new Map<string, Edge>();
   context.pages.forEach((entry) => entry.page.links.filter((link) => link.is_internal).forEach((link) => {
     const to = normalizeUrl(link.target_url);
-    if (to === entry.url || !context.byUrl.has(to)) return;
-    const edge = edges.get(`${entry.url}|${to}`) ?? { from: entry.url, to, anchors: [] };
+    const origin = linkOrigin(link.zone);
+    if (to === entry.url || !context.byUrl.has(to) || isChromeOrigin(origin)) return;
+    const edge = edges.get(`${entry.url}|${to}`) ?? { from: entry.url, to, anchors: [], untagged: true };
     edge.anchors.push(link.anchor_text ?? '');
+    if (origin !== 'unknown') edge.untagged = false;
     edges.set(`${entry.url}|${to}`, edge);
   }));
   const sources = new Map<string, number>();
-  edges.forEach((edge) => sources.set(edge.to, (sources.get(edge.to) ?? 0) + 1));
+  edges.forEach((edge) => { if (edge.untagged) sources.set(edge.to, (sources.get(edge.to) ?? 0) + 1); });
   const chrome = context.pages.length >= CHROME_MIN_PAGES ? context.pages.length * CHROME_SHARE : Infinity;
-  return [...edges.values()].filter((edge) => (sources.get(edge.to) ?? 0) < chrome);
+  return [...edges.values()].filter((edge) => !edge.untagged || sources.get(edge.to)! < chrome);
 };
 
 /** Descriptive anchors score by cosine with the target's declared topic; generic ones count 0.1. */
@@ -81,7 +89,7 @@ export const auditSilo = (context: AuthorityContext, eligible: AuthorityPage[], 
     if (value !== null) connectivity.push(value);
     members.forEach((entry) => { audits[entry.url] = { pillarUrl: pillar.url, linksToPillar: entry === pillar || links.has(`${entry.url}|${pillar.url}`), inbound: inbound.get(entry.url) ?? 0, bleedTargets: [] }; });
   });
-  const bleedLinks = edges.filter((edge) => ok.has(edge.from) && (context.byUrl.get(edge.to)?.focus.trs ?? 100) < BLEED_BELOW && context.byUrl.get(edge.to)?.focus.type !== 'technical').map((edge) => ({ from: edge.from, to: edge.to }));
+  const bleedLinks = edges.filter((edge) => ok.has(edge.from) && context.byUrl.get(edge.to)!.focus.trs < BLEED_BELOW && context.byUrl.get(edge.to)!.focus.type !== 'technical').map((edge) => ({ from: edge.from, to: edge.to }));
   bleedLinks.forEach((edge) => { (audits[edge.from] ??= { linksToPillar: false, inbound: inbound.get(edge.from) ?? 0, bleedTargets: [] }).bleedTargets.push(edge.to); });
   const nonHome = eligible.filter((entry) => entry.focus.type !== 'homepage');
   const orphans = nonHome.filter((entry) => !(inbound.get(entry.url) ?? 0)).map((entry) => entry.url).sort();

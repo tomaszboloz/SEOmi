@@ -12,7 +12,8 @@ vi.mock('@/services/desktopNotifications/delivery', () => ({ sendProjectNotifica
 const pages = ownSite();
 const START = `https://${OWN_HOST}/`;
 const makeRun = (id: string) => createCrawlRunFixture({ id, startUrl: START, result: createCrawlResultFixture({ pages, start_url: START }) });
-const okOutcome = (): ReferenceOutcome => ({ status: 'ok', taxonomy: referenceTaxonomy(pages)!, competitors: COMPETITORS });
+const defaultTaxonomy = referenceTaxonomy(pages)!;
+const okOutcome = (): ReferenceOutcome => ({ status: 'ok', taxonomy: structuredClone(defaultTaxonomy), competitors: COMPETITORS });
 
 beforeEach(async () => { localStorage.clear(); await i18n.changeLanguage('en'); });
 
@@ -91,7 +92,7 @@ describe('Authority tab', () => {
   });
 
   it('loads a cached map for the project and checks a draft for overlap', async () => {
-    writeTaxonomy('p3', referenceTaxonomy(pages)!);
+    writeTaxonomy('p3', structuredClone(defaultTaxonomy));
     render(<CrawlAuthorityTab pages={pages} startUrl={START} run={makeRun('r3')} projectId="p3" />);
     expect(screen.getByText('Topic coverage map')).toBeTruthy();
     fireEvent.change(screen.getByLabelText('Draft title'), { target: { value: 'Espresso machines' } });

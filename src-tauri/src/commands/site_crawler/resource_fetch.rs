@@ -29,7 +29,7 @@ pub(super) async fn fetch_resource_candidate_with_context(
             let mut body_read_failed = false;
             if candidate.resource_type == "image"
                 && response.status().is_success()
-                && content_length.map_or(true, |length| length <= MAX_INTRINSIC_IMAGE_BYTES as u64)
+                && content_length.is_none_or(|length| length <= MAX_INTRINSIC_IMAGE_BYTES as u64)
             {
                 loop {
                     match read_response_chunk(&mut response, &context).await {

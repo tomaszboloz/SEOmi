@@ -1,9 +1,14 @@
 import type { CrawlRunRecord } from '@/types';
-import { invokeTauriCommand, isTauriEnvironment } from '@/services/tauri';
-import { parseCrawlRuns } from './crawlContracts';
+import { isTauriEnvironment } from '@/services/tauri';
+import { indexedDbWrite } from './crawlPersistence/browser';
 import { indexedDbRead } from './crawlPersistence/indexedDb';
-import { saveCrawlRunsUnlocked } from './crawlPersistence/native';
-import { withCrawlWriteLock } from './crawlPersistence/writeLock';
+import { clearLegacyCrawlStorage } from './crawlPersistence/legacy';
+import { loadStoredRuns, migrateLegacyCrawlRuns, saveStoredRuns } from './crawlStore';
+import {
+  assertCrawlWriteGeneration,
+  crawlWriteGeneration,
+  withCrawlWriteLock,
+} from './crawlPersistence/writeLock';
 import type { CrawlSaveResult } from './crawlPersistence/contracts';
 
 export type { CrawlSaveResult } from './crawlPersistence/contracts';
@@ -18,9 +23,28 @@ export { crawlQuotaRetryCounts, isStorageQuotaError } from './crawlPersistence/q
  */
 export const usesDedicatedCrawlStorage = (): boolean => isTauriEnvironment() || typeof indexedDB !== 'undefined';
 
-export const loadCrawlRuns = (projectId: string): Promise<CrawlRunRecord[]> => isTauriEnvironment()
-  ? invokeTauriCommand<unknown>('load_project_crawl_runs', { projectId }).then(parseCrawlRuns)
-  : indexedDbRead(projectId);
+export const loadCrawlRuns = async (projectId: string): Promise<CrawlRunRecord[]> => {
+  if (!isTauriEnvironment()) return indexedDbRead(projectId);
+  return withCrawlWriteLock(projectId, async () => {
+    await migrateLegacyCrawlRuns(projectId);
+    return loadStoredRuns(projectId);
+  });
+};
 
-export const saveCrawlRuns = (projectId: string, runs: CrawlRunRecord[]): Promise<CrawlSaveResult> =>
-  withCrawlWriteLock(projectId, () => saveCrawlRunsUnlocked(projectId, runs));
+const saveUnlocked = async (projectId: string, runs: CrawlRunRecord[]): Promise<CrawlSaveResult> => {
+  if (!isTauriEnvironment()) return indexedDbWrite(projectId, runs);
+  // A save can be the first action after restoring a backup or a failed load.
+  // Finish migration before replacement or legacy cleanup can discard v1 data.
+  await migrateLegacyCrawlRuns(projectId);
+  await saveStoredRuns(projectId, runs);
+  clearLegacyCrawlStorage(projectId);
+  return { prunedRuns: Math.max(0, runs.length - 50) };
+};
+
+export const saveCrawlRuns = (projectId: string, runs: CrawlRunRecord[]): Promise<CrawlSaveResult> => {
+  const generation = crawlWriteGeneration(projectId);
+  return withCrawlWriteLock(projectId, () => {
+    assertCrawlWriteGeneration(projectId, generation);
+    return saveUnlocked(projectId, runs);
+  });
+};

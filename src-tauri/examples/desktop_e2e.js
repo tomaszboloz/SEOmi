@@ -1,12 +1,18 @@
 (async () => {
   if (window.__seomiE2eRunning) return;
   window.__seomiE2eRunning = true;
-  const invoke = window.__TAURI_INTERNALS__.invoke;
+  const nativeInvoke = window.__TAURI_INTERNALS__.invoke;
+  const progress = name => nativeInvoke('plugin:event|emit', { event: 'seomi-desktop-e2e-progress', payload: name });
+  const invoke = (command, args) => {
+    progress(command).catch(console.error);
+    return nativeInvoke(command, args);
+  };
   const rendererEnabled = window.__seomiE2eRendererEnabled === true;
   const checks = JSON.parse(sessionStorage.getItem('seomi-e2e-checks') || '[]');
   const check = (name, value) => {
     if (!value) throw new Error(name);
     checks.push(name);
+    progress(`checked: ${name}`).catch(console.error);
   };
   const waitFor = async (predicate, name) => {
     const deadline = Date.now() + 15000;

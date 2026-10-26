@@ -90,6 +90,8 @@ mod config_recovery_tests;
 #[cfg(test)]
 mod config_storage_tests;
 #[cfg(test)]
+mod credential_interop_tests;
+#[cfg(test)]
 mod credentials_tests;
 #[cfg(test)]
 mod fixture;
@@ -99,6 +101,8 @@ mod ipc_argument_tests;
 mod profile_storage_tests;
 #[cfg(test)]
 mod profile_validation_tests;
+#[cfg(test)]
+mod proxy_list_validation_tests;
 #[cfg(test)]
 mod secret_tests;
 #[cfg(test)]

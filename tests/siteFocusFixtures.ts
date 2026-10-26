@@ -29,14 +29,14 @@ export const topicArticles = (host: string, prefix: string, pool: string[], coun
     terms: [...rotate(pool, i * 3, size), [`unique${prefix.replace(/\W/g, '')}${i} word${i}`, 1]],
   }));
 
-export const diabetesSite = (host = 'diabetes.test'): FocusPage[] => [
+export const diabetesSite = (host = 'diabetes.test', articleCount = 24): FocusPage[] => [
   makePage(host, { path: '/', title: 'Diabetes care', terms: rotate(DIABETES_TERMS, 0, 24) }),
   makePage(host, {
     path: '/category/diabetes-care', title: 'Diabetes care category', terms: rotate(DIABETES_TERMS, 5, 20),
     // A category leads from its own content to its articles.
     patch: { semantic_links: Array.from({ length: 4 }, (_, i) => ({ target_url: `https://${host}/articles/article-${i}`, anchor_text: `Article ${i}`, is_internal: true })) },
   }),
-  ...topicArticles(host, '/articles', DIABETES_TERMS, 24),
+  ...topicArticles(host, '/articles', DIABETES_TERMS, articleCount),
   makePage(host, { path: '/phones/review-1', title: 'Best smartphone review', terms: rotate(PHONE_TERMS, 0, 10) }),
   makePage(host, { path: '/phones/review-2', title: 'Smartphone camera test', terms: rotate(PHONE_TERMS, 3, 10) }),
   makePage(host, { path: '/phones/review-3', title: 'Smartphone battery life', terms: rotate(PHONE_TERMS, 6, 10) }),

@@ -1,4 +1,4 @@
-import { act, cleanup, fireEvent, render, screen } from "@testing-library/react";
+import { cleanup, fireEvent, render, screen } from "@testing-library/react";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { CrawlResultsTabs } from "@/components/Domain/CrawlResultsTabs";
 import { useProjectStore } from "@/stores/projectStore";
@@ -8,20 +8,17 @@ import i18n from "@/i18n";
 import { result, run } from "./fixtures/crawlResultsTabsContracts";
 
 describe("CrawlResultsTabs", () => {
-afterEach(async () => {
-    cleanup();
-    if (i18n.language !== "en") await act(async () => { await i18n.changeLanguage("en"); });
-  });
+  afterEach(() => { cleanup(); });
 
   beforeEach(async () => {
     cleanup();
-    if (i18n.language !== "en") await act(async () => { await i18n.changeLanguage("en"); });
+    await i18n.changeLanguage("en");
     localStorage.clear();
     window.history.replaceState(null, "", "/");
     useProjectStore.setState({ activeProjectId: null });
   });
 
-it("shows faceted metadata findings and remembers the selected facet per project and run", () => {
+  it("shows faceted metadata findings and remembers the selected facet per project and run", async () => {
     useProjectStore.setState({ activeProjectId: "project-a" });
     const metadataResult = {
       ...result,
@@ -72,7 +69,8 @@ it("shows faceted metadata findings and remembers the selected facet per project
     );
 
     fireEvent.click(screen.getByRole("tab", { name: /Metadata/ }));
-    expect(screen.getByRole("tab", { name: /Metadata 2/ })).not.toBeNull();
+    expect(screen.getByRole("tab", { name: "Metadata 2" })).not.toBeNull();
+    expect(screen.getByRole("tab", { name: /^Overview \d+/ })).not.toBeNull();
     expect(screen.getByText(/Faceted metadata report/)).not.toBeNull();
     expect(screen.getByRole("button", { name: /Title out of range · 1/ })).not.toBeNull();
     expect(screen.getByRole("button", { name: /Empty title · 1/ })).not.toBeNull();

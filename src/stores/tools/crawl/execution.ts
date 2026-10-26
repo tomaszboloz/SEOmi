@@ -9,15 +9,21 @@ import type { ToolsState, InterruptedCrawl, ToolsSet, ToolsGet, ToolsServices } 
 import { crawlResultKey, crawlRunsKey, activeProjectId } from '../storageKeys';
 import { formatCrawlPersistenceNotice, formatCrawlRuntimeError } from '../runtime';
 import { activeCrawlRuns, persistInterruptedCrawl, buildCrawlCheckpoint, mergeCrawlResults } from '../crawlPersistence';
-import { monitorCrawlComparison } from '@/services/monitoringAlerts';
+import { monitorAioCrawls, monitorCrawlComparison } from '@/services/monitoringAlerts';
 import { runScheduledFocus } from '@/services/siteFocusMonitoring';
+import { runTaskVerification } from '@/services/optimizationTasks/runVerification';
 import { compareCrawlRuns } from '@/services/crawlDiff';
+import { deniedMessage, enforcePermission } from '@/services/team/enforce';
 
 export const createCrawlExecutionActions = (set: ToolsSet, get: ToolsGet, services: ToolsServices): Pick<ToolsState, "startSiteCrawl"> => ({
 startSiteCrawl: async (url, limit, configPatch, environment = 'default', notifyCompletion = true, resumeBaseResult) => {
     const targetUrl = (url ?? get().crawlUrl).trim();
     const maxLimit = limit ?? get().crawlLimit;
     if (!targetUrl) return null;
+    if (!enforcePermission('run_crawl', { startUrl: targetUrl })) {
+      set({ crawlError: deniedMessage() });
+      return null;
+    }
     const projectIdAtStart = activeProjectId();
     const originalCrawlRuns = get().crawlRuns;
     const previousRun = projectIdAtStart
@@ -74,7 +80,7 @@ startSiteCrawl: async (url, limit, configPatch, environment = 'default', notifyC
       const freshCrawlResult = await services.invoke<SiteCrawlResult>('crawl_site', { startUrl: targetUrl, maxPages: maxLimit, runId, projectId: projectIdAtStart || undefined, config: effectiveCrawlConfig });
       if (!freshCrawlResult.pages.length && !freshCrawlResult.cancelled && !resumeBaseResult) throw new Error(i18n.t('runtimeErrors.tools.crawlerNoPages'));
       const crawlResult = resumeBaseResult ? mergeCrawlResults(resumeBaseResult, freshCrawlResult) : freshCrawlResult;
-      const run: CrawlRunRecord = { id: runId, projectId: projectIdAtStart || undefined, completedAt: new Date().toISOString(), startUrl: targetUrl, config: persistedCrawlConfig, result: crawlResult, environment };
+      const run: CrawlRunRecord = { id: runId, projectId: projectIdAtStart || undefined, startedAt: interruptedCrawl.startedAt, completedAt: new Date().toISOString(), startUrl: targetUrl, config: persistedCrawlConfig, result: crawlResult, environment };
       const projectRuns = activeProjectId() === projectIdAtStart ? get().crawlRuns : originalCrawlRuns;
       const crawlRuns = [run, ...projectRuns.filter((item) => item.id !== run.id)].slice(0, 50);
       const projectId = projectIdAtStart;
@@ -101,7 +107,9 @@ startSiteCrawl: async (url, limit, configPatch, environment = 'default', notifyC
         void services.notifyCrawlCompleted(projectId, crawlResult, previousRun?.result, { runId });
       }
       if (projectId && previousRun) void monitorCrawlComparison(projectId, compareCrawlRuns(run, previousRun, { projectId }));
+      if (projectId) void monitorAioCrawls(projectId, run, projectRuns).catch(() => undefined);
       if (projectId) void runScheduledFocus(projectId, run, previousRun);
+      if (projectId) { try { runTaskVerification(projectId, run); } catch { /* verification is best-effort */ } }
       return crawlResult;
     } catch (err: unknown) {
       const msg = formatCrawlRuntimeError(err);
