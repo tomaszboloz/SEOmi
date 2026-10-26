@@ -17,11 +17,15 @@ import { buildParityReport } from './parityAdapter';
 import { buildTemplateEvents } from './templateAdapter';
 import { useDecayHistory } from './useDecayHistory';
 import { useCausalImpact } from './useCausalImpact';
+import { useToolsStore } from '@/stores/toolsStore';
 
 export const SignalsWorkspace = ({ projectId = null, pages, graph }: { projectId?: string | null; pages: CrawledPageSummary[]; graph: SemanticMap }) => {
   const { t } = useTranslation();
+  const gscProperty = useToolsStore((state) => state.gscProperty);
+  const gscFilters = useToolsStore((state) => state.gscFilters);
+  const gscHydratedProjectId = useToolsStore((state) => state.gscHydratedProjectId);
   const decay = useDecayHistory(projectId);
-  const causalImpact = useCausalImpact(projectId, pages[0]?.url);
+  const causalImpact = useCausalImpact(projectId, gscProperty || undefined, gscFilters, gscHydratedProjectId === projectId, true);
   const { snapshot, stale, refresh } = useGraphSnapshot(graph);
   const sprsInput = useMemo(() => buildSprsInput(snapshot), [snapshot]);
   const sprs = useMemo(() => computeSprs(sprsInput.nodes, sprsInput.edges), [sprsInput]);

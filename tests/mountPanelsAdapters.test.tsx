@@ -69,13 +69,13 @@ describe('backlink adapters', () => {
   it('outreach section lists gap domains and is empty without a report', () => {
     const { unmount } = render(<BacklinkOutreachSection report={null} />);
     expect(screen.getByTestId('outreach-panel')).toBeTruthy();
-    expect(screen.queryByRole('button')).toBeNull();
+    expect(screen.queryByRole('button', { name: /export/i })).toBeNull();
     unmount();
     const report: BacklinkGapReport = {
       target: 'me.com', competitors: ['a.com'], include_subdomains: false, total_rows: 1, rows_scanned: 1,
       opportunities: [{ referring_domain: 'blog.example', target_backlinks: 0, competitor_backlinks: [{ domain: 'a.com', backlinks: 3, rank: 50 }], max_competitor_spam_score: null }],
     };
     render(<BacklinkOutreachSection report={report} />);
-    expect(screen.getByRole('button')).toBeTruthy();
+    expect(screen.getByRole('button', { name: /export/i })).toBeTruthy();
   });
 });
