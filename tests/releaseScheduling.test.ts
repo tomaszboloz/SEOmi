@@ -1,4 +1,4 @@
-import { chmodSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
+import { mkdtempSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { spawnSync } from 'node:child_process';
@@ -8,22 +8,23 @@ import { createPackageFixture, shaA, shaB } from './releaseCiGateCliHelpers.js';
 
 const release = readFileSync('.github/workflows/release.yml', 'utf8');
 const dispatcher = () => readFileSync('.github/workflows/release-after-ci.yml', 'utf8');
+const bash = process.platform === 'win32'
+  ? join(process.env.ProgramFiles ?? 'C:\\Program Files', 'Git', 'bin', 'bash.exe') : '/bin/bash';
 
 function runDispatch({ branch = 'main', sha = shaA, current = shaA, apiExit = '0', dispatchExit = '0' } = {}) {
   const dir = mkdtempSync(join(tmpdir(), 'release-dispatch-'));
   try {
     const calls = join(dir, 'calls.jsonl'), fakeGh = join(dir, 'gh');
-    writeFileSync(fakeGh, `#!/usr/bin/env node
+    writeFileSync(fakeGh, `
 const fs = require('node:fs');
 fs.appendFileSync(process.env.TEST_CALLS, JSON.stringify(process.argv.slice(2)) + '\\n');
 if (process.argv[2] === 'api') { console.log(process.env.TEST_CURRENT); process.exit(Number(process.env.TEST_API_EXIT)); }
 process.exit(Number(process.env.TEST_DISPATCH_EXIT));
 `);
-    chmodSync(fakeGh, 0o755);
     const script = dispatcher().split('        run: |\n')[1].split('\n')
       .map(line => line.startsWith('          ') ? line.slice(10) : line).join('\n');
-    const result = spawnSync('bash', ['-c', script], { encoding: 'utf8', env: {
-      PATH: `${dir}:${process.env.PATH}`, SOURCE_BRANCH: branch, SOURCE_SHA: sha,
+    const result = spawnSync(bash, ['-c', 'gh() { "$TEST_NODE" "$TEST_GH" "$@"; }\n' + script], { encoding: 'utf8', env: {
+      ...process.env, TEST_NODE: process.execPath, TEST_GH: fakeGh, SOURCE_BRANCH: branch, SOURCE_SHA: sha,
       GITHUB_REPOSITORY: 'owner/repo', TEST_CALLS: calls, TEST_CURRENT: current,
       TEST_API_EXIT: apiExit, TEST_DISPATCH_EXIT: dispatchExit,
     } });
@@ -85,11 +86,12 @@ describe('release scheduling after complete CI', () => {
     const script = release.split('      - name: Check updater signing credentials')[0]
       .split('        run: |\n')[1].split('\n')
       .map(line => line.startsWith('          ') ? line.slice(10) : line).join('\n');
-    const result = spawnSync('/bin/bash', ['-c', script], { encoding: 'utf8',
-      env: { PATH: '/unavailable', RELEASE_EXPECTED_SHA: shaB, RELEASE_COMMIT_SHA: shaA } });
+    const noRead = 'node() { echo forbidden-read >&2; exit 99; }; git() { echo forbidden-read >&2; exit 99; };\n';
+    const result = spawnSync(bash, ['-c', noRead + script], { encoding: 'utf8',
+      env: { ...process.env, RELEASE_EXPECTED_SHA: shaB, RELEASE_COMMIT_SHA: shaA } });
     expect(result.status).toBe(1);
     expect(result.stderr).toContain('Expected CI commit does not match release SHA');
-    expect(result.stderr).not.toContain('command not found');
+    expect(result.stderr).not.toContain('forbidden-read');
   });
 
   it.each(['feature/test', 'release/../main', 'release/bad?ref=x'])('rejects unsafe branch %s before any API call', branch => {
