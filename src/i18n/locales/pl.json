@@ -7553,6 +7553,7 @@
       "added": "Dodano zadanie",
       "empty": "Brak zadań. Dodaj je z rekomendacji.",
       "verify": "Zweryfikuj na ostatnim crawlu",
+      "crawlUnavailable": "Wybrany crawl nie dostarcza kompletnych danych z potwierdzoną datą; weryfikacja została odroczona.",
       "markImplemented": "Oznacz jako wdrożone",
       "regression": "Regres wyniku",
       "kind": {

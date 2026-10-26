@@ -68,7 +68,7 @@ describe('metric history and verification', () => {
     expect(readMetricHistory('q')).toEqual([]);
   });
   it('verifies after a crawl and writes deltas', () => {
-    const run = { startedAt: '2026-10-01T12:00:00Z', result: { start_url: A, pages: [page({ url: A, final_url: A, http_status: 410 })] } } as never;
+    const run = { startedAt: '2026-10-01T12:00:00Z', completedAt: '2026-10-01T12:01:00Z', result: { start_url: A, pages: [page({ url: A, final_url: A, http_status: 410 })] } } as never;
     expect(runTaskVerification('p', run)).toEqual([]);
     writeTasks('p', [task(), task({ id: 't2', module: 'tas', baselineScore: 60 }), task({ id: 't3', module: 'eetv' as never, baselineScore: 1 })]);
     runTaskVerification('p', run);

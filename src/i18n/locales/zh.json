@@ -7553,6 +7553,7 @@
       "added": "任务已添加",
       "empty": "暂无任务。请从建议中添加。",
       "verify": "用最新抓取验证",
+      "crawlUnavailable": "所选抓取未提供日期已确认的完整证据，验证已推迟。",
       "markImplemented": "标记为已实施",
       "regression": "分数回落",
       "kind": {

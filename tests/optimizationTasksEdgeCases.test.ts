@@ -87,13 +87,13 @@ describe('runTaskVerification-level freshness and caching', () => {
     const unknownStartRun = { result: { start_url: U, pages: [page({ url: U, final_url: U, http_status: 200, indexability_status: 'Eligible' })] } } as CrawlRunRecord;
     expect(runTaskVerification(P, unknownStartRun)[0].status).toBe('implemented');
 
-    const nextCrawlRun = { startedAt: '2026-10-24T10:15:00Z', result: { start_url: U, pages: [page({ url: U, final_url: U, http_status: 200, indexability_status: 'Eligible' })] } } as CrawlRunRecord;
+    const nextCrawlRun = { startedAt: '2026-10-24T10:15:00Z', completedAt: '2026-10-24T10:16:00Z', result: { start_url: U, pages: [page({ url: U, final_url: U, http_status: 200, indexability_status: 'Eligible' })] } } as CrawlRunRecord;
     expect(runTaskVerification(P, nextCrawlRun)[0].status).toBe('verified');
   });
 
   it('covers tas caching and empty run fallback in runTaskVerification', () => {
     writeTasks(P, [makeTask({ id: 'tas1', module: 'tas', kind: 'remove-noindex', baselineScore: 30 }), makeTask({ id: 'tas2', module: 'tas', kind: 'remove-noindex', baselineScore: 30 })]);
-    const run = { startedAt: '2026-10-24T10:15:00Z', result: { start_url: U, pages: [page({ url: U, final_url: U, http_status: 200, indexability_status: 'Eligible' })] } } as CrawlRunRecord;
+    const run = { startedAt: '2026-10-24T10:15:00Z', completedAt: '2026-10-24T10:16:00Z', result: { start_url: U, pages: [page({ url: U, final_url: U, http_status: 200, indexability_status: 'Eligible' })] } } as CrawlRunRecord;
     const verified = runTaskVerification(P, run);
     expect(verified[0].status).toBe('verified');
     expect(verified[1].status).toBe('verified');
@@ -109,7 +109,7 @@ describe('SPRS, EETV, editTask and appendDeltas branch coverage', () => {
   it('computes real SPRS score delta for page and honest null when missing', () => {
     const p1 = page({ url: U, final_url: U, http_status: 200, semantic_terms: ['seo', 'audit'], links: [{ target_url: U2, anchor_text: 'p2', is_internal: true }] });
     const p2 = page({ url: U2, final_url: U2, http_status: 200, semantic_terms: ['audit', 'tools'], links: [{ target_url: U, anchor_text: 'p1', is_internal: true }] });
-    const run = { startedAt: '2026-10-24T11:00:00Z', result: { start_url: U, duration_ms: 1000, pages: [p1, p2] } } as CrawlRunRecord;
+    const run = { startedAt: '2026-10-24T11:00:00Z', completedAt: '2026-10-24T11:01:00Z', result: { start_url: U, duration_ms: 1000, pages: [p1, p2] } } as CrawlRunRecord;
 
     writeTasks(P, [makeTask({ id: 'tsprs', module: 'sprs', kind: 'add-link', targetUrl: U2, baselineScore: 10 }), makeTask({ id: 'tsprs2', module: 'sprs', kind: 'add-link', targetUrl: U2, baselineScore: 10 }), makeTask({ id: 'tsprs-missing', module: 'sprs', url: 'https://site.test/absent', baselineScore: 10 })]);
     const verified = runTaskVerification(P, run);
@@ -119,20 +119,20 @@ describe('SPRS, EETV, editTask and appendDeltas branch coverage', () => {
     expect(verified[2].status).toBe('implemented');
 
     writeTasks('empty-sprs', [makeTask({ id: 'tsprs-empty', module: 'sprs', baselineScore: 10 })]);
-    const emptyRun = { startedAt: '2026-10-24T11:00:00Z', result: { start_url: U, pages: [] } } as unknown as CrawlRunRecord;
+    const emptyRun = { startedAt: '2026-10-24T11:00:00Z', completedAt: '2026-10-24T11:01:00Z', result: { start_url: U, pages: [] } } as unknown as CrawlRunRecord;
     expect(runTaskVerification('empty-sprs', emptyRun)[0].status).toBe('implemented');
     expect(runTaskVerification('empty-sprs', emptyRun)[0].verdict).toBeUndefined();
   });
 
   it('computes EETV trust score delta when live pages exist and null when absent', () => {
     const p1 = page({ url: U, final_url: U, http_status: 200 });
-    const run = { startedAt: '2026-10-24T11:00:00Z', result: { start_url: U, duration_ms: 1000, pages: [p1] } } as CrawlRunRecord;
+    const run = { startedAt: '2026-10-24T11:00:00Z', completedAt: '2026-10-24T11:01:00Z', result: { start_url: U, duration_ms: 1000, pages: [p1] } } as CrawlRunRecord;
     writeTasks(P, [makeTask({ id: 'teetv', module: 'eetv', kind: 'remove-noindex', baselineScore: 20 })]);
     const verified = runTaskVerification(P, run);
     expect(verified[0].status).toBe('verified');
     expect(typeof verified[0].verdict?.delta).toBe('number');
 
-    const errorRun = { startedAt: '2026-10-24T12:00:00Z', result: { start_url: U, duration_ms: 1000, pages: [page({ url: U, final_url: U, http_status: 500 })] } } as CrawlRunRecord;
+    const errorRun = { startedAt: '2026-10-24T12:00:00Z', completedAt: '2026-10-24T12:01:00Z', result: { start_url: U, duration_ms: 1000, pages: [page({ url: U, final_url: U, http_status: 500 })] } } as CrawlRunRecord;
     writeTasks(P, [makeTask({ id: 'teetv2', module: 'eetv', kind: 'remove-410', baselineScore: 20 })]);
     const errorVerified = runTaskVerification(P, errorRun);
     expect(errorVerified[0].verdict?.delta).toBeNull();

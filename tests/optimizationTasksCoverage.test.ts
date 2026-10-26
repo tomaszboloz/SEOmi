@@ -77,7 +77,7 @@ describe('optimizationTasks metricHistory and runVerification coverage', () => {
       task('e1', { module: 'eetv', kind: 'remove-noindex', baselineScore: 10 }),
       task('e2', { module: 'eetv', kind: 'remove-noindex', baselineScore: 20 }),
     ]);
-    const run = { startedAt: '2026-10-24T05:00:00Z', result: { start_url: U, pages: [page({ url: U, final_url: U, http_status: 200, indexability_status: 'Eligible' })] } } as CrawlRunRecord;
+    const run = { startedAt: '2026-10-24T05:00:00Z', completedAt: '2026-10-24T05:01:00Z', result: { start_url: U, pages: [page({ url: U, final_url: U, http_status: 200, indexability_status: 'Eligible' })] } } as CrawlRunRecord;
     const verified = runTaskVerification('eetv-cache', run);
     expect(verified[0].status).toBe('verified');
     expect(verified[1].status).toBe('verified');
@@ -96,7 +96,7 @@ describe('optimizationTasks metricHistory and runVerification coverage', () => {
 
   it('eetv regression on all-HTTP0 crawl: returns honest null delta and zero metricHistory points', () => {
     writeTasks('eetv-http0', [task('e-fail', { module: 'eetv', kind: 'remove-410', baselineScore: 20 })]);
-    const run = { startedAt: '2026-10-24T05:00:00Z', result: { start_url: U, duration_ms: 1000, pages: [page({ url: U, final_url: U, http_status: 0 })] } } as CrawlRunRecord;
+    const run = { startedAt: '2026-10-24T05:00:00Z', completedAt: '2026-10-24T05:01:00Z', result: { start_url: U, duration_ms: 1000, pages: [page({ url: U, final_url: U, http_status: 0 })] } } as CrawlRunRecord;
     const verified = runTaskVerification('eetv-http0', run);
     expect(verified[0].status).toBe('implemented');
     expect(verified[0].verdict).toBeUndefined();
@@ -112,7 +112,7 @@ describe('optimizationTasks metricHistory and runVerification coverage', () => {
       task('t-gone', { url: u3, module: 'eetv', kind: 'remove-410', baselineScore: 20 }),
     ]);
     const run = {
-      startedAt: '2026-10-24T05:00:00Z',
+      startedAt: '2026-10-24T05:00:00Z', completedAt: '2026-10-24T05:01:00Z',
       result: {
         start_url: U, duration_ms: 1000,
         pages: [
@@ -136,7 +136,7 @@ describe('optimizationTasks metricHistory and runVerification coverage', () => {
     writeTasks('sprs-ineligible', [task('s-ineligible', { url: U, module: 'sprs', kind: 'remove-410', baselineScore: 30 })]);
     const pIneligible = page({ url: U, final_url: U, http_status: 200, meta_robots: 'noindex', semantic_terms: ['seo'] });
     const pEligible = page({ url: u2, final_url: u2, http_status: 200, semantic_terms: ['seo', 'audit'], links: [{ target_url: U, anchor_text: 'p1', is_internal: true }] });
-    const run = { startedAt: '2026-10-24T05:00:00Z', result: { start_url: u2, duration_ms: 1000, pages: [pIneligible, pEligible] } } as CrawlRunRecord;
+    const run = { startedAt: '2026-10-24T05:00:00Z', completedAt: '2026-10-24T05:01:00Z', result: { start_url: u2, duration_ms: 1000, pages: [pIneligible, pEligible] } } as CrawlRunRecord;
     const verified = runTaskVerification('sprs-ineligible', run);
     expect(verified[0].verdict?.delta).toBeNull();
   });

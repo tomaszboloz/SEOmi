@@ -3,11 +3,12 @@ import { useTranslation } from 'react-i18next';
 import { buildBriefPrompt, buildPagePlaybook, buildRewriteBrief } from '@/services/siteFocus';
 import type { PageFocus, SiteFocusReport } from '@/services/siteFocus';
 import { BriefCardButton } from '@/components/Charts/BriefCardButton';
+import { AddTaskButton } from '@/components/Charts/OptimizationTaskTracker';
 import { codeDetail, codeText, codeTitle } from './focusText';
 
 type CopyState = 'idle' | 'copied' | 'failed';
 
-export const PagePlaybookPanel = ({ page, report }: { page: PageFocus; report: SiteFocusReport }) => {
+export const PagePlaybookPanel = ({ page, report, projectId, baselineScore }: { page: PageFocus; report: SiteFocusReport; projectId?: string | null; baselineScore?: number | null }) => {
   const { t } = useTranslation();
   const [copy, setCopy] = useState<CopyState>('idle');
   const playbook = buildPagePlaybook(page, report.pages, report.score, report.coreTopic);
@@ -48,6 +49,7 @@ export const PagePlaybookPanel = ({ page, report }: { page: PageFocus; report: S
           <p><strong>{t('focus.brief.avoid')}:</strong> {brief.avoid.join(', ') || t('focus.detail.none')}</p>
           <p><strong>{t('focus.brief.headings')}:</strong> {brief.headingSeeds.map((group) => group.join(' / ')).join('; ') || t('focus.detail.none')}</p>
           <p>{t('focus.brief.words', { min: brief.wordCount.min, max: brief.wordCount.max })}</p>
+          {projectId && brief.mustInclude.length > 0 && <AddTaskButton projectId={projectId} task={{ kind: 'add-entities', module: 'sfs', url: page.url, requiredEntities: brief.mustInclude, baselineScore: baselineScore ?? null }} />}
           <BriefCardButton input={{ origin: 'sfs', title: page.url, sourceUrl: page.url, missingEntities: brief.mustInclude }} />
           <button type="button" onClick={() => void copyPrompt(buildBriefPrompt(brief))} className="rounded border border-slate-600 px-2 py-1 text-slate-100 hover:bg-slate-800 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-400">
             {t('focus.brief.copy')}

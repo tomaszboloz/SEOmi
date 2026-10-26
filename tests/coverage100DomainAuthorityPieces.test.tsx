@@ -9,15 +9,28 @@ import { ReferenceMapPanel } from '@/components/Domain/crawlResults/authority/Re
 import { SubtopicDrilldown } from '@/components/Domain/crawlResults/authority/SubtopicDrilldown';
 import { pillarName } from '@/components/Domain/crawlResults/authority/authorityText';
 import { buildAuthorityReport } from '@/services/topicalAuthority';
+import { readTasks } from '@/services/optimizationTasks/storage';
+import { useProjectStore } from '@/stores/projectStore';
 import { NOW, OWN_HOST, ownReport, ownSite, referenceTaxonomy } from './authorityFixtures';
 
 const pages = ownSite();
 const startUrl = `https://${OWN_HOST}/`;
 const report = () => buildAuthorityReport(pages, startUrl, ownReport(pages), { taxonomy: referenceTaxonomy(pages), now: NOW });
 
-beforeEach(async () => { await i18n.changeLanguage('en'); localStorage.clear(); });
+beforeEach(async () => { await i18n.changeLanguage('en'); localStorage.clear(); useProjectStore.setState({ activeProjectId: null }); });
 
 describe('coverage100 topical authority pieces', () => {
+  it('adds a real canonical redirect task from the mounted execution card', () => {
+    const base = report();
+    const canonical = 'https://coffee.test/canonical';
+    const donor = 'https://coffee.test/donor';
+    useProjectStore.setState({ activeProjectId: 'different-active-project' });
+    render(<CannibalizationPanel report={{ ...base, tas: 74, cannibalization: [{ canonical, urls: [canonical, donor], edges: [], similarity: 90, sharedEntitiesPct: 80 }] }} pages={pages} startUrl={startUrl} projectId="authority-card" baselineScore={74} />);
+    fireEvent.click(screen.getByRole('button', { name: i18n.t('executionCard.tasks.add') as string }));
+    expect(readTasks('authority-card')[0]).toMatchObject({ kind: 'redirect-301', module: 'tas', url: donor, targetUrl: canonical, baselineScore: 74 });
+    expect(readTasks('different-active-project')).toEqual([]);
+  });
+
   it('covers null pillar values, names and rows without optional coverage details', () => {
     const base = report();
     render(<AuthorityPillars report={{ ...base, pillars: { ...base.pillars, tcr: null, cdes: null }, warnings: ['empty-authority'], templateDuplicates: [] }} />);

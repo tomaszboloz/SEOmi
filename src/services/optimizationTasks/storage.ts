@@ -9,6 +9,12 @@ const STATUSES: TaskStatus[] = ['planned', 'implemented', 'verified', 'failed'];
 const PRIORITIES: TaskPriority[] = ['high', 'medium', 'low'];
 
 export const tasksKey = (projectId: string) => `seomi_project_${projectId}_optimization_tasks_v1`;
+export const OPTIMIZATION_TASKS_STORAGE_EVENT = 'seomi:optimization-tasks-storage';
+
+const dispatchTasksChanged = (projectId: string): void => {
+  if (typeof window === 'undefined') return;
+  try { window.dispatchEvent(new CustomEvent(OPTIMIZATION_TASKS_STORAGE_EVENT, { detail: { projectId, key: tasksKey(projectId) } })); } catch { /* restricted WebView */ }
+};
 
 const isTask = (value: unknown): value is OptimizationTask => {
   const t = value as Partial<OptimizationTask> | null;
@@ -22,7 +28,11 @@ export const readTasks = (projectId: string): OptimizationTask[] => {
   return Array.isArray(raw) ? raw.filter(isTask).slice(-MAX_TASKS) : [];
 };
 
-export const writeTasks = (projectId: string, tasks: OptimizationTask[]): boolean => writeJsonStorage(tasksKey(projectId), tasks.slice(-MAX_TASKS));
+export const writeTasks = (projectId: string, tasks: OptimizationTask[]): boolean => {
+  const ok = writeJsonStorage(tasksKey(projectId), tasks.slice(-MAX_TASKS));
+  if (ok) dispatchTasksChanged(projectId);
+  return ok;
+};
 
 export type NewTask = Pick<OptimizationTask, 'kind' | 'module' | 'url' | 'baselineScore'> & Partial<Pick<OptimizationTask, 'targetUrl' | 'requiredEntities' | 'owner' | 'priority' | 'dueDate'>>;
 

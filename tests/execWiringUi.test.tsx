@@ -1,5 +1,5 @@
 import { fireEvent, render, screen } from '@testing-library/react';
-import { beforeEach, describe, expect, it, vi } from 'vitest';
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import i18n from '@/i18n';
 import { BriefCardButton, BriefNavigationContext } from '@/components/Charts/BriefCardButton';
 import { OptimizationTaskTracker } from '@/components/Charts/OptimizationTaskTracker';
@@ -15,10 +15,11 @@ const tr = (k: string) => i18n.t(`executionCard.tasks.${k}`) as string;
 const base = { id: 't1', kind: 'remove-410', module: 'sfs', status: 'planned', url: A, baselineScore: 50, priority: 'medium', createdAt: 'x' } as const;
 
 describe('task tracker meta editing', () => {
-  beforeEach(() => localStorage.clear());
+  beforeEach(() => { localStorage.clear(); vi.useFakeTimers(); vi.setSystemTime(new Date('2026-10-25T10:00:00Z')); });
+  afterEach(() => vi.useRealTimers());
   it('edits owner, priority, SLA, filters and records delta on verify', () => {
     writeTasks('p', [{ ...base, dueDate: '2020-01-01' }, { ...base, id: 't2', owner: 'Ann' }]);
-    render(<OptimizationTaskTracker projectId="p" pages={[page({ url: A, final_url: A, http_status: 410 })]} scoreFor={() => 58} />);
+    render(<OptimizationTaskTracker projectId="p" pages={[page({ url: A, final_url: A, http_status: 410 })]} scoreFor={() => 58} crawlStartedAt="2099-01-01T00:00:00Z" />);
     expect(screen.getByRole('status').textContent).toBe(tr('overdue'));
     const owners = screen.getAllByLabelText(tr('owner'));
     fireEvent.change(owners[0], { target: { value: 'Bob' } });
@@ -68,7 +69,8 @@ describe('LinksWorkspace', () => {
     const { rerender } = render(<LinksWorkspace projectId={null} pages={[]} />);
     expect(screen.queryByLabelText(i18n.t('executionCard.tasks.aria') as string)).toBeNull();
     writeTasks('p', [{ ...base }, { ...base, id: 't2', module: 'tas' }, { ...base, id: 't3', module: 'sprs' }]);
-    rerender(<LinksWorkspace projectId="p" pages={[page({ url: A, final_url: A })]} />);
+    const selectedPages = [page({ url: A, final_url: A })];
+    rerender(<LinksWorkspace projectId="p" pages={selectedPages} run={{ id: 'run-p', startedAt: '2026-10-25T00:00:00Z', completedAt: '2026-10-25T00:01:00Z', result: { pages: selectedPages, cancelled: false } } as never} />);
     expect(screen.getByLabelText(i18n.t('executionCard.tasks.aria') as string)).toBeTruthy();
     fireEvent.click(screen.getByRole('button', { name: tr('verify') }));
   });

@@ -1,12 +1,15 @@
 import { act, cleanup, fireEvent, render, renderHook, screen } from '@testing-library/react';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import '@/i18n';
+import i18n from '@/i18n';
 import { PagePlaybookPanel } from '@/components/Domain/crawlResults/focus/PagePlaybookPanel';
 import { BenchmarkResults } from '@/components/Domain/crawlResults/focus/benchmark/BenchmarkResults';
 import { useFocusBenchmark } from '@/components/Domain/crawlResults/focus/benchmark/useFocusBenchmark';
 import { buildTreeRows } from '@/components/Domain/crawlResults/focus/focusHelpers';
 import { DataForSEOClient } from '@/services/dataforseo';
-import { buildSiteFocusReport } from '@/services/siteFocus';
+import { buildRewriteBrief, buildSiteFocusReport } from '@/services/siteFocus';
+import { readTasks } from '@/services/optimizationTasks/storage';
+import { useProjectStore } from '@/stores/projectStore';
 import { benchmarkQueries, buildGaps, buildInsights, buildRanking, createBenchmarkDeps, pickCompetitors, runBenchmark, type BenchmarkOutcome, type BenchmarkReport, type CompetitorResult } from '@/services/siteFocusBenchmark';
 import { useSettingsStore } from '@/stores/settingsStore';
 import { useToolsStore } from '@/stores/toolsStore';
@@ -59,6 +62,23 @@ describe('createBenchmarkDeps credentials wiring', () => {
 });
 
 describe('focus components edge branches', () => {
+  it('adds a real entity task from the mounted execution card and preserves unavailable baseline', () => {
+    const target = report.pages.find((candidate) => !candidate.skipped && candidate.playbook !== 'C');
+    expect(target).toBeDefined();
+    const brief = buildRewriteBrief(target!, report.coreTopic);
+    expect(brief.mustInclude.length).toBeGreaterThan(0);
+    useProjectStore.setState({ activeProjectId: 'focus-card' });
+    localStorage.clear();
+    render(<PagePlaybookPanel page={target!} report={report} projectId="focus-card" baselineScore={report.score} />);
+    fireEvent.click(screen.getByRole('button', { name: i18n.t('executionCard.tasks.add') as string }));
+    expect(readTasks('focus-card')[0]).toMatchObject({ kind: 'add-entities', module: 'sfs', url: target!.url, baselineScore: report.score });
+    cleanup();
+    localStorage.clear();
+    render(<PagePlaybookPanel page={target!} report={{ ...report, unavailable: true, score: 0 }} projectId="focus-card" baselineScore={null} />);
+    fireEvent.click(screen.getByRole('button', { name: i18n.t('executionCard.tasks.add') as string }));
+    expect(readTasks('focus-card')[0].baselineScore).toBeNull();
+  });
+
   it('keeps URL order for identical paths', () => {
     const [a, b] = report.pages;
     const rows = buildTreeRows([{ ...b, url: 'https://diabetes.test/p?x=2' }, { ...a, url: 'https://diabetes.test/p?x=1' }]);
