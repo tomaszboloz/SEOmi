@@ -20,6 +20,7 @@ jobs:
     permissions:
       contents: write
       checks: read
+      security-events: read
     outputs:
       publish: ${{ steps.resolve.outputs.publish }}
       tag: ${{ steps.resolve.outputs.tag }}
