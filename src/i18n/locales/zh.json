@@ -3560,6 +3560,21 @@
       "chooseBaseRun": "Choose base run",
       "match": "Match",
       "preview": "Preview"
+    },
+    "spaShell": {
+      "summary": "看起来是未渲染 JavaScript 外壳的页面:{{count}}",
+      "reasons": {
+        "next_data": "Next.js 数据 (__NEXT_DATA__)",
+        "nuxt_payload": "Nuxt 负载 (__NUXT__)",
+        "initial_state": "应用状态 (__INITIAL_STATE__)",
+        "bundle_empty_root": "应用根节点为空的 JS 包",
+        "unknown": "未记录原因"
+      },
+      "reasonCount": "{{reason}}:{{count}}",
+      "payloadRead": "在这 {{total}} 个页面中,SEOmi 从框架负载读取了 {{count}} 个页面的文本。该文本来自 JS 负载,而非渲染后的页面。",
+      "noPayload": "SEOmi 未能从这些页面中任何一个的框架负载读取文本。",
+      "showUrls": "显示受影响的 URL",
+      "payloadWords": "JS 负载词数:{{count}}(非渲染内容)"
     }
   },
   "ai": {
@@ -6307,6 +6322,13 @@
         "why": "Pages with very little text give search engines little to understand, which is called thin content. Long is not automatically better, though: the page must fully answer what the visitor came for.",
         "action": "Under 300 words: ask yourself whether the page really answers the question. Add useful detail if not.\n300 to 1000 words: normal for most service and product pages.\nOver 1500 words: typical for in-depth guides; make sure headings split it into scannable sections.\nCompare with the top Google results for your keyword, not with a magic number.",
         "example": "A product page with 80 words usually loses to competitors who explain materials, sizes, shipping and returns in 400 words."
+      },
+      "jsShell": {
+        "title": "疑似 JavaScript 外壳",
+        "what": "这些页面的静态 HTML 几乎没有文本,但会加载 JavaScript 应用(例如 Next.js 或 Nuxt)。真正的内容只有在浏览器运行脚本后才会出现。",
+        "why": "SEOmi 根据原始 HTML 分析这些页面。词数、术语、内容检查和评分可能偏低。从框架负载读取的文本会单独显示,不计入页面内容。",
+        "action": "以渲染 (JavaScript) 模式重新抓取,查看用户实际获得的内容。\n检查搜索引擎在没有 JavaScript 的情况下能否获取内容(服务器端渲染或预渲染)。\n谨慎看待这些页面的内容评分。",
+        "example": "一个带有空 <div id=\"__next\"></div> 和 __NEXT_DATA__ 脚本的 Next.js 页面,其静态 HTML 中只有 12 个词。"
       }
     },
     "metadata": {

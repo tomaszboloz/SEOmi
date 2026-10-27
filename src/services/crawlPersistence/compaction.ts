@@ -1,4 +1,5 @@
 import type { CrawlRunRecord } from '@/types';
+import { compactSpaPayload } from './spaPayload';
 
 /**
  * Reduce only verbose, repeatable evidence as a last-resort persistence
@@ -36,6 +37,8 @@ export const compactCrawlRunsForStorage = (runs: CrawlRunRecord[], level: 1 | 2 
       social_meta_tags: page.social_meta_tags?.slice(0, level === 1 ? 40 : level === 2 ? 12 : 4),
       frames: page.frames?.slice(0, level === 1 ? 20 : level === 2 ? 6 : 2),
       discovery_sources: page.discovery_sources?.slice(0, level === 1 ? 20 : level === 2 ? 6 : 2),
+      // is_js_shell_suspected / js_shell_reason survive via the spread above.
+      spa_payload: compactSpaPayload(page.spa_payload, level === 1 ? 40 : level === 2 ? 10 : 'none'),
     }));
     if (level >= 2) {
       run.result.resources = undefined;

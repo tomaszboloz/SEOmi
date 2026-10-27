@@ -3560,6 +3560,21 @@
       "chooseBaseRun": "Choose base run",
       "match": "Match",
       "preview": "Preview"
+    },
+    "spaShell": {
+      "summary": "レンダリングされていない JavaScript シェルのように見えるページ: {{count}}",
+      "reasons": {
+        "next_data": "Next.js データ (__NEXT_DATA__)",
+        "nuxt_payload": "Nuxt ペイロード (__NUXT__)",
+        "initial_state": "アプリ状態 (__INITIAL_STATE__)",
+        "bundle_empty_root": "アプリのルートが空の JS バンドル",
+        "unknown": "理由は記録されていません"
+      },
+      "reasonCount": "{{reason}}: {{count}}",
+      "payloadRead": "SEOmi はこのうち {{total}} ページ中 {{count}} ページでフレームワークのペイロードからテキストを読み取りました。このテキストは JS ペイロード由来で、レンダリング後のページのものではありません。",
+      "noPayload": "SEOmi はこれらのどのページでもフレームワークのペイロードからテキストを読み取れませんでした。",
+      "showUrls": "対象の URL を表示",
+      "payloadWords": "JS ペイロードの単語数: {{count}}(レンダリングされたコンテンツではありません)"
     }
   },
   "ai": {
@@ -6307,6 +6322,13 @@
         "why": "Pages with very little text give search engines little to understand, which is called thin content. Long is not automatically better, though: the page must fully answer what the visitor came for.",
         "action": "Under 300 words: ask yourself whether the page really answers the question. Add useful detail if not.\n300 to 1000 words: normal for most service and product pages.\nOver 1500 words: typical for in-depth guides; make sure headings split it into scannable sections.\nCompare with the top Google results for your keyword, not with a magic number.",
         "example": "A product page with 80 words usually loses to competitors who explain materials, sizes, shipping and returns in 400 words."
+      },
+      "jsShell": {
+        "title": "JavaScript シェルの疑い",
+        "what": "これらのページの静的 HTML にはほとんどテキストがなく、JavaScript アプリ(Next.js や Nuxt など)を読み込みます。実際のコンテンツはブラウザーがスクリプトを実行した後にのみ表示されます。",
+        "why": "SEOmi はこれらのページを生の HTML から分析します。単語数、用語、コンテンツチェック、スコアが実際より低くなる場合があります。フレームワークのペイロードから読み取ったテキストは別に表示され、ページのコンテンツとしては数えません。",
+        "action": "ユーザーが受け取るコンテンツを確認するには、レンダリング (JavaScript) モードでクロールを再実行してください。\n検索エンジンが JavaScript なしでコンテンツを受け取れるか確認してください(サーバーサイドレンダリングまたはプリレンダリング)。\nこれらのページのコンテンツスコアは慎重に扱ってください。",
+        "example": "空の <div id=\"__next\"></div> と __NEXT_DATA__ スクリプトを持つ Next.js ページは、静的 HTML の単語数が 12 です。"
       }
     },
     "metadata": {

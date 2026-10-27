@@ -3560,6 +3560,21 @@
       "chooseBaseRun": "Wybierz run bazowy",
       "match": "Dopasuj",
       "preview": "Podgląd"
+    },
+    "spaShell": {
+      "summary": "Podstrony wyglądające na niewyrenderowany szkielet JavaScript: {{count}}",
+      "reasons": {
+        "next_data": "Dane Next.js (__NEXT_DATA__)",
+        "nuxt_payload": "Payload Nuxt (__NUXT__)",
+        "initial_state": "Stan aplikacji (__INITIAL_STATE__)",
+        "bundle_empty_root": "Bundle JS z pustym kontenerem aplikacji",
+        "unknown": "Nie zapisano przyczyny"
+      },
+      "reasonCount": "{{reason}}: {{count}}",
+      "payloadRead": "SEOmi odczytało tekst z payloadu frameworka dla {{count}} z {{total}} tych podstron. Ten tekst pochodzi z payloadu JS, a nie z wyrenderowanej strony.",
+      "noPayload": "SEOmi nie odczytało tekstu z payloadu frameworka dla żadnej z tych podstron.",
+      "showUrls": "Pokaż adresy URL tych podstron",
+      "payloadWords": "Słowa w payloadzie JS: {{count}} (to nie jest wyrenderowana treść)"
     }
   },
   "ai": {
@@ -6307,6 +6322,13 @@
         "why": "Strony z bardzo małą ilością tekstu dają wyszukiwarkom mało do zrozumienia, co nazywa się cienką treścią. Dłużej nie znaczy automatycznie lepiej: strona musi w pełni odpowiadać na to, po co przyszedł użytkownik.",
         "action": "Poniżej 300 słów: zapytaj siebie, czy strona naprawdę odpowiada na pytanie. Jeśli nie, dodaj konkretne informacje.\n300 do 1000 słów: normalne dla większości stron usług i produktów.\nPowyżej 1500 słów: typowe dla pogłębionych poradników; podziel tekst nagłówkami na łatwe do przejrzenia części.\nPorównuj się z najlepszymi wynikami Google dla swojej frazy, a nie z magiczną liczbą.",
         "example": "Karta produktu z 80 słowami zwykle przegrywa z konkurencją, która w 400 słowach opisuje materiały, rozmiary, dostawę i zwroty."
+      },
+      "jsShell": {
+        "title": "Podejrzenie szkieletu JavaScript",
+        "what": "Statyczny HTML tych podstron prawie nie zawiera tekstu, ale ładuje aplikację JavaScript (np. Next.js lub Nuxt). Właściwa treść pojawia się dopiero po uruchomieniu skryptów w przeglądarce.",
+        "why": "SEOmi analizuje te podstrony na podstawie surowego HTML. Liczba słów, frazy, kontrole treści i wyniki mogą być dla nich zaniżone. Tekst odczytany z payloadu frameworka jest pokazywany osobno i nie jest liczony jako treść strony.",
+        "action": "Uruchom crawl ponownie w trybie renderowania (JavaScript), aby zobaczyć treść widzianą przez użytkowników.\nSprawdź, czy wyszukiwarki dostają treść bez JavaScript (renderowanie po stronie serwera lub prerendering).\nWyniki treści dla tych podstron traktuj ostrożnie.",
+        "example": "Strona Next.js z pustym <div id=\"__next\"></div> i skryptem __NEXT_DATA__ ma w statycznym HTML 12 słów."
       }
     },
     "metadata": {
