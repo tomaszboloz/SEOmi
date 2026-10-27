@@ -7735,7 +7735,10 @@
     "spent": "Gastado: {{value}}",
     "saved": "Ahorrado con caché y modelos locales: {{value}}",
     "hits": "Aciertos de caché: {{count}}",
-    "leaves": "El texto de las páginas se envía fuera de este dispositivo a {{provider}}."
+    "leaves": "El texto de las páginas se envía fuera de este dispositivo a {{provider}}.",
+    "remaining": "Presupuesto restante: {{value}}",
+    "storageUnavailable": "El almacenamiento del presupuesto o gasto de LLM no está disponible o no es válido.",
+    "overBudget": "Se ha superado el presupuesto mensual de LLM.", "unknownCost": "{{count}} llamadas externas tienen un coste desconocido y quedan fuera del gasto.", "selectProject": "Selecciona un proyecto para editar su presupuesto LLM.", "budgetTitle": "Presupuesto LLM del proyecto", "noLimit": "Sin límite mensual", "limitLabel": "Límite mensual (USD)", "warnLabel": "Avisar al (%)", "saveBudget": "Guardar presupuesto", "savedBudget": "Presupuesto LLM guardado.", "invalidLimit": "Introduce un límite mensual válido.", "invalidWarn": "El umbral debe ser un entero entre 1 y 100."
   },
   "templateGovernor": {
     "title": "Calidad de plantillas programáticas",

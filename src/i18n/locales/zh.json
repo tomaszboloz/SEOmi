@@ -7735,7 +7735,10 @@
     "spent": "已花费：{{value}}",
     "saved": "缓存和本地运行节省：{{value}}",
     "hits": "缓存命中：{{count}}",
-    "leaves": "页面文本将发送到本设备之外的 {{provider}}。"
+    "leaves": "页面文本将发送到本设备之外的 {{provider}}。",
+    "remaining": "剩余预算：{{value}}",
+    "storageUnavailable": "LLM 预算或支出存储不可用或无效。",
+    "overBudget": "已超出每月 LLM 预算。", "unknownCost": "{{count}} 次外部调用的费用未知，未计入支出。", "selectProject": "选择项目以编辑其 LLM 预算。", "budgetTitle": "项目 LLM 预算", "noLimit": "无每月上限", "limitLabel": "每月上限（USD）", "warnLabel": "警告阈值（%）", "saveBudget": "保存预算", "savedBudget": "LLM 预算已保存。", "invalidLimit": "请输入有效的非负每月上限。", "invalidWarn": "警告阈值必须是 1 到 100 的整数。"
   },
   "templateGovernor": {
     "title": "程序化模板质量",

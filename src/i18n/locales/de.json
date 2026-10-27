@@ -7735,7 +7735,10 @@
     "spent": "Ausgegeben: {{value}}",
     "saved": "Gespart durch Cache und lokale Läufe: {{value}}",
     "hits": "Cache-Treffer: {{count}}",
-    "leaves": "Der Seitentext wird von diesem Gerät an {{provider}} gesendet."
+    "leaves": "Der Seitentext wird von diesem Gerät an {{provider}} gesendet.",
+    "remaining": "Verbleibendes Budget: {{value}}",
+    "storageUnavailable": "Der Speicher für LLM-Budget oder Ausgaben ist nicht verfügbar oder ungültig.",
+    "overBudget": "Monatliches LLM-Budget überschritten.", "unknownCost": "{{count}} externe Aufrufe haben unbekannte Kosten und sind nicht enthalten.", "selectProject": "Projekt für das LLM-Budget auswählen.", "budgetTitle": "LLM-Projektbudget", "noLimit": "Kein Monatslimit", "limitLabel": "Monatslimit (USD)", "warnLabel": "Warnung ab (%)", "saveBudget": "Budget speichern", "savedBudget": "LLM-Budget gespeichert.", "invalidLimit": "Gültiges nichtnegatives Monatslimit eingeben.", "invalidWarn": "Schwelle muss eine ganze Zahl von 1 bis 100 sein."
   },
   "templateGovernor": {
     "title": "Qualität programmatischer Templates",

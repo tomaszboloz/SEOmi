@@ -7735,7 +7735,10 @@
     "spent": "Wydano: {{value}}",
     "saved": "Zaoszczędzono dzięki cache i modelom lokalnym: {{value}}",
     "hits": "Trafienia cache: {{count}}",
-    "leaves": "Treść stron jest wysyłana poza to urządzenie do: {{provider}}."
+    "leaves": "Treść stron jest wysyłana poza to urządzenie do: {{provider}}.",
+    "remaining": "Pozostały budżet: {{value}}",
+    "storageUnavailable": "Magazyn budżetu lub wydatków LLM jest niedostępny albo nieprawidłowy.",
+    "overBudget": "Miesięczny budżet LLM został przekroczony.", "unknownCost": "{{count}} zewnętrznych wywołań ma nieznany koszt i nie jest uwzględnionych w wydatkach.", "selectProject": "Wybierz projekt, aby edytować jego budżet LLM.", "budgetTitle": "Budżet LLM projektu", "noLimit": "Bez miesięcznego limitu", "limitLabel": "Limit miesięczny (USD)", "warnLabel": "Ostrzegaj przy (%)", "saveBudget": "Zapisz budżet", "savedBudget": "Zapisano budżet LLM.", "invalidLimit": "Wpisz prawidłowy nieujemny limit miesięczny.", "invalidWarn": "Próg ostrzeżenia musi być liczbą całkowitą od 1 do 100."
   },
   "templateGovernor": {
     "title": "Jakość szablonów programatycznych",

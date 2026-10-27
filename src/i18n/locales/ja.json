@@ -7735,7 +7735,10 @@
     "spent": "支出: {{value}}",
     "saved": "キャッシュとローカル実行の節約額: {{value}}",
     "hits": "キャッシュヒット: {{count}}",
-    "leaves": "ページ本文はこの端末の外の {{provider}} に送信されます。"
+    "leaves": "ページ本文はこの端末の外の {{provider}} に送信されます。",
+    "remaining": "残りの予算: {{value}}",
+    "storageUnavailable": "LLM予算または支出の保存領域が利用できないか無効です。",
+    "overBudget": "月間LLM予算を超過しました。", "unknownCost": "{{count}}件の外部呼び出しは費用不明のため支出に含まれません。", "selectProject": "LLM予算を編集するプロジェクトを選択してください。", "budgetTitle": "プロジェクトLLM予算", "noLimit": "月間上限なし", "limitLabel": "月間上限 (USD)", "warnLabel": "警告しきい値 (%)", "saveBudget": "予算を保存", "savedBudget": "LLM予算を保存しました。", "invalidLimit": "0以上の有効な月間上限を入力してください。", "invalidWarn": "警告しきい値は1から100の整数で指定してください。"
   },
   "templateGovernor": {
     "title": "プログラマティックテンプレートの品質",

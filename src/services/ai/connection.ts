@@ -1,7 +1,7 @@
 import type { AiProvider } from '@/types';
 import i18n from '@/i18n';
 import { aiProviderLabel } from './labels';
-import { CLAUDE_CONNECTION_PROBE_MODEL, CLAUDE_MESSAGES_URL, claudeHeaders } from './claude';
+import { CLAUDE_CONNECTION_PROBE_MODEL, CLAUDE_MODELS_URL, claudeHeaders } from './claude';
 import { invokeTauriCommand } from '@/services/tauri';
 import { isDesktopAi } from './native';
 
@@ -45,14 +45,11 @@ export async function testAiConnection(
     }
 
     if (provider === 'claude') {
-      const res = await fetch(CLAUDE_MESSAGES_URL, {
-        method: 'POST',
+      // Models listing validates the credential without sending a billable
+      // prompt/token request (the old `ping` Messages probe did).
+      const res = await fetch(CLAUDE_MODELS_URL, {
+        method: 'GET',
         headers: claudeHeaders(apiKey, CLAUDE_CONNECTION_PROBE_MODEL),
-        body: JSON.stringify({
-          model: CLAUDE_CONNECTION_PROBE_MODEL,
-          max_tokens: 5,
-          messages: [{ role: 'user', content: 'ping' }],
-        }),
       });
       if (!res.ok) {
         if (res.status === 401) {

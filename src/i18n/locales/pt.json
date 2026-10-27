@@ -7735,7 +7735,10 @@
     "spent": "Gasto: {{value}}",
     "saved": "Economizado com cache e execução local: {{value}}",
     "hits": "Acertos de cache: {{count}}",
-    "leaves": "O texto das páginas é enviado para fora deste dispositivo para {{provider}}."
+    "leaves": "O texto das páginas é enviado para fora deste dispositivo para {{provider}}.",
+    "remaining": "Orçamento restante: {{value}}",
+    "storageUnavailable": "O armazenamento do orçamento ou despesas de LLM está indisponível ou inválido.",
+    "overBudget": "O orçamento mensal de LLM foi excedido.", "unknownCost": "{{count}} chamadas externas têm custo desconhecido e não entram nas despesas.", "selectProject": "Selecione um projeto para editar o orçamento LLM.", "budgetTitle": "Orçamento LLM do projeto", "noLimit": "Sem limite mensal", "limitLabel": "Limite mensal (USD)", "warnLabel": "Avisar em (%)", "saveBudget": "Guardar orçamento", "savedBudget": "Orçamento LLM guardado.", "invalidLimit": "Introduza um limite mensal válido.", "invalidWarn": "O limiar deve ser um inteiro de 1 a 100."
   },
   "templateGovernor": {
     "title": "Qualidade de modelos programáticos",

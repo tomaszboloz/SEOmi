@@ -7735,7 +7735,10 @@
     "spent": "Spent: {{value}}",
     "saved": "Saved by cache and local runs: {{value}}",
     "hits": "Cache hits: {{count}}",
-    "leaves": "Page text is sent outside this device to {{provider}}."
+    "leaves": "Page text is sent outside this device to {{provider}}.",
+    "remaining": "Remaining budget: {{value}}",
+    "storageUnavailable": "LLM budget or spend storage is unavailable or invalid.",
+    "overBudget": "Monthly LLM budget exceeded.", "unknownCost": "{{count}} external calls had unknown cost and are excluded from spend.", "selectProject": "Select a project to edit its LLM budget.", "budgetTitle": "Project LLM budget", "noLimit": "No monthly limit", "limitLabel": "Monthly limit (USD)", "warnLabel": "Warn at (%)", "saveBudget": "Save budget", "savedBudget": "LLM budget saved.", "invalidLimit": "Enter a valid non-negative monthly limit.", "invalidWarn": "Warning threshold must be an integer from 1 to 100."
   },
   "templateGovernor": {
     "title": "Programmatic template quality",

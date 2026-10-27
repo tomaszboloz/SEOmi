@@ -5,8 +5,10 @@ import type { PatchProposal, PatchResult, PatchTarget } from './types';
 /** One configured AI backend. `generate` is the existing provider abstraction (AIService.generateText) bound to credentials. */
 export interface PatchProvider {
   id: string;
-  /** Local CLI providers are local even when their product id is openai/claude. */
+  /** Deprecated caller hint; transport is derived from the provider id. */
   local?: boolean;
+  /** Explicit transport may only make a known local provider remote. */
+  transport?: 'local' | 'cloud';
   generate: (prompt: string) => Promise<string>;
 }
 
@@ -15,7 +17,10 @@ export type PatchCache = Map<string, string>;
 
 /** Local provider first (nothing leaves the device); otherwise the first configured one. */
 export const choosePatchProvider = (providers: PatchProvider[]): PatchProvider | null =>
-  providers.find((provider) => provider.local || isLocalProvider(provider.id)) ?? providers[0] ?? null;
+  providers.find((provider) => isLocalProvider(provider.id) && provider.transport !== 'cloud') ?? providers[0] ?? null;
+
+const providerIsLocal = (provider: PatchProvider): boolean =>
+  isLocalProvider(provider.id) && provider.transport !== 'cloud';
 
 const stripHtml = (text: string): string => {
   let out = text;
@@ -55,7 +60,7 @@ export const proposePatch = async (target: PatchTarget, providers: PatchProvider
     const gate = gateFacts(clean, [target.paragraph]);
     const proposal: PatchProposal = {
       before: target.paragraph, after: gate.accepted.join(' '), status: 'pending',
-      rejectedSentences: gate.rejected.map((item) => item.sentence), leftDevice: !(provider.local || isLocalProvider(provider.id)), fromCache: cached !== undefined,
+      rejectedSentences: gate.rejected.map((item) => item.sentence), leftDevice: !providerIsLocal(provider), fromCache: cached !== undefined,
     };
     return proposal.after ? { ok: true, proposal } : { ok: false, reason: 'empty-response' };
   } catch (error) {

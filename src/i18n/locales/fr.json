@@ -7735,7 +7735,10 @@
     "spent": "Dépensé : {{value}}",
     "saved": "Économisé par le cache et le local : {{value}}",
     "hits": "Succès du cache : {{count}}",
-    "leaves": "Le texte des pages est envoyé hors de cet appareil vers {{provider}}."
+    "leaves": "Le texte des pages est envoyé hors de cet appareil vers {{provider}}.",
+    "remaining": "Budget restant : {{value}}",
+    "storageUnavailable": "Le stockage du budget ou des dépenses LLM est indisponible ou invalide.",
+    "overBudget": "Budget LLM mensuel dépassé.", "unknownCost": "{{count}} appels externes ont un coût inconnu et sont exclus des dépenses.", "selectProject": "Sélectionnez un projet pour modifier son budget LLM.", "budgetTitle": "Budget LLM du projet", "noLimit": "Aucune limite mensuelle", "limitLabel": "Limite mensuelle (USD)", "warnLabel": "Alerter à (%)", "saveBudget": "Enregistrer le budget", "savedBudget": "Budget LLM enregistré.", "invalidLimit": "Saisissez une limite mensuelle valide.", "invalidWarn": "Le seuil doit être un entier de 1 à 100."
   },
   "templateGovernor": {
     "title": "Qualité des gabarits programmatiques",
