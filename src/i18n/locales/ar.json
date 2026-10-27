@@ -7479,7 +7479,11 @@
       "generic": "توقيع مجهول",
       "identityEvidence": "دليل الهوية",
       "unavailableNote": "لا يوجد ملف معلن؛ عدم التوفر لا يعني أنه مختلق.",
-      "verifyProfiles": "تحقق من الملفات"
+      "verifyProfiles": "تحقق من الملفات",
+      "roleReviewer": "المراجع",
+      "rolePublisher": "الناشر",
+      "roleEvidence": "{{name}} ({{role}}) · {{status}} · تصريح sameAs {{recall}}%",
+      "roleRecall": "تصريح sameAs المرجّح حسب الدور: {{pct}}% (المؤلف 50%، المراجع 25%، الناشر 25%؛ أوزان مقترحة، وهي إشارة تصريح وليست تحققًا من الهوية)."
     },
     "signals": {
       "claimEvidence": "أدلة الادعاءات",

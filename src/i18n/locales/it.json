@@ -7479,7 +7479,11 @@
       "generic": "firma anonima",
       "identityEvidence": "Prova d’identità",
       "unavailableNote": "Nessun profilo dichiarato; non disponibile non significa fittizio.",
-      "verifyProfiles": "Verifica profili"
+      "verifyProfiles": "Verifica profili",
+      "roleReviewer": "Revisore",
+      "rolePublisher": "Editore",
+      "roleEvidence": "{{name}} ({{role}}) · {{status}} · dichiarazione sameAs {{recall}}%",
+      "roleRecall": "Dichiarazione sameAs ponderata per ruolo: {{pct}}% (autore 50%, revisore 25%, editore 25%; pesi proposti, un segnale dichiarativo, non una verifica dell’identità)."
     },
     "signals": {
       "claimEvidence": "Prove delle affermazioni",
