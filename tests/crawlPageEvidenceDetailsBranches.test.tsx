@@ -65,6 +65,14 @@ describe('CrawlPageEvidenceDetails', () => {
     expect(ease).not.toContain(ui('grade'));
   });
 
+  it('warns when the fetched HTML is a suspected unrendered SPA shell', () => {
+    const warning = ui('jsShellWarning');
+    expect(show({ is_js_shell_suspected: true }).text).toContain(warning);
+    expect(show({ is_js_shell_suspected: false }).text).not.toContain(warning);
+    expect(show().text).not.toContain(warning);
+    expect(show({ is_js_shell_suspected: null }).text).not.toContain(warning);
+  });
+
   it('renders the focus phrase, discovery sources and redirect chain', () => {
     const t = show({
       focus_phrase: { phrase: 'seo tools', body_occurrences: 4, body_density_percent: 1.26, title_occurrences: 1, meta_description_occurrences: 0, h1_occurrences: 1 },

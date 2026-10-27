@@ -3401,6 +3401,7 @@
       "focusPhrase": "Focus phrase “{{phrase}}”: body {{body}}× ({{density}}%), title {{title}}×, meta {{meta}}×, H1 {{h1}}×.",
       "urlDiscovery": "URL discovery",
       "noIssuesForUrl": "No saved issues for this URL",
+      "jsShellWarning": "Das abgerufene HTML sieht wie ein nicht gerendertes JavaScript-Anwendungsgerüst aus. Inhalte und Begriffe können unvollständig sein; starte zur Prüfung einen browsergerenderten Crawl.",
       "noUrlsForFilters": "No URLs match the selected filters.",
       "onlyProblems": "Only problems",
       "severity": "Severity",

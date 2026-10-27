@@ -3401,6 +3401,7 @@
       "focusPhrase": "Focus phrase “{{phrase}}”: body {{body}}× ({{density}}%), title {{title}}×, meta {{meta}}×, H1 {{h1}}×.",
       "urlDiscovery": "URL discovery",
       "noIssuesForUrl": "No saved issues for this URL",
+      "jsShellWarning": "يبدو أن HTML الذي تم جلبه هو هيكل تطبيق JavaScript غير مُعرض. قد يكون المحتوى والمصطلحات غير مكتملة؛ شغّل زحفًا مُعرضًا في المتصفح للتحقق.",
       "noUrlsForFilters": "No URLs match the selected filters.",
       "onlyProblems": "Only problems",
       "severity": "Severity",

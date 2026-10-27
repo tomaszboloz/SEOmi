@@ -3401,6 +3401,7 @@
       "focusPhrase": "Focus phrase “{{phrase}}”: body {{body}}× ({{density}}%), title {{title}}×, meta {{meta}}×, H1 {{h1}}×.",
       "urlDiscovery": "URL discovery",
       "noIssuesForUrl": "No saved issues for this URL",
+      "jsShellWarning": "El HTML obtenido parece un esqueleto de aplicación JavaScript sin renderizar. El contenido y los términos pueden estar incompletos; ejecuta un rastreo renderizado por navegador para comprobarlo.",
       "noUrlsForFilters": "No URLs match the selected filters.",
       "onlyProblems": "Only problems",
       "severity": "Severity",

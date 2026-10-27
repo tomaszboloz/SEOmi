@@ -3401,6 +3401,7 @@
       "focusPhrase": "Focus phrase “{{phrase}}”: body {{body}}× ({{density}}%), title {{title}}×, meta {{meta}}×, H1 {{h1}}×.",
       "urlDiscovery": "URL discovery",
       "noIssuesForUrl": "No saved issues for this URL",
+      "jsShellWarning": "가져온 HTML이 렌더링되지 않은 JavaScript 애플리케이션 셸처럼 보입니다. 콘텐츠와 용어가 불완전할 수 있으므로 브라우저 렌더링 크롤링으로 확인하세요.",
       "noUrlsForFilters": "No URLs match the selected filters.",
       "onlyProblems": "Only problems",
       "severity": "Severity",

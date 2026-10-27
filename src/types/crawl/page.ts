@@ -86,6 +86,8 @@ export interface CrawledPageSummary {
   semantic_content_provenance?: 'http' | 'rendered' | 'unavailable' | string;
   /** True when semantic evidence was bounded or the source was incomplete. */
   semantic_content_partial?: boolean;
+  /** True when thin fetched HTML resembles an unrendered JavaScript app shell. */
+  is_js_shell_suspected?: boolean | null;
   schema_types: string[];
   /** Bounded identifiers/relationships explicitly declared in structured data. */
   schema_references?: CrawledSchemaReference[];

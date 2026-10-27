@@ -68,6 +68,11 @@ export const CrawlPageEvidenceDetails: React.FC<CrawlPageEvidenceDetailsProps> =
               : ''}
           </p>
         ) : null}
+        {page.is_js_shell_suspected === true && (
+          <p role="status" className="border-t border-amber-500/20 pt-1.5 text-amber-200">
+            {t('crawl.ui.jsShellWarning')}
+          </p>
+        )}
         {(page.sentence_count != null || page.complexity_score != null) && (
           <p>
             {t('crawl.ui.content')} {page.word_count} {t('crawl.ui.words')}

@@ -3401,6 +3401,7 @@
       "focusPhrase": "Fraza główna „{{phrase}}”: body {{body}}× ({{density}}%), title {{title}}×, meta {{meta}}×, H1 {{h1}}×.",
       "urlDiscovery": "Odkrycie URL",
       "noIssuesForUrl": "Brak zapisanych problemów dla URL",
+      "jsShellWarning": "Pobrany HTML wygląda jak nierenderowany szkielet aplikacji JavaScript. Treść i terminy mogą być niepełne; uruchom crawl renderowany w przeglądarce, aby to sprawdzić.",
       "noUrlsForFilters": "Brak URL-i spełniających wybrane filtry.",
       "onlyProblems": "Tylko problemy",
       "severity": "Ważność",
