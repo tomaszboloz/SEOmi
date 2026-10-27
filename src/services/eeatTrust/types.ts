@@ -66,6 +66,11 @@ export interface EntityReconciliation {
   role: EntityRole; profiles: ProfileEvidence[]; declarationRecall: number;
   status: ProfileStatus | 'unavailable'; evidence: 'declared' | 'registry' | 'manual';
 }
+/** Reviewer or publisher named by article JSON-LD, with syntax-only sameAs evidence (never "verified" offline). */
+export interface RoleEntity {
+  role: Exclude<EntityRole, 'author'>; key: string; name: string; id?: string;
+  sameAs: string[]; articleUrls: string[]; reconciliation: EntityReconciliation;
+}
 
 export interface CitationDetail {
   pagesAnalyzed: number;
@@ -102,6 +107,10 @@ export interface TrustReport {
   ymylPolicy?: { category: YmylCategory; applicable: boolean; multiplier: number; triggered: boolean; heuristic: true };
   schema: SchemaGraphDetail;
   authors: AuthorEntity[];
+  /** Reviewers and publishers; absent in reports stored before #87. */
+  roleEntities?: RoleEntity[];
+  /** Role-weighted sameAs declaration recall 0-1; undefined when no role is named. */
+  roleRecall?: number;
   citations: CitationDetail;
   transparency: TransparencyDetail;
   findings: TrustFinding[];

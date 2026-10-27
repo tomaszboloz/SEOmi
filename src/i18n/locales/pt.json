@@ -7489,7 +7489,11 @@
       "generic": "assinatura anónima",
       "identityEvidence": "Evidência de identidade",
       "unavailableNote": "Não há perfil declarado; indisponível não significa fictício.",
-      "verifyProfiles": "Verificar perfis"
+      "verifyProfiles": "Verificar perfis",
+      "roleReviewer": "Revisor",
+      "rolePublisher": "Editora",
+      "roleEvidence": "{{name}} ({{role}}) · {{status}} · declaração sameAs {{recall}}%",
+      "roleRecall": "Declaração sameAs ponderada por papel: {{pct}}% (autor 50%, revisor 25%, editora 25%; pesos propostos, um sinal declarado, não uma verificação de identidade)."
     },
     "signals": {
       "claimEvidence": "Evidência das afirmações",

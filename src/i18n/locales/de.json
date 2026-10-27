@@ -7489,7 +7489,11 @@
       "generic": "anonyme Autorenzeile",
       "identityEvidence": "Identitätsnachweis",
       "unavailableNote": "Kein Profil angegeben; nicht verfügbar bedeutet nicht fiktiv.",
-      "verifyProfiles": "Profile prüfen"
+      "verifyProfiles": "Profile prüfen",
+      "roleReviewer": "Prüfer",
+      "rolePublisher": "Herausgeber",
+      "roleEvidence": "{{name}} ({{role}}) · {{status}} · sameAs-Angabe {{recall}}%",
+      "roleRecall": "Rollengewichtete sameAs-Angabe: {{pct}}% (Autor 50 %, Prüfer 25 %, Herausgeber 25 %; vorgeschlagene Gewichte, ein Angabesignal, keine Identitätsprüfung)."
     },
     "signals": {
       "claimEvidence": "Belege für Aussagen",

@@ -68,6 +68,22 @@ export const TrustEntities = ({ report, onGenerate, onVerify }: TrustEntitiesPro
           </table>
         </div>
       )}
+      {(report.roleEntities ?? []).length > 0 && (
+        <ul className="space-y-0.5 text-xs text-slate-400">
+          {(report.roleEntities ?? []).slice(0, 12).map((entity) => (
+            <li key={entity.key} className="break-all">
+              {t('trust.entities.roleEvidence', {
+                role: t(entity.role === 'reviewer' ? 'trust.entities.roleReviewer' : 'trust.entities.rolePublisher'),
+                name: entity.name, status: entity.reconciliation.status,
+                recall: Math.round(entity.reconciliation.declarationRecall * 100),
+              })}
+            </li>
+          ))}
+        </ul>
+      )}
+      {report.roleRecall !== undefined && (
+        <p className="text-xs text-slate-500">{t('trust.entities.roleRecall', { pct: Math.round(report.roleRecall * 100) })}</p>
+      )}
     </section>
   );
 };

@@ -7489,7 +7489,11 @@
       "generic": "anonymous byline",
       "identityEvidence": "Identity evidence",
       "unavailableNote": "No declared profile; unavailable does not mean fictitious.",
-      "verifyProfiles": "Verify profiles"
+      "verifyProfiles": "Verify profiles",
+      "roleReviewer": "Reviewer",
+      "rolePublisher": "Publisher",
+      "roleEvidence": "{{name}} ({{role}}) · {{status}} · sameAs declaration {{recall}}%",
+      "roleRecall": "Role-weighted sameAs declaration: {{pct}}% (author 50%, reviewer 25%, publisher 25%; proposed weights, a declaration signal, not identity verification)."
     },
     "signals": {
       "claimEvidence": "Claim evidence",

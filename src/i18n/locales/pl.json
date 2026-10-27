@@ -7489,7 +7489,11 @@
       "generic": "anonimowa sygnatura",
       "identityEvidence": "Dowód tożsamości",
       "unavailableNote": "Brak zadeklarowanego profilu; niedostępność nie oznacza fikcyjności.",
-      "verifyProfiles": "Sprawdź profile"
+      "verifyProfiles": "Sprawdź profile",
+      "roleReviewer": "Recenzent",
+      "rolePublisher": "Wydawca",
+      "roleEvidence": "{{name}} ({{role}}) · {{status}} · deklaracja sameAs {{recall}}%",
+      "roleRecall": "Deklaracja sameAs ważona rolą: {{pct}}% (autor 50%, recenzent 25%, wydawca 25%; wagi proponowane, sygnał deklaracji, nie weryfikacja tożsamości)."
     },
     "signals": {
       "claimEvidence": "Dowody twierdzeń",

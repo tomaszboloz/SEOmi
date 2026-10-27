@@ -7489,7 +7489,11 @@
       "generic": "익명 서명",
       "identityEvidence": "신원 근거",
       "unavailableNote": "선언된 프로필이 없습니다. 사용할 수 없음은 허구를 뜻하지 않습니다.",
-      "verifyProfiles": "프로필 확인"
+      "verifyProfiles": "프로필 확인",
+      "roleReviewer": "검토자",
+      "rolePublisher": "발행처",
+      "roleEvidence": "{{name}} ({{role}}) · {{status}} · sameAs 선언 {{recall}}%",
+      "roleRecall": "역할 가중 sameAs 선언: {{pct}}% (저자 50%, 검토자 25%, 발행처 25%; 제안된 가중치이며 선언 신호일 뿐 신원 확인이 아닙니다)."
     },
     "signals": {
       "claimEvidence": "주장 근거",

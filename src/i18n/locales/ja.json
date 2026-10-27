@@ -7489,7 +7489,11 @@
       "generic": "匿名の署名",
       "identityEvidence": "本人確認の証拠",
       "unavailableNote": "宣言されたプロフィールなし。利用不可は架空を意味しません。",
-      "verifyProfiles": "プロフィールを検証"
+      "verifyProfiles": "プロフィールを検証",
+      "roleReviewer": "レビュー担当者",
+      "rolePublisher": "発行者",
+      "roleEvidence": "{{name}} ({{role}}) · {{status}} · sameAs 宣言 {{recall}}%",
+      "roleRecall": "役割加重の sameAs 宣言: {{pct}}%(著者 50%、レビュー担当者 25%、発行者 25%。提案された重みで、宣言のシグナルであり、本人確認ではありません)。"
     },
     "signals": {
       "claimEvidence": "主張の証拠",
