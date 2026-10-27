@@ -38,6 +38,16 @@ impl Doc {
     pub fn crawl_aio(&mut self, aio: &Value) {
         self.heading(t(a::TITLE));
         self.paragraph(MARGIN, CONTENT_W, Style::CAPTION, t(a::INTRO));
+        if let Some(availability) = aio.get("availability").and_then(Value::as_str).filter(|value| *value != "complete") {
+            self.paragraph(MARGIN, CONTENT_W, Style::BODY.colored(WARNING), &coded(a::AVAILABILITY, availability, &[]));
+        }
+        let reasons: Vec<&str> = list(aio, "unknown_reasons").iter().filter_map(Value::as_str).collect();
+        if !reasons.is_empty() {
+            self.paragraph(MARGIN, CONTENT_W, Style::CAPTION, t(a::UNKNOWN_REASONS));
+            for reason in reasons {
+                self.paragraph(MARGIN + 8.0, CONTENT_W - 8.0, Style::BODY.colored(WARNING), &coded(a::UNKNOWN_REASON, reason, &[]));
+            }
+        }
         if let Some(profile) = aio.get("profile").filter(|value| value.is_object()) {
             let values = [
                 "id",

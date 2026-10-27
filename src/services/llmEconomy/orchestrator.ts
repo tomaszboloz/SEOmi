@@ -6,6 +6,13 @@ import { shareInFlight } from './executionState';
 import { reserveProjectBudget } from './budgetReservation';
 export { IN_FLIGHT_TTL_MS, MAX_IN_FLIGHT } from './executionState';
 
+export interface LlmRequestContext {
+  projectId: string;
+  runId: string;
+  chunkId: string;
+  revision: string;
+}
+
 export interface ExecuteOptions {
   projectId: string;
   configuredProviders: string[];
@@ -20,6 +27,8 @@ export interface ExecuteOptions {
   batchThreshold?: number;
   estimatedCostUsd?: number | null;
   actualCostUsd?: number | null;
+  /** Transport metadata kept beside the prompt for request/caller scope auditing. */
+  requestContext?: LlmRequestContext;
   ymyl?: boolean;
   sources?: YmylSourceInput[];
   run: (providerId: string) => Promise<{ text: string; actualCostUsd?: number | null; transport?: 'local' | 'cloud' }>;
@@ -64,6 +73,9 @@ const blockedResult = (base: ExecutionResult, rejectedClaims: string[]): Executi
 });
 
 export const executeWithEconomy = async (options: ExecuteOptions): Promise<ExecutionResult> => {
+  if (options.requestContext && options.requestContext.projectId !== options.projectId) {
+    throw new Error('AI request context does not match the economy project scope');
+  }
   const chosenProvider = options.providerId
     ?? (options.batchSize !== undefined ? pickBatchProvider(options.configuredProviders, options.batchSize, options.batchThreshold) : null)
     ?? options.configuredProviders[0]

@@ -6080,8 +6080,12 @@
           "good": "جاهزية جيدة",
           "moderate": "جاهزية متوسطة",
           "weak": "جاهزية ضعيفة",
-          "critical": "جاهزية حرجة"
+          "critical": "جاهزية حرجة",
+          "unavailable": "غير متاح"
         },
+        "availability": { "complete": "أدلة مكتملة", "partial": "أدلة جزئية", "unavailable": "غير متاح: لا توجد أدلة AIO قابلة للتقييم" },
+        "unknownReasons": "سبب عدم توفر أدلة AIO أو كونها جزئية",
+        "unknownReason": { "no-sections": "لم تُحفظ أقسام محتوى في هذا الزحف.", "no-content": "لم يُحفظ محتوى قابل للقراءة.", "non-html": "لم تكن الصفحة المحفوظة HTML.", "request-error": "فشل طلب الصفحة." },
         "issue": {
           "dangling-pronoun": "إشارة غير واضحة",
           "no-answer-first": "لا توجد إجابة مباشرة في البداية",
@@ -7353,6 +7357,7 @@
     "title": "الجاهزية لـ AI Overviews وRAG",
     "subtitle": "مدى سهولة أن تجد محركات الإجابة بالذكاء الاصطناعي مقاطعك وتستخرجها وتقتبسها.",
     "empty": "لا توجد بعد بيانات صفحات تحتوي على أقسام محتوى. شغّل زحفًا جديدًا لتحليل جاهزية الذكاء الاصطناعي.",
+    "status": { "unavailable": "جاهزية الذكاء الاصطناعي غير متاحة لهذا الزحف المحفوظ.", "partial": "جاهزية الذكاء الاصطناعي جزئية؛ بعض الأدلة غير متاحة.", "cancelled": "لم تكتمل جاهزية الذكاء الاصطناعي لأن الزحف أُلغي.", "timedOut": "لم تكتمل جاهزية الذكاء الاصطناعي لانتهاء مهلة الزحف.", "noPages": "جاهزية الذكاء الاصطناعي غير متاحة لأن الزحف لم يحفظ صفحات." },
     "band": {
       "excellent": "جاهزية ممتازة",
       "good": "جاهزية جيدة",
@@ -7480,6 +7485,20 @@
       "identityEvidence": "دليل الهوية",
       "unavailableNote": "لا يوجد ملف معلن؛ عدم التوفر لا يعني أنه مختلق.",
       "verifyProfiles": "تحقق من الملفات"
+    },
+    "graph": {
+      "title": "رسم الثقة للكيانات",
+      "summary": "{{entities}} كيانات · {{edges}} روابط أدوار · {{diagnostics}} تشخيصات",
+      "roles": { "document": "مستند", "author": "مؤلف", "reviewer": "مراجع", "publisher": "ناشر" },
+      "definition": "تعريف",
+      "referenceOnly": "مرجع فقط",
+      "status": "حالة {{role}}: {{status}}",
+      "verifiedProfile": "ملف موثّق: {{url}}",
+      "noVerifiedProfile": "لا يوجد ملف موثّق؛ هذا لا يثبت المؤهلات",
+      "verifyRole": "تحقق من {{role}}",
+      "diagnostics": "التشخيصات",
+      "statusValues": { "unavailable": "غير متاح", "declared": "معلن", "fetched": "تم الجلب", "verified": "موثّق", "mismatch": "غير متطابق", "invalid": "غير صالح", "syntax-valid": "بنية صحيحة" },
+      "diagnosticCodes": { "conflicting-definition": "تعريف متعارض", "dangling-reference": "مرجع معلّق", "indeterminate-reference": "مرجع غير محدد", "incomplete-definition": "تعريف غير مكتمل", "cycle": "دورة", "role-overlap": "تداخل الأدوار", "graph-truncated": "تم تحديد تحليل الرسم" }
     },
     "signals": {
       "claimEvidence": "أدلة الادعاءات",

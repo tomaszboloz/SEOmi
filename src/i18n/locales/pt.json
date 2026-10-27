@@ -6080,8 +6080,12 @@
           "good": "Boa prontidão",
           "moderate": "Prontidão moderada",
           "weak": "Prontidão fraca",
-          "critical": "Prontidão crítica"
+          "critical": "Prontidão crítica",
+          "unavailable": "Indisponível"
         },
+        "availability": { "complete": "Evidência completa", "partial": "Evidência parcial", "unavailable": "Indisponível: não há evidência AIO pontuável" },
+        "unknownReasons": "Por que a evidência AIO está indisponível ou parcial",
+        "unknownReason": { "no-sections": "Este rastreio não guardou secções de conteúdo.", "no-content": "Não foi guardado conteúdo legível.", "non-html": "A página guardada não era HTML.", "request-error": "O pedido da página falhou." },
         "issue": {
           "dangling-pronoun": "Referência pouco clara",
           "no-answer-first": "Sem resposta direta no início",
@@ -7353,6 +7357,7 @@
     "title": "Prontidão para AI Overviews e RAG",
     "subtitle": "Com que facilidade os motores de resposta de IA encontram, extraem e citam as suas passagens.",
     "empty": "Ainda não há dados de páginas com secções de conteúdo. Execute um novo rastreio para analisar a prontidão para IA.",
+    "status": { "unavailable": "A prontidão para IA não está disponível para este rastreio guardado.", "partial": "A prontidão para IA é parcial; algumas evidências estão indisponíveis.", "cancelled": "A prontidão para IA não foi concluída porque o rastreio foi cancelado.", "timedOut": "A prontidão para IA não foi concluída porque o rastreio excedeu o tempo limite.", "noPages": "A prontidão para IA não está disponível porque o rastreio não guardou páginas." },
     "band": {
       "excellent": "Prontidão excelente",
       "good": "Boa prontidão",
@@ -7480,6 +7485,20 @@
       "identityEvidence": "Evidência de identidade",
       "unavailableNote": "Não há perfil declarado; indisponível não significa fictício.",
       "verifyProfiles": "Verificar perfis"
+    },
+    "graph": {
+      "title": "Grafo de confiança de entidades",
+      "summary": "{{entities}} entidades · {{edges}} ligações de função · {{diagnostics}} diagnósticos",
+      "roles": { "document": "documento", "author": "autor", "reviewer": "revisor", "publisher": "editor" },
+      "definition": "definição",
+      "referenceOnly": "apenas referência",
+      "status": "Estado de {{role}}: {{status}}",
+      "verifiedProfile": "perfil verificado: {{url}}",
+      "noVerifiedProfile": "sem perfil verificado; isto não confirma qualificações",
+      "verifyRole": "Verificar {{role}}",
+      "diagnostics": "Diagnósticos",
+      "statusValues": { "unavailable": "indisponível", "declared": "declarado", "fetched": "obtido", "verified": "verificado", "mismatch": "não corresponde", "invalid": "inválido", "syntax-valid": "sintaxe válida" },
+      "diagnosticCodes": { "conflicting-definition": "definição conflitante", "dangling-reference": "referência órfã", "indeterminate-reference": "referência indeterminada", "incomplete-definition": "definição incompleta", "cycle": "ciclo", "role-overlap": "sobreposição de funções", "graph-truncated": "análise do grafo limitada" }
     },
     "signals": {
       "claimEvidence": "Evidência das afirmações",

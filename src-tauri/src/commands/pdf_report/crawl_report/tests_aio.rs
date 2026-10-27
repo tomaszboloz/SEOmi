@@ -80,6 +80,18 @@ fn aio_section_without_passages_or_notes_skips_those_blocks() {
 }
 
 #[test]
+fn aio_pdf_discloses_unavailable_score_and_reasons() {
+    let mut data = aio();
+    data["score"] = Value::Null;
+    data["band"] = json!("unavailable");
+    data["availability"] = json!("unavailable");
+    data["unknown_reasons"] = json!(["no-sections"]);
+    let text = text_of(&with_aio(data));
+    assert!(text.contains("Unavailable: no scoreable AIO evidence"));
+    assert!(text.contains("No content sections were saved in this crawl."));
+}
+
+#[test]
 fn every_aio_label_key_exists_in_english() {
     let known = default_keys();
     let mut keys: Vec<String> = ALL.iter().map(|key| (*key).to_owned()).collect();

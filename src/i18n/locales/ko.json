@@ -6080,8 +6080,12 @@
           "good": "준비도 높음",
           "moderate": "준비도 보통",
           "weak": "준비도 낮음",
-          "critical": "준비도 위험"
+          "critical": "준비도 위험",
+          "unavailable": "사용할 수 없음"
         },
+        "availability": { "complete": "근거 완전", "partial": "근거 부분적", "unavailable": "사용할 수 없음: 평가할 AIO 근거가 없습니다" },
+        "unknownReasons": "AIO 근거를 사용할 수 없거나 부분적인 이유",
+        "unknownReason": { "no-sections": "이 크롤링에는 콘텐츠 섹션이 저장되지 않았습니다.", "no-content": "읽을 수 있는 콘텐츠가 저장되지 않았습니다.", "non-html": "저장된 페이지가 HTML이 아닙니다.", "request-error": "페이지 요청에 실패했습니다." },
         "issue": {
           "dangling-pronoun": "지시 대상이 불분명함",
           "no-answer-first": "처음에 직접적인 답이 없음",
@@ -7353,6 +7357,7 @@
     "title": "AI Overviews 및 RAG 준비도",
     "subtitle": "AI 답변 엔진이 내 문단을 얼마나 쉽게 찾아 추출하고 인용할 수 있는지 보여 줍니다.",
     "empty": "콘텐츠 섹션이 있는 페이지 데이터가 아직 없습니다. 새 크롤을 실행해 AI 준비도를 분석하세요.",
+    "status": { "unavailable": "이 저장된 크롤링에서는 AI 준비도를 사용할 수 없습니다.", "partial": "AI 준비도가 부분적입니다. 일부 근거를 사용할 수 없습니다.", "cancelled": "크롤링이 취소되어 AI 준비도가 완료되지 않았습니다.", "timedOut": "크롤링 시간이 초과되어 AI 준비도가 완료되지 않았습니다.", "noPages": "크롤링에 저장된 페이지가 없어 AI 준비도를 사용할 수 없습니다." },
     "band": {
       "excellent": "준비도 매우 높음",
       "good": "준비도 높음",
@@ -7480,6 +7485,20 @@
       "identityEvidence": "신원 근거",
       "unavailableNote": "선언된 프로필이 없습니다. 사용할 수 없음은 허구를 뜻하지 않습니다.",
       "verifyProfiles": "프로필 확인"
+    },
+    "graph": {
+      "title": "엔터티 신뢰 그래프",
+      "summary": "{{entities}}개 엔터티 · {{edges}}개 역할 엣지 · {{diagnostics}}개 진단",
+      "roles": { "document": "문서", "author": "작성자", "reviewer": "검토자", "publisher": "게시자" },
+      "definition": "정의",
+      "referenceOnly": "참조만",
+      "status": "{{role}} 상태: {{status}}",
+      "verifiedProfile": "확인된 프로필: {{url}}",
+      "noVerifiedProfile": "확인된 프로필 없음; 자격을 확인하지 않습니다",
+      "verifyRole": "{{role}} 확인",
+      "diagnostics": "진단",
+      "statusValues": { "unavailable": "사용 불가", "declared": "선언됨", "fetched": "가져옴", "verified": "확인됨", "mismatch": "불일치", "invalid": "유효하지 않음", "syntax-valid": "구문 유효" },
+      "diagnosticCodes": { "conflicting-definition": "정의 충돌", "dangling-reference": "끊긴 참조", "indeterminate-reference": "불확실한 참조", "incomplete-definition": "불완전한 정의", "cycle": "순환", "role-overlap": "역할 중복", "graph-truncated": "그래프 분석 제한" }
     },
     "signals": {
       "claimEvidence": "주장 근거",

@@ -1,6 +1,7 @@
 import type { ProfileEvidence, ProfileStatus } from './types';
 import { hostMatches } from './identifiers';
 import { invokeTauriCommand, isTauriEnvironment } from '@/services/tauri';
+import { requestRegistry } from './registryRequest';
 
 export interface RegistryResponse { status: number; url: string; body: string; sourceDate?: string }
 export interface RegistryFetcher { (url: string, signal: AbortSignal): Promise<RegistryResponse> }
@@ -8,6 +9,7 @@ export interface RegistryOptions {
   fetcher?: RegistryFetcher; now?: () => string; ttlMs?: number; maxBytes?: number; timeoutMs?: number; maxRequests?: number;
   /** Optional durable scope labels; the options object itself remains part of the cache scope. */
   projectId?: string; runId?: string;
+  budgetScope?: object;
   matches?: (profile: ProfileEvidence, response: RegistryResponse) => boolean | undefined;
 }
 export interface RegistryResult { profile: ProfileEvidence; stale: boolean }
@@ -69,7 +71,8 @@ export const safeRegistryUrl = (value: string, kind: ProfileEvidence['kind']): U
     const url = new URL(value);
     const allowed = hosts[kind] ?? [];
     const host = url.hostname.toLowerCase().replace(/^www\./, '');
-    if (url.protocol !== 'https:' || privateHost(url.hostname) || !allowed.some((domain) => hostMatches(host, domain))) return undefined;
+    if (url.protocol !== 'https:' || url.username || url.password || url.port || privateHost(url.hostname)
+      || !allowed.some((domain) => hostMatches(host, domain))) return undefined;
     return url;
   } catch { return undefined; }
 };
@@ -89,12 +92,13 @@ export const verifyProfile = async (profile: ProfileEvidence, options: RegistryO
   if (cached && nowMs - cached.at <= ttl) return { profile: cached.profile, stale: false };
   const url = safeRegistryUrl(profile.url, profile.kind);
   if (!url || !options.fetcher) return { profile: { ...profile, status: 'unavailable', detail: 'registry-unavailable' }, stale: Boolean(cached) };
-  const used = budgets.get(options) ?? 0;
+  const budgetScope = options.budgetScope ?? options;
+  const used = budgets.get(budgetScope) ?? 0;
   if (used >= (options.maxRequests ?? LIMITS.maxRequests)) return { profile: { ...profile, status: 'unavailable', detail: 'rate-budget' }, stale: Boolean(cached) };
-  budgets.set(options, used + 1);
+  budgets.set(budgetScope, used + 1);
   const controller = new AbortController(); const timeout = setTimeout(() => controller.abort(), options.timeoutMs ?? LIMITS.timeoutMs);
   try {
-    const response = await options.fetcher(url.toString(), controller.signal);
+    const response = await requestRegistry(options.fetcher, url.toString(), controller.signal);
     if (!safeRegistryUrl(response.url, profile.kind)) return { profile: { ...profile, status: 'unavailable', detail: 'unsafe-redirect' }, stale: false };
     if (response.body.length > (options.maxBytes ?? LIMITS.maxBytes)) return { profile: { ...profile, status: 'unavailable', detail: 'body-limit' }, stale: false };
     const result = { ...profile, status: statusFor(profile, response, options), fetchedAt: now(), expiresAt: new Date(nowMs + ttl).toISOString(), sourceDate: response.sourceDate };

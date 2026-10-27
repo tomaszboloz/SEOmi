@@ -1,4 +1,4 @@
-import type { BriefDeps } from '@/services/siteFocusBenchmark/rewriteBrief';
+import type { BriefDeps, BriefRequestContext } from '@/services/siteFocusBenchmark/rewriteBrief';
 import type { AioChunk, AioIssue } from './types';
 
 export type RewriteOutcome =
@@ -8,7 +8,7 @@ export type RewriteOutcome =
   | { status: 'cancelled' }
   | { status: 'error'; message: string };
 
-export interface RewriteOptions { signal?: AbortSignal }
+export interface RewriteOptions { signal?: AbortSignal; context?: BriefRequestContext }
 
 const ISSUE_HINT: Record<AioIssue, string> = {
   'dangling-pronoun': 'Replace pronouns and references like "it", "this" with the explicit entity name.',
@@ -54,7 +54,7 @@ export const rewritePassage = async (deps: BriefDeps, chunk: Pick<AioChunk, 'hea
   if (options.signal?.aborted) return { status: 'cancelled' };
   if (!deps.isConfigured()) return { status: 'no-key' };
   try {
-    const text = sanitizeRewrite(await abortable(deps.generateText(buildRewritePrompt(chunk)), options.signal));
+    const text = sanitizeRewrite(await abortable(deps.generateText(buildRewritePrompt(chunk), options.context), options.signal));
     return text ? { status: 'ok', text } : { status: 'empty' };
   } catch (error) {
     if (options.signal?.aborted || (error instanceof DOMException && error.name === 'AbortError')) return { status: 'cancelled' };

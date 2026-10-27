@@ -31,4 +31,6 @@ mod tests_error_paths_extended;
 #[path = "http_client/tests_gap_remaining.rs"]
 mod tests_gap_remaining;
 #[cfg(test)]
+mod tests_registry_accept;
+#[cfg(test)]
 mod tests_transport_error_paths;

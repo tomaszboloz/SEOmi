@@ -62,6 +62,10 @@ describe('childNodes', () => {
   it('keeps same-declaration nodes at the property or its indexed entries', () => {
     expect(childNodes(parent, 'author', all).map((c) => c.path)).toEqual(['$.author', '$.author[1]']);
   });
+
+  it('does not treat nested properties below an array element as another author', () => {
+    expect(childNodes(parent, 'author', [...all, n('$.author[0].worksFor', ['Organization'])]).map((c) => c.path)).toEqual(['$.author', '$.author[1]']);
+  });
   it('does not match a property that merely shares a prefix', () => {
     expect(childNodes(parent, 'auth', all)).toEqual([]);
   });
@@ -76,6 +80,24 @@ describe('buildRegistry', () => {
     ]);
     expect([...reg.keys()]).toEqual(['#o']);
     expect(reg.get('#o')).toMatchObject({ types: ['Organization', 'LocalBusiness'], name: 'Acme', props: { sameAs: ['a', 'b'] } });
+  });
+
+  it('does not flag a shortened Person reference as a role conflict', () => {
+    const reg = buildRegistry([n('$', [], 0, {}, '#p'), n('$', ['Person'], 0, {}, '#p')]);
+    expect(reg.get('#p')?.conflicts).toBeUndefined();
+  });
+
+  it('accepts NFC/casefold names and explicit alternateName aliases', () => {
+    const reg = buildRegistry([
+      { ...n('$', ['Person'], 0, { alternateName: ['Alicja Nowak'] }, '#p'), name: 'Alice Nowak' },
+      { ...n('$', ['Person'], 0, {}, '#p'), name: 'Alicja   Nowak' },
+    ]);
+    expect(reg.get('#p')?.conflicts).toBeUndefined();
+  });
+
+  it('retains a real Person name conflict as a diagnostic signal', () => {
+    const reg = buildRegistry([n('$', ['Person'], 0, {}, '#p'), { ...n('$', ['Person'], 0, {}, '#p'), name: 'Bob Nowak' }]);
+    expect(reg.get('#p')?.conflicts).toContain('name');
   });
 });
 

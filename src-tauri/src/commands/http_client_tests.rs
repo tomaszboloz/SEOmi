@@ -120,7 +120,27 @@ fn registry_url_allows_only_profile_paths_and_https_hosts() {
         "https://www.wikidata.org/wiki/Main_Page",
         "https://www.wikidata.org/wiki/Q",
         "https://www.wikidata.org/wiki/Q0",
+        "https://orcid.org/0000-0002-1825-0097?tab=record",
     ] {
         assert!(super::registry_url(url).is_err(), "{url}");
     }
+}
+
+#[test]
+fn registry_structured_api_urls_are_deterministic() {
+    let orcid = Url::parse("https://orcid.org/0000-0002-1825-0097").unwrap();
+    assert_eq!(
+        super::registry_api_url(&orcid).unwrap().as_str(),
+        "https://pub.orcid.org/v3.0/0000-0002-1825-0097"
+    );
+    let wikidata = Url::parse("https://wikidata.org/wiki/Q42").unwrap();
+    assert_eq!(
+        super::registry_api_url(&wikidata).unwrap().as_str(),
+        "https://www.wikidata.org/wiki/Special:EntityData/Q42.json"
+    );
+    assert!(
+        super::registry_api_url(&Url::parse("https://scopus.com/authid/detail.uri").unwrap())
+            .is_none()
+    );
+    assert!(super::registry_url("https://scholar.google.com/citations?user=abc").is_ok());
 }

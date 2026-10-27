@@ -6080,8 +6080,12 @@
           "good": "対応度：高い",
           "moderate": "対応度：中程度",
           "weak": "対応度：低い",
-          "critical": "対応度：危機的"
+          "critical": "対応度：危機的",
+          "unavailable": "利用不可"
         },
+        "availability": { "complete": "完全な証拠", "partial": "部分的な証拠", "unavailable": "利用不可：評価可能なAIO証拠がありません" },
+        "unknownReasons": "AIO証拠が利用できない、または部分的な理由",
+        "unknownReason": { "no-sections": "このクロールにはコンテンツセクションが保存されていません。", "no-content": "読み取り可能なコンテンツが保存されていません。", "non-html": "保存されたページはHTMLではありません。", "request-error": "ページのリクエストに失敗しました。" },
         "issue": {
           "dangling-pronoun": "指示対象が不明確",
           "no-answer-first": "冒頭に直接の回答がない",
@@ -7353,6 +7357,7 @@
     "title": "AI Overviews・RAG対応度",
     "subtitle": "AI回答エンジンがあなたの文章をどれだけ見つけ、抜き出し、引用しやすいか。",
     "empty": "コンテンツセクションを含むページデータがまだありません。新しいクロールを実行してAI対応度を分析してください。",
+    "status": { "unavailable": "この保存済みクロールではAI対応度を利用できません。", "partial": "AI対応度は部分的です。一部の証拠を利用できません。", "cancelled": "クロールがキャンセルされたため、AI対応度は完了していません。", "timedOut": "クロールがタイムアウトしたため、AI対応度は完了していません。", "noPages": "クロールにページが保存されていないため、AI対応度を利用できません。" },
     "band": {
       "excellent": "対応度：非常に高い",
       "good": "対応度：高い",
@@ -7480,6 +7485,20 @@
       "identityEvidence": "本人確認の証拠",
       "unavailableNote": "宣言されたプロフィールなし。利用不可は架空を意味しません。",
       "verifyProfiles": "プロフィールを検証"
+    },
+    "graph": {
+      "title": "エンティティ信頼グラフ",
+      "summary": "{{entities}} エンティティ · {{edges}} ロールエッジ · {{diagnostics}} 診断",
+      "roles": { "document": "文書", "author": "著者", "reviewer": "査読者", "publisher": "公開者" },
+      "definition": "定義",
+      "referenceOnly": "参照のみ",
+      "status": "{{role}} の状態: {{status}}",
+      "verifiedProfile": "確認済みプロフィール: {{url}}",
+      "noVerifiedProfile": "確認済みプロフィールなし。資格の確認を意味しません",
+      "verifyRole": "{{role}}を確認",
+      "diagnostics": "診断",
+      "statusValues": { "unavailable": "利用不可", "declared": "宣言済み", "fetched": "取得済み", "verified": "確認済み", "mismatch": "不一致", "invalid": "無効", "syntax-valid": "構文有効" },
+      "diagnosticCodes": { "conflicting-definition": "定義の競合", "dangling-reference": "未解決の参照", "indeterminate-reference": "不確定な参照", "incomplete-definition": "不完全な定義", "cycle": "循環", "role-overlap": "役割の重複", "graph-truncated": "グラフ分析を制限" }
     },
     "signals": {
       "claimEvidence": "主張の証拠",

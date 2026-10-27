@@ -1,17 +1,20 @@
 import { Fragment } from 'react';
 import { useTranslation } from 'react-i18next';
 import { HelpTip } from '@/components/Help/HelpTip';
-import type { AuthorEntity, TrustReport } from '@/services/eeatTrust';
+import type { AuthorEntity, TrustGraphEntity, EntityRole, TrustReport } from '@/services/eeatTrust';
 import { FOCUS_RING } from './trustHelpers';
+import { TrustGraphPanel } from './TrustGraphPanel';
 
-export interface TrustEntitiesProps { report: TrustReport; onGenerate: (author: AuthorEntity) => void; onVerify?: (author: AuthorEntity) => void }
+export interface TrustEntitiesProps { report: TrustReport; onGenerate: (author: AuthorEntity) => void; onVerify?: (author: AuthorEntity) => void; onVerifyEntity?: (entity: TrustGraphEntity, role: EntityRole) => void }
 
 const MARK = (ok: boolean, yes: string, no: string) => <span className={ok ? 'text-emerald-300' : 'text-rose-300'}>{ok ? `✓ ${yes}` : `✗ ${no}`}</span>;
 
-export const TrustEntities = ({ report, onGenerate, onVerify }: TrustEntitiesProps) => {
+export const TrustEntities = ({ report, onGenerate, onVerify, onVerifyEntity }: TrustEntitiesProps) => {
   const { t } = useTranslation();
   const { organization: org } = report.schema;
   return (
+    <div className="space-y-3">
+    <TrustGraphPanel report={report} onVerifyEntity={onVerifyEntity} />
     <section aria-labelledby="trust-entities-title" className="space-y-3 rounded-xl border border-slate-800 bg-slate-900/60 p-4">
       <h2 id="trust-entities-title" className="flex items-center gap-1 text-sm font-semibold text-slate-200">
         {t('trust.entities.title')} <HelpTip id="trust.sameAs" />
@@ -69,5 +72,6 @@ export const TrustEntities = ({ report, onGenerate, onVerify }: TrustEntitiesPro
         </div>
       )}
     </section>
+    </div>
   );
 };

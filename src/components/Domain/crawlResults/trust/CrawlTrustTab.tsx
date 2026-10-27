@@ -3,6 +3,9 @@ import { useTranslation } from 'react-i18next';
 import { useTrust } from '@/hooks/useTrust';
 import { nativeRegistryFetcher, prefillFromAuthor, verifyProfile, type AuthorEntity, type ProfileEvidence, type TrustJsonLdInput } from '@/services/eeatTrust';
 import { nodesOf } from '@/services/eeatTrust/graph';
+import { createRegistryMatcher } from '@/services/eeatTrust/registryIdentity';
+import { registryEvidenceKey } from '@/services/eeatTrust/registryEvidence';
+import type { RegistryOptions } from '@/services/eeatTrust/registry';
 import type { CrawledPageSummary, CrawlRunRecord } from '@/types';
 import { Empty } from '../CrawlViewPrimitives';
 import { TrustEntities } from './TrustEntities';
@@ -24,6 +27,7 @@ export const CrawlTrustTab = ({ pages, startUrl, run, projectId }: CrawlTrustTab
   const activeScope = useRef<symbol | undefined>(scope); activeScope.current = scope;
   useEffect(() => { activeScope.current = scope; return () => { if (activeScope.current === scope) activeScope.current = undefined; }; }, [scope]);
   const registryOptions = useMemo(() => ({ fetcher: nativeRegistryFetcher, maxRequests: 8, projectId: projectId ?? undefined, runId: run?.id }), [scope, projectId, run?.id]);
+  const matchers = useMemo(() => new Map<string, RegistryOptions>(), [scope]);
   const [evidence, setEvidence] = useState<{ scope: symbol; profiles: Record<string, ProfileEvidence> }>();
   const { report, previous } = useTrust(pages, startUrl, run, projectId, evidence?.scope === scope ? evidence.profiles : undefined);
   const [form, setForm] = useState<TrustJsonLdInput | null>(null);
@@ -36,7 +40,16 @@ export const CrawlTrustTab = ({ pages, startUrl, run, projectId }: CrawlTrustTab
   }))) };
   const open = (author: AuthorEntity) => setForm(prefillFromAuthor(author, report, startUrl));
   const verify = async (author: AuthorEntity) => {
-    const entries = await Promise.all(author.profiles.slice(0, 8).map(async (profile) => [profile.url, (await verifyProfile(profile, registryOptions)).profile] as const));
+    const role = 'author';
+    const key = `${role}|${author.key}`;
+    let options = matchers.get(key);
+    if (!options) {
+      options = { ...registryOptions, budgetScope: registryOptions, matches: createRegistryMatcher({
+        name: author.name, id: author.id, role, aliases: author.aliases, profileUrls: author.profileUrls,
+      }) };
+      matchers.set(key, options);
+    }
+    const entries = await Promise.all(author.profiles.slice(0, 8).map(async (profile) => [registryEvidenceKey(author.key, role, profile.url), (await verifyProfile(profile, options)).profile] as const));
     if (activeScope.current !== scope) return;
     setEvidence((current) => ({ scope, profiles: { ...(current?.scope === scope ? current.profiles : {}), ...Object.fromEntries(entries) } }));
   };

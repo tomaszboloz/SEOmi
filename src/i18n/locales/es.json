@@ -6080,8 +6080,12 @@
           "good": "Buena preparación",
           "moderate": "Preparación moderada",
           "weak": "Preparación débil",
-          "critical": "Preparación crítica"
+          "critical": "Preparación crítica",
+          "unavailable": "No disponible"
         },
+        "availability": { "complete": "Evidencia completa", "partial": "Evidencia parcial", "unavailable": "No disponible: no hay evidencia AIO puntuable" },
+        "unknownReasons": "Por qué la evidencia AIO no está disponible o es parcial",
+        "unknownReason": { "no-sections": "Este rastreo no guardó secciones de contenido.", "no-content": "No se guardó contenido legible.", "non-html": "La página guardada no era HTML.", "request-error": "Falló la solicitud de la página." },
         "issue": {
           "dangling-pronoun": "Referencia poco clara",
           "no-answer-first": "Sin respuesta directa al inicio",
@@ -7353,6 +7357,7 @@
     "title": "Preparación para AI Overviews y RAG",
     "subtitle": "Con qué facilidad los motores de respuesta de IA encuentran, extraen y citan tus pasajes.",
     "empty": "Aún no hay datos de páginas con secciones de contenido. Lanza un nuevo rastreo para analizar la preparación para IA.",
+    "status": { "unavailable": "La preparación para IA no está disponible para este rastreo guardado.", "partial": "La preparación para IA es parcial; faltan algunas evidencias.", "cancelled": "La preparación para IA no se completó porque se canceló el rastreo.", "timedOut": "La preparación para IA no se completó porque el rastreo agotó el tiempo.", "noPages": "La preparación para IA no está disponible porque el rastreo no guardó páginas." },
     "band": {
       "excellent": "Preparación excelente",
       "good": "Buena preparación",
@@ -7480,6 +7485,20 @@
       "identityEvidence": "Evidencia de identidad",
       "unavailableNote": "No hay perfil declarado; no disponible no significa ficticio.",
       "verifyProfiles": "Verificar perfiles"
+    },
+    "graph": {
+      "title": "Grafo de confianza de entidades",
+      "summary": "{{entities}} entidades · {{edges}} enlaces de rol · {{diagnostics}} diagnósticos",
+      "roles": { "document": "documento", "author": "autor", "reviewer": "revisor", "publisher": "editor" },
+      "definition": "definición",
+      "referenceOnly": "solo referencia",
+      "status": "Estado de {{role}}: {{status}}",
+      "verifiedProfile": "perfil verificado: {{url}}",
+      "noVerifiedProfile": "sin perfil verificado; esto no confirma las cualificaciones",
+      "verifyRole": "Verificar {{role}}",
+      "diagnostics": "Diagnósticos",
+      "statusValues": { "unavailable": "no disponible", "declared": "declarado", "fetched": "obtenido", "verified": "verificado", "mismatch": "no coincide", "invalid": "no válido", "syntax-valid": "sintaxis válida" },
+      "diagnosticCodes": { "conflicting-definition": "definición conflictiva", "dangling-reference": "referencia huérfana", "indeterminate-reference": "referencia indeterminada", "incomplete-definition": "definición incompleta", "cycle": "ciclo", "role-overlap": "solapamiento de roles", "graph-truncated": "análisis del grafo limitado" }
     },
     "signals": {
       "claimEvidence": "Evidencia de afirmaciones",

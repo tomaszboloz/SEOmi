@@ -5,7 +5,8 @@ import { classifyProfile, declarationRecall } from '@/services/eeatTrust/identif
 import { hasVerifiedTrustEvidence, readTrustHistory, recordTrust, trustHistoryKey } from '@/services/eeatTrust/history';
 import { clearRegistryCache, verifyProfile } from '@/services/eeatTrust/registry';
 import type { TrustReport } from '@/services/eeatTrust/types';
-import { diabetesFocus, diabetesPages, node, trustedArticle } from './eeatTrustFixtures';
+import { AUTHOR_ID, diabetesFocus, diabetesPages, node, trustedArticle } from './eeatTrustFixtures';
+import { registryEvidenceKey } from '@/services/eeatTrust/registryEvidence';
 
 const ORCID = 'https://orcid.org/0000-0002-1825-0097';
 
@@ -55,7 +56,7 @@ describe('trust evidence follow-up contracts', () => {
     const baseline = buildTrustReport(pages, focus, { now: '2026-10-27T00:00:00Z' });
     const verified = buildTrustReport(pages, focus, {
       now: '2026-10-27T00:00:00Z',
-      profileEvidence: { [ORCID]: { url: ORCID, kind: 'orcid', tier: 1, id: '0000-0000-0000-0001', status: 'verified' } },
+      profileEvidence: { [registryEvidenceKey(AUTHOR_ID, 'author', ORCID)]: { url: ORCID, kind: 'orcid', tier: 1, id: '0000-0002-1825-0097', status: 'verified' } },
     });
     expect(verified.layers.sameAs).toBe(baseline.layers.sameAs);
     expect(verified.coverage.sameAs?.verified).toBe(100);
@@ -77,8 +78,8 @@ describe('trust evidence follow-up contracts', () => {
     });
     const report = buildTrustReport(pages, diabetesFocus(pages), {
       profileEvidence: {
-        [ORCID]: { url: ORCID, kind: 'orcid', tier: 1, id: '0000-0000-0000-0001', status: 'verified' },
-        [wikidata]: { url: wikidata, kind: 'wikidata', tier: 1, id: 'Q1', status: 'mismatch' },
+        [registryEvidenceKey(AUTHOR_ID, 'author', ORCID)]: { url: ORCID, kind: 'orcid', tier: 1, id: '0000-0002-1825-0097', status: 'verified' },
+        [registryEvidenceKey(AUTHOR_ID, 'author', wikidata)]: { url: wikidata, kind: 'wikidata', tier: 1, id: 'Q1', status: 'mismatch' },
       },
     });
     expect(report.authors[0].reconciliation?.status).toBe('mismatch');

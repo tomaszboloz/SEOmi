@@ -113,7 +113,7 @@ describe('gemini050AioPdfProfileProvenance - crawlAioSummary profile provenance'
     expect(summary).toBeDefined();
     expect(JSON.stringify(run)).toBe(before);
 
-    if (summary) {
+    if (summary && summary.score !== null && summary.self_containment !== null && summary.spo_density !== null && summary.extractability !== null) {
       expect(Math.round(summary.score * 10) / 10).toBe(summary.score);
       expect(Math.round(summary.self_containment * 10) / 10).toBe(summary.self_containment);
       expect(Math.round(summary.spo_density * 10) / 10).toBe(summary.spo_density);

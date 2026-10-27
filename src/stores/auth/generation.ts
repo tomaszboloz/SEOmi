@@ -4,10 +4,14 @@ import i18n from '@/i18n';
 import type { AuthState, AuthSet, AuthGet } from './types';
 export const createAuthGeneration = (_set: AuthSet, get: AuthGet): Pick<AuthState, 'isProviderConnected' | 'generateText' | 'generateTextForProvider' | 'generateSuggestions'> => ({
   isProviderConnected: (provider) => get().connectionStatus[provider || get().provider] === 'connected',
-  generateText: async (prompt) => {
+  generateText: async (prompt, requestContext) => {
     const { provider, model, apiKeys, connectionMethod } = get();
-    const projectId = useProjectStore.getState().activeProjectId;
-    return AIService.generateText(provider, apiKeys[provider], model, prompt, connectionMethod[provider], { projectId });
+    const activeProjectId = useProjectStore.getState().activeProjectId;
+    if (requestContext && activeProjectId !== requestContext.projectId) {
+      throw new Error('AI request context does not match the active project');
+    }
+    const options = requestContext ? { projectId: requestContext.projectId, requestContext } : { projectId: activeProjectId };
+    return AIService.generateText(provider, apiKeys[provider], model, prompt, connectionMethod[provider], options);
   },
   generateTextForProvider: async (provider, prompt) => {
     const { model, apiKeys, connectionMethod } = get();

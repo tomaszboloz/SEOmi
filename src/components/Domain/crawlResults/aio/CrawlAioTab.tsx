@@ -15,16 +15,33 @@ export interface CrawlAioTabProps {
 
 const HISTORY_SHOWN = 5;
 
+const reportReasons = (report: ReturnType<typeof useAioReadiness>['report']): string[] => [...new Set([
+  ...report.pages.flatMap((page) => page.skipped ? [page.skipped] : []),
+  ...report.unknownReasons,
+])];
+
 export const CrawlAioTab = ({ pages, run, projectId }: CrawlAioTabProps) => {
   const { t, i18n } = useTranslation();
   const { report, history } = useAioReadiness(pages, run, projectId);
-  if (!report.scoredCount) return <Empty>{t('aio.empty')}</Empty>;
+  const incomplete = run?.result.cancelled ? 'cancelled' : run?.result.timed_out ? 'timedOut' : !pages.length ? 'noPages' : undefined;
+  if (incomplete) return <section className="space-y-2" data-testid="aio-unavailable" role="status"><Empty>{t(`aio.status.${incomplete}`)}</Empty></section>;
+  const reasons = reportReasons(report);
+  if (!report.scoredCount) return (
+    <section className="space-y-2" data-testid="aio-unavailable" role="status">
+      <p className="text-sm text-amber-200">{t('aio.status.unavailable')}</p>
+      {reasons.length > 0 && <ul className="list-disc space-y-1 ps-5 text-xs text-slate-300">{reasons.map((reason) => <li key={reason}>{t(`aio.skip.${reason}`, { defaultValue: reason })}</li>)}</ul>}
+    </section>
+  );
   const prior = history.filter((item) => !run || item.runId !== run.id);
   const previous = prior[prior.length - 1];
 
   return (
     <div className="space-y-4">
       <p className="text-xs text-slate-400">{t('aio.subtitle')}</p>
+      {report.availability !== 'complete' && <section className="space-y-1 rounded border border-amber-500/30 bg-amber-500/5 p-2 text-xs" data-testid="aio-partial" role="note">
+        <p className="font-semibold text-amber-200">{t('aio.status.partial')}</p>
+        {reasons.length > 0 && <ul className="list-disc space-y-1 ps-5 text-slate-300">{reasons.map((reason) => <li key={reason}>{t(`aio.skip.${reason}`, { defaultValue: reason })}</li>)}</ul>}
+      </section>}
       <AioHero report={report} previous={previous} />
       <section aria-labelledby="aio-passages-title" className="space-y-2">
         <h3 id="aio-passages-title" className="flex items-center gap-1 text-sm font-semibold text-slate-200">

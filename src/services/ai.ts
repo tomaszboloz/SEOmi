@@ -1,7 +1,7 @@
 import type { AiConnectionMethod, AiProvider, PageAuditData } from '@/types';
 import { invokeTauriCommand } from '@/services/tauri';
 import { executeWithEconomy, LlmFactGateBlockedError } from '@/services/llmEconomy';
-import type { YmylSourceInput } from '@/services/llmEconomy';
+import type { LlmRequestContext, YmylSourceInput } from '@/services/llmEconomy';
 import i18n from '@/i18n';
 import { parseAiSuggestionResponse, type AiSuggestionResponse } from './ai/parsing';
 import { buildAiPrompt } from './ai/prompt';
@@ -15,6 +15,7 @@ export type { AiSuggestionResponse } from './ai/parsing';
 
 export interface GenerateTextEconomyOptions {
   projectId?: string | null;
+  requestContext?: LlmRequestContext;
   estimatedCostUsd?: number | null;
   actualCostUsd?: number | null;
   vector?: ArrayLike<number> | null;
@@ -49,6 +50,7 @@ export class AIService {
         transport: 'cloud',
         model,
         prompt,
+        requestContext: options?.requestContext,
         vector: options?.vector,
         estimatedCostUsd: options?.estimatedCostUsd,
         actualCostUsd: options?.actualCostUsd,

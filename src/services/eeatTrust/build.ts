@@ -5,11 +5,13 @@ import { scanAuthors } from './authors';
 import { analyzeCitations, citationScore } from './citations';
 import { buildFindings, levelFor } from './findings';
 import { buildRegistry, isArticleNode, nodesOf, type SchemaNode } from './graph';
+import { buildTrustGraph } from './entityGraph';
 import { analyzeSchema, schemaScore } from './schemaScore';
 import { analyzeTransparency, transparencyScore } from './transparency';
 import { EEAT_TRUST_VERSION, LEGACY_TRUST_WEIGHTS, TRUST_PROFILE_ID, TRUST_WEIGHTS, type ProfileEvidence, type TrustLayer, type TrustReport } from './types';
 import { detectYmyl } from './ymyl';
 import { declarationRecall } from './identifiers';
+import { applyRegistryEvidence, decorateRegistryGraph, reconciliationFor } from './registryEvidence';
 
 export interface TrustOptions { now?: string; profileEvidence?: Record<string, ProfileEvidence> }
 
@@ -27,12 +29,6 @@ const coverage = (score: number | undefined, declared: number, verified = 0) => 
   observed: score === undefined ? 0 : 100, declared: declared ? 100 : 0, verified, unknown: score === undefined ? 100 : 0,
 });
 
-/** Surface a warning before a positive registry result when profiles conflict. */
-const reconciliationStatus = (profiles: ProfileEvidence[]): ProfileEvidence['status'] | 'unavailable' => {
-  const priorities: Array<ProfileEvidence['status']> = ['mismatch', 'invalid', 'verified', 'fetched', 'syntax-valid', 'declared', 'unavailable'];
-  return priorities.find((status) => profiles.some((profile) => profile.status === status)) ?? 'unavailable';
-};
-
 /** E-E-A-T & Entity Trust report from the crawl's own schema, links and pages; the Site Focus report supplies Core Topic and page types. */
 export const buildTrustReport = (pages: CrawledPageSummary[], focus?: SiteFocusReport, options: TrustOptions = {}): TrustReport => {
   const live = pages.filter(usable);
@@ -48,12 +44,13 @@ export const buildTrustReport = (pages: CrawledPageSummary[], focus?: SiteFocusR
     if (focusArticles.has(normalizeUrl(url)) || typed) articleNodes.set(url, own);
   }
   const scan = scanAuthors(live, nodesByPage, articleNodes, registry, focus);
+  const graph = buildTrustGraph(live, nodesByPage);
+  decorateRegistryGraph(graph, options.profileEvidence);
   if (options.profileEvidence) scan.authors.forEach((author) => {
-    author.profiles = author.profiles.map((profile) => options.profileEvidence?.[profile.url] ?? profile);
-    author.reconciliation = {
-      role: 'author', profiles: author.profiles, declarationRecall: declarationRecall(author.profiles),
-      status: reconciliationStatus(author.profiles), evidence: 'registry',
-    };
+    const declared = author.profiles;
+    author.profiles = applyRegistryEvidence(declared, author.key, 'author', options.profileEvidence!);
+    author.reconciliation = reconciliationFor('author', author.profiles,
+      author.profiles.some((profile, index) => profile !== declared[index]) ? 'registry' : 'declared');
   });
   const articleUrls = new Set(articleNodes.keys());
   const cited = new Map<string, string[]>([...articleNodes].map(([url, list]) => [url, list.flatMap((node) => node.props.citation ?? [])]));
@@ -97,7 +94,7 @@ export const buildTrustReport = (pages: CrawledPageSummary[], focus?: SiteFocusR
   return {
     availability: observed ? 'observed' : 'unavailable', score, level: score === null ? null : levelFor(score), layers, profileVersion: EEAT_TRUST_VERSION, profileId: TRUST_PROFILE_ID, coverage: coverageByLayer, ymyl,
     ...(ymyl ? { ymylPolicy: { category: ymyl, applicable: true, multiplier: 0.45, triggered: ymylTriggered, heuristic: true as const } } : {}),
-    schema, authors: scan.authors, citations, transparency,
+    schema, graph, authors: scan.authors, citations, transparency,
     findings: buildFindings({ schema, authors: scan.authors, citations, transparency, ymyl, unattributed }),
     ymylUnattributedPct: ymyl && articleUrls.size ? Math.round((unattributed / articleUrls.size) * 100) : undefined,
     pageCount: live.length, articleCount: articleUrls.size, generatedAt: options.now ?? new Date().toISOString(), version: EEAT_TRUST_VERSION,

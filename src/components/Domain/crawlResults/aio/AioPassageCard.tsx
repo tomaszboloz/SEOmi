@@ -25,6 +25,12 @@ export const AioPassageCard = ({ passage, index, page, projectId, runId }: { pas
   const optimized = state.status === 'ok' ? state.text : undefined;
   const patchTarget = useMemo(() => patchTargetForPassage(page, passage), [page, passage]);
   const reviewPartial = review !== null && (review.before.availability !== 'complete' || review.after.availability !== 'complete');
+  const requestContext = useMemo(() => ({
+    projectId: projectId ?? '',
+    runId: runId ?? '',
+    chunkId: `${passage.url}\u0000${passage.heading}\u0000${passage.windowIndex}`,
+    revision,
+  }), [passage.heading, passage.url, passage.windowIndex, projectId, revision, runId]);
 
   useEffect(() => () => controller.current?.abort(), [contextKey]);
   useEffect(() => { setState({ status: 'idle' }); setReview(null); setApproved(false); }, [contextKey]);
@@ -35,7 +41,7 @@ export const AioPassageCard = ({ passage, index, page, projectId, runId }: { pas
     controller.current = active;
     const expected = contextKey;
     setState({ status: 'busy' });
-    const outcome = await rewritePassage(createBriefDeps(), passage, { signal: active.signal });
+    const outcome = await rewritePassage(createBriefDeps(), passage, { signal: active.signal, context: requestContext });
     if (expected !== contextRef.current) return;
     if (active.signal.aborted) { setState({ status: 'cancelled' }); return; }
     setState(outcome.status === 'ok' ? outcome : outcome.status === 'error' ? { status: 'error', message: outcome.message } : { status: outcome.status });

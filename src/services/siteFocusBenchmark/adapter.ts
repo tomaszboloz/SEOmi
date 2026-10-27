@@ -7,7 +7,8 @@ import { createId } from '@/services/ids';
 import { useAuthStore } from '@/stores/authStore';
 import { useSettingsStore } from '@/stores/settingsStore';
 import { useToolsStore } from '@/stores/toolsStore';
-import type { BriefDeps } from './rewriteBrief';
+import { useProjectStore } from '@/stores/projectStore';
+import type { BriefDeps, BriefRequestContext } from './rewriteBrief';
 import type { BenchmarkDeps, CrawlRequest, CrawlResponse, SerpHit, SerpResponse } from './types';
 
 /** Polite, capped competitor crawl: robots and crawl-delay honored, low concurrency, bounded run time. */
@@ -97,8 +98,35 @@ export const createBenchmarkDeps = (): BenchmarkDeps => {
   };
 };
 
+export class BriefRequestContextMismatchError extends Error {
+  readonly code = 'brief-request-context-mismatch';
+
+  constructor(message = 'AI request context does not match the active project') {
+    super(message);
+    this.name = 'BriefRequestContextMismatchError';
+  }
+}
+
+const validContextValue = (value: unknown): value is string => typeof value === 'string' && value.trim().length > 0;
+
+/** Rejects scoped requests before auth/API work when the workspace has changed. */
+export const assertBriefRequestContext = (context: BriefRequestContext): void => {
+  if (!context || ![context.projectId, context.runId, context.chunkId, context.revision].every(validContextValue)) {
+    throw new BriefRequestContextMismatchError('AI request context is incomplete');
+  }
+  if (useProjectStore.getState().activeProjectId !== context.projectId) {
+    throw new BriefRequestContextMismatchError();
+  }
+};
+
 /** AI brief dependencies: same provider, model and key path as the other AI features. */
-export const createBriefDeps = (): BriefDeps => {
+export const createBriefDeps = (requestContext?: BriefRequestContext): BriefDeps => {
   const auth = useAuthStore.getState();
-  return { isConfigured: () => auth.isProviderConnected(), generateText: (prompt) => auth.generateText(prompt) };
+  return {
+    isConfigured: () => auth.isProviderConnected(),
+    generateText: async (prompt, context = requestContext) => {
+      if (context) assertBriefRequestContext(context);
+      return context ? auth.generateText(prompt, context) : auth.generateText(prompt);
+    },
+  };
 };

@@ -1,4 +1,4 @@
-use super::fetch::fetch_with_resolver;
+use super::fetch::{fetch_with_resolver, fetch_with_resolver_accept};
 use super::models::{FetchOptions, FetchResult, MAX_BODY_BYTES};
 use super::resolver::resolve_public_addresses;
 use anyhow::Result;
@@ -37,7 +37,7 @@ pub async fn fetch_page_with_options(
 
 /// Bounded native fetch for registry evidence; caller supplies a much smaller body budget.
 pub async fn fetch_registry_page(target_url: &Url) -> Result<FetchResult> {
-    fetch_with_resolver(
+    fetch_with_resolver_accept(
         target_url,
         "SEOmi registry evidence/1.0",
         FetchOptions {
@@ -46,6 +46,7 @@ pub async fn fetch_registry_page(target_url: &Url) -> Result<FetchResult> {
             verify_ssl: true,
             max_body_bytes: 512 * 1024,
         },
+        Some("application/json"),
         |url| async move {
             validate_registry_hop(&url)?;
             resolve_public_addresses(&url).await

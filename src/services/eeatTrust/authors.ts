@@ -2,12 +2,12 @@ import type { CrawledPageSummary } from '@/types';
 import type { FocusPage, SiteFocusReport } from '@/services/siteFocus';
 import { normalizeUrl } from '@/services/siteFocus/pageType';
 import { phraseKey } from '@/services/siteFocus/terms';
-import { childNodes, type SchemaNode } from './graph';
+import { canonicalId, childNodes, nodeIdentity, type SchemaNode } from './graph';
 import { classifyProfiles, declarationRecall } from './identifiers';
 import type { AuthorEntity } from './types';
 
 const GENERIC = /^(the\s+)?(redakcj|redaktion|redacci|redazion|r[eé]daction|editorial|editors?\b|staff\b|admin|team\b|zesp[oó]ł|zespol|команд|редакц|администр|autor\b|author\b|unknown|anonim)/i;
-const ID_LIKE = /^(https?:\/\/|#|\/)/;
+const ID_LIKE = /^(https?:\/\/|#|\/|\.\.?(?:\/|$))/;
 const BIO_TERMS = 40;
 
 /** A site-root id such as https://site/#person names the entity, not a profile page. */
@@ -19,16 +19,20 @@ export const isGenericAuthor = (name: string): boolean => GENERIC.test(name.trim
 export const resolveEntities = (node: SchemaNode, property: string, siblings: SchemaNode[], registry: Map<string, SchemaNode>): SchemaNode[] => {
   const found: SchemaNode[] = [];
   for (const value of (node.props[property] ?? []).filter((item) => item.trim())) {
-    const known = registry.get(value);
+    const known = registry.get(value) ?? registry.get(canonicalId(value, node.page) ?? value);
     if (known) found.push(known);
-    else if (ID_LIKE.test(value)) found.push({ ...node, id: value, types: ['Person'], name: undefined, props: {} });
+    else if (ID_LIKE.test(value)) found.push({ ...node, id: value, canonicalId: canonicalId(value, node.page), types: ['Person'], name: undefined, props: {} });
     else found.push({ ...node, id: undefined, types: ['Person'], name: value, props: {} });
   }
-  for (const child of childNodes(node, property, siblings)) found.push((child.id && registry.get(child.id)) || child);
+  for (const child of childNodes(node, property, siblings)) found.push((child.id && registry.get(nodeIdentity(child))) || child);
   return found;
 };
 
-const entityKey = (entity: SchemaNode): string => (entity.id ?? entity.name ?? '').trim().toLowerCase();
+const entityKey = (entity: SchemaNode): string => {
+  if (entity.id) return nodeIdentity(entity);
+  const name = entity.name?.normalize('NFC').trim().toLowerCase() ?? '';
+  return isGenericAuthor(entity.name ?? '') ? `generic:${name}` : `name:${entity.page}|${entity.decl}|${entity.path}|${name}`;
+};
 
 /** Share (0-100) of the author's declared expertise that lies inside the Core Topic; undefined without bio signal. */
 const alignmentOf = (entity: SchemaNode, pages: CrawledPageSummary[], report: SiteFocusReport | undefined): number | undefined => {
@@ -81,6 +85,7 @@ export const scanAuthors = (
           credentials: entity.props.hasCredential ?? entity.props.credential ?? [],
           knowsAbout: entity.props.knowsAbout ?? [],
           sameAs: entity.props.sameAs ?? [],
+          aliases: entity.props.alternateName ?? [], profileUrls: entity.props.url ?? [],
           profiles: classifyProfiles(entity.props.sameAs ?? []), articleUrls: [], generic: isGenericAuthor(entity.name ?? ''),
           alignmentPct: alignmentOf(entity, pages, report),
         };

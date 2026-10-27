@@ -2,7 +2,10 @@ use crate::services::http_client::check_url_status;
 use crate::services::http_client::fetch_registry_page;
 use crate::utils::url_validator::validate_and_normalize_url;
 use serde::{Deserialize, Serialize};
-use url::Url;
+
+#[path = "http_client_registry.rs"]
+mod registry;
+use registry::{registry_api_url, registry_url};
 
 #[derive(Debug, Serialize, Deserialize)]
 pub struct LinkStatusResult {
@@ -21,65 +24,12 @@ pub struct RegistryProfileResult {
     pub source_date: Option<String>,
 }
 
-fn registry_url(raw: &str) -> Result<Url, String> {
-    let url = validate_and_normalize_url(raw)
-        .map_err(|error| format!("Invalid registry URL: {error}"))?;
-    if url.scheme() != "https" {
-        return Err("Registry evidence requires HTTPS".into());
-    }
-    let host = url
-        .host_str()
-        .unwrap_or_default()
-        .trim_start_matches("www.")
-        .to_ascii_lowercase();
-    let allowed_host = host == "orcid.org"
-        || host.ends_with(".orcid.org")
-        || host == "wikidata.org"
-        || host.ends_with(".wikidata.org")
-        || host == "scholar.google.com"
-        || host == "researchgate.net"
-        || host.ends_with(".researchgate.net")
-        || host == "scopus.com";
-    if !allowed_host {
-        return Err("Registry host is not allow-listed".into());
-    }
-    if url.path() == "/" || url.path().is_empty() {
-        return Err("Registry homepage is not a profile".into());
-    }
-    let path = url.path().trim_matches('/');
-    if host == "orcid.org" || host.ends_with(".orcid.org") {
-        let valid = path.len() == 19
-            && path.as_bytes().iter().enumerate().all(|(index, byte)| {
-                matches!(index, 4 | 9 | 14) && *byte == b'-'
-                    || index == 18 && (*byte == b'X' || byte.is_ascii_digit())
-                    || !matches!(index, 4 | 9 | 14 | 18) && byte.is_ascii_digit()
-            });
-        if !valid {
-            return Err("ORCID profile path is invalid".into());
-        }
-    }
-    if host == "wikidata.org" || host.ends_with(".wikidata.org") {
-        let valid = (path
-            .strip_prefix("wiki/")
-            .or_else(|| path.strip_prefix("entity/")))
-        .is_some_and(|id| {
-            id.starts_with('Q')
-                && id.len() > 1
-                && !id[1..].starts_with('0')
-                && id[1..].chars().all(|char| char.is_ascii_digit())
-        });
-        if !valid {
-            return Err("Wikidata entity path is invalid".into());
-        }
-    }
-    Ok(url)
-}
-
 /// Native-only bounded registry fetch. Identity matching remains a separate evidence decision.
 #[tauri::command]
 pub async fn fetch_registry_profile(url: String) -> Result<RegistryProfileResult, String> {
     let target = registry_url(&url)?;
-    let result = fetch_registry_page(&target)
+    let api = registry_api_url(&target).unwrap_or_else(|| target.clone());
+    let result = fetch_registry_page(&api)
         .await
         .map_err(|error| format!("Registry transport unavailable: {error}"))?;
     Ok(RegistryProfileResult {
@@ -87,7 +37,11 @@ pub async fn fetch_registry_profile(url: String) -> Result<RegistryProfileResult
         final_url: result.final_url,
         status: result.status,
         body: result.body,
-        source_date: result.headers.get("date").cloned(),
+        source_date: result
+            .headers
+            .get("last-modified")
+            .cloned()
+            .or_else(|| result.headers.get("date").cloned()),
     })
 }
 

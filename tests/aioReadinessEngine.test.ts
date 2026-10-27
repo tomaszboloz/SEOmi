@@ -108,10 +108,13 @@ describe('PDF summary', () => {
     expect(summarizeAio(buildAioReport([WEAK_PAGE])).passages[0].excerpt).not.toContain('…');
   });
 
-  it('is undefined without usable pages or for cancelled runs', () => {
+  it('keeps cancelled, timed-out and empty runs out of the PDF, but discloses old non-empty runs', () => {
     expect(crawlAioSummary(run([GOOD_PAGE]))?.scored).toBe(1);
+    const partial = crawlAioSummary(run([GOOD_PAGE, aioPage('partial-old', undefined)]));
+    expect(partial?.availability).toBe('partial');
+    expect(partial?.unknown_reasons).toContain('no-sections');
     expect(crawlAioSummary(run([]))).toBeUndefined();
-    expect(crawlAioSummary(run([aioPage('u', undefined)]))).toBeUndefined();
+    expect(crawlAioSummary(run([aioPage('u', undefined)]))).toMatchObject({ score: null, availability: 'unavailable', unknown_reasons: ['no-sections'] });
     expect(crawlAioSummary(run([GOOD_PAGE], { cancelled: true }))).toBeUndefined();
     expect(crawlAioSummary(run([GOOD_PAGE], { timed_out: true }))).toBeUndefined();
     expect(crawlAioSummary({ id: 'r' } as unknown as CrawlRunRecord)).toBeUndefined();

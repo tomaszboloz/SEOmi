@@ -6080,8 +6080,12 @@
           "good": "就绪度良好",
           "moderate": "就绪度中等",
           "weak": "就绪度较弱",
-          "critical": "就绪度危急"
+          "critical": "就绪度危急",
+          "unavailable": "不可用"
         },
+        "availability": { "complete": "证据完整", "partial": "证据不完整", "unavailable": "不可用：没有可评分的 AIO 证据" },
+        "unknownReasons": "AIO 证据不可用或不完整的原因",
+        "unknownReason": { "no-sections": "此次抓取未保存内容分区。", "no-content": "未保存可读内容。", "non-html": "保存的页面不是 HTML。", "request-error": "页面请求失败。" },
         "issue": {
           "dangling-pronoun": "指代不清",
           "no-answer-first": "开头没有直接回答",
@@ -7353,6 +7357,7 @@
     "title": "AI Overviews 与 RAG 就绪度",
     "subtitle": "AI 回答引擎找到、提取并引用你页面段落的难易程度。",
     "empty": "暂无包含内容分区的页面数据。请运行新的抓取以分析 AI 就绪度。",
+    "status": { "unavailable": "此保存的抓取没有可用的 AI 就绪度。", "partial": "AI 就绪度不完整；部分证据不可用。", "cancelled": "抓取已取消，AI 就绪度未完成。", "timedOut": "抓取超时，AI 就绪度未完成。", "noPages": "抓取未保存页面，AI 就绪度不可用。" },
     "band": {
       "excellent": "就绪度优秀",
       "good": "就绪度良好",
@@ -7480,6 +7485,20 @@
       "identityEvidence": "身份证据",
       "unavailableNote": "没有声明的个人资料；不可用不表示虚构。",
       "verifyProfiles": "验证个人资料"
+    },
+    "graph": {
+      "title": "实体信任图",
+      "summary": "{{entities}} 个实体 · {{edges}} 条角色边 · {{diagnostics}} 条诊断",
+      "roles": { "document": "文档", "author": "作者", "reviewer": "审阅者", "publisher": "发布者" },
+      "definition": "定义",
+      "referenceOnly": "仅引用",
+      "status": "{{role}} 状态：{{status}}",
+      "verifiedProfile": "已验证个人资料：{{url}}",
+      "noVerifiedProfile": "没有已验证的个人资料；这不代表资格已确认",
+      "verifyRole": "验证{{role}}",
+      "diagnostics": "诊断",
+      "statusValues": { "unavailable": "不可用", "declared": "已声明", "fetched": "已获取", "verified": "已验证", "mismatch": "不匹配", "invalid": "无效", "syntax-valid": "语法有效" },
+      "diagnosticCodes": { "conflicting-definition": "定义冲突", "dangling-reference": "悬空引用", "indeterminate-reference": "不确定引用", "incomplete-definition": "定义不完整", "cycle": "循环", "role-overlap": "角色重叠", "graph-truncated": "图分析已截断" }
     },
     "signals": {
       "claimEvidence": "主张证据",

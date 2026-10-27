@@ -44,6 +44,21 @@ describe('CrawlAioTab without weak passages', () => {
     expect(screen.getByText('No weak passages found.')).toBeTruthy();
     expect(screen.getByText(/No weak passages found across 1/)).toBeTruthy();
   });
+
+  it('discloses unavailable evidence for an older non-empty crawl and partial reasons', () => {
+    const { rerender } = render(<CrawlAioTab pages={[aioPage('https://a.test/old', undefined)]} />);
+    expect(screen.getByTestId('aio-unavailable').textContent).toContain('AI readiness is unavailable');
+    expect(screen.getByTestId('aio-unavailable').textContent).toContain('No content sections');
+    rerender(<CrawlAioTab pages={[aioPage('https://a.test/g', [GOOD]), aioPage('https://a.test/old', undefined)]} />);
+    expect(screen.getByTestId('aio-partial').textContent).toContain('AI readiness is partial');
+    expect(screen.getByTestId('aio-partial').textContent).toContain('No content sections');
+    rerender(<CrawlAioTab pages={[]} />);
+    expect(screen.getByTestId('aio-unavailable').textContent).toContain('saved no pages');
+    rerender(<CrawlAioTab pages={[aioPage('https://a.test/g', [GOOD])]} run={createCrawlRunFixture({ result: createCrawlResultFixture({ pages: [], cancelled: true }) })} />);
+    expect(screen.getByTestId('aio-unavailable').textContent).toContain('crawl was cancelled');
+    rerender(<CrawlAioTab pages={[aioPage('https://a.test/g', [GOOD])]} run={createCrawlRunFixture({ result: createCrawlResultFixture({ pages: [], timed_out: true }) })} />);
+    expect(screen.getByTestId('aio-unavailable').textContent).toContain('crawl timed out');
+  });
 });
 
 describe('integration points', () => {

@@ -43,4 +43,14 @@ describe('AIO rewrite lifecycle guards', () => {
     expect(screen.getByTestId('aio-review-profile-meta').textContent).toContain('aio-r-');
     expect(screen.getByText(/Before .* · after /u)).toBeTruthy();
   });
+
+  it('passes project, run, chunk and revision beside the rewrite prompt', async () => {
+    rewriteMock.mockResolvedValue({ status: 'ok', text: 'A fact is 12 kg.' });
+    render(<AioPassageCard passage={passage} index={0} projectId="p1" runId="r1" />);
+    fireEvent.click(screen.getByRole('button', { name: /Rewrite with AI/ }));
+    await screen.findByTestId('aio-optimized');
+    const options = rewriteMock.mock.calls[0]?.[2];
+    expect(options.context).toMatchObject({ projectId: 'p1', runId: 'r1', chunkId: expect.any(String), revision: expect.any(String) });
+    expect(options.context.revision).not.toBe(options.context.chunkId);
+  });
 });

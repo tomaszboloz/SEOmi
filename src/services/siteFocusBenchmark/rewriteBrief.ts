@@ -1,9 +1,18 @@
 import { buildBriefPrompt, buildRewriteBrief, type CoreTopic, type PageFocus, type RewriteBrief } from '@/services/siteFocus';
 
+/** Stable scope attached to an AI request without putting internal IDs in the prompt. */
+export interface BriefRequestContext {
+  projectId: string;
+  runId: string;
+  chunkId: string;
+  revision: string;
+}
+
 export interface BriefDeps {
   /** Missing or returning false means no AI provider is connected. */
   isConfigured: () => boolean;
-  generateText: (prompt: string) => Promise<string>;
+  /** The context is transport metadata; callers must not interpolate it into prompt text. */
+  generateText: (prompt: string, context?: BriefRequestContext) => Promise<string>;
 }
 
 export type BriefOutcome =

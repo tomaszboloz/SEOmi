@@ -6080,8 +6080,12 @@
           "good": "Gute Bereitschaft",
           "moderate": "Mittlere Bereitschaft",
           "weak": "Schwache Bereitschaft",
-          "critical": "Kritische Bereitschaft"
+          "critical": "Kritische Bereitschaft",
+          "unavailable": "Nicht verfügbar"
         },
+        "availability": { "complete": "Vollständige Nachweise", "partial": "Teilweise Nachweise", "unavailable": "Nicht verfügbar: keine bewertbaren AIO-Nachweise" },
+        "unknownReasons": "Warum AIO-Nachweise nicht verfügbar oder teilweise sind",
+        "unknownReason": { "no-sections": "In diesem Crawl wurden keine Inhaltsabschnitte gespeichert.", "no-content": "Es wurde kein lesbarer Inhalt gespeichert.", "non-html": "Die gespeicherte Seite war kein HTML.", "request-error": "Die Seitenanfrage ist fehlgeschlagen." },
         "issue": {
           "dangling-pronoun": "Unklarer Bezug",
           "no-answer-first": "Keine direkte Antwort am Anfang",
@@ -7353,6 +7357,7 @@
     "title": "Bereitschaft für AI Overviews & RAG",
     "subtitle": "Wie leicht KI-Antwortmaschinen Ihre Textstellen finden, entnehmen und zitieren können.",
     "empty": "Noch keine Seitendaten mit Inhaltsabschnitten. Starten Sie einen neuen Crawl, um die KI-Bereitschaft zu analysieren.",
+    "status": { "unavailable": "Die KI-Bereitschaft ist für diesen gespeicherten Crawl nicht verfügbar.", "partial": "Die KI-Bereitschaft ist teilweise; einige Nachweise fehlen.", "cancelled": "Die KI-Bereitschaft wurde nicht abgeschlossen, weil der Crawl abgebrochen wurde.", "timedOut": "Die KI-Bereitschaft wurde wegen eines Zeitlimits nicht abgeschlossen.", "noPages": "Die KI-Bereitschaft ist nicht verfügbar, weil der Crawl keine Seiten gespeichert hat." },
     "band": {
       "excellent": "Hervorragende Bereitschaft",
       "good": "Gute Bereitschaft",
@@ -7480,6 +7485,20 @@
       "identityEvidence": "Identitätsnachweis",
       "unavailableNote": "Kein Profil angegeben; nicht verfügbar bedeutet nicht fiktiv.",
       "verifyProfiles": "Profile prüfen"
+    },
+    "graph": {
+      "title": "Entitäts-Vertrauensgraph",
+      "summary": "{{entities}} Entitäten · {{edges}} Rollenverknüpfungen · {{diagnostics}} Diagnosen",
+      "roles": { "document": "Dokument", "author": "Autor", "reviewer": "Prüfer", "publisher": "Herausgeber" },
+      "definition": "Definition",
+      "referenceOnly": "nur Verweis",
+      "status": "{{role}}-Status: {{status}}",
+      "verifiedProfile": "verifiziertes Profil: {{url}}",
+      "noVerifiedProfile": "kein verifiziertes Profil; dies bestätigt keine Qualifikationen",
+      "verifyRole": "{{role}} verifizieren",
+      "diagnostics": "Diagnosen",
+      "statusValues": { "unavailable": "nicht verfügbar", "declared": "deklariert", "fetched": "abgerufen", "verified": "verifiziert", "mismatch": "abweichend", "invalid": "ungültig", "syntax-valid": "syntaxgültig" },
+      "diagnosticCodes": { "conflicting-definition": "widersprüchliche Definition", "dangling-reference": "verwaister Verweis", "indeterminate-reference": "unbestimmter Verweis", "incomplete-definition": "unvollständige Definition", "cycle": "Zyklus", "role-overlap": "Rollenüberschneidung", "graph-truncated": "Graphanalyse begrenzt" }
     },
     "signals": {
       "claimEvidence": "Belege für Aussagen",

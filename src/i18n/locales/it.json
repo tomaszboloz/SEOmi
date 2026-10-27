@@ -6080,8 +6080,12 @@
           "good": "Buona prontezza",
           "moderate": "Prontezza moderata",
           "weak": "Prontezza debole",
-          "critical": "Prontezza critica"
+          "critical": "Prontezza critica",
+          "unavailable": "Non disponibile"
         },
+        "availability": { "complete": "Evidenza completa", "partial": "Evidenza parziale", "unavailable": "Non disponibile: nessuna evidenza AIO valutabile" },
+        "unknownReasons": "Perché l’evidenza AIO è non disponibile o parziale",
+        "unknownReason": { "no-sections": "In questa scansione non sono state salvate sezioni di contenuto.", "no-content": "Non è stato salvato contenuto leggibile.", "non-html": "La pagina salvata non era HTML.", "request-error": "La richiesta della pagina non è riuscita." },
         "issue": {
           "dangling-pronoun": "Riferimento poco chiaro",
           "no-answer-first": "Nessuna risposta diretta all'inizio",
@@ -7353,6 +7357,7 @@
     "title": "Prontezza per AI Overviews e RAG",
     "subtitle": "Con quanta facilità i motori di risposta IA trovano, estraggono e citano i tuoi passaggi.",
     "empty": "Ancora nessun dato di pagina con sezioni di contenuto. Avvia una nuova scansione per analizzare la prontezza per l'IA.",
+    "status": { "unavailable": "La prontezza per l'IA non è disponibile per questa scansione salvata.", "partial": "La prontezza per l'IA è parziale; alcune prove non sono disponibili.", "cancelled": "La prontezza per l'IA non è stata completata perché la scansione è stata annullata.", "timedOut": "La prontezza per l'IA non è stata completata per il limite di tempo.", "noPages": "La prontezza per l'IA non è disponibile perché la scansione non ha salvato pagine." },
     "band": {
       "excellent": "Prontezza eccellente",
       "good": "Buona prontezza",
@@ -7480,6 +7485,20 @@
       "identityEvidence": "Prova d’identità",
       "unavailableNote": "Nessun profilo dichiarato; non disponibile non significa fittizio.",
       "verifyProfiles": "Verifica profili"
+    },
+    "graph": {
+      "title": "Grafo di fiducia delle entità",
+      "summary": "{{entities}} entità · {{edges}} collegamenti di ruolo · {{diagnostics}} diagnostiche",
+      "roles": { "document": "documento", "author": "autore", "reviewer": "revisore", "publisher": "editore" },
+      "definition": "definizione",
+      "referenceOnly": "solo riferimento",
+      "status": "Stato {{role}}: {{status}}",
+      "verifiedProfile": "profilo verificato: {{url}}",
+      "noVerifiedProfile": "nessun profilo verificato; non conferma le qualifiche",
+      "verifyRole": "Verifica {{role}}",
+      "diagnostics": "Diagnostica",
+      "statusValues": { "unavailable": "non disponibile", "declared": "dichiarato", "fetched": "recuperato", "verified": "verificato", "mismatch": "non corrispondente", "invalid": "non valido", "syntax-valid": "sintassi valida" },
+      "diagnosticCodes": { "conflicting-definition": "definizione in conflitto", "dangling-reference": "riferimento orfano", "indeterminate-reference": "riferimento indeterminato", "incomplete-definition": "definizione incompleta", "cycle": "ciclo", "role-overlap": "sovrapposizione di ruoli", "graph-truncated": "analisi del grafo limitata" }
     },
     "signals": {
       "claimEvidence": "Prove delle affermazioni",

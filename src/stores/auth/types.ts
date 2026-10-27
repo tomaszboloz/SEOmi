@@ -1,6 +1,7 @@
 import type { StoreApi } from 'zustand';
 import type { AiCliStatus, AiConnectionMethod, AiConnectionState, AiProvider, UserSubscription } from '@/types';
 import type { AIService } from '@/services/ai';
+import type { LlmRequestContext } from '@/services/llmEconomy';
 import type { AiModelOption } from '@/services/ai/modelList';
 export interface AuthState {
   subscription: UserSubscription;
@@ -26,7 +27,7 @@ export interface AuthState {
   detectLocalClients: () => Promise<void>;
   testProviderConnection: (provider: AiProvider) => Promise<{ success: boolean; message: string }>;
   isProviderConnected: (provider?: AiProvider) => boolean;
-  generateText: (prompt: string) => Promise<string>;
+  generateText: (prompt: string, requestContext?: LlmRequestContext) => Promise<string>;
   generateTextForProvider: (provider: AiProvider, prompt: string) => Promise<string>;
   generateSuggestions: (audit: Parameters<typeof AIService.generateSuggestions>[3], instruction?: string) => ReturnType<typeof AIService.generateSuggestions>;
 }

@@ -25,6 +25,20 @@ where
     R: Fn(Url) -> F,
     F: Future<Output = Result<Vec<SocketAddr>>>,
 {
+    fetch_with_resolver_accept(target_url, user_agent_str, options, None, resolve).await
+}
+
+pub async fn fetch_with_resolver_accept<R, F>(
+    target_url: &Url,
+    user_agent_str: &str,
+    options: FetchOptions,
+    accept: Option<&str>,
+    resolve: R,
+) -> Result<FetchResult>
+where
+    R: Fn(Url) -> F,
+    F: Future<Output = Result<Vec<SocketAddr>>>,
+{
     tokio::time::timeout(options.timeout, async {
         let mut current = validate_and_normalize_url(target_url.as_str())
             .map_err(|error| anyhow!(error.to_string()))?;
@@ -47,6 +61,9 @@ where
             let mut request = client.get(current.clone());
             if let Ok(value) = HeaderValue::from_str(user_agent_str) {
                 request = request.header(USER_AGENT, value);
+            }
+            if let Some(accept) = accept {
+                request = request.header(reqwest::header::ACCEPT, accept);
             }
             let response = request.send().await?;
             if matches!(response.status().as_u16(), 301 | 302 | 303 | 307 | 308) {

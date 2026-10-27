@@ -6085,8 +6085,12 @@
           "good": "Good readiness",
           "moderate": "Moderate readiness",
           "weak": "Weak readiness",
-          "critical": "Critical readiness"
+          "critical": "Critical readiness",
+          "unavailable": "Unavailable"
         },
+        "availability": { "complete": "Complete evidence", "partial": "Partial evidence", "unavailable": "Unavailable: no scoreable AIO evidence" },
+        "unknownReasons": "Why AIO evidence is unavailable or partial",
+        "unknownReason": { "no-sections": "No content sections were saved in this crawl.", "no-content": "No readable content was saved.", "non-html": "The saved page was not HTML.", "request-error": "The page request failed." },
         "issue": {
           "dangling-pronoun": "Unclear reference",
           "no-answer-first": "No direct answer first",
@@ -7353,6 +7357,7 @@
     "title": "AI Overviews & RAG readiness",
     "subtitle": "How easily AI answer engines can find, lift and quote your passages.",
     "empty": "No page data with content sections yet. Run a new crawl to analyse AI readiness.",
+    "status": { "unavailable": "AI readiness is unavailable for this saved crawl.", "partial": "AI readiness is partial; some evidence is unavailable.", "cancelled": "AI readiness was not completed because the crawl was cancelled.", "timedOut": "AI readiness was not completed because the crawl timed out.", "noPages": "AI readiness is unavailable because the crawl saved no pages." },
     "band": {
       "excellent": "Excellent readiness",
       "good": "Good readiness",
@@ -7480,6 +7485,20 @@
       "identityEvidence": "Identity evidence",
       "unavailableNote": "No declared profile; unavailable does not mean fictitious.",
       "verifyProfiles": "Verify profiles"
+    },
+    "graph": {
+      "title": "Entity trust graph",
+      "summary": "{{entities}} entities · {{edges}} role edges · {{diagnostics}} diagnostics",
+      "roles": { "document": "document", "author": "author", "reviewer": "reviewer", "publisher": "publisher" },
+      "definition": "definition",
+      "referenceOnly": "reference only",
+      "status": "{{role}} status: {{status}}",
+      "verifiedProfile": "verified profile: {{url}}",
+      "noVerifiedProfile": "no verified profile; this does not verify qualifications",
+      "verifyRole": "Verify {{role}}",
+      "diagnostics": "Diagnostics",
+      "statusValues": { "unavailable": "unavailable", "declared": "declared", "fetched": "fetched", "verified": "verified", "mismatch": "mismatch", "invalid": "invalid", "syntax-valid": "syntax-valid" },
+      "diagnosticCodes": { "conflicting-definition": "conflicting definition", "dangling-reference": "dangling reference", "indeterminate-reference": "indeterminate reference", "incomplete-definition": "incomplete definition", "cycle": "cycle", "role-overlap": "role overlap", "graph-truncated": "graph analysis truncated" }
     },
     "signals": {
       "claimEvidence": "Claim evidence",

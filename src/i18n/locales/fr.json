@@ -6080,8 +6080,12 @@
           "good": "Bonne préparation",
           "moderate": "Préparation modérée",
           "weak": "Préparation faible",
-          "critical": "Préparation critique"
+          "critical": "Préparation critique",
+          "unavailable": "Indisponible"
         },
+        "availability": { "complete": "Preuves complètes", "partial": "Preuves partielles", "unavailable": "Indisponible : aucune preuve AIO évaluable" },
+        "unknownReasons": "Pourquoi les preuves AIO sont indisponibles ou partielles",
+        "unknownReason": { "no-sections": "Aucune section de contenu n’a été enregistrée dans ce crawl.", "no-content": "Aucun contenu lisible n’a été enregistré.", "non-html": "La page enregistrée n’était pas en HTML.", "request-error": "La requête de la page a échoué." },
         "issue": {
           "dangling-pronoun": "Référence floue",
           "no-answer-first": "Pas de réponse directe en premier",
@@ -7353,6 +7357,7 @@
     "title": "Préparation à AI Overviews et au RAG",
     "subtitle": "La facilité avec laquelle les moteurs de réponse IA trouvent, extraient et citent vos passages.",
     "empty": "Aucune donnée de page avec sections de contenu pour l'instant. Lancez un nouveau crawl pour analyser la préparation à l'IA.",
+    "status": { "unavailable": "La préparation à l’IA est indisponible pour ce crawl enregistré.", "partial": "La préparation à l’IA est partielle ; certaines preuves sont indisponibles.", "cancelled": "La préparation à l’IA n’est pas terminée, car le crawl a été annulé.", "timedOut": "La préparation à l’IA n’est pas terminée, car le crawl a dépassé le délai.", "noPages": "La préparation à l’IA est indisponible, car le crawl n’a enregistré aucune page." },
     "band": {
       "excellent": "Préparation excellente",
       "good": "Bonne préparation",
@@ -7480,6 +7485,20 @@
       "identityEvidence": "Preuve d’identité",
       "unavailableNote": "Aucun profil déclaré ; indisponible ne signifie pas fictif.",
       "verifyProfiles": "Vérifier les profils"
+    },
+    "graph": {
+      "title": "Graphe de confiance des entités",
+      "summary": "{{entities}} entités · {{edges}} liens de rôle · {{diagnostics}} diagnostics",
+      "roles": { "document": "document", "author": "auteur", "reviewer": "relecteur", "publisher": "éditeur" },
+      "definition": "définition",
+      "referenceOnly": "référence uniquement",
+      "status": "Statut {{role}} : {{status}}",
+      "verifiedProfile": "profil vérifié : {{url}}",
+      "noVerifiedProfile": "aucun profil vérifié ; cela ne confirme pas les qualifications",
+      "verifyRole": "Vérifier {{role}}",
+      "diagnostics": "Diagnostics",
+      "statusValues": { "unavailable": "indisponible", "declared": "déclaré", "fetched": "récupéré", "verified": "vérifié", "mismatch": "non concordant", "invalid": "invalide", "syntax-valid": "syntaxe valide" },
+      "diagnosticCodes": { "conflicting-definition": "définition contradictoire", "dangling-reference": "référence orpheline", "indeterminate-reference": "référence indéterminée", "incomplete-definition": "définition incomplète", "cycle": "cycle", "role-overlap": "chevauchement de rôles", "graph-truncated": "analyse du graphe limitée" }
     },
     "signals": {
       "claimEvidence": "Preuves des affirmations",

@@ -1,6 +1,7 @@
 import { beforeEach, describe, expect, it } from 'vitest';
 import { buildTrustReport, comparableTrustSnapshots, readTrustHistory, recordTrust, trustHistoryKey } from '@/services/eeatTrust';
 import { AUTHOR_ID, diabetesFocus, diabetesPages, NOW, trustedArticle } from './eeatTrustFixtures';
+import { registryEvidenceKey } from '@/services/eeatTrust/registryEvidence';
 
 describe('EETV five-layer profile', () => {
   beforeEach(() => localStorage.clear());
@@ -37,7 +38,7 @@ describe('EETV five-layer profile', () => {
   it('uses supplied registry evidence as the report default source contract', () => {
     const pages = diabetesPages().map((page) => page.url.includes('/articles/') ? trustedArticle(page) : page);
     const report = buildTrustReport(pages, diabetesFocus(pages), { profileEvidence: {
-      'https://orcid.org/0000-0000-0000-0001': { url: 'https://orcid.org/0000-0000-0000-0001', kind: 'orcid', status: 'verified', tier: 1, id: '0000-0000-0000-0001' },
+      [registryEvidenceKey(AUTHOR_ID, 'author', 'https://orcid.org/0000-0000-0000-0001')]: { url: 'https://orcid.org/0000-0000-0000-0001', kind: 'orcid', status: 'verified', tier: 1, id: '0000-0000-0000-0001' },
     } });
     expect(report.authors.find((author) => author.id === AUTHOR_ID)?.reconciliation).toMatchObject({ status: 'verified', evidence: 'registry' });
   });

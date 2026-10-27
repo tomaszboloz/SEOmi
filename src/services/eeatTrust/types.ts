@@ -1,5 +1,7 @@
 import type { Coded } from '@/services/siteFocus';
 import type { ClaimCitation } from '@/services/citationEvidence/claims';
+import type { TrustGraph } from './graphTypes';
+export type * from './graphTypes';
 
 /** E-E-A-T & Entity Trust Verifier contracts. Wording is a code plus params: the UI localizes. */
 
@@ -44,6 +46,8 @@ export interface AuthorEntity {
   credentials?: string[];
   knowsAbout?: string[];
   sameAs: string[];
+  aliases?: string[];
+  profileUrls?: string[];
   articleUrls: string[];
   /** "Redakcja", "Editorial team", "admin": an anonymous byline. */
   generic: boolean;
@@ -101,6 +105,7 @@ export interface TrustReport {
   ymyl?: YmylCategory;
   ymylPolicy?: { category: YmylCategory; applicable: boolean; multiplier: number; triggered: boolean; heuristic: true };
   schema: SchemaGraphDetail;
+  graph?: TrustGraph;
   authors: AuthorEntity[];
   citations: CitationDetail;
   transparency: TransparencyDetail;

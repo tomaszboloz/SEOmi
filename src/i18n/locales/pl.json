@@ -6080,8 +6080,12 @@
           "good": "Dobra gotowość",
           "moderate": "Umiarkowana gotowość",
           "weak": "Słaba gotowość",
-          "critical": "Krytyczna gotowość"
+          "critical": "Krytyczna gotowość",
+          "unavailable": "Niedostępne"
         },
+        "availability": { "complete": "Kompletne dowody", "partial": "Częściowe dowody", "unavailable": "Niedostępne: brak ocenialnych dowodów AIO" },
+        "unknownReasons": "Dlaczego dowody AIO są niedostępne lub częściowe",
+        "unknownReason": { "no-sections": "W tym crawl nie zapisano sekcji treści.", "no-content": "Nie zapisano czytelnej treści.", "non-html": "Zapisana strona nie była HTML.", "request-error": "Żądanie strony nie powiodło się." },
         "issue": {
           "dangling-pronoun": "Niejasne odniesienie",
           "no-answer-first": "Brak bezpośredniej odpowiedzi na początku",
@@ -7353,6 +7357,7 @@
     "title": "Gotowość na AI Overviews i RAG",
     "subtitle": "Jak łatwo silniki odpowiedzi AI znajdą, wyciągną i zacytują fragmenty Twoich stron.",
     "empty": "Brak danych stron z sekcjami treści. Uruchom nowy crawl, aby przeanalizować gotowość na AI.",
+    "status": { "unavailable": "Gotowość na AI jest niedostępna dla tego zapisanego crawl.", "partial": "Gotowość na AI jest częściowa; część dowodów jest niedostępna.", "cancelled": "Gotowość na AI nie została ukończona, ponieważ crawl anulowano.", "timedOut": "Gotowość na AI nie została ukończona z powodu limitu czasu crawl.", "noPages": "Gotowość na AI jest niedostępna, ponieważ crawl nie zapisał stron." },
     "band": {
       "excellent": "Doskonała gotowość",
       "good": "Dobra gotowość",
@@ -7480,6 +7485,20 @@
       "identityEvidence": "Dowód tożsamości",
       "unavailableNote": "Brak zadeklarowanego profilu; niedostępność nie oznacza fikcyjności.",
       "verifyProfiles": "Sprawdź profile"
+    },
+    "graph": {
+      "title": "Graf zaufania encji",
+      "summary": "{{entities}} encji · {{edges}} krawędzi ról · {{diagnostics}} diagnostyk",
+      "roles": { "document": "dokument", "author": "autor", "reviewer": "recenzent", "publisher": "wydawca" },
+      "definition": "definicja",
+      "referenceOnly": "tylko odwołanie",
+      "status": "Status {{role}}: {{status}}",
+      "verifiedProfile": "zweryfikowany profil: {{url}}",
+      "noVerifiedProfile": "brak zweryfikowanego profilu; nie potwierdza to kwalifikacji",
+      "verifyRole": "Zweryfikuj {{role}}",
+      "diagnostics": "Diagnostyka",
+      "statusValues": { "unavailable": "niedostępne", "declared": "zadeklarowane", "fetched": "pobrane", "verified": "zweryfikowane", "mismatch": "niezgodne", "invalid": "nieprawidłowe", "syntax-valid": "poprawne składniowo" },
+      "diagnosticCodes": { "conflicting-definition": "sprzeczna definicja", "dangling-reference": "wiszące odwołanie", "indeterminate-reference": "nierozstrzygnięte odwołanie", "incomplete-definition": "niepełna definicja", "cycle": "cykl", "role-overlap": "nakładanie ról", "graph-truncated": "analiza grafu ograniczona" }
     },
     "signals": {
       "claimEvidence": "Dowody twierdzeń",

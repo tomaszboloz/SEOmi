@@ -42,13 +42,16 @@ keys! {
     PROFILE_LEGACY => "crawl.aio.profileLegacy",
     PROFILE_MISMATCH => "crawl.aio.profileMismatch",
     HISTORICAL_PROFILE => "crawl.aio.historicalProfile",
+    UNKNOWN_REASONS => "crawl.aio.unknownReasons",
 }
 
 pub const BAND: &str = "crawl.aio.band";
 pub const ISSUE: &str = "crawl.aio.issue";
+pub const AVAILABILITY: &str = "crawl.aio.availability";
+pub const UNKNOWN_REASON: &str = "crawl.aio.unknownReason";
 
 #[cfg(test)]
-pub const BANDS: &[&str] = &["excellent", "good", "moderate", "weak", "critical"];
+pub const BANDS: &[&str] = &["excellent", "good", "moderate", "weak", "critical", "unavailable"];
 #[cfg(test)]
 pub const ISSUES: &[&str] = &[
     "dangling-pronoun",

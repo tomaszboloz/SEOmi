@@ -7,11 +7,12 @@ export const AIO_PDF_PASSAGES = 12;
 const EXCERPT_CHARS = 220;
 
 export interface AioPdfSummary {
-  score: number;
+  score: number | null;
   band: string;
-  self_containment: number;
-  spo_density: number;
-  extractability: number;
+  self_containment: number | null;
+  spo_density: number | null;
+  extractability: number | null;
+  availability: 'complete' | 'partial' | 'unavailable';
   scored: number;
   skipped: number;
   basic_rule_languages: string[];
@@ -52,15 +53,18 @@ export const summarizeAio = (report: AioReport, profile: SummaryProfile = {
   })),
   profile,
   profile_status: profileStatus,
+  availability: report.availability === 'complete' ? 'complete' : report.scoredCount ? 'partial' : 'unavailable',
   unknown_reasons: report.unknownReasons,
 });
 
-/** Summary for a finished run; undefined when no page carries scoreable sections (older saved runs). */
+const skipReasons = (report: AioReport): string[] => report.pages.flatMap((page) => page.skipped ? [page.skipped] : []);
+
+/** Summary for a finished run; old non-empty runs remain explicit unavailable summaries. */
 export const crawlAioSummary = (run: CrawlRunRecord): AioPdfSummary | undefined => {
   const pages = run.result?.pages ?? [];
   if (run.result?.cancelled || run.result?.timed_out || !pages.length) return undefined;
   const report = buildAioReport(pages);
-  if (!report.scoredCount) return undefined;
+  const reasons = [...new Set([...report.unknownReasons, ...skipReasons(report)])];
   const stored = run.result.aio_profile;
   const storedProfile: SummaryProfile | undefined = stored && {
     id: stored.id, algorithm_version: stored.algorithmVersion, config_hash: stored.configHash, language: stored.language, market: stored.market,
@@ -68,11 +72,25 @@ export const crawlAioSummary = (run: CrawlRunRecord): AioPdfSummary | undefined 
   const currentProfile: SummaryProfile = {
     id: report.profile.id, algorithm_version: report.profile.algorithmVersion, config_hash: report.profile.configHash, language: report.profile.language, market: report.profile.market,
   };
-  if (!storedProfile) {
-    return summarizeAio(report, currentProfile, 'legacy-unversioned');
-  }
+  const profileStatus = storedProfile
+    ? (profileIdentity(storedProfile) === profileIdentity(currentProfile) ? 'persisted' : 'mismatch')
+    : 'legacy-unversioned';
+  const summary = summarizeAio(report, currentProfile, profileStatus);
+  if (!report.scoredCount) return {
+    ...summary,
+    score: null,
+    band: 'unavailable',
+    self_containment: null,
+    spo_density: null,
+    extractability: null,
+    availability: 'unavailable',
+    unknown_reasons: reasons.length ? reasons : ['no-sections'],
+    ...(storedProfile ? { historical_profile: storedProfile } : {}),
+  };
   return {
-    ...summarizeAio(report, currentProfile, profileIdentity(storedProfile) === profileIdentity(currentProfile) ? 'persisted' : 'mismatch'),
-    historical_profile: storedProfile,
+    ...summary,
+    availability: report.availability === 'complete' ? 'complete' : 'partial',
+    unknown_reasons: reasons,
+    ...(storedProfile ? { historical_profile: storedProfile } : {}),
   };
 };

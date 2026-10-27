@@ -1,5 +1,6 @@
 export * from './types';
 export { buildTrustReport, combineLayers } from './build';
+export { buildTrustGraph } from './entityGraph';
 export { buildFindings, levelFor, TRUST_CODES } from './findings';
 export { isTrustedHost } from './citations';
 export { isGenericAuthor } from './authors';
@@ -8,3 +9,4 @@ export { readTrustHistory, recordTrust, trustHistoryKey, TRUST_HISTORY_LIMIT, co
 export { persistCompletedTrustRun, type CompletedTrustResult } from './completion';
 export { summarizeTrust, crawlTrustSummary, TRUST_PDF_AUTHORS, type TrustPdfSummary } from './summary';
 export { safeRegistryUrl, verifyProfile, clearRegistryCache, nativeRegistryFetcher, type RegistryOptions, type RegistryResult } from './registry';
+export { createRegistryMatcher, type RegistryIdentity } from './registryIdentity';
