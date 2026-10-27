@@ -106,8 +106,26 @@ fn terms_are_capped_and_alt_text_counts() {
 }
 
 #[test]
+fn chrome_images_are_ignored_and_header_headings_use_the_outer_zone() {
+    let page = focus(
+        "<body><header><h3>Header label</h3></header><main><h2></h2><p>Body text.</p></main><footer><img alt='footer-only'></footer></body>",
+        "en",
+        None,
+    );
+    assert!(!page.focus_terms.iter().any(|term| term.term == "footer"));
+    assert!(page
+        .heading_texts
+        .h3
+        .iter()
+        .any(|heading| heading == "Header label"));
+}
+
+#[test]
 fn old_saved_runs_without_focus_fields_still_load() {
     let page: crate::commands::site_crawler::models::CrawledPageFocus =
         serde_json::from_str("{}").unwrap();
     assert!(page.focus_terms.is_empty() && page.focus_text_chars == 0);
 }
+
+#[path = "coverage100_focus_terms.rs"]
+mod coverage100_focus_terms;

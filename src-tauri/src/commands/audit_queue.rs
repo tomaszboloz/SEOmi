@@ -112,3 +112,6 @@ mod tests {
         assert!(!json!([]).is_object());
     }
 }
+
+#[cfg(test)]
+mod coverage100_race_tests;

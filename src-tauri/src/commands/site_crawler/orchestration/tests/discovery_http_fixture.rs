@@ -1,10 +1,7 @@
 use super::*;
 use std::sync::{Arc, Mutex};
-use tokio::{
-    io::{AsyncReadExt, AsyncWriteExt},
-    net::TcpListener,
-    task::JoinHandle,
-};
+use tokio::io::{AsyncReadExt, AsyncWriteExt};
+use tokio::{net::TcpListener, task::JoinHandle};
 pub struct DiscoveryServer {
     pub setup: CrawlSetup,
     pub requests: Arc<Mutex<Vec<String>>>,
@@ -88,7 +85,6 @@ impl DiscoveryServer {
             task,
         }
     }
-
     pub fn url(&self, path: &str) -> String {
         self.setup.parsed_base.join(path).unwrap().to_string()
     }
@@ -98,7 +94,6 @@ impl Drop for DiscoveryServer {
         self.task.abort();
     }
 }
-
 pub fn route(path: &str, status: u16, body: &str) -> Route {
     Route {
         path: path.into(),
@@ -108,31 +103,36 @@ pub fn route(path: &str, status: u16, body: &str) -> Route {
         delay_ms: 0,
     }
 }
-
 pub fn delayed_route(path: &str, status: u16, body: &str, delay_ms: u64) -> Route {
-    let mut route = route(path, status, body);
-    route.delay_ms = delay_ms;
-    route
+    Route {
+        delay_ms,
+        ..route(path, status, body)
+    }
 }
-
 pub fn redirect(path: &str, location: &str) -> Route {
-    let mut route = route(path, 302, "");
-    route.headers.push(format!("Location: {location}"));
-    route
+    Route {
+        headers: vec![format!("Location: {location}")],
+        ..route(path, 302, "")
+    }
 }
-
 pub fn html_route(path: &str, body: &str) -> Route {
-    let mut route = route(path, 200, body);
-    route.headers.push("Content-Type: text/html".into());
-    route
+    Route {
+        headers: vec!["Content-Type: text/html".into()],
+        ..route(path, 200, body)
+    }
 }
-
 pub fn media_route(path: &str, body: &str) -> Route {
-    let mut route = route(path, 200, body);
-    route.headers.push("Content-Type: image/png".into());
-    route
+    Route {
+        headers: vec!["Content-Type: image/png".into()],
+        ..route(path, 200, body)
+    }
 }
-
+pub fn waf_route(path: &str, status: u16, body: &str, header: &str) -> Route {
+    Route {
+        headers: vec![header.into()],
+        ..route(path, status, body)
+    }
+}
 pub fn refused_setup() -> (CrawlSetup, tokio::net::TcpSocket) {
     let socket = tokio::net::TcpSocket::new_v4().unwrap();
     socket.bind("127.0.0.1:0".parse().unwrap()).unwrap();

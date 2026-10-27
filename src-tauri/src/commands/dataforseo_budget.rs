@@ -104,5 +104,8 @@ impl Reservation {
 }
 
 #[cfg(test)]
+#[path = "dataforseo_budget_coverage100_tests.rs"]
+mod coverage100_tests;
+#[cfg(test)]
 #[path = "dataforseo_budget_tests.rs"]
 mod tests;

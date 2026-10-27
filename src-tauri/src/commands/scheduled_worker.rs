@@ -145,3 +145,6 @@ pub fn acknowledge_scheduled_execution<R: tauri::Runtime>(
 #[cfg(test)]
 #[path = "scheduled_worker/command_tests/mod.rs"]
 mod command_tests;
+
+#[cfg(test)]
+mod coverage100_concurrency_tests;
