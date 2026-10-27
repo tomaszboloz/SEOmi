@@ -6,8 +6,9 @@ import { createBriefDeps } from '@/services/siteFocusBenchmark/adapter';
 import { copyText } from '@/services/clipboard';
 import { downloadBlob } from '@/services/download';
 import type { CrawledPageSummary } from '@/types';
+import { AioPassageEvidence } from './AioPassageEvidence';
 
-type Passage = AioChunk & { url: string; startOffset?: number; endOffset?: number };
+type Passage = AioChunk & { url: string };
 type State = { status: 'idle' | 'busy' | 'ok' | 'no-key' | 'empty' | 'cancelled' | 'error'; text?: string; message?: string };
 
 const btn = 'rounded border border-slate-600 px-2 py-1 text-xs text-slate-100 hover:bg-slate-800 disabled:opacity-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-400';
@@ -54,12 +55,11 @@ export const AioPassageCard = ({ passage, index, page, projectId, runId }: { pas
       <p className="break-all font-medium text-slate-100">{passage.url}</p>
       <p className="text-slate-400">
         {passage.heading || t('aio.passage.noHeading')} · {t('aio.passage.chunk', { n: passage.windowIndex + 1, tokens: passage.tokens, score: passage.score })}
-        {passage.startOffset !== undefined && ` · ${t('aio.passage.offset', { start: passage.startOffset, end: passage.endOffset ?? passage.startOffset + passage.text.length })}`}
       </p>
       <ul className="flex flex-wrap gap-1" aria-label={t('aio.passage.title')}>
         {passage.issues.map((issue) => <li key={issue} className="rounded bg-rose-500/10 px-2 py-0.5 text-rose-200">{t(`aio.issue.${issue}`)}</li>)}
       </ul>
-      <p className="whitespace-pre-line rounded bg-slate-900 p-2 text-slate-200"><span className="sr-only">{t('aio.passage.current')}: </span>{passage.text}</p>
+      <AioPassageEvidence passage={passage} />
       <div className="flex flex-wrap items-center gap-2">
         <button type="button" className={btn} disabled={state.status === 'busy'} onClick={() => void generate()} aria-label={`${t('aio.passage.generate')} ${index + 1}`}>
           {state.status === 'busy' ? t('aio.passage.generating') : t('aio.passage.generate')}

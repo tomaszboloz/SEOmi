@@ -20,12 +20,15 @@ export interface AioChunk {
   text: string;
   tokens: number;
   windowIndex: number;
-  /** 0-100 citability of this chunk alone. */
+  /** 0-100 weighted chunk score. */
   score: number;
+  /** Ratio in [0, 1]. */
   selfContainment: number;
+  /** Ratio in [0, 1]. */
   answerFirst: number;
   answerFirstAvailability?: 'available' | 'not-applicable';
   selfContainmentDetails?: SelfContainmentDetails;
+  /** Ratio in [0, 1]. */
   spoDensity?: number;
   offsets?: { start: number; end: number; unit: 'utf16' };
   oversizedSentence?: boolean;
