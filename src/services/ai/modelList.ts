@@ -2,6 +2,8 @@ import { z } from 'zod';
 import type { AiProvider } from '@/types';
 import { CLAUDE_DEFAULT_MODEL } from './claude';
 import { GEMINI_DEFAULT_MODEL, isHiddenModel } from './modelCatalog';
+import { invokeTauriCommand } from '@/services/tauri';
+import { isDesktopAi } from './native';
 
 export interface AiModelOption {
   id: string;
@@ -22,7 +24,9 @@ const MAX_PAGES = 5;
 
 // Models listed by OpenAI include embeddings, audio, image and moderation
 // models that cannot answer a chat request; only text generation is offered.
-const OPENAI_NON_CHAT = /(embedding|whisper|tts|dall-e|image|audio|realtime|transcribe|moderation|search|davinci|babbage|computer-use)/i;
+// `-pro`, `codex` and `gpt-live` are served by other endpoints, `instruct` by legacy completions.
+const OPENAI_NON_CHAT = /(embedding|whisper|tts|dall-e|image|audio|realtime|transcribe|moderation|search|davinci|babbage|computer-use|-pro|codex|gpt-live|instruct)/i;
+const GEMINI_NON_TEXT = /(tts|image|transcribe|embedding|robotics|computer-use)/i;
 const isOpenAiChatModel = (id: string): boolean => /^(gpt-|o\d|chatgpt-)/i.test(id) && !OPENAI_NON_CHAT.test(id);
 
 const OpenAiList = z.object({ data: z.array(z.object({ id: z.string().min(1), created: z.number().optional() })) });
@@ -82,7 +86,7 @@ const listGemini = async (apiKey: string, fetchImpl: ModelListFetch): Promise<Ai
     const body = GeminiList.parse(await readJson(await fetchImpl(`https://generativelanguage.googleapis.com/v1beta/models?${query}`)));
     for (const model of body.models) {
       const id = model.name.replace(/^models\//, '');
-      if (!id.startsWith('gemini') || /embedding/i.test(id)) continue;
+      if (!id.startsWith('gemini') || GEMINI_NON_TEXT.test(id)) continue;
       if (!(model.supportedGenerationMethods ?? []).includes('generateContent')) continue;
       models.push({ id, label: model.displayName || id });
     }
@@ -100,6 +104,10 @@ const listers: Record<AiProvider, (apiKey: string, fetchImpl: ModelListFetch) =>
 
 /** Text-generation models the API key can use, newest first where the provider reports dates. */
 export const listProviderModels = async (provider: AiProvider, apiKey: string, fetchImpl: ModelListFetch = fetch): Promise<AiModelOption[]> => {
+  if (isDesktopAi()) {
+    const models = await invokeTauriCommand<AiModelOption[]>('ai_list_models', { provider });
+    return models.filter((model) => !isHiddenModel(model.id)).slice(0, MAX_MODELS);
+  }
   if (!apiKey.trim()) return [];
   const seen = new Set<string>();
   return (await listers[provider](apiKey.trim(), fetchImpl))

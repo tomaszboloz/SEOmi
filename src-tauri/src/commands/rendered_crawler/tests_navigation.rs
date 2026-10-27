@@ -1,7 +1,7 @@
 use url::Url;
 
 use super::models::RenderedArtifactKind;
-use super::navigation::{is_allowed_navigation, parse_capture_chunk};
+use super::navigation::{is_allowed_crawl_navigation, is_allowed_navigation, parse_capture_chunk};
 use super::preview::normalize_preview_value;
 
 #[test]
@@ -42,6 +42,32 @@ fn rendered_navigation_is_confined_to_http_scope_and_path_boundary() {
         "example.test",
         false,
         None
+    ));
+}
+
+#[test]
+fn allowlisted_hosts_are_in_crawl_scope_without_the_seed_path_scope() {
+    let allowed = vec!["docs.example.test".to_string()];
+    let docs = Url::parse("https://docs.example.test/guide").unwrap();
+    let seed = ("www.example.test", Some("/articles"));
+    assert!(!is_allowed_crawl_navigation(
+        &docs,
+        seed.0,
+        false,
+        seed.1,
+        &[]
+    ));
+    assert!(is_allowed_crawl_navigation(
+        &docs, seed.0, false, seed.1, &allowed
+    ));
+    // The seed host keeps its path scope even with an allowlist.
+    let shop = Url::parse("https://www.example.test/shop").unwrap();
+    assert!(!is_allowed_crawl_navigation(
+        &shop, seed.0, false, seed.1, &allowed
+    ));
+    let elsewhere = Url::parse("https://elsewhere.test/guide").unwrap();
+    assert!(!is_allowed_crawl_navigation(
+        &elsewhere, seed.0, true, None, &allowed
     ));
 }
 

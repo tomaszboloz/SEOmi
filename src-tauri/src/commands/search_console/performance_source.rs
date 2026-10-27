@@ -77,7 +77,7 @@ pub(super) async fn run(
         filters,
         queries.may_be_truncated,
         pages.may_be_truncated,
-    );
+    )?;
     output["query_pages"] = serde_json::json!(map_joint_rows(&joint.rows)?);
     output["query_pages_may_be_truncated"] = serde_json::json!(joint.may_be_truncated);
     Ok(output)

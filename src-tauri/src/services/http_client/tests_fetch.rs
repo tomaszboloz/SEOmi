@@ -21,13 +21,17 @@ async fn rejects_initial_dns_before_transport() {
 
 #[tokio::test]
 async fn pinned_transport_preserves_headers_cookies_and_measurements() {
-    let address = fixture(vec!["HTTP/1.1 200 OK\r\nContent-Length: 5\r\nSet-Cookie: a=1\r\nSet-Cookie: b=2\r\nConnection: close\r\n\r\nhello".into()]).await;
+    let address = fixture(vec!["HTTP/1.1 200 OK\r\nContent-Length: 5\r\nContent-Security-Policy: default-src *\r\nContent-Security-Policy: script-src 'self'\r\nSet-Cookie: a=1\r\nSet-Cookie: b=2\r\nConnection: close\r\n\r\nhello".into()]).await;
     let url = Url::parse(&format!("http://audit.example:{}/", address.port())).unwrap();
     let result = fetch_with_resolver(&url, "Test", options(5, 0), |_| async { Ok(vec![address]) })
         .await
         .unwrap();
     assert_eq!(result.body, "hello");
     assert_eq!(result.set_cookie_headers, ["a=1", "b=2"]);
+    assert_eq!(
+        result.repeated_headers["content-security-policy"],
+        ["default-src *", "script-src 'self'"]
+    );
     assert_eq!(result.http_performance.decoded_body_bytes, 5);
     assert_eq!(result.http_performance.content_length_header_bytes, Some(5));
     assert!(result.http_performance.total_request_ms >= result.response_time_ms);

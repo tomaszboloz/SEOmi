@@ -11,6 +11,9 @@ pub(super) trait ProcessRunner {
 }
 
 pub(super) struct SystemProcessRunner;
+#[cfg(test)]
+#[path = "process_output_tests.rs"]
+mod output_tests;
 
 impl ProcessRunner for SystemProcessRunner {
     fn output(&self, program: &str, args: &[String]) -> io::Result<ProcessResult> {

@@ -3,13 +3,16 @@ import { DomainOverviewData, DomainComparisonData, DomainComparisonHistory, Back
 
 import { readJsonStorage, writeJsonStorage } from '@/services/storage';
 
-import { parseBacklinkGapReport, parseBacklinkProfile, parseBacklinkSnapshot, parseDomainComparison, parseDomainOverview, parseResearchHistory } from '@/services/researchContracts';
+import { parseBacklinkGapReport, parseDomainComparison, parseDomainOverview, parseResearchHistory } from '@/services/researchContracts';
+import { dropSnapshot } from '@/services/urlTelemetry/store';
+export { loadBacklinkProfile, normalizeBacklinkProfileHistory, loadBacklinkProfileHistory } from '@/services/urlTelemetry/backlinkPersistence';
 
 import { domainComparisonKey, domainComparisonHistoryKey, domainComparisonTargetsKey, domainOverviewKey, backlinkProfileKey, backlinkProfileHistoryKey, backlinkGapReportKey, activeProjectId } from './storageKeys';
 
 export const saveProjectResearch = (key: (projectId: string) => string, value: unknown, projectId = activeProjectId()) => {
   if (!projectId) return;
   writeJsonStorage(key(projectId), value);
+  if (key(projectId) === backlinkProfileKey(projectId)) dropSnapshot(projectId);
 };
 
 export const readProjectResearch = (key: (projectId: string) => string, projectId: string): unknown => {
@@ -47,18 +50,6 @@ export const loadLatestDomainComparison = (projectId: string): DomainComparisonD
 export const loadDomainOverview = (projectId: string): DomainOverviewData | null => {
   return parseDomainOverview(readProjectResearch(domainOverviewKey, projectId));
 };
-
-export const loadBacklinkProfile = (projectId: string): BacklinkProfileData | null => {
-  return parseBacklinkProfile(readProjectResearch(backlinkProfileKey, projectId));
-};
-
-export const normalizeBacklinkProfileHistory = (value: unknown): BacklinkProfileHistory => {
-  return parseResearchHistory(value, parseBacklinkSnapshot, 12, 'last');
-};
-
-export const loadBacklinkProfileHistory = (projectId: string): BacklinkProfileHistory => normalizeBacklinkProfileHistory(
-  readProjectResearch(backlinkProfileHistoryKey, projectId),
-);
 
 export const saveBacklinkProfileSnapshot = (
   projectId: string,

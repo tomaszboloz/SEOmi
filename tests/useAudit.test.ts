@@ -4,7 +4,7 @@ import { useAudit } from '@/hooks/useAudit';
 import { useAuditStore } from '@/stores/auditStore';
 
 const initial = useAuditStore.getState();
-afterEach(() => useAuditStore.setState(initial));
+afterEach(() => { act(() => useAuditStore.setState(initial)); });
 
 describe('public audit hook subscription', () => {
   it('reacts to audit status, error and tab changes while preserving the store action identities', () => {

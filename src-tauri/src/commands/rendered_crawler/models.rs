@@ -77,6 +77,9 @@ pub struct RenderOptions {
     pub wait_for_selector: Option<String>,
     pub wait_delay_ms: u64,
     pub lazy_scroll_cycles: usize,
+    /// Extra hosts the crawl may visit besides the seed host. A path scope
+    /// applies to the seed host only, exactly as in HTTP mode.
+    pub allowed_hosts: Vec<String>,
 }
 
 #[derive(Debug, Deserialize)]

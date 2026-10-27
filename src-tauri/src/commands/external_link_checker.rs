@@ -1,14 +1,17 @@
+mod concurrency;
 mod models;
 mod network;
 mod request;
+mod request_flow;
+mod result;
+mod runner;
 
+use concurrency::new_host_gates;
 pub use models::{ExternalLinkCheck, ExternalLinkCheckBatch, ExternalLinkCheckProgress};
-use models::{
-    DEFAULT_EXTERNAL_LINK_LIMIT, MAX_CONCURRENT_EXTERNAL_LINKS, MAX_EXTERNAL_LINKS_PER_RUN,
-};
-use network::{check_one, normalize_external_url};
+use models::{DEFAULT_EXTERNAL_LINK_LIMIT, MAX_EXTERNAL_LINKS_PER_RUN};
+use network::{check_one_with_gates, normalize_external_url};
+use runner::run_checks;
 use tauri::{AppHandle, Emitter};
-use tokio::task::JoinSet;
 
 #[tauri::command]
 pub async fn check_external_crawl_links<R: tauri::Runtime>(
@@ -47,38 +50,26 @@ pub async fn check_external_crawl_links<R: tauri::Runtime>(
         .take(limit.min(MAX_EXTERNAL_LINKS_PER_RUN))
         .collect::<Vec<_>>();
     let scheduled = selected.len();
-    let mut tasks: JoinSet<ExternalLinkCheck> = JoinSet::new();
-    let mut pending = selected.into_iter();
-    let mut results = Vec::with_capacity(scheduled);
-    for _ in 0..MAX_CONCURRENT_EXTERNAL_LINKS.min(scheduled) {
-        if let Some(url) = pending.next() {
-            tasks.spawn(check_one(url));
-        }
-    }
-    while let Some(joined) = tasks.join_next().await {
-        match joined {
-            Ok(result) => {
-                results.push(result);
-                if let Some(current) = results.last() {
-                    let _ = app.emit(
-                        "crawl-external-link-progress",
-                        ExternalLinkCheckProgress {
-                            request_id: request_id.clone(),
-                            completed: results.len(),
-                            total: scheduled,
-                            current_url: current.url.clone(),
-                            http_status: current.http_status,
-                            request_error_kind: current.request_error_kind.clone(),
-                        },
-                    );
-                }
-            }
-            Err(_) => return Err("An external link check task failed unexpectedly".into()),
-        }
-        if let Some(url) = pending.next() {
-            tasks.spawn(check_one(url));
-        }
-    }
+    let host_gates = new_host_gates();
+    let mut results = run_checks(
+        selected,
+        host_gates,
+        check_one_with_gates,
+        |done, current| {
+            let _ = app.emit(
+                "crawl-external-link-progress",
+                ExternalLinkCheckProgress {
+                    request_id: request_id.clone(),
+                    completed: done,
+                    total: scheduled,
+                    current_url: current.url.clone(),
+                    http_status: current.http_status,
+                    request_error_kind: current.request_error_kind.clone(),
+                },
+            );
+        },
+    )
+    .await?;
     results.sort_by(|left, right| left.url.cmp(&right.url));
     Ok(ExternalLinkCheckBatch {
         requested: unique_count,
@@ -107,3 +98,31 @@ mod network_tests;
 #[cfg(test)]
 #[path = "external_link_checker/http_tests/mod.rs"]
 mod http_tests;
+
+#[cfg(test)]
+#[path = "external_link_checker/network_error_path_tests.rs"]
+mod network_error_path_tests;
+
+#[cfg(test)]
+#[path = "external_link_checker/batch_and_edge_error_tests.rs"]
+mod batch_and_edge_error_tests;
+
+#[cfg(test)]
+#[path = "external_link_checker/request_edge_tests.rs"]
+mod request_edge_tests;
+
+#[cfg(test)]
+#[path = "external_link_checker/concurrency_tests.rs"]
+mod concurrency_tests;
+
+#[cfg(test)]
+#[path = "external_link_checker/redirect_and_dns_edge_tests.rs"]
+mod redirect_and_dns_edge_tests;
+
+#[cfg(test)]
+#[path = "external_link_checker/gap_tests.rs"]
+mod gap_tests;
+
+#[cfg(test)]
+#[path = "external_link_checker/normalized_dedup_tests.rs"]
+mod normalized_dedup_tests;

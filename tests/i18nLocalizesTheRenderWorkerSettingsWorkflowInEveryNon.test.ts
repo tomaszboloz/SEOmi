@@ -7,9 +7,7 @@ import i18n from '../src/i18n';
 import en from '../src/i18n/locales/en.json';
 
 import { flattenKeys, locales } from "./fixtures/i18nContracts";
-
 describe('i18n multi-language support', () => {
-
 it('localizes the render-worker settings workflow in every non-English locale', () => {
     const keys = flattenKeys(en.legacyUi.renderWorker);
     const naturalLanguageKeys = [
@@ -35,7 +33,6 @@ it('localizes the render-worker settings workflow in every non-English locale', 
       }
     }
   });
-
 it('does not embed human-readable JSX text outside translation resources', () => {
     const sourceRoot = join(process.cwd(), 'src');
     const files: string[] = [];
@@ -65,8 +62,7 @@ it('does not embed human-readable JSX text outside translation resources', () =>
       visit(parsed);
     }
     expect(violations, 'Move visible JSX text into src/i18n/locales/*.json').toEqual([]);
-  });
-
+  }, 30_000);
 it('does not embed human-readable JSX labels or hints outside translation resources', () => {
     const sourceRoot = join(process.cwd(), 'src');
     const files: string[] = [];
@@ -108,9 +104,8 @@ it('does not embed human-readable JSX labels or hints outside translation resour
       visit(parsed);
     }
     expect(violations, 'Move visible JSX labels, hints and titles into src/i18n/locales/*.json').toEqual([]);
-  });
-
-it('should identify Arabic as RTL text direction', () => {
+  }, 30_000);
+    it('should identify Arabic as RTL text direction', () => {
     const arabic = LANGUAGES.find((l) => l.code === 'ar');
     expect(arabic?.dir).toBe('rtl');
 
@@ -118,7 +113,6 @@ it('should identify Arabic as RTL text direction', () => {
     expect(document.documentElement.dir).toBe('rtl');
     expect(document.documentElement.lang).toBe('ar');
   });
-
 it('should identify English as LTR text direction', () => {
     const english = LANGUAGES.find((l) => l.code === 'en');
     expect(english?.dir).toBe('ltr');
@@ -127,12 +121,29 @@ it('should identify English as LTR text direction', () => {
     expect(document.documentElement.dir).toBe('ltr');
     expect(document.documentElement.lang).toBe('en');
   });
-
 it('loads a non-English resource on demand before changing the UI language', async () => {
     await i18n.changeLanguage('pl');
     expect(i18n.language).toBe('pl');
     expect(i18n.t('app.name')).toBe('SEOmi');
     expect(i18n.t('sidebar.overview')).toBe('Przegląd');
-    await i18n.changeLanguage('en');
-  });
+  await i18n.changeLanguage('en');
+});
+
+it('localizes the unknown keyword intent in every locale', () => {
+  for (const loc of locales) {
+    expect(
+      (loc.data.keywordResearchUi as any)?.intent?.unknown,
+      `Missing keywordResearchUi.intent.unknown in ${loc.code}`,
+    ).toBeDefined();
+  }
+});
+
+it('localizes the crawl comparison guard message in every locale', () => {
+  for (const loc of locales) {
+    const message = (loc.data.siteAudit as any)?.comparisonGuard;
+    expect(message, `Missing siteAudit.comparisonGuard in ${loc.code}`).toBeDefined();
+    expect(message).toContain('{{status}}');
+    expect(message).toContain('{{reasons}}');
+  }
+});
 });

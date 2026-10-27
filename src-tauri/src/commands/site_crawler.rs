@@ -13,6 +13,7 @@ use crate::models::audit_data::{FaviconData, StructuredDataValidationIssue};
 use crate::services::schema_validator;
 use crate::utils::url_validator::validate_and_normalize_url;
 
+mod adaptive_backoff;
 mod canonical;
 mod client_redirects;
 mod constants;
@@ -26,6 +27,9 @@ mod fetch_data;
 mod fetch_types;
 mod filter_validation;
 mod fingerprints;
+mod focus_counter;
+mod focus_date;
+mod focus_terms;
 mod frames;
 mod hreflang;
 mod hreflang_validation;
@@ -34,26 +38,43 @@ mod html_source_locator;
 mod html_validation;
 mod html_validation_rules;
 mod image_decoding;
+mod image_decoding_modern;
 mod inline_images;
 mod js_redirects;
+mod js_shell;
+mod link_placement;
 mod models;
 mod orchestration;
 mod pagination;
 mod post_processing;
 mod prefetch;
+pub(crate) mod proxy_feedback;
+pub(crate) mod proxy_pool;
+mod rag_sections;
 mod readability;
+mod render_decision;
+mod render_fetch;
+mod render_health;
 mod request_error;
 mod resource_apply;
 mod resource_discovery;
 mod resource_fetch;
+mod retry;
 mod robots;
 mod robots_matching;
 mod schema;
+mod schema_graph;
+mod schema_graph_analysis;
+mod schema_graph_analysis_helpers;
+mod schema_graph_checks;
+mod schema_graph_values;
 mod schema_inspections;
 mod schema_references;
 mod scope;
 mod scoring;
 mod semantic_chrome;
+mod semantic_inflection;
+mod semantic_terms;
 mod semantics;
 mod simhash;
 mod sitemap;
@@ -64,21 +85,25 @@ mod svg_inline;
 mod target_relations;
 mod transport;
 mod url_normalization;
+mod waf_block;
 
 use {
     canonical::*, client_redirects::*, constants::*, content_terms::*, crawl_delay::*,
     fetch_data::*, fetch_types::*, fingerprints::*, hreflang::*, hreflang_validation::*,
     html_source_locator::*, html_validation_rules::*, image_decoding::*, inline_images::*,
-    models::*, pagination::*, readability::*, request_error::*, robots::*, robots_matching::*,
-    schema_inspections::*, schema_references::*, scope::*, semantic_chrome::*, simhash::*,
-    svg_dimensions::*, svg_inline::*, target_relations::*, transport::*, url_normalization::*,
+    models::*, pagination::*, readability::*, retry::*, robots::*, robots_matching::*,
+    schema_graph::*, schema_graph_analysis::*, schema_graph_analysis_helpers::*,
+    schema_graph_checks::*, schema_graph_values::*, schema_inspections::*, schema_references::*,
+    scope::*, semantic_chrome::*, simhash::*, svg_dimensions::*, svg_inline::*,
+    target_relations::*, transport::*, url_normalization::*,
 };
 
 #[cfg(test)]
 use {
     content_metrics::*, duplicate_annotation::*, favicon::*, frames::*, html_decoding::*,
-    html_validation::*, js_redirects::*, post_processing::*, prefetch::*, resource_apply::*,
-    resource_discovery::*, schema::*, scoring::*, semantics::*, sitemap::*, social::*, srcset::*,
+    html_validation::*, js_redirects::*, post_processing::*, prefetch::*, request_error::*,
+    resource_apply::*, resource_discovery::*, schema::*, scoring::*, semantic_inflection::*,
+    semantic_terms::*, semantics::*, sitemap::*, social::*, srcset::*,
 };
 
 mod ipc;
@@ -95,3 +120,12 @@ pub use orchestration::crawl_site_with_control;
 #[cfg(test)]
 #[path = "site_crawler/tests.rs"]
 mod tests;
+
+#[cfg(test)]
+mod link_placement_tests;
+
+#[cfg(test)]
+mod semantic_fold_tests;
+
+#[cfg(test)]
+mod hreflang_region_tests;

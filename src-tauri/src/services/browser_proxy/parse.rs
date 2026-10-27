@@ -52,7 +52,6 @@ pub(super) async fn read_request<R: AsyncRead + Unpin>(
     let parsed_target = parse_proxy_target(method, target, headers, content_length, &body)?;
     Ok(ParsedRequest {
         target: parsed_target,
-        body,
     })
 }
 

@@ -70,14 +70,7 @@ pub(super) fn normalize_crawl_url(mut url: url::Url, config: &CrawlConfig) -> ur
             let _ = url.set_host(Some(&normalized_host));
         }
     }
-    let default_port = match url.scheme() {
-        "http" => Some(80),
-        "https" => Some(443),
-        _ => None,
-    };
-    if default_port.is_some_and(|port| url.port() == Some(port)) {
-        let _ = url.set_port(None);
-    }
+    // `Url` already reports scheme-default ports as `None`.
     if config.lowercase_path {
         let path = url.path().to_ascii_lowercase();
         url.set_path(&path);

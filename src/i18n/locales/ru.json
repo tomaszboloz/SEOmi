@@ -1,4 +1,79 @@
 {
+  "cmsPanelUi": {
+    "title": "Безопасное изменение CMS",
+    "description": "Замените содержимое под одним заголовком. Подготовьте и одобрите точный diff, выполните пробный запуск, затем примените. Изменение полей отменяет одобрение.",
+    "kind": "Тип CMS",
+    "baseUrl": "Базовый URL CMS (HTTPS)",
+    "contentId": "ID содержимого",
+    "credential": "Имя сохранённых учётных данных (необязательно)",
+    "credentialHelp": "Используйте запись cms_auth_ с заголовком Authorization в системном хранилище. Пустое поле означает анонимный запрос. Не вводите здесь секреты.",
+    "collection": "Коллекция Strapi",
+    "heading": "Искомый заголовок",
+    "replacement": "Новое содержимое раздела (HTML или Markdown)",
+    "ymyl": "Медицинский, финансовый или правовой контент (YMYL)",
+    "factGate": "Обязательная проверка фактов для этого точного diff пройдена",
+    "diff": "Предлагаемый diff",
+    "revision": "Исходная версия: {{revision}}",
+    "noChanges": "Изменений нет. Измените заменяющий текст перед применением.",
+    "prepare": "Подготовить diff",
+    "approve": "Я одобряю этот точный diff",
+    "dryRun": "Пробный запуск",
+    "apply": "Применить одобренный diff",
+    "busy": "Обработка изменения CMS…",
+    "noProject": "Выберите активный проект для подготовки изменения CMS.",
+    "desktopOnly": "Запросы к CMS доступны только в настольном приложении.",
+    "failed": "Ошибка изменения CMS: {{reason}}"
+  },
+  "teamPanelUi": {
+    "title": "Командный режим и журнал аудита",
+    "description": "Выберите, кто действует и в какой роли. Каждое изменение добавляется в локальный журнал аудита с цепочкой хешей, защищённый от подделки.",
+    "actor": "Пользователь",
+    "role": "Роль",
+    "roles": {
+      "admin": "Администратор",
+      "seo_strategist": "SEO-стратег",
+      "content_writer": "Автор контента",
+      "developer": "Разработчик"
+    },
+    "permissions": {
+      "run_crawl": "Запуск обхода",
+      "execute_cms_patch": "Применение патча CMS",
+      "modify_site_focus_rules": "Изменение правил Site Focus",
+      "export_audit_pdf": "Экспорт аудита в PDF",
+      "manage_team_roles": "Управление ролями команды"
+    },
+    "permissionsTitle": "Разрешение",
+    "auditTitle": "Журнал аудита",
+    "auditEmpty": "Записей аудита пока нет.",
+    "chainOk": "Цепочка аудита проверена.",
+    "chainBroken": "Цепочка аудита нарушена в записи {{entry}} ({{reason}}).",
+    "exportCsv": "Экспорт в CSV",
+    "columns": {
+      "time": "Время",
+      "actor": "Пользователь",
+      "action": "Действие",
+      "result": "Результат"
+    },
+    "results": {
+      "success": "Успех",
+      "denied": "Отказано",
+      "failure": "Ошибка",
+      "dry_run": "Пробный запуск"
+    },
+    "allowed": "Разрешено",
+    "notAllowed": "Не разрешено"
+  },
+  "dataErasureUi": {
+    "title": "Удалить данные проекта (GDPR)",
+    "description": "Безвозвратно удаляет из локального хранилища запуски обхода, эмбеддинги и историю этого проекта, уничтожая их ключи шифрования. Действие необратимо.",
+    "confirm": "Введите ID проекта для подтверждения: {{id}}",
+    "button": "Удалить данные проекта",
+    "run": "Удалить безвозвратно",
+    "cancel": "Отмена",
+    "done": "Удалено: записей — {{records}}, запусков обхода — {{runs}}.",
+    "failed": "Не удалось удалить: {{message}}",
+    "desktopOnly": "Доступно только в настольном приложении."
+  },
   "schemaFindings": {
     "messageMissing": "Правило структурированных данных {{code}} обнаружило отсутствующее свойство или элемент структуры для {{type}}.",
     "messageInvalid": "Правило структурированных данных {{code}} обнаружило недопустимое значение или форму для {{type}}.",
@@ -15,6 +90,31 @@
     "severityWarning": "Предупреждение",
     "severityInfo": "Информация",
     "sourceEvidence": "Исходное доказательство"
+  },
+  "copilotPatcherUi": {
+    "title": "Контекстный патчер Copilot",
+    "description": "Создаёт предложение До/После на основе данных сканирования этой страницы. Проверьте его перед копированием; CMS не изменяется.",
+    "contextUnavailable": "Данные заголовков страницы отсутствуют, поэтому патчер ждёт нового сканирования.",
+    "generate": "Предложить патч",
+    "generating": "Создание...",
+    "cancel": "Отмена",
+    "before": "До",
+    "after": "После",
+    "pending": "Ожидает проверки; ничего не изменено.",
+    "factGate": "Фактологический фильтр удалил предложений: {{count}}, поскольку на странице не было подходящего источника.",
+    "remote": "Выбранному AI-провайдеру передан текст страницы.",
+    "local": "Выбранный AI-исполнитель работал на этом устройстве.",
+    "approve": "Одобрить для копирования",
+    "reject": "Отклонить",
+    "approved": "Одобрено для копирования; CMS не изменялась.",
+    "copy": "Копировать одобренный текст",
+    "rejected": "Предложение отклонено.",
+    "keyboard": "Клавиатура: Tab перемещает по элементам, Enter активирует элемент в фокусе.",
+    "no-provider": "Подключите AI-провайдера перед запросом патча.",
+    "empty-response": "AI не вернул пригодный патч.",
+    "provider-error": "Ошибка запроса AI: {{message}}",
+    "ownership": "Проект больше не активен; запрос остановлен.",
+    "unavailable": "В отрывке нет пригодного исходного текста."
   },
   "app": {
     "name": "SEOmi",
@@ -169,7 +269,7 @@
       "urlTooLong": "The URL cannot exceed 2048 characters.",
       "urlInvalid": "Enter a complete URL beginning with http:// or https://.",
       "urlPublicOnly": "Schedules accept only a public HTTP(S) URL without credentials.",
-      "crawlLimit": "The scheduled crawl limit must be between 1 and 500 URLs.",
+      "crawlLimit": "The scheduled crawl limit must be between 1 and {{max}} URLs.",
       "maxReached": "A project can have at most {{count}} schedules.",
       "duplicate": "This URL already has a schedule in the project.",
       "auditFailed": "The audit failed."
@@ -589,7 +689,8 @@
       "responseHidden": "Provider response withheld.",
       "invalidResponse": "The AI provider returned an invalid response.",
       "responseTooLarge": "The AI provider response exceeds the 1 MiB limit.",
-      "refused": "{{provider}} отклонил этот запрос. Переформулируйте его или выберите другую модель."
+      "refused": "{{provider}} отклонил этот запрос. Переформулируйте его или выберите другую модель.",
+      "modelRejected": "{{provider}} не принял запрос для модели {{model}} (HTTP {{status}}). Выберите другую модель."
     },
     "pagespeed": {
       "projectRequired": "Choose a project before starting the measurement."
@@ -1134,6 +1235,7 @@
     "tabEntity": "Entity graph",
     "tabLinks": "Internal links",
     "tabSchema": "JSON-LD schema",
+    "tabSignals": "Сигналы",
     "saveError": "Unable to save the topical map in local storage. It remains visible until the view closes; check application storage availability.",
     "preferencesSaveError": "Unable to remember the topical map view and filters in this project.",
     "entityTitle": "Project entity",
@@ -1410,6 +1512,45 @@
     "searchVolume": "Search volume",
     "addedAt": "Added at"
   },
+  "googleSuggestionsUi": {
+    "title": "Подсказки Google",
+    "description": "Находите связанные запросы через бесплатную конечную точку Google Suggest.",
+    "query": "Запрос",
+    "byteCount": "{{count}}/500 байт UTF-8",
+    "fetch": "Получить подсказки",
+    "selectProject": "Выберите проект перед получением подсказок.",
+    "blocked": "Google Suggest временно недоступен.",
+    "error": "Не удалось загрузить подсказки Google.",
+    "provenance": "Источник: Google Suggest (неофициальный, по возможности).",
+    "context": "Запрошенный контекст: {{geo}} / {{language}}. Это не подтверждает локализацию результатов.",
+    "retrievedAt": "Получено: {{timestamp}}.",
+    "empty": "Подсказки не получены.",
+    "saved": "Сохранено",
+    "save": "Сохранить",
+    "importTitle": "Импорт подсказок",
+    "importDescription": "Импортируйте локальный список JSON или CSV. Метрики и намерение запроса остаются неизвестными.",
+    "importFormat": "Формат импорта",
+    "importSourceUrl": "URL источника (необязательно)",
+    "importPayload": "Данные подсказок",
+    "import": "Импортировать",
+    "importedAt": "Импортировано: {{timestamp}} · подсказок: {{count}}.",
+    "json": "JSON",
+    "csv": "CSV",
+    "sourcePlaceholder": "https://...",
+    "evidenceTitle": "Данные сканирования",
+    "evidenceNoCrawl": "Данные сканирования проекта недоступны.",
+    "evidencePartial": "Данные получены из неполного сканирования; страницы могут отсутствовать.",
+    "evidenceObserved": "Данные сканирования для проекта обнаружены.",
+    "evidenceNoMatch": "Совпадения в заголовке или семантических терминах не найдены.",
+    "evidenceRun": "Запуск {{run}} · страниц обнаружено: {{count}}.",
+    "evidenceLanguage": "Язык данных: {{language}}.",
+    "evidenceInvalidTimestamp": "Сканирование с неверным временем завершения пропущено.",
+    "evidenceTruncated": "Данные ограничены: пропущено страниц: {{pages}}, подсказок: {{suggestions}}, совпадений: {{matches}}.",
+    "intentUncertain": "{{intent}} (неуверенно)",
+    "intentSignals": "Лексические сигналы: {{signals}}",
+    "evidenceTitleMatch": "заголовок",
+    "evidenceTermsMatch": "семантические термины"
+  },
   "rankTrackingUi": {
     "badge": "Keyword workflows",
     "provider": "SERP position monitor",
@@ -1480,7 +1621,8 @@
       "informational": "Informational",
       "commercial": "Commercial",
       "transactional": "Transactional",
-      "navigational": "Navigational"
+      "navigational": "Navigational",
+      "unknown": "Неизвестная"
     },
     "saved": "Saved",
     "addSaved": "Add to saved keywords",
@@ -1504,6 +1646,37 @@
     "save": "Save",
     "researchTag": "Research"
   },
+  "trendingNowUi": {
+    "badge": "Trending Now",
+    "title": "Country trends",
+    "description": "Use the free Google Trends RSS feed or import a real CSV/JSON export. Traffic labels remain source text; no search volume is inferred.",
+    "freeSource": "Free RSS / import",
+    "countryLabel": "Country",
+    "refresh": "Refresh feed",
+    "importFile": "Import CSV or JSON",
+    "importLimit": "Files up to {{size}}",
+    "clear": "Clear saved snapshot",
+    "empty": "No snapshot for this project yet.",
+    "selectProjectError": "Select a project to use Trending Now.",
+    "storageUnavailable": "The snapshot is visible in memory, but project storage is unavailable.",
+    "payloadTooLarge": "The selected file exceeds the 1 MiB limit.",
+    "unsupportedImport": "Choose a .csv or .json file.",
+    "fetchError": "The free Trends feed could not be loaded.",
+    "importError": "The import could not be read.",
+    "countryValue": "Country: {{geo}}",
+    "sourceValue": "Source: {{source}}",
+    "capturedValue": "Captured: {{time}}",
+    "entryCount": "Entries: {{count}}",
+    "keyword": "Trend",
+    "trafficLabel": "Source traffic label",
+    "startedAt": "Source time",
+    "notProvided": "Not provided",
+    "source": {
+      "rss": "Google Trends RSS",
+      "csv": "CSV import",
+      "json": "JSON import"
+    }
+  },
   "mapUi": {
     "edgeSimilarityAria": "Content similarity {{percent}}%, shared terms: {{terms}}",
     "nodeAria": "{{label}}, кластер {{cluster}}",
@@ -1523,7 +1696,9 @@
       "directory": "URL tree",
       "directoryDescription": "URL hierarchy in this run",
       "plan": "Topical plan",
-      "planDescription": "Topics and semantic audit"
+      "planDescription": "Topics and semantic audit",
+      "diagnosis": "Диагностика",
+      "diagnosisDescription": "Что в порядке, что слабо и что исправить"
     },
     "graph": {
       "fullTitle": "Full link graph map",
@@ -1634,7 +1809,86 @@
     "bottomTablistAria": "Map views in bottom bar",
     "goToView": "Go to {{view}} view",
     "backToMapStart": "Return to map start",
-    "start": "Start"
+    "start": "Start",
+    "graphEvidence": {
+      "sectionAria": "Структура семантического графа и данные Search Console",
+      "title": "Структура графа и данные GSC",
+      "description": "PageRank описывает структуру ссылок, собранную при обходе. Метрики Search Console показываются отдельно и объединяются только при совпадении активного проекта, ресурса, периода и фильтров.",
+      "structureAria": "Структурный PageRank",
+      "structureTitle": "Структурный PageRank",
+      "structureMeta": "{{iterations}} итераций · {{status}}",
+      "converged": "сошёлся",
+      "bounded": "достигнут предел итераций",
+      "structureNote": "Это сигнал графа, а не позиция в Google и не метрика трафика.",
+      "structurePartial": "Входные данные графа ограничены; структурный PageRank охватывает только сохранённые страницы и ссылки.",
+      "noNodes": "Для структурного графа нет доступных просканированных страниц.",
+      "trafficAria": "Данные о трафике из Google Search Console",
+      "trafficTitle": "Данные о трафике из Search Console",
+      "status": {
+        "complete": "Совпавшие строки GSC",
+        "partial": "Неполные строки GSC; отсутствующие значения остаются неизвестными",
+        "unavailable": "Данные GSC недоступны",
+        "invalid": "Область данных GSC не совпадает"
+      },
+      "project": "Проект",
+      "property": "Ресурс",
+      "period": "Период",
+      "filters": "Фильтры",
+      "allFilters": "все выбранные фильтры",
+      "noSelection": "Выберите реальный ресурс Search Console и загрузите данные для этого проекта, чтобы добавить данные о трафике.",
+      "counts": "Наблюдаемые: {{observed}} · неточные/усечённые: {{uncertain}} · неизвестные: {{missing}}",
+      "trafficNote": "— означает отсутствие наблюдаемого значения. Неизвестные и усечённые строки никогда не считаются нулём.",
+      "partialNotice": "Данные о трафике неполны: некоторые исходные строки усечены или отклонены; неизвестные значения остаются неизвестными.",
+      "invalidNotice": "Данные о трафике отклонены: область GSC или исходные строки не совпадают.",
+      "rowQuality": "Исходные строки: недействительных {{invalid}} · вне выбранного ресурса {{ignored}}",
+      "observation": {
+        "gsc": "наблюдается",
+        "missing": "неизвестно",
+        "truncated": "усечено",
+        "unavailable": "недоступно",
+        "invalid": "недействительно",
+        "out-of-scope": "вне ресурса",
+        "ambiguous": "неоднозначно"
+      }
+    },
+    "diagnosisFilter": "Область диагностики: {{label}}",
+    "clearDiagnosisFilter": "Показать весь граф",
+    "allTopics": "Все темы ({{count}})",
+    "cy": {
+      "layoutLabel": "Раскладка",
+      "layoutHierarchy": "Иерархия",
+      "layoutForce": "Силовая",
+      "sectionsLabel": "Разделы URL",
+      "expandAll": "Развернуть все",
+      "collapseAll": "Свернуть все",
+      "highlightLabel": "Подсветить URL",
+      "highlightPlaceholder": "Часть URL или заголовка",
+      "matches": "Совпадений: {{count}}",
+      "depthLabel": "Глубина",
+      "depthAll": "Все уровни",
+      "problemsOnly": "Только проблемы",
+      "statusLabel": "HTTP-статус",
+      "colorTrs": "Цвет: тематическая релевантность (TRS)",
+      "colorStatus": "Цвет: HTTP-статус (TRS недоступен)",
+      "sizeHint": "размер = входящие ссылки",
+      "mapAria": "Интерактивная карта архитектуры сайта, сгруппированная по разделам URL",
+      "mapHelp": "Нажмите на раздел, чтобы развернуть или свернуть его, на страницу, чтобы увидеть детали; перетаскивайте для сдвига, прокручивайте или сводите пальцы для масштаба. Крупные сайты открываются со свернутыми разделами. Под картой есть таблица с теми же страницами.",
+      "tooltip": "HTTP {{status}} · глубина {{depth}} · входящих ссылок: {{inlinks}}",
+      "detailsHint": "Выберите страницу на карте или в таблице, чтобы увидеть детали.",
+      "detailsTitle": "Детали страницы",
+      "colUrl": "URL",
+      "colStatus": "HTTP-статус",
+      "colDepth": "Глубина",
+      "colInlinks": "Входящие ссылки",
+      "colTrs": "TRS",
+      "colSection": "Раздел",
+      "colProblem": "Проблема",
+      "noTrs": "н/д",
+      "yes": "да",
+      "no": "нет",
+      "tableSummary": "Таблица страниц ({{count}})",
+      "tableCaption": "Страницы на карте архитектуры со статусом, глубиной, входящими ссылками, TRS и разделом"
+    }
   },
   "crawlDiff": {
     "fields": {
@@ -1915,6 +2169,8 @@
     "exportJson": "JSON",
     "exportCsv": "CSV",
     "exportPdf": "PDF",
+    "exportHtml": "HTML",
+    "exportHelp": "Export the saved audit snapshot as JSON, CSV, PDF or sanitized HTML.",
     "healthScore": "Оценка SEO-здоровья",
     "criticalIssues": "Критические ошибки",
     "warnings": "Предупреждения",
@@ -2113,7 +2369,12 @@
       "resources": "Ресурсы",
       "frames": "Фреймы",
       "custom-search": "Пользовательский поиск",
-      "semantic": "Семантический анализ"
+      "semantic": "Семантический анализ",
+      "focus": "Тематический фокус сайта",
+      "authority": "Тематический авторитет",
+      "aio": "Готовность к ИИ",
+      "trust": "Доверие к сущностям",
+      "offPage": "Внешний анализ"
     },
     "environmentStaging": "test/staging",
     "environmentProduction": "production",
@@ -2143,7 +2404,7 @@
     "renderDelayAria": "Render delay in milliseconds",
     "lazyScroll": "Lazy-load scroll cycles",
     "lazyScrollAria": "Number of lazy-load scroll cycles",
-    "browserModeNotice": "Browser mode analyzes the DOM after JavaScript execution. Custom User-Agent is also used for robots.txt. The selected profile may inject ordinary session cookies into an isolated WebView; HttpOnly and full cookie-store import are unavailable. Additional headers and proxy require HTTP mode. X-Robots-Tag and Cache-Control headers are unavailable from rendered DOM.",
+    "browserModeNotice": "Browser mode analyzes the DOM after JavaScript execution. Custom User-Agent is also used for robots.txt. The selected profile may inject ordinary session cookies into an isolated WebView; HttpOnly and full cookie-store import are unavailable. Additional headers and proxy require HTTP mode. The HTTP status, response headers such as X-Robots-Tag and Cache-Control, and redirect hops come from a separate HTTP request for the same URL. A page that cannot be rendered is analyzed from that raw HTML and marked with a warning.",
     "renderProfileWarning": "The selected profile contains custom headers or a proxy. Rendered mode uses only its cookies — choose HTTP or a cookie-only profile.",
     "resourcesTitle": "Resources fetched during the crawl",
     "resourcesDescription": "Only resources discovered in the current scope. Status and size come from real HTTP responses.",
@@ -2158,12 +2419,13 @@
     "comparisonSelectPlaceholder": "Choose baseline run",
     "comparisonPathLabel": "Match by path (test ↔ production)",
     "comparisonPathNotice": "Hosts are ignored and tracking parameters removed; path and remaining query stay part of the key. This is a snapshot comparison, not proof of environment equivalence.",
+    "comparisonGuard": "Статус сравнения: {{status}} · причины: {{reasons}}",
     "comparisonAdded": "New URLs",
-    "comparisonRemoved": "Removed URLs",
+    "comparisonRemoved": "Не обнаруженные URL",
     "comparisonChanged": "Changed URLs",
     "comparisonNoDifferences": "No differences in compared fields.",
     "comparisonAddedLabel": "Added",
-    "comparisonRemovedLabel": "Removed",
+    "comparisonRemovedLabel": "Не обнаружен",
     "comparisonChangedLabel": "Changed",
     "healthScore": "Health score",
     "healthIndex": "Site-wide health index",
@@ -2268,6 +2530,7 @@
     "profileNamePlaceholder": "e.g. Editorial account",
     "sessionCookies": "Session cookies",
     "proxyOptional": "(optional; credentials in the URL remain in the system vault)",
+    "proxyListHint": "Несколько прокси: через запятую или пробел (до 64). Запросы чередуются между ними.",
     "customHeaders": "Custom headers",
     "oneHeaderPerLine": "(one per line: Name: value)",
     "saving": "Saving…",
@@ -2318,8 +2581,10 @@
     "remove": "Remove",
     "reportSectionsLegend": "JSON/PDF sections",
     "reportTemplateDescription": "The summary is always included. The template affects JSON and PDF; CSV exports remain full evidence tables.",
+    "reportTemplateHelp": "The template controls which saved evidence sections are included in JSON, PDF and HTML exports. No new network request is made.",
     "exportTitle": "Export this crawl run",
     "exportDescription": "Each file contains the real timestamp, scope and run configuration. CSV fields are neutralized before opening in a spreadsheet.",
+    "exportHtml": "HTML report",
     "urlCsv": "URL CSV",
     "linksCsv": "Links CSV",
     "imagesCsv": "Images CSV",
@@ -2374,7 +2639,19 @@
     "notCheckedInRun": "not checked in run",
     "noAnchor": "no anchor",
     "redirectChain": "Redirect chain",
-    "identifiedIssues": "Identified technical issues:"
+    "identifiedIssues": "Identified technical issues:",
+    "comparisonReasons": {
+      "same-run": "тот же запуск",
+      "project-unverified": "владелец проекта не подтверждён",
+      "different-project": "разные проекты",
+      "different-scope": "разный охват сканирования",
+      "invalid-completion-time": "некорректное время завершения",
+      "baseline-incomplete": "базовый запуск неполный",
+      "current-incomplete": "текущий запуск неполный",
+      "path-key-collision": "дублирующийся ключ пути",
+      "url-key-collision": "дублирующийся ключ URL"
+    },
+    "pageLimitUnlimited": "Без ограничений"
   },
   "mcp": {
     "badge": "AI agent workflows",
@@ -2754,6 +3031,8 @@
     "sentenceCount": "{{count}} sentences",
     "exportJson": "JSON",
     "exportPdf": "PDF report",
+    "exportHtml": "HTML report",
+    "exportHelp": "HTML keeps the saved crawl metadata, evidence and recorded limits readable in a browser.",
     "exportUrlsCsv": "URLs CSV",
     "exportLinksCsv": "Links CSV",
     "exportImagesCsv": "Images CSV",
@@ -2911,7 +3190,11 @@
       "structured": "Структурированные данные",
       "validation": "Проверка HTML",
       "performance": "Производительность",
-      "exports": "Экспорт"
+      "exports": "Экспорт",
+      "focus": "Фокус сайта",
+      "authority": "Тематический авторитет",
+      "aio": "Готовность к ИИ",
+      "trust": "Доверие к сущностям"
     },
     "groups": {
       "core": "Обзор",
@@ -3310,6 +3593,31 @@
     "applyDesc": "Применить описание",
     "copyJsonLd": "Скопировать JSON-LD"
   },
+  "ollamaAssistantUi": {
+    "title": "Local Ollama",
+    "description": "Run metadata suggestions with the observed models from Ollama on this device.",
+    "endpoint": "Loopback endpoint",
+    "status": {
+      "idle": "Not checked",
+      "loading": "Checking Ollama…",
+      "ready": "Connected · {{version}}",
+      "error": "Unavailable"
+    },
+    "refresh": "Refresh",
+    "model": "Observed model",
+    "chooseModel": "Choose a discovered model",
+    "noModels": "No models reported by Ollama",
+    "maxOutputTokens": "Maximum output tokens",
+    "instruction": "Local instruction (optional)",
+    "instructionPlaceholder": "Add a focused instruction…",
+    "generate": "Generate with Ollama",
+    "errors": {
+      "projectRequired": "Choose a project before using local Ollama.",
+      "auditRequired": "Run a page audit before generating local suggestions.",
+      "modelRequired": "Select a model reported by Ollama.",
+      "promptTooLarge": "The audit prompt is too large for the bounded local request."
+    }
+  },
   "auth": {
     "loginTitle": "Аккаунт SEOmi Cloud",
     "subscriptionTitle": "Тарифный план ИИ",
@@ -3339,7 +3647,12 @@
     "refreshModels": "Обновить список моделей",
     "modelsFromProvider": "{{count}} моделей из API провайдера",
     "modelsDefault": "Модели по умолчанию — проверьте ключ API, чтобы загрузить ваши модели",
-    "modelsUnavailable": "Не удалось загрузить модели провайдера; показан последний известный список."
+    "modelsUnavailable": "Не удалось загрузить модели провайдера; показан последний известный список.",
+    "apiKeyStoredPlaceholder": "•••••••• ключ сохранён; вставьте новый, чтобы заменить его",
+    "saveApiKey": "Сохранить ключ",
+    "removeApiKey": "Удалить ключ",
+    "apiKeyRemoved": "Ключ удалён.",
+    "apiKeySaveFailed": "Не удалось сохранить ключ."
   },
   "schedules": {
     "saveError": "Unable to save the schedule.",
@@ -3410,6 +3723,7 @@
     "clientIdPlaceholder": "123456789.apps.googleusercontent.com",
     "clientSecretLabel": "Google OAuth client secret",
     "clientSecretPlaceholder": "GOCSPX-… (stored in the system credential manager)",
+    "clientSecretHelp": "Клиент OAuth Desktop требует секрет того же идентификатора клиента. Секрет, сохранённый для проекта, используется повторно.",
     "connecting": "Connecting…",
     "authorize": "Authorize with Google",
     "startDate": "Period start",
@@ -3424,6 +3738,7 @@
     "property": "Search Console property",
     "selectedPropertyAria": "Selected Search Console property",
     "noProperties": "Google authorization succeeded, but the account returned no accessible Search Console properties.",
+    "noMatchingProperty": "Ни один ресурс не соответствует сайту проекта — выберите вручную",
     "totalClicks": "Total clicks",
     "totalImpressions": "Total impressions",
     "searchAppearances": "Search result appearances",
@@ -3480,7 +3795,13 @@
       "currentQueries": "Запросы только в текущем периоде: {{count}}",
       "baselinePages": "URL только в базовом периоде: {{count}}",
       "currentPages": "URL только в текущем периоде: {{count}}"
-    }
+    },
+    "sortBy": "Сортировать по: {{column}}",
+    "showingRows": "Строки {{from}}–{{to}} из {{total}}",
+    "rowsPerPage": "Строк на странице",
+    "pagePrevious": "Назад",
+    "pageNext": "Далее",
+    "pageOf": "Страница {{page}} из {{total}}"
   },
   "settings": {
     "close": "Close settings",
@@ -3836,7 +4157,7 @@
       "backup": "Project backup",
       "backupDescription": "Import always creates a separate project and saves data under a new identifier. It never overwrites an existing project or copies credentials.",
       "installedVersion": "Current installed version",
-      "version": "v0.0.3 (текущий выпуск)",
+      "version": "v{{version}} (текущий выпуск)",
       "checkUpdates": "Check for updates",
       "chooseProjectBackup": "Choose a project before creating a backup.",
       "preparingBackup": "Preparing project backup…",
@@ -3856,7 +4177,7 @@
       "backupTitle": "Project backup",
       "backupDescriptionLong": "Exports metadata, settings and workspace data for the active project with crawl history. DataForSEO, Google and AI client secrets remain in the system keychain and never enter the file.",
       "backupSafety": "Import always creates a separate project and saves data under a new identifier. It never overwrites an existing project or copies credentials.",
-      "releaseVersion": "v0.0.3 (текущий выпуск)",
+      "releaseVersion": "v{{version}} (текущий выпуск)",
       "installUpdate": "Загрузить и установить",
       "updateAvailable": "Версия {{version}} готова к установке.",
       "updateInstalled": "Версия {{version}} установлена.",
@@ -3990,6 +4311,8 @@
     "multipleTitle": "Найдено несколько тегов <title> ({{count}})",
     "emptyDescription": "Meta description пуста",
     "multipleDescription": "Найдено несколько тегов meta description ({{count}})",
+    "renderFallback": "Не удалось выполнить рендеринг в браузере; вместо этого проанализирован исходный HTML-ответ: {{reason}}",
+    "renderedSelfNavigation": "Страница перешла на другой URL в браузере; HTTP-статус и заголовки ответа относятся к запрошенному URL",
     "technicalDetail": "Техническая деталь: {{detail}}"
   },
   "auditChecks": {
@@ -4323,6 +4646,37 @@
     }
   },
   "exportUi": {
+    "html": {
+      "auditTitle": "SEOmi audit report",
+      "crawlTitle": "SEOmi crawl report",
+      "summary": "Summary",
+      "inputUrl": "Входной URL",
+      "httpStatus": "Статус HTTP",
+      "responseTimeMs": "Время ответа (мс)",
+      "healthScore": "Оценка состояния",
+      "exportFormat": "Формат экспорта",
+      "runId": "ID запуска",
+      "scope": "Область",
+      "environment": "Среда",
+      "completedAt": "Завершено",
+      "templateId": "ID шаблона",
+      "templateSections": "Разделы шаблона",
+      "pagesCrawled": "Просканированные страницы",
+      "criticalIssues": "Критические проблемы",
+      "warnings": "Предупреждения",
+      "durationMs": "Длительность (мс)",
+      "evidence": "Saved evidence",
+      "auditEvidence": "Audit evidence",
+      "issues": "Issues",
+      "configuration": "Configuration",
+      "limitations": "Recorded limitations",
+      "sourceLocal": "Source: saved local snapshot; no new network request was made.",
+      "exportedAt": "Exported at",
+      "reportTemplate": "Report template",
+      "fullSnapshot": "Full saved snapshot",
+      "unknown": "Unknown / not supplied",
+      "noLimitations": "No limitations were recorded in this snapshot."
+    },
     "invalidPdf": "The generator returned invalid PDF data. Please try again.",
     "labels": {
       "field": "Field",
@@ -4760,5 +5114,3011 @@
     "saveLimit": "Сохранить лимит",
     "noLimitOption": "Без лимита — до суммы баланса аккаунта",
     "balanceExhausted": "Баланс DataForSEO исчерпан (осталось ≈ {{balance}} USD, следующему запросу нужно около {{expected}} USD). Пополните аккаунт и нажмите «Проверить баланс»."
+  },
+  "serpImportUi": {
+    "title": "Free SERP evidence",
+    "description": "Import observed organic results or fetch free partial Bing RSS evidence. No paid API is called.",
+    "fetchTitle": "Fetch free Bing RSS evidence",
+    "fetchHelp": "Bing RSS is a partial source and is never treated as a complete Google SERP.",
+    "query": "Query",
+    "country": "Country",
+    "language": "Language",
+    "fetch": "Fetch Bing RSS",
+    "fetching": "Fetching…",
+    "feedBlocked": "Bing RSS was blocked",
+    "feedError": "Bing RSS request failed",
+    "formatHelp": "CSV: keyword,rank,url. JSON: records and metadata. Complete scoring requires explicit countryCode, locationCode, languageCode and complete availability.",
+    "format": "Format",
+    "payload": "Observed SERP data",
+    "import": "Import SERP",
+    "clear": "Remove import",
+    "summary": "{{count}} keyword snapshots; {{rejected}} rejected records",
+    "source": "Source: {{provider}} · {{status}}",
+    "context": "Market: {{country}} · language: {{language}}",
+    "times": "Captured: {{captured}} · imported: {{imported}}",
+    "partialNotice": "Bing RSS is partial evidence; clustering uses semantic-only scoring until complete, compatible SERP data is supplied.",
+    "unknown": "Unknown",
+    "pairs": "Qualifying pairs: {{count}}",
+    "pairHelp": "Groups are connected components of qualifying pairs. Missing or incompatible SERP contributes semantic evidence only. Up to 100 pairs are displayed.",
+    "scores": "Semantic: {{semantic}} · SERP: {{serp}} · score: {{score}}",
+    "weights": "Applied weights: semantic {{semantic}}, SERP {{serp}}",
+    "pairSources": "Sources: {{a}} / {{b}}",
+    "visiblePairs": "Showing the first {{count}} pairs.",
+    "retrieved": "Retrieved: {{retrieved}}"
+  },
+  "targetPhraseAuditUi": {
+    "title": "Target phrase audit",
+    "description": "Literal evidence from the current page audit plus an imported TOP10 snapshot. URL inspection starts only after you request it.",
+    "phraseLabel": "Target phrase",
+    "phrasePlaceholder": "e.g. technical SEO audit",
+    "evidenceTitle": "Phrase evidence in the current audit",
+    "evidenceDescription": "Counts and excerpts come from the stored title, H1, body and anchor text.",
+    "completeness": {
+      "complete": "Complete",
+      "partial": "Partial"
+    },
+    "enterPhrase": "Enter a target phrase to inspect literal evidence.",
+    "fields": {
+      "title": "Title",
+      "h1": "H1",
+      "body": "Body",
+      "anchors": "Anchors"
+    },
+    "occurrences": "{{count}} occurrences",
+    "noLiteralEvidence": "No literal occurrence was found in this field.",
+    "intent": "Intent",
+    "intentUnavailable": "Unavailable (no exact provider value)",
+    "intents": {
+      "informational": "Informational",
+      "commercial": "Commercial",
+      "transactional": "Transactional",
+      "navigational": "Navigational"
+    },
+    "auditUrl": "Audit URL",
+    "partialReason": "The stored body evidence is missing or truncated; this result is partial.",
+    "topTenTitle": "TOP10 content gap",
+    "topTenDescription": "The source is the matching imported SERP snapshot. Each URL is inspected locally only when you click the audit button.",
+    "auditRunning": "Inspecting TOP10…",
+    "auditTopTen": "Inspect TOP10 locally",
+    "sourceProvider": "Provider",
+    "sourceAvailability": "Availability",
+    "sourceContext": "Market / location / language",
+    "sourceCaptured": "Captured",
+    "sourceRetrieved": "Retrieved",
+    "sourceReason": "Reason",
+    "unknown": "Unknown",
+    "sourceStatus": {
+      "complete": "Complete",
+      "partial": "Partial",
+      "blocked": "Blocked",
+      "missing": "Missing"
+    },
+    "status": {
+      "available": "Available",
+      "unavailable": "Unavailable",
+      "error": "Error"
+    },
+    "unavailable": {
+      "no-project": "Select a project to use project-scoped SERP evidence.",
+      "no-phrase": "Enter a phrase to match an imported SERP snapshot.",
+      "no-import": "No imported SERP snapshot is available for this project.",
+      "phrase-not-found": "The imported SERP does not contain an exact case-insensitive match for this phrase.",
+      "no-results": "The matching imported snapshot contains no valid TOP10 organic results."
+    },
+    "reportStatus": "Report status",
+    "reportStatuses": {
+      "unavailable": "Unavailable",
+      "partial": "Partial",
+      "complete": "Complete"
+    },
+    "availablePages": "{{count}} pages with usable evidence",
+    "noRows": "No organic TOP10 rows were supplied by the matching snapshot.",
+    "topicsTitle": "Observed topics and target coverage",
+    "noTopics": "Topics require at least one successfully inspected page.",
+    "topicStatus": {
+      "gap": "Gap",
+      "covered": "Covered",
+      "unknown": "Unknown"
+    },
+    "topicShare": "{{observed}} of {{total}} pages · {{share}}%",
+    "targetOccurrencesUnknown": "Target occurrences: unknown",
+    "targetOccurrences": "Target occurrences: {{count}}",
+    "finalUrl": "Final URL"
+  },
+  "monitoringUi": {
+    "title": "Уведомления об изменениях",
+    "enable": "Включить уведомления об изменениях",
+    "description": "Уведомлять после сопоставимого изменения, сохранённого локально. Отсутствующие или обрезанные данные не считаются нулём.",
+    "frequency": "Частота",
+    "frequencyAria": "Частота уведомлений мониторинга",
+    "run": "При каждом запуске",
+    "daily": "Раз в день",
+    "weekly": "Раз в неделю",
+    "enableType": "Включить уведомления {{type}}",
+    "gscDecline": "Снижение GSC %",
+    "gscDeclineAria": "Процент снижения GSC",
+    "gscMinimum": "Минимум показов GSC",
+    "psiDrop": "Снижение категории PageSpeed",
+    "crawlChanged": "Изменённые страницы обхода",
+    "semanticChanged": "Семантические изменения",
+    "types": {
+      "gsc": "Search Console",
+      "pagespeed": "PageSpeed / CrUX",
+      "crawl": "Сравнения обходов",
+      "semantic": "Семантические сравнения",
+      "focus": "Site Focus Score",
+      "aio": "Готовность к AI Overviews"
+    },
+    "focusDrop": "Падение Site Focus Score (баллы)",
+    "aioDrop": "Падение оценки AIO-R (баллы)"
+  },
+  "ga4": {
+    "title": "Google Analytics 4",
+    "description": "Landing page traffic for the same date range as Search Console. Analytics includes all channels; Search Console covers organic search.",
+    "projectRequired": "Select a project with a website URL to match its Analytics web stream.",
+    "connectFirst": "Connect Search Console with your Google OAuth client first.",
+    "clientSecret": "Google OAuth client secret (optional)",
+    "clientSecretHint": "Stored only in the system credential store after authorization.",
+    "loading": "Loading…",
+    "reconnect": "Authorize again",
+    "authorize": "Authorize Analytics access",
+    "refresh": "Refresh matching property",
+    "property": "Matched Analytics property",
+    "noProperty": "No unique matching web stream was found. Check Analytics access and the project website URL.",
+    "loadReport": "Load traffic report",
+    "truncated": "This result is partial or ambiguous. Do not treat it as complete.",
+    "periodsDiffer": "The report periods differ. Search Console metrics cannot be joined.",
+    "unavailable": "No traffic report has been loaded.",
+    "unknown": "Unavailable",
+    "noRows": "Google Analytics returned no landing page rows for this period.",
+    "landingPage": "Landing page",
+    "host": "Hostname",
+    "sessions": "Sessions",
+    "engagedSessions": "Engaged sessions",
+    "keyEvents": "Key events",
+    "clicks": "GSC clicks",
+    "impressions": "GSC impressions",
+    "issues": "Crawl issues",
+    "rowCount": "Rows: {{count}}"
+  },
+  "topicalDiagnosis": {
+    "title": "Тематическая диагностика",
+    "description": "Документы (языковые версии считаются один раз), области вокруг хаб-страниц, темы из контента и вердикты с конкретным действием. Рассчитано по сохранённому обходу, без языковых моделей.",
+    "noTerms": "В этом обходе нет терминов контента, диагностике нечего обрабатывать. Запустите обход снова.",
+    "noContentLinks": "Этот обход сохранён без ссылок из основного контента, поэтому вердикты о ссылках (страницы без ссылки из контента, хабы, страницы темы, которые не ссылаются друг на друга) не показываются. Запустите обход снова.",
+    "truncated": "Анализ ограничен 500 страницами или лимитом пар; часть результатов может отсутствовать.",
+    "empty": "В этой группе нет вердиктов.",
+    "showRemaining": "Показать остальные вердикты ({{count}})",
+    "stats": {
+      "documents": "Документы",
+      "pages": "Страницы",
+      "skipped": "Пропущено",
+      "hubs": "Хабы",
+      "topics": "Темы",
+      "singletons": "Одиночные",
+      "languages": "Языки",
+      "mergedPairs": "Языковые пары"
+    },
+    "severity": {
+      "fix": "Исправить",
+      "weak": "Слабо",
+      "info": "Инфо",
+      "good": "Хорошо"
+    },
+    "filter": {
+      "all": "Все · {{count}}",
+      "fix": "Исправить · {{count}}",
+      "weak": "Слабо · {{count}}",
+      "info": "Инфо · {{count}}",
+      "good": "Хорошо · {{count}}"
+    },
+    "areas": {
+      "title": "Области и темы",
+      "noHub": "Без хаба",
+      "hubWithoutMembers": "Хаб без привязанных документов",
+      "members": "{{count}} док.",
+      "showInGraph": "Показать на графе",
+      "hub": "Хаб: {{url}}"
+    },
+    "topics": {
+      "singletons": "Одиночные документы · {{count}}",
+      "labelFromContent": "метка из контента",
+      "noLabel": "Тема без метки",
+      "documents": "{{count}} док."
+    },
+    "roles": {
+      "hub": "хаб",
+      "utility": "служебная страница",
+      "content": "контент"
+    },
+    "scope": {
+      "area": "область",
+      "topic": "тема",
+      "document": "документ"
+    },
+    "verdict": {
+      "hub-missing-backlink": {
+        "title": "Нет ссылки на хаб",
+        "action": "Добавьте на этой странице ссылку на {{hub}}: в навигации, в «хлебных крошках» или в контенте."
+      },
+      "hub-missing-member-link": {
+        "title": "Хаб не ссылается на часть страниц своей темы",
+        "action": "Добавьте недостающие страницы ({{count}}) в список {{hub}}."
+      },
+      "area-healthy": {
+        "title": "Связная область",
+        "action": "Хаб ссылается на все {{count}} документов, и каждый ссылается обратно на хаб. Делать ничего не нужно."
+      },
+      "topic-no-hub": {
+        "title": "Тема без опорной страницы",
+        "action": "Создайте или назначьте опорную страницу для этой темы и свяжите с неё все документы; сейчас их объединяет только контент."
+      },
+      "topic-members-unlinked": {
+        "title": "Страницы темы не ссылаются друг на друга",
+        "action": "Добавьте контекстные ссылки между перечисленными парами ({{count}} пар без ссылки в обе стороны)."
+      },
+      "topic-thin": {
+        "title": "Тонкая тема",
+        "action": "В теме только два документа. Добавьте третий материал или объедините оба, если они отвечают на один вопрос."
+      },
+      "cannibalization-candidate": {
+        "title": "Кандидаты на каннибализацию",
+        "action": "Две страницы на одном языке пересекаются на {{percent}}% и делят слова заголовка: {{titleTokens}}. Сравните интент и объедините их или разведите заголовки."
+      },
+      "document-isolated": {
+        "title": "Изолированная страница",
+        "action": "У неё нет темы, и на неё ссылаются только списки. Добавьте ссылку с ближайшей по контенту страницы: {{url}} ({{percent}}% общих терминов).",
+        "actionNoNearest": "У неё нет темы, и на неё ссылаются только списки. Поставьте ссылку из связанной статьи."
+      },
+      "document-orphan": {
+        "title": "Нет ни одной ссылки из контента",
+        "action": "Ни одна страница не ссылается на неё из основного контента. Добавьте контекстную ссылку со связанной страницы или с хаба."
+      },
+      "near-duplicate": {
+        "title": "Почти идентичный контент",
+        "action": "Сравните обе страницы. Если это дубликат, объедините их или задайте canonical."
+      },
+      "language-pair-missing": {
+        "title": "Нет языковой версии",
+        "action": "Документ существует только на языке {{language}}. Решите, нужен ли перевод; это информация, а не ошибка."
+      }
+    },
+    "evidence": {
+      "hub": "хаб: {{hub}}",
+      "count": "Количество страниц: {{count}}",
+      "members": "{{count}} документов",
+      "areas": "{{count}} областей",
+      "withoutHub": "{{count}} без хаба",
+      "pairs": "Количество пар: {{count}}",
+      "similarity": "сходство {{percent}}%",
+      "titleTokens": "общие слова заголовка: {{titleTokens}}",
+      "nearest": "ближайшая страница: {{url}}",
+      "hash": "тот же хеш контента",
+      "distance": "SimHash: {{value}}/64",
+      "language": "язык: {{language}}"
+    },
+    "confidence": {
+      "limited": "ограниченная уверенность (неполные данные о контенте)",
+      "moderate": "умеренная уверенность"
+    },
+    "import": {
+      "button": "Импортировать темы диагностики",
+      "topicsCount": "{{count}} тем · запуск {{run}}"
+    }
+  },
+  "pdfReport": {
+    "audit": {
+      "report": {
+        "reportTitle": "SEOmi · Отчёт SEO-аудита",
+        "brandLine": "Создано в SEOmi",
+        "methodNote": "Метод: локальный анализ HTTP и HTML. Отчёт не является вердиктом Google об индексации.",
+        "pageLabel": "Страница {{page}} из {{total}}",
+        "sevCritical": "Критично",
+        "sevWarning": "Предупреждение",
+        "sevInfo": "Информация",
+        "noMessage": "Для этой проблемы не указано описание.",
+        "noRecommendation": "Проверьте эту проблему и исправьте затронутый элемент.",
+        "categoryFallback": "Общее",
+        "statusOk": "OK",
+        "statusAttention": "Требует внимания",
+        "statusInfo": "Информация",
+        "noAction": "Действий не требуется.",
+        "yes": "Да",
+        "no": "Нет",
+        "notSet": "не задано",
+        "title": "Отчёт SEO-аудита",
+        "auditedAt": "ДАТА АУДИТА",
+        "httpStatus": "HTTP-СТАТУС",
+        "responseTime": "ВРЕМЯ ОТВЕТА",
+        "ms": "{{0}} мс",
+        "healthScore": "Оценка состояния",
+        "ratingGood": "Хорошо",
+        "ratingFair": "Нужно улучшить",
+        "ratingPoor": "Плохо",
+        "ratingNone": "Без оценки",
+        "legend": "Зелёный: 80 и выше  ·  Жёлтый: от 50 до 79  ·  Красный: ниже 50",
+        "findings": "проблем",
+        "kpiHttp": "HTTP-СТАТУС",
+        "kpiTime": "ВРЕМЯ ОТВЕТА",
+        "kpiTitle": "ДЛИНА TITLE",
+        "kpiDescription": "META DESCRIPTION",
+        "kpiH1": "ЗАГОЛОВКИ H1",
+        "kpiImages": "ИЗОБРАЖЕНИЯ",
+        "kpiLinks": "ССЫЛКИ",
+        "kpiWords": "КОЛИЧЕСТВО СЛОВ",
+        "httpNote": "итоговый ответ",
+        "slow": "медленнее 800 мс",
+        "fast": "в пределах 800 мс",
+        "characters": "символов",
+        "present": "Есть",
+        "missing": "Отсутствует",
+        "charsNote": "{{0}} симв.",
+        "h1Note": "рекомендуется ровно 1",
+        "noAltNote": "{{0}} без alt-текста",
+        "linksNote": "{{0}} внутренних, {{1}} внешних",
+        "wordsNote": "слов основного текста",
+        "where": "ГДЕ",
+        "howToFix": "КАК ИСПРАВИТЬ",
+        "fixFirst": "Что исправить в первую очередь",
+        "noIssues": "В ходе аудита проблем не обнаружено.",
+        "fixIntro": "Проблемы отсортированы по серьёзности и сгруппированы по категориям. В каждой карточке указано, что изменить и где это применимо.",
+        "severityGroup": "{{0}} ({{1}})",
+        "details": "Детали аудита",
+        "noDetails": "В этом аудите нет подробных данных о странице.",
+        "colCheck": "Проверка",
+        "colValue": "Текущее значение",
+        "colStatus": "Статус",
+        "colAdvice": "Рекомендация",
+        "colArea": "Область",
+        "passed": "Пройденные проверки",
+        "nothingPassed": "В этом аудите не пройдено ни одной проверки.",
+        "passedSummary": "Пройдено проверок: {{0}} из {{1}}."
+      },
+      "checks": {
+        "chars": "{{0}} ({{1}} симв.)",
+        "ms": "{{0}} мс",
+        "bytes": "{{0}} байт",
+        "minutes": "{{0}} мин",
+        "unknown": "неизвестно",
+        "missingCount": "отсутствует: {{0}}",
+        "fixAlt": "Добавьте информативный alt-текст к каждому изображению.",
+        "fixSize": "Укажите явные атрибуты width и height для изображений.",
+        "fixInsecure": "Замените ссылки http:// на https://.",
+        "fixMixed": "Загружайте все ресурсы по HTTPS.",
+        "keyword": "{{0}} ({{1}})",
+        "metaTitle": "Метатеги",
+        "title": "Title",
+        "description": "Meta description",
+        "canonical": "Canonical URL",
+        "robotsMeta": "Meta robots",
+        "viewport": "Viewport",
+        "charset": "Кодировка (charset)",
+        "keywords": "Meta keywords",
+        "author": "Автор",
+        "generator": "Генератор",
+        "themeColor": "Цвет темы",
+        "headingsTitle": "Заголовки",
+        "h1Count": "Количество H1",
+        "h1Text": "Текст H1",
+        "hierarchy": "Корректная иерархия заголовков",
+        "outline": "Структура заголовков",
+        "contentTitle": "Статистика контента",
+        "words": "Количество слов",
+        "sentences": "Предложения",
+        "readingTime": "Время чтения",
+        "readability": "Читабельность",
+        "readabilityValue": "{{0}} (индекс Флеша {{1}})",
+        "wordsPerSentence": "Слов в предложении",
+        "textRatio": "Соотношение текста и HTML",
+        "topKeywords": "Топ ключевых слов",
+        "imagesTitle": "Изображения",
+        "imageTotal": "Найдено изображений",
+        "imageAlt": "Изображения без alt-текста",
+        "imageSize": "Изображения без width и height",
+        "imageFormats": "Форматы изображений",
+        "linksTitle": "Ссылки",
+        "linkTotal": "Всего ссылок",
+        "linkInternal": "Внутренние ссылки",
+        "linkExternal": "Внешние ссылки",
+        "linkNofollow": "Ссылки nofollow",
+        "linkInsecure": "Небезопасные (HTTP) ссылки",
+        "linkBlank": "Ссылки, открывающиеся в новой вкладке",
+        "redirectTitle": "Цепочка редиректов",
+        "redirectHops": "Число редиректов",
+        "hop": "Переход {{0}}",
+        "hopValue": "HTTP {{0}}: {{1}} → {{2}}",
+        "indexTitle": "Индексируемость",
+        "indexStatus": "Статус индексируемости",
+        "xRobots": "Заголовок X-Robots-Tag",
+        "canonicalMatch": "Canonical совпадает с итоговым URL",
+        "canonicalChecked": "Целевой URL canonical проверен",
+        "canonicalStatus": "HTTP-статус целевого URL canonical",
+        "canonicalError": "Ошибка проверки canonical",
+        "securityTitle": "Заголовки безопасности",
+        "securityScore": "Оценка безопасности",
+        "transportTitle": "Безопасность передачи данных",
+        "https": "Доступ по HTTPS",
+        "scheme": "Схема URL",
+        "mixed": "Ресурсы со смешанным контентом",
+        "cookies": "Cookie",
+        "noCookies": "Cookie не устанавливались",
+        "cookie": "Cookie: {{0}}",
+        "cookieValue": "Secure: {{0}}; HttpOnly: {{1}}; SameSite: {{2}}",
+        "cookieAdvice": "Задайте флаги Secure и HttpOnly и атрибут SameSite.",
+        "tls": "Охват TLS",
+        "structuredTitle": "Структурированные данные",
+        "blocks": "Блоки структурированных данных",
+        "block": "{{0}} ({{1}})",
+        "valid": "Проблем валидации нет",
+        "structuredAdvice": "Исправьте структурированные данные, чтобы они проходили валидацию.",
+        "socialTitle": "Open Graph и Twitter Card",
+        "addTag": "Добавьте тег {{0}} в head страницы.",
+        "a11yTitle": "Доступность",
+        "language": "Язык документа",
+        "landmarks": "Ориентиры (landmarks)",
+        "aria": "Атрибуты ARIA",
+        "formControls": "Элементы форм",
+        "unlabeled": "Элементы форм без подписи",
+        "hiddenControls": "Скрытые элементы форм",
+        "manual": "Требуется ручная проверка",
+        "ampTitle": "AMP",
+        "ampDetected": "AMP обнаружен",
+        "ampDocument": "Страница является AMP-документом",
+        "ampUrls": "Связанные AMP-версии",
+        "ampCanonical": "Canonical URL AMP",
+        "ampCoverage": "Охват валидации",
+        "notVerified": "Не проверено",
+        "perfTitle": "Производительность",
+        "httpStatus": "HTTP-статус",
+        "responseTime": "Время ответа сервера",
+        "headersTime": "Время до заголовков ответа",
+        "bodyTime": "Время чтения тела",
+        "totalTime": "Общее время запроса",
+        "bodyBytes": "Размер декодированного тела",
+        "lengthHeader": "Заголовок Content-Length",
+        "redirectCount": "Выполнено редиректов",
+        "method": "Метод запроса",
+        "measuredAt": "Время измерения",
+        "scope": "Область измерения",
+        "techTitle": "Технические детали",
+        "contentType": "Тип контента",
+        "server": "Сервер",
+        "favicon": "Favicon",
+        "robotsTxt": "robots.txt",
+        "sitemap": "Sitemap",
+        "hreflangTags": "Теги hreflang",
+        "hreflang": "{{0}}: {{1}}",
+        "techSignals": "Обнаруженные технологии",
+        "signal": "{{0}}{{1}} ({{2}}, {{3}})"
+      },
+      "loc": {
+        "wholePage": "Вся страница: {{0}}",
+        "page": "Страница: {{0}}",
+        "element": "Элемент: {{0}}",
+        "current": "Текущее значение: {{0}}",
+        "image": "Изображение: {{0}}",
+        "link": "Ссылка: {{0}}",
+        "linkText": "Ссылка: {{0}} (текст ссылки: {{1}})",
+        "h1": "Заголовок <h1>: {{0}}",
+        "header": "HTTP-заголовок ответа: {{0}}",
+        "headerMissing": "Текущее значение: сервер не отправляет",
+        "cookie": "Cookie: {{0}}",
+        "block": "{{0}} {{1}}",
+        "blockPath": "Структурированные данные {{0}}, путь: {{1}}",
+        "noPath": "не указано",
+        "lineColumn": " (строка {{0}}, столбец {{1}})",
+        "elementAt": "{{0}}{{1}}: {{2}}",
+        "evidence": "Подтверждение: {{0}}",
+        "scheme": "Схема URL: {{0}}",
+        "resource": "Небезопасный ресурс: {{0}}",
+        "response": "Ответ сервера: HTTP {{1}} за {{0}} мс",
+        "hop": "Переход редиректа: HTTP {{0}} с {{1}}"
+      }
+    },
+    "crawl": {
+      "report": {
+        "reportTitle": "SEOmi · Отчёт об обходе сайта",
+        "brandLine": "Создано в SEOmi",
+        "footerNote": "Метод: локальный обход по HTTP и HTML; только сохранённые данные запуска, страницы повторно не загружались.",
+        "methodFull": "Метод: локальный обход по HTTP и HTML. В отчёт включены только данные выбранного запуска; страницы для него повторно не загружались. Отчёт не является вердиктом Google об индексации.",
+        "pageLabel": "Страница {{page}} из {{total}}",
+        "title": "Отчёт об обходе сайта",
+        "completedAt": "ЗАВЕРШЕНО",
+        "duration": "ДЛИТЕЛЬНОСТЬ",
+        "pagesCrawled": "ОБОЙДЕНО СТРАНИЦ",
+        "mode": "РЕЖИМ ОБХОДА",
+        "modeDefault": "http",
+        "environment": "ОКРУЖЕНИЕ",
+        "envDefault": "по умолчанию",
+        "scoreVersion": "ВЕРСИЯ ОЦЕНКИ",
+        "versionNone": "без версии",
+        "seconds": "{{0}} с",
+        "minSec": "{{0}} мин {{1}} с",
+        "ms": "{{0}} мс",
+        "yes": "Да",
+        "no": "Нет",
+        "none": "Нет",
+        "ok": "OK",
+        "problem": "Проблема",
+        "noteCancelled": "Обход был отменён до завершения; результаты неполные.",
+        "noteTimedOut": "Обход достиг лимита времени; результаты неполные.",
+        "noteRobots": "Предупреждение robots.txt: {{0}}",
+        "noteLimits": "Достигнуты лимиты: {{0}}.",
+        "healthScore": "Оценка состояния",
+        "legend": "Зелёный: 80 и выше  ·  Жёлтый: от 50 до 79  ·  Красный: ниже 50",
+        "ratingGood": "Хорошо",
+        "ratingFair": "Нужно улучшить",
+        "ratingPoor": "Плохо",
+        "ratingNone": "Без оценки",
+        "critical": "Критично",
+        "warning": "Предупреждение",
+        "notice": "Замечание",
+        "findings": "проблем",
+        "kpiShare": "{{0}}% страниц",
+        "kIndexable": "ИНДЕКСИРУЕМЫЕ",
+        "kBlocked": "НЕИНДЕКСИРУЕМЫЕ",
+        "kUncertain": "НЕОПРЕДЕЛЁННЫЕ",
+        "k2xx": "СТАТУС 2XX",
+        "k3xx": "СТАТУС 3XX",
+        "k4xx": "СТАТУС 4XX",
+        "k5xx": "СТАТУС 5XX",
+        "kNoStatus": "НЕТ ОТВЕТА",
+        "kAvgTime": "СРЕДНИЙ ОТВЕТ",
+        "kAvgNote": "на страницу",
+        "kAvgWords": "СРЕДНЕЕ ЧИСЛО СЛОВ",
+        "kWordsNote": "на страницу",
+        "kOrphans": "СТРАНИЦЫ-СИРОТЫ",
+        "kDuplicates": "ГРУППЫ ДУБЛИКАТОВ",
+        "kDupNote": "title, description, контент",
+        "kChains": "ЦЕПОЧКИ РЕДИРЕКТОВ",
+        "kChainNote": "2 и более переходов",
+        "kBrokenInt": "БИТЫЕ ВНУТРЕННИЕ ССЫЛКИ",
+        "kBrokenExt": "БИТЫЕ ВНЕШНИЕ ССЫЛКИ",
+        "kLinkNote": "проверено ссылок",
+        "kNoTitle": "НЕТ TITLE",
+        "kNoDesc": "НЕТ DESCRIPTION",
+        "kNoH1": "НЕТ H1",
+        "kNoCanonical": "НЕТ CANONICAL",
+        "kWithIssues": "СТРАНИЦЫ С ПРОБЛЕМАМИ",
+        "fixFirst": "Что исправить в первую очередь",
+        "fixIntro": "Проблемы сгруппированы по типу и упорядочены: критичные, предупреждения, замечания. В каждой карточке перечислены затронутые страницы и способы исправления.",
+        "noIssues": "На обойдённых страницах проблем не найдено.",
+        "severityGroup": "{{0}} ({{1}})",
+        "affectedOne": "Затронута 1 страница",
+        "affected": "Затронуто страниц: {{0}} ({{1}}%)",
+        "where": "ГДЕ",
+        "howToFix": "КАК ИСПРАВИТЬ",
+        "wherePage": "{{0}}: {{1}}",
+        "morePages": "... и ещё страниц: {{0}} (все URL см. в таблице страниц)",
+        "evTitle": "title: {{0}}",
+        "evDescription": "meta description: {{0}}",
+        "evCanonical": "canonical: {{0}} ({{1}})",
+        "evStatus": "HTTP {{0}}",
+        "evError": "ошибка запроса: {{0}}",
+        "evRobots": "meta robots: {{0}}, X-Robots-Tag: {{1}}",
+        "evWords": "слов: {{0}}",
+        "evH1": "количество H1: {{0}}",
+        "evLang": "lang: {{0}}",
+        "evImages": "изображений без alt: {{0}}",
+        "pagesHeading": "Страницы",
+        "pagesIntro": "Все обойдённые страницы в порядке обхода.",
+        "criticalPages": "Страницы с критичными проблемами",
+        "criticalIntro": "Страницы хотя бы с одной критичной проблемой и проблемами, которые нужно исправить в первую очередь.",
+        "colCritical": "Критичные проблемы",
+        "details": "Подробные результаты",
+        "noneFound": "В этом запуске ничего не найдено.",
+        "moreRows": "+ ещё строк: {{0}} (здесь не показаны)",
+        "rows": "строк: {{0}}",
+        "rowOne": "1 строка",
+        "tCoverage": "Охват отчёта",
+        "coverageIntro": "Все перечисленные ниже области были проверены; разделы без данных помечены как пустые.",
+        "tComparison": "Сравнение с предыдущим запуском",
+        "noComparison": "Недоступно: в сохранённой записи запуска нет данных о предыдущем запуске."
+      },
+      "labels": {
+        "tRun": "Сведения о запуске",
+        "tConfig": "Конфигурация обхода",
+        "configIntro": "Настройки, с которыми выполнялся обход, в точности как сохранены в запуске.",
+        "tRobots": "Robots.txt и sitemap",
+        "runId": "ID запуска",
+        "scopeUrl": "Стартовый URL области",
+        "startUrl": "Стартовый URL краулера",
+        "resources": "Проверено ресурсов",
+        "images": "Найдено изображений",
+        "limits": "Достигнутые лимиты",
+        "cancelled": "Отменён",
+        "timedOut": "Превышено время",
+        "resourceLimit": "Достигнут лимит запросов ресурсов",
+        "provenance": "Происхождение обнаруженных URL неполное",
+        "compacted": "Сохранённые данные сжаты",
+        "pagesTruncated": "Сохранённые страницы усечены",
+        "storagePages": "Сохранено страниц: {{0}} из {{1}}",
+        "template": "Шаблон отчёта",
+        "templateFull": "Полный отчёт",
+        "robotsStatus": "Статус robots.txt",
+        "robotsEval": "Оценка robots.txt",
+        "robotsCode": "HTTP-статус robots.txt",
+        "robotsUrl": "Итоговый URL robots.txt",
+        "robotsAgent": "User-agent краулера",
+        "robotsBlocked": "URL, заблокированные в robots.txt",
+        "robotsWarning": "Предупреждение robots.txt",
+        "sitemapStatus": "Результат обработки sitemap",
+        "sitemapFound": "Обнаружено URL в sitemap",
+        "tPages": "Все обойдённые страницы",
+        "tDupTitles": "Дублирующиеся title",
+        "tDupDescriptions": "Дублирующиеся meta description",
+        "tDupContent": "Дублирующийся контент",
+        "tNear": "Почти дублирующийся контент",
+        "dupIntro": "Страницы в одной группе имеют одинаковое значение; сделайте каждую страницу уникальной.",
+        "hashLabel": "Хеш контента {{0}} ({{1}})",
+        "tRedirects": "Редиректы и цепочки редиректов",
+        "redirectIntro": "Ссылайтесь сразу на итоговый URL; цепочки из 2 и более переходов расходуют краулинговый бюджет.",
+        "hop": "{{0}} → {{1}}",
+        "tClientRedirects": "Редиректы на стороне клиента",
+        "tBroken": "Битые ссылки",
+        "brokenIntro": "Ссылки, целевой URL которых вернул ошибку или не был запрошен; сначала внутренние ссылки.",
+        "internal": "Внутренняя",
+        "external": "Внешняя",
+        "statusError": "{{0}} ({{1}})",
+        "tExternal": "Сводка по внешним ссылкам",
+        "externalIntro": "Внешние цели сгруппированы по хосту, с результатами проверок, выполненных в этом запуске.",
+        "notChecked": "не проверялось в этом запуске",
+        "tCanonical": "Конфликты canonical",
+        "canonicalIntro": "Страницы, у которых canonical отсутствует, недопустим, указан несколько раз или ведёт на другой URL.",
+        "targetStatus": "{{0}} (HTTP {{1}})",
+        "rdCompleted": "Завершён",
+        "rdMode": "Режим обхода",
+        "rdDuration": "Длительность",
+        "rdPages": "Обойдено страниц",
+        "tHreflang": "Hreflang",
+        "tPagination": "Пагинация",
+        "tAmp": "AMP",
+        "tSchema": "Структурированные данные",
+        "schemaFinding": "{{0}} {{1}}: {{2}}",
+        "tHtml": "Результаты валидации HTML",
+        "lineColumn": "(строка {{0}}, столбец {{1}})",
+        "tImages": "Проблемы с изображениями",
+        "imagesIntro": "Проблемы у изображений: {{0}} из {{1}}: нет alt-текста или размеров, ошибки или слишком большие файлы.",
+        "pNoAlt": "нет alt",
+        "pNoSize": "нет width/height",
+        "pBroken": "запрос не удался",
+        "pOversized": "больше {{0}} КБ",
+        "tResources": "Ресурсы",
+        "usedBy": "Страниц: {{0}}, например {{1}}",
+        "tFrames": "Фреймы (iframe)",
+        "tSearches": "Результаты пользовательского поиска",
+        "tRules": "Правила robots.txt для краулера",
+        "tAgents": "robots.txt по идентификатору краулера",
+        "tDirectives": "Директивы Sitemap в robots.txt",
+        "tRobotsChain": "Цепочка редиректов robots.txt",
+        "tSitemapUrls": "URL из sitemap в области обхода",
+        "tRejected": "URL, отклонённые областью обхода",
+        "tReasons": "Причины индексируемости",
+        "reasonsIntro": "Почему страницы заблокированы или имеют неопределённый статус, включая правила robots.txt.",
+        "httpIntro": "Заголовки или данные об обнаружении вернули страницы: {{0}} из {{1}}; у остальных их нет.",
+        "tHttp": "Сведения об HTTP-ответах и обнаружении",
+        "discovered": "{{0}} {{1}}"
+      },
+      "cols": {
+        "colItem": "Элемент",
+        "colValue": "Значение",
+        "colUrl": "URL",
+        "colStatus": "Статус",
+        "colIndexability": "Индексируемость",
+        "colTitle": "Title",
+        "colDepth": "Глубина",
+        "colTime": "Время (мс)",
+        "colWords": "Слов",
+        "colIssues": "Проблем",
+        "colPages": "Страниц",
+        "colUrls": "URL",
+        "colFinding": "Проблема",
+        "colFindings": "Проблемы",
+        "colSource": "Страница-источник",
+        "colTarget": "Цель",
+        "colAnchor": "Анкор",
+        "colType": "Тип",
+        "colHost": "Хост",
+        "colLinks": "Ссылок",
+        "colStates": "Результаты",
+        "colHops": "Переходов",
+        "colChain": "Цепочка редиректов",
+        "colFinal": "Итоговый URL",
+        "colStop": "Причина остановки",
+        "colDeclaration": "Объявление",
+        "colDelay": "Задержка (с)",
+        "colCanonical": "Целевой canonical",
+        "colRelation": "Связь",
+        "colDeclarations": "Теги",
+        "colConflict": "Конфликт robots",
+        "colLang": "Язык",
+        "colReciprocal": "Взаимная ссылка",
+        "colVerdict": "Вердикт",
+        "colParams": "Изменения query",
+        "colAlignment": "Соответствие canonical",
+        "colAmp": "URL AMP",
+        "colChecked": "Проверено",
+        "colImage": "Изображение",
+        "colAlt": "Alt",
+        "colSize": "Размер",
+        "colBytes": "Байт",
+        "colProblem": "Проблема",
+        "colResource": "Ресурс",
+        "colContentType": "Тип контента",
+        "colUsedBy": "Где используется",
+        "colFrame": "Фрейм",
+        "colSearch": "Поиск",
+        "colFound": "Найденные значения",
+        "colError": "Ошибка",
+        "colTypes": "Типы схем",
+        "colSyntax": "Синтаксические ошибки",
+        "colSeverity": "Серьёзность",
+        "colCode": "Код",
+        "colElement": "Элемент",
+        "colDirective": "Директива",
+        "colPath": "Путь",
+        "colAgent": "User-agent",
+        "colGroup": "Своя группа",
+        "colRules": "Правила",
+        "colDelayMs": "Задержка (мс)",
+        "colFrom": "Откуда",
+        "colTo": "Куда",
+        "colReason": "Причина",
+        "colReasons": "Причины",
+        "colEncoding": "Кодировка",
+        "colCache": "Cache-Control",
+        "colXrobots": "X-Robots-Tag",
+        "colDiscovered": "Обнаружено через",
+        "colArea": "Область",
+        "colResult": "Результат"
+      },
+      "focus": {
+        "title": "Тематический фокус сайта",
+        "intro": "Насколько последовательно обойдённые страницы придерживаются одной основной темы. Оценки берутся из сохранённого обхода; страницы повторно не загружаются.",
+        "scoreTitle": "Site Focus Score",
+        "legend": "Диапазоны: 90-100 отлично, 75-89 хорошо, 60-74 умеренно, 40-59 слабо, 0-39 критично.",
+        "kConfidence": "Уверенность в основной теме",
+        "kOnTopic": "Доля страниц по теме",
+        "kScored": "Оценено страниц",
+        "kSkipped": "Пропущено страниц",
+        "kOffTopic": "Страницы не по теме",
+        "kBorderline": "Пограничные страницы",
+        "kStrong": "Сильные страницы",
+        "nConfidence": "Доля основного кластера",
+        "nOnTopic": "Страницы с TRS 60 и выше",
+        "nScored": "из {{0}} обойдённых",
+        "nSkipped": "Не оценены",
+        "nOffTopic": "TRS ниже 40",
+        "nBorderline": "TRS 60-74",
+        "nStrong": "TRS 75 и выше",
+        "percent": "{{0}}%",
+        "coreBadge": "ОСНОВНАЯ ТЕМА",
+        "coreTerms": "Главные термины",
+        "coreTerm": "{{0}} ({{1}}% страниц)",
+        "coreConfidence": "Уверенность {{0}}%",
+        "coreManual": "Тема задана вручную: {{0}}",
+        "coreDetected": "Определена по обойдённым страницам",
+        "tPages": "Страницы с наименьшей тематической релевантностью",
+        "pagesIntro": "До 25 контентных страниц с самым низким показателем тематической релевантности (Topical Relevance Score, TRS). Технические и пропущенные страницы не учитываются.",
+        "colTrs": "TRS",
+        "colType": "Тип",
+        "colSimilarity": "Сходство",
+        "colOverlap": "Пересечение",
+        "colDrift": "Дрейф",
+        "colPlaybook": "План действий",
+        "playbook": "{{0}}: {{1}}",
+        "tRecs": "Рекомендации",
+        "recsIntro": "Отсортированы по смоделированному приросту оценки на оценочный час работы. Приросты приблизительные.",
+        "colNo": "№",
+        "colAction": "Рекомендация",
+        "colGain": "Прирост",
+        "gain": "+{{0}}",
+        "tSub": "Оценки подразделов сайта",
+        "subIntro": "Тематические области сайта с несколькими темами; каждая оценивается относительно собственной основной темы.",
+        "colArea": "Тематическая область",
+        "colPrefix": "Путь",
+        "colShare": "Доля страниц",
+        "colScore": "Оценка",
+        "tGaps": "Тематические пробелы",
+        "colGap": "Пробел",
+        "band": {
+          "excellent": "Отличный фокус",
+          "good": "Хороший фокус",
+          "moderate": "Умеренный фокус",
+          "weak": "Слабый фокус",
+          "critical": "Критичный фокус"
+        },
+        "status": {
+          "strong": "Сильная",
+          "moderate": "Умеренная",
+          "borderline": "Пограничная",
+          "weak": "Слабая",
+          "off-topic": "Явно не по теме"
+        },
+        "type": {
+          "homepage": "Главная страница",
+          "category": "Категория",
+          "article": "Статья",
+          "technical": "Техническая"
+        },
+        "note": {
+          "lowConfidence": "Малая выборка ({{0}} стр.). Результаты ориентировочные; для надёжного определения основной темы обойдите не менее 10 страниц. Советы по удалению ограничены.",
+          "multiTopic": "Обнаружено тематических областей: {{0}}. У сайта нет одной доминирующей темы. Оценки подразделов приведены ниже.",
+          "lexicalFallback": "Для выбранного языка анализ использует статистический алгоритм TF-IDF. Компонент глубокого семантического сходства недоступен; оценка основана на покрытии и распределении ключевых слов.",
+          "skippedRender": "Страниц, пропущенных в анализе из-за тайм-аута рендеринга JavaScript: {{0}}.",
+          "degraded": "У некоторых страниц было мало данных, поэтому их оценки могут быть менее точными.",
+          "unmatchedTopic": "Ни одна страница не соответствует теме «{{0}}». Вместо неё используется определённая тема."
+        },
+        "rec": {
+          "remove-offtopic": "Удалите или перенесите страницы не по теме ({{0}}): настройте редирект, noindex или удалите худшие и уберите внутренние ссылки на них. Потенциал по баллам: +{{1}}.",
+          "strengthen-borderline": "Усильте пограничные страницы ({{0}}): добавьте недостающие основные термины и разделы, чтобы поднять их примерно до {{1}}. Потенциал по баллам: +{{2}}.",
+          "expand-core-cluster": "Расширьте кластер основной темы: напишите новые страницы ({{0}}) для слабо раскрытых подтем. Потенциал по баллам: +{{1}}.",
+          "add-internal-links": "Добавьте внутренние ссылки на хаб-страницы: предложений по ссылкам {{0}}, они направляют слабые страницы на сильные хабы.",
+          "collect-more-pages": "Соберите больше страниц: проанализировано только {{0}}. Обойдите больше страниц, прежде чем что-либо удалять.",
+          "split-subsites": "Рассмотрите разделение сайта: найдено отдельных тематических областей: {{0}}. Помочь могут отдельные разделы или поддомены.",
+          "review-skipped-pages": "Проверьте пропущенные страницы ({{0}}): из них {{1}} превысили тайм-аут при рендеринге JavaScript.",
+          "monitor-strong-pages": "Следите за сильными страницами ({{0}}): сохраняйте их тематику и регулярно перепроверяйте."
+        },
+        "option": {
+          "remove-redirect": "Удалить и настроить редирект 301 (+{{0}} б.)",
+          "noindex-isolate": "Закрыть noindex и изолировать (+{{0}} б.)",
+          "rewrite-on-topic": "Переписать по теме по брифу (целевой TRS около {{0}})",
+          "add-missing-terms": "Добавить недостающие термины: {{0}}",
+          "reinforce-headings": "Усилить заголовки H2 и H3",
+          "deepen-coverage": "Углубить тематическое покрытие",
+          "serve-as-hub": "Использовать как хаб",
+          "build-satellite-cluster": "Создать кластер сопутствующих страниц",
+          "monitor-periodically": "Проверять каждые {{0}} нед."
+        },
+        "gap": {
+          "thin-subtopic": "Слабо раскрытая подтема «{{0}}»: её освещают только {{1}}% страниц (страниц: {{2}}). Термины: {{3}}.",
+          "competitor-terms": "Термины конкурентов, которых нет на вашем сайте: {{3}}."
+        }
+      },
+      "authority": {
+        "title": "Тематический авторитет",
+        "intro": "Насколько полно и глубоко сайт раскрывает главную тему по сравнению с рынком. Оценки берутся из сохранённого запуска и кэша эталонной карты; страницы повторно не загружаются.",
+        "scoreTitle": "Topical Authority Score",
+        "legend": "TAS = 0,35 охват + 0,30 глубина сущностей + 0,25 связность силосов + 0,10 свежесть, масштабируется Site Focus Score (от 0,7 до 1,0).",
+        "kTcr": "Охват темы",
+        "kCdes": "Глубина сущностей",
+        "kSilc": "Связность силосов",
+        "kCvff": "Свежесть",
+        "unavailable": "н/д",
+        "noReference": "Для проекта не построена эталонная карта, поэтому охват и глубина не измеряются, а TAS не рассчитывается.",
+        "reference": "Эталонная карта: {{0}} подтем в {{1}} столпах от {{2}} конкурентов ({{3}}).",
+        "quadrant": {
+          "dominant_authority": "Доминирующий авторитет",
+          "boutique_specialist": "Узкий специалист",
+          "diluted_giant": "Размытый гигант",
+          "unfocused_generalist": "Несфокусированный универсал"
+        },
+        "warning": {
+          "empty-authority": "Пустой авторитет: затронуто много тем, но их средняя глубина очень мала. Углубите существующие страницы, прежде чем публиковать новые.",
+          "template-duplicates": "Клоны шаблона объединены с самой сильной страницей: они не повышают охват и тратят краулинговый бюджет.",
+          "no-dates": "Даты публикации и обновления не найдены, свежесть не измеряется.",
+          "no-links": "Внутренних ссылок в контенте между проанализированными страницами нет; связность оценена только по страницам-сиротам."
+        },
+        "tCoverage": "Охват по столпам",
+        "colPillar": "Столп",
+        "colCoverage": "Охват",
+        "colGaps": "Недостающие подтемы",
+        "tGaps": "Пробелы в контенте",
+        "colGap": "Недостающая подтема",
+        "colLevel": "Серьёзность",
+        "tCannibal": "Семантическая каннибализация",
+        "colCanonical": "Страница для сохранения",
+        "colPages": "Страницы",
+        "tRecs": "План расширения авторитета",
+        "tBench": "Матрица пробелов против топ-конкурентов",
+        "level": {
+          "critical": "критический",
+          "high": "высокий",
+          "medium": "средний"
+        },
+        "rec": {
+          "fill-gaps": "Закройте пробелы в «{{0}}»: не хватает подтем — {{1}}",
+          "merge-cannibalized": "Объедините {{0}} групп каннибализирующих страниц",
+          "fix-linking": "Исправьте перелинковку: {{0}} страниц-сирот, {{1}} ссылок на нетематические страницы",
+          "deepen-shallow": "Углубите {{0}} поверхностных подтем",
+          "refresh-stale": "Обновите {{0}} страниц, не менявшихся больше года"
+        }
+      },
+      "aio": {
+        "title": "Готовность к AI Overviews и RAG",
+        "intro": "Насколько легко ИИ-системы ответов извлекают и цитируют фрагменты ваших страниц. Оценка объединяет самодостаточные фрагменты (45%), плотность фактов (35%) и извлекаемую структуру (20%).",
+        "scoreTitle": "Оценка готовности к ИИ",
+        "legend": "Уровни: 90-100 отличная, 75-89 хорошая, 60-74 умеренная, 40-59 слабая, 0-39 критическая.",
+        "kSelf": "Самодостаточность",
+        "kSpo": "Плотность фактов",
+        "kExtract": "Извлекаемость",
+        "kScored": "Оценено страниц",
+        "nSelf": "Фрагменты, понятные сами по себе",
+        "nSpo": "Факты «подлежащее-сказуемое-дополнение»",
+        "nExtract": "Таблицы, списки, заголовки",
+        "nScored": "Пропущено страниц: {{0}}",
+        "noteBasic": "Языковые правила для {{0}} базовые: определение местоимений и фактов там менее точно.",
+        "tPages": "Страницы по готовности к ИИ",
+        "pagesIntro": "До 25 страниц, сначала с самой низкой оценкой.",
+        "colScore": "Оценка",
+        "colSelf": "Самодостаточность",
+        "colSpo": "Факты",
+        "colExtract": "Структура",
+        "colChunks": "Фрагменты",
+        "tPassages": "Самые слабые фрагменты",
+        "passagesIntro": "Фрагменты, которые RAG-индексу было бы трудно процитировать, с найденными проблемами.",
+        "colHeading": "Страница и заголовок",
+        "colExcerpt": "Фрагмент",
+        "colIssues": "Проблемы",
+        "percent": "{{0}}%",
+        "band": {
+          "excellent": "Отличная готовность",
+          "good": "Хорошая готовность",
+          "moderate": "Умеренная готовность",
+          "weak": "Слабая готовность",
+          "critical": "Критическая готовность"
+        },
+        "issue": {
+          "dangling-pronoun": "Неясная отсылка",
+          "no-answer-first": "Нет прямого ответа в начале",
+          "filler-opening": "Водянистое начало",
+          "no-facts": "Нет конкретных фактов",
+          "too-long": "Слишком длинный для одного фрагмента"
+        }
+      },
+      "trust": {
+        "title": "Доверие к сущностям (E-E-A-T)",
+        "intro": "Насколько можно проверить издателя, авторов и источники сайта. Оценки взяты из сохранённого запуска; страницы повторно не загружаются.",
+        "scoreTitle": "Показатель доверия к сущностям",
+        "legend": "Уровни: 75-100 высокий, 60-74 достаточный, 40-59 слабый, 0-39 критический.",
+        "kSchema": "Граф сущностей",
+        "kAuthor": "Соответствие автора теме",
+        "kCitation": "Качество источников",
+        "kTransparency": "Прозрачность",
+        "kArticles": "Страницы статей",
+        "kAuthors": "Сущности авторов",
+        "nLayer": "Оценка 0-100",
+        "nNoData": "Нет данных в этом обходе",
+        "nArticles": "из {{0}} просканированных",
+        "nAuthors": "{{0}} с sameAs",
+        "ymylNote": "Категория YMYL: {{0}}. У {{1}}% статей нет автора или рецензента с указанным именем.",
+        "tAuthors": "Сущности авторов",
+        "authorsIntro": "Авторы, найденные в структурированных данных, со ссылками sameAs и соответствием основной теме.",
+        "colAuthor": "Автор",
+        "colArticles": "Статьи",
+        "colSameAs": "sameAs",
+        "colAlignment": "Соответствие",
+        "generic": "{{0}} (анонимная подпись)",
+        "tPages": "Страницы доверия",
+        "pagesIntro": "Страницы, показывающие редакционную и корпоративную прозрачность.",
+        "colPage": "Страница",
+        "colState": "Статус",
+        "found": "Найдена: {{0}}",
+        "missing": "Отсутствует",
+        "tFindings": "Выводы о доверии",
+        "findingsIntro": "Упорядочены по важности; сначала исправьте критичные.",
+        "colSeverity": "Важность",
+        "colFinding": "Вывод",
+        "level": {
+          "strong": "Высокое доверие",
+          "adequate": "Достаточное доверие",
+          "weak": "Слабое доверие",
+          "critical": "Критические пробелы доверия"
+        },
+        "severity": {
+          "critical": "Критично",
+          "warning": "Предупреждение",
+          "info": "Инфо"
+        },
+        "kind": {
+          "editorial": "Редакционная политика",
+          "about": "О нас",
+          "contact": "Контакты",
+          "registry": "Регистрационные данные компании"
+        },
+        "ymyl": {
+          "health": "здоровье",
+          "finance": "финансы",
+          "legal": "право"
+        },
+        "find": {
+          "ymyl-unattributed": "У {{0}} статей ({{1}}%) на тему YMYL нет автора или рецензента с указанным именем.",
+          "ymyl-no-reviewer": "Ни одна из {{0}} медицинских статей не указывает рецензента (reviewedBy).",
+          "no-bylines": "Ни одна из {{0}} статей не указывает автора в структурированных данных.",
+          "generic-author": "{{0}} статей подписаны анонимно.",
+          "org-missing": "В структурированных данных не найдена сущность Organization.",
+          "org-no-same-as": "У издателя {{0}} нет ссылок sameAs.",
+          "author-no-same-as": "У {{0}} авторов нет ссылок sameAs ({{1}}).",
+          "author-no-id": "У {{0}} авторов нет стабильного @id.",
+          "author-off-topic": "Профиль {{0}} соответствует основной теме лишь на {{1}}%.",
+          "low-citations": "Лишь {{0}}% из {{1}} страниц статей ссылаются на надёжный источник.",
+          "dead-citations": "{{0}} исходящих ссылок возвращают ошибку.",
+          "missing-editorial": "Не найдена редакционная политика или страница проверки фактов.",
+          "missing-contact": "Не найдена страница контактов.",
+          "missing-registry": "Не найдена страница с регистрационными данными компании или правовой информацией.",
+          "missing-about": "Не найдена страница «О нас».",
+          "missing-dates": "Лишь у {{0}}% статей указана дата изменения или проверки.",
+          "no-articles": "Страницы статей не обнаружены; слои авторов и цитирования не оценивались.",
+          "author-invalid-profile": "{{0}} авторов указывают профиль ORCID или Wikidata с неверным идентификатором ({{1}}). Проверьте контрольную сумму или Q-ID.",
+          "ymyl-no-scholarly-ids": "Ни одна из {{0}} статей не цитирует источник с DOI, PMID или PMCID. В темах YMYL цитируйте первичное исследование."
+        }
+      },
+      "offPage": {
+        "title": "Внешний анализ",
+        "intro": "Последний сохранённый анализ этого проекта; выборка не является полным профилем обратных ссылок.",
+        "topic": "Тема",
+        "scale": "Шкала авторитетности",
+        "model": "Модель эмбеддингов",
+        "requested": "Запрошено источников",
+        "fetched": "Получено источников",
+        "scored": "Оценено источников",
+        "statusLabel": "Статус",
+        "limitationsLabel": "Ограничения",
+        "sourcesIntro": "До 10 источников, по убыванию вклада; n/a означает отсутствие данных.",
+        "offset": "Позиция в тексте",
+        "excerpt": "Фрагмент",
+        "disclaimer": "Это не Google PageRank; отсутствие текста или авторитетности означает частичные/недоступные данные, а не ноль обратных ссылок; совместное упоминание не означает одобрение.",
+        "tbva": "TBVA",
+        "tSources": "Сохранённые данные по источникам",
+        "authority": "Авторитетность",
+        "similarity": "Сходство",
+        "contribution": "Вклад",
+        "tCitations": "Фрагменты социтирования",
+        "na": "n/a",
+        "status": {
+          "ready": "Готово",
+          "partial": "Частично",
+          "unavailable": "Недоступно"
+        },
+        "limitations": {
+          "no-topic-vector": "Нет пригодного вектора Core Topic из последнего завершённого обхода проекта; TBVA недоступна.",
+          "invalid-scale": "Неверная шкала авторитета; TBVA недоступна.",
+          "no-follow-links": "Нет follow-ссылок для анализа.",
+          "source-text-or-authority-missing": "У части источников нет текста, пригодных векторов или авторитета провайдера."
+        }
+      }
+    },
+    "recs": {
+      "crawlMissingLanguage": "Добавьте в элемент <html> корректный атрибут lang, например lang=\"ru\".",
+      "htmlDoctype": "Начинайте документ с <!doctype html> ровно один раз.",
+      "htmlMetaCharset": "Объявите <meta charset=\"utf-8\"> в первых 1024 байтах head.",
+      "htmlDuplicateId": "Сделайте каждый атрибут id уникальным в пределах документа.",
+      "htmlUriInvalid": "Исправьте URL: он должен быть корректно закодирован (percent-encoding) и разрешаться.",
+      "missingTitle": "Добавьте уникальный информативный <title> длиной 30–60 символов.",
+      "multipleTitle": "Оставьте в head ровно один элемент <title>.",
+      "titleLength": "Перепишите <title> до 30–60 символов, описывающих страницу.",
+      "duplicateTitle": "Задайте каждой странице уникальный title, соответствующий её теме.",
+      "missingMetaDescription": "Добавьте уникальный meta description длиной 70–160 символов.",
+      "metaDescriptionLength": "Перепишите meta description до 70–160 символов.",
+      "emptyDescription": "Заполните meta description или удалите пустой тег.",
+      "multipleMetaDescription": "Оставьте в head один тег meta description.",
+      "duplicateMetaDescription": "Напишите уникальный meta description для каждой страницы.",
+      "missingCanonical": "Добавьте <link rel=\"canonical\">, указывающий на предпочтительный URL страницы.",
+      "canonicalTargetReturned": "Укажите в canonical URL, который отвечает HTTP 200.",
+      "canonicalAndNoindex": "Уберите canonical или noindex, чтобы сигнал индексации был однозначным.",
+      "canonicalDeclarationHas": "Используйте в ссылке canonical абсолютный URL http(s).",
+      "crawlMultipleCanonical": "Объявляйте ровно один canonical URL на страницу.",
+      "crawlCanonical": "Убедитесь, что целевой URL canonical — это страница, которую нужно индексировать; иначе сделайте canonical самоссылающимся.",
+      "missingH1": "Добавьте ровно один <h1>, указывающий тему страницы.",
+      "multipleH1": "Оставьте один <h1>, а остальные замените на <h2>.",
+      "heading": "Соблюдайте порядок заголовков (h1, h2, h3), не пропуская уровни.",
+      "crawlDuplicateContent": "Перепишите страницу или объедините дубликаты с помощью canonical или редиректа.",
+      "nearDuplicate": "Сделайте контент этих страниц разным или объедините их.",
+      "httpErrorStatus": "Устраните ошибку сервера или удалите/перенаправьте ссылки, ведущие на этот URL.",
+      "fetchFailed": "Убедитесь, что сервер доступен и отвечает в пределах таймаута; затем выполните обход повторно.",
+      "crawlClientRedirect": "Замените meta/JS refresh серверным редиректом 301.",
+      "redirect": "Ссылайтесь сразу на итоговый URL и ограничивайте цепочки редиректов одним переходом.",
+      "crawlNofollow": "Уберите nofollow из директив robots, если только передачу ссылочного веса действительно не нужно блокировать.",
+      "noindex": "Уберите noindex, если страница должна появляться в результатах поиска.",
+      "crawlThinContent": "Дополните страницу полезным оригинальным контентом либо закройте её через noindex или объедините с другой.",
+      "missingAlt": "Добавьте информативный атрибут alt к каждому содержательному изображению.",
+      "jsonldSyntax": "Исправьте синтаксис JSON-LD, чтобы он разбирался и проходил валидацию.",
+      "schemaValidation": "Сократите объём структурированных данных на странице, чтобы уложиться в лимиты.",
+      "structuredData": "Объявите каждый используемый @id в том же графе или удалите ссылку.",
+      "schema": "Исправьте свойство структурированных данных, указанное для этой страницы.",
+      "pagination": "Сделайте цели rel=next/prev корректными, доступными и взаимными.",
+      "ampTarget": "Проверьте AMP-страницу: она должна отвечать 200 и указывать исходную страницу как canonical.",
+      "nonHtmlResource": "Действий не требуется, если только этот URL не должен быть HTML-страницей.",
+      "responseBody": "Уменьшите размер страницы или увеличьте лимит ответа и повторите обход.",
+      "transientHttpFailure": "Проверьте стабильность сервера: запрос сработал только после повторной попытки.",
+      "browser": "Проверьте ошибку отрисовки в консоли браузера и исправьте проблемный ресурс.",
+      "rendered": "Убедитесь, что запрошенный URL не перенаправляет в браузере на другой адрес.",
+      "robots": "Проверьте правило robots.txt, если этот URL должен быть доступен для обхода.",
+      "genericCritical": "Исправьте эту проблему в первую очередь: она может помешать обходу или индексации страницы.",
+      "genericWarning": "Проверьте затронутые страницы и исправьте указанный элемент.",
+      "genericNotice": "Необязательное улучшение: проверьте затронутые страницы, когда будет время."
+    }
+  },
+  "help": {
+    "overview": {
+      "healthScore": {
+        "title": "Health score",
+        "what": "A single number from 0 to 100 that sums up how many technical and on-page SEO problems SEOmi found on this one page. 100 means nothing wrong was detected; every problem subtracts points, and serious problems subtract more than small ones.",
+        "why": "Search engines and visitors both prefer pages that load, can be read and are easy to understand. A low score usually means something is blocking the page from ranking, such as a missing title, a broken status code or a noindex tag. The score is a quick triage tool, not a ranking factor that Google reads.",
+        "action": "Check the colour: 85 and above (green) is healthy, 65 to 84 (amber) needs attention, below 65 (red) needs work now.\nOpen the issues list further down this screen and start with the Critical items.\nFix one issue, run the audit again and watch the score rise.\nDo not chase 100 at any price: a score of 90 with great content beats 100 on a thin page.",
+        "example": "A page with a missing title (Critical), no meta description (Warning) and two images without alt text (Info) might score 68. Adding the title and the description usually brings it above 85.",
+        "learnMore": "The score only covers what SEOmi can measure on this single page. It does not judge your content quality, backlinks or competition."
+      },
+      "httpStatus": {
+        "title": "HTTP status code",
+        "what": "A three-digit answer the web server gives to every request, saying whether the page was delivered. 200 means OK, 301 and 302 mean the page moved, 404 means not found, 410 means gone for good, and 500 or higher means the server itself failed.",
+        "why": "Google only indexes pages that answer 200 (or follow a redirect to one). A 404 or 5xx page drops out of search results, and visitors see an error. Even a short-lived 500 can make Googlebot visit your site less often.",
+        "action": "200: nothing to do, this is correct.\n301 or 302: check the final address is the page you want people to land on. Use 301 for permanent moves.\n404 or 410: restore the page, or redirect the old address to the closest matching page with a 301.\n5xx: ask your hosting provider or developer to check the server logs, then re-run the audit.\nAfter a fix, re-test to confirm the status is now 200.",
+        "example": "You renamed /blog/seo-tips to /blog/seo-guide and forgot the redirect. The old address now returns 404, so every link and Google result pointing to it leads to an error. A 301 from the old to the new address fixes it."
+      },
+      "responseTime": {
+        "title": "Response time",
+        "what": "How many milliseconds (1000 ms = 1 second) the server needed to start sending this page after SEOmi asked for it. It measures the server, not how long the page takes to display in a browser.",
+        "why": "A slow server delays everything that comes after it, so visitors leave and Google crawls fewer of your pages. Google suggests keeping server response under about 200 ms. Above 1000 ms is clearly slow.",
+        "action": "Under 200 ms: excellent, leave it.\n200 to 600 ms: acceptable; consider caching if the page is mostly static.\nAbove 600 ms: turn on page caching (or a CDN) and compress responses.\nAbove 1000 ms: check hosting quality, heavy database queries and slow plugins.\nMeasure two or three times, because a single reading can be a one-off spike.",
+        "example": "A blog post that answers in 1800 ms on shared hosting often drops to 150 to 300 ms after a full-page cache plugin is switched on."
+      },
+      "severityCounts": {
+        "title": "Issue severity counts",
+        "what": "The problems found on this page, grouped by how serious they are. Critical issues can stop the page from ranking or working. Warnings are real weaknesses that cost you traffic or clicks. Info items are small improvements or things worth knowing.",
+        "why": "Grouping tells you what to fix first. Ten Info items matter less than one Critical, so you avoid spending a day on cosmetic details while a broken canonical tag hides the page from Google.",
+        "action": "Fix every Critical issue first, then re-run the audit.\nWork through the Warnings, starting with the ones that affect many pages.\nTreat Info items as a backlog for when you have time.\nA 0 under Critical is the goal, not 0 everywhere.",
+        "example": "3 Critical, 5 Warning, 9 Info: start with the 3 Critical ones, for example a missing title, a noindex tag and a 404 on the main image."
+      },
+      "wordCount": {
+        "title": "Word count",
+        "what": "The number of words of visible text that SEOmi found in the main content of the page. Menus, scripts and hidden code are not counted. The reading time is estimated at about 200 words per minute.",
+        "why": "Pages with very little text give search engines little to understand, which is called thin content. Long is not automatically better, though: the page must fully answer what the visitor came for.",
+        "action": "Under 300 words: ask yourself whether the page really answers the question. Add useful detail if not.\n300 to 1000 words: normal for most service and product pages.\nOver 1500 words: typical for in-depth guides; make sure headings split it into scannable sections.\nCompare with the top Google results for your keyword, not with a magic number.",
+        "example": "A product page with 80 words usually loses to competitors who explain materials, sizes, shipping and returns in 400 words."
+      }
+    },
+    "metadata": {
+      "titleLength": {
+        "title": "Page title length",
+        "what": "The title is the blue clickable headline in Google results and the text on the browser tab. The length is counted in characters, spaces included.",
+        "why": "Google shows about 50 to 60 characters (roughly 580 pixels). Longer titles are cut off with an ellipsis, so your key words and brand can vanish. Titles that are too short waste a chance to describe the page and attract clicks.",
+        "action": "Aim for 40 to 65 characters (SEOmi shows green in this range).\nPut the main keyword near the start.\nMake every page title unique.\nAdd your brand at the end if it fits, for example after a dash.\nWrite for people: promise what the visitor will get.\nSave and re-audit to see the counter turn green.",
+        "example": "\"Cheap shoes\" (11 characters) is too short. \"Buy Men's Running Shoes Online | Free Returns | ShoeShop\" is 53 characters and fits."
+      },
+      "metaDescription": {
+        "title": "Meta description",
+        "what": "A one or two sentence summary of the page, hidden in the code, that Google often shows under the title in search results. It is not visible on the page itself.",
+        "why": "It does not directly change your ranking, but a clear, inviting description raises the share of people who click your result (click-through rate), which brings more visitors from the same position. When it is missing Google makes up its own snippet, often a random piece of text.",
+        "action": "Write a unique description for each page.\nKeep it between 120 and 160 characters so it is not cut off.\nInclude the main keyword naturally, because Google bolds words that match the search.\nSay what the visitor gains and add a call to action such as \"See prices\" or \"Learn how\".\nDo not copy the first paragraph of the page.",
+        "example": "\"Learn how to choose running shoes in 5 steps: fit, cushioning, weight, price and terrain. Includes a free size chart and buying tips.\" (about 135 characters)."
+      }
+    },
+    "headings": {
+      "h1Count": {
+        "title": "Number of H1 headings",
+        "what": "H1 is the main heading of a page, the biggest title the visitor sees at the top of the content. It is different from the title tag in the browser tab. Headings H2 to H6 are smaller sub-headings below it.",
+        "why": "The H1 tells visitors and search engines what the page is about in one line. Pages without an H1 look unstructured to screen readers. Several H1s are not an error for Google, but they dilute the message and confuse assistive tools.",
+        "action": "Exactly one H1 per page is the target.\nIf there are 0: add one at the top of the content that describes the page, with the main keyword.\nIf there are 2 or more: keep the best one and change the others to H2 or H3.\nDo not use H1 only for styling; use CSS for size instead.",
+        "example": "On a recipe page the H1 is \"Easy Homemade Pizza Dough\" and the steps below are H2 headings: \"Ingredients\", \"Method\", \"Tips\"."
+      }
+    },
+    "images": {
+      "overview": {
+        "title": "Images found",
+        "what": "How many images SEOmi detected on the page, together with checks on each one: alt text (a short description for people who cannot see the image), size attributes, format and file weight.",
+        "why": "Images are usually the heaviest part of a page, so they slow it down. Missing alt text hurts blind visitors and removes a chance to appear in Google Images. Missing width and height make the page jump while loading (layout shift).",
+        "action": "Give every meaningful image a short, accurate alt text. Use an empty alt for decorative ones.\nSet width and height attributes so the browser reserves the space.\nCompress photos; try to keep each under 150 KB.\nUse modern formats such as WebP or AVIF.\nLazy-load images that are below the first screen.",
+        "example": "alt=\"Red running shoe, side view\" is useful. alt=\"image1.jpg\" or a stuffed list of keywords is not."
+      }
+    },
+    "links": {
+      "overview": {
+        "title": "Links on the page",
+        "what": "The count of all links SEOmi found, split into internal (to your own site), external (to other sites) and nofollow (links marked so that search engines do not pass trust through them).",
+        "why": "Internal links help Google discover pages and understand which ones matter. External links to good sources make content more trustworthy. Broken links frustrate visitors and waste crawl budget.",
+        "action": "Check the page links to your important related pages with descriptive text, not \"click here\".\nFix or remove any link that returns 404.\nLink to reputable external sources only; use nofollow for paid or untrusted ones.\nKeep the number reasonable: a few dozen on normal pages, not hundreds.\nReview security risks, for example links opening a new tab without rel=\"noopener\".",
+        "example": "A guide about running shoes should link to your \"shoe size chart\" page with the anchor text \"size chart\"."
+      }
+    },
+    "settings": {
+      "theme": {
+        "title": "Theme",
+        "what": "Chooses how SEOmi looks: Dark, Light, or System, which follows the setting of your computer.",
+        "why": "It does not change any audit result. Pick what is easiest on your eyes; dark themes reduce glare in dim rooms, light themes are easier to read in bright sunlight, and System switches automatically at night.",
+        "action": "Click Dark, Light or System.\nThe change applies immediately and is remembered next time you open the app.\nIf you share your screen or print reports, Light is usually easier to read on projectors.",
+        "example": "Choose System if your computer switches to dark mode in the evening and you want SEOmi to follow."
+      },
+      "auditNotifications": {
+        "title": "Audit notifications",
+        "what": "When enabled, SEOmi sends a desktop notification as soon as a long audit, crawl or scheduled check finishes, even if the app is in the background.",
+        "why": "Large crawls can take minutes or hours. Notifications let you work on something else and come back at the right time. They also tell you about scheduled checks that finished while you were away.",
+        "action": "Turn the switch on if you run crawls or schedules.\nWhen your system asks for permission, choose Allow. If you refused earlier, enable notifications for SEOmi in the system settings.\nTurn it off if you find the pop-ups distracting.\nThe text below the switch shows whether permission was granted.",
+        "example": "Start a 5000-page crawl, switch to your email, and get a notification when it is done."
+      }
+    },
+    "focus": {
+      "siteFocusScore": {
+        "title": "Site Focus Score (SFS)",
+        "what": "Показатель от 0 до 100, отражающий, насколько последовательно страницы сайта держатся одной основной темы. Это средневзвешенное значение оценки тематической релевантности (Topical Relevance Score, TRS) всех страниц: главная учитывается с весом 3, категории и разделы с весом 2, статьи с весом 1.",
+        "why": "Поисковые системы и читатели ценят сайты, которые чётко раскрывают одну тему. Низкий SFS означает, что многие страницы размывают этот сигнал.",
+        "action": "Посмотрите диапазон: 90-100 отлично, 75-89 хорошо, 60-74 умеренно, 40-59 слабо, 0-39 критично.\nОткройте тепловую карту и сначала исправьте самые слабые страницы.",
+        "example": "Блог о диабете с 40 статьями о диабете и 8 о путешествиях получит около 80."
+      },
+      "topicRelevance": {
+        "title": "Оценка тематической релевантности (TRS)",
+        "what": "Оценка от 0 до 100 для одного URL: насколько страница соответствует основной теме сайта. Учитывает семантическое сходство, пересечение ключевых слов и семантический дрейф.",
+        "why": "Показывает, какие отдельные страницы уводят весь сайт от темы.",
+        "action": "Стремитесь к 75 и выше.\nУлучшайте страницы с оценкой от 60 до 74.\nУдаляйте, перенаправляйте или переписывайте страницы ниже 40.",
+        "example": "Страница о глюкометрах на сайте о диабете: TRS 88. Страница о дешёвых авиабилетах: TRS 12."
+      },
+      "coreTopicConfidence": {
+        "title": "Уверенность в основной теме",
+        "what": "Насколько определённая основная тема доминирует над остальными темами сайта, от 0 до 100 процентов.",
+        "why": "Если уверенность низкая, у сайта нет ясной главной темы или проанализировано слишком мало страниц, поэтому оценки менее надёжны.",
+        "action": "Выше 60 процентов: тема определена надёжно.\nЕсли ниже, проверьте название темы и при ошибке задайте тему вручную.",
+        "example": "Если главная тема занимает 70 процентов общего веса терминов, уверенность составляет 70 процентов."
+      },
+      "onTopicRatio": {
+        "title": "Доля страниц по теме",
+        "what": "Доля контентных страниц с TRS 60 и выше. Технические страницы, например вход или корзина, не учитываются.",
+        "why": "Показывает, сколько страниц (а не какой взвешенный балл) поддерживают основную тему.",
+        "action": "Повышайте её, исправляя пограничные страницы (60-74 и ниже) и удаляя страницы не по теме.",
+        "example": "У 42 из 50 контентных страниц TRS 60 и выше: доля составляет 84 процента."
+      },
+      "semanticSimilarity": {
+        "title": "Семантическое сходство",
+        "what": "Насколько лексика страницы близка к профилю основной темы сайта (косинусное сходство, в процентах).",
+        "why": "Это самая весомая часть формулы TRS.",
+        "action": "80-100 процентов: сильное сходство, 50-79: умеренное, ниже 50: слабое.\nДобавьте термины и разделы, относящиеся к основной теме.",
+        "example": "Страница об инсулиновых помпах при основной теме «диабет»: 86 процентов."
+      },
+      "keywordOverlap": {
+        "title": "Пересечение ключевых слов",
+        "what": "Доля из 30-50 самых важных ключевых слов основной темы, которые встречаются на странице.",
+        "why": "Страница, в которой нет большинства ключевых слов темы, не может её поддерживать, даже если она хорошо написана.",
+        "action": "Более 60 процентов: сильное пересечение; менее 30 процентов: страница не по теме.\nДобавьте недостающие ключевые слова там, где они уместны.",
+        "example": "В основном наборе 40 ключевых слов, на странице использовано 28: пересечение 70 процентов."
+      },
+      "semanticDrift": {
+        "title": "Семантический дрейф",
+        "what": "Доля веса терминов страницы, которая относится к посторонним темам, а не к основной.",
+        "why": "Высокий дрейф означает, что страница тратит слова на что-то другое.",
+        "action": "Дрейф выше 50 процентов: тревожный сигнал.\nУберите или перенесите посторонние разделы либо выделите их в отдельную область сайта.",
+        "example": "Страница о диабете с длинными абзацами о туристических предложениях: дрейф 55 процентов."
+      },
+      "keywordAlignment": {
+        "title": "Соответствие ключевых слов",
+        "what": "Показывает, как каждое частое ключевое слово страницы связано с основной темой. Обозначения: галочка: релевантность выше 70 процентов, тильда: от 40 до 70 процентов, крестик: ниже 40 процентов.",
+        "why": "Наглядно показывает, какие слова на странице помогают теме, а какие отвлекают.",
+        "action": "Сохраняйте и развивайте слова с галочкой.\nСокращайте или убирайте слова с крестиком.",
+        "example": "«глюкоза» - 92 процента - галочка; «отель» - 8 процентов - крестик."
+      },
+      "deltaScore": {
+        "title": "Дельта оценки",
+        "what": "Смоделированное изменение Site Focus Score, если выполнить действие. Симуляция заново пересчитывает средневзвешенное значение с новыми оценками страниц.",
+        "why": "Позволяет ранжировать действия по приросту на единицу усилий, а не гадать.",
+        "action": "Начинайте с действий с наибольшим приростом и наименьшими трудозатратами.\nПосле работы выполните повторный обход, чтобы подтвердить реальный прирост.",
+        "example": "Удаление 6 страниц не по теме: плюс 4,2 балла."
+      },
+      "lowConfidence": {
+        "title": "Низкая уверенность",
+        "what": "Показывается, когда проанализировано слишком мало страниц или ни одна тема явно не лидирует, поэтому определённая основная тема может быть неверной.",
+        "why": "При малой выборке одна необычная страница может изменить весь результат.",
+        "action": "Обойдите больше страниц.\nПроверьте название темы и задайте её вручную, если она неверна.\nК советам по удалению относитесь осторожно.",
+        "example": "Обход 6 страниц даёт лишь приблизительную картину."
+      },
+      "benchmark": {
+        "title": "Конкурентный бенчмарк",
+        "what": "Ваш Site Focus Score рядом с сайтами, которые ранжируются в поиске по вашей основной теме. Каждый конкурент обходится на небольшой выборке страниц и оценивается по той же формуле, что и ваш сайт.",
+        "why": "Оценка имеет смысл только в сравнении с эталоном. Увидев, насколько сфокусированы лидеры, вы поймёте, сколько у вас запаса и какая цель реалистична.",
+        "action": "Запустите бенчмарк с подключённым источником результатов поиска.\nСравните свою долю страниц по теме и страницы не по теме с тройкой лидеров.\nОткройте список пробелов и запланируйте контент по терминам, которые используют большинство конкурентов.",
+        "example": "Если у лидирующей тройки в среднем 82, а у вас 64, сначала стремитесь к 80, исправив страницы не по теме.",
+        "learnMore": "Показатели конкурентов получены на ограниченной выборке обхода, поэтому небольшие различия считайте шумом."
+      },
+      "benchmarkTarget": {
+        "title": "Целевая оценка",
+        "what": "Рекомендуемая цель: не менее 80 или среднее значение трёх лучших конкурентов, если оно выше.",
+        "why": "Превращает сравнение в одно число, к которому нужно стремиться.",
+        "action": "Используйте её как плановую цель.\nПосле исправлений повторите бенчмарк, чтобы увидеть изменения."
+      },
+      "indexGate": {
+        "title": "Фильтр индексируемости",
+        "what": "Страницы с noindex или с canonical на другой URL не входят в оценку, поэтому она отражает страницы, способные ранжироваться.",
+        "why": "Учёт страниц, которые Google не проиндексирует, снижает оценку и может привести к совету поставить noindex там, где он уже есть.",
+        "action": "Проверьте счётчик пропущенных страниц.\nИсправьте конфликты под оценкой, например опорную страницу с noindex.\n«Учитывать их» используйте только чтобы увидеть оценку по всем страницам.",
+        "example": "Страница тега с noindex пропускается, а не оценивается как не по теме."
+      },
+      "protection": {
+        "title": "Защита URL",
+        "what": "Для страниц с низкой тематической релевантностью показывает, говорят ли реальные клики, конверсии, выручка или ссылающиеся домены в пользу того, чтобы их сохранить.",
+        "why": "Низкая оценка сама по себе не повод удалять, перенаправлять или закрывать noindex страницу с трафиком или ссылками.",
+        "action": "Подключите GSC и GA4, чтобы данные можно было измерить.\n«Нужны данные» считайте неизвестным, а не нулём.\nРешайте вручную; для 301 нужна подходящая цель.",
+        "example": "Страница с TRS 30 и 80 кликами за 90 дней защищена."
+      }
+    },
+    "authority": {
+      "tas": {
+        "title": "Topical Authority Score",
+        "what": "Оценка 0-100 того, насколько полно, глубоко и связно сайт раскрывает главную тему по сравнению с рынком. Объединяет охват темы (35%), глубину сущностей (30%), связность силосов (25%) и свежесть (10%), затем масштабируется Site Focus Score.",
+        "why": "SFS измеряет только чистоту. Сайт с тремя идеальными статьями получит высокий SFS, но почти нулевой авторитет, так как раскрывает малую часть области. TAS показывает, какую часть области вы покрываете.",
+        "action": "Стремитесь к 80+ и по SFS, и по TAS. Низкий TAS при высоком SFS: добавляйте контент. Высокий TAS при низком SFS: удалите или выделите посторонние разделы. Начните с первого пункта плана."
+      },
+      "tcr": {
+        "title": "Охват темы (TCR)",
+        "what": "Доля подтем рынка, которые сайт раскрывает отдельной тематической страницей. Каждая подтема учитывается по важности; точное совпадение — полностью, частичное — наполовину.",
+        "why": "Поисковики считают эталоном сайты, отвечающие на весь спектр вопросов области. Пробелы отдают посетителей и сигналы ранжирования конкурентам.",
+        "action": "Выше 80% — полный авторитет. Ниже 40% — фрагментарные знания. Откройте карту, отфильтруйте пробелы и сначала публикуйте самые важные недостающие подтемы."
+      },
+      "esd": {
+        "title": "Глубина сущностей",
+        "what": "Проверяет, действительно ли страница раскрывает подтему: понятия и атрибуты лидеров, вопросы пользователей с ответами под своими заголовками и доля оригинального материала.",
+        "why": "Длинная статья без ключевых понятий области проигрывает более коротким, но полным источникам. Одной длины недостаточно.",
+        "action": "Откройте поверхностную подтему: добавьте недостающие сущности и атрибуты, ответьте на перечисленные вопросы под отдельным H2 и добавьте данные или таблицу, которых нет у конкурентов."
+      },
+      "scs": {
+        "title": "Связность силосов",
+        "what": "Показывает, насколько статьи одной темы связаны внутренними ссылками: опорная страница со ссылками в обе стороны, описательные анкоры, нет страниц-сирот и ссылок с экспертных страниц на посторонние.",
+        "why": "Страницы-сироты не передают и не получают тематический авторитет. Анкоры «нажмите здесь» ничего не сообщают и учитываются лишь на одну десятую.",
+        "action": "Ссылайтесь на каждую сироту со столпа и смежных статей, используйте анкоры, описывающие цель («симптомы диабетической нейропатии»), и уберите ссылки на нетематические страницы."
+      },
+      "matrix": {
+        "title": "Матрица SFS × TAS",
+        "what": "Размещает сайт по чистоте (SFS, по горизонтали) и полноте (TAS, по вертикали). Четыре квадранта: доминирующий авторитет, узкий специалист, размытый гигант и несфокусированный универсал.",
+        "why": "Почему фокус высокий, а авторитет низкий? Пять идеальных статей о диабете дают SFS 95, но TAS 14: ничего постороннего, зато не хватает 90% области.",
+        "action": "Держите SFS выше 80 и добавляйте кластеры, чтобы поднять TAS выше 80. Выделенный квадрант подскажет: расширять, чистить или перестраивать."
+      },
+      "cannibalization": {
+        "title": "Семантическая каннибализация",
+        "what": "Две и более ваших страницы отвечают на один поисковый интент: контент и заголовки почти совпадают (косинусное сходство от 88%) или обе полностью раскрывают одну эталонную подтему.",
+        "why": "Сигналы внутренних ссылок и релевантность делятся между дублями, поэтому ни одна страница не выходит в топ.",
+        "action": "Оставьте самую сильную страницу, перенесите на неё уникальные разделы, остальные направьте 301-м редиректом и обновите внутренние ссылки. Перед публикацией проверяйте черновик, чтобы не создавать новых пересечений."
+      }
+    },
+    "aio": {
+      "aioReadiness": {
+        "title": "Оценка готовности к ИИ (AIO-R)",
+        "what": "Показатель от 0 до 100: насколько легко ИИ-системы ответов (Google AI Overviews, Perplexity, Copilot) извлекают и цитируют фрагменты ваших страниц. Он объединяет самодостаточные фрагменты (45%), плотность фактов (35%) и извлекаемую структуру (20%).",
+        "why": "ИИ-системы режут страницы на фрагменты и цитируют только тот, что отвечает на вопрос. Расплывчатые или зависящие от контекста фрагменты пропускаются.",
+        "action": "Откройте самые слабые фрагменты и исправьте указанные проблемы.\nПереписывайте их так, чтобы ответ шёл первым, с явными названиями и цифрами.",
+        "example": "Раздел «Какая норма сахара?», который начинается со слов «Это зависит от многих факторов», получает низкую оценку."
+      },
+      "selfContainment": {
+        "title": "Самодостаточность",
+        "what": "Сохраняет ли фрагмент смысл, будучи вырезанным со страницы: он называет свой предмет и не начинается с «это», «он» или «как сказано выше».",
+        "why": "Фрагмент индексируется отдельно. Повисшее местоимение оставляет модель без подлежащего, и фрагмент подходит под меньше вопросов.",
+        "action": "Заменяйте «это» и «он» в начале абзацев настоящим названием.\nСтавьте ответ в первые 40-60 слов под каждым заголовком.",
+        "example": "«Это значение должно быть ниже 140.» превращается в «Уровень глюкозы после еды должен быть ниже 140 мг/дл.»"
+      },
+      "spoDensity": {
+        "title": "Плотность фактов",
+        "what": "Сколько чётких фактов «подлежащее-сказуемое-дополнение» содержит текст на 100 слов, например «Глюкоза натощак составляет 70-99 мг/дл». Цель — около 3 на 100 слов.",
+        "why": "Модели цитируют проверяемые утверждения. Из воды им нечего извлечь.",
+        "action": "Превращайте расплывчатые фразы в утверждения с подлежащим, глаголом и значением.\nДобавляйте единицы и цифры, где они есть.",
+        "example": "«Важно множество факторов» не содержит факта. «HbA1c ниже 7% — обычная цель лечения» содержит."
+      },
+      "extractability": {
+        "title": "Извлекаемость",
+        "what": "Использует ли страница структуры, которые парсеры извлекают легко: таблицы, нумерованные списки, списки определений и чёткую схему H2/H3.",
+        "why": "Генеративные системы охотно строят ответы из таблиц и списков шагов, потому что их смысл очевиден.",
+        "action": "Сравнения подавайте таблицей, а процедуры — нумерованным списком.\nФормулируйте заголовки H2/H3 как вопросы, которые задают люди.",
+        "example": "Пошаговая инструкция одним длинным абзацем получает меньше баллов, чем та же инструкция нумерованным списком."
+      },
+      "answerFirst": {
+        "title": "Сначала ответ",
+        "what": "Первые 40-60 слов под заголовком должны прямо отвечать на него, называть предмет и давать факт.",
+        "why": "RAG-поиск сравнивает вопрос с началом фрагмента. Длинное вступление снижает совпадение.",
+        "action": "Сначала пишите прямой ответ, потом контекст.\nПовторяйте ключевой термин заголовка в первом предложении.",
+        "example": "Заголовок «Как долго работает сенсор CGM?» и ответ «Сенсор CGM работает 10-15 дней в зависимости от модели.»"
+      },
+      "chunking": {
+        "title": "Моделирование разбиения на фрагменты",
+        "what": "SEOmi режет каждую страницу так, как RAG-индекс: один фрагмент на раздел H2/H3, а длинные разделы — на окна примерно по 300 токенов.",
+        "why": "Вы видите страницу так, как её видит система поиска: набор отдельных фрагментов, каждый оценивается сам по себе.",
+        "action": "Проверьте оценку каждого слабого фрагмента.\nДелайте разделы достаточно короткими, чтобы они умещались в один фрагмент.",
+        "example": "Раздел в 900 токенов превращается примерно в три фрагмента; только первый стоит прямо под заголовком."
+      }
+    },
+    "trust": {
+      "trustScore": {
+        "title": "Показатель доверия к сущностям",
+        "what": "Оценка от 0 до 100: насколько хорошо поисковые системы могут проверить, кто публикует и пишет ваш контент. Это среднее по четырём слоям: граф сущностей, соответствие авторов теме, качество источников и редакционная прозрачность.",
+        "why": "В темах здоровья, финансов и права одного тематического фокуса недостаточно. Страницы без проверяемого автора и издателя редко попадают в верх выдачи.",
+        "action": "Сначала прочитайте критичные пункты в списке.\nИсправьте самый слабый слой и выполните обход заново, чтобы увидеть изменение оценки."
+      },
+      "schemaGraph": {
+        "title": "Граф сущностей (JSON-LD)",
+        "what": "Проверяет, что структурированные данные называют издателя и каждого автора сущностями со стабильным @id и ссылками sameAs, а статьи содержат автора, даты, рецензента и цитаты.",
+        "why": "Связанные сущности позволяют поисковым системам сопоставить ваших авторов с известными людьми и организациями, а не угадывать по тексту.",
+        "action": "Добавьте разметку Organization и Person с @id.\nСвяжите каждого человека и издателя через sameAs с Wikidata, ORCID, LinkedIn или официальным реестром.\nИспользуйте генератор JSON-LD под списком авторов."
+      },
+      "authorAlignment": {
+        "title": "Соответствие авторов теме",
+        "what": "Сравнивает заявленную экспертизу каждого автора (должность, knowsAbout и страница профиля) с основной темой сайта.",
+        "why": "Статья об инсулинотерапии, подписанная маркетинговым копирайтером, — слабый сигнал экспертности.",
+        "action": "Закрепляйте статьи за авторами, чей профиль соответствует теме.\nДобавьте jobTitle и knowsAbout в разметку Person.\nОпубликуйте страницу профиля для каждого автора."
+      },
+      "citationQuality": {
+        "title": "Качество источников",
+        "what": "Показывает, сколько страниц статей ссылаются на надёжные источники, такие как .gov, .edu, PubMed, NCBI, ВОЗ или научные издательства, и сколько исходящих ссылок не работают.",
+        "why": "Ссылки на первичные источники показывают, что утверждения можно проверить. Нерабочие ссылки ослабляют этот сигнал.",
+        "action": "Добавьте ссылки на первичные источники в каждую экспертную статью.\nЗамените или удалите нерабочие исходящие ссылки.\nПроверьте внешние ссылки на вкладке «Ссылки», чтобы обновить коды статуса."
+      },
+      "transparency": {
+        "title": "Редакционная прозрачность",
+        "what": "Ищет редакционную политику, страницу «О нас», страницу контактов, регистрационные данные компании и видимые даты изменения или проверки в статьях.",
+        "why": "Читателям и поисковым системам нужно знать, кто стоит за сайтом и как проверяется контент.",
+        "action": "Опубликуйте редакционную политику и правила проверки фактов.\nДобавьте контакты и регистрационные данные компании.\nПоказывайте дату последнего обновления в каждой статье."
+      },
+      "ymyl": {
+        "title": "Темы YMYL",
+        "what": "Your Money or Your Life: темы вроде здоровья, финансов и права, где неверная информация может навредить читателям.",
+        "why": "Руководства по качеству поиска предъявляют к таким темам самые высокие требования доверия, поэтому отсутствие авторов или рецензентов считается критическим пробелом.",
+        "action": "Указывайте квалифицированного автора в каждой статье.\nДобавляйте рецензента с подтверждённой квалификацией для медицинского или юридического контента.\nСсылайтесь на первичные источники."
+      },
+      "sameAs": {
+        "title": "Ссылки sameAs",
+        "what": "Свойство schema.org, которое указывает от человека или организации на ту же сущность в другом месте: Wikidata, ORCID, LinkedIn или официальный реестр.",
+        "why": "Позволяет поисковым системам подтвердить, что ваш автор — реальный человек с такой квалификацией.",
+        "action": "Добавьте хотя бы один авторитетный URL sameAs для каждого автора и для издателя.\nИспользуйте то же имя и написание, что и в этом профиле."
+      }
+    },
+    "executionCard": {
+      "bus": {
+        "title": "Карантин ссылок",
+        "what": "URL, которые другой модуль хочет удалить или перенаправить 301-м, исключаются из всех рекомендаций по ссылкам.",
+        "why": "Иначе одна панель советует ссылаться на страницу, которую другая панель советует удалить.",
+        "action": "Просмотрите список.\nРазберите конфликты, отмеченные красным, до развёртывания."
+      },
+      "brief": {
+        "title": "Бриф в 1 клик",
+        "what": "Создаёт или обновляет контент-бриф страницы по данным модуля, выдавшего рекомендацию.",
+        "why": "Бриф начинается с реальных недостающих сущностей, ссылок, вопросов и источников, а не со скопированного текста.",
+        "action": "Нажмите кнопку.\nОткройте рабочую станцию брифов и правьте черновик.\nНажмите снова позже, чтобы обновить данные без дубликата."
+      },
+      "deploy": {
+        "title": "Артефакты развёртывания",
+        "what": "Готовые файлы правил для редиректов и удалений: Apache, Nginx, Cloudflare Bulk Redirects и WordPress Redirection.",
+        "why": "Правила сначала проверяются на циклы и цепочки, так что редирект не нарушит краулинг.",
+        "action": "Скачайте файл для своего сервера.\nСначала разверните его на тестовой копии.\nОтметьте задачу внедрённой и проверьте при следующем краулинге."
+      },
+      "tasks": {
+        "title": "Трекер задач",
+        "what": "Каждое рекомендованное изменение становится задачей: запланирована, внедрена, затем подтверждена или не удалась.",
+        "why": "Следующий краул проверяет реальный результат и показывает, как изменился показатель модуля относительно исходного.",
+        "action": "Добавьте задачу из рекомендации.\nОтметьте её внедрённой после публикации.\nЗапустите новый краул и нажмите «Проверить»."
+      },
+      "sla": {
+        "title": "Ответственный и SLA",
+        "what": "Кто отвечает за задачу, насколько она срочна и к какой дате её нужно выполнить.",
+        "why": "Задачи с ответственным и сроком не теряются, а просроченные легко отфильтровать.",
+        "action": "Введите имя ответственного.\nВыберите приоритет и срок SLA.\nФильтры покажут ваши или просроченные задачи."
+      }
+    },
+    "sprs": {
+      "panel": {
+        "title": "Семантический PageRank",
+        "what": "Внутренний PageRank (затухание 0,85) в шкале 0-100 с отметками для страниц без исходящих ссылок, с малым числом входящих или отправляющих большинство ссылок на несвязанные страницы.",
+        "why": "Показывает, где ссылочный вес накапливается или утекает внутри сайта.",
+        "action": "Добавьте исходящие ссылки на тупиковых страницах.\nСсылайтесь на слабо связанные страницы с сильных тематических.\nПроверьте утечки."
+      }
+    },
+    "decay": {
+      "radar": {
+        "title": "Радар семантического устаревания",
+        "what": "Сравнивает сохранённые снимки выдачи по одному запросу, рынку, провайдеру и модели: сдвиг центроида, новые или утраченные сущности консенсуса, смену интента и формата.",
+        "why": "Топ выдачи может уходить от вашей страницы задолго до падения позиций.",
+        "action": "Откройте указанные URL.\nРешите вручную, обновлять ли страницу."
+      }
+    },
+    "sija": {
+      "panel": {
+        "title": "Интент поиска (SIJA)",
+        "what": "Относит страницу к одному из 8 микроинтентов по структуре (таблицы, списки, формы, карточки товаров) и сравнивает со средним по реальным страницам из ТОП-5.",
+        "why": "Страница, чей формат отличается от выдачи, часто плохо ранжируется по этому запросу.",
+        "action": "Откройте страницы из ТОП.\nДобавьте недостающий формат, например таблицу или инструмент.\nСчитайте это подсказкой, а не приговором."
+      }
+    },
+    "prePublish": {
+      "check": {
+        "title": "Проверка перед публикацией",
+        "what": "Имитирует добавление черновика на сайт: изменение Site Focus Score, сходство с существующими страницами и самостоятельность каждого фрагмента.",
+        "why": "Находит дубль или страницу не по теме до выхода в свет.",
+        "action": "Исправьте каждую указанную причину.\nЗапустите проверку снова.\nПубликуйте только после собственной проверки."
+      }
+    },
+    "parity": {
+      "hreflang": {
+        "title": "Международный паритет",
+        "what": "Сравнивает глубину тем в языковых версиях, связанных через hreflang, с эталонным языком и помечает тему как покрытую, поверхностную, отсутствующую или намеренно локальную.",
+        "why": "Отделяет настоящий пробел в контенте от рынка, который намеренно предлагает другое.",
+        "action": "Проверьте отсутствующие и поверхностные темы.\nПометьте как локальные темы, не нужные рынку.\nИнструмент никогда не меняет hreflang сам."
+      }
+    },
+    "offPage": {
+      "tbva": {
+        "title": "Тематический авторитет off-page",
+        "what": "Суммирует авторитет провайдера по follow-ссылкам, взвешенный по близости страницы-источника к вашей теме. Также находит абзацы, где вместе упомянуты ваш бренд и основная сущность.",
+        "why": "Несколько уместных ссылок могут значить больше, чем много несвязанных.",
+        "action": "Проверьте источники с низким сходством.\nИспользуйте упоминания без ссылки как поводы для контакта.\nУпоминания с отрицанием оцените сами."
+      }
+    },
+    "llmEconomy": {
+      "costGate": {
+        "title": "Стоимость LLM и проверка фактов",
+        "what": "Считает стоимость вызовов ИИ и экономию от кэша и локальных моделей. Медицинские и финансовые фразы с дозой или суммой, которой нет в источнике, отклоняются.",
+        "why": "Внешние провайдеры стоят денег и получают текст ваших страниц. Выдуманные дозировки опасны в материалах о здоровье и финансах.",
+        "action": "Для больших партий выбирайте локальную модель.\nСверьте отклонённые фразы с источником.\nТексты YMYL утверждайте сами, прежде чем они попадут в CMS."
+      }
+    },
+    "templateGovernor": {
+      "informationGain": {
+        "title": "Информационный прирост шаблона",
+        "what": "Доля каждой страницы, которая не является общим текстом шаблона. Низкий прирост означает тысячи почти одинаковых копий.",
+        "why": "Google может отфильтровать весь сегмент шаблона как тонкий контент. Одно предупреждение о шаблоне исправить проще, чем тысячи по страницам.",
+        "action": "Добавьте на каждую страницу уникальные данные (местные факты, цифры, отзывы).\nИли закройте сегмент noindex, пока нет настоящего контента.\nПросканируйте снова и проверьте, что прирост вырос."
+      }
+    },
+    "outreach": {
+      "gapDomains": {
+        "title": "Цели аутрича",
+        "what": "Сайты, которые ссылаются на ваших конкурентов из ТОП-3, но не на вас, отсортированные по числу конкурентов и авторитетности.",
+        "why": "Сайт, уже ссылающийся на нескольких конкурентов, — самое подходящее место для просьбы о ссылке, если вы предлагаете что-то новое.",
+        "action": "Начните с верха списка.\nОткройте черновик, добавьте источник, который есть только у вас, и отредактируйте.\nОтправьте сами из своей почты. SEOmi ничего не отправляет."
+      }
+    },
+    "causalMarket": {
+      "updateWindow": {
+        "title": "Окно обновления Google",
+        "what": "Дни, когда Google выкатывал обновление или весь рынок был необычно нестабилен. Результат показывается с интервалом неопределённости и отметкой, если период пересекается с таким окном.",
+        "why": "Контрольная группа на том же сайте страдает от обновления так же, как тестовая, поэтому рост или падение могут быть вызваны рынком, а не вашим изменением.",
+        "action": "Считайте отмеченный результат неубедительным.\nДождитесь конца окна обновления и сравните снова.\nИспользуйте внешнюю базовую линию рынка, если она есть."
+      }
+    },
+    "igos": {
+      "score": {
+        "title": "Оценка IGOS",
+        "what": "Информационный прирост относительно того, что уже говорят реальные результаты TOP: новые сущности по теме, плотность доказательств, маркеры опыта и распределение подтем; снижается при слабой базе.",
+        "why": "Показывает, что страница добавляет сверх консенсуса. Маркеры показывают лишь заявленный опыт и не доказывают исследования или оригинальность.",
+        "action": "Проверьте четыре компонента.\nДобавьте недостающие основы.\nЗапустите снова после правок."
+      },
+      "heatmap": {
+        "title": "Тепловая карта абзацев",
+        "what": "Каждый абзац помечен: Эхо (близкая копия фрагмента конкурента), Прирост (по теме и ново), Дрейф (не по теме) или Нейтрально.",
+        "why": "Эхо ничего не добавляет, а дрейф размывает тему. Метки текстовые, не только цвет.",
+        "action": "Сначала откройте абзацы Эхо и Дрейф.\nПеремещайтесь стрелками.\nПерепишите или сфокусируйте их."
+      },
+      "coverage": {
+        "title": "Покрытие базы",
+        "what": "Доля консенсусных сущностей, уже охваченных страницей. Ниже 50% оценка умножается на штраф.",
+        "why": "Без общей основы страница с небольшой новизной всё равно не соответствует теме.",
+        "action": "Охватите недостающие консенсусные сущности.\nЗатем добавьте новые факты."
+      }
+    }
+  },
+  "helpUi": {
+    "what": "Что это",
+    "why": "Почему это важно",
+    "action": "Что делать",
+    "example": "Пример",
+    "learnMore": "Подробнее"
+  },
+  "siteFocusMonitoring": {
+    "alert": {
+      "title": "SEOmi · Уведомление о Site Focus Score",
+      "sfsDrop": "Site Focus Score снизился на {{points}} б. между полными анализами (с {{from}} до {{to}}).",
+      "contentGuard": "Новые страницы, впервые замеченные за последние 24 часа, не по теме (TRS ниже 40). Количество: {{count}}. Адреса: {{urls}}."
+    },
+    "weekly": {
+      "title": "SEOmi · Еженедельный отчёт о фокусе сайта",
+      "body": "Site Focus Score {{score}} ({{delta}} к прошлой неделе). Главные задачи: {{tasks}}",
+      "noPrevious": "первый отчёт",
+      "task": "{{code}} (+{{gain}} б.)",
+      "noTasks": "срочных задач нет"
+    }
+  },
+  "focus": {
+    "title": "Фокус сайта",
+    "subtitle": "Насколько последовательно обойдённые страницы придерживаются одной основной темы.",
+    "band": {
+      "excellent": "Отличный фокус",
+      "good": "Хороший фокус",
+      "moderate": "Умеренный фокус",
+      "weak": "Слабый фокус",
+      "critical": "Критичный фокус"
+    },
+    "bandRange": {
+      "excellent": "90-100",
+      "good": "75-89",
+      "moderate": "60-74",
+      "weak": "40-59",
+      "critical": "0-39"
+    },
+    "empty": "Нет страниц с контентом для анализа. Сначала запустите обход.",
+    "status": {
+      "strong": "Сильная",
+      "moderate": "Умеренная",
+      "borderline": "Пограничная",
+      "weak": "Слабая",
+      "off-topic": "Явно не по теме"
+    },
+    "type": {
+      "homepage": "Главная страница",
+      "category": "Категория",
+      "article": "Статья",
+      "technical": "Техническая"
+    },
+    "effort": "Трудозатраты: {{min}}-{{max}} ч (оценка)",
+    "banner": {
+      "lowConfidence": "Малая выборка (страниц: {{count}}). Результаты ориентировочные; для надёжного определения основной темы обойдите не менее 10 страниц. Советы по удалению ограничены.",
+      "multiTopic": "Обнаружено тематических областей: {{count}}. У сайта нет одной доминирующей темы. Оценки подразделов приведены ниже.",
+      "lexicalFallback": "Для выбранного языка анализ использует статистический алгоритм TF-IDF. Компонент глубокого семантического сходства недоступен; оценка основана на покрытии и распределении ключевых слов.",
+      "skippedRender": "Страниц, пропущенных в анализе из-за тайм-аута рендеринга JavaScript: {{count}}.",
+      "degraded": "У некоторых страниц было мало данных, поэтому их оценки могут быть менее точными.",
+      "unmatchedTopic": "Ни одна страница не соответствует теме «{{topic}}». Вместо неё используется определённая тема.",
+      "gateSkipped": "Пропущено страниц: {{count}} (noindex/canonical).",
+      "gateInclude": "Учитывать их",
+      "gateExclude": "Снова исключить"
+    },
+    "skip": {
+      "render-timeout": "Тайм-аут рендеринга JavaScript",
+      "request-error": "Ошибка запроса",
+      "non-topical-status": "HTTP-статус без контента",
+      "non-html": "Не HTML-страница",
+      "no-content": "Нет текстового контента",
+      "noindex": "Исключена: noindex",
+      "canonicalized": "Исключена: canonical указывает на другой URL"
+    },
+    "hero": {
+      "label": "Site Focus Score",
+      "outOf": "из 100",
+      "unavailable": "Оценки пока нет: ни одну из просканированных страниц не удалось оценить. Повторите сканирование или проверьте источник; это не результат 0.",
+      "summaryAll": "Все проанализированные страницы ({{count}}) соответствуют теме.",
+      "summaryOff": "Страниц, заметно отклоняющихся от основной темы: {{off}} из {{count}}.",
+      "metaButton": "Подробности анализа",
+      "metaPages": "Проанализировано страниц: {{count}}",
+      "metaAge": "Обновлено: {{date}}",
+      "recalc": "Пересчитать",
+      "howItWorks": "Как это работает?",
+      "change": "{{delta}} б. с предыдущего анализа",
+      "progressAria": "Site Focus Score {{score}} из 100, {{band}}",
+      "recalcBudget": "Осталось полных пересчётов на сегодня: {{remaining}} из {{limit}}.",
+      "recalcExhausted": "Достигнут дневной лимит полных пересчётов ({{limit}}). Попробуйте завтра."
+    },
+    "drawer": {
+      "title": "Как работает Site Focus Score",
+      "close": "Закрыть",
+      "weights": "Веса страниц в оценке",
+      "weightHome": "Главная страница: вес 3",
+      "weightCategory": "Категории, разделы, опорные и хаб-страницы: вес 2",
+      "weightArticle": "Статьи, посты и карточки: вес 1",
+      "sfsFormula": "SFS = сумма(вес x TRS) / сумма(вес) по всем проанализированным страницам",
+      "trsTitle": "Оценка тематической релевантности (TRS)",
+      "trsFormula": "TRS = clamp(0..100, (0,5 x Сходство + 0,3 x Пересечение - 0,2 x Дрейф) x 125)",
+      "trsLexical": "Без семантического компонента: TRS = clamp(0..100, (0,75 x Пересечение - 0,25 x ЛексическийДрейф) x 125)",
+      "bands": "Диапазоны: 90-100 отлично, 75-89 хорошо, 60-74 умеренно, 40-59 слабо, 0-39 критично.",
+      "onTopic": "Страница считается соответствующей теме при TRS от 60."
+    },
+    "core": {
+      "title": "Основная тема",
+      "label": "Определённая тема",
+      "terms": "Главные термины",
+      "termAria": "{{term}}: {{pct}} процентов",
+      "coverage": "Охват: {{pct}}% контента сайта тесно связано с темой.",
+      "wrong": "Тема определена неверно?",
+      "inputLabel": "Ваша тема (слова или фраза)",
+      "placeholder": "например: лечение диабета",
+      "reset": "Вернуть определённую тему",
+      "manualActive": "Тема задана вручную: {{input}}",
+      "confidenceLine": "Уверенность в основной теме: {{pct}}%"
+    },
+    "metrics": {
+      "title": "Ключевые показатели",
+      "confidence": "Уверенность в основной теме",
+      "onTopic": "Доля страниц по теме",
+      "pages": "Оценено страниц",
+      "skipped": "Пропущено страниц",
+      "offTopic": "Страницы не по теме (TRS ниже 40)",
+      "borderline": "Пограничные страницы (60-74)"
+    },
+    "heatmap": {
+      "title": "Распределение по темам",
+      "treeAria": "Страницы по URL с тематической релевантностью",
+      "ignoreTechnical": "Игнорировать технические страницы",
+      "empty": "Нет страниц, подходящих под этот фильтр.",
+      "filter": {
+        "all": "Все ({{count}})",
+        "critical": "Критичные <40 ({{count}})",
+        "borderline": "Пограничные 60-74 ({{count}})",
+        "strong": "Сильные >=75 ({{count}})"
+      },
+      "filtersAria": "Фильтр страниц по релевантности",
+      "warning": "Ниже 60: риск ухода от темы",
+      "trsBar": "TRS {{trs}}",
+      "open": "Открыть анализ страницы {{url}}",
+      "section": "Раздел {{name}}",
+      "home": "Главная страница"
+    },
+    "detail": {
+      "title": "Анализ страницы",
+      "back": "Назад к списку",
+      "close": "Закрыть анализ страницы",
+      "trs": "TRS",
+      "status": "Статус",
+      "why": "Почему такая оценка?",
+      "similarity": "Семантическое сходство: {{value}}%",
+      "overlap": "Пересечение ключевых слов: {{value}}%",
+      "drift": "Семантический дрейф: {{value}}%",
+      "driftFlag": "Тревожный сигнал: больше половины страницы посвящено другим темам.",
+      "similarityStrong": "сильное",
+      "similarityModerate": "умеренное",
+      "similarityWeak": "слабое",
+      "foreign": "Посторонние темы: {{label}} ({{pct}}%)",
+      "noForeign": "Посторонних тем не обнаружено.",
+      "matched": "Ключевые слова, соответствующие основной теме",
+      "unmatched": "Ключевые слова из других тем",
+      "none": "Не найдено.",
+      "count": "{{count}}x",
+      "context": "Контекст: {{text}}",
+      "clusterOf": "тема: {{cluster}}",
+      "skipped": "Эта страница не оценивалась: {{reason}}.",
+      "degraded": "У этой страницы мало данных, поэтому оценка менее точна."
+    },
+    "matrix": {
+      "title": "Матрица соответствия ключевых слов",
+      "keyword": "Ключевое слово",
+      "freq": "Частота",
+      "relevance": "Релевантность основной теме",
+      "alignment": "Соответствие",
+      "match": "Соответствует (выше 70%)",
+      "partial": "Частично (40-70%)",
+      "miss": "Не соответствует (ниже 40%)",
+      "empty": "Нет ключевых слов для отображения."
+    },
+    "playbook": {
+      "title": "Что делать с этой страницей",
+      "typeA": "Тип A: страница не по теме",
+      "typeB": "Тип B: пограничная страница",
+      "typeC": "Тип C: сильная страница",
+      "options": "Варианты",
+      "steps": "Шаги",
+      "potential": "Ожидаемый TRS: {{min}}-{{max}} (оценка)",
+      "gain": "Прирост для сайта: +{{gain}} б."
+    },
+    "brief": {
+      "title": "Бриф для переписывания",
+      "target": "Целевой TRS: {{target}} (сейчас {{current}})",
+      "mustInclude": "Обязательно включить",
+      "avoid": "Избегать",
+      "headings": "Идеи для заголовков",
+      "words": "Объём: {{min}}-{{max}} слов",
+      "copy": "Скопировать промпт для ИИ",
+      "copied": "Промпт скопирован",
+      "copyFailed": "Не удалось скопировать. Выделите и скопируйте вручную."
+    },
+    "site": {
+      "title": "Рекомендации",
+      "empty": "Рекомендаций нет. Сайт остаётся в рамках темы.",
+      "delta": "Дельта оценки: +{{value}}",
+      "deltaZero": "Дельта оценки: 0",
+      "pagesList": "Страницы",
+      "gaps": "Тематические пробелы",
+      "gapsEmpty": "Тематических пробелов не найдено.",
+      "links": "Предложения по внутренним ссылкам",
+      "linksEmpty": "Предложений по ссылкам нет.",
+      "terms": "Термины"
+    },
+    "subsites": {
+      "title": "Оценки подразделов сайта",
+      "item": "{{label}} ({{prefix}}): {{share}}% страниц",
+      "score": "Оценка {{score}}"
+    },
+    "recommendation": {
+      "remove-offtopic": {
+        "title": "Удалите или перенесите страницы не по теме ({{count}})",
+        "detail": "Настройте редирект, noindex или удалите худшие страницы и уберите внутренние ссылки на них. Потенциал по баллам: +{{gain}}."
+      },
+      "strengthen-borderline": {
+        "title": "Усильте пограничные страницы ({{count}})",
+        "detail": "Добавьте недостающие основные термины и разделы, чтобы поднять их примерно до {{target}}. Потенциал по баллам: +{{gain}}."
+      },
+      "expand-core-cluster": {
+        "title": "Расширьте кластер основной темы",
+        "detail": "Напишите новые страницы ({{count}}) для слабо раскрытых подтем. Потенциал по баллам: +{{gain}}."
+      },
+      "add-internal-links": {
+        "title": "Добавьте внутренние ссылки на хаб-страницы",
+        "detail": "Предложений по ссылкам: {{count}}. Они направляют слабые страницы на сильные хабы."
+      },
+      "collect-more-pages": {
+        "title": "Соберите больше страниц",
+        "detail": "Проанализировано только {{pageCount}} стр. Обойдите больше страниц, прежде чем что-либо удалять."
+      },
+      "split-subsites": {
+        "title": "Рассмотрите разделение сайта",
+        "detail": "Найдено отдельных тематических областей: {{count}}. Помочь могут отдельные разделы или поддомены."
+      },
+      "review-skipped-pages": {
+        "title": "Проверьте пропущенные страницы ({{count}})",
+        "detail": "У {{timeouts}} из них истёк тайм-аут при рендеринге JavaScript."
+      },
+      "monitor-strong-pages": {
+        "title": "Следите за сильными страницами ({{count}})",
+        "detail": "Сохраняйте их тематику и регулярно перепроверяйте."
+      }
+    },
+    "playbookOption": {
+      "remove-redirect": {
+        "title": "Удалить и настроить редирект 301",
+        "detail": "Сначала проверьте трафик и обратные ссылки. Прирост для сайта: +{{gain}} б."
+      },
+      "noindex-isolate": {
+        "title": "Закрыть noindex и изолировать",
+        "detail": "Оставьте страницу для пользователей, но скройте её из поиска и уберите внутренние ссылки. Прирост для сайта: +{{gain}} б."
+      },
+      "rewrite-on-topic": {
+        "title": "Переписать по теме по брифу",
+        "detail": "Превратите страницу в контент по основной теме. Целевой TRS около {{target}}."
+      },
+      "add-missing-terms": {
+        "title": "Добавить недостающие термины",
+        "detail": "Органично включите недостающие основные термины: {{terms}}."
+      },
+      "reinforce-headings": {
+        "title": "Усилить заголовки H2 и H3",
+        "detail": "Используйте в заголовках формулировки основной темы."
+      },
+      "deepen-coverage": {
+        "title": "Углубить тематическое покрытие",
+        "detail": "Добавьте разделы, примеры и глубину по основной теме."
+      },
+      "serve-as-hub": {
+        "title": "Использовать как хаб",
+        "detail": "Настройте ссылки на связанные страницы и с них, чтобы эта страница возглавила кластер."
+      },
+      "build-satellite-cluster": {
+        "title": "Создать кластер сопутствующих страниц",
+        "detail": "Запланируйте вспомогательные страницы, которые ссылаются на эту."
+      },
+      "monitor-periodically": {
+        "title": "Мониторинг",
+        "detail": "Перепроверяйте каждые {{weeks}} нед."
+      }
+    },
+    "playbookStep": {
+      "check-traffic-and-backlinks": "Проверьте трафик и обратные ссылки страницы.",
+      "redirect-301-to-closest-page": "Настройте редирект 301 на ближайшую страницу по теме.",
+      "remove-internal-links": "Уберите внутренние ссылки на эту страницу.",
+      "add-noindex": "Добавьте директиву noindex.",
+      "rewrite-with-brief": "Перепишите страницу по брифу. Недостающие термины: {{terms}}.",
+      "add-terms": "Добавьте недостающие термины: {{terms}}.",
+      "expand-h2-h3": "Расширьте заголовки H2 и H3 формулировками основной темы.",
+      "add-examples": "Добавьте примеры и глубину.",
+      "link-from-weak-pages": "Добавьте ссылки на эту страницу со слабых страниц.",
+      "plan-satellite-pages": "Запланируйте сопутствующие страницы вокруг этой.",
+      "recheck-in-six-weeks": "Перепроверьте через {{weeks}} нед."
+    },
+    "gap": {
+      "thin-subtopic": "Слабо раскрытая подтема «{{label}}»: её освещают только {{coveragePct}}% страниц (страниц: {{pagesCovering}}). Термины: {{terms}}.",
+      "competitor-terms": "Термины конкурентов, которых нет на вашем сайте: {{terms}}.",
+      "competitorActive": "В анализе тематических пробелов кластера используются термины конкурентов: {{count}}.",
+      "competitorClear": "Очистить термины конкурентов"
+    },
+    "link": {
+      "link-to-hub": "Добавьте ссылку со страницы {{from}} на хаб {{to}}. Рекомендуемые анкоры: {{anchors}}."
+    },
+    "history": {
+      "removed-offtopic": "Удалено страниц не по теме: {{count}} ({{delta}} б.).",
+      "new-cluster": "Новый тематический кластер «{{label}}» (новых страниц: {{count}}, {{delta}} б.).",
+      "optimized-borderline": "Оптимизировано пограничных страниц: {{count}} ({{delta}} б.).",
+      "core-topic-changed": "Основная тема изменилась с «{{from}}» на «{{to}}» ({{delta}} б.).",
+      "title": "История оценки",
+      "empty": "Выполните как минимум два полных анализа, чтобы увидеть динамику.",
+      "aria": "Site Focus Score по {{count}} анализам, от {{from}} до {{to}}",
+      "point": "{{date}}: {{score}}",
+      "annotations": "Ключевые изменения"
+    },
+    "alert": {
+      "sfs-drop": "Site Focus Score снизился с {{from}} до {{to}} ({{points}} б.).",
+      "content-guard": "Новая страница не по теме: {{url}} (TRS {{trs}})."
+    },
+    "weekly": {
+      "title": "Итоги недели",
+      "summary": "Оценка {{score}} ({{delta}} с предыдущего анализа).",
+      "noPrevious": "первый анализ",
+      "noTasks": "Срочных задач нет.",
+      "gain": "(+{{value}} б.)"
+    },
+    "conflict": {
+      "pillar-noindex": "Опорная страница с noindex: {{url}}",
+      "inlinked-foreign-canonical": "У {{url}} {{inlinks}} внутренних ссылок, но canonical указывает на другой хост",
+      "noindex-with-traffic": "{{url}} с noindex, но имеет {{clicks}} кликов GSC и {{domains}} ссылающихся доменов",
+      "sitemap-noindex": "{{url}} есть в sitemap, но помечена noindex"
+    },
+    "protection": {
+      "title": "Проверка защиты URL",
+      "empty": "Для проекта нет снимка GSC/GA4/ссылок, поэтому трафик и ценность ссылок неизвестны.",
+      "advisory": "Только совет. Ничего не удаляется, не перенаправляется и не закрывается noindex автоматически.",
+      "pri": "PRI {{value}}",
+      "decision": {
+        "keep": "Оставить",
+        "shield": "Защитить",
+        "needs-data": "Нужны данные",
+        "semantic-bridge": "Семантический мост",
+        "prune-candidate": "Рассмотреть для удаления"
+      },
+      "reason": {
+        "trs-above-threshold": "TRS достаточно высокий",
+        "revenue": "Выручка измерена",
+        "pri-above-threshold": "Трафик, конверсии или ссылки достигают порога защиты",
+        "telemetry-incomplete": "Данных нет, они устарели или основаны на выборке",
+        "low-pri-measured": "Измеренные сигналы низкие; сначала оцените ценность для бизнеса"
+      }
+    }
+  },
+  "focusBenchmark": {
+    "title": "Конкурентный бенчмарк",
+    "intro": "Сравните свой Site Focus Score с сайтами, которые ранжируются по вашей основной теме. SEOmi находит результаты поиска, аккуратно обходит небольшую выборку страниц каждого конкурента (с соблюдением robots.txt) и оценивает их тем же движком.",
+    "run": "Запустить бенчмарк",
+    "rerun": "Запустить снова",
+    "cancel": "Отмена",
+    "cancelled": "Бенчмарк отменён. Ничего не сохранено.",
+    "sources": "Источник результатов поиска: {{source}}",
+    "queries": "Запросы: {{queries}}",
+    "sample": "У каждого конкурента обходится до {{count}} страниц.",
+    "progress": {
+      "serp": "Поиск результатов выдачи ({{done}}/{{total}})",
+      "crawl": "Обход конкурентов ({{done}}/{{total}}), сейчас {{domain}}: страниц {{pages}}",
+      "analyze": "Оценка конкурентов"
+    },
+    "unavailable": {
+      "title": "Бенчмарк недоступен",
+      "no-serp-source": "Источник результатов поиска не подключён. Добавьте учётные данные DataForSEO в настройках, чтобы сравнивать себя с реальными конкурентами.",
+      "no-queries": "У основной темы пока нет терминов для поиска. Сначала обойдите больше страниц.",
+      "serp-failed": "Не удалось получить результаты поиска: {{error}}",
+      "no-competitors": "В результатах поиска нет сайтов конкурентов, кроме вашего."
+    },
+    "error": "Бенчмарк завершился с ошибкой: {{error}}",
+    "ranking": {
+      "title": "Рейтинг",
+      "you": "Вы",
+      "pages": "Страниц: {{count}}",
+      "onTopic": "{{pct}}% по теме",
+      "offTopic": "Не по теме: {{count}}",
+      "score": "SFS {{score}}",
+      "average": "Среднее по отрасли",
+      "target": "Целевая оценка",
+      "position": "Ваша позиция: {{rank}} из {{total}}",
+      "chart": "Site Focus Score по сайтам"
+    },
+    "failure": {
+      "title": "Не оценены",
+      "crawl-error": "Не удалось выполнить обход: {{error}}",
+      "no-pages": "Нет страниц для обхода (закрыты в robots.txt или недоступны).",
+      "analysis-failed": "Не удалось выполнить анализ: {{error}}",
+      "cancelled": "Отменено до оценки."
+    },
+    "insights": {
+      "title": "Выводы",
+      "on-topic-share": "{{own}}% вашего контента по теме против {{leaders}}% у тройки лидеров ({{delta}} б.).",
+      "off-topic-pages": "У вас страниц не по теме: {{own}}; в среднем у тройки лидеров: {{leaders}}.",
+      "keyword-coverage": "Ваш сайт покрывает {{pct}}% ({{covered}} из {{total}}) ключевых слов основной темы, которые используют лидеры.",
+      "versus-average": "Ваша оценка отличается от среднего по отрасли ({{average}}) на {{delta}} б."
+    },
+    "gaps": {
+      "title": "Пробелы кластера, замеченные у конкурентов",
+      "coverage": "{{pct}}% конкурентов ({{count}})",
+      "empty": "На вашем сайте есть все темы конкурентов.",
+      "apply": "Добавить эти термины в анализ пробелов"
+    }
+  },
+  "authority": {
+    "title": "Тематический авторитет",
+    "empty": "Запустите краулинг, чтобы измерить тематический авторитет.",
+    "hero": {
+      "sfs": "Site Focus Score",
+      "tas": "Topical Authority Score",
+      "sfsRole": "Чистота: какая доля контента соответствует теме",
+      "tasRole": "Полнота: насколько глубоко раскрыта тема",
+      "target": "Цель: {{value}}+",
+      "pending": "постройте эталонную карту, чтобы рассчитать"
+    },
+    "quadrant": {
+      "dominant_authority": "Доминирующий авторитет",
+      "boutique_specialist": "Узкий специалист",
+      "diluted_giant": "Размытый гигант",
+      "unfocused_generalist": "Несфокусированный универсал"
+    },
+    "quadrantHint": {
+      "dominant_authority": "Сфокусирован и почти полон. Удерживайте позицию, обновляйте данные и расширяйтесь на длинный хвост.",
+      "boutique_specialist": "Тема выдержана, но охвачена лишь часть области. Расширяйте контент и создавайте новые кластеры.",
+      "diluted_giant": "Много контента по теме, но посторонние разделы размывают его. Удалите их или вынесите на поддомены.",
+      "unfocused_generalist": "Нет чёткого фокуса и покрытие поверхностное. Выберите главную тему, очистите индекс и постройте первый сильный силос."
+    },
+    "matrix": {
+      "title": "Матрица тематической зрелости (SFS × TAS)",
+      "pending": "Матрица появится после расчёта TAS.",
+      "aria": "Вы: SFS {{sfs}}, TAS {{tas}}, квадрант {{quadrant}}",
+      "you": "Вы",
+      "axisX": "SFS",
+      "axisY": "TAS"
+    },
+    "freshness": {
+      "undated": "У {{undated}} из {{total}} страниц нет даты, и они не оцениваются"
+    },
+    "pillars": {
+      "title": "Составляющие Topical Authority Score",
+      "tcr": "Охват темы",
+      "cdes": "Глубина сущностей",
+      "silc": "Связность силосов",
+      "cvff": "Свежесть и уникальность",
+      "tcrNote": "Охвачено {{covered}} из {{total}} эталонных подтем",
+      "cdesNote": "Средняя глубина сущностей в охваченных подтемах",
+      "silcNote": "{{orphans}} страниц-сирот, {{weak}} слабых анкоров, {{bleed}} ссылок на нетематические страницы",
+      "cvffNote": "{{stale}} устаревших страниц, {{groups}} групп каннибализации",
+      "unavailable": "нет данных",
+      "multiplier": "Множитель фокуса ×{{value}} от SFS {{sfs}}"
+    },
+    "warning": {
+      "empty-authority": "Пустой авторитет: сайт затрагивает {{tcr}}% тем, но средняя глубина лишь {{depth}}/100. Углубите существующие страницы данными и сущностями, прежде чем публиковать новые.",
+      "template-duplicates": "{{count}} клонов шаблона объединены с самой сильной страницей; они не повышают охват и тратят краулинговый бюджет.",
+      "no-dates": "Даты публикации и обновления не найдены, поэтому свежесть не измеряется. Добавьте даты в мета-теги или JSON-LD.",
+      "no-links": "Внутренних ссылок в контенте между проанализированными страницами не найдено; связность оценена только по страницам-сиротам.",
+      "no-pillars": "Эталонной карты пока нет: охват и глубина не измеряются."
+    },
+    "reference": {
+      "title": "Эталонная карта",
+      "intro": "Строит рыночную карту темы по реальным данным: заголовки, сущности и вопросы страниц из топа по главной теме плюс Google Suggest. Ничего не выдумывается; без источника SERP карта остаётся пустой.",
+      "build": "Построить эталонную карту",
+      "rebuild": "Перестроить карту",
+      "cancel": "Отмена",
+      "clear": "Удалить карту",
+      "info": "{{subtopics}} подтем в {{pillars}} столпах от {{competitors}} конкурентов ({{source}}), построено {{date}}",
+      "progress": {
+        "serp": "Получение выдачи ({{done}}/{{total}})",
+        "crawl": "Краулинг {{domain}} ({{done}}/{{total}})",
+        "build": "Построение карты"
+      },
+      "error": "Не удалось построить карту: {{error}}",
+      "cancelled": "Построение карты отменено.",
+      "unavailableTitle": "Эталонная карта недоступна",
+      "unavailable": {
+        "no-serp-source": "Подключите источник SERP (DataForSEO или бесплатный Bing RSS), чтобы построить карту по реальной выдаче.",
+        "no-queries": "У главной темы пока нет пригодного запроса. Сначала выполните более крупный краулинг.",
+        "serp-failed": "Не удалось получить выдачу: {{error}}",
+        "no-competitors": "В выдаче не найдено конкурирующих доменов.",
+        "no-pages": "Не удалось просканировать страницы конкурентов (robots.txt, блокировки или тайм-ауты).",
+        "no-taxonomy": "У страниц конкурентов слишком мало общих заголовков для надёжной карты. Повторите позже или с большим числом конкурентов."
+      }
+    },
+    "coverage": {
+      "title": "Карта охвата темы",
+      "filters": "Фильтр подтем",
+      "filter": {
+        "all": "Все ({{count}})",
+        "gaps": "Только пробелы ({{count}})",
+        "shallow": "Поверхностные ({{count}})",
+        "cannibalized": "Каннибализация ({{count}})"
+      },
+      "general": "Общие темы",
+      "empty": "Нет подтем, подходящих под фильтр.",
+      "row": "совпадение {{similarity}}% · глубина {{depth}}",
+      "status": {
+        "covered_strong": "Раскрыт глубоко",
+        "covered_shallow": "Поверхностное покрытие",
+        "missing_gap": "Отсутствует",
+        "cannibalized": "Каннибализация"
+      },
+      "gap": {
+        "critical": "критический пробел",
+        "high": "высокий пробел",
+        "medium": "средний пробел"
+      }
+    },
+    "drill": {
+      "title": "Анализ подтемы",
+      "back": "К карте",
+      "url": "Назначенная страница",
+      "none": "Ни одна страница пока не раскрывает эту подтему.",
+      "depth": "Глубина сущностей {{value}}/100",
+      "entitiesPresent": "Присутствующие сущности ({{count}}/{{total}})",
+      "entitiesMissing": "Отсутствующие сущности (используют лидеры)",
+      "questions": "Вопросы пользователей без ответа на странице",
+      "links": "Аудит внутренней перелинковки",
+      "noPillarLink": "Нет ссылки на опорную страницу {{url}}",
+      "almostOrphan": "Всего {{count}} входящих ссылок: почти страница-сирота",
+      "bleed": "Ссылается на нетематическую страницу {{url}}",
+      "linksOk": "Внутренняя перелинковка в порядке."
+    },
+    "brief": {
+      "title": "Бриф статьи",
+      "path": "Предлагаемый URL",
+      "h1": "Предлагаемый H1",
+      "entities": "Чек-лист сущностей",
+      "questions": "Вопросы для ответа",
+      "linkFrom": "Ссылайтесь на неё с",
+      "linkTo": "Она должна ссылаться на",
+      "impact": "Оценка влияния на TAS: +{{value}}",
+      "generate": "Создать ИИ-бриф",
+      "generating": "Создание…",
+      "noKey": "Подключите ИИ-провайдера в настройках, чтобы создавать брифы.",
+      "empty": "ИИ не вернул текст. Повторите попытку.",
+      "error": "Не удалось создать бриф: {{error}}"
+    },
+    "cannibal": {
+      "title": "Семантическая каннибализация",
+      "index": "Индекс каннибализации: {{value}}%",
+      "empty": "Нет страниц, конкурирующих за один поисковый интент.",
+      "group": "{{count}} стр., сходство интента {{similarity}}%, общих сущностей {{shared}}%",
+      "canonical": "Оставить: {{url}}",
+      "steps": "Перенесите уникальные разделы на сохраняемую страницу, настройте 301 с остальных и обновите внутренние ссылки.",
+      "edge": "Доказательство: {{from}} и {{to}}, {{similarity}}% ({{basis}})",
+      "basis": {
+        "intent": "тот же интент",
+        "subtopic": "та же подтема"
+      }
+    },
+    "draft": {
+      "title": "Проверьте черновик перед публикацией",
+      "titleField": "Заголовок черновика",
+      "bodyField": "Текст черновика",
+      "check": "Проверить пересечение",
+      "none": "Пересечения с существующими страницами выше 85% нет.",
+      "hit": "Пересечение {{similarity}}% с {{url}}"
+    },
+    "rec": {
+      "title": "План расширения тематического авторитета",
+      "empty": "Рекомендаций пока нет. Постройте эталонную карту, чтобы увидеть пробелы.",
+      "delta": "+{{value}} TAS",
+      "fill-gaps": "Закройте пробелы в «{{pillar}}»: не хватает подтем — {{count}}",
+      "merge-cannibalized": "Объедините {{count}} групп каннибализирующих страниц",
+      "fix-linking": "Исправьте перелинковку: {{orphans}} страниц-сирот, {{bleed}} ссылок на нетематические страницы",
+      "deepen-shallow": "Углубите {{count}} поверхностных подтем",
+      "refresh-stale": "Обновите {{count}} страниц, не менявшихся больше года",
+      "how": {
+        "fill-gaps": "Публикуйте по статье на каждую недостающую подтему: используйте бриф (URL, H1, сущности, вопросы) и свяжите её со столпом.",
+        "merge-cannibalized": "Оставьте сильнейшую страницу, перенесите на неё уникальные разделы, остальные направьте 301-м редиректом и обновите ссылки.",
+        "fix-linking": "Добавьте ссылки на каждую страницу-сироту со столпа и смежных статей и уберите ссылки с экспертных страниц на нетематические.",
+        "deepen-shallow": "Добавьте недостающие сущности и атрибуты и ответьте на открытые вопросы пользователей под отдельными заголовками.",
+        "refresh-stale": "Обновите цифры, модели и рекомендации, добавьте новые сущности и освежите дату публикации."
+      }
+    },
+    "benchmark": {
+      "title": "Матрица тематических пробелов против топ-конкурентов",
+      "empty": "Постройте эталонную карту, чтобы сравниться с лидерами выдачи. Показываются только реальные данные краулинга.",
+      "domain": "Домен",
+      "pillars": "Охват по столпам",
+      "pillar": "Столп",
+      "insight": {
+        "rank": "По TAS вы на месте {{rank}} из {{total}}.",
+        "lead-pillar": "Вы лидируете в «{{pillar}}»: {{own}}% против {{best}}% у лучшего конкурента.",
+        "trailing-pillars": "Вы уступаете лидерам в: {{pillars}}."
+      }
+    },
+    "history": {
+      "title": "SFS и TAS во времени",
+      "empty": "Шкала времени появится после как минимум двух полных анализов.",
+      "aria": "График SFS и TAS по {{count}} анализам",
+      "point": "{{date}}: SFS {{sfs}}, TAS {{tas}}",
+      "sfs": "SFS (сплошная)",
+      "tas": "TAS (пунктир)",
+      "milestones": "Вехи",
+      "cleanup": "Чистка: SFS вырос на {{delta}}",
+      "architecture": "Архитектура: перелинковка и каннибализация улучшены на {{delta}}",
+      "expansion": "Расширение: охват темы вырос на {{delta}}",
+      "regression": "Спад: TAS изменился на {{delta}}"
+    }
+  },
+  "authorityMonitoring": {
+    "alert": {
+      "title": "SEOmi · оповещение о тематическом авторитете",
+      "tas-drop": "Topical Authority Score упал на {{points}} п. между полными анализами ({{from}} → {{to}}).",
+      "cannibalization": "Страница, опубликованная за последние 24 часа, конкурирует с {{canonical}} за тот же интент (сходство {{similarity}}%): {{url}}.",
+      "competitor-expansion": "{{domain}} расширил охват «{{pillar}}» с {{from}}% до {{to}}%, открыв для вас новый пробел.",
+      "content-decay": "Опорной странице {{url}} больше года, и ей не хватает {{missing}} сущностей, которые сейчас использует рынок."
+    }
+  },
+  "aio": {
+    "title": "Готовность к AI Overviews и RAG",
+    "subtitle": "Насколько легко ИИ-системы ответов находят, извлекают и цитируют фрагменты ваших страниц.",
+    "empty": "Пока нет данных страниц с разделами контента. Запустите новый обход, чтобы проанализировать готовность к ИИ.",
+    "band": {
+      "excellent": "Отличная готовность",
+      "good": "Хорошая готовность",
+      "moderate": "Умеренная готовность",
+      "weak": "Слабая готовность",
+      "critical": "Критическая готовность"
+    },
+    "hero": {
+      "label": "Оценка цитируемости в ИИ",
+      "outOf": "из 100",
+      "summary": "Найдено слабых фрагментов: {{weak}} на {{count}} проанализированных страницах.",
+      "summaryNone": "Слабых фрагментов не найдено на {{count}} проанализированных страницах.",
+      "change": "Изменение с прошлого анализа: {{delta}}",
+      "skipped": "Пропущено страниц: {{count}} (нет пригодных разделов контента)."
+    },
+    "components": {
+      "self": "Самодостаточность",
+      "spo": "Плотность фактов",
+      "extract": "Извлекаемость"
+    },
+    "basicNote": "Языковые правила для {{languages}} базовые: определение местоимений и фактов для этих языков менее точно.",
+    "pages": {
+      "title": "Страницы",
+      "url": "URL",
+      "score": "Оценка",
+      "chunks": "Фрагменты",
+      "facts": "Факты",
+      "language": "Язык",
+      "empty": "Нет страниц для показа."
+    },
+    "skip": {
+      "no-sections": "Нет разделов контента (обход выполнен до появления функции)",
+      "non-html": "Не HTML-страница",
+      "request-error": "Запрос не удался",
+      "no-content": "Нет читаемого текста"
+    },
+    "passage": {
+      "title": "Самые слабые фрагменты",
+      "intro": "Смоделированные RAG-фрагменты, которые сложнее всего процитировать. Сначала исправьте указанные проблемы.",
+      "chunk": "Фрагмент {{n}} · {{tokens}} токенов · оценка {{score}}",
+      "noHeading": "(вступление без заголовка)",
+      "current": "Текущий фрагмент",
+      "optimized": "Оптимизированный фрагмент",
+      "generate": "Переписать с ИИ",
+      "generating": "Переписываю…",
+      "copy": "Копировать",
+      "copied": "Скопировано",
+      "noKey": "Подключите ИИ-провайдера в Настройках, чтобы переписывать фрагменты.",
+      "error": "Запрос к ИИ не удался: {{message}}",
+      "empty": "ИИ не вернул текст.",
+      "none": "Слабых фрагментов не найдено."
+    },
+    "issue": {
+      "dangling-pronoun": "Неясная отсылка",
+      "no-answer-first": "Нет прямого ответа в начале",
+      "filler-opening": "Водянистое начало",
+      "no-facts": "Нет конкретных фактов",
+      "too-long": "Слишком длинный для одного фрагмента"
+    },
+    "history": {
+      "title": "История",
+      "empty": "История появится после второго анализа этого проекта.",
+      "row": "{{date}}: {{score}}"
+    }
+  },
+  "trust": {
+    "title": "E-E-A-T и доверие к сущностям",
+    "subtitle": "Насколько можно проверить авторов, издателя и источники. Считается по сохранённому обходу; страницы повторно не загружаются.",
+    "empty": "Сначала выполните обход, чтобы оценить сигналы доверия.",
+    "hero": {
+      "label": "Показатель доверия к сущностям",
+      "articles": "{{articles}} страниц статей среди {{pages}} просканированных страниц",
+      "previous": "Предыдущий запуск: {{score}} ({{delta}})",
+      "ymyl": "Категория YMYL: {{category}}. Поисковые системы применяют к таким страницам самые строгие требования доверия.",
+      "unattributed": "У {{pct}}% статей нет автора или рецензента с указанным именем."
+    },
+    "level": {
+      "strong": "Высокое доверие",
+      "adequate": "Достаточное доверие",
+      "weak": "Слабое доверие",
+      "critical": "Критические пробелы доверия"
+    },
+    "ymyl": {
+      "health": "здоровье",
+      "finance": "финансы",
+      "legal": "право"
+    },
+    "layers": {
+      "title": "Слои доверия",
+      "schemaGraph": "Граф сущностей (JSON-LD)",
+      "authorAlignment": "Соответствие авторов теме",
+      "citationQuality": "Качество источников",
+      "transparency": "Редакционная прозрачность",
+      "noData": "н/д",
+      "unverified": "не проверено"
+    },
+    "entities": {
+      "title": "Издатель и авторы",
+      "orgPresent": "Издатель: {{name}}. Стабильный @id: {{id}}. Ссылки sameAs: {{sameAs}}.",
+      "orgMissing": "В структурированных данных не найдена сущность Organization.",
+      "none": "В структурированных данных не найдены сущности авторов.",
+      "colAuthor": "Автор",
+      "colArticles": "Статьи",
+      "colSameAs": "Ссылки sameAs",
+      "colAlignment": "Соответствие теме",
+      "generic": "анонимная подпись"
+    },
+    "signals": {
+      "title": "Источники и прозрачность",
+      "citations": "{{trusted}} из {{pages}} страниц статей ссылаются на надёжный источник (.gov, .edu, PubMed, ВОЗ).",
+      "dead": "Нерабочих исходящих ссылок: {{count}}",
+      "dated": "У {{dated}} из {{articles}} статей указана дата изменения или проверки.",
+      "pagesTitle": "Страницы доверия",
+      "page": {
+        "editorial": "Редакционная политика",
+        "about": "О нас",
+        "contact": "Контакты",
+        "registry": "Регистрационные данные компании"
+      },
+      "found": "найдена",
+      "missing": "отсутствует"
+    },
+    "severity": {
+      "critical": "Критично",
+      "warning": "Предупреждение",
+      "info": "Инфо"
+    },
+    "findings": {
+      "title": "Что исправить в первую очередь",
+      "none": "Пробелов доверия не обнаружено.",
+      "code": {
+        "ymyl-unattributed": "У {{count}} статей ({{pct}}%) на тему YMYL нет автора или рецензента с указанным именем. Добавьте человека с проверяемой квалификацией.",
+        "ymyl-no-reviewer": "Ни одна из {{count}} медицинских статей не указывает рецензента (reviewedBy). Добавьте квалифицированного медицинского рецензента.",
+        "no-bylines": "Ни одна из {{count}} статей не указывает автора в структурированных данных.",
+        "generic-author": "{{count}} статей подписаны анонимно, например «Редакция».",
+        "org-missing": "Сущность Organization не найдена. Добавьте разметку издателя со стабильным @id.",
+        "org-no-same-as": "У издателя {{name}} нет ссылок sameAs на Wikidata, реестр компаний или профили в соцсетях.",
+        "author-no-same-as": "У {{count}} авторов нет ссылок sameAs ({{names}}). Свяжите их с ORCID, LinkedIn или профессиональным реестром.",
+        "author-no-id": "У {{count}} авторов нет стабильного @id, поэтому поисковые системы не могут сопоставить их между страницами.",
+        "author-off-topic": "Профиль {{name}} соответствует основной теме лишь на {{pct}}%. Предпочитайте авторов с подходящей экспертизой.",
+        "low-citations": "Лишь {{pct}}% из {{pages}} страниц статей ссылаются на надёжный источник (.gov, .edu, PubMed, ВОЗ).",
+        "dead-citations": "{{count}} исходящих ссылок возвращают ошибку. Замените или удалите их.",
+        "missing-editorial": "Не найдена редакционная политика или страница проверки фактов.",
+        "missing-contact": "Не найдена страница контактов.",
+        "missing-registry": "Не найдена страница с регистрационными данными компании или правовой информацией.",
+        "missing-about": "Не найдена страница «О нас».",
+        "missing-dates": "Лишь у {{pct}}% статей указана дата изменения или проверки.",
+        "no-articles": "Страницы статей не обнаружены, поэтому слои авторов и цитирования не оценивались.",
+        "author-invalid-profile": "{{count}} авторов указывают профиль ORCID или Wikidata с неверным идентификатором ({{names}}). Проверьте контрольную сумму или Q-ID.",
+        "ymyl-no-scholarly-ids": "Ни одна из {{pages}} статей не цитирует источник с DOI, PMID или PMCID. В темах YMYL цитируйте первичное исследование."
+      }
+    },
+    "generator": {
+      "open": "Исправить через JSON-LD",
+      "title": "Генератор JSON-LD",
+      "intro": "Создаёт граф Organization, Person и страницы со ссылками sameAs. Проверьте его и вставьте в head страницы.",
+      "close": "Закрыть",
+      "field": {
+        "personName": "Имя автора",
+        "jobTitle": "Должность",
+        "personUrl": "URL профиля автора",
+        "organizationName": "Название издателя",
+        "organizationUrl": "URL издателя",
+        "pageUrl": "URL страницы",
+        "dateModified": "Дата изменения (ГГГГ-ММ-ДД)",
+        "lastReviewed": "Последняя проверка (ГГГГ-ММ-ДД)",
+        "sameAs": "Профили sameAs (по одному URL в строке: Wikidata, ORCID, LinkedIn, профессиональный реестр)",
+        "asReviewer": "Указать как экспертного рецензента вместо автора"
+      },
+      "issue": {
+        "missing-name": "Введите имя автора.",
+        "invalid-organization-url": "Введите корректный URL издателя (https://...).",
+        "invalid-page-url": "Введите корректный URL страницы (https://...).",
+        "invalid-same-as": "Некоторые записи sameAs не являются корректными URL и были пропущены."
+      },
+      "preview": "Сгенерированный JSON-LD",
+      "copy": "Копировать тег script",
+      "copied": "Скопировано.",
+      "copyFailed": "Не удалось скопировать. Выделите текст и скопируйте его вручную."
+    }
+  },
+  "executionCard": {
+    "bus": {
+      "aria": "URL, исключённые из рекомендаций по ссылкам",
+      "title": "URL в карантине",
+      "summary": "{{count}} URL удаляются или перенаправляются и исключены из целей ссылок; отброшено предложений ссылок: {{dropped}}.",
+      "reason": {
+        "remove": "Удалить",
+        "redirect": "Редирект 301"
+      },
+      "conflict": {
+        "protected-by-evidence": "Оставлен: есть данные Search Console или обратные ссылки",
+        "canonical-removed": "Конфликт: канонический URL тоже в списке на удаление"
+      }
+    },
+    "brief": {
+      "open": "Открыть в рабочей станции брифов",
+      "pillar": "Целевой столп",
+      "anchors": "анкоры",
+      "donor": "Страница-донор",
+      "entities": "Недостающие сущности",
+      "links": "Ссылки для вставки",
+      "paa": "Вопросы People Also Ask",
+      "structure": "Структура H2",
+      "jsonLd": "Недостающие свойства автора в JSON-LD",
+      "footnotes": "Обязательные сноски",
+      "origin": {
+        "sfs": "Рекомендация Site Focus",
+        "tas": "Рекомендация Topical Authority",
+        "eetv": "Рекомендация EETV"
+      },
+      "state": {
+        "created": "Бриф создан",
+        "updated": "Бриф обновлён",
+        "failed": "Не удалось сохранить бриф"
+      }
+    },
+    "deploy": {
+      "empty": "Правил редиректов и удаления пока нет.",
+      "aria": "Артефакты развёртывания",
+      "title": "Артефакты развёртывания (301/410)",
+      "summary": "Корректных правил: {{count}}, без циклов и цепочек.",
+      "zip": "Скачать всё (ZIP)",
+      "issuesAria": "Проблемы правил",
+      "issue": {
+        "invalid": "Некорректное правило, пропущено",
+        "duplicate": "Дубль источника, пропущен",
+        "loop": "Цикл редиректов, пропущен",
+        "chain-flattened": "Цепочка редиректов, направлена на конечную цель",
+        "dead-target": "Редирект на удалённую страницу (410)",
+        "query-unsupported": "Есть строка запроса, не экспортируется в этот формат сервера",
+        "gone-unsupported": "Cloudflare Bulk Redirects не поддерживает 410"
+      }
+    },
+    "tasks": {
+      "aria": "Задачи оптимизации",
+      "title": "Задачи оптимизации",
+      "add": "Добавить в трекер",
+      "added": "Задача добавлена",
+      "empty": "Задач пока нет. Добавьте её из рекомендации.",
+      "verify": "Проверить по последнему краулу",
+      "crawlUnavailable": "Выбранное сканирование не содержит полных данных с подтверждённой датой; проверка отложена.",
+      "markImplemented": "Отметить как внедрённую",
+      "regression": "Падение показателя",
+      "kind": {
+        "add-link": "Добавить ссылку",
+        "redirect-301": "Редирект 301",
+        "remove-410": "Удаление 410",
+        "add-entities": "Добавить сущности",
+        "remove-noindex": "Убрать noindex"
+      },
+      "status": {
+        "planned": "Запланирована",
+        "implemented": "Внедрена",
+        "verified": "Подтверждена",
+        "failed": "Не удалась"
+      },
+      "verdict": {
+        "link-found": "ПОДТВЕРЖДЕНО: найдена новая ссылка, зона {{zone}}",
+        "link-missing": "ОШИБКА ВНЕДРЕНИЯ: ссылки по-прежнему нет",
+        "redirect-ok": "ПОДТВЕРЖДЕНО: 301 ведёт на нужную страницу",
+        "redirect-wrong-target": "ОШИБКА ВНЕДРЕНИЯ: редирект ведёт на другую страницу",
+        "still-200": "ОШИБКА ВНЕДРЕНИЯ: по-прежнему HTTP {{status}}",
+        "gone-ok": "ПОДТВЕРЖДЕНО: страница отдаёт HTTP 410",
+        "wrong-status": "ОШИБКА ВНЕДРЕНИЯ: HTTP {{status}} вместо 410",
+        "entities-ok": "ПОДТВЕРЖДЕНО: присутствует {{found}} из {{total}} обязательных сущностей",
+        "entities-missing": "ОШИБКА ВНЕДРЕНИЯ: присутствует только {{found}} из {{total}} обязательных сущностей (нужно 60%)",
+        "index-ok": "ПОДТВЕРЖДЕНО: страница индексируется",
+        "still-noindex": "ОШИБКА ВНЕДРЕНИЯ: noindex всё ещё на месте"
+      },
+      "owner": "Ответственный",
+      "priority": "Приоритет",
+      "dueDate": "Срок SLA",
+      "overdue": "Просрочено",
+      "me": "Моё имя",
+      "filter": {
+        "all": "Все",
+        "mine": "Мои задачи",
+        "overdue": "Просроченные"
+      },
+      "priorityLevel": {
+        "high": "Высокий",
+        "medium": "Средний",
+        "low": "Низкий"
+      }
+    }
+  },
+  "scoreDropAlert": {
+    "aio": {
+      "title": "Снизилась готовность к ИИ",
+      "body": "Готовность к AI Overviews снизилась с {{from}} до {{to}} ({{points}} п.)."
+    },
+    "trust": {
+      "title": "Снизился показатель доверия",
+      "body": "Показатель доверия E-E-A-T снизился с {{from}} до {{to}} ({{points}} п.)."
+    }
+  },
+  "sprsUi": {
+    "title": "Семантический PageRank",
+    "empty": "Графа ссылок пока нет. Сначала просканируйте сайт; без реальных ссылок оценка не показывается.",
+    "page": "Страница",
+    "score": "Оценка",
+    "deadEnd": "Тупик",
+    "underLinked": "Мало ссылок",
+    "leak": "Утечка",
+    "unknown": "У {{count}} ссылок неизвестное сходство, они не считаются утечкой.",
+    "notConverged": "Решатель не сошёлся; оценки приблизительные.",
+    "whatIf": {
+      "title": "Симулятор ссылок What-If",
+      "source": "С какой страницы",
+      "target": "На какую страницу",
+      "action": "Изменение",
+      "add": "Добавить ссылку",
+      "remove": "Удалить ссылку",
+      "run": "Смоделировать",
+      "noChange": "Оценки не изменились.",
+      "before": "До",
+      "after": "После",
+      "delta": "Изменение"
+    }
+  },
+  "decayUi": {
+    "snapshots": "Снимков, на которых основана оценка: {{count}}",
+    "title": "Радар семантического устаревания",
+    "verdict": {
+      "too-few-samples": "Пока мало сопоставимых снимков выдачи. Сообщать нечего.",
+      "incompatible": "Снимки несопоставимы, поэтому дрейф не заявляется.",
+      "stable": "Существенных изменений относительно базы нет.",
+      "not-persistent": "Изменение появилось, но не держится. Ждём.",
+      "cooldown": "Дрейф сохраняется; оповещение уже было недавно.",
+      "alert": "Устойчивый дрейф относительно базы. Проверьте вручную."
+    },
+    "shift": "Сдвиг центроида: {{value}} %",
+    "newEntities": "Новые сущности",
+    "lostEntities": "Утраченные сущности",
+    "intent": "Интент: {{from}} на {{to}}",
+    "format": "Формат: {{from}} на {{to}}",
+    "incompatible": "Различаются: {{fields}}. Это не изменение рынка."
+  },
+  "sijaUi": {
+    "title": "Интент поиска (SIJA)",
+    "empty": "Структура страницы не указывает на явный микроинтент.",
+    "primary": "Наблюдаемый интент: {{intent}} (уверенность {{confidence}} %).",
+    "mixed": "Также: {{list}}.",
+    "inconclusive": "SSAS неопределён: доступно реальных страниц из ТОП {{count}}, нужно минимум 3.",
+    "ssas": {
+      "aligned": "SSAS {{score}}: структура совпадает со страницами из ТОП.",
+      "mismatch": "SSAS {{score}}: структура отличается от страниц из ТОП."
+    },
+    "intents": {
+      "definitional": "Определение",
+      "how-to": "Инструкция",
+      "troubleshooting": "Решение проблем",
+      "comparison": "Сравнение",
+      "curated-list": "Подборка",
+      "tool": "Инструмент или калькулятор",
+      "transactional": "Транзакционный",
+      "local": "Локальный"
+    }
+  },
+  "prePublishUi": {
+    "title": "Проверка перед публикацией",
+    "copy": "Копировать отчёт",
+    "copied": "Отчёт скопирован.",
+    "copyFailed": "Не удалось скопировать отчёт.",
+    "verdict": {
+      "insufficient": "Недостаточно данных, чтобы оценить этот черновик.",
+      "blocked": "Пока не публикуйте: черновик дублирует существующую страницу.",
+      "review": "Проверьте перед публикацией.",
+      "ok": "Проблем не найдено. Это совет, а не одобрение."
+    },
+    "sfs": "Site Focus Score {{before}} на {{after}} ({{delta}}). Релевантность черновика {{trs}}. Это не прогноз трафика.",
+    "conflict": "Слишком похоже на {{url}} ({{value}} %).",
+    "overlap": "Пересекается с {{url}} ({{value}} %).",
+    "reason": {
+      "no-core": "Основной темы пока нет.",
+      "corpus-too-small": "На сайте меньше 3 оценённых страниц.",
+      "dimension-mismatch": "Эмбеддинги получены из разных моделей.",
+      "cannibalization": "Риск каннибализации.",
+      "overlap": "Частичное пересечение с существующей страницей.",
+      "low-trs": "Релевантность черновика основной теме низкая.",
+      "chunk-issues": "Некоторые фрагменты не работают сами по себе."
+    },
+    "chunk": {
+      "leading-pronoun": "Фрагмент {{index}} начинается с местоимения, требующего прежнего контекста.",
+      "too-short": "Фрагмент {{index}} слишком короткий, чтобы быть самостоятельным."
+    }
+  },
+  "parityUi": {
+    "title": "Международный паритет",
+    "summary": "Охвачено: {{covered}}, поверхностно: {{shallow}}, отсутствует: {{missing}}, намеренно локально: {{local}}.",
+    "inconclusive": "Вывод невозможен: по доступным данным паритет оценить нельзя.",
+    "gap": {
+      "no-reference-coverage": "У эталонного языка нет данных о покрытии тем.",
+      "partial-crawl": "Сканирование неполное.",
+      "single-language": "Найден только один язык."
+    },
+    "language": "Язык",
+    "topic": "Тема",
+    "status": "Статус",
+    "statuses": {
+      "covered": "Покрыта",
+      "shallow": "Поверхностно",
+      "missing": "Отсутствует",
+      "intentionally-local": "Намеренно локальная"
+    },
+    "note": "Отсутствие версии не всегда ошибка. Тексты не обязаны совпадать один к одному, а язык интерфейса не определяет, какие языки сайта анализируются."
+  },
+  "offPageUi": {
+    "title": "Тематический авторитет off-page",
+    "empty": "Тематической ценности ссылок пока нет: не хватает обратных ссылок, текста источников или данных об авторитете. Это не значит, что ссылок нет.",
+    "tbva": "Тематическая ценность ссылок {{value}} с {{count}} доменов-источников (оценено {{coverage}} % follow-ссылок).",
+    "partial": "Не удалось оценить {{count}} follow-ссылок (нет текста источника или авторитета).",
+    "nofollow": "{{count}} nofollow-ссылок не учитываются.",
+    "noText": "Текста источников нет, поэтому сопоставления бренда не проверялись.",
+    "coCitation": "Бренд и основная сущность в одном абзаце: {{linked}} со ссылкой, {{unlinked}} без ссылки.",
+    "note": "Значение использует авторитет провайдера и не воспроизводит Google PageRank и не объясняет ранжирование. Совместное упоминание не означает рекомендацию."
+  },
+  "llmEconomy": {
+    "title": "Стоимость LLM",
+    "empty": "Вызовов ИИ пока нет.",
+    "spent": "Потрачено: {{value}}",
+    "saved": "Сэкономлено кэшем и локальными запусками: {{value}}",
+    "hits": "Попаданий в кэш: {{count}}",
+    "leaves": "Текст страниц отправляется за пределы устройства провайдеру {{provider}}."
+  },
+  "templateGovernor": {
+    "title": "Качество программных шаблонов",
+    "empty": "Слабых шаблонов не найдено.",
+    "row": "{{pattern}}: {{count}} стр., информационный прирост {{gain}}%",
+    "noindex": "Рекомендуется: noindex для сегмента",
+    "limit": "Рекомендуется: ограничить число индексируемых страниц"
+  },
+  "outreach": {
+    "title": "Цели аутрича",
+    "empty": "Нет данных по разрыву ссылок. Сначала запустите анализ.",
+    "row": "{{domain}}: приоритет {{priority}}, ссылается на конкурентов: {{count}}",
+    "export": "Экспорт CSV",
+    "manualNote": "SEOmi никогда не отправляет сообщения. Отправляйте черновики из своей почты."
+  },
+  "causalMarket": {
+    "title": "Причинный эффект",
+    "empty": "Оценка невозможна: нужны не менее 7 дней до и 1 дня после, реальный внешний рыночный ряд и независимые контрольные данные.",
+    "effect": "Эффект в день: {{effect}} (от {{lower}} до {{upper}})",
+    "updateWindow": "Окно обновления Google: результат неубедителен.",
+    "normalized": "Нормализовано по базовой линии рынка",
+    "positive": "Положительный эффект",
+    "negative": "Отрицательный эффект",
+    "noEffect": "Измеримого эффекта нет",
+    "inconclusive": "Неубедительно",
+    "evidence": "Данные: рынок {{market}}; контроль {{control}}",
+    "unknown": "неизвестно",
+    "marketUnavailable": "Внешняя рыночная база недоступна или недействительна; причинный успех или неудача не выводятся.",
+    "controlUnavailable": "Нет независимых контрольных данных; причинный успех или неудача не выводятся.",
+    "updateWindowReason": "Анализ пересекается с подтверждённым обновлением рейтинга Google; результат неокончательный.",
+    "disclaimer": "Оценка с внешними рыночными и контрольными данными; это не доказательство причинности."
+  },
+  "snapshots": {
+    "newerData": "Доступны более новые данные обхода.",
+    "refresh": "Обновить"
+  },
+  "teamUi": {
+    "role": {
+      "admin": "Администратор",
+      "seo_strategist": "SEO-стратег",
+      "content_writer": "Автор контента",
+      "developer": "Разработчик"
+    },
+    "permission": {
+      "run_crawl": "Запуск краула",
+      "execute_cms_patch": "Применение правок в CMS",
+      "modify_site_focus_rules": "Изменение правил Site Focus",
+      "export_audit_pdf": "Экспорт аудита в PDF",
+      "manage_team_roles": "Управление ролями команды"
+    },
+    "denied": "Ваша роль не позволяет это действие."
+  },
+  "cmsUi": {
+    "kind": {
+      "wordpress": "WordPress",
+      "strapi": "Strapi",
+      "webhook": "Webhook"
+    },
+    "error": {
+      "unsafe-url": "Адрес CMS недопустим (нужны HTTPS и публичный хост).",
+      "conflict": "Страницу изменили после подготовки diff. Подготовьте diff заново.",
+      "http": "CMS отклонила запрос.",
+      "bad-response": "CMS ответила в неожиданном формате.",
+      "heading-not-found": "Заголовок не найден на странице.",
+      "heading-ambiguous": "Заголовок встречается более одного раза.",
+      "forbidden": "Ваша роль не позволяет применять правки в CMS.",
+      "not-approved": "Утвердите именно этот diff перед записью.",
+      "fact-gate-required": "Для YMYL-контента перед записью нужна пройденная проверка фактов."
+    },
+    "verified": "Изменение записано и проверено.",
+    "unverified": "Изменение записано, но на живой странице его пока не видно.",
+    "dryRun": "Пробный запуск: ничего не записано."
+  },
+  "igosUi": {
+    "title": "Оригинальность IGOS",
+    "empty": "Сопоставимые результаты TOP не получены: нет базы и оценки.",
+    "noScore": "Нет оценки",
+    "offTopic": "Большинство абзацев не по теме; оценка не выставлена.",
+    "partial": "Частичная база: {{available}} из {{requested}} страниц конкурентов.",
+    "basis": "База: {{available}} из {{requested}} страниц конкурентов.",
+    "component": {
+      "nefr": "Новые сущности",
+      "edsi": "Плотность доказательств",
+      "fhem": "Маркеры опыта",
+      "sdd": "Распределение подтем"
+    },
+    "coverage": "Покрытие базы {{coverage}}, множитель штрафа {{multiplier}}",
+    "novel": "Новые сущности по теме: {{list}}",
+    "advice": "Рекомендации",
+    "heatmap": "Тепловая карта абзацев",
+    "heatmapEmpty": "Нет абзацев для показа.",
+    "noHeading": "Без заголовка",
+    "zone": {
+      "echo": "Эхо",
+      "gain": "Прирост",
+      "drift": "Дрейф",
+      "neutral": "Нейтрально"
+    },
+    "detail": "Смещение {{offset}}, близость к теме {{topic}}, ближайший фрагмент конкурента {{nearest}}.",
+    "source": "Ближайший источник: {{url}} (позиция {{rank}}).",
+    "noSource": "Нет ближайшего источника.",
+    "limit": {
+      "no-comparable-documents": "Нет сопоставимых документов конкурентов.",
+      "too-few-documents": "Слишком мало документов конкурентов для надёжной базы.",
+      "some-documents-missing": "Часть страниц конкурентов не удалось получить.",
+      "no-target-chunks": "На странице нет абзацев для анализа.",
+      "off-topic-below-quota": "Слишком мало абзацев по теме."
+    },
+    "rec": {
+      "rewrite-echo": "Абзац со смещением {{offset}} повторяет фрагмент конкурента: перепишите своими словами.",
+      "add-evidence": "Добавьте конкретные данные с единицами или источниками; ничего не найдено.",
+      "refocus-drift": "Абзац со смещением {{offset}} уходит от темы: сфокусируйте или удалите его."
+    }
+  },
+  "logIntelUi": {
+    "title": "Анализ логов",
+    "description": "Импорт локального журнала доступа .log или .txt (не более 500 МБ). Сохраняются только агрегаты, без исходных IP. Дедупликация использует выборочный SHA-256 (первый/последний МиБ и размер).",
+    "chooseFile": "Выбрать журнал доступа",
+    "cancel": "Отмена",
+    "clear": "Очистить логи",
+    "importing": "Импорт журнала доступа",
+    "progress": "Строки: {{lines}} · Ошибочные: {{malformed}} · Не боты: {{ignoredNonBot}}",
+    "cancelled": "Импорт отменён.",
+    "duplicate": "Этот файл уже импортирован.",
+    "complete": "Импорт завершён.",
+    "storageFailed": "Не удалось обновить локальное хранилище. Изменения остались только в памяти; сохранённые логи могут не измениться.",
+    "tooLarge": "Файл превышает лимит 500 МБ.",
+    "invalidFile": "Выберите файл .log или .txt.",
+    "resumeRequired": "Продолжите незавершённый файл или очистите логи перед импортом другого.",
+    "importFailed": "Не удалось прочитать файл или вычислить хеш. Повторите попытку.",
+    "resume": "Выберите тот же файл, чтобы продолжить без повторного подсчёта строк.",
+    "verificationNote": "Идентичность бота — заявление User-Agent, а не доказательство. Проверки подмены требуют DNS-резолвер настольного приложения; панель не обращается к DNS. Непроверенные строки остаются неопределёнными.",
+    "verificationNoteDesktop": "Личность бота проверяется на этом компьютере обратным и прямым DNS (тайм-аут 3 с). Неудачный запрос оставляет строку «заявлено», но не «подделка».",
+    "matrix": "Матрица эффективности обхода",
+    "coverage": "Покрытие: {{days}} из {{period}} дней",
+    "period": "Окно (UTC): {{start}} – {{end}}",
+    "insufficient": "Покрытия логов недостаточно для надёжных выводов.",
+    "noScores": "В последнем обходе проекта нет сохранённых оценок TRS по путям. Оценки не выдумываются.",
+    "unavailable": "Нет данных",
+    "empty": "Нет путей из логов или обхода.",
+    "previous": "Назад",
+    "page": "Страница {{current}} из {{total}}",
+    "next": "Далее",
+    "loading": "Загрузка анализа логов…",
+    "columns": {
+      "path": "Путь",
+      "family": "Семейство бота",
+      "status": "Проверка",
+      "hits": "Запросы",
+      "errors": "Доля 4xx/5xx",
+      "verdict": "Вывод"
+    },
+    "families": {
+      "googlebot": "Googlebot",
+      "bingbot": "Bingbot",
+      "gptbot": "GPTBot",
+      "perplexitybot": "PerplexityBot",
+      "none": "Нет свидетельств бота"
+    },
+    "statuses": {
+      "verified": "Подтверждён",
+      "claimed": "Заявлен",
+      "spoofed": "Поддельный",
+      "unknown": "Неизвестно"
+    },
+    "verdicts": {
+      "waste": "Растрата",
+      "starvation": "Недостаточный обход",
+      "ok": "Норма",
+      "inconclusive": "Неопределённо",
+      "no-logs": "Нет логов"
+    }
+  },
+  "altCheckUi": {
+    "column": "Качество ALT",
+    "csvColumn": "alt_issues",
+    "summary": "Проверено изображений: {{checked}}, с проблемами ALT: {{issues}}.",
+    "issues": {
+      "missing": "Нет ALT",
+      "empty": "Пустой ALT",
+      "filename": "Похоже на имя файла",
+      "generic": "Общая формулировка",
+      "too-long": "Слишком длинный",
+      "repeats-caption": "Повторяет подпись",
+      "unrelated-to-context": "Не связан с контекстом"
+    },
+    "noIssues": "Проблем с ALT нет",
+    "decorative": "Декоративное (пустой ALT)",
+    "visualNotice": "Визуальный анализ требует локальной модели и недоступен в этой версии.",
+    "analyses": {
+      "ocr": "OCR",
+      "clip-alignment": "Соответствие CLIP",
+      "transcript": "Транскрипции"
+    },
+    "statuses": {
+      "unavailable": "Недоступно"
+    },
+    "noScorePenalty": "Это не снижает ни одну оценку."
+  },
+  "prePublishMountUi": {
+    "title": "Проверка перед публикацией",
+    "description": "Использует последнее завершённое сканирование, сохранённые фрагменты и термины, оценки Site Focus и настройки эмбеддингов проекта. Только моделирование: ничего не сохраняется и не публикуется.",
+    "draft": "Текст неопубликованного черновика",
+    "url": "URL черновика (необязательно)",
+    "urlHint": "Оставьте пустым для новой страницы. Существующий URL сканирования заменяет эту страницу в модели.",
+    "invalidUrl": "Введите корректный URL HTTP или HTTPS без учётных данных.",
+    "run": "Проверить черновик",
+    "cancel": "Отмена",
+    "loading": "Загрузка проверки…",
+    "noCrawl": "Нет завершённого сканирования активного проекта. Сначала просканируйте сайт.",
+    "noCore": "Основная тема пока не определена. Оценить черновик невозможно.",
+    "running": "Создание эмбеддингов черновика и данных сканирования…",
+    "unreachable": "Выбранный поставщик эмбеддингов не вернул векторы. Проверьте настройки проекта и подключение.",
+    "cancelled": "Проверка отменена. Результат не применён.",
+    "stale": "Исходные данные или сканирование изменились. Запустите проверку снова."
+  },
+  "telemetrySourcesUi": {
+    "title": "Источники",
+    "sources": {
+      "gsc": "GSC",
+      "ga4": "GA4",
+      "backlinks": "Обратные ссылки"
+    },
+    "states": {
+      "measured": "Измерено",
+      "partial-history": "Неполная история",
+      "stale": "Устарело",
+      "sampled": "Выборка",
+      "missing-permission": "Нет разрешения",
+      "unavailable": "Недоступно"
+    },
+    "property": "Ресурс: {{value}}",
+    "provider": "Поставщик: {{value}}",
+    "period": "{{start}} – {{end}} ({{days}} дн.)",
+    "retrievedAt": "Получено: {{value}}",
+    "truncated": {
+      "yes": "Данные усечены: да",
+      "no": "Данные усечены: нет"
+    },
+    "coverage": "Покрытие: {{value}}%",
+    "unknownNote": "Неизвестные данные никогда не считаются нулевыми."
+  },
+  "offPageSourcesUi": {
+    "analyze": "Анализировать источники ссылок",
+    "cancel": "Отмена",
+    "scope": "до 25 follow-ссылок, по одной на исходный домен, сначала с наибольшим авторитетом провайдера. Шкала авторитета: 0–100; TBVA — сумма, не процент и не Google PageRank. Лимиты: 3 параллельных запроса, нативный тайм-аут 15 с, ответ 25 МиБ, 20 000 видимых символов на источник.",
+    "provider": "Локальный провайдер эмбеддингов",
+    "local": "Локальный хеш",
+    "ollama": "Локальная Ollama",
+    "model": "Модель эмбеддингов Ollama",
+    "scored": "Оценено источников: {{scored}} / {{total}} выбранных (не весь профиль ссылок).",
+    "sources": "Статус загрузки источников",
+    "fetchedAt": "Загружено: {{time}}",
+    "notFetched": "Не загружено",
+    "context": "Извлечение не сохраняет границы абзацев и анкоров. Ограниченные текстовые блоки приблизительны; все совпадения имеют linked=false, так как контекст ссылки в абзаце недоступен.",
+    "caveat": "Совместное упоминание не означает рекомендацию. Омонимы могут давать ложные совпадения; упоминания с отрицанием остаются неоднозначными.",
+    "excerpts": "Фрагменты социтирования",
+    "offset": "{{url}} — смещение в извлечённом тексте {{offset}}",
+    "missing": "Отсутствие текста, пригодных векторов или авторитета означает частичные/недоступные данные, а не ноль обратных ссылок. Выборка не является полным профилем.",
+    "status": {
+      "running": "Анализ источников…",
+      "done": "Анализ источников завершён",
+      "cancelled": "Анализ отменён; незавершённые источники не оцениваются",
+      "unavailable": "Анализ недоступен"
+    },
+    "fetch": {
+      "pending": "Ожидание",
+      "ok": "Текст доступен",
+      "unavailable": "Недоступно",
+      "too-large": "Ответ слишком большой",
+      "blocked": "Заблокировано безопасным транспортом"
+    },
+    "limitations": {
+      "no-topic-vector": "Нет пригодного вектора Core Topic из последнего завершённого обхода проекта; TBVA недоступна.",
+      "invalid-scale": "Неверная шкала авторитета; TBVA недоступна.",
+      "no-follow-links": "Нет follow-ссылок для анализа.",
+      "source-text-or-authority-missing": "У части источников нет текста, пригодных векторов или авторитета провайдера."
+    },
+    "polarity": {
+      "neutral": "Нейтральное совместное упоминание; не рекомендация",
+      "unclear": "Неоднозначно: возможно отрицание"
+    },
+    "pacing": "Защита нативного аудита также ограничивает запуски до 10 в минуту. Анализ выборки может занять несколько минут; другие аудиты могут снизить доступность.",
+    "history": {
+      "title": "История",
+      "empty": "Нет сохранённых завершённых анализов.",
+      "summary": "TBVA: {{value}} · Оценено/запрошено: {{scored}}/{{requested}}",
+      "delta": "Изменение TBVA: {{delta}}",
+      "notComparable": "Несопоставимо: {{reason}}",
+      "reasons": {
+        "first": "нет предыдущей записи",
+        "scale": "другая шкала авторитетности",
+        "model": "другая модель эмбеддингов",
+        "unknownModel": "модель эмбеддингов неизвестна",
+        "unavailable": "TBVA недоступно"
+      },
+      "view": "Показать источники",
+      "hide": "Скрыть источники",
+      "delete": "Удалить запись",
+      "clear": "Очистить историю проекта",
+      "exportCurrent": "Экспорт текущего анализа CSV",
+      "exportRecord": "Экспорт записи CSV",
+      "storageError": "Хранилище истории недоступно; изменения не сохранены.",
+      "topic": "Тема: {{topic}}",
+      "embedding": "Эмбеддинг: {{provider}} / {{model}}",
+      "details": "Сохранённые данные по источникам",
+      "fields": {
+        "sourceUrl": "URL источника",
+        "fetchedAt": "Время загрузки",
+        "availability": "Доступность",
+        "authority": "Авторитетность",
+        "similarity": "Сходство",
+        "contribution": "Вклад"
+      },
+      "unavailable": "Недоступно",
+      "status": {
+        "ready": "Готово",
+        "partial": "Частично",
+        "unavailable": "Недоступно"
+      },
+      "privacy": "Последние 10 завершённых анализов сохраняются локально для каждого проекта. Полные тексты страниц и векторы никогда не сохраняются."
+    }
+  },
+  "experimentsUi": {
+    "title": "SEO-эксперименты",
+    "disclaimer": "Это наблюдение, а не доказательство причинной связи. Изменения могут отражать сезонность, другие вмешательства или внешние факторы.",
+    "projectRequired": "Выберите проект для регистрации изменений.",
+    "capacity": "Хранятся до {{count}} изменений; новые записи заменяют самые старые.",
+    "url": "URL страницы",
+    "site": "Весь сайт",
+    "date": "Первый день действия",
+    "kind": "Тип изменения",
+    "note": "Примечание (до 300 символов)",
+    "add": "Добавить изменение",
+    "saveFailed": "Не удалось сохранить. Проверьте поля и доступность локального хранилища.",
+    "removeFailed": "Не удалось удалить изменение из локального хранилища.",
+    "empty": "Нет зарегистрированных изменений.",
+    "intervention": "Изменение",
+    "unavailable": "Недоступно",
+    "baseline": "Базовый период",
+    "followUp": "Период после изменения",
+    "measurements": "Наблюдаемые показатели",
+    "metric": "Показатель",
+    "before": "До",
+    "after": "После",
+    "change": "Относительное изменение",
+    "clicks": "Клики",
+    "impressions": "Показы",
+    "position": "Средняя позиция (разница со знаком)",
+    "restOfSite": "Остальной сайт (итог минус страница)",
+    "relativeVsSite": "Страница минус остальной сайт (процентные пункты)",
+    "limitations": "Ограничения",
+    "remove": "Удалить изменение",
+    "percent": "{{value}}%",
+    "points": "{{value}} п. п.",
+    "kinds": {
+      "content": "Контент",
+      "internal-links": "Внутренние ссылки",
+      "title-meta": "Заголовок и метаданные",
+      "technical": "Техническое",
+      "other": "Другое"
+    },
+    "status": {
+      "ready": "Наблюдение доступно",
+      "inconclusive": "Неопределённый результат",
+      "pending": "Запланировано / ожидается"
+    },
+    "reasons": {
+      "observational": "Только наблюдение до и после; без причинных выводов.",
+      "uncontrolled-factors": "Сезонность, параллельные изменения и внешние факторы не контролируются.",
+      "zero-baseline": "При нулевой базе относительное изменение недоступно.",
+      "no-control": "Для изменения всего сайта нет отдельной контрольной группы остального сайта.",
+      "filtered-scope": "К обоим периодам применяются одинаковые сохранённые фильтры Search Console.",
+      "invalid-period": "В сохранённом периоде некорректные даты или длительность.",
+      "inconsistent-totals": "Показатели страницы превышают сохранённые итоги сайта; контроль не вычисляется.",
+      "no-baseline": "Нет сохранённого периода, завершившегося до изменения.",
+      "no-follow-up": "Нет сохранённого периода, начавшегося в день изменения или позже.",
+      "incomparable-scope": "Ближайшие периоды имеют разные ресурсы или фильтры либо не охватывают URL.",
+      "period-length-mismatch": "Длительность периодов отличается более чем на 10%.",
+      "rows-truncated": "Сохранённые строки страниц усечены; сравнение может быть неполным.",
+      "low-volume": "В базовом периоде менее 30 кликов; объём слишком мал для надёжного сравнения.",
+      "pending": "Дата изменения в будущем; оценка ожидается."
+    }
   }
 }

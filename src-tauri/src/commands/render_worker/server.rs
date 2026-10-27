@@ -1,40 +1,50 @@
 use super::http::*;
 use super::models::*;
 use super::render::*;
+use crate::commands::rendered_crawler::RenderedPageSnapshot;
 use tauri::Runtime;
-use tokio::{
-    net::{TcpListener, TcpStream},
-    sync::oneshot,
-    time::{sleep_until, timeout, Instant},
-};
+use tokio::{net::TcpStream, time::Instant};
 
-pub(super) async fn run_worker<R: Runtime>(
-    listener: TcpListener,
+pub(super) use super::http::format_render_snapshot;
+
+pub(super) async fn handle_connection<R: Runtime>(
+    stream: TcpStream,
     shared: WorkerShared<R>,
-    mut shutdown: oneshot::Receiver<()>,
-) {
-    loop {
-        tokio::select! {
-            _ = &mut shutdown => break,
-            _ = sleep_until(shared.expires_at) => break,
-            accepted = listener.accept() => {
-                let Ok((stream, peer)) = accepted else { break; };
-                if !peer.ip().is_loopback() {
-                    continue;
-                }
-                let connection_shared = shared.clone();
-                tokio::spawn(async move {
-                    let _ = timeout(REQUEST_TIMEOUT, handle_connection(stream, connection_shared)).await;
-                });
-            }
-        }
+) -> Result<(), String> {
+    let app = shared.app.clone();
+    handle_connection_with(stream, shared, move |req| async move {
+        render_request(&app, req).await
+    })
+    .await
+}
+
+fn render_guard(
+    request: &HttpRequest,
+    shared: &WorkerShared<impl Runtime>,
+) -> Option<(u16, &'static str)> {
+    if Instant::now() >= shared.expires_at {
+        Some((410, "Worker lease has expired."))
+    } else if request
+        .headers
+        .get("x-seomi-worker-version")
+        .map(String::as_str)
+        != Some(RENDER_WORKER_VERSION)
+    {
+        Some((426, "Worker protocol version is not supported."))
+    } else {
+        None
     }
 }
 
-pub(super) async fn handle_connection<R: Runtime>(
+pub(super) async fn handle_connection_with<R: Runtime, F, Fut>(
     mut stream: TcpStream,
     shared: WorkerShared<R>,
-) -> Result<(), String> {
+    render: F,
+) -> Result<(), String>
+where
+    F: FnOnce(RenderWorkerRequest) -> Fut,
+    Fut: std::future::Future<Output = Result<RenderedPageSnapshot, String>>,
+{
     let request = match read_request(&mut stream).await {
         Ok(request) => request,
         Err(error) => {
@@ -42,46 +52,14 @@ pub(super) async fn handle_connection<R: Runtime>(
         }
     };
     let (status, content_type, body) = match (request.method.as_str(), request.path.as_str()) {
-        ("GET", "/health") => {
-            let expired = Instant::now() >= shared.expires_at;
-            let body = serde_json::json!({
-                "ok": !expired,
-                "version": RENDER_WORKER_VERSION,
-                "renderer": crate::commands::rendered_artifacts::renderer_platform(),
-                "expiresAt": shared.expires_at_text,
-                "expiresInSeconds": shared.expires_at.saturating_duration_since(Instant::now()).as_secs(),
-            });
-            (
-                if expired { 410 } else { 200 },
-                "application/json",
-                serde_json::to_vec(&body).map_err(|error| error.to_string())?,
-            )
-        }
+        ("GET", "/health") => health_response(&shared)?,
         ("POST", "/v1/render") => {
-            if Instant::now() >= shared.expires_at {
-                return write_response(
-                    &mut stream,
-                    410,
-                    "application/json",
-                    &json_error("Worker lease has expired."),
-                )
-                .await;
+            if let Some((status, msg)) = render_guard(&request, &shared) {
+                return write_response(&mut stream, status, "application/json", &json_error(msg))
+                    .await;
             }
-            let version = request
-                .headers
-                .get("x-seomi-worker-version")
-                .map(String::as_str);
-            if version != Some(RENDER_WORKER_VERSION) {
-                return write_response(
-                    &mut stream,
-                    426,
-                    "application/json",
-                    &json_error("Worker protocol version is not supported."),
-                )
-                .await;
-            }
-            let authorization = request.headers.get("authorization").map(String::as_str);
-            if !bearer_matches(authorization, &shared.token).await {
+            let auth = request.headers.get("authorization").map(String::as_str);
+            if !bearer_matches(auth, &shared.token).await {
                 return write_response(
                     &mut stream,
                     401,
@@ -112,20 +90,9 @@ pub(super) async fn handle_connection<R: Runtime>(
                     .await;
                 }
             };
-            let result = render_request(&shared.app, payload).await;
+            let result = render(payload).await;
             match result {
-                Ok(snapshot) => {
-                    let body = serde_json::to_vec(&snapshot).map_err(|error| error.to_string())?;
-                    if body.len() > 8 * 1024 * 1024 {
-                        (
-                            413,
-                            "application/json",
-                            json_error("Rendered snapshot exceeds the response safety limit."),
-                        )
-                    } else {
-                        (200, "application/json", body)
-                    }
-                }
+                Ok(snapshot) => format_render_snapshot(&snapshot)?,
                 Err(error) => (422, "application/json", json_error(&error)),
             }
         }

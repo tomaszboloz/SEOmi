@@ -53,6 +53,20 @@ pub fn public_client_builder() -> reqwest::ClientBuilder {
 }
 
 pub async fn resolve_public_addresses(url: &Url) -> Result<Vec<SocketAddr>> {
+    resolve_public_addresses_with(url, |domain, port| async move {
+        Ok(lookup_host((domain.as_str(), port)).await?.collect())
+    })
+    .await
+}
+
+pub(super) async fn resolve_public_addresses_with<R, F>(
+    url: &Url,
+    lookup: R,
+) -> Result<Vec<SocketAddr>>
+where
+    R: FnOnce(String, u16) -> F,
+    F: Future<Output = std::io::Result<Vec<SocketAddr>>>,
+{
     let host = url.host().ok_or_else(|| anyhow!("URL has no host"))?;
     let port = url
         .port_or_known_default()
@@ -62,11 +76,10 @@ pub async fn resolve_public_addresses(url: &Url) -> Result<Vec<SocketAddr>> {
         Host::Ipv6(ip) => return validate_addresses(vec![SocketAddr::new(IpAddr::V6(ip), port)]),
         Host::Domain(domain) => domain,
     };
-    let addresses = timeout(DNS_TIMEOUT, lookup_host((domain, port)))
+    let addresses = timeout(DNS_TIMEOUT, lookup(domain.to_owned(), port))
         .await
         .map_err(|_| anyhow!("DNS lookup timed out"))?
-        .map_err(|error| anyhow!("DNS lookup failed: {error}"))?
-        .collect::<Vec<_>>();
+        .map_err(|error| anyhow!("DNS lookup failed: {error}"))?;
     validate_addresses(addresses)
 }
 
@@ -74,7 +87,10 @@ pub fn validate_addresses(addresses: Vec<SocketAddr>) -> Result<Vec<SocketAddr>>
     if addresses.is_empty() {
         return Err(anyhow!("DNS returned no addresses"));
     }
-    if addresses.iter().any(|address| !is_public_ip(&address.ip())) {
+    if addresses.iter().any(|addr| {
+        !is_public_ip(&addr.ip())
+            && !crate::utils::test_fixture::is_allowed_test_fixture_socket(addr)
+    }) {
         return Err(anyhow!(
             "DNS resolved to a private or reserved address; request blocked"
         ));

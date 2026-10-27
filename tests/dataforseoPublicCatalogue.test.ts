@@ -19,7 +19,7 @@ it('uses the current locale for catalogue labels and preserves real catalogue va
   const locale=(i18n.language||'en').replace('_','-');
   expect(dataForSeoMarketLabel(market)).toBe(new Intl.DisplayNames([locale],{type:'region'}).of('PL'));
   expect(dataForSeoLanguageLabel({code:'pl'})).toBe(new Intl.DisplayNames([locale],{type:'language'}).of('pl'));
-  vi.spyOn(Intl,'DisplayNames').mockImplementation(()=>{throw new Error('unavailable');});
+  vi.spyOn(Intl,'DisplayNames').mockImplementation(function(){throw new Error('unavailable');});
   expect(dataForSeoMarketLabel(market)).toBe(market.label);
   expect(dataForSeoLanguageLabel({code:'pl',label:'Polish catalogue'})).toBe('Polish catalogue');
   expect(dataForSeoLanguageLabel({code:'pl'})).toBe('pl');

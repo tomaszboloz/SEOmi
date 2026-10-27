@@ -17,6 +17,7 @@ importScheduledCrawlResult: async (result, identity) => {
     const safeIdentity = identity?.replace(/[^a-zA-Z0-9_-]/g, '-').slice(0, 120);
     const run: CrawlRunRecord = {
       id: safeIdentity ? `scheduled-crawl-${safeIdentity}` : createId('scheduled-crawl'),
+      projectId,
       completedAt: new Date().toISOString(),
       startUrl: crawlResult.start_url,
       config: { ...get().crawlConfig, maxPages: crawlResult.pages_crawled },

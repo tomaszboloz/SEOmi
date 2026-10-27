@@ -1,8 +1,10 @@
 import { getSecureValue, setSecureValue } from '@/services/tauri';
+import { isTauriEnvironment } from '@/services/tauri/transport';
+import { STORED_SECRET_MARKER } from '@/services/tauri/secrets';
 import { activeProjectId, dataForSeoSecretNameFor, googleMetricsSecretNameFor } from './defaults';
 import type { SettingsSet, SettingsGet, SettingsState } from './types';
 
-export const createSettingsCredentials = (set: SettingsSet, _get: SettingsGet): Pick<SettingsState, 'loadDataForSeoCredentials' | 'loadGoogleMetricsApiKey' | 'saveDataForSeoCredentials' | 'saveGoogleMetricsApiKey'> => {
+export const createSettingsCredentials = (set: SettingsSet, get: SettingsGet): Pick<SettingsState, 'loadDataForSeoCredentials' | 'loadGoogleMetricsApiKey' | 'saveDataForSeoCredentials' | 'saveGoogleMetricsApiKey'> => {
   const secureSaveQueues = new Map<string, Promise<void>>();
   const secureSaveRevisions = new Map<string, number>();
   const loadRevisions = new Map<string, number>();
@@ -66,9 +68,12 @@ export const createSettingsCredentials = (set: SettingsSet, _get: SettingsGet): 
       secureSaveRevisions.set(queueKey, revision);
       set({ isSaving: true, secureStorageError: null });
       const previous = secureSaveQueues.get(queueKey) || Promise.resolve();
+      const existing = get().dataForSeoCredentials;
+      const preserveLogin = isTauriEnvironment() && !credentials.login.trim() && existing.login === STORED_SECRET_MARKER;
+      const preservePassword = isTauriEnvironment() && !credentials.password.trim() && existing.password === STORED_SECRET_MARKER;
       const save = previous.catch(() => undefined).then(() => Promise.allSettled([
-        setSecureValue(dataForSeoSecretNameFor('login', projectId), credentials.login),
-        setSecureValue(dataForSeoSecretNameFor('password', projectId), credentials.password),
+        ...(preserveLogin ? [] : [setSecureValue(dataForSeoSecretNameFor('login', projectId), credentials.login)]),
+        ...(preservePassword ? [] : [setSecureValue(dataForSeoSecretNameFor('password', projectId), credentials.password)]),
       ])).then((results) => {
         const failed = results.find((result) => result.status === 'rejected');
         if (failed?.status === 'rejected') throw failed.reason;
@@ -76,7 +81,13 @@ export const createSettingsCredentials = (set: SettingsSet, _get: SettingsGet): 
       secureSaveQueues.set(queueKey, save);
       try {
         await save;
-        if (activeProjectId() === projectId && secureSaveRevisions.get(queueKey) === revision) set({ dataForSeoCredentials: credentials });
+        if (activeProjectId() === projectId && secureSaveRevisions.get(queueKey) === revision) {
+          const storedValue = (value: string) => isTauriEnvironment() && value.trim() ? STORED_SECRET_MARKER : value;
+          set({ dataForSeoCredentials: {
+            login: preserveLogin ? existing.login : storedValue(credentials.login),
+            password: preservePassword ? existing.password : storedValue(credentials.password),
+          } });
+        }
       } catch (error) {
         const message = error instanceof Error ? error.message : String(error);
         if (activeProjectId() === projectId && secureSaveRevisions.get(queueKey) === revision) set({ secureStorageError: message });
@@ -98,11 +109,19 @@ export const createSettingsCredentials = (set: SettingsSet, _get: SettingsGet): 
       set({ isSaving: true, secureStorageError: null });
       const previous = secureSaveQueues.get(queueKey) || Promise.resolve();
       const normalizedKey = apiKey.trim();
-      const save = previous.catch(() => undefined).then(() => setSecureValue(googleMetricsSecretNameFor(projectId), normalizedKey)).then(() => undefined);
+      const existing = get().googleMetricsApiKey;
+      const preserveExisting = isTauriEnvironment() && !normalizedKey && existing === STORED_SECRET_MARKER;
+      const save = previous.catch(() => undefined).then(() => preserveExisting
+        ? undefined
+        : setSecureValue(googleMetricsSecretNameFor(projectId), normalizedKey)).then(() => undefined);
       secureSaveQueues.set(queueKey, save);
       try {
         await save;
-        if (activeProjectId() === projectId && secureSaveRevisions.get(queueKey) === revision) set({ googleMetricsApiKey: normalizedKey });
+        if (activeProjectId() === projectId && secureSaveRevisions.get(queueKey) === revision) {
+          set({ googleMetricsApiKey: preserveExisting || (isTauriEnvironment() && normalizedKey)
+            ? STORED_SECRET_MARKER
+            : normalizedKey });
+        }
       } catch (error) {
         const message = error instanceof Error ? error.message : String(error);
         if (activeProjectId() === projectId && secureSaveRevisions.get(queueKey) === revision) set({ secureStorageError: message });

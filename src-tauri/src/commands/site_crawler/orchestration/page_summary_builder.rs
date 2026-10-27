@@ -43,9 +43,12 @@ pub fn build_crawled_page_summary(input: BuildCrawledPageSummaryInput<'_>) -> Cr
         content.semantic_excerpts.len(),
         links.semantic_links.len(),
     );
+    let evidence_mode = page_data
+        .rendered_diagnostics
+        .as_ref()
+        .map_or("http", |_| crawl_mode);
     let semantic_content_provenance =
-        semantic_provenance_for_mode(crawl_mode, &content.semantic_content_source);
-    let issues_count = issues.len();
+        semantic_provenance_for_mode(evidence_mode, &content.semantic_content_source);
 
     CrawledPageSummary {
         url: current_url.to_string(),
@@ -55,6 +58,8 @@ pub fn build_crawled_page_summary(input: BuildCrawledPageSummaryInput<'_>) -> Cr
         redirect_stop_reason: redirect_stopped_reason,
         depth,
         http_status: page_data.status,
+        http_response_url: page_data.http_response_url.clone(),
+        response_url_mismatch: Some(page_data.response_url_mismatch),
         response_time_ms: page_duration,
         rendered_lcp_ms: page_data.rendered_lcp_ms,
         rendered_inp_ms: page_data.rendered_inp_ms,
@@ -99,7 +104,9 @@ pub fn build_crawled_page_summary(input: BuildCrawledPageSummaryInput<'_>) -> Cr
         content_hash: content.content_hash,
         content_simhash: content.content_simhash,
         semantic_terms: content.semantic_terms,
+        semantic_language: content.semantic_language,
         semantic_excerpts: content.semantic_excerpts,
+        focus: content.focus.dated(page_data.last_modified.as_deref()),
         semantic_links: links.semantic_links,
         semantic_content_source: content.semantic_content_source,
         semantic_content_provenance,
@@ -137,7 +144,7 @@ pub fn build_crawled_page_summary(input: BuildCrawledPageSummaryInput<'_>) -> Cr
         favicon_resource_checks: extra.favicon_resource_checks,
         social_meta_tags: extra.social_meta_tags,
         custom_search_results: extra.custom_search_results,
-        issues_count,
+        issues_count: issues.len(),
         issues,
     }
 }

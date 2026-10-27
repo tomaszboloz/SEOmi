@@ -7,15 +7,18 @@ const link = (patch: Partial<CrawledLink> = {}): CrawledLink => ({ target_url: '
 afterEach(() => vi.restoreAllMocks());
 
 it.each([
-  [199, 'unchecked'], [200, 'ok'], [299, 'ok'], [300, 'redirect'], [399, 'redirect'], [400, 'error'],
+  [199, 'unchecked'], [200, 'ok'], [299, 'ok'], [300, 'redirect'], [399, 'redirect'],
+  [400, 'unverifiable'], [401, 'unverifiable'], [403, 'unverifiable'], [404, 'broken'],
+  [410, 'broken'], [429, 'unverifiable'], [500, 'unverifiable'], [999, 'unverifiable'],
 ] as const)('classifies HTTP boundary %i as %s', (target_http_status, expected) => {
   expect(crawlLinkStatus(link({ target_http_status }))).toBe(expected);
 });
 
 it('gives request failures precedence over HTTP and redirects', () => {
-  expect(crawlLinkStatus(link({ target_request_error_kind: 'invalid', target_http_status: 200 }))).toBe('blocked');
-  expect(crawlLinkStatus(link({ target_request_error_kind: 'blocked', target_http_status: 500 }))).toBe('blocked');
-  expect(crawlLinkStatus(link({ target_request_error_kind: 'timeout', target_redirect_url: 'https://final.test' }))).toBe('error');
+  expect(crawlLinkStatus(link({ target_request_error_kind: 'invalid', target_http_status: 200 }))).toBe('unverifiable');
+  expect(crawlLinkStatus(link({ target_request_error_kind: 'blocked', target_http_status: 500 }))).toBe('unverifiable');
+  expect(crawlLinkStatus(link({ target_request_error_kind: 'timeout', target_redirect_url: 'https://final.test' }))).toBe('unverifiable');
+  expect(crawlLinkStatus(link({ target_request_error_kind: 'dns' }))).toBe('broken');
   expect(crawlLinkStatus(link({ target_redirect_url: 'https://final.test' }))).toBe('redirect');
 });
 
@@ -27,8 +30,10 @@ const records: CrawlLinkRecord[] = [
 const filtered = (sort: CrawlLinkSort, descending = false) => filterAndSortCrawlLinks(records, { query: '', kind: 'all', status: 'all', sort, descending }).map(({ key }) => key);
 
 it.each(['source', 'anchor', 'target', 'status'] as const)('sorts %s in both directions without changing the input', (sort) => {
-  expect(filtered(sort)).toEqual(['a', 'b', 'c']);
-  expect(filtered(sort, true)).toEqual(['c', 'b', 'a']);
+  const ascending = sort === 'status' ? ['b', 'c', 'a'] : ['a', 'b', 'c'];
+  const descending = sort === 'status' ? ['a', 'c', 'b'] : ['c', 'b', 'a'];
+  expect(filtered(sort)).toEqual(ascending);
+  expect(filtered(sort, true)).toEqual(descending);
   expect(records.map(({ key }) => key)).toEqual(['b', 'a', 'c']);
 });
 

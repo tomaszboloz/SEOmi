@@ -8,7 +8,8 @@ pub(super) struct IssueCollector {
 
 impl IssueCollector {
     pub(super) fn push(&mut self, issue: StructuredDataValidationIssue) {
-        if self.issues.len() < MAX_VALIDATION_ISSUES - 1 && !self.truncated {
+        // `truncated` is only set once the marker pushed the list past this bound.
+        if self.issues.len() < MAX_VALIDATION_ISSUES - 1 {
             self.issues.push(issue);
         } else if !self.truncated {
             self.issues.push(StructuredDataValidationIssue {

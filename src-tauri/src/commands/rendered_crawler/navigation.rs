@@ -29,9 +29,11 @@ pub(crate) fn is_allowed_navigation(
     let Ok(validated) = validate_and_normalize_url(url.as_str()) else {
         return false;
     };
-    let Some(host) = validated.host_str().map(str::to_ascii_lowercase) else {
-        return false;
-    };
+    // `validate_and_normalize_url` rejects URLs without a host.
+    let host = validated
+        .host_str()
+        .unwrap_or_default()
+        .to_ascii_lowercase();
     let base_host = base_host.to_ascii_lowercase();
     let host_in_scope =
         host == base_host || (allow_subdomains && host.ends_with(&format!(".{base_host}")));
@@ -47,6 +49,22 @@ pub(crate) fn is_allowed_navigation(
         || path
             .strip_prefix(normalized_scope)
             .is_some_and(|suffix| suffix.starts_with('/'))
+}
+
+/// Crawl scope: the seed host (with its optional path scope) or any explicitly
+/// allowlisted host. Allowlisted hosts do not inherit the seed's path scope,
+/// matching the HTTP crawler.
+pub(crate) fn is_allowed_crawl_navigation(
+    url: &Url,
+    base_host: &str,
+    allow_subdomains: bool,
+    scope_path: Option<&str>,
+    allowed_hosts: &[String],
+) -> bool {
+    is_allowed_navigation(url, base_host, allow_subdomains, scope_path)
+        || allowed_hosts
+            .iter()
+            .any(|host| is_allowed_navigation(url, host, allow_subdomains, None))
 }
 
 pub(crate) fn parse_capture_chunk(url: &Url, nonce: &str) -> Option<CaptureChunk> {
@@ -72,4 +90,15 @@ pub(crate) fn parse_capture_chunk(url: &Url, nonce: &str) -> Option<CaptureChunk
         total,
         data,
     })
+}
+
+pub(crate) fn parse_transfer_failed(url: &Url, nonce: &str) -> Option<u64> {
+    if url.scheme() != CAPTURE_SCHEME || url.host_str() != Some(nonce) {
+        return None;
+    }
+
+    url.path()
+        .strip_suffix("/error")
+        .and_then(|path| path.strip_prefix('/'))
+        .and_then(|sequence| sequence.parse().ok())
 }

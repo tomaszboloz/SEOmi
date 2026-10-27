@@ -67,7 +67,7 @@ it.each(['hook-project', null])('compares two newly saved environment runs and n
   const fixture = executionHook(project); urls(fixture);
   const staging = createCrawlResultFixture({ health_score: 70 });
   const production = createCrawlResultFixture({ health_score: 90 });
-  useToolsStore.setState({ crawlRuns: [createCrawlRunFixture({ id: 'existing', environment: 'staging' })] });
+  act(() => useToolsStore.setState({ crawlRuns: [createCrawlRunFixture({ id: 'existing', environment: 'staging' })] }));
   fixture.startSiteCrawl.mockImplementation(async (url, _limit, _config, environment) => {
     const result = environment === 'staging' ? staging : production;
     useToolsStore.setState({ crawlRuns: [...useToolsStore.getState().crawlRuns, createCrawlRunFixture({ id: environment, environment, startUrl: url, result })] });
@@ -77,6 +77,6 @@ it.each(['hook-project', null])('compares two newly saved environment runs and n
   expect(fixture.startSiteCrawl).toHaveBeenNthCalledWith(1, 'https://staging.test', 25, undefined, 'staging', false);
   expect(fixture.startSiteCrawl).toHaveBeenNthCalledWith(2, 'https://production.test', 25, undefined, 'production', false);
   expect(fixture.result.current).toMatchObject({ comparisonRunId: 'staging', comparisonByPath: true, environmentComparisonError: null, isEnvironmentComparisonRunning: false });
-  if (project) expect(notifyCrawlCompleted).toHaveBeenCalledWith(project, production, 70);
+  if (project) expect(notifyCrawlCompleted).toHaveBeenCalledWith(project, production, staging, { runId: 'production' });
   else expect(notifyCrawlCompleted).not.toHaveBeenCalled();
 });

@@ -1,4 +1,4 @@
-import { fireEvent, render, screen } from '@testing-library/react';
+import { act, fireEvent, render, screen } from '@testing-library/react';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { Sidebar } from '@/components/Layout/Sidebar';
@@ -16,7 +16,7 @@ beforeEach(async () => {
   });
 
 afterEach(() => {
-    useUIStore.setState({ activeModal: null });
+    act(() => { useUIStore.setState({ activeModal: null }); });
   });
 
 it('keeps new-project creation available from the active workspace sidebar', () => {

@@ -94,4 +94,31 @@ describe('DataForSEOAudit Decomposition', () => {
     render(<DataForSeoTaskLogCard />);
     expect(screen.getByText('dataforseo.taskState')).toBeDefined();
   });
+
+  it('handles invalid or empty target url safely with fallback empty domain', () => {
+    (useProjectStore as any).mockImplementation((selector: any) => selector({
+      activeProjectId: 'proj1',
+      projects: [{ id: 'proj1', rootUrl: 'invalid-url' }],
+    }));
+    render(<DataForSEOAudit />);
+    expect(screen.getByText('dataforseo.title')).toBeDefined();
+    expect(screen.getByText('—')).toBeDefined();
+    expect((screen.getByRole('button', { name: 'dataforseo.fetchLiveMetrics' }) as HTMLButtonElement).disabled).toBe(true);
+  });
+
+  it('uses audit final_url when provided', () => {
+    render(<DataForSEOAudit audit={{ final_url: 'https://custom-target.com' } as any} />);
+    expect(screen.getByText('custom-target.com')).toBeDefined();
+    expect((screen.getByRole('button', { name: 'dataforseo.fetchLiveMetrics' }) as HTMLButtonElement).disabled).toBe(false);
+  });
+
+  it('handles missing project and audit with empty string fallback', () => {
+    (useProjectStore as any).mockImplementation((selector: any) => selector({
+      activeProjectId: null,
+      projects: [],
+    }));
+    render(<DataForSEOAudit audit={{} as any} />);
+    expect(screen.getByText('dataforseo.title')).toBeDefined();
+    expect(screen.getByText('—')).toBeDefined();
+  });
 });

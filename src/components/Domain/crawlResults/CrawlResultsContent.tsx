@@ -1,3 +1,4 @@
+import { BriefNavigationContext } from '@/components/Charts/BriefCardButton';
 import type { useCrawlResultsSession } from './useCrawlResultsSession';
 import { CrawlOverviewTab } from './CrawlOverviewTab';
 import { CrawlCrawlerReadinessTab } from './CrawlCrawlerReadinessTab';
@@ -16,8 +17,12 @@ import { CrawlStructuredTab } from './CrawlStructuredTab';
 import { CrawlValidationTab } from './CrawlValidationTab';
 import { CrawlPerformanceTab } from './CrawlPerformanceTab';
 import { CrawlVisualisationsTab } from './CrawlVisualisationsTab';
+import { CrawlAioTab } from './aio/CrawlAioTab';
+import { CrawlFocusTab } from './focus/CrawlFocusTab';
+import { CrawlAuthorityTab } from './authority/CrawlAuthorityTab';
+import { CrawlTrustTab } from './trust/CrawlTrustTab';
 import { CrawlExportsTab } from './CrawlExportsTab';
-export const CrawlResultsContent = ({ session }: { session: ReturnType<typeof useCrawlResultsSession> }) => {
+const renderTab = (session: ReturnType<typeof useCrawlResultsSession>) => {
 switch (session.activeTab) {
 case 'overview': return <CrawlOverviewTab session={session} />;
 case 'crawlerReadiness': return <CrawlCrawlerReadinessTab session={session} />;
@@ -36,7 +41,12 @@ case 'structured': return <CrawlStructuredTab session={session} />;
 case 'validation': return <CrawlValidationTab session={session} />;
 case 'performance': return <CrawlPerformanceTab session={session} />;
 case 'visualisations': return <CrawlVisualisationsTab session={session} />;
+case 'aio': return <CrawlAioTab pages={session.result.pages} run={session.currentRun} projectId={session.activeProjectId} />;
+case 'focus': return <CrawlFocusTab pages={session.result.pages} startUrl={session.result.start_url} run={session.currentRun} projectId={session.activeProjectId} />;
+case 'authority': return <CrawlAuthorityTab pages={session.result.pages} startUrl={session.result.start_url} run={session.currentRun} projectId={session.activeProjectId} />;
+case 'trust': return <CrawlTrustTab pages={session.result.pages} startUrl={session.result.start_url} run={session.currentRun} projectId={session.activeProjectId} />;
 case 'exports': return <CrawlExportsTab session={session} />;
 default: return null;
 }
 };
+export const CrawlResultsContent = ({ session }: { session: ReturnType<typeof useCrawlResultsSession> }) => <BriefNavigationContext.Provider value={session.openMapSection}>{renderTab(session)}</BriefNavigationContext.Provider>;

@@ -1,3 +1,4 @@
+use super::header_capture::capture_headers;
 use super::models::{FetchOptions, FetchResult};
 use super::stream::read_bounded_bytes;
 use crate::models::audit_data::{HttpPerformanceMeasurement, RedirectHop};
@@ -6,7 +7,6 @@ use anyhow::{anyhow, Result};
 use chrono::Utc;
 use reqwest::header::{HeaderValue, USER_AGENT};
 use reqwest::redirect::Policy;
-use std::collections::HashMap;
 use std::future::Future;
 use std::net::SocketAddr;
 use std::time::Instant;
@@ -35,7 +35,7 @@ where
             let addresses = resolve(current.clone()).await?;
             let host = current
                 .host_str()
-                .ok_or_else(|| anyhow!("URL has no host"))?;
+                .expect("validated URL must have a hostname");
             let client = reqwest::Client::builder()
                 .danger_accept_invalid_certs(!options.verify_ssl)
                 .redirect(Policy::none())
@@ -74,16 +74,7 @@ where
         let response_headers_ms = start_time.elapsed().as_millis() as u64;
         let final_url = response.url().to_string();
         let status = response.status().as_u16();
-        let headers_map: HashMap<String, String> = response
-            .headers()
-            .iter()
-            .filter_map(|(name, value)| {
-                value
-                    .to_str()
-                    .ok()
-                    .map(|value| (name.as_str().to_lowercase(), value.to_owned()))
-            })
-            .collect();
+        let (headers_map, repeated_headers) = capture_headers(response.headers());
         let set_cookie_headers = response
             .headers()
             .get_all(reqwest::header::SET_COOKIE)
@@ -106,6 +97,7 @@ where
             status,
             response_time_ms: response_headers_ms,
             headers: headers_map,
+            repeated_headers,
             set_cookie_headers,
             redirect_chain: recorded_hops,
             body,

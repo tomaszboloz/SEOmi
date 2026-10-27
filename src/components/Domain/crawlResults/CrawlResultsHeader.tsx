@@ -2,8 +2,14 @@ import { Map } from "lucide-react";
 import { format } from "date-fns";
 import type { useCrawlResultsSession } from './useCrawlResultsSession';
 type Session = ReturnType<typeof useCrawlResultsSession>;
+const completionLabel = (value: string): string => {
+  const date = new Date(value);
+  return Number.isFinite(date.getTime()) ? format(date, "yyyy-MM-dd HH:mm") : "—";
+};
 export const CrawlResultsHeader = ({ session }: { session: Session }) => {
 const { currentRun, deleteCurrentRun, isCrawling, onDeleteRun, onSelectRun, openMapSection, result, runs, t } = session;
+// Warn when any rendered page lacks headers applicable to its final DOM.
+const responseHeadersObserved = result.pages.every((page) => page.robots_decision?.response_headers_available === true);
 return (
 <div className="flex flex-col gap-2 rounded-xl border border-slate-800 bg-slate-900/35 p-3 sm:flex-row sm:items-center sm:justify-between">
         <div className="min-w-0">
@@ -31,7 +37,7 @@ return (
           >
             {result.start_url}
           </p>
-          {result.crawl_mode === "browser-rendered" && (
+          {result.crawl_mode === "browser-rendered" && !responseHeadersObserved && (
             <p className="mt-1 text-[11px] leading-4 text-amber-200/80">
               {t("crawlDeepUi.renderedDomNote")}
             </p>
@@ -57,7 +63,7 @@ return (
               >
                 {runs.map((run) => (
                   <option key={run.id} value={run.id}>
-                    {format(new Date(run.completedAt), "yyyy-MM-dd HH:mm")} ·{" "}
+                    {completionLabel(run.completedAt)} ·{" "}
                     {t("crawl.ui.urlsCount", { count: run.result.pages_crawled })} · {run.startUrl}
                   </option>
                 ))}

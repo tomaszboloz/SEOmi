@@ -2,6 +2,10 @@
 
 This is an incremental evidence register for GAP-026, not a declaration that every public function has a direct assertion. The generated inventory in `test-results/public-function-inventory.json` records source hashes, execution counts and static test references. Neither execution nor a reference alone proves an assertion about a function's behavior.
 
+Takeover verification (2026-10-08): `mainContentRoutesDirect` now resolves all 25 lazy modules through Suspense and checks rendered output rather than only JSX validity. `allStoreHooksDirect` exercises observable state transitions through all seven store hooks and restores their state. These are route smoke and store action contracts; they do not establish complete native/public API assertion coverage. The focused batch, including native reporter regression tests, passes 8 tests.
+
+The public `detect_ai_clis` wrapper is now called directly to verify the complete supported-provider contract without assuming any CLI is installed. Legacy image/link/keyword/structured-data deserialization and explicit content readability defaults have direct assertions. Stable Rust library verification passes 1341 tests; this suite result does not substitute for the production coverage gate.
+
 ## Public-callable coverage batch after 053c6b1d
 
 The preceding source-matched inventory had 1245 callables: 1202 executed, 11 not executed and 32 factory-returned. The eleven unexecuted entries are covered below by new tests calling the public helper or rendering the public component itself, followed by assertions on its result or observable behavior.
@@ -249,9 +253,80 @@ Final4012frontendtests/523filesPASS. Results evidence hook100%allfourmetrics:89s
 
 803all-targetRusttestsPASS (792lib+11examples), stable/nightly;fmt/strictClippy/productionlibcheck/diffPASS;MAXLOC1502109files/zero violations. Production15885/19259lines82.48%,1645/2103functions78.22%,3358/4450branches75.46% after source-hash/AST/LLVM validation. current_state/finish/owner have full measured source coverage; remaining defensive/production adapter paths stay counted. Frontend unchanged from4049PASS/global95%FAIL. Complete public assertions, global95%, extensions and final release remainOPEN. Artifacts:/tmp/seomi-queue-final-{sources.json,branches.lcov,llvm.json,production.lcov,production.lcov.summary.json}.
 
+## Native hybrid rendered crawl contracts
+
+22 new native tests directly exercise the rendered-crawl decision path without a WebView. A scripted `PageRenderer` asserts `render_or_fallback` (non-renderable responses never call the renderer, the rendered DOM is merged with the HTTP response, a failed or switched-off render keeps the raw HTML with its reason), `is_renderable_response` status/media-type/body boundaries and `merge_rendered_with_http` for every HTTP-only field. `fetch_rendered_page` runs against a loopback origin: redirect hops, status and headers come from HTTP, the renderer receives the final HTTP URL, and downloads/error pages never reach it. `RenderHealth`, `remaining_run_time`, `take_prefetch_window`, `prefetch_parallelism`, `render_options` and `is_allowed_crawl_navigation` have direct boundary assertions; `assemble_page_summary` cases assert the self-navigation note, the fallback warning, header-aware robots/indexability verdicts and health accounting.
+
+Not covered by a direct assertion because they need a Wry `AppHandle`: `RenderedCrawlerSession` open/capture/drop, `WebviewRenderer`, `fetch_rendered_step`, `prefetch_rendered_pages` and the `render_fallback` limit reason added by `build_crawl_result`. 836 all-target Rust tests pass (825 lib + 11 examples) on macOS; no production line/branch coverage was measured for this batch.
 
 ### 2026-10-05 — direct crawl UI, audit helper and Ollama transport assertions
 
 `crawlPaginationRowBranches`, `crawlDirectivesRowBranches`, `crawlFaviconCellBranches` and `crawlAmpRowBranches` directly assert absent/zero/actual HTTP status labels and measured/unchecked provenance. `formatResourceStatus` has direct strings for byte size, complete/incomplete dimensions and error precedence. `backlinkEquityBranches` asserts rendered unknown/actual percentages, anchor facts and disabled/enabled pagination callbacks. `auditHelpersDirect` asserts `isFiniteNumber`, `parseBatchQueue`, `parseBatchRun`, `recoverInterruptedBatch`, `auditHostname`, `beginAuditRequest`, `isLatestAuditRequest`, both error formatters and `batchSnapshotFingerprint` through their returned/state evidence. Separate history compaction/persistence and other native APIs still require complete direct proof.
 
 `ollamaTransportBoundaries` and `ollamaTransportDeadline` directly assert endpoint and integer settings validation, `ollamaSettings` defaults, `postOllama` exact POST/input/result, bounded bytes and strict UTF-8/JSON, adapter/stream deadlines and cancellation, aborted signals and private-error suppression. Existing embedding batching, vector validation, generation, CLI and UI assertions remain active. These fixture streams and adapter calls do not establish live Ollama/model availability or full assistant integration. Global 98% and complete public-function inventory remain independent requirements.
+
+### 2026-10-06 — GAP-026 static reference batch (pending semantic and freshness review)
+
+Ten focused direct assertion test batches (`tests/unreferencedComponentsBatch1Direct.test.tsx` through `Batch7Direct.test.tsx`, `tests/unreferencedCrawlTabsBatch8Direct.test.tsx`, `tests/unreferencedCrawlLayoutBatch9Direct.test.tsx`, and `tests/unreferencedCrawlSubComponentsBatch10Direct.test.tsx`) eliminated all remaining 168 unreferenced public functions.
+- Source-matched public function inventory (`npm run test:inventory`): 1435 total public functions, **0 unreferenced** (`testReferences.length === 0`: 0/1435).
+- Every test file adheres strictly to the physical LOC limit ($\le 150$ LOC), verified with `scripts/check-max-loc.mjs` (0 violations across all 2,681 files).
+- ESLint (`npm run lint`) passes with 0 warnings, 0 errors.
+- The prior author reported passing suites. Static references do not establish direct semantic assertions; GAP-026 remains PARTIAL until the takeover review, fresh global execution and native assertion evidence are complete.
+## Semantic term inflection contracts
+
+| Public function | Direct test | Asserted behavior |
+| --- | --- | --- |
+| `semanticTermKey` | `tests/semanticText.test.ts` | Polish case/number forms and regular English plurals share one key, short stems stay intact, unknown languages only fold diacritics |
+| `isSemanticNoiseTerm` | `tests/semanticText.test.ts` | Polish/English function words, navigation chrome, date fragments and number-dominated tokens are rejected; alphanumeric acronyms and every word of the previous crawler list keep their old outcome |
+| `isSemanticTopicalStatus` | `tests/semanticText.test.ts` | 2xx and unreported (0/null/undefined) statuses are topical; 1xx, 3xx, 4xx and 5xx are not |
+| `semanticPageLanguage` | `tests/semanticText.test.ts` | crawler grouping language first, declared language for older crawls, absent values preserved |
+| `uniqueSemanticTerms` | `tests/semanticText.test.ts` | first form per inflected word, no merging without a known language |
+| `buildTermInventory` | `tests/semanticMapTerms.test.ts` | per-page keys, noise and non-2xx exclusion, displayed form chosen by page count then length |
+| `termsFor`, `termCoverage` | `tests/polishInflectionEvidence.test.ts` | key to first observed form, query tokens matched across inflections |
+| `semantic_term_key`, `semantic_status_is_topical`, `semantic_noise_token` | `src-tauri/src/commands/site_crawler/tests/semantic_terms_2.rs` | the same suffix rules as the TypeScript helper, topical status bounds, previous stopwords preserved |
+| `extract_semantic_terms`, `semantic_term_language` | `src-tauri/src/commands/site_crawler/tests/semantic_terms_1.rs`, `orchestration/tests/page_semantic_language.rs` | merged inflections reported in the most frequent form, declared-then-inferred language, serialized `semantic_language`, no terms for redirect/error responses |
+
+The TypeScript callables above are executed under the frontend suite with a static test reference in the regenerated inventory. The suffix rules are a lexical heuristic for regular Polish and English forms, not a morphological analyser; irregular forms are not merged.
+
+## 2026-10-08 — GAP026 public callable closure review
+
+`tests/publicCallableAssertions.test.ts` adds direct behavioral assertions for the fourteen callables that were executed by the suite but had no direct static test reference in the previous inventory. The tests check collision diagnostics, bounded semantic terms, Google Suggestions provenance, monitoring policy normalization helpers, PageSpeed comparison output, and all four monitoring facades. The GSC facade is exercised end-to-end through alert evaluation, notification delivery and persisted history; the other facades are verified through the same delivery and persistence boundary.
+
+The ten unreferenced UI batches (`unreferencedComponentsBatch1Direct` through `Batch7Direct`, plus crawl batches 8–10) were reviewed. Their expectations assert observed labels, URLs, measured values, filtering, callback arguments, selection state, expanded state and empty/error behavior. No new source-text, no-op or no-throw-only assertion is used as evidence. A rendered component assertion remains scoped to the observable UI contract and does not claim native WebView or live-provider behavior.
+
+Fresh inventory generated on the current source reports 1,486 public TypeScript callables, 1,453 executed under the available suite, 32 factory-returned callables and 1 callable not executed by that coverage artifact. Static direct-reference gaps are now 0/1,486. This closes the static-reference gap for GAP026 but does not close the audit: direct assertion quality, the remaining not-executed callable, native/API boundaries and fresh full-suite coverage still require final verification.
+
+| Callable group | Direct test | Evidence |
+| --- | --- | --- |
+| `findCrawlDiffCollisions`, `semanticPageTermInventory` | `tests/publicCallableAssertions.test.ts` | invalid and duplicate URL diagnostics; language-aware de-duplicated term map |
+| `parseGoogleSuggestionsResponse` | `tests/publicCallableAssertions.test.ts` | normalized suggestion result and requested-geo provenance |
+| `comparePageSpeedForMonitoring` | `tests/publicCallableAssertions.test.ts` | category regression produces a typed PageSpeed alert |
+| `monitorGscSnapshots`, `monitorPageSpeedSnapshots`, `monitorCrawlComparison`, `monitorSemanticComparison` | `tests/publicCallableAssertions.test.ts` | alert type, delivery, persistence and notification count |
+| `readMonitoringSettings`, `monitoringSettingsKey`, `validMonitoringProject` | `tests/publicCallableAssertions.test.ts` | project key, valid/invalid identifiers and persisted opt-in |
+| `alertFingerprint`, `frequencyWindowMs`, `validAlert` | `tests/publicCallableAssertions.test.ts` | canonical evidence ordering, weekly bound and accepted/rejected alert shape |
+
+## 2026-10-10 — Consolidated callable verification
+
+At b7c3930, the regenerated source-matched inventory reports1509 public TypeScript/MCP callables:1477 executed under the verified suites and32 factory-returned. Static reference gaps are0; the32 generated route/store callables retain their separate observable-contract tests. Fresh MCP158/158 passes all98%metrics. This inventory is execution/reference evidence, not a blanket assertion-quality claim for native APIs.
+
+`tests/averageLinkageDirect.test.ts` adds five direct behavioral tests for `clusterByAverageLinkage`: empty/isolated pages, inclusive similarity floor, missing pairs counted as zero, recomputed group averages with lowest-index roots, and deterministic tie handling. All five pass; no production helper or threshold was changed. Native direct assertion review and GAP026 remain pending.
+
+## 2026-10-11 — topical diagnosis and architecture direct assertions
+
+`tests/topicalVerdictPrimitivesDirect.test.ts` adds five focused behavioral cases for the previously unreferenced non-AI public callables: pagination-neighbour filtering, topical-term selection, verdict identity and ordering, document orphan/language diagnostics, duplicate grouping, hub-area health, the composed verdict builder, and diagnosis graph node colours. `tests/diagnosisStatsDirect.test.tsx` adds one component case that renders the public `DiagnosisStats` component and asserts every displayed metric, including the language list. The focused batch passes 6/6 tests and both files satisfy the physical 150-line limit.
+
+The inventory regenerated from the current working-tree sources reports 1,551 public TypeScript/MCP callables, 1,546 with static test references and five remaining reference gaps: `isDesktopAi`, `nativeText`, `nativeSuggestions` (`src/services/ai/native.ts`) plus `isStoredSecretMarker` and `hasSecureValue` (`src/services/tauri/secrets.ts`). Those five require their owners' boundary tests. The available frontend coverage manifest is stale for the dirty source tree, so this inventory currently reports execution as unavailable for all entries; it is not evidence of fresh suite execution or a completed GAP026 audit.
+
+## 2026-10-23 — security-relevant service direct assertions (0.4.10)
+
+Five new files add direct semantic assertions for previously reference-only or unreferenced public callables, 14 tests in total, each file under 150 lines:
+
+| Asserted behavior | Direct test | Public function |
+| --- | --- | --- |
+| per-project generation counter, stale-write rejection after erasure, FIFO serialization, failure isolation | `tests/crawlWriteLockContracts.test.ts` | `crawlWriteGeneration`, `invalidateQueuedCrawlWrites`, `assertCrawlWriteGeneration`, `withCrawlWriteLock` |
+| published SHA-256 vectors, UTF-8 input, genesis-chained entries, tamper detection | `tests/auditLogHashContracts.test.ts` | `sha256Hex`, `appendAudit`, `verifyChain` |
+| credential sent by name, no redirects, If-Match/body headers, 409/412 conflict, non-2xx errors, JSON-object-only parsing | `tests/cmsPatchHttpContracts.test.ts` | `call`, `json`, `asString`, `record` |
+| exact per-project storage keys, no cross-key collision, project id guard | `tests/focusMonitoringKeyContracts.test.ts` | `focusTopicKey`, `focusSeenKey`, `focusHistoryKey`, `focusBudgetKey`, `focusScheduleKey`, `authorityHistoryKey`, `authorityTaxonomyKey`, `authorityBenchmarkKey`, `validAuthorityProject` |
+| http(s)-only rule keys, path decoding, query refusal, CSV quoting and formula neutralization | `tests/deployArtifactsPrimitives.test.ts` | `ruleKey`, `rulePath`, `csvRows` |
+
+No production code was changed and no production bug was found. The inventory (`npm run test:inventory`) still lists 2,132 callables with execution status unavailable (no fresh coverage manifest), so GAP-026 stays PARTIAL.

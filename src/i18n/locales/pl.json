@@ -1,4 +1,79 @@
 {
+  "cmsPanelUi": {
+    "title": "Bezpieczna zmiana w CMS",
+    "description": "Zastąp treść pod jednym nagłówkiem. Przygotuj i zatwierdź dokładny diff, wykonaj próbę, a następnie zapisz. Zmiana danych anuluje zgodę.",
+    "kind": "Rodzaj CMS",
+    "baseUrl": "Adres bazowy CMS (HTTPS)",
+    "contentId": "Identyfikator treści",
+    "credential": "Nazwa zapisanych poświadczeń (opcjonalnie)",
+    "credentialHelp": "Użyj poświadczeń cms_auth_ z nagłówkiem Authorization w systemowym magazynie. Puste pole oznacza żądania anonimowe. Nie wpisuj tutaj sekretu.",
+    "collection": "Kolekcja Strapi",
+    "heading": "Szukany nagłówek",
+    "replacement": "Nowa treść sekcji (HTML lub Markdown)",
+    "ymyl": "Treść zdrowotna, finansowa lub prawna (YMYL)",
+    "factGate": "Wymagana weryfikacja faktów zakończyła się pomyślnie dla tego diffu",
+    "diff": "Proponowane zmiany",
+    "revision": "Wersja źródłowa: {{revision}}",
+    "noChanges": "Brak zmian. Zmień treść zastępczą przed zapisem.",
+    "prepare": "Przygotuj diff",
+    "approve": "Zatwierdzam dokładnie te zmiany",
+    "dryRun": "Wykonaj próbę bez zapisu",
+    "apply": "Zapisz zatwierdzone zmiany",
+    "busy": "Przetwarzanie zmiany CMS…",
+    "noProject": "Wybierz aktywny projekt, aby przygotować zmianę CMS.",
+    "desktopOnly": "Żądania CMS są dostępne tylko w aplikacji desktopowej.",
+    "failed": "Zmiana CMS nie powiodła się: {{reason}}"
+  },
+  "teamPanelUi": {
+    "title": "Tryb zespołowy i dziennik audytu",
+    "description": "Wybierz, kto działa i w jakiej roli. Każda zmiana trafia do lokalnego dziennika audytu zabezpieczonego łańcuchem skrótów.",
+    "actor": "Użytkownik",
+    "role": "Rola",
+    "roles": {
+      "admin": "Administrator",
+      "seo_strategist": "Strateg SEO",
+      "content_writer": "Autor treści",
+      "developer": "Programista"
+    },
+    "permissions": {
+      "run_crawl": "Uruchamianie crawla",
+      "execute_cms_patch": "Wykonanie patcha CMS",
+      "modify_site_focus_rules": "Zmiana reguł Site Focus",
+      "export_audit_pdf": "Eksport audytu PDF",
+      "manage_team_roles": "Zarządzanie rolami"
+    },
+    "permissionsTitle": "Uprawnienie",
+    "auditTitle": "Dziennik audytu",
+    "auditEmpty": "Brak wpisów audytu.",
+    "chainOk": "Łańcuch audytu zweryfikowany.",
+    "chainBroken": "Łańcuch audytu przerwany we wpisie {{entry}} ({{reason}}).",
+    "exportCsv": "Eksportuj CSV",
+    "columns": {
+      "time": "Czas",
+      "actor": "Użytkownik",
+      "action": "Akcja",
+      "result": "Wynik"
+    },
+    "results": {
+      "success": "Sukces",
+      "denied": "Odmowa",
+      "failure": "Błąd",
+      "dry_run": "Próba bez zmian"
+    },
+    "allowed": "Dozwolone",
+    "notAllowed": "Niedozwolone"
+  },
+  "dataErasureUi": {
+    "title": "Wymaż dane projektu (RODO)",
+    "description": "Trwale usuwa z lokalnego magazynu przebiegi crawla, embeddingi i historię tego projektu, niszcząc ich klucze szyfrujące. Tej operacji nie można cofnąć.",
+    "confirm": "Wpisz ID projektu, aby potwierdzić: {{id}}",
+    "button": "Wymaż dane projektu",
+    "run": "Wymaż trwale",
+    "cancel": "Anuluj",
+    "done": "Wymazano: {{records}} rekordów i {{runs}} przebiegów crawla.",
+    "failed": "Wymazywanie nie powiodło się: {{message}}",
+    "desktopOnly": "Dostępne tylko w aplikacji desktopowej."
+  },
   "schemaFindings": {
     "messageMissing": "Reguła danych strukturalnych {{code}} wykryła brak właściwości lub elementu struktury dla typu {{type}}.",
     "messageInvalid": "Reguła danych strukturalnych {{code}} wykryła nieprawidłową wartość lub kształt typu {{type}}.",
@@ -15,6 +90,31 @@
     "severityWarning": "Ostrzeżenie",
     "severityInfo": "Informacja",
     "sourceEvidence": "Dowód źródłowy"
+  },
+  "copilotPatcherUi": {
+    "title": "Kontekstowy patcher Copilota",
+    "description": "Tworzy propozycję Przed/Po z dowodów crawl tej strony. Sprawdź ją przed skopiowaniem; CMS nie jest zmieniany.",
+    "contextUnavailable": "Brakuje dowodów nagłówków strony, więc patcher czeka na nowy crawl.",
+    "generate": "Zaproponuj patch",
+    "generating": "Generowanie...",
+    "cancel": "Anuluj",
+    "before": "Przed",
+    "after": "Po",
+    "pending": "Oczekuje na sprawdzenie; nic nie zostało zmienione.",
+    "factGate": "Bramka faktów usunęła {{count}} zdań, bo strona nie dostarczyła pasującego źródła.",
+    "remote": "Wybrany dostawca AI otrzymał tekst tej strony.",
+    "local": "Wybrany runner AI działał na tym urządzeniu.",
+    "approve": "Akceptuj do skopiowania",
+    "reject": "Odrzuć",
+    "approved": "Zaakceptowano do skopiowania; CMS nie został zmieniony.",
+    "copy": "Kopiuj zaakceptowany tekst",
+    "rejected": "Propozycja odrzucona.",
+    "keyboard": "Klawiatura: Tab przechodzi między kontrolkami, Enter uruchamia aktywną kontrolkę.",
+    "no-provider": "Połącz dostawcę AI przed zamówieniem patcha.",
+    "empty-response": "AI nie zwróciło użytecznego patcha.",
+    "provider-error": "Żądanie AI nie powiodło się: {{message}}",
+    "ownership": "Projekt nie jest już aktywny; żądanie zatrzymano.",
+    "unavailable": "Akapit nie ma użytecznego tekstu źródłowego."
   },
   "app": {
     "name": "SEOmi",
@@ -169,7 +269,7 @@
       "urlTooLong": "Adres URL nie może przekraczać 2048 znaków.",
       "urlInvalid": "Podaj pełny adres URL zaczynający się od http:// lub https://.",
       "urlPublicOnly": "Harmonogram obsługuje wyłącznie publiczny adres HTTP(S) bez danych logowania w URL.",
-      "crawlLimit": "Limit crawla w harmonogramie musi mieścić się w zakresie 1–500 URL.",
+      "crawlLimit": "Limit crawla w harmonogramie musi mieścić się w zakresie 1–{{max}} URL.",
       "maxReached": "Projekt może mieć maksymalnie {{count}} harmonogramów.",
       "duplicate": "Ten adres URL ma już harmonogram w tym projekcie.",
       "auditFailed": "Audyt zakończył się błędem."
@@ -589,7 +689,8 @@
       "responseHidden": "Treść odpowiedzi dostawcy została ukryta.",
       "invalidResponse": "Dostawca AI zwrócił niepoprawną odpowiedź.",
       "responseTooLarge": "Odpowiedź dostawcy AI przekracza limit 1 MiB.",
-      "refused": "{{provider}} odmówił wykonania tego żądania. Przeformułuj je lub wybierz inny model."
+      "refused": "{{provider}} odmówił wykonania tego żądania. Przeformułuj je lub wybierz inny model.",
+      "modelRejected": "{{provider}} nie przyjął zapytania dla modelu {{model}} (HTTP {{status}}). Wybierz inny model."
     },
     "pagespeed": {
       "projectRequired": "Wybierz projekt przed uruchomieniem pomiaru."
@@ -1134,6 +1235,7 @@
     "tabEntity": "Graf encji",
     "tabLinks": "Linki wewnętrzne",
     "tabSchema": "Schemat JSON-LD",
+    "tabSignals": "Sygnały",
     "saveError": "Nie udało się zapisać topical mapy w pamięci lokalnej. Pozostaje widoczna do zamknięcia widoku; sprawdź dostępność pamięci aplikacji.",
     "preferencesSaveError": "Nie udało się zapamiętać widoku topical mapy i filtrów w tym projekcie.",
     "entityTitle": "Encja projektu",
@@ -1410,6 +1512,45 @@
     "searchVolume": "Wolumen wyszukiwania",
     "addedAt": "Dodano"
   },
+  "googleSuggestionsUi": {
+    "title": "Sugestie Google",
+    "description": "Odkrywaj powiązane zapytania z bezpłatnego endpointu Google Suggest.",
+    "query": "Zapytanie",
+    "byteCount": "{{count}}/500 bajtów UTF-8",
+    "fetch": "Pobierz sugestie",
+    "selectProject": "Wybierz projekt przed pobraniem sugestii.",
+    "blocked": "Google Suggest jest tymczasowo niedostępny.",
+    "error": "Nie udało się wczytać sugestii Google.",
+    "provenance": "Źródło: Google Suggest (nieoficjalne, best effort).",
+    "context": "Żądany kontekst: {{geo}} / {{language}}. Nie dowodzi to lokalizacji wyników.",
+    "retrievedAt": "Pobrano: {{timestamp}}.",
+    "empty": "Brak zwróconych sugestii.",
+    "saved": "Zapisano",
+    "save": "Zapisz",
+    "importTitle": "Importuj sugestie",
+    "importDescription": "Zaimportuj lokalną listę JSON lub CSV. Metryki i intencja pozostają nieznane.",
+    "importFormat": "Format importu",
+    "importSourceUrl": "URL źródłowy (opcjonalny)",
+    "importPayload": "Dane sugestii",
+    "import": "Importuj",
+    "importedAt": "Zaimportowano: {{timestamp}} · {{count}} sugestii.",
+    "json": "JSON",
+    "csv": "CSV",
+    "sourcePlaceholder": "https://...",
+    "evidenceTitle": "Dowody z crawla",
+    "evidenceNoCrawl": "Brak dowodów crawla dla projektu.",
+    "evidencePartial": "Dowody pochodzą z częściowego crawla; niektórych stron może brakować.",
+    "evidenceObserved": "Zaobserwowano dowody crawla dla tego projektu.",
+    "evidenceNoMatch": "Nie zaobserwowano pasujących dowodów w tytułach ani terminach semantycznych.",
+    "evidenceRun": "Crawl {{run}} · zaobserwowano {{count}} stron.",
+    "evidenceLanguage": "Język dowodów: {{language}}.",
+    "evidenceInvalidTimestamp": "Pominięto crawl z nieprawidłowym czasem zakończenia.",
+    "evidenceTruncated": "Dowody ograniczono: pominięto {{pages}} stron, {{suggestions}} sugestii i {{matches}} dopasowań stron.",
+    "intentUncertain": "{{intent}} (niepewne)",
+    "intentSignals": "Sygnały leksykalne: {{signals}}",
+    "evidenceTitleMatch": "tytuł",
+    "evidenceTermsMatch": "terminy semantyczne"
+  },
   "rankTrackingUi": {
     "badge": "Workflow słów kluczowych",
     "provider": "Monitor pozycji SERP",
@@ -1480,7 +1621,8 @@
       "informational": "Informacyjna",
       "commercial": "Komercyjna",
       "transactional": "Transakcyjna",
-      "navigational": "Nawigacyjna"
+      "navigational": "Nawigacyjna",
+      "unknown": "Nieustalona"
     },
     "saved": "Zapisano",
     "addSaved": "Dodaj do zapisanych fraz",
@@ -1504,6 +1646,37 @@
     "save": "Zapisz",
     "researchTag": "Research"
   },
+  "trendingNowUi": {
+    "badge": "Trending Now",
+    "title": "Trendy w kraju",
+    "description": "Użyj darmowego feedu RSS Google Trends albo zaimportuj rzeczywisty eksport CSV/JSON. Etykiety ruchu pozostają tekstem źródłowym; nie wyliczamy wolumenu.",
+    "freeSource": "Darmowy RSS / import",
+    "countryLabel": "Kraj",
+    "refresh": "Odśwież feed",
+    "importFile": "Importuj CSV lub JSON",
+    "importLimit": "Pliki do {{size}}",
+    "clear": "Wyczyść zapisany snapshot",
+    "empty": "Brak snapshotu dla tego projektu.",
+    "selectProjectError": "Wybierz projekt, aby użyć Trending Now.",
+    "storageUnavailable": "Snapshot jest widoczny w pamięci, ale zapis projektu jest niedostępny.",
+    "payloadTooLarge": "Wybrany plik przekracza limit 1 MiB.",
+    "unsupportedImport": "Wybierz plik .csv lub .json.",
+    "fetchError": "Nie udało się wczytać darmowego feedu Trends.",
+    "importError": "Nie udało się odczytać importu.",
+    "countryValue": "Kraj: {{geo}}",
+    "sourceValue": "Źródło: {{source}}",
+    "capturedValue": "Pobrano: {{time}}",
+    "entryCount": "Wpisy: {{count}}",
+    "keyword": "Trend",
+    "trafficLabel": "Źródłowa etykieta ruchu",
+    "startedAt": "Czas źródłowy",
+    "notProvided": "Nie podano",
+    "source": {
+      "rss": "Google Trends RSS",
+      "csv": "Import CSV",
+      "json": "Import JSON"
+    }
+  },
   "mapUi": {
     "edgeSimilarityAria": "Podobieństwo treści {{percent}}%, wspólne terminy: {{terms}}",
     "nodeAria": "{{label}}, klaster {{cluster}}",
@@ -1523,7 +1696,9 @@
       "directory": "Drzewo URL",
       "directoryDescription": "Hierarchia adresów w runie",
       "plan": "Topical plan",
-      "planDescription": "Tematy i audyt semantyczny"
+      "planDescription": "Tematy i audyt semantyczny",
+      "diagnosis": "Diagnoza",
+      "diagnosisDescription": "Co jest dobrze, co słabo i co poprawić"
     },
     "graph": {
       "fullTitle": "Mapa pełnego grafu linków",
@@ -1634,7 +1809,86 @@
     "bottomTablistAria": "Widoki mapy w dolnym pasku",
     "goToView": "Przejdź do widoku {{view}}",
     "backToMapStart": "Wróć na początek mapy",
-    "start": "Początek"
+    "start": "Początek",
+    "graphEvidence": {
+      "sectionAria": "Struktura grafu semantycznego i dowody z Search Console",
+      "title": "Struktura grafu i dowody GSC",
+      "description": "PageRank opisuje strukturę linków zebranych w crawlu. Metryki Search Console są oddzielne i łączą się wyłącznie przy zgodności aktywnego projektu, property, okresu i filtrów.",
+      "structureAria": "Strukturalny PageRank",
+      "structureTitle": "Strukturalny PageRank",
+      "structureMeta": "{{iterations}} iteracji · {{status}}",
+      "converged": "zbieżny",
+      "bounded": "osiągnięto limit iteracji",
+      "structureNote": "To sygnał grafu, a nie ranking Google ani metryka ruchu.",
+      "structurePartial": "Dane wejściowe grafu zostały ograniczone; strukturalny PageRank obejmuje wyłącznie zachowane strony i linki.",
+      "noNodes": "Brak zebranych stron do obliczenia grafu strukturalnego.",
+      "trafficAria": "Dowody ruchu z Google Search Console",
+      "trafficTitle": "Dowody ruchu z Search Console",
+      "status": {
+        "complete": "Dopasowane wiersze GSC",
+        "partial": "Częściowe wiersze GSC; brakujące wartości pozostają nieznane",
+        "unavailable": "Dowody GSC niedostępne",
+        "invalid": "Zakres dowodów GSC nie jest zgodny"
+      },
+      "project": "Projekt",
+      "property": "Property",
+      "period": "Okres",
+      "filters": "Filtry",
+      "allFilters": "wszystkie wybrane filtry",
+      "noSelection": "Wybierz rzeczywiste property Search Console i załaduj dane dla tego projektu, aby dołączyć dowody ruchu.",
+      "counts": "Zaobserwowane: {{observed}} · niepewne/obcięte: {{uncertain}} · nieznane: {{missing}}",
+      "trafficNote": "— oznacza brak zaobserwowanej wartości. Nieznane i obcięte wiersze nigdy nie są traktowane jako zero.",
+      "partialNotice": "Dowody ruchu są częściowe, ponieważ część wierszy źródłowych została obcięta lub odrzucona; nieznane wartości pozostają nieznane.",
+      "invalidNotice": "Dowody ruchu odrzucono, ponieważ zakres GSC lub wiersze źródłowe nie są zgodne.",
+      "rowQuality": "Wiersze źródłowe: nieprawidłowe {{invalid}} · poza wybranym property {{ignored}}",
+      "observation": {
+        "gsc": "zaobserwowane",
+        "missing": "nieznane",
+        "truncated": "obcięte",
+        "unavailable": "niedostępne",
+        "invalid": "nieprawidłowe",
+        "out-of-scope": "poza property",
+        "ambiguous": "niejednoznaczne"
+      }
+    },
+    "diagnosisFilter": "Zakres z diagnozy: {{label}}",
+    "clearDiagnosisFilter": "Pokaż cały graf",
+    "allTopics": "Wszystkie tematy ({{count}})",
+    "cy": {
+      "layoutLabel": "Układ",
+      "layoutHierarchy": "Hierarchia",
+      "layoutForce": "Siłowy",
+      "sectionsLabel": "Sekcje URL",
+      "expandAll": "Rozwiń wszystko",
+      "collapseAll": "Zwiń wszystko",
+      "highlightLabel": "Podświetl URL",
+      "highlightPlaceholder": "Fragment adresu lub tytułu",
+      "matches": "Trafienia: {{count}}",
+      "depthLabel": "Głębokość",
+      "depthAll": "Wszystkie głębokości",
+      "problemsOnly": "Tylko problemy",
+      "statusLabel": "Status HTTP",
+      "colorTrs": "Kolor: trafność tematyczna (TRS)",
+      "colorStatus": "Kolor: status HTTP (brak TRS)",
+      "sizeHint": "rozmiar = linki przychodzące",
+      "mapAria": "Interaktywna mapa architektury serwisu pogrupowana według sekcji URL",
+      "mapHelp": "Kliknij sekcję, aby ją rozwinąć lub zwinąć, kliknij stronę, aby zobaczyć szczegóły, przeciągaj, aby przesuwać, przewijaj lub szczypnij, aby powiększać. Duże serwisy startują ze zwiniętymi sekcjami. Tabela z tymi samymi stronami jest pod mapą.",
+      "tooltip": "HTTP {{status}} · głębokość {{depth}} · linki przychodzące: {{inlinks}}",
+      "detailsHint": "Wybierz stronę na mapie lub w tabeli, aby zobaczyć szczegóły.",
+      "detailsTitle": "Szczegóły strony",
+      "colUrl": "URL",
+      "colStatus": "Status HTTP",
+      "colDepth": "Głębokość",
+      "colInlinks": "Linki przychodzące",
+      "colTrs": "TRS",
+      "colSection": "Sekcja",
+      "colProblem": "Problem",
+      "noTrs": "brak",
+      "yes": "tak",
+      "no": "nie",
+      "tableSummary": "Tabela stron ({{count}})",
+      "tableCaption": "Strony widoczne na mapie architektury ze statusem, głębokością, linkami przychodzącymi, TRS i sekcją"
+    }
   },
   "crawlDiff": {
     "fields": {
@@ -1915,6 +2169,8 @@
     "exportJson": "JSON",
     "exportCsv": "CSV",
     "exportPdf": "PDF",
+    "exportHtml": "HTML",
+    "exportHelp": "Eksportuj zapisaną migawkę audytu jako JSON, CSV, PDF lub oczyszczony HTML.",
     "healthScore": "Ocena Zdrowia SEO",
     "criticalIssues": "Błędy Krytyczne",
     "warnings": "Ostrzeżenia",
@@ -2113,7 +2369,12 @@
       "resources": "Zasoby",
       "frames": "Ramki",
       "custom-search": "Własne wyszukiwanie",
-      "semantic": "Analiza semantyczna"
+      "semantic": "Analiza semantyczna",
+      "focus": "Site Focus",
+      "authority": "Autorytet tematyczny",
+      "aio": "Gotowość na AI",
+      "trust": "Zaufanie do encji",
+      "offPage": "Analiza off-page"
     },
     "environmentStaging": "test/staging",
     "environmentProduction": "produkcja",
@@ -2143,7 +2404,7 @@
     "renderDelayAria": "Opóźnienie renderowania w milisekundach",
     "lazyScroll": "Przewinięcia dla lazy-load",
     "lazyScrollAria": "Liczba przewinięć lazy-load",
-    "browserModeNotice": "Tryb przeglądarki analizuje DOM po wykonaniu JavaScriptu. Własny User-Agent jest używany także w zapytaniu robots.txt. Wybrany profil może wstrzyknąć zwykłe cookies sesji do odizolowanego WebView; HttpOnly i pełny import magazynu cookies nie są możliwe. Dodatkowe nagłówki i proxy wymagają trybu HTTP. Nagłówki X-Robots-Tag i Cache-Control nie są dostępne z renderowanego DOM.",
+    "browserModeNotice": "Tryb przeglądarki analizuje DOM po wykonaniu JavaScriptu. Własny User-Agent jest używany także w zapytaniu robots.txt. Wybrany profil może wstrzyknąć zwykłe cookies sesji do odizolowanego WebView; HttpOnly i pełny import magazynu cookies nie są możliwe. Dodatkowe nagłówki i proxy wymagają trybu HTTP. Status HTTP, nagłówki odpowiedzi, takie jak X-Robots-Tag i Cache-Control, oraz przekierowania pochodzą z osobnego żądania HTTP do tego samego URL. Strona, której nie da się wyrenderować, jest analizowana z tego surowego HTML i oznaczana ostrzeżeniem.",
     "renderProfileWarning": "Wybrany profil zawiera własne nagłówki lub proxy. Tryb renderowany obsługuje z niego wyłącznie cookies — wybierz HTTP albo profil cookie-only.",
     "resourcesTitle": "Zasoby pobrane w crawl’u",
     "resourcesDescription": "Wyłącznie zasoby odkryte w bieżącym scope. Status i rozmiar pochodzą z rzeczywistych odpowiedzi HTTP.",
@@ -2158,12 +2419,13 @@
     "comparisonSelectPlaceholder": "Wybierz run bazowy",
     "comparisonPathLabel": "Dopasuj po ścieżce (test ↔ produkcja)",
     "comparisonPathNotice": "Hosty są ignorowane, a parametry śledzące pomijane; ścieżka i pozostałe query pozostają częścią klucza. To porównanie snapshotów, nie dowód równoważności środowisk.",
+    "comparisonGuard": "Walidacja porównania: {{status}} · powody: {{reasons}}",
     "comparisonAdded": "Nowe URL",
-    "comparisonRemoved": "Usunięte URL",
+    "comparisonRemoved": "URL-e niezaobserwowane",
     "comparisonChanged": "Zmienione URL",
     "comparisonNoDifferences": "Brak różnic w porównywanych polach.",
     "comparisonAddedLabel": "Dodany",
-    "comparisonRemovedLabel": "Usunięty",
+    "comparisonRemovedLabel": "Niezaobserwowany",
     "comparisonChangedLabel": "Zmieniony",
     "healthScore": "Ocena kondycji",
     "healthIndex": "Indeks kondycji całej witryny",
@@ -2268,6 +2530,7 @@
     "profileNamePlaceholder": "np. Konto redakcyjne",
     "sessionCookies": "Cookies sesji",
     "proxyOptional": "(opcjonalnie; dane w URL pozostają w magazynie systemowym)",
+    "proxyListHint": "Kilka proxy: oddziel przecinkami lub spacjami (do 64). Żądania rotują między nimi.",
     "customHeaders": "Własne nagłówki",
     "oneHeaderPerLine": "(jeden w wierszu: Nazwa: wartość)",
     "saving": "Zapisywanie…",
@@ -2318,8 +2581,10 @@
     "remove": "Usuń",
     "reportSectionsLegend": "Sekcje JSON/PDF",
     "reportTemplateDescription": "Podsumowanie jest zawsze dołączone. Szablon wpływa na JSON i PDF; eksporty CSV pozostają pełnymi tabelami dowodów.",
+    "reportTemplateHelp": "Szablon określa, które zapisane sekcje dowodów są dołączane do eksportów JSON, PDF i HTML. Nie jest wykonywane nowe żądanie sieciowe.",
     "exportTitle": "Eksportuj ten run crawla",
     "exportDescription": "Każdy plik zawiera rzeczywisty czas, zakres i konfigurację runu. Pola CSV są neutralizowane przed otwarciem w arkuszu.",
+    "exportHtml": "Raport HTML",
     "urlCsv": "CSV URL",
     "linksCsv": "CSV linków",
     "imagesCsv": "CSV obrazów",
@@ -2374,7 +2639,19 @@
     "notCheckedInRun": "nie sprawdzono w tym runie",
     "noAnchor": "brak anchor textu",
     "redirectChain": "Łańcuch przekierowań",
-    "identifiedIssues": "Wykryte problemy techniczne:"
+    "identifiedIssues": "Wykryte problemy techniczne:",
+    "comparisonReasons": {
+      "same-run": "ten sam run",
+      "project-unverified": "własność projektu niezweryfikowana",
+      "different-project": "różne projekty",
+      "different-scope": "różny zakres crawl",
+      "invalid-completion-time": "nieprawidłowy czas zakończenia",
+      "baseline-incomplete": "bazowy run niekompletny",
+      "current-incomplete": "bieżący run niekompletny",
+      "path-key-collision": "zduplikowany klucz ścieżki",
+      "url-key-collision": "zduplikowany klucz URL"
+    },
+    "pageLimitUnlimited": "Bez limitu"
   },
   "mcp": {
     "badge": "Workflowy agentów AI",
@@ -2754,6 +3031,8 @@
     "sentenceCount": "{{count}} zdań",
     "exportJson": "JSON",
     "exportPdf": "Raport PDF",
+    "exportHtml": "Raport HTML",
+    "exportHelp": "HTML ułatwia odczyt zapisanych metadanych crawla, dowodów i odnotowanych ograniczeń w przeglądarce.",
     "exportUrlsCsv": "URL CSV",
     "exportLinksCsv": "Linki CSV",
     "exportImagesCsv": "Obrazy CSV",
@@ -2911,7 +3190,11 @@
       "structured": "Dane strukturalne",
       "validation": "Walidacja HTML",
       "performance": "Wydajność",
-      "exports": "Eksporty"
+      "exports": "Eksporty",
+      "focus": "Site Focus",
+      "authority": "Autorytet tematyczny",
+      "aio": "Gotowość na AI",
+      "trust": "Zaufanie do encji"
     },
     "groups": {
       "core": "Przegląd",
@@ -3310,6 +3593,31 @@
     "applyDesc": "Zastosuj Opis",
     "copyJsonLd": "Kopiuj JSON-LD"
   },
+  "ollamaAssistantUi": {
+    "title": "Lokalny Ollama",
+    "description": "Generuj sugestie metadanych na podstawie modeli Ollama wykrytych na tym urządzeniu.",
+    "endpoint": "Adres loopback",
+    "status": {
+      "idle": "Nie sprawdzono",
+      "loading": "Sprawdzanie Ollama…",
+      "ready": "Połączono · {{version}}",
+      "error": "Niedostępny"
+    },
+    "refresh": "Odśwież",
+    "model": "Wykryty model",
+    "chooseModel": "Wybierz wykryty model",
+    "noModels": "Ollama nie zgłosił żadnych modeli",
+    "maxOutputTokens": "Maksymalna liczba tokenów wyjściowych",
+    "instruction": "Instrukcja lokalna (opcjonalnie)",
+    "instructionPlaceholder": "Dodaj krótką, ukierunkowaną instrukcję…",
+    "generate": "Generuj przez Ollama",
+    "errors": {
+      "projectRequired": "Wybierz projekt przed użyciem lokalnego Ollama.",
+      "auditRequired": "Uruchom audyt strony przed wygenerowaniem lokalnych sugestii.",
+      "modelRequired": "Wybierz model zgłoszony przez Ollama.",
+      "promptTooLarge": "Prompt audytu jest zbyt duży dla ograniczonego żądania lokalnego."
+    }
+  },
   "auth": {
     "loginTitle": "Konto SEOmi Cloud",
     "subscriptionTitle": "Plan Subskrypcji AI",
@@ -3339,7 +3647,12 @@
     "refreshModels": "Odśwież listę modeli",
     "modelsFromProvider": "{{count}} modeli z API dostawcy",
     "modelsDefault": "Modele domyślne — przetestuj klucz API, aby wczytać swoje modele",
-    "modelsUnavailable": "Nie udało się pobrać modeli od dostawcy; pokazano ostatnią znaną listę."
+    "modelsUnavailable": "Nie udało się pobrać modeli od dostawcy; pokazano ostatnią znaną listę.",
+    "apiKeyStoredPlaceholder": "•••••••• klucz zapisany; wklej nowy, aby go zastąpić",
+    "saveApiKey": "Zapisz klucz",
+    "removeApiKey": "Usuń klucz",
+    "apiKeyRemoved": "Klucz usunięty.",
+    "apiKeySaveFailed": "Nie udało się zapisać klucza."
   },
   "schedules": {
     "saveError": "Nie udało się zapisać harmonogramu.",
@@ -3410,6 +3723,7 @@
     "clientIdPlaceholder": "123456789.apps.googleusercontent.com",
     "clientSecretLabel": "Sekret klienta Google OAuth",
     "clientSecretPlaceholder": "GOCSPX… (zapisany w systemowym magazynie poświadczeń)",
+    "clientSecretHelp": "Klient OAuth typu Desktop wymaga sekretu z tego samego identyfikatora klienta. Sekret zapisany wcześniej dla tego projektu zostanie użyty ponownie.",
     "connecting": "Łączenie…",
     "authorize": "Autoryzuj przez Google",
     "startDate": "Początek okresu",
@@ -3424,6 +3738,7 @@
     "property": "Właściwość Search Console",
     "selectedPropertyAria": "Wybrana właściwość Search Console",
     "noProperties": "Autoryzacja Google się powiodła, ale konto nie zwróciło dostępnych właściwości Search Console.",
+    "noMatchingProperty": "Żadna usługa nie pasuje do witryny projektu — wybierz ręcznie",
     "totalClicks": "Wszystkie kliknięcia",
     "totalImpressions": "Wszystkie wyświetlenia",
     "searchAppearances": "Wyświetlenia w wynikach wyszukiwania",
@@ -3480,7 +3795,13 @@
       "currentQueries": "Frazy widoczne tylko w bieżącym okresie: {{count}}",
       "baselinePages": "Adresy URL widoczne tylko w okresie bazowym: {{count}}",
       "currentPages": "Adresy URL widoczne tylko w bieżącym okresie: {{count}}"
-    }
+    },
+    "sortBy": "Sortuj według: {{column}}",
+    "showingRows": "Wiersze {{from}}–{{to}} z {{total}}",
+    "rowsPerPage": "Wierszy na stronie",
+    "pagePrevious": "Poprzednia",
+    "pageNext": "Następna",
+    "pageOf": "Strona {{page}} z {{total}}"
   },
   "settings": {
     "close": "Zamknij ustawienia",
@@ -3836,7 +4157,7 @@
       "backup": "Backup projektu",
       "backupDescription": "Import zawsze tworzy osobny projekt i zapisuje dane pod nowym identyfikatorem. Nie nadpisuje istniejącego projektu ani nie kopiuje poświadczeń.",
       "installedVersion": "Bieżąca zainstalowana wersja",
-      "version": "v0.0.3 (aktualne wydanie)",
+      "version": "v{{version}} (aktualne wydanie)",
       "checkUpdates": "Sprawdź aktualizacje",
       "chooseProjectBackup": "Przed utworzeniem backupu wybierz projekt.",
       "preparingBackup": "Przygotowywanie backupu projektu…",
@@ -3856,7 +4177,7 @@
       "backupTitle": "Backup projektu",
       "backupDescriptionLong": "Eksportuje metadane, ustawienia i dane workspace aktywnego projektu wraz z historią crawla. Sekrety DataForSEO, Google i klientów AI pozostają w systemowym pęku kluczy i nigdy nie trafiają do pliku.",
       "backupSafety": "Import zawsze tworzy osobny projekt i zapisuje dane pod nowym identyfikatorem. Nie nadpisuje istniejącego projektu ani nie kopiuje poświadczeń.",
-      "releaseVersion": "v0.0.3 (aktualne wydanie)",
+      "releaseVersion": "v{{version}} (aktualne wydanie)",
       "installUpdate": "Pobierz i zainstaluj",
       "updateAvailable": "Wersja {{version}} jest gotowa do instalacji.",
       "updateInstalled": "Wersja {{version}} została zainstalowana.",
@@ -3990,6 +4311,8 @@
     "multipleTitle": "Znaleziono wiele tagów <title> ({{count}})",
     "emptyDescription": "Meta description jest pusta",
     "multipleDescription": "Znaleziono wiele tagów meta description ({{count}})",
+    "renderFallback": "Renderowanie w przeglądarce nie powiodło się; przeanalizowano surową odpowiedź HTML: {{reason}}",
+    "renderedSelfNavigation": "Strona sama przeszła w przeglądarce pod inny URL; status HTTP i nagłówki odpowiedzi dotyczą żądanego URL",
     "technicalDetail": "Szczegóły techniczne: {{detail}}"
   },
   "auditChecks": {
@@ -4323,6 +4646,37 @@
     }
   },
   "exportUi": {
+    "html": {
+      "auditTitle": "Raport audytu SEOmi",
+      "crawlTitle": "Raport crawla SEOmi",
+      "summary": "Podsumowanie",
+      "inputUrl": "Adres wejściowy",
+      "httpStatus": "Status HTTP",
+      "responseTimeMs": "Czas odpowiedzi (ms)",
+      "healthScore": "Wynik zdrowia",
+      "exportFormat": "Format eksportu",
+      "runId": "ID uruchomienia",
+      "scope": "Zakres",
+      "environment": "Środowisko",
+      "completedAt": "Ukończono",
+      "templateId": "ID szablonu",
+      "templateSections": "Sekcje szablonu",
+      "pagesCrawled": "Przeskanowane strony",
+      "criticalIssues": "Problemy krytyczne",
+      "warnings": "Ostrzeżenia",
+      "durationMs": "Czas trwania (ms)",
+      "evidence": "Zapisane dowody",
+      "auditEvidence": "Dowody audytu",
+      "issues": "Problemy",
+      "configuration": "Konfiguracja",
+      "limitations": "Odnotowane ograniczenia",
+      "sourceLocal": "Źródło: zapisana lokalna migawka; nie wykonano nowego żądania sieciowego.",
+      "exportedAt": "Wyeksportowano",
+      "reportTemplate": "Szablon raportu",
+      "fullSnapshot": "Pełna zapisana migawka",
+      "unknown": "Nieznane / niepodane",
+      "noLimitations": "W tej migawce nie odnotowano ograniczeń."
+    },
     "invalidPdf": "Generator zwrócił nieprawidłowe dane PDF. Spróbuj ponownie.",
     "labels": {
       "field": "Field",
@@ -4760,5 +5114,3011 @@
     "saveLimit": "Zapisz limit",
     "noLimitOption": "Bez limitu — do wysokości salda konta",
     "balanceExhausted": "Saldo konta DataForSEO wyczerpane (zostało ≈ {{balance}} USD, następne zapytanie wymaga około {{expected}} USD). Doładuj konto, potem kliknij „Sprawdź saldo”."
+  },
+  "serpImportUi": {
+    "title": "Darmowe dane SERP",
+    "description": "Zaimportuj zaobserwowane wyniki organiczne lub pobierz darmowe, częściowe dane Bing RSS. Bez wywoływania płatnego API.",
+    "fetchTitle": "Pobierz bezpłatne dane Bing RSS",
+    "fetchHelp": "Bing RSS jest źródłem częściowym i nigdy nie jest traktowany jako kompletny Google SERP.",
+    "query": "Fraza",
+    "country": "Kraj",
+    "language": "Język",
+    "fetch": "Pobierz Bing RSS",
+    "fetching": "Pobieranie…",
+    "feedBlocked": "Bing RSS zostało zablokowane",
+    "feedError": "Pobranie Bing RSS nie powiodło się",
+    "formatHelp": "CSV: keyword,rank,url. JSON: records i metadata. Pełny scoring wymaga jawnych countryCode, locationCode, languageCode oraz dostępności complete.",
+    "format": "Format",
+    "payload": "Zaobserwowane dane SERP",
+    "import": "Importuj SERP",
+    "clear": "Usuń import",
+    "summary": "Migawki dla {{count}} fraz; odrzucone rekordy: {{rejected}}",
+    "source": "Źródło: {{provider}} · {{status}}",
+    "context": "Rynek: {{country}} · język: {{language}}",
+    "times": "Obserwacja: {{captured}} · import: {{imported}}",
+    "partialNotice": "Bing RSS jest częściowym dowodem; grupowanie używa wyłącznie semantycznej oceny, dopóki nie podasz kompletnych i zgodnych danych SERP.",
+    "unknown": "Nieznane",
+    "pairs": "Pary spełniające próg: {{count}}",
+    "pairHelp": "Grupy powstają z połączonych par spełniających próg. Brak lub niezgodność SERP pozostawia wyłącznie ocenę semantyczną. Wyświetlamy do 100 par.",
+    "scores": "Semantyka: {{semantic}} · SERP: {{serp}} · ocena: {{score}}",
+    "weights": "Użyte wagi: semantyka {{semantic}}, SERP {{serp}}",
+    "pairSources": "Źródła: {{a}} / {{b}}",
+    "visiblePairs": "Wyświetlamy pierwsze {{count}} par.",
+    "retrieved": "Pobrano: {{retrieved}}"
+  },
+  "targetPhraseAuditUi": {
+    "title": "Audyt frazy docelowej",
+    "description": "Literalne dowody z bieżącego audytu strony oraz zaimportowana migawka TOP10. Sprawdzanie URL-i rozpoczyna się dopiero po kliknięciu przycisku.",
+    "phraseLabel": "Fraza docelowa",
+    "phrasePlaceholder": "np. audyt SEO",
+    "evidenceTitle": "Dowody frazy w bieżącym audycie",
+    "evidenceDescription": "Liczby i fragmenty pochodzą z zapisanego tytułu, H1, treści i tekstów kotwic.",
+    "completeness": {
+      "complete": "Kompletny",
+      "partial": "Częściowy"
+    },
+    "enterPhrase": "Wpisz frazę docelową, aby sprawdzić literalne dowody.",
+    "fields": {
+      "title": "Tytuł",
+      "h1": "H1",
+      "body": "Treść",
+      "anchors": "Kotwice"
+    },
+    "occurrences": "{{count}} wystąpień",
+    "noLiteralEvidence": "W tym polu nie znaleziono literalnego wystąpienia.",
+    "intent": "Intencja",
+    "intentUnavailable": "Niedostępna (brak dokładnej wartości dostawcy)",
+    "intents": {
+      "informational": "Informacyjna",
+      "commercial": "Komercyjna",
+      "transactional": "Transakcyjna",
+      "navigational": "Nawigacyjna"
+    },
+    "auditUrl": "URL audytu",
+    "partialReason": "Dowód treści jest nieobecny lub obcięty; wynik jest częściowy.",
+    "topTenTitle": "Luka treściowa TOP10",
+    "topTenDescription": "Źródłem jest pasująca zaimportowana migawka SERP. Każdy URL jest sprawdzany lokalnie dopiero po kliknięciu przycisku.",
+    "auditRunning": "Sprawdzanie TOP10…",
+    "auditTopTen": "Sprawdź TOP10 lokalnie",
+    "sourceProvider": "Dostawca",
+    "sourceAvailability": "Dostępność",
+    "sourceContext": "Rynek / lokalizacja / język",
+    "sourceCaptured": "Przechwycono",
+    "sourceRetrieved": "Pobrano",
+    "sourceReason": "Powód",
+    "unknown": "Nieznane",
+    "sourceStatus": {
+      "complete": "Kompletna",
+      "partial": "Częściowa",
+      "blocked": "Zablokowana",
+      "missing": "Brak"
+    },
+    "status": {
+      "available": "Dostępne",
+      "unavailable": "Niedostępne",
+      "error": "Błąd"
+    },
+    "unavailable": {
+      "no-project": "Wybierz projekt, aby użyć projektowego dowodu SERP.",
+      "no-phrase": "Wpisz frazę, aby dopasować zaimportowaną migawkę SERP.",
+      "no-import": "Dla tego projektu nie ma zaimportowanej migawki SERP.",
+      "phrase-not-found": "Importowany SERP nie zawiera dokładnego, bez względu na wielkość liter, dopasowania tej frazy.",
+      "no-results": "Pasująca migawka nie zawiera poprawnych organicznych wyników TOP10."
+    },
+    "reportStatus": "Status raportu",
+    "reportStatuses": {
+      "unavailable": "Niedostępny",
+      "partial": "Częściowy",
+      "complete": "Kompletny"
+    },
+    "availablePages": "{{count}} stron z użytecznym dowodem",
+    "noRows": "Pasująca migawka nie dostarczyła organicznych wierszy TOP10.",
+    "topicsTitle": "Zaobserwowane tematy i pokrycie celu",
+    "noTopics": "Tematy wymagają co najmniej jednej pomyślnie sprawdzonej strony.",
+    "topicStatus": {
+      "gap": "Luka",
+      "covered": "Pokryte",
+      "unknown": "Nieznane"
+    },
+    "topicShare": "{{observed}} z {{total}} stron · {{share}}%",
+    "targetOccurrencesUnknown": "Wystąpienia celu: nieznane",
+    "targetOccurrences": "Wystąpienia celu: {{count}}",
+    "finalUrl": "Końcowy URL"
+  },
+  "monitoringUi": {
+    "title": "Alerty monitorowania zmian",
+    "enable": "Włącz alerty monitorowania zmian",
+    "description": "Powiadamiaj po porównywalnej zmianie zapisanej lokalnie. Brakujących i obciętych danych nie traktujemy jako zera.",
+    "frequency": "Częstotliwość",
+    "frequencyAria": "Częstotliwość alertów monitorowania",
+    "run": "Każde uruchomienie",
+    "daily": "Raz dziennie",
+    "weekly": "Raz w tygodniu",
+    "enableType": "Włącz alerty: {{type}}",
+    "gscDecline": "Spadek GSC %",
+    "gscDeclineAria": "Procent spadku GSC",
+    "gscMinimum": "Minimalne wyświetlenia GSC",
+    "psiDrop": "Spadek kategorii PageSpeed",
+    "crawlChanged": "Zmienione strony crawla",
+    "semanticChanged": "Zmiany semantyczne",
+    "types": {
+      "gsc": "Search Console",
+      "pagespeed": "PageSpeed / CrUX",
+      "crawl": "Porównania crawlów",
+      "semantic": "Porównania semantyczne",
+      "focus": "Site Focus Score",
+      "aio": "Gotowość do AI Overviews"
+    },
+    "focusDrop": "Spadek Site Focus Score (punkty)",
+    "aioDrop": "Spadek wyniku AIO-R (punkty)"
+  },
+  "ga4": {
+    "title": "Google Analytics 4",
+    "description": "Ruch na stronach docelowych z tego samego okresu co Search Console. Analytics obejmuje wszystkie kanały, a Search Console wyszukiwanie organiczne.",
+    "projectRequired": "Wybierz projekt z adresem witryny, aby dopasować strumień Analytics.",
+    "connectFirst": "Najpierw połącz Search Console przy użyciu klienta Google OAuth.",
+    "clientSecret": "Sekret klienta Google OAuth (opcjonalny)",
+    "clientSecretHint": "Po autoryzacji zapisywany wyłącznie w systemowym magazynie poświadczeń.",
+    "loading": "Wczytywanie…",
+    "reconnect": "Autoryzuj ponownie",
+    "authorize": "Autoryzuj dostęp do Analytics",
+    "refresh": "Odśwież dopasowanie usługi",
+    "property": "Dopasowana usługa Analytics",
+    "noProperty": "Nie znaleziono jednoznacznie dopasowanego strumienia. Sprawdź dostęp do Analytics i adres witryny projektu.",
+    "loadReport": "Wczytaj raport ruchu",
+    "truncated": "Wynik jest częściowy lub niejednoznaczny. Nie traktuj go jako kompletnego.",
+    "periodsDiffer": "Okresy raportów różnią się. Nie można połączyć metryk Search Console.",
+    "unavailable": "Raport ruchu nie został jeszcze wczytany.",
+    "unknown": "Brak danych",
+    "noRows": "Google Analytics nie zwrócił stron docelowych dla tego okresu.",
+    "landingPage": "Strona docelowa",
+    "host": "Host",
+    "sessions": "Sesje",
+    "engagedSessions": "Sesje z zaangażowaniem",
+    "keyEvents": "Kluczowe zdarzenia",
+    "clicks": "Kliknięcia GSC",
+    "impressions": "Wyświetlenia GSC",
+    "issues": "Problemy crawla",
+    "rowCount": "Wiersze: {{count}}"
+  },
+  "topicalDiagnosis": {
+    "title": "Diagnoza tematyczna",
+    "description": "Dokumenty (wersje językowe liczone raz), obszary wokół stron-hubów, tematy z treści i werdykty z konkretną czynnością. Liczone z zapisanego crawla, bez modeli językowych.",
+    "noTerms": "Ten crawl nie ma terminów treści, więc diagnoza nie ma na czym pracować. Uruchom crawl ponownie.",
+    "noContentLinks": "Ten crawl zapisano bez linków z głównej treści, więc werdykty o linkach (strony bez linku z treści, huby, strony tematu, które nie linkują do siebie) nie są pokazywane. Uruchom crawl ponownie.",
+    "truncated": "Analiza ograniczona do 500 stron albo limitu par; część wyników może brakować.",
+    "empty": "Brak werdyktów w tej grupie.",
+    "showRemaining": "Pokaż pozostałe werdykty ({{count}})",
+    "stats": {
+      "documents": "Dokumenty",
+      "pages": "Strony",
+      "skipped": "Pominięte",
+      "hubs": "Huby",
+      "topics": "Tematy",
+      "singletons": "Pojedyncze",
+      "languages": "Języki",
+      "mergedPairs": "Pary językowe"
+    },
+    "severity": {
+      "fix": "Do poprawy",
+      "weak": "Słabo",
+      "info": "Informacja",
+      "good": "Dobrze"
+    },
+    "filter": {
+      "all": "Wszystkie · {{count}}",
+      "fix": "Do poprawy · {{count}}",
+      "weak": "Słabo · {{count}}",
+      "info": "Informacje · {{count}}",
+      "good": "Dobrze · {{count}}"
+    },
+    "areas": {
+      "title": "Obszary i tematy",
+      "noHub": "Bez huba",
+      "hubWithoutMembers": "Hub bez przypisanych dokumentów",
+      "members": "{{count}} dok.",
+      "showInGraph": "Pokaż w grafie",
+      "hub": "Hub: {{url}}"
+    },
+    "topics": {
+      "singletons": "Pojedyncze dokumenty · {{count}}",
+      "labelFromContent": "etykieta z treści",
+      "noLabel": "Temat bez etykiety",
+      "documents": "{{count}} dok."
+    },
+    "roles": {
+      "hub": "hub",
+      "utility": "strona pomocnicza",
+      "content": "treść"
+    },
+    "scope": {
+      "area": "obszar",
+      "topic": "temat",
+      "document": "dokument"
+    },
+    "verdict": {
+      "hub-missing-backlink": {
+        "title": "Brak linku do huba",
+        "action": "Dodaj na tej stronie link do {{hub}}: w nawigacji, ścieżce okruszków albo w treści."
+      },
+      "hub-missing-member-link": {
+        "title": "Hub nie linkuje do części stron swojego tematu",
+        "action": "Dodaj do listy huba {{hub}} brakujące strony ({{count}})."
+      },
+      "area-healthy": {
+        "title": "Obszar spójny",
+        "action": "Hub linkuje do wszystkich {{count}} dokumentów, a każdy z nich linkuje do huba. Nic do zrobienia."
+      },
+      "topic-no-hub": {
+        "title": "Temat bez strony-filaru",
+        "action": "Utwórz lub wskaż stronę-filar tego tematu i podlinkuj z niej wszystkie dokumenty; dziś łączy je tylko treść."
+      },
+      "topic-members-unlinked": {
+        "title": "Strony tematu nie linkują do siebie",
+        "action": "Dodaj linki kontekstowe między wymienionymi parami ({{count}} par bez linku w żadną stronę)."
+      },
+      "topic-thin": {
+        "title": "Cienki temat",
+        "action": "Temat ma tylko dwa dokumenty. Dopisz trzeci materiał albo scal oba, jeśli odpowiadają na to samo pytanie."
+      },
+      "cannibalization-candidate": {
+        "title": "Kandydaci do kanibalizacji",
+        "action": "Dwie strony w tym samym języku pokrywają się w {{percent}}% i dzielą słowa tytułu: {{titleTokens}}. Porównaj intencję i scal je albo rozróżnij tytuły."
+      },
+      "document-isolated": {
+        "title": "Strona odizolowana",
+        "action": "Nie ma tematu i linkują do niej tylko listy. Dodaj link z najbliższej treściowo strony: {{url}} ({{percent}}% wspólnych terminów).",
+        "actionNoNearest": "Nie ma tematu i linkują do niej tylko listy. Podlinkuj ją z pokrewnego artykułu."
+      },
+      "document-orphan": {
+        "title": "Brak jakiegokolwiek linku z treści",
+        "action": "Żadna strona nie linkuje do niej z głównej treści. Dodaj link kontekstowy z pokrewnej strony albo z huba."
+      },
+      "near-duplicate": {
+        "title": "Niemal identyczna treść",
+        "action": "Porównaj obie strony. Jeśli to duplikat, scal je albo ustaw canonical."
+      },
+      "language-pair-missing": {
+        "title": "Brak wersji językowej",
+        "action": "Dokument istnieje tylko w języku {{language}}. Zdecyduj, czy ma mieć tłumaczenie; to informacja, nie błąd."
+      }
+    },
+    "evidence": {
+      "hub": "hub: {{hub}}",
+      "count": "Liczba stron: {{count}}",
+      "members": "{{count}} dokumentów",
+      "areas": "{{count}} obszarów",
+      "withoutHub": "{{count}} bez huba",
+      "pairs": "Liczba par: {{count}}",
+      "similarity": "podobieństwo {{percent}}%",
+      "titleTokens": "wspólne słowa tytułu: {{titleTokens}}",
+      "nearest": "najbliższa strona: {{url}}",
+      "hash": "ten sam hash treści",
+      "distance": "SimHash: {{value}}/64",
+      "language": "język: {{language}}"
+    },
+    "confidence": {
+      "limited": "pewność ograniczona (niepełny dowód treści)",
+      "moderate": "pewność umiarkowana"
+    },
+    "import": {
+      "button": "Importuj tematy diagnozy",
+      "topicsCount": "{{count}} tematów · przebieg {{run}}"
+    }
+  },
+  "pdfReport": {
+    "audit": {
+      "report": {
+        "reportTitle": "SEOmi · Raport z audytu SEO",
+        "brandLine": "Wygenerowano w SEOmi",
+        "methodNote": "Metoda: lokalna analiza HTTP i HTML. Ten raport nie jest werdyktem indeksowania Google.",
+        "pageLabel": "Strona {{page}} z {{total}}",
+        "sevCritical": "Krytyczne",
+        "sevWarning": "Ostrzeżenie",
+        "sevInfo": "Informacja",
+        "noMessage": "Brak opisu dla tego problemu.",
+        "noRecommendation": "Sprawdź ten problem i popraw dotknięty element.",
+        "categoryFallback": "Ogólne",
+        "statusOk": "OK",
+        "statusAttention": "Wymaga uwagi",
+        "statusInfo": "Informacja",
+        "noAction": "Nie są wymagane żadne działania.",
+        "yes": "Tak",
+        "no": "Nie",
+        "notSet": "nie ustawiono",
+        "title": "Raport z audytu SEO",
+        "auditedAt": "DATA AUDYTU",
+        "httpStatus": "STATUS HTTP",
+        "responseTime": "CZAS ODPOWIEDZI",
+        "ms": "{{0}} ms",
+        "healthScore": "Wynik kondycji",
+        "ratingGood": "Dobry",
+        "ratingFair": "Do poprawy",
+        "ratingPoor": "Słaby",
+        "ratingNone": "Brak oceny",
+        "legend": "Zielony: 80 i więcej  ·  Bursztynowy: 50 do 79  ·  Czerwony: poniżej 50",
+        "findings": "problemy",
+        "kpiHttp": "STATUS HTTP",
+        "kpiTime": "CZAS ODPOWIEDZI",
+        "kpiTitle": "DŁUGOŚĆ TITLE",
+        "kpiDescription": "META DESCRIPTION",
+        "kpiH1": "NAGŁÓWKI H1",
+        "kpiImages": "OBRAZY",
+        "kpiLinks": "LINKI",
+        "kpiWords": "LICZBA SŁÓW",
+        "httpNote": "odpowiedź końcowa",
+        "slow": "wolniej niż 800 ms",
+        "fast": "w granicach 800 ms",
+        "characters": "znaków",
+        "present": "Jest",
+        "missing": "Brak",
+        "charsNote": "{{0}} znaków",
+        "h1Note": "zalecany dokładnie 1",
+        "noAltNote": "{{0}} bez tekstu alternatywnego",
+        "linksNote": "{{0}} wewnętrznych, {{1}} zewnętrznych",
+        "wordsNote": "słów w treści strony",
+        "where": "GDZIE",
+        "howToFix": "JAK NAPRAWIĆ",
+        "fixFirst": "Co naprawić w pierwszej kolejności",
+        "noIssues": "Ten audyt nie zgłosił żadnych problemów.",
+        "fixIntro": "Problemy są uporządkowane według wagi i pogrupowane według kategorii. Każda karta mówi, co zmienić i gdzie to dotyczy.",
+        "severityGroup": "{{0}} ({{1}})",
+        "details": "Szczegóły audytu",
+        "noDetails": "Ten audyt nie zawiera szczegółowych danych strony.",
+        "colCheck": "Kontrola",
+        "colValue": "Bieżąca wartość",
+        "colStatus": "Status",
+        "colAdvice": "Rekomendacja",
+        "colArea": "Obszar",
+        "passed": "Zaliczone kontrole",
+        "nothingPassed": "W tym audycie nie zaliczono żadnej kontroli.",
+        "passedSummary": "Zaliczono {{0}} z {{1}} kontroli."
+      },
+      "checks": {
+        "chars": "{{0}} ({{1}} znaków)",
+        "ms": "{{0}} ms",
+        "bytes": "{{0}} bajtów",
+        "minutes": "{{0}} min",
+        "unknown": "nieznane",
+        "missingCount": "brak: {{0}}",
+        "fixAlt": "Dodaj opisowy tekst alternatywny (alt) do każdego obrazu.",
+        "fixSize": "Ustaw jawne atrybuty width i height dla obrazów.",
+        "fixInsecure": "Zmień linki http:// na https://.",
+        "fixMixed": "Ładuj wszystkie zasoby przez HTTPS.",
+        "keyword": "{{0}} ({{1}})",
+        "metaTitle": "Znaczniki meta",
+        "title": "Title",
+        "description": "Meta description",
+        "canonical": "Adres canonical",
+        "robotsMeta": "Meta robots",
+        "viewport": "Viewport",
+        "charset": "Kodowanie znaków",
+        "keywords": "Meta keywords",
+        "author": "Autor",
+        "generator": "Generator",
+        "themeColor": "Kolor motywu",
+        "headingsTitle": "Nagłówki",
+        "h1Count": "Liczba H1",
+        "h1Text": "Tekst H1",
+        "hierarchy": "Poprawna hierarchia nagłówków",
+        "outline": "Struktura nagłówków",
+        "contentTitle": "Statystyki treści",
+        "words": "Liczba słów",
+        "sentences": "Zdania",
+        "readingTime": "Czas czytania",
+        "readability": "Czytelność",
+        "readabilityValue": "{{0}} (wynik Flescha {{1}})",
+        "wordsPerSentence": "Słów na zdanie",
+        "textRatio": "Stosunek tekstu do HTML",
+        "topKeywords": "Najczęstsze słowa kluczowe",
+        "imagesTitle": "Obrazy",
+        "imageTotal": "Znalezione obrazy",
+        "imageAlt": "Obrazy bez tekstu alternatywnego",
+        "imageSize": "Obrazy bez width i height",
+        "imageFormats": "Formaty obrazów",
+        "linksTitle": "Linki",
+        "linkTotal": "Wszystkie linki",
+        "linkInternal": "Linki wewnętrzne",
+        "linkExternal": "Linki zewnętrzne",
+        "linkNofollow": "Linki nofollow",
+        "linkInsecure": "Niezabezpieczone linki (HTTP)",
+        "linkBlank": "Linki otwierane w nowej karcie",
+        "redirectTitle": "Łańcuch przekierowań",
+        "redirectHops": "Kroki przekierowań",
+        "hop": "Krok {{0}}",
+        "hopValue": "HTTP {{0}}: {{1}} do {{2}}",
+        "indexTitle": "Indeksowalność",
+        "indexStatus": "Status indeksowalności",
+        "xRobots": "Nagłówek X-Robots-Tag",
+        "canonicalMatch": "Canonical zgodny z końcowym adresem URL",
+        "canonicalChecked": "Sprawdzono cel canonical",
+        "canonicalStatus": "Status HTTP celu canonical",
+        "canonicalError": "Błąd sprawdzania canonical",
+        "securityTitle": "Nagłówki bezpieczeństwa",
+        "securityScore": "Wynik bezpieczeństwa",
+        "transportTitle": "Bezpieczeństwo transportu",
+        "https": "Udostępniono przez HTTPS",
+        "scheme": "Schemat URL",
+        "mixed": "Zasoby z mieszaną zawartością",
+        "cookies": "Pliki cookie",
+        "noCookies": "Nie ustawiono żadnych plików cookie",
+        "cookie": "Cookie: {{0}}",
+        "cookieValue": "Secure: {{0}}; HttpOnly: {{1}}; SameSite: {{2}}",
+        "cookieAdvice": "Ustaw flagi Secure i HttpOnly oraz atrybut SameSite.",
+        "tls": "Pokrycie TLS",
+        "structuredTitle": "Dane strukturalne",
+        "blocks": "Bloki danych strukturalnych",
+        "block": "{{0}} ({{1}})",
+        "valid": "Brak problemów z walidacją",
+        "structuredAdvice": "Popraw dane strukturalne, aby przechodziły walidację.",
+        "socialTitle": "Open Graph i Twitter card",
+        "addTag": "Dodaj znacznik {{0}} w sekcji head strony.",
+        "a11yTitle": "Dostępność",
+        "language": "Język dokumentu",
+        "landmarks": "Landmarki",
+        "aria": "Atrybuty ARIA",
+        "formControls": "Kontrolki formularzy",
+        "unlabeled": "Kontrolki formularzy bez etykiety",
+        "hiddenControls": "Ukryte kontrolki formularzy",
+        "manual": "Wymagany przegląd ręczny",
+        "ampTitle": "AMP",
+        "ampDetected": "Wykryto AMP",
+        "ampDocument": "Strona jest dokumentem AMP",
+        "ampUrls": "Powiązane wersje AMP",
+        "ampCanonical": "Adres canonical AMP",
+        "ampCoverage": "Zakres walidacji",
+        "notVerified": "Nie zweryfikowano",
+        "perfTitle": "Wydajność",
+        "httpStatus": "Status HTTP",
+        "responseTime": "Czas odpowiedzi serwera",
+        "headersTime": "Czas do nagłówków odpowiedzi",
+        "bodyTime": "Czas odczytu treści",
+        "totalTime": "Łączny czas żądania",
+        "bodyBytes": "Rozmiar zdekodowanej treści",
+        "lengthHeader": "Nagłówek Content-Length",
+        "redirectCount": "Wykonane przekierowania",
+        "method": "Metoda żądania",
+        "measuredAt": "Zmierzono",
+        "scope": "Zakres pomiaru",
+        "techTitle": "Szczegóły techniczne",
+        "contentType": "Typ zawartości",
+        "server": "Serwer",
+        "favicon": "Favicon",
+        "robotsTxt": "robots.txt",
+        "sitemap": "Mapa witryny",
+        "hreflangTags": "Znaczniki hreflang",
+        "hreflang": "{{0}}: {{1}}",
+        "techSignals": "Wykryte technologie",
+        "signal": "{{0}}{{1}} ({{2}}, {{3}})"
+      },
+      "loc": {
+        "wholePage": "Cała strona: {{0}}",
+        "page": "Strona: {{0}}",
+        "element": "Element: {{0}}",
+        "current": "Bieżąca wartość: {{0}}",
+        "image": "Obraz: {{0}}",
+        "link": "Link: {{0}}",
+        "linkText": "Link: {{0}} (tekst kotwicy: {{1}})",
+        "h1": "Nagłówek <h1>: {{0}}",
+        "header": "Nagłówek odpowiedzi HTTP: {{0}}",
+        "headerMissing": "Bieżąca wartość: serwer jej nie wysłał",
+        "cookie": "Cookie: {{0}}",
+        "block": "{{0}} {{1}}",
+        "blockPath": "Dane strukturalne {{0}}, ścieżka: {{1}}",
+        "noPath": "nie określono",
+        "lineColumn": " (wiersz {{0}}, kolumna {{1}})",
+        "elementAt": "{{0}}{{1}}: {{2}}",
+        "evidence": "Dowód: {{0}}",
+        "scheme": "Schemat URL: {{0}}",
+        "resource": "Niezabezpieczony zasób: {{0}}",
+        "response": "Odpowiedź serwera: HTTP {{1}} w {{0}} ms",
+        "hop": "Krok przekierowania: HTTP {{0}} z {{1}}"
+      }
+    },
+    "crawl": {
+      "report": {
+        "reportTitle": "SEOmi · Raport z crawlowania witryny",
+        "brandLine": "Wygenerowano w SEOmi",
+        "footerNote": "Metoda: lokalny crawl HTTP i HTML; tylko zapisane dane uruchomienia, bez ponownego pobierania stron.",
+        "methodFull": "Metoda: lokalny crawl HTTP i HTML. Uwzględniono tylko dane zapisane w wybranym uruchomieniu; na potrzeby tego raportu strony nie są pobierane ponownie. Ten raport nie jest werdyktem indeksowania Google.",
+        "pageLabel": "Strona {{page}} z {{total}}",
+        "title": "Raport z crawlowania witryny",
+        "completedAt": "ZAKOŃCZONO",
+        "duration": "CZAS TRWANIA",
+        "pagesCrawled": "PRZECRAWLOWANE STRONY",
+        "mode": "TRYB CRAWLA",
+        "modeDefault": "http",
+        "environment": "ŚRODOWISKO",
+        "envDefault": "domyślne",
+        "scoreVersion": "WERSJA OCENY",
+        "versionNone": "bez wersji",
+        "seconds": "{{0}} s",
+        "minSec": "{{0}} min {{1}} s",
+        "ms": "{{0}} ms",
+        "yes": "Tak",
+        "no": "Nie",
+        "none": "Brak",
+        "ok": "OK",
+        "problem": "Problem",
+        "noteCancelled": "Ten crawl został anulowany przed zakończeniem; wyniki są częściowe.",
+        "noteTimedOut": "Ten crawl osiągnął limit czasu; wyniki są częściowe.",
+        "noteRobots": "Ostrzeżenie robots.txt: {{0}}",
+        "noteLimits": "Osiągnięte limity: {{0}}.",
+        "healthScore": "Wynik kondycji",
+        "legend": "Zielony: 80 i więcej  ·  Bursztynowy: 50 do 79  ·  Czerwony: poniżej 50",
+        "ratingGood": "Dobry",
+        "ratingFair": "Do poprawy",
+        "ratingPoor": "Słaby",
+        "ratingNone": "Brak oceny",
+        "critical": "Krytyczne",
+        "warning": "Ostrzeżenie",
+        "notice": "Uwaga",
+        "findings": "problemy",
+        "kpiShare": "{{0}}% stron",
+        "kIndexable": "INDEKSOWALNE",
+        "kBlocked": "NIEINDEKSOWALNE",
+        "kUncertain": "NIEPEWNE",
+        "k2xx": "STATUS 2XX",
+        "k3xx": "STATUS 3XX",
+        "k4xx": "STATUS 4XX",
+        "k5xx": "STATUS 5XX",
+        "kNoStatus": "BRAK ODPOWIEDZI",
+        "kAvgTime": "ŚR. CZAS ODPOWIEDZI",
+        "kAvgNote": "na stronę",
+        "kAvgWords": "ŚR. LICZBA SŁÓW",
+        "kWordsNote": "na stronę",
+        "kOrphans": "STRONY OSIEROCONE",
+        "kDuplicates": "GRUPY DUPLIKATÓW",
+        "kDupNote": "title, description, treść",
+        "kChains": "ŁAŃCUCHY PRZEKIEROWAŃ",
+        "kChainNote": "2 lub więcej kroków",
+        "kBrokenInt": "USZKODZONE LINKI WEWNĘTRZNE",
+        "kBrokenExt": "USZKODZONE LINKI ZEWNĘTRZNE",
+        "kLinkNote": "sprawdzone linki",
+        "kNoTitle": "BRAKUJĄCE TITLE",
+        "kNoDesc": "BRAKUJĄCE DESCRIPTION",
+        "kNoH1": "BRAK H1",
+        "kNoCanonical": "BRAK CANONICAL",
+        "kWithIssues": "STRONY Z PROBLEMAMI",
+        "fixFirst": "Co naprawić w pierwszej kolejności",
+        "fixIntro": "Problemy są pogrupowane według typu i uporządkowane jako Krytyczne, Ostrzeżenie, Uwaga. Każda karta wymienia dotknięte strony i sposób ich naprawy.",
+        "noIssues": "Na przecrawlowanych stronach nie znaleziono problemów.",
+        "severityGroup": "{{0}} ({{1}})",
+        "affectedOne": "Dotyczy 1 strony",
+        "affected": "Dotyczy {{0}} stron ({{1}}%)",
+        "where": "GDZIE",
+        "howToFix": "JAK NAPRAWIĆ",
+        "wherePage": "{{0}}: {{1}}",
+        "morePages": "... i {{0}} kolejnych stron (wszystkie adresy URL w tabeli stron)",
+        "evTitle": "title: {{0}}",
+        "evDescription": "meta description: {{0}}",
+        "evCanonical": "canonical: {{0}} ({{1}})",
+        "evStatus": "HTTP {{0}}",
+        "evError": "błąd żądania: {{0}}",
+        "evRobots": "meta robots: {{0}}, X-Robots-Tag: {{1}}",
+        "evWords": "słów: {{0}}",
+        "evH1": "Liczba H1: {{0}}",
+        "evLang": "lang: {{0}}",
+        "evImages": "obrazów bez alt: {{0}}",
+        "pagesHeading": "Strony",
+        "pagesIntro": "Wszystkie przecrawlowane strony w kolejności crawla.",
+        "criticalPages": "Strony z problemami krytycznymi",
+        "criticalIntro": "Strony z co najmniej jednym problemem krytycznym wraz z ustaleniami, które trzeba naprawić w pierwszej kolejności.",
+        "colCritical": "Problemy krytyczne",
+        "details": "Szczegółowe ustalenia",
+        "noneFound": "Nic nie znaleziono w tym uruchomieniu.",
+        "moreRows": "+ {{0}} kolejnych wierszy nieuwzględnionych tutaj",
+        "rows": "wierszy: {{0}}",
+        "rowOne": "1 wiersz",
+        "tCoverage": "Zakres raportu",
+        "coverageIntro": "Każdy poniższy obszar został sprawdzony; sekcje bez danych mają taką informację.",
+        "tComparison": "Porównanie z poprzednim uruchomieniem",
+        "noComparison": "Niedostępne: zapisany rekord uruchomienia nie zawiera poprzedniego uruchomienia."
+      },
+      "labels": {
+        "tRun": "Szczegóły uruchomienia",
+        "tConfig": "Konfiguracja crawla",
+        "configIntro": "Ustawienia, z którymi uruchomiono crawl, dokładnie tak, jak zapisano je w uruchomieniu.",
+        "tRobots": "Robots.txt i mapa witryny",
+        "runId": "ID uruchomienia",
+        "scopeUrl": "Początkowy URL zakresu",
+        "startUrl": "URL startowy użyty przez crawler",
+        "resources": "Sprawdzone zasoby",
+        "images": "Znalezione obrazy",
+        "limits": "Zaobserwowane limity",
+        "cancelled": "Anulowano",
+        "timedOut": "Przekroczono limit czasu",
+        "resourceLimit": "Osiągnięto limit żądań zasobów",
+        "provenance": "Częściowe pochodzenie wykrytych adresów",
+        "compacted": "Zapisane dowody skompaktowano",
+        "pagesTruncated": "Zapisane strony obcięto",
+        "storagePages": "Zachowano {{0}} z {{1}} stron",
+        "template": "Szablon raportu",
+        "templateFull": "Pełny raport",
+        "robotsStatus": "Status robots.txt",
+        "robotsEval": "Ocena robots.txt",
+        "robotsCode": "Status HTTP robots.txt",
+        "robotsUrl": "Końcowy URL robots.txt",
+        "robotsAgent": "User agent crawlera",
+        "robotsBlocked": "Adresy URL zablokowane przez robots.txt",
+        "robotsWarning": "Ostrzeżenie robots.txt",
+        "sitemapStatus": "Wynik mapy witryny",
+        "sitemapFound": "Wykryte adresy URL z mapy witryny",
+        "tPages": "Wszystkie przecrawlowane strony",
+        "tDupTitles": "Zduplikowane title",
+        "tDupDescriptions": "Zduplikowane meta description",
+        "tDupContent": "Zduplikowana treść",
+        "tNear": "Treść niemal zduplikowana",
+        "dupIntro": "Strony w tej samej grupie mają tę samą wartość; nadaj każdej stronie unikalną wartość.",
+        "hashLabel": "Hash treści {{0}} ({{1}})",
+        "tRedirects": "Przekierowania i łańcuchy przekierowań",
+        "redirectIntro": "Linkuj bezpośrednio do końcowego URL; łańcuchy co najmniej 2 kroków marnują crawl budget.",
+        "hop": "{{0}} → {{1}}",
+        "tClientRedirects": "Przekierowania po stronie klienta",
+        "tBroken": "Uszkodzone linki",
+        "brokenIntro": "Linki, których cel odpowiedział błędem lub nie dało się go zażądać; najpierw linki wewnętrzne.",
+        "internal": "Wewnętrzne",
+        "external": "Zewnętrzne",
+        "statusError": "{{0}} ({{1}})",
+        "tExternal": "Podsumowanie linków zewnętrznych",
+        "externalIntro": "Cele zewnętrzne pogrupowane według hosta, z wynikami kontroli wykonanych w tym uruchomieniu.",
+        "notChecked": "nie sprawdzono w tym uruchomieniu",
+        "tCanonical": "Konflikty canonical",
+        "canonicalIntro": "Strony, których canonical jest brakujący, nieprawidłowy, wielokrotny lub wskazuje gdzie indziej.",
+        "targetStatus": "{{0}} (HTTP {{1}})",
+        "rdCompleted": "Zakończono",
+        "rdMode": "Tryb crawla",
+        "rdDuration": "Czas trwania",
+        "rdPages": "Przecrawlowane strony",
+        "tHreflang": "Hreflang",
+        "tPagination": "Paginacja",
+        "tAmp": "AMP",
+        "tSchema": "Dane strukturalne",
+        "schemaFinding": "{{0}} {{1}}: {{2}}",
+        "tHtml": "Ustalenia walidacji HTML",
+        "lineColumn": "(wiersz {{0}}, kolumna {{1}})",
+        "tImages": "Problemy z obrazami",
+        "imagesIntro": "{{0}} z {{1}} obrazów ma problem: brak tekstu alternatywnego lub wymiarów, błędy albo zbyt duże pliki.",
+        "pNoAlt": "brak alt",
+        "pNoSize": "brak width/height",
+        "pBroken": "żądanie nieudane",
+        "pOversized": "ponad {{0}} KB",
+        "tResources": "Zasoby",
+        "usedBy": "{{0}} stron, np. {{1}}",
+        "tFrames": "Ramki (iframe)",
+        "tSearches": "Niestandardowe wyniki wyszukiwania",
+        "tRules": "Reguły robots.txt stosowane do crawlera",
+        "tAgents": "robots.txt według tożsamości crawlera",
+        "tDirectives": "Dyrektywy Sitemap w robots.txt",
+        "tRobotsChain": "Łańcuch przekierowań robots.txt",
+        "tSitemapUrls": "Adresy URL mapy witryny w zakresie",
+        "tRejected": "Adresy URL odrzucone przez zakres crawla",
+        "tReasons": "Powody indeksowalności",
+        "reasonsIntro": "Dlaczego strony są zablokowane lub niepewne, w tym reguły robots.txt.",
+        "httpIntro": "{{0}} z {{1}} stron zwróciło dane nagłówków lub wykrywania; pozostałe ich nie mają.",
+        "tHttp": "Szczegóły odpowiedzi HTTP i wykrywanie",
+        "discovered": "{{0}} {{1}}"
+      },
+      "cols": {
+        "colItem": "Element",
+        "colValue": "Wartość",
+        "colUrl": "URL",
+        "colStatus": "Status",
+        "colIndexability": "Indeksowalność",
+        "colTitle": "Title",
+        "colDepth": "Głębokość",
+        "colTime": "Czas (ms)",
+        "colWords": "Słowa",
+        "colIssues": "Problemy",
+        "colPages": "Strony",
+        "colUrls": "URL-e",
+        "colFinding": "Ustalenie",
+        "colFindings": "Ustalenia",
+        "colSource": "Strona źródłowa",
+        "colTarget": "Cel",
+        "colAnchor": "Kotwica",
+        "colType": "Typ",
+        "colHost": "Host",
+        "colLinks": "Linki",
+        "colStates": "Wyniki",
+        "colHops": "Kroki",
+        "colChain": "Łańcuch przekierowań",
+        "colFinal": "Końcowy URL",
+        "colStop": "Powód zatrzymania",
+        "colDeclaration": "Deklaracja",
+        "colDelay": "Opóźnienie (s)",
+        "colCanonical": "Cel canonical",
+        "colRelation": "Relacja",
+        "colDeclarations": "Znaczniki",
+        "colConflict": "Konflikt robots",
+        "colLang": "Język",
+        "colReciprocal": "Wzajemność",
+        "colVerdict": "Werdykt",
+        "colParams": "Zmiany zapytania",
+        "colAlignment": "Zgodność canonical",
+        "colAmp": "URL AMP",
+        "colChecked": "Sprawdzono",
+        "colImage": "Obraz",
+        "colAlt": "Alt",
+        "colSize": "Rozmiar",
+        "colBytes": "Bajty",
+        "colProblem": "Problem",
+        "colResource": "Zasób",
+        "colContentType": "Typ zawartości",
+        "colUsedBy": "Używany przez",
+        "colFrame": "Ramka",
+        "colSearch": "Wyszukiwanie",
+        "colFound": "Znalezione wartości",
+        "colError": "Błąd",
+        "colTypes": "Typy schema",
+        "colSyntax": "Błędy składni",
+        "colSeverity": "Waga",
+        "colCode": "Kod",
+        "colElement": "Element",
+        "colDirective": "Dyrektywa",
+        "colPath": "Ścieżka",
+        "colAgent": "User agent",
+        "colGroup": "Własna grupa",
+        "colRules": "Reguły",
+        "colDelayMs": "Opóźnienie (ms)",
+        "colFrom": "Z",
+        "colTo": "Do",
+        "colReason": "Powód",
+        "colReasons": "Powody",
+        "colEncoding": "Kodowanie",
+        "colCache": "Cache-Control",
+        "colXrobots": "X-Robots-Tag",
+        "colDiscovered": "Wykryto przez",
+        "colArea": "Obszar",
+        "colResult": "Wynik"
+      },
+      "focus": {
+        "title": "Site Focus",
+        "intro": "Jak spójnie przeskanowane strony trzymają się jednego tematu głównego. Wyniki pochodzą z zapisanego uruchomienia; żadne strony nie są pobierane ponownie.",
+        "scoreTitle": "Site Focus Score",
+        "legend": "Przedziały: 90-100 doskonały, 75-89 dobry, 60-74 umiarkowany, 40-59 słaby, 0-39 krytyczny.",
+        "kConfidence": "Pewność tematu głównego",
+        "kOnTopic": "Odsetek stron w temacie",
+        "kScored": "Ocenione strony",
+        "kSkipped": "Pominięte strony",
+        "kOffTopic": "Strony poza tematem",
+        "kBorderline": "Strony graniczne",
+        "kStrong": "Mocne strony",
+        "nConfidence": "Udział klastra głównego",
+        "nOnTopic": "Strony z TRS 60 lub więcej",
+        "nScored": "z {{0}} przeskanowanych",
+        "nSkipped": "Nieocenione",
+        "nOffTopic": "TRS poniżej 40",
+        "nBorderline": "TRS 60-74",
+        "nStrong": "TRS 75 lub więcej",
+        "percent": "{{0}}%",
+        "coreBadge": "TEMAT GŁÓWNY",
+        "coreTerms": "Najważniejsze terminy",
+        "coreTerm": "{{0}} ({{1}}% stron)",
+        "coreConfidence": "Pewność {{0}}%",
+        "coreManual": "Temat ręczny: {{0}}",
+        "coreDetected": "Wykryty na podstawie przeskanowanych stron",
+        "tPages": "Najsłabsze strony pod względem trafności tematycznej",
+        "pagesIntro": "Do 25 stron z treścią o najniższym wskaźniku trafności tematycznej (Topical Relevance Score, TRS). Strony techniczne i pominięte nie są uwzględniane.",
+        "colTrs": "TRS",
+        "colType": "Typ",
+        "colSimilarity": "Podobieństwo",
+        "colOverlap": "Zbieżność",
+        "colDrift": "Dryf",
+        "colPlaybook": "Playbook",
+        "playbook": "{{0}}: {{1}}",
+        "tRecs": "Rekomendacje",
+        "recsIntro": "Uszeregowane według symulowanego przyrostu wyniku na szacowaną godzinę pracy. Przyrosty są szacunkami.",
+        "colNo": "#",
+        "colAction": "Rekomendacja",
+        "colGain": "Zysk",
+        "gain": "+{{0}}",
+        "tSub": "Wyniki podserwisów",
+        "subIntro": "Obszary tematyczne serwisu wielotematycznego, każdy oceniony względem własnego tematu głównego.",
+        "colArea": "Obszar tematyczny",
+        "colPrefix": "Ścieżka",
+        "colShare": "Udział stron",
+        "colScore": "Wynik",
+        "tGaps": "Luki tematyczne",
+        "colGap": "Luka",
+        "band": {
+          "excellent": "Doskonałe skupienie",
+          "good": "Dobre skupienie",
+          "moderate": "Umiarkowane skupienie",
+          "weak": "Słabe skupienie",
+          "critical": "Krytyczne skupienie"
+        },
+        "status": {
+          "strong": "Mocna",
+          "moderate": "Umiarkowana",
+          "borderline": "Graniczna",
+          "weak": "Słaba",
+          "off-topic": "Wyraźnie poza tematem"
+        },
+        "type": {
+          "homepage": "Strona główna",
+          "category": "Kategoria",
+          "article": "Artykuł",
+          "technical": "Techniczna"
+        },
+        "note": {
+          "lowConfidence": "Mała próba ({{0}} stron). Wyniki mają charakter orientacyjny; aby wiarygodnie określić temat główny, przeskanuj co najmniej 10 stron. Porady dotyczące usuwania są ograniczone.",
+          "multiTopic": "Wykryto {{0}} obszarów tematycznych. Serwis nie ma jednego dominującego tematu. Wyniki podserwisów podano poniżej.",
+          "lexicalFallback": "Analiza dla wybranego języka korzysta z algorytmu statystycznego TF-IDF. Komponent głębokiego podobieństwa semantycznego jest niedostępny; wynik opiera się na pokryciu i rozkładzie słów kluczowych.",
+          "skippedRender": "Pominięto {{0}} stron w analizie, ponieważ renderowanie JavaScript przekroczyło limit czasu.",
+          "degraded": "Niektóre strony miały ograniczone dane, więc ich wyniki mogą być mniej precyzyjne.",
+          "unmatchedTopic": "Żadna strona nie pasuje do tematu „{{0}}”. Zamiast niego użyto wykrytego tematu."
+        },
+        "rec": {
+          "remove-offtopic": "Usuń lub przenieś {{0}} stron spoza tematu: przekieruj, oznacz noindex lub usuń najgorsze i usuń linki wewnętrzne do nich. Potencjał: +{{1}} pkt.",
+          "strengthen-borderline": "Wzmocnij {{0}} stron granicznych: dodaj brakujące kluczowe terminy i sekcje, aby podnieść je do około {{1}}. Potencjał: +{{2}} pkt.",
+          "expand-core-cluster": "Rozbuduj klaster tematu głównego: napisz {{0}} nowych stron dla słabo pokrytych podtematów. Potencjał: +{{1}} pkt.",
+          "add-internal-links": "Dodaj linki wewnętrzne do stron-hubów: {{0}} sugestii linków kieruje słabe strony do mocnych hubów.",
+          "collect-more-pages": "Zbierz więcej stron: przeanalizowano tylko {{0}} stron. Przeskanuj więcej, zanim cokolwiek usuniesz.",
+          "split-subsites": "Rozważ podział serwisu: znaleziono {{0}} odrębnych obszarów tematycznych. Pomóc może wydzielenie sekcji lub subdomen.",
+          "review-skipped-pages": "Przejrzyj {{0}} pominiętych stron: {{1}} z nich przekroczyło limit czasu podczas renderowania JavaScript.",
+          "monitor-strong-pages": "Monitoruj {{0}} mocnych stron: utrzymuj je w temacie i regularnie sprawdzaj ponownie."
+        },
+        "option": {
+          "remove-redirect": "Usuń i przekieruj kodem 301 (+{{0}} pkt)",
+          "noindex-isolate": "Oznacz noindex i odizoluj (+{{0}} pkt)",
+          "rewrite-on-topic": "Przepisz w temacie na podstawie briefu (docelowy TRS około {{0}})",
+          "add-missing-terms": "Dodaj brakujące terminy: {{0}}",
+          "reinforce-headings": "Wzmocnij nagłówki H2 i H3",
+          "deepen-coverage": "Pogłębij pokrycie tematu",
+          "serve-as-hub": "Wykorzystaj jako hub",
+          "build-satellite-cluster": "Zbuduj klaster satelitarny",
+          "monitor-periodically": "Monitoruj co {{0}} tyg."
+        },
+        "gap": {
+          "thin-subtopic": "Słabo pokryty podtemat „{{0}}”: porusza go tylko {{1}}% stron ({{2}} stron). Terminy: {{3}}.",
+          "competitor-terms": "Terminy konkurencji, których brakuje w Twoim serwisie: {{3}}."
+        }
+      },
+      "authority": {
+        "title": "Autorytet tematyczny",
+        "intro": "Jak kompletnie i głęboko witryna pokrywa temat główny na tle rynku. Wyniki pochodzą z zapisanego runu i zapamiętanej mapy referencyjnej; strony nie są pobierane ponownie.",
+        "scoreTitle": "Topical Authority Score",
+        "legend": "TAS = 0,35 pokrycie + 0,30 głębokość encji + 0,25 spójność silosów + 0,10 aktualność, skalowane Site Focus Score (0,7 do 1,0).",
+        "kTcr": "Pokrycie tematu",
+        "kCdes": "Głębokość encji",
+        "kSilc": "Spójność silosów",
+        "kCvff": "Aktualność",
+        "unavailable": "brak",
+        "noReference": "Dla tego projektu nie zbudowano mapy referencyjnej, więc pokrycie i głębokość nie są mierzone, a TAS nie jest liczony.",
+        "reference": "Mapa referencyjna: {{0}} podtematów w {{1}} filarach z {{2}} konkurentów ({{3}}).",
+        "quadrant": {
+          "dominant_authority": "Dominujący autorytet",
+          "boutique_specialist": "Wąski specjalista",
+          "diluted_giant": "Rozproszony gigant",
+          "unfocused_generalist": "Chaotyczny horyzont"
+        },
+        "warning": {
+          "empty-authority": "Pusty autorytet: wiele tematów jest poruszonych, ale ich średnia głębokość jest bardzo niska. Pogłębiaj istniejące strony, zanim dodasz nowe.",
+          "template-duplicates": "Klony szablonu połączono z najsilniejszą stroną: nie podnoszą pokrycia i marnują budżet indeksowania.",
+          "no-dates": "Nie znaleziono dat publikacji ani aktualizacji, więc aktualność nie jest mierzona.",
+          "no-links": "Nie znaleziono linków wewnętrznych w treści między analizowanymi stronami, więc spójność silosów opiera się tylko na stronach osieroconych."
+        },
+        "tCoverage": "Pokrycie filarów",
+        "colPillar": "Filar",
+        "colCoverage": "Pokrycie",
+        "colGaps": "Brakujące podtematy",
+        "tGaps": "Luki w treści",
+        "colGap": "Brakujący podtemat",
+        "colLevel": "Waga luki",
+        "tCannibal": "Kanibalizacja semantyczna",
+        "colCanonical": "Strona do zachowania",
+        "colPages": "Strony",
+        "tRecs": "Plan rozbudowy autorytetu",
+        "tBench": "Macierz luk tematycznych vs najlepsi konkurenci",
+        "level": {
+          "critical": "krytyczna",
+          "high": "wysoka",
+          "medium": "średnia"
+        },
+        "rec": {
+          "fill-gaps": "Wypełnij luki w „{{0}}”: brakuje {{1}} podtematów",
+          "merge-cannibalized": "Połącz {{0}} grup kanibalizujących się stron",
+          "fix-linking": "Napraw linkowanie: {{0}} stron osieroconych, {{1}} linków do stron poza tematem",
+          "deepen-shallow": "Pogłęb {{0}} płytkich podtematów",
+          "refresh-stale": "Odśwież {{0}} stron nieaktualizowanych od ponad roku"
+        }
+      },
+      "aio": {
+        "title": "Gotowość na AI Overviews i RAG",
+        "intro": "Jak łatwo silniki odpowiedzi AI wyciągną i zacytują fragmenty Twoich stron. Wynik łączy samowystarczalne fragmenty (45%), gęstość faktów (35%) i strukturę łatwą do ekstrakcji (20%).",
+        "scoreTitle": "Wynik gotowości na AI",
+        "legend": "Pasma: 90-100 doskonała, 75-89 dobra, 60-74 umiarkowana, 40-59 słaba, 0-39 krytyczna.",
+        "kSelf": "Samowystarczalność",
+        "kSpo": "Gęstość faktów",
+        "kExtract": "Łatwość ekstrakcji",
+        "kScored": "Ocenione strony",
+        "nSelf": "Fragmenty rozumiane samodzielnie",
+        "nSpo": "Fakty podmiot-orzeczenie-dopełnienie",
+        "nExtract": "Tabele, listy, nagłówki",
+        "nScored": "Pominięto stron: {{0}}",
+        "noteBasic": "Reguły językowe dla {{0}} są podstawowe: wykrywanie zaimków i faktów jest tam mniej precyzyjne.",
+        "tPages": "Strony wg gotowości na AI",
+        "pagesIntro": "Do 25 stron, od najniższego wyniku.",
+        "colScore": "Wynik",
+        "colSelf": "Samowystarczalne",
+        "colSpo": "Fakty",
+        "colExtract": "Struktura",
+        "colChunks": "Fragmenty",
+        "tPassages": "Najsłabsze fragmenty",
+        "passagesIntro": "Fragmenty, które indeks RAG miałby trudność zacytować, wraz ze znalezionymi problemami.",
+        "colHeading": "Strona i nagłówek",
+        "colExcerpt": "Fragment",
+        "colIssues": "Problemy",
+        "percent": "{{0}}%",
+        "band": {
+          "excellent": "Doskonała gotowość",
+          "good": "Dobra gotowość",
+          "moderate": "Umiarkowana gotowość",
+          "weak": "Słaba gotowość",
+          "critical": "Krytyczna gotowość"
+        },
+        "issue": {
+          "dangling-pronoun": "Niejasne odniesienie",
+          "no-answer-first": "Brak bezpośredniej odpowiedzi na początku",
+          "filler-opening": "Wodnisty początek",
+          "no-facts": "Brak konkretnych faktów",
+          "too-long": "Za długi na jeden fragment"
+        }
+      },
+      "trust": {
+        "title": "Zaufanie do encji (E-E-A-T)",
+        "intro": "Jak łatwo zweryfikować wydawcę, autorów i źródła witryny. Wyniki pochodzą z zapisanego przebiegu; żadne strony nie są pobierane ponownie.",
+        "scoreTitle": "Wynik zaufania do encji",
+        "legend": "Poziomy: 75-100 silne, 60-74 wystarczające, 40-59 słabe, 0-39 krytyczne.",
+        "kSchema": "Graf encji",
+        "kAuthor": "Dopasowanie autora",
+        "kCitation": "Jakość źródeł",
+        "kTransparency": "Transparentność",
+        "kArticles": "Strony artykułów",
+        "kAuthors": "Encje autorów",
+        "nLayer": "Wynik 0-100",
+        "nNoData": "Brak danych w tym crawlu",
+        "nArticles": "z {{0}} przeskanowanych",
+        "nAuthors": "{{0}} z sameAs",
+        "ymylNote": "Kategoria YMYL: {{0}}. {{1}}% artykułów nie ma imiennego autora ani recenzenta.",
+        "tAuthors": "Encje autorów",
+        "authorsIntro": "Autorzy znalezieni w danych strukturalnych, z linkami sameAs i dopasowaniem do tematu głównego.",
+        "colAuthor": "Autor",
+        "colArticles": "Artykuły",
+        "colSameAs": "sameAs",
+        "colAlignment": "Dopasowanie",
+        "generic": "{{0}} (anonimowa sygnatura)",
+        "tPages": "Strony zaufania",
+        "pagesIntro": "Strony pokazujące transparentność redakcyjną i firmową.",
+        "colPage": "Strona",
+        "colState": "Status",
+        "found": "Znaleziono: {{0}}",
+        "missing": "Brak",
+        "tFindings": "Ustalenia o zaufaniu",
+        "findingsIntro": "Posortowane według wagi; najpierw popraw pozycje krytyczne.",
+        "colSeverity": "Waga",
+        "colFinding": "Ustalenie",
+        "level": {
+          "strong": "Silne zaufanie",
+          "adequate": "Wystarczające zaufanie",
+          "weak": "Słabe zaufanie",
+          "critical": "Krytyczne braki zaufania"
+        },
+        "severity": {
+          "critical": "Krytyczne",
+          "warning": "Ostrzeżenie",
+          "info": "Info"
+        },
+        "kind": {
+          "editorial": "Polityka redakcyjna",
+          "about": "O nas",
+          "contact": "Kontakt",
+          "registry": "Dane rejestrowe firmy"
+        },
+        "ymyl": {
+          "health": "zdrowie",
+          "finance": "finanse",
+          "legal": "prawo"
+        },
+        "find": {
+          "ymyl-unattributed": "{{0}} artykułów ({{1}}%) w temacie YMYL nie ma imiennego autora ani recenzenta.",
+          "ymyl-no-reviewer": "Żaden z {{0}} artykułów medycznych nie wskazuje recenzenta (reviewedBy).",
+          "no-bylines": "Żaden z {{0}} artykułów nie wskazuje autora w danych strukturalnych.",
+          "generic-author": "{{0}} artykułów jest podpisanych anonimowo.",
+          "org-missing": "W danych strukturalnych nie znaleziono encji Organization.",
+          "org-no-same-as": "Wydawca {{0}} nie ma linków sameAs.",
+          "author-no-same-as": "{{0}} autorów nie ma linków sameAs ({{1}}).",
+          "author-no-id": "{{0}} autorów nie ma stabilnego @id.",
+          "author-off-topic": "Profil autora {{0}} pasuje do tematu głównego tylko w {{1}}%.",
+          "low-citations": "Tylko {{0}}% z {{1}} stron artykułów cytuje zaufane źródło.",
+          "dead-citations": "{{0}} linków wychodzących zwraca błąd.",
+          "missing-editorial": "Nie znaleziono polityki redakcyjnej ani strony o weryfikacji faktów.",
+          "missing-contact": "Nie znaleziono strony kontaktowej.",
+          "missing-registry": "Nie znaleziono strony z danymi rejestrowymi firmy ani informacji prawnej.",
+          "missing-about": "Nie znaleziono strony O nas.",
+          "missing-dates": "Tylko {{0}}% artykułów pokazuje datę modyfikacji lub recenzji.",
+          "no-articles": "Nie wykryto stron artykułów; warstwy autorów i cytowań nie zostały ocenione.",
+          "author-invalid-profile": "{{0}} autorów podaje profil ORCID lub Wikidata z błędnym identyfikatorem ({{1}}). Sprawdź sumę kontrolną lub Q-ID.",
+          "ymyl-no-scholarly-ids": "Żaden z {{0}} artykułów nie cytuje źródła z DOI, PMID ani PMCID. W tematyce YMYL cytuj badanie pierwotne."
+        }
+      },
+      "offPage": {
+        "title": "Analiza off-page",
+        "intro": "Najnowsza zapisana analiza tego projektu; próbka nie jest pełnym profilem linków zwrotnych.",
+        "topic": "Temat",
+        "scale": "Skala autorytetu",
+        "model": "Model embeddingów",
+        "requested": "Żądane źródła",
+        "fetched": "Pobrane źródła",
+        "scored": "Ocenione źródła",
+        "statusLabel": "Status",
+        "limitationsLabel": "Ograniczenia",
+        "sourcesIntro": "Do 10 źródeł, od najwyższego wkładu; n/a oznacza brak danych.",
+        "offset": "Pozycja w tekście",
+        "excerpt": "Fragment",
+        "disclaimer": "To nie jest Google PageRank; brak tekstu lub autorytetu oznacza dane częściowe/niedostępne, a nie zero linków zwrotnych; współwystępowanie nie oznacza poparcia.",
+        "tbva": "TBVA",
+        "tSources": "Zapisane dane poszczególnych źródeł",
+        "authority": "Autorytet",
+        "similarity": "Podobieństwo",
+        "contribution": "Wkład",
+        "tCitations": "Fragmenty współcytowań",
+        "na": "n/a",
+        "status": {
+          "ready": "Gotowe",
+          "partial": "Częściowe",
+          "unavailable": "Niedostępne"
+        },
+        "limitations": {
+          "no-topic-vector": "Brak poprawnego wektora Core Topic z ostatniego ukończonego crawlu projektu; TBVA jest niedostępne.",
+          "invalid-scale": "Nieprawidłowa skala autorytetu; TBVA jest niedostępne.",
+          "no-follow-links": "Brak linków follow do analizy.",
+          "source-text-or-authority-missing": "Część źródeł nie ma tekstu, poprawnych wektorów lub autorytetu dostawcy."
+        }
+      }
+    },
+    "recs": {
+      "crawlMissingLanguage": "Dodaj prawidłowy atrybut lang do elementu <html>, na przykład lang=\"pl\".",
+      "htmlDoctype": "Rozpocznij dokument dokładnie jednym <!doctype html>.",
+      "htmlMetaCharset": "Zadeklaruj <meta charset=\"utf-8\"> w pierwszych 1024 bajtach sekcji head.",
+      "htmlDuplicateId": "Zadbaj, aby każdy atrybut id był unikalny w dokumencie.",
+      "htmlUriInvalid": "Popraw URL tak, aby był poprawnie zakodowany procentowo i możliwy do rozwiązania.",
+      "missingTitle": "Dodaj unikalny, opisowy <title> o długości 30 do 60 znaków.",
+      "multipleTitle": "Zachowaj dokładnie jeden element <title> w sekcji head.",
+      "titleLength": "Przepisz <title> na 30-60 znaków opisujących stronę.",
+      "duplicateTitle": "Nadaj każdej stronie własny, unikalny title odpowiadający jej tematowi.",
+      "missingMetaDescription": "Dodaj unikalny meta description o długości 70-160 znaków.",
+      "metaDescriptionLength": "Przepisz meta description na 70-160 znaków.",
+      "emptyDescription": "Uzupełnij meta description lub usuń pusty znacznik.",
+      "multipleMetaDescription": "Zachowaj pojedynczy znacznik meta description w sekcji head.",
+      "duplicateMetaDescription": "Napisz unikalny meta description dla każdej strony.",
+      "missingCanonical": "Dodaj <link rel=\"canonical\"> wskazujący preferowany URL strony.",
+      "canonicalTargetReturned": "Wskaż w canonical URL, który odpowiada kodem HTTP 200.",
+      "canonicalAndNoindex": "Usuń canonical albo noindex, aby sygnał indeksowania był jednoznaczny.",
+      "canonicalDeclarationHas": "Użyj bezwzględnego adresu URL http(s) w linku canonical.",
+      "crawlMultipleCanonical": "Zadeklaruj dokładnie jeden adres canonical na stronę.",
+      "crawlCanonical": "Sprawdź, czy cel canonical to strona, którą chcesz indeksować; w przeciwnym razie ustaw canonical na samą stronę.",
+      "missingH1": "Dodaj dokładnie jeden <h1> określający temat strony.",
+      "multipleH1": "Zachowaj jeden <h1>, a pozostałe obniż do <h2>.",
+      "heading": "Zachowaj kolejność nagłówków (h1, h2, h3) bez pomijania poziomów.",
+      "crawlDuplicateContent": "Przepisz stronę lub scal duplikaty za pomocą canonical albo przekierowania.",
+      "nearDuplicate": "Zróżnicuj treść tych stron lub je połącz.",
+      "httpErrorStatus": "Napraw błąd serwera albo usuń/przekieruj linki prowadzące do tego URL.",
+      "fetchFailed": "Sprawdź, czy serwer jest osiągalny i odpowiada w limicie czasu; następnie wykonaj crawl ponownie.",
+      "crawlClientRedirect": "Zastąp meta/JS refresh przekierowaniem 301 po stronie serwera.",
+      "redirect": "Linkuj bezpośrednio do końcowego URL i ogranicz łańcuchy przekierowań do jednego kroku.",
+      "crawlNofollow": "Usuń nofollow z dyrektyw robots, chyba że przekazywanie mocy linków naprawdę ma być zablokowane.",
+      "noindex": "Usuń noindex, jeśli strona powinna pojawiać się w wynikach wyszukiwania.",
+      "crawlThinContent": "Rozbuduj stronę o wartościową, oryginalną treść albo ustaw noindex/scal ją.",
+      "missingAlt": "Dodaj opisowy atrybut alt do każdego obrazu niosącego informację.",
+      "jsonldSyntax": "Popraw składnię JSON-LD, aby dało się ją sparsować i zwalidować.",
+      "schemaValidation": "Zmniejsz ilość danych strukturalnych na stronie, aby zmieścić się w limitach.",
+      "structuredData": "Zadeklaruj każdy przywoływany @id w tym samym grafie albo usuń odwołanie.",
+      "schema": "Popraw właściwość danych strukturalnych zgłoszoną dla tej strony.",
+      "pagination": "Zadbaj, aby cele rel=next/prev były poprawne, osiągalne i wzajemne.",
+      "ampTarget": "Sprawdź stronę AMP: musi odpowiadać kodem 200 i deklarować stronę źródłową jako canonical.",
+      "nonHtmlResource": "Nie są wymagane żadne działania, chyba że ten URL powinien być stroną HTML.",
+      "responseBody": "Zmniejsz rozmiar strony lub zwiększ limit odpowiedzi i wykonaj crawl ponownie.",
+      "transientHttpFailure": "Sprawdź stabilność serwera; żądanie powiodło się dopiero po ponowieniu.",
+      "browser": "Sprawdź błąd renderowania w konsoli przeglądarki i napraw zasób, który zawodzi.",
+      "rendered": "Upewnij się, że żądany URL nie przenosi w przeglądarce gdzie indziej.",
+      "robots": "Sprawdź regułę robots.txt, jeśli ten URL powinien być dostępny dla crawlera.",
+      "genericCritical": "Napraw ten problem w pierwszej kolejności: może uniemożliwiać crawlowanie lub indeksowanie strony.",
+      "genericWarning": "Sprawdź dotknięte strony i popraw zgłoszony element.",
+      "genericNotice": "Opcjonalne usprawnienie: sprawdź dotknięte strony, gdy będzie czas."
+    }
+  },
+  "help": {
+    "overview": {
+      "healthScore": {
+        "title": "Wynik zdrowia strony",
+        "what": "Jedna liczba od 0 do 100, która podsumowuje, ile problemów technicznych i on-page SEO SEOmi znalazł na tej jednej stronie. 100 oznacza, że niczego nie wykryto. Każdy problem odejmuje punkty, a poważne odejmują więcej niż drobne.",
+        "why": "Wyszukiwarki i użytkownicy wolą strony, które się ładują, da się je przeczytać i łatwo zrozumieć. Niski wynik zwykle oznacza, że coś blokuje pozycjonowanie, na przykład brak tytułu, błędny kod odpowiedzi albo znacznik noindex. Wynik to szybka ocena stanu, a nie czynnik rankingowy, który czyta Google.",
+        "action": "Sprawdź kolor: 85 i więcej (zielony) to dobry stan, 65 do 84 (żółty) wymaga uwagi, poniżej 65 (czerwony) trzeba działać od razu.\nOtwórz listę problemów niżej na tym ekranie i zacznij od pozycji Krytycznych.\nNapraw jeden problem, uruchom audyt ponownie i zobacz, jak rośnie wynik.\nNie goń za 100 za wszelką cenę: 90 punktów i świetna treść są lepsze niż 100 na stronie z cienką treścią.",
+        "example": "Strona bez tytułu (Krytyczny), bez meta description (Ostrzeżenie) i z dwoma obrazami bez tekstu alternatywnego (Info) może dostać około 68 punktów. Dodanie tytułu i opisu zwykle podnosi wynik powyżej 85.",
+        "learnMore": "Wynik obejmuje tylko to, co SEOmi potrafi zmierzyć na tej jednej stronie. Nie ocenia jakości treści, linków przychodzących ani konkurencji."
+      },
+      "httpStatus": {
+        "title": "Kod odpowiedzi HTTP",
+        "what": "Trzycyfrowa odpowiedź, którą serwer WWW daje na każde zapytanie i która mówi, czy strona została dostarczona. 200 oznacza, że wszystko w porządku, 301 i 302 że strona została przeniesiona, 404 że nie znaleziono, 410 że usunięto na stałe, a 500 i więcej że zawiódł sam serwer.",
+        "why": "Google indeksuje tylko strony odpowiadające kodem 200 (albo przekierowane na taką stronę). Strona z kodem 404 lub 5xx znika z wyników wyszukiwania, a użytkownik widzi błąd. Nawet krótka awaria 500 może sprawić, że Googlebot rzadziej odwiedza witrynę.",
+        "action": "200: nic nie rób, to poprawny wynik.\n301 lub 302: sprawdź, czy adres docelowy to strona, na którą mają trafiać ludzie. Do stałych zmian używaj 301.\n404 lub 410: przywróć stronę albo przekieruj stary adres kodem 301 na najbardziej pasującą stronę.\n5xx: poproś firmę hostingową lub programistę o sprawdzenie logów serwera, potem uruchom audyt ponownie.\nPo naprawie sprawdź ponownie, czy status to 200.",
+        "example": "Zmieniasz adres /blog/porady-seo na /blog/poradnik-seo i zapominasz o przekierowaniu. Stary adres zwraca 404, więc każdy link i wynik w Google prowadzi do błędu. Przekierowanie 301 ze starego adresu na nowy naprawia sprawę."
+      },
+      "responseTime": {
+        "title": "Czas odpowiedzi serwera",
+        "what": "Liczba milisekund (1000 ms to 1 sekunda), której serwer potrzebował, żeby zacząć wysyłać tę stronę po zapytaniu SEOmi. To pomiar serwera, a nie czasu wyświetlenia strony w przeglądarce.",
+        "why": "Wolny serwer opóźnia wszystko, co dzieje się potem, więc użytkownicy wychodzą, a Google skanuje mniej Twoich stron. Google zaleca odpowiedź serwera poniżej około 200 ms. Powyżej 1000 ms jest wyraźnie wolno.",
+        "action": "Poniżej 200 ms: świetnie, nic nie zmieniaj.\n200 do 600 ms: akceptowalnie; rozważ cache, jeśli strona jest głównie statyczna.\nPowyżej 600 ms: włącz cache stron (lub CDN) i kompresję odpowiedzi.\nPowyżej 1000 ms: sprawdź jakość hostingu, ciężkie zapytania do bazy i wolne wtyczki.\nZmierz 2 lub 3 razy, bo pojedynczy odczyt może być jednorazowym skokiem.",
+        "example": "Wpis blogowy, który na współdzielonym hostingu odpowiada w 1800 ms, po włączeniu wtyczki z pełnym cache często schodzi do 150 do 300 ms."
+      },
+      "severityCounts": {
+        "title": "Liczba problemów według wagi",
+        "what": "Problemy znalezione na tej stronie, pogrupowane według powagi. Krytyczne mogą uniemożliwić pozycjonowanie albo działanie strony. Ostrzeżenia to realne słabości, które kosztują ruch lub kliknięcia. Info to drobne usprawnienia lub informacje warte uwagi.",
+        "why": "Podział mówi, co naprawiać najpierw. Dziesięć pozycji Info znaczy mniej niż jedna Krytyczna, więc nie stracisz dnia na kosmetykę, kiedy błędny znacznik canonical ukrywa stronę przed Google.",
+        "action": "Najpierw napraw wszystkie problemy Krytyczne, potem uruchom audyt ponownie.\nPrzejdź przez Ostrzeżenia, zaczynając od tych, które dotyczą wielu stron.\nPozycje Info traktuj jak zaległości na czas, gdy będzie wolna chwila.\nCelem jest 0 przy Krytycznych, a nie 0 wszędzie.",
+        "example": "3 Krytyczne, 5 Ostrzeżeń, 9 Info: zacznij od trzech Krytycznych, na przykład braku tytułu, znacznika noindex i błędu 404 na głównym obrazie."
+      },
+      "wordCount": {
+        "title": "Liczba słów",
+        "what": "Liczba słów widocznego tekstu, które SEOmi znalazł w głównej treści strony. Menu, skrypty i ukryty kod nie są liczone. Czas czytania jest szacowany na około 200 słów na minutę.",
+        "why": "Strony z bardzo małą ilością tekstu dają wyszukiwarkom mało do zrozumienia, co nazywa się cienką treścią. Dłużej nie znaczy automatycznie lepiej: strona musi w pełni odpowiadać na to, po co przyszedł użytkownik.",
+        "action": "Poniżej 300 słów: zapytaj siebie, czy strona naprawdę odpowiada na pytanie. Jeśli nie, dodaj konkretne informacje.\n300 do 1000 słów: normalne dla większości stron usług i produktów.\nPowyżej 1500 słów: typowe dla pogłębionych poradników; podziel tekst nagłówkami na łatwe do przejrzenia części.\nPorównuj się z najlepszymi wynikami Google dla swojej frazy, a nie z magiczną liczbą.",
+        "example": "Karta produktu z 80 słowami zwykle przegrywa z konkurencją, która w 400 słowach opisuje materiały, rozmiary, dostawę i zwroty."
+      }
+    },
+    "metadata": {
+      "titleLength": {
+        "title": "Długość tytułu strony",
+        "what": "Tytuł to niebieski, klikalny nagłówek w wynikach Google oraz napis na karcie przeglądarki. Długość liczymy w znakach, razem ze spacjami.",
+        "why": "Google pokazuje około 50 do 60 znaków (mniej więcej 580 pikseli). Dłuższe tytuły są ucinane wielokropkiem, więc słowa kluczowe i marka mogą zniknąć. Zbyt krótki tytuł marnuje szansę na opisanie strony i zachęcenie do kliknięcia.",
+        "action": "Celuj w 40 do 65 znaków (w tym zakresie SEOmi pokazuje kolor zielony).\nUmieść główną frazę blisko początku.\nKażda strona powinna mieć unikalny tytuł.\nDodaj nazwę marki na końcu, jeśli się mieści, na przykład po myślniku.\nPisz dla ludzi: obiecaj to, co użytkownik dostanie.\nZapisz zmianę i uruchom audyt ponownie, żeby zobaczyć zielony licznik.",
+        "example": "\"Tanie buty\" (10 znaków) to za mało. \"Buty do biegania męskie online | Darmowy zwrot | SportSklep\" ma 56 znaków i się mieści."
+      },
+      "metaDescription": {
+        "title": "Meta description (opis strony)",
+        "what": "Jedno lub dwa zdania podsumowujące stronę, ukryte w kodzie, które Google często pokazuje pod tytułem w wynikach wyszukiwania. Na samej stronie nie jest widoczne.",
+        "why": "Nie wpływa bezpośrednio na pozycję, ale czytelny, zachęcający opis zwiększa odsetek osób klikających Twój wynik (CTR), czyli daje więcej odwiedzin z tej samej pozycji. Gdy go brakuje, Google układa własny fragment, często przypadkowy kawałek tekstu.",
+        "action": "Napisz unikalny opis dla każdej strony.\nMieść się między 120 a 160 znakami, żeby nie został ucięty.\nUżyj głównej frazy naturalnie, bo Google pogrubia słowa pasujące do zapytania.\nPowiedz, co zyska użytkownik, i dodaj wezwanie do działania, na przykład \"Sprawdź ceny\" lub \"Dowiedz się jak\".\nNie kopiuj pierwszego akapitu strony.",
+        "example": "\"Jak wybrać buty do biegania w 5 krokach: dopasowanie, amortyzacja, waga, cena i teren. Zawiera darmową tabelę rozmiarów i porady zakupowe.\" (około 140 znaków)."
+      }
+    },
+    "headings": {
+      "h1Count": {
+        "title": "Liczba nagłówków H1",
+        "what": "H1 to główny nagłówek strony, największy tytuł widoczny na górze treści. To coś innego niż tag title na karcie przeglądarki. Nagłówki H2 do H6 to mniejsze śródtytuły poniżej niego.",
+        "why": "H1 jednym zdaniem mówi użytkownikom i wyszukiwarkom, o czym jest strona. Brak H1 sprawia, że strona wygląda na nieuporządkowaną dla czytników ekranu. Kilka H1 nie jest błędem dla Google, ale rozmywa przekaz i myli narzędzia dostępności.",
+        "action": "Celem jest dokładnie jeden H1 na stronę.\nJeśli jest 0: dodaj na górze treści jeden, który opisuje stronę i zawiera główną frazę.\nJeśli jest 2 lub więcej: zostaw najlepszy, a pozostałe zmień na H2 lub H3.\nNie używaj H1 tylko do ozdoby; do rozmiaru użyj CSS.",
+        "example": "Na stronie z przepisem H1 to \"Łatwe domowe ciasto na pizzę\", a kroki niżej to nagłówki H2: \"Składniki\", \"Sposób przygotowania\", \"Wskazówki\"."
+      }
+    },
+    "images": {
+      "overview": {
+        "title": "Znalezione obrazy",
+        "what": "Liczba obrazów wykrytych na stronie wraz z kontrolą każdego z nich: tekst alternatywny alt (krótki opis dla osób, które nie widzą obrazu), atrybuty rozmiaru, format i waga pliku.",
+        "why": "Obrazy są zwykle najcięższą częścią strony, więc ją spowalniają. Brak tekstu alt krzywdzi osoby niewidome i odbiera szansę na pojawienie się w Grafice Google. Brak szerokości i wysokości powoduje skakanie strony podczas ładowania (przesunięcie układu).",
+        "action": "Dla każdego istotnego obrazu napisz krótki, trafny tekst alt. Dla ozdobnych zostaw pusty alt.\nUstaw atrybuty width i height, żeby przeglądarka zarezerwowała miejsce.\nSkompresuj zdjęcia; staraj się, by każde miało poniżej 150 KB.\nUżywaj nowoczesnych formatów, takich jak WebP lub AVIF.\nWłącz leniwe ładowanie dla obrazów poniżej pierwszego ekranu.",
+        "example": "alt=\"Czerwony but do biegania, widok z boku\" jest dobry. alt=\"image1.jpg\" albo upchana lista fraz już nie."
+      }
+    },
+    "links": {
+      "overview": {
+        "title": "Linki na stronie",
+        "what": "Liczba wszystkich linków znalezionych przez SEOmi, podzielona na wewnętrzne (do Twojej witryny), zewnętrzne (do innych witryn) i nofollow (oznaczone tak, by wyszukiwarki nie przekazywały przez nie zaufania).",
+        "why": "Linki wewnętrzne pomagają Google odkrywać strony i rozumieć, które są ważne. Linki zewnętrzne do dobrych źródeł zwiększają wiarygodność treści. Zepsute linki irytują użytkowników i marnują budżet skanowania.",
+        "action": "Sprawdź, czy strona linkuje do ważnych powiązanych stron opisowym tekstem, a nie \"kliknij tutaj\".\nNapraw lub usuń każdy link zwracający 404.\nLinkuj na zewnątrz tylko do wiarygodnych źródeł; dla płatnych lub niepewnych dodaj nofollow.\nZachowaj rozsądną liczbę: kilkadziesiąt na zwykłej stronie, a nie setki.\nSprawdź ryzyka bezpieczeństwa, na przykład linki otwierające nową kartę bez rel=\"noopener\".",
+        "example": "Poradnik o butach do biegania powinien linkować do strony \"tabela rozmiarów\" z tekstem kotwicy \"tabela rozmiarów\"."
+      }
+    },
+    "settings": {
+      "theme": {
+        "title": "Motyw",
+        "what": "Wybiera wygląd SEOmi: Ciemny, Jasny albo Systemowy, który podąża za ustawieniem Twojego komputera.",
+        "why": "Nie zmienia żadnego wyniku audytu. Wybierz to, co jest najwygodniejsze dla oczu: ciemny motyw zmniejsza olśnienie w słabo oświetlonym pokoju, jasny jest czytelniejszy w pełnym słońcu, a Systemowy przełącza się sam wieczorem.",
+        "action": "Kliknij Ciemny, Jasny lub Systemowy.\nZmiana działa od razu i jest zapamiętywana przy następnym uruchomieniu.\nJeśli udostępniasz ekran lub drukujesz raporty, Jasny jest zwykle czytelniejszy na projektorze.",
+        "example": "Wybierz Systemowy, jeśli Twój komputer wieczorem przechodzi w tryb ciemny i chcesz, by SEOmi robił to samo."
+      },
+      "auditNotifications": {
+        "title": "Powiadomienia o audycie",
+        "what": "Po włączeniu SEOmi wysyła powiadomienie na pulpit, gdy tylko skończy się długi audyt, skanowanie lub zaplanowane sprawdzenie, nawet jeśli aplikacja działa w tle.",
+        "why": "Duże skanowania trwają minuty lub godziny. Powiadomienia pozwalają zająć się czymś innym i wrócić w odpowiednim momencie. Informują też o zaplanowanych sprawdzeniach zakończonych pod Twoją nieobecność.",
+        "action": "Włącz przełącznik, jeśli uruchamiasz skanowania lub harmonogramy.\nGdy system zapyta o zgodę, wybierz Zezwól. Jeśli wcześniej odmówiono, włącz powiadomienia dla SEOmi w ustawieniach systemu.\nWyłącz, jeśli wyskakujące okienka Cię rozpraszają.\nTekst pod przełącznikiem pokazuje, czy zgoda została udzielona.",
+        "example": "Uruchom skanowanie 5000 stron, przejdź do poczty i dostań powiadomienie, gdy będzie gotowe."
+      }
+    },
+    "focus": {
+      "siteFocusScore": {
+        "title": "Site Focus Score (SFS)",
+        "what": "Miara od 0 do 100 pokazująca, jak spójnie Twoje strony trzymają się jednego tematu głównego. To średnia ważona wskaźnika trafności tematycznej (Topical Relevance Score, TRS) każdej strony: strona główna liczy się 3x, strony kategorii i sekcji 2x, artykuły 1x.",
+        "why": "Wyszukiwarki i czytelnicy nagradzają serwisy, które wyraźnie opisują jeden temat. Niski SFS oznacza, że wiele stron rozmywa ten sygnał.",
+        "action": "Sprawdź przedział: 90-100 doskonały, 75-89 dobry, 60-74 umiarkowany, 40-59 słaby, 0-39 krytyczny.\nOtwórz mapę cieplną i najpierw popraw najsłabsze strony.",
+        "example": "Blog o cukrzycy z 40 artykułami o cukrzycy i 8 o podróżach uzyskuje około 80."
+      },
+      "topicRelevance": {
+        "title": "Topical Relevance Score (TRS)",
+        "what": "Wynik od 0 do 100 dla jednego adresu URL: jak dobrze ta strona pasuje do tematu głównego serwisu. Łączy podobieństwo semantyczne, zbieżność słów kluczowych i dryf semantyczny.",
+        "why": "Pokazuje, które pojedyncze strony odciągają cały serwis od tematu.",
+        "action": "Celuj w 75 lub więcej.\nPopraw strony z wynikiem od 60 do 74.\nUsuń, przekieruj lub przepisz strony poniżej 40.",
+        "example": "Strona o glukometrach w serwisie o cukrzycy: TRS 88. Strona o tanich lotach: TRS 12."
+      },
+      "coreTopicConfidence": {
+        "title": "Pewność tematu głównego",
+        "what": "Jak dominujący jest wykryty temat główny w porównaniu z wszystkimi innymi tematami znalezionymi w serwisie, od 0 do 100 procent.",
+        "why": "Jeśli pewność jest niska, serwis nie ma jasnego tematu przewodniego albo przeanalizowano zbyt mało stron, więc wyniki są mniej wiarygodne.",
+        "action": "Powyżej 60 procent: możesz zaufać tematowi.\nPoniżej sprawdź nazwę tematu i w razie błędu skorzystaj z ręcznego ustawienia.",
+        "example": "Jeśli najważniejszy temat ma 70 procent łącznej wagi terminów, pewność wynosi 70 procent."
+      },
+      "onTopicRatio": {
+        "title": "Odsetek stron w temacie",
+        "what": "Udział stron z treścią, których TRS wynosi 60 lub więcej. Strony techniczne, takie jak logowanie czy koszyk, nie są liczone.",
+        "why": "Pokazuje, ile stron, a nie jaki ważony wynik, wspiera temat główny.",
+        "action": "Podnieś go, poprawiając strony graniczne (60-74 i niżej) oraz usuwając strony spoza tematu.",
+        "example": "42 z 50 stron z treścią ma TRS 60 lub więcej: odsetek wynosi 84 procent."
+      },
+      "semanticSimilarity": {
+        "title": "Podobieństwo semantyczne",
+        "what": "Jak bardzo słownictwo strony zbliżone jest do profilu tematu głównego serwisu (podobieństwo cosinusowe, podane w procentach).",
+        "why": "To największy składnik wzoru TRS.",
+        "action": "80-100 procent to wynik mocny, 50-79 umiarkowany, poniżej 50 słaby.\nDodaj terminy i sekcje należące do tematu głównego.",
+        "example": "Strona o pompach insulinowych przy temacie głównym o cukrzycy: 86 procent."
+      },
+      "keywordOverlap": {
+        "title": "Zbieżność słów kluczowych",
+        "what": "Udział 30-50 najważniejszych słów kluczowych tematu głównego, które pojawiają się na stronie.",
+        "why": "Strona, która pomija większość kluczowych słów tematu, nie wesprze go, nawet jeśli jest dobrze napisana.",
+        "action": "Ponad 60 procent to wynik mocny; poniżej 30 procent oznacza stronę spoza tematu.\nDodaj brakujące słowa kluczowe tam, gdzie pasują naturalnie.",
+        "example": "Zestaw główny ma 40 słów kluczowych, a strona używa 28: zbieżność 70 procent."
+      },
+      "semanticDrift": {
+        "title": "Dryf semantyczny",
+        "what": "Udział wagi terminów strony, który należy do obcych tematów, a nie do tematu głównego.",
+        "why": "Wysoki dryf oznacza, że strona poświęca słowa czemuś innemu.",
+        "action": "Dryf powyżej 50 procent to sygnał alarmowy.\nWytnij lub przenieś obce sekcje albo wydziel je do osobnego obszaru serwisu.",
+        "example": "Strona o cukrzycy z długimi akapitami o ofertach wakacyjnych: dryf 55 procent."
+      },
+      "keywordAlignment": {
+        "title": "Dopasowanie słów kluczowych",
+        "what": "Pokazuje, jak każde częste słowo kluczowe strony odnosi się do tematu głównego. Symbole: znacznik ptaszka powyżej 70 procent trafności, tylda od 40 do 70 procent, krzyżyk poniżej 40 procent.",
+        "why": "Uwidacznia, które słowa na stronie pomagają tematowi, a które rozpraszają.",
+        "action": "Zachowaj i rozwijaj słowa kluczowe oznaczone ptaszkiem.\nOgranicz lub usuń słowa oznaczone krzyżykiem.",
+        "example": "„glukoza” - 92 procent - ptaszek; „hotel” - 8 procent - krzyżyk."
+      },
+      "deltaScore": {
+        "title": "Delta Score",
+        "what": "Symulowana zmiana Site Focus Score po wykonaniu danego działania. Symulacja przelicza średnią ważoną z nowymi wartościami stron.",
+        "why": "Pozwala uszeregować działania według zysku w stosunku do nakładu pracy, zamiast zgadywać.",
+        "action": "Zacznij od działań o najwyższym zysku i najniższym nakładzie.\nPo pracach przeskanuj serwis ponownie, aby potwierdzić rzeczywisty zysk.",
+        "example": "Usunięcie 6 stron spoza tematu: plus 4,2 punktu."
+      },
+      "lowConfidence": {
+        "title": "Niska pewność",
+        "what": "Wyświetlana, gdy przeanalizowano zbyt mało stron albo żaden temat wyraźnie nie przeważa, więc wykryty temat główny może być błędny.",
+        "why": "Przy małej próbie jedna nietypowa strona może zmienić cały wynik.",
+        "action": "Przeskanuj więcej stron.\nSprawdź nazwę tematu i w razie błędu zmień ją ręcznie.\nPodchodź ostrożnie do porad dotyczących usuwania.",
+        "example": "Crawl 6 stron daje tylko przybliżony obraz."
+      },
+      "benchmark": {
+        "title": "Benchmark konkurencji",
+        "what": "Twój Site Focus Score zestawiony z serwisami, które pojawiają się w wynikach wyszukiwania dla Twojego tematu głównego. Każdy konkurent jest skanowany na niewielkiej próbie stron i oceniany tym samym wzorem co Twój serwis.",
+        "why": "Wynik ma sens dopiero na tle punktu odniesienia. Gdy widzisz, jak skupieni są liderzy, wiesz, ile masz pola do poprawy i jak wygląda realistyczny cel.",
+        "action": "Uruchom benchmark z podłączonym źródłem wyników wyszukiwania.\nPorównaj swój udział stron w temacie i strony spoza tematu z top 3.\nOtwórz listę luk i zaplanuj treści dla terminów używanych przez większość konkurentów.",
+        "example": "Jeśli średnia top 3 to 82, a Ty masz 64, najpierw celuj w 80, poprawiając strony spoza tematu.",
+        "learnMore": "Dane konkurentów pochodzą z ograniczonej próby crawla, więc małe różnice traktuj jako szum."
+      },
+      "benchmarkTarget": {
+        "title": "Wynik docelowy",
+        "what": "Sugerowany cel: co najmniej 80 lub średnia top 3 konkurentów, jeśli ich wynik jest wyższy.",
+        "why": "Zamienia porównanie w jedną liczbę, do której możesz dążyć.",
+        "action": "Traktuj go jako cel planistyczny.\nUruchom benchmark ponownie po poprawkach, aby zobaczyć zmianę."
+      },
+      "indexGate": {
+        "title": "Bramka indeksowalności",
+        "what": "Strony z noindex lub z canonical wskazującym inny URL nie wchodzą do wyniku, więc wynik dotyczy stron, które mogą się pozycjonować.",
+        "why": "Liczenie stron, których Google nie zaindeksuje, obniża wynik i może prowadzić do porad noindex dla stron, które już go mają.",
+        "action": "Sprawdź licznik pominiętych.\nNapraw konflikty pod wynikiem, np. filar z noindex.\n„Uwzględnij je” użyj tylko, by zobaczyć wynik dla wszystkich stron.",
+        "example": "Strona tagu z noindex jest pomijana, a nie oceniana jako poza tematem."
+      },
+      "protection": {
+        "title": "Ochrona URL",
+        "what": "Dla stron o niskiej trafności tematycznej pokazuje, czy prawdziwe kliknięcia, konwersje, przychód lub domeny linkujące przemawiają za ich zachowaniem.",
+        "why": "Sam niski wynik nie uzasadnia usunięcia, przekierowania ani noindex strony, która ma ruch lub linki.",
+        "action": "Połącz GSC i GA4, aby dane dało się zmierzyć.\n„Potrzebne dane” traktuj jako nieznane, nie zero.\nDecyduj ręcznie; 301 wymaga trafnego celu.",
+        "example": "Strona z TRS 30 i 80 kliknięciami w 90 dni jest chroniona."
+      }
+    },
+    "authority": {
+      "tas": {
+        "title": "Topical Authority Score",
+        "what": "Wynik 0-100 mówiący, jak kompletnie, głęboko i spójnie witryna pokrywa swój temat główny na tle rynku. Łączy pokrycie tematu (35%), głębokość encji (30%), spójność silosów (25%) i aktualność (10%), a wynik skaluje Site Focus Score.",
+        "why": "SFS mierzy tylko czystość. Witryna z trzema idealnymi artykułami ma wysoki SFS, ale prawie zerowy autorytet, bo pokrywa ułamek dziedziny. TAS mierzy, jak dużą część dziedziny pokrywasz.",
+        "action": "Celuj w 80+ w SFS i TAS. Niski TAS przy wysokim SFS: dodawaj treści. Wysoki TAS przy niskim SFS: usuń lub wydziel obce działy. Zacznij od pierwszej pozycji planu rozbudowy."
+      },
+      "tcr": {
+        "title": "Pokrycie tematu (TCR)",
+        "what": "Odsetek podtematów rynku, które witryna pokrywa dedykowaną stroną w temacie. Każdy podtemat liczy się wg ważności; pełne dopasowanie liczy się w całości, częściowe w połowie.",
+        "why": "Wyszukiwarki traktują jako źródła referencyjne witryny odpowiadające na pełne spektrum pytań w danej dziedzinie. Luki oddają odwiedzających i sygnały rankingowe konkurencji.",
+        "action": "Powyżej 80%: pełny autorytet. Poniżej 40%: wiedza fragmentaryczna. Otwórz mapę pokrycia, przefiltruj luki i publikuj najpierw najważniejsze brakujące podtematy."
+      },
+      "esd": {
+        "title": "Głębokość i encje",
+        "what": "Sprawdza, czy strona naprawdę wyczerpuje podtemat: pojęcia i atrybuty używane przez liderów, pytania użytkowników odpowiedziane pod osobnymi nagłówkami oraz ilość oryginalnego materiału.",
+        "why": "Długi artykuł bez kluczowych pojęć dziedziny przegrywa z krótszymi, ale pełniejszymi źródłami. Sama długość się nie liczy.",
+        "action": "Otwórz płytki podtemat: dodaj brakujące encje i atrybuty, odpowiedz na wymienione pytania pod własnym H2 oraz dodaj dane lub tabelę, której brakuje konkurencji."
+      },
+      "scs": {
+        "title": "Spójność silosów",
+        "what": "Mierzy, jak dobrze artykuły jednego działu są spięte linkami wewnętrznymi: strona filarowa z linkami w obie strony, opisowe anchory, brak stron osieroconych i brak linków ze stron eksperckich do obcych.",
+        "why": "Strony osierocone nie przekazują ani nie otrzymują autorytetu tematycznego. Anchory „kliknij tutaj” nic nie mówią, więc liczą się tylko w jednej dziesiątej.",
+        "action": "Podlinkuj każdą osieroconą stronę z filaru i powiązanych artykułów, używaj anchorów opisujących cel („objawy neuropatii cukrzycowej”) i usuń linki do stron poza tematem."
+      },
+      "matrix": {
+        "title": "Macierz SFS × TAS",
+        "what": "Umieszcza witrynę według czystości (SFS, poziomo) i kompletności (TAS, pionowo). Cztery kwadranty to dominujący autorytet, wąski specjalista, rozproszony gigant i chaotyczny horyzont.",
+        "why": "Dlaczego wysoki focus, a niski autorytet? Pięć idealnych artykułów o cukrzycy daje SFS 95, ale TAS 14: nic poza tematem, za to brakuje 90% dziedziny.",
+        "action": "Utrzymuj SFS powyżej 80, dodając nowe klastry, by podnieść TAS powyżej 80. Wyróżniony kwadrant podpowiada, czy rozbudować, usunąć, czy przebudować."
+      },
+      "cannibalization": {
+        "title": "Kanibalizacja semantyczna",
+        "what": "Dwie lub więcej Twoich stron odpowiada na tę samą intencję: ich treść i nagłówki są niemal identyczne (podobieństwo cosinusowe od 88%) albo obie w pełni pokrywają jeden podtemat referencyjny.",
+        "why": "Sygnały linków wewnętrznych i trafność rozdzielają się między duplikaty, więc żadna ze stron nie trafia na szczyt wyników.",
+        "action": "Zostaw najsilniejszą stronę, przenieś na nią unikalne sekcje, ustaw 301 z pozostałych i zaktualizuj linki wewnętrzne. Przed publikacją użyj sprawdzania szkicu, by uniknąć nowych nakładań."
+      }
+    },
+    "aio": {
+      "aioReadiness": {
+        "title": "Wynik gotowości na AI (AIO-R)",
+        "what": "Miara 0-100 tego, jak łatwo silniki odpowiedzi AI (Google AI Overviews, Perplexity, Copilot) wyciągną i zacytują fragmenty Twoich stron. Łączy samowystarczalne fragmenty (45%), gęstość faktów (35%) i strukturę łatwą do ekstrakcji (20%).",
+        "why": "Silniki AI tną strony na fragmenty i cytują tylko ten, który odpowiada na pytanie. Mętne lub zależne od kontekstu fragmenty są pomijane.",
+        "action": "Otwórz najsłabsze fragmenty i popraw wskazane problemy.\nPrzepisz je tak, by odpowiedź była na początku, z jawnymi nazwami i liczbami.",
+        "example": "Sekcja „Jaka jest norma cukru?”, która zaczyna się od „To zależy od wielu czynników”, dostaje niski wynik."
+      },
+      "selfContainment": {
+        "title": "Samowystarczalność",
+        "what": "Czy fragment ma sens po wycięciu ze strony: nazywa swój podmiot i nie zaczyna się od „to”, „ten” ani „jak wspomniano wyżej”.",
+        "why": "Fragment jest indeksowany osobno. Wiszący zaimek zostawia model bez podmiotu, więc fragment pasuje do mniejszej liczby pytań.",
+        "action": "Zamień „to” i „ten” na początku akapitów na właściwą nazwę.\nUmieść odpowiedź w pierwszych 40-60 słowach pod każdym nagłówkiem.",
+        "example": "„Ta wartość powinna być poniżej 140.” zmienia się w „Glikemia po posiłku powinna być poniżej 140 mg/dl.”"
+      },
+      "spoDensity": {
+        "title": "Gęstość faktów",
+        "what": "Ile jednoznacznych faktów podmiot-orzeczenie-dopełnienie tekst podaje na 100 słów, np. „Glikemia na czczo wynosi 70-99 mg/dl”. Cel to około 3 na 100 słów.",
+        "why": "Modele cytują sprawdzalne stwierdzenia. Wodolejstwo nie daje im czego wyciągnąć.",
+        "action": "Zamień ogólniki w zdania z podmiotem, orzeczeniem i wartością.\nDodaj jednostki i liczby tam, gdzie je masz.",
+        "example": "„Wiele czynników ma znaczenie” nie zawiera faktu. „HbA1c poniżej 7% to typowy cel leczenia” zawiera."
+      },
+      "extractability": {
+        "title": "Łatwość ekstrakcji",
+        "what": "Czy strona używa struktur, które parsery łatwo wyciągają: tabel, list numerowanych, list definicji i czytelnego układu H2/H3.",
+        "why": "Silniki generatywne chętnie budują odpowiedzi z tabel i list kroków, bo ich znaczenie jest jawne.",
+        "action": "Porównania podawaj w tabeli, a procedury na liście numerowanej.\nPisz nagłówki H2/H3 jako pytania, które zadają ludzie.",
+        "example": "Poradnik krok po kroku w jednym długim akapicie dostaje niższy wynik niż ten sam poradnik jako lista numerowana."
+      },
+      "answerFirst": {
+        "title": "Odpowiedź na początku",
+        "what": "Pierwsze 40-60 słów pod nagłówkiem powinno bezpośrednio odpowiadać na nagłówek, nazywać podmiot i podawać fakt.",
+        "why": "Wyszukiwanie RAG porównuje pytanie z początkiem fragmentu. Długi wstęp obniża dopasowanie.",
+        "action": "Najpierw napisz bezpośrednią odpowiedź, potem kontekst.\nPowtórz kluczowy termin z nagłówka w pierwszym zdaniu.",
+        "example": "Nagłówek „Jak długo działa sensor CGM?” i odpowiedź „Sensor CGM działa 10-15 dni, zależnie od modelu.”"
+      },
+      "chunking": {
+        "title": "Symulacja podziału na fragmenty",
+        "what": "SEOmi tnie każdą stronę tak jak indeks RAG: jeden fragment na sekcję H2/H3, a długie sekcje na okna po około 300 tokenów.",
+        "why": "Widzisz stronę tak jak system wyszukujący: jako zbiór osobnych fragmentów, z których każdy jest oceniany osobno.",
+        "action": "Sprawdź wynik każdego słabego fragmentu.\nTrzymaj sekcje na tyle krótkie, by mieściły się w jednym fragmencie.",
+        "example": "Sekcja 900 tokenów to około trzech fragmentów; tylko pierwszy leży bezpośrednio pod nagłówkiem."
+      }
+    },
+    "trust": {
+      "trustScore": {
+        "title": "Wynik zaufania do encji",
+        "what": "Wynik 0-100 pokazujący, jak dobrze wyszukiwarki mogą zweryfikować, kto publikuje i pisze Twoje treści. To średnia czterech warstw: grafu encji, dopasowania autora do tematu, jakości źródeł i transparentności redakcyjnej.",
+        "why": "W tematach zdrowia, finansów i prawa samo skupienie tematyczne nie wystarcza. Strony bez sprawdzalnego autora i wydawcy rzadko trafiają na szczyt wyników.",
+        "action": "Zacznij od krytycznych pozycji na liście.\nPopraw najniższą warstwę, a potem skanuj ponownie, aby zobaczyć zmianę wyniku."
+      },
+      "schemaGraph": {
+        "title": "Graf encji (JSON-LD)",
+        "what": "Sprawdza, czy dane strukturalne nazywają wydawcę i każdego autora jako encje ze stabilnym @id i linkami sameAs oraz czy artykuły zawierają autora, daty, recenzenta i cytowania.",
+        "why": "Powiązane encje pozwalają wyszukiwarkom dopasować autorów do znanych osób i organizacji zamiast zgadywać z samego tekstu.",
+        "action": "Dodaj znaczniki Organization i Person z @id.\nPołącz każdą osobę i wydawcę przez sameAs z Wikidata, ORCID, LinkedIn lub oficjalnym rejestrem.\nSkorzystaj z generatora JSON-LD pod listą autorów."
+      },
+      "authorAlignment": {
+        "title": "Dopasowanie autora do tematu",
+        "what": "Porównuje deklarowaną wiedzę każdego autora (stanowisko, knowsAbout i strona profilu) z tematem głównym witryny.",
+        "why": "Artykuł o insulinoterapii podpisany przez copywritera marketingowego to słaby sygnał eksperckości.",
+        "action": "Przypisuj artykuły autorom, których profil pasuje do tematu.\nDodaj jobTitle i knowsAbout do znaczników Person.\nOpublikuj stronę profilu każdego autora."
+      },
+      "citationQuality": {
+        "title": "Jakość źródeł",
+        "what": "Pokazuje, ile stron artykułów linkuje do zaufanych źródeł, takich jak .gov, .edu, PubMed, NCBI, WHO lub wydawcy naukowi, oraz ile linków wychodzących jest uszkodzonych.",
+        "why": "Cytowanie źródeł pierwotnych pokazuje, że twierdzenia można zweryfikować. Martwe odsyłacze osłabiają ten sygnał.",
+        "action": "Dodaj odsyłacze do źródeł pierwotnych w każdym artykule eksperckim.\nZastąp lub usuń uszkodzone linki wychodzące.\nSprawdź linki zewnętrzne w zakładce Linki, aby odświeżyć kody statusu."
+      },
+      "transparency": {
+        "title": "Transparentność redakcyjna",
+        "what": "Szuka polityki redakcyjnej, strony O nas, strony kontaktowej, danych rejestrowych firmy oraz widocznych dat modyfikacji lub recenzji w artykułach.",
+        "why": "Czytelnicy i wyszukiwarki muszą wiedzieć, kto stoi za witryną i jak sprawdzane są treści.",
+        "action": "Opublikuj politykę redakcyjną i weryfikacji faktów.\nDodaj dane kontaktowe i rejestrowe firmy.\nPokaż datę ostatniej aktualizacji w każdym artykule."
+      },
+      "ymyl": {
+        "title": "Tematy YMYL",
+        "what": "Your Money or Your Life: tematy takie jak zdrowie, finanse i prawo, w których błędne informacje mogą zaszkodzić czytelnikom.",
+        "why": "Wytyczne jakości wyszukiwania stawiają tym tematom najwyższe wymagania zaufania, dlatego brak autorów lub recenzentów to krytyczne braki.",
+        "action": "Podpisz każdy artykuł wykwalifikowanym autorem.\nDodaj recenzenta z kwalifikacjami do treści medycznych lub prawnych.\nCytuj źródła pierwotne."
+      },
+      "sameAs": {
+        "title": "Linki sameAs",
+        "what": "Właściwość schema.org wskazująca z osoby lub organizacji tę samą encję w innym miejscu: Wikidata, ORCID, LinkedIn lub oficjalny rejestr.",
+        "why": "Pozwala wyszukiwarkom potwierdzić, że Twój autor to prawdziwa osoba z tymi kwalifikacjami.",
+        "action": "Dodaj co najmniej jeden wiarygodny adres sameAs dla każdego autora i dla wydawcy.\nUżyj tego samego imienia i pisowni co w tym profilu."
+      }
+    },
+    "executionCard": {
+      "bus": {
+        "title": "Kwarantanna linków",
+        "what": "Adresy, które inny moduł chce usunąć lub przekierować 301, są wyłączone ze wszystkich rekomendacji linków.",
+        "why": "Bez tego jeden panel każe linkować do strony, którą inny panel każe usunąć.",
+        "action": "Przejrzyj listę.\nRozwiąż konflikty oznaczone na czerwono przed wdrożeniem."
+      },
+      "brief": {
+        "title": "Brief jednym kliknięciem",
+        "what": "Tworzy lub aktualizuje brief treści tej strony z danych modułu, który wygenerował rekomendację.",
+        "why": "Brief zaczyna się od realnych brakujących encji, linków, pytań i źródeł zamiast skopiowanego tekstu.",
+        "action": "Kliknij przycisk.\nOtwórz Stację Roboczą Briefu i edytuj szkic.\nKliknij ponownie później, by odświeżyć dane bez tworzenia duplikatu."
+      },
+      "deploy": {
+        "title": "Artefakty wdrożeniowe",
+        "what": "Gotowe pliki reguł przekierowań i usunięć: Apache, Nginx, Cloudflare Bulk Redirects i WordPress Redirection.",
+        "why": "Reguły są najpierw sprawdzane pod kątem pętli i łańcuchów, więc nie wdrożysz przekierowania psującego crawlowanie.",
+        "action": "Pobierz plik dla swojego serwera.\nWdróż go najpierw na kopii testowej.\nOznacz zadanie jako wdrożone i zweryfikuj przy następnym crawlu."
+      },
+      "tasks": {
+        "title": "Rejestr zadań",
+        "what": "Każda rekomendowana zmiana jest zadaniem: zaplanowane, wdrożone, potem zweryfikowane lub nieudane.",
+        "why": "Kolejny crawl sprawdza realny efekt i pokazuje, jak zmienił się wynik modułu względem punktu wyjścia.",
+        "action": "Dodaj zadanie z rekomendacji.\nOznacz je jako wdrożone po publikacji.\nUruchom nowy crawl i kliknij Zweryfikuj."
+      },
+      "sla": {
+        "title": "Właściciel i SLA",
+        "what": "Kto odpowiada za zadanie, jak pilne jest i do kiedy trzeba je wykonać.",
+        "why": "Zadania z właścicielem i terminem nie giną, a przeterminowane łatwo odfiltrować.",
+        "action": "Wpisz nazwę właściciela.\nWybierz priorytet i termin SLA.\nUżyj filtrów, by zobaczyć swoje lub przeterminowane zadania."
+      }
+    },
+    "sprs": {
+      "panel": {
+        "title": "Semantyczny PageRank",
+        "what": "Wewnętrzny PageRank (tłumienie 0,85) w skali 0-100 z flagami stron bez linków wychodzących, z za małą liczbą linków przychodzących lub wysyłających większość linków do niepowiązanych stron.",
+        "why": "Pokazuje, gdzie autorytet linków gromadzi się lub ucieka w obrębie witryny.",
+        "action": "Dodaj linki wychodzące ze ślepych uliczek.\nLinkuj do słabo podlinkowanych stron z mocnych, powiązanych.\nSprawdź wycieki."
+      }
+    },
+    "decay": {
+      "radar": {
+        "title": "Radar zaniku semantycznego",
+        "what": "Porównuje zapisane zrzuty SERP tego samego zapytania, rynku, dostawcy i modelu: przesunięcie centroidu, nowe lub utracone encje konsensusu, zmiany intencji i formatu.",
+        "why": "Czołówka wyników może oddalić się od Twojej strony na długo przed spadkiem pozycji.",
+        "action": "Otwórz wskazane adresy URL.\nZdecyduj ręcznie, czy odświeżyć stronę."
+      }
+    },
+    "sija": {
+      "panel": {
+        "title": "Intencja wyszukiwania (SIJA)",
+        "what": "Przypisuje stronę do jednej z 8 mikrointencji na podstawie struktury (tabele, listy, formularze, karty produktów) i porównuje ją ze średnią realnych stron z TOP 5.",
+        "why": "Strona o formacie innym niż w wynikach często słabo wypada na to zapytanie.",
+        "action": "Otwórz strony z TOP.\nDodaj brakujący format, np. tabelę lub narzędzie.\nTraktuj to jako wskazówkę, nie wyrok."
+      }
+    },
+    "prePublish": {
+      "check": {
+        "title": "Kontrola przed publikacją",
+        "what": "Symuluje dodanie szkicu do witryny: zmianę Site Focus Score, podobieństwo do istniejących stron i to, czy każdy fragment działa samodzielnie.",
+        "why": "Wychwytuje duplikat lub stronę nie na temat, zanim trafi na żywo.",
+        "action": "Popraw każdy wymieniony powód.\nUruchom kontrolę ponownie.\nOpublikuj dopiero po własnej weryfikacji."
+      }
+    },
+    "parity": {
+      "hreflang": {
+        "title": "Parytet międzynarodowy",
+        "what": "Porównuje głębokość tematów w wersjach językowych powiązanych przez hreflang z językiem referencyjnym i oznacza temat jako pokryty, płytki, brakujący lub celowo lokalny.",
+        "why": "Odróżnia prawdziwą lukę treści od rynku, który celowo oferuje coś innego.",
+        "action": "Sprawdź tematy brakujące i płytkie.\nOznacz jako lokalne tematy niepotrzebne na danym rynku.\nNarzędzie nigdy samo nie zmienia hreflang."
+      }
+    },
+    "offPage": {
+      "tbva": {
+        "title": "Autorytet tematyczny off-page",
+        "what": "Sumuje autorytet dostawcy dla linków follow, ważony bliskością strony źródłowej do Twojego tematu. Znajduje też akapity, które wspominają razem Twoją markę i główną encję.",
+        "why": "Kilka trafnych linków może znaczyć więcej niż wiele niezwiązanych.",
+        "action": "Sprawdź źródła o niskim podobieństwie.\nTraktuj wzmianki bez linku jako tropy do kontaktu.\nWzmianki z przeczeniem oceń samodzielnie."
+      }
+    },
+    "llmEconomy": {
+      "costGate": {
+        "title": "Koszt LLM i bramka faktów",
+        "what": "Liczy koszt wywołań AI oraz oszczędności z cache i modeli lokalnych. Zdania medyczne i finansowe z dawką lub kwotą, której nie ma w źródle, są odrzucane.",
+        "why": "Zdalni dostawcy kosztują i dostają treść stron. Zmyślone dawki w treściach zdrowotnych i finansowych są niebezpieczne.",
+        "action": "Przy dużych partiach wybierz model lokalny.\nSprawdź odrzucone zdania ze źródłem.\nTreść YMYL zatwierdź sam, zanim trafi do CMS."
+      }
+    },
+    "templateGovernor": {
+      "informationGain": {
+        "title": "Template Information Gain",
+        "what": "Jaka część każdej strony nie jest szablonem wspólnym dla stron z tego samego wzorca. Niski wynik oznacza tysiące niemal identycznych kopii.",
+        "why": "Google może odfiltrować cały segment szablonu jako cienką treść. Jedno ostrzeżenie o szablonie łatwiej naprawić niż tysiące ostrzeżeń o stronach.",
+        "action": "Dodaj do każdej strony unikalne dane (fakty lokalne, liczby, opinie).\nAlbo ustaw noindex dla segmentu, dopóki nie ma realnej treści.\nPrzeskanuj ponownie i sprawdź, czy wynik rośnie."
+      }
+    },
+    "outreach": {
+      "gapDomains": {
+        "title": "Cele outreachu",
+        "what": "Serwisy, które linkują do Twojej konkurencji z TOP3, a nie do Ciebie, uszeregowane według liczby linkowanych konkurentów i autorytetu.",
+        "why": "Serwis, który już linkuje do kilku konkurentów, to najcieplejszy adres do prośby o link, o ile oferujesz coś nowego.",
+        "action": "Zacznij od góry listy.\nOtwórz szkic, dodaj źródło, które możesz zaoferować tylko Ty, i popraw tekst.\nWyślij go sam ze swojej skrzynki. SEOmi niczego nie wysyła."
+      }
+    },
+    "causalMarket": {
+      "updateWindow": {
+        "title": "Okno aktualizacji Google",
+        "what": "Dni, w których Google wdrażał aktualizację lub cały rynek był wyjątkowo zmienny. Wynik pokazujemy z przedziałem niepewności i flagą, gdy okres nakłada się na takie okno.",
+        "why": "Grupa kontrolna w tej samej witrynie cierpi podczas aktualizacji tak samo jak testowa, więc spadek lub wzrost może wynikać z rynku, a nie ze zmiany.",
+        "action": "Wynik z flagą traktuj jako niejednoznaczny.\nPoczekaj do końca okna aktualizacji i porównaj ponownie.\nJeśli masz zewnętrzną linię bazową rynku, użyj jej."
+      }
+    },
+    "igos": {
+      "score": {
+        "title": "Wynik IGOS",
+        "what": "Zysk informacyjny względem tego, co mówią realne wyniki TOP: nowe encje w temacie, gęstość dowodów, znaczniki doświadczenia i rozkład podtematów, obniżony przy cienkiej bazie.",
+        "why": "Pokazuje, co strona dodaje ponad konsensus. Znaczniki wykazują tylko deklarowane doświadczenie, nie dowodzą badań ani oryginalności.",
+        "action": "Sprawdź cztery składniki.\nDodaj brakujące podstawy.\nUruchom ponownie po edycji."
+      },
+      "heatmap": {
+        "title": "Mapa cieplna akapitów",
+        "what": "Każdy akapit ma etykietę: Echo (bliska kopia fragmentu konkurencji), Zysk (w temacie i nowy), Dryf (poza tematem) lub Neutralny.",
+        "why": "Echo nic nie wnosi, a dryf rozmywa temat. Etykiety są tekstowe, nie tylko kolorem.",
+        "action": "Zacznij od akapitów Echo i Dryf.\nPoruszaj się strzałkami.\nPrzepisz je lub skup na temacie."
+      },
+      "coverage": {
+        "title": "Pokrycie bazy",
+        "what": "Odsetek encji konsensusu, które strona już pokrywa. Poniżej 50% wynik jest mnożony przez karę.",
+        "why": "Bez wspólnego fundamentu strona z odrobiną nowości nadal nie pasuje do tematu.",
+        "action": "Pokryj brakujące encje konsensusu.\nPotem dodaj nowe fakty."
+      }
+    }
+  },
+  "helpUi": {
+    "what": "Co to jest",
+    "why": "Dlaczego to ważne",
+    "action": "Co zrobić",
+    "example": "Przykład",
+    "learnMore": "Dowiedz się więcej"
+  },
+  "siteFocusMonitoring": {
+    "alert": {
+      "title": "SEOmi · Alert Site Focus Score",
+      "sfsDrop": "Site Focus Score spadł o {{points}} pkt między pełnymi analizami (z {{from}} do {{to}}).",
+      "contentGuard": "Nowe strony zauważone po raz pierwszy w ciągu ostatnich 24 godzin są poza tematem (liczba: {{count}}, TRS poniżej 40): {{urls}}."
+    },
+    "weekly": {
+      "title": "SEOmi · Tygodniowy raport Site Focus",
+      "body": "Site Focus Score {{score}} ({{delta}} względem zeszłego tygodnia). Najważniejsze zadania: {{tasks}}",
+      "noPrevious": "pierwszy raport",
+      "task": "{{code}} (+{{gain}} pkt)",
+      "noTasks": "brak pilnych zadań"
+    }
+  },
+  "focus": {
+    "title": "Site Focus",
+    "subtitle": "Jak spójnie przeskanowane strony trzymają się jednego tematu głównego.",
+    "band": {
+      "excellent": "Doskonałe skupienie",
+      "good": "Dobre skupienie",
+      "moderate": "Umiarkowane skupienie",
+      "weak": "Słabe skupienie",
+      "critical": "Krytyczne skupienie"
+    },
+    "bandRange": {
+      "excellent": "90-100",
+      "good": "75-89",
+      "moderate": "60-74",
+      "weak": "40-59",
+      "critical": "0-39"
+    },
+    "empty": "Brak stron z treścią do analizy. Najpierw uruchom crawl.",
+    "status": {
+      "strong": "Mocna",
+      "moderate": "Umiarkowana",
+      "borderline": "Graniczna",
+      "weak": "Słaba",
+      "off-topic": "Wyraźnie poza tematem"
+    },
+    "type": {
+      "homepage": "Strona główna",
+      "category": "Kategoria",
+      "article": "Artykuł",
+      "technical": "Techniczna"
+    },
+    "effort": "Nakład pracy: {{min}}-{{max}} godz. (szacunek)",
+    "banner": {
+      "lowConfidence": "Mała próba ({{count}} stron). Wyniki mają charakter orientacyjny; aby wiarygodnie określić temat główny, przeskanuj co najmniej 10 stron. Porady dotyczące usuwania są ograniczone.",
+      "multiTopic": "Wykryto {{count}} obszarów tematycznych. Serwis nie ma jednego dominującego tematu. Wyniki podserwisów podano poniżej.",
+      "lexicalFallback": "Analiza dla wybranego języka korzysta z algorytmu statystycznego TF-IDF. Komponent głębokiego podobieństwa semantycznego jest niedostępny; wynik opiera się na pokryciu i rozkładzie słów kluczowych.",
+      "skippedRender": "Pominięto {{count}} stron w analizie, ponieważ renderowanie JavaScript przekroczyło limit czasu.",
+      "degraded": "Niektóre strony miały ograniczone dane, więc ich wyniki mogą być mniej precyzyjne.",
+      "unmatchedTopic": "Żadna strona nie pasuje do tematu „{{topic}}”. Zamiast niego użyto wykrytego tematu.",
+      "gateSkipped": "Pominięto {{count}} stron (noindex/canonical).",
+      "gateInclude": "Uwzględnij je",
+      "gateExclude": "Znów pomiń"
+    },
+    "skip": {
+      "render-timeout": "Renderowanie JavaScript przekroczyło limit czasu",
+      "request-error": "Żądanie nie powiodło się",
+      "non-topical-status": "Status HTTP bez treści",
+      "non-html": "To nie jest strona HTML",
+      "no-content": "Brak treści tekstowej",
+      "noindex": "Pominięta: noindex",
+      "canonicalized": "Pominięta: canonical wskazuje inny URL"
+    },
+    "hero": {
+      "label": "Site Focus Score",
+      "outOf": "na 100",
+      "unavailable": "Brak wyniku: żadnej z przeskanowanych stron nie dało się ocenić. Uruchom crawl ponownie lub sprawdź źródło; to nie jest wynik 0.",
+      "summaryAll": "Wszystkie przeanalizowane strony ({{count}}) pozostają w temacie.",
+      "summaryOff": "{{off}} z {{count}} stron znacząco odbiega od tematu głównego.",
+      "metaButton": "Szczegóły analizy",
+      "metaPages": "Przeanalizowane strony: {{count}}",
+      "metaAge": "Zaktualizowano: {{date}}",
+      "recalc": "Przelicz ponownie",
+      "howItWorks": "Jak to działa?",
+      "change": "{{delta}} pkt od poprzedniej analizy",
+      "progressAria": "Site Focus Score {{score}} na 100, {{band}}",
+      "recalcBudget": "Pozostało dziś pełnych przeliczeń: {{remaining}} z {{limit}}.",
+      "recalcExhausted": "Osiągnięto dzienny limit {{limit}} pełnych przeliczeń. Spróbuj ponownie jutro."
+    },
+    "drawer": {
+      "title": "Jak działa Site Focus Score",
+      "close": "Zamknij",
+      "weights": "Wagi stron w wyniku",
+      "weightHome": "Strona główna: waga 3",
+      "weightCategory": "Kategorie, sekcje, strony filarowe i huby: waga 2",
+      "weightArticle": "Artykuły, wpisy i karty: waga 1",
+      "sfsFormula": "SFS = suma(waga x TRS) / suma(wag), dla wszystkich przeanalizowanych stron",
+      "trsTitle": "Topical Relevance Score (TRS)",
+      "trsFormula": "TRS = clamp(0..100, (0.5 x Podobieństwo + 0.3 x Zbieżność - 0.2 x Dryf) x 125)",
+      "trsLexical": "Bez komponentu semantycznego: TRS = clamp(0..100, (0.75 x Zbieżność - 0.25 x DryfLeksykalny) x 125)",
+      "bands": "Przedziały: 90-100 doskonały, 75-89 dobry, 60-74 umiarkowany, 40-59 słaby, 0-39 krytyczny.",
+      "onTopic": "Strona liczy się jako będąca w temacie od TRS 60."
+    },
+    "core": {
+      "title": "Temat główny",
+      "label": "Wykryty temat",
+      "terms": "Najważniejsze terminy",
+      "termAria": "{{term}}: {{pct}} procent",
+      "coverage": "Pokrycie: {{pct}}% treści serwisu jest ściśle powiązane.",
+      "wrong": "To nie ten temat?",
+      "inputLabel": "Twój temat (słowa lub fraza)",
+      "placeholder": "na przykład: leczenie cukrzycy",
+      "reset": "Przywróć wykryty temat",
+      "manualActive": "Temat ręczny: {{input}}",
+      "confidenceLine": "Pewność tematu głównego: {{pct}}%"
+    },
+    "metrics": {
+      "title": "Kluczowe wskaźniki",
+      "confidence": "Pewność tematu głównego",
+      "onTopic": "Odsetek stron w temacie",
+      "pages": "Ocenione strony",
+      "skipped": "Pominięte strony",
+      "offTopic": "Strony poza tematem (TRS poniżej 40)",
+      "borderline": "Strony graniczne (60-74)"
+    },
+    "heatmap": {
+      "title": "Rozkład tematów",
+      "treeAria": "Strony według adresu URL wraz z trafnością tematyczną",
+      "ignoreTechnical": "Ignoruj strony techniczne",
+      "empty": "Żadna strona nie pasuje do tego filtra.",
+      "filter": {
+        "all": "Wszystkie ({{count}})",
+        "critical": "Krytyczne <40 ({{count}})",
+        "borderline": "Graniczne 60-74 ({{count}})",
+        "strong": "Mocne >=75 ({{count}})"
+      },
+      "filtersAria": "Filtruj strony według trafności",
+      "warning": "Poniżej 60: ryzyko wyjścia poza temat",
+      "trsBar": "TRS {{trs}}",
+      "open": "Otwórz analizę strony {{url}}",
+      "section": "Sekcja {{name}}",
+      "home": "Strona główna"
+    },
+    "detail": {
+      "title": "Analiza strony",
+      "back": "Wróć do listy",
+      "close": "Zamknij analizę strony",
+      "trs": "TRS",
+      "status": "Status",
+      "why": "Skąd ten wynik?",
+      "similarity": "Podobieństwo semantyczne: {{value}}%",
+      "overlap": "Zbieżność słów kluczowych: {{value}}%",
+      "drift": "Dryf semantyczny: {{value}}%",
+      "driftFlag": "Sygnał alarmowy: ponad połowa strony dotyczy innych tematów.",
+      "similarityStrong": "wysokie",
+      "similarityModerate": "umiarkowane",
+      "similarityWeak": "niskie",
+      "foreign": "Obce tematy: {{label}} ({{pct}}%)",
+      "noForeign": "Nie wykryto obcych tematów.",
+      "matched": "Słowa kluczowe zgodne z tematem głównym",
+      "unmatched": "Słowa kluczowe z innych tematów",
+      "none": "Nic nie znaleziono.",
+      "count": "{{count}}x",
+      "context": "Kontekst: {{text}}",
+      "clusterOf": "temat: {{cluster}}",
+      "skipped": "Ta strona nie została oceniona: {{reason}}.",
+      "degraded": "Ta strona ma ograniczone dane, więc jej wynik jest mniej precyzyjny."
+    },
+    "matrix": {
+      "title": "Macierz dopasowania słów kluczowych",
+      "keyword": "Słowo kluczowe",
+      "freq": "Częstotliwość",
+      "relevance": "Trafność względem tematu głównego",
+      "alignment": "Dopasowanie",
+      "match": "Pasuje (powyżej 70%)",
+      "partial": "Częściowo (40-70%)",
+      "miss": "Nie pasuje (poniżej 40%)",
+      "empty": "Brak słów kluczowych do wyświetlenia."
+    },
+    "playbook": {
+      "title": "Co zrobić z tą stroną",
+      "typeA": "Typ A: strona poza tematem",
+      "typeB": "Typ B: strona graniczna",
+      "typeC": "Typ C: mocna strona",
+      "options": "Opcje",
+      "steps": "Kroki",
+      "potential": "Oczekiwany TRS: {{min}}-{{max}} (szacunek)",
+      "gain": "Zysk dla serwisu: +{{gain}} pkt"
+    },
+    "brief": {
+      "title": "Brief do przepisania",
+      "target": "Docelowy TRS: {{target}} (obecnie {{current}})",
+      "mustInclude": "Obowiązkowo uwzględnij",
+      "avoid": "Unikaj",
+      "headings": "Pomysły na nagłówki",
+      "words": "Długość: {{min}}-{{max}} słów",
+      "copy": "Kopiuj prompt AI",
+      "copied": "Skopiowano prompt",
+      "copyFailed": "Nie udało się skopiować. Zaznacz i skopiuj ręcznie."
+    },
+    "site": {
+      "title": "Rekomendacje",
+      "empty": "Brak rekomendacji. Serwis trzyma się tematu.",
+      "delta": "Delta Score: +{{value}}",
+      "deltaZero": "Delta Score: 0",
+      "pagesList": "Strony",
+      "gaps": "Luki tematyczne",
+      "gapsEmpty": "Nie znaleziono luk tematycznych.",
+      "links": "Sugestie linków wewnętrznych",
+      "linksEmpty": "Brak sugestii linków.",
+      "terms": "Terminy"
+    },
+    "subsites": {
+      "title": "Wyniki podserwisów",
+      "item": "{{label}} ({{prefix}}): {{share}}% stron",
+      "score": "Wynik {{score}}"
+    },
+    "recommendation": {
+      "remove-offtopic": {
+        "title": "Usuń lub przenieś {{count}} stron spoza tematu",
+        "detail": "Przekieruj, oznacz noindex lub usuń najgorsze strony i usuń linki wewnętrzne do nich. Potencjał: +{{gain}} pkt."
+      },
+      "strengthen-borderline": {
+        "title": "Wzmocnij {{count}} stron granicznych",
+        "detail": "Dodaj brakujące kluczowe terminy i sekcje, aby podnieść je do około {{target}}. Potencjał: +{{gain}} pkt."
+      },
+      "expand-core-cluster": {
+        "title": "Rozbuduj klaster tematu głównego",
+        "detail": "Napisz {{count}} nowych stron dla słabo pokrytych podtematów. Potencjał: +{{gain}} pkt."
+      },
+      "add-internal-links": {
+        "title": "Dodaj linki wewnętrzne do stron-hubów",
+        "detail": "{{count}} sugestii linków kieruje słabe strony do mocnych hubów."
+      },
+      "collect-more-pages": {
+        "title": "Zbierz więcej stron",
+        "detail": "Przeanalizowano tylko {{pageCount}} stron. Przeskanuj więcej, zanim cokolwiek usuniesz."
+      },
+      "split-subsites": {
+        "title": "Rozważ podział serwisu",
+        "detail": "Znaleziono {{count}} odrębnych obszarów tematycznych. Pomóc może wydzielenie sekcji lub subdomen."
+      },
+      "review-skipped-pages": {
+        "title": "Przejrzyj {{count}} pominiętych stron",
+        "detail": "{{timeouts}} z nich przekroczyło limit czasu podczas renderowania JavaScript."
+      },
+      "monitor-strong-pages": {
+        "title": "Monitoruj {{count}} mocnych stron",
+        "detail": "Utrzymuj je w temacie i regularnie sprawdzaj ponownie."
+      }
+    },
+    "playbookOption": {
+      "remove-redirect": {
+        "title": "Usuń i przekieruj kodem 301",
+        "detail": "Najpierw sprawdź ruch i backlinki. Zysk dla serwisu: +{{gain}} pkt."
+      },
+      "noindex-isolate": {
+        "title": "Oznacz noindex i odizoluj",
+        "detail": "Zostaw stronę dla użytkowników, ale ukryj ją przed wyszukiwarką i odetnij linki wewnętrzne. Zysk dla serwisu: +{{gain}} pkt."
+      },
+      "rewrite-on-topic": {
+        "title": "Przepisz w temacie na podstawie briefu",
+        "detail": "Zamień stronę w treść o temacie głównym. Docelowy TRS około {{target}}."
+      },
+      "add-missing-terms": {
+        "title": "Dodaj brakujące terminy",
+        "detail": "Wpleć brakujące kluczowe terminy: {{terms}}."
+      },
+      "reinforce-headings": {
+        "title": "Wzmocnij nagłówki H2 i H3",
+        "detail": "Używaj w nagłówkach sformułowań z tematu głównego."
+      },
+      "deepen-coverage": {
+        "title": "Pogłębij pokrycie tematu",
+        "detail": "Dodaj sekcje, przykłady i głębię dotyczące tematu głównego."
+      },
+      "serve-as-hub": {
+        "title": "Wykorzystaj jako hub",
+        "detail": "Zlinkuj powiązane strony z tą stroną i odwrotnie, aby stała się liderem klastra."
+      },
+      "build-satellite-cluster": {
+        "title": "Zbuduj klaster satelitarny",
+        "detail": "Zaplanuj strony wspierające, które linkują z powrotem do tej strony."
+      },
+      "monitor-periodically": {
+        "title": "Monitoruj",
+        "detail": "Sprawdzaj ponownie co {{weeks}} tyg."
+      }
+    },
+    "playbookStep": {
+      "check-traffic-and-backlinks": "Sprawdź ruch i backlinki tej strony.",
+      "redirect-301-to-closest-page": "Przekieruj kodem 301 na najbliższą stronę w temacie.",
+      "remove-internal-links": "Usuń linki wewnętrzne prowadzące do tej strony.",
+      "add-noindex": "Dodaj dyrektywę noindex.",
+      "rewrite-with-brief": "Przepisz stronę według briefu. Brakujące terminy: {{terms}}.",
+      "add-terms": "Dodaj brakujące terminy: {{terms}}.",
+      "expand-h2-h3": "Rozbuduj nagłówki H2 i H3 o sformułowania z tematu głównego.",
+      "add-examples": "Dodaj przykłady i głębię.",
+      "link-from-weak-pages": "Linkuj do tej strony ze słabszych stron.",
+      "plan-satellite-pages": "Zaplanuj strony satelitarne wokół tej strony.",
+      "recheck-in-six-weeks": "Sprawdź ponownie za {{weeks}} tyg."
+    },
+    "gap": {
+      "thin-subtopic": "Słabo pokryty podtemat „{{label}}”: porusza go tylko {{coveragePct}}% stron ({{pagesCovering}} stron). Terminy: {{terms}}.",
+      "competitor-terms": "Terminy konkurencji, których brakuje w Twoim serwisie: {{terms}}.",
+      "competitorActive": "Analiza luk klastra tematycznego uwzględnia {{count}} terminów konkurencji.",
+      "competitorClear": "Wyczyść terminy konkurencji"
+    },
+    "link": {
+      "link-to-hub": "Zlinkuj z {{from}} do huba {{to}}. Sugerowane anchory: {{anchors}}."
+    },
+    "history": {
+      "removed-offtopic": "Usunięto {{count}} stron spoza tematu ({{delta}} pkt).",
+      "new-cluster": "Nowy klaster tematyczny „{{label}}” ({{count}} nowych, {{delta}} pkt).",
+      "optimized-borderline": "Zoptymalizowano {{count}} stron granicznych ({{delta}} pkt).",
+      "core-topic-changed": "Temat główny zmienił się z „{{from}}” na „{{to}}” ({{delta}} pkt).",
+      "title": "Historia wyniku",
+      "empty": "Wykonaj co najmniej dwie pełne analizy, aby zobaczyć trend.",
+      "aria": "Site Focus Score w {{count}} analizach, od {{from}} do {{to}}",
+      "point": "{{date}}: {{score}}",
+      "annotations": "Kluczowe zmiany"
+    },
+    "alert": {
+      "sfs-drop": "Site Focus Score spadł z {{from}} do {{to}} ({{points}} pkt).",
+      "content-guard": "Nowa strona spoza tematu {{url}} (TRS {{trs}})."
+    },
+    "weekly": {
+      "title": "Podsumowanie tygodnia",
+      "summary": "Wynik {{score}} ({{delta}} od poprzedniej analizy).",
+      "noPrevious": "pierwsza analiza",
+      "noTasks": "Brak pilnych zadań.",
+      "gain": "(+{{value}} pkt)"
+    },
+    "conflict": {
+      "pillar-noindex": "Strona filarowa ma noindex: {{url}}",
+      "inlinked-foreign-canonical": "{{url}} ma {{inlinks}} linków wewnętrznych, a canonical wskazuje inny host",
+      "noindex-with-traffic": "{{url}} ma noindex, ale ma {{clicks}} kliknięć GSC i {{domains}} domen linkujących",
+      "sitemap-noindex": "{{url}} jest w mapie witryny, ale ma noindex"
+    },
+    "protection": {
+      "title": "Kontrola ochrony URL",
+      "empty": "Brak snapshotu GSC/GA4/linków dla tego projektu, więc ruch i wartość linków są nieznane.",
+      "advisory": "Tylko porada. Nic nie jest usuwane, przekierowywane ani oznaczane noindex automatycznie.",
+      "pri": "PRI {{value}}",
+      "decision": {
+        "keep": "Zachowaj",
+        "shield": "Chroń",
+        "needs-data": "Potrzebne dane",
+        "semantic-bridge": "Most semantyczny",
+        "prune-candidate": "Do przeglądu pod kątem usunięcia"
+      },
+      "reason": {
+        "trs-above-threshold": "TRS jest wystarczająco wysoki",
+        "revenue": "Zmierzono przychód",
+        "pri-above-threshold": "Ruch, konwersje lub linki osiągają próg ochrony",
+        "telemetry-incomplete": "Brak danych, są nieaktualne lub próbkowane",
+        "low-pri-measured": "Zmierzone sygnały są niskie; najpierw oceń wartość biznesową"
+      }
+    }
+  },
+  "focusBenchmark": {
+    "title": "Benchmark konkurencji",
+    "intro": "Porównaj swój Site Focus Score z serwisami, które pozycjonują się na Twój temat główny. SEOmi sprawdza wyniki wyszukiwania, w uprzejmy sposób skanuje niewielką próbę stron każdego konkurenta (z poszanowaniem robots.txt) i ocenia je tym samym silnikiem.",
+    "run": "Uruchom benchmark",
+    "rerun": "Uruchom ponownie",
+    "cancel": "Anuluj",
+    "cancelled": "Benchmark anulowany. Nic nie zapisano.",
+    "sources": "Źródło wyników wyszukiwania: {{source}}",
+    "queries": "Zapytania: {{queries}}",
+    "sample": "Do {{count}} stron skanowanych na konkurenta.",
+    "progress": {
+      "serp": "Pobieranie wyników wyszukiwania ({{done}}/{{total}})",
+      "crawl": "Skanowanie konkurentów ({{done}}/{{total}}), teraz {{domain}}: {{pages}} stron",
+      "analyze": "Ocenianie konkurentów"
+    },
+    "unavailable": {
+      "title": "Benchmark niedostępny",
+      "no-serp-source": "Nie podłączono źródła wyników wyszukiwania. Dodaj dane dostępowe DataForSEO w Ustawieniach, aby porównać się z prawdziwymi konkurentami.",
+      "no-queries": "Temat główny nie ma jeszcze terminów do wyszukania. Najpierw przeskanuj więcej stron.",
+      "serp-failed": "Nie udało się pobrać wyników wyszukiwania: {{error}}",
+      "no-competitors": "Wyniki wyszukiwania nie zawierały serwisów konkurencji innych niż Twój."
+    },
+    "error": "Benchmark nie powiódł się: {{error}}",
+    "ranking": {
+      "title": "Ranking",
+      "you": "Ty",
+      "pages": "{{count}} stron",
+      "onTopic": "{{pct}}% w temacie",
+      "offTopic": "{{count}} poza tematem",
+      "score": "SFS {{score}}",
+      "average": "Średnia w branży",
+      "target": "Wynik docelowy",
+      "position": "Twoja pozycja: {{rank}} z {{total}}",
+      "chart": "Site Focus Score według serwisów"
+    },
+    "failure": {
+      "title": "Nieocenione",
+      "crawl-error": "Skanowanie nie powiodło się: {{error}}",
+      "no-pages": "Brak stron możliwych do przeskanowania (zablokowane przez robots.txt lub niedostępne).",
+      "analysis-failed": "Analiza nie powiodła się: {{error}}",
+      "cancelled": "Anulowano przed oceną."
+    },
+    "insights": {
+      "title": "Wnioski",
+      "on-topic-share": "{{own}}% Twoich treści jest w temacie, wobec {{leaders}}% w top 3 (różnica: {{delta}} pkt).",
+      "off-topic-pages": "Masz {{own}} stron spoza tematu; średnia w top 3 to {{leaders}}.",
+      "keyword-coverage": "Twój serwis pokrywa {{pct}}% ({{covered}} z {{total}}) słów kluczowych tematu głównego używanych przez top 3.",
+      "versus-average": "Twój wynik różni się o {{delta}} pkt od średniej w branży, która wynosi {{average}}."
+    },
+    "gaps": {
+      "title": "Luki klastra widoczne u konkurentów",
+      "coverage": "{{pct}}% konkurentów ({{count}})",
+      "empty": "Żadnego tematu konkurentów nie brakuje w Twoim serwisie.",
+      "apply": "Dodaj te terminy do analizy luk"
+    }
+  },
+  "authority": {
+    "title": "Autorytet tematyczny",
+    "empty": "Uruchom crawl, aby zmierzyć autorytet tematyczny.",
+    "hero": {
+      "sfs": "Site Focus Score",
+      "tas": "Topical Authority Score",
+      "sfsRole": "Czystość: ile treści trzyma się tematu",
+      "tasRole": "Kompletność: jak pełno pokryty jest temat",
+      "target": "Cel: {{value}}+",
+      "pending": "zbuduj mapę referencyjną, aby go policzyć"
+    },
+    "quadrant": {
+      "dominant_authority": "Dominujący autorytet",
+      "boutique_specialist": "Wąski specjalista",
+      "diluted_giant": "Rozproszony gigant",
+      "unfocused_generalist": "Chaotyczny horyzont"
+    },
+    "quadrantHint": {
+      "dominant_authority": "Skupiony i prawie kompletny. Broń pozycji, aktualizuj dane i rozwijaj się w long tail.",
+      "boutique_specialist": "Trzyma się tematu, ale pokrywa tylko część dziedziny. Rozbuduj treści i twórz nowe klastry tematyczne.",
+      "diluted_giant": "Dużo treści w temacie, ale obce działy go rozmywają. Usuń je lub przenieś na subdomeny.",
+      "unfocused_generalist": "Brak skupienia i płytkie pokrycie. Wybierz jeden temat główny, oczyść indeks i zbuduj pierwszy spójny silos."
+    },
+    "matrix": {
+      "title": "Macierz dojrzałości tematycznej (SFS × TAS)",
+      "pending": "Macierz pojawi się po obliczeniu TAS.",
+      "aria": "Ty: SFS {{sfs}}, TAS {{tas}}, kwadrant {{quadrant}}",
+      "you": "Ty",
+      "axisX": "SFS",
+      "axisY": "TAS"
+    },
+    "freshness": {
+      "undated": "{{undated}} z {{total}} stron nie ma daty i nie podlega ocenie"
+    },
+    "pillars": {
+      "title": "Składowe Topical Authority Score",
+      "tcr": "Pokrycie tematu",
+      "cdes": "Głębokość i encje",
+      "silc": "Spójność silosów",
+      "cvff": "Aktualność i brak kanibalizacji",
+      "tcrNote": "Pokryto {{covered}} z {{total}} podtematów referencyjnych",
+      "cdesNote": "Średnia głębokość encji w pokrytych podtematach",
+      "silcNote": "{{orphans}} stron osieroconych, {{weak}} słabych anchorów, {{bleed}} linków do stron poza tematem",
+      "cvffNote": "{{stale}} nieaktualnych stron, {{groups}} grup kanibalizacji",
+      "unavailable": "brak danych",
+      "multiplier": "Mnożnik focusu ×{{value}} z SFS {{sfs}}"
+    },
+    "warning": {
+      "empty-authority": "Pusty autorytet: witryna dotyka {{tcr}}% tematów, ale średnia głębokość to tylko {{depth}}/100. Pogłębiaj istniejące strony twardymi danymi i encjami, zanim dodasz nowe.",
+      "template-duplicates": "{{count}} klonów szablonu połączono z najsilniejszą stroną; nie podnoszą pokrycia i marnują budżet indeksowania.",
+      "no-dates": "Nie znaleziono dat publikacji ani aktualizacji, więc aktualność nie jest mierzona. Dodaj daty w meta tagach lub JSON-LD.",
+      "no-links": "Nie znaleziono linków wewnętrznych w treści między analizowanymi stronami, więc spójność silosów opiera się tylko na stronach osieroconych.",
+      "no-pillars": "Brak mapy referencyjnej: pokrycie i głębokość nie są mierzone."
+    },
+    "reference": {
+      "title": "Mapa referencyjna",
+      "intro": "Buduje rynkową mapę tematu z realnych danych: nagłówków, encji i pytań stron rankujących na Twój temat główny oraz Google Suggest. Nic nie jest zmyślone; bez źródła SERP mapa pozostaje pusta.",
+      "build": "Zbuduj mapę referencyjną",
+      "rebuild": "Przebuduj mapę",
+      "cancel": "Anuluj",
+      "clear": "Odrzuć mapę",
+      "info": "{{subtopics}} podtematów w {{pillars}} filarach z {{competitors}} konkurentów ({{source}}), zbudowano {{date}}",
+      "progress": {
+        "serp": "Pobieranie rankingów ({{done}}/{{total}})",
+        "crawl": "Crawl {{domain}} ({{done}}/{{total}})",
+        "build": "Budowanie mapy"
+      },
+      "error": "Budowa mapy nie powiodła się: {{error}}",
+      "cancelled": "Budowa mapy została anulowana.",
+      "unavailableTitle": "Mapa referencyjna jest niedostępna",
+      "unavailable": {
+        "no-serp-source": "Połącz źródło SERP (DataForSEO lub darmowy kanał Bing RSS), aby zbudować mapę z realnych rankingów.",
+        "no-queries": "Temat główny nie ma jeszcze użytecznej frazy. Najpierw wykonaj większy crawl.",
+        "serp-failed": "Pobranie rankingu nie powiodło się: {{error}}",
+        "no-competitors": "W rankingach nie znaleziono domen konkurencyjnych.",
+        "no-pages": "Nie udało się przeskanować stron konkurencji (robots.txt, blokady lub limity czasu).",
+        "no-taxonomy": "Strony konkurencji mają zbyt mało wspólnych nagłówków, by zbudować wiarygodną mapę. Spróbuj później lub z większą liczbą konkurentów."
+      }
+    },
+    "coverage": {
+      "title": "Mapa pokrycia tematu",
+      "filters": "Filtruj podtematy",
+      "filter": {
+        "all": "Wszystkie ({{count}})",
+        "gaps": "Tylko luki ({{count}})",
+        "shallow": "Płytkie ({{count}})",
+        "cannibalized": "Kanibalizacja ({{count}})"
+      },
+      "general": "Tematy ogólne",
+      "empty": "Żaden podtemat nie pasuje do filtra.",
+      "row": "dopasowanie {{similarity}}% · głębokość {{depth}}",
+      "status": {
+        "covered_strong": "Pokryty w głąb",
+        "covered_shallow": "Płytkie pokrycie",
+        "missing_gap": "Brak treści",
+        "cannibalized": "Kanibalizacja"
+      },
+      "gap": {
+        "critical": "luka krytyczna",
+        "high": "luka wysoka",
+        "medium": "luka średnia"
+      }
+    },
+    "drill": {
+      "title": "Analiza podtematu",
+      "back": "Wróć do mapy",
+      "url": "Przypisana strona",
+      "none": "Żadna strona nie pokrywa jeszcze tego podtematu.",
+      "depth": "Głębokość encji {{value}}/100",
+      "entitiesPresent": "Encje obecne ({{count}}/{{total}})",
+      "entitiesMissing": "Brakujące encje (używane przez liderów)",
+      "questions": "Pytania użytkowników bez odpowiedzi na stronie",
+      "links": "Audyt linkowania wewnętrznego",
+      "noPillarLink": "Brak linku do strony filarowej {{url}}",
+      "almostOrphan": "Tylko {{count}} linków przychodzących: prawie strona osierocona",
+      "bleed": "Linkuje do strony poza tematem {{url}}",
+      "linksOk": "Linkowanie wewnętrzne wygląda dobrze."
+    },
+    "brief": {
+      "title": "Brief artykułu",
+      "path": "Sugerowany URL",
+      "h1": "Sugerowany H1",
+      "entities": "Lista encji do użycia",
+      "questions": "Pytania do odpowiedzenia",
+      "linkFrom": "Linkuj do niej z",
+      "linkTo": "Powinna linkować do",
+      "impact": "Szacowany wpływ na TAS: +{{value}}",
+      "generate": "Generuj brief AI",
+      "generating": "Generowanie…",
+      "noKey": "Połącz dostawcę AI w Ustawieniach, aby generować briefy.",
+      "empty": "AI nie zwróciło tekstu. Spróbuj ponownie.",
+      "error": "Generowanie briefu nie powiodło się: {{error}}"
+    },
+    "cannibal": {
+      "title": "Kanibalizacja semantyczna",
+      "index": "Wskaźnik kanibalizacji: {{value}}%",
+      "empty": "Żadne strony nie konkurują o tę samą intencję.",
+      "group": "{{count}} strony, podobieństwo intencji {{similarity}}%, wspólne encje {{shared}}%",
+      "canonical": "Zachowaj: {{url}}",
+      "steps": "Przenieś unikalne sekcje na stronę, którą zachowujesz, ustaw 301 z pozostałych i zaktualizuj linki wewnętrzne.",
+      "edge": "Dowód: {{from}} i {{to}} przy {{similarity}}% ({{basis}})",
+      "basis": {
+        "intent": "ta sama intencja",
+        "subtopic": "ten sam podtemat"
+      }
+    },
+    "draft": {
+      "title": "Sprawdź szkic przed publikacją",
+      "titleField": "Tytuł szkicu",
+      "bodyField": "Tekst szkicu",
+      "check": "Sprawdź nakładanie",
+      "none": "Brak nakładania powyżej 85% z istniejącymi stronami.",
+      "hit": "{{similarity}}% nakładania z {{url}}"
+    },
+    "rec": {
+      "title": "Plan rozbudowy autorytetu tematycznego",
+      "empty": "Brak rekomendacji. Zbuduj mapę referencyjną, aby zobaczyć luki w pokryciu.",
+      "delta": "+{{value}} TAS",
+      "fill-gaps": "Wypełnij luki w „{{pillar}}”: brakuje {{count}} podtematów",
+      "merge-cannibalized": "Połącz {{count}} grup kanibalizujących się stron",
+      "fix-linking": "Napraw linkowanie wewnętrzne: {{orphans}} stron osieroconych, {{bleed}} linków do stron poza tematem",
+      "deepen-shallow": "Pogłęb {{count}} płytkich podtematów",
+      "refresh-stale": "Odśwież {{count}} stron nieaktualizowanych od ponad roku",
+      "how": {
+        "fill-gaps": "Opublikuj po jednym artykule na brakujący podtemat: skorzystaj z briefu (URL, H1, lista encji, pytania) i podlinkuj go do filaru.",
+        "merge-cannibalized": "Zostaw najsilniejszą stronę, przenieś na nią unikalne sekcje, ustaw 301 z reszty i zaktualizuj linki wewnętrzne.",
+        "fix-linking": "Podlinkuj każdą stronę osieroconą z jej filaru i powiązanych artykułów oraz usuń linki ze stron eksperckich do stron poza tematem.",
+        "deepen-shallow": "Dodaj brakujące encje i atrybuty oraz odpowiedz na otwarte pytania użytkowników pod osobnymi nagłówkami.",
+        "refresh-stale": "Zaktualizuj liczby, modele i wytyczne, dodaj nowe encje i odśwież datę publikacji."
+      }
+    },
+    "benchmark": {
+      "title": "Macierz luk tematycznych vs najlepsi konkurenci",
+      "empty": "Zbuduj mapę referencyjną, aby porównać się z najlepszymi konkurentami. Pokazujemy wyłącznie realne dane z crawla.",
+      "domain": "Domena",
+      "pillars": "Pokrycie filarów",
+      "pillar": "Filar",
+      "insight": {
+        "rank": "Zajmujesz {{rank}}. miejsce z {{total}} według TAS.",
+        "lead-pillar": "Prowadzisz w „{{pillar}}”: {{own}}% wobec {{best}}% u najlepszego konkurenta.",
+        "trailing-pillars": "Przegrywasz z liderami w: {{pillars}}."
+      }
+    },
+    "history": {
+      "title": "SFS i TAS w czasie",
+      "empty": "Oś czasu pojawi się po co najmniej dwóch pełnych analizach.",
+      "aria": "Wykres SFS i TAS z {{count}} analiz",
+      "point": "{{date}}: SFS {{sfs}}, TAS {{tas}}",
+      "sfs": "SFS (linia ciągła)",
+      "tas": "TAS (linia przerywana)",
+      "milestones": "Kamienie milowe",
+      "cleanup": "Porządki: SFS wzrósł o {{delta}}",
+      "architecture": "Architektura: linkowanie i kanibalizacja poprawione o {{delta}}",
+      "expansion": "Ekspansja: pokrycie tematu wzrosło o {{delta}}",
+      "regression": "Spadek: TAS zmienił się o {{delta}}"
+    }
+  },
+  "authorityMonitoring": {
+    "alert": {
+      "title": "SEOmi · alert autorytetu tematycznego",
+      "tas-drop": "Topical Authority Score spadł o {{points}} pkt między pełnymi analizami ({{from}} → {{to}}).",
+      "cannibalization": "Strona opublikowana w ostatnich 24 godzinach konkuruje z {{canonical}} o tę samą intencję (podobieństwo {{similarity}}%): {{url}}.",
+      "competitor-expansion": "{{domain}} rozbudował pokrycie „{{pillar}}” z {{from}}% do {{to}}%, otwierając dla Ciebie nową lukę.",
+      "content-decay": "Strona filarowa {{url}} ma ponad rok i nie zawiera {{missing}} encji używanych dziś na rynku."
+    }
+  },
+  "aio": {
+    "title": "Gotowość na AI Overviews i RAG",
+    "subtitle": "Jak łatwo silniki odpowiedzi AI znajdą, wyciągną i zacytują fragmenty Twoich stron.",
+    "empty": "Brak danych stron z sekcjami treści. Uruchom nowy crawl, aby przeanalizować gotowość na AI.",
+    "band": {
+      "excellent": "Doskonała gotowość",
+      "good": "Dobra gotowość",
+      "moderate": "Umiarkowana gotowość",
+      "weak": "Słaba gotowość",
+      "critical": "Krytyczna gotowość"
+    },
+    "hero": {
+      "label": "Wynik cytowalności w AI",
+      "outOf": "na 100",
+      "summary": "Znaleziono {{weak}} słabych fragmentów na {{count}} przeanalizowanych stronach.",
+      "summaryNone": "Nie znaleziono słabych fragmentów na {{count}} przeanalizowanych stronach.",
+      "change": "Zmiana od poprzedniej analizy: {{delta}}",
+      "skipped": "Pominięto {{count}} stron (brak użytecznych sekcji treści)."
+    },
+    "components": {
+      "self": "Samowystarczalność",
+      "spo": "Gęstość faktów",
+      "extract": "Łatwość ekstrakcji"
+    },
+    "basicNote": "Reguły językowe dla {{languages}} są podstawowe: wykrywanie zaimków i faktów jest w tych językach mniej precyzyjne.",
+    "pages": {
+      "title": "Strony",
+      "url": "URL",
+      "score": "Wynik",
+      "chunks": "Fragmenty",
+      "facts": "Fakty",
+      "language": "Język",
+      "empty": "Brak stron do wyświetlenia."
+    },
+    "skip": {
+      "no-sections": "Brak sekcji treści (crawl sprzed tej funkcji)",
+      "non-html": "To nie jest strona HTML",
+      "request-error": "Żądanie nie powiodło się",
+      "no-content": "Brak czytelnego tekstu"
+    },
+    "passage": {
+      "title": "Najsłabsze fragmenty",
+      "intro": "Symulowane fragmenty RAG, które najtrudniej zacytować. Najpierw popraw wskazane problemy.",
+      "chunk": "Fragment {{n}} · {{tokens}} tokenów · wynik {{score}}",
+      "noHeading": "(wstęp bez nagłówka)",
+      "current": "Obecny fragment",
+      "optimized": "Fragment po optymalizacji",
+      "generate": "Przepisz z AI",
+      "generating": "Przepisuję…",
+      "copy": "Kopiuj",
+      "copied": "Skopiowano",
+      "noKey": "Połącz dostawcę AI w Ustawieniach, aby przepisywać fragmenty.",
+      "error": "Zapytanie do AI nie powiodło się: {{message}}",
+      "empty": "AI nie zwróciło tekstu.",
+      "none": "Nie znaleziono słabych fragmentów."
+    },
+    "issue": {
+      "dangling-pronoun": "Niejasne odniesienie",
+      "no-answer-first": "Brak bezpośredniej odpowiedzi na początku",
+      "filler-opening": "Wodnisty początek",
+      "no-facts": "Brak konkretnych faktów",
+      "too-long": "Za długi na jeden fragment"
+    },
+    "history": {
+      "title": "Historia",
+      "empty": "Historia pojawi się po drugiej analizie tego projektu.",
+      "row": "{{date}}: {{score}}"
+    }
+  },
+  "trust": {
+    "title": "E-E-A-T i zaufanie do encji",
+    "subtitle": "Jak łatwo zweryfikować autorów, wydawcę i źródła. Wynik liczony z zapisanego crawla; żadna strona nie jest pobierana ponownie.",
+    "empty": "Najpierw uruchom crawl, aby ocenić sygnały zaufania.",
+    "hero": {
+      "label": "Wynik zaufania do encji",
+      "articles": "{{articles}} stron artykułów wśród {{pages}} przeskanowanych stron",
+      "previous": "Poprzedni przebieg: {{score}} ({{delta}})",
+      "ymyl": "Kategoria YMYL: {{category}}. Wyszukiwarki stosują do tych stron najostrzejsze kryteria zaufania.",
+      "unattributed": "{{pct}}% artykułów nie ma imiennego autora ani recenzenta."
+    },
+    "level": {
+      "strong": "Silne zaufanie",
+      "adequate": "Wystarczające zaufanie",
+      "weak": "Słabe zaufanie",
+      "critical": "Krytyczne braki zaufania"
+    },
+    "ymyl": {
+      "health": "zdrowie",
+      "finance": "finanse",
+      "legal": "prawo"
+    },
+    "layers": {
+      "title": "Warstwy zaufania",
+      "schemaGraph": "Graf encji (JSON-LD)",
+      "authorAlignment": "Dopasowanie autora do tematu",
+      "citationQuality": "Jakość źródeł",
+      "transparency": "Transparentność redakcyjna",
+      "noData": "brak",
+      "unverified": "niezweryfikowane"
+    },
+    "entities": {
+      "title": "Wydawca i autorzy",
+      "orgPresent": "Wydawca: {{name}}. Stabilny @id: {{id}}. Linki sameAs: {{sameAs}}.",
+      "orgMissing": "W danych strukturalnych nie znaleziono encji Organization.",
+      "none": "W danych strukturalnych nie znaleziono encji autorów.",
+      "colAuthor": "Autor",
+      "colArticles": "Artykuły",
+      "colSameAs": "Linki sameAs",
+      "colAlignment": "Dopasowanie do tematu",
+      "generic": "anonimowa sygnatura"
+    },
+    "signals": {
+      "title": "Źródła i transparentność",
+      "citations": "{{trusted}} z {{pages}} stron artykułów linkuje do zaufanego źródła (.gov, .edu, PubMed, WHO).",
+      "dead": "{{count}} linków wychodzących jest uszkodzonych",
+      "dated": "{{dated}} z {{articles}} artykułów pokazuje datę modyfikacji lub recenzji.",
+      "pagesTitle": "Strony zaufania",
+      "page": {
+        "editorial": "Polityka redakcyjna",
+        "about": "O nas",
+        "contact": "Kontakt",
+        "registry": "Dane rejestrowe firmy"
+      },
+      "found": "znaleziono",
+      "missing": "brak"
+    },
+    "severity": {
+      "critical": "Krytyczne",
+      "warning": "Ostrzeżenie",
+      "info": "Info"
+    },
+    "findings": {
+      "title": "Co poprawić najpierw",
+      "none": "Nie wykryto braków w zaufaniu.",
+      "code": {
+        "ymyl-unattributed": "{{count}} artykułów ({{pct}}%) w temacie YMYL nie ma imiennego autora ani recenzenta. Dodaj osobę ze sprawdzalnymi kwalifikacjami.",
+        "ymyl-no-reviewer": "Żaden z {{count}} artykułów medycznych nie wskazuje recenzenta (reviewedBy). Dodaj wykwalifikowanego recenzenta medycznego.",
+        "no-bylines": "Żaden z {{count}} artykułów nie wskazuje autora w danych strukturalnych.",
+        "generic-author": "{{count}} artykułów jest podpisanych anonimowo, np. jako zespół redakcyjny.",
+        "org-missing": "Nie znaleziono encji Organization. Dodaj znaczniki wydawcy ze stabilnym @id.",
+        "org-no-same-as": "Wydawca {{name}} nie ma linków sameAs do Wikidata, rejestru firm ani profili społecznościowych.",
+        "author-no-same-as": "{{count}} autorów nie ma linków sameAs ({{names}}). Połącz ich z ORCID, LinkedIn lub rejestrem zawodowym.",
+        "author-no-id": "{{count}} autorów nie ma stabilnego @id, więc wyszukiwarki nie mogą ich powiązać między stronami.",
+        "author-off-topic": "Profil autora {{name}} pasuje do tematu głównego tylko w {{pct}}%. Wybieraj autorów z dopasowaną wiedzą.",
+        "low-citations": "Tylko {{pct}}% z {{pages}} stron artykułów cytuje zaufane źródło (.gov, .edu, PubMed, WHO).",
+        "dead-citations": "{{count}} linków wychodzących zwraca błąd. Zastąp je lub usuń.",
+        "missing-editorial": "Nie znaleziono polityki redakcyjnej ani strony o weryfikacji faktów.",
+        "missing-contact": "Nie znaleziono strony kontaktowej.",
+        "missing-registry": "Nie znaleziono strony z danymi rejestrowymi firmy ani informacji prawnej.",
+        "missing-about": "Nie znaleziono strony O nas.",
+        "missing-dates": "Tylko {{pct}}% artykułów pokazuje datę modyfikacji lub recenzji.",
+        "no-articles": "Nie wykryto stron artykułów, więc warstwy autorów i cytowań nie zostały ocenione.",
+        "author-invalid-profile": "{{count}} autorów podaje profil ORCID lub Wikidata z błędnym identyfikatorem ({{names}}). Sprawdź sumę kontrolną lub Q-ID.",
+        "ymyl-no-scholarly-ids": "Żaden z {{pages}} artykułów nie cytuje źródła z DOI, PMID ani PMCID. W tematyce YMYL cytuj badanie pierwotne."
+      }
+    },
+    "generator": {
+      "open": "Napraw w JSON-LD",
+      "title": "Generator JSON-LD",
+      "intro": "Tworzy graf Organization, Person i strony z linkami sameAs. Sprawdź go i wklej do sekcji head strony.",
+      "close": "Zamknij",
+      "field": {
+        "personName": "Imię i nazwisko autora",
+        "jobTitle": "Stanowisko",
+        "personUrl": "Adres profilu autora",
+        "organizationName": "Nazwa wydawcy",
+        "organizationUrl": "Adres wydawcy",
+        "pageUrl": "Adres strony",
+        "dateModified": "Data modyfikacji (RRRR-MM-DD)",
+        "lastReviewed": "Ostatnia recenzja (RRRR-MM-DD)",
+        "sameAs": "Profile sameAs (jeden adres w linii: Wikidata, ORCID, LinkedIn, rejestr zawodowy)",
+        "asReviewer": "Wskaż jako recenzenta merytorycznego zamiast autora"
+      },
+      "issue": {
+        "missing-name": "Podaj imię i nazwisko autora.",
+        "invalid-organization-url": "Podaj poprawny adres wydawcy (https://...).",
+        "invalid-page-url": "Podaj poprawny adres strony (https://...).",
+        "invalid-same-as": "Niektóre wpisy sameAs nie są poprawnymi adresami i zostały pominięte."
+      },
+      "preview": "Wygenerowany JSON-LD",
+      "copy": "Kopiuj znacznik script",
+      "copied": "Skopiowano.",
+      "copyFailed": "Nie udało się skopiować. Zaznacz tekst i skopiuj go ręcznie."
+    }
+  },
+  "executionCard": {
+    "bus": {
+      "aria": "Adresy wykluczone z rekomendacji linków",
+      "title": "Adresy w kwarantannie",
+      "summary": "{{count}} adresów jest usuwanych lub przekierowywanych i wykluczonych z celów linkowania; odrzucono {{dropped}} sugestii linków.",
+      "reason": {
+        "remove": "Usuń",
+        "redirect": "Przekierowanie 301"
+      },
+      "conflict": {
+        "protected-by-evidence": "Zachowano: adres ma dane z Search Console lub linki zwrotne",
+        "canonical-removed": "Konflikt: adres kanoniczny jest też na liście do usunięcia"
+      }
+    },
+    "brief": {
+      "open": "Otwórz w Stacji Roboczej Briefu",
+      "pillar": "Docelowy filar",
+      "anchors": "anchory",
+      "donor": "Strona-donor",
+      "entities": "Brakujące encje",
+      "links": "Linki do wstawienia",
+      "paa": "Pytania People Also Ask",
+      "structure": "Struktura H2",
+      "jsonLd": "Brakujące właściwości autora w JSON-LD",
+      "footnotes": "Wymagane przypisy",
+      "origin": {
+        "sfs": "Rekomendacja Site Focus",
+        "tas": "Rekomendacja Topical Authority",
+        "eetv": "Rekomendacja EETV"
+      },
+      "state": {
+        "created": "Brief utworzony",
+        "updated": "Brief zaktualizowany",
+        "failed": "Nie udało się zapisać briefu"
+      }
+    },
+    "deploy": {
+      "empty": "Brak reguł przekierowań i usunięć.",
+      "aria": "Artefakty wdrożeniowe",
+      "title": "Artefakty wdrożeniowe (301/410)",
+      "summary": "{{count}} poprawnych reguł, bez pętli i łańcuchów.",
+      "zip": "Pobierz wszystko (ZIP)",
+      "issuesAria": "Problemy z regułami",
+      "issue": {
+        "invalid": "Niepoprawna reguła, pominięta",
+        "duplicate": "Zduplikowane źródło, pominięte",
+        "loop": "Pętla przekierowań, pominięta",
+        "chain-flattened": "Łańcuch przekierowań, skierowany na cel końcowy",
+        "dead-target": "Przekierowanie na stronę usuniętą (410)",
+        "query-unsupported": "Ma parametry zapytania, nie jest eksportowana do tego formatu serwera",
+        "gone-unsupported": "Cloudflare Bulk Redirects nie obsługuje 410"
+      }
+    },
+    "tasks": {
+      "aria": "Zadania optymalizacyjne",
+      "title": "Zadania optymalizacyjne",
+      "add": "Dodaj do rejestru",
+      "added": "Dodano zadanie",
+      "empty": "Brak zadań. Dodaj je z rekomendacji.",
+      "verify": "Zweryfikuj na ostatnim crawlu",
+      "crawlUnavailable": "Wybrany crawl nie dostarcza kompletnych danych z potwierdzoną datą; weryfikacja została odroczona.",
+      "markImplemented": "Oznacz jako wdrożone",
+      "regression": "Regres wyniku",
+      "kind": {
+        "add-link": "Dodaj link",
+        "redirect-301": "Przekierowanie 301",
+        "remove-410": "Usunięcie 410",
+        "add-entities": "Dodaj encje",
+        "remove-noindex": "Usuń noindex"
+      },
+      "status": {
+        "planned": "Zaplanowane",
+        "implemented": "Wdrożone",
+        "verified": "Zweryfikowane",
+        "failed": "Nieudane"
+      },
+      "verdict": {
+        "link-found": "ZWERYFIKOWANO: znaleziono nowy link, strefa {{zone}}",
+        "link-missing": "BŁĄD WDROŻENIA: linku nadal brak",
+        "redirect-ok": "ZWERYFIKOWANO: 301 prowadzi na właściwą stronę",
+        "redirect-wrong-target": "BŁĄD WDROŻENIA: przekierowanie prowadzi na inną stronę",
+        "still-200": "BŁĄD WDROŻENIA: nadal HTTP {{status}}",
+        "gone-ok": "ZWERYFIKOWANO: strona zwraca HTTP 410",
+        "wrong-status": "BŁĄD WDROŻENIA: HTTP {{status}} zamiast 410",
+        "entities-ok": "ZWERYFIKOWANO: {{found}} z {{total}} wymaganych encji jest obecnych",
+        "entities-missing": "BŁĄD WDROŻENIA: obecnych tylko {{found}} z {{total}} wymaganych encji (potrzeba 60%)",
+        "index-ok": "ZWERYFIKOWANO: strona jest indeksowalna",
+        "still-noindex": "BŁĄD WDROŻENIA: noindex nadal obecny"
+      },
+      "owner": "Właściciel",
+      "priority": "Priorytet",
+      "dueDate": "Termin SLA",
+      "overdue": "Po terminie",
+      "me": "Moje imię",
+      "filter": {
+        "all": "Wszystkie",
+        "mine": "Moje zadania",
+        "overdue": "Po terminie"
+      },
+      "priorityLevel": {
+        "high": "Wysoki",
+        "medium": "Średni",
+        "low": "Niski"
+      }
+    }
+  },
+  "scoreDropAlert": {
+    "aio": {
+      "title": "Spadła gotowość AI",
+      "body": "Gotowość AI Overviews spadła z {{from}} do {{to}} ({{points}} pkt)."
+    },
+    "trust": {
+      "title": "Spadł wynik zaufania",
+      "body": "Wynik zaufania E-E-A-T spadł z {{from}} do {{to}} ({{points}} pkt)."
+    }
+  },
+  "sprsUi": {
+    "title": "Semantyczny PageRank",
+    "empty": "Brak grafu linków. Najpierw przeskanuj witrynę; bez prawdziwych linków nie pokazujemy wyniku.",
+    "page": "Strona",
+    "score": "Wynik",
+    "deadEnd": "Ślepa uliczka",
+    "underLinked": "Za mało linków",
+    "leak": "Wyciek",
+    "unknown": "{{count}} linków ma nieznane podobieństwo i nie liczy się jako wyciek.",
+    "notConverged": "Solver nie zbiegł; wyniki są przybliżone.",
+    "whatIf": {
+      "title": "Symulator What-If linków",
+      "source": "Ze strony",
+      "target": "Do strony",
+      "action": "Zmiana",
+      "add": "Dodaj link",
+      "remove": "Usuń link",
+      "run": "Symuluj",
+      "noChange": "Brak zmian wyników.",
+      "before": "Przed",
+      "after": "Po",
+      "delta": "Zmiana"
+    }
+  },
+  "decayUi": {
+    "snapshots": "Liczba zrzutów stanowiących podstawę oceny: {{count}}",
+    "title": "Radar zaniku semantycznego",
+    "verdict": {
+      "too-few-samples": "Za mało porównywalnych zrzutów SERP. Nie ma czego raportować.",
+      "incompatible": "Zrzuty nie są porównywalne, więc nie twierdzimy, że wystąpił dryf.",
+      "stable": "Brak istotnej zmiany względem punktu odniesienia.",
+      "not-persistent": "Zmiana się pojawiła, ale nie utrzymuje się. Czekamy.",
+      "cooldown": "Dryf się utrzymuje; alert wysłano niedawno.",
+      "alert": "Utrzymujący się dryf względem punktu odniesienia. Sprawdź ręcznie."
+    },
+    "shift": "Przesunięcie centroidu: {{value}}%",
+    "newEntities": "Nowe encje",
+    "lostEntities": "Utracone encje",
+    "intent": "Intencja: {{from}} na {{to}}",
+    "format": "Format: {{from}} na {{to}}",
+    "incompatible": "Różne pola: {{fields}}. To nie jest zmiana rynku."
+  },
+  "sijaUi": {
+    "title": "Intencja wyszukiwania (SIJA)",
+    "empty": "Struktura strony nie wskazuje wyraźnej mikrointencji.",
+    "primary": "Zaobserwowana intencja: {{intent}} (pewność {{confidence}}%).",
+    "mixed": "Także: {{list}}.",
+    "inconclusive": "SSAS nierozstrzygający: dostępne realne strony TOP: {{count}}, potrzeba co najmniej 3.",
+    "ssas": {
+      "aligned": "SSAS {{score}}: struktura zgadza się ze stronami TOP.",
+      "mismatch": "SSAS {{score}}: struktura odbiega od stron TOP."
+    },
+    "intents": {
+      "definitional": "Definicja",
+      "how-to": "Poradnik krok po kroku",
+      "troubleshooting": "Rozwiązywanie problemów",
+      "comparison": "Porównanie",
+      "curated-list": "Zestawienie",
+      "tool": "Narzędzie lub kalkulator",
+      "transactional": "Transakcyjna",
+      "local": "Lokalna"
+    }
+  },
+  "prePublishUi": {
+    "title": "Kontrola przed publikacją",
+    "copy": "Kopiuj raport",
+    "copied": "Skopiowano raport.",
+    "copyFailed": "Nie udało się skopiować raportu.",
+    "verdict": {
+      "insufficient": "Za mało danych, by ocenić ten szkic.",
+      "blocked": "Nie publikuj jeszcze: szkic dubluje istniejącą stronę.",
+      "review": "Sprawdź przed publikacją.",
+      "ok": "Nie znaleziono problemów. To rada, nie zatwierdzenie."
+    },
+    "sfs": "Site Focus Score {{before}} na {{after}} ({{delta}}). Trafność szkicu {{trs}}. To nie jest prognoza ruchu.",
+    "conflict": "Zbyt podobne do {{url}} ({{value}}%).",
+    "overlap": "Częściowo pokrywa się z {{url}} ({{value}}%).",
+    "reason": {
+      "no-core": "Brak jeszcze tematu głównego.",
+      "corpus-too-small": "Mniej niż 3 ocenione strony w witrynie.",
+      "dimension-mismatch": "Embeddingi pochodzą z różnych modeli.",
+      "cannibalization": "Ryzyko kanibalizacji.",
+      "overlap": "Częściowe pokrycie z istniejącą stroną.",
+      "low-trs": "Trafność szkicu względem tematu głównego jest niska.",
+      "chunk-issues": "Niektóre fragmenty nie działają samodzielnie."
+    },
+    "chunk": {
+      "leading-pronoun": "Fragment {{index}} zaczyna się zaimkiem wymagającym wcześniejszego kontekstu.",
+      "too-short": "Fragment {{index}} jest za krótki, by działać samodzielnie."
+    }
+  },
+  "parityUi": {
+    "title": "Parytet międzynarodowy",
+    "summary": "Pokryte: {{covered}}, płytkie: {{shallow}}, brakujące: {{missing}}, celowo lokalne: {{local}}.",
+    "inconclusive": "Brak rozstrzygnięcia: z dostępnych danych nie da się ocenić parytetu.",
+    "gap": {
+      "no-reference-coverage": "Język referencyjny nie ma danych o pokryciu tematów.",
+      "partial-crawl": "Crawl jest niepełny.",
+      "single-language": "Znaleziono tylko jeden język."
+    },
+    "language": "Język",
+    "topic": "Temat",
+    "status": "Status",
+    "statuses": {
+      "covered": "Pokryty",
+      "shallow": "Płytki",
+      "missing": "Brak",
+      "intentionally-local": "Celowo lokalny"
+    },
+    "note": "Brak wersji nie zawsze jest błędem. Teksty nie muszą być 1:1, a język interfejsu nie decyduje o analizowanych językach witryny."
+  },
+  "offPageUi": {
+    "title": "Autorytet tematyczny off-page",
+    "empty": "Brak wartości tematycznej linków: brakuje backlinków, tekstu źródeł lub danych o autorytecie. To nie znaczy, że backlinków nie ma.",
+    "tbva": "Tematyczna wartość linków {{value}} z {{count}} domen źródłowych (oceniono {{coverage}}% linków follow).",
+    "partial": "Nie udało się ocenić {{count}} linków follow (brak tekstu źródła lub autorytetu).",
+    "nofollow": "{{count}} linków nofollow nie jest liczonych.",
+    "noText": "Brak tekstu źródeł, więc nie sprawdzono współcytowań marki.",
+    "coCitation": "Marka i główna encja w jednym akapicie: {{linked}} z linkiem, {{unlinked}} bez linku.",
+    "note": "Wartość opiera się na autorytecie dostawcy i nie odtwarza Google PageRank ani nie wyjaśnia rankingu. Współwystępowanie to nie poparcie."
+  },
+  "llmEconomy": {
+    "title": "Koszt LLM",
+    "empty": "Brak zapisanych wywołań AI.",
+    "spent": "Wydano: {{value}}",
+    "saved": "Zaoszczędzono dzięki cache i modelom lokalnym: {{value}}",
+    "hits": "Trafienia cache: {{count}}",
+    "leaves": "Treść stron jest wysyłana poza to urządzenie do: {{provider}}."
+  },
+  "templateGovernor": {
+    "title": "Jakość szablonów programatycznych",
+    "empty": "Nie znaleziono słabych szablonów.",
+    "row": "{{pattern}}: {{count}} stron, zysk informacji {{gain}}%",
+    "noindex": "Zalecane: noindex dla segmentu",
+    "limit": "Zalecane: ogranicz liczbę indeksowanych stron"
+  },
+  "outreach": {
+    "title": "Cele outreachu",
+    "empty": "Brak danych luki linkowej. Najpierw uruchom analizę luki linków.",
+    "row": "{{domain}}: priorytet {{priority}}, linkuje do {{count}} konkurentów",
+    "export": "Eksportuj CSV",
+    "manualNote": "SEOmi nie wysyła wiadomości. Szkice wysyłasz ze swojej skrzynki."
+  },
+  "causalMarket": {
+    "title": "Wpływ przyczynowy",
+    "empty": "Nie można oszacować: potrzeba min. 7 dni przed zmianą, 1 dnia po niej, rzeczywistej zewnętrznej serii rynku i niezależnych dowodów kontroli.",
+    "effect": "Efekt dzienny: {{effect}} ({{lower}} do {{upper}})",
+    "updateWindow": "Okno aktualizacji Google: wynik niejednoznaczny.",
+    "normalized": "Znormalizowano linią bazową rynku",
+    "positive": "Efekt dodatni",
+    "negative": "Efekt ujemny",
+    "noEffect": "Brak mierzalnego efektu",
+    "inconclusive": "Niejednoznaczny",
+    "evidence": "Dowody: rynek {{market}}; kontrola {{control}}",
+    "unknown": "nieznane",
+    "marketUnavailable": "Zewnętrzna linia bazowa rynku jest niedostępna lub nieprawidłowa; nie wnioskujemy o sukcesie ani porażce przyczynowej.",
+    "controlUnavailable": "Brakuje niezależnych dowodów kontroli; nie wnioskujemy o sukcesie ani porażce przyczynowej.",
+    "updateWindowReason": "Analiza nakłada się na potwierdzoną aktualizację rankingu Google; wynik jest niejednoznaczny.",
+    "disclaimer": "Szacunek z użyciem zewnętrznego rynku i kontroli; nie jest dowodem związku przyczynowego."
+  },
+  "snapshots": {
+    "newerData": "Dostępne są nowsze dane z crawla.",
+    "refresh": "Odśwież"
+  },
+  "teamUi": {
+    "role": {
+      "admin": "Administrator",
+      "seo_strategist": "Strateg SEO",
+      "content_writer": "Autor treści",
+      "developer": "Programista"
+    },
+    "permission": {
+      "run_crawl": "Uruchamianie crawla",
+      "execute_cms_patch": "Stosowanie poprawek w CMS",
+      "modify_site_focus_rules": "Zmiana reguł Site Focus",
+      "export_audit_pdf": "Eksport audytu do PDF",
+      "manage_team_roles": "Zarządzanie rolami zespołu"
+    },
+    "denied": "Twoja rola nie pozwala na tę akcję."
+  },
+  "cmsUi": {
+    "kind": {
+      "wordpress": "WordPress",
+      "strapi": "Strapi",
+      "webhook": "Webhook"
+    },
+    "error": {
+      "unsafe-url": "Adres CMS jest niedozwolony (wymagany HTTPS i publiczny host).",
+      "conflict": "Strona zmieniła się po przygotowaniu diffa. Przygotuj diff ponownie.",
+      "http": "CMS odrzucił żądanie.",
+      "bad-response": "CMS odpowiedział w nieoczekiwanym formacie.",
+      "heading-not-found": "Nie znaleziono nagłówka na stronie.",
+      "heading-ambiguous": "Nagłówek występuje więcej niż raz.",
+      "forbidden": "Twoja rola nie pozwala stosować poprawek w CMS.",
+      "not-approved": "Zatwierdź dokładnie ten diff przed zapisem.",
+      "fact-gate-required": "Treści YMYL wymagają zaliczonej weryfikacji faktów przed zapisem."
+    },
+    "verified": "Zmiana zapisana i zweryfikowana.",
+    "unverified": "Zmiana zapisana, ale na żywej stronie jeszcze jej nie widać.",
+    "dryRun": "Próba na sucho: nic nie zapisano."
+  },
+  "igosUi": {
+    "title": "Oryginalność IGOS",
+    "empty": "Nie pobrano porównywalnych wyników TOP, więc nie ma bazy ani wyniku.",
+    "noScore": "Brak wyniku",
+    "offTopic": "Większość akapitów jest poza tematem; wyniku nie podano.",
+    "partial": "Baza częściowa: {{available}} z {{requested}} stron konkurencji.",
+    "basis": "Baza: {{available}} z {{requested}} stron konkurencji.",
+    "component": {
+      "nefr": "Nowe encje",
+      "edsi": "Gęstość dowodów",
+      "fhem": "Znaczniki doświadczenia",
+      "sdd": "Rozkład podtematów"
+    },
+    "coverage": "Pokrycie bazy {{coverage}}, mnożnik kary {{multiplier}}",
+    "novel": "Nowe encje w temacie: {{list}}",
+    "advice": "Rekomendacje",
+    "heatmap": "Mapa cieplna akapitów",
+    "heatmapEmpty": "Brak akapitów do pokazania.",
+    "noHeading": "Brak nagłówka",
+    "zone": {
+      "echo": "Echo",
+      "gain": "Zysk",
+      "drift": "Dryf",
+      "neutral": "Neutralny"
+    },
+    "detail": "Offset {{offset}}, podobieństwo do tematu {{topic}}, najbliższy fragment konkurencji {{nearest}}.",
+    "source": "Najbliższe źródło: {{url}} (pozycja {{rank}}).",
+    "noSource": "Brak najbliższego źródła.",
+    "limit": {
+      "no-comparable-documents": "Brak porównywalnych dokumentów konkurencji.",
+      "too-few-documents": "Zbyt mało dokumentów konkurencji dla wiarygodnej bazy.",
+      "some-documents-missing": "Nie udało się pobrać części stron konkurencji.",
+      "no-target-chunks": "Strona nie ma akapitów do analizy.",
+      "off-topic-below-quota": "Zbyt mało akapitów w temacie."
+    },
+    "rec": {
+      "rewrite-echo": "Akapit na offsecie {{offset}} powtarza fragment konkurencji: przepisz go własnymi słowami.",
+      "add-evidence": "Dodaj konkretne dane z jednostkami lub źródłami; żadnych nie wykryto.",
+      "refocus-drift": "Akapit na offsecie {{offset}} odpływa od tematu: skup go lub usuń."
+    }
+  },
+  "logIntelUi": {
+    "title": "Analiza logów",
+    "description": "Importuj lokalny log dostępu .log lub .txt (maksymalnie 500 MB). Zapisywane są tylko agregaty, nigdy surowe adresy IP. Deduplikacja używa próbkowanego skrótu SHA-256 (pierwszy i ostatni 1 MiB oraz rozmiar).",
+    "chooseFile": "Wybierz log dostępu",
+    "cancel": "Anuluj",
+    "clear": "Wyczyść logi",
+    "importing": "Importowanie logu dostępu",
+    "progress": "Wiersze: {{lines}} · Błędne: {{malformed}} · Pominięte inne niż boty: {{ignoredNonBot}}",
+    "cancelled": "Import anulowany.",
+    "duplicate": "Ten plik został już zaimportowany.",
+    "complete": "Import zakończony.",
+    "storageFailed": "Nie udało się zaktualizować pamięci lokalnej. Zmiany pozostają tylko w pamięci; zapisane logi mogą być bez zmian.",
+    "tooLarge": "Plik przekracza limit 500 MB.",
+    "invalidFile": "Wybierz plik .log lub .txt.",
+    "resumeRequired": "Wznów niedokończony plik lub wyczyść logi przed importem innego pliku.",
+    "importFailed": "Nie udało się odczytać pliku lub obliczyć skrótu. Spróbuj ponownie.",
+    "resume": "Wybierz ten sam plik, aby wznowić import bez podwójnego zliczania wierszy.",
+    "verificationNote": "Tożsamość bota to deklaracja User-Agent, nie dowód. Wykrywanie podszywania wymaga desktopowego resolvera DNS; panel nie odpytuje DNS. Niezweryfikowane wiersze pozostają nierozstrzygnięte.",
+    "verificationNoteDesktop": "Tożsamość bota jest sprawdzana na tym komputerze przez odwrotny i prosty DNS (limit 3 s). Nieudane zapytanie zostawia wiersz jako zadeklarowany, nigdy jako podszywanie.",
+    "matrix": "Macierz efektywności crawlowania",
+    "coverage": "Pokrycie: {{days}} z {{period}} dni",
+    "period": "Okno (UTC): {{start}} – {{end}}",
+    "insufficient": "Pokrycie logów jest niewystarczające do wiarygodnych ocen.",
+    "noScores": "Najnowszy crawl projektu nie ma zapisanych ocen TRS dla ścieżek. Oceny nie są domyślane.",
+    "unavailable": "Brak danych",
+    "empty": "Brak ścieżek logów lub crawla do wyświetlenia.",
+    "previous": "Poprzednia",
+    "page": "Strona {{current}} z {{total}}",
+    "next": "Następna",
+    "loading": "Ładowanie analizy logów…",
+    "columns": {
+      "path": "Ścieżka",
+      "family": "Rodzina bota",
+      "status": "Weryfikacja",
+      "hits": "Żądania",
+      "errors": "Udział 4xx/5xx",
+      "verdict": "Ocena"
+    },
+    "families": {
+      "googlebot": "Googlebot",
+      "bingbot": "Bingbot",
+      "gptbot": "GPTBot",
+      "perplexitybot": "PerplexityBot",
+      "none": "Brak śladów bota"
+    },
+    "statuses": {
+      "verified": "Zweryfikowany",
+      "claimed": "Deklarowany",
+      "spoofed": "Podszywający się",
+      "unknown": "Nieznany"
+    },
+    "verdicts": {
+      "waste": "Marnotrawstwo",
+      "starvation": "Niedobór crawlowania",
+      "ok": "OK",
+      "inconclusive": "Nierozstrzygnięte",
+      "no-logs": "Brak logów"
+    }
+  },
+  "altCheckUi": {
+    "column": "Jakość ALT",
+    "csvColumn": "alt_issues",
+    "summary": "Sprawdzono {{checked}} obrazów, {{issues}} z problemami ALT.",
+    "issues": {
+      "missing": "Brak ALT",
+      "empty": "Pusty ALT",
+      "filename": "Wygląda jak nazwa pliku",
+      "generic": "Ogólnikowe sformułowanie",
+      "too-long": "Za długi",
+      "repeats-caption": "Powtarza podpis",
+      "unrelated-to-context": "Bez związku z kontekstem"
+    },
+    "noIssues": "Brak problemów z ALT",
+    "decorative": "Dekoracyjny (pusty ALT)",
+    "visualNotice": "Analiza wizualna wymaga lokalnego modelu i nie jest dostępna w tej wersji.",
+    "analyses": {
+      "ocr": "OCR",
+      "clip-alignment": "Zgodność CLIP",
+      "transcript": "Transkrypcje"
+    },
+    "statuses": {
+      "unavailable": "Niedostępne"
+    },
+    "noScorePenalty": "Nie obniża to żadnego wyniku."
+  },
+  "prePublishMountUi": {
+    "title": "Kontrola przed publikacją",
+    "description": "Wykorzystuje ostatni ukończony crawl, zapisane fragmenty i terminy, wyniki Site Focus oraz ustawienia embeddingów projektu. To tylko symulacja: nic nie jest zapisywane ani publikowane.",
+    "draft": "Tekst nieopublikowanego szkicu",
+    "url": "URL szkicu (opcjonalnie)",
+    "urlHint": "Pozostaw puste dla nowej strony. Istniejący URL z crawla zastępuje tę stronę w symulacji.",
+    "invalidUrl": "Podaj poprawny URL HTTP lub HTTPS bez danych logowania.",
+    "run": "Sprawdź szkic",
+    "cancel": "Anuluj",
+    "loading": "Ładowanie kontroli przed publikacją…",
+    "noCrawl": "Brak ukończonego crawla aktywnego projektu. Najpierw przeskanuj witrynę.",
+    "noCore": "Brak głównego tematu. Nie można ocenić szkicu.",
+    "running": "Tworzenie embeddingów szkicu i danych z crawla…",
+    "unreachable": "Wybrany dostawca embeddingów nie zwrócił wektorów. Sprawdź ustawienia embeddingów projektu i połączenie z dostawcą.",
+    "cancelled": "Kontrola anulowana. Nie zastosowano żadnego wyniku.",
+    "stale": "Zmieniono dane wejściowe lub crawl. Uruchom kontrolę ponownie."
+  },
+  "telemetrySourcesUi": {
+    "title": "Źródła",
+    "sources": {
+      "gsc": "GSC",
+      "ga4": "GA4",
+      "backlinks": "Linki zwrotne"
+    },
+    "states": {
+      "measured": "Zmierzone",
+      "partial-history": "Niepełna historia",
+      "stale": "Nieaktualne",
+      "sampled": "Próbka",
+      "missing-permission": "Brak uprawnień",
+      "unavailable": "Niedostępne"
+    },
+    "property": "Usługa: {{value}}",
+    "provider": "Dostawca: {{value}}",
+    "period": "{{start}} – {{end}} ({{days}} dni)",
+    "retrievedAt": "Pobrano: {{value}}",
+    "truncated": {
+      "yes": "Dane obcięte: tak",
+      "no": "Dane obcięte: nie"
+    },
+    "coverage": "Pokrycie: {{value}}%",
+    "unknownNote": "Nieznane dane nigdy nie są liczone jako zero."
+  },
+  "offPageSourcesUi": {
+    "analyze": "Analizuj źródła linków",
+    "cancel": "Anuluj",
+    "scope": "do 25 linków follow, po jednym na domenę źródłową, od najwyższego autorytetu dostawcy. Skala autorytetu: 0–100; TBVA jest sumą, nie procentem ani Google PageRank. Limity: 3 żądania równolegle, 15 s limitu natywnego, 25 MiB odpowiedzi, 20 000 znaków widocznego tekstu na źródło.",
+    "provider": "Lokalny dostawca embeddingów",
+    "local": "Lokalny hash",
+    "ollama": "Lokalna Ollama",
+    "model": "Model embeddingów Ollama",
+    "scored": "Ocenione źródła: {{scored}} / {{total}} wybranych (nie cały profil linków).",
+    "sources": "Status pobrania źródeł",
+    "fetchedAt": "Pobrano: {{time}}",
+    "notFetched": "Nie pobrano",
+    "context": "Ekstrakcja nie zachowuje granic akapitów ani kotwic. Ograniczone bloki tekstu są przybliżeniem; każde trafienie ma linked=false, bo brak kontekstu linku w akapicie.",
+    "caveat": "Współwystępowanie nie jest rekomendacją. Homonimy mogą dawać fałszywe trafienia; wzmianki z negacją pozostają niejednoznaczne.",
+    "excerpts": "Fragmenty współcytowań",
+    "offset": "{{url}} — offset w wyodrębnionym tekście {{offset}}",
+    "missing": "Brak tekstu, poprawnych wektorów lub autorytetu oznacza dane częściowe/niedostępne, nie zero linków. Próbka nie obejmuje całego profilu.",
+    "status": {
+      "running": "Analizowanie źródeł…",
+      "done": "Analiza źródeł zakończona",
+      "cancelled": "Anulowano; niedokończone źródła nie są oceniane",
+      "unavailable": "Analiza niedostępna"
+    },
+    "fetch": {
+      "pending": "Oczekuje",
+      "ok": "Tekst dostępny",
+      "unavailable": "Niedostępne",
+      "too-large": "Zbyt duża odpowiedź",
+      "blocked": "Zablokowano przez bezpieczny transport"
+    },
+    "limitations": {
+      "no-topic-vector": "Brak poprawnego wektora Core Topic z ostatniego ukończonego crawlu projektu; TBVA jest niedostępne.",
+      "invalid-scale": "Nieprawidłowa skala autorytetu; TBVA jest niedostępne.",
+      "no-follow-links": "Brak linków follow do analizy.",
+      "source-text-or-authority-missing": "Część źródeł nie ma tekstu, poprawnych wektorów lub autorytetu dostawcy."
+    },
+    "polarity": {
+      "neutral": "Neutralne współwystępowanie; nie rekomendacja",
+      "unclear": "Niejednoznaczne: możliwa negacja"
+    },
+    "pacing": "Natywny audyt ogranicza też rozpoczęcia do 10 na minutę. Analiza próbki może potrwać kilka minut; inne audyty mogą zmniejszyć dostępność.",
+    "history": {
+      "title": "Historia",
+      "empty": "Brak zapisanych ukończonych analiz.",
+      "summary": "TBVA: {{value}} · Ocenione/żądane: {{scored}}/{{requested}}",
+      "delta": "Zmiana TBVA: {{delta}}",
+      "notComparable": "Nieporównywalne: {{reason}}",
+      "reasons": {
+        "first": "brak poprzedniego zapisu",
+        "scale": "inna skala autorytetu",
+        "model": "inny model embeddingów",
+        "unknownModel": "nieznany model embeddingów",
+        "unavailable": "TBVA niedostępne"
+      },
+      "view": "Pokaż źródła",
+      "hide": "Ukryj źródła",
+      "delete": "Usuń zapis",
+      "clear": "Wyczyść historię projektu",
+      "exportCurrent": "Eksportuj bieżącą analizę CSV",
+      "exportRecord": "Eksportuj zapis CSV",
+      "storageError": "Pamięć historii jest niedostępna; zmiany nie zostały zapisane.",
+      "topic": "Temat: {{topic}}",
+      "embedding": "Embedding: {{provider}} / {{model}}",
+      "details": "Zapisane dane poszczególnych źródeł",
+      "fields": {
+        "sourceUrl": "URL źródła",
+        "fetchedAt": "Pobrano",
+        "availability": "Dostępność",
+        "authority": "Autorytet",
+        "similarity": "Podobieństwo",
+        "contribution": "Wkład"
+      },
+      "unavailable": "Niedostępne",
+      "status": {
+        "ready": "Gotowe",
+        "partial": "Częściowe",
+        "unavailable": "Niedostępne"
+      },
+      "privacy": "Ostatnie 10 ukończonych analiz jest zapisanych lokalnie dla każdego projektu. Pełny tekst stron i wektory nigdy nie są zapisywane."
+    }
+  },
+  "experimentsUi": {
+    "title": "Eksperymenty SEO",
+    "disclaimer": "To obserwacja, a nie dowód związku przyczynowego. Zmiany mogą wynikać z sezonowości, innych interwencji lub czynników zewnętrznych.",
+    "projectRequired": "Wybierz projekt, aby rejestrować interwencje.",
+    "capacity": "Przechowujemy do {{count}} interwencji; kolejne zastępują najstarsze.",
+    "url": "Adres URL strony",
+    "site": "Cała witryna",
+    "date": "Pierwszy dzień objęty zmianą",
+    "kind": "Rodzaj interwencji",
+    "note": "Notatka (do 300 znaków)",
+    "add": "Dodaj interwencję",
+    "saveFailed": "Nie udało się zapisać. Sprawdź pola i dostępność pamięci lokalnej.",
+    "removeFailed": "Nie udało się usunąć interwencji z pamięci lokalnej.",
+    "empty": "Brak zarejestrowanych interwencji.",
+    "intervention": "Interwencja",
+    "unavailable": "Niedostępne",
+    "baseline": "Okres bazowy",
+    "followUp": "Okres po zmianie",
+    "measurements": "Zaobserwowane pomiary",
+    "metric": "Wskaźnik",
+    "before": "Przed",
+    "after": "Po",
+    "change": "Zmiana względna",
+    "clicks": "Kliknięcia",
+    "impressions": "Wyświetlenia",
+    "position": "Średnia pozycja (różnica ze znakiem)",
+    "restOfSite": "Reszta witryny (suma minus strona)",
+    "relativeVsSite": "Strona minus reszta witryny (punkty procentowe)",
+    "limitations": "Ograniczenia",
+    "remove": "Usuń interwencję",
+    "percent": "{{value}}%",
+    "points": "{{value}} p.p.",
+    "kinds": {
+      "content": "Treść",
+      "internal-links": "Linkowanie wewnętrzne",
+      "title-meta": "Tytuł i metadane",
+      "technical": "Techniczna",
+      "other": "Inna"
+    },
+    "status": {
+      "ready": "Obserwacja dostępna",
+      "inconclusive": "Nierozstrzygające",
+      "pending": "Zaplanowana / oczekuje"
+    },
+    "reasons": {
+      "observational": "Wyłącznie obserwacja przed i po; bez wnioskowania przyczynowego.",
+      "uncontrolled-factors": "Sezonowość, równoległe zmiany i czynniki zewnętrzne nie są kontrolowane.",
+      "zero-baseline": "Zerowa wartość bazowa uniemożliwia obliczenie zmiany względnej.",
+      "no-control": "Interwencja dla całej witryny nie ma oddzielnej kontroli w postaci reszty witryny.",
+      "filtered-scope": "W obu okresach obowiązują te same zapisane filtry Search Console.",
+      "invalid-period": "Zapisany okres ma nieprawidłowe daty lub długość.",
+      "inconsistent-totals": "Wskaźniki strony przekraczają zapisane sumy witryny; nie można obliczyć kontroli.",
+      "no-baseline": "Brak zapisanego okresu kończącego się przed interwencją.",
+      "no-follow-up": "Brak zapisanego okresu rozpoczynającego się w dniu interwencji lub później.",
+      "incomparable-scope": "Najbliższe okresy dotyczą różnych usług lub filtrów albo nie obejmują adresu URL.",
+      "period-length-mismatch": "Długości okresów różnią się o ponad 10%.",
+      "rows-truncated": "Zapisane wiersze stron są ucięte; porównanie strony może być niepełne.",
+      "low-volume": "Bazowa liczba kliknięć jest mniejsza niż 30; zbyt mały wolumen do wiarygodnego porównania.",
+      "pending": "Data interwencji jest w przyszłości; ocena oczekuje."
+    }
   }
 }

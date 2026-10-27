@@ -38,7 +38,7 @@ describe('brief internal link planning', () => {
     expect(screen.getByText(label('limited100'))).toBeTruthy();
     fireEvent.click(screen.getByLabelText(label('addInternal', { url: pages[50].url })));
     expect(props.onUpdate).toHaveBeenLastCalledWith(expect.objectContaining({ internalLinkTargets: props.node.contentBrief.internalLinkTargets }));
-  });
+  }, 30_000);
 
   it('discloses missing crawl and allows explicit unverified planned targets', () => {
     const model = briefModel();

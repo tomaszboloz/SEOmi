@@ -8,7 +8,8 @@ type Session = ReturnType<typeof useSiteAuditSession>;
 export const CrawlLegacyHistory = ({ session }: { session: Session }) => {
 const { crawlResult, crawlRuns, historyMetrics, t } = session;
 
-return (<div className="hidden" aria-hidden="true">
+return (<>
+          <div className="hidden" aria-hidden="true">
             {crawlResult?.resources !== undefined && (
               <CrawlResourceErrors session={session} />
             )}
@@ -47,13 +48,13 @@ return (<div className="hidden" aria-hidden="true">
               </section>
             )}
 
-            {crawlRuns.length > 1 && crawlResult && (
-              <CrawlRunComparison session={session} />
-            )}
-
             {/* Crawl Result Dashboard */}
             {crawlResult && (
               <CrawlRunResults session={session} />
             )}
-          </div>);
+          </div>
+          {crawlRuns.length > 1 && crawlResult && (
+            <CrawlRunComparison session={session} />
+          )}
+        </>);
 };

@@ -1,31 +1,9 @@
 use super::credentials::{client_secret_key, refresh_token_key};
 use super::models::TokenResponse;
 use super::oauth_response::oauth_response;
-use crate::commands::settings::secret_entry;
+use super::session::{CredentialReadError, CredentialStore, NativeCredentialStore, TOKEN_ENDPOINT};
 use crate::utils::provider_json::{read_provider_json, REPORT_JSON_LIMIT};
 use serde_json::Value;
-
-const TOKEN_URL: &str = "https://oauth2.googleapis.com/token";
-
-pub(super) async fn exchange_code(
-    client: &reqwest::Client,
-    client_id: &str,
-    code: &str,
-    verifier: &str,
-    redirect_uri: &str,
-    client_secret: Option<&str>,
-) -> Result<TokenResponse, String> {
-    exchange_code_at(
-        client,
-        TOKEN_URL,
-        client_id,
-        code,
-        verifier,
-        redirect_uri,
-        client_secret,
-    )
-    .await
-}
 
 pub(super) async fn exchange_code_at(
     client: &reqwest::Client,
@@ -60,18 +38,34 @@ pub(super) async fn refresh_access_token(
     project_id: &str,
     client_id: &str,
 ) -> Result<String, String> {
+    let store = NativeCredentialStore;
+    refresh_access_token_with_store(client, project_id, client_id, &store, TOKEN_ENDPOINT).await
+}
+
+pub(super) async fn refresh_access_token_with_store(
+    client: &reqwest::Client,
+    project_id: &str,
+    client_id: &str,
+    store: &dyn CredentialStore,
+    token_url: &str,
+) -> Result<String, String> {
     let key = refresh_token_key(project_id)?;
-    let refresh_token = secret_entry(&key)?.get_password().map_err(|_| {
-        "Search Console token is missing from the OS credential store. Connect your account again."
-            .to_string()
-    })?;
+    let refresh_token = match store.read(&key) {
+        Ok(Some(token)) => token,
+        Ok(None) | Err(CredentialReadError::Value) => {
+            return Err(
+                "Search Console token is missing from the OS credential store. Connect your account again."
+                    .into(),
+            )
+        }
+        Err(CredentialReadError::Store(error)) => return Err(error),
+    };
     let client_secret = client_secret_key(project_id)
         .ok()
-        .and_then(|key| secret_entry(&key).ok())
-        .and_then(|entry| entry.get_password().ok());
+        .and_then(|key| store.read(&key).ok().flatten());
     refresh_access_token_at(
         client,
-        TOKEN_URL,
+        token_url,
         client_id,
         &refresh_token,
         client_secret.as_deref(),
@@ -121,8 +115,15 @@ pub(super) async fn authorized_json(
     client_id: &str,
     request: reqwest::RequestBuilder,
 ) -> Result<Value, String> {
-    let access_token = refresh_access_token(client, project_id, client_id).await?;
-    authorized_json_with_access_token(&access_token, request).await
+    let refreshed = refresh_access_token(client, project_id, client_id).await;
+    authorized_json_after_refresh(refreshed, request).await
+}
+
+pub(super) async fn authorized_json_after_refresh(
+    refreshed: Result<String, String>,
+    request: reqwest::RequestBuilder,
+) -> Result<Value, String> {
+    authorized_json_with_access_token(&refreshed?, request).await
 }
 
 pub(super) async fn authorized_json_with_access_token(

@@ -4,6 +4,7 @@ import { useTranslation } from "react-i18next";
 import { useToolsStore } from "@/stores/toolsStore";
 import { readEphemeralStorage, removeEphemeralStorage, readStorage, writeStorage, readJsonStorage, writeJsonStorage } from "@/services/storage";
 import { notifyCrawlCompleted } from "@/services/desktopNotifications";
+import type { CrawlDiff, CrawlDiffReport } from "@/services/crawlDiff";
 import { isTauriEnvironment } from "@/services/tauri";
 import { focusCrawlStartForm } from "../siteAuditHelpers";
 import type { SiteAuditSessionDependencies } from "../contracts";
@@ -109,7 +110,7 @@ export const useCrawlExecution = (
       const productionRun = useToolsStore.getState().crawlRuns.find((r) => !existingProdIds.has(r.id) && r.environment === "production" && r.startUrl === productionUrl);
       if (!productionRun) throw new Error(t("siteAudit.productionRunSaveError"));
       setComparisonRunId(stagingRun.id);
-      if (activeProjectId) void notifyCrawlCompleted(activeProjectId, productionResult, stagingResult.health_score);
+      if (activeProjectId) void notifyCrawlCompleted(activeProjectId, productionResult, stagingResult, { runId: productionRun.id });
     } catch (error) { if (isCurrent()) setEnvironmentComparisonError(error instanceof Error ? error.message : t("siteAudit.environmentCompareError")); }
     finally { if (isCurrent()) setIsEnvironmentComparisonRunning(false); }
   };
@@ -130,8 +131,14 @@ export const useCrawlExecution = (
   };
 
   const comparisonRun = crawlRuns.find((run) => run.id === comparisonRunId);
-  const comparison = crawlResult && comparisonRun && comparisonRun.result !== crawlResult
-    ? services.compare(crawlResult, comparisonRun.result, { matchByPath: comparisonByPath }) : null;
+  const currentRun = selectedRun?.result === crawlResult ? selectedRun : crawlRuns.find((run) => run.result === crawlResult);
+  const comparison: CrawlDiff | CrawlDiffReport | null = crawlResult && comparisonRun && comparisonRun.result !== crawlResult
+    ? services.compareRuns
+      ? currentRun
+        ? services.compareRuns(currentRun, comparisonRun, { projectId: activeProjectId ?? undefined, matchByPath: comparisonByPath })
+        : null
+      : services.compare(crawlResult, comparisonRun.result, { matchByPath: comparisonByPath })
+    : null;
 
   return {
     comparisonRunId, setComparisonRunId, crawlPdfError, mapNavigationRequest, setMapNavigationRequest,

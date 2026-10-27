@@ -87,3 +87,33 @@ fn favicon_declarations_preserve_mime_types_and_missing_data_subtypes() {
     assert_eq!(icons[0].inferred_format.as_deref(), Some("ico"));
     assert!(icons[1].inferred_format.is_none());
 }
+
+#[test]
+fn explicit_charset_is_not_overwritten_by_a_later_http_equiv_declaration() {
+    let doc = Html::parse_document(
+        "<meta charset='utf-8'><meta http-equiv='content-type' content='text/html; charset=windows-1250'>",
+    );
+    assert_eq!(
+        extract_meta_tags(&doc, None).charset.as_deref(),
+        Some("utf-8")
+    );
+}
+
+#[test]
+fn content_type_without_encoding_does_not_invent_a_charset() {
+    let doc = Html::parse_document("<meta http-equiv='content-type' content='text/html'>");
+    assert!(extract_meta_tags(&doc, None).charset.is_none());
+}
+
+#[test]
+fn empty_named_and_property_metadata_remain_available_for_audit() {
+    let doc = Html::parse_document("<meta name='custom'><meta property='og:description'><meta>");
+    let meta = extract_meta_tags(&doc, None);
+    assert_eq!(meta.other_tags.len(), 2);
+    assert_eq!(meta.other_tags[0].name.as_deref(), Some("custom"));
+    assert_eq!(
+        meta.other_tags[1].property.as_deref(),
+        Some("og:description")
+    );
+    assert!(meta.other_tags.iter().all(|tag| tag.content.is_empty()));
+}

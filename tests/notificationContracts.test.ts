@@ -65,7 +65,7 @@ it('honors a native environment change while opt-in is pending', async () => {
 it('reports completion without regression when there is no lower score', async () => {
   await notifyAuditCompleted('project-a', notificationAudit(80));
   expect(sendNotification).toHaveBeenLastCalledWith({ title: i18n.t('runtimeErrors.desktop.auditComplete'), body: i18n.t('runtimeErrors.desktop.auditCompleteBody', { host: 'example.com', score: 80 }) });
-  await notifyCrawlCompleted('project-a', notificationCrawl(80), 80);
+  await notifyCrawlCompleted('project-a', notificationCrawl(80), notificationCrawl(80));
   expect(sendNotification).toHaveBeenLastCalledWith({ title: i18n.t('runtimeErrors.desktop.crawlCompleted'), body: i18n.t('runtimeErrors.desktop.crawlCompletedBody', { host: 'example.com', pages: 3, score: 80 }) });
   await notifyBatchCompleted('project-a', { completed: 1, failed: 0, queued: 0, regressionCount: 0, stopped: false });
   expect(sendNotification).toHaveBeenLastCalledWith({ title: i18n.t('runtimeErrors.desktop.queueCompleted'), body: i18n.t('runtimeErrors.desktop.queueBody', { completed: 1, failed: 0, pending: '', regression: '' }) });

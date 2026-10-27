@@ -1,3 +1,5 @@
+/// Safety ceiling for one crawl run; the UI offers it as "no limit".
+pub(super) const MAX_CRAWL_PAGES: usize = 1_000_000;
 pub(super) const MAX_SEMANTIC_CONTENT_LINKS_PER_PAGE: usize = 1_000;
 pub(super) const MAX_SEMANTIC_TERMS_PER_PAGE: usize = 40;
 pub(super) const MAX_SEMANTIC_EXCERPTS_PER_PAGE: usize = 8;

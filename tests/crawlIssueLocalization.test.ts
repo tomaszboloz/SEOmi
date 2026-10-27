@@ -37,6 +37,16 @@ describe('crawler issue localization', () => {
     expect(unknown.displayMessage).toBe('Technisches Detail: Browser console error: custom diagnostic');
   });
 
+  it('localizes a render fallback while keeping the renderer reason verbatim', async () => {
+    await i18n.changeLanguage('pl');
+    const reason = 'Rendered page capture timed out after 60 seconds.';
+    const issue = { severity: 'Warning' as const, message: `Browser rendering failed; the raw HTML response was analyzed instead: ${reason}` };
+    const fallback = localizeCrawlIssue(issue, i18n.t.bind(i18n));
+    expect(fallback.displayMessage).toBe(`Renderowanie w przeglądarce nie powiodło się; przeanalizowano surową odpowiedź HTML: ${reason}`);
+    expect(fallback.message).toBe(issue.message);
+    expect(inferCrawlIssueMessageKey({ severity: 'Warning', message: 'Browser rendering failed' })).toBeNull();
+  });
+
   it('chooses the correct localized length wording for short and long metadata', async () => {
     await i18n.changeLanguage('en');
     const shortTitle = localizeCrawlIssue(
@@ -76,6 +86,8 @@ describe('crawler issue localization', () => {
     ['2 invalid JSON-LD block(s)', 'crawlIssues.invalidJsonLd'],
     ['Client-side refresh redirect detected (1 declaration(s))', 'crawlIssues.clientRedirect'],
     ['2 pagination declaration(s) have a missing or invalid HTTP(S) target', 'crawlIssues.paginationInvalid'],
+    ['Browser rendering failed; the raw HTML response was analyzed instead: Rendered page capture timed out after 60 seconds.', 'crawlIssues.renderFallback'],
+    ['The page navigated to a different URL in the browser; the HTTP status and response headers describe the requested URL', 'crawlIssues.renderedSelfNavigation'],
     ['Duplicate title found in this crawl', 'crawl.metadataFacets.duplicateTitleDescription'],
     ['Duplicate meta description found in this crawl', 'crawl.metadataFacets.duplicateDescriptionDescription'],
     ['Title length is 61 characters; reference range is 30–60', 'auditIssues.messages.meta_title_long'],

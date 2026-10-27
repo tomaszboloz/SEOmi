@@ -1,10 +1,12 @@
 use regex::Regex;
 use std::collections::HashSet;
+use std::sync::Arc;
 use std::time::Instant;
 
+use super::super::retry::{RetryBudget, RetryContext};
 use super::super::{
-    control::CrawlControl, filter_validation::compile_filter_patterns, models::CrawlConfig,
-    scope::normalize_allowed_hosts, url_normalization::normalize_crawl_url,
+    constants::MAX_CRAWL_PAGES, control::CrawlControl, filter_validation::compile_filter_patterns,
+    models::CrawlConfig, scope::normalize_allowed_hosts, url_normalization::normalize_crawl_url,
 };
 use super::setup_client::build_crawler_client;
 use super::setup_config::{default_crawl_config, resolve_resume_urls};
@@ -30,6 +32,17 @@ pub struct CrawlSetup {
     pub rendered_cookie: Option<String>,
     pub ua: String,
     pub client: reqwest::Client,
+    pub retry_budget: Arc<RetryBudget>,
+}
+
+impl CrawlSetup {
+    pub(crate) fn retry_context(&self) -> RetryContext {
+        RetryContext::new(
+            self.retry_budget.clone(),
+            self.start_time,
+            self.max_run_seconds,
+        )
+    }
 }
 
 impl CrawlSetup {
@@ -44,10 +57,10 @@ impl CrawlSetup {
     ) -> Result<Self, String> {
         let start_time = Instant::now();
         let parsed_base = validate_and_normalize_url(&start_url).map_err(|e| e.to_string())?;
-        let base_host = match parsed_base.host_str() {
-            Some(h) => h.to_string(),
-            None => return Err("URL has no valid hostname".into()),
-        };
+        let base_host = parsed_base
+            .host_str()
+            .expect("validated HTTP(S) URLs always have a host")
+            .to_string();
         let mut config = config.unwrap_or_else(|| default_crawl_config(max_pages));
         config.allowed_hosts = normalize_allowed_hosts(&config.allowed_hosts)?;
         config.focus_phrase = config
@@ -66,7 +79,7 @@ impl CrawlSetup {
             .max_pages
             .or(max_pages)
             .unwrap_or(25)
-            .clamp(1, 10_000);
+            .clamp(1, MAX_CRAWL_PAGES);
         let max_depth = config.max_depth.unwrap_or(usize::MAX).min(100);
         let max_redirects = config.max_redirects.unwrap_or(10).min(50);
         let max_response_bytes = config
@@ -76,6 +89,7 @@ impl CrawlSetup {
         let max_run_seconds = config
             .max_run_seconds
             .map(|seconds| seconds.clamp(1, 3_600));
+        let retry_budget = RetryBudget::new(limit / 10);
         let include_patterns = compile_filter_patterns(&config.include_patterns, "include")
             .map_err(|e| format!("Invalid include filter `{}`: {}", e.pattern, e.message))?;
         let exclude_patterns = compile_filter_patterns(&config.exclude_patterns, "exclude")
@@ -105,6 +119,7 @@ impl CrawlSetup {
             rendered_cookie,
             ua,
             client,
+            retry_budget,
         })
     }
 }

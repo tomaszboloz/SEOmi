@@ -9,8 +9,17 @@ use std::path::{Path, PathBuf};
 use tauri::AppHandle;
 
 #[cfg(test)]
+#[path = "storage_edge_tests.rs"]
+mod edge_tests;
+#[cfg(test)]
 #[path = "storage_tests.rs"]
 mod tests;
+
+pub(super) fn entry_path(entry: std::io::Result<fs::DirEntry>) -> Result<PathBuf, String> {
+    entry
+        .map(|entry| entry.path())
+        .map_err(|error| format!("Unable to read scheduled execution entry: {error}"))
+}
 
 pub(super) fn task_path<R: tauri::Runtime>(
     app: &AppHandle<R>,
@@ -60,8 +69,7 @@ pub(super) fn write_json_atomic(
     value: &Value,
     max_bytes: usize,
 ) -> Result<(), String> {
-    let bytes = serde_json::to_vec(value)
-        .map_err(|e| format!("Unable to serialize scheduled data: {e}"))?;
+    let bytes = serde_json::to_vec(value).expect("a JSON value always serializes");
     if bytes.len() > max_bytes {
         return Err(format!(
             "Scheduled data exceeds the {max_bytes}-byte safety limit."

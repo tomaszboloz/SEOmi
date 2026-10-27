@@ -37,6 +37,7 @@ fn store(app: &StorageApp, value: &ScheduledExecutionHandoff) {
     .unwrap();
 }
 
+mod filename_edges;
 mod identity;
 mod ipc;
 mod listing;

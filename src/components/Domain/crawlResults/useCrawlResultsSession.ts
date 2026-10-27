@@ -3,7 +3,7 @@ import { useTranslation } from "react-i18next";
 import { useProjectStore } from "@/stores/projectStore";
 import { useToolsStore } from "@/stores/toolsStore";
 import { writeJsonStorage } from "@/services/storage";
-import { compareCrawlResults } from "@/services/crawlDiff";
+import { compareCrawlRuns } from "@/services/crawlDiff";
 
 import { CrawlResultsTabsProps, readCrawlNavigationPreferences, readCrawlLinkNavigationPreferences, tabs, tabGroups } from "./crawlResultsHelpers";
 import { CrawlResultsDependencies, defaultDependencies } from "./session/crawlResultsSessionTypes";
@@ -97,7 +97,9 @@ export const useCrawlResultsSession = (
   };
 
   const baseRun = runs.find((run) => run.id === filterState.comparisonRunId && run.id !== currentRun?.id);
-  const comparison = baseRun ? compareCrawlResults(result, baseRun.result, { matchByPath: filterState.compareByPath }) : null;
+  const comparison = currentRun && baseRun
+    ? compareCrawlRuns(currentRun, baseRun, { projectId: activeProjectId ?? undefined, matchByPath: filterState.compareByPath })
+    : null;
   const chronologicalRuns = [...runs].reverse();
   const crawledUrlSet = new Set(result.pages.flatMap((page) => [page.url, page.final_url]));
   const sitemapOnlyCount = result.sitemap_urls.filter((url) => !crawledUrlSet.has(url)).length;

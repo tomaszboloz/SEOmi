@@ -4,6 +4,7 @@ import { useCrawlTabNavigation } from '../src/components/Domain/crawlResults/ses
 import { useCrawlMapState } from '../src/components/Domain/crawlResults/session/useCrawlMapState';
 import { useCrawlExportHandlers } from '../src/components/Domain/crawlResults/session/useCrawlExportHandlers';
 import { defaultDependencies } from '../src/components/Domain/crawlResults/session/crawlResultsSessionTypes';
+import * as exportModule from '@/services/export';
 
 vi.mock('react-i18next', async (importOriginal) => {
   const actual: any = await importOriginal();
@@ -45,5 +46,14 @@ describe('Crawl Session Modules', () => {
     const { result } = renderHook(() => useCrawlExportHandlers(crawlResult, undefined, defaultDependencies));
     
     expect(result.current.renderedArtifactUrl).toBe('https://example.com');
+  });
+
+  it('invokes defaultDependencies delegates', async () => {
+    const pdfSpy = vi.spyOn(exportModule, 'downloadCrawlPdf').mockResolvedValue(undefined);
+    await defaultDependencies.exportPdf({} as never);
+    expect(pdfSpy).toHaveBeenCalled();
+
+    const copyResult = await defaultDependencies.copyText('hello');
+    expect(typeof copyResult).toBe('boolean');
   });
 });

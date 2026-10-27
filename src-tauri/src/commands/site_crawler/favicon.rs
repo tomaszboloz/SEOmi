@@ -4,9 +4,8 @@ use super::*;
 /// Extract the same favicon declaration metadata as the single-page audit,
 /// while keeping this crawler's legacy URL list stable for persisted runs.
 pub(super) fn crawl_favicon_metadata(document: &Html, base_url: &url::Url) -> Vec<FaviconData> {
-    let Ok(selector) = Selector::parse("link[rel][href]") else {
-        return Vec::new();
-    };
+    let selector =
+        Selector::parse("link[rel][href]").expect("favicon selector is a valid constant");
     document
         .select(&selector)
         .filter_map(|element| {

@@ -1,125 +1,148 @@
 use crate::models::audit_data::{Issue, IssueCategory, IssueSeverity};
-use std::collections::BTreeMap;
+
+const HSTS_MIN_SECONDS: u64 = 15_552_000;
+
+enum HstsMaxAge {
+    Missing,
+    Invalid,
+    Value(u64),
+}
 
 pub fn audit_hsts(hsts: Option<&str>, score: &mut u8, issues: &mut Vec<Issue>) {
-    if let Some(val) = hsts {
-        let val_lower = val.to_lowercase();
-        if !val_lower.contains("max-age=") {
-            *score = score.saturating_sub(10);
-            issues.push(Issue {
-                severity: IssueSeverity::Warning,
-                category: IssueCategory::Security,
-                code: Some("security_hsts_invalid".into()),
-                params: None,
-                message: "HSTS header is missing 'max-age'".to_string(),
-                recommendation: Some(
-                    "Specify 'max-age=31536000; includeSubDomains; preload' in Strict-Transport-Security"
-                        .to_string(),
-                ),
-            });
-        }
-    } else {
+    audit_hsts_values(
+        hsts.into_iter()
+            .map(str::to_owned)
+            .collect::<Vec<_>>()
+            .as_slice(),
+        score,
+        issues,
+    );
+}
+
+pub fn audit_hsts_values(values: &[String], score: &mut u8, issues: &mut Vec<Issue>) {
+    if values.is_empty() {
         *score = score.saturating_sub(25);
-        issues.push(Issue {
-            severity: IssueSeverity::Critical,
-            category: IssueCategory::Security,
-            code: Some("security_hsts_missing".into()),
-            params: None,
-            message: "Missing Strict-Transport-Security (HSTS) header".to_string(),
-            recommendation: Some(
-                "Enable HSTS to prevent man-in-the-middle attacks and cookie hijacking".to_string(),
-            ),
-        });
+        issues.push(issue(
+            IssueSeverity::Critical,
+            "security_hsts_missing",
+            "Missing Strict-Transport-Security (HSTS) header",
+            "Enable HSTS to prevent man-in-the-middle attacks and cookie hijacking",
+        ));
+        return;
+    }
+    // Browsers process the first HSTS field. Keep later fields as evidence but
+    // never let a duplicate hide a malformed first policy.
+    let value = &values[0];
+    let max_age = match hsts_max_age(value) {
+        HstsMaxAge::Value(max_age) => max_age,
+        HstsMaxAge::Missing => {
+            *score = score.saturating_sub(10);
+            issues.push(issue(IssueSeverity::Warning, "security_hsts_invalid", "HSTS header is missing 'max-age'", "Specify 'max-age=31536000; includeSubDomains; preload' in Strict-Transport-Security"));
+            return;
+        }
+        HstsMaxAge::Invalid => {
+            *score = score.saturating_sub(10);
+            issues.push(issue(
+                IssueSeverity::Warning,
+                "security_hsts_invalid",
+                "HSTS header has an invalid 'max-age'",
+                "Specify a non-negative numeric max-age in Strict-Transport-Security",
+            ));
+            return;
+        }
+    };
+    if max_age == 0 {
+        *score = score.saturating_sub(20);
+        issues.push(issue(
+            IssueSeverity::Warning,
+            "security_hsts_disabled",
+            "HSTS is disabled by 'max-age=0'",
+            "Use a positive HSTS max-age of at least six months",
+        ));
+    } else if max_age < HSTS_MIN_SECONDS {
+        *score = score.saturating_sub(10);
+        issues.push(issue(
+            IssueSeverity::Warning,
+            "security_hsts_short",
+            "HSTS max-age is shorter than six months",
+            "Use an HSTS max-age of at least 15552000 seconds",
+        ));
     }
 }
 
-pub fn audit_csp(csp: Option<&str>, score: &mut u8, issues: &mut Vec<Issue>) {
-    if let Some(val) = csp {
-        let val_lower = val.to_lowercase();
-        if val_lower.contains("'unsafe-inline'") || val_lower.contains("'unsafe-eval'") {
-            *score = score.saturating_sub(10);
-            issues.push(Issue {
-                severity: IssueSeverity::Warning,
-                category: IssueCategory::Security,
-                code: Some("security_csp_unsafe".into()),
-                params: None,
-                message: "Content-Security-Policy allows 'unsafe-inline' or 'unsafe-eval'".to_string(),
-                recommendation: Some(
-                    "Avoid unsafe directives in CSP to strictly mitigate Cross-Site Scripting (XSS)"
-                        .to_string(),
-                ),
+fn hsts_max_age(value: &str) -> HstsMaxAge {
+    let mut max_age: Option<u64> = None;
+    for directive in value.split(';') {
+        let Some((name, raw)) = directive.trim().split_once('=') else {
+            continue;
+        };
+        if name.trim().eq_ignore_ascii_case("max-age") {
+            if max_age.is_some() {
+                return HstsMaxAge::Invalid;
+            }
+            max_age = Some(match raw.trim().parse() {
+                Ok(value) => value,
+                Err(_) => return HstsMaxAge::Invalid,
             });
         }
-    } else {
-        *score = score.saturating_sub(25);
-        issues.push(Issue {
-            severity: IssueSeverity::Warning,
-            category: IssueCategory::Security,
-            code: Some("security_csp_missing".into()),
-            params: None,
-            message: "Missing Content-Security-Policy (CSP) header".to_string(),
-            recommendation: Some(
-                "Implement a strict Content-Security-Policy to protect against XSS and data injection"
-                    .to_string(),
-            ),
-        });
+    }
+    max_age.map_or(HstsMaxAge::Missing, HstsMaxAge::Value)
+}
+
+fn issue(severity: IssueSeverity, code: &str, message: &str, recommendation: &str) -> Issue {
+    Issue {
+        severity,
+        category: IssueCategory::Security,
+        code: Some(code.into()),
+        params: None,
+        message: message.into(),
+        recommendation: Some(recommendation.into()),
     }
 }
 
 pub fn audit_x_frame(x_frame: Option<&str>, score: &mut u8, issues: &mut Vec<Issue>) {
-    if let Some(val) = x_frame {
-        let val_upper = val.to_uppercase();
-        if !val_upper.contains("DENY") && !val_upper.contains("SAMEORIGIN") {
+    if let Some(value) = x_frame {
+        let upper = value.to_uppercase();
+        if !upper.contains("DENY") && !upper.contains("SAMEORIGIN") {
             *score = score.saturating_sub(10);
-            issues.push(Issue {
-                severity: IssueSeverity::Warning,
-                category: IssueCategory::Security,
-                code: Some("security_xframe_invalid".into()),
-                params: Some(BTreeMap::from([("value".into(), val.to_string())])),
-                message: format!("X-Frame-Options value '{}' is non-standard", val),
-                recommendation: Some(
-                    "Set X-Frame-Options to DENY or SAMEORIGIN to prevent Clickjacking".to_string(),
-                ),
-            });
+            issues.push(issue(
+                IssueSeverity::Warning,
+                "security_xframe_invalid",
+                &format!("X-Frame-Options value '{value}' is non-standard"),
+                "Set X-Frame-Options to DENY or SAMEORIGIN to prevent Clickjacking",
+            ));
         }
     } else {
         *score = score.saturating_sub(15);
-        issues.push(Issue {
-            severity: IssueSeverity::Warning,
-            category: IssueCategory::Security,
-            code: Some("security_xframe_missing".into()),
-            params: None,
-            message: "Missing X-Frame-Options header (Clickjacking vulnerability)".to_string(),
-            recommendation: Some("Set X-Frame-Options to DENY or SAMEORIGIN".to_string()),
-        });
+        issues.push(issue(
+            IssueSeverity::Warning,
+            "security_xframe_missing",
+            "Missing X-Frame-Options header (Clickjacking vulnerability)",
+            "Set X-Frame-Options to DENY or SAMEORIGIN",
+        ));
     }
 }
 
-pub fn audit_x_content_type(x_content_type: Option<&str>, score: &mut u8, issues: &mut Vec<Issue>) {
-    if let Some(val) = x_content_type {
-        if !val.to_lowercase().contains("nosniff") {
-            *score = score.saturating_sub(10);
-            issues.push(Issue {
-                severity: IssueSeverity::Warning,
-                category: IssueCategory::Security,
-                code: Some("security_xcontent_invalid".into()),
-                params: None,
-                message: "X-Content-Type-Options is not set to 'nosniff'".to_string(),
-                recommendation: Some(
-                    "Set X-Content-Type-Options to 'nosniff' to prevent MIME sniffing attacks"
-                        .to_string(),
-                ),
-            });
-        }
-    } else {
-        *score = score.saturating_sub(15);
-        issues.push(Issue {
-            severity: IssueSeverity::Warning,
-            category: IssueCategory::Security,
-            code: Some("security_xcontent_missing".into()),
-            params: None,
-            message: "Missing X-Content-Type-Options header".to_string(),
-            recommendation: Some("Add 'X-Content-Type-Options: nosniff' header".to_string()),
-        });
+pub fn audit_x_content_type(value: Option<&str>, score: &mut u8, issues: &mut Vec<Issue>) {
+    if value.is_some_and(|value| value.to_lowercase().contains("nosniff")) {
+        return;
     }
+    *score = score.saturating_sub(if value.is_some() { 10 } else { 15 });
+    let (code, message) = if value.is_some() {
+        (
+            "security_xcontent_invalid",
+            "X-Content-Type-Options is not set to 'nosniff'",
+        )
+    } else {
+        (
+            "security_xcontent_missing",
+            "Missing X-Content-Type-Options header",
+        )
+    };
+    issues.push(issue(
+        IssueSeverity::Warning,
+        code,
+        message,
+        "Set X-Content-Type-Options to 'nosniff' to prevent MIME sniffing attacks",
+    ));
 }

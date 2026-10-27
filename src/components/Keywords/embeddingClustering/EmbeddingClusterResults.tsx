@@ -2,11 +2,13 @@ import React from 'react';
 import { useTranslation } from 'react-i18next';
 import type { EmbeddingClusteringResult } from '@/services/embeddingClustering';
 import { appLocale } from '@/services/localeFormat';
+import { HybridPairEvidence } from './HybridPairEvidence';
 
 export const EmbeddingClusterResults: React.FC<{ result: EmbeddingClusteringResult }> = ({ result }) => {
   const { t } = useTranslation();
   return (
     <section className="space-y-4" aria-live="polite" aria-labelledby="embedding-result-title">
+      {result.pairEvidence && <HybridPairEvidence pairs={result.pairEvidence} />}
       <div className="flex flex-wrap items-baseline justify-between gap-2">
         <h2 id="embedding-result-title" className="text-lg font-bold text-white">{t('embeddingClusteringUi.resultTitle')}</h2>
         <span className="text-xs text-slate-500">{t('embeddingClusteringUi.resultMeta', { model: result.model, threshold: result.threshold.toFixed(2), date: new Date(result.analyzedAt).toLocaleString(appLocale()) })}</span>

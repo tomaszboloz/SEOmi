@@ -3,6 +3,7 @@ import { useTranslation } from 'react-i18next';
 import { useToolsStore } from '@/stores/toolsStore';
 import { useProjectStore } from '@/stores/projectStore';
 import type { GscPerformanceFilters } from '@/types';
+import { monitorGscSnapshots } from '@/services/monitoringAlerts';
 import { compareGscSnapshots, findGscStrikingDistanceQueries, latestCompleteGscDateRange,
   readGscSnapshots, saveGscSnapshot, snapshotGscPerformance, validateGscDateRange,
   type GscDateRange, type GscPerformanceSnapshot } from '@/services/gscPerformanceTracker';
@@ -76,6 +77,7 @@ export function useSearchConsoleSession() {
     if (!activeProjectId || !gscData || gscData.site_url !== gscProperty) return;
     try {
       const result = saveGscSnapshot(activeProjectId, gscData);
+      if (baselineSnapshot) void monitorGscSnapshots(activeProjectId, baselineSnapshot, result.snapshot);
       setSnapshots(result.snapshots.filter((snapshot) => snapshot.site_url === gscProperty));
       setBaselineId((current) => current || result.snapshots.find((snapshot) => snapshot.id !== result.snapshot.id)?.id || '');
       setTrackerMessage(t('searchConsole.snapshotSaved', { start: result.snapshot.start_date, end: result.snapshot.end_date }));

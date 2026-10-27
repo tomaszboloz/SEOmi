@@ -30,3 +30,5 @@ pub use models::{
     MAX_CUSTOM_SEARCH_CHARS_PER_RUN,
 };
 pub use validation::validate_custom_searches;
+#[cfg(test)]
+mod tests_xpath_gaps;

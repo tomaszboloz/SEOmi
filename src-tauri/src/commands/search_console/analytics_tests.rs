@@ -4,7 +4,7 @@ use super::{
     models::GscPerformanceFilters,
     requests::{analytics_page_request, next_start_row, SEARCH_ROW_PAGE_SIZE},
 };
-use serde_json::json;
+use serde_json::{json, Value};
 
 #[test]
 fn maps_search_analytics_contract_without_inventing_rows() {
@@ -24,7 +24,8 @@ fn maps_search_analytics_contract_without_inventing_rows() {
         &GscPerformanceFilters::default(),
         false,
         false,
-    );
+    )
+    .unwrap();
     assert_eq!(output["avg_ctr"], 6.0);
     assert_eq!(output["avg_position"], 4.3);
     assert_eq!(output["queries"][0]["query"], "seo tools");
@@ -94,4 +95,34 @@ fn validates_and_normalizes_real_search_console_filter_values() {
         ..Default::default()
     }))
     .is_err());
+}
+
+#[test]
+fn rejects_missing_invalid_or_negative_metrics_instead_of_mapping_zero() {
+    let valid = json!({"clicks":12,"impressions":200,"ctr":0.06,"position":4.25});
+    let maps = |total: Value| {
+        map_performance(
+            "sc-domain:example.com",
+            "2026-09-01",
+            "2026-09-28",
+            &[],
+            &[],
+            &[total],
+            &[],
+            &GscPerformanceFilters::default(),
+            false,
+            false,
+        )
+    };
+    for field in ["clicks", "impressions", "ctr", "position"] {
+        let mut row = valid.clone();
+        row.as_object_mut().unwrap().remove(field);
+        assert!(maps(row).is_err(), "missing {field} must remain observable");
+    }
+    for value in [json!(1.01), json!(-0.01)] {
+        let mut row = valid.clone();
+        row["ctr"] = value;
+        assert!(maps(row).is_err(), "invalid CTR must not become a score");
+    }
+    assert!(maps(json!({})).is_err());
 }

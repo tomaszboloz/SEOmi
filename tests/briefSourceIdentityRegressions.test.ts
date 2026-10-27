@@ -55,4 +55,11 @@ describe('brief snapshot source identity regressions', () => {
     expect(result).toMatchObject({ matched: true, overlapPercent: 25 });
     expect(result.matchedTerms).toHaveLength(12);
   });
+
+  it('does not label legacy noise as semantic source evidence', () => {
+    const result = matchParagraphToCrawlSource('Coffee beans are useful', 'https://site.test/source', pages([
+      { url: 'https://site.test/source', title: 'Coffee', semantic_terms: ['ale', '2026'] },
+    ]));
+    expect(result).toMatchObject({ matched: false, scope: 'title' });
+  });
 });

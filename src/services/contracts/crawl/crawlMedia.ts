@@ -14,7 +14,7 @@ export const CrawledImageResourceCheckSchema = z.object({
   http_status: z.union([z.number().finite(), z.null()]).optional(),
   content_length: z.union([z.number().finite(), z.null()]).optional(),
   request_error_kind: z.union([z.string(), z.null()]).optional(),
-}).passthrough() satisfies z.ZodType<CrawledImageResourceCheck, z.ZodTypeDef, unknown>;
+}).passthrough() satisfies z.ZodType<CrawledImageResourceCheck, unknown>;
 
 export const CrawledImageSchema = z.object({
   src: z.string(),
@@ -31,7 +31,7 @@ export const CrawledImageSchema = z.object({
   request_error_kind: z.union([z.string(), z.null()]).optional(),
   srcset_resource_checks: z.array(CrawledImageResourceCheckSchema).nullable().transform(value => value ?? undefined).optional(),
   srcset_resource_checks_truncated: z.boolean().nullable().transform(value => value ?? undefined).optional(),
-}).passthrough() satisfies z.ZodType<CrawledImage, z.ZodTypeDef, unknown>;
+}).passthrough() satisfies z.ZodType<CrawledImage, unknown>;
 
 export const CrawledFrameSchema = z.object({
   src: z.string().nullable().transform(value => value ?? undefined).optional(),
@@ -43,7 +43,7 @@ export const CrawledFrameSchema = z.object({
   checked_in_run: z.boolean().nullable().transform(value => value ?? undefined).optional(),
   http_status: z.number().finite().nullable().transform(value => value ?? undefined).optional(),
   request_error_kind: z.string().nullable().transform(value => value ?? undefined).optional(),
-}).passthrough() satisfies z.ZodType<CrawledFrame, z.ZodTypeDef, unknown>;
+}).passthrough() satisfies z.ZodType<CrawledFrame, unknown>;
 
 export const FaviconDataSchema = z.object({
   href: z.string(),
@@ -51,7 +51,7 @@ export const FaviconDataSchema = z.object({
   declared_type: z.string().nullable().transform(value => value ?? undefined).optional(),
   declared_sizes: z.string().nullable().transform(value => value ?? undefined).optional(),
   inferred_format: z.string().nullable().transform(value => value ?? undefined).optional(),
-}).passthrough() satisfies z.ZodType<FaviconData, z.ZodTypeDef, unknown>;
+}).passthrough() satisfies z.ZodType<FaviconData, unknown>;
 
 export const CrawledSocialResourceCheckSchema = z.object({
   url: z.string(),
@@ -63,10 +63,10 @@ export const CrawledSocialResourceCheckSchema = z.object({
   intrinsic_height: z.union([z.number().finite(), z.null()]).optional(),
   dimensions_source: z.union([z.literal('intrinsic-http'), z.string(), z.null()]).optional(),
   request_error_kind: z.union([z.string(), z.null()]).optional(),
-}).passthrough() satisfies z.ZodType<CrawledSocialResourceCheck, z.ZodTypeDef, unknown>;
+}).passthrough() satisfies z.ZodType<CrawledSocialResourceCheck, unknown>;
 
 export const CrawledSocialMetaTagSchema = z.object({
   key: z.string(),
   content: z.union([z.string(), z.null()]).optional(),
   resource_check: z.union([CrawledSocialResourceCheckSchema, z.null()]).optional(),
-}).passthrough() satisfies z.ZodType<CrawledSocialMetaTag, z.ZodTypeDef, unknown>;
+}).passthrough() satisfies z.ZodType<CrawledSocialMetaTag, unknown>;

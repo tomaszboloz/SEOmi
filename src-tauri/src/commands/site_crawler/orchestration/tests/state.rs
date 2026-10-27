@@ -34,8 +34,9 @@ fn loop_state_preserves_frontier_and_provenance_without_inventing_completed_work
     assert!(!state.depth_limit_reached);
     assert!(
         state.last_page_request_at.is_none()
-            && state.rendered_session.is_none()
-            && state.rendered_init_error.is_none()
+            && state.rendered_sessions.is_empty()
+            && state.render_health.rendering_enabled()
+            && state.render_health.fallback_pages == 0
     );
     assert!(state.prefetched_order.is_empty() && state.prefetched_responses.is_empty());
 }

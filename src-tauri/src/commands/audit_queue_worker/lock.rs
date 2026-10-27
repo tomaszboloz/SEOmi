@@ -38,6 +38,6 @@ pub(super) fn stop_requested_for_run(snapshot: &QueueSnapshot, run_id: &str) -> 
 }
 
 pub(super) fn queue_value(snapshot: &QueueSnapshot) -> Result<Value, String> {
-    serde_json::to_value(snapshot)
-        .map_err(|error| format!("Unable to serialize audit queue: {error}"))
+    // QueueSnapshot holds only strings, integers, booleans and options, so serialization cannot fail.
+    Ok(serde_json::json!(snapshot))
 }

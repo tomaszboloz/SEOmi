@@ -85,3 +85,26 @@ pub(super) fn audit_accessibility(
         })
         .collect()
 }
+
+#[cfg(test)]
+mod tests {
+    use super::audit_accessibility;
+    use crate::models::audit_data::{AccessibilityAudit, AccessibilityFinding, IssueSeverity};
+
+    #[test]
+    fn error_severity_maps_to_a_critical_issue() {
+        let finding = AccessibilityFinding {
+            code: "accessibility-custom-check".into(),
+            severity: "error".into(),
+            message: "Broken control".into(),
+            evidence: "fixture".into(),
+            recommendation: "Fix the control".into(),
+            elements: Vec::new(),
+        };
+        let issues = audit_accessibility(&AccessibilityAudit {
+            findings: vec![finding],
+            ..Default::default()
+        });
+        assert_eq!(issues[0].severity, IssueSeverity::Critical);
+    }
+}

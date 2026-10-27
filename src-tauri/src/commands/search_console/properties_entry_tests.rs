@@ -9,7 +9,7 @@ const CLIENT_ID: &str = "fixture.apps.googleusercontent.com";
 async fn public_properties_reject_invalid_project_before_keyring_access() {
     let error = list_search_console_properties("bad project".into(), CLIENT_ID.into())
         .await
-        .unwrap_err();
+        .expect_err("invalid project must be rejected");
     assert_eq!(error, "Invalid Google Search Console project identifier.");
 }
 
@@ -36,7 +36,7 @@ async fn site_properties_rejects_provider_status_and_malformed_json() {
         single_response("403 Forbidden", r#"{"error":{"message":"private"}}"#).await;
     let error = site_properties_at(&client(), "synthetic-token", &endpoint)
         .await
-        .unwrap_err();
+        .expect_err("provider status must be rejected");
     assert!(error.contains("403"));
     assert!(!error.contains("private"));
     server.await.unwrap();
@@ -44,10 +44,30 @@ async fn site_properties_rejects_provider_status_and_malformed_json() {
     let (endpoint, server) = single_response("200 OK", "not-json").await;
     let error = site_properties_at(&client(), "synthetic-token", &endpoint)
         .await
-        .unwrap_err();
+        .expect_err("malformed provider response must be rejected");
     assert!(error.starts_with("Google Search Console returned an invalid response"));
     server.await.unwrap();
     assert!(super::properties::parse_properties(serde_json::json!({}))
         .unwrap()
         .is_empty());
+}
+
+struct FailingResolver;
+impl reqwest::dns::Resolve for FailingResolver {
+    fn resolve(&self, _: reqwest::dns::Name) -> reqwest::dns::Resolving {
+        Box::pin(async { Err(std::io::Error::other("offline").into()) })
+    }
+}
+
+#[tokio::test]
+async fn site_properties_fails_cleanly_on_network_error() {
+    let client = reqwest::Client::builder()
+        .dns_resolver(std::sync::Arc::new(FailingResolver))
+        .no_proxy()
+        .build()
+        .unwrap();
+    let err = super::properties::site_properties(&client, "token")
+        .await
+        .expect_err("connection must fail");
+    assert_eq!(err, "Google Search Console request failed.");
 }

@@ -57,3 +57,37 @@ fn public_launch_context_has_no_schedule_without_scheduler_flags() {
     assert!(context.schedule_id.is_none());
     assert!(!context.headless);
 }
+
+#[test]
+fn unregister_commands_forward_to_fake_platform_without_os_mutation() {
+    let calls = std::cell::RefCell::new(Vec::new());
+    assert!(super::forwarding::unregister_audit_wakeup_with(
+        "seomi-test-proj",
+        "seomi-test-sched",
+        |project, id, queue| {
+            calls
+                .borrow_mut()
+                .push((project.to_owned(), id.to_owned(), queue));
+            Ok(())
+        }
+    )
+    .is_ok());
+    assert!(super::forwarding::unregister_audit_queue_wakeup_with(
+        "seomi-test-proj",
+        "seomi-test-run",
+        |project, id, queue| {
+            calls
+                .borrow_mut()
+                .push((project.to_owned(), id.to_owned(), queue));
+            Ok(())
+        }
+    )
+    .is_ok());
+    assert_eq!(
+        calls.into_inner(),
+        vec![
+            ("seomi-test-proj".into(), "seomi-test-sched".into(), false),
+            ("seomi-test-proj".into(), "seomi-test-run".into(), true),
+        ]
+    );
+}

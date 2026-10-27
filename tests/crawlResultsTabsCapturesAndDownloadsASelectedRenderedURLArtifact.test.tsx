@@ -1,4 +1,4 @@
-import { fireEvent, render, screen, waitFor } from "@testing-library/react";
+import { act, cleanup, fireEvent, render, screen, waitFor } from "@testing-library/react";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { CrawlResultsTabs } from "@/components/Domain/CrawlResultsTabs";
 import { useProjectStore } from "@/stores/projectStore";
@@ -10,12 +10,14 @@ import { result, run } from "./fixtures/crawlResultsTabsContracts";
 
 describe("CrawlResultsTabs", () => {
 afterEach(async () => {
-    await i18n.changeLanguage('en');
+    cleanup();
+    if (i18n.language !== "en") await act(async () => { await i18n.changeLanguage("en"); });
   });
 
-beforeEach(async () => {
-    await i18n.changeLanguage('en');
-   localStorage.clear();
+  beforeEach(async () => {
+    cleanup();
+    if (i18n.language !== "en") await act(async () => { await i18n.changeLanguage("en"); });
+    localStorage.clear();
     window.history.replaceState(null, "", "/");
     useProjectStore.setState({ activeProjectId: null });
   });
@@ -87,7 +89,7 @@ it("captures and downloads a selected rendered URL artifact", async () => {
         }),
       ),
     );
-    expect(screen.getByText(i18n.t("crawl.ui.createdAndDownloaded"))).not.toBeNull();
-    expect(screen.getByText("macos-wkwebview")).not.toBeNull();
+    expect(await screen.findByText(i18n.t("crawl.ui.createdAndDownloaded"))).not.toBeNull();
+    expect(await screen.findByText("macos-wkwebview")).not.toBeNull();
   });
 });

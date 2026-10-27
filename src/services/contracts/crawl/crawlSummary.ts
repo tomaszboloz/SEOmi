@@ -37,6 +37,8 @@ export const CrawledPageSummarySchema = z.object({
   redirect_stop_reason: z.union([z.string(), z.null()]).optional(),
   depth: z.number().finite(),
   http_status: z.number().finite(),
+  http_response_url: z.union([z.string(), z.null()]).optional(),
+  response_url_mismatch: z.boolean().optional(),
   response_time_ms: z.number().finite(),
   rendered_lcp_ms: z.union([z.number().finite(), z.null()]).optional(),
   rendered_inp_ms: z.union([z.number().finite(), z.null()]).optional(),
@@ -94,6 +96,7 @@ export const CrawledPageSummarySchema = z.object({
   html_validation_findings: z.array(CrawledHtmlValidationFindingSchema).nullable().transform(value => value ?? undefined).optional(),
   html_validation_truncated: z.boolean().nullable().transform(value => value ?? undefined).optional(),
   document_language: z.union([z.string(), z.null()]).optional(),
+  semantic_language: z.union([z.string(), z.null()]).optional(),
   hreflangs: z.array(CrawledHreflangSchema),
   amp_url: z.union([z.string(), z.null()]).optional(),
   amp_target_http_status: z.union([z.number().finite(), z.null()]).optional(),
@@ -121,7 +124,7 @@ export const CrawledPageSummarySchema = z.object({
   custom_search_results: z.array(CrawledCustomSearchResultSchema).nullable().transform(value => value ?? undefined).optional(),
   issues_count: z.number().finite(),
   issues: z.array(CrawledPageIssueSchema),
-}).passthrough() satisfies z.ZodType<CrawledPageSummary, z.ZodTypeDef, unknown>;
+}).passthrough() satisfies z.ZodType<CrawledPageSummary, unknown>;
 
 export const CrawledResourceSchema = z.object({
   source_urls: z.array(z.string()),
@@ -135,4 +138,4 @@ export const CrawledResourceSchema = z.object({
   dimensions_source: z.string().nullable().transform(value => value ?? undefined).optional(),
   response_time_ms: z.number().finite().nullable().transform(value => value ?? undefined).optional(),
   request_error_kind: z.string().nullable().transform(value => value ?? undefined).optional(),
-}).passthrough() satisfies z.ZodType<CrawledResource, z.ZodTypeDef, unknown>;
+}).passthrough() satisfies z.ZodType<CrawledResource, unknown>;

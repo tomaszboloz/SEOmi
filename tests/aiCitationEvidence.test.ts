@@ -63,4 +63,19 @@ describe('AI citation crawl evidence', () => {
     expect(matchAiCitationToCrawl('javascript:alert(1)', run([]))).toMatchObject({ matched: false, normalizedUrl: null });
     expect(matchAiCitationToCrawl('https://example.test/page', null)).toMatchObject({ matched: false, normalizedUrl: 'https://example.test/page' });
   });
+
+  it('matches Polish page terms to a response that uses other inflections of them', () => {
+    const snapshot = run([{ url: 'https://example.test/oferta', final_url: 'https://example.test/oferta', title: 'Oferta', document_language: 'pl', semantic_terms: ['szkolenia', 'navigatora', 'sprzedaży'], http_status: 200, indexability_status: 'index', redirect_chain: [] }]);
+    const context = matchAiCitationToCrawl('https://example.test/oferta', snapshot, 'Szkolenie z Sales Navigator poprawia wyniki sprzedaży.').context;
+
+    expect(context?.matchedTerms).toEqual(['szkolenia', 'navigatora', 'sprzedaży']);
+    expect(context?.matchedTermEvidence.find((item) => item.term === 'szkolenia')?.response).toEqual({ start: 0, end: 9 });
+  });
+
+  it('does not claim semantic context for an error page that retained legacy terms', () => {
+    const snapshot = run([{ url: 'https://example.test/missing', final_url: 'https://example.test/missing', title: 'Coffee', semantic_terms: ['coffee', 'beans'], http_status: 404, indexability_status: 'Blocked by HTTP error', redirect_chain: [] }]);
+    expect(matchAiCitationToCrawl('https://example.test/missing', snapshot, 'Coffee beans are useful.').context).toMatchObject({
+      scope: 'no-content-signal', meetsMinimum: false, matchedTerms: [], sourceTermCount: 0,
+    });
+  });
 });

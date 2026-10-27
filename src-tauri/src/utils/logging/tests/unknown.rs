@@ -2,6 +2,9 @@ use super::*;
 
 #[test]
 fn unknown_commands_and_log_io_failures_cannot_leak_or_change_dispatch() {
+    // Production code registers the shared span callsites here without a scoped
+    // subscriber; the global one keeps their cached Interest from becoming never.
+    init();
     let mut records = Vec::new();
     assert!(dispatch_with_sink(
         "secret_token_https://user:pass@example.com",

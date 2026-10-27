@@ -5,7 +5,7 @@ fn semantic_extraction_uses_main_content_and_excludes_site_chrome() {
     let document = Html::parse_document(
         r#"<html><body><header><nav><a href="/global">globalnavigation</a></nav></header><aside class="sidebar">sidebarkeyword</aside><main><h1>Espresso brewing</h1><article><p>Espresso brewing requires precise grinding and fresh coffee beans.</p><a href="/grinding">grinding guide</a></article><form><label>formkeyword</label></form><div role="search">searchformkeyword</div><footer>footerkeyword</footer></main><footer>sitefooterkeyword</footer></body></html>"#,
     );
-    let terms = extract_semantic_terms(&document);
+    let terms = extract_semantic_terms(&document, None);
     let excerpts = extract_semantic_excerpts(&document);
     assert!(terms.contains(&"espresso".to_string()));
     assert!(terms.contains(&"grinding".to_string()));
@@ -33,7 +33,7 @@ fn semantic_extraction_uses_main_content_and_excludes_site_chrome() {
     let fallback_document = Html::parse_document(
         r#"<html><body><header>globalheaderterm</header><nav>globalnavigationterm</nav><div class="sidebar">sidebarkeyword</div><p>Fallback article content discusses espresso machines and coffee extraction.</p><footer>globalfooterterm</footer></body></html>"#,
     );
-    let fallback_terms = extract_semantic_terms(&fallback_document);
+    let fallback_terms = extract_semantic_terms(&fallback_document, None);
     let fallback_excerpts = extract_semantic_excerpts(&fallback_document);
     assert!(fallback_terms.contains(&"espresso".to_string()));
     assert!(fallback_excerpts
@@ -89,7 +89,7 @@ fn semantic_extraction_handles_rendered_dom_visibility_and_dynamic_chrome() {
             </body></html>
         "#;
     let document = Html::parse_document(rendered_dom);
-    let terms = extract_semantic_terms(&document);
+    let terms = extract_semantic_terms(&document, None);
     let excerpts = extract_semantic_excerpts(&document);
     assert!(terms.contains(&"hydrated".to_string()));
     assert!(terms.contains(&"diagnostics".to_string()));

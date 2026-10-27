@@ -37,11 +37,15 @@ Every result retains its source and timing for later review by project owners.</
 pub(super) fn data(text: &str) -> FetchedPageData {
     FetchedPageData {
         status: 200,
+        http_response_url: Some(CURRENT_URL.into()),
+        response_url_mismatch: false,
         content_type: Some("text/html".into()),
+        content_disposition: None,
         content_length: Some(text.len() as u64),
         content_encoding: Some("gzip".into()),
         http_refresh: None,
         cache_control: Some("max-age=60".into()),
+        last_modified: None,
         charset: Some("utf-8".into()),
         x_robots_tag: None,
         declared_html: true,
@@ -53,6 +57,8 @@ pub(super) fn data(text: &str) -> FetchedPageData {
         rendered_lcp_ms: None,
         rendered_inp_ms: None,
         rendered_cls: None,
+        response_headers_available: true,
+        render_fallback: None,
     }
 }
 

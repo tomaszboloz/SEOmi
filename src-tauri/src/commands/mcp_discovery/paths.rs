@@ -26,7 +26,8 @@ pub(super) fn validate_server_path(value: &str) -> Result<String, String> {
     {
         return Err("The MCP server path must point to a .js file.".into());
     }
-    let canonical = path.canonicalize().map_err(|_| {
+    // Node's entrypoint resolution needs ordinary Windows paths where safe.
+    let canonical = dunce::canonicalize(path).map_err(|_| {
         "The selected MCP server file does not exist or cannot be read.".to_string()
     })?;
     if !canonical.is_file() {

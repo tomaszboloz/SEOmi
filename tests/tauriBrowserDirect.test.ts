@@ -78,7 +78,11 @@ it('counts regex limit in Unicode codepoints', async () => {
   expect(result).toEqual({ valid: true, errors: [], previews: [] });
 });
 it('handles non-Error regex constructor failures with localized diagnostics', async () => {
-  vi.stubGlobal('RegExp', vi.fn(function () { throw 'constructor unavailable'; }));
+  const NativeRegExp = RegExp;
+  vi.stubGlobal('RegExp', vi.fn(function (pattern: string | RegExp, flags?: string) {
+    if (pattern === 'docs') throw 'constructor unavailable';
+    return Reflect.construct(NativeRegExp, [pattern, flags]);
+  }));
   try {
     const result = await validateBrowserCrawlFilters({ includePatterns: ['docs'] });
     expect(result).toEqual({ valid: false, previews: [], errors: [

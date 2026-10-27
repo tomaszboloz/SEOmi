@@ -17,21 +17,21 @@ const openDatabase = (): Promise<IDBDatabase> => new Promise((resolve, reject) =
   request.onerror = () => reject(request.error ?? new Error(i18n.t('runtimeErrors.persistence.databaseOpenFailed')));
 });
 
-export const indexedDbRead = async (projectId: string): Promise<CrawlRunRecord[]> => {
+export const indexedDbRead = async (projectId: string, strict = false): Promise<CrawlRunRecord[]> => {
   if (typeof indexedDB === 'undefined') {
     const raw = readStorage(`seomi_project_${projectId}_crawl_runs`);
     if (!raw) return [];
     try {
       const parsed: unknown = JSON.parse(raw);
-      return await decodeCrawlRunsFromStorage(parsed);
-    } catch { return []; }
+      return await decodeCrawlRunsFromStorage(parsed, strict);
+    } catch (error) { if (strict) throw error; return []; }
   }
   const db = await openDatabase();
   try {
     return await new Promise((resolve, reject) => {
       const request = db.transaction(STORE_NAME, 'readonly').objectStore(STORE_NAME).get(projectId);
       request.onsuccess = () => {
-        void decodeCrawlRunsFromStorage(request.result).then(resolve, reject);
+        void decodeCrawlRunsFromStorage(request.result, strict).then(resolve, reject);
       };
       request.onerror = () => reject(request.error ?? new Error(i18n.t('runtimeErrors.persistence.historyReadFailed')));
     });

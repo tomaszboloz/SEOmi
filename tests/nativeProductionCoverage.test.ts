@@ -40,11 +40,11 @@ describe('isolated native production coverage', () => {
     expect(() => productionCoverage(lcov.replace('FNDA:0,real\n', ''), { [file]: metadata }, () => source)).toThrow('Missing function counters');
   });
 
-  it('groups generic instances by exact source region and validates LLVM aggregate counters', () => {
+  it('groups generic instances by declaration start despite different ends and validates LLVM counters', () => {
     const raw = `SF:/runner/SEOmi/${file}\nFN:1,generic-u8\nFN:1,generic-u16\nFN:1,neighbor\nFNDA:0,generic-u8\nFNDA:3,generic-u16\nFNDA:0,neighbor\nFNF:2\nFNH:1\nDA:1,3\nend_of_record\n`;
-    const llvmJson = { data: [{ files: [{ filename: `/runner/SEOmi/${file}`, summary: { functions: { count: 2, covered: 1 } } }], functions: [
+    const llvmJson = { data: [{ files: [{ filename: `/runner/SEOmi/${file}`, segments: [[1, 1, 3, true, true, false], [1, 31, 0, false, false, false]], summary: { functions: { count: 2, covered: 1 } } }], functions: [
       { name: 'generic-u8', count: 0, filenames: [`/runner/SEOmi/${file}`], regions: [[1, 1, 1, 10]] },
-      { name: 'generic-u16', count: 3, filenames: [`/runner/SEOmi/${file}`], regions: [[1, 1, 1, 10]] },
+      { name: 'generic-u16', count: 3, filenames: [`/runner/SEOmi/${file}`], regions: [[1, 1, 2, 30]] },
       { name: 'neighbor', count: 0, filenames: [`/runner/SEOmi/${file}`], regions: [[1, 20, 1, 30]] },
     ] }] };
     expect(() => productionCoverage(raw, { [file]: metadata }, () => source)).toThrow('JSON required');

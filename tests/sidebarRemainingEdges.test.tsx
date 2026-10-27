@@ -1,5 +1,5 @@
 import { fireEvent, render, screen, waitFor, act } from '@testing-library/react';
-import { beforeEach, describe, expect, it } from 'vitest';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { Sidebar } from '@/components/Layout/Sidebar';
 import { useAuditStore } from '@/stores/auditStore';
 import { useProjectStore } from '@/stores/projectStore';
@@ -21,19 +21,28 @@ describe('Sidebar remaining branches', () => {
     useUIStore.setState({ sidebarCollapsed: false, collapsedSections: {}, activeModal: null });
   });
 
-  it('shows an explicit empty result when navigation filtering matches nothing', () => {
+  it('shows search results count or empty result when filtering', () => {
     render(<Sidebar />);
     fireEvent.change(screen.getByRole('textbox'), { target: { value: 'no-such-navigation-item' } });
     expect(screen.getByText(/no-such-navigation-item/i)).toBeTruthy();
+
+    fireEvent.change(screen.getByRole('textbox'), { target: { value: 'audit' } });
+    expect(screen.getByRole('status').textContent).toBeTruthy();
   });
+
 
   it('opens the active section after navigation changes into a collapsed section', async () => {
-    useUIStore.setState({ collapsedSections: { 'audit-workspace': true } });
+    vi.spyOn(window, 'requestAnimationFrame').mockImplementation((cb: FrameRequestCallback) => {
+      cb(0);
+      return 1;
+    });
+    localStorage.setItem('seomi_project_sidebar-edges_sidebar_sections_v1', JSON.stringify({ 'keyword-research': true }));
     render(<Sidebar />);
 
-    act(() => useAuditStore.getState().setActiveTab('site-audit'));
-    await waitFor(() => expect(useUIStore.getState().collapsedSections['audit-workspace']).not.toBe(true));
+    act(() => useAuditStore.getState().setActiveTab('keyword-research'));
+    await waitFor(() => expect(useUIStore.getState().collapsedSections['keyword-research']).not.toBe(true));
   });
+
 
   it('returns safely from navigation synchronization in compact and unknown-tab states', () => {
     useUIStore.setState({ sidebarCollapsed: true });

@@ -1,4 +1,79 @@
 {
+  "cmsPanelUi": {
+    "title": "تعديل آمن لنظام إدارة المحتوى",
+    "description": "استبدل المحتوى تحت عنوان واحد. جهّز الفرق الدقيق ووافق عليه ثم نفّذ تجربة قبل التطبيق. يؤدي تغيير أي حقل إلى إلغاء الموافقة.",
+    "kind": "نوع نظام إدارة المحتوى",
+    "baseUrl": "العنوان الأساسي للنظام (HTTPS)",
+    "contentId": "معرّف المحتوى",
+    "credential": "اسم بيانات الاعتماد المحفوظة (اختياري)",
+    "credentialHelp": "استخدم بيانات اعتماد cms_auth_ تتضمن ترويسة Authorization في مخزن النظام. اترك الحقل فارغًا للطلبات المجهولة. لا تدخل أي سر هنا.",
+    "collection": "مجموعة Strapi",
+    "heading": "العنوان المطلوب البحث عنه",
+    "replacement": "محتوى القسم الجديد (HTML أو Markdown)",
+    "ymyl": "محتوى صحي أو مالي أو قانوني (YMYL)",
+    "factGate": "اجتاز هذا الفرق الدقيق التحقق المطلوب من الحقائق",
+    "diff": "الفرق المقترح",
+    "revision": "نسخة المصدر: {{revision}}",
+    "noChanges": "لا توجد تغييرات. عدّل المحتوى البديل قبل التطبيق.",
+    "prepare": "تجهيز الفرق",
+    "approve": "أوافق على هذا الفرق الدقيق",
+    "dryRun": "تنفيذ تجربة بلا كتابة",
+    "apply": "تطبيق الفرق المعتمد",
+    "busy": "جارٍ معالجة تعديل النظام…",
+    "noProject": "اختر مشروعًا نشطًا لتجهيز تعديل نظام إدارة المحتوى.",
+    "desktopOnly": "طلبات نظام إدارة المحتوى متاحة في تطبيق سطح المكتب فقط.",
+    "failed": "فشل تعديل نظام إدارة المحتوى: {{reason}}"
+  },
+  "teamPanelUi": {
+    "title": "وضع الفريق وسجل التدقيق",
+    "description": "اختر من يعمل وبأي دور. تُضاف كل تغييرات إلى سجل تدقيق محلي محمي بسلسلة تجزئة يكشف أي تلاعب.",
+    "actor": "المستخدم",
+    "role": "الدور",
+    "roles": {
+      "admin": "مسؤول",
+      "seo_strategist": "خبير استراتيجية SEO",
+      "content_writer": "كاتب محتوى",
+      "developer": "مطوّر"
+    },
+    "permissions": {
+      "run_crawl": "تشغيل الزحف",
+      "execute_cms_patch": "تنفيذ تصحيح CMS",
+      "modify_site_focus_rules": "تعديل قواعد Site Focus",
+      "export_audit_pdf": "تصدير تدقيق PDF",
+      "manage_team_roles": "إدارة أدوار الفريق"
+    },
+    "permissionsTitle": "الصلاحية",
+    "auditTitle": "سجل التدقيق",
+    "auditEmpty": "لا توجد إدخالات تدقيق بعد.",
+    "chainOk": "تم التحقق من سلسلة التدقيق.",
+    "chainBroken": "انكسرت سلسلة التدقيق عند الإدخال {{entry}} ({{reason}}).",
+    "exportCsv": "تصدير CSV",
+    "columns": {
+      "time": "الوقت",
+      "actor": "المستخدم",
+      "action": "الإجراء",
+      "result": "النتيجة"
+    },
+    "results": {
+      "success": "نجاح",
+      "denied": "مرفوض",
+      "failure": "فشل",
+      "dry_run": "تشغيل تجريبي"
+    },
+    "allowed": "مسموح",
+    "notAllowed": "غير مسموح"
+  },
+  "dataErasureUi": {
+    "title": "مسح بيانات المشروع (GDPR)",
+    "description": "يحذف نهائيًا عمليات الزحف والتضمينات والسجل الخاصة بهذا المشروع من التخزين المحلي عبر إتلاف مفاتيح التشفير الخاصة بها. لا يمكن التراجع عن ذلك.",
+    "confirm": "اكتب معرّف المشروع للتأكيد: {{id}}",
+    "button": "مسح بيانات المشروع",
+    "run": "مسح نهائي",
+    "cancel": "إلغاء",
+    "done": "تم المسح: {{records}} سجلًا و{{runs}} من عمليات الزحف.",
+    "failed": "فشل المسح: {{message}}",
+    "desktopOnly": "متاح في تطبيق سطح المكتب فقط."
+  },
   "schemaFindings": {
     "messageMissing": "اكتشفت قاعدة البيانات المنظمة {{code}} خاصية أو عنصراً بنيوياً مفقوداً في {{type}}.",
     "messageInvalid": "اكتشفت قاعدة البيانات المنظمة {{code}} قيمة أو بنية غير صالحة في {{type}}.",
@@ -15,6 +90,31 @@
     "severityWarning": "تحذير",
     "severityInfo": "معلومة",
     "sourceEvidence": "دليل المصدر"
+  },
+  "copilotPatcherUi": {
+    "title": "تصحيح Copilot السياقي",
+    "description": "ينشئ اقتراحاً قبل/بعد من أدلة الزحف لهذه الصفحة. راجعه قبل النسخ؛ لا يتم تغيير CMS.",
+    "contextUnavailable": "لا تتوفر أدلة عناوين الصفحة؛ ينتظر المصحح عملية زحف جديدة.",
+    "generate": "اقتراح تصحيح",
+    "generating": "جارٍ الإنشاء...",
+    "cancel": "إلغاء",
+    "before": "قبل",
+    "after": "بعد",
+    "pending": "بانتظار المراجعة؛ لم يتغير شيء.",
+    "factGate": "حذف حاجز الحقائق {{count}} جملة لعدم وجود مصدر مطابق في الصفحة.",
+    "remote": "تلقى مزود الذكاء الاصطناعي المحدد نص الصفحة.",
+    "local": "عمل مشغل الذكاء الاصطناعي المحدد على هذا الجهاز.",
+    "approve": "اعتماد للنسخ",
+    "reject": "رفض",
+    "approved": "تم الاعتماد للنسخ؛ لم يتم تغيير CMS.",
+    "copy": "نسخ النص المعتمد",
+    "rejected": "تم رفض الاقتراح.",
+    "keyboard": "لوحة المفاتيح: ينقل Tab بين عناصر التحكم، ويشغل Enter العنصر المحدد.",
+    "no-provider": "صل مزود ذكاء اصطناعي قبل طلب التصحيح.",
+    "empty-response": "لم يُرجع الذكاء الاصطناعي تصحيحاً صالحاً.",
+    "provider-error": "فشل طلب الذكاء الاصطناعي: {{message}}",
+    "ownership": "لم يعد المشروع نشطاً؛ أُوقف الطلب.",
+    "unavailable": "لا يحتوي المقطع على نص مصدر صالح للاستخدام."
   },
   "app": {
     "name": "SEOmi",
@@ -169,7 +269,7 @@
       "urlTooLong": "The URL cannot exceed 2048 characters.",
       "urlInvalid": "Enter a complete URL beginning with http:// or https://.",
       "urlPublicOnly": "Schedules accept only a public HTTP(S) URL without credentials.",
-      "crawlLimit": "The scheduled crawl limit must be between 1 and 500 URLs.",
+      "crawlLimit": "The scheduled crawl limit must be between 1 and {{max}} URLs.",
       "maxReached": "A project can have at most {{count}} schedules.",
       "duplicate": "This URL already has a schedule in the project.",
       "auditFailed": "The audit failed."
@@ -589,7 +689,8 @@
       "responseHidden": "Provider response withheld.",
       "invalidResponse": "The AI provider returned an invalid response.",
       "responseTooLarge": "The AI provider response exceeds the 1 MiB limit.",
-      "refused": "رفض {{provider}} هذا الطلب. أعد صياغته أو اختر نموذجًا آخر."
+      "refused": "رفض {{provider}} هذا الطلب. أعد صياغته أو اختر نموذجًا آخر.",
+      "modelRejected": "لم يقبل {{provider}} الطلب للنموذج {{model}} (HTTP {{status}}). اختر نموذجًا آخر."
     },
     "pagespeed": {
       "projectRequired": "Choose a project before starting the measurement."
@@ -1134,6 +1235,7 @@
     "tabEntity": "Entity graph",
     "tabLinks": "Internal links",
     "tabSchema": "JSON-LD schema",
+    "tabSignals": "الإشارات",
     "saveError": "Unable to save the topical map in local storage. It remains visible until the view closes; check application storage availability.",
     "preferencesSaveError": "Unable to remember the topical map view and filters in this project.",
     "entityTitle": "Project entity",
@@ -1410,6 +1512,45 @@
     "searchVolume": "Search volume",
     "addedAt": "Added at"
   },
+  "googleSuggestionsUi": {
+    "title": "اقتراحات Google",
+    "description": "اكتشف استعلامات ذات صلة من نقطة نهاية Google Suggest المجانية.",
+    "query": "الاستعلام",
+    "byteCount": "{{count}}/500 بايت UTF-8",
+    "fetch": "جلب الاقتراحات",
+    "selectProject": "اختر مشروعًا قبل جلب الاقتراحات.",
+    "blocked": "خدمة Google Suggest غير متاحة مؤقتًا.",
+    "error": "تعذر تحميل اقتراحات Google.",
+    "provenance": "المصدر: Google Suggest (غير رسمي، بأفضل جهد).",
+    "context": "السياق المطلوب: {{geo}} / {{language}}. لا يثبت ذلك توطين النتائج.",
+    "retrievedAt": "تم الاسترداد في: {{timestamp}}.",
+    "empty": "لم تُرجع أي اقتراحات.",
+    "saved": "محفوظ",
+    "save": "حفظ",
+    "importTitle": "استيراد الاقتراحات",
+    "importDescription": "استورد قائمة JSON أو CSV محلية. تظل المقاييس وهدف البحث غير معروفين.",
+    "importFormat": "تنسيق الاستيراد",
+    "importSourceUrl": "عنوان URL للمصدر (اختياري)",
+    "importPayload": "بيانات الاقتراحات",
+    "import": "استيراد",
+    "importedAt": "تم الاستيراد في: {{timestamp}} · {{count}} اقتراحًا.",
+    "json": "JSON",
+    "csv": "CSV",
+    "sourcePlaceholder": "https://...",
+    "evidenceTitle": "أدلة الزحف",
+    "evidenceNoCrawl": "لا تتوفر أدلة زحف لهذا المشروع.",
+    "evidencePartial": "الأدلة من زحف جزئي؛ قد تكون بعض الصفحات مفقودة.",
+    "evidenceObserved": "تم رصد أدلة زحف لهذا المشروع.",
+    "evidenceNoMatch": "لم يتم رصد دليل مطابق في العناوين أو المصطلحات الدلالية.",
+    "evidenceRun": "التشغيل {{run}} · تمت ملاحظة {{count}} صفحة.",
+    "evidenceLanguage": "لغة الأدلة: {{language}}.",
+    "evidenceInvalidTimestamp": "تم تجاهل زحف بوقت إكمال غير صالح.",
+    "evidenceTruncated": "تم تحديد الأدلة: أُهملت {{pages}} صفحة و{{suggestions}} اقتراحات و{{matches}} تطابقات صفحات.",
+    "intentUncertain": "{{intent}} (غير مؤكد)",
+    "intentSignals": "إشارات لغوية: {{signals}}",
+    "evidenceTitleMatch": "العنوان",
+    "evidenceTermsMatch": "مصطلحات دلالية"
+  },
   "rankTrackingUi": {
     "badge": "Keyword workflows",
     "provider": "SERP position monitor",
@@ -1480,7 +1621,8 @@
       "informational": "Informational",
       "commercial": "Commercial",
       "transactional": "Transactional",
-      "navigational": "Navigational"
+      "navigational": "Navigational",
+      "unknown": "غير معروف"
     },
     "saved": "Saved",
     "addSaved": "Add to saved keywords",
@@ -1504,6 +1646,37 @@
     "save": "Save",
     "researchTag": "Research"
   },
+  "trendingNowUi": {
+    "badge": "Trending Now",
+    "title": "Country trends",
+    "description": "Use the free Google Trends RSS feed or import a real CSV/JSON export. Traffic labels remain source text; no search volume is inferred.",
+    "freeSource": "Free RSS / import",
+    "countryLabel": "Country",
+    "refresh": "Refresh feed",
+    "importFile": "Import CSV or JSON",
+    "importLimit": "Files up to {{size}}",
+    "clear": "Clear saved snapshot",
+    "empty": "No snapshot for this project yet.",
+    "selectProjectError": "Select a project to use Trending Now.",
+    "storageUnavailable": "The snapshot is visible in memory, but project storage is unavailable.",
+    "payloadTooLarge": "The selected file exceeds the 1 MiB limit.",
+    "unsupportedImport": "Choose a .csv or .json file.",
+    "fetchError": "The free Trends feed could not be loaded.",
+    "importError": "The import could not be read.",
+    "countryValue": "Country: {{geo}}",
+    "sourceValue": "Source: {{source}}",
+    "capturedValue": "Captured: {{time}}",
+    "entryCount": "Entries: {{count}}",
+    "keyword": "Trend",
+    "trafficLabel": "Source traffic label",
+    "startedAt": "Source time",
+    "notProvided": "Not provided",
+    "source": {
+      "rss": "Google Trends RSS",
+      "csv": "CSV import",
+      "json": "JSON import"
+    }
+  },
   "mapUi": {
     "edgeSimilarityAria": "Content similarity {{percent}}%, shared terms: {{terms}}",
     "nodeAria": "{{label}}، المجموعة {{cluster}}",
@@ -1523,7 +1696,9 @@
       "directory": "URL tree",
       "directoryDescription": "URL hierarchy in this run",
       "plan": "Topical plan",
-      "planDescription": "Topics and semantic audit"
+      "planDescription": "Topics and semantic audit",
+      "diagnosis": "التشخيص",
+      "diagnosisDescription": "ما هو جيد، وما هو ضعيف، وما يجب إصلاحه"
     },
     "graph": {
       "fullTitle": "Full link graph map",
@@ -1634,7 +1809,86 @@
     "bottomTablistAria": "Map views in bottom bar",
     "goToView": "Go to {{view}} view",
     "backToMapStart": "Return to map start",
-    "start": "Start"
+    "start": "Start",
+    "graphEvidence": {
+      "sectionAria": "بنية الرسم البياني الدلالي وأدلة Search Console",
+      "title": "بنية الرسم البياني وأدلة GSC",
+      "description": "يصف PageRank بنية الروابط التي جُمعت أثناء الزحف. تُعرض مقاييس Search Console منفصلة ولا تُضم إلا عند تطابق المشروع النشط والخاصية والفترة والفلاتر.",
+      "structureAria": "PageRank البنيوي",
+      "structureTitle": "PageRank البنيوي",
+      "structureMeta": "{{iterations}} تكرارات · {{status}}",
+      "converged": "متقارب",
+      "bounded": "تم بلوغ حد التكرارات",
+      "structureNote": "هذه إشارة من الرسم البياني وليست ترتيب Google أو مقياسًا للزيارات.",
+      "structurePartial": "تم تقييد مدخلات الرسم البياني؛ يغطي PageRank البنيوي الصفحات والروابط المحتفظ بها فقط.",
+      "noNodes": "لا توجد صفحات مزحوفة للرسم البياني البنيوي.",
+      "trafficAria": "أدلة الزيارات من Google Search Console",
+      "trafficTitle": "أدلة الزيارات من Search Console",
+      "status": {
+        "complete": "صفوف GSC المطابقة",
+        "partial": "صفوف GSC جزئية؛ تظل القيم المفقودة غير معروفة",
+        "unavailable": "أدلة GSC غير متاحة",
+        "invalid": "نطاق أدلة GSC غير متطابق"
+      },
+      "project": "المشروع",
+      "property": "الخاصية",
+      "period": "الفترة",
+      "filters": "الفلاتر",
+      "allFilters": "كل الفلاتر المحددة",
+      "noSelection": "اختر خاصية Search Console حقيقية وحمّل البيانات لهذا المشروع لضم أدلة الزيارات.",
+      "counts": "الملاحظ: {{observed}} · غير مؤكد/مقتطع: {{uncertain}} · غير معروف: {{missing}}",
+      "trafficNote": "— يعني عدم وجود قيمة ملاحظة. لا تُعامل الصفوف غير المعروفة والمقتطعة مطلقًا كأصفار.",
+      "partialNotice": "أدلة الزيارات جزئية لأن بعض الصفوف المصدرية اقتُطعت أو رُفضت؛ تبقى القيم غير المعروفة غير معروفة.",
+      "invalidNotice": "رُفضت أدلة الزيارات لأن نطاق GSC أو الصفوف المصدرية غير متطابقة.",
+      "rowQuality": "صفوف المصدر: غير صالحة {{invalid}} · خارج الموقع المحدد {{ignored}}",
+      "observation": {
+        "gsc": "ملاحظ",
+        "missing": "غير معروف",
+        "truncated": "مقتطع",
+        "unavailable": "غير متاح",
+        "invalid": "غير صالح",
+        "out-of-scope": "خارج الخاصية",
+        "ambiguous": "ملتبس"
+      }
+    },
+    "diagnosisFilter": "نطاق التشخيص: {{label}}",
+    "clearDiagnosisFilter": "عرض الرسم كاملًا",
+    "allTopics": "كل المواضيع ({{count}})",
+    "cy": {
+      "layoutLabel": "التخطيط",
+      "layoutHierarchy": "هرمي",
+      "layoutForce": "قوى",
+      "sectionsLabel": "أقسام URL",
+      "expandAll": "توسيع الكل",
+      "collapseAll": "طي الكل",
+      "highlightLabel": "تمييز URL",
+      "highlightPlaceholder": "جزء من عنوان URL أو العنوان",
+      "matches": "التطابقات: {{count}}",
+      "depthLabel": "العمق",
+      "depthAll": "كل الأعماق",
+      "problemsOnly": "المشكلات فقط",
+      "statusLabel": "حالة HTTP",
+      "colorTrs": "اللون: الصلة الموضوعية (TRS)",
+      "colorStatus": "اللون: حالة HTTP (لا يتوفر TRS)",
+      "sizeHint": "الحجم = الروابط الواردة",
+      "mapAria": "خريطة تفاعلية لبنية الموقع مجمّعة حسب أقسام URL",
+      "mapHelp": "انقر على قسم لتوسيعه أو طيه، وعلى صفحة لعرض تفاصيلها؛ اسحب للتحريك، ومرّر أو اقرص للتكبير. تبدأ المواقع الكبيرة بأقسام مطوية. يوجد أسفل الخريطة جدول بالصفحات نفسها.",
+      "tooltip": "HTTP {{status}} · العمق {{depth}} · {{inlinks}} رابط وارد",
+      "detailsHint": "اختر صفحة على الخريطة أو في الجدول لعرض تفاصيلها.",
+      "detailsTitle": "تفاصيل الصفحة",
+      "colUrl": "URL",
+      "colStatus": "حالة HTTP",
+      "colDepth": "العمق",
+      "colInlinks": "الروابط الواردة",
+      "colTrs": "TRS",
+      "colSection": "القسم",
+      "colProblem": "مشكلة",
+      "noTrs": "غير متاح",
+      "yes": "نعم",
+      "no": "لا",
+      "tableSummary": "جدول الصفحات ({{count}})",
+      "tableCaption": "الصفحات المعروضة على خريطة البنية مع الحالة والعمق والروابط الواردة وTRS والقسم"
+    }
   },
   "crawlDiff": {
     "fields": {
@@ -1915,6 +2169,8 @@
     "exportJson": "JSON",
     "exportCsv": "CSV",
     "exportPdf": "PDF",
+    "exportHtml": "HTML",
+    "exportHelp": "Export the saved audit snapshot as JSON, CSV, PDF or sanitized HTML.",
     "healthScore": "نقاط الصحة",
     "criticalIssues": "مشكلات حرجة",
     "warnings": "تحذيرات",
@@ -2113,7 +2369,12 @@
       "resources": "الموارد",
       "frames": "الإطارات",
       "custom-search": "بحث مخصص",
-      "semantic": "تحليل دلالي"
+      "semantic": "تحليل دلالي",
+      "focus": "تركيز الموقع",
+      "authority": "السلطة الموضوعية",
+      "aio": "جاهزية الذكاء الاصطناعي",
+      "trust": "موثوقية الكيانات",
+      "offPage": "تحليل خارج الصفحة"
     },
     "environmentStaging": "test/staging",
     "environmentProduction": "production",
@@ -2143,7 +2404,7 @@
     "renderDelayAria": "Render delay in milliseconds",
     "lazyScroll": "Lazy-load scroll cycles",
     "lazyScrollAria": "Number of lazy-load scroll cycles",
-    "browserModeNotice": "Browser mode analyzes the DOM after JavaScript execution. Custom User-Agent is also used for robots.txt. The selected profile may inject ordinary session cookies into an isolated WebView; HttpOnly and full cookie-store import are unavailable. Additional headers and proxy require HTTP mode. X-Robots-Tag and Cache-Control headers are unavailable from rendered DOM.",
+    "browserModeNotice": "Browser mode analyzes the DOM after JavaScript execution. Custom User-Agent is also used for robots.txt. The selected profile may inject ordinary session cookies into an isolated WebView; HttpOnly and full cookie-store import are unavailable. Additional headers and proxy require HTTP mode. The HTTP status, response headers such as X-Robots-Tag and Cache-Control, and redirect hops come from a separate HTTP request for the same URL. A page that cannot be rendered is analyzed from that raw HTML and marked with a warning.",
     "renderProfileWarning": "The selected profile contains custom headers or a proxy. Rendered mode uses only its cookies — choose HTTP or a cookie-only profile.",
     "resourcesTitle": "Resources fetched during the crawl",
     "resourcesDescription": "Only resources discovered in the current scope. Status and size come from real HTTP responses.",
@@ -2158,12 +2419,13 @@
     "comparisonSelectPlaceholder": "Choose baseline run",
     "comparisonPathLabel": "Match by path (test ↔ production)",
     "comparisonPathNotice": "Hosts are ignored and tracking parameters removed; path and remaining query stay part of the key. This is a snapshot comparison, not proof of environment equivalence.",
+    "comparisonGuard": "حالة المقارنة: {{status}} · الأسباب: {{reasons}}",
     "comparisonAdded": "New URLs",
-    "comparisonRemoved": "Removed URLs",
+    "comparisonRemoved": "عناوين URL غير المرصودة",
     "comparisonChanged": "Changed URLs",
     "comparisonNoDifferences": "No differences in compared fields.",
     "comparisonAddedLabel": "Added",
-    "comparisonRemovedLabel": "Removed",
+    "comparisonRemovedLabel": "غير مرصود",
     "comparisonChangedLabel": "Changed",
     "healthScore": "Health score",
     "healthIndex": "Site-wide health index",
@@ -2268,6 +2530,7 @@
     "profileNamePlaceholder": "e.g. Editorial account",
     "sessionCookies": "Session cookies",
     "proxyOptional": "(optional; credentials in the URL remain in the system vault)",
+    "proxyListHint": "عدة وكلاء: افصل بينها بفواصل أو مسافات (حتى 64). تتناوب الطلبات بينها.",
     "customHeaders": "Custom headers",
     "oneHeaderPerLine": "(one per line: Name: value)",
     "saving": "Saving…",
@@ -2318,8 +2581,10 @@
     "remove": "Remove",
     "reportSectionsLegend": "JSON/PDF sections",
     "reportTemplateDescription": "The summary is always included. The template affects JSON and PDF; CSV exports remain full evidence tables.",
+    "reportTemplateHelp": "The template controls which saved evidence sections are included in JSON, PDF and HTML exports. No new network request is made.",
     "exportTitle": "Export this crawl run",
     "exportDescription": "Each file contains the real timestamp, scope and run configuration. CSV fields are neutralized before opening in a spreadsheet.",
+    "exportHtml": "HTML report",
     "urlCsv": "URL CSV",
     "linksCsv": "Links CSV",
     "imagesCsv": "Images CSV",
@@ -2374,7 +2639,19 @@
     "notCheckedInRun": "not checked in run",
     "noAnchor": "no anchor",
     "redirectChain": "Redirect chain",
-    "identifiedIssues": "Identified technical issues:"
+    "identifiedIssues": "Identified technical issues:",
+    "comparisonReasons": {
+      "same-run": "التشغيل نفسه",
+      "project-unverified": "ملكية المشروع غير مؤكدة",
+      "different-project": "مشاريع مختلفة",
+      "different-scope": "نطاق الزحف مختلف",
+      "invalid-completion-time": "وقت إكمال غير صالح",
+      "baseline-incomplete": "التشغيل الأساسي غير مكتمل",
+      "current-incomplete": "التشغيل الحالي غير مكتمل",
+      "path-key-collision": "مفتاح مسار مكرر",
+      "url-key-collision": "مفتاح URL مكرر"
+    },
+    "pageLimitUnlimited": "بدون حد"
   },
   "mcp": {
     "badge": "AI agent workflows",
@@ -2754,6 +3031,8 @@
     "sentenceCount": "{{count}} sentences",
     "exportJson": "JSON",
     "exportPdf": "PDF report",
+    "exportHtml": "HTML report",
+    "exportHelp": "HTML keeps the saved crawl metadata, evidence and recorded limits readable in a browser.",
     "exportUrlsCsv": "URLs CSV",
     "exportLinksCsv": "Links CSV",
     "exportImagesCsv": "Images CSV",
@@ -2911,7 +3190,11 @@
       "structured": "منظم",
       "validation": "التحقق من HTML",
       "performance": "الأداء",
-      "exports": "التصدير"
+      "exports": "التصدير",
+      "focus": "تركيز الموقع",
+      "authority": "السلطة الموضوعية",
+      "aio": "جاهزية الذكاء الاصطناعي",
+      "trust": "موثوقية الكيانات"
     },
     "groups": {
       "core": "نظرة عامة",
@@ -3310,6 +3593,31 @@
     "applyDesc": "تطبيق الوصف",
     "copyJsonLd": "نسخ JSON-LD"
   },
+  "ollamaAssistantUi": {
+    "title": "Local Ollama",
+    "description": "Run metadata suggestions with the observed models from Ollama on this device.",
+    "endpoint": "Loopback endpoint",
+    "status": {
+      "idle": "Not checked",
+      "loading": "Checking Ollama…",
+      "ready": "Connected · {{version}}",
+      "error": "Unavailable"
+    },
+    "refresh": "Refresh",
+    "model": "Observed model",
+    "chooseModel": "Choose a discovered model",
+    "noModels": "No models reported by Ollama",
+    "maxOutputTokens": "Maximum output tokens",
+    "instruction": "Local instruction (optional)",
+    "instructionPlaceholder": "Add a focused instruction…",
+    "generate": "Generate with Ollama",
+    "errors": {
+      "projectRequired": "Choose a project before using local Ollama.",
+      "auditRequired": "Run a page audit before generating local suggestions.",
+      "modelRequired": "Select a model reported by Ollama.",
+      "promptTooLarge": "The audit prompt is too large for the bounded local request."
+    }
+  },
   "auth": {
     "loginTitle": "حساب سحابة SEOmi",
     "subscriptionTitle": "خطة اشتراك الذكاء الاصطناعي",
@@ -3339,7 +3647,12 @@
     "refreshModels": "تحديث قائمة النماذج",
     "modelsFromProvider": "{{count}} نموذجًا من واجهة برمجة المزوّد",
     "modelsDefault": "النماذج الافتراضية — اختبر مفتاح API لتحميل نماذجك",
-    "modelsUnavailable": "تعذّر تحميل النماذج من المزوّد؛ تُعرض آخر قائمة معروفة."
+    "modelsUnavailable": "تعذّر تحميل النماذج من المزوّد؛ تُعرض آخر قائمة معروفة.",
+    "apiKeyStoredPlaceholder": "•••••••• تم حفظ المفتاح؛ الصق مفتاحًا جديدًا لاستبداله",
+    "saveApiKey": "حفظ المفتاح",
+    "removeApiKey": "إزالة المفتاح",
+    "apiKeyRemoved": "تمت إزالة المفتاح.",
+    "apiKeySaveFailed": "تعذّر حفظ المفتاح."
   },
   "schedules": {
     "saveError": "Unable to save the schedule.",
@@ -3410,6 +3723,7 @@
     "clientIdPlaceholder": "123456789.apps.googleusercontent.com",
     "clientSecretLabel": "Google OAuth client secret",
     "clientSecretPlaceholder": "GOCSPX-… (stored in the system credential manager)",
+    "clientSecretHelp": "يتطلب عميل OAuth لسطح المكتب سرًا لنفس معرّف العميل. يُعاد استخدام السر المحفوظ لهذا المشروع.",
     "connecting": "Connecting…",
     "authorize": "Authorize with Google",
     "startDate": "Period start",
@@ -3424,6 +3738,7 @@
     "property": "Search Console property",
     "selectedPropertyAria": "Selected Search Console property",
     "noProperties": "Google authorization succeeded, but the account returned no accessible Search Console properties.",
+    "noMatchingProperty": "لا يوجد موقع مطابق لموقع هذا المشروع — اختر واحدًا",
     "totalClicks": "Total clicks",
     "totalImpressions": "Total impressions",
     "searchAppearances": "Search result appearances",
@@ -3480,7 +3795,13 @@
       "currentQueries": "استعلامات ظهرت في الفترة الحالية فقط: {{count}}",
       "baselinePages": "روابط ظهرت في الفترة المرجعية فقط: {{count}}",
       "currentPages": "روابط ظهرت في الفترة الحالية فقط: {{count}}"
-    }
+    },
+    "sortBy": "الترتيب حسب {{column}}",
+    "showingRows": "عرض الصفوف {{from}}–{{to}} من {{total}}",
+    "rowsPerPage": "عدد الصفوف في الصفحة",
+    "pagePrevious": "السابق",
+    "pageNext": "التالي",
+    "pageOf": "صفحة {{page}} من {{total}}"
   },
   "settings": {
     "close": "Close settings",
@@ -3836,7 +4157,7 @@
       "backup": "Project backup",
       "backupDescription": "Import always creates a separate project and saves data under a new identifier. It never overwrites an existing project or copies credentials.",
       "installedVersion": "Current installed version",
-      "version": "v0.0.3 (الإصدار الحالي)",
+      "version": "v{{version}} (الإصدار الحالي)",
       "checkUpdates": "Check for updates",
       "chooseProjectBackup": "Choose a project before creating a backup.",
       "preparingBackup": "Preparing project backup…",
@@ -3856,7 +4177,7 @@
       "backupTitle": "Project backup",
       "backupDescriptionLong": "Exports metadata, settings and workspace data for the active project with crawl history. DataForSEO, Google and AI client secrets remain in the system keychain and never enter the file.",
       "backupSafety": "Import always creates a separate project and saves data under a new identifier. It never overwrites an existing project or copies credentials.",
-      "releaseVersion": "v0.0.3 (الإصدار الحالي)",
+      "releaseVersion": "v{{version}} (الإصدار الحالي)",
       "installUpdate": "تنزيل وتثبيت",
       "updateAvailable": "الإصدار {{version}} جاهز للتثبيت.",
       "updateInstalled": "تم تثبيت الإصدار {{version}}.",
@@ -3990,6 +4311,8 @@
     "multipleTitle": "تم العثور على عدة وسوم <title> ({{count}})",
     "emptyDescription": "وصف meta فارغ",
     "multipleDescription": "تم العثور على عدة وسوم meta description ({{count}})",
+    "renderFallback": "فشل العرض في المتصفح؛ تم تحليل استجابة HTML الأولية بدلًا من ذلك: {{reason}}",
+    "renderedSelfNavigation": "انتقلت الصفحة إلى عنوان URL مختلف في المتصفح؛ حالة HTTP ورؤوس الاستجابة تصف عنوان URL المطلوب",
     "technicalDetail": "تفصيل تقني: {{detail}}"
   },
   "auditChecks": {
@@ -4323,6 +4646,37 @@
     }
   },
   "exportUi": {
+    "html": {
+      "auditTitle": "SEOmi audit report",
+      "crawlTitle": "SEOmi crawl report",
+      "summary": "Summary",
+      "inputUrl": "عنوان URL للإدخال",
+      "httpStatus": "حالة HTTP",
+      "responseTimeMs": "زمن الاستجابة (مللي ثانية)",
+      "healthScore": "درجة الصحة",
+      "exportFormat": "تنسيق التصدير",
+      "runId": "معرّف التشغيل",
+      "scope": "النطاق",
+      "environment": "البيئة",
+      "completedAt": "وقت الاكتمال",
+      "templateId": "معرّف القالب",
+      "templateSections": "أقسام القالب",
+      "pagesCrawled": "الصفحات التي تم الزحف إليها",
+      "criticalIssues": "المشكلات الحرجة",
+      "warnings": "التحذيرات",
+      "durationMs": "المدة (مللي ثانية)",
+      "evidence": "Saved evidence",
+      "auditEvidence": "Audit evidence",
+      "issues": "Issues",
+      "configuration": "Configuration",
+      "limitations": "Recorded limitations",
+      "sourceLocal": "Source: saved local snapshot; no new network request was made.",
+      "exportedAt": "Exported at",
+      "reportTemplate": "Report template",
+      "fullSnapshot": "Full saved snapshot",
+      "unknown": "Unknown / not supplied",
+      "noLimitations": "No limitations were recorded in this snapshot."
+    },
     "invalidPdf": "The generator returned invalid PDF data. Please try again.",
     "labels": {
       "field": "Field",
@@ -4760,5 +5114,3011 @@
     "saveLimit": "حفظ الحد",
     "noLimitOption": "بلا حد — حتى رصيد الحساب",
     "balanceExhausted": "نفد رصيد DataForSEO (المتبقي ≈ {{balance}} دولار، والطلب التالي يحتاج نحو {{expected}} دولار). اشحن الحساب ثم انقر «التحقق من الرصيد»."
+  },
+  "serpImportUi": {
+    "title": "Free SERP evidence",
+    "description": "Import observed organic results or fetch free partial Bing RSS evidence. No paid API is called.",
+    "fetchTitle": "Fetch free Bing RSS evidence",
+    "fetchHelp": "Bing RSS is a partial source and is never treated as a complete Google SERP.",
+    "query": "Query",
+    "country": "Country",
+    "language": "Language",
+    "fetch": "Fetch Bing RSS",
+    "fetching": "Fetching…",
+    "feedBlocked": "Bing RSS was blocked",
+    "feedError": "Bing RSS request failed",
+    "formatHelp": "CSV: keyword,rank,url. JSON: records and metadata. Complete scoring requires explicit countryCode, locationCode, languageCode and complete availability.",
+    "format": "Format",
+    "payload": "Observed SERP data",
+    "import": "Import SERP",
+    "clear": "Remove import",
+    "summary": "{{count}} keyword snapshots; {{rejected}} rejected records",
+    "source": "Source: {{provider}} · {{status}}",
+    "context": "Market: {{country}} · language: {{language}}",
+    "times": "Captured: {{captured}} · imported: {{imported}}",
+    "partialNotice": "Bing RSS is partial evidence; clustering uses semantic-only scoring until complete, compatible SERP data is supplied.",
+    "unknown": "Unknown",
+    "pairs": "Qualifying pairs: {{count}}",
+    "pairHelp": "Groups are connected components of qualifying pairs. Missing or incompatible SERP contributes semantic evidence only. Up to 100 pairs are displayed.",
+    "scores": "Semantic: {{semantic}} · SERP: {{serp}} · score: {{score}}",
+    "weights": "Applied weights: semantic {{semantic}}, SERP {{serp}}",
+    "pairSources": "Sources: {{a}} / {{b}}",
+    "visiblePairs": "Showing the first {{count}} pairs.",
+    "retrieved": "Retrieved: {{retrieved}}"
+  },
+  "targetPhraseAuditUi": {
+    "title": "Target phrase audit",
+    "description": "Literal evidence from the current page audit plus an imported TOP10 snapshot. URL inspection starts only after you request it.",
+    "phraseLabel": "Target phrase",
+    "phrasePlaceholder": "e.g. technical SEO audit",
+    "evidenceTitle": "Phrase evidence in the current audit",
+    "evidenceDescription": "Counts and excerpts come from the stored title, H1, body and anchor text.",
+    "completeness": {
+      "complete": "Complete",
+      "partial": "Partial"
+    },
+    "enterPhrase": "Enter a target phrase to inspect literal evidence.",
+    "fields": {
+      "title": "Title",
+      "h1": "H1",
+      "body": "Body",
+      "anchors": "Anchors"
+    },
+    "occurrences": "{{count}} occurrences",
+    "noLiteralEvidence": "No literal occurrence was found in this field.",
+    "intent": "Intent",
+    "intentUnavailable": "Unavailable (no exact provider value)",
+    "intents": {
+      "informational": "Informational",
+      "commercial": "Commercial",
+      "transactional": "Transactional",
+      "navigational": "Navigational"
+    },
+    "auditUrl": "Audit URL",
+    "partialReason": "The stored body evidence is missing or truncated; this result is partial.",
+    "topTenTitle": "TOP10 content gap",
+    "topTenDescription": "The source is the matching imported SERP snapshot. Each URL is inspected locally only when you click the audit button.",
+    "auditRunning": "Inspecting TOP10…",
+    "auditTopTen": "Inspect TOP10 locally",
+    "sourceProvider": "Provider",
+    "sourceAvailability": "Availability",
+    "sourceContext": "Market / location / language",
+    "sourceCaptured": "Captured",
+    "sourceRetrieved": "Retrieved",
+    "sourceReason": "Reason",
+    "unknown": "Unknown",
+    "sourceStatus": {
+      "complete": "Complete",
+      "partial": "Partial",
+      "blocked": "Blocked",
+      "missing": "Missing"
+    },
+    "status": {
+      "available": "Available",
+      "unavailable": "Unavailable",
+      "error": "Error"
+    },
+    "unavailable": {
+      "no-project": "Select a project to use project-scoped SERP evidence.",
+      "no-phrase": "Enter a phrase to match an imported SERP snapshot.",
+      "no-import": "No imported SERP snapshot is available for this project.",
+      "phrase-not-found": "The imported SERP does not contain an exact case-insensitive match for this phrase.",
+      "no-results": "The matching imported snapshot contains no valid TOP10 organic results."
+    },
+    "reportStatus": "Report status",
+    "reportStatuses": {
+      "unavailable": "Unavailable",
+      "partial": "Partial",
+      "complete": "Complete"
+    },
+    "availablePages": "{{count}} pages with usable evidence",
+    "noRows": "No organic TOP10 rows were supplied by the matching snapshot.",
+    "topicsTitle": "Observed topics and target coverage",
+    "noTopics": "Topics require at least one successfully inspected page.",
+    "topicStatus": {
+      "gap": "Gap",
+      "covered": "Covered",
+      "unknown": "Unknown"
+    },
+    "topicShare": "{{observed}} of {{total}} pages · {{share}}%",
+    "targetOccurrencesUnknown": "Target occurrences: unknown",
+    "targetOccurrences": "Target occurrences: {{count}}",
+    "finalUrl": "Final URL"
+  },
+  "monitoringUi": {
+    "title": "تنبيهات مراقبة التغييرات",
+    "enable": "تفعيل تنبيهات مراقبة التغييرات",
+    "description": "التنبيه بعد تغيير قابل للمقارنة ومحفوظ محليًا. البيانات المفقودة أو المقتطعة لا تعني صفرًا.",
+    "frequency": "التكرار",
+    "frequencyAria": "تكرار تنبيهات المراقبة",
+    "run": "كل تشغيل",
+    "daily": "مرة يوميًا",
+    "weekly": "مرة أسبوعيًا",
+    "enableType": "تفعيل تنبيهات {{type}}",
+    "gscDecline": "انخفاض GSC %",
+    "gscDeclineAria": "نسبة انخفاض GSC",
+    "gscMinimum": "الحد الأدنى لمرات ظهور GSC",
+    "psiDrop": "انخفاض فئة PageSpeed",
+    "crawlChanged": "صفحات الزحف المتغيرة",
+    "semanticChanged": "التغييرات الدلالية",
+    "types": {
+      "gsc": "Search Console",
+      "pagespeed": "PageSpeed / CrUX",
+      "crawl": "مقارنات الزحف",
+      "semantic": "المقارنات الدلالية",
+      "focus": "Site Focus Score",
+      "aio": "جاهزية AI Overviews"
+    },
+    "focusDrop": "انخفاض Site Focus Score (نقاط)",
+    "aioDrop": "انخفاض درجة AIO-R (نقاط)"
+  },
+  "ga4": {
+    "title": "Google Analytics 4",
+    "description": "Landing page traffic for the same date range as Search Console. Analytics includes all channels; Search Console covers organic search.",
+    "projectRequired": "Select a project with a website URL to match its Analytics web stream.",
+    "connectFirst": "Connect Search Console with your Google OAuth client first.",
+    "clientSecret": "Google OAuth client secret (optional)",
+    "clientSecretHint": "Stored only in the system credential store after authorization.",
+    "loading": "Loading…",
+    "reconnect": "Authorize again",
+    "authorize": "Authorize Analytics access",
+    "refresh": "Refresh matching property",
+    "property": "Matched Analytics property",
+    "noProperty": "No unique matching web stream was found. Check Analytics access and the project website URL.",
+    "loadReport": "Load traffic report",
+    "truncated": "This result is partial or ambiguous. Do not treat it as complete.",
+    "periodsDiffer": "The report periods differ. Search Console metrics cannot be joined.",
+    "unavailable": "No traffic report has been loaded.",
+    "unknown": "Unavailable",
+    "noRows": "Google Analytics returned no landing page rows for this period.",
+    "landingPage": "Landing page",
+    "host": "Hostname",
+    "sessions": "Sessions",
+    "engagedSessions": "Engaged sessions",
+    "keyEvents": "Key events",
+    "clicks": "GSC clicks",
+    "impressions": "GSC impressions",
+    "issues": "Crawl issues",
+    "rowCount": "Rows: {{count}}"
+  },
+  "topicalDiagnosis": {
+    "title": "التشخيص الموضوعي",
+    "description": "المستندات (تُحسب النسخ اللغوية مرة واحدة)، والمناطق حول صفحات المحور، والمواضيع من المحتوى، وأحكام مع إجراء محدد. يُحسب من الزحف المحفوظ دون نماذج لغوية.",
+    "noTerms": "لا يحتوي هذا الزحف على مصطلحات محتوى، فلا شيء يعمل عليه التشخيص. أعد تشغيل الزحف.",
+    "noContentLinks": "حُفظ هذا الزحف بدون روابط المحتوى الرئيسي، لذلك لا تُعرض الأحكام المتعلقة بالروابط (صفحات بلا رابط من المحتوى، المحاور، صفحات الموضوع التي لا تربط ببعضها). أعد تشغيل الزحف.",
+    "truncated": "اقتصر التحليل على 500 صفحة أو على حد الأزواج؛ قد تكون بعض النتائج مفقودة.",
+    "empty": "لا أحكام في هذه المجموعة.",
+    "showRemaining": "عرض بقية الأحكام ({{count}})",
+    "stats": {
+      "documents": "المستندات",
+      "pages": "الصفحات",
+      "skipped": "المتجاوَزة",
+      "hubs": "المحاور",
+      "topics": "المواضيع",
+      "singletons": "منفردة",
+      "languages": "اللغات",
+      "mergedPairs": "أزواج اللغات"
+    },
+    "severity": {
+      "fix": "للإصلاح",
+      "weak": "ضعيف",
+      "info": "معلومة",
+      "good": "جيد"
+    },
+    "filter": {
+      "all": "الكل · {{count}}",
+      "fix": "للإصلاح · {{count}}",
+      "weak": "ضعيف · {{count}}",
+      "info": "معلومات · {{count}}",
+      "good": "جيد · {{count}}"
+    },
+    "areas": {
+      "title": "المناطق والمواضيع",
+      "noHub": "بدون محور",
+      "hubWithoutMembers": "محور بدون مستندات مرتبطة",
+      "members": "{{count}} مستند",
+      "showInGraph": "عرض في الرسم",
+      "hub": "المحور: {{url}}"
+    },
+    "topics": {
+      "singletons": "مستندات منفردة · {{count}}",
+      "labelFromContent": "تسمية من المحتوى",
+      "noLabel": "موضوع بلا تسمية",
+      "documents": "{{count}} مستند"
+    },
+    "roles": {
+      "hub": "محور",
+      "utility": "صفحة مساعدة",
+      "content": "محتوى"
+    },
+    "scope": {
+      "area": "منطقة",
+      "topic": "موضوع",
+      "document": "مستند"
+    },
+    "verdict": {
+      "hub-missing-backlink": {
+        "title": "لا رابط إلى المحور",
+        "action": "أضف في هذه الصفحة رابطًا إلى {{hub}}: في التنقل أو مسار التنقل أو المحتوى."
+      },
+      "hub-missing-member-link": {
+        "title": "المحور لا يربط ببعض صفحات موضوعه",
+        "action": "أضف الصفحات المفقودة ({{count}}) إلى قائمة {{hub}}."
+      },
+      "area-healthy": {
+        "title": "منطقة متماسكة",
+        "action": "يربط المحور بجميع المستندات ({{count}}) ويربط كل منها بالمحور. لا شيء مطلوب."
+      },
+      "topic-no-hub": {
+        "title": "موضوع بلا صفحة ركيزة",
+        "action": "أنشئ أو عيّن صفحة ركيزة لهذا الموضوع واربط منها جميع المستندات؛ اليوم لا يجمعها سوى المحتوى."
+      },
+      "topic-members-unlinked": {
+        "title": "صفحات الموضوع لا تربط ببعضها",
+        "action": "أضف روابط سياقية بين الأزواج المذكورة ({{count}} زوجًا بلا رابط في أي اتجاه)."
+      },
+      "topic-thin": {
+        "title": "موضوع ضعيف",
+        "action": "يحتوي الموضوع على مستندَين فقط. أضف مادة ثالثة أو ادمجهما إن كانا يجيبان عن السؤال نفسه."
+      },
+      "cannibalization-candidate": {
+        "title": "مرشحان للتنافس الذاتي",
+        "action": "صفحتان بنفس اللغة تتداخلان بنسبة {{percent}}% وتتشاركان كلمات العنوان: {{titleTokens}}. قارن النية وادمجهما أو ميّز العنوانين."
+      },
+      "document-isolated": {
+        "title": "صفحة معزولة",
+        "action": "ليس لها موضوع ولا تربط بها سوى صفحات القوائم. أضف رابطًا من أقرب صفحة في المحتوى: {{url}} ({{percent}}% مصطلحات مشتركة).",
+        "actionNoNearest": "ليس لها موضوع ولا تربط بها سوى صفحات القوائم. اربطها من مقال ذي صلة."
+      },
+      "document-orphan": {
+        "title": "لا رابط من المحتوى إطلاقًا",
+        "action": "لا تربط بها أي صفحة من المحتوى الرئيسي. أضف رابطًا سياقيًا من صفحة ذات صلة أو من المحور."
+      },
+      "near-duplicate": {
+        "title": "محتوى شبه متطابق",
+        "action": "قارن الصفحتين. إن كان تكرارًا فادمجهما أو عيّن canonical."
+      },
+      "language-pair-missing": {
+        "title": "نسخة لغوية مفقودة",
+        "action": "المستند موجود بلغة {{language}} فقط. قرر إن كان يحتاج ترجمة؛ هذه معلومة وليست خطأ."
+      }
+    },
+    "evidence": {
+      "hub": "المحور: {{hub}}",
+      "count": "عدد الصفحات: {{count}}",
+      "members": "{{count}} مستند",
+      "areas": "{{count}} منطقة",
+      "withoutHub": "{{count}} بدون محور",
+      "pairs": "عدد الأزواج: {{count}}",
+      "similarity": "التشابه {{percent}}%",
+      "titleTokens": "كلمات العنوان المشتركة: {{titleTokens}}",
+      "nearest": "أقرب صفحة: {{url}}",
+      "hash": "نفس تجزئة المحتوى",
+      "distance": "SimHash: {{value}}/64",
+      "language": "اللغة: {{language}}"
+    },
+    "confidence": {
+      "limited": "ثقة محدودة (دليل محتوى غير كامل)",
+      "moderate": "ثقة متوسطة"
+    },
+    "import": {
+      "button": "استيراد مواضيع التشخيص",
+      "topicsCount": "{{count}} موضوعًا · التشغيل {{run}}"
+    }
+  },
+  "pdfReport": {
+    "audit": {
+      "report": {
+        "reportTitle": "SEOmi · تقرير تدقيق السيو",
+        "brandLine": "أُنشئ بواسطة SEOmi",
+        "methodNote": "المنهجية: تحليل HTTP وHTML محلي. هذا التقرير ليس حكمًا من Google بشأن الفهرسة.",
+        "pageLabel": "الصفحة {{page}} من {{total}}",
+        "sevCritical": "حرج",
+        "sevWarning": "تحذير",
+        "sevInfo": "معلومة",
+        "noMessage": "لم يتم تقديم وصف لهذه الملاحظة.",
+        "noRecommendation": "راجع هذه الملاحظة وصحّح العنصر المتأثر.",
+        "categoryFallback": "عام",
+        "statusOk": "سليم",
+        "statusAttention": "يحتاج إلى انتباه",
+        "statusInfo": "معلومة",
+        "noAction": "لا يلزم أي إجراء.",
+        "yes": "نعم",
+        "no": "لا",
+        "notSet": "غير محدد",
+        "title": "تقرير تدقيق السيو",
+        "auditedAt": "وقت التدقيق",
+        "httpStatus": "حالة HTTP",
+        "responseTime": "زمن الاستجابة",
+        "ms": "{{0}} ms",
+        "healthScore": "درجة السلامة",
+        "ratingGood": "جيد",
+        "ratingFair": "يحتاج إلى تحسين",
+        "ratingPoor": "ضعيف",
+        "ratingNone": "بلا تقييم",
+        "legend": "أخضر: 80 فأعلى  ·  كهرماني: من 50 إلى 79  ·  أحمر: أقل من 50",
+        "findings": "ملاحظات",
+        "kpiHttp": "حالة HTTP",
+        "kpiTime": "زمن الاستجابة",
+        "kpiTitle": "طول العنوان",
+        "kpiDescription": "META DESCRIPTION",
+        "kpiH1": "عناوين H1",
+        "kpiImages": "الصور",
+        "kpiLinks": "الروابط",
+        "kpiWords": "عدد الكلمات",
+        "httpNote": "الاستجابة النهائية",
+        "slow": "أبطأ من 800 ms",
+        "fast": "ضمن 800 ms",
+        "characters": "حرفًا",
+        "present": "موجود",
+        "missing": "مفقود",
+        "charsNote": "{{0}} حرفًا",
+        "h1Note": "يوصى بعنصر واحد فقط",
+        "noAltNote": "{{0}} بدون نص alt",
+        "linksNote": "{{0}} داخلية، {{1}} خارجية",
+        "wordsNote": "كلمة من نص الصفحة",
+        "where": "الموضع",
+        "howToFix": "طريقة الإصلاح",
+        "fixFirst": "ما يجب إصلاحه أولًا",
+        "noIssues": "لم يُبلغ هذا التدقيق عن أي مشكلات.",
+        "fixIntro": "الملاحظات مرتبة حسب الخطورة ومجمّعة حسب الفئة. توضح كل بطاقة ما يجب تغييره وأين ينطبق.",
+        "severityGroup": "{{0}} ({{1}})",
+        "details": "تفاصيل التدقيق",
+        "noDetails": "لا يحتوي هذا التدقيق على بيانات تفصيلية للصفحة.",
+        "colCheck": "الفحص",
+        "colValue": "القيمة الحالية",
+        "colStatus": "الحالة",
+        "colAdvice": "التوصية",
+        "colArea": "المنطقة",
+        "passed": "الفحوصات الناجحة",
+        "nothingPassed": "لم ينجح أي فحص في هذا التدقيق.",
+        "passedSummary": "نجح {{0}} من أصل {{1}} فحصًا."
+      },
+      "checks": {
+        "chars": "{{0}} ({{1}} حرفًا)",
+        "ms": "{{0}} ms",
+        "bytes": "{{0}} بايت",
+        "minutes": "{{0}} دقيقة",
+        "unknown": "غير معروف",
+        "missingCount": "{{0}} مفقود",
+        "fixAlt": "أضف نص alt وصفيًا لكل صورة.",
+        "fixSize": "حدّد سمتي width وheight صراحةً للصور.",
+        "fixInsecure": "غيّر روابط http:// إلى https://.",
+        "fixMixed": "حمّل جميع الموارد عبر HTTPS.",
+        "keyword": "{{0}} ({{1}})",
+        "metaTitle": "وسوم Meta",
+        "title": "العنوان",
+        "description": "Meta description",
+        "canonical": "Canonical URL",
+        "robotsMeta": "Meta robots",
+        "viewport": "Viewport",
+        "charset": "ترميز الأحرف",
+        "keywords": "Meta keywords",
+        "author": "المؤلف",
+        "generator": "المولّد",
+        "themeColor": "لون السمة",
+        "headingsTitle": "العناوين",
+        "h1Count": "عدد H1",
+        "h1Text": "نص H1",
+        "hierarchy": "تسلسل هرمي صحيح للعناوين",
+        "outline": "مخطط العناوين",
+        "contentTitle": "إحصاءات المحتوى",
+        "words": "عدد الكلمات",
+        "sentences": "الجمل",
+        "readingTime": "وقت القراءة",
+        "readability": "سهولة القراءة",
+        "readabilityValue": "{{0}} (درجة Flesch {{1}})",
+        "wordsPerSentence": "الكلمات في الجملة",
+        "textRatio": "نسبة النص إلى HTML",
+        "topKeywords": "أهم الكلمات المفتاحية",
+        "imagesTitle": "الصور",
+        "imageTotal": "الصور المكتشفة",
+        "imageAlt": "صور بدون نص alt",
+        "imageSize": "صور بدون width وheight",
+        "imageFormats": "صيغ الصور",
+        "linksTitle": "الروابط",
+        "linkTotal": "إجمالي الروابط",
+        "linkInternal": "الروابط الداخلية",
+        "linkExternal": "الروابط الخارجية",
+        "linkNofollow": "روابط Nofollow",
+        "linkInsecure": "الروابط غير الآمنة (HTTP)",
+        "linkBlank": "روابط تفتح في تبويب جديد",
+        "redirectTitle": "سلسلة إعادة التوجيه",
+        "redirectHops": "قفزات إعادة التوجيه",
+        "hop": "القفزة {{0}}",
+        "hopValue": "HTTP {{0}}: {{1}} ← {{2}}",
+        "indexTitle": "قابلية الفهرسة",
+        "indexStatus": "حالة قابلية الفهرسة",
+        "xRobots": "ترويسة X-Robots-Tag",
+        "canonicalMatch": "Canonical يطابق عنوان URL النهائي",
+        "canonicalChecked": "تم فحص هدف Canonical",
+        "canonicalStatus": "حالة HTTP لهدف Canonical",
+        "canonicalError": "خطأ في فحص Canonical",
+        "securityTitle": "ترويسات الأمان",
+        "securityScore": "درجة الأمان",
+        "transportTitle": "أمان النقل",
+        "https": "يُقدَّم عبر HTTPS",
+        "scheme": "مخطط URL",
+        "mixed": "موارد المحتوى المختلط",
+        "cookies": "ملفات تعريف الارتباط (Cookies)",
+        "noCookies": "لم يتم تعيين أي ملفات تعريف ارتباط",
+        "cookie": "Cookie: {{0}}",
+        "cookieValue": "Secure: {{0}}؛ HttpOnly: {{1}}؛ SameSite: {{2}}",
+        "cookieAdvice": "فعّل العلامتين Secure وHttpOnly وحدّد السمة SameSite.",
+        "tls": "تغطية TLS",
+        "structuredTitle": "البيانات المنظمة",
+        "blocks": "كتل البيانات المنظمة",
+        "block": "{{0}} ({{1}})",
+        "valid": "لا توجد مشكلات تحقق",
+        "structuredAdvice": "صحّح البيانات المنظمة لتجتاز التحقق.",
+        "socialTitle": "Open Graph وبطاقة Twitter",
+        "addTag": "أضف الوسم {{0}} إلى head الصفحة.",
+        "a11yTitle": "إمكانية الوصول",
+        "language": "لغة المستند",
+        "landmarks": "المعالم (Landmarks)",
+        "aria": "سمات ARIA",
+        "formControls": "عناصر النماذج",
+        "unlabeled": "عناصر نماذج بلا تسمية",
+        "hiddenControls": "عناصر نماذج مخفية",
+        "manual": "تلزم مراجعة يدوية",
+        "ampTitle": "AMP",
+        "ampDetected": "تم اكتشاف AMP",
+        "ampDocument": "الصفحة مستند AMP",
+        "ampUrls": "إصدارات AMP المرتبطة",
+        "ampCanonical": "AMP canonical URL",
+        "ampCoverage": "تغطية التحقق",
+        "notVerified": "لم يتم التحقق",
+        "perfTitle": "الأداء",
+        "httpStatus": "حالة HTTP",
+        "responseTime": "زمن استجابة الخادم",
+        "headersTime": "الوقت حتى ترويسات الاستجابة",
+        "bodyTime": "وقت قراءة المحتوى",
+        "totalTime": "إجمالي وقت الطلب",
+        "bodyBytes": "حجم المحتوى بعد فك الترميز",
+        "lengthHeader": "ترويسة Content-Length",
+        "redirectCount": "عمليات إعادة التوجيه المتبَعة",
+        "method": "طريقة الطلب",
+        "measuredAt": "وقت القياس",
+        "scope": "نطاق القياس",
+        "techTitle": "التفاصيل التقنية",
+        "contentType": "نوع المحتوى",
+        "server": "الخادم",
+        "favicon": "Favicon",
+        "robotsTxt": "robots.txt",
+        "sitemap": "Sitemap",
+        "hreflangTags": "وسوم Hreflang",
+        "hreflang": "{{0}}: {{1}}",
+        "techSignals": "التقنيات المكتشفة",
+        "signal": "{{0}}{{1}} ({{2}}، {{3}})"
+      },
+      "loc": {
+        "wholePage": "الصفحة كاملة: {{0}}",
+        "page": "الصفحة: {{0}}",
+        "element": "العنصر: {{0}}",
+        "current": "القيمة الحالية: {{0}}",
+        "image": "الصورة: {{0}}",
+        "link": "الرابط: {{0}}",
+        "linkText": "الرابط: {{0}} (نص الرابط: {{1}})",
+        "h1": "العنوان <h1>: {{0}}",
+        "header": "ترويسة استجابة HTTP: {{0}}",
+        "headerMissing": "القيمة الحالية: لم يرسلها الخادم",
+        "cookie": "Cookie: {{0}}",
+        "block": "{{0}} {{1}}",
+        "blockPath": "البيانات المنظمة {{0}}، المسار: {{1}}",
+        "noPath": "غير محدد",
+        "lineColumn": " (السطر {{0}}، العمود {{1}})",
+        "elementAt": "{{0}}{{1}}: {{2}}",
+        "evidence": "الدليل: {{0}}",
+        "scheme": "مخطط URL: {{0}}",
+        "resource": "مورد غير آمن: {{0}}",
+        "response": "استجابة الخادم: HTTP {{1}} خلال {{0}} ms",
+        "hop": "قفزة إعادة التوجيه: HTTP {{0}} من {{1}}"
+      }
+    },
+    "crawl": {
+      "report": {
+        "reportTitle": "SEOmi · تقرير زحف الموقع",
+        "brandLine": "أُنشئ بواسطة SEOmi",
+        "footerNote": "المنهجية: زحف HTTP وHTML محلي؛ بيانات التشغيل المحفوظة فقط، دون إعادة جلب الصفحات.",
+        "methodFull": "المنهجية: زحف HTTP وHTML محلي. تُدرج فقط البيانات المخزنة في التشغيل المحدد؛ ولا تُجلب أي صفحات مجددًا لهذا التقرير. هذا التقرير ليس حكمًا من Google بشأن الفهرسة.",
+        "pageLabel": "الصفحة {{page}} من {{total}}",
+        "title": "تقرير زحف الموقع",
+        "completedAt": "وقت الاكتمال",
+        "duration": "المدة",
+        "pagesCrawled": "الصفحات المزحوفة",
+        "mode": "وضع الزحف",
+        "modeDefault": "http",
+        "environment": "البيئة",
+        "envDefault": "افتراضي",
+        "scoreVersion": "إصدار التقييم",
+        "versionNone": "بلا إصدار",
+        "seconds": "{{0}} ث",
+        "minSec": "{{0}} د {{1}} ث",
+        "ms": "{{0}} ms",
+        "yes": "نعم",
+        "no": "لا",
+        "none": "لا يوجد",
+        "ok": "سليم",
+        "problem": "مشكلة",
+        "noteCancelled": "أُلغي هذا الزحف قبل اكتماله؛ النتائج جزئية.",
+        "noteTimedOut": "بلغ هذا الزحف حدّه الزمني؛ النتائج جزئية.",
+        "noteRobots": "تحذير robots.txt: {{0}}",
+        "noteLimits": "الحدود التي تم بلوغها: {{0}}.",
+        "healthScore": "درجة السلامة",
+        "legend": "أخضر: 80 فأعلى  ·  كهرماني: من 50 إلى 79  ·  أحمر: أقل من 50",
+        "ratingGood": "جيد",
+        "ratingFair": "يحتاج إلى تحسين",
+        "ratingPoor": "ضعيف",
+        "ratingNone": "بلا تقييم",
+        "critical": "حرج",
+        "warning": "تحذير",
+        "notice": "تنبيه",
+        "findings": "مشكلات",
+        "kpiShare": "{{0}}% من الصفحات",
+        "kIndexable": "قابلة للفهرسة",
+        "kBlocked": "غير قابلة للفهرسة",
+        "kUncertain": "غير مؤكدة",
+        "k2xx": "الحالة 2XX",
+        "k3xx": "الحالة 3XX",
+        "k4xx": "الحالة 4XX",
+        "k5xx": "الحالة 5XX",
+        "kNoStatus": "بلا استجابة",
+        "kAvgTime": "متوسط الاستجابة",
+        "kAvgNote": "لكل صفحة",
+        "kAvgWords": "متوسط الكلمات",
+        "kWordsNote": "لكل صفحة",
+        "kOrphans": "الصفحات اليتيمة",
+        "kDuplicates": "مجموعات التكرار",
+        "kDupNote": "العناوين، الأوصاف، المحتوى",
+        "kChains": "سلاسل إعادة التوجيه",
+        "kChainNote": "قفزتان أو أكثر",
+        "kBrokenInt": "روابط داخلية معطلة",
+        "kBrokenExt": "روابط خارجية معطلة",
+        "kLinkNote": "روابط تم فحصها",
+        "kNoTitle": "عناوين مفقودة",
+        "kNoDesc": "أوصاف مفقودة",
+        "kNoH1": "H1 مفقود",
+        "kNoCanonical": "بلا CANONICAL",
+        "kWithIssues": "صفحات بها مشكلات",
+        "fixFirst": "ما يجب إصلاحه أولًا",
+        "fixIntro": "المشكلات مجمّعة حسب النوع ومرتبة: حرج، تحذير، تنبيه. تسرد كل بطاقة الصفحات المتأثرة وطريقة إصلاحها.",
+        "noIssues": "لم يُعثر على مشكلات في الصفحات المزحوفة.",
+        "severityGroup": "{{0}} ({{1}})",
+        "affectedOne": "صفحة واحدة متأثرة",
+        "affected": "{{0}} صفحة متأثرة ({{1}}%)",
+        "where": "الموضع",
+        "howToFix": "طريقة الإصلاح",
+        "wherePage": "{{0}}: {{1}}",
+        "morePages": "... و{{0}} صفحة أخرى (راجع جدول الصفحات لكل عناوين URL)",
+        "evTitle": "title: {{0}}",
+        "evDescription": "meta description: {{0}}",
+        "evCanonical": "canonical: {{0}} ({{1}})",
+        "evStatus": "HTTP {{0}}",
+        "evError": "خطأ في الطلب: {{0}}",
+        "evRobots": "meta robots: {{0}}، X-Robots-Tag: {{1}}",
+        "evWords": "{{0}} كلمة",
+        "evH1": "عدد H1: {{0}}",
+        "evLang": "lang: {{0}}",
+        "evImages": "{{0}} صورة بدون alt",
+        "pagesHeading": "الصفحات",
+        "pagesIntro": "جميع الصفحات المزحوفة بترتيب الزحف.",
+        "criticalPages": "صفحات بها مشكلات حرجة",
+        "criticalIntro": "صفحات بها مشكلة حرجة واحدة على الأقل، مع الملاحظات التي يجب إصلاحها أولًا.",
+        "colCritical": "المشكلات الحرجة",
+        "details": "الملاحظات التفصيلية",
+        "noneFound": "لم يُعثر على شيء في هذا التشغيل.",
+        "moreRows": "+ {{0}} صفوف أخرى غير معروضة هنا",
+        "rows": "{{0}} صفوف",
+        "rowOne": "صف واحد",
+        "tCoverage": "تغطية التقرير",
+        "coverageIntro": "فُحصت جميع المجالات أدناه؛ والأقسام التي لا بيانات فيها تذكر ذلك.",
+        "tComparison": "المقارنة مع تشغيل سابق",
+        "noComparison": "غير متاحة: سجل التشغيل المحفوظ لا يتضمن تشغيلًا سابقًا."
+      },
+      "labels": {
+        "tRun": "تفاصيل التشغيل",
+        "tConfig": "إعدادات الزحف",
+        "configIntro": "الإعدادات التي عمل بها الزحف، كما هي مخزنة في التشغيل تمامًا.",
+        "tRobots": "Robots.txt وSitemap",
+        "runId": "معرّف التشغيل",
+        "scopeUrl": "عنوان URL لبداية النطاق",
+        "startUrl": "عنوان URL البدء الذي استخدمه الزاحف",
+        "resources": "الموارد التي تم فحصها",
+        "images": "الصور المكتشفة",
+        "limits": "الحدود الملحوظة",
+        "cancelled": "أُلغي",
+        "timedOut": "انتهت المهلة",
+        "resourceLimit": "بلغ حد طلبات الموارد",
+        "provenance": "مصدر الاكتشاف جزئي",
+        "compacted": "ضُغطت الأدلة المخزنة",
+        "pagesTruncated": "اقتُطعت الصفحات المخزنة",
+        "storagePages": "تم الاحتفاظ بـ {{0}} من {{1}} صفحة",
+        "template": "قالب التقرير",
+        "templateFull": "التقرير الكامل",
+        "robotsStatus": "حالة robots.txt",
+        "robotsEval": "تقييم robots.txt",
+        "robotsCode": "حالة HTTP لملف robots.txt",
+        "robotsUrl": "عنوان URL النهائي لـ robots.txt",
+        "robotsAgent": "وكيل مستخدم الزاحف",
+        "robotsBlocked": "عناوين URL المحظورة بواسطة robots.txt",
+        "robotsWarning": "تحذير robots.txt",
+        "sitemapStatus": "نتيجة Sitemap",
+        "sitemapFound": "عناوين URL المكتشفة في Sitemap",
+        "tPages": "جميع الصفحات المزحوفة",
+        "tDupTitles": "عناوين مكررة",
+        "tDupDescriptions": "أوصاف meta مكررة",
+        "tDupContent": "محتوى مكرر",
+        "tNear": "محتوى شبه مكرر",
+        "dupIntro": "الصفحات في المجموعة نفسها تتشارك القيمة نفسها؛ اجعل كل صفحة فريدة.",
+        "hashLabel": "تجزئة المحتوى {{0}} ({{1}})",
+        "tRedirects": "عمليات إعادة التوجيه وسلاسلها",
+        "redirectIntro": "اربط مباشرة بعنوان URL النهائي؛ فالسلاسل ذات القفزتين أو أكثر تهدر ميزانية الزحف.",
+        "hop": "{{0}} ← {{1}}",
+        "tClientRedirects": "عمليات إعادة التوجيه من جهة العميل",
+        "tBroken": "روابط معطلة",
+        "brokenIntro": "روابط ردّ هدفها بخطأ أو تعذر طلبه؛ الروابط الداخلية أولًا.",
+        "internal": "داخلي",
+        "external": "خارجي",
+        "statusError": "{{0}} ({{1}})",
+        "tExternal": "ملخص الروابط الخارجية",
+        "externalIntro": "الأهداف الخارجية مجمّعة حسب المضيف، مع نتائج الفحوصات التي أُجريت في هذا التشغيل.",
+        "notChecked": "لم يُفحص في هذا التشغيل",
+        "tCanonical": "تعارضات Canonical",
+        "canonicalIntro": "صفحات canonical فيها مفقود أو غير صالح أو متعدد أو يشير إلى مكان آخر.",
+        "targetStatus": "{{0}} (HTTP {{1}})",
+        "rdCompleted": "وقت الاكتمال",
+        "rdMode": "وضع الزحف",
+        "rdDuration": "المدة",
+        "rdPages": "الصفحات المزحوفة",
+        "tHreflang": "Hreflang",
+        "tPagination": "ترقيم الصفحات",
+        "tAmp": "AMP",
+        "tSchema": "البيانات المنظمة",
+        "schemaFinding": "{{0}} {{1}}: {{2}}",
+        "tHtml": "ملاحظات التحقق من HTML",
+        "lineColumn": "(السطر {{0}}، العمود {{1}})",
+        "tImages": "مشكلات الصور",
+        "imagesIntro": "{{0}} من أصل {{1}} صورة بها مشكلة: نص alt أو أبعاد مفقودة، أو أخطاء، أو ملفات كبيرة الحجم.",
+        "pNoAlt": "بلا alt",
+        "pNoSize": "بلا width/height",
+        "pBroken": "فشل الطلب",
+        "pOversized": "أكبر من {{0}} KB",
+        "tResources": "الموارد",
+        "usedBy": "{{0}} صفحة، مثل {{1}}",
+        "tFrames": "الإطارات (iframes)",
+        "tSearches": "نتائج البحث المخصص",
+        "tRules": "قواعد robots.txt المطبقة على الزاحف",
+        "tAgents": "robots.txt حسب هوية الزاحف",
+        "tDirectives": "توجيهات Sitemap في robots.txt",
+        "tRobotsChain": "سلسلة إعادة توجيه robots.txt",
+        "tSitemapUrls": "عناوين URL في Sitemap ضمن النطاق",
+        "tRejected": "عناوين URL المرفوضة بسبب نطاق الزحف",
+        "tReasons": "أسباب قابلية الفهرسة",
+        "reasonsIntro": "سبب حظر الصفحات أو عدم التأكد من حالتها، بما في ذلك قواعد robots.txt.",
+        "httpIntro": "أعادت {{0}} من أصل {{1}} صفحة ترويسات أو بيانات اكتشاف؛ ولا تحمل الباقية أيًّا منها.",
+        "tHttp": "تفاصيل استجابة HTTP والاكتشاف",
+        "discovered": "{{0}} {{1}}"
+      },
+      "cols": {
+        "colItem": "العنصر",
+        "colValue": "القيمة",
+        "colUrl": "URL",
+        "colStatus": "الحالة",
+        "colIndexability": "قابلية الفهرسة",
+        "colTitle": "العنوان",
+        "colDepth": "العمق",
+        "colTime": "الزمن (ms)",
+        "colWords": "الكلمات",
+        "colIssues": "المشكلات",
+        "colPages": "الصفحات",
+        "colUrls": "عناوين URL",
+        "colFinding": "الملاحظة",
+        "colFindings": "الملاحظات",
+        "colSource": "صفحة المصدر",
+        "colTarget": "الهدف",
+        "colAnchor": "نص الرابط",
+        "colType": "النوع",
+        "colHost": "المضيف",
+        "colLinks": "الروابط",
+        "colStates": "النتائج",
+        "colHops": "القفزات",
+        "colChain": "سلسلة إعادة التوجيه",
+        "colFinal": "URL النهائي",
+        "colStop": "سبب التوقف",
+        "colDeclaration": "التصريح",
+        "colDelay": "التأخير (ث)",
+        "colCanonical": "هدف Canonical",
+        "colRelation": "العلاقة",
+        "colDeclarations": "الوسوم",
+        "colConflict": "تعارض Robots",
+        "colLang": "اللغة",
+        "colReciprocal": "التبادلية",
+        "colVerdict": "الحكم",
+        "colParams": "تغييرات الاستعلام",
+        "colAlignment": "توافق Canonical",
+        "colAmp": "AMP URL",
+        "colChecked": "تم الفحص",
+        "colImage": "الصورة",
+        "colAlt": "Alt",
+        "colSize": "الحجم",
+        "colBytes": "بايت",
+        "colProblem": "المشكلة",
+        "colResource": "المورد",
+        "colContentType": "نوع المحتوى",
+        "colUsedBy": "مستخدم في",
+        "colFrame": "الإطار",
+        "colSearch": "البحث",
+        "colFound": "القيم المكتشفة",
+        "colError": "الخطأ",
+        "colTypes": "أنواع المخطط",
+        "colSyntax": "أخطاء الصياغة",
+        "colSeverity": "الخطورة",
+        "colCode": "الرمز",
+        "colElement": "العنصر",
+        "colDirective": "التوجيه",
+        "colPath": "المسار",
+        "colAgent": "وكيل المستخدم",
+        "colGroup": "مجموعة خاصة",
+        "colRules": "القواعد",
+        "colDelayMs": "التأخير (ms)",
+        "colFrom": "من",
+        "colTo": "إلى",
+        "colReason": "السبب",
+        "colReasons": "الأسباب",
+        "colEncoding": "الترميز",
+        "colCache": "Cache-Control",
+        "colXrobots": "X-Robots-Tag",
+        "colDiscovered": "اكتُشف عبر",
+        "colArea": "المنطقة",
+        "colResult": "النتيجة"
+      },
+      "focus": {
+        "title": "تركيز الموقع",
+        "intro": "يوضح مدى ثبات الصفحات التي تم الزحف إليها على موضوع أساسي واحد. تُحتسب الدرجات من عملية الزحف المحفوظة، ولا تُجلب أي صفحات مرة أخرى.",
+        "scoreTitle": "Site Focus Score",
+        "legend": "الفئات: 90-100 ممتاز، 75-89 جيد، 60-74 متوسط، 40-59 ضعيف، 0-39 حرج.",
+        "kConfidence": "الثقة في الموضوع الأساسي",
+        "kOnTopic": "نسبة الصفحات المتوافقة مع الموضوع",
+        "kScored": "الصفحات المقيَّمة",
+        "kSkipped": "الصفحات المتخطاة",
+        "kOffTopic": "الصفحات الخارجة عن الموضوع",
+        "kBorderline": "الصفحات الحدّية",
+        "kStrong": "الصفحات القوية",
+        "nConfidence": "حصة المجموعة الأساسية",
+        "nOnTopic": "صفحات بدرجة TRS تبلغ 60 أو أكثر",
+        "nScored": "من أصل {{0}} تم الزحف إليها",
+        "nSkipped": "غير مقيَّمة",
+        "nOffTopic": "TRS أقل من 40",
+        "nBorderline": "TRS 60-74",
+        "nStrong": "TRS 75 أو أكثر",
+        "percent": "{{0}}%",
+        "coreBadge": "الموضوع الأساسي",
+        "coreTerms": "أهم المصطلحات",
+        "coreTerm": "{{0}} ({{1}}% من الصفحات)",
+        "coreConfidence": "الثقة {{0}}%",
+        "coreManual": "موضوع محدد يدويًا: {{0}}",
+        "coreDetected": "مستخلص من الصفحات التي تم الزحف إليها",
+        "tPages": "أضعف الصفحات من حيث الصلة بالموضوع",
+        "pagesIntro": "حتى 25 صفحة محتوى بأدنى درجة Topical Relevance Score (TRS). تُستبعد الصفحات التقنية والصفحات المتخطاة.",
+        "colTrs": "TRS",
+        "colType": "النوع",
+        "colSimilarity": "التشابه",
+        "colOverlap": "التداخل",
+        "colDrift": "الانحراف",
+        "colPlaybook": "خطة العمل",
+        "playbook": "{{0}}: {{1}}",
+        "tRecs": "التوصيات",
+        "recsIntro": "مرتبة حسب المكسب المحاكى في الدرجة لكل ساعة جهد مقدّرة. المكاسب تقديرية.",
+        "colNo": "#",
+        "colAction": "الإجراء",
+        "colGain": "المكسب",
+        "gain": "+{{0}}",
+        "tSub": "درجات المواقع الفرعية",
+        "subIntro": "المجالات الموضوعية في موقع متعدد المواضيع، وتُقيَّم كل منها وفق موضوعها الأساسي الخاص.",
+        "colArea": "المجال",
+        "colPrefix": "المسار",
+        "colShare": "حصة الصفحات",
+        "colScore": "الدرجة",
+        "tGaps": "الفجوات الموضوعية",
+        "colGap": "الفجوة",
+        "band": {
+          "excellent": "تركيز ممتاز",
+          "good": "تركيز جيد",
+          "moderate": "تركيز متوسط",
+          "weak": "تركيز ضعيف",
+          "critical": "تركيز حرج"
+        },
+        "status": {
+          "strong": "قوية",
+          "moderate": "متوسطة",
+          "borderline": "حدّية",
+          "weak": "ضعيفة",
+          "off-topic": "خارجة بوضوح عن الموضوع"
+        },
+        "type": {
+          "homepage": "الصفحة الرئيسية",
+          "category": "تصنيف",
+          "article": "مقالة",
+          "technical": "تقنية"
+        },
+        "note": {
+          "lowConfidence": "العينة صغيرة (عدد الصفحات: {{0}}). النتائج استرشادية؛ ازحف إلى 10 صفحات على الأقل للحصول على موضوع أساسي موثوق. نصائح الحذف محدودة.",
+          "multiTopic": "تم رصد {{0}} من المجالات الموضوعية. ليس للموقع موضوع واحد مهيمن. تظهر درجات المواقع الفرعية أدناه.",
+          "lexicalFallback": "يستخدم التحليل للّغة المحددة خوارزمية TF-IDF الإحصائية. مكوّن التشابه الدلالي العميق غير متاح؛ وتستند الدرجة إلى تغطية الكلمات المفتاحية وتوزيعها.",
+          "skippedRender": "تم تخطي {{0}} من الصفحات في التحليل لانتهاء مهلة عرض JavaScript.",
+          "degraded": "كانت بيانات بعض الصفحات محدودة، لذا قد تكون الدرجات أقل دقة.",
+          "unmatchedTopic": "لا توجد صفحات تطابق الموضوع \"{{0}}\". يُستخدم الموضوع المرصود بدلًا منه."
+        },
+        "rec": {
+          "remove-offtopic": "احذف أو انقل {{0}} من الصفحات الخارجة عن الموضوع: أعد توجيه أسوأ الصفحات أو أضف لها noindex أو احذفها، وأزل الروابط الداخلية المؤدية إليها. المكسب المحتمل: +{{1}} نقطة.",
+          "strengthen-borderline": "عزّز {{0}} من الصفحات الحدّية: أضف المصطلحات الأساسية والأقسام الناقصة لرفعها إلى نحو {{1}}. المكسب المحتمل: +{{2}} نقطة.",
+          "expand-core-cluster": "وسّع مجموعة الموضوع الأساسي: اكتب {{0}} من الصفحات الجديدة للموضوعات الفرعية الضعيفة. المكسب المحتمل: +{{1}} نقطة.",
+          "add-internal-links": "أضف روابط داخلية إلى صفحات المحور: {{0}} من اقتراحات الروابط توجّه الصفحات الضعيفة إلى محاور قوية.",
+          "collect-more-pages": "اجمع مزيدًا من الصفحات: تم تحليل {{0}} من الصفحات فقط. ازحف إلى المزيد قبل حذف أي شيء.",
+          "split-subsites": "فكّر في تقسيم الموقع: تم العثور على {{0}} من المجالات الموضوعية المتمايزة. قد يفيد فصل الأقسام أو النطاقات الفرعية.",
+          "review-skipped-pages": "راجع {{0}} من الصفحات المتخطاة: انتهت مهلة {{1}} منها أثناء عرض JavaScript.",
+          "monitor-strong-pages": "راقب {{0}} من الصفحات القوية: أبقِها ضمن الموضوع وأعد فحصها بانتظام."
+        },
+        "option": {
+          "remove-redirect": "الحذف وإعادة التوجيه عبر 301 (+{{0}} نقطة)",
+          "noindex-isolate": "noindex والعزل (+{{0}} نقطة)",
+          "rewrite-on-topic": "إعادة الكتابة ضمن الموضوع وفق موجز (TRS المستهدف نحو {{0}})",
+          "add-missing-terms": "إضافة المصطلحات الناقصة: {{0}}",
+          "reinforce-headings": "تعزيز عناوين H2 وH3",
+          "deepen-coverage": "تعميق التغطية الموضوعية",
+          "serve-as-hub": "استخدامها كصفحة محور",
+          "build-satellite-cluster": "بناء مجموعة صفحات داعمة",
+          "monitor-periodically": "المراقبة كل {{0}} أسابيع"
+        },
+        "gap": {
+          "thin-subtopic": "موضوع فرعي ضعيف \"{{0}}\": تغطيه {{1}}% فقط من الصفحات (عدد الصفحات: {{2}}). المصطلحات: {{3}}.",
+          "competitor-terms": "مصطلحات المنافسين غير الموجودة في موقعك: {{3}}."
+        }
+      },
+      "authority": {
+        "title": "السلطة الموضوعية",
+        "intro": "مدى تغطية الموقع لموضوعه الرئيسي بشكل كامل وعميق مقارنة بالسوق. تأتي الدرجات من التشغيل المحفوظ والخريطة المرجعية المخزّنة؛ ولا يُعاد جلب أي صفحة.",
+        "scoreTitle": "Topical Authority Score",
+        "legend": "TAS = ‏0.35 التغطية + 0.30 عمق الكيانات + 0.25 تماسك الصوامع + 0.10 الحداثة، مضبوطة بـ Site Focus Score (من 0.7 إلى 1.0).",
+        "kTcr": "تغطية الموضوع",
+        "kCdes": "عمق الكيانات",
+        "kSilc": "تماسك الصوامع",
+        "kCvff": "الحداثة",
+        "unavailable": "غير متاح",
+        "noReference": "لم تُنشأ خريطة مرجعية لهذا المشروع، لذا لا تُقاس التغطية والعمق ولا يُحسب TAS.",
+        "reference": "الخريطة المرجعية: {{0}} موضوعًا فرعيًا في {{1}} ركائز من {{2}} منافسين ({{3}}).",
+        "quadrant": {
+          "dominant_authority": "سلطة مهيمنة",
+          "boutique_specialist": "متخصص متفرد",
+          "diluted_giant": "عملاق مشتّت",
+          "unfocused_generalist": "عام بلا تركيز"
+        },
+        "warning": {
+          "empty-authority": "سلطة فارغة: تُلمس مواضيع كثيرة لكن متوسط عمقها منخفض جدًا. عمّق الصفحات الحالية قبل نشر المزيد.",
+          "template-duplicates": "دُمجت نسخ القالب في أقوى صفحة: لا ترفع التغطية وتهدر ميزانية الزحف.",
+          "no-dates": "لم يُعثر على تواريخ نشر أو تحديث، لذا لا تُقاس الحداثة.",
+          "no-links": "لم تُوجد روابط داخلية ضمن المحتوى بين الصفحات المحلّلة، لذا يعتمد التماسك على الصفحات اليتيمة فقط."
+        },
+        "tCoverage": "التغطية حسب الركيزة",
+        "colPillar": "الركيزة",
+        "colCoverage": "التغطية",
+        "colGaps": "مواضيع فرعية مفقودة",
+        "tGaps": "فجوات المحتوى",
+        "colGap": "موضوع فرعي مفقود",
+        "colLevel": "الخطورة",
+        "tCannibal": "التنافس الدلالي الداخلي",
+        "colCanonical": "الصفحة المراد الاحتفاظ بها",
+        "colPages": "الصفحات",
+        "tRecs": "خطة التوسّع الموضوعي",
+        "tBench": "مصفوفة الفجوات مقابل أبرز المنافسين",
+        "level": {
+          "critical": "حرجة",
+          "high": "عالية",
+          "medium": "متوسطة"
+        },
+        "rec": {
+          "fill-gaps": "سدّ الفجوات في «{{0}}»: ينقص {{1}} مواضيع فرعية",
+          "merge-cannibalized": "ادمج {{0}} مجموعات من الصفحات المتنافسة",
+          "fix-linking": "أصلح الروابط الداخلية: {{0}} صفحات يتيمة و{{1}} روابط إلى صفحات خارج الموضوع",
+          "deepen-shallow": "عمّق {{0}} مواضيع فرعية سطحية",
+          "refresh-stale": "حدّث {{0}} صفحات لم تُحدَّث منذ أكثر من عام"
+        }
+      },
+      "aio": {
+        "title": "الجاهزية لـ AI Overviews وRAG",
+        "intro": "مدى سهولة أن تستخرج محركات الإجابة بالذكاء الاصطناعي مقاطع صفحاتك وتقتبسها. تجمع الدرجة بين المقاطع المكتفية ذاتيًا (45%) وكثافة الحقائق (35%) والبنية القابلة للاستخراج (20%).",
+        "scoreTitle": "درجة جاهزية الذكاء الاصطناعي",
+        "legend": "النطاقات: 90-100 ممتاز، 75-89 جيد، 60-74 متوسط، 40-59 ضعيف، 0-39 حرج.",
+        "kSelf": "الاكتفاء الذاتي",
+        "kSpo": "كثافة الحقائق",
+        "kExtract": "قابلية الاستخراج",
+        "kScored": "الصفحات المقيَّمة",
+        "nSelf": "مقاطع مفهومة بذاتها",
+        "nSpo": "حقائق فاعل-فعل-مفعول",
+        "nExtract": "جداول وقوائم وعناوين",
+        "nScored": "تم تخطي {{0}} صفحة",
+        "noteBasic": "قواعد اللغة لـ {{0}} أساسية: اكتشاف الضمائر والحقائق أقل دقة هناك.",
+        "tPages": "الصفحات حسب جاهزية الذكاء الاصطناعي",
+        "pagesIntro": "حتى 25 صفحة، الأقل درجة أولًا.",
+        "colScore": "الدرجة",
+        "colSelf": "مكتفٍ ذاتيًا",
+        "colSpo": "الحقائق",
+        "colExtract": "البنية",
+        "colChunks": "المقاطع",
+        "tPassages": "أضعف المقاطع",
+        "passagesIntro": "مقاطع يصعب على فهرس RAG اقتباسها، مع المشكلات المكتشفة.",
+        "colHeading": "الصفحة والعنوان",
+        "colExcerpt": "المقطع",
+        "colIssues": "المشكلات",
+        "percent": "{{0}}%",
+        "band": {
+          "excellent": "جاهزية ممتازة",
+          "good": "جاهزية جيدة",
+          "moderate": "جاهزية متوسطة",
+          "weak": "جاهزية ضعيفة",
+          "critical": "جاهزية حرجة"
+        },
+        "issue": {
+          "dangling-pronoun": "إشارة غير واضحة",
+          "no-answer-first": "لا توجد إجابة مباشرة في البداية",
+          "filler-opening": "بداية حشو",
+          "no-facts": "لا توجد حقائق ملموسة",
+          "too-long": "أطول من أن يتسع في مقطع واحد"
+        }
+      },
+      "trust": {
+        "title": "موثوقية الكيانات (E-E-A-T)",
+        "intro": "مدى إمكانية التحقق من ناشر الموقع ومؤلفيه ومصادره. تأتي الدرجات من التشغيل المحفوظ؛ ولا تُجلب أي صفحة مرة أخرى.",
+        "scoreTitle": "درجة موثوقية الكيانات",
+        "legend": "المستويات: 75-100 قوية، 60-74 كافية، 40-59 ضعيفة، 0-39 حرجة.",
+        "kSchema": "مخطط الكيانات",
+        "kAuthor": "ملاءمة المؤلف",
+        "kCitation": "جودة المصادر",
+        "kTransparency": "الشفافية",
+        "kArticles": "صفحات المقالات",
+        "kAuthors": "كيانات المؤلفين",
+        "nLayer": "الدرجة 0-100",
+        "nNoData": "لا توجد بيانات في هذا الزحف",
+        "nArticles": "من أصل {{0}} تم زحفها",
+        "nAuthors": "{{0}} مع sameAs",
+        "ymylNote": "فئة YMYL: {{0}}. {{1}}% من المقالات بلا مؤلف أو مراجع مذكور بالاسم.",
+        "tAuthors": "كيانات المؤلفين",
+        "authorsIntro": "المؤلفون الموجودون في البيانات المنظمة مع روابط sameAs وملاءمتهم للموضوع الرئيسي.",
+        "colAuthor": "المؤلف",
+        "colArticles": "المقالات",
+        "colSameAs": "sameAs",
+        "colAlignment": "الملاءمة",
+        "generic": "{{0}} (توقيع مجهول)",
+        "tPages": "صفحات الموثوقية",
+        "pagesIntro": "صفحات تُظهر الشفافية التحريرية وشفافية الشركة.",
+        "colPage": "الصفحة",
+        "colState": "الحالة",
+        "found": "موجودة: {{0}}",
+        "missing": "مفقودة",
+        "tFindings": "نتائج الموثوقية",
+        "findingsIntro": "مرتبة حسب الخطورة؛ أصلح العناصر الحرجة أولًا.",
+        "colSeverity": "الخطورة",
+        "colFinding": "النتيجة",
+        "level": {
+          "strong": "موثوقية قوية",
+          "adequate": "موثوقية كافية",
+          "weak": "موثوقية ضعيفة",
+          "critical": "فجوات موثوقية حرجة"
+        },
+        "severity": {
+          "critical": "حرج",
+          "warning": "تحذير",
+          "info": "معلومات"
+        },
+        "kind": {
+          "editorial": "السياسة التحريرية",
+          "about": "من نحن",
+          "contact": "اتصل بنا",
+          "registry": "بيانات السجل التجاري للشركة"
+        },
+        "ymyl": {
+          "health": "الصحة",
+          "finance": "المالية",
+          "legal": "القانون"
+        },
+        "find": {
+          "ymyl-unattributed": "{{0}} مقالة ({{1}}%) في موضوع YMYL بلا مؤلف أو مراجع مذكور بالاسم.",
+          "ymyl-no-reviewer": "لا تذكر أي من المقالات الطبية البالغ عددها {{0}} مراجعًا (reviewedBy).",
+          "no-bylines": "لا تذكر أي من المقالات البالغ عددها {{0}} مؤلفًا في البيانات المنظمة.",
+          "generic-author": "{{0}} مقالة موقّعة بتوقيع مجهول.",
+          "org-missing": "لم يُعثر على كيان Organization في البيانات المنظمة.",
+          "org-no-same-as": "الناشر {{0}} ليس لديه روابط sameAs.",
+          "author-no-same-as": "{{0}} من المؤلفين بلا روابط sameAs ({{1}}).",
+          "author-no-id": "{{0}} من المؤلفين بلا @id ثابت.",
+          "author-off-topic": "ملف {{0}} يلائم الموضوع الرئيسي بنسبة {{1}}% فقط.",
+          "low-citations": "{{0}}% فقط من {{1}} صفحة مقالات تستشهد بمصدر موثوق.",
+          "dead-citations": "{{0}} من الروابط الخارجية تُرجع خطأ.",
+          "missing-editorial": "لم يُعثر على سياسة تحريرية أو صفحة للتحقق من الحقائق.",
+          "missing-contact": "لم يُعثر على صفحة اتصال.",
+          "missing-registry": "لم يُعثر على صفحة بيانات السجل التجاري أو الإشعار القانوني.",
+          "missing-about": "لم يُعثر على صفحة من نحن.",
+          "missing-dates": "{{0}}% فقط من المقالات تعرض تاريخ تعديل أو مراجعة.",
+          "no-articles": "لم تُكتشف صفحات مقالات؛ لم تُقيَّم طبقتا المؤلفين والاستشهادات.",
+          "author-invalid-profile": "يربط {{0}} مؤلفين ملف ORCID أو Wikidata بمعرّف غير صالح ({{1}}). تحقق من رقم التحقق أو Q-ID.",
+          "ymyl-no-scholarly-ids": "لا تستشهد أي من {{0}} مقالات بمصدر يحمل DOI أو PMID أو PMCID. في مواضيع YMYL استشهد بالدراسة الأصلية."
+        }
+      },
+      "offPage": {
+        "title": "تحليل خارج الصفحة",
+        "intro": "أحدث تحليل محفوظ لهذا المشروع؛ هذه العينة ليست ملف الروابط الخلفية الكامل.",
+        "topic": "الموضوع",
+        "scale": "مقياس الموثوقية",
+        "model": "نموذج التضمين",
+        "requested": "المصادر المطلوبة",
+        "fetched": "المصادر المجلوبة",
+        "scored": "المصادر المقيّمة",
+        "statusLabel": "الحالة",
+        "limitationsLabel": "القيود",
+        "sourcesIntro": "حتى 10 مصادر بترتيب المساهمة تنازليًا؛ n/a تعني أن البيانات غير متاحة.",
+        "offset": "الموضع في النص",
+        "excerpt": "مقتطف",
+        "disclaimer": "ليس Google PageRank؛ غياب النص أو الموثوقية يعني بيانات جزئية/غير متاحة، وليس صفر روابط خلفية؛ التزامن في الذكر لا يعني التأييد.",
+        "tbva": "TBVA",
+        "tSources": "الأدلة المحفوظة لكل مصدر",
+        "authority": "السلطة",
+        "similarity": "التشابه",
+        "contribution": "المساهمة",
+        "tCitations": "مقتطفات الاستشهاد المشترك",
+        "na": "n/a",
+        "status": {
+          "ready": "جاهز",
+          "partial": "جزئي",
+          "unavailable": "غير متاح"
+        },
+        "limitations": {
+          "no-topic-vector": "لا يوجد متجه Core Topic صالح من آخر زحف مكتمل للمشروع؛ TBVA غير متاح.",
+          "invalid-scale": "مقياس السلطة غير صالح؛ TBVA غير متاح.",
+          "no-follow-links": "لا توجد روابط follow متاحة للتحليل.",
+          "source-text-or-authority-missing": "تفتقر بعض المصادر إلى نص أو متجهات صالحة أو سلطة المزوّد."
+        }
+      }
+    },
+    "recs": {
+      "crawlMissingLanguage": "أضف سمة lang صالحة إلى العنصر <html>، مثل lang=\"ar\".",
+      "htmlDoctype": "ابدأ المستند بـ <!doctype html> مرة واحدة فقط.",
+      "htmlMetaCharset": "صرّح بـ <meta charset=\"utf-8\"> ضمن أول 1024 بايت من head.",
+      "htmlDuplicateId": "اجعل كل سمة id فريدة داخل المستند.",
+      "htmlUriInvalid": "صحّح عنوان URL ليكون مرمّزًا بنسبة مئوية (percent-encoding) بشكل صحيح وقابلًا للحل.",
+      "missingTitle": "أضف <title> فريدًا ووصفيًا بطول 30 إلى 60 حرفًا.",
+      "multipleTitle": "أبقِ عنصر <title> واحدًا فقط في head.",
+      "titleLength": "أعد كتابة <title> ليصبح بطول 30-60 حرفًا ويصف الصفحة.",
+      "duplicateTitle": "امنح كل صفحة عنوانًا فريدًا يتوافق مع موضوعها.",
+      "missingMetaDescription": "أضف meta description فريدًا بطول 70-160 حرفًا.",
+      "metaDescriptionLength": "أعد كتابة meta description ليصبح بطول 70-160 حرفًا.",
+      "emptyDescription": "املأ meta description أو أزل الوسم الفارغ.",
+      "multipleMetaDescription": "أبقِ وسم meta description واحدًا فقط في head.",
+      "duplicateMetaDescription": "اكتب meta description فريدًا لكل صفحة.",
+      "missingCanonical": "أضف <link rel=\"canonical\"> يشير إلى عنوان URL المفضل للصفحة.",
+      "canonicalTargetReturned": "اجعل canonical يشير إلى عنوان URL يستجيب برمز HTTP 200.",
+      "canonicalAndNoindex": "أزل canonical أو noindex لتكون إشارة الفهرسة واضحة.",
+      "canonicalDeclarationHas": "استخدم عنوان URL مطلقًا بصيغة http(s) في رابط canonical.",
+      "crawlMultipleCanonical": "صرّح بعنوان canonical URL واحد فقط لكل صفحة.",
+      "crawlCanonical": "تحقق من أن هدف canonical هو الصفحة التي تريد فهرستها؛ وإلا فاجعله يشير إلى الصفحة نفسها.",
+      "missingH1": "أضف عنصر <h1> واحدًا فقط يوضح موضوع الصفحة.",
+      "multipleH1": "أبقِ <h1> واحدًا وخفّض البقية إلى <h2>.",
+      "heading": "حافظ على ترتيب العناوين (h1 ثم h2 ثم h3) دون تخطي المستويات.",
+      "crawlDuplicateContent": "أعد كتابة الصفحة أو ادمج المكرر باستخدام canonical أو إعادة توجيه.",
+      "nearDuplicate": "ميّز محتوى هذه الصفحات أو ادمجها.",
+      "httpErrorStatus": "أصلح خطأ الخادم أو أزل الروابط المؤدية إلى عنوان URL هذا أو أعد توجيهها.",
+      "fetchFailed": "تأكد من إمكانية الوصول إلى الخادم واستجابته ضمن المهلة؛ ثم أعد الزحف.",
+      "crawlClientRedirect": "استبدل تحديث meta/JS بإعادة توجيه 301 من جهة الخادم.",
+      "redirect": "اربط مباشرة بعنوان URL النهائي واجعل سلاسل إعادة التوجيه قفزة واحدة.",
+      "crawlNofollow": "أزل nofollow من توجيهات robots ما لم يكن المطلوب فعلًا حجب قيمة الروابط.",
+      "noindex": "أزل noindex إذا كان يجب أن تظهر الصفحة في نتائج البحث.",
+      "crawlThinContent": "أضف إلى الصفحة محتوى أصليًا مفيدًا، أو اجعلها noindex، أو ادمجها.",
+      "missingAlt": "أضف سمة alt وصفية لكل صورة تحمل معلومة.",
+      "jsonldSyntax": "صحّح صياغة JSON-LD لكي يمكن تحليله والتحقق منه.",
+      "schemaValidation": "قلّل حجم البيانات المنظمة في الصفحة لتبقى ضمن الحدود.",
+      "structuredData": "صرّح بكل @id مُشار إليه في الرسم البياني نفسه أو أزل الإشارة.",
+      "schema": "صحّح خاصية البيانات المنظمة المبلغ عنها لهذه الصفحة.",
+      "pagination": "اجعل أهداف rel=next/prev صالحة ويمكن الوصول إليها ومتبادلة.",
+      "ampTarget": "افحص صفحة AMP: يجب أن تستجيب بالرمز 200 وتصرّح بالصفحة المصدر بوصفها canonical.",
+      "nonHtmlResource": "لا يلزم أي إجراء ما لم يكن يجب أن يكون عنوان URL هذا صفحة HTML.",
+      "responseBody": "قلّل حجم الصفحة أو ارفع حد الاستجابة ثم أعد الزحف.",
+      "transientHttpFailure": "تحقق من استقرار الخادم؛ فالطلب لم ينجح إلا بعد إعادة المحاولة.",
+      "browser": "افحص خطأ العرض في وحدة تحكم المتصفح وأصلح المورد الذي فشل.",
+      "rendered": "تأكد من أن عنوان URL المطلوب لا ينتقل إلى مكان آخر في المتصفح.",
+      "robots": "راجع قاعدة robots.txt إذا كان يجب أن يكون عنوان URL هذا قابلًا للزحف.",
+      "genericCritical": "أصلح هذه المشكلة أولًا: فقد تمنع زحف الصفحة أو فهرستها.",
+      "genericWarning": "راجع الصفحات المتأثرة وصحّح العنصر المبلغ عنه.",
+      "genericNotice": "تحسين اختياري: راجع الصفحات المتأثرة عندما يسمح الوقت."
+    }
+  },
+  "help": {
+    "overview": {
+      "healthScore": {
+        "title": "Health score",
+        "what": "A single number from 0 to 100 that sums up how many technical and on-page SEO problems SEOmi found on this one page. 100 means nothing wrong was detected; every problem subtracts points, and serious problems subtract more than small ones.",
+        "why": "Search engines and visitors both prefer pages that load, can be read and are easy to understand. A low score usually means something is blocking the page from ranking, such as a missing title, a broken status code or a noindex tag. The score is a quick triage tool, not a ranking factor that Google reads.",
+        "action": "Check the colour: 85 and above (green) is healthy, 65 to 84 (amber) needs attention, below 65 (red) needs work now.\nOpen the issues list further down this screen and start with the Critical items.\nFix one issue, run the audit again and watch the score rise.\nDo not chase 100 at any price: a score of 90 with great content beats 100 on a thin page.",
+        "example": "A page with a missing title (Critical), no meta description (Warning) and two images without alt text (Info) might score 68. Adding the title and the description usually brings it above 85.",
+        "learnMore": "The score only covers what SEOmi can measure on this single page. It does not judge your content quality, backlinks or competition."
+      },
+      "httpStatus": {
+        "title": "HTTP status code",
+        "what": "A three-digit answer the web server gives to every request, saying whether the page was delivered. 200 means OK, 301 and 302 mean the page moved, 404 means not found, 410 means gone for good, and 500 or higher means the server itself failed.",
+        "why": "Google only indexes pages that answer 200 (or follow a redirect to one). A 404 or 5xx page drops out of search results, and visitors see an error. Even a short-lived 500 can make Googlebot visit your site less often.",
+        "action": "200: nothing to do, this is correct.\n301 or 302: check the final address is the page you want people to land on. Use 301 for permanent moves.\n404 or 410: restore the page, or redirect the old address to the closest matching page with a 301.\n5xx: ask your hosting provider or developer to check the server logs, then re-run the audit.\nAfter a fix, re-test to confirm the status is now 200.",
+        "example": "You renamed /blog/seo-tips to /blog/seo-guide and forgot the redirect. The old address now returns 404, so every link and Google result pointing to it leads to an error. A 301 from the old to the new address fixes it."
+      },
+      "responseTime": {
+        "title": "Response time",
+        "what": "How many milliseconds (1000 ms = 1 second) the server needed to start sending this page after SEOmi asked for it. It measures the server, not how long the page takes to display in a browser.",
+        "why": "A slow server delays everything that comes after it, so visitors leave and Google crawls fewer of your pages. Google suggests keeping server response under about 200 ms. Above 1000 ms is clearly slow.",
+        "action": "Under 200 ms: excellent, leave it.\n200 to 600 ms: acceptable; consider caching if the page is mostly static.\nAbove 600 ms: turn on page caching (or a CDN) and compress responses.\nAbove 1000 ms: check hosting quality, heavy database queries and slow plugins.\nMeasure two or three times, because a single reading can be a one-off spike.",
+        "example": "A blog post that answers in 1800 ms on shared hosting often drops to 150 to 300 ms after a full-page cache plugin is switched on."
+      },
+      "severityCounts": {
+        "title": "Issue severity counts",
+        "what": "The problems found on this page, grouped by how serious they are. Critical issues can stop the page from ranking or working. Warnings are real weaknesses that cost you traffic or clicks. Info items are small improvements or things worth knowing.",
+        "why": "Grouping tells you what to fix first. Ten Info items matter less than one Critical, so you avoid spending a day on cosmetic details while a broken canonical tag hides the page from Google.",
+        "action": "Fix every Critical issue first, then re-run the audit.\nWork through the Warnings, starting with the ones that affect many pages.\nTreat Info items as a backlog for when you have time.\nA 0 under Critical is the goal, not 0 everywhere.",
+        "example": "3 Critical, 5 Warning, 9 Info: start with the 3 Critical ones, for example a missing title, a noindex tag and a 404 on the main image."
+      },
+      "wordCount": {
+        "title": "Word count",
+        "what": "The number of words of visible text that SEOmi found in the main content of the page. Menus, scripts and hidden code are not counted. The reading time is estimated at about 200 words per minute.",
+        "why": "Pages with very little text give search engines little to understand, which is called thin content. Long is not automatically better, though: the page must fully answer what the visitor came for.",
+        "action": "Under 300 words: ask yourself whether the page really answers the question. Add useful detail if not.\n300 to 1000 words: normal for most service and product pages.\nOver 1500 words: typical for in-depth guides; make sure headings split it into scannable sections.\nCompare with the top Google results for your keyword, not with a magic number.",
+        "example": "A product page with 80 words usually loses to competitors who explain materials, sizes, shipping and returns in 400 words."
+      }
+    },
+    "metadata": {
+      "titleLength": {
+        "title": "Page title length",
+        "what": "The title is the blue clickable headline in Google results and the text on the browser tab. The length is counted in characters, spaces included.",
+        "why": "Google shows about 50 to 60 characters (roughly 580 pixels). Longer titles are cut off with an ellipsis, so your key words and brand can vanish. Titles that are too short waste a chance to describe the page and attract clicks.",
+        "action": "Aim for 40 to 65 characters (SEOmi shows green in this range).\nPut the main keyword near the start.\nMake every page title unique.\nAdd your brand at the end if it fits, for example after a dash.\nWrite for people: promise what the visitor will get.\nSave and re-audit to see the counter turn green.",
+        "example": "\"Cheap shoes\" (11 characters) is too short. \"Buy Men's Running Shoes Online | Free Returns | ShoeShop\" is 53 characters and fits."
+      },
+      "metaDescription": {
+        "title": "Meta description",
+        "what": "A one or two sentence summary of the page, hidden in the code, that Google often shows under the title in search results. It is not visible on the page itself.",
+        "why": "It does not directly change your ranking, but a clear, inviting description raises the share of people who click your result (click-through rate), which brings more visitors from the same position. When it is missing Google makes up its own snippet, often a random piece of text.",
+        "action": "Write a unique description for each page.\nKeep it between 120 and 160 characters so it is not cut off.\nInclude the main keyword naturally, because Google bolds words that match the search.\nSay what the visitor gains and add a call to action such as \"See prices\" or \"Learn how\".\nDo not copy the first paragraph of the page.",
+        "example": "\"Learn how to choose running shoes in 5 steps: fit, cushioning, weight, price and terrain. Includes a free size chart and buying tips.\" (about 135 characters)."
+      }
+    },
+    "headings": {
+      "h1Count": {
+        "title": "Number of H1 headings",
+        "what": "H1 is the main heading of a page, the biggest title the visitor sees at the top of the content. It is different from the title tag in the browser tab. Headings H2 to H6 are smaller sub-headings below it.",
+        "why": "The H1 tells visitors and search engines what the page is about in one line. Pages without an H1 look unstructured to screen readers. Several H1s are not an error for Google, but they dilute the message and confuse assistive tools.",
+        "action": "Exactly one H1 per page is the target.\nIf there are 0: add one at the top of the content that describes the page, with the main keyword.\nIf there are 2 or more: keep the best one and change the others to H2 or H3.\nDo not use H1 only for styling; use CSS for size instead.",
+        "example": "On a recipe page the H1 is \"Easy Homemade Pizza Dough\" and the steps below are H2 headings: \"Ingredients\", \"Method\", \"Tips\"."
+      }
+    },
+    "images": {
+      "overview": {
+        "title": "Images found",
+        "what": "How many images SEOmi detected on the page, together with checks on each one: alt text (a short description for people who cannot see the image), size attributes, format and file weight.",
+        "why": "Images are usually the heaviest part of a page, so they slow it down. Missing alt text hurts blind visitors and removes a chance to appear in Google Images. Missing width and height make the page jump while loading (layout shift).",
+        "action": "Give every meaningful image a short, accurate alt text. Use an empty alt for decorative ones.\nSet width and height attributes so the browser reserves the space.\nCompress photos; try to keep each under 150 KB.\nUse modern formats such as WebP or AVIF.\nLazy-load images that are below the first screen.",
+        "example": "alt=\"Red running shoe, side view\" is useful. alt=\"image1.jpg\" or a stuffed list of keywords is not."
+      }
+    },
+    "links": {
+      "overview": {
+        "title": "Links on the page",
+        "what": "The count of all links SEOmi found, split into internal (to your own site), external (to other sites) and nofollow (links marked so that search engines do not pass trust through them).",
+        "why": "Internal links help Google discover pages and understand which ones matter. External links to good sources make content more trustworthy. Broken links frustrate visitors and waste crawl budget.",
+        "action": "Check the page links to your important related pages with descriptive text, not \"click here\".\nFix or remove any link that returns 404.\nLink to reputable external sources only; use nofollow for paid or untrusted ones.\nKeep the number reasonable: a few dozen on normal pages, not hundreds.\nReview security risks, for example links opening a new tab without rel=\"noopener\".",
+        "example": "A guide about running shoes should link to your \"shoe size chart\" page with the anchor text \"size chart\"."
+      }
+    },
+    "settings": {
+      "theme": {
+        "title": "Theme",
+        "what": "Chooses how SEOmi looks: Dark, Light, or System, which follows the setting of your computer.",
+        "why": "It does not change any audit result. Pick what is easiest on your eyes; dark themes reduce glare in dim rooms, light themes are easier to read in bright sunlight, and System switches automatically at night.",
+        "action": "Click Dark, Light or System.\nThe change applies immediately and is remembered next time you open the app.\nIf you share your screen or print reports, Light is usually easier to read on projectors.",
+        "example": "Choose System if your computer switches to dark mode in the evening and you want SEOmi to follow."
+      },
+      "auditNotifications": {
+        "title": "Audit notifications",
+        "what": "When enabled, SEOmi sends a desktop notification as soon as a long audit, crawl or scheduled check finishes, even if the app is in the background.",
+        "why": "Large crawls can take minutes or hours. Notifications let you work on something else and come back at the right time. They also tell you about scheduled checks that finished while you were away.",
+        "action": "Turn the switch on if you run crawls or schedules.\nWhen your system asks for permission, choose Allow. If you refused earlier, enable notifications for SEOmi in the system settings.\nTurn it off if you find the pop-ups distracting.\nThe text below the switch shows whether permission was granted.",
+        "example": "Start a 5000-page crawl, switch to your email, and get a notification when it is done."
+      }
+    },
+    "focus": {
+      "siteFocusScore": {
+        "title": "Site Focus Score (SFS)",
+        "what": "مقياس من 0 إلى 100 يوضح مدى ثبات صفحات موقعك على موضوع أساسي واحد. هو المتوسط المرجّح لدرجة Topical Relevance Score (TRS) لكل صفحة: تُحتسب الصفحة الرئيسية 3 مرات، وصفحات التصنيفات والأقسام مرتين، والمقالات مرة واحدة.",
+        "why": "تكافئ محركات البحث والقرّاء المواقع التي تغطي موضوعًا واحدًا بوضوح. انخفاض SFS يعني أن كثيرًا من الصفحات يُضعف هذه الإشارة.",
+        "action": "اقرأ الفئة: 90-100 ممتاز، 75-89 جيد، 60-74 متوسط، 40-59 ضعيف، 0-39 حرج.\nافتح الخريطة الحرارية وأصلح الصفحات الأدنى درجة أولًا.",
+        "example": "مدوّنة عن السكري فيها 40 مقالة عن السكري و8 مقالات عن السفر تحصل على نحو 80."
+      },
+      "topicRelevance": {
+        "title": "Topical Relevance Score (TRS)",
+        "what": "درجة من 0 إلى 100 لعنوان URL واحد: مدى ملاءمة تلك الصفحة للموضوع الأساسي للموقع. تجمع بين التشابه الدلالي وتداخل الكلمات المفتاحية والانحراف الدلالي.",
+        "why": "توضح أي الصفحات تسحب الموقع كله بعيدًا عن موضوعه.",
+        "action": "استهدف 75 أو أكثر.\nحسّن الصفحات التي تتراوح درجتها بين 60 و74.\nاحذف الصفحات التي درجتها أقل من 40 أو أعد توجيهها أو أعد كتابتها.",
+        "example": "صفحة عن أجهزة قياس الجلوكوز في موقع عن السكري: TRS 88. صفحة عن تذاكر الطيران الرخيصة: TRS 12."
+      },
+      "coreTopicConfidence": {
+        "title": "Core Topic Confidence",
+        "what": "مدى هيمنة الموضوع الأساسي المرصود مقارنةً بجميع المواضيع الأخرى في الموقع، من 0 إلى 100 بالمئة.",
+        "why": "إذا كانت الثقة منخفضة فليس للموقع موضوع رئيسي واضح أو أن عدد الصفحات المحلَّلة قليل جدًا، فتكون الدرجات أقل موثوقية.",
+        "action": "فوق 60 بالمئة: يمكنك الوثوق بالموضوع.\nدون ذلك، راجع اسم الموضوع واستخدم التحديد اليدوي إن كان خاطئًا.",
+        "example": "إذا كان أبرز موضوع يستحوذ على 70 بالمئة من إجمالي وزن المصطلحات، فالثقة 70 بالمئة."
+      },
+      "onTopicRatio": {
+        "title": "On-topic Ratio",
+        "what": "حصة صفحات المحتوى التي تبلغ درجة TRS فيها 60 أو أكثر. لا تُحتسب الصفحات التقنية مثل تسجيل الدخول أو السلة.",
+        "why": "تخبرك بعدد الصفحات التي تدعم الموضوع الأساسي، لا بالدرجة المرجّحة.",
+        "action": "ارفعها بتحسين الصفحات الحدّية (60-74 وما دونها) وحذف الصفحات الخارجة عن الموضوع.",
+        "example": "إذا كانت 42 صفحة من أصل 50 صفحة محتوى بدرجة TRS تبلغ 60 أو أكثر، فالنسبة 84 بالمئة."
+      },
+      "semanticSimilarity": {
+        "title": "التشابه الدلالي (Semantic Similarity)",
+        "what": "مدى قرب مفردات الصفحة من ملف الموضوع الأساسي للموقع (تشابه جيب التمام، ويُعرض كنسبة مئوية).",
+        "why": "هو أكبر مكوّن في معادلة TRS.",
+        "action": "80-100 بالمئة قوي، 50-79 متوسط، دون 50 ضعيف.\nأضف المصطلحات والأقسام التي تنتمي إلى الموضوع الأساسي.",
+        "example": "صفحة عن مضخات الأنسولين في موقع موضوعه الأساسي السكري: 86 بالمئة."
+      },
+      "keywordOverlap": {
+        "title": "تداخل الكلمات المفتاحية (Keyword Overlap)",
+        "what": "نسبة أهم 30-50 كلمة مفتاحية للموضوع الأساسي التي تظهر في الصفحة.",
+        "why": "الصفحة التي تغفل معظم الكلمات المفتاحية الأساسية لا تدعم الموضوع، حتى لو كانت مكتوبة جيدًا.",
+        "action": "أكثر من 60 بالمئة قوي؛ وأقل من 30 بالمئة خارج الموضوع.\nأضف الكلمات المفتاحية الأساسية الناقصة حيث تناسب السياق بطبيعية.",
+        "example": "إذا كانت المجموعة الأساسية 40 كلمة مفتاحية وتستخدم الصفحة 28 منها فالتداخل 70 بالمئة."
+      },
+      "semanticDrift": {
+        "title": "الانحراف الدلالي (Semantic Drift)",
+        "what": "نسبة وزن مصطلحات الصفحة التي تنتمي إلى مواضيع غريبة لا إلى الموضوع الأساسي.",
+        "why": "الانحراف المرتفع يعني أن الصفحة تنفق كلماتها على موضوع آخر.",
+        "action": "الانحراف فوق 50 بالمئة علامة تحذير.\nاحذف الأقسام الغريبة أو انقلها، أو افصلها في قسم مستقل من الموقع.",
+        "example": "صفحة عن السكري فيها فقرات طويلة عن عروض العطلات: انحراف 55 بالمئة."
+      },
+      "keywordAlignment": {
+        "title": "توافق الكلمات المفتاحية (Keyword Alignment)",
+        "what": "يوضح صلة كل كلمة مفتاحية متكررة في الصفحة بالموضوع الأساسي. الرموز: علامة صح فوق 70 بالمئة من الصلة، وعلامة ~ من 40 إلى 70 بالمئة، وعلامة × دون 40 بالمئة.",
+        "why": "يُظهر أي كلمات في الصفحة تخدم الموضوع وأيها تشتّت عنه.",
+        "action": "أبقِ الكلمات المفتاحية المعلَّمة بعلامة صح ووسّع استخدامها.\nقلّل الكلمات المعلَّمة بعلامة × أو أزلها.",
+        "example": "\"glucose\" - 92 بالمئة - علامة صح؛ \"hotel\" - 8 بالمئة - علامة ×."
+      },
+      "deltaScore": {
+        "title": "Delta Score",
+        "what": "تغيّر محاكى في Site Focus Score إذا نفّذت إجراءً ما. تعيد المحاكاة حساب المتوسط المرجّح بقيم الصفحات الجديدة.",
+        "why": "يتيح لك ترتيب الإجراءات حسب المكسب مقابل الجهد بدل التخمين.",
+        "action": "ابدأ بالإجراءات ذات أعلى مكسب وأقل جهد.\nأعد الزحف بعد العمل لتأكيد المكسب الفعلي.",
+        "example": "حذف 6 صفحات خارجة عن الموضوع: زيادة 4.2 نقطة."
+      },
+      "lowConfidence": {
+        "title": "ثقة منخفضة",
+        "what": "تظهر عندما يكون عدد الصفحات المحلَّلة قليلًا جدًا أو لا يتصدر موضوع بوضوح، فقد يكون الموضوع الأساسي المرصود خاطئًا.",
+        "why": "مع عينة صغيرة قد تغيّر صفحة غير معتادة واحدة النتيجة كلها.",
+        "action": "ازحف إلى مزيد من الصفحات.\nراجع اسم الموضوع وعدّله يدويًا إن كان خاطئًا.\nتعامل بحذر مع نصائح الحذف.",
+        "example": "زحف يشمل 6 صفحات يعطي صورة تقريبية فقط."
+      },
+      "benchmark": {
+        "title": "المقارنة المرجعية مع المنافسين",
+        "what": "يضع Site Focus Score الخاص بك بجانب المواقع التي تتصدر البحث عن موضوعك الأساسي. يُزحف إلى عينة صغيرة من صفحات كل منافس ويُقيَّم بالمعادلة نفسها المستخدمة لموقعك.",
+        "why": "الدرجة لا تعني شيئًا إلا بمقارنتها بمرجع. معرفة مدى تركيز المتصدرين توضح لك حجم المجال المتاح للتحسّن وشكل الهدف الواقعي.",
+        "action": "شغّل المقارنة بعد ربط مصدر نتائج البحث.\nقارن نسبة صفحاتك المتوافقة مع الموضوع والصفحات الخارجة عنه بأفضل 3 مواقع.\nافتح قائمة الفجوات وخطّط المحتوى وفق المصطلحات التي يستخدمها معظم المنافسين.",
+        "example": "إذا كان متوسط أفضل 3 مواقع 82 ودرجتك 64، فاستهدف 80 أولًا بإصلاح صفحاتك الخارجة عن الموضوع.",
+        "learnMore": "أرقام المنافسين مصدرها عينة زحف محدودة، لذا اعتبر الفروق الصغيرة ضجيجًا."
+      },
+      "benchmarkTarget": {
+        "title": "الدرجة المستهدفة",
+        "what": "هدف مقترح: 80 على الأقل، أو متوسط أفضل 3 منافسين إذا كانت درجتهم أعلى.",
+        "why": "يحوّل المقارنة إلى رقم واحد تعمل على بلوغه.",
+        "action": "استخدمه هدفًا في التخطيط.\nأعد تشغيل المقارنة بعد الإصلاحات لترى التغيّر."
+      },
+      "indexGate": {
+        "title": "بوابة قابلية الفهرسة",
+        "what": "الصفحات التي عليها noindex أو التي يشير canonical فيها إلى رابط آخر لا تدخل في الدرجة، فتعكس الدرجة الصفحات القادرة على الترتيب.",
+        "why": "احتساب صفحات لن تفهرسها Google يخفض الدرجة وقد يؤدي إلى نصيحة noindex لصفحات عليها noindex أصلًا.",
+        "action": "راجع عدّاد الصفحات المتخطاة.\nأصلح التعارضات أسفل الدرجة مثل صفحة محورية عليها noindex.\nاستخدم «تضمينها» فقط لرؤية الدرجة مع كل الصفحات.",
+        "example": "صفحة وسم عليها noindex تُتخطى ولا تُقيَّم كخارج الموضوع."
+      },
+      "protection": {
+        "title": "حماية الروابط",
+        "what": "للصفحات منخفضة الصلة بالموضوع، يوضح هل تدعم النقرات أو التحويلات أو الإيرادات أو النطاقات المُحيلة الحقيقية إبقاءها.",
+        "why": "الدرجة المنخفضة وحدها لا تبرر حذف صفحة لها زيارات أو روابط أو إعادة توجيهها أو وضع noindex عليها.",
+        "action": "اربط GSC وGA4 ليمكن قياس البيانات.\nتعامل مع «بيانات مطلوبة» كقيمة مجهولة لا صفر.\nقرّر يدويًا؛ يحتاج 301 إلى هدف ذي صلة.",
+        "example": "صفحة بدرجة TRS 30 و80 نقرة خلال 90 يومًا تكون محمية."
+      }
+    },
+    "authority": {
+      "tas": {
+        "title": "Topical Authority Score",
+        "what": "درجة من 0 إلى 100 تبيّن مدى تغطية الموقع لموضوعه الرئيسي بشكل كامل وعميق ومتماسك مقارنة بالسوق. تجمع تغطية الموضوع (35%) وعمق الكيانات (30%) وتماسك الصوامع (25%) والحداثة (10%) ثم تُضبط بحسب Site Focus Score.",
+        "why": "يقيس SFS النقاء فقط. موقع بثلاث مقالات مثالية يحصل على SFS عالٍ لكن سلطته شبه معدومة لأنه يغطي جزءًا ضئيلًا من المجال. يقيس TAS مقدار ما تغطيه من المجال.",
+        "action": "استهدف 80+ في SFS وTAS معًا. TAS منخفض مع SFS مرتفع: أضف محتوى. TAS مرتفع مع SFS منخفض: احذف أو افصل الأقسام الغريبة. ابدأ بأول بند في خطة التوسّع."
+      },
+      "tcr": {
+        "title": "تغطية الموضوع (TCR)",
+        "what": "نسبة المواضيع الفرعية في السوق التي يغطيها موقعك بصفحة مخصصة وملتزمة بالموضوع. يُوزن كل موضوع بأهميته؛ التطابق الواضح يُحسب كاملًا والجزئي نصفًا.",
+        "why": "تعتبر محركات البحث المواقع التي تجيب عن كامل نطاق أسئلة المجال مرجعًا. وتذهب الفجوات بالزوار وإشارات الترتيب إلى المنافسين.",
+        "action": "فوق 80% سلطة كاملة، وتحت 40% معرفة مجزّأة. افتح الخريطة وصفِّ الفجوات وانشر أهم المواضيع الفرعية المفقودة أولًا."
+      },
+      "esd": {
+        "title": "عمق الكيانات",
+        "what": "يتحقق مما إذا كانت الصفحة تغطي موضوعها الفرعي فعلًا: المفاهيم والخصائص التي يستخدمها المتصدّرون، وأسئلة المستخدمين المجاب عنها تحت عناوينها، وحجم المادة الأصلية.",
+        "why": "المقال الطويل الذي يفتقد مفاهيم المجال الأساسية يخسر أمام مصادر أقصر لكن أكمل. الطول وحده لا يكفي.",
+        "action": "افتح موضوعًا فرعيًا سطحيًا: أضف الكيانات والخصائص المفقودة وأجب عن الأسئلة المدرجة تحت H2 مستقل وأضف بيانات أو جدولًا يفتقده المنافسون."
+      },
+      "scs": {
+        "title": "تماسك الصوامع",
+        "what": "يقيس مدى ترابط مقالات الموضوع الواحد بالروابط الداخلية: صفحة ركيزة مرتبطة في الاتجاهين ونصوص رابط وصفية وخلو من الصفحات اليتيمة ومن روابط الصفحات المتخصصة إلى صفحات خارج الموضوع.",
+        "why": "الصفحات اليتيمة لا تنقل السلطة الموضوعية ولا تتلقاها. نصوص مثل «اضغط هنا» لا تقول شيئًا فتُحسب بعُشر وزنها فقط.",
+        "action": "اربط كل صفحة يتيمة من ركيزتها ومقالاتها ذات الصلة، واستخدم نصوص رابط تصف الوجهة («أعراض اعتلال الأعصاب السكري»)، واحذف الروابط إلى صفحات خارج الموضوع."
+      },
+      "matrix": {
+        "title": "مصفوفة SFS × TAS",
+        "what": "تضع الموقع حسب النقاء (SFS أفقيًا) والاكتمال (TAS رأسيًا). الأرباع الأربعة: سلطة مهيمنة، متخصص متفرد، عملاق مشتّت، وعام بلا تركيز.",
+        "why": "لماذا تركيز عالٍ وسلطة منخفضة؟ خمس مقالات مثالية عن السكري تعطي SFS ‏95 لكن TAS ‏14: لا شيء خارج الموضوع لكن 90% من المجال مفقود.",
+        "action": "أبقِ SFS فوق 80 وأضف مجموعات جديدة لرفع TAS فوق 80. يخبرك الربع المظلّل هل تتوسّع أم تُقلّم أم تعيد الهيكلة."
+      },
+      "cannibalization": {
+        "title": "التنافس الدلالي الداخلي",
+        "what": "تجيب صفحتان أو أكثر لديك عن نية البحث نفسها: المحتوى والعناوين متطابقان تقريبًا (تشابه جيب التمام من 88%) أو تغطي كلتاهما موضوعًا فرعيًا مرجعيًا بالكامل.",
+        "why": "تتوزع إشارات الروابط الداخلية والصلة بين الصفحات المتكررة فلا تصل أي منها إلى المراكز الأولى.",
+        "action": "احتفظ بأقوى صفحة وانقل إليها الأقسام الفريدة وأعد توجيه الأخرى بـ 301 وحدّث الروابط الداخلية. استخدم فاحص المسودات قبل النشر لتجنب تداخلات جديدة."
+      }
+    },
+    "aio": {
+      "aioReadiness": {
+        "title": "درجة جاهزية الذكاء الاصطناعي (AIO-R)",
+        "what": "مقياس من 0 إلى 100 لمدى سهولة أن تستخرج محركات الإجابة بالذكاء الاصطناعي (Google AI Overviews وPerplexity وCopilot) مقاطع صفحاتك وتقتبسها. يجمع بين المقاطع المكتفية ذاتيًا (45%) وكثافة الحقائق (35%) والبنية القابلة للاستخراج (20%).",
+        "why": "تقسّم محركات الذكاء الاصطناعي الصفحات إلى مقاطع وتقتبس فقط المقطع الذي يجيب عن السؤال. تُتجاهل المقاطع الغامضة أو المعتمدة على السياق.",
+        "action": "افتح أضعف المقاطع وأصلح المشكلات المذكورة.\nأعد كتابتها بحيث تأتي الإجابة أولًا مع أسماء وأرقام صريحة.",
+        "example": "قسم بعنوان «ما هو مستوى السكر الطبيعي؟» يبدأ بعبارة «هذا يعتمد على عوامل كثيرة» يحصل على درجة منخفضة."
+      },
+      "selfContainment": {
+        "title": "الاكتفاء الذاتي",
+        "what": "هل يظل المقطع مفهومًا عند فصله عن الصفحة: يسمّي موضوعه ولا يبدأ بـ «هو» أو «هذا» أو «كما ذُكر أعلاه».",
+        "why": "يُفهرس المقطع بمفرده. الضمير المعلّق يترك النموذج بلا فاعل، فيطابق المقطع أسئلة أقل.",
+        "action": "استبدل «هو» و«هذا» في بداية الفقرات بالاسم الحقيقي.\nضع الإجابة في أول 40-60 كلمة تحت كل عنوان.",
+        "example": "«يجب أن تبقى هذه القيمة دون 140.» تصبح «يجب أن يبقى سكر الدم بعد الوجبة دون 140 ملغ/ديسيلتر.»"
+      },
+      "spoDensity": {
+        "title": "كثافة الحقائق",
+        "what": "عدد الحقائق الواضحة (فاعل-فعل-مفعول) التي يذكرها النص لكل 100 كلمة، مثل «سكر الدم الصائم يبلغ 70-99 ملغ/ديسيلتر». الهدف نحو 3 لكل 100 كلمة.",
+        "why": "تقتبس النماذج عبارات يمكن التحقق منها. النص الحشو لا يمنحها ما تستخرجه.",
+        "action": "حوّل الجمل الغامضة إلى عبارات تضم فاعلًا وفعلًا وقيمة.\nأضف الوحدات والأرقام حيثما توفرت.",
+        "example": "«عوامل كثيرة مهمة» لا تحمل حقيقة. «السكر التراكمي دون 7% هو هدف العلاج المعتاد» تحمل حقيقة."
+      },
+      "extractability": {
+        "title": "قابلية الاستخراج",
+        "what": "هل تستخدم الصفحة بُنى يسهل على المحللات استخراجها: الجداول والقوائم المرقمة وقوائم التعريفات وهيكل H2/H3 واضح.",
+        "why": "تفضّل المحركات التوليدية بناء الإجابات من الجداول وقوائم الخطوات لأن معناها صريح.",
+        "action": "اعرض المقارنات في جدول والإجراءات في قائمة مرقمة.\nاكتب عناوين H2/H3 على هيئة الأسئلة التي يطرحها الناس.",
+        "example": "دليل خطوة بخطوة مكتوب في فقرة طويلة واحدة يحصل على درجة أقل من الدليل نفسه في قائمة مرتبة."
+      },
+      "answerFirst": {
+        "title": "الإجابة أولًا",
+        "what": "يجب أن تجيب أول 40-60 كلمة تحت العنوان عنه مباشرة، وأن تسمّي الموضوع وتذكر حقيقة.",
+        "why": "يقارن استرجاع RAG السؤال ببداية المقطع. المقدمة الطويلة تخفض المطابقة.",
+        "action": "اكتب الإجابة المباشرة أولًا ثم السياق.\nكرّر المصطلح الرئيسي للعنوان في الجملة الأولى.",
+        "example": "العنوان «كم يدوم مستشعر CGM؟» تليه «يدوم مستشعر CGM من 10 إلى 15 يومًا بحسب الطراز.»"
+      },
+      "chunking": {
+        "title": "محاكاة التقطيع",
+        "what": "يقطّع SEOmi كل صفحة كما يفعل فهرس RAG: مقطع واحد لكل قسم H2/H3، وتُقسَّم الأقسام الطويلة إلى نوافذ من نحو 300 رمز.",
+        "why": "ترى الصفحة كما يراها نظام الاسترجاع: مجموعة مقاطع منفصلة يُقيَّم كل منها بمفرده.",
+        "action": "تحقق من درجة كل مقطع ضعيف.\nأبقِ الأقسام قصيرة بما يكفي لتكون مقطعًا واحدًا.",
+        "example": "قسم من 900 رمز يصبح نحو ثلاثة مقاطع؛ الأول فقط يقع مباشرة تحت العنوان."
+      }
+    },
+    "trust": {
+      "trustScore": {
+        "title": "درجة موثوقية الكيانات",
+        "what": "درجة من 0 إلى 100 توضح مدى قدرة محركات البحث على التحقق ممن ينشر محتواك ويكتبه. هي متوسط أربع طبقات: مخطط الكيانات، وملاءمة المؤلف للموضوع، وجودة المصادر، والشفافية التحريرية.",
+        "why": "في مواضيع الصحة والمالية والقانون لا يكفي التركيز الموضوعي وحده. نادرًا ما تصل الصفحات بلا مؤلف وناشر يمكن التحقق منهما إلى أعلى النتائج.",
+        "action": "اقرأ العناصر الحرجة في القائمة أولًا.\nأصلح أدنى طبقة ثم أعد الزحف لترى تغيّر الدرجة."
+      },
+      "schemaGraph": {
+        "title": "مخطط الكيانات (JSON-LD)",
+        "what": "يتحقق من أن بياناتك المنظمة تسمّي الناشر وكل مؤلف ككيانات بـ @id ثابت وروابط sameAs، وأن المقالات تتضمن المؤلف والتواريخ والمراجع والاستشهادات.",
+        "why": "الكيانات المترابطة تتيح لمحركات البحث مطابقة مؤلفيك مع أشخاص ومؤسسات معروفة بدل التخمين من النص.",
+        "action": "أضف ترميز Organization وPerson مع @id.\nاربط كل شخص والناشر عبر sameAs بويكي بيانات أو ORCID أو LinkedIn أو سجل رسمي.\nاستخدم مولّد JSON-LD أسفل قائمة المؤلفين."
+      },
+      "authorAlignment": {
+        "title": "ملاءمة المؤلف للموضوع",
+        "what": "يقارن خبرة كل مؤلف المعلنة (المسمى الوظيفي وknowsAbout وصفحة الملف) بالموضوع الرئيسي للموقع.",
+        "why": "مقالة عن العلاج بالإنسولين يوقّعها كاتب محتوى تسويقي تُعدّ إشارة خبرة ضعيفة.",
+        "action": "أسند المقالات إلى مؤلفين تلائم ملفاتهم الموضوع.\nأضف jobTitle وknowsAbout إلى ترميز Person.\nانشر صفحة ملف لكل مؤلف."
+      },
+      "citationQuality": {
+        "title": "جودة المصادر",
+        "what": "يعرض عدد صفحات المقالات التي تربط بمصادر موثوقة مثل .gov و.edu وPubMed وNCBI ومنظمة الصحة العالمية أو دور النشر العلمية، وعدد الروابط الخارجية المعطّلة.",
+        "why": "الاستشهاد بالمصادر الأولية يبيّن أن الادعاءات قابلة للتحقق. والمراجع الميتة تُضعف هذه الإشارة.",
+        "action": "أضف مراجع إلى مصادر أولية في كل مقالة متخصصة.\nاستبدل الروابط الخارجية المعطّلة أو احذفها.\nافحص الروابط الخارجية في تبويب الروابط لتحديث رموز الحالة."
+      },
+      "transparency": {
+        "title": "الشفافية التحريرية",
+        "what": "يبحث عن سياسة تحريرية وصفحة من نحن وصفحة اتصال وبيانات السجل التجاري وتواريخ تعديل أو مراجعة ظاهرة في المقالات.",
+        "why": "يحتاج القراء ومحركات البحث إلى معرفة من يقف وراء الموقع وكيف يُتحقق من المحتوى.",
+        "action": "انشر سياسة تحريرية وسياسة للتحقق من الحقائق.\nأضف بيانات الاتصال وبيانات السجل التجاري.\nاعرض تاريخ آخر تحديث في كل مقالة."
+      },
+      "ymyl": {
+        "title": "مواضيع YMYL",
+        "what": "Your Money or Your Life: مواضيع مثل الصحة والمالية والقانون، حيث قد تضر المعلومات الخاطئة بالقراء.",
+        "why": "تطبّق إرشادات جودة البحث أعلى متطلبات الموثوقية على هذه المواضيع، لذا يُعدّ غياب المؤلفين أو المراجعين فجوة حرجة.",
+        "action": "اذكر مؤلفًا مؤهلًا في كل مقالة.\nأضف مراجعًا بمؤهلات للمحتوى الطبي أو القانوني.\nاستشهد بمصادر أولية."
+      },
+      "sameAs": {
+        "title": "روابط sameAs",
+        "what": "خاصية في schema.org تشير من شخص أو منظمة إلى الكيان نفسه في مكان آخر: ويكي بيانات أو ORCID أو LinkedIn أو سجل رسمي.",
+        "why": "تتيح لمحركات البحث تأكيد أن مؤلفك هو الشخص الحقيقي صاحب هذه المؤهلات.",
+        "action": "أضف رابط sameAs موثوقًا واحدًا على الأقل لكل مؤلف وللناشر.\nاستخدم الاسم والتهجئة نفسيهما الموجودين في ذلك الملف."
+      }
+    },
+    "executionCard": {
+      "bus": {
+        "title": "حجر الروابط",
+        "what": "عناوين URL التي تريد وحدة أخرى حذفها أو تحويلها بـ 301 تُستبعد من كل توصيات الروابط.",
+        "why": "بدونه ينصحك لوح بالربط بصفحة ينصحك لوح آخر بحذفها.",
+        "action": "راجع القائمة.\nعالج التعارضات المعلَّمة بالأحمر قبل النشر."
+      },
+      "brief": {
+        "title": "ملخص بنقرة واحدة",
+        "what": "ينشئ أو يحدّث ملخص محتوى هذه الصفحة من بيانات الوحدة التي أصدرت التوصية.",
+        "why": "يبدأ الملخص بكيانات وروابط وأسئلة ومصادر ناقصة حقيقية بدل نص منسوخ.",
+        "action": "انقر الزر.\nافتح محطة عمل الملخصات وحرّر المسودة.\nانقر مرة أخرى لاحقاً لتحديث البيانات دون إنشاء نسخة مكررة."
+      },
+      "deploy": {
+        "title": "ملفات النشر",
+        "what": "ملفات قواعد جاهزة لإعادة التوجيه والحذف: Apache وNginx وCloudflare Bulk Redirects وWordPress Redirection.",
+        "why": "تُفحص القواعد أولاً بحثاً عن حلقات وسلاسل، فلا تنشر إعادة توجيه تعطّل الزحف.",
+        "action": "نزّل الملف المناسب لخادمك.\nانشره أولاً على نسخة تجريبية.\nضع علامة منفذة على المهمة وتحقق في الزحف التالي."
+      },
+      "tasks": {
+        "title": "متتبع المهام",
+        "what": "كل تغيير موصى به يصبح مهمة: مخططة، منفذة، ثم تم التحقق أو فشلت.",
+        "why": "يفحص الزحف التالي النتيجة الفعلية ويعرض كيف تغيّرت نتيجة الوحدة منذ خط الأساس.",
+        "action": "أضف مهمة من توصية.\nضع علامة منفذة بعد النشر.\nشغّل زحفاً جديداً وانقر تحقق."
+      },
+      "sla": {
+        "title": "المسؤول وSLA",
+        "what": "من المسؤول عن المهمة ومدى إلحاحها والتاريخ الذي يجب إنجازها فيه.",
+        "why": "المهام ذات المسؤول والتاريخ لا تضيع ويسهل تصفية المتأخرة منها.",
+        "action": "اكتب اسم المسؤول.\nاختر الأولوية وتاريخ SLA.\nاستخدم المرشحات لعرض مهامك أو المتأخرة."
+      }
+    },
+    "sprs": {
+      "panel": {
+        "title": "PageRank الدلالي",
+        "what": "PageRank داخلي (التخميد 0.85) بمقياس 0-100 مع علامات للصفحات بلا روابط صادرة أو بروابط واردة قليلة أو التي ترسل معظم روابطها إلى صفحات غير مرتبطة.",
+        "why": "يبيّن أين تتجمع سلطة الروابط أو تتسرب داخل موقعك.",
+        "action": "أضف روابط صادرة إلى الصفحات المسدودة.\nاربط الصفحات قليلة الروابط من صفحات قوية ومرتبطة.\nراجع التسربات."
+      }
+    },
+    "decay": {
+      "radar": {
+        "title": "رادار التقادم الدلالي",
+        "what": "يقارن لقطات SERP المحفوظة لنفس الاستعلام والسوق والمزوّد والنموذج: إزاحة المركز والكيانات التوافقية الجديدة أو المفقودة وتغيرات النية والشكل.",
+        "why": "قد تبتعد النتائج الأولى عن صفحتك قبل أن تنخفض مراتبك بوقت طويل.",
+        "action": "افتح روابط URL المذكورة.\nقرر يدوياً هل تُحدّث الصفحة."
+      }
+    },
+    "sija": {
+      "panel": {
+        "title": "نية البحث (SIJA)",
+        "what": "يصنّف الصفحة في إحدى 8 نوايا دقيقة حسب بنيتها (جداول وقوائم ونماذج وبطاقات منتجات) ويقارنها بمتوسط صفحات TOP 5 الحقيقية.",
+        "why": "الصفحة التي يختلف شكلها عن نتائج البحث غالباً ما تترتب سيئاً لهذا الاستعلام.",
+        "action": "افتح صفحات TOP.\nأضف الشكل الناقص مثل جدول أو أداة.\nاعتبره إشارة لا حكماً."
+      }
+    },
+    "prePublish": {
+      "check": {
+        "title": "فحص ما قبل النشر",
+        "what": "يحاكي إضافة هذه المسودة إلى موقعك: تغير Site Focus Score والتشابه مع الصفحات الموجودة وهل يعمل كل مقطع بمفرده.",
+        "why": "يكشف الصفحة المكررة أو الخارجة عن الموضوع قبل نشرها.",
+        "action": "أصلح كل سبب مذكور.\nأعد تشغيل الفحص.\nانشر بعد مراجعتك الخاصة فقط."
+      }
+    },
+    "parity": {
+      "hreflang": {
+        "title": "التكافؤ الدولي",
+        "what": "يقارن عمق المواضيع في النسخ اللغوية المرتبطة عبر hreflang بلغة مرجعية، ويصنّف كل موضوع: مغطى أو سطحي أو مفقود أو محلي عمداً.",
+        "why": "يفصل بين فجوة محتوى حقيقية وسوق يقدم عمداً شيئاً مختلفاً.",
+        "action": "راجع المواضيع المفقودة والسطحية.\nضع علامة محلي على ما لا يحتاجه السوق.\nلا تغيّر الأداة hreflang نيابةً عنك."
+      }
+    },
+    "offPage": {
+      "tbva": {
+        "title": "السلطة الموضوعية خارج الصفحة",
+        "what": "يجمع سلطة المزوّد للروابط الخلفية follow مرجّحةً بقرب صفحة المصدر من موضوعك. ويجد أيضاً الفقرات التي تذكر علامتك وكيانك الأساسي معاً.",
+        "why": "قد تساوي روابط قليلة وثيقة الصلة أكثر من روابط كثيرة غير مرتبطة.",
+        "action": "راجع المصادر ذات التشابه المنخفض.\nاستخدم الإشارات بلا رابط كفرص تواصل.\nاقرأ بنفسك الإشارات المنفية."
+      }
+    },
+    "llmEconomy": {
+      "costGate": {
+        "title": "تكلفة LLM وبوابة الحقائق",
+        "what": "يحسب تكلفة استدعاءات الذكاء الاصطناعي وما وفّرته الذاكرة المؤقتة والنماذج المحلية. تُرفض الجمل الطبية والمالية التي تذكر جرعة أو مبلغًا غير موجود في المصدر.",
+        "why": "المزوّدون عن بُعد يكلّفون مالًا ويتلقون نص صفحاتك. الجرعات المختلقة خطيرة في محتوى الصحة والمال.",
+        "action": "فضّل نموذجًا محليًا للدفعات الكبيرة.\nقارن الجمل المرفوضة بالمصدر.\nوافق بنفسك على نص YMYL قبل وصوله إلى CMS."
+      }
+    },
+    "templateGovernor": {
+      "informationGain": {
+        "title": "المكسب المعلوماتي للقالب",
+        "what": "نسبة كل صفحة التي ليست نصًا مشتركًا مع بقية صفحات القالب نفسه. المكسب المنخفض يعني آلاف النسخ المتشابهة تقريبًا.",
+        "why": "قد تُصفّي Google قسم القالب كله باعتباره محتوى ضعيفًا. تحذير واحد للقالب أسهل في الإصلاح من آلاف تحذيرات الصفحات.",
+        "action": "أضف بيانات فريدة لكل صفحة (حقائق محلية وأرقام ومراجعات).\nأو طبّق noindex على القسم حتى يتوفر محتوى حقيقي.\nأعد الزحف وتأكد من ارتفاع المكسب."
+      }
+    },
+    "outreach": {
+      "gapDomains": {
+        "title": "أهداف التواصل",
+        "what": "مواقع تربط بمنافسيك الثلاثة الأوائل ولا تربط بك، مرتبة حسب عدد المنافسين المرتبط بهم وسلطتها.",
+        "why": "الموقع الذي يربط بعدة منافسين هو أنسب مكان لطلب رابط، بشرط أن تقدم شيئًا جديدًا.",
+        "action": "ابدأ من أعلى القائمة.\nافتح المسودة وأضف مصدرًا لا يقدمه غيرك وعدّلها.\nأرسلها بنفسك من بريدك. لا يرسل SEOmi أي شيء."
+      }
+    },
+    "causalMarket": {
+      "updateWindow": {
+        "title": "نافذة تحديث Google",
+        "what": "أيام أطلقت فيها Google تحديثًا أو كان السوق كله متقلبًا بشكل غير معتاد. تظهر النتيجة مع نطاق عدم يقين وعلامة إذا تداخلت الفترة مع نافذة كهذه.",
+        "why": "تتأثر مجموعة التحكم في الموقع نفسه بالتحديث مثل مجموعة الاختبار، فقد يعود الارتفاع أو الانخفاض إلى السوق لا إلى تغييرك.",
+        "action": "اعتبر النتيجة الموسومة غير حاسمة.\nانتظر انتهاء نافذة التحديث ثم قارن مجددًا.\nاستخدم خط أساس خارجيًا للسوق إن توفر."
+      }
+    },
+    "igos": {
+      "score": {
+        "title": "درجة IGOS",
+        "what": "مكسب المعلومات مقارنة بما تقوله نتائج TOP الحقيقية: كيانات جديدة ضمن الموضوع، كثافة الأدلة، مؤشرات الخبرة وتوزيع المواضيع الفرعية، وتنخفض عند ضعف القاعدة.",
+        "why": "يوضح ما تضيفه الصفحة فوق الإجماع. المؤشرات تدل على خبرة معلنة فقط ولا تثبت بحثًا أو أصالة.",
+        "action": "راجع المكونات الأربعة.\nأضف الأساسيات الناقصة.\nأعد التشغيل بعد التعديل."
+      },
+      "heatmap": {
+        "title": "خريطة حرارية للفقرات",
+        "what": "توسم كل فقرة بـ صدى (نسخة قريبة من مقطع منافس) أو مكسب (ضمن الموضوع وجديد) أو انحراف (خارج الموضوع) أو محايد.",
+        "why": "الصدى لا يضيف جديدًا والانحراف يخفف الموضوع. التسميات نصية وليست ألوانًا فقط.",
+        "action": "افتح فقرات الصدى والانحراف أولًا.\nتنقّل بمفاتيح الأسهم.\nأعد كتابتها أو ركّزها."
+      },
+      "coverage": {
+        "title": "تغطية القاعدة",
+        "what": "نسبة كيانات الإجماع التي تغطيها الصفحة بالفعل. دون 50% تُضرب الدرجة بمعامل عقوبة.",
+        "why": "دون الأساس المشترك لا تناسب الصفحة الموضوع حتى لو فيها بعض الجِدّة.",
+        "action": "غطِّ كيانات الإجماع الناقصة.\nثم أضف حقائق جديدة."
+      }
+    }
+  },
+  "helpUi": {
+    "what": "ما هذا",
+    "why": "لماذا هو مهم",
+    "action": "ماذا تفعل",
+    "example": "مثال",
+    "learnMore": "اعرف المزيد"
+  },
+  "siteFocusMonitoring": {
+    "alert": {
+      "title": "SEOmi · تنبيه Site Focus Score",
+      "sfsDrop": "انخفض Site Focus Score بمقدار {{points}} نقطة بين تحليلين كاملين ({{from}} ← {{to}}).",
+      "contentGuard": "ظهرت لأول مرة خلال آخر 24 ساعة {{count}} من الصفحات الجديدة الخارجة عن الموضوع (TRS أقل من 40): {{urls}}."
+    },
+    "weekly": {
+      "title": "SEOmi · تقرير Site Focus الأسبوعي",
+      "body": "Site Focus Score {{score}} ({{delta}} مقارنةً بالأسبوع الماضي). أهم المهام: {{tasks}}",
+      "noPrevious": "التقرير الأول",
+      "task": "{{code}} (+{{gain}} نقطة)",
+      "noTasks": "لا مهام عاجلة"
+    }
+  },
+  "focus": {
+    "title": "تركيز الموقع",
+    "subtitle": "يوضح مدى ثبات الصفحات التي تم الزحف إليها على موضوع أساسي واحد.",
+    "band": {
+      "excellent": "تركيز ممتاز",
+      "good": "تركيز جيد",
+      "moderate": "تركيز متوسط",
+      "weak": "تركيز ضعيف",
+      "critical": "تركيز حرج"
+    },
+    "bandRange": {
+      "excellent": "90-100",
+      "good": "75-89",
+      "moderate": "60-74",
+      "weak": "40-59",
+      "critical": "0-39"
+    },
+    "empty": "لا توجد صفحات ذات محتوى للتحليل. شغّل الزحف أولًا.",
+    "status": {
+      "strong": "قوية",
+      "moderate": "متوسطة",
+      "borderline": "حدّية",
+      "weak": "ضعيفة",
+      "off-topic": "خارجة بوضوح عن الموضوع"
+    },
+    "type": {
+      "homepage": "الصفحة الرئيسية",
+      "category": "تصنيف",
+      "article": "مقالة",
+      "technical": "تقنية"
+    },
+    "effort": "الجهد: {{min}}-{{max}} ساعة (تقدير)",
+    "banner": {
+      "lowConfidence": "العينة صغيرة (عدد الصفحات: {{count}}). النتائج استرشادية؛ ازحف إلى 10 صفحات على الأقل للحصول على موضوع أساسي موثوق. نصائح الحذف محدودة.",
+      "multiTopic": "تم رصد {{count}} من المجالات الموضوعية. ليس للموقع موضوع واحد مهيمن. تظهر درجات المواقع الفرعية أدناه.",
+      "lexicalFallback": "يستخدم التحليل للّغة المحددة خوارزمية TF-IDF الإحصائية. مكوّن التشابه الدلالي العميق غير متاح؛ وتستند الدرجة إلى تغطية الكلمات المفتاحية وتوزيعها.",
+      "skippedRender": "تم تخطي {{count}} من الصفحات في التحليل لانتهاء مهلة عرض JavaScript.",
+      "degraded": "كانت بيانات بعض الصفحات محدودة، لذا قد تكون الدرجات أقل دقة.",
+      "unmatchedTopic": "لا توجد صفحات تطابق الموضوع \"{{topic}}\". يُستخدم الموضوع المرصود بدلًا منه.",
+      "gateSkipped": "تم تخطي {{count}} صفحة (noindex/canonical).",
+      "gateInclude": "تضمينها",
+      "gateExclude": "استبعادها مجددًا"
+    },
+    "skip": {
+      "render-timeout": "انتهت مهلة عرض JavaScript",
+      "request-error": "فشل الطلب",
+      "non-topical-status": "حالة HTTP لا تخص المحتوى",
+      "non-html": "ليست صفحة HTML",
+      "no-content": "لا يوجد محتوى نصي",
+      "noindex": "مستبعدة: noindex",
+      "canonicalized": "مستبعدة: canonical يشير إلى رابط آخر"
+    },
+    "hero": {
+      "label": "Site Focus Score",
+      "outOf": "من 100",
+      "unavailable": "لا توجد نتيجة: تعذّر تقييم أي من الصفحات التي تم زحفها. أعد الزحف أو تحقق من المصدر؛ هذه ليست نتيجة 0.",
+      "summaryAll": "جميع الصفحات المحلَّلة ({{count}}) تلتزم بالموضوع.",
+      "summaryOff": "تنحرف {{off}} من أصل {{count}} صفحة انحرافًا كبيرًا عن الموضوع الأساسي.",
+      "metaButton": "تفاصيل التحليل",
+      "metaPages": "الصفحات المحلَّلة: {{count}}",
+      "metaAge": "آخر تحديث: {{date}}",
+      "recalc": "إعادة الحساب",
+      "howItWorks": "كيف يعمل؟",
+      "change": "{{delta}} نقطة منذ التحليل السابق",
+      "progressAria": "Site Focus Score {{score}} من 100، {{band}}",
+      "recalcBudget": "المتبقي اليوم من إعادة الحساب الكاملة: {{remaining}} من {{limit}}.",
+      "recalcExhausted": "تم بلوغ الحد اليومي لإعادة الحساب الكاملة ({{limit}}). حاول مجددًا غدًا."
+    },
+    "drawer": {
+      "title": "كيف يعمل Site Focus Score",
+      "close": "إغلاق",
+      "weights": "أوزان الصفحات في الدرجة",
+      "weightHome": "الصفحة الرئيسية: الوزن 3",
+      "weightCategory": "التصنيفات والأقسام وصفحات المحور الرئيسية: الوزن 2",
+      "weightArticle": "المقالات والتدوينات والبطاقات: الوزن 1",
+      "sfsFormula": "SFS = sum(الوزن x TRS) / sum(الوزن)، على جميع الصفحات المحلَّلة",
+      "trsTitle": "Topical Relevance Score (TRS)",
+      "trsFormula": "TRS = clamp(0..100, (0.5 x Similarity + 0.3 x Overlap - 0.2 x Drift) x 125)",
+      "trsLexical": "بدون المكوّن الدلالي: TRS = clamp(0..100, (0.75 x Overlap - 0.25 x LexicalDrift) x 125)",
+      "bands": "الفئات: 90-100 ممتاز، 75-89 جيد، 60-74 متوسط، 40-59 ضعيف، 0-39 حرج.",
+      "onTopic": "تُحتسب الصفحة ضمن الموضوع ابتداءً من TRS 60."
+    },
+    "core": {
+      "title": "الموضوع الأساسي",
+      "label": "الموضوع المرصود",
+      "terms": "أهم المصطلحات",
+      "termAria": "{{term}}: {{pct}} بالمئة",
+      "coverage": "التغطية: {{pct}}% من محتوى الموقع وثيق الصلة.",
+      "wrong": "هل هذا الموضوع خاطئ؟",
+      "inputLabel": "موضوعك (كلمات أو عبارة)",
+      "placeholder": "مثال: علاج السكري",
+      "reset": "العودة إلى الموضوع المرصود",
+      "manualActive": "موضوع محدد يدويًا: {{input}}",
+      "confidenceLine": "الثقة في الموضوع الأساسي: {{pct}}%"
+    },
+    "metrics": {
+      "title": "المقاييس الرئيسية",
+      "confidence": "الثقة في الموضوع الأساسي",
+      "onTopic": "نسبة الصفحات المتوافقة مع الموضوع",
+      "pages": "الصفحات المقيَّمة",
+      "skipped": "الصفحات المتخطاة",
+      "offTopic": "الصفحات الخارجة عن الموضوع (TRS أقل من 40)",
+      "borderline": "الصفحات الحدّية (60-74)"
+    },
+    "heatmap": {
+      "title": "توزيع المواضيع",
+      "treeAria": "الصفحات حسب URL وصلتها بالموضوع",
+      "ignoreTechnical": "تجاهل الصفحات التقنية",
+      "empty": "لا توجد صفحات تطابق الفلتر.",
+      "filter": {
+        "all": "الكل ({{count}})",
+        "critical": "حرجة <40 ({{count}})",
+        "borderline": "حدّية 60-74 ({{count}})",
+        "strong": "قوية >=75 ({{count}})"
+      },
+      "filtersAria": "تصفية الصفحات حسب الصلة",
+      "warning": "أقل من 60: خطر الخروج عن الموضوع",
+      "trsBar": "TRS {{trs}}",
+      "open": "فتح تحليل الصفحة لـ {{url}}",
+      "section": "القسم {{name}}",
+      "home": "الصفحة الرئيسية"
+    },
+    "detail": {
+      "title": "تحليل الصفحة",
+      "back": "العودة إلى القائمة",
+      "close": "إغلاق تحليل الصفحة",
+      "trs": "TRS",
+      "status": "الحالة",
+      "why": "لماذا هذه الدرجة؟",
+      "similarity": "التشابه الدلالي: {{value}}%",
+      "overlap": "تداخل الكلمات المفتاحية: {{value}}%",
+      "drift": "الانحراف الدلالي: {{value}}%",
+      "driftFlag": "علامة تحذير: أكثر من نصف الصفحة يتناول مواضيع أخرى.",
+      "similarityStrong": "قوي",
+      "similarityModerate": "متوسط",
+      "similarityWeak": "ضعيف",
+      "foreign": "مواضيع غريبة: {{label}} ({{pct}}%)",
+      "noForeign": "لم يتم رصد مواضيع غريبة.",
+      "matched": "الكلمات المفتاحية المطابقة للموضوع الأساسي",
+      "unmatched": "كلمات مفتاحية من مواضيع أخرى",
+      "none": "لم يتم العثور على شيء.",
+      "count": "{{count}}×",
+      "context": "السياق: {{text}}",
+      "clusterOf": "الموضوع: {{cluster}}",
+      "skipped": "لم تُقيَّم الصفحة: {{reason}}.",
+      "degraded": "بيانات هذه الصفحة محدودة، لذا الدرجة أقل دقة."
+    },
+    "matrix": {
+      "title": "مصفوفة توافق الكلمات المفتاحية",
+      "keyword": "الكلمة المفتاحية",
+      "freq": "التكرار",
+      "relevance": "الصلة بالموضوع الأساسي",
+      "alignment": "التوافق",
+      "match": "مطابقة (أكثر من 70%)",
+      "partial": "جزئية (40-70%)",
+      "miss": "غير مطابقة (أقل من 40%)",
+      "empty": "لا توجد كلمات مفتاحية للعرض."
+    },
+    "playbook": {
+      "title": "ماذا تفعل بهذه الصفحة",
+      "typeA": "النوع A: صفحة خارجة عن الموضوع",
+      "typeB": "النوع B: صفحة حدّية",
+      "typeC": "النوع C: صفحة قوية",
+      "options": "الخيارات",
+      "steps": "الخطوات",
+      "potential": "TRS المتوقع: {{min}}-{{max}} (تقدير)",
+      "gain": "المكسب للموقع: +{{gain}} نقطة"
+    },
+    "brief": {
+      "title": "موجز إعادة الكتابة",
+      "target": "TRS المستهدف: {{target}} (الحالي {{current}})",
+      "mustInclude": "يجب تضمينه",
+      "avoid": "يجب تجنبه",
+      "headings": "أفكار للعناوين",
+      "words": "الطول: {{min}}-{{max}} كلمة",
+      "copy": "نسخ موجّه الذكاء الاصطناعي",
+      "copied": "تم نسخ الموجّه",
+      "copyFailed": "فشل النسخ. حدّد النص وانسخه يدويًا."
+    },
+    "site": {
+      "title": "التوصيات",
+      "empty": "لا توجد توصيات. الموقع ملتزم بالموضوع.",
+      "delta": "Delta Score: +{{value}}",
+      "deltaZero": "Delta Score: 0",
+      "pagesList": "الصفحات",
+      "gaps": "الفجوات الموضوعية",
+      "gapsEmpty": "لم يتم العثور على فجوات موضوعية.",
+      "links": "اقتراحات الروابط الداخلية",
+      "linksEmpty": "لا توجد اقتراحات للروابط.",
+      "terms": "المصطلحات"
+    },
+    "subsites": {
+      "title": "درجات المواقع الفرعية",
+      "item": "{{label}} ({{prefix}}): {{share}}% من الصفحات",
+      "score": "الدرجة {{score}}"
+    },
+    "recommendation": {
+      "remove-offtopic": {
+        "title": "احذف أو انقل {{count}} من الصفحات الخارجة عن الموضوع",
+        "detail": "أعد توجيه أسوأ الصفحات أو أضف لها noindex أو احذفها، وأزل الروابط الداخلية المؤدية إليها. المكسب المحتمل: +{{gain}} نقطة."
+      },
+      "strengthen-borderline": {
+        "title": "عزّز {{count}} من الصفحات الحدّية",
+        "detail": "أضف المصطلحات الأساسية والأقسام الناقصة لرفعها إلى نحو {{target}}. المكسب المحتمل: +{{gain}} نقطة."
+      },
+      "expand-core-cluster": {
+        "title": "وسّع مجموعة الموضوع الأساسي",
+        "detail": "اكتب {{count}} من الصفحات الجديدة للموضوعات الفرعية الضعيفة. المكسب المحتمل: +{{gain}} نقطة."
+      },
+      "add-internal-links": {
+        "title": "أضف روابط داخلية إلى صفحات المحور",
+        "detail": "{{count}} من اقتراحات الروابط توجّه الصفحات الضعيفة إلى محاور قوية."
+      },
+      "collect-more-pages": {
+        "title": "اجمع مزيدًا من الصفحات",
+        "detail": "تم تحليل {{pageCount}} من الصفحات فقط. ازحف إلى المزيد قبل حذف أي شيء."
+      },
+      "split-subsites": {
+        "title": "فكّر في تقسيم الموقع",
+        "detail": "تم العثور على {{count}} من المجالات الموضوعية المتمايزة. قد يفيد فصل الأقسام أو النطاقات الفرعية."
+      },
+      "review-skipped-pages": {
+        "title": "راجع {{count}} من الصفحات المتخطاة",
+        "detail": "انتهت مهلة {{timeouts}} منها أثناء عرض JavaScript."
+      },
+      "monitor-strong-pages": {
+        "title": "راقب {{count}} من الصفحات القوية",
+        "detail": "أبقِها ضمن الموضوع وأعد فحصها بانتظام."
+      }
+    },
+    "playbookOption": {
+      "remove-redirect": {
+        "title": "الحذف وإعادة التوجيه عبر 301",
+        "detail": "افحص الزيارات والروابط الخلفية أولًا. المكسب للموقع: +{{gain}} نقطة."
+      },
+      "noindex-isolate": {
+        "title": "noindex والعزل",
+        "detail": "أبقِ الصفحة للمستخدمين لكن أخفِها عن البحث وقلّل الروابط الداخلية إليها. المكسب للموقع: +{{gain}} نقطة."
+      },
+      "rewrite-on-topic": {
+        "title": "إعادة الكتابة ضمن الموضوع وفق موجز",
+        "detail": "حوّل الصفحة إلى محتوى عن الموضوع الأساسي. TRS المستهدف نحو {{target}}."
+      },
+      "add-missing-terms": {
+        "title": "إضافة المصطلحات الناقصة",
+        "detail": "أدرج المصطلحات الأساسية الناقصة في النص: {{terms}}."
+      },
+      "reinforce-headings": {
+        "title": "تعزيز عناوين H2 وH3",
+        "detail": "استخدم صياغة الموضوع الأساسي في العناوين."
+      },
+      "deepen-coverage": {
+        "title": "تعميق التغطية الموضوعية",
+        "detail": "أضف أقسامًا وأمثلة وعمقًا حول الموضوع الأساسي."
+      },
+      "serve-as-hub": {
+        "title": "استخدامها كصفحة محور",
+        "detail": "اربط الصفحات ذات الصلة بها لتقود هذه الصفحة المجموعة."
+      },
+      "build-satellite-cluster": {
+        "title": "بناء مجموعة صفحات داعمة",
+        "detail": "خطّط لصفحات داعمة تربط بهذه الصفحة."
+      },
+      "monitor-periodically": {
+        "title": "المراقبة",
+        "detail": "أعد الفحص كل {{weeks}} أسابيع."
+      }
+    },
+    "playbookStep": {
+      "check-traffic-and-backlinks": "افحص زيارات الصفحة وروابطها الخلفية.",
+      "redirect-301-to-closest-page": "أعد التوجيه عبر 301 إلى أقرب صفحة ضمن الموضوع.",
+      "remove-internal-links": "أزل الروابط الداخلية المؤدية إلى هذه الصفحة.",
+      "add-noindex": "أضف التوجيه noindex.",
+      "rewrite-with-brief": "أعد كتابة الصفحة وفق الموجز. المصطلحات الناقصة: {{terms}}.",
+      "add-terms": "أضف المصطلحات الناقصة: {{terms}}.",
+      "expand-h2-h3": "وسّع عناوين H2 وH3 بصياغة الموضوع الأساسي.",
+      "add-examples": "أضف أمثلة وعمقًا.",
+      "link-from-weak-pages": "اربط من الصفحات الأضعف إلى هذه الصفحة.",
+      "plan-satellite-pages": "خطّط لصفحات داعمة حول هذه الصفحة.",
+      "recheck-in-six-weeks": "أعد الفحص بعد {{weeks}} أسابيع."
+    },
+    "gap": {
+      "thin-subtopic": "موضوع فرعي ضعيف \"{{label}}\": تغطيه {{coveragePct}}% فقط من الصفحات (عدد الصفحات: {{pagesCovering}}). المصطلحات: {{terms}}.",
+      "competitor-terms": "مصطلحات المنافسين غير الموجودة في موقعك: {{terms}}.",
+      "competitorActive": "يستخدم تحليل فجوات مجموعة المواضيع {{count}} من مصطلحات المنافسين.",
+      "competitorClear": "مسح مصطلحات المنافسين"
+    },
+    "link": {
+      "link-to-hub": "اربط من {{from}} إلى المحور {{to}}. النصوص الرابطة المقترحة: {{anchors}}."
+    },
+    "history": {
+      "removed-offtopic": "تم حذف {{count}} من الصفحات الخارجة عن الموضوع ({{delta}} نقطة).",
+      "new-cluster": "مجموعة مواضيع جديدة \"{{label}}\" ({{count}} جديدة، {{delta}} نقطة).",
+      "optimized-borderline": "تم تحسين {{count}} من الصفحات الحدّية ({{delta}} نقطة).",
+      "core-topic-changed": "تغيّر الموضوع الأساسي من \"{{from}}\" إلى \"{{to}}\" ({{delta}} نقطة).",
+      "title": "سجل الدرجات",
+      "empty": "شغّل تحليلين كاملين على الأقل لرؤية الاتجاه.",
+      "aria": "Site Focus Score عبر {{count}} من التحليلات، من {{from}} إلى {{to}}",
+      "point": "{{date}}: {{score}}",
+      "annotations": "أبرز التغييرات"
+    },
+    "alert": {
+      "sfs-drop": "انخفض Site Focus Score من {{from}} إلى {{to}} ({{points}} نقطة).",
+      "content-guard": "صفحة جديدة خارجة عن الموضوع {{url}} (TRS {{trs}})."
+    },
+    "weekly": {
+      "title": "الملخص الأسبوعي",
+      "summary": "الدرجة {{score}} ({{delta}} منذ التحليل السابق).",
+      "noPrevious": "التحليل الأول",
+      "noTasks": "لا مهام عاجلة.",
+      "gain": "(+{{value}} نقطة)"
+    },
+    "conflict": {
+      "pillar-noindex": "الصفحة المحورية عليها noindex: {{url}}",
+      "inlinked-foreign-canonical": "لدى {{url}} عدد {{inlinks}} من الروابط الداخلية لكن canonical يشير إلى مضيف آخر",
+      "noindex-with-traffic": "{{url}} عليها noindex لكن لديها {{clicks}} نقرة في GSC و{{domains}} نطاقًا مُحيلًا",
+      "sitemap-noindex": "{{url}} موجودة في خريطة الموقع لكنها noindex"
+    },
+    "protection": {
+      "title": "فحص حماية الروابط",
+      "empty": "لا توجد لقطة GSC/GA4/روابط خلفية لهذا المشروع، لذا حركة الزيارات وقيمة الروابط غير معروفتين.",
+      "advisory": "نصيحة فقط. لا يُحذف شيء ولا يُعاد توجيهه ولا يوضع عليه noindex تلقائيًا.",
+      "pri": "PRI {{value}}",
+      "decision": {
+        "keep": "إبقاء",
+        "shield": "حماية",
+        "needs-data": "بيانات مطلوبة",
+        "semantic-bridge": "جسر دلالي",
+        "prune-candidate": "مراجعة للتقليم"
+      },
+      "reason": {
+        "trs-above-threshold": "TRS مرتفع بما يكفي",
+        "revenue": "تم قياس الإيرادات",
+        "pri-above-threshold": "الزيارات أو التحويلات أو الروابط بلغت حد الحماية",
+        "telemetry-incomplete": "بيانات القياس مفقودة أو قديمة أو مأخوذة بالعينة",
+        "low-pri-measured": "الإشارات المقاسة منخفضة؛ افحص القيمة التجارية أولًا"
+      }
+    }
+  },
+  "focusBenchmark": {
+    "title": "المقارنة المرجعية مع المنافسين",
+    "intro": "قارن Site Focus Score الخاص بك بالمواقع التي تتصدر البحث عن موضوعك الأساسي. يبحث SEOmi في نتائج البحث، ويزحف بلطف إلى عينة صغيرة من كل منافس (مع احترام robots.txt)، ويقيّمها بالمحرك نفسه.",
+    "run": "تشغيل المقارنة",
+    "rerun": "التشغيل مرة أخرى",
+    "cancel": "إلغاء",
+    "cancelled": "تم إلغاء المقارنة. لم يُحفظ أي شيء.",
+    "sources": "مصدر نتائج البحث: {{source}}",
+    "queries": "الاستعلامات: {{queries}}",
+    "sample": "يُزحف إلى {{count}} صفحة كحد أقصى لكل منافس.",
+    "progress": {
+      "serp": "جارٍ البحث في نتائج البحث ({{done}}/{{total}})",
+      "crawl": "جارٍ الزحف إلى المنافسين ({{done}}/{{total}})، الآن {{domain}}: {{pages}} صفحة",
+      "analyze": "جارٍ تقييم المنافسين"
+    },
+    "unavailable": {
+      "title": "المقارنة غير متاحة",
+      "no-serp-source": "لا يوجد مصدر متصل لنتائج البحث. أضف بيانات اعتماد DataForSEO في الإعدادات للمقارنة مع منافسين حقيقيين.",
+      "no-queries": "ليس للموضوع الأساسي مصطلحات للبحث عنها بعد. ازحف إلى مزيد من الصفحات أولًا.",
+      "serp-failed": "تعذّر جلب نتائج البحث: {{error}}",
+      "no-competitors": "لا تتضمن نتائج البحث مواقع منافسين غير موقعك."
+    },
+    "error": "فشلت المقارنة: {{error}}",
+    "ranking": {
+      "title": "الترتيب",
+      "you": "أنت",
+      "pages": "{{count}} صفحة",
+      "onTopic": "{{pct}}% ضمن الموضوع",
+      "offTopic": "{{count}} خارج الموضوع",
+      "score": "SFS {{score}}",
+      "average": "متوسط القطاع",
+      "target": "الدرجة المستهدفة",
+      "position": "ترتيبك: {{rank}} من {{total}}",
+      "chart": "Site Focus Score حسب الموقع"
+    },
+    "failure": {
+      "title": "غير مقيَّم",
+      "crawl-error": "فشل الزحف: {{error}}",
+      "no-pages": "لا توجد صفحات قابلة للزحف (محظورة بواسطة robots.txt أو لا يمكن الوصول إليها).",
+      "analysis-failed": "فشل التحليل: {{error}}",
+      "cancelled": "أُلغي قبل التقييم."
+    },
+    "insights": {
+      "title": "رؤى",
+      "on-topic-share": "{{own}}% من محتواك ضمن الموضوع مقابل {{leaders}}% لدى أفضل 3 مواقع ({{delta}} نقطة).",
+      "off-topic-pages": "لديك {{own}} من الصفحات الخارجة عن الموضوع؛ ومتوسط أفضل 3 مواقع {{leaders}}.",
+      "keyword-coverage": "يغطي موقعك {{pct}}% ({{covered}} من {{total}}) من كلمات الموضوع الأساسي المفتاحية التي يستخدمها أفضل 3 مواقع.",
+      "versus-average": "درجتك {{delta}} نقطة مقارنةً بمتوسط القطاع البالغ {{average}}."
+    },
+    "gaps": {
+      "title": "فجوات المجموعة الموضوعية لدى المنافسين",
+      "coverage": "{{pct}}% من المنافسين ({{count}})",
+      "empty": "لا توجد مواضيع لدى المنافسين غير موجودة في موقعك.",
+      "apply": "أضف هذه المصطلحات إلى تحليل الفجوات"
+    }
+  },
+  "authority": {
+    "title": "السلطة الموضوعية",
+    "empty": "شغّل زحفًا لقياس السلطة الموضوعية.",
+    "hero": {
+      "sfs": "Site Focus Score",
+      "tas": "Topical Authority Score",
+      "sfsRole": "النقاء: مقدار المحتوى الملتزم بالموضوع",
+      "tasRole": "الاكتمال: مدى تغطية الموضوع بالكامل",
+      "target": "الهدف: {{value}}+",
+      "pending": "أنشئ الخريطة المرجعية لحسابه"
+    },
+    "quadrant": {
+      "dominant_authority": "سلطة مهيمنة",
+      "boutique_specialist": "متخصص متفرد",
+      "diluted_giant": "عملاق مشتّت",
+      "unfocused_generalist": "عام بلا تركيز"
+    },
+    "quadrantHint": {
+      "dominant_authority": "مركّز وشبه مكتمل. دافع عن موقعك وحدّث البيانات ووسّع نحو الاستعلامات الطويلة.",
+      "boutique_specialist": "ملتزم بالموضوع لكنه يغطي جزءًا من المجال فقط. وسّع المحتوى وأنشئ مجموعات موضوعية جديدة.",
+      "diluted_giant": "محتوى وفير حول الموضوع لكن أقسامًا غريبة تخفّفه. احذفها أو انقلها إلى نطاقات فرعية.",
+      "unfocused_generalist": "لا تركيز واضح وتغطية سطحية. اختر موضوعًا رئيسيًا واحدًا ونظّف الفهرس وابنِ أول صومعة متينة."
+    },
+    "matrix": {
+      "title": "مصفوفة النضج الموضوعي (SFS × TAS)",
+      "pending": "تظهر المصفوفة بعد حساب TAS.",
+      "aria": "أنت: SFS {{sfs}}، TAS {{tas}}، الربع {{quadrant}}",
+      "you": "أنت",
+      "axisX": "SFS",
+      "axisY": "TAS"
+    },
+    "freshness": {
+      "undated": "{{undated}} من أصل {{total}} صفحة ليس لها تاريخ ولا تُقيَّم"
+    },
+    "pillars": {
+      "title": "مكوّنات Topical Authority Score",
+      "tcr": "تغطية الموضوع",
+      "cdes": "عمق الكيانات",
+      "silc": "تماسك الصوامع",
+      "cvff": "الحداثة والتفرّد",
+      "tcrNote": "تمت تغطية {{covered}} من {{total}} موضوعًا فرعيًا مرجعيًا",
+      "cdesNote": "متوسط عمق الكيانات في المواضيع الفرعية المغطاة",
+      "silcNote": "{{orphans}} صفحات يتيمة و{{weak}} نصوص رابط ضعيفة و{{bleed}} روابط إلى صفحات خارج الموضوع",
+      "cvffNote": "{{stale}} صفحات قديمة و{{groups}} مجموعات تنافس داخلي",
+      "unavailable": "غير قابل للقياس",
+      "multiplier": "معامل التركيز ×{{value}} من SFS {{sfs}}"
+    },
+    "warning": {
+      "empty-authority": "سلطة فارغة: يلمس الموقع {{tcr}}% من المواضيع لكن متوسط العمق {{depth}}/100 فقط. عمّق الصفحات الحالية بالبيانات والكيانات قبل نشر المزيد.",
+      "template-duplicates": "تم دمج {{count}} من نسخ القالب في أقوى صفحة؛ لا ترفع التغطية وتهدر ميزانية الزحف.",
+      "no-dates": "لم يتم العثور على تواريخ نشر أو تحديث، لذا لا تُقاس الحداثة. أضف التواريخ في وسوم meta أو JSON-LD.",
+      "no-links": "لم تُوجد روابط داخلية ضمن المحتوى بين الصفحات المحلّلة، لذا يعتمد التماسك على الصفحات اليتيمة فقط.",
+      "no-pillars": "لا توجد خريطة مرجعية بعد، لذا لا تُقاس التغطية والعمق."
+    },
+    "reference": {
+      "title": "الخريطة المرجعية",
+      "intro": "تبني خريطة السوق لموضوعك من بيانات حقيقية: عناوين وكيانات وأسئلة الصفحات المتصدّرة لموضوعك الرئيسي إضافة إلى Google Suggest. لا شيء مُختلَق؛ وبدون مصدر SERP تبقى الخريطة فارغة.",
+      "build": "إنشاء الخريطة المرجعية",
+      "rebuild": "إعادة بناء الخريطة",
+      "cancel": "إلغاء",
+      "clear": "تجاهل الخريطة",
+      "info": "{{subtopics}} موضوعًا فرعيًا في {{pillars}} ركائز من {{competitors}} منافسين ({{source}})، أُنشئت {{date}}",
+      "progress": {
+        "serp": "جارٍ جلب الترتيب ({{done}}/{{total}})",
+        "crawl": "زحف {{domain}} ({{done}}/{{total}})",
+        "build": "جارٍ بناء الخريطة"
+      },
+      "error": "فشل بناء الخريطة: {{error}}",
+      "cancelled": "تم إلغاء بناء الخريطة.",
+      "unavailableTitle": "الخريطة المرجعية غير متاحة",
+      "unavailable": {
+        "no-serp-source": "اربط مصدر SERP (‏DataForSEO أو خلاصة Bing RSS المجانية) لبناء الخريطة من ترتيب حقيقي.",
+        "no-queries": "لا توجد بعد عبارة بحث صالحة للموضوع الرئيسي. شغّل زحفًا أكبر أولًا.",
+        "serp-failed": "فشل جلب الترتيب: {{error}}",
+        "no-competitors": "لم يتم العثور على نطاقات منافسة في الترتيب.",
+        "no-pages": "تعذّر زحف أي صفحة منافسة (robots.txt أو حظر أو انتهاء المهلة).",
+        "no-taxonomy": "تشترك صفحات المنافسين في عناوين قليلة جدًا لتكوين خريطة موثوقة. أعد المحاولة لاحقًا أو بمنافسين أكثر."
+      }
+    },
+    "coverage": {
+      "title": "خريطة تغطية الموضوع",
+      "filters": "تصفية المواضيع الفرعية",
+      "filter": {
+        "all": "الكل ({{count}})",
+        "gaps": "الفجوات فقط ({{count}})",
+        "shallow": "سطحية ({{count}})",
+        "cannibalized": "تنافس داخلي ({{count}})"
+      },
+      "general": "مواضيع عامة",
+      "empty": "لا توجد مواضيع فرعية مطابقة للمرشح.",
+      "row": "تطابق {{similarity}}% · عمق {{depth}}",
+      "status": {
+        "covered_strong": "مغطّى بعمق",
+        "covered_shallow": "تغطية سطحية",
+        "missing_gap": "مفقود",
+        "cannibalized": "تنافس داخلي"
+      },
+      "gap": {
+        "critical": "فجوة حرجة",
+        "high": "فجوة عالية",
+        "medium": "فجوة متوسطة"
+      }
+    },
+    "drill": {
+      "title": "تحليل الموضوع الفرعي",
+      "back": "العودة إلى الخريطة",
+      "url": "الصفحة المعيّنة",
+      "none": "لا توجد صفحة تغطي هذا الموضوع الفرعي بعد.",
+      "depth": "عمق الكيانات {{value}}/100",
+      "entitiesPresent": "الكيانات الموجودة ({{count}}/{{total}})",
+      "entitiesMissing": "كيانات مفقودة (يستخدمها المتصدّرون)",
+      "questions": "أسئلة المستخدمين التي لا تجيب عنها الصفحة",
+      "links": "تدقيق الروابط الداخلية",
+      "noPillarLink": "لا يوجد رابط إلى صفحة الركيزة {{url}}",
+      "almostOrphan": "رابط وارد واحد فقط ({{count}}): شبه صفحة يتيمة",
+      "bleed": "يرتبط بصفحة خارج الموضوع {{url}}",
+      "linksOk": "تبدو الروابط الداخلية سليمة."
+    },
+    "brief": {
+      "title": "ملخص المقال",
+      "path": "عنوان URL المقترح",
+      "h1": "H1 المقترح",
+      "entities": "قائمة الكيانات",
+      "questions": "أسئلة يجب الإجابة عنها",
+      "linkFrom": "اربط إليها من",
+      "linkTo": "يجب أن ترتبط بـ",
+      "impact": "الأثر المقدّر على TAS: ‎+{{value}}",
+      "generate": "إنشاء ملخص بالذكاء الاصطناعي",
+      "generating": "جارٍ الإنشاء…",
+      "noKey": "اربط مزوّد ذكاء اصطناعي في الإعدادات لإنشاء الملخصات.",
+      "empty": "لم يُرجع الذكاء الاصطناعي نصًا. حاول مجددًا.",
+      "error": "فشل إنشاء الملخص: {{error}}"
+    },
+    "cannibal": {
+      "title": "التنافس الدلالي الداخلي",
+      "index": "مؤشر التنافس الداخلي: {{value}}%",
+      "empty": "لا توجد صفحات تتنافس على نفس نية البحث.",
+      "group": "{{count}} صفحات، تشابه النية {{similarity}}%، كيانات مشتركة {{shared}}%",
+      "canonical": "احتفظ بـ: {{url}}",
+      "steps": "انقل الأقسام الفريدة إلى الصفحة المحتفَظ بها، وأعد توجيه الأخرى إليها بـ 301، وحدّث الروابط الداخلية.",
+      "edge": "الدليل: {{from}} و{{to}} بنسبة {{similarity}}٪ ({{basis}})",
+      "basis": {
+        "intent": "نفس القصد",
+        "subtopic": "نفس الموضوع الفرعي"
+      }
+    },
+    "draft": {
+      "title": "افحص مسودة قبل النشر",
+      "titleField": "عنوان المسودة",
+      "bodyField": "نص المسودة",
+      "check": "فحص التداخل",
+      "none": "لا يوجد تداخل يتجاوز 85% مع الصفحات الحالية.",
+      "hit": "تداخل {{similarity}}% مع {{url}}"
+    },
+    "rec": {
+      "title": "خطة التوسّع الموضوعي",
+      "empty": "لا توجد إجراءات موصى بها بعد. أنشئ الخريطة المرجعية لرؤية الفجوات.",
+      "delta": "‎+{{value}} TAS",
+      "fill-gaps": "سدّ الفجوات في «{{pillar}}»: ينقص {{count}} مواضيع فرعية",
+      "merge-cannibalized": "ادمج {{count}} مجموعات من الصفحات المتنافسة",
+      "fix-linking": "أصلح الروابط الداخلية: {{orphans}} صفحات يتيمة و{{bleed}} روابط إلى صفحات خارج الموضوع",
+      "deepen-shallow": "عمّق {{count}} مواضيع فرعية سطحية",
+      "refresh-stale": "حدّث {{count}} صفحات لم تُحدَّث منذ أكثر من عام",
+      "how": {
+        "fill-gaps": "انشر مقالًا لكل موضوع فرعي مفقود: استخدم الملخص (URL وH1 والكيانات والأسئلة) واربطه بركيزته.",
+        "merge-cannibalized": "احتفظ بأقوى صفحة وانقل إليها الأقسام الفريدة وأعد توجيه الباقي بـ 301 وحدّث الروابط الداخلية.",
+        "fix-linking": "اربط كل صفحة يتيمة من ركيزتها ومقالاتها ذات الصلة، واحذف الروابط من الصفحات المتخصصة إلى صفحات خارج الموضوع.",
+        "deepen-shallow": "أضف الكيانات والخصائص المفقودة وأجب عن الأسئلة المفتوحة تحت عناوين خاصة بها.",
+        "refresh-stale": "حدّث الأرقام والنماذج والإرشادات وأضف كيانات جديدة وجدّد تاريخ النشر."
+      }
+    },
+    "benchmark": {
+      "title": "مصفوفة الفجوات الموضوعية مقابل أبرز المنافسين",
+      "empty": "أنشئ الخريطة المرجعية لمقارنة نفسك بالمنافسين المتصدّرين. تُعرض بيانات زحف حقيقية فقط.",
+      "domain": "النطاق",
+      "pillars": "التغطية حسب الركيزة",
+      "pillar": "الركيزة",
+      "insight": {
+        "rank": "ترتيبك {{rank}} من {{total}} حسب TAS.",
+        "lead-pillar": "تتفوّق في «{{pillar}}»: ‏{{own}}% مقابل {{best}}% لأفضل منافس.",
+        "trailing-pillars": "أنت متأخر عن المتصدّرين في: {{pillars}}."
+      }
+    },
+    "history": {
+      "title": "SFS وTAS عبر الزمن",
+      "empty": "يظهر الخط الزمني بعد تحليلين كاملين على الأقل.",
+      "aria": "مخطط SFS وTAS عبر {{count}} تحليلات",
+      "point": "{{date}}: ‏SFS {{sfs}}، ‏TAS {{tas}}",
+      "sfs": "SFS (خط متصل)",
+      "tas": "TAS (خط متقطع)",
+      "milestones": "محطات رئيسية",
+      "cleanup": "تنظيف: ارتفع SFS بمقدار {{delta}}",
+      "architecture": "البنية: تحسّنت الروابط والتنافس الداخلي بمقدار {{delta}}",
+      "expansion": "توسّع: ارتفعت تغطية الموضوع بمقدار {{delta}}",
+      "regression": "تراجع: تغيّر TAS بمقدار {{delta}}"
+    }
+  },
+  "authorityMonitoring": {
+    "alert": {
+      "title": "SEOmi · تنبيه السلطة الموضوعية",
+      "tas-drop": "انخفض Topical Authority Score بمقدار {{points}} نقطة بين تحليلين كاملين (من {{from}} إلى {{to}}).",
+      "cannibalization": "صفحة نُشرت خلال آخر 24 ساعة تنافس {{canonical}} على النية نفسها (تشابه {{similarity}}%): {{url}}.",
+      "competitor-expansion": "وسّع {{domain}} تغطيته لـ «{{pillar}}» من {{from}}% إلى {{to}}% مما يفتح لك فجوة جديدة.",
+      "content-decay": "صفحة الركيزة {{url}} مضى عليها أكثر من عام وتفتقر إلى {{missing}} كيانات يستخدمها السوق الآن."
+    }
+  },
+  "aio": {
+    "title": "الجاهزية لـ AI Overviews وRAG",
+    "subtitle": "مدى سهولة أن تجد محركات الإجابة بالذكاء الاصطناعي مقاطعك وتستخرجها وتقتبسها.",
+    "empty": "لا توجد بعد بيانات صفحات تحتوي على أقسام محتوى. شغّل زحفًا جديدًا لتحليل جاهزية الذكاء الاصطناعي.",
+    "band": {
+      "excellent": "جاهزية ممتازة",
+      "good": "جاهزية جيدة",
+      "moderate": "جاهزية متوسطة",
+      "weak": "جاهزية ضعيفة",
+      "critical": "جاهزية حرجة"
+    },
+    "hero": {
+      "label": "درجة قابلية الاقتباس بالذكاء الاصطناعي",
+      "outOf": "من 100",
+      "summary": "تم العثور على {{weak}} مقاطع ضعيفة في {{count}} صفحة محللة.",
+      "summaryNone": "لم يتم العثور على مقاطع ضعيفة في {{count}} صفحة محللة.",
+      "change": "التغيير منذ التحليل السابق: {{delta}}",
+      "skipped": "تم تخطي {{count}} صفحة (لا توجد أقسام محتوى صالحة)."
+    },
+    "components": {
+      "self": "الاكتفاء الذاتي",
+      "spo": "كثافة الحقائق",
+      "extract": "قابلية الاستخراج"
+    },
+    "basicNote": "قواعد اللغة لـ {{languages}} أساسية: اكتشاف الضمائر والحقائق أقل دقة في هذه اللغات.",
+    "pages": {
+      "title": "الصفحات",
+      "url": "URL",
+      "score": "الدرجة",
+      "chunks": "المقاطع",
+      "facts": "الحقائق",
+      "language": "اللغة",
+      "empty": "لا توجد صفحات للعرض."
+    },
+    "skip": {
+      "no-sections": "لا توجد أقسام محتوى (تم الزحف قبل هذه الميزة)",
+      "non-html": "ليست صفحة HTML",
+      "request-error": "فشل الطلب",
+      "no-content": "لا يوجد نص قابل للقراءة"
+    },
+    "passage": {
+      "title": "أضعف المقاطع",
+      "intro": "مقاطع RAG محاكاة هي الأصعب اقتباسًا. أصلح المشكلات المذكورة أولًا.",
+      "chunk": "المقطع {{n}} · {{tokens}} رمزًا · الدرجة {{score}}",
+      "noHeading": "(مقدمة بلا عنوان)",
+      "current": "المقطع الحالي",
+      "optimized": "المقطع المحسّن",
+      "generate": "أعد الكتابة بالذكاء الاصطناعي",
+      "generating": "جارٍ إعادة الكتابة…",
+      "copy": "نسخ",
+      "copied": "تم النسخ",
+      "noKey": "اربط مزوّد ذكاء اصطناعي في الإعدادات لإعادة كتابة المقاطع.",
+      "error": "فشل طلب الذكاء الاصطناعي: {{message}}",
+      "empty": "لم يُرجع الذكاء الاصطناعي أي نص.",
+      "none": "لم يتم العثور على مقاطع ضعيفة."
+    },
+    "issue": {
+      "dangling-pronoun": "إشارة غير واضحة",
+      "no-answer-first": "لا توجد إجابة مباشرة في البداية",
+      "filler-opening": "بداية حشو",
+      "no-facts": "لا توجد حقائق ملموسة",
+      "too-long": "أطول من أن يتسع في مقطع واحد"
+    },
+    "history": {
+      "title": "السجل",
+      "empty": "يظهر السجل بعد التحليل الثاني لهذا المشروع.",
+      "row": "{{date}}: {{score}}"
+    }
+  },
+  "trust": {
+    "title": "E-E-A-T وموثوقية الكيانات",
+    "subtitle": "مدى إمكانية التحقق من المؤلفين والناشر والمصادر. تُحسب من الزحف المحفوظ؛ ولا تُجلب أي صفحة مرة أخرى.",
+    "empty": "شغّل زحفًا أولًا لتقييم إشارات الموثوقية.",
+    "hero": {
+      "label": "درجة موثوقية الكيانات",
+      "articles": "{{articles}} صفحة مقالات من بين {{pages}} صفحة تم زحفها",
+      "previous": "التشغيل السابق: {{score}} ({{delta}})",
+      "ymyl": "فئة YMYL: {{category}}. تطبّق محركات البحث على هذه الصفحات أشد معايير الموثوقية صرامة.",
+      "unattributed": "{{pct}}% من المقالات بلا مؤلف أو مراجع مذكور بالاسم."
+    },
+    "level": {
+      "strong": "موثوقية قوية",
+      "adequate": "موثوقية كافية",
+      "weak": "موثوقية ضعيفة",
+      "critical": "فجوات موثوقية حرجة"
+    },
+    "ymyl": {
+      "health": "الصحة",
+      "finance": "المالية",
+      "legal": "القانون"
+    },
+    "layers": {
+      "title": "طبقات الموثوقية",
+      "schemaGraph": "مخطط الكيانات (JSON-LD)",
+      "authorAlignment": "ملاءمة المؤلف للموضوع",
+      "citationQuality": "جودة المصادر",
+      "transparency": "الشفافية التحريرية",
+      "noData": "غير متاح",
+      "unverified": "غير متحقق منه"
+    },
+    "entities": {
+      "title": "الناشر والمؤلفون",
+      "orgPresent": "الناشر: {{name}}. @id ثابت: {{id}}. روابط sameAs: {{sameAs}}.",
+      "orgMissing": "لم يُعثر على كيان Organization في البيانات المنظمة.",
+      "none": "لم يُعثر على كيانات مؤلفين في البيانات المنظمة.",
+      "colAuthor": "المؤلف",
+      "colArticles": "المقالات",
+      "colSameAs": "روابط sameAs",
+      "colAlignment": "ملاءمة الموضوع",
+      "generic": "توقيع مجهول"
+    },
+    "signals": {
+      "title": "المصادر والشفافية",
+      "citations": "{{trusted}} من {{pages}} صفحة مقالات تربط بمصدر موثوق (.gov، .edu، PubMed، منظمة الصحة العالمية).",
+      "dead": "{{count}} من الروابط الخارجية معطّلة",
+      "dated": "{{dated}} من {{articles}} مقالة تعرض تاريخ تعديل أو مراجعة.",
+      "pagesTitle": "صفحات الموثوقية",
+      "page": {
+        "editorial": "السياسة التحريرية",
+        "about": "من نحن",
+        "contact": "اتصل بنا",
+        "registry": "بيانات السجل التجاري للشركة"
+      },
+      "found": "موجودة",
+      "missing": "مفقودة"
+    },
+    "severity": {
+      "critical": "حرج",
+      "warning": "تحذير",
+      "info": "معلومات"
+    },
+    "findings": {
+      "title": "ما يجب إصلاحه أولًا",
+      "none": "لم تُكتشف فجوات في الموثوقية.",
+      "code": {
+        "ymyl-unattributed": "{{count}} مقالة ({{pct}}%) في موضوع YMYL بلا مؤلف أو مراجع مذكور بالاسم. أضف شخصًا بمؤهلات يمكن التحقق منها.",
+        "ymyl-no-reviewer": "لا تذكر أي من المقالات الطبية البالغ عددها {{count}} مراجعًا (reviewedBy). أضف مراجعًا طبيًا مؤهلًا.",
+        "no-bylines": "لا تذكر أي من المقالات البالغ عددها {{count}} مؤلفًا في البيانات المنظمة.",
+        "generic-author": "{{count}} مقالة موقّعة بتوقيع مجهول مثل فريق التحرير.",
+        "org-missing": "لم يُعثر على كيان Organization. أضف ترميز الناشر مع @id ثابت.",
+        "org-no-same-as": "الناشر {{name}} ليس لديه روابط sameAs إلى ويكي بيانات أو سجل الشركات أو الحسابات الاجتماعية.",
+        "author-no-same-as": "{{count}} من المؤلفين بلا روابط sameAs ({{names}}). اربطهم بـ ORCID أو LinkedIn أو سجل مهني.",
+        "author-no-id": "{{count}} من المؤلفين بلا @id ثابت، لذا لا تستطيع محركات البحث مطابقتهم عبر الصفحات.",
+        "author-off-topic": "ملف {{name}} يلائم الموضوع الرئيسي بنسبة {{pct}}% فقط. فضّل مؤلفين بخبرة مناسبة.",
+        "low-citations": "{{pct}}% فقط من {{pages}} صفحة مقالات تستشهد بمصدر موثوق (.gov، .edu، PubMed، منظمة الصحة العالمية).",
+        "dead-citations": "{{count}} من الروابط الخارجية تُرجع خطأ. استبدلها أو احذفها.",
+        "missing-editorial": "لم يُعثر على سياسة تحريرية أو صفحة للتحقق من الحقائق.",
+        "missing-contact": "لم يُعثر على صفحة اتصال.",
+        "missing-registry": "لم يُعثر على صفحة بيانات السجل التجاري أو الإشعار القانوني.",
+        "missing-about": "لم يُعثر على صفحة من نحن.",
+        "missing-dates": "{{pct}}% فقط من المقالات تعرض تاريخ تعديل أو مراجعة.",
+        "no-articles": "لم تُكتشف صفحات مقالات، لذا لم تُقيَّم طبقتا المؤلفين والاستشهادات.",
+        "author-invalid-profile": "يربط {{count}} مؤلفين ملف ORCID أو Wikidata بمعرّف غير صالح ({{names}}). تحقق من رقم التحقق أو Q-ID.",
+        "ymyl-no-scholarly-ids": "لا تستشهد أي من {{pages}} مقالات بمصدر يحمل DOI أو PMID أو PMCID. في مواضيع YMYL استشهد بالدراسة الأصلية."
+      }
+    },
+    "generator": {
+      "open": "أصلح باستخدام JSON-LD",
+      "title": "مولّد JSON-LD",
+      "intro": "ينشئ مخططًا يضم Organization وPerson والصفحة مع روابط sameAs. راجعه ثم الصقه في head الصفحة.",
+      "close": "إغلاق",
+      "field": {
+        "personName": "اسم المؤلف",
+        "jobTitle": "المسمى الوظيفي",
+        "personUrl": "رابط ملف المؤلف",
+        "organizationName": "اسم الناشر",
+        "organizationUrl": "رابط الناشر",
+        "pageUrl": "رابط الصفحة",
+        "dateModified": "تاريخ التعديل (YYYY-MM-DD)",
+        "lastReviewed": "آخر مراجعة (YYYY-MM-DD)",
+        "sameAs": "ملفات sameAs (رابط واحد في كل سطر: ويكي بيانات، ORCID، LinkedIn، سجل مهني)",
+        "asReviewer": "اعتماده مراجعًا خبيرًا بدلًا من مؤلف"
+      },
+      "issue": {
+        "missing-name": "أدخل اسم المؤلف.",
+        "invalid-organization-url": "أدخل رابط ناشر صالحًا (https://...).",
+        "invalid-page-url": "أدخل رابط صفحة صالحًا (https://...).",
+        "invalid-same-as": "بعض مدخلات sameAs ليست روابط صالحة وتم تجاهلها."
+      },
+      "preview": "JSON-LD المُنشأ",
+      "copy": "نسخ وسم script",
+      "copied": "تم النسخ.",
+      "copyFailed": "تعذّر النسخ. حدّد النص وانسخه يدويًا."
+    }
+  },
+  "executionCard": {
+    "bus": {
+      "aria": "عناوين URL المستبعدة من توصيات الروابط",
+      "title": "عناوين URL في الحجر",
+      "summary": "تُحذف أو تُحوَّل {{count}} من عناوين URL وتُستبعد من أهداف الروابط؛ وتم تجاهل {{dropped}} من اقتراحات الروابط.",
+      "reason": {
+        "remove": "حذف",
+        "redirect": "إعادة توجيه 301"
+      },
+      "conflict": {
+        "protected-by-evidence": "محفوظة: لديها بيانات Search Console أو روابط خلفية",
+        "canonical-removed": "تعارض: عنوان URL الأساسي موجود أيضاً في قائمة الحذف"
+      }
+    },
+    "brief": {
+      "open": "فتح في محطة عمل الملخصات",
+      "pillar": "الصفحة المحورية المستهدفة",
+      "anchors": "نصوص الروابط",
+      "donor": "الصفحة المانحة",
+      "entities": "الكيانات الناقصة",
+      "links": "روابط للإدراج",
+      "paa": "أسئلة People Also Ask",
+      "structure": "بنية H2",
+      "jsonLd": "خصائص المؤلف الناقصة في JSON-LD",
+      "footnotes": "الحواشي المطلوبة",
+      "origin": {
+        "sfs": "توصية Site Focus",
+        "tas": "توصية Topical Authority",
+        "eetv": "توصية EETV"
+      },
+      "state": {
+        "created": "تم إنشاء الملخص",
+        "updated": "تم تحديث الملخص",
+        "failed": "تعذر حفظ الملخص"
+      }
+    },
+    "deploy": {
+      "empty": "لا توجد قواعد إعادة توجيه أو حذف بعد.",
+      "aria": "ملفات النشر",
+      "title": "ملفات النشر (301/410)",
+      "summary": "{{count}} من القواعد الصالحة، بلا حلقات ولا سلاسل.",
+      "zip": "تنزيل الكل (ZIP)",
+      "issuesAria": "مشكلات القواعد",
+      "issue": {
+        "invalid": "قاعدة غير صالحة، تم تخطيها",
+        "duplicate": "مصدر مكرر، تم تخطيه",
+        "loop": "حلقة إعادة توجيه، تم تخطيها",
+        "chain-flattened": "سلسلة إعادة توجيه، وُجِّهت إلى الهدف النهائي",
+        "dead-target": "تعيد التوجيه إلى صفحة محذوفة (410)",
+        "query-unsupported": "تحتوي على سلسلة استعلام، لم تُصدَّر لهذا النوع من الخوادم",
+        "gone-unsupported": "لا يدعم Cloudflare Bulk Redirects الرمز 410"
+      }
+    },
+    "tasks": {
+      "aria": "مهام التحسين",
+      "title": "مهام التحسين",
+      "add": "إضافة إلى المتتبع",
+      "added": "تمت إضافة المهمة",
+      "empty": "لا توجد مهام بعد. أضف واحدة من توصية.",
+      "verify": "تحقق في آخر زحف",
+      "crawlUnavailable": "لا يوفّر الفحص المحدّد أدلة كاملة ذات تاريخ مؤكّد؛ تم تأجيل التحقّق.",
+      "markImplemented": "وضع علامة منفذة",
+      "regression": "تراجع في النتيجة",
+      "kind": {
+        "add-link": "إضافة رابط",
+        "redirect-301": "إعادة توجيه 301",
+        "remove-410": "حذف 410",
+        "add-entities": "إضافة كيانات",
+        "remove-noindex": "إزالة noindex"
+      },
+      "status": {
+        "planned": "مخططة",
+        "implemented": "منفذة",
+        "verified": "تم التحقق",
+        "failed": "فشلت"
+      },
+      "verdict": {
+        "link-found": "تم التحقق: عُثر على رابط جديد، المنطقة {{zone}}",
+        "link-missing": "خطأ في التنفيذ: الرابط لا يزال مفقوداً",
+        "redirect-ok": "تم التحقق: 301 يشير إلى الصفحة الصحيحة",
+        "redirect-wrong-target": "خطأ في التنفيذ: إعادة التوجيه تشير إلى صفحة أخرى",
+        "still-200": "خطأ في التنفيذ: لا تزال HTTP {{status}}",
+        "gone-ok": "تم التحقق: الصفحة تعيد HTTP 410",
+        "wrong-status": "خطأ في التنفيذ: HTTP {{status}} بدلاً من 410",
+        "entities-ok": "تم التحقق: {{found}} من {{total}} كيانات مطلوبة موجودة",
+        "entities-missing": "خطأ في التنفيذ: {{found}} فقط من {{total}} كيانات مطلوبة موجودة (يلزم 60%)",
+        "index-ok": "تم التحقق: الصفحة قابلة للفهرسة",
+        "still-noindex": "خطأ في التنفيذ: noindex لا يزال موجوداً"
+      },
+      "owner": "المسؤول",
+      "priority": "الأولوية",
+      "dueDate": "تاريخ SLA",
+      "overdue": "متأخرة",
+      "me": "اسمي",
+      "filter": {
+        "all": "الكل",
+        "mine": "مهامي",
+        "overdue": "المتأخرة"
+      },
+      "priorityLevel": {
+        "high": "عالية",
+        "medium": "متوسطة",
+        "low": "منخفضة"
+      }
+    }
+  },
+  "scoreDropAlert": {
+    "aio": {
+      "title": "انخفضت جاهزية الذكاء الاصطناعي",
+      "body": "انخفضت جاهزية AI Overviews من {{from}} إلى {{to}} ({{points}} نقطة)."
+    },
+    "trust": {
+      "title": "انخفضت درجة الثقة",
+      "body": "انخفضت درجة الثقة E-E-A-T من {{from}} إلى {{to}} ({{points}} نقطة)."
+    }
+  },
+  "sprsUi": {
+    "title": "PageRank الدلالي",
+    "empty": "لا يوجد مخطط روابط بعد. افحص الموقع أولاً؛ لا تُعرض درجة بدون روابط حقيقية.",
+    "page": "الصفحة",
+    "score": "الدرجة",
+    "deadEnd": "طريق مسدود",
+    "underLinked": "روابط قليلة",
+    "leak": "تسرب",
+    "unknown": "{{count}} رابطاً بتشابه غير معروف ولا تُحسب كتسرب.",
+    "notConverged": "لم يتقارب الحل؛ الدرجات تقريبية.",
+    "whatIf": {
+      "title": "محاكي الروابط What-If",
+      "source": "من الصفحة",
+      "target": "إلى الصفحة",
+      "action": "التغيير",
+      "add": "إضافة رابط",
+      "remove": "إزالة رابط",
+      "run": "محاكاة",
+      "noChange": "لا تغيّر في الدرجات.",
+      "before": "قبل",
+      "after": "بعد",
+      "delta": "التغيّر"
+    }
+  },
+  "decayUi": {
+    "snapshots": "لقطات تدعم هذا التقييم: {{count}}",
+    "title": "رادار التقادم الدلالي",
+    "verdict": {
+      "too-few-samples": "لا توجد بعد لقطات SERP قابلة للمقارنة بما يكفي. لا شيء للإبلاغ عنه.",
+      "incompatible": "اللقطات غير قابلة للمقارنة، لذا لا يُدّعى وجود انحراف.",
+      "stable": "لا تغيير جوهري مقارنة بخط الأساس.",
+      "not-persistent": "ظهر تغيير لكنه لم يستمر. بانتظار المزيد.",
+      "cooldown": "الانحراف مستمر؛ أُصدر تنبيه مؤخراً.",
+      "alert": "انحراف مستمر عن خط الأساس. راجع يدوياً."
+    },
+    "shift": "إزاحة المركز: {{value}}٪",
+    "newEntities": "كيانات جديدة",
+    "lostEntities": "كيانات مفقودة",
+    "intent": "النية: {{from}} إلى {{to}}",
+    "format": "الشكل: {{from}} إلى {{to}}",
+    "incompatible": "اختلاف في {{fields}}: ليس تغيراً في السوق."
+  },
+  "sijaUi": {
+    "title": "نية البحث (SIJA)",
+    "empty": "لم تُكتشف نية دقيقة واضحة من بنية الصفحة.",
+    "primary": "النية الملحوظة: {{intent}} (ثقة {{confidence}}٪).",
+    "mixed": "وأيضاً: {{list}}.",
+    "inconclusive": "SSAS غير حاسم: يتوفر {{count}} من صفحات TOP الحقيقية ويلزم 3 على الأقل.",
+    "ssas": {
+      "aligned": "SSAS {{score}}: البنية تطابق صفحات TOP.",
+      "mismatch": "SSAS {{score}}: البنية تختلف عن صفحات TOP."
+    },
+    "intents": {
+      "definitional": "تعريف",
+      "how-to": "دليل خطوات",
+      "troubleshooting": "حل المشكلات",
+      "comparison": "مقارنة",
+      "curated-list": "قائمة منتقاة",
+      "tool": "أداة أو حاسبة",
+      "transactional": "معاملات",
+      "local": "محلي"
+    }
+  },
+  "prePublishUi": {
+    "title": "فحص ما قبل النشر",
+    "copy": "نسخ التقرير",
+    "copied": "تم نسخ التقرير.",
+    "copyFailed": "تعذّر نسخ التقرير.",
+    "verdict": {
+      "insufficient": "لا تكفي البيانات لتقييم هذه المسودة.",
+      "blocked": "لا تنشر بعد: المسودة تكرر صفحة موجودة.",
+      "review": "راجع قبل النشر.",
+      "ok": "لم تُعثر مشكلات. هذه نصيحة وليست موافقة."
+    },
+    "sfs": "Site Focus Score من {{before}} إلى {{after}} ({{delta}}). صلة المسودة {{trs}}. هذا ليس توقعاً لحركة الزيارات.",
+    "conflict": "مشابهة جداً لـ {{url}} ({{value}}٪).",
+    "overlap": "تتداخل مع {{url}} ({{value}}٪).",
+    "reason": {
+      "no-core": "لا يوجد موضوع أساسي بعد.",
+      "corpus-too-small": "أقل من 3 صفحات مقيّمة في الموقع.",
+      "dimension-mismatch": "التضمينات من نماذج مختلفة.",
+      "cannibalization": "خطر التهام المحتوى.",
+      "overlap": "تداخل جزئي مع صفحة موجودة.",
+      "low-trs": "صلة المسودة بالموضوع الأساسي منخفضة.",
+      "chunk-issues": "بعض المقاطع لا تعمل بمفردها."
+    },
+    "chunk": {
+      "leading-pronoun": "المقطع {{index}} يبدأ بضمير يحتاج إلى سياق سابق.",
+      "too-short": "المقطع {{index}} أقصر من أن يستقل بذاته."
+    }
+  },
+  "parityUi": {
+    "title": "التكافؤ الدولي",
+    "summary": "مغطّى: {{covered}}، سطحي: {{shallow}}، مفقود: {{missing}}، محلي عن قصد: {{local}}.",
+    "inconclusive": "غير حاسم: لا يمكن الحكم على التكافؤ بالبيانات المتاحة.",
+    "gap": {
+      "no-reference-coverage": "لغة المرجع ليس لديها بيانات تغطية للمواضيع.",
+      "partial-crawl": "الفحص جزئي.",
+      "single-language": "عُثر على لغة واحدة فقط."
+    },
+    "language": "اللغة",
+    "topic": "الموضوع",
+    "status": "الحالة",
+    "statuses": {
+      "covered": "مغطى",
+      "shallow": "سطحي",
+      "missing": "مفقود",
+      "intentionally-local": "محلي عمداً"
+    },
+    "note": "غياب نسخة لا يعني دائماً وجود خطأ. لا يلزم تطابق النصوص واحداً لواحد، ولغة الواجهة لا تحدد لغات الموقع التي تُحلَّل."
+  },
+  "offPageUi": {
+    "title": "السلطة الموضوعية خارج الصفحة",
+    "empty": "لا توجد قيمة موضوعية للروابط الخلفية بعد: تنقص الروابط الخلفية أو نص المصادر أو بيانات السلطة. هذا لا يعني عدم وجود روابط خلفية.",
+    "tbva": "القيمة الموضوعية للروابط الخلفية {{value}} من {{count}} نطاق مصدر (تم تقييم {{coverage}}٪ من روابط follow).",
+    "partial": "تعذر تقييم {{count}} من روابط follow (نص المصدر أو السلطة غير متوفر).",
+    "nofollow": "{{count}} من روابط nofollow غير محتسبة.",
+    "noText": "لا يوجد نص مصدر، لذلك لم تُفحص الاستشهادات المشتركة بالعلامة.",
+    "coCitation": "العلامة والكيان الأساسي في فقرة واحدة: {{linked}} برابط، {{unlinked}} بلا رابط.",
+    "note": "تستخدم القيمة سلطة المزوّد ولا تعيد إنتاج PageRank من Google ولا تفسّر الترتيب. التزامن في الذكر ليس تأييداً."
+  },
+  "llmEconomy": {
+    "title": "تكلفة LLM",
+    "empty": "لا توجد استدعاءات ذكاء اصطناعي مسجلة بعد.",
+    "spent": "المصروف: {{value}}",
+    "saved": "الموفَّر عبر الذاكرة المؤقتة والتشغيل المحلي: {{value}}",
+    "hits": "إصابات الذاكرة المؤقتة: {{count}}",
+    "leaves": "يُرسل نص الصفحات خارج هذا الجهاز إلى {{provider}}."
+  },
+  "templateGovernor": {
+    "title": "جودة القوالب البرمجية",
+    "empty": "لم يتم العثور على قوالب ضعيفة.",
+    "row": "{{pattern}}: {{count}} صفحة، المكسب المعلوماتي {{gain}}%",
+    "noindex": "موصى به: تطبيق noindex على هذا القسم",
+    "limit": "موصى به: الحد من عدد الصفحات المفهرسة"
+  },
+  "outreach": {
+    "title": "أهداف التواصل",
+    "empty": "لا توجد بيانات فجوة الروابط. شغّل تحليل الفجوة أولًا.",
+    "row": "{{domain}}: الأولوية {{priority}}، يربط بـ {{count}} منافسين",
+    "export": "تصدير CSV",
+    "manualNote": "لا يرسل SEOmi أي رسائل. أرسل المسودات من بريدك."
+  },
+  "causalMarket": {
+    "title": "الأثر السببي",
+    "empty": "لا يمكن التقدير: يلزم توفر 7 أيام على الأقل قبل التغيير ويوم واحد بعده وسلسلة سوق خارجية حقيقية وأدلة ضبط مستقلة.",
+    "effect": "الأثر اليومي: {{effect}} (من {{lower}} إلى {{upper}})",
+    "updateWindow": "نافذة تحديث Google: النتيجة غير حاسمة.",
+    "normalized": "مُعاير بخط أساس السوق",
+    "positive": "أثر إيجابي",
+    "negative": "أثر سلبي",
+    "noEffect": "لا أثر قابل للقياس",
+    "inconclusive": "غير حاسم",
+    "evidence": "الدليل: السوق {{market}}؛ الضبط {{control}}",
+    "unknown": "غير معروف",
+    "marketUnavailable": "خط الأساس الخارجي للسوق غير متاح أو غير صالح؛ لا يُستنتج نجاح أو فشل سببي.",
+    "controlUnavailable": "أدلة الضبط المستقلة غير متاحة؛ لا يُستنتج نجاح أو فشل سببي.",
+    "updateWindowReason": "يتداخل التحليل مع تحديث مؤكد لترتيب Google؛ النتيجة غير حاسمة.",
+    "disclaimer": "هذا تقدير باستخدام بيانات سوق وضبط خارجية، وليس دليلاً على السببية."
+  },
+  "snapshots": {
+    "newerData": "تتوفر بيانات زحف أحدث.",
+    "refresh": "تحديث"
+  },
+  "teamUi": {
+    "role": {
+      "admin": "مسؤول",
+      "seo_strategist": "استراتيجي SEO",
+      "content_writer": "كاتب محتوى",
+      "developer": "مطوّر"
+    },
+    "permission": {
+      "run_crawl": "تشغيل الزحف",
+      "execute_cms_patch": "تطبيق تعديل على CMS",
+      "modify_site_focus_rules": "تغيير قواعد Site Focus",
+      "export_audit_pdf": "تصدير تقرير التدقيق PDF",
+      "manage_team_roles": "إدارة أدوار الفريق"
+    },
+    "denied": "دورك لا يسمح بهذا الإجراء."
+  },
+  "cmsUi": {
+    "kind": {
+      "wordpress": "WordPress",
+      "strapi": "Strapi",
+      "webhook": "Webhook"
+    },
+    "error": {
+      "unsafe-url": "عنوان CMS غير مسموح (يلزم HTTPS ومضيف عام).",
+      "conflict": "تم تعديل الصفحة بعد إعداد الفروقات. أعدّ الفروقات من جديد.",
+      "http": "رفض CMS الطلب.",
+      "bad-response": "ردّ CMS بصيغة غير متوقعة.",
+      "heading-not-found": "لم يُعثر على العنوان في الصفحة.",
+      "heading-ambiguous": "يظهر العنوان أكثر من مرة.",
+      "forbidden": "دورك لا يسمح بتطبيق تعديلات CMS.",
+      "not-approved": "وافق على هذه الفروقات بالتحديد قبل الكتابة.",
+      "fact-gate-required": "محتوى YMYL يحتاج إلى تحقق ناجح من الحقائق قبل الكتابة."
+    },
+    "verified": "تمت كتابة التغيير والتحقق منه.",
+    "unverified": "تمت كتابة التغيير لكنه لم يظهر بعد في الصفحة المباشرة.",
+    "dryRun": "تشغيل تجريبي: لم تتم كتابة أي شيء."
+  },
+  "igosUi": {
+    "title": "أصالة IGOS",
+    "empty": "لم يتم جلب نتائج TOP قابلة للمقارنة، لذا لا توجد قاعدة ولا درجة.",
+    "noScore": "لا توجد درجة",
+    "offTopic": "معظم الفقرات خارج الموضوع؛ لا تُعطى درجة.",
+    "partial": "قاعدة جزئية: {{available}} من {{requested}} صفحة منافسة.",
+    "basis": "القاعدة: {{available}} من {{requested}} صفحة منافسة.",
+    "component": {
+      "nefr": "كيانات جديدة",
+      "edsi": "كثافة الأدلة",
+      "fhem": "مؤشرات الخبرة",
+      "sdd": "توزيع المواضيع الفرعية"
+    },
+    "coverage": "تغطية القاعدة {{coverage}}، معامل العقوبة {{multiplier}}",
+    "novel": "كيانات جديدة ضمن الموضوع: {{list}}",
+    "advice": "التوصيات",
+    "heatmap": "خريطة حرارية للفقرات",
+    "heatmapEmpty": "لا توجد فقرات للعرض.",
+    "noHeading": "بلا عنوان",
+    "zone": {
+      "echo": "صدى",
+      "gain": "مكسب",
+      "drift": "انحراف",
+      "neutral": "محايد"
+    },
+    "detail": "الإزاحة {{offset}}، تشابه الموضوع {{topic}}، أقرب مقطع منافس {{nearest}}.",
+    "source": "أقرب مصدر: {{url}} (الترتيب {{rank}}).",
+    "noSource": "لا يوجد مصدر قريب.",
+    "limit": {
+      "no-comparable-documents": "لا توجد مستندات منافسة قابلة للمقارنة.",
+      "too-few-documents": "عدد مستندات المنافسين قليل جدًا لقاعدة موثوقة.",
+      "some-documents-missing": "تعذر جلب بعض صفحات المنافسين.",
+      "no-target-chunks": "لا تحتوي الصفحة على فقرات قابلة للتحليل.",
+      "off-topic-below-quota": "عدد الفقرات ضمن الموضوع قليل جدًا."
+    },
+    "rec": {
+      "rewrite-echo": "الفقرة عند الإزاحة {{offset}} تكرر مقطعًا لمنافس: أعد كتابتها بكلماتك.",
+      "add-evidence": "أضف بيانات محددة بوحدات أو مصادر؛ لم يُكتشف أي منها.",
+      "refocus-drift": "الفقرة عند الإزاحة {{offset}} تنحرف عن الموضوع: ركّزها أو احذفها."
+    }
+  },
+  "logIntelUi": {
+    "title": "تحليل السجلات",
+    "description": "استورد سجل وصول محليًا بصيغة .log أو .txt (بحد أقصى 500 MB). تُحفظ التجميعات فقط دون عناوين IP الخام. تستخدم إزالة التكرار بصمة SHA-256 لعينة من أول وآخر 1 MiB وحجم الملف.",
+    "chooseFile": "اختر سجل الوصول",
+    "cancel": "إلغاء",
+    "clear": "مسح السجلات",
+    "importing": "جارٍ استيراد سجل الوصول",
+    "progress": "الأسطر: {{lines}} · غير الصالحة: {{malformed}} · غير الروبوتات المتجاهلة: {{ignoredNonBot}}",
+    "cancelled": "أُلغي الاستيراد.",
+    "duplicate": "تم استيراد هذا الملف بالفعل.",
+    "complete": "اكتمل الاستيراد.",
+    "storageFailed": "تعذّر تحديث التخزين المحلي. تبقى التغييرات في الذاكرة فقط وقد تبقى السجلات المحفوظة دون تغيير.",
+    "tooLarge": "يتجاوز الملف الحد الأقصى 500 MB.",
+    "invalidFile": "اختر ملفًا بصيغة .log أو .txt.",
+    "resumeRequired": "استأنف الملف غير المكتمل أو امسح السجلات قبل استيراد ملف آخر.",
+    "importFailed": "تعذّرت قراءة الملف أو حساب بصمته. حاول مجددًا.",
+    "resume": "اختر الملف نفسه للاستئناف دون احتساب الأسطر مرتين.",
+    "verificationNote": "هوية الروبوت ادعاء في User-Agent وليست دليلًا. يتطلب كشف الانتحال محلّل DNS لسطح المكتب؛ هذه اللوحة لا تستعلم عن DNS. تبقى الصفوف غير المتحقق منها غير حاسمة.",
+    "verificationNoteDesktop": "يتم التحقق من هوية الروبوت على هذا الجهاز عبر DNS العكسي والمباشر (مهلة 3 ثوانٍ). عند فشل الاستعلام يبقى الصف «مُدّعى» وليس «منتحلًا».",
+    "matrix": "مصفوفة كفاءة الزحف",
+    "coverage": "التغطية: {{days}} من {{period}} يومًا",
+    "period": "الفترة (UTC): {{start}} – {{end}}",
+    "insufficient": "تغطية السجلات غير كافية لاستنتاجات موثوقة.",
+    "noScores": "لا يتضمن أحدث زحف للمشروع درجات TRS محفوظة لكل مسار. لا تُفترض أي درجات.",
+    "unavailable": "غير متاح",
+    "empty": "لا توجد مسارات سجلات أو زحف لعرضها.",
+    "previous": "السابق",
+    "page": "الصفحة {{current}} من {{total}}",
+    "next": "التالي",
+    "loading": "جارٍ تحميل تحليل السجلات…",
+    "columns": {
+      "path": "المسار",
+      "family": "عائلة الروبوت",
+      "status": "التحقق",
+      "hits": "الطلبات",
+      "errors": "نسبة 4xx/5xx",
+      "verdict": "النتيجة"
+    },
+    "families": {
+      "googlebot": "Googlebot",
+      "bingbot": "Bingbot",
+      "gptbot": "GPTBot",
+      "perplexitybot": "PerplexityBot",
+      "none": "لا دليل على روبوت"
+    },
+    "statuses": {
+      "verified": "تم التحقق",
+      "claimed": "مُدّعى",
+      "spoofed": "منتحل",
+      "unknown": "غير معروف"
+    },
+    "verdicts": {
+      "waste": "هدر",
+      "starvation": "نقص الزحف",
+      "ok": "جيد",
+      "inconclusive": "غير حاسم",
+      "no-logs": "لا سجلات"
+    }
+  },
+  "altCheckUi": {
+    "column": "جودة ALT",
+    "csvColumn": "alt_issues",
+    "summary": "تم فحص {{checked}} صورة، منها {{issues}} بها مشكلات ALT.",
+    "issues": {
+      "missing": "ALT مفقود",
+      "empty": "ALT فارغ",
+      "filename": "يشبه اسم ملف",
+      "generic": "صياغة عامة",
+      "too-long": "طويل جدًا",
+      "repeats-caption": "يكرر التعليق",
+      "unrelated-to-context": "لا علاقة له بالسياق"
+    },
+    "noIssues": "لا مشكلات في ALT",
+    "decorative": "زخرفية (ALT فارغ)",
+    "visualNotice": "يتطلب التحليل البصري نموذجًا محليًا وهو غير متاح في هذا الإصدار.",
+    "analyses": {
+      "ocr": "OCR",
+      "clip-alignment": "محاذاة CLIP",
+      "transcript": "النصوص المفرّغة"
+    },
+    "statuses": {
+      "unavailable": "غير متاح"
+    },
+    "noScorePenalty": "هذا لا يخفض أي درجة."
+  },
+  "prePublishMountUi": {
+    "title": "فحص ما قبل النشر",
+    "description": "يستخدم أحدث زحف مكتمل والمقتطفات والمصطلحات المحفوظة ودرجات Site Focus وإعدادات التضمين للمشروع. محاكاة فقط: لا يتم حفظ أو نشر أي شيء.",
+    "draft": "نص المسودة غير المنشورة",
+    "url": "رابط المسودة (اختياري)",
+    "urlHint": "اتركه فارغًا لصفحة جديدة. الرابط الموجود في الزحف يستبدل تلك الصفحة في المحاكاة.",
+    "invalidUrl": "أدخل رابط HTTP أو HTTPS صالحًا دون بيانات تسجيل الدخول.",
+    "run": "فحص المسودة",
+    "cancel": "إلغاء",
+    "loading": "جارٍ تحميل الفحص…",
+    "noCrawl": "لا يوجد زحف مكتمل للمشروع النشط. ازحف إلى الموقع أولًا.",
+    "noCore": "لا يوجد موضوع أساسي بعد. لا يمكن تقييم هذه المسودة.",
+    "running": "جارٍ إنشاء تضمينات المسودة وبيانات الزحف…",
+    "unreachable": "لم يُرجع مزود التضمين المحدد متجهات. تحقق من إعدادات المشروع والاتصال بالمزود.",
+    "cancelled": "تم إلغاء الفحص. لم يتم تطبيق أي نتيجة.",
+    "stale": "تغيرت المدخلات أو بيانات الزحف. أعد تشغيل الفحص."
+  },
+  "telemetrySourcesUi": {
+    "title": "المصادر",
+    "sources": {
+      "gsc": "GSC",
+      "ga4": "GA4",
+      "backlinks": "الروابط الخلفية"
+    },
+    "states": {
+      "measured": "تم القياس",
+      "partial-history": "سجل جزئي",
+      "stale": "بيانات قديمة",
+      "sampled": "عينة",
+      "missing-permission": "الإذن مفقود",
+      "unavailable": "غير متاح"
+    },
+    "property": "الموقع: {{value}}",
+    "provider": "المزوّد: {{value}}",
+    "period": "{{start}} – {{end}} ({{days}} يومًا)",
+    "retrievedAt": "وقت الاسترجاع: {{value}}",
+    "truncated": {
+      "yes": "البيانات مقتطعة: نعم",
+      "no": "البيانات مقتطعة: لا"
+    },
+    "coverage": "التغطية: {{value}}%",
+    "unknownNote": "لا تُحتسب البيانات المجهولة على أنها صفر أبدًا."
+  },
+  "offPageSourcesUi": {
+    "analyze": "تحليل مصادر الروابط",
+    "cancel": "إلغاء",
+    "scope": "حتى 25 رابط follow، رابط واحد لكل نطاق مصدر، بدءًا بأعلى سلطة لدى المزوّد. مقياس السلطة: 0–100؛ TBVA مجموع وليس نسبة مئوية أو Google PageRank. الحدود: 3 طلبات متزامنة، مهلة أصلية 15 ثانية، جسم استجابة 25 MiB، و20,000 حرف نص ظاهر لكل مصدر.",
+    "provider": "مزوّد التضمين المحلي",
+    "local": "تجزئة محلية",
+    "ollama": "Ollama محلي",
+    "model": "نموذج تضمين Ollama",
+    "scored": "المصادر المقيمة: {{scored}} من {{total}} مصدرًا مختارًا (وليس ملف الروابط كاملًا).",
+    "sources": "حالة جلب المصادر",
+    "fetchedAt": "وقت الجلب: {{time}}",
+    "notFetched": "لم يُجلب",
+    "context": "لا يحتفظ الاستخراج بحدود الفقرات أو نصوص الروابط. كتل النص المحدودة تقديرية؛ كل تطابق له linked=false لعدم توفر سياق الرابط داخل الفقرة.",
+    "caveat": "التواجد المشترك ليس تأييدًا. قد تؤدي الأسماء المتشابهة إلى تطابقات خاطئة؛ وتظل الإشارات المنفية غير واضحة.",
+    "excerpts": "مقتطفات الاستشهاد المشترك",
+    "offset": "{{url}} — إزاحة النص المستخرج {{offset}}",
+    "missing": "غياب النص أو المتجهات الصالحة أو السلطة يعني أدلة جزئية أو غير متاحة، وليس صفر روابط خلفية. هذه العينة ليست الملف الكامل.",
+    "status": {
+      "running": "جارٍ تحليل المصادر…",
+      "done": "اكتمل تحليل المصادر",
+      "cancelled": "أُلغي التحليل؛ لا تُقيّم المصادر غير المكتملة",
+      "unavailable": "التحليل غير متاح"
+    },
+    "fetch": {
+      "pending": "قيد الانتظار",
+      "ok": "النص متاح",
+      "unavailable": "غير متاح",
+      "too-large": "جسم الاستجابة كبير جدًا",
+      "blocked": "حظره النقل الآمن"
+    },
+    "limitations": {
+      "no-topic-vector": "لا يوجد متجه Core Topic صالح من آخر زحف مكتمل للمشروع؛ TBVA غير متاح.",
+      "invalid-scale": "مقياس السلطة غير صالح؛ TBVA غير متاح.",
+      "no-follow-links": "لا توجد روابط follow متاحة للتحليل.",
+      "source-text-or-authority-missing": "تفتقر بعض المصادر إلى نص أو متجهات صالحة أو سلطة المزوّد."
+    },
+    "polarity": {
+      "neutral": "تواجد مشترك محايد؛ ليس تأييدًا",
+      "unclear": "غير واضح: نفي محتمل"
+    },
+    "pacing": "تحد حماية التدقيق الأصلي أيضًا من عمليات البدء إلى 10 في الدقيقة. قد تستغرق العينة عدة دقائق؛ وقد تقلل عمليات التدقيق الأخرى من الإتاحة.",
+    "history": {
+      "title": "السجل",
+      "empty": "لا توجد تحليلات مكتملة محفوظة.",
+      "summary": "TBVA: {{value}} · المُقيّمة/المطلوبة: {{scored}}/{{requested}}",
+      "delta": "تغيّر TBVA: {{delta}}",
+      "notComparable": "غير قابل للمقارنة: {{reason}}",
+      "reasons": {
+        "first": "لا يوجد سجل سابق",
+        "scale": "مقياس سلطة مختلف",
+        "model": "نموذج تضمين مختلف",
+        "unknownModel": "نموذج التضمين غير معروف",
+        "unavailable": "TBVA غير متاح"
+      },
+      "view": "عرض المصادر",
+      "hide": "إخفاء المصادر",
+      "delete": "حذف السجل",
+      "clear": "مسح سجل المشروع",
+      "exportCurrent": "تصدير التحليل الحالي CSV",
+      "exportRecord": "تصدير السجل CSV",
+      "storageError": "تخزين السجل غير متاح؛ لم تُحفظ التغييرات.",
+      "topic": "الموضوع: {{topic}}",
+      "embedding": "التضمين: {{provider}} / {{model}}",
+      "details": "الأدلة المحفوظة لكل مصدر",
+      "fields": {
+        "sourceUrl": "رابط المصدر",
+        "fetchedAt": "وقت الجلب",
+        "availability": "الإتاحة",
+        "authority": "السلطة",
+        "similarity": "التشابه",
+        "contribution": "المساهمة"
+      },
+      "unavailable": "غير متاح",
+      "status": {
+        "ready": "جاهز",
+        "partial": "جزئي",
+        "unavailable": "غير متاح"
+      },
+      "privacy": "تُحفظ آخر 10 تحليلات مكتملة محليًا لكل مشروع. لا يُحفظ النص الكامل للصفحات أو المتجهات مطلقًا."
+    }
+  },
+  "experimentsUi": {
+    "title": "تجارب تحسين محركات البحث",
+    "disclaimer": "هذه ملاحظة وليست دليلاً على السببية. قد تعكس التغييرات الموسمية أو تدخلات أخرى أو عوامل خارجية.",
+    "projectRequired": "اختر مشروعاً لتسجيل التدخلات.",
+    "capacity": "يُحتفظ بما يصل إلى {{count}} تدخل؛ وتحل الإضافات الجديدة محل الأقدم.",
+    "url": "عنوان URL للصفحة",
+    "site": "الموقع بالكامل",
+    "date": "أول يوم متأثر",
+    "kind": "نوع التدخل",
+    "note": "ملاحظة (حتى 300 حرف)",
+    "add": "إضافة تدخل",
+    "saveFailed": "تعذر الحفظ. تحقق من الحقول وتوفر التخزين المحلي.",
+    "removeFailed": "تعذرت إزالة التدخل من التخزين المحلي.",
+    "empty": "لا توجد تدخلات مسجلة.",
+    "intervention": "تدخل",
+    "unavailable": "غير متاح",
+    "baseline": "الفترة الأساسية",
+    "followUp": "فترة المتابعة",
+    "measurements": "القياسات المرصودة",
+    "metric": "المؤشر",
+    "before": "قبل",
+    "after": "بعد",
+    "change": "التغير النسبي",
+    "clicks": "النقرات",
+    "impressions": "مرات الظهور",
+    "position": "متوسط الموضع (فرق بإشارة)",
+    "restOfSite": "بقية الموقع (الإجمالي ناقص الصفحة)",
+    "relativeVsSite": "الصفحة ناقص بقية الموقع (نقاط مئوية)",
+    "limitations": "القيود",
+    "remove": "إزالة التدخل",
+    "percent": "{{value}}٪",
+    "points": "{{value}} نقطة مئوية",
+    "kinds": {
+      "content": "المحتوى",
+      "internal-links": "الروابط الداخلية",
+      "title-meta": "العنوان والبيانات الوصفية",
+      "technical": "تقني",
+      "other": "آخر"
+    },
+    "status": {
+      "ready": "الملاحظة متاحة",
+      "inconclusive": "غير حاسم",
+      "pending": "مخطط / قيد الانتظار"
+    },
+    "reasons": {
+      "observational": "ملاحظة قبل وبعد فقط؛ دون استنتاج سببي.",
+      "uncontrolled-factors": "لم يتم ضبط الموسمية والتغييرات المتزامنة والعوامل الخارجية.",
+      "zero-baseline": "عندما تكون القيمة الأساسية صفراً يتعذر حساب التغير النسبي.",
+      "no-control": "لا يتوفر لتدخل يشمل الموقع بالكامل عنصر مقارنة منفصل من بقية الموقع.",
+      "filtered-scope": "تنطبق فلاتر Search Console المحفوظة نفسها على الفترتين.",
+      "invalid-period": "تحتوي فترة محفوظة على تواريخ أو مدة غير صالحة.",
+      "inconsistent-totals": "تتجاوز مؤشرات الصفحة إجماليات الموقع المحفوظة؛ ويتعذر حساب المقارنة.",
+      "no-baseline": "لا توجد فترة محفوظة تنتهي قبل التدخل.",
+      "no-follow-up": "لا توجد فترة محفوظة تبدأ يوم التدخل أو بعده.",
+      "incomparable-scope": "أقرب الفترات لها خصائص أو فلاتر مختلفة أو لا تشمل عنوان URL.",
+      "period-length-mismatch": "تختلف مدة الفترتين بأكثر من 10٪.",
+      "rows-truncated": "صفوف الصفحات المحفوظة مقتطعة؛ وقد تكون مقارنة الصفحة غير مكتملة.",
+      "low-volume": "النقرات الأساسية أقل من 30؛ والحجم غير كافٍ لمقارنة موثوقة.",
+      "pending": "تاريخ التدخل في المستقبل؛ والتقييم قيد الانتظار."
+    }
   }
 }

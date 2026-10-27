@@ -1,8 +1,10 @@
 use crate::utils::provider_json::{read_provider_json, REPORT_JSON_LIMIT};
+use client::google_client;
 use mapping::map_pagespeed_response;
 use serde_json::{json, Value};
 use std::time::Duration;
 use validation::{google_metrics_key, target_url, validate_form_factor, validate_strategy};
+mod client;
 mod images;
 mod mapping;
 mod metrics;
@@ -27,11 +29,13 @@ pub async fn run_pagespeed_insights(
     strategy: String,
 ) -> Result<Value, String> {
     let api_key = google_metrics_key(&project_id)?;
-    let client = reqwest::Client::builder()
-        .timeout(Duration::from_secs(150))
-        .redirect(reqwest::redirect::Policy::limited(5))
-        .build()
-        .map_err(|_| "Unable to initialize the PageSpeed network client.".to_string())?;
+    let client = google_client(
+        reqwest::Client::builder()
+            .timeout(Duration::from_secs(150))
+            .redirect(reqwest::redirect::Policy::limited(5))
+            .build(),
+        "Unable to initialize the PageSpeed network client.",
+    )?;
     run_pagespeed_request(&url, &strategy, PAGESPEED_ENDPOINT, &api_key, &client).await
 }
 async fn run_pagespeed_request(
@@ -72,10 +76,12 @@ pub async fn query_crux_record(
     origin_scope: bool,
 ) -> Result<Value, String> {
     let api_key = google_metrics_key(&project_id)?;
-    let client = reqwest::Client::builder()
-        .timeout(Duration::from_secs(45))
-        .build()
-        .map_err(|_| "Unable to initialize the CrUX network client.".to_string())?;
+    let client = google_client(
+        reqwest::Client::builder()
+            .timeout(Duration::from_secs(45))
+            .build(),
+        "Unable to initialize the CrUX network client.",
+    )?;
     query_crux_request(
         &url,
         &form_factor,
@@ -125,25 +131,4 @@ async fn query_crux_request(
     response_json(response).await
 }
 #[cfg(test)]
-#[path = "pagespeed/image_tests.rs"]
-mod image_tests;
-#[cfg(test)]
-#[path = "pagespeed/mapping_tests.rs"]
-mod mapping_tests;
-#[cfg(test)]
-#[path = "pagespeed/touch_tests.rs"]
-mod touch_tests;
-#[cfg(test)]
-#[path = "pagespeed/transport_tests.rs"]
-mod transport_tests;
-#[cfg(test)]
-#[path = "pagespeed/validation_tests.rs"]
-mod validation_tests;
-#[cfg(test)]
-include!("pagespeed/command_request_tests.rs");
-#[cfg(test)]
-#[path = "pagespeed/command_tests.rs"]
-mod command_tests;
-#[cfg(test)]
-#[path = "pagespeed/metric_tests.rs"]
-mod metric_tests;
+include!("pagespeed/test_modules.rs");

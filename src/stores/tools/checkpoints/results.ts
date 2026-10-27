@@ -1,5 +1,6 @@
 import { SiteCrawlResult } from '@/types';
 import type { InterruptedCrawl } from '../contracts';
+import { crawlHealthScore, CRAWL_SCORE_VERSION } from '@/services/crawlHealthScore';
 
 export const checkpointUrl = (value: string): string => {
   try {
@@ -39,7 +40,7 @@ export const mergeCrawlResults = (base: SiteCrawlResult, fresh: SiteCrawlResult)
   const criticalCount = pages.flatMap((page) => page.issues || []).filter((issue) => issue.severity === 'Critical').length;
   const warningCount = pages.flatMap((page) => page.issues || []).filter((issue) => issue.severity === 'Warning').length;
   const noticeCount = pages.flatMap((page) => page.issues || []).filter((issue) => issue.severity === 'Info').length;
-  const healthScore = Math.max(20, 100 - Math.min(80, criticalCount * 15 + warningCount * 5));
+  const healthScore = crawlHealthScore(pages);
   const sitemapUrls = [...new Set([...(base.sitemap_urls || []), ...(fresh.sitemap_urls || [])])];
   const rejected = new Map<string, { url: string; reason: string }>();
   for (const item of [...(base.rejected_urls || []), ...(fresh.rejected_urls || [])]) rejected.set(`${item.url}\n${item.reason}`, item);
@@ -50,6 +51,7 @@ export const mergeCrawlResults = (base: SiteCrawlResult, fresh: SiteCrawlResult)
     start_url: base.start_url || fresh.start_url,
     pages_crawled: pages.length,
     health_score: healthScore,
+    score_version: CRAWL_SCORE_VERSION,
     critical_count: criticalCount,
     warning_count: warningCount,
     notice_count: noticeCount,

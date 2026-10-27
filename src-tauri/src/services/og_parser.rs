@@ -24,14 +24,8 @@ pub fn parse_social_tags(
         .og_description
         .or_else(|| page_description.map(|s| s.to_string()));
 
-    let final_tw_title = raw
-        .twitter_title
-        .or_else(|| final_og_title.clone())
-        .or_else(|| page_title.map(|s| s.to_string()));
-    let final_tw_desc = raw
-        .twitter_description
-        .or_else(|| final_og_desc.clone())
-        .or_else(|| page_description.map(|s| s.to_string()));
+    let final_tw_title = raw.twitter_title.or_else(|| final_og_title.clone());
+    let final_tw_desc = raw.twitter_description.or_else(|| final_og_desc.clone());
     let final_tw_image = raw.twitter_image.or_else(|| raw.og_image.clone());
 
     SocialTagsResult {

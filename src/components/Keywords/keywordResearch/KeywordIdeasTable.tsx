@@ -15,7 +15,7 @@ interface KeywordIdeasTableProps {
   t: TFunction;
 }
 
-const INTENT_MODES = ['all', 'Informational', 'Commercial', 'Transactional', 'Navigational'] as const;
+const INTENT_MODES = ['all', 'Informational', 'Commercial', 'Transactional', 'Navigational', 'Unknown'] as const;
 
 export const KeywordIdeasTable: React.FC<KeywordIdeasTableProps> = ({
   filteredResults,

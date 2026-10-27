@@ -4,7 +4,12 @@ import { Moon, Sun, Monitor, Bell } from 'lucide-react';
 import { useSettingsStore } from '@/stores/settingsStore';
 import { useProjectStore } from '@/stores/projectStore';
 import { isTauriEnvironment } from '@/services/tauri';
+import { HelpTip } from '@/components/Help/HelpTip';
 import { RenderWorkerPanel } from '@/components/Settings/RenderWorkerPanel';
+import { MonitoringAlertsPanel } from '@/components/Settings/MonitoringAlertsPanel';
+import { TeamPanel } from '@/components/Settings/TeamPanel';
+import { CmsPatchPanel } from '@/components/Settings/CmsPatchPanel';
+import { DataErasurePanel } from '@/components/Settings/DataErasurePanel';
 
 interface GeneralSettingsTabProps {
   auditNotificationsEnabled: boolean;
@@ -33,7 +38,7 @@ export const GeneralSettingsTab: React.FC<GeneralSettingsTabProps> = ({
   return (
     <div className="space-y-4 text-xs">
       <div>
-        <label className="font-semibold text-slate-300 block mb-2">{t('settings.theme')}</label>
+        <label className="font-semibold text-slate-300 mb-2 flex items-center gap-1">{t('settings.theme')} <HelpTip id="settings.theme" /></label>
         <div className="grid grid-cols-3 gap-2">
           <button onClick={() => setTheme('dark')} className={getThemeClass('dark')}><Moon className="w-4 h-4" /><span>{t('settings.dark')}</span></button>
           <button onClick={() => setTheme('light')} className={getThemeClass('light')}><Sun className="w-4 h-4" /><span>{t('settings.light')}</span></button>
@@ -45,7 +50,7 @@ export const GeneralSettingsTab: React.FC<GeneralSettingsTabProps> = ({
         <label className="flex items-start gap-3">
           <Bell className="mt-0.5 h-4 w-4 shrink-0 text-emerald-400" />
           <span className="min-w-0 flex-1">
-            <span className="block font-semibold text-slate-200">{t('settings.auditNotifications')}</span>
+            <span className="flex items-center gap-1 font-semibold text-slate-200">{t('settings.auditNotifications')} <HelpTip id="settings.auditNotifications" /></span>
             <span className="mt-1 block text-[11px] leading-5 text-slate-400">{t('settings.auditNotificationsDescription')}</span>
           </span>
           <input
@@ -60,7 +65,12 @@ export const GeneralSettingsTab: React.FC<GeneralSettingsTabProps> = ({
         {notificationStatus && <p role="status" className="mt-2 text-[11px] text-slate-400">{notificationStatus}</p>}
       </div>
 
+      <MonitoringAlertsPanel />
+
       <RenderWorkerPanel />
+      <TeamPanel />
+      <CmsPatchPanel />
+      <DataErasurePanel />
 
       <div>
         <label className="font-semibold text-slate-300 block mb-1">{t('settings.timeout')}</label>

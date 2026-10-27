@@ -49,3 +49,7 @@ pub(super) fn parse_dimension_token(value: &str) -> Option<usize> {
         .ok()
         .filter(|value| *value > 0 && *value <= 100_000)
 }
+
+#[cfg(test)]
+#[path = "image_format_tests.rs"]
+mod tests;

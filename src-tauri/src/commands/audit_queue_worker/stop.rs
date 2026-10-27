@@ -45,3 +45,7 @@ pub(super) fn handle_stop_requested<R: tauri::Runtime>(
     }
     Ok(())
 }
+
+#[cfg(test)]
+#[path = "stop_publish_tests.rs"]
+mod publish_tests;

@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-
+import type { CrawledPageSummary } from '@/types';
 import { buildSemanticMap } from '@/services/semanticMap';
 import { createEmptyTopicalMap, createTopicalNode, importCrawlClusters, normalizeTopicalMap, parseManualTopicalQueries, readTopicalMap, setTopicalNodeParent, topicalMapStorageKey, topicalCalendarDays, shiftTopicalCalendarMonth, toggleTopicalLateralRelation, writeTopicalMap } from '@/services/topicalMap';
 import { pages, storage } from "./fixtures/topicalMapContracts";
@@ -86,5 +86,17 @@ it('builds Monday-first calendar grids across month and year boundaries', () => 
     expect(februaryLeapYear.some((day) => day.date === '2028-02-29' && day.inCurrentMonth)).toBe(true);
     expect(shiftTopicalCalendarMonth('2026-12', 1)).toBe('2027-01');
     expect(shiftTopicalCalendarMonth('2027-01', -1)).toBe('2026-12');
+  });
+
+  it('keeps one evidence term per word when cluster pages use different inflections', () => {
+    const polish = [
+      { url: 'https://example.com/a', final_url: 'https://example.com/a', title: 'A', document_language: 'pl', semantic_terms: ['szkolenia', 'navigatora', 'sprzedaży'], semantic_links: [] },
+      { url: 'https://example.com/b', final_url: 'https://example.com/b', title: 'B', document_language: 'pl', semantic_terms: ['szkolenie', 'navigator', 'sprzedaż'], semantic_links: [] },
+    ] as unknown as CrawledPageSummary[];
+    const graph = buildSemanticMap(polish, polish[0].url);
+
+    const node = importCrawlClusters(createEmptyTopicalMap(), graph, polish, 'run-pl').nodes[0];
+
+    expect(node.evidenceTerms).toEqual(['szkolenia', 'navigatora', 'sprzedaży']);
   });
 });

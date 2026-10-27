@@ -55,14 +55,31 @@ pub(crate) async fn wait_for_crawl_delay(
     last_request_at: Instant,
     delay: std::time::Duration,
 ) -> bool {
-    while let Some(remaining) = delay.checked_sub(last_request_at.elapsed()) {
+    let last_request_at = tokio::time::Instant::from_std(last_request_at);
+    let mut paused_for = std::time::Duration::ZERO;
+    while let Some(remaining) = delay
+        .checked_sub(last_request_at.elapsed().saturating_sub(paused_for))
+        .filter(|remaining| !remaining.is_zero())
+    {
         if control.is_cancelled(run_id) {
             return false;
         }
-        if control.is_paused(run_id) && !control.wait_until_resumed(run_id).await {
-            return false;
+        if control.is_paused(run_id) {
+            let paused_at = tokio::time::Instant::now();
+            if !control.wait_until_resumed(run_id).await {
+                return false;
+            }
+            paused_for += paused_at.elapsed();
+            continue;
         }
         tokio::time::sleep(remaining.min(std::time::Duration::from_millis(100))).await;
     }
     !control.is_cancelled(run_id)
 }
+
+#[cfg(test)]
+#[path = "crawl_delay_gap_tests.rs"]
+mod gap_tests;
+#[cfg(test)]
+#[path = "crawl_delay_tests.rs"]
+mod tests;

@@ -84,3 +84,7 @@ pub(super) fn validate(
         }
     }
 }
+
+#[cfg(test)]
+#[path = "breadcrumblist_branch_tests.rs"]
+mod branch_tests;

@@ -33,4 +33,13 @@ describe('direct language picker pointer selection', () => {
     expect(change).not.toHaveBeenCalled();
     expect(input.value).toBe('impossible-language');
   });
+
+  it('closes dropdown on click outside', () => {
+    render(<DataForSeoLanguagePicker value="de" market={dataForSeoMarket('CH')} onChange={vi.fn()} ariaLabel="Language" />);
+    const input = screen.getByRole('combobox', { name: 'Language' });
+    fireEvent.focus(input);
+    expect(screen.getByRole('listbox')).toBeDefined();
+    fireEvent.pointerDown(document.body);
+    expect(screen.queryByRole('listbox')).toBeNull();
+  });
 });

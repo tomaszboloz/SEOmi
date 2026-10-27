@@ -53,6 +53,21 @@ async fn public_performance_command_rejects_bad_range_and_filters_before_credent
 }
 
 #[tokio::test]
+async fn public_performance_command_validates_and_attempts_token_refresh() {
+    let err = search_console_performance(
+        "fixture-project".into(),
+        CLIENT_ID.into(),
+        "https://fixture.test".into(),
+        Some("2026-01-01".into()),
+        Some("2026-01-02".into()),
+        None,
+    )
+    .await
+    .unwrap_err();
+    assert!(err.contains("Search Console refresh token") || err.contains("credential store"));
+}
+
+#[tokio::test]
 async fn endpoint_helper_maps_queries_pages_totals_daily_and_pairs() {
     let (endpoint, server) = performance_fixture::fixture().await;
     let output = search_console_performance_at(

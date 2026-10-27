@@ -61,6 +61,18 @@ describe('CrawlLinksTab modular architecture', () => {
     const setQuery = vi.fn();
     const setDescending = vi.fn();
 
+    const sampleLink = {
+      sourceUrl: 'https://site.com',
+      link: {
+        url: 'https://site.com/about',
+        target_url: 'https://site.com/about',
+        text: 'About',
+        is_internal: true,
+        target_http_status: 200,
+      } as any,
+      key: 'link-1',
+    };
+
     render(
       <CrawlLinksFilters
         linkQuery="test"
@@ -74,8 +86,8 @@ describe('CrawlLinksTab modular architecture', () => {
         linkDescending={false}
         setLinkDescending={setDescending}
         navigationRunId="run-1"
-        links={[]}
-        allLinks={[]}
+        links={[sampleLink]}
+        allLinks={[sampleLink]}
         t={mockT}
       />,
     );
@@ -87,5 +99,13 @@ describe('CrawlLinksTab modular architecture', () => {
     const descBtn = screen.getByRole('button', { name: 'crawl.ui.ascending' });
     fireEvent.click(descBtn);
     expect(setDescending).toHaveBeenCalled();
+
+    const filenames: string[] = [];
+    const download = vi.spyOn(HTMLAnchorElement.prototype, 'click').mockImplementation(function (this: HTMLAnchorElement) { filenames.push(this.download); });
+    const exportBtn = screen.getByRole('button', { name: 'crawl.ui.exportViewCsv' });
+    try {
+      fireEvent.click(exportBtn);
+      expect(filenames).toEqual(['seomi-crawl-links-run-1.csv']);
+    } finally { download.mockRestore(); }
   });
 });

@@ -1,11 +1,13 @@
 import type { GscPerformanceData } from '@/types';
 import type { GscPerformanceSnapshot } from './types';
-import { MAX_STORED_GSC_ROWS_PER_DIMENSION } from './limits';
+import { MAX_STORED_GSC_DAILY_ROWS, MAX_STORED_GSC_ROWS_PER_DIMENSION } from './limits';
 import { normalizedFilters } from './filters';
 
 export const snapshotGscPerformance = (data: GscPerformanceData, capturedAt = new Date().toISOString()): GscPerformanceSnapshot => {
   const queries = data.queries.slice(0, MAX_STORED_GSC_ROWS_PER_DIMENSION).map(row => ({ ...row }));
   const pages = data.pages.slice(0, MAX_STORED_GSC_ROWS_PER_DIMENSION).map(row => ({ ...row }));
+  const daily = data.daily?.map(row => ({ ...row })).sort((left, right) => left.date.localeCompare(right.date))
+    .slice(0, MAX_STORED_GSC_DAILY_ROWS);
   const joint = data.query_pages?.slice(0, MAX_STORED_GSC_ROWS_PER_DIMENSION).map(row => ({ ...row }));
   return {
     id: `${data.site_url}|${data.start_date}|${data.end_date}|${JSON.stringify(normalizedFilters(data.filters))}`,
@@ -20,6 +22,8 @@ export const snapshotGscPerformance = (data: GscPerformanceData, capturedAt = ne
     avg_position: data.avg_position,
     queries,
     pages,
+    ...(daily ? { daily, daily_may_be_truncated: data.daily_may_be_truncated === true
+      || data.daily.length > MAX_STORED_GSC_DAILY_ROWS } : {}),
     ...(joint ? { query_pages: joint,
       query_pages_may_be_truncated: data.query_pages_may_be_truncated === true
         || data.query_pages!.length > MAX_STORED_GSC_ROWS_PER_DIMENSION,

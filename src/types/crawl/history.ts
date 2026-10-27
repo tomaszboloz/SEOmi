@@ -19,7 +19,11 @@ export type CrawlEnvironment = 'default' | 'staging' | 'production';
 
 export interface CrawlRunRecord {
   id: string;
+  /** Project ownership is persisted so cross-project comparisons fail closed. */
+  projectId?: string;
   completedAt: string;
+  /** ISO timestamp when crawl was started; used to sequence next-crawl task verification. */
+  startedAt?: string;
   startUrl: string;
   config: CrawlConfig;
   result: SiteCrawlResult;

@@ -16,6 +16,7 @@ async fn test_fetch_result_model() {
         status: 200,
         response_time_ms: 120,
         headers: HashMap::from([("content-type".to_string(), "text/html".to_string())]),
+        repeated_headers: HashMap::new(),
         set_cookie_headers: Vec::new(),
         redirect_chain: Vec::new(),
         body: "<html><head><title>Test</title></head></html>".to_string(),
@@ -115,4 +116,11 @@ async fn head_deadline_includes_dns_and_preserves_response_status() {
         .0,
         404
     );
+}
+
+#[tokio::test]
+async fn resolve_public_addresses_reports_dns_lookup_failure_for_invalid_domain() {
+    let url = Url::parse("https://non-existent-domain.invalid/").unwrap();
+    let error = resolve_public_addresses(&url).await.unwrap_err();
+    assert!(error.to_string().contains("DNS lookup failed"));
 }

@@ -17,6 +17,21 @@ fn srcset_parser_preserves_candidate_commas_inside_data_urls_and_reads_descripto
 }
 
 #[test]
+fn srcset_parser_handles_empty_candidates_trailing_commas_and_parenthesized_commas() {
+    assert_eq!(parse_srcset_urls(" \t,\n , "), Vec::<String>::new());
+    assert_eq!(
+        parse_srcset_urls("one.webp, two.webp 1x"),
+        vec!["one.webp", "two.webp"]
+    );
+    assert_eq!(parse_srcset_urls("one.webp,"), vec!["one.webp"]);
+    assert_eq!(
+        parse_srcset_urls("one.webp 1x(foo,bar), two.webp"),
+        vec!["one.webp", "two.webp"]
+    );
+    assert_eq!(parse_srcset_urls("terminal.webp"), vec!["terminal.webp"]);
+}
+
+#[test]
 fn resource_crawl_only_enables_explicitly_selected_resource_types() {
     let mut config = crawl_config_for_test();
     config.crawl_images = true;

@@ -5,6 +5,7 @@ import type { AiProvider, AiCliStatus, AiConnectionState } from '@/types';
 import type { ProviderDefinition } from './subscriptionModalTypes';
 import { ProviderMethodButtons } from './ProviderMethodButtons';
 import { ProviderActiveControls } from './ProviderActiveControls';
+import { SecretKeyField } from '@/components/Auth/SecretKeyField';
 
 interface SubscriptionProviderCardProps {
   item: ProviderDefinition;
@@ -17,7 +18,7 @@ interface SubscriptionProviderCardProps {
   saving: boolean;
   onSetProvider: (id: AiProvider) => void;
   onSetMethod: (id: AiProvider, method: 'local_cli' | 'api_key') => void;
-  onSaveKey: (id: AiProvider, key: string) => void;
+  onSaveKey: (id: AiProvider, key: string) => Promise<void>;
   onTestConnection: (id: AiProvider) => void;
   t: TFunction;
 }
@@ -88,14 +89,12 @@ export const SubscriptionProviderCard: React.FC<SubscriptionProviderCardProps> =
       />
 
       {method === 'api_key' && (
-        <div className="mt-3 flex flex-col gap-2 sm:flex-row">
-          <input
-            aria-label={t('auth.apiKeyLabel', { provider: t(item.nameKey) })}
-            type="password"
-            value={apiKey}
-            onChange={(event) => void onSaveKey(item.id, event.target.value)}
-            placeholder={t('auth.apiKeyPlaceholder')}
-            className="h-9 flex-1 rounded-lg border border-slate-700 bg-slate-950 px-3 font-mono text-xs text-white"
+        <div className="mt-3 flex flex-col gap-2 sm:flex-row sm:items-start">
+          <SecretKeyField
+            label={t('auth.apiKeyLabel', { provider: t(item.nameKey) })}
+            stored={Boolean(apiKey.trim())}
+            onSave={(value) => onSaveKey(item.id, value)}
+            inputClassName="h-9 min-w-0 flex-1 rounded-lg border border-slate-700 bg-slate-950 px-3 font-mono text-xs text-white"
           />
           <a
             href={item.apiHelp}

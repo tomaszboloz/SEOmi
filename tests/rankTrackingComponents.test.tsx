@@ -5,6 +5,8 @@ import { RankTrackingHeader } from '@/components/Keywords/rankTracking/RankTrack
 import { RankTrackingStatsCards } from '@/components/Keywords/rankTracking/RankTrackingStatsCards';
 import { RankTrackingTableRow } from '@/components/Keywords/rankTracking/RankTrackingTableRow';
 import { RankTrackingAddModal } from '@/components/Keywords/rankTracking/RankTrackingAddModal';
+import { RankTracking } from '@/components/Keywords/RankTracking';
+import { useToolsStore } from '@/stores/toolsStore';
 import { codeFiles, maxLocReport } from '../scripts/check-max-loc.mjs';
 
 const mockT = ((key: string, opts?: any) => {
@@ -110,5 +112,20 @@ describe('RankTracking modular architecture', () => {
     expect(screen.getByText('rankTrackingUi.trackNew')).toBeTruthy();
     fireEvent.click(screen.getByRole('button', { name: /rankTrackingUi.cancel/i }));
     expect(onClose).toHaveBeenCalled();
+  });
+
+  it('renders RankTracking with error and opens/closes add modal', () => {
+    useToolsStore.setState({
+      rankError: 'Sample rank error message',
+      trackedRanks: [],
+    });
+    render(<RankTracking />);
+    expect(screen.getByText('Sample rank error message')).toBeTruthy();
+
+    const openModalBtn = screen.getByRole('button', { name: /track keyword|rankTrackingUi\.trackKeyword/i });
+    fireEvent.click(openModalBtn);
+
+    const cancelBtn = screen.getByRole('button', { name: /cancel|rankTrackingUi\.cancel/i });
+    fireEvent.click(cancelBtn);
   });
 });

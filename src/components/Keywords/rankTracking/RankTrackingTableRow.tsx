@@ -71,7 +71,7 @@ export const RankTrackingTableRow: React.FC<RankTrackingTableRowProps> = ({
           }`}
         >
           {r.current_rank !== null
-            ? (r.current_rank > 100 ? t('rankTrackingUi.outsideTop100', 'Outside top 100') : `#${r.current_rank}`)
+            ? (r.current_rank > 100 ? t('rankTrackingUi.outsideTop100') : `#${r.current_rank}`)
             : t('rankTrackingUi.notChecked')}
         </span>
       </td>

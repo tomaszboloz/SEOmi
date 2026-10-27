@@ -1,5 +1,6 @@
 import type { TopicalAuditContext } from './types';
 import { addFinding, semanticText, termCoverage } from './evidence';
+import { isSemanticTopicalStatus } from '@/services/semanticText';
 
 export const auditTopicLifecycle = (context: TopicalAuditContext, now: Date) => {
   const { document, pagesByTopic, findings } = context;
@@ -29,6 +30,7 @@ export const auditTopicLifecycle = (context: TopicalAuditContext, now: Date) => 
       evidence: unhealthy.slice(0, 20).map((page) => semanticText('httpEvidence', { url: page.url, status: page.http_status })), confidence: 'moderate',
     });
     for (const page of topicPages) {
+      if (!isSemanticTopicalStatus(page.http_status)) continue;
       const coverage = termCoverage(node.title, page);
       if (!coverage || coverage.matched.length === coverage.expected.length) continue;
       const coveragePercent = Math.round(coverage.matched.length / coverage.expected.length * 100);

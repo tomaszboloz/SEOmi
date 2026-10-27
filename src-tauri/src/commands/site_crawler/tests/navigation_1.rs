@@ -111,6 +111,11 @@ fn pagination_query_changes_preserve_duplicate_parameter_values() {
         pagination_query_changes(&source, &target),
         vec!["tag: one, two → one, three"]
     );
+    let empty_target = url::Url::parse("https://example.com/items").unwrap();
+    assert_eq!(
+        pagination_query_changes(&source, &empty_target),
+        vec!["sort: asc → ∅", "tag: one, two → ∅"]
+    );
 }
 
 #[test]

@@ -1,4 +1,79 @@
 {
+  "cmsPanelUi": {
+    "title": "安全的 CMS 修改",
+    "description": "替换一个标题下的内容。准备并批准确切的差异，先试运行，再应用。修改任何输入都会取消批准。",
+    "kind": "CMS 类型",
+    "baseUrl": "CMS 基础网址（HTTPS）",
+    "contentId": "内容 ID",
+    "credential": "已保存的凭据名称（可选）",
+    "credentialHelp": "使用系统凭据库中包含 Authorization 请求头的 cms_auth_ 凭据。留空表示匿名请求。请勿在此输入密钥。",
+    "collection": "Strapi 集合",
+    "heading": "要查找的标题",
+    "replacement": "新的章节内容（HTML 或 Markdown）",
+    "ymyl": "健康、金融或法律内容（YMYL）",
+    "factGate": "此确切差异所需的事实核查已通过",
+    "diff": "拟议差异",
+    "revision": "源版本：{{revision}}",
+    "noChanges": "没有更改。请先修改替换内容再应用。",
+    "prepare": "准备差异",
+    "approve": "我批准此确切差异",
+    "dryRun": "执行试运行",
+    "apply": "应用已批准的差异",
+    "busy": "正在处理 CMS 修改…",
+    "noProject": "请选择活动项目以准备 CMS 修改。",
+    "desktopOnly": "CMS 请求仅在桌面应用中可用。",
+    "failed": "CMS 修改失败：{{reason}}"
+  },
+  "teamPanelUi": {
+    "title": "团队模式与审计日志",
+    "description": "选择谁以何种角色操作。每次变更都会追加到本地防篡改的哈希链审计日志中。",
+    "actor": "操作者",
+    "role": "角色",
+    "roles": {
+      "admin": "管理员",
+      "seo_strategist": "SEO 策略师",
+      "content_writer": "内容撰写者",
+      "developer": "开发者"
+    },
+    "permissions": {
+      "run_crawl": "运行抓取",
+      "execute_cms_patch": "执行 CMS 补丁",
+      "modify_site_focus_rules": "修改 Site Focus 规则",
+      "export_audit_pdf": "导出审计 PDF",
+      "manage_team_roles": "管理团队角色"
+    },
+    "permissionsTitle": "权限",
+    "auditTitle": "审计日志",
+    "auditEmpty": "暂无审计条目。",
+    "chainOk": "审计链已验证。",
+    "chainBroken": "审计链在第 {{entry}} 条处中断（{{reason}}）。",
+    "exportCsv": "导出 CSV",
+    "columns": {
+      "time": "时间",
+      "actor": "操作者",
+      "action": "操作",
+      "result": "结果"
+    },
+    "results": {
+      "success": "成功",
+      "denied": "已拒绝",
+      "failure": "失败",
+      "dry_run": "试运行"
+    },
+    "allowed": "允许",
+    "notAllowed": "不允许"
+  },
+  "dataErasureUi": {
+    "title": "清除项目数据（GDPR）",
+    "description": "通过销毁加密密钥，从本地存储中永久删除此项目的抓取记录、嵌入向量和历史。此操作无法撤销。",
+    "confirm": "请输入项目 ID 以确认：{{id}}",
+    "button": "清除项目数据",
+    "run": "永久清除",
+    "cancel": "取消",
+    "done": "已清除：{{records}} 条记录和 {{runs}} 次抓取。",
+    "failed": "清除失败：{{message}}",
+    "desktopOnly": "仅在桌面应用中可用。"
+  },
   "schemaFindings": {
     "messageMissing": "结构化数据规则 {{code}} 检测到 {{type}} 缺少属性或结构元素。",
     "messageInvalid": "结构化数据规则 {{code}} 检测到 {{type}} 的值或形状无效。",
@@ -15,6 +90,31 @@
     "severityWarning": "警告",
     "severityInfo": "信息",
     "sourceEvidence": "源证据"
+  },
+  "copilotPatcherUi": {
+    "title": "上下文 Copilot 补丁",
+    "description": "根据此页面的抓取证据生成修改前后提案。复制前请审核；不会修改 CMS。",
+    "contextUnavailable": "缺少页面标题证据，补丁工具正在等待新的抓取结果。",
+    "generate": "建议补丁",
+    "generating": "生成中...",
+    "cancel": "取消",
+    "before": "修改前",
+    "after": "修改后",
+    "pending": "等待审核；尚未进行任何修改。",
+    "factGate": "页面没有匹配来源，事实网关删除了 {{count}} 个句子。",
+    "remote": "页面文本已发送给所选 AI 提供商。",
+    "local": "所选 AI 运行器在此设备上运行。",
+    "approve": "批准复制",
+    "reject": "拒绝",
+    "approved": "已批准复制；CMS 未被修改。",
+    "copy": "复制已批准文本",
+    "rejected": "提案已拒绝。",
+    "keyboard": "键盘：Tab 在控件间移动，Enter 激活当前焦点控件。",
+    "no-provider": "请求补丁前请连接 AI 提供商。",
+    "empty-response": "AI 未返回可用补丁。",
+    "provider-error": "AI 请求失败：{{message}}",
+    "ownership": "项目已不再处于活动状态；请求已停止。",
+    "unavailable": "该段落没有可用的源文本。"
   },
   "app": {
     "name": "SEOmi",
@@ -169,7 +269,7 @@
       "urlTooLong": "The URL cannot exceed 2048 characters.",
       "urlInvalid": "Enter a complete URL beginning with http:// or https://.",
       "urlPublicOnly": "Schedules accept only a public HTTP(S) URL without credentials.",
-      "crawlLimit": "The scheduled crawl limit must be between 1 and 500 URLs.",
+      "crawlLimit": "The scheduled crawl limit must be between 1 and {{max}} URLs.",
       "maxReached": "A project can have at most {{count}} schedules.",
       "duplicate": "This URL already has a schedule in the project.",
       "auditFailed": "The audit failed."
@@ -589,7 +689,8 @@
       "responseHidden": "Provider response withheld.",
       "invalidResponse": "The AI provider returned an invalid response.",
       "responseTooLarge": "The AI provider response exceeds the 1 MiB limit.",
-      "refused": "{{provider}} 拒绝了此请求。请换种说法或选择其他模型。"
+      "refused": "{{provider}} 拒绝了此请求。请换种说法或选择其他模型。",
+      "modelRejected": "{{provider}} 未接受针对模型 {{model}} 的请求（HTTP {{status}}）。请选择其他模型。"
     },
     "pagespeed": {
       "projectRequired": "Choose a project before starting the measurement."
@@ -1134,6 +1235,7 @@
     "tabEntity": "Entity graph",
     "tabLinks": "Internal links",
     "tabSchema": "JSON-LD schema",
+    "tabSignals": "信号",
     "saveError": "Unable to save the topical map in local storage. It remains visible until the view closes; check application storage availability.",
     "preferencesSaveError": "Unable to remember the topical map view and filters in this project.",
     "entityTitle": "Project entity",
@@ -1410,6 +1512,45 @@
     "searchVolume": "Search volume",
     "addedAt": "Added at"
   },
+  "googleSuggestionsUi": {
+    "title": "Google 建议",
+    "description": "从免费的 Google Suggest 接口发现相关查询。",
+    "query": "查询",
+    "byteCount": "{{count}}/500 UTF-8 字节",
+    "fetch": "获取建议",
+    "selectProject": "请先选择项目再获取建议。",
+    "blocked": "Google Suggest 暂时不可用。",
+    "error": "无法加载 Google 建议。",
+    "provenance": "来源：Google Suggest（非官方，尽力而为）。",
+    "context": "请求上下文：{{geo}} / {{language}}。这不能证明结果的本地化。",
+    "retrievedAt": "获取时间：{{timestamp}}。",
+    "empty": "未返回建议。",
+    "saved": "已保存",
+    "save": "保存",
+    "importTitle": "导入建议",
+    "importDescription": "导入本地 JSON 或 CSV 列表。指标和意图仍然未知。",
+    "importFormat": "导入格式",
+    "importSourceUrl": "来源 URL（可选）",
+    "importPayload": "建议数据",
+    "import": "导入",
+    "importedAt": "导入时间：{{timestamp}} · {{count}} 条建议。",
+    "json": "JSON",
+    "csv": "CSV",
+    "sourcePlaceholder": "https://...",
+    "evidenceTitle": "抓取证据",
+    "evidenceNoCrawl": "没有此项目的抓取证据。",
+    "evidencePartial": "证据来自部分抓取；可能缺少页面。",
+    "evidenceObserved": "已观察到此项目的抓取证据。",
+    "evidenceNoMatch": "标题或语义术语中没有观察到匹配证据。",
+    "evidenceRun": "运行 {{run}} · 已观察 {{count}} 个页面。",
+    "evidenceLanguage": "证据语言：{{language}}。",
+    "evidenceInvalidTimestamp": "已忽略完成时间无效的抓取记录。",
+    "evidenceTruncated": "证据已限制：省略 {{pages}} 个页面、{{suggestions}} 条建议和 {{matches}} 个页面匹配。",
+    "intentUncertain": "{{intent}}（不确定）",
+    "intentSignals": "词汇信号：{{signals}}",
+    "evidenceTitleMatch": "标题",
+    "evidenceTermsMatch": "语义术语"
+  },
   "rankTrackingUi": {
     "badge": "Keyword workflows",
     "provider": "SERP position monitor",
@@ -1480,7 +1621,8 @@
       "informational": "Informational",
       "commercial": "Commercial",
       "transactional": "Transactional",
-      "navigational": "Navigational"
+      "navigational": "Navigational",
+      "unknown": "未知"
     },
     "saved": "Saved",
     "addSaved": "Add to saved keywords",
@@ -1504,6 +1646,37 @@
     "save": "Save",
     "researchTag": "Research"
   },
+  "trendingNowUi": {
+    "badge": "Trending Now",
+    "title": "Country trends",
+    "description": "Use the free Google Trends RSS feed or import a real CSV/JSON export. Traffic labels remain source text; no search volume is inferred.",
+    "freeSource": "Free RSS / import",
+    "countryLabel": "Country",
+    "refresh": "Refresh feed",
+    "importFile": "Import CSV or JSON",
+    "importLimit": "Files up to {{size}}",
+    "clear": "Clear saved snapshot",
+    "empty": "No snapshot for this project yet.",
+    "selectProjectError": "Select a project to use Trending Now.",
+    "storageUnavailable": "The snapshot is visible in memory, but project storage is unavailable.",
+    "payloadTooLarge": "The selected file exceeds the 1 MiB limit.",
+    "unsupportedImport": "Choose a .csv or .json file.",
+    "fetchError": "The free Trends feed could not be loaded.",
+    "importError": "The import could not be read.",
+    "countryValue": "Country: {{geo}}",
+    "sourceValue": "Source: {{source}}",
+    "capturedValue": "Captured: {{time}}",
+    "entryCount": "Entries: {{count}}",
+    "keyword": "Trend",
+    "trafficLabel": "Source traffic label",
+    "startedAt": "Source time",
+    "notProvided": "Not provided",
+    "source": {
+      "rss": "Google Trends RSS",
+      "csv": "CSV import",
+      "json": "JSON import"
+    }
+  },
   "mapUi": {
     "edgeSimilarityAria": "Content similarity {{percent}}%, shared terms: {{terms}}",
     "nodeAria": "{{label}}，集群 {{cluster}}",
@@ -1523,7 +1696,9 @@
       "directory": "URL tree",
       "directoryDescription": "URL hierarchy in this run",
       "plan": "Topical plan",
-      "planDescription": "Topics and semantic audit"
+      "planDescription": "Topics and semantic audit",
+      "diagnosis": "诊断",
+      "diagnosisDescription": "哪些好、哪些弱、该修什么"
     },
     "graph": {
       "fullTitle": "Full link graph map",
@@ -1634,7 +1809,86 @@
     "bottomTablistAria": "Map views in bottom bar",
     "goToView": "Go to {{view}} view",
     "backToMapStart": "Return to map start",
-    "start": "Start"
+    "start": "Start",
+    "graphEvidence": {
+      "sectionAria": "语义图结构与 Search Console 证据",
+      "title": "图结构与 GSC 证据",
+      "description": "PageRank 描述抓取到的链接结构。Search Console 指标单独显示，只有活动项目、资源、时间段和筛选条件都匹配时才会合并。",
+      "structureAria": "结构 PageRank",
+      "structureTitle": "结构 PageRank",
+      "structureMeta": "{{iterations}} 次迭代 · {{status}}",
+      "converged": "已收敛",
+      "bounded": "已达到迭代上限",
+      "structureNote": "这是图信号，不是 Google 排名或流量指标。",
+      "structurePartial": "图数据受到限制；结构 PageRank 仅涵盖保留的页面和链接。",
+      "noNodes": "结构图没有可用的已抓取页面。",
+      "trafficAria": "Google Search Console 流量证据",
+      "trafficTitle": "Search Console 流量证据",
+      "status": {
+        "complete": "匹配的 GSC 行",
+        "partial": "GSC 行不完整；缺失值仍为未知",
+        "unavailable": "GSC 证据不可用",
+        "invalid": "GSC 证据范围不匹配"
+      },
+      "project": "项目",
+      "property": "资源",
+      "period": "时间段",
+      "filters": "筛选条件",
+      "allFilters": "所有已选筛选条件",
+      "noSelection": "请选择真实的 Search Console 资源并加载此项目的数据，以合并流量证据。",
+      "counts": "已观测：{{observed}} · 不确定/截断：{{uncertain}} · 未知：{{missing}}",
+      "trafficNote": "— 表示没有观测值。未知和截断的行绝不会按零处理。",
+      "partialNotice": "流量证据不完整，因为部分源行被截断或拒绝；未知值仍保持未知。",
+      "invalidNotice": "由于 GSC 范围或源行不匹配，流量证据被拒绝。",
+      "rowQuality": "源行：无效 {{invalid}} · 在所选资源之外 {{ignored}}",
+      "observation": {
+        "gsc": "已观测",
+        "missing": "未知",
+        "truncated": "已截断",
+        "unavailable": "不可用",
+        "invalid": "无效",
+        "out-of-scope": "资源范围之外",
+        "ambiguous": "不明确"
+      }
+    },
+    "diagnosisFilter": "诊断范围：{{label}}",
+    "clearDiagnosisFilter": "显示整个图",
+    "allTopics": "全部主题（{{count}}）",
+    "cy": {
+      "layoutLabel": "布局",
+      "layoutHierarchy": "层级",
+      "layoutForce": "力导向",
+      "sectionsLabel": "URL 分区",
+      "expandAll": "全部展开",
+      "collapseAll": "全部折叠",
+      "highlightLabel": "高亮 URL",
+      "highlightPlaceholder": "URL 或标题的一部分",
+      "matches": "匹配：{{count}}",
+      "depthLabel": "深度",
+      "depthAll": "所有深度",
+      "problemsOnly": "仅问题页",
+      "statusLabel": "HTTP 状态",
+      "colorTrs": "颜色：主题相关性 (TRS)",
+      "colorStatus": "颜色：HTTP 状态（无 TRS）",
+      "sizeHint": "大小 = 入站链接",
+      "mapAria": "按 URL 分区分组的交互式网站架构图",
+      "mapHelp": "点击分区可展开或折叠，点击页面查看详情；拖动平移，滚轮或双指缩放。大型网站默认折叠各分区。地图下方提供包含相同页面的表格。",
+      "tooltip": "HTTP {{status}} · 深度 {{depth}} · {{inlinks}} 个入站链接",
+      "detailsHint": "在地图或表格中选择页面以查看详情。",
+      "detailsTitle": "页面详情",
+      "colUrl": "URL",
+      "colStatus": "HTTP 状态",
+      "colDepth": "深度",
+      "colInlinks": "入站链接",
+      "colTrs": "TRS",
+      "colSection": "分区",
+      "colProblem": "问题",
+      "noTrs": "无",
+      "yes": "是",
+      "no": "否",
+      "tableSummary": "页面表格（{{count}}）",
+      "tableCaption": "架构图中显示的页面，含状态、深度、入站链接、TRS 与分区"
+    }
   },
   "crawlDiff": {
     "fields": {
@@ -1915,6 +2169,8 @@
     "exportJson": "JSON",
     "exportCsv": "CSV",
     "exportPdf": "PDF",
+    "exportHtml": "HTML",
+    "exportHelp": "Export the saved audit snapshot as JSON, CSV, PDF or sanitized HTML.",
     "healthScore": "健康评分",
     "criticalIssues": "严重问题",
     "warnings": "警告提示",
@@ -2113,7 +2369,12 @@
       "resources": "资源",
       "frames": "框架",
       "custom-search": "自定义搜索",
-      "semantic": "语义分析"
+      "semantic": "语义分析",
+      "focus": "站点聚焦度",
+      "authority": "主题权威度",
+      "aio": "AI 就绪度",
+      "trust": "实体信任度",
+      "offPage": "站外分析"
     },
     "environmentStaging": "test/staging",
     "environmentProduction": "production",
@@ -2143,7 +2404,7 @@
     "renderDelayAria": "Render delay in milliseconds",
     "lazyScroll": "Lazy-load scroll cycles",
     "lazyScrollAria": "Number of lazy-load scroll cycles",
-    "browserModeNotice": "Browser mode analyzes the DOM after JavaScript execution. Custom User-Agent is also used for robots.txt. The selected profile may inject ordinary session cookies into an isolated WebView; HttpOnly and full cookie-store import are unavailable. Additional headers and proxy require HTTP mode. X-Robots-Tag and Cache-Control headers are unavailable from rendered DOM.",
+    "browserModeNotice": "Browser mode analyzes the DOM after JavaScript execution. Custom User-Agent is also used for robots.txt. The selected profile may inject ordinary session cookies into an isolated WebView; HttpOnly and full cookie-store import are unavailable. Additional headers and proxy require HTTP mode. The HTTP status, response headers such as X-Robots-Tag and Cache-Control, and redirect hops come from a separate HTTP request for the same URL. A page that cannot be rendered is analyzed from that raw HTML and marked with a warning.",
     "renderProfileWarning": "The selected profile contains custom headers or a proxy. Rendered mode uses only its cookies — choose HTTP or a cookie-only profile.",
     "resourcesTitle": "Resources fetched during the crawl",
     "resourcesDescription": "Only resources discovered in the current scope. Status and size come from real HTTP responses.",
@@ -2158,12 +2419,13 @@
     "comparisonSelectPlaceholder": "Choose baseline run",
     "comparisonPathLabel": "Match by path (test ↔ production)",
     "comparisonPathNotice": "Hosts are ignored and tracking parameters removed; path and remaining query stay part of the key. This is a snapshot comparison, not proof of environment equivalence.",
+    "comparisonGuard": "比较状态：{{status}} · 原因：{{reasons}}",
     "comparisonAdded": "New URLs",
-    "comparisonRemoved": "Removed URLs",
+    "comparisonRemoved": "未观察到的 URL",
     "comparisonChanged": "Changed URLs",
     "comparisonNoDifferences": "No differences in compared fields.",
     "comparisonAddedLabel": "Added",
-    "comparisonRemovedLabel": "Removed",
+    "comparisonRemovedLabel": "未观察到",
     "comparisonChangedLabel": "Changed",
     "healthScore": "Health score",
     "healthIndex": "Site-wide health index",
@@ -2268,6 +2530,7 @@
     "profileNamePlaceholder": "e.g. Editorial account",
     "sessionCookies": "Session cookies",
     "proxyOptional": "(optional; credentials in the URL remain in the system vault)",
+    "proxyListHint": "多个代理：用逗号或空格分隔（最多 64 个）。请求将在其间轮换。",
     "customHeaders": "Custom headers",
     "oneHeaderPerLine": "(one per line: Name: value)",
     "saving": "Saving…",
@@ -2318,8 +2581,10 @@
     "remove": "Remove",
     "reportSectionsLegend": "JSON/PDF sections",
     "reportTemplateDescription": "The summary is always included. The template affects JSON and PDF; CSV exports remain full evidence tables.",
+    "reportTemplateHelp": "The template controls which saved evidence sections are included in JSON, PDF and HTML exports. No new network request is made.",
     "exportTitle": "Export this crawl run",
     "exportDescription": "Each file contains the real timestamp, scope and run configuration. CSV fields are neutralized before opening in a spreadsheet.",
+    "exportHtml": "HTML report",
     "urlCsv": "URL CSV",
     "linksCsv": "Links CSV",
     "imagesCsv": "Images CSV",
@@ -2374,7 +2639,19 @@
     "notCheckedInRun": "not checked in run",
     "noAnchor": "no anchor",
     "redirectChain": "Redirect chain",
-    "identifiedIssues": "Identified technical issues:"
+    "identifiedIssues": "Identified technical issues:",
+    "comparisonReasons": {
+      "same-run": "同一次运行",
+      "project-unverified": "未验证项目归属",
+      "different-project": "项目不同",
+      "different-scope": "抓取范围不同",
+      "invalid-completion-time": "完成时间无效",
+      "baseline-incomplete": "基线运行不完整",
+      "current-incomplete": "当前运行不完整",
+      "path-key-collision": "路径键重复",
+      "url-key-collision": "URL 键重复"
+    },
+    "pageLimitUnlimited": "不限制"
   },
   "mcp": {
     "badge": "AI agent workflows",
@@ -2754,6 +3031,8 @@
     "sentenceCount": "{{count}} sentences",
     "exportJson": "JSON",
     "exportPdf": "PDF report",
+    "exportHtml": "HTML report",
+    "exportHelp": "HTML keeps the saved crawl metadata, evidence and recorded limits readable in a browser.",
     "exportUrlsCsv": "URLs CSV",
     "exportLinksCsv": "Links CSV",
     "exportImagesCsv": "Images CSV",
@@ -2911,7 +3190,11 @@
       "structured": "结构化数据",
       "validation": "HTML 验证",
       "performance": "性能",
-      "exports": "导出"
+      "exports": "导出",
+      "focus": "站点聚焦度",
+      "authority": "主题权威",
+      "aio": "AI 就绪度",
+      "trust": "实体信任度"
     },
     "groups": {
       "core": "概览",
@@ -3310,6 +3593,31 @@
     "applyDesc": "应用此描述",
     "copyJsonLd": "复制 JSON-LD"
   },
+  "ollamaAssistantUi": {
+    "title": "Local Ollama",
+    "description": "Run metadata suggestions with the observed models from Ollama on this device.",
+    "endpoint": "Loopback endpoint",
+    "status": {
+      "idle": "Not checked",
+      "loading": "Checking Ollama…",
+      "ready": "Connected · {{version}}",
+      "error": "Unavailable"
+    },
+    "refresh": "Refresh",
+    "model": "Observed model",
+    "chooseModel": "Choose a discovered model",
+    "noModels": "No models reported by Ollama",
+    "maxOutputTokens": "Maximum output tokens",
+    "instruction": "Local instruction (optional)",
+    "instructionPlaceholder": "Add a focused instruction…",
+    "generate": "Generate with Ollama",
+    "errors": {
+      "projectRequired": "Choose a project before using local Ollama.",
+      "auditRequired": "Run a page audit before generating local suggestions.",
+      "modelRequired": "Select a model reported by Ollama.",
+      "promptTooLarge": "The audit prompt is too large for the bounded local request."
+    }
+  },
   "auth": {
     "loginTitle": "SEOmi 云端账户",
     "subscriptionTitle": "AI 订阅计划",
@@ -3339,7 +3647,12 @@
     "refreshModels": "刷新模型列表",
     "modelsFromProvider": "来自提供商 API 的 {{count}} 个模型",
     "modelsDefault": "默认模型——测试 API 密钥即可加载你的模型",
-    "modelsUnavailable": "无法从提供商加载模型；显示上次获取的列表。"
+    "modelsUnavailable": "无法从提供商加载模型；显示上次获取的列表。",
+    "apiKeyStoredPlaceholder": "•••••••• 密钥已保存；粘贴新密钥即可替换",
+    "saveApiKey": "保存密钥",
+    "removeApiKey": "删除密钥",
+    "apiKeyRemoved": "密钥已删除。",
+    "apiKeySaveFailed": "无法保存密钥。"
   },
   "schedules": {
     "saveError": "Unable to save the schedule.",
@@ -3410,6 +3723,7 @@
     "clientIdPlaceholder": "123456789.apps.googleusercontent.com",
     "clientSecretLabel": "Google OAuth client secret",
     "clientSecretPlaceholder": "GOCSPX-… (stored in the system credential manager)",
+    "clientSecretHelp": "桌面 OAuth 客户端需要同一客户端 ID 的密钥。此前为该项目保存的密钥将被重复使用。",
     "connecting": "Connecting…",
     "authorize": "Authorize with Google",
     "startDate": "Period start",
@@ -3424,6 +3738,7 @@
     "property": "Search Console property",
     "selectedPropertyAria": "Selected Search Console property",
     "noProperties": "Google authorization succeeded, but the account returned no accessible Search Console properties.",
+    "noMatchingProperty": "没有与此项目网站匹配的资源，请手动选择",
     "totalClicks": "Total clicks",
     "totalImpressions": "Total impressions",
     "searchAppearances": "Search result appearances",
@@ -3480,7 +3795,13 @@
       "currentQueries": "仅在当前时段观测到的查询：{{count}}",
       "baselinePages": "仅在基准时段观测到的URL：{{count}}",
       "currentPages": "仅在当前时段观测到的URL：{{count}}"
-    }
+    },
+    "sortBy": "按{{column}}排序",
+    "showingRows": "显示第 {{from}}–{{to}} 行，共 {{total}} 行",
+    "rowsPerPage": "每页行数",
+    "pagePrevious": "上一页",
+    "pageNext": "下一页",
+    "pageOf": "第 {{page}} / {{total}} 页"
   },
   "settings": {
     "close": "Close settings",
@@ -3836,7 +4157,7 @@
       "backup": "Project backup",
       "backupDescription": "Import always creates a separate project and saves data under a new identifier. It never overwrites an existing project or copies credentials.",
       "installedVersion": "Current installed version",
-      "version": "v0.0.3 (当前版本)",
+      "version": "v{{version}} (当前版本)",
       "checkUpdates": "Check for updates",
       "chooseProjectBackup": "Choose a project before creating a backup.",
       "preparingBackup": "Preparing project backup…",
@@ -3856,7 +4177,7 @@
       "backupTitle": "Project backup",
       "backupDescriptionLong": "Exports metadata, settings and workspace data for the active project with crawl history. DataForSEO, Google and AI client secrets remain in the system keychain and never enter the file.",
       "backupSafety": "Import always creates a separate project and saves data under a new identifier. It never overwrites an existing project or copies credentials.",
-      "releaseVersion": "v0.0.3 (当前版本)",
+      "releaseVersion": "v{{version}} (当前版本)",
       "installUpdate": "下载并安装",
       "updateAvailable": "版本 {{version}} 已准备安装。",
       "updateInstalled": "版本 {{version}} 已安装。",
@@ -3990,6 +4311,8 @@
     "multipleTitle": "发现多个 <title> 标签（{{count}}）",
     "emptyDescription": "meta description 为空",
     "multipleDescription": "发现多个 meta description 标签（{{count}}）",
+    "renderFallback": "浏览器渲染失败，已改为分析原始 HTML 响应：{{reason}}",
+    "renderedSelfNavigation": "页面在浏览器中跳转到了其他 URL；HTTP 状态和响应标头描述的是所请求的 URL",
     "technicalDetail": "技术详情：{{detail}}"
   },
   "auditChecks": {
@@ -4323,6 +4646,37 @@
     }
   },
   "exportUi": {
+    "html": {
+      "auditTitle": "SEOmi audit report",
+      "crawlTitle": "SEOmi crawl report",
+      "summary": "Summary",
+      "inputUrl": "输入 URL",
+      "httpStatus": "HTTP 状态",
+      "responseTimeMs": "响应时间（毫秒）",
+      "healthScore": "健康分数",
+      "exportFormat": "导出格式",
+      "runId": "运行 ID",
+      "scope": "范围",
+      "environment": "环境",
+      "completedAt": "完成时间",
+      "templateId": "模板 ID",
+      "templateSections": "模板分区",
+      "pagesCrawled": "已抓取页面",
+      "criticalIssues": "严重问题",
+      "warnings": "警告",
+      "durationMs": "持续时间（毫秒）",
+      "evidence": "Saved evidence",
+      "auditEvidence": "Audit evidence",
+      "issues": "Issues",
+      "configuration": "Configuration",
+      "limitations": "Recorded limitations",
+      "sourceLocal": "Source: saved local snapshot; no new network request was made.",
+      "exportedAt": "Exported at",
+      "reportTemplate": "Report template",
+      "fullSnapshot": "Full saved snapshot",
+      "unknown": "Unknown / not supplied",
+      "noLimitations": "No limitations were recorded in this snapshot."
+    },
     "invalidPdf": "The generator returned invalid PDF data. Please try again.",
     "labels": {
       "field": "Field",
@@ -4760,5 +5114,3011 @@
     "saveLimit": "保存上限",
     "noLimitOption": "无上限——以账户余额为限",
     "balanceExhausted": "DataForSEO 账户余额已用完（剩余 ≈ {{balance}} 美元，下一次请求约需 {{expected}} 美元）。请充值后点击“检查余额”。"
+  },
+  "serpImportUi": {
+    "title": "Free SERP evidence",
+    "description": "Import observed organic results or fetch free partial Bing RSS evidence. No paid API is called.",
+    "fetchTitle": "Fetch free Bing RSS evidence",
+    "fetchHelp": "Bing RSS is a partial source and is never treated as a complete Google SERP.",
+    "query": "Query",
+    "country": "Country",
+    "language": "Language",
+    "fetch": "Fetch Bing RSS",
+    "fetching": "Fetching…",
+    "feedBlocked": "Bing RSS was blocked",
+    "feedError": "Bing RSS request failed",
+    "formatHelp": "CSV: keyword,rank,url. JSON: records and metadata. Complete scoring requires explicit countryCode, locationCode, languageCode and complete availability.",
+    "format": "Format",
+    "payload": "Observed SERP data",
+    "import": "Import SERP",
+    "clear": "Remove import",
+    "summary": "{{count}} keyword snapshots; {{rejected}} rejected records",
+    "source": "Source: {{provider}} · {{status}}",
+    "context": "Market: {{country}} · language: {{language}}",
+    "times": "Captured: {{captured}} · imported: {{imported}}",
+    "partialNotice": "Bing RSS is partial evidence; clustering uses semantic-only scoring until complete, compatible SERP data is supplied.",
+    "unknown": "Unknown",
+    "pairs": "Qualifying pairs: {{count}}",
+    "pairHelp": "Groups are connected components of qualifying pairs. Missing or incompatible SERP contributes semantic evidence only. Up to 100 pairs are displayed.",
+    "scores": "Semantic: {{semantic}} · SERP: {{serp}} · score: {{score}}",
+    "weights": "Applied weights: semantic {{semantic}}, SERP {{serp}}",
+    "pairSources": "Sources: {{a}} / {{b}}",
+    "visiblePairs": "Showing the first {{count}} pairs.",
+    "retrieved": "Retrieved: {{retrieved}}"
+  },
+  "targetPhraseAuditUi": {
+    "title": "Target phrase audit",
+    "description": "Literal evidence from the current page audit plus an imported TOP10 snapshot. URL inspection starts only after you request it.",
+    "phraseLabel": "Target phrase",
+    "phrasePlaceholder": "e.g. technical SEO audit",
+    "evidenceTitle": "Phrase evidence in the current audit",
+    "evidenceDescription": "Counts and excerpts come from the stored title, H1, body and anchor text.",
+    "completeness": {
+      "complete": "Complete",
+      "partial": "Partial"
+    },
+    "enterPhrase": "Enter a target phrase to inspect literal evidence.",
+    "fields": {
+      "title": "Title",
+      "h1": "H1",
+      "body": "Body",
+      "anchors": "Anchors"
+    },
+    "occurrences": "{{count}} occurrences",
+    "noLiteralEvidence": "No literal occurrence was found in this field.",
+    "intent": "Intent",
+    "intentUnavailable": "Unavailable (no exact provider value)",
+    "intents": {
+      "informational": "Informational",
+      "commercial": "Commercial",
+      "transactional": "Transactional",
+      "navigational": "Navigational"
+    },
+    "auditUrl": "Audit URL",
+    "partialReason": "The stored body evidence is missing or truncated; this result is partial.",
+    "topTenTitle": "TOP10 content gap",
+    "topTenDescription": "The source is the matching imported SERP snapshot. Each URL is inspected locally only when you click the audit button.",
+    "auditRunning": "Inspecting TOP10…",
+    "auditTopTen": "Inspect TOP10 locally",
+    "sourceProvider": "Provider",
+    "sourceAvailability": "Availability",
+    "sourceContext": "Market / location / language",
+    "sourceCaptured": "Captured",
+    "sourceRetrieved": "Retrieved",
+    "sourceReason": "Reason",
+    "unknown": "Unknown",
+    "sourceStatus": {
+      "complete": "Complete",
+      "partial": "Partial",
+      "blocked": "Blocked",
+      "missing": "Missing"
+    },
+    "status": {
+      "available": "Available",
+      "unavailable": "Unavailable",
+      "error": "Error"
+    },
+    "unavailable": {
+      "no-project": "Select a project to use project-scoped SERP evidence.",
+      "no-phrase": "Enter a phrase to match an imported SERP snapshot.",
+      "no-import": "No imported SERP snapshot is available for this project.",
+      "phrase-not-found": "The imported SERP does not contain an exact case-insensitive match for this phrase.",
+      "no-results": "The matching imported snapshot contains no valid TOP10 organic results."
+    },
+    "reportStatus": "Report status",
+    "reportStatuses": {
+      "unavailable": "Unavailable",
+      "partial": "Partial",
+      "complete": "Complete"
+    },
+    "availablePages": "{{count}} pages with usable evidence",
+    "noRows": "No organic TOP10 rows were supplied by the matching snapshot.",
+    "topicsTitle": "Observed topics and target coverage",
+    "noTopics": "Topics require at least one successfully inspected page.",
+    "topicStatus": {
+      "gap": "Gap",
+      "covered": "Covered",
+      "unknown": "Unknown"
+    },
+    "topicShare": "{{observed}} of {{total}} pages · {{share}}%",
+    "targetOccurrencesUnknown": "Target occurrences: unknown",
+    "targetOccurrences": "Target occurrences: {{count}}",
+    "finalUrl": "Final URL"
+  },
+  "monitoringUi": {
+    "title": "变化监控通知",
+    "enable": "启用变化监控通知",
+    "description": "仅在本地保存的可比较数据发生变化后通知。缺失或截断数据不视为零。",
+    "frequency": "频率",
+    "frequencyAria": "监控通知频率",
+    "run": "每次运行",
+    "daily": "每天一次",
+    "weekly": "每周一次",
+    "enableType": "启用{{type}}通知",
+    "gscDecline": "GSC下降百分比",
+    "gscDeclineAria": "GSC下降百分比",
+    "gscMinimum": "GSC最低展示次数",
+    "psiDrop": "PageSpeed类别下降",
+    "crawlChanged": "抓取变化页面",
+    "semanticChanged": "语义变化",
+    "types": {
+      "gsc": "Search Console",
+      "pagespeed": "PageSpeed / CrUX",
+      "crawl": "抓取比较",
+      "semantic": "语义比较",
+      "focus": "Site Focus Score",
+      "aio": "AI Overviews 就绪度"
+    },
+    "focusDrop": "Site Focus Score 下降(分)",
+    "aioDrop": "AIO-R 分数下降（分）"
+  },
+  "ga4": {
+    "title": "Google Analytics 4",
+    "description": "Landing page traffic for the same date range as Search Console. Analytics includes all channels; Search Console covers organic search.",
+    "projectRequired": "Select a project with a website URL to match its Analytics web stream.",
+    "connectFirst": "Connect Search Console with your Google OAuth client first.",
+    "clientSecret": "Google OAuth client secret (optional)",
+    "clientSecretHint": "Stored only in the system credential store after authorization.",
+    "loading": "Loading…",
+    "reconnect": "Authorize again",
+    "authorize": "Authorize Analytics access",
+    "refresh": "Refresh matching property",
+    "property": "Matched Analytics property",
+    "noProperty": "No unique matching web stream was found. Check Analytics access and the project website URL.",
+    "loadReport": "Load traffic report",
+    "truncated": "This result is partial or ambiguous. Do not treat it as complete.",
+    "periodsDiffer": "The report periods differ. Search Console metrics cannot be joined.",
+    "unavailable": "No traffic report has been loaded.",
+    "unknown": "Unavailable",
+    "noRows": "Google Analytics returned no landing page rows for this period.",
+    "landingPage": "Landing page",
+    "host": "Hostname",
+    "sessions": "Sessions",
+    "engagedSessions": "Engaged sessions",
+    "keyEvents": "Key events",
+    "clicks": "GSC clicks",
+    "impressions": "GSC impressions",
+    "issues": "Crawl issues",
+    "rowCount": "Rows: {{count}}"
+  },
+  "topicalDiagnosis": {
+    "title": "主题诊断",
+    "description": "文档（语言版本只计一次）、围绕枢纽页的区域、来自内容的主题以及带具体行动的判定。基于已保存的抓取计算，不使用语言模型。",
+    "noTerms": "此次抓取没有内容词项，诊断没有可处理的数据。请重新运行抓取。",
+    "noContentLinks": "此次抓取保存时没有正文链接，因此不显示与链接有关的结论（没有正文链接的页面、枢纽、互不链接的主题页面）。请重新运行抓取。",
+    "truncated": "分析限于 500 个页面或配对上限，部分结果可能缺失。",
+    "empty": "此组没有判定。",
+    "showRemaining": "显示其余判定（{{count}}）",
+    "stats": {
+      "documents": "文档",
+      "pages": "页面",
+      "skipped": "已跳过",
+      "hubs": "枢纽",
+      "topics": "主题",
+      "singletons": "单独",
+      "languages": "语言",
+      "mergedPairs": "语言配对"
+    },
+    "severity": {
+      "fix": "需修复",
+      "weak": "较弱",
+      "info": "信息",
+      "good": "良好"
+    },
+    "filter": {
+      "all": "全部 · {{count}}",
+      "fix": "需修复 · {{count}}",
+      "weak": "较弱 · {{count}}",
+      "info": "信息 · {{count}}",
+      "good": "良好 · {{count}}"
+    },
+    "areas": {
+      "title": "区域与主题",
+      "noHub": "无枢纽",
+      "hubWithoutMembers": "没有分配文档的枢纽",
+      "members": "{{count}} 篇",
+      "showInGraph": "在图中显示",
+      "hub": "枢纽：{{url}}"
+    },
+    "topics": {
+      "singletons": "单独文档 · {{count}}",
+      "labelFromContent": "来自内容的标签",
+      "noLabel": "无标签主题",
+      "documents": "{{count}} 篇"
+    },
+    "roles": {
+      "hub": "枢纽",
+      "utility": "辅助页面",
+      "content": "内容"
+    },
+    "scope": {
+      "area": "区域",
+      "topic": "主题",
+      "document": "文档"
+    },
+    "verdict": {
+      "hub-missing-backlink": {
+        "title": "没有指向枢纽的链接",
+        "action": "在此页面添加指向 {{hub}} 的链接：放在导航、面包屑或正文中。"
+      },
+      "hub-missing-member-link": {
+        "title": "枢纽未链接到其主题的部分页面",
+        "action": "把缺失的页面（{{count}} 个）加入 {{hub}} 的列表。"
+      },
+      "area-healthy": {
+        "title": "区域连贯",
+        "action": "枢纽链接到全部 {{count}} 篇文档，每篇也链接回枢纽。无需处理。"
+      },
+      "topic-no-hub": {
+        "title": "主题没有支柱页",
+        "action": "为该主题创建或指定一个支柱页，并从它链接到所有文档；目前只有内容把它们联系在一起。"
+      },
+      "topic-members-unlinked": {
+        "title": "主题内的页面互不链接",
+        "action": "在列出的配对之间添加上下文链接（{{count}} 对双向均无链接）。"
+      },
+      "topic-thin": {
+        "title": "主题薄弱",
+        "action": "该主题只有两篇文档。补充第三篇，或在回答同一问题时将两篇合并。"
+      },
+      "cannibalization-candidate": {
+        "title": "关键词蚕食候选",
+        "action": "同一语言的两个页面重叠 {{percent}}%，且共享标题词：{{titleTokens}}。比较意图后合并，或区分标题。"
+      },
+      "document-isolated": {
+        "title": "孤立页面",
+        "action": "没有主题，且只有列表页链接到它。请从内容最接近的页面添加链接：{{url}}（共享词项 {{percent}}%）。",
+        "actionNoNearest": "没有主题，且只有列表页链接到它。请从相关文章链接到它。"
+      },
+      "document-orphan": {
+        "title": "没有任何正文链接",
+        "action": "没有页面从正文链接到它。请从相关页面或枢纽添加上下文链接。"
+      },
+      "near-duplicate": {
+        "title": "内容几乎相同",
+        "action": "比较两个页面。若为重复，请合并或设置 canonical。"
+      },
+      "language-pair-missing": {
+        "title": "缺少语言版本",
+        "action": "该文档只有 {{language}} 版本。请决定是否需要翻译；这是信息，不是错误。"
+      }
+    },
+    "evidence": {
+      "hub": "枢纽：{{hub}}",
+      "count": "页面数：{{count}}",
+      "members": "{{count}} 篇文档",
+      "areas": "{{count}} 个区域",
+      "withoutHub": "{{count}} 个无枢纽",
+      "pairs": "配对数：{{count}}",
+      "similarity": "相似度 {{percent}}%",
+      "titleTokens": "共享标题词：{{titleTokens}}",
+      "nearest": "最接近的页面：{{url}}",
+      "hash": "相同的内容哈希",
+      "distance": "SimHash：{{value}}/64",
+      "language": "语言：{{language}}"
+    },
+    "confidence": {
+      "limited": "置信度有限（内容证据不完整）",
+      "moderate": "置信度中等"
+    },
+    "import": {
+      "button": "导入诊断主题",
+      "topicsCount": "{{count}} 个主题 · 运行 {{run}}"
+    }
+  },
+  "pdfReport": {
+    "audit": {
+      "report": {
+        "reportTitle": "SEOmi · SEO 审计报告",
+        "brandLine": "由 SEOmi 生成",
+        "methodNote": "方法：本地 HTTP 与 HTML 分析。本报告不代表 Google 的索引判定。",
+        "pageLabel": "第 {{page}} 页，共 {{total}} 页",
+        "sevCritical": "严重",
+        "sevWarning": "警告",
+        "sevInfo": "信息",
+        "noMessage": "此发现未提供描述。",
+        "noRecommendation": "请检查此发现并修正受影响的元素。",
+        "categoryFallback": "通用",
+        "statusOk": "正常",
+        "statusAttention": "需要关注",
+        "statusInfo": "信息",
+        "noAction": "无需处理。",
+        "yes": "是",
+        "no": "否",
+        "notSet": "未设置",
+        "title": "SEO 审计报告",
+        "auditedAt": "审计时间",
+        "httpStatus": "HTTP 状态",
+        "responseTime": "响应时间",
+        "ms": "{{0}} ms",
+        "healthScore": "健康评分",
+        "ratingGood": "良好",
+        "ratingFair": "需要改进",
+        "ratingPoor": "较差",
+        "ratingNone": "未评分",
+        "legend": "绿色：80 及以上  ·  琥珀色：50 至 79  ·  红色：低于 50",
+        "findings": "项发现",
+        "kpiHttp": "HTTP 状态",
+        "kpiTime": "响应时间",
+        "kpiTitle": "标题长度",
+        "kpiDescription": "META DESCRIPTION",
+        "kpiH1": "H1 标题",
+        "kpiImages": "图片",
+        "kpiLinks": "链接",
+        "kpiWords": "字数",
+        "httpNote": "最终响应",
+        "slow": "慢于 800 ms",
+        "fast": "在 800 ms 以内",
+        "characters": "个字符",
+        "present": "存在",
+        "missing": "缺失",
+        "charsNote": "{{0}} 个字符",
+        "h1Note": "建议恰好 1 个",
+        "noAltNote": "{{0}} 个缺少 alt 文本",
+        "linksNote": "{{0}} 个内部链接，{{1}} 个外部链接",
+        "wordsNote": "正文字数",
+        "where": "位置",
+        "howToFix": "修复方法",
+        "fixFirst": "优先修复项",
+        "noIssues": "本次审计未报告任何问题。",
+        "fixIntro": "发现按严重程度排序并按类别分组。每张卡片说明需要修改的内容及其适用位置。",
+        "severityGroup": "{{0}}（{{1}}）",
+        "details": "审计详情",
+        "noDetails": "本次审计不包含详细的页面数据。",
+        "colCheck": "检查项",
+        "colValue": "当前值",
+        "colStatus": "状态",
+        "colAdvice": "建议",
+        "colArea": "范围",
+        "passed": "通过的检查",
+        "nothingPassed": "本次审计没有通过的检查。",
+        "passedSummary": "共 {{1}} 项检查，通过 {{0}} 项。"
+      },
+      "checks": {
+        "chars": "{{0}}（{{1}} 个字符）",
+        "ms": "{{0}} ms",
+        "bytes": "{{0}} 字节",
+        "minutes": "{{0}} 分钟",
+        "unknown": "未知",
+        "missingCount": "缺少 {{0}} 个",
+        "fixAlt": "为每张图片添加描述性的 alt 文本。",
+        "fixSize": "为图片设置明确的 width 和 height 属性。",
+        "fixInsecure": "将 http:// 链接改为 https://。",
+        "fixMixed": "通过 HTTPS 加载所有资源。",
+        "keyword": "{{0}}（{{1}}）",
+        "metaTitle": "Meta 标签",
+        "title": "标题",
+        "description": "Meta description",
+        "canonical": "Canonical URL",
+        "robotsMeta": "Meta robots",
+        "viewport": "Viewport",
+        "charset": "字符集",
+        "keywords": "Meta keywords",
+        "author": "作者",
+        "generator": "生成器",
+        "themeColor": "主题色",
+        "headingsTitle": "标题层级",
+        "h1Count": "H1 数量",
+        "h1Text": "H1 文本",
+        "hierarchy": "标题层级有效",
+        "outline": "标题大纲",
+        "contentTitle": "内容统计",
+        "words": "字数",
+        "sentences": "句子数",
+        "readingTime": "阅读时间",
+        "readability": "可读性",
+        "readabilityValue": "{{0}}（Flesch 分数 {{1}}）",
+        "wordsPerSentence": "每句字数",
+        "textRatio": "文本与 HTML 比例",
+        "topKeywords": "热门关键词",
+        "imagesTitle": "图片",
+        "imageTotal": "发现的图片数",
+        "imageAlt": "缺少 alt 文本的图片",
+        "imageSize": "缺少 width 和 height 的图片",
+        "imageFormats": "图片格式",
+        "linksTitle": "链接",
+        "linkTotal": "链接总数",
+        "linkInternal": "内部链接",
+        "linkExternal": "外部链接",
+        "linkNofollow": "Nofollow 链接",
+        "linkInsecure": "不安全（HTTP）链接",
+        "linkBlank": "在新标签页打开的链接",
+        "redirectTitle": "重定向链",
+        "redirectHops": "重定向跳数",
+        "hop": "第 {{0}} 跳",
+        "hopValue": "HTTP {{0}}：{{1}} → {{2}}",
+        "indexTitle": "可索引性",
+        "indexStatus": "可索引性状态",
+        "xRobots": "X-Robots-Tag 响应头",
+        "canonicalMatch": "Canonical 与最终 URL 一致",
+        "canonicalChecked": "已检查 Canonical 目标",
+        "canonicalStatus": "Canonical 目标的 HTTP 状态",
+        "canonicalError": "Canonical 检查错误",
+        "securityTitle": "安全响应头",
+        "securityScore": "安全评分",
+        "transportTitle": "传输安全",
+        "https": "通过 HTTPS 提供",
+        "scheme": "URL 协议",
+        "mixed": "混合内容资源",
+        "cookies": "Cookie",
+        "noCookies": "未设置任何 Cookie",
+        "cookie": "Cookie：{{0}}",
+        "cookieValue": "Secure：{{0}}；HttpOnly：{{1}}；SameSite：{{2}}",
+        "cookieAdvice": "请设置 Secure 和 HttpOnly 标志以及 SameSite 属性。",
+        "tls": "TLS 覆盖情况",
+        "structuredTitle": "结构化数据",
+        "blocks": "结构化数据块",
+        "block": "{{0}}（{{1}}）",
+        "valid": "无验证问题",
+        "structuredAdvice": "请修复结构化数据，使其通过验证。",
+        "socialTitle": "Open Graph 与 Twitter 卡片",
+        "addTag": "请在页面 head 中添加 {{0}} 标签。",
+        "a11yTitle": "无障碍",
+        "language": "文档语言",
+        "landmarks": "地标",
+        "aria": "ARIA 属性",
+        "formControls": "表单控件",
+        "unlabeled": "无标签的表单控件",
+        "hiddenControls": "隐藏的表单控件",
+        "manual": "需要人工复核",
+        "ampTitle": "AMP",
+        "ampDetected": "检测到 AMP",
+        "ampDocument": "页面为 AMP 文档",
+        "ampUrls": "已链接的 AMP 版本",
+        "ampCanonical": "AMP Canonical URL",
+        "ampCoverage": "验证覆盖情况",
+        "notVerified": "未验证",
+        "perfTitle": "性能",
+        "httpStatus": "HTTP 状态",
+        "responseTime": "服务器响应时间",
+        "headersTime": "响应头耗时",
+        "bodyTime": "正文读取时间",
+        "totalTime": "请求总耗时",
+        "bodyBytes": "解码后的正文大小",
+        "lengthHeader": "Content-Length 响应头",
+        "redirectCount": "已跟随的重定向数",
+        "method": "请求方法",
+        "measuredAt": "测量时间",
+        "scope": "测量范围",
+        "techTitle": "技术详情",
+        "contentType": "内容类型",
+        "server": "服务器",
+        "favicon": "Favicon",
+        "robotsTxt": "robots.txt",
+        "sitemap": "站点地图",
+        "hreflangTags": "Hreflang 标签",
+        "hreflang": "{{0}}：{{1}}",
+        "techSignals": "检测到的技术",
+        "signal": "{{0}}{{1}}（{{2}}，{{3}}）"
+      },
+      "loc": {
+        "wholePage": "整个页面：{{0}}",
+        "page": "页面：{{0}}",
+        "element": "元素：{{0}}",
+        "current": "当前值：{{0}}",
+        "image": "图片：{{0}}",
+        "link": "链接：{{0}}",
+        "linkText": "链接：{{0}}（锚文本：{{1}}）",
+        "h1": "标题 <h1>：{{0}}",
+        "header": "HTTP 响应头：{{0}}",
+        "headerMissing": "当前值：服务器未发送",
+        "cookie": "Cookie：{{0}}",
+        "block": "{{0}} {{1}}",
+        "blockPath": "结构化数据 {{0}}，路径：{{1}}",
+        "noPath": "未指定",
+        "lineColumn": "（第 {{0}} 行，第 {{1}} 列）",
+        "elementAt": "{{0}}{{1}}：{{2}}",
+        "evidence": "证据：{{0}}",
+        "scheme": "URL 协议：{{0}}",
+        "resource": "不安全的资源：{{0}}",
+        "response": "服务器响应：HTTP {{1}}，耗时 {{0}} ms",
+        "hop": "重定向跳转：来自 {{1}} 的 HTTP {{0}}"
+      }
+    },
+    "crawl": {
+      "report": {
+        "reportTitle": "SEOmi · 站点爬取报告",
+        "brandLine": "由 SEOmi 生成",
+        "footerNote": "方法：本地 HTTP 与 HTML 爬取；仅使用已保存的运行数据，不会重新抓取页面。",
+        "methodFull": "方法：本地 HTTP 与 HTML 爬取。仅包含所选运行中保存的数据；生成本报告时不会重新抓取任何页面。本报告不代表 Google 的索引判定。",
+        "pageLabel": "第 {{page}} 页，共 {{total}} 页",
+        "title": "站点爬取报告",
+        "completedAt": "完成时间",
+        "duration": "耗时",
+        "pagesCrawled": "已爬取页面",
+        "mode": "爬取模式",
+        "modeDefault": "http",
+        "environment": "环境",
+        "envDefault": "默认",
+        "scoreVersion": "评分版本",
+        "versionNone": "未版本化",
+        "seconds": "{{0}} 秒",
+        "minSec": "{{0}} 分 {{1}} 秒",
+        "ms": "{{0}} ms",
+        "yes": "是",
+        "no": "否",
+        "none": "无",
+        "ok": "正常",
+        "problem": "有问题",
+        "noteCancelled": "此次爬取在完成前被取消；结果不完整。",
+        "noteTimedOut": "此次爬取达到时间上限；结果不完整。",
+        "noteRobots": "robots.txt 警告：{{0}}",
+        "noteLimits": "已达到的限制：{{0}}。",
+        "healthScore": "健康评分",
+        "legend": "绿色：80 及以上  ·  琥珀色：50 至 79  ·  红色：低于 50",
+        "ratingGood": "良好",
+        "ratingFair": "需要改进",
+        "ratingPoor": "较差",
+        "ratingNone": "未评分",
+        "critical": "严重",
+        "warning": "警告",
+        "notice": "提示",
+        "findings": "个问题",
+        "kpiShare": "占页面的 {{0}}%",
+        "kIndexable": "可索引",
+        "kBlocked": "不可索引",
+        "kUncertain": "不确定",
+        "k2xx": "状态 2XX",
+        "k3xx": "状态 3XX",
+        "k4xx": "状态 4XX",
+        "k5xx": "状态 5XX",
+        "kNoStatus": "无响应",
+        "kAvgTime": "平均响应",
+        "kAvgNote": "每页",
+        "kAvgWords": "平均字数",
+        "kWordsNote": "每页",
+        "kOrphans": "孤立页面",
+        "kDuplicates": "重复组",
+        "kDupNote": "标题、描述、内容",
+        "kChains": "重定向链",
+        "kChainNote": "2 跳或以上",
+        "kBrokenInt": "内部死链",
+        "kBrokenExt": "外部死链",
+        "kLinkNote": "已检查的链接",
+        "kNoTitle": "缺少标题",
+        "kNoDesc": "缺少描述",
+        "kNoH1": "缺少 H1",
+        "kNoCanonical": "无 CANONICAL",
+        "kWithIssues": "存在问题的页面",
+        "fixFirst": "优先修复项",
+        "fixIntro": "问题按类型分组，并按严重、警告、提示排序。每张卡片列出受影响的页面及修复方法。",
+        "noIssues": "在已爬取的页面上未发现问题。",
+        "severityGroup": "{{0}}（{{1}}）",
+        "affectedOne": "影响 1 个页面",
+        "affected": "影响 {{0}} 个页面（{{1}}%）",
+        "where": "位置",
+        "howToFix": "修复方法",
+        "wherePage": "{{0}}：{{1}}",
+        "morePages": "…… 另有 {{0}} 个页面（所有 URL 见页面表）",
+        "evTitle": "title：{{0}}",
+        "evDescription": "meta description：{{0}}",
+        "evCanonical": "canonical：{{0}}（{{1}}）",
+        "evStatus": "HTTP {{0}}",
+        "evError": "请求错误：{{0}}",
+        "evRobots": "meta robots：{{0}}，X-Robots-Tag：{{1}}",
+        "evWords": "{{0}} 个词",
+        "evH1": "H1 数量：{{0}}",
+        "evLang": "lang：{{0}}",
+        "evImages": "{{0}} 张图片缺少 alt",
+        "pagesHeading": "页面",
+        "pagesIntro": "所有已爬取的页面，按爬取顺序排列。",
+        "criticalPages": "存在严重问题的页面",
+        "criticalIntro": "至少有一个严重问题的页面，以及需要优先修复的发现。",
+        "colCritical": "严重问题",
+        "details": "详细发现",
+        "noneFound": "本次运行中未发现。",
+        "moreRows": "另有 {{0}} 行未在此显示",
+        "rows": "{{0}} 行",
+        "rowOne": "1 行",
+        "tCoverage": "报告覆盖范围",
+        "coverageIntro": "下列各部分均已检查；没有数据的部分会予以说明。",
+        "tComparison": "与上一次运行的对比",
+        "noComparison": "不可用：已保存的运行记录不包含上一次运行。"
+      },
+      "labels": {
+        "tRun": "运行详情",
+        "tConfig": "爬取配置",
+        "configIntro": "爬取所用的设置，与运行中保存的内容完全一致。",
+        "tRobots": "Robots.txt 与站点地图",
+        "runId": "运行 ID",
+        "scopeUrl": "范围起始 URL",
+        "startUrl": "爬虫使用的起始 URL",
+        "resources": "已检查的资源",
+        "images": "发现的图片",
+        "limits": "观察到的限制",
+        "cancelled": "已取消",
+        "timedOut": "已超时",
+        "resourceLimit": "已达到资源请求上限",
+        "provenance": "发现来源信息不完整",
+        "compacted": "已压缩存储的证据",
+        "pagesTruncated": "已截断存储的页面",
+        "storagePages": "已保留 {{1}} 个页面中的 {{0}} 个",
+        "template": "报告模板",
+        "templateFull": "完整报告",
+        "robotsStatus": "robots.txt 状态",
+        "robotsEval": "robots.txt 评估",
+        "robotsCode": "robots.txt HTTP 状态",
+        "robotsUrl": "robots.txt 最终 URL",
+        "robotsAgent": "爬虫 User-Agent",
+        "robotsBlocked": "被 robots.txt 屏蔽的 URL",
+        "robotsWarning": "robots.txt 警告",
+        "sitemapStatus": "站点地图结果",
+        "sitemapFound": "发现的站点地图 URL",
+        "tPages": "所有已爬取的页面",
+        "tDupTitles": "重复的标题",
+        "tDupDescriptions": "重复的 meta description",
+        "tDupContent": "重复内容",
+        "tNear": "近似重复内容",
+        "dupIntro": "同一组中的页面具有相同的值；请让每个页面都独一无二。",
+        "hashLabel": "内容哈希 {{0}}（{{1}}）",
+        "tRedirects": "重定向与重定向链",
+        "redirectIntro": "请直接链接到最终 URL；2 跳或以上的重定向链会浪费抓取预算。",
+        "hop": "{{0}} → {{1}}",
+        "tClientRedirects": "客户端重定向",
+        "tBroken": "死链",
+        "brokenIntro": "目标返回错误或无法请求的链接；内部链接优先。",
+        "internal": "内部",
+        "external": "外部",
+        "statusError": "{{0}}（{{1}}）",
+        "tExternal": "外部链接汇总",
+        "externalIntro": "外部目标按主机分组，并附上本次运行所做检查的结果。",
+        "notChecked": "本次运行未检查",
+        "tCanonical": "Canonical 冲突",
+        "canonicalIntro": "Canonical 缺失、无效、重复或指向其他位置的页面。",
+        "targetStatus": "{{0}}（HTTP {{1}}）",
+        "rdCompleted": "完成时间",
+        "rdMode": "爬取模式",
+        "rdDuration": "耗时",
+        "rdPages": "已爬取页面",
+        "tHreflang": "Hreflang",
+        "tPagination": "分页",
+        "tAmp": "AMP",
+        "tSchema": "结构化数据",
+        "schemaFinding": "{{0}} {{1}}：{{2}}",
+        "tHtml": "HTML 验证发现",
+        "lineColumn": "（第 {{0}} 行，第 {{1}} 列）",
+        "tImages": "图片问题",
+        "imagesIntro": "{{1}} 张图片中有 {{0}} 张存在问题：缺少 alt 文本或尺寸、出错或文件过大。",
+        "pNoAlt": "无 alt",
+        "pNoSize": "无 width/height",
+        "pBroken": "请求失败",
+        "pOversized": "超过 {{0}} KB",
+        "tResources": "资源",
+        "usedBy": "{{0}} 个页面，例如 {{1}}",
+        "tFrames": "框架（iframe）",
+        "tSearches": "自定义搜索结果",
+        "tRules": "适用于爬虫的 robots.txt 规则",
+        "tAgents": "按爬虫身份划分的 robots.txt",
+        "tDirectives": "robots.txt 中的 Sitemap 指令",
+        "tRobotsChain": "robots.txt 重定向链",
+        "tSitemapUrls": "范围内的站点地图 URL",
+        "tRejected": "被爬取范围拒绝的 URL",
+        "tReasons": "可索引性原因",
+        "reasonsIntro": "页面被屏蔽或不确定的原因，包括 robots.txt 规则。",
+        "httpIntro": "{{1}} 个页面中有 {{0}} 个返回了响应头或发现数据；其余页面没有。",
+        "tHttp": "HTTP 响应详情与发现",
+        "discovered": "{{0}} {{1}}"
+      },
+      "cols": {
+        "colItem": "项目",
+        "colValue": "值",
+        "colUrl": "URL",
+        "colStatus": "状态",
+        "colIndexability": "可索引性",
+        "colTitle": "标题",
+        "colDepth": "深度",
+        "colTime": "时间 (ms)",
+        "colWords": "字数",
+        "colIssues": "问题",
+        "colPages": "页面数",
+        "colUrls": "URL 数",
+        "colFinding": "发现",
+        "colFindings": "发现",
+        "colSource": "来源页面",
+        "colTarget": "目标",
+        "colAnchor": "锚文本",
+        "colType": "类型",
+        "colHost": "主机",
+        "colLinks": "链接数",
+        "colStates": "结果",
+        "colHops": "跳数",
+        "colChain": "重定向链",
+        "colFinal": "最终 URL",
+        "colStop": "停止原因",
+        "colDeclaration": "声明",
+        "colDelay": "延迟 (秒)",
+        "colCanonical": "Canonical 目标",
+        "colRelation": "关系",
+        "colDeclarations": "标签",
+        "colConflict": "Robots 冲突",
+        "colLang": "语言",
+        "colReciprocal": "互惠",
+        "colVerdict": "结论",
+        "colParams": "查询参数变化",
+        "colAlignment": "Canonical 一致性",
+        "colAmp": "AMP URL",
+        "colChecked": "已检查",
+        "colImage": "图片",
+        "colAlt": "Alt",
+        "colSize": "大小",
+        "colBytes": "字节",
+        "colProblem": "问题",
+        "colResource": "资源",
+        "colContentType": "内容类型",
+        "colUsedBy": "使用方",
+        "colFrame": "框架",
+        "colSearch": "搜索",
+        "colFound": "发现的值",
+        "colError": "错误",
+        "colTypes": "Schema 类型",
+        "colSyntax": "语法错误",
+        "colSeverity": "严重程度",
+        "colCode": "代码",
+        "colElement": "元素",
+        "colDirective": "指令",
+        "colPath": "路径",
+        "colAgent": "User-Agent",
+        "colGroup": "独立组",
+        "colRules": "规则",
+        "colDelayMs": "延迟 (ms)",
+        "colFrom": "来源",
+        "colTo": "目标",
+        "colReason": "原因",
+        "colReasons": "原因",
+        "colEncoding": "编码",
+        "colCache": "Cache-Control",
+        "colXrobots": "X-Robots-Tag",
+        "colDiscovered": "发现途径",
+        "colArea": "范围",
+        "colResult": "结果"
+      },
+      "focus": {
+        "title": "站点聚焦度",
+        "intro": "已爬取页面在多大程度上始终围绕同一个核心主题。评分来自已保存的运行结果,不会重新抓取页面。",
+        "scoreTitle": "Site Focus Score",
+        "legend": "分级:90-100 优秀,75-89 良好,60-74 中等,40-59 较弱,0-39 严重。",
+        "kConfidence": "核心主题置信度",
+        "kOnTopic": "主题相关占比",
+        "kScored": "已评分页面",
+        "kSkipped": "已跳过页面",
+        "kOffTopic": "偏离主题的页面",
+        "kBorderline": "临界页面",
+        "kStrong": "高相关页面",
+        "nConfidence": "核心主题簇占比",
+        "nOnTopic": "TRS 达到 60 及以上的页面",
+        "nScored": "共爬取 {{0}} 个",
+        "nSkipped": "未评分",
+        "nOffTopic": "TRS 低于 40",
+        "nBorderline": "TRS 60-74",
+        "nStrong": "TRS 75 及以上",
+        "percent": "{{0}}%",
+        "coreBadge": "核心主题",
+        "coreTerms": "高频词",
+        "coreTerm": "{{0}}(占页面 {{1}}%)",
+        "coreConfidence": "置信度 {{0}}%",
+        "coreManual": "手动指定的主题:{{0}}",
+        "coreDetected": "根据已爬取页面自动识别",
+        "tPages": "主题相关度最低的页面",
+        "pagesIntro": "最多列出 25 个主题相关度评分(Topical Relevance Score,TRS)最低的内容页面。技术页面和已跳过的页面不包含在内。",
+        "colTrs": "TRS",
+        "colType": "类型",
+        "colSimilarity": "相似度",
+        "colOverlap": "重合度",
+        "colDrift": "偏移",
+        "colPlaybook": "处理方案",
+        "playbook": "{{0}}:{{1}}",
+        "tRecs": "优化建议",
+        "recsIntro": "按每预估工时可模拟获得的评分提升从高到低排序。提升幅度为估算值。",
+        "colNo": "#",
+        "colAction": "建议",
+        "colGain": "提升",
+        "gain": "+{{0}}",
+        "tSub": "子站点评分",
+        "subIntro": "多主题站点的各个主题板块,分别按其自身的核心主题评分。",
+        "colArea": "主题板块",
+        "colPrefix": "路径",
+        "colShare": "页面占比",
+        "colScore": "评分",
+        "tGaps": "主题缺口",
+        "colGap": "缺口",
+        "band": {
+          "excellent": "聚焦度优秀",
+          "good": "聚焦度良好",
+          "moderate": "聚焦度中等",
+          "weak": "聚焦度较弱",
+          "critical": "聚焦度严重不足"
+        },
+        "status": {
+          "strong": "强",
+          "moderate": "中等",
+          "borderline": "临界",
+          "weak": "较弱",
+          "off-topic": "严重偏离主题"
+        },
+        "type": {
+          "homepage": "首页",
+          "category": "分类页",
+          "article": "文章",
+          "technical": "技术页"
+        },
+        "note": {
+          "lowConfidence": "样本较小(共 {{0}} 个页面),结果仅供参考;要获得可靠的核心主题,请至少爬取 10 个页面。删除建议受到限制。",
+          "multiTopic": "检测到 {{0}} 个主题板块。该站点没有单一的主导主题。下方显示各子站点的评分。",
+          "lexicalFallback": "所选语言的分析使用 TF-IDF 统计算法。深度语义相似度部分不可用,评分基于关键词覆盖率和分布。",
+          "skippedRender": "因 JavaScript 渲染超时,有 {{0}} 个页面未纳入分析。",
+          "degraded": "部分页面的数据有限,因此其评分可能不够精确。",
+          "unmatchedTopic": "没有页面与主题“{{0}}”匹配,将改用自动识别的主题。"
+        },
+        "rec": {
+          "remove-offtopic": "删除或迁移 {{0}} 个偏离主题的页面:对最差的页面做重定向、设置 noindex 或直接删除,并移除指向它们的内部链接。潜在提升:+{{1}} 分。",
+          "strengthen-borderline": "强化 {{0}} 个临界页面:补充缺失的核心词和章节,将其提升到约 {{1}} 分。潜在提升:+{{2}} 分。",
+          "expand-core-cluster": "扩充核心主题簇:为内容单薄的子主题撰写 {{0}} 个新页面。潜在提升:+{{1}} 分。",
+          "add-internal-links": "向枢纽页面添加内部链接:{{0}} 条链接建议可将较弱的页面导向强枢纽页。",
+          "collect-more-pages": "收集更多页面:仅分析了 {{0}} 个页面。在删除任何内容之前,请先爬取更多页面。",
+          "split-subsites": "考虑拆分站点:发现 {{0}} 个不同的主题板块。拆分为独立栏目或子域名可能有帮助。",
+          "review-skipped-pages": "检查 {{0}} 个被跳过的页面:其中 {{1}} 个在渲染 JavaScript 时超时。",
+          "monitor-strong-pages": "监控 {{0}} 个高相关页面:保持其主题不偏离,并定期复查。"
+        },
+        "option": {
+          "remove-redirect": "删除并 301 重定向(+{{0}} 分)",
+          "noindex-isolate": "设置 noindex 并隔离(+{{0}} 分)",
+          "rewrite-on-topic": "按内容简报围绕主题重写(目标 TRS 约 {{0}})",
+          "add-missing-terms": "补充缺失的词:{{0}}",
+          "reinforce-headings": "强化 H2 和 H3 标题",
+          "deepen-coverage": "加深主题覆盖",
+          "serve-as-hub": "用作枢纽页面",
+          "build-satellite-cluster": "建立卫星内容簇",
+          "monitor-periodically": "每 {{0}} 周监控一次"
+        },
+        "gap": {
+          "thin-subtopic": "内容单薄的子主题“{{0}}”:仅有 {{1}}% 的页面涉及(共 {{2}} 个页面)。相关词:{{3}}。",
+          "competitor-terms": "竞争对手使用而你的站点缺失的词:{{3}}。"
+        }
+      },
+      "authority": {
+        "title": "主题权威度",
+        "intro": "网站相对市场对核心主题覆盖得多完整、多深入。分数来自已保存的运行结果和缓存的参考图谱，不会重新抓取页面。",
+        "scoreTitle": "Topical Authority Score",
+        "legend": "TAS = 0.35 覆盖率 + 0.30 实体深度 + 0.25 孤岛内聚 + 0.10 时效，并按 Site Focus Score 缩放（0.7 至 1.0）。",
+        "kTcr": "主题覆盖率",
+        "kCdes": "实体深度",
+        "kSilc": "孤岛内聚",
+        "kCvff": "时效",
+        "unavailable": "不适用",
+        "noReference": "该项目未构建参考图谱，因此未衡量覆盖率与深度，也未计算 TAS。",
+        "reference": "参考图谱：来自 {{2}} 个竞争对手（{{3}}）的 {{1}} 个支柱、{{0}} 个子主题。",
+        "quadrant": {
+          "dominant_authority": "主导权威",
+          "boutique_specialist": "精品专家型",
+          "diluted_giant": "被稀释的巨头",
+          "unfocused_generalist": "缺乏焦点的泛化者"
+        },
+        "warning": {
+          "empty-authority": "空洞权威：涉及许多主题，但平均深度很低。发布新内容前请先深化现有页面。",
+          "template-duplicates": "模板克隆页已并入最强页面：不会提高覆盖率，还会浪费抓取预算。",
+          "no-dates": "未找到发布或更新日期，因此未衡量时效。",
+          "no-links": "分析页面之间未发现正文内链，因此内聚度仅依据孤立页面。"
+        },
+        "tCoverage": "各支柱覆盖率",
+        "colPillar": "支柱",
+        "colCoverage": "覆盖率",
+        "colGaps": "缺失子主题",
+        "tGaps": "内容缺口",
+        "colGap": "缺失子主题",
+        "colLevel": "严重程度",
+        "tCannibal": "语义内部竞争",
+        "colCanonical": "保留页面",
+        "colPages": "页面数",
+        "tRecs": "主题扩展计划",
+        "tBench": "与头部竞争对手的主题缺口矩阵",
+        "level": {
+          "critical": "关键",
+          "high": "较高",
+          "medium": "中等"
+        },
+        "rec": {
+          "fill-gaps": "填补“{{0}}”的缺口：缺少 {{1}} 个子主题",
+          "merge-cannibalized": "合并 {{0}} 组相互竞争的页面",
+          "fix-linking": "修复内部链接：{{0}} 个孤立页面，{{1}} 条指向无关页面的链接",
+          "deepen-shallow": "深化 {{0}} 个覆盖较浅的子主题",
+          "refresh-stale": "更新 {{0}} 个超过一年未更新的页面"
+        }
+      },
+      "aio": {
+        "title": "AI Overviews 与 RAG 就绪度",
+        "intro": "AI 回答引擎提取并引用你页面段落的难易程度。得分综合了自成一体的段落（45%）、事实密度（35%）和可提取的结构（20%）。",
+        "scoreTitle": "AI 就绪度得分",
+        "legend": "分级：90-100 优秀，75-89 良好，60-74 中等，40-59 较弱，0-39 危急。",
+        "kSelf": "自成一体",
+        "kSpo": "事实密度",
+        "kExtract": "可提取性",
+        "kScored": "已评分页面",
+        "nSelf": "可独立理解的段落",
+        "nSpo": "主谓宾事实",
+        "nExtract": "表格、列表、标题",
+        "nScored": "已跳过 {{0}} 个页面",
+        "noteBasic": "{{0}} 的语言规则较为基础：该语言的代词和事实检测精度较低。",
+        "tPages": "按 AI 就绪度排序的页面",
+        "pagesIntro": "最多 25 个页面，得分最低的在前。",
+        "colScore": "得分",
+        "colSelf": "自成一体",
+        "colSpo": "事实",
+        "colExtract": "结构",
+        "colChunks": "分块",
+        "tPassages": "最薄弱的段落",
+        "passagesIntro": "RAG 索引难以引用的段落及发现的问题。",
+        "colHeading": "页面与标题",
+        "colExcerpt": "段落",
+        "colIssues": "问题",
+        "percent": "{{0}}%",
+        "band": {
+          "excellent": "就绪度优秀",
+          "good": "就绪度良好",
+          "moderate": "就绪度中等",
+          "weak": "就绪度较弱",
+          "critical": "就绪度危急"
+        },
+        "issue": {
+          "dangling-pronoun": "指代不清",
+          "no-answer-first": "开头没有直接回答",
+          "filler-opening": "开头空洞",
+          "no-facts": "缺少具体事实",
+          "too-long": "对单个分块来说太长"
+        }
+      },
+      "trust": {
+        "title": "实体信任度（E-E-A-T）",
+        "intro": "网站发布者、作者和来源的可验证程度。得分来自已保存的运行结果，不会重新获取任何页面。",
+        "scoreTitle": "实体信任得分",
+        "legend": "等级：75-100 高，60-74 足够，40-59 弱，0-39 严重。",
+        "kSchema": "实体图谱",
+        "kAuthor": "作者契合度",
+        "kCitation": "来源质量",
+        "kTransparency": "透明度",
+        "kArticles": "文章页面",
+        "kAuthors": "作者实体",
+        "nLayer": "得分 0-100",
+        "nNoData": "此次抓取无数据",
+        "nArticles": "共抓取 {{0}} 个",
+        "nAuthors": "{{0}} 个带 sameAs",
+        "ymylNote": "YMYL 类别：{{0}}。{{1}}% 的文章没有署名作者或审核者。",
+        "tAuthors": "作者实体",
+        "authorsIntro": "在结构化数据中找到的作者，含 sameAs 链接及与核心主题的契合度。",
+        "colAuthor": "作者",
+        "colArticles": "文章数",
+        "colSameAs": "sameAs",
+        "colAlignment": "契合度",
+        "generic": "{{0}}（匿名署名）",
+        "tPages": "信任页面",
+        "pagesIntro": "体现编辑和公司透明度的页面。",
+        "colPage": "页面",
+        "colState": "状态",
+        "found": "已找到：{{0}}",
+        "missing": "缺失",
+        "tFindings": "信任问题",
+        "findingsIntro": "按严重程度排序；请先修复严重事项。",
+        "colSeverity": "严重程度",
+        "colFinding": "问题",
+        "level": {
+          "strong": "信任度高",
+          "adequate": "信任度足够",
+          "weak": "信任度弱",
+          "critical": "信任存在严重缺口"
+        },
+        "severity": {
+          "critical": "严重",
+          "warning": "警告",
+          "info": "信息"
+        },
+        "kind": {
+          "editorial": "编辑政策",
+          "about": "关于我们",
+          "contact": "联系方式",
+          "registry": "公司注册信息"
+        },
+        "ymyl": {
+          "health": "健康",
+          "finance": "金融",
+          "legal": "法律"
+        },
+        "find": {
+          "ymyl-unattributed": "YMYL 主题下有 {{0}} 篇文章（{{1}}%）没有署名作者或审核者。",
+          "ymyl-no-reviewer": "{{0}} 篇医学文章均未声明审核者（reviewedBy）。",
+          "no-bylines": "{{0}} 篇文章均未在结构化数据中声明作者。",
+          "generic-author": "有 {{0}} 篇文章以匿名方式署名。",
+          "org-missing": "结构化数据中未找到 Organization 实体。",
+          "org-no-same-as": "发布者 {{0}} 没有 sameAs 链接。",
+          "author-no-same-as": "{{0}} 位作者没有 sameAs 链接（{{1}}）。",
+          "author-no-id": "{{0}} 位作者没有稳定的 @id。",
+          "author-off-topic": "{{0}} 的资料与核心主题的契合度仅为 {{1}}%。",
+          "low-citations": "{{1}} 个文章页面中只有 {{0}}% 引用了可信来源。",
+          "dead-citations": "{{0}} 个出站链接返回错误。",
+          "missing-editorial": "未找到编辑政策或事实核查页面。",
+          "missing-contact": "未找到联系页面。",
+          "missing-registry": "未找到公司注册信息或法律声明页面。",
+          "missing-about": "未找到“关于我们”页面。",
+          "missing-dates": "只有 {{0}}% 的文章显示了修改或审核日期。",
+          "no-articles": "未检测到文章页面；未对作者和引用层级评分。",
+          "author-invalid-profile": "{{0}}位作者链接的ORCID或Wikidata档案标识符无效（{{1}}）。请检查校验码或Q-ID。",
+          "ymyl-no-scholarly-ids": "{{0}}篇文章均未引用带DOI、PMID或PMCID的来源。YMYL主题请引用原始研究。"
+        }
+      },
+      "offPage": {
+        "title": "站外分析",
+        "intro": "此项目最新保存的分析；此样本并非完整的反向链接档案。",
+        "topic": "主题",
+        "scale": "权威度量表",
+        "model": "嵌入模型",
+        "requested": "请求的来源数",
+        "fetched": "获取的来源数",
+        "scored": "已评分的来源数",
+        "statusLabel": "状态",
+        "limitationsLabel": "限制",
+        "sourcesIntro": "按贡献从高到低最多列出10个来源；n/a 表示数据不可用。",
+        "offset": "文本偏移量",
+        "excerpt": "摘录",
+        "disclaimer": "这不是 Google PageRank；缺少文本或权威度表示数据部分可用或不可用，而非零反向链接；共同出现不代表认可。",
+        "tbva": "TBVA",
+        "tSources": "已保存的各来源证据",
+        "authority": "权威值",
+        "similarity": "相似度",
+        "contribution": "贡献值",
+        "tCitations": "共引摘录",
+        "na": "n/a",
+        "status": {
+          "ready": "就绪",
+          "partial": "部分可用",
+          "unavailable": "不可用"
+        },
+        "limitations": {
+          "no-topic-vector": "项目最近完成的抓取没有可用的Core Topic向量；TBVA不可用。",
+          "invalid-scale": "权威值尺度无效；TBVA不可用。",
+          "no-follow-links": "没有可分析的follow链接。",
+          "source-text-or-authority-missing": "部分来源缺少文本、可用向量或提供方权威值。"
+        }
+      }
+    },
+    "recs": {
+      "crawlMissingLanguage": "请为 <html> 元素添加有效的 lang 属性，例如 lang=\"zh\"。",
+      "htmlDoctype": "文档应以 <!doctype html> 开头，且仅出现一次。",
+      "htmlMetaCharset": "请在 head 的前 1024 字节内声明 <meta charset=\"utf-8\">。",
+      "htmlDuplicateId": "确保每个 id 属性在文档内唯一。",
+      "htmlUriInvalid": "请修正 URL，使其正确进行百分号编码且可解析。",
+      "missingTitle": "添加一个唯一且具描述性的 <title>，长度为 30 至 60 个字符。",
+      "multipleTitle": "在 head 中仅保留一个 <title> 元素。",
+      "titleLength": "将 <title> 改写为 30-60 个字符并描述页面内容。",
+      "duplicateTitle": "为每个页面设置与其主题相符的唯一标题。",
+      "missingMetaDescription": "添加一个唯一的 meta description，长度为 70-160 个字符。",
+      "metaDescriptionLength": "将 meta description 改写为 70-160 个字符。",
+      "emptyDescription": "填写 meta description，或删除空标签。",
+      "multipleMetaDescription": "在 head 中仅保留一个 meta description 标签。",
+      "duplicateMetaDescription": "为每个页面撰写唯一的 meta description。",
+      "missingCanonical": "添加 <link rel=\"canonical\">，指向页面的首选 URL。",
+      "canonicalTargetReturned": "让 canonical 指向返回 HTTP 200 的 URL。",
+      "canonicalAndNoindex": "请移除 canonical 或 noindex 之一，使索引信号明确。",
+      "canonicalDeclarationHas": "在 canonical 链接中使用绝对的 http(s) URL。",
+      "crawlMultipleCanonical": "每个页面只声明一个 canonical URL。",
+      "crawlCanonical": "检查 canonical 目标是否为你希望被索引的页面；否则请将其设为自引用。",
+      "missingH1": "添加且仅添加一个说明页面主题的 <h1>。",
+      "multipleH1": "保留一个 <h1>，将其余的降级为 <h2>。",
+      "heading": "按顺序使用标题（h1、h2、h3），不要跳级。",
+      "crawlDuplicateContent": "改写页面，或通过 canonical 或重定向合并重复页面。",
+      "nearDuplicate": "让这些页面的内容有所区别，或将它们合并。",
+      "httpErrorStatus": "修复服务器错误，或删除/重定向指向此 URL 的链接。",
+      "fetchFailed": "确认服务器可访问且在超时时间内响应；然后重新爬取。",
+      "crawlClientRedirect": "将 meta/JS 刷新替换为服务器端 301 重定向。",
+      "redirect": "直接链接到最终 URL，并将重定向链控制在一跳以内。",
+      "crawlNofollow": "除非确实需要阻止链接权重传递，否则请从 robots 指令中移除 nofollow。",
+      "noindex": "如果页面应出现在搜索结果中，请移除 noindex。",
+      "crawlThinContent": "用有价值的原创内容扩充页面，或将其设为 noindex/合并。",
+      "missingAlt": "为每张有信息价值的图片添加描述性的 alt 属性。",
+      "jsonldSyntax": "修复 JSON-LD 语法，使其可解析并通过验证。",
+      "schemaValidation": "减少页面上的结构化数据量，使其保持在限制范围内。",
+      "structuredData": "在同一图中声明每个被引用的 @id，或删除该引用。",
+      "schema": "修复为此页面报告的结构化数据属性。",
+      "pagination": "确保 rel=next/prev 的目标有效、可访问且相互指向。",
+      "ampTarget": "检查 AMP 页面：它必须返回 200，并将源页面声明为 canonical。",
+      "nonHtmlResource": "除非此 URL 应为 HTML 页面，否则无需处理。",
+      "responseBody": "减小页面大小或提高响应限制，然后重新爬取。",
+      "transientHttpFailure": "检查服务器稳定性；该请求仅在重试后才成功。",
+      "browser": "检查浏览器控制台中的渲染错误，并修复失败的资源。",
+      "rendered": "确保请求的 URL 不会在浏览器中跳转到其他位置。",
+      "robots": "如果此 URL 应可被爬取，请检查 robots.txt 规则。",
+      "genericCritical": "请优先修复此问题：它可能阻止页面被爬取或索引。",
+      "genericWarning": "检查受影响的页面并修正报告的元素。",
+      "genericNotice": "可选改进：有时间时检查受影响的页面。"
+    }
+  },
+  "help": {
+    "overview": {
+      "healthScore": {
+        "title": "Health score",
+        "what": "A single number from 0 to 100 that sums up how many technical and on-page SEO problems SEOmi found on this one page. 100 means nothing wrong was detected; every problem subtracts points, and serious problems subtract more than small ones.",
+        "why": "Search engines and visitors both prefer pages that load, can be read and are easy to understand. A low score usually means something is blocking the page from ranking, such as a missing title, a broken status code or a noindex tag. The score is a quick triage tool, not a ranking factor that Google reads.",
+        "action": "Check the colour: 85 and above (green) is healthy, 65 to 84 (amber) needs attention, below 65 (red) needs work now.\nOpen the issues list further down this screen and start with the Critical items.\nFix one issue, run the audit again and watch the score rise.\nDo not chase 100 at any price: a score of 90 with great content beats 100 on a thin page.",
+        "example": "A page with a missing title (Critical), no meta description (Warning) and two images without alt text (Info) might score 68. Adding the title and the description usually brings it above 85.",
+        "learnMore": "The score only covers what SEOmi can measure on this single page. It does not judge your content quality, backlinks or competition."
+      },
+      "httpStatus": {
+        "title": "HTTP status code",
+        "what": "A three-digit answer the web server gives to every request, saying whether the page was delivered. 200 means OK, 301 and 302 mean the page moved, 404 means not found, 410 means gone for good, and 500 or higher means the server itself failed.",
+        "why": "Google only indexes pages that answer 200 (or follow a redirect to one). A 404 or 5xx page drops out of search results, and visitors see an error. Even a short-lived 500 can make Googlebot visit your site less often.",
+        "action": "200: nothing to do, this is correct.\n301 or 302: check the final address is the page you want people to land on. Use 301 for permanent moves.\n404 or 410: restore the page, or redirect the old address to the closest matching page with a 301.\n5xx: ask your hosting provider or developer to check the server logs, then re-run the audit.\nAfter a fix, re-test to confirm the status is now 200.",
+        "example": "You renamed /blog/seo-tips to /blog/seo-guide and forgot the redirect. The old address now returns 404, so every link and Google result pointing to it leads to an error. A 301 from the old to the new address fixes it."
+      },
+      "responseTime": {
+        "title": "Response time",
+        "what": "How many milliseconds (1000 ms = 1 second) the server needed to start sending this page after SEOmi asked for it. It measures the server, not how long the page takes to display in a browser.",
+        "why": "A slow server delays everything that comes after it, so visitors leave and Google crawls fewer of your pages. Google suggests keeping server response under about 200 ms. Above 1000 ms is clearly slow.",
+        "action": "Under 200 ms: excellent, leave it.\n200 to 600 ms: acceptable; consider caching if the page is mostly static.\nAbove 600 ms: turn on page caching (or a CDN) and compress responses.\nAbove 1000 ms: check hosting quality, heavy database queries and slow plugins.\nMeasure two or three times, because a single reading can be a one-off spike.",
+        "example": "A blog post that answers in 1800 ms on shared hosting often drops to 150 to 300 ms after a full-page cache plugin is switched on."
+      },
+      "severityCounts": {
+        "title": "Issue severity counts",
+        "what": "The problems found on this page, grouped by how serious they are. Critical issues can stop the page from ranking or working. Warnings are real weaknesses that cost you traffic or clicks. Info items are small improvements or things worth knowing.",
+        "why": "Grouping tells you what to fix first. Ten Info items matter less than one Critical, so you avoid spending a day on cosmetic details while a broken canonical tag hides the page from Google.",
+        "action": "Fix every Critical issue first, then re-run the audit.\nWork through the Warnings, starting with the ones that affect many pages.\nTreat Info items as a backlog for when you have time.\nA 0 under Critical is the goal, not 0 everywhere.",
+        "example": "3 Critical, 5 Warning, 9 Info: start with the 3 Critical ones, for example a missing title, a noindex tag and a 404 on the main image."
+      },
+      "wordCount": {
+        "title": "Word count",
+        "what": "The number of words of visible text that SEOmi found in the main content of the page. Menus, scripts and hidden code are not counted. The reading time is estimated at about 200 words per minute.",
+        "why": "Pages with very little text give search engines little to understand, which is called thin content. Long is not automatically better, though: the page must fully answer what the visitor came for.",
+        "action": "Under 300 words: ask yourself whether the page really answers the question. Add useful detail if not.\n300 to 1000 words: normal for most service and product pages.\nOver 1500 words: typical for in-depth guides; make sure headings split it into scannable sections.\nCompare with the top Google results for your keyword, not with a magic number.",
+        "example": "A product page with 80 words usually loses to competitors who explain materials, sizes, shipping and returns in 400 words."
+      }
+    },
+    "metadata": {
+      "titleLength": {
+        "title": "Page title length",
+        "what": "The title is the blue clickable headline in Google results and the text on the browser tab. The length is counted in characters, spaces included.",
+        "why": "Google shows about 50 to 60 characters (roughly 580 pixels). Longer titles are cut off with an ellipsis, so your key words and brand can vanish. Titles that are too short waste a chance to describe the page and attract clicks.",
+        "action": "Aim for 40 to 65 characters (SEOmi shows green in this range).\nPut the main keyword near the start.\nMake every page title unique.\nAdd your brand at the end if it fits, for example after a dash.\nWrite for people: promise what the visitor will get.\nSave and re-audit to see the counter turn green.",
+        "example": "\"Cheap shoes\" (11 characters) is too short. \"Buy Men's Running Shoes Online | Free Returns | ShoeShop\" is 53 characters and fits."
+      },
+      "metaDescription": {
+        "title": "Meta description",
+        "what": "A one or two sentence summary of the page, hidden in the code, that Google often shows under the title in search results. It is not visible on the page itself.",
+        "why": "It does not directly change your ranking, but a clear, inviting description raises the share of people who click your result (click-through rate), which brings more visitors from the same position. When it is missing Google makes up its own snippet, often a random piece of text.",
+        "action": "Write a unique description for each page.\nKeep it between 120 and 160 characters so it is not cut off.\nInclude the main keyword naturally, because Google bolds words that match the search.\nSay what the visitor gains and add a call to action such as \"See prices\" or \"Learn how\".\nDo not copy the first paragraph of the page.",
+        "example": "\"Learn how to choose running shoes in 5 steps: fit, cushioning, weight, price and terrain. Includes a free size chart and buying tips.\" (about 135 characters)."
+      }
+    },
+    "headings": {
+      "h1Count": {
+        "title": "Number of H1 headings",
+        "what": "H1 is the main heading of a page, the biggest title the visitor sees at the top of the content. It is different from the title tag in the browser tab. Headings H2 to H6 are smaller sub-headings below it.",
+        "why": "The H1 tells visitors and search engines what the page is about in one line. Pages without an H1 look unstructured to screen readers. Several H1s are not an error for Google, but they dilute the message and confuse assistive tools.",
+        "action": "Exactly one H1 per page is the target.\nIf there are 0: add one at the top of the content that describes the page, with the main keyword.\nIf there are 2 or more: keep the best one and change the others to H2 or H3.\nDo not use H1 only for styling; use CSS for size instead.",
+        "example": "On a recipe page the H1 is \"Easy Homemade Pizza Dough\" and the steps below are H2 headings: \"Ingredients\", \"Method\", \"Tips\"."
+      }
+    },
+    "images": {
+      "overview": {
+        "title": "Images found",
+        "what": "How many images SEOmi detected on the page, together with checks on each one: alt text (a short description for people who cannot see the image), size attributes, format and file weight.",
+        "why": "Images are usually the heaviest part of a page, so they slow it down. Missing alt text hurts blind visitors and removes a chance to appear in Google Images. Missing width and height make the page jump while loading (layout shift).",
+        "action": "Give every meaningful image a short, accurate alt text. Use an empty alt for decorative ones.\nSet width and height attributes so the browser reserves the space.\nCompress photos; try to keep each under 150 KB.\nUse modern formats such as WebP or AVIF.\nLazy-load images that are below the first screen.",
+        "example": "alt=\"Red running shoe, side view\" is useful. alt=\"image1.jpg\" or a stuffed list of keywords is not."
+      }
+    },
+    "links": {
+      "overview": {
+        "title": "Links on the page",
+        "what": "The count of all links SEOmi found, split into internal (to your own site), external (to other sites) and nofollow (links marked so that search engines do not pass trust through them).",
+        "why": "Internal links help Google discover pages and understand which ones matter. External links to good sources make content more trustworthy. Broken links frustrate visitors and waste crawl budget.",
+        "action": "Check the page links to your important related pages with descriptive text, not \"click here\".\nFix or remove any link that returns 404.\nLink to reputable external sources only; use nofollow for paid or untrusted ones.\nKeep the number reasonable: a few dozen on normal pages, not hundreds.\nReview security risks, for example links opening a new tab without rel=\"noopener\".",
+        "example": "A guide about running shoes should link to your \"shoe size chart\" page with the anchor text \"size chart\"."
+      }
+    },
+    "settings": {
+      "theme": {
+        "title": "Theme",
+        "what": "Chooses how SEOmi looks: Dark, Light, or System, which follows the setting of your computer.",
+        "why": "It does not change any audit result. Pick what is easiest on your eyes; dark themes reduce glare in dim rooms, light themes are easier to read in bright sunlight, and System switches automatically at night.",
+        "action": "Click Dark, Light or System.\nThe change applies immediately and is remembered next time you open the app.\nIf you share your screen or print reports, Light is usually easier to read on projectors.",
+        "example": "Choose System if your computer switches to dark mode in the evening and you want SEOmi to follow."
+      },
+      "auditNotifications": {
+        "title": "Audit notifications",
+        "what": "When enabled, SEOmi sends a desktop notification as soon as a long audit, crawl or scheduled check finishes, even if the app is in the background.",
+        "why": "Large crawls can take minutes or hours. Notifications let you work on something else and come back at the right time. They also tell you about scheduled checks that finished while you were away.",
+        "action": "Turn the switch on if you run crawls or schedules.\nWhen your system asks for permission, choose Allow. If you refused earlier, enable notifications for SEOmi in the system settings.\nTurn it off if you find the pop-ups distracting.\nThe text below the switch shows whether permission was granted.",
+        "example": "Start a 5000-page crawl, switch to your email, and get a notification when it is done."
+      }
+    },
+    "focus": {
+      "siteFocusScore": {
+        "title": "Site Focus Score(SFS)",
+        "what": "一个 0-100 的指标,衡量站点页面在多大程度上始终围绕同一个核心主题。它是所有页面主题相关度评分(Topical Relevance Score,TRS)的加权平均:首页权重为 3 倍,分类和栏目页为 2 倍,文章为 1 倍。",
+        "why": "搜索引擎和读者都更青睐明确聚焦于单一主题的站点。SFS 偏低意味着有许多页面稀释了这一信号。",
+        "action": "对照分级查看:90-100 优秀,75-89 良好,60-74 中等,40-59 较弱,0-39 严重。\n打开热力图,优先修复得分最低的页面。",
+        "example": "一个糖尿病博客有 40 篇糖尿病文章和 8 篇旅行文章,得分约为 80。"
+      },
+      "topicRelevance": {
+        "title": "主题相关度评分(TRS)",
+        "what": "针对单个 URL 的 0-100 评分:该页面与站点核心主题的契合程度。综合了语义相似度、关键词重合度和语义偏移。",
+        "why": "它能显示是哪些具体页面把整个站点拉离了主题。",
+        "action": "目标是 75 分及以上。\n改进 60 到 74 分之间的页面。\n对低于 40 分的页面进行删除、重定向或重写。",
+        "example": "糖尿病站点上一篇关于血糖仪的页面:TRS 88。一篇关于廉价机票的页面:TRS 12。"
+      },
+      "coreTopicConfidence": {
+        "title": "核心主题置信度",
+        "what": "检测到的核心主题相对于站点上其他主题的主导程度,范围为 0 到 100%。",
+        "why": "置信度较低时,说明站点没有清晰的主要主题,或分析的页面太少,评分的可靠性会下降。",
+        "action": "高于 60%:可以信任该主题。\n低于此值时,请检查主题名称,若有误则使用手动指定。",
+        "example": "如果最主要的主题占总词权重的 70%,则置信度为 70%。"
+      },
+      "onTopicRatio": {
+        "title": "主题相关占比",
+        "what": "TRS 达到 60 及以上的内容页面所占比例。登录、购物车等技术页面不计入。",
+        "why": "它告诉你有多少个页面(而不是加权后的分数)在支撑核心主题。",
+        "action": "通过修复临界页面(60-74 分及以下)和移除偏离主题的页面来提高该占比。",
+        "example": "50 个内容页面中有 42 个 TRS 达到 60 及以上:占比为 84%。"
+      },
+      "semanticSimilarity": {
+        "title": "语义相似度",
+        "what": "页面用词与站点核心主题画像的接近程度(余弦相似度,以百分比显示)。",
+        "why": "它是 TRS 公式中占比最大的部分。",
+        "action": "80-100% 为强,50-79% 为中等,低于 50% 为弱。\n补充属于核心主题的词语和章节。",
+        "example": "核心主题为糖尿病的站点上,一篇关于胰岛素泵的页面:86%。"
+      },
+      "keywordOverlap": {
+        "title": "关键词重合度",
+        "what": "核心主题最重要的 30-50 个关键词中,出现在该页面上的比例。",
+        "why": "即使写得很好,漏掉大部分核心关键词的页面也无法支撑该主题。",
+        "action": "超过 60% 为强;低于 30% 属于偏离主题。\n在合适且自然的位置补充缺失的核心关键词。",
+        "example": "核心词集有 40 个关键词,页面使用了其中 28 个:重合度为 70%。"
+      },
+      "semanticDrift": {
+        "title": "语义偏移",
+        "what": "页面词权重中属于其他主题、而非核心主题的比例。",
+        "why": "偏移较高说明页面把篇幅花在了别的话题上。",
+        "action": "偏移超过 50% 是危险信号。\n删减或移走无关章节,或将其拆分到站点的独立板块。",
+        "example": "一个糖尿病页面中有大段关于度假套餐的内容:偏移 55%。"
+      },
+      "keywordAlignment": {
+        "title": "关键词契合度",
+        "what": "显示页面上每个高频关键词与核心主题的关系。符号含义:对勾表示相关度高于 70%,波浪号表示 40% 到 70%,叉号表示低于 40%。",
+        "why": "让你一眼看出页面上哪些词有助于主题,哪些词在分散注意力。",
+        "action": "保留并扩展标有对勾的关键词。\n减少或删除标有叉号的词。",
+        "example": "“血糖” - 92% - 对勾;“酒店” - 8% - 叉号。"
+      },
+      "deltaScore": {
+        "title": "分数变化量",
+        "what": "执行某项操作后 Site Focus Score 的模拟变化。模拟会用新的页面分值重新计算加权平均。",
+        "why": "让你按每投入一份精力的收益对操作排序,而不是凭感觉猜测。",
+        "action": "优先从收益最高、投入最小的操作开始。\n完成后重新爬取,以确认实际提升。",
+        "example": "移除 6 个偏离主题的页面:提高 4.2 分。"
+      },
+      "lowConfidence": {
+        "title": "置信度低",
+        "what": "当分析的页面太少,或没有哪个主题明显领先时显示,此时检测到的核心主题可能有误。",
+        "why": "样本较小时,一个特殊页面就可能改变整个结果。",
+        "action": "爬取更多页面。\n检查主题名称,若有误请手动指定。\n对删除建议要谨慎对待。",
+        "example": "只爬取 6 个页面,只能得到一个粗略的结果。"
+      },
+      "benchmark": {
+        "title": "竞争对手基准",
+        "what": "把你的 Site Focus Score 与在搜索中针对你的核心主题排名靠前的站点放在一起对比。每个竞争对手只抽取少量页面样本进行爬取,并使用与你的站点相同的公式评分。",
+        "why": "分数只有与参照物比较才有意义。了解领先者的聚焦程度,就能知道自己还有多少提升空间,以及什么是现实的目标。",
+        "action": "在已连接搜索结果数据源的情况下运行基准。\n将你的主题相关占比和偏离主题的页面与前 3 名对比。\n打开缺口列表,针对多数竞争对手使用的词规划内容。",
+        "example": "如果前 3 名平均 82 分而你是 64 分,先通过修复偏离主题的页面把目标定在 80 分。",
+        "learnMore": "竞争对手的数据来自有限的爬取样本,因此请把微小差异视为噪声。"
+      },
+      "benchmarkTarget": {
+        "title": "目标分数",
+        "what": "建议的目标:至少 80 分;若前 3 名竞争对手的平均分更高,则取该平均分。",
+        "why": "把对比结果变成一个可以努力达成的数字。",
+        "action": "把它作为规划目标。\n完成修复后重新运行基准,查看变化。"
+      },
+      "indexGate": {
+        "title": "可索引性过滤",
+        "what": "带 noindex 或 canonical 指向其他 URL 的页面不计入得分，因此得分反映能参与排名的页面。",
+        "why": "计入 Google 不会索引的页面会拉低得分，还可能建议对已是 noindex 的页面再设置 noindex。",
+        "action": "查看被跳过的页面数。\n修复得分下方列出的冲突，例如 noindex 的支柱页面。\n仅在想查看包含全部页面的得分时才使用“纳入这些页面”。",
+        "example": "带 noindex 的标签页会被跳过，而不是被判为偏题。"
+      },
+      "protection": {
+        "title": "URL 保护",
+        "what": "对主题相关度低的页面，显示真实的点击、转化、收入或引荐域名是否支持保留。",
+        "why": "仅凭得分低，不足以删除、重定向或对有流量或外链的页面设置 noindex。",
+        "action": "连接 GSC 和 GA4 以便获得测量数据。\n把“需要数据”视为未知，而不是零。\n手动决定；301 需要相关的目标页面。",
+        "example": "TRS 为 30 且 90 天内有 80 次点击的页面会受到保护。"
+      }
+    },
+    "authority": {
+      "tas": {
+        "title": "Topical Authority Score",
+        "what": "0-100 分，衡量网站相对市场对核心主题覆盖得多完整、多深入、多连贯。综合主题覆盖（35%）、实体深度（30%）、孤岛内聚（25%）和时效（10%），再按 Site Focus Score 缩放。",
+        "why": "SFS 只衡量纯度。只有三篇完美文章的网站 SFS 很高，但因为只覆盖领域的一小部分，权威度几乎为零。TAS 衡量您覆盖了领域的多少。",
+        "action": "目标是 SFS 与 TAS 都达到 80 以上。SFS 高而 TAS 低：增加内容；TAS 高而 SFS 低：清理或拆分无关板块。先做扩展计划中的第一项。"
+      },
+      "tcr": {
+        "title": "主题覆盖率（TCR）",
+        "what": "网站用专门且切题的页面覆盖的市场子主题占比。每个子主题按重要性加权，明确匹配计全分，部分匹配计一半。",
+        "why": "搜索引擎会把能回答领域内全部问题的网站视为权威来源。缺口会把访客和排名信号让给竞争对手。",
+        "action": "高于 80% 为权威完整；低于 40% 为知识零散。打开覆盖图谱，筛选缺口，优先发布最重要的缺失子主题。"
+      },
+      "esd": {
+        "title": "实体深度",
+        "what": "检查页面是否真正覆盖其子主题：头部页面使用的概念和属性、在专属标题下回答的用户问题，以及原创内容的多少。",
+        "why": "缺少领域关键概念的长文会输给更短但更完整的来源。篇幅本身不算数。",
+        "action": "打开覆盖较浅的子主题：补充缺失的实体和属性，在独立 H2 下回答列出的问题，并加入竞争对手没有的数据或表格。"
+      },
+      "scs": {
+        "title": "孤岛内聚度",
+        "what": "衡量同一主题的文章通过内链联系得多紧密：支柱页与文章双向链接、描述性锚文本、没有孤立页面，专业页面不链接到无关页面。",
+        "why": "孤立页面既不传递也不接收主题权威。“点击这里”之类的锚文本没有信息，只计十分之一权重。",
+        "action": "从支柱页和相关文章链接每个孤立页面，使用描述目标的锚文本（如“糖尿病神经病变症状”），并移除指向无关页面的链接。"
+      },
+      "matrix": {
+        "title": "SFS × TAS 矩阵",
+        "what": "按纯度（SFS，横轴）与完整度（TAS，纵轴）定位网站。四个象限：主导权威、精品专家型、被稀释的巨头、缺乏焦点的泛化者。",
+        "why": "为什么聚焦高而权威低？五篇完美的糖尿病文章 SFS 为 95，TAS 却只有 14：没有跑题内容，但缺少 90% 的领域知识。",
+        "action": "保持 SFS 在 80 以上，同时新增集群，把 TAS 提升到 80 以上。高亮象限会告诉您应扩展、清理还是重构。"
+      },
+      "cannibalization": {
+        "title": "语义内部竞争",
+        "what": "您的两个或多个页面回答同一搜索意图：内容与标题几乎相同（余弦相似度 ≥ 88%），或都完整覆盖同一参考子主题。",
+        "why": "内链信号和相关性被重复页面分摊，因此没有一个页面能进入前列。",
+        "action": "保留最强页面，把独有内容并入，其余做 301 重定向并更新内链。发布前用草稿检查，避免产生新的重叠。"
+      }
+    },
+    "aio": {
+      "aioReadiness": {
+        "title": "AI 就绪度得分（AIO-R）",
+        "what": "以 0-100 衡量 AI 回答引擎（Google AI Overviews、Perplexity、Copilot）提取并引用你页面段落的难易程度。综合了自成一体的段落（45%）、事实密度（35%）和可提取的结构（20%）。",
+        "why": "AI 引擎会把页面切分为分块，只引用能回答问题的那一块。含糊或依赖上下文的段落会被忽略。",
+        "action": "打开最薄弱的段落并修复列出的问题。\n以答案优先的方式改写，使用明确的名称和数字。",
+        "example": "标题为“正常血糖是多少？”的章节若以“这取决于许多因素”开头，得分会很低。"
+      },
+      "selfContainment": {
+        "title": "自成一体",
+        "what": "段落脱离页面后是否仍然成立：明确写出主语，不以“它”“这”或“如上所述”开头。",
+        "why": "分块是单独索引的。悬空的代词会让模型缺少主语，分块能匹配的问题就更少。",
+        "action": "把段落开头的“它”“这”换成真实名称。\n把答案放在每个标题下的前 40-60 个词内。",
+        "example": "“这个值应保持在 140 以下。”改为“餐后血糖应保持在 140 mg/dl 以下。”"
+      },
+      "spoDensity": {
+        "title": "事实密度",
+        "what": "每 100 个词中有多少条清晰的主谓宾事实，例如“空腹血糖为 70-99 mg/dl”。目标约为每 100 词 3 条。",
+        "why": "模型引用可验证的陈述。空洞的文字没有可提取的内容。",
+        "action": "把含糊的句子改成含主语、动词和数值的陈述。\n有单位和数字时请补上。",
+        "example": "“许多因素都很重要”没有事实。“糖化血红蛋白低于 7% 是常见的治疗目标”则有事实。"
+      },
+      "extractability": {
+        "title": "可提取性",
+        "what": "页面是否使用解析器容易提取的结构：表格、编号列表、定义列表以及清晰的 H2/H3 大纲。",
+        "why": "生成式引擎更倾向于用表格和步骤列表组织答案，因为它们的含义明确。",
+        "action": "对比用表格呈现，流程用编号列表呈现。\n把 H2/H3 标题写成人们会问的问题。",
+        "example": "写成一个长段落的分步指南，得分低于同一指南改写成有序列表。"
+      },
+      "answerFirst": {
+        "title": "答案优先",
+        "what": "标题下的前 40-60 个词应直接回答标题，写明主语并给出事实。",
+        "why": "RAG 检索会把问题与分块开头比较。冗长的开场会降低匹配度。",
+        "action": "先写直接答案，再写背景。\n在第一句重复标题中的关键词。",
+        "example": "标题“CGM 传感器能用多久？”之后写“CGM 传感器可用 10-15 天，视型号而定。”"
+      },
+      "chunking": {
+        "title": "分块模拟",
+        "what": "SEOmi 按 RAG 索引的方式切分页面：每个 H2/H3 章节一个分块，较长章节按约 300 个 token 的窗口拆分。",
+        "why": "你看到的就是检索系统看到的页面：一组彼此独立、各自被评估的段落。",
+        "action": "查看每个薄弱段落的分块得分。\n让章节足够短，能放进一个分块。",
+        "example": "900 个 token 的章节会变成约三个分块，只有第一个紧跟在标题下。"
+      }
+    },
+    "trust": {
+      "trustScore": {
+        "title": "实体信任得分",
+        "what": "0 到 100 的得分，表示搜索引擎能在多大程度上验证谁发布并撰写了你的内容。它是四个层级的平均值：实体图谱、作者主题契合度、来源质量和编辑透明度。",
+        "why": "在健康、金融和法律主题中，仅有主题聚焦是不够的。缺少可验证作者和发布者的页面很少能进入前列。",
+        "action": "先看列表中的严重事项。\n修复最低的层级，然后重新抓取以查看得分变化。"
+      },
+      "schemaGraph": {
+        "title": "实体图谱（JSON-LD）",
+        "what": "检查结构化数据是否将发布者和每位作者标明为带有稳定 @id 和 sameAs 链接的实体，以及文章是否包含作者、日期、审核者和引用。",
+        "why": "实体相互关联后，搜索引擎可以把你的作者与已知的人物和组织对应起来，而不是只靠文本猜测。",
+        "action": "添加带 @id 的 Organization 和 Person 标记。\n用 sameAs 把每位人员和发布者链接到 Wikidata、ORCID、LinkedIn 或官方注册库。\n使用作者列表下方的 JSON-LD 生成器。"
+      },
+      "authorAlignment": {
+        "title": "作者主题契合度",
+        "what": "将每位作者声明的专业能力（职位、knowsAbout 和个人主页）与网站的核心主题进行比较。",
+        "why": "一篇关于胰岛素治疗的文章如果由营销文案撰稿人署名，专业性信号就很弱。",
+        "action": "把文章分配给资料与主题相符的作者。\n在 Person 标记中添加 jobTitle 和 knowsAbout。\n为每位作者发布个人主页。"
+      },
+      "citationQuality": {
+        "title": "来源质量",
+        "what": "显示有多少文章页面链接到 .gov、.edu、PubMed、NCBI、WHO 或学术出版社等可信来源，以及有多少出站链接已失效。",
+        "why": "引用一手来源表明观点可以验证。失效的引用会削弱这一信号。",
+        "action": "在每篇专业文章中添加一手来源的引用。\n替换或删除失效的出站链接。\n在“链接”标签页检查外部链接以刷新状态码。"
+      },
+      "transparency": {
+        "title": "编辑透明度",
+        "what": "查找编辑政策、“关于我们”页面、联系页面、公司注册信息，以及文章上可见的修改或审核日期。",
+        "why": "读者和搜索引擎需要知道网站背后是谁，以及内容如何核查。",
+        "action": "发布编辑与事实核查政策。\n添加联系方式和公司注册信息。\n在每篇文章上显示最近更新日期。"
+      },
+      "ymyl": {
+        "title": "YMYL 主题",
+        "what": "Your Money or Your Life：健康、金融和法律等主题，错误信息可能伤害读者。",
+        "why": "搜索质量指南对这些主题提出最高的信任要求，因此缺少作者或审核者属于严重缺口。",
+        "action": "每篇文章都标明合格的作者。\n医学或法律内容请添加具备资质的审核者。\n引用一手来源。"
+      },
+      "sameAs": {
+        "title": "sameAs 链接",
+        "what": "schema.org 属性，用于从某个人或组织指向其他地方的同一实体：Wikidata、ORCID、LinkedIn 或官方注册库。",
+        "why": "它让搜索引擎能够确认你的作者就是具备这些资质的真实人物。",
+        "action": "为每位作者和发布者至少添加一个权威的 sameAs URL。\n使用与该主页一致的姓名和拼写。"
+      }
+    },
+    "executionCard": {
+      "bus": {
+        "title": "链接隔离",
+        "what": "其他模块要删除或做301重定向的URL，会从所有链接建议中排除。",
+        "why": "否则一个面板让你链接到某页面，而另一个面板却让你删除它。",
+        "action": "查看列表。\n部署前先解决标红的冲突。"
+      },
+      "brief": {
+        "title": "一键简报",
+        "what": "用提出建议的模块的数据，创建或更新此页面的内容简报。",
+        "why": "简报以真实缺失的实体、链接、问题和来源为起点，而不是复制的文本。",
+        "action": "点击按钮。\n打开简报工作台并编辑草稿。\n稍后再次点击可刷新数据且不会产生重复。"
+      },
+      "deploy": {
+        "title": "部署产物",
+        "what": "现成的重定向和删除规则文件：Apache、Nginx、Cloudflare Bulk Redirects和WordPress Redirection。",
+        "why": "规则会先检查循环和链式重定向，避免发布影响抓取的重定向。",
+        "action": "下载适合你服务器的文件。\n先部署到预发布副本。\n将任务标记为已实施，并在下次抓取时验证。"
+      },
+      "tasks": {
+        "title": "任务跟踪器",
+        "what": "每项建议的更改都是一个任务：已计划、已实施，然后已验证或失败。",
+        "why": "下一次抓取会检查真实结果，并显示模块分数相对基线的变化。",
+        "action": "从建议中添加任务。\n部署后标记为已实施。\n运行新的抓取并点击验证。"
+      },
+      "sla": {
+        "title": "负责人与 SLA",
+        "what": "任务由谁负责、紧急程度以及截止日期。",
+        "why": "有负责人和日期的任务不会丢失，逾期任务也便于筛选。",
+        "action": "输入负责人姓名。\n选择优先级和 SLA 日期。\n使用筛选查看自己的或逾期的任务。"
+      }
+    },
+    "sprs": {
+      "panel": {
+        "title": "语义 PageRank",
+        "what": "内部 PageRank（阻尼 0.85）缩放到 0-100，并标记没有出链、入链过少或把多数链接指向无关页面的页面。",
+        "why": "显示链接权重在站内哪里聚集、哪里流失。",
+        "action": "为死胡同页面添加出链。\n从相关的强页面链接到内链不足的页面。\n检查泄漏。"
+      }
+    },
+    "decay": {
+      "radar": {
+        "title": "语义衰减雷达",
+        "what": "比较同一查询、市场、提供方和模型下保存的 SERP 快照：质心偏移、共识实体的新增或消失、意图和形式变化。",
+        "why": "在排名下降之前，前排结果可能已经偏离你的页面。",
+        "action": "打开所引用的 URL。\n人工决定是否更新页面。"
+      }
+    },
+    "sija": {
+      "panel": {
+        "title": "搜索意图 (SIJA)",
+        "what": "根据表格、列表、表单、商品卡片等结构，把页面归入 8 种微意图之一，并与真实 TOP 5 页面的平均值比较。",
+        "why": "形式与搜索结果不同的页面，在该查询上往往排名较差。",
+        "action": "打开 TOP 页面。\n补上缺失的形式，如表格或工具。\n把它当作提示，而不是结论。"
+      }
+    },
+    "prePublish": {
+      "check": {
+        "title": "发布前检查",
+        "what": "模拟把此草稿加入网站：Site Focus Score 的变化、与现有页面的相似度，以及每个段落能否独立成立。",
+        "why": "在上线前发现重复或偏题的页面。",
+        "action": "修复列出的每个原因。\n重新运行检查。\n经自己复核后再发布。"
+      }
+    },
+    "parity": {
+      "hreflang": {
+        "title": "国际对等性",
+        "what": "把通过 hreflang 关联的各语言版本的主题深度与参考语言比较，并把每个主题标为已覆盖、较浅、缺失或有意本地化。",
+        "why": "它区分真正的内容缺口与有意提供不同内容的市场。",
+        "action": "检查缺失和较浅的主题。\n把某市场不需要的主题标为本地化。\n工具不会替你修改 hreflang。"
+      }
+    },
+    "offPage": {
+      "tbva": {
+        "title": "站外主题权威",
+        "what": "把 follow 外链的提供方权威度相加，并按来源页面与你主题的接近程度加权。同时找出同一段落中同时提到你的品牌和核心实体的位置。",
+        "why": "少数相关链接可能比大量无关链接更有价值。",
+        "action": "检查相似度低的来源。\n把无链接的提及当作联系线索。\n含否定的提及请自行阅读判断。"
+      }
+    },
+    "llmEconomy": {
+      "costGate": {
+        "title": "LLM 成本与事实闸门",
+        "what": "统计 AI 调用成本，以及缓存和本地模型节省的费用。含有来源中不存在的剂量或金额的医疗、金融句子会被拒绝。",
+        "why": "远程服务商需要付费，并会收到您的页面文本。健康和金融内容中编造的剂量十分危险。",
+        "action": "大批量任务优先使用本地模型。\n对照来源检查被拒绝的句子。\nYMYL 文本在进入 CMS 前由您亲自批准。"
+      }
+    },
+    "templateGovernor": {
+      "informationGain": {
+        "title": "模板信息增益",
+        "what": "每个页面中不属于同一模板共有样板文字的部分。增益低意味着有成千上万近乎相同的副本。",
+        "why": "Google 可能把整个模板分段当作内容单薄而过滤。处理一条模板警告比处理成千上万条页面警告容易得多。",
+        "action": "为每个页面添加独有数据（本地事实、数字、评价）。\n或在有真实内容之前对该分段设置 noindex。\n重新抓取并确认增益上升。"
+      }
+    },
+    "outreach": {
+      "gapDomains": {
+        "title": "外链拓展目标",
+        "what": "链接到您的前三名竞争对手但不链接到您的网站，按链接的竞争对手数量和权威度排序。",
+        "why": "已经链接多个竞争对手的网站最容易接受链接请求，前提是您能提供新的内容。",
+        "action": "从列表顶部开始。\n打开草稿，加入只有您能提供的资料并修改。\n从您自己的邮箱亲自发送。SEOmi 不会发送任何内容。"
+      }
+    },
+    "causalMarket": {
+      "updateWindow": {
+        "title": "Google 更新窗口",
+        "what": "Google 推出更新或整个市场异常波动的日期。当分析期与这类窗口重叠时，结果会附带不确定区间并加以标记。",
+        "why": "同一网站内的对照组在更新期间与测试组受到同样影响，因此上涨或下跌可能来自市场而非您的改动。",
+        "action": "将带标记的结果视为无定论。\n等更新窗口结束后再次比较。\n如有外部市场基线，请使用。"
+      }
+    },
+    "igos": {
+      "score": {
+        "title": "IGOS 分数",
+        "what": "相对于真实 TOP 结果已有内容的信息增益：主题相关的新实体、证据密度、经验标记和子主题分布，基准薄弱时会降低。",
+        "why": "显示页面在共识之外增加了什么。标记只表示声明的经验，不证明研究或原创性。",
+        "action": "检查四个组成部分。\n补充缺失的基础内容。\n编辑后重新运行。"
+      },
+      "heatmap": {
+        "title": "段落热力图",
+        "what": "每个段落被标为回声（与竞品段落接近的复制）、增益（切题且新）、偏移（离题）或中性。",
+        "why": "回声没有新内容，偏移会稀释主题。标签是文字，不只靠颜色。",
+        "action": "先打开回声和偏移段落。\n用方向键移动。\n改写或重新聚焦。"
+      },
+      "coverage": {
+        "title": "基准覆盖率",
+        "what": "页面已覆盖的共识实体占比。低于 50% 时分数会乘以惩罚系数。",
+        "why": "没有共同基础，即使有一点新意，页面仍不符合主题。",
+        "action": "补全缺失的共识实体。\n再添加新的事实。"
+      }
+    }
+  },
+  "helpUi": {
+    "what": "这是什么",
+    "why": "为什么重要",
+    "action": "怎么做",
+    "example": "示例",
+    "learnMore": "了解更多"
+  },
+  "siteFocusMonitoring": {
+    "alert": {
+      "title": "SEOmi · Site Focus Score 提醒",
+      "sfsDrop": "两次完整分析之间,Site Focus Score 下降了 {{points}} 分(从 {{from}} 降至 {{to}})。",
+      "contentGuard": "过去 24 小时内首次发现的 {{count}} 个新页面偏离主题(TRS 低于 40):{{urls}}。"
+    },
+    "weekly": {
+      "title": "SEOmi · 站点聚焦度周报",
+      "body": "Site Focus Score {{score}}(较上周 {{delta}})。主要任务:{{tasks}}",
+      "noPrevious": "首份报告",
+      "task": "{{code}}(+{{gain}} 分)",
+      "noTasks": "没有紧急任务"
+    }
+  },
+  "focus": {
+    "title": "站点聚焦度",
+    "subtitle": "已爬取页面在多大程度上始终围绕同一个核心主题。",
+    "band": {
+      "excellent": "聚焦度优秀",
+      "good": "聚焦度良好",
+      "moderate": "聚焦度中等",
+      "weak": "聚焦度较弱",
+      "critical": "聚焦度严重不足"
+    },
+    "bandRange": {
+      "excellent": "90-100",
+      "good": "75-89",
+      "moderate": "60-74",
+      "weak": "40-59",
+      "critical": "0-39"
+    },
+    "empty": "没有可分析的含内容页面。请先运行爬取。",
+    "status": {
+      "strong": "强",
+      "moderate": "中等",
+      "borderline": "临界",
+      "weak": "较弱",
+      "off-topic": "严重偏离主题"
+    },
+    "type": {
+      "homepage": "首页",
+      "category": "分类页",
+      "article": "文章",
+      "technical": "技术页"
+    },
+    "effort": "工作量:{{min}}-{{max}} 小时(估算)",
+    "banner": {
+      "lowConfidence": "样本较小(共 {{count}} 个页面),结果仅供参考;要获得可靠的核心主题,请至少爬取 10 个页面。删除建议受到限制。",
+      "multiTopic": "检测到 {{count}} 个主题板块。该站点没有单一的主导主题。下方显示各子站点的评分。",
+      "lexicalFallback": "所选语言的分析使用 TF-IDF 统计算法。深度语义相似度部分不可用,评分基于关键词覆盖率和分布。",
+      "skippedRender": "因 JavaScript 渲染超时,有 {{count}} 个页面未纳入分析。",
+      "degraded": "部分页面的数据有限,因此其评分可能不够精确。",
+      "unmatchedTopic": "没有页面与主题“{{topic}}”匹配,将改用自动识别的主题。",
+      "gateSkipped": "已跳过 {{count}} 个页面（noindex/canonical）。",
+      "gateInclude": "纳入这些页面",
+      "gateExclude": "重新排除"
+    },
+    "skip": {
+      "render-timeout": "JavaScript 渲染超时",
+      "request-error": "请求失败",
+      "non-topical-status": "非内容类 HTTP 状态",
+      "non-html": "不是 HTML 页面",
+      "no-content": "没有文本内容",
+      "noindex": "已排除：noindex",
+      "canonicalized": "已排除：canonical 指向其他 URL"
+    },
+    "hero": {
+      "label": "Site Focus Score",
+      "outOf": "满分 100",
+      "unavailable": "暂无得分：抓取的页面均无法评分。请重新抓取或检查来源；这不是 0 分的结果。",
+      "summaryAll": "所有 {{count}} 个已分析页面都围绕主题。",
+      "summaryOff": "{{count}} 个页面中有 {{off}} 个明显偏离核心主题。",
+      "metaButton": "分析详情",
+      "metaPages": "已分析页面:{{count}}",
+      "metaAge": "更新时间:{{date}}",
+      "recalc": "重新计算",
+      "howItWorks": "它是如何运作的?",
+      "change": "较上次分析 {{delta}} 分",
+      "progressAria": "Site Focus Score {{score}} 分(满分 100),{{band}}",
+      "recalcBudget": "今天还剩 {{remaining}} 次完整重新计算机会(共 {{limit}} 次)。",
+      "recalcExhausted": "已达到每日 {{limit}} 次完整重新计算的上限。请明天再试。"
+    },
+    "drawer": {
+      "title": "Site Focus Score 的工作原理",
+      "close": "关闭",
+      "weights": "评分中的页面权重",
+      "weightHome": "首页:权重 3",
+      "weightCategory": "分类、栏目、支柱页面和枢纽页面:权重 2",
+      "weightArticle": "文章、帖子和卡片:权重 1",
+      "sfsFormula": "SFS = sum(权重 x TRS) / sum(权重),对所有已分析页面求和",
+      "trsTitle": "主题相关度评分(TRS)",
+      "trsFormula": "TRS = clamp(0..100, (0.5 x 相似度 + 0.3 x 重合度 - 0.2 x 偏移) x 125)",
+      "trsLexical": "不含语义部分时:TRS = clamp(0..100, (0.75 x 重合度 - 0.25 x 词汇偏移) x 125)",
+      "bands": "分级:90-100 优秀,75-89 良好,60-74 中等,40-59 较弱,0-39 严重。",
+      "onTopic": "TRS 达到 60 的页面计为主题相关。"
+    },
+    "core": {
+      "title": "核心主题",
+      "label": "识别出的主题",
+      "terms": "高频词",
+      "termAria": "{{term}}:{{pct}}%",
+      "coverage": "覆盖率:站点 {{pct}}% 的内容与该主题密切相关。",
+      "wrong": "主题不对?",
+      "inputLabel": "你的主题(词语或短语)",
+      "placeholder": "例如:糖尿病治疗",
+      "reset": "恢复为识别出的主题",
+      "manualActive": "手动指定的主题:{{input}}",
+      "confidenceLine": "核心主题置信度:{{pct}}%"
+    },
+    "metrics": {
+      "title": "关键指标",
+      "confidence": "核心主题置信度",
+      "onTopic": "主题相关占比",
+      "pages": "已评分页面",
+      "skipped": "已跳过页面",
+      "offTopic": "偏离主题的页面(TRS 低于 40)",
+      "borderline": "临界页面(60-74)"
+    },
+    "heatmap": {
+      "title": "主题分布",
+      "treeAria": "按 URL 排列的页面及其主题相关度",
+      "ignoreTechnical": "忽略技术页面",
+      "empty": "没有符合此筛选条件的页面。",
+      "filter": {
+        "all": "全部({{count}})",
+        "critical": "严重 <40({{count}})",
+        "borderline": "临界 60-74({{count}})",
+        "strong": "强 >=75({{count}})"
+      },
+      "filtersAria": "按相关度筛选页面",
+      "warning": "低于 60:存在偏离主题的风险",
+      "trsBar": "TRS {{trs}}",
+      "open": "打开 {{url}} 的页面分析",
+      "section": "栏目 {{name}}",
+      "home": "首页"
+    },
+    "detail": {
+      "title": "页面分析",
+      "back": "返回列表",
+      "close": "关闭页面分析",
+      "trs": "TRS",
+      "status": "状态",
+      "why": "为什么是这个分数?",
+      "similarity": "语义相似度:{{value}}%",
+      "overlap": "关键词重合度:{{value}}%",
+      "drift": "语义偏移:{{value}}%",
+      "driftFlag": "危险信号:页面一半以上的内容在谈论其他主题。",
+      "similarityStrong": "强",
+      "similarityModerate": "中等",
+      "similarityWeak": "弱",
+      "foreign": "其他主题:{{label}}({{pct}}%)",
+      "noForeign": "未检测到其他主题。",
+      "matched": "与核心主题匹配的关键词",
+      "unmatched": "属于其他主题的关键词",
+      "none": "未找到。",
+      "count": "{{count}}x",
+      "context": "上下文:{{text}}",
+      "clusterOf": "主题:{{cluster}}",
+      "skipped": "该页面未评分:{{reason}}。",
+      "degraded": "该页面数据有限,因此评分不够精确。"
+    },
+    "matrix": {
+      "title": "关键词契合度矩阵",
+      "keyword": "关键词",
+      "freq": "频次",
+      "relevance": "与核心主题的相关度",
+      "alignment": "契合度",
+      "match": "匹配(高于 70%)",
+      "partial": "部分匹配(40-70%)",
+      "miss": "不匹配(低于 40%)",
+      "empty": "没有可显示的关键词。"
+    },
+    "playbook": {
+      "title": "如何处理这个页面",
+      "typeA": "A 类:偏离主题的页面",
+      "typeB": "B 类:临界页面",
+      "typeC": "C 类:高相关页面",
+      "options": "可选方案",
+      "steps": "步骤",
+      "potential": "预期 TRS:{{min}}-{{max}}(估算)",
+      "gain": "站点提升:+{{gain}} 分"
+    },
+    "brief": {
+      "title": "重写简报",
+      "target": "目标 TRS:{{target}}(当前 {{current}})",
+      "mustInclude": "必须包含",
+      "avoid": "避免",
+      "headings": "标题思路",
+      "words": "篇幅:{{min}}-{{max}} 词",
+      "copy": "复制 AI 提示词",
+      "copied": "提示词已复制",
+      "copyFailed": "复制失败。请手动选择并复制。"
+    },
+    "site": {
+      "title": "优化建议",
+      "empty": "暂无建议。站点始终围绕主题。",
+      "delta": "分数变化量:+{{value}}",
+      "deltaZero": "分数变化量:0",
+      "pagesList": "页面",
+      "gaps": "主题缺口",
+      "gapsEmpty": "未发现主题缺口。",
+      "links": "内部链接建议",
+      "linksEmpty": "暂无链接建议。",
+      "terms": "词语"
+    },
+    "subsites": {
+      "title": "子站点评分",
+      "item": "{{label}}({{prefix}}):占页面的 {{share}}%",
+      "score": "评分 {{score}}"
+    },
+    "recommendation": {
+      "remove-offtopic": {
+        "title": "删除或迁移 {{count}} 个偏离主题的页面",
+        "detail": "对最差的页面做重定向、设置 noindex 或直接删除,并移除指向它们的内部链接。潜在提升:+{{gain}} 分。"
+      },
+      "strengthen-borderline": {
+        "title": "强化 {{count}} 个临界页面",
+        "detail": "补充缺失的核心词和章节,将其提升到约 {{target}} 分。潜在提升:+{{gain}} 分。"
+      },
+      "expand-core-cluster": {
+        "title": "扩充核心主题簇",
+        "detail": "为内容单薄的子主题撰写 {{count}} 个新页面。潜在提升:+{{gain}} 分。"
+      },
+      "add-internal-links": {
+        "title": "向枢纽页面添加内部链接",
+        "detail": "{{count}} 条链接建议可将较弱的页面导向强枢纽页。"
+      },
+      "collect-more-pages": {
+        "title": "收集更多页面",
+        "detail": "仅分析了 {{pageCount}} 个页面。在删除任何内容之前,请先爬取更多页面。"
+      },
+      "split-subsites": {
+        "title": "考虑拆分站点",
+        "detail": "发现 {{count}} 个不同的主题板块。拆分为独立栏目或子域名可能有帮助。"
+      },
+      "review-skipped-pages": {
+        "title": "检查 {{count}} 个被跳过的页面",
+        "detail": "其中 {{timeouts}} 个在渲染 JavaScript 时超时。"
+      },
+      "monitor-strong-pages": {
+        "title": "监控 {{count}} 个高相关页面",
+        "detail": "保持其主题不偏离,并定期复查。"
+      }
+    },
+    "playbookOption": {
+      "remove-redirect": {
+        "title": "删除并 301 重定向",
+        "detail": "请先检查流量和外链。站点提升:+{{gain}} 分。"
+      },
+      "noindex-isolate": {
+        "title": "设置 noindex 并隔离",
+        "detail": "为用户保留该页面,但对搜索隐藏并减少内部链接。站点提升:+{{gain}} 分。"
+      },
+      "rewrite-on-topic": {
+        "title": "按简报围绕主题重写",
+        "detail": "把该页面改写为核心主题内容。目标 TRS 约 {{target}}。"
+      },
+      "add-missing-terms": {
+        "title": "补充缺失的词",
+        "detail": "自然地融入缺失的核心词:{{terms}}。"
+      },
+      "reinforce-headings": {
+        "title": "强化 H2 和 H3 标题",
+        "detail": "在标题中使用核心主题的措辞。"
+      },
+      "deepen-coverage": {
+        "title": "加深主题覆盖",
+        "detail": "围绕核心主题补充章节、示例和深度内容。"
+      },
+      "serve-as-hub": {
+        "title": "用作枢纽页面",
+        "detail": "与相关页面互相链接,让该页面成为内容簇的核心。"
+      },
+      "build-satellite-cluster": {
+        "title": "建立卫星内容簇",
+        "detail": "规划链接回该页面的辅助页面。"
+      },
+      "monitor-periodically": {
+        "title": "监控",
+        "detail": "每 {{weeks}} 周复查一次。"
+      }
+    },
+    "playbookStep": {
+      "check-traffic-and-backlinks": "检查该页面的流量和外链。",
+      "redirect-301-to-closest-page": "用 301 重定向到最接近的主题相关页面。",
+      "remove-internal-links": "移除指向该页面的内部链接。",
+      "add-noindex": "添加 noindex 指令。",
+      "rewrite-with-brief": "按简报重写该页面。缺失的词:{{terms}}。",
+      "add-terms": "补充缺失的词:{{terms}}。",
+      "expand-h2-h3": "用核心主题的措辞扩充 H2 和 H3 标题。",
+      "add-examples": "补充示例和深度内容。",
+      "link-from-weak-pages": "从较弱的页面链接到该页面。",
+      "plan-satellite-pages": "围绕该页面规划卫星页面。",
+      "recheck-in-six-weeks": "{{weeks}} 周后复查。"
+    },
+    "gap": {
+      "thin-subtopic": "内容单薄的子主题“{{label}}”:仅有 {{coveragePct}}% 的页面涉及(共 {{pagesCovering}} 个页面)。相关词:{{terms}}。",
+      "competitor-terms": "竞争对手使用而你的站点缺失的词:{{terms}}。",
+      "competitorActive": "主题簇缺口分析正在使用 {{count}} 个竞争对手词。",
+      "competitorClear": "清除竞争对手词"
+    },
+    "link": {
+      "link-to-hub": "从 {{from}} 链接到枢纽页面 {{to}}。建议锚文本:{{anchors}}。"
+    },
+    "history": {
+      "removed-offtopic": "已移除 {{count}} 个偏离主题的页面({{delta}} 分)。",
+      "new-cluster": "新的主题簇“{{label}}”(新增 {{count}} 个,{{delta}} 分)。",
+      "optimized-borderline": "已优化 {{count}} 个临界页面({{delta}} 分)。",
+      "core-topic-changed": "核心主题已从“{{from}}”变为“{{to}}”({{delta}} 分)。",
+      "title": "评分历史",
+      "empty": "至少运行两次完整分析后才能看到趋势。",
+      "aria": "{{count}} 次分析中的 Site Focus Score,从 {{from}} 到 {{to}}",
+      "point": "{{date}}:{{score}}",
+      "annotations": "关键变化"
+    },
+    "alert": {
+      "sfs-drop": "Site Focus Score 从 {{from}} 降至 {{to}}({{points}} 分)。",
+      "content-guard": "新增偏离主题的页面 {{url}}(TRS {{trs}})。"
+    },
+    "weekly": {
+      "title": "每周摘要",
+      "summary": "评分 {{score}}(较上次分析 {{delta}})。",
+      "noPrevious": "首次分析",
+      "noTasks": "没有紧急任务。",
+      "gain": "(+{{value}} 分)"
+    },
+    "conflict": {
+      "pillar-noindex": "支柱页面设置了 noindex：{{url}}",
+      "inlinked-foreign-canonical": "{{url}} 有 {{inlinks}} 个内部链接，但 canonical 指向其他主机",
+      "noindex-with-traffic": "{{url}} 为 noindex，却有 {{clicks}} 次 GSC 点击和 {{domains}} 个引荐域名",
+      "sitemap-noindex": "{{url}} 在站点地图中，但被标记为 noindex"
+    },
+    "protection": {
+      "title": "URL 保护检查",
+      "empty": "此项目没有 GSC/GA4/外链快照，因此流量和链接价值未知。",
+      "advisory": "仅供建议。不会自动删除、重定向或设置 noindex。",
+      "pri": "PRI {{value}}",
+      "decision": {
+        "keep": "保留",
+        "shield": "保护",
+        "needs-data": "需要数据",
+        "semantic-bridge": "语义桥接",
+        "prune-candidate": "待审查（可修剪）"
+      },
+      "reason": {
+        "trs-above-threshold": "TRS 足够高",
+        "revenue": "已测得收入",
+        "pri-above-threshold": "流量、转化或链接达到保护阈值",
+        "telemetry-incomplete": "遥测数据缺失、过期或经过抽样",
+        "low-pri-measured": "已测信号偏低；请先评估业务价值"
+      }
+    }
+  },
+  "focusBenchmark": {
+    "title": "竞争对手基准",
+    "intro": "将你的 Site Focus Score 与针对核心主题排名靠前的站点进行比较。SEOmi 会查询搜索结果,以友好的方式(遵守 robots.txt)爬取每个竞争对手的少量页面样本,并用同一套引擎为它们评分。",
+    "run": "运行基准",
+    "rerun": "重新运行",
+    "cancel": "取消",
+    "cancelled": "基准已取消。未保存任何内容。",
+    "sources": "搜索结果数据源:{{source}}",
+    "queries": "查询词:{{queries}}",
+    "sample": "每个竞争对手最多爬取 {{count}} 个页面。",
+    "progress": {
+      "serp": "正在查询搜索结果({{done}}/{{total}})",
+      "crawl": "正在爬取竞争对手({{done}}/{{total}}),当前为 {{domain}}:{{pages}} 个页面",
+      "analyze": "正在为竞争对手评分"
+    },
+    "unavailable": {
+      "title": "基准不可用",
+      "no-serp-source": "未连接搜索结果数据源。请在设置中添加 DataForSEO 凭据,以便与真实竞争对手对比。",
+      "no-queries": "核心主题暂时没有可供搜索的词。请先爬取更多页面。",
+      "serp-failed": "无法获取搜索结果:{{error}}",
+      "no-competitors": "搜索结果中除你自己的站点外,没有其他竞争对手站点。"
+    },
+    "error": "基准运行失败:{{error}}",
+    "ranking": {
+      "title": "排名",
+      "you": "你",
+      "pages": "{{count}} 个页面",
+      "onTopic": "{{pct}}% 主题相关",
+      "offTopic": "{{count}} 个偏离主题",
+      "score": "SFS {{score}}",
+      "average": "行业平均",
+      "target": "目标分数",
+      "position": "你的排名:第 {{rank}} 位,共 {{total}} 个",
+      "chart": "各站点的 Site Focus Score"
+    },
+    "failure": {
+      "title": "未评分",
+      "crawl-error": "爬取失败:{{error}}",
+      "no-pages": "没有可爬取的页面(被 robots.txt 屏蔽或无法访问)。",
+      "analysis-failed": "分析失败:{{error}}",
+      "cancelled": "在评分前已取消。"
+    },
+    "insights": {
+      "title": "洞察",
+      "on-topic-share": "你的内容中有 {{own}}% 与主题相关,前 3 名为 {{leaders}}%(相差 {{delta}} 分)。",
+      "off-topic-pages": "你有 {{own}} 个偏离主题的页面;前 3 名平均为 {{leaders}} 个。",
+      "keyword-coverage": "你的站点覆盖了前 3 名所用核心主题关键词的 {{pct}}%({{total}} 个中的 {{covered}} 个)。",
+      "versus-average": "你的分数与行业平均 {{average}} 相差 {{delta}} 分。"
+    },
+    "gaps": {
+      "title": "竞争对手中出现的主题簇缺口",
+      "coverage": "{{pct}}% 的竞争对手({{count}} 个)",
+      "empty": "你的站点没有缺失任何竞争对手的主题。",
+      "apply": "将这些词加入缺口分析"
+    }
+  },
+  "authority": {
+    "title": "主题权威度",
+    "empty": "运行抓取以衡量主题权威度。",
+    "hero": {
+      "sfs": "Site Focus Score",
+      "tas": "Topical Authority Score",
+      "sfsRole": "纯度：内容围绕主题的程度",
+      "tasRole": "完整度：主题被覆盖的充分程度",
+      "target": "目标：{{value}}+",
+      "pending": "构建参考图谱后即可计算"
+    },
+    "quadrant": {
+      "dominant_authority": "主导权威",
+      "boutique_specialist": "精品专家型",
+      "diluted_giant": "被稀释的巨头",
+      "unfocused_generalist": "缺乏焦点的泛化者"
+    },
+    "quadrantHint": {
+      "dominant_authority": "专注且接近完整。巩固地位，保持数据新鲜，并拓展长尾查询。",
+      "boutique_specialist": "内容紧扣主题，但只覆盖了领域的一部分。请扩充内容并建立新的主题集群。",
+      "diluted_giant": "主题内容很多，但无关板块稀释了它。请清理或迁移到子域名。",
+      "unfocused_generalist": "缺乏明确焦点且覆盖浅薄。请选定一个核心主题，清理索引，并建立第一个扎实的内容孤岛。"
+    },
+    "matrix": {
+      "title": "主题成熟度矩阵（SFS × TAS）",
+      "pending": "计算出 TAS 后将显示矩阵。",
+      "aria": "您：SFS {{sfs}}，TAS {{tas}}，象限 {{quadrant}}",
+      "you": "您",
+      "axisX": "SFS",
+      "axisY": "TAS"
+    },
+    "freshness": {
+      "undated": "{{total}} 个页面中有 {{undated}} 个没有日期，不参与评分"
+    },
+    "pillars": {
+      "title": "Topical Authority Score 的构成",
+      "tcr": "主题覆盖率",
+      "cdes": "实体深度",
+      "silc": "孤岛内聚度",
+      "cvff": "时效与唯一性",
+      "tcrNote": "已覆盖 {{total}} 个参考子主题中的 {{covered}} 个",
+      "cdesNote": "已覆盖子主题的平均实体深度",
+      "silcNote": "{{orphans}} 个孤立页面，{{weak}} 个弱锚文本，{{bleed}} 条指向无关页面的链接",
+      "cvffNote": "{{stale}} 个过时页面，{{groups}} 个内部竞争组",
+      "unavailable": "无法衡量",
+      "multiplier": "来自 SFS {{sfs}} 的聚焦系数 ×{{value}}"
+    },
+    "warning": {
+      "empty-authority": "空洞权威：网站涉及 {{tcr}}% 的主题，但平均深度仅 {{depth}}/100。发布新内容前，请先用数据和实体深化现有页面。",
+      "template-duplicates": "{{count}} 个模板克隆页已并入最强页面，不会提高覆盖率，还会浪费抓取预算。",
+      "no-dates": "未找到发布或更新日期，因此未衡量时效。请在 meta 标签或 JSON-LD 中添加日期。",
+      "no-links": "分析页面之间未发现正文内链，因此内聚度仅依据孤立页面。",
+      "no-pillars": "尚无参考图谱，未衡量覆盖率与深度。"
+    },
+    "reference": {
+      "title": "参考图谱",
+      "intro": "基于真实数据构建主题的市场图谱：主主题排名靠前页面的标题、实体和问题，外加 Google Suggest。不会编造任何内容；没有 SERP 数据源时图谱保持为空。",
+      "build": "构建参考图谱",
+      "rebuild": "重新构建图谱",
+      "cancel": "取消",
+      "clear": "丢弃图谱",
+      "info": "来自 {{competitors}} 个竞争对手（{{source}}）的 {{pillars}} 个支柱、{{subtopics}} 个子主题，构建于 {{date}}",
+      "progress": {
+        "serp": "正在获取排名（{{done}}/{{total}}）",
+        "crawl": "正在抓取 {{domain}}（{{done}}/{{total}}）",
+        "build": "正在构建图谱"
+      },
+      "error": "构建图谱失败：{{error}}",
+      "cancelled": "图谱构建已取消。",
+      "unavailableTitle": "参考图谱不可用",
+      "unavailable": {
+        "no-serp-source": "请连接 SERP 数据源（DataForSEO 或免费的 Bing RSS），以便基于真实排名构建图谱。",
+        "no-queries": "核心主题尚无可用搜索短语。请先运行更大规模的抓取。",
+        "serp-failed": "排名查询失败：{{error}}",
+        "no-competitors": "排名中未找到竞争域名。",
+        "no-pages": "无法抓取任何竞争对手页面（robots.txt、拦截或超时）。",
+        "no-taxonomy": "竞争对手页面共有的标题太少，无法形成可靠图谱。请稍后重试或增加竞争对手。"
+      }
+    },
+    "coverage": {
+      "title": "主题覆盖图谱",
+      "filters": "筛选子主题",
+      "filter": {
+        "all": "全部（{{count}}）",
+        "gaps": "仅缺口（{{count}}）",
+        "shallow": "浅层（{{count}}）",
+        "cannibalized": "内部竞争（{{count}}）"
+      },
+      "general": "通用主题",
+      "empty": "没有符合筛选条件的子主题。",
+      "row": "匹配 {{similarity}}% · 深度 {{depth}}",
+      "status": {
+        "covered_strong": "已深入覆盖",
+        "covered_shallow": "覆盖较浅",
+        "missing_gap": "缺失",
+        "cannibalized": "内部竞争"
+      },
+      "gap": {
+        "critical": "关键缺口",
+        "high": "较大缺口",
+        "medium": "中等缺口"
+      }
+    },
+    "drill": {
+      "title": "子主题分析",
+      "back": "返回图谱",
+      "url": "对应页面",
+      "none": "尚无页面覆盖此子主题。",
+      "depth": "实体深度 {{value}}/100",
+      "entitiesPresent": "已包含的实体（{{count}}/{{total}}）",
+      "entitiesMissing": "缺失的实体（头部网站都在使用）",
+      "questions": "页面未回答的用户问题",
+      "links": "内部链接审计",
+      "noPillarLink": "没有指向支柱页 {{url}} 的链接",
+      "almostOrphan": "仅有 {{count}} 条入链：近乎孤立页面",
+      "bleed": "链接到无关页面 {{url}}",
+      "linksOk": "内部链接状况良好。"
+    },
+    "brief": {
+      "title": "文章简报",
+      "path": "建议 URL",
+      "h1": "建议 H1",
+      "entities": "实体清单",
+      "questions": "需要回答的问题",
+      "linkFrom": "从此页面链接",
+      "linkTo": "应链接到",
+      "impact": "预计对 TAS 的影响：+{{value}}",
+      "generate": "生成 AI 简报",
+      "generating": "生成中…",
+      "noKey": "请在设置中连接 AI 提供商以生成简报。",
+      "empty": "AI 未返回文本，请重试。",
+      "error": "生成简报失败：{{error}}"
+    },
+    "cannibal": {
+      "title": "语义内部竞争",
+      "index": "内部竞争指数：{{value}}%",
+      "empty": "没有页面竞争同一搜索意图。",
+      "group": "{{count}} 个页面，意图相似度 {{similarity}}%，共享实体 {{shared}}%",
+      "canonical": "保留：{{url}}",
+      "steps": "将独有内容并入保留页面，其余页面做 301 重定向，并更新内部链接。",
+      "edge": "依据：{{from}} 与 {{to}}，相似度 {{similarity}}%（{{basis}}）",
+      "basis": {
+        "intent": "相同意图",
+        "subtopic": "相同子主题"
+      }
+    },
+    "draft": {
+      "title": "发布前检查草稿",
+      "titleField": "草稿标题",
+      "bodyField": "草稿正文",
+      "check": "检查重叠",
+      "none": "与现有页面的重叠未超过 85%。",
+      "hit": "与 {{url}} 重叠 {{similarity}}%"
+    },
+    "rec": {
+      "title": "主题扩展计划",
+      "empty": "暂无建议。构建参考图谱后可查看覆盖缺口。",
+      "delta": "+{{value}} TAS",
+      "fill-gaps": "填补“{{pillar}}”的缺口：缺少 {{count}} 个子主题",
+      "merge-cannibalized": "合并 {{count}} 组相互竞争的页面",
+      "fix-linking": "修复内部链接：{{orphans}} 个孤立页面，{{bleed}} 条指向无关页面的链接",
+      "deepen-shallow": "深化 {{count}} 个覆盖较浅的子主题",
+      "refresh-stale": "更新 {{count}} 个超过一年未更新的页面",
+      "how": {
+        "fill-gaps": "为每个缺失的子主题发布一篇文章：使用简报（URL、H1、实体清单、问题），并链接到所属支柱。",
+        "merge-cannibalized": "保留最强页面，把独有内容并入，其余做 301 重定向并更新内部链接。",
+        "fix-linking": "从支柱页和相关文章链接到每个孤立页面，并移除专业页面指向无关页面的链接。",
+        "deepen-shallow": "补充缺失的实体和属性，并在各自的标题下回答尚未解答的用户问题。",
+        "refresh-stale": "更新数据、型号和指南，加入新实体并刷新发布日期。"
+      }
+    },
+    "benchmark": {
+      "title": "与头部竞争对手的主题缺口矩阵",
+      "empty": "构建参考图谱后即可与排名靠前的竞争对手比较。仅显示真实抓取数据。",
+      "domain": "域名",
+      "pillars": "各支柱覆盖率",
+      "pillar": "支柱",
+      "insight": {
+        "rank": "按 TAS 排名，您位列 {{total}} 个站点中的第 {{rank}} 名。",
+        "lead-pillar": "您在“{{pillar}}”领先：{{own}}%，最佳竞争对手为 {{best}}%。",
+        "trailing-pillars": "在以下方面落后于领先者：{{pillars}}。"
+      }
+    },
+    "history": {
+      "title": "SFS 与 TAS 的变化",
+      "empty": "至少完成两次完整分析后将显示时间线。",
+      "aria": "{{count}} 次分析的 SFS 与 TAS 图表",
+      "point": "{{date}}：SFS {{sfs}}，TAS {{tas}}",
+      "sfs": "SFS（实线）",
+      "tas": "TAS（虚线）",
+      "milestones": "里程碑",
+      "cleanup": "清理：SFS 上升 {{delta}}",
+      "architecture": "架构：链接与内部竞争改善 {{delta}}",
+      "expansion": "扩展：主题覆盖率上升 {{delta}}",
+      "regression": "退步：TAS 变化 {{delta}}"
+    }
+  },
+  "authorityMonitoring": {
+    "alert": {
+      "title": "SEOmi · 主题权威度提醒",
+      "tas-drop": "两次完整分析之间，Topical Authority Score 下降了 {{points}} 分（{{from}} → {{to}}）。",
+      "cannibalization": "过去 24 小时内发布的页面与 {{canonical}} 争夺同一意图（相似度 {{similarity}}%）：{{url}}。",
+      "competitor-expansion": "{{domain}} 将“{{pillar}}”的覆盖率从 {{from}}% 提升到 {{to}}%，为您带来新的缺口。",
+      "content-decay": "支柱页 {{url}} 已超过一年，且缺少市场现用的 {{missing}} 个实体。"
+    }
+  },
+  "aio": {
+    "title": "AI Overviews 与 RAG 就绪度",
+    "subtitle": "AI 回答引擎找到、提取并引用你页面段落的难易程度。",
+    "empty": "暂无包含内容分区的页面数据。请运行新的抓取以分析 AI 就绪度。",
+    "band": {
+      "excellent": "就绪度优秀",
+      "good": "就绪度良好",
+      "moderate": "就绪度中等",
+      "weak": "就绪度较弱",
+      "critical": "就绪度危急"
+    },
+    "hero": {
+      "label": "AI 可引用性得分",
+      "outOf": "满分 100",
+      "summary": "在 {{count}} 个已分析页面中发现 {{weak}} 个薄弱段落。",
+      "summaryNone": "在 {{count}} 个已分析页面中未发现薄弱段落。",
+      "change": "与上次分析相比的变化：{{delta}}",
+      "skipped": "已跳过 {{count}} 个页面（没有可用的内容分区）。"
+    },
+    "components": {
+      "self": "自成一体",
+      "spo": "事实密度",
+      "extract": "可提取性"
+    },
+    "basicNote": "{{languages}} 的语言规则较为基础：这些语言的代词和事实检测精度较低。",
+    "pages": {
+      "title": "页面",
+      "url": "URL",
+      "score": "得分",
+      "chunks": "分块",
+      "facts": "事实",
+      "language": "语言",
+      "empty": "没有可显示的页面。"
+    },
+    "skip": {
+      "no-sections": "没有内容分区（在此功能之前抓取）",
+      "non-html": "不是 HTML 页面",
+      "request-error": "请求失败",
+      "no-content": "没有可读文本"
+    },
+    "passage": {
+      "title": "最薄弱的段落",
+      "intro": "模拟的最难被引用的 RAG 分块。请先修复列出的问题。",
+      "chunk": "分块 {{n}} · {{tokens}} 个 token · 得分 {{score}}",
+      "noHeading": "（无标题的开头部分）",
+      "current": "当前段落",
+      "optimized": "优化后的段落",
+      "generate": "用 AI 改写",
+      "generating": "正在改写…",
+      "copy": "复制",
+      "copied": "已复制",
+      "noKey": "请在设置中连接 AI 提供商以改写段落。",
+      "error": "AI 请求失败：{{message}}",
+      "empty": "AI 没有返回文本。",
+      "none": "未发现薄弱段落。"
+    },
+    "issue": {
+      "dangling-pronoun": "指代不清",
+      "no-answer-first": "开头没有直接回答",
+      "filler-opening": "开头空洞",
+      "no-facts": "缺少具体事实",
+      "too-long": "对单个分块来说太长"
+    },
+    "history": {
+      "title": "历史",
+      "empty": "此项目完成第二次分析后会显示历史记录。",
+      "row": "{{date}}：{{score}}"
+    }
+  },
+  "trust": {
+    "title": "E-E-A-T 与实体信任度",
+    "subtitle": "作者、发布者和来源的可验证程度。基于已保存的抓取结果计算，不会重新获取任何页面。",
+    "empty": "请先运行一次抓取，以评估信任信号。",
+    "hero": {
+      "label": "实体信任得分",
+      "articles": "在 {{pages}} 个已抓取页面中有 {{articles}} 个文章页面",
+      "previous": "上次运行：{{score}}（{{delta}}）",
+      "ymyl": "YMYL 类别：{{category}}。搜索引擎对这类页面采用最严格的信任标准。",
+      "unattributed": "{{pct}}% 的文章没有署名作者或审核者。"
+    },
+    "level": {
+      "strong": "信任度高",
+      "adequate": "信任度足够",
+      "weak": "信任度弱",
+      "critical": "信任存在严重缺口"
+    },
+    "ymyl": {
+      "health": "健康",
+      "finance": "金融",
+      "legal": "法律"
+    },
+    "layers": {
+      "title": "信任层级",
+      "schemaGraph": "实体图谱（JSON-LD）",
+      "authorAlignment": "作者主题契合度",
+      "citationQuality": "来源质量",
+      "transparency": "编辑透明度",
+      "noData": "无",
+      "unverified": "未验证"
+    },
+    "entities": {
+      "title": "发布者与作者",
+      "orgPresent": "发布者：{{name}}。稳定的 @id：{{id}}。sameAs 链接：{{sameAs}}。",
+      "orgMissing": "结构化数据中未找到 Organization 实体。",
+      "none": "结构化数据中未找到作者实体。",
+      "colAuthor": "作者",
+      "colArticles": "文章数",
+      "colSameAs": "sameAs 链接",
+      "colAlignment": "主题契合度",
+      "generic": "匿名署名"
+    },
+    "signals": {
+      "title": "来源与透明度",
+      "citations": "{{pages}} 个文章页面中有 {{trusted}} 个链接到可信来源（.gov、.edu、PubMed、WHO）。",
+      "dead": "{{count}} 个出站链接已失效",
+      "dated": "{{articles}} 篇文章中有 {{dated}} 篇显示了修改或审核日期。",
+      "pagesTitle": "信任页面",
+      "page": {
+        "editorial": "编辑政策",
+        "about": "关于我们",
+        "contact": "联系方式",
+        "registry": "公司注册信息"
+      },
+      "found": "已找到",
+      "missing": "缺失"
+    },
+    "severity": {
+      "critical": "严重",
+      "warning": "警告",
+      "info": "信息"
+    },
+    "findings": {
+      "title": "优先修复事项",
+      "none": "未发现信任缺口。",
+      "code": {
+        "ymyl-unattributed": "YMYL 主题下有 {{count}} 篇文章（{{pct}}%）没有署名作者或审核者。请添加具备可验证资质的人员。",
+        "ymyl-no-reviewer": "{{count}} 篇医学文章均未声明审核者（reviewedBy）。请添加具备资质的医学审核者。",
+        "no-bylines": "{{count}} 篇文章均未在结构化数据中声明作者。",
+        "generic-author": "有 {{count}} 篇文章以编辑部等匿名方式署名。",
+        "org-missing": "未找到 Organization 实体。请添加带有稳定 @id 的发布者标记。",
+        "org-no-same-as": "发布者 {{name}} 没有指向 Wikidata、企业注册库或社交主页的 sameAs 链接。",
+        "author-no-same-as": "{{count}} 位作者没有 sameAs 链接（{{names}}）。请将他们链接到 ORCID、LinkedIn 或职业注册库。",
+        "author-no-id": "{{count}} 位作者没有稳定的 @id，搜索引擎无法跨页面识别他们。",
+        "author-off-topic": "{{name}} 的资料与核心主题的契合度仅为 {{pct}}%。请优先选择专业背景相符的作者。",
+        "low-citations": "{{pages}} 个文章页面中只有 {{pct}}% 引用了可信来源（.gov、.edu、PubMed、WHO）。",
+        "dead-citations": "{{count}} 个出站链接返回错误。请替换或删除。",
+        "missing-editorial": "未找到编辑政策或事实核查页面。",
+        "missing-contact": "未找到联系页面。",
+        "missing-registry": "未找到公司注册信息或法律声明页面。",
+        "missing-about": "未找到“关于我们”页面。",
+        "missing-dates": "只有 {{pct}}% 的文章显示了修改或审核日期。",
+        "no-articles": "未检测到文章页面，因此未对作者和引用层级评分。",
+        "author-invalid-profile": "{{count}}位作者链接的ORCID或Wikidata档案标识符无效（{{names}}）。请检查校验码或Q-ID。",
+        "ymyl-no-scholarly-ids": "{{pages}}篇文章均未引用带DOI、PMID或PMCID的来源。YMYL主题请引用原始研究。"
+      }
+    },
+    "generator": {
+      "open": "用 JSON-LD 修复",
+      "title": "JSON-LD 生成器",
+      "intro": "生成包含 sameAs 链接的 Organization、Person 和页面图谱。检查后粘贴到页面的 head 中。",
+      "close": "关闭",
+      "field": {
+        "personName": "作者姓名",
+        "jobTitle": "职位",
+        "personUrl": "作者主页 URL",
+        "organizationName": "发布者名称",
+        "organizationUrl": "发布者 URL",
+        "pageUrl": "页面 URL",
+        "dateModified": "修改日期（YYYY-MM-DD）",
+        "lastReviewed": "最近审核日期（YYYY-MM-DD）",
+        "sameAs": "sameAs 资料（每行一个 URL：Wikidata、ORCID、LinkedIn、职业注册库）",
+        "asReviewer": "声明为专家审核者而非作者"
+      },
+      "issue": {
+        "missing-name": "请输入作者姓名。",
+        "invalid-organization-url": "请输入有效的发布者 URL（https://...）。",
+        "invalid-page-url": "请输入有效的页面 URL（https://...）。",
+        "invalid-same-as": "部分 sameAs 条目不是有效 URL，已被忽略。"
+      },
+      "preview": "生成的 JSON-LD",
+      "copy": "复制 script 标签",
+      "copied": "已复制。",
+      "copyFailed": "复制失败。请选中文本并手动复制。"
+    }
+  },
+  "executionCard": {
+    "bus": {
+      "aria": "已从链接建议中排除的URL",
+      "title": "隔离的URL",
+      "summary": "{{count}}个URL将被删除或重定向，并已从链接目标中排除；已丢弃{{dropped}}条链接建议。",
+      "reason": {
+        "remove": "删除",
+        "redirect": "301重定向"
+      },
+      "conflict": {
+        "protected-by-evidence": "已保留：有Search Console或反向链接数据",
+        "canonical-removed": "冲突：规范URL也在删除列表中"
+      }
+    },
+    "brief": {
+      "open": "在简报工作台中打开",
+      "pillar": "目标支柱页",
+      "anchors": "锚文本",
+      "donor": "来源页面",
+      "entities": "缺失的实体",
+      "links": "待插入的链接",
+      "paa": "People Also Ask问题",
+      "structure": "H2结构",
+      "jsonLd": "缺失的JSON-LD作者属性",
+      "footnotes": "必需的脚注",
+      "origin": {
+        "sfs": "Site Focus建议",
+        "tas": "Topical Authority建议",
+        "eetv": "EETV建议"
+      },
+      "state": {
+        "created": "简报已创建",
+        "updated": "简报已更新",
+        "failed": "无法保存简报"
+      }
+    },
+    "deploy": {
+      "empty": "暂无重定向或删除规则。",
+      "aria": "部署产物",
+      "title": "部署产物 (301/410)",
+      "summary": "{{count}}条有效规则，无循环和链式重定向。",
+      "zip": "全部下载 (ZIP)",
+      "issuesAria": "规则问题",
+      "issue": {
+        "invalid": "无效规则，已跳过",
+        "duplicate": "来源重复，已跳过",
+        "loop": "重定向循环，已跳过",
+        "chain-flattened": "重定向链已改为直指最终目标",
+        "dead-target": "重定向到已删除页面 (410)",
+        "query-unsupported": "含查询字符串，未导出到此服务器格式",
+        "gone-unsupported": "Cloudflare Bulk Redirects不支持410"
+      }
+    },
+    "tasks": {
+      "aria": "优化任务",
+      "title": "优化任务",
+      "add": "添加到跟踪器",
+      "added": "任务已添加",
+      "empty": "暂无任务。请从建议中添加。",
+      "verify": "用最新抓取验证",
+      "crawlUnavailable": "所选抓取未提供日期已确认的完整证据，验证已推迟。",
+      "markImplemented": "标记为已实施",
+      "regression": "分数回落",
+      "kind": {
+        "add-link": "添加链接",
+        "redirect-301": "301重定向",
+        "remove-410": "410删除",
+        "add-entities": "添加实体",
+        "remove-noindex": "移除noindex"
+      },
+      "status": {
+        "planned": "已计划",
+        "implemented": "已实施",
+        "verified": "已验证",
+        "failed": "失败"
+      },
+      "verdict": {
+        "link-found": "已验证：发现新链接，区域 {{zone}}",
+        "link-missing": "部署错误：链接仍然缺失",
+        "redirect-ok": "已验证：301指向正确页面",
+        "redirect-wrong-target": "部署错误：重定向指向了其他页面",
+        "still-200": "部署错误：仍为HTTP {{status}}",
+        "gone-ok": "已验证：页面返回HTTP 410",
+        "wrong-status": "部署错误：返回HTTP {{status}}而非410",
+        "entities-ok": "已验证：{{total}}个必需实体中有{{found}}个",
+        "entities-missing": "部署错误：{{total}}个必需实体中仅有{{found}}个（需要60%）",
+        "index-ok": "已验证：页面可被索引",
+        "still-noindex": "部署错误：noindex仍然存在"
+      },
+      "owner": "负责人",
+      "priority": "优先级",
+      "dueDate": "SLA 日期",
+      "overdue": "已逾期",
+      "me": "我的名字",
+      "filter": {
+        "all": "全部",
+        "mine": "我的任务",
+        "overdue": "已逾期"
+      },
+      "priorityLevel": {
+        "high": "高",
+        "medium": "中",
+        "low": "低"
+      }
+    }
+  },
+  "scoreDropAlert": {
+    "aio": {
+      "title": "AI就绪度下降",
+      "body": "AI Overviews就绪度从{{from}}降至{{to}}（{{points}}分）。"
+    },
+    "trust": {
+      "title": "信任分下降",
+      "body": "E-E-A-T信任分从{{from}}降至{{to}}（{{points}}分）。"
+    }
+  },
+  "sprsUi": {
+    "title": "语义 PageRank",
+    "empty": "暂无链接图。请先抓取网站；没有真实链接时不显示分数。",
+    "page": "页面",
+    "score": "分数",
+    "deadEnd": "死胡同",
+    "underLinked": "内链不足",
+    "leak": "泄漏",
+    "unknown": "{{count}} 个链接的相似度未知，不计为泄漏。",
+    "notConverged": "求解器未收敛，分数为近似值。",
+    "whatIf": {
+      "title": "链接 What-If 模拟器",
+      "source": "来源页面",
+      "target": "目标页面",
+      "action": "变更",
+      "add": "添加链接",
+      "remove": "移除链接",
+      "run": "模拟",
+      "noChange": "分数无变化。",
+      "before": "之前",
+      "after": "之后",
+      "delta": "变化"
+    }
+  },
+  "decayUi": {
+    "snapshots": "支持此判定的快照数量：{{count}}",
+    "title": "语义衰减雷达",
+    "verdict": {
+      "too-few-samples": "可比较的 SERP 快照还不够，暂无可报告内容。",
+      "incompatible": "快照不可比较，因此不判定为漂移。",
+      "stable": "相对基线没有实质变化。",
+      "not-persistent": "出现过变化但未持续，继续观察。",
+      "cooldown": "漂移持续存在；近期已发出过提醒。",
+      "alert": "相对基线出现持续漂移，请人工检查。"
+    },
+    "shift": "质心偏移：{{value}}%",
+    "newEntities": "新增实体",
+    "lostEntities": "消失实体",
+    "intent": "意图：{{from}} 变为 {{to}}",
+    "format": "形式：{{from}} 变为 {{to}}",
+    "incompatible": "{{fields}} 不同，这不是市场变化。"
+  },
+  "sijaUi": {
+    "title": "搜索意图 (SIJA)",
+    "empty": "页面结构中未检测到明确的微意图。",
+    "primary": "观察到的意图：{{intent}}（置信度 {{confidence}}%）。",
+    "mixed": "另外：{{list}}。",
+    "inconclusive": "SSAS 无法判定：仅有 {{count}} 个真实 TOP 页面，至少需要 3 个。",
+    "ssas": {
+      "aligned": "SSAS {{score}}：结构与 TOP 页面一致。",
+      "mismatch": "SSAS {{score}}：结构与 TOP 页面不同。"
+    },
+    "intents": {
+      "definitional": "定义",
+      "how-to": "操作指南",
+      "troubleshooting": "故障排除",
+      "comparison": "对比",
+      "curated-list": "精选列表",
+      "tool": "工具或计算器",
+      "transactional": "交易",
+      "local": "本地"
+    }
+  },
+  "prePublishUi": {
+    "title": "发布前检查",
+    "copy": "复制报告",
+    "copied": "报告已复制。",
+    "copyFailed": "无法复制报告。",
+    "verdict": {
+      "insufficient": "数据不足，无法评估此草稿。",
+      "blocked": "暂勿发布：草稿与现有页面重复。",
+      "review": "发布前请复查。",
+      "ok": "未发现问题。这只是建议，不是批准。"
+    },
+    "sfs": "Site Focus Score {{before}} 变为 {{after}}（{{delta}}）。草稿相关度 {{trs}}。这不是流量预测。",
+    "conflict": "与 {{url}} 过于相似（{{value}}%）。",
+    "overlap": "与 {{url}} 重叠（{{value}}%）。",
+    "reason": {
+      "no-core": "尚无核心主题。",
+      "corpus-too-small": "站内已评分页面少于 3 个。",
+      "dimension-mismatch": "嵌入来自不同模型。",
+      "cannibalization": "存在内容蚕食风险。",
+      "overlap": "与现有页面部分重叠。",
+      "low-trs": "草稿与核心主题的相关度较低。",
+      "chunk-issues": "部分段落无法独立成立。"
+    },
+    "chunk": {
+      "leading-pronoun": "第 {{index}} 段以需要上文语境的代词开头。",
+      "too-short": "第 {{index}} 段太短，无法独立成立。"
+    }
+  },
+  "parityUi": {
+    "title": "国际对等性",
+    "summary": "已覆盖 {{covered}}，较浅 {{shallow}}，缺失 {{missing}}，有意本地化 {{local}}。",
+    "inconclusive": "无法判定：现有数据不足以评估对等性。",
+    "gap": {
+      "no-reference-coverage": "参考语言没有主题覆盖数据。",
+      "partial-crawl": "抓取不完整。",
+      "single-language": "只发现一种语言。"
+    },
+    "language": "语言",
+    "topic": "主题",
+    "status": "状态",
+    "statuses": {
+      "covered": "已覆盖",
+      "shallow": "较浅",
+      "missing": "缺失",
+      "intentionally-local": "有意本地化"
+    },
+    "note": "缺少某个语言版本不一定是错误。文本不必一一对应，界面语言也不决定分析哪些站点语言。"
+  },
+  "offPageUi": {
+    "title": "站外主题权威",
+    "empty": "暂无主题外链价值：缺少外链、来源文本或权威数据。这并不意味着没有外链。",
+    "tbva": "主题外链价值 {{value}}，来自 {{count}} 个来源域名（已评分 follow 链接占 {{coverage}}%）。",
+    "partial": "{{count}} 个 follow 链接无法评分（缺少来源文本或权威数据）。",
+    "nofollow": "{{count}} 个 nofollow 链接不计入。",
+    "noText": "没有来源文本，因此未检查品牌共同引用。",
+    "coCitation": "品牌与核心实体出现在同一段落：带链接 {{linked}}，无链接 {{unlinked}}。",
+    "note": "该值使用数据提供方的权威度，不复现 Google PageRank，也不解释排名。共同出现不等于背书。"
+  },
+  "llmEconomy": {
+    "title": "LLM 成本",
+    "empty": "尚无 AI 调用记录。",
+    "spent": "已花费：{{value}}",
+    "saved": "缓存和本地运行节省：{{value}}",
+    "hits": "缓存命中：{{count}}",
+    "leaves": "页面文本将发送到本设备之外的 {{provider}}。"
+  },
+  "templateGovernor": {
+    "title": "程序化模板质量",
+    "empty": "未发现薄弱模板。",
+    "row": "{{pattern}}：{{count}} 个页面，信息增益 {{gain}}%",
+    "noindex": "建议：对该分段设置 noindex",
+    "limit": "建议：限制被索引的页面数量"
+  },
+  "outreach": {
+    "title": "外链拓展目标",
+    "empty": "没有外链差距数据。请先运行外链差距分析。",
+    "row": "{{domain}}：优先级 {{priority}}，链接 {{count}} 个竞争对手",
+    "export": "导出 CSV",
+    "manualNote": "SEOmi 从不发送消息。请从您自己的邮箱发送草稿。"
+  },
+  "causalMarket": {
+    "title": "因果影响",
+    "empty": "无法估计：需要变更前至少 7 天和变更后 1 天、真实的外部市场序列以及独立对照证据。",
+    "effect": "每日效果：{{effect}}（{{lower}} 至 {{upper}}）",
+    "updateWindow": "Google 更新窗口：结果无定论。",
+    "normalized": "已按市场基线归一化",
+    "positive": "正向效果",
+    "negative": "负向效果",
+    "noEffect": "无可测量的效果",
+    "inconclusive": "无定论",
+    "evidence": "证据：市场 {{market}}；对照 {{control}}",
+    "unknown": "未知",
+    "marketUnavailable": "外部市场基线不可用或无效；不会推断因果成功或失败。",
+    "controlUnavailable": "缺少独立对照证据；不会推断因果成功或失败。",
+    "updateWindowReason": "分析与已确认的 Google 排名更新重叠；结果无法确定。",
+    "disclaimer": "这是基于外部市场和对照证据的估计，不是因果关系证明。"
+  },
+  "snapshots": {
+    "newerData": "有更新的抓取数据。",
+    "refresh": "刷新"
+  },
+  "teamUi": {
+    "role": {
+      "admin": "管理员",
+      "seo_strategist": "SEO 策略师",
+      "content_writer": "内容撰写者",
+      "developer": "开发者"
+    },
+    "permission": {
+      "run_crawl": "运行抓取",
+      "execute_cms_patch": "应用 CMS 补丁",
+      "modify_site_focus_rules": "修改 Site Focus 规则",
+      "export_audit_pdf": "导出审计 PDF",
+      "manage_team_roles": "管理团队角色"
+    },
+    "denied": "您的角色无权执行此操作。"
+  },
+  "cmsUi": {
+    "kind": {
+      "wordpress": "WordPress",
+      "strapi": "Strapi",
+      "webhook": "Webhook"
+    },
+    "error": {
+      "unsafe-url": "不允许该 CMS 地址（需要 HTTPS 和公共主机）。",
+      "conflict": "生成 diff 后页面已被编辑。请重新生成 diff。",
+      "http": "CMS 拒绝了请求。",
+      "bad-response": "CMS 返回了意外的格式。",
+      "heading-not-found": "页面中未找到该标题。",
+      "heading-ambiguous": "该标题出现多次。",
+      "forbidden": "您的角色无权应用 CMS 补丁。",
+      "not-approved": "写入前请批准这份确切的 diff。",
+      "fact-gate-required": "YMYL 内容在写入前需通过事实核查。"
+    },
+    "verified": "更改已写入并验证。",
+    "unverified": "更改已写入，但线上页面尚未显示。",
+    "dryRun": "试运行：未写入任何内容。"
+  },
+  "igosUi": {
+    "title": "IGOS 原创性",
+    "empty": "未获取到可比较的 TOP 结果，因此没有基准，也没有分数。",
+    "noScore": "无分数",
+    "offTopic": "大多数段落偏离主题，不给出分数。",
+    "partial": "部分基准：{{requested}} 个竞品页面中的 {{available}} 个。",
+    "basis": "基准：{{requested}} 个竞品页面中的 {{available}} 个。",
+    "component": {
+      "nefr": "新实体",
+      "edsi": "证据密度",
+      "fhem": "经验标记",
+      "sdd": "子主题分布"
+    },
+    "coverage": "基准覆盖率 {{coverage}}，惩罚系数 {{multiplier}}",
+    "novel": "主题相关的新实体：{{list}}",
+    "advice": "建议",
+    "heatmap": "段落热力图",
+    "heatmapEmpty": "没有可显示的段落。",
+    "noHeading": "无标题",
+    "zone": {
+      "echo": "回声",
+      "gain": "增益",
+      "drift": "偏移",
+      "neutral": "中性"
+    },
+    "detail": "偏移量 {{offset}}，主题相似度 {{topic}}，最接近的竞品段落 {{nearest}}。",
+    "source": "最近来源：{{url}}（排名 {{rank}}）。",
+    "noSource": "没有相近来源。",
+    "limit": {
+      "no-comparable-documents": "没有可比较的竞品文档。",
+      "too-few-documents": "竞品文档太少，无法建立可靠基准。",
+      "some-documents-missing": "部分竞品页面无法获取。",
+      "no-target-chunks": "页面没有可分析的段落。",
+      "off-topic-below-quota": "切题段落太少。"
+    },
+    "rec": {
+      "rewrite-echo": "偏移量 {{offset}} 处的段落重复了竞品内容：请用自己的话改写。",
+      "add-evidence": "请添加带单位或来源的具体数据；未检测到任何数据。",
+      "refocus-drift": "偏移量 {{offset}} 处的段落偏离主题：请重新聚焦或删除。"
+    }
+  },
+  "logIntelUi": {
+    "title": "日志分析",
+    "description": "导入本地 .log 或 .txt 访问日志（最大500 MB）。仅保存聚合数据，不保存原始IP。去重使用抽样SHA-256指纹（首尾各1 MiB及文件大小）。",
+    "chooseFile": "选择访问日志",
+    "cancel": "取消",
+    "clear": "清除日志",
+    "importing": "正在导入访问日志",
+    "progress": "行数：{{lines}} · 格式错误：{{malformed}} · 已忽略非机器人：{{ignoredNonBot}}",
+    "cancelled": "导入已取消。",
+    "duplicate": "此文件已导入。",
+    "complete": "导入完成。",
+    "storageFailed": "无法更新本地存储。更改仅保留在内存中，已保存的日志可能未变。",
+    "tooLarge": "文件超过500 MB限制。",
+    "invalidFile": "请选择 .log 或 .txt 文件。",
+    "resumeRequired": "导入其他文件前请恢复未完成的文件或清除日志。",
+    "importFailed": "无法读取文件或计算哈希。请重试。",
+    "resume": "选择相同文件即可继续，且不会重复计算行数。",
+    "verificationNote": "机器人身份只是User-Agent声明，并非证据。伪装检查需要桌面DNS解析器；此面板不调用DNS。未经验证的行将保持无法确定状态。",
+    "verificationNoteDesktop": "机器人身份在本机通过反向和正向 DNS 验证（超时 3 秒）。查询失败时该行保持“声称”，绝不会标记为“伪造”。",
+    "matrix": "抓取效率矩阵",
+    "coverage": "覆盖：{{period}}天中的{{days}}天",
+    "period": "时间窗口（UTC）：{{start}} – {{end}}",
+    "insufficient": "日志覆盖不足，无法得出可靠结论。",
+    "noScores": "项目最新抓取没有保存各路径的TRS评分。不会推测评分。",
+    "unavailable": "不可用",
+    "empty": "没有可显示的日志或抓取路径。",
+    "previous": "上一页",
+    "page": "第{{current}}页，共{{total}}页",
+    "next": "下一页",
+    "loading": "正在加载日志分析…",
+    "columns": {
+      "path": "路径",
+      "family": "机器人类别",
+      "status": "验证状态",
+      "hits": "请求数",
+      "errors": "4xx/5xx占比",
+      "verdict": "结论"
+    },
+    "families": {
+      "googlebot": "Googlebot",
+      "bingbot": "Bingbot",
+      "gptbot": "GPTBot",
+      "perplexitybot": "PerplexityBot",
+      "none": "无机器人证据"
+    },
+    "statuses": {
+      "verified": "已验证",
+      "claimed": "自行声明",
+      "spoofed": "伪装",
+      "unknown": "未知"
+    },
+    "verdicts": {
+      "waste": "浪费",
+      "starvation": "抓取不足",
+      "ok": "正常",
+      "inconclusive": "无法确定",
+      "no-logs": "无日志"
+    }
+  },
+  "altCheckUi": {
+    "column": "ALT 质量",
+    "csvColumn": "alt_issues",
+    "summary": "已检查 {{checked}} 张图片，其中 {{issues}} 张存在 ALT 问题。",
+    "issues": {
+      "missing": "缺少 ALT",
+      "empty": "ALT 为空",
+      "filename": "看起来像文件名",
+      "generic": "措辞笼统",
+      "too-long": "过长",
+      "repeats-caption": "重复说明文字",
+      "unrelated-to-context": "与上下文无关"
+    },
+    "noIssues": "没有 ALT 问题",
+    "decorative": "装饰性（ALT 为空）",
+    "visualNotice": "视觉分析需要本地模型，此版本中不可用。",
+    "analyses": {
+      "ocr": "OCR",
+      "clip-alignment": "CLIP 对齐",
+      "transcript": "转录"
+    },
+    "statuses": {
+      "unavailable": "不可用"
+    },
+    "noScorePenalty": "这不会降低任何分数。"
+  },
+  "prePublishMountUi": {
+    "title": "发布前检查",
+    "description": "使用最近完成的抓取、已保存的摘录和术语、Site Focus 评分以及项目的嵌入设置。仅进行模拟，不会保存或发布任何内容。",
+    "draft": "未发布的草稿正文",
+    "url": "草稿 URL（可选）",
+    "urlHint": "新页面请留空。抓取中已有的 URL 会在模拟中替换该页面。",
+    "invalidUrl": "请输入不含登录凭据的有效 HTTP 或 HTTPS URL。",
+    "run": "检查草稿",
+    "cancel": "取消",
+    "loading": "正在加载检查…",
+    "noCrawl": "当前项目没有已完成的抓取。请先抓取网站。",
+    "noCore": "尚无核心主题，无法评估此草稿。",
+    "running": "正在生成草稿和抓取数据的嵌入…",
+    "unreachable": "所选嵌入提供方未能返回向量。请检查项目设置和提供方连接。",
+    "cancelled": "检查已取消，未应用任何结果。",
+    "stale": "输入或抓取已更改，请重新运行检查。"
+  },
+  "telemetrySourcesUi": {
+    "title": "数据来源",
+    "sources": {
+      "gsc": "GSC",
+      "ga4": "GA4",
+      "backlinks": "反向链接"
+    },
+    "states": {
+      "measured": "已测量",
+      "partial-history": "历史不完整",
+      "stale": "已过期",
+      "sampled": "样本",
+      "missing-permission": "缺少权限",
+      "unavailable": "不可用"
+    },
+    "property": "媒体资源：{{value}}",
+    "provider": "提供商：{{value}}",
+    "period": "{{start}} 至 {{end}}（{{days}} 天）",
+    "retrievedAt": "获取时间：{{value}}",
+    "truncated": {
+      "yes": "数据截断：是",
+      "no": "数据截断：否"
+    },
+    "coverage": "覆盖率：{{value}}%",
+    "unknownNote": "未知数据绝不会被计为零。"
+  },
+  "offPageSourcesUi": {
+    "analyze": "分析链接来源",
+    "cancel": "取消",
+    "scope": "按提供方权威值降序选择最多25条follow链接，每个来源域名一条。权威值尺度为0–100；TBVA是总和，不是百分比，也不是Google PageRank。限制：并发3个请求、原生超时15秒、响应正文25 MiB、每个来源20,000个可见文本字符。",
+    "provider": "本地嵌入提供方",
+    "local": "本地哈希",
+    "ollama": "本地Ollama",
+    "model": "Ollama嵌入模型",
+    "scored": "已评分来源：所选{{total}}个中的{{scored}}个（并非完整外链档案）。",
+    "sources": "来源抓取状态",
+    "fetchedAt": "抓取时间：{{time}}",
+    "notFetched": "尚未抓取",
+    "context": "提取结果不保留段落或锚点边界。系统推定有长度限制的文本块；由于缺少段落内链接上下文，所有匹配均为linked=false。",
+    "caveat": "共同出现不代表认可。同名异义词可能导致误匹配；含否定的提及仍标为不明确。",
+    "excerpts": "共引摘录",
+    "offset": "{{url}} — 提取文本偏移量 {{offset}}",
+    "missing": "缺少文本、可用向量或权威值意味着证据不完整或不可用，并非零外链。此样本不是完整档案。",
+    "status": {
+      "running": "正在分析来源…",
+      "done": "来源分析已完成",
+      "cancelled": "分析已取消；未完成的来源不会评分",
+      "unavailable": "分析不可用"
+    },
+    "fetch": {
+      "pending": "等待中",
+      "ok": "文本可用",
+      "unavailable": "不可用",
+      "too-large": "响应正文过大",
+      "blocked": "已被安全传输阻止"
+    },
+    "limitations": {
+      "no-topic-vector": "项目最近完成的抓取没有可用的Core Topic向量；TBVA不可用。",
+      "invalid-scale": "权威值尺度无效；TBVA不可用。",
+      "no-follow-links": "没有可分析的follow链接。",
+      "source-text-or-authority-missing": "部分来源缺少文本、可用向量或提供方权威值。"
+    },
+    "polarity": {
+      "neutral": "中性共现；不代表认可",
+      "unclear": "不明确：可能含否定"
+    },
+    "pacing": "原生审计保护还将启动频率限制为每分钟10次。样本分析可能需要数分钟；其他审计可能降低可用性。",
+    "history": {
+      "title": "历史记录",
+      "empty": "暂无已保存的已完成分析。",
+      "summary": "TBVA：{{value}} · 已评分/已请求：{{scored}}/{{requested}}",
+      "delta": "TBVA 变化：{{delta}}",
+      "notComparable": "不可比较：{{reason}}",
+      "reasons": {
+        "first": "没有上一条记录",
+        "scale": "权威值尺度不同",
+        "model": "嵌入模型不同",
+        "unknownModel": "嵌入模型未知",
+        "unavailable": "TBVA 不可用"
+      },
+      "view": "查看来源",
+      "hide": "隐藏来源",
+      "delete": "删除记录",
+      "clear": "清空项目历史",
+      "exportCurrent": "导出当前分析 CSV",
+      "exportRecord": "导出记录 CSV",
+      "storageError": "历史存储不可用；更改未保存。",
+      "topic": "主题：{{topic}}",
+      "embedding": "嵌入：{{provider}} / {{model}}",
+      "details": "已保存的各来源证据",
+      "fields": {
+        "sourceUrl": "来源 URL",
+        "fetchedAt": "获取时间",
+        "availability": "可用性",
+        "authority": "权威值",
+        "similarity": "相似度",
+        "contribution": "贡献值"
+      },
+      "unavailable": "不可用",
+      "status": {
+        "ready": "就绪",
+        "partial": "部分可用",
+        "unavailable": "不可用"
+      },
+      "privacy": "每个项目在本地保存最近 10 次已完成的分析。绝不保存页面全文或向量。"
+    }
+  },
+  "experimentsUi": {
+    "title": "SEO实验",
+    "disclaimer": "这是观察结果，而非因果关系的证明。变化可能来自季节性、其他干预或外部因素。",
+    "projectRequired": "请选择项目以登记干预。",
+    "capacity": "最多保留{{count}}项干预；新增超出上限时会移除最旧的记录。",
+    "url": "页面URL",
+    "site": "整个网站",
+    "date": "首个受影响日期",
+    "kind": "干预类型",
+    "note": "备注（最多300个字符）",
+    "add": "添加干预",
+    "saveFailed": "无法保存。请检查输入内容和本地存储。",
+    "removeFailed": "无法从本地存储中删除干预。",
+    "empty": "尚未登记干预。",
+    "intervention": "干预",
+    "unavailable": "不可用",
+    "baseline": "基准期间",
+    "followUp": "干预后期间",
+    "measurements": "观察指标",
+    "metric": "指标",
+    "before": "之前",
+    "after": "之后",
+    "change": "相对变化",
+    "clicks": "点击次数",
+    "impressions": "展示次数",
+    "position": "平均排名（带符号差值）",
+    "restOfSite": "网站其余部分（总计减去该页面）",
+    "relativeVsSite": "页面减去网站其余部分（百分点）",
+    "limitations": "局限性",
+    "remove": "删除干预",
+    "percent": "{{value}}%",
+    "points": "{{value}}个百分点",
+    "kinds": {
+      "content": "内容",
+      "internal-links": "内部链接",
+      "title-meta": "标题与元数据",
+      "technical": "技术",
+      "other": "其他"
+    },
+    "status": {
+      "ready": "可查看观察结果",
+      "inconclusive": "无法得出结论",
+      "pending": "已计划／待评估"
+    },
+    "reasons": {
+      "observational": "仅为前后观察，不作因果推断。",
+      "uncontrolled-factors": "未控制季节性、同期变更和外部因素。",
+      "zero-baseline": "基准值为零时，无法计算相对变化。",
+      "no-control": "整个网站的干预没有独立的网站其余部分对照。",
+      "filtered-scope": "两个期间使用相同的已保存Search Console筛选条件。",
+      "invalid-period": "已保存期间的日期或长度无效。",
+      "inconsistent-totals": "页面指标超过已保存的网站总计，无法计算对照。",
+      "no-baseline": "没有在干预之前结束的已保存期间。",
+      "no-follow-up": "没有在干预当日或之后开始的已保存期间。",
+      "incomparable-scope": "最近的期间使用不同的资源或筛选条件，或不涵盖此URL。",
+      "period-length-mismatch": "两个期间的长度相差超过10%。",
+      "rows-truncated": "已保存的页面行被截断，页面比较可能不完整。",
+      "low-volume": "基准点击次数少于30，数据量不足以进行可靠比较。",
+      "pending": "干预日期在未来，正在等待评估。"
+    }
   }
 }

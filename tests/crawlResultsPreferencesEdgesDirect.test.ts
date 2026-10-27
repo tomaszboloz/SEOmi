@@ -1,4 +1,4 @@
-import { beforeEach, describe, expect, it } from 'vitest';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
 import {
   filterPresetsKey,
   loadFilterPresets,
@@ -51,5 +51,32 @@ describe('crawl result preference edge contracts', () => {
       id: 'healthy', name: 'Healthy', severity: 'Warning', errorKind: 'all',
       segment: '2xx', onlyProblems: false, query: 'docs', sort: 'url', descending: true,
     }]);
+  });
+
+  it('falls back to empty navigation preferences on storage read exception', async () => {
+    const storage = await import('@/services/storage');
+    const spy = vi.spyOn(storage, 'readJsonStorage').mockImplementationOnce(() => {
+      throw new Error('corrupted');
+    });
+    expect(readCrawlNavigationPreferences('nav-key')).toEqual({
+      activeTab: 'overview',
+      activeTabGroup: 'core',
+      metadataFacet: 'all',
+      validationQuery: '',
+      validationSeverity: 'all',
+    });
+    spy.mockRestore();
+  });
+
+  it('handles non-array filter presets and read exceptions gracefully', async () => {
+    localStorage.setItem(filterPresetsKey('project-not-arr'), JSON.stringify({ not: 'array' }));
+    expect(loadFilterPresets('project-not-arr')).toEqual([]);
+
+    const storage = await import('@/services/storage');
+    const spy = vi.spyOn(storage, 'readJsonStorage').mockImplementationOnce(() => {
+      throw new Error('corrupted');
+    });
+    expect(loadFilterPresets('project-err')).toEqual([]);
+    spy.mockRestore();
   });
 });

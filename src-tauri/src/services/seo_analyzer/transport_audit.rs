@@ -1,5 +1,7 @@
 use crate::models::audit_data::{Issue, IssueCategory, IssueSeverity, TransportSecurityAudit};
-use crate::services::security_checker::{evaluate_security_headers, SecurityAuditResult};
+use crate::services::security_checker::{
+    evaluate_security_headers, evaluate_security_headers_with_repeated, SecurityAuditResult,
+};
 use crate::services::seo_analyzer::transport_security::{
     assess_cookie_headers, detect_mixed_content_resources,
 };
@@ -12,14 +14,35 @@ pub struct TransportAuditOutput {
     pub issues: Vec<Issue>,
 }
 
+#[cfg(test)]
 pub fn audit_transport(
     headers: &HashMap<String, String>,
     set_cookie_headers: &[String],
     body: &str,
     parsed_url: &Url,
 ) -> TransportAuditOutput {
+    audit_transport_with_repeated_headers(
+        headers,
+        &HashMap::new(),
+        set_cookie_headers,
+        body,
+        parsed_url,
+    )
+}
+
+pub fn audit_transport_with_repeated_headers(
+    headers: &HashMap<String, String>,
+    repeated_headers: &HashMap<String, Vec<String>>,
+    set_cookie_headers: &[String],
+    body: &str,
+    parsed_url: &Url,
+) -> TransportAuditOutput {
     let mut issues = Vec::new();
-    let sec_result = evaluate_security_headers(headers);
+    let sec_result = if repeated_headers.is_empty() {
+        evaluate_security_headers(headers)
+    } else {
+        evaluate_security_headers_with_repeated(headers, repeated_headers)
+    };
     issues.extend(sec_result.issues.clone());
 
     let mixed_content_urls = detect_mixed_content_resources(body, parsed_url);

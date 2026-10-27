@@ -3,17 +3,17 @@ import { expect, it, vi } from 'vitest';
 import ts from 'typescript';
 import { exportedTypeContract } from './fixtures/typeContracts';
 
-it('preserves every crawler export, property type, optional flag and declaration order', () => {
+it('preserves the reviewed crawler contract including optional project ownership and semantic language', () => {
   expect(exportedTypeContract('src/types/crawl.ts')).toEqual({
-    exports: 37,
-    sha256: '1a8cacd51a9b8216b11bcd6022e916a4b84be1d9100af0686e509fdcb2eab177',
+    exports: 40,
+    sha256: '0a66b59fd6dd2aa2cfd7aae5cc00ceb25afc135a459aa777897736a2ca0749a0',
   });
 });
 
 it('preserves every audit export, property type, optional flag and declaration order', () => {
   expect(exportedTypeContract('src/types/audit.ts')).toEqual({
     exports: 35,
-    sha256: '62a78ea80ca71c772571e0a25117950fb09249a5d5d39a9f6b9342b60fee0453',
+    sha256: 'e8bcd54ac98a9547c027e3d2e39286721794d7594b3af19c2a1c43ef6cfb81a3',
   });
 });
 
@@ -25,7 +25,7 @@ it('resolves the complete type graph without loading unrelated ambient declarati
     return readFile(path);
   });
   try {
-    expect(exportedTypeContract('src/types/crawl.ts').exports).toBe(37);
+    expect(exportedTypeContract('src/types/crawl.ts').exports).toBe(40);
     expect(reads.filter(path => path.includes('/node_modules/') && path.endsWith('.d.ts'))).toEqual([]);
     expect(reads.some(path => path.endsWith('/types/crawl/page.ts'))).toBe(true);
   } finally { spy.mockRestore(); }

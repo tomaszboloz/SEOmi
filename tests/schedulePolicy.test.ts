@@ -14,8 +14,8 @@ it.each([undefined,{},'invalid',[{startedAt:'invalid',completedAt:'invalid',succ
 });
 it('preserves valid bounded history and normalizes legacy task options',()=>{
  const history=Array.from({length:25},(_,index)=>({startedAt:'2026-10-01T08:00:00Z',completedAt:'2026-10-01T08:01:00Z',succeeded:index%2===0}));
- const parsed=parseSchedules([{...record,taskType:'site-crawl',crawlLimit:900,runHistory:history}]);
- expect(parsed[0]).toMatchObject({taskType:'site-crawl',crawlLimit:500,runHistory:history.slice(-20)});
+ const parsed=parseSchedules([{...record,taskType:'site-crawl',crawlLimit:2_000_000,runHistory:history}]);
+ expect(parsed[0]).toMatchObject({taskType:'site-crawl',crawlLimit:1_000_000,runHistory:history.slice(-20)});
  expect(history).toHaveLength(25);expect(parseSchedules(Array(30).fill(record))).toHaveLength(20);
  expect(parseSchedules([record])[0].taskType).toBe('page-audit');
 });

@@ -115,3 +115,7 @@ pub(super) fn parse_links(html_str: &str, base_url: &Url) -> (LinksAnalysis, Vec
 
     (analysis, issues)
 }
+
+#[cfg(test)]
+#[path = "links_tests.rs"]
+mod tests;

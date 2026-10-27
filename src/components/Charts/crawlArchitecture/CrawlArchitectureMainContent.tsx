@@ -2,9 +2,10 @@ import { useTranslation } from 'react-i18next';
 import { SemanticTopicalWorkspace } from '@/components/Charts/SemanticTopicalWorkspace';
 import { CrawlDirectoryTree } from '@/components/Charts/CrawlDirectoryTree';
 import { CrawlArchitectureGraphView } from './CrawlArchitectureGraphView';
+import { TopicalDiagnosisView } from './topicalDiagnosis/TopicalDiagnosisView';
 
 export const CrawlArchitectureMainContent = ({
-  pages, crawlMode, sitemapUrls, runs, currentRunId, state
+  pages, startUrl, crawlMode, sitemapUrls, runs, currentRunId, state
 }: any) => {
   const { t } = useTranslation();
   const {
@@ -28,7 +29,18 @@ export const CrawlArchitectureMainContent = ({
     return t(`mapUi.plural.${key}.${form}`, { count });
   };
 
-  if (activeView === 'plan') return <SemanticTopicalWorkspace projectId={activeProjectId} pages={pages} graph={contentGraph} runId={effectiveRunId} sitemapUrls={sitemapUrls} runs={runs} currentRunId={currentRunId ?? effectiveRunId} />;
+  const selectPageByUrl = (url: string) => {
+    const node = graph.nodes.find((candidate: any) => candidate.page.url === url || candidate.page.final_url === url);
+    if (!node) return;
+    // The page must be visible in the graph, so every restriction is lifted first.
+    state.setPreferences((previous: any) => ({ ...previous, diagnosisFilter: null, clusterFilter: 'all', orphansOnly: false, query: '' }));
+    setSelectedId(node.id);
+    state.setActiveView('graph');
+  };
+
+  if (activeView === 'diagnosis') return <TopicalDiagnosisView report={state.diagnosis} onShowInGraph={state.setDiagnosisFilter} onOpenPage={selectPageByUrl} />;
+
+  if (activeView === 'plan') return <SemanticTopicalWorkspace projectId={activeProjectId} pages={pages} graph={contentGraph} diagnosis={state.diagnosis} runId={effectiveRunId} sitemapUrls={sitemapUrls} runs={runs} currentRunId={currentRunId ?? effectiveRunId} />;
   
   if (activeView === 'directory') return <CrawlDirectoryTree pages={pages} projectId={activeProjectId} runId={effectiveRunId} onSelectPage={(url) => {
     const node = graph.nodes.find((candidate: any) => candidate.page.url === url);
@@ -53,7 +65,7 @@ export const CrawlArchitectureMainContent = ({
       {!graph.hasSemanticTerms && <p role="status" className="mt-3 rounded-lg border border-amber-500/25 bg-amber-500/5 px-3 py-2 text-xs text-amber-100">{t('mapUi.noterms')}</p>}
       {graph.truncated && <p className="mt-3 rounded-lg border border-sky-500/25 bg-sky-500/5 px-3 py-2 text-xs text-sky-100">{t('mapUi.truncated')}</p>}
       
-      <CrawlArchitectureGraphView state={state} crawlMode={crawlMode} />
+      <CrawlArchitectureGraphView state={state} crawlMode={crawlMode} pages={pages} startUrl={startUrl} />
     </>
   );
 };

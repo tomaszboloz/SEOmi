@@ -1,4 +1,4 @@
-import { act, fireEvent, render, screen, waitFor, within } from '@testing-library/react';
+import { act, cleanup, fireEvent, render, screen, waitFor, within } from '@testing-library/react';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import i18n from '@/i18n';
 import { ProviderModelSelect } from '@/components/AI/ProviderModelSelect';
@@ -11,10 +11,10 @@ const keys = { openai: '', claude: 'sk-test', gemini: '' };
 beforeEach(async () => {
   localStorage.clear();
   await i18n.changeLanguage('en');
-  useAuthStore.setState({ provider: 'claude', model: 'claude-opus-5', apiKeys: keys, connectionMethod: { openai: 'api_key', claude: 'api_key', gemini: 'api_key' },
-    availableModels: { openai: [], claude: [], gemini: [] }, modelListStatus: { openai: 'idle', claude: 'idle', gemini: 'idle' } });
+  await act(async () => useAuthStore.setState({ provider: 'claude', model: 'claude-opus-5', apiKeys: keys, connectionMethod: { openai: 'api_key', claude: 'api_key', gemini: 'api_key' },
+    availableModels: { openai: [], claude: [], gemini: [] }, modelListStatus: { openai: 'idle', claude: 'idle', gemini: 'idle' } }));
 });
-afterEach(() => { useAuthStore.setState(initial, true); vi.restoreAllMocks(); });
+afterEach(() => { cleanup(); act(() => useAuthStore.setState(initial, true)); vi.restoreAllMocks(); });
 
 describe('model list in the store', () => {
   it('stores and caches the provider list, keeping the cached copy valid', async () => {
@@ -25,7 +25,7 @@ describe('model list in the store', () => {
   });
 
   it('keeps the previous list and reports an error when listing fails', async () => {
-    useAuthStore.setState({ availableModels: { openai: [], claude: [{ id: 'claude-opus-5', label: 'Claude Opus 5' }], gemini: [] } });
+    act(() => useAuthStore.setState({ availableModels: { openai: [], claude: [{ id: 'claude-opus-5', label: 'Claude Opus 5' }], gemini: [] } }));
     vi.spyOn(modelList, 'listProviderModels').mockRejectedValue(new Error('offline'));
     await act(() => useAuthStore.getState().refreshProviderModels('claude'));
     expect(useAuthStore.getState().modelListStatus.claude).toBe('error');
@@ -34,7 +34,7 @@ describe('model list in the store', () => {
 
   it('does not list models for a CLI connection or a missing key', async () => {
     const spy = vi.spyOn(modelList, 'listProviderModels');
-    useAuthStore.setState({ connectionMethod: { openai: 'api_key', claude: 'local_cli', gemini: 'api_key' } });
+    act(() => useAuthStore.setState({ connectionMethod: { openai: 'api_key', claude: 'local_cli', gemini: 'api_key' } }));
     await useAuthStore.getState().refreshProviderModels('claude');
     await useAuthStore.getState().refreshProviderModels('gemini');
     expect(spy).not.toHaveBeenCalled();
@@ -59,7 +59,7 @@ describe('model list in the store', () => {
 
 describe('provider model select', () => {
   it('offers default models before listing and the fetched models afterwards', async () => {
-    render(<ProviderModelSelect provider="claude" ariaLabel="Model" className="" />);
+    await act(async () => { render(<ProviderModelSelect provider="claude" ariaLabel="Model" className="" />); });
     const select = screen.getByRole('combobox', { name: 'Model' });
     expect(within(select).getAllByRole('option').map(option => option.textContent)).toEqual(['Claude Opus 5', 'Claude Sonnet 5', 'Claude Haiku 4.5']);
     expect(screen.getByText(i18n.t('auth.modelsDefault'))).toBeTruthy();
@@ -71,9 +71,9 @@ describe('provider model select', () => {
     expect(useAuthStore.getState().model).toBe('claude-x');
   });
 
-  it('disables refresh without a key and shows listing errors', () => {
-    useAuthStore.setState({ apiKeys: { ...keys, claude: '' }, modelListStatus: { openai: 'idle', claude: 'error', gemini: 'idle' } });
-    render(<ProviderModelSelect provider="claude" ariaLabel="Model" className="" />);
+  it('disables refresh without a key and shows listing errors', async () => {
+    act(() => useAuthStore.setState({ apiKeys: { ...keys, claude: '' }, modelListStatus: { openai: 'idle', claude: 'error', gemini: 'idle' } }));
+    await act(async () => { render(<ProviderModelSelect provider="claude" ariaLabel="Model" className="" />); });
     expect((screen.getByRole('button', { name: i18n.t('auth.refreshModels') }) as HTMLButtonElement).disabled).toBe(true);
     expect(screen.getByRole('alert').textContent).toBe(i18n.t('auth.modelsUnavailable'));
   });

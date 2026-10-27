@@ -36,6 +36,16 @@ describe('SecurityHeaders modular architecture', () => {
     expect(specs[2].value).toBeUndefined();
   });
 
+  it('surfaces report-only CSP as a distinct observed header', () => {
+    const specs = buildHeaderSpecs({
+      score: 90,
+      content_security_policy_report_only: "default-src 'self'",
+    }, mockT);
+    expect(specs).toHaveLength(9);
+    expect(specs[2].key).toBe('content-security-policy-report-only');
+    expect(specs[2].value).toContain("default-src 'self'");
+  });
+
   it('renders SecurityScoreBanner with hardened rating for high score', () => {
     render(<SecurityScoreBanner score={90} t={mockT} />);
     expect(screen.getByText('90%')).toBeTruthy();

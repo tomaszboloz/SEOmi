@@ -1,5 +1,6 @@
 use super::{
-    mapping::map_joint_rows,
+    mapping::{map_joint_rows, map_performance},
+    models::GscPerformanceFilters,
     requests::analytics_dimensions_request,
     rows::performance_dimensions_at,
     rows_test_fixture::{client, fixture},
@@ -88,4 +89,29 @@ fn joint_metrics_must_be_observed_finite_and_nonnegative() {
             );
         }
     }
+}
+
+#[test]
+fn map_performance_rejects_blank_key_in_analytics_row() {
+    let total = json!({"clicks": 10, "impressions": 100, "ctr": 0.1, "position": 2.0});
+    let blank_query = json!({
+        "keys": ["   "],
+        "clicks": 1,
+        "impressions": 10,
+        "ctr": 0.1,
+        "position": 1.0
+    });
+    let result = map_performance(
+        "sc-domain:example.com",
+        "2026-09-01",
+        "2026-09-28",
+        &[blank_query],
+        &[],
+        &[total],
+        &[],
+        &GscPerformanceFilters::default(),
+        false,
+        false,
+    );
+    assert!(result.unwrap_err().contains("invalid query row"));
 }

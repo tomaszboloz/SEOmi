@@ -8,6 +8,7 @@ export function handleBrowserFallback<T>(cmd: string, args?: Record<string, unkn
   // preview must stay usable without pretending local storage is secure: return
   // an empty value and keep writes as an explicit no-op until the desktop shell
   // is available.
+  if (cmd === 'has_secret') return Promise.resolve(false as T);
   if (cmd === 'get_secret') return Promise.resolve(null as T);
   if (cmd === 'set_secret') return Promise.resolve(undefined as T);
   if (cmd === 'detect_ai_clis') {
@@ -61,12 +62,21 @@ export function handleBrowserFallback<T>(cmd: string, args?: Record<string, unkn
   // "unknown command" error to the user.
   const desktopOnlyCommands = new Set([
     'cancel_inspect_url',
+    'ai_generate_text',
+    'ai_generate_suggestions',
+    'ai_list_models',
+    'ai_test_connection',
     'cancel_site_crawl',
     'check_link',
     'check_external_crawl_links',
+    'connect_google_analytics',
+    'list_google_analytics_properties',
+    'google_analytics_performance',
     'connect_search_console',
     'crawl_site',
     'dataforseo_request',
+    'fetch_public_feed',
+    'rdap_domain_lookup',
     'delete_crawl_auth_profile',
     'discover_mcp_tools',
     'load_project_audit_queue',
@@ -87,6 +97,18 @@ export function handleBrowserFallback<T>(cmd: string, args?: Record<string, unkn
     'save_crawl_auth_profile',
     'save_project_audit_queue',
     'save_project_crawl_checkpoint',
+    'store_save_crawl_run',
+    'store_replace_crawl_runs',
+    'store_list_crawl_runs',
+    'store_load_crawl_run',
+    'store_load_crawl_pages',
+    'store_delete_crawl_run',
+    'store_import_legacy_runs',
+    'store_put_record',
+    'store_get_record',
+    'store_forget_subject',
+    'store_erase_project',
+    'store_erasure_log',
     'save_project_crawl_runs',
     'delete_project_audit_queue',
     'delete_project_crawl_checkpoint',

@@ -2,11 +2,35 @@ import { useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useProjectStore } from '@/stores/projectStore';
 import { readStorage, writeStorage } from '@/services/storage';
+import { invokeTauriCommand, isTauriEnvironment } from '@/services/tauri';
 import {
   type RdapDomain,
   domainAgeInputStorageKey,
   domainFromInput,
 } from './seoToolsTypes';
+
+const RDAP_TIMEOUT_MS = 10_000;
+
+/** Desktop builds query RDAP natively so the WebView CSP needs no remote connect-src. */
+const lookupRdap = async (hostname: string, controller: AbortController): Promise<RdapDomain> => {
+  const timeout = globalThis.setTimeout(() => controller.abort(), RDAP_TIMEOUT_MS);
+  try {
+    if (isTauriEnvironment()) {
+      const aborted = new Promise<never>((_, reject) => {
+        controller.signal.addEventListener('abort', () => reject(new Error('aborted')), { once: true });
+      });
+      return await Promise.race([invokeTauriCommand<RdapDomain>('rdap_domain_lookup', { domain: hostname }), aborted]);
+    }
+    const response = await fetch(`https://rdap.org/domain/${encodeURIComponent(hostname)}`, {
+      headers: { Accept: 'application/rdap+json, application/json' },
+      signal: controller.signal,
+    });
+    if (!response.ok) throw new Error(`HTTP ${response.status}`);
+    return (await response.json()) as RdapDomain;
+  } finally {
+    globalThis.clearTimeout(timeout);
+  }
+};
 
 export const useDomainAgeLookup = () => {
   const { t, i18n } = useTranslation();
@@ -65,21 +89,7 @@ export const useDomainAgeLookup = () => {
     setRegistrationDate(null);
     setError(null);
     try {
-      const timeout = globalThis.setTimeout(() => controller.abort(), 10_000);
-      let response: Response;
-      try {
-        response = await fetch(
-          `https://rdap.org/domain/${encodeURIComponent(hostname)}`,
-          {
-            headers: { Accept: 'application/rdap+json, application/json' },
-            signal: controller.signal,
-          },
-        );
-      } finally {
-        globalThis.clearTimeout(timeout);
-      }
-      if (!response.ok) throw new Error(`HTTP ${response.status}`);
-      const payload = (await response.json()) as RdapDomain;
+      const payload = await lookupRdap(hostname, controller);
       const registration = (payload.events || []).find(
         (event) => event.eventAction.toLowerCase() === 'registration',
       );

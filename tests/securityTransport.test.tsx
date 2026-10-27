@@ -32,4 +32,18 @@ describe('transport security report', () => {
     expect(screen.getByText('SameSite Lax')).toBeTruthy();
     expect(screen.getByText(/Certificate chain and negotiated TLS version are not inspected/)).toBeTruthy();
   });
+
+  it('filters only missing headers when showOnlyProblems is true', () => {
+    useAuditStore.setState({ showOnlyProblems: true });
+    const auditWithHeaders = {
+      ...audit,
+      security_headers: {
+        score: 50,
+        strict_transport_security: 'max-age=31536000',
+      },
+    } as unknown as PageAuditData;
+    render(<SecurityHeaders audit={auditWithHeaders} />);
+    expect(screen.getByText('Transport i cookies')).toBeTruthy();
+    expect(screen.queryByText('max-age=31536000')).toBeNull();
+  });
 });

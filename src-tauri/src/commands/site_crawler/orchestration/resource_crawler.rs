@@ -4,7 +4,7 @@ use tokio::task::JoinSet;
 
 use super::super::{
     control::CrawlControl, crawl_delay::wait_for_crawl_delay, models::CrawledResource,
-    resource_fetch::fetch_resource_candidate, transport::crawl_deadline_reached,
+    resource_fetch::fetch_resource_candidate_with_context, transport::crawl_deadline_reached,
 };
 use super::setup::CrawlSetup;
 use super::state::CrawlLoopState;
@@ -66,7 +66,14 @@ pub async fn crawl_secondary_resources<R: Runtime>(
                 }
             }
             state.last_page_request_at = Some(Instant::now());
-            resources.push(fetch_resource_candidate(setup.client.clone(), candidate).await);
+            resources.push(
+                fetch_resource_candidate_with_context(
+                    setup.client.clone(),
+                    candidate,
+                    setup.retry_context(),
+                )
+                .await,
+            );
         }
     } else {
         if !selected_resources.is_empty() && !can_fetch_resources(setup, control, state).await {
@@ -81,7 +88,11 @@ pub async fn crawl_secondary_resources<R: Runtime>(
         let mut tasks = JoinSet::new();
         for _ in 0..max_concurrent_requests {
             if let Some(candidate) = pending.next() {
-                tasks.spawn(fetch_resource_candidate(setup.client.clone(), candidate));
+                tasks.spawn(fetch_resource_candidate_with_context(
+                    setup.client.clone(),
+                    candidate,
+                    setup.retry_context(),
+                ));
             }
         }
         while let Some(joined) = tasks.join_next().await {
@@ -89,24 +100,15 @@ pub async fn crawl_secondary_resources<R: Runtime>(
                 tasks.abort_all();
                 break;
             }
-            match joined {
-                Ok(resource) => resources.push(resource),
-                Err(_) => resources.push(CrawledResource {
-                    source_urls: Vec::new(),
-                    url: String::new(),
-                    resource_type: "other".into(),
-                    http_status: None,
-                    content_type: None,
-                    content_length: None,
-                    intrinsic_width: None,
-                    intrinsic_height: None,
-                    dimensions_source: None,
-                    response_time_ms: None,
-                    request_error_kind: Some("resource_task".into()),
-                }),
-            }
+            // A panicked or cancelled task has no resource to report; the former
+            // placeholder carried an empty URL and was dropped by `retain` below.
+            resources.extend(joined.ok());
             if let Some(candidate) = pending.next() {
-                tasks.spawn(fetch_resource_candidate(setup.client.clone(), candidate));
+                tasks.spawn(fetch_resource_candidate_with_context(
+                    setup.client.clone(),
+                    candidate,
+                    setup.retry_context(),
+                ));
             }
         }
     }

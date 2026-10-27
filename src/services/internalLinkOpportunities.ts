@@ -1,4 +1,5 @@
 import type { CrawledPageSummary } from '@/types';
+import { semanticPageTermInventory } from '@/services/semanticText';
 
 const MAX_PAGES = 160;
 const MAX_CAPTURED_CONTENT_LINKS = 1_000;
@@ -33,8 +34,6 @@ const normalizeUrl = (value: string): string => {
   } catch { return ''; }
 };
 
-const normalizeTerm = (term: string) => term.normalize('NFKC').trim().toLocaleLowerCase();
-
 /**
  * Suggests review candidates from bounded main-content terms and captured main-content
  * links only. This is lexical evidence, not a claim that a link is needed or will rank.
@@ -44,7 +43,9 @@ export const findInternalLinkOpportunities = (pages: CrawledPageSummary[]): Inte
   const omittedByLimit = Math.max(0, pages.length - boundedPages.length);
   const eligible = boundedPages.flatMap((page) => {
     const url = normalizeUrl(page.final_url || page.url);
-    const terms = [...new Set((page.semantic_terms ?? []).map(normalizeTerm).filter(Boolean))].slice(0, 40);
+    // Inflections share a language-namespaced key; evidence shows an observed form.
+    const forms = semanticPageTermInventory(page);
+    const terms = [...forms.keys()];
     const links = page.semantic_links;
     const indexability = (page.indexability_status ?? '').toLocaleLowerCase();
     const eligibleIndexState = indexability === 'indexable' || indexability.startsWith('eligible from this response only');
@@ -52,7 +53,7 @@ export const findInternalLinkOpportunities = (pages: CrawledPageSummary[]): Inte
     // Missing arrays occur in old/partial snapshots. At the storage ceiling the list
     // may also be truncated, so absence of a captured edge is not safe evidence.
     if (!url || !isHttpSuccess || !eligibleIndexState || page.body_truncated !== false || !terms.length || !Array.isArray(links) || links.length >= MAX_CAPTURED_CONTENT_LINKS) return [];
-    return [{ page, url, terms: new Set(terms), links }];
+    return [{ page, url, terms: new Set(terms), forms, links }];
   });
   const pagesWithoutCompleteEvidence = boundedPages.length - eligible.length;
   const documentFrequency = new Map<string, number>();
@@ -69,7 +70,7 @@ export const findInternalLinkOpportunities = (pages: CrawledPageSummary[]): Inte
     const existingTargets = new Set(source.links.filter((link) => link.is_internal).map((link) => normalizeUrl(link.target_url)).filter(Boolean));
     for (const target of eligible) {
       if (source === target || source.url === target.url || existingTargets.has(target.url) || existingTargets.has(normalizeUrl(target.page.url))) continue;
-      const sharedTerms = [...source.terms].filter((term) => target.terms.has(term)).sort();
+      const sharedTerms = [...source.terms].filter((term) => target.terms.has(term)).map((term) => source.forms.get(term)!).sort();
       if (sharedTerms.length < MIN_SHARED_TERMS) continue;
       const vocabulary = new Set([...source.terms, ...target.terms]);
       let sharedWeight = 0;

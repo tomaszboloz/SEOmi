@@ -1,5 +1,5 @@
 use super::page_summary::CrawledPageSummary;
-use super::resources_and_hops::CrawledResource;
+use super::resources_and_hops::{CrawledRedirectHop, CrawledResource};
 use super::robots_and_indexability::{CrawledRobotsAgent, CrawledRobotsRule};
 use crate::commands::site_crawler::{
     MAX_SEMANTIC_CONTENT_LINKS_PER_PAGE, MAX_SEMANTIC_EXCERPTS_PER_PAGE,
@@ -15,6 +15,9 @@ pub struct SiteCrawlResult {
     pub crawl_mode: String,
     pub pages_crawled: usize,
     pub health_score: u8,
+    /// Zero identifies legacy snapshots whose formula was not recorded.
+    #[serde(default)]
+    pub score_version: u16,
     pub critical_count: usize,
     pub warning_count: usize,
     pub notice_count: usize,
@@ -23,6 +26,16 @@ pub struct SiteCrawlResult {
     pub cancelled: bool,
     pub timed_out: bool,
     pub robots_txt_status: String,
+    #[serde(default)]
+    pub robots_txt_evaluation_status: String,
+    #[serde(default)]
+    pub robots_txt_warning: Option<String>,
+    #[serde(default)]
+    pub robots_txt_status_code: Option<u16>,
+    #[serde(default)]
+    pub robots_txt_final_url: Option<String>,
+    #[serde(default)]
+    pub robots_txt_redirect_chain: Vec<CrawledRedirectHop>,
     #[serde(default)]
     pub robots_user_agent: String,
     #[serde(default)]

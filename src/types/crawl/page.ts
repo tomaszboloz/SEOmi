@@ -5,6 +5,8 @@ import type { CrawledImage, CrawledFrame, CrawledSocialResourceCheck, CrawledSoc
 import type { FaviconData } from '../audit/technical';
 import type { CrawledCustomSearchResult } from './configuration';
 
+import type { FocusTerm, HeadingTexts, RagSection } from './focus';
+
 export interface CrawledPageSummary {
   url: string;
   final_url: string;
@@ -64,6 +66,16 @@ export interface CrawledPageSummary {
   content_simhash?: string | null;
   /** Bounded topical terms from main content, excluding header/footer/nav/sidebar. */
   semantic_terms?: string[];
+  /** Top 120 zone-weighted 1-4-gram terms for Site Focus Score; absent in older saved runs. */
+  focus_terms?: FocusTerm[];
+  /** H1-H3 texts (max 20 per level, 160 chars each); absent in older saved runs. */
+  heading_texts?: HeadingTexts;
+  /** Characters of cleaned main-content text behind focus_terms. */
+  focus_text_chars?: number;
+  /** Latest YYYY-MM-DD date the page declares (meta, JSON-LD, time, Last-Modified); absent when none. */
+  content_date?: string;
+  /** H1-H3 sections (max 40) for AI Overviews / RAG readiness; absent in older saved runs. */
+  rag_sections?: RagSection[];
   /** Bounded semantic-content excerpts retained only for local source-context checks. */
   semantic_excerpts?: string[];
   /** Internal links discovered in main content only for semantic architecture analysis. */
@@ -84,6 +96,8 @@ export interface CrawledPageSummary {
   html_validation_findings?: CrawledHtmlValidationFinding[];
   html_validation_truncated?: boolean;
   document_language?: string | null;
+  /** Language the crawler used to group inflected semantic terms (declared or inferred). */
+  semantic_language?: string | null;
   hreflangs: CrawledHreflang[];
   amp_url?: string | null;
   amp_target_http_status?: number | null;

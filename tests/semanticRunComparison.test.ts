@@ -88,4 +88,28 @@ describe('compareSemanticRuns', () => {
     expect(report.counts['topic-edge-added']).toBe(1);
     expect(report.changes.find((change) => change.code === 'topic-edge-added')?.evidence.join(' ')).toContain('Jaccard');
   });
+
+  it('does not report a term change when the new crawler merged inflected forms of the same word', () => {
+    const report = compareSemanticRuns(createEmptyTopicalMap(), {
+      id: 'baseline',
+      result: { pages: [{ ...page('https://site.test/oferta', ['szkolenia', 'szkolenie']), document_language: 'pl' }] } as never,
+    }, { id: 'current', pages: [{ ...page('https://site.test/oferta', ['szkolenie']), document_language: 'pl', semantic_language: 'pl' }] });
+
+    expect(report.counts['content-terms-changed']).toBe(0);
+  });
+
+  it('ignores function words, numbers and error-page terms that older crawls still stored', () => {
+    const report = compareSemanticRuns(createEmptyTopicalMap(), {
+      id: 'baseline',
+      result: { pages: [
+        { ...page('https://site.test/oferta', ['szkolenie', 'ale', '2026']), document_language: 'pl' },
+        { ...page('https://site.test/missing', ['found', 'error']), http_status: 404 },
+      ] } as never,
+    }, { id: 'current', pages: [
+      { ...page('https://site.test/oferta', ['szkolenie']), document_language: 'pl' },
+      { ...page('https://site.test/missing', []), http_status: 404 },
+    ] });
+
+    expect(report.counts['content-terms-changed']).toBe(0);
+  });
 });

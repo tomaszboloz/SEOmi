@@ -65,4 +65,11 @@ describe('AI research edge cases', () => {
     expect(result.citations).toEqual(['https://seomi.test.evil.test', 'https://evilseomi.test']);
     expect(result).toMatchObject({ brandMentioned: false, ownDomainCited: false, mentionPosition: null });
   });
+
+  it('discards citations with invalid port or invalid URL syntax', () => {
+    const text = 'Valid https://valid.test and invalid https://bad.test:99999.';
+    expect(extractAiCitations(text)).toEqual(['https://valid.test']);
+    const analysis = analyzeAiEvidence(text, 'Valid', 'valid.test', []);
+    expect(analysis.citations).toEqual(['https://valid.test']);
+  });
 });

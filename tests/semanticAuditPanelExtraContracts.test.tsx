@@ -70,9 +70,9 @@ describe('SemanticAuditPanel direct evidence contracts', () => {
   });
 
   it('renders comparison changes and applies severity and text filters', () => {
-    const older = createCrawlRunFixture({ id: 'older', completedAt: '2026-10-01' });
-    const newest = createCrawlRunFixture({ id: 'newest', completedAt: '2026-10-02' });
-    const current = createCrawlRunFixture({ id: 'current', completedAt: '2026-10-03' });
+    const older = createCrawlRunFixture({ id: 'older', projectId: 'semantic-project', completedAt: '2026-10-01' });
+    const newest = createCrawlRunFixture({ id: 'newest', projectId: 'semantic-project', completedAt: '2026-10-02' });
+    const current = createCrawlRunFixture({ id: 'current', projectId: 'semantic-project', completedAt: '2026-10-03' });
     render(<SemanticAuditPanel document={createEmptyTopicalMap()} pages={[]} runs={[older, newest, current]} currentRunId="current" />);
     const baseline = screen.getByRole('combobox') as HTMLSelectElement;
     expect(baseline.value).toBe('newest');
@@ -89,5 +89,21 @@ describe('SemanticAuditPanel direct evidence contracts', () => {
     expect(screen.getByText('Notice signal')).toBeTruthy();
     fireEvent.change(screen.getByLabelText('semanticAudit.searchAria'), { target: { value: 'impossible' } });
     expect(screen.getByText('semanticAudit.noFilterMatches')).toBeTruthy();
+  });
+
+  it('does not promote a baseline to current when the controlled run is absent', () => {
+    const baseline = createCrawlRunFixture({ id: 'baseline', projectId: 'semantic-project' });
+    vi.mocked(compareSemanticRuns).mockClear();
+    render(<SemanticAuditPanel document={createEmptyTopicalMap()} pages={baseline.result.pages} runs={[baseline]} currentRunId="missing-current" />);
+    expect(vi.mocked(compareSemanticRuns)).not.toHaveBeenCalled();
+    expect(screen.queryByTestId('semantic-comparison-guard')).toBeNull();
+  });
+
+  it('sorts a valid epoch completion ahead of an invalid timestamp', () => {
+    const invalid = createCrawlRunFixture({ id: 'invalid', projectId: 'semantic-project', completedAt: 'not-a-date' });
+    const epoch = createCrawlRunFixture({ id: 'epoch', projectId: 'semantic-project', completedAt: '1970-01-01T00:00:00.000Z' });
+    const current = createCrawlRunFixture({ id: 'current', projectId: 'semantic-project', completedAt: '2026-10-03' });
+    render(<SemanticAuditPanel document={createEmptyTopicalMap()} pages={[]} runs={[invalid, epoch, current]} currentRunId="current" />);
+    expect((screen.getByRole('combobox') as HTMLSelectElement).value).toBe('epoch');
   });
 });

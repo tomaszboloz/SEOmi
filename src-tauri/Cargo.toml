@@ -1,10 +1,10 @@
 [package]
 name = "seomi"
-version = "0.0.3"
+version = "0.4.43"
 description = "Lightning-fast Native Desktop SEO & Open Graph Auditor"
 authors = ["Tomasz Bołoz"]
 edition = "2021"
-rust-version = "1.77.2"
+rust-version = "1.90"
 autoexamples = false
 
 [lib]
@@ -12,14 +12,15 @@ name = "seomi_lib"
 crate-type = ["staticlib", "cdylib", "rlib"]
 
 [build-dependencies]
-tauri-build = { version = "2", features = [] }
+tauri-build = { version = "2.7.4", features = [] }
 
 [features]
 custom-protocol = ["tauri/custom-protocol"]
+test-fixture = []
 
 [[example]]
 name = "desktop_e2e"
-required-features = ["custom-protocol"]
+required-features = ["custom-protocol", "test-fixture"]
 
 [[example]]
 name = "function_inventory"
@@ -34,60 +35,70 @@ name = "coverage_sources"
 test = true
 
 [dev-dependencies]
-tauri = { version = "2", features = ["test"] }
-syn = { version = "2", features = ["full"] }
-proc-macro2 = { version = "1", features = ["span-locations"] }
-minisign-verify = "0.2.5"
+tauri = { version = "2.12.5", features = ["test"] }
+syn = { version = "3.0.9", features = ["full"] }
+proc-macro2 = { version = "1.0.107", features = ["span-locations"] }
+minisign-verify = "0.3.0"
+tokio = { version = "1.54.1", features = ["test-util"] }
 
 [dependencies]
-tauri = { version = "2", features = ["macos-proxy", "tracing"] }
-tauri-plugin-dialog = { version = "2.7.0", default-features = false }
-tauri-plugin-updater = "2"
-tauri-plugin-process = "2"
-tauri-plugin-notification = "2.3.2"
-serde = { version = "1.0", features = ["derive"] }
-serde_json = "1.0"
-flate2 = "1.0"
-tokio = { version = "1.41", features = ["full"] }
-reqwest = { version = "0.12", features = ["json", "cookies", "gzip", "brotli"] }
-scraper = "0.26"
-url = "2.5"
-regex = "1.11"
-chrono = { version = "0.4", features = ["serde"] }
-anyhow = "1.0"
-thiserror = "2.0"
-base64 = "0.22"
-sha2 = "0.10"
-uuid = { version = "1.11", features = ["v4", "serde"] }
-log = "0.4"
-env_logger = "0.11"
-tracing = "0.1"
-tracing-subscriber = { version = "0.3", default-features = false, features = ["registry"] }
-mime = "0.3"
-encoding_rs = "0.8"
-keyring = { version = "3.6", features = ["apple-native", "windows-native"] }
+tauri = { version = "2.12.5", features = ["macos-proxy", "tracing"] }
+tauri-plugin-dialog = { version = "2.8.3", default-features = false }
+tauri-plugin-updater = "2.14.0"
+tauri-plugin-process = "2.4.0"
+tauri-plugin-notification = "2.7.0"
+serde = { version = "1.0.229", features = ["derive"] }
+serde_json = "1.0.154"
+unicode-normalization = "0.1.26"
+ttf-parser = "0.25.1"
+rustybuzz = "0.20.1"
+unicode-bidi = "0.3.18"
+flate2 = "1.1.10"
+tokio = { version = "1.54.1", features = ["full"] }
+reqwest = { version = "0.13.5", default-features = false, features = ["native-tls", "http2", "charset", "system-proxy", "json", "query", "form", "cookies", "gzip", "brotli"] }
+scraper = "0.29.0"
+url = "2.5.8"
+regex = "1.13.1"
+chrono = { version = "0.4.45", features = ["serde"] }
+anyhow = "1.0.104"
+thiserror = "2.0.21"
+base64 = "0.23.1"
+sha2 = "0.11.1"
+uuid = { version = "1.29.0", features = ["v4", "serde"] }
+log = "0.4.34"
+env_logger = "0.11.11"
+tracing = "0.1.44"
+tracing-subscriber = { version = "0.3.23", default-features = false, features = ["registry"] }
+mime = "0.3.17"
+encoding_rs = "0.8.42"
+keyring = { version = "4.2.0", features = ["apple-native-keyring-store", "windows-native-keyring-store"] }
 fs2 = "0.4.3"
+dunce = "1.0.5"
+rusqlite = { version = "0.41.0", features = ["bundled"] }
+chacha20poly1305 = "0.11.0"
+getrandom = "0.4.3"
+dns-lookup = "4.0.2"
 
 [target.'cfg(windows)'.dependencies]
-windows-sys = { version = "0.61", features = ["Win32_Storage_FileSystem"] }
-webview2-com = "0.38"
-windows = { version = "0.61", features = [
+windows-sys = { version = "0.61.2", features = ["Win32_Storage_FileSystem"] }
+webview2-com = "0.39.1"
+windows = { version = "0.62.2", features = [
     "Win32_System_Com",
     "Win32_System_Com_StructuredStorage",
     "Win32_UI_Shell",
 ] }
 
 [target.'cfg(target_os = "macos")'.dependencies]
-block2 = "0.6"
-objc2 = { version = "0.6", features = ["std"] }
-objc2-app-kit = { version = "0.3", default-features = false, features = [
+block2 = "0.6.2"
+objc2 = { version = "0.6.5", features = ["std"] }
+objc2-app-kit = { version = "0.3.2", default-features = false, features = [
     "std",
     "objc2-core-foundation",
     "NSImage",
     "NSImageRep",
     "NSBitmapImageRep",
 ] }
-objc2-foundation = { version = "0.3", default-features = false, features = [
+objc2-foundation = { version = "0.3.2", default-features = false, features = [
     "std",
     "objc2-core-foundation",
     "NSData",
@@ -96,7 +107,7 @@ objc2-foundation = { version = "0.3", default-features = false, features = [
     "NSObject",
     "NSValue",
 ] }
-objc2-web-kit = { version = "0.3", default-features = false, features = [
+objc2-web-kit = { version = "0.3.2", default-features = false, features = [
     "std",
     "objc2-core-foundation",
     "objc2-app-kit",

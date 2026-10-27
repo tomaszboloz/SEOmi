@@ -74,4 +74,9 @@ describe('AmpAuditView modular architecture and subcomponents', () => {
     expect(screen.getByText('CORS checks on AMP assets')).toBeDefined();
     expect(screen.getByText('AMP cache validation')).toBeDefined();
   });
+
+  it('renders null when unchecked list is empty', () => {
+    const { container } = render(<AmpUncheckedCard unchecked={[]} t={mockT} />);
+    expect(container.firstChild).toBeNull();
+  });
 });

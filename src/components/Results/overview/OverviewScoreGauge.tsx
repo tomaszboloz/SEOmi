@@ -1,6 +1,7 @@
 import React from "react";
 import { useTranslation } from "react-i18next";
 import type { PageAuditData } from "@/types";
+import { HelpTip } from '@/components/Help/HelpTip';
 
 interface OverviewScoreGaugeProps {
   audit: PageAuditData;
@@ -69,8 +70,9 @@ export const OverviewScoreGauge: React.FC<OverviewScoreGaugeProps> = ({
       </div>
 
       <div className="min-w-0 [overflow-wrap:anywhere]">
-        <span className="text-xs font-semibold text-slate-400 uppercase tracking-wider">
+        <span className="inline-flex items-center gap-1 text-xs font-semibold text-slate-400 uppercase tracking-wider">
           {t("overview.healthScore")}
+          <HelpTip id="overview.healthScore" />
         </span>
         <h3 className="text-lg font-bold text-white mt-0.5">
           {audit.health_score >= 85

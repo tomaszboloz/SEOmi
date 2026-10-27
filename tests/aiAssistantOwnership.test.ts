@@ -26,7 +26,7 @@ it.each(['project', 'url', 'model', 'provider', 'timestamp', 'connection', 'prom
     if (kind === 'timestamp') audit.setState({ currentAudit: { ...audit.getState().currentAudit!, timestamp: '2026-10-04' } });
     if (kind === 'connection') auth.setState({ connectionMethod: { ...auth.getState().connectionMethod, openai: 'local_cli' } });
     if (kind === 'prompt') result.current.setPromptInstruction('New instructions');
-    if (kind === 'key-input') result.current.handleApiKeyChange('new-key');
+    if (kind === 'key-input') void result.current.handleApiKeyChange('new-key').catch(() => {});
     if (kind === 'key-storage') auth.setState({ apiKeys: { ...auth.getState().apiKeys, openai: 'another-key' } });
   });
   await act(async () => { pending.resolve(suggestion); await job; });
@@ -37,7 +37,7 @@ it.each(['project', 'url', 'model', 'provider', 'timestamp', 'connection', 'prom
 it('ignores an old API key rejection after switching provider', async () => {
   const pending = deferred<void>(); setApiKey.mockReturnValueOnce(pending.promise);
   const { result } = renderHook(useAIAssistantSession);
-  act(() => result.current.handleApiKeyChange('old-key'));
+  act(() => { void result.current.handleApiKeyChange('old-key').catch(() => {}); });
   act(() => auth.setState({ provider: 'claude' }));
   await act(async () => { pending.reject(new Error('old write')); await pending.promise.catch(() => {}); });
   expect(result.current.error).toBeNull();

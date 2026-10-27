@@ -3,12 +3,16 @@
 import { FileDown } from "lucide-react";
 import { format } from "date-fns";
 
-import { downloadCrawlCustomSearchCsv, downloadCrawlImagesCsv, downloadCrawlIssuesCsv, downloadCrawlJson, downloadCrawlLinksCsv, downloadCrawlPagesCsv, downloadCrawlResourcesCsv, downloadCrawlFramesCsv } from "@/services/export";
+import { downloadCrawlCustomSearchCsv, downloadCrawlHtml, downloadCrawlImagesCsv, downloadCrawlIssuesCsv, downloadCrawlJson, downloadCrawlLinksCsv, downloadCrawlPagesCsv, downloadCrawlResourcesCsv, downloadCrawlFramesCsv } from "@/services/export";
 
 import { Empty } from './CrawlViewPrimitives';
 
 import type { useCrawlResultsSession } from './useCrawlResultsSession';
 type Session = ReturnType<typeof useCrawlResultsSession>;
+const completionLabel = (value: string): string => {
+  const date = new Date(value);
+  return Number.isFinite(date.getTime()) ? format(date, "yyyy-MM-dd HH:mm") : "—";
+};
 
 export const CrawlExportsTab = ({ session }: { session: Session }) => {
 const { currentRun, exportPdf, pdfError, t } = session;
@@ -21,10 +25,7 @@ return currentRun ? (
               <p className="mt-1 text-xs leading-5 text-slate-500">
                 {t("crawlDeepUi.exportRunDescription", {
                   id: currentRun.id,
-                  date: format(
-                    new Date(currentRun.completedAt),
-                    "yyyy-MM-dd HH:mm",
-                  ),
+                  date: completionLabel(currentRun.completedAt),
                   url: currentRun.startUrl,
                 })}
               </p>
@@ -33,6 +34,7 @@ return currentRun ? (
               {[
                 [t("crawlDeepUi.exportJson"), () => downloadCrawlJson(currentRun)],
                 [t("crawlDeepUi.exportPdf"), () => void exportPdf()],
+                [t("crawlDeepUi.exportHtml"), () => downloadCrawlHtml(currentRun)],
                 [t("crawlDeepUi.exportUrlsCsv"), () => downloadCrawlPagesCsv(currentRun)],
                 [t("crawlDeepUi.exportLinksCsv"), () => downloadCrawlLinksCsv(currentRun)],
                 [t("crawlDeepUi.exportImagesCsv"), () => downloadCrawlImagesCsv(currentRun)],

@@ -4,7 +4,7 @@ import { JsonRecord, DataForSeoRequestError } from './dataforseoTypes';
 import { asRecord, asArray, asRequestError, nullableNumber, text, wait, retryDelayMs, providerQuotaMessage } from './dataforseoHelpers';
 import { activeProjectForTaskLog, appendDataForSeoTask } from './dataforseoTaskLog';
 import { ACCOUNT_ENDPOINT, recordCost } from './dataforseoBudget';
-import { reserveBudget } from './dataforseoBudgetGuard';
+import { nativeBudget, reserveBudget } from './dataforseoBudgetGuard';
 import { deductFromAccount, parseUserData, readAccount, writeAccount, type DataForSeoAccount } from './dataforseoAccount';
 
 const DATAFORSEO_MAX_NETWORK_ATTEMPTS = 3;
@@ -52,7 +52,7 @@ export class DataForSEOCore {
     for (let attempt = 0; attempt < DATAFORSEO_MAX_NETWORK_ATTEMPTS; attempt += 1) {
       try {
         if (isTauriEnvironment()) {
-          return await invokeTauriCommand<JsonRecord>('dataforseo_request', { projectId, path, payload: payload || null });
+          return await invokeTauriCommand<JsonRecord>('dataforseo_request', { projectId, path, payload: payload || null, budget: nativeBudget(projectId) });
         }
         const response = await fetch(`${this.baseUrl}${path}`, {
           method: payload ? 'POST' : 'GET',

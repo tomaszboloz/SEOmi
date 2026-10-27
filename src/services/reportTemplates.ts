@@ -9,6 +9,11 @@ export const REPORT_TEMPLATE_SECTIONS = [
   'frames',
   'custom-search',
   'semantic',
+  'focus',
+  'authority',
+  'aio',
+  'offPage',
+  'trust',
 ] as const;
 import { readJsonStorage, readStorage, removeStorage, writeJsonStorage, writeStorage } from '@/services/storage';
 import i18n from '@/i18n';

@@ -6,6 +6,7 @@ import { AIAssistantModalHeader } from './assistant/AIAssistantModalHeader';
 import { AIAssistantEngineSelect } from './assistant/AIAssistantEngineSelect';
 import { AIAssistantApiKeyInput } from './assistant/AIAssistantApiKeyInput';
 import { AIAssistantSuggestions } from './assistant/AIAssistantSuggestions';
+import { OllamaAssistantPanel } from './ollama/OllamaAssistantPanel';
 
 export const AIAssistantModal: React.FC = () => {
   const session = useAIAssistantSession();
@@ -17,7 +18,7 @@ export const AIAssistantModal: React.FC = () => {
     provider,
     setProvider,
     connectionMethod,
-    currentKey,
+    keyStored,
     handleApiKeyChange,
     promptInstruction,
     setPromptInstruction,
@@ -63,7 +64,7 @@ export const AIAssistantModal: React.FC = () => {
 
           <AIAssistantApiKeyInput
             provider={provider}
-            currentKey={currentKey}
+            keyStored={keyStored}
             handleApiKeyChange={handleApiKeyChange}
             connectionMethod={connectionMethod}
             openSubscriptionModal={openSubscriptionModal}
@@ -110,6 +111,8 @@ export const AIAssistantModal: React.FC = () => {
               t={t}
             />
           )}
+
+          {currentAudit && <OllamaAssistantPanel />}
         </div>
       </div>
     </div>

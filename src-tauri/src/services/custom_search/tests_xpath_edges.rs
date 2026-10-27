@@ -135,3 +135,14 @@ fn paths_reject_unsupported_steps_and_multiple_text_filters() {
         assert!(xpath_to_css(expression).is_err(), "{expression}");
     }
 }
+
+#[test]
+fn paths_cover_quoted_slashes_relative_dots_and_invalid_tag_names() {
+    assert_eq!(
+        xpath_to_css("//a[@href='x/y'][@title='a\"b']").unwrap().css,
+        "a[href=\"x/y\"][title=\"a\\\"b\"]"
+    );
+    for expression in [".//a/./b", "//a/ @href", "//a()[1]"] {
+        assert!(xpath_to_css(expression).is_err(), "{expression}");
+    }
+}

@@ -1,9 +1,5 @@
 use super::*;
-use crate::models::audit_data::FaviconData;
-use crate::services::custom_search::CrawledCustomSearchResult;
-use serde::{Deserialize, Serialize};
-
-#[derive(Debug, Serialize, Deserialize, Clone)]
+#[derive(Debug, serde::Serialize, serde::Deserialize, Clone)]
 pub struct CrawledPageSummary {
     pub url: String,
     pub final_url: String,
@@ -14,6 +10,8 @@ pub struct CrawledPageSummary {
     pub redirect_stop_reason: Option<String>,
     pub depth: usize,
     pub http_status: u16,
+    pub http_response_url: Option<String>,
+    pub response_url_mismatch: Option<bool>,
     pub response_time_ms: u64,
     #[serde(default)]
     pub rendered_lcp_ms: Option<u64>,
@@ -81,6 +79,7 @@ pub struct CrawledPageSummary {
     pub content_simhash: Option<String>,
     #[serde(default)]
     pub semantic_terms: Vec<String>,
+    pub semantic_language: Option<String>,
     #[serde(default)]
     pub semantic_excerpts: Vec<String>,
     #[serde(default)]
@@ -137,13 +136,15 @@ pub struct CrawledPageSummary {
     #[serde(default)]
     pub favicons: Vec<String>,
     #[serde(default)]
-    pub favicon_metadata: Vec<FaviconData>,
+    pub favicon_metadata: Vec<crate::models::audit_data::FaviconData>,
     #[serde(default)]
     pub favicon_resource_checks: Vec<CrawledSocialResourceCheck>,
     #[serde(default)]
     pub social_meta_tags: Vec<CrawledSocialMetaTag>,
     #[serde(default)]
-    pub custom_search_results: Vec<CrawledCustomSearchResult>,
+    pub custom_search_results: Vec<crate::services::custom_search::CrawledCustomSearchResult>,
+    #[serde(flatten)]
+    pub focus: CrawledPageFocus,
     pub issues_count: usize,
     pub issues: Vec<CrawledPageIssue>,
 }

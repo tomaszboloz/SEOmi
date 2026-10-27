@@ -57,10 +57,10 @@ pub(super) fn parse_images(html_str: &str, base_url: &Url) -> (Vec<ImageData>, V
 
         // The empty alt attribute is itself the HTML signal for a decorative
         // image. aria-hidden/role are optional, not prerequisites.
-        let decorative = alt.as_deref().is_some_and(|value| value.trim().is_empty());
-        let has_alt = decorative || matches!(&alt, Some(value) if !value.trim().is_empty());
+        // Any present alt value (empty = decorative, non-empty = text) counts.
+        let has_alt = alt.is_some();
 
-        if !has_alt && !decorative {
+        if !has_alt {
             missing_alt_count += 1;
         }
 

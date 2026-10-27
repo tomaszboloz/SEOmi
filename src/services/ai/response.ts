@@ -12,10 +12,14 @@ const schemas = {
 };
 
 /** Preserve status evidence without reading or exposing provider error bodies. */
-export function aiResponseError(provider: AiProvider, status: number, suggestion = false): Error {
+export function aiResponseError(provider: AiProvider, status: number, suggestion = false, model = ''): Error {
   const label = aiProviderLabel(provider);
   if (suggestion && (status === 401 || (provider === 'gemini' && (status === 400 || status === 403)))) {
     return new Error(i18n.t('runtimeErrors.ai.authFailed', { provider: label }));
+  }
+  // 400 and 404 with a working key mean the chosen model refused the request or no longer exists.
+  if (model && (status === 400 || status === 404)) {
+    return new Error(i18n.t('runtimeErrors.ai.modelRejected', { provider: label, model, status }));
   }
   if (suggestion && status === 429) {
     const host = { openai: 'platform.openai.com', claude: 'console.anthropic.com', gemini: 'aistudio.google.com' }[provider];

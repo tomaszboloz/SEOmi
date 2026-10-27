@@ -6,13 +6,16 @@ use scraper::{Html, Selector};
 
 use super::super::{
     content_metrics::{content_metrics, ContentMetrics},
-    models::{CrawledDuplicateHeading, CrawledPageIssue},
+    focus_terms::extract_page_focus,
+    models::{CrawledDuplicateHeading, CrawledPageFocus, CrawledPageIssue},
     semantic_chrome::has_semantic_content_root,
+    semantic_terms::{semantic_status_is_topical, semantic_term_language},
     semantics::{extract_semantic_excerpts, extract_semantic_terms, semantic_content_source},
     simhash::content_simhash,
 };
 use super::page_headings::extract_page_headings;
 use super::page_title_meta::extract_page_title_and_meta;
+use super::page_type_guidance::thin_content_issue;
 
 pub struct PageContentOutcome {
     pub document_language: Option<String>,
@@ -22,7 +25,9 @@ pub struct PageContentOutcome {
     pub reading_time_minutes: Option<usize>,
     pub content_simhash: Option<String>,
     pub semantic_terms: Vec<String>,
+    pub semantic_language: Option<String>,
     pub semantic_excerpts: Vec<String>,
+    pub focus: CrawledPageFocus,
     pub has_primary_content_root: bool,
     pub semantic_content_source: String,
     pub title: Option<String>,
@@ -37,7 +42,10 @@ pub struct PageContentOutcome {
 pub fn extract_page_content(input: ExtractPageContentInput<'_>) -> PageContentOutcome {
     let ExtractPageContentInput {
         document,
+        page_url,
+        crawl_mode,
         body_len,
+        status,
         is_html,
         body_truncated,
         body_read_failed,
@@ -70,8 +78,13 @@ pub fn extract_page_content(input: ExtractPageContentInput<'_>) -> PageContentOu
         ContentMetrics::default()
     };
     let content_simhash = is_html.then(|| content_simhash(document)).flatten();
-    let semantic_terms = if is_html {
-        extract_semantic_terms(document)
+    let semantic_language = if is_html {
+        semantic_term_language(document, document_language.as_deref())
+    } else {
+        None
+    };
+    let semantic_terms = if is_html && semantic_status_is_topical(status) {
+        extract_semantic_terms(document, semantic_language.as_deref())
     } else {
         Vec::new()
     };
@@ -83,11 +96,15 @@ pub fn extract_page_content(input: ExtractPageContentInput<'_>) -> PageContentOu
     let has_primary_content_root = is_html && has_semantic_content_root(document);
     let semantic_content_source =
         semantic_content_source(document, is_html, body_truncated, body_read_failed);
-    if is_html && cm.word_count < 50 {
-        issues.push(CrawledPageIssue {
-            severity: "Info".into(),
-            message: format!("Thin text content: {} words", cm.word_count),
-        });
+    if let Some(issue) = thin_content_issue(
+        document,
+        page_url,
+        crawl_mode,
+        status,
+        is_html && !body_truncated && !body_read_failed,
+        cm.word_count,
+    ) {
+        issues.push(issue);
     }
 
     let tm = extract_page_title_and_meta(
@@ -98,6 +115,16 @@ pub fn extract_page_content(input: ExtractPageContentInput<'_>) -> PageContentOu
         issues,
     );
     let hd = extract_page_headings(document, is_html, h1_selector, headings_selector, issues);
+    let focus = if is_html && semantic_status_is_topical(status) {
+        extract_page_focus(
+            document,
+            semantic_language.as_deref(),
+            tm.title.as_deref(),
+            tm.meta_description.as_deref(),
+        )
+    } else {
+        Default::default()
+    };
 
     PageContentOutcome {
         document_language,
@@ -107,7 +134,9 @@ pub fn extract_page_content(input: ExtractPageContentInput<'_>) -> PageContentOu
         reading_time_minutes: cm.reading_time_minutes,
         content_simhash,
         semantic_terms,
+        semantic_language,
         semantic_excerpts,
+        focus: focus.with_js_shell(document, is_html.then_some(cm.word_count)),
         has_primary_content_root,
         semantic_content_source,
         title: tm.title,

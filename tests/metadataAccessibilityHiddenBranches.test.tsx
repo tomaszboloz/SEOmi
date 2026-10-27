@@ -23,8 +23,8 @@ describe('MetadataAccessibilityHidden', () => {
     render(<MetadataAccessibilityHidden audit={audit({ hidden_form_control_count: 5, hidden_form_controls: [el(1, { line: 7, column: 3 }), el(2, { line: 9 }), el(3)] }, { final_url: 'https://f.test/' })} />);
     expect(screen.getByText(i18n.t('accessibility.hiddenTitle', { count: 5 }))).toBeTruthy();
     expect(screen.getByText(i18n.t('accessibility.hiddenDescription'))).toBeTruthy();
-    expect(screen.getByText(new RegExp(i18n.t('accessibility.source', { line: 7, column: 3 }).replace(/[()]/g, '\\$&')))).toBeTruthy();
-    expect(screen.getByText(new RegExp(i18n.t('accessibility.source', { line: 9, column: 1 }).replace(/[()]/g, '\\$&')))).toBeTruthy();
+    expect(screen.getByText(new RegExp(i18n.t('accessibility.source', { line: 7, column: 3 }).replace(/[.*+?^${}()|[\]\\]/g, '\\$&')))).toBeTruthy();
+    expect(screen.getByText(new RegExp(i18n.t('accessibility.source', { line: 9, column: 1 }).replace(/[.*+?^${}()|[\]\\]/g, '\\$&')))).toBeTruthy();
     expect(screen.getByText(new RegExp(i18n.t('accessibility.sourceUnavailable')))).toBeTruthy();
     expect(screen.getByText(i18n.t('accessibility.limitFirst', { shown: 3 }))).toBeTruthy();
     const buttons = screen.getAllByTestId('show');

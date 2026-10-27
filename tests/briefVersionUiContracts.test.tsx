@@ -26,9 +26,12 @@ describe('brief version controls', () => {
     props.node.contentBrief.draftMarkdown = 'one\ntwo';
     props.node.contentBrief.draftVersions = [{ id: 'old', note: 'note', savedAt: '2026-10-01', draftMarkdown: 'one\ntwo' }];
     const view = render(<BriefVersionHistory model={createBriefModel(props)} />);
-    expect((screen.getByRole('button', { name: label('restoreVersion') }) as HTMLButtonElement).disabled).toBe(true);
+    const restoreBtn = screen.getByRole('button', { name: label('restoreVersion') }) as HTMLButtonElement;
+    expect(restoreBtn.disabled).toBe(true);
+    fireEvent.click(restoreBtn);
     fireEvent.change(screen.getByRole('combobox', { name: label('diffAria') }), { target: { value: 'old' } });
     expect(screen.getByRole('status').textContent).toContain(label('noChanges'));
+    fireEvent.click(restoreBtn);
     fireEvent.click(screen.getByRole('button', { name: label('saveVersion') }));
     expect(props.onUpdate).toHaveBeenCalledOnce();
     props.node.contentBrief.draftMarkdown = 'two\none';

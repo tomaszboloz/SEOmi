@@ -1,6 +1,7 @@
 import type { CrawlRunRecord, ExternalLinkCheckBatchResult, SiteCrawlResult } from '@/types';
 import i18n from '@/i18n';
 import { normalizeCrawlLinkUrl } from '../crawlPersistence';
+import { crawlHealthScore, CRAWL_SCORE_VERSION } from '@/services/crawlHealthScore';
 
 export const collectExternalLinkTargets = (run: CrawlRunRecord, force: boolean): string[] =>
   [...new Set(run.result.pages.flatMap(page => page.links
@@ -26,8 +27,8 @@ export const applyExternalLinkEvidence = (result: SiteCrawlResult, batch: Extern
     });
     const existing = page.issues.filter((issue) => issue.code !== 'external-link-check');
     const failedTargets = new Set(links.filter((link) => !link.is_internal && (
-      (link.target_http_status !== undefined && link.target_http_status >= 400)
-      || ['dns', 'timeout', 'tls', 'connect', 'network'].includes(link.target_request_error_kind || '')
+      link.target_http_status === 404 || link.target_http_status === 410
+      || ['dns', 'broken'].includes(link.target_request_error_kind || '')
     )).map((link) => normalizeCrawlLinkUrl(link.target_url)));
     if (failedTargets.size) existing.push({
       severity: 'Warning',
@@ -39,7 +40,7 @@ export const applyExternalLinkEvidence = (result: SiteCrawlResult, batch: Extern
   const criticalCount = pages.reduce((count, page) => count + page.issues.filter((issue) => issue.severity === 'Critical').length, 0);
   const warningCount = pages.reduce((count, page) => count + page.issues.filter((issue) => issue.severity === 'Warning').length, 0);
   const noticeCount = pages.reduce((count, page) => count + page.issues.filter((issue) => issue.severity === 'Info').length, 0);
-  const healthScore = Math.max(20, 100 - Math.min(80, criticalCount * 15 + warningCount * 5));
-  const updated = { ...result, pages, critical_count: criticalCount, warning_count: warningCount, notice_count: noticeCount, health_score: healthScore };
+  const healthScore = crawlHealthScore(pages);
+  const updated = { ...result, pages, critical_count: criticalCount, warning_count: warningCount, notice_count: noticeCount, health_score: healthScore, score_version: CRAWL_SCORE_VERSION };
   return updated;
 };

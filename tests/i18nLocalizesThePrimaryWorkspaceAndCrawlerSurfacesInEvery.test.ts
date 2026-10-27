@@ -80,6 +80,7 @@ it('localizes crawler issue diagnostics in every non-English locale', () => {
       'canonicalElsewhere', 'canonicalConflict', 'multipleCanonical',
       'invalidCanonical', 'thinContent', 'invalidJsonLd', 'clientRedirect',
       'paginationInvalid', 'multipleTitle', 'emptyDescription', 'multipleDescription', 'technicalDetail',
+      'renderFallback', 'renderedSelfNavigation',
     ];
     for (const loc of locales.filter(({ code }) => code !== 'en')) {
       for (const key of keys) {

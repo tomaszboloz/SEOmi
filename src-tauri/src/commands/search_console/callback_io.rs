@@ -6,6 +6,23 @@ use tokio::{
 
 const MAX_CALLBACK_HEADER_BYTES: usize = 16 * 1024;
 
+/// `None` while more bytes are needed; otherwise the finished header block.
+pub(super) fn complete_request(request: &[u8]) -> Option<Result<String, String>> {
+    if let Some(end) = request.windows(4).position(|bytes| bytes == b"\r\n\r\n") {
+        if end + 4 > MAX_CALLBACK_HEADER_BYTES {
+            return Some(Err("OAuth callback headers exceed the limit.".into()));
+        }
+        return Some(
+            String::from_utf8(request[..end + 4].to_vec())
+                .map_err(|_| "Invalid OAuth callback encoding.".into()),
+        );
+    }
+    if request.len() >= MAX_CALLBACK_HEADER_BYTES {
+        return Some(Err("OAuth callback headers exceed the limit.".into()));
+    }
+    None
+}
+
 pub(super) async fn read_callback_request(
     stream: &mut TcpStream,
     deadline: Duration,
@@ -23,15 +40,8 @@ pub(super) async fn read_callback_request(
                 return Err("Incomplete OAuth callback request.".into());
             }
             request.extend_from_slice(&chunk[..count]);
-            if let Some(end) = request.windows(4).position(|bytes| bytes == b"\r\n\r\n") {
-                if end + 4 > MAX_CALLBACK_HEADER_BYTES {
-                    return Err("OAuth callback headers exceed the limit.".into());
-                }
-                return String::from_utf8(request[..end + 4].to_vec())
-                    .map_err(|_| "Invalid OAuth callback encoding.".into());
-            }
-            if request.len() >= MAX_CALLBACK_HEADER_BYTES {
-                return Err("OAuth callback headers exceed the limit.".into());
+            if let Some(result) = complete_request(&request) {
+                return result;
             }
         }
     })
@@ -52,3 +62,10 @@ pub(super) async fn write_callback_response(
         .await
         .map_err(|error| format!("Unable to complete the OAuth callback: {error}"))
 }
+
+#[cfg(test)]
+#[path = "callback_io_more_tests.rs"]
+mod more_tests;
+#[cfg(test)]
+#[path = "callback_io_tests.rs"]
+mod tests;

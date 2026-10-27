@@ -1,47 +1,9 @@
-use super::super::process::{ProcessResult, ProcessRunner};
+use super::test_support::FakeRunner;
 use super::{register_platform_with, unregister_platform_with};
 use std::{
-    cell::RefCell,
-    fs, io,
+    fs,
     path::{Path, PathBuf},
 };
-
-struct FakeRunner {
-    uid: &'static str,
-    uid_success: bool,
-    bootstrap: Result<bool, &'static str>,
-    calls: RefCell<Vec<(String, Vec<String>)>>,
-}
-
-impl FakeRunner {
-    fn new(uid: &'static str, uid_success: bool, bootstrap: Result<bool, &'static str>) -> Self {
-        Self {
-            uid,
-            uid_success,
-            bootstrap,
-            calls: RefCell::new(Vec::new()),
-        }
-    }
-}
-
-impl ProcessRunner for FakeRunner {
-    fn output(&self, program: &str, args: &[String]) -> io::Result<ProcessResult> {
-        self.calls.borrow_mut().push((program.into(), args.into()));
-        Ok(ProcessResult {
-            success: self.uid_success,
-            stdout: self.uid.as_bytes().into(),
-        })
-    }
-
-    fn status(&self, program: &str, args: &[String]) -> io::Result<bool> {
-        self.calls.borrow_mut().push((program.into(), args.into()));
-        if args.first().map(String::as_str) == Some("bootstrap") {
-            self.bootstrap.map_err(io::Error::other)
-        } else {
-            Ok(true)
-        }
-    }
-}
 
 fn home() -> PathBuf {
     let path = std::env::temp_dir().join(format!("seomi-scheduler-{}", uuid::Uuid::new_v4()));

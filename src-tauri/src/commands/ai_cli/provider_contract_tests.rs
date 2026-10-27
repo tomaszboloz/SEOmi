@@ -100,4 +100,10 @@ async fn public_entrypoints_reject_invalid_input_before_calling_a_provider() {
         .await
         .unwrap_err()
         .contains("Unsupported"));
+
+    let gemini_res = test_ai_cli_connection("gemini".into()).await.unwrap();
+    assert_eq!(gemini_res.provider, "gemini");
+
+    let openai_res = test_ai_cli_connection("openai".into()).await.unwrap();
+    assert_eq!(openai_res.provider, "openai");
 }

@@ -1,4 +1,4 @@
-import { beforeEach, describe, expect, it } from 'vitest';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { loadSession } from '@/components/Keywords/keywordClustering/keywordClusteringStorage';
 import { useToolsStore } from '@/stores/toolsStore';
 
@@ -29,5 +29,18 @@ describe('keyword clustering storage boundaries', () => {
     expect(loadSession('p1')).toMatchObject({ input: 'one', country: 'US', minSharedUrls: 4, result: null });
     localStorage.setItem('seomi_keyword_clustering_p2', '{not-json');
     expect(loadSession('p2')).toMatchObject({ input: '', country: 'PL', language: 'pl', minSharedUrls: 3, result: null });
+  });
+
+  it('falls back to defaults if saved record is falsy or storage throws', async () => {
+    const contracts = await import('@/services/storageContracts');
+    const spy = vi.spyOn(contracts, 'readJsonRecord').mockReturnValueOnce(null as any);
+    expect(loadSession('p1')).toMatchObject({ input: '', country: 'PL', language: 'pl', minSharedUrls: 3, result: null });
+    spy.mockRestore();
+
+    const storageSpy = vi.spyOn(Storage.prototype, 'getItem').mockImplementationOnce(() => {
+      throw new Error('fail');
+    });
+    expect(loadSession('p1')).toMatchObject({ input: '', country: 'PL', language: 'pl', minSharedUrls: 3, result: null });
+    storageSpy.mockRestore();
   });
 });

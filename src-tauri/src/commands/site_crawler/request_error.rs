@@ -24,13 +24,11 @@ pub(super) fn classify_request_error(
     {
         return "dns";
     }
+    // "invalid peer certificate", "rustls" and "native-tls" are covered by "certificate"/"tls".
     if detail.contains("tls")
         || detail.contains("certificate")
         || detail.contains("unknown ca")
-        || detail.contains("invalid peer certificate")
         || detail.contains("handshake failure")
-        || detail.contains("rustls")
-        || detail.contains("native-tls")
     {
         return "tls";
     }
@@ -58,3 +56,7 @@ pub(super) fn request_error_kind(error: &reqwest::Error) -> String {
     }
     classify_request_error(error.is_timeout(), error.is_connect(), &detail).into()
 }
+
+#[cfg(test)]
+#[path = "request_error_tests.rs"]
+mod tests;

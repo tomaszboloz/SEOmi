@@ -1,4 +1,4 @@
-import { renderHook } from '@testing-library/react';
+import { act, renderHook } from '@testing-library/react';
 import { afterEach, beforeEach, expect, it } from 'vitest';
 import i18n from '@/i18n';
 import { useSiteAuditSession } from '@/components/Domain/siteAudit/useSiteAuditSession';
@@ -8,14 +8,18 @@ import { createCrawlPageFixture, createCrawlResultFixture, createCrawlRunFixture
 
 const tools = useToolsStore.getState();
 const projects = useProjectStore.getState();
-beforeEach(async () => { await i18n.changeLanguage('en'); localStorage.clear(); useProjectStore.setState({ activeProjectId: 'derived' }); });
-afterEach(() => { useToolsStore.setState(tools); useProjectStore.setState(projects); });
+beforeEach(async () => {
+  await act(async () => { await i18n.changeLanguage('en'); });
+  localStorage.clear();
+  act(() => useProjectStore.setState({ activeProjectId: 'derived' }));
+});
+afterEach(() => act(() => { useToolsStore.setState(tools); useProjectStore.setState(projects); }));
 
 it('derives history metrics in chronological order from stored runs', () => {
   const newest = createCrawlRunFixture({ id: 'b', result: createCrawlResultFixture({ pages_crawled: 2, critical_count: 1, warning_count: 3,
     pages: [createCrawlPageFixture({ word_count: 10 }), createCrawlPageFixture({ http_status: 404, indexability_status: 'Blocked', word_count: 5 })] }) });
   const oldest = createCrawlRunFixture({ id: 'a', result: createCrawlResultFixture({ pages_crawled: Number.NaN, pages: [] }) });
-  useToolsStore.setState({ crawlRuns: [newest, oldest] });
+  act(() => useToolsStore.setState({ crawlRuns: [newest, oldest] }));
   const { result } = renderHook(() => useSiteAuditSession());
   const byLabel = Object.fromEntries(result.current.historyMetrics.map((m) => [m.label, m.values]));
   expect(byLabel[i18n.t('siteAudit.processedUrls')]).toEqual([null, 2]);
@@ -27,8 +31,8 @@ it('derives history metrics in chronological order from stored runs', () => {
 });
 
 it('labels crawl environments and splits sitemap-only from crawl-only urls', () => {
-  useToolsStore.setState({ crawlResult: createCrawlResultFixture({ sitemap_urls: ['https://example.test/', 'https://example.test/s'],
-    pages: [createCrawlPageFixture(), createCrawlPageFixture({ url: 'https://example.test/c', final_url: 'https://example.test/c' })] }) });
+  act(() => useToolsStore.setState({ crawlResult: createCrawlResultFixture({ sitemap_urls: ['https://example.test/', 'https://example.test/s'],
+    pages: [createCrawlPageFixture(), createCrawlPageFixture({ url: 'https://example.test/c', final_url: 'https://example.test/c' })] }) }));
   const { result } = renderHook(() => useSiteAuditSession());
   const label = result.current.crawlEnvironmentLabel;
   expect(label('staging')).toBe(i18n.t('siteAudit.environmentStaging'));

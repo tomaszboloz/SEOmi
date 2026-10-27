@@ -10,11 +10,7 @@ const CLIENT_ID: &str = "fixture.apps.googleusercontent.com";
 
 #[tokio::test]
 async fn public_inspection_rejects_invalid_urls_before_credentials() {
-    for value in [
-        "not-a-url",
-        "ftp://fixture.test/page",
-        "https:///missing-host",
-    ] {
+    for value in ["not-a-url", "ftp://fixture.test/page", "https://"] {
         let error = inspect_search_console_url(
             "fixture-project".into(),
             CLIENT_ID.into(),

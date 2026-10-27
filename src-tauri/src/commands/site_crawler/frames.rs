@@ -1,9 +1,7 @@
 use super::*;
 
 pub(super) fn crawl_frames(document: &Html, base_url: &url::Url) -> (Vec<CrawledFrame>, bool) {
-    let Ok(selector) = Selector::parse("iframe") else {
-        return (Vec::new(), false);
-    };
+    let selector = Selector::parse("iframe").expect("static iframe selector is valid");
     let mut frames = Vec::new();
     let mut truncated = false;
     for element in document.select(&selector) {
@@ -34,3 +32,6 @@ pub(super) fn crawl_frames(document: &Html, base_url: &url::Url) -> (Vec<Crawled
     }
     (frames, truncated)
 }
+#[cfg(test)]
+#[path = "frames_gap_tests.rs"]
+mod gap_tests;

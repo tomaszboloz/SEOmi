@@ -7,6 +7,7 @@ import { useToolsStore } from '@/stores/toolsStore';
 import type { CrawledPageSummary } from '@/types';
 import i18n from '@/i18n';
 import { pages } from "./fixtures/semanticTopicalWorkspaceContracts";
+import { createSemanticCrawlRunFixture } from './fixtures/semanticCrawlRun';
 
 describe('SemanticTopicalWorkspace', () => {
 beforeEach(async () => {
@@ -96,8 +97,9 @@ it('does not offer an unscoped plan when no project is active', () => {
 
 it('opens semantic audit, compares against a saved baseline run and remembers the audit tab per project', () => {
     const currentPages = [{ ...pages[0], semantic_terms: ['coffee', 'fresh'] }] as unknown as CrawledPageSummary[];
-    const baseline = { id: 'run-old', completedAt: '2026-09-20T10:00:00.000Z', startUrl: pages[0].url, config: {}, result: { pages_crawled: 1, pages } } as never;
-    const props = { projectId: 'project-semantic-audit', pages: currentPages, graph: buildSemanticMap(currentPages, pages[0].url), runId: 'run-new', currentRunId: 'run-new', runs: [baseline] };
+    const baseline = createSemanticCrawlRunFixture('run-old', '2026-09-20T10:00:00.000Z', 'project-semantic-audit', pages);
+    const current = createSemanticCrawlRunFixture('run-new', '2026-09-21T10:00:00.000Z', 'project-semantic-audit', currentPages);
+    const props = { projectId: 'project-semantic-audit', pages: currentPages, graph: buildSemanticMap(currentPages, pages[0].url), runId: 'run-new', currentRunId: 'run-new', runs: [baseline, current] };
     const mounted = render(<SemanticTopicalWorkspace {...props} />);
 
     fireEvent.click(screen.getByRole('tab', { name: 'Audyt semantyczny' }));

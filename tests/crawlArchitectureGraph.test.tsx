@@ -1,3 +1,4 @@
+import type { ReactElement } from 'react';
 import { fireEvent, render, screen, waitFor, within } from '@testing-library/react';
 import { beforeEach, describe, expect, it } from 'vitest';
 import type { CrawledPageSummary } from '@/types';
@@ -7,39 +8,35 @@ import { useToolsStore } from '@/stores/toolsStore';
 import i18n from '@/i18n';
 import { pages } from "./fixtures/crawlArchitectureGraphContracts";
 
+const renderGraph = (ui: ReactElement) => { const view = render(ui); fireEvent.click(screen.getByRole('tab', { name: 'Graf crawla' })); return view; };
 describe('CrawlArchitectureGraph', () => {
-beforeEach(async () => {
+  beforeEach(async () => {
     localStorage.clear();
     await i18n.changeLanguage('pl');
     useProjectStore.setState({ activeProjectId: null });
     useToolsStore.setState({ selectedCrawlRunId: null });
   });
-
 it('renders the content-only force map and lets users select a page from its accessible list', () => {
-    render(<CrawlArchitectureGraph pages={pages} startUrl={pages[0].url} />);
-
-    expect(screen.getByRole('img', { name: 'Interaktywna mapa semantycznych klastrów i linków w treści' })).toBeTruthy();
+    renderGraph(<CrawlArchitectureGraph pages={pages} startUrl={pages[0].url} />);
+    expect(screen.getByRole('img', { name: 'Interaktywna mapa architektury serwisu pogrupowana według sekcji URL' })).toBeTruthy();
     expect(screen.getByText(/1 relacja · 1 link treści/)).toBeTruthy();
-    expect(screen.getAllByText('brewing · 2')).toHaveLength(2);
-    fireEvent.click(screen.getByRole('button', { name: '/coffee' }));
+    expect((screen.getByLabelText('Temat') as HTMLSelectElement).options[0].text).toMatch(/Wszystkie tematy/);
+    fireEvent.click(screen.getByRole('button', { name: /\/coffee$/ }));
     expect(screen.getByText('Wybrana strona')).toBeTruthy();
     expect(screen.getByText('Coffee brewing')).toBeTruthy();
     expect(screen.getByText('Linki z głównej treści')).toBeTruthy();
     expect(screen.getAllByText(/grinding guide/).length).toBeGreaterThan(0);
   });
 
-it('makes force-graph nodes keyboard-selectable', async () => {
-    render(<CrawlArchitectureGraph pages={pages} startUrl={pages[0].url} />);
+it('lets keyboard users select pages through the accessible table', async () => {
+    renderGraph(<CrawlArchitectureGraph pages={pages} startUrl={pages[0].url} />);
 
-    const graph = screen.getByRole('img', { name: 'Interaktywna mapa semantycznych klastrów i linków w treści' });
-    const nodes = graph.querySelectorAll('[role="button"]');
-    expect(nodes.length).toBe(2);
-    fireEvent.keyDown(nodes[1], { key: 'Enter' });
+    const tableButton = screen.getAllByRole('button', { name: /\/grinding$/ })[0];
+    tableButton.focus();
+    fireEvent.click(tableButton);
 
-    await waitFor(() => {
-      expect(screen.getByText('Coffee grinding')).toBeTruthy();
-      expect(nodes[1].getAttribute('aria-pressed')).toBe('true');
-    });
+    await waitFor(() => expect(screen.getAllByText('Coffee grinding').length).toBeGreaterThan(0));
+    expect(screen.getByRole('table')).toBeTruthy();
   });
 
 it('shows semantic extraction provenance for rendered DOM and body fallback pages', () => {
@@ -49,19 +46,19 @@ it('shows semantic extraction provenance for rendered DOM and body fallback page
       semantic_content_provenance: 'rendered',
       semantic_content_partial: index === 1,
     })) as unknown as CrawledPageSummary[];
-    render(<CrawlArchitectureGraph pages={pagesWithSources} startUrl={pages[0].url} crawlMode="browser-rendered" />);
+    renderGraph(<CrawlArchitectureGraph pages={pagesWithSources} startUrl={pages[0].url} crawlMode="browser-rendered" />);
 
     expect(screen.getByText(/renderowany DOM po JavaScript/)).toBeTruthy();
     expect(screen.getByText(/Główna treść: 1 · fallback: 1 · niedostępne: 0 · częściowe: 1/)).toBeTruthy();
-    fireEvent.click(screen.getByRole('button', { name: '/coffee' }));
+    fireEvent.click(screen.getByRole('button', { name: /\/coffee$/ }));
     expect(screen.getByText('Coffee brewing').closest('aside')?.textContent).toContain('źródło snapshotu');
-    fireEvent.click(screen.getByRole('button', { name: '/grinding' }));
+    fireEvent.click(screen.getByRole('button', { name: /\/grinding$/ }));
     expect(screen.getByText('Coffee grinding').closest('aside')?.textContent).toContain('częściowe dowody semantyczne');
   });
 
 it('switches to the full internal link graph and persists the scope', () => {
     useProjectStore.setState({ activeProjectId: 'project-full-link-graph' });
-    render(<CrawlArchitectureGraph pages={pages} startUrl={pages[0].url} runId="full-link-run" />);
+    renderGraph(<CrawlArchitectureGraph pages={pages} startUrl={pages[0].url} runId="full-link-run" />);
 
     fireEvent.click(screen.getByRole('button', { name: 'Wszystkie linki' }));
     expect(screen.getByText(/2 relacje · 2 linki wewnętrzne/)).toBeTruthy();
@@ -75,9 +72,9 @@ it('shows recorded discovery evidence for the selected graph node', () => {
           discovery_sources: [{ kind: 'sitemap', source_url: 'https://example.com/sitemap.xml' }],
         }
       : page) as unknown as CrawledPageSummary[];
-    render(<CrawlArchitectureGraph pages={pagesWithDiscovery} startUrl={pages[0].url} />);
+    renderGraph(<CrawlArchitectureGraph pages={pagesWithDiscovery} startUrl={pages[0].url} />);
 
-    fireEvent.click(screen.getByRole('button', { name: '/coffee' }));
+    fireEvent.click(screen.getByRole('button', { name: /\/coffee$/ }));
 
     expect(screen.getByText('Odkrycie URL')).toBeTruthy();
     expect(screen.getByText('sitemap')).toBeTruthy();
@@ -85,29 +82,29 @@ it('shows recorded discovery evidence for the selected graph node', () => {
   });
 
 it('filters the graph and accessible page list by content term', () => {
-    render(<CrawlArchitectureGraph pages={pages} startUrl={pages[0].url} />);
+    renderGraph(<CrawlArchitectureGraph pages={pages} startUrl={pages[0].url} />);
     fireEvent.change(screen.getByLabelText('Szukaj strony lub terminu na mapie'), { target: { value: 'burr' } });
 
     expect(screen.getByText('1/2 URL-i')).toBeTruthy();
-    expect(screen.getByRole('button', { name: '/grinding' })).toBeTruthy();
-    expect(screen.queryByRole('button', { name: '/coffee' })).toBeNull();
+    expect(screen.getByRole('button', { name: /\/grinding$/ })).toBeTruthy();
+    expect(screen.queryByRole('button', { name: /\/coffee$/ })).toBeNull();
   });
 
 it('filters localized terms without requiring diacritics', () => {
     const localizedPages = pages.map((page, index) => index === 0
       ? { ...page, semantic_terms: ['żółć', 'świat'] }
       : { ...page, semantic_terms: ['kawa', 'młynek'] }) as unknown as CrawledPageSummary[];
-    render(<CrawlArchitectureGraph pages={localizedPages} startUrl={localizedPages[0].url} />);
+    renderGraph(<CrawlArchitectureGraph pages={localizedPages} startUrl={localizedPages[0].url} />);
 
     fireEvent.change(screen.getByLabelText('Szukaj strony lub terminu na mapie'), { target: { value: 'zolc' } });
 
     expect(screen.getByText('1/2 URL-i')).toBeTruthy();
-    expect(screen.getByRole('button', { name: '/coffee' })).toBeTruthy();
-    expect(screen.queryByRole('button', { name: '/grinding' })).toBeNull();
+    expect(screen.getByRole('button', { name: /\/coffee$/ })).toBeTruthy();
+    expect(screen.queryByRole('button', { name: /\/grinding$/ })).toBeNull();
   });
 
 it('opens the crawl directory view and filters the saved run URL tree', () => {
-    render(<CrawlArchitectureGraph pages={pages} startUrl={pages[0].url} runId="directory-run" />);
+    renderGraph(<CrawlArchitectureGraph pages={pages} startUrl={pages[0].url} runId="directory-run" />);
 
     fireEvent.click(screen.getByRole('tab', { name: 'Drzewo URL' }));
     expect(screen.getByText('Struktura URL z audytu')).toBeTruthy();
@@ -119,7 +116,7 @@ it('opens the crawl directory view and filters the saved run URL tree', () => {
   });
 
 it('keeps map view tabs in document flow and keyboard-navigable', () => {
-    render(<CrawlArchitectureGraph pages={pages} startUrl={pages[0].url} />);
+    renderGraph(<CrawlArchitectureGraph pages={pages} startUrl={pages[0].url} />);
 
     const viewTabs = screen.getByRole('tablist', { name: 'Widoki mapy semantycznej' });
     expect(viewTabs.parentElement?.parentElement?.className).not.toContain('sticky');
@@ -130,7 +127,7 @@ it('keeps map view tabs in document flow and keyboard-navigable', () => {
   });
 
 it('keeps map navigation available at the bottom of long map content', () => {
-    render(<CrawlArchitectureGraph pages={pages} startUrl={pages[0].url} />);
+    renderGraph(<CrawlArchitectureGraph pages={pages} startUrl={pages[0].url} />);
 
     expect(screen.getByRole('group', { name: 'Sterowanie powiększeniem mapy' })).toBeTruthy();
     expect(screen.getByRole('button', { name: 'Powiększ mapę' })).toBeTruthy();

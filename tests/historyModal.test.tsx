@@ -1,4 +1,4 @@
-import { act, fireEvent, render, screen } from '@testing-library/react';
+import { act, cleanup, fireEvent, render, screen } from '@testing-library/react';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { HistoryModal } from '@/components/History/HistoryModal';
 import { useAuditStore } from '@/stores/auditStore';
@@ -10,6 +10,7 @@ const auditState = useAuditStore.getState();
 const uiState = useUIStore.getState();
 const closeModal = vi.fn();
 afterEach(() => {
+  cleanup();
   useAuditStore.setState(auditState);
   useUIStore.setState(uiState);
 });
@@ -37,7 +38,7 @@ describe('public audit history modal', () => {
     expect(document.body.style.overflow).not.toBe('hidden');
   });
 
-  it.each(['click', 'Enter', ' '] as const)('loads the exact historical snapshot using %s', (activation) => {
+  it.each(['click', 'Enter', ' '] as const)('loads the exact historical snapshot using %s', async (activation) => {
     const selected = createAuditFixture({ health_score: 92 });
     const older = createAuditFixture({ final_url: 'https://older.example', health_score: 24,
       meta_tags: { ...createAuditFixture().meta_tags, title: '' } });
@@ -45,25 +46,27 @@ describe('public audit history modal', () => {
     render(<HistoryModal />);
     const entry = screen.getAllByRole('button', { name: i18n.t('urlBar.loadAudit', { url: selected.final_url }) })
       .find(button => button.tagName === 'DIV')!;
-    fireEvent.keyDown(entry, { key: 'ArrowDown' });
+    await act(async () => fireEvent.keyDown(entry, { key: 'ArrowDown' }));
     expect(useAuditStore.getState().currentAudit).toBeNull();
-    if (activation === 'click') fireEvent.click(entry);
-    else fireEvent.keyDown(entry, { key: activation });
+    await act(async () => {
+      if (activation === 'click') fireEvent.click(entry);
+      else fireEvent.keyDown(entry, { key: activation });
+    });
     expect(useAuditStore.getState().currentAudit).toBe(selected);
     expect(closeModal).toHaveBeenCalledTimes(1);
     expect(screen.getAllByText(older.final_url)).toHaveLength(2);
   });
 
-  it('uses the load button and removes only the requested history row', () => {
+  it('uses the load button and removes only the requested history row', async () => {
     const selected = createAuditFixture();
     const retained = createAuditFixture({ final_url: 'https://retained.example' });
     useAuditStore.setState({ history: [selected, retained] });
     render(<HistoryModal />);
     const load = screen.getAllByRole('button', { name: i18n.t('urlBar.loadAudit', { url: selected.final_url }) })
       .find(button => button.tagName === 'BUTTON')!;
-    fireEvent.click(load);
+    await act(async () => fireEvent.click(load));
     expect(useAuditStore.getState().currentAudit).toBe(selected);
-    fireEvent.click(screen.getByRole('button', { name: i18n.t('urlBar.removeAudit', { url: selected.final_url }) }));
+    await act(async () => fireEvent.click(screen.getByRole('button', { name: i18n.t('urlBar.removeAudit', { url: selected.final_url }) })));
     expect(useAuditStore.getState().history).toEqual([retained]);
     act(() => useAuditStore.setState({ history: [] }));
     expect(screen.getByText(i18n.t('urlBar.historyEmpty'))).toBeTruthy();

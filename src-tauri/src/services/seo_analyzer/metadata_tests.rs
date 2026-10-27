@@ -32,6 +32,7 @@ async fn audits_long_metadata_and_noindex_from_real_html() {
         status: 200,
         response_time_ms: 12,
         headers: HashMap::new(),
+        repeated_headers: HashMap::new(),
         set_cookie_headers: Vec::new(),
         redirect_chain: Vec::new(),
         body: html.into(),

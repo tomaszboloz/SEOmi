@@ -1,4 +1,5 @@
 import { REPORT_TEMPLATE_SECTIONS } from "@/services/reportTemplates";
+import { ContextHelp } from "@/components/ContextHelp";
 import { CrawlReportTemplateSelector } from '../CrawlReportTemplateSelector';
 import type { useSiteAuditSession } from '../useSiteAuditSession';
 
@@ -23,8 +24,14 @@ export const CrawlReportTemplateSection = ({ session }: { session: Session }) =>
         {t("siteAudit.reportTemplate")} · {selectedReportTemplate.name}
       </summary>
       <div className="mt-3 space-y-3">
+        <ContextHelp id="crawl-report-template-help" label={t("siteAudit.reportTemplateHelp")}>
+          {t("siteAudit.reportTemplateHelp")}
+        </ContextHelp>
+        <p id="crawl-report-template-description" className="sr-only">
+          {t("siteAudit.reportTemplateHelp")}
+        </p>
         <CrawlReportTemplateSelector session={session} />
-        <fieldset className="grid gap-2 sm:grid-cols-2 lg:grid-cols-3">
+        <fieldset aria-describedby="crawl-report-template-description" className="grid gap-2 sm:grid-cols-2 lg:grid-cols-3">
           <legend className="mb-1 text-[11px] font-semibold uppercase tracking-wide text-slate-500">
             {t("siteAudit.reportSectionsLegend")}
           </legend>

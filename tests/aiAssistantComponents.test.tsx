@@ -1,6 +1,6 @@
 import { useAuthStore } from '@/stores/authStore';
 import { describe, expect, it, vi } from 'vitest';
-import { render, screen, fireEvent } from '@testing-library/react';
+import { act, render, screen, fireEvent } from '@testing-library/react';
 import { AIAssistantModalHeader } from '@/components/AI/assistant/AIAssistantModalHeader';
 import { AIAssistantEngineSelect } from '@/components/AI/assistant/AIAssistantEngineSelect';
 import { AIAssistantApiKeyInput } from '@/components/AI/assistant/AIAssistantApiKeyInput';
@@ -59,7 +59,7 @@ describe('AIAssistant modular architecture', () => {
     expect(useAuthStore.getState().model).toBe('gpt-4o-mini');
   });
 
-  it('renders AIAssistantApiKeyInput and responds to input and modal trigger', () => {
+  it('renders AIAssistantApiKeyInput and responds to input and modal trigger', async () => {
     const handleKeyChange = vi.fn();
     const openSub = vi.fn();
     const setInstruction = vi.fn();
@@ -67,7 +67,7 @@ describe('AIAssistant modular architecture', () => {
     render(
       <AIAssistantApiKeyInput
         provider="openai"
-        currentKey="sk-test"
+        keyStored
         handleApiKeyChange={handleKeyChange}
         connectionMethod={{ openai: 'api_key', claude: 'api_key', gemini: 'api_key' }}
         openSubscriptionModal={openSub}
@@ -81,10 +81,18 @@ describe('AIAssistant modular architecture', () => {
     fireEvent.click(subBtn);
     expect(openSub).toHaveBeenCalledTimes(1);
 
-    const keyInput = screen.getByDisplayValue('sk-test');
+    const keyInput = screen.getByLabelText(/ai\.apiKeyLabel/);
+    expect((keyInput as HTMLInputElement).value).toBe('');
     fireEvent.change(keyInput, { target: { value: 'sk-new' } });
-    expect(handleKeyChange).toHaveBeenCalledWith('sk-new');
+    expect(handleKeyChange).not.toHaveBeenCalled();
+    await act(async () => { fireEvent.keyDown(keyInput, { key: 'Enter' }); });
+    expect(handleKeyChange).toHaveBeenCalledExactlyOnceWith('sk-new');
+
+    const instructionInput = screen.getByLabelText('ai.customInstruction');
+    fireEvent.change(instructionInput, { target: { value: 'focus on e-commerce' } });
+    expect(setInstruction).toHaveBeenCalledWith('focus on e-commerce');
   });
+
 
   it('renders AIAssistantSuggestions and triggers apply callbacks', () => {
     const suggestions: AiSuggestionResponse = {

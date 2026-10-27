@@ -11,6 +11,7 @@ fn fetch(status: u16, response_time_ms: u64, headers: HashMap<String, String>) -
         status,
         response_time_ms,
         headers,
+        repeated_headers: HashMap::new(),
         set_cookie_headers: Vec::new(),
         redirect_chain: vec![
             RedirectHop {

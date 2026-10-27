@@ -10,6 +10,11 @@ async fn http_body_preserves_headers_bytes_and_unknown_browser_metrics() {
     )
     .await;
     assert_eq!(result.status, 200);
+    assert!(result
+        .http_response_url
+        .as_deref()
+        .is_some_and(|url| url.starts_with("http://")));
+    assert!(result.content_disposition.is_none());
     assert_eq!(result.body, bytes);
     assert_eq!(result.content_length, Some(bytes.len() as u64));
     assert_eq!(result.charset.as_deref(), Some("\"utf-8\""));
@@ -24,6 +29,23 @@ async fn http_body_preserves_headers_bytes_and_unknown_browser_metrics() {
         result.rendered_lcp_ms.is_none()
             && result.rendered_inp_ms.is_none()
             && result.rendered_cls.is_none()
+    );
+}
+
+#[tokio::test]
+async fn http_content_disposition_is_retained_for_render_decision() {
+    let result = read_fetched_page_data(
+        FetchedPageBody::Http(response(
+            "Content-Type: text/html\r\nContent-Disposition: attachment; filename=page.html\r\n",
+            b"<html />",
+        )
+        .await),
+        100,
+    )
+    .await;
+    assert_eq!(
+        result.content_disposition.as_deref(),
+        Some("attachment; filename=page.html")
     );
 }
 
@@ -81,4 +103,22 @@ async fn content_type_matches_media_type_not_parameter_or_substring() {
         assert_eq!(result.declared_html, expected, "{media_type}");
         assert!(result.http_refresh.is_none() && result.x_robots_tag.is_none());
     }
+}
+
+#[tokio::test]
+async fn non_html_body_size_is_not_reported_as_html_limit() {
+    let result = read_fetched_page_data(
+        FetchedPageBody::Http(
+            response(
+                "Content-Type: image/png\r\nContent-Length: 100\r\n",
+                b"binary",
+            )
+            .await,
+        ),
+        4,
+    )
+    .await;
+    assert!(!result.declared_html);
+    assert!(!result.body_truncated && !result.body_read_failed);
+    assert!(result.body.is_empty());
 }

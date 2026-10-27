@@ -2,8 +2,13 @@ use super::super::{lock::acquire_scheduled_lock, models::*, storage::*};
 use crate::commands::crawl_storage;
 use chrono::Utc;
 use serde_json::Value;
-use std::{fs, future::Future};
+use std::{fs, future::Future, path::Path};
 use tauri::{AppHandle, Runtime};
+
+pub(super) fn ensure_project_directory(path: &Path) -> Result<(), String> {
+    fs::create_dir_all(path)
+        .map_err(|error| format!("Unable to create scheduled task directory: {error}"))
+}
 
 pub(super) async fn run_scheduled_task_with<R, Execute, Register, Unregister, TaskFuture>(
     app: AppHandle<R>,
@@ -38,8 +43,7 @@ where
     }
     let project_dir = crawl_storage::project_directory(&app, &project_id)?;
     let lock_path = project_dir.join(format!("scheduled_execution_{schedule_id}.lock"));
-    fs::create_dir_all(&project_dir)
-        .map_err(|error| format!("Unable to create scheduled task directory: {error}"))?;
+    ensure_project_directory(&project_dir)?;
     let Some(_lock_guard) = acquire_scheduled_lock(&lock_path)? else {
         return Ok(());
     };
@@ -48,11 +52,7 @@ where
     task.status = "running".into();
     task.last_started_at = Some(started_at.to_rfc3339());
     task.last_error = None;
-    write_json_atomic(
-        &path,
-        &serde_json::to_value(&task).map_err(|error| error.to_string())?,
-        MAX_EXECUTION_BYTES,
-    )?;
+    write_json_atomic(&path, &value_of(&task)?, MAX_EXECUTION_BYTES)?;
     let outcome = execute(task.clone()).await;
     let completed_at = Utc::now();
     let succeeded = outcome.is_ok();
@@ -76,11 +76,7 @@ where
         return Err("Scheduled task manifest does not match requested schedule.".into());
     }
     let next_run_at = finalize_task(&mut latest_task, execution.clone(), succeeded)?;
-    write_json_atomic(
-        &path,
-        &serde_json::to_value(&latest_task).map_err(|error| error.to_string())?,
-        MAX_EXECUTION_BYTES,
-    )?;
+    write_json_atomic(&path, &value_of(&latest_task)?, MAX_EXECUTION_BYTES)?;
     let scheduler_error = if latest_task.enabled {
         register(
             project_id.clone(),
@@ -111,9 +107,9 @@ where
     } else {
         let _ = fs::remove_file(&result_path);
     }
-    write_json_atomic(
-        &metadata_path,
-        &serde_json::to_value(handoff).map_err(|error| error.to_string())?,
-        MAX_EXECUTION_BYTES,
-    )
+    write_json_atomic(&metadata_path, &value_of(&handoff)?, MAX_EXECUTION_BYTES)
+}
+
+pub(super) fn value_of<T: serde::Serialize>(value: &T) -> Result<serde_json::Value, String> {
+    serde_json::to_value(value).map_err(|error| error.to_string())
 }

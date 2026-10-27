@@ -1,5 +1,6 @@
 use serde_json::Value;
 
+use super::dataforseo_budget::{reserve, BudgetInput};
 use crate::commands::settings::dataforseo_credentials;
 
 const API_BASE: &str = "https://api.dataforseo.com";
@@ -22,20 +23,32 @@ fn allowed_path(path: &str) -> bool {
     )
 }
 
+pub(crate) fn client_unavailable(_: reqwest::Error) -> String {
+    "Unable to create DataForSEO client.".to_string()
+}
+
 #[tauri::command]
 pub async fn dataforseo_request(
     project_id: String,
     path: String,
     payload: Option<Value>,
+    budget: Option<BudgetInput>,
 ) -> Result<Value, String> {
     let client = reqwest::Client::builder()
         .timeout(std::time::Duration::from_secs(30))
         .build()
-        .map_err(|_| "Unable to create DataForSEO client.".to_string())?;
-    dataforseo_request_at(&project_id, &path, payload, API_BASE, &client, |project| {
+        .map_err(client_unavailable)?;
+    if !allowed_path(&path) {
+        return Err("Unsupported DataForSEO endpoint.".into());
+    }
+    // Native cap check: runs before credentials are read or any request is sent.
+    let reservation = reserve(&project_id, &path, budget.as_ref())?;
+    let result = dataforseo_request_at(&project_id, &path, payload, API_BASE, &client, |project| {
         dataforseo_credentials(project)
     })
-    .await
+    .await;
+    reservation.settle(result.as_ref().ok());
+    result
 }
 
 async fn dataforseo_request_at<C>(
@@ -78,7 +91,10 @@ where
 
 #[cfg(test)]
 #[path = "dataforseo_contract_tests.rs"]
-mod contract_tests;
+pub(crate) mod contract_tests;
+#[cfg(test)]
+#[path = "dataforseo_ipc_tests.rs"]
+mod ipc_tests;
 
 #[cfg(test)]
 mod tests {

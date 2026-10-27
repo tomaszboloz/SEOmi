@@ -2,6 +2,7 @@ import React from "react";
 import { useTranslation } from "react-i18next";
 import { CheckCircle2 } from "lucide-react";
 import type { Issue } from "@/types";
+import { HelpTip } from '@/components/Help/HelpTip';
 
 interface OverviewIssuesSummaryProps {
   criticalIssues: Issue[];
@@ -20,8 +21,9 @@ export const OverviewIssuesSummary: React.FC<OverviewIssuesSummaryProps> = ({
 
   return (
     <div className="min-w-0 p-5 rounded-2xl bg-slate-900/60 border border-slate-800 flex flex-col justify-between">
-      <span className="text-xs font-semibold text-slate-400 uppercase tracking-wider">
+      <span className="inline-flex items-center gap-1 text-xs font-semibold text-slate-400 uppercase tracking-wider">
         {t("legacyUi.overview.issuesAudit")}
+        <HelpTip id="overview.severityCounts" />
       </span>
       <div className="grid grid-cols-3 gap-2 my-2">
         <div className="min-w-0 text-center p-2 rounded-lg bg-rose-500/10 border border-rose-500/20">

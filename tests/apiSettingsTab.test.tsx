@@ -38,15 +38,16 @@ describe('ApiSettingsTab', () => {
     expect(screen.getByTestId('budget')).toBeTruthy();
   });
 
-  it('forwards each AI provider key edit with its provider id', () => {
+  it('saves each AI provider key with its provider id, once, on Enter', () => {
     const p = props();
     render(<ApiSettingsTab {...p} />);
-    fireEvent.change(screen.getByDisplayValue('o'), { target: { value: 'o2' } });
-    fireEvent.change(screen.getByDisplayValue('c'), { target: { value: 'c2' } });
-    fireEvent.change(screen.getByDisplayValue('g'), { target: { value: 'g2' } });
-    expect(p.handleAiKeyChange).toHaveBeenNthCalledWith(1, 'openai', 'o2');
-    expect(p.handleAiKeyChange).toHaveBeenNthCalledWith(2, 'claude', 'c2');
-    expect(p.handleAiKeyChange).toHaveBeenNthCalledWith(3, 'gemini', 'g2');
+    const fields = (['openai', 'claude', 'gemini'] as const).map((provider) => screen.getByLabelText(i18n.t(`legacyUi.settings.${provider}ApiKey`)));
+    fields.forEach((field, index) => fireEvent.change(field, { target: { value: `key-${index}` } }));
+    expect(p.handleAiKeyChange).not.toHaveBeenCalled();
+    fields.forEach((field) => fireEvent.keyDown(field, { key: 'Enter' }));
+    expect(p.handleAiKeyChange).toHaveBeenNthCalledWith(1, 'openai', 'key-0');
+    expect(p.handleAiKeyChange).toHaveBeenNthCalledWith(2, 'claude', 'key-1');
+    expect(p.handleAiKeyChange).toHaveBeenNthCalledWith(3, 'gemini', 'key-2');
   });
 
   it('runs the connection test and shows idle label and status text', () => {
@@ -82,9 +83,36 @@ describe('ApiSettingsTab', () => {
     expect(save.getAttribute('aria-busy')).toBe('true');
   });
 
-  it('masks for the AI providers', () => {
+  it('masks for the AI providers and marks a stored key without showing it', () => {
     render(<ApiSettingsTab {...props()} />);
-    for (const v of ['o', 'c', 'g']) expect((screen.getByDisplayValue(v) as HTMLInputElement).type).toBe('password');
+    for (const provider of ['openai', 'claude', 'gemini'] as const) {
+      const field = screen.getByLabelText(i18n.t(`legacyUi.settings.${provider}ApiKey`)) as HTMLInputElement;
+      expect([field.type, field.value, field.placeholder]).toEqual(['password', '', i18n.t('auth.apiKeyStoredPlaceholder')]);
+    }
     expect(screen.queryByRole('alert')).toBeNull();
+  });
+
+  it('marks stored DataForSEO and Google values in the placeholder and keeps the plain hints otherwise', () => {
+    const empty = { ...props(), dataforseoLogin: '', dataforseoPass: '', googleMetricsKey: '' };
+    useSettingsStore.setState({ dataForSeoCredentials: { login: '', password: '' }, googleMetricsApiKey: '' } as never);
+    const { unmount } = render(<ApiSettingsTab {...empty} />);
+    expect(screen.getByPlaceholderText(i18n.t('dataforseo.loginPlaceholder'))).toBeTruthy();
+    expect(screen.getByPlaceholderText(i18n.t('legacyUi.settings.googlePlaceholder'))).toBeTruthy();
+    unmount();
+    const marker = '__seomi_secret_present__';
+    useSettingsStore.setState({ dataForSeoCredentials: { login: marker, password: marker }, googleMetricsApiKey: marker } as never);
+    render(<ApiSettingsTab {...empty} />);
+    expect(screen.getAllByPlaceholderText(i18n.t('auth.apiKeyStoredPlaceholder'))).toHaveLength(6);
+  });
+
+  it('does not render native secret presence markers into AI inputs', () => {
+    useAuthStore.setState({ apiKeys: {
+      openai: '__seomi_secret_present__',
+      claude: '__seomi_secret_present__',
+      gemini: '__seomi_secret_present__',
+    } } as never);
+    render(<ApiSettingsTab {...props()} />);
+    const passwordInputs = [...document.querySelectorAll<HTMLInputElement>('input[type="password"]')];
+    expect(passwordInputs.slice(-3).map((input) => input.value)).toEqual(['', '', '']);
   });
 });

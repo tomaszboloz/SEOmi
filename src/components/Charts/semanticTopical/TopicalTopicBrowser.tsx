@@ -6,7 +6,9 @@ import type { useSemanticTopicalSession } from './useSemanticTopicalSession';
 import { TopicalTopicList } from './TopicalTopicList';
 type Session = ReturnType<typeof useSemanticTopicalSession>;
 export const TopicalTopicBrowser = ({ session }: { session: Session }) => {
-const { addNode, draggingNodeId, dropTopicOn, graph, hierarchyNotice, importClusters, runId, t, updateWorkspacePreferences, workspacePreferences } = session;
+const { addNode, diagnosis, document, draggingNodeId, dropTopicOn, graph, hierarchyNotice, importClusters, runId, t, updateWorkspacePreferences, workspacePreferences } = session;
+const imported = new Set(document.nodes.filter((node) => node.sourceRunId === runId).map((node) => node.sourceClusterId));
+const importableCount = diagnosis ? diagnosis.topics.filter((topic) => !imported.has(topic.id)).length : graph.clusters.length;
 
 return (<div className="flex min-h-0 flex-col rounded-xl border border-slate-800 bg-slate-900/45 p-3">
               <div className="flex flex-wrap items-center justify-between gap-2">
@@ -52,14 +54,14 @@ return (<div className="flex min-h-0 flex-col rounded-xl border border-slate-800
                 <button
                   type="button"
                   onClick={importClusters}
-                  disabled={!graph.clusters.length}
+                  disabled={!importableCount}
                   className="rounded-md border border-slate-700 px-2 py-2 text-[10px] text-slate-300 hover:border-sky-400 disabled:opacity-40"
                 >
-                  {t("semanticWorkspace.importClusters")}
+                  {t(diagnosis ? "topicalDiagnosis.import.button" : "semanticWorkspace.importClusters")}
                 </button>
                 <span className="self-center text-[10px] text-slate-500">
-                  {t("semanticWorkspace.clusterRun", {
-                    count: graph.clusters.length,
+                  {t(diagnosis ? "topicalDiagnosis.import.topicsCount" : "semanticWorkspace.clusterRun", {
+                    count: importableCount,
                     run: runId.slice(0, 12),
                   })}
                 </span>

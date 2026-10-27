@@ -1,7 +1,31 @@
 // -------------------------------------------------------------
 // Keyword Workflows Models
 // -------------------------------------------------------------
-export type SearchIntent = 'Informational' | 'Commercial' | 'Transactional' | 'Navigational';
+export type SearchIntent = 'Informational' | 'Commercial' | 'Transactional' | 'Navigational' | 'Unknown';
+
+export interface GoogleSuggestProvenance {
+  kind: 'google-suggest-unofficial';
+  provider: 'Google Suggest';
+  sourceUrl: string;
+  requestedGeo: string;
+  requestedLanguage: string;
+  retrievedAt: string;
+  availability: 'best-effort';
+  reason: string;
+}
+
+export interface UserImportProvenance {
+  kind: 'user-import';
+  provider: 'User supplied file';
+  sourceUrl: string | null;
+  requestedGeo: string | null;
+  requestedLanguage: string | null;
+  retrievedAt: string;
+  availability: 'user-supplied';
+  reason: 'Imported locally by the user';
+}
+
+export type SavedKeywordProvenance = GoogleSuggestProvenance | UserImportProvenance;
 
 export interface KeywordIdea {
   keyword: string;
@@ -24,12 +48,14 @@ export interface KeywordIdea {
 export interface SavedKeywordItem {
   id: string;
   keyword: string;
-  search_volume: number;
-  difficulty: number;
-  cpc: number;
+  /** Null means that no provider metric was observed for this saved keyword. */
+  search_volume: number | null;
+  difficulty: number | null;
+  cpc: number | null;
   intent: SearchIntent;
   tags: string[];
   addedAt: string;
+  provenance?: SavedKeywordProvenance;
 }
 
 export interface RankHistoryPoint {

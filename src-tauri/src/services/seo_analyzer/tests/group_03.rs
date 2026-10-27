@@ -30,6 +30,7 @@ async fn x_robots_noindex_is_exposed_in_the_audit_and_health_issues() {
         status: 200,
         response_time_ms: 120,
         headers: HashMap::from([("x-robots-tag".to_string(), "noindex".to_string())]),
+        repeated_headers: HashMap::new(),
         set_cookie_headers: Vec::new(),
         redirect_chain: Vec::new(),
         body: "<html><head><title>Wystarczająco długi tytuł testowej strony</title><meta name=\"description\" content=\"Wystarczająco długi opis testowej strony dla walidacji lokalnego audytu.\"><meta name=\"viewport\" content=\"width=device-width\"><link rel=\"canonical\" href=\"https://example.com/page\"></head><body><h1>Temat</h1></body></html>".to_string(),

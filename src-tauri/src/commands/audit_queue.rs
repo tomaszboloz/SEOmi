@@ -99,23 +99,7 @@ pub fn delete_project_audit_queue<R: tauri::Runtime>(
         Err(error) if error.kind() == ErrorKind::NotFound => Ok(()),
         Err(error) => Err(format!("Unable to remove audit queue: {error}")),
     }?;
-    let entries = match fs::read_dir(&directory) {
-        Ok(entries) => entries,
-        Err(error) if error.kind() == ErrorKind::NotFound => return Ok(()),
-        Err(error) => return Err(format!("Unable to inspect audit queue files: {error}")),
-    };
-    for entry in entries {
-        let path = entry
-            .map_err(|error| format!("Unable to inspect audit queue file: {error}"))?
-            .path();
-        let Some(name) = path.file_name().and_then(|value| value.to_str()) else {
-            continue;
-        };
-        if cleanup::is_queue_handoff_file(name) {
-            let _ = fs::remove_file(path);
-        }
-    }
-    Ok(())
+    cleanup::remove_handoff_files(&directory)
 }
 
 #[cfg(test)]

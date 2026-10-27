@@ -1,12 +1,23 @@
 use super::*;
 
+#[cfg(test)]
 pub(super) async fn fetch_resource_candidate(
     client: reqwest::Client,
     candidate: ResourceCandidate,
 ) -> CrawledResource {
+    fetch_resource_candidate_with_context(client, candidate, RetryContext::disabled()).await
+}
+
+pub(super) async fn fetch_resource_candidate_with_context(
+    client: reqwest::Client,
+    candidate: ResourceCandidate,
+    context: RetryContext,
+) -> CrawledResource {
     let request_started_at = Instant::now();
-    match client.get(&candidate.url).send().await {
-        Ok(mut response) => {
+    let mut retry_available = true;
+    match send_get_with_retry(&client, &candidate.url, &context, &mut retry_available).await {
+        Ok(fetched) => {
+            let mut response = fetched.response;
             let response_time_ms = request_started_at.elapsed().as_millis() as u64;
             let content_type = response
                 .headers()
@@ -18,10 +29,10 @@ pub(super) async fn fetch_resource_candidate(
             let mut body_read_failed = false;
             if candidate.resource_type == "image"
                 && response.status().is_success()
-                && content_length.map_or(true, |length| length <= MAX_INTRINSIC_IMAGE_BYTES as u64)
+                && content_length.is_none_or(|length| length <= MAX_INTRINSIC_IMAGE_BYTES as u64)
             {
                 loop {
-                    match response.chunk().await {
+                    match read_response_chunk(&mut response, &context).await {
                         Ok(Some(chunk)) => {
                             if body.len().saturating_add(chunk.len()) > MAX_INTRINSIC_IMAGE_BYTES {
                                 body.clear();
@@ -64,7 +75,7 @@ pub(super) async fn fetch_resource_candidate(
             intrinsic_height: None,
             dimensions_source: None,
             response_time_ms: Some(request_started_at.elapsed().as_millis() as u64),
-            request_error_kind: Some(request_error_kind(&error)),
+            request_error_kind: Some(error.kind()),
         },
     }
 }

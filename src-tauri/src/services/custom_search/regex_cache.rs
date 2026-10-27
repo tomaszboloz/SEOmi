@@ -8,9 +8,14 @@ use std::sync::{Mutex, OnceLock};
 /// small bound, so stale patterns from earlier crawls cannot accumulate.
 const MAX_CACHED_PATTERNS: usize = 64;
 
+type PatternCache = Mutex<HashMap<String, Regex>>;
+
 pub(crate) fn cached_regex(pattern: &str) -> Result<Regex, regex::Error> {
-    static CACHE: OnceLock<Mutex<HashMap<String, Regex>>> = OnceLock::new();
-    let cache = CACHE.get_or_init(|| Mutex::new(HashMap::new()));
+    static CACHE: OnceLock<PatternCache> = OnceLock::new();
+    cached_regex_in(CACHE.get_or_init(|| Mutex::new(HashMap::new())), pattern)
+}
+
+fn cached_regex_in(cache: &PatternCache, pattern: &str) -> Result<Regex, regex::Error> {
     if let Some(regex) = cache
         .lock()
         .ok()
@@ -47,5 +52,17 @@ mod tests {
             let regex = cached_regex(&format!("item-{index}")).unwrap();
             assert!(regex.is_match(&format!("x item-{index} y")));
         }
+    }
+
+    #[test]
+    fn a_poisoned_cache_still_compiles_patterns() {
+        let cache = PatternCache::default();
+        let _ = std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| {
+            let _guard = cache.lock().unwrap();
+            panic!("poison the cache");
+        }));
+        assert!(cache.is_poisoned());
+        assert!(cached_regex_in(&cache, "a+").unwrap().is_match("caat"));
+        assert!(cached_regex_in(&cache, "a+").unwrap().is_match("caat"));
     }
 }

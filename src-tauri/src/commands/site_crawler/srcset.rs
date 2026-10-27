@@ -24,9 +24,9 @@ pub(super) fn parse_srcset_urls(srcset: &str) -> Vec<String> {
         }
         let raw_url = &srcset[url_start..position];
         let url = raw_url.trim_end_matches(',');
-        if !url.is_empty() {
-            urls.push(url.to_string());
-        }
+        // `raw_url` starts at a non-comma, non-whitespace character, so it is never all commas.
+        debug_assert!(!url.is_empty());
+        urls.push(url.to_string());
         if raw_url.ends_with(',') {
             continue;
         }

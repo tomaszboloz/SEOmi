@@ -77,10 +77,25 @@ pub(super) fn assess_indexability(
     }
 }
 
+async fn production_check(url: String) -> anyhow::Result<(u16, u64)> {
+    crate::services::http_client::check_url_status(&url, 5).await
+}
+
 pub(super) async fn verify_canonical_target(
     assessment: &mut IndexabilityAssessment,
     current_status: u16,
 ) {
+    verify_canonical_target_with(assessment, current_status, production_check).await
+}
+
+pub(super) async fn verify_canonical_target_with<F, Fut>(
+    assessment: &mut IndexabilityAssessment,
+    current_status: u16,
+    check: F,
+) where
+    F: FnOnce(String) -> Fut,
+    Fut: std::future::Future<Output = anyhow::Result<(u16, u64)>>,
+{
     let Some(canonical) = assessment.canonical.as_deref() else {
         return;
     };
@@ -100,7 +115,7 @@ pub(super) async fn verify_canonical_target(
             return;
         }
     };
-    match crate::services::http_client::check_url_status(target.as_str(), 5).await {
+    match check(target.to_string()).await {
         Ok((status, _)) => {
             assessment.canonical_target_checked = true;
             assessment.canonical_target_status = Some(status);
@@ -111,3 +126,7 @@ pub(super) async fn verify_canonical_target(
         }
     }
 }
+
+#[cfg(test)]
+#[path = "indexability_target_tests.rs"]
+mod target_tests;

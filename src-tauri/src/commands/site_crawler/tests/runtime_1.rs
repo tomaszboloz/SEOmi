@@ -3,7 +3,7 @@ use super::*;
 #[test]
 fn scoring_counts_severities_and_caps_penalties() {
     let empty = score_pages(&[]);
-    assert_eq!(empty.health_score, 100);
+    assert_eq!(empty.health_score, 50);
     let mut page = post_processing_page("https://example.com");
     page.issues = vec![
         CrawledPageIssue {
@@ -27,9 +27,9 @@ fn scoring_counts_severities_and_caps_penalties() {
             score.notice_count,
             score.health_score
         ),
-        (1, 1, 1, 80)
+        (1, 1, 1, 70)
     );
-    assert_eq!(score_pages(&vec![page; 10]).health_score, 20);
+    assert_eq!(score_pages(&vec![page; 10]).health_score, 70);
 }
 
 #[test]

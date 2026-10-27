@@ -16,8 +16,8 @@ export const auditPageSimilarity = (context: TopicalAuditContext) => {
       const sameTopic = leftTopics.some((node) => rightTopics.some((candidate) => candidate.id === node.id));
       const leftTerms = termsFor(leftPage);
       const rightTerms = termsFor(rightPage);
-      const shared = [...leftTerms].filter((term) => rightTerms.has(term));
-      const union = new Set([...leftTerms, ...rightTerms]);
+      const shared = [...leftTerms].filter(([key]) => rightTerms.has(key)).map(([, term]) => term);
+      const union = new Set([...leftTerms.keys(), ...rightTerms.keys()]);
       const lexicalOverlap = union.size ? shared.length / union.size : 0;
       const simhashDistance = leftPage.content_simhash && rightPage.content_simhash
         ? hammingDistance(leftPage.content_simhash, rightPage.content_simhash) : null;

@@ -22,15 +22,15 @@ describe('readPreferences', () => {
   it('restores valid preferences', () => {
     store({
       query: 'seo', clusterFilter: 'c1', orphansOnly: true, linkMode: 'all',
-      selectedUrl: 'https://a.test/', activeView: 'plan',
+      selectedUrl: 'https://a.test/', activeView: 'plan', diagnosisFilter: null,
       positions: { 'https://a.test/': { x: 1, y: 2 } }, transform: { x: 5, y: 6, k: 2 },
     });
     expect(readPreferences(KEY)).toEqual({
       query: 'seo', clusterFilter: 'c1', orphansOnly: true, linkMode: 'all',
-      selectedUrl: 'https://a.test/', activeView: 'plan',
+      selectedUrl: 'https://a.test/', activeView: 'plan', diagnosisFilter: null,
       positions: { 'https://a.test/': { x: 1, y: 2 } }, transform: { x: 5, y: 6, k: 2 },
     });
-    store({ activeView: 'directory' });
+    store({ activeView: 'directory', diagnosisFilter: null });
     expect(readPreferences(KEY).activeView).toBe('directory');
   });
 
@@ -46,7 +46,7 @@ describe('readPreferences', () => {
     expect(prefs.orphansOnly).toBe(false);
     expect(prefs.linkMode).toBe('content');
     expect(prefs.selectedUrl).toBeNull();
-    expect(prefs.activeView).toBe('graph');
+    expect(prefs.activeView).toBe('diagnosis');
     expect(Object.keys(prefs.positions)).toEqual(['good']);
     expect(prefs.transform).toEqual({ x: 0, y: 0, k: 1 });
   });

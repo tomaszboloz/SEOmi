@@ -98,4 +98,11 @@ describe('project persistence defensive branches', () => {
     expect(useProjectStore.getState().projects).toEqual(before.projects);
     expect(useProjectStore.getState().activeProjectId).toBe('a');
   });
+
+  it('covers non-array storage, non-string project ids, and invalid rootUrls in createProject', () => {
+    expect(normalizePersistedProjects(null)).toEqual([]);
+    expect(normalizePersistedProjects('not-an-array')).toEqual([]);
+    expect(normalizePersistedProjects([{ id: 123 as never, name: 456 as never }])).toEqual([]);
+    expect(() => useProjectStore.getState().createProject({ name: 'Valid Project', rootUrl: 'not a valid url' })).toThrow();
+  });
 });

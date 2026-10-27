@@ -25,7 +25,7 @@ it('keeps execution-only resume arrays out of durable history and uses app reque
       resumeCompletedUrls: ['https://example.test/previous'] }) }));
   expect(saveCrawlRuns.mock.calls[0][1][0].config.resumeCompletedUrls).toBeUndefined();
   expect(saveCrawlRuns.mock.calls[0][1][0].config.resumeFrontierUrls).toBeUndefined();
-  expect(notifyCrawlCompleted).toHaveBeenCalledWith('execution-direct', result, 90);
+  expect(notifyCrawlCompleted).toHaveBeenCalledWith('execution-direct', result, expect.objectContaining({ health_score: 90 }), { runId: expect.any(String) });
 });
 
 it('rejects an empty target and a completed snapshot with no actual pages', async () => {

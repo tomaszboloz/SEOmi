@@ -1,4 +1,4 @@
-import { fireEvent, render, screen, waitFor } from '@testing-library/react';
+import { act, fireEvent, render, screen, waitFor } from '@testing-library/react';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { McpHub } from '@/components/AgentWorkflows/McpHub';
 import { useProjectStore } from '@/stores/projectStore';
@@ -27,12 +27,12 @@ it('does not apply delayed discovery results after switching projects', async ()
     fireEvent.change(screen.getByRole('textbox', { name: /Absolute MCP server path/ }), { target: { value: '/Users/test/mcp-server/dist/index.js' } });
     fireEvent.click(screen.getByRole('button', { name: 'Discover server tools' }));
 
-    useProjectStore.setState({ activeProjectId: 'mcp-project-next' });
-    resolveDiscovery({
+    act(() => { useProjectStore.setState({ activeProjectId: 'mcp-project-next' }); });
+    await act(async () => { resolveDiscovery({
       serverName: 'stale-mcp',
       serverVersion: '1.0',
       tools: [{ name: 'stale_tool', description: 'Stale', inputSchema: { type: 'object' } }],
-    });
+    }); });
     await waitFor(() => expect(screen.queryByText(/stale-mcp/)).toBeNull());
     expect(screen.queryByText('stale_tool')).toBeNull();
   });

@@ -80,6 +80,8 @@ const inferCrawlIssueIdentity = (issue: CrawledPageIssue): CrawlIssueIdentity | 
     ?? matches(/^(?<count>\d+) invalid JSON-LD block\(s\)$/, 'crawlIssues.invalidJsonLd')
     ?? matches(/^Client-side refresh redirect detected \((?<count>\d+) declaration\(s\)\)$/, 'crawlIssues.clientRedirect')
     ?? matches(/^(?<count>\d+) pagination declaration\(s\) have a missing or invalid HTTP\(S\) target$/, 'crawlIssues.paginationInvalid')
+    ?? matches(/^Browser rendering failed; the raw HTML response was analyzed instead: (?<reason>[\s\S]+)$/, 'crawlIssues.renderFallback')
+    ?? matches(/^The page navigated to a different URL in the browser; the HTTP status and response headers describe the requested URL$/, 'crawlIssues.renderedSelfNavigation')
     ?? (message === 'Duplicate title found in this crawl'
       ? { messageKey: 'crawl.metadataFacets.duplicateTitleDescription' }
       : null)

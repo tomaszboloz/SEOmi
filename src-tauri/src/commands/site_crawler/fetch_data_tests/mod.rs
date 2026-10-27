@@ -50,5 +50,8 @@ fn snapshot() -> RenderedPageSnapshot {
     }
 }
 
+#[path = "coverage100_invalid_headers.rs"]
+mod coverage100_invalid_headers;
 mod http;
+mod http_edges;
 mod rendered;

@@ -39,4 +39,14 @@ describe('AI credential write ordering', () => {
 
     expect(useAuthStore.getState().apiKeys.openai).toBe('new-key');
   });
+
+  it('keeps only a presence marker in the native auth store after saving', async () => {
+    Object.defineProperty(window, '__TAURI_INTERNALS__', { configurable: true, value: {} });
+    try {
+      await useAuthStore.getState().setApiKey('openai', 'native-secret');
+      expect(useAuthStore.getState().apiKeys.openai).toBe('__seomi_secret_present__');
+    } finally {
+      delete (window as Window & { __TAURI_INTERNALS__?: unknown }).__TAURI_INTERNALS__;
+    }
+  });
 });

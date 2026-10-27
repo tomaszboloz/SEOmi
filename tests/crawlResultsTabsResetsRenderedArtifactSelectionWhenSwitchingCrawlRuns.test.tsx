@@ -1,4 +1,4 @@
-import { fireEvent, render, screen } from "@testing-library/react";
+import { act, cleanup, fireEvent, render, screen } from "@testing-library/react";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { CrawlResultsTabs } from "@/components/Domain/CrawlResultsTabs";
 import { useProjectStore } from "@/stores/projectStore";
@@ -9,17 +9,27 @@ import { result, run } from "./fixtures/crawlResultsTabsContracts";
 
 describe("CrawlResultsTabs", () => {
 afterEach(async () => {
-    await i18n.changeLanguage('en');
+    cleanup();
+    if (i18n.language !== 'en') {
+      await act(async () => {
+        await i18n.changeLanguage('en');
+      });
+    }
   });
 
 beforeEach(async () => {
-    await i18n.changeLanguage('en');
+    cleanup();
+    if (i18n.language !== 'en') {
+      await act(async () => {
+        await i18n.changeLanguage('en');
+      });
+    }
    localStorage.clear();
     window.history.replaceState(null, "", "/");
     useProjectStore.setState({ activeProjectId: null });
   });
 
-it("resets rendered artifact selection when switching crawl runs", () => {
+it("resets rendered artifact selection when switching crawl runs", async () => {
     const firstRenderedResult = {
       ...result,
       crawl_mode: "browser-rendered",
@@ -54,23 +64,29 @@ it("resets rendered artifact selection when switching crawl runs", () => {
         onSelectRun={vi.fn()}
       />,
     );
-    fireEvent.click(screen.getByRole("tab", { name: /Performance/ }));
+    await act(async () => {
+      fireEvent.click(screen.getByRole("tab", { name: /Performance/ }));
+    });
     const artifactSelect = screen.getByLabelText(
       i18n.t("crawl.ui.renderedUrlForArtifact"),
     ) as HTMLSelectElement;
-    fireEvent.change(artifactSelect, {
-      target: { value: "https://example.com/missing" },
+    await act(async () => {
+      fireEvent.change(artifactSelect, {
+        target: { value: "https://example.com/missing" },
+      });
     });
     expect(artifactSelect.value).toBe("https://example.com/missing");
 
-    view.rerender(
-      <CrawlResultsTabs
-        result={secondRenderedResult}
-        runs={[secondRenderedRun]}
-        selectedRun={secondRenderedRun}
-        onSelectRun={vi.fn()}
-      />,
-    );
+    await act(async () => {
+      view.rerender(
+        <CrawlResultsTabs
+          result={secondRenderedResult}
+          runs={[secondRenderedRun]}
+          selectedRun={secondRenderedRun}
+          onSelectRun={vi.fn()}
+        />,
+      );
+    });
 
     expect(
       (screen.getByLabelText(
@@ -97,11 +113,7 @@ fireEvent.click(screen.getByRole("button", { name: "Mapa i klastry" }));
 .getByRole("tab", { name: /Mapa i klastry/ })
         .getAttribute("aria-selected"),
     ).toBe("true");
-    expect(
-      screen.getByRole("img", {
-        name: "Interaktywna mapa semantycznych klastrów i linków w treści",
-      }),
-    ).not.toBeNull();
+    expect(screen.getByTestId("topical-diagnosis-view")).not.toBeNull();
     expect(
         screen
         .getByRole("tablist", { name: i18n.t("crawl.navigation.resultsTitle") })

@@ -8,7 +8,7 @@ export const auditEntityObservability = (context: TopicalAuditContext) => {
     ...document.entity.facts.map((fact) => ({ label: `${fact.attribute}: ${fact.value}`, value: fact.value, kind: semanticText('kindAsserted', { value: fact.attribute }) })),
   ];
   const entityObservability = entityAssertions.map(({ label, value, kind }) => {
-    const comparable = pages.filter((page) => [...termsFor(page)].some((term) => /[\p{L}\p{N}]/u.test(term)));
+    const comparable = pages.filter((page) => [...termsFor(page).values()].some((term) => /[\p{L}\p{N}]/u.test(term)));
     const observedPages = comparable.filter((page) => {
       const coverage = termCoverage(value, page);
       return Boolean(coverage?.expected.length && coverage.expected.every((term) => coverage.matched.includes(term)));

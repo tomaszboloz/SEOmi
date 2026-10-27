@@ -48,3 +48,89 @@ async fn bearer_token_is_consumed_after_the_first_valid_request() {
     assert!(!bearer_matches(Some("Bearer one-shot"), &token).await);
     assert!(!bearer_matches(Some("Bearer other"), &token).await);
 }
+
+#[test]
+fn render_request_prepares_normalized_inputs_without_opening_renderer() {
+    use super::render::prepare_render_request;
+
+    assert!(prepare_render_request(RenderWorkerRequest {
+        url: "https://[".into(),
+        allow_subdomains: false,
+        scope_path: None,
+        wait_for_selector: None,
+        wait_delay_ms: 0,
+        lazy_scroll_cycles: 0,
+    })
+    .is_err());
+
+    assert!(prepare_render_request(RenderWorkerRequest {
+        url: "https://example.test/".into(),
+        allow_subdomains: false,
+        scope_path: Some("not-rooted".into()),
+        wait_for_selector: None,
+        wait_delay_ms: 0,
+        lazy_scroll_cycles: 0,
+    })
+    .is_err());
+
+    assert!(prepare_render_request(RenderWorkerRequest {
+        url: "https://example.test/".into(),
+        allow_subdomains: false,
+        scope_path: None,
+        wait_for_selector: Some("h1\0null".into()),
+        wait_delay_ms: 0,
+        lazy_scroll_cycles: 0,
+    })
+    .is_err());
+
+    let prepared = prepare_render_request(RenderWorkerRequest {
+        url: "https://example.test/".into(),
+        allow_subdomains: true,
+        scope_path: Some("/docs".into()),
+        wait_for_selector: Some("h1".into()),
+        wait_delay_ms: 10,
+        lazy_scroll_cycles: 1,
+    })
+    .unwrap();
+    assert_eq!(prepared.target.as_str(), "https://example.test/");
+    assert_eq!(prepared.base_host, "example.test");
+    assert_eq!(prepared.scope_path.as_deref(), Some("/docs"));
+    assert_eq!(prepared.options.wait_for_selector.as_deref(), Some("h1"));
+    assert_eq!(prepared.options.wait_delay_ms, 10);
+    assert_eq!(prepared.options.lazy_scroll_cycles, 1);
+}
+
+#[test]
+fn format_render_snapshot_serializes_and_enforces_safety_limit() {
+    use super::server::format_render_snapshot;
+    use crate::commands::rendered_crawler::RenderedPageSnapshot;
+
+    let snapshot = RenderedPageSnapshot {
+        requested_url: "https://example.test".into(),
+        final_url: "https://example.test".into(),
+        http_status: Some(200),
+        content_type: "text/html".into(),
+        charset: "utf-8".into(),
+        html: "<html></html>".into(),
+        html_truncated: false,
+        navigation_time_ms: Some(10),
+        lcp_ms: None,
+        inp_ms: None,
+        cls: None,
+        failed_resource_urls: vec![],
+        console_errors: vec![],
+    };
+    let (status, ct, body) = format_render_snapshot(&snapshot).unwrap();
+    assert_eq!(status, 200);
+    assert_eq!(ct, "application/json");
+    assert!(!body.is_empty());
+
+    let giant_snapshot = RenderedPageSnapshot {
+        html: "x".repeat(9 * 1024 * 1024),
+        ..snapshot
+    };
+    let (status, ct, body) = format_render_snapshot(&giant_snapshot).unwrap();
+    assert_eq!(status, 413);
+    assert_eq!(ct, "application/json");
+    assert!(String::from_utf8_lossy(&body).contains("exceeds the response safety limit"));
+}

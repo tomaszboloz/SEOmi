@@ -1,20 +1,15 @@
-use std::sync::{
-    atomic::{AtomicU64, Ordering},
-    Arc,
-};
+use super::models::{RenderOptions, MAX_CAPTURE_CHANNEL_EVENTS};
+use super::scripts::cookie_bootstrap_script;
+use super::session::RenderedCrawlerSession;
+pub(crate) use super::session_open_handlers::*;
+use super::session_open_prepare::{prepare_session_open, PreparedSessionOpen};
+use crate::services::browser_proxy::BrowserRequestProxy;
+use std::sync::{atomic::AtomicU64, Arc};
 use tauri::{
-    webview::{NewWindowResponse, PageLoadEvent, WebviewWindowBuilder},
+    webview::{NewWindowResponse, WebviewWindowBuilder},
     AppHandle, Runtime,
 };
 use tokio::sync::mpsc;
-
-use super::models::{CaptureEvent, RenderOptions, CAPTURE_SCHEME, MAX_CAPTURE_CHANNEL_EVENTS};
-use super::navigation::{is_allowed_navigation, parse_capture_chunk};
-use super::scripts::{capture_script, cookie_bootstrap_script};
-use super::session::RenderedCrawlerSession;
-use crate::{
-    services::browser_proxy::BrowserRequestProxy, utils::url_validator::validate_and_normalize_url,
-};
 
 impl<R: Runtime> RenderedCrawlerSession<R> {
     pub async fn open(
@@ -25,22 +20,27 @@ impl<R: Runtime> RenderedCrawlerSession<R> {
         scope_path: Option<&str>,
         options: RenderOptions,
     ) -> Result<Self, String> {
-        let start_url = validate_and_normalize_url(start_url).map_err(|error| error.to_string())?;
+        let PreparedSessionOpen {
+            start_url,
+            base_host,
+            allow_subdomains,
+            scope_path,
+            options,
+        } = prepare_session_open(start_url, base_host, allow_subdomains, scope_path, options)?;
         let nonce = uuid::Uuid::new_v4().simple().to_string();
         let label = format!("rendered-crawl-{}", uuid::Uuid::new_v4().simple());
         let proxy = BrowserRequestProxy::start()
             .await
             .map_err(|error| format!("Unable to start isolated renderer proxy: {error}"))?;
         let proxy_url = proxy.url();
-        let base_host = base_host.to_ascii_lowercase();
-        let scope_path = scope_path.map(str::to_owned);
         let sequence = Arc::new(AtomicU64::new(0));
         let (sender, receiver) = mpsc::channel(MAX_CAPTURE_CHANNEL_EVENTS);
-
         let build_app = app.clone();
         let build_nonce = nonce.clone();
         let build_host = base_host.clone();
         let build_scope = scope_path.clone();
+        let allowed_hosts = options.allowed_hosts.clone();
+        let build_allowed_hosts = allowed_hosts.clone();
         let build_sequence = sequence.clone();
         let build_sender = sender.clone();
         let build_options = options.clone();
@@ -54,7 +54,7 @@ impl<R: Runtime> RenderedCrawlerSession<R> {
         app.run_on_main_thread(move || {
             let mut builder = WebviewWindowBuilder::new(
                 &build_app,
-                label,
+                label.clone(),
                 tauri::WebviewUrl::External(start_url_for_window),
             )
             .title("SEOmi renderer")
@@ -62,34 +62,29 @@ impl<R: Runtime> RenderedCrawlerSession<R> {
             .incognito(true)
             .on_new_window(|_, _| NewWindowResponse::Deny)
             .on_navigation(move |url| {
-                if url.scheme() == CAPTURE_SCHEME {
-                    if let Some(chunk) = parse_capture_chunk(url, &navigation_nonce) {
-                        let _ = navigation_sender.blocking_send(CaptureEvent::Chunk(chunk));
-                    } else if url.host_str() == Some(navigation_nonce.as_str()) {
-                        if let Some(sequence) = url.path().strip_suffix("/error").and_then(|value| value.trim_start_matches('/').parse::<u64>().ok()) {
-                            let _ = navigation_sender.blocking_send(CaptureEvent::TransferFailed(sequence));
-                        }
-                    }
-                    return false;
-                }
-                is_allowed_navigation(url, &build_host, allow_subdomains, build_scope.as_deref())
+                handle_session_navigation(
+                    url,
+                    &navigation_nonce,
+                    &navigation_sender,
+                    &build_host,
+                    allow_subdomains,
+                    build_scope.as_deref(),
+                    &build_allowed_hosts,
+                )
             })
             .on_page_load(move |window, payload| {
-                if payload.event() != PageLoadEvent::Finished {
-                    return;
-                }
-                if window.url().ok().as_ref() != Some(payload.url()) {
-                    return;
-                }
-                let current_sequence = build_sequence.fetch_add(1, Ordering::Relaxed) + 1;
-                if build_sender
-                    .blocking_send(CaptureEvent::PageReady(current_sequence))
-                    .is_err()
-                {
-                    return;
-                }
-                let script = capture_script(&build_nonce, current_sequence, &build_options);
-                let _ = window.eval(&script);
+                let window_url = window.url().ok();
+                handle_session_page_load(
+                    payload.event(),
+                    (window_url.as_ref(), payload.url()),
+                    &build_sequence,
+                    &build_sender,
+                    &build_nonce,
+                    &build_options,
+                    |script| {
+                        let _ = window.eval(script);
+                    },
+                );
             });
 
             if let Some(user_agent) = build_user_agent.as_deref() {
@@ -106,7 +101,9 @@ impl<R: Runtime> RenderedCrawlerSession<R> {
                     proxy_url.host_str().unwrap_or("127.0.0.1"),
                     proxy_url.port().unwrap_or_default()
                 );
-                builder = builder.additional_browser_args(&args);
+                builder = builder
+                    .additional_browser_args(&args)
+                    .data_directory(super::session::windows_profile_dir(&label));
             }
 
             #[cfg(target_os = "macos")]
@@ -117,7 +114,9 @@ impl<R: Runtime> RenderedCrawlerSession<R> {
             let result = builder
                 .build()
                 .map_err(|error| format!("Unable to create isolated renderer: {error}"));
-            let _ = built_tx.send(result);
+            if let Err(Ok(orphan)) = built_tx.send(result) {
+                let _ = orphan.close();
+            }
         })
         .map_err(|error| format!("Unable to schedule renderer creation: {error}"))?;
 
@@ -131,9 +130,11 @@ impl<R: Runtime> RenderedCrawlerSession<R> {
             receiver,
             nonce,
             requested_url: start_url.to_string(),
+            initial_load_pending: true,
             base_host,
             allow_subdomains,
             scope_path,
+            allowed_hosts,
         })
     }
 }

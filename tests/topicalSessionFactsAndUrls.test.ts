@@ -66,6 +66,10 @@ describe('Topical session facts and URL candidates', () => {
     expect(result.current.factDraft.attribute).toBe('');
 
     act(() => {
+      result.current.addTopicFact();
+    });
+
+    act(() => {
       result.current.setTopicFactDraft({ attribute: 'Pricing', value: '$99', sourceUrl: '' });
     });
     act(() => {

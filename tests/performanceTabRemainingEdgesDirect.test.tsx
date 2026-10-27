@@ -27,8 +27,10 @@ describe('crawl performance edge contracts', () => {
       renderedArtifactError={null} renderedArtifact={null} t={t} />);
     fireEvent.change(screen.getByRole('combobox'), { target: { value: artifact.requestedUrl } });
     fireEvent.click(screen.getByRole('button', { name: 'crawlDeepUi.screenshot' }));
+    fireEvent.click(screen.getByRole('button', { name: 'crawlDeepUi.pagePdf' }));
     expect(setUrl).toHaveBeenCalledWith(artifact.requestedUrl);
     expect(create).toHaveBeenCalledWith('screenshot');
+    expect(create).toHaveBeenCalledWith('pdf');
 
     view.rerender(<PerformanceArtifactsSection renderedArtifactUrl={artifact.requestedUrl}
       renderedArtifactUrls={[artifact.requestedUrl]} setRenderedArtifactUrl={setUrl}
@@ -38,8 +40,16 @@ describe('crawl performance edge contracts', () => {
     expect(screen.getByRole('alert').textContent).toBe('capture failed');
     expect((screen.getByRole('button', { name: 'crawlDeepUi.pagePdf' }) as HTMLButtonElement).disabled).toBe(true);
     expect(screen.getByText('https://example.test/final')).toBeTruthy();
-    expect(screen.getByRole('button', { name: 'crawlDeepUi.downloadAgain' })).toBeTruthy();
+    const downloadBtn = screen.getByRole('button', { name: 'crawlDeepUi.downloadAgain' });
+    expect(downloadBtn).toBeTruthy();
+    const filenames: string[] = [];
+    const download = vi.spyOn(HTMLAnchorElement.prototype, 'click').mockImplementation(function (this: HTMLAnchorElement) { filenames.push(this.download); });
+    try {
+      fireEvent.click(downloadBtn);
+      expect(filenames).toEqual(['page.pdf']);
+    } finally { download.mockRestore(); }
   });
+
 
   it('renders request errors, transfer bytes and browser navigation headings', () => {
     const pages = [

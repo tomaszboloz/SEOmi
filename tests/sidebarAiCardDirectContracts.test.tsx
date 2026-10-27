@@ -7,7 +7,7 @@ import i18n from '@/i18n';
 
 const initialAuth = useAuthStore.getState();
 const initialUi = useUIStore.getState();
-afterEach(() => { useAuthStore.setState(initialAuth); useUIStore.setState(initialUi); });
+afterEach(() => act(() => { useAuthStore.setState(initialAuth); useUIStore.setState(initialUi); }));
 
 describe('direct AI connection card interactions', () => {
   it.each([['claude', 'Claude'], ['openai', 'OpenAI'], ['gemini', 'Gemini']] as const)(

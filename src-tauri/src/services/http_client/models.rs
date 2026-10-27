@@ -12,6 +12,8 @@ pub struct FetchResult {
     pub status: u16,
     pub response_time_ms: u64,
     pub headers: HashMap<String, String>,
+    /// Header values in wire order; unlike `headers`, repeated fields are preserved.
+    pub repeated_headers: HashMap<String, Vec<String>>,
     pub set_cookie_headers: Vec<String>,
     pub redirect_chain: Vec<RedirectHop>,
     pub body: String,

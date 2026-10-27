@@ -44,11 +44,14 @@ pub(in crate::commands::site_crawler) fn locate_html_attribute(
         {
             let name_start = cursor + relative_attribute;
             let name_end = name_start + attribute.len();
-            let before_ok = name_start == 0 || tag.as_bytes()[name_start - 1].is_ascii_whitespace();
+            // The tag text starts at the delimiter that follows the element name
+            // (whitespace, `/` or `>`), so an attribute name never sits at index 0.
+            debug_assert!(name_start > 0);
+            let before_ok = tag.as_bytes()[name_start - 1].is_ascii_whitespace();
             let after_ok = tag
                 .as_bytes()
                 .get(name_end)
-                .map_or(true, |b| b.is_ascii_whitespace() || *b == b'=');
+                .is_none_or(|b| b.is_ascii_whitespace() || *b == b'=');
             if !before_ok || !after_ok {
                 cursor = name_end;
                 continue;

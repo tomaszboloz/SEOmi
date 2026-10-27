@@ -1,61 +1,8 @@
 use super::dataforseo_request_at;
 use serde_json::{json, Value};
-use tokio::{
-    io::{AsyncReadExt, AsyncWriteExt},
-    net::TcpListener,
-    sync::oneshot,
-};
-
-async fn server(status: &str, body: &str) -> (String, oneshot::Receiver<String>) {
-    let listener = TcpListener::bind("127.0.0.1:0").await.unwrap();
-    let address = listener.local_addr().unwrap();
-    let (sender, received) = oneshot::channel();
-    let status = status.to_string();
-    let body = body.to_string();
-    tokio::spawn(async move {
-        let (mut stream, _) = listener.accept().await.unwrap();
-        let mut request = Vec::new();
-        loop {
-            let mut chunk = [0; 1024];
-            let count = stream.read(&mut chunk).await.unwrap();
-            request.extend_from_slice(&chunk[..count]);
-            if request.windows(4).any(|window| window == b"\r\n\r\n") {
-                break;
-            }
-        }
-        let head_end = request
-            .windows(4)
-            .position(|window| window == b"\r\n\r\n")
-            .unwrap()
-            + 4;
-        let headers = String::from_utf8_lossy(&request[..head_end]);
-        let length = headers
-            .lines()
-            .find_map(|line| {
-                let (name, value) = line.split_once(':')?;
-                name.eq_ignore_ascii_case("content-length")
-                    .then(|| value.trim().parse::<usize>().unwrap())
-            })
-            .unwrap_or(0);
-        let already_read = request.len() - head_end;
-        if length > already_read {
-            let mut tail = vec![0; length - already_read];
-            stream.read_exact(&mut tail).await.unwrap();
-            request.extend_from_slice(&tail);
-        }
-        let _ = sender.send(String::from_utf8_lossy(&request).into_owned());
-        let reply = format!(
-            "HTTP/1.1 {status}\r\nContent-Length: {}\r\nConnection: close\r\n\r\n{body}",
-            body.len()
-        );
-        stream.write_all(reply.as_bytes()).await.unwrap();
-    });
-    (format!("http://{address}"), received)
-}
-
-fn client() -> reqwest::Client {
-    reqwest::Client::builder().no_proxy().build().unwrap()
-}
+#[path = "dataforseo_fixture.rs"]
+pub(crate) mod fixture;
+use fixture::{client, server};
 
 #[tokio::test]
 async fn rejects_unknown_endpoint_before_reading_credentials() {
@@ -142,4 +89,61 @@ async fn rejects_malformed_provider_json() {
     .await
     .unwrap_err();
     assert_eq!(error, "DataForSEO returned an invalid response.");
+}
+#[tokio::test]
+async fn public_command_rejects_unknown_endpoint() {
+    let error = super::dataforseo_request("project".into(), "/v3/not-allowed".into(), None, None)
+        .await
+        .unwrap_err();
+    assert_eq!(error, "Unsupported DataForSEO endpoint.");
+}
+
+#[tokio::test]
+async fn public_command_reads_credentials_for_allowed_endpoint() {
+    for (path, payload) in [
+        ("/v3/appendix/user_data", None),
+        (
+            "/v3/serp/google/organic/live/regular",
+            Some(json!({"kw": 1})),
+        ),
+    ] {
+        let error = super::dataforseo_request("project".into(), path.into(), payload, None)
+            .await
+            .unwrap_err();
+        assert!(error.contains("DataForSEO login") || error.contains("credential store"));
+    }
+}
+
+#[tokio::test]
+async fn reports_request_failure_on_network_error() {
+    let error = dataforseo_request_at(
+        "project",
+        "/v3/appendix/user_data",
+        None,
+        "http://127.0.0.1:1",
+        &client(),
+        |_| Ok(("u".into(), "p".into())),
+    )
+    .await
+    .unwrap_err();
+    assert_eq!(error, "DataForSEO request failed.");
+}
+
+#[tokio::test]
+async fn dataforseo_ipc_command_handles_payload() {
+    use crate::utils::test_app::{invoke, StorageApp};
+    use tauri::test::mock_builder;
+    let app = StorageApp::new(
+        mock_builder().invoke_handler(tauri::generate_handler![super::dataforseo_request]),
+    );
+    let view = tauri::WebviewWindowBuilder::new(&app.app, "main", Default::default())
+        .build()
+        .unwrap();
+    let err = invoke(
+        &view,
+        "dataforseo_request",
+        json!({"projectId":"p","path":"/v3/bad","payload":null}),
+    )
+    .unwrap_err();
+    assert!(err.as_str().unwrap().contains("Unsupported DataForSEO"));
 }

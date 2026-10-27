@@ -29,6 +29,25 @@ async fn cancellation_wait_and_finish_clear_run_state() {
 }
 
 #[test]
+fn poisoned_mutex_defaults_safely_across_control_methods() {
+    let control = CrawlControl::new();
+    let _ = std::panic::catch_unwind(|| {
+        let _guard = control.cancelled_runs.lock().unwrap();
+        panic!("poison cancelled_runs");
+    });
+    let _ = std::panic::catch_unwind(|| {
+        let _guard = control.paused_runs.lock().unwrap();
+        panic!("poison paused_runs");
+    });
+    assert!(control.is_cancelled("any-run"));
+    assert!(!control.is_paused("any-run"));
+    control.start("any-run");
+    control.pause("any-run");
+    control.resume("any-run");
+    control.finish("any-run");
+}
+
+#[test]
 fn svg_dimensions_accept_bounded_tokens_and_viewbox_fallback() {
     assert_eq!(parse_dimension_token(" 12.9px "), Some(12));
     assert_eq!(parse_dimension_token("0"), None);
@@ -41,6 +60,18 @@ fn svg_dimensions_accept_bounded_tokens_and_viewbox_fallback() {
     assert_eq!(
         svg_intrinsic_dimensions(br#"<svg viewBox="0,0,120,60"></svg>"#),
         Some((120, 60))
+    );
+    assert_eq!(
+        svg_intrinsic_dimensions(br#"<svg viewBox="0 0 20"></svg>"#),
+        None
+    );
+    assert_eq!(
+        svg_intrinsic_dimensions(br#"<svg viewBox="0 0 -1 40"></svg>"#),
+        None
+    );
+    assert_eq!(
+        svg_intrinsic_dimensions(br#"<svg viewbox="0 0 100 50"></svg>"#),
+        Some((100, 50))
     );
     assert!(svg_intrinsic_dimensions(&[0xff, 0xfe]).is_none());
 }

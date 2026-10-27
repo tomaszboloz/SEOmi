@@ -37,4 +37,14 @@ describe('direct location picker pointer contracts', () => {
     fireEvent.pointerDown(document.body);
     expect(screen.queryByRole('listbox')).toBeNull();
   });
+
+  it('selects active option on Enter key press', () => {
+    const onChange = vi.fn();
+    render(<DataForSeoLocationPicker value="US" markets={markets} onChange={onChange} ariaLabel="Location" />);
+    const input = screen.getByRole('combobox', { name: 'Location' });
+    fireEvent.focus(input);
+    fireEvent.keyDown(input, { key: 'ArrowDown' });
+    fireEvent.keyDown(input, { key: 'Enter' });
+    expect(onChange).toHaveBeenCalled();
+  });
 });

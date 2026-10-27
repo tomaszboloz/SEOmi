@@ -12,6 +12,7 @@ fn renderer_wait_and_scroll_limits_are_applied_to_the_injected_script() {
             wait_for_selector: Some("main".into()),
             wait_delay_ms: u64::MAX,
             lazy_scroll_cycles: usize::MAX,
+            allowed_hosts: Vec::new(),
         },
     );
     assert!(script.contains("const waitDelayMs = 10000;"));
@@ -45,6 +46,39 @@ fn capture_script_base64url_regexes_are_valid_javascript() {
     let script = capture_script("nonce", 1, &RenderOptions::default());
     assert!(script.contains(r"replace(/\+/g, '-').replace(/\//g, '_')"));
     assert!(!script.contains(r"/\\"));
+}
+
+#[test]
+fn emitted_capture_script_passes_javascript_syntax_validation() {
+    use std::io::Write;
+    use std::process::{Command, Stdio};
+    let script = capture_script(
+        "nonce\"\\\né",
+        u64::MAX,
+        &RenderOptions {
+            wait_for_selector: Some("main[data-name=\"世界\"]".into()),
+            ..RenderOptions::default()
+        },
+    );
+    let mut child = Command::new("node")
+        .arg("--check")
+        .stdin(Stdio::piped())
+        .stderr(Stdio::piped())
+        .stdout(Stdio::null())
+        .spawn()
+        .expect("Node.js is required for the desktop script regression tests");
+    child
+        .stdin
+        .take()
+        .unwrap()
+        .write_all(script.as_bytes())
+        .unwrap();
+    let output = child.wait_with_output().unwrap();
+    assert!(
+        output.status.success(),
+        "{}",
+        String::from_utf8_lossy(&output.stderr)
+    );
 }
 
 #[test]

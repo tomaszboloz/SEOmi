@@ -16,12 +16,12 @@ pub use status::AiCliStatus;
 
 #[tauri::command]
 pub async fn detect_ai_clis() -> Vec<AiCliStatus> {
-    detect_ai_clis_with(status::version_check).await
+    detect_ai_clis_with(version::version_check).await
 }
 
 async fn detect_ai_clis_with<F, Fut>(mut check: F) -> Vec<AiCliStatus>
 where
-    F: FnMut(&str, &str) -> Fut,
+    F: FnMut(&'static str, &'static str) -> Fut,
     Fut: Future<Output = (bool, String)>,
 {
     let providers = [
@@ -59,6 +59,8 @@ pub async fn run_ai_cli(
 #[cfg(test)]
 use {auth::authenticated_output, diagnostics::display_output, streams::MAX_CLI_OUTPUT_BYTES};
 #[cfg(test)]
+mod arguments_and_streams_coverage;
+#[cfg(test)]
 mod auth_output_tests;
 #[cfg(test)]
 #[path = "ai_cli_contract_tests.rs"]
@@ -67,6 +69,11 @@ mod contract_tests;
 mod diagnostics_tests;
 #[cfg(test)]
 mod output_limit_tests;
+#[cfg(test)]
+mod paths_tests;
+#[cfg(test)]
+#[path = "ai_cli_process_contract_tests.rs"]
+mod process_contract_tests;
 #[cfg(test)]
 mod provider_contract_tests;
 #[cfg(test)]

@@ -1,11 +1,7 @@
-use tauri::{
-    webview::{NewWindowResponse, PageLoadEvent, WebviewWindowBuilder},
-    AppHandle, Runtime,
-};
-
 use super::models::{PREVIEW_NEEDLE_MAX_CHARS, PREVIEW_SELECTOR_MAX_CHARS};
-use super::navigation::is_allowed_navigation;
+use super::preview_window::{open_preview_window, schedule_on_main_thread, PreviewWindow};
 use crate::utils::url_validator::validate_and_normalize_url;
+use tauri::{AppHandle, Runtime};
 
 pub(crate) fn normalize_preview_value(
     value: &str,
@@ -56,19 +52,37 @@ pub async fn open_rendered_element_preview<R: Runtime>(
     )?;
     let base_host = target
         .host_str()
-        .ok_or_else(|| "Preview URL has no hostname.".to_string())?
+        .expect("validated preview URLs always carry a host")
         .to_ascii_lowercase();
-    let label = format!("audit-preview-{}", uuid::Uuid::new_v4().simple());
-    let title = preview_title;
-    let selector_json = serde_json::to_string(&selector)
-        .map_err(|error| format!("Unable to encode preview selector: {error}"))?;
-    let needle_json = serde_json::to_string(&needle)
-        .map_err(|error| format!("Unable to encode preview match text: {error}"))?;
-    let dom_index_json = serde_json::to_string(&dom_index)
-        .map_err(|error| format!("Unable to encode preview DOM index: {error}"))?;
-    let not_found_message_json = serde_json::to_string(&not_found_message)
-        .map_err(|error| format!("Unable to encode preview not-found message: {error}"))?;
-    let preview_script = format!(
+    let script = build_preview_script(&selector, needle.as_deref(), dom_index, &not_found_message);
+    let spec = PreviewWindow {
+        label: format!("audit-preview-{}", uuid::Uuid::new_v4().simple()),
+        title: preview_title,
+        url: target,
+        host: base_host,
+        script,
+    };
+    open_preview_window(&app, spec, schedule_on_main_thread).await
+}
+
+/// Builds the browser-side preview script from JSON literals. `String`,
+/// `Option<String>` and `Option<usize>` have infallible serde representations;
+/// the `expect` calls document that invariant while preserving JSON escaping.
+pub(crate) fn build_preview_script(
+    selector: &str,
+    needle: Option<&str>,
+    dom_index: Option<usize>,
+    not_found_message: &str,
+) -> String {
+    let selector_json = serde_json::to_string(selector)
+        .expect("preview selector string is always JSON serializable");
+    let needle_json =
+        serde_json::to_string(&needle).expect("preview match text is always JSON serializable");
+    let dom_index_json =
+        serde_json::to_string(&dom_index).expect("preview DOM index is always JSON serializable");
+    let not_found_message_json = serde_json::to_string(not_found_message)
+        .expect("preview not-found message is always JSON serializable");
+    format!(
         r#"(() => {{
   const selector = {selector_json};
   const needle = {needle_json};
@@ -103,34 +117,5 @@ pub async fn open_rendered_element_preview<R: Runtime>(
     setTimeout(() => notice.remove(), 6000);
   }}
 }})();"#
-    );
-    let (sender, receiver) = tokio::sync::oneshot::channel::<Result<(), String>>();
-    let build_app = app.clone();
-    let navigation_host = base_host.clone();
-    let build_url = target.clone();
-    app.run_on_main_thread(move || {
-        let result =
-            WebviewWindowBuilder::new(&build_app, label, tauri::WebviewUrl::External(build_url))
-                .title(title)
-                .visible(true)
-                .inner_size(1200.0, 800.0)
-                .on_new_window(|_, _| NewWindowResponse::Deny)
-                .on_navigation(move |navigation_url| {
-                    is_allowed_navigation(navigation_url, &navigation_host, false, None)
-                })
-                .on_page_load(move |window, payload| {
-                    if payload.event() == PageLoadEvent::Finished {
-                        let _ = window.eval(&preview_script);
-                    }
-                })
-                .build()
-                .map(|_| ())
-                .map_err(|error| format!("Unable to open rendered element preview: {error}"));
-        let _ = sender.send(result);
-    })
-    .map_err(|error| format!("Unable to schedule rendered element preview: {error}"))?;
-    receiver
-        .await
-        .map_err(|_| "Rendered element preview was interrupted.".to_string())??;
-    Ok(())
+    )
 }

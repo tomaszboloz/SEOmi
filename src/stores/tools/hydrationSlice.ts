@@ -27,6 +27,8 @@ hydrateProject: async (projectId) => {
     beginToolRequest('gsc-session');
     beginToolRequest('gsc-data');
     beginToolRequest('gsc-inspection');
+    // Invalidate the previous project's GSC scope before reading the new one.
+    set({ gscHydratedProjectId: null });
     if (!projectId) return set({ aiResearchSettings: emptyAiResearchSettings(), savedKeywords: [], trackedRanks: [], rankTrackingDraft: defaultRankTrackingDraft(), isRankLoading: false, rankError: null, crawlResult: null, crawlRuns: [], isCrawling: false, isCrawlPaused: false, crawlProgress: 0, activeCrawlRunId: null, crawlError: null, crawlPersistenceError: null, crawlPersistenceNotice: null, crawlPersistenceCompacted: false, isRetryingCrawlPersistence: false, crawlProgressDetail: null, interruptedCrawl: null, crawlUrl: '', crawlLimit: 25, crawlConfig: CrawlConfigSchema.parse(DEFAULT_CRAWL_CONFIG), crawlRequestProfiles: [], selectedCrawlRunId: null, isSavingCrawlRequestProfile: false, isCheckingCrawlExternalLinks: false, crawlExternalLinkCheckProgress: null, crawlExternalLinkCheckError: null, keywordQuery: '', keywordCountry: 'US', keywordLanguage: 'en', isKeywordLoading: false, keywordError: null, domainQuery: '', domainCountry: 'US', domainLanguage: 'en', domainOverview: null, isDomainLoading: false, domainError: null, backlinkQuery: '', backlinkProfile: null, backlinkProfileHistory: [], isBacklinkLoading: false, backlinkError: null, backlinkGapCompetitors: [], backlinkGapIncludeSubdomains: true, backlinkGapReport: null, isBacklinkGapLoading: false, backlinkGapError: null, aiBrandQuery: '', aiBrandDomain: '', aiBrandReport: null, aiBrandHistory: [], isAiBrandLoading: false, aiBrandError: null, aiSearchPrompt: '', aiPromptComparison: null, aiPromptHistory: [], isAiPromptLoading: false, aiPromptError: null, gscClientId: '', gscClientSecret: '', gscProperties: [], gscProperty: '', gscFilters: { ...DEFAULT_GSC_FILTERS }, isGscConnected: false, gscData: null, gscDataFetchedAt: null, gscInspectionResult: null, isGscLoading: false, gscError: null, keywordResults: [], keywordResultsSource: null, domainComparison: null, domainComparisonHistory: [], domainComparisonTargets: [], isDomainComparisonLoading: false, domainComparisonError: null });
     const storedGscClientId = readStorage(gscClientIdKey(projectId)) || '';
     // The browser preview has no native credential store. Avoid an extra
@@ -34,7 +36,7 @@ hydrateProject: async (projectId) => {
     // WebView and keeps all secrets desktop-only.
     const desktop = isTauriEnvironment();
     const storedGscClientSecret = desktop
-      ? await services.secureValue(gscClientSecretKey(projectId)).catch(() => '')
+      ? await services.secureValue(gscClientSecretKey(projectId)).then(() => '').catch(() => '')
       : '';
     if (desktop && !isCurrentHydration()) return;
     const storedGscProperty = readStorage(gscPropertyKey(projectId)) || '';
@@ -81,6 +83,9 @@ hydrateProject: async (projectId) => {
       }
     }
     if (!isCurrentHydration()) return;
+    // History is loaded through a project-scoped store; stamp legacy records
+    // so guarded comparisons can retain ownership provenance in memory.
+    crawlRuns = crawlRuns.map((run) => run.projectId === projectId ? run : { ...run, projectId });
     const parsedSettings = z.object({ url: z.string(), limit: z.number().finite().int().min(1).max(5000),
       config: z.preprocess(parseCrawlConfig, CrawlConfigSchema),
     }).safeParse(readJsonStorage(crawlSettingsKey(projectId), null));
@@ -116,7 +121,7 @@ hydrateProject: async (projectId) => {
       }
     }
     if (!isCurrentHydration()) return;
-    set({ crawlResult: crawlRuns[0]?.result || null, crawlRuns, crawlPersistenceError: persistenceError, crawlPersistenceNotice: persistenceNotice, crawlPersistenceCompacted: hydratedCompacted, interruptedCrawl: hydratedInterruptedCrawl, crawlUrl: hydratedCrawlUrl, crawlLimit: crawlSettings?.limit || 25, crawlConfig: CrawlConfigSchema.parse({ ...DEFAULT_CRAWL_CONFIG, ...crawlSettings?.config }), selectedCrawlRunId: crawlRuns[0]?.id || null,
+    set({ gscHydratedProjectId: projectId, crawlResult: crawlRuns[0]?.result || null, crawlRuns, crawlPersistenceError: persistenceError, crawlPersistenceNotice: persistenceNotice, crawlPersistenceCompacted: hydratedCompacted, interruptedCrawl: hydratedInterruptedCrawl, crawlUrl: hydratedCrawlUrl, crawlLimit: crawlSettings?.limit || 25, crawlConfig: CrawlConfigSchema.parse({ ...DEFAULT_CRAWL_CONFIG, ...crawlSettings?.config }), selectedCrawlRunId: crawlRuns[0]?.id || null,
       aiBrandQuery: aiResearchInputs.brand ?? aiBrandReport?.brand ?? '', aiBrandDomain: aiResearchInputs.domain ?? aiBrandReport?.domain ?? '', aiBrandReport, aiBrandHistory, isAiBrandLoading: false, aiBrandError: null,
       aiSearchPrompt: aiResearchInputs.prompt ?? aiPromptComparison?.prompt ?? '', aiPromptComparison, aiPromptHistory, isAiPromptLoading: false, aiPromptError: null });
   }

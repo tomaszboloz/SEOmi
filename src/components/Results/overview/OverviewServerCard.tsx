@@ -2,6 +2,7 @@ import React from "react";
 import { useTranslation } from "react-i18next";
 import { Activity } from "lucide-react";
 import type { PageAuditData } from "@/types";
+import { HelpTip } from '@/components/Help/HelpTip';
 
 interface OverviewServerCardProps {
   audit: PageAuditData;
@@ -14,8 +15,9 @@ export const OverviewServerCard: React.FC<OverviewServerCardProps> = ({
 
   return (
     <div className="p-5 rounded-2xl bg-slate-900/60 border border-slate-800 flex flex-col justify-between">
-      <span className="text-xs font-semibold text-slate-400 uppercase tracking-wider">
+      <span className="inline-flex items-center gap-1 text-xs font-semibold text-slate-400 uppercase tracking-wider">
         {t("overview.responseTime")}
+        <HelpTip id="overview.responseTime" />
       </span>
       <div className="my-2">
         <div className="flex items-baseline space-x-2">
@@ -36,6 +38,7 @@ export const OverviewServerCard: React.FC<OverviewServerCardProps> = ({
           >
             {t("exportUi.statuses.http", { status: audit.http_status })}
           </span>
+          <HelpTip id="overview.httpStatus" />
           <span className="text-xs text-slate-400">
             {audit.redirect_chain.length === 0
               ? t("legacyUi.overview.directResponse")

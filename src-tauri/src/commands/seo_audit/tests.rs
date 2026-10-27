@@ -1,8 +1,8 @@
-use super::control::AuditControl;
 use super::normalize_request_id;
 use super::rate_limiter::{
     AuditRateLimiter, AUDIT_MIN_INTERVAL_MS, AUDIT_RATE_LIMIT, AUDIT_RATE_WINDOW_MS,
 };
+use super::{control::AuditControl, AuditTransport};
 use crate::utils::test_app::{invoke, StorageApp};
 use serde_json::json;
 use tauri::{test::mock_builder, WebviewWindowBuilder};
@@ -71,9 +71,16 @@ async fn headless_audit_rejects_local_targets_before_network_access() {
 
 #[test]
 fn audit_ipc_rejects_invalid_targets_and_tracks_pre_start_cancellation() {
-    let app = StorageApp::new(mock_builder().manage(AuditControl::new()).invoke_handler(
-        tauri::generate_handler![super::inspect_url, super::cancel_inspect_url],
-    ));
+    let app = StorageApp::new(
+        mock_builder()
+            .manage(AuditControl::new())
+            .manage(AuditRateLimiter::new())
+            .manage(AuditTransport::production())
+            .invoke_handler(tauri::generate_handler![
+                super::inspect_url,
+                super::cancel_inspect_url
+            ]),
+    );
     let view = WebviewWindowBuilder::new(&app.app, "main", Default::default())
         .build()
         .unwrap();

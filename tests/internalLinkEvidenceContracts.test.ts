@@ -54,7 +54,7 @@ describe('direct internal link evidence boundaries', () => {
     expect(findInternalLinkOpportunities([eligible('https://example.test/a'), eligible('https://example.test/b', {
       semantic_terms: ['alpha', 'gamma'],
     })]).opportunities).toEqual([]);
-    const terms = (prefix: string) => ['alpha', 'beta', ...Array.from({ length: 38 }, (_, index) => `${prefix}${index}`)];
+    const terms = (prefix: string) => ['alpha', 'beta', ...Array.from({ length: 38 }, (_, index) => `${prefix}topic${index}`)];
     expect(findInternalLinkOpportunities([eligible('https://example.test/a', { semantic_terms: terms('a') }),
       eligible('https://example.test/b', { semantic_terms: terms('b') })]).opportunities).toEqual([]);
   });

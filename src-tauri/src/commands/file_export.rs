@@ -18,12 +18,10 @@ fn validate_export_path(value: &str) -> Result<PathBuf, String> {
         return Err("MCP configuration exports must use a .json or .toml extension.".into());
     }
 
-    let file_name = path
-        .file_name()
-        .ok_or_else(|| "The selected export path has no file name.".to_string())?;
-    let parent = path
-        .parent()
-        .ok_or_else(|| "The selected export path has no parent directory.".to_string())?;
+    // A path with a .json/.toml extension always has a file name, and a path
+    // with a file name always has a parent.
+    let file_name = path.file_name().expect("extension implies a file name");
+    let parent = path.parent().expect("a file name implies a parent");
     let canonical_parent = parent.canonicalize().map_err(|_| {
         "The selected export directory does not exist or cannot be read.".to_string()
     })?;

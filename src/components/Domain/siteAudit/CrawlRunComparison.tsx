@@ -1,9 +1,12 @@
 import type { useSiteAuditSession } from './useSiteAuditSession';
 import { CrawlComparisonSelector } from './CrawlComparisonSelector';
 import { CrawlComparisonDetails } from './CrawlComparisonDetails';
+import type { CrawlDiffReport } from '@/services/crawlDiff';
 type Session = ReturnType<typeof useSiteAuditSession>;
 export const CrawlRunComparison = ({ session }: { session: Session }) => {
 const { comparison, comparisonByPath, t } = session;
+const guarded = comparison && 'status' in comparison ? comparison as CrawlDiffReport : null;
+const guardReasons = guarded?.reasons.map((reason) => t(`siteAudit.comparisonReasons.${reason}`)).join(', ') || 'none';
 
 return (<section className="rounded-xl border border-slate-800 bg-slate-900/45 p-4">
                 <CrawlComparisonSelector session={session} />
@@ -17,7 +20,22 @@ return (<section className="rounded-xl border border-slate-800 bg-slate-900/45 p
                 )}
                 {comparison && (
                   <div className="mt-4 grid gap-3 sm:grid-cols-3">
-                    <div className="rounded-lg border border-emerald-500/20 bg-emerald-500/5 p-3">
+                    {guarded && (
+                      <p
+                        role="status"
+                        data-testid="crawl-comparison-guard"
+                        className="sm:col-span-3 rounded-md border border-slate-700 bg-slate-950/60 px-3 py-2 text-[10px] leading-4 text-slate-300"
+                      >
+                        {t('siteAudit.comparisonGuard', {
+                          status: guarded.status,
+                          reasons: `${guardReasons} [${guarded.reasons.join(', ')}]`,
+                        })}
+                        <span className="font-mono text-slate-500">
+                          {guarded.provenance.source} · {guarded.provenance.current.runId} ↔ {guarded.provenance.baseline.runId}
+                        </span>
+                      </p>
+                    )}
+                    {guarded?.status !== 'blocked' && <><div className="rounded-lg border border-emerald-500/20 bg-emerald-500/5 p-3">
                       <p className="text-xs text-emerald-300">
                         {t("siteAudit.comparisonAdded")}
                       </p>
@@ -41,7 +59,7 @@ return (<section className="rounded-xl border border-slate-800 bg-slate-900/45 p
                         {comparison.changed.length}
                       </p>
                     </div>
-                    <CrawlComparisonDetails session={session} />
+                    <CrawlComparisonDetails session={session} /></>}
                   </div>
                 )}
               </section>);

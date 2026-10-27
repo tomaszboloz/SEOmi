@@ -106,6 +106,7 @@ async fn saves_transport_and_cookie_findings_without_cookie_values() {
         status: 200,
         response_time_ms: 100,
         headers: HashMap::new(),
+        repeated_headers: HashMap::new(),
         set_cookie_headers: vec!["session=super-secret-value; Path=/; HttpOnly".into()],
         redirect_chain: Vec::new(),
         body: "<html><head><title>Security findings fixture page</title></head><body><main><h1>Page</h1><a href=\"http://example.com/ordinary-navigation\">HTTP link</a><script src=\"http://cdn.example.test/app.js?token=private\"></script></main></body></html>".into(),

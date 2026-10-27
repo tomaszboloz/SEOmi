@@ -2,9 +2,9 @@ import { afterEach, beforeEach, expect, it, vi } from 'vitest';
 import { invoke } from '@tauri-apps/api/core';
 import { save } from '@tauri-apps/plugin-dialog';
 import {
-  captureRenderedArtifact, getRenderWorkerStatus, getSecureValue, invokeTauriCommand,
-  isTauriEnvironment, openRenderedElementPreview, saveTextFile, setSecureValue,
-  startRenderWorker, stopRenderWorker,
+  captureRenderedArtifact, getRenderWorkerStatus, getSecureValue, hasSecureValue,
+  invokeTauriCommand, isTauriEnvironment, openRenderedElementPreview, saveTextFile,
+  setSecureValue, startRenderWorker, stopRenderWorker, STORED_SECRET_MARKER,
 } from '@/services/tauri';
 
 vi.mock('@tauri-apps/api/core', () => ({ invoke: vi.fn() }));
@@ -24,10 +24,11 @@ it('forwards command arguments and returns the native result', async () => {
   await expect(invokeTauriCommand('example', { input: 1 })).resolves.toEqual({ answer: 42 });
   expect(invoke).toHaveBeenCalledWith('example', { input: 1 });
 });
-it.each([null, '', 'secret'])('hydrates native secure value %s', async (value) => {
-  vi.mocked(invoke).mockResolvedValue(value);
-  await expect(getSecureValue('key')).resolves.toBe(value || '');
-  expect(invoke).toHaveBeenCalledWith('get_secret', { name: 'key' });
+it.each([false, true])('hydrates native secure value presence %s', async (present) => {
+  vi.mocked(invoke).mockResolvedValue(present);
+  await expect(hasSecureValue('key')).resolves.toBe(present);
+  await expect(getSecureValue('key')).resolves.toBe(present ? STORED_SECRET_MARKER : '');
+  expect(invoke).toHaveBeenCalledWith('has_secret', { name: 'key' });
 });
 it('writes secrets through native transport', async () => {
   await expect(setSecureValue('key', 'value')).resolves.toBeUndefined();

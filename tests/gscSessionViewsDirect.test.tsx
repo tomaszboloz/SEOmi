@@ -1,5 +1,5 @@
 import i18n from '@/i18n';
-import { act, cleanup, render, renderHook, screen } from '@testing-library/react';
+import { act, cleanup, fireEvent, render, renderHook, screen } from '@testing-library/react';
 import { afterEach, beforeEach, expect, it, vi } from 'vitest';
 import { useSearchConsoleSession } from '@/components/AgentWorkflows/searchConsole/useSearchConsoleSession';
 import { SearchConsoleHeader } from '@/components/AgentWorkflows/searchConsole/Header';
@@ -50,4 +50,87 @@ it('directly renders every extracted view with actual session state', () => {
   expect(screen.getByRole('button', { name: i18n.t('searchConsole.saveSnapshot') })).toBeDefined();
   expect(screen.getAllByText('query')).toHaveLength(1);
   expect(screen.getByText('https://example.com')).toBeDefined();
+});
+
+it('SearchConsoleConnection handles input changes, submission, loading and error states', () => {
+  const setInputClientId = vi.fn();
+  const setInputClientSecret = vi.fn();
+  const handleConnect = vi.fn((e) => e.preventDefault());
+  const session = {
+    t: (k: string) => k,
+    isGscLoading: false,
+    gscError: 'Failed to connect',
+    handleConnect,
+    inputClientId: 'test-id',
+    setInputClientId,
+    inputClientSecret: 'test-secret',
+    setInputClientSecret,
+  } as any;
+
+  const { rerender } = render(<SearchConsoleConnection session={session} />);
+  expect(screen.getByText('Failed to connect')).toBeDefined();
+
+  const idInput = screen.getByPlaceholderText('searchConsole.clientIdPlaceholder');
+  fireEvent.change(idInput, { target: { value: 'my-client-id' } });
+  expect(setInputClientId).toHaveBeenCalledWith('my-client-id');
+
+  const secretInput = screen.getByPlaceholderText('searchConsole.clientSecretPlaceholder');
+  const help = screen.getByText('searchConsole.clientSecretHelp');
+  expect(secretInput.getAttribute('aria-describedby')).toBe(help.id);
+  expect(secretInput.hasAttribute('required')).toBe(false); // A saved project secret can be reused.
+  fireEvent.change(secretInput, { target: { value: 'my-secret' } });
+  expect(setInputClientSecret).toHaveBeenCalledWith('my-secret');
+
+  fireEvent.submit(idInput.closest('form')!);
+  expect(handleConnect).toHaveBeenCalledOnce();
+
+  rerender(<SearchConsoleConnection session={{ ...session, isGscLoading: true, gscError: null }} />);
+  expect(screen.getByText('searchConsole.connecting')).toBeDefined();
+});
+
+it('SearchConsoleHeader handles refresh, disconnect and loading spinner', () => {
+  const disconnectGsc = vi.fn();
+  const handleRefresh = vi.fn();
+  const session = {
+    t: (k: string) => k,
+    isGscConnected: true,
+    gscProperty: 'sc-domain:example.com',
+    isGscLoading: false,
+    disconnectGsc,
+    dateRangeError: null,
+    handleRefresh,
+  } as any;
+
+  render(<SearchConsoleHeader session={session} />);
+  expect(screen.getByText('searchConsole.refresh')).toBeDefined();
+  const disconnectBtn = screen.getByText('searchConsole.disconnect');
+  fireEvent.click(disconnectBtn);
+  expect(disconnectGsc).toHaveBeenCalled();
+});
+
+
+it('SearchConsoleInspection handles input changes, inspection results, and errors', () => {
+  const setInspectUrl = vi.fn();
+  const handleInspect = vi.fn((e) => e.preventDefault());
+  const session = {
+    t: (k: string) => k,
+    gscProperty: 'sc-domain:example.com',
+    gscInspectionResult: { verdict: 'PASS' },
+    isGscLoading: false,
+    gscError: 'Inspection failed',
+    handleInspect,
+    inspectUrl: 'https://example.com/page',
+    setInspectUrl,
+  } as any;
+
+  render(<SearchConsoleInspection session={session} />);
+  const input = screen.getByLabelText('searchConsole.inspectionAria');
+  fireEvent.change(input, { target: { value: 'https://example.com/new' } });
+  expect(setInspectUrl).toHaveBeenCalledWith('https://example.com/new');
+
+  fireEvent.submit(input.closest('form')!);
+  expect(handleInspect).toHaveBeenCalled();
+
+  expect(screen.getByText(/PASS/)).toBeDefined();
+  expect(screen.getByRole('alert').textContent).toBe('Inspection failed');
 });

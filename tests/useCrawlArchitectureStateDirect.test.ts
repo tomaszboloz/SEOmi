@@ -1,4 +1,4 @@
-import { act, renderHook } from '@testing-library/react';
+import { act, cleanup, renderHook } from '@testing-library/react';
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 import { useCrawlArchitectureState } from '@/components/Charts/crawlArchitecture/useCrawlArchitectureState';
 import { useProjectStore } from '@/stores/projectStore';
@@ -30,13 +30,18 @@ beforeEach(() => {
   projectSnapshot = useProjectStore.getState();
   toolsSnapshot = useToolsStore.getState();
   localStorage.clear();
-  useProjectStore.setState({ activeProjectId: projectId });
-  useToolsStore.setState({ selectedCrawlRunId: 'selected-run' });
+  act(() => {
+    useProjectStore.setState({ activeProjectId: projectId });
+    useToolsStore.setState({ selectedCrawlRunId: 'selected-run' });
+  });
 });
 
 afterEach(() => {
-  useProjectStore.setState(projectSnapshot, true);
-  useToolsStore.setState(toolsSnapshot, true);
+  cleanup();
+  act(() => {
+    useProjectStore.setState(projectSnapshot, true);
+    useToolsStore.setState(toolsSnapshot, true);
+  });
   localStorage.clear();
 });
 

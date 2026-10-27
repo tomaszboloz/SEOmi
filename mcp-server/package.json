@@ -15,11 +15,11 @@
     "test": "npm run build && node --test test/**/*.test.mjs"
   },
   "dependencies": {
-    "@modelcontextprotocol/sdk": "1.30.0",
-    "zod": "4.6.5"
+    "@modelcontextprotocol/sdk": "1.32.2",
+    "zod": "4.6.7"
   },
   "devDependencies": {
-    "@types/node": "22.18.13",
-    "typescript": "5.9.3"
+    "@types/node": "26.6.5",
+    "typescript": "7.0.2"
   }
 }

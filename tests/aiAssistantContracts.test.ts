@@ -1,7 +1,7 @@
 import { act, renderHook } from '@testing-library/react';
 import { afterEach, beforeEach, expect, it, vi } from 'vitest';
 import { useAIAssistantSession } from '@/components/AI/assistant/useAIAssistantSession';
-import { audit, generate, connected, setApiKey, clipboard, setAuditData, openModal, closeModal, suggestion, resetAssistant, deferred } from './fixtures/aiAssistantSession';
+import { audit, auth, generate, connected, setApiKey, clipboard, setAuditData, openModal, closeModal, suggestion, resetAssistant, deferred } from './fixtures/aiAssistantSession';
 
 vi.mock('@/stores/auditStore', async () => ({ useAuditStore: (await import('./fixtures/aiAssistantSession')).audit }));
 vi.mock('@/stores/authStore', async () => ({ useAuthStore: (await import('./fixtures/aiAssistantSession')).auth }));
@@ -11,6 +11,16 @@ vi.mock('@/services/clipboard', async () => ({ copyText: (await import('./fixtur
 vi.mock('react-i18next', () => ({ useTranslation: () => ({ t: (key: string, options?: { provider?: string }) => options?.provider ? `${key}:${options.provider}` : key }) }));
 beforeEach(resetAssistant);
 afterEach(() => vi.useRealTimers());
+
+it('keeps a stored credential marker out of the editable key and still generates natively', async () => {
+  auth.setState({ apiKeys: { openai: '__seomi_secret_present__', claude: '', gemini: '' } });
+  const { result } = renderHook(useAIAssistantSession);
+  expect(result.current.currentKey).toBe('');
+  await act(async () => { await result.current.handleGenerate(); });
+  expect(generate).toHaveBeenCalledExactlyOnceWith(audit.getState().currentAudit, '');
+  expect(result.current.suggestions).toEqual(suggestion);
+  expect(setApiKey).not.toHaveBeenCalled();
+});
 
 it('forwards modal/provider/model actions and exposes current or absent provider keys', () => {
   const { result } = renderHook(useAIAssistantSession);
@@ -67,7 +77,7 @@ it.each([new Error('provider failed'), 'provider rejected'])('reports a current 
 it.each([new Error('vault failed'), 'vault rejected'])('reports a current key write failure: %s', async failure => {
   const pending = deferred<void>(); setApiKey.mockReturnValueOnce(pending.promise);
   const { result } = renderHook(useAIAssistantSession);
-  act(() => result.current.handleApiKeyChange('new-key'));
+  act(() => { void result.current.handleApiKeyChange('new-key').catch(() => {}); });
   expect(setApiKey).toHaveBeenCalledExactlyOnceWith('openai', 'new-key');
   await act(async () => { pending.reject(failure); await pending.promise.catch(() => {}); });
   expect(result.current.error).toBe(failure instanceof Error ? failure.message : failure);
@@ -76,7 +86,7 @@ it.each([new Error('vault failed'), 'vault rejected'])('reports a current key wr
 it('ignores an older key rejection after a newer successful generation', async () => {
   const pending = deferred<void>(); setApiKey.mockReturnValueOnce(pending.promise);
   const { result } = renderHook(useAIAssistantSession);
-  act(() => result.current.handleApiKeyChange('new-key'));
+  act(() => { void result.current.handleApiKeyChange('new-key').catch(() => {}); });
   await act(async () => { await result.current.handleGenerate(); });
   await act(async () => { pending.reject(new Error('old failure')); await pending.promise.catch(() => {}); });
   expect(result.current.error).toBeNull(); expect(result.current.suggestions).toEqual(suggestion);

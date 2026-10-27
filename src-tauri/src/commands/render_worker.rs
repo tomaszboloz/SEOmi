@@ -1,3 +1,4 @@
+mod admission;
 mod http;
 mod http_response;
 mod models;
@@ -16,6 +17,9 @@ mod http_body_tests;
 #[cfg(test)]
 mod http_response_tests;
 
+#[cfg(test)]
+mod tests_http_response;
+
 use std::sync::Arc;
 use tauri::{AppHandle, Runtime, State};
 use tokio::{
@@ -24,9 +28,13 @@ use tokio::{
     time::Instant,
 };
 
+use admission::run_worker;
 use models::*;
 pub use models::{RenderWorkerLease, RenderWorkerState, RENDER_WORKER_VERSION};
-use server::run_worker;
+
+pub(super) fn io_failure(context: &'static str) -> impl FnOnce(std::io::Error) -> String {
+    move |error| format!("{context}: {error}")
+}
 
 #[tauri::command]
 pub async fn start_render_worker<R: Runtime>(
@@ -35,10 +43,10 @@ pub async fn start_render_worker<R: Runtime>(
 ) -> Result<RenderWorkerLease, String> {
     let listener = TcpListener::bind(("127.0.0.1", 0))
         .await
-        .map_err(|e| format!("Unable to bind the local render worker: {e}"))?;
+        .map_err(io_failure("Unable to bind the local render worker"))?;
     let address = listener
         .local_addr()
-        .map_err(|e| format!("Unable to read the local render worker address: {e}"))?;
+        .map_err(io_failure("Unable to read the local render worker address"))?;
     let token = uuid::Uuid::new_v4().simple().to_string();
     let expires_at = Instant::now() + WORKER_TTL;
     let (shutdown_sender, shutdown_receiver) = oneshot::channel();
@@ -96,6 +104,18 @@ pub async fn render_worker_status(state: State<'_, RenderWorkerState>) -> Result
 }
 
 #[cfg(test)]
+mod admission_tests;
+#[cfg(test)]
+mod ipc_direct_coverage;
+#[cfg(test)]
+mod ipc_tests;
+#[cfg(test)]
 mod lifecycle_tests;
 #[cfg(test)]
+mod render_request_tests;
+#[cfg(test)]
 mod server_contract_tests;
+#[cfg(test)]
+mod server_edge_tests;
+#[cfg(test)]
+mod server_snapshot_tests;

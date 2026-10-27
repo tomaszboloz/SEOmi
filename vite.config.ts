@@ -1,9 +1,25 @@
-import { defineConfig } from 'vite';
+import { defineConfig } from 'vitest/config';
 import react from '@vitejs/plugin-react';
 import tailwindcss from '@tailwindcss/vite';
 import path from 'path';
 
 // https://vitejs.dev/config/
+// Vendor chunk groups; matched by package folder name (Rolldown needs a function, not an object).
+const VENDOR_CHUNKS: Record<string, string[]> = {
+  'react-vendor': ['react', 'react-dom'],
+  'i18n-vendor': ['i18next', 'react-i18next'],
+  'icons-vendor': ['lucide-react'],
+  'graph-vendor': ['cytoscape', 'cytoscape-fcose', 'cytoscape-dagre'],
+  'tauri-vendor': [
+    '@tauri-apps/api',
+    '@tauri-apps/plugin-dialog',
+    '@tauri-apps/plugin-notification',
+    '@tauri-apps/plugin-process',
+    '@tauri-apps/plugin-updater',
+  ],
+  'data-vendor': ['zod', 'zustand', 'date-fns', 'tldts', 'clsx'],
+};
+
 export default defineConfig({
   // Tauri serves the production bundle through tauri://localhost. Relative
   // asset URLs are required there; absolute /assets paths resolve outside the
@@ -15,7 +31,7 @@ export default defineConfig({
   ],
   resolve: {
     alias: {
-      '@': path.resolve(__dirname, './src'),
+      '@': path.resolve(import.meta.dirname, './src'),
     },
   },
   // Prevent vite from obscuring rust errors
@@ -32,16 +48,19 @@ export default defineConfig({
   build: {
     rollupOptions: {
       output: {
-        manualChunks: {
-          'react-vendor': ['react', 'react-dom'],
-          'i18n-vendor': ['i18next', 'react-i18next'],
-          'icons-vendor': ['lucide-react'],
+        manualChunks(id: string) {
+          const path = id.replace(/\\/g, '/');
+          if (!path.includes('/node_modules/')) return undefined;
+          return Object.entries(VENDOR_CHUNKS).find(([, packages]) => packages.some((name) => path.includes(`/node_modules/${name}/`)))?.[0];
         },
       },
     },
-    chunkSizeWarningLimit: 600,
+    chunkSizeWarningLimit: 700,
   },
   test: {
+    // Worktrees may contain older copies of the suite. Only this checkout's
+    // canonical tests may import this checkout's production modules.
+    include: ['tests/**/*.{test,spec}.{ts,tsx,js,jsx,mjs,cjs,mts,cts}'],
     // Coverage plus large DOM fixtures can saturate shared desktop/CI hosts.
     // Bound parallelism while keeping every test and its existing timeout.
     maxWorkers: 2,
@@ -55,6 +74,6 @@ export default defineConfig({
     globals: true,
     environment: 'jsdom',
     setupFiles: './tests/setup.ts',
-    exclude: ['mcp-server/**', 'node_modules/**', 'dist/**'],
+    exclude: ['mcp-server/**', 'node_modules/**', 'dist/**', 'src-tauri/target/**'],
   },
 });

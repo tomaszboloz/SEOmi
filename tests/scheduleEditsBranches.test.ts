@@ -19,9 +19,9 @@ describe('schedule edits', () => {
       ['unparsable', () => add('not a url'), () => err('urlInvalid')],
       ['non-http', () => add('ftp://a.test/'), () => err('urlPublicOnly')],
       ['credentials', () => add('https://user:pw@a.test/'), () => err('urlPublicOnly')],
-      ['crawl limit zero', () => add('https://a.test/', { taskType: 'site-crawl', crawlLimit: 0 }), () => err('crawlLimit')],
-      ['crawl limit too big', () => add('https://a.test/', { taskType: 'site-crawl', crawlLimit: 501 }), () => err('crawlLimit')],
-      ['crawl limit NaN', () => add('https://a.test/', { taskType: 'site-crawl', crawlLimit: Number.NaN }), () => err('crawlLimit')],
+      ['crawl limit zero', () => add('https://a.test/', { taskType: 'site-crawl', crawlLimit: 0 }), () => err('crawlLimit', { max: (1_000_000).toLocaleString(i18n.language) })],
+      ['crawl limit too big', () => add('https://a.test/', { taskType: 'site-crawl', crawlLimit: 1_000_001 }), () => err('crawlLimit', { max: (1_000_000).toLocaleString(i18n.language) })],
+      ['crawl limit NaN', () => add('https://a.test/', { taskType: 'site-crawl', crawlLimit: Number.NaN }), () => err('crawlLimit', { max: (1_000_000).toLocaleString(i18n.language) })],
     ])('rejects %s', (_name, run, message) => {
       expect(run).toThrow(message());
       expect(loadScheduledAudits('proj')).toEqual([]);

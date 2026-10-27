@@ -1,7 +1,6 @@
-use std::collections::{HashMap, HashSet, VecDeque};
-
 use super::super::{
     models::{record_discovery_source, CrawledDiscoverySource},
+    retry::{read_bounded_text_with_retry, send_get_with_retry},
     scope::matches_scope,
     sitemap::parse_sitemap_locations,
     transport::crawl_deadline_reached,
@@ -9,6 +8,7 @@ use super::super::{
 };
 use super::setup::CrawlSetup;
 use crate::utils::url_validator::validate_and_normalize_url;
+use std::collections::{HashMap, HashSet, VecDeque};
 
 pub struct CrawlSitemapsOutcome {
     pub sitemap_status: String,
@@ -17,7 +17,6 @@ pub struct CrawlSitemapsOutcome {
     pub discovery_provenance_truncated: bool,
     pub timed_out: bool,
 }
-
 pub async fn discover_and_parse_sitemaps(
     setup: &CrawlSetup,
     robots_sitemaps: &[String],
@@ -27,7 +26,6 @@ pub async fn discover_and_parse_sitemaps(
     let mut unique_urls = HashSet::new();
     let mut discovery_sources_by_url: HashMap<String, Vec<CrawledDiscoverySource>> = HashMap::new();
     let mut discovery_provenance_truncated = false;
-
     let sitemap_status = if setup.config.discover_sitemaps {
         let candidates = if robots_sitemaps.is_empty() {
             vec![setup
@@ -62,11 +60,22 @@ pub async fn discover_and_parse_sitemaps(
             ) {
                 continue;
             }
-            if let Ok(response) = setup.client.get(sitemap_url.clone()).send().await {
+            let mut retry_available = true;
+            let retry_context = setup.retry_context();
+            let response = send_get_with_retry(
+                &setup.client,
+                sitemap_url.as_str(),
+                &retry_context,
+                &mut retry_available,
+            )
+            .await
+            .map(|result| result.response);
+            if let Ok(response) = response {
                 if response.status().is_success() {
-                    let content = match crate::services::http_client::read_bounded_text(
+                    let content = match read_bounded_text_with_retry(
                         response,
                         setup.max_response_bytes,
+                        &retry_context,
                     )
                     .await
                     {
@@ -131,7 +140,6 @@ pub async fn discover_and_parse_sitemaps(
     } else {
         "Sitemap discovery disabled by this crawl configuration".into()
     };
-
     Ok(CrawlSitemapsOutcome {
         sitemap_status,
         sitemap_urls,

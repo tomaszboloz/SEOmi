@@ -34,6 +34,13 @@ export const CrawlerReadinessPanel = ({ result }: CrawlerReadinessPanelProps) =>
         </div>
       </div>
 
+      {result.robots_txt_warning && (
+        <div role="alert" className="flex items-start gap-2 rounded-lg border border-amber-500/40 bg-amber-500/10 px-4 py-3 text-xs leading-5 text-amber-100">
+          <ShieldAlert className="mt-0.5 h-4 w-4 shrink-0" aria-hidden="true" />
+          <span>{result.robots_txt_warning}</span>
+        </div>
+      )}
+
       {report.checks.length === 0 ? (
         <p className="rounded-lg border border-amber-500/25 bg-amber-500/5 px-4 py-6 text-center text-sm text-amber-100">{t('crawlerReadiness.emptyRun')}</p>
       ) : (

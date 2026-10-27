@@ -9,7 +9,33 @@ fn fetched(page_data: super::super::super::fetch_types::FetchedPageData) -> Fetc
         final_url: FINAL_URL.into(),
         redirect_chain: vec![hop()],
         redirect_stopped_reason: None,
+        request_duration_ms: None,
+        retry_count: 0,
     }
+}
+
+#[tokio::test]
+async fn recovered_transient_request_is_recorded_as_info() {
+    let setup = setup(default_crawl_config(None));
+    let mut state = state();
+    let mut response = fetched(data(HTML));
+    response.retry_count = 1;
+    assemble_page_summary(
+        response,
+        12,
+        CURRENT_URL,
+        0,
+        &CrawlSelectors::compile(),
+        &setup,
+        &mut state,
+    )
+    .await
+    .unwrap();
+    let issues = &state.pages[0].issues;
+    assert!(issues.iter().any(|issue| {
+        issue.severity == "Info" && issue.message.contains("recovered after 1 retry")
+    }));
+    assert!(!issues.iter().any(|issue| issue.severity == "Critical"));
 }
 
 #[tokio::test]
@@ -50,6 +76,7 @@ async fn assembler_uses_prefetched_body_and_moves_only_matching_discovery() {
 async fn assembler_prefers_observed_browser_navigation_time_including_zero() {
     for navigation_time in [0, 127] {
         let mut page_data = data(HTML);
+        page_data.rendered_diagnostics = Some((Vec::new(), Vec::new()));
         page_data.browser_navigation_time_ms = Some(navigation_time);
         page_data.rendered_lcp_ms = Some(321);
         let mut config = default_crawl_config(None);

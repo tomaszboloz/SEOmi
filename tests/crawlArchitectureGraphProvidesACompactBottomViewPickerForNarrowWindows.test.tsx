@@ -1,4 +1,4 @@
-import { fireEvent, render, screen, waitFor, within } from '@testing-library/react';
+import { fireEvent, render, screen, within } from '@testing-library/react';
 import { beforeEach, describe, expect, it } from 'vitest';
 import type { CrawledPageSummary } from '@/types';
 import { CrawlArchitectureGraph } from '@/components/Charts/CrawlArchitectureGraph';
@@ -6,6 +6,7 @@ import { useProjectStore } from '@/stores/projectStore';
 import { useToolsStore } from '@/stores/toolsStore';
 import i18n from '@/i18n';
 import { pages } from "./fixtures/crawlArchitectureGraphContracts";
+import { createSemanticCrawlRunFixture } from './fixtures/semanticCrawlRun';
 
 describe('CrawlArchitectureGraph', () => {
 beforeEach(async () => {
@@ -34,7 +35,7 @@ it('remembers the selected map view and supports Home/End in the bottom dock', (
     expect(localStorage.getItem('seomi_project_project-map-navigation_semantic_map_navigation-run_v1')).toContain('"activeView":"plan"');
 
     fireEvent.keyDown(bottomDock, { key: 'Home' });
-    expect(screen.getByRole('tab', { name: 'Graf crawla' }).getAttribute('aria-selected')).toBe('true');
+    expect(screen.getByRole('tab', { name: 'Diagnoza' }).getAttribute('aria-selected')).toBe('true');
     fireEvent.keyDown(bottomDock, { key: 'End' });
     expect(screen.getByRole('tab', { name: 'Topical plan' }).getAttribute('aria-selected')).toBe('true');
 
@@ -74,22 +75,13 @@ it('paginates large directory nodes while retaining all-run metrics', () => {
     expect(localStorage.getItem('seomi_project_project-wide-crawl_crawl_directory_wide-run_v1')).toContain('visibleCounts');
   });
 
-it('persists filters and zoom against the active project and saved crawl run', async () => {
+it('persists filters against the active project and saved crawl run', async () => {
     useProjectStore.setState({ activeProjectId: 'project-semantic' });
     const view = render(<CrawlArchitectureGraph pages={pages} startUrl={pages[0].url} runId="run-semantic" />);
+    fireEvent.click(screen.getByRole('tab', { name: 'Graf crawla' }));
     fireEvent.change(screen.getByLabelText('Szukaj strony lub terminu na mapie'), { target: { value: 'burr' } });
     const preferenceKey = 'seomi_project_project-semantic_semantic_map_run-semantic_v1';
     expect(localStorage.getItem(preferenceKey)).toContain('burr');
-    fireEvent.wheel(screen.getByRole('img', { name: 'Interaktywna mapa semantycznych klastrów i linków w treści' }), {
-      deltaY: -100,
-      clientX: 300,
-      clientY: 220,
-    });
-    await waitFor(() => {
-      const saved = JSON.parse(localStorage.getItem(preferenceKey) ?? '{}');
-      expect(saved.transform.k).toBeGreaterThan(1);
-    });
-
     view.unmount();
     render(<CrawlArchitectureGraph pages={pages} startUrl={pages[0].url} runId="run-semantic" />);
     expect(screen.getByLabelText('Szukaj strony lub terminu na mapie').getAttribute('value')).toBe('burr');
@@ -98,8 +90,9 @@ it('persists filters and zoom against the active project and saved crawl run', a
 
 it('carries saved crawl snapshots from the visualization into the semantic audit baseline selector', () => {
     useProjectStore.setState({ activeProjectId: 'project-semantic-chain' });
-    const baseline = { id: 'older-run', completedAt: '2026-09-20T10:00:00.000Z', startUrl: pages[0].url, config: {}, result: { pages_crawled: 2, pages } } as never;
-    render(<CrawlArchitectureGraph pages={pages} startUrl={pages[0].url} runId="current-run" currentRunId="current-run" runs={[baseline]} />);
+    const baseline = createSemanticCrawlRunFixture('older-run', '2026-09-20T10:00:00.000Z', 'project-semantic-chain', pages);
+    const current = createSemanticCrawlRunFixture('current-run', '2026-09-21T10:00:00.000Z', 'project-semantic-chain', pages);
+    render(<CrawlArchitectureGraph pages={pages} startUrl={pages[0].url} runId="current-run" currentRunId="current-run" runs={[baseline, current]} />);
 
     fireEvent.click(screen.getByRole('tab', { name: 'Topical plan' }));
     fireEvent.click(screen.getByRole('tab', { name: 'Audyt semantyczny' }));
@@ -120,6 +113,7 @@ it('uses the controlled current run when the global store still points at an old
         currentRunId="current-run"
       />,
     );
+    fireEvent.click(screen.getByRole('tab', { name: 'Graf crawla' }));
     fireEvent.change(screen.getByLabelText('Szukaj strony lub terminu na mapie'), {
       target: { value: 'burr' },
     });

@@ -1,4 +1,4 @@
-import { fireEvent, render, screen } from "@testing-library/react";
+import { act, cleanup, fireEvent, render, screen } from "@testing-library/react";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { CrawlResultsTabs } from "@/components/Domain/CrawlResultsTabs";
 import { useProjectStore } from "@/stores/projectStore";
@@ -8,12 +8,14 @@ import { result, run } from "./fixtures/crawlResultsTabsContracts";
 
 describe("CrawlResultsTabs", () => {
 afterEach(async () => {
-    await i18n.changeLanguage('en');
+    cleanup();
+    if (i18n.language !== "en") await act(async () => { await i18n.changeLanguage("en"); });
   });
 
-beforeEach(async () => {
-    await i18n.changeLanguage('en');
-   localStorage.clear();
+  beforeEach(async () => {
+    cleanup();
+    if (i18n.language !== "en") await act(async () => { await i18n.changeLanguage("en"); });
+    localStorage.clear();
     window.history.replaceState(null, "", "/");
     useProjectStore.setState({ activeProjectId: null });
   });
@@ -39,7 +41,7 @@ it("shows HTTP error filters and a genuine empty-history state", () => {
     expect(pageUrlCells).not.toContain("https://example.com/");
 
 fireEvent.click(screen.getByRole("tab", { name: /Map & clusters/ }));
-    expect(screen.getByRole("img", { name: i18n.t("mapUi.svgAria") })).not.toBeNull();
+    expect(screen.getByTestId("topical-diagnosis-view")).not.toBeNull();
   });
 
 it("segments and searches URLs, and persists named filter presets per project", () => {

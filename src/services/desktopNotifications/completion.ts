@@ -1,13 +1,30 @@
 import type { PageAuditData, SiteCrawlResult } from '@/types';
 import { sendProjectNotification } from './delivery';
+import { reserveCompletionNotification, type CompletionNotificationType } from './dedupe';
 import i18n from '@/i18n';
+import { comparableCrawlScore } from '@/services/crawlHealthScore';
+
+export interface CompletionNotificationOptions { runId?: string }
+
+const sendCompletion = async (
+  projectId: string,
+  runId: string | undefined,
+  type: CompletionNotificationType,
+  build: () => { title: string; body: string },
+): Promise<void> => {
+  const reservation = runId ? reserveCompletionNotification(projectId, runId, type) : null;
+  if (reservation?.duplicate) return;
+  const sent = await sendProjectNotification(projectId, build);
+  reservation?.finish(sent);
+};
 
 export const notifyAuditCompleted = async (
   projectId: string,
   audit: PageAuditData,
   previousScore?: number,
+  options?: CompletionNotificationOptions,
 ): Promise<void> => {
-  await sendProjectNotification(projectId, () => {
+  await sendCompletion(projectId, options?.runId || audit.timestamp, 'audit', () => {
     const regression = typeof previousScore === 'number' && audit.health_score < previousScore;
     const host = new URL(audit.final_url).hostname;
     const delta = regression ? previousScore - audit.health_score : 0;
@@ -23,9 +40,12 @@ export const notifyAuditCompleted = async (
 export const notifyCrawlCompleted = async (
   projectId: string,
   crawl: SiteCrawlResult,
-  previousHealthScore?: number,
+  previousResult?: SiteCrawlResult,
+  options?: CompletionNotificationOptions,
 ): Promise<void> => {
-  await sendProjectNotification(projectId, () => {
+  const observedRunId = (crawl as SiteCrawlResult & { runId?: string }).runId;
+  await sendCompletion(projectId, options?.runId || observedRunId, 'crawl', () => {
+    const previousHealthScore = comparableCrawlScore(crawl, previousResult);
     const regression = typeof previousHealthScore === 'number' && crawl.health_score < previousHealthScore;
     const host = new URL(crawl.start_url).hostname;
     const delta = regression ? previousHealthScore - crawl.health_score : 0;
@@ -37,4 +57,3 @@ export const notifyCrawlCompleted = async (
     };
   });
 };
-

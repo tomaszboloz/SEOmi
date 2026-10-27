@@ -39,7 +39,7 @@ fn manifest_accepts_supported_types_intervals_statuses_and_crawl_bounds() {
     for task_type in ["page-audit", "site-crawl"] {
         for interval in [6, 12, 24, 168] {
             for status in ["scheduled", "running", "completed", "failed", "paused"] {
-                for limit in [None, Some(1), Some(500)] {
+                for limit in [None, Some(1), Some(1_000_000)] {
                     let mut task = manifest();
                     task.task_type = task_type.into();
                     task.interval_hours = interval;
@@ -108,13 +108,31 @@ fn manifest_rejects_each_invalid_field_with_its_own_error() {
             "expected {expected}, got {error}"
         );
     }
-    for limit in [0, 501] {
+    for limit in [0, 1_000_001] {
         let mut task = manifest();
         task.task_type = "site-crawl".into();
         task.crawl_limit = Some(limit);
         assert_eq!(
             validate_manifest("project-1", &task).unwrap_err(),
-            "Scheduled crawl limit must be between 1 and 500 pages."
+            "Scheduled crawl limit must be between 1 and 1000000 pages."
         );
+    }
+}
+
+#[test]
+fn manifest_uses_shared_url_normalization_and_ssrf_protection() {
+    let mut task = manifest();
+    task.url = "example.test/path".into();
+    assert!(validate_manifest("project-1", &task).is_ok());
+
+    for url in [
+        "http://127.0.0.1/private",
+        "http://localhost/private",
+        "http://service.internal/private",
+    ] {
+        task.url = url.into();
+        assert!(validate_manifest("project-1", &task)
+            .unwrap_err()
+            .starts_with("Invalid scheduled URL:"));
     }
 }

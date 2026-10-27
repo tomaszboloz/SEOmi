@@ -8,7 +8,7 @@ const m = vi.hoisted(() => ({
 }));
 vi.mock('@/services/tauri', () => ({ isTauriEnvironment: () => m.tauri, invokeTauriCommand: m.invoke }));
 vi.mock('@/services/dataforseo/dataforseoTaskLog', () => ({ activeProjectForTaskLog: () => m.project, appendDataForSeoTask: m.append }));
-vi.mock('@/services/dataforseo/dataforseoBudgetGuard', () => ({ reserveBudget: m.reserve }));
+vi.mock('@/services/dataforseo/dataforseoBudgetGuard', () => ({ reserveBudget: m.reserve, nativeBudget: () => null }));
 vi.mock('@/services/dataforseo/dataforseoBudget', () => ({ ACCOUNT_ENDPOINT: '/v3/appendix/user_data', recordCost: m.record }));
 vi.mock('@/services/dataforseo/dataforseoAccount', () => ({ deductFromAccount: m.deduct, parseUserData: m.parseUser, readAccount: m.readAccount, writeAccount: m.writeAccount }));
 vi.mock('@/services/dataforseo/dataforseoHelpers', async (orig) => ({ ...(await orig<object>()), wait: m.wait }));
@@ -58,9 +58,9 @@ it('stores parsed account data only for the account endpoint', async () => {
 it('goes through the native command in the desktop shell and requires a project', async () => {
   m.tauri = true; m.invoke.mockResolvedValue({ cost: 0 });
   await core.request('/v3/z', [{ q: 1 }]);
-  expect(m.invoke).toHaveBeenCalledWith('dataforseo_request', { projectId: 'proj', path: '/v3/z', payload: [{ q: 1 }] });
+  expect(m.invoke).toHaveBeenCalledWith('dataforseo_request', { projectId: 'proj', path: '/v3/z', payload: [{ q: 1 }], budget: null });
   await core.request('/v3/z', undefined, 'other');
-  expect(m.invoke).toHaveBeenLastCalledWith('dataforseo_request', { projectId: 'other', path: '/v3/z', payload: null });
+  expect(m.invoke).toHaveBeenLastCalledWith('dataforseo_request', { projectId: 'other', path: '/v3/z', payload: null, budget: null });
   m.project = null;
   await expect(core.request('/v3/z')).rejects.toThrow();
   expect(m.release).toHaveBeenCalledTimes(2);

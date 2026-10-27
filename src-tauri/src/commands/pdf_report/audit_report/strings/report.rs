@@ -1,0 +1,70 @@
+pub const REPORT_TITLE: &str = "audit.report.reportTitle";
+pub const BRAND_LINE: &str = "audit.report.brandLine";
+pub const METHOD_NOTE: &str = "audit.report.methodNote";
+pub const PAGE_LABEL: &str = "audit.report.pageLabel";
+
+pub const SEV_CRITICAL: &str = "audit.report.sevCritical";
+pub const SEV_WARNING: &str = "audit.report.sevWarning";
+pub const SEV_INFO: &str = "audit.report.sevInfo";
+pub const NO_MESSAGE: &str = "audit.report.noMessage";
+pub const NO_RECOMMENDATION: &str = "audit.report.noRecommendation";
+pub const CATEGORY_FALLBACK: &str = "audit.report.categoryFallback";
+
+pub const STATUS_OK: &str = "audit.report.statusOk";
+pub const STATUS_ATTENTION: &str = "audit.report.statusAttention";
+pub const STATUS_INFO: &str = "audit.report.statusInfo";
+pub const NO_ACTION: &str = "audit.report.noAction";
+pub const YES: &str = "audit.report.yes";
+pub const NO: &str = "audit.report.no";
+pub const NOT_SET: &str = "audit.report.notSet";
+
+pub const TITLE: &str = "audit.report.title";
+pub const AUDITED_AT: &str = "audit.report.auditedAt";
+pub const HTTP_STATUS: &str = "audit.report.httpStatus";
+pub const RESPONSE_TIME: &str = "audit.report.responseTime";
+pub const MS: &str = "audit.report.ms";
+pub const HEALTH_SCORE: &str = "audit.report.healthScore";
+pub const RATING_GOOD: &str = "audit.report.ratingGood";
+pub const RATING_FAIR: &str = "audit.report.ratingFair";
+pub const RATING_POOR: &str = "audit.report.ratingPoor";
+pub const RATING_NONE: &str = "audit.report.ratingNone";
+pub const LEGEND: &str = "audit.report.legend";
+pub const FINDINGS: &str = "audit.report.findings";
+
+pub const KPI_HTTP: &str = "audit.report.kpiHttp";
+pub const KPI_TIME: &str = "audit.report.kpiTime";
+pub const KPI_TITLE: &str = "audit.report.kpiTitle";
+pub const KPI_DESCRIPTION: &str = "audit.report.kpiDescription";
+pub const KPI_H1: &str = "audit.report.kpiH1";
+pub const KPI_IMAGES: &str = "audit.report.kpiImages";
+pub const KPI_LINKS: &str = "audit.report.kpiLinks";
+pub const KPI_WORDS: &str = "audit.report.kpiWords";
+pub const HTTP_NOTE: &str = "audit.report.httpNote";
+pub const SLOW: &str = "audit.report.slow";
+pub const FAST: &str = "audit.report.fast";
+pub const CHARACTERS: &str = "audit.report.characters";
+pub const PRESENT: &str = "audit.report.present";
+pub const MISSING: &str = "audit.report.missing";
+pub const CHARS_NOTE: &str = "audit.report.charsNote";
+pub const H1_NOTE: &str = "audit.report.h1Note";
+pub const NO_ALT_NOTE: &str = "audit.report.noAltNote";
+pub const LINKS_NOTE: &str = "audit.report.linksNote";
+pub const WORDS_NOTE: &str = "audit.report.wordsNote";
+
+pub const WHERE: &str = "audit.report.where";
+pub const HOW_TO_FIX: &str = "audit.report.howToFix";
+pub const FIX_FIRST: &str = "audit.report.fixFirst";
+pub const NO_ISSUES: &str = "audit.report.noIssues";
+pub const FIX_INTRO: &str = "audit.report.fixIntro";
+pub const SEVERITY_GROUP: &str = "audit.report.severityGroup";
+
+pub const DETAILS: &str = "audit.report.details";
+pub const NO_DETAILS: &str = "audit.report.noDetails";
+pub const COL_CHECK: &str = "audit.report.colCheck";
+pub const COL_VALUE: &str = "audit.report.colValue";
+pub const COL_STATUS: &str = "audit.report.colStatus";
+pub const COL_ADVICE: &str = "audit.report.colAdvice";
+pub const COL_AREA: &str = "audit.report.colArea";
+pub const PASSED: &str = "audit.report.passed";
+pub const NOTHING_PASSED: &str = "audit.report.nothingPassed";
+pub const PASSED_SUMMARY: &str = "audit.report.passedSummary";

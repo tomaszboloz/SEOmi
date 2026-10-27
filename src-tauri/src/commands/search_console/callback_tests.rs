@@ -56,6 +56,11 @@ async fn cancellation_and_provider_failure_return_distinct_errors() {
     for (error, expected) in [
         ("access_denied", "cancelled by the user"),
         ("server_error", "Google OAuth failed: server_error"),
+        (
+            "redirect_uri_mismatch",
+            "Use an OAuth client of type Desktop app",
+        ),
+        ("synthetic-secret%0Amalicious-error", "Google OAuth failed."),
     ] {
         let listener = TcpListener::bind(("127.0.0.1", 0)).await.unwrap();
         let address = listener.local_addr().unwrap();
@@ -65,12 +70,14 @@ async fn cancellation_and_provider_failure_return_distinct_errors() {
                 .await
                 .starts_with("HTTP/1.1 400")
         );
-        assert!(timeout(Duration::from_secs(1), task)
+        let message = timeout(Duration::from_secs(1), task)
             .await
             .unwrap()
             .unwrap()
-            .unwrap_err()
-            .contains(expected));
+            .unwrap_err();
+        assert!(message.contains(expected), "{message}");
+        assert!(!message.contains("synthetic-secret"));
+        assert!(!message.contains("malicious-error"));
     }
 }
 
@@ -90,4 +97,44 @@ async fn absent_or_empty_codes_are_rejected() {
             "Google did not return an authorization code."
         );
     }
+}
+
+#[tokio::test]
+async fn receiver_times_out_when_no_callback_arrives() {
+    let listener = TcpListener::bind(("127.0.0.1", 0)).await.unwrap();
+    let err = super::callback::receive_oauth_code_with_timeout(
+        listener,
+        "state",
+        Duration::from_millis(10),
+    )
+    .await
+    .unwrap_err();
+    assert!(err.contains("did not finish within 3 minutes"));
+}
+
+#[tokio::test]
+async fn malformed_url_returns_invalid_oauth_url_error() {
+    let listener = TcpListener::bind(("127.0.0.1", 0)).await.unwrap();
+    let address = listener.local_addr().unwrap();
+    let task = tokio::spawn(async move { receive_oauth_code(listener, "state").await });
+    let mut stream = TcpStream::connect(address).await.unwrap();
+    stream
+        .write_all(b"GET :bad HTTP/1.1\r\nHost: localhost\r\n\r\n")
+        .await
+        .unwrap();
+    stream.shutdown().await.unwrap();
+    let err = timeout(Duration::from_secs(1), task)
+        .await
+        .unwrap()
+        .unwrap()
+        .unwrap_err();
+    assert_eq!(err, "Google returned an invalid OAuth URL.");
+}
+
+#[test]
+fn accept_failures_are_reported_with_their_cause() {
+    assert_eq!(
+        super::callback::accept_failure(std::io::Error::other("closed")),
+        "Unable to receive the OAuth response: closed"
+    );
 }

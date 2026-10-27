@@ -44,8 +44,8 @@ pub async fn delete_crawl_auth_profile(
 }
 
 #[tauri::command]
-pub async fn get_secret(name: String) -> Result<Option<String>, String> {
-    secret_commands::read_secret(&name, &NATIVE_STORE)
+pub async fn has_secret(name: String) -> Result<bool, String> {
+    secret_commands::has_secret(&name, &NATIVE_STORE)
 }
 
 #[tauri::command]
@@ -54,7 +54,7 @@ pub async fn set_secret(name: String, value: String) -> Result<(), String> {
 }
 
 #[tauri::command]
-pub async fn get_config(app: tauri::AppHandle) -> Result<AppConfig, String> {
+pub async fn get_config<R: tauri::Runtime>(app: tauri::AppHandle<R>) -> Result<AppConfig, String> {
     let path = app
         .path()
         .app_config_dir()
@@ -66,7 +66,10 @@ pub async fn get_config(app: tauri::AppHandle) -> Result<AppConfig, String> {
 }
 
 #[tauri::command]
-pub async fn save_config(app: tauri::AppHandle, config: AppConfig) -> Result<(), String> {
+pub async fn save_config<R: tauri::Runtime>(
+    app: tauri::AppHandle<R>,
+    config: AppConfig,
+) -> Result<(), String> {
     config.validate()?;
     let path = app
         .path()
@@ -79,15 +82,27 @@ pub async fn save_config(app: tauri::AppHandle, config: AppConfig) -> Result<(),
 }
 
 #[cfg(test)]
+mod command_handler_tests;
+#[cfg(test)]
+mod config_ipc_tests;
+#[cfg(test)]
+mod config_recovery_tests;
+#[cfg(test)]
 mod config_storage_tests;
+#[cfg(test)]
+mod credential_interop_tests;
 #[cfg(test)]
 mod credentials_tests;
 #[cfg(test)]
 mod fixture;
 #[cfg(test)]
+mod ipc_argument_tests;
+#[cfg(test)]
 mod profile_storage_tests;
 #[cfg(test)]
 mod profile_validation_tests;
+#[cfg(test)]
+mod proxy_list_validation_tests;
 #[cfg(test)]
 mod secret_tests;
 #[cfg(test)]

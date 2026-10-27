@@ -8,9 +8,12 @@ import { CrawlResultsNavigation } from '@/components/Domain/crawlResults/CrawlRe
 import { useCrawlResultsSession } from '@/components/Domain/crawlResults/useCrawlResultsSession';
 import { CrawlWorkspaceHeader } from '@/components/Domain/siteAudit/CrawlWorkspaceHeader';
 import { CrawlWorkspaceNotices } from '@/components/Domain/siteAudit/CrawlWorkspaceNotices';
+import { CrawlLegacyHistory } from '@/components/Domain/siteAudit/CrawlLegacyHistory';
 import type { useSiteAuditSession } from '@/components/Domain/siteAudit/useSiteAuditSession';
 import { result, run } from './fixtures/crawlResultsTabsContracts';
 import i18n from '@/i18n';
+
+vi.mock('@/components/Domain/siteAudit/CrawlRunResults', () => ({ CrawlRunResults: () => null }));
 
 type Session = ReturnType<typeof useCrawlResultsSession>;
 function Harness({ component: Component }: { component: ComponentType<{ session: Session }> }) {
@@ -24,19 +27,48 @@ const siteSession = (values: object) => ({
 }) as ReturnType<typeof useSiteAuditSession>;
 
 describe('extracted crawler layout components', () => {
-  it('keeps a saved-run picker and the original crawl URL in the result header', () => {
-    render(<Harness component={CrawlResultsHeader} />);
-    expect(screen.getByRole('combobox', { name: i18n.t('crawl.navigation.chooseSavedCrawl') })).toHaveProperty('value', run.id);
+  it('keeps a saved-run picker and handles selection and crawling state', () => {
+    const onSelectRun = vi.fn();
+    const session = {
+      result,
+      runs: [run, { ...run, id: 'run-2' }],
+      currentRun: run,
+      isCrawling: true,
+      onSelectRun,
+      onDeleteRun: vi.fn(),
+      deleteCurrentRun: vi.fn(),
+      t: (key: string, opts?: any) => i18n.t(key, opts),
+    } as any;
+    render(<CrawlResultsHeader session={session} />);
+    const select = screen.getByRole('combobox', { name: i18n.t('crawl.navigation.chooseSavedCrawl') });
+    expect(select).toHaveProperty('value', run.id);
     expect(screen.getByText(result.start_url)).toBeTruthy();
+
+    fireEvent.change(select, { target: { value: 'run-2' } });
+    expect(onSelectRun).toHaveBeenCalledWith('run-2');
+    expect(screen.getByTitle(i18n.t('crawl.navigation.deleteRunDuringCrawl'))).toBeTruthy();
   });
+
+  it('does not throw when a saved crawl has an invalid completion timestamp', () => {
+    const malformed = { ...run, completedAt: 'not-a-date' };
+    render(<CrawlResultsHeader session={{ result, runs: [malformed], currentRun: malformed, isCrawling: false, onSelectRun: vi.fn(), onDeleteRun: undefined, deleteCurrentRun: vi.fn(), openMapSection: vi.fn(), t: (key: string) => key } as any} />);
+    expect(screen.getByRole('option', { name: /—/ })).toBeTruthy();
+  });
+
 
   it('switches the active group without hiding navigation actions', () => {
     render(<Harness component={CrawlResultsGroups} />);
     const jump = screen.getByRole('combobox', { name: i18n.t('crawl.navigation.jumpLabel') });
     fireEvent.change(jump, { target: { value: 'links' } });
     expect(jump).toHaveProperty('value', 'links');
-    expect(screen.getByRole('button', { name: i18n.t('crawl.navigation.scrollResultsStart') })).toBeTruthy();
+    const startBtn = screen.getByRole('button', { name: i18n.t('crawl.navigation.scrollResultsStart') });
+    const endBtn = screen.getByRole('button', { name: i18n.t('crawl.navigation.scrollResultsEnd') });
+    expect(startBtn).toBeTruthy();
+    expect(endBtn).toBeTruthy();
+    fireEvent.click(startBtn);
+    fireEvent.click(endBtn);
   });
+
 
   it('keeps the tab keyboard contract and gives translated start/end labels flexible width', () => {
     render(<Harness component={CrawlResultsTabStrip} />);
@@ -81,5 +113,24 @@ describe('extracted crawler layout components', () => {
     expect(screen.getByText('siteAudit.timedOut')).toBeTruthy();
     fireEvent.click(screen.getByRole('button', { name: 'siteAudit.retrySave' }));
     expect(retry).toHaveBeenCalledTimes(1);
+  });
+
+  it('keeps persisted crawl comparison visible outside the legacy hidden dashboard', () => {
+    const run = { id: 'current', completedAt: '2026-10-07T00:00:00Z', startUrl: 'https://example.test/', result: { pages: [], pages_crawled: 0 } } as any;
+    const comparison = {
+      added: [], removed: [], changed: [], status: 'blocked', reasons: ['different-project'],
+      provenance: {
+        source: 'stored-crawl-runs', scopeMatched: false,
+        current: { runId: 'current', completedAt: run.completedAt, startUrl: run.startUrl, scopeFingerprint: 'a', pageCount: 0, completeness: 'complete', partial: false, partialReasons: [], provenance: 'stored-crawl-run' },
+        baseline: { runId: 'baseline', completedAt: '2026-10-06T00:00:00Z', startUrl: run.startUrl, scopeFingerprint: 'b', pageCount: 0, completeness: 'complete', partial: false, partialReasons: [], provenance: 'stored-crawl-run' },
+      },
+    } as any;
+    const view = render(<CrawlLegacyHistory session={siteSession({
+      crawlResult: run.result, crawlRuns: [run, { ...run, id: 'baseline' }], historyMetrics: [], comparison,
+      comparisonRunId: 'baseline', comparisonByPath: false, selectedRun: run,
+      crawlEnvironmentLabel: () => 'Default', setComparisonRunId: vi.fn(), updateComparisonByPath: vi.fn(),
+    })} />);
+    const marker = view.getByTestId('crawl-comparison-guard');
+    expect(marker.closest('[aria-hidden="true"]')).toBeNull();
   });
 });

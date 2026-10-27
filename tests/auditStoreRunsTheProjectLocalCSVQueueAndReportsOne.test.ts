@@ -53,13 +53,14 @@ it('runs the project-local CSV queue and reports one bounded batch summary', asy
 
     expect(useAuditStore.getState().batchItems).toMatchObject([{ url: 'https://example.com/', status: 'completed' }]);
     expect(notifyAuditCompleted).not.toHaveBeenCalled();
-    expect(notifyBatchCompleted).toHaveBeenCalledWith('project-batch', {
+    expect(notifyBatchCompleted).toHaveBeenCalledWith('project-batch', expect.objectContaining({
       completed: 1,
       failed: 0,
       queued: 0,
       regressionCount: 1,
       stopped: false,
-    });
+      runId: expect.any(String),
+    }));
     expect(useAuditStore.getState().currentAudit).toEqual(mockAudit);
   });
 
@@ -93,13 +94,14 @@ it('keeps a batch result out of a newly selected project while the source queue 
     expect(JSON.parse(localStorage.getItem('seomi_project_project-batch-source_audit_queue_v1') || '[]')).toMatchObject([{ status: 'completed' }]);
     expect(JSON.parse(localStorage.getItem('seomi_project_project-batch-next_audit_queue_v1') || '[]')).toEqual([]);
     expect(notifyAuditCompleted).not.toHaveBeenCalled();
-    expect(notifyBatchCompleted).toHaveBeenCalledWith('project-batch-source', {
+    expect(notifyBatchCompleted).toHaveBeenCalledWith('project-batch-source', expect.objectContaining({
       completed: 1,
       failed: 0,
       queued: 0,
       regressionCount: 0,
       stopped: false,
-    });
+      runId: expect.any(String),
+    }));
   });
 
 it('keeps a newer project batch running while an older project batch finishes', async () => {

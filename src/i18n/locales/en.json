@@ -1,4 +1,79 @@
 {
+  "cmsPanelUi": {
+    "title": "Safe CMS patch",
+    "description": "Replace the content under one heading. Prepare and approve the exact diff, run a dry run, then apply. Editing any input cancels approval.",
+    "kind": "CMS kind",
+    "baseUrl": "CMS base URL (HTTPS)",
+    "contentId": "Content ID",
+    "credential": "Stored credential name (optional)",
+    "credentialHelp": "Use a cms_auth_ credential containing the Authorization header in the system credential store. Leave blank for anonymous requests. Never enter a secret here.",
+    "collection": "Strapi collection",
+    "heading": "Heading to find",
+    "replacement": "New section content (HTML or Markdown)",
+    "ymyl": "Health, finance or legal content (YMYL)",
+    "factGate": "The required fact check has passed for this exact diff",
+    "diff": "Proposed diff",
+    "revision": "Source revision: {{revision}}",
+    "noChanges": "No changes. Update the replacement before applying.",
+    "prepare": "Prepare diff",
+    "approve": "I approve this exact diff",
+    "dryRun": "Run dry run",
+    "apply": "Apply approved diff",
+    "busy": "Processing CMS patch…",
+    "noProject": "Select an active project to prepare a CMS patch.",
+    "desktopOnly": "CMS requests are available only in the desktop app.",
+    "failed": "CMS patch failed: {{reason}}"
+  },
+  "teamPanelUi": {
+    "title": "Team mode and audit trail",
+    "description": "Choose who is acting and in which role. Every change is appended to a tamper-evident, hash-chained audit log stored locally.",
+    "actor": "Actor",
+    "role": "Role",
+    "roles": {
+      "admin": "Admin",
+      "seo_strategist": "SEO Strategist",
+      "content_writer": "Content Writer",
+      "developer": "Developer"
+    },
+    "permissions": {
+      "run_crawl": "Run crawl",
+      "execute_cms_patch": "Execute CMS patch",
+      "modify_site_focus_rules": "Modify Site Focus rules",
+      "export_audit_pdf": "Export audit PDF",
+      "manage_team_roles": "Manage team roles"
+    },
+    "permissionsTitle": "Permission",
+    "auditTitle": "Audit log",
+    "auditEmpty": "No audit entries yet.",
+    "chainOk": "Audit chain verified.",
+    "chainBroken": "Audit chain broken at entry {{entry}} ({{reason}}).",
+    "exportCsv": "Export CSV",
+    "columns": {
+      "time": "Time",
+      "actor": "Actor",
+      "action": "Action",
+      "result": "Result"
+    },
+    "results": {
+      "success": "Success",
+      "denied": "Denied",
+      "failure": "Failure",
+      "dry_run": "Dry run"
+    },
+    "allowed": "Allowed",
+    "notAllowed": "Not allowed"
+  },
+  "dataErasureUi": {
+    "title": "Erase project data (GDPR)",
+    "description": "Permanently deletes this project's crawl runs, embeddings and history from the local store by destroying their encryption keys. This cannot be undone.",
+    "confirm": "Type the project ID to confirm: {{id}}",
+    "button": "Erase project data",
+    "run": "Erase permanently",
+    "cancel": "Cancel",
+    "done": "Erased: {{records}} records and {{runs}} crawl runs.",
+    "failed": "Erasure failed: {{message}}",
+    "desktopOnly": "Available in the desktop app only."
+  },
   "schemaFindings": {
     "messageMissing": "Structured-data rule {{code}} reports a missing property or structural element for {{type}}.",
     "messageInvalid": "Structured-data rule {{code}} reports an invalid value or shape for {{type}}.",
@@ -15,6 +90,31 @@
     "severityWarning": "Warning",
     "severityInfo": "Info",
     "sourceEvidence": "Source evidence"
+  },
+  "copilotPatcherUi": {
+    "title": "Contextual Copilot patch",
+    "description": "Builds a before/after proposal from this page's crawl evidence. Review it before copying; no CMS change is sent.",
+    "contextUnavailable": "Page heading evidence is unavailable, so this patcher is waiting for a new crawl.",
+    "generate": "Suggest patch",
+    "generating": "Generating...",
+    "cancel": "Cancel",
+    "before": "Before",
+    "after": "After",
+    "pending": "Pending review; nothing has changed.",
+    "factGate": "{{count}} sentence(s) removed by the fact gate because the page supplied no matching source.",
+    "remote": "The selected AI provider received this page text.",
+    "local": "The selected AI runner stayed on this device.",
+    "approve": "Approve for copy",
+    "reject": "Reject",
+    "approved": "Approved for copy; the CMS was not changed.",
+    "copy": "Copy approved text",
+    "rejected": "Proposal rejected.",
+    "keyboard": "Keyboard: Tab moves through controls; Enter activates the focused control.",
+    "no-provider": "Connect an AI provider before requesting a patch.",
+    "empty-response": "The AI returned no usable patch.",
+    "provider-error": "AI request failed: {{message}}",
+    "ownership": "The project is no longer active; this request was stopped.",
+    "unavailable": "The passage has no usable source text."
   },
   "app": {
     "name": "SEOmi",
@@ -169,7 +269,7 @@
       "urlTooLong": "The URL cannot exceed 2048 characters.",
       "urlInvalid": "Enter a complete URL beginning with http:// or https://.",
       "urlPublicOnly": "Schedules accept only a public HTTP(S) URL without credentials.",
-      "crawlLimit": "The scheduled crawl limit must be between 1 and 500 URLs.",
+      "crawlLimit": "The scheduled crawl limit must be between 1 and {{max}} URLs.",
       "maxReached": "A project can have at most {{count}} schedules.",
       "duplicate": "This URL already has a schedule in the project.",
       "auditFailed": "The audit failed."
@@ -589,7 +689,8 @@
       "responseHidden": "Provider response withheld.",
       "invalidResponse": "The AI provider returned an invalid response.",
       "responseTooLarge": "The AI provider response exceeds the 1 MiB limit.",
-      "refused": "{{provider}} declined this request. Rephrase it or choose another model."
+      "refused": "{{provider}} declined this request. Rephrase it or choose another model.",
+      "modelRejected": "{{provider}} did not accept the request for model {{model}} (HTTP {{status}}). Choose another model."
     },
     "pagespeed": {
       "projectRequired": "Choose a project before starting the measurement."
@@ -1134,6 +1235,7 @@
     "tabEntity": "Entity graph",
     "tabLinks": "Internal links",
     "tabSchema": "JSON-LD schema",
+    "tabSignals": "Signals",
     "saveError": "Unable to save the topical map in local storage. It remains visible until the view closes; check application storage availability.",
     "preferencesSaveError": "Unable to remember the topical map view and filters in this project.",
     "entityTitle": "Project entity",
@@ -1410,6 +1512,45 @@
     "searchVolume": "Search volume",
     "addedAt": "Added at"
   },
+  "googleSuggestionsUi": {
+    "title": "Google suggestions",
+    "description": "Discover related queries from the free Google Suggest endpoint.",
+    "query": "Query",
+    "byteCount": "{{count}}/500 bytes UTF-8",
+    "fetch": "Fetch suggestions",
+    "selectProject": "Select a project before fetching suggestions.",
+    "blocked": "Google Suggest is temporarily unavailable.",
+    "error": "Google suggestions could not be loaded.",
+    "provenance": "Source: Google Suggest (unofficial, best effort).",
+    "context": "Requested context: {{geo}} / {{language}}. This does not prove result localization.",
+    "retrievedAt": "Retrieved at: {{timestamp}}.",
+    "empty": "No suggestions returned.",
+    "saved": "Saved",
+    "save": "Save",
+    "importTitle": "Import suggestions",
+    "importDescription": "Import a local JSON or CSV list. Metrics and intent remain unknown.",
+    "importFormat": "Import format",
+    "importSourceUrl": "Source URL (optional)",
+    "importPayload": "Suggestions payload",
+    "import": "Import",
+    "importedAt": "Imported at: {{timestamp}} · {{count}} suggestions.",
+    "json": "JSON",
+    "csv": "CSV",
+    "sourcePlaceholder": "https://...",
+    "evidenceTitle": "Crawl evidence",
+    "evidenceNoCrawl": "No project crawl evidence is available.",
+    "evidencePartial": "Evidence comes from a partial crawl; unmatched pages may be missing.",
+    "evidenceObserved": "Observed crawl evidence for this project.",
+    "evidenceNoMatch": "No matching title or semantic-term evidence was observed.",
+    "evidenceRun": "Run {{run}} · {{count}} pages observed.",
+    "evidenceLanguage": "Evidence language: {{language}}.",
+    "evidenceInvalidTimestamp": "A crawl with an invalid completion timestamp was ignored.",
+    "evidenceTruncated": "Evidence was bounded: {{pages}} pages, {{suggestions}} suggestions and {{matches}} page matches omitted.",
+    "intentUncertain": "{{intent}} (uncertain)",
+    "intentSignals": "Lexical signals: {{signals}}",
+    "evidenceTitleMatch": "title",
+    "evidenceTermsMatch": "semantic terms"
+  },
   "rankTrackingUi": {
     "badge": "Keyword workflows",
     "provider": "SERP position monitor",
@@ -1480,7 +1621,8 @@
       "informational": "Informational",
       "commercial": "Commercial",
       "transactional": "Transactional",
-      "navigational": "Navigational"
+      "navigational": "Navigational",
+      "unknown": "Unknown"
     },
     "saved": "Saved",
     "addSaved": "Add to saved keywords",
@@ -1504,6 +1646,37 @@
     "save": "Save",
     "researchTag": "Research"
   },
+  "trendingNowUi": {
+    "badge": "Trending Now",
+    "title": "Country trends",
+    "description": "Use the free Google Trends RSS feed or import a real CSV/JSON export. Traffic labels remain source text; no search volume is inferred.",
+    "freeSource": "Free RSS / import",
+    "countryLabel": "Country",
+    "refresh": "Refresh feed",
+    "importFile": "Import CSV or JSON",
+    "importLimit": "Files up to {{size}}",
+    "clear": "Clear saved snapshot",
+    "empty": "No snapshot for this project yet.",
+    "selectProjectError": "Select a project to use Trending Now.",
+    "storageUnavailable": "The snapshot is visible in memory, but project storage is unavailable.",
+    "payloadTooLarge": "The selected file exceeds the 1 MiB limit.",
+    "unsupportedImport": "Choose a .csv or .json file.",
+    "fetchError": "The free Trends feed could not be loaded.",
+    "importError": "The import could not be read.",
+    "countryValue": "Country: {{geo}}",
+    "sourceValue": "Source: {{source}}",
+    "capturedValue": "Captured: {{time}}",
+    "entryCount": "Entries: {{count}}",
+    "keyword": "Trend",
+    "trafficLabel": "Source traffic label",
+    "startedAt": "Source time",
+    "notProvided": "Not provided",
+    "source": {
+      "rss": "Google Trends RSS",
+      "csv": "CSV import",
+      "json": "JSON import"
+    }
+  },
   "mapUi": {
     "edgeSimilarityAria": "Content similarity {{percent}}%, shared terms: {{terms}}",
     "nodeAria": "{{label}}, cluster {{cluster}}",
@@ -1523,7 +1696,9 @@
       "directory": "URL tree",
       "directoryDescription": "URL hierarchy in this run",
       "plan": "Topical plan",
-      "planDescription": "Topics and semantic audit"
+      "planDescription": "Topics and semantic audit",
+      "diagnosis": "Diagnosis",
+      "diagnosisDescription": "What is fine, what is weak and what to fix"
     },
     "graph": {
       "fullTitle": "Full link graph map",
@@ -1634,7 +1809,86 @@
     "bottomTablistAria": "Map views in bottom bar",
     "goToView": "Go to {{view}} view",
     "backToMapStart": "Return to map start",
-    "start": "Start"
+    "start": "Start",
+    "graphEvidence": {
+      "sectionAria": "Semantic graph structure and Search Console evidence",
+      "title": "Graph structure and GSC evidence",
+      "description": "PageRank describes the crawled link structure. Search Console metrics are shown separately and join only when the active project, property, period and filters match.",
+      "structureAria": "Structural PageRank",
+      "structureTitle": "Structural PageRank",
+      "structureMeta": "{{iterations}} iterations · {{status}}",
+      "converged": "converged",
+      "bounded": "iteration bound reached",
+      "structureNote": "This is a graph signal, not a Google ranking or traffic metric.",
+      "structurePartial": "The graph input was bounded; structural PageRank covers retained pages and links only.",
+      "noNodes": "No crawled pages are available for the structural graph.",
+      "trafficAria": "Google Search Console traffic evidence",
+      "trafficTitle": "Search Console traffic evidence",
+      "status": {
+        "complete": "Matched GSC rows",
+        "partial": "Partial GSC rows; missing values remain unknown",
+        "unavailable": "GSC evidence unavailable",
+        "invalid": "GSC evidence scope does not match"
+      },
+      "project": "Project",
+      "property": "Property",
+      "period": "Period",
+      "filters": "Filters",
+      "allFilters": "all selected filters",
+      "noSelection": "Select a real Search Console property and load data for this project to join traffic evidence.",
+      "counts": "Observed: {{observed}} · uncertain/truncated: {{uncertain}} · unknown: {{missing}}",
+      "trafficNote": "— means no observed value. Unknown and truncated rows are never treated as zero.",
+      "partialNotice": "Traffic evidence is partial because some source rows were truncated or rejected; unknown values remain unknown.",
+      "invalidNotice": "Traffic evidence was rejected because the GSC scope or source rows do not match.",
+      "rowQuality": "Source rows: {{invalid}} invalid · {{ignored}} outside the selected property",
+      "observation": {
+        "gsc": "observed",
+        "missing": "unknown",
+        "truncated": "truncated",
+        "unavailable": "unavailable",
+        "invalid": "invalid",
+        "out-of-scope": "outside property",
+        "ambiguous": "ambiguous"
+      }
+    },
+    "diagnosisFilter": "Diagnosis scope: {{label}}",
+    "clearDiagnosisFilter": "Show the whole graph",
+    "allTopics": "All topics ({{count}})",
+    "cy": {
+      "layoutLabel": "Layout",
+      "layoutHierarchy": "Hierarchy",
+      "layoutForce": "Force",
+      "sectionsLabel": "URL sections",
+      "expandAll": "Expand all",
+      "collapseAll": "Collapse all",
+      "highlightLabel": "Highlight URL",
+      "highlightPlaceholder": "Part of a URL or title",
+      "matches": "Matches: {{count}}",
+      "depthLabel": "Depth",
+      "depthAll": "All depths",
+      "problemsOnly": "Problems only",
+      "statusLabel": "HTTP status",
+      "colorTrs": "Colour: topical relevance (TRS)",
+      "colorStatus": "Colour: HTTP status (TRS unavailable)",
+      "sizeHint": "size = inbound links",
+      "mapAria": "Interactive site architecture map grouped by URL sections",
+      "mapHelp": "Click a section to expand or collapse it, click a page for details, drag to pan, scroll or pinch to zoom. Big sites start with sections collapsed. A table with the same pages is available below the map.",
+      "tooltip": "HTTP {{status}} · depth {{depth}} · {{inlinks}} inbound links",
+      "detailsHint": "Select a page on the map or in the table to see its details.",
+      "detailsTitle": "Page details",
+      "colUrl": "URL",
+      "colStatus": "HTTP status",
+      "colDepth": "Depth",
+      "colInlinks": "Inbound links",
+      "colTrs": "TRS",
+      "colSection": "Section",
+      "colProblem": "Problem",
+      "noTrs": "n/a",
+      "yes": "yes",
+      "no": "no",
+      "tableSummary": "Page table ({{count}})",
+      "tableCaption": "Pages shown on the architecture map with status, depth, inbound links, TRS and section"
+    }
   },
   "crawlDiff": {
     "fields": {
@@ -1915,6 +2169,8 @@
     "exportJson": "JSON",
     "exportCsv": "CSV",
     "exportPdf": "PDF",
+    "exportHtml": "HTML",
+    "exportHelp": "Export the saved audit snapshot as JSON, CSV, PDF or sanitized HTML.",
     "healthScore": "Health Score",
     "criticalIssues": "Critical Issues",
     "warnings": "Warnings",
@@ -2113,7 +2369,12 @@
       "resources": "Resources",
       "frames": "Frames",
       "custom-search": "Custom search",
-      "semantic": "Semantic analysis"
+      "semantic": "Semantic analysis",
+      "focus": "Site Focus",
+      "authority": "Topical Authority",
+      "aio": "AI readiness",
+      "trust": "Entity trust",
+      "offPage": "Off-page analysis"
     },
     "environmentStaging": "test/staging",
     "environmentProduction": "production",
@@ -2143,7 +2404,7 @@
     "renderDelayAria": "Render delay in milliseconds",
     "lazyScroll": "Lazy-load scroll cycles",
     "lazyScrollAria": "Number of lazy-load scroll cycles",
-    "browserModeNotice": "Browser mode analyzes the DOM after JavaScript execution. Custom User-Agent is also used for robots.txt. The selected profile may inject ordinary session cookies into an isolated WebView; HttpOnly and full cookie-store import are unavailable. Additional headers and proxy require HTTP mode. X-Robots-Tag and Cache-Control headers are unavailable from rendered DOM.",
+    "browserModeNotice": "Browser mode analyzes the DOM after JavaScript execution. Custom User-Agent is also used for robots.txt. The selected profile may inject ordinary session cookies into an isolated WebView; HttpOnly and full cookie-store import are unavailable. Additional headers and proxy require HTTP mode. The HTTP status, response headers such as X-Robots-Tag and Cache-Control, and redirect hops come from a separate HTTP request for the same URL. A page that cannot be rendered is analyzed from that raw HTML and marked with a warning.",
     "renderProfileWarning": "The selected profile contains custom headers or a proxy. Rendered mode uses only its cookies — choose HTTP or a cookie-only profile.",
     "resourcesTitle": "Resources fetched during the crawl",
     "resourcesDescription": "Only resources discovered in the current scope. Status and size come from real HTTP responses.",
@@ -2158,12 +2419,13 @@
     "comparisonSelectPlaceholder": "Choose baseline run",
     "comparisonPathLabel": "Match by path (test ↔ production)",
     "comparisonPathNotice": "Hosts are ignored and tracking parameters removed; path and remaining query stay part of the key. This is a snapshot comparison, not proof of environment equivalence.",
+    "comparisonGuard": "Comparison guard: {{status}} · reasons: {{reasons}}",
     "comparisonAdded": "New URLs",
-    "comparisonRemoved": "Removed URLs",
+    "comparisonRemoved": "URLs not observed",
     "comparisonChanged": "Changed URLs",
     "comparisonNoDifferences": "No differences in compared fields.",
     "comparisonAddedLabel": "Added",
-    "comparisonRemovedLabel": "Removed",
+    "comparisonRemovedLabel": "Not observed",
     "comparisonChangedLabel": "Changed",
     "healthScore": "Health score",
     "healthIndex": "Site-wide health index",
@@ -2268,6 +2530,7 @@
     "profileNamePlaceholder": "e.g. Editorial account",
     "sessionCookies": "Session cookies",
     "proxyOptional": "(optional; credentials in the URL remain in the system vault)",
+    "proxyListHint": "Several proxies: separate with commas or spaces (up to 64). Requests rotate across them.",
     "customHeaders": "Custom headers",
     "oneHeaderPerLine": "(one per line: Name: value)",
     "saving": "Saving…",
@@ -2318,8 +2581,10 @@
     "remove": "Remove",
     "reportSectionsLegend": "JSON/PDF sections",
     "reportTemplateDescription": "The summary is always included. The template affects JSON and PDF; CSV exports remain full evidence tables.",
+    "reportTemplateHelp": "The template controls which saved evidence sections are included in JSON, PDF and HTML exports. No new network request is made.",
     "exportTitle": "Export this crawl run",
     "exportDescription": "Each file contains the real timestamp, scope and run configuration. CSV fields are neutralized before opening in a spreadsheet.",
+    "exportHtml": "HTML report",
     "urlCsv": "URL CSV",
     "linksCsv": "Links CSV",
     "imagesCsv": "Images CSV",
@@ -2374,7 +2639,19 @@
     "notCheckedInRun": "not checked in run",
     "noAnchor": "no anchor",
     "redirectChain": "Redirect chain",
-    "identifiedIssues": "Identified technical issues:"
+    "identifiedIssues": "Identified technical issues:",
+    "comparisonReasons": {
+      "same-run": "same run",
+      "project-unverified": "project ownership not verified",
+      "different-project": "different projects",
+      "different-scope": "different crawl scope",
+      "invalid-completion-time": "invalid completion time",
+      "baseline-incomplete": "baseline run incomplete",
+      "current-incomplete": "current run incomplete",
+      "path-key-collision": "duplicate path key",
+      "url-key-collision": "duplicate URL key"
+    },
+    "pageLimitUnlimited": "No limit"
   },
   "mcp": {
     "badge": "AI agent workflows",
@@ -2754,6 +3031,8 @@
     "sentenceCount": "{{count}} sentences",
     "exportJson": "JSON",
     "exportPdf": "PDF report",
+    "exportHtml": "HTML report",
+    "exportHelp": "HTML keeps the saved crawl metadata, evidence and recorded limits readable in a browser.",
     "exportUrlsCsv": "URLs CSV",
     "exportLinksCsv": "Links CSV",
     "exportImagesCsv": "Images CSV",
@@ -2911,7 +3190,11 @@
       "structured": "Structured",
       "validation": "HTML validation",
       "performance": "Performance",
-      "exports": "Exports"
+      "exports": "Exports",
+      "focus": "Site focus",
+      "authority": "Topical authority",
+      "aio": "AI readiness",
+      "trust": "Entity trust"
     },
     "groups": {
       "core": "Overview",
@@ -3310,6 +3593,31 @@
     "applyDesc": "Apply Description",
     "copyJsonLd": "Copy Schema JSON-LD"
   },
+  "ollamaAssistantUi": {
+    "title": "Local Ollama",
+    "description": "Run metadata suggestions with the observed models from Ollama on this device.",
+    "endpoint": "Loopback endpoint",
+    "status": {
+      "idle": "Not checked",
+      "loading": "Checking Ollama…",
+      "ready": "Connected · {{version}}",
+      "error": "Unavailable"
+    },
+    "refresh": "Refresh",
+    "model": "Observed model",
+    "chooseModel": "Choose a discovered model",
+    "noModels": "No models reported by Ollama",
+    "maxOutputTokens": "Maximum output tokens",
+    "instruction": "Local instruction (optional)",
+    "instructionPlaceholder": "Add a focused instruction…",
+    "generate": "Generate with Ollama",
+    "errors": {
+      "projectRequired": "Choose a project before using local Ollama.",
+      "auditRequired": "Run a page audit before generating local suggestions.",
+      "modelRequired": "Select a model reported by Ollama.",
+      "promptTooLarge": "The audit prompt is too large for the bounded local request."
+    }
+  },
   "auth": {
     "loginTitle": "SEOmi Cloud Account",
     "subscriptionTitle": "AI Subscription Plan",
@@ -3339,7 +3647,12 @@
     "refreshModels": "Refresh model list",
     "modelsFromProvider": "{{count}} models from the provider API",
     "modelsDefault": "Default models — test the API key to load your models",
-    "modelsUnavailable": "Could not load models from the provider; showing the last known list."
+    "modelsUnavailable": "Could not load models from the provider; showing the last known list.",
+    "apiKeyStoredPlaceholder": "•••••••• key saved; paste a new one to replace it",
+    "saveApiKey": "Save key",
+    "removeApiKey": "Remove key",
+    "apiKeyRemoved": "Key removed.",
+    "apiKeySaveFailed": "The key could not be saved."
   },
   "schedules": {
     "saveError": "Unable to save the schedule.",
@@ -3410,6 +3723,7 @@
     "clientIdPlaceholder": "123456789.apps.googleusercontent.com",
     "clientSecretLabel": "Google OAuth client secret",
     "clientSecretPlaceholder": "GOCSPX-… (stored in the system credential manager)",
+    "clientSecretHelp": "Desktop OAuth clients require a client secret from the same Client ID. A secret already saved for this project is reused.",
     "connecting": "Connecting…",
     "authorize": "Authorize with Google",
     "startDate": "Period start",
@@ -3424,6 +3738,7 @@
     "property": "Search Console property",
     "selectedPropertyAria": "Selected Search Console property",
     "noProperties": "Google authorization succeeded, but the account returned no accessible Search Console properties.",
+    "noMatchingProperty": "No property matches this project's site — choose one",
     "totalClicks": "Total clicks",
     "totalImpressions": "Total impressions",
     "searchAppearances": "Search result appearances",
@@ -3480,7 +3795,13 @@
       "currentQueries": "Queries observed only in current period: {{count}}",
       "baselinePages": "URLs observed only in baseline: {{count}}",
       "currentPages": "URLs observed only in current period: {{count}}"
-    }
+    },
+    "sortBy": "Sort by {{column}}",
+    "showingRows": "Showing {{from}}–{{to}} of {{total}}",
+    "rowsPerPage": "Rows per page",
+    "pagePrevious": "Previous",
+    "pageNext": "Next",
+    "pageOf": "Page {{page}} of {{total}}"
   },
   "settings": {
     "close": "Close settings",
@@ -3836,7 +4157,7 @@
       "backup": "Project backup",
       "backupDescription": "Import always creates a separate project and saves data under a new identifier. It never overwrites an existing project or copies credentials.",
       "installedVersion": "Current installed version",
-      "version": "v0.0.3 (current release)",
+      "version": "v{{version}} (current release)",
       "checkUpdates": "Check for updates",
       "chooseProjectBackup": "Choose a project before creating a backup.",
       "preparingBackup": "Preparing project backup…",
@@ -3856,7 +4177,7 @@
       "backupTitle": "Project backup",
       "backupDescriptionLong": "Exports metadata, settings and workspace data for the active project with crawl history. DataForSEO, Google and AI client secrets remain in the system keychain and never enter the file.",
       "backupSafety": "Import always creates a separate project and saves data under a new identifier. It never overwrites an existing project or copies credentials.",
-      "releaseVersion": "v0.0.3 (current release)",
+      "releaseVersion": "v{{version}} (current release)",
       "installUpdate": "Download and install",
       "updateAvailable": "Version {{version}} is ready to install.",
       "updateInstalled": "Version {{version}} was installed.",
@@ -3990,6 +4311,8 @@
     "multipleTitle": "Multiple <title> tags found ({{count}})",
     "emptyDescription": "Meta description is empty",
     "multipleDescription": "Multiple meta description tags found ({{count}})",
+    "renderFallback": "Browser rendering failed; the raw HTML response was analyzed instead: {{reason}}",
+    "renderedSelfNavigation": "The page navigated to a different URL in the browser; the HTTP status and response headers describe the requested URL",
     "technicalDetail": "Technical detail: {{detail}}"
   },
   "auditChecks": {
@@ -4323,6 +4646,37 @@
     }
   },
   "exportUi": {
+    "html": {
+      "auditTitle": "SEOmi audit report",
+      "crawlTitle": "SEOmi crawl report",
+      "summary": "Summary",
+      "inputUrl": "Input URL",
+      "httpStatus": "HTTP status",
+      "responseTimeMs": "Response time (ms)",
+      "healthScore": "Health score",
+      "exportFormat": "Export format",
+      "runId": "Run ID",
+      "scope": "Scope",
+      "environment": "Environment",
+      "completedAt": "Completed at",
+      "templateId": "Template ID",
+      "templateSections": "Template sections",
+      "pagesCrawled": "Pages crawled",
+      "criticalIssues": "Critical issues",
+      "warnings": "Warnings",
+      "durationMs": "Duration (ms)",
+      "evidence": "Saved evidence",
+      "auditEvidence": "Audit evidence",
+      "issues": "Issues",
+      "configuration": "Configuration",
+      "limitations": "Recorded limitations",
+      "sourceLocal": "Source: saved local snapshot; no new network request was made.",
+      "exportedAt": "Exported at",
+      "reportTemplate": "Report template",
+      "fullSnapshot": "Full saved snapshot",
+      "unknown": "Unknown / not supplied",
+      "noLimitations": "No limitations were recorded in this snapshot."
+    },
     "invalidPdf": "The generator returned invalid PDF data. Please try again.",
     "labels": {
       "field": "Field",
@@ -4760,5 +5114,3011 @@
     "saveLimit": "Save limit",
     "noLimitOption": "No limit — up to the account balance",
     "balanceExhausted": "DataForSEO account balance is used up (≈ {{balance}} USD left, the next request needs about {{expected}} USD). Top up the account, then click \"Check balance\"."
+  },
+  "serpImportUi": {
+    "title": "Free SERP evidence",
+    "description": "Import observed organic results or fetch free partial Bing RSS evidence. No paid API is called.",
+    "fetchTitle": "Fetch free Bing RSS evidence",
+    "fetchHelp": "Bing RSS is a partial source and is never treated as a complete Google SERP.",
+    "query": "Query",
+    "country": "Country",
+    "language": "Language",
+    "fetch": "Fetch Bing RSS",
+    "fetching": "Fetching…",
+    "feedBlocked": "Bing RSS was blocked",
+    "feedError": "Bing RSS request failed",
+    "formatHelp": "CSV: keyword,rank,url. JSON: records and metadata. Complete scoring requires explicit countryCode, locationCode, languageCode and complete availability.",
+    "format": "Format",
+    "payload": "Observed SERP data",
+    "import": "Import SERP",
+    "clear": "Remove import",
+    "summary": "{{count}} keyword snapshots; {{rejected}} rejected records",
+    "source": "Source: {{provider}} · {{status}}",
+    "context": "Market: {{country}} · language: {{language}}",
+    "times": "Captured: {{captured}} · imported: {{imported}}",
+    "partialNotice": "Bing RSS is partial evidence; clustering uses semantic-only scoring until complete, compatible SERP data is supplied.",
+    "unknown": "Unknown",
+    "pairs": "Qualifying pairs: {{count}}",
+    "pairHelp": "Groups are connected components of qualifying pairs. Missing or incompatible SERP contributes semantic evidence only. Up to 100 pairs are displayed.",
+    "scores": "Semantic: {{semantic}} · SERP: {{serp}} · score: {{score}}",
+    "weights": "Applied weights: semantic {{semantic}}, SERP {{serp}}",
+    "pairSources": "Sources: {{a}} / {{b}}",
+    "visiblePairs": "Showing the first {{count}} pairs.",
+    "retrieved": "Retrieved: {{retrieved}}"
+  },
+  "targetPhraseAuditUi": {
+    "title": "Target phrase audit",
+    "description": "Literal evidence from the current page audit plus an imported TOP10 snapshot. URL inspection starts only after you request it.",
+    "phraseLabel": "Target phrase",
+    "phrasePlaceholder": "e.g. technical SEO audit",
+    "evidenceTitle": "Phrase evidence in the current audit",
+    "evidenceDescription": "Counts and excerpts come from the stored title, H1, body and anchor text.",
+    "completeness": {
+      "complete": "Complete",
+      "partial": "Partial"
+    },
+    "enterPhrase": "Enter a target phrase to inspect literal evidence.",
+    "fields": {
+      "title": "Title",
+      "h1": "H1",
+      "body": "Body",
+      "anchors": "Anchors"
+    },
+    "occurrences": "{{count}} occurrences",
+    "noLiteralEvidence": "No literal occurrence was found in this field.",
+    "intent": "Intent",
+    "intentUnavailable": "Unavailable (no exact provider value)",
+    "intents": {
+      "informational": "Informational",
+      "commercial": "Commercial",
+      "transactional": "Transactional",
+      "navigational": "Navigational"
+    },
+    "auditUrl": "Audit URL",
+    "partialReason": "The stored body evidence is missing or truncated; this result is partial.",
+    "topTenTitle": "TOP10 content gap",
+    "topTenDescription": "The source is the matching imported SERP snapshot. Each URL is inspected locally only when you click the audit button.",
+    "auditRunning": "Inspecting TOP10…",
+    "auditTopTen": "Inspect TOP10 locally",
+    "sourceProvider": "Provider",
+    "sourceAvailability": "Availability",
+    "sourceContext": "Market / location / language",
+    "sourceCaptured": "Captured",
+    "sourceRetrieved": "Retrieved",
+    "sourceReason": "Reason",
+    "unknown": "Unknown",
+    "sourceStatus": {
+      "complete": "Complete",
+      "partial": "Partial",
+      "blocked": "Blocked",
+      "missing": "Missing"
+    },
+    "status": {
+      "available": "Available",
+      "unavailable": "Unavailable",
+      "error": "Error"
+    },
+    "unavailable": {
+      "no-project": "Select a project to use project-scoped SERP evidence.",
+      "no-phrase": "Enter a phrase to match an imported SERP snapshot.",
+      "no-import": "No imported SERP snapshot is available for this project.",
+      "phrase-not-found": "The imported SERP does not contain an exact case-insensitive match for this phrase.",
+      "no-results": "The matching imported snapshot contains no valid TOP10 organic results."
+    },
+    "reportStatus": "Report status",
+    "reportStatuses": {
+      "unavailable": "Unavailable",
+      "partial": "Partial",
+      "complete": "Complete"
+    },
+    "availablePages": "{{count}} pages with usable evidence",
+    "noRows": "No organic TOP10 rows were supplied by the matching snapshot.",
+    "topicsTitle": "Observed topics and target coverage",
+    "noTopics": "Topics require at least one successfully inspected page.",
+    "topicStatus": {
+      "gap": "Gap",
+      "covered": "Covered",
+      "unknown": "Unknown"
+    },
+    "topicShare": "{{observed}} of {{total}} pages · {{share}}%",
+    "targetOccurrencesUnknown": "Target occurrences: unknown",
+    "targetOccurrences": "Target occurrences: {{count}}",
+    "finalUrl": "Final URL"
+  },
+  "monitoringUi": {
+    "title": "Change monitoring alerts",
+    "enable": "Enable change monitoring alerts",
+    "description": "Alert only after a comparable, locally stored change. Missing or truncated evidence never counts as zero.",
+    "frequency": "Frequency",
+    "frequencyAria": "Monitoring alert frequency",
+    "run": "Every run",
+    "daily": "Once per day",
+    "weekly": "Once per week",
+    "enableType": "Enable {{type}} alerts",
+    "gscDecline": "GSC decline %",
+    "gscDeclineAria": "GSC decline percent",
+    "gscMinimum": "GSC minimum impressions",
+    "psiDrop": "PageSpeed category drop",
+    "crawlChanged": "Crawl changed pages",
+    "semanticChanged": "Semantic changes",
+    "types": {
+      "gsc": "Search Console",
+      "pagespeed": "PageSpeed / CrUX",
+      "crawl": "Crawl comparisons",
+      "semantic": "Semantic comparisons",
+      "focus": "Site Focus Score",
+      "aio": "AI Overviews readiness"
+    },
+    "focusDrop": "Site Focus Score drop (points)",
+    "aioDrop": "AIO-R score drop (points)"
+  },
+  "ga4": {
+    "title": "Google Analytics 4",
+    "description": "Landing page traffic for the same date range as Search Console. Analytics includes all channels; Search Console covers organic search.",
+    "projectRequired": "Select a project with a website URL to match its Analytics web stream.",
+    "connectFirst": "Connect Search Console with your Google OAuth client first.",
+    "clientSecret": "Google OAuth client secret (optional)",
+    "clientSecretHint": "Stored only in the system credential store after authorization.",
+    "loading": "Loading…",
+    "reconnect": "Authorize again",
+    "authorize": "Authorize Analytics access",
+    "refresh": "Refresh matching property",
+    "property": "Matched Analytics property",
+    "noProperty": "No unique matching web stream was found. Check Analytics access and the project website URL.",
+    "loadReport": "Load traffic report",
+    "truncated": "This result is partial or ambiguous. Do not treat it as complete.",
+    "periodsDiffer": "The report periods differ. Search Console metrics cannot be joined.",
+    "unavailable": "No traffic report has been loaded.",
+    "unknown": "Unavailable",
+    "noRows": "Google Analytics returned no landing page rows for this period.",
+    "landingPage": "Landing page",
+    "host": "Hostname",
+    "sessions": "Sessions",
+    "engagedSessions": "Engaged sessions",
+    "keyEvents": "Key events",
+    "clicks": "GSC clicks",
+    "impressions": "GSC impressions",
+    "issues": "Crawl issues",
+    "rowCount": "Rows: {{count}}"
+  },
+  "topicalDiagnosis": {
+    "title": "Topical diagnosis",
+    "description": "Documents (language versions counted once), areas around hub pages, topics from the content and verdicts with a concrete action. Computed from the saved crawl, without language models.",
+    "noTerms": "This crawl has no content terms, so the diagnosis has nothing to work on. Run the crawl again.",
+    "noContentLinks": "This crawl was saved without main-content links, so verdicts about links (pages without a content link, hubs, topic pages that do not link to each other) are not shown. Run the crawl again.",
+    "truncated": "Analysis bounded to 500 pages or the pair limit; some results may be missing.",
+    "empty": "No verdicts in this group.",
+    "showRemaining": "Show the remaining verdicts ({{count}})",
+    "stats": {
+      "documents": "Documents",
+      "pages": "Pages",
+      "skipped": "Skipped",
+      "hubs": "Hubs",
+      "topics": "Topics",
+      "singletons": "Singletons",
+      "languages": "Languages",
+      "mergedPairs": "Language pairs"
+    },
+    "severity": {
+      "fix": "Fix",
+      "weak": "Weak",
+      "info": "Info",
+      "good": "Good"
+    },
+    "filter": {
+      "all": "All · {{count}}",
+      "fix": "Fix · {{count}}",
+      "weak": "Weak · {{count}}",
+      "info": "Info · {{count}}",
+      "good": "Good · {{count}}"
+    },
+    "areas": {
+      "title": "Areas and topics",
+      "noHub": "No hub",
+      "hubWithoutMembers": "Hub without assigned documents",
+      "members": "{{count}} docs",
+      "showInGraph": "Show in graph",
+      "hub": "Hub: {{url}}"
+    },
+    "topics": {
+      "singletons": "Single documents · {{count}}",
+      "labelFromContent": "label from content",
+      "noLabel": "Unlabelled topic",
+      "documents": "{{count}} docs"
+    },
+    "roles": {
+      "hub": "hub",
+      "utility": "utility page",
+      "content": "content"
+    },
+    "scope": {
+      "area": "area",
+      "topic": "topic",
+      "document": "document"
+    },
+    "verdict": {
+      "hub-missing-backlink": {
+        "title": "No link to the hub",
+        "action": "Add a link from this page to {{hub}}: in the navigation, the breadcrumb or the content."
+      },
+      "hub-missing-member-link": {
+        "title": "The hub does not link to some pages of its topic",
+        "action": "Add the missing pages ({{count}}) to the listing of {{hub}}."
+      },
+      "area-healthy": {
+        "title": "Coherent area",
+        "action": "The hub links to all {{count}} documents and each of them links back to the hub. Nothing to do."
+      },
+      "topic-no-hub": {
+        "title": "Topic without a pillar page",
+        "action": "Create or designate a pillar page for this topic and link every document from it; today only the content connects them."
+      },
+      "topic-members-unlinked": {
+        "title": "Topic pages do not link to each other",
+        "action": "Add contextual links between the listed pairs ({{count}} pairs without a link in either direction)."
+      },
+      "topic-thin": {
+        "title": "Thin topic",
+        "action": "The topic has only two documents. Add a third piece or merge both if they answer the same question."
+      },
+      "cannibalization-candidate": {
+        "title": "Cannibalization candidates",
+        "action": "Two pages in the same language overlap by {{percent}}% and share title words: {{titleTokens}}. Compare the intent and merge them or differentiate the titles."
+      },
+      "document-isolated": {
+        "title": "Isolated page",
+        "action": "It has no topic and only listings link to it. Add a link from the closest page by content: {{url}} ({{percent}}% shared terms).",
+        "actionNoNearest": "It has no topic and only listings link to it. Link it from a related article."
+      },
+      "document-orphan": {
+        "title": "No content link at all",
+        "action": "No page links to it from the main content. Add a contextual link from a related page or from the hub."
+      },
+      "near-duplicate": {
+        "title": "Nearly identical content",
+        "action": "Compare both pages. If it is a duplicate, merge them or set a canonical."
+      },
+      "language-pair-missing": {
+        "title": "Missing language version",
+        "action": "The document exists only in {{language}}. Decide whether it needs a translation; this is information, not an error."
+      }
+    },
+    "evidence": {
+      "hub": "hub: {{hub}}",
+      "count": "Pages: {{count}}",
+      "members": "{{count}} documents",
+      "areas": "{{count}} areas",
+      "withoutHub": "{{count}} without a hub",
+      "pairs": "Pairs: {{count}}",
+      "similarity": "similarity {{percent}}%",
+      "titleTokens": "shared title words: {{titleTokens}}",
+      "nearest": "closest page: {{url}}",
+      "hash": "same content hash",
+      "distance": "SimHash: {{value}}/64",
+      "language": "language: {{language}}"
+    },
+    "confidence": {
+      "limited": "limited confidence (partial content evidence)",
+      "moderate": "moderate confidence"
+    },
+    "import": {
+      "button": "Import diagnosis topics",
+      "topicsCount": "{{count}} topics · run {{run}}"
+    }
+  },
+  "pdfReport": {
+    "audit": {
+      "report": {
+        "reportTitle": "SEOmi · SEO audit report",
+        "brandLine": "Generated by SEOmi",
+        "methodNote": "Method: local HTTP and HTML analysis. This report is not a Google indexation verdict.",
+        "pageLabel": "Page {{page}} of {{total}}",
+        "sevCritical": "Critical",
+        "sevWarning": "Warning",
+        "sevInfo": "Info",
+        "noMessage": "No description was provided for this finding.",
+        "noRecommendation": "Review this finding and correct the affected element.",
+        "categoryFallback": "General",
+        "statusOk": "OK",
+        "statusAttention": "Needs attention",
+        "statusInfo": "Info",
+        "noAction": "No action needed.",
+        "yes": "Yes",
+        "no": "No",
+        "notSet": "not set",
+        "title": "SEO audit report",
+        "auditedAt": "AUDITED AT",
+        "httpStatus": "HTTP STATUS",
+        "responseTime": "RESPONSE TIME",
+        "ms": "{{0}} ms",
+        "healthScore": "Health score",
+        "ratingGood": "Good",
+        "ratingFair": "Needs improvement",
+        "ratingPoor": "Poor",
+        "ratingNone": "Not scored",
+        "legend": "Green: 80 and above  ·  Amber: 50 to 79  ·  Red: below 50",
+        "findings": "findings",
+        "kpiHttp": "HTTP STATUS",
+        "kpiTime": "RESPONSE TIME",
+        "kpiTitle": "TITLE LENGTH",
+        "kpiDescription": "META DESCRIPTION",
+        "kpiH1": "H1 HEADINGS",
+        "kpiImages": "IMAGES",
+        "kpiLinks": "LINKS",
+        "kpiWords": "WORD COUNT",
+        "httpNote": "final response",
+        "slow": "slower than 800 ms",
+        "fast": "within 800 ms",
+        "characters": "characters",
+        "present": "Present",
+        "missing": "Missing",
+        "charsNote": "{{0}} characters",
+        "h1Note": "exactly 1 recommended",
+        "noAltNote": "{{0}} without alt text",
+        "linksNote": "{{0}} internal, {{1}} external",
+        "wordsNote": "words of body text",
+        "where": "WHERE",
+        "howToFix": "HOW TO FIX",
+        "fixFirst": "What to fix first",
+        "noIssues": "No issues were reported by this audit.",
+        "fixIntro": "Findings are ordered by severity and grouped by category. Each card says what to change and where it applies.",
+        "severityGroup": "{{0}} ({{1}})",
+        "details": "Audit details",
+        "noDetails": "This audit contains no detailed page data.",
+        "colCheck": "Check",
+        "colValue": "Current value",
+        "colStatus": "Status",
+        "colAdvice": "Recommendation",
+        "colArea": "Area",
+        "passed": "Passed checks",
+        "nothingPassed": "No check passed in this audit.",
+        "passedSummary": "{{0}} of {{1}} checks passed."
+      },
+      "checks": {
+        "chars": "{{0}} ({{1}} characters)",
+        "ms": "{{0}} ms",
+        "bytes": "{{0}} bytes",
+        "minutes": "{{0}} min",
+        "unknown": "unknown",
+        "missingCount": "{{0}} missing",
+        "fixAlt": "Add descriptive alt text to every image.",
+        "fixSize": "Set explicit width and height attributes on images.",
+        "fixInsecure": "Change http:// links to https://.",
+        "fixMixed": "Load every resource over HTTPS.",
+        "keyword": "{{0}} ({{1}})",
+        "metaTitle": "Meta tags",
+        "title": "Title",
+        "description": "Meta description",
+        "canonical": "Canonical URL",
+        "robotsMeta": "Meta robots",
+        "viewport": "Viewport",
+        "charset": "Charset",
+        "keywords": "Meta keywords",
+        "author": "Author",
+        "generator": "Generator",
+        "themeColor": "Theme color",
+        "headingsTitle": "Headings",
+        "h1Count": "H1 count",
+        "h1Text": "H1 text",
+        "hierarchy": "Valid heading hierarchy",
+        "outline": "Heading outline",
+        "contentTitle": "Content statistics",
+        "words": "Word count",
+        "sentences": "Sentences",
+        "readingTime": "Reading time",
+        "readability": "Readability",
+        "readabilityValue": "{{0}} (Flesch score {{1}})",
+        "wordsPerSentence": "Words per sentence",
+        "textRatio": "Text to HTML ratio",
+        "topKeywords": "Top keywords",
+        "imagesTitle": "Images",
+        "imageTotal": "Images found",
+        "imageAlt": "Images without alt text",
+        "imageSize": "Images without width and height",
+        "imageFormats": "Image formats",
+        "linksTitle": "Links",
+        "linkTotal": "Total links",
+        "linkInternal": "Internal links",
+        "linkExternal": "External links",
+        "linkNofollow": "Nofollow links",
+        "linkInsecure": "Insecure (HTTP) links",
+        "linkBlank": "Links opening a new tab",
+        "redirectTitle": "Redirect chain",
+        "redirectHops": "Redirect hops",
+        "hop": "Hop {{0}}",
+        "hopValue": "HTTP {{0}}: {{1}} to {{2}}",
+        "indexTitle": "Indexability",
+        "indexStatus": "Indexability status",
+        "xRobots": "X-Robots-Tag header",
+        "canonicalMatch": "Canonical matches final URL",
+        "canonicalChecked": "Canonical target checked",
+        "canonicalStatus": "Canonical target HTTP status",
+        "canonicalError": "Canonical check error",
+        "securityTitle": "Security headers",
+        "securityScore": "Security score",
+        "transportTitle": "Transport security",
+        "https": "Served over HTTPS",
+        "scheme": "URL scheme",
+        "mixed": "Mixed content resources",
+        "cookies": "Cookies",
+        "noCookies": "No cookies were set",
+        "cookie": "Cookie: {{0}}",
+        "cookieValue": "Secure: {{0}}; HttpOnly: {{1}}; SameSite: {{2}}",
+        "cookieAdvice": "Set the Secure and HttpOnly flags and a SameSite attribute.",
+        "tls": "TLS coverage",
+        "structuredTitle": "Structured data",
+        "blocks": "Structured data blocks",
+        "block": "{{0}} ({{1}})",
+        "valid": "No validation issues",
+        "structuredAdvice": "Fix the structured data so it validates.",
+        "socialTitle": "Open Graph and Twitter card",
+        "addTag": "Add the {{0}} tag to the page head.",
+        "a11yTitle": "Accessibility",
+        "language": "Document language",
+        "landmarks": "Landmarks",
+        "aria": "ARIA attributes",
+        "formControls": "Form controls",
+        "unlabeled": "Unlabeled form controls",
+        "hiddenControls": "Hidden form controls",
+        "manual": "Manual review needed",
+        "ampTitle": "AMP",
+        "ampDetected": "AMP detected",
+        "ampDocument": "Page is an AMP document",
+        "ampUrls": "AMP versions linked",
+        "ampCanonical": "AMP canonical URL",
+        "ampCoverage": "Validation coverage",
+        "notVerified": "Not verified",
+        "perfTitle": "Performance",
+        "httpStatus": "HTTP status",
+        "responseTime": "Server response time",
+        "headersTime": "Time to response headers",
+        "bodyTime": "Body read time",
+        "totalTime": "Total request time",
+        "bodyBytes": "Decoded body size",
+        "lengthHeader": "Content-Length header",
+        "redirectCount": "Redirects followed",
+        "method": "Request method",
+        "measuredAt": "Measured at",
+        "scope": "Measurement scope",
+        "techTitle": "Technical details",
+        "contentType": "Content type",
+        "server": "Server",
+        "favicon": "Favicon",
+        "robotsTxt": "robots.txt",
+        "sitemap": "Sitemap",
+        "hreflangTags": "Hreflang tags",
+        "hreflang": "{{0}}: {{1}}",
+        "techSignals": "Detected technologies",
+        "signal": "{{0}}{{1}} ({{2}}, {{3}})"
+      },
+      "loc": {
+        "wholePage": "Whole page: {{0}}",
+        "page": "Page: {{0}}",
+        "element": "Element: {{0}}",
+        "current": "Current value: {{0}}",
+        "image": "Image: {{0}}",
+        "link": "Link: {{0}}",
+        "linkText": "Link: {{0}} (anchor text: {{1}})",
+        "h1": "Heading <h1>: {{0}}",
+        "header": "HTTP response header: {{0}}",
+        "headerMissing": "Current value: not sent by the server",
+        "cookie": "Cookie: {{0}}",
+        "block": "{{0}} {{1}}",
+        "blockPath": "Structured data {{0}}, path: {{1}}",
+        "noPath": "not specified",
+        "lineColumn": " (line {{0}}, column {{1}})",
+        "elementAt": "{{0}}{{1}}: {{2}}",
+        "evidence": "Evidence: {{0}}",
+        "scheme": "URL scheme: {{0}}",
+        "resource": "Insecure resource: {{0}}",
+        "response": "Server response: HTTP {{1}} in {{0}} ms",
+        "hop": "Redirect hop: HTTP {{0}} from {{1}}"
+      }
+    },
+    "crawl": {
+      "report": {
+        "reportTitle": "SEOmi · Site crawl report",
+        "brandLine": "Generated by SEOmi",
+        "footerNote": "Method: local HTTP and HTML crawl; saved run data only, no pages re-fetched.",
+        "methodFull": "Method: local HTTP and HTML crawl. Only data stored in the selected run is included; no pages are fetched again for this report. This report is not a Google indexation verdict.",
+        "pageLabel": "Page {{page}} of {{total}}",
+        "title": "Site crawl report",
+        "completedAt": "COMPLETED AT",
+        "duration": "DURATION",
+        "pagesCrawled": "PAGES CRAWLED",
+        "mode": "CRAWL MODE",
+        "modeDefault": "http",
+        "environment": "ENVIRONMENT",
+        "envDefault": "default",
+        "scoreVersion": "SCORE VERSION",
+        "versionNone": "not versioned",
+        "seconds": "{{0}} s",
+        "minSec": "{{0}} min {{1}} s",
+        "ms": "{{0}} ms",
+        "yes": "Yes",
+        "no": "No",
+        "none": "None",
+        "ok": "OK",
+        "problem": "Problem",
+        "noteCancelled": "This crawl was cancelled before it finished; results are partial.",
+        "noteTimedOut": "This crawl hit its time limit; results are partial.",
+        "noteRobots": "robots.txt warning: {{0}}",
+        "noteLimits": "Limits reached: {{0}}.",
+        "healthScore": "Health score",
+        "legend": "Green: 80 and above  ·  Amber: 50 to 79  ·  Red: below 50",
+        "ratingGood": "Good",
+        "ratingFair": "Needs improvement",
+        "ratingPoor": "Poor",
+        "ratingNone": "Not scored",
+        "critical": "Critical",
+        "warning": "Warning",
+        "notice": "Notice",
+        "findings": "issues",
+        "kpiShare": "{{0}}% of pages",
+        "kIndexable": "INDEXABLE",
+        "kBlocked": "NOT INDEXABLE",
+        "kUncertain": "UNCERTAIN",
+        "k2xx": "STATUS 2XX",
+        "k3xx": "STATUS 3XX",
+        "k4xx": "STATUS 4XX",
+        "k5xx": "STATUS 5XX",
+        "kNoStatus": "NO RESPONSE",
+        "kAvgTime": "AVG RESPONSE",
+        "kAvgNote": "per page",
+        "kAvgWords": "AVG WORDS",
+        "kWordsNote": "per page",
+        "kOrphans": "ORPHAN PAGES",
+        "kDuplicates": "DUPLICATE GROUPS",
+        "kDupNote": "titles, descriptions, content",
+        "kChains": "REDIRECT CHAINS",
+        "kChainNote": "2 or more hops",
+        "kBrokenInt": "BROKEN INTERNAL LINKS",
+        "kBrokenExt": "BROKEN EXTERNAL LINKS",
+        "kLinkNote": "checked links",
+        "kNoTitle": "MISSING TITLES",
+        "kNoDesc": "MISSING DESCRIPTIONS",
+        "kNoH1": "MISSING H1",
+        "kNoCanonical": "NO CANONICAL",
+        "kWithIssues": "PAGES WITH ISSUES",
+        "fixFirst": "What to fix first",
+        "fixIntro": "Issues are grouped by type and ordered Critical, Warning, Notice. Each card lists the affected pages and how to fix them.",
+        "noIssues": "No issues were found on the crawled pages.",
+        "severityGroup": "{{0}} ({{1}})",
+        "affectedOne": "1 page affected",
+        "affected": "{{0}} pages affected ({{1}}%)",
+        "where": "WHERE",
+        "howToFix": "HOW TO FIX",
+        "wherePage": "{{0}}: {{1}}",
+        "morePages": "... and {{0}} more pages (see the pages table for every URL)",
+        "evTitle": "title: {{0}}",
+        "evDescription": "meta description: {{0}}",
+        "evCanonical": "canonical: {{0}} ({{1}})",
+        "evStatus": "HTTP {{0}}",
+        "evError": "request error: {{0}}",
+        "evRobots": "meta robots: {{0}}, X-Robots-Tag: {{1}}",
+        "evWords": "{{0}} words",
+        "evH1": "H1 count: {{0}}",
+        "evLang": "lang: {{0}}",
+        "evImages": "{{0}} images without alt",
+        "pagesHeading": "Pages",
+        "pagesIntro": "Every crawled page, in crawl order.",
+        "criticalPages": "Pages with critical issues",
+        "criticalIntro": "Pages with at least one Critical issue, with the findings that need fixing first.",
+        "colCritical": "Critical issues",
+        "details": "Detailed findings",
+        "noneFound": "None found in this run.",
+        "moreRows": "+ {{0}} more rows not shown here",
+        "rows": "{{0}} rows",
+        "rowOne": "1 row",
+        "tCoverage": "Report coverage",
+        "coverageIntro": "Every area below was checked; sections with no data say so.",
+        "tComparison": "Comparison with a previous run",
+        "noComparison": "Not available: a saved run record does not carry a previous run."
+      },
+      "labels": {
+        "tRun": "Run details",
+        "tConfig": "Crawl configuration",
+        "configIntro": "Settings the crawl ran with, exactly as stored in the run.",
+        "tRobots": "Robots.txt and sitemap",
+        "runId": "Run ID",
+        "scopeUrl": "Scope start URL",
+        "startUrl": "Start URL used by the crawler",
+        "resources": "Resources checked",
+        "images": "Images found",
+        "limits": "Limits observed",
+        "cancelled": "Cancelled",
+        "timedOut": "Timed out",
+        "resourceLimit": "Resource request limit reached",
+        "provenance": "Discovery provenance partial",
+        "compacted": "Stored evidence compacted",
+        "pagesTruncated": "Stored pages truncated",
+        "storagePages": "{{0}} of {{1}} pages kept",
+        "template": "Report template",
+        "templateFull": "Full report",
+        "robotsStatus": "robots.txt status",
+        "robotsEval": "robots.txt evaluation",
+        "robotsCode": "robots.txt HTTP status",
+        "robotsUrl": "robots.txt final URL",
+        "robotsAgent": "Crawler user agent",
+        "robotsBlocked": "URLs blocked by robots.txt",
+        "robotsWarning": "robots.txt warning",
+        "sitemapStatus": "Sitemap result",
+        "sitemapFound": "Sitemap URLs discovered",
+        "tPages": "All crawled pages",
+        "tDupTitles": "Duplicate titles",
+        "tDupDescriptions": "Duplicate meta descriptions",
+        "tDupContent": "Duplicate content",
+        "tNear": "Near-duplicate content",
+        "dupIntro": "Pages in the same group share the same value; make each page unique.",
+        "hashLabel": "Content hash {{0}} ({{1}})",
+        "tRedirects": "Redirects and redirect chains",
+        "redirectIntro": "Link directly to the final URL; chains of 2 or more hops waste crawl budget.",
+        "hop": "{{0}} → {{1}}",
+        "tClientRedirects": "Client-side redirects",
+        "tBroken": "Broken links",
+        "brokenIntro": "Links whose target answered with an error or could not be requested; internal links first.",
+        "internal": "Internal",
+        "external": "External",
+        "statusError": "{{0}} ({{1}})",
+        "tExternal": "External links summary",
+        "externalIntro": "External targets grouped by host, with the results of the checks done in this run.",
+        "notChecked": "not checked in this run",
+        "tCanonical": "Canonical conflicts",
+        "canonicalIntro": "Pages whose canonical is missing, invalid, multiple or points elsewhere.",
+        "targetStatus": "{{0}} (HTTP {{1}})",
+        "rdCompleted": "Completed at",
+        "rdMode": "Crawl mode",
+        "rdDuration": "Duration",
+        "rdPages": "Pages crawled",
+        "tHreflang": "Hreflang",
+        "tPagination": "Pagination",
+        "tAmp": "AMP",
+        "tSchema": "Structured data",
+        "schemaFinding": "{{0}} {{1}}: {{2}}",
+        "tHtml": "HTML validation findings",
+        "lineColumn": "(line {{0}}, column {{1}})",
+        "tImages": "Image problems",
+        "imagesIntro": "{{0}} of {{1}} images have a problem: missing alt text or dimensions, errors or oversized files.",
+        "pNoAlt": "no alt",
+        "pNoSize": "no width/height",
+        "pBroken": "request failed",
+        "pOversized": "over {{0}} KB",
+        "tResources": "Resources",
+        "usedBy": "{{0}} pages, e.g. {{1}}",
+        "tFrames": "Frames (iframes)",
+        "tSearches": "Custom search results",
+        "tRules": "robots.txt rules applying to the crawler",
+        "tAgents": "robots.txt by crawler identity",
+        "tDirectives": "Sitemap directives in robots.txt",
+        "tRobotsChain": "robots.txt redirect chain",
+        "tSitemapUrls": "Sitemap URLs in scope",
+        "tRejected": "URLs rejected by the crawl scope",
+        "tReasons": "Indexability reasons",
+        "reasonsIntro": "Why pages are blocked or uncertain, including robots.txt rules.",
+        "httpIntro": "{{0}} of {{1}} pages returned header or discovery data; the others carry none.",
+        "tHttp": "HTTP response details and discovery",
+        "discovered": "{{0}} {{1}}"
+      },
+      "cols": {
+        "colItem": "Item",
+        "colValue": "Value",
+        "colUrl": "URL",
+        "colStatus": "Status",
+        "colIndexability": "Indexability",
+        "colTitle": "Title",
+        "colDepth": "Depth",
+        "colTime": "Time (ms)",
+        "colWords": "Words",
+        "colIssues": "Issues",
+        "colPages": "Pages",
+        "colUrls": "URLs",
+        "colFinding": "Finding",
+        "colFindings": "Findings",
+        "colSource": "Source page",
+        "colTarget": "Target",
+        "colAnchor": "Anchor",
+        "colType": "Type",
+        "colHost": "Host",
+        "colLinks": "Links",
+        "colStates": "Results",
+        "colHops": "Hops",
+        "colChain": "Redirect chain",
+        "colFinal": "Final URL",
+        "colStop": "Stop reason",
+        "colDeclaration": "Declaration",
+        "colDelay": "Delay (s)",
+        "colCanonical": "Canonical target",
+        "colRelation": "Relation",
+        "colDeclarations": "Tags",
+        "colConflict": "Robots conflict",
+        "colLang": "Lang",
+        "colReciprocal": "Reciprocal",
+        "colVerdict": "Verdict",
+        "colParams": "Query changes",
+        "colAlignment": "Canonical alignment",
+        "colAmp": "AMP URL",
+        "colChecked": "Checked",
+        "colImage": "Image",
+        "colAlt": "Alt",
+        "colSize": "Size",
+        "colBytes": "Bytes",
+        "colProblem": "Problem",
+        "colResource": "Resource",
+        "colContentType": "Content type",
+        "colUsedBy": "Used by",
+        "colFrame": "Frame",
+        "colSearch": "Search",
+        "colFound": "Values found",
+        "colError": "Error",
+        "colTypes": "Schema types",
+        "colSyntax": "Syntax errors",
+        "colSeverity": "Severity",
+        "colCode": "Code",
+        "colElement": "Element",
+        "colDirective": "Directive",
+        "colPath": "Path",
+        "colAgent": "User agent",
+        "colGroup": "Own group",
+        "colRules": "Rules",
+        "colDelayMs": "Delay (ms)",
+        "colFrom": "From",
+        "colTo": "To",
+        "colReason": "Reason",
+        "colReasons": "Reasons",
+        "colEncoding": "Encoding",
+        "colCache": "Cache-Control",
+        "colXrobots": "X-Robots-Tag",
+        "colDiscovered": "Discovered via",
+        "colArea": "Area",
+        "colResult": "Result"
+      },
+      "focus": {
+        "title": "Site Focus",
+        "intro": "How consistently the crawled pages stay on one core topic. Scores come from the saved run; no pages are fetched again.",
+        "scoreTitle": "Site Focus Score",
+        "legend": "Bands: 90-100 excellent, 75-89 good, 60-74 moderate, 40-59 weak, 0-39 critical.",
+        "kConfidence": "Core topic confidence",
+        "kOnTopic": "On-topic ratio",
+        "kScored": "Pages scored",
+        "kSkipped": "Pages skipped",
+        "kOffTopic": "Off-topic pages",
+        "kBorderline": "Borderline pages",
+        "kStrong": "Strong pages",
+        "nConfidence": "Core cluster share",
+        "nOnTopic": "Pages with TRS 60 or more",
+        "nScored": "of {{0}} crawled",
+        "nSkipped": "Not scored",
+        "nOffTopic": "TRS under 40",
+        "nBorderline": "TRS 60-74",
+        "nStrong": "TRS 75 or more",
+        "percent": "{{0}}%",
+        "coreBadge": "CORE TOPIC",
+        "coreTerms": "Top terms",
+        "coreTerm": "{{0}} ({{1}}% of pages)",
+        "coreConfidence": "Confidence {{0}}%",
+        "coreManual": "Manual topic: {{0}}",
+        "coreDetected": "Detected from the crawled pages",
+        "tPages": "Weakest pages by topic relevance",
+        "pagesIntro": "Up to 25 content pages with the lowest Topical Relevance Score (TRS). Technical pages and skipped pages are left out.",
+        "colTrs": "TRS",
+        "colType": "Type",
+        "colSimilarity": "Similarity",
+        "colOverlap": "Overlap",
+        "colDrift": "Drift",
+        "colPlaybook": "Playbook",
+        "playbook": "{{0}}: {{1}}",
+        "tRecs": "Recommendations",
+        "recsIntro": "Ranked by simulated score gain per estimated effort hour. Gains are estimates.",
+        "colNo": "#",
+        "colAction": "Recommendation",
+        "colGain": "Gain",
+        "gain": "+{{0}}",
+        "tSub": "Sub-site scores",
+        "subIntro": "Topic areas of a multi-topic site, each scored against its own core topic.",
+        "colArea": "Topic area",
+        "colPrefix": "Path",
+        "colShare": "Share of pages",
+        "colScore": "Score",
+        "tGaps": "Topic gaps",
+        "colGap": "Gap",
+        "band": {
+          "excellent": "Excellent focus",
+          "good": "Good focus",
+          "moderate": "Moderate focus",
+          "weak": "Weak focus",
+          "critical": "Critical focus"
+        },
+        "status": {
+          "strong": "Strong",
+          "moderate": "Moderate",
+          "borderline": "Borderline",
+          "weak": "Weak",
+          "off-topic": "Strongly off-topic"
+        },
+        "type": {
+          "homepage": "Homepage",
+          "category": "Category",
+          "article": "Article",
+          "technical": "Technical"
+        },
+        "note": {
+          "lowConfidence": "Small sample ({{0}} pages). Results are indicative; crawl at least 10 pages for a reliable core topic. Removal advice is limited.",
+          "multiTopic": "{{0}} topic areas detected. The site does not have one dominant topic. Sub-site scores are shown below.",
+          "lexicalFallback": "The analysis for the selected language uses the TF-IDF statistical algorithm. The deep semantic similarity component is unavailable; the score is based on keyword coverage and distribution.",
+          "skippedRender": "{{0}} pages were skipped in the analysis because JavaScript rendering timed out.",
+          "degraded": "Some pages had limited data, so their scores may be less precise.",
+          "unmatchedTopic": "No pages matched the topic \"{{0}}\". The detected topic is used instead."
+        },
+        "rec": {
+          "remove-offtopic": "Remove or move {{0}} off-topic pages: redirect, noindex or delete the worst ones and remove internal links to them. Potential: +{{1}} points.",
+          "strengthen-borderline": "Strengthen {{0}} borderline pages: add missing core terms and sections to lift them to about {{1}}. Potential: +{{2}} points.",
+          "expand-core-cluster": "Expand the core topic cluster: write {{0}} new pages for thin subtopics. Potential: +{{1}} points.",
+          "add-internal-links": "Add internal links to hub pages: {{0}} link suggestions send weak pages to strong hubs.",
+          "collect-more-pages": "Collect more pages: only {{0}} pages were analysed. Crawl more before removing anything.",
+          "split-subsites": "Consider splitting the site: {{0}} distinct topic areas found. Separate sections or subdomains may help.",
+          "review-skipped-pages": "Review {{0}} skipped pages: {{1}} of them timed out while rendering JavaScript.",
+          "monitor-strong-pages": "Monitor {{0}} strong pages: keep them on topic and recheck regularly."
+        },
+        "option": {
+          "remove-redirect": "Delete and redirect with 301 (+{{0}} points)",
+          "noindex-isolate": "Noindex and isolate (+{{0}} points)",
+          "rewrite-on-topic": "Rewrite on topic with a brief (target TRS about {{0}})",
+          "add-missing-terms": "Add missing terms: {{0}}",
+          "reinforce-headings": "Reinforce H2 and H3 headings",
+          "deepen-coverage": "Deepen topical coverage",
+          "serve-as-hub": "Use as a hub",
+          "build-satellite-cluster": "Build a satellite cluster",
+          "monitor-periodically": "Monitor every {{0}} weeks"
+        },
+        "gap": {
+          "thin-subtopic": "Thin subtopic \"{{0}}\": only {{1}}% of pages cover it ({{2}} pages). Terms: {{3}}.",
+          "competitor-terms": "Competitor terms missing on your site: {{3}}."
+        }
+      },
+      "authority": {
+        "title": "Topical Authority",
+        "intro": "How completely and deeply the site covers its Core Topic compared with the market. Scores come from the saved run and the cached reference map; no pages are fetched again.",
+        "scoreTitle": "Topical Authority Score",
+        "legend": "TAS = 0.35 coverage + 0.30 entity depth + 0.25 silo cohesion + 0.10 freshness, scaled by the Site Focus Score (0.7 to 1.0).",
+        "kTcr": "Topic coverage",
+        "kCdes": "Entity depth",
+        "kSilc": "Silo cohesion",
+        "kCvff": "Freshness",
+        "unavailable": "n/a",
+        "noReference": "No reference map was built for this project, so coverage and depth are not measured and TAS is not calculated.",
+        "reference": "Reference map: {{0}} sub-topics in {{1}} pillars from {{2}} competitors ({{3}}).",
+        "quadrant": {
+          "dominant_authority": "Dominant authority",
+          "boutique_specialist": "Boutique specialist",
+          "diluted_giant": "Diluted giant",
+          "unfocused_generalist": "Unfocused generalist"
+        },
+        "warning": {
+          "empty-authority": "Empty authority: many topics are touched but their average depth is very low. Deepen existing pages before publishing more.",
+          "template-duplicates": "Template clones were merged into their strongest page: they do not raise coverage and waste crawl budget.",
+          "no-dates": "No publication or update dates were found, so freshness is not measured.",
+          "no-links": "No in-content internal links between analysed pages were found, so silo cohesion rests on orphan pages only."
+        },
+        "tCoverage": "Pillar coverage",
+        "colPillar": "Pillar",
+        "colCoverage": "Coverage",
+        "colGaps": "Missing sub-topics",
+        "tGaps": "Content gaps",
+        "colGap": "Missing sub-topic",
+        "colLevel": "Severity",
+        "tCannibal": "Semantic cannibalization",
+        "colCanonical": "Page to keep",
+        "colPages": "Pages",
+        "tRecs": "Topical expansion plan",
+        "tBench": "Topical gap matrix vs top competitors",
+        "level": {
+          "critical": "critical",
+          "high": "high",
+          "medium": "medium"
+        },
+        "rec": {
+          "fill-gaps": "Fill the gaps in “{{0}}”: {{1}} missing sub-topics",
+          "merge-cannibalized": "Merge {{0}} groups of cannibalizing pages",
+          "fix-linking": "Fix internal linking: {{0}} orphan pages, {{1}} links to off-topic pages",
+          "deepen-shallow": "Deepen {{0}} shallow sub-topics",
+          "refresh-stale": "Refresh {{0}} pages not updated for over a year"
+        }
+      },
+      "aio": {
+        "title": "AI Overviews & RAG readiness",
+        "intro": "How easily AI answer engines can lift and quote passages of your pages. The score combines self-contained passages (45%), fact density (35%) and extractable structure (20%).",
+        "scoreTitle": "AI readiness score",
+        "legend": "Bands: 90-100 excellent, 75-89 good, 60-74 moderate, 40-59 weak, 0-39 critical.",
+        "kSelf": "Self-containment",
+        "kSpo": "Fact density",
+        "kExtract": "Extractability",
+        "kScored": "Pages scored",
+        "nSelf": "Passages that stand alone",
+        "nSpo": "Subject-predicate-object facts",
+        "nExtract": "Tables, lists, headings",
+        "nScored": "{{0}} pages skipped",
+        "noteBasic": "Language rules for {{0}} are basic: pronoun and fact detection is less precise there.",
+        "tPages": "Pages by AI readiness",
+        "pagesIntro": "Up to 25 pages, lowest score first.",
+        "colScore": "Score",
+        "colSelf": "Self-contained",
+        "colSpo": "Facts",
+        "colExtract": "Structure",
+        "colChunks": "Chunks",
+        "tPassages": "Weakest passages",
+        "passagesIntro": "Passages a RAG index would struggle to cite, with the problems found.",
+        "colHeading": "Page and heading",
+        "colExcerpt": "Passage",
+        "colIssues": "Problems",
+        "percent": "{{0}}%",
+        "band": {
+          "excellent": "Excellent readiness",
+          "good": "Good readiness",
+          "moderate": "Moderate readiness",
+          "weak": "Weak readiness",
+          "critical": "Critical readiness"
+        },
+        "issue": {
+          "dangling-pronoun": "Unclear reference",
+          "no-answer-first": "No direct answer first",
+          "filler-opening": "Filler opening",
+          "no-facts": "No concrete facts",
+          "too-long": "Too long for one chunk"
+        }
+      },
+      "trust": {
+        "title": "Entity Trust (E-E-A-T)",
+        "intro": "How verifiable the publisher, authors and sources of the site are. Scores come from the saved run; no pages are fetched again.",
+        "scoreTitle": "Entity Trust Score",
+        "legend": "Levels: 75-100 strong, 60-74 adequate, 40-59 weak, 0-39 critical.",
+        "kSchema": "Entity graph",
+        "kAuthor": "Author topic fit",
+        "kCitation": "Source quality",
+        "kTransparency": "Transparency",
+        "kArticles": "Article pages",
+        "kAuthors": "Author entities",
+        "nLayer": "Score 0-100",
+        "nNoData": "No data in this crawl",
+        "nArticles": "of {{0}} crawled",
+        "nAuthors": "{{0}} with sameAs",
+        "ymylNote": "YMYL category: {{0}}. {{1}}% of articles have no named author or reviewer.",
+        "tAuthors": "Author entities",
+        "authorsIntro": "Authors found in structured data, with sameAs links and fit to the core topic.",
+        "colAuthor": "Author",
+        "colArticles": "Articles",
+        "colSameAs": "sameAs",
+        "colAlignment": "Topic fit",
+        "generic": "{{0}} (anonymous byline)",
+        "tPages": "Trust pages",
+        "pagesIntro": "Pages that show editorial and company transparency.",
+        "colPage": "Page",
+        "colState": "Status",
+        "found": "Found: {{0}}",
+        "missing": "Missing",
+        "tFindings": "Trust findings",
+        "findingsIntro": "Ordered by severity; fix critical items first.",
+        "colSeverity": "Severity",
+        "colFinding": "Finding",
+        "level": {
+          "strong": "Strong trust",
+          "adequate": "Adequate trust",
+          "weak": "Weak trust",
+          "critical": "Critical trust gaps"
+        },
+        "severity": {
+          "critical": "Critical",
+          "warning": "Warning",
+          "info": "Info"
+        },
+        "kind": {
+          "editorial": "Editorial policy",
+          "about": "About us",
+          "contact": "Contact",
+          "registry": "Company registry data"
+        },
+        "ymyl": {
+          "health": "health",
+          "finance": "finance",
+          "legal": "legal"
+        },
+        "find": {
+          "ymyl-unattributed": "{{0}} articles ({{1}}%) on a YMYL topic have no named author or reviewer.",
+          "ymyl-no-reviewer": "None of the {{0}} medical articles declares a reviewer (reviewedBy).",
+          "no-bylines": "None of the {{0}} articles declares an author in structured data.",
+          "generic-author": "{{0}} articles are signed with an anonymous byline.",
+          "org-missing": "No Organization entity was found in the structured data.",
+          "org-no-same-as": "The publisher {{0}} has no sameAs links.",
+          "author-no-same-as": "{{0}} authors have no sameAs links ({{1}}).",
+          "author-no-id": "{{0}} authors have no stable @id.",
+          "author-off-topic": "The profile of {{0}} fits the core topic only {{1}}%.",
+          "low-citations": "Only {{0}}% of {{1}} article pages cite a trusted source.",
+          "dead-citations": "{{0}} outbound links return an error.",
+          "missing-editorial": "No editorial policy or fact-checking page was found.",
+          "missing-contact": "No contact page was found.",
+          "missing-registry": "No company registry or legal notice page was found.",
+          "missing-about": "No About page was found.",
+          "missing-dates": "Only {{0}}% of articles show a modified or review date.",
+          "no-articles": "No article pages were detected; author and citation layers were not scored.",
+          "author-invalid-profile": "{{0}} authors link an ORCID or Wikidata profile with an invalid identifier ({{1}}). Check the checksum or Q-ID.",
+          "ymyl-no-scholarly-ids": "None of the {{0}} article pages cite a source with a DOI, PMID or PMCID. On a YMYL topic, cite the primary study."
+        }
+      },
+      "offPage": {
+        "title": "Off-page analysis",
+        "intro": "Latest saved analysis for this project; this sample is not the full backlink profile.",
+        "topic": "Topic",
+        "scale": "Authority scale",
+        "model": "Embedding model",
+        "requested": "Sources requested",
+        "fetched": "Sources fetched",
+        "scored": "Sources scored",
+        "statusLabel": "Status",
+        "limitationsLabel": "Limitations",
+        "sourcesIntro": "Up to 10 sources, highest contribution first; n/a means unavailable.",
+        "offset": "Text offset",
+        "excerpt": "Excerpt",
+        "disclaimer": "Not Google PageRank; missing text or authority is partial/unavailable, not zero backlinks; co-occurrence is not endorsement.",
+        "tbva": "TBVA",
+        "tSources": "Saved per-source evidence",
+        "authority": "Authority",
+        "similarity": "Similarity",
+        "contribution": "Contribution",
+        "tCitations": "Co-citation excerpts",
+        "na": "n/a",
+        "status": {
+          "ready": "Ready",
+          "partial": "Partial",
+          "unavailable": "Unavailable"
+        },
+        "limitations": {
+          "no-topic-vector": "No usable Core Topic vector from the latest completed project crawl; TBVA is unavailable.",
+          "invalid-scale": "Invalid authority scale; TBVA is unavailable.",
+          "no-follow-links": "No follow links available for analysis.",
+          "source-text-or-authority-missing": "Some sources lack text, usable vectors or provider authority."
+        }
+      }
+    },
+    "recs": {
+      "crawlMissingLanguage": "Add a valid lang attribute to the <html> element, for example lang=\"en\".",
+      "htmlDoctype": "Start the document with <!doctype html> exactly once.",
+      "htmlMetaCharset": "Declare <meta charset=\"utf-8\"> in the first 1024 bytes of the head.",
+      "htmlDuplicateId": "Make every id attribute unique within the document.",
+      "htmlUriInvalid": "Fix the URL so it is correctly percent-encoded and resolvable.",
+      "missingTitle": "Add a unique, descriptive <title> of 30 to 60 characters.",
+      "multipleTitle": "Keep exactly one <title> element in the head.",
+      "titleLength": "Rewrite the <title> to 30-60 characters that describe the page.",
+      "duplicateTitle": "Give every page its own unique title that matches its topic.",
+      "missingMetaDescription": "Add a unique meta description of 70-160 characters.",
+      "metaDescriptionLength": "Rewrite the meta description to 70-160 characters.",
+      "emptyDescription": "Fill in the meta description or remove the empty tag.",
+      "multipleMetaDescription": "Keep a single meta description tag in the head.",
+      "duplicateMetaDescription": "Write a unique meta description for every page.",
+      "missingCanonical": "Add <link rel=\"canonical\"> pointing to the preferred URL of the page.",
+      "canonicalTargetReturned": "Point the canonical to a URL that answers with HTTP 200.",
+      "canonicalAndNoindex": "Remove either the canonical or the noindex so the indexing signal is clear.",
+      "canonicalDeclarationHas": "Use an absolute http(s) URL in the canonical link.",
+      "crawlMultipleCanonical": "Declare exactly one canonical URL per page.",
+      "crawlCanonical": "Check that the canonical target is the page you want indexed; make it self-referencing otherwise.",
+      "missingH1": "Add exactly one <h1> that states the page topic.",
+      "multipleH1": "Keep a single <h1> and demote the others to <h2>.",
+      "heading": "Keep headings in order (h1, h2, h3) without skipping levels.",
+      "crawlDuplicateContent": "Rewrite the page or consolidate duplicates with a canonical or a redirect.",
+      "nearDuplicate": "Differentiate the content of these pages or merge them.",
+      "httpErrorStatus": "Fix the server error or remove/redirect links that lead to this URL.",
+      "fetchFailed": "Check that the server is reachable and answers within the timeout; then re-crawl.",
+      "crawlClientRedirect": "Replace the meta/JS refresh with a server-side 301 redirect.",
+      "redirect": "Link directly to the final URL and keep redirect chains to a single hop.",
+      "crawlNofollow": "Remove nofollow from robots directives unless link equity should really be blocked.",
+      "noindex": "Remove noindex if the page should appear in search results.",
+      "crawlThinContent": "Expand the page with useful original content or noindex/merge it.",
+      "missingAlt": "Add a descriptive alt attribute to every informative image.",
+      "jsonldSyntax": "Fix the JSON-LD syntax so it parses and validates.",
+      "schemaValidation": "Reduce the amount of structured data on the page to stay within the limits.",
+      "structuredData": "Declare every referenced @id in the same graph or remove the reference.",
+      "schema": "Fix the structured data property reported for this page.",
+      "pagination": "Make rel=next/prev targets valid, reachable and reciprocal.",
+      "ampTarget": "Check the AMP page: it must answer 200 and declare the source page as canonical.",
+      "nonHtmlResource": "No action needed unless this URL should be an HTML page.",
+      "responseBody": "Reduce the page size or raise the response limit and crawl again.",
+      "transientHttpFailure": "Check server stability; the request only worked after a retry.",
+      "browser": "Check the rendering error in the browser console and fix the failing resource.",
+      "rendered": "Make sure the requested URL does not navigate elsewhere in the browser.",
+      "robots": "Review the robots.txt rule if this URL should be crawlable.",
+      "genericCritical": "Fix this problem first: it can prevent the page from being crawled or indexed.",
+      "genericWarning": "Review the affected pages and correct the reported element.",
+      "genericNotice": "Optional improvement: review the affected pages when time allows."
+    }
+  },
+  "help": {
+    "overview": {
+      "healthScore": {
+        "title": "Health score",
+        "what": "A single number from 0 to 100 that sums up how many technical and on-page SEO problems SEOmi found on this one page. 100 means nothing wrong was detected; every problem subtracts points, and serious problems subtract more than small ones.",
+        "why": "Search engines and visitors both prefer pages that load, can be read and are easy to understand. A low score usually means something is blocking the page from ranking, such as a missing title, a broken status code or a noindex tag. The score is a quick triage tool, not a ranking factor that Google reads.",
+        "action": "Check the colour: 85 and above (green) is healthy, 65 to 84 (amber) needs attention, below 65 (red) needs work now.\nOpen the issues list further down this screen and start with the Critical items.\nFix one issue, run the audit again and watch the score rise.\nDo not chase 100 at any price: a score of 90 with great content beats 100 on a thin page.",
+        "example": "A page with a missing title (Critical), no meta description (Warning) and two images without alt text (Info) might score 68. Adding the title and the description usually brings it above 85.",
+        "learnMore": "The score only covers what SEOmi can measure on this single page. It does not judge your content quality, backlinks or competition."
+      },
+      "httpStatus": {
+        "title": "HTTP status code",
+        "what": "A three-digit answer the web server gives to every request, saying whether the page was delivered. 200 means OK, 301 and 302 mean the page moved, 404 means not found, 410 means gone for good, and 500 or higher means the server itself failed.",
+        "why": "Google only indexes pages that answer 200 (or follow a redirect to one). A 404 or 5xx page drops out of search results, and visitors see an error. Even a short-lived 500 can make Googlebot visit your site less often.",
+        "action": "200: nothing to do, this is correct.\n301 or 302: check the final address is the page you want people to land on. Use 301 for permanent moves.\n404 or 410: restore the page, or redirect the old address to the closest matching page with a 301.\n5xx: ask your hosting provider or developer to check the server logs, then re-run the audit.\nAfter a fix, re-test to confirm the status is now 200.",
+        "example": "You renamed /blog/seo-tips to /blog/seo-guide and forgot the redirect. The old address now returns 404, so every link and Google result pointing to it leads to an error. A 301 from the old to the new address fixes it."
+      },
+      "responseTime": {
+        "title": "Response time",
+        "what": "How many milliseconds (1000 ms = 1 second) the server needed to start sending this page after SEOmi asked for it. It measures the server, not how long the page takes to display in a browser.",
+        "why": "A slow server delays everything that comes after it, so visitors leave and Google crawls fewer of your pages. Google suggests keeping server response under about 200 ms. Above 1000 ms is clearly slow.",
+        "action": "Under 200 ms: excellent, leave it.\n200 to 600 ms: acceptable; consider caching if the page is mostly static.\nAbove 600 ms: turn on page caching (or a CDN) and compress responses.\nAbove 1000 ms: check hosting quality, heavy database queries and slow plugins.\nMeasure two or three times, because a single reading can be a one-off spike.",
+        "example": "A blog post that answers in 1800 ms on shared hosting often drops to 150 to 300 ms after a full-page cache plugin is switched on."
+      },
+      "severityCounts": {
+        "title": "Issue severity counts",
+        "what": "The problems found on this page, grouped by how serious they are. Critical issues can stop the page from ranking or working. Warnings are real weaknesses that cost you traffic or clicks. Info items are small improvements or things worth knowing.",
+        "why": "Grouping tells you what to fix first. Ten Info items matter less than one Critical, so you avoid spending a day on cosmetic details while a broken canonical tag hides the page from Google.",
+        "action": "Fix every Critical issue first, then re-run the audit.\nWork through the Warnings, starting with the ones that affect many pages.\nTreat Info items as a backlog for when you have time.\nA 0 under Critical is the goal, not 0 everywhere.",
+        "example": "3 Critical, 5 Warning, 9 Info: start with the 3 Critical ones, for example a missing title, a noindex tag and a 404 on the main image."
+      },
+      "wordCount": {
+        "title": "Word count",
+        "what": "The number of words of visible text that SEOmi found in the main content of the page. Menus, scripts and hidden code are not counted. The reading time is estimated at about 200 words per minute.",
+        "why": "Pages with very little text give search engines little to understand, which is called thin content. Long is not automatically better, though: the page must fully answer what the visitor came for.",
+        "action": "Under 300 words: ask yourself whether the page really answers the question. Add useful detail if not.\n300 to 1000 words: normal for most service and product pages.\nOver 1500 words: typical for in-depth guides; make sure headings split it into scannable sections.\nCompare with the top Google results for your keyword, not with a magic number.",
+        "example": "A product page with 80 words usually loses to competitors who explain materials, sizes, shipping and returns in 400 words."
+      }
+    },
+    "metadata": {
+      "titleLength": {
+        "title": "Page title length",
+        "what": "The title is the blue clickable headline in Google results and the text on the browser tab. The length is counted in characters, spaces included.",
+        "why": "Google shows about 50 to 60 characters (roughly 580 pixels). Longer titles are cut off with an ellipsis, so your key words and brand can vanish. Titles that are too short waste a chance to describe the page and attract clicks.",
+        "action": "Aim for 40 to 65 characters (SEOmi shows green in this range).\nPut the main keyword near the start.\nMake every page title unique.\nAdd your brand at the end if it fits, for example after a dash.\nWrite for people: promise what the visitor will get.\nSave and re-audit to see the counter turn green.",
+        "example": "\"Cheap shoes\" (11 characters) is too short. \"Buy Men's Running Shoes Online | Free Returns | ShoeShop\" is 53 characters and fits."
+      },
+      "metaDescription": {
+        "title": "Meta description",
+        "what": "A one or two sentence summary of the page, hidden in the code, that Google often shows under the title in search results. It is not visible on the page itself.",
+        "why": "It does not directly change your ranking, but a clear, inviting description raises the share of people who click your result (click-through rate), which brings more visitors from the same position. When it is missing Google makes up its own snippet, often a random piece of text.",
+        "action": "Write a unique description for each page.\nKeep it between 120 and 160 characters so it is not cut off.\nInclude the main keyword naturally, because Google bolds words that match the search.\nSay what the visitor gains and add a call to action such as \"See prices\" or \"Learn how\".\nDo not copy the first paragraph of the page.",
+        "example": "\"Learn how to choose running shoes in 5 steps: fit, cushioning, weight, price and terrain. Includes a free size chart and buying tips.\" (about 135 characters)."
+      }
+    },
+    "headings": {
+      "h1Count": {
+        "title": "Number of H1 headings",
+        "what": "H1 is the main heading of a page, the biggest title the visitor sees at the top of the content. It is different from the title tag in the browser tab. Headings H2 to H6 are smaller sub-headings below it.",
+        "why": "The H1 tells visitors and search engines what the page is about in one line. Pages without an H1 look unstructured to screen readers. Several H1s are not an error for Google, but they dilute the message and confuse assistive tools.",
+        "action": "Exactly one H1 per page is the target.\nIf there are 0: add one at the top of the content that describes the page, with the main keyword.\nIf there are 2 or more: keep the best one and change the others to H2 or H3.\nDo not use H1 only for styling; use CSS for size instead.",
+        "example": "On a recipe page the H1 is \"Easy Homemade Pizza Dough\" and the steps below are H2 headings: \"Ingredients\", \"Method\", \"Tips\"."
+      }
+    },
+    "images": {
+      "overview": {
+        "title": "Images found",
+        "what": "How many images SEOmi detected on the page, together with checks on each one: alt text (a short description for people who cannot see the image), size attributes, format and file weight.",
+        "why": "Images are usually the heaviest part of a page, so they slow it down. Missing alt text hurts blind visitors and removes a chance to appear in Google Images. Missing width and height make the page jump while loading (layout shift).",
+        "action": "Give every meaningful image a short, accurate alt text. Use an empty alt for decorative ones.\nSet width and height attributes so the browser reserves the space.\nCompress photos; try to keep each under 150 KB.\nUse modern formats such as WebP or AVIF.\nLazy-load images that are below the first screen.",
+        "example": "alt=\"Red running shoe, side view\" is useful. alt=\"image1.jpg\" or a stuffed list of keywords is not."
+      }
+    },
+    "links": {
+      "overview": {
+        "title": "Links on the page",
+        "what": "The count of all links SEOmi found, split into internal (to your own site), external (to other sites) and nofollow (links marked so that search engines do not pass trust through them).",
+        "why": "Internal links help Google discover pages and understand which ones matter. External links to good sources make content more trustworthy. Broken links frustrate visitors and waste crawl budget.",
+        "action": "Check the page links to your important related pages with descriptive text, not \"click here\".\nFix or remove any link that returns 404.\nLink to reputable external sources only; use nofollow for paid or untrusted ones.\nKeep the number reasonable: a few dozen on normal pages, not hundreds.\nReview security risks, for example links opening a new tab without rel=\"noopener\".",
+        "example": "A guide about running shoes should link to your \"shoe size chart\" page with the anchor text \"size chart\"."
+      }
+    },
+    "settings": {
+      "theme": {
+        "title": "Theme",
+        "what": "Chooses how SEOmi looks: Dark, Light, or System, which follows the setting of your computer.",
+        "why": "It does not change any audit result. Pick what is easiest on your eyes; dark themes reduce glare in dim rooms, light themes are easier to read in bright sunlight, and System switches automatically at night.",
+        "action": "Click Dark, Light or System.\nThe change applies immediately and is remembered next time you open the app.\nIf you share your screen or print reports, Light is usually easier to read on projectors.",
+        "example": "Choose System if your computer switches to dark mode in the evening and you want SEOmi to follow."
+      },
+      "auditNotifications": {
+        "title": "Audit notifications",
+        "what": "When enabled, SEOmi sends a desktop notification as soon as a long audit, crawl or scheduled check finishes, even if the app is in the background.",
+        "why": "Large crawls can take minutes or hours. Notifications let you work on something else and come back at the right time. They also tell you about scheduled checks that finished while you were away.",
+        "action": "Turn the switch on if you run crawls or schedules.\nWhen your system asks for permission, choose Allow. If you refused earlier, enable notifications for SEOmi in the system settings.\nTurn it off if you find the pop-ups distracting.\nThe text below the switch shows whether permission was granted.",
+        "example": "Start a 5000-page crawl, switch to your email, and get a notification when it is done."
+      }
+    },
+    "focus": {
+      "siteFocusScore": {
+        "title": "Site Focus Score (SFS)",
+        "what": "A 0-100 measure of how consistently your pages stay on one core topic. It is a weighted average of the Topical Relevance Score (TRS) of every page: the homepage counts 3x, category and section pages 2x, articles 1x.",
+        "why": "Search engines and readers reward sites that clearly cover one subject. A low SFS means many pages dilute that signal.",
+        "action": "Read the band: 90-100 excellent, 75-89 good, 60-74 moderate, 40-59 weak, 0-39 critical.\nOpen the heatmap and fix the lowest pages first.",
+        "example": "A blog about diabetes with 40 articles on diabetes and 8 on travel scores about 80."
+      },
+      "topicRelevance": {
+        "title": "Topical Relevance Score (TRS)",
+        "what": "A 0-100 score for one URL: how well that page fits the core topic of the site. It combines semantic similarity, keyword overlap and semantic drift.",
+        "why": "It shows which individual pages pull the whole site off topic.",
+        "action": "Aim for 75 or more.\nImprove pages between 60 and 74.\nRemove, redirect or rewrite pages below 40.",
+        "example": "A page about glucose meters on a diabetes site: TRS 88. A page about cheap flights: TRS 12."
+      },
+      "coreTopicConfidence": {
+        "title": "Core Topic Confidence",
+        "what": "How dominant the detected core topic is compared with all other topics found on the site, from 0 to 100 percent.",
+        "why": "If the confidence is low, the site has no clear main subject or too few pages were analysed, so scores are less reliable.",
+        "action": "Above 60 percent: trust the topic.\nBelow that, check the topic label and use the manual override if it is wrong.",
+        "example": "If the top topic holds 70 percent of the total term weight, confidence is 70 percent."
+      },
+      "onTopicRatio": {
+        "title": "On-topic Ratio",
+        "what": "The share of content pages whose TRS is 60 or higher. Technical pages such as login or cart are not counted.",
+        "why": "It tells you how many pages, not how much weighted score, support the core topic.",
+        "action": "Raise it by fixing borderline pages (60-74 and below) and removing off-topic ones.",
+        "example": "42 of 50 content pages have TRS 60 or more: the ratio is 84 percent."
+      },
+      "semanticSimilarity": {
+        "title": "Semantic Similarity",
+        "what": "How close the vocabulary of a page is to the core topic profile of the site (cosine similarity, shown as a percentage).",
+        "why": "It is the largest part of the TRS formula.",
+        "action": "80-100 percent is strong, 50-79 moderate, under 50 weak.\nAdd terms and sections that belong to the core topic.",
+        "example": "A page on insulin pumps next to a diabetes core topic: 86 percent."
+      },
+      "keywordOverlap": {
+        "title": "Keyword Overlap",
+        "what": "The share of the 30-50 most important core topic keywords that appear on the page.",
+        "why": "A page that skips most core keywords cannot support the topic, even when it is well written.",
+        "action": "Over 60 percent is strong; under 30 percent is off topic.\nAdd the missing core keywords where they fit naturally.",
+        "example": "The core set has 40 keywords and the page uses 28: overlap 70 percent."
+      },
+      "semanticDrift": {
+        "title": "Semantic Drift",
+        "what": "The share of the page term weight that belongs to foreign topics, not to the core topic.",
+        "why": "High drift means the page spends its words on something else.",
+        "action": "Drift above 50 percent is a red flag.\nCut or move the foreign sections, or split them to their own site area.",
+        "example": "A diabetes page with long paragraphs on holiday offers: drift 55 percent."
+      },
+      "keywordAlignment": {
+        "title": "Keyword Alignment",
+        "what": "Shows how each frequent keyword of the page relates to the core topic. Symbols: a check mark above 70 percent relevance, a tilde from 40 to 70 percent, a cross below 40 percent.",
+        "why": "It makes visible which words on the page help the topic and which ones distract.",
+        "action": "Keep and expand the keywords marked with a check mark.\nReduce or remove words marked with a cross.",
+        "example": "\"glucose\" - 92 percent - check mark; \"hotel\" - 8 percent - cross."
+      },
+      "deltaScore": {
+        "title": "Delta Score",
+        "what": "A simulated change of the Site Focus Score if you carry out an action. The simulation recalculates the weighted average with the new page values.",
+        "why": "It lets you rank actions by gain per effort instead of guessing.",
+        "action": "Start with actions that have the highest gain and the lowest effort.\nRe-crawl after the work to confirm the real gain.",
+        "example": "Removing 6 off-topic pages: plus 4.2 points."
+      },
+      "lowConfidence": {
+        "title": "Low confidence",
+        "what": "Shown when too few pages were analysed or no topic clearly leads, so the detected core topic may be wrong.",
+        "why": "With a small sample one unusual page can change the whole result.",
+        "action": "Crawl more pages.\nCheck the topic label and override it when it is wrong.\nTreat removal advice with caution.",
+        "example": "A crawl of 6 pages gives a rough picture only."
+      },
+      "benchmark": {
+        "title": "Competitive benchmark",
+        "what": "Your Site Focus Score placed next to the sites that rank in search for your Core Topic. Each competitor is crawled on a small sample of pages and scored with the same formula as your site.",
+        "why": "A score only means something against a reference. Seeing how focused the leaders are tells you how much room you have and what a realistic goal looks like.",
+        "action": "Run the benchmark with a search results source connected.\nCompare your on-topic share and off-topic pages with the top 3.\nOpen the gaps list and plan content for terms most competitors use.",
+        "example": "If the top 3 average 82 and you have 64, aim at 80 first by fixing your off-topic pages.",
+        "learnMore": "Competitor numbers come from a limited crawl sample, so treat small differences as noise."
+      },
+      "benchmarkTarget": {
+        "title": "Target score",
+        "what": "A suggested goal: at least 80, or the average of the top 3 competitors when they score higher.",
+        "why": "It turns the comparison into one number to work toward.",
+        "action": "Use it as a planning goal.\nRe-run the benchmark after your fixes to see the change."
+      },
+      "indexGate": {
+        "title": "Indexability gate",
+        "what": "Pages that are noindex or whose canonical points to another URL are left out of the score, so the score reflects pages that can rank.",
+        "why": "Counting pages Google will not index lowers the score and can lead to advice to noindex pages that are already noindex.",
+        "action": "Check the skipped count.\nFix conflicts listed below the score, such as a noindex pillar.\nUse \"Include them\" only to see the score with all pages.",
+        "example": "A noindex tag page is skipped, not scored as off-topic."
+      },
+      "protection": {
+        "title": "URL protection",
+        "what": "For pages with low topical relevance, shows whether real clicks, conversions, revenue or referring domains argue for keeping them.",
+        "why": "A low score alone is no reason to delete, redirect or noindex a page that earns traffic or links.",
+        "action": "Connect GSC and GA4 so data can be measured.\nTreat \"Needs data\" as unknown, not zero.\nDecide by hand; a 301 needs a relevant target.",
+        "example": "A page with TRS 30 and 80 clicks in 90 days is protected."
+      }
+    },
+    "authority": {
+      "tas": {
+        "title": "Topical Authority Score",
+        "what": "A 0-100 score of how completely, deeply and coherently the site covers its Core Topic compared with the market. It combines topic coverage (35%), entity depth (30%), silo cohesion (25%) and freshness (10%), then scales the result by your Site Focus Score.",
+        "why": "SFS only measures purity. A site with three perfect articles scores a high SFS yet has almost no authority, because it covers a sliver of the field. TAS measures how much of the field you cover.",
+        "action": "Aim for 80+ on both SFS and TAS. Low TAS with high SFS: add content. High TAS with low SFS: prune or split off-topic sections. Start with the top item in the expansion plan."
+      },
+      "tcr": {
+        "title": "Topic coverage (TCR)",
+        "what": "The share of the market’s sub-topics your site covers with a dedicated, on-topic page. Each sub-topic counts by its importance; a close match counts fully, a partial match counts half.",
+        "why": "Search engines treat sites that answer the whole range of questions in a field as references. Gaps send visitors, and ranking signals, to competitors.",
+        "action": "Above 80%: full authority. Below 40%: fragmentary knowledge. Open the coverage map, filter gaps and publish the most important missing sub-topics first."
+      },
+      "esd": {
+        "title": "Entity depth",
+        "what": "Checks whether a page really covers its sub-topic: the named concepts and attributes the leading pages use, the user questions it answers under their own headings, and how much original material it adds.",
+        "why": "A long article that misses the key concepts of its field loses to shorter but more complete sources. Length alone does not count.",
+        "action": "Open a shallow sub-topic: add the missing entities and attributes, answer the listed questions under their own H2 and add data or a table that competitors lack."
+      },
+      "scs": {
+        "title": "Silo cohesion",
+        "what": "Measures how well articles of one theme are tied together by internal links: a pillar page linked both ways with its articles, descriptive anchor texts, no orphan pages and no links from expert pages to off-topic ones.",
+        "why": "Orphan pages neither pass nor receive topical authority. “Click here” anchors say nothing, so they count only a tenth.",
+        "action": "Link each orphan from its pillar and related articles, use anchors that describe the target (“diabetic neuropathy symptoms”) and drop links to off-topic pages."
+      },
+      "matrix": {
+        "title": "SFS × TAS matrix",
+        "what": "Places the site by purity (SFS, horizontal) and completeness (TAS, vertical). The four quadrants are dominant authority, boutique specialist, diluted giant and unfocused generalist.",
+        "why": "Why do you have high focus but low authority? Five perfect articles on diabetes give SFS 95 but TAS 14: nothing off-topic, yet 90% of the field is missing.",
+        "action": "Keep SFS above 80 while you add new clusters to raise TAS above 80. The highlighted quadrant tells you whether to expand, prune or restructure."
+      },
+      "cannibalization": {
+        "title": "Semantic cannibalization",
+        "what": "Two or more of your pages answer the same search intent: their content and headings are almost identical (cosine similarity from 88%), or both fully cover one reference sub-topic.",
+        "why": "Internal link signals and relevance are split between the duplicates, so none of them reaches the top positions.",
+        "action": "Keep the strongest page, move the unique sections into it, 301-redirect the others and update internal links. Use the draft checker before publishing to avoid new overlaps."
+      }
+    },
+    "aio": {
+      "aioReadiness": {
+        "title": "AI readiness score (AIO-R)",
+        "what": "A 0-100 measure of how easily AI answer engines (Google AI Overviews, Perplexity, Copilot) can lift and quote passages of your pages. It combines self-contained passages (45%), fact density (35%) and extractable structure (20%).",
+        "why": "AI engines cut pages into chunks and quote only the chunk that answers the question. Vague or dependent passages are skipped.",
+        "action": "Open the weakest passages and fix the listed problems.\nRewrite them answer-first with explicit names and numbers.",
+        "example": "A section titled 'What is a normal blood sugar?' that opens with 'This depends on many factors' scores low."
+      },
+      "selfContainment": {
+        "title": "Self-containment",
+        "what": "Whether a passage still makes sense when cut out of the page: it names its subject and does not start with 'it', 'this' or 'as mentioned above'.",
+        "why": "A chunk is indexed alone. A dangling pronoun leaves the model without the subject, so the chunk matches fewer questions.",
+        "action": "Replace 'it' and 'this' at the start of paragraphs with the real name.\nPut the answer in the first 40-60 words under each heading.",
+        "example": "'This value should stay under 140.' becomes 'Post-meal blood glucose should stay under 140 mg/dl.'"
+      },
+      "spoDensity": {
+        "title": "Fact density",
+        "what": "How many clear subject-predicate-object facts the text states per 100 words, such as 'Fasting glucose is 70-99 mg/dl'. The target is about 3 per 100 words.",
+        "why": "Models quote verifiable statements. Filler text gives them nothing to extract.",
+        "action": "Turn vague sentences into statements with a subject, a verb and a value.\nAdd units and numbers where you have them.",
+        "example": "'Many factors matter' has no fact. 'HbA1c below 7% is the usual treatment target' has one."
+      },
+      "extractability": {
+        "title": "Extractability",
+        "what": "Whether the page uses structures that parsers lift easily: tables, numbered lists, definition lists and a clear H2/H3 outline.",
+        "why": "Generative engines prefer to build answers from tables and step lists because their meaning is explicit.",
+        "action": "Present comparisons as a table and procedures as a numbered list.\nUse H2/H3 headings phrased as the questions people ask.",
+        "example": "A step-by-step guide written as one long paragraph scores lower than the same guide as an ordered list."
+      },
+      "answerFirst": {
+        "title": "Answer-first",
+        "what": "The first 40-60 words under a heading should answer the heading directly, naming the subject and giving a fact.",
+        "why": "RAG retrieval compares the question with the start of the chunk. A long preamble lowers the match.",
+        "action": "Write the direct answer first, then the context.\nRepeat the heading's key term in the opening sentence.",
+        "example": "Heading 'How long does a CGM sensor last?' followed by 'A CGM sensor lasts 10-15 days, depending on the model.'"
+      },
+      "chunking": {
+        "title": "Chunking simulation",
+        "what": "SEOmi cuts every page the way a RAG index does: one chunk per H2/H3 section, long sections split into windows of about 300 tokens.",
+        "why": "You see the page as the retrieval system sees it: a set of separate passages, each judged on its own.",
+        "action": "Check the chunk score of each weak passage.\nKeep sections short enough to be one chunk.",
+        "example": "A 900-token section becomes about three chunks; only the first one sits directly under the heading."
+      }
+    },
+    "trust": {
+      "trustScore": {
+        "title": "Entity Trust Score",
+        "what": "A 0-100 score of how well search engines can verify who publishes and writes your content. It averages four layers: entity graph, author topic fit, source quality and editorial transparency.",
+        "why": "For health, finance and legal topics, strong topical focus is not enough. Pages without a verifiable author and publisher rarely reach the top results.",
+        "action": "Read the critical items in the list first.\nFix the lowest layer, then re-crawl to see the score move."
+      },
+      "schemaGraph": {
+        "title": "Entity graph (JSON-LD)",
+        "what": "Checks that your structured data names the publisher and each author as entities with a stable @id and sameAs links, and that articles carry author, dates, reviewer and citations.",
+        "why": "Linked entities let search engines match your authors to known people and organizations instead of guessing from plain text.",
+        "action": "Add Organization and Person markup with @id.\nLink each person and the publisher to Wikidata, ORCID, LinkedIn or an official register with sameAs.\nUse the JSON-LD generator below the author list."
+      },
+      "authorAlignment": {
+        "title": "Author topic fit",
+        "what": "Compares each author's declared expertise (job title, knowsAbout and profile page) with the core topic of the site.",
+        "why": "An article on insulin therapy signed by a marketing copywriter is a weak expertise signal.",
+        "action": "Assign articles to authors whose profile matches the topic.\nAdd jobTitle and knowsAbout to the Person markup.\nPublish a profile page for every author."
+      },
+      "citationQuality": {
+        "title": "Source quality",
+        "what": "Shows how many article pages link out to trusted sources such as .gov, .edu, PubMed, NCBI, WHO or scientific publishers, and how many outbound links are broken.",
+        "why": "Citing primary sources shows that claims are verifiable. Dead references weaken that signal.",
+        "action": "Add references to primary sources in each expert article.\nReplace or remove broken outbound links.\nCheck external links in the Links tab to refresh status codes."
+      },
+      "transparency": {
+        "title": "Editorial transparency",
+        "what": "Looks for an editorial policy, an About page, a contact page, company registry data and visible modified or review dates on articles.",
+        "why": "Readers and search engines need to know who is behind the site and how content is checked.",
+        "action": "Publish an editorial and fact-checking policy.\nAdd contact details and company registry data.\nShow the last update date on every article."
+      },
+      "ymyl": {
+        "title": "YMYL topics",
+        "what": "Your Money or Your Life: subjects such as health, finance and law, where wrong information can harm readers.",
+        "why": "Search quality guidelines apply the highest trust requirements to these topics, so missing authors or reviewers count as critical gaps.",
+        "action": "Name a qualified author on every article.\nAdd a reviewer with credentials for medical or legal content.\nCite primary sources."
+      },
+      "sameAs": {
+        "title": "sameAs links",
+        "what": "A schema.org property that points from a person or organization to the same entity elsewhere: Wikidata, ORCID, LinkedIn or an official register.",
+        "why": "It lets search engines confirm that your author is the real person with those credentials.",
+        "action": "Add at least one authoritative sameAs URL per author and for the publisher.\nUse the same name and spelling as on that profile."
+      }
+    },
+    "executionCard": {
+      "bus": {
+        "title": "Link quarantine",
+        "what": "URLs that another module wants to remove or redirect with a 301 are kept out of every link recommendation.",
+        "why": "Without it one panel tells you to link to a page another panel tells you to delete.",
+        "action": "Review the list.\nResolve any conflict shown in red before you deploy."
+      },
+      "brief": {
+        "title": "1-click brief",
+        "what": "Creates or updates the content brief for this page from the data of the module that made the recommendation.",
+        "why": "The brief starts with the real missing entities, links, questions and sources instead of copied text.",
+        "action": "Click the button.\nOpen the Brief Workstation and edit the draft.\nClick again later to refresh the data without creating a duplicate."
+      },
+      "deploy": {
+        "title": "Deployment artifacts",
+        "what": "Ready rule files for redirects and removals: Apache, Nginx, Cloudflare Bulk Redirects and WordPress Redirection.",
+        "why": "Rules are checked for loops and chains first, so you do not ship a redirect that breaks crawling.",
+        "action": "Download the file for your server.\nDeploy it on a staging copy first.\nMark the task as implemented and verify on the next crawl."
+      },
+      "tasks": {
+        "title": "Task tracker",
+        "what": "Keeps each recommended change as a task: planned, implemented, then verified or failed.",
+        "why": "The next crawl checks the real result and shows how the module score changed since the baseline.",
+        "action": "Add a task from a recommendation.\nMark it implemented after you deploy.\nRun a new crawl and click Verify."
+      },
+      "sla": {
+        "title": "Owner and SLA",
+        "what": "Who is responsible for the task, how urgent it is and the date it must be done.",
+        "why": "Tasks with an owner and a date do not get lost, and overdue ones are easy to filter.",
+        "action": "Type the owner name.\nPick the priority and the SLA date.\nUse the filters to see your tasks or the overdue ones."
+      }
+    },
+    "sprs": {
+      "panel": {
+        "title": "Semantic PageRank",
+        "what": "Internal PageRank (damping 0.85) scaled to 0-100, with flags for pages that pass no links, receive too few, or send most links to unrelated pages.",
+        "why": "It shows where link authority pools or drains inside your own site.",
+        "action": "Add outgoing links to dead ends.\nLink to under-linked pages from strong related pages.\nReview leaks."
+      }
+    },
+    "decay": {
+      "radar": {
+        "title": "Semantic Decay Radar",
+        "what": "Compares saved SERP snapshots of the same query, market, provider and model: centroid shift, new or lost consensus entities, intent and format changes.",
+        "why": "The top results can drift away from your page long before rankings drop.",
+        "action": "Open the cited URLs.\nDecide manually whether to refresh the page."
+      }
+    },
+    "sija": {
+      "panel": {
+        "title": "Search intent (SIJA)",
+        "what": "Classifies the page into one of 8 micro-intents from its structure (tables, lists, forms, product cards) and compares it with the average of the real TOP 5 pages.",
+        "why": "A page whose format differs from what the SERP shows often ranks poorly for that query.",
+        "action": "Open the TOP pages.\nAdd the missing format, such as a table or a tool.\nTreat this as a hint, not a verdict."
+      }
+    },
+    "prePublish": {
+      "check": {
+        "title": "Pre-publish check",
+        "what": "Simulates adding this draft to your site: change in Site Focus Score, similarity to existing pages and whether each passage works on its own.",
+        "why": "It catches a duplicate or off-topic page before it goes live.",
+        "action": "Fix every listed reason.\nRe-run the check.\nPublish only after your own review."
+      }
+    },
+    "parity": {
+      "hreflang": {
+        "title": "International parity",
+        "what": "Compares topic depth across the language versions linked by hreflang with a reference language, and marks each topic covered, shallow, missing or intentionally local.",
+        "why": "It separates a real content gap from a market that deliberately offers something different.",
+        "action": "Check the missing and shallow topics.\nMark topics a market does not need as local.\nThe tool never changes hreflang for you."
+      }
+    },
+    "offPage": {
+      "tbva": {
+        "title": "Off-page topical authority",
+        "what": "Adds up the provider authority of follow backlinks, weighted by how close each source page is to your topic. Also finds paragraphs that mention your brand and your core entity together.",
+        "why": "A few relevant links can matter more than many unrelated ones.",
+        "action": "Review the sources with low similarity.\nLook at unlinked mentions as outreach leads.\nRead negated mentions yourself."
+      }
+    },
+    "llmEconomy": {
+      "costGate": {
+        "title": "LLM cost and fact gate",
+        "what": "Counts what AI calls cost and what the cache and local models saved. Medical and financial sentences with a dose or amount missing from the source are rejected.",
+        "why": "Remote providers cost money and receive your page text. Invented doses in health or finance content are dangerous.",
+        "action": "Prefer a local model for big batches.\nCheck rejected sentences against the source.\nApprove YMYL text yourself before it reaches the CMS."
+      }
+    },
+    "templateGovernor": {
+      "informationGain": {
+        "title": "Template Information Gain",
+        "what": "Share of each page that is not boilerplate shared with the other pages built from the same template. Low gain means thousands of near-copies.",
+        "why": "Google can filter a whole template segment as thin content. One template warning is easier to fix than thousands of page warnings.",
+        "action": "Add unique data to each page (local facts, numbers, reviews).\nOr noindex the segment until it has real content.\nRe-crawl and check that the gain rises."
+      }
+    },
+    "outreach": {
+      "gapDomains": {
+        "title": "Outreach targets",
+        "what": "Sites that link to your TOP3 competitors but not to you, ranked by how many competitors they link to and by their authority.",
+        "why": "A site that already links to several competitors is the warmest place to ask for a link, as long as you bring something new.",
+        "action": "Start from the top of the list.\nOpen the draft, add a source only you can offer, and edit it.\nSend it yourself from your own mailbox. SEOmi never sends anything."
+      }
+    },
+    "causalMarket": {
+      "updateWindow": {
+        "title": "Google update window",
+        "what": "Days when Google rolled out an update or the whole market was unusually volatile. The result is shown with an uncertainty range and flagged when the period overlaps such a window.",
+        "why": "A control group on the same site suffers from an update just like the test group, so a drop or gain can be the market and not your change.",
+        "action": "Treat a flagged result as inconclusive.\nWait until the update window ends and compare again.\nUse an external market baseline when you have one."
+      }
+    },
+    "igos": {
+      "score": {
+        "title": "IGOS score",
+        "what": "Information gain over what the real TOP results already say: new on-topic entities, evidence density, experience markers and subtopic spread, reduced when the baseline is thin.",
+        "why": "It shows what your page adds beyond the consensus. Markers only show declared experience; they do not prove research or originality.",
+        "action": "Check the four components.\nAdd the missing fundamentals.\nRe-run after editing."
+      },
+      "heatmap": {
+        "title": "Paragraph heatmap",
+        "what": "Each paragraph is labelled Echo (close copy of a competitor passage), Gain (on-topic and new), Drift (off-topic) or Neutral.",
+        "why": "Echo adds nothing new and drift dilutes the topic. Labels use text, not only colour.",
+        "action": "Open Echo and Drift paragraphs first.\nUse arrow keys to move between paragraphs.\nRewrite or refocus them."
+      },
+      "coverage": {
+        "title": "Baseline coverage",
+        "what": "Share of consensus entities your page already covers. Below 50% the score is multiplied by a penalty.",
+        "why": "Without the common foundation a page with some novelty still does not match the topic.",
+        "action": "Cover the missing consensus entities.\nThen add the new facts."
+      }
+    }
+  },
+  "helpUi": {
+    "what": "What it is",
+    "why": "Why it matters",
+    "action": "What to do",
+    "example": "Example",
+    "learnMore": "Learn more"
+  },
+  "siteFocusMonitoring": {
+    "alert": {
+      "title": "SEOmi · Site Focus Score alert",
+      "sfsDrop": "Site Focus Score fell by {{points}} points between full analyses ({{from}} to {{to}}).",
+      "contentGuard": "{{count}} new page(s) first seen in the last 24 hours are off-topic (TRS below 40): {{urls}}."
+    },
+    "weekly": {
+      "title": "SEOmi · Weekly Site Focus report",
+      "body": "Site Focus Score {{score}} ({{delta}} vs last week). Top tasks: {{tasks}}",
+      "noPrevious": "first report",
+      "task": "{{code}} (+{{gain}} pts)",
+      "noTasks": "no urgent tasks"
+    }
+  },
+  "focus": {
+    "title": "Site Focus",
+    "subtitle": "How consistently the crawled pages stay on one core topic.",
+    "band": {
+      "excellent": "Excellent focus",
+      "good": "Good focus",
+      "moderate": "Moderate focus",
+      "weak": "Weak focus",
+      "critical": "Critical focus"
+    },
+    "bandRange": {
+      "excellent": "90-100",
+      "good": "75-89",
+      "moderate": "60-74",
+      "weak": "40-59",
+      "critical": "0-39"
+    },
+    "empty": "No pages with content to analyse. Run a crawl first.",
+    "status": {
+      "strong": "Strong",
+      "moderate": "Moderate",
+      "borderline": "Borderline",
+      "weak": "Weak",
+      "off-topic": "Strongly off-topic"
+    },
+    "type": {
+      "homepage": "Homepage",
+      "category": "Category",
+      "article": "Article",
+      "technical": "Technical"
+    },
+    "effort": "Effort: {{min}}-{{max}} h (estimate)",
+    "banner": {
+      "lowConfidence": "Small sample ({{count}} pages). Results are indicative; crawl at least 10 pages for a reliable core topic. Removal advice is limited.",
+      "multiTopic": "{{count}} topic areas detected. The site does not have one dominant topic. Sub-site scores are shown below.",
+      "lexicalFallback": "The analysis for the selected language uses the TF-IDF statistical algorithm. The deep semantic similarity component is unavailable; the score is based on keyword coverage and distribution.",
+      "skippedRender": "{{count}} pages were skipped in the analysis because JavaScript rendering timed out.",
+      "degraded": "Some pages had limited data, so their scores may be less precise.",
+      "unmatchedTopic": "No pages matched the topic \"{{topic}}\". The detected topic is used instead.",
+      "gateSkipped": "Skipped {{count}} pages (noindex/canonical).",
+      "gateInclude": "Include them",
+      "gateExclude": "Exclude them again"
+    },
+    "skip": {
+      "render-timeout": "JavaScript rendering timed out",
+      "request-error": "Request failed",
+      "non-topical-status": "Non-content HTTP status",
+      "non-html": "Not an HTML page",
+      "no-content": "No text content",
+      "noindex": "Excluded: noindex",
+      "canonicalized": "Excluded: canonical points to another URL"
+    },
+    "hero": {
+      "label": "Site Focus Score",
+      "outOf": "out of 100",
+      "unavailable": "No score yet: none of the crawled pages could be scored. Re-run the crawl or check the source; this is not a result of 0.",
+      "summaryAll": "All {{count}} analysed pages stay on topic.",
+      "summaryOff": "{{off}} of {{count}} pages deviate significantly from the core topic.",
+      "metaButton": "Analysis details",
+      "metaPages": "Pages analysed: {{count}}",
+      "metaAge": "Updated: {{date}}",
+      "recalc": "Recalculate",
+      "howItWorks": "How does it work?",
+      "change": "{{delta}} points since the previous analysis",
+      "progressAria": "Site Focus Score {{score}} out of 100, {{band}}",
+      "recalcBudget": "{{remaining}} of {{limit}} full recalculations left today.",
+      "recalcExhausted": "Daily limit of {{limit}} full recalculations reached. Try again tomorrow."
+    },
+    "drawer": {
+      "title": "How the Site Focus Score works",
+      "close": "Close",
+      "weights": "Page weights in the score",
+      "weightHome": "Homepage: weight 3",
+      "weightCategory": "Categories, sections, pillar and hub pages: weight 2",
+      "weightArticle": "Articles, posts and cards: weight 1",
+      "sfsFormula": "SFS = sum(weight x TRS) / sum(weight), over all analysed pages",
+      "trsTitle": "Topical Relevance Score (TRS)",
+      "trsFormula": "TRS = clamp(0..100, (0.5 x Similarity + 0.3 x Overlap - 0.2 x Drift) x 125)",
+      "trsLexical": "Without the semantic component: TRS = clamp(0..100, (0.75 x Overlap - 0.25 x LexicalDrift) x 125)",
+      "bands": "Bands: 90-100 excellent, 75-89 good, 60-74 moderate, 40-59 weak, 0-39 critical.",
+      "onTopic": "A page counts as on topic from TRS 60."
+    },
+    "core": {
+      "title": "Core topic",
+      "label": "Detected topic",
+      "terms": "Top terms",
+      "termAria": "{{term}}: {{pct}} percent",
+      "coverage": "Coverage: {{pct}}% of site content is closely related.",
+      "wrong": "Is this the wrong topic?",
+      "inputLabel": "Your topic (words or phrase)",
+      "placeholder": "for example: diabetes treatment",
+      "reset": "Reset to detected topic",
+      "manualActive": "Manual topic: {{input}}",
+      "confidenceLine": "Core topic confidence: {{pct}}%"
+    },
+    "metrics": {
+      "title": "Key metrics",
+      "confidence": "Core Topic Confidence",
+      "onTopic": "On-topic Ratio",
+      "pages": "Pages scored",
+      "skipped": "Pages skipped",
+      "offTopic": "Off-topic pages (TRS under 40)",
+      "borderline": "Borderline pages (60-74)"
+    },
+    "heatmap": {
+      "title": "Topic distribution",
+      "treeAria": "Pages by URL with topical relevance",
+      "ignoreTechnical": "Ignore technical pages",
+      "empty": "No pages match this filter.",
+      "filter": {
+        "all": "All ({{count}})",
+        "critical": "Critical <40 ({{count}})",
+        "borderline": "Borderline 60-74 ({{count}})",
+        "strong": "Strong >=75 ({{count}})"
+      },
+      "filtersAria": "Filter pages by relevance",
+      "warning": "Below 60: off-topic risk",
+      "trsBar": "TRS {{trs}}",
+      "open": "Open page analysis for {{url}}",
+      "section": "Section {{name}}",
+      "home": "Homepage"
+    },
+    "detail": {
+      "title": "Page analysis",
+      "back": "Back to the list",
+      "close": "Close page analysis",
+      "trs": "TRS",
+      "status": "Status",
+      "why": "Why this score?",
+      "similarity": "Semantic similarity: {{value}}%",
+      "overlap": "Keyword overlap: {{value}}%",
+      "drift": "Semantic drift: {{value}}%",
+      "driftFlag": "Red flag: more than half of the page is about other topics.",
+      "similarityStrong": "strong",
+      "similarityModerate": "moderate",
+      "similarityWeak": "weak",
+      "foreign": "Foreign topics: {{label}} ({{pct}}%)",
+      "noForeign": "No foreign topics detected.",
+      "matched": "Keywords matching the core topic",
+      "unmatched": "Keywords from other topics",
+      "none": "None found.",
+      "count": "{{count}}x",
+      "context": "Context: {{text}}",
+      "clusterOf": "topic: {{cluster}}",
+      "skipped": "This page was not scored: {{reason}}.",
+      "degraded": "This page has limited data, so the score is less precise."
+    },
+    "matrix": {
+      "title": "Keyword Alignment Matrix",
+      "keyword": "Keyword",
+      "freq": "Frequency",
+      "relevance": "Core topic relevance",
+      "alignment": "Alignment",
+      "match": "Matches (above 70%)",
+      "partial": "Partial (40-70%)",
+      "miss": "Does not match (below 40%)",
+      "empty": "No keywords to show."
+    },
+    "playbook": {
+      "title": "What to do with this page",
+      "typeA": "Type A: off-topic page",
+      "typeB": "Type B: borderline page",
+      "typeC": "Type C: strong page",
+      "options": "Options",
+      "steps": "Steps",
+      "potential": "Expected TRS: {{min}}-{{max}} (estimate)",
+      "gain": "Site gain: +{{gain}} points"
+    },
+    "brief": {
+      "title": "Rewrite brief",
+      "target": "Target TRS: {{target}} (now {{current}})",
+      "mustInclude": "Must include",
+      "avoid": "Avoid",
+      "headings": "Heading ideas",
+      "words": "Length: {{min}}-{{max}} words",
+      "copy": "Copy AI prompt",
+      "copied": "Prompt copied",
+      "copyFailed": "Copy failed. Select and copy manually."
+    },
+    "site": {
+      "title": "Recommendations",
+      "empty": "No recommendations. The site stays on topic.",
+      "delta": "Delta Score: +{{value}}",
+      "deltaZero": "Delta Score: 0",
+      "pagesList": "Pages",
+      "gaps": "Topic gaps",
+      "gapsEmpty": "No topic gaps found.",
+      "links": "Internal link suggestions",
+      "linksEmpty": "No link suggestions.",
+      "terms": "Terms"
+    },
+    "subsites": {
+      "title": "Sub-site scores",
+      "item": "{{label}} ({{prefix}}): {{share}}% of pages",
+      "score": "Score {{score}}"
+    },
+    "recommendation": {
+      "remove-offtopic": {
+        "title": "Remove or move {{count}} off-topic pages",
+        "detail": "Redirect, noindex or delete the worst pages and remove internal links to them. Potential: +{{gain}} points."
+      },
+      "strengthen-borderline": {
+        "title": "Strengthen {{count}} borderline pages",
+        "detail": "Add missing core terms and sections to lift them to about {{target}}. Potential: +{{gain}} points."
+      },
+      "expand-core-cluster": {
+        "title": "Expand the core topic cluster",
+        "detail": "Write {{count}} new pages for thin subtopics. Potential: +{{gain}} points."
+      },
+      "add-internal-links": {
+        "title": "Add internal links to hub pages",
+        "detail": "{{count}} link suggestions send weak pages to strong hubs."
+      },
+      "collect-more-pages": {
+        "title": "Collect more pages",
+        "detail": "Only {{pageCount}} pages were analysed. Crawl more before removing anything."
+      },
+      "split-subsites": {
+        "title": "Consider splitting the site",
+        "detail": "{{count}} distinct topic areas found. Separate sections or subdomains may help."
+      },
+      "review-skipped-pages": {
+        "title": "Review {{count}} skipped pages",
+        "detail": "{{timeouts}} of them timed out while rendering JavaScript."
+      },
+      "monitor-strong-pages": {
+        "title": "Monitor {{count}} strong pages",
+        "detail": "Keep them on topic and recheck regularly."
+      }
+    },
+    "playbookOption": {
+      "remove-redirect": {
+        "title": "Delete and redirect with 301",
+        "detail": "Check traffic and backlinks first. Site gain: +{{gain}} points."
+      },
+      "noindex-isolate": {
+        "title": "Noindex and isolate",
+        "detail": "Keep the page for users but hide it from search and cut internal links. Site gain: +{{gain}} points."
+      },
+      "rewrite-on-topic": {
+        "title": "Rewrite on topic with a brief",
+        "detail": "Turn the page into core topic content. Target TRS about {{target}}."
+      },
+      "add-missing-terms": {
+        "title": "Add missing terms",
+        "detail": "Work in the missing core terms: {{terms}}."
+      },
+      "reinforce-headings": {
+        "title": "Reinforce H2 and H3 headings",
+        "detail": "Use core topic wording in the headings."
+      },
+      "deepen-coverage": {
+        "title": "Deepen topical coverage",
+        "detail": "Add sections, examples and depth on the core topic."
+      },
+      "serve-as-hub": {
+        "title": "Use as a hub",
+        "detail": "Link to and from related pages so this page leads a cluster."
+      },
+      "build-satellite-cluster": {
+        "title": "Build a satellite cluster",
+        "detail": "Plan supporting pages that link back to this page."
+      },
+      "monitor-periodically": {
+        "title": "Monitor",
+        "detail": "Recheck every {{weeks}} weeks."
+      }
+    },
+    "playbookStep": {
+      "check-traffic-and-backlinks": "Check traffic and backlinks of the page.",
+      "redirect-301-to-closest-page": "Redirect with 301 to the closest on-topic page.",
+      "remove-internal-links": "Remove internal links pointing to the page.",
+      "add-noindex": "Add a noindex directive.",
+      "rewrite-with-brief": "Rewrite the page with the brief. Missing terms: {{terms}}.",
+      "add-terms": "Add the missing terms: {{terms}}.",
+      "expand-h2-h3": "Expand the H2 and H3 headings with core topic wording.",
+      "add-examples": "Add examples and depth.",
+      "link-from-weak-pages": "Link to this page from weaker pages.",
+      "plan-satellite-pages": "Plan satellite pages around this page.",
+      "recheck-in-six-weeks": "Recheck in {{weeks}} weeks."
+    },
+    "gap": {
+      "thin-subtopic": "Thin subtopic \"{{label}}\": only {{coveragePct}}% of pages cover it ({{pagesCovering}} pages). Terms: {{terms}}.",
+      "competitor-terms": "Competitor terms missing on your site: {{terms}}.",
+      "competitorActive": "Topic Cluster Gap Analysis uses {{count}} competitor terms.",
+      "competitorClear": "Clear competitor terms"
+    },
+    "link": {
+      "link-to-hub": "Link from {{from}} to the hub {{to}}. Suggested anchors: {{anchors}}."
+    },
+    "history": {
+      "removed-offtopic": "Removed {{count}} off-topic pages ({{delta}} points).",
+      "new-cluster": "New topic cluster \"{{label}}\" ({{count}} new, {{delta}} points).",
+      "optimized-borderline": "Optimised {{count}} borderline pages ({{delta}} points).",
+      "core-topic-changed": "Core topic changed from \"{{from}}\" to \"{{to}}\" ({{delta}} points).",
+      "title": "Score history",
+      "empty": "Run at least two full analyses to see the trend.",
+      "aria": "Site Focus Score over {{count}} analyses, from {{from}} to {{to}}",
+      "point": "{{date}}: {{score}}",
+      "annotations": "Key changes"
+    },
+    "alert": {
+      "sfs-drop": "Site Focus Score fell from {{from}} to {{to}} ({{points}} points).",
+      "content-guard": "New off-topic page {{url}} (TRS {{trs}})."
+    },
+    "weekly": {
+      "title": "Weekly summary",
+      "summary": "Score {{score}} ({{delta}} since the previous analysis).",
+      "noPrevious": "first analysis",
+      "noTasks": "No urgent tasks.",
+      "gain": "(+{{value}} pts)"
+    },
+    "conflict": {
+      "pillar-noindex": "Pillar page is noindex: {{url}}",
+      "inlinked-foreign-canonical": "{{url}} has {{inlinks}} internal links but its canonical points to another host",
+      "noindex-with-traffic": "{{url}} is noindex but has {{clicks}} GSC clicks and {{domains}} referring domains",
+      "sitemap-noindex": "{{url}} is in the sitemap but marked noindex"
+    },
+    "protection": {
+      "title": "URL protection check",
+      "empty": "No GSC/GA4/backlink snapshot for this project, so traffic and link value are unknown.",
+      "advisory": "Advice only. Nothing is deleted, redirected or noindexed automatically.",
+      "pri": "PRI {{value}}",
+      "decision": {
+        "keep": "Keep",
+        "shield": "Protect",
+        "needs-data": "Needs data",
+        "semantic-bridge": "Semantic bridge",
+        "prune-candidate": "Review for pruning"
+      },
+      "reason": {
+        "trs-above-threshold": "TRS is high enough",
+        "revenue": "Revenue measured",
+        "pri-above-threshold": "Traffic, conversions or links reach the protection threshold",
+        "telemetry-incomplete": "Telemetry is missing, stale or sampled",
+        "low-pri-measured": "Measured signals are low; check business value first"
+      }
+    }
+  },
+  "focusBenchmark": {
+    "title": "Competitive benchmark",
+    "intro": "Compare your Site Focus Score with the sites that rank for your Core Topic. SEOmi looks up the search results, crawls a small sample of each competitor politely (robots.txt respected) and scores them with the same engine.",
+    "run": "Run benchmark",
+    "rerun": "Run again",
+    "cancel": "Cancel",
+    "cancelled": "Benchmark cancelled. Nothing was saved.",
+    "sources": "Search results source: {{source}}",
+    "queries": "Queries: {{queries}}",
+    "sample": "Up to {{count}} pages crawled per competitor.",
+    "progress": {
+      "serp": "Looking up search results ({{done}}/{{total}})",
+      "crawl": "Crawling competitors ({{done}}/{{total}}), now {{domain}}: {{pages}} pages",
+      "analyze": "Scoring competitors"
+    },
+    "unavailable": {
+      "title": "Benchmark unavailable",
+      "no-serp-source": "No search results source is connected. Add DataForSEO credentials in Settings to benchmark against real competitors.",
+      "no-queries": "The Core Topic has no terms to search for yet. Crawl more pages first.",
+      "serp-failed": "Search results could not be fetched: {{error}}",
+      "no-competitors": "The search results contained no competitor sites other than your own."
+    },
+    "error": "The benchmark failed: {{error}}",
+    "ranking": {
+      "title": "Ranking",
+      "you": "You",
+      "pages": "{{count}} pages",
+      "onTopic": "{{pct}}% on-topic",
+      "offTopic": "{{count}} off-topic",
+      "score": "SFS {{score}}",
+      "average": "Industry average",
+      "target": "Target score",
+      "position": "Your position: {{rank}} of {{total}}",
+      "chart": "Site Focus Score by site"
+    },
+    "failure": {
+      "title": "Not scored",
+      "crawl-error": "Crawl failed: {{error}}",
+      "no-pages": "No crawlable pages (blocked by robots.txt or unreachable).",
+      "analysis-failed": "Analysis failed: {{error}}",
+      "cancelled": "Cancelled before scoring."
+    },
+    "insights": {
+      "title": "Insights",
+      "on-topic-share": "{{own}}% of your content is on-topic versus {{leaders}}% for the top 3 ({{delta}} points).",
+      "off-topic-pages": "You have {{own}} off-topic pages; the top 3 average {{leaders}}.",
+      "keyword-coverage": "Your site covers {{pct}}% ({{covered}} of {{total}}) of the Core Topic keywords used by the top 3.",
+      "versus-average": "Your score is {{delta}} points versus the industry average of {{average}}."
+    },
+    "gaps": {
+      "title": "Cluster gaps seen at competitors",
+      "coverage": "{{pct}}% of competitors ({{count}})",
+      "empty": "No competitor topics are missing from your site.",
+      "apply": "Add these terms to the gap analysis"
+    }
+  },
+  "authority": {
+    "title": "Topical Authority",
+    "empty": "Run a crawl to measure topical authority.",
+    "hero": {
+      "sfs": "Site Focus Score",
+      "tas": "Topical Authority Score",
+      "sfsRole": "Purity: how much of the content stays on topic",
+      "tasRole": "Completeness: how fully the topic is covered",
+      "target": "Target: {{value}}+",
+      "pending": "build the reference map to calculate it"
+    },
+    "quadrant": {
+      "dominant_authority": "Dominant authority",
+      "boutique_specialist": "Boutique specialist",
+      "diluted_giant": "Diluted giant",
+      "unfocused_generalist": "Unfocused generalist"
+    },
+    "quadrantHint": {
+      "dominant_authority": "Focused and nearly complete. Defend the position, keep data fresh and expand into long-tail queries.",
+      "boutique_specialist": "On topic but covers only part of the field. Expand content and build new topic clusters.",
+      "diluted_giant": "Plenty of content on the topic, but off-topic sections dilute it. Prune or move them to subdomains.",
+      "unfocused_generalist": "No clear focus and shallow coverage. Pick one Core Topic, clean up the index and build the first solid silo."
+    },
+    "matrix": {
+      "title": "Topical maturity matrix (SFS × TAS)",
+      "pending": "The matrix appears once TAS is calculated.",
+      "aria": "You: SFS {{sfs}}, TAS {{tas}}, quadrant {{quadrant}}",
+      "you": "You",
+      "axisX": "SFS",
+      "axisY": "TAS"
+    },
+    "freshness": {
+      "undated": "{{undated}} of {{total}} pages have no date and are not scored"
+    },
+    "pillars": {
+      "title": "Components of the Topical Authority Score",
+      "tcr": "Topic coverage",
+      "cdes": "Entity depth",
+      "silc": "Silo cohesion",
+      "cvff": "Freshness and uniqueness",
+      "tcrNote": "{{covered}} of {{total}} reference sub-topics covered",
+      "cdesNote": "Average entity depth of the sub-topics you cover",
+      "silcNote": "{{orphans}} orphan pages, {{weak}} weak anchors, {{bleed}} links to off-topic pages",
+      "cvffNote": "{{stale}} stale pages, {{groups}} cannibalization groups",
+      "unavailable": "not measurable",
+      "multiplier": "Focus multiplier ×{{value}} from SFS {{sfs}}"
+    },
+    "warning": {
+      "empty-authority": "Empty authority: the site touches {{tcr}}% of the topics but their average depth is only {{depth}}/100. Deepen existing pages with hard data and entities before publishing more.",
+      "template-duplicates": "{{count}} template clones were merged into their strongest page and do not raise coverage. They waste crawl budget.",
+      "no-dates": "No publication or update dates were found, so freshness is not measured. Add dates in meta tags or JSON-LD.",
+      "no-links": "No in-content internal links between analysed pages were found, so silo cohesion is based on orphan pages only.",
+      "no-pillars": "No reference map yet: coverage and depth are not measured."
+    },
+    "reference": {
+      "title": "Reference map",
+      "intro": "Builds the market map of your topic from real data: headings, entities and questions of the pages ranking for your Core Topic, plus Google Suggest. Nothing is invented; without a SERP source the map stays empty.",
+      "build": "Build reference map",
+      "rebuild": "Rebuild map",
+      "cancel": "Cancel",
+      "clear": "Discard map",
+      "info": "{{subtopics}} sub-topics in {{pillars}} pillars from {{competitors}} competitors ({{source}}), built {{date}}",
+      "progress": {
+        "serp": "Fetching rankings ({{done}}/{{total}})",
+        "crawl": "Crawling {{domain}} ({{done}}/{{total}})",
+        "build": "Building the map"
+      },
+      "error": "Building the map failed: {{error}}",
+      "cancelled": "Map building was cancelled.",
+      "unavailableTitle": "The reference map is unavailable",
+      "unavailable": {
+        "no-serp-source": "Connect a SERP source (DataForSEO or the free Bing RSS feed) to build the map from real rankings.",
+        "no-queries": "The Core Topic has no usable search phrase yet. Run a larger crawl first.",
+        "serp-failed": "The ranking lookup failed: {{error}}",
+        "no-competitors": "No competing domains were found in the rankings.",
+        "no-pages": "No competitor pages could be crawled (robots.txt, blocking or timeouts).",
+        "no-taxonomy": "The competitor pages share too few headings to form a reliable map. Try again later or with more competitors."
+      }
+    },
+    "coverage": {
+      "title": "Topic coverage map",
+      "filters": "Filter sub-topics",
+      "filter": {
+        "all": "All ({{count}})",
+        "gaps": "Gaps only ({{count}})",
+        "shallow": "Shallow ({{count}})",
+        "cannibalized": "Cannibalized ({{count}})"
+      },
+      "general": "General topics",
+      "empty": "No sub-topics match this filter.",
+      "row": "{{similarity}}% match · depth {{depth}}",
+      "status": {
+        "covered_strong": "Covered in depth",
+        "covered_shallow": "Shallow coverage",
+        "missing_gap": "Missing",
+        "cannibalized": "Cannibalized"
+      },
+      "gap": {
+        "critical": "critical gap",
+        "high": "high gap",
+        "medium": "medium gap"
+      }
+    },
+    "drill": {
+      "title": "Sub-topic analysis",
+      "back": "Back to the map",
+      "url": "Assigned page",
+      "none": "No page covers this sub-topic yet.",
+      "depth": "Entity depth {{value}}/100",
+      "entitiesPresent": "Entities present ({{count}}/{{total}})",
+      "entitiesMissing": "Entities missing (used by the leaders)",
+      "questions": "User questions the page does not answer",
+      "links": "Internal linking audit",
+      "noPillarLink": "No link to the pillar page {{url}}",
+      "almostOrphan": "Only {{count}} incoming link(s): almost an orphan page",
+      "bleed": "Links to the off-topic page {{url}}",
+      "linksOk": "Internal linking looks healthy."
+    },
+    "brief": {
+      "title": "Article brief",
+      "path": "Suggested URL",
+      "h1": "Suggested H1",
+      "entities": "Entity checklist",
+      "questions": "Questions to answer",
+      "linkFrom": "Link to it from",
+      "linkTo": "It should link to",
+      "impact": "Estimated TAS impact: +{{value}}",
+      "generate": "Generate AI brief",
+      "generating": "Generating…",
+      "noKey": "Connect an AI provider in Settings to generate briefs.",
+      "empty": "The AI returned no text. Try again.",
+      "error": "Brief generation failed: {{error}}"
+    },
+    "cannibal": {
+      "title": "Semantic cannibalization",
+      "index": "Cannibalization index: {{value}}%",
+      "empty": "No pages compete for the same search intent.",
+      "group": "{{count}} pages, {{similarity}}% intent similarity, {{shared}}% shared entities",
+      "canonical": "Keep: {{url}}",
+      "steps": "Move the unique sections into the page to keep, 301-redirect the others to it and update the internal links.",
+      "edge": "Evidence: {{from}} and {{to}} at {{similarity}}% ({{basis}})",
+      "basis": {
+        "intent": "same intent",
+        "subtopic": "same sub-topic"
+      }
+    },
+    "draft": {
+      "title": "Check a draft before publishing",
+      "titleField": "Draft title",
+      "bodyField": "Draft text",
+      "check": "Check overlap",
+      "none": "No overlap above 85% with existing pages.",
+      "hit": "{{similarity}}% overlap with {{url}}"
+    },
+    "rec": {
+      "title": "Topical expansion plan",
+      "empty": "No actions to recommend yet. Build the reference map to see coverage gaps.",
+      "delta": "+{{value}} TAS",
+      "fill-gaps": "Fill the gaps in “{{pillar}}”: {{count}} missing sub-topics",
+      "merge-cannibalized": "Merge {{count}} groups of cannibalizing pages",
+      "fix-linking": "Fix internal linking: {{orphans}} orphan pages, {{bleed}} links to off-topic pages",
+      "deepen-shallow": "Deepen {{count}} shallow sub-topics",
+      "refresh-stale": "Refresh {{count}} pages not updated for over a year",
+      "how": {
+        "fill-gaps": "Publish one article per missing sub-topic: use the brief (URL, H1, entity checklist, questions) and link it into its pillar.",
+        "merge-cannibalized": "Keep the strongest page, move unique sections into it, 301-redirect the rest and update internal links.",
+        "fix-linking": "Link every orphan page from its pillar and related articles, and remove links from expert pages to off-topic pages.",
+        "deepen-shallow": "Add the missing entities and attributes, and answer the open user questions under their own headings.",
+        "refresh-stale": "Update figures, models and guidelines, add new entities and refresh the published date."
+      }
+    },
+    "benchmark": {
+      "title": "Topical gap matrix vs top competitors",
+      "empty": "Build the reference map to compare with the top-ranking competitors. Only real crawled data is shown.",
+      "domain": "Domain",
+      "pillars": "Pillar coverage",
+      "pillar": "Pillar",
+      "insight": {
+        "rank": "You rank {{rank}} of {{total}} by TAS.",
+        "lead-pillar": "You lead in “{{pillar}}”: {{own}}% against {{best}}% for the best competitor.",
+        "trailing-pillars": "You trail the leaders in: {{pillars}}."
+      }
+    },
+    "history": {
+      "title": "SFS and TAS over time",
+      "empty": "The timeline appears after at least two full analyses.",
+      "aria": "Chart of SFS and TAS over {{count}} analyses",
+      "point": "{{date}}: SFS {{sfs}}, TAS {{tas}}",
+      "sfs": "SFS (solid)",
+      "tas": "TAS (dashed)",
+      "milestones": "Milestones",
+      "cleanup": "Cleanup: SFS rose by {{delta}}",
+      "architecture": "Architecture: linking and cannibalization improved by {{delta}}",
+      "expansion": "Expansion: topic coverage rose by {{delta}}",
+      "regression": "Regression: TAS changed by {{delta}}"
+    }
+  },
+  "authorityMonitoring": {
+    "alert": {
+      "title": "SEOmi · Topical Authority alert",
+      "tas-drop": "Topical Authority Score fell by {{points}} points between full analyses ({{from}} to {{to}}).",
+      "cannibalization": "A page published within the last 24 hours competes with {{canonical}} for the same intent ({{similarity}}% similar): {{url}}.",
+      "competitor-expansion": "{{domain}} expanded its coverage of “{{pillar}}” from {{from}}% to {{to}}%, opening a new gap for you.",
+      "content-decay": "Pillar page {{url}} is over a year old and misses {{missing}} entities the market now uses."
+    }
+  },
+  "aio": {
+    "title": "AI Overviews & RAG readiness",
+    "subtitle": "How easily AI answer engines can find, lift and quote your passages.",
+    "empty": "No page data with content sections yet. Run a new crawl to analyse AI readiness.",
+    "band": {
+      "excellent": "Excellent readiness",
+      "good": "Good readiness",
+      "moderate": "Moderate readiness",
+      "weak": "Weak readiness",
+      "critical": "Critical readiness"
+    },
+    "hero": {
+      "label": "AI citability score",
+      "outOf": "out of 100",
+      "summary": "{{weak}} weak passages found across {{count}} analysed pages.",
+      "summaryNone": "No weak passages found across {{count}} analysed pages.",
+      "change": "Change since the previous analysis: {{delta}}",
+      "skipped": "{{count}} pages skipped (no usable content sections)."
+    },
+    "components": {
+      "self": "Self-containment",
+      "spo": "Fact density",
+      "extract": "Extractability"
+    },
+    "basicNote": "Language rules for {{languages}} are basic: pronoun and fact detection is less precise for these languages.",
+    "pages": {
+      "title": "Pages",
+      "url": "URL",
+      "score": "Score",
+      "chunks": "Chunks",
+      "facts": "Facts",
+      "language": "Language",
+      "empty": "No pages to show."
+    },
+    "skip": {
+      "no-sections": "No content sections (crawled before this feature)",
+      "non-html": "Not an HTML page",
+      "request-error": "Request failed",
+      "no-content": "No readable text"
+    },
+    "passage": {
+      "title": "Weakest passages",
+      "intro": "Simulated RAG chunks that are hardest to cite. Fix the listed problems first.",
+      "chunk": "Chunk {{n}} · {{tokens}} tokens · score {{score}}",
+      "noHeading": "(intro without heading)",
+      "current": "Current passage",
+      "optimized": "Optimized passage",
+      "generate": "Rewrite with AI",
+      "generating": "Rewriting…",
+      "copy": "Copy",
+      "copied": "Copied",
+      "noKey": "Connect an AI provider in Settings to rewrite passages.",
+      "error": "AI request failed: {{message}}",
+      "empty": "The AI returned no text.",
+      "none": "No weak passages found."
+    },
+    "issue": {
+      "dangling-pronoun": "Unclear reference",
+      "no-answer-first": "No direct answer first",
+      "filler-opening": "Filler opening",
+      "no-facts": "No concrete facts",
+      "too-long": "Too long for one chunk"
+    },
+    "history": {
+      "title": "History",
+      "empty": "History appears after the second analysis of this project.",
+      "row": "{{date}}: {{score}}"
+    }
+  },
+  "trust": {
+    "title": "E-E-A-T & Entity Trust",
+    "subtitle": "How verifiable your authors, publisher and sources are. Computed from the saved crawl; no page is fetched again.",
+    "empty": "Run a crawl first to assess trust signals.",
+    "hero": {
+      "label": "Entity Trust Score",
+      "articles": "{{articles}} article pages among {{pages}} crawled pages",
+      "previous": "Previous run: {{score}} ({{delta}})",
+      "ymyl": "YMYL category: {{category}}. Search engines hold these pages to the strictest trust standard.",
+      "unattributed": "{{pct}}% of articles have no named author or reviewer."
+    },
+    "level": {
+      "strong": "Strong trust",
+      "adequate": "Adequate trust",
+      "weak": "Weak trust",
+      "critical": "Critical trust gaps"
+    },
+    "ymyl": {
+      "health": "health",
+      "finance": "finance",
+      "legal": "legal"
+    },
+    "layers": {
+      "title": "Trust layers",
+      "schemaGraph": "Entity graph (JSON-LD)",
+      "authorAlignment": "Author topic fit",
+      "citationQuality": "Source quality",
+      "transparency": "Editorial transparency",
+      "noData": "n/a",
+      "unverified": "unverified"
+    },
+    "entities": {
+      "title": "Publisher and authors",
+      "orgPresent": "Publisher: {{name}}. Stable @id: {{id}}. sameAs links: {{sameAs}}.",
+      "orgMissing": "No Organization entity was found in the structured data.",
+      "none": "No author entities were found in the structured data.",
+      "colAuthor": "Author",
+      "colArticles": "Articles",
+      "colSameAs": "sameAs links",
+      "colAlignment": "Topic fit",
+      "generic": "anonymous byline"
+    },
+    "signals": {
+      "title": "Sources and transparency",
+      "citations": "{{trusted}} of {{pages}} article pages link to a trusted source (.gov, .edu, PubMed, WHO).",
+      "dead": "{{count}} outbound links are broken",
+      "dated": "{{dated}} of {{articles}} articles show a modified or review date.",
+      "pagesTitle": "Trust pages",
+      "page": {
+        "editorial": "Editorial policy",
+        "about": "About us",
+        "contact": "Contact",
+        "registry": "Company registry data"
+      },
+      "found": "found",
+      "missing": "missing"
+    },
+    "severity": {
+      "critical": "Critical",
+      "warning": "Warning",
+      "info": "Info"
+    },
+    "findings": {
+      "title": "What to fix first",
+      "none": "No trust gaps were detected.",
+      "code": {
+        "ymyl-unattributed": "{{count}} articles ({{pct}}%) on a YMYL topic have no named author or reviewer. Add a person with verifiable credentials.",
+        "ymyl-no-reviewer": "None of the {{count}} medical articles declares a reviewer (reviewedBy). Add a qualified medical reviewer.",
+        "no-bylines": "None of the {{count}} articles declares an author in structured data.",
+        "generic-author": "{{count}} articles are signed with an anonymous byline such as an editorial team.",
+        "org-missing": "No Organization entity was found. Add publisher markup with a stable @id.",
+        "org-no-same-as": "The publisher {{name}} has no sameAs links to Wikidata, a company register or social profiles.",
+        "author-no-same-as": "{{count}} authors have no sameAs links ({{names}}). Link them to ORCID, LinkedIn or a professional register.",
+        "author-no-id": "{{count}} authors have no stable @id, so search engines cannot reconcile them across pages.",
+        "author-off-topic": "The profile of {{name}} fits the core topic only {{pct}}%. Prefer authors with matching expertise.",
+        "low-citations": "Only {{pct}}% of {{pages}} article pages cite a trusted source (.gov, .edu, PubMed, WHO).",
+        "dead-citations": "{{count}} outbound links return an error. Replace or remove them.",
+        "missing-editorial": "No editorial policy or fact-checking page was found.",
+        "missing-contact": "No contact page was found.",
+        "missing-registry": "No company registry or legal notice page was found.",
+        "missing-about": "No About page was found.",
+        "missing-dates": "Only {{pct}}% of articles show a modified or review date.",
+        "no-articles": "No article pages were detected, so the author and citation layers were not scored.",
+        "author-invalid-profile": "{{count}} authors link an ORCID or Wikidata profile with an invalid identifier ({{names}}). Check the checksum or Q-ID.",
+        "ymyl-no-scholarly-ids": "None of the {{pages}} article pages cite a source with a DOI, PMID or PMCID. On a YMYL topic, cite the primary study."
+      }
+    },
+    "generator": {
+      "open": "Fix with JSON-LD",
+      "title": "JSON-LD generator",
+      "intro": "Builds an Organization, Person and page graph with sameAs links. Review it, then paste it into the page head.",
+      "close": "Close",
+      "field": {
+        "personName": "Author name",
+        "jobTitle": "Job title",
+        "personUrl": "Author profile URL",
+        "organizationName": "Publisher name",
+        "organizationUrl": "Publisher URL",
+        "pageUrl": "Page URL",
+        "dateModified": "Date modified (YYYY-MM-DD)",
+        "lastReviewed": "Last reviewed (YYYY-MM-DD)",
+        "sameAs": "sameAs profiles (one URL per line: Wikidata, ORCID, LinkedIn, professional register)",
+        "asReviewer": "Declare as expert reviewer instead of author"
+      },
+      "issue": {
+        "missing-name": "Enter the author name.",
+        "invalid-organization-url": "Enter a valid publisher URL (https://...).",
+        "invalid-page-url": "Enter a valid page URL (https://...).",
+        "invalid-same-as": "Some sameAs entries are not valid URLs and were left out."
+      },
+      "preview": "Generated JSON-LD",
+      "copy": "Copy script tag",
+      "copied": "Copied.",
+      "copyFailed": "Copy failed. Select the text and copy it manually."
+    }
+  },
+  "executionCard": {
+    "bus": {
+      "aria": "URLs excluded from link recommendations",
+      "title": "Quarantined URLs",
+      "summary": "{{count}} URLs are removed or redirected and excluded from link targets; {{dropped}} link suggestions dropped.",
+      "reason": {
+        "remove": "Remove",
+        "redirect": "301 redirect"
+      },
+      "conflict": {
+        "protected-by-evidence": "Kept: it has Search Console or backlink evidence",
+        "canonical-removed": "Conflict: the canonical URL is also on the removal list"
+      }
+    },
+    "brief": {
+      "open": "Open in Brief Workstation",
+      "pillar": "Target pillar",
+      "anchors": "anchors",
+      "donor": "Donor page",
+      "entities": "Missing entities",
+      "links": "Links to insert",
+      "paa": "People Also Ask questions",
+      "structure": "H2 structure",
+      "jsonLd": "Missing JSON-LD author properties",
+      "footnotes": "Required footnotes",
+      "origin": {
+        "sfs": "Site Focus recommendation",
+        "tas": "Topical Authority recommendation",
+        "eetv": "EETV recommendation"
+      },
+      "state": {
+        "created": "Brief created",
+        "updated": "Brief updated",
+        "failed": "Brief could not be saved"
+      }
+    },
+    "deploy": {
+      "empty": "No redirect or removal rules yet.",
+      "aria": "Deployment artifacts",
+      "title": "Deployment artifacts (301/410)",
+      "summary": "{{count}} valid rules, no loops and no chains.",
+      "zip": "Download all (ZIP)",
+      "issuesAria": "Rule problems",
+      "issue": {
+        "invalid": "Invalid rule, skipped",
+        "duplicate": "Duplicate source, skipped",
+        "loop": "Redirect loop, skipped",
+        "chain-flattened": "Redirect chain, pointed at the final target",
+        "dead-target": "Redirects to a page that is gone (410)",
+        "query-unsupported": "Has a query string, not exported to this server format",
+        "gone-unsupported": "410 is not supported by Cloudflare Bulk Redirects"
+      }
+    },
+    "tasks": {
+      "aria": "Optimization tasks",
+      "title": "Optimization tasks",
+      "add": "Add to tracker",
+      "added": "Task added",
+      "empty": "No tasks yet. Add one from a recommendation.",
+      "verify": "Verify on latest crawl",
+      "crawlUnavailable": "The selected crawl does not provide complete, dated evidence; verification is deferred.",
+      "markImplemented": "Mark as implemented",
+      "regression": "Score regression",
+      "kind": {
+        "add-link": "Add link",
+        "redirect-301": "301 redirect",
+        "remove-410": "410 removal",
+        "add-entities": "Add entities",
+        "remove-noindex": "Remove noindex"
+      },
+      "status": {
+        "planned": "Planned",
+        "implemented": "Implemented",
+        "verified": "Verified",
+        "failed": "Failed"
+      },
+      "verdict": {
+        "link-found": "VERIFIED: new link found, zone {{zone}}",
+        "link-missing": "DEPLOYMENT ERROR: the link is still missing",
+        "redirect-ok": "VERIFIED: 301 points to the right page",
+        "redirect-wrong-target": "DEPLOYMENT ERROR: redirect points to a different page",
+        "still-200": "DEPLOYMENT ERROR: still HTTP {{status}}",
+        "gone-ok": "VERIFIED: page returns HTTP 410",
+        "wrong-status": "DEPLOYMENT ERROR: HTTP {{status}} instead of 410",
+        "entities-ok": "VERIFIED: {{found}} of {{total}} required entities present",
+        "entities-missing": "DEPLOYMENT ERROR: only {{found}} of {{total}} required entities present (60% needed)",
+        "index-ok": "VERIFIED: page is indexable",
+        "still-noindex": "DEPLOYMENT ERROR: noindex is still present"
+      },
+      "owner": "Owner",
+      "priority": "Priority",
+      "dueDate": "SLA date",
+      "overdue": "Overdue",
+      "me": "My name",
+      "filter": {
+        "all": "All",
+        "mine": "My tasks",
+        "overdue": "Overdue"
+      },
+      "priorityLevel": {
+        "high": "High",
+        "medium": "Medium",
+        "low": "Low"
+      }
+    }
+  },
+  "scoreDropAlert": {
+    "aio": {
+      "title": "AI readiness dropped",
+      "body": "AI Overviews readiness fell from {{from}} to {{to}} ({{points}} points)."
+    },
+    "trust": {
+      "title": "Trust score dropped",
+      "body": "The E-E-A-T trust score fell from {{from}} to {{to}} ({{points}} points)."
+    }
+  },
+  "sprsUi": {
+    "title": "Semantic PageRank",
+    "empty": "No link graph yet. Crawl the site first; no score is shown without real links.",
+    "page": "Page",
+    "score": "Score",
+    "deadEnd": "Dead end",
+    "underLinked": "Under-linked",
+    "leak": "Leak",
+    "unknown": "{{count}} links have unknown similarity and are not counted as leaks.",
+    "notConverged": "The solver did not converge; scores are approximate.",
+    "whatIf": {
+      "title": "What-If link simulator",
+      "source": "From page",
+      "target": "To page",
+      "action": "Change",
+      "add": "Add link",
+      "remove": "Remove link",
+      "run": "Simulate",
+      "noChange": "No score changes.",
+      "before": "Before",
+      "after": "After",
+      "delta": "Change"
+    }
+  },
+  "decayUi": {
+    "snapshots": "Snapshots supporting this verdict: {{count}}",
+    "title": "Semantic Decay Radar",
+    "verdict": {
+      "too-few-samples": "Not enough comparable SERP snapshots yet. Nothing to report.",
+      "incompatible": "Snapshots are not comparable, so no drift is claimed.",
+      "stable": "No material change against the baseline.",
+      "not-persistent": "A change appeared but has not persisted. Waiting.",
+      "cooldown": "Drift persists; an alert was already raised recently.",
+      "alert": "Persistent drift against the baseline. Review manually."
+    },
+    "shift": "Centroid shift: {{value}}%",
+    "newEntities": "New entities",
+    "lostEntities": "Lost entities",
+    "intent": "Intent: {{from}} to {{to}}",
+    "format": "Format: {{from}} to {{to}}",
+    "incompatible": "Different {{fields}}: not a market change."
+  },
+  "sijaUi": {
+    "title": "Search intent (SIJA)",
+    "empty": "No clear micro-intent detected from the page structure.",
+    "primary": "Observed intent: {{intent}} ({{confidence}}% confidence).",
+    "mixed": "Also: {{list}}.",
+    "inconclusive": "SSAS inconclusive: {{count}} real TOP pages available, at least 3 needed.",
+    "ssas": {
+      "aligned": "SSAS {{score}}: structure matches the TOP pages.",
+      "mismatch": "SSAS {{score}}: structure differs from the TOP pages."
+    },
+    "intents": {
+      "definitional": "Definition",
+      "how-to": "How-to",
+      "troubleshooting": "Troubleshooting",
+      "comparison": "Comparison",
+      "curated-list": "Curated list",
+      "tool": "Tool or calculator",
+      "transactional": "Transactional",
+      "local": "Local"
+    }
+  },
+  "prePublishUi": {
+    "title": "Pre-publish check",
+    "copy": "Copy report",
+    "copied": "Report copied.",
+    "copyFailed": "Could not copy the report.",
+    "verdict": {
+      "insufficient": "Not enough data to judge this draft.",
+      "blocked": "Do not publish yet: the draft duplicates an existing page.",
+      "review": "Review before publishing.",
+      "ok": "No issues found. This is advice, not approval."
+    },
+    "sfs": "Site Focus Score {{before}} to {{after}} ({{delta}}). Draft relevance {{trs}}. This is not a traffic forecast.",
+    "conflict": "Too similar to {{url}} ({{value}}%).",
+    "overlap": "Overlaps with {{url}} ({{value}}%).",
+    "reason": {
+      "no-core": "No Core Topic yet.",
+      "corpus-too-small": "Fewer than 3 scored pages on the site.",
+      "dimension-mismatch": "Embeddings come from different models.",
+      "cannibalization": "Cannibalization risk.",
+      "overlap": "Partial overlap with an existing page.",
+      "low-trs": "Draft relevance to the Core Topic is low.",
+      "chunk-issues": "Some passages would not work when retrieved alone."
+    },
+    "chunk": {
+      "leading-pronoun": "Passage {{index}} starts with a pronoun that needs earlier context.",
+      "too-short": "Passage {{index}} is too short to stand alone."
+    }
+  },
+  "parityUi": {
+    "title": "International parity",
+    "summary": "{{covered}} covered, {{shallow}} shallow, {{missing}} missing, {{local}} intentionally local.",
+    "inconclusive": "Inconclusive: parity cannot be judged from the data available.",
+    "gap": {
+      "no-reference-coverage": "The reference language has no topic coverage data.",
+      "partial-crawl": "The crawl is partial.",
+      "single-language": "Only one language was found."
+    },
+    "language": "Language",
+    "topic": "Topic",
+    "status": "Status",
+    "statuses": {
+      "covered": "Covered",
+      "shallow": "Shallow",
+      "missing": "Missing",
+      "intentionally-local": "Intentionally local"
+    },
+    "note": "A missing version is not always an error. Texts need not match one to one, and the UI language does not set which site languages are analyzed."
+  },
+  "offPageUi": {
+    "title": "Off-page topical authority",
+    "empty": "No topical backlink value yet: backlinks, source text or authority data are missing. This does not mean there are no backlinks.",
+    "tbva": "Topical backlink value {{value}} from {{count}} source domains ({{coverage}}% of follow links scored).",
+    "partial": "{{count}} follow links could not be scored (source text or authority missing).",
+    "nofollow": "{{count}} nofollow links are not counted.",
+    "noText": "No source text available, so brand co-citations were not checked.",
+    "coCitation": "Brand and core entity in one paragraph: {{linked}} linked, {{unlinked}} unlinked.",
+    "note": "The value uses provider authority and does not reproduce Google PageRank or explain rankings. Co-occurrence is not endorsement."
+  },
+  "llmEconomy": {
+    "title": "LLM cost",
+    "empty": "No AI calls recorded yet.",
+    "spent": "Spent: {{value}}",
+    "saved": "Saved by cache and local runs: {{value}}",
+    "hits": "Cache hits: {{count}}",
+    "leaves": "Page text is sent outside this device to {{provider}}."
+  },
+  "templateGovernor": {
+    "title": "Programmatic template quality",
+    "empty": "No weak templates found.",
+    "row": "{{pattern}}: {{count}} pages, information gain {{gain}}%",
+    "noindex": "Recommended: noindex this segment",
+    "limit": "Recommended: limit the number of indexed pages"
+  },
+  "outreach": {
+    "title": "Outreach targets",
+    "empty": "No backlink gap data. Run a backlink gap check first.",
+    "row": "{{domain}}: priority {{priority}}, links to {{count}} competitors",
+    "export": "Export CSV",
+    "manualNote": "SEOmi never sends messages. Send drafts from your own mailbox."
+  },
+  "causalMarket": {
+    "title": "Causal impact",
+    "empty": "Not estimable. Not enough history: need at least 7 days before and 1 after, a real external market series, and independent control evidence.",
+    "effect": "Daily effect: {{effect}} ({{lower}} to {{upper}})",
+    "updateWindow": "Google update window: result is inconclusive.",
+    "normalized": "Normalized by market baseline",
+    "positive": "Positive effect",
+    "negative": "Negative effect",
+    "noEffect": "No measurable effect",
+    "inconclusive": "Inconclusive",
+    "evidence": "Evidence: market {{market}}; control {{control}}",
+    "unknown": "unknown",
+    "marketUnavailable": "External market baseline is unavailable or invalid; no causal success or failure is inferred.",
+    "controlUnavailable": "Independent control evidence is unavailable; no causal success or failure is inferred.",
+    "updateWindowReason": "The analysis overlaps a confirmed Google ranking update; the result is inconclusive.",
+    "disclaimer": "Estimate with external market and control evidence; it is not proof of causation."
+  },
+  "snapshots": {
+    "newerData": "Newer crawl data is available.",
+    "refresh": "Refresh"
+  },
+  "teamUi": {
+    "role": {
+      "admin": "Admin",
+      "seo_strategist": "SEO Strategist",
+      "content_writer": "Content Writer",
+      "developer": "Developer"
+    },
+    "permission": {
+      "run_crawl": "Run crawl",
+      "execute_cms_patch": "Apply CMS patch",
+      "modify_site_focus_rules": "Change Site Focus rules",
+      "export_audit_pdf": "Export audit PDF",
+      "manage_team_roles": "Manage team roles"
+    },
+    "denied": "Your role cannot perform this action."
+  },
+  "cmsUi": {
+    "kind": {
+      "wordpress": "WordPress",
+      "strapi": "Strapi",
+      "webhook": "Webhook"
+    },
+    "error": {
+      "unsafe-url": "The CMS address is not allowed (HTTPS and a public host are required).",
+      "conflict": "The page was edited after the diff was prepared. Prepare the diff again.",
+      "http": "The CMS rejected the request.",
+      "bad-response": "The CMS answered in an unexpected format.",
+      "heading-not-found": "The heading was not found in the page.",
+      "heading-ambiguous": "The heading appears more than once.",
+      "forbidden": "Your role cannot apply CMS patches.",
+      "not-approved": "Approve this exact diff before writing.",
+      "fact-gate-required": "YMYL content needs a passed fact check before writing."
+    },
+    "verified": "Change written and verified.",
+    "unverified": "Change written, but the live page does not show it yet.",
+    "dryRun": "Dry run: nothing was written."
+  },
+  "igosUi": {
+    "title": "IGOS originality",
+    "empty": "No comparable TOP results were fetched, so there is no baseline and no score.",
+    "noScore": "No score",
+    "offTopic": "Most paragraphs are off-topic; no score is given.",
+    "partial": "Partial baseline: {{available}} of {{requested}} competitor pages.",
+    "basis": "Baseline: {{available}} of {{requested}} competitor pages.",
+    "component": {
+      "nefr": "Novel entities",
+      "edsi": "Evidence density",
+      "fhem": "Experience markers",
+      "sdd": "Subtopic distribution"
+    },
+    "coverage": "Baseline coverage {{coverage}}, penalty multiplier {{multiplier}}",
+    "novel": "New on-topic entities: {{list}}",
+    "advice": "Recommendations",
+    "heatmap": "Paragraph heatmap",
+    "heatmapEmpty": "No paragraphs to show.",
+    "noHeading": "No heading",
+    "zone": {
+      "echo": "Echo",
+      "gain": "Gain",
+      "drift": "Drift",
+      "neutral": "Neutral"
+    },
+    "detail": "Offset {{offset}}, topic similarity {{topic}}, nearest competitor passage {{nearest}}.",
+    "source": "Nearest source: {{url}} (rank {{rank}}).",
+    "noSource": "No nearest source.",
+    "limit": {
+      "no-comparable-documents": "No comparable competitor documents.",
+      "too-few-documents": "Too few competitor documents for a reliable baseline.",
+      "some-documents-missing": "Some competitor pages could not be fetched.",
+      "no-target-chunks": "The page has no analysable paragraphs.",
+      "off-topic-below-quota": "Too few on-topic paragraphs."
+    },
+    "rec": {
+      "rewrite-echo": "The paragraph at offset {{offset}} repeats a competitor passage: rewrite it in your own words.",
+      "add-evidence": "Add concrete data with units or sources; none was detected.",
+      "refocus-drift": "The paragraph at offset {{offset}} drifts off the topic: refocus or remove it."
+    }
+  },
+  "logIntelUi": {
+    "title": "Log intelligence",
+    "description": "Import a local .log or .txt access log (maximum 500 MB). Only aggregates are saved, never raw IP addresses. Dedupe uses a sampled SHA-256 fingerprint (first/last 1 MiB and size).",
+    "chooseFile": "Choose access log",
+    "cancel": "Cancel",
+    "clear": "Clear logs",
+    "importing": "Importing access log",
+    "progress": "Lines: {{lines}} · Malformed: {{malformed}} · Ignored non-bot: {{ignoredNonBot}}",
+    "cancelled": "Import cancelled.",
+    "duplicate": "This file was already imported.",
+    "complete": "Import complete.",
+    "storageFailed": "Local storage could not be updated. Changes remain in memory only; saved logs may be unchanged.",
+    "tooLarge": "This file exceeds the 500 MB limit.",
+    "invalidFile": "Choose a .log or .txt file.",
+    "resumeRequired": "Resume the unfinished file or clear logs before importing a different file.",
+    "importFailed": "The file could not be read or hashed. Please try again.",
+    "resume": "Select the same file to resume without counting lines twice.",
+    "verificationNote": "Bot identity is a User-Agent claim, not proof. Spoof checks need the desktop DNS resolver; this panel does not call DNS. Unverified rows remain inconclusive.",
+    "verificationNoteDesktop": "Bot identity is checked on this computer with reverse and forward DNS (3 s timeout). A failed lookup leaves the row as claimed, never as spoofed.",
+    "matrix": "Crawl Efficiency Matrix",
+    "coverage": "Coverage: {{days}} of {{period}} days",
+    "period": "Window (UTC): {{start}} – {{end}}",
+    "insufficient": "Log coverage is insufficient for reliable verdicts.",
+    "noScores": "The latest project crawl has no saved per-path TRS scores. No scores are inferred.",
+    "unavailable": "Not available",
+    "empty": "No log or crawl paths to display.",
+    "previous": "Previous",
+    "page": "Page {{current}} of {{total}}",
+    "next": "Next",
+    "loading": "Loading log intelligence…",
+    "columns": {
+      "path": "Path",
+      "family": "Bot family",
+      "status": "Verification",
+      "hits": "Hits",
+      "errors": "4xx/5xx share",
+      "verdict": "Verdict"
+    },
+    "families": {
+      "googlebot": "Googlebot",
+      "bingbot": "Bingbot",
+      "gptbot": "GPTBot",
+      "perplexitybot": "PerplexityBot",
+      "none": "No bot evidence"
+    },
+    "statuses": {
+      "verified": "Verified",
+      "claimed": "Claimed",
+      "spoofed": "Spoofed",
+      "unknown": "Unknown"
+    },
+    "verdicts": {
+      "waste": "Waste",
+      "starvation": "Starvation",
+      "ok": "OK",
+      "inconclusive": "Inconclusive",
+      "no-logs": "No logs"
+    }
+  },
+  "altCheckUi": {
+    "column": "ALT quality",
+    "csvColumn": "alt_issues",
+    "summary": "{{checked}} images checked, {{issues}} with ALT issues.",
+    "issues": {
+      "missing": "Missing ALT",
+      "empty": "Empty ALT",
+      "filename": "Looks like a file name",
+      "generic": "Generic wording",
+      "too-long": "Too long",
+      "repeats-caption": "Repeats the caption",
+      "unrelated-to-context": "Unrelated to context"
+    },
+    "noIssues": "No ALT issues",
+    "decorative": "Decorative (empty ALT)",
+    "visualNotice": "Visual analysis needs a local model and is not available in this build.",
+    "analyses": {
+      "ocr": "OCR",
+      "clip-alignment": "CLIP alignment",
+      "transcript": "Transcripts"
+    },
+    "statuses": {
+      "unavailable": "Unavailable"
+    },
+    "noScorePenalty": "This does not lower any score."
+  },
+  "prePublishMountUi": {
+    "title": "Pre-publish check",
+    "description": "Uses the latest completed crawl, its saved excerpts and terms, Site Focus scores and project embedding settings. Simulation only: nothing is saved or published.",
+    "draft": "Unpublished draft text",
+    "url": "Draft URL (optional)",
+    "urlHint": "Leave blank for a new page. An existing crawl URL replaces that page in the simulation.",
+    "invalidUrl": "Enter a valid HTTP or HTTPS URL without credentials.",
+    "run": "Check draft",
+    "cancel": "Cancel",
+    "loading": "Loading pre-publish check…",
+    "noCrawl": "No completed crawl for the active project. Crawl the site first.",
+    "noCore": "No Core Topic yet. The check cannot judge this draft.",
+    "running": "Embedding the draft and crawl evidence…",
+    "unreachable": "The selected embedding provider could not return vectors. Check the project embedding settings and provider connection.",
+    "cancelled": "Check cancelled. No result was applied.",
+    "stale": "Inputs or crawl changed. Run the check again."
+  },
+  "telemetrySourcesUi": {
+    "title": "Sources",
+    "sources": {
+      "gsc": "GSC",
+      "ga4": "GA4",
+      "backlinks": "Backlinks"
+    },
+    "states": {
+      "measured": "Measured",
+      "partial-history": "Partial history",
+      "stale": "Stale",
+      "sampled": "Sampled",
+      "missing-permission": "Missing permission",
+      "unavailable": "Unavailable"
+    },
+    "property": "Property: {{value}}",
+    "provider": "Provider: {{value}}",
+    "period": "{{start}} – {{end}} ({{days}} days)",
+    "retrievedAt": "Retrieved: {{value}}",
+    "truncated": {
+      "yes": "Truncated: yes",
+      "no": "Truncated: no"
+    },
+    "coverage": "Coverage: {{value}}%",
+    "unknownNote": "Unknown data is never counted as zero."
+  },
+  "offPageSourcesUi": {
+    "analyze": "Analyze link sources",
+    "cancel": "Cancel",
+    "scope": "up to 25 follow links, one per source domain, highest provider authority first. Authority scale: 0–100; TBVA is a sum, not a percentage or Google PageRank. Limits: 3 concurrent requests, 15 s native timeout, 25 MiB response body, 20,000 visible-text characters per source.",
+    "provider": "Local embedding provider",
+    "local": "Local hash",
+    "ollama": "Local Ollama",
+    "model": "Ollama embedding model",
+    "scored": "Scored sources: {{scored}} / {{total}} selected (not the whole backlink profile).",
+    "sources": "Source fetch status",
+    "fetchedAt": "Fetched at: {{time}}",
+    "notFetched": "Not fetched",
+    "context": "Extraction has no paragraph or anchor boundaries. Bounded text blocks are inferred; every hit has linked=false because paragraph-level link context is unavailable.",
+    "caveat": "Co-occurrence is not endorsement. Homonyms can produce false matches; negated mentions remain unclear.",
+    "excerpts": "Co-citation excerpts",
+    "offset": "{{url}} — extracted-text offset {{offset}}",
+    "missing": "Missing text, usable vectors or authority means partial/unavailable evidence, not zero backlinks. This sample is not the full profile.",
+    "status": {
+      "running": "Analyzing sources…",
+      "done": "Source analysis completed",
+      "cancelled": "Analysis cancelled; unfinished sources are not scored",
+      "unavailable": "Analysis unavailable"
+    },
+    "fetch": {
+      "pending": "Pending",
+      "ok": "Text available",
+      "unavailable": "Unavailable",
+      "too-large": "Body too large",
+      "blocked": "Blocked by safe transport"
+    },
+    "limitations": {
+      "no-topic-vector": "No usable Core Topic vector from the latest completed project crawl; TBVA is unavailable.",
+      "invalid-scale": "Invalid authority scale; TBVA is unavailable.",
+      "no-follow-links": "No follow links available for analysis.",
+      "source-text-or-authority-missing": "Some sources lack text, usable vectors or provider authority."
+    },
+    "polarity": {
+      "neutral": "Neutral co-occurrence; not endorsement",
+      "unclear": "Unclear: possible negation"
+    },
+    "pacing": "The native audit guard also limits starts to 10 per minute. The sample can take several minutes; other audits may reduce availability.",
+    "history": {
+      "title": "History",
+      "empty": "No completed analyses saved.",
+      "summary": "TBVA: {{value}} · Scored/requested: {{scored}}/{{requested}}",
+      "delta": "TBVA change: {{delta}}",
+      "notComparable": "Not comparable: {{reason}}",
+      "reasons": {
+        "first": "no previous record",
+        "scale": "different authority scale",
+        "model": "different embedding model",
+        "unknownModel": "embedding model unknown",
+        "unavailable": "TBVA unavailable"
+      },
+      "view": "View sources",
+      "hide": "Hide sources",
+      "delete": "Delete record",
+      "clear": "Clear project history",
+      "exportCurrent": "Export current CSV",
+      "exportRecord": "Export record CSV",
+      "storageError": "History storage is unavailable; changes were not saved.",
+      "topic": "Topic: {{topic}}",
+      "embedding": "Embedding: {{provider}} / {{model}}",
+      "details": "Saved per-source evidence",
+      "fields": {
+        "sourceUrl": "Source URL",
+        "fetchedAt": "Fetched at",
+        "availability": "Availability",
+        "authority": "Authority",
+        "similarity": "Similarity",
+        "contribution": "Contribution"
+      },
+      "unavailable": "Unavailable",
+      "status": {
+        "ready": "Ready",
+        "partial": "Partial",
+        "unavailable": "Unavailable"
+      },
+      "privacy": "The last 10 completed analyses are stored locally per project. Full page text and vectors are never saved."
+    }
+  },
+  "experimentsUi": {
+    "title": "SEO experiments",
+    "disclaimer": "This is an observation, not proof of causation. Changes may reflect seasonality, other interventions or external factors.",
+    "projectRequired": "Select a project to register interventions.",
+    "capacity": "Up to {{count}} interventions are retained; adding more removes the oldest.",
+    "url": "Page URL",
+    "site": "Whole site",
+    "date": "First day affected",
+    "kind": "Intervention type",
+    "note": "Note (up to 300 characters)",
+    "add": "Add intervention",
+    "saveFailed": "Could not save. Check the fields and local storage availability.",
+    "removeFailed": "Could not remove the intervention from local storage.",
+    "empty": "No interventions registered.",
+    "intervention": "Intervention",
+    "unavailable": "Unavailable",
+    "baseline": "Baseline period",
+    "followUp": "Follow-up period",
+    "measurements": "Observed measurements",
+    "metric": "Metric",
+    "before": "Before",
+    "after": "After",
+    "change": "Relative change",
+    "clicks": "Clicks",
+    "impressions": "Impressions",
+    "position": "Average position (signed difference)",
+    "restOfSite": "Rest of site (totals minus page)",
+    "relativeVsSite": "Page minus rest of site (percentage points)",
+    "limitations": "Limitations",
+    "remove": "Remove intervention",
+    "percent": "{{value}}%",
+    "points": "{{value}} pp",
+    "kinds": {
+      "content": "Content",
+      "internal-links": "Internal links",
+      "title-meta": "Title and meta",
+      "technical": "Technical",
+      "other": "Other"
+    },
+    "status": {
+      "ready": "Observation available",
+      "inconclusive": "Inconclusive",
+      "pending": "Planned / pending"
+    },
+    "reasons": {
+      "observational": "Before/after observation only; no causal inference.",
+      "uncontrolled-factors": "Seasonality, concurrent changes and external factors are not controlled.",
+      "zero-baseline": "A zero baseline makes the relative change unavailable.",
+      "no-control": "A whole-site intervention has no separate rest-of-site control.",
+      "filtered-scope": "The same saved Search Console filters apply to both periods.",
+      "invalid-period": "A saved period has invalid dates or duration.",
+      "inconsistent-totals": "Page metrics exceed saved site totals; the control cannot be computed.",
+      "no-baseline": "No saved period ends before the intervention.",
+      "no-follow-up": "No saved period starts on or after the intervention.",
+      "incomparable-scope": "The nearest periods have different properties or filters, or do not cover the URL.",
+      "period-length-mismatch": "Period lengths differ by more than 10%.",
+      "rows-truncated": "Saved page rows are truncated; the page comparison may be incomplete.",
+      "low-volume": "Baseline clicks are below 30; the volume is too low for a reliable comparison.",
+      "pending": "The intervention date is in the future; evaluation is pending."
+    }
   }
 }

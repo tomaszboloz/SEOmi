@@ -22,7 +22,7 @@ export const notificationAudit = (score: number): PageAuditData => ({
 });
 
 export const notificationCrawl = (score: number): SiteCrawlResult => ({
-  start_url: 'https://example.com/', pages_crawled: 3, health_score: score,
+  start_url: 'https://example.com/', pages_crawled: 3, health_score: score, score_version: 2,
   critical_count: 0, warning_count: 0, notice_count: 0, duration_ms: 12,
   cancelled: false, timed_out: false, robots_txt_status: 'loaded', robots_blocked_count: 0,
   sitemap_status: 'loaded', sitemap_urls_discovered: 0, sitemap_urls: [], pages: [],

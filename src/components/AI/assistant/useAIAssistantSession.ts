@@ -24,6 +24,7 @@ export const useAIAssistantSession = () => {
   const setApiKey = useAuthStore((s) => s.setApiKey);
   const connectionMethod = useAuthStore((s) => s.connectionMethod);
   const isProviderConnected = useAuthStore((s) => s.isProviderConnected);
+  const testProviderConnection = useAuthStore((s) => s.testProviderConnection);
   const generateSuggestions = useAuthStore((s) => s.generateSuggestions);
 
   const [promptInstruction, setPromptInstruction] = useState('');
@@ -31,7 +32,7 @@ export const useAIAssistantSession = () => {
   const [error, setError] = useState<string | null>(null);
   const [suggestions, setSuggestions] = useState<AiSuggestionResponse | null>(null);
 
-  const currentKey = apiKeys[provider] || '';
+  const currentKey = apiKeys[provider] === '__seomi_secret_present__' ? '' : apiKeys[provider] || '';
   const ownerKey = JSON.stringify([activeProjectId, provider, model, currentAudit?.url, currentAudit?.timestamp, connectionMethod[provider], currentKey, promptInstruction]);
   const beginOperation = useAsyncOperationScope(ownerKey);
   const actions = useAIAssistantActions({ ownerKey, currentAudit, suggestions, setAuditData, setError, beginOperation });
@@ -49,8 +50,9 @@ export const useAIAssistantSession = () => {
     setLoading(false);
     setSuggestions(null);
     setError(null);
-    void setApiKey(provider, value).catch((cause) => {
+    return setApiKey(provider, value).catch((cause) => {
       if (isCurrent() && isErrorCurrent()) setError(cause instanceof Error ? cause.message : String(cause));
+      throw cause;
     });
   };
 
@@ -61,14 +63,20 @@ export const useAIAssistantSession = () => {
     setError(null);
     setSuggestions(null);
     if (!currentAudit) return;
-    if (!isProviderConnected()) {
-      setError(t('ai.connectBeforeGenerate', { provider: provider.toUpperCase() }));
-      return;
-    }
-
     setLoading(true);
 
     try {
+      if (!isProviderConnected()) {
+        // A stored API key is verified here instead of sending the user to the
+        // connection dialog after every restart; a local CLI proves itself on detection.
+        const stored = connectionMethod[provider] === 'api_key' && Boolean(apiKeys[provider].trim());
+        const verified = stored ? await testProviderConnection(provider) : null;
+        if (!isCurrent()) return;
+        if (!verified?.success) {
+          if (isErrorCurrent()) setError(verified?.message || t('ai.connectBeforeGenerate', { provider: provider.toUpperCase() }));
+          return;
+        }
+      }
       const res = await generateSuggestions(currentAudit, promptInstruction);
       if (isCurrent()) setSuggestions(res);
     } catch (err: unknown) {
@@ -90,6 +98,7 @@ export const useAIAssistantSession = () => {
     setModel,
     connectionMethod,
     currentKey,
+    keyStored: Boolean(apiKeys[provider].trim()),
     handleApiKeyChange,
     promptInstruction,
     setPromptInstruction,

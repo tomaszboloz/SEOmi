@@ -30,6 +30,7 @@ export const SavedKeywordsTableRow: React.FC<SavedKeywordsTableRowProps> = ({
     if (diff < 60) return 'text-amber-400 bg-amber-500/10 border-amber-500/30';
     return 'text-rose-400 bg-rose-500/10 border-rose-500/30';
   };
+  const getMetricLabel = (value: number | null) => value === null ? '—' : value;
 
   return (
     <tr className="hover:bg-slate-800/40 transition">
@@ -85,14 +86,14 @@ export const SavedKeywordsTableRow: React.FC<SavedKeywordsTableRowProps> = ({
         </div>
       </td>
       <td className="px-4 py-3.5 text-right font-mono text-slate-200">
-        {item.search_volume.toLocaleString(appLocale())}
+        {item.search_volume === null ? '—' : item.search_volume.toLocaleString(appLocale())}
       </td>
       <td className="px-4 py-3.5 text-center font-mono">
-        <span className={`text-xs px-2 py-0.5 rounded-md border ${getDiffColor(item.difficulty)}`}>
-          {item.difficulty}
+        <span className={`text-xs px-2 py-0.5 rounded-md border ${item.difficulty === null ? 'border-slate-700 text-slate-500' : getDiffColor(item.difficulty)}`}>
+          {getMetricLabel(item.difficulty)}
         </span>
       </td>
-      <td className="px-4 py-3.5 text-right font-mono text-slate-300">${item.cpc.toFixed(2)}</td>
+      <td className="px-4 py-3.5 text-right font-mono text-slate-300">{item.cpc === null ? '—' : `$${item.cpc.toFixed(2)}`}</td>
       <td className="px-4 py-3.5 text-center text-xs text-slate-400">{intentLabel(item.intent)}</td>
       <td className="px-4 py-3.5 text-right">
         <button

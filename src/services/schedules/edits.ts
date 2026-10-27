@@ -4,6 +4,7 @@ import type { CrawlConfig } from '@/types';
 import { createId } from '@/services/ids';
 import type { ScheduledAudit, AuditIntervalHours, ScheduledTaskType } from './types';
 import { validProjectId, allowedIntervals, isHttpUrlWithoutCredentials, MAX_SCHEDULES_PER_PROJECT } from './policy';
+import { MAX_CRAWL_LIMIT } from '@/constants/crawlLimits';
 
 export const addScheduledAudit = (
   projectId: string,
@@ -31,8 +32,8 @@ export const addScheduledAudit = (
   }
   const taskType = options.taskType === 'site-crawl' ? 'site-crawl' : 'page-audit';
   const crawlLimit = Math.trunc(options.crawlLimit ?? 25);
-  if (taskType === 'site-crawl' && (!Number.isFinite(crawlLimit) || crawlLimit < 1 || crawlLimit > 500)) {
-    throw new Error(i18n.t('runtimeErrors.schedules.crawlLimit'));
+  if (taskType === 'site-crawl' && (!Number.isFinite(crawlLimit) || crawlLimit < 1 || crawlLimit > MAX_CRAWL_LIMIT)) {
+    throw new Error(i18n.t('runtimeErrors.schedules.crawlLimit', { max: MAX_CRAWL_LIMIT.toLocaleString(i18n.language) }));
   }
   const schedules = loadScheduledAudits(projectId);
   if (schedules.length >= MAX_SCHEDULES_PER_PROJECT) throw new Error(i18n.t('runtimeErrors.schedules.maxReached', { count: MAX_SCHEDULES_PER_PROJECT }));

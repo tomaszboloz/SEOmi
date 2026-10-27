@@ -1,12 +1,15 @@
 import { useTranslation } from 'react-i18next';
-import { CLUSTER_COLORS } from './CrawlArchitectureTypes';
 import { shortUrl, discoveryLabel } from './CrawlArchitectureHelpers';
 
 export const CrawlArchitectureSidebar = ({
   graph, selectedNode, selectedId, selectedTopicEdges, selectedOutboundEdges,
-  nodeById, linkMode, crawlMode
+  nodeById, linkMode, crawlMode, diagnosis
 }: any) => {
   const { t } = useTranslation();
+  // Topic list: diagnosis topics when the report is available, graph clusters otherwise (node colours come from TRS or HTTP status).
+  const legend: Array<{ id: string; label: string; count: number }> = diagnosis
+    ? diagnosis.topics.map((topic: any) => ({ id: topic.id, label: topic.label || t('topicalDiagnosis.topics.noLabel'), count: topic.documentIds.length }))
+    : graph.clusters.map((cluster: any) => ({ id: cluster.id, label: cluster.label, count: cluster.pageCount }));
 
   const semanticRegionLabel = (source: string | undefined) => {
     if (source === 'primary-root') return t('mapUi.source.primary');
@@ -29,8 +32,8 @@ export const CrawlArchitectureSidebar = ({
   return (
     <div className="mt-3 grid gap-3 lg:grid-cols-[minmax(0,1fr)_minmax(220px,0.7fr)]">
       <div className="flex flex-wrap gap-2" aria-label={t('mapUi.clusterLegend')}>
-        {graph.clusters.slice(0, 12).map((cluster: any, index: number) => <span key={cluster.id} className="inline-flex items-center gap-1.5 rounded-full border border-slate-800 px-2 py-1 text-[10px] text-slate-400"><span className="h-2 w-2 rounded-full" style={{ backgroundColor: CLUSTER_COLORS[index % CLUSTER_COLORS.length] }} />{cluster.label} · {cluster.pageCount}</span>)}
-        {graph.clusters.length > 12 && <span className="self-center text-[10px] text-slate-500">{t('mapUi.moreClusters', { count: graph.clusters.length - 12 })}</span>}
+        {legend.slice(0, 12).map((entry) => <span key={entry.id} className="inline-flex items-center gap-1.5 rounded-full border border-slate-800 px-2 py-1 text-[10px] text-slate-400">{entry.label} · {entry.count}</span>)}
+        {legend.length > 12 && <span className="self-center text-[10px] text-slate-500">{t('mapUi.moreClusters', { count: legend.length - 12 })}</span>}
       </div>
       <aside aria-live="polite" className="rounded-lg border border-slate-800 bg-slate-950/50 p-3">
         {selectedNode ? <>

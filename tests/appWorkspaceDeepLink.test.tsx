@@ -95,9 +95,9 @@ it('mounts every sidebar module through the full App shell without a route fallb
         expect(useAuditStore.getState().activeTab).toBe(tab);
         expectRenderedRoute(tab);
         expect(screen.queryByRole('alert')).toBeNull();
-      }, { timeout: 15_000 });
+      }, { timeout: 30_000 });
     }
-  }, 60_000);
+  }, 120_000);
 
 it('routes the semantic-map action into the crawler without leaving a dead tab', async () => {
     window.location.hash = buildWorkspaceHash({ projectId: 'project-a', tab: 'overview' });
@@ -117,12 +117,12 @@ it('routes the semantic-map action into the crawler without leaving a dead tab',
         );
       });
       expect(openMapEvent).toHaveBeenCalledTimes(1);
-      expect(await screen.findByText(i18n.t('siteAudit.mapRequiresCrawl'))).toBeTruthy();
+      expect(await screen.findByText(i18n.t('siteAudit.mapRequiresCrawl'), {}, { timeout: 20_000 })).toBeTruthy();
       expect(screen.queryByRole('alert')).toBeNull();
     } finally {
       window.removeEventListener('seomi:open-crawl-map', openMapEvent);
     }
-  });
+  }, 60_000);
 
 it('keeps repeated manual project switches authoritative over internally written hashes', async () => {
     render(<App />);

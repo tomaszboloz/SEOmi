@@ -19,16 +19,16 @@ it('downloads exactly the supplied UTF-8 text with the requested MIME type', asy
 it('passes exact native arguments and downloads the decoded PDF bytes', async () => {
   vi.mocked(invokeTauriCommand).mockResolvedValue(btoa('%PDF-1.7\n'));
   await downloadPdf('generate_crawl_pdf', { run: { id: 'observed' } }, 'observed.pdf');
-  expect(invokeTauriCommand).toHaveBeenCalledWith('generate_crawl_pdf', { run: { id: 'observed' } });
+  expect(invokeTauriCommand).toHaveBeenCalledWith('generate_crawl_pdf', { run: expect.objectContaining({ id: 'observed', pdf_locale: i18n.language, pdf_labels: expect.any(Object) }) });
   expect(vi.mocked(downloadBlob).mock.calls[0]).toEqual(['observed.pdf', expect.objectContaining({ type: 'application/pdf', size: 9 })]);
 });
 it('calls the public audit PDF action with its immutable audit and meaningful filename', async () => {
   vi.mocked(invokeTauriCommand).mockResolvedValue(btoa('%PDF-fixture'));
   await downloadAuditPdf(audit);
-  expect(invokeTauriCommand).toHaveBeenCalledWith('generate_audit_pdf', { audit });
+  expect(invokeTauriCommand).toHaveBeenCalledWith('generate_audit_pdf', { audit: expect.objectContaining({ ...audit, pdf_locale: i18n.language, pdf_labels: expect.any(Object) }) });
   expect(vi.mocked(downloadBlob).mock.calls[0][0]).toBe('seomi-audit-example.com-2026-09-20.pdf');
 });
-it.each([null, 42, '', 'bad base64!', btoa('wrong header')])('rejects malformed native wire data %j with a localized error', async encoded => {
+it.each([null, 42, '', 'bad base64!', btoa('wrong header'), btoa('%PDF'), btoa('%PDE-'), btoa('x%PDF-')])('rejects malformed native wire data %j with a localized error', async encoded => {
   vi.mocked(invokeTauriCommand).mockResolvedValue(encoded);
   await expect(downloadPdf('generate_audit_pdf', { audit }, 'observed.pdf')).rejects.toThrow(i18n.t('exportUi.invalidPdf'));
   expect(downloadBlob).not.toHaveBeenCalled();

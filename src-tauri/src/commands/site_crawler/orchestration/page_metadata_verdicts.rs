@@ -16,6 +16,7 @@ pub struct PageVerdictsOutcome {
 pub fn evaluate_page_verdicts(input: EvaluatePageVerdictsInput<'_>) -> PageVerdictsOutcome {
     let EvaluatePageVerdictsInput {
         status,
+        response_headers_available,
         config,
         meta_robots,
         x_robots_tag,
@@ -25,7 +26,16 @@ pub fn evaluate_page_verdicts(input: EvaluatePageVerdictsInput<'_>) -> PageVerdi
         header_nofollow,
         canonical_points_elsewhere,
     } = input;
-    let indexability_status = if status == 0 && config.crawl_mode == "browser-rendered" {
+    // The verdict is only uncertain when the response headers are missing,
+    // which a rendered page paired with its HTTP response does not lack.
+    let rendered_without_headers =
+        config.crawl_mode == "browser-rendered" && !response_headers_available;
+    let verdict_mode = if rendered_without_headers {
+        "browser-rendered"
+    } else {
+        "http"
+    };
+    let indexability_status = if status == 0 && rendered_without_headers {
         "HTTP status unavailable from rendered document".to_string()
     } else if status >= 400 {
         "Blocked by HTTP error".to_string()
@@ -37,7 +47,7 @@ pub fn evaluate_page_verdicts(input: EvaluatePageVerdictsInput<'_>) -> PageVerdi
         "Eligible from this response only; link following is restricted".to_string()
     } else if status >= 300 {
         "Redirect response — target not evaluated".to_string()
-    } else if config.crawl_mode == "browser-rendered" {
+    } else if rendered_without_headers {
         "Rendered DOM checked; X-Robots-Tag response header unavailable".to_string()
     } else {
         "Eligible from this response only".to_string()
@@ -46,11 +56,11 @@ pub fn evaluate_page_verdicts(input: EvaluatePageVerdictsInput<'_>) -> PageVerdi
     let robots_decision = Some(build_robots_decision(
         meta_robots,
         x_robots_tag,
-        config.crawl_mode != "browser-rendered",
+        !rendered_without_headers,
     ));
     let indexability_verdict = Some(build_indexability_verdict(
         status,
-        &config.crawl_mode,
+        verdict_mode,
         meta_noindex,
         header_noindex,
         canonical_points_elsewhere,

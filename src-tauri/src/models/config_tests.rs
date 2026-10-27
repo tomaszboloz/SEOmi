@@ -80,3 +80,21 @@ fn validates_string_limits_and_all_supported_enums() {
     .validate()
     .is_err());
 }
+
+#[test]
+fn omitted_auto_install_updates_defaults_to_disabled() {
+    let value = serde_json::json!({
+        "theme": "dark",
+        "language": "en",
+        "default_user_agent": "chrome_mac",
+        "request_timeout_secs": 15,
+        "max_redirects": 10,
+        "verify_ssl": true,
+        "ai_provider": "openai",
+        "ai_model": "gpt-4o",
+        "auto_check_updates": true
+    });
+    let config: AppConfig = serde_json::from_value(value).unwrap();
+
+    assert!(!config.auto_install_updates);
+}

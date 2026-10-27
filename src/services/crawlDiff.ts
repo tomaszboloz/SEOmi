@@ -1,5 +1,9 @@
 import { CrawledPageSummary, SiteCrawlResult } from '@/types';
 import i18n from '@/i18n';
+import type { CrawlComparisonContractOptions, CrawlComparisonProvenance, CrawlComparisonRun, CrawlComparisonStatus } from './crawlComparisonContract';
+import { guardCrawlComparison } from './crawlComparisonContract';
+import { findCrawlDiffCollisions, type CrawlDiffCollision } from './crawlDiff/collisions';
+export type { CrawlDiffCollision } from './crawlDiff/collisions';
 
 export type CrawlChangeKind = 'added' | 'removed' | 'changed';
 
@@ -9,12 +13,21 @@ export interface CrawlPageChange {
   fields: string[];
   /** URL from the other snapshot when two environments were matched by path. */
   matchedUrl?: string;
+  /** Removed means the URL was not observed in the current snapshot. */
+  observation?: 'not-observed';
 }
 
 export interface CrawlDiff {
   added: CrawlPageChange[];
   removed: CrawlPageChange[];
   changed: CrawlPageChange[];
+  collisions?: CrawlDiffCollision[];
+}
+
+export interface CrawlDiffReport extends CrawlDiff {
+  status: CrawlComparisonStatus;
+  reasons: string[];
+  provenance: CrawlComparisonProvenance;
 }
 
 const comparableFields: Array<[keyof CrawledPageSummary, string]> = [
@@ -37,9 +50,12 @@ export interface CrawlDiffOptions {
   matchByPath?: boolean;
 }
 
+export type CrawlRunDiffOptions = CrawlDiffOptions & CrawlComparisonContractOptions;
+
 const trackingQueryParameters = /^(utm_[^=]+|gclid|fbclid|msclkid)$/i;
 
 export const crawlComparisonKey = (url: string, matchByPath = false): string => {
+  if (typeof url !== 'string' || !url.trim()) return '';
   if (!matchByPath) return url;
   try {
     const parsed = new URL(url);
@@ -61,6 +77,8 @@ export function compareCrawlResults(
   options: CrawlDiffOptions = {},
 ): CrawlDiff {
   const key = (url: string) => crawlComparisonKey(url, options.matchByPath === true);
+  const collisions = [...findCrawlDiffCollisions(current.pages, key, 'current'), ...findCrawlDiffCollisions(baseline.pages, key, 'baseline')];
+  if (collisions.length) return { added: [], removed: [], changed: [], collisions };
   const currentPages = new Map(current.pages.map((page) => [key(page.url), page]));
   const baselinePages = new Map(baseline.pages.map((page) => [key(page.url), page]));
   const added: CrawlPageChange[] = [];
@@ -96,4 +114,29 @@ export function compareCrawlResults(
     if (!currentPages.has(comparisonKey)) removed.push({ kind: 'removed', url: page.url, fields: [] });
   }
   return { added, removed, changed };
+}
+
+/** Compare persisted runs only after project, scope and completion guards pass. */
+export function compareCrawlRuns(
+  current: CrawlComparisonRun,
+  baseline: CrawlComparisonRun,
+  options: CrawlRunDiffOptions = {},
+): CrawlDiffReport {
+  const guard = guardCrawlComparison(current, baseline, options);
+  if (guard.status === 'blocked') return { added: [], removed: [], changed: [], ...guard };
+  const diff = compareCrawlResults(current.result, baseline.result, options);
+  if (diff.collisions?.length) {
+    const reason = diff.collisions.some((collision) => collision.invalid) ? 'invalid-page-url' : options.matchByPath ? 'path-key-collision' : 'url-key-collision';
+    return { ...diff, ...guard, status: 'blocked', reasons: [...guard.reasons, reason] };
+  }
+  const baselinePartial = guard.provenance.baseline.partial;
+  const currentPartial = guard.provenance.current.partial;
+  return {
+    status: guard.status,
+    reasons: guard.reasons,
+    provenance: guard.provenance,
+    added: baselinePartial ? [] : diff.added,
+    removed: currentPartial ? [] : diff.removed.map((change) => ({ ...change, observation: 'not-observed' as const })),
+    changed: diff.changed,
+  };
 }

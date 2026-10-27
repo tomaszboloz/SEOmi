@@ -95,5 +95,12 @@ pub(super) fn normalized_content_fingerprint(document: &Html) -> (usize, Option<
         return (0, None);
     }
     let hash = Sha256::digest(text.to_ascii_lowercase().as_bytes());
-    (word_count, Some(format!("{:x}", hash)))
+    (
+        word_count,
+        Some(hash.iter().map(|byte| format!("{byte:02x}")).collect()),
+    )
 }
+
+#[cfg(test)]
+#[path = "fingerprints_hex_tests.rs"]
+mod hex_tests;

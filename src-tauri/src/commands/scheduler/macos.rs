@@ -48,7 +48,7 @@ fn register_platform_with<R: ProcessRunner>(
     };
     let plist_path = launch_agents.join(format!("{label}.plist"));
     let trigger = scheduler_time(next_run_at)?;
-    let plist = launchd_plist(&label, &executable, trigger, project_id, schedule_id, queue);
+    let plist = launchd_plist(&label, executable, trigger, project_id, schedule_id, queue);
     fs::write(&plist_path, plist)
         .map_err(|error| format!("Unable to write macOS schedule: {error}"))?;
     let uid = runner
@@ -76,7 +76,7 @@ fn register_platform_with<R: ProcessRunner>(
             ],
         )
         .map_err(|error| format!("Unable to register macOS schedule: {error}"))?;
-    if !status.success() {
+    if !status {
         return Err("macOS launchd rejected the SEOmi schedule.".into());
     }
     Ok(label)
@@ -130,5 +130,17 @@ fn unregister_platform_with<R: ProcessRunner>(
 }
 
 #[cfg(test)]
+#[path = "macos_additional_tests.rs"]
+mod additional_tests;
+#[cfg(test)]
 #[path = "macos_contract_tests.rs"]
 mod contract_tests;
+#[cfg(test)]
+#[path = "macos_edge_tests.rs"]
+mod edge_tests;
+#[cfg(test)]
+#[path = "macos_failure_tests.rs"]
+mod failure_tests;
+#[cfg(test)]
+#[path = "macos_test_support.rs"]
+mod test_support;

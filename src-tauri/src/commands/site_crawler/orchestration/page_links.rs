@@ -8,6 +8,7 @@ use url::Url;
 
 use super::super::{
     constants::MAX_SEMANTIC_CONTENT_LINKS_PER_PAGE,
+    link_placement::{build_link, LinkFacts},
     models::CrawledLink,
     resource_discovery::{add_resource_candidate, is_other_resource_url},
     scope::matches_scope,
@@ -86,35 +87,31 @@ pub fn extract_page_links<R: Runtime>(input: ExtractPageLinksInput<'_, R>) -> Pa
                 );
             }
             if links.len() < 5_000 {
-                links.push(CrawledLink {
-                    target_url: target_for_run.to_string(),
-                    anchor_text: anchor_text.clone(),
-                    rel: rel.clone(),
-                    is_internal,
-                    source_excerpt: source_excerpt.clone(),
-                    target_http_status: None,
-                    target_response_time_ms: None,
-                    target_redirect_url: None,
-                    target_request_error_kind: None,
-                    target_checked_at: None,
-                });
+                links.push(build_link(
+                    LinkFacts {
+                        target_url: target_for_run.to_string(),
+                        anchor_text: anchor_text.clone(),
+                        rel: rel.clone(),
+                        is_internal,
+                        source_excerpt: source_excerpt.clone(),
+                    },
+                    &element,
+                ));
             }
             if is_internal
                 && is_semantic
                 && semantic_links.len() < MAX_SEMANTIC_CONTENT_LINKS_PER_PAGE
             {
-                semantic_links.push(CrawledLink {
-                    target_url: target_for_run.to_string(),
-                    anchor_text,
-                    rel,
-                    is_internal: true,
-                    source_excerpt,
-                    target_http_status: None,
-                    target_response_time_ms: None,
-                    target_redirect_url: None,
-                    target_request_error_kind: None,
-                    target_checked_at: None,
-                });
+                semantic_links.push(build_link(
+                    LinkFacts {
+                        target_url: target_for_run.to_string(),
+                        anchor_text,
+                        rel,
+                        is_internal: true,
+                        source_excerpt,
+                    },
+                    &element,
+                ));
             }
             if is_other_resource_url(&resolved) {
                 add_resource_candidate(

@@ -24,13 +24,15 @@ describe('ScheduledAuditsPanel external updates', () => {
     render(<ScheduledAuditsPanel projectId="ev1" />);
     open();
     expect(screen.queryByText('https://e.test/')).toBeNull();
-    addScheduledAudit('ev1', 'https://e.test/', 24, Date.now());
-    emit({ projectId: 'other' });
-    expect(screen.queryByText('https://e.test/')).toBeNull();
-    emit();
-    expect(screen.queryByText('https://e.test/')).toBeNull();
-    emit({ projectId: 'ev1' });
+    act(() => { addScheduledAudit('ev1', 'https://e.test/', 24, Date.now()); });
     expect(screen.getByText('https://e.test/')).toBeTruthy();
+    localStorage.removeItem('seomi_project_ev1_audit_schedules_v1');
+    emit({ projectId: 'other' });
+    expect(screen.getByText('https://e.test/')).toBeTruthy();
+    emit();
+    expect(screen.getByText('https://e.test/')).toBeTruthy();
+    emit({ projectId: 'ev1' });
+    expect(screen.queryByText('https://e.test/')).toBeNull();
   });
 
   it('stops listening after unmount', () => {

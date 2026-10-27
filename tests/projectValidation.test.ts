@@ -30,6 +30,11 @@ describe('project root URL validation', () => {
   it('keeps a public path and query usable as a crawl root', () => {
     expect(validateProjectRootUrl('https://example.com/store?page=1')).toEqual({ ok: true, value: 'https://example.com/store?page=1' });
   });
+
+  it('handles IPv4-mapped IPv6 addresses for both private and public destinations', () => {
+    expect(validateProjectRootUrl('http://[::ffff:192.168.1.1]')).toMatchObject({ ok: false });
+    expect(validateProjectRootUrl('http://[::ffff:8.8.8.8]')).toMatchObject({ ok: true, value: 'http://[::ffff:808:808]' });
+  });
 });
 
 describe('project name validation', () => {

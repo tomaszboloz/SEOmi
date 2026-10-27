@@ -34,8 +34,8 @@ describe('cost accounting on real client calls', () => {
   });
 
   it('blocks a paid call before any network traffic once the monthly limit is used', async () => {
-    writeBudget('p1', { monthlyLimitUsd: 0.002, warnAtPercent: 80 });
-    const fetchSpy = vi.spyOn(globalThis, 'fetch').mockResolvedValue(serp(0.0025));
+    writeBudget('p1', { monthlyLimitUsd: 0.2, warnAtPercent: 80 });
+    const fetchSpy = vi.spyOn(globalThis, 'fetch').mockResolvedValue(serp(0.25));
     const client = new DataForSEOClient('l', 'p');
     await client.getSerpCompetitors('seo', 2616, 'pl');
     await expect(client.getSerpCompetitors('seo 2', 2616, 'pl')).rejects.toThrow(/monthly limit reached/);

@@ -1,4 +1,5 @@
 use serde::Serialize;
+use tauri::{AppHandle, Runtime};
 use tauri_plugin_updater::UpdaterExt;
 
 #[derive(Debug, Serialize)]
@@ -28,11 +29,14 @@ fn check_error(error: tauri_plugin_updater::Error) -> Result<UpdateStatus, Strin
 }
 
 #[tauri::command]
-pub async fn check_for_updates(app: tauri::AppHandle) -> Result<UpdateStatus, String> {
-    let updater = match app.updater() {
-        Ok(u) => u,
-        Err(e) => return Err(format!("Updater initialization: {}", e)),
-    };
+pub async fn check_for_updates<R: Runtime>(app: AppHandle<R>) -> Result<UpdateStatus, String> {
+    check_for_updates_with(app).await
+}
+
+async fn check_for_updates_with<R: Runtime>(app: AppHandle<R>) -> Result<UpdateStatus, String> {
+    let updater = app
+        .updater()
+        .map_err(|error| format!("Updater initialization: {error}"))?;
 
     match updater.check().await {
         Ok(Some(update)) => {
@@ -57,7 +61,9 @@ mod tests {
     #[test]
     fn missing_release_is_no_update() {
         let status = check_error(tauri_plugin_updater::Error::ReleaseNotFound).unwrap();
-        assert!(!status.available && !status.installed && !status.restart_required);
+        assert!(!status.available);
+        assert!(!status.installed);
+        assert!(!status.restart_required);
         assert!(status.version.is_none());
     }
 
@@ -72,7 +78,29 @@ mod tests {
 }
 
 #[tauri::command]
-pub async fn install_update(app: tauri::AppHandle) -> Result<UpdateStatus, String> {
+pub async fn install_update<R: Runtime>(app: AppHandle<R>) -> Result<UpdateStatus, String> {
+    install_update_with(app).await
+}
+
+async fn install_update_with<R: Runtime>(app: AppHandle<R>) -> Result<UpdateStatus, String> {
+    install_update_step(app, |update| async move {
+        update
+            .restart_after_install(false)
+            .download_and_install(|_, _| {}, || {})
+            .await
+            .map_err(|error| format!("Update installation failed: {error}"))
+    })
+    .await
+}
+
+async fn install_update_step<R: Runtime, F, Fut>(
+    app: AppHandle<R>,
+    installer: F,
+) -> Result<UpdateStatus, String>
+where
+    F: FnOnce(tauri_plugin_updater::Update) -> Fut,
+    Fut: std::future::Future<Output = Result<(), String>>,
+{
     let updater = app
         .updater()
         .map_err(|error| format!("Updater initialization: {error}"))?;
@@ -82,11 +110,7 @@ pub async fn install_update(app: tauri::AppHandle) -> Result<UpdateStatus, Strin
         .map_err(|error| format!("Update check failed: {error}"))?
         .ok_or_else(|| "No update is available".to_string())?;
     let version = update.version.clone();
-    update
-        .restart_after_install(false)
-        .download_and_install(|_, _| {}, || {})
-        .await
-        .map_err(|error| format!("Update installation failed: {error}"))?;
+    installer(update).await?;
     Ok(UpdateStatus {
         available: true,
         installed: true,
@@ -95,3 +119,22 @@ pub async fn install_update(app: tauri::AppHandle) -> Result<UpdateStatus, Strin
         current_version: env!("CARGO_PKG_VERSION").to_string(),
     })
 }
+
+#[cfg(test)]
+#[path = "updater_contract_fixture.rs"]
+mod fixture;
+
+#[cfg(test)]
+#[path = "updater_contract_tests.rs"]
+mod contract_tests;
+#[cfg(test)]
+#[path = "updater_ipc_tests.rs"]
+mod ipc_tests;
+
+#[cfg(test)]
+#[path = "updater_status_tests.rs"]
+mod updater_status_tests;
+
+#[cfg(test)]
+#[path = "updater_endpoint_tests.rs"]
+mod endpoint_tests;

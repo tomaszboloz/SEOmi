@@ -45,6 +45,30 @@ it('prioritizes robots exclusions but keeps unavailable retrieval unknown', () =
   expect(check([page()], 'robots', { robots_txt_status: 'error' }).status).toBe('unknown');
 });
 
+it('does not pass robots when the crawler reports that the file was not evaluated', () => {
+  for (const status of ['robots.txt returned HTTP 503 Service Unavailable; URLs allowed', 'robots.txt returned HTTP 429 Too Many Requests; URLs allowed', 'robots.txt returned HTTP 301 Moved Permanently; URLs allowed', 'robots.txt could not be read (response too large); URLs allowed', 'robots.txt unavailable (timeout); URLs allowed']) {
+    expect(check([page()], 'robots', { robots_txt_status: status }).status, status).toBe('unknown');
+  }
+  for (const status of ['Loaded 12 applicable robots.txt rules', 'robots.txt not found; URLs allowed']) {
+    expect(check([page()], 'robots', { robots_txt_status: status }).status, status).toBe('pass');
+  }
+});
+
+it('uses structured robots state and preserves unrestricted 4xx semantics', () => {
+  expect(check([page()], 'robots', {
+    robots_txt_status: 'robots.txt returned HTTP 503; restrictions are unknown',
+    robots_txt_evaluation_status: 'unknown',
+  }).status).toBe('unknown');
+  expect(check([page()], 'robots', {
+    robots_txt_status: 'robots.txt returned HTTP 429; restrictions are unknown',
+    robots_txt_evaluation_status: 'unknown',
+  }).status).toBe('unknown');
+  expect(check([page()], 'robots', {
+    robots_txt_status: 'robots.txt returned HTTP 403; no restrictions apply',
+    robots_txt_status_code: 403,
+  }).status).toBe('pass');
+});
+
 it('distinguishes missing content, truncation, language and schema evidence', () => {
   expect(check([page({ word_count: 0 })], 'content').status).toBe('error');
   expect(check([page({ body_truncated: true })], 'content').status).toBe('warning');

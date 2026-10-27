@@ -1,20 +1,25 @@
-pub mod audit_text;
-pub mod charts;
-pub mod crawl_page_summary;
-pub mod crawl_resources_table;
-pub mod crawl_tables;
-pub mod crawl_text;
+pub mod audit_report;
+pub mod crawl_report;
+pub mod font;
+pub mod font_pdf;
+pub mod labels;
+pub mod layout;
 pub mod renderer;
-pub mod text_utils;
 
 #[cfg(test)]
 mod tests;
 
 #[cfg(test)]
-mod tests_edges;
+mod tests_generator;
 
 #[cfg(test)]
-mod tests_tables;
+mod tests_labels;
+
+#[cfg(test)]
+mod tests_labels_overlay;
+
+#[cfg(test)]
+mod tests_unicode;
 
 use base64::Engine;
 use serde_json::Value;
@@ -28,12 +33,7 @@ pub fn generate_audit_pdf(audit: Value) -> Result<String, String> {
     if final_url.is_empty() {
         return Err("The audit has no final URL to report.".into());
     }
-    Ok(
-        base64::engine::general_purpose::STANDARD.encode(renderer::pdf_bytes(
-            audit_text::audit_text_lines(&audit),
-            charts::audit_chart(&audit),
-        )),
-    )
+    Ok(base64::engine::general_purpose::STANDARD.encode(audit_report::audit_pdf(&audit)))
 }
 
 #[tauri::command]
@@ -45,10 +45,11 @@ pub fn generate_crawl_pdf(run: Value) -> Result<String, String> {
     if start_url.is_empty() {
         return Err("The crawl run has no scope URL to report.".into());
     }
-    Ok(
-        base64::engine::general_purpose::STANDARD.encode(renderer::pdf_bytes(
-            crawl_text::crawl_text_lines(&run),
-            charts::crawl_chart(&run),
-        )),
-    )
+    Ok(base64::engine::general_purpose::STANDARD.encode(crawl_report::crawl_pdf(&run)))
 }
+
+#[cfg(test)]
+#[path = "pdf_report/coverage100_tests.rs"]
+mod coverage100_tests;
+#[cfg(test)]
+mod tests_gaps;

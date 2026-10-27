@@ -18,6 +18,7 @@ import {
 import { auditPublicUrl } from './auditRunner.js';
 
 const MAX_CRAWL_ERRORS = 50;
+const CRAWL_CONCURRENCY = 4;
 
 export const crawlPublicSite = async (
   value: string,
@@ -51,11 +52,22 @@ export const crawlPublicSite = async (
   let truncated = false;
 
   while (queue.length && pages.length < boundedPages) {
-    const current = queue.shift()!;
-    try {
-      const audit = await runner(current.url, timeoutMs, scopeOptions);
-      pages.push({ depth: current.depth, audit });
-      if (current.depth >= boundedDepth) continue;
+    const batch = queue.splice(0, Math.min(CRAWL_CONCURRENCY, boundedPages - pages.length));
+    const settled = await Promise.allSettled(batch.map((item) => runner(item.url, timeoutMs, scopeOptions)));
+    // Results are applied in queue order, so the outcome never depends on network timing.
+    const audited: Array<{ depth: number; audit: PublicCrawlPage['audit'] }> = [];
+    settled.forEach((outcome, index) => {
+      const item = batch[index];
+      if (outcome.status === 'fulfilled') {
+        pages.push({ depth: item.depth, audit: outcome.value });
+        audited.push({ depth: item.depth, audit: outcome.value });
+        return;
+      }
+      const reason = outcome.reason;
+      errors.push({ url: item.url, depth: item.depth, error: reason instanceof Error ? reason.message : String(reason) });
+    });
+    for (const { depth, audit } of audited) {
+      if (depth >= boundedDepth) continue;
       for (const candidate of audit.discovered_links) {
         if (queued.has(candidate)) continue;
         let parsed: URL;
@@ -65,13 +77,11 @@ export const crawlPublicSite = async (
         discoveredUrls += 1;
         if (queue.length + pages.length >= boundedPages) {
           truncated = true;
-          break;
+          continue;
         }
-        queue.push({ url: candidate, depth: current.depth + 1 });
+        queue.push({ url: candidate, depth: depth + 1 });
       }
       if (audit.discovered_links_truncated) truncated = true;
-    } catch (error) {
-      errors.push({ url: current.url, depth: current.depth, error: error instanceof Error ? error.message : String(error) });
     }
   }
   if (queue.length) truncated = true;
@@ -82,8 +92,8 @@ export const crawlPublicSite = async (
     max_pages: boundedPages,
     max_depth: boundedDepth,
     scope_path: scopeOptions.scopePath || null,
-    include_patterns: scopeOptions.includePatterns || [],
-    exclude_patterns: scopeOptions.excludePatterns || [],
+    include_patterns: scopeOptions.includePatterns,
+    exclude_patterns: scopeOptions.excludePatterns,
     pages,
     errors: errors.slice(0, MAX_CRAWL_ERRORS),
     discovered_urls: discoveredUrls,

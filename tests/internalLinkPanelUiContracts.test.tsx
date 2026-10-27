@@ -1,5 +1,5 @@
 import { fireEvent, render, screen } from '@testing-library/react';
-import { describe, expect, it } from 'vitest';
+import { describe, expect, it, vi } from 'vitest';
 import { InternalLinkOpportunitiesPanel } from '@/components/Charts/InternalLinkOpportunitiesPanel';
 import { findInternalLinkOpportunities } from '@/services/internalLinkOpportunities';
 import { createCrawlPageFixture as page } from './fixtures/crawl';
@@ -36,5 +36,29 @@ describe('internal link opportunity presentation', () => {
     view.rerender(<InternalLinkOpportunitiesPanel pages={[eligible('https://site.test/one', 'One')]} />);
     expect(screen.queryByRole('status')).toBeNull();
     expect(screen.getByText(label('noCandidates'))).toBeTruthy();
+  });
+
+  it('falls back to raw string when page URL is not a valid URL', async () => {
+    const linkOps = await import('@/services/internalLinkOpportunities');
+    const spy = vi.spyOn(linkOps, 'findInternalLinkOpportunities').mockReturnValueOnce({
+      opportunities: [
+        {
+          id: '1',
+          sourceUrl: 'invalid-url-1',
+          sourceTitle: 'Source Title',
+          targetUrl: 'invalid-url-2',
+          targetTitle: 'Target Title',
+          sharedTerms: ['seo'],
+          weightedJaccard: 0.5,
+        },
+      ],
+      eligiblePageCount: 2,
+      pagesWithoutCompleteEvidence: 0,
+      pagesOmittedByLimit: 0,
+      resultsLimited: false,
+    });
+    const view = render(<InternalLinkOpportunitiesPanel pages={[]} />);
+    expect(view.container.textContent).toContain('invalid-url-1');
+    spy.mockRestore();
   });
 });

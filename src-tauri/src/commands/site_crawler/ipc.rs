@@ -1,4 +1,4 @@
-use tauri::{AppHandle, State};
+use tauri::{AppHandle, Runtime, State};
 
 use super::{
     control::CrawlControl, models::CrawlConfig, orchestration::crawl_site_with_control,
@@ -32,8 +32,8 @@ pub fn resume_site_crawl(run_id: String, control: State<'_, CrawlControl>) -> Re
 
 #[tauri::command]
 #[allow(clippy::too_many_arguments)]
-pub async fn crawl_site(
-    app: AppHandle,
+pub async fn crawl_site<R: Runtime>(
+    app: AppHandle<R>,
     control: State<'_, CrawlControl>,
     start_url: String,
     max_pages: Option<usize>,

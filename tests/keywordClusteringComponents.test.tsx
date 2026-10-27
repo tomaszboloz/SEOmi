@@ -83,5 +83,16 @@ describe('KeywordClustering modular architecture', () => {
     expect(sharedUrlsInput).toBeTruthy();
     fireEvent.change(sharedUrlsInput, { target: { value: '4' } });
     expect(updateSession).toHaveBeenCalledWith({ minSharedUrls: 4, result: null });
+
+    fireEvent.change(sharedUrlsInput, { target: { value: '' } });
+    expect(updateSession).toHaveBeenCalledWith({ minSharedUrls: 1, result: null });
+
+    const langInput = screen.getByRole('combobox', { name: 'dataforseo.languageLabel' });
+    fireEvent.focus(langInput);
+    const options = screen.getAllByRole('option');
+    if (options.length > 0) {
+      fireEvent.click(options[0]);
+      expect(updateSession).toHaveBeenCalled();
+    }
   });
 });

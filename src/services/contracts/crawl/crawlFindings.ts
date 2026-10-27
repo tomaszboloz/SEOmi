@@ -21,18 +21,18 @@ export const CrawledRobotsDecisionSchema = z.object({
   directives: z.array(z.string()).nullable().transform(value => value ?? undefined).optional(),
   sources: z.array(z.string()).nullable().transform(value => value ?? undefined).optional(),
   response_headers_available: z.boolean(),
-}).passthrough() satisfies z.ZodType<CrawledRobotsDecision, z.ZodTypeDef, unknown>;
+}).passthrough() satisfies z.ZodType<CrawledRobotsDecision, unknown>;
 
 export const CrawledIndexabilityVerdictSchema = z.object({
   status: z.string(),
   reasons: z.array(z.string()),
-}).passthrough() satisfies z.ZodType<CrawledIndexabilityVerdict, z.ZodTypeDef, unknown>;
+}).passthrough() satisfies z.ZodType<CrawledIndexabilityVerdict, unknown>;
 
 export const CrawledContentTermSchema = z.object({
   term: z.string(),
   count: z.number().finite(),
   density_percent: z.number().finite(),
-}).passthrough() satisfies z.ZodType<CrawledContentTerm, z.ZodTypeDef, unknown>;
+}).passthrough() satisfies z.ZodType<CrawledContentTerm, unknown>;
 
 export const CrawledFocusPhraseEvidenceSchema = z.object({
   phrase: z.string(),
@@ -41,7 +41,7 @@ export const CrawledFocusPhraseEvidenceSchema = z.object({
   title_occurrences: z.number().finite(),
   meta_description_occurrences: z.number().finite(),
   h1_occurrences: z.number().finite(),
-}).passthrough() satisfies z.ZodType<CrawledFocusPhraseEvidence, z.ZodTypeDef, unknown>;
+}).passthrough() satisfies z.ZodType<CrawledFocusPhraseEvidence, unknown>;
 
 export const CrawledLinkSchema = z.object({
   target_url: z.string(),
@@ -54,14 +54,14 @@ export const CrawledLinkSchema = z.object({
   target_redirect_url: z.string().nullable().transform(value => value ?? undefined).optional(),
   target_request_error_kind: z.string().nullable().transform(value => value ?? undefined).optional(),
   target_checked_at: z.string().nullable().transform(value => value ?? undefined).optional(),
-}).passthrough() satisfies z.ZodType<CrawledLink, z.ZodTypeDef, unknown>;
+}).passthrough() satisfies z.ZodType<CrawledLink, unknown>;
 
 export const CrawledSchemaReferenceSchema = z.object({
   format: z.string(),
   declaration_index: z.number().finite(),
   property: z.string(),
   value: z.string(),
-}).passthrough() satisfies z.ZodType<CrawledSchemaReference, z.ZodTypeDef, unknown>;
+}).passthrough() satisfies z.ZodType<CrawledSchemaReference, unknown>;
 
 export const StructuredDataValidationIssueSchema = z.object({
   code: z.string(),
@@ -69,13 +69,13 @@ export const StructuredDataValidationIssueSchema = z.object({
   message: z.string(),
   path: z.string().nullable().transform(value => value ?? undefined).optional(),
   recommendation: z.string().nullable().transform(value => value ?? undefined).optional(),
-}).passthrough() satisfies z.ZodType<StructuredDataValidationIssue, z.ZodTypeDef, unknown>;
+}).passthrough() satisfies z.ZodType<StructuredDataValidationIssue, unknown>;
 
 export const CrawledSchemaFindingSchema = z.object({
   format: z.string(),
   declaration_index: z.number().finite(),
   finding: StructuredDataValidationIssueSchema,
-}).passthrough() satisfies z.ZodType<CrawledSchemaFinding, z.ZodTypeDef, unknown>;
+}).passthrough() satisfies z.ZodType<CrawledSchemaFinding, unknown>;
 
 export const CrawledHtmlValidationFindingSchema = z.object({
   code: z.string(),
@@ -87,29 +87,29 @@ export const CrawledHtmlValidationFindingSchema = z.object({
   line: z.number().finite().nullable().transform(value => value ?? undefined).optional(),
   column: z.number().finite().nullable().transform(value => value ?? undefined).optional(),
   source_excerpt: z.string().nullable().transform(value => value ?? undefined).optional(),
-}).passthrough() satisfies z.ZodType<CrawledHtmlValidationFinding, z.ZodTypeDef, unknown>;
+}).passthrough() satisfies z.ZodType<CrawledHtmlValidationFinding, unknown>;
 
 export const CrawledDuplicateHeadingSchema = z.object({
   text: z.string(),
   levels: z.array(z.number().finite()),
   occurrences: z.number().finite(),
-}).passthrough() satisfies z.ZodType<CrawledDuplicateHeading, z.ZodTypeDef, unknown>;
+}).passthrough() satisfies z.ZodType<CrawledDuplicateHeading, unknown>;
 
 export const IssueSeveritySchema = z.union([
   z.literal('Critical'),
   z.literal('Warning'),
   z.literal('Info'),
-]) satisfies z.ZodType<IssueSeverity, z.ZodTypeDef, unknown>;
+]) satisfies z.ZodType<IssueSeverity, unknown>;
 
 export const CrawledPageIssueSchema = z.object({
   severity: IssueSeveritySchema,
   message: z.string(),
   code: z.string().nullable().transform(value => value ?? undefined).optional(),
-}).passthrough() satisfies z.ZodType<CrawledPageIssue, z.ZodTypeDef, unknown>;
+}).passthrough() satisfies z.ZodType<CrawledPageIssue, unknown>;
 
 export const CrawledCustomSearchResultSchema = z.object({
   id: z.string(),
   values: z.array(z.string()),
   error: z.union([z.string(), z.null()]).optional(),
   truncated: z.boolean(),
-}).passthrough() satisfies z.ZodType<CrawledCustomSearchResult, z.ZodTypeDef, unknown>;
+}).passthrough() satisfies z.ZodType<CrawledCustomSearchResult, unknown>;

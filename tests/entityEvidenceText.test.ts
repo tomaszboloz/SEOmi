@@ -35,7 +35,8 @@ describe('entity evidence lexical contracts', () => {
     expect(coverageFor([], page(['seo']))).toBeNull();
     expect(coverageFor(['seo'], page())).toBeNull();
     expect(coverageFor(['seo'], page(['!!!']))).toBeNull();
-    expect(coverageFor(['seo'], page(['other']))).toEqual({ matched: [], coverage: 0 });
+    expect(coverageFor(['seo'], page(['ale', '2026']))).toBeNull();
+    expect(coverageFor(['seo'], page(['unrelated']))).toEqual({ matched: [], coverage: 0 });
     expect(coverageFor(['seo', 'łódź'], page(['SEO!', 'seo']))).toEqual({ matched: ['seo'], coverage: 0.5 });
   });
 });

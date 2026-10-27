@@ -10,6 +10,9 @@ const { mergeProcessCovs } = v8Coverage;
 import { convert } from 'ast-v8-to-istanbul';
 import { parseAstAsync } from 'vite';
 import { sourceFiles, sourceHashes } from './public-function-inventory.mjs';
+import { assertMcpCoverage } from './mcp-coverage-metrics.mjs';
+
+export { assertMcpCoverage, assertMcpCoverageThreshold } from './mcp-coverage-metrics.mjs';
 
 const normalize = file => relative(process.cwd(), resolve(file)).replaceAll('\\', '/');
 
@@ -28,31 +31,6 @@ const mergeRuntimeRecords = (records, runtimeUrl, alternateUrl) => {
   }));
   return mergeProcessCovs([{ result: canonical }]).result[0];
 };
-
-/** Count measured Istanbul entries; lines use the greatest statement count on each line. */
-export function assertMcpCoverage(mapped) {
-  if (!Object.keys(mapped).length) throw new Error('Missing mapped MCP coverage');
-  const totals = Object.fromEntries(['statements', 'functions', 'branches', 'lines'].map(metric => [metric, {total:0, covered:0}]));
-  for (const record of Object.values(mapped)) {
-    const lines = {};
-    for (const [id, count] of Object.entries(record.s)) {
-      const line = record.statementMap[id].start.line;
-      lines[line] = Math.max(lines[line] || 0, count);
-    }
-    const counts = {statements:Object.values(record.s), functions:Object.values(record.f), branches:Object.values(record.b).flat(), lines:Object.values(lines)};
-    for (const [metric, values] of Object.entries(counts)) {
-      if (values.some(count => !Number.isFinite(count) || count < 0)) throw new Error('Invalid MCP execution count');
-      totals[metric].total += values.length;
-      totals[metric].covered += values.filter(count => count > 0).length;
-    }
-  }
-  for (const [metric, counts] of Object.entries(totals)) {
-    if (!counts.total || counts.covered * 100 < counts.total * 98) {
-      throw new Error(`MCP ${metric} coverage below 98%: ${counts.covered}/${counts.total}`);
-    }
-  }
-  return totals;
-}
 
 /** Reject changed source/runtime bytes before accepting remapped V8 evidence. */
 export async function mapRuntimeCoverage(processCoverage, runtimeFiles, expectedSources, expectedRuntime) {
@@ -87,13 +65,14 @@ export async function runMcpCoverage() {
   mkdirSync('test-results', {recursive:true});
   mkdirSync('coverage', {recursive:true});
   // Failed runs must invalidate older evidence before invoking any command.
-  writeFileSync('test-results/mcp-coverage-sources.json', '{}');
-  writeFileSync('test-results/mcp-runtime-sources.json', '{}');
-  writeFileSync('coverage/mcp-coverage-final.json', '{}');
-  writeFileSync('coverage/mcp-v8-raw.json', '{}');
-  writeFileSync('coverage/mcp-coverage-summary.json', '{}');
+  for (const artifact of [
+    'test-results/mcp-coverage-sources.json', 'test-results/mcp-runtime-sources.json',
+    'coverage/mcp-coverage-final.json', 'coverage/mcp-v8-raw.json', 'coverage/mcp-coverage-summary.json',
+  ]) writeFileSync(artifact, '{}');
   rmSync('mcp-server/dist', {recursive:true,force:true});
-  const build = spawnSync(process.execPath, [createRequire(resolve('mcp-server/package.json')).resolve('typescript/bin/tsc'), '-p', 'mcp-server/tsconfig.json'], {stdio:'inherit'});
+  const mcpRequire = createRequire(resolve('mcp-server/package.json'));
+  const typeScriptPackage = dirname(mcpRequire.resolve('typescript/package.json'));
+  const build = spawnSync(process.execPath, [join(typeScriptPackage, 'lib', 'tsc.js'), '-p', 'mcp-server/tsconfig.json'], {stdio:'inherit'});
   if (build.status !== 0) throw new Error('MCP coverage build failed');
   const generatedFiles = directory => readdirSync(directory, {withFileTypes:true}).flatMap(entry => {
     const file = join(directory, entry.name);
@@ -115,11 +94,10 @@ export async function runMcpCoverage() {
     writeFileSync('coverage/mcp-v8-raw.json', JSON.stringify(merged));
     writeFileSync('coverage/mcp-coverage-final.json', JSON.stringify(mapped));
     const summary = assertMcpCoverage(mapped);
-    writeFileSync('coverage/mcp-coverage-summary.json', JSON.stringify({threshold:98, ...summary},null,2));
+    writeFileSync('coverage/mcp-coverage-summary.json', JSON.stringify(summary, null, 2));
     writeFileSync('test-results/mcp-runtime-sources.json', JSON.stringify(runtimeHashes,null,2));
     writeFileSync('test-results/mcp-coverage-sources.json', JSON.stringify(before,null,2));
-    console.log(`MCP coverage: ${Object.keys(mapped).length} source files mapped from real Node test execution`);
-    console.log(JSON.stringify(summary));
+    console.log(`MCP coverage: ${Object.keys(mapped).length} source files mapped; ${JSON.stringify(summary)}`);
   } finally { rmSync(rawDirectory, {recursive:true,force:true}); }
 }
 

@@ -12,6 +12,7 @@ import {
 } from '@/services/desktopNotifications';
 import { addScheduledAudit } from '@/services/auditSchedule';
 import i18n from '@/i18n';
+import { createCrawlPageFixture } from './fixtures/crawl';
 
 vi.mock('@tauri-apps/plugin-notification', () => ({
   isPermissionGranted: vi.fn(async () => false),
@@ -62,11 +63,22 @@ describe('project-scoped desktop audit notifications', () => {
     localStorage.setItem('seomi_project_project-a_desktop_notifications_v1', 'true');
     vi.mocked(isPermissionGranted).mockResolvedValue(true);
 
-    await notifyCrawlCompleted('project-a', crawl(70), 80);
+    await notifyCrawlCompleted('project-a', crawl(70), crawl(80));
 
     expect(sendNotification).toHaveBeenCalledWith(expect.objectContaining({
       title: i18n.t('runtimeErrors.desktop.crawlRegression'),
       body: i18n.t('runtimeErrors.desktop.crawlRegressionBody', { host: 'example.com', delta: 10, previous: 80, current: 70, pages: 3 }),
+    }));
+  });
+
+  it('avoids a false regression when legacy scores use another formula', async () => {
+    localStorage.setItem('seomi_project_project-a_desktop_notifications_v1', 'true');
+    vi.mocked(isPermissionGranted).mockResolvedValue(true);
+    const previous = { ...crawl(100), score_version: undefined, pages_crawled: 1,
+      pages: [createCrawlPageFixture({ issues_count: 1, issues: [{ severity: 'Critical', message: 'Missing title' }] })] };
+    await notifyCrawlCompleted('project-a', crawl(80), previous);
+    expect(sendNotification).toHaveBeenCalledWith(expect.objectContaining({
+      title: i18n.t('runtimeErrors.desktop.crawlCompleted'),
     }));
   });
 

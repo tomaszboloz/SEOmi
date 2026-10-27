@@ -131,3 +131,7 @@ pub(crate) fn collect_social_meta(html_str: &str, base_url: &str) -> RawSocialMe
 
     meta
 }
+
+#[cfg(test)]
+#[path = "og_collector_tests.rs"]
+mod tests;

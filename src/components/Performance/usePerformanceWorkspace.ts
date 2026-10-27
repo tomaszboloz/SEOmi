@@ -6,6 +6,7 @@ import { createPageSpeedSnapshot, readPageSpeedSnapshots, savePageSpeedSnapshot,
 import { writeJsonStorage } from '@/services/storage';
 import { parseCruxReport, parsePageSpeedReport } from '@/services/performanceContracts';
 import { loadSession, storageKey, type PerformanceSession } from './performanceSession';
+import { monitorPageSpeedSnapshots } from '@/services/monitoringAlerts';
 
 export interface PerformanceDependencies {
   runPsi?: typeof runPageSpeedInsights;
@@ -82,6 +83,7 @@ export const usePerformanceWorkspace = (
       pageSpeed: patch.pageSpeed,
       crux: patch.crux,
     });
+    if (history[0]) void monitorPageSpeedSnapshots(activeProjectId, history[0], snapshot);
     setHistory((current) => savePageSpeedSnapshot(activeProjectId, snapshot, current));
   };
 
@@ -133,7 +135,7 @@ export const usePerformanceWorkspace = (
       if ((dependencies.activeProjectId ?? (() => useProjectStore.getState().activeProjectId))() === projectId && cruxRequestToken.current === requestToken) {
         const message = error instanceof Error ? error.message : String(error);
         setCruxError(message.includes("CRUX_NOT_ENOUGH_DATA")
-          ? t("pageSpeedUi.cruxNotEnoughData", "Not enough real user data is available for this URL or origin.")
+          ? t("pageSpeedUi.cruxNotEnoughData")
           : message || t("pageSpeedUi.cruxError"));
       }
     } finally {

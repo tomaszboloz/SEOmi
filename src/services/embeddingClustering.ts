@@ -3,6 +3,9 @@ import { clusterVectors, labelClusters } from './embeddings/cluster.ts';
 import { createOllamaGenerator } from './embeddings/ollama.ts';
 import { createProvider, DEFAULT_CLUSTER_THRESHOLD } from './embeddings/registry.ts';
 import { cosine } from './embeddings/vector.ts';
+import { hybridKeywordGroups } from './embeddings/hybridGroups';
+import { hybridPairEvidenceSchema } from './embeddings/hybridResultSchema';
+import type { SerpSnapshot } from './serpImport';
 
 /**
  * The desktop CSP allows plain HTTP only to this loopback Ollama endpoint, so
@@ -26,6 +29,8 @@ export const embeddingClusteringResultSchema = z.object({
   })).max(MAX_EMBEDDING_KEYWORDS),
   unclusteredKeywords: z.array(z.string().max(500)).max(MAX_EMBEDDING_KEYWORDS),
   analyzedAt: z.string().max(40),
+  scoringMode: z.enum(['semantic-only', 'embedding-serp']).optional(),
+  pairEvidence: z.array(hybridPairEvidenceSchema).max(19900).optional(),
 });
 export type EmbeddingClusteringResult = z.infer<typeof embeddingClusteringResultSchema>;
 
@@ -38,6 +43,7 @@ export interface EmbeddingClusteringOptions {
   labelModel?: string;
   fetchImpl?: (input: string, init: RequestInit) => Promise<Response>;
   analyzedAt?: string;
+  serpSnapshots?: SerpSnapshot[];
 }
 
 export const defaultEmbeddingThreshold = (provider: EmbeddingProviderName): number => DEFAULT_CLUSTER_THRESHOLD[provider];
@@ -53,7 +59,9 @@ export const clusterKeywordsByEmbedding = async (keywords: string[], options: Em
   const threshold = options.threshold ?? defaultEmbeddingThreshold(options.provider);
   const embedder = createProvider({ provider: options.provider, corpus: keywords, ollamaUrl: LOCAL_OLLAMA_URL, ollamaModel: options.ollamaModel?.trim() || undefined, fetchImpl: options.fetchImpl });
   const vectors = await embedder.embed(keywords);
-  const all = clusterVectors(vectors, threshold);
+  const hybrid = options.serpSnapshots?.length
+    ? hybridKeywordGroups(keywords, vectors, options.serpSnapshots, threshold) : null;
+  const all = hybrid ? hybrid.clusters : clusterVectors(vectors, threshold);
   let grouped = all.filter((cluster) => cluster.members.length > 1);
   if (options.labelModel?.trim() && grouped.length) {
     const generate = createOllamaGenerator({ baseUrl: LOCAL_OLLAMA_URL, model: options.labelModel.trim(), fetchImpl: options.fetchImpl });
@@ -72,5 +80,6 @@ export const clusterKeywordsByEmbedding = async (keywords: string[], options: Em
     })),
     unclusteredKeywords: all.filter((cluster) => cluster.members.length === 1).map((cluster) => keywords[cluster.members[0]]),
     analyzedAt: options.analyzedAt ?? new Date().toISOString(),
+    ...(hybrid ? { scoringMode: 'embedding-serp' as const, pairEvidence: hybrid.pairEvidence } : {}),
   };
 };

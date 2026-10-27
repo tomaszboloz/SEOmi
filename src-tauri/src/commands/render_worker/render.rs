@@ -4,15 +4,48 @@ use crate::commands::rendered_crawler::{
 };
 use crate::utils::url_validator::validate_and_normalize_url;
 use tauri::{AppHandle, Runtime};
+use url::Url;
+
+pub(super) struct PreparedRenderRequest {
+    pub(super) target: Url,
+    pub(super) base_host: String,
+    pub(super) scope_path: Option<String>,
+    pub(super) options: RenderOptions,
+}
 
 pub(super) async fn render_request<R: Runtime>(
     app: &AppHandle<R>,
     request: RenderWorkerRequest,
 ) -> Result<RenderedPageSnapshot, String> {
+    let allow_subdomains = request.allow_subdomains;
+    let prepared = prepare_render_request(request)?;
+    let PreparedRenderRequest {
+        target,
+        base_host,
+        scope_path,
+        options,
+    } = prepared;
+    let mut session = RenderedCrawlerSession::open(
+        app,
+        target.as_str(),
+        &base_host,
+        allow_subdomains,
+        scope_path.as_deref(),
+        options,
+    )
+    .await?;
+    let result = session.capture(target.as_str()).await;
+    session.close_and_wait().await;
+    result
+}
+
+pub(super) fn prepare_render_request(
+    request: RenderWorkerRequest,
+) -> Result<PreparedRenderRequest, String> {
     let target = validate_and_normalize_url(&request.url).map_err(|error| error.to_string())?;
     let base_host = target
         .host_str()
-        .ok_or_else(|| "Rendered URL has no hostname.".to_string())?
+        .expect("validated rendered URL must have a hostname")
         .to_ascii_lowercase();
     let scope_path = normalize_scope_path(request.scope_path.as_deref())?;
     let wait_for_selector = request
@@ -26,19 +59,14 @@ pub(super) async fn render_request<R: Runtime>(
         wait_for_selector,
         wait_delay_ms: request.wait_delay_ms.min(10_000),
         lazy_scroll_cycles: request.lazy_scroll_cycles.min(40),
+        allowed_hosts: Vec::new(),
     };
-    let mut session = RenderedCrawlerSession::open(
-        app,
-        target.as_str(),
-        &base_host,
-        request.allow_subdomains,
-        scope_path.as_deref(),
+    Ok(PreparedRenderRequest {
+        target,
+        base_host,
+        scope_path,
         options,
-    )
-    .await?;
-    let result = session.capture(target.as_str()).await;
-    session.close();
-    result
+    })
 }
 
 pub(super) fn normalize_scope_path(value: Option<&str>) -> Result<Option<String>, String> {
@@ -46,7 +74,8 @@ pub(super) fn normalize_scope_path(value: Option<&str>) -> Result<Option<String>
         return Ok(None);
     };
     let value = normalize_bounded_text(value, "scopePath", MAX_SCOPE_PATH_CHARS)?;
-    if !value.starts_with('/') || value.contains('\0') {
+    // `normalize_bounded_text` already rejected null characters.
+    if !value.starts_with('/') {
         return Err("scopePath must be an absolute URL path without null characters.".into());
     }
     Ok(Some(value.trim_end_matches('/').to_string()))

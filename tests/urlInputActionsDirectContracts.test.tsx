@@ -1,12 +1,16 @@
-import { fireEvent, render, screen, waitFor } from '@testing-library/react';
-import { beforeEach, describe, expect, it, vi } from 'vitest';
+import { act, cleanup, fireEvent, render, screen, waitFor } from '@testing-library/react';
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { URLInputActions } from '@/components/URLBar/urlInput/URLInputActions';
 import { useAuditStore } from '@/stores/auditStore';
 import i18n from '@/i18n';
 
 vi.mock('@/components/URLBar/UserAgentSelector', () => ({ UserAgentSelector: () => <span>User agent</span> }));
 const importer = vi.fn();
-beforeEach(() => { importer.mockReset(); useAuditStore.setState({ isBatchRunning: false, importAuditCsv: importer }); });
+beforeEach(() => {
+  importer.mockReset();
+  act(() => { useAuditStore.setState({ isBatchRunning: false, importAuditCsv: importer }); });
+});
+afterEach(() => { cleanup(); act(() => { useAuditStore.setState({ isBatchRunning: false }); }); });
 
 describe('direct URL action controls', () => {
   it('imports actual file text, resets the picker, and ignores an empty file event', async () => {
@@ -31,7 +35,7 @@ describe('direct URL action controls', () => {
     expect((screen.getByRole('button', { name: i18n.t('urlBar.analyze') }) as HTMLButtonElement).disabled).toBe(true);
     fireEvent.click(screen.getByTitle(i18n.t('legacyUi.url.reauditTitle')));
     expect(rerun).toHaveBeenCalledOnce();
-    useAuditStore.setState({ isBatchRunning: true });
+    act(() => { useAuditStore.setState({ isBatchRunning: true }); });
     view.rerender(<URLInputActions url="https://example.test" isLoading hasCurrentAudit onReAudit={rerun} />);
     expect((screen.getByTitle(i18n.t('legacyUi.url.csvImportTitle')) as HTMLButtonElement).disabled).toBe(true);
     expect(screen.getByText(i18n.t('urlBar.analyzing'))).toBeTruthy();

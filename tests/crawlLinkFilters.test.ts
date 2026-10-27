@@ -10,7 +10,7 @@ const records = [
 
 describe('crawl link filters', () => {
   it('classifies factual status without treating unchecked as success', () => {
-    expect(crawlLinkStatus(records[0].link)).toBe('error');
+    expect(crawlLinkStatus(records[0].link)).toBe('broken');
     expect(crawlLinkStatus(records[1].link)).toBe('ok');
     expect(crawlLinkStatus(records[2].link)).toBe('redirect');
     expect(crawlLinkStatus(records[3].link)).toBe('unchecked');
@@ -19,6 +19,7 @@ describe('crawl link filters', () => {
   it('filters by kind/status/query and sorts deterministically', () => {
     const filtered = filterAndSortCrawlLinks([...records], { query: 'outside', kind: 'external', status: 'all', sort: 'target', descending: false });
     expect(filtered.map((item) => item.key)).toEqual(['a', 'c', 'd']);
+    expect(filterAndSortCrawlLinks([...records], { query: '', kind: 'all', status: 'broken', sort: 'source', descending: false }).map((item) => item.key)).toEqual(['a']);
     expect(filterAndSortCrawlLinks([...records], { query: '', kind: 'all', status: 'error', sort: 'source', descending: false }).map((item) => item.key)).toEqual(['a']);
     expect(filterAndSortCrawlLinks([...records], { query: 'href="/broken"', kind: 'all', status: 'all', sort: 'source', descending: false }).map((item) => item.key)).toEqual(['a']);
   });

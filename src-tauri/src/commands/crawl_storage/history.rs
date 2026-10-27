@@ -25,14 +25,22 @@ pub(crate) fn read_crawl_history_file(path: &Path) -> Result<Value, String> {
     let mut header = [0u8; STORAGE_MAGIC.len()];
     let mut file = fs::File::open(path)
         .map_err(|error| format!("Unable to open saved crawl runs: {error}"))?;
-    let file_size = file
-        .metadata()
-        .map_err(|error| format!("Unable to inspect saved crawl runs: {error}"))?
-        .len();
-    let header_len = file
-        .read(&mut header)
-        .map_err(|error| format!("Unable to inspect saved crawl runs: {error}"))?;
+    let file_size = file.metadata().map_err(inspect_error)?.len();
+    let header_len = file.read(&mut header).map_err(inspect_error)?;
     let compressed = header_len == STORAGE_MAGIC.len() && header == STORAGE_MAGIC;
+    let bytes = read_history_payload(file, file_size, compressed)?;
+    decode_crawl_runs(&bytes)
+}
+
+fn inspect_error(error: std::io::Error) -> String {
+    format!("Unable to inspect saved crawl runs: {error}")
+}
+
+fn read_history_payload<R: Read + Seek>(
+    mut file: R,
+    file_size: u64,
+    compressed: bool,
+) -> Result<Vec<u8>, String> {
     validate_storage_size(file_size, compressed)?;
     let limit = if compressed {
         (MAX_STORED_BYTES + STORAGE_MAGIC.len()) as u64
@@ -46,7 +54,7 @@ pub(crate) fn read_crawl_history_file(path: &Path) -> Result<Value, String> {
         .read_to_end(&mut bytes)
         .map_err(|error| format!("Unable to read saved crawl runs: {error}"))?;
     validate_storage_size(bytes.len() as u64, compressed)?;
-    decode_crawl_runs(&bytes)
+    Ok(bytes)
 }
 
 pub(crate) fn load_crawl_history_with_recovery(path: &Path) -> Result<Value, String> {
@@ -74,3 +82,7 @@ pub(crate) fn load_crawl_history_with_recovery(path: &Path) -> Result<Value, Str
         }
     }
 }
+
+#[cfg(test)]
+#[path = "history_io_error_tests.rs"]
+mod io_error_tests;

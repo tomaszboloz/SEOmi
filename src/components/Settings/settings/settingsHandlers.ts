@@ -18,9 +18,10 @@ export const useSettingsHandlers = () => {
   const activeProjectId = useProjectStore((s) => s.activeProjectId);
   const setApiKey = useAuthStore((s) => s.setApiKey);
 
+  const redact = (value: string) => value === '__seomi_secret_present__' ? '' : value;
   const [state, setState] = useState({
-    dataforseoLogin: dataForSeoCredentials.login, dataforseoPass: dataForSeoCredentials.password,
-    googleMetricsKey: googleMetricsApiKey, savedSuccess: false, testingDataForSeo: false,
+    dataforseoLogin: redact(dataForSeoCredentials.login), dataforseoPass: redact(dataForSeoCredentials.password),
+    googleMetricsKey: redact(googleMetricsApiKey), savedSuccess: false, testingDataForSeo: false,
     dataForSeoTestStatus: null as string | null, auditNotificationsEnabled: false,
     notificationStatus: null as string | null
   });
@@ -36,10 +37,10 @@ export const useSettingsHandlers = () => {
     updateState({ savedSuccess: false, testingDataForSeo: false, dataForSeoTestStatus: null });
   }, [activeProjectId]);
 
-  useEffect(() => { updateState({ googleMetricsKey: googleMetricsApiKey }); }, [googleMetricsApiKey, activeProjectId]);
+  useEffect(() => { updateState({ googleMetricsKey: redact(googleMetricsApiKey) }); }, [googleMetricsApiKey, activeProjectId]);
   useEffect(() => {
     beginCredentials('test');
-    updateState({ dataforseoLogin: dataForSeoCredentials.login, dataforseoPass: dataForSeoCredentials.password, testingDataForSeo: false, dataForSeoTestStatus: null });
+    updateState({ dataforseoLogin: redact(dataForSeoCredentials.login), dataforseoPass: redact(dataForSeoCredentials.password), testingDataForSeo: false, dataForSeoTestStatus: null });
   }, [activeProjectId, dataForSeoCredentials.login, dataForSeoCredentials.password, beginCredentials]);
   useEffect(() => {
     updateState({ auditNotificationsEnabled: activeProjectId ? areAuditNotificationsEnabled(activeProjectId) : false, notificationStatus: null });
@@ -69,7 +70,7 @@ export const useSettingsHandlers = () => {
     } catch {}
   };
 
-  const handleAiKeyChange = (provider: 'openai' | 'claude' | 'gemini', value: string) => void setApiKey(provider, value).catch(() => undefined);
+  const handleAiKeyChange = (provider: 'openai' | 'claude' | 'gemini', value: string) => setApiKey(provider, value);
 
   const handleTestDataForSeo = async () => {
     const isCurrent = beginCredentials('test');

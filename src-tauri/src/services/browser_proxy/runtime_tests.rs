@@ -1,22 +1,16 @@
 use super::{types::MAX_CONCURRENT_CONNECTIONS, BrowserRequestProxy};
 use tokio::{
-    io::{AsyncReadExt, AsyncWriteExt},
+    io::AsyncWriteExt,
     net::TcpStream,
     sync::watch,
     time::{timeout, Duration},
 };
 
-async fn request(proxy: &BrowserRequestProxy, request: &[u8]) -> Vec<u8> {
-    let mut stream = TcpStream::connect(proxy.address).await.unwrap();
-    stream.write_all(request).await.unwrap();
-    stream.shutdown().await.unwrap();
-    let mut response = Vec::new();
-    timeout(Duration::from_secs(5), stream.read_to_end(&mut response))
-        .await
-        .unwrap()
-        .unwrap();
-    response
-}
+#[path = "runtime_fixture.rs"]
+mod runtime_fixture;
+#[path = "runtime_framing_tests.rs"]
+mod runtime_framing_tests;
+use runtime_fixture::request;
 
 #[tokio::test]
 async fn proxy_public_lifecycle_binds_loopback_and_stops_after_rejecting_unsafe_routes() {
@@ -53,7 +47,6 @@ async fn dropping_proxy_aborts_listener_and_closes_an_accepted_partial_request()
     stream.write_all(b"GET").await.unwrap();
     let address = proxy.address;
     let task = proxy.task.as_ref().unwrap().abort_handle();
-    // A completed exchange confirms the listener has processed connections.
     assert!(request(&proxy, b"invalid\r\n\r\n")
         .await
         .starts_with(b"HTTP/1.1 400"));
@@ -67,9 +60,12 @@ async fn dropping_proxy_aborts_listener_and_closes_an_accepted_partial_request()
     .unwrap();
     assert!(TcpStream::connect(address).await.is_err());
     let mut response = Vec::new();
-    let closed = timeout(Duration::from_secs(5), stream.read_to_end(&mut response))
-        .await
-        .unwrap();
+    let closed = timeout(
+        Duration::from_secs(5),
+        tokio::io::AsyncReadExt::read_to_end(&mut stream, &mut response),
+    )
+    .await
+    .unwrap();
     assert!(closed.is_ok() || closed.unwrap_err().kind() == std::io::ErrorKind::ConnectionReset);
 }
 
@@ -81,16 +77,17 @@ async fn proxy_rejects_connections_after_the_permit_pool_is_full() {
         let mut stream = TcpStream::connect(proxy.address).await.unwrap();
         stream.write_all(b"GET").await.unwrap();
         held.push(stream);
+        tokio::task::yield_now().await;
     }
-    let mut rejected = false;
-    for _ in 0..MAX_CONCURRENT_CONNECTIONS * 2 {
-        let response = request(&proxy, b"GET http://example.test:22/ HTTP/1.1\r\n\r\n").await;
-        if response.starts_with(b"HTTP/1.1 503 Service Unavailable") {
-            rejected = true;
-            break;
-        }
-    }
-    assert!(rejected, "the connection permit limit was not enforced");
+    let response = request(&proxy, b"").await;
+    assert!(response.starts_with(b"HTTP/1.1 503 Service Unavailable\r\n"));
+    assert!(response
+        .windows(b"Connection: close".len())
+        .any(|bytes| bytes == b"Connection: close"));
+    assert!(response
+        .windows(b"Content-Length: 30".len())
+        .any(|bytes| bytes == b"Content-Length: 30"));
+    assert!(response.ends_with(b"Proxy connection limit reached"));
     drop(held);
     proxy.stop().await;
 }
@@ -121,4 +118,18 @@ async fn lifecycle_methods_cover_absent_handles_and_join_errors() {
     }
     .stop()
     .await;
+}
+
+#[tokio::test]
+async fn dropping_the_shutdown_sender_ends_the_listener_loop() {
+    let mut proxy = BrowserRequestProxy::start().await.unwrap();
+    let task = proxy.task.as_ref().unwrap().abort_handle();
+    proxy.shutdown.take();
+    timeout(Duration::from_secs(2), async {
+        while !task.is_finished() {
+            tokio::task::yield_now().await;
+        }
+    })
+    .await
+    .unwrap();
 }

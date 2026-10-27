@@ -29,6 +29,43 @@ fn rejects_invalid_or_excessive_tool_catalogs() {
 }
 
 #[test]
+fn invalid_catalog_shapes_and_tool_names_have_precise_errors() {
+    for catalog in [json!({}), json!({"tools": null}), json!({"tools": {}})] {
+        assert_eq!(
+            parse_tools(&catalog).unwrap_err(),
+            "MCP tools/list response did not contain a tools array."
+        );
+    }
+    for name in [
+        json!(null),
+        json!(42),
+        json!(""),
+        json!("   "),
+        json!("n".repeat(129)),
+    ] {
+        assert_eq!(
+            parse_tools(&json!({"tools": [{"name": name, "inputSchema": {}}]})).unwrap_err(),
+            "MCP server returned a tool with an invalid name."
+        );
+    }
+    let name = "n".repeat(128);
+    let result = parse_tools(&json!({"tools": [{"name": name, "inputSchema": {}}]})).unwrap();
+    assert_eq!(result[0].name.len(), 128);
+}
+
+#[test]
+fn catalog_descriptions_are_bounded_by_unicode_characters() {
+    let result = parse_tools(&json!({"tools": [{
+        "name": "fixture", "inputSchema": {}, "description": "ż".repeat(2001)
+    }]}))
+    .unwrap();
+    assert_eq!(
+        result[0].description.as_deref(),
+        Some("ż".repeat(2000).as_str())
+    );
+}
+
+#[test]
 fn validates_explicit_absolute_javascript_server_path() {
     assert!(validate_server_path("relative/server.js").is_err());
     assert!(validate_server_path("/definitely/not/a/server.ts").is_err());

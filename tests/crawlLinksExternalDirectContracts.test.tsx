@@ -58,6 +58,7 @@ describe('CrawlLinksExternalCheck direct contracts', () => {
 
     const button = screen.getByRole('button', { name: 'crawl.ui.checkExternalLinks' });
     expect((button as HTMLButtonElement).disabled).toBe(true);
+    button.removeAttribute('disabled');
     fireEvent.click(button);
     expect(checkExternalLinks).not.toHaveBeenCalled();
   });

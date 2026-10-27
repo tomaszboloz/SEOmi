@@ -57,6 +57,7 @@ fn metadata_extractor_reports_canonical_noindex_conflict_only_from_usable_html()
 fn status_diagnostics_report_bounded_browser_errors_and_unavailable_response_checks() {
     let mut page_data = data("");
     page_data.status = 0;
+    page_data.response_headers_available = false;
     page_data.declared_html = false;
     page_data.body_truncated = true;
     page_data.body_read_failed = true;
@@ -76,7 +77,7 @@ fn status_diagnostics_report_bounded_browser_errors_and_unavailable_response_che
         &config,
         &mut issues,
     );
-    assert_eq!(issues.len(), 27);
+    assert_eq!(issues.len(), 25);
     assert_eq!(
         issues
             .iter()
@@ -94,6 +95,14 @@ fn status_diagnostics_report_bounded_browser_errors_and_unavailable_response_che
     assert!(!issues
         .iter()
         .any(|i| i.message.contains("resource-10") || i.message.contains("console-10")));
+    assert!(!issues.iter().any(|i| {
+        i.message
+            .contains("Response body exceeded the configured limit")
+    }));
+    assert!(!issues.iter().any(|i| {
+        i.message
+            .contains("Response body could not be read completely")
+    }));
     for expected in [
         "Safely followed 2 redirect(s)",
         "stopped",

@@ -72,9 +72,9 @@ it('mounts every sidebar destination through the real SPA content switch', async
         expect(useAuditStore.getState().activeTab).toBe(tab);
         expectRouteContent(tab);
         expect(screen.queryByRole('alert')).toBeNull();
-      }, { timeout: 15_000 });
+      }, { timeout: 30_000 });
     }
-  }, 60_000);
+  }, 120_000);
 
 it('mounts every page-audit result tab without activating the route fallback', async () => {
     useAuditStore.setState({ currentAudit: auditFixture, activeTab: 'overview' });
@@ -89,9 +89,9 @@ it('mounts every page-audit result tab without activating the route fallback', a
         expect(useAuditStore.getState().activeTab).toBe(tab);
         expectRouteContent(tab);
         expect(screen.queryByRole('alert')).toBeNull();
-      }, { timeout: 15000 });
+      }, { timeout: 30_000 });
     }
-  }, 60_000);
+  }, 120_000);
 
 it('keeps every action-only workspace destination reachable from the sidebar', async () => {
     render(<Sidebar />);

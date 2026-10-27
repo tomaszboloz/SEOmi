@@ -1,6 +1,6 @@
 import { format } from "date-fns";
 import type { CrawlRunRecord } from "@/types";
-import type { CrawlDiff } from "@/services/crawlDiff";
+import type { CrawlDiff, CrawlDiffReport } from "@/services/crawlDiff";
 import { ComparisonChangesList } from "./ComparisonChangesList";
 
 interface CrawlCompareRunsSectionProps {
@@ -10,9 +10,13 @@ interface CrawlCompareRunsSectionProps {
   setComparisonRunId: (id: string) => void;
   compareByPath: boolean;
   updateCompareByPath: (val: boolean) => void;
-  comparison: CrawlDiff | null;
+  comparison: CrawlDiff | CrawlDiffReport | null;
   t: (key: string, params?: Record<string, unknown>) => string;
 }
+const completionLabel = (value: string): string => {
+  const date = new Date(value);
+  return Number.isFinite(date.getTime()) ? format(date, "yyyy-MM-dd HH:mm") : "—";
+};
 
 export const CrawlCompareRunsSection = ({
   runs,
@@ -25,6 +29,8 @@ export const CrawlCompareRunsSection = ({
   t,
 }: CrawlCompareRunsSectionProps) => {
   if (runs.length <= 1) return null;
+  const guarded = comparison && 'status' in comparison ? comparison as CrawlDiffReport : null;
+  const guardReasons = guarded?.reasons.map((reason) => t(`siteAudit.comparisonReasons.${reason}`)).join(', ') || 'none';
 
   return (
     <section className="rounded-xl border border-slate-800 bg-slate-900/45 p-4">
@@ -51,7 +57,7 @@ export const CrawlCompareRunsSection = ({
               .filter((run) => run.id !== currentRunId)
               .map((run) => (
                 <option key={run.id} value={run.id}>
-                  {format(new Date(run.completedAt), "yyyy-MM-dd HH:mm")}{" "}
+                  {completionLabel(run.completedAt)}{" "}
                   · {t("crawl.ui.urlsCount", { count: run.result.pages_crawled })} · {run.startUrl}
                 </option>
               ))}
@@ -77,6 +83,12 @@ export const CrawlCompareRunsSection = ({
       )}
       {comparison && (
         <div className="mt-4 grid gap-3 sm:grid-cols-3">
+          {guarded && (
+            <p role="status" data-testid="crawl-results-comparison-guard" className="sm:col-span-3 rounded-md border border-slate-700 bg-slate-950/60 px-3 py-2 text-[10px] leading-4 text-slate-300">
+              {t('siteAudit.comparisonGuard', { status: guarded.status, reasons: `${guardReasons} [${guarded.reasons.join(', ')}]` })}
+            </p>
+          )}
+          {guarded?.status !== 'blocked' && <>
           <div className="rounded-lg border border-emerald-500/20 bg-emerald-500/5 p-3 text-xs text-emerald-200">
             {t("crawlDeepUi.addedUrls")}{" "}
             <strong className="ml-2 text-lg text-white">
@@ -96,6 +108,7 @@ export const CrawlCompareRunsSection = ({
             </strong>
           </div>
           <ComparisonChangesList comparison={comparison} t={t} />
+          </>}
         </div>
       )}
     </section>

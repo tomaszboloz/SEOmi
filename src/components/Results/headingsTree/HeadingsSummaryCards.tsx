@@ -2,6 +2,7 @@ import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { AlertCircle, AlertTriangle, CheckCircle2, Heading } from 'lucide-react';
 import type { PageAuditData } from '@/types';
+import { HelpTip } from '@/components/Help/HelpTip';
 
 interface HeadingsSummaryCardsProps {
   headings: PageAuditData['headings'];
@@ -19,7 +20,7 @@ export const HeadingsSummaryCards: React.FC<HeadingsSummaryCardsProps> = ({
       <div className="p-4 rounded-xl bg-slate-900/60 border border-slate-800 flex items-center justify-between">
         <div>
           <span className="text-xs text-slate-400 uppercase tracking-wider block mb-1">
-            {t('headings.h1Count')}
+            {t('headings.h1Count')} <HelpTip id="headings.h1Count" />
           </span>
           <span className="text-2xl font-bold font-mono text-white">{headings.h1_count}</span>
         </div>

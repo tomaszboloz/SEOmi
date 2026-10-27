@@ -67,4 +67,13 @@ it('routes generation through the selected provider and rejects an API-only prov
   expect(await auth.getState().generateText('question')).toBe('real-response-fixture');
   expect(generate).toHaveBeenCalledWith('claude', '', 'local-model', 'question', 'local_cli');
   await expect(auth.getState().generateTextForProvider('openai', 'question')).rejects.toThrow();
+
+  const generateProvider = vi.spyOn(AIService, 'generateText').mockResolvedValue('provider-answer');
+  expect(await auth.getState().generateTextForProvider('claude', 'cli-question')).toBe('provider-answer');
+  expect(generateProvider).toHaveBeenCalledWith('claude', '', 'local-model', 'cli-question', 'local_cli');
+
+  const suggestion = { suggestedTitle: 'Suggestion', suggestedDescription: 'Description', keyImprovements: ['Improve code'] };
+  const suggestionsSpy = vi.spyOn(AIService, 'generateSuggestions').mockResolvedValue(suggestion);
+  expect(await auth.getState().generateSuggestions({} as never, 'fix code')).toEqual(suggestion);
+  expect(suggestionsSpy).toHaveBeenCalled();
 });
