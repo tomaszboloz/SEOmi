@@ -7749,7 +7749,14 @@
     "empty": "Brak danych luki linkowej. Najpierw uruchom analizę luki linków.",
     "row": "{{domain}}: priorytet {{priority}}, linkuje do {{count}} konkurentów",
     "export": "Eksportuj CSV",
-    "manualNote": "SEOmi nie wysyła wiadomości. Szkice wysyłasz ze swojej skrzynki."
+    "manualNote": "SEOmi nie wysyła wiadomości. Szkice wysyłasz ze swojej skrzynki.",
+    "draft": "Pokaż szkic",
+    "draftSubject": "Źródło dla {{domain}}",
+    "draftBody": "Dzień dobry,\\n\\nZauważyliśmy, że linkujesz do {{competitors}}. Opublikowaliśmy {{title}} ({{url}}): {{summary}}\\nUnikalny kąt: {{novelEntities}}. Zysk informacji: {{informationGain}}. Dowód: {{evidence}}\\nProvider: {{provider}}; model: {{model}}; {{approximation}}; obserwacja: {{observedAt}}\\n\\nPozdrawiam,\\n{{site}}",
+    "evidence": "IGOS {{score}}/100; dowód: {{url}}",
+    "provenance": "Źródło IGOS: provider {{provider}}, model {{model}} ({{approximation}}); obserwacja: {{observedAt}}",
+    "unknown": "niedostępne",
+    "localApproximation": "lokalne przybliżenie leksykalne"
   },
   "causalMarket": {
     "title": "Wpływ przyczynowy",

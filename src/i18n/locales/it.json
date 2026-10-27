@@ -7749,7 +7749,14 @@
     "empty": "Nessun dato sul divario di backlink. Esegui prima l’analisi.",
     "row": "{{domain}}: priorità {{priority}}, linka {{count}} concorrenti",
     "export": "Esporta CSV",
-    "manualNote": "SEOmi non invia mai messaggi. Invia le bozze dalla tua casella."
+    "manualNote": "SEOmi non invia mai messaggi. Invia le bozze dalla tua casella.",
+    "draft": "Mostra bozza",
+    "draftSubject": "Una risorsa per {{domain}}",
+    "draftBody": "Buongiorno,\\n\\nAbbiamo notato che linki a {{competitors}}. Abbiamo pubblicato {{title}} ({{url}}): {{summary}}\\nAngolo unico: {{novelEntities}}. Guadagno informativo: {{informationGain}}. Prova: {{evidence}}\\nProvider: {{provider}}; modello: {{model}}; {{approximation}}; osservato: {{observedAt}}\\n\\nCordiali saluti,\\n{{site}}",
+    "evidence": "IGOS {{score}}/100; prova: {{url}}",
+    "provenance": "Fonte IGOS: provider {{provider}}, modello {{model}} ({{approximation}}); osservato: {{observedAt}}",
+    "unknown": "non disponibile",
+    "localApproximation": "approssimazione lessicale locale"
   },
   "causalMarket": {
     "title": "Impatto causale",

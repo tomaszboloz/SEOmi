@@ -7749,7 +7749,14 @@
     "empty": "Sem dados de lacuna de backlinks. Execute primeiro a análise.",
     "row": "{{domain}}: prioridade {{priority}}, linka {{count}} concorrentes",
     "export": "Exportar CSV",
-    "manualNote": "O SEOmi nunca envia mensagens. Envie os rascunhos pelo seu e-mail."
+    "manualNote": "O SEOmi nunca envia mensagens. Envie os rascunhos pelo seu e-mail.",
+    "draft": "Mostrar rascunho",
+    "draftSubject": "Um recurso para {{domain}}",
+    "draftBody": "Olá,\\n\\nNotámos que liga a {{competitors}}. Publicámos {{title}} ({{url}}): {{summary}}\\nÂngulo único: {{novelEntities}}. Ganho de informação: {{informationGain}}. Evidência: {{evidence}}\\nFornecedor: {{provider}}; modelo: {{model}}; {{approximation}}; observado: {{observedAt}}\\n\\nCumprimentos,\\n{{site}}",
+    "evidence": "IGOS {{score}}/100; evidência: {{url}}",
+    "provenance": "Fonte IGOS: fornecedor {{provider}}, modelo {{model}} ({{approximation}}); observado: {{observedAt}}",
+    "unknown": "indisponível",
+    "localApproximation": "aproximação lexical local"
   },
   "causalMarket": {
     "title": "Impacto causal",

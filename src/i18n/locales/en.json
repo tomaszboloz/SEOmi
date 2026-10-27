@@ -7749,7 +7749,14 @@
     "empty": "No backlink gap data. Run a backlink gap check first.",
     "row": "{{domain}}: priority {{priority}}, links to {{count}} competitors",
     "export": "Export CSV",
-    "manualNote": "SEOmi never sends messages. Send drafts from your own mailbox."
+    "manualNote": "SEOmi never sends messages. Send drafts from your own mailbox.",
+    "draft": "Show draft",
+    "draftSubject": "A resource for {{domain}}",
+    "draftBody": "Hello,\\n\\nWe noticed you link to {{competitors}}. We published {{title}} ({{url}}): {{summary}}\\nUnique angle: {{novelEntities}}. Information gain: {{informationGain}}. Evidence: {{evidence}}\\nProvider: {{provider}}; model: {{model}}; {{approximation}}; observed: {{observedAt}}\\n\\nBest,\\n{{site}}",
+    "evidence": "IGOS {{score}}/100; evidence: {{url}}",
+    "provenance": "IGOS source: provider {{provider}}, model {{model}} ({{approximation}}); observed: {{observedAt}}",
+    "unknown": "unavailable",
+    "localApproximation": "local lexical approximation"
   },
   "causalMarket": {
     "title": "Causal impact",

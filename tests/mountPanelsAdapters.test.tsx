@@ -1,5 +1,6 @@
 import { describe, expect, it } from 'vitest';
-import { render, screen } from '@testing-library/react';
+import '@/i18n';
+import { fireEvent, render, screen } from '@testing-library/react';
 import { buildSprsReport } from '@/components/Charts/semanticTopical/signals/sprsAdapter';
 import { buildParityReport } from '@/components/Charts/semanticTopical/signals/parityAdapter';
 import { buildTemplateEvents } from '@/components/Charts/semanticTopical/signals/templateAdapter';
@@ -69,13 +70,32 @@ describe('backlink adapters', () => {
   it('outreach section lists gap domains and is empty without a report', () => {
     const { unmount } = render(<BacklinkOutreachSection report={null} />);
     expect(screen.getByTestId('outreach-panel')).toBeTruthy();
-    expect(screen.queryByRole('button')).toBeNull();
+    expect(screen.queryByRole('button', { name: 'Export CSV' })).toBeNull();
     unmount();
     const report: BacklinkGapReport = {
       target: 'me.com', competitors: ['a.com'], include_subdomains: false, total_rows: 1, rows_scanned: 1,
       opportunities: [{ referring_domain: 'blog.example', target_backlinks: 0, competitor_backlinks: [{ domain: 'a.com', backlinks: 3, rank: 50 }], max_competitor_spam_score: null }],
     };
     render(<BacklinkOutreachSection report={report} />);
-    expect(screen.getByRole('button')).toBeTruthy();
+    expect(screen.getByRole('button', { name: 'Export CSV' })).toBeTruthy();
+  });
+
+  it('mounts a deferred IGOS draft only for the producing project', () => {
+    const report = {
+      status: 'ready', igos: 80, components: null, coverage: null, multiplier: null, onTopicShare: 1,
+      availableDocs: 3, requestedDocs: 3, novelEntities: ['local study'], limitations: [],
+      zones: [{ chunk: { text: 'new', offset: 0, heading: null, vector: new Float64Array([1]) }, topic: 0.8, nearest: 0.2, zone: 'gain', evidence: { url: 'https://competitor.example/source', rank: 1, passageIndex: 0 } }],
+    } as never;
+    const reportData: BacklinkGapReport = { target: 'me.com', competitors: ['a.com'], include_subdomains: false, total_rows: 1, rows_scanned: 1, opportunities: [{ referring_domain: 'blog.example', target_backlinks: 0, competitor_backlinks: [{ domain: 'a.com', backlinks: 3, rank: 50 }], max_competitor_spam_score: null }] };
+    const source = { projectId: 'p1', site: 'https://me.com', report, source: { title: 'Study', url: 'https://me.com/study', summary: 'Observed data.' }, provenance: { provider: 'local-hash', model: 'hash-1024-n345', approximation: 'local-lexical', observedAt: '2026-10-26T12:00:00Z' } };
+    const view = render(<BacklinkOutreachSection report={reportData} projectId="p1" informationGain={null} />);
+    expect(screen.queryByRole('button', { name: 'Show draft' })).toBeNull();
+    view.rerender(<BacklinkOutreachSection report={reportData} projectId="p1" informationGain={source} />);
+    fireEvent.click(screen.getByRole('button', { name: 'Show draft' }));
+    expect(screen.getByTestId('outreach-draft').textContent).toContain('Study');
+    expect(screen.getByTestId('outreach-provenance').textContent).toContain('hash-1024-n345');
+    expect(screen.getByTestId('outreach-provenance').textContent).toContain('2026-10-26T12:00:00Z');
+    view.rerender(<BacklinkOutreachSection report={reportData} projectId="p2" informationGain={source} />);
+    expect(screen.queryByTestId('outreach-evidence')).toBeNull();
   });
 });

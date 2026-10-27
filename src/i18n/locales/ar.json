@@ -7749,7 +7749,14 @@
     "empty": "لا توجد بيانات فجوة الروابط. شغّل تحليل الفجوة أولًا.",
     "row": "{{domain}}: الأولوية {{priority}}، يربط بـ {{count}} منافسين",
     "export": "تصدير CSV",
-    "manualNote": "لا يرسل SEOmi أي رسائل. أرسل المسودات من بريدك."
+    "manualNote": "لا يرسل SEOmi أي رسائل. أرسل المسودات من بريدك.",
+    "draft": "عرض المسودة",
+    "draftSubject": "مصدر لـ {{domain}}",
+    "draftBody": "مرحبًا،\\n\\nلاحظنا أنك تشير إلى {{competitors}}. نشرنا {{title}} ({{url}}): {{summary}}\\nالزاوية الفريدة: {{novelEntities}}. مكسب المعلومات: {{informationGain}}. الدليل: {{evidence}}\\nالمعالج: {{provider}}؛ النموذج: {{model}}؛ {{approximation}}؛ وقت الرصد: {{observedAt}}\\n\\nمع التحية،\\n{{site}}",
+    "evidence": "IGOS {{score}}/100؛ الدليل: {{url}}",
+    "provenance": "مصدر IGOS: المعالج {{provider}}، النموذج {{model}} ({{approximation}})؛ الرصد: {{observedAt}}",
+    "unknown": "غير متاح",
+    "localApproximation": "تقريب محلي معجمي"
   },
   "causalMarket": {
     "title": "الأثر السببي",
