@@ -41,6 +41,15 @@ pub struct CrawledPageFocus {
     /// H1-H3 sections with text and list/table counts for AI/RAG readiness.
     #[serde(default)]
     pub rag_sections: Vec<RagSection>,
+    /// Stable tag/depth skeleton from the fetched HTML; omitted when DOM evidence is unavailable.
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub template_dom_signature: Option<String>,
+    /// Bounded native injected-variable capture from HTML evidence; `None` when evidence is unavailable.
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub template_injected_variables: Option<Vec<String>>,
+    /// Project/run or document-scoped TAS subtopic identity; `None` when evidence is unavailable.
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub tas_subtopic_id: Option<String>,
     /// Thin static HTML that looks like an unrendered SPA shell (Next/Nuxt
     /// payload, empty app root). `None` when the page was not assessed.
     #[serde(default, skip_serializing_if = "Option::is_none")]

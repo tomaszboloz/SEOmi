@@ -1,10 +1,12 @@
 import { readGscSnapshots } from '@/services/gscTracker/read';
-import { filtersEqual } from '@/services/gscTracker/filters';
+import { filtersEqual, normalizedFilters } from '@/services/gscTracker/filters';
 import type { GscPerformanceSnapshot } from '@/services/gscTracker/types';
+import type { GscPerformanceFilters } from '@/types';
 import { listInterventions, type Intervention } from '@/services/experiments/registry';
-import { matchGscProperty } from '@/services/gscPropertyMatch';
 import { estimateImpact, type ImpactResult } from './impact';
 import { alignMarketObservations, type DatedMarketObservation, type UpdateWindow } from './normalize';
+import { areSitesIndependent, normalizeSiteDomain } from './domain';
+import type { MarketSourceStatus, UpdateWindowSourceResult } from './source';
 
 type Daily = NonNullable<GscPerformanceSnapshot['daily']>[number];
 type Group = { site: string; filters?: GscPerformanceSnapshot['filters']; snapshots: GscPerformanceSnapshot[] };
@@ -19,14 +21,14 @@ export interface StoredCausalImpactInput {
   snapshots: readonly GscPerformanceSnapshot[];
   interventions: readonly Intervention[];
   market: CausalMarketEvidence | null;
-  updateWindows?: UpdateWindow[];
+  updateWindows?: UpdateWindow[] | UpdateWindowSourceResult | null;
   testSiteUrl?: string;
 }
 
 const groupSnapshots = (snapshots: readonly GscPerformanceSnapshot[]): Group[] => {
   const groups = new Map<string, Group>();
   snapshots.forEach((snapshot) => {
-    const key = `${snapshot.site_url}|${JSON.stringify(snapshot.filters ?? {})}`;
+    const key = `${snapshot.site_url}|${snapshot.filters ? JSON.stringify(snapshot.filters) : ''}`;
     const group = groups.get(key) ?? { site: snapshot.site_url, filters: snapshot.filters, snapshots: [] };
     group.snapshots.push(snapshot);
     groups.set(key, group);
@@ -42,26 +44,55 @@ const dailyOf = (group: Group): Map<string, Daily> => {
   return rows;
 };
 
-const bestControl = (test: Group, groups: Group[], testDates: Set<string>): { group: Group; rows: Map<string, Daily> } | null => {
+const canonicalCohort = (filters?: GscPerformanceFilters): GscPerformanceFilters => {
+  const norm = normalizedFilters(filters);
+  return { search_type: norm.search_type || 'web', ...(norm.device ? { device: norm.device } : {}), ...(norm.country ? { country: norm.country } : {}) };
+};
+const areCohortsCompatible = (left?: GscPerformanceFilters, right?: GscPerformanceFilters): boolean => filtersEqual(canonicalCohort(left), canonicalCohort(right));
+
+const compareCandidates = (
+  left: { group: Group; overlap: number; independent: boolean },
+  right: { group: Group; overlap: number; independent: boolean },
+): number => (
+  Number(right.independent) - Number(left.independent)
+  || right.overlap - left.overlap
+  || left.group.site.localeCompare(right.group.site)
+);
+
+const bestControl = (test: Group, groups: Group[], testDates: Set<string>): { group: Group; rows: Map<string, Daily>; independent: boolean } | null => {
   const candidates = groups.flatMap((group) => {
-    if (group.site === test.site || !filtersEqual(test.filters, group.filters)) return [];
+    if (group.site === test.site || !areCohortsCompatible(test.filters, group.filters)) return [];
     const rows = dailyOf(group);
     const overlap = [...rows.keys()].filter((date) => testDates.has(date)).length;
-    return overlap ? [{ group, rows, overlap }] : [];
-  }).sort((left, right) => right.overlap - left.overlap || left.group.site.localeCompare(right.group.site));
+    if (!overlap) return [];
+    return [{ group, rows, overlap, independent: areSitesIndependent(group.site, test.site) }];
+  }).sort(compareCandidates);
   const selected = candidates[0];
-  return selected ? { group: selected.group, rows: selected.rows } : null;
+  return selected ? { group: selected.group, rows: selected.rows, independent: selected.independent } : null;
 };
+
+const matchesTarget = (site: string, target: string): boolean => (
+  site === target || normalizeSiteDomain(site) === normalizeSiteDomain(target)
+);
 
 const testGroup = (groups: Group[], testSiteUrl?: string): { group: Group; rows: Map<string, Daily> } | null => {
   const ranked = groups.map((group) => ({ group, rows: dailyOf(group) }))
     .filter((candidate) => candidate.rows.size > 0)
     .sort((left, right) => right.rows.size - left.rows.size);
-  const matched = testSiteUrl?.trim()
-    ? ranked.find((candidate) => matchGscProperty([{ siteUrl: candidate.group.site, permissionLevel: 'siteOwner' }], testSiteUrl) === candidate.group.site)
-    : undefined;
-  if (ranked.length > 1 && (!testSiteUrl?.trim() || !matched)) return null;
-  return matched ?? ranked[0] ?? null;
+  if (!ranked.length) return null;
+  const target = testSiteUrl?.trim();
+  if (target) {
+    const matched = ranked.find((candidate) => matchesTarget(candidate.group.site, target));
+    return matched ?? null;
+  }
+  if (ranked.length > 1) return null;
+  return ranked[0];
+};
+
+const resolveWindows = (input?: UpdateWindow[] | UpdateWindowSourceResult | null) => {
+  if (Array.isArray(input)) return { windows: input, status: 'available' as MarketSourceStatus };
+  if (input && 'windows' in input) return { windows: input.windows, status: input.status };
+  return { windows: [] as UpdateWindow[], status: (input === null ? 'unavailable' : 'unknown') as MarketSourceStatus };
 };
 
 export const buildCausalImpact = (input: StoredCausalImpactInput): ImpactResult | null => {
@@ -71,26 +102,47 @@ export const buildCausalImpact = (input: StoredCausalImpactInput): ImpactResult 
   const test = testGroup(groups, input.testSiteUrl);
   if (!test) return null;
   const control = bestControl(test.group, groups, new Set(test.rows.keys()));
-  if (!control) return null;
-  const dates = [...test.rows.keys()].filter((date) => control.rows.has(date)).sort();
-  if (!dates.length) return null;
-  const market = input.market?.status === 'available'
-    ? alignMarketObservations(dates, input.market.observations)
-    : null;
+  const marketReady = input.market?.status === 'available';
+  if (!control && !marketReady) return null;
+
+  const dates = control
+    ? [...test.rows.keys()].filter((date) => control.rows.has(date)).sort()
+    : [...test.rows.keys()].sort();
+
+  const market = marketReady ? alignMarketObservations(dates, input.market!.observations) : null;
+  const testSeries = dates.map((date) => test.rows.get(date)!.clicks);
+  const preDates = dates.filter((date) => date < intervention.date);
+  const preMean = preDates.reduce((sum, d) => sum + test.rows.get(d)!.clicks, 0) / Math.max(1, preDates.length);
+  const controlSeries = control ? dates.map((date) => control.rows.get(date)!.clicks) : dates.map(() => preMean);
+
+  const { windows, status: updateFeedStatus } = resolveWindows(input.updateWindows);
+
   return estimateImpact({
     dates,
-    test: dates.map((date) => test.rows.get(date)!.clicks),
-    control: dates.map((date) => control.rows.get(date)!.clicks),
+    test: testSeries,
+    control: controlSeries,
     market,
     marketSource: market ? input.market?.source : null,
-    controlSource: `Google Search Console property ${control.group.site}`,
-    controlIndependent: control.group.site !== test.group.site,
+    controlSource: control?.independent ? `Google Search Console property ${control.group.site}` : null,
+    controlIndependent: control?.independent ?? false,
     interventionDate: intervention.date,
-    updateWindows: input.updateWindows ?? [],
+    updateWindows: windows,
+    updateFeedStatus,
   });
 };
 
-export const readStoredCausalImpact = (projectId: string | null, market: CausalMarketEvidence | null, updateWindows: UpdateWindow[] = [], testSiteUrl?: string): ImpactResult | null => {
+export const readStoredCausalImpact = (
+  projectId: string | null,
+  market: CausalMarketEvidence | null,
+  updateWindows?: UpdateWindow[] | UpdateWindowSourceResult | null,
+  testSiteUrl?: string,
+): ImpactResult | null => {
   if (!projectId?.trim()) return null;
-  return buildCausalImpact({ snapshots: readGscSnapshots(projectId), interventions: listInterventions(projectId), market, updateWindows, testSiteUrl });
+  return buildCausalImpact({
+    snapshots: readGscSnapshots(projectId),
+    interventions: listInterventions(projectId),
+    market,
+    updateWindows,
+    testSiteUrl,
+  });
 };

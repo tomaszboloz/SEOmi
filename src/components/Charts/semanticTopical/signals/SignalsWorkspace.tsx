@@ -14,11 +14,25 @@ import { computeSprs } from '@/services/semanticGraph/sprs';
 import { buildSprsInput } from './sprsAdapter';
 import { useGraphSnapshot } from './useGraphSnapshot';
 import { buildParityReport } from './parityAdapter';
-import { buildTemplateEvents } from './templateAdapter';
+import { buildTemplateEvents, subtopicsFromAuthorityReport, subtopicsFromGraph } from './templateAdapter';
 import { useDecayHistory } from './useDecayHistory';
 import { useCausalImpact } from './useCausalImpact';
 
-export const SignalsWorkspace = ({ projectId = null, pages, graph }: { projectId?: string | null; pages: CrawledPageSummary[]; graph: SemanticMap }) => {
+export interface SignalsWorkspaceProps {
+  projectId?: string | null;
+  pages: CrawledPageSummary[];
+  graph: SemanticMap;
+  subtopicsByUrl?: Record<string, string>;
+  authorityReport?: { coverage?: Array<{ subtopicId: string; urls: string[] }> } | null;
+}
+
+export const SignalsWorkspace = ({
+  projectId = null,
+  pages,
+  graph,
+  subtopicsByUrl: propSubtopics,
+  authorityReport = null,
+}: SignalsWorkspaceProps) => {
   const { t } = useTranslation();
   const decay = useDecayHistory(projectId);
   const causalImpact = useCausalImpact(projectId, pages[0]?.url);
@@ -26,15 +40,28 @@ export const SignalsWorkspace = ({ projectId = null, pages, graph }: { projectId
   const sprsInput = useMemo(() => buildSprsInput(snapshot), [snapshot]);
   const sprs = useMemo(() => computeSprs(sprsInput.nodes, sprsInput.edges), [sprsInput]);
   const parity = useMemo(() => buildParityReport(pages, graph), [pages, graph]);
-  const templates = useMemo(() => buildTemplateEvents(pages), [pages]);
-  return <div className="space-y-4" data-testid="signals-workspace" aria-label={t('semanticWorkspace.tabSignals')}>
-    <StaleSnapshotBanner stale={stale} onRefresh={refresh} />
-    <SprsPanel report={sprs} />
-    <SprsWhatIf nodes={sprsInput.nodes} edges={sprsInput.edges} />
-    <HreflangParityPanel report={parity} />
-    <TemplateGovernorPanel events={templates} />
-    <DecayRadarPanel evaluation={decay.evaluation} snapshotCount={decay.snapshotCount} />
-    <CausalImpactPanel result={causalImpact} />
-    <ExperimentsPanel projectId={projectId} pages={pages} />
-  </div>;
+  const authoritySubtopics = useMemo(
+    () => subtopicsFromAuthorityReport(authorityReport),
+    [authorityReport],
+  );
+  const subtopicsByUrl = useMemo(
+    () => ({ ...authoritySubtopics, ...subtopicsFromGraph(graph), ...propSubtopics }),
+    [authoritySubtopics, graph, propSubtopics],
+  );
+  const templates = useMemo(
+    () => buildTemplateEvents(pages, { subtopicsByUrl }),
+    [pages, subtopicsByUrl],
+  );
+  return (
+    <div className="space-y-4" data-testid="signals-workspace" aria-label={t('semanticWorkspace.tabSignals')}>
+      <StaleSnapshotBanner stale={stale} onRefresh={refresh} />
+      <SprsPanel report={sprs} />
+      <SprsWhatIf nodes={sprsInput.nodes} edges={sprsInput.edges} />
+      <HreflangParityPanel report={parity} />
+      <TemplateGovernorPanel events={templates} />
+      <DecayRadarPanel evaluation={decay.evaluation} snapshotCount={decay.snapshotCount} />
+      <CausalImpactPanel result={causalImpact} />
+      <ExperimentsPanel projectId={projectId} pages={pages} />
+    </div>
+  );
 };

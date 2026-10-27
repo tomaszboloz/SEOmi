@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import type { BacklinkGapOpportunity } from '@/types';
-import { draftOutreach, normalizeDomain, outreachTargets, targetsToCsv } from '@/services/outreachCopilot';
+import { draftOutreach, igosSourceStatus, normalizeDomain, outreachTargets, resolveIgosSource, targetsToCsv } from '@/services/outreachCopilot';
 
 const row = (domain: string, own: number, links: Array<[string, number, number | null]>, spam: number | null = null): BacklinkGapOpportunity => ({
   referring_domain: domain,
@@ -29,6 +29,21 @@ describe('outreachTargets', () => {
     expect(outreachTargets([], 3)).toEqual([]);
     expect(outreachTargets([row('x.com', 0, [['a.com', 1, null]])], 0)[0].priority).toBe(0);
   });
+  it('limits relevance to the ordered TOP3 competitor set', () => {
+    const result = outreachTargets([
+      row('source.test', 0, [['one.test', 1, 100], ['two.test', 1, 100], ['three.test', 1, 100], ['four.test', 1, 100]]),
+    ], 4, { topCompetitors: ['one.test', 'two.test', 'three.test', 'four.test'] });
+    expect(result[0].linkingCompetitors).toEqual(['one.test', 'two.test', 'three.test']);
+    expect(result[0].relevance).toBe(1);
+  });
+  it('treats non-finite ranks and an invalid rank scale as unknown authority', () => {
+    expect(outreachTargets([row('nan.test', 0, [['one.test', 1, Number.NaN]])], 1)[0].authority).toBe(0);
+    expect(outreachTargets([row('scale.test', 0, [['one.test', 1, 50]])], 1, { rankScale: 0 })[0].authority).toBe(0);
+  });
+  it('breaks equal priority ties by relevance and then domain', () => {
+    const result = outreachTargets([row('z.test', 0, [['a.test', 1, 50]]), row('a.test', 0, [['a.test', 1, 50]])], 1);
+    expect(result.map((item) => item.domain)).toEqual(['a.test', 'z.test']);
+  });
   it('normalizes URLs to hosts', () => {
     expect(normalizeDomain('https://WWW.Site.com/path?q=1')).toBe('site.com');
   });
@@ -37,17 +52,51 @@ describe('outreachTargets', () => {
 describe('draft and csv', () => {
   const target = outreachTargets([row('blog.com', 0, [['a.com', 1, 50]])], 1)[0];
   const template = { subject: 'Resource for {{domain}}', body: 'You link to {{competitors}}. See {{title}} {{url}}: {{summary}} -- {{site}}{{missing}}' };
-  const source = { title: 'Study', url: 'https://me.com/study', summary: 'Original data.' };
-  it('fills a draft only when a unique source exists', () => {
+  const evidence = {
+    reportId: 'igos:https://me.com/study:3:2:1',
+    sourceUrl: 'https://me.com/study',
+    novelEntities: ['novel-metric', 'measured-dataset'],
+    gainZones: 1,
+    baselineDocs: 3,
+    baselineProvenance: 'igos' as const,
+  };
+  const source = { title: 'Study', url: 'https://me.com/study', summary: 'Original data.', provenance: 'igos' as const, evidence };
+
+  it('fills a draft only when a unique source with novelty evidence exists', () => {
     expect(draftOutreach(target, 'me.com', null, template)).toBeNull();
     expect(draftOutreach(target, '', source, template)).toBeNull();
+    expect(draftOutreach(target, '   ', source, template)).toBeNull();
     expect(draftOutreach(target, 'me.com', { ...source, title: ' ' }, template)).toBeNull();
+    expect(draftOutreach(target, 'me.com', { ...source, url: ' ' }, template)).toBeNull();
+    expect(draftOutreach(target, 'me.com', { ...source, provenance: 'other' as any }, template)).toBeNull();
+    expect(draftOutreach(target, 'me.com', { ...source, evidence: undefined as any }, template)).toBeNull();
+    expect(draftOutreach(target, 'me.com', { ...source, evidence: { ...evidence, novelEntities: [] } }, template)).toBeNull();
+    expect(draftOutreach(target, 'me.com', { ...source, evidence: { ...evidence, sourceUrl: 'https://other.com' } }, template)).toBeNull();
     expect(draftOutreach(target, 'me.com', source, template)).toEqual({
       to: 'blog.com',
       subject: 'Resource for blog.com',
       body: 'You link to a.com. See Study https://me.com/study: Original data. -- me.com',
     });
+    expect(draftOutreach(target, 'me.com', { ...source, url: 'javascript:alert(1)' }, template)).toBeNull();
   });
+
+  it('fails closed when IGOS or source novelty provenance is unavailable', () => {
+    const ready = { status: 'ready' as const, igos: 72 };
+    const partial = { status: 'partial' as const, igos: 41 };
+    expect(igosSourceStatus(null)).toBe('unavailable');
+    expect(igosSourceStatus({ status: 'off-topic', igos: null })).toBe('unavailable');
+    expect(igosSourceStatus(partial)).toBe('partial');
+    expect(resolveIgosSource(ready, { ...source, provenance: undefined })).toBeNull();
+    expect(resolveIgosSource(ready, { ...source, evidence: undefined })).toBeNull();
+    expect(resolveIgosSource(ready, { ...source, evidence: { ...evidence, novelEntities: [] } })).toBeNull();
+    expect(resolveIgosSource(ready, { ...source, evidence: { ...evidence, baselineProvenance: 'other' as any } })).toBeNull();
+    expect(resolveIgosSource(ready, { ...source, evidence: { ...evidence, sourceUrl: 'https://other.com' } })).toBeNull();
+    expect(resolveIgosSource(ready, { ...source, url: 'https://user:pass@me.com/study' })).toBeNull();
+    expect(resolveIgosSource(ready, { ...source, url: 'not-a-url' })).toBeNull();
+    expect(resolveIgosSource(ready, null)).toBeNull();
+    expect(resolveIgosSource(ready, source)).toEqual(source);
+  });
+
   it('exports escaped, formula-safe CSV', () => {
     const csv = targetsToCsv([{ ...target, domain: '=cmd', linkingCompetitors: ['a,b', 'c"d'] }]);
     expect(csv.split('\n')[0]).toBe('domain,priority,relevance,authority,linking_competitors');

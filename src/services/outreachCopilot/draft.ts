@@ -1,7 +1,7 @@
 import type { OutreachTarget } from './gap';
+import { isHttpSourceUrl, type UniqueSource } from './source';
 
-/** The unique source we can offer (IGOS): something the competitors' linked pages do not have. */
-export interface UniqueSource { title: string; url: string; summary: string }
+export type { UniqueSource } from './source';
 
 export interface DraftTemplate { subject: string; body: string }
 
@@ -12,8 +12,8 @@ const fill = (template: string, values: Record<string, string>): string =>
 
 /**
  * Fills a localized template with real data. Placeholders: domain, competitors, site, title, url, summary.
- * Without a unique source there is nothing worth pitching, so no draft is produced. The app never sends it:
- * the user copies or exports the text and sends it from their own mailbox.
+ * Without a verified unique source backed by novelty evidence there is nothing worth pitching, so no draft
+ * is produced. The app never sends it: the user copies or exports the text and sends it manually.
  */
 export const draftOutreach = (
   target: OutreachTarget,
@@ -21,7 +21,10 @@ export const draftOutreach = (
   source: UniqueSource | null,
   template: DraftTemplate,
 ): OutreachDraft | null => {
-  if (!source || !source.title.trim() || !source.url.trim() || !site.trim()) return null;
+  if (!source || !source.title.trim() || !source.url.trim() || !site.trim() || !isHttpSourceUrl(source.url)) return null;
+  if (source.provenance !== 'igos' || !source.evidence) return null;
+  if (!Array.isArray(source.evidence.novelEntities) || source.evidence.novelEntities.length === 0) return null;
+  if (source.evidence.sourceUrl !== source.url) return null;
   const values = {
     domain: target.domain,
     competitors: target.linkingCompetitors.join(', '),
