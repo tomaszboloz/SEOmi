@@ -14,6 +14,8 @@ describe('EETV five-layer profile', () => {
 
   it('keeps an empty crawl unavailable instead of reporting observed zero layers', () => {
     const report = buildTrustReport([], undefined, { now: NOW });
+    expect(report).toMatchObject({ availability: 'unavailable', score: null, level: null });
+    expect(recordTrust('unavailable', report, 'empty')).toEqual([]);
     expect(report.layers.schemaGraph).toBeUndefined();
     expect(report.layers.transparency).toBeUndefined();
     expect(report.coverage.schemaGraph?.unknown).toBe(100);
@@ -26,7 +28,7 @@ describe('EETV five-layer profile', () => {
     const legacy = readTrustHistory('p')[0];
     expect(legacy).toEqual(old);
     expect(comparableTrustSnapshots(legacy, { ...old, runId: 'old-2' })).toBe(true);
-    const report = buildTrustReport([], undefined, { now: NOW });
+    const report = buildTrustReport(diabetesPages().map(trustedArticle), undefined, { now: NOW });
     const modern = recordTrust('p', report, 'new')[1];
     expect(modern.profileId).toBe('eetv-5-layer-v2');
     expect(comparableTrustSnapshots(legacy, modern)).toBe(false);

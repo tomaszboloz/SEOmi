@@ -7,6 +7,7 @@ import { writeTasks } from '@/services/optimizationTasks/storage';
 import { verifyTask } from '@/services/optimizationTasks/verify';
 import type { OptimizationTask } from '@/services/optimizationTasks/types';
 import { createCrawlPageFixture as page } from './fixtures/crawl';
+import { node } from './eeatTrustFixtures';
 
 const U = 'https://site.test/p1';
 const task = (id: string, patch: Partial<OptimizationTask> = {}): OptimizationTask => ({
@@ -117,7 +118,7 @@ describe('optimizationTasks metricHistory and runVerification coverage', () => {
         start_url: U, duration_ms: 1000,
         pages: [
           page({ url: U, final_url: U, http_status: 0 }),
-          page({ url: u2, final_url: u2, http_status: 200, indexability_status: 'Eligible' }),
+          page({ url: u2, final_url: u2, http_status: 200, indexability_status: 'Eligible', schema_references: node('$', { type: 'Article' }) }),
           page({ url: u3, final_url: u3, http_status: 410 }),
         ],
       },
@@ -125,7 +126,7 @@ describe('optimizationTasks metricHistory and runVerification coverage', () => {
     const verified = runTaskVerification('eetv-mixed', run);
     expect(verified[0].status).toBe('implemented');
     expect(verified[1].status).toBe('verified');
-    expect(typeof verified[1].verdict?.delta).toBe('number');
+    expect(verified[1].verdict?.delta).toBe(-20);
     expect(verified[2].status).toBe('verified');
     expect(verified[2].verdict?.code).toBe('gone-ok');
     expect(readMetricHistory('eetv-mixed')).toHaveLength(2);
