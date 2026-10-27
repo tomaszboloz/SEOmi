@@ -1,6 +1,7 @@
 use super::extract_rag_sections;
 use crate::commands::site_crawler::models::RagSection;
 use scraper::Html;
+use serde_json::json;
 
 fn sections(html: &str) -> Vec<RagSection> {
     extract_rag_sections(&Html::parse_document(html))
@@ -40,6 +41,59 @@ fn counts_unordered_lists_and_skips_empty_headings() {
     let s = sections("<body><main><h2> </h2><ul><li>a</li></ul></main></body>");
     assert_eq!(s.len(), 1);
     assert_eq!(s[0].unordered_lists, 1);
+}
+
+#[test]
+fn emits_structural_evidence_for_real_headers_instructions_and_list_items() {
+    let s = sections(
+        "<body><main><p>Follow these steps:</p><ol><li>First step</li><li>Then wait</li></ol>\
+         <table><tr><td>Unheaded</td></tr></table>\
+         <table><thead><tr><th>Field</th></tr></thead><tr><td>Value</td></tr></table>\
+         <ul><li>short item</li><li>two words</li></ul>\
+         <dl><dt>Term</dt><dd>definition text</dd></dl></main></body>",
+    );
+    assert_eq!(s[0].tables, 2);
+    assert_eq!(s[0].table_headers, Some(1));
+    assert_eq!(s[0].ordered_list_instruction, Some(true));
+    assert_eq!(s[0].list_item_word_counts, Some(vec![2, 2, 2]));
+    let wire = serde_json::to_value(&s[0]).unwrap();
+    assert_eq!(wire.get("table_headers"), Some(&json!(1)));
+    assert_eq!(wire.get("ordered_list_instruction"), Some(&json!(true)));
+    assert_eq!(wire.get("list_item_word_counts"), Some(&json!([2, 2, 2])));
+}
+
+#[test]
+fn preserves_known_absence_without_inventing_list_item_evidence() {
+    let s = sections(
+        "<body><main><table><tr><td>Value</td></tr></table>\
+         <ol><li>First</li></ol></main></body>",
+    );
+    assert_eq!(s[0].table_headers, None);
+    assert_eq!(s[0].ordered_list_instruction, Some(false));
+    assert_eq!(s[0].list_item_word_counts, None);
+    let wire = serde_json::to_value(&s[0]).unwrap();
+    assert!(!wire.as_object().unwrap().contains_key("table_headers"));
+    assert_eq!(wire.get("ordered_list_instruction"), Some(&json!(false)));
+    assert!(!wire
+        .as_object()
+        .unwrap()
+        .contains_key("list_item_word_counts"));
+}
+
+#[test]
+fn omits_list_item_evidence_after_the_section_budget_is_exceeded() {
+    let mut html = String::from("<body><main><ul>");
+    for _ in 0..257 {
+        html.push_str("<li>item</li>");
+    }
+    html.push_str("</ul><ul><li>later short item</li></ul></main></body>");
+    let section = &sections(&html)[0];
+    assert_eq!(section.list_item_word_counts, None);
+    let wire = serde_json::to_value(section).unwrap();
+    assert!(!wire
+        .as_object()
+        .unwrap()
+        .contains_key("list_item_word_counts"));
 }
 
 #[test]

@@ -90,7 +90,7 @@ export const ApiSettingsTab: React.FC<ApiSettingsTabProps> = ({
 
       {/* Live project LLM ledger: shows live usage or empty state, never fictitious costs. */}
       <LlmEconomyBudgetSettings />
-      <LlmEconomyPanel projectId={activeProjectId} providerId={activeProvider} />
+      <LlmEconomyPanel projectId={activeProjectId} providerId={activeProjectId ? activeProvider : ''} />
 
       {secureStorageError &&<p role="alert" className="text-[11px] leading-4 text-rose-300">{secureStorageError}</p>}
       <button type="button" onClick={handleSaveGeneral} disabled={isSaving} aria-busy={isSaving} className="w-full h-9 bg-emerald-600 hover:bg-emerald-500 text-white rounded-lg font-semibold transition disabled:cursor-not-allowed disabled:opacity-60">

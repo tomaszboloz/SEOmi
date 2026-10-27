@@ -16,8 +16,10 @@ export const LlmEconomyPanel: React.FC<LlmEconomyPanelProps> = ({ summary: expli
   const { t } = useTranslation();
   const live = useLlmEconomy(projectId, providerId);
   const summary = explicitSummary ?? live.summary ?? { spentUsd: 0, savedUsd: 0, cacheHits: 0, calls: 0, remainingUsd: null, overBudget: false };
-  const storageUnavailable = live.storage?.budget === 'invalid' || live.storage?.budget === 'unavailable'
-    || live.storage?.spend === 'invalid' || live.storage?.spend === 'unavailable';
+  const storageUnavailable = Boolean(live.projectId) && (
+    live.storage?.budget === 'invalid' || live.storage?.budget === 'unavailable'
+    || live.storage?.spend === 'invalid' || live.storage?.spend === 'unavailable'
+  );
 
   return (
     <section className="space-y-2 rounded-lg border border-slate-800 p-4 text-sm text-slate-300" data-testid="llm-economy-panel">

@@ -6,20 +6,23 @@ import { LAYERS, LEVEL_BAR, LEVEL_TEXT } from './trustHelpers';
 
 export const TrustHero = ({ report, previous }: { report: TrustReport; previous?: TrustSnapshot }) => {
   const { t } = useTranslation();
-  const delta = previous ? report.score - previous.score : undefined;
+  const delta = report.score !== null && previous ? report.score - previous.score : undefined;
+  const tone = report.level ? LEVEL_TEXT[report.level] : 'text-slate-300';
   return (
     <section aria-labelledby="trust-hero-title" className="space-y-3 rounded-xl border border-slate-800 bg-slate-900/60 p-4">
       <h2 id="trust-hero-title" className="flex items-center gap-1 text-sm font-semibold text-slate-200">
         {t('trust.hero.label')} <HelpTip id="trust.trustScore" />
       </h2>
       <div className="flex flex-wrap items-end gap-4">
-        <p className={`text-5xl font-bold tabular-nums ${LEVEL_TEXT[report.level]}`} data-testid="trust-score">{report.score}</p>
-        <p className={`text-sm font-medium ${LEVEL_TEXT[report.level]}`}>{t(`trust.level.${report.level}`)}</p>
+        <p className={`text-5xl font-bold tabular-nums ${tone}`} data-testid="trust-score">{report.score ?? t('trust.layers.noData')}</p>
+        <p className={`text-sm font-medium ${tone}`}>{report.level ? t(`trust.level.${report.level}`) : t('trust.layers.noData')}</p>
         {delta !== undefined && <p className="text-xs text-slate-400">{t('trust.hero.previous', { score: previous?.score, delta: `${delta > 0 ? '+' : ''}${delta}` })}</p>}
       </div>
-      <div role="meter" aria-valuemin={0} aria-valuemax={100} aria-valuenow={report.score} aria-label={t('trust.hero.label')} className="h-2 overflow-hidden rounded bg-slate-800">
-        <div className={`h-2 ${LEVEL_BAR[report.level]}`} style={{ width: `${report.score}%` }} />
-      </div>
+      {report.score !== null && report.level && (
+        <div role="meter" aria-valuemin={0} aria-valuemax={100} aria-valuenow={report.score} aria-label={t('trust.hero.label')} className="h-2 overflow-hidden rounded bg-slate-800">
+          <div className={`h-2 ${LEVEL_BAR[report.level]}`} style={{ width: `${report.score}%` }} />
+        </div>
+      )}
       <p className="text-xs text-slate-300">{t('trust.hero.articles', { articles: report.articleCount, pages: report.pageCount })}</p>
       <p className="text-[11px] text-slate-500" data-testid="trust-profile">{t('trust.hero.profile', { profile: report.profileId, version: report.profileVersion })}</p>
       {report.ymyl && (

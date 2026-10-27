@@ -55,7 +55,7 @@ it('preserves the reviewed 120 contracts including suggestion provenance and unk
   expect(signatures).toHaveLength(120);
   expect(new Set(signatures.map(([name]) => name)).size).toBe(120);
   expect(createHash('sha256').update(JSON.stringify(signatures)).digest('hex'))
-    .toBe('bf71381cbfe0802a9bc4e707170a5c4a1cc4b1471a7826715b3064cf6779e6f6');
+    .toBe('2942cfc7b9cf13ce2f7c16bc1e2c36cbcf826b6ae07a554c7bf45607d79d63c1');
 });
 
 it('adds only optional observed query/page fields to the legacy GSC contract', () => {

@@ -48,7 +48,8 @@ describe('JSON-LD generator', () => {
 
 describe('trust history', () => {
   beforeEach(() => localStorage.clear());
-  const report = buildTrustReport([], undefined, { now: NOW });
+  const report = buildTrustReport([trustedArticle(diabetesPages()[0])], undefined, { now: NOW });
+  const unavailable = buildTrustReport([{ ...diabetesPages()[0], http_status: 500 }], undefined, { now: NOW });
 
   it('stores one snapshot per run, bounded, and rejects bad projects', () => {
     expect(recordTrust(null, report, 'r1')).toEqual([]);
@@ -60,6 +61,8 @@ describe('trust history', () => {
     expect(readTrustHistory('proj1')[0].score).toBe(55);
     for (let i = 0; i < TRUST_HISTORY_LIMIT + 5; i += 1) recordTrust('proj1', report, `run${i}`);
     expect(readTrustHistory('proj1')).toHaveLength(TRUST_HISTORY_LIMIT);
+    expect(recordTrust('proj1', unavailable, 'unusable')).toHaveLength(TRUST_HISTORY_LIMIT);
+    expect(readTrustHistory('proj1').some((item) => item.runId === 'unusable')).toBe(false);
   });
 
   it('drops malformed stored entries', () => {

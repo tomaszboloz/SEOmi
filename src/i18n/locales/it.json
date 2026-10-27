@@ -5031,14 +5031,38 @@
     "legacyNote": "This saved run included the brand in the question. It is not an unprompted visibility measurement."
   },
   "gscOpportunities": {
-    "title": "GSC opportunities",
-    "near": "Queries just beyond TOP10 (10–20)",
-    "ctr": "CTR below observed peers",
-    "empty": "No rows meet the evidence thresholds.",
-    "benchmark": "CTR {{actual}}% · peers {{expected}}% ({{count}} queries)",
-    "method": "Average position is a period metric. CTR uses other queries within ±1 position, at least 3 peers and 300 peer impressions. Signals require review; brand, intent and SERP features can differ.",
-    "aiOverview": "Google includes AI Overviews and AI Mode in total Web traffic. This report cannot separate their metrics.",
-    "source": "Google documentation"
+    "title": "Opportunità GSC",
+    "views": "Viste delle query",
+    "view": {
+      "all": "Tutte le query",
+      "near": "Query 10–20",
+      "ctr": "Anomalie CTR"
+    },
+    "filterLabel": "Filtra query",
+    "filterPlaceholder": "Contiene…",
+    "pageSize": "Righe per pagina",
+    "sort": {
+      "query": "Query",
+      "clicks": "Clic",
+      "impressions": "Impressioni",
+      "ctr": "CTR",
+      "position": "Posizione",
+      "benchmark": "Benchmark CTR"
+    },
+    "rows": "Visualizzazione {{from}}–{{to}} di {{count}}",
+    "previous": "Precedente",
+    "next": "Successiva",
+    "near": "Query appena oltre la TOP10 (10–20)",
+    "ctr": "CTR inferiore alle query di confronto osservate",
+    "empty": "Nessuna riga soddisfa le soglie di evidenza.",
+    "benchmark": "CTR {{actual}}% · query di confronto {{expected}}% ({{count}} query)",
+    "method": "La posizione media è una metrica del periodo. Il CTR usa altre query entro ±1 posizione, con almeno 3 query di confronto e 300 impression. I segnali richiedono una verifica; marca, intento e funzioni della SERP possono differire.",
+    "aiOverview": "Google include AI Overviews e AI Mode nel traffico Web totale. Questo report non può separare le relative metriche.",
+    "source": "Documentazione Google",
+    "truncatedWarning": "L’elenco delle query potrebbe essere incompleto a causa dei limiti del report. L’assenza di una query non implica una perdita di visibilità.",
+    "clear": "Cancella filtro di testo",
+    "noMatches": "Nessuna query contiene questo testo.",
+    "noQueries": "Non ci sono query disponibili in questo rapporto."
   },
   "gscCannibalization": {
     "title": "Possibile cannibalizzazione delle query",
@@ -7459,6 +7483,7 @@
     },
     "signals": {
       "claimEvidence": "Prove delle affermazioni",
+      "unbacked": "senza supporto",
       "associationNote": "L’associazione non dimostra la tesi; la sovrapposizione non imposta mai sourceChecked.",
       "title": "Fonti e trasparenza",
       "citations": "{{trusted}} pagine di articoli su {{pages}} rimandano a una fonte affidabile (.gov, .edu, PubMed, OMS).",
@@ -7508,6 +7533,7 @@
       "open": "Correggi con JSON-LD",
       "title": "Generatore JSON-LD",
       "intro": "Crea un grafo di Organization, Person e pagina con link sameAs. Controllalo e incollalo nell'head della pagina.",
+      "conflict": "Il campo {{property}} esistente per {{id}} è in conflitto con la proposta. Risolvi il conflitto prima dell’esportazione.",
       "close": "Chiudi",
       "field": {
         "personName": "Nome dell'autore",

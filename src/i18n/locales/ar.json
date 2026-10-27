@@ -5031,14 +5031,38 @@
     "legacyNote": "This saved run included the brand in the question. It is not an unprompted visibility measurement."
   },
   "gscOpportunities": {
-    "title": "GSC opportunities",
-    "near": "Queries just beyond TOP10 (10–20)",
-    "ctr": "CTR below observed peers",
-    "empty": "No rows meet the evidence thresholds.",
-    "benchmark": "CTR {{actual}}% · peers {{expected}}% ({{count}} queries)",
-    "method": "Average position is a period metric. CTR uses other queries within ±1 position, at least 3 peers and 300 peer impressions. Signals require review; brand, intent and SERP features can differ.",
-    "aiOverview": "Google includes AI Overviews and AI Mode in total Web traffic. This report cannot separate their metrics.",
-    "source": "Google documentation"
+    "title": "فرص GSC",
+    "views": "طرق عرض الاستعلامات",
+    "view": {
+      "all": "كل الاستعلامات",
+      "near": "استعلامات 10–20",
+      "ctr": "قيم CTR الشاذة"
+    },
+    "filterLabel": "تصفية الاستعلامات",
+    "filterPlaceholder": "يحتوي على…",
+    "pageSize": "صفوف لكل صفحة",
+    "sort": {
+      "query": "الاستعلام",
+      "clicks": "النقرات",
+      "impressions": "مرات الظهور",
+      "ctr": "CTR",
+      "position": "الموضع",
+      "benchmark": "معيار CTR"
+    },
+    "rows": "عرض {{from}}–{{to}} من أصل {{count}}",
+    "previous": "السابق",
+    "next": "التالي",
+    "near": "استعلامات بعد TOP10 مباشرة (10–20)",
+    "ctr": "CTR أقل من استعلامات المقارنة المرصودة",
+    "empty": "لا توجد صفوف تستوفي عتبات الأدلة.",
+    "benchmark": "CTR {{actual}}% · الاستعلامات المقارنة {{expected}}% ({{count}} استعلامات)",
+    "method": "متوسط الموضع هو مقياس للفترة. يستخدم CTR استعلامات أخرى ضمن نطاق ±1 موضع، مع 3 استعلامات مقارنة على الأقل و300 مرة ظهور. تتطلب الإشارات مراجعة؛ وقد تختلف العلامة التجارية والنية وميزات SERP.",
+    "aiOverview": "تدرج Google ميزتي AI Overviews وAI Mode ضمن إجمالي زيارات الويب. لا يمكن لهذا التقرير فصل مقاييسهما.",
+    "source": "وثائق Google",
+    "truncatedWarning": "قد تكون قائمة الاستعلامات غير مكتملة بسبب حدود التقرير. غياب استعلام لا يعني فقدان الظهور.",
+    "clear": "مسح مرشح النص",
+    "noMatches": "لا يتضمن أي استعلام هذا النص.",
+    "noQueries": "لا تتوفر استعلامات في هذا التقرير."
   },
   "gscCannibalization": {
     "title": "تعارض محتمل بين عناوين البحث",
@@ -7459,6 +7483,7 @@
     },
     "signals": {
       "claimEvidence": "أدلة الادعاءات",
+      "unbacked": "بلا دعم",
       "associationNote": "الارتباط ليس إثباتًا؛ لا يعيّن التطابق sourceChecked يدويًا.",
       "title": "المصادر والشفافية",
       "citations": "{{trusted}} من {{pages}} صفحة مقالات تربط بمصدر موثوق (.gov، .edu، PubMed، منظمة الصحة العالمية).",
@@ -7508,6 +7533,7 @@
       "open": "أصلح باستخدام JSON-LD",
       "title": "مولّد JSON-LD",
       "intro": "ينشئ مخططًا يضم Organization وPerson والصفحة مع روابط sameAs. راجعه ثم الصقه في head الصفحة.",
+      "conflict": "يتعارض الحقل {{property}} الموجود للمعرّف {{id}} مع الاقتراح. حل التعارض قبل التصدير.",
       "close": "إغلاق",
       "field": {
         "personName": "اسم المؤلف",

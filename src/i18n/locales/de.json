@@ -5031,14 +5031,38 @@
     "legacyNote": "This saved run included the brand in the question. It is not an unprompted visibility measurement."
   },
   "gscOpportunities": {
-    "title": "GSC opportunities",
-    "near": "Queries just beyond TOP10 (10–20)",
-    "ctr": "CTR below observed peers",
-    "empty": "No rows meet the evidence thresholds.",
-    "benchmark": "CTR {{actual}}% · peers {{expected}}% ({{count}} queries)",
-    "method": "Average position is a period metric. CTR uses other queries within ±1 position, at least 3 peers and 300 peer impressions. Signals require review; brand, intent and SERP features can differ.",
-    "aiOverview": "Google includes AI Overviews and AI Mode in total Web traffic. This report cannot separate their metrics.",
-    "source": "Google documentation"
+    "title": "GSC-Chancen",
+    "views": "Suchanfragenansichten",
+    "view": {
+      "all": "Alle Suchanfragen",
+      "near": "Suchanfragen 10–20",
+      "ctr": "CTR-Ausreißer"
+    },
+    "filterLabel": "Suchanfragen filtern",
+    "filterPlaceholder": "Enthält…",
+    "pageSize": "Zeilen pro Seite",
+    "sort": {
+      "query": "Suchanfrage",
+      "clicks": "Klicks",
+      "impressions": "Impressionen",
+      "ctr": "CTR",
+      "position": "Position",
+      "benchmark": "CTR-Benchmark"
+    },
+    "rows": "{{from}}–{{to}} von {{count}} angezeigt",
+    "previous": "Zurück",
+    "next": "Weiter",
+    "near": "Suchanfragen knapp hinter TOP10 (10–20)",
+    "ctr": "CTR unter beobachteten Vergleichswerten",
+    "empty": "Keine Zeilen erfüllen die Evidenzschwellen.",
+    "benchmark": "CTR {{actual}}% · Vergleichswerte {{expected}}% ({{count}} Suchanfragen)",
+    "method": "Die durchschnittliche Position ist eine Periodenkennzahl. Für die CTR werden andere Suchanfragen innerhalb von ±1 Position verwendet, mit mindestens 3 Vergleichssuchanfragen und 300 Impressionen. Die Signale müssen geprüft werden; Marke, Suchintention und SERP-Elemente können abweichen.",
+    "aiOverview": "Google zählt AI Overviews und AI Mode zum gesamten Web-Traffic. Dieser Bericht kann ihre Kennzahlen nicht getrennt ausweisen.",
+    "source": "Google-Dokumentation",
+    "truncatedWarning": "Die Suchanfragenliste kann aufgrund von Berichtslimits unvollständig sein. Eine fehlende Suchanfrage bedeutet nicht, dass Sichtbarkeit verloren ging.",
+    "clear": "Textfilter löschen",
+    "noMatches": "Keine Suchanfrage enthält diesen Text.",
+    "noQueries": "Dieser Bericht enthält keine verfügbaren Suchanfragen."
   },
   "gscCannibalization": {
     "title": "Mögliche Keyword-Kannibalisierung",
@@ -7459,6 +7483,7 @@
     },
     "signals": {
       "claimEvidence": "Belege für Aussagen",
+      "unbacked": "unbelegt",
       "associationNote": "Ein Zusammenhang ist kein Beleg; Überschneidung setzt sourceChecked nicht.",
       "title": "Quellen und Transparenz",
       "citations": "{{trusted}} von {{pages}} Artikelseiten verlinken auf eine vertrauenswürdige Quelle (.gov, .edu, PubMed, WHO).",
@@ -7508,6 +7533,7 @@
       "open": "Mit JSON-LD beheben",
       "title": "JSON-LD-Generator",
       "intro": "Erzeugt einen Graphen aus Organization, Person und Seite mit sameAs-Links. Prüfe ihn und füge ihn in den Head der Seite ein.",
+      "conflict": "Das vorhandene Feld {{property}} für {{id}} widerspricht dem Vorschlag. Vor dem Export muss der Konflikt gelöst werden.",
       "close": "Schließen",
       "field": {
         "personName": "Name des Autors",

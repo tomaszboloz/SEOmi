@@ -9,6 +9,7 @@ export const TRUST_PROFILE_ID = 'eetv-5-layer-v2';
 export const LEGACY_TRUST_PROFILE_ID = 'eetv-4-layer-v1';
 
 export type TrustLevel = 'strong' | 'adequate' | 'weak' | 'critical';
+export type TrustAvailability = 'observed' | 'unavailable';
 export type YmylCategory = 'health' | 'finance' | 'legal';
 export type TrustSeverity = 'critical' | 'warning' | 'info';
 export type TransparencyKind = 'editorial' | 'about' | 'contact' | 'registry';
@@ -89,8 +90,9 @@ export interface TransparencyDetail {
 }
 
 export interface TrustReport {
-  score: number;
-  level: TrustLevel;
+  availability: TrustAvailability;
+  score: number | null;
+  level: TrustLevel | null;
   /** 0-100 per layer, undefined when the crawl has no data for it. */
   layers: Partial<Record<TrustLayer, number>>;
   profileVersion: number;

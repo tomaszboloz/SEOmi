@@ -12,7 +12,7 @@ import i18n from '@/i18n';
 const empty = { baselineQueries: [], currentQueries: [], baselinePages: [], currentPages: [] };
 beforeEach(() => {
   localStorage.clear(); useProjectStore.setState({ activeProjectId: 'comparable-windows' });
-  useToolsStore.setState({ gscProperty: 'sc-domain:example.com', gscClientId: '', gscClientSecret: '',
+  useToolsStore.setState({ gscHydratedProjectId: 'comparable-windows', gscProperty: 'sc-domain:example.com', gscClientId: '', gscClientSecret: '',
     isGscConnected: true, isGscLoading: false, gscData: gscData({ start_date: '2026-08-01', end_date: '2026-08-28' }),
     gscProperties: [], gscError: null, gscInspectionResult: null, gscFilters: {} });
 });

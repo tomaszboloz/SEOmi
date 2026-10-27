@@ -5032,13 +5032,37 @@
   },
   "gscOpportunities": {
     "title": "Szanse w GSC",
+    "views": "Widoki fraz",
+    "view": {
+      "all": "Wszystkie frazy",
+      "near": "Frazy 10–20",
+      "ctr": "Odstające CTR"
+    },
+    "filterLabel": "Filtruj frazy",
+    "filterPlaceholder": "Zawiera…",
+    "pageSize": "Wierszy na stronę",
+    "sort": {
+      "query": "Fraza",
+      "clicks": "Kliknięcia",
+      "impressions": "Wyświetlenia",
+      "ctr": "CTR",
+      "position": "Pozycja",
+      "benchmark": "Benchmark CTR"
+    },
+    "rows": "Wyświetlono {{from}}–{{to}} z {{count}}",
+    "previous": "Poprzednia",
+    "next": "Następna",
     "near": "Frazy tuż za TOP10 (10–20)",
     "ctr": "CTR poniżej obserwowanych fraz",
     "empty": "Brak wierszy spełniających progi dowodowe.",
     "benchmark": "CTR {{actual}}% · inne frazy {{expected}}% ({{count}} fraz)",
     "method": "Średnia pozycja dotyczy okresu. CTR porównujemy z innymi frazami w zakresie ±1 pozycji, przy minimum 3 frazach i 300 wyświetleniach. Sygnały wymagają oceny; marka, intencja i elementy SERP mogą się różnić.",
     "aiOverview": "Google uwzględnia AI Overviews i AI Mode w łącznym ruchu Web. Ten raport nie pozwala wydzielić ich metryk.",
-    "source": "Dokumentacja Google"
+    "source": "Dokumentacja Google",
+    "truncatedWarning": "Lista fraz może być niepełna z powodu limitu raportu. Brak frazy nie oznacza utraty widoczności.",
+    "clear": "Wyczyść filtr tekstowy",
+    "noMatches": "Żadna fraza nie zawiera podanego tekstu.",
+    "noQueries": "W tym raporcie nie ma dostępnych fraz."
   },
   "gscCannibalization": {
     "title": "Możliwa kanibalizacja fraz",
@@ -7459,6 +7483,7 @@
     },
     "signals": {
       "claimEvidence": "Dowody twierdzeń",
+      "unbacked": "bez potwierdzenia",
       "associationNote": "Powiązanie nie jest wynikanie; podobieństwo nie ustawia ręcznego sourceChecked.",
       "title": "Źródła i transparentność",
       "citations": "{{trusted}} z {{pages}} stron artykułów linkuje do zaufanego źródła (.gov, .edu, PubMed, WHO).",
@@ -7508,6 +7533,7 @@
       "open": "Napraw w JSON-LD",
       "title": "Generator JSON-LD",
       "intro": "Tworzy graf Organization, Person i strony z linkami sameAs. Sprawdź go i wklej do sekcji head strony.",
+      "conflict": "Istniejące pole {{property}} dla {{id}} koliduje z propozycją. Rozwiąż konflikt przed eksportem.",
       "close": "Zamknij",
       "field": {
         "personName": "Imię i nazwisko autora",

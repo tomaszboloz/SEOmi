@@ -21,6 +21,7 @@ export const persistCompletedTrustRun = (projectId: string | null | undefined, r
   const focus = buildSiteFocusReport(pages, run.startUrl, { manualTopic: readManualTopic(projectId), now: run.completedAt });
   const report = buildTrustReport(pages, focus, { now: run.completedAt });
   const before = readTrustHistory(projectId);
+  if (report.score === null) return { report, history: before, alerted: false };
   const previous = before.filter((entry) => entry.runId !== run.id).at(-1);
   const history = recordTrust(projectId, report, run.id);
   const current: TrustSnapshot = { at: report.generatedAt, runId: run.id, score: report.score, layers: report.layers, profileVersion: report.profileVersion, profileId: report.profileId, coverage: report.coverage };

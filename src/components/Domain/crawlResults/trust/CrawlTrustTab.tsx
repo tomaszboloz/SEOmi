@@ -23,7 +23,7 @@ export const CrawlTrustTab = ({ pages, startUrl, run, projectId }: CrawlTrustTab
   const scope = useMemo(() => Symbol('trust-run'), [projectId, run?.id, pages]);
   const activeScope = useRef<symbol | undefined>(scope); activeScope.current = scope;
   useEffect(() => { activeScope.current = scope; return () => { if (activeScope.current === scope) activeScope.current = undefined; }; }, [scope]);
-  const registryOptions = useMemo(() => ({ fetcher: nativeRegistryFetcher, maxRequests: 8 }), [scope]);
+  const registryOptions = useMemo(() => ({ fetcher: nativeRegistryFetcher, maxRequests: 8, projectId: projectId ?? undefined, runId: run?.id }), [scope, projectId, run?.id]);
   const [evidence, setEvidence] = useState<{ scope: symbol; profiles: Record<string, ProfileEvidence> }>();
   const { report, previous } = useTrust(pages, startUrl, run, projectId, evidence?.scope === scope ? evidence.profiles : undefined);
   const [form, setForm] = useState<TrustJsonLdInput | null>(null);

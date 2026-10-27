@@ -4,7 +4,7 @@ import { analyzeCitations, citationScore, citationsUnverified } from '@/services
 import { buildRegistry, nodesOf } from '@/services/eeatTrust/graph';
 import { analyzeTransparency, transparencyScore } from '@/services/eeatTrust/transparency';
 import { detectYmyl } from '@/services/eeatTrust/ymyl';
-import { AUTHOR_ID, NOW, diabetesFocus, diabetesPages, extLink, trustedArticle, withRefs } from './eeatTrustFixtures';
+import { AUTHOR_ID, NOW, diabetesFocus, diabetesPages, extLink, node, trustedArticle, withRefs } from './eeatTrustFixtures';
 
 const articles = (pages = diabetesPages()) => pages.filter((page) => page.url.includes('/articles/'));
 
@@ -117,11 +117,27 @@ describe('helpers', () => {
 });
 
 describe('buildTrustReport', () => {
-  it('assesses an empty crawl as critical with no article findings', () => {
+  it('marks a crawl without usable pages as unavailable with no numeric score', () => {
     const report = buildTrustReport([], undefined, { now: NOW });
-    expect(report).toMatchObject({ score: 0, level: 'critical', articleCount: 0, generatedAt: NOW });
+    expect(report).toMatchObject({ availability: 'unavailable', score: null, level: null, layers: {}, articleCount: 0, generatedAt: NOW });
     expect(report.findings.map((item) => item.code)).toContain('no-articles');
     expect(report.layers.authorAlignment).toBeUndefined();
     expect(buildTrustReport([]).generatedAt).toMatch(/^\d{4}-/);
+  });
+
+  it.each([
+    { http_status: 500, request_error_kind: null },
+    { http_status: 200, request_error_kind: 'timeout' },
+    { http_status: 0, request_error_kind: null },
+  ])('does not score unusable pages (%j)', (status) => {
+    const report = buildTrustReport([{ ...diabetesPages()[0], ...status }], undefined, { now: NOW });
+    expect(report).toMatchObject({ availability: 'unavailable', score: null, level: null, pageCount: 0, layers: {} });
+  });
+
+  it('keeps an observed zero numeric score distinct from unavailable data', () => {
+    const report = buildTrustReport([withRefs({ ...diabetesPages()[0], http_status: 200, request_error_kind: null }, node('$', { type: 'Article' }))], undefined, { now: NOW });
+    expect(report.availability).toBe('observed');
+    expect(report.score).toBe(0);
+    expect(report.level).toBe('critical');
   });
 });

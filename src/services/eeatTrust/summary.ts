@@ -9,8 +9,8 @@ import type { TransparencyKind, TrustReport } from './types';
 export const TRUST_PDF_AUTHORS = 15;
 
 export interface TrustPdfSummary {
-  score: number;
-  level: string;
+  score: number | null;
+  level: string | null;
   layers: { schema_graph: number | null; same_as: number | null; author_alignment: number | null; citation_quality: number | null; transparency: number | null };
   profile_version: number;
   profile_id: string;

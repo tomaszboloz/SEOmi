@@ -9,7 +9,7 @@ describe('SearchConsoleHub daily performance charts', () => {
     localStorage.clear();
     useProjectStore.setState({ activeProjectId: 'gsc-chart-project' });
     useToolsStore.setState({
-      isGscConnected: true,
+      isGscConnected: true, gscHydratedProjectId: 'gsc-chart-project',
       gscClientId: '',
       gscProperties: [{ siteUrl: 'sc-domain:example.com', permissionLevel: 'siteOwner' }],
       gscProperty: 'sc-domain:example.com',

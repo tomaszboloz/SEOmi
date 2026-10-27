@@ -11,7 +11,7 @@ beforeEach(() => {
   const row = (query: string, page: string) => ({ query, page, clicks: 1, impressions: 50, ctr: 2, position: 8 });
   const pairs = Array.from({ length: 249 }, (_, i) => row(`single ${i}`, `https://example.com/${i}`));
   pairs.push(row('target query', 'https://example.com/a'), row('target query', 'https://example.com/b'));
-  useToolsStore.setState({ gscProperty: 'sc-domain:example.com', gscClientId: '', gscClientSecret: '',
+  useToolsStore.setState({ gscHydratedProjectId: 'live-joint-report', gscProperty: 'sc-domain:example.com', gscClientId: '', gscClientSecret: '',
     isGscConnected: true, isGscLoading: false, gscData: gscData({ query_pages: pairs }),
     gscProperties: [], gscError: null, gscInspectionResult: null, gscFilters: {} });
 });

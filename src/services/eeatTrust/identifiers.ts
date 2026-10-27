@@ -65,6 +65,14 @@ export const classifyProfiles = (urls: string[]): ProfileEvidence[] => {
   return [...seen.values()];
 };
 
-/** Rec(E) = min(1, sum of tier weight over syntax-valid profiles): a declaration indicator. */
+/**
+ * Rec(E) = min(1, sum of tier weight over profiles whose declaration was
+ * syntactically valid. Fetching is an additional observation and must not
+ * erase the original declaration signal; an unavailable fetch likewise does
+ * not turn a valid declaration into zero. Mismatch and invalid are excluded.
+ */
 export const declarationRecall = (profiles: ProfileEvidence[]): number =>
-  Math.min(1, profiles.reduce((sum, profile) => sum + (profile.status === 'syntax-valid' && profile.tier ? TIER_WEIGHTS[profile.tier] : 0), 0));
+  Math.min(1, profiles.reduce((sum, profile) => {
+    const declarationStillValid = ['syntax-valid', 'fetched', 'verified', 'unavailable'].includes(profile.status);
+    return sum + (declarationStillValid && profile.tier ? TIER_WEIGHTS[profile.tier] : 0);
+  }, 0));

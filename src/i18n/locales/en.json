@@ -5032,13 +5032,37 @@
   },
   "gscOpportunities": {
     "title": "GSC opportunities",
+    "views": "Query views",
+    "view": {
+      "all": "All queries",
+      "near": "Queries 10–20",
+      "ctr": "CTR outliers"
+    },
+    "filterLabel": "Filter queries",
+    "filterPlaceholder": "Contains…",
+    "pageSize": "Rows per page",
+    "sort": {
+      "query": "Query",
+      "clicks": "Clicks",
+      "impressions": "Impressions",
+      "ctr": "CTR",
+      "position": "Position",
+      "benchmark": "CTR benchmark"
+    },
+    "rows": "Showing {{from}}–{{to}} of {{count}}",
+    "previous": "Previous",
+    "next": "Next",
     "near": "Queries just beyond TOP10 (10–20)",
     "ctr": "CTR below observed peers",
     "empty": "No rows meet the evidence thresholds.",
     "benchmark": "CTR {{actual}}% · peers {{expected}}% ({{count}} queries)",
     "method": "Average position is a period metric. CTR uses other queries within ±1 position, at least 3 peers and 300 peer impressions. Signals require review; brand, intent and SERP features can differ.",
     "aiOverview": "Google includes AI Overviews and AI Mode in total Web traffic. This report cannot separate their metrics.",
-    "source": "Google documentation"
+    "source": "Google documentation",
+    "truncatedWarning": "The query list may be incomplete because of report limits. A missing query does not imply lost visibility.",
+    "clear": "Clear text filter",
+    "noMatches": "No queries contain this text.",
+    "noQueries": "No query rows are available in this report."
   },
   "gscCannibalization": {
     "title": "Potential query cannibalization",
@@ -7459,6 +7483,7 @@
     },
     "signals": {
       "claimEvidence": "Claim evidence",
+      "unbacked": "unbacked",
       "associationNote": "Association evidence is not entailment; overlap never sets manual sourceChecked.",
       "title": "Sources and transparency",
       "citations": "{{trusted}} of {{pages}} article pages link to a trusted source (.gov, .edu, PubMed, WHO).",

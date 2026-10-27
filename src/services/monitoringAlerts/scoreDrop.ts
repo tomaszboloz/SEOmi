@@ -9,12 +9,12 @@ const round1 = (value: number): number => Math.round(value * 10) / 10;
 
 export const evaluateScoreDropAlert = (
   kind: ScoreDropKind,
-  previous: { score: number } | undefined,
-  next: { score: number },
+  previous: { score: number | null } | undefined,
+  next: { score: number | null },
   sourceId: string,
   settings: MonitoringAlertSettings = defaultMonitoringAlertSettings(),
 ): MonitoringAlert | null => {
-  if (!previous || !Number.isFinite(previous.score) || !Number.isFinite(next.score)) return null;
+  if (!previous || typeof previous.score !== 'number' || typeof next.score !== 'number' || !Number.isFinite(previous.score) || !Number.isFinite(next.score)) return null;
   const difference = previous.score - next.score;
   const points = round1(difference);
   const tolerance = Number.EPSILON * Math.max(Math.abs(previous.score), Math.abs(next.score), 1);

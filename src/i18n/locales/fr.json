@@ -5031,14 +5031,38 @@
     "legacyNote": "This saved run included the brand in the question. It is not an unprompted visibility measurement."
   },
   "gscOpportunities": {
-    "title": "GSC opportunities",
-    "near": "Queries just beyond TOP10 (10–20)",
-    "ctr": "CTR below observed peers",
-    "empty": "No rows meet the evidence thresholds.",
-    "benchmark": "CTR {{actual}}% · peers {{expected}}% ({{count}} queries)",
-    "method": "Average position is a period metric. CTR uses other queries within ±1 position, at least 3 peers and 300 peer impressions. Signals require review; brand, intent and SERP features can differ.",
-    "aiOverview": "Google includes AI Overviews and AI Mode in total Web traffic. This report cannot separate their metrics.",
-    "source": "Google documentation"
+    "title": "Opportunités GSC",
+    "views": "Vues des requêtes",
+    "view": {
+      "all": "Toutes les requêtes",
+      "near": "Requêtes 10–20",
+      "ctr": "Valeurs aberrantes CTR"
+    },
+    "filterLabel": "Filtrer les requêtes",
+    "filterPlaceholder": "Contient…",
+    "pageSize": "Lignes par page",
+    "sort": {
+      "query": "Requête",
+      "clicks": "Clics",
+      "impressions": "Impressions",
+      "ctr": "CTR",
+      "position": "Position",
+      "benchmark": "Référence CTR"
+    },
+    "rows": "Affichage de {{from}} à {{to}} sur {{count}}",
+    "previous": "Précédent",
+    "next": "Suivant",
+    "near": "Requêtes juste après le TOP10 (10–20)",
+    "ctr": "CTR inférieur aux requêtes comparables observées",
+    "empty": "Aucune ligne ne respecte les seuils de preuve.",
+    "benchmark": "CTR {{actual}}% · requêtes comparables {{expected}}% ({{count}} requêtes)",
+    "method": "La position moyenne est une métrique de période. Le CTR utilise d’autres requêtes à ±1 position, avec au moins 3 requêtes comparables et 300 impressions. Ces signaux doivent être vérifiés ; la marque, l’intention et les fonctionnalités de la SERP peuvent différer.",
+    "aiOverview": "Google inclut AI Overviews et AI Mode dans le trafic Web total. Ce rapport ne peut pas séparer leurs métriques.",
+    "source": "Documentation Google",
+    "truncatedWarning": "La liste des requêtes peut être incomplète en raison des limites du rapport. L’absence d’une requête n’implique pas une perte de visibilité.",
+    "clear": "Effacer le filtre de texte",
+    "noMatches": "Aucune requête ne contient ce texte.",
+    "noQueries": "Aucune requête n’est disponible dans ce rapport."
   },
   "gscCannibalization": {
     "title": "Cannibalisation potentielle des requêtes",
@@ -7459,6 +7483,7 @@
     },
     "signals": {
       "claimEvidence": "Preuves des affirmations",
+      "unbacked": "sans preuve",
       "associationNote": "Une association n’est pas une preuve ; le chevauchement ne définit jamais sourceChecked.",
       "title": "Sources et transparence",
       "citations": "{{trusted}} pages d'articles sur {{pages}} renvoient vers une source fiable (.gov, .edu, PubMed, OMS).",
@@ -7508,6 +7533,7 @@
       "open": "Corriger avec JSON-LD",
       "title": "Générateur JSON-LD",
       "intro": "Crée un graphe Organization, Person et page avec des liens sameAs. Vérifiez-le, puis collez-le dans le head de la page.",
+      "conflict": "Le champ {{property}} existant pour {{id}} est en conflit avec la proposition. Résolvez-le avant l’export.",
       "close": "Fermer",
       "field": {
         "personName": "Nom de l'auteur",

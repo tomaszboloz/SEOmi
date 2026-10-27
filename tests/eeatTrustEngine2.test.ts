@@ -62,6 +62,14 @@ describe('anonymous YMYL site', () => {
   });
 });
 
+describe('unavailable trust summaries', () => {
+  it('keeps the PDF score, level and layers unknown when no page was usable', () => {
+    const report = buildTrustReport([{ ...diabetesPages()[0], http_status: 500 }], undefined, { now: NOW });
+    expect(report.availability).toBe('unavailable');
+    expect(summarizeTrust(report)).toMatchObject({ score: null, level: null, layers: { schema_graph: null, author_alignment: null, citation_quality: null, transparency: null } });
+  });
+});
+
 describe('weak author entities', () => {
   const { pages, focus } = site((page, index) => withRefs(page, [
     ...node('$', { type: 'BlogPosting', props: [['author', index % 2 ? 'https://diabetes.test/#ghost' : 'Jan Kowalski']] }),

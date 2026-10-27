@@ -37,7 +37,16 @@ describe('approval and role gates', () => {
     const s = make('developer', true);
     const plan = await planPatch(s.request, s.cms.send);
     await expect(applyPatch(plan, { approvedBy: 'a', planHash: plan.planHash }, s.deps)).rejects.toMatchObject({ code: 'fact-gate-required' });
-    const ok = await applyPatch(plan, { approvedBy: 'a', planHash: plan.planHash, factGatePassed: true }, s.deps);
+    const reviewedSource = {
+      sourceId: 'cms-reviewed-pricing',
+      targetId: `${plan.target.baseUrl}\u0000${plan.target.contentId}`,
+      planHash: plan.planHash,
+      text: plan.before,
+      revision: plan.baseRevision,
+      reviewedBy: 'a',
+      reviewedAt: '2026-10-27T12:00:00.000Z',
+    };
+    const ok = await applyPatch(plan, { approvedBy: 'a', planHash: plan.planHash, factGatePassed: true, sources: [reviewedSource] }, s.deps);
     expect(ok.status).toBe('verified');
   });
   it('dry-run audits and writes nothing', async () => {

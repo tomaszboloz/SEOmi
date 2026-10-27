@@ -12,7 +12,7 @@ export const TrustSignals = ({ report }: { report: TrustReport }) => {
       <p className="text-xs text-slate-300">{t('trust.signals.citations', { trusted: citations.pagesWithTrusted, pages: citations.pagesAnalyzed })}</p>
       {citations.claimEvidence && citations.claimEvidence.length > 0 && (
         <details className="text-xs text-slate-300">
-          <summary className="cursor-pointer">{t('trust.signals.claimEvidence')} · {citations.claimEvidence.length} · unbacked {citations.unbackedHighStakesClaims ?? 0}</summary>
+          <summary className="cursor-pointer">{t('trust.signals.claimEvidence')} · {citations.claimEvidence.length} · {t('trust.signals.unbacked')} {citations.unbackedHighStakesClaims ?? 0}</summary>
           <ul className="mt-1 space-y-1 text-slate-400">
             {citations.claimEvidence.slice(0, 12).map((claim) => <li key={`${claim.start}|${claim.end}`}><span className="text-slate-200">{claim.relation}</span> · {claim.evidence} · {claim.claim}</li>)}
           </ul>

@@ -5031,14 +5031,38 @@
     "legacyNote": "This saved run included the brand in the question. It is not an unprompted visibility measurement."
   },
   "gscOpportunities": {
-    "title": "GSC opportunities",
-    "near": "Queries just beyond TOP10 (10–20)",
-    "ctr": "CTR below observed peers",
-    "empty": "No rows meet the evidence thresholds.",
-    "benchmark": "CTR {{actual}}% · peers {{expected}}% ({{count}} queries)",
-    "method": "Average position is a period metric. CTR uses other queries within ±1 position, at least 3 peers and 300 peer impressions. Signals require review; brand, intent and SERP features can differ.",
-    "aiOverview": "Google includes AI Overviews and AI Mode in total Web traffic. This report cannot separate their metrics.",
-    "source": "Google documentation"
+    "title": "Oportunidades de GSC",
+    "views": "Vistas de consultas",
+    "view": {
+      "all": "Todas las consultas",
+      "near": "Consultas 10–20",
+      "ctr": "Valores atípicos de CTR"
+    },
+    "filterLabel": "Filtrar consultas",
+    "filterPlaceholder": "Contiene…",
+    "pageSize": "Filas por página",
+    "sort": {
+      "query": "Consulta",
+      "clicks": "Clics",
+      "impressions": "Impresiones",
+      "ctr": "CTR",
+      "position": "Posición",
+      "benchmark": "Referencia CTR"
+    },
+    "rows": "Mostrando {{from}}–{{to}} de {{count}}",
+    "previous": "Anterior",
+    "next": "Siguiente",
+    "near": "Consultas justo después del TOP10 (10–20)",
+    "ctr": "CTR por debajo de las consultas comparables observadas",
+    "empty": "Ninguna fila cumple los umbrales de evidencia.",
+    "benchmark": "CTR {{actual}}% · consultas comparables {{expected}}% ({{count}} consultas)",
+    "method": "La posición media es una métrica del periodo. El CTR usa otras consultas dentro de ±1 posición, con al menos 3 consultas comparables y 300 impresiones. Las señales requieren revisión; la marca, la intención y las funciones de las SERP pueden diferir.",
+    "aiOverview": "Google incluye AI Overviews y AI Mode en el tráfico web total. Este informe no puede separar sus métricas.",
+    "source": "Documentación de Google",
+    "truncatedWarning": "La lista de consultas puede estar incompleta debido a los límites del informe. La ausencia de una consulta no implica pérdida de visibilidad.",
+    "clear": "Borrar filtro de texto",
+    "noMatches": "Ninguna consulta contiene este texto.",
+    "noQueries": "No hay consultas disponibles en este informe."
   },
   "gscCannibalization": {
     "title": "Posible canibalización de consultas",
@@ -7459,6 +7483,7 @@
     },
     "signals": {
       "claimEvidence": "Evidencia de afirmaciones",
+      "unbacked": "sin respaldo",
       "associationNote": "La asociación no demuestra la afirmación; el solapamiento nunca marca sourceChecked.",
       "title": "Fuentes y transparencia",
       "citations": "{{trusted}} de {{pages}} páginas de artículos enlazan a una fuente fiable (.gov, .edu, PubMed, OMS).",
@@ -7508,6 +7533,7 @@
       "open": "Corregir con JSON-LD",
       "title": "Generador de JSON-LD",
       "intro": "Crea un grafo de Organization, Person y página con enlaces sameAs. Revísalo y pégalo en el head de la página.",
+      "conflict": "El campo {{property}} existente para {{id}} entra en conflicto con la propuesta. Resuélvelo antes de exportar.",
       "close": "Cerrar",
       "field": {
         "personName": "Nombre del autor",

@@ -5031,14 +5031,38 @@
     "legacyNote": "This saved run included the brand in the question. It is not an unprompted visibility measurement."
   },
   "gscOpportunities": {
-    "title": "GSC opportunities",
-    "near": "Queries just beyond TOP10 (10–20)",
-    "ctr": "CTR below observed peers",
-    "empty": "No rows meet the evidence thresholds.",
-    "benchmark": "CTR {{actual}}% · peers {{expected}}% ({{count}} queries)",
-    "method": "Average position is a period metric. CTR uses other queries within ±1 position, at least 3 peers and 300 peer impressions. Signals require review; brand, intent and SERP features can differ.",
-    "aiOverview": "Google includes AI Overviews and AI Mode in total Web traffic. This report cannot separate their metrics.",
-    "source": "Google documentation"
+    "title": "GSCの機会",
+    "views": "クエリ表示",
+    "view": {
+      "all": "すべてのクエリ",
+      "near": "クエリ 10–20",
+      "ctr": "CTR外れ値"
+    },
+    "filterLabel": "クエリを絞り込む",
+    "filterPlaceholder": "含む…",
+    "pageSize": "1ページの行数",
+    "sort": {
+      "query": "クエリ",
+      "clicks": "クリック数",
+      "impressions": "表示回数",
+      "ctr": "CTR",
+      "position": "掲載順位",
+      "benchmark": "CTRベンチマーク"
+    },
+    "rows": "{{count}}件中 {{from}}–{{to}}件を表示",
+    "previous": "前へ",
+    "next": "次へ",
+    "near": "TOP10直下のクエリ（10–20位）",
+    "ctr": "観測された比較クエリよりCTRが低いクエリ",
+    "empty": "エビデンスのしきい値を満たす行はありません。",
+    "benchmark": "CTR {{actual}}% · 比較クエリ {{expected}}%（{{count}}件）",
+    "method": "平均掲載順位は期間の指標です。CTRは±1順位以内の他のクエリを使い、比較クエリを3件以上、表示回数を300以上必要とします。シグナルは確認が必要で、ブランド・検索意図・SERP機能によって異なる場合があります。",
+    "aiOverview": "GoogleはAI OverviewsとAI ModeをWeb全体のトラフィックに含めています。このレポートではそれらの指標を分離できません。",
+    "source": "Googleのドキュメント",
+    "truncatedWarning": "レポートの制限により、クエリ一覧は不完全な場合があります。クエリがないことは、表示の喪失を意味しません。",
+    "clear": "テキストフィルターをクリア",
+    "noMatches": "このテキストを含むクエリはありません。",
+    "noQueries": "このレポートには利用できるクエリがありません。"
   },
   "gscCannibalization": {
     "title": "クエリの競合候補",
@@ -7459,6 +7483,7 @@
     },
     "signals": {
       "claimEvidence": "主張の証拠",
+      "unbacked": "裏付けなし",
       "associationNote": "関連付けは裏付けではありません。重複で手動sourceCheckedは設定されません。",
       "title": "情報源と透明性",
       "citations": "記事{{pages}}ページのうち{{trusted}}ページが信頼できる情報源（.gov、.edu、PubMed、WHO）へリンクしています。",
@@ -7508,6 +7533,7 @@
       "open": "JSON-LDで修正",
       "title": "JSON-LDジェネレーター",
       "intro": "Organization、Person、ページをsameAsリンクでつないだグラフを作成します。内容を確認し、ページのheadに貼り付けてください。",
+      "conflict": "{{id}} の既存の {{property}} が提案と競合しています。エクスポート前に解決してください。",
       "close": "閉じる",
       "field": {
         "personName": "著者名",

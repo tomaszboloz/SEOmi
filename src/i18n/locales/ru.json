@@ -5031,14 +5031,38 @@
     "legacyNote": "This saved run included the brand in the question. It is not an unprompted visibility measurement."
   },
   "gscOpportunities": {
-    "title": "GSC opportunities",
-    "near": "Queries just beyond TOP10 (10–20)",
-    "ctr": "CTR below observed peers",
-    "empty": "No rows meet the evidence thresholds.",
-    "benchmark": "CTR {{actual}}% · peers {{expected}}% ({{count}} queries)",
-    "method": "Average position is a period metric. CTR uses other queries within ±1 position, at least 3 peers and 300 peer impressions. Signals require review; brand, intent and SERP features can differ.",
-    "aiOverview": "Google includes AI Overviews and AI Mode in total Web traffic. This report cannot separate their metrics.",
-    "source": "Google documentation"
+    "title": "Возможности GSC",
+    "views": "Представления запросов",
+    "view": {
+      "all": "Все запросы",
+      "near": "Запросы 10–20",
+      "ctr": "Выбросы CTR"
+    },
+    "filterLabel": "Фильтр запросов",
+    "filterPlaceholder": "Содержит…",
+    "pageSize": "Строк на странице",
+    "sort": {
+      "query": "Запрос",
+      "clicks": "Клики",
+      "impressions": "Показы",
+      "ctr": "CTR",
+      "position": "Позиция",
+      "benchmark": "Бенчмарк CTR"
+    },
+    "rows": "Показано {{from}}–{{to}} из {{count}}",
+    "previous": "Назад",
+    "next": "Далее",
+    "near": "Запросы сразу за TOP10 (10–20)",
+    "ctr": "CTR ниже наблюдаемых сопоставимых запросов",
+    "empty": "Нет строк, соответствующих порогам доказательности.",
+    "benchmark": "CTR {{actual}}% · сопоставимые запросы {{expected}}% ({{count}} запросов)",
+    "method": "Средняя позиция — показатель за период. Для CTR используются другие запросы в пределах ±1 позиции, не менее 3 сопоставимых запросов и 300 показов. Сигналы требуют проверки; бренд, намерение и элементы SERP могут различаться.",
+    "aiOverview": "Google включает AI Overviews и AI Mode в общий веб-трафик. Этот отчёт не позволяет разделить их показатели.",
+    "source": "Документация Google",
+    "truncatedWarning": "Список запросов может быть неполным из-за ограничений отчёта. Отсутствие запроса не означает потерю видимости.",
+    "clear": "Очистить текстовый фильтр",
+    "noMatches": "Ни один запрос не содержит этот текст.",
+    "noQueries": "В этом отчёте нет доступных запросов."
   },
   "gscCannibalization": {
     "title": "Возможная каннибализация запросов",
@@ -7459,6 +7483,7 @@
     },
     "signals": {
       "claimEvidence": "Доказательства утверждений",
+      "unbacked": "без подтверждения",
       "associationNote": "Связь не доказывает тезис; совпадение не устанавливает ручной sourceChecked.",
       "title": "Источники и прозрачность",
       "citations": "{{trusted}} из {{pages}} страниц статей ссылаются на надёжный источник (.gov, .edu, PubMed, ВОЗ).",
@@ -7508,6 +7533,7 @@
       "open": "Исправить через JSON-LD",
       "title": "Генератор JSON-LD",
       "intro": "Создаёт граф Organization, Person и страницы со ссылками sameAs. Проверьте его и вставьте в head страницы.",
+      "conflict": "Существующее поле {{property}} для {{id}} конфликтует с предложением. Устраните конфликт перед экспортом.",
       "close": "Закрыть",
       "field": {
         "personName": "Имя автора",

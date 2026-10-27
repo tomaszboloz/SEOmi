@@ -6,6 +6,8 @@ export interface RegistryResponse { status: number; url: string; body: string; s
 export interface RegistryFetcher { (url: string, signal: AbortSignal): Promise<RegistryResponse> }
 export interface RegistryOptions {
   fetcher?: RegistryFetcher; now?: () => string; ttlMs?: number; maxBytes?: number; timeoutMs?: number; maxRequests?: number;
+  /** Optional durable scope labels; the options object itself remains part of the cache scope. */
+  projectId?: string; runId?: string;
   matches?: (profile: ProfileEvidence, response: RegistryResponse) => boolean | undefined;
 }
 export interface RegistryResult { profile: ProfileEvidence; stale: boolean }
@@ -18,11 +20,34 @@ export const nativeRegistryFetcher: RegistryFetcher = async (url) => {
 };
 
 const LIMITS = { ttlMs: 86_400_000, maxBytes: 512_000, timeoutMs: 4_000, maxRequests: 8 };
+const MAX_CACHE_ENTRIES = 128;
 const cache = new Map<string, { profile: ProfileEvidence; at: number }>();
 const budgets = new WeakMap<object, number>();
+const identities = new WeakMap<object, number>();
+let nextIdentity = 1;
 const hosts: Record<string, string[]> = {
   orcid: ['orcid.org'], wikidata: ['wikidata.org'], register: ['scholar.google.com', 'researchgate.net', 'scopus.com'],
 };
+
+const identityOf = (value: object | undefined): number => {
+  if (!value) return 0;
+  const known = identities.get(value);
+  if (known) return known;
+  const identity = nextIdentity++;
+  identities.set(value, identity);
+  return identity;
+};
+
+/** Cache only within the same run/options/matcher provenance, never by URL alone. */
+const cacheKey = (profile: ProfileEvidence, options: RegistryOptions): string => [
+  profile.url,
+  profile.kind,
+  options.projectId ?? '',
+  options.runId ?? '',
+  identityOf(options),
+  identityOf(options.fetcher),
+  identityOf(options.matches),
+].join('\u0000');
 
 const privateHost = (host: string): boolean => {
   const value = host.toLowerCase().replace(/\.$/, '');
@@ -59,7 +84,8 @@ export const verifyProfile = async (profile: ProfileEvidence, options: RegistryO
   if (profile.status !== 'syntax-valid') return { profile, stale: false };
   const now = options.now ?? (() => new Date().toISOString());
   const nowMs = Date.parse(now()); const ttl = options.ttlMs ?? LIMITS.ttlMs;
-  const cached = cache.get(profile.url);
+  const key = cacheKey(profile, options);
+  const cached = cache.get(key);
   if (cached && nowMs - cached.at <= ttl) return { profile: cached.profile, stale: false };
   const url = safeRegistryUrl(profile.url, profile.kind);
   if (!url || !options.fetcher) return { profile: { ...profile, status: 'unavailable', detail: 'registry-unavailable' }, stale: Boolean(cached) };
@@ -72,7 +98,11 @@ export const verifyProfile = async (profile: ProfileEvidence, options: RegistryO
     if (!safeRegistryUrl(response.url, profile.kind)) return { profile: { ...profile, status: 'unavailable', detail: 'unsafe-redirect' }, stale: false };
     if (response.body.length > (options.maxBytes ?? LIMITS.maxBytes)) return { profile: { ...profile, status: 'unavailable', detail: 'body-limit' }, stale: false };
     const result = { ...profile, status: statusFor(profile, response, options), fetchedAt: now(), expiresAt: new Date(nowMs + ttl).toISOString(), sourceDate: response.sourceDate };
-    cache.set(profile.url, { profile: result, at: nowMs });
+    if (!cache.has(key) && cache.size >= MAX_CACHE_ENTRIES) {
+      const oldest = cache.keys().next().value;
+      if (oldest !== undefined) cache.delete(oldest);
+    }
+    cache.set(key, { profile: result, at: nowMs });
     return { profile: result, stale: false };
   } catch { return { profile: { ...profile, status: 'unavailable', detail: 'transport-error' }, stale: Boolean(cached) }; }
   finally { clearTimeout(timeout); }

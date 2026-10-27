@@ -22,9 +22,10 @@ describe('trustHelpers', () => {
     expect(Object.keys(SEVERITY_TEXT).sort()).toEqual(['critical', 'info', 'warning']);
   });
 
-  it('lists the four trust layers with matching help ids', () => {
-    expect(LAYERS.map((l) => l.layer)).toEqual(['schemaGraph', 'authorAlignment', 'citationQuality', 'transparency']);
-    LAYERS.forEach((l) => expect(l.help).toBe(`trust.${l.layer}`));
+  it('lists all five trust layers with the shared schema help for sameAs', () => {
+    expect(LAYERS.map((l) => l.layer)).toEqual(['schemaGraph', 'sameAs', 'authorAlignment', 'citationQuality', 'transparency']);
+    LAYERS.filter((l) => l.layer !== 'sameAs').forEach((l) => expect(l.help).toBe(`trust.${l.layer}`));
+    expect(LAYERS.find((l) => l.layer === 'sameAs')?.help).toBe('trust.schemaGraph');
     expect(FOCUS_RING).toContain('focus-visible:ring-2');
   });
 });

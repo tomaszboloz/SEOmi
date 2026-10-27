@@ -5031,14 +5031,38 @@
     "legacyNote": "This saved run included the brand in the question. It is not an unprompted visibility measurement."
   },
   "gscOpportunities": {
-    "title": "GSC opportunities",
-    "near": "Queries just beyond TOP10 (10–20)",
-    "ctr": "CTR below observed peers",
-    "empty": "No rows meet the evidence thresholds.",
-    "benchmark": "CTR {{actual}}% · peers {{expected}}% ({{count}} queries)",
-    "method": "Average position is a period metric. CTR uses other queries within ±1 position, at least 3 peers and 300 peer impressions. Signals require review; brand, intent and SERP features can differ.",
-    "aiOverview": "Google includes AI Overviews and AI Mode in total Web traffic. This report cannot separate their metrics.",
-    "source": "Google documentation"
+    "title": "GSC机会",
+    "views": "查询视图",
+    "view": {
+      "all": "全部查询",
+      "near": "查询 10–20",
+      "ctr": "CTR 异常值"
+    },
+    "filterLabel": "筛选查询",
+    "filterPlaceholder": "包含…",
+    "pageSize": "每页行数",
+    "sort": {
+      "query": "查询",
+      "clicks": "点击次数",
+      "impressions": "展示次数",
+      "ctr": "CTR",
+      "position": "位置",
+      "benchmark": "CTR 基准"
+    },
+    "rows": "显示 {{from}}–{{to}}，共 {{count}} 条",
+    "previous": "上一页",
+    "next": "下一页",
+    "near": "刚好位于TOP10之后的查询（10–20）",
+    "ctr": "CTR低于观测到的对比查询",
+    "empty": "没有符合证据阈值的行。",
+    "benchmark": "CTR {{actual}}% · 对比查询 {{expected}}%（{{count}} 个查询）",
+    "method": "平均位置是周期指标。CTR使用位置相差±1以内的其他查询，至少需要3个对比查询和300次展示。信号需要人工复核；品牌、意图和SERP功能可能有所不同。",
+    "aiOverview": "Google将AI Overviews和AI Mode计入整体Web流量。本报告无法分离它们的指标。",
+    "source": "Google文档",
+    "truncatedWarning": "由于报告限制，查询列表可能不完整。缺少某个查询并不意味着可见性丢失。",
+    "clear": "清除文本筛选",
+    "noMatches": "没有查询包含此文本。",
+    "noQueries": "此报告中没有可用的查询。"
   },
   "gscCannibalization": {
     "title": "潜在查询蚕食",
@@ -7459,6 +7483,7 @@
     },
     "signals": {
       "claimEvidence": "主张证据",
+      "unbacked": "无依据",
       "associationNote": "关联不等于支持；重叠不会设置手动 sourceChecked。",
       "title": "来源与透明度",
       "citations": "{{pages}} 个文章页面中有 {{trusted}} 个链接到可信来源（.gov、.edu、PubMed、WHO）。",
@@ -7508,6 +7533,7 @@
       "open": "用 JSON-LD 修复",
       "title": "JSON-LD 生成器",
       "intro": "生成包含 sameAs 链接的 Organization、Person 和页面图谱。检查后粘贴到页面的 head 中。",
+      "conflict": "{{id}} 的现有 {{property}} 与此提案冲突。请在导出前解决。",
       "close": "关闭",
       "field": {
         "personName": "作者姓名",
