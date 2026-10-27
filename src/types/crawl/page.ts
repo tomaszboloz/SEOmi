@@ -1,6 +1,7 @@
 import type { CrawledDiscoverySource, CrawledRobotsDecision, CrawledIndexabilityVerdict, CrawledContentTerm, CrawledFocusPhraseEvidence, CrawledSchemaReference, CrawledSchemaFinding, CrawledHtmlValidationFinding, CrawledPageIssue } from './findings';
 import type { CrawledRedirectHop, CrawledCanonicalTarget, CrawledClientRedirect, CrawledHreflang, CrawledDuplicateHeading, CrawledPaginationLink } from './navigation';
 import type { CrawledLink } from './links';
+import type { ContentSection } from './sections';
 import type { CrawledImage, CrawledFrame, CrawledSocialResourceCheck, CrawledSocialMetaTag } from './media';
 import type { FaviconData } from '../audit/technical';
 import type { CrawledCustomSearchResult } from './configuration';
@@ -88,6 +89,8 @@ export interface CrawledPageSummary {
   heading_texts?: HeadingTexts;
   /** Characters of cleaned main-content text behind focus_terms. */
   focus_text_chars?: number;
+  /** Heading-delimited main-content blocks for the Information Gain score; absent in older saved runs. */
+  content_sections?: ContentSection[];
   /** Bounded semantic-content excerpts retained only for local source-context checks. */
   semantic_excerpts?: string[];
   /** Internal links discovered in main content only for semantic architecture analysis. */

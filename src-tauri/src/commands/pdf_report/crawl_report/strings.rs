@@ -3,6 +3,7 @@
 //! lives in the locale files. Templates use `{{0}}`, `{{1}}` placeholders.
 
 pub mod focus;
+pub mod infogain;
 mod labels;
 mod labels_cols;
 pub mod recs;

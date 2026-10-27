@@ -1,5 +1,6 @@
 export type * from './crawl/findings';
 export type * from './crawl/page';
+export type * from './crawl/sections';
 export type * from './crawl/navigation';
 export type * from './crawl/links';
 export type * from './crawl/media';

@@ -34,4 +34,27 @@ pub struct CrawledPageFocus {
     /// Characters of cleaned main-content text the focus terms came from.
     #[serde(default)]
     pub focus_text_chars: u32,
+    /// Heading-delimited main-content blocks (Information Gain score).
+    #[serde(default)]
+    pub content_sections: Vec<ContentSection>,
+}
+
+/// One heading-delimited block of main content for the Information Gain score.
+/// Text is capped, `words` counts the whole block.
+#[derive(Debug, Serialize, Deserialize, Clone, Default, PartialEq)]
+pub struct ContentSection {
+    /// Heading text; empty for the intro before the first heading.
+    #[serde(default)]
+    pub heading: String,
+    /// 0 for the intro, otherwise heading level 1-3.
+    #[serde(default)]
+    pub level: u8,
+    #[serde(default)]
+    pub text: String,
+    #[serde(default)]
+    pub words: u32,
+    #[serde(default)]
+    pub tables: u32,
+    #[serde(default)]
+    pub lists: u32,
 }

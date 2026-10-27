@@ -18,6 +18,7 @@ mod sec_dupes;
 mod sec_extra;
 mod sec_focus;
 mod sec_http;
+mod sec_infogain;
 mod sec_links;
 mod sec_media;
 mod sec_meta;
@@ -43,6 +44,8 @@ mod tests_focus;
 #[cfg(test)]
 mod tests_focus_more;
 #[cfg(test)]
+mod tests_infogain;
+#[cfg(test)]
 mod tests_more;
 #[cfg(test)]
 mod tests_sections;
@@ -55,9 +58,10 @@ use serde_json::Value;
 use strings::{report as s, t, tf};
 use tables::Table;
 
-fn coverage(tables: &[Table], focus: Option<&Table>) -> Table {
-    let mut rows: Vec<Vec<String>> = focus
-        .into_iter()
+fn coverage(tables: &[Table], sections: &[&Table]) -> Table {
+    let mut rows: Vec<Vec<String>> = sections
+        .iter()
+        .copied()
         .chain(tables)
         .map(|table| {
             let count = table.rows.len() + table.omitted;
@@ -111,10 +115,15 @@ pub fn crawl_pdf(run: &Value) -> Vec<u8> {
         doc.crawl_focus(&run["focus"]);
         focus_tables::pages(&run["focus"])
     });
+    let info_gain_table = sec_infogain::present(run).then(|| {
+        doc.crawl_info_gain(&run["info_gain"]);
+        sec_infogain::pages(&run["info_gain"])
+    });
     doc.heading(t(s::DETAILS));
     let details = detail_tables::detail_tables(&c);
     details.iter().for_each(|table| doc.data_table(table));
-    doc.data_table(&coverage(&details, focus_table.as_ref()));
+    let sections: Vec<&Table> = focus_table.iter().chain(info_gain_table.iter()).collect();
+    doc.data_table(&coverage(&details, &sections));
     doc.paragraph(MARGIN, CONTENT_W, Style::CAPTION, t(s::METHOD_FULL));
     doc.finish()
 }

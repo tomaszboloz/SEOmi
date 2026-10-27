@@ -1,3 +1,4 @@
+use super::content_sections::extract_content_sections;
 use super::focus_counter::{FocusCounter, STRONG_ZONE_WEIGHT};
 use super::semantic_chrome::{
     has_semantic_content_root, semantic_chrome_element, semantic_content_contains,
@@ -60,6 +61,7 @@ pub(super) fn extract_page_focus(
         focus_terms: counter.into_terms(),
         heading_texts: headings,
         focus_text_chars: body.chars().count().min(u32::MAX as usize) as u32,
+        content_sections: extract_content_sections(document),
     }
 }
 
