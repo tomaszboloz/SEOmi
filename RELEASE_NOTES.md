@@ -1,3 +1,14 @@
+# SEOmi 0.4.46 — release notes
+
+## Fixed
+- The AIO passage inspector shows the passage's real UTF-16 source offsets, or says they are unavailable, instead of estimating an end offset from the text length.
+- Each passage lists its score, self-containment, SPO density and answer-first components plus the detected SPO relation count. Missing values read as unknown, and answer-first reads as n/a when it does not apply.
+- Problem spans are highlighted only when their offsets fall inside the passage text and on UTF-16 character boundaries. Overlapping spans merge into one highlight; invalid spans are listed and counted but not highlighted. Labels are translated in all 12 locales.
+
+## Quality
+- Added regressions for offsets, score formatting at 0 and 1, surrogate-pair and out-of-range spans, unique accessible section labels and single rendering of passage text.
+- The MCP stdio fuzz test imports `process` and `setImmediate` from Node modules, matching the other MCP server tests.
+
 # SEOmi 0.4.45 — release notes
 
 ## Fixed

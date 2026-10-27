@@ -1,8 +1,10 @@
 import assert from 'node:assert/strict';
 import { spawn } from 'node:child_process';
 import { once } from 'node:events';
+import process from 'node:process';
 import { createInterface } from 'node:readline';
 import test from 'node:test';
+import { setImmediate } from 'node:timers';
 import { InMemoryTransport } from '@modelcontextprotocol/sdk/inMemory.js';
 import { createSeoMiServer } from '../dist/server.js';
 import { withClient } from './testHelpers.mjs';
