@@ -53,6 +53,7 @@ export const HeaderLanguageSelector = () => {
                 key={l.code}
                 type="button"
                 role="menuitem"
+                aria-label={`${l.nativeName} ${l.code}`}
                 onClick={() => {
                   setLanguage(l.code);
                   setLanguageOpen(false);

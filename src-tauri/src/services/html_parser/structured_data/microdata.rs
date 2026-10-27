@@ -33,7 +33,7 @@ pub(in crate::services::html_parser) fn extract_microdata(document: &Html) -> Ve
             "itemprops": itemprops,
         });
         list.push(StructuredData {
-            data_type: if itemtype.map_or(true, str::is_empty) {
+            data_type: if itemtype.is_none_or(str::is_empty) {
                 "Unknown Microdata item".into()
             } else {
                 itemtype.unwrap().into()

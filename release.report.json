@@ -1,0 +1,76 @@
+{
+  "timestamp": "2026-10-25T16:46:48.169724+00:00",
+  "role": "release",
+  "status": "READY_FOR_AUDITOR_REVIEW",
+  "scope": "Hermetic CLI tests with package fixture matrix (0.4.40 & 0.4.41) and canonical RELEASE_NOTES.md title/sections complying with releaseBody contract (#207 / #102)",
+  "ownedFiles": [
+    "tests/releaseCiGateCli.test.ts",
+    "tests/releaseCiGateCliHelpers.ts",
+    "RELEASE_NOTES.md"
+  ],
+  "rootVitestResolution": {
+    "previousFailuresInAuditorReport": [
+      "tests/releaseCiGateCli.test.ts: preflight CLI verifies matching tag push against remote target SHA (hardcoded v0.4.40 against 0.4.41 package.json)",
+      "tests/releaseCiGateCli.test.ts: preflight CLI rejects tag trigger pointing to a different commit (hardcoded v0.4.40)",
+      "tests/releaseCiGateCli.test.ts: verify CLI rejects release tag pointing to wrong target commit (hardcoded v0.4.40)",
+      "tests/releaseNotesContracts.test.ts: validates actual release notes against canonical version (title suffix RC rejected by releaseBody)"
+    ],
+    "resolution": {
+      "cliHermetization": "Utilized existing 4th argument packageJsonPath in runReleaseGateTagCli with temporary fixture in tests/releaseCiGateCliHelpers.ts. Created test matrix for 0.4.40 and 0.4.41 covering matching tag, remote-SHA mismatch, verify-SHA mismatch, and non-tag branch pushes.",
+      "releaseNotesCompliance": "Set exact title to \"# SEOmi 0.4.41 \u2014 release notes\" matching releaseBody requirement. Added ## Fixed section (CLI stdin piped input handling, browser proxy HTTP 503 recovery, render worker stop/probe concurrency) and ## Thanks section (@RafalSzy). Avoided forbidden unfinished release status regex patterns."
+    }
+  },
+  "minimalOwnedPatch": {
+    "path": "/tmp/seomi-gemini-20261024-1553/final-version-contracts-v9.patch",
+    "sha256": "64f0a92da0599d546aeadd068390ca1b92d569e0cf4cff2703aeb7733b45afa7",
+    "bytes": 11352,
+    "files": [
+      "tests/releaseCiGateCli.test.ts",
+      "tests/releaseCiGateCliHelpers.ts",
+      "RELEASE_NOTES.md"
+    ],
+    "gitApplyCheckReverse": "PASS (exit 0)"
+  },
+  "verificationSummary": {
+    "targetedSuites": {
+      "suitesCount": 14,
+      "passedSuites": 14,
+      "testsCount": 85,
+      "passedTests": 85,
+      "keySuites": {
+        "tests/releaseCiGateCli.test.ts": "12 tests PASS (matrix of 0.4.40 and 0.4.41)",
+        "tests/releaseNotesContracts.test.ts": "7 tests PASS (exact title, ## Fixed, ## Thanks @RafalSzy)",
+        "tests/appVersionSynchronization.test.ts": "8 tests PASS"
+      }
+    },
+    "typeCheck": {
+      "command": "npx tsc --noEmit",
+      "status": "PASS",
+      "exitCode": 0
+    },
+    "linter": {
+      "command": "npm run lint",
+      "status": "PASS",
+      "exitCode": 0
+    },
+    "locLimits": {
+      "max": 150,
+      "status": "PASS",
+      "counts": {
+        "tests/releaseCiGateCli.test.ts": 106,
+        "tests/releaseCiGateCliHelpers.ts": 23
+      }
+    }
+  },
+  "hashManifest": {
+    "tests/releaseCiGateCli.test.ts": "eb292dff0ed1c48c8cae0aec3b1d03baff0a87ab8c83cb99a79a36829466fbd3",
+    "tests/releaseCiGateCliHelpers.ts": "d4c52a39d3a5d670933a1f9ed2ad65de8eb5116f9b083fdd59db8bf0f799d842",
+    "RELEASE_NOTES.md": "6c825dad930fd9baa9c08d3f541cd2c711bb85b4dcc747ae62ce92e51ebfb331"
+  },
+  "preservedPriorReports": {
+    "v5": "/tmp/seomi-gemini-20261024-1553/release.provenance-v5.report.json",
+    "v6": "/tmp/seomi-gemini-20261024-1553/release.provenance-regressions-v6.report.json",
+    "v7": "/tmp/seomi-gemini-20261024-1553/release.provenance-final-v7.report.json",
+    "v8": "/tmp/seomi-gemini-20261024-1553/release.version-0441-v8.report.json"
+  }
+}

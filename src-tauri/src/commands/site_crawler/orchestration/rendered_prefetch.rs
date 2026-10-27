@@ -11,7 +11,7 @@ use super::super::{
     robots_matching::robots_allows,
 };
 use super::page_fetch_rendered::render_options;
-use super::rendered_prefetch_failure::record_task_failure;
+use super::rendered_prefetch_failure::handle_joined_prefetch_task;
 use super::setup::CrawlSetup;
 use super::state::CrawlLoopState;
 
@@ -125,12 +125,7 @@ pub async fn prefetch_rendered_pages<R: Runtime>(
         };
         match joined {
             None => break,
-            Some(Ok((url, session, result))) => {
-                state.rendered_sessions.extend(session);
-                state.prefetched_responses.insert(url, result);
-            }
-            Some(Err(error)) if error.is_cancelled() => continue,
-            Some(Err(error)) => record_task_failure(state, &mut task_urls, &error),
+            Some(task_result) => handle_joined_prefetch_task(state, &mut task_urls, task_result),
         }
     }
 }

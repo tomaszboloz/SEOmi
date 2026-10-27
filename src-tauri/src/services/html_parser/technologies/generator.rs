@@ -25,7 +25,7 @@ pub(in crate::services::html_parser) fn generator_signals(
                 && value
                     .get(prefix.len()..)
                     .and_then(|remainder| remainder.chars().next())
-                    .map_or(true, char::is_whitespace)
+                    .is_none_or(char::is_whitespace)
         });
         if let Some((prefix, name)) = declared {
             let suffix = value.get(prefix.len()..).unwrap_or_default().trim_start();

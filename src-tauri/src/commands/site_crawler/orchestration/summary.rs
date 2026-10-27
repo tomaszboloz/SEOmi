@@ -73,11 +73,7 @@ pub fn build_crawl_result<R: Runtime>(input: BuildCrawlResultInput<'_, R>) -> Si
             reasons.push("max_depth".into());
         }
         if state.pages.iter().any(|page| {
-            page.body_truncated
-                && page
-                    .content_type
-                    .as_deref()
-                    .map_or(true, is_html_media_type)
+            page.body_truncated && page.content_type.as_deref().is_none_or(is_html_media_type)
         }) {
             reasons.push("max_response_bytes".into());
         }

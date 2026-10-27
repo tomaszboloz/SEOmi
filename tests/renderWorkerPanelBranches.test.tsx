@@ -61,13 +61,14 @@ describe('RenderWorkerPanel branches', () => {
   it('starts, shows lease details, then stops the worker', async () => {
     vi.mocked(getRenderWorkerStatus).mockResolvedValue(true);
     vi.mocked(startRenderWorker).mockResolvedValue(lease());
-    vi.mocked(stopRenderWorker).mockResolvedValue(undefined);
+    vi.mocked(stopRenderWorker).mockImplementation(async () => {
+      vi.mocked(getRenderWorkerStatus).mockResolvedValue(false);
+    });
     render(<RenderWorkerPanel />);
     fireEvent.click(startBtn());
     expect(await screen.findByText('tok-1')).toBeTruthy();
     expect(screen.getByText('1.2.3')).toBeTruthy();
     expect(screen.getByRole('status').textContent).toBe(t('started'));
-    vi.mocked(getRenderWorkerStatus).mockResolvedValue(false);
     fireEvent.click(screen.getByRole('button', { name: t('stop') }));
     await waitFor(() => expect(screen.getByRole('status').textContent).toBe(t('stopped')));
     expect(screen.queryByText('tok-1')).toBeNull();

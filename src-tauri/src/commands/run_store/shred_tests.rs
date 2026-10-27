@@ -84,3 +84,24 @@ fn truncated_or_tampered_ciphertext_reads_as_none() {
         .unwrap();
     assert_eq!(shred::read_record(&conn, "p", "k", "r").unwrap(), None);
 }
+
+#[test]
+fn corrupted_key_or_nonce_in_database_reads_as_none() {
+    let conn = full();
+    shred::put_encrypted(&conn, "p", "k", "r", "s", b"secret").unwrap();
+    conn.execute(
+        "UPDATE subject_keys SET key = x'01020304' WHERE project_id = 'p'",
+        [],
+    )
+    .unwrap();
+    assert_eq!(shred::read_record(&conn, "p", "k", "r").unwrap(), None);
+
+    let conn = full();
+    shred::put_encrypted(&conn, "p", "k", "r2", "s2", b"secret").unwrap();
+    conn.execute(
+        "UPDATE records SET data = x'010203' WHERE rec_key = 'r2'",
+        [],
+    )
+    .unwrap();
+    assert_eq!(shred::read_record(&conn, "p", "k", "r2").unwrap(), None);
+}
