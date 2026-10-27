@@ -63,6 +63,10 @@ export const composeSchemaGraph = (input: SchemaCompositionInput): SchemaComposi
   return { schema, text, script: `<script type="application/ld+json">\n${text}\n</script>`, added, conflicts, warnings };
 };
 
-/** JSON-LD is rendered as data; escape script terminators and JavaScript line separators before export. */
+/**
+ * JSON-LD is rendered as data. Every `<` becomes `<`: escaping only `</script` still lets `<!--<script`
+ * switch the HTML parser to the double-escaped state, where the closing tag no longer ends the element.
+ * Line separators are escaped for JavaScript consumers. The parsed JSON value is unchanged.
+ */
 export const serializeJsonLd = (schema: Record<string, unknown>): string => JSON.stringify(schema, null, 2)
-  .replace(/<\/script/giu, '<\\/script').replace(/\u2028/gu, '\\u2028').replace(/\u2029/gu, '\\u2029');
+  .replace(/</gu, '\\u003c').replace(/\u2028/gu, '\\u2028').replace(/\u2029/gu, '\\u2029');

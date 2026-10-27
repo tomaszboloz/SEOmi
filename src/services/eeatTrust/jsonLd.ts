@@ -1,3 +1,4 @@
+import { serializeJsonLd } from '@/services/schemaGenerator/composition';
 import type { AuthorEntity, TrustReport, YmylCategory } from './types';
 
 export interface TrustJsonLdInput {
@@ -21,8 +22,8 @@ export type JsonLdIssue = 'missing-name' | 'invalid-organization-url' | 'invalid
 
 export interface TrustJsonLd { ok: boolean; graph: Record<string, unknown>; text: string; issues: JsonLdIssue[] }
 
-export const safeJsonLdText = (value: Record<string, unknown>): string => JSON.stringify(value, null, 2)
-  .replace(/<\/script/giu, '<\\/script').replace(/\u2028/gu, '\\u2028').replace(/\u2029/gu, '\\u2029');
+/** Single serializer shared with schema composition, so both exports escape the same way. */
+export const safeJsonLdText = serializeJsonLd;
 
 const web = (value: string | undefined): string | undefined => {
   try {
