@@ -45,6 +45,12 @@ pub struct CrawledPageFocus {
     /// payload, empty app root). `None` when the page was not assessed.
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub is_js_shell_suspected: Option<bool>,
+    /// Which signal triggered `is_js_shell_suspected`; absent when not a shell.
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub js_shell_reason: Option<super::JsShellReason>,
+    /// Text/title/links parsed from the shell's embedded JSON payload.
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub spa_payload: Option<super::SpaPayload>,
 }
 
 /// One heading-delimited section of main content (AI Overviews / RAG chunking).

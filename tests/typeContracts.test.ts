@@ -12,7 +12,7 @@ const modules = codeFiles('src/types').map(file => relative('src/types', file)).
 const additive: Record<string, string[]> = {
   SecurityHeaders: ['content_security_policy_report_only', 'repeated_headers'],
   GscPerformanceData: ['query_pages', 'query_pages_may_be_truncated'],
-  CrawledPageSummary: ['semantic_language', 'focus_terms', 'heading_texts', 'focus_text_chars', 'content_date', 'rag_sections'],
+  CrawledPageSummary: ['semantic_language', 'focus_terms', 'heading_texts', 'focus_text_chars', 'content_date', 'rag_sections', 'is_js_shell_suspected', 'js_shell_reason', 'spa_payload'],
   CrawledLink: ['zone', 'zone_method', 'context_before', 'context_after'],
   SiteCrawlResult: ['score_version', 'robots_txt_evaluation_status', 'robots_txt_warning', 'robots_txt_status_code', 'robots_txt_final_url', 'robots_txt_redirect_chain'],
   CrawlRunRecord: ['startedAt'],
@@ -85,7 +85,7 @@ it('adds only optional focus fields to the crawled page contract', () => {
   const source = parse('crawl/page.ts');
   const page = source.statements.find(node => ts.isInterfaceDeclaration(node) && node.name.text === 'CrawledPageSummary');
   if (!page || !ts.isInterfaceDeclaration(page)) throw new Error('Missing crawled page contract');
-  for (const name of ['focus_terms', 'heading_texts', 'focus_text_chars', 'content_date', 'rag_sections']) {
+  for (const name of ['focus_terms', 'heading_texts', 'focus_text_chars', 'content_date', 'rag_sections', 'is_js_shell_suspected', 'js_shell_reason', 'spa_payload']) {
     const field = page.members.find(member => member.name?.getText(source) === name);
     if (!field || !ts.isPropertySignature(field)) throw new Error(`Missing additive field ${name}`);
     expect(field.questionToken).toBeDefined();
