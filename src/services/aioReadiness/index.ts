@@ -5,6 +5,7 @@ export { chunkSections, type RawChunk } from './chunking';
 export { scoreChunk, countDangling, answerFirstScore } from './chunkScore';
 export { extractTriples } from './spo';
 export { rulesFor, AIO_LANGUAGES, type LanguageRules } from './languageRules';
-export { buildRewritePrompt, rewritePassage, type RewriteOutcome } from './rewrite';
+export { buildRewritePrompt, rewritePassage, type RewriteOptions, type RewriteOutcome } from './rewrite';
+export { checkRewritePreservation, compareRewrite, extractPreservationTokens, passageRevision, profileRewrite, type PreservationCheck, type PreservationTokens, type RewriteComparison, type RewriteProfile } from './rewriteReview';
 export { readAioHistory, recordAioSnapshot, makeAioSnapshot, aioHistoryKey, validAioProject, AIO_HISTORY_LIMIT, type AioSnapshot } from './history';
 export { summarizeAio, crawlAioSummary, AIO_PDF_PAGES, AIO_PDF_PASSAGES, type AioPdfSummary } from './summary';

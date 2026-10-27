@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useTrust } from '@/hooks/useTrust';
 import { prefillFromAuthor, type AuthorEntity, type TrustJsonLdInput } from '@/services/eeatTrust';
+import { nodesOf } from '@/services/eeatTrust/graph';
 import type { CrawledPageSummary, CrawlRunRecord } from '@/types';
 import { Empty } from '../CrawlViewPrimitives';
 import { TrustEntities } from './TrustEntities';
@@ -22,6 +23,12 @@ export const CrawlTrustTab = ({ pages, startUrl, run, projectId }: CrawlTrustTab
   const { report, previous } = useTrust(pages, startUrl, run, projectId);
   const [form, setForm] = useState<TrustJsonLdInput | null>(null);
   if (!report) return <Empty>{t('trust.empty')}</Empty>;
+  const observed = { '@graph': pages.flatMap((page) => nodesOf(page).map((node) => ({
+    ...(node.id ? { '@id': node.id } : {}),
+    ...(node.types.length ? { '@type': node.types.length === 1 ? node.types[0] : node.types } : {}),
+    ...(node.name ? { name: node.name } : {}),
+    ...Object.fromEntries(Object.entries(node.props).map(([key, values]) => [key, values.length === 1 ? values[0] : values])),
+  }))) };
   const open = (author: AuthorEntity) => setForm(prefillFromAuthor(author, report, startUrl));
   return (
     <div className="space-y-4">
@@ -32,7 +39,7 @@ export const CrawlTrustTab = ({ pages, startUrl, run, projectId }: CrawlTrustTab
         <TrustEntities report={report} onGenerate={open} />
         <TrustSignals report={report} />
       </div>
-      {form && <TrustJsonLdGenerator key={form.personName + form.pageUrl} initial={form} onClose={() => setForm(null)} />}
+      {form && <TrustJsonLdGenerator key={form.personName + form.pageUrl} initial={form} observed={observed} onClose={() => setForm(null)} />}
     </div>
   );
 };
