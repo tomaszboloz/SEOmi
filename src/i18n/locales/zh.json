@@ -7735,7 +7735,9 @@
     "spent": "已花费：{{value}}",
     "saved": "缓存和本地运行节省：{{value}}",
     "hits": "缓存命中：{{count}}",
-    "leaves": "页面文本将发送到本设备之外的 {{provider}}。"
+    "leaves": "页面文本将发送到本设备之外的 {{provider}}。",
+    "remaining": "剩余预算: {{value}}",
+    "overBudget": "超出每月 LLM 预算。"
   },
   "templateGovernor": {
     "title": "程序化模板质量",
@@ -7753,14 +7755,20 @@
   },
   "causalMarket": {
     "title": "因果影响",
-    "empty": "历史数据不足：改动前至少 7 天，改动后至少 1 天。",
+    "empty": "无法估计：需要变更前至少 7 天和变更后 1 天、真实的外部市场序列以及独立对照证据。",
     "effect": "每日效果：{{effect}}（{{lower}} 至 {{upper}}）",
     "updateWindow": "Google 更新窗口：结果无定论。",
     "normalized": "已按市场基线归一化",
     "positive": "正向效果",
     "negative": "负向效果",
     "noEffect": "无可测量的效果",
-    "inconclusive": "无定论"
+    "inconclusive": "无定论",
+    "evidence": "证据：市场 {{market}}；对照 {{control}}",
+    "unknown": "未知",
+    "marketUnavailable": "外部市场基线不可用或无效；不会推断因果成功或失败。",
+    "controlUnavailable": "缺少独立对照证据；不会推断因果成功或失败。",
+    "updateWindowReason": "分析与已确认的 Google 排名更新重叠；结果无法确定。",
+    "disclaimer": "这是基于外部市场和对照证据的估计，不是因果关系证明。"
   },
   "snapshots": {
     "newerData": "有更新的抓取数据。",

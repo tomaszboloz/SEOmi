@@ -7735,7 +7735,9 @@
     "spent": "Wydano: {{value}}",
     "saved": "Zaoszczędzono dzięki cache i modelom lokalnym: {{value}}",
     "hits": "Trafienia cache: {{count}}",
-    "leaves": "Treść stron jest wysyłana poza to urządzenie do: {{provider}}."
+    "leaves": "Treść stron jest wysyłana poza to urządzenie do: {{provider}}.",
+    "remaining": "Pozostały budżet: {{value}}",
+    "overBudget": "Miesięczny budżet LLM został przekroczony."
   },
   "templateGovernor": {
     "title": "Jakość szablonów programatycznych",
@@ -7753,14 +7755,20 @@
   },
   "causalMarket": {
     "title": "Wpływ przyczynowy",
-    "empty": "Za mało danych: potrzeba min. 7 dni przed zmianą i 1 dnia po niej.",
+    "empty": "Nie można oszacować: potrzeba min. 7 dni przed zmianą, 1 dnia po niej, rzeczywistej zewnętrznej serii rynku i niezależnych dowodów kontroli.",
     "effect": "Efekt dzienny: {{effect}} ({{lower}} do {{upper}})",
     "updateWindow": "Okno aktualizacji Google: wynik niejednoznaczny.",
     "normalized": "Znormalizowano linią bazową rynku",
     "positive": "Efekt dodatni",
     "negative": "Efekt ujemny",
     "noEffect": "Brak mierzalnego efektu",
-    "inconclusive": "Niejednoznaczny"
+    "inconclusive": "Niejednoznaczny",
+    "evidence": "Dowody: rynek {{market}}; kontrola {{control}}",
+    "unknown": "nieznane",
+    "marketUnavailable": "Zewnętrzna linia bazowa rynku jest niedostępna lub nieprawidłowa; nie wnioskujemy o sukcesie ani porażce przyczynowej.",
+    "controlUnavailable": "Brakuje niezależnych dowodów kontroli; nie wnioskujemy o sukcesie ani porażce przyczynowej.",
+    "updateWindowReason": "Analiza nakłada się na potwierdzoną aktualizację rankingu Google; wynik jest niejednoznaczny.",
+    "disclaimer": "Szacunek z użyciem zewnętrznego rynku i kontroli; nie jest dowodem związku przyczynowego."
   },
   "snapshots": {
     "newerData": "Dostępne są nowsze dane z crawla.",

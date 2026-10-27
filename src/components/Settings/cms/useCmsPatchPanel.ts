@@ -5,6 +5,7 @@ import { planPatch, type PatchPlan } from '@/services/cmsPatch/plan';
 import { assertSafeCmsUrl } from '@/services/cmsPatch/ssrf';
 import { cmsTransport } from '@/services/cmsPatch/transport';
 import { CmsError } from '@/services/cmsPatch/types';
+import { validateYmylClaim } from '@/services/llmEconomy';
 import { deniedMessage, enforcePermission } from '@/services/team/enforce';
 import { readIdentity } from '@/services/team/identity';
 import { cmsPanelError, initialCmsFields, saveCmsBackup, type CmsPanelFields } from './cmsPanelState';
@@ -68,6 +69,14 @@ export const useCmsPatchPanel = (projectId: string | null) => {
     setError(null);
   };
   const confirmFacts = (checked: boolean) => {
+    if (checked && plan?.ymyl) {
+      const check = validateYmylClaim(plan.replacement, [plan.before]);
+      if (!check.allowed) {
+        setFactGatePassed(false);
+        setError(`Unsupported numeric claims: ${check.rejectedValues.join(', ')}`);
+        return;
+      }
+    }
     setFactGatePassed(checked);
     approve(false);
   };

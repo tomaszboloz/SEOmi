@@ -1,12 +1,13 @@
 import { authorize, type TeamContext } from '@/services/team/guard';
 import type { KeyValueStore } from '@/services/team/auditStore';
 import { recordAudit } from '@/services/team/auditStore';
+import { validateYmylClaim } from '@/services/llmEconomy/factGate';
 import { ADAPTERS } from './adapters';
 import type { PatchPlan } from './plan';
 import { CmsError, type CmsTarget, type CmsTransport } from './types';
 import { sectionApplied } from './verify';
 
-export interface Approval { approvedBy: string; planHash: string; factGatePassed?: boolean }
+export interface Approval { approvedBy: string; planHash: string; factGatePassed?: boolean; sources?: string[] }
 
 export interface Backup { target: CmsTarget; content: string; revision: string; at: string }
 
@@ -44,6 +45,11 @@ export const applyPatch = async (plan: PatchPlan, approval: Approval | null, dep
   const adapter = ADAPTERS[plan.target.kind];
   const current = await adapter.read(plan.target, deps.send);
   if (current.revision !== plan.baseRevision) return fail('conflict', 'The page changed after the diff was approved');
+  if (plan.ymyl) {
+    const sources = approval.sources && approval.sources.length > 0 ? approval.sources : [current.content];
+    const check = validateYmylClaim(plan.replacement, sources);
+    if (!check.allowed) return fail('fact-gate-required', `Unsupported numeric claims: ${check.rejectedValues.join(', ')}`);
+  }
   const backup: Backup = { target: plan.target, content: current.content, revision: current.revision, at: (deps.now?.() ?? new Date()).toISOString() };
   await deps.saveBackup(backup);
   try {

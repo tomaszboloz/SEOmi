@@ -7735,7 +7735,9 @@
     "spent": "Dépensé : {{value}}",
     "saved": "Économisé par le cache et le local : {{value}}",
     "hits": "Succès du cache : {{count}}",
-    "leaves": "Le texte des pages est envoyé hors de cet appareil vers {{provider}}."
+    "leaves": "Le texte des pages est envoyé hors de cet appareil vers {{provider}}.",
+    "remaining": "Budget restant: {{value}}",
+    "overBudget": "Budget mensuel LLM dépassé."
   },
   "templateGovernor": {
     "title": "Qualité des gabarits programmatiques",
@@ -7753,14 +7755,20 @@
   },
   "causalMarket": {
     "title": "Impact causal",
-    "empty": "Historique insuffisant : au moins 7 jours avant le changement et 1 après.",
+    "empty": "Non estimable : il faut au moins 7 jours avant et 1 jour après, une vraie série externe du marché et des preuves de contrôle indépendant.",
     "effect": "Effet quotidien : {{effect}} ({{lower}} à {{upper}})",
     "updateWindow": "Fenêtre de mise à jour Google : résultat non concluant.",
     "normalized": "Normalisé par la base de marché",
     "positive": "Effet positif",
     "negative": "Effet négatif",
     "noEffect": "Aucun effet mesurable",
-    "inconclusive": "Non concluant"
+    "inconclusive": "Non concluant",
+    "evidence": "Preuve : marché {{market}} ; contrôle {{control}}",
+    "unknown": "inconnu",
+    "marketUnavailable": "La base de référence externe du marché est indisponible ou invalide ; aucun succès ou échec causal n’est déduit.",
+    "controlUnavailable": "Les preuves d’un contrôle indépendant sont indisponibles ; aucun succès ou échec causal n’est déduit.",
+    "updateWindowReason": "L’analyse recouvre une mise à jour confirmée du classement Google ; le résultat est indéterminé.",
+    "disclaimer": "Estimation avec des données externes de marché et de contrôle ; ce n’est pas une preuve de causalité."
   },
   "snapshots": {
     "newerData": "Des données d'exploration plus récentes sont disponibles.",

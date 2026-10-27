@@ -1,5 +1,6 @@
 import type { AiConnectionMethod, AiProvider, PageAuditData } from '@/types';
 import { invokeTauriCommand } from '@/services/tauri';
+import { executeWithEconomy } from '@/services/llmEconomy';
 import i18n from '@/i18n';
 import { parseAiSuggestionResponse, type AiSuggestionResponse } from './ai/parsing';
 import { buildAiPrompt } from './ai/prompt';
@@ -11,9 +12,41 @@ import { GEMINI_DEFAULT_MODEL, currentModel } from './ai/modelCatalog';
 export { extractJsonObject, parseAiSuggestionResponse } from './ai/parsing';
 export type { AiSuggestionResponse } from './ai/parsing';
 
+export interface GenerateTextEconomyOptions {
+  projectId?: string | null;
+  estimatedCostUsd?: number | null;
+  actualCostUsd?: number | null;
+  vector?: ArrayLike<number> | null;
+  ymyl?: boolean;
+  sources?: string[];
+}
+
 export class AIService {
-  static generateText(provider:AiProvider,apiKey:string,model:string,prompt:string,method:AiConnectionMethod='api_key'):Promise<string> {
-    return generateAiText(provider,apiKey,model,prompt,method);
+  static generateText(
+    provider: AiProvider,
+    apiKey: string,
+    model: string,
+    prompt: string,
+    method: AiConnectionMethod = 'api_key',
+    options?: GenerateTextEconomyOptions,
+  ): Promise<string> {
+    const projectId = options?.projectId ?? null;
+    if (projectId) {
+      return executeWithEconomy({
+        projectId,
+        configuredProviders: [provider],
+        providerId: provider,
+        model,
+        prompt,
+        vector: options?.vector,
+        estimatedCostUsd: options?.estimatedCostUsd,
+        actualCostUsd: options?.actualCostUsd,
+        ymyl: options?.ymyl,
+        sources: options?.sources,
+        run: async () => ({ text: await generateAiText(provider, apiKey, model, prompt, method) }),
+      }).then((res) => res.text);
+    }
+    return generateAiText(provider, apiKey, model, prompt, method);
   }
 static async generateSuggestions(
   provider: AiProvider,

@@ -11,6 +11,14 @@ export interface GateResult {
   needsHumanApproval: true;
 }
 
+export interface YmylGateValidation {
+  allowed: boolean;
+  gate: GateResult;
+  rejectedValues: string[];
+  reason?: GateReason;
+  needsHumanApproval: true;
+}
+
 const UNITS = 'mg|mcg|µg|ug|g|kg|ml|l|iu|ie|mmol|mol|mmhg|kcal|%|pln|zł|usd|eur|gbp|\\$|€|£';
 const VALUE = new RegExp(`(\\d+(?:[.,]\\d+)?)\\s*(${UNITS})(?![\\p{L}])`, 'giu');
 
@@ -38,4 +46,18 @@ export const gateFacts = (text: string, sources: string[]): GateResult => {
     else result.rejected.push({ sentence, reason: supported.size === 0 ? 'no-source' : 'unsupported-value', values: missing });
   }
   return result;
+};
+
+/** Deterministic YMYL gate validation for CMS publishing. */
+export const validateYmylClaim = (replacement: string, sources: string[]): YmylGateValidation => {
+  const gate = gateFacts(replacement, sources);
+  const rejectedValues = gate.rejected.flatMap((item) => item.values);
+  const hasRejections = gate.rejected.length > 0;
+  return {
+    allowed: !hasRejections,
+    gate,
+    rejectedValues,
+    reason: hasRejections ? gate.rejected[0].reason : undefined,
+    needsHumanApproval: true,
+  };
 };

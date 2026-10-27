@@ -5,6 +5,7 @@ import { invalidateQueuedCrawlWrites, withCrawlWriteLock } from '@/services/craw
 import { migrateLegacyCrawlRuns } from '@/services/crawlStore';
 import { forgetGa4Report, ga4ReportStorageKey } from '@/services/urlTelemetry/ga4Cache';
 import { offPageHistoryKey } from '@/services/offPage/history';
+import { clearProjectCache } from '@/services/llmEconomy';
 
 /** Evidence returned by the native store after a physical erasure. */
 export interface ErasureReport {
@@ -43,6 +44,8 @@ const legacyKeys = (projectId: string): string[] => [
   `seomi_project_${projectId}_crawl_result`,
   `seomi_project_${projectId}_crawl_runs_v1_backup`,
   `seomi_store_v2_migrated_${projectId}`,
+  `seomi_project_${projectId}_llm_budget_v1`,
+  `seomi_project_${projectId}_llm_spend_v1`,
 ];
 
 const migrationKey = (projectId: string): string => `seomi_store_v2_migrated_${projectId}`;
@@ -60,6 +63,7 @@ const clearLegacyStorage = (projectId: string): void => {
     }
   }
   forgetGa4Report(projectId);
+  clearProjectCache(projectId);
 };
 
 /** Full project wipe, including leftover Web Storage migration artifacts. */

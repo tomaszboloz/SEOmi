@@ -7735,7 +7735,9 @@
     "spent": "支出: {{value}}",
     "saved": "キャッシュとローカル実行の節約額: {{value}}",
     "hits": "キャッシュヒット: {{count}}",
-    "leaves": "ページ本文はこの端末の外の {{provider}} に送信されます。"
+    "leaves": "ページ本文はこの端末の外の {{provider}} に送信されます。",
+    "remaining": "残りの予算: {{value}}",
+    "overBudget": "毎月のLLM予算を超過しました。"
   },
   "templateGovernor": {
     "title": "プログラマティックテンプレートの品質",
@@ -7753,14 +7755,20 @@
   },
   "causalMarket": {
     "title": "因果効果",
-    "empty": "履歴が不足しています。変更前7日以上と変更後1日以上が必要です。",
+    "empty": "推定できません。変更前7日以上、変更後1日以上、実際の外部市場系列、独立した対照根拠が必要です。",
     "effect": "1日あたりの効果: {{effect}}（{{lower}}〜{{upper}}）",
     "updateWindow": "Googleアップデート期間: 結果は結論不可です。",
     "normalized": "市場ベースラインで正規化済み",
     "positive": "プラスの効果",
     "negative": "マイナスの効果",
     "noEffect": "測定可能な効果なし",
-    "inconclusive": "結論不可"
+    "inconclusive": "結論不可",
+    "evidence": "根拠: 市場 {{market}}、対照 {{control}}",
+    "unknown": "不明",
+    "marketUnavailable": "外部市場ベースラインを利用できないか無効です。因果的な成功や失敗は推定しません。",
+    "controlUnavailable": "独立した対照の根拠を利用できません。因果的な成功や失敗は推定しません。",
+    "updateWindowReason": "分析期間が確認済みのGoogleランキング更新と重なるため、結果は判断不能です。",
+    "disclaimer": "外部市場データと対照データによる推定であり、因果関係の証明ではありません。"
   },
   "snapshots": {
     "newerData": "より新しいクロールデータがあります。",
