@@ -29,7 +29,6 @@ export const CopilotPatcherPanel = ({ target, projectId, index, providers }: Pro
   const { t } = useTranslation();
   const activeProjectId = useProjectStore((state) => state.activeProjectId);
   const selectedProvider = useAuthStore((state) => state.provider);
-  const selectedMethod = useAuthStore((state) => state.connectionMethod[state.provider]);
   const selectedConnected = useAuthStore((state) => state.connectionStatus[state.provider] === 'connected');
   const [state, setState] = useState<PanelState>({ kind: 'idle' });
   const controller = useRef<AbortController | null>(null);
@@ -70,7 +69,7 @@ export const CopilotPatcherPanel = ({ target, projectId, index, providers }: Pro
     setState({ kind: 'busy' });
     const configured = providers ?? (selectedConnected ? [{
       id: selectedProvider,
-      local: selectedMethod === 'local_cli',
+      transport: 'cloud' as const,
       generate: createBriefDeps().generateText,
     }] : []);
     const result = await proposePatch(target, configured, { signal: own.signal });

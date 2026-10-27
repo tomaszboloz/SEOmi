@@ -2,7 +2,7 @@ import { useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import type { CrawledPageSummary } from '@/types';
 import type { TopicalMapDocument } from '@/services/topicalMap';
-import { generateSchemaGraph, type SchemaArticleType } from '@/services/schemaGenerator';
+import { generateSchemaGraph, serializeJsonLd, type SchemaArticleType } from '@/services/schemaGenerator';
 import { observedArticleTypes } from '@/services/schemaGenerator/urls';
 import { copyText } from '@/services/clipboard';
 import { useTransientValue } from '@/hooks/useTransientValue';
@@ -55,7 +55,7 @@ export const SchemaGraphBuilder = ({ document, pages, siteUrl, selectedUrl, incl
     includeUrlBreadcrumbs,
     articleType,
   }) : null;
-  const json = generated ? JSON.stringify(generated.schema, null, 2) : '';
+  const json = generated ? serializeJsonLd(generated.schema) : '';
   const copy = async () => {
     try {
       const copied = await copyText(`<script type="application/ld+json">\n${json}\n</script>`);

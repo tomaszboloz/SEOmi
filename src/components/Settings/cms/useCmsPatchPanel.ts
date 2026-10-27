@@ -5,6 +5,7 @@ import { planPatch, type PatchPlan } from '@/services/cmsPatch/plan';
 import { assertSafeCmsUrl } from '@/services/cmsPatch/ssrf';
 import { cmsTransport } from '@/services/cmsPatch/transport';
 import { CmsError } from '@/services/cmsPatch/types';
+import { validateYmylClaim, type YmylSource } from '@/services/llmEconomy';
 import { deniedMessage, enforcePermission } from '@/services/team/enforce';
 import { readIdentity } from '@/services/team/identity';
 import { cmsPanelError, initialCmsFields, saveCmsBackup, type CmsPanelFields } from './cmsPanelState';
@@ -14,6 +15,7 @@ export const useCmsPatchPanel = (projectId: string | null) => {
   const [plan, setPlan] = useState<PatchPlan | null>(null);
   const [approval, setApproval] = useState<Approval | null>(null);
   const [factGatePassed, setFactGatePassed] = useState(false);
+  const [factSources, setFactSources] = useState<YmylSource[]>([]);
   const [dryRunHash, setDryRunHash] = useState<string | null>(null);
   const [status, setStatus] = useState<ApplyStatus | null>(null);
   const [error, setError] = useState<string | null>(null);
@@ -27,6 +29,7 @@ export const useCmsPatchPanel = (projectId: string | null) => {
     setPlan(null);
     setApproval(null);
     setFactGatePassed(false);
+    setFactSources([]);
     setDryRunHash(null);
     setStatus(null);
     setError(null);
@@ -62,12 +65,33 @@ export const useCmsPatchPanel = (projectId: string | null) => {
     }
   };
   const approve = (checked: boolean) => {
-    setApproval(checked && plan ? { approvedBy: readIdentity().actor, planHash: plan.planHash, factGatePassed } : null);
+    setApproval(checked && plan ? { approvedBy: readIdentity().actor, planHash: plan.planHash, factGatePassed, sources: factSources } : null);
     setDryRunHash(null);
     setStatus(null);
     setError(null);
   };
   const confirmFacts = (checked: boolean) => {
+    if (checked && plan?.ymyl) {
+      const identity = readIdentity();
+      const source: YmylSource = {
+        sourceId: `${plan.target.baseUrl}\u0000${plan.target.contentId}`,
+        targetId: `${plan.target.baseUrl}\u0000${plan.target.contentId}`,
+        planHash: plan.planHash,
+        text: plan.before,
+        revision: plan.baseRevision,
+        reviewedBy: identity.actor,
+        reviewedAt: new Date().toISOString(),
+      };
+      const check = validateYmylClaim(plan.replacement, [source]);
+      if (!check.allowed) {
+        setFactGatePassed(false);
+        setFactSources([]);
+        setError(`Unsupported numeric claims: ${check.rejectedValues.join(', ')}`);
+        return;
+      }
+      setFactSources([source]);
+    }
+    if (!checked) setFactSources([]);
     setFactGatePassed(checked);
     approve(false);
   };

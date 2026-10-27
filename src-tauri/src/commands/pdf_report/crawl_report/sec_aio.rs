@@ -38,6 +38,34 @@ impl Doc {
     pub fn crawl_aio(&mut self, aio: &Value) {
         self.heading(t(a::TITLE));
         self.paragraph(MARGIN, CONTENT_W, Style::CAPTION, t(a::INTRO));
+        if let Some(profile) = aio.get("profile").filter(|value| value.is_object()) {
+            let values = [
+                "id",
+                "algorithm_version",
+                "config_hash",
+                "language",
+                "market",
+            ]
+            .map(|key| arg(profile.get(key)));
+            let refs: Vec<&str> = values.iter().map(String::as_str).collect();
+            self.paragraph(MARGIN, CONTENT_W, Style::CAPTION, &tf(t(a::PROFILE), &refs));
+            let status = match aio.get("profile_status").and_then(Value::as_str) {
+                Some("persisted") => a::PROFILE_PERSISTED,
+                Some("mismatch") => a::PROFILE_MISMATCH,
+                _ => a::PROFILE_LEGACY,
+            };
+            self.paragraph(MARGIN, CONTENT_W, Style::CAPTION, t(status));
+            if let Some(historical) = aio.get("historical_profile") {
+                let note = tf(
+                    t(a::HISTORICAL_PROFILE),
+                    &[
+                        &arg(historical.get("id")),
+                        &arg(historical.get("config_hash")),
+                    ],
+                );
+                self.paragraph(MARGIN, CONTENT_W, Style::CAPTION, &note);
+            }
+        }
         self.skip(6.0);
         let code = field(aio, "band").unwrap_or_default();
         self.ensure(90.0);

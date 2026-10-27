@@ -27,6 +27,8 @@ describe('CrawlTrustTab', () => {
     expect(screen.getByRole('list', { name: 'Trust layers' })).toBeTruthy();
     expect(screen.getByText('Anna Nowak')).toBeTruthy();
     expect(screen.getByText(/Publisher: Diabetes Portal/)).toBeTruthy();
+    expect(screen.getByTestId('trust-profile').textContent).toContain('eetv-5-layer-v2');
+    expect(screen.getByTestId('trust-coverage').textContent).toContain('Evidence coverage');
     expect(within(screen.getByRole('list', { name: 'Trust pages' })).getAllByRole('listitem')).toHaveLength(4);
     expect(screen.getByText(/of \d+ article pages link to a trusted source/)).toBeTruthy();
   });
@@ -96,5 +98,8 @@ describe('CrawlTrustTab', () => {
     render(<CrawlTrustTab pages={bare} startUrl={START} />);
     expect(screen.getByText('No author entities were found in the structured data.')).toBeTruthy();
     expect(screen.getByText(/No Organization entity was found in the structured data\./)).toBeTruthy();
+    const noData = screen.getAllByText('n/a');
+    expect(noData.length).toBeGreaterThan(0);
+    noData.forEach((label) => expect(within(label.closest('li') as HTMLElement).queryByRole('meter')).toBeNull());
   });
 });

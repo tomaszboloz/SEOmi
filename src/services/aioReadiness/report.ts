@@ -1,4 +1,5 @@
 import { scorePageAio } from './page';
+import { aioRProfile } from './profile';
 import { AIO_VERSION, type AioBand, type AioOptions, type AioPage, type AioReport } from './types';
 
 export const MAX_WEAK_PASSAGES = 25;
@@ -15,9 +16,11 @@ const mean = (values: number[]): number => (values.length ? Math.round((values.r
 
 /** Site-level AI Overviews / RAG citability: the mean of the scored pages (pages without sections are skipped, not zeroed). */
 export const buildAioReport = (pages: AioPage[], options: AioOptions = {}): AioReport => {
-  const reports = pages.map(scorePageAio);
+  const reports = pages.map((page) => scorePageAio(page, options.market));
   const scored = reports.filter((page) => !page.skipped);
   const score = mean(scored.map((page) => page.score));
+  const profile = aioRProfile('und', options.market);
+  const availability = scored.length === 0 ? 'unavailable' : reports.some((page) => page.availability !== 'complete') ? 'partial' : 'complete';
   return {
     score,
     band: aioBandFor(score),
@@ -35,5 +38,10 @@ export const buildAioReport = (pages: AioPage[], options: AioOptions = {}): AioR
     generatedAt: options.now ?? new Date().toISOString(),
     pageCount: pages.length,
     version: AIO_VERSION,
+    profile,
+    availability,
+    languageStatuses: Object.fromEntries(reports.map((page) => [page.language, page.languageStatus ?? 'unsupported'])),
+    sourceSnapshot: options.crawlRunId ? { crawlRunId: options.crawlRunId } : undefined,
+    unknownReasons: [...new Set(reports.flatMap((page) => page.unknownReasons ?? []))],
   };
 };

@@ -1,5 +1,6 @@
 import type { CrawledLink, CrawledPageSummary } from '@/types';
 import { scholarlyIds, scholarlyKey } from './citationIds';
+import { mapClaimsToCitations, type CitationSource } from '@/services/citationEvidence/claims';
 import type { CitationDetail } from './types';
 
 /** Time-tested seed hosts: public institutions, scholarly publishers and standards bodies. */
@@ -17,7 +18,7 @@ export const isDeadLink = (link: CrawledLink): boolean => Boolean(link.target_re
 
 /** Outbound citation quality for the given article pages (external links only). */
 export const analyzeCitations = (pages: CrawledPageSummary[], articleUrls: Set<string>, citedBySchema: Map<string, string[]>): CitationDetail => {
-  const detail: CitationDetail = { pagesAnalyzed: 0, pagesWithTrusted: 0, pagesWithAnyExternal: 0, trustedLinks: 0, externalLinks: 0, checkedLinks: 0, deadLinks: [], pagesWithScholarly: 0, scholarlySources: 0 };
+  const detail: CitationDetail = { pagesAnalyzed: 0, pagesWithTrusted: 0, pagesWithAnyExternal: 0, trustedLinks: 0, externalLinks: 0, checkedLinks: 0, deadLinks: [], pagesWithScholarly: 0, scholarlySources: 0, claimEvidence: [], unbackedHighStakesClaims: 0 };
   const sources = new Set<string>();
   for (const page of pages) {
     const url = page.final_url || page.url;
@@ -25,6 +26,14 @@ export const analyzeCitations = (pages: CrawledPageSummary[], articleUrls: Set<s
     detail.pagesAnalyzed += 1;
     const external = page.links.filter((link) => !link.is_internal);
     const targets = new Set([...external.map((link) => link.target_url), ...(citedBySchema.get(url) ?? [])]);
+    const sourceCatalog = [...targets].map((target): CitationSource | null => {
+      const id = scholarlyKey(scholarlyIds(target));
+      const link = external.find((item) => item.target_url === target);
+      return id ? { key: id, exists: true, reachable: link?.target_http_status === undefined ? undefined : link.target_http_status < 400 } : null;
+    }).filter((item): item is CitationSource => Boolean(item));
+    const claims = mapClaimsToCitations((page.semantic_excerpts ?? []).join(' '), sourceCatalog);
+    detail.claimEvidence?.push(...claims.map((claim) => ({ ...claim, claim: `${url}: ${claim.claim}` })));
+    detail.unbackedHighStakesClaims = (detail.unbackedHighStakesClaims ?? 0) + claims.filter((claim) => claim.relation === 'unmatched').length;
     const trusted = [...targets].filter((target) => isTrustedHost(hostOf(target)));
     if (targets.size) detail.pagesWithAnyExternal += 1;
     if (trusted.length) detail.pagesWithTrusted += 1;

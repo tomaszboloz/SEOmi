@@ -19,6 +19,7 @@ export * from './evaluators';
 export * from './focus';
 export * from './scoreDrop';
 export * from './aio';
+export * from './aioCalibration';
 
 export interface MonitoringDelivery { email?: (alert: MonitoringAlert) => Promise<boolean>; }
 export interface MonitoringDeliveryResult { alert: MonitoringAlert | null; delivered: boolean; persisted: boolean; duplicate: boolean; emailConfigured: boolean; }

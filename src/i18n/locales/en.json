@@ -6029,6 +6029,11 @@
         "intro": "How easily AI answer engines can lift and quote passages of your pages. The score combines self-contained passages (45%), fact density (35%) and extractable structure (20%).",
         "scoreTitle": "AI readiness score",
         "legend": "Bands: 90-100 excellent, 75-89 good, 60-74 moderate, 40-59 weak, 0-39 critical.",
+        "profile": "Calculation profile: {{0}} / {{1}} / {{2}} / {{3}} / {{4}}",
+        "profilePersisted": "Profile matches the saved crawl.",
+        "profileLegacy": "This crawl has no saved profile. Scores were recalculated with the displayed profile and cannot be compared with historical scores.",
+        "profileMismatch": "The saved profile differs. Scores were recalculated with the displayed profile and cannot be compared with historical scores.",
+        "historicalProfile": "Saved profile: {{0}} / {{1}}.",
         "kSelf": "Self-containment",
         "kSpo": "Fact density",
         "kExtract": "Extractability",
@@ -6063,7 +6068,9 @@
           "no-answer-first": "No direct answer first",
           "filler-opening": "Filler opening",
           "no-facts": "No concrete facts",
-          "too-long": "Too long for one chunk"
+          "too-long": "Too long for one chunk",
+          "deictic-context": "Context-dependent reference",
+          "no-entity": "Missing topic anchor"
         }
       },
       "trust": {
@@ -6071,7 +6078,10 @@
         "intro": "How verifiable the publisher, authors and sources of the site are. Scores come from the saved run; no pages are fetched again.",
         "scoreTitle": "Entity Trust Score",
         "legend": "Levels: 75-100 strong, 60-74 adequate, 40-59 weak, 0-39 critical.",
+        "profile": "EETV profile {{0}} (version {{1}})",
+        "coverage": "Evidence coverage",
         "kSchema": "Entity graph",
+        "kSameAs": "Identity declarations",
         "kAuthor": "Author topic fit",
         "kCitation": "Source quality",
         "kTransparency": "Transparency",
@@ -6141,7 +6151,14 @@
           "no-articles": "No article pages were detected; author and citation layers were not scored.",
           "author-invalid-profile": "{{0}} authors link an ORCID or Wikidata profile with an invalid identifier ({{1}}). Check the checksum or Q-ID.",
           "ymyl-no-scholarly-ids": "None of the {{0}} article pages cite a source with a DOI, PMID or PMCID. On a YMYL topic, cite the primary study."
-        }
+        },
+        "colProfile": "Profile evidence",
+        "tClaims": "Claim evidence",
+        "claimsIntro": "Claim-to-citation associations; lexical overlap is not verification.",
+        "colClaim": "Claim",
+        "colEvidence": "Evidence",
+        "colRelation": "Relation",
+        "colChecked": "Manual check"
       },
       "offPage": {
         "title": "Off-page analysis",
@@ -7352,12 +7369,25 @@
       "title": "Weakest passages",
       "intro": "Simulated RAG chunks that are hardest to cite. Fix the listed problems first.",
       "chunk": "Chunk {{n}} · {{tokens}} tokens · score {{score}}",
+      "offset": "source chars {{start}}–{{end}}",
       "noHeading": "(intro without heading)",
       "current": "Current passage",
       "optimized": "Optimized passage",
       "generate": "Rewrite with AI",
       "generating": "Rewriting…",
+      "cancelled": "Rewrite cancelled.",
+      "cancel": "Cancel",
       "copy": "Copy",
+      "export": "Export draft",
+      "approve": "Approve for brief",
+      "approved": "Approved for brief",
+      "diff": "Show changed lines",
+      "scoreChange": "Profile change: {{delta}}",
+      "beforeAfter": "Before {{before}} · after {{after}}",
+      "facts": "Facts: {{before}} → {{after}}",
+      "partialProfile": "Partial profile: language or anchor evidence is incomplete; the before/after delta is not a complete assessment.",
+      "preservationWarning": "Review required: these source tokens were not found after rewrite: {{missing}}",
+      "unverified": "AI proposal is unverified. Approval is manual; nothing is published to the CMS.",
       "copied": "Copied",
       "noKey": "Connect an AI provider in Settings to rewrite passages.",
       "error": "AI request failed: {{message}}",
@@ -7366,6 +7396,8 @@
     },
     "issue": {
       "dangling-pronoun": "Unclear reference",
+      "deictic-context": "Context-dependent reference",
+      "no-entity": "Subject or entity not named",
       "no-answer-first": "No direct answer first",
       "filler-opening": "Filler opening",
       "no-facts": "No concrete facts",
@@ -7384,6 +7416,8 @@
     "hero": {
       "label": "Entity Trust Score",
       "articles": "{{articles}} article pages among {{pages}} crawled pages",
+      "profile": "Profile {{profile}} · version {{version}}",
+      "coverage": "Evidence coverage: observed / declared / verified / unknown",
       "previous": "Previous run: {{score}} ({{delta}})",
       "ymyl": "YMYL category: {{category}}. Search engines hold these pages to the strictest trust standard.",
       "unattributed": "{{pct}}% of articles have no named author or reviewer."
@@ -7402,6 +7436,7 @@
     "layers": {
       "title": "Trust layers",
       "schemaGraph": "Entity graph (JSON-LD)",
+      "sameAs": "Identity declarations (sameAs)",
       "authorAlignment": "Author topic fit",
       "citationQuality": "Source quality",
       "transparency": "Editorial transparency",
@@ -7417,9 +7452,14 @@
       "colArticles": "Articles",
       "colSameAs": "sameAs links",
       "colAlignment": "Topic fit",
-      "generic": "anonymous byline"
+      "generic": "anonymous byline",
+      "identityEvidence": "Identity evidence",
+      "unavailableNote": "No declared profile; unavailable does not mean fictitious.",
+      "verifyProfiles": "Verify profiles"
     },
     "signals": {
+      "claimEvidence": "Claim evidence",
+      "associationNote": "Association evidence is not entailment; overlap never sets manual sourceChecked.",
       "title": "Sources and transparency",
       "citations": "{{trusted}} of {{pages}} article pages link to a trusted source (.gov, .edu, PubMed, WHO).",
       "dead": "{{count}} outbound links are broken",
@@ -7468,6 +7508,7 @@
       "open": "Fix with JSON-LD",
       "title": "JSON-LD generator",
       "intro": "Builds an Organization, Person and page graph with sameAs links. Review it, then paste it into the page head.",
+      "conflict": "Existing {{property}} for {{id}} conflicts with this proposal. Resolve it before export.",
       "close": "Close",
       "field": {
         "personName": "Author name",
@@ -7485,7 +7526,8 @@
         "missing-name": "Enter the author name.",
         "invalid-organization-url": "Enter a valid publisher URL (https://...).",
         "invalid-page-url": "Enter a valid page URL (https://...).",
-        "invalid-same-as": "Some sameAs entries are not valid URLs and were left out."
+        "invalid-same-as": "Some sameAs entries are not valid URLs and were left out.",
+        "conflict": "Existing {{property}} for {{id}} conflicts with this proposal. Resolve it before export."
       },
       "preview": "Generated JSON-LD",
       "copy": "Copy script tag",
@@ -7736,7 +7778,20 @@
     "spent": "Spent: {{value}}",
     "saved": "Saved by cache and local runs: {{value}}",
     "hits": "Cache hits: {{count}}",
-    "leaves": "Page text is sent outside this device to {{provider}}."
+    "leaves": "Page text is sent outside this device to {{provider}}.",
+    "remaining": "Remaining budget: {{value}}",
+    "storageUnavailable": "LLM budget or spend storage is unavailable or invalid.",
+    "overBudget": "Monthly LLM budget exceeded.",
+    "unknownCost": "{{count}} external calls had unknown cost and are excluded from spend.",
+    "selectProject": "Select a project to edit its LLM budget.",
+    "budgetTitle": "Project LLM budget",
+    "noLimit": "No monthly limit",
+    "limitLabel": "Monthly limit (USD)",
+    "warnLabel": "Warn at (%)",
+    "saveBudget": "Save budget",
+    "savedBudget": "LLM budget saved.",
+    "invalidLimit": "Enter a valid non-negative monthly limit.",
+    "invalidWarn": "Warning threshold must be an integer from 1 to 100."
   },
   "templateGovernor": {
     "title": "Programmatic template quality",

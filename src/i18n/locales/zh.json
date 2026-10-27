@@ -6063,15 +6063,25 @@
           "no-answer-first": "开头没有直接回答",
           "filler-opening": "开头空洞",
           "no-facts": "缺少具体事实",
-          "too-long": "对单个分块来说太长"
-        }
+          "too-long": "对单个分块来说太长",
+          "deictic-context": "依赖上下文的指代",
+          "no-entity": "缺少主题指向"
+        },
+        "profile": "计算配置: {{0}} / {{1}} / {{2}} / {{3}} / {{4}}",
+        "profilePersisted": "此配置与已保存的抓取一致。",
+        "profileLegacy": "此抓取没有保存的配置。结果已按显示的配置重新计算，不能与历史结果比较。",
+        "profileMismatch": "已保存的配置不同。结果已按显示的配置重新计算，不能与历史结果比较。",
+        "historicalProfile": "已保存的配置: {{0}} / {{1}}."
       },
       "trust": {
         "title": "实体信任度（E-E-A-T）",
         "intro": "网站发布者、作者和来源的可验证程度。得分来自已保存的运行结果，不会重新获取任何页面。",
         "scoreTitle": "实体信任得分",
         "legend": "等级：75-100 高，60-74 足够，40-59 弱，0-39 严重。",
+        "profile": "EETV 配置 {{0}}（版本 {{1}}）",
+        "coverage": "证据覆盖",
         "kSchema": "实体图谱",
+        "kSameAs": "身份声明",
         "kAuthor": "作者契合度",
         "kCitation": "来源质量",
         "kTransparency": "透明度",
@@ -6141,7 +6151,14 @@
           "no-articles": "未检测到文章页面；未对作者和引用层级评分。",
           "author-invalid-profile": "{{0}}位作者链接的ORCID或Wikidata档案标识符无效（{{1}}）。请检查校验码或Q-ID。",
           "ymyl-no-scholarly-ids": "{{0}}篇文章均未引用带DOI、PMID或PMCID的来源。YMYL主题请引用原始研究。"
-        }
+        },
+        "colProfile": "个人资料证据",
+        "tClaims": "主张证据",
+        "claimsIntro": "主张与引文的关联；词语重叠不代表已验证。",
+        "colClaim": "主张",
+        "colEvidence": "证据",
+        "colRelation": "关系",
+        "colChecked": "手动检查"
       },
       "offPage": {
         "title": "站外分析",
@@ -7352,11 +7369,24 @@
       "title": "最薄弱的段落",
       "intro": "模拟的最难被引用的 RAG 分块。请先修复列出的问题。",
       "chunk": "分块 {{n}} · {{tokens}} 个 token · 得分 {{score}}",
+      "offset": "源字符 {{start}}–{{end}}",
+      "cancel": "取消",
+      "export": "导出草稿",
+      "approve": "批准用于简报",
+      "approved": "已批准用于简报",
+      "diff": "显示修改行",
+      "scoreChange": "配置变化：{{delta}}",
+      "beforeAfter": "之前 {{before}} · 之后 {{after}}",
+      "facts": "事实：{{before}} → {{after}}",
+      "partialProfile": "部分配置：语言或锚点证据不完整；前后差异不是完整评估。",
+      "preservationWarning": "需要检查：改写后未找到这些源 token：{{missing}}",
+      "unverified": "AI 建议未经验证。批准需手动完成；不会发布到 CMS。",
       "noHeading": "（无标题的开头部分）",
       "current": "当前段落",
       "optimized": "优化后的段落",
       "generate": "用 AI 改写",
       "generating": "正在改写…",
+      "cancelled": "已取消改写。",
       "copy": "复制",
       "copied": "已复制",
       "noKey": "请在设置中连接 AI 提供商以改写段落。",
@@ -7366,6 +7396,8 @@
     },
     "issue": {
       "dangling-pronoun": "指代不清",
+      "deictic-context": "依赖上下文的指代",
+      "no-entity": "未指明主体或实体",
       "no-answer-first": "开头没有直接回答",
       "filler-opening": "开头空洞",
       "no-facts": "缺少具体事实",
@@ -7384,6 +7416,8 @@
     "hero": {
       "label": "实体信任得分",
       "articles": "在 {{pages}} 个已抓取页面中有 {{articles}} 个文章页面",
+      "profile": "配置文件 {{profile}} · 版本 {{version}}",
+      "coverage": "证据覆盖：已观察 / 已声明 / 已验证 / 未知",
       "previous": "上次运行：{{score}}（{{delta}}）",
       "ymyl": "YMYL 类别：{{category}}。搜索引擎对这类页面采用最严格的信任标准。",
       "unattributed": "{{pct}}% 的文章没有署名作者或审核者。"
@@ -7402,6 +7436,7 @@
     "layers": {
       "title": "信任层级",
       "schemaGraph": "实体图谱（JSON-LD）",
+      "sameAs": "身份声明（sameAs）",
       "authorAlignment": "作者主题契合度",
       "citationQuality": "来源质量",
       "transparency": "编辑透明度",
@@ -7417,9 +7452,14 @@
       "colArticles": "文章数",
       "colSameAs": "sameAs 链接",
       "colAlignment": "主题契合度",
-      "generic": "匿名署名"
+      "generic": "匿名署名",
+      "identityEvidence": "身份证据",
+      "unavailableNote": "没有声明的个人资料；不可用不表示虚构。",
+      "verifyProfiles": "验证个人资料"
     },
     "signals": {
+      "claimEvidence": "主张证据",
+      "associationNote": "关联不等于支持；重叠不会设置手动 sourceChecked。",
       "title": "来源与透明度",
       "citations": "{{pages}} 个文章页面中有 {{trusted}} 个链接到可信来源（.gov、.edu、PubMed、WHO）。",
       "dead": "{{count}} 个出站链接已失效",
@@ -7485,7 +7525,8 @@
         "missing-name": "请输入作者姓名。",
         "invalid-organization-url": "请输入有效的发布者 URL（https://...）。",
         "invalid-page-url": "请输入有效的页面 URL（https://...）。",
-        "invalid-same-as": "部分 sameAs 条目不是有效 URL，已被忽略。"
+        "invalid-same-as": "部分 sameAs 条目不是有效 URL，已被忽略。",
+        "conflict": "{{id}} 的现有 {{property}} 与此提案冲突。请在导出前解决。"
       },
       "preview": "生成的 JSON-LD",
       "copy": "复制 script 标签",
@@ -7736,7 +7777,20 @@
     "spent": "已花费：{{value}}",
     "saved": "缓存和本地运行节省：{{value}}",
     "hits": "缓存命中：{{count}}",
-    "leaves": "页面文本将发送到本设备之外的 {{provider}}。"
+    "leaves": "页面文本将发送到本设备之外的 {{provider}}。",
+    "remaining": "剩余预算：{{value}}",
+    "storageUnavailable": "LLM 预算或支出存储不可用或无效。",
+    "overBudget": "已超出每月 LLM 预算。",
+    "unknownCost": "{{count}} 次外部调用的费用未知，未计入支出。",
+    "selectProject": "选择项目以编辑其 LLM 预算。",
+    "budgetTitle": "项目 LLM 预算",
+    "noLimit": "无每月上限",
+    "limitLabel": "每月上限（USD）",
+    "warnLabel": "警告阈值（%）",
+    "saveBudget": "保存预算",
+    "savedBudget": "LLM 预算已保存。",
+    "invalidLimit": "请输入有效的非负每月上限。",
+    "invalidWarn": "警告阈值必须是 1 到 100 的整数。"
   },
   "templateGovernor": {
     "title": "程序化模板质量",

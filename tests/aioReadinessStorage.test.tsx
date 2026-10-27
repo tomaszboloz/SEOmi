@@ -61,6 +61,12 @@ describe('useAioReadiness', () => {
     expect(result.current.history).toEqual([]);
     expect(readAioHistory('p1')).toEqual([]);
   });
+
+  it('does not expose an unversioned legacy snapshot as a comparable trend point', () => {
+    localStorage.setItem(aioHistoryKey('p1'), JSON.stringify([{ runId: 'legacy', at: '2026-10-01', score: 99, selfContainment: 99, spoDensity: 99, extractability: 99, scored: 1, weakPassages: 0 }]));
+    const { result } = renderHook(() => useAioReadiness([GOOD_PAGE], run('new'), 'p1'));
+    expect(result.current.history.map((item) => item.runId)).toEqual(['new']);
+  });
 });
 
 describe('CrawlAioTab', () => {
@@ -82,7 +88,8 @@ describe('CrawlAioTab', () => {
   });
 
   it('shows the previous-run delta and the basic-language note', () => {
-    localStorage.setItem(aioHistoryKey('p1'), JSON.stringify([{ runId: 'old', at: '2026-10-01T00:00:00Z', score: 0, selfContainment: 0, spoDensity: 0, extractability: 0, scored: 1, weakPassages: 0 }]));
+    const profile = buildAioReport([GOOD_PAGE]).profile;
+    localStorage.setItem(aioHistoryKey('p1'), JSON.stringify([{ runId: 'old', at: '2026-10-01T00:00:00Z', score: 0, selfContainment: 0, spoDensity: 0, extractability: 0, scored: 1, weakPassages: 0, profile: { id: profile.id, algorithmVersion: profile.algorithmVersion, configHash: profile.configHash, language: profile.language, market: profile.market } }]));
     render(<CrawlAioTab pages={[GOOD_PAGE, aioPage('https://a.test/de', [section('Frage', ['Das ist ein Satz mit Text.'])], { semantic_language: 'de' })]} run={run('r3')} projectId="p1" />);
     expect(screen.getByText(/Change since the previous analysis: \+/)).toBeTruthy();
     expect(screen.getByRole('note').textContent).toContain('de');

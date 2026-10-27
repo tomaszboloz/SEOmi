@@ -6063,15 +6063,25 @@
           "no-answer-first": "Brak bezpośredniej odpowiedzi na początku",
           "filler-opening": "Wodnisty początek",
           "no-facts": "Brak konkretnych faktów",
-          "too-long": "Za długi na jeden fragment"
-        }
+          "too-long": "Za długi na jeden fragment",
+          "deictic-context": "Odwołanie zależne od kontekstu",
+          "no-entity": "Brak odniesienia do tematu"
+        },
+        "profile": "Profil obliczeń: {{0}} / {{1}} / {{2}} / {{3}} / {{4}}",
+        "profilePersisted": "Profil jest zgodny z zapisanym crawlem.",
+        "profileLegacy": "Ten crawl nie ma zapisanego profilu. Wyniki przeliczono według widocznego profilu; nie można ich porównywać z wynikami historycznymi.",
+        "profileMismatch": "Zapisany profil jest inny. Wyniki przeliczono według widocznego profilu; nie można ich porównywać z wynikami historycznymi.",
+        "historicalProfile": "Zapisany profil: {{0}} / {{1}}."
       },
       "trust": {
         "title": "Zaufanie do encji (E-E-A-T)",
         "intro": "Jak łatwo zweryfikować wydawcę, autorów i źródła witryny. Wyniki pochodzą z zapisanego przebiegu; żadne strony nie są pobierane ponownie.",
         "scoreTitle": "Wynik zaufania do encji",
         "legend": "Poziomy: 75-100 silne, 60-74 wystarczające, 40-59 słabe, 0-39 krytyczne.",
+        "profile": "Profil EETV {{0}} (wersja {{1}})",
+        "coverage": "Pokrycie dowodami",
         "kSchema": "Graf encji",
+        "kSameAs": "Deklaracje tożsamości",
         "kAuthor": "Dopasowanie autora",
         "kCitation": "Jakość źródeł",
         "kTransparency": "Transparentność",
@@ -6141,7 +6151,14 @@
           "no-articles": "Nie wykryto stron artykułów; warstwy autorów i cytowań nie zostały ocenione.",
           "author-invalid-profile": "{{0}} autorów podaje profil ORCID lub Wikidata z błędnym identyfikatorem ({{1}}). Sprawdź sumę kontrolną lub Q-ID.",
           "ymyl-no-scholarly-ids": "Żaden z {{0}} artykułów nie cytuje źródła z DOI, PMID ani PMCID. W tematyce YMYL cytuj badanie pierwotne."
-        }
+        },
+        "colProfile": "Dowód profilu",
+        "tClaims": "Dowody twierdzeń",
+        "claimsIntro": "Powiązania twierdzeń z cytowaniami; podobieństwo słów nie jest weryfikacją.",
+        "colClaim": "Twierdzenie",
+        "colEvidence": "Dowód",
+        "colRelation": "Relacja",
+        "colChecked": "Sprawdzone ręcznie"
       },
       "offPage": {
         "title": "Analiza off-page",
@@ -7352,11 +7369,24 @@
       "title": "Najsłabsze fragmenty",
       "intro": "Symulowane fragmenty RAG, które najtrudniej zacytować. Najpierw popraw wskazane problemy.",
       "chunk": "Fragment {{n}} · {{tokens}} tokenów · wynik {{score}}",
+      "offset": "znaki źródła {{start}}–{{end}}",
+      "cancel": "Anuluj",
+      "export": "Eksportuj wersję roboczą",
+      "approve": "Zatwierdź do briefu",
+      "approved": "Zatwierdzono do briefu",
+      "diff": "Pokaż zmienione wiersze",
+      "scoreChange": "Zmiana profilu: {{delta}}",
+      "beforeAfter": "Przed {{before}} · po {{after}}",
+      "facts": "Fakty: {{before}} → {{after}}",
+      "partialProfile": "Profil częściowy: dane językowe lub kotwica są niepełne; zmiana przed/po nie jest pełną oceną.",
+      "preservationWarning": "Wymaga sprawdzenia: tych tokenów źródłowych nie znaleziono po przepisaniu: {{missing}}",
+      "unverified": "Propozycja AI nie jest zweryfikowana. Akceptacja jest ręczna; nic nie trafia do CMS.",
       "noHeading": "(wstęp bez nagłówka)",
       "current": "Obecny fragment",
       "optimized": "Fragment po optymalizacji",
       "generate": "Przepisz z AI",
       "generating": "Przepisuję…",
+      "cancelled": "Przepisywanie anulowane.",
       "copy": "Kopiuj",
       "copied": "Skopiowano",
       "noKey": "Połącz dostawcę AI w Ustawieniach, aby przepisywać fragmenty.",
@@ -7366,6 +7396,8 @@
     },
     "issue": {
       "dangling-pronoun": "Niejasne odniesienie",
+      "deictic-context": "Odniesienie zależne od kontekstu",
+      "no-entity": "Nie nazwano podmiotu ani encji",
       "no-answer-first": "Brak bezpośredniej odpowiedzi na początku",
       "filler-opening": "Wodnisty początek",
       "no-facts": "Brak konkretnych faktów",
@@ -7384,6 +7416,8 @@
     "hero": {
       "label": "Wynik zaufania do encji",
       "articles": "{{articles}} stron artykułów wśród {{pages}} przeskanowanych stron",
+      "profile": "Profil {{profile}} · wersja {{version}}",
+      "coverage": "Pokrycie dowodami: zaobserwowane / zadeklarowane / zweryfikowane / nieznane",
       "previous": "Poprzedni przebieg: {{score}} ({{delta}})",
       "ymyl": "Kategoria YMYL: {{category}}. Wyszukiwarki stosują do tych stron najostrzejsze kryteria zaufania.",
       "unattributed": "{{pct}}% artykułów nie ma imiennego autora ani recenzenta."
@@ -7402,6 +7436,7 @@
     "layers": {
       "title": "Warstwy zaufania",
       "schemaGraph": "Graf encji (JSON-LD)",
+      "sameAs": "Deklaracje tożsamości (sameAs)",
       "authorAlignment": "Dopasowanie autora do tematu",
       "citationQuality": "Jakość źródeł",
       "transparency": "Transparentność redakcyjna",
@@ -7417,9 +7452,14 @@
       "colArticles": "Artykuły",
       "colSameAs": "Linki sameAs",
       "colAlignment": "Dopasowanie do tematu",
-      "generic": "anonimowa sygnatura"
+      "generic": "anonimowa sygnatura",
+      "identityEvidence": "Dowód tożsamości",
+      "unavailableNote": "Brak zadeklarowanego profilu; niedostępność nie oznacza fikcyjności.",
+      "verifyProfiles": "Sprawdź profile"
     },
     "signals": {
+      "claimEvidence": "Dowody twierdzeń",
+      "associationNote": "Powiązanie nie jest wynikanie; podobieństwo nie ustawia ręcznego sourceChecked.",
       "title": "Źródła i transparentność",
       "citations": "{{trusted}} z {{pages}} stron artykułów linkuje do zaufanego źródła (.gov, .edu, PubMed, WHO).",
       "dead": "{{count}} linków wychodzących jest uszkodzonych",
@@ -7485,7 +7525,8 @@
         "missing-name": "Podaj imię i nazwisko autora.",
         "invalid-organization-url": "Podaj poprawny adres wydawcy (https://...).",
         "invalid-page-url": "Podaj poprawny adres strony (https://...).",
-        "invalid-same-as": "Niektóre wpisy sameAs nie są poprawnymi adresami i zostały pominięte."
+        "invalid-same-as": "Niektóre wpisy sameAs nie są poprawnymi adresami i zostały pominięte.",
+        "conflict": "Istniejące pole {{property}} dla {{id}} koliduje z propozycją. Rozwiąż konflikt przed eksportem."
       },
       "preview": "Wygenerowany JSON-LD",
       "copy": "Kopiuj znacznik script",
@@ -7736,7 +7777,20 @@
     "spent": "Wydano: {{value}}",
     "saved": "Zaoszczędzono dzięki cache i modelom lokalnym: {{value}}",
     "hits": "Trafienia cache: {{count}}",
-    "leaves": "Treść stron jest wysyłana poza to urządzenie do: {{provider}}."
+    "leaves": "Treść stron jest wysyłana poza to urządzenie do: {{provider}}.",
+    "remaining": "Pozostały budżet: {{value}}",
+    "storageUnavailable": "Magazyn budżetu lub wydatków LLM jest niedostępny albo nieprawidłowy.",
+    "overBudget": "Miesięczny budżet LLM został przekroczony.",
+    "unknownCost": "{{count}} zewnętrznych wywołań ma nieznany koszt i nie jest uwzględnionych w wydatkach.",
+    "selectProject": "Wybierz projekt, aby edytować jego budżet LLM.",
+    "budgetTitle": "Budżet LLM projektu",
+    "noLimit": "Bez miesięcznego limitu",
+    "limitLabel": "Limit miesięczny (USD)",
+    "warnLabel": "Ostrzegaj przy (%)",
+    "saveBudget": "Zapisz budżet",
+    "savedBudget": "Zapisano budżet LLM.",
+    "invalidLimit": "Wpisz prawidłowy nieujemny limit miesięczny.",
+    "invalidWarn": "Próg ostrzeżenia musi być liczbą całkowitą od 1 do 100."
   },
   "templateGovernor": {
     "title": "Jakość szablonów programatycznych",

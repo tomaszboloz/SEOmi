@@ -21,6 +21,7 @@ export const TrustHero = ({ report, previous }: { report: TrustReport; previous?
         <div className={`h-2 ${LEVEL_BAR[report.level]}`} style={{ width: `${report.score}%` }} />
       </div>
       <p className="text-xs text-slate-300">{t('trust.hero.articles', { articles: report.articleCount, pages: report.pageCount })}</p>
+      <p className="text-[11px] text-slate-500" data-testid="trust-profile">{t('trust.hero.profile', { profile: report.profileId, version: report.profileVersion })}</p>
       {report.ymyl && (
         <p className="flex items-center gap-1 text-xs text-amber-200">
           {t('trust.hero.ymyl', { category: t(`trust.ymyl.${report.ymyl}`) })} <HelpTip id="trust.ymyl" />
@@ -36,7 +37,7 @@ export const TrustHero = ({ report, previous }: { report: TrustReport; previous?
             <li key={layer} className="space-y-1 rounded-lg border border-slate-800 bg-slate-950/40 px-3 py-2 text-xs text-slate-300">
               <span className="flex items-center gap-1">{t(`trust.layers.${layer}`)} <HelpTip id={help} /></span>
               <span className="flex items-center gap-2">
-                <span role="meter" aria-valuemin={0} aria-valuemax={100} aria-valuenow={value ?? 0} aria-label={t(`trust.layers.${layer}`)} className="h-2 flex-1 overflow-hidden rounded bg-slate-800">
+                <span {...(value === undefined ? {} : { role: 'meter', 'aria-valuemin': 0, 'aria-valuemax': 100, 'aria-valuenow': value })} aria-label={t(`trust.layers.${layer}`)} className="h-2 flex-1 overflow-hidden rounded bg-slate-800">
                   <span className="block h-2 bg-emerald-500" style={{ width: `${value ?? 0}%` }} />
                 </span>
                 <span className="w-10 text-end tabular-nums">{value === undefined ? t('trust.layers.noData') : `${value}`}</span>
@@ -46,6 +47,16 @@ export const TrustHero = ({ report, previous }: { report: TrustReport; previous?
           );
         })}
       </ul>
+      <div className="rounded-lg border border-slate-800 bg-slate-950/30 px-3 py-2 text-[11px] text-slate-400" data-testid="trust-coverage">
+        <p className="font-medium text-slate-300">{t('trust.hero.coverage')}</p>
+        <ul className="mt-1 grid gap-1 sm:grid-cols-2">
+          {LAYERS.map(({ layer }) => {
+            const value = report.coverage[layer];
+            if (!value) return null;
+            return <li key={layer}>{t(`trust.layers.${layer}`)}: {value.observed}/{value.declared}/{value.verified}/{value.unknown}</li>;
+          })}
+        </ul>
+      </div>
     </section>
   );
 };

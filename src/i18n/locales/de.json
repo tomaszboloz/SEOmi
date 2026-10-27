@@ -6063,15 +6063,25 @@
           "no-answer-first": "Keine direkte Antwort am Anfang",
           "filler-opening": "Füllende Einleitung",
           "no-facts": "Keine konkreten Fakten",
-          "too-long": "Zu lang für einen Chunk"
-        }
+          "too-long": "Zu lang für einen Chunk",
+          "deictic-context": "Kontextabhängiger Verweis",
+          "no-entity": "Themenbezug fehlt"
+        },
+        "profile": "Berechnungsprofil: {{0}} / {{1}} / {{2}} / {{3}} / {{4}}",
+        "profilePersisted": "Das Profil entspricht dem gespeicherten Crawl.",
+        "profileLegacy": "Dieser Crawl hat kein gespeichertes Profil. Die Werte wurden mit dem angezeigten Profil neu berechnet und sind nicht mit historischen Werten vergleichbar.",
+        "profileMismatch": "Das gespeicherte Profil weicht ab. Die Werte wurden mit dem angezeigten Profil neu berechnet und sind nicht mit historischen Werten vergleichbar.",
+        "historicalProfile": "Gespeichertes Profil: {{0}} / {{1}}."
       },
       "trust": {
         "title": "Entitätsvertrauen (E-E-A-T)",
         "intro": "Wie gut sich Herausgeber, Autoren und Quellen der Website überprüfen lassen. Die Werte stammen aus dem gespeicherten Lauf; keine Seite wird erneut abgerufen.",
         "scoreTitle": "Entitäts-Vertrauenswert",
         "legend": "Stufen: 75-100 stark, 60-74 ausreichend, 40-59 schwach, 0-39 kritisch.",
+        "profile": "EETV-Profil {{0}} (Version {{1}})",
+        "coverage": "Evidenzabdeckung",
         "kSchema": "Entitätsgraph",
+        "kSameAs": "Identitätsdeklarationen",
         "kAuthor": "Themenpassung Autor",
         "kCitation": "Quellenqualität",
         "kTransparency": "Transparenz",
@@ -6141,7 +6151,14 @@
           "no-articles": "Es wurden keine Artikelseiten erkannt; die Ebenen Autoren und Quellenangaben wurden nicht bewertet.",
           "author-invalid-profile": "{{0}} Autoren verlinken ein ORCID- oder Wikidata-Profil mit ungültiger Kennung ({{1}}). Prüfsumme oder Q-ID kontrollieren.",
           "ymyl-no-scholarly-ids": "Keiner der {{0}} Artikel zitiert eine Quelle mit DOI, PMID oder PMCID. Bei YMYL-Themen die Primärstudie zitieren."
-        }
+        },
+        "colProfile": "Profilnachweis",
+        "tClaims": "Belege für Aussagen",
+        "claimsIntro": "Zuordnungen von Aussagen zu Quellen; Wortähnlichkeit ist keine Verifizierung.",
+        "colClaim": "Aussage",
+        "colEvidence": "Beleg",
+        "colRelation": "Beziehung",
+        "colChecked": "Manuell geprüft"
       },
       "offPage": {
         "title": "Offpage-Analyse",
@@ -7352,11 +7369,24 @@
       "title": "Schwächste Textstellen",
       "intro": "Simulierte RAG-Chunks, die sich am schwersten zitieren lassen. Beheben Sie zuerst die genannten Probleme.",
       "chunk": "Chunk {{n}} · {{tokens}} Tokens · Wert {{score}}",
+      "offset": "Quellzeichen {{start}}–{{end}}",
+      "cancel": "Abbrechen",
+      "export": "Entwurf exportieren",
+      "approve": "Für Brief freigeben",
+      "approved": "Für Brief freigegeben",
+      "diff": "Geänderte Zeilen anzeigen",
+      "scoreChange": "Profiländerung: {{delta}}",
+      "beforeAfter": "Vorher {{before}} · nachher {{after}}",
+      "facts": "Fakten: {{before}} → {{after}}",
+      "partialProfile": "Teilprofil: Sprach- oder Ankerdaten sind unvollständig; die Änderung vorher/nachher ist keine vollständige Bewertung.",
+      "preservationWarning": "Prüfung erforderlich: Diese Quell-Token fehlen nach der Umschreibung: {{missing}}",
+      "unverified": "Der KI-Vorschlag ist nicht verifiziert. Die Freigabe erfolgt manuell; nichts wird im CMS veröffentlicht.",
       "noHeading": "(Einleitung ohne Überschrift)",
       "current": "Aktuelle Textstelle",
       "optimized": "Optimierte Textstelle",
       "generate": "Mit KI umschreiben",
       "generating": "Wird umgeschrieben…",
+      "cancelled": "Umschreibung abgebrochen.",
       "copy": "Kopieren",
       "copied": "Kopiert",
       "noKey": "Verbinden Sie in den Einstellungen einen KI-Anbieter, um Textstellen umzuschreiben.",
@@ -7366,6 +7396,8 @@
     },
     "issue": {
       "dangling-pronoun": "Unklarer Bezug",
+      "deictic-context": "Kontextabhängiger Verweis",
+      "no-entity": "Subjekt oder Entität nicht benannt",
       "no-answer-first": "Keine direkte Antwort am Anfang",
       "filler-opening": "Füllende Einleitung",
       "no-facts": "Keine konkreten Fakten",
@@ -7384,6 +7416,8 @@
     "hero": {
       "label": "Entitäts-Vertrauenswert",
       "articles": "{{articles}} Artikelseiten unter {{pages}} gecrawlten Seiten",
+      "profile": "Profil {{profile}} · Version {{version}}",
+      "coverage": "Evidenzabdeckung: beobachtet / deklariert / verifiziert / unbekannt",
       "previous": "Vorheriger Lauf: {{score}} ({{delta}})",
       "ymyl": "YMYL-Kategorie: {{category}}. Suchmaschinen legen an diese Seiten den strengsten Vertrauensmaßstab an.",
       "unattributed": "{{pct}} % der Artikel haben keinen namentlich genannten Autor oder Prüfer."
@@ -7402,6 +7436,7 @@
     "layers": {
       "title": "Vertrauensebenen",
       "schemaGraph": "Entitätsgraph (JSON-LD)",
+      "sameAs": "Identitätsdeklarationen (sameAs)",
       "authorAlignment": "Themenpassung der Autoren",
       "citationQuality": "Quellenqualität",
       "transparency": "Redaktionelle Transparenz",
@@ -7417,9 +7452,14 @@
       "colArticles": "Artikel",
       "colSameAs": "sameAs-Links",
       "colAlignment": "Themenpassung",
-      "generic": "anonyme Autorenzeile"
+      "generic": "anonyme Autorenzeile",
+      "identityEvidence": "Identitätsnachweis",
+      "unavailableNote": "Kein Profil angegeben; nicht verfügbar bedeutet nicht fiktiv.",
+      "verifyProfiles": "Profile prüfen"
     },
     "signals": {
+      "claimEvidence": "Belege für Aussagen",
+      "associationNote": "Ein Zusammenhang ist kein Beleg; Überschneidung setzt sourceChecked nicht.",
       "title": "Quellen und Transparenz",
       "citations": "{{trusted}} von {{pages}} Artikelseiten verlinken auf eine vertrauenswürdige Quelle (.gov, .edu, PubMed, WHO).",
       "dead": "{{count}} ausgehende Links sind defekt",
@@ -7485,7 +7525,8 @@
         "missing-name": "Gib den Namen des Autors ein.",
         "invalid-organization-url": "Gib eine gültige Herausgeber-URL ein (https://...).",
         "invalid-page-url": "Gib eine gültige Seiten-URL ein (https://...).",
-        "invalid-same-as": "Einige sameAs-Einträge sind keine gültigen URLs und wurden weggelassen."
+        "invalid-same-as": "Einige sameAs-Einträge sind keine gültigen URLs und wurden weggelassen.",
+        "conflict": "Das vorhandene Feld {{property}} für {{id}} widerspricht dem Vorschlag. Vor dem Export muss der Konflikt gelöst werden."
       },
       "preview": "Erzeugtes JSON-LD",
       "copy": "Script-Tag kopieren",
@@ -7736,7 +7777,20 @@
     "spent": "Ausgegeben: {{value}}",
     "saved": "Gespart durch Cache und lokale Läufe: {{value}}",
     "hits": "Cache-Treffer: {{count}}",
-    "leaves": "Der Seitentext wird von diesem Gerät an {{provider}} gesendet."
+    "leaves": "Der Seitentext wird von diesem Gerät an {{provider}} gesendet.",
+    "remaining": "Verbleibendes Budget: {{value}}",
+    "storageUnavailable": "Der Speicher für LLM-Budget oder Ausgaben ist nicht verfügbar oder ungültig.",
+    "overBudget": "Monatliches LLM-Budget überschritten.",
+    "unknownCost": "{{count}} externe Aufrufe haben unbekannte Kosten und sind nicht enthalten.",
+    "selectProject": "Projekt für das LLM-Budget auswählen.",
+    "budgetTitle": "LLM-Projektbudget",
+    "noLimit": "Kein Monatslimit",
+    "limitLabel": "Monatslimit (USD)",
+    "warnLabel": "Warnung ab (%)",
+    "saveBudget": "Budget speichern",
+    "savedBudget": "LLM-Budget gespeichert.",
+    "invalidLimit": "Gültiges nichtnegatives Monatslimit eingeben.",
+    "invalidWarn": "Schwelle muss eine ganze Zahl von 1 bis 100 sein."
   },
   "templateGovernor": {
     "title": "Qualität programmatischer Templates",

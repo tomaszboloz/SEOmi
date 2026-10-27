@@ -6063,15 +6063,25 @@
           "no-answer-first": "冒頭に直接の回答がない",
           "filler-opening": "冗長な書き出し",
           "no-facts": "具体的な事実がない",
-          "too-long": "1チャンクには長すぎる"
-        }
+          "too-long": "1チャンクには長すぎる",
+          "deictic-context": "文脈に依存する参照",
+          "no-entity": "主題への言及がありません"
+        },
+        "profile": "計算プロファイル: {{0}} / {{1}} / {{2}} / {{3}} / {{4}}",
+        "profilePersisted": "保存されたクロールのプロファイルと一致しています。",
+        "profileLegacy": "このクロールには保存されたプロファイルがありません。表示中のプロファイルで再計算した結果のため、過去の結果とは比較できません。",
+        "profileMismatch": "保存されたプロファイルが異なります。表示中のプロファイルで再計算した結果のため、過去の結果とは比較できません。",
+        "historicalProfile": "保存されたプロファイル: {{0}} / {{1}}."
       },
       "trust": {
         "title": "エンティティの信頼性（E-E-A-T）",
         "intro": "サイトの発行者、著者、情報源をどの程度確認できるかを示します。スコアは保存済みの実行結果から算出し、ページは再取得しません。",
         "scoreTitle": "エンティティ信頼スコア",
         "legend": "レベル: 75-100 高い、60-74 十分、40-59 低い、0-39 重大。",
+        "profile": "EETVプロファイル {{0}}（バージョン{{1}}）",
+        "coverage": "証拠カバレッジ",
         "kSchema": "エンティティグラフ",
+        "kSameAs": "身元宣言",
         "kAuthor": "著者の適合度",
         "kCitation": "情報源の品質",
         "kTransparency": "透明性",
@@ -6141,7 +6151,14 @@
           "no-articles": "記事ページが検出されませんでした。著者と引用のレイヤーは採点されていません。",
           "author-invalid-profile": "{{0}}人の著者が無効な識別子のORCIDまたはWikidataプロフィールをリンクしています（{{1}}）。チェックサムまたはQ-IDを確認してください。",
           "ymyl-no-scholarly-ids": "{{0}}件の記事のいずれもDOI、PMID、PMCIDを持つ情報源を引用していません。YMYLの話題では一次研究を引用してください。"
-        }
+        },
+        "colProfile": "プロフィール証拠",
+        "tClaims": "主張の証拠",
+        "claimsIntro": "主張と引用の関連付けです。語句の重複は検証ではありません。",
+        "colClaim": "主張",
+        "colEvidence": "証拠",
+        "colRelation": "関係",
+        "colChecked": "手動確認"
       },
       "offPage": {
         "title": "オフページ分析",
@@ -7352,11 +7369,24 @@
       "title": "最も弱い文章",
       "intro": "引用しにくい順に並べたRAGチャンクのシミュレーションです。まず示された問題を修正してください。",
       "chunk": "チャンク{{n}}・{{tokens}}トークン・スコア{{score}}",
+      "offset": "ソース文字 {{start}}–{{end}}",
+      "cancel": "キャンセル",
+      "export": "下書きをエクスポート",
+      "approve": "ブリーフ用に承認",
+      "approved": "ブリーフ用に承認済み",
+      "diff": "変更行を表示",
+      "scoreChange": "プロファイルの変化：{{delta}}",
+      "beforeAfter": "前 {{before}}・後 {{after}}",
+      "facts": "事実：{{before}} → {{after}}",
+      "partialProfile": "部分的なプロファイル：言語またはアンカーの証拠が不完全なため、変更前後の差分は完全な評価ではありません。",
+      "preservationWarning": "確認が必要です。書き換え後に次のソーストークンが見つかりません：{{missing}}",
+      "unverified": "AIの提案は未検証です。承認は手動で行い、CMSには公開しません。",
       "noHeading": "（見出しのない導入部）",
       "current": "現在の文章",
       "optimized": "最適化した文章",
       "generate": "AIで書き直す",
       "generating": "書き直し中…",
+      "cancelled": "書き換えをキャンセルしました。",
       "copy": "コピー",
       "copied": "コピーしました",
       "noKey": "文章を書き直すには、設定でAIプロバイダーを接続してください。",
@@ -7366,6 +7396,8 @@
     },
     "issue": {
       "dangling-pronoun": "指示対象が不明確",
+      "deictic-context": "文脈依存の指示",
+      "no-entity": "主語・エンティティが未記載",
       "no-answer-first": "冒頭に直接の回答がない",
       "filler-opening": "冗長な書き出し",
       "no-facts": "具体的な事実がない",
@@ -7384,6 +7416,8 @@
     "hero": {
       "label": "エンティティ信頼スコア",
       "articles": "クロールした{{pages}}ページのうち記事ページは{{articles}}ページ",
+      "profile": "プロファイル {{profile}} · バージョン {{version}}",
+      "coverage": "証拠カバレッジ: 観測 / 宣言 / 検証済み / 不明",
       "previous": "前回の実行: {{score}}（{{delta}}）",
       "ymyl": "YMYLカテゴリ: {{category}}。検索エンジンはこれらのページに最も厳しい信頼基準を適用します。",
       "unattributed": "記事の{{pct}}%に、氏名のある著者または監修者がいません。"
@@ -7402,6 +7436,7 @@
     "layers": {
       "title": "信頼性のレイヤー",
       "schemaGraph": "エンティティグラフ（JSON-LD）",
+      "sameAs": "身元宣言（sameAs）",
       "authorAlignment": "著者のテーマ適合度",
       "citationQuality": "情報源の品質",
       "transparency": "編集の透明性",
@@ -7417,9 +7452,14 @@
       "colArticles": "記事数",
       "colSameAs": "sameAsリンク",
       "colAlignment": "テーマ適合度",
-      "generic": "匿名の署名"
+      "generic": "匿名の署名",
+      "identityEvidence": "本人確認の証拠",
+      "unavailableNote": "宣言されたプロフィールなし。利用不可は架空を意味しません。",
+      "verifyProfiles": "プロフィールを検証"
     },
     "signals": {
+      "claimEvidence": "主張の証拠",
+      "associationNote": "関連付けは裏付けではありません。重複で手動sourceCheckedは設定されません。",
       "title": "情報源と透明性",
       "citations": "記事{{pages}}ページのうち{{trusted}}ページが信頼できる情報源（.gov、.edu、PubMed、WHO）へリンクしています。",
       "dead": "外部リンク{{count}}件が切れています",
@@ -7485,7 +7525,8 @@
         "missing-name": "著者名を入力してください。",
         "invalid-organization-url": "有効な発行者URLを入力してください（https://...）。",
         "invalid-page-url": "有効なページURLを入力してください（https://...）。",
-        "invalid-same-as": "有効なURLではないsameAsの項目は除外しました。"
+        "invalid-same-as": "有効なURLではないsameAsの項目は除外しました。",
+        "conflict": "{{id}} の既存の {{property}} が提案と競合しています。エクスポート前に解決してください。"
       },
       "preview": "生成されたJSON-LD",
       "copy": "scriptタグをコピー",
@@ -7736,7 +7777,20 @@
     "spent": "支出: {{value}}",
     "saved": "キャッシュとローカル実行の節約額: {{value}}",
     "hits": "キャッシュヒット: {{count}}",
-    "leaves": "ページ本文はこの端末の外の {{provider}} に送信されます。"
+    "leaves": "ページ本文はこの端末の外の {{provider}} に送信されます。",
+    "remaining": "残りの予算: {{value}}",
+    "storageUnavailable": "LLM予算または支出の保存領域が利用できないか無効です。",
+    "overBudget": "月間LLM予算を超過しました。",
+    "unknownCost": "{{count}}件の外部呼び出しは費用不明のため支出に含まれません。",
+    "selectProject": "LLM予算を編集するプロジェクトを選択してください。",
+    "budgetTitle": "プロジェクトLLM予算",
+    "noLimit": "月間上限なし",
+    "limitLabel": "月間上限 (USD)",
+    "warnLabel": "警告しきい値 (%)",
+    "saveBudget": "予算を保存",
+    "savedBudget": "LLM予算を保存しました。",
+    "invalidLimit": "0以上の有効な月間上限を入力してください。",
+    "invalidWarn": "警告しきい値は1から100の整数で指定してください。"
   },
   "templateGovernor": {
     "title": "プログラマティックテンプレートの品質",

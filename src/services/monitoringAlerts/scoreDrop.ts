@@ -1,4 +1,5 @@
 import i18n from '@/i18n';
+import { AIO_ALERT_CALIBRATION_VERSION } from './aioCalibration';
 import { alertFingerprint, defaultMonitoringAlertSettings } from './policy';
 import type { MonitoringAlert, MonitoringAlertSettings } from './types';
 
@@ -20,7 +21,7 @@ export const evaluateScoreDropAlert = (
   const type = kind === 'aio' ? 'aio' : 'focus';
   if (kind === 'aio' ? difference + tolerance < settings.thresholds.aio.dropPoints : points <= settings.thresholds.focus.dropPoints) return null;
   const evidence: MonitoringAlert['evidence'] = kind === 'aio'
-    ? { kind, before: previous.score, after: next.score, drop: points }
+    ? { kind, before: previous.score, after: next.score, drop: points, calibrationVersion: AIO_ALERT_CALIBRATION_VERSION }
     : { kind, from: previous.score, to: next.score, points };
   return {
     type,
