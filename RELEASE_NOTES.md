@@ -1,3 +1,9 @@
+# SEOmi 0.4.44 — release notes
+
+## Fixed
+- Exported JSON-LD escapes every `<` as `\u003c`, so values such as `<!--<script` can no longer switch the HTML parser into the double-escaped state. Trust and composed schema exports share one serializer (#225, #226).
+- URL protection never sends a page with positive revenue but no currency to pruning. It returns `needs-data` with a request to confirm the currency (#224).
+
 # SEOmi 0.4.43 — release notes
 
 ## Fixed
