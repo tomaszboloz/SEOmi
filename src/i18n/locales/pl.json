@@ -6071,7 +6071,10 @@
         "intro": "Jak łatwo zweryfikować wydawcę, autorów i źródła witryny. Wyniki pochodzą z zapisanego przebiegu; żadne strony nie są pobierane ponownie.",
         "scoreTitle": "Wynik zaufania do encji",
         "legend": "Poziomy: 75-100 silne, 60-74 wystarczające, 40-59 słabe, 0-39 krytyczne.",
+        "profile": "Profil EETV {{0}} (wersja {{1}})",
+        "coverage": "Pokrycie dowodami",
         "kSchema": "Graf encji",
+        "kSameAs": "Deklaracje tożsamości",
         "kAuthor": "Dopasowanie autora",
         "kCitation": "Jakość źródeł",
         "kTransparency": "Transparentność",
@@ -7384,6 +7387,8 @@
     "hero": {
       "label": "Wynik zaufania do encji",
       "articles": "{{articles}} stron artykułów wśród {{pages}} przeskanowanych stron",
+      "profile": "Profil {{profile}} · wersja {{version}}",
+      "coverage": "Pokrycie dowodami: zaobserwowane / zadeklarowane / zweryfikowane / nieznane",
       "previous": "Poprzedni przebieg: {{score}} ({{delta}})",
       "ymyl": "Kategoria YMYL: {{category}}. Wyszukiwarki stosują do tych stron najostrzejsze kryteria zaufania.",
       "unattributed": "{{pct}}% artykułów nie ma imiennego autora ani recenzenta."
@@ -7402,6 +7407,7 @@
     "layers": {
       "title": "Warstwy zaufania",
       "schemaGraph": "Graf encji (JSON-LD)",
+      "sameAs": "Deklaracje tożsamości (sameAs)",
       "authorAlignment": "Dopasowanie autora do tematu",
       "citationQuality": "Jakość źródeł",
       "transparency": "Transparentność redakcyjna",

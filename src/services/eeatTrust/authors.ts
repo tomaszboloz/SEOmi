@@ -3,7 +3,7 @@ import type { FocusPage, SiteFocusReport } from '@/services/siteFocus';
 import { normalizeUrl } from '@/services/siteFocus/pageType';
 import { phraseKey } from '@/services/siteFocus/terms';
 import { childNodes, type SchemaNode } from './graph';
-import { classifyProfiles } from './identifiers';
+import { classifyProfiles, declarationRecall } from './identifiers';
 import type { AuthorEntity } from './types';
 
 const GENERIC = /^(the\s+)?(redakcj|redaktion|redacci|redazion|r[eé]daction|editorial|editors?\b|staff\b|admin|team\b|zesp[oó]ł|zespol|команд|редакц|администр|autor\b|author\b|unknown|anonim)/i;
@@ -36,7 +36,12 @@ const alignmentOf = (entity: SchemaNode, pages: CrawledPageSummary[], report: Si
   const language = report.model.language;
   const weights = new Map<string, number>();
   const add = (key: string | null | undefined, weight: number): void => { if (key) weights.set(key, (weights.get(key) ?? 0) + weight); };
-  [...(entity.props.jobTitle ?? []), ...(entity.props.knowsAbout ?? [])].forEach((text) => {
+  const bio = [...(entity.props.bio ?? []), ...(entity.props.description ?? [])];
+  const credentials = entity.props.hasCredential ?? entity.props.credential ?? [];
+  const declared = [...bio, ...credentials, ...(entity.props.knowsAbout ?? [])];
+  // A jobTitle by itself is not a competence claim. It can add signal only
+  // when the crawl also exposes an explicit bio, credential or knowsAbout.
+  if (declared.length) [...(entity.props.jobTitle ?? []), ...declared].forEach((text) => {
     add(phraseKey(text, language), 1);
     text.split(/[\s,;/]+/).forEach((word) => add(phraseKey(word, language), 0.5));
   });
@@ -72,10 +77,14 @@ export const scanAuthors = (
         withAuthor.add(url);
         const author = byKey.get(key) ?? {
           key, name: entity.name ?? entity.id ?? key, id: entity.id, jobTitle: entity.props.jobTitle?.[0],
+          bio: [...(entity.props.bio ?? []), ...(entity.props.description ?? [])].join(' ') || undefined,
+          credentials: entity.props.hasCredential ?? entity.props.credential ?? [],
+          knowsAbout: entity.props.knowsAbout ?? [],
           sameAs: entity.props.sameAs ?? [],
         profiles: classifyProfiles(entity.props.sameAs ?? []), articleUrls: [], generic: isGenericAuthor(entity.name ?? ''),
           alignmentPct: alignmentOf(entity, pages, report),
         };
+        author.reconciliation = { role: 'author', profiles: author.profiles, declarationRecall: declarationRecall(author.profiles), status: author.profiles.length ? 'declared' : 'unavailable', evidence: 'declared' };
         if (!author.articleUrls.includes(url)) author.articleUrls.push(url);
         byKey.set(key, author);
       }

@@ -6071,7 +6071,10 @@
         "intro": "网站发布者、作者和来源的可验证程度。得分来自已保存的运行结果，不会重新获取任何页面。",
         "scoreTitle": "实体信任得分",
         "legend": "等级：75-100 高，60-74 足够，40-59 弱，0-39 严重。",
+        "profile": "EETV 配置 {{0}}（版本 {{1}}）",
+        "coverage": "证据覆盖",
         "kSchema": "实体图谱",
+        "kSameAs": "身份声明",
         "kAuthor": "作者契合度",
         "kCitation": "来源质量",
         "kTransparency": "透明度",
@@ -7384,6 +7387,8 @@
     "hero": {
       "label": "实体信任得分",
       "articles": "在 {{pages}} 个已抓取页面中有 {{articles}} 个文章页面",
+      "profile": "配置文件 {{profile}} · 版本 {{version}}",
+      "coverage": "证据覆盖：已观察 / 已声明 / 已验证 / 未知",
       "previous": "上次运行：{{score}}（{{delta}}）",
       "ymyl": "YMYL 类别：{{category}}。搜索引擎对这类页面采用最严格的信任标准。",
       "unattributed": "{{pct}}% 的文章没有署名作者或审核者。"
@@ -7402,6 +7407,7 @@
     "layers": {
       "title": "信任层级",
       "schemaGraph": "实体图谱（JSON-LD）",
+      "sameAs": "身份声明（sameAs）",
       "authorAlignment": "作者主题契合度",
       "citationQuality": "来源质量",
       "transparency": "编辑透明度",

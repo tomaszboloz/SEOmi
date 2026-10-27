@@ -12,6 +12,7 @@ import { activeCrawlRuns, persistInterruptedCrawl, buildCrawlCheckpoint, mergeCr
 import { monitorAioCrawls, monitorCrawlComparison } from '@/services/monitoringAlerts';
 import { runScheduledFocus } from '@/services/siteFocusMonitoring';
 import { runTaskVerification } from '@/services/optimizationTasks/runVerification';
+import { persistCompletedTrustRun } from '@/services/eeatTrust';
 import { compareCrawlRuns } from '@/services/crawlDiff';
 import { deniedMessage, enforcePermission } from '@/services/team/enforce';
 
@@ -108,6 +109,7 @@ startSiteCrawl: async (url, limit, configPatch, environment = 'default', notifyC
       }
       if (projectId && previousRun) void monitorCrawlComparison(projectId, compareCrawlRuns(run, previousRun, { projectId }));
       if (projectId) void monitorAioCrawls(projectId, run, projectRuns).catch(() => undefined);
+      if (projectId) { try { persistCompletedTrustRun(projectId, run); } catch { /* trust persistence must not fail the crawl */ } }
       if (projectId) void runScheduledFocus(projectId, run, previousRun);
       if (projectId) { try { runTaskVerification(projectId, run); } catch { /* verification is best-effort */ } }
       return crawlResult;

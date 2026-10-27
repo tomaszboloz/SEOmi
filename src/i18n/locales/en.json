@@ -6071,7 +6071,10 @@
         "intro": "How verifiable the publisher, authors and sources of the site are. Scores come from the saved run; no pages are fetched again.",
         "scoreTitle": "Entity Trust Score",
         "legend": "Levels: 75-100 strong, 60-74 adequate, 40-59 weak, 0-39 critical.",
+        "profile": "EETV profile {{0}} (version {{1}})",
+        "coverage": "Evidence coverage",
         "kSchema": "Entity graph",
+        "kSameAs": "Identity declarations",
         "kAuthor": "Author topic fit",
         "kCitation": "Source quality",
         "kTransparency": "Transparency",
@@ -7384,6 +7387,8 @@
     "hero": {
       "label": "Entity Trust Score",
       "articles": "{{articles}} article pages among {{pages}} crawled pages",
+      "profile": "Profile {{profile}} · version {{version}}",
+      "coverage": "Evidence coverage: observed / declared / verified / unknown",
       "previous": "Previous run: {{score}} ({{delta}})",
       "ymyl": "YMYL category: {{category}}. Search engines hold these pages to the strictest trust standard.",
       "unattributed": "{{pct}}% of articles have no named author or reviewer."
@@ -7402,6 +7407,7 @@
     "layers": {
       "title": "Trust layers",
       "schemaGraph": "Entity graph (JSON-LD)",
+      "sameAs": "Identity declarations (sameAs)",
       "authorAlignment": "Author topic fit",
       "citationQuality": "Source quality",
       "transparency": "Editorial transparency",

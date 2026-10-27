@@ -6071,7 +6071,10 @@
         "intro": "Dans quelle mesure l'éditeur, les auteurs et les sources du site sont vérifiables. Les scores proviennent de l'exécution enregistrée ; aucune page n'est téléchargée à nouveau.",
         "scoreTitle": "Score de confiance des entités",
         "legend": "Niveaux : 75-100 fort, 60-74 suffisant, 40-59 faible, 0-39 critique.",
+        "profile": "Profil EETV {{0}} (version {{1}})",
+        "coverage": "Couverture des preuves",
         "kSchema": "Graphe d'entités",
+        "kSameAs": "Déclarations d'identité",
         "kAuthor": "Adéquation de l'auteur",
         "kCitation": "Qualité des sources",
         "kTransparency": "Transparence",
@@ -7384,6 +7387,8 @@
     "hero": {
       "label": "Score de confiance des entités",
       "articles": "{{articles}} pages d'articles parmi {{pages}} pages explorées",
+      "profile": "Profil {{profile}} · version {{version}}",
+      "coverage": "Couverture des preuves : observée / déclarée / vérifiée / inconnue",
       "previous": "Exécution précédente : {{score}} ({{delta}})",
       "ymyl": "Catégorie YMYL : {{category}}. Les moteurs de recherche appliquent à ces pages le niveau de confiance le plus strict.",
       "unattributed": "{{pct}} % des articles n'ont ni auteur ni relecteur nommé."
@@ -7402,6 +7407,7 @@
     "layers": {
       "title": "Couches de confiance",
       "schemaGraph": "Graphe d'entités (JSON-LD)",
+      "sameAs": "Déclarations d'identité (sameAs)",
       "authorAlignment": "Adéquation thématique des auteurs",
       "citationQuality": "Qualité des sources",
       "transparency": "Transparence éditoriale",

@@ -47,8 +47,12 @@ pub fn kpis(trust: &Value) -> Vec<Kpi> {
             color: value.map_or(MUTED, |v| level_color(level_of(v))),
         }
     };
+    let mut schema = item(t(k::K_SCHEMA), "schema_graph");
+    if let Some(value) = layer(trust, "same_as") {
+        schema.note = format!("{}; {} {}", schema.note, t(k::K_SAME_AS), arg(Some(&Value::from(value))));
+    }
     vec![
-        item(t(k::K_SCHEMA), "schema_graph"),
+        schema,
         item(t(k::K_AUTHOR), "author_alignment"),
         item(t(k::K_CITATION), "citation_quality"),
         item(t(k::K_TRANSPARENCY), "transparency"),
@@ -95,6 +99,16 @@ impl Doc {
             t(k::LEGEND),
         );
         self.kpi_grid(&kpis(trust));
+        if let (Some(version), Some(profile)) = (trust.get("profile_version"), trust.get("profile_id")) {
+            self.paragraph(MARGIN, CONTENT_W, Style::CAPTION, &tf(t(k::PROFILE), &[&arg(Some(profile)), &arg(Some(version))]));
+        }
+        if let Some(coverage) = trust.get("coverage").and_then(Value::as_object) {
+            let detail = coverage.iter().filter_map(|(layer, value)| {
+                let item = value.as_object()?;
+                Some(format!("{layer} O/D/V/U {}/{}/{}/{}", arg(item.get("observed")), arg(item.get("declared")), arg(item.get("verified")), arg(item.get("unknown"))))
+            }).collect::<Vec<_>>().join("; ");
+            if !detail.is_empty() { self.paragraph(MARGIN, CONTENT_W, Style::CAPTION, &format!("{}: {}", t(k::COVERAGE), detail)); }
+        }
         if let Some(category) = trust.get("ymyl").and_then(Value::as_str) {
             let note = tf(
                 t(k::YMYL_NOTE),

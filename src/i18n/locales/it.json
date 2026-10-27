@@ -6071,7 +6071,10 @@
         "intro": "Quanto sono verificabili editore, autori e fonti del sito. I punteggi derivano dall'esecuzione salvata; nessuna pagina viene scaricata di nuovo.",
         "scoreTitle": "Punteggio di fiducia delle entità",
         "legend": "Livelli: 75-100 solido, 60-74 adeguato, 40-59 debole, 0-39 critico.",
+        "profile": "Profilo EETV {{0}} (versione {{1}})",
+        "coverage": "Copertura delle prove",
         "kSchema": "Grafo delle entità",
+        "kSameAs": "Dichiarazioni di identità",
         "kAuthor": "Affinità dell'autore",
         "kCitation": "Qualità delle fonti",
         "kTransparency": "Trasparenza",
@@ -7384,6 +7387,8 @@
     "hero": {
       "label": "Punteggio di fiducia delle entità",
       "articles": "{{articles}} pagine di articoli su {{pages}} pagine scansionate",
+      "profile": "Profilo {{profile}} · versione {{version}}",
+      "coverage": "Copertura delle prove: osservata / dichiarata / verificata / sconosciuta",
       "previous": "Esecuzione precedente: {{score}} ({{delta}})",
       "ymyl": "Categoria YMYL: {{category}}. I motori di ricerca applicano a queste pagine lo standard di fiducia più severo.",
       "unattributed": "Il {{pct}}% degli articoli non ha un autore o un revisore indicato per nome."
@@ -7402,6 +7407,7 @@
     "layers": {
       "title": "Livelli di fiducia",
       "schemaGraph": "Grafo delle entità (JSON-LD)",
+      "sameAs": "Dichiarazioni di identità (sameAs)",
       "authorAlignment": "Affinità tematica degli autori",
       "citationQuality": "Qualità delle fonti",
       "transparency": "Trasparenza editoriale",

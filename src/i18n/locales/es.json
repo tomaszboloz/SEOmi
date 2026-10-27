@@ -6071,7 +6071,10 @@
         "intro": "Qué tan verificables son el editor, los autores y las fuentes del sitio. Las puntuaciones proceden de la ejecución guardada; no se vuelve a descargar ninguna página.",
         "scoreTitle": "Puntuación de confianza de entidad",
         "legend": "Niveles: 75-100 alta, 60-74 suficiente, 40-59 débil, 0-39 crítica.",
+        "profile": "Perfil EETV {{0}} (versión {{1}})",
+        "coverage": "Cobertura de evidencia",
         "kSchema": "Grafo de entidades",
+        "kSameAs": "Declaraciones de identidad",
         "kAuthor": "Afinidad del autor",
         "kCitation": "Calidad de las fuentes",
         "kTransparency": "Transparencia",
@@ -7384,6 +7387,8 @@
     "hero": {
       "label": "Puntuación de confianza de entidad",
       "articles": "{{articles}} páginas de artículos entre {{pages}} páginas rastreadas",
+      "profile": "Perfil {{profile}} · versión {{version}}",
+      "coverage": "Cobertura de evidencia: observada / declarada / verificada / desconocida",
       "previous": "Ejecución anterior: {{score}} ({{delta}})",
       "ymyl": "Categoría YMYL: {{category}}. Los buscadores aplican a estas páginas el estándar de confianza más estricto.",
       "unattributed": "El {{pct}}% de los artículos no tiene autor ni revisor con nombre."
@@ -7402,6 +7407,7 @@
     "layers": {
       "title": "Capas de confianza",
       "schemaGraph": "Grafo de entidades (JSON-LD)",
+      "sameAs": "Declaraciones de identidad (sameAs)",
       "authorAlignment": "Afinidad temática del autor",
       "citationQuality": "Calidad de las fuentes",
       "transparency": "Transparencia editorial",

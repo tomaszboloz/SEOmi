@@ -6071,7 +6071,10 @@
         "intro": "Wie gut sich Herausgeber, Autoren und Quellen der Website überprüfen lassen. Die Werte stammen aus dem gespeicherten Lauf; keine Seite wird erneut abgerufen.",
         "scoreTitle": "Entitäts-Vertrauenswert",
         "legend": "Stufen: 75-100 stark, 60-74 ausreichend, 40-59 schwach, 0-39 kritisch.",
+        "profile": "EETV-Profil {{0}} (Version {{1}})",
+        "coverage": "Evidenzabdeckung",
         "kSchema": "Entitätsgraph",
+        "kSameAs": "Identitätsdeklarationen",
         "kAuthor": "Themenpassung Autor",
         "kCitation": "Quellenqualität",
         "kTransparency": "Transparenz",
@@ -7384,6 +7387,8 @@
     "hero": {
       "label": "Entitäts-Vertrauenswert",
       "articles": "{{articles}} Artikelseiten unter {{pages}} gecrawlten Seiten",
+      "profile": "Profil {{profile}} · Version {{version}}",
+      "coverage": "Evidenzabdeckung: beobachtet / deklariert / verifiziert / unbekannt",
       "previous": "Vorheriger Lauf: {{score}} ({{delta}})",
       "ymyl": "YMYL-Kategorie: {{category}}. Suchmaschinen legen an diese Seiten den strengsten Vertrauensmaßstab an.",
       "unattributed": "{{pct}} % der Artikel haben keinen namentlich genannten Autor oder Prüfer."
@@ -7402,6 +7407,7 @@
     "layers": {
       "title": "Vertrauensebenen",
       "schemaGraph": "Entitätsgraph (JSON-LD)",
+      "sameAs": "Identitätsdeklarationen (sameAs)",
       "authorAlignment": "Themenpassung der Autoren",
       "citationQuality": "Quellenqualität",
       "transparency": "Redaktionelle Transparenz",

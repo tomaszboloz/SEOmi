@@ -6071,7 +6071,10 @@
         "intro": "サイトの発行者、著者、情報源をどの程度確認できるかを示します。スコアは保存済みの実行結果から算出し、ページは再取得しません。",
         "scoreTitle": "エンティティ信頼スコア",
         "legend": "レベル: 75-100 高い、60-74 十分、40-59 低い、0-39 重大。",
+        "profile": "EETVプロファイル {{0}}（バージョン{{1}}）",
+        "coverage": "証拠カバレッジ",
         "kSchema": "エンティティグラフ",
+        "kSameAs": "身元宣言",
         "kAuthor": "著者の適合度",
         "kCitation": "情報源の品質",
         "kTransparency": "透明性",
@@ -7384,6 +7387,8 @@
     "hero": {
       "label": "エンティティ信頼スコア",
       "articles": "クロールした{{pages}}ページのうち記事ページは{{articles}}ページ",
+      "profile": "プロファイル {{profile}} · バージョン {{version}}",
+      "coverage": "証拠カバレッジ: 観測 / 宣言 / 検証済み / 不明",
       "previous": "前回の実行: {{score}}（{{delta}}）",
       "ymyl": "YMYLカテゴリ: {{category}}。検索エンジンはこれらのページに最も厳しい信頼基準を適用します。",
       "unattributed": "記事の{{pct}}%に、氏名のある著者または監修者がいません。"
@@ -7402,6 +7407,7 @@
     "layers": {
       "title": "信頼性のレイヤー",
       "schemaGraph": "エンティティグラフ（JSON-LD）",
+      "sameAs": "身元宣言（sameAs）",
       "authorAlignment": "著者のテーマ適合度",
       "citationQuality": "情報源の品質",
       "transparency": "編集の透明性",

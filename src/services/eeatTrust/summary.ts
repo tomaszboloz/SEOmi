@@ -11,7 +11,10 @@ export const TRUST_PDF_AUTHORS = 15;
 export interface TrustPdfSummary {
   score: number;
   level: string;
-  layers: { schema_graph: number | null; author_alignment: number | null; citation_quality: number | null; transparency: number | null };
+  layers: { schema_graph: number | null; same_as: number | null; author_alignment: number | null; citation_quality: number | null; transparency: number | null };
+  profile_version: number;
+  profile_id: string;
+  coverage: Record<string, { observed: number; declared: number; verified: number; unknown: number }>;
   ymyl: string | null;
   ymyl_unattributed_pct: number | null;
   article_count: number;
@@ -29,10 +32,14 @@ export const summarizeTrust = (report: TrustReport): TrustPdfSummary => ({
   level: report.level,
   layers: {
     schema_graph: report.layers.schemaGraph ?? null,
+    same_as: report.layers.sameAs ?? null,
     author_alignment: report.layers.authorAlignment ?? null,
     citation_quality: report.layers.citationQuality ?? null,
     transparency: report.layers.transparency ?? null,
   },
+  profile_version: report.profileVersion,
+  profile_id: report.profileId,
+  coverage: report.coverage,
   ymyl: report.ymyl ?? null,
   ymyl_unattributed_pct: report.ymylUnattributedPct ?? null,
   article_count: report.articleCount,
