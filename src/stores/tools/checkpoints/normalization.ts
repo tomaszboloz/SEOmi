@@ -23,7 +23,7 @@ export const normalizeInterruptedCrawl = (value: unknown): InterruptedCrawl | nu
   const environment = candidate.environment === 'staging' || candidate.environment === 'production' ? candidate.environment : 'default';
   const startedAt = typeof candidate.startedAt === 'string' && Number.isFinite(Date.parse(candidate.startedAt))
     ? candidate.startedAt
-    : new Date(0).toISOString();
+    : '';
   const updatedAt = typeof candidate.updatedAt === 'string' && Number.isFinite(Date.parse(candidate.updatedAt))
     ? candidate.updatedAt
     : startedAt;
@@ -37,11 +37,12 @@ export const normalizeInterruptedCrawl = (value: unknown): InterruptedCrawl | nu
     completedUrls: Array.isArray(candidate.completedUrls) ? candidate.completedUrls.filter((item): item is string => typeof item === 'string').slice(0, 20_000) : undefined,
     frontierUrls: Array.isArray(candidate.frontierUrls) ? candidate.frontierUrls.filter((item): item is string => typeof item === 'string').slice(0, 20_000) : undefined,
     baseRunId: typeof candidate.baseRunId === 'string' ? candidate.baseRunId : undefined,
+    baseResult: candidate.baseResult,
   };
 };
 
 export const interruptedCrawlTimestamp = (value: InterruptedCrawl): number => {
-  const timestamp = Date.parse(value.updatedAt || value.startedAt);
+  const timestamp = Date.parse(value.updatedAt || value.startedAt || '');
   return Number.isFinite(timestamp) ? timestamp : 0;
 };
 

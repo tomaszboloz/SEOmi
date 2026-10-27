@@ -1,4 +1,4 @@
-import type { ExternalLinkCheckBatchResult } from '@/types';
+import type { CrawlRunRecord, ExternalLinkCheckBatchResult } from '@/types';
 import { isStorageQuotaError } from '@/services/crawlPersistence';
 import i18n from '@/i18n';
 import type { ToolsSet, ToolsGet, ToolsServices } from '../contracts';
@@ -25,7 +25,9 @@ export const persistExternalLinkEvidence = async (context: ExternalLinkPersisten
   // Superseded checks may not replace newer evidence in the same project.
   // Background checks can still persist to their originating project.
   if (!isLatest() || (activeProjectId() === projectId && !isCurrent())) return;
-  const loadedRuns = activeProjectId() === projectId ? get().crawlRuns : await services.loadCrawlRuns(projectId);
+  const loadedRuns = activeProjectId() === projectId
+    ? get().crawlRuns
+    : (await services.loadCrawlRuns(projectId)).filter((r): r is CrawlRunRecord => Boolean(r.completedAt));
   if (!isLatest() || (activeProjectId() === projectId && !isCurrent())) return;
   const latestRuns = activeProjectId() === projectId ? get().crawlRuns : loadedRuns;
   const latestRun = latestRuns.find(candidate => candidate.id === runId);

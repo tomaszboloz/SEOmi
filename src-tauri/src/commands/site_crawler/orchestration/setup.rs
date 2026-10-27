@@ -33,6 +33,7 @@ pub struct CrawlSetup {
     pub ua: String,
     pub client: reqwest::Client,
     pub retry_budget: Arc<RetryBudget>,
+    pub project_id: Option<String>,
 }
 
 impl CrawlSetup {
@@ -120,6 +121,7 @@ impl CrawlSetup {
             ua,
             client,
             retry_budget,
+            project_id,
         })
     }
 }

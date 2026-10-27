@@ -2539,6 +2539,8 @@
     "interruptedTitle": "이전 크롤링을 재개할 수 있습니다",
     "interruptedDescription": "{{url}} · {{limit}}개 URL 제한 · {{date}}의 부분 또는 중단된 결과입니다. 재개하면 저장된 구성으로 새 크롤링을 시작합니다{{completed}}{{frontier}}.",
     "resumeCrawl": "크롤링 재개",
+    "interruptedMissingConfigNotice": "저장된 크롤링 설정을 사용할 수 없습니다. 현재 설정을 사용하여 재개할 수 있습니다.",
+    "resumeWithCurrentConfig": "현재 설정으로 재개",
     "discard": "삭제",
     "progressStatus": "Crawling internal domain links and checking status codes…",
     "liveMetricsAria": "실시간 크롤링 지표",

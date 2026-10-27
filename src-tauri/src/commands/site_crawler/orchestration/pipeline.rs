@@ -1,10 +1,9 @@
 use tauri::{AppHandle, Runtime};
 
 use super::{
-    frontier::init_frontier, loop_runner::run_crawl_loop,
-    resource_crawler::crawl_secondary_resources, robots::fetch_and_eval_robots,
-    selectors::CrawlSelectors, setup::CrawlSetup, sitemaps::discover_and_parse_sitemaps,
-    state::CrawlLoopState, summary::build_crawl_result,
+    frontier::init_frontier, resource_crawler::crawl_secondary_resources,
+    robots::fetch_and_eval_robots, selectors::CrawlSelectors, setup::CrawlSetup,
+    sitemaps::discover_and_parse_sitemaps, state::CrawlLoopState, summary::build_crawl_result,
 };
 use crate::commands::site_crawler::{control::CrawlControl, models::SiteCrawlResult};
 
@@ -31,7 +30,19 @@ pub(super) async fn run_crawl_pipeline<R: Runtime>(
     );
     let selectors = CrawlSelectors::compile();
 
-    run_crawl_loop(
+    let conn = match setup.project_id.as_deref() {
+        Some(pid) if !pid.trim().is_empty() => {
+            Some(crate::commands::run_store::commands::open_store(app, pid)?)
+        }
+        _ => None,
+    };
+    let mut collector = Some(super::native_collector::NativeCrawlCollector::new(
+        setup.project_id.clone(),
+        setup.run_id.clone(),
+        conn,
+    ));
+
+    super::loop_runner::run_crawl_loop_with_collector(
         app,
         control,
         setup,
@@ -39,8 +50,9 @@ pub(super) async fn run_crawl_pipeline<R: Runtime>(
         &selectors,
         &robots.robots_rules,
         robots.robots_crawl_delay,
+        &mut collector,
     )
-    .await;
+    .await?;
 
     super::super::post_processing::annotate_page_relations(
         &mut state.pages,
@@ -50,7 +62,7 @@ pub(super) async fn run_crawl_pipeline<R: Runtime>(
     let (resources, resource_limit_reached) =
         crawl_secondary_resources(setup, control, &mut state, robots.robots_crawl_delay).await;
 
-    Ok(build_crawl_result(super::summary::BuildCrawlResultInput {
+    let result = build_crawl_result(super::summary::BuildCrawlResultInput {
         app,
         control,
         setup,
@@ -59,5 +71,20 @@ pub(super) async fn run_crawl_pipeline<R: Runtime>(
         state: &mut state,
         resources,
         resource_limit_reached,
-    }))
+    });
+    if let Some(col) = collector.as_mut() {
+        if result.cancelled {
+            col.record_cancelled(&result.start_url, result.pages.len(), result.duration_ms)?;
+        } else if result.timed_out {
+            col.record_timed_out(&result.start_url, result.pages.len(), result.duration_ms)?;
+        } else {
+            col.record_completed(
+                &result.start_url,
+                result.pages.len(),
+                f64::from(result.health_score),
+                result.duration_ms,
+            )?;
+        }
+    }
+    Ok(result)
 }

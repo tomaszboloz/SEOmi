@@ -2539,6 +2539,8 @@
     "interruptedTitle": "Предыдущий обход можно продолжить",
     "interruptedDescription": "{{url}} · лимит {{limit}} URL · частичный или прерванный результат от {{date}}. Продолжение запустит новый обход с сохранённой конфигурацией{{completed}}{{frontier}}.",
     "resumeCrawl": "Продолжить обход",
+    "interruptedMissingConfigNotice": "Сохраненная конфигурация обхода недоступна. Вы можете продолжить с текущими настройками.",
+    "resumeWithCurrentConfig": "Продолжить с текущими настройками",
     "discard": "Удалить",
     "progressStatus": "Crawling internal domain links and checking status codes…",
     "liveMetricsAria": "Показатели обхода в реальном времени",

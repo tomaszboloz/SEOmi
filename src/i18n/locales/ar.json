@@ -2539,6 +2539,8 @@
     "interruptedTitle": "يمكن استئناف الزحف السابق",
     "interruptedDescription": "{{url}} · حد {{limit}} من عناوين URL · نتيجة جزئية أو متوقفة من {{date}}. سيبدأ الاستئناف زحفًا جديدًا بالإعدادات المحفوظة{{completed}}{{frontier}}.",
     "resumeCrawl": "استئناف الزحف",
+    "interruptedMissingConfigNotice": "تكوين الزحف المحفوظ غير متوفر. يمكنك الاستئناف باستخدام الإعدادات الحالية.",
+    "resumeWithCurrentConfig": "الاستئناف بالإعدادات الحالية",
     "discard": "تجاهل",
     "progressStatus": "Crawling internal domain links and checking status codes…",
     "liveMetricsAria": "مقاييس الزحف المباشرة",

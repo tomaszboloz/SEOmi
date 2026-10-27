@@ -1,6 +1,6 @@
-import type { CrawlConfig, CrawlEnvironment } from '@/types';
+import type { CrawlConfig, CrawlEnvironment, SiteCrawlResult } from '@/types';
 import type { getSecureValue, invokeTauriCommand } from '@/services/tauri';
-import type { loadCrawlRuns, saveCrawlRuns } from '@/services/crawlPersistence';
+import type { loadCrawlRuns, saveCrawlRuns, RecoveredActiveCrawlResult } from '@/services/crawlPersistence';
 import type { notifyCrawlCompleted } from '@/services/desktopNotifications';
 import type { DataForSEOClient } from '@/services/dataforseo';
 import type { useAuthStore } from '../authStore';
@@ -35,6 +35,7 @@ export interface InterruptedCrawl {
   completedUrls?: string[];
   frontierUrls?: string[];
   baseRunId?: string;
+  baseResult?: SiteCrawlResult | RecoveredActiveCrawlResult;
 }
 
 export type ToolsSet = StoreApi<ToolsState>['setState'];

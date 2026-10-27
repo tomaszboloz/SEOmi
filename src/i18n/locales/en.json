@@ -2539,6 +2539,8 @@
     "interruptedTitle": "The previous crawl can be resumed",
     "interruptedDescription": "{{url}} · limit {{limit}} URLs · partial or interrupted result from {{date}}. Resuming starts a new run with the saved configuration{{completed}}{{frontier}}.",
     "resumeCrawl": "Resume crawl",
+    "interruptedMissingConfigNotice": "Saved crawl configuration is unavailable. You can resume using current settings.",
+    "resumeWithCurrentConfig": "Resume with current settings",
     "discard": "Discard",
     "progressStatus": "Crawling internal domain links and checking status codes…",
     "liveMetricsAria": "Live crawl telemetry",

@@ -88,6 +88,8 @@ pub fn erase_project(conn: &mut Connection, project: &str) -> Result<ErasureRepo
         .map_err(db)?;
     tx.execute("DELETE FROM import_log WHERE project_id = ?1", [project])
         .map_err(db)?;
+    tx.execute("DELETE FROM crawl_events WHERE project_id = ?1", [project])
+        .map_err(db)?;
     let report = log(
         &tx,
         project,

@@ -1,4 +1,5 @@
-import { SiteCrawlResult } from '@/types';
+import type { SiteCrawlResult } from '@/types';
+import type { RecoveredActiveCrawlResult } from '@/services/crawlPersistence/contracts';
 import type { InterruptedCrawl } from '../contracts';
 import { crawlHealthScore, CRAWL_SCORE_VERSION } from '@/services/crawlHealthScore';
 
@@ -32,7 +33,10 @@ export const buildCrawlCheckpoint = (result: SiteCrawlResult): Pick<InterruptedC
   };
 };
 
-export const mergeCrawlResults = (base: SiteCrawlResult, fresh: SiteCrawlResult): SiteCrawlResult => {
+export const mergeCrawlResults = (
+  base: SiteCrawlResult | RecoveredActiveCrawlResult,
+  fresh: SiteCrawlResult,
+): SiteCrawlResult => {
   const pagesByUrl = new Map<string, SiteCrawlResult['pages'][number]>();
   for (const page of base.pages) pagesByUrl.set(checkpointUrl(page.final_url || page.url), page);
   for (const page of fresh.pages) pagesByUrl.set(checkpointUrl(page.final_url || page.url), page);
@@ -43,9 +47,14 @@ export const mergeCrawlResults = (base: SiteCrawlResult, fresh: SiteCrawlResult)
   const healthScore = crawlHealthScore(pages);
   const sitemapUrls = [...new Set([...(base.sitemap_urls || []), ...(fresh.sitemap_urls || [])])];
   const rejected = new Map<string, { url: string; reason: string }>();
-  for (const item of [...(base.rejected_urls || []), ...(fresh.rejected_urls || [])]) rejected.set(`${item.url}\n${item.reason}`, item);
+  const baseRejected = 'rejected_urls' in base && Array.isArray(base.rejected_urls) ? base.rejected_urls : [];
+  for (const item of [...baseRejected, ...(fresh.rejected_urls || [])]) rejected.set(`${item.url}\n${item.reason}`, item);
   const resources = new Map<string, NonNullable<SiteCrawlResult['resources']>[number]>();
-  for (const resource of [...(base.resources || []), ...(fresh.resources || [])]) resources.set(checkpointUrl(resource.url), resource);
+  const baseResources = 'resources' in base && Array.isArray(base.resources) ? base.resources : [];
+  for (const resource of [...baseResources, ...(fresh.resources || [])]) resources.set(checkpointUrl(resource.url), resource);
+  const baseDuration = typeof base.duration_ms === 'number' && Number.isFinite(base.duration_ms) ? base.duration_ms : 0;
+  const freshDuration = typeof fresh.duration_ms === 'number' && Number.isFinite(fresh.duration_ms) ? fresh.duration_ms : 0;
+  const baseLimit = 'resource_limit_reached' in base ? Boolean(base.resource_limit_reached) : false;
   return {
     ...fresh,
     start_url: base.start_url || fresh.start_url,
@@ -56,11 +65,11 @@ export const mergeCrawlResults = (base: SiteCrawlResult, fresh: SiteCrawlResult)
     warning_count: warningCount,
     notice_count: noticeCount,
     pages,
-    duration_ms: base.duration_ms + fresh.duration_ms,
+    duration_ms: baseDuration + freshDuration,
     sitemap_urls_discovered: sitemapUrls.length,
     sitemap_urls: sitemapUrls,
     rejected_urls: [...rejected.values()],
     resources: [...resources.values()],
-    resource_limit_reached: Boolean(base.resource_limit_reached || fresh.resource_limit_reached),
+    resource_limit_reached: Boolean(baseLimit || fresh.resource_limit_reached),
   };
 };

@@ -14,6 +14,7 @@ import { runScheduledFocus } from '@/services/siteFocusMonitoring';
 import { runTaskVerification } from '@/services/optimizationTasks/runVerification';
 import { compareCrawlRuns } from '@/services/crawlDiff';
 import { deniedMessage, enforcePermission } from '@/services/team/enforce';
+import { createLiveCrawlEventHook } from './executionHook';
 
 export const createCrawlExecutionActions = (set: ToolsSet, get: ToolsGet, services: ToolsServices): Pick<ToolsState, "startSiteCrawl"> => ({
 startSiteCrawl: async (url, limit, configPatch, environment = 'default', notifyCompletion = true, resumeBaseResult) => {
@@ -40,9 +41,6 @@ startSiteCrawl: async (url, limit, configPatch, environment = 'default', notifyC
     effectiveCrawlConfig.userAgent = effectiveCrawlConfig.userAgent?.trim() || appConfig.default_user_agent;
     effectiveCrawlConfig.requestTimeoutSecs = appConfig.request_timeout_secs;
     effectiveCrawlConfig.verifySsl = appConfig.verify_ssl;
-    // Resume arrays are execution-only checkpoint inputs. Keep them out of
-    // the durable crawl history/configuration so a large frontier cannot
-    // consume the same storage quota that caused the interruption.
     const persistedCrawlConfig: CrawlConfig = {
       ...effectiveCrawlConfig,
       resumeCompletedUrls: undefined,
@@ -62,6 +60,8 @@ startSiteCrawl: async (url, limit, configPatch, environment = 'default', notifyC
     if (projectIdAtStart) activeCrawlRuns.set(projectIdAtStart, runId);
     let unlisten: (() => void) | undefined;
     if (projectIdAtStart) persistInterruptedCrawl(projectIdAtStart, interruptedCrawl);
+    const liveHook = createLiveCrawlEventHook(projectIdAtStart, runId);
+    liveHook?.appendStarted(targetUrl);
     set({ isCrawling: true, isCrawlPaused: false, interruptedCrawl: null, crawlProgress: 0, crawlProgressDetail: { runId, discovered: 1, completed: 0, queued: 1, cancelled: false, paused: false, elapsedMs: 0, pagesPerSecond: 0 }, activeCrawlRunId: runId, crawlError: null, crawlPersistenceError: null, crawlPersistenceNotice: null, crawlPersistenceCompacted: false, isRetryingCrawlPersistence: false });
     try {
       if (typeof window !== 'undefined' && '__TAURI_INTERNALS__' in window) {
@@ -69,9 +69,7 @@ startSiteCrawl: async (url, limit, configPatch, environment = 'default', notifyC
         unlisten = await listen<CrawlProgress>('crawl-progress', (event) => {
           const progress = event.payload;
           if (progress.runId !== runId) return;
-          // A crawl keeps running for its originating project even when the
-          // user navigates to another workspace. Do not let its telemetry
-          // overwrite the newly selected project's progress state.
+          liveHook?.appendProgress(progress);
           if (!isCurrentCrawlRun()) return;
           const known = Math.max(progress.discovered, 1);
           set({ crawlProgressDetail: progress, crawlProgress: Math.floor((progress.completed / known) * 100) });
@@ -79,10 +77,17 @@ startSiteCrawl: async (url, limit, configPatch, environment = 'default', notifyC
       }
       const freshCrawlResult = await services.invoke<SiteCrawlResult>('crawl_site', { startUrl: targetUrl, maxPages: maxLimit, runId, projectId: projectIdAtStart || undefined, config: effectiveCrawlConfig });
       if (!freshCrawlResult.pages.length && !freshCrawlResult.cancelled && !resumeBaseResult) throw new Error(i18n.t('runtimeErrors.tools.crawlerNoPages'));
+      liveHook?.appendPages(freshCrawlResult.pages);
       const crawlResult = resumeBaseResult ? mergeCrawlResults(resumeBaseResult, freshCrawlResult) : freshCrawlResult;
       const run: CrawlRunRecord = { id: runId, projectId: projectIdAtStart || undefined, completedAt: new Date().toISOString(), startUrl: targetUrl, config: persistedCrawlConfig, result: crawlResult, environment };
+      if (freshCrawlResult.cancelled) {
+        await liveHook?.appendCancelled(crawlResult.pages.length, targetUrl);
+      } else {
+        await liveHook?.appendCompleted(crawlResult.pages.length, run.completedAt, targetUrl);
+      }
+      const baseId = interruptedCrawl?.baseRunId;
       const projectRuns = activeProjectId() === projectIdAtStart ? get().crawlRuns : originalCrawlRuns;
-      const crawlRuns = [run, ...projectRuns.filter((item) => item.id !== run.id)].slice(0, 50);
+      const crawlRuns = [run, ...projectRuns.filter((item) => item.id !== run.id && (!baseId || item.id !== baseId) && Boolean(item.completedAt))].slice(0, 50);
       const projectId = projectIdAtStart;
       const canResume = Boolean(freshCrawlResult.cancelled || freshCrawlResult.timed_out);
       const pendingCrawl = canResume ? { ...interruptedCrawl, ...buildCrawlCheckpoint(crawlResult), baseRunId: runId } : null;
@@ -113,6 +118,9 @@ startSiteCrawl: async (url, limit, configPatch, environment = 'default', notifyC
       return crawlResult;
     } catch (err: unknown) {
       const msg = formatCrawlRuntimeError(err);
+      if (liveHook) {
+        try { await liveHook.appendError(msg); } catch { /* preserve main runtime error */ }
+      }
       if (projectIdAtStart && activeCrawlRuns.get(projectIdAtStart) === runId) persistInterruptedCrawl(projectIdAtStart, interruptedCrawl);
       if (isCurrentCrawlRun()) {
         set({ crawlError: msg, interruptedCrawl, isCrawling: false, isCrawlPaused: false, activeCrawlRunId: null });

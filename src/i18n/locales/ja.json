@@ -2539,6 +2539,8 @@
     "interruptedTitle": "前回のクロールを再開できます",
     "interruptedDescription": "{{url}} · {{limit}} URLまで · {{date}}の途中または中断された結果。再開すると保存済み設定で新しいクロールを開始します{{completed}}{{frontier}}。",
     "resumeCrawl": "クロールを再開",
+    "interruptedMissingConfigNotice": "保存されたクロール設定は利用できません。現在の設定を使用して再開できます。",
+    "resumeWithCurrentConfig": "現在の設定で再開",
     "discard": "破棄",
     "progressStatus": "Crawling internal domain links and checking status codes…",
     "liveMetricsAria": "クロールのライブ指標",

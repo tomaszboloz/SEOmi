@@ -2539,6 +2539,8 @@
     "interruptedTitle": "可以恢复上一次抓取",
     "interruptedDescription": "{{url}} · 限制 {{limit}} 个 URL · {{date}} 的部分或中断结果。恢复操作会使用已保存的配置开始新的抓取{{completed}}{{frontier}}。",
     "resumeCrawl": "恢复抓取",
+    "interruptedMissingConfigNotice": "保存的抓取配置不可用。您可以使用当前设置恢复抓取。",
+    "resumeWithCurrentConfig": "使用当前设置恢复",
     "discard": "丢弃",
     "progressStatus": "Crawling internal domain links and checking status codes…",
     "liveMetricsAria": "实时抓取指标",

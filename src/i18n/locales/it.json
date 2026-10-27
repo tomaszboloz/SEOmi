@@ -2539,6 +2539,8 @@
     "interruptedTitle": "È possibile riprendere il crawl precedente",
     "interruptedDescription": "{{url}} · limite di {{limit}} URL · risultato parziale o interrotto del {{date}}. La ripresa avvia un nuovo crawl con la configurazione salvata{{completed}}{{frontier}}.",
     "resumeCrawl": "Riprendi crawl",
+    "interruptedMissingConfigNotice": "La configurazione salvata del crawl non è disponibile. È possibile riprendere con le impostazioni correnti.",
+    "resumeWithCurrentConfig": "Riprendi con le impostazioni correnti",
     "discard": "Scarta",
     "progressStatus": "Crawling internal domain links and checking status codes…",
     "liveMetricsAria": "Metriche del crawl in tempo reale",

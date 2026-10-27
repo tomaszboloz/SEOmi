@@ -1,10 +1,11 @@
 
 import { CrawlRunRecord } from '@/types';
+import type { AnyCrawlRun, RecoveredActiveCrawlRun } from '@/services/crawlPersistence';
 import { z } from 'zod';
 import { parseCrawlConfig, parseCrawlRuns, parseSiteCrawlResult } from '@/services/crawlContracts';
 import { CrawlConfigSchema } from '@/services/contracts/crawl';
 import { isTauriEnvironment } from '@/services/tauri';
-import { isStorageQuotaError, usesDedicatedCrawlStorage } from '@/services/crawlPersistence';
+import { isCompletedSnapshotRun, isStorageQuotaError, usesDedicatedCrawlStorage } from '@/services/crawlPersistence';
 
 import { readJsonStorage, readStorage, removeStorage } from '@/services/storage';
 import { emptyAiResearchSettings, normalizeAiResearchSettings } from '@/services/aiResearchEvidence';
@@ -17,7 +18,7 @@ import { crawlResultKey, crawlRunsKey, crawlSettingsKey, domainQueryKey, backlin
 import { beginToolRequest, isLatestToolRequest, formatCrawlPersistenceNotice, formatCrawlRuntimeError } from './runtime';
 import { readProjectResearch, loadDomainComparisonTargets, loadDomainComparisonHistory, loadLatestDomainComparison, loadDomainOverview, loadBacklinkProfile, loadBacklinkProfileHistory, loadBacklinkGapReport } from './researchPersistence';
 import { gscClientIdKey, gscClientSecretKey, gscPropertyKey, DEFAULT_GSC_FILTERS, readGscFilters, loadProjectQuery, loadKeywordQuery, loadKeywordCountry, loadKeywordLanguage, loadDomainCountry, loadDomainLanguage, loadBacklinkGapSettings } from './projectPreferences';
-import { normalizeInterruptedCrawl, newestInterruptedCrawl, readInterruptedCrawl, DEFAULT_CRAWL_CONFIG, loadCrawlRequestProfiles } from './crawlPersistence';
+import { normalizeInterruptedCrawl, newestInterruptedCrawl, readInterruptedCrawl, DEFAULT_CRAWL_CONFIG, loadCrawlRequestProfiles, buildInterruptedCrawlFromRecoveredRun } from './crawlPersistence';
 import { loadSavedKeywords, loadTrackedRanks, defaultRankTrackingDraft, loadRankTrackingDraft, migrateLegacyToolData } from './keywordPersistence';
 export const createHydrationSlice = (set: ToolsSet, _get: ToolsGet, services: ToolsServices): Pick<ToolsState, "setMcpClientTab" | "hydrateProject"> => ({
 setMcpClientTab: (tab) => set({ mcpClientTab: tab }),
@@ -46,10 +47,12 @@ hydrateProject: async (projectId) => {
       aiSearchPrompt: '', aiPromptComparison: null, aiPromptHistory: [], aiPromptError: null, isAiPromptLoading: false,
       gscClientId: storedGscClientId, gscClientSecret: storedGscClientSecret, gscProperty: storedGscProperty, gscFilters: readGscFilters(projectId), gscProperties: [], isGscConnected: false, gscData: null, gscDataFetchedAt: null, gscInspectionResult: null, isGscLoading: false, gscError: null, keywordResults: [], keywordResultsSource: null });
     let crawlRuns: CrawlRunRecord[] = [];
+    let rawLoadedRuns: AnyCrawlRun[] = [];
     let persistenceError: string | null = null;
     let persistenceNotice: string | null = null;
     try {
-      crawlRuns = (await services.loadCrawlRuns(projectId)).filter((item): item is CrawlRunRecord => Boolean(item?.id && item?.result?.start_url));
+      rawLoadedRuns = await services.loadCrawlRuns(projectId);
+      crawlRuns = rawLoadedRuns.filter(isCompletedSnapshotRun);
     } catch (error) {
       persistenceError = isStorageQuotaError(error) ? formatCrawlRuntimeError(error) : error instanceof Error ? error.message : i18n.t('runtimeErrors.tools.historyReadFailed');
     }
@@ -117,6 +120,13 @@ hydrateProject: async (projectId) => {
         // Keep the local compatibility copy when the native checkpoint is not
         // available while upgrading from an older release.
       }
+    }
+    const activeCandidate = rawLoadedRuns.find((r) => !isCompletedSnapshotRun(r));
+    if (activeCandidate) {
+      hydratedInterruptedCrawl = newestInterruptedCrawl(
+        hydratedInterruptedCrawl,
+        buildInterruptedCrawlFromRecoveredRun(activeCandidate as RecoveredActiveCrawlRun, crawlSettings?.config, crawlSettings?.limit),
+      );
     }
     if (!isCurrentHydration()) return;
     set({ crawlResult: crawlRuns[0]?.result || null, crawlRuns, crawlPersistenceError: persistenceError, crawlPersistenceNotice: persistenceNotice, crawlPersistenceCompacted: hydratedCompacted, interruptedCrawl: hydratedInterruptedCrawl, crawlUrl: hydratedCrawlUrl, crawlLimit: crawlSettings?.limit || 25, crawlConfig: CrawlConfigSchema.parse({ ...DEFAULT_CRAWL_CONFIG, ...crawlSettings?.config }), selectedCrawlRunId: crawlRuns[0]?.id || null,

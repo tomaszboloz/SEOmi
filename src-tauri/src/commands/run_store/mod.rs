@@ -15,6 +15,10 @@ pub mod erase_commands;
 mod erase_tests;
 #[cfg(test)]
 mod erasure_regression_tests;
+pub mod event_commands;
+#[cfg(test)]
+mod event_tests;
+pub mod events;
 #[cfg(test)]
 mod open_store_failure_tests;
 #[cfg(test)]

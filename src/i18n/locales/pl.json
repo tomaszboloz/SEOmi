@@ -2539,6 +2539,8 @@
     "interruptedTitle": "Można wznowić poprzedni crawl",
     "interruptedDescription": "{{url}} · limit {{limit}} URL · częściowy lub przerwany wynik z {{date}}. Wznowienie rozpocznie nowy crawl z zapisaną konfiguracją{{completed}}{{frontier}}.",
     "resumeCrawl": "Wznów crawl",
+    "interruptedMissingConfigNotice": "Zapisana konfiguracja crawla jest niedostępna. Możesz wznowić z bieżącymi ustawieniami.",
+    "resumeWithCurrentConfig": "Wznów z bieżącymi ustawieniami",
     "discard": "Odrzuć",
     "progressStatus": "Skanowanie wewnętrznych linków domeny i sprawdzanie kodów statusu…",
     "liveMetricsAria": "Bieżące dane crawla",

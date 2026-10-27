@@ -1,3 +1,4 @@
+import type { CrawlConfig } from '@/types';
 import type { ToolsState, ToolsSet, ToolsGet, ToolsServices } from '../contracts';
 import { activeProjectId } from '../storageKeys';
 import { formatCrawlRuntimeError } from '../runtime';
@@ -46,14 +47,22 @@ resumeSiteCrawl: async () => {
       }
     }
   },
-resumeInterruptedCrawl: async () => {
+resumeInterruptedCrawl: async (explicitConfig?: CrawlConfig | { explicitConfig?: CrawlConfig }) => {
     const pending = get().interruptedCrawl;
     if (!pending || get().isCrawling) return null;
+    const resolvedExplicit = explicitConfig && 'crawlMode' in explicitConfig
+      ? explicitConfig
+      : (explicitConfig as { explicitConfig?: CrawlConfig } | undefined)?.explicitConfig;
+    const effectiveConfig = pending.config ?? resolvedExplicit;
+    if (!effectiveConfig) return null;
     const baseRun = pending.baseRunId ? get().crawlRuns.find((run) => run.id === pending.baseRunId) : undefined;
-    const config = baseRun && pending.completedUrls?.length
-      ? { ...pending.config, resumeCompletedUrls: pending.completedUrls, resumeFrontierUrls: pending.frontierUrls || [] }
-      : pending.config;
-    return get().startSiteCrawl(pending.url, pending.limit, config, pending.environment, true, baseRun?.result);
+    const baseResult = baseRun?.result ?? pending.baseResult;
+    const limit = pending.limit ?? get().crawlLimit;
+    const environment = pending.environment ?? 'default';
+    const config = (baseResult || baseRun) && pending.completedUrls?.length
+      ? { ...effectiveConfig, resumeCompletedUrls: pending.completedUrls, resumeFrontierUrls: pending.frontierUrls || [] }
+      : effectiveConfig;
+    return get().startSiteCrawl(pending.url, limit, config, environment, true, baseResult);
   },
 discardInterruptedCrawl: () => {
     const projectId = activeProjectId();

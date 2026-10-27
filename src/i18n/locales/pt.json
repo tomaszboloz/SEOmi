@@ -2539,6 +2539,8 @@
     "interruptedTitle": "O rastreamento anterior pode ser retomado",
     "interruptedDescription": "{{url}} · limite de {{limit}} URLs · resultado parcial ou interrompido de {{date}}. Retomar inicia um novo rastreamento com a configuração salva{{completed}}{{frontier}}.",
     "resumeCrawl": "Retomar rastreamento",
+    "interruptedMissingConfigNotice": "A configuração salva de rastreamento não está disponível. Você pode retomar com as configurações atuais.",
+    "resumeWithCurrentConfig": "Retomar com as configurações atuais",
     "discard": "Descartar",
     "progressStatus": "Crawling internal domain links and checking status codes…",
     "liveMetricsAria": "Métricas do crawl em tempo real",

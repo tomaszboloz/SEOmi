@@ -2539,6 +2539,8 @@
     "interruptedTitle": "Le crawl précédent peut être repris",
     "interruptedDescription": "{{url}} · limite de {{limit}} URL · résultat partiel ou interrompu du {{date}}. La reprise démarre un nouveau crawl avec la configuration enregistrée{{completed}}{{frontier}}.",
     "resumeCrawl": "Reprendre le crawl",
+    "interruptedMissingConfigNotice": "La configuration enregistrée du crawl est indisponible. Vous pouvez reprendre avec les paramètres actuels.",
+    "resumeWithCurrentConfig": "Reprendre avec les paramètres actuels",
     "discard": "Supprimer",
     "progressStatus": "Crawling internal domain links and checking status codes…",
     "liveMetricsAria": "Mesures du crawl en direct",

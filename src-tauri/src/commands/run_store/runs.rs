@@ -111,6 +111,10 @@ where
 }
 
 pub fn delete_run(conn: &Connection, project_id: &str, run_id: &str) -> Result<usize> {
+    let _ = conn.execute(
+        "DELETE FROM crawl_events WHERE project_id = ?1 AND run_id = ?2",
+        params![project_id, run_id],
+    );
     conn.execute(
         "DELETE FROM crawl_runs WHERE project_id = ?1 AND run_id = ?2",
         params![project_id, run_id],

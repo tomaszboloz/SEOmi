@@ -1,4 +1,4 @@
-import type { SeoProject } from '@/types';
+import type { CrawlRunRecord, SeoProject } from '@/types';
 import { loadCrawlRuns } from '@/services/crawlPersistence';
 import { readProjectStorage } from './storage';
 import { isProject, assertBackupShape } from './validation';
@@ -12,7 +12,7 @@ export const createProjectBackup = async (project: SeoProject): Promise<ProjectB
     exportedAt: new Date().toISOString(),
     project: { ...project },
     localStorage: readProjectStorage(project.id),
-    crawlRuns: await loadCrawlRuns(project.id),
+    crawlRuns: (await loadCrawlRuns(project.id)).filter((r): r is CrawlRunRecord => Boolean(r.completedAt)),
     secretsExcluded: true,
   };
 };

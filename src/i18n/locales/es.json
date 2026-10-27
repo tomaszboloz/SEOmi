@@ -2539,6 +2539,8 @@
     "interruptedTitle": "Se puede reanudar el rastreo anterior",
     "interruptedDescription": "{{url}} · límite de {{limit}} URL · resultado parcial o interrumpido de {{date}}. Reanudar iniciará un rastreo nuevo con la configuración guardada{{completed}}{{frontier}}.",
     "resumeCrawl": "Reanudar rastreo",
+    "interruptedMissingConfigNotice": "La configuración guardada del rastreo no está disponible. Puede reanudar con la configuración actual.",
+    "resumeWithCurrentConfig": "Reanudar con la configuración actual",
     "discard": "Descartar",
     "progressStatus": "Crawling internal domain links and checking status codes…",
     "liveMetricsAria": "Métricas del rastreo en vivo",

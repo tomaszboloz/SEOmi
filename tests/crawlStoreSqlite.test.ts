@@ -11,7 +11,7 @@ const summary = (id: string, pageCount = 3) => ({ id, completedAt: '2026-01-01',
 
 it('saves the full replacement snapshot without truncation', async () => {
   const keep = createCrawlRunFixture({ id: 'keep' });
-  native.invokeTauriCommand.mockImplementation(async (cmd: string) => (cmd === 'load_project_crawl_runs' ? [] : undefined));
+  native.invokeTauriCommand.mockImplementation(async (cmd: string) => (cmd === 'load_project_crawl_runs' || cmd === 'store_load_crawl_events' ? [] : undefined));
   localStorage.setItem('seomi_project_p_crawl_runs', '[]');
   expect(await saveCrawlRuns('p', [keep])).toEqual({ prunedRuns: 0 });
   expect(native.invokeTauriCommand).toHaveBeenCalledWith('store_replace_crawl_runs', { projectId: 'p', runs: [keep] });
@@ -19,7 +19,7 @@ it('saves the full replacement snapshot without truncation', async () => {
 });
 
 it('reports pruned count above the fifty run cap', async () => {
-  native.invokeTauriCommand.mockImplementation(async (cmd: string) => (cmd === 'load_project_crawl_runs' ? [] : undefined));
+  native.invokeTauriCommand.mockImplementation(async (cmd: string) => (cmd === 'load_project_crawl_runs' || cmd === 'store_load_crawl_events' ? [] : undefined));
   const rows = Array.from({ length: 52 }, (_, i) => createCrawlRunFixture({ id: `r${i}` }));
   expect(await saveCrawlRuns('p', rows)).toEqual({ prunedRuns: 2 });
   expect(native.invokeTauriCommand).toHaveBeenCalledWith('store_replace_crawl_runs', { projectId: 'p', runs: rows.slice(0, 50) });
@@ -34,6 +34,8 @@ it('migrates once with a backup, then loads from SQLite', async () => {
     if (cmd === 'store_import_legacy_runs') return 1;
     if (cmd === 'store_list_crawl_runs') return [summary('old', 0)];
     if (cmd === 'store_load_crawl_run') return legacy;
+    if (cmd === 'store_load_crawl_events') return [];
+    if (cmd === 'store_append_crawl_events') return 1;
     return undefined;
   });
   expect(await loadCrawlRuns('m')).toEqual([legacy]);

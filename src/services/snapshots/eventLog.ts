@@ -5,6 +5,8 @@ export interface CrawlEvent<P = unknown> {
   readonly type: string;
   readonly at: string;
   readonly payload: Readonly<P>;
+  readonly runId?: string;
+  readonly projectId?: string;
 }
 
 export type EventSink = (event: CrawlEvent) => void;
@@ -18,8 +20,16 @@ export class CrawlEventLog {
   private events: CrawlEvent[] = [];
   private readonly sinks = new Set<EventSink>();
 
+  constructor(initial: CrawlEvent[] = []) {
+    this.events = initial.map((ev) => Object.freeze({ ...ev, payload: freezeCopy(ev.payload) }));
+  }
+
   get revision(): number {
     return this.events.length;
+  }
+
+  allEvents(): readonly CrawlEvent[] {
+    return this.events;
   }
 
   append<P>(type: string, payload: P, now: () => Date = () => new Date()): CrawlEvent<P> {

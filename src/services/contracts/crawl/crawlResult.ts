@@ -62,6 +62,7 @@ export const CrawlRunRecordSchema = z.object({
   id: z.string(),
   projectId: z.string().optional(),
   completedAt: z.string(),
+  startedAt: z.string().optional(),
   startUrl: z.string(),
   config: CrawlConfigSchema,
   result: SiteCrawlResultSchema,
