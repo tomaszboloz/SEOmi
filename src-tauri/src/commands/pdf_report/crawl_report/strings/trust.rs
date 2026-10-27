@@ -34,6 +34,7 @@ keys! {
     COL_ARTICLES "crawl.trust.colArticles",
     COL_SAME_AS "crawl.trust.colSameAs",
     COL_ALIGNMENT "crawl.trust.colAlignment",
+    COL_PROFILE "crawl.trust.colProfile",
     GENERIC "crawl.trust.generic",
     T_PAGES "crawl.trust.tPages",
     PAGES_INTRO "crawl.trust.pagesIntro",
@@ -45,6 +46,12 @@ keys! {
     FINDINGS_INTRO "crawl.trust.findingsIntro",
     COL_SEVERITY "crawl.trust.colSeverity",
     COL_FINDING "crawl.trust.colFinding",
+    T_CLAIMS "crawl.trust.tClaims",
+    CLAIMS_INTRO "crawl.trust.claimsIntro",
+    COL_CLAIM "crawl.trust.colClaim",
+    COL_RELATION "crawl.trust.colRelation",
+    COL_EVIDENCE "crawl.trust.colEvidence",
+    COL_CHECKED "crawl.trust.colChecked",
 }
 
 pub const LEVEL: &str = "crawl.trust.level";

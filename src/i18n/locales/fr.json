@@ -6088,6 +6088,7 @@
         "colArticles": "Articles",
         "colSameAs": "sameAs",
         "colAlignment": "Adéquation",
+        "colProfile": "Preuve du profil",
         "generic": "{{0}} (signature anonyme)",
         "tPages": "Pages de confiance",
         "pagesIntro": "Pages qui montrent la transparence éditoriale et celle de l'entreprise.",
@@ -6097,6 +6098,12 @@
         "missing": "Manquante",
         "tFindings": "Constats de confiance",
         "findingsIntro": "Classés par gravité ; corrigez d'abord les éléments critiques.",
+        "tClaims": "Preuves des affirmations",
+        "claimsIntro": "Associations affirmation-citation ; le chevauchement lexical ne vérifie rien.",
+        "colClaim": "Affirmation",
+        "colEvidence": "Preuve",
+        "colRelation": "Relation",
+        "colChecked": "Vérifié manuellement",
         "colSeverity": "Gravité",
         "colFinding": "Constat",
         "level": {
@@ -7417,9 +7424,14 @@
       "colArticles": "Articles",
       "colSameAs": "Liens sameAs",
       "colAlignment": "Adéquation thématique",
-      "generic": "signature anonyme"
+      "generic": "signature anonyme",
+      "identityEvidence": "Preuve d’identité",
+      "unavailableNote": "Aucun profil déclaré ; indisponible ne signifie pas fictif.",
+      "verifyProfiles": "Vérifier les profils"
     },
-    "signals": {
+      "signals": {
+        "claimEvidence": "Preuves des affirmations",
+        "associationNote": "Une association n’est pas une preuve ; le chevauchement ne définit jamais sourceChecked.",
       "title": "Sources et transparence",
       "citations": "{{trusted}} pages d'articles sur {{pages}} renvoient vers une source fiable (.gov, .edu, PubMed, OMS).",
       "dead": "{{count}} liens sortants sont cassés",

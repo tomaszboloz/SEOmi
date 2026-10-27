@@ -7,10 +7,11 @@ import { buildFindings, levelFor } from './findings';
 import { buildRegistry, isArticleNode, nodesOf, type SchemaNode } from './graph';
 import { analyzeSchema, schemaScore } from './schemaScore';
 import { analyzeTransparency, transparencyScore } from './transparency';
-import { EEAT_TRUST_VERSION, TRUST_WEIGHTS, type TrustLayer, type TrustReport } from './types';
+import { EEAT_TRUST_VERSION, TRUST_WEIGHTS, type ProfileEvidence, type TrustLayer, type TrustReport } from './types';
+import { declarationRecall } from './identifiers';
 import { detectYmyl } from './ymyl';
 
-export interface TrustOptions { now?: string }
+export interface TrustOptions { now?: string; profileEvidence?: Record<string, ProfileEvidence> }
 
 const usable = (page: CrawledPageSummary): boolean => page.http_status < 400 && !page.request_error_kind;
 
@@ -36,6 +37,14 @@ export const buildTrustReport = (pages: CrawledPageSummary[], focus?: SiteFocusR
     if (focusArticles.has(normalizeUrl(url)) || typed) articleNodes.set(url, own);
   }
   const scan = scanAuthors(live, nodesByPage, articleNodes, registry, focus);
+  if (options.profileEvidence) scan.authors.forEach((author) => {
+    author.profiles = author.profiles.map((profile) => options.profileEvidence?.[profile.url] ?? profile);
+    author.reconciliation = {
+      role: 'author', profiles: author.profiles, declarationRecall: declarationRecall(author.profiles),
+      status: author.profiles.find((profile) => profile.status === 'verified' || profile.status === 'mismatch' || profile.status === 'invalid')?.status
+        ?? (author.profiles.some((profile) => profile.status === 'syntax-valid') ? 'syntax-valid' : 'unavailable'), evidence: 'registry',
+    };
+  });
   const articleUrls = new Set(articleNodes.keys());
   const cited = new Map<string, string[]>([...articleNodes].map(([url, list]) => [url, list.flatMap((node) => node.props.citation ?? [])]));
   const citations = analyzeCitations(live, articleUrls, cited);

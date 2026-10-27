@@ -6088,6 +6088,7 @@
         "colArticles": "Articles",
         "colSameAs": "sameAs",
         "colAlignment": "Topic fit",
+        "colProfile": "Profile evidence",
         "generic": "{{0}} (anonymous byline)",
         "tPages": "Trust pages",
         "pagesIntro": "Pages that show editorial and company transparency.",
@@ -6097,6 +6098,12 @@
         "missing": "Missing",
         "tFindings": "Trust findings",
         "findingsIntro": "Ordered by severity; fix critical items first.",
+        "tClaims": "Claim evidence",
+        "claimsIntro": "Claim-to-citation associations; lexical overlap is not verification.",
+        "colClaim": "Claim",
+        "colEvidence": "Evidence",
+        "colRelation": "Relation",
+        "colChecked": "Manual check",
         "colSeverity": "Severity",
         "colFinding": "Finding",
         "level": {
@@ -7417,9 +7424,14 @@
       "colArticles": "Articles",
       "colSameAs": "sameAs links",
       "colAlignment": "Topic fit",
-      "generic": "anonymous byline"
+      "generic": "anonymous byline",
+      "identityEvidence": "Identity evidence",
+      "unavailableNote": "No declared profile; unavailable does not mean fictitious.",
+      "verifyProfiles": "Verify profiles"
     },
-    "signals": {
+      "signals": {
+        "claimEvidence": "Claim evidence",
+        "associationNote": "Association evidence is not entailment; overlap never sets manual sourceChecked.",
       "title": "Sources and transparency",
       "citations": "{{trusted}} of {{pages}} article pages link to a trusted source (.gov, .edu, PubMed, WHO).",
       "dead": "{{count}} outbound links are broken",

@@ -6088,6 +6088,7 @@
         "colArticles": "記事数",
         "colSameAs": "sameAs",
         "colAlignment": "適合度",
+        "colProfile": "プロフィール証拠",
         "generic": "{{0}}（匿名の署名）",
         "tPages": "信頼性ページ",
         "pagesIntro": "編集と会社の透明性を示すページです。",
@@ -6097,6 +6098,12 @@
         "missing": "なし",
         "tFindings": "信頼性の検出事項",
         "findingsIntro": "重要度順に並べています。重大なものから先に修正してください。",
+        "tClaims": "主張の証拠",
+        "claimsIntro": "主張と引用の関連付けです。語句の重複は検証ではありません。",
+        "colClaim": "主張",
+        "colEvidence": "証拠",
+        "colRelation": "関係",
+        "colChecked": "手動確認",
         "colSeverity": "重要度",
         "colFinding": "検出事項",
         "level": {
@@ -7417,9 +7424,14 @@
       "colArticles": "記事数",
       "colSameAs": "sameAsリンク",
       "colAlignment": "テーマ適合度",
-      "generic": "匿名の署名"
+      "generic": "匿名の署名",
+      "identityEvidence": "本人確認の証拠",
+      "unavailableNote": "宣言されたプロフィールなし。利用不可は架空を意味しません。",
+      "verifyProfiles": "プロフィールを検証"
     },
-    "signals": {
+      "signals": {
+        "claimEvidence": "主張の証拠",
+        "associationNote": "関連付けは裏付けではありません。重複で手動sourceCheckedは設定されません。",
       "title": "情報源と透明性",
       "citations": "記事{{pages}}ページのうち{{trusted}}ページが信頼できる情報源（.gov、.edu、PubMed、WHO）へリンクしています。",
       "dead": "外部リンク{{count}}件が切れています",

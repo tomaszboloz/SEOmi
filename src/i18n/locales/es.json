@@ -6088,6 +6088,7 @@
         "colArticles": "Artículos",
         "colSameAs": "sameAs",
         "colAlignment": "Afinidad",
+        "colProfile": "Evidencia del perfil",
         "generic": "{{0}} (firma anónima)",
         "tPages": "Páginas de confianza",
         "pagesIntro": "Páginas que muestran transparencia editorial y de la empresa.",
@@ -6097,6 +6098,12 @@
         "missing": "Falta",
         "tFindings": "Hallazgos de confianza",
         "findingsIntro": "Ordenados por gravedad; corrige primero los críticos.",
+        "tClaims": "Evidencia de afirmaciones",
+        "claimsIntro": "Asociaciones entre afirmaciones y citas; el solapamiento léxico no verifica.",
+        "colClaim": "Afirmación",
+        "colEvidence": "Evidencia",
+        "colRelation": "Relación",
+        "colChecked": "Comprobación manual",
         "colSeverity": "Gravedad",
         "colFinding": "Hallazgo",
         "level": {
@@ -7417,9 +7424,14 @@
       "colArticles": "Artículos",
       "colSameAs": "Enlaces sameAs",
       "colAlignment": "Afinidad temática",
-      "generic": "firma anónima"
+      "generic": "firma anónima",
+      "identityEvidence": "Evidencia de identidad",
+      "unavailableNote": "No hay perfil declarado; no disponible no significa ficticio.",
+      "verifyProfiles": "Verificar perfiles"
     },
-    "signals": {
+      "signals": {
+        "claimEvidence": "Evidencia de afirmaciones",
+        "associationNote": "La asociación no demuestra la afirmación; el solapamiento nunca marca sourceChecked.",
       "title": "Fuentes y transparencia",
       "citations": "{{trusted}} de {{pages}} páginas de artículos enlazan a una fuente fiable (.gov, .edu, PubMed, OMS).",
       "dead": "{{count}} enlaces salientes están rotos",

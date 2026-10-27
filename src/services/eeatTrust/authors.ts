@@ -3,7 +3,7 @@ import type { FocusPage, SiteFocusReport } from '@/services/siteFocus';
 import { normalizeUrl } from '@/services/siteFocus/pageType';
 import { phraseKey } from '@/services/siteFocus/terms';
 import { childNodes, type SchemaNode } from './graph';
-import { classifyProfiles } from './identifiers';
+import { classifyProfiles, declarationRecall } from './identifiers';
 import type { AuthorEntity } from './types';
 
 const GENERIC = /^(the\s+)?(redakcj|redaktion|redacci|redazion|r[eé]daction|editorial|editors?\b|staff\b|admin|team\b|zesp[oó]ł|zespol|команд|редакц|администр|autor\b|author\b|unknown|anonim)/i;
@@ -73,8 +73,14 @@ export const scanAuthors = (
         const author = byKey.get(key) ?? {
           key, name: entity.name ?? entity.id ?? key, id: entity.id, jobTitle: entity.props.jobTitle?.[0],
           sameAs: entity.props.sameAs ?? [],
-        profiles: classifyProfiles(entity.props.sameAs ?? []), articleUrls: [], generic: isGenericAuthor(entity.name ?? ''),
+          profiles: classifyProfiles(entity.props.sameAs ?? []), articleUrls: [], generic: isGenericAuthor(entity.name ?? ''),
           alignmentPct: alignmentOf(entity, pages, report),
+        };
+        author.reconciliation = {
+          role: 'author', profiles: author.profiles, declarationRecall: declarationRecall(author.profiles),
+          status: author.profiles.find((profile) => profile.status === 'invalid')?.status
+            ?? (author.profiles.some((profile) => profile.status === 'syntax-valid') ? 'syntax-valid' : 'unavailable'),
+          evidence: author.profiles.length ? 'declared' : 'declared',
         };
         if (!author.articleUrls.includes(url)) author.articleUrls.push(url);
         byKey.set(key, author);

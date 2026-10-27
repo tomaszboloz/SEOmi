@@ -6088,6 +6088,7 @@
         "colArticles": "Artykuły",
         "colSameAs": "sameAs",
         "colAlignment": "Dopasowanie",
+        "colProfile": "Dowód profilu",
         "generic": "{{0}} (anonimowa sygnatura)",
         "tPages": "Strony zaufania",
         "pagesIntro": "Strony pokazujące transparentność redakcyjną i firmową.",
@@ -6097,6 +6098,12 @@
         "missing": "Brak",
         "tFindings": "Ustalenia o zaufaniu",
         "findingsIntro": "Posortowane według wagi; najpierw popraw pozycje krytyczne.",
+        "tClaims": "Dowody twierdzeń",
+        "claimsIntro": "Powiązania twierdzeń z cytowaniami; podobieństwo słów nie jest weryfikacją.",
+        "colClaim": "Twierdzenie",
+        "colEvidence": "Dowód",
+        "colRelation": "Relacja",
+        "colChecked": "Sprawdzone ręcznie",
         "colSeverity": "Waga",
         "colFinding": "Ustalenie",
         "level": {
@@ -7417,9 +7424,14 @@
       "colArticles": "Artykuły",
       "colSameAs": "Linki sameAs",
       "colAlignment": "Dopasowanie do tematu",
-      "generic": "anonimowa sygnatura"
+      "generic": "anonimowa sygnatura",
+      "identityEvidence": "Dowód tożsamości",
+      "unavailableNote": "Brak zadeklarowanego profilu; niedostępność nie oznacza fikcyjności.",
+      "verifyProfiles": "Sprawdź profile"
     },
-    "signals": {
+      "signals": {
+        "claimEvidence": "Dowody twierdzeń",
+        "associationNote": "Powiązanie nie jest wynikanie; podobieństwo nie ustawia ręcznego sourceChecked.",
       "title": "Źródła i transparentność",
       "citations": "{{trusted}} z {{pages}} stron artykułów linkuje do zaufanego źródła (.gov, .edu, PubMed, WHO).",
       "dead": "{{count}} linków wychodzących jest uszkodzonych",

@@ -34,3 +34,19 @@ pub async fn fetch_page_with_options(
     )
     .await
 }
+
+/// Bounded native fetch for registry evidence; caller supplies a much smaller body budget.
+pub async fn fetch_registry_page(target_url: &Url) -> Result<FetchResult> {
+    fetch_with_resolver(
+        target_url,
+        "SEOmi registry evidence/1.0",
+        FetchOptions {
+            timeout: Duration::from_secs(4),
+            max_redirects: 3,
+            verify_ssl: true,
+            max_body_bytes: 512 * 1024,
+        },
+        |url| async move { resolve_public_addresses(&url).await },
+    )
+    .await
+}

@@ -110,6 +110,9 @@ impl Doc {
         if !list(trust, "authors").is_empty() {
             self.data_table(&tables::authors(trust));
         }
+        if !list(trust, "claims").is_empty() {
+            self.data_table(&tables::claims(trust));
+        }
         self.data_table(&tables::pages(trust));
     }
 }

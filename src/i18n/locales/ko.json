@@ -6088,6 +6088,7 @@
         "colArticles": "문서 수",
         "colSameAs": "sameAs",
         "colAlignment": "적합도",
+        "colProfile": "프로필 근거",
         "generic": "{{0}} (익명 서명)",
         "tPages": "신뢰 페이지",
         "pagesIntro": "편집 및 회사 투명성을 보여 주는 페이지입니다.",
@@ -6097,6 +6098,12 @@
         "missing": "없음",
         "tFindings": "신뢰 점검 결과",
         "findingsIntro": "심각도 순으로 정렬했습니다. 심각 항목부터 고치세요.",
+        "tClaims": "주장 근거",
+        "claimsIntro": "주장과 인용의 연결입니다. 어휘 중복은 검증이 아닙니다.",
+        "colClaim": "주장",
+        "colEvidence": "근거",
+        "colRelation": "관계",
+        "colChecked": "수동 확인",
         "colSeverity": "심각도",
         "colFinding": "점검 결과",
         "level": {
@@ -7417,9 +7424,14 @@
       "colArticles": "문서 수",
       "colSameAs": "sameAs 링크",
       "colAlignment": "주제 적합도",
-      "generic": "익명 서명"
+      "generic": "익명 서명",
+      "identityEvidence": "신원 근거",
+      "unavailableNote": "선언된 프로필이 없습니다. 사용할 수 없음은 허구를 뜻하지 않습니다.",
+      "verifyProfiles": "프로필 확인"
     },
-    "signals": {
+      "signals": {
+        "claimEvidence": "주장 근거",
+        "associationNote": "연관성은 함의 증명이 아닙니다. 중복으로 수동 sourceChecked를 설정하지 않습니다.",
       "title": "출처와 투명성",
       "citations": "문서 페이지 {{pages}}개 중 {{trusted}}개가 신뢰할 수 있는 출처(.gov, .edu, PubMed, WHO)로 연결됩니다.",
       "dead": "외부로 나가는 링크 {{count}}개가 끊어졌습니다",

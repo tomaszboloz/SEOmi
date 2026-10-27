@@ -6088,6 +6088,7 @@
         "colArticles": "Artikel",
         "colSameAs": "sameAs",
         "colAlignment": "Themenpassung",
+        "colProfile": "Profilnachweis",
         "generic": "{{0}} (anonyme Autorenzeile)",
         "tPages": "Vertrauensseiten",
         "pagesIntro": "Seiten, die redaktionelle und unternehmensbezogene Transparenz zeigen.",
@@ -6097,6 +6098,12 @@
         "missing": "Fehlt",
         "tFindings": "Vertrauensbefunde",
         "findingsIntro": "Nach Schweregrad geordnet; behebe zuerst die kritischen Punkte.",
+        "tClaims": "Belege für Aussagen",
+        "claimsIntro": "Zuordnungen von Aussagen zu Quellen; Wortähnlichkeit ist keine Verifizierung.",
+        "colClaim": "Aussage",
+        "colEvidence": "Beleg",
+        "colRelation": "Beziehung",
+        "colChecked": "Manuell geprüft",
         "colSeverity": "Schweregrad",
         "colFinding": "Befund",
         "level": {
@@ -7417,9 +7424,14 @@
       "colArticles": "Artikel",
       "colSameAs": "sameAs-Links",
       "colAlignment": "Themenpassung",
-      "generic": "anonyme Autorenzeile"
+      "generic": "anonyme Autorenzeile",
+      "identityEvidence": "Identitätsnachweis",
+      "unavailableNote": "Kein Profil angegeben; nicht verfügbar bedeutet nicht fiktiv.",
+      "verifyProfiles": "Profile prüfen"
     },
-    "signals": {
+      "signals": {
+        "claimEvidence": "Belege für Aussagen",
+        "associationNote": "Ein Zusammenhang ist kein Beleg; Überschneidung setzt sourceChecked nicht.",
       "title": "Quellen und Transparenz",
       "citations": "{{trusted}} von {{pages}} Artikelseiten verlinken auf eine vertrauenswürdige Quelle (.gov, .edu, PubMed, WHO).",
       "dead": "{{count}} ausgehende Links sind defekt",

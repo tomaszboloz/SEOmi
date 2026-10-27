@@ -6088,6 +6088,7 @@
         "colArticles": "Artigos",
         "colSameAs": "sameAs",
         "colAlignment": "Afinidade",
+        "colProfile": "Evidência do perfil",
         "generic": "{{0}} (assinatura anónima)",
         "tPages": "Páginas de confiança",
         "pagesIntro": "Páginas que mostram transparência editorial e da empresa.",
@@ -6097,6 +6098,12 @@
         "missing": "Em falta",
         "tFindings": "Constatações de confiança",
         "findingsIntro": "Ordenadas por gravidade; corrija primeiro as críticas.",
+        "tClaims": "Evidência das afirmações",
+        "claimsIntro": "Associações entre afirmações e citações; sobreposição lexical não é verificação.",
+        "colClaim": "Afirmação",
+        "colEvidence": "Evidência",
+        "colRelation": "Relação",
+        "colChecked": "Verificação manual",
         "colSeverity": "Gravidade",
         "colFinding": "Constatação",
         "level": {
@@ -7417,9 +7424,14 @@
       "colArticles": "Artigos",
       "colSameAs": "Links sameAs",
       "colAlignment": "Afinidade temática",
-      "generic": "assinatura anónima"
+      "generic": "assinatura anónima",
+      "identityEvidence": "Evidência de identidade",
+      "unavailableNote": "Não há perfil declarado; indisponível não significa fictício.",
+      "verifyProfiles": "Verificar perfis"
     },
-    "signals": {
+      "signals": {
+        "claimEvidence": "Evidência das afirmações",
+        "associationNote": "Associação não é comprovação; sobreposição nunca define sourceChecked manual.",
       "title": "Fontes e transparência",
       "citations": "{{trusted}} de {{pages}} páginas de artigos ligam a uma fonte fiável (.gov, .edu, PubMed, OMS).",
       "dead": "{{count}} links de saída estão quebrados",

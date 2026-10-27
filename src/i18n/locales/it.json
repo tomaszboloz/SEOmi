@@ -6088,6 +6088,7 @@
         "colArticles": "Articoli",
         "colSameAs": "sameAs",
         "colAlignment": "Affinità",
+        "colProfile": "Prova del profilo",
         "generic": "{{0}} (firma anonima)",
         "tPages": "Pagine di fiducia",
         "pagesIntro": "Pagine che mostrano la trasparenza editoriale e aziendale.",
@@ -6097,6 +6098,12 @@
         "missing": "Mancante",
         "tFindings": "Rilievi sulla fiducia",
         "findingsIntro": "Ordinati per gravità; correggi prima quelli critici.",
+        "tClaims": "Prove delle affermazioni",
+        "claimsIntro": "Associazioni tra affermazioni e citazioni; la sovrapposizione lessicale non verifica.",
+        "colClaim": "Affermazione",
+        "colEvidence": "Prova",
+        "colRelation": "Relazione",
+        "colChecked": "Controllo manuale",
         "colSeverity": "Gravità",
         "colFinding": "Rilievo",
         "level": {
@@ -7417,9 +7424,14 @@
       "colArticles": "Articoli",
       "colSameAs": "Link sameAs",
       "colAlignment": "Affinità tematica",
-      "generic": "firma anonima"
+      "generic": "firma anonima",
+      "identityEvidence": "Prova d’identità",
+      "unavailableNote": "Nessun profilo dichiarato; non disponibile non significa fittizio.",
+      "verifyProfiles": "Verifica profili"
     },
-    "signals": {
+      "signals": {
+        "claimEvidence": "Prove delle affermazioni",
+        "associationNote": "L’associazione non dimostra la tesi; la sovrapposizione non imposta mai sourceChecked.",
       "title": "Fonti e trasparenza",
       "citations": "{{trusted}} pagine di articoli su {{pages}} rimandano a una fonte affidabile (.gov, .edu, PubMed, OMS).",
       "dead": "{{count}} link in uscita sono interrotti",

@@ -18,7 +18,8 @@ export interface TrustPdfSummary {
   page_count: number;
   organization: { present: boolean; has_id: boolean; same_as: number };
   counts: { authors: number; authors_with_same_as: number; trusted_pages: number; analyzed_pages: number; dead_links: number; dated_articles: number };
-  authors: Array<{ name: string; articles: number; same_as: number; alignment: number | null; generic: boolean }>;
+  authors: Array<{ name: string; articles: number; same_as: number; alignment: number | null; generic: boolean; profile_status: string }>;
+  claims: Array<{ claim: string; relation: string; evidence: string; source_checked: boolean }>;
   pages: Record<TransparencyKind, string | null>;
   findings: Array<{ code: string; params: CodeParams; severity: string }>;
 }
@@ -44,6 +45,10 @@ export const summarizeTrust = (report: TrustReport): TrustPdfSummary => ({
   },
   authors: report.authors.slice(0, TRUST_PDF_AUTHORS).map((author) => ({
     name: author.name, articles: author.articleUrls.length, same_as: author.sameAs.length, alignment: author.alignmentPct ?? null, generic: author.generic,
+    profile_status: author.profiles.length ? author.profiles.map((profile) => `${profile.kind}:${profile.status}`).join(', ') : 'unavailable',
+  })),
+  claims: (report.citations.claimEvidence ?? []).slice(0, 20).map((claim) => ({
+    claim: claim.claim, relation: claim.relation, evidence: claim.evidence, source_checked: claim.sourceChecked,
   })),
   pages: {
     editorial: report.transparency.found.editorial ?? null, about: report.transparency.found.about ?? null,

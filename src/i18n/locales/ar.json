@@ -6088,6 +6088,7 @@
         "colArticles": "المقالات",
         "colSameAs": "sameAs",
         "colAlignment": "الملاءمة",
+        "colProfile": "دليل الملف",
         "generic": "{{0}} (توقيع مجهول)",
         "tPages": "صفحات الموثوقية",
         "pagesIntro": "صفحات تُظهر الشفافية التحريرية وشفافية الشركة.",
@@ -6097,6 +6098,12 @@
         "missing": "مفقودة",
         "tFindings": "نتائج الموثوقية",
         "findingsIntro": "مرتبة حسب الخطورة؛ أصلح العناصر الحرجة أولًا.",
+        "tClaims": "أدلة الادعاءات",
+        "claimsIntro": "روابط الادعاء بالاستشهاد؛ تشابه الكلمات ليس تحققًا.",
+        "colClaim": "الادعاء",
+        "colEvidence": "الدليل",
+        "colRelation": "العلاقة",
+        "colChecked": "تحقق يدوي",
         "colSeverity": "الخطورة",
         "colFinding": "النتيجة",
         "level": {
@@ -7417,9 +7424,14 @@
       "colArticles": "المقالات",
       "colSameAs": "روابط sameAs",
       "colAlignment": "ملاءمة الموضوع",
-      "generic": "توقيع مجهول"
+      "generic": "توقيع مجهول",
+      "identityEvidence": "دليل الهوية",
+      "unavailableNote": "لا يوجد ملف معلن؛ عدم التوفر لا يعني أنه مختلق.",
+      "verifyProfiles": "تحقق من الملفات"
     },
-    "signals": {
+      "signals": {
+        "claimEvidence": "أدلة الادعاءات",
+        "associationNote": "الارتباط ليس إثباتًا؛ لا يعيّن التطابق sourceChecked يدويًا.",
       "title": "المصادر والشفافية",
       "citations": "{{trusted}} من {{pages}} صفحة مقالات تربط بمصدر موثوق (.gov، .edu، PubMed، منظمة الصحة العالمية).",
       "dead": "{{count}} من الروابط الخارجية معطّلة",

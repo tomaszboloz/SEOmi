@@ -1,4 +1,5 @@
 import type { Coded } from '@/services/siteFocus';
+import type { ClaimCitation } from '@/services/citationEvidence/claims';
 
 /** E-E-A-T & Entity Trust Verifier contracts. Wording is a code plus params: the UI localizes. */
 
@@ -40,12 +41,23 @@ export interface AuthorEntity {
   alignmentPct?: number;
   /** Syntax-only classification of sameAs links; never fetched, so never "verified". */
   profiles: ProfileEvidence[];
+  reconciliation?: EntityReconciliation;
 }
 
 export type ProfileKind = 'orcid' | 'wikidata' | 'register' | 'social' | 'other';
-export type ProfileStatus = 'syntax-valid' | 'declared' | 'invalid';
+export type ProfileStatus = 'syntax-valid' | 'declared' | 'fetched' | 'verified' | 'mismatch' | 'unavailable' | 'invalid';
 
-export interface ProfileEvidence { url: string; kind: ProfileKind; status: ProfileStatus; tier?: 1 | 2 | 3; id?: string }
+export interface ProfileEvidence {
+  url: string; kind: ProfileKind; status: ProfileStatus; tier?: 1 | 2 | 3; id?: string;
+  fetchedAt?: string; expiresAt?: string; sourceDate?: string; detail?: string;
+}
+
+export type EntityRole = 'author' | 'reviewer' | 'publisher';
+
+export interface EntityReconciliation {
+  role: EntityRole; profiles: ProfileEvidence[]; declarationRecall: number;
+  status: ProfileStatus | 'unavailable'; evidence: 'declared' | 'registry' | 'manual';
+}
 
 export interface CitationDetail {
   pagesAnalyzed: number;
@@ -58,6 +70,9 @@ export interface CitationDetail {
   /** Article pages citing at least one DOI/PMID/PMCID source, and unique identified sources. */
   pagesWithScholarly: number;
   scholarlySources: number;
+  /** Bounded claim-to-source associations; lexical overlap never marks a claim manually checked. */
+  claimEvidence?: ClaimCitation[];
+  unbackedHighStakesClaims?: number;
 }
 
 export interface TransparencyDetail {

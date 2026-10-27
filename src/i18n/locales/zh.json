@@ -6088,6 +6088,7 @@
         "colArticles": "文章数",
         "colSameAs": "sameAs",
         "colAlignment": "契合度",
+        "colProfile": "个人资料证据",
         "generic": "{{0}}（匿名署名）",
         "tPages": "信任页面",
         "pagesIntro": "体现编辑和公司透明度的页面。",
@@ -6097,6 +6098,12 @@
         "missing": "缺失",
         "tFindings": "信任问题",
         "findingsIntro": "按严重程度排序；请先修复严重事项。",
+        "tClaims": "主张证据",
+        "claimsIntro": "主张与引文的关联；词语重叠不代表已验证。",
+        "colClaim": "主张",
+        "colEvidence": "证据",
+        "colRelation": "关系",
+        "colChecked": "手动检查",
         "colSeverity": "严重程度",
         "colFinding": "问题",
         "level": {
@@ -7417,9 +7424,14 @@
       "colArticles": "文章数",
       "colSameAs": "sameAs 链接",
       "colAlignment": "主题契合度",
-      "generic": "匿名署名"
+      "generic": "匿名署名",
+      "identityEvidence": "身份证据",
+      "unavailableNote": "没有声明的个人资料；不可用不表示虚构。",
+      "verifyProfiles": "验证个人资料"
     },
-    "signals": {
+      "signals": {
+        "claimEvidence": "主张证据",
+        "associationNote": "关联不等于支持；重叠不会设置手动 sourceChecked。",
       "title": "来源与透明度",
       "citations": "{{pages}} 个文章页面中有 {{trusted}} 个链接到可信来源（.gov、.edu、PubMed、WHO）。",
       "dead": "{{count}} 个出站链接已失效",

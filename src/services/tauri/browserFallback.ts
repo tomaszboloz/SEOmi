@@ -68,6 +68,7 @@ export function handleBrowserFallback<T>(cmd: string, args?: Record<string, unkn
     'ai_test_connection',
     'cancel_site_crawl',
     'check_link',
+    'fetch_registry_profile',
     'check_external_crawl_links',
     'connect_google_analytics',
     'list_google_analytics_properties',
