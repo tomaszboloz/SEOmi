@@ -27,6 +27,7 @@ describe('chunk scoring', () => {
     expect(countDangling(['It can vary.', 'Sensors vary.'], 'CGM sensors', en)).toBe(1);
     expect(countDangling(['This sensor works.'], 'Sensor life', en)).toBe(0);
     expect(countDangling([''], 'x', en)).toBe(1 - 1);
+    expect(countDangling(['These battery units require careful recycling.'], 'Replacement batteries', en)).toBe(0);
   });
 
   it('scores answer-first by naming, facts and clean openers', () => {

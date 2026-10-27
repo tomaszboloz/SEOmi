@@ -8,8 +8,11 @@ import type { MonitoringAlert, MonitoringAlertSettings } from './types';
 export interface AioMonitoringEvaluation {
   alert: MonitoringAlert | null;
   partial: boolean;
-  skipped?: 'no-baseline' | 'incomparable' | 'score-unavailable';
+  skipped?: 'no-baseline' | 'incomparable' | 'score-unavailable' | 'profile-unavailable' | 'profile-mismatch';
 }
+
+const profileKey = (profile: CrawlRunRecord['result']['aio_profile']): string | undefined => profile
+  && [profile.id, profile.algorithmVersion, profile.configHash, profile.language, profile.market].join('|');
 
 const comparable = (baseline: CrawlRunRecord, current: CrawlRunRecord, projectId?: string): boolean =>
   Date.parse(baseline.completedAt) < Date.parse(current.completedAt)
@@ -29,6 +32,10 @@ export const compareAioForMonitoring = (
   const before = baseline && crawlAioSummary(baseline);
   if (!after || (baseline && !before)) return { alert: null, partial: true, skipped: 'score-unavailable' };
   if (!baseline) return { alert: null, partial: false, skipped: 'no-baseline' };
+  const beforeProfile = profileKey(baseline.result.aio_profile);
+  const afterProfile = profileKey(current.result.aio_profile);
+  if (!beforeProfile || !afterProfile) return { alert: null, partial: true, skipped: 'profile-unavailable' };
+  if (beforeProfile !== afterProfile) return { alert: null, partial: true, skipped: 'profile-mismatch' };
   if (!comparable(baseline, current, projectId)) return { alert: null, partial: true, skipped: 'incomparable' };
   const partial = Boolean(before!.skipped || after.skipped);
   const alert = evaluateScoreDropAlert('aio', before, after, `aio-${current.id}`, settings);

@@ -9,6 +9,8 @@ export type RewriteOutcome =
 
 const ISSUE_HINT: Record<AioIssue, string> = {
   'dangling-pronoun': 'Replace pronouns and references like "it", "this" with the explicit entity name.',
+  'deictic-context': 'Replace context-dependent words such as here, above or today with explicit references.',
+  'no-entity': 'Name the core or pillar topic explicitly inside this passage.',
   'no-answer-first': 'Open with a direct 40-60 word answer to the heading before any context.',
   'filler-opening': 'Remove introductory filler and references to earlier text.',
   'no-facts': 'State concrete facts with units, numbers and named entities.',

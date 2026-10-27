@@ -12,6 +12,14 @@ export interface SiteCrawlResult {
   warning_count: number;
   notice_count: number;
   pages: CrawledPageSummary[];
+  /** Persisted AIO-R profile identity for comparable monitoring; absent on legacy crawls. */
+  aio_profile?: {
+    id: string;
+    algorithmVersion: string;
+    configHash: string;
+    language: string;
+    market: string;
+  };
   duration_ms: number;
   cancelled: boolean;
   timed_out?: boolean;

@@ -12,7 +12,7 @@ export const aioPage = (url: string, sections: RagSection[] | undefined, extra: 
 export const GOOD = section('How long does a CGM sensor last?', [
   'A CGM sensor lasts 10 to 15 days depending on the model. The sensor measures glucose in interstitial fluid every 5 minutes.',
   'CGM sensors require a warm-up period of 60 minutes after insertion.',
-], { tables: 1, ordered_lists: 1, unordered_lists: 1, definition_lists: 1 });
+], { tables: 1, ordered_lists: 1, unordered_lists: 1, definition_lists: 1, table_headers: 1, ordered_list_instruction: true, list_item_word_counts: [8, 9] });
 
 export const WEAK = section('What is a normal blood sugar?', [
   'This is a question that raises many doubts. As mentioned before, everything depends on many factors, but usually it should not exceed the limit after two hours.',

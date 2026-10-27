@@ -10,13 +10,15 @@ export interface LanguageRules {
   relations: string[];
   /** CJK-like scripts split into characters instead of words. */
   charBased?: boolean;
+  deictic?: string[];
 }
 
 const en: LanguageRules = {
   coverage: 'full',
   dangling: ['it', 'this', 'that', 'these', 'those', 'they', 'he', 'she', 'such', 'the latter', 'the former', 'the above', 'this method', 'this process', 'this approach', 'this value', 'the aforementioned', 'its', 'their'],
   filler: ['as mentioned', 'as we said', 'as already', 'as noted', 'as discussed', 'as previously', 'many people', 'there are many', 'it is well known', 'in today', 'when it comes to', 'let us', "let's", 'before we', 'in this article', 'you may wonder', 'this question'],
-  relations: ['is', 'are', 'was', 'were', 'means', 'equals', 'contains', 'requires', 'causes', 'reduces', 'increases', 'measures', 'lasts', 'costs', 'should', 'must', 'ranges'],
+  relations: ['is', 'are', 'was', 'were', 'means', 'equals', 'contains', 'requires', 'causes', 'reduces', 'increases', 'measure', 'measures', 'lasts', 'costs', 'should', 'must', 'ranges'],
+  deictic: ['here', 'there', 'now', 'today', 'above', 'below', 'as follows'],
 };
 
 const pl: LanguageRules = {
@@ -24,9 +26,10 @@ const pl: LanguageRules = {
   dangling: ['to', 'ten', 'ta', 'te', 'tego', 'tej', 'tym', 'tych', 'ona', 'on', 'oni', 'one', 'ono', 'powyższy', 'powyższa', 'powyższe', 'wspomniany', 'wspomniana', 'wspomniane', 'taki', 'taka', 'takie', 'jego', 'jej', 'ich', 'wartość ta', 'kwestia ta', 'metoda ta', 'proces ten'],
   filler: ['jak już', 'jak wspomniano', 'jak wcześniej', 'jak pisaliśmy', 'jak wiadomo', 'wiele osób', 'istnieje wiele', 'kwestia ta', 'w dzisiejszych czasach', 'jeśli chodzi o', 'zacznijmy', 'w tym artykule', 'przed przejściem'],
   relations: ['jest', 'są', 'był', 'była', 'było', 'wynosi', 'oznacza', 'powoduje', 'zawiera', 'wymaga', 'zmniejsza', 'zwiększa', 'mierzy', 'trwa', 'kosztuje', 'powinien', 'powinna', 'powinno', 'należy', 'stanowi', 'służy'],
+  deictic: ['tutaj', 'tam', 'teraz', 'dziś', 'powyżej', 'poniżej', 'jak następuje'],
 };
 
-const basic = (dangling: string[], filler: string[], relations: string[], charBased = false): LanguageRules => ({ coverage: 'basic', dangling, filler, relations, charBased });
+const basic = (dangling: string[], filler: string[], relations: string[], charBased = false, deictic: string[] = ['here', 'there', 'now', 'above', 'below']): LanguageRules => ({ coverage: 'basic', dangling, filler, relations, charBased, deictic });
 
 const RULES: Record<string, LanguageRules> = {
   en,
@@ -46,7 +49,9 @@ const RULES: Record<string, LanguageRules> = {
 export const AIO_LANGUAGES = Object.keys(RULES);
 
 /** Rules for the language's primary subtag; English rules when the language is unknown or unsupported. */
-export const rulesFor = (language: string): { language: string; rules: LanguageRules } => {
+export const rulesFor = (language: string): { language: string; rules: LanguageRules; status: 'supported' | 'uncertain' | 'unsupported' } => {
   const code = language.split(/[-_]/)[0].toLowerCase();
-  return code in RULES ? { language: code, rules: RULES[code] } : { language: code || 'en', rules: { ...en, coverage: 'basic' } };
+  if (code === 'en' || code === 'pl') return { language: code, rules: RULES[code], status: 'supported' };
+  if (code in RULES) return { language: code, rules: RULES[code], status: 'uncertain' };
+  return { language: code || 'en', rules: { ...en, coverage: 'basic' }, status: 'unsupported' };
 };
