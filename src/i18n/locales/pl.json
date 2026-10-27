@@ -5913,7 +5913,7 @@
         "nScored": "z {{0}} przeskanowanych",
         "nSkipped": "Nieocenione",
         "nOffTopic": "TRS poniżej 40",
-        "nBorderline": "TRS 60-74",
+        "nBorderline": "TRS 40-74",
         "nStrong": "TRS 75 lub więcej",
         "percent": "{{0}}%",
         "coreBadge": "TEMAT GŁÓWNY",
@@ -6394,7 +6394,7 @@
         "title": "Odsetek stron w temacie",
         "what": "Udział stron z treścią, których TRS wynosi 60 lub więcej. Strony techniczne, takie jak logowanie czy koszyk, nie są liczone.",
         "why": "Pokazuje, ile stron, a nie jaki ważony wynik, wspiera temat główny.",
-        "action": "Podnieś go, poprawiając strony graniczne (60-74 i niżej) oraz usuwając strony spoza tematu.",
+        "action": "Podnieś go, poprawiając strony graniczne (40-74) oraz usuwając strony spoza tematu.",
         "example": "42 z 50 stron z treścią ma TRS 60 lub więcej: odsetek wynosi 84 procent."
       },
       "semanticSimilarity": {
@@ -6850,7 +6850,7 @@
       "pages": "Ocenione strony",
       "skipped": "Pominięte strony",
       "offTopic": "Strony poza tematem (TRS poniżej 40)",
-      "borderline": "Strony graniczne (60-74)"
+      "borderline": "Strony graniczne (40-74)"
     },
     "heatmap": {
       "title": "Rozkład tematów",
@@ -6860,7 +6860,7 @@
       "filter": {
         "all": "Wszystkie ({{count}})",
         "critical": "Krytyczne <40 ({{count}})",
-        "borderline": "Graniczne 60-74 ({{count}})",
+        "borderline": "Graniczne 40-74 ({{count}})",
         "strong": "Mocne >=75 ({{count}})"
       },
       "filtersAria": "Filtruj strony według trafności",

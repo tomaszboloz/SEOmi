@@ -2,6 +2,7 @@ export * from './types';
 export { buildSiteFocusReport } from './build';
 export { scoreIncremental } from './incremental';
 export { bandFor, computeSfs, statusFor, priorityFor, playbookFor } from './aggregate';
+export { trsGroup, isBorderlineTrs, OFF_TOPIC_BELOW, ON_TOPIC_FROM, STRONG_FROM, type TrsGroup } from './trsPolicy';
 export { simulateRemoval, simulateImprovement, buildPagePlaybook } from './recommend';
 export { buildRewriteBrief, buildBriefPrompt, type RewriteBrief } from './brief';
 export { buildLinkSuggestions } from './links';

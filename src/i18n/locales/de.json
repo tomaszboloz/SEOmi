@@ -5913,7 +5913,7 @@
         "nScored": "von {{0}} gecrawlten",
         "nSkipped": "Nicht bewertet",
         "nOffTopic": "TRS unter 40",
-        "nBorderline": "TRS 60-74",
+        "nBorderline": "TRS 40-74",
         "nStrong": "TRS 75 oder mehr",
         "percent": "{{0}} %",
         "coreBadge": "KERNTHEMA",
@@ -6394,7 +6394,7 @@
         "title": "Anteil themenrelevanter Seiten",
         "what": "Der Anteil der Inhaltsseiten mit einem TRS von 60 oder höher. Technische Seiten wie Login oder Warenkorb werden nicht mitgezählt.",
         "why": "Er zeigt, wie viele Seiten das Kernthema stützen, nicht wie hoch der gewichtete Wert ist.",
-        "action": "Steigere ihn, indem du Grenzfall-Seiten (60-74 und darunter) verbesserst und themenfremde entfernst.",
+        "action": "Steigere ihn, indem du Grenzfall-Seiten (40-74) verbesserst und themenfremde entfernst.",
         "example": "42 von 50 Inhaltsseiten haben einen TRS von 60 oder mehr: Der Anteil beträgt 84 Prozent."
       },
       "semanticSimilarity": {
@@ -6850,7 +6850,7 @@
       "pages": "Bewertete Seiten",
       "skipped": "Übersprungene Seiten",
       "offTopic": "Seiten abseits des Themas (TRS unter 40)",
-      "borderline": "Grenzfall-Seiten (60-74)"
+      "borderline": "Grenzfall-Seiten (40-74)"
     },
     "heatmap": {
       "title": "Themenverteilung",
@@ -6860,7 +6860,7 @@
       "filter": {
         "all": "Alle ({{count}})",
         "critical": "Kritisch <40 ({{count}})",
-        "borderline": "Grenzfall 60-74 ({{count}})",
+        "borderline": "Grenzfall 40-74 ({{count}})",
         "strong": "Stark >=75 ({{count}})"
       },
       "filtersAria": "Seiten nach Relevanz filtern",

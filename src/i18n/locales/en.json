@@ -5913,7 +5913,7 @@
         "nScored": "of {{0}} crawled",
         "nSkipped": "Not scored",
         "nOffTopic": "TRS under 40",
-        "nBorderline": "TRS 60-74",
+        "nBorderline": "TRS 40-74",
         "nStrong": "TRS 75 or more",
         "percent": "{{0}}%",
         "coreBadge": "CORE TOPIC",
@@ -6394,7 +6394,7 @@
         "title": "On-topic Ratio",
         "what": "The share of content pages whose TRS is 60 or higher. Technical pages such as login or cart are not counted.",
         "why": "It tells you how many pages, not how much weighted score, support the core topic.",
-        "action": "Raise it by fixing borderline pages (60-74 and below) and removing off-topic ones.",
+        "action": "Raise it by fixing borderline pages (40-74) and removing off-topic ones.",
         "example": "42 of 50 content pages have TRS 60 or more: the ratio is 84 percent."
       },
       "semanticSimilarity": {
@@ -6850,7 +6850,7 @@
       "pages": "Pages scored",
       "skipped": "Pages skipped",
       "offTopic": "Off-topic pages (TRS under 40)",
-      "borderline": "Borderline pages (60-74)"
+      "borderline": "Borderline pages (40-74)"
     },
     "heatmap": {
       "title": "Topic distribution",
@@ -6860,7 +6860,7 @@
       "filter": {
         "all": "All ({{count}})",
         "critical": "Critical <40 ({{count}})",
-        "borderline": "Borderline 60-74 ({{count}})",
+        "borderline": "Borderline 40-74 ({{count}})",
         "strong": "Strong >=75 ({{count}})"
       },
       "filtersAria": "Filter pages by relevance",

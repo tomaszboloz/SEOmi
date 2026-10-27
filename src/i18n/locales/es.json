@@ -5913,7 +5913,7 @@
         "nScored": "de {{0}} rastreadas",
         "nSkipped": "Sin puntuar",
         "nOffTopic": "TRS inferior a 40",
-        "nBorderline": "TRS 60-74",
+        "nBorderline": "TRS 40-74",
         "nStrong": "TRS 75 o más",
         "percent": "{{0}}%",
         "coreBadge": "TEMA PRINCIPAL",
@@ -6394,7 +6394,7 @@
         "title": "Proporción on-topic",
         "what": "El porcentaje de páginas de contenido cuyo TRS es 60 o superior. Las páginas técnicas, como el inicio de sesión o el carrito, no se cuentan.",
         "why": "Indica cuántas páginas, y no cuánta puntuación ponderada, respaldan el tema principal.",
-        "action": "Súbela corrigiendo las páginas límite (60-74 e inferiores) y eliminando las off-topic.",
+        "action": "Súbela corrigiendo las páginas límite (40-74) y eliminando las off-topic.",
         "example": "42 de 50 páginas de contenido tienen un TRS de 60 o más: la proporción es del 84 por ciento."
       },
       "semanticSimilarity": {
@@ -6850,7 +6850,7 @@
       "pages": "Páginas puntuadas",
       "skipped": "Páginas omitidas",
       "offTopic": "Páginas off-topic (TRS inferior a 40)",
-      "borderline": "Páginas límite (60-74)"
+      "borderline": "Páginas límite (40-74)"
     },
     "heatmap": {
       "title": "Distribución temática",
@@ -6860,7 +6860,7 @@
       "filter": {
         "all": "Todas ({{count}})",
         "critical": "Críticas <40 ({{count}})",
-        "borderline": "Límite 60-74 ({{count}})",
+        "borderline": "Límite 40-74 ({{count}})",
         "strong": "Sólidas >=75 ({{count}})"
       },
       "filtersAria": "Filtrar páginas por relevancia",

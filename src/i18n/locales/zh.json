@@ -5913,7 +5913,7 @@
         "nScored": "共爬取 {{0}} 个",
         "nSkipped": "未评分",
         "nOffTopic": "TRS 低于 40",
-        "nBorderline": "TRS 60-74",
+        "nBorderline": "TRS 40-74",
         "nStrong": "TRS 75 及以上",
         "percent": "{{0}}%",
         "coreBadge": "核心主题",
@@ -6394,7 +6394,7 @@
         "title": "主题相关占比",
         "what": "TRS 达到 60 及以上的内容页面所占比例。登录、购物车等技术页面不计入。",
         "why": "它告诉你有多少个页面(而不是加权后的分数)在支撑核心主题。",
-        "action": "通过修复临界页面(60-74 分及以下)和移除偏离主题的页面来提高该占比。",
+        "action": "通过修复临界页面(40-74)和移除偏离主题的页面来提高该占比。",
         "example": "50 个内容页面中有 42 个 TRS 达到 60 及以上:占比为 84%。"
       },
       "semanticSimilarity": {
@@ -6850,7 +6850,7 @@
       "pages": "已评分页面",
       "skipped": "已跳过页面",
       "offTopic": "偏离主题的页面(TRS 低于 40)",
-      "borderline": "临界页面(60-74)"
+      "borderline": "临界页面(40-74)"
     },
     "heatmap": {
       "title": "主题分布",
@@ -6860,7 +6860,7 @@
       "filter": {
         "all": "全部({{count}})",
         "critical": "严重 <40({{count}})",
-        "borderline": "临界 60-74({{count}})",
+        "borderline": "临界 40-74({{count}})",
         "strong": "强 >=75({{count}})"
       },
       "filtersAria": "按相关度筛选页面",

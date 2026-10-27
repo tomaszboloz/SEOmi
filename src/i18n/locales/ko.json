@@ -5913,7 +5913,7 @@
         "nScored": "크롤링된 {{0}}개 중",
         "nSkipped": "점수 미산정",
         "nOffTopic": "TRS 40 미만",
-        "nBorderline": "TRS 60-74",
+        "nBorderline": "TRS 40-74",
         "nStrong": "TRS 75 이상",
         "percent": "{{0}}%",
         "coreBadge": "핵심 주제",
@@ -6394,7 +6394,7 @@
         "title": "On-topic Ratio",
         "what": "TRS가 60 이상인 콘텐츠 페이지의 비율입니다. 로그인이나 장바구니 같은 기술 페이지는 포함되지 않습니다.",
         "why": "가중 점수가 아니라 핵심 주제를 뒷받침하는 페이지가 몇 개인지 알려줍니다.",
-        "action": "경계선 페이지(60-74 이하)를 개선하고 주제에서 벗어난 페이지를 제거해 비율을 높이세요.",
+        "action": "경계선 페이지(40-74)를 개선하고 주제에서 벗어난 페이지를 제거해 비율을 높이세요.",
         "example": "콘텐츠 페이지 50개 중 42개의 TRS가 60 이상이면 비율은 84퍼센트입니다."
       },
       "semanticSimilarity": {
@@ -6850,7 +6850,7 @@
       "pages": "점수가 매겨진 페이지",
       "skipped": "건너뛴 페이지",
       "offTopic": "주제에서 벗어난 페이지(TRS 40 미만)",
-      "borderline": "경계선 페이지(60-74)"
+      "borderline": "경계선 페이지(40-74)"
     },
     "heatmap": {
       "title": "주제 분포",
@@ -6860,7 +6860,7 @@
       "filter": {
         "all": "전체({{count}})",
         "critical": "심각 <40({{count}})",
-        "borderline": "경계선 60-74({{count}})",
+        "borderline": "경계선 40-74({{count}})",
         "strong": "우수 >=75({{count}})"
       },
       "filtersAria": "관련성별로 페이지 필터링",

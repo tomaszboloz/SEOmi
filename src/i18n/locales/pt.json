@@ -5913,7 +5913,7 @@
         "nScored": "de {{0}} rastreadas",
         "nSkipped": "Sem pontuação",
         "nOffTopic": "TRS abaixo de 40",
-        "nBorderline": "TRS 60-74",
+        "nBorderline": "TRS 40-74",
         "nStrong": "TRS 75 ou mais",
         "percent": "{{0}}%",
         "coreBadge": "TEMA PRINCIPAL",
@@ -6394,7 +6394,7 @@
         "title": "Proporção on-topic",
         "what": "A parcela das páginas de conteúdo com TRS igual ou superior a 60. Páginas técnicas, como login ou carrinho, não são contadas.",
         "why": "Mostra quantas páginas, e não quanta pontuação ponderada, sustentam o tema principal.",
-        "action": "Aumente-a corrigindo as páginas limítrofes (60-74 e abaixo) e removendo as off-topic.",
+        "action": "Aumente-a corrigindo as páginas limítrofes (40-74) e removendo as off-topic.",
         "example": "42 de 50 páginas de conteúdo têm TRS de 60 ou mais: proporção de 84 por cento."
       },
       "semanticSimilarity": {
@@ -6850,7 +6850,7 @@
       "pages": "Páginas pontuadas",
       "skipped": "Páginas ignoradas",
       "offTopic": "Páginas off-topic (TRS abaixo de 40)",
-      "borderline": "Páginas limítrofes (60-74)"
+      "borderline": "Páginas limítrofes (40-74)"
     },
     "heatmap": {
       "title": "Distribuição temática",
@@ -6860,7 +6860,7 @@
       "filter": {
         "all": "Todas ({{count}})",
         "critical": "Críticas <40 ({{count}})",
-        "borderline": "Limítrofes 60-74 ({{count}})",
+        "borderline": "Limítrofes 40-74 ({{count}})",
         "strong": "Fortes >=75 ({{count}})"
       },
       "filtersAria": "Filtrar páginas por relevância",
