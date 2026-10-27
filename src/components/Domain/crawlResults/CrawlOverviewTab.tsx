@@ -6,11 +6,13 @@ import type { useCrawlResultsSession } from './useCrawlResultsSession';
 type Session = ReturnType<typeof useCrawlResultsSession>;
 
 import { CrawlSummaryMetrics } from './CrawlSummaryMetrics';
+import { SpaShellBanner } from './SpaShellBanner';
 export const CrawlOverviewTab = ({ session }: { session: Session }) => {
 const { result, t } = session;
 const summaryRows = <CrawlSummaryMetrics session={session} />;
 return (
           <div className="space-y-4">
+            <SpaShellBanner pages={result.pages} />
             <Table minWidth="min-w-[520px]">
               <tbody>{summaryRows}</tbody>
             </Table>
