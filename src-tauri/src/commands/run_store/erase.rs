@@ -54,9 +54,27 @@ pub fn forget_subject(
             params![project, subject],
         )
         .map_err(db)?;
+    let tagged_run_ids: Vec<String> = {
+        let mut stmt = tx
+            .prepare("SELECT run_id FROM crawl_runs WHERE project_id = ?1 AND json_extract(meta, '$.subjectId') = ?2")
+            .map_err(db)?;
+        let rows = stmt
+            .query_map(params![project, subject], |row| row.get(0))
+            .map_err(db)?
+            .collect::<Result<Vec<String>, _>>()
+            .map_err(db)?;
+        rows
+    };
     let runs = tx
         .execute("DELETE FROM crawl_runs WHERE project_id = ?1 AND json_extract(meta, '$.subjectId') = ?2", params![project, subject])
         .map_err(db)?;
+    for run_id in tagged_run_ids {
+        tx.execute(
+            "DELETE FROM crawl_events WHERE project_id = ?1 AND run_id = ?2",
+            params![project, run_id],
+        )
+        .map_err(db)?;
+    }
     let report = log(
         &tx,
         project,
@@ -85,6 +103,8 @@ pub fn erase_project(conn: &mut Connection, project: &str) -> Result<ErasureRepo
         .map_err(db)?;
     let runs = tx
         .execute("DELETE FROM crawl_runs WHERE project_id = ?1", [project])
+        .map_err(db)?;
+    tx.execute("DELETE FROM crawl_events WHERE project_id = ?1", [project])
         .map_err(db)?;
     tx.execute("DELETE FROM import_log WHERE project_id = ?1", [project])
         .map_err(db)?;

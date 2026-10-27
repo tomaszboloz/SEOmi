@@ -17,16 +17,11 @@ export const normalizeCrawlLinkUrl = (value: string): string => {
 export const normalizeInterruptedCrawl = (value: unknown): InterruptedCrawl | null => {
   if (!value || typeof value !== 'object') return null;
   const candidate = value as Partial<InterruptedCrawl>;
-  if (typeof candidate.url !== 'string' || !candidate.url.trim() || typeof candidate.limit !== 'number' || !Number.isFinite(candidate.limit) || !candidate.config || typeof candidate.config !== 'object') return null;
-  const config = parseCrawlConfig(candidate.config);
-  if (!config) return null;
+  if (typeof candidate.url !== 'string' || !candidate.url.trim() || typeof candidate.limit !== 'number' || !Number.isFinite(candidate.limit)) return null;
+  const config = candidate.config && typeof candidate.config === 'object' ? parseCrawlConfig(candidate.config) : undefined;
   const environment = candidate.environment === 'staging' || candidate.environment === 'production' ? candidate.environment : 'default';
-  const startedAt = typeof candidate.startedAt === 'string' && Number.isFinite(Date.parse(candidate.startedAt))
-    ? candidate.startedAt
-    : new Date(0).toISOString();
-  const updatedAt = typeof candidate.updatedAt === 'string' && Number.isFinite(Date.parse(candidate.updatedAt))
-    ? candidate.updatedAt
-    : startedAt;
+  const startedAt = typeof candidate.startedAt === 'string' && Number.isFinite(Date.parse(candidate.startedAt)) ? candidate.startedAt : undefined;
+  const updatedAt = typeof candidate.updatedAt === 'string' && Number.isFinite(Date.parse(candidate.updatedAt)) ? candidate.updatedAt : startedAt;
   return {
     url: candidate.url,
     limit: Math.max(1, Math.min(MAX_CRAWL_LIMIT, Math.floor(candidate.limit))),
@@ -41,7 +36,7 @@ export const normalizeInterruptedCrawl = (value: unknown): InterruptedCrawl | nu
 };
 
 export const interruptedCrawlTimestamp = (value: InterruptedCrawl): number => {
-  const timestamp = Date.parse(value.updatedAt || value.startedAt);
+  const timestamp = Date.parse(value.updatedAt || value.startedAt || '');
   return Number.isFinite(timestamp) ? timestamp : 0;
 };
 

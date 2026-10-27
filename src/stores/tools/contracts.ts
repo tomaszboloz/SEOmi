@@ -1,4 +1,5 @@
-import type { CrawlConfig, CrawlEnvironment } from '@/types';
+import type { CrawlConfig, CrawlEnvironment, SiteCrawlResult } from '@/types';
+import type { RecoveredCrawlResult } from '@/services/crawlPersistence/recovery';
 import type { getSecureValue, invokeTauriCommand } from '@/services/tauri';
 import type { loadCrawlRuns, saveCrawlRuns } from '@/services/crawlPersistence';
 import type { notifyCrawlCompleted } from '@/services/desktopNotifications';
@@ -27,14 +28,15 @@ export interface CrawlProjectSettings {
 export interface InterruptedCrawl {
   url: string;
   limit: number;
-  config: CrawlConfig;
+  config?: CrawlConfig;
   environment: CrawlEnvironment;
-  startedAt: string;
+  startedAt?: string;
   /** Monotonic freshness marker used to reconcile WebView and native copies. */
-  updatedAt: string;
+  updatedAt?: string;
   completedUrls?: string[];
   frontierUrls?: string[];
   baseRunId?: string;
+  baseResult?: SiteCrawlResult | RecoveredCrawlResult;
 }
 
 export type ToolsSet = StoreApi<ToolsState>['setState'];

@@ -4,7 +4,7 @@ import { z } from 'zod';
 import { parseCrawlConfig, parseCrawlRuns, parseSiteCrawlResult } from '@/services/crawlContracts';
 import { CrawlConfigSchema } from '@/services/contracts/crawl';
 import { isTauriEnvironment } from '@/services/tauri';
-import { isStorageQuotaError, usesDedicatedCrawlStorage } from '@/services/crawlPersistence';
+import { buildInterruptedCrawlFromRecoveredRun, isStorageQuotaError, loadRecoveredCrawl, usesDedicatedCrawlStorage } from '@/services/crawlPersistence';
 
 import { readJsonStorage, readStorage, removeStorage } from '@/services/storage';
 import { emptyAiResearchSettings, normalizeAiResearchSettings } from '@/services/aiResearchEvidence';
@@ -116,6 +116,14 @@ hydrateProject: async (projectId) => {
       } catch {
         // Keep the local compatibility copy when the native checkpoint is not
         // available while upgrading from an older release.
+      }
+    }
+    if (desktop && !persistenceError) {
+      try {
+        const recovered = await loadRecoveredCrawl(projectId);
+        if (recovered) hydratedInterruptedCrawl = newestInterruptedCrawl(hydratedInterruptedCrawl, buildInterruptedCrawlFromRecoveredRun(recovered, crawlSettings?.config, crawlSettings?.limit));
+      } catch (error) {
+        persistenceError = error instanceof Error ? error.message : i18n.t('runtimeErrors.tools.historyReadFailed');
       }
     }
     if (!isCurrentHydration()) return;

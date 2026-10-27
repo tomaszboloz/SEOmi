@@ -7,6 +7,8 @@ use super::{
 
 mod frontier;
 mod loop_runner;
+mod loop_runner_progress;
+mod native_collector;
 mod page_assembler;
 mod page_assembler_assets;
 mod page_assembler_signals;

@@ -112,10 +112,12 @@ mod loop_runner_depth_boundary;
 
 mod gap_boundaries;
 mod loop_runner_resume_and_cancel;
+mod native_collector;
 mod page_fetch_rendered_delay;
 mod page_media_http_scheme;
 mod page_type_branch_gaps;
 mod page_type_links_ratio_gaps;
+mod pipeline_event_stream;
 mod summary_rendered_sessions;
 
 #[path = "coverage100_exact_gaps.rs"]

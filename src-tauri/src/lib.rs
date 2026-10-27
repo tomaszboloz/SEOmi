@@ -16,7 +16,6 @@ mod startup;
 mod startup_tests;
 pub mod utils;
 use tauri::Builder;
-
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
 pub fn run() {
     utils::logging::init();
@@ -24,7 +23,6 @@ pub fn run() {
         .run(tauri::generate_context!())
         .expect("Error while running SEOmi desktop application");
 }
-
 /// Shared production composition root, also exercised by the real desktop E2E binary.
 pub fn desktop_builder() -> Builder<tauri::Wry> {
     compose(
@@ -76,6 +74,8 @@ pub(crate) fn compose<R: tauri::Runtime>(builder: Builder<R>) -> Builder<R> {
                 commands::run_store::erase_commands::store_forget_subject,
                 commands::run_store::erase_commands::store_erase_project,
                 commands::run_store::erase_commands::store_erasure_log,
+                commands::run_store::event_commands::store_append_crawl_events,
+                commands::run_store::event_commands::store_load_crawl_events,
                 commands::seo_audit::inspect_url,
                 commands::seo_audit::cancel_inspect_url,
                 commands::http_client::check_link,

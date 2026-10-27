@@ -1,4 +1,5 @@
 import { SiteCrawlResult } from '@/types';
+import type { RecoveredCrawlResult } from '@/services/crawlPersistence/recovery';
 import type { InterruptedCrawl } from '../contracts';
 import { crawlHealthScore, CRAWL_SCORE_VERSION } from '@/services/crawlHealthScore';
 
@@ -32,7 +33,7 @@ export const buildCrawlCheckpoint = (result: SiteCrawlResult): Pick<InterruptedC
   };
 };
 
-export const mergeCrawlResults = (base: SiteCrawlResult, fresh: SiteCrawlResult): SiteCrawlResult => {
+export const mergeCrawlResults = (base: SiteCrawlResult | RecoveredCrawlResult, fresh: SiteCrawlResult): SiteCrawlResult => {
   const pagesByUrl = new Map<string, SiteCrawlResult['pages'][number]>();
   for (const page of base.pages) pagesByUrl.set(checkpointUrl(page.final_url || page.url), page);
   for (const page of fresh.pages) pagesByUrl.set(checkpointUrl(page.final_url || page.url), page);
@@ -56,7 +57,7 @@ export const mergeCrawlResults = (base: SiteCrawlResult, fresh: SiteCrawlResult)
     warning_count: warningCount,
     notice_count: noticeCount,
     pages,
-    duration_ms: base.duration_ms + fresh.duration_ms,
+    duration_ms: Number.isFinite(base.duration_ms) ? base.duration_ms + fresh.duration_ms : fresh.duration_ms,
     sitemap_urls_discovered: sitemapUrls.length,
     sitemap_urls: sitemapUrls,
     rejected_urls: [...rejected.values()],

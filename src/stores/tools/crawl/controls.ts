@@ -53,7 +53,7 @@ resumeInterruptedCrawl: async () => {
     const config = baseRun && pending.completedUrls?.length
       ? { ...pending.config, resumeCompletedUrls: pending.completedUrls, resumeFrontierUrls: pending.frontierUrls || [] }
       : pending.config;
-    return get().startSiteCrawl(pending.url, pending.limit, config, pending.environment, true, baseRun?.result);
+    return get().startSiteCrawl(pending.url, pending.limit, config, pending.environment, true, baseRun?.result || pending.baseResult);
   },
 discardInterruptedCrawl: () => {
     const projectId = activeProjectId();

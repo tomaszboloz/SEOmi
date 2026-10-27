@@ -1,4 +1,5 @@
 import type { SavedKeywordItem, SiteCrawlResult, CrawlConfig, CrawlEnvironment, CrawlRequestProfile, GscPerformanceFilters } from '@/types';
+import type { RecoveredCrawlResult } from '@/services/crawlPersistence/recovery';
 import type { RankTrackingDraft } from '../contracts';
 
 export interface ToolsActions {  // Actions - Keywords
@@ -41,7 +42,7 @@ export interface ToolsActions {  // Actions - Keywords
   setCrawlConfig: (patch: Partial<CrawlConfig>) => void;
   saveCrawlRequestProfile: (input: { id?: string; name: string; userAgent: string; headers: Array<{ name: string; value: string }>; cookie: string; proxyUrl: string }) => Promise<CrawlRequestProfile>;
   deleteCrawlRequestProfile: (id: string) => Promise<void>;
-  startSiteCrawl: (url?: string, limit?: number, configPatch?: Partial<CrawlConfig>, environment?: CrawlEnvironment, notifyCompletion?: boolean, resumeBaseResult?: SiteCrawlResult) => Promise<SiteCrawlResult | null>;
+  startSiteCrawl: (url?: string, limit?: number, configPatch?: Partial<CrawlConfig>, environment?: CrawlEnvironment, notifyCompletion?: boolean, resumeBaseResult?: SiteCrawlResult | RecoveredCrawlResult) => Promise<SiteCrawlResult | null>;
   cancelSiteCrawl: () => Promise<void>;
   pauseSiteCrawl: () => Promise<void>;
   resumeSiteCrawl: () => Promise<void>;

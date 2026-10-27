@@ -19,7 +19,7 @@ return (<section
                 {t("siteAudit.interruptedDescription", {
                   url: interruptedCrawl.url,
                   limit: interruptedCrawl.limit,
-                  date: new Date(interruptedCrawl.startedAt).toLocaleString(appLocale()),
+                  date: interruptedCrawl.startedAt ? new Date(interruptedCrawl.startedAt).toLocaleString(appLocale()) : t('auditProblems.unknown'),
                   completed:
                     interruptedCrawl.completedUrls?.length?.toLocaleString(appLocale()) ||
                     "",
