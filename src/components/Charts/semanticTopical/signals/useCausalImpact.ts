@@ -10,18 +10,22 @@ import { experimentsKey, listInterventions } from '@/services/experiments/regist
 import { readGscSnapshots } from '@/services/gscTracker/read';
 import { readStoredCausalImpact } from '@/services/causalMarket/adapter';
 import { CAUSAL_STORAGE_EVENT, installCausalStorageInterceptor } from '@/services/causalMarket/storageEvents';
+import { normalizedFilters } from '@/services/gscTracker/filters';
+import type { GscPerformanceFilters } from '@/types';
 
 const emptyMarket = (): MarketSourceResult => ({ status: 'unknown', source: 'dataforseo-serp-volatility', observations: [] });
 
 interface EvidenceState {
   projectId: string | null;
+  scopeKey: string;
   market: MarketSourceResult | null;
   updateWindows: UpdateWindowSourceResult | null;
 }
 
-export const useCausalImpact = (projectId: string | null, testSiteUrl?: string) => {
+export const useCausalImpact = (projectId: string | null, testSiteUrl?: string, testFilters?: GscPerformanceFilters, gscScopeReady = true, exactProperty = false) => {
   const [revision, refresh] = useReducer((value: number) => value + 1, 0);
-  const [state, setState] = useState<EvidenceState>({ projectId: null, market: null, updateWindows: null });
+  const scopeKey = JSON.stringify([testSiteUrl?.trim() ?? '', normalizedFilters(testFilters)]);
+  const [state, setState] = useState<EvidenceState>({ projectId: null, scopeKey: '', market: null, updateWindows: null });
 
   useEffect(() => {
     installCausalStorageInterceptor();
@@ -52,24 +56,24 @@ export const useCausalImpact = (projectId: string | null, testSiteUrl?: string) 
 
   useEffect(() => {
     let active = true;
-    if (!projectId || !readGscSnapshots(projectId).length || !listInterventions(projectId).length) {
-      setState({ projectId, market: null, updateWindows: null });
+    if (!gscScopeReady || !projectId || !readGscSnapshots(projectId).length || !listInterventions(projectId).length) {
+      setState({ projectId, scopeKey, market: null, updateWindows: null });
       return () => { active = false; };
     }
     void Promise.all([fetchSerpVolatility(), fetchGoogleSearchUpdateWindows()]).then(([nextMarket, nextWindows]) => {
       if (!active) return;
-      setState({ projectId, market: nextMarket, updateWindows: nextWindows });
+      setState({ projectId, scopeKey, market: nextMarket, updateWindows: nextWindows });
     });
     return () => { active = false; };
-  }, [projectId, revision]);
+  }, [projectId, revision, scopeKey, gscScopeReady]);
 
-  const isCurrent = Boolean(projectId && state.projectId === projectId);
+  const isCurrent = Boolean(projectId && state.projectId === projectId && state.scopeKey === scopeKey);
   const activeMarket = isCurrent ? state.market : null;
   const activeWindows = isCurrent ? state.updateWindows : null;
   const evidence = activeMarket ?? emptyMarket();
 
   return useMemo(
-    () => readStoredCausalImpact(projectId, evidence, activeWindows, testSiteUrl),
-    [projectId, evidence, activeWindows, testSiteUrl, revision],
+    () => gscScopeReady ? readStoredCausalImpact(projectId, evidence, activeWindows, testSiteUrl, testFilters, exactProperty) : null,
+    [projectId, evidence, activeWindows, scopeKey, testSiteUrl, testFilters, revision, gscScopeReady, exactProperty],
   );
 };

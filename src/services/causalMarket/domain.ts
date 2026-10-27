@@ -38,6 +38,23 @@ const parseHttpUrl = (value: string): URL | null => {
 
 const cleanHost = (url: URL): string => url.hostname.toLowerCase().replace(/\.$/, '');
 
+/**
+ * Canonical identity for an explicit Search Console property selection.
+ * Unlike propertyMatchScore this never treats a broader property as covering
+ * a narrower URL-prefix property.
+ */
+export const normalizePropertyIdentity = (siteUrl: string | null | undefined): string => {
+  const trimmed = siteUrl?.trim() || '';
+  if (!trimmed) return '';
+  if (trimmed.toLowerCase().startsWith(DOMAIN_PREFIX)) {
+    const domain = trimmed.slice(DOMAIN_PREFIX.length).trim().toLowerCase().replace(/\.$/, '');
+    return domain ? `${DOMAIN_PREFIX}${domain}` : '';
+  }
+  const url = parseHttpUrl(trimmed);
+  if (!url) return '';
+  return `url:${url.protocol.toLowerCase()}//${url.host.toLowerCase()}${url.pathname}${url.search}`;
+};
+
 export const propertyMatchScore = (propertySite: string, target: string): number => {
   const pTrim = propertySite.trim();
   const tTrim = target.trim();
