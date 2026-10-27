@@ -7741,6 +7741,10 @@
     "title": "프로그래매틱 템플릿 품질",
     "empty": "취약한 템플릿이 없습니다.",
     "row": "{{pattern}}: {{count}}페이지, 정보 이득 {{gain}}%",
+    "rowGainUnavailable": "{{pattern}}: {{count}}페이지, 정보 이득 측정 불가(샘플)",
+    "unverifiedStructure": "검증되지 않은 구조(DOM 사용 불가)",
+    "sampledOnly": "샘플만 측정됨(전체 텍스트 미측정)",
+    "variablesUnavailable": "템플릿 변수를 사용할 수 없음",
     "noindex": "권장: 이 세그먼트를 noindex로 설정",
     "limit": "권장: 색인 페이지 수 제한"
   },

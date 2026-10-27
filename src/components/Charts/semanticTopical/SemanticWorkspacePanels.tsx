@@ -1,4 +1,4 @@
-import React, { lazy, Suspense, useEffect } from 'react';
+import React, { lazy, Suspense, useEffect, useMemo } from 'react';
 import { takePendingBrief } from '@/services/executionCard/openBrief';
 import { TopicalCalendar } from '@/components/Charts/TopicalCalendar';
 import { SemanticAuditPanel } from '@/components/Charts/SemanticAuditPanel';
@@ -9,6 +9,10 @@ import { EntityEvidenceGraph } from '@/components/Charts/EntityEvidenceGraph';
 import type { useSemanticTopicalSession } from './useSemanticTopicalSession';
 import { TopicalTopicBrowser } from './TopicalTopicBrowser';
 import { TopicalNodeEditor } from './TopicalNodeEditor';
+import { buildAuthorityReport } from '@/services/topicalAuthority';
+import { readTaxonomy } from '@/services/topicalAuthorityMonitoring/taxonomyStore';
+import { buildSiteFocusReport } from '@/services/siteFocus';
+import type { FocusPage } from '@/services/siteFocus';
 
 type Session = ReturnType<typeof useSemanticTopicalSession>;
 const PrePublishWorkspace = lazy(() => import('../prePublish/PrePublishWorkspace'));
@@ -26,6 +30,17 @@ export const SemanticWorkspacePanels: React.FC<{ session: Session }> = ({ sessio
     updateWorkspacePreferences,
     workspacePreferences,
   } = session;
+
+  const authorityReport = useMemo(() => {
+    const startUrl = pages[0]?.url;
+    if (!startUrl) return null;
+    try {
+      const sfs = buildSiteFocusReport(pages as FocusPage[], startUrl);
+      return buildAuthorityReport(pages as FocusPage[], startUrl, sfs, { taxonomy: readTaxonomy(session.projectId), now: sfs.generatedAt });
+    } catch {
+      return null;
+    }
+  }, [pages, session.projectId]);
 
   useEffect(() => {
     const pendingId = takePendingBrief();
@@ -77,7 +92,7 @@ export const SemanticWorkspacePanels: React.FC<{ session: Session }> = ({ sessio
   }
 
   if (workspacePreferences.view === 'signals') {
-    return <SignalsWorkspace projectId={session.projectId} pages={pages} graph={session.graph} />;
+    return <SignalsWorkspace projectId={session.projectId} pages={pages} graph={session.graph} authorityReport={authorityReport} />;
   }
 
   if (workspacePreferences.view === 'links') {

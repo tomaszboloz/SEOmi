@@ -7741,6 +7741,10 @@
     "title": "Qualidade de modelos programáticos",
     "empty": "Nenhum modelo fraco encontrado.",
     "row": "{{pattern}}: {{count}} páginas, ganho de informação {{gain}}%",
+    "rowGainUnavailable": "{{pattern}}: {{count}} páginas, ganho não medido (amostra)",
+    "unverifiedStructure": "Estrutura não verificada (DOM indisponível)",
+    "sampledOnly": "Somente amostra (texto completo não medido)",
+    "variablesUnavailable": "Variáveis do template indisponíveis",
     "noindex": "Recomendado: noindex neste segmento",
     "limit": "Recomendado: limitar as páginas indexadas"
   },

@@ -78,6 +78,12 @@ export interface CrawledPageSummary {
   rag_sections?: RagSection[];
   /** Bounded semantic-content excerpts retained only for local source-context checks. */
   semantic_excerpts?: string[];
+  /** Native fetched-DOM tag/depth skeleton; absent when DOM evidence is unavailable. */
+  template_dom_signature?: string;
+  /** Native injected-variable capture; absent when the crawler has no such source. */
+  template_injected_variables?: string[];
+  /** Explicit TAS subtopic identity; absent when the authority report is unavailable. */
+  tas_subtopic_id?: string | null;
   /** Internal links discovered in main content only for semantic architecture analysis. */
   semantic_links?: CrawledLink[];
   /** Provenance of the content region used for semantic terms/links. */

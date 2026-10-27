@@ -7741,6 +7741,10 @@
     "title": "Qualität programmatischer Templates",
     "empty": "Keine schwachen Templates gefunden.",
     "row": "{{pattern}}: {{count}} Seiten, Informationsgewinn {{gain}} %",
+    "rowGainUnavailable": "{{pattern}}: {{count}} Seiten, Informationsgewinn ungemessen (Stichprobe)",
+    "unverifiedStructure": "Unverifizierte Struktur (DOM-Skelett nicht verfügbar)",
+    "sampledOnly": "Nur Stichproben-Präfix (Gesamter Text ungemessen)",
+    "variablesUnavailable": "Vorlagenvariablen nicht verfügbar",
     "noindex": "Empfohlen: Segment auf noindex setzen",
     "limit": "Empfohlen: Zahl indexierter Seiten begrenzen"
   },

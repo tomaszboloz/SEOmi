@@ -7741,6 +7741,10 @@
     "title": "Programmatic template quality",
     "empty": "No weak templates found.",
     "row": "{{pattern}}: {{count}} pages, information gain {{gain}}%",
+    "rowGainUnavailable": "{{pattern}}: {{count}} pages, information gain unmeasured (sampled prefix)",
+    "unverifiedStructure": "Unverified structure (DOM skeleton unavailable)",
+    "sampledOnly": "Sampled prefix only (full text unmeasured)",
+    "variablesUnavailable": "Template variables unavailable",
     "noindex": "Recommended: noindex this segment",
     "limit": "Recommended: limit the number of indexed pages"
   },
