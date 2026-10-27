@@ -1,7 +1,7 @@
 import { useTranslation } from 'react-i18next';
 import { HelpTip } from '@/components/Help/HelpTip';
 import type { SiteFocusReport } from '@/services/siteFocus';
-import { decideProtection } from '@/services/urlProtection';
+import { decideProtection, DEFAULT_TRS_THRESHOLD } from '@/services/urlProtection';
 import { ensureUrlTelemetry, type UrlTelemetry } from '@/services/urlTelemetry';
 import { TelemetrySources } from './TelemetrySources';
 
@@ -13,7 +13,7 @@ const keyOf = (url: string): string => url.replace(/\/+$/, '');
 /** Advisory PRI guardrail for low-TRS pages. No snapshot means an empty state, never zeros. */
 export const ProtectionPanel = ({ report, projectId }: { report: SiteFocusReport; projectId?: string | null }) => {
   const { t } = useTranslation();
-  const low = report.pages.filter((page) => !page.skipped && page.trs < 40);
+  const low = report.pages.filter((page) => !page.skipped && page.trs < DEFAULT_TRS_THRESHOLD);
   const snapshot = projectId ? ensureUrlTelemetry(projectId, report.pages.map((page) => page.url)) : null;
   if (!low.length) return null;
   const byUrl = new Map((snapshot?.urls ?? []).map((row) => [keyOf(row.url), row]));
