@@ -3,14 +3,14 @@ import {
   validateReleaseVersion,
   validateRepository,
 } from './release-input-validation.mjs';
+import { macManifestFileNames } from './release-manifest-naming.mjs';
 
 export const MANIFEST_PLATFORMS = Object.freeze([
   'darwin-aarch64', 'darwin-x86_64', 'windows-x86_64',
 ]);
 
 const expectedFileNames = (platform, version) => {
-  if (platform === 'darwin-aarch64') return ['SEOmi_aarch64.app.tar.gz'];
-  if (platform === 'darwin-x86_64') return ['SEOmi_x64.app.tar.gz'];
+  if (platform === 'darwin-aarch64' || platform === 'darwin-x86_64') return macManifestFileNames(platform, version);
   if (platform === 'windows-x86_64') return [`SEOmi_${version}_x64-setup.exe`, `SEOmi_${version}_x64_en-US.msi`];
   throw new Error(`Unknown manifest platform: ${platform}`);
 };
