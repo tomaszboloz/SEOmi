@@ -27,6 +27,12 @@ const coverage = (score: number | undefined, declared: number, verified = 0) => 
   observed: score === undefined ? 0 : 100, declared: declared ? 100 : 0, verified, unknown: score === undefined ? 100 : 0,
 });
 
+/** Surface a warning before a positive registry result when profiles conflict. */
+const reconciliationStatus = (profiles: ProfileEvidence[]): ProfileEvidence['status'] | 'unavailable' => {
+  const priorities: Array<ProfileEvidence['status']> = ['mismatch', 'invalid', 'verified', 'fetched', 'syntax-valid', 'declared', 'unavailable'];
+  return priorities.find((status) => profiles.some((profile) => profile.status === status)) ?? 'unavailable';
+};
+
 /** E-E-A-T & Entity Trust report from the crawl's own schema, links and pages; the Site Focus report supplies Core Topic and page types. */
 export const buildTrustReport = (pages: CrawledPageSummary[], focus?: SiteFocusReport, options: TrustOptions = {}): TrustReport => {
   const live = pages.filter(usable);
@@ -46,7 +52,7 @@ export const buildTrustReport = (pages: CrawledPageSummary[], focus?: SiteFocusR
     author.profiles = author.profiles.map((profile) => options.profileEvidence?.[profile.url] ?? profile);
     author.reconciliation = {
       role: 'author', profiles: author.profiles, declarationRecall: declarationRecall(author.profiles),
-      status: author.profiles.find((profile) => ['verified', 'mismatch', 'invalid', 'unavailable', 'fetched', 'syntax-valid', 'declared'].includes(profile.status))?.status ?? 'unavailable', evidence: 'registry',
+      status: reconciliationStatus(author.profiles), evidence: 'registry',
     };
   });
   const articleUrls = new Set(articleNodes.keys());
@@ -65,6 +71,7 @@ export const buildTrustReport = (pages: CrawledPageSummary[], focus?: SiteFocusR
   const sameAsLinks = schema.organization.sameAs.length + named.reduce((sum, author) => sum + author.sameAs.length, 0);
   const entityCount = named.length + (schema.organization.present ? 1 : 0);
   const profileRecall = entityCount ? named.reduce((sum, author) => sum + declarationRecall(author.profiles), 0) / entityCount : 0;
+  const verifiedProfiles = named.reduce((sum, author) => sum + author.profiles.filter((profile) => profile.status === 'verified').length, 0);
   const sameAsScore = entityCount ? Math.round((Math.min(1, sameAsLinks / entityCount) * 50 + profileRecall * 50)) : undefined;
   const hasAuthorEvidence = scan.authors.some((author) => author.alignmentPct !== undefined || author.bio || author.credentials?.length || author.knowsAbout?.length);
   const layers: TrustReport['layers'] = {
@@ -81,7 +88,7 @@ export const buildTrustReport = (pages: CrawledPageSummary[], focus?: SiteFocusR
   const score = ymylTriggered ? Math.round(rawScore * 0.45) : rawScore;
   const coverageByLayer: TrustReport['coverage'] = {
     schemaGraph: coverage(layers.schemaGraph, schema.articleCount),
-    sameAs: coverage(layers.sameAs, sameAsLinks),
+    sameAs: coverage(layers.sameAs, sameAsLinks, verifiedProfiles > 0 ? 100 : 0),
     authorAlignment: coverage(layers.authorAlignment, scan.authors.some((author) => author.bio || author.credentials?.length || author.knowsAbout?.length) ? 1 : 0),
     citationQuality: coverage(layers.citationQuality, citations.pagesWithAnyExternal),
     transparency: coverage(layers.transparency, Object.values(transparency.found).filter(Boolean).length),

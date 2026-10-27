@@ -2,6 +2,7 @@ import { useEffect, useMemo, useState } from 'react';
 import type { CrawledPageSummary, CrawlRunRecord } from '@/types';
 import { buildSiteFocusReport } from '@/services/siteFocus';
 import { buildTrustReport, comparableTrustSnapshots, readTrustHistory, recordTrust, type ProfileEvidence, type TrustReport, type TrustSnapshot } from '@/services/eeatTrust';
+import { hasVerifiedTrustEvidence } from '@/services/eeatTrust/history';
 import { monitorScoreDrop } from '@/services/monitoringAlerts';
 import { readManualTopic } from '@/services/siteFocusMonitoring/topic';
 
@@ -20,6 +21,13 @@ export const useTrust = (pages: CrawledPageSummary[], startUrl: string, run: Cra
   useEffect(() => {
     if (!report || !run || !projectId) return;
     const before = readTrustHistory(projectId);
+    const existing = before.find((item) => item.runId === run.id);
+    // Registry results live only for the current view. Do not let a remount
+    // without them overwrite a stronger verified snapshot for this run.
+    if (existing && hasVerifiedTrustEvidence(existing) && !hasVerifiedTrustEvidence(report)) {
+      setHistory(before);
+      return;
+    }
     const entries = recordTrust(projectId, report, run.id);
     setHistory(entries);
     const previous = before.filter((item) => item.runId !== run.id).at(-1);

@@ -44,10 +44,21 @@ export const comparableTrustSnapshots = (left: TrustSnapshot | undefined, right:
   return profile(left) === profile(right);
 };
 
-/** Appends one snapshot per run (a repeat for the same run replaces it); keeps the newest TRUST_HISTORY_LIMIT. */
+/** Whether a snapshot contains an explicit positive verification observation. */
+export const hasVerifiedTrustEvidence = (item: Pick<TrustSnapshot, 'coverage'>): boolean =>
+  Object.values(item.coverage ?? {}).some((layer) => Boolean(layer && finite(layer.verified) && layer.verified > 0));
+
+/**
+ * Appends one snapshot per run. A verified snapshot is an immutable baseline:
+ * a later remount without the ephemeral profile evidence must not replace it
+ * with a weaker, source-free observation for the same run.
+ */
 export const recordTrust = (projectId: string | null | undefined, report: TrustReport, runId: string): TrustSnapshot[] => {
   if (!projectId || !validProjectId(projectId)) return [];
   const snapshot: TrustSnapshot = { at: report.generatedAt, runId, score: report.score, layers: report.layers, profileVersion: report.profileVersion, profileId: report.profileId, coverage: report.coverage };
-  const history = [...readTrustHistory(projectId).filter((item) => item.runId !== runId), snapshot].slice(-TRUST_HISTORY_LIMIT);
+  const current = readTrustHistory(projectId);
+  const existing = current.find((item) => item.runId === runId);
+  const next = existing && hasVerifiedTrustEvidence(existing) && !hasVerifiedTrustEvidence(snapshot) ? existing : snapshot;
+  const history = [...current.filter((item) => item.runId !== runId), next].slice(-TRUST_HISTORY_LIMIT);
   return writeJsonStorage(trustHistoryKey(projectId), history) ? history : readTrustHistory(projectId);
 };
