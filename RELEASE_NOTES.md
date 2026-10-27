@@ -1,3 +1,11 @@
+# SEOmi 0.4.45 — release notes
+
+## Fixed
+- Site Focus uses one page-level TRS policy for borderline pages: off-topic below 40, borderline 40–74, strong from 75. Page status, the heatmap filter, the metric card, the PDF summary, history annotations and the strengthen-borderline recommendation now agree, so pages with TRS 40–59 are no longer left out of the borderline count. Labels in all 12 locales say 40–74 (#79).
+
+## Quality
+- Added fuzz contracts for the MCP stdio server (malformed and JSON-RPC 1.0 frames, unknown tools and methods, type-mismatched arguments, concurrent calls), the Tauri IPC browser fallback (prototype-like and near-miss command names never reach the native bridge) and topical diagnosis edge cases (zero-overlap documents, reciprocal link cycles, self-links).
+
 # SEOmi 0.4.44 — release notes
 
 ## Fixed
