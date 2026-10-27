@@ -3,11 +3,17 @@ import type { AlignmentLevel, FallbackMode, PagePriority, PageStatus, PageType, 
 export interface TermCoverage { term: string; coveragePct: number; weight: number }
 export interface ClusterTerm { term: string; weight: number }
 export interface FocusCluster { id: string; label: string; weight: number; sharePct: number; terms: ClusterTerm[] }
+/** How the Core Topic was chosen: heaviest cluster, user-typed topic, or home + anchor pages. */
+export type CoreTopicMode = 'auto' | 'manual' | 'anchored';
+/** Anchor input as resolved against the crawl. `applied` is false when manual topic won or no anchor had content. */
+export interface CoreAnchors { sources: string[]; missing: string[]; applied: boolean }
 export interface CoreTopic {
   label: string;
   terms: TermCoverage[];
   clusterId: string;
+  mode?: CoreTopicMode;
   manualOverride?: { input: string; matched: boolean };
+  anchors?: CoreAnchors;
 }
 
 export interface KeywordFound { term: string; count: number; context?: string }
