@@ -76,6 +76,12 @@ export interface CrawledPageSummary {
   content_date?: string;
   /** H1-H3 sections (max 40) for AI Overviews / RAG readiness; absent in older saved runs. */
   rag_sections?: RagSection[];
+  /** Thin static HTML looks like an unrendered SPA shell; absent when not assessed (non-HTML, older runs). */
+  is_js_shell_suspected?: boolean;
+  /** Signal behind is_js_shell_suspected; absent when the page is not a shell. */
+  js_shell_reason?: 'next_data' | 'nuxt_payload' | 'initial_state' | 'bundle_empty_root';
+  /** Verbatim strings from the shell's embedded JSON (provenance 'payload', never rendered); absent when none. */
+  spa_payload?: { provenance: 'payload'; source: string; title?: string; text: string; word_count: number; links: string[]; truncated: boolean };
   /** Bounded semantic-content excerpts retained only for local source-context checks. */
   semantic_excerpts?: string[];
   /** Internal links discovered in main content only for semantic architecture analysis. */
