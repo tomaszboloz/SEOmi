@@ -23,9 +23,13 @@ async fn read_cms_response_handles_success_and_invalid_utf8() {
         for body in [&b"{\"ok\":true}"[..], &vec![b'a'; 32][..], &b"\xff\xfe"[..]] {
             if let Ok((mut stream, _)) = listener.accept().await {
                 read_request_headers(&mut stream).await;
-                let head = format!("HTTP/1.1 200 OK\r\nContent-Length: {}\r\n\r\n", body.len());
-                let _ = stream.write_all(head.as_bytes()).await;
-                let _ = stream.write_all(body).await;
+                let head = format!(
+                    "HTTP/1.1 200 OK\r\nContent-Length: {}\r\nConnection: close\r\n\r\n",
+                    body.len()
+                );
+                stream.write_all(head.as_bytes()).await.unwrap();
+                stream.write_all(body).await.unwrap();
+                stream.shutdown().await.unwrap();
             }
         }
     });
