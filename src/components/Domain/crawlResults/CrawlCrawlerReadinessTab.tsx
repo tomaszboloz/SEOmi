@@ -1,13 +1,14 @@
 
 
-import { lazy, Suspense } from 'react';
+import { Suspense } from 'react';
 import { useTranslation } from 'react-i18next';
 import { CrawlerReadinessPanel } from "@/components/Results/CrawlerReadinessPanel";
 import { latestLogCrawl } from './logIntelligence/matrixView';
+import { lazyRoute } from '@/services/lazyRoute';
 
 import type { useCrawlResultsSession } from './useCrawlResultsSession';
 type Session = ReturnType<typeof useCrawlResultsSession>;
-const LogIntelligencePanel = lazy(() => import('./logIntelligence/LogIntelligencePanel'));
+const LogIntelligencePanel = lazyRoute(() => import('./logIntelligence/LogIntelligencePanel'));
 
 export const CrawlCrawlerReadinessTab = ({ session }: { session: Session }) => {
   const { result, activeProjectId, runs } = session;

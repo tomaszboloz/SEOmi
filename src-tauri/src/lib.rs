@@ -79,6 +79,7 @@ pub(crate) fn compose<R: tauri::Runtime>(builder: Builder<R>) -> Builder<R> {
                 commands::seo_audit::inspect_url,
                 commands::seo_audit::cancel_inspect_url,
                 commands::http_client::check_link,
+                commands::http_client::fetch_registry_profile,
                 commands::cms_patch::cms_patch_request,
                 commands::external_link_checker::check_external_crawl_links,
                 commands::free_feeds::fetch_public_feed,

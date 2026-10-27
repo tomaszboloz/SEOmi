@@ -37,6 +37,17 @@ keys! {
     COL_EXCERPT => "crawl.aio.colExcerpt",
     COL_ISSUES => "crawl.aio.colIssues",
     PERCENT => "crawl.aio.percent",
+    PROFILE => "crawl.aio.profile",
+    PROFILE_STATUS => "crawl.aio.profileStatus",
+    PROFILE_STATUS_PERSISTED => "crawl.aio.profileStatusPersisted",
+    PROFILE_STATUS_LEGACY => "crawl.aio.profileStatusLegacy",
+    PROFILE_STATUS_MISMATCH => "crawl.aio.profileStatusMismatch",
+    ALGORITHM_VERSION => "crawl.aio.algorithmVersion",
+    CONFIG_HASH => "crawl.aio.configHash",
+    LANGUAGE => "crawl.aio.language",
+    MARKET => "crawl.aio.market",
+    UNKNOWN_REASONS => "crawl.aio.unknownReasons",
+    UNKNOWN_DISCLOSURE => "crawl.aio.unknownDisclosure",
 }
 
 pub const BAND: &str = "crawl.aio.band";

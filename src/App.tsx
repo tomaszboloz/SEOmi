@@ -1,6 +1,6 @@
 import { useScheduledLaunch } from '@/hooks/app/useScheduledLaunch';
 import { useCrawlEvidenceRouting } from '@/hooks/app/useCrawlEvidenceRouting';
-import React, { lazy, Suspense } from 'react';
+import React, { Suspense } from 'react';
 import { Header } from '@/components/Layout/Header';
 import { Footer } from '@/components/Layout/Footer';
 import { Sidebar } from '@/components/Layout/Sidebar';
@@ -14,13 +14,14 @@ import { useAppStartup } from '@/hooks/app/useAppStartup';
 import { useAppHydration } from '@/hooks/app/useAppHydration';
 import { useAppRouting } from '@/hooks/app/useAppRouting';
 import { useAppScheduler } from '@/hooks/app/useAppScheduler';
+import { lazyRoute } from '@/services/lazyRoute';
 
-const SettingsModal = lazy(() => import('@/components/Settings/SettingsModal').then((module) => ({ default: module.SettingsModal })));
-const AIAssistantModal = lazy(() => import('@/components/AI/AIAssistantModal').then((module) => ({ default: module.AIAssistantModal })));
-const SubscriptionModal = lazy(() => import('@/components/Auth/SubscriptionModal').then((module) => ({ default: module.SubscriptionModal })));
-const HistoryModal = lazy(() => import('@/components/History/HistoryModal').then((module) => ({ default: module.HistoryModal })));
-const CreateProjectModal = lazy(() => import('@/components/Projects/CreateProjectModal').then((module) => ({ default: module.CreateProjectModal })));
-const CommandPalette = lazy(() => import('@/components/Layout/CommandPalette').then((module) => ({ default: module.CommandPalette })));
+const SettingsModal = lazyRoute(() => import('@/components/Settings/SettingsModal').then((module) => ({ default: module.SettingsModal })));
+const AIAssistantModal = lazyRoute(() => import('@/components/AI/AIAssistantModal').then((module) => ({ default: module.AIAssistantModal })));
+const SubscriptionModal = lazyRoute(() => import('@/components/Auth/SubscriptionModal').then((module) => ({ default: module.SubscriptionModal })));
+const HistoryModal = lazyRoute(() => import('@/components/History/HistoryModal').then((module) => ({ default: module.HistoryModal })));
+const CreateProjectModal = lazyRoute(() => import('@/components/Projects/CreateProjectModal').then((module) => ({ default: module.CreateProjectModal })));
+const CommandPalette = lazyRoute(() => import('@/components/Layout/CommandPalette').then((module) => ({ default: module.CommandPalette })));
 
 export const App: React.FC = () => {
   useKeyboardShortcuts();

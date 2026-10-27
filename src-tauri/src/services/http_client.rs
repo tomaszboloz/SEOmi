@@ -19,7 +19,7 @@ mod tests_resolver_seams;
 #[cfg(test)]
 mod tests_stream;
 
-pub use entry::{fetch_page, fetch_page_with_options};
+pub use entry::{fetch_page, fetch_page_with_options, fetch_registry_page};
 pub use models::FetchResult;
 pub use resolver::public_client_builder;
 pub use status::check_url_status;
@@ -32,3 +32,5 @@ mod tests_error_paths_extended;
 mod tests_gap_remaining;
 #[cfg(test)]
 mod tests_transport_error_paths;
+#[cfg(test)]
+mod tests_registry;

@@ -1,4 +1,4 @@
-import { buildRegistry, isOrganizationNode, type SchemaNode } from './graph';
+import { buildRegistry, isOrganizationNode, nodeIdentity, type SchemaNode } from './graph';
 import type { AuthorEntity, SchemaGraphDetail } from './types';
 
 const DATE_PROPERTIES = ['dateModified', 'lastReviewed', 'datePublished'];
@@ -14,7 +14,7 @@ export const analyzeSchema = (
   withReviewer: Set<string>,
 ): SchemaGraphDetail => {
   const registry = buildRegistry(nodes);
-  const organizations = nodes.filter(isOrganizationNode).map((node) => (node.id && registry.get(node.id)) || node);
+  const organizations = nodes.filter(isOrganizationNode).map((node) => (node.id && registry.get(nodeIdentity(node))) || node);
   const sameAs = [...new Set(organizations.flatMap((node) => node.props.sameAs ?? []))];
   const named = authors.filter((author) => !author.generic);
   const pagesWith = (test: (node: SchemaNode) => boolean): number => [...articleNodes.values()].filter((list) => list.some(test)).length;

@@ -1,4 +1,4 @@
-import React, { lazy, Suspense, useEffect } from 'react';
+import React, { Suspense, useEffect } from 'react';
 import { takePendingBrief } from '@/services/executionCard/openBrief';
 import { TopicalCalendar } from '@/components/Charts/TopicalCalendar';
 import { SemanticAuditPanel } from '@/components/Charts/SemanticAuditPanel';
@@ -9,9 +9,10 @@ import { EntityEvidenceGraph } from '@/components/Charts/EntityEvidenceGraph';
 import type { useSemanticTopicalSession } from './useSemanticTopicalSession';
 import { TopicalTopicBrowser } from './TopicalTopicBrowser';
 import { TopicalNodeEditor } from './TopicalNodeEditor';
+import { lazyRoute } from '@/services/lazyRoute';
 
 type Session = ReturnType<typeof useSemanticTopicalSession>;
-const PrePublishWorkspace = lazy(() => import('../prePublish/PrePublishWorkspace'));
+const PrePublishWorkspace = lazyRoute(() => import('../prePublish/PrePublishWorkspace'));
 
 export const SemanticWorkspacePanels: React.FC<{ session: Session }> = ({ session }) => {
   const {

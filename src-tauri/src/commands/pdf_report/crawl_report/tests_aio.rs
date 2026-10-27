@@ -9,6 +9,15 @@ fn aio() -> Value {
     json!({
         "score": 58.5, "band": "weak", "self_containment": 61, "spo_density": 40.5,
         "extractability": 70, "scored": 12, "skipped": 2,
+        "profile": {
+            "id": "aio-r-v1-en",
+            "algorithm_version": "1.0.0",
+            "config_hash": "cfg-1234",
+            "language": "en",
+            "market": "global"
+        },
+        "profile_status": "persisted",
+        "unknown_reasons": [],
         "basic_rule_languages": ["de", "ja"],
         "pages": [
             {"url": "https://shop.example.test/guide", "score": 31, "self_containment": 40,
@@ -42,6 +51,12 @@ fn aio_section_shows_score_kpis_pages_and_passages() {
         "Fact density",
         "Extractability",
         "2 pages skipped",
+        "Evaluation profile",
+        "aio-r-v1-en",
+        "Profile persisted",
+        "1.0.0",
+        "cfg-1234",
+        "global",
         "Language rules for de, ja are basic",
         "Pages by AI readiness",
         "shop.example.test/guide",
@@ -53,6 +68,39 @@ fn aio_section_shows_score_kpis_pages_and_passages() {
     ] {
         assert!(text.contains(part), "missing: {part}");
     }
+}
+
+#[test]
+fn aio_profile_status_discloses_legacy_and_mismatch_runs() {
+    let mut legacy = aio();
+    legacy.as_object_mut().unwrap().remove("profile");
+    legacy.as_object_mut().unwrap().remove("profile_status");
+    let legacy_text = text_of(&with_aio(legacy));
+    assert!(legacy_text.contains("Legacy / unversioned profile"));
+    assert!(!legacy_text.contains("aio-r-v1-en"));
+
+    let mut mismatch = aio();
+    mismatch["profile_status"] = json!("mismatch");
+    let mismatch_text = text_of(&with_aio(mismatch));
+    assert!(mismatch_text.contains("Profile mismatch"));
+}
+
+#[test]
+fn aio_unknown_reasons_are_disclosed_and_old_payloads_stay_valid() {
+    let mut data = aio();
+    data["unknown_reasons"] = json!(["unsupported-language", "missing-evidence"]);
+    let text = text_of(&with_aio(data));
+    assert!(text.contains("Unknown or unavailable reasons"));
+    assert!(text.contains("unsupported-language, missing-evidence"));
+
+    let mut old = aio();
+    old.as_object_mut().unwrap().remove("profile");
+    old.as_object_mut().unwrap().remove("profile_status");
+    old.as_object_mut().unwrap().remove("unknown_reasons");
+    let old_text = text_of(&with_aio(old));
+    assert!(old_text.contains("AI readiness score"));
+    assert!(old_text.contains("Legacy / unversioned profile"));
+    assert!(!old_text.contains("Profile persisted"));
 }
 
 #[test]

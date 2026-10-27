@@ -5,6 +5,7 @@ import { scanAuthors } from './authors';
 import { analyzeCitations, citationScore } from './citations';
 import { buildFindings, levelFor } from './findings';
 import { buildRegistry, isArticleNode, nodesOf, type SchemaNode } from './graph';
+import { buildTrustGraph } from './entityGraph';
 import { analyzeSchema, schemaScore } from './schemaScore';
 import { analyzeTransparency, transparencyScore } from './transparency';
 import { EEAT_TRUST_VERSION, TRUST_WEIGHTS, type TrustLayer, type TrustReport } from './types';
@@ -36,6 +37,7 @@ export const buildTrustReport = (pages: CrawledPageSummary[], focus?: SiteFocusR
     if (focusArticles.has(normalizeUrl(url)) || typed) articleNodes.set(url, own);
   }
   const scan = scanAuthors(live, nodesByPage, articleNodes, registry, focus);
+  const graph = buildTrustGraph(live, nodesByPage);
   const articleUrls = new Set(articleNodes.keys());
   const cited = new Map<string, string[]>([...articleNodes].map(([url, list]) => [url, list.flatMap((node) => node.props.citation ?? [])]));
   const citations = analyzeCitations(live, articleUrls, cited);
@@ -57,7 +59,7 @@ export const buildTrustReport = (pages: CrawledPageSummary[], focus?: SiteFocusR
   };
   const score = combineLayers(layers);
   return {
-    score, level: levelFor(score), layers, ymyl, schema, authors: scan.authors, citations, transparency,
+    score, level: levelFor(score), layers, ymyl, schema, graph, authors: scan.authors, citations, transparency,
     findings: buildFindings({ schema, authors: scan.authors, citations, transparency, ymyl, unattributed }),
     ymylUnattributedPct: ymyl && articleUrls.size ? Math.round((unattributed / articleUrls.size) * 100) : undefined,
     pageCount: live.length, articleCount: articleUrls.size, generatedAt: options.now ?? new Date().toISOString(), version: EEAT_TRUST_VERSION,

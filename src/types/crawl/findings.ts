@@ -21,6 +21,8 @@ export interface CrawledSchemaFinding {
 export interface CrawledSchemaReference {
   format: string;
   declaration_index: number;
+  /** JSON-LD object path, retained so nested and array objects remain distinct. */
+  node_path?: string | null;
   property: string;
   value: string;
 }

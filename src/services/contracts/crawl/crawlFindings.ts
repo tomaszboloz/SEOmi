@@ -59,6 +59,7 @@ export const CrawledLinkSchema = z.object({
 export const CrawledSchemaReferenceSchema = z.object({
   format: z.string(),
   declaration_index: z.number().finite(),
+  node_path: z.string().nullable().transform(value => value ?? undefined).optional(),
   property: z.string(),
   value: z.string(),
 }).passthrough() satisfies z.ZodType<CrawledSchemaReference, unknown>;

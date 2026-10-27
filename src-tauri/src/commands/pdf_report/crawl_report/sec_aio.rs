@@ -13,6 +13,54 @@ use crate::commands::pdf_report::layout::text::Style;
 use crate::commands::pdf_report::layout::widgets::Kpi;
 use serde_json::Value;
 
+fn profile_status(aio: &Value) -> String {
+    field(aio, "profile_status").unwrap_or_else(|| {
+        if aio.get("profile").is_some_and(Value::is_object) {
+            "mismatch".to_owned()
+        } else {
+            "legacy-unversioned".to_owned()
+        }
+    })
+}
+
+fn profile_status_label(status: &str) -> String {
+    match status {
+        "persisted" => t(a::PROFILE_STATUS_PERSISTED).to_owned(),
+        "legacy-unversioned" => t(a::PROFILE_STATUS_LEGACY).to_owned(),
+        "mismatch" => t(a::PROFILE_STATUS_MISMATCH).to_owned(),
+        _ => status.to_owned(),
+    }
+}
+
+fn profile_facts(aio: &Value) -> ([(&'static str, String); 4], [(&'static str, String); 2]) {
+    let profile = aio.get("profile").filter(|value| value.is_object());
+    let status = profile_status(aio);
+    (
+        [
+            (t(a::PROFILE), arg(profile.and_then(|value| value.get("id")))),
+            (t(a::PROFILE_STATUS), profile_status_label(&status)),
+            (
+                t(a::ALGORITHM_VERSION),
+                arg(profile.and_then(|value| value.get("algorithm_version"))),
+            ),
+            (
+                t(a::CONFIG_HASH),
+                arg(profile.and_then(|value| value.get("config_hash"))),
+            ),
+        ],
+        [
+            (
+                t(a::LANGUAGE),
+                arg(profile.and_then(|value| value.get("language"))),
+            ),
+            (
+                t(a::MARKET),
+                arg(profile.and_then(|value| value.get("market"))),
+            ),
+        ],
+    )
+}
+
 fn kpis(aio: &Value) -> Vec<Kpi> {
     let item = |label, key: &str, note| Kpi {
         label,
@@ -38,6 +86,9 @@ impl Doc {
     pub fn crawl_aio(&mut self, aio: &Value) {
         self.heading(t(a::TITLE));
         self.paragraph(MARGIN, CONTENT_W, Style::CAPTION, t(a::INTRO));
+        let (first_profile_row, second_profile_row) = profile_facts(aio);
+        self.facts_row(&first_profile_row);
+        self.facts_row(&second_profile_row);
         self.skip(6.0);
         let code = field(aio, "band").unwrap_or_default();
         self.ensure(90.0);
@@ -55,6 +106,17 @@ impl Doc {
             .collect();
         if !basic.is_empty() {
             let note = tf(t(a::NOTE_BASIC), &[&basic.join(", ")]);
+            self.paragraph(MARGIN, CONTENT_W, Style::BODY.colored(WARNING), &note);
+            self.skip(4.0);
+        }
+        let unknown: Vec<&str> = list(aio, "unknown_reasons")
+            .iter()
+            .filter_map(Value::as_str)
+            .filter(|reason| !reason.trim().is_empty())
+            .collect();
+        if !unknown.is_empty() {
+            let reasons = format!("{}: {}", t(a::UNKNOWN_REASONS), unknown.join(", "));
+            let note = tf(t(a::UNKNOWN_DISCLOSURE), &[&reasons]);
             self.paragraph(MARGIN, CONTENT_W, Style::BODY.colored(WARNING), &note);
             self.skip(4.0);
         }

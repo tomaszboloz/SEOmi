@@ -11,6 +11,45 @@ export type TransparencyKind = 'editorial' | 'about' | 'contact' | 'registry';
 
 export interface TrustFinding extends Coded { severity: TrustSeverity }
 
+export type TrustGraphRole = 'document' | 'author' | 'reviewer' | 'publisher';
+export interface TrustGraphEntity {
+  key: string;
+  id?: string;
+  names: string[];
+  types: string[];
+  roles: TrustGraphRole[];
+  sameAs: string[];
+  aliases: string[];
+  profileUrls: string[];
+  sourcePages: string[];
+  declarations: Array<{ sourcePage: string; declaration: number; nodePath: string }>;
+  complete: boolean;
+}
+export interface TrustGraphEdge {
+  from: string;
+  to: string;
+  role: Exclude<TrustGraphRole, 'document'>;
+  property: string;
+  sourcePage: string;
+  declaration: number;
+  nodePath: string;
+  rawValue: string;
+}
+export interface TrustGraphDiagnostic {
+  code: 'conflicting-definition' | 'dangling-reference' | 'indeterminate-reference' | 'incomplete-definition' | 'cycle' | 'role-overlap';
+  severity: TrustSeverity;
+  sourcePage?: string;
+  declaration?: number;
+  nodePath?: string;
+  entityKey?: string;
+  target?: string;
+}
+export interface TrustGraph {
+  entities: TrustGraphEntity[];
+  edges: TrustGraphEdge[];
+  diagnostics: TrustGraphDiagnostic[];
+}
+
 /** Weights of the four layers; a layer without data is dropped and the rest renormalized. */
 export const TRUST_WEIGHTS = { schemaGraph: 0.3, authorAlignment: 0.25, citationQuality: 0.25, transparency: 0.2 } as const;
 export type TrustLayer = keyof typeof TRUST_WEIGHTS;
@@ -33,6 +72,8 @@ export interface AuthorEntity {
   id?: string;
   jobTitle?: string;
   sameAs: string[];
+  aliases?: string[];
+  profileUrls?: string[];
   articleUrls: string[];
   /** "Redakcja", "Editorial team", "admin": an anonymous byline. */
   generic: boolean;
@@ -73,6 +114,7 @@ export interface TrustReport {
   layers: Partial<Record<TrustLayer, number>>;
   ymyl?: YmylCategory;
   schema: SchemaGraphDetail;
+  graph?: TrustGraph;
   authors: AuthorEntity[];
   citations: CitationDetail;
   transparency: TransparencyDetail;

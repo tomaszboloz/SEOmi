@@ -5,6 +5,9 @@ import './styles/globals.css';
 import './i18n';
 import i18n, { languageReady } from './i18n';
 import { RootErrorBoundary } from './components/Layout/RootErrorBoundary';
+import { installChunkLoadRecovery } from './services/lazyRoute';
+
+installChunkLoadRecovery();
 
 const mount = () => {
   const rootErrorProps = {

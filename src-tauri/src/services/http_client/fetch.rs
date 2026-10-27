@@ -5,7 +5,7 @@ use crate::models::audit_data::{HttpPerformanceMeasurement, RedirectHop};
 use crate::utils::url_validator::validate_and_normalize_url;
 use anyhow::{anyhow, Result};
 use chrono::Utc;
-use reqwest::header::{HeaderValue, USER_AGENT};
+use reqwest::header::{HeaderValue, ACCEPT, USER_AGENT};
 use reqwest::redirect::Policy;
 use std::future::Future;
 use std::net::SocketAddr;
@@ -25,9 +25,29 @@ where
     R: Fn(Url) -> F,
     F: Future<Output = Result<Vec<SocketAddr>>>,
 {
+    fetch_with_resolver_policy(target_url, user_agent_str, options, None, resolve, |_| Ok(())).await
+}
+
+/// Fetch with an optional request media type and a guard applied to every hop.
+/// The guard is intentionally separate from the generic URL validator so
+/// callers such as registry integrations can keep redirects on official hosts.
+pub async fn fetch_with_resolver_policy<R, F, G>(
+    target_url: &Url,
+    user_agent_str: &str,
+    options: FetchOptions,
+    accept: Option<&str>,
+    resolve: R,
+    guard: G,
+) -> Result<FetchResult>
+where
+    R: Fn(Url) -> F,
+    F: Future<Output = Result<Vec<SocketAddr>>>,
+    G: Fn(&Url) -> Result<()> + Copy,
+{
     tokio::time::timeout(options.timeout, async {
         let mut current = validate_and_normalize_url(target_url.as_str())
             .map_err(|error| anyhow!(error.to_string()))?;
+        guard(&current)?;
         let measured_at = Utc::now();
         let start_time = Instant::now();
         let mut recorded_hops = Vec::new();
@@ -48,12 +68,16 @@ where
             if let Ok(value) = HeaderValue::from_str(user_agent_str) {
                 request = request.header(USER_AGENT, value);
             }
+            if let Some(accept) = accept.and_then(|value| HeaderValue::from_str(value).ok()) {
+                request = request.header(ACCEPT, accept);
+            }
             let response = request.send().await?;
             if matches!(response.status().as_u16(), 301 | 302 | 303 | 307 | 308) {
                 if let Some(location) = response.headers().get(reqwest::header::LOCATION) {
                     let next = current.join(location.to_str()?)?;
                     let next = validate_and_normalize_url(next.as_str())
                         .map_err(|error| anyhow!("Unsafe redirect blocked: {error}"))?;
+                    guard(&next).map_err(|error| anyhow!("Unsafe redirect blocked: {error}"))?;
                     if recorded_hops.len() >= options.max_redirects {
                         return Err(anyhow!(
                             "Too many redirects (max {} allowed)",
