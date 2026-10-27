@@ -1,3 +1,17 @@
+# SEOmi 0.4.43 — release notes
+
+## Fixed
+- Execution-card actions create project-scoped optimization tasks and refresh the visible tracker after a successful save. Baseline scores remain unavailable when the selected crawl cannot supply completed evidence (#130).
+- Manual and automatic task verification require a completed crawl started after implementation. Cancelled, timed-out, compacted or undated imported evidence cannot confirm implementation or add metric history (#130).
+- Signals uses the project's selected Search Console property and filters. Exact property matching preserves URL-prefix boundaries, including the difference between `/blog` and `/blog/`, and project hydration prevents stale results during switching (#144).
+
+## Quality
+- Added mounted regressions for execution-card actions, crawl freshness, persistence failure and project switching, plus the reviewed Gemini regression suites.
+- Missing evidence remains unavailable. Market comparisons remain observational, without causal claims. Existing coverage, locale, security and 150-line limits are unchanged.
+
+## Thanks
+- Thank you @RafalSzy and all contributors.
+
 # SEOmi 0.4.42 — release notes
 
 ## Fixed

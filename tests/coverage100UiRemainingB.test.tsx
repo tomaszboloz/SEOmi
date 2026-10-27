@@ -10,7 +10,10 @@ import { SemanticAuditPanel } from '@/components/Charts/SemanticAuditPanel';
 const m = vi.hoisted(() => ({
   save: vi.fn(), tauri: vi.fn(() => false), cost: null as unknown, sfs: vi.fn(), tas: vi.fn(), scoreFns: [] as Array<(task: { module: string }) => number | null>,
 }));
-vi.mock('react-i18next', () => ({ useTranslation: () => ({ t: (key: string) => key }) }));
+vi.mock('react-i18next', async (importOriginal) => ({
+  ...(await importOriginal<typeof import('react-i18next')>()),
+  useTranslation: () => ({ t: (key: string) => key }),
+}));
 vi.mock('@/services/tauri', () => ({ saveTextFile: m.save, isTauriEnvironment: m.tauri }));
 vi.mock('@/services/clipboard', () => ({ copyText: vi.fn() }));
 vi.mock('@/components/Charts/semanticTopical/OptimizationTaskTracker', () => ({ OptimizationTaskTracker: (props: { scoreFor: (task: { module: string }) => number | null }) => { m.scoreFns.push(props.scoreFor); return <div data-testid="tracker" />; } }));

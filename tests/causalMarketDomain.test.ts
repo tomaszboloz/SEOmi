@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { areSitesIndependent, normalizeSiteDomain, propertyMatchScore } from '@/services/causalMarket/domain';
+import { areSitesIndependent, normalizePropertyIdentity, normalizeSiteDomain, propertyMatchScore } from '@/services/causalMarket/domain';
 
 describe('causalMarket domain normalization and property matching', () => {
   it('normalizes sc-domain and url prefix properties of the same domain', () => {
@@ -38,6 +38,15 @@ describe('causalMarket domain normalization and property matching', () => {
     expect(propertyMatchScore('https://example.com/', 'https://example.com')).toBe(1000);
     expect(propertyMatchScore('https://example.com/blog/', 'HTTPS://EXAMPLE.COM/blog')).toBe(1000);
     expect(propertyMatchScore('https://example.com/blog/', 'https://example.com/BLOG/')).toBe(0);
+  });
+
+  it('normalizes explicit property identities without broadening their scope', () => {
+    expect(normalizePropertyIdentity('HTTPS://Example.com/blog')).toBe('url:https://example.com/blog');
+    expect(normalizePropertyIdentity('https://example.com/blog/')).toBe('url:https://example.com/blog/');
+    expect(normalizePropertyIdentity('https://example.com/blog/?tab=one')).toBe('url:https://example.com/blog/?tab=one');
+    expect(normalizePropertyIdentity('https://example.com/blog/?tab=two')).not.toBe(normalizePropertyIdentity('https://example.com/blog/?tab=one'));
+    expect(normalizePropertyIdentity('SC-DOMAIN:Example.COM.')).toBe('sc-domain:example.com');
+    expect(normalizePropertyIdentity('https://example.com/other')).not.toBe(normalizePropertyIdentity('https://example.com/blog'));
   });
 
   it('scores domain property matches against domains and covering URLs', () => {

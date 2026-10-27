@@ -7553,6 +7553,7 @@
       "added": "Tâche ajoutée",
       "empty": "Aucune tâche. Ajoutez-en une depuis une recommandation.",
       "verify": "Vérifier sur le dernier crawl",
+      "crawlUnavailable": "L’exploration sélectionnée ne fournit pas de preuves complètes avec une date confirmée ; la vérification est reportée.",
       "markImplemented": "Marquer comme déployée",
       "regression": "Régression du score",
       "kind": {

@@ -96,6 +96,8 @@ export interface ToolsData {
   gscProperties: GscSiteProperty[];
   gscProperty: string;
   gscFilters: GscPerformanceFilters;
+  /** Project whose GSC property/filter scope has completed hydration. */
+  gscHydratedProjectId: string | null;
   gscData: GscPerformanceData | null;
   gscDataFetchedAt: string | null;
   gscInspectionResult: Record<string, unknown> | null;

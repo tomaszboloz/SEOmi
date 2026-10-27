@@ -81,7 +81,8 @@ export const SemanticWorkspacePanels: React.FC<{ session: Session }> = ({ sessio
   }
 
   if (workspacePreferences.view === 'links') {
-    return <LinksWorkspace projectId={session.projectId} pages={pages} />;
+    const selectedRun = runs.find((run) => run.id === currentRunId) ?? null;
+    return <LinksWorkspace projectId={session.projectId} pages={selectedRun?.result.pages ?? pages} run={selectedRun} />;
   }
 
   return (

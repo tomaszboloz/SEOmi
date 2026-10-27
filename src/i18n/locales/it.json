@@ -7553,6 +7553,7 @@
       "added": "Attività aggiunta",
       "empty": "Nessuna attività. Aggiungine una da una raccomandazione.",
       "verify": "Verifica sull'ultimo crawl",
+      "crawlUnavailable": "La scansione selezionata non fornisce prove complete con una data confermata; la verifica è rinviata.",
       "markImplemented": "Segna come implementata",
       "regression": "Regressione del punteggio",
       "kind": {

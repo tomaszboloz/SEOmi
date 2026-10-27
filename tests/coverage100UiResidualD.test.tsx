@@ -4,6 +4,7 @@ import { SemanticAuditPanel } from '@/components/Charts/SemanticAuditPanel';
 import { BriefVersionHistory } from '@/components/Charts/contentBrief/BriefVersionHistory';
 import { LinksWorkspace } from '@/components/Charts/semanticTopical/LinksWorkspace';
 import { SemanticWorkspacePanels } from '@/components/Charts/semanticTopical/SemanticWorkspacePanels';
+import { createCrawlPageFixture, createCrawlResultFixture, createCrawlRunFixture } from './fixtures/crawl';
 
 const m = vi.hoisted(() => ({
   build: vi.fn(), compare: vi.fn(), guard: vi.fn(), monitor: vi.fn(), focus: vi.fn(), authority: vi.fn(), busInput: vi.fn(), bus: vi.fn(), rules: vi.fn(), takePending: vi.fn(), scoreFns: [] as Array<(task: { module: string }) => number | null>,
@@ -61,14 +62,16 @@ describe('semantic audit and brief edge paths', () => {
 
 describe('semantic links and workspace fallbacks', () => {
   it('exposes score fallbacks for every optimization module and tolerates report errors', () => {
-    const page = { url: 'https://site.test/', final_url: 'https://site.test/', http_status: 200 };
-    render(<LinksWorkspace projectId="project" pages={[page] as never} />);
+    const page = createCrawlPageFixture({ url: 'https://site.test/', final_url: 'https://site.test/', http_status: 200 });
+    const pages = [page];
+    const run = createCrawlRunFixture({ id: 'current-run', result: createCrawlResultFixture({ pages }) });
+    render(<LinksWorkspace projectId="project" pages={pages} run={run} />);
     const score = m.scoreFns[0];
     expect(score({ module: 'sfs' })).toBe(88);
     expect(score({ module: 'tas' })).toBe(77);
     expect(score({ module: 'other' })).toBeNull();
     m.focus.mockImplementationOnce(() => { throw new Error('incomplete'); });
-    render(<LinksWorkspace projectId={null} pages={[page] as never} />);
+    render(<LinksWorkspace projectId={null} pages={pages} run={run} />);
     expect(m.focus).toHaveBeenCalledTimes(2);
   });
 
