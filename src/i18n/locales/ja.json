@@ -7553,6 +7553,7 @@
       "added": "タスクを追加しました",
       "empty": "タスクはまだありません。推奨から追加してください。",
       "verify": "最新クロールで検証",
+      "crawlUnavailable": "The selected crawl start time is unavailable; verification is deferred.",
       "markImplemented": "実装済みにする",
       "regression": "スコア低下",
       "kind": {

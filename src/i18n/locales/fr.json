@@ -7553,6 +7553,7 @@
       "added": "Tâche ajoutée",
       "empty": "Aucune tâche. Ajoutez-en une depuis une recommandation.",
       "verify": "Vérifier sur le dernier crawl",
+      "crawlUnavailable": "The selected crawl start time is unavailable; verification is deferred.",
       "markImplemented": "Marquer comme déployée",
       "regression": "Régression du score",
       "kind": {

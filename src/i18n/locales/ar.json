@@ -7553,6 +7553,7 @@
       "added": "تمت إضافة المهمة",
       "empty": "لا توجد مهام بعد. أضف واحدة من توصية.",
       "verify": "تحقق في آخر زحف",
+      "crawlUnavailable": "The selected crawl start time is unavailable; verification is deferred.",
       "markImplemented": "وضع علامة منفذة",
       "regression": "تراجع في النتيجة",
       "kind": {

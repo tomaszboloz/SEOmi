@@ -7553,6 +7553,7 @@
       "added": "Задача добавлена",
       "empty": "Задач пока нет. Добавьте её из рекомендации.",
       "verify": "Проверить по последнему краулу",
+      "crawlUnavailable": "The selected crawl start time is unavailable; verification is deferred.",
       "markImplemented": "Отметить как внедрённую",
       "regression": "Падение показателя",
       "kind": {

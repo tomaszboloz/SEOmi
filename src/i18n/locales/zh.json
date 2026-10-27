@@ -7553,6 +7553,7 @@
       "added": "任务已添加",
       "empty": "暂无任务。请从建议中添加。",
       "verify": "用最新抓取验证",
+      "crawlUnavailable": "The selected crawl start time is unavailable; verification is deferred.",
       "markImplemented": "标记为已实施",
       "regression": "分数回落",
       "kind": {

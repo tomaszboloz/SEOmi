@@ -7553,6 +7553,7 @@
       "added": "Tarefa adicionada",
       "empty": "Ainda não há tarefas. Adicione uma a partir de uma recomendação.",
       "verify": "Verificar no último rastreio",
+      "crawlUnavailable": "The selected crawl start time is unavailable; verification is deferred.",
       "markImplemented": "Marcar como implementada",
       "regression": "Regressão da pontuação",
       "kind": {

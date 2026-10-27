@@ -7553,6 +7553,7 @@
       "added": "Task added",
       "empty": "No tasks yet. Add one from a recommendation.",
       "verify": "Verify on latest crawl",
+      "crawlUnavailable": "The selected crawl start time is unavailable; verification is deferred.",
       "markImplemented": "Mark as implemented",
       "regression": "Score regression",
       "kind": {

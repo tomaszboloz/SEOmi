@@ -32,7 +32,7 @@ it('records a null score delta when site focus is unavailable', () => {
     id: 't', kind: 'remove-410', module: 'sfs', status: 'implemented', url: 'https://site.test/gone',
     baselineScore: 50, priority: 'high', createdAt: 'now', implementedAt: '2026-10-25T08:00:00.000Z',
   }]));
-  const run = { startedAt: '2026-10-25T08:10:00.000Z', result: { start_url: 'https://site.test/', pages: [createCrawlPageFixture({ url: 'https://site.test/gone', http_status: 410 })] } } as never;
+  const run = { startedAt: '2026-10-25T08:10:00.000Z', completedAt: '2026-10-25T08:11:00.000Z', result: { start_url: 'https://site.test/', pages: [createCrawlPageFixture({ url: 'https://site.test/gone', http_status: 410 })] } } as never;
   expect(runTaskVerification('verify-unavailable', run)[0]).toMatchObject({ status: 'verified', verdict: { code: 'gone-ok', delta: null } });
 });
 

@@ -6,6 +6,7 @@ import { buildSemanticMap } from '@/services/semanticMap';
 import { buildSprsReport } from '@/services/sprs/report';
 import { buildTrustReport } from '@/services/eeatTrust';
 import { appendDeltas } from './metricHistory';
+import { isCompletedCrawlRun } from './crawlEvidence';
 import { readTasks, writeTasks } from './storage';
 import type { OptimizationTask } from './types';
 import { verifyTasks } from './verify';
@@ -37,6 +38,7 @@ export const deriveCrawlStartedAt = (run: CrawlRunRecord): string | undefined =>
 export const runTaskVerification = (projectId: string, run: CrawlRunRecord): OptimizationTask[] => {
   const tasks = readTasks(projectId);
   if (!tasks.some((task) => task.status === 'implemented')) return tasks;
+  if (!isCompletedCrawlRun(run)) return tasks;
   const pages = run.result?.pages ?? [];
   const startUrl = run.result?.start_url ?? '';
   const sfs = buildSiteFocusReport(pages, startUrl);
@@ -73,7 +75,7 @@ export const runTaskVerification = (projectId: string, run: CrawlRunRecord): Opt
 
   const crawlStartedAt = deriveCrawlStartedAt(run) ?? 'unavailable';
   const next = verifyTasks(tasks, pages, scoreFor, new Date().toISOString(), crawlStartedAt);
-  writeTasks(projectId, next);
+  if (!writeTasks(projectId, next)) return tasks;
   appendDeltas(projectId, tasks, next);
   return next;
 };

@@ -4,6 +4,9 @@ import { SemanticWorkspacePanels } from '@/components/Charts/semanticTopical/Sem
 import type { useSemanticTopicalSession } from '@/components/Charts/semanticTopical/useSemanticTopicalSession';
 import type { TopicalWorkspacePreferences, TopicalWorkspaceView } from '@/components/Charts/semanticTopical/workspaceHelpers';
 import { createEmptyTopicalMap } from '@/services/topicalMap';
+import { createCrawlPageFixture, createCrawlResultFixture, createCrawlRunFixture } from './fixtures/crawl';
+
+const linksSeen = vi.hoisted(() => ({ props: [] as Array<{ pages: unknown[]; run: { id: string } | null }> }));
 
 vi.mock('@/components/Charts/SemanticAuditPanel', () => ({
   SemanticAuditPanel: ({ currentRunId }: { currentRunId?: string }) => <div data-testid="audit-panel">audit:{currentRunId}</div>,
@@ -22,6 +25,9 @@ vi.mock('@/components/Charts/SchemaGraphBuilder', () => ({
 }));
 vi.mock('@/components/Charts/InternalLinkOpportunitiesPanel', () => ({
   InternalLinkOpportunitiesPanel: ({ pages }: { pages: unknown[] }) => <div data-testid="links-panel">links:{pages.length}</div>,
+}));
+vi.mock('@/components/Charts/semanticTopical/LinksWorkspace', () => ({
+  LinksWorkspace: (props: { pages: unknown[]; run: { id: string } | null }) => { linksSeen.props.push(props); return <div data-testid="links-workspace">links:{props.pages.length}:{props.run?.id ?? 'none'}</div>; },
 }));
 vi.mock('@/components/Charts/TopicalCalendar', () => ({
   TopicalCalendar: (props: any) => <div data-testid="calendar-panel">
@@ -57,7 +63,7 @@ describe('SemanticWorkspacePanels direct view contracts', () => {
     view.rerender(<SemanticWorkspacePanels session={session('entity')} />);
     expect(screen.getByTestId('entity-panel').textContent).toBe('entity:1');
     view.rerender(<SemanticWorkspacePanels session={session('links')} />);
-    expect(screen.getByTestId('links-panel').textContent).toBe('links:1');
+    expect(screen.getByTestId('links-workspace').textContent).toBe('links:1:none');
   });
 
   it('passes schema state and wraps each schema preference callback', () => {
@@ -72,6 +78,20 @@ describe('SemanticWorkspacePanels direct view contracts', () => {
     expect(current.updateWorkspacePreferences).toHaveBeenNthCalledWith(2, { includeSchemaOrganization: false });
     expect(current.updateWorkspacePreferences).toHaveBeenNthCalledWith(3, { includeSchemaBreadcrumbs: true });
     expect(current.updateWorkspacePreferences).toHaveBeenNthCalledWith(4, { schemaArticleType: 'Article' });
+  });
+
+  it('keeps the tracker snapshot paired with the selected run when mounted', () => {
+    const oldPages = [createCrawlPageFixture({ url: 'https://site.test/old' })];
+    const currentPages = [createCrawlPageFixture({ url: 'https://site.test/current' })];
+    const runs = [
+      createCrawlRunFixture({ id: 'old-run', startedAt: '2026-10-24T10:00:00Z', completedAt: '2026-10-24T10:01:00Z', result: createCrawlResultFixture({ pages: oldPages, cancelled: false }) }),
+      createCrawlRunFixture({ id: 'current-run', startedAt: '2026-10-25T10:00:00Z', completedAt: '2026-10-25T10:01:00Z', result: createCrawlResultFixture({ pages: currentPages, cancelled: false }) }),
+    ];
+    const view = render(<SemanticWorkspacePanels session={session('links', { pages: currentPages, runs, currentRunId: 'current-run' })} />);
+    expect(screen.getByTestId('links-workspace').textContent).toBe('links:1:current-run');
+    view.rerender(<SemanticWorkspacePanels session={session('links', { pages: oldPages, runs, currentRunId: 'old-run' })} />);
+    expect(screen.getByTestId('links-workspace').textContent).toBe('links:1:old-run');
+    expect(linksSeen.props.at(-1)?.pages).toBe(oldPages);
   });
 
   it('wraps calendar navigation callbacks and shows topic selection states', () => {

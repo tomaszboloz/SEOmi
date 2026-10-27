@@ -23,9 +23,11 @@ export interface PageFocusDetailProps {
   page: PageFocus;
   report: SiteFocusReport;
   onBack: () => void;
+  projectId?: string | null;
+  baselineScore?: number | null;
 }
 
-export const PageFocusDetail = ({ page, report, onBack }: PageFocusDetailProps) => {
+export const PageFocusDetail = ({ page, report, onBack, projectId, baselineScore }: PageFocusDetailProps) => {
   const { t } = useTranslation();
   const headingRef = useRef<HTMLHeadingElement>(null);
   useEffect(() => { headingRef.current?.focus(); }, [page.url]);
@@ -95,7 +97,7 @@ export const PageFocusDetail = ({ page, report, onBack }: PageFocusDetailProps) 
             </section>
           </div>
           <KeywordAlignmentMatrix rows={page.alignment} />
-          <PagePlaybookPanel page={page} report={report} />
+          <PagePlaybookPanel page={page} report={report} projectId={projectId} baselineScore={baselineScore} />
         </>
       )}
     </section>

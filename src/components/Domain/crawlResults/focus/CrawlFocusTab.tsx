@@ -20,6 +20,7 @@ import { SubSiteScores } from './SubSiteScores';
 import { WeeklySummaryCard } from './WeeklySummaryCard';
 import { FocusBenchmarkSection } from './benchmark/FocusBenchmarkSection';
 import type { FocusFilter } from './focusHelpers';
+import { isSelectedCompletedCrawl } from '@/services/optimizationTasks/crawlEvidence';
 
 export interface CrawlFocusTabProps {
   pages: CrawledPageSummary[];
@@ -86,6 +87,8 @@ export const CrawlFocusTab = ({ pages, startUrl, run, projectId, history, benchm
   const applyTerms = useCallback((terms: string[]) => setCompetitorTerms(terms), []);
 
   if (!report) return <Empty>{t('focus.empty')}</Empty>;
+  const completeRun = isSelectedCompletedCrawl(run, pages);
+  const taskBaseline = completeRun && !report.unavailable ? report.score : null;
   const selected = selectedUrl ? report.pages.find((page) => page.url === selectedUrl) : undefined;
   let note: string | undefined;
   if (spent) note = t('focus.hero.recalcExhausted', { limit: budget.limit });
@@ -95,7 +98,7 @@ export const CrawlFocusTab = ({ pages, startUrl, run, projectId, history, benchm
     <div className="space-y-4">
       <FocusHero report={report} history={prior} onRecalculate={onRecalculate} recalcDisabled={spent} recalcNote={note} />
       <FocusBanners report={report} />
-      <GateBanner report={report} pages={pages} included={includeGated} onToggle={() => setIncludeGated((value) => !value)} sitemapUrls={run?.result?.sitemap_urls} />
+      <GateBanner report={report} pages={pages} included={includeGated} onToggle={() => setIncludeGated((value) => !value)} sitemapUrls={run?.result?.sitemap_urls} projectId={projectId} baselineScore={taskBaseline} />
       <ProtectionPanel report={report} projectId={projectId} />
       {historySlot ?? <FocusHistoryChart series={series} />}
       {weekly && <WeeklySummaryCard weekly={weekly} />}
@@ -105,7 +108,7 @@ export const CrawlFocusTab = ({ pages, startUrl, run, projectId, history, benchm
       </div>
       {report.subSites && report.subSites.length > 0 && <SubSiteScores subSites={report.subSites} />}
       {selected ? (
-        <PageFocusDetail page={selected} report={report} onBack={() => setSelectedUrl(undefined)} />
+        <PageFocusDetail page={selected} report={report} onBack={() => setSelectedUrl(undefined)} projectId={projectId} baselineScore={taskBaseline} />
       ) : (
         <FocusHeatmapTree
           pages={report.pages}

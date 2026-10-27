@@ -3,6 +3,7 @@ import { useTranslation } from 'react-i18next';
 import { useSiteFocus } from '@/hooks/useSiteFocus';
 import { useTopicalAuthority, type ReferenceRunner } from '@/hooks/useTopicalAuthority';
 import { buildSiteFocusReport, type FocusPage } from '@/services/siteFocus';
+import { isSelectedCompletedCrawl } from '@/services/optimizationTasks/crawlEvidence';
 import type { CrawledPageSummary, CrawlRunRecord } from '@/types';
 import { Empty } from '../CrawlViewPrimitives';
 import { AuthorityBenchmark } from './AuthorityBenchmark';
@@ -35,6 +36,8 @@ export const CrawlAuthorityTab = ({ pages, startUrl, run, projectId, runner }: C
   const { report } = authority;
   if (!report) return <Empty>{t('authority.empty')}</Empty>;
   const row = selected ? report.coverage.find((item) => item.subtopicId === selected) : undefined;
+  const completeRun = isSelectedCompletedCrawl(run, pages);
+  const taskBaseline = completeRun ? report.tas : null;
   return (
     <div className="space-y-4">
       <AuthorityHero report={report} />
@@ -43,7 +46,7 @@ export const CrawlAuthorityTab = ({ pages, startUrl, run, projectId, runner }: C
       {report.taxonomy && (row ? (
         <SubtopicDrilldown report={report} row={row} onBack={() => setSelected(undefined)} />
       ) : <CoverageMap report={report} onSelect={setSelected} />)}
-      <CannibalizationPanel report={report} pages={pages as FocusPage[]} startUrl={startUrl} language={sfs?.model.language || undefined} />
+      <CannibalizationPanel report={report} pages={pages as FocusPage[]} startUrl={startUrl} language={sfs?.model.language || undefined} projectId={projectId} baselineScore={taskBaseline} />
       <AuthorityRecommendations report={report} />
       <AuthorityBenchmark benchmark={authority.benchmark} />
       <AuthorityHistoryChart entries={authority.history} />

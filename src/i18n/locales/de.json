@@ -7553,6 +7553,7 @@
       "added": "Aufgabe hinzugefügt",
       "empty": "Noch keine Aufgaben. Füge eine aus einer Empfehlung hinzu.",
       "verify": "Mit letztem Crawl prüfen",
+      "crawlUnavailable": "The selected crawl start time is unavailable; verification is deferred.",
       "markImplemented": "Als umgesetzt markieren",
       "regression": "Score-Rückgang",
       "kind": {

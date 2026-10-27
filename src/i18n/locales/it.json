@@ -7553,6 +7553,7 @@
       "added": "Attività aggiunta",
       "empty": "Nessuna attività. Aggiungine una da una raccomandazione.",
       "verify": "Verifica sull'ultimo crawl",
+      "crawlUnavailable": "The selected crawl start time is unavailable; verification is deferred.",
       "markImplemented": "Segna come implementata",
       "regression": "Regressione del punteggio",
       "kind": {
