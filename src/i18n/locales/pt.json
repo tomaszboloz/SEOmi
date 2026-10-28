@@ -7627,7 +7627,10 @@
         "dateModified": "Data de modificação (AAAA-MM-DD)",
         "lastReviewed": "Última revisão (AAAA-MM-DD)",
         "sameAs": "Perfis sameAs (um URL por linha: Wikidata, ORCID, LinkedIn, registo profissional)",
-        "asReviewer": "Declarar como revisor especialista em vez de autor"
+        "asReviewer": "Declarar como revisor especialista em vez de autor",
+        "bio": "Biografia curta (opcional)",
+        "credential": "Credencial ou formação (opcional)",
+        "knowsAbout": "Temas de especialidade (opcional, um por linha)"
       },
       "issue": {
         "missing-name": "Introduza o nome do autor.",
@@ -7639,7 +7642,24 @@
       "preview": "JSON-LD gerado",
       "copy": "Copiar etiqueta script",
       "copied": "Copiado.",
-      "copyFailed": "Falha ao copiar. Selecione o texto e copie-o manualmente."
+      "copyFailed": "Falha ao copiar. Selecione o texto e copie-o manualmente.",
+      "needsVerification": "Requer verificação: escreva apenas o que puder comprovar.",
+      "unverifiedNote": "Campos não verificados na saída: {{fields}}. Confirme cada um antes de publicar.",
+      "source": "Fonte: {{source}}",
+      "sourceName": {
+        "crawl": "rastreamento",
+        "report": "relatório de confiança",
+        "start-url": "URL inicial"
+      },
+      "diff": {
+        "title": "Alterações em relação ao esquema observado",
+        "none": "Sem alterações em relação ao esquema observado.",
+        "added": "Adicionado",
+        "removed": "Removido"
+      },
+      "download": "Baixar JSON-LD",
+      "downloaded": "Baixado.",
+      "downloadFailed": "Falha no download. Copie a tag script."
     }
   },
   "executionCard": {

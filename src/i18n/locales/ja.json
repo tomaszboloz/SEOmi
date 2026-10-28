@@ -7627,7 +7627,10 @@
         "dateModified": "更新日（YYYY-MM-DD）",
         "lastReviewed": "最終監修日（YYYY-MM-DD）",
         "sameAs": "sameAsプロフィール（1行に1つのURL: Wikidata、ORCID、LinkedIn、専門職の登録簿）",
-        "asReviewer": "著者ではなく専門家の監修者として宣言する"
+        "asReviewer": "著者ではなく専門家の監修者として宣言する",
+        "bio": "短い経歴（任意）",
+        "credential": "資格または学位（任意）",
+        "knowsAbout": "専門トピック（任意、1行に1つ）"
       },
       "issue": {
         "missing-name": "著者名を入力してください。",
@@ -7639,7 +7642,24 @@
       "preview": "生成されたJSON-LD",
       "copy": "scriptタグをコピー",
       "copied": "コピーしました。",
-      "copyFailed": "コピーできませんでした。テキストを選択して手動でコピーしてください。"
+      "copyFailed": "コピーできませんでした。テキストを選択して手動でコピーしてください。",
+      "needsVerification": "要確認: 証明できる内容のみ入力してください。",
+      "unverifiedNote": "出力内の未確認フィールド: {{fields}}。公開前に各項目を確認してください。",
+      "source": "出典: {{source}}",
+      "sourceName": {
+        "crawl": "クロール",
+        "report": "信頼レポート",
+        "start-url": "開始URL"
+      },
+      "diff": {
+        "title": "観測済みスキーマとの差分",
+        "none": "観測済みスキーマとの差分はありません。",
+        "added": "追加",
+        "removed": "削除"
+      },
+      "download": "JSON-LDをダウンロード",
+      "downloaded": "ダウンロードしました。",
+      "downloadFailed": "ダウンロードに失敗しました。代わりにscriptタグをコピーしてください。"
     }
   },
   "executionCard": {

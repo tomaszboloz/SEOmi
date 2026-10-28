@@ -7627,7 +7627,10 @@
         "dateModified": "Data modyfikacji (RRRR-MM-DD)",
         "lastReviewed": "Ostatnia recenzja (RRRR-MM-DD)",
         "sameAs": "Profile sameAs (jeden adres w linii: Wikidata, ORCID, LinkedIn, rejestr zawodowy)",
-        "asReviewer": "Wskaż jako recenzenta merytorycznego zamiast autora"
+        "asReviewer": "Wskaż jako recenzenta merytorycznego zamiast autora",
+        "bio": "Krótki opis (opcjonalnie)",
+        "credential": "Kwalifikacja lub stopień (opcjonalnie)",
+        "knowsAbout": "Tematy specjalizacji (opcjonalnie, po jednym w linii)"
       },
       "issue": {
         "missing-name": "Podaj imię i nazwisko autora.",
@@ -7639,7 +7642,24 @@
       "preview": "Wygenerowany JSON-LD",
       "copy": "Kopiuj znacznik script",
       "copied": "Skopiowano.",
-      "copyFailed": "Nie udało się skopiować. Zaznacz tekst i skopiuj go ręcznie."
+      "copyFailed": "Nie udało się skopiować. Zaznacz tekst i skopiuj go ręcznie.",
+      "needsVerification": "Wymaga weryfikacji: wpisz tylko to, co potrafisz udowodnić.",
+      "unverifiedNote": "Niezweryfikowane pola w wyniku: {{fields}}. Potwierdź każde przed publikacją.",
+      "source": "Źródło: {{source}}",
+      "sourceName": {
+        "crawl": "crawl",
+        "report": "raport zaufania",
+        "start-url": "adres startowy"
+      },
+      "diff": {
+        "title": "Zmiany względem obserwowanego schematu",
+        "none": "Brak zmian względem obserwowanego schematu.",
+        "added": "Dodano",
+        "removed": "Usunięto"
+      },
+      "download": "Pobierz JSON-LD",
+      "downloaded": "Pobrano.",
+      "downloadFailed": "Nie udało się pobrać. Skopiuj znacznik script."
     }
   },
   "executionCard": {

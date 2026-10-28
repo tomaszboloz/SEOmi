@@ -16,11 +16,20 @@ export interface TrustJsonLdInput {
   lastReviewed?: string;
   /** When true the person is declared as medical/legal reviewer instead of author. */
   asReviewer?: boolean;
+  /** Optional, user-typed only. Never prefilled, so each stays "needs verification". */
+  bio?: string;
+  credential?: string;
+  knowsAbout?: string[];
+  /** Where a prefilled field came from. */
+  sources?: Partial<Record<string, FieldSource>>;
 }
+
+export type FieldSource = 'crawl' | 'report' | 'start-url';
+export type UnverifiedField = 'bio' | 'hasCredential' | 'knowsAbout';
 
 export type JsonLdIssue = 'missing-name' | 'invalid-organization-url' | 'invalid-page-url' | 'invalid-same-as';
 
-export interface TrustJsonLd { ok: boolean; graph: Record<string, unknown>; text: string; issues: JsonLdIssue[] }
+export interface TrustJsonLd { ok: boolean; graph: Record<string, unknown>; text: string; issues: JsonLdIssue[]; needsVerification: UnverifiedField[] }
 
 /** Single serializer shared with schema composition, so both exports escape the same way. */
 export const safeJsonLdText = serializeJsonLd;
@@ -55,8 +64,15 @@ export const buildTrustJsonLd = (input: TrustJsonLdInput): TrustJsonLd => {
     '@type': 'Organization', '@id': orgId, name: input.organizationName?.trim() || undefined, url: org,
     ...(input.organizationSameAs?.length ? { sameAs: input.organizationSameAs.map(web).filter(Boolean) } : {}),
   };
+  const bio = input.bio?.trim();
+  const credential = input.credential?.trim();
+  const knowsAbout = (input.knowsAbout ?? []).map((item) => item.trim()).filter(Boolean);
+  const needsVerification: UnverifiedField[] = [...(bio ? ['bio' as const] : []), ...(credential ? ['hasCredential' as const] : []), ...(knowsAbout.length ? ['knowsAbout' as const] : [])];
   const person = {
     '@type': 'Person', '@id': personId, name, jobTitle: input.jobTitle?.trim() || undefined,
+    description: bio || undefined,
+    hasCredential: credential ? { '@type': 'EducationalOccupationalCredential', name: credential } : undefined,
+    knowsAbout: knowsAbout.length ? knowsAbout : undefined,
     url: web(input.personUrl), sameAs: validSameAs.length ? validSameAs : undefined, worksFor: { '@id': orgId },
   };
   const webPage = {
@@ -66,7 +82,7 @@ export const buildTrustJsonLd = (input: TrustJsonLdInput): TrustJsonLd => {
   };
   const graph = { '@context': 'https://schema.org', '@graph': [organization, person, webPage] };
   const text = safeJsonLdText(graph);
-  return { ok: issues.filter((issue) => issue !== 'invalid-same-as').length === 0, graph, text, issues };
+  return { ok: issues.filter((issue) => issue !== 'invalid-same-as').length === 0, graph, text, issues, needsVerification };
 };
 
 /** Form defaults for an author found in the crawl, so the generator starts from real data. */
@@ -75,6 +91,12 @@ export const prefillFromAuthor = (author: AuthorEntity, report: TrustReport, sta
   jobTitle: author.jobTitle,
   personUrl: author.id && /^https?:/.test(author.id) ? author.id.split('#')[0] : undefined,
   sameAs: author.sameAs,
+  sources: {
+    ...(author.generic ? {} : { personName: 'crawl' as const }), ...(author.jobTitle ? { jobTitle: 'crawl' as const } : {}),
+    ...(author.id && /^https?:/.test(author.id) ? { personUrl: 'crawl' as const } : {}), ...(author.sameAs.length ? { sameAs: 'crawl' as const } : {}),
+    ...(report.schema.organization.name ? { organizationName: 'report' as const } : {}), organizationUrl: 'start-url',
+    pageUrl: author.articleUrls[0] ? 'crawl' : 'start-url',
+  },
   organizationName: report.schema.organization.name,
   organizationUrl: startUrl,
   organizationSameAs: report.schema.organization.sameAs,
