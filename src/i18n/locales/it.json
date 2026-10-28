@@ -7494,7 +7494,22 @@
       "noKey": "Collega un provider IA nelle Impostazioni per riscrivere i passaggi.",
       "error": "Richiesta all'IA non riuscita: {{message}}",
       "empty": "L'IA non ha restituito testo.",
-      "none": "Nessun passaggio debole trovato."
+      "none": "Nessun passaggio debole trovato.",
+      "copyFailed": "Copia non riuscita. Seleziona il testo e copialo manualmente.",
+      "brief": {
+        "heading": "Passaggio riscritto: {{heading}}",
+        "unverified": "Proposta dell'IA non verificata. Controlla fatti, numeri e fonti prima di pubblicare.",
+        "original": "Originale",
+        "rewritten": "Riscrittura IA (accettata manualmente)",
+        "versionNote": "Riscrittura AIO accettata, versione della bozza {{n}} ({{revision}})",
+        "accepted": "Aggiunto al brief. Versione della bozza salvata: {{version}}",
+        "failed": "Impossibile aggiungere il passaggio al brief.",
+        "noProject": "Seleziona un progetto per aggiungere il passaggio al suo brief."
+      },
+      "history": {
+        "comparable": "Riscritture confrontabili (stesso profilo): {{count}}, ultima variazione {{delta}}.",
+        "other": "Non confrontabili (altro profilo): {{count}}."
+      }
     },
     "issue": {
       "dangling-pronoun": "Riferimento poco chiaro",

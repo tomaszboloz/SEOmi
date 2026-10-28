@@ -7494,7 +7494,22 @@
       "noKey": "请在设置中连接 AI 提供商以改写段落。",
       "error": "AI 请求失败：{{message}}",
       "empty": "AI 没有返回文本。",
-      "none": "未发现薄弱段落。"
+      "none": "未发现薄弱段落。",
+      "copyFailed": "复制失败。请选中文本后手动复制。",
+      "brief": {
+        "heading": "改写段落:{{heading}}",
+        "unverified": "AI 建议未经验证。发布前请核对事实、数字和来源。",
+        "original": "原文",
+        "rewritten": "AI 改写(手动接受)",
+        "versionNote": "已接受 AIO 改写,草稿版本 {{n}} ({{revision}})",
+        "accepted": "已添加到简报。已保存草稿版本:{{version}}",
+        "failed": "无法将该段落添加到简报。",
+        "noProject": "请选择项目以将段落添加到其简报。"
+      },
+      "history": {
+        "comparable": "可比较的改写(同一配置):{{count}} 次,最近变化 {{delta}}。",
+        "other": "不可比较(其他配置):{{count}} 次。"
+      }
     },
     "issue": {
       "dangling-pronoun": "指代不清",

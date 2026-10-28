@@ -7494,7 +7494,22 @@
       "noKey": "Ligue um fornecedor de IA nas Definições para reescrever passagens.",
       "error": "O pedido à IA falhou: {{message}}",
       "empty": "A IA não devolveu texto.",
-      "none": "Nenhuma passagem fraca encontrada."
+      "none": "Nenhuma passagem fraca encontrada.",
+      "copyFailed": "Falha ao copiar. Selecione o texto e copie manualmente.",
+      "brief": {
+        "heading": "Trecho reescrito: {{heading}}",
+        "unverified": "Proposta de IA não verificada. Confira fatos, números e fontes antes de publicar.",
+        "original": "Original",
+        "rewritten": "Reescrita por IA (aceita manualmente)",
+        "versionNote": "Reescrita AIO aceita, versão do rascunho {{n}} ({{revision}})",
+        "accepted": "Adicionado ao brief. Versão do rascunho salva: {{version}}",
+        "failed": "Não foi possível adicionar o trecho ao brief.",
+        "noProject": "Selecione um projeto para adicionar o trecho ao brief."
+      },
+      "history": {
+        "comparable": "Reescritas comparáveis (mesmo perfil): {{count}}, última variação {{delta}}.",
+        "other": "Não comparáveis (outro perfil): {{count}}."
+      }
     },
     "issue": {
       "dangling-pronoun": "Referência pouco clara",

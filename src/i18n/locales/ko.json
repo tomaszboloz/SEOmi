@@ -7494,7 +7494,22 @@
       "noKey": "문단을 다시 쓰려면 설정에서 AI 제공자를 연결하세요.",
       "error": "AI 요청 실패: {{message}}",
       "empty": "AI가 텍스트를 반환하지 않았습니다.",
-      "none": "약한 문단을 찾지 못했습니다."
+      "none": "약한 문단을 찾지 못했습니다.",
+      "copyFailed": "복사하지 못했습니다. 텍스트를 선택해 직접 복사하세요.",
+      "brief": {
+        "heading": "다시 쓴 구절: {{heading}}",
+        "unverified": "AI 제안은 검증되지 않았습니다. 게시 전에 사실, 수치, 출처를 확인하세요.",
+        "original": "원문",
+        "rewritten": "AI 재작성(수동 승인)",
+        "versionNote": "AIO 재작성 승인, 초안 버전 {{n}} ({{revision}})",
+        "accepted": "브리프에 추가했습니다. 초안 버전 저장됨: {{version}}",
+        "failed": "구절을 브리프에 추가하지 못했습니다.",
+        "noProject": "구절을 브리프에 추가하려면 프로젝트를 선택하세요."
+      },
+      "history": {
+        "comparable": "비교 가능한 재작성(동일 프로필): {{count}}건, 최근 변화 {{delta}}.",
+        "other": "비교 불가(다른 프로필): {{count}}건."
+      }
     },
     "issue": {
       "dangling-pronoun": "지시 대상이 불분명함",
