@@ -7739,7 +7739,9 @@
         "high": "عالية",
         "medium": "متوسطة",
         "low": "منخفضة"
-      }
+      },
+      "expectedDelta": "الأثر المتوقع (نقاط)",
+      "expectedVsMeasured": "المتوقع {{expected}}، المقيس {{measured}}"
     }
   },
   "scoreDropAlert": {

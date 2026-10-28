@@ -2,6 +2,8 @@ import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import type { LinkInjection } from '@/services/linkInjector';
 import { copyText } from '@/services/clipboard';
+import type { NewTask } from '@/services/optimizationTasks/storage';
+import { AddTaskButton } from './OptimizationTaskTracker';
 
 type Format = 'html' | 'markdown';
 
@@ -9,7 +11,20 @@ const gainText = (value: number | null, t: (key: string, options?: Record<string
   value === null ? t('linkInjector.gainUnknown') : t('linkInjector.gain', { value: `${value > 0 ? '+' : ''}${value.toFixed(1)}` });
 
 /** Top contextual link injections (#128): where to place the link in the donor and the ready sentence. */
-export const ContextualLinkInjectorPanel = ({ injections }: { injections: LinkInjection[] }) => {
+interface Props {
+  injections: LinkInjection[];
+  /** With a project, each row can become an add-link task carrying the solver gain as its expected effect (#134). */
+  projectId?: string | null;
+  baselineScoreFor?: (task: NewTask) => number | null;
+}
+
+const taskOf = (item: LinkInjection, baselineScoreFor?: (task: NewTask) => number | null): NewTask => {
+  const task: NewTask = { kind: 'add-link', module: 'sprs', url: item.sourceUrl, targetUrl: item.targetUrl, baselineScore: null,
+    ...(item.expectedSprGain === null ? {} : { expectedDelta: item.expectedSprGain }) };
+  return { ...task, baselineScore: baselineScoreFor?.(task) ?? null };
+};
+
+export const ContextualLinkInjectorPanel = ({ injections, projectId, baselineScoreFor }: Props) => {
   const { t } = useTranslation();
   const [format, setFormat] = useState<Format>('html');
   const [copied, setCopied] = useState<string | null>(null);
@@ -56,6 +71,7 @@ export const ContextualLinkInjectorPanel = ({ injections }: { injections: LinkIn
                 <button type="button" onClick={() => void copy(item)} className="rounded border border-slate-600 px-2 py-1 text-slate-200 hover:bg-slate-800 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-400">
                   {copied === item.id ? t('linkInjector.copied') : t('linkInjector.copy')}
                 </button>
+                {projectId && <AddTaskButton projectId={projectId} task={taskOf(item, baselineScoreFor)} />}
               </div>
             </li>
           ))}

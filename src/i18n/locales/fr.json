@@ -7739,7 +7739,9 @@
         "high": "Haute",
         "medium": "Moyenne",
         "low": "Basse"
-      }
+      },
+      "expectedDelta": "Effet attendu (points)",
+      "expectedVsMeasured": "attendu {{expected}}, mesuré {{measured}}"
     }
   },
   "scoreDropAlert": {

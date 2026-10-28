@@ -7739,7 +7739,9 @@
         "high": "Высокий",
         "medium": "Средний",
         "low": "Низкий"
-      }
+      },
+      "expectedDelta": "Ожидаемый эффект (баллы)",
+      "expectedVsMeasured": "ожидалось {{expected}}, измерено {{measured}}"
     }
   },
   "scoreDropAlert": {
