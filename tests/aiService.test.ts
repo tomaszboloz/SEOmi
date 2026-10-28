@@ -14,6 +14,10 @@ const valid = {
 };
 
 describe('AI suggestion response parsing', () => {
+  it('requires a project scope before any provider call', async () => {
+    await expect(AIService.generateText('openai', 'key', 'model', 'prompt')).rejects.toThrow('Project ID is required');
+  });
+
   it('extracts fenced JSON without losing braces inside quoted values', () => {
     const response = `Here is the result:\n\n\`\`\`json\n${JSON.stringify({
       ...valid,
@@ -46,7 +50,7 @@ describe('AI suggestion response parsing', () => {
   it('encodes a persisted Gemini model before placing it in the request path', async () => {
     const fetchMock = vi.spyOn(globalThis, 'fetch').mockResolvedValue(new Response(JSON.stringify({ candidates: [{ content: { parts: [{ text: 'safe response' }] } }] })));
 
-    await expect(AIService.generateText('gemini', 'test-key', 'model/name?variant=1', 'prompt')).resolves.toBe('safe response');
+    await expect(AIService.generateText('gemini', 'test-key', 'model/name?variant=1', 'prompt', 'api_key', { projectId: 'ai-service-test' })).resolves.toBe('safe response');
     expect(String(fetchMock.mock.calls[0]?.[0])).toContain('models/model%2Fname%3Fvariant%3D1:generateContent');
     fetchMock.mockRestore();
   });
@@ -93,6 +97,6 @@ it('skips an invalid complete object and retains the next valid escaped JSON obj
 
 it('rejects unsupported provider when generating suggestions', async () => {
   await expect(
-    AIService.generateSuggestions('unsupported' as any, 'key', 'model', createAuditFixture())
+    AIService.generateSuggestions('unsupported' as any, 'key', 'model', createAuditFixture(), undefined, 'api_key', { projectId: 'ai-service-test' })
   ).rejects.toThrow(i18n.t('runtimeErrors.ai.unsupportedProvider', { provider: 'unsupported' }));
 });

@@ -1,17 +1,20 @@
+import { OFF_TOPIC_BELOW, ON_TOPIC_FROM, STRONG_FROM, trsGroup } from './trsPolicy';
 import type { PageFocus, PagePriority, PageStatus, Playbook, SfsBand } from './types';
 
-export const ON_TOPIC_TRS = 60;
+export const ON_TOPIC_TRS = ON_TOPIC_FROM;
 const round1 = (value: number): number => Math.round(value * 10) / 10;
 
 export const bandFor = (score: number): SfsBand =>
   score >= 90 ? 'excellent' : score >= 75 ? 'good' : score >= 60 ? 'moderate' : score >= 40 ? 'weak' : 'critical';
 
+/** Status subdivides the TRS groups in ./trsPolicy: 'weak', 'borderline' and 'moderate' are all in the borderline group (40-74). */
 export const statusFor = (trs: number): PageStatus =>
-  trs >= 75 ? 'strong' : trs >= 60 ? 'moderate' : trs >= 50 ? 'borderline' : trs >= 40 ? 'weak' : 'off-topic';
+  trs >= STRONG_FROM ? 'strong' : trs >= ON_TOPIC_FROM ? 'moderate' : trs >= 50 ? 'borderline' : trs >= OFF_TOPIC_BELOW ? 'weak' : 'off-topic';
 
 export const priorityFor = (trs: number): PagePriority => (trs < 40 ? 'critical' : trs < 60 ? 'high' : trs < 75 ? 'medium' : 'low');
 
-export const playbookFor = (trs: number): Playbook => (trs < 40 ? 'A' : trs < 75 ? 'B' : 'C');
+const PLAYBOOK: Record<ReturnType<typeof trsGroup>, Playbook> = { 'off-topic': 'A', borderline: 'B', strong: 'C' };
+export const playbookFor = (trs: number): Playbook => PLAYBOOK[trsGroup(trs)];
 
 type Scored = Pick<PageFocus, 'trs' | 'weight' | 'type' | 'skipped'>;
 

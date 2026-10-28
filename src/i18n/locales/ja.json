@@ -3560,6 +3560,21 @@
       "chooseBaseRun": "Choose base run",
       "match": "Match",
       "preview": "Preview"
+    },
+    "spaShell": {
+      "summary": "レンダリングされていない JavaScript シェルのように見えるページ: {{count}}",
+      "reasons": {
+        "next_data": "Next.js データ (__NEXT_DATA__)",
+        "nuxt_payload": "Nuxt ペイロード (__NUXT__)",
+        "initial_state": "アプリ状態 (__INITIAL_STATE__)",
+        "bundle_empty_root": "アプリのルートが空の JS バンドル",
+        "unknown": "理由は記録されていません"
+      },
+      "reasonCount": "{{reason}}: {{count}}",
+      "payloadRead": "SEOmi はこのうち {{total}} ページ中 {{count}} ページでフレームワークのペイロードからテキストを読み取りました。このテキストは JS ペイロード由来で、レンダリング後のページのものではありません。",
+      "noPayload": "SEOmi はこれらのどのページでもフレームワークのペイロードからテキストを読み取れませんでした。",
+      "showUrls": "対象の URL を表示",
+      "payloadWords": "JS ペイロードの単語数: {{count}}(レンダリングされたコンテンツではありません)"
     }
   },
   "ai": {
@@ -5031,14 +5046,38 @@
     "legacyNote": "This saved run included the brand in the question. It is not an unprompted visibility measurement."
   },
   "gscOpportunities": {
-    "title": "GSC opportunities",
-    "near": "Queries just beyond TOP10 (10–20)",
-    "ctr": "CTR below observed peers",
-    "empty": "No rows meet the evidence thresholds.",
-    "benchmark": "CTR {{actual}}% · peers {{expected}}% ({{count}} queries)",
-    "method": "Average position is a period metric. CTR uses other queries within ±1 position, at least 3 peers and 300 peer impressions. Signals require review; brand, intent and SERP features can differ.",
-    "aiOverview": "Google includes AI Overviews and AI Mode in total Web traffic. This report cannot separate their metrics.",
-    "source": "Google documentation"
+    "title": "GSCの機会",
+    "views": "クエリ表示",
+    "view": {
+      "all": "すべてのクエリ",
+      "near": "クエリ 10–20",
+      "ctr": "CTR外れ値"
+    },
+    "filterLabel": "クエリを絞り込む",
+    "filterPlaceholder": "含む…",
+    "pageSize": "1ページの行数",
+    "sort": {
+      "query": "クエリ",
+      "clicks": "クリック数",
+      "impressions": "表示回数",
+      "ctr": "CTR",
+      "position": "掲載順位",
+      "benchmark": "CTRベンチマーク"
+    },
+    "rows": "{{count}}件中 {{from}}–{{to}}件を表示",
+    "previous": "前へ",
+    "next": "次へ",
+    "near": "TOP10直下のクエリ（10–20位）",
+    "ctr": "観測された比較クエリよりCTRが低いクエリ",
+    "empty": "エビデンスのしきい値を満たす行はありません。",
+    "benchmark": "CTR {{actual}}% · 比較クエリ {{expected}}%（{{count}}件）",
+    "method": "平均掲載順位は期間の指標です。CTRは±1順位以内の他のクエリを使い、比較クエリを3件以上、表示回数を300以上必要とします。シグナルは確認が必要で、ブランド・検索意図・SERP機能によって異なる場合があります。",
+    "aiOverview": "GoogleはAI OverviewsとAI ModeをWeb全体のトラフィックに含めています。このレポートではそれらの指標を分離できません。",
+    "source": "Googleのドキュメント",
+    "truncatedWarning": "レポートの制限により、クエリ一覧は不完全な場合があります。クエリがないことは、表示の喪失を意味しません。",
+    "clear": "テキストフィルターをクリア",
+    "noMatches": "このテキストを含むクエリはありません。",
+    "noQueries": "このレポートには利用できるクエリがありません。"
   },
   "gscCannibalization": {
     "title": "クエリの競合候補",
@@ -5889,7 +5928,7 @@
         "nScored": "クロール済み {{0}} ページ中",
         "nSkipped": "未評価",
         "nOffTopic": "TRS 40 未満",
-        "nBorderline": "TRS 60-74",
+        "nBorderline": "TRS 40-74",
         "nStrong": "TRS 75 以上",
         "percent": "{{0}}%",
         "coreBadge": "中心トピック",
@@ -6063,15 +6102,25 @@
           "no-answer-first": "冒頭に直接の回答がない",
           "filler-opening": "冗長な書き出し",
           "no-facts": "具体的な事実がない",
-          "too-long": "1チャンクには長すぎる"
-        }
+          "too-long": "1チャンクには長すぎる",
+          "deictic-context": "文脈に依存する参照",
+          "no-entity": "主題への言及がありません"
+        },
+        "profile": "計算プロファイル: {{0}} / {{1}} / {{2}} / {{3}} / {{4}}",
+        "profilePersisted": "保存されたクロールのプロファイルと一致しています。",
+        "profileLegacy": "このクロールには保存されたプロファイルがありません。表示中のプロファイルで再計算した結果のため、過去の結果とは比較できません。",
+        "profileMismatch": "保存されたプロファイルが異なります。表示中のプロファイルで再計算した結果のため、過去の結果とは比較できません。",
+        "historicalProfile": "保存されたプロファイル: {{0}} / {{1}}."
       },
       "trust": {
         "title": "エンティティの信頼性（E-E-A-T）",
         "intro": "サイトの発行者、著者、情報源をどの程度確認できるかを示します。スコアは保存済みの実行結果から算出し、ページは再取得しません。",
         "scoreTitle": "エンティティ信頼スコア",
         "legend": "レベル: 75-100 高い、60-74 十分、40-59 低い、0-39 重大。",
+        "profile": "EETVプロファイル {{0}}（バージョン{{1}}）",
+        "coverage": "証拠カバレッジ",
         "kSchema": "エンティティグラフ",
+        "kSameAs": "身元宣言",
         "kAuthor": "著者の適合度",
         "kCitation": "情報源の品質",
         "kTransparency": "透明性",
@@ -6141,7 +6190,14 @@
           "no-articles": "記事ページが検出されませんでした。著者と引用のレイヤーは採点されていません。",
           "author-invalid-profile": "{{0}}人の著者が無効な識別子のORCIDまたはWikidataプロフィールをリンクしています（{{1}}）。チェックサムまたはQ-IDを確認してください。",
           "ymyl-no-scholarly-ids": "{{0}}件の記事のいずれもDOI、PMID、PMCIDを持つ情報源を引用していません。YMYLの話題では一次研究を引用してください。"
-        }
+        },
+        "colProfile": "プロフィール証拠",
+        "tClaims": "主張の証拠",
+        "claimsIntro": "主張と引用の関連付けです。語句の重複は検証ではありません。",
+        "colClaim": "主張",
+        "colEvidence": "証拠",
+        "colRelation": "関係",
+        "colChecked": "手動確認"
       },
       "offPage": {
         "title": "オフページ分析",
@@ -6266,6 +6322,13 @@
         "why": "Pages with very little text give search engines little to understand, which is called thin content. Long is not automatically better, though: the page must fully answer what the visitor came for.",
         "action": "Under 300 words: ask yourself whether the page really answers the question. Add useful detail if not.\n300 to 1000 words: normal for most service and product pages.\nOver 1500 words: typical for in-depth guides; make sure headings split it into scannable sections.\nCompare with the top Google results for your keyword, not with a magic number.",
         "example": "A product page with 80 words usually loses to competitors who explain materials, sizes, shipping and returns in 400 words."
+      },
+      "jsShell": {
+        "title": "JavaScript シェルの疑い",
+        "what": "これらのページの静的 HTML にはほとんどテキストがなく、JavaScript アプリ(Next.js や Nuxt など)を読み込みます。実際のコンテンツはブラウザーがスクリプトを実行した後にのみ表示されます。",
+        "why": "SEOmi はこれらのページを生の HTML から分析します。単語数、用語、コンテンツチェック、スコアが実際より低くなる場合があります。フレームワークのペイロードから読み取ったテキストは別に表示され、ページのコンテンツとしては数えません。",
+        "action": "ユーザーが受け取るコンテンツを確認するには、レンダリング (JavaScript) モードでクロールを再実行してください。\n検索エンジンが JavaScript なしでコンテンツを受け取れるか確認してください(サーバーサイドレンダリングまたはプリレンダリング)。\nこれらのページのコンテンツスコアは慎重に扱ってください。",
+        "example": "空の <div id=\"__next\"></div> と __NEXT_DATA__ スクリプトを持つ Next.js ページは、静的 HTML の単語数が 12 です。"
       }
     },
     "metadata": {
@@ -6353,7 +6416,7 @@
         "title": "トピック適合率",
         "what": "TRS が60以上のコンテンツページの割合です。ログインやカートなどの技術ページは含まれません。",
         "why": "加重スコアではなく、何ページが中心トピックを支えているかがわかります。",
-        "action": "境界線上のページ(60-74以下)を修正し、トピック外のページを削除すると向上します。",
+        "action": "境界線上のページ(40-74)を修正し、トピック外のページを削除すると向上します。",
         "example": "コンテンツページ50件のうち42件が TRS 60以上の場合、適合率は84パーセントです。"
       },
       "semanticSimilarity": {
@@ -6809,7 +6872,7 @@
       "pages": "評価したページ",
       "skipped": "スキップしたページ",
       "offTopic": "トピック外のページ(TRS 40未満)",
-      "borderline": "境界線上のページ(60-74)"
+      "borderline": "境界線上のページ(40-74)"
     },
     "heatmap": {
       "title": "トピックの分布",
@@ -6819,7 +6882,7 @@
       "filter": {
         "all": "すべて({{count}})",
         "critical": "危険 <40({{count}})",
-        "borderline": "境界線上 60-74({{count}})",
+        "borderline": "境界線上 40-74({{count}})",
         "strong": "強い >=75({{count}})"
       },
       "filtersAria": "関連性でページを絞り込む",
@@ -7352,11 +7415,34 @@
       "title": "最も弱い文章",
       "intro": "引用しにくい順に並べたRAGチャンクのシミュレーションです。まず示された問題を修正してください。",
       "chunk": "チャンク{{n}}・{{tokens}}トークン・スコア{{score}}",
+      "offset": "ソース文字 {{start}}–{{end}}",
+      "offsetUnavailable": "ソース位置を利用できません",
+      "evidence": "証拠",
+      "score": "スコア",
+      "answerFirst": "冒頭の回答",
+      "spans": "検出された範囲",
+      "notApplicable": "該当なし",
+      "notAvailable": "不明",
+      "invalidSpan": "無効な範囲（強調表示なし）",
+      "invalidSpanCount": "強調表示されなかった無効な範囲：{{count}}件。",
+      "cancel": "キャンセル",
+      "export": "下書きをエクスポート",
+      "approve": "ブリーフ用に承認",
+      "approved": "ブリーフ用に承認済み",
+      "diff": "変更行を表示",
+      "scoreChange": "プロファイルの変化：{{delta}}",
+      "beforeAfter": "前 {{before}}・後 {{after}}",
+      "facts": "事実：{{before}} → {{after}}",
+      "spoRelations": "検出されたSPO関係",
+      "partialProfile": "部分的なプロファイル：言語またはアンカーの証拠が不完全なため、変更前後の差分は完全な評価ではありません。",
+      "preservationWarning": "確認が必要です。書き換え後に次のソーストークンが見つかりません：{{missing}}",
+      "unverified": "AIの提案は未検証です。承認は手動で行い、CMSには公開しません。",
       "noHeading": "（見出しのない導入部）",
       "current": "現在の文章",
       "optimized": "最適化した文章",
       "generate": "AIで書き直す",
       "generating": "書き直し中…",
+      "cancelled": "書き換えをキャンセルしました。",
       "copy": "コピー",
       "copied": "コピーしました",
       "noKey": "文章を書き直すには、設定でAIプロバイダーを接続してください。",
@@ -7366,6 +7452,8 @@
     },
     "issue": {
       "dangling-pronoun": "指示対象が不明確",
+      "deictic-context": "文脈依存の指示",
+      "no-entity": "主語・エンティティが未記載",
       "no-answer-first": "冒頭に直接の回答がない",
       "filler-opening": "冗長な書き出し",
       "no-facts": "具体的な事実がない",
@@ -7384,6 +7472,8 @@
     "hero": {
       "label": "エンティティ信頼スコア",
       "articles": "クロールした{{pages}}ページのうち記事ページは{{articles}}ページ",
+      "profile": "プロファイル {{profile}} · バージョン {{version}}",
+      "coverage": "証拠カバレッジ: 観測 / 宣言 / 検証済み / 不明",
       "previous": "前回の実行: {{score}}（{{delta}}）",
       "ymyl": "YMYLカテゴリ: {{category}}。検索エンジンはこれらのページに最も厳しい信頼基準を適用します。",
       "unattributed": "記事の{{pct}}%に、氏名のある著者または監修者がいません。"
@@ -7402,6 +7492,7 @@
     "layers": {
       "title": "信頼性のレイヤー",
       "schemaGraph": "エンティティグラフ（JSON-LD）",
+      "sameAs": "身元宣言（sameAs）",
       "authorAlignment": "著者のテーマ適合度",
       "citationQuality": "情報源の品質",
       "transparency": "編集の透明性",
@@ -7417,9 +7508,19 @@
       "colArticles": "記事数",
       "colSameAs": "sameAsリンク",
       "colAlignment": "テーマ適合度",
-      "generic": "匿名の署名"
+      "generic": "匿名の署名",
+      "identityEvidence": "本人確認の証拠",
+      "unavailableNote": "宣言されたプロフィールなし。利用不可は架空を意味しません。",
+      "verifyProfiles": "プロフィールを検証",
+      "roleReviewer": "レビュー担当者",
+      "rolePublisher": "発行者",
+      "roleEvidence": "{{name}} ({{role}}) · {{status}} · sameAs 宣言 {{recall}}%",
+      "roleRecall": "役割加重の sameAs 宣言: {{pct}}%(著者 50%、レビュー担当者 25%、発行者 25%。提案された重みで、宣言のシグナルであり、本人確認ではありません)。"
     },
     "signals": {
+      "claimEvidence": "主張の証拠",
+      "unbacked": "裏付けなし",
+      "associationNote": "関連付けは裏付けではありません。重複で手動sourceCheckedは設定されません。",
       "title": "情報源と透明性",
       "citations": "記事{{pages}}ページのうち{{trusted}}ページが信頼できる情報源（.gov、.edu、PubMed、WHO）へリンクしています。",
       "dead": "外部リンク{{count}}件が切れています",
@@ -7468,6 +7569,7 @@
       "open": "JSON-LDで修正",
       "title": "JSON-LDジェネレーター",
       "intro": "Organization、Person、ページをsameAsリンクでつないだグラフを作成します。内容を確認し、ページのheadに貼り付けてください。",
+      "conflict": "{{id}} の既存の {{property}} が提案と競合しています。エクスポート前に解決してください。",
       "close": "閉じる",
       "field": {
         "personName": "著者名",
@@ -7485,7 +7587,8 @@
         "missing-name": "著者名を入力してください。",
         "invalid-organization-url": "有効な発行者URLを入力してください（https://...）。",
         "invalid-page-url": "有効なページURLを入力してください（https://...）。",
-        "invalid-same-as": "有効なURLではないsameAsの項目は除外しました。"
+        "invalid-same-as": "有効なURLではないsameAsの項目は除外しました。",
+        "conflict": "{{id}} の既存の {{property}} が提案と競合しています。エクスポート前に解決してください。"
       },
       "preview": "生成されたJSON-LD",
       "copy": "scriptタグをコピー",
@@ -7736,7 +7839,20 @@
     "spent": "支出: {{value}}",
     "saved": "キャッシュとローカル実行の節約額: {{value}}",
     "hits": "キャッシュヒット: {{count}}",
-    "leaves": "ページ本文はこの端末の外の {{provider}} に送信されます。"
+    "leaves": "ページ本文はこの端末の外の {{provider}} に送信されます。",
+    "remaining": "残りの予算: {{value}}",
+    "storageUnavailable": "LLM予算または支出の保存領域が利用できないか無効です。",
+    "overBudget": "月間LLM予算を超過しました。",
+    "unknownCost": "{{count}}件の外部呼び出しは費用不明のため支出に含まれません。",
+    "selectProject": "LLM予算を編集するプロジェクトを選択してください。",
+    "budgetTitle": "プロジェクトLLM予算",
+    "noLimit": "月間上限なし",
+    "limitLabel": "月間上限 (USD)",
+    "warnLabel": "警告しきい値 (%)",
+    "saveBudget": "予算を保存",
+    "savedBudget": "LLM予算を保存しました。",
+    "invalidLimit": "0以上の有効な月間上限を入力してください。",
+    "invalidWarn": "警告しきい値は1から100の整数で指定してください。"
   },
   "templateGovernor": {
     "title": "プログラマティックテンプレートの品質",

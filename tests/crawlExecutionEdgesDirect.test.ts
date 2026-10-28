@@ -1,9 +1,11 @@
 import { beforeEach, expect, it, vi } from 'vitest';
 import { createCrawlExecutionActions } from '@/stores/tools/crawl/execution';
 import { useProjectStore } from '@/stores/projectStore';
+import { aioRProfile } from '@/services/aioReadiness';
 import { isolatedToolsSlice } from './fixtures/toolsSlice';
 import { createCrawlPageFixture, createCrawlResultFixture } from './fixtures/crawl';
-const result = createCrawlResultFixture({ pages: [createCrawlPageFixture()], pages_crawled: 1 });
+const nativeResult = createCrawlResultFixture({ pages: [createCrawlPageFixture()], pages_crawled: 1 });
+const result = { ...nativeResult, aio_profile: aioRProfile() };
 beforeEach(() => { localStorage.clear(); useProjectStore.setState({ activeProjectId: 'execution-edges' }); });
 
 it('runs without a project without persisting or notifying another project', async () => {
@@ -11,7 +13,7 @@ it('runs without a project without persisting or notifying another project', asy
   const saveCrawlRuns = vi.fn();
   const notifyCrawlCompleted = vi.fn();
   const { actions, store } = isolatedToolsSlice((set, get, services) => createCrawlExecutionActions(set, get, services),
-    { invoke: vi.fn().mockResolvedValue(result), saveCrawlRuns, notifyCrawlCompleted });
+    { invoke: vi.fn().mockResolvedValue(nativeResult), saveCrawlRuns, notifyCrawlCompleted });
   expect(await actions.startSiteCrawl('https://example.test/')).toEqual(result);
   expect(store.getState().crawlResult).toEqual(result);
   expect(saveCrawlRuns).not.toHaveBeenCalled();
@@ -21,7 +23,7 @@ it('runs without a project without persisting or notifying another project', asy
 it.each([new Error('save failure'), new DOMException('quota', 'QuotaExceededError'), 'unstructured save failure'])(
   'keeps a completed result inspectable when history save fails: %s', async error => {
     const { actions, store } = isolatedToolsSlice((set, get, services) => createCrawlExecutionActions(set, get, services),
-      { invoke: vi.fn().mockResolvedValue(result), saveCrawlRuns: vi.fn().mockRejectedValue(error), notifyCrawlCompleted: vi.fn() });
+      { invoke: vi.fn().mockResolvedValue(nativeResult), saveCrawlRuns: vi.fn().mockRejectedValue(error), notifyCrawlCompleted: vi.fn() });
     expect(await actions.startSiteCrawl('https://example.test/')).toEqual(result);
     expect(store.getState().crawlResult).toEqual(result);
     expect(store.getState().crawlPersistenceError).toBeTruthy();
@@ -45,7 +47,7 @@ it('ignores a failed old native run after switching projects', async () => {
 });
 
 it('uses the configured target and explicit agent when called without URL arguments', async () => {
-  const invoke = vi.fn().mockResolvedValue(result);
+  const invoke = vi.fn().mockResolvedValue(nativeResult);
   const { actions, store } = isolatedToolsSlice((set, get, services) => createCrawlExecutionActions(set, get, services),
     { invoke, saveCrawlRuns: vi.fn().mockResolvedValue({ prunedRuns: 0 }), notifyCrawlCompleted: vi.fn() });
   store.setState({ crawlUrl: ' https://example.test/configured ', crawlLimit: 15 });

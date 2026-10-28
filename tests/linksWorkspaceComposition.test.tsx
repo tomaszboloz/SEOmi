@@ -3,6 +3,7 @@ import { describe, expect, it, vi } from 'vitest';
 import { LinksWorkspace } from '@/components/Charts/semanticTopical/LinksWorkspace';
 import type { CrawledPageSummary } from '@/types';
 import { createCrawlPageFixture } from './fixtures/crawl';
+import { node } from './eeatTrustFixtures';
 
 const seen = vi.hoisted(() => ({ links: [] as unknown[], tracker: [] as unknown[] }));
 
@@ -38,14 +39,14 @@ describe('LinksWorkspace', () => {
   });
 
   it('passes the selected run and exposes real SPRS and EETV scores', () => {
-    const first = page('https://a/');
+    const first = { ...page('https://a/'), schema_references: node('$', { type: 'Article' }) };
     const second = { ...page('https://a/b'), links: [{ target_url: first.url, anchor_text: 'home', is_internal: true }] } as CrawledPageSummary;
     const selectedPages = [first, second];
     render(<LinksWorkspace projectId="p2" pages={selectedPages} run={{ id: 'run-2', startedAt: '2026-01-01T00:00:00Z', completedAt: '2026-01-01T00:01:00Z', result: { pages: selectedPages, cancelled: false } } as never} />);
     const props = seen.tracker.at(-1) as { crawlStartedAt: string; scoreFor: (task: { module: string; url: string }) => number | null };
     expect(props.crawlStartedAt).toBe('2026-01-01T00:00:00.000Z');
     expect(typeof props.scoreFor({ module: 'sprs', url: first.url })).toBe('number');
-    expect(typeof props.scoreFor({ module: 'eetv', url: first.url })).toBe('number');
+    expect(props.scoreFor({ module: 'eetv', url: first.url })).toBe(0);
   });
 
   it('defers scores and verification when the run is incomplete or not the pages snapshot', () => {
@@ -55,5 +56,12 @@ describe('LinksWorkspace', () => {
     const props = seen.tracker.at(-1) as { crawlStartedAt: string; scoreFor: (task: { module: string; url: string }) => number | null };
     expect(props.crawlStartedAt).toBe('unavailable');
     expect(props.scoreFor({ module: 'eetv', url: current.url })).toBeNull();
+  });
+
+  it('keeps a completed crawl without Trust evidence unavailable', () => {
+    const pages = [page('https://a/no-evidence')];
+    render(<LinksWorkspace projectId="unknown" pages={pages} run={{ id: 'unknown', startedAt: '2026-01-01T00:00:00Z', completedAt: '2026-01-01T00:01:00Z', result: { pages, cancelled: false } } as never} />);
+    const props = seen.tracker.at(-1) as { scoreFor: (task: { module: string; url: string }) => number | null };
+    expect(props.scoreFor({ module: 'eetv', url: pages[0].url })).toBeNull();
   });
 });

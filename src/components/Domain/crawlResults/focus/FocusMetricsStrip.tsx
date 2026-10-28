@@ -3,7 +3,8 @@ import { useTranslation } from 'react-i18next';
 import { HelpTip } from '@/components/Help/HelpTip';
 import type { HelpId } from '@/components/Help/helpTypes';
 import type { SiteFocusReport } from '@/services/siteFocus';
-import { CRITICAL_BELOW, ON_TOPIC_FROM, STRONG_FROM } from './focusHelpers';
+import { isBorderlineTrs } from '@/services/siteFocus/trsPolicy';
+import { CRITICAL_BELOW } from './focusHelpers';
 import { formatPct } from './focusText';
 
 const Metric = ({ label, value, help }: { label: string; value: ReactNode; help?: HelpId }) => (
@@ -26,7 +27,7 @@ export const FocusMetricsStrip = ({ report }: { report: SiteFocusReport }) => {
         <Metric label={t('focus.metrics.pages')} value={scored.length} />
         <Metric label={t('focus.metrics.skipped')} value={report.pages.length - scored.length} />
         <Metric label={t('focus.metrics.offTopic')} value={count((trs) => trs < CRITICAL_BELOW)} />
-        <Metric label={t('focus.metrics.borderline')} value={count((trs) => trs >= ON_TOPIC_FROM && trs < STRONG_FROM)} />
+        <Metric label={t('focus.metrics.borderline')} value={count(isBorderlineTrs)} />
       </dl>
     </section>
   );

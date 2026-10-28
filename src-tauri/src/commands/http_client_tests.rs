@@ -108,3 +108,19 @@ async fn check_link_executes_outer_transport_wrapper() {
     assert_eq!(result.status, 0);
     assert!(result.is_broken);
 }
+
+#[test]
+fn registry_url_allows_only_profile_paths_and_https_hosts() {
+    assert!(super::registry_url("https://orcid.org/0000-0002-1825-0097").is_ok());
+    assert!(super::registry_url("https://www.wikidata.org/entity/Q42").is_ok());
+    for url in [
+        "https://orcid.org/",
+        "https://orcid.org.evil.test/0000-0002-1825-0097",
+        "http://orcid.org/0000-0002-1825-0097",
+        "https://www.wikidata.org/wiki/Main_Page",
+        "https://www.wikidata.org/wiki/Q",
+        "https://www.wikidata.org/wiki/Q0",
+    ] {
+        assert!(super::registry_url(url).is_err(), "{url}");
+    }
+}

@@ -19,6 +19,10 @@ export interface RagSection {
   ordered_lists: number;
   unordered_lists: number;
   definition_lists: number;
+  /** Optional structural evidence retained by newer crawls. */
+  table_headers?: number;
+  ordered_list_instruction?: boolean;
+  list_item_word_counts?: number[];
 }
 
 export interface HeadingTexts {

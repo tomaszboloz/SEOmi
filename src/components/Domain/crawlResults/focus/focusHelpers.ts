@@ -1,11 +1,11 @@
 import type { PageFocus, SfsBand } from '@/services/siteFocus';
+import { isBorderlineTrs, OFF_TOPIC_BELOW, ON_TOPIC_FROM, STRONG_FROM } from '@/services/siteFocus/trsPolicy';
 
 export type FocusFilter = 'all' | 'critical' | 'borderline' | 'strong';
 export const FOCUS_FILTERS: FocusFilter[] = ['all', 'critical', 'borderline', 'strong'];
 
-export const CRITICAL_BELOW = 40;
-export const ON_TOPIC_FROM = 60;
-export const STRONG_FROM = 75;
+export const CRITICAL_BELOW = OFF_TOPIC_BELOW;
+export { ON_TOPIC_FROM, STRONG_FROM };
 
 export type Tone = 'green' | 'yellow' | 'red';
 
@@ -32,7 +32,7 @@ export const BAND_TEXT: Record<SfsBand, string> = {
 
 export const matchesFilter = (page: PageFocus, filter: FocusFilter): boolean => {
   if (filter === 'critical') return page.trs < CRITICAL_BELOW;
-  if (filter === 'borderline') return page.trs >= ON_TOPIC_FROM && page.trs < STRONG_FROM;
+  if (filter === 'borderline') return isBorderlineTrs(page.trs);
   if (filter === 'strong') return page.trs >= STRONG_FROM;
   return true;
 };

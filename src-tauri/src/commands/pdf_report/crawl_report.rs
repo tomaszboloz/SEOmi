@@ -35,6 +35,7 @@ mod sec_schema;
 mod sec_trust;
 mod strings;
 mod tables;
+mod trust_profile;
 mod trust_tables;
 
 #[cfg(test)]

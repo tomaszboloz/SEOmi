@@ -1,3 +1,4 @@
+import { serializeJsonLd } from '@/services/schemaGenerator/composition';
 import type { AuthorEntity, TrustReport, YmylCategory } from './types';
 
 export interface TrustJsonLdInput {
@@ -20,6 +21,9 @@ export interface TrustJsonLdInput {
 export type JsonLdIssue = 'missing-name' | 'invalid-organization-url' | 'invalid-page-url' | 'invalid-same-as';
 
 export interface TrustJsonLd { ok: boolean; graph: Record<string, unknown>; text: string; issues: JsonLdIssue[] }
+
+/** Single serializer shared with schema composition, so both exports escape the same way. */
+export const safeJsonLdText = serializeJsonLd;
 
 const web = (value: string | undefined): string | undefined => {
   try {
@@ -61,7 +65,7 @@ export const buildTrustJsonLd = (input: TrustJsonLdInput): TrustJsonLd => {
     dateModified: input.dateModified || undefined, lastReviewed: input.lastReviewed || undefined,
   };
   const graph = { '@context': 'https://schema.org', '@graph': [organization, person, webPage] };
-  const text = JSON.stringify(graph, null, 2);
+  const text = safeJsonLdText(graph);
   return { ok: issues.filter((issue) => issue !== 'invalid-same-as').length === 0, graph, text, issues };
 };
 

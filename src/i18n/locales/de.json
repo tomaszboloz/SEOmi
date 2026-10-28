@@ -3560,6 +3560,21 @@
       "chooseBaseRun": "Choose base run",
       "match": "Match",
       "preview": "Preview"
+    },
+    "spaShell": {
+      "summary": "Seiten, die wie eine nicht gerenderte JavaScript-Hülle aussehen: {{count}}",
+      "reasons": {
+        "next_data": "Next.js-Daten (__NEXT_DATA__)",
+        "nuxt_payload": "Nuxt-Payload (__NUXT__)",
+        "initial_state": "App-Zustand (__INITIAL_STATE__)",
+        "bundle_empty_root": "JS-Bundle mit leerem App-Container",
+        "unknown": "Grund nicht erfasst"
+      },
+      "reasonCount": "{{reason}}: {{count}}",
+      "payloadRead": "SEOmi hat bei {{count}} von {{total}} dieser Seiten Text aus dem Framework-Payload gelesen. Dieser Text stammt aus dem JS-Payload, nicht aus der gerenderten Seite.",
+      "noPayload": "SEOmi konnte bei keiner dieser Seiten Text aus einem Framework-Payload lesen.",
+      "showUrls": "Betroffene URLs anzeigen",
+      "payloadWords": "Wörter im JS-Payload: {{count}} (kein gerenderter Inhalt)"
     }
   },
   "ai": {
@@ -5031,14 +5046,38 @@
     "legacyNote": "This saved run included the brand in the question. It is not an unprompted visibility measurement."
   },
   "gscOpportunities": {
-    "title": "GSC opportunities",
-    "near": "Queries just beyond TOP10 (10–20)",
-    "ctr": "CTR below observed peers",
-    "empty": "No rows meet the evidence thresholds.",
-    "benchmark": "CTR {{actual}}% · peers {{expected}}% ({{count}} queries)",
-    "method": "Average position is a period metric. CTR uses other queries within ±1 position, at least 3 peers and 300 peer impressions. Signals require review; brand, intent and SERP features can differ.",
-    "aiOverview": "Google includes AI Overviews and AI Mode in total Web traffic. This report cannot separate their metrics.",
-    "source": "Google documentation"
+    "title": "GSC-Chancen",
+    "views": "Suchanfragenansichten",
+    "view": {
+      "all": "Alle Suchanfragen",
+      "near": "Suchanfragen 10–20",
+      "ctr": "CTR-Ausreißer"
+    },
+    "filterLabel": "Suchanfragen filtern",
+    "filterPlaceholder": "Enthält…",
+    "pageSize": "Zeilen pro Seite",
+    "sort": {
+      "query": "Suchanfrage",
+      "clicks": "Klicks",
+      "impressions": "Impressionen",
+      "ctr": "CTR",
+      "position": "Position",
+      "benchmark": "CTR-Benchmark"
+    },
+    "rows": "{{from}}–{{to}} von {{count}} angezeigt",
+    "previous": "Zurück",
+    "next": "Weiter",
+    "near": "Suchanfragen knapp hinter TOP10 (10–20)",
+    "ctr": "CTR unter beobachteten Vergleichswerten",
+    "empty": "Keine Zeilen erfüllen die Evidenzschwellen.",
+    "benchmark": "CTR {{actual}}% · Vergleichswerte {{expected}}% ({{count}} Suchanfragen)",
+    "method": "Die durchschnittliche Position ist eine Periodenkennzahl. Für die CTR werden andere Suchanfragen innerhalb von ±1 Position verwendet, mit mindestens 3 Vergleichssuchanfragen und 300 Impressionen. Die Signale müssen geprüft werden; Marke, Suchintention und SERP-Elemente können abweichen.",
+    "aiOverview": "Google zählt AI Overviews und AI Mode zum gesamten Web-Traffic. Dieser Bericht kann ihre Kennzahlen nicht getrennt ausweisen.",
+    "source": "Google-Dokumentation",
+    "truncatedWarning": "Die Suchanfragenliste kann aufgrund von Berichtslimits unvollständig sein. Eine fehlende Suchanfrage bedeutet nicht, dass Sichtbarkeit verloren ging.",
+    "clear": "Textfilter löschen",
+    "noMatches": "Keine Suchanfrage enthält diesen Text.",
+    "noQueries": "Dieser Bericht enthält keine verfügbaren Suchanfragen."
   },
   "gscCannibalization": {
     "title": "Mögliche Keyword-Kannibalisierung",
@@ -5889,7 +5928,7 @@
         "nScored": "von {{0}} gecrawlten",
         "nSkipped": "Nicht bewertet",
         "nOffTopic": "TRS unter 40",
-        "nBorderline": "TRS 60-74",
+        "nBorderline": "TRS 40-74",
         "nStrong": "TRS 75 oder mehr",
         "percent": "{{0}} %",
         "coreBadge": "KERNTHEMA",
@@ -6063,15 +6102,25 @@
           "no-answer-first": "Keine direkte Antwort am Anfang",
           "filler-opening": "Füllende Einleitung",
           "no-facts": "Keine konkreten Fakten",
-          "too-long": "Zu lang für einen Chunk"
-        }
+          "too-long": "Zu lang für einen Chunk",
+          "deictic-context": "Kontextabhängiger Verweis",
+          "no-entity": "Themenbezug fehlt"
+        },
+        "profile": "Berechnungsprofil: {{0}} / {{1}} / {{2}} / {{3}} / {{4}}",
+        "profilePersisted": "Das Profil entspricht dem gespeicherten Crawl.",
+        "profileLegacy": "Dieser Crawl hat kein gespeichertes Profil. Die Werte wurden mit dem angezeigten Profil neu berechnet und sind nicht mit historischen Werten vergleichbar.",
+        "profileMismatch": "Das gespeicherte Profil weicht ab. Die Werte wurden mit dem angezeigten Profil neu berechnet und sind nicht mit historischen Werten vergleichbar.",
+        "historicalProfile": "Gespeichertes Profil: {{0}} / {{1}}."
       },
       "trust": {
         "title": "Entitätsvertrauen (E-E-A-T)",
         "intro": "Wie gut sich Herausgeber, Autoren und Quellen der Website überprüfen lassen. Die Werte stammen aus dem gespeicherten Lauf; keine Seite wird erneut abgerufen.",
         "scoreTitle": "Entitäts-Vertrauenswert",
         "legend": "Stufen: 75-100 stark, 60-74 ausreichend, 40-59 schwach, 0-39 kritisch.",
+        "profile": "EETV-Profil {{0}} (Version {{1}})",
+        "coverage": "Evidenzabdeckung",
         "kSchema": "Entitätsgraph",
+        "kSameAs": "Identitätsdeklarationen",
         "kAuthor": "Themenpassung Autor",
         "kCitation": "Quellenqualität",
         "kTransparency": "Transparenz",
@@ -6141,7 +6190,14 @@
           "no-articles": "Es wurden keine Artikelseiten erkannt; die Ebenen Autoren und Quellenangaben wurden nicht bewertet.",
           "author-invalid-profile": "{{0}} Autoren verlinken ein ORCID- oder Wikidata-Profil mit ungültiger Kennung ({{1}}). Prüfsumme oder Q-ID kontrollieren.",
           "ymyl-no-scholarly-ids": "Keiner der {{0}} Artikel zitiert eine Quelle mit DOI, PMID oder PMCID. Bei YMYL-Themen die Primärstudie zitieren."
-        }
+        },
+        "colProfile": "Profilnachweis",
+        "tClaims": "Belege für Aussagen",
+        "claimsIntro": "Zuordnungen von Aussagen zu Quellen; Wortähnlichkeit ist keine Verifizierung.",
+        "colClaim": "Aussage",
+        "colEvidence": "Beleg",
+        "colRelation": "Beziehung",
+        "colChecked": "Manuell geprüft"
       },
       "offPage": {
         "title": "Offpage-Analyse",
@@ -6266,6 +6322,13 @@
         "why": "Pages with very little text give search engines little to understand, which is called thin content. Long is not automatically better, though: the page must fully answer what the visitor came for.",
         "action": "Under 300 words: ask yourself whether the page really answers the question. Add useful detail if not.\n300 to 1000 words: normal for most service and product pages.\nOver 1500 words: typical for in-depth guides; make sure headings split it into scannable sections.\nCompare with the top Google results for your keyword, not with a magic number.",
         "example": "A product page with 80 words usually loses to competitors who explain materials, sizes, shipping and returns in 400 words."
+      },
+      "jsShell": {
+        "title": "Verdacht auf JavaScript-Hülle",
+        "what": "Das statische HTML dieser Seiten enthält fast keinen Text, lädt aber eine JavaScript-App (zum Beispiel Next.js oder Nuxt). Der eigentliche Inhalt erscheint erst, wenn der Browser die Skripte ausführt.",
+        "why": "SEOmi analysiert diese Seiten anhand des rohen HTML. Wortanzahl, Begriffe, Inhaltsprüfungen und Scores können für sie zu niedrig sein. Aus einem Framework-Payload gelesener Text wird separat angezeigt und nicht als Seiteninhalt gezählt.",
+        "action": "Führe den Crawl erneut im gerenderten Modus (JavaScript) aus, um den Inhalt zu sehen, den Nutzer erhalten.\nPrüfe, ob Suchmaschinen den Inhalt ohne JavaScript erhalten (serverseitiges Rendering oder Prerendering).\nBewerte Inhalts-Scores dieser Seiten mit Vorsicht.",
+        "example": "Eine Next.js-Seite mit leerem <div id=\"__next\"></div> und einem __NEXT_DATA__-Skript hat im statischen HTML 12 Wörter."
       }
     },
     "metadata": {
@@ -6353,7 +6416,7 @@
         "title": "Anteil themenrelevanter Seiten",
         "what": "Der Anteil der Inhaltsseiten mit einem TRS von 60 oder höher. Technische Seiten wie Login oder Warenkorb werden nicht mitgezählt.",
         "why": "Er zeigt, wie viele Seiten das Kernthema stützen, nicht wie hoch der gewichtete Wert ist.",
-        "action": "Steigere ihn, indem du Grenzfall-Seiten (60-74 und darunter) verbesserst und themenfremde entfernst.",
+        "action": "Steigere ihn, indem du Grenzfall-Seiten (40-74) verbesserst und themenfremde entfernst.",
         "example": "42 von 50 Inhaltsseiten haben einen TRS von 60 oder mehr: Der Anteil beträgt 84 Prozent."
       },
       "semanticSimilarity": {
@@ -6809,7 +6872,7 @@
       "pages": "Bewertete Seiten",
       "skipped": "Übersprungene Seiten",
       "offTopic": "Seiten abseits des Themas (TRS unter 40)",
-      "borderline": "Grenzfall-Seiten (60-74)"
+      "borderline": "Grenzfall-Seiten (40-74)"
     },
     "heatmap": {
       "title": "Themenverteilung",
@@ -6819,7 +6882,7 @@
       "filter": {
         "all": "Alle ({{count}})",
         "critical": "Kritisch <40 ({{count}})",
-        "borderline": "Grenzfall 60-74 ({{count}})",
+        "borderline": "Grenzfall 40-74 ({{count}})",
         "strong": "Stark >=75 ({{count}})"
       },
       "filtersAria": "Seiten nach Relevanz filtern",
@@ -7352,11 +7415,34 @@
       "title": "Schwächste Textstellen",
       "intro": "Simulierte RAG-Chunks, die sich am schwersten zitieren lassen. Beheben Sie zuerst die genannten Probleme.",
       "chunk": "Chunk {{n}} · {{tokens}} Tokens · Wert {{score}}",
+      "offset": "Quellzeichen {{start}}–{{end}}",
+      "offsetUnavailable": "Quellposition nicht verfügbar",
+      "evidence": "Nachweise",
+      "score": "Bewertung",
+      "answerFirst": "Antwort zuerst",
+      "spans": "Erkannte Bereiche",
+      "notApplicable": "k. A.",
+      "notAvailable": "unbekannt",
+      "invalidSpan": "Ungültiger Bereich (nicht hervorgehoben)",
+      "invalidSpanCount": "Nicht hervorgehobene ungültige Bereiche: {{count}}.",
+      "cancel": "Abbrechen",
+      "export": "Entwurf exportieren",
+      "approve": "Für Brief freigeben",
+      "approved": "Für Brief freigegeben",
+      "diff": "Geänderte Zeilen anzeigen",
+      "scoreChange": "Profiländerung: {{delta}}",
+      "beforeAfter": "Vorher {{before}} · nachher {{after}}",
+      "facts": "Fakten: {{before}} → {{after}}",
+      "spoRelations": "Erkannte SPO-Beziehungen",
+      "partialProfile": "Teilprofil: Sprach- oder Ankerdaten sind unvollständig; die Änderung vorher/nachher ist keine vollständige Bewertung.",
+      "preservationWarning": "Prüfung erforderlich: Diese Quell-Token fehlen nach der Umschreibung: {{missing}}",
+      "unverified": "Der KI-Vorschlag ist nicht verifiziert. Die Freigabe erfolgt manuell; nichts wird im CMS veröffentlicht.",
       "noHeading": "(Einleitung ohne Überschrift)",
       "current": "Aktuelle Textstelle",
       "optimized": "Optimierte Textstelle",
       "generate": "Mit KI umschreiben",
       "generating": "Wird umgeschrieben…",
+      "cancelled": "Umschreibung abgebrochen.",
       "copy": "Kopieren",
       "copied": "Kopiert",
       "noKey": "Verbinden Sie in den Einstellungen einen KI-Anbieter, um Textstellen umzuschreiben.",
@@ -7366,6 +7452,8 @@
     },
     "issue": {
       "dangling-pronoun": "Unklarer Bezug",
+      "deictic-context": "Kontextabhängiger Verweis",
+      "no-entity": "Subjekt oder Entität nicht benannt",
       "no-answer-first": "Keine direkte Antwort am Anfang",
       "filler-opening": "Füllende Einleitung",
       "no-facts": "Keine konkreten Fakten",
@@ -7384,6 +7472,8 @@
     "hero": {
       "label": "Entitäts-Vertrauenswert",
       "articles": "{{articles}} Artikelseiten unter {{pages}} gecrawlten Seiten",
+      "profile": "Profil {{profile}} · Version {{version}}",
+      "coverage": "Evidenzabdeckung: beobachtet / deklariert / verifiziert / unbekannt",
       "previous": "Vorheriger Lauf: {{score}} ({{delta}})",
       "ymyl": "YMYL-Kategorie: {{category}}. Suchmaschinen legen an diese Seiten den strengsten Vertrauensmaßstab an.",
       "unattributed": "{{pct}} % der Artikel haben keinen namentlich genannten Autor oder Prüfer."
@@ -7402,6 +7492,7 @@
     "layers": {
       "title": "Vertrauensebenen",
       "schemaGraph": "Entitätsgraph (JSON-LD)",
+      "sameAs": "Identitätsdeklarationen (sameAs)",
       "authorAlignment": "Themenpassung der Autoren",
       "citationQuality": "Quellenqualität",
       "transparency": "Redaktionelle Transparenz",
@@ -7417,9 +7508,19 @@
       "colArticles": "Artikel",
       "colSameAs": "sameAs-Links",
       "colAlignment": "Themenpassung",
-      "generic": "anonyme Autorenzeile"
+      "generic": "anonyme Autorenzeile",
+      "identityEvidence": "Identitätsnachweis",
+      "unavailableNote": "Kein Profil angegeben; nicht verfügbar bedeutet nicht fiktiv.",
+      "verifyProfiles": "Profile prüfen",
+      "roleReviewer": "Prüfer",
+      "rolePublisher": "Herausgeber",
+      "roleEvidence": "{{name}} ({{role}}) · {{status}} · sameAs-Angabe {{recall}}%",
+      "roleRecall": "Rollengewichtete sameAs-Angabe: {{pct}}% (Autor 50 %, Prüfer 25 %, Herausgeber 25 %; vorgeschlagene Gewichte, ein Angabesignal, keine Identitätsprüfung)."
     },
     "signals": {
+      "claimEvidence": "Belege für Aussagen",
+      "unbacked": "unbelegt",
+      "associationNote": "Ein Zusammenhang ist kein Beleg; Überschneidung setzt sourceChecked nicht.",
       "title": "Quellen und Transparenz",
       "citations": "{{trusted}} von {{pages}} Artikelseiten verlinken auf eine vertrauenswürdige Quelle (.gov, .edu, PubMed, WHO).",
       "dead": "{{count}} ausgehende Links sind defekt",
@@ -7468,6 +7569,7 @@
       "open": "Mit JSON-LD beheben",
       "title": "JSON-LD-Generator",
       "intro": "Erzeugt einen Graphen aus Organization, Person und Seite mit sameAs-Links. Prüfe ihn und füge ihn in den Head der Seite ein.",
+      "conflict": "Das vorhandene Feld {{property}} für {{id}} widerspricht dem Vorschlag. Vor dem Export muss der Konflikt gelöst werden.",
       "close": "Schließen",
       "field": {
         "personName": "Name des Autors",
@@ -7485,7 +7587,8 @@
         "missing-name": "Gib den Namen des Autors ein.",
         "invalid-organization-url": "Gib eine gültige Herausgeber-URL ein (https://...).",
         "invalid-page-url": "Gib eine gültige Seiten-URL ein (https://...).",
-        "invalid-same-as": "Einige sameAs-Einträge sind keine gültigen URLs und wurden weggelassen."
+        "invalid-same-as": "Einige sameAs-Einträge sind keine gültigen URLs und wurden weggelassen.",
+        "conflict": "Das vorhandene Feld {{property}} für {{id}} widerspricht dem Vorschlag. Vor dem Export muss der Konflikt gelöst werden."
       },
       "preview": "Erzeugtes JSON-LD",
       "copy": "Script-Tag kopieren",
@@ -7736,7 +7839,20 @@
     "spent": "Ausgegeben: {{value}}",
     "saved": "Gespart durch Cache und lokale Läufe: {{value}}",
     "hits": "Cache-Treffer: {{count}}",
-    "leaves": "Der Seitentext wird von diesem Gerät an {{provider}} gesendet."
+    "leaves": "Der Seitentext wird von diesem Gerät an {{provider}} gesendet.",
+    "remaining": "Verbleibendes Budget: {{value}}",
+    "storageUnavailable": "Der Speicher für LLM-Budget oder Ausgaben ist nicht verfügbar oder ungültig.",
+    "overBudget": "Monatliches LLM-Budget überschritten.",
+    "unknownCost": "{{count}} externe Aufrufe haben unbekannte Kosten und sind nicht enthalten.",
+    "selectProject": "Projekt für das LLM-Budget auswählen.",
+    "budgetTitle": "LLM-Projektbudget",
+    "noLimit": "Kein Monatslimit",
+    "limitLabel": "Monatslimit (USD)",
+    "warnLabel": "Warnung ab (%)",
+    "saveBudget": "Budget speichern",
+    "savedBudget": "LLM-Budget gespeichert.",
+    "invalidLimit": "Gültiges nichtnegatives Monatslimit eingeben.",
+    "invalidWarn": "Schwelle muss eine ganze Zahl von 1 bis 100 sein."
   },
   "templateGovernor": {
     "title": "Qualität programmatischer Templates",

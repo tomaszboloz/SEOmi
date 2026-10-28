@@ -47,8 +47,17 @@ pub fn kpis(trust: &Value) -> Vec<Kpi> {
             color: value.map_or(MUTED, |v| level_color(level_of(v))),
         }
     };
+    let mut schema = item(t(k::K_SCHEMA), "schema_graph");
+    if let Some(value) = layer(trust, "same_as") {
+        schema.note = format!(
+            "{}; {} {}",
+            schema.note,
+            t(k::K_SAME_AS),
+            arg(Some(&Value::from(value)))
+        );
+    }
     vec![
-        item(t(k::K_SCHEMA), "schema_graph"),
+        schema,
         item(t(k::K_AUTHOR), "author_alignment"),
         item(t(k::K_CITATION), "citation_quality"),
         item(t(k::K_TRANSPARENCY), "transparency"),
@@ -95,6 +104,9 @@ impl Doc {
             t(k::LEGEND),
         );
         self.kpi_grid(&kpis(trust));
+        for note in super::trust_profile::notes(trust) {
+            self.paragraph(MARGIN, CONTENT_W, Style::CAPTION, &note);
+        }
         if let Some(category) = trust.get("ymyl").and_then(Value::as_str) {
             let note = tf(
                 t(k::YMYL_NOTE),
@@ -109,6 +121,9 @@ impl Doc {
         self.data_table(&tables::findings(trust));
         if !list(trust, "authors").is_empty() {
             self.data_table(&tables::authors(trust));
+        }
+        if !list(trust, "claims").is_empty() {
+            self.data_table(&tables::claims(trust));
         }
         self.data_table(&tables::pages(trust));
     }

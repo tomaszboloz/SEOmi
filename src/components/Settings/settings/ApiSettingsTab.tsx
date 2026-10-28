@@ -3,9 +3,10 @@ import { useTranslation } from 'react-i18next';
 import { Loader2 } from 'lucide-react';
 import { useAuthStore } from '@/stores/authStore';
 import { useSettingsStore } from '@/stores/settingsStore';
+import { useProjectStore } from '@/stores/projectStore';
 import { DataForSeoBudgetSettings } from '@/components/DataForSEO/cost/DataForSeoBudgetSettings';
 import { LlmEconomyPanel } from '@/components/AI/LlmEconomyPanel';
-import { summarizeUsage } from '@/services/llmEconomy';
+import { LlmEconomyBudgetSettings } from '@/components/AI/LlmEconomyBudgetSettings';
 import { SecretKeyField } from '@/components/Auth/SecretKeyField';
 
 interface ApiSettingsTabProps {
@@ -32,8 +33,10 @@ export const ApiSettingsTab: React.FC<ApiSettingsTabProps> = ({
 }) => {
   const { t } = useTranslation();
   const apiKeys = useAuthStore((s) => s.apiKeys);
+  const activeProvider = useAuthStore((s) => s.provider);
   const secureStorageError = useSettingsStore((s) => s.secureStorageError);
   const isSaving = useSettingsStore((s) => s.isSaving);
+  const activeProjectId = useProjectStore((s) => s.activeProjectId);
   const dataForSeoStored = useSettingsStore((s) => s.dataForSeoCredentials);
   const googleKeyStored = useSettingsStore((s) => s.googleMetricsApiKey);
   // Stored values never reach this form; the placeholder says one exists instead of looking empty.
@@ -85,8 +88,9 @@ export const ApiSettingsTab: React.FC<ApiSettingsTabProps> = ({
         </div>
       </div>
 
-      {/* No usage ledger is persisted yet: the panel shows its empty state, never estimated cost. */}
-      <LlmEconomyPanel summary={summarizeUsage([], null)} providerId="" />
+      {/* Live project LLM ledger: shows live usage or empty state, never fictitious costs. */}
+      <LlmEconomyBudgetSettings />
+      <LlmEconomyPanel projectId={activeProjectId} providerId={activeProjectId ? activeProvider : ''} />
 
       {secureStorageError &&<p role="alert" className="text-[11px] leading-4 text-rose-300">{secureStorageError}</p>}
       <button type="button" onClick={handleSaveGeneral} disabled={isSaving} aria-busy={isSaving} className="w-full h-9 bg-emerald-600 hover:bg-emerald-500 text-white rounded-lg font-semibold transition disabled:cursor-not-allowed disabled:opacity-60">

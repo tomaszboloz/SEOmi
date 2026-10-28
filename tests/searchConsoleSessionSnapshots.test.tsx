@@ -27,7 +27,7 @@ describe('useSearchConsoleSession snapshots', () => {
     act(() => {
       useProjectStore.setState({ activeProjectId: 'p1' });
       useToolsStore.setState({
-        gscClientId: '', isGscConnected: true, gscProperty: SITE, gscData: null, gscFilters: {},
+        gscHydratedProjectId: 'p1', gscClientId: '', isGscConnected: true, gscProperty: SITE, gscData: null, gscFilters: {},
       } as never);
     });
   });

@@ -2,6 +2,7 @@ import { afterEach, beforeEach, expect, it, vi } from 'vitest';
 import { createCrawlExecutionActions } from '@/stores/tools/crawl/execution';
 import { useProjectStore } from '@/stores/projectStore';
 import { useSettingsStore } from '@/stores/settingsStore';
+import { aioRProfile } from '@/services/aioReadiness';
 import { isolatedToolsSlice } from './fixtures/toolsSlice';
 import { createCrawlPageFixture, createCrawlResultFixture, createCrawlRunFixture } from './fixtures/crawl';
 const original = useSettingsStore.getState();
@@ -11,8 +12,9 @@ afterEach(() => { vi.restoreAllMocks(); useSettingsStore.setState(original); });
 it('keeps execution-only resume arrays out of durable history and uses app request settings', async () => {
   useSettingsStore.setState({ config: { ...original.config, default_user_agent: 'fixture-agent', request_timeout_secs: 12,
     max_redirects: 7, verify_ssl: false } });
-  const result = createCrawlResultFixture({ pages_crawled: 1, pages: [createCrawlPageFixture()] });
-  const invoke = vi.fn().mockResolvedValue(result);
+  const nativeResult = createCrawlResultFixture({ pages_crawled: 1, pages: [createCrawlPageFixture()] });
+  const result = { ...nativeResult, aio_profile: aioRProfile() };
+  const invoke = vi.fn().mockResolvedValue(nativeResult);
   const saveCrawlRuns = vi.fn().mockResolvedValue({ prunedRuns: 0 });
   const notifyCrawlCompleted = vi.fn();
   const { actions, store } = isolatedToolsSlice((set, get, services) => createCrawlExecutionActions(set, get, services),

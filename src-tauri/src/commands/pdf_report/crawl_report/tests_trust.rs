@@ -10,6 +10,8 @@ use std::collections::HashSet;
 fn trust() -> Value {
     json!({
         "score": 58, "level": "weak", "ymyl": "health", "ymyl_unattributed_pct": 40,
+        "profile_version": 2, "profile_id": "eetv-5-layer-v2",
+        "coverage": {"schema_graph": {"observed": 100, "declared": 80, "verified": 0, "unknown": 20}},
         "article_count": 20, "page_count": 30,
         "layers": {"schema_graph": 70, "author_alignment": null, "citation_quality": 30, "transparency": 45},
         "organization": {"present": true, "has_id": true, "same_as": 0},
@@ -62,6 +64,8 @@ fn trust_section_shows_score_layers_findings_authors_and_pages() {
         "Entity Trust Score",
         "Weak trust",
         "Entity graph",
+        "EETV profile eetv-5-layer-v2 (version 2)",
+        "Evidence coverage",
         "No data in this crawl",
         "Source quality",
         "Author entities",

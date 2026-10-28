@@ -3560,6 +3560,21 @@
       "chooseBaseRun": "Choose base run",
       "match": "Match",
       "preview": "Preview"
+    },
+    "spaShell": {
+      "summary": "렌더링되지 않은 JavaScript 셸로 보이는 페이지: {{count}}",
+      "reasons": {
+        "next_data": "Next.js 데이터 (__NEXT_DATA__)",
+        "nuxt_payload": "Nuxt 페이로드 (__NUXT__)",
+        "initial_state": "앱 상태 (__INITIAL_STATE__)",
+        "bundle_empty_root": "앱 루트가 비어 있는 JS 번들",
+        "unknown": "이유가 기록되지 않음"
+      },
+      "reasonCount": "{{reason}}: {{count}}",
+      "payloadRead": "SEOmi는 이 중 {{total}}개 페이지 가운데 {{count}}개에서 프레임워크 페이로드의 텍스트를 읽었습니다. 이 텍스트는 렌더링된 페이지가 아니라 JS 페이로드에서 온 것입니다.",
+      "noPayload": "SEOmi는 이 페이지들 중 어느 곳에서도 프레임워크 페이로드의 텍스트를 읽지 못했습니다.",
+      "showUrls": "해당 URL 보기",
+      "payloadWords": "JS 페이로드 단어 수: {{count}} (렌더링된 콘텐츠 아님)"
     }
   },
   "ai": {
@@ -5031,14 +5046,38 @@
     "legacyNote": "This saved run included the brand in the question. It is not an unprompted visibility measurement."
   },
   "gscOpportunities": {
-    "title": "GSC opportunities",
-    "near": "Queries just beyond TOP10 (10–20)",
-    "ctr": "CTR below observed peers",
-    "empty": "No rows meet the evidence thresholds.",
-    "benchmark": "CTR {{actual}}% · peers {{expected}}% ({{count}} queries)",
-    "method": "Average position is a period metric. CTR uses other queries within ±1 position, at least 3 peers and 300 peer impressions. Signals require review; brand, intent and SERP features can differ.",
-    "aiOverview": "Google includes AI Overviews and AI Mode in total Web traffic. This report cannot separate their metrics.",
-    "source": "Google documentation"
+    "title": "GSC 기회",
+    "views": "검색어 보기",
+    "view": {
+      "all": "모든 검색어",
+      "near": "검색어 10–20",
+      "ctr": "CTR 이상치"
+    },
+    "filterLabel": "검색어 필터",
+    "filterPlaceholder": "포함…",
+    "pageSize": "페이지당 행",
+    "sort": {
+      "query": "검색어",
+      "clicks": "클릭수",
+      "impressions": "노출수",
+      "ctr": "CTR",
+      "position": "순위",
+      "benchmark": "CTR 기준"
+    },
+    "rows": "{{count}}개 중 {{from}}–{{to}} 표시",
+    "previous": "이전",
+    "next": "다음",
+    "near": "TOP10 바로 다음의 검색어 (10–20위)",
+    "ctr": "관측된 비교 검색어보다 CTR이 낮은 검색어",
+    "empty": "증거 기준을 충족하는 행이 없습니다.",
+    "benchmark": "CTR {{actual}}% · 비교 검색어 {{expected}}% (검색어 {{count}}개)",
+    "method": "평균 순위는 기간 단위 지표입니다. CTR은 순위 ±1 이내의 다른 검색어를 사용하며, 비교 검색어가 최소 3개이고 노출수가 300 이상이어야 합니다. 신호는 검토가 필요하며 브랜드, 검색 의도, SERP 기능에 따라 달라질 수 있습니다.",
+    "aiOverview": "Google은 AI Overviews와 AI Mode를 전체 웹 트래픽에 포함합니다. 이 보고서에서는 해당 지표를 분리할 수 없습니다.",
+    "source": "Google 문서",
+    "truncatedWarning": "보고서 제한으로 검색어 목록이 불완전할 수 있습니다. 검색어가 없다고 해서 노출이 사라진 것은 아닙니다.",
+    "clear": "텍스트 필터 지우기",
+    "noMatches": "이 텍스트를 포함하는 검색어가 없습니다.",
+    "noQueries": "이 보고서에는 사용 가능한 검색어가 없습니다."
   },
   "gscCannibalization": {
     "title": "검색어 경쟁 가능성",
@@ -5889,7 +5928,7 @@
         "nScored": "크롤링된 {{0}}개 중",
         "nSkipped": "점수 미산정",
         "nOffTopic": "TRS 40 미만",
-        "nBorderline": "TRS 60-74",
+        "nBorderline": "TRS 40-74",
         "nStrong": "TRS 75 이상",
         "percent": "{{0}}%",
         "coreBadge": "핵심 주제",
@@ -6063,15 +6102,25 @@
           "no-answer-first": "처음에 직접적인 답이 없음",
           "filler-opening": "군더더기 도입",
           "no-facts": "구체적인 사실 없음",
-          "too-long": "청크 하나에 담기엔 너무 김"
-        }
+          "too-long": "청크 하나에 담기엔 너무 김",
+          "deictic-context": "문맥에 의존하는 지시 표현",
+          "no-entity": "주제에 대한 언급 없음"
+        },
+        "profile": "계산 프로필: {{0}} / {{1}} / {{2}} / {{3}} / {{4}}",
+        "profilePersisted": "저장된 크롤링의 프로필과 일치합니다.",
+        "profileLegacy": "이 크롤링에는 저장된 프로필이 없습니다. 표시된 프로필로 다시 계산한 결과이므로 과거 결과와 비교할 수 없습니다.",
+        "profileMismatch": "저장된 프로필이 다릅니다. 표시된 프로필로 다시 계산한 결과이므로 과거 결과와 비교할 수 없습니다.",
+        "historicalProfile": "저장된 프로필: {{0}} / {{1}}."
       },
       "trust": {
         "title": "엔터티 신뢰도 (E-E-A-T)",
         "intro": "사이트의 발행자, 저자, 출처를 얼마나 확인할 수 있는지 보여 줍니다. 점수는 저장된 실행 결과에서 가져오며 페이지를 다시 가져오지 않습니다.",
         "scoreTitle": "엔터티 신뢰 점수",
         "legend": "수준: 75-100 높음, 60-74 충분, 40-59 낮음, 0-39 심각.",
+        "profile": "EETV 프로필 {{0}} (버전 {{1}})",
+        "coverage": "증거 범위",
         "kSchema": "엔터티 그래프",
+        "kSameAs": "신원 선언",
         "kAuthor": "저자 적합도",
         "kCitation": "출처 품질",
         "kTransparency": "투명성",
@@ -6141,7 +6190,14 @@
           "no-articles": "문서 페이지가 감지되지 않아 저자 및 인용 계층은 점수를 매기지 않았습니다.",
           "author-invalid-profile": "{{0}}명의 저자가 유효하지 않은 식별자의 ORCID 또는 Wikidata 프로필을 연결했습니다({{1}}). 체크섬 또는 Q-ID를 확인하세요.",
           "ymyl-no-scholarly-ids": "{{0}}개 문서 중 DOI, PMID, PMCID가 있는 출처를 인용한 문서가 없습니다. YMYL 주제에서는 1차 연구를 인용하세요."
-        }
+        },
+        "colProfile": "프로필 근거",
+        "tClaims": "주장 근거",
+        "claimsIntro": "주장과 인용의 연결입니다. 어휘 중복은 검증이 아닙니다.",
+        "colClaim": "주장",
+        "colEvidence": "근거",
+        "colRelation": "관계",
+        "colChecked": "수동 확인"
       },
       "offPage": {
         "title": "오프페이지 분석",
@@ -6266,6 +6322,13 @@
         "why": "Pages with very little text give search engines little to understand, which is called thin content. Long is not automatically better, though: the page must fully answer what the visitor came for.",
         "action": "Under 300 words: ask yourself whether the page really answers the question. Add useful detail if not.\n300 to 1000 words: normal for most service and product pages.\nOver 1500 words: typical for in-depth guides; make sure headings split it into scannable sections.\nCompare with the top Google results for your keyword, not with a magic number.",
         "example": "A product page with 80 words usually loses to competitors who explain materials, sizes, shipping and returns in 400 words."
+      },
+      "jsShell": {
+        "title": "JavaScript 셸 의심",
+        "what": "이 페이지들의 정적 HTML에는 텍스트가 거의 없지만 JavaScript 앱(예: Next.js 또는 Nuxt)을 불러옵니다. 실제 콘텐츠는 브라우저가 스크립트를 실행한 뒤에만 나타납니다.",
+        "why": "SEOmi는 이 페이지들을 원본 HTML로 분석합니다. 단어 수, 용어, 콘텐츠 검사와 점수가 실제보다 낮을 수 있습니다. 프레임워크 페이로드에서 읽은 텍스트는 따로 표시되며 페이지 콘텐츠로 계산되지 않습니다.",
+        "action": "사용자가 받는 콘텐츠를 보려면 렌더링(JavaScript) 모드로 크롤링을 다시 실행하세요.\n검색 엔진이 JavaScript 없이 콘텐츠를 받는지 확인하세요(서버 측 렌더링 또는 사전 렌더링).\n이 페이지들의 콘텐츠 점수는 신중하게 해석하세요.",
+        "example": "빈 <div id=\"__next\"></div>와 __NEXT_DATA__ 스크립트가 있는 Next.js 페이지는 정적 HTML의 단어 수가 12개입니다."
       }
     },
     "metadata": {
@@ -6353,7 +6416,7 @@
         "title": "On-topic Ratio",
         "what": "TRS가 60 이상인 콘텐츠 페이지의 비율입니다. 로그인이나 장바구니 같은 기술 페이지는 포함되지 않습니다.",
         "why": "가중 점수가 아니라 핵심 주제를 뒷받침하는 페이지가 몇 개인지 알려줍니다.",
-        "action": "경계선 페이지(60-74 이하)를 개선하고 주제에서 벗어난 페이지를 제거해 비율을 높이세요.",
+        "action": "경계선 페이지(40-74)를 개선하고 주제에서 벗어난 페이지를 제거해 비율을 높이세요.",
         "example": "콘텐츠 페이지 50개 중 42개의 TRS가 60 이상이면 비율은 84퍼센트입니다."
       },
       "semanticSimilarity": {
@@ -6809,7 +6872,7 @@
       "pages": "점수가 매겨진 페이지",
       "skipped": "건너뛴 페이지",
       "offTopic": "주제에서 벗어난 페이지(TRS 40 미만)",
-      "borderline": "경계선 페이지(60-74)"
+      "borderline": "경계선 페이지(40-74)"
     },
     "heatmap": {
       "title": "주제 분포",
@@ -6819,7 +6882,7 @@
       "filter": {
         "all": "전체({{count}})",
         "critical": "심각 <40({{count}})",
-        "borderline": "경계선 60-74({{count}})",
+        "borderline": "경계선 40-74({{count}})",
         "strong": "우수 >=75({{count}})"
       },
       "filtersAria": "관련성별로 페이지 필터링",
@@ -7352,11 +7415,34 @@
       "title": "가장 약한 문단",
       "intro": "인용하기 가장 어려운 RAG 청크를 시뮬레이션한 결과입니다. 표시된 문제부터 고치세요.",
       "chunk": "청크 {{n}} · 토큰 {{tokens}}개 · 점수 {{score}}",
+      "offset": "소스 문자 {{start}}–{{end}}",
+      "offsetUnavailable": "소스 오프셋을 사용할 수 없음",
+      "evidence": "근거",
+      "score": "점수",
+      "answerFirst": "첫 답변",
+      "spans": "감지된 범위",
+      "notApplicable": "해당 없음",
+      "notAvailable": "알 수 없음",
+      "invalidSpan": "잘못된 범위(강조 표시 안 함)",
+      "invalidSpanCount": "강조 표시하지 않은 잘못된 범위: {{count}}개.",
+      "cancel": "취소",
+      "export": "초안 내보내기",
+      "approve": "브리프에 승인",
+      "approved": "브리프에 승인됨",
+      "diff": "변경된 줄 표시",
+      "scoreChange": "프로필 변화: {{delta}}",
+      "beforeAfter": "이전 {{before}} · 이후 {{after}}",
+      "facts": "사실: {{before}} → {{after}}",
+      "spoRelations": "감지된 SPO 관계",
+      "partialProfile": "부분 프로필: 언어 또는 앵커 근거가 불완전하므로 전후 변화는 완전한 평가가 아닙니다.",
+      "preservationWarning": "검토 필요: 다시 작성한 뒤 다음 원본 토큰을 찾을 수 없습니다: {{missing}}",
+      "unverified": "AI 제안은 검증되지 않았습니다. 승인은 수동이며 CMS에 게시되지 않습니다.",
       "noHeading": "(제목 없는 도입부)",
       "current": "현재 문단",
       "optimized": "최적화된 문단",
       "generate": "AI로 다시 쓰기",
       "generating": "다시 쓰는 중…",
+      "cancelled": "다시 쓰기를 취소했습니다.",
       "copy": "복사",
       "copied": "복사됨",
       "noKey": "문단을 다시 쓰려면 설정에서 AI 제공자를 연결하세요.",
@@ -7366,6 +7452,8 @@
     },
     "issue": {
       "dangling-pronoun": "지시 대상이 불분명함",
+      "deictic-context": "문맥에 의존하는 지시",
+      "no-entity": "주체 또는 엔터티가 명시되지 않음",
       "no-answer-first": "처음에 직접적인 답이 없음",
       "filler-opening": "군더더기 도입",
       "no-facts": "구체적인 사실 없음",
@@ -7384,6 +7472,8 @@
     "hero": {
       "label": "엔터티 신뢰 점수",
       "articles": "크롤한 {{pages}}개 페이지 중 문서 페이지 {{articles}}개",
+      "profile": "프로필 {{profile}} · 버전 {{version}}",
+      "coverage": "증거 범위: 관찰됨 / 선언됨 / 검증됨 / 알 수 없음",
       "previous": "이전 실행: {{score}} ({{delta}})",
       "ymyl": "YMYL 카테고리: {{category}}. 검색엔진은 이런 페이지에 가장 엄격한 신뢰 기준을 적용합니다.",
       "unattributed": "문서의 {{pct}}%에 실명 저자나 검토자가 없습니다."
@@ -7402,6 +7492,7 @@
     "layers": {
       "title": "신뢰 계층",
       "schemaGraph": "엔터티 그래프 (JSON-LD)",
+      "sameAs": "신원 선언 (sameAs)",
       "authorAlignment": "저자 주제 적합도",
       "citationQuality": "출처 품질",
       "transparency": "편집 투명성",
@@ -7417,9 +7508,19 @@
       "colArticles": "문서 수",
       "colSameAs": "sameAs 링크",
       "colAlignment": "주제 적합도",
-      "generic": "익명 서명"
+      "generic": "익명 서명",
+      "identityEvidence": "신원 근거",
+      "unavailableNote": "선언된 프로필이 없습니다. 사용할 수 없음은 허구를 뜻하지 않습니다.",
+      "verifyProfiles": "프로필 확인",
+      "roleReviewer": "검토자",
+      "rolePublisher": "발행처",
+      "roleEvidence": "{{name}} ({{role}}) · {{status}} · sameAs 선언 {{recall}}%",
+      "roleRecall": "역할 가중 sameAs 선언: {{pct}}% (저자 50%, 검토자 25%, 발행처 25%; 제안된 가중치이며 선언 신호일 뿐 신원 확인이 아닙니다)."
     },
     "signals": {
+      "claimEvidence": "주장 근거",
+      "unbacked": "근거 없음",
+      "associationNote": "연관성은 함의 증명이 아닙니다. 중복으로 수동 sourceChecked를 설정하지 않습니다.",
       "title": "출처와 투명성",
       "citations": "문서 페이지 {{pages}}개 중 {{trusted}}개가 신뢰할 수 있는 출처(.gov, .edu, PubMed, WHO)로 연결됩니다.",
       "dead": "외부로 나가는 링크 {{count}}개가 끊어졌습니다",
@@ -7468,6 +7569,7 @@
       "open": "JSON-LD로 수정",
       "title": "JSON-LD 생성기",
       "intro": "sameAs 링크가 있는 Organization, Person, 페이지 그래프를 만듭니다. 검토한 뒤 페이지의 head에 붙여 넣으세요.",
+      "conflict": "{{id}}의 기존 {{property}}가 제안과 충돌합니다. 내보내기 전에 해결하세요.",
       "close": "닫기",
       "field": {
         "personName": "저자 이름",
@@ -7485,7 +7587,8 @@
         "missing-name": "저자 이름을 입력하세요.",
         "invalid-organization-url": "올바른 발행자 URL을 입력하세요 (https://...).",
         "invalid-page-url": "올바른 페이지 URL을 입력하세요 (https://...).",
-        "invalid-same-as": "올바른 URL이 아닌 sameAs 항목은 제외했습니다."
+        "invalid-same-as": "올바른 URL이 아닌 sameAs 항목은 제외했습니다.",
+        "conflict": "{{id}}의 기존 {{property}}가 제안과 충돌합니다. 내보내기 전에 해결하세요."
       },
       "preview": "생성된 JSON-LD",
       "copy": "script 태그 복사",
@@ -7736,7 +7839,20 @@
     "spent": "지출: {{value}}",
     "saved": "캐시·로컬 실행으로 절약: {{value}}",
     "hits": "캐시 적중: {{count}}",
-    "leaves": "페이지 본문이 이 기기 밖의 {{provider}}(으)로 전송됩니다."
+    "leaves": "페이지 본문이 이 기기 밖의 {{provider}}(으)로 전송됩니다.",
+    "remaining": "남은 예산: {{value}}",
+    "storageUnavailable": "LLM 예산 또는 지출 저장소를 사용할 수 없거나 유효하지 않습니다.",
+    "overBudget": "월간 LLM 예산을 초과했습니다.",
+    "unknownCost": "외부 호출 {{count}}건의 비용을 알 수 없어 지출에서 제외했습니다.",
+    "selectProject": "LLM 예산을 편집할 프로젝트를 선택하세요.",
+    "budgetTitle": "프로젝트 LLM 예산",
+    "noLimit": "월간 한도 없음",
+    "limitLabel": "월간 한도 (USD)",
+    "warnLabel": "경고 기준 (%)",
+    "saveBudget": "예산 저장",
+    "savedBudget": "LLM 예산을 저장했습니다.",
+    "invalidLimit": "0 이상인 유효한 월간 한도를 입력하세요.",
+    "invalidWarn": "경고 기준은 1에서 100 사이의 정수여야 합니다."
   },
   "templateGovernor": {
     "title": "프로그래매틱 템플릿 품질",

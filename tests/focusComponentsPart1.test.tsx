@@ -33,7 +33,7 @@ describe('helpers', () => {
   it('classifies tones, filters and tree rows', () => {
     expect([trsTone(80), trsTone(65), trsTone(10)]).toEqual(['green', 'yellow', 'red']);
     const page = { trs: 50 } as PageFocus;
-    expect([matchesFilter(page, 'all'), matchesFilter(page, 'critical'), matchesFilter(page, 'borderline'), matchesFilter(page, 'strong')]).toEqual([true, false, false, false]);
+    expect([matchesFilter(page, 'all'), matchesFilter(page, 'critical'), matchesFilter(page, 'borderline'), matchesFilter(page, 'strong')]).toEqual([true, false, true, false]);
     expect(filterCounts(report.pages.filter((p) => !p.skipped)).all).toBeGreaterThan(0);
     const rows = buildTreeRows(report.pages.filter((p) => !p.skipped));
     expect(rows.some((row) => row.kind === 'dir')).toBe(true);

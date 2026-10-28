@@ -1,4 +1,5 @@
 import { computeSfs } from './aggregate';
+import { isBorderlineTrs, OFF_TOPIC_BELOW } from './trsPolicy';
 import type { CodeParams, PageFocus, SiteFocusReport } from './types';
 
 export interface SfsSnapshot {
@@ -17,7 +18,7 @@ export interface HistoryAnnotation { code: 'removed-offtopic' | 'new-cluster' | 
 export interface AlertEvent { code: 'sfs-drop' | 'content-guard'; params: CodeParams }
 
 export const SFS_DROP_POINTS = 5;
-export const CONTENT_GUARD_TRS = 40;
+export const CONTENT_GUARD_TRS = OFF_TOPIC_BELOW;
 const OPTIMIZED_MIN_GAIN = 10;
 const round1 = (value: number): number => Math.round(value * 10) / 10;
 
@@ -43,7 +44,7 @@ export const annotateChange = (prev: SfsSnapshot, next: SfsSnapshot): HistoryAnn
     const gone = new Set(removed.map((page) => page.url));
     result.push({ code: 'removed-offtopic', params: { count: removed.length }, delta: round1(computeSfs(before.filter((page) => !gone.has(page.url))).score - baseline) });
   }
-  const optimized = before.filter((page) => page.trs >= CONTENT_GUARD_TRS && page.trs < 75 && page.url in nextPages && nextPages[page.url].trs - page.trs >= OPTIMIZED_MIN_GAIN);
+  const optimized = before.filter((page) => isBorderlineTrs(page.trs) && page.url in nextPages && nextPages[page.url].trs - page.trs >= OPTIMIZED_MIN_GAIN);
   if (optimized.length) {
     const lifted = new Map(optimized.map((page) => [page.url, nextPages[page.url].trs]));
     result.push({ code: 'optimized-borderline', params: { count: optimized.length }, delta: round1(computeSfs(before.map((page) => ({ ...page, trs: lifted.get(page.url) ?? page.trs }))).score - baseline) });

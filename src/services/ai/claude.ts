@@ -3,6 +3,7 @@ import { aiProviderLabel } from './labels';
 import { currentModel } from './modelCatalog';
 
 export const CLAUDE_MESSAGES_URL = 'https://api.anthropic.com/v1/messages';
+export const CLAUDE_MODELS_URL = 'https://api.anthropic.com/v1/models';
 export const CLAUDE_DEFAULT_MODEL = 'claude-opus-5';
 /** Cheapest current model; only used to prove that an API key is accepted. */
 export const CLAUDE_CONNECTION_PROBE_MODEL = 'claude-haiku-4-5';

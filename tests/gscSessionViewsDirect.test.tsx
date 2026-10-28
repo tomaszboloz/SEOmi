@@ -14,7 +14,7 @@ import { useToolsStore } from '@/stores/toolsStore';
 import { gscData } from './fixtures/gscTracker';
 beforeEach(() => {
   localStorage.clear(); useProjectStore.setState({ activeProjectId: 'gsc-views' });
-  useToolsStore.setState({ gscProperty: 'sc-domain:example.com', gscClientId: '', gscClientSecret: '',
+  useToolsStore.setState({ gscHydratedProjectId: 'gsc-views', gscProperty: 'sc-domain:example.com', gscClientId: '', gscClientSecret: '',
     isGscConnected: true, isGscLoading: false, gscData: gscData(), gscProperties: [], gscError: null,
     gscInspectionResult: null, gscFilters: {} });
 });

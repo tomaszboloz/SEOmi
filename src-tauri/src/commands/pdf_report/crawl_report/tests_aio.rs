@@ -91,3 +91,32 @@ fn every_aio_label_key_exists_in_english() {
         .collect();
     assert!(missing.is_empty(), "missing in en.json: {missing:?}");
 }
+
+#[test]
+fn aio_pdf_discloses_computing_profile_and_historical_recalculation() {
+    let mut data = aio();
+    data["profile"] = json!({"id":"aio-r", "algorithm_version":"v-next",
+        "config_hash":"current-hash", "language":"en", "market":"us"});
+    data["historical_profile"] = json!({"id":"old-profile", "config_hash":"old-hash"});
+    for (status, note) in [
+        ("persisted", "Profile matches the saved crawl"),
+        ("legacy-unversioned", "This crawl has no saved profile"),
+        ("mismatch", "The saved profile differs"),
+    ] {
+        data["profile_status"] = json!(status);
+        let text = text_of(&with_aio(data.clone()));
+        for part in [
+            "aio-r",
+            "v-next",
+            "current-hash",
+            "old-profile",
+            "old-hash",
+            note,
+        ] {
+            assert!(text.contains(part), "missing {part} for {status}");
+        }
+        if status != "persisted" {
+            assert!(text.contains("cannot be compared with historical scores"));
+        }
+    }
+}

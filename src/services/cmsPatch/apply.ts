@@ -1,12 +1,13 @@
 import { authorize, type TeamContext } from '@/services/team/guard';
 import type { KeyValueStore } from '@/services/team/auditStore';
 import { recordAudit } from '@/services/team/auditStore';
+import { isReviewedSource, validateYmylClaim, type YmylSource } from '@/services/llmEconomy/factGate';
 import { ADAPTERS } from './adapters';
 import type { PatchPlan } from './plan';
 import { CmsError, type CmsTarget, type CmsTransport } from './types';
 import { sectionApplied } from './verify';
 
-export interface Approval { approvedBy: string; planHash: string; factGatePassed?: boolean }
+export interface Approval { approvedBy: string; planHash: string; factGatePassed?: boolean; sources?: YmylSource[] }
 
 export interface Backup { target: CmsTarget; content: string; revision: string; at: string }
 
@@ -40,10 +41,21 @@ export const applyPatch = async (plan: PatchPlan, approval: Approval | null, dep
     return { status: 'dry-run' };
   }
   if (!approval || approval.planHash !== plan.planHash) return fail('not-approved', 'A human approval for this exact diff is required');
-  if (plan.ymyl && !approval.factGatePassed) return fail('fact-gate-required', 'YMYL content needs a passed fact gate');
+  if (plan.ymyl && !approval.factGatePassed) return fail('fact-gate-required', 'YMYL content needs a passed fact gate with reviewed sources');
   const adapter = ADAPTERS[plan.target.kind];
   const current = await adapter.read(plan.target, deps.send);
   if (current.revision !== plan.baseRevision) return fail('conflict', 'The page changed after the diff was approved');
+  if (plan.ymyl) {
+    const targetId = `${plan.target.baseUrl}\u0000${plan.target.contentId}`;
+    const sources = (approval.sources ?? []).filter((source) => isReviewedSource(source)
+      && source.revision === current.revision
+      && source.planHash === plan.planHash
+      && source.targetId === targetId
+      && source.sourceId.trim().length > 0
+      && current.content.includes(source.text));
+    const check = validateYmylClaim(plan.replacement, sources);
+    if (!sources.length || !check.allowed) return fail('fact-gate-required', `Unsupported numeric claims: ${check.rejectedValues.join(', ') || 'reviewed source required'}`);
+  }
   const backup: Backup = { target: plan.target, content: current.content, revision: current.revision, at: (deps.now?.() ?? new Date()).toISOString() };
   await deps.saveBackup(backup);
   try {

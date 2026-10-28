@@ -7,6 +7,7 @@ export const SEVERITY_TEXT: Record<TrustSeverity, string> = { critical: 'text-ro
 
 export const LAYERS: Array<{ layer: TrustLayer; help: HelpId }> = [
   { layer: 'schemaGraph', help: 'trust.schemaGraph' },
+  { layer: 'sameAs', help: 'trust.schemaGraph' },
   { layer: 'authorAlignment', help: 'trust.authorAlignment' },
   { layer: 'citationQuality', help: 'trust.citationQuality' },
   { layer: 'transparency', help: 'trust.transparency' },

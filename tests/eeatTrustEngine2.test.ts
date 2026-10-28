@@ -57,7 +57,16 @@ describe('anonymous YMYL site', () => {
     expect(report.ymylUnattributedPct).toBe(100);
     expect(report.level).toBe('critical');
     expect(report.findings[0].severity).toBe('critical');
-    expect(report.layers.authorAlignment).toBe(0);
+    expect(report.layers.authorAlignment).toBeUndefined();
+    expect(report.coverage.authorAlignment?.unknown).toBe(100);
+  });
+});
+
+describe('unavailable trust summaries', () => {
+  it('keeps the PDF score, level and layers unknown when no page was usable', () => {
+    const report = buildTrustReport([{ ...diabetesPages()[0], http_status: 500 }], undefined, { now: NOW });
+    expect(report.availability).toBe('unavailable');
+    expect(summarizeTrust(report)).toMatchObject({ score: null, level: null, layers: { schema_graph: null, author_alignment: null, citation_quality: null, transparency: null } });
   });
 });
 
@@ -84,7 +93,7 @@ describe('weak author entities', () => {
 describe('inline author objects and off-topic bios', () => {
   const { pages, focus } = site((page) => withRefs(page, [
     ...node('$', { type: 'Article' }),
-    ...node('$.author', { type: 'Person', name: 'Marek Marketing', props: [['jobTitle', 'Copywriter marketing'], ['url', 'https://diabetes.test/team/marek']] }),
+    ...node('$.author', { type: 'Person', name: 'Marek Marketing', props: [['jobTitle', 'Copywriter marketing'], ['description', 'Marketing copywriter for advertising campaigns'], ['url', 'https://diabetes.test/team/marek']] }),
   ]));
   const report = buildTrustReport(pages, focus, { now: NOW });
 
@@ -98,6 +107,17 @@ describe('inline author objects and off-topic bios', () => {
     const profile = { ...pages[1], url: 'https://diabetes.test/team/marek', final_url: 'https://diabetes.test/team/marek' };
     const next = buildTrustReport([...pages, profile], focus, { now: NOW });
     expect(next.authors[0].alignmentPct).toBeGreaterThan(report.authors[0].alignmentPct ?? 0);
+  });
+
+  it('keeps jobTitle-only authors unknown instead of calling them incompetent', () => {
+    const unknownPages = site((page) => withRefs(page, [
+      ...node('$', { type: 'Article' }),
+      ...node('$.author', { type: 'Person', name: 'Title Only', props: [['jobTitle', 'Doctor']] }),
+    ])).pages;
+    const unknown = buildTrustReport(unknownPages, focus, { now: NOW });
+    expect(unknown.authors[0].alignmentPct).toBeUndefined();
+    expect(unknown.coverage.authorAlignment?.unknown).toBe(100);
+    expect(unknown.findings.some((item) => item.code === 'author-off-topic')).toBe(false);
   });
 });
 

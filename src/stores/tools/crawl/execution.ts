@@ -10,8 +10,10 @@ import { crawlResultKey, crawlRunsKey, activeProjectId } from '../storageKeys';
 import { formatCrawlPersistenceNotice, formatCrawlRuntimeError } from '../runtime';
 import { activeCrawlRuns, persistInterruptedCrawl, buildCrawlCheckpoint, mergeCrawlResults } from '../crawlPersistence';
 import { monitorAioCrawls, monitorCrawlComparison } from '@/services/monitoringAlerts';
+import { buildAioReport } from '@/services/aioReadiness';
 import { runScheduledFocus } from '@/services/siteFocusMonitoring';
 import { runTaskVerification } from '@/services/optimizationTasks/runVerification';
+import { persistCompletedTrustRun } from '@/services/eeatTrust';
 import { compareCrawlRuns } from '@/services/crawlDiff';
 import { deniedMessage, enforcePermission } from '@/services/team/enforce';
 
@@ -79,7 +81,11 @@ startSiteCrawl: async (url, limit, configPatch, environment = 'default', notifyC
       }
       const freshCrawlResult = await services.invoke<SiteCrawlResult>('crawl_site', { startUrl: targetUrl, maxPages: maxLimit, runId, projectId: projectIdAtStart || undefined, config: effectiveCrawlConfig });
       if (!freshCrawlResult.pages.length && !freshCrawlResult.cancelled && !resumeBaseResult) throw new Error(i18n.t('runtimeErrors.tools.crawlerNoPages'));
-      const crawlResult = resumeBaseResult ? mergeCrawlResults(resumeBaseResult, freshCrawlResult) : freshCrawlResult;
+      const mergedCrawlResult = resumeBaseResult ? mergeCrawlResults(resumeBaseResult, freshCrawlResult) : freshCrawlResult;
+      const crawlResult = {
+        ...mergedCrawlResult,
+        aio_profile: buildAioReport(mergedCrawlResult.pages, { crawlRunId: runId }).profile,
+      };
       const run: CrawlRunRecord = { id: runId, projectId: projectIdAtStart || undefined, startedAt: interruptedCrawl.startedAt, completedAt: new Date().toISOString(), startUrl: targetUrl, config: persistedCrawlConfig, result: crawlResult, environment };
       const projectRuns = activeProjectId() === projectIdAtStart ? get().crawlRuns : originalCrawlRuns;
       const crawlRuns = [run, ...projectRuns.filter((item) => item.id !== run.id)].slice(0, 50);
@@ -108,6 +114,7 @@ startSiteCrawl: async (url, limit, configPatch, environment = 'default', notifyC
       }
       if (projectId && previousRun) void monitorCrawlComparison(projectId, compareCrawlRuns(run, previousRun, { projectId }));
       if (projectId) void monitorAioCrawls(projectId, run, projectRuns).catch(() => undefined);
+      if (projectId) { try { persistCompletedTrustRun(projectId, run); } catch { /* trust persistence must not fail the crawl */ } }
       if (projectId) void runScheduledFocus(projectId, run, previousRun);
       if (projectId) { try { runTaskVerification(projectId, run); } catch { /* verification is best-effort */ } }
       return crawlResult;

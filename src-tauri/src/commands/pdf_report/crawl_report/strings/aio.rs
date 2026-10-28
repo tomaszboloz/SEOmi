@@ -37,6 +37,11 @@ keys! {
     COL_EXCERPT => "crawl.aio.colExcerpt",
     COL_ISSUES => "crawl.aio.colIssues",
     PERCENT => "crawl.aio.percent",
+    PROFILE => "crawl.aio.profile",
+    PROFILE_PERSISTED => "crawl.aio.profilePersisted",
+    PROFILE_LEGACY => "crawl.aio.profileLegacy",
+    PROFILE_MISMATCH => "crawl.aio.profileMismatch",
+    HISTORICAL_PROFILE => "crawl.aio.historicalProfile",
 }
 
 pub const BAND: &str = "crawl.aio.band";
@@ -51,4 +56,6 @@ pub const ISSUES: &[&str] = &[
     "filler-opening",
     "no-facts",
     "too-long",
+    "deictic-context",
+    "no-entity",
 ];
