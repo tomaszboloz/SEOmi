@@ -30,6 +30,16 @@ fn notes_follow_the_flags() {
 }
 
 #[test]
+fn notes_state_anchored_topic_provenance_and_missing_anchors() {
+    let core = json!({"mode": "anchored", "anchor_source_count": 3, "anchor_missing_count": 2});
+    let anchored = notes(&json!({ "core_topic": core }));
+    assert!(anchored[0].contains("anchor pages (3 pages)"));
+    assert!(anchored[1].contains("not found in this crawl: 2"));
+    let auto = json!({"core_topic": {"mode": "auto", "anchor_missing_count": 0}});
+    assert!(notes(&auto).is_empty());
+}
+
+#[test]
 fn band_colors_differ_per_band() {
     let colors: Vec<_> = BANDS.iter().map(|band| band_color(band)).collect();
     assert!(colors

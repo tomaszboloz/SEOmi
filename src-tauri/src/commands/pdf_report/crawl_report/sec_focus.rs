@@ -68,6 +68,14 @@ pub fn notes(focus: &Value) -> Vec<String> {
             &[arg(core.get("manual_input"))],
         ));
     }
+    let sources = core.get("anchor_source_count");
+    if core.get("mode").and_then(Value::as_str) == Some("anchored") {
+        notes.push(coded(NOTE, "anchoredTopic", &[arg(sources)]));
+    }
+    let missing = core.get("anchor_missing_count");
+    if missing.and_then(Value::as_u64).unwrap_or(0) > 0 {
+        notes.push(coded(NOTE, "anchorsMissing", &[arg(missing)]));
+    }
     notes
 }
 
