@@ -8258,5 +8258,17 @@
       "low-volume": "Hay menos de 30 clics de referencia; el volumen es insuficiente para una comparación fiable.",
       "pending": "La intervención es futura; la evaluación está pendiente."
     }
+  },
+  "linkInjector": {
+    "title": "Inyector de enlaces contextuales",
+    "description": "Los 10 mejores enlaces que añadir: la sección H2/H3 de la página donante con más términos compartidos, una frase lista en el idioma de la página y el cambio de SPRS del destino según el solver del grafo de enlaces. Se excluyen las páginas en cuarentena. El cambio de SPRS es una estimación del modelo, no una previsión de posiciones ni de tráfico.",
+    "format": "Formato del fragmento",
+    "empty": "Ningún candidato tiene en la página donante una sección H2/H3 que mencione los términos compartidos.",
+    "section": "Colocar en H{{level}} «{{heading}}» (menciones de términos compartidos: {{hits}})",
+    "gain": "Cambio de SPRS esperado del destino: {{value}} (escala 0–100)",
+    "gainUnknown": "Cambio de SPRS esperado: desconocido (página fuera del grafo del solver)",
+    "languageFallback": "Idioma de la página desconocido: la frase está en inglés.",
+    "copy": "Copiar",
+    "copied": "Copiado"
   }
 }

@@ -1,10 +1,13 @@
 import { useMemo } from 'react';
 import { DeploymentArtifactsPanel } from '@/components/Charts/DeploymentArtifactsPanel';
+import { ContextualLinkInjectorPanel } from '@/components/Charts/ContextualLinkInjectorPanel';
 import { InternalLinkOpportunitiesPanel } from '@/components/Charts/InternalLinkOpportunitiesPanel';
 import { OptimizationTaskTracker } from '@/components/Charts/OptimizationTaskTracker';
 import { rulesFromQuarantine } from '@/services/deployArtifacts/fromBus';
 import type { OptimizationTask } from '@/services/optimizationTasks/types';
-import { excludeQuarantinedPages, runRecommendationBus } from '@/services/recommendationBus';
+import { findInternalLinkOpportunities } from '@/services/internalLinkOpportunities';
+import { buildLinkInjections, sprsGainContext } from '@/services/linkInjector';
+import { excludeQuarantined, excludeQuarantinedPages, runRecommendationBus } from '@/services/recommendationBus';
 import { busInputFromReports } from '@/services/recommendationBus/fromReports';
 import { buildSiteFocusReport } from '@/services/siteFocus';
 import { buildAuthorityReport } from '@/services/topicalAuthority';
@@ -30,6 +33,10 @@ export const LinksWorkspace = ({ projectId, pages, run }: { projectId: string | 
   const rules = useMemo(() => rulesFromQuarantine(bus.quarantine), [bus]);
   const semanticGraph = useMemo(() => (pages.length ? attempt(() => buildSemanticMap(pages, startUrl)) : undefined), [pages, startUrl]);
   const sprs = useMemo(() => (semanticGraph ? attempt(() => buildSprsReport(semanticGraph)) : undefined), [semanticGraph]);
+  const linkReport = useMemo(() => findInternalLinkOpportunities(linkPages), [linkPages]);
+  const injections = useMemo(() => attempt(() => buildLinkInjections(
+    excludeQuarantined(linkReport.opportunities, bus.quarantine).kept, linkPages, semanticGraph ? sprsGainContext(semanticGraph) : null,
+  )) ?? [], [linkReport, bus, linkPages, semanticGraph]);
   const eetv = useMemo(() => {
     if (!sfs) return null;
     const livePages = pages.filter((page) => page.http_status >= 200 && page.http_status < 400 && !page.request_error_kind);
@@ -48,7 +55,8 @@ export const LinksWorkspace = ({ projectId, pages, run }: { projectId: string | 
   };
   const crawlStartedAt = runCompleted && run ? deriveCrawlStartedAt(run) ?? 'unavailable' : 'unavailable';
   return <div className="space-y-4">
-    <InternalLinkOpportunitiesPanel pages={linkPages} quarantine={bus.quarantine} conflicts={bus.conflicts} projectId={projectId} baselineScoreFor={scoreFor} />
+    <ContextualLinkInjectorPanel injections={injections} />
+    <InternalLinkOpportunitiesPanel pages={linkPages} report={linkReport} quarantine={bus.quarantine} conflicts={bus.conflicts} projectId={projectId} baselineScoreFor={scoreFor} />
     <DeploymentArtifactsPanel rules={rules} projectId={projectId} baselineScoreFor={scoreFor} />
     {projectId && <OptimizationTaskTracker projectId={projectId} pages={pages} scoreFor={scoreFor} crawlStartedAt={crawlStartedAt} />}
   </div>;

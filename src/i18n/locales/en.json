@@ -8258,5 +8258,17 @@
       "low-volume": "Baseline clicks are below 30; the volume is too low for a reliable comparison.",
       "pending": "The intervention date is in the future; evaluation is pending."
     }
+  },
+  "linkInjector": {
+    "title": "Contextual link injector",
+    "description": "Top 10 links to add: the donor's H2/H3 section with the most shared terms, a ready sentence in the page's language and the target's SPRS change from the link-graph solver. Quarantined pages are excluded. The SPRS change is a model estimate, not a ranking or traffic forecast.",
+    "format": "Snippet format",
+    "empty": "No candidate has a donor H2/H3 section that mentions the shared terms.",
+    "section": "Place in H{{level}} \"{{heading}}\" ({{hits}} shared-term mentions)",
+    "gain": "Expected SPRS change of the target: {{value}} (0–100 scale)",
+    "gainUnknown": "Expected SPRS change: unknown (page outside the solver graph)",
+    "languageFallback": "Page language unknown: the sentence is in English.",
+    "copy": "Copy",
+    "copied": "Copied"
   }
 }

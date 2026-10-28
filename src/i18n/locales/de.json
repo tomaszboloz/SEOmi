@@ -8258,5 +8258,17 @@
       "low-volume": "Weniger als 30 Klicks im Referenzzeitraum; das Volumen ist für einen verlässlichen Vergleich zu gering.",
       "pending": "Die Maßnahme liegt in der Zukunft; die Auswertung steht aus."
     }
+  },
+  "linkInjector": {
+    "title": "Kontextueller Link-Injektor",
+    "description": "Top 10 Links zum Hinzufügen: der H2/H3-Abschnitt der Spenderseite mit den meisten gemeinsamen Begriffen, ein fertiger Satz in der Sprache der Seite und die SPRS-Änderung des Ziels laut Linkgraph-Solver. Seiten in Quarantäne sind ausgeschlossen. Die SPRS-Änderung ist eine Modellschätzung, keine Ranking- oder Traffic-Prognose.",
+    "format": "Snippet-Format",
+    "empty": "Kein Kandidat hat auf der Spenderseite einen H2/H3-Abschnitt, der die gemeinsamen Begriffe erwähnt.",
+    "section": "In H{{level}} „{{heading}}“ platzieren (Erwähnungen gemeinsamer Begriffe: {{hits}})",
+    "gain": "Erwartete SPRS-Änderung des Ziels: {{value}} (Skala 0–100)",
+    "gainUnknown": "Erwartete SPRS-Änderung: unbekannt (Seite außerhalb des Solver-Graphen)",
+    "languageFallback": "Seitensprache unbekannt: Der Satz ist auf Englisch.",
+    "copy": "Kopieren",
+    "copied": "Kopiert"
   }
 }

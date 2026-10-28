@@ -8258,5 +8258,17 @@
       "low-volume": "Moins de 30 clics de référence ; le volume est trop faible pour une comparaison fiable.",
       "pending": "La date d’intervention est future ; l’évaluation est en attente."
     }
+  },
+  "linkInjector": {
+    "title": "Injecteur de liens contextuels",
+    "description": "Les 10 meilleurs liens à ajouter : la section H2/H3 de la page donneuse avec le plus de termes communs, une phrase prête dans la langue de la page et la variation SPRS de la cible calculée par le solveur du graphe de liens. Les pages en quarantaine sont exclues. La variation SPRS est une estimation du modèle, pas une prévision de classement ni de trafic.",
+    "format": "Format de l’extrait",
+    "empty": "Aucun candidat n’a, sur la page donneuse, de section H2/H3 qui mentionne les termes communs.",
+    "section": "Placer dans H{{level}} « {{heading}} » (mentions de termes communs : {{hits}})",
+    "gain": "Variation SPRS attendue de la cible : {{value}} (échelle 0–100)",
+    "gainUnknown": "Variation SPRS attendue : inconnue (page hors du graphe du solveur)",
+    "languageFallback": "Langue de la page inconnue : la phrase est en anglais.",
+    "copy": "Copier",
+    "copied": "Copié"
   }
 }

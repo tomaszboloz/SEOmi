@@ -1,7 +1,7 @@
 import { useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import type { CrawledPageSummary } from '@/types';
-import { findInternalLinkOpportunities } from '@/services/internalLinkOpportunities';
+import { findInternalLinkOpportunities, type InternalLinkOpportunityReport } from '@/services/internalLinkOpportunities';
 import type { NewTask } from '@/services/optimizationTasks/storage';
 import { excludeQuarantined, excludeQuarantinedPages, type BusConflict, type QuarantineEntry } from '@/services/recommendationBus';
 import { AddTaskButton } from './OptimizationTaskTracker';
@@ -13,6 +13,8 @@ interface Props {
   conflicts?: BusConflict[];
   projectId?: string | null;
   baselineScoreFor?: (task: NewTask) => number | null;
+  /** Candidates already computed for these pages by the caller; avoids a second pairwise pass. */
+  report?: InternalLinkOpportunityReport;
 }
 
 const displayUrl = (value: string) => {
@@ -22,11 +24,11 @@ const displayUrl = (value: string) => {
 
 const NO_QUARANTINE: QuarantineEntry[] = [];
 
-export const InternalLinkOpportunitiesPanel = ({ pages, quarantine = NO_QUARANTINE, conflicts, projectId, baselineScoreFor }: Props) => {
+export const InternalLinkOpportunitiesPanel = ({ pages, quarantine = NO_QUARANTINE, conflicts, projectId, baselineScoreFor, report: precomputed }: Props) => {
   const { t } = useTranslation();
   const [query, setQuery] = useState('');
   const safePages = useMemo(() => excludeQuarantinedPages(pages, quarantine), [pages, quarantine]);
-  const base = useMemo(() => findInternalLinkOpportunities(safePages), [safePages]);
+  const base = useMemo(() => precomputed ?? findInternalLinkOpportunities(safePages), [precomputed, safePages]);
   const split = useMemo(() => excludeQuarantined(base.opportunities, quarantine), [base, quarantine]);
   const report = useMemo(() => ({ ...base, opportunities: split.kept }), [base, split]);
   const filtered = useMemo(() => {

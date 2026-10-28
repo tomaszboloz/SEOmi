@@ -8258,5 +8258,17 @@
       "low-volume": "Bazowa liczba kliknięć jest mniejsza niż 30; zbyt mały wolumen do wiarygodnego porównania.",
       "pending": "Data interwencji jest w przyszłości; ocena oczekuje."
     }
+  },
+  "linkInjector": {
+    "title": "Wstawianie linków kontekstowych",
+    "description": "10 najlepszych linków do dodania: sekcja H2/H3 dawcy z największą liczbą wspólnych terminów, gotowe zdanie w języku strony i zmiana SPRS celu policzona solverem grafu linków. Strony w kwarantannie są wykluczone. Zmiana SPRS to szacunek modelu, nie prognoza pozycji ani ruchu.",
+    "format": "Format fragmentu",
+    "empty": "Żaden kandydat nie ma u dawcy sekcji H2/H3, która wspomina wspólne terminy.",
+    "section": "Umieść w H{{level}} „{{heading}}” (wzmianki wspólnych terminów: {{hits}})",
+    "gain": "Oczekiwana zmiana SPRS celu: {{value}} (skala 0–100)",
+    "gainUnknown": "Oczekiwana zmiana SPRS: nieznana (strona poza grafem solvera)",
+    "languageFallback": "Nieznany język strony: zdanie jest po angielsku.",
+    "copy": "Kopiuj",
+    "copied": "Skopiowano"
   }
 }
