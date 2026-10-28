@@ -1,4 +1,4 @@
-import { verifyBot, type BotFamily, type BotStatus, type BotVerdict, type VerifyDeps } from './botVerify';
+import { canonicalIp, claimedFamily, verifyBot, type BotFamily, type BotStatus, type BotVerdict, type VerifyDeps } from './botVerify';
 import { parseLogLine, type ParseOptions } from './parseLine';
 
 /** Aggregates for one path, bot family and verification status. Raw IPs are never stored. */
@@ -77,12 +77,18 @@ export const importAccessLog = async (input: ImportInput): Promise<LogImportStat
     state.firstAt = state.firstAt === null ? hit.at : Math.min(state.firstAt, hit.at);
     state.lastAt = state.lastAt === null ? hit.at : Math.max(state.lastAt, hit.at);
     days.add(new Date(hit.at).toISOString().slice(0, 10));
-    const key = `${hit.ip}|${hit.userAgent}`;
-    let verdict = cache.get(key);
+    // A verdict depends only on the address and the claimed family, never on the exact UA string. Human
+    // traffic needs no lookup, so it stays out of the cache and cannot evict verified crawler addresses.
+    const family = claimedFamily(hit.userAgent);
+    const ip = canonicalIp(hit.ip);
+    const key = family ? `${ip}|${family}` : null;
+    let verdict = key ? cache.get(key) : undefined;
     if (!verdict) {
-      verdict = await verifyBot(hit.ip, hit.userAgent, input.verify);
-      if (cache.size >= MAX_IP_CACHE) cache.clear();
-      cache.set(key, verdict);
+      verdict = await verifyBot(ip, hit.userAgent, input.verify);
+      if (key) {
+        if (cache.size >= MAX_IP_CACHE) cache.clear();
+        cache.set(key, verdict);
+      }
     }
     const g = group(hit.status);
     if (!verdict.family || !g) { state.ignoredNonBot += 1; continue; }
