@@ -7954,7 +7954,14 @@
     "empty": "Aucune donnée d’écart de backlinks. Lancez d’abord l’analyse.",
     "row": "{{domain}} : priorité {{priority}}, lie {{count}} concurrents",
     "export": "Exporter en CSV",
-    "manualNote": "SEOmi n’envoie jamais de messages. Envoyez les brouillons depuis votre messagerie."
+    "manualNote": "SEOmi n’envoie jamais de messages. Envoyez les brouillons depuis votre messagerie.",
+    "draft": "Afficher le brouillon",
+    "draftSubject": "Une ressource pour {{domain}}",
+    "draftBody": "Bonjour,\\n\\nNous avons vu que vous faites un lien vers {{competitors}}. Nous avons publié {{title}} ({{url}}) : {{summary}}\\nAngle unique : {{novelEntities}}. Gain d’information : {{informationGain}}. Preuve : {{evidence}}\\nFournisseur : {{provider}} ; modèle : {{model}} ; {{approximation}} ; observé : {{observedAt}}\\n\\nCordialement,\\n{{site}}",
+    "evidence": "IGOS {{score}}/100 ; preuve : {{url}}",
+    "provenance": "Source IGOS : fournisseur {{provider}}, modèle {{model}} ({{approximation}}) ; observé : {{observedAt}}",
+    "unknown": "indisponible",
+    "localApproximation": "approximation lexicale locale"
   },
   "causalMarket": {
     "title": "Impact causal",

@@ -7954,7 +7954,14 @@
     "empty": "被リンクギャップのデータがありません。先にギャップ分析を実行してください。",
     "row": "{{domain}}: 優先度 {{priority}}、競合{{count}}社にリンク",
     "export": "CSVを出力",
-    "manualNote": "SEOmiはメッセージを送信しません。下書きはご自身のメールから送信してください。"
+    "manualNote": "SEOmiはメッセージを送信しません。下書きはご自身のメールから送信してください。",
+    "draft": "下書きを表示",
+    "draftSubject": "{{domain}} 向けのリソース",
+    "draftBody": "こんにちは。\\n\\n{{competitors}} へのリンクを確認しました。{{title}}（{{url}}）を公開しました：{{summary}}\\n独自の切り口：{{novelEntities}}。情報利得：{{informationGain}}。根拠：{{evidence}}\\nプロバイダー：{{provider}}、モデル：{{model}}、{{approximation}}、観測時刻：{{observedAt}}\\n\\nよろしくお願いします。\\n{{site}}",
+    "evidence": "IGOS {{score}}/100；根拠：{{url}}",
+    "provenance": "IGOS ソース：プロバイダー {{provider}}、モデル {{model}}（{{approximation}}）；観測：{{observedAt}}",
+    "unknown": "利用不可",
+    "localApproximation": "ローカル語彙近似"
   },
   "causalMarket": {
     "title": "因果効果",

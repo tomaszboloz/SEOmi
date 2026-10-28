@@ -7954,7 +7954,14 @@
     "empty": "Нет данных по разрыву ссылок. Сначала запустите анализ.",
     "row": "{{domain}}: приоритет {{priority}}, ссылается на конкурентов: {{count}}",
     "export": "Экспорт CSV",
-    "manualNote": "SEOmi никогда не отправляет сообщения. Отправляйте черновики из своей почты."
+    "manualNote": "SEOmi никогда не отправляет сообщения. Отправляйте черновики из своей почты.",
+    "draft": "Показать черновик",
+    "draftSubject": "Ресурс для {{domain}}",
+    "draftBody": "Здравствуйте!\\n\\nМы заметили ссылку на {{competitors}}. Мы опубликовали {{title}} ({{url}}): {{summary}}\\nУникальный ракурс: {{novelEntities}}. Информационный выигрыш: {{informationGain}}. Доказательство: {{evidence}}\\nПровайдер: {{provider}}; модель: {{model}}; {{approximation}}; наблюдение: {{observedAt}}\\n\\nС уважением,\\n{{site}}",
+    "evidence": "IGOS {{score}}/100; доказательство: {{url}}",
+    "provenance": "Источник IGOS: провайдер {{provider}}, модель {{model}} ({{approximation}}); наблюдение: {{observedAt}}",
+    "unknown": "недоступно",
+    "localApproximation": "локальное лексическое приближение"
   },
   "causalMarket": {
     "title": "Причинный эффект",
