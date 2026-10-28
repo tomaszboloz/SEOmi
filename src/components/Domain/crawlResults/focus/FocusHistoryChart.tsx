@@ -18,6 +18,10 @@ export const FocusHistoryChart = ({ series }: FocusHistoryChartProps) => {
   const yOf = (score: number): number => H - PAD - (Math.min(100, Math.max(0, score)) / 100) * (H - PAD * 2);
   const date = (at: string): string => new Date(at).toLocaleDateString(i18n.language);
   const indexOf = (runId: string): number => points.findIndex((point) => point.runId === runId);
+  // Topic-selection modes are stored as codes; show them in the reader's language.
+  const modeLabels = (code: string, params: Record<string, unknown>): Record<string, unknown> => (code === 'core-mode-changed'
+    ? { ...params, from: t(`focus.history.mode.${String(params.from)}`), to: t(`focus.history.mode.${String(params.to)}`) }
+    : params);
   const first = points[0];
   const last = points[points.length - 1];
 
@@ -54,7 +58,7 @@ export const FocusHistoryChart = ({ series }: FocusHistoryChartProps) => {
             {markers.map((marker, index) => (
               <li key={`${marker.runId}:${marker.code}:${index}`}>
                 <span className="text-slate-500">{date(marker.at)}: </span>
-                {t(`focus.history.${marker.code}`, { ...marker.params, delta: signed(marker.delta), defaultValue: marker.code })}
+                {t(`focus.history.${marker.code}`, { ...modeLabels(marker.code, marker.params), delta: signed(marker.delta), defaultValue: marker.code })}
               </li>
             ))}
           </ul>

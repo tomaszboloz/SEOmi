@@ -5986,7 +5986,9 @@
           "lexicalFallback": "L'analyse pour la langue sélectionnée utilise l'algorithme statistique TF-IDF. Le composant de similarité sémantique approfondie est indisponible ; le score repose sur la couverture et la distribution des mots-clés.",
           "skippedRender": "{{0}} pages ont été ignorées dans l'analyse car le rendu JavaScript a dépassé le délai.",
           "degraded": "Certaines pages disposaient de données limitées ; leurs scores peuvent donc être moins précis.",
-          "unmatchedTopic": "Aucune page ne correspond au sujet « {{0}} ». Le sujet détecté est utilisé à la place."
+          "unmatchedTopic": "Aucune page ne correspond au sujet « {{0}} ». Le sujet détecté est utilisé à la place.",
+          "anchoredTopic": "Le sujet principal a été choisi à partir de la page d’accueil et des pages d’ancrage ({{0}} pages).",
+          "anchorsMissing": "Pages d’ancrage introuvables dans ce crawl : {{0}}."
         },
         "rec": {
           "remove-offtopic": "Supprimer ou déplacer {{0}} pages hors sujet : rediriger, passer en noindex ou supprimer les pires et retirer les liens internes qui y mènent. Potentiel : +{{1}} points.",
@@ -6865,6 +6867,20 @@
       "manualActive": "Sujet manuel : {{input}}",
       "confidenceLine": "Confiance du sujet principal : {{pct}} %"
     },
+    "anchors": {
+      "title": "Pages d’ancrage",
+      "mode": {
+        "auto": "Mode du thème : détecté sur l’ensemble du contenu",
+        "manual": "Mode du thème : défini manuellement",
+        "anchored": "Mode du thème : page d’accueil et pages d’ancrage"
+      },
+      "inputLabel": "Pages d’ancrage (une URL par ligne)",
+      "placeholder": "https://example.com/offre",
+      "help": "La page d’accueil est toujours incluse. Les ancrages empêchent un grand blog de redéfinir l’offre du site. Jusqu’à 20 URL.",
+      "applied": "Pages utilisées pour choisir le thème : {{count}}",
+      "manualWins": "Votre thème manuel est prioritaire sur les pages d’ancrage.",
+      "missing": "Ancrages introuvables dans ce crawl : {{count}}"
+    },
     "metrics": {
       "title": "Indicateurs clés",
       "confidence": "Confiance du sujet principal",
@@ -7065,6 +7081,12 @@
       "new-cluster": "Nouveau cluster thématique « {{label}} » ({{count}} nouvelles, {{delta}} points).",
       "optimized-borderline": "{{count}} pages limites optimisées ({{delta}} points).",
       "core-topic-changed": "Le sujet principal est passé de « {{from}} » à « {{to}} » ({{delta}} points).",
+      "core-mode-changed": "La sélection du sujet a changé : {{from}} → {{to}} ({{delta}} points).",
+      "mode": {
+        "auto": "détection sur tout le contenu",
+        "manual": "sujet manuel",
+        "anchored": "accueil et pages d’ancrage"
+      },
       "title": "Historique du score",
       "empty": "Lancez au moins deux analyses complètes pour voir la tendance.",
       "aria": "Site Focus Score sur {{count}} analyses, de {{from}} à {{to}}",

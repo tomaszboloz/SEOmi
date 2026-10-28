@@ -5986,7 +5986,9 @@
           "lexicalFallback": "Die Analyse für die gewählte Sprache nutzt den statistischen TF-IDF-Algorithmus. Die tiefe semantische Ähnlichkeitskomponente ist nicht verfügbar; der Wert basiert auf Abdeckung und Verteilung der Keywords.",
           "skippedRender": "{{0}} Seiten wurden in der Analyse übersprungen, weil das JavaScript-Rendering ein Zeitlimit überschritten hat.",
           "degraded": "Bei einigen Seiten waren die Daten begrenzt, daher können ihre Werte ungenauer sein.",
-          "unmatchedTopic": "Keine Seite passt zum Thema „{{0}}“. Stattdessen wird das erkannte Thema verwendet."
+          "unmatchedTopic": "Keine Seite passt zum Thema „{{0}}“. Stattdessen wird das erkannte Thema verwendet.",
+          "anchoredTopic": "Das Kernthema wurde aus Startseite und Ankerseiten gewählt ({{0}} Seiten).",
+          "anchorsMissing": "In diesem Crawl nicht gefundene Ankerseiten: {{0}}."
         },
         "rec": {
           "remove-offtopic": "{{0}} themenfremde Seiten entfernen oder verschieben: die schlechtesten weiterleiten, auf noindex setzen oder löschen und interne Links darauf entfernen. Potenzial: +{{1}} Punkte.",
@@ -6865,6 +6867,20 @@
       "manualActive": "Manuelles Thema: {{input}}",
       "confidenceLine": "Konfidenz des Kernthemas: {{pct}} %"
     },
+    "anchors": {
+      "title": "Ankerseiten",
+      "mode": {
+        "auto": "Themenmodus: aus allen Inhalten erkannt",
+        "manual": "Themenmodus: manuell festgelegt",
+        "anchored": "Themenmodus: Startseite und Ankerseiten"
+      },
+      "inputLabel": "Ankerseiten (eine URL pro Zeile)",
+      "placeholder": "https://example.com/angebot",
+      "help": "Die Startseite wird immer einbezogen. Anker verhindern, dass ein großer Blog das Angebot der Website umdefiniert. Bis zu 20 URLs.",
+      "applied": "Für die Themenwahl genutzte Seiten: {{count}}",
+      "manualWins": "Ihr manuelles Thema hat Vorrang vor den Ankerseiten.",
+      "missing": "In diesem Crawl nicht gefundene Anker: {{count}}"
+    },
     "metrics": {
       "title": "Wichtige Kennzahlen",
       "confidence": "Konfidenz des Kernthemas",
@@ -7065,6 +7081,12 @@
       "new-cluster": "Neues Themencluster „{{label}}“ ({{count}} neu, {{delta}} Punkte).",
       "optimized-borderline": "{{count}} Grenzfall-Seiten optimiert ({{delta}} Punkte).",
       "core-topic-changed": "Kernthema von „{{from}}“ zu „{{to}}“ geändert ({{delta}} Punkte).",
+      "core-mode-changed": "Themenauswahl geändert: {{from}} → {{to}} ({{delta}} Punkte).",
+      "mode": {
+        "auto": "Erkennung aus allen Inhalten",
+        "manual": "manuelles Thema",
+        "anchored": "Startseite und Ankerseiten"
+      },
       "title": "Verlauf des Werts",
       "empty": "Führe mindestens zwei vollständige Analysen durch, um den Trend zu sehen.",
       "aria": "Site Focus Score über {{count}} Analysen, von {{from}} bis {{to}}",

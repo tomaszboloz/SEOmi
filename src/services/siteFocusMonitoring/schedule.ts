@@ -3,11 +3,11 @@ import { sendProjectNotification } from '@/services/desktopNotifications/deliver
 import type { FocusPage } from '@/services/siteFocus';
 import type { CrawlRunRecord } from '@/types';
 import { readJsonStorage, writeJsonStorage } from '@/services/storage';
-import { applyIncremental, buildRunReport, isCompletedRun, recordFullAnalysis } from './analysis';
+import { applyIncremental, isCompletedRun, recordFullAnalysis } from './analysis';
 import type { Clock } from './budget';
 import { detectChangedPages } from './changes';
 import { focusScheduleKey, validFocusProject } from './keys';
-import { readManualTopic } from './topic';
+import { buildProjectRunReport } from './projectReport';
 import { buildWeeklyReport, weeklyNotification } from './weekly';
 
 export const INCREMENTAL_INTERVAL_MS = 24 * 3_600_000;
@@ -47,7 +47,7 @@ const runDueJob = async (
   const job = dueFocusJob(state, clock());
   const save = (patch: FocusScheduleState) => writeJsonStorage(focusScheduleKey(projectId), { ...state, ...patch });
   if (job === 'full') {
-    const report = buildRunReport(latest, readManualTopic(projectId), new Date(clock()).toISOString());
+    const report = buildProjectRunReport(latest, projectId, new Date(clock()).toISOString());
     const record = recordFullAnalysis(projectId, report, latest.id, { clock, delivery: deps.delivery });
     save({ lastFullAt: clock(), lastIncrementalAt: clock() });
     if (record.saved) await deliverWeekly(projectId, buildWeeklyReport(report, record.previous?.score));
@@ -58,7 +58,7 @@ const runDueJob = async (
     const { added, changed } = detectChangedPages(base.result.pages as FocusPage[], latest.result.pages as FocusPage[], deps.sitemapUrls ?? latest.result.sitemap_urls);
     save({ lastIncrementalAt: clock() });
     if (!added.length && !changed.length) return { job, skipped: 'no-changes' };
-    applyIncremental(projectId, buildRunReport(base, readManualTopic(projectId)), [...added, ...changed], latest.startUrl, { clock, delivery: deps.delivery });
+    applyIncremental(projectId, buildProjectRunReport(base, projectId), [...added, ...changed], latest.startUrl, { clock, delivery: deps.delivery });
   }
   return { job };
 };

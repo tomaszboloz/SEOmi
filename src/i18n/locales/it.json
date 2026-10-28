@@ -5986,7 +5986,9 @@
           "lexicalFallback": "L'analisi per la lingua selezionata usa l'algoritmo statistico TF-IDF. Il componente di somiglianza semantica profonda non è disponibile; il punteggio si basa sulla copertura e sulla distribuzione delle parole chiave.",
           "skippedRender": "{{0}} pagine sono state escluse dall'analisi perché il rendering JavaScript è andato in timeout.",
           "degraded": "Alcune pagine avevano dati limitati, quindi i loro punteggi potrebbero essere meno precisi.",
-          "unmatchedTopic": "Nessuna pagina corrisponde all'argomento \"{{0}}\". Viene usato l'argomento rilevato."
+          "unmatchedTopic": "Nessuna pagina corrisponde all'argomento \"{{0}}\". Viene usato l'argomento rilevato.",
+          "anchoredTopic": "L'argomento principale è stato scelto da home page e pagine àncora ({{0}} pagine).",
+          "anchorsMissing": "Pagine àncora non trovate in questa scansione: {{0}}."
         },
         "rec": {
           "remove-offtopic": "Rimuovi o sposta {{0}} pagine off-topic: reindirizza, applica noindex o elimina le peggiori e rimuovi i link interni che puntano a esse. Potenziale: +{{1}} punti.",
@@ -6865,6 +6867,20 @@
       "manualActive": "Argomento manuale: {{input}}",
       "confidenceLine": "Affidabilità dell'argomento principale: {{pct}}%"
     },
+    "anchors": {
+      "title": "Pagine àncora",
+      "mode": {
+        "auto": "Modalità argomento: rilevato da tutti i contenuti",
+        "manual": "Modalità argomento: impostato manualmente",
+        "anchored": "Modalità argomento: home page e pagine àncora"
+      },
+      "inputLabel": "Pagine àncora (un URL per riga)",
+      "placeholder": "https://example.com/offerta",
+      "help": "La home page è sempre inclusa. Le àncore impediscono a un blog esteso di ridefinire l’offerta del sito. Fino a 20 URL.",
+      "applied": "Pagine usate per scegliere l’argomento: {{count}}",
+      "manualWins": "L’argomento manuale ha la precedenza sulle pagine àncora.",
+      "missing": "Àncore non trovate in questa scansione: {{count}}"
+    },
     "metrics": {
       "title": "Metriche chiave",
       "confidence": "Affidabilità dell'argomento principale",
@@ -7065,6 +7081,12 @@
       "new-cluster": "Nuovo cluster tematico \"{{label}}\" ({{count}} nuove, {{delta}} punti).",
       "optimized-borderline": "Ottimizzate {{count}} pagine al limite ({{delta}} punti).",
       "core-topic-changed": "L'argomento principale è cambiato da \"{{from}}\" a \"{{to}}\" ({{delta}} punti).",
+      "core-mode-changed": "La selezione dell'argomento è cambiata: {{from}} → {{to}} ({{delta}} punti).",
+      "mode": {
+        "auto": "rilevamento da tutti i contenuti",
+        "manual": "argomento manuale",
+        "anchored": "home e pagine àncora"
+      },
       "title": "Storico del punteggio",
       "empty": "Esegui almeno due analisi complete per vedere l'andamento.",
       "aria": "Site Focus Score su {{count}} analisi, da {{from}} a {{to}}",

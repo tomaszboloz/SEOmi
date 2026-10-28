@@ -5986,7 +5986,9 @@
           "lexicalFallback": "所选语言的分析使用 TF-IDF 统计算法。深度语义相似度部分不可用,评分基于关键词覆盖率和分布。",
           "skippedRender": "因 JavaScript 渲染超时,有 {{0}} 个页面未纳入分析。",
           "degraded": "部分页面的数据有限,因此其评分可能不够精确。",
-          "unmatchedTopic": "没有页面与主题“{{0}}”匹配,将改用自动识别的主题。"
+          "unmatchedTopic": "没有页面与主题“{{0}}”匹配,将改用自动识别的主题。",
+          "anchoredTopic": "核心主题选自首页和锚点页面（{{0}} 个页面）。",
+          "anchorsMissing": "本次抓取中未找到的锚点页面：{{0}}。"
         },
         "rec": {
           "remove-offtopic": "删除或迁移 {{0}} 个偏离主题的页面:对最差的页面做重定向、设置 noindex 或直接删除,并移除指向它们的内部链接。潜在提升:+{{1}} 分。",
@@ -6865,6 +6867,20 @@
       "manualActive": "手动指定的主题:{{input}}",
       "confidenceLine": "核心主题置信度:{{pct}}%"
     },
+    "anchors": {
+      "title": "锚点页面",
+      "mode": {
+        "auto": "主题模式：从全部内容中识别",
+        "manual": "主题模式：手动设置",
+        "anchored": "主题模式：首页和锚点页面"
+      },
+      "inputLabel": "锚点页面（每行一个 URL）",
+      "placeholder": "https://example.com/offer",
+      "help": "首页始终包含在内。锚点可防止大型博客改写网站的核心业务。最多 20 个 URL。",
+      "applied": "用于选择主题的页面：{{count}}",
+      "manualWins": "您手动设置的主题优先于锚点页面。",
+      "missing": "本次抓取中未找到的锚点：{{count}}"
+    },
     "metrics": {
       "title": "关键指标",
       "confidence": "核心主题置信度",
@@ -7065,6 +7081,12 @@
       "new-cluster": "新的主题簇“{{label}}”(新增 {{count}} 个,{{delta}} 分)。",
       "optimized-borderline": "已优化 {{count}} 个临界页面({{delta}} 分)。",
       "core-topic-changed": "核心主题已从“{{from}}”变为“{{to}}”({{delta}} 分)。",
+      "core-mode-changed": "主题选择方式已变更：{{from}} → {{to}}（{{delta}} 分）。",
+      "mode": {
+        "auto": "从全部内容识别",
+        "manual": "手动主题",
+        "anchored": "首页和锚点页面"
+      },
       "title": "评分历史",
       "empty": "至少运行两次完整分析后才能看到趋势。",
       "aria": "{{count}} 次分析中的 Site Focus Score,从 {{from}} 到 {{to}}",

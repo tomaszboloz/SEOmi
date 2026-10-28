@@ -13,7 +13,7 @@ import { diabetesFocus, diabetesPages, trustedArticle } from './eeatTrustFixture
 
 vi.mock('@/hooks/useSiteFocus', () => ({ useSiteFocus: () => ({
   report: { score: 70, band: 'good', pages: [], recommendations: [], generatedAt: '2026-01-01', pageCount: 0 },
-  manualTopic: null, history: [], annotations: [], recomputeBudget: { remaining: 1, limit: 2 }, setManualTopic: vi.fn(), recompute: vi.fn(),
+  manualTopic: null, history: [], annotations: [], recomputeBudget: { remaining: 1, limit: 2 }, setManualTopic: vi.fn(), anchorUrls: [], setAnchorUrls: vi.fn(), recompute: vi.fn(),
 }) }));
 vi.mock('@/components/Domain/crawlResults/focus/GateBanner', () => ({ GateBanner: () => <div>gate</div> }));
 vi.mock('@/components/Domain/crawlResults/focus/FocusBanners', () => ({ FocusBanners: () => <div>banners</div> }));
@@ -21,6 +21,7 @@ vi.mock('@/components/Domain/crawlResults/focus/ProtectionPanel', () => ({ Prote
 vi.mock('@/components/Domain/crawlResults/focus/FocusHistoryChart', () => ({ FocusHistoryChart: () => <div>chart</div> }));
 vi.mock('@/components/Domain/crawlResults/focus/WeeklySummaryCard', () => ({ WeeklySummaryCard: () => <div>weekly</div> }));
 vi.mock('@/components/Domain/crawlResults/focus/CoreTopicPanel', () => ({ CoreTopicPanel: () => <div>topic</div> }));
+vi.mock('@/components/Domain/crawlResults/focus/CoreAnchorsPanel', () => ({ CoreAnchorsPanel: () => <div>anchors</div> }));
 vi.mock('@/components/Domain/crawlResults/focus/FocusMetricsStrip', () => ({ FocusMetricsStrip: () => <div>metrics</div> }));
 vi.mock('@/components/Domain/crawlResults/focus/SubSiteScores', () => ({ SubSiteScores: () => <div>subsites</div> }));
 vi.mock('@/components/Domain/crawlResults/focus/FocusHeatmapTree', () => ({ FocusHeatmapTree: () => <div>heatmap</div> }));

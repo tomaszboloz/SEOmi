@@ -4,7 +4,7 @@ import i18n from '@/i18n';
 import { CrawlAuthorityTab } from '@/components/Domain/crawlResults/authority/CrawlAuthorityTab';
 import { CrawlResultsContent } from '@/components/Domain/crawlResults/CrawlResultsContent';
 
-vi.mock('@/hooks/useSiteFocus', () => ({ useSiteFocus: () => ({ report: null, manualTopic: null, history: [], annotations: [], recomputeBudget: { remaining: 1, limit: 2 }, setManualTopic: vi.fn(), recompute: vi.fn() }) }));
+vi.mock('@/hooks/useSiteFocus', () => ({ useSiteFocus: () => ({ report: null, manualTopic: null, history: [], annotations: [], recomputeBudget: { remaining: 1, limit: 2 }, setManualTopic: vi.fn(), anchorUrls: [], setAnchorUrls: vi.fn(), recompute: vi.fn() }) }));
 vi.mock('@/hooks/useTopicalAuthority', () => ({ useTopicalAuthority: () => ({ report: { taxonomy: null }, taxonomy: null, state: { running: false, progress: null, failure: null, error: null }, benchmark: null, history: [], build: vi.fn(), cancel: vi.fn(), clear: vi.fn() }) }));
 vi.mock('@/components/Domain/crawlResults/authority/AuthorityHero', () => ({ AuthorityHero: () => <div>hero</div> }));
 vi.mock('@/components/Domain/crawlResults/authority/AuthorityPillars', () => ({ AuthorityPillars: () => <div>pillars</div> }));

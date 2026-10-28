@@ -5986,7 +5986,9 @@
           "lexicalFallback": "Analiza dla wybranego języka korzysta z algorytmu statystycznego TF-IDF. Komponent głębokiego podobieństwa semantycznego jest niedostępny; wynik opiera się na pokryciu i rozkładzie słów kluczowych.",
           "skippedRender": "Pominięto {{0}} stron w analizie, ponieważ renderowanie JavaScript przekroczyło limit czasu.",
           "degraded": "Niektóre strony miały ograniczone dane, więc ich wyniki mogą być mniej precyzyjne.",
-          "unmatchedTopic": "Żadna strona nie pasuje do tematu „{{0}}”. Zamiast niego użyto wykrytego tematu."
+          "unmatchedTopic": "Żadna strona nie pasuje do tematu „{{0}}”. Zamiast niego użyto wykrytego tematu.",
+          "anchoredTopic": "Temat główny wybrano ze strony głównej i stron-kotwic (stron: {{0}}).",
+          "anchorsMissing": "Strony-kotwice nieznalezione w tym crawlu: {{0}}."
         },
         "rec": {
           "remove-offtopic": "Usuń lub przenieś {{0}} stron spoza tematu: przekieruj, oznacz noindex lub usuń najgorsze i usuń linki wewnętrzne do nich. Potencjał: +{{1}} pkt.",
@@ -6865,6 +6867,20 @@
       "manualActive": "Temat ręczny: {{input}}",
       "confidenceLine": "Pewność tematu głównego: {{pct}}%"
     },
+    "anchors": {
+      "title": "Strony-kotwice",
+      "mode": {
+        "auto": "Tryb tematu: wykryty z całej treści",
+        "manual": "Tryb tematu: ustawiony ręcznie",
+        "anchored": "Tryb tematu: strona główna i strony-kotwice"
+      },
+      "inputLabel": "Strony-kotwice (jeden URL w wierszu)",
+      "placeholder": "https://example.com/oferta",
+      "help": "Strona główna jest zawsze uwzględniana. Kotwice nie pozwalają, by rozbudowany blog przedefiniował ofertę witryny. Maksymalnie 20 adresów.",
+      "applied": "Strony użyte do wyboru tematu: {{count}}",
+      "manualWins": "Ręcznie ustawiony temat ma pierwszeństwo przed stronami-kotwicami.",
+      "missing": "Kotwice nieznalezione w tym crawlu: {{count}}"
+    },
     "metrics": {
       "title": "Kluczowe wskaźniki",
       "confidence": "Pewność tematu głównego",
@@ -7065,6 +7081,12 @@
       "new-cluster": "Nowy klaster tematyczny „{{label}}” ({{count}} nowych, {{delta}} pkt).",
       "optimized-borderline": "Zoptymalizowano {{count}} stron granicznych ({{delta}} pkt).",
       "core-topic-changed": "Temat główny zmienił się z „{{from}}” na „{{to}}” ({{delta}} pkt).",
+      "core-mode-changed": "Sposób wyboru tematu zmienił się: {{from}} → {{to}} ({{delta}} pkt).",
+      "mode": {
+        "auto": "wykrywanie z całej treści",
+        "manual": "temat ręczny",
+        "anchored": "strona główna i kotwice"
+      },
       "title": "Historia wyniku",
       "empty": "Wykonaj co najmniej dwie pełne analizy, aby zobaczyć trend.",
       "aria": "Site Focus Score w {{count}} analizach, od {{from}} do {{to}}",

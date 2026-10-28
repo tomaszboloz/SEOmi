@@ -1,7 +1,7 @@
 import { isBorderlineTrs, STRONG_FROM } from '@/services/siteFocus/trsPolicy';
 import { buildPagePlaybook, type CodeParams, type PageFocus, type SiteFocusReport } from '@/services/siteFocus';
-import { buildRunReport, isCompletedRun } from '@/services/siteFocusMonitoring/analysis';
-import { readManualTopic } from '@/services/siteFocusMonitoring/topic';
+import { isCompletedRun } from '@/services/siteFocusMonitoring/analysis';
+import { buildProjectRunReport } from '@/services/siteFocusMonitoring/projectReport';
 import type { CrawlRunRecord } from '@/types';
 
 /** Worst pages listed in the PDF; the full per-page model stays in the app. */
@@ -14,7 +14,11 @@ export interface FocusPdfSummary {
   confidence: number;
   on_topic_ratio: number;
   page_count: number;
-  core_topic: { label: string; terms: Array<{ term: string; coverage_pct: number }>; manual_input?: string; manual_matched?: boolean };
+  core_topic: {
+    label: string; terms: Array<{ term: string; coverage_pct: number }>; manual_input?: string; manual_matched?: boolean;
+    /** How the topic was chosen; anchor counts include the home page. */
+    mode?: 'auto' | 'manual' | 'anchored'; anchor_source_count?: number; anchor_missing_count?: number;
+  };
   flags: { low_confidence: boolean; multi_topic: boolean; lexical_fallback: boolean; degraded: boolean; skipped_render_timeouts: number };
   counts: { scored: number; skipped: number; off_topic: number; borderline: number; strong: number };
   pages: Array<{
@@ -34,6 +38,7 @@ export const summarizeSiteFocus = (report: SiteFocusReport): FocusPdfSummary => 
   const content = live.filter((page) => page.type !== 'technical');
   const worst = [...content].sort(byWorst).slice(0, FOCUS_PDF_PAGES);
   const manual = report.coreTopic.manualOverride;
+  const anchors = report.coreTopic.anchors;
   return {
     score: report.score,
     band: report.band,
@@ -44,6 +49,9 @@ export const summarizeSiteFocus = (report: SiteFocusReport): FocusPdfSummary => 
       label: report.coreTopic.label,
       terms: report.coreTopic.terms.slice(0, TOP_TERMS).map((item) => ({ term: item.term, coverage_pct: item.coveragePct })),
       ...(manual ? { manual_input: manual.input, manual_matched: manual.matched } : {}),
+      mode: report.coreTopic.mode ?? 'auto',
+      ...(anchors?.applied ? { anchor_source_count: anchors.sources.length } : {}),
+      ...(anchors?.missing.length ? { anchor_missing_count: anchors.missing.length } : {}),
     },
     flags: {
       low_confidence: report.flags.isLowConfidence,
@@ -76,5 +84,5 @@ export const summarizeSiteFocus = (report: SiteFocusReport): FocusPdfSummary => 
 /** Summary for a completed run, honouring the project's manual core topic; undefined when nothing can be scored. */
 export const crawlFocusSummary = (run: CrawlRunRecord): FocusPdfSummary | undefined => {
   if (!isCompletedRun(run)) return undefined;
-  return summarizeSiteFocus(buildRunReport(run, readManualTopic(run.projectId)));
+  return summarizeSiteFocus(buildProjectRunReport(run, run.projectId));
 };

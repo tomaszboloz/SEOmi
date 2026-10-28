@@ -4,7 +4,7 @@ import { buildSiteFocusReport } from '@/services/siteFocus';
 import { buildTrustReport, comparableTrustSnapshots, readTrustHistory, recordTrust, type ProfileEvidence, type TrustReport, type TrustSnapshot } from '@/services/eeatTrust';
 import { hasVerifiedTrustEvidence } from '@/services/eeatTrust/history';
 import { monitorScoreDrop } from '@/services/monitoringAlerts';
-import { readManualTopic } from '@/services/siteFocusMonitoring/topic';
+import { projectFocusOptions } from '@/services/siteFocusMonitoring/projectReport';
 
 export interface TrustState { report: TrustReport | null; previous: TrustSnapshot | undefined }
 
@@ -13,7 +13,7 @@ export const useTrust = (pages: CrawledPageSummary[], startUrl: string, run: Cra
   const [history, setHistory] = useState(() => readTrustHistory(projectId));
   const report = useMemo(() => {
     if (!pages.length) return null;
-    const focus = buildSiteFocusReport(pages, startUrl, { manualTopic: readManualTopic(projectId), now: run?.completedAt });
+    const focus = buildSiteFocusReport(pages, startUrl, { ...projectFocusOptions(projectId), now: run?.completedAt });
     return buildTrustReport(pages, focus, { now: run?.completedAt, profileEvidence });
   }, [pages, startUrl, projectId, run?.completedAt, profileEvidence]);
 

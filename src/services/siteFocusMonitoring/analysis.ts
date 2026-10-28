@@ -11,8 +11,10 @@ import type { ManualTopic } from './topic';
 
 export interface AnalysisDeps { clock?: Clock; notify?: boolean; delivery?: MonitoringDelivery }
 
-export const buildRunReport = (run: CrawlRunRecord, manualTopic?: ManualTopic, now?: string): SiteFocusReport =>
-  buildSiteFocusReport(run.result.pages as FocusPage[], run.startUrl, { manualTopic, ...(now ? { now } : {}) });
+export const buildRunReport = (run: CrawlRunRecord, manualTopic?: ManualTopic, now?: string, anchorUrls?: readonly string[]): SiteFocusReport =>
+  buildSiteFocusReport(run.result.pages as FocusPage[], run.startUrl, {
+    manualTopic, ...(now ? { now } : {}), ...(anchorUrls?.length ? { anchorUrls: [...anchorUrls] } : {}),
+  });
 
 export const isCompletedRun = (run: CrawlRunRecord | null | undefined): run is CrawlRunRecord =>
   Boolean(run && run.result && !run.result.cancelled && !run.result.timed_out && run.result.pages.length);
