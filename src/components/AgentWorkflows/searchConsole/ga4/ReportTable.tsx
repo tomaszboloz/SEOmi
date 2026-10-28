@@ -1,25 +1,40 @@
+import { useMemo } from 'react';
+import type { Ga4JoinedRow } from '@/types/ga4';
+import { PagedTable, type PagedColumn } from '../PagedTable';
+import { usePagedRows } from '../usePagedRows';
 import type { Ga4Rows, Ga4T } from './viewTypes';
 
 interface Props { rows: Ga4Rows; t: Ga4T; }
 const value = (number: number | undefined, t: Ga4T): string => number === undefined ? t('ga4.unknown') : number.toLocaleString();
+/** Unknown metrics sort below every measured value, never as zero. */
+const sortable = (number: number | undefined): number => number ?? Number.NEGATIVE_INFINITY;
 
+const SORT: Record<string, (row: Ga4JoinedRow) => string | number> = {
+  landingPage: (row) => row.landing_page,
+  host: (row) => row.host_name,
+  sessions: (row) => sortable(row.sessions),
+  engagedSessions: (row) => sortable(row.engaged_sessions),
+  keyEvents: (row) => sortable(row.key_events),
+  clicks: (row) => sortable(row.gsc?.clicks),
+  impressions: (row) => sortable(row.gsc?.impressions),
+  issues: (row) => sortable(row.crawl_issue_count),
+};
+
+/** Landing pages one page at a time (25-250 rows), sortable by every column; sessions first. */
 export function Ga4ReportTable({ rows, t }: Props) {
+  const paged = usePagedRows(rows, SORT, 'sessions');
+  const columns = useMemo((): PagedColumn<Ga4JoinedRow>[] => [
+    { key: 'landingPage', label: t('ga4.landingPage'), cellClassName: 'max-w-[320px] truncate text-sky-200', cell: (row) => <span title={row.landing_page}>{row.landing_page}</span> },
+    { key: 'host', label: t('ga4.host'), cell: (row) => row.host_name },
+    { key: 'sessions', label: t('ga4.sessions'), align: 'right', cell: (row) => value(row.sessions, t) },
+    { key: 'engagedSessions', label: t('ga4.engagedSessions'), align: 'right', cell: (row) => value(row.engaged_sessions, t) },
+    { key: 'keyEvents', label: t('ga4.keyEvents'), align: 'right', cell: (row) => value(row.key_events, t) },
+    { key: 'clicks', label: t('ga4.clicks'), align: 'right', cell: (row) => value(row.gsc?.clicks, t) },
+    { key: 'impressions', label: t('ga4.impressions'), align: 'right', cell: (row) => value(row.gsc?.impressions, t) },
+    { key: 'issues', label: t('ga4.issues'), align: 'right', cell: (row) => value(row.crawl_issue_count, t) },
+  ], [t]);
   if (!rows.length) return <p className="rounded-lg border border-slate-800 bg-slate-900/50 p-3 text-xs text-slate-400">{t('ga4.noRows')}</p>;
-  return <div className="overflow-x-auto rounded-xl border border-slate-800 bg-slate-900/60">
-    <table className="w-full min-w-[960px] text-left text-xs text-slate-300">
-      <thead className="border-b border-slate-800 text-[11px] uppercase text-slate-500"><tr>
-        <th className="px-3 py-3">{t('ga4.landingPage')}</th><th className="px-3 py-3">{t('ga4.host')}</th>
-        <th className="px-3 py-3 text-right">{t('ga4.sessions')}</th><th className="px-3 py-3 text-right">{t('ga4.engagedSessions')}</th>
-        <th className="px-3 py-3 text-right">{t('ga4.keyEvents')}</th><th className="px-3 py-3 text-right">{t('ga4.clicks')}</th>
-        <th className="px-3 py-3 text-right">{t('ga4.impressions')}</th><th className="px-3 py-3 text-right">{t('ga4.issues')}</th>
-      </tr></thead>
-      <tbody>{rows.map((row, index) => <tr key={`${row.host_name}:${row.landing_page}:${index}`} className="border-b border-slate-800/70 last:border-0">
-        <td className="max-w-[320px] truncate px-3 py-3 font-mono text-sky-200" title={row.landing_page}>{row.landing_page}</td>
-        <td className="px-3 py-3 font-mono">{row.host_name}</td><td className="px-3 py-3 text-right">{value(row.sessions, t)}</td>
-        <td className="px-3 py-3 text-right">{value(row.engaged_sessions, t)}</td><td className="px-3 py-3 text-right">{value(row.key_events, t)}</td>
-        <td className="px-3 py-3 text-right">{value(row.gsc?.clicks, t)}</td><td className="px-3 py-3 text-right">{value(row.gsc?.impressions, t)}</td>
-        <td className="px-3 py-3 text-right">{value(row.crawl_issue_count, t)}</td>
-      </tr>)}</tbody>
-    </table>
+  return <div className="rounded-xl border border-slate-800 bg-slate-900/60 p-3 text-slate-300">
+    <PagedTable columns={columns} paged={paged} emptyLabel={t('ga4.noRows')} rowKey={(row) => `${row.host_name}:${row.landing_page}`} />
   </div>;
 }

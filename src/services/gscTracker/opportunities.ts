@@ -16,9 +16,22 @@ const valid = (row: Query): boolean => [row.position, row.clicks, row.impression
   value => Number.isFinite(value) && value >= 0,
 ) && row.position > 0 && row.impressions > 0 && row.clicks <= row.impressions;
 
+/** Average-position window: above `min`, up to and including `max`. */
+export interface PositionRange { min: number; max: number }
+export const NEAR_TOP_TEN_RANGE: PositionRange = { min: 10, max: 20 };
+export const MAX_GSC_POSITION = 100;
+
+/** A usable window (0 <= min < max <= 100); anything else falls back to the default 10-20. */
+export const sanitizePositionRange = (value: unknown): PositionRange => {
+  const range = value as Partial<PositionRange> | null;
+  const min = Number(range?.min);
+  const max = Number(range?.max);
+  return Number.isFinite(min) && Number.isFinite(max) && min >= 0 && max <= MAX_GSC_POSITION && min < max ? { min, max } : { ...NEAR_TOP_TEN_RANGE };
+};
+
 /** Average GSC position is a period metric, not a current live SERP rank. */
-export function findNearTopTenQueries(snapshot: QuerySource): Query[] {
-  return snapshot.queries.filter(row => valid(row) && row.position > 10 && row.position <= 20 && row.impressions >= 100)
+export function findNearTopTenQueries(snapshot: QuerySource, range: PositionRange = NEAR_TOP_TEN_RANGE): Query[] {
+  return snapshot.queries.filter(row => valid(row) && row.position > range.min && row.position <= range.max && row.impressions >= 100)
     .sort((a, b) => b.impressions - a.impressions || a.position - b.position || a.query.localeCompare(b.query));
 }
 

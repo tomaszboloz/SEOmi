@@ -5068,7 +5068,7 @@
     "views": "Vues des requêtes",
     "view": {
       "all": "Toutes les requêtes",
-      "near": "Requêtes 10–20",
+      "near": "Requêtes {{min}}–{{max}}",
       "ctr": "Valeurs aberrantes CTR"
     },
     "filterLabel": "Filtrer les requêtes",
@@ -5095,7 +5095,13 @@
     "truncatedWarning": "La liste des requêtes peut être incomplète en raison des limites du rapport. L’absence d’une requête n’implique pas une perte de visibilité.",
     "clear": "Effacer le filtre de texte",
     "noMatches": "Aucune requête ne contient ce texte.",
-    "noQueries": "Aucune requête n’est disponible dans ce rapport."
+    "noQueries": "Aucune requête n’est disponible dans ce rapport.",
+    "range": {
+      "min": "Position au-delà de",
+      "max": "Position jusqu’à",
+      "hint": "Requêtes dont la position moyenne est au-delà de {{min}} et jusqu’à {{max}}.",
+      "invalid": "Saisissez des positions de 0 à 100, la première inférieure à la seconde."
+    }
   },
   "gscCannibalization": {
     "title": "Cannibalisation potentielle des requêtes",
