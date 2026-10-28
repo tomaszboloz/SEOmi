@@ -3575,6 +3575,23 @@
       "noPayload": "SEOmi nie odczytało tekstu z payloadu frameworka dla żadnej z tych podstron.",
       "showUrls": "Pokaż adresy URL tych podstron",
       "payloadWords": "Słowa w payloadzie JS: {{count}} (to nie jest wyrenderowana treść)"
+    },
+    "spaRender": {
+      "start": "Wyrenderuj w przeglądarce strony-szkielety: {{count}}",
+      "cancel": "Zatrzymaj renderowanie",
+      "note": "Porównuje statyczny HTML z DOM przeglądarki. Wyniki się nie zmieniają; aby analizować wyrenderowaną treść, uruchom crawl w trybie renderowania.",
+      "desktopOnly": "Renderowanie stron-szkieletów jest dostępne w zainstalowanej aplikacji desktopowej.",
+      "error": "renderowanie nieudane: {{error}}",
+      "words": "słowa {{raw}} → {{rendered}} ({{delta}})",
+      "links": "linki wewnętrzne {{raw}} → {{rendered}}",
+      "title": "tytuł po renderze: {{title}}",
+      "truncated": "wyrenderowany HTML obcięty",
+      "consoleErrors": "błędy konsoli: {{count}}",
+      "status": {
+        "pending": "w kolejce",
+        "rendering": "renderowanie…",
+        "cancelled": "przerwano"
+      }
     }
   },
   "ai": {
@@ -3816,7 +3833,8 @@
     "rowsPerPage": "Wierszy na stronie",
     "pagePrevious": "Poprzednia",
     "pageNext": "Następna",
-    "pageOf": "Strona {{page}} z {{total}}"
+    "pageOf": "Strona {{page}} z {{total}}",
+    "lastFetched": "Pokazuję ostatni raport ({{start}} – {{end}}), pobrany {{fetchedAt}}. Odśwież, aby pobrać nowsze dane."
   },
   "settings": {
     "close": "Zamknij ustawienia",
@@ -5986,7 +6004,9 @@
           "lexicalFallback": "Analiza dla wybranego języka korzysta z algorytmu statystycznego TF-IDF. Komponent głębokiego podobieństwa semantycznego jest niedostępny; wynik opiera się na pokryciu i rozkładzie słów kluczowych.",
           "skippedRender": "Pominięto {{0}} stron w analizie, ponieważ renderowanie JavaScript przekroczyło limit czasu.",
           "degraded": "Niektóre strony miały ograniczone dane, więc ich wyniki mogą być mniej precyzyjne.",
-          "unmatchedTopic": "Żadna strona nie pasuje do tematu „{{0}}”. Zamiast niego użyto wykrytego tematu."
+          "unmatchedTopic": "Żadna strona nie pasuje do tematu „{{0}}”. Zamiast niego użyto wykrytego tematu.",
+          "anchoredTopic": "Temat główny wybrano ze strony głównej i stron-kotwic (stron: {{0}}).",
+          "anchorsMissing": "Strony-kotwice nieznalezione w tym crawlu: {{0}}."
         },
         "rec": {
           "remove-offtopic": "Usuń lub przenieś {{0}} stron spoza tematu: przekieruj, oznacz noindex lub usuń najgorsze i usuń linki wewnętrzne do nich. Potencjał: +{{1}} pkt.",
@@ -6865,6 +6885,20 @@
       "manualActive": "Temat ręczny: {{input}}",
       "confidenceLine": "Pewność tematu głównego: {{pct}}%"
     },
+    "anchors": {
+      "title": "Strony-kotwice",
+      "mode": {
+        "auto": "Tryb tematu: wykryty z całej treści",
+        "manual": "Tryb tematu: ustawiony ręcznie",
+        "anchored": "Tryb tematu: strona główna i strony-kotwice"
+      },
+      "inputLabel": "Strony-kotwice (jeden URL w wierszu)",
+      "placeholder": "https://example.com/oferta",
+      "help": "Strona główna jest zawsze uwzględniana. Kotwice nie pozwalają, by rozbudowany blog przedefiniował ofertę witryny. Maksymalnie 20 adresów.",
+      "applied": "Strony użyte do wyboru tematu: {{count}}",
+      "manualWins": "Ręcznie ustawiony temat ma pierwszeństwo przed stronami-kotwicami.",
+      "missing": "Kotwice nieznalezione w tym crawlu: {{count}}"
+    },
     "metrics": {
       "title": "Kluczowe wskaźniki",
       "confidence": "Pewność tematu głównego",
@@ -7065,6 +7099,12 @@
       "new-cluster": "Nowy klaster tematyczny „{{label}}” ({{count}} nowych, {{delta}} pkt).",
       "optimized-borderline": "Zoptymalizowano {{count}} stron granicznych ({{delta}} pkt).",
       "core-topic-changed": "Temat główny zmienił się z „{{from}}” na „{{to}}” ({{delta}} pkt).",
+      "core-mode-changed": "Sposób wyboru tematu zmienił się: {{from}} → {{to}} ({{delta}} pkt).",
+      "mode": {
+        "auto": "wykrywanie z całej treści",
+        "manual": "temat ręczny",
+        "anchored": "strona główna i kotwice"
+      },
       "title": "Historia wyniku",
       "empty": "Wykonaj co najmniej dwie pełne analizy, aby zobaczyć trend.",
       "aria": "Site Focus Score w {{count}} analizach, od {{from}} do {{to}}",
@@ -7858,6 +7898,10 @@
     "title": "Jakość szablonów programatycznych",
     "empty": "Nie znaleziono słabych szablonów.",
     "row": "{{pattern}}: {{count}} stron, zysk informacji {{gain}}%",
+    "rowGainUnavailable": "{{pattern}}: {{count}} stron, unikalność niezmierzona (próbka wstępna)",
+    "unverifiedStructure": "Niezweryfikowana struktura (brak szkieletu DOM)",
+    "sampledOnly": "Tylko próbka wstępna (pełny tekst niezmierzony)",
+    "variablesUnavailable": "Zmienne szablonu niedostępne",
     "noindex": "Zalecane: noindex dla segmentu",
     "limit": "Zalecane: ogranicz liczbę indeksowanych stron"
   },
@@ -8236,5 +8280,17 @@
       "low-volume": "Bazowa liczba kliknięć jest mniejsza niż 30; zbyt mały wolumen do wiarygodnego porównania.",
       "pending": "Data interwencji jest w przyszłości; ocena oczekuje."
     }
+  },
+  "linkInjector": {
+    "title": "Wstawianie linków kontekstowych",
+    "description": "10 najlepszych linków do dodania: sekcja H2/H3 dawcy z największą liczbą wspólnych terminów, gotowe zdanie w języku strony i zmiana SPRS celu policzona solverem grafu linków. Strony w kwarantannie są wykluczone. Zmiana SPRS to szacunek modelu, nie prognoza pozycji ani ruchu.",
+    "format": "Format fragmentu",
+    "empty": "Żaden kandydat nie ma u dawcy sekcji H2/H3, która wspomina wspólne terminy.",
+    "section": "Umieść w H{{level}} „{{heading}}” (wzmianki wspólnych terminów: {{hits}})",
+    "gain": "Oczekiwana zmiana SPRS celu: {{value}} (skala 0–100)",
+    "gainUnknown": "Oczekiwana zmiana SPRS: nieznana (strona poza grafem solvera)",
+    "languageFallback": "Nieznany język strony: zdanie jest po angielsku.",
+    "copy": "Kopiuj",
+    "copied": "Skopiowano"
   }
 }

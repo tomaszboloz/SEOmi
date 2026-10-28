@@ -1,6 +1,8 @@
+import { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { HelpTip } from '@/components/Help/HelpTip';
 import type { CrawledPageSummary } from '@/types';
+import { SpaShellRenderPanel } from './SpaShellRenderPanel';
 
 type ShellReason = NonNullable<CrawledPageSummary['js_shell_reason']> | 'unknown';
 const REASONS: ShellReason[] = ['next_data', 'nuxt_payload', 'initial_state', 'bundle_empty_root', 'unknown'];
@@ -25,7 +27,8 @@ export const summarizeJsShells = (pages: CrawledPageSummary[] | undefined) => {
  */
 export const SpaShellBanner = ({ pages }: { pages: CrawledPageSummary[] | undefined }) => {
   const { t } = useTranslation();
-  const { shells, reasons, withPayload } = summarizeJsShells(pages);
+  // Memoised: the render panel resets its batch whenever the shell list identity changes.
+  const { shells, reasons, withPayload } = useMemo(() => summarizeJsShells(pages), [pages]);
   if (shells.length === 0) return null;
   return (
     <div role="status" data-testid="spa-shell-banner"
@@ -57,6 +60,7 @@ export const SpaShellBanner = ({ pages }: { pages: CrawledPageSummary[] | undefi
           ))}
         </ul>
       </details>
+      <SpaShellRenderPanel shells={shells} />
     </div>
   );
 };

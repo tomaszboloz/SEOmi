@@ -1,3 +1,21 @@
+# SEOmi 0.4.48 — release notes
+
+## Added
+- Site Focus has an **Anchor pages** panel under Core Topic. List the key offer pages (one URL per line, up to 20); together with the home page they pick the Core Topic, so a large blog no longer redefines the offer. The list is saved per project and used consistently by Focus, Trust, PDF summaries, pre-publish checks and the weekly schedule. The panel shows the selection mode (auto, manual or anchored), how many pages picked the topic and which anchors the crawl did not contain. A manual topic still wins (#82).
+- Site Focus history records how the Core Topic was chosen and notes when that changes; snapshots saved earlier keep an unknown mode. The PDF focus section states an anchored topic and missing anchors (#82).
+- The Links view has a **Contextual link injector**: the top 10 links to add, each with the donor's H2/H3 section that mentions the shared terms most, a ready sentence with the link in HTML or Markdown in the donor page's language, and the target's SPRS change from the link-graph solver. Quarantined pages are excluded; an unknown gain is shown as unknown (#128).
+- The JS-shell banner can render up to 10 flagged pages in the desktop app, one at a time and cancellable, and compares static HTML with the rendered DOM (words, internal links, title, truncation, console errors). Scores are unchanged (#131).
+- Backlink outreach drafts can cite information gain: an IGOS comparison of your crawled content with three live competitor pages, with evidence and embedding provenance, scoped to the producing project (#143).
+- The crawler records a bounded template DOM signature, variables the document explicitly declares and an explicit TAS subtopic id; the Template Governor clusters and scores programmatic pages with them (#139).
+
+## Fixed
+- Search Console remembers the last fetched report per project and shows it after a restart, project switch or reconnect, only for the same property and filters, and says when it was fetched. With nothing remembered, a connected property fetches once automatically. Disconnecting removes the remembered report.
+- Log import verifies one crawler address once regardless of User-Agent variant or IPv6 spelling, and human traffic no longer evicts verified crawlers from the cache.
+
+## Quality
+- New optional crawled-page fields (`template_dom_signature`, `template_injected_variables`, `tas_subtopic_id`) have their own additive contract test; the pinned crawl contract hash was updated for this additive change and the export count stays 40.
+- Strings for every addition are translated in all 12 locales.
+
 # SEOmi 0.4.47 — release notes
 
 ## Added

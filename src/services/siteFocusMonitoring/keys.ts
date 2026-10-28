@@ -10,6 +10,7 @@ const keyOf = (name: string) => (projectId: string): string => `seomi_project_${
 
 export const focusHistoryKey = keyOf('history');
 export const focusTopicKey = keyOf('manual_topic');
+export const focusAnchorsKey = keyOf('anchor_urls');
 export const focusBudgetKey = keyOf('recompute_budget');
 export const focusSeenKey = keyOf('first_seen');
 export const focusScheduleKey = keyOf('schedule');

@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useToolsStore } from '@/stores/toolsStore';
 import { useProjectStore } from '@/stores/projectStore';
@@ -9,7 +9,7 @@ import { compareGscSnapshots, findGscStrikingDistanceQueries, latestCompleteGscD
   type GscDateRange, type GscPerformanceSnapshot } from '@/services/gscPerformanceTracker';
 
 export function useSearchConsoleSession() {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
   const activeProjectId = useProjectStore((s) => s.activeProjectId);
   const isGscConnected = useToolsStore((s) => s.isGscConnected);
   const gscHydratedProjectId = useToolsStore((s) => s.gscHydratedProjectId);
@@ -19,6 +19,7 @@ export function useSearchConsoleSession() {
   const gscProperty = useToolsStore((s) => s.gscProperty);
   const gscFilters = useToolsStore((s) => s.gscFilters || {});
   const gscData = useToolsStore((s) => s.gscData);
+  const gscDataFetchedAt = useToolsStore((s) => s.gscDataFetchedAt);
   const gscInspectionResult = useToolsStore((s) => s.gscInspectionResult);
   const isGscLoading = useToolsStore((s) => s.isGscLoading);
   const gscError = useToolsStore((s) => s.gscError);
@@ -74,6 +75,14 @@ export function useSearchConsoleSession() {
   const handleRefresh = () => {
     if (!dateRangeError) void refreshGscData(dateRange, gscFilters);
   };
+  // First visit with a connected property and nothing remembered: fetch once instead of showing an empty view.
+  const autoFetched = useRef('');
+  useEffect(() => {
+    const scope = `${activeProjectId}|${gscProperty}|${JSON.stringify(gscFilters)}`;
+    if (!isGscScopeReady || !isGscConnected || !gscProperty || gscData || isGscLoading || gscError || dateRangeError || autoFetched.current === scope) return;
+    autoFetched.current = scope;
+    handleRefresh();
+  }, [isGscScopeReady, isGscConnected, gscProperty, gscData, isGscLoading, gscError, dateRangeError, activeProjectId, gscFilters]);
   const updateFilter = (patch: GscPerformanceFilters) => setGscFilters({ ...gscFilters, ...patch });
   const handleSaveSnapshot = () => {
     if (!isGscScopeReady || !activeProjectId || !gscData || gscData.site_url !== gscProperty) return;
@@ -99,9 +108,9 @@ export function useSearchConsoleSession() {
     return values.length ? ` · ${values.join(' · ')}` : ` · ${t('searchConsole.fullScope')}`;
   };
 
-  return { t, activeProjectId, isGscScopeReady, gscHydratedProjectId, isGscConnected: isGscScopeReady && isGscConnected,
+  return { t, i18n, activeProjectId, isGscScopeReady, gscHydratedProjectId, isGscConnected: isGscScopeReady && isGscConnected,
     gscClientId, gscClientSecret, gscProperties: isGscScopeReady ? gscProperties : [], gscProperty: scopedGscProperty,
-    gscFilters: isGscScopeReady ? gscFilters : {}, gscData: scopedGscData,
+    gscFilters: isGscScopeReady ? gscFilters : {}, gscData: scopedGscData, gscDataFetchedAt: scopedGscData ? gscDataFetchedAt : null,
     gscInspectionResult: isGscScopeReady ? gscInspectionResult : null, isGscLoading, gscError: isGscScopeReady ? gscError : null,
     resumeGsc, connectGsc, disconnectGsc, setGscProperty, setGscFilters, refreshGscData, inspectGscUrl, dateRangeError, handleConnect,
     handleInspect, handleRefresh, updateFilter, handleSaveSnapshot, currentSnapshot, baselineSnapshot, comparison, strikingDistance,

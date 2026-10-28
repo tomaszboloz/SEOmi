@@ -3575,6 +3575,23 @@
       "noPayload": "O SEOmi não conseguiu ler texto de um payload do framework em nenhuma destas páginas.",
       "showUrls": "Mostrar os URLs afetados",
       "payloadWords": "Palavras no payload JS: {{count}} (não é conteúdo renderizado)"
+    },
+    "spaRender": {
+      "start": "Renderizar no navegador páginas esqueleto: {{count}}",
+      "cancel": "Parar renderização",
+      "note": "Compara o HTML estático com o DOM do navegador. As pontuações não mudam; para analisar o conteúdo renderizado, execute um rastreio com renderização.",
+      "desktopOnly": "A renderização de páginas esqueleto está disponível na aplicação de ambiente de trabalho instalada.",
+      "error": "falha na renderização: {{error}}",
+      "words": "palavras {{raw}} → {{rendered}} ({{delta}})",
+      "links": "links internos {{raw}} → {{rendered}}",
+      "title": "título renderizado: {{title}}",
+      "truncated": "HTML renderizado truncado",
+      "consoleErrors": "erros da consola: {{count}}",
+      "status": {
+        "pending": "em espera",
+        "rendering": "a renderizar…",
+        "cancelled": "cancelado"
+      }
     }
   },
   "ai": {
@@ -3816,7 +3833,8 @@
     "rowsPerPage": "Linhas por página",
     "pagePrevious": "Anterior",
     "pageNext": "Seguinte",
-    "pageOf": "Página {{page}} de {{total}}"
+    "pageOf": "Página {{page}} de {{total}}",
+    "lastFetched": "A mostrar o último relatório ({{start}} – {{end}}), obtido em {{fetchedAt}}. Atualize para obter dados mais recentes."
   },
   "settings": {
     "close": "Close settings",
@@ -5986,7 +6004,9 @@
           "lexicalFallback": "A análise do idioma selecionado usa o algoritmo estatístico TF-IDF. O componente de similaridade semântica profunda não está disponível; a pontuação se baseia na cobertura e na distribuição das palavras-chave.",
           "skippedRender": "{{0}} páginas foram ignoradas na análise porque a renderização de JavaScript excedeu o tempo limite.",
           "degraded": "Algumas páginas tinham dados limitados, então suas pontuações podem ser menos precisas.",
-          "unmatchedTopic": "Nenhuma página correspondeu ao tema \"{{0}}\". O tema detectado é usado no lugar."
+          "unmatchedTopic": "Nenhuma página correspondeu ao tema \"{{0}}\". O tema detectado é usado no lugar.",
+          "anchoredTopic": "O tema principal foi escolhido a partir da página inicial e das páginas âncora ({{0}} páginas).",
+          "anchorsMissing": "Páginas âncora não encontradas neste rastreio: {{0}}."
         },
         "rec": {
           "remove-offtopic": "Remova ou mova {{0}} páginas off-topic: redirecione, aplique noindex ou exclua as piores e remova os links internos que apontam para elas. Potencial: +{{1}} pontos.",
@@ -6865,6 +6885,20 @@
       "manualActive": "Tema manual: {{input}}",
       "confidenceLine": "Confiança do tema principal: {{pct}}%"
     },
+    "anchors": {
+      "title": "Páginas âncora",
+      "mode": {
+        "auto": "Modo do tema: detetado em todo o conteúdo",
+        "manual": "Modo do tema: definido manualmente",
+        "anchored": "Modo do tema: página inicial e páginas âncora"
+      },
+      "inputLabel": "Páginas âncora (um URL por linha)",
+      "placeholder": "https://example.com/oferta",
+      "help": "A página inicial é sempre incluída. As âncoras impedem que um blog grande redefina a oferta do site. Até 20 URLs.",
+      "applied": "Páginas usadas para escolher o tema: {{count}}",
+      "manualWins": "O seu tema manual tem prioridade sobre as páginas âncora.",
+      "missing": "Âncoras não encontradas neste rastreio: {{count}}"
+    },
     "metrics": {
       "title": "Métricas principais",
       "confidence": "Confiança do tema principal",
@@ -7065,6 +7099,12 @@
       "new-cluster": "Novo cluster temático \"{{label}}\" ({{count}} novas, {{delta}} pontos).",
       "optimized-borderline": "{{count}} páginas limítrofes otimizadas ({{delta}} pontos).",
       "core-topic-changed": "O tema principal mudou de \"{{from}}\" para \"{{to}}\" ({{delta}} pontos).",
+      "core-mode-changed": "A seleção do tema mudou: {{from}} → {{to}} ({{delta}} pontos).",
+      "mode": {
+        "auto": "deteção em todo o conteúdo",
+        "manual": "tema manual",
+        "anchored": "página inicial e páginas âncora"
+      },
       "title": "Histórico de pontuação",
       "empty": "Execute pelo menos duas análises completas para ver a tendência.",
       "aria": "Site Focus Score ao longo de {{count}} análises, de {{from}} a {{to}}",
@@ -7858,6 +7898,10 @@
     "title": "Qualidade de modelos programáticos",
     "empty": "Nenhum modelo fraco encontrado.",
     "row": "{{pattern}}: {{count}} páginas, ganho de informação {{gain}}%",
+    "rowGainUnavailable": "{{pattern}}: {{count}} páginas, ganho não medido (amostra)",
+    "unverifiedStructure": "Estrutura não verificada (DOM indisponível)",
+    "sampledOnly": "Somente amostra (texto completo não medido)",
+    "variablesUnavailable": "Variáveis do template indisponíveis",
     "noindex": "Recomendado: noindex neste segmento",
     "limit": "Recomendado: limitar as páginas indexadas"
   },
@@ -8236,5 +8280,17 @@
       "low-volume": "Menos de 30 cliques de referência; o volume é insuficiente para uma comparação confiável.",
       "pending": "A data da intervenção está no futuro; a avaliação está pendente."
     }
+  },
+  "linkInjector": {
+    "title": "Injetor de links contextuais",
+    "description": "Os 10 melhores links a adicionar: a secção H2/H3 da página doadora com mais termos partilhados, uma frase pronta no idioma da página e a variação de SPRS do destino calculada pelo solver do grafo de links. As páginas em quarentena são excluídas. A variação de SPRS é uma estimativa do modelo, não uma previsão de posições nem de tráfego.",
+    "format": "Formato do excerto",
+    "empty": "Nenhum candidato tem na página doadora uma secção H2/H3 que mencione os termos partilhados.",
+    "section": "Colocar em H{{level}} «{{heading}}» (menções de termos partilhados: {{hits}})",
+    "gain": "Variação de SPRS esperada do destino: {{value}} (escala 0–100)",
+    "gainUnknown": "Variação de SPRS esperada: desconhecida (página fora do grafo do solver)",
+    "languageFallback": "Idioma da página desconhecido: a frase está em inglês.",
+    "copy": "Copiar",
+    "copied": "Copiado"
   }
 }

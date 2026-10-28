@@ -3575,6 +3575,23 @@
       "noPayload": "SEOmi could not read text from a framework payload for any of them.",
       "showUrls": "Show affected URLs",
       "payloadWords": "JS payload words: {{count}} (not rendered content)"
+    },
+    "spaRender": {
+      "start": "Render {{count}} shell pages in the browser",
+      "cancel": "Stop rendering",
+      "note": "Compares static HTML with the browser DOM. Scores are unchanged; to analyse rendered content, run a browser-rendered crawl.",
+      "desktopOnly": "Rendering shell pages is available in the installed desktop app.",
+      "error": "render failed: {{error}}",
+      "words": "words {{raw}} → {{rendered}} ({{delta}})",
+      "links": "internal links {{raw}} → {{rendered}}",
+      "title": "rendered title: {{title}}",
+      "truncated": "rendered HTML truncated",
+      "consoleErrors": "console errors: {{count}}",
+      "status": {
+        "pending": "waiting",
+        "rendering": "rendering…",
+        "cancelled": "cancelled"
+      }
     }
   },
   "ai": {
@@ -3816,7 +3833,8 @@
     "rowsPerPage": "Rows per page",
     "pagePrevious": "Previous",
     "pageNext": "Next",
-    "pageOf": "Page {{page}} of {{total}}"
+    "pageOf": "Page {{page}} of {{total}}",
+    "lastFetched": "Showing the last report ({{start}} – {{end}}), fetched {{fetchedAt}}. Refresh to get newer data."
   },
   "settings": {
     "close": "Close settings",
@@ -5986,7 +6004,9 @@
           "lexicalFallback": "The analysis for the selected language uses the TF-IDF statistical algorithm. The deep semantic similarity component is unavailable; the score is based on keyword coverage and distribution.",
           "skippedRender": "{{0}} pages were skipped in the analysis because JavaScript rendering timed out.",
           "degraded": "Some pages had limited data, so their scores may be less precise.",
-          "unmatchedTopic": "No pages matched the topic \"{{0}}\". The detected topic is used instead."
+          "unmatchedTopic": "No pages matched the topic \"{{0}}\". The detected topic is used instead.",
+          "anchoredTopic": "The core topic was chosen from the home page and anchor pages ({{0}} pages).",
+          "anchorsMissing": "Anchor pages not found in this crawl: {{0}}."
         },
         "rec": {
           "remove-offtopic": "Remove or move {{0}} off-topic pages: redirect, noindex or delete the worst ones and remove internal links to them. Potential: +{{1}} points.",
@@ -6865,6 +6885,20 @@
       "manualActive": "Manual topic: {{input}}",
       "confidenceLine": "Core topic confidence: {{pct}}%"
     },
+    "anchors": {
+      "title": "Anchor pages",
+      "mode": {
+        "auto": "Topic mode: detected from all content",
+        "manual": "Topic mode: set manually",
+        "anchored": "Topic mode: home page and anchor pages"
+      },
+      "inputLabel": "Anchor pages (one URL per line)",
+      "placeholder": "https://example.com/offer",
+      "help": "The home page is always included. Anchors keep a large blog from redefining what the site offers. Up to 20 URLs.",
+      "applied": "Pages used to pick the topic: {{count}}",
+      "manualWins": "Your manual topic takes precedence over anchor pages.",
+      "missing": "Anchors not found in this crawl: {{count}}"
+    },
     "metrics": {
       "title": "Key metrics",
       "confidence": "Core Topic Confidence",
@@ -7065,6 +7099,12 @@
       "new-cluster": "New topic cluster \"{{label}}\" ({{count}} new, {{delta}} points).",
       "optimized-borderline": "Optimised {{count}} borderline pages ({{delta}} points).",
       "core-topic-changed": "Core topic changed from \"{{from}}\" to \"{{to}}\" ({{delta}} points).",
+      "core-mode-changed": "Topic selection changed from {{from}} to {{to}} ({{delta}} points).",
+      "mode": {
+        "auto": "detection from all content",
+        "manual": "manual topic",
+        "anchored": "home and anchor pages"
+      },
       "title": "Score history",
       "empty": "Run at least two full analyses to see the trend.",
       "aria": "Site Focus Score over {{count}} analyses, from {{from}} to {{to}}",
@@ -7858,6 +7898,10 @@
     "title": "Programmatic template quality",
     "empty": "No weak templates found.",
     "row": "{{pattern}}: {{count}} pages, information gain {{gain}}%",
+    "rowGainUnavailable": "{{pattern}}: {{count}} pages, information gain unmeasured (sampled prefix)",
+    "unverifiedStructure": "Unverified structure (DOM skeleton unavailable)",
+    "sampledOnly": "Sampled prefix only (full text unmeasured)",
+    "variablesUnavailable": "Template variables unavailable",
     "noindex": "Recommended: noindex this segment",
     "limit": "Recommended: limit the number of indexed pages"
   },
@@ -8236,5 +8280,17 @@
       "low-volume": "Baseline clicks are below 30; the volume is too low for a reliable comparison.",
       "pending": "The intervention date is in the future; evaluation is pending."
     }
+  },
+  "linkInjector": {
+    "title": "Contextual link injector",
+    "description": "Top 10 links to add: the donor's H2/H3 section with the most shared terms, a ready sentence in the page's language and the target's SPRS change from the link-graph solver. Quarantined pages are excluded. The SPRS change is a model estimate, not a ranking or traffic forecast.",
+    "format": "Snippet format",
+    "empty": "No candidate has a donor H2/H3 section that mentions the shared terms.",
+    "section": "Place in H{{level}} \"{{heading}}\" ({{hits}} shared-term mentions)",
+    "gain": "Expected SPRS change of the target: {{value}} (0–100 scale)",
+    "gainUnknown": "Expected SPRS change: unknown (page outside the solver graph)",
+    "languageFallback": "Page language unknown: the sentence is in English.",
+    "copy": "Copy",
+    "copied": "Copied"
   }
 }

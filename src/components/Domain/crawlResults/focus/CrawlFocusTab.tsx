@@ -3,9 +3,10 @@ import { useTranslation } from 'react-i18next';
 import { useSiteFocus } from '@/hooks/useSiteFocus';
 import { buildSiteFocusReport } from '@/services/siteFocus';
 import type { SfsSnapshot, SiteFocusReport } from '@/services/siteFocus';
-import { buildHistorySeries, buildWeeklyReport, validFocusProject } from '@/services/siteFocusMonitoring';
+import { buildHistorySeries, buildWeeklyReport, parseAnchorInput, validFocusProject } from '@/services/siteFocusMonitoring';
 import type { CrawledPageSummary, CrawlRunRecord } from '@/types';
 import { Empty } from '../CrawlViewPrimitives';
+import { CoreAnchorsPanel } from './CoreAnchorsPanel';
 import { CoreTopicPanel } from './CoreTopicPanel';
 import { FocusBanners } from './FocusBanners';
 import { GateBanner } from './GateBanner';
@@ -45,6 +46,7 @@ export const CrawlFocusTab = ({ pages, startUrl, run, projectId, history, benchm
   const focus = useSiteFocus(run, projectId);
   const persisted = Boolean(run) && validFocusProject(projectId);
   const [draft, setDraft] = useState(() => topicText(focus.manualTopic));
+  const [anchorDraft, setAnchorDraft] = useState(() => focus.anchorUrls.join('\n'));
   const [filter, setFilter] = useState<FocusFilter>('all');
   const [ignoreTechnical, setIgnoreTechnical] = useState(true);
   const [includeGated, setIncludeGated] = useState(false);
@@ -52,23 +54,27 @@ export const CrawlFocusTab = ({ pages, startUrl, run, projectId, history, benchm
   const [tick, setTick] = useState(0);
   const [competitorTerms, setCompetitorTerms] = useState<string[]>([]);
   const deferredTopic = useDeferredValue(draft.trim());
-  const { setManualTopic } = focus;
+  const deferredAnchors = useDeferredValue(anchorDraft);
+  const anchorUrls = useMemo(() => parseAnchorInput(deferredAnchors), [deferredAnchors]);
+  const { setManualTopic, setAnchorUrls } = focus;
   const stored = topicText(focus.manualTopic);
+  const storedAnchors = focus.anchorUrls.join('\n');
 
   useEffect(() => { if (persisted && deferredTopic !== stored) setManualTopic(deferredTopic || null); }, [persisted, deferredTopic, stored, setManualTopic]);
+  useEffect(() => { if (persisted && anchorUrls.join('\n') !== storedAnchors) setAnchorUrls(anchorUrls); }, [persisted, anchorUrls, storedAnchors, setAnchorUrls]);
 
   // Local computation only when the hook has no report (no completed run / project).
   const local = useMemo(
-    () => (!focus.report && pages.length ? buildSiteFocusReport(pages, startUrl, { manualTopic: deferredTopic || undefined, now: new Date().toISOString() }) : undefined),
+    () => (!focus.report && pages.length ? buildSiteFocusReport(pages, startUrl, { manualTopic: deferredTopic || undefined, anchorUrls, now: new Date().toISOString() }) : undefined),
     // tick forces a recompute with a fresh timestamp.
-    [focus.report, pages, startUrl, deferredTopic, tick],
+    [focus.report, pages, startUrl, deferredTopic, anchorUrls, tick],
   );
   const base = focus.report ?? local;
   const report = useMemo(
     () => (base && (competitorTerms.length || includeGated)
-      ? buildSiteFocusReport(pages, startUrl, { manualTopic: focus.manualTopic ?? (deferredTopic || undefined), competitorTerms, includeNonIndexable: includeGated, now: base.generatedAt })
+      ? buildSiteFocusReport(pages, startUrl, { manualTopic: focus.manualTopic ?? (deferredTopic || undefined), anchorUrls, competitorTerms, includeNonIndexable: includeGated, now: base.generatedAt })
       : base),
-    [base, competitorTerms, pages, startUrl, focus.manualTopic, deferredTopic, includeGated],
+    [base, competitorTerms, pages, startUrl, focus.manualTopic, deferredTopic, anchorUrls, includeGated],
   );
   useEffect(() => { if (report) onReport?.(report); }, [report, onReport]);
 
@@ -103,7 +109,10 @@ export const CrawlFocusTab = ({ pages, startUrl, run, projectId, history, benchm
       {historySlot ?? <FocusHistoryChart series={series} />}
       {weekly && <WeeklySummaryCard weekly={weekly} />}
       <div className="grid gap-4 lg:grid-cols-[minmax(0,1fr)_minmax(0,1.4fr)]">
-        <CoreTopicPanel coreTopic={report.coreTopic} coveragePct={report.onTopicRatio} confidence={report.confidence} manualTopic={draft} onManualTopicChange={setDraft} />
+        <div className="space-y-4">
+          <CoreTopicPanel coreTopic={report.coreTopic} coveragePct={report.onTopicRatio} confidence={report.confidence} manualTopic={draft} onManualTopicChange={setDraft} />
+          <CoreAnchorsPanel coreTopic={report.coreTopic} value={anchorDraft} onChange={setAnchorDraft} />
+        </div>
         <FocusMetricsStrip report={report} />
       </div>
       {report.subSites && report.subSites.length > 0 && <SubSiteScores subSites={report.subSites} />}

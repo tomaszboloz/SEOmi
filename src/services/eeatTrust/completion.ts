@@ -1,6 +1,6 @@
 import type { CrawlRunRecord } from '@/types';
 import { buildSiteFocusReport } from '@/services/siteFocus';
-import { readManualTopic } from '@/services/siteFocusMonitoring/topic';
+import { projectFocusOptions } from '@/services/siteFocusMonitoring/projectReport';
 import { monitorScoreDrop } from '@/services/monitoringAlerts';
 import { isCompletedCrawlRun } from '@/services/optimizationTasks/crawlEvidence';
 import { comparableTrustSnapshots, readTrustHistory, recordTrust } from './history';
@@ -18,7 +18,7 @@ export interface CompletedTrustResult {
 export const persistCompletedTrustRun = (projectId: string | null | undefined, run: CrawlRunRecord): CompletedTrustResult | undefined => {
   if (!projectId || !isCompletedCrawlRun(run) || !run.result.pages.length) return undefined;
   const pages = run.result.pages;
-  const focus = buildSiteFocusReport(pages, run.startUrl, { manualTopic: readManualTopic(projectId), now: run.completedAt });
+  const focus = buildSiteFocusReport(pages, run.startUrl, { ...projectFocusOptions(projectId), now: run.completedAt });
   const report = buildTrustReport(pages, focus, { now: run.completedAt });
   const before = readTrustHistory(projectId);
   if (report.score === null) return { report, history: before, alerted: false };

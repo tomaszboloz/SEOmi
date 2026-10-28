@@ -50,6 +50,7 @@ mod setup_config;
 mod sitemaps;
 mod state;
 mod summary;
+mod template_signature;
 
 use pipeline::run_crawl_pipeline;
 use setup::CrawlSetup;

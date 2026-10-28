@@ -37,7 +37,7 @@ describe('coverage 100 signals UI', () => {
     expect(screen.getByText(/unknown similarity/)).toBeTruthy();
     expect(screen.getByText('International parity')).toBeTruthy();
     expect(screen.getByText('Shallow')).toBeTruthy();
-    expect(screen.getByText('Recommended: noindex this segment')).toBeTruthy();
+    expect(screen.getByText('Recommended: limit the number of indexed pages')).toBeTruthy();
     expect(screen.getByText(/Not enough comparable SERP snapshots/)).toBeTruthy();
     expect(screen.getByText(/Not enough history/)).toBeTruthy();
   });

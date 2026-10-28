@@ -3575,6 +3575,23 @@
       "noPayload": "SEOmi konnte bei keiner dieser Seiten Text aus einem Framework-Payload lesen.",
       "showUrls": "Betroffene URLs anzeigen",
       "payloadWords": "Wörter im JS-Payload: {{count}} (kein gerenderter Inhalt)"
+    },
+    "spaRender": {
+      "start": "Shell-Seiten im Browser rendern: {{count}}",
+      "cancel": "Rendern stoppen",
+      "note": "Vergleicht statisches HTML mit dem Browser-DOM. Bewertungen bleiben unverändert; um gerenderte Inhalte zu analysieren, starten Sie einen Crawl im Rendering-Modus.",
+      "desktopOnly": "Das Rendern von Shell-Seiten ist in der installierten Desktop-App verfügbar.",
+      "error": "Rendern fehlgeschlagen: {{error}}",
+      "words": "Wörter {{raw}} → {{rendered}} ({{delta}})",
+      "links": "interne Links {{raw}} → {{rendered}}",
+      "title": "gerenderter Titel: {{title}}",
+      "truncated": "gerendertes HTML gekürzt",
+      "consoleErrors": "Konsolenfehler: {{count}}",
+      "status": {
+        "pending": "wartet",
+        "rendering": "wird gerendert…",
+        "cancelled": "abgebrochen"
+      }
     }
   },
   "ai": {
@@ -3816,7 +3833,8 @@
     "rowsPerPage": "Zeilen pro Seite",
     "pagePrevious": "Zurück",
     "pageNext": "Weiter",
-    "pageOf": "Seite {{page}} von {{total}}"
+    "pageOf": "Seite {{page}} von {{total}}",
+    "lastFetched": "Letzter Bericht ({{start}} – {{end}}), abgerufen am {{fetchedAt}}. Aktualisieren Sie für neuere Daten."
   },
   "settings": {
     "close": "Close settings",
@@ -5986,7 +6004,9 @@
           "lexicalFallback": "Die Analyse für die gewählte Sprache nutzt den statistischen TF-IDF-Algorithmus. Die tiefe semantische Ähnlichkeitskomponente ist nicht verfügbar; der Wert basiert auf Abdeckung und Verteilung der Keywords.",
           "skippedRender": "{{0}} Seiten wurden in der Analyse übersprungen, weil das JavaScript-Rendering ein Zeitlimit überschritten hat.",
           "degraded": "Bei einigen Seiten waren die Daten begrenzt, daher können ihre Werte ungenauer sein.",
-          "unmatchedTopic": "Keine Seite passt zum Thema „{{0}}“. Stattdessen wird das erkannte Thema verwendet."
+          "unmatchedTopic": "Keine Seite passt zum Thema „{{0}}“. Stattdessen wird das erkannte Thema verwendet.",
+          "anchoredTopic": "Das Kernthema wurde aus Startseite und Ankerseiten gewählt ({{0}} Seiten).",
+          "anchorsMissing": "In diesem Crawl nicht gefundene Ankerseiten: {{0}}."
         },
         "rec": {
           "remove-offtopic": "{{0}} themenfremde Seiten entfernen oder verschieben: die schlechtesten weiterleiten, auf noindex setzen oder löschen und interne Links darauf entfernen. Potenzial: +{{1}} Punkte.",
@@ -6865,6 +6885,20 @@
       "manualActive": "Manuelles Thema: {{input}}",
       "confidenceLine": "Konfidenz des Kernthemas: {{pct}} %"
     },
+    "anchors": {
+      "title": "Ankerseiten",
+      "mode": {
+        "auto": "Themenmodus: aus allen Inhalten erkannt",
+        "manual": "Themenmodus: manuell festgelegt",
+        "anchored": "Themenmodus: Startseite und Ankerseiten"
+      },
+      "inputLabel": "Ankerseiten (eine URL pro Zeile)",
+      "placeholder": "https://example.com/angebot",
+      "help": "Die Startseite wird immer einbezogen. Anker verhindern, dass ein großer Blog das Angebot der Website umdefiniert. Bis zu 20 URLs.",
+      "applied": "Für die Themenwahl genutzte Seiten: {{count}}",
+      "manualWins": "Ihr manuelles Thema hat Vorrang vor den Ankerseiten.",
+      "missing": "In diesem Crawl nicht gefundene Anker: {{count}}"
+    },
     "metrics": {
       "title": "Wichtige Kennzahlen",
       "confidence": "Konfidenz des Kernthemas",
@@ -7065,6 +7099,12 @@
       "new-cluster": "Neues Themencluster „{{label}}“ ({{count}} neu, {{delta}} Punkte).",
       "optimized-borderline": "{{count}} Grenzfall-Seiten optimiert ({{delta}} Punkte).",
       "core-topic-changed": "Kernthema von „{{from}}“ zu „{{to}}“ geändert ({{delta}} Punkte).",
+      "core-mode-changed": "Themenauswahl geändert: {{from}} → {{to}} ({{delta}} Punkte).",
+      "mode": {
+        "auto": "Erkennung aus allen Inhalten",
+        "manual": "manuelles Thema",
+        "anchored": "Startseite und Ankerseiten"
+      },
       "title": "Verlauf des Werts",
       "empty": "Führe mindestens zwei vollständige Analysen durch, um den Trend zu sehen.",
       "aria": "Site Focus Score über {{count}} Analysen, von {{from}} bis {{to}}",
@@ -7858,6 +7898,10 @@
     "title": "Qualität programmatischer Templates",
     "empty": "Keine schwachen Templates gefunden.",
     "row": "{{pattern}}: {{count}} Seiten, Informationsgewinn {{gain}} %",
+    "rowGainUnavailable": "{{pattern}}: {{count}} Seiten, Informationsgewinn ungemessen (Stichprobe)",
+    "unverifiedStructure": "Unverifizierte Struktur (DOM-Skelett nicht verfügbar)",
+    "sampledOnly": "Nur Stichproben-Präfix (Gesamter Text ungemessen)",
+    "variablesUnavailable": "Vorlagenvariablen nicht verfügbar",
     "noindex": "Empfohlen: Segment auf noindex setzen",
     "limit": "Empfohlen: Zahl indexierter Seiten begrenzen"
   },
@@ -8236,5 +8280,17 @@
       "low-volume": "Weniger als 30 Klicks im Referenzzeitraum; das Volumen ist für einen verlässlichen Vergleich zu gering.",
       "pending": "Die Maßnahme liegt in der Zukunft; die Auswertung steht aus."
     }
+  },
+  "linkInjector": {
+    "title": "Kontextueller Link-Injektor",
+    "description": "Top 10 Links zum Hinzufügen: der H2/H3-Abschnitt der Spenderseite mit den meisten gemeinsamen Begriffen, ein fertiger Satz in der Sprache der Seite und die SPRS-Änderung des Ziels laut Linkgraph-Solver. Seiten in Quarantäne sind ausgeschlossen. Die SPRS-Änderung ist eine Modellschätzung, keine Ranking- oder Traffic-Prognose.",
+    "format": "Snippet-Format",
+    "empty": "Kein Kandidat hat auf der Spenderseite einen H2/H3-Abschnitt, der die gemeinsamen Begriffe erwähnt.",
+    "section": "In H{{level}} „{{heading}}“ platzieren (Erwähnungen gemeinsamer Begriffe: {{hits}})",
+    "gain": "Erwartete SPRS-Änderung des Ziels: {{value}} (Skala 0–100)",
+    "gainUnknown": "Erwartete SPRS-Änderung: unbekannt (Seite außerhalb des Solver-Graphen)",
+    "languageFallback": "Seitensprache unbekannt: Der Satz ist auf Englisch.",
+    "copy": "Kopieren",
+    "copied": "Kopiert"
   }
 }

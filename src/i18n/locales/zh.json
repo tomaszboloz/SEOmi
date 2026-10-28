@@ -3575,6 +3575,23 @@
       "noPayload": "SEOmi 未能从这些页面中任何一个的框架负载读取文本。",
       "showUrls": "显示受影响的 URL",
       "payloadWords": "JS 负载词数:{{count}}(非渲染内容)"
+    },
+    "spaRender": {
+      "start": "在浏览器中渲染空壳页面：{{count}} 个",
+      "cancel": "停止渲染",
+      "note": "对比静态 HTML 与浏览器 DOM。评分不变；如需分析渲染后的内容，请以渲染模式抓取。",
+      "desktopOnly": "空壳页面渲染仅在已安装的桌面应用中可用。",
+      "error": "渲染失败：{{error}}",
+      "words": "词数 {{raw}} → {{rendered}}（{{delta}}）",
+      "links": "内部链接 {{raw}} → {{rendered}}",
+      "title": "渲染后标题：{{title}}",
+      "truncated": "渲染后的 HTML 已截断",
+      "consoleErrors": "控制台错误：{{count}}",
+      "status": {
+        "pending": "等待中",
+        "rendering": "渲染中…",
+        "cancelled": "已取消"
+      }
     }
   },
   "ai": {
@@ -3816,7 +3833,8 @@
     "rowsPerPage": "每页行数",
     "pagePrevious": "上一页",
     "pageNext": "下一页",
-    "pageOf": "第 {{page}} / {{total}} 页"
+    "pageOf": "第 {{page}} / {{total}} 页",
+    "lastFetched": "显示上次的报告（{{start}} – {{end}}，获取于 {{fetchedAt}}）。刷新以获取更新的数据。"
   },
   "settings": {
     "close": "Close settings",
@@ -5986,7 +6004,9 @@
           "lexicalFallback": "所选语言的分析使用 TF-IDF 统计算法。深度语义相似度部分不可用,评分基于关键词覆盖率和分布。",
           "skippedRender": "因 JavaScript 渲染超时,有 {{0}} 个页面未纳入分析。",
           "degraded": "部分页面的数据有限,因此其评分可能不够精确。",
-          "unmatchedTopic": "没有页面与主题“{{0}}”匹配,将改用自动识别的主题。"
+          "unmatchedTopic": "没有页面与主题“{{0}}”匹配,将改用自动识别的主题。",
+          "anchoredTopic": "核心主题选自首页和锚点页面（{{0}} 个页面）。",
+          "anchorsMissing": "本次抓取中未找到的锚点页面：{{0}}。"
         },
         "rec": {
           "remove-offtopic": "删除或迁移 {{0}} 个偏离主题的页面:对最差的页面做重定向、设置 noindex 或直接删除,并移除指向它们的内部链接。潜在提升:+{{1}} 分。",
@@ -6865,6 +6885,20 @@
       "manualActive": "手动指定的主题:{{input}}",
       "confidenceLine": "核心主题置信度:{{pct}}%"
     },
+    "anchors": {
+      "title": "锚点页面",
+      "mode": {
+        "auto": "主题模式：从全部内容中识别",
+        "manual": "主题模式：手动设置",
+        "anchored": "主题模式：首页和锚点页面"
+      },
+      "inputLabel": "锚点页面（每行一个 URL）",
+      "placeholder": "https://example.com/offer",
+      "help": "首页始终包含在内。锚点可防止大型博客改写网站的核心业务。最多 20 个 URL。",
+      "applied": "用于选择主题的页面：{{count}}",
+      "manualWins": "您手动设置的主题优先于锚点页面。",
+      "missing": "本次抓取中未找到的锚点：{{count}}"
+    },
     "metrics": {
       "title": "关键指标",
       "confidence": "核心主题置信度",
@@ -7065,6 +7099,12 @@
       "new-cluster": "新的主题簇“{{label}}”(新增 {{count}} 个,{{delta}} 分)。",
       "optimized-borderline": "已优化 {{count}} 个临界页面({{delta}} 分)。",
       "core-topic-changed": "核心主题已从“{{from}}”变为“{{to}}”({{delta}} 分)。",
+      "core-mode-changed": "主题选择方式已变更：{{from}} → {{to}}（{{delta}} 分）。",
+      "mode": {
+        "auto": "从全部内容识别",
+        "manual": "手动主题",
+        "anchored": "首页和锚点页面"
+      },
       "title": "评分历史",
       "empty": "至少运行两次完整分析后才能看到趋势。",
       "aria": "{{count}} 次分析中的 Site Focus Score,从 {{from}} 到 {{to}}",
@@ -7858,6 +7898,10 @@
     "title": "程序化模板质量",
     "empty": "未发现薄弱模板。",
     "row": "{{pattern}}：{{count}} 个页面，信息增益 {{gain}}%",
+    "rowGainUnavailable": "{{pattern}}：{{count}} 个页面，信息增益未测量（采样）",
+    "unverifiedStructure": "结构未验证（DOM 不可用）",
+    "sampledOnly": "仅为采样前缀（完整文本未测量）",
+    "variablesUnavailable": "模板变量不可用",
     "noindex": "建议：对该分段设置 noindex",
     "limit": "建议：限制被索引的页面数量"
   },
@@ -8236,5 +8280,17 @@
       "low-volume": "基准点击次数少于30，数据量不足以进行可靠比较。",
       "pending": "干预日期在未来，正在等待评估。"
     }
+  },
+  "linkInjector": {
+    "title": "上下文链接插入",
+    "description": "建议添加的前 10 个链接：捐赠页中共享词最多的 H2/H3 部分、使用页面语言的现成句子，以及链接图求解器计算的目标页 SPRS 变化。隔离页面已排除。SPRS 变化是模型估计，不是排名或流量预测。",
+    "format": "片段格式",
+    "empty": "没有候选的捐赠页包含提及共享词的 H2/H3 部分。",
+    "section": "放在 H{{level}}“{{heading}}”中（共享词出现次数：{{hits}}）",
+    "gain": "目标页预期 SPRS 变化：{{value}}（0–100 刻度）",
+    "gainUnknown": "预期 SPRS 变化：未知（页面不在求解器图中）",
+    "languageFallback": "页面语言未知：句子为英文。",
+    "copy": "复制",
+    "copied": "已复制"
   }
 }

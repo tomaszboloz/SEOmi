@@ -1,6 +1,6 @@
 import { computeSfs } from './aggregate';
 import { isBorderlineTrs, OFF_TOPIC_BELOW } from './trsPolicy';
-import type { CodeParams, PageFocus, SiteFocusReport } from './types';
+import type { CodeParams, CoreTopicMode, PageFocus, SiteFocusReport } from './types';
 
 export interface SfsSnapshot {
   runId: string;
@@ -9,12 +9,13 @@ export interface SfsSnapshot {
   pageCount: number;
   /** No page was scored: the score is not a measurement and must not drive alerts. */
   unavailable?: boolean;
-  coreTopic: { label: string; clusterId: string };
+  /** `mode` and `anchorCount` are absent in snapshots saved before #82: provenance unknown, not auto. */
+  coreTopic: { label: string; clusterId: string; mode?: CoreTopicMode; anchorCount?: number };
   clusterLabels: string[];
   pages: Record<string, { trs: number; weight: number; type: PageFocus['type'] }>;
 }
 
-export interface HistoryAnnotation { code: 'removed-offtopic' | 'new-cluster' | 'optimized-borderline' | 'core-topic-changed'; params: CodeParams; delta: number }
+export interface HistoryAnnotation { code: 'removed-offtopic' | 'new-cluster' | 'optimized-borderline' | 'core-topic-changed' | 'core-mode-changed'; params: CodeParams; delta: number }
 export interface AlertEvent { code: 'sfs-drop' | 'content-guard'; params: CodeParams }
 
 export const SFS_DROP_POINTS = 5;
@@ -25,7 +26,10 @@ const round1 = (value: number): number => Math.round(value * 10) / 10;
 export const makeSnapshot = (report: SiteFocusReport, runId: string, at: string = report.generatedAt): SfsSnapshot => ({
   runId, at, score: report.score, pageCount: report.pageCount,
   ...(report.unavailable ? { unavailable: true } : {}),
-  coreTopic: { label: report.coreTopic.label, clusterId: report.coreTopic.clusterId },
+  coreTopic: {
+    label: report.coreTopic.label, clusterId: report.coreTopic.clusterId, mode: report.coreTopic.mode ?? 'auto',
+    ...(report.coreTopic.anchors?.applied ? { anchorCount: report.coreTopic.anchors.sources.length } : {}),
+  },
   clusterLabels: report.clusters.map((cluster) => cluster.label),
   pages: Object.fromEntries(report.pages.filter((page) => !page.skipped).map((page) => [page.url, { trs: page.trs, weight: page.weight, type: page.type }])),
 });
@@ -54,6 +58,8 @@ export const annotateChange = (prev: SfsSnapshot, next: SfsSnapshot): HistoryAnn
   if (prev.coreTopic.label !== next.coreTopic.label) {
     result.push({ code: 'core-topic-changed', params: { from: prev.coreTopic.label, to: next.coreTopic.label }, delta: round1(next.score - prev.score) });
   }
+  const [was, now] = [prev.coreTopic.mode, next.coreTopic.mode];
+  if (was && now && was !== now) result.push({ code: 'core-mode-changed', params: { from: was, to: now }, delta: round1(next.score - prev.score) });
   return result;
 };
 

@@ -2,7 +2,7 @@ import type { SearchConsoleSession } from './useSearchConsoleSession';
 import { RefreshCw } from 'lucide-react';
 
 export function SearchConsoleHeader({ session }: { session: SearchConsoleSession }) {
-  const { t, isGscConnected, gscProperty, isGscLoading, disconnectGsc, dateRangeError, handleRefresh } = session;
+  const { t, i18n, isGscConnected, gscProperty, isGscLoading, disconnectGsc, dateRangeError, handleRefresh, gscData, gscDataFetchedAt } = session;
   return <>
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div>
@@ -16,6 +16,11 @@ export function SearchConsoleHeader({ session }: { session: SearchConsoleSession
           <p className="text-sm text-slate-400">
             {t('searchConsole.description')}
           </p>
+          {gscData && gscDataFetchedAt && (
+            <p className="mt-1 text-xs text-slate-500" data-testid="gsc-last-fetched">
+              {t('searchConsole.lastFetched', { start: gscData.start_date, end: gscData.end_date, fetchedAt: new Date(gscDataFetchedAt).toLocaleString(i18n.language) })}
+            </p>
+          )}
         </div>
 
         <div className="flex items-center space-x-3">

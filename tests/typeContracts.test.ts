@@ -12,7 +12,7 @@ const modules = codeFiles('src/types').map(file => relative('src/types', file)).
 const additive: Record<string, string[]> = {
   SecurityHeaders: ['content_security_policy_report_only', 'repeated_headers'],
   GscPerformanceData: ['query_pages', 'query_pages_may_be_truncated'],
-  CrawledPageSummary: ['semantic_language', 'focus_terms', 'heading_texts', 'focus_text_chars', 'content_date', 'rag_sections', 'is_js_shell_suspected', 'js_shell_reason', 'spa_payload'],
+  CrawledPageSummary: ['semantic_language', 'focus_terms', 'heading_texts', 'focus_text_chars', 'content_date', 'rag_sections', 'is_js_shell_suspected', 'js_shell_reason', 'spa_payload', 'template_dom_signature', 'template_injected_variables', 'tas_subtopic_id'],
   CrawledLink: ['zone', 'zone_method', 'context_before', 'context_after'],
   SiteCrawlResult: ['score_version', 'robots_txt_evaluation_status', 'robots_txt_warning', 'robots_txt_status_code', 'robots_txt_final_url', 'robots_txt_redirect_chain'],
   CrawlRunRecord: ['startedAt'],
@@ -72,8 +72,7 @@ it('adds only optional observed query/page fields to the legacy GSC contract', (
 });
 
 it('adds only an optional semantic grouping language to the legacy crawled page contract', () => {
-  const source = parse('crawl/page.ts');
-  const page = source.statements.find(node => ts.isInterfaceDeclaration(node) && node.name.text === 'CrawledPageSummary');
+  const source = parse('crawl/page.ts'); const page = source.statements.find(node => ts.isInterfaceDeclaration(node) && node.name.text === 'CrawledPageSummary');
   if (!page || !ts.isInterfaceDeclaration(page)) throw new Error('Missing crawled page contract');
   const language = page.members.find(member => member.name?.getText(source) === 'semantic_language');
   if (!language || !ts.isPropertySignature(language)) throw new Error('Missing additive field');
@@ -89,6 +88,14 @@ it('adds only optional focus fields to the crawled page contract', () => {
     const field = page.members.find(member => member.name?.getText(source) === name);
     if (!field || !ts.isPropertySignature(field)) throw new Error(`Missing additive field ${name}`);
     expect(field.questionToken).toBeDefined();
+  }
+});
+it('adds optional template-governor evidence without changing the reviewed contract', () => {
+  const source = parse('crawl/page.ts'); const page = source.statements.find(node => ts.isInterfaceDeclaration(node) && node.name.text === 'CrawledPageSummary');
+  if (!page || !ts.isInterfaceDeclaration(page)) throw new Error('Missing crawled page contract');
+  for (const [name, type] of [['template_dom_signature', 'string'], ['template_injected_variables', 'string[]'], ['tas_subtopic_id', 'string | null']]) {
+    const field = page.members.find(member => member.name?.getText(source) === name); if (!field || !ts.isPropertySignature(field)) throw new Error(`Missing additive field ${name}`);
+    expect(field.questionToken).toBeDefined(); expect(field.type?.getText(source)).toBe(type);
   }
 });
 

@@ -2,6 +2,35 @@ import type { RenderedPageArtifact } from '@/types';
 import i18n from '@/i18n';
 import { invokeTauriCommand } from './transport';
 
+/** One page rendered in the desktop WebView (`render_crawl_page`); HTML is capped by the renderer. */
+export interface RenderedPageSnapshot {
+  requestedUrl: string;
+  finalUrl: string;
+  httpStatus?: number | null;
+  contentType: string;
+  charset: string;
+  html: string;
+  htmlTruncated: boolean;
+  navigationTimeMs?: number | null;
+  lcpMs?: number | null;
+  inpMs?: number | null;
+  cls?: number | null;
+  failedResourceUrls: string[];
+  consoleErrors: string[];
+}
+
+/** Renders one page in the desktop WebView, scoped to its own host. */
+export async function renderCrawlPage(args: { url: string; allowSubdomains?: boolean; waitDelayMs?: number }): Promise<RenderedPageSnapshot> {
+  return invokeTauriCommand<RenderedPageSnapshot>('render_crawl_page', {
+    url: args.url,
+    allowSubdomains: args.allowSubdomains ?? false,
+    scopePath: null,
+    waitForSelector: null,
+    waitDelayMs: args.waitDelayMs ?? 0,
+    lazyScrollCycles: 0,
+  });
+}
+
 export async function captureRenderedArtifact(args: {
   url: string;
   allowSubdomains: boolean;

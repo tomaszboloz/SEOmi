@@ -1,7 +1,7 @@
 import type { FocusPage } from '@/services/siteFocus';
 import { buildAuthorityReport, buildGapBrief, type TopicalAuthorityReport } from '@/services/topicalAuthority';
 import { readTaxonomy, readTopicalBenchmark } from '@/services/topicalAuthorityMonitoring';
-import { buildRunReport, isCompletedRun, readManualTopic } from '@/services/siteFocusMonitoring';
+import { buildProjectRunReport, isCompletedRun } from '@/services/siteFocusMonitoring';
 import type { CodeParams } from '@/services/siteFocus';
 import type { CrawlRunRecord } from '@/types';
 
@@ -40,7 +40,7 @@ export const summarizeAuthority = (report: TopicalAuthorityReport, benchmark: Ar
 /** Authority digest of a completed run, using the project's cached reference map; undefined for unfinished runs. */
 export const crawlAuthoritySummary = (run: CrawlRunRecord): AuthorityPdfSummary | undefined => {
   if (!isCompletedRun(run)) return undefined;
-  const sfs = buildRunReport(run, readManualTopic(run.projectId));
+  const sfs = buildProjectRunReport(run, run.projectId);
   const report = buildAuthorityReport(run.result.pages as FocusPage[], run.startUrl, sfs, { taxonomy: readTaxonomy(run.projectId), now: sfs.generatedAt });
   const rows = readTopicalBenchmark(run.projectId)?.rows.map((row) => ({ domain: row.domain, sfs: row.sfs, tas: row.tas })) ?? [];
   return summarizeAuthority(report, rows);
