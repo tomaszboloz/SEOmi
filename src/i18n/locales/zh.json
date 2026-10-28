@@ -7621,7 +7621,10 @@
         "dateModified": "修改日期（YYYY-MM-DD）",
         "lastReviewed": "最近审核日期（YYYY-MM-DD）",
         "sameAs": "sameAs 资料（每行一个 URL：Wikidata、ORCID、LinkedIn、职业注册库）",
-        "asReviewer": "声明为专家审核者而非作者"
+        "asReviewer": "声明为专家审核者而非作者",
+        "bio": "简短简介（可选）",
+        "credential": "资质或学位（可选）",
+        "knowsAbout": "专长主题（可选，每行一个）"
       },
       "issue": {
         "missing-name": "请输入作者姓名。",
@@ -7633,7 +7636,24 @@
       "preview": "生成的 JSON-LD",
       "copy": "复制 script 标签",
       "copied": "已复制。",
-      "copyFailed": "复制失败。请选中文本并手动复制。"
+      "copyFailed": "复制失败。请选中文本并手动复制。",
+      "needsVerification": "需要核实：只填写能够证明的内容。",
+      "unverifiedNote": "输出中的未核实字段：{{fields}}。发布前请逐一确认。",
+      "source": "来源：{{source}}",
+      "sourceName": {
+        "crawl": "抓取",
+        "report": "信任报告",
+        "start-url": "起始 URL"
+      },
+      "diff": {
+        "title": "相对已观察 schema 的变更",
+        "none": "相对已观察 schema 没有变更。",
+        "added": "新增",
+        "removed": "移除"
+      },
+      "download": "下载 JSON-LD",
+      "downloaded": "已下载。",
+      "downloadFailed": "下载失败。请改为复制 script 标签。"
     }
   },
   "executionCard": {

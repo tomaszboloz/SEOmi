@@ -7621,7 +7621,10 @@
         "dateModified": "Data di modifica (AAAA-MM-GG)",
         "lastReviewed": "Ultima revisione (AAAA-MM-GG)",
         "sameAs": "Profili sameAs (un URL per riga: Wikidata, ORCID, LinkedIn, albo professionale)",
-        "asReviewer": "Dichiara come revisore esperto invece che come autore"
+        "asReviewer": "Dichiara come revisore esperto invece che come autore",
+        "bio": "Breve biografia (facoltativo)",
+        "credential": "Titolo o qualifica (facoltativo)",
+        "knowsAbout": "Argomenti di competenza (facoltativo, uno per riga)"
       },
       "issue": {
         "missing-name": "Inserisci il nome dell'autore.",
@@ -7633,7 +7636,24 @@
       "preview": "JSON-LD generato",
       "copy": "Copia il tag script",
       "copied": "Copiato.",
-      "copyFailed": "Copia non riuscita. Seleziona il testo e copialo manualmente."
+      "copyFailed": "Copia non riuscita. Seleziona il testo e copialo manualmente.",
+      "needsVerification": "Da verificare: inserisci solo ciò che puoi dimostrare.",
+      "unverifiedNote": "Campi non verificati nell'output: {{fields}}. Conferma ciascuno prima di pubblicare.",
+      "source": "Fonte: {{source}}",
+      "sourceName": {
+        "crawl": "scansione",
+        "report": "rapporto di fiducia",
+        "start-url": "URL iniziale"
+      },
+      "diff": {
+        "title": "Modifiche rispetto allo schema osservato",
+        "none": "Nessuna modifica rispetto allo schema osservato.",
+        "added": "Aggiunto",
+        "removed": "Rimosso"
+      },
+      "download": "Scarica JSON-LD",
+      "downloaded": "Scaricato.",
+      "downloadFailed": "Download non riuscito. Copia invece il tag script."
     }
   },
   "executionCard": {

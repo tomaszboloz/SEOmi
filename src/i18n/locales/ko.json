@@ -7621,7 +7621,10 @@
         "dateModified": "수정일 (YYYY-MM-DD)",
         "lastReviewed": "최종 검토일 (YYYY-MM-DD)",
         "sameAs": "sameAs 프로필 (한 줄에 URL 하나: Wikidata, ORCID, LinkedIn, 전문직 등록부)",
-        "asReviewer": "저자 대신 전문가 검토자로 표시"
+        "asReviewer": "저자 대신 전문가 검토자로 표시",
+        "bio": "짧은 약력(선택)",
+        "credential": "자격 또는 학위(선택)",
+        "knowsAbout": "전문 주제(선택, 한 줄에 하나)"
       },
       "issue": {
         "missing-name": "저자 이름을 입력하세요.",
@@ -7633,7 +7636,24 @@
       "preview": "생성된 JSON-LD",
       "copy": "script 태그 복사",
       "copied": "복사했습니다.",
-      "copyFailed": "복사하지 못했습니다. 텍스트를 선택해 직접 복사하세요."
+      "copyFailed": "복사하지 못했습니다. 텍스트를 선택해 직접 복사하세요.",
+      "needsVerification": "확인 필요: 증명할 수 있는 내용만 입력하세요.",
+      "unverifiedNote": "출력의 미확인 필드: {{fields}}. 게시 전에 각각 확인하세요.",
+      "source": "출처: {{source}}",
+      "sourceName": {
+        "crawl": "크롤",
+        "report": "신뢰 보고서",
+        "start-url": "시작 URL"
+      },
+      "diff": {
+        "title": "관찰된 스키마 대비 변경 사항",
+        "none": "관찰된 스키마 대비 변경 사항이 없습니다.",
+        "added": "추가됨",
+        "removed": "제거됨"
+      },
+      "download": "JSON-LD 다운로드",
+      "downloaded": "다운로드했습니다.",
+      "downloadFailed": "다운로드에 실패했습니다. script 태그를 복사하세요."
     }
   },
   "executionCard": {

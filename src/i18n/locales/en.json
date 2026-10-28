@@ -7621,7 +7621,10 @@
         "dateModified": "Date modified (YYYY-MM-DD)",
         "lastReviewed": "Last reviewed (YYYY-MM-DD)",
         "sameAs": "sameAs profiles (one URL per line: Wikidata, ORCID, LinkedIn, professional register)",
-        "asReviewer": "Declare as expert reviewer instead of author"
+        "asReviewer": "Declare as expert reviewer instead of author",
+        "bio": "Short bio (optional)",
+        "credential": "Credential or degree (optional)",
+        "knowsAbout": "Topics known (optional, one per line)"
       },
       "issue": {
         "missing-name": "Enter the author name.",
@@ -7633,7 +7636,24 @@
       "preview": "Generated JSON-LD",
       "copy": "Copy script tag",
       "copied": "Copied.",
-      "copyFailed": "Copy failed. Select the text and copy it manually."
+      "copyFailed": "Copy failed. Select the text and copy it manually.",
+      "needsVerification": "Needs verification: type only what you can prove.",
+      "unverifiedNote": "Unverified fields in output: {{fields}}. Confirm each before publishing.",
+      "source": "Source: {{source}}",
+      "sourceName": {
+        "crawl": "crawl",
+        "report": "trust report",
+        "start-url": "start URL"
+      },
+      "diff": {
+        "title": "Changes against observed schema",
+        "none": "No changes against observed schema.",
+        "added": "Added",
+        "removed": "Removed"
+      },
+      "download": "Download JSON-LD",
+      "downloaded": "Downloaded.",
+      "downloadFailed": "Download failed. Copy the script tag instead."
     }
   },
   "executionCard": {

@@ -7621,7 +7621,10 @@
         "dateModified": "Date de modification (AAAA-MM-JJ)",
         "lastReviewed": "Dernière relecture (AAAA-MM-JJ)",
         "sameAs": "Profils sameAs (une URL par ligne : Wikidata, ORCID, LinkedIn, registre professionnel)",
-        "asReviewer": "Déclarer comme relecteur expert plutôt que comme auteur"
+        "asReviewer": "Déclarer comme relecteur expert plutôt que comme auteur",
+        "bio": "Courte biographie (facultatif)",
+        "credential": "Diplôme ou qualification (facultatif)",
+        "knowsAbout": "Sujets de compétence (facultatif, un par ligne)"
       },
       "issue": {
         "missing-name": "Saisissez le nom de l'auteur.",
@@ -7633,7 +7636,24 @@
       "preview": "JSON-LD généré",
       "copy": "Copier la balise script",
       "copied": "Copié.",
-      "copyFailed": "Échec de la copie. Sélectionnez le texte et copiez-le manuellement."
+      "copyFailed": "Échec de la copie. Sélectionnez le texte et copiez-le manuellement.",
+      "needsVerification": "À vérifier : ne saisissez que ce que vous pouvez prouver.",
+      "unverifiedNote": "Champs non vérifiés dans le résultat : {{fields}}. Confirmez chacun avant publication.",
+      "source": "Source : {{source}}",
+      "sourceName": {
+        "crawl": "exploration",
+        "report": "rapport de confiance",
+        "start-url": "URL de départ"
+      },
+      "diff": {
+        "title": "Modifications par rapport au schéma observé",
+        "none": "Aucune modification par rapport au schéma observé.",
+        "added": "Ajouté",
+        "removed": "Supprimé"
+      },
+      "download": "Télécharger le JSON-LD",
+      "downloaded": "Téléchargé.",
+      "downloadFailed": "Échec du téléchargement. Copiez plutôt la balise script."
     }
   },
   "executionCard": {
