@@ -23,7 +23,7 @@ export function SearchConsoleHub() {
         <SearchConsoleControls session={session} />
         <SearchConsoleMetrics session={session} />
         <SearchConsoleComparison session={session} />
-        {session.currentSnapshot && <GscOpportunities key={`${session.activeProjectId}|${session.currentSnapshot.id}`} snapshot={session.currentSnapshot} data={session.gscData ?? undefined} />}
+        {session.currentSnapshot && <GscOpportunities key={`${session.activeProjectId}|${session.currentSnapshot.id}`} snapshot={session.currentSnapshot} data={session.gscData ?? undefined} projectId={session.activeProjectId} />}
         {session.currentSnapshot && session.gscData && <GscCannibalization key={session.currentSnapshot.id} data={session.gscData} />}
         <SearchConsoleInspection session={session} />
         <SearchConsoleTables session={session} />

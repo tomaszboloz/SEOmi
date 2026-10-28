@@ -5050,7 +5050,7 @@
     "views": "Query views",
     "view": {
       "all": "All queries",
-      "near": "Queries 10–20",
+      "near": "Queries {{min}}–{{max}}",
       "ctr": "CTR outliers"
     },
     "filterLabel": "Filter queries",
@@ -5077,7 +5077,13 @@
     "truncatedWarning": "The query list may be incomplete because of report limits. A missing query does not imply lost visibility.",
     "clear": "Clear text filter",
     "noMatches": "No queries contain this text.",
-    "noQueries": "No query rows are available in this report."
+    "noQueries": "No query rows are available in this report.",
+    "range": {
+      "min": "Position above",
+      "max": "Position up to",
+      "hint": "Queries with an average position above {{min}} and up to {{max}}.",
+      "invalid": "Enter positions from 0 to 100 with the first lower than the second."
+    }
   },
   "gscCannibalization": {
     "title": "Potential query cannibalization",

@@ -5050,7 +5050,7 @@
     "views": "Suchanfragenansichten",
     "view": {
       "all": "Alle Suchanfragen",
-      "near": "Suchanfragen 10–20",
+      "near": "Suchanfragen {{min}}–{{max}}",
       "ctr": "CTR-Ausreißer"
     },
     "filterLabel": "Suchanfragen filtern",
@@ -5077,7 +5077,13 @@
     "truncatedWarning": "Die Suchanfragenliste kann aufgrund von Berichtslimits unvollständig sein. Eine fehlende Suchanfrage bedeutet nicht, dass Sichtbarkeit verloren ging.",
     "clear": "Textfilter löschen",
     "noMatches": "Keine Suchanfrage enthält diesen Text.",
-    "noQueries": "Dieser Bericht enthält keine verfügbaren Suchanfragen."
+    "noQueries": "Dieser Bericht enthält keine verfügbaren Suchanfragen.",
+    "range": {
+      "min": "Position über",
+      "max": "Position bis",
+      "hint": "Suchanfragen mit einer durchschnittlichen Position über {{min}} bis einschließlich {{max}}.",
+      "invalid": "Geben Sie Positionen von 0 bis 100 ein, die erste kleiner als die zweite."
+    }
   },
   "gscCannibalization": {
     "title": "Mögliche Keyword-Kannibalisierung",

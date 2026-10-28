@@ -5050,7 +5050,7 @@
     "views": "Vistas de consultas",
     "view": {
       "all": "Todas las consultas",
-      "near": "Consultas 10–20",
+      "near": "Consultas {{min}}–{{max}}",
       "ctr": "Valores atípicos de CTR"
     },
     "filterLabel": "Filtrar consultas",
@@ -5077,7 +5077,13 @@
     "truncatedWarning": "La lista de consultas puede estar incompleta debido a los límites del informe. La ausencia de una consulta no implica pérdida de visibilidad.",
     "clear": "Borrar filtro de texto",
     "noMatches": "Ninguna consulta contiene este texto.",
-    "noQueries": "No hay consultas disponibles en este informe."
+    "noQueries": "No hay consultas disponibles en este informe.",
+    "range": {
+      "min": "Posición por encima de",
+      "max": "Posición hasta",
+      "hint": "Consultas con posición media por encima de {{min}} y hasta {{max}}.",
+      "invalid": "Introduce posiciones de 0 a 100, la primera menor que la segunda."
+    }
   },
   "gscCannibalization": {
     "title": "Posible canibalización de consultas",
