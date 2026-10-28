@@ -3833,7 +3833,8 @@
     "rowsPerPage": "Righe per pagina",
     "pagePrevious": "Precedente",
     "pageNext": "Successiva",
-    "pageOf": "Pagina {{page}} di {{total}}"
+    "pageOf": "Pagina {{page}} di {{total}}",
+    "lastFetched": "Ultimo report ({{start}} – {{end}}), recuperato il {{fetchedAt}}. Aggiorna per ottenere dati più recenti."
   },
   "settings": {
     "close": "Close settings",

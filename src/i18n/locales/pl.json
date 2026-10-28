@@ -3833,7 +3833,8 @@
     "rowsPerPage": "Wierszy na stronie",
     "pagePrevious": "Poprzednia",
     "pageNext": "Następna",
-    "pageOf": "Strona {{page}} z {{total}}"
+    "pageOf": "Strona {{page}} z {{total}}",
+    "lastFetched": "Pokazuję ostatni raport ({{start}} – {{end}}), pobrany {{fetchedAt}}. Odśwież, aby pobrać nowsze dane."
   },
   "settings": {
     "close": "Zamknij ustawienia",

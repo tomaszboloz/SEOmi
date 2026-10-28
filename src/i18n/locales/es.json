@@ -3833,7 +3833,8 @@
     "rowsPerPage": "Filas por página",
     "pagePrevious": "Anterior",
     "pageNext": "Siguiente",
-    "pageOf": "Página {{page}} de {{total}}"
+    "pageOf": "Página {{page}} de {{total}}",
+    "lastFetched": "Se muestra el último informe ({{start}} – {{end}}), obtenido el {{fetchedAt}}. Actualiza para obtener datos más recientes."
   },
   "settings": {
     "close": "Close settings",

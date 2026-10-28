@@ -3833,7 +3833,8 @@
     "rowsPerPage": "Строк на странице",
     "pagePrevious": "Назад",
     "pageNext": "Далее",
-    "pageOf": "Страница {{page}} из {{total}}"
+    "pageOf": "Страница {{page}} из {{total}}",
+    "lastFetched": "Показан последний отчёт ({{start}} – {{end}}), получен {{fetchedAt}}. Обновите, чтобы получить новые данные."
   },
   "settings": {
     "close": "Close settings",

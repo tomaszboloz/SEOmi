@@ -3833,7 +3833,8 @@
     "rowsPerPage": "1ページの行数",
     "pagePrevious": "前へ",
     "pageNext": "次へ",
-    "pageOf": "{{page}} / {{total}} ページ"
+    "pageOf": "{{page}} / {{total}} ページ",
+    "lastFetched": "前回のレポート（{{start}} – {{end}}、取得日時 {{fetchedAt}}）を表示しています。新しいデータは更新してください。"
   },
   "settings": {
     "close": "Close settings",

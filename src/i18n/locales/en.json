@@ -3833,7 +3833,8 @@
     "rowsPerPage": "Rows per page",
     "pagePrevious": "Previous",
     "pageNext": "Next",
-    "pageOf": "Page {{page}} of {{total}}"
+    "pageOf": "Page {{page}} of {{total}}",
+    "lastFetched": "Showing the last report ({{start}} – {{end}}), fetched {{fetchedAt}}. Refresh to get newer data."
   },
   "settings": {
     "close": "Close settings",

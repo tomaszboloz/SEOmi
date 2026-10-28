@@ -3833,7 +3833,8 @@
     "rowsPerPage": "페이지당 행 수",
     "pagePrevious": "이전",
     "pageNext": "다음",
-    "pageOf": "{{page}} / {{total}} 페이지"
+    "pageOf": "{{page}} / {{total}} 페이지",
+    "lastFetched": "마지막 보고서({{start}} – {{end}}, {{fetchedAt}}에 가져옴)를 표시합니다. 최신 데이터는 새로고침하세요."
   },
   "settings": {
     "close": "Close settings",
