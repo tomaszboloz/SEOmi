@@ -7576,7 +7576,8 @@
       "roleReviewer": "Prüfer",
       "rolePublisher": "Herausgeber",
       "roleEvidence": "{{name}} ({{role}}) · {{status}} · sameAs-Angabe {{recall}}%",
-      "roleRecall": "Rollengewichtete sameAs-Angabe: {{pct}}% (Autor 50 %, Prüfer 25 %, Herausgeber 25 %; vorgeschlagene Gewichte, ein Angabesignal, keine Identitätsprüfung)."
+      "roleRecall": "Rollengewichtete sameAs-Angabe: {{pct}}% (Autor 50 %, Prüfer 25 %, Herausgeber 25 %; vorgeschlagene Gewichte, ein Angabesignal, keine Identitätsprüfung).",
+      "declaredNote": "Angegeben heißt nicht geprüft: Ein sameAs-Link zählt als Angabe. Verified erscheint erst, wenn das Registerprofil abgerufen wurde und Name oder Alias zum Autor passen; ein Treffer ist ein schwacher Beleg und beweist keine Qualifikation. Ein Strich bedeutet keine Daten."
     },
     "signals": {
       "claimEvidence": "Belege für Aussagen",

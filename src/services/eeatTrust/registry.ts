@@ -1,5 +1,6 @@
 import type { ProfileEvidence, ProfileStatus } from './types';
 import { hostMatches } from './identifiers';
+import { defaultIdentityMatcher } from './identityMatch';
 import { invokeTauriCommand, isTauriEnvironment } from '@/services/tauri';
 
 export interface RegistryResponse { status: number; url: string; body: string; sourceDate?: string }
@@ -8,6 +9,7 @@ export interface RegistryOptions {
   fetcher?: RegistryFetcher; now?: () => string; ttlMs?: number; maxBytes?: number; timeoutMs?: number; maxRequests?: number;
   /** Optional durable scope labels; the options object itself remains part of the cache scope. */
   projectId?: string; runId?: string;
+  /** Overrides the default name matcher (identityMatch). true = verified, false = mismatch, undefined = fetched only. */
   matches?: (profile: ProfileEvidence, response: RegistryResponse) => boolean | undefined;
 }
 export interface RegistryResult { profile: ProfileEvidence; stale: boolean }
@@ -47,6 +49,7 @@ const cacheKey = (profile: ProfileEvidence, options: RegistryOptions): string =>
   identityOf(options),
   identityOf(options.fetcher),
   identityOf(options.matches),
+  (profile.subjects ?? []).join('\u0001'),
 ].join('\u0000');
 
 const privateHost = (host: string): boolean => {
@@ -76,7 +79,7 @@ export const safeRegistryUrl = (value: string, kind: ProfileEvidence['kind']): U
 
 const statusFor = (profile: ProfileEvidence, response: RegistryResponse, options: RegistryOptions): ProfileStatus => {
   if (response.status < 200 || response.status >= 300) return 'unavailable';
-  const matches = options.matches?.(profile, response);
+  const matches = (options.matches ?? defaultIdentityMatcher)(profile, response);
   return matches === true ? 'verified' : matches === false ? 'mismatch' : 'fetched';
 };
 

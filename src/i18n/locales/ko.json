@@ -7576,7 +7576,8 @@
       "roleReviewer": "검토자",
       "rolePublisher": "발행처",
       "roleEvidence": "{{name}} ({{role}}) · {{status}} · sameAs 선언 {{recall}}%",
-      "roleRecall": "역할 가중 sameAs 선언: {{pct}}% (저자 50%, 검토자 25%, 발행처 25%; 제안된 가중치이며 선언 신호일 뿐 신원 확인이 아닙니다)."
+      "roleRecall": "역할 가중 sameAs 선언: {{pct}}% (저자 50%, 검토자 25%, 발행처 25%; 제안된 가중치이며 선언 신호일 뿐 신원 확인이 아닙니다).",
+      "declaredNote": "선언은 검증이 아닙니다. sameAs 링크는 선언으로 집계됩니다. verified는 레지스트리 프로필을 가져와 그 이름이나 별칭이 저자와 일치할 때만 표시됩니다. 일치는 약한 증거이며 자격을 증명하지 않습니다. 대시는 데이터 없음을 뜻합니다."
     },
     "signals": {
       "claimEvidence": "주장 근거",

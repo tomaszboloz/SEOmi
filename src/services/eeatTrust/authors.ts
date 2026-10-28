@@ -3,8 +3,9 @@ import type { FocusPage, SiteFocusReport } from '@/services/siteFocus';
 import { normalizeUrl } from '@/services/siteFocus/pageType';
 import { phraseKey } from '@/services/siteFocus/terms';
 import { childNodes, type SchemaNode } from './graph';
+import { sameName } from './identityMatch';
 import { classifyProfiles, declarationRecall, reconciliationStatus } from './identifiers';
-import type { AuthorEntity } from './types';
+import type { AuthorEntity, ProfileEvidence } from './types';
 
 const GENERIC = /^(the\s+)?(redakcj|redaktion|redacci|redazion|r[eé]daction|editorial|editors?\b|staff\b|admin|team\b|zesp[oó]ł|zespol|команд|редакц|администр|autor\b|author\b|unknown|anonim)/i;
 const ID_LIKE = /^(https?:\/\/|#|\/)/;
@@ -12,6 +13,12 @@ const BIO_TERMS = 40;
 
 /** A site-root id such as https://site/#person names the entity, not a profile page. */
 const isRootUrl = (url: string): boolean => { try { return new URL(url).pathname === '/'; } catch { return false; } };
+
+/** Name and alias of a non-generic entity travel with each profile so a fetched registry body can be compared. */
+const withSubjects = (profiles: ProfileEvidence[], entity: SchemaNode): ProfileEvidence[] => {
+  const subjects = [entity.name, ...(entity.props.alternateName ?? [])].filter((name): name is string => Boolean(name?.trim()) && !isGenericAuthor(name ?? ''));
+  return subjects.length ? profiles.map((profile) => ({ ...profile, subjects })) : profiles;
+};
 
 export const isGenericAuthor = (name: string): boolean => GENERIC.test(name.trim());
 
@@ -31,7 +38,7 @@ export const resolveEntities = (node: SchemaNode, property: string, siblings: Sc
 const entityKey = (entity: SchemaNode): string => (entity.id ?? entity.name ?? '').trim().toLowerCase();
 
 /** Share (0-100) of the author's declared expertise that lies inside the Core Topic; undefined without bio signal. */
-const alignmentOf = (entity: SchemaNode, pages: CrawledPageSummary[], report: SiteFocusReport | undefined): number | undefined => {
+const alignmentOf = (entity: SchemaNode, pages: CrawledPageSummary[], report: SiteFocusReport | undefined, articles: Set<string>): number | undefined => {
   if (!report) return undefined;
   const language = report.model.language;
   const weights = new Map<string, number>();
@@ -46,7 +53,11 @@ const alignmentOf = (entity: SchemaNode, pages: CrawledPageSummary[], report: Si
     text.split(/[\s,;/]+/).forEach((word) => add(phraseKey(word, language), 0.5));
   });
   const urls = new Set([entity.id, ...(entity.props.url ?? [])].filter((url): url is string => Boolean(url) && !isRootUrl(String(url))).map((url) => normalizeUrl(url.split('#')[0])));
-  const profile = pages.find((page) => urls.has(normalizeUrl(page.final_url || page.url))) as FocusPage | undefined;
+  const pageUrl = (page: CrawledPageSummary): string => page.final_url || page.url;
+  // No profile URL in the graph: an author page is a non-article page whose h1 or title carries the byline name.
+  const named = (page: FocusPage): boolean => Boolean(entity.name) && !articles.has(pageUrl(page))
+    && [...(page.heading_texts?.h1 ?? []), page.title ?? ''].some((text) => sameName(entity.name ?? '', text.replace(/\s*[-|–].*$/, '')));
+  const profile = (pages.find((page) => urls.has(normalizeUrl(pageUrl(page)))) ?? pages.find((page) => named(page as FocusPage))) as FocusPage | undefined;
   [...(profile?.focus_terms ?? [])].sort((a, b) => b.weight - a.weight).slice(0, BIO_TERMS).forEach((term) => add(term.term, term.weight));
   const total = [...weights.values()].reduce((sum, weight) => sum + weight, 0);
   if (!total) return undefined;
@@ -64,6 +75,7 @@ export const scanAuthors = (
   registry: Map<string, SchemaNode>,
   report: SiteFocusReport | undefined,
 ): AuthorScan => {
+  const articleUrlSet = new Set(articleNodes.keys());
   const byKey = new Map<string, AuthorEntity>();
   const withAuthor = new Set<string>();
   const withReviewer = new Set<string>();
@@ -81,8 +93,8 @@ export const scanAuthors = (
           credentials: entity.props.hasCredential ?? entity.props.credential ?? [],
           knowsAbout: entity.props.knowsAbout ?? [],
           sameAs: entity.props.sameAs ?? [],
-          profiles: classifyProfiles(entity.props.sameAs ?? []), articleUrls: [], generic: isGenericAuthor(entity.name ?? ''),
-          alignmentPct: alignmentOf(entity, pages, report),
+          profiles: withSubjects(classifyProfiles(entity.props.sameAs ?? []), entity), articleUrls: [], generic: isGenericAuthor(entity.name ?? ''),
+          alignmentPct: alignmentOf(entity, pages, report, articleUrlSet),
         };
         author.reconciliation = {
           role: 'author', profiles: author.profiles, declarationRecall: declarationRecall(author.profiles),
