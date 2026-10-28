@@ -7745,7 +7745,9 @@
         "high": "高",
         "medium": "中",
         "low": "低"
-      }
+      },
+      "expectedDelta": "期待される効果（ポイント）",
+      "expectedVsMeasured": "期待 {{expected}}、実測 {{measured}}"
     }
   },
   "scoreDropAlert": {

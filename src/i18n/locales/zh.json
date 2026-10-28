@@ -7745,7 +7745,9 @@
         "high": "高",
         "medium": "中",
         "low": "低"
-      }
+      },
+      "expectedDelta": "预期效果（分）",
+      "expectedVsMeasured": "预期 {{expected}}，实测 {{measured}}"
     }
   },
   "scoreDropAlert": {

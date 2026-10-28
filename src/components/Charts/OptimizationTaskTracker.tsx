@@ -11,6 +11,7 @@ import { TaskFilterBar } from './TaskFilterBar';
 import { TaskMetaEditor } from './TaskMetaEditor';
 
 const btn = 'rounded-md border border-slate-700 px-2 py-1 text-[10px] text-slate-200 hover:border-emerald-400';
+const signedPoints = (value: number): string => `${value > 0 ? '+' : ''}${value}`;
 
 /** Card action: adds a planned task with the module's current score as baseline. */
 export const AddTaskButton = ({ projectId, task, onAdded }: { projectId: string; task: NewTask; onAdded?: () => void }) => {
@@ -67,7 +68,8 @@ export const OptimizationTaskTracker = ({ projectId, pages, scoreFor, crawlStart
       {task.status === 'planned' && <button type="button" className={`${btn} mt-2`} onClick={() => save(markImplemented(tasks, task.id))}>{t('executionCard.tasks.markImplemented')}</button>}
       {task.verdict && <p role={task.verdict.regression ? 'alert' : 'status'} className={`mt-2 text-[10px] ${task.verdict.status === 'verified' ? 'text-emerald-300' : 'text-rose-300'}`}>
         {t(`executionCard.tasks.verdict.${task.verdict.code}`, task.verdict.params)}{task.verdict.delta !== null ? ` (${task.verdict.delta > 0 ? '+' : ''}${task.verdict.delta})` : ''}
-        {task.verdict.regression && ` — ${t('executionCard.tasks.regression')}`}</p>}
+        {task.verdict.regression && ` — ${t('executionCard.tasks.regression')}`}
+        {task.expectedDelta !== undefined && task.verdict.delta !== null && ` · ${t('executionCard.tasks.expectedVsMeasured', { expected: signedPoints(task.expectedDelta), measured: signedPoints(task.verdict.delta) })}`}</p>}
     </li>)}</ul>
   </section>;
 };

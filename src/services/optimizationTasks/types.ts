@@ -19,6 +19,8 @@ export interface OptimizationTask {
   priority: TaskPriority;
   /** SLA deadline, YYYY-MM-DD. */
   dueDate?: string;
+  /** Expected module score change in points (#134); absent when nobody estimated it. */
+  expectedDelta?: number;
   createdAt: string;
   implementedAt?: string;
   verifiedAt?: string;
