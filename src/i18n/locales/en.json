@@ -7488,7 +7488,22 @@
       "noKey": "Connect an AI provider in Settings to rewrite passages.",
       "error": "AI request failed: {{message}}",
       "empty": "The AI returned no text.",
-      "none": "No weak passages found."
+      "none": "No weak passages found.",
+      "copyFailed": "Copy failed. Select the text and copy it manually.",
+      "brief": {
+        "heading": "Rewritten passage: {{heading}}",
+        "unverified": "AI proposal, not verified. Check facts, numbers and sources before publishing.",
+        "original": "Original",
+        "rewritten": "AI rewrite (accepted manually)",
+        "versionNote": "AIO rewrite accepted, draft version {{n}} ({{revision}})",
+        "accepted": "Added to the brief. Draft version saved: {{version}}",
+        "failed": "Could not add the passage to the brief.",
+        "noProject": "Select a project to add the passage to its brief."
+      },
+      "history": {
+        "comparable": "Comparable rewrites (same profile): {{count}}, last change {{delta}}.",
+        "other": "Not comparable (different profile): {{count}}."
+      }
     },
     "issue": {
       "dangling-pronoun": "Unclear reference",

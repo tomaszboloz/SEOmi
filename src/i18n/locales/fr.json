@@ -7488,7 +7488,22 @@
       "noKey": "Connectez un fournisseur d'IA dans les Réglages pour réécrire les passages.",
       "error": "Échec de la requête IA : {{message}}",
       "empty": "L'IA n'a renvoyé aucun texte.",
-      "none": "Aucun passage faible trouvé."
+      "none": "Aucun passage faible trouvé.",
+      "copyFailed": "Échec de la copie. Sélectionnez le texte et copiez-le manuellement.",
+      "brief": {
+        "heading": "Passage réécrit : {{heading}}",
+        "unverified": "Proposition de l'IA non vérifiée. Vérifiez faits, chiffres et sources avant publication.",
+        "original": "Original",
+        "rewritten": "Réécriture IA (acceptée manuellement)",
+        "versionNote": "Réécriture AIO acceptée, version de brouillon {{n}} ({{revision}})",
+        "accepted": "Ajouté au brief. Version de brouillon enregistrée : {{version}}",
+        "failed": "Impossible d'ajouter le passage au brief.",
+        "noProject": "Sélectionnez un projet pour ajouter le passage à son brief."
+      },
+      "history": {
+        "comparable": "Réécritures comparables (même profil) : {{count}}, dernière variation {{delta}}.",
+        "other": "Non comparables (autre profil) : {{count}}."
+      }
     },
     "issue": {
       "dangling-pronoun": "Référence floue",

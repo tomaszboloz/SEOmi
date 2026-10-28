@@ -7488,7 +7488,22 @@
       "noKey": "Połącz dostawcę AI w Ustawieniach, aby przepisywać fragmenty.",
       "error": "Zapytanie do AI nie powiodło się: {{message}}",
       "empty": "AI nie zwróciło tekstu.",
-      "none": "Nie znaleziono słabych fragmentów."
+      "none": "Nie znaleziono słabych fragmentów.",
+      "copyFailed": "Kopiowanie nie powiodło się. Zaznacz tekst i skopiuj go ręcznie.",
+      "brief": {
+        "heading": "Przepisany fragment: {{heading}}",
+        "unverified": "Propozycja AI, niezweryfikowana. Sprawdź fakty, liczby i źródła przed publikacją.",
+        "original": "Oryginał",
+        "rewritten": "Przepisanie AI (zaakceptowane ręcznie)",
+        "versionNote": "Przepisanie AIO zaakceptowane, wersja szkicu {{n}} ({{revision}})",
+        "accepted": "Dodano do briefu. Zapisano wersję szkicu: {{version}}",
+        "failed": "Nie udało się dodać fragmentu do briefu.",
+        "noProject": "Wybierz projekt, aby dodać fragment do jego briefu."
+      },
+      "history": {
+        "comparable": "Porównywalne przepisania (ten sam profil): {{count}}, ostatnia zmiana {{delta}}.",
+        "other": "Nieporównywalne (inny profil): {{count}}."
+      }
     },
     "issue": {
       "dangling-pronoun": "Niejasne odniesienie",

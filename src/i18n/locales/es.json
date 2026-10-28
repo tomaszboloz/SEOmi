@@ -7488,7 +7488,22 @@
       "noKey": "Conecta un proveedor de IA en Ajustes para reescribir pasajes.",
       "error": "La solicitud a la IA falló: {{message}}",
       "empty": "La IA no devolvió texto.",
-      "none": "No se encontraron pasajes débiles."
+      "none": "No se encontraron pasajes débiles.",
+      "copyFailed": "No se pudo copiar. Selecciona el texto y cópialo manualmente.",
+      "brief": {
+        "heading": "Pasaje reescrito: {{heading}}",
+        "unverified": "Propuesta de IA sin verificar. Comprueba hechos, cifras y fuentes antes de publicar.",
+        "original": "Original",
+        "rewritten": "Reescritura con IA (aceptada manualmente)",
+        "versionNote": "Reescritura AIO aceptada, versión de borrador {{n}} ({{revision}})",
+        "accepted": "Añadido al brief. Versión de borrador guardada: {{version}}",
+        "failed": "No se pudo añadir el pasaje al brief.",
+        "noProject": "Selecciona un proyecto para añadir el pasaje a su brief."
+      },
+      "history": {
+        "comparable": "Reescrituras comparables (mismo perfil): {{count}}, último cambio {{delta}}.",
+        "other": "No comparables (otro perfil): {{count}}."
+      }
     },
     "issue": {
       "dangling-pronoun": "Referencia poco clara",

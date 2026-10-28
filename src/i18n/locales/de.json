@@ -7488,7 +7488,22 @@
       "noKey": "Verbinden Sie in den Einstellungen einen KI-Anbieter, um Textstellen umzuschreiben.",
       "error": "KI-Anfrage fehlgeschlagen: {{message}}",
       "empty": "Die KI hat keinen Text geliefert.",
-      "none": "Keine schwachen Textstellen gefunden."
+      "none": "Keine schwachen Textstellen gefunden.",
+      "copyFailed": "Kopieren fehlgeschlagen. Text markieren und manuell kopieren.",
+      "brief": {
+        "heading": "Umgeschriebene Passage: {{heading}}",
+        "unverified": "KI-Vorschlag, nicht geprüft. Fakten, Zahlen und Quellen vor der Veröffentlichung prüfen.",
+        "original": "Original",
+        "rewritten": "KI-Umschreibung (manuell übernommen)",
+        "versionNote": "AIO-Umschreibung übernommen, Entwurfsversion {{n}} ({{revision}})",
+        "accepted": "Zum Briefing hinzugefügt. Entwurfsversion gespeichert: {{version}}",
+        "failed": "Die Passage konnte nicht zum Briefing hinzugefügt werden.",
+        "noProject": "Projekt auswählen, um die Passage dem Briefing hinzuzufügen."
+      },
+      "history": {
+        "comparable": "Vergleichbare Umschreibungen (gleiches Profil): {{count}}, letzte Änderung {{delta}}.",
+        "other": "Nicht vergleichbar (anderes Profil): {{count}}."
+      }
     },
     "issue": {
       "dangling-pronoun": "Unklarer Bezug",
