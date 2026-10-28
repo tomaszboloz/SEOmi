@@ -5986,7 +5986,9 @@
           "lexicalFallback": "El análisis del idioma seleccionado usa el algoritmo estadístico TF-IDF. El componente de similitud semántica profunda no está disponible; la puntuación se basa en la cobertura y distribución de palabras clave.",
           "skippedRender": "Se omitieron {{0}} páginas del análisis porque se agotó el tiempo de renderizado de JavaScript.",
           "degraded": "Algunas páginas tenían datos limitados, por lo que sus puntuaciones pueden ser menos precisas.",
-          "unmatchedTopic": "Ninguna página coincidió con el tema \"{{0}}\". Se usa el tema detectado."
+          "unmatchedTopic": "Ninguna página coincidió con el tema \"{{0}}\". Se usa el tema detectado.",
+          "anchoredTopic": "El tema principal se eligió a partir de la página de inicio y las páginas ancla ({{0}} páginas).",
+          "anchorsMissing": "Páginas ancla no encontradas en este rastreo: {{0}}."
         },
         "rec": {
           "remove-offtopic": "Elimina o mueve {{0}} páginas off-topic: redirige, aplica noindex o elimina las peores y quita los enlaces internos que apuntan a ellas. Potencial: +{{1}} puntos.",
@@ -7079,6 +7081,12 @@
       "new-cluster": "Nuevo clúster temático \"{{label}}\" ({{count}} nuevas, {{delta}} puntos).",
       "optimized-borderline": "Se optimizaron {{count}} páginas límite ({{delta}} puntos).",
       "core-topic-changed": "El tema principal cambió de \"{{from}}\" a \"{{to}}\" ({{delta}} puntos).",
+      "core-mode-changed": "La selección del tema cambió: {{from}} → {{to}} ({{delta}} puntos).",
+      "mode": {
+        "auto": "detección en todo el contenido",
+        "manual": "tema manual",
+        "anchored": "inicio y páginas ancla"
+      },
       "title": "Historial de puntuación",
       "empty": "Ejecuta al menos dos análisis completos para ver la tendencia.",
       "aria": "Site Focus Score a lo largo de {{count}} análisis, de {{from}} a {{to}}",

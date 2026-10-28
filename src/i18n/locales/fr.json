@@ -5986,7 +5986,9 @@
           "lexicalFallback": "L'analyse pour la langue sélectionnée utilise l'algorithme statistique TF-IDF. Le composant de similarité sémantique approfondie est indisponible ; le score repose sur la couverture et la distribution des mots-clés.",
           "skippedRender": "{{0}} pages ont été ignorées dans l'analyse car le rendu JavaScript a dépassé le délai.",
           "degraded": "Certaines pages disposaient de données limitées ; leurs scores peuvent donc être moins précis.",
-          "unmatchedTopic": "Aucune page ne correspond au sujet « {{0}} ». Le sujet détecté est utilisé à la place."
+          "unmatchedTopic": "Aucune page ne correspond au sujet « {{0}} ». Le sujet détecté est utilisé à la place.",
+          "anchoredTopic": "Le sujet principal a été choisi à partir de la page d’accueil et des pages d’ancrage ({{0}} pages).",
+          "anchorsMissing": "Pages d’ancrage introuvables dans ce crawl : {{0}}."
         },
         "rec": {
           "remove-offtopic": "Supprimer ou déplacer {{0}} pages hors sujet : rediriger, passer en noindex ou supprimer les pires et retirer les liens internes qui y mènent. Potentiel : +{{1}} points.",
@@ -7079,6 +7081,12 @@
       "new-cluster": "Nouveau cluster thématique « {{label}} » ({{count}} nouvelles, {{delta}} points).",
       "optimized-borderline": "{{count}} pages limites optimisées ({{delta}} points).",
       "core-topic-changed": "Le sujet principal est passé de « {{from}} » à « {{to}} » ({{delta}} points).",
+      "core-mode-changed": "La sélection du sujet a changé : {{from}} → {{to}} ({{delta}} points).",
+      "mode": {
+        "auto": "détection sur tout le contenu",
+        "manual": "sujet manuel",
+        "anchored": "accueil et pages d’ancrage"
+      },
       "title": "Historique du score",
       "empty": "Lancez au moins deux analyses complètes pour voir la tendance.",
       "aria": "Site Focus Score sur {{count}} analyses, de {{from}} à {{to}}",

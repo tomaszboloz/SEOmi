@@ -5986,7 +5986,9 @@
           "lexicalFallback": "The analysis for the selected language uses the TF-IDF statistical algorithm. The deep semantic similarity component is unavailable; the score is based on keyword coverage and distribution.",
           "skippedRender": "{{0}} pages were skipped in the analysis because JavaScript rendering timed out.",
           "degraded": "Some pages had limited data, so their scores may be less precise.",
-          "unmatchedTopic": "No pages matched the topic \"{{0}}\". The detected topic is used instead."
+          "unmatchedTopic": "No pages matched the topic \"{{0}}\". The detected topic is used instead.",
+          "anchoredTopic": "The core topic was chosen from the home page and anchor pages ({{0}} pages).",
+          "anchorsMissing": "Anchor pages not found in this crawl: {{0}}."
         },
         "rec": {
           "remove-offtopic": "Remove or move {{0}} off-topic pages: redirect, noindex or delete the worst ones and remove internal links to them. Potential: +{{1}} points.",
@@ -7079,6 +7081,12 @@
       "new-cluster": "New topic cluster \"{{label}}\" ({{count}} new, {{delta}} points).",
       "optimized-borderline": "Optimised {{count}} borderline pages ({{delta}} points).",
       "core-topic-changed": "Core topic changed from \"{{from}}\" to \"{{to}}\" ({{delta}} points).",
+      "core-mode-changed": "Topic selection changed from {{from}} to {{to}} ({{delta}} points).",
+      "mode": {
+        "auto": "detection from all content",
+        "manual": "manual topic",
+        "anchored": "home and anchor pages"
+      },
       "title": "Score history",
       "empty": "Run at least two full analyses to see the trend.",
       "aria": "Site Focus Score over {{count}} analyses, from {{from}} to {{to}}",

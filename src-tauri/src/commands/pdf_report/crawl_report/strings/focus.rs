@@ -80,6 +80,8 @@ pub const NOTES: &[&str] = &[
     "skippedRender",
     "degraded",
     "unmatchedTopic",
+    "anchoredTopic",
+    "anchorsMissing",
 ];
 #[cfg(test)]
 pub const STATUSES: &[&str] = &["strong", "moderate", "borderline", "weak", "off-topic"];
