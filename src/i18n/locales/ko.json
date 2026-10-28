@@ -6865,6 +6865,20 @@
       "manualActive": "수동 지정 주제: {{input}}",
       "confidenceLine": "핵심 주제 신뢰도: {{pct}}%"
     },
+    "anchors": {
+      "title": "앵커 페이지",
+      "mode": {
+        "auto": "주제 모드: 전체 콘텐츠에서 감지",
+        "manual": "주제 모드: 수동 설정",
+        "anchored": "주제 모드: 홈페이지와 앵커 페이지"
+      },
+      "inputLabel": "앵커 페이지 (한 줄에 URL 하나)",
+      "placeholder": "https://example.com/offer",
+      "help": "홈페이지는 항상 포함됩니다. 앵커는 대형 블로그가 사이트의 제공 내용을 재정의하지 못하게 합니다. 최대 20개 URL.",
+      "applied": "주제 선택에 사용된 페이지: {{count}}",
+      "manualWins": "수동으로 설정한 주제가 앵커 페이지보다 우선합니다.",
+      "missing": "이번 크롤링에서 찾지 못한 앵커: {{count}}"
+    },
     "metrics": {
       "title": "주요 지표",
       "confidence": "핵심 주제 신뢰도",

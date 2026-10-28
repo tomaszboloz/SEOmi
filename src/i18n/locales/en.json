@@ -6865,6 +6865,20 @@
       "manualActive": "Manual topic: {{input}}",
       "confidenceLine": "Core topic confidence: {{pct}}%"
     },
+    "anchors": {
+      "title": "Anchor pages",
+      "mode": {
+        "auto": "Topic mode: detected from all content",
+        "manual": "Topic mode: set manually",
+        "anchored": "Topic mode: home page and anchor pages"
+      },
+      "inputLabel": "Anchor pages (one URL per line)",
+      "placeholder": "https://example.com/offer",
+      "help": "The home page is always included. Anchors keep a large blog from redefining what the site offers. Up to 20 URLs.",
+      "applied": "Pages used to pick the topic: {{count}}",
+      "manualWins": "Your manual topic takes precedence over anchor pages.",
+      "missing": "Anchors not found in this crawl: {{count}}"
+    },
     "metrics": {
       "title": "Key metrics",
       "confidence": "Core Topic Confidence",

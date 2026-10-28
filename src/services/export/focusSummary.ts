@@ -1,7 +1,7 @@
 import { isBorderlineTrs, STRONG_FROM } from '@/services/siteFocus/trsPolicy';
 import { buildPagePlaybook, type CodeParams, type PageFocus, type SiteFocusReport } from '@/services/siteFocus';
-import { buildRunReport, isCompletedRun } from '@/services/siteFocusMonitoring/analysis';
-import { readManualTopic } from '@/services/siteFocusMonitoring/topic';
+import { isCompletedRun } from '@/services/siteFocusMonitoring/analysis';
+import { buildProjectRunReport } from '@/services/siteFocusMonitoring/projectReport';
 import type { CrawlRunRecord } from '@/types';
 
 /** Worst pages listed in the PDF; the full per-page model stays in the app. */
@@ -76,5 +76,5 @@ export const summarizeSiteFocus = (report: SiteFocusReport): FocusPdfSummary => 
 /** Summary for a completed run, honouring the project's manual core topic; undefined when nothing can be scored. */
 export const crawlFocusSummary = (run: CrawlRunRecord): FocusPdfSummary | undefined => {
   if (!isCompletedRun(run)) return undefined;
-  return summarizeSiteFocus(buildRunReport(run, readManualTopic(run.projectId)));
+  return summarizeSiteFocus(buildProjectRunReport(run, run.projectId));
 };

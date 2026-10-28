@@ -1,6 +1,6 @@
 import type { CrawledPageSummary, CrawlRunRecord } from '@/types';
 import type { PrePublishReport } from './check';
-import { buildRunReport, isCompletedRun, readManualTopic } from '@/services/siteFocusMonitoring';
+import { buildProjectRunReport, isCompletedRun } from '@/services/siteFocusMonitoring';
 
 export const insufficientPrePublish = (reason: string): PrePublishReport => ({
   verdict: 'insufficient', publishApproved: false, draftTrs: null,
@@ -29,7 +29,7 @@ export const prePublishContext = (projectId: string | null, runs: CrawlRunRecord
     && Number.isFinite(Date.parse(entry.completedAt)))
     .sort((left, right) => Date.parse(right.completedAt) - Date.parse(left.completedAt))[0] : undefined;
   if (!run) return { run: null, focus: null, pages: [], coreText: '' };
-  const focus = buildRunReport(run, readManualTopic(projectId));
+  const focus = buildProjectRunReport(run, projectId);
   const pages = focus.pages.filter((page) => !page.skipped).flatMap((score) => {
     const source = run.result.pages.find((page) => page.url === score.url);
     const text = source ? crawlEmbeddingText(source) : '';

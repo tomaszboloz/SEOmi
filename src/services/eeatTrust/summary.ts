@@ -1,5 +1,5 @@
-import { buildRunReport, isCompletedRun } from '@/services/siteFocusMonitoring/analysis';
-import { readManualTopic } from '@/services/siteFocusMonitoring/topic';
+import { isCompletedRun } from '@/services/siteFocusMonitoring/analysis';
+import { buildProjectRunReport } from '@/services/siteFocusMonitoring/projectReport';
 import type { CrawlRunRecord } from '@/types';
 import { buildTrustReport } from './build';
 import type { CodeParams } from '@/services/siteFocus';
@@ -67,6 +67,6 @@ export const summarizeTrust = (report: TrustReport): TrustPdfSummary => ({
 /** Summary for a completed run, honouring the project's manual core topic; undefined when nothing can be assessed. */
 export const crawlTrustSummary = (run: CrawlRunRecord): TrustPdfSummary | undefined => {
   if (!isCompletedRun(run)) return undefined;
-  const focus = buildRunReport(run, readManualTopic(run.projectId));
+  const focus = buildProjectRunReport(run, run.projectId);
   return summarizeTrust(buildTrustReport(run.result.pages, focus));
 };

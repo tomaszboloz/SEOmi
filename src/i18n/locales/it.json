@@ -6865,6 +6865,20 @@
       "manualActive": "Argomento manuale: {{input}}",
       "confidenceLine": "Affidabilità dell'argomento principale: {{pct}}%"
     },
+    "anchors": {
+      "title": "Pagine àncora",
+      "mode": {
+        "auto": "Modalità argomento: rilevato da tutti i contenuti",
+        "manual": "Modalità argomento: impostato manualmente",
+        "anchored": "Modalità argomento: home page e pagine àncora"
+      },
+      "inputLabel": "Pagine àncora (un URL per riga)",
+      "placeholder": "https://example.com/offerta",
+      "help": "La home page è sempre inclusa. Le àncore impediscono a un blog esteso di ridefinire l’offerta del sito. Fino a 20 URL.",
+      "applied": "Pagine usate per scegliere l’argomento: {{count}}",
+      "manualWins": "L’argomento manuale ha la precedenza sulle pagine àncora.",
+      "missing": "Àncore non trovate in questa scansione: {{count}}"
+    },
     "metrics": {
       "title": "Metriche chiave",
       "confidence": "Affidabilità dell'argomento principale",

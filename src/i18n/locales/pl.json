@@ -6865,6 +6865,20 @@
       "manualActive": "Temat ręczny: {{input}}",
       "confidenceLine": "Pewność tematu głównego: {{pct}}%"
     },
+    "anchors": {
+      "title": "Strony-kotwice",
+      "mode": {
+        "auto": "Tryb tematu: wykryty z całej treści",
+        "manual": "Tryb tematu: ustawiony ręcznie",
+        "anchored": "Tryb tematu: strona główna i strony-kotwice"
+      },
+      "inputLabel": "Strony-kotwice (jeden URL w wierszu)",
+      "placeholder": "https://example.com/oferta",
+      "help": "Strona główna jest zawsze uwzględniana. Kotwice nie pozwalają, by rozbudowany blog przedefiniował ofertę witryny. Maksymalnie 20 adresów.",
+      "applied": "Strony użyte do wyboru tematu: {{count}}",
+      "manualWins": "Ręcznie ustawiony temat ma pierwszeństwo przed stronami-kotwicami.",
+      "missing": "Kotwice nieznalezione w tym crawlu: {{count}}"
+    },
     "metrics": {
       "title": "Kluczowe wskaźniki",
       "confidence": "Pewność tematu głównego",

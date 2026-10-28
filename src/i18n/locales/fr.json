@@ -6865,6 +6865,20 @@
       "manualActive": "Sujet manuel : {{input}}",
       "confidenceLine": "Confiance du sujet principal : {{pct}} %"
     },
+    "anchors": {
+      "title": "Pages d’ancrage",
+      "mode": {
+        "auto": "Mode du thème : détecté sur l’ensemble du contenu",
+        "manual": "Mode du thème : défini manuellement",
+        "anchored": "Mode du thème : page d’accueil et pages d’ancrage"
+      },
+      "inputLabel": "Pages d’ancrage (une URL par ligne)",
+      "placeholder": "https://example.com/offre",
+      "help": "La page d’accueil est toujours incluse. Les ancrages empêchent un grand blog de redéfinir l’offre du site. Jusqu’à 20 URL.",
+      "applied": "Pages utilisées pour choisir le thème : {{count}}",
+      "manualWins": "Votre thème manuel est prioritaire sur les pages d’ancrage.",
+      "missing": "Ancrages introuvables dans ce crawl : {{count}}"
+    },
     "metrics": {
       "title": "Indicateurs clés",
       "confidence": "Confiance du sujet principal",

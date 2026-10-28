@@ -6865,6 +6865,20 @@
       "manualActive": "手動指定のトピック: {{input}}",
       "confidenceLine": "中心トピックの信頼度: {{pct}}%"
     },
+    "anchors": {
+      "title": "アンカーページ",
+      "mode": {
+        "auto": "トピックモード：全コンテンツから検出",
+        "manual": "トピックモード：手動で設定",
+        "anchored": "トピックモード：トップページとアンカーページ"
+      },
+      "inputLabel": "アンカーページ（1行に1つのURL）",
+      "placeholder": "https://example.com/offer",
+      "help": "トップページは常に含まれます。アンカーにより、大規模なブログがサイトの提供内容を塗り替えることを防ぎます。最大20件のURL。",
+      "applied": "トピック選定に使ったページ数：{{count}}",
+      "manualWins": "手動で設定したトピックがアンカーページより優先されます。",
+      "missing": "このクロールで見つからなかったアンカー：{{count}}"
+    },
     "metrics": {
       "title": "主要指標",
       "confidence": "中心トピックの信頼度",

@@ -6865,6 +6865,20 @@
       "manualActive": "Tema manual: {{input}}",
       "confidenceLine": "Confianza del tema principal: {{pct}}%"
     },
+    "anchors": {
+      "title": "Páginas ancla",
+      "mode": {
+        "auto": "Modo del tema: detectado de todo el contenido",
+        "manual": "Modo del tema: definido manualmente",
+        "anchored": "Modo del tema: página de inicio y páginas ancla"
+      },
+      "inputLabel": "Páginas ancla (una URL por línea)",
+      "placeholder": "https://example.com/oferta",
+      "help": "La página de inicio siempre se incluye. Las anclas evitan que un blog grande redefina la oferta del sitio. Hasta 20 URL.",
+      "applied": "Páginas usadas para elegir el tema: {{count}}",
+      "manualWins": "Tu tema manual tiene prioridad sobre las páginas ancla.",
+      "missing": "Anclas no encontradas en este rastreo: {{count}}"
+    },
     "metrics": {
       "title": "Métricas clave",
       "confidence": "Confianza del tema principal",

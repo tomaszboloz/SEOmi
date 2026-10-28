@@ -6865,6 +6865,20 @@
       "manualActive": "Tema manual: {{input}}",
       "confidenceLine": "Confiança do tema principal: {{pct}}%"
     },
+    "anchors": {
+      "title": "Páginas âncora",
+      "mode": {
+        "auto": "Modo do tema: detetado em todo o conteúdo",
+        "manual": "Modo do tema: definido manualmente",
+        "anchored": "Modo do tema: página inicial e páginas âncora"
+      },
+      "inputLabel": "Páginas âncora (um URL por linha)",
+      "placeholder": "https://example.com/oferta",
+      "help": "A página inicial é sempre incluída. As âncoras impedem que um blog grande redefina a oferta do site. Até 20 URLs.",
+      "applied": "Páginas usadas para escolher o tema: {{count}}",
+      "manualWins": "O seu tema manual tem prioridade sobre as páginas âncora.",
+      "missing": "Âncoras não encontradas neste rastreio: {{count}}"
+    },
     "metrics": {
       "title": "Métricas principais",
       "confidence": "Confiança do tema principal",

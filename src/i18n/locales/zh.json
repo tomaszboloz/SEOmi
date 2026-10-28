@@ -6865,6 +6865,20 @@
       "manualActive": "手动指定的主题:{{input}}",
       "confidenceLine": "核心主题置信度:{{pct}}%"
     },
+    "anchors": {
+      "title": "锚点页面",
+      "mode": {
+        "auto": "主题模式：从全部内容中识别",
+        "manual": "主题模式：手动设置",
+        "anchored": "主题模式：首页和锚点页面"
+      },
+      "inputLabel": "锚点页面（每行一个 URL）",
+      "placeholder": "https://example.com/offer",
+      "help": "首页始终包含在内。锚点可防止大型博客改写网站的核心业务。最多 20 个 URL。",
+      "applied": "用于选择主题的页面：{{count}}",
+      "manualWins": "您手动设置的主题优先于锚点页面。",
+      "missing": "本次抓取中未找到的锚点：{{count}}"
+    },
     "metrics": {
       "title": "关键指标",
       "confidence": "核心主题置信度",
