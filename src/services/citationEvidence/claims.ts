@@ -12,7 +12,8 @@ export interface ClaimCitation {
 export interface CitationSource { key: string; exists?: boolean; reachable?: boolean; topical?: boolean; supportsClaim?: boolean; sourceChecked?: boolean }
 
 const DOI = /\b(?:https?:\/\/(?:dx\.)?doi\.org\/|doi:\s*)?(10\.\d{4,9}\/[-._;()/:A-Z0-9]+)\b/giu;
-const PMID = /\b(?:PMID\s*:?[\s#]*)?(\d{5,9})\b/giu;
+/** The PMID label is required: a bare number (population, postcode, price) is not a citation. */
+const PMID = /\bPMID\s*:?[\s#]*(\d{1,9})\b/giu;
 const PMCID = /\b(PMC\d{4,9})\b/giu;
 const URL = /https?:\/\/[^\s)\]>]+/giu;
 const NUMERIC = /\[(\d{1,3})\]/gu;
@@ -27,7 +28,7 @@ export const extractCitationReferences = (text: string): CitationReference[] => 
   const result: CitationReference[] = [];
   for (const match of text.matchAll(DOI)) { const raw = match[0]; const id = scholarlyIds(`https://doi.org/${match[1]}`); push(result, { raw, start: match.index, end: match.index + raw.length, kind: 'doi', key: scholarlyKey(id) }); }
   for (const match of text.matchAll(PMCID)) { const raw = match[0]; push(result, { raw, start: match.index, end: match.index + raw.length, kind: 'pmcid', key: `pmcid:${raw.toUpperCase()}` }); }
-  for (const match of text.matchAll(PMID)) { const raw = match[0]; if (!/\d{5,9}/.test(raw)) continue; push(result, { raw, start: match.index, end: match.index + raw.length, kind: 'pmid', key: `pmid:${match[1]}` }); }
+  for (const match of text.matchAll(PMID)) { const raw = match[0]; push(result, { raw, start: match.index, end: match.index + raw.length, kind: 'pmid', key: `pmid:${match[1]}` }); }
   for (const match of text.matchAll(URL)) { const raw = match[0].replace(/[.,;:]+$/, ''); const id = scholarlyIds(raw); push(result, { raw, start: match.index, end: match.index + raw.length, kind: id.doi ? 'doi' : id.pmid ? 'pmid' : id.pmcid ? 'pmcid' : 'url', key: scholarlyKey(id) }); }
   for (const match of text.matchAll(NUMERIC)) push(result, { raw: match[0], start: match.index, end: match.index + match[0].length, kind: 'numeric' });
   for (const match of text.matchAll(AUTHOR_YEAR)) push(result, { raw: match[0], start: match.index, end: match.index + match[0].length, kind: 'author-year' });

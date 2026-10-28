@@ -1,6 +1,6 @@
 import type { CrawledLink, CrawledPageSummary } from '@/types';
 import { scholarlyIds, scholarlyKey } from './citationIds';
-import { mapClaimsToCitations, type CitationSource } from '@/services/citationEvidence/claims';
+import { extractCitationReferences, mapClaimsToCitations, type CitationSource } from '@/services/citationEvidence/claims';
 import type { CitationDetail } from './types';
 
 /** Time-tested seed hosts: public institutions, scholarly publishers and standards bodies. */
@@ -10,6 +10,12 @@ const SEED_HOSTS = new Set([
   'cochranelibrary.com', 'nature.com', 'sciencedirect.com', 'thelancet.com', 'nejm.org', 'bmj.com', 'jamanetwork.com', 'springer.com',
   'wiley.com', 'oecd.org', 'iso.org', 'w3.org', 'eur-lex.europa.eu', 'isap.sejm.gov.pl', 'orcid.org', 'arxiv.org', 'scholar.google.com',
 ]);
+
+const SCHOLARLY_KINDS = new Set(['doi', 'pmid', 'pmcid']);
+/** DOI / PMID / PMCID written in the page text (bibliography, inline notes), not only in link targets. */
+const textScholarlyKeys = (page: CrawledPageSummary): string[] => extractCitationReferences(
+  [...(page.semantic_excerpts ?? []), ...(page.rag_sections ?? []).flatMap((section) => section.paragraphs)].join('\n'),
+).flatMap((ref) => (ref.key && SCHOLARLY_KINDS.has(ref.kind) ? [ref.key] : []));
 
 const hostOf = (url: string): string => { try { return new URL(url).hostname.toLowerCase().replace(/^www\./, ''); } catch { return ''; } };
 
@@ -37,7 +43,8 @@ export const analyzeCitations = (pages: CrawledPageSummary[], articleUrls: Set<s
     const trusted = [...targets].filter((target) => isTrustedHost(hostOf(target)));
     if (targets.size) detail.pagesWithAnyExternal += 1;
     if (trusted.length) detail.pagesWithTrusted += 1;
-    const keys = [...targets].map((target) => scholarlyKey(scholarlyIds(target))).filter((key): key is string => Boolean(key));
+    const linked = [...targets].map((target) => scholarlyKey(scholarlyIds(target))).filter((key): key is string => Boolean(key));
+    const keys = [...new Set([...linked, ...textScholarlyKeys(page)])];
     if (keys.length) detail.pagesWithScholarly += 1;
     keys.forEach((key) => sources.add(key));
     detail.externalLinks += external.length;
