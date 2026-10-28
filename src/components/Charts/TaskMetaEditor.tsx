@@ -22,6 +22,10 @@ export const TaskMetaEditor = ({ task, today, onEdit }: { task: OptimizationTask
     <label className="flex items-center gap-1">{t('executionCard.tasks.dueDate')}
       <input type="date" className={field} value={task.dueDate ?? ''} onChange={(event) => onEdit({ dueDate: event.target.value })} />
     </label>
+    <label className="flex items-center gap-1">{t('executionCard.tasks.expectedDelta')}
+      <input type="number" step="0.1" className={`${field} w-16`} defaultValue={task.expectedDelta ?? ''}
+        onBlur={(event) => onEdit({ expectedDelta: event.target.value.trim() === '' ? null : Number(event.target.value) })} />
+    </label>
     <HelpTip id="executionCard.sla" />
     {overdue && <span role="status" className="font-semibold text-rose-300">{t('executionCard.tasks.overdue')}</span>}
   </div>;

@@ -5068,7 +5068,7 @@
     "views": "Widoki fraz",
     "view": {
       "all": "Wszystkie frazy",
-      "near": "Frazy 10–20",
+      "near": "Frazy {{min}}–{{max}}",
       "ctr": "Odstające CTR"
     },
     "filterLabel": "Filtruj frazy",
@@ -5095,7 +5095,13 @@
     "truncatedWarning": "Lista fraz może być niepełna z powodu limitu raportu. Brak frazy nie oznacza utraty widoczności.",
     "clear": "Wyczyść filtr tekstowy",
     "noMatches": "Żadna fraza nie zawiera podanego tekstu.",
-    "noQueries": "W tym raporcie nie ma dostępnych fraz."
+    "noQueries": "W tym raporcie nie ma dostępnych fraz.",
+    "range": {
+      "min": "Pozycja powyżej",
+      "max": "Pozycja do",
+      "hint": "Frazy ze średnią pozycją powyżej {{min}} i najwyżej {{max}}.",
+      "invalid": "Podaj pozycje od 0 do 100, pierwszą mniejszą niż drugą."
+    }
   },
   "gscCannibalization": {
     "title": "Możliwa kanibalizacja fraz",
@@ -7739,7 +7745,9 @@
         "high": "Wysoki",
         "medium": "Średni",
         "low": "Niski"
-      }
+      },
+      "expectedDelta": "Oczekiwany efekt (pkt)",
+      "expectedVsMeasured": "oczekiwano {{expected}}, zmierzono {{measured}}"
     }
   },
   "scoreDropAlert": {

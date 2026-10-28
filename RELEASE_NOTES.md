@@ -1,3 +1,17 @@
+# SEOmi 0.4.49 — release notes
+
+## Added
+- Optimization tasks have an optional **Expected effect** (module score points). The task editor edits it (rounded to 0.1, empty clears it, non-finite or absolute values above 100 are rejected) and a verdict shows "expected +X, measured +Y". Each Contextual link injector row can be added as an add-link task whose expected effect is the solver's SPRS gain; an unknown gain sets no estimate. A damaged stored estimate is dropped on read without losing the task (#134).
+- Search Console near-top-10 view has adjustable **Position above** / **Position up to** fields (0-100, step 0.1; default 10-20). Only a valid window (min lower than max) is applied, an invalid one is announced and the previous one stays. The window is saved per project and shown in the tab label.
+- GA4 landing pages are paged (25, 50, 100 or 250 rows), with previous/next, a row counter and sorting by every column; unknown values sort last and never count as zero.
+
+## Fixed
+- Trust: a bare 5-9 digit number is no longer read as a PubMed citation; the PMID label is required. DOI, PMID and PMCID written in page text now count as scholarly sources, once even when also linked (#88).
+- URL protection telemetry uses only full-scope Search Console data (web search, no device or country filter), so a filtered snapshot can no longer turn a missing URL into measured 0 clicks. The last fetched report counts as a source alongside saved snapshots; the newer period wins (#91, #81).
+
+## Quality
+- New tests for task expected effect, citation text IDs, GSC telemetry scope and GSC window / GA4 paging. Strings are translated in all 12 locales.
+
 # SEOmi 0.4.48 — release notes
 
 ## Added

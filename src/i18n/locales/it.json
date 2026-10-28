@@ -5068,7 +5068,7 @@
     "views": "Viste delle query",
     "view": {
       "all": "Tutte le query",
-      "near": "Query 10–20",
+      "near": "Query {{min}}–{{max}}",
       "ctr": "Anomalie CTR"
     },
     "filterLabel": "Filtra query",
@@ -5095,7 +5095,13 @@
     "truncatedWarning": "L’elenco delle query potrebbe essere incompleto a causa dei limiti del report. L’assenza di una query non implica una perdita di visibilità.",
     "clear": "Cancella filtro di testo",
     "noMatches": "Nessuna query contiene questo testo.",
-    "noQueries": "Non ci sono query disponibili in questo rapporto."
+    "noQueries": "Non ci sono query disponibili in questo rapporto.",
+    "range": {
+      "min": "Posizione oltre",
+      "max": "Posizione fino a",
+      "hint": "Query con posizione media oltre {{min}} e fino a {{max}}.",
+      "invalid": "Inserisci posizioni da 0 a 100, la prima minore della seconda."
+    }
   },
   "gscCannibalization": {
     "title": "Possibile cannibalizzazione delle query",
@@ -7739,7 +7745,9 @@
         "high": "Alta",
         "medium": "Media",
         "low": "Bassa"
-      }
+      },
+      "expectedDelta": "Effetto atteso (punti)",
+      "expectedVsMeasured": "atteso {{expected}}, misurato {{measured}}"
     }
   },
   "scoreDropAlert": {

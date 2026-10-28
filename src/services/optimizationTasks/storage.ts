@@ -23,9 +23,16 @@ const isTask = (value: unknown): value is OptimizationTask => {
     && PRIORITIES.includes(t!.priority as TaskPriority) && (t!.baselineScore === null || typeof t!.baselineScore === 'number');
 };
 
+/** A damaged optional estimate is dropped; the task itself stays. */
+const withValidEstimate = (task: OptimizationTask): OptimizationTask => {
+  if (task.expectedDelta === undefined || Number.isFinite(task.expectedDelta)) return task;
+  const { expectedDelta: _dropped, ...rest } = task;
+  return rest;
+};
+
 export const readTasks = (projectId: string): OptimizationTask[] => {
   const raw = readJsonStorage(tasksKey(projectId), []);
-  return Array.isArray(raw) ? raw.filter(isTask).slice(-MAX_TASKS) : [];
+  return Array.isArray(raw) ? raw.filter(isTask).map(withValidEstimate).slice(-MAX_TASKS) : [];
 };
 
 export const writeTasks = (projectId: string, tasks: OptimizationTask[]): boolean => {
@@ -34,7 +41,7 @@ export const writeTasks = (projectId: string, tasks: OptimizationTask[]): boolea
   return ok;
 };
 
-export type NewTask = Pick<OptimizationTask, 'kind' | 'module' | 'url' | 'baselineScore'> & Partial<Pick<OptimizationTask, 'targetUrl' | 'requiredEntities' | 'owner' | 'priority' | 'dueDate'>>;
+export type NewTask = Pick<OptimizationTask, 'kind' | 'module' | 'url' | 'baselineScore'> & Partial<Pick<OptimizationTask, 'targetUrl' | 'requiredEntities' | 'owner' | 'priority' | 'dueDate' | 'expectedDelta'>>;
 
 /** Adds a planned task; an identical open task (same kind, URL and target) is not duplicated. */
 export const planTask = (tasks: OptimizationTask[], input: NewTask, now = new Date().toISOString()): OptimizationTask[] => {

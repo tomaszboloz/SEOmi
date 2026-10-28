@@ -5068,7 +5068,7 @@
     "views": "查询视图",
     "view": {
       "all": "全部查询",
-      "near": "查询 10–20",
+      "near": "查询 {{min}}–{{max}}",
       "ctr": "CTR 异常值"
     },
     "filterLabel": "筛选查询",
@@ -5095,7 +5095,13 @@
     "truncatedWarning": "由于报告限制，查询列表可能不完整。缺少某个查询并不意味着可见性丢失。",
     "clear": "清除文本筛选",
     "noMatches": "没有查询包含此文本。",
-    "noQueries": "此报告中没有可用的查询。"
+    "noQueries": "此报告中没有可用的查询。",
+    "range": {
+      "min": "排名大于",
+      "max": "排名不超过",
+      "hint": "平均排名大于 {{min}} 且不超过 {{max}} 的查询。",
+      "invalid": "请输入 0 到 100 之间的排名，且第一个小于第二个。"
+    }
   },
   "gscCannibalization": {
     "title": "潜在查询蚕食",
@@ -7739,7 +7745,9 @@
         "high": "高",
         "medium": "中",
         "low": "低"
-      }
+      },
+      "expectedDelta": "预期效果（分）",
+      "expectedVsMeasured": "预期 {{expected}}，实测 {{measured}}"
     }
   },
   "scoreDropAlert": {
