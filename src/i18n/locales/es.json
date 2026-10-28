@@ -7858,6 +7858,10 @@
     "title": "Calidad de plantillas programáticas",
     "empty": "No se encontraron plantillas débiles.",
     "row": "{{pattern}}: {{count}} páginas, ganancia de información {{gain}}%",
+    "rowGainUnavailable": "{{pattern}}: {{count}} páginas, ganancia no medida (muestra parcial)",
+    "unverifiedStructure": "Estructura no verificada (DOM no disponible)",
+    "sampledOnly": "Solo muestra parcial (texto completo no medido)",
+    "variablesUnavailable": "Variables de plantilla no disponibles",
     "noindex": "Recomendado: noindex para este segmento",
     "limit": "Recomendado: limitar las páginas indexadas"
   },

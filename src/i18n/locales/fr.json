@@ -7858,6 +7858,10 @@
     "title": "Qualité des gabarits programmatiques",
     "empty": "Aucun gabarit faible trouvé.",
     "row": "{{pattern}} : {{count}} pages, gain d’information {{gain}} %",
+    "rowGainUnavailable": "{{pattern}} : {{count}} pages, gain non mesuré (échantillon)",
+    "unverifiedStructure": "Structure non vérifiée (DOM indisponible)",
+    "sampledOnly": "Échantillon seulement (texte complet non mesuré)",
+    "variablesUnavailable": "Variables du modèle indisponibles",
     "noindex": "Recommandé : noindex pour ce segment",
     "limit": "Recommandé : limiter le nombre de pages indexées"
   },

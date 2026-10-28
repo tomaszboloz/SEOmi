@@ -1,6 +1,9 @@
 #[path = "page_content_inputs.rs"]
 mod inputs;
+#[path = "page_content_outcome.rs"]
+mod outcome;
 pub use inputs::ExtractPageContentInput;
+pub use outcome::PageContentOutcome;
 
 use scraper::{Html, Selector};
 
@@ -16,28 +19,7 @@ use super::super::{
 use super::page_headings::extract_page_headings;
 use super::page_title_meta::extract_page_title_and_meta;
 use super::page_type_guidance::thin_content_issue;
-
-pub struct PageContentOutcome {
-    pub document_language: Option<String>,
-    pub word_count: usize,
-    pub content_hash: Option<String>,
-    pub text_ratio_percent: Option<f64>,
-    pub reading_time_minutes: Option<usize>,
-    pub content_simhash: Option<String>,
-    pub semantic_terms: Vec<String>,
-    pub semantic_language: Option<String>,
-    pub semantic_excerpts: Vec<String>,
-    pub focus: CrawledPageFocus,
-    pub has_primary_content_root: bool,
-    pub semantic_content_source: String,
-    pub title: Option<String>,
-    pub title_length: Option<usize>,
-    pub h1_count: usize,
-    pub heading_counts: Vec<usize>,
-    pub duplicate_headings: Vec<CrawledDuplicateHeading>,
-    pub meta_description: Option<String>,
-    pub meta_description_length: Option<usize>,
-}
+use super::template_signature;
 
 pub fn extract_page_content(input: ExtractPageContentInput<'_>) -> PageContentOutcome {
     let ExtractPageContentInput {
@@ -136,7 +118,11 @@ pub fn extract_page_content(input: ExtractPageContentInput<'_>) -> PageContentOu
         semantic_terms,
         semantic_language,
         semantic_excerpts,
-        focus: focus.with_js_shell(document, is_html.then_some(cm.word_count)),
+        focus: template_signature::attach(
+            focus.with_js_shell(document, is_html.then_some(cm.word_count)),
+            document,
+            is_html && !body_truncated && !body_read_failed,
+        ),
         has_primary_content_root,
         semantic_content_source,
         title: tm.title,

@@ -7858,6 +7858,10 @@
     "title": "プログラマティックテンプレートの品質",
     "empty": "弱いテンプレートは見つかりませんでした。",
     "row": "{{pattern}}: {{count}}ページ、情報利得 {{gain}}%",
+    "rowGainUnavailable": "{{pattern}}: {{count}} ページ、情報利得は未測定（サンプル）",
+    "unverifiedStructure": "未検証の構造（DOM が利用できません）",
+    "sampledOnly": "サンプルのみ（全文は未測定）",
+    "variablesUnavailable": "テンプレート変数は利用できません",
     "noindex": "推奨: このセグメントをnoindexにする",
     "limit": "推奨: インデックス対象ページ数を制限する"
   },
