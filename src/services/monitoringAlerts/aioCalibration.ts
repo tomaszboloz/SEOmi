@@ -20,7 +20,17 @@ export interface AioCalibrationResult {
   limitation: 'synthetic-labeled-cases-only';
 }
 
-/** Small deterministic harness for threshold decisions, not production calibration. */
+/*
+ * LIMITATION: synthetic only (issue #108).
+ *
+ * Every case below was written by hand to exercise the comparison logic (stable, below threshold,
+ * inclusive boundary, large drop, improvement, missing baseline). None comes from real crawls, real
+ * score histories or human-labelled outcomes. The default 10-point drop threshold is an engineering
+ * assumption, not a fitted value, and the result must not be read as measured precision, recall or
+ * accuracy on production data. Calibrating it needs real before/after score pairs with labels from
+ * users or editors; until that data exists, `limitation` stays 'synthetic-labeled-cases-only'.
+ */
+/** Small deterministic harness for threshold decisions, not production calibration (see limitation above). */
 export const DEFAULT_AIO_CALIBRATION_CASES: readonly AioCalibrationCase[] = [
   { id: 'stable', before: 80, after: 80, expected: 'no-alert' },
   { id: 'below-threshold', before: 80, after: 70.1, expected: 'no-alert' },
