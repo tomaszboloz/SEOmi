@@ -17,8 +17,15 @@ export const sameName = (a: string, b: string): boolean => {
   return small.size >= 2 && [...small].every((token) => large.has(token));
 };
 
-const decode = (text: string): string => text.replace(/<[^>]*>/g, ' ').replace(/&amp;/g, '&').replace(/&quot;/g, '"').replace(/&#0?39;|&apos;/g, "'")
-  .replace(/&#(\d+);/g, (_, code: string) => String.fromCodePoint(Number(code))).replace(/\s+/g, ' ').trim();
+const ENTITIES: Record<string, string> = { amp: '&', quot: '"', apos: "'" };
+
+/** Single pass, so `&amp;quot;` decodes to the literal text `&quot;` and is never unescaped twice. */
+const decode = (text: string): string => text.replace(/<[^>]*>/g, ' ')
+  .replace(/&(amp|quot|apos|#0?39|#\d+);/g, (match, entity: string) => {
+    if (entity in ENTITIES) return ENTITIES[entity];
+    const code = entity === '#39' || entity === '#039' ? 39 : Number(entity.slice(1));
+    return Number.isInteger(code) && code <= 0x10ffff ? String.fromCodePoint(code) : match;
+  }).replace(/\s+/g, ' ').trim();
 
 const strings = (value: unknown, out: string[], depth = 0): void => {
   if (depth > 6 || value === null) return;
