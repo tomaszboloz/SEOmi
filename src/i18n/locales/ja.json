@@ -3575,6 +3575,23 @@
       "noPayload": "SEOmi はこれらのどのページでもフレームワークのペイロードからテキストを読み取れませんでした。",
       "showUrls": "対象の URL を表示",
       "payloadWords": "JS ペイロードの単語数: {{count}}(レンダリングされたコンテンツではありません)"
+    },
+    "spaRender": {
+      "start": "シェルページをブラウザでレンダリング：{{count}}件",
+      "cancel": "レンダリングを停止",
+      "note": "静的HTMLとブラウザのDOMを比較します。スコアは変わりません。レンダリング後のコンテンツを分析するには、レンダリングモードでクロールしてください。",
+      "desktopOnly": "シェルページのレンダリングはインストール済みのデスクトップアプリで利用できます。",
+      "error": "レンダリング失敗：{{error}}",
+      "words": "単語数 {{raw}} → {{rendered}}（{{delta}}）",
+      "links": "内部リンク {{raw}} → {{rendered}}",
+      "title": "レンダリング後のタイトル：{{title}}",
+      "truncated": "レンダリング後のHTMLは切り詰められています",
+      "consoleErrors": "コンソールエラー：{{count}}",
+      "status": {
+        "pending": "待機中",
+        "rendering": "レンダリング中…",
+        "cancelled": "キャンセル済み"
+      }
     }
   },
   "ai": {

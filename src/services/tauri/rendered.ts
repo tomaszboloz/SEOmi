@@ -1,6 +1,18 @@
-import type { RenderedPageArtifact } from '@/types';
+import type { RenderedPageArtifact, RenderedPageSnapshot } from '@/types';
 import i18n from '@/i18n';
 import { invokeTauriCommand } from './transport';
+
+/** Renders one page in the desktop WebView, scoped to its own host. */
+export async function renderCrawlPage(args: { url: string; allowSubdomains?: boolean; waitDelayMs?: number }): Promise<RenderedPageSnapshot> {
+  return invokeTauriCommand<RenderedPageSnapshot>('render_crawl_page', {
+    url: args.url,
+    allowSubdomains: args.allowSubdomains ?? false,
+    scopePath: null,
+    waitForSelector: null,
+    waitDelayMs: args.waitDelayMs ?? 0,
+    lazyScrollCycles: 0,
+  });
+}
 
 export async function captureRenderedArtifact(args: {
   url: string;

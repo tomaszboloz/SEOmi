@@ -79,6 +79,23 @@ export interface CrawledResource {
   request_error_kind?: string;
 }
 
+/** One page rendered in the desktop WebView (`render_crawl_page`); HTML is capped by the renderer. */
+export interface RenderedPageSnapshot {
+  requestedUrl: string;
+  finalUrl: string;
+  httpStatus?: number | null;
+  contentType: string;
+  charset: string;
+  html: string;
+  htmlTruncated: boolean;
+  navigationTimeMs?: number | null;
+  lcpMs?: number | null;
+  inpMs?: number | null;
+  cls?: number | null;
+  failedResourceUrls: string[];
+  consoleErrors: string[];
+}
+
 export interface RenderedPageArtifact {
   requestedUrl: string;
   finalUrl: string;

@@ -44,6 +44,7 @@ export function handleBrowserFallback<T>(cmd: string, args?: Record<string, unkn
   }
   if (cmd === 'check_for_updates') return Promise.reject(new Error(i18n.t('runtimeErrors.tauri.updatesDesktop')));
   if (cmd === 'install_update') return Promise.reject(new Error(i18n.t('runtimeErrors.tauri.updatesDesktop')));
+  if (cmd === 'render_crawl_page') return Promise.reject(new Error(i18n.t('runtimeErrors.tauri.renderedOnly')));
   if (cmd === 'capture_rendered_artifact') return Promise.reject(new Error(i18n.t('runtimeErrors.tauri.renderedOnly')));
   if (cmd === 'open_rendered_element_preview') return Promise.reject(new Error(i18n.t('runtimeErrors.tauri.previewDesktop')));
   if (cmd === 'start_render_worker' || cmd === 'stop_render_worker' || cmd === 'render_worker_status') {

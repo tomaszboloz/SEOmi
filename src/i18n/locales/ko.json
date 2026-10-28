@@ -3575,6 +3575,23 @@
       "noPayload": "SEOmi는 이 페이지들 중 어느 곳에서도 프레임워크 페이로드의 텍스트를 읽지 못했습니다.",
       "showUrls": "해당 URL 보기",
       "payloadWords": "JS 페이로드 단어 수: {{count}} (렌더링된 콘텐츠 아님)"
+    },
+    "spaRender": {
+      "start": "셸 페이지를 브라우저에서 렌더링: {{count}}개",
+      "cancel": "렌더링 중지",
+      "note": "정적 HTML과 브라우저 DOM을 비교합니다. 점수는 바뀌지 않습니다. 렌더링된 콘텐츠를 분석하려면 렌더링 모드로 크롤링하세요.",
+      "desktopOnly": "셸 페이지 렌더링은 설치된 데스크톱 앱에서 사용할 수 있습니다.",
+      "error": "렌더링 실패: {{error}}",
+      "words": "단어 {{raw}} → {{rendered}} ({{delta}})",
+      "links": "내부 링크 {{raw}} → {{rendered}}",
+      "title": "렌더링된 제목: {{title}}",
+      "truncated": "렌더링된 HTML이 잘렸습니다",
+      "consoleErrors": "콘솔 오류: {{count}}",
+      "status": {
+        "pending": "대기 중",
+        "rendering": "렌더링 중…",
+        "cancelled": "취소됨"
+      }
     }
   },
   "ai": {
