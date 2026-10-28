@@ -37,28 +37,34 @@ export const TrustJsonLdGenerator = ({ initial, onClose, observed }: TrustJsonLd
       <p className="text-xs text-slate-400">{t('trust.generator.intro')}</p>
       <div className="grid gap-2 sm:grid-cols-2">
         {FIELDS.map((field) => (
-          <label key={field} className="flex flex-col gap-1 text-xs text-slate-300">
-            {t(`trust.generator.field.${field}`)}
-            {sourceOf(field) && <span className="text-[10px] text-sky-300">{t('trust.generator.source', { source: t(`trust.generator.sourceName.${sourceOf(field)}`) })}</span>}
-            <input className={input} value={form[field] ?? ''} onChange={(event) => set({ [field]: event.target.value })} />
-          </label>
+          <div key={field} className="flex flex-col gap-1">
+            <label className="flex flex-col gap-1 text-xs text-slate-300">
+              {t(`trust.generator.field.${field}`)}
+              <input className={input} value={form[field] ?? ''} aria-describedby={sourceOf(field) ? `trust-gen-src-${field}` : undefined} onChange={(event) => set({ [field]: event.target.value })} />
+            </label>
+            {sourceOf(field) && <span id={`trust-gen-src-${field}`} className="text-[10px] text-sky-300">{t('trust.generator.source', { source: t(`trust.generator.sourceName.${sourceOf(field)}`) })}</span>}
+          </div>
         ))}
         <label className="flex flex-col gap-1 text-xs text-slate-300 sm:col-span-2">
           {t('trust.generator.field.sameAs')}
           <textarea className={input} rows={3} value={form.sameAs.join('\n')} onChange={(event) => set({ sameAs: event.target.value.split('\n') })} />
         </label>
         {UNVERIFIED.map((field) => (
-          <label key={field} className="flex flex-col gap-1 text-xs text-slate-300">
-            {t(`trust.generator.field.${field}`)}
-            <span className="text-[10px] text-amber-300">{t('trust.generator.needsVerification')}</span>
-            <input className={input} value={form[field] ?? ''} onChange={(event) => set({ [field]: event.target.value })} />
-          </label>
+          <div key={field} className="flex flex-col gap-1">
+            <label className="flex flex-col gap-1 text-xs text-slate-300">
+              {t(`trust.generator.field.${field}`)}
+              <input className={input} value={form[field] ?? ''} aria-describedby={`trust-gen-verify-${field}`} onChange={(event) => set({ [field]: event.target.value })} />
+            </label>
+            <span id={`trust-gen-verify-${field}`} className="text-[10px] text-amber-300">{t('trust.generator.needsVerification')}</span>
+          </div>
         ))}
-        <label className="flex flex-col gap-1 text-xs text-slate-300 sm:col-span-2">
-          {t('trust.generator.field.knowsAbout')}
-          <span className="text-[10px] text-amber-300">{t('trust.generator.needsVerification')}</span>
-          <textarea className={input} rows={2} value={(form.knowsAbout ?? []).join('\n')} onChange={(event) => set({ knowsAbout: event.target.value.split('\n') })} />
-        </label>
+        <div className="flex flex-col gap-1 sm:col-span-2">
+          <label className="flex flex-col gap-1 text-xs text-slate-300">
+            {t('trust.generator.field.knowsAbout')}
+            <textarea className={input} rows={2} value={(form.knowsAbout ?? []).join('\n')} aria-describedby="trust-gen-verify-knowsAbout" onChange={(event) => set({ knowsAbout: event.target.value.split('\n') })} />
+          </label>
+          <span id="trust-gen-verify-knowsAbout" className="text-[10px] text-amber-300">{t('trust.generator.needsVerification')}</span>
+        </div>
         <label className="flex items-center gap-2 text-xs text-slate-300">
           <input type="checkbox" checked={Boolean(form.asReviewer)} onChange={(event) => set({ asReviewer: event.target.checked })} />
           {t('trust.generator.field.asReviewer')}
