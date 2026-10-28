@@ -3816,7 +3816,8 @@
     "rowsPerPage": "Linhas por página",
     "pagePrevious": "Anterior",
     "pageNext": "Seguinte",
-    "pageOf": "Página {{page}} de {{total}}"
+    "pageOf": "Página {{page}} de {{total}}",
+    "lastFetched": "A mostrar o último relatório ({{start}} – {{end}}), obtido em {{fetchedAt}}. Atualize para obter dados mais recentes."
   },
   "settings": {
     "close": "Close settings",

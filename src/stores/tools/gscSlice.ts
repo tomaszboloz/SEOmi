@@ -10,6 +10,7 @@ import { activeProjectId } from './storageKeys';
 import { beginToolRequest, isLatestToolRequest, errorMessage } from './runtime';
 
 import { gscClientIdKey, gscPropertyKey, gscFiltersKey } from './projectPreferences';
+import { clearGscLastResult, rememberedGscData, saveGscLastResult } from './gscLastResult';
 import { selectGscProperty } from '@/services/gscPropertyMatch';
 import { useProjectStore } from '@/stores/projectStore';
 
@@ -26,7 +27,7 @@ setGscProperty: (property) => {
     beginToolRequest('gsc-data');
     beginToolRequest('gsc-inspection');
     if (projectId) writeStorage(gscPropertyKey(projectId), property);
-    set({ gscProperty: property, gscData: null, gscDataFetchedAt: null, gscInspectionResult: null, gscError: null, isGscLoading: false });
+    set({ gscProperty: property, ...rememberedGscData(projectId ?? '', property, get().gscFilters), gscInspectionResult: null, gscError: null, isGscLoading: false });
   },
 setGscFilters: (filters) => {
     const projectId = activeProjectId();
@@ -37,7 +38,7 @@ setGscFilters: (filters) => {
       ...(filters.country?.trim() ? { country: filters.country.trim().toLowerCase().slice(0, 3) } : {}),
     };
     if (projectId) writeJsonStorage(gscFiltersKey(projectId), normalized);
-    set({ gscFilters: normalized, gscData: null, gscDataFetchedAt: null, gscError: null, isGscLoading: false });
+    set({ gscFilters: normalized, ...rememberedGscData(projectId ?? '', get().gscProperty, normalized), gscError: null, isGscLoading: false });
   },
 resumeGsc: async () => {
     const projectId = activeProjectId();
@@ -52,7 +53,7 @@ resumeGsc: async () => {
       if (activeProjectId() !== projectId || !isLatestToolRequest('gsc-session', requestToken)) return;
       if (selectedProperty !== storedProperty) {
         invalidateGscEvidence();
-        set({ gscData: null, gscDataFetchedAt: null, gscInspectionResult: null });
+        set({ ...rememberedGscData(projectId, selectedProperty, get().gscFilters), gscInspectionResult: null });
       }
       if (selectedProperty) writeStorage(gscPropertyKey(projectId), selectedProperty);
       else removeStorage(gscPropertyKey(projectId));
@@ -82,7 +83,7 @@ connectGsc: async (clientId, clientSecret) => {
       if (activeProjectId() !== projectId || !isLatestToolRequest('gsc-session', requestToken)) return;
       if (selectedProperty) writeStorage(gscPropertyKey(projectId), selectedProperty);
       else removeStorage(gscPropertyKey(projectId));
-      set({ gscClientId: normalizedClientId, gscClientSecret: normalizedSecret, isGscConnected: true, gscProperties: properties, gscProperty: selectedProperty });
+      set({ gscClientId: normalizedClientId, gscClientSecret: normalizedSecret, isGscConnected: true, gscProperties: properties, gscProperty: selectedProperty, ...rememberedGscData(projectId, selectedProperty, get().gscFilters) });
     } catch (error) {
       if (activeProjectId() === projectId && isLatestToolRequest('gsc-session', requestToken)) set({ isGscConnected: false, gscError: errorMessage(error, i18n.t('runtimeErrors.tools.gscConnectFailed')) });
     } finally { if (activeProjectId() === projectId && isLatestToolRequest('gsc-session', requestToken)) set({ isGscLoading: false }); }
@@ -97,6 +98,7 @@ disconnectGsc: async () => {
       const status = await services.invoke<string>('disconnect_search_console', { projectId });
       if (activeProjectId() !== projectId || !isLatestToolRequest('gsc-session', requestToken)) return;
       invalidateGscEvidence();
+      clearGscLastResult(projectId);
       set({ isGscConnected: false, gscClientSecret: '', gscProperties: [], gscData: null, gscDataFetchedAt: null, gscInspectionResult: null, isGscLoading: false, gscError: status.startsWith(i18n.t('runtimeErrors.tools.providerTokenRemovedPrefix')) ? status : null });
     } catch (error) {
       if (activeProjectId() === projectId && isLatestToolRequest('gsc-session', requestToken)) set({ isGscLoading: false, gscError: errorMessage(error, i18n.t('runtimeErrors.tools.gscDisconnectFailed')) });
@@ -115,7 +117,9 @@ refreshGscData: async (range, requestedFilters) => {
     try {
       const gscData = await services.invoke<GscPerformanceData>('search_console_performance', { projectId, clientId: gscClientId, siteUrl: gscProperty, startDate: range?.startDate ?? null, endDate: range?.endDate ?? null, filters });
       if (activeProjectId() !== projectId || !isLatestToolRequest('gsc-data', requestToken)) return;
-      set({ gscData, gscDataFetchedAt: new Date().toISOString() });
+      const gscDataFetchedAt = new Date().toISOString();
+      set({ gscData, gscDataFetchedAt });
+      saveGscLastResult(projectId, { data: gscData, fetchedAt: gscDataFetchedAt, filters });
     } catch (error) {
       if (activeProjectId() === projectId && isLatestToolRequest('gsc-data', requestToken)) set({ gscError: error instanceof Error ? error.message : i18n.t('runtimeErrors.tools.gscDataFailed') });
     } finally { if (activeProjectId() === projectId && isLatestToolRequest('gsc-data', requestToken)) set({ isGscLoading: false }); }

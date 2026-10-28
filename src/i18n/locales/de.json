@@ -3816,7 +3816,8 @@
     "rowsPerPage": "Zeilen pro Seite",
     "pagePrevious": "Zurück",
     "pageNext": "Weiter",
-    "pageOf": "Seite {{page}} von {{total}}"
+    "pageOf": "Seite {{page}} von {{total}}",
+    "lastFetched": "Letzter Bericht ({{start}} – {{end}}), abgerufen am {{fetchedAt}}. Aktualisieren Sie für neuere Daten."
   },
   "settings": {
     "close": "Close settings",

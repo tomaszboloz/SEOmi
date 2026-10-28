@@ -3816,7 +3816,8 @@
     "rowsPerPage": "عدد الصفوف في الصفحة",
     "pagePrevious": "السابق",
     "pageNext": "التالي",
-    "pageOf": "صفحة {{page}} من {{total}}"
+    "pageOf": "صفحة {{page}} من {{total}}",
+    "lastFetched": "يُعرض آخر تقرير ({{start}} – {{end}})، تم جلبه في {{fetchedAt}}. حدّث للحصول على بيانات أحدث."
   },
   "settings": {
     "close": "Close settings",
