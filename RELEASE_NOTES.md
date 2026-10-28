@@ -1,3 +1,15 @@
+# SEOmi 0.5.0 — release notes
+
+## Added
+- Trust: new claim-backed citation profile `claim-backed-v1`, which scores a page by how many of its claims are backed by quality sources instead of by link counts (#88, #65). It is opt-in through `TrustOptions.scoringProfile`. The default stays the legacy profile, so existing scores do not change unless you select the new one.
+- JSON-LD generator completion: more fields and a diff view against the existing markup (#66).
+- AI Overview rewrite: a rewrite can be accepted into the brief, rewrites can run on Ollama, and rewrite history is kept (#64).
+- Default identity matcher and text-based author alignment for Trust (#87, #109).
+- Pronoun rules for 10 more languages in the AIO checks (#108). Coverage is basic and results for these languages are uncertain; calibration used synthetic data only.
+
+## Included
+- Everything from 0.4.49 (below).
+
 # SEOmi 0.4.49 — release notes
 
 ## Added

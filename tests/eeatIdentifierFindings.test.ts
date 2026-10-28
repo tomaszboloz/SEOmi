@@ -11,7 +11,7 @@ const input = { schema: base.schema, authors: base.authors, citations: base.cita
 
 describe('author profile evidence', () => {
   it('classifies the author sameAs links syntactically', () => {
-    expect(base.authors[0].profiles).toEqual(classifyProfiles(base.authors[0].sameAs));
+    expect(base.authors[0].profiles.map(({ subjects: _subjects, ...profile }) => profile)).toEqual(classifyProfiles(base.authors[0].sameAs));
     expect(base.authors[0].profiles[0]).toMatchObject({ kind: 'orcid', tier: 1 });
   });
   it('flags an ORCID or Wikidata link with an invalid identifier, naming the author', () => {
