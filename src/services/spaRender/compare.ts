@@ -1,4 +1,5 @@
-import type { CrawledPageSummary, RenderedPageSnapshot } from '@/types';
+import type { CrawledPageSummary } from '@/types';
+import type { RenderedPageSnapshot } from '@/services/tauri/rendered';
 
 export interface RenderedCounts { title: string; words: number; internalLinks: number }
 export interface ShellRenderComparison {

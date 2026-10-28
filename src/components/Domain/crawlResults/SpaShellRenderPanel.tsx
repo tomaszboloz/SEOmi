@@ -1,7 +1,8 @@
 import { useTranslation } from 'react-i18next';
 import { MAX_SHELL_RENDERS, useSpaShellRender, type ShellRenderRow } from '@/hooks/useSpaShellRender';
 import { isTauriEnvironment } from '@/services/tauri/transport';
-import type { CrawledPageSummary, RenderedPageSnapshot } from '@/types';
+import type { CrawledPageSummary } from '@/types';
+import type { RenderedPageSnapshot } from '@/services/tauri/rendered';
 
 const signed = (value: number): string => `${value > 0 ? '+' : ''}${value}`;
 

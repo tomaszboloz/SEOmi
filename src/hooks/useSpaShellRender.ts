@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
-import type { CrawledPageSummary, RenderedPageSnapshot } from '@/types';
+import type { CrawledPageSummary } from '@/types';
 import { compareShellRender, type ShellRenderComparison } from '@/services/spaRender/compare';
-import { renderCrawlPage } from '@/services/tauri/rendered';
+import { renderCrawlPage, type RenderedPageSnapshot } from '@/services/tauri/rendered';
 
 /** Each render opens a WebView for up to a minute; keep the on-demand batch small. */
 export const MAX_SHELL_RENDERS = 10;

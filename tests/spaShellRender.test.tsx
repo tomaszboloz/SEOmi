@@ -4,7 +4,7 @@ import '@/i18n';
 import { SpaShellRenderPanel } from '@/components/Domain/crawlResults/SpaShellRenderPanel';
 import { MAX_SHELL_RENDERS, useSpaShellRender } from '@/hooks/useSpaShellRender';
 import { compareShellRender, renderedCounts } from '@/services/spaRender/compare';
-import type { RenderedPageSnapshot } from '@/types';
+import type { RenderedPageSnapshot } from '@/services/tauri/rendered';
 import { createCrawlPageFixture } from './fixtures/crawl';
 
 afterEach(cleanup);
