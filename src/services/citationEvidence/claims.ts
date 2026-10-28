@@ -70,3 +70,25 @@ export const mapClaimsToCitations = (text: string, sources: CitationSource[] = [
     };
   });
 };
+
+/**
+ * A claim counts as backed when a citation sits in its own or an adjacent sentence and no known
+ * fact contradicts it (source missing, unreachable or checked as not supporting). Without an
+ * entailment model this is association evidence only, never verified support (#88 D02).
+ */
+export const isClaimBacked = (claim: ClaimCitation): boolean => (
+  claim.relation !== 'unmatched' && claim.sourceExists !== false && claim.reachable !== false && claim.supportsClaim !== false
+);
+
+/** Source count below which an article with zero claims is not given the benefit of the doubt. */
+export const R_BACKED_MIN_QUALITY_SUM = 2;
+/** R_backed for zero claims when too little source quality was observed (#88 D01). */
+export const R_BACKED_FEW_SOURCES = 0.65;
+
+/**
+ * R_backed = N_backed / N_claims. Zero claims: 1 once the quality sum reaches 2, otherwise .65, so a
+ * thin article neither gets a free pass nor a hard zero. Always within [0, 1].
+ */
+export const backedRatio = (claims: ClaimCitation[], qualitySum: number): number => (
+  claims.length ? claims.filter(isClaimBacked).length / claims.length : qualitySum >= R_BACKED_MIN_QUALITY_SUM ? 1 : R_BACKED_FEW_SOURCES
+);
