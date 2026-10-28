@@ -7866,7 +7866,14 @@
     "empty": "Keine Backlink-Lückendaten. Starten Sie zuerst die Backlink-Lückenanalyse.",
     "row": "{{domain}}: Priorität {{priority}}, verlinkt {{count}} Konkurrenten",
     "export": "CSV exportieren",
-    "manualNote": "SEOmi sendet nie Nachrichten. Senden Sie Entwürfe aus Ihrem eigenen Postfach."
+    "manualNote": "SEOmi sendet nie Nachrichten. Senden Sie Entwürfe aus Ihrem eigenen Postfach.",
+    "draft": "Entwurf anzeigen",
+    "draftSubject": "Eine Ressource für {{domain}}",
+    "draftBody": "Hallo,\\n\\nwir haben bemerkt, dass Sie auf {{competitors}} verlinken. Wir haben {{title}} ({{url}}) veröffentlicht: {{summary}}\\nEinzigartiger Ansatz: {{novelEntities}}. Informationsgewinn: {{informationGain}}. Beleg: {{evidence}}\\nAnbieter: {{provider}}; Modell: {{model}}; {{approximation}}; Beobachtung: {{observedAt}}\\n\\nViele Grüße,\\n{{site}}",
+    "evidence": "IGOS {{score}}/100; Beleg: {{url}}",
+    "provenance": "IGOS-Quelle: Anbieter {{provider}}, Modell {{model}} ({{approximation}}); beobachtet: {{observedAt}}",
+    "unknown": "nicht verfügbar",
+    "localApproximation": "lokale lexikalische Näherung"
   },
   "causalMarket": {
     "title": "Kausale Wirkung",
