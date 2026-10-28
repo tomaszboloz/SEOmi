@@ -7898,6 +7898,10 @@
     "title": "程序化模板质量",
     "empty": "未发现薄弱模板。",
     "row": "{{pattern}}：{{count}} 个页面，信息增益 {{gain}}%",
+    "rowGainUnavailable": "{{pattern}}：{{count}} 个页面，信息增益未测量（采样）",
+    "unverifiedStructure": "结构未验证（DOM 不可用）",
+    "sampledOnly": "仅为采样前缀（完整文本未测量）",
+    "variablesUnavailable": "模板变量不可用",
     "noindex": "建议：对该分段设置 noindex",
     "limit": "建议：限制被索引的页面数量"
   },

@@ -7898,6 +7898,10 @@
     "title": "Jakość szablonów programatycznych",
     "empty": "Nie znaleziono słabych szablonów.",
     "row": "{{pattern}}: {{count}} stron, zysk informacji {{gain}}%",
+    "rowGainUnavailable": "{{pattern}}: {{count}} stron, unikalność niezmierzona (próbka wstępna)",
+    "unverifiedStructure": "Niezweryfikowana struktura (brak szkieletu DOM)",
+    "sampledOnly": "Tylko próbka wstępna (pełny tekst niezmierzony)",
+    "variablesUnavailable": "Zmienne szablonu niedostępne",
     "noindex": "Zalecane: noindex dla segmentu",
     "limit": "Zalecane: ogranicz liczbę indeksowanych stron"
   },

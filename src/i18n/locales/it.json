@@ -7898,6 +7898,10 @@
     "title": "Qualità dei template programmatici",
     "empty": "Nessun template debole trovato.",
     "row": "{{pattern}}: {{count}} pagine, guadagno informativo {{gain}}%",
+    "rowGainUnavailable": "{{pattern}}: {{count}} pagine, guadagno non misurato (campione)",
+    "unverifiedStructure": "Struttura non verificata (DOM non disponibile)",
+    "sampledOnly": "Solo campione (testo completo non misurato)",
+    "variablesUnavailable": "Variabili del template non disponibili",
     "noindex": "Consigliato: noindex per questo segmento",
     "limit": "Consigliato: limita le pagine indicizzate"
   },
