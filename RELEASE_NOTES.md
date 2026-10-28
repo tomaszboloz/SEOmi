@@ -1,3 +1,18 @@
+# SEOmi 0.4.47 — release notes
+
+## Added
+- Site Focus can pick the Core Topic from the home page plus explicit anchor pages, so a large blog no longer redefines the offer. A manual topic still wins, and auto mode is unchanged when no anchors are given. The report states the mode (auto, manual or anchored) and lists anchors that could not be resolved instead of guessing. The engine has no UI or persisted anchor setting yet (#82).
+- The crawler records why a page looks like an unrendered JavaScript shell (`__NEXT_DATA__`, Nuxt payload, initial state, or a script bundle with an empty app root) and reads title, text and links verbatim from plain-JSON hydration payloads. Payload text is kept apart from the page word count and labelled as payload, never as rendered content (#131).
+- The crawl Overview shows a banner when pages look like JS shells, with a breakdown by reason, the number read from a framework payload and an expandable list of affected URLs. Scoring is unchanged and pages are not rendered automatically yet. Strings are translated in all 12 locales (#131).
+
+## Fixed
+- Trust deduplicates `sameAs` profiles by a canonical URL (https, host without `www`/`m`, no fragment or tracking parameters, sorted query, no trailing slash), so one profile written several ways no longer inflates declaration recall. Lowercase ORCID check characters are accepted (#87).
+- Reviewer (`reviewedBy`) and publisher entities are reconciled across article pages and listed on the Trust tab with role-weighted recall; roles naming nobody count as unknown, not zero. The copy states a declaration signal, not identity verification. The sameAs layer score is unchanged. Strings are translated in all 12 locales (#87).
+
+## Quality
+- Evidence compaction keeps the JS-shell flags and bounds payload links; the most compact form keeps the payload record without its text, so reloaded runs still report the payload count.
+- The crawl type contract gains only optional fields (`is_js_shell_suspected`, `js_shell_reason`, `spa_payload`); its pinned hash was updated for this additive change.
+
 # SEOmi 0.4.46 — release notes
 
 ## Fixed
