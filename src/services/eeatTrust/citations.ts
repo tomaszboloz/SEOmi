@@ -1,7 +1,8 @@
 import type { CrawledLink, CrawledPageSummary } from '@/types';
 import { scholarlyIds, scholarlyKey } from './citationIds';
 import { mapClaimsToCitations, type CitationSource } from '@/services/citationEvidence/claims';
-import type { CitationDetail } from './types';
+import { claimBackedPageScore, classifySource, pageQuality, pageRBacked, Q_TARGET_DEFAULT, Q_TARGET_YMYL, type SourceClass } from './citationQuality';
+import type { CitationDetail, ScoringProfile } from './types';
 
 /** Time-tested seed hosts: public institutions, scholarly publishers and standards bodies. */
 const SEED_SUFFIX = /(^|\.)(gov|edu|mil|int)$|\.(gov|edu|ac|go|gouv)\.[a-z]{2}$|\.bund\.de$/i;
@@ -18,7 +19,7 @@ export const isDeadLink = (link: CrawledLink): boolean => Boolean(link.target_re
 
 /** Outbound citation quality for the given article pages (external links only). */
 export const analyzeCitations = (pages: CrawledPageSummary[], articleUrls: Set<string>, citedBySchema: Map<string, string[]>): CitationDetail => {
-  const detail: CitationDetail = { pagesAnalyzed: 0, pagesWithTrusted: 0, pagesWithAnyExternal: 0, trustedLinks: 0, externalLinks: 0, checkedLinks: 0, deadLinks: [], pagesWithScholarly: 0, scholarlySources: 0, claimEvidence: [], unbackedHighStakesClaims: 0 };
+  const detail: CitationDetail = { pagesAnalyzed: 0, pagesWithTrusted: 0, pagesWithAnyExternal: 0, trustedLinks: 0, externalLinks: 0, checkedLinks: 0, deadLinks: [], pagesWithScholarly: 0, scholarlySources: 0, claimEvidence: [], unbackedHighStakesClaims: 0, pageQuality: [], claimCount: 0 };
   const sources = new Set<string>();
   for (const page of pages) {
     const url = page.final_url || page.url;
@@ -35,6 +36,13 @@ export const analyzeCitations = (pages: CrawledPageSummary[], articleUrls: Set<s
     detail.claimEvidence?.push(...claims.map((claim) => ({ ...claim, claim: `${url}: ${claim.claim}` })));
     detail.unbackedHighStakesClaims = (detail.unbackedHighStakesClaims ?? 0) + claims.filter((claim) => claim.relation === 'unmatched').length;
     const trusted = [...targets].filter((target) => isTrustedHost(hostOf(target)));
+    const classes = new Map<string, SourceClass>();
+    for (const target of targets) {
+      const link = external.find((item) => item.target_url === target);
+      classes.set(scholarlyKey(scholarlyIds(target)) ?? target, classifySource(target, isTrustedHost(hostOf(target)), Boolean(link && isDeadLink(link))));
+    }
+    detail.pageQuality?.push(pageQuality(url, [...classes.values()], claims));
+    detail.claimCount = (detail.claimCount ?? 0) + claims.length;
     if (targets.size) detail.pagesWithAnyExternal += 1;
     if (trusted.length) detail.pagesWithTrusted += 1;
     const keys = [...targets].map((target) => scholarlyKey(scholarlyIds(target))).filter((key): key is string => Boolean(key));
@@ -49,6 +57,8 @@ export const analyzeCitations = (pages: CrawledPageSummary[], articleUrls: Set<s
     }
   }
   detail.scholarlySources = sources.size;
+  const quality = detail.pageQuality ?? [];
+  detail.rBacked = quality.length ? quality.reduce((sum, item) => sum + pageRBacked(item), 0) / quality.length : undefined;
   return detail;
 };
 
@@ -58,11 +68,23 @@ export const UNVERIFIED_CITATION_CAP = 75;
 /** True when citations exist to score but no outbound link was status-checked (crawl without checkCrawlExternalLinks). */
 export const citationsUnverified = (detail: CitationDetail): boolean => detail.pagesAnalyzed > 0 && detail.checkedLinks === 0;
 
-/** 0-100: article pages citing trusted sources, reduced by share of dead checked links, capped while unverified. Undefined without articles. */
-export const citationScore = (detail: CitationDetail): number | undefined => {
-  if (!detail.pagesAnalyzed) return undefined;
+/** Legacy 0-100: article pages citing trusted sources, reduced by share of dead checked links, capped while unverified. Undefined without articles. */
+const legacyCitationScore = (detail: CitationDetail): number => {
   const cited = detail.pagesWithTrusted / detail.pagesAnalyzed;
   const dead = detail.checkedLinks ? detail.deadLinks.length / detail.checkedLinks : 0;
-  const score = Math.round(Math.max(0, Math.min(1, cited * (1 - 0.5 * dead))) * 100);
+  return Math.round(Math.max(0, Math.min(1, cited * (1 - 0.5 * dead))) * 100);
+};
+
+/** Claim-backed 0-100: mean over pages of min(1, sumQ/Qtarget) * (.40 + .60 * R_backed). Qtarget 4 for YMYL, 2 otherwise. */
+const claimBackedScore = (detail: CitationDetail, ymyl: boolean): number => {
+  const pages = detail.pageQuality ?? [];
+  const target = ymyl ? Q_TARGET_YMYL : Q_TARGET_DEFAULT;
+  return Math.round((pages.reduce((sum, item) => sum + claimBackedPageScore(item, target), 0) / Math.max(1, pages.length)) * 100);
+};
+
+/** 0-100 citation score under a versioned profile; the unverified-link cap applies to both. Undefined without articles. */
+export const citationScore = (detail: CitationDetail, profile: ScoringProfile = 'legacy', ymyl = false): number | undefined => {
+  if (!detail.pagesAnalyzed) return undefined;
+  const score = profile === 'claim-backed-v1' ? claimBackedScore(detail, ymyl) : legacyCitationScore(detail);
   return citationsUnverified(detail) ? Math.min(score, UNVERIFIED_CITATION_CAP) : score;
 };

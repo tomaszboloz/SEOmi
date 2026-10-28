@@ -36,3 +36,42 @@ export const detectYmyl = (nodes: SchemaNode[], report: SiteFocusReport | undefi
   const [best] = [...counts].sort((a, b) => b[1] - a[1]);
   return best && best[1] >= 3 ? best[0] : undefined;
 };
+
+/**
+ * Per-category applicability (profile decision, #65 D01): the claim gate applies to every YMYL category;
+ * a named reviewer is expected for health and finance content, not for legal commentary.
+ */
+export const YMYL_APPLICABILITY: Record<YmylCategory, { reviewer: boolean; claimGate: boolean }> = {
+  health: { reviewer: true, claimGate: true },
+  finance: { reviewer: true, claimGate: true },
+  legal: { reviewer: false, claimGate: true },
+};
+export const reviewerApplicable = (category: YmylCategory): boolean => YMYL_APPLICABILITY[category].reviewer;
+
+export const YMYL_SEVERE_MULTIPLIER = 0.45;
+export const YMYL_MODERATE_MULTIPLIER = 0.65;
+
+export interface YmylGateInput { category: YmylCategory; authorScore?: number; citationScore?: number; rBacked?: number; claimCount?: number; articlesWithReviewer: number; articleCount: number }
+export interface YmylGate { multiplier: number; tier: 'none' | 'moderate' | 'severe'; reasons: string[]; claimGate: boolean }
+
+/**
+ * Tiered YMYL penalty. Severe (.45): author alignment 0, citation score under 15, or claim gate with
+ * R_backed under .25. Moderate (.65): citation under 30, R_backed under .5, or an expected reviewer missing.
+ * Unknown values never trigger; the claim gate needs observed claims.
+ */
+export const ymylGate = (input: YmylGateInput): YmylGate => {
+  const rule = YMYL_APPLICABILITY[input.category];
+  const claimGate = rule.claimGate && (input.claimCount ?? 0) > 0 && input.rBacked !== undefined;
+  const rBacked = input.rBacked ?? 1;
+  const severe: string[] = [];
+  const moderate: string[] = [];
+  if (input.authorScore === 0) severe.push('author-zero');
+  if (input.citationScore !== undefined && input.citationScore < 15) severe.push('citation-below-15');
+  if (claimGate && rBacked < 0.25) severe.push('claims-unbacked');
+  if (input.citationScore !== undefined && input.citationScore < 30) moderate.push('citation-below-30');
+  if (claimGate && rBacked < 0.5) moderate.push('claims-weakly-backed');
+  if (rule.reviewer && input.articleCount > 0 && input.articlesWithReviewer === 0) moderate.push('reviewer-missing');
+  if (severe.length) return { multiplier: YMYL_SEVERE_MULTIPLIER, tier: 'severe', reasons: severe, claimGate };
+  if (moderate.length) return { multiplier: YMYL_MODERATE_MULTIPLIER, tier: 'moderate', reasons: moderate, claimGate };
+  return { multiplier: 1, tier: 'none', reasons: [], claimGate };
+};

@@ -1,4 +1,5 @@
 import type { Coded } from '@/services/siteFocus';
+import type { PageCitationQuality } from './citationQuality';
 import type { ClaimCitation } from '@/services/citationEvidence/claims';
 
 /** E-E-A-T & Entity Trust Verifier contracts. Wording is a code plus params: the UI localizes. */
@@ -6,6 +7,10 @@ import type { ClaimCitation } from '@/services/citationEvidence/claims';
 export const EEAT_TRUST_VERSION = 2;
 export const LEGACY_EEAT_TRUST_VERSION = 1;
 export const TRUST_PROFILE_ID = 'eetv-5-layer-v2';
+/** Sub-scoring of the citation and schema layers (#88, #65); layer weights stay under TRUST_PROFILE_ID. Legacy stays the default so stored history remains comparable; claim-backed-v1 is opt-in through TrustOptions.scoringProfile. Missing in stored history means legacy. */
+export type ScoringProfile = 'legacy' | 'claim-backed-v1';
+export const SCORING_PROFILE: ScoringProfile = 'legacy';
+export const CLAIM_BACKED_PROFILE: ScoringProfile = 'claim-backed-v1';
 export const LEGACY_TRUST_PROFILE_ID = 'eetv-4-layer-v1';
 
 export type TrustLevel = 'strong' | 'adequate' | 'weak' | 'critical';
@@ -86,6 +91,11 @@ export interface CitationDetail {
   /** Bounded claim-to-source associations; lexical overlap never marks a claim manually checked. */
   claimEvidence?: ClaimCitation[];
   unbackedHighStakesClaims?: number;
+  /** Per-page source quality sums and claim backing; absent in reports stored before claim-backed-v1. */
+  pageQuality?: PageCitationQuality[];
+  claimCount?: number;
+  /** Mean per-page R_backed 0-1. */
+  rBacked?: number;
 }
 
 export interface TransparencyDetail {
@@ -102,9 +112,10 @@ export interface TrustReport {
   layers: Partial<Record<TrustLayer, number>>;
   profileVersion: number;
   profileId: string;
+  scoringProfile?: ScoringProfile;
   coverage: Partial<Record<TrustLayer, TrustCoverage>>;
   ymyl?: YmylCategory;
-  ymylPolicy?: { category: YmylCategory; applicable: boolean; multiplier: number; triggered: boolean; heuristic: true };
+  ymylPolicy?: { category: YmylCategory; applicable: boolean; multiplier: number; triggered: boolean; heuristic: true; tier?: 'none' | 'moderate' | 'severe'; reasons?: string[]; claimGate?: boolean };
   schema: SchemaGraphDetail;
   authors: AuthorEntity[];
   /** Reviewers and publishers; absent in reports stored before #87. */
@@ -124,5 +135,5 @@ export interface TrustReport {
 
 export interface TrustSnapshot {
   at: string; runId: string; score: number; layers: Partial<Record<TrustLayer, number>>;
-  profileVersion?: number; profileId?: string; coverage?: Partial<Record<TrustLayer, TrustCoverage>>;
+  profileVersion?: number; profileId?: string; scoringProfile?: ScoringProfile; coverage?: Partial<Record<TrustLayer, TrustCoverage>>;
 }
