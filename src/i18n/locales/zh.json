@@ -3575,6 +3575,23 @@
       "noPayload": "SEOmi 未能从这些页面中任何一个的框架负载读取文本。",
       "showUrls": "显示受影响的 URL",
       "payloadWords": "JS 负载词数:{{count}}(非渲染内容)"
+    },
+    "spaRender": {
+      "start": "在浏览器中渲染空壳页面：{{count}} 个",
+      "cancel": "停止渲染",
+      "note": "对比静态 HTML 与浏览器 DOM。评分不变；如需分析渲染后的内容，请以渲染模式抓取。",
+      "desktopOnly": "空壳页面渲染仅在已安装的桌面应用中可用。",
+      "error": "渲染失败：{{error}}",
+      "words": "词数 {{raw}} → {{rendered}}（{{delta}}）",
+      "links": "内部链接 {{raw}} → {{rendered}}",
+      "title": "渲染后标题：{{title}}",
+      "truncated": "渲染后的 HTML 已截断",
+      "consoleErrors": "控制台错误：{{count}}",
+      "status": {
+        "pending": "等待中",
+        "rendering": "渲染中…",
+        "cancelled": "已取消"
+      }
     }
   },
   "ai": {

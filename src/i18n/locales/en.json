@@ -3575,6 +3575,23 @@
       "noPayload": "SEOmi could not read text from a framework payload for any of them.",
       "showUrls": "Show affected URLs",
       "payloadWords": "JS payload words: {{count}} (not rendered content)"
+    },
+    "spaRender": {
+      "start": "Render {{count}} shell pages in the browser",
+      "cancel": "Stop rendering",
+      "note": "Compares static HTML with the browser DOM. Scores are unchanged; to analyse rendered content, run a browser-rendered crawl.",
+      "desktopOnly": "Rendering shell pages is available in the installed desktop app.",
+      "error": "render failed: {{error}}",
+      "words": "words {{raw}} → {{rendered}} ({{delta}})",
+      "links": "internal links {{raw}} → {{rendered}}",
+      "title": "rendered title: {{title}}",
+      "truncated": "rendered HTML truncated",
+      "consoleErrors": "console errors: {{count}}",
+      "status": {
+        "pending": "waiting",
+        "rendering": "rendering…",
+        "cancelled": "cancelled"
+      }
     }
   },
   "ai": {

@@ -3575,6 +3575,23 @@
       "noPayload": "SEOmi nie odczytało tekstu z payloadu frameworka dla żadnej z tych podstron.",
       "showUrls": "Pokaż adresy URL tych podstron",
       "payloadWords": "Słowa w payloadzie JS: {{count}} (to nie jest wyrenderowana treść)"
+    },
+    "spaRender": {
+      "start": "Wyrenderuj w przeglądarce strony-szkielety: {{count}}",
+      "cancel": "Zatrzymaj renderowanie",
+      "note": "Porównuje statyczny HTML z DOM przeglądarki. Wyniki się nie zmieniają; aby analizować wyrenderowaną treść, uruchom crawl w trybie renderowania.",
+      "desktopOnly": "Renderowanie stron-szkieletów jest dostępne w zainstalowanej aplikacji desktopowej.",
+      "error": "renderowanie nieudane: {{error}}",
+      "words": "słowa {{raw}} → {{rendered}} ({{delta}})",
+      "links": "linki wewnętrzne {{raw}} → {{rendered}}",
+      "title": "tytuł po renderze: {{title}}",
+      "truncated": "wyrenderowany HTML obcięty",
+      "consoleErrors": "błędy konsoli: {{count}}",
+      "status": {
+        "pending": "w kolejce",
+        "rendering": "renderowanie…",
+        "cancelled": "przerwano"
+      }
     }
   },
   "ai": {

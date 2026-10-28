@@ -3575,6 +3575,23 @@
       "noPayload": "O SEOmi não conseguiu ler texto de um payload do framework em nenhuma destas páginas.",
       "showUrls": "Mostrar os URLs afetados",
       "payloadWords": "Palavras no payload JS: {{count}} (não é conteúdo renderizado)"
+    },
+    "spaRender": {
+      "start": "Renderizar no navegador páginas esqueleto: {{count}}",
+      "cancel": "Parar renderização",
+      "note": "Compara o HTML estático com o DOM do navegador. As pontuações não mudam; para analisar o conteúdo renderizado, execute um rastreio com renderização.",
+      "desktopOnly": "A renderização de páginas esqueleto está disponível na aplicação de ambiente de trabalho instalada.",
+      "error": "falha na renderização: {{error}}",
+      "words": "palavras {{raw}} → {{rendered}} ({{delta}})",
+      "links": "links internos {{raw}} → {{rendered}}",
+      "title": "título renderizado: {{title}}",
+      "truncated": "HTML renderizado truncado",
+      "consoleErrors": "erros da consola: {{count}}",
+      "status": {
+        "pending": "em espera",
+        "rendering": "a renderizar…",
+        "cancelled": "cancelado"
+      }
     }
   },
   "ai": {

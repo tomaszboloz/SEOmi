@@ -3575,6 +3575,23 @@
       "noPayload": "SEOmi non è riuscito a leggere testo da un payload del framework per nessuna di queste pagine.",
       "showUrls": "Mostra gli URL interessati",
       "payloadWords": "Parole nel payload JS: {{count}} (non è contenuto renderizzato)"
+    },
+    "spaRender": {
+      "start": "Esegui il rendering nel browser delle pagine shell: {{count}}",
+      "cancel": "Interrompi rendering",
+      "note": "Confronta l’HTML statico con il DOM del browser. I punteggi non cambiano; per analizzare il contenuto renderizzato, avvia una scansione con rendering.",
+      "desktopOnly": "Il rendering delle pagine shell è disponibile nell’app desktop installata.",
+      "error": "rendering non riuscito: {{error}}",
+      "words": "parole {{raw}} → {{rendered}} ({{delta}})",
+      "links": "link interni {{raw}} → {{rendered}}",
+      "title": "titolo renderizzato: {{title}}",
+      "truncated": "HTML renderizzato troncato",
+      "consoleErrors": "errori della console: {{count}}",
+      "status": {
+        "pending": "in attesa",
+        "rendering": "rendering…",
+        "cancelled": "annullato"
+      }
     }
   },
   "ai": {

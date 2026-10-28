@@ -3575,6 +3575,23 @@
       "noPayload": "SEOmi n'a pu lire de texte dans un payload de framework pour aucune de ces pages.",
       "showUrls": "Afficher les URL concernées",
       "payloadWords": "Mots dans le payload JS : {{count}} (pas du contenu rendu)"
+    },
+    "spaRender": {
+      "start": "Rendre dans le navigateur les pages coquilles : {{count}}",
+      "cancel": "Arrêter le rendu",
+      "note": "Compare le HTML statique au DOM du navigateur. Les scores ne changent pas ; pour analyser le contenu rendu, lancez un crawl avec rendu.",
+      "desktopOnly": "Le rendu des pages coquilles est disponible dans l’application de bureau installée.",
+      "error": "échec du rendu : {{error}}",
+      "words": "mots {{raw}} → {{rendered}} ({{delta}})",
+      "links": "liens internes {{raw}} → {{rendered}}",
+      "title": "titre rendu : {{title}}",
+      "truncated": "HTML rendu tronqué",
+      "consoleErrors": "erreurs de console : {{count}}",
+      "status": {
+        "pending": "en attente",
+        "rendering": "rendu en cours…",
+        "cancelled": "annulé"
+      }
     }
   },
   "ai": {

@@ -3575,6 +3575,23 @@
       "noPayload": "SEOmi konnte bei keiner dieser Seiten Text aus einem Framework-Payload lesen.",
       "showUrls": "Betroffene URLs anzeigen",
       "payloadWords": "Wörter im JS-Payload: {{count}} (kein gerenderter Inhalt)"
+    },
+    "spaRender": {
+      "start": "Shell-Seiten im Browser rendern: {{count}}",
+      "cancel": "Rendern stoppen",
+      "note": "Vergleicht statisches HTML mit dem Browser-DOM. Bewertungen bleiben unverändert; um gerenderte Inhalte zu analysieren, starten Sie einen Crawl im Rendering-Modus.",
+      "desktopOnly": "Das Rendern von Shell-Seiten ist in der installierten Desktop-App verfügbar.",
+      "error": "Rendern fehlgeschlagen: {{error}}",
+      "words": "Wörter {{raw}} → {{rendered}} ({{delta}})",
+      "links": "interne Links {{raw}} → {{rendered}}",
+      "title": "gerenderter Titel: {{title}}",
+      "truncated": "gerendertes HTML gekürzt",
+      "consoleErrors": "Konsolenfehler: {{count}}",
+      "status": {
+        "pending": "wartet",
+        "rendering": "wird gerendert…",
+        "cancelled": "abgebrochen"
+      }
     }
   },
   "ai": {
