@@ -7555,7 +7555,8 @@
       "roleReviewer": "Recenzent",
       "rolePublisher": "Wydawca",
       "roleEvidence": "{{name}} ({{role}}) · {{status}} · deklaracja sameAs {{recall}}%",
-      "roleRecall": "Deklaracja sameAs ważona rolą: {{pct}}% (autor 50%, recenzent 25%, wydawca 25%; wagi proponowane, sygnał deklaracji, nie weryfikacja tożsamości)."
+      "roleRecall": "Deklaracja sameAs ważona rolą: {{pct}}% (autor 50%, recenzent 25%, wydawca 25%; wagi proponowane, sygnał deklaracji, nie weryfikacja tożsamości).",
+      "declaredNote": "Zadeklarowane to nie zweryfikowane: link sameAs liczy się jako deklaracja. Status verified pojawia się dopiero po pobraniu profilu z rejestru i zgodności imienia lub aliasu z autorem; zgodność to słaby dowód i nie potwierdza kwalifikacji. Myślnik oznacza brak danych."
     },
     "signals": {
       "claimEvidence": "Dowody twierdzeń",

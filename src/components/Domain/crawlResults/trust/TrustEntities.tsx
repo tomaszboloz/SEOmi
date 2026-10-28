@@ -21,6 +21,7 @@ export const TrustEntities = ({ report, onGenerate, onVerify }: TrustEntitiesPro
           ? t('trust.entities.orgPresent', { name: org.name ?? '-', id: org.hasId ? '✓' : '✗', sameAs: org.sameAs.length })
           : t('trust.entities.orgMissing')}
       </p>
+      <p className="text-[11px] text-slate-400">{t('trust.entities.declaredNote')}</p>
       {report.authors.length === 0 ? <p className="text-xs text-slate-500">{t('trust.entities.none')}</p> : (
         <div className="overflow-x-auto">
           <table className="w-full text-start text-xs text-slate-300">
@@ -43,7 +44,7 @@ export const TrustEntities = ({ report, onGenerate, onVerify }: TrustEntitiesPro
                   </td>
                   <td className="px-2 text-end tabular-nums">{author.articleUrls.length}</td>
                   <td className="px-2">{MARK(author.sameAs.length > 0, String(author.sameAs.length), '0')}</td>
-                  <td className="px-2 text-end tabular-nums">{author.alignmentPct === undefined ? '-' : `${author.alignmentPct}%`}</td>
+                  <td className="px-2 text-end tabular-nums">{author.alignmentPct === undefined ? '—' : `${author.alignmentPct}%`}</td>
                   <td className="text-end">
                     {onVerify && <button type="button" onClick={() => onVerify(author)} className={`me-1 rounded border border-slate-600 px-2 py-0.5 text-sky-300 hover:bg-slate-800 ${FOCUS_RING}`}>{t('trust.entities.verifyProfiles')}</button>}
                     <button type="button" onClick={() => onGenerate(author)} className={`rounded border border-slate-600 px-2 py-0.5 text-emerald-300 hover:bg-slate-800 ${FOCUS_RING}`}>

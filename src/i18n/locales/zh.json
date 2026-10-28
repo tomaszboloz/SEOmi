@@ -7555,7 +7555,8 @@
       "roleReviewer": "审阅者",
       "rolePublisher": "发布者",
       "roleEvidence": "{{name}} ({{role}}) · {{status}} · sameAs 声明 {{recall}}%",
-      "roleRecall": "按角色加权的 sameAs 声明：{{pct}}%（作者 50%、审阅者 25%、发布者 25%；建议权重，仅为声明信号，并非身份验证）。"
+      "roleRecall": "按角色加权的 sameAs 声明：{{pct}}%（作者 50%、审阅者 25%、发布者 25%；建议权重，仅为声明信号，并非身份验证）。",
+      "declaredNote": "已声明不等于已验证：sameAs 链接只算声明。只有在获取注册表资料且其姓名或别名与作者一致后才会显示 verified；匹配只是较弱的证据，并不证明资质。短横线表示没有数据。"
     },
     "signals": {
       "claimEvidence": "主张证据",

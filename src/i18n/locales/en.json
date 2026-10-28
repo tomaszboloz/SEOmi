@@ -7555,7 +7555,8 @@
       "roleReviewer": "Reviewer",
       "rolePublisher": "Publisher",
       "roleEvidence": "{{name}} ({{role}}) · {{status}} · sameAs declaration {{recall}}%",
-      "roleRecall": "Role-weighted sameAs declaration: {{pct}}% (author 50%, reviewer 25%, publisher 25%; proposed weights, a declaration signal, not identity verification)."
+      "roleRecall": "Role-weighted sameAs declaration: {{pct}}% (author 50%, reviewer 25%, publisher 25%; proposed weights, a declaration signal, not identity verification).",
+      "declaredNote": "Declared is not verified: a sameAs link counts as a declaration. Verified appears only after the registry profile was fetched and its name or alias matched the author; a match is weak evidence and does not prove qualifications. A dash means no data."
     },
     "signals": {
       "claimEvidence": "Claim evidence",

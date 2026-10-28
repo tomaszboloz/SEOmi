@@ -7555,7 +7555,8 @@
       "roleReviewer": "Revisore",
       "rolePublisher": "Editore",
       "roleEvidence": "{{name}} ({{role}}) · {{status}} · dichiarazione sameAs {{recall}}%",
-      "roleRecall": "Dichiarazione sameAs ponderata per ruolo: {{pct}}% (autore 50%, revisore 25%, editore 25%; pesi proposti, un segnale dichiarativo, non una verifica dell’identità)."
+      "roleRecall": "Dichiarazione sameAs ponderata per ruolo: {{pct}}% (autore 50%, revisore 25%, editore 25%; pesi proposti, un segnale dichiarativo, non una verifica dell’identità).",
+      "declaredNote": "Dichiarato non significa verificato: un link sameAs conta come dichiarazione. Verified compare solo dopo aver recuperato il profilo del registro e se il suo nome o alias coincide con l’autore; una corrispondenza è una prova debole e non dimostra le qualifiche. Un trattino indica assenza di dati."
     },
     "signals": {
       "claimEvidence": "Prove delle affermazioni",
