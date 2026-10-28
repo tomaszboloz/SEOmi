@@ -4109,7 +4109,7 @@ dependencies = [
 
 [[package]]
 name = "seomi"
-version = "0.4.48"
+version = "0.4.49"
 dependencies = [
  "anyhow",
  "base64 0.23.1",
