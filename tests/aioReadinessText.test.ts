@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { AIO_LANGUAGES, extractTriples, rulesFor } from '@/services/aioReadiness';
-import { contentWords, mentions, sentencesOf, startsWithAny, tokenCount, wordsOf } from '@/services/aioReadiness/text';
+import { boundedSpans, contentWords, mentions, sentenceSpans, sentencesOf, startsWithAny, tokenCount, wordsOf } from '@/services/aioReadiness/text';
 
 describe('text helpers', () => {
   it('splits sentences and words, word and char based', () => {
@@ -10,6 +10,8 @@ describe('text helpers', () => {
     expect(wordsOf('犬 は 走る。', true)).toEqual(['犬', 'は', '走', 'る']);
     expect(tokenCount('a b c d')).toBe(4);
     expect(tokenCount('abcd efgh', true)).toBe(4);
+    expect(sentenceSpans('The ratio is 2.5. Next.').map((span) => span.text)).toEqual(['The ratio is 2.5.', 'Next.']);
+    expect(boundedSpans(Array.from({ length: 300 }, (_, i) => `w${i}`).join(' '), 250)).toHaveLength(2);
   });
 
   it('matches openers as whole words and mentions with prefix tolerance', () => {

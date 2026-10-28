@@ -50,7 +50,9 @@ export const decideProtection = (trs: number, telemetry: UrlTelemetry, options: 
     ({ ...base, decision, reasons, requiresBusinessReview: review, alternatives });
 
   if (trs >= trsThreshold) return done('keep', ['trs-above-threshold']);
-  if (revenue && revenue.amount > 0 && revenue.currency) return done('shield', ['revenue']);
+  if (revenue && revenue.amount > 0 && revenue.currency?.trim()) return done('shield', ['revenue']);
+  // Positive revenue without a currency is still evidence of value; never default one and never let it fall to pruning.
+  if (revenue && revenue.amount > 0) return done('needs-data', ['telemetry-incomplete'], ['confirm-revenue-currency'], true);
   if (pri.pri !== null && pri.pri >= priThreshold) return done('shield', ['pri-above-threshold']);
   if (Object.keys(weakSignals).length || pri.unknown.length) return done('needs-data', ['telemetry-incomplete'], ['check-gsc-ga4-backlinks-access']);
   const alternatives = ['redirect-301-to-relevant-target', 'canonical-for-duplicates', 'keep-and-rewrite'];

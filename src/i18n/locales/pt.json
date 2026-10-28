@@ -3560,6 +3560,21 @@
       "chooseBaseRun": "Choose base run",
       "match": "Match",
       "preview": "Preview"
+    },
+    "spaShell": {
+      "summary": "Páginas que parecem um esqueleto JavaScript não renderizado: {{count}}",
+      "reasons": {
+        "next_data": "Dados do Next.js (__NEXT_DATA__)",
+        "nuxt_payload": "Payload do Nuxt (__NUXT__)",
+        "initial_state": "Estado da aplicação (__INITIAL_STATE__)",
+        "bundle_empty_root": "Bundle JS com o contêiner da aplicação vazio",
+        "unknown": "Motivo não registado"
+      },
+      "reasonCount": "{{reason}}: {{count}}",
+      "payloadRead": "O SEOmi leu texto do payload do framework em {{count}} de {{total}} destas páginas. Esse texto vem do payload JS, não da página renderizada.",
+      "noPayload": "O SEOmi não conseguiu ler texto de um payload do framework em nenhuma destas páginas.",
+      "showUrls": "Mostrar os URLs afetados",
+      "payloadWords": "Palavras no payload JS: {{count}} (não é conteúdo renderizado)"
     }
   },
   "ai": {
@@ -5031,14 +5046,38 @@
     "legacyNote": "This saved run included the brand in the question. It is not an unprompted visibility measurement."
   },
   "gscOpportunities": {
-    "title": "GSC opportunities",
-    "near": "Queries just beyond TOP10 (10–20)",
-    "ctr": "CTR below observed peers",
-    "empty": "No rows meet the evidence thresholds.",
-    "benchmark": "CTR {{actual}}% · peers {{expected}}% ({{count}} queries)",
-    "method": "Average position is a period metric. CTR uses other queries within ±1 position, at least 3 peers and 300 peer impressions. Signals require review; brand, intent and SERP features can differ.",
-    "aiOverview": "Google includes AI Overviews and AI Mode in total Web traffic. This report cannot separate their metrics.",
-    "source": "Google documentation"
+    "title": "Oportunidades do GSC",
+    "views": "Vistas de consultas",
+    "view": {
+      "all": "Todas as consultas",
+      "near": "Consultas 10–20",
+      "ctr": "Outliers de CTR"
+    },
+    "filterLabel": "Filtrar consultas",
+    "filterPlaceholder": "Contém…",
+    "pageSize": "Linhas por página",
+    "sort": {
+      "query": "Consulta",
+      "clicks": "Cliques",
+      "impressions": "Impressões",
+      "ctr": "CTR",
+      "position": "Posição",
+      "benchmark": "Referência CTR"
+    },
+    "rows": "A mostrar {{from}}–{{to}} de {{count}}",
+    "previous": "Anterior",
+    "next": "Seguinte",
+    "near": "Consultas logo depois do TOP10 (10–20)",
+    "ctr": "CTR abaixo das consultas de comparação observadas",
+    "empty": "Nenhuma linha atende aos limites de evidência.",
+    "benchmark": "CTR {{actual}}% · consultas de comparação {{expected}}% ({{count}} consultas)",
+    "method": "A posição média é uma métrica do período. O CTR usa outras consultas dentro de ±1 posição, com pelo menos 3 consultas de comparação e 300 impressões. Os sinais exigem revisão; marca, intenção e recursos da SERP podem ser diferentes.",
+    "aiOverview": "O Google inclui AI Overviews e AI Mode no tráfego Web total. Este relatório não consegue separar as respetivas métricas.",
+    "source": "Documentação do Google",
+    "truncatedWarning": "A lista de consultas pode estar incompleta devido aos limites do relatório. A ausência de uma consulta não implica perda de visibilidade.",
+    "clear": "Limpar filtro de texto",
+    "noMatches": "Nenhuma consulta contém este texto.",
+    "noQueries": "Não há consultas disponíveis neste relatório."
   },
   "gscCannibalization": {
     "title": "Possível canibalização de consultas",
@@ -5889,7 +5928,7 @@
         "nScored": "de {{0}} rastreadas",
         "nSkipped": "Sem pontuação",
         "nOffTopic": "TRS abaixo de 40",
-        "nBorderline": "TRS 60-74",
+        "nBorderline": "TRS 40-74",
         "nStrong": "TRS 75 ou mais",
         "percent": "{{0}}%",
         "coreBadge": "TEMA PRINCIPAL",
@@ -6063,15 +6102,25 @@
           "no-answer-first": "Sem resposta direta no início",
           "filler-opening": "Abertura de enchimento",
           "no-facts": "Sem factos concretos",
-          "too-long": "Demasiado longo para um fragmento"
-        }
+          "too-long": "Demasiado longo para um fragmento",
+          "deictic-context": "Referência dependente do contexto",
+          "no-entity": "Falta uma referência ao tema"
+        },
+        "profile": "Perfil de cálculo: {{0}} / {{1}} / {{2}} / {{3}} / {{4}}",
+        "profilePersisted": "O perfil corresponde ao rastreamento guardado.",
+        "profileLegacy": "Este rastreamento não tem um perfil guardado. Os resultados foram recalculados com o perfil apresentado e não são comparáveis com os resultados históricos.",
+        "profileMismatch": "O perfil guardado é diferente. Os resultados foram recalculados com o perfil apresentado e não são comparáveis com os resultados históricos.",
+        "historicalProfile": "Perfil guardado: {{0}} / {{1}}."
       },
       "trust": {
         "title": "Confiança de entidades (E-E-A-T)",
         "intro": "Quão verificáveis são o editor, os autores e as fontes do site. As pontuações vêm da execução guardada; nenhuma página é transferida de novo.",
         "scoreTitle": "Pontuação de confiança de entidades",
         "legend": "Níveis: 75-100 forte, 60-74 adequado, 40-59 fraco, 0-39 crítico.",
+        "profile": "Perfil EETV {{0}} (versão {{1}})",
+        "coverage": "Cobertura de evidências",
         "kSchema": "Grafo de entidades",
+        "kSameAs": "Declarações de identidade",
         "kAuthor": "Afinidade do autor",
         "kCitation": "Qualidade das fontes",
         "kTransparency": "Transparência",
@@ -6141,7 +6190,14 @@
           "no-articles": "Não foram detetadas páginas de artigos; as camadas de autores e citações não foram pontuadas.",
           "author-invalid-profile": "{{0}} autores ligam um perfil ORCID ou Wikidata com identificador inválido ({{1}}). Verifique o checksum ou o Q-ID.",
           "ymyl-no-scholarly-ids": "Nenhum dos {{0}} artigos cita uma fonte com DOI, PMID ou PMCID. Em temas YMYL, cite o estudo primário."
-        }
+        },
+        "colProfile": "Evidência do perfil",
+        "tClaims": "Evidência das afirmações",
+        "claimsIntro": "Associações entre afirmações e citações; sobreposição lexical não é verificação.",
+        "colClaim": "Afirmação",
+        "colEvidence": "Evidência",
+        "colRelation": "Relação",
+        "colChecked": "Verificação manual"
       },
       "offPage": {
         "title": "Análise off-page",
@@ -6266,6 +6322,13 @@
         "why": "Pages with very little text give search engines little to understand, which is called thin content. Long is not automatically better, though: the page must fully answer what the visitor came for.",
         "action": "Under 300 words: ask yourself whether the page really answers the question. Add useful detail if not.\n300 to 1000 words: normal for most service and product pages.\nOver 1500 words: typical for in-depth guides; make sure headings split it into scannable sections.\nCompare with the top Google results for your keyword, not with a magic number.",
         "example": "A product page with 80 words usually loses to competitors who explain materials, sizes, shipping and returns in 400 words."
+      },
+      "jsShell": {
+        "title": "Suspeita de esqueleto JavaScript",
+        "what": "O HTML estático destas páginas quase não contém texto, mas carrega uma aplicação JavaScript (por exemplo Next.js ou Nuxt). O conteúdo real só aparece depois de o navegador executar os scripts.",
+        "why": "O SEOmi analisa estas páginas a partir do HTML bruto. A contagem de palavras, os termos, as verificações de conteúdo e as pontuações podem ficar abaixo do real. O texto lido de um payload do framework é mostrado à parte e não conta como conteúdo da página.",
+        "action": "Execute o rastreamento novamente no modo renderizado (JavaScript) para ver o conteúdo que os utilizadores recebem.\nVerifique se os motores de busca recebem o conteúdo sem JavaScript (renderização no servidor ou pré-renderização).\nTrate com cautela as pontuações de conteúdo destas páginas.",
+        "example": "Uma página Next.js com um <div id=\"__next\"></div> vazio e um script __NEXT_DATA__ tem 12 palavras no HTML estático."
       }
     },
     "metadata": {
@@ -6353,7 +6416,7 @@
         "title": "Proporção on-topic",
         "what": "A parcela das páginas de conteúdo com TRS igual ou superior a 60. Páginas técnicas, como login ou carrinho, não são contadas.",
         "why": "Mostra quantas páginas, e não quanta pontuação ponderada, sustentam o tema principal.",
-        "action": "Aumente-a corrigindo as páginas limítrofes (60-74 e abaixo) e removendo as off-topic.",
+        "action": "Aumente-a corrigindo as páginas limítrofes (40-74) e removendo as off-topic.",
         "example": "42 de 50 páginas de conteúdo têm TRS de 60 ou mais: proporção de 84 por cento."
       },
       "semanticSimilarity": {
@@ -6809,7 +6872,7 @@
       "pages": "Páginas pontuadas",
       "skipped": "Páginas ignoradas",
       "offTopic": "Páginas off-topic (TRS abaixo de 40)",
-      "borderline": "Páginas limítrofes (60-74)"
+      "borderline": "Páginas limítrofes (40-74)"
     },
     "heatmap": {
       "title": "Distribuição temática",
@@ -6819,7 +6882,7 @@
       "filter": {
         "all": "Todas ({{count}})",
         "critical": "Críticas <40 ({{count}})",
-        "borderline": "Limítrofes 60-74 ({{count}})",
+        "borderline": "Limítrofes 40-74 ({{count}})",
         "strong": "Fortes >=75 ({{count}})"
       },
       "filtersAria": "Filtrar páginas por relevância",
@@ -7352,11 +7415,34 @@
       "title": "Passagens mais fracas",
       "intro": "Fragmentos RAG simulados mais difíceis de citar. Corrija primeiro os problemas indicados.",
       "chunk": "Fragmento {{n}} · {{tokens}} tokens · pontuação {{score}}",
+      "offset": "caracteres de origem {{start}}–{{end}}",
+      "offsetUnavailable": "Posição de origem indisponível",
+      "evidence": "Evidência",
+      "score": "Pontuação",
+      "answerFirst": "Resposta primeiro",
+      "spans": "Intervalos detetados",
+      "notApplicable": "n/d",
+      "notAvailable": "desconhecido",
+      "invalidSpan": "Intervalo inválido (não destacado)",
+      "invalidSpanCount": "Intervalos inválidos não destacados: {{count}}.",
+      "cancel": "Cancelar",
+      "export": "Exportar rascunho",
+      "approve": "Aprovar para o briefing",
+      "approved": "Aprovado para o briefing",
+      "diff": "Mostrar linhas alteradas",
+      "scoreChange": "Mudança do perfil: {{delta}}",
+      "beforeAfter": "Antes {{before}} · depois {{after}}",
+      "facts": "Fatos: {{before}} → {{after}}",
+      "spoRelations": "Relações SPO detetadas",
+      "partialProfile": "Perfil parcial: os dados de idioma ou âncora estão incompletos; a diferença antes/depois não é uma avaliação completa.",
+      "preservationWarning": "Revisão necessária: estes tokens de origem não aparecem após a reescrita: {{missing}}",
+      "unverified": "A proposta de IA não foi verificada. A aprovação é manual; nada é publicado no CMS.",
       "noHeading": "(introdução sem título)",
       "current": "Passagem atual",
       "optimized": "Passagem otimizada",
       "generate": "Reescrever com IA",
       "generating": "A reescrever…",
+      "cancelled": "Reescrita cancelada.",
       "copy": "Copiar",
       "copied": "Copiado",
       "noKey": "Ligue um fornecedor de IA nas Definições para reescrever passagens.",
@@ -7366,6 +7452,8 @@
     },
     "issue": {
       "dangling-pronoun": "Referência pouco clara",
+      "deictic-context": "Referência dependente do contexto",
+      "no-entity": "Sujeito ou entidade não nomeado",
       "no-answer-first": "Sem resposta direta no início",
       "filler-opening": "Abertura de enchimento",
       "no-facts": "Sem factos concretos",
@@ -7384,6 +7472,8 @@
     "hero": {
       "label": "Pontuação de confiança de entidades",
       "articles": "{{articles}} páginas de artigos entre {{pages}} páginas rastreadas",
+      "profile": "Perfil {{profile}} · versão {{version}}",
+      "coverage": "Cobertura de evidências: observada / declarada / verificada / desconhecida",
       "previous": "Execução anterior: {{score}} ({{delta}})",
       "ymyl": "Categoria YMYL: {{category}}. Os motores de busca aplicam a estas páginas o padrão de confiança mais rigoroso.",
       "unattributed": "{{pct}}% dos artigos não têm autor nem revisor identificado."
@@ -7402,6 +7492,7 @@
     "layers": {
       "title": "Camadas de confiança",
       "schemaGraph": "Grafo de entidades (JSON-LD)",
+      "sameAs": "Declarações de identidade (sameAs)",
       "authorAlignment": "Afinidade temática dos autores",
       "citationQuality": "Qualidade das fontes",
       "transparency": "Transparência editorial",
@@ -7417,9 +7508,19 @@
       "colArticles": "Artigos",
       "colSameAs": "Links sameAs",
       "colAlignment": "Afinidade temática",
-      "generic": "assinatura anónima"
+      "generic": "assinatura anónima",
+      "identityEvidence": "Evidência de identidade",
+      "unavailableNote": "Não há perfil declarado; indisponível não significa fictício.",
+      "verifyProfiles": "Verificar perfis",
+      "roleReviewer": "Revisor",
+      "rolePublisher": "Editora",
+      "roleEvidence": "{{name}} ({{role}}) · {{status}} · declaração sameAs {{recall}}%",
+      "roleRecall": "Declaração sameAs ponderada por papel: {{pct}}% (autor 50%, revisor 25%, editora 25%; pesos propostos, um sinal declarado, não uma verificação de identidade)."
     },
     "signals": {
+      "claimEvidence": "Evidência das afirmações",
+      "unbacked": "sem suporte",
+      "associationNote": "Associação não é comprovação; sobreposição nunca define sourceChecked manual.",
       "title": "Fontes e transparência",
       "citations": "{{trusted}} de {{pages}} páginas de artigos ligam a uma fonte fiável (.gov, .edu, PubMed, OMS).",
       "dead": "{{count}} links de saída estão quebrados",
@@ -7468,6 +7569,7 @@
       "open": "Corrigir com JSON-LD",
       "title": "Gerador de JSON-LD",
       "intro": "Cria um grafo de Organization, Person e página com links sameAs. Reveja-o e cole-o no head da página.",
+      "conflict": "O campo {{property}} existente para {{id}} entra em conflito com a proposta. Resolva-o antes de exportar.",
       "close": "Fechar",
       "field": {
         "personName": "Nome do autor",
@@ -7485,7 +7587,8 @@
         "missing-name": "Introduza o nome do autor.",
         "invalid-organization-url": "Introduza um URL de editor válido (https://...).",
         "invalid-page-url": "Introduza um URL de página válido (https://...).",
-        "invalid-same-as": "Algumas entradas sameAs não são URLs válidos e foram omitidas."
+        "invalid-same-as": "Algumas entradas sameAs não são URLs válidos e foram omitidas.",
+        "conflict": "O campo {{property}} existente para {{id}} entra em conflito com a proposta. Resolva-o antes de exportar."
       },
       "preview": "JSON-LD gerado",
       "copy": "Copiar etiqueta script",
@@ -7736,7 +7839,20 @@
     "spent": "Gasto: {{value}}",
     "saved": "Economizado com cache e execução local: {{value}}",
     "hits": "Acertos de cache: {{count}}",
-    "leaves": "O texto das páginas é enviado para fora deste dispositivo para {{provider}}."
+    "leaves": "O texto das páginas é enviado para fora deste dispositivo para {{provider}}.",
+    "remaining": "Orçamento restante: {{value}}",
+    "storageUnavailable": "O armazenamento do orçamento ou despesas de LLM está indisponível ou inválido.",
+    "overBudget": "O orçamento mensal de LLM foi excedido.",
+    "unknownCost": "{{count}} chamadas externas têm custo desconhecido e não entram nas despesas.",
+    "selectProject": "Selecione um projeto para editar o orçamento LLM.",
+    "budgetTitle": "Orçamento LLM do projeto",
+    "noLimit": "Sem limite mensal",
+    "limitLabel": "Limite mensal (USD)",
+    "warnLabel": "Avisar em (%)",
+    "saveBudget": "Guardar orçamento",
+    "savedBudget": "Orçamento LLM guardado.",
+    "invalidLimit": "Introduza um limite mensal válido.",
+    "invalidWarn": "O limiar deve ser um inteiro de 1 a 100."
   },
   "templateGovernor": {
     "title": "Qualidade de modelos programáticos",

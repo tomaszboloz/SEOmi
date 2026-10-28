@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useToolsStore } from '@/stores/toolsStore';
 import { useProjectStore } from '@/stores/projectStore';
@@ -12,6 +12,7 @@ export function useSearchConsoleSession() {
   const { t } = useTranslation();
   const activeProjectId = useProjectStore((s) => s.activeProjectId);
   const isGscConnected = useToolsStore((s) => s.isGscConnected);
+  const gscHydratedProjectId = useToolsStore((s) => s.gscHydratedProjectId);
   const gscClientId = useToolsStore((s) => s.gscClientId);
   const gscClientSecret = useToolsStore((s) => s.gscClientSecret);
   const gscProperties = useToolsStore((s) => s.gscProperties);
@@ -37,6 +38,7 @@ export function useSearchConsoleSession() {
   const [baselineId, setBaselineId] = useState('');
   const [trackerMessage, setTrackerMessage] = useState('');
   const dateRangeError = validateGscDateRange(dateRange);
+  const isGscScopeReady = Boolean(activeProjectId) && gscHydratedProjectId === activeProjectId;
   useEffect(() => {
     setInputClientId(gscClientId);
     setInputClientSecret(gscClientSecret);
@@ -48,8 +50,8 @@ export function useSearchConsoleSession() {
       setSnapshots([]);
       setBaselineId('');
     }
-    if (gscClientId && !isGscConnected) void resumeGsc();
-  }, [activeProjectId, gscClientId, gscClientSecret, gscProperty, isGscConnected]);
+    if (isGscScopeReady && gscClientId && !isGscConnected) void resumeGsc();
+  }, [activeProjectId, gscClientId, gscClientSecret, gscProperty, isGscConnected, isGscScopeReady]);
 
   useEffect(() => {
     setInspectUrl('');
@@ -74,7 +76,7 @@ export function useSearchConsoleSession() {
   };
   const updateFilter = (patch: GscPerformanceFilters) => setGscFilters({ ...gscFilters, ...patch });
   const handleSaveSnapshot = () => {
-    if (!activeProjectId || !gscData || gscData.site_url !== gscProperty) return;
+    if (!isGscScopeReady || !activeProjectId || !gscData || gscData.site_url !== gscProperty) return;
     try {
       const result = saveGscSnapshot(activeProjectId, gscData);
       if (baselineSnapshot) void monitorGscSnapshots(activeProjectId, baselineSnapshot, result.snapshot);
@@ -86,15 +88,24 @@ export function useSearchConsoleSession() {
     }
   };
 
-  const currentSnapshot = gscData && gscData.site_url === gscProperty ? snapshotGscPerformance(gscData) : null;
-  const baselineSnapshot = snapshots.find((snapshot) => snapshot.id === baselineId) || null;
+  const scopedGscProperty = isGscScopeReady ? gscProperty : '';
+  const scopedGscData = isGscScopeReady && (!gscData || gscData.site_url === scopedGscProperty) ? gscData : null;
+  const currentSnapshot = useMemo(() => scopedGscData && scopedGscData.site_url === scopedGscProperty ? snapshotGscPerformance(scopedGscData) : null, [scopedGscData, scopedGscProperty]);
+  const baselineSnapshot = isGscScopeReady ? snapshots.find((snapshot) => snapshot.id === baselineId) || null : null;
   const comparison = baselineSnapshot && currentSnapshot ? compareGscSnapshots(baselineSnapshot, currentSnapshot) : null;
-  const strikingDistance = gscData ? findGscStrikingDistanceQueries(currentSnapshot || snapshotGscPerformance(gscData)) : [];
+  const strikingDistance = scopedGscData ? findGscStrikingDistanceQueries(currentSnapshot || snapshotGscPerformance(scopedGscData)) : [];
   const snapshotScopeLabel = (filters?: GscPerformanceFilters) => {
     const values = [filters?.search_type, filters?.device, filters?.country?.toUpperCase()].filter(Boolean);
     return values.length ? ` · ${values.join(' · ')}` : ` · ${t('searchConsole.fullScope')}`;
   };
 
-  return { t, activeProjectId, isGscConnected, gscClientId, gscClientSecret, gscProperties, gscProperty, gscFilters, gscData, gscInspectionResult, isGscLoading, gscError, resumeGsc, connectGsc, disconnectGsc, setGscProperty, setGscFilters, refreshGscData, inspectGscUrl, dateRangeError, handleConnect, handleInspect, handleRefresh, updateFilter, handleSaveSnapshot, currentSnapshot, baselineSnapshot, comparison, strikingDistance, snapshotScopeLabel, inputClientId, setInputClientId, inputClientSecret, setInputClientSecret, inspectUrl, setInspectUrl, dateRange, setDateRange, snapshots, setSnapshots, baselineId, setBaselineId, trackerMessage, setTrackerMessage };
+  return { t, activeProjectId, isGscScopeReady, gscHydratedProjectId, isGscConnected: isGscScopeReady && isGscConnected,
+    gscClientId, gscClientSecret, gscProperties: isGscScopeReady ? gscProperties : [], gscProperty: scopedGscProperty,
+    gscFilters: isGscScopeReady ? gscFilters : {}, gscData: scopedGscData,
+    gscInspectionResult: isGscScopeReady ? gscInspectionResult : null, isGscLoading, gscError: isGscScopeReady ? gscError : null,
+    resumeGsc, connectGsc, disconnectGsc, setGscProperty, setGscFilters, refreshGscData, inspectGscUrl, dateRangeError, handleConnect,
+    handleInspect, handleRefresh, updateFilter, handleSaveSnapshot, currentSnapshot, baselineSnapshot, comparison, strikingDistance,
+    snapshotScopeLabel, inputClientId, setInputClientId, inputClientSecret, setInputClientSecret, inspectUrl, setInspectUrl, dateRange,
+    setDateRange, snapshots: isGscScopeReady ? snapshots : [], setSnapshots, baselineId, setBaselineId, trackerMessage, setTrackerMessage };
 }
 export type SearchConsoleSession = ReturnType<typeof useSearchConsoleSession>;

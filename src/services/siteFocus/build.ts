@@ -7,6 +7,7 @@ import { evaluatePage, modelFor, prepare, typeContext, type EvalContext, type Pr
 import { analyzeGaps } from './gaps';
 import { computeFlags, detectSubSites } from './flags';
 import { buildLinkSuggestions } from './links';
+import { resolveAnchors } from './anchors';
 import { buildRecommendations } from './recommend';
 import { buildTermStats, tfidfVector } from './terms';
 import { SITE_FOCUS_VERSION, type FallbackMode, type FocusPage, type SiteFocusModel, type SiteFocusOptions, type SiteFocusReport } from './types';
@@ -44,7 +45,8 @@ export const buildSiteFocusReport = (pages: FocusPage[], startUrl: string, optio
   const vectors = live.map((item) => tfidfVector(item.terms, stats));
   const totals = siteTotals(vectors);
   const { clusters } = clusterTerms(topTerms(totals), vectors, { cut: options.clusterCut, similarity: options.similarity });
-  const selection = chooseCore(clusters, totals, options.manualTopic, language);
+  const anchors = resolveAnchors(live, vectors, startUrl, options.anchorUrls);
+  const selection = chooseCore(clusters, totals, options.manualTopic, language, anchors);
   const surfaces = surfaceMap(live);
   const labels = new Map(selection.clusters.map((cluster) => [cluster.id, labelOf(cluster.keys, surfaces)]));
   const termCluster = new Map(selection.clusters.flatMap((cluster) => cluster.keys.map((key): [string, string] => [key, cluster.id])));

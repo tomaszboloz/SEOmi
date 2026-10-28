@@ -1,6 +1,6 @@
 import { validProjectId } from '@/services/schedules/policy';
 import { readJsonStorage, writeJsonStorage } from '@/services/storage';
-import type { AioReport } from './types';
+import type { AioProfile, AioReport } from './types';
 
 export const AIO_HISTORY_LIMIT = 200;
 
@@ -13,6 +13,8 @@ export interface AioSnapshot {
   extractability: number;
   scored: number;
   weakPassages: number;
+  /** Profile identity is persisted so history is never silently recalculated. */
+  profile?: Pick<AioProfile, 'id' | 'algorithmVersion' | 'configHash' | 'language' | 'market'>;
 }
 
 export const aioHistoryKey = (projectId: string): string => `seomi_project_${projectId}_aio_readiness_history_v1`;
@@ -39,6 +41,13 @@ export const makeAioSnapshot = (report: AioReport, runId: string): AioSnapshot =
   extractability: report.extractability,
   scored: report.scoredCount,
   weakPassages: report.weakPassages.length,
+  profile: report.profile && {
+    id: report.profile.id,
+    algorithmVersion: report.profile.algorithmVersion,
+    configHash: report.profile.configHash,
+    language: report.profile.language,
+    market: report.profile.market,
+  },
 });
 
 /** Appends one snapshot per run id (deduplicated, capped); returns the stored list. */

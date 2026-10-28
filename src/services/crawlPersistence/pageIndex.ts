@@ -1,4 +1,5 @@
 import type { CrawlRunRecord } from '@/types';
+import { compactSpaPayload } from './spaPayload';
 
 /**
  * Last-resort durable representation for a single crawl when even the
@@ -27,6 +28,10 @@ export const compactCrawlRunsToPageIndex = (runs: CrawlRunRecord[]): CrawlRunRec
       indexability_status: page.indexability_status,
       body_truncated: page.body_truncated,
       word_count: page.word_count,
+      // Tiny JS-shell markers keep the shell banner truthful after reload.
+      is_js_shell_suspected: page.is_js_shell_suspected,
+      js_shell_reason: page.js_shell_reason,
+      spa_payload: compactSpaPayload(page.spa_payload, 'none'),
       internal_link_count: page.internal_link_count,
       external_link_count: page.external_link_count,
       schema_types: [],

@@ -42,6 +42,7 @@ mod image_decoding_modern;
 mod inline_images;
 mod js_redirects;
 mod js_shell;
+mod js_shell_payload;
 mod link_placement;
 mod models;
 mod orchestration;

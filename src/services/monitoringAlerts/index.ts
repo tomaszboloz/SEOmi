@@ -19,6 +19,7 @@ export * from './evaluators';
 export * from './focus';
 export * from './scoreDrop';
 export * from './aio';
+export * from './aioCalibration';
 
 export interface MonitoringDelivery { email?: (alert: MonitoringAlert) => Promise<boolean>; }
 export interface MonitoringDeliveryResult { alert: MonitoringAlert | null; delivered: boolean; persisted: boolean; duplicate: boolean; emailConfigured: boolean; }
@@ -40,7 +41,7 @@ export const monitorPageSpeedSnapshots = (projectId: string, baseline: PageSpeed
 export const monitorCrawlComparison = (projectId: string, report: CrawlDiffReport, delivery?: MonitoringDelivery) => deliverMonitoringAlert(projectId, evaluateCrawlAlert(report, readMonitoringSettings(projectId)), delivery);
 export const monitorSemanticComparison = (projectId: string, report: SemanticRunComparisonReport, delivery?: MonitoringDelivery) => deliverMonitoringAlert(projectId, evaluateSemanticAlert(report, readMonitoringSettings(projectId)), delivery);
 export const monitorSiteFocus = (projectId: string, events: AlertEvent[], sourceId: string, delivery?: MonitoringDelivery) => deliverMonitoringAlert(projectId, evaluateFocusAlert(events, sourceId), delivery);
-export const monitorScoreDrop = (projectId: string, kind: ScoreDropKind, previous: { score: number } | undefined, next: { score: number }, runId: string, delivery?: MonitoringDelivery) => deliverMonitoringAlert(projectId, evaluateScoreDropAlert(kind, previous, next, `${kind}-${runId}`, readMonitoringSettings(projectId)), delivery);
+export const monitorScoreDrop = (projectId: string, kind: ScoreDropKind, previous: { score: number | null } | undefined, next: { score: number | null }, runId: string, delivery?: MonitoringDelivery) => deliverMonitoringAlert(projectId, evaluateScoreDropAlert(kind, previous, next, `${kind}-${runId}`, readMonitoringSettings(projectId)), delivery);
 
 export const monitorAioCrawls = async (projectId: string, current: CrawlRunRecord, runs: CrawlRunRecord[], delivery?: MonitoringDelivery) => {
   const evaluation = compareAioForMonitoring(previousComparableAioCrawl(current, runs, projectId), current, readMonitoringSettings(projectId), projectId);

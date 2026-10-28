@@ -1,3 +1,4 @@
+import { isBorderlineTrs, STRONG_FROM } from '@/services/siteFocus/trsPolicy';
 import { buildPagePlaybook, type CodeParams, type PageFocus, type SiteFocusReport } from '@/services/siteFocus';
 import { buildRunReport, isCompletedRun } from '@/services/siteFocusMonitoring/analysis';
 import { readManualTopic } from '@/services/siteFocusMonitoring/topic';
@@ -55,8 +56,8 @@ export const summarizeSiteFocus = (report: SiteFocusReport): FocusPdfSummary => 
       scored: live.length,
       skipped: report.pages.length - live.length,
       off_topic: content.filter((page) => page.status === 'off-topic').length,
-      borderline: content.filter((page) => page.trs >= 60 && page.trs < 75).length,
-      strong: content.filter((page) => page.trs >= 75).length,
+      borderline: content.filter((page) => isBorderlineTrs(page.trs)).length,
+      strong: content.filter((page) => page.trs >= STRONG_FROM).length,
     },
     pages: worst.map((page) => ({
       url: page.url, type: page.type, trs: page.trs, similarity: page.similarity, overlap: page.keywordOverlap, drift: page.semanticDrift,

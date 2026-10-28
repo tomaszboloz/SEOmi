@@ -3560,6 +3560,21 @@
       "chooseBaseRun": "Choose base run",
       "match": "Match",
       "preview": "Preview"
+    },
+    "spaShell": {
+      "summary": "看起来是未渲染 JavaScript 外壳的页面:{{count}}",
+      "reasons": {
+        "next_data": "Next.js 数据 (__NEXT_DATA__)",
+        "nuxt_payload": "Nuxt 负载 (__NUXT__)",
+        "initial_state": "应用状态 (__INITIAL_STATE__)",
+        "bundle_empty_root": "应用根节点为空的 JS 包",
+        "unknown": "未记录原因"
+      },
+      "reasonCount": "{{reason}}:{{count}}",
+      "payloadRead": "在这 {{total}} 个页面中,SEOmi 从框架负载读取了 {{count}} 个页面的文本。该文本来自 JS 负载,而非渲染后的页面。",
+      "noPayload": "SEOmi 未能从这些页面中任何一个的框架负载读取文本。",
+      "showUrls": "显示受影响的 URL",
+      "payloadWords": "JS 负载词数:{{count}}(非渲染内容)"
     }
   },
   "ai": {
@@ -5031,14 +5046,38 @@
     "legacyNote": "This saved run included the brand in the question. It is not an unprompted visibility measurement."
   },
   "gscOpportunities": {
-    "title": "GSC opportunities",
-    "near": "Queries just beyond TOP10 (10–20)",
-    "ctr": "CTR below observed peers",
-    "empty": "No rows meet the evidence thresholds.",
-    "benchmark": "CTR {{actual}}% · peers {{expected}}% ({{count}} queries)",
-    "method": "Average position is a period metric. CTR uses other queries within ±1 position, at least 3 peers and 300 peer impressions. Signals require review; brand, intent and SERP features can differ.",
-    "aiOverview": "Google includes AI Overviews and AI Mode in total Web traffic. This report cannot separate their metrics.",
-    "source": "Google documentation"
+    "title": "GSC机会",
+    "views": "查询视图",
+    "view": {
+      "all": "全部查询",
+      "near": "查询 10–20",
+      "ctr": "CTR 异常值"
+    },
+    "filterLabel": "筛选查询",
+    "filterPlaceholder": "包含…",
+    "pageSize": "每页行数",
+    "sort": {
+      "query": "查询",
+      "clicks": "点击次数",
+      "impressions": "展示次数",
+      "ctr": "CTR",
+      "position": "位置",
+      "benchmark": "CTR 基准"
+    },
+    "rows": "显示 {{from}}–{{to}}，共 {{count}} 条",
+    "previous": "上一页",
+    "next": "下一页",
+    "near": "刚好位于TOP10之后的查询（10–20）",
+    "ctr": "CTR低于观测到的对比查询",
+    "empty": "没有符合证据阈值的行。",
+    "benchmark": "CTR {{actual}}% · 对比查询 {{expected}}%（{{count}} 个查询）",
+    "method": "平均位置是周期指标。CTR使用位置相差±1以内的其他查询，至少需要3个对比查询和300次展示。信号需要人工复核；品牌、意图和SERP功能可能有所不同。",
+    "aiOverview": "Google将AI Overviews和AI Mode计入整体Web流量。本报告无法分离它们的指标。",
+    "source": "Google文档",
+    "truncatedWarning": "由于报告限制，查询列表可能不完整。缺少某个查询并不意味着可见性丢失。",
+    "clear": "清除文本筛选",
+    "noMatches": "没有查询包含此文本。",
+    "noQueries": "此报告中没有可用的查询。"
   },
   "gscCannibalization": {
     "title": "潜在查询蚕食",
@@ -5889,7 +5928,7 @@
         "nScored": "共爬取 {{0}} 个",
         "nSkipped": "未评分",
         "nOffTopic": "TRS 低于 40",
-        "nBorderline": "TRS 60-74",
+        "nBorderline": "TRS 40-74",
         "nStrong": "TRS 75 及以上",
         "percent": "{{0}}%",
         "coreBadge": "核心主题",
@@ -6063,15 +6102,25 @@
           "no-answer-first": "开头没有直接回答",
           "filler-opening": "开头空洞",
           "no-facts": "缺少具体事实",
-          "too-long": "对单个分块来说太长"
-        }
+          "too-long": "对单个分块来说太长",
+          "deictic-context": "依赖上下文的指代",
+          "no-entity": "缺少主题指向"
+        },
+        "profile": "计算配置: {{0}} / {{1}} / {{2}} / {{3}} / {{4}}",
+        "profilePersisted": "此配置与已保存的抓取一致。",
+        "profileLegacy": "此抓取没有保存的配置。结果已按显示的配置重新计算，不能与历史结果比较。",
+        "profileMismatch": "已保存的配置不同。结果已按显示的配置重新计算，不能与历史结果比较。",
+        "historicalProfile": "已保存的配置: {{0}} / {{1}}."
       },
       "trust": {
         "title": "实体信任度（E-E-A-T）",
         "intro": "网站发布者、作者和来源的可验证程度。得分来自已保存的运行结果，不会重新获取任何页面。",
         "scoreTitle": "实体信任得分",
         "legend": "等级：75-100 高，60-74 足够，40-59 弱，0-39 严重。",
+        "profile": "EETV 配置 {{0}}（版本 {{1}}）",
+        "coverage": "证据覆盖",
         "kSchema": "实体图谱",
+        "kSameAs": "身份声明",
         "kAuthor": "作者契合度",
         "kCitation": "来源质量",
         "kTransparency": "透明度",
@@ -6141,7 +6190,14 @@
           "no-articles": "未检测到文章页面；未对作者和引用层级评分。",
           "author-invalid-profile": "{{0}}位作者链接的ORCID或Wikidata档案标识符无效（{{1}}）。请检查校验码或Q-ID。",
           "ymyl-no-scholarly-ids": "{{0}}篇文章均未引用带DOI、PMID或PMCID的来源。YMYL主题请引用原始研究。"
-        }
+        },
+        "colProfile": "个人资料证据",
+        "tClaims": "主张证据",
+        "claimsIntro": "主张与引文的关联；词语重叠不代表已验证。",
+        "colClaim": "主张",
+        "colEvidence": "证据",
+        "colRelation": "关系",
+        "colChecked": "手动检查"
       },
       "offPage": {
         "title": "站外分析",
@@ -6266,6 +6322,13 @@
         "why": "Pages with very little text give search engines little to understand, which is called thin content. Long is not automatically better, though: the page must fully answer what the visitor came for.",
         "action": "Under 300 words: ask yourself whether the page really answers the question. Add useful detail if not.\n300 to 1000 words: normal for most service and product pages.\nOver 1500 words: typical for in-depth guides; make sure headings split it into scannable sections.\nCompare with the top Google results for your keyword, not with a magic number.",
         "example": "A product page with 80 words usually loses to competitors who explain materials, sizes, shipping and returns in 400 words."
+      },
+      "jsShell": {
+        "title": "疑似 JavaScript 外壳",
+        "what": "这些页面的静态 HTML 几乎没有文本,但会加载 JavaScript 应用(例如 Next.js 或 Nuxt)。真正的内容只有在浏览器运行脚本后才会出现。",
+        "why": "SEOmi 根据原始 HTML 分析这些页面。词数、术语、内容检查和评分可能偏低。从框架负载读取的文本会单独显示,不计入页面内容。",
+        "action": "以渲染 (JavaScript) 模式重新抓取,查看用户实际获得的内容。\n检查搜索引擎在没有 JavaScript 的情况下能否获取内容(服务器端渲染或预渲染)。\n谨慎看待这些页面的内容评分。",
+        "example": "一个带有空 <div id=\"__next\"></div> 和 __NEXT_DATA__ 脚本的 Next.js 页面,其静态 HTML 中只有 12 个词。"
       }
     },
     "metadata": {
@@ -6353,7 +6416,7 @@
         "title": "主题相关占比",
         "what": "TRS 达到 60 及以上的内容页面所占比例。登录、购物车等技术页面不计入。",
         "why": "它告诉你有多少个页面(而不是加权后的分数)在支撑核心主题。",
-        "action": "通过修复临界页面(60-74 分及以下)和移除偏离主题的页面来提高该占比。",
+        "action": "通过修复临界页面(40-74)和移除偏离主题的页面来提高该占比。",
         "example": "50 个内容页面中有 42 个 TRS 达到 60 及以上:占比为 84%。"
       },
       "semanticSimilarity": {
@@ -6809,7 +6872,7 @@
       "pages": "已评分页面",
       "skipped": "已跳过页面",
       "offTopic": "偏离主题的页面(TRS 低于 40)",
-      "borderline": "临界页面(60-74)"
+      "borderline": "临界页面(40-74)"
     },
     "heatmap": {
       "title": "主题分布",
@@ -6819,7 +6882,7 @@
       "filter": {
         "all": "全部({{count}})",
         "critical": "严重 <40({{count}})",
-        "borderline": "临界 60-74({{count}})",
+        "borderline": "临界 40-74({{count}})",
         "strong": "强 >=75({{count}})"
       },
       "filtersAria": "按相关度筛选页面",
@@ -7352,11 +7415,34 @@
       "title": "最薄弱的段落",
       "intro": "模拟的最难被引用的 RAG 分块。请先修复列出的问题。",
       "chunk": "分块 {{n}} · {{tokens}} 个 token · 得分 {{score}}",
+      "offset": "源字符 {{start}}–{{end}}",
+      "offsetUnavailable": "源偏移不可用",
+      "evidence": "证据",
+      "score": "分数",
+      "answerFirst": "首先回答",
+      "spans": "检测到的范围",
+      "notApplicable": "不适用",
+      "notAvailable": "未知",
+      "invalidSpan": "无效范围（未高亮）",
+      "invalidSpanCount": "未高亮的无效范围：{{count}} 个。",
+      "cancel": "取消",
+      "export": "导出草稿",
+      "approve": "批准用于简报",
+      "approved": "已批准用于简报",
+      "diff": "显示修改行",
+      "scoreChange": "配置变化：{{delta}}",
+      "beforeAfter": "之前 {{before}} · 之后 {{after}}",
+      "facts": "事实：{{before}} → {{after}}",
+      "spoRelations": "检测到的 SPO 关系",
+      "partialProfile": "部分配置：语言或锚点证据不完整；前后差异不是完整评估。",
+      "preservationWarning": "需要检查：改写后未找到这些源 token：{{missing}}",
+      "unverified": "AI 建议未经验证。批准需手动完成；不会发布到 CMS。",
       "noHeading": "（无标题的开头部分）",
       "current": "当前段落",
       "optimized": "优化后的段落",
       "generate": "用 AI 改写",
       "generating": "正在改写…",
+      "cancelled": "已取消改写。",
       "copy": "复制",
       "copied": "已复制",
       "noKey": "请在设置中连接 AI 提供商以改写段落。",
@@ -7366,6 +7452,8 @@
     },
     "issue": {
       "dangling-pronoun": "指代不清",
+      "deictic-context": "依赖上下文的指代",
+      "no-entity": "未指明主体或实体",
       "no-answer-first": "开头没有直接回答",
       "filler-opening": "开头空洞",
       "no-facts": "缺少具体事实",
@@ -7384,6 +7472,8 @@
     "hero": {
       "label": "实体信任得分",
       "articles": "在 {{pages}} 个已抓取页面中有 {{articles}} 个文章页面",
+      "profile": "配置文件 {{profile}} · 版本 {{version}}",
+      "coverage": "证据覆盖：已观察 / 已声明 / 已验证 / 未知",
       "previous": "上次运行：{{score}}（{{delta}}）",
       "ymyl": "YMYL 类别：{{category}}。搜索引擎对这类页面采用最严格的信任标准。",
       "unattributed": "{{pct}}% 的文章没有署名作者或审核者。"
@@ -7402,6 +7492,7 @@
     "layers": {
       "title": "信任层级",
       "schemaGraph": "实体图谱（JSON-LD）",
+      "sameAs": "身份声明（sameAs）",
       "authorAlignment": "作者主题契合度",
       "citationQuality": "来源质量",
       "transparency": "编辑透明度",
@@ -7417,9 +7508,19 @@
       "colArticles": "文章数",
       "colSameAs": "sameAs 链接",
       "colAlignment": "主题契合度",
-      "generic": "匿名署名"
+      "generic": "匿名署名",
+      "identityEvidence": "身份证据",
+      "unavailableNote": "没有声明的个人资料；不可用不表示虚构。",
+      "verifyProfiles": "验证个人资料",
+      "roleReviewer": "审阅者",
+      "rolePublisher": "发布者",
+      "roleEvidence": "{{name}} ({{role}}) · {{status}} · sameAs 声明 {{recall}}%",
+      "roleRecall": "按角色加权的 sameAs 声明：{{pct}}%（作者 50%、审阅者 25%、发布者 25%；建议权重，仅为声明信号，并非身份验证）。"
     },
     "signals": {
+      "claimEvidence": "主张证据",
+      "unbacked": "无依据",
+      "associationNote": "关联不等于支持；重叠不会设置手动 sourceChecked。",
       "title": "来源与透明度",
       "citations": "{{pages}} 个文章页面中有 {{trusted}} 个链接到可信来源（.gov、.edu、PubMed、WHO）。",
       "dead": "{{count}} 个出站链接已失效",
@@ -7468,6 +7569,7 @@
       "open": "用 JSON-LD 修复",
       "title": "JSON-LD 生成器",
       "intro": "生成包含 sameAs 链接的 Organization、Person 和页面图谱。检查后粘贴到页面的 head 中。",
+      "conflict": "{{id}} 的现有 {{property}} 与此提案冲突。请在导出前解决。",
       "close": "关闭",
       "field": {
         "personName": "作者姓名",
@@ -7485,7 +7587,8 @@
         "missing-name": "请输入作者姓名。",
         "invalid-organization-url": "请输入有效的发布者 URL（https://...）。",
         "invalid-page-url": "请输入有效的页面 URL（https://...）。",
-        "invalid-same-as": "部分 sameAs 条目不是有效 URL，已被忽略。"
+        "invalid-same-as": "部分 sameAs 条目不是有效 URL，已被忽略。",
+        "conflict": "{{id}} 的现有 {{property}} 与此提案冲突。请在导出前解决。"
       },
       "preview": "生成的 JSON-LD",
       "copy": "复制 script 标签",
@@ -7736,7 +7839,20 @@
     "spent": "已花费：{{value}}",
     "saved": "缓存和本地运行节省：{{value}}",
     "hits": "缓存命中：{{count}}",
-    "leaves": "页面文本将发送到本设备之外的 {{provider}}。"
+    "leaves": "页面文本将发送到本设备之外的 {{provider}}。",
+    "remaining": "剩余预算：{{value}}",
+    "storageUnavailable": "LLM 预算或支出存储不可用或无效。",
+    "overBudget": "已超出每月 LLM 预算。",
+    "unknownCost": "{{count}} 次外部调用的费用未知，未计入支出。",
+    "selectProject": "选择项目以编辑其 LLM 预算。",
+    "budgetTitle": "项目 LLM 预算",
+    "noLimit": "无每月上限",
+    "limitLabel": "每月上限（USD）",
+    "warnLabel": "警告阈值（%）",
+    "saveBudget": "保存预算",
+    "savedBudget": "LLM 预算已保存。",
+    "invalidLimit": "请输入有效的非负每月上限。",
+    "invalidWarn": "警告阈值必须是 1 到 100 的整数。"
   },
   "templateGovernor": {
     "title": "程序化模板质量",

@@ -32,6 +32,18 @@ describe('protection decision', () => {
     expect(decideProtection(10, tel({ revenue: { state: 'measured', value: { amount: 5, currency: 'PLN' } } })).reasons).toEqual(['revenue']);
     expect(decideProtection(10, tel({ revenue: { state: 'measured', value: { amount: 0, currency: 'PLN' } } })).decision).toBe('prune-candidate');
   });
+  it('never prunes positive revenue that lacks a currency', () => {
+    for (const currency of ['', '  ']) {
+      const r = decideProtection(10, tel({ revenue: { state: 'measured', value: { amount: 12, currency } } }));
+      expect(r).toMatchObject({ decision: 'needs-data', reasons: ['telemetry-incomplete'], requiresBusinessReview: true, automaticAction: false });
+      expect(r.alternatives).toEqual(['confirm-revenue-currency']);
+    }
+    expect(decideProtection(10, tel({ revenue: { state: 'measured', value: { amount: 3, currency: 'EUR' } } })).decision).toBe('shield');
+  });
+  it('shields a conversion without revenue', () => {
+    const r = decideProtection(10, tel({ ga4: { state: 'measured', value: { sessions: 1, engagedSessions: 1, keyEvents: 1 } } }));
+    expect(r).toMatchObject({ decision: 'shield', reasons: ['pri-above-threshold'] });
+  });
   it('shields on PRI', () => {
     const r = decideProtection(10, tel({ backlinks: { state: 'measured', value: { referringDomains: 5 } } }));
     expect(r).toMatchObject({ decision: 'shield', automaticAction: false });

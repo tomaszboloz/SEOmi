@@ -1,4 +1,5 @@
-import type { ClusterTerm, CoreTopic, FocusCluster } from './types';
+import type { ClusterTerm, CoreTopic, CoreTopicMode, FocusCluster } from './types';
+import type { AnchorResolution } from './anchors';
 import type { TermCluster } from './cluster';
 import { phraseKey } from './terms';
 
@@ -14,6 +15,8 @@ export interface CoreSelection {
   weights: Map<string, number>;
   kCore: string[];
   manual?: { input: string; matched: boolean };
+  mode: CoreTopicMode;
+  anchors?: AnchorResolution;
 }
 
 export const labelOf = (keys: string[], surfaces: Map<string, string>): string =>
@@ -37,29 +40,47 @@ const share = (core: TermCluster, clusters: TermCluster[]): number => {
   return total > 0 ? round1((core.weight / total) * 100) : 0;
 };
 
-/** The heaviest cluster is the Core Topic; a manual topic re-centres on the cluster it overlaps most, or stands alone. */
+/** Cluster carrying most of the anchor pages' term mass; undefined when anchors share no clustered term. */
+const anchoredIndex = (base: TermCluster[], anchors: AnchorResolution | undefined): number | undefined => {
+  if (!anchors) return undefined;
+  const hits = base.map((cluster) => cluster.keys.reduce((sum, key) => sum + (anchors.mass.get(key) ?? 0), 0));
+  const best = hits.indexOf(Math.max(...hits));
+  return hits[best] > 0 ? best : undefined;
+};
+
+/**
+ * Manual topic wins and re-centres on the cluster it overlaps most (or stands alone). Without it,
+ * home + anchor pages pick the cluster, so a large blog cannot silently redefine the offer.
+ * Otherwise the heaviest cluster is the Core Topic.
+ */
 export const chooseCore = (
   clusters: TermCluster[], totals: Map<string, number>, input: string | string[] | undefined, language: string,
+  anchors?: AnchorResolution,
 ): CoreSelection => {
   const base = clusters.length ? clusters : [{ id: 'c1', keys: [], weight: 0 }];
   const keys = input === undefined ? [] : manualKeys(input, language);
-  if (input === undefined || !keys.length) return finish(base, base[0], totals, undefined);
+  const finish = (all: TermCluster[], core: TermCluster, mode: CoreTopicMode, manual?: CoreSelection['manual']): CoreSelection =>
+    complete(all, core, totals, { manual, mode, anchors: anchors && { ...anchors, applied: mode === 'anchored' } });
+  if (input === undefined || !keys.length) {
+    const anchored = anchoredIndex(base, anchors);
+    return anchored === undefined ? finish(base, base[0], 'auto') : finish(base, base[anchored], 'anchored');
+  }
   const label = (Array.isArray(input) ? input.join(', ') : input).trim();
   const hits = base.map((cluster) => keys.reduce((sum, key) => sum + (cluster.keys.includes(key) ? totals.get(key) as number : 0), 0));
   const best = hits.indexOf(Math.max(...hits));
   if (hits[best] > 0) {
     const core = base[best];
     const boosted = [...keys.filter((key) => core.keys.includes(key)), ...core.keys.filter((key) => !keys.includes(key))];
-    return finish(base, { ...core, keys: boosted }, totals, { input: label, matched: true });
+    return finish(base, { ...core, keys: boosted }, 'manual', { input: label, matched: true });
   }
   const synthetic: TermCluster = { id: 'manual', keys, weight: keys.reduce((sum, key) => sum + (totals.get(key) ?? 0), 0) };
-  return finish([...base, synthetic], synthetic, totals, { input: label, matched: false });
+  return finish([...base, synthetic], synthetic, 'manual', { input: label, matched: false });
 };
 
-const finish = (
-  clusters: TermCluster[], core: TermCluster, totals: Map<string, number>, manual: CoreSelection['manual'],
+const complete = (
+  clusters: TermCluster[], core: TermCluster, totals: Map<string, number>, extra: Pick<CoreSelection, 'manual' | 'mode' | 'anchors'>,
 ): CoreSelection => ({
-  clusters, core, manual,
+  clusters, core, ...extra,
   confidence: share(core, clusters),
   weights: new Map(core.keys.map((key) => [key, totals.get(key) ?? 0])),
   kCore: core.keys.slice(0, K_CORE_SIZE),
@@ -68,13 +89,17 @@ const finish = (
 export const describeCore = (
   selection: CoreSelection, surfaces: Map<string, string>, documentFrequency: Map<string, number>, pageCount: number,
 ): CoreTopic => {
-  const { core, manual } = selection;
+  const { core, manual, mode, anchors } = selection;
   const terms = core.keys.slice(0, SHOWN_TERMS).map((key) => ({
     term: surfaces.get(key) ?? key,
     coveragePct: round1(((documentFrequency.get(key) ?? 0) / Math.max(1, pageCount)) * 100),
     weight: round1(selection.weights.get(key) as number),
   }));
-  return { label: manual?.input || labelOf(core.keys, surfaces), terms, clusterId: core.id, ...(manual ? { manualOverride: manual } : {}) };
+  return {
+    label: manual?.input || labelOf(core.keys, surfaces), terms, clusterId: core.id, mode,
+    ...(manual ? { manualOverride: manual } : {}),
+    ...(anchors ? { anchors: { sources: anchors.sources, missing: anchors.missing, applied: anchors.applied } } : {}),
+  };
 };
 
 export const describeClusters = (clusters: TermCluster[], surfaces: Map<string, string>, totals: Map<string, number>): FocusCluster[] => {

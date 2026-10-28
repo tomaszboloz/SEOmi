@@ -21,7 +21,7 @@ describe('describeCore', () => {
   it('rounds coverage and weight to one decimal and caps shown terms at 15', () => {
     const keys = Array.from({ length: 20 }, (_, i) => `t${i}`);
     const weights = new Map(keys.map((key) => [key, 1.26]));
-    const core = describeCore({ clusters: [], core: { id: 'c1', keys, weight: 1 }, confidence: 50, weights, kCore: keys }, surfaces, new Map([['t0', 1]]), 3);
+    const core = describeCore({ clusters: [], core: { id: 'c1', keys, weight: 1 }, confidence: 50, weights, kCore: keys, mode: 'auto' }, surfaces, new Map([['t0', 1]]), 3);
     expect(core.terms).toHaveLength(15);
     expect(core.terms[0]).toEqual({ term: 't0', coveragePct: 33.3, weight: 1.3 });
     expect(core.terms[1].coveragePct).toBe(0);

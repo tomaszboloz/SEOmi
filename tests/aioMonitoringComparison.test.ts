@@ -63,6 +63,18 @@ describe('AIO crawl comparison', () => {
     expect(compareAioForMonitoring(baseline, { ...current, result: { ...current.result, resource_limit_reached: true } }).skipped).toBe('incomparable');
   });
 
+  it('does not compare runs without an explicit persisted AIO profile', () => {
+    const baseline = beforeAio(); const current = afterAio();
+    const legacy = { ...baseline, result: { ...baseline.result, aio_profile: undefined } };
+    expect(compareAioForMonitoring(legacy, current)).toEqual({ alert: null, partial: true, skipped: 'profile-unavailable' });
+  });
+
+  it('does not compare different AIO profile identities', () => {
+    const baseline = beforeAio(); const current = afterAio();
+    const changed = { ...current, result: { ...current.result, aio_profile: { ...current.result.aio_profile!, configHash: 'changed' } } };
+    expect(compareAioForMonitoring(baseline, changed)).toEqual({ alert: null, partial: true, skipped: 'profile-mismatch' });
+  });
+
   it('chooses the latest comparable prior crawl without mutating or skipping an unavailable score', () => {
     const current = afterAio();
     const newest = aioRun('newest', [createCrawlPageFixture()], { completedAt: '2026-10-01T12:00:00Z' });

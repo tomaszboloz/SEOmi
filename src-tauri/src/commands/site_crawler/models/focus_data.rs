@@ -45,6 +45,12 @@ pub struct CrawledPageFocus {
     /// payload, empty app root). `None` when the page was not assessed.
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub is_js_shell_suspected: Option<bool>,
+    /// Which signal triggered `is_js_shell_suspected`; absent when not a shell.
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub js_shell_reason: Option<super::JsShellReason>,
+    /// Text/title/links parsed from the shell's embedded JSON payload.
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub spa_payload: Option<super::SpaPayload>,
 }
 
 /// One heading-delimited section of main content (AI Overviews / RAG chunking).
@@ -67,4 +73,13 @@ pub struct RagSection {
     pub unordered_lists: u16,
     #[serde(default)]
     pub definition_lists: u16,
+    /// Number of tables with a real `thead` or `th`; absent when no table was observed.
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub table_headers: Option<u16>,
+    /// Whether an ordered list has explicit instructional/procedural context.
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub ordered_list_instruction: Option<bool>,
+    /// Word counts for direct `li`/`dd` items; absent when no such items were observed.
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub list_item_word_counts: Option<Vec<u16>>,
 }

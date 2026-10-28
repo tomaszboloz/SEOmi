@@ -2,22 +2,24 @@ import { useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { copyText } from '@/services/clipboard';
 import { buildTrustJsonLd, type TrustJsonLdInput } from '@/services/eeatTrust';
+import { composeSchemaGraph } from '@/services/schemaGenerator';
 import { FOCUS_RING } from './trustHelpers';
 
-export interface TrustJsonLdGeneratorProps { initial: TrustJsonLdInput; onClose: () => void }
+export interface TrustJsonLdGeneratorProps { initial: TrustJsonLdInput; onClose: () => void; observed?: Record<string, unknown> }
 
 type TextField = 'personName' | 'jobTitle' | 'personUrl' | 'organizationName' | 'organizationUrl' | 'pageUrl' | 'dateModified' | 'lastReviewed';
 const FIELDS: TextField[] = ['personName', 'jobTitle', 'personUrl', 'organizationName', 'organizationUrl', 'pageUrl', 'dateModified', 'lastReviewed'];
 const input = 'rounded border border-slate-700 bg-slate-950 px-2 py-1 text-xs text-slate-100';
 
 /** Fixes missing author entity markup: Person with sameAs plus the page naming them as author or reviewer. */
-export const TrustJsonLdGenerator = ({ initial, onClose }: TrustJsonLdGeneratorProps) => {
+export const TrustJsonLdGenerator = ({ initial, onClose, observed }: TrustJsonLdGeneratorProps) => {
   const { t } = useTranslation();
   const [form, setForm] = useState<TrustJsonLdInput>(initial);
   const [copied, setCopied] = useState<'idle' | 'ok' | 'failed'>('idle');
   const result = useMemo(() => buildTrustJsonLd(form), [form]);
+  const composition = useMemo(() => composeSchemaGraph({ observed, trust: result }), [observed, result]);
   const set = (patch: Partial<TrustJsonLdInput>) => { setForm((current) => ({ ...current, ...patch })); setCopied('idle'); };
-  const copy = async () => setCopied((await copyText(`<script type="application/ld+json">\n${result.text}\n</script>`)) ? 'ok' : 'failed');
+  const copy = async () => setCopied((await copyText(composition.script)) ? 'ok' : 'failed');
   return (
     <section aria-labelledby="trust-gen-title" className="space-y-3 rounded-xl border border-slate-700 bg-slate-900/80 p-4">
       <div className="flex items-center justify-between">
@@ -46,7 +48,8 @@ export const TrustJsonLdGenerator = ({ initial, onClose }: TrustJsonLdGeneratorP
           {result.issues.map((issue) => <li key={issue}>{t(`trust.generator.issue.${issue}`)}</li>)}
         </ul>
       )}
-      <pre aria-label={t('trust.generator.preview')} className="max-h-64 overflow-auto rounded bg-slate-950 p-2 text-[11px] text-slate-200">{result.text}</pre>
+      {composition.conflicts.length > 0 && <ul role="alert" className="list-disc ps-5 text-xs text-rose-200">{composition.conflicts.map((conflict) => <li key={`${conflict.id}:${conflict.property}`}>{t('trust.generator.issue.conflict', { id: conflict.id, property: conflict.property })}</li>)}</ul>}
+      <pre aria-label={t('trust.generator.preview')} className="max-h-64 overflow-auto rounded bg-slate-950 p-2 text-[11px] text-slate-200">{composition.text}</pre>
       <div className="flex items-center gap-3">
         <button type="button" onClick={copy} disabled={!result.ok} className={`rounded border border-emerald-500 px-3 py-1 text-xs text-emerald-200 disabled:opacity-50 ${FOCUS_RING}`}>{t('trust.generator.copy')}</button>
         {copied !== 'idle' && <p role="status" className="text-xs text-slate-300">{t(copied === 'ok' ? 'trust.generator.copied' : 'trust.generator.copyFailed')}</p>}

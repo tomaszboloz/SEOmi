@@ -76,7 +76,7 @@ describe('useSearchConsoleSession', () => {
   it('runs snapshot monitoring against the selected baseline when saving a snapshot', () => {
     saveGscSnapshot('shard0-gsc', data(5));
     const monitor = vi.spyOn(monitoring, 'monitorGscSnapshots').mockResolvedValue(undefined as never);
-    act(() => { useToolsStore.setState({ gscProperty: SITE, gscData: data(9) }); });
+    act(() => { useToolsStore.setState({ gscHydratedProjectId: 'shard0-gsc', gscProperty: SITE, gscData: data(9) }); });
     const { result } = renderHook(() => useSearchConsoleSession());
     const baseline = result.current.baselineSnapshot;
     expect(baseline).not.toBeNull();

@@ -41,6 +41,8 @@ export type TermSimilarity = (left: string, right: string) => number | null | un
 
 export interface SiteFocusOptions {
   manualTopic?: string | string[];
+  /** Key offer pages that, with the home page, define the Core Topic when no manual topic is set. */
+  anchorUrls?: string[];
   /** Pluggable term-to-term similarity (e.g. embeddings). Blended into term clustering. */
   similarity?: TermSimilarity;
   language?: string;

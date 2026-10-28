@@ -6,6 +6,8 @@ import { CrawlOverviewTab } from '@/components/Domain/crawlResults/CrawlOverview
 import { TrustHero } from '@/components/Domain/crawlResults/trust/TrustHero';
 import { DomainComparisonTable } from '@/components/Domain/domainOverview/DomainComparisonTable';
 import { barFor, host, pillarName, toneFor } from '@/components/Domain/crawlResults/authority/authorityText';
+import { buildTrustReport, type TrustSnapshot } from '@/services/eeatTrust';
+import { diabetesPages, trustedArticle } from './eeatTrustFixtures';
 
 vi.mock('@/components/Domain/crawlResults/CrawlSummaryMetrics', () => ({ CrawlSummaryMetrics: () => <tr><td>metrics</td></tr> }));
 
@@ -32,13 +34,14 @@ describe('coverage100 domain remaining A', () => {
     expect(screen.getByText(i18n.t('crawl.ui.savedHttpValues'))).toBeTruthy();
     overview.unmount();
 
-    const trust = {
-      score: 40, level: 'adequate', articleCount: 1, pageCount: 2, layers: {},
-      ymyl: undefined, ymylUnattributedPct: 0,
-      citations: { pagesAnalyzed: 0, pagesWithTrusted: 0, pagesWithAnyExternal: 0, trustedLinks: 0, externalLinks: 0, checkedLinks: 0, deadLinks: [], pagesWithScholarly: 0, scholarlySources: 0 },
+    const trust = buildTrustReport([trustedArticle(diabetesPages()[2])], undefined, { now: '2026-10-01T00:00:00Z' });
+    if (trust.score === null) throw new Error('fixture requires observed trust evidence');
+    const previous: TrustSnapshot = {
+      at: '2026-09-01T00:00:00Z', runId: 'trust-previous', score: trust.score + 1,
+      layers: trust.layers, profileVersion: trust.profileVersion, profileId: trust.profileId, coverage: trust.coverage,
     };
-    render(<TrustHero report={trust as never} previous={{ score: 41, at: '', runId: '', layers: {} }} />);
-    expect(screen.getByText(i18n.t('trust.hero.previous', { score: 41, delta: '-1' }))).toBeTruthy();
+    render(<TrustHero report={trust} previous={previous} />);
+    expect(screen.getByText(i18n.t('trust.hero.previous', { score: previous.score, delta: '-1' }))).toBeTruthy();
   });
 
   it('covers authority colour bands and URL fallbacks', () => {

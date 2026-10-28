@@ -3,19 +3,23 @@ import { renderHook } from '@testing-library/react';
 import i18n from '@/i18n';
 import { useTrust } from '@/hooks/useTrust';
 import { findInternalLinkOpportunities } from '@/services/internalLinkOpportunities';
-import * as eeatTrust from '@/services/eeatTrust';
 import * as monitoringAlerts from '@/services/monitoringAlerts';
-import type { CrawledPageSummary } from '@/types';
+import type { CrawledPageSummary, CrawledSchemaReference } from '@/types';
+import { createCrawlPageFixture, createCrawlRunFixture } from './fixtures/crawl';
+
+type SchemaRef = CrawledSchemaReference & { node_path?: string };
+const schemaRef = (node_path: string, property: string, value: string): SchemaRef => ({ format: 'JSON-LD', declaration_index: 0, node_path, property, value });
 
 vi.mock('@/services/monitoringAlerts', () => ({
   monitorScoreDrop: vi.fn(),
 }));
 
 vi.mock('@/services/siteFocus', () => ({
-  buildSiteFocusReport: vi.fn().mockReturnValue({ topic: 'SEO' }),
+  buildSiteFocusReport: vi.fn().mockReturnValue({ pages: [], coreTopic: { label: '', terms: [] }, model: { language: 'en', coreWeights: {} } }),
 }));
 
-vi.mock('@/services/semanticText', () => ({
+vi.mock('@/services/semanticText', async (importOriginal) => ({
+  ...(await importOriginal<typeof import('@/services/semanticText')>()),
   semanticPageTermInventory: vi.fn((page: CrawledPageSummary) => {
     if (page.url.includes('p1') || page.url.includes('p2') || page.url.includes('p3')) {
       return new Map([['termA', 'termA'], ['termB', 'termB'], ['termC', 'termC']]);
@@ -31,27 +35,35 @@ beforeEach(async () => {
 
 describe('geminiGapGOVERNORServicesA: useTrust and internalLinkOpportunities', () => {
   it('covers useTrust line 26 score drop dispatch, catch handler and duplicate run bypass', async () => {
-    const dummyPage = { url: 'https://example.com/p', final_url: 'https://example.com/p' } as CrawledPageSummary;
-    const run = { id: 'run-100', completedAt: '2026-01-01T00:00:00Z' } as never;
+    const dummyPage = createCrawlPageFixture({
+      url: 'https://example.com/p', final_url: 'https://example.com/p', title: 'Diabetes treatment', schema_types: ['Article'],
+      schema_references: [
+        schemaRef('$', '@type', 'Article'), schemaRef('$', 'author', 'https://example.com/authors/anna'),
+        schemaRef('$.author', '@id', 'https://example.com/authors/anna'), schemaRef('$.author', '@type', 'Person'),
+        schemaRef('$.author', 'name', 'Anna Nowak'), schemaRef('$.author', 'description', 'Diabetes physician'),
+      ],
+    }) as CrawledPageSummary;
+    const weakPage = { ...dummyPage, schema_references: [schemaRef('$', '@type', 'Article')] };
+    const run1 = createCrawlRunFixture({ id: 'run-100', completedAt: '2026-01-01T00:00:00Z', startUrl: 'https://example.com/', result: { ...createCrawlRunFixture().result, pages: [dummyPage], pages_crawled: 1 } });
+    const run2 = createCrawlRunFixture({ id: 'run-101', completedAt: '2026-01-02T00:00:00Z', startUrl: 'https://example.com/', result: { ...run1.result, pages: [weakPage], pages_crawled: 1 } });
 
-    vi.spyOn(eeatTrust, 'readTrustHistory').mockReturnValue([]);
-    vi.spyOn(eeatTrust, 'recordTrust').mockReturnValue([]);
-    vi.spyOn(eeatTrust, 'buildTrustReport').mockReturnValue({ score: 75 } as never);
     const dropSpy = vi.spyOn(monitoringAlerts, 'monitorScoreDrop').mockRejectedValue(new Error('dispatch fail'));
 
-    const h1 = renderHook(() => useTrust([dummyPage], 'https://example.com', run, 'proj-1'));
-    expect(dropSpy).toHaveBeenCalledWith('proj-1', 'trust', undefined, expect.any(Object), 'run-100');
+    const h1 = renderHook(() => useTrust([dummyPage], 'https://example.com', run1, 'proj-1'));
+    expect(dropSpy).not.toHaveBeenCalled();
     h1.unmount();
 
-    vi.spyOn(eeatTrust, 'readTrustHistory').mockReturnValue([{ runId: 'run-100', score: 80 } as never]);
-    dropSpy.mockClear();
-    const h2 = renderHook(() => useTrust([dummyPage], 'https://example.com', run, 'proj-1'));
-    expect(dropSpy).not.toHaveBeenCalled();
+    const h2 = renderHook(() => useTrust([weakPage], 'https://example.com', run2, 'proj-1'));
+    expect(dropSpy).toHaveBeenCalledWith('proj-1', 'trust', expect.objectContaining({ profileId: 'eetv-5-layer-v2' }), expect.objectContaining({ profileId: 'eetv-5-layer-v2' }), 'run-101');
     h2.unmount();
 
-    const h3 = renderHook(() => useTrust([], 'https://example.com', null, null));
-    expect(h3.result.current.report).toBeNull();
+    dropSpy.mockClear();
+    const h3 = renderHook(() => useTrust([weakPage], 'https://example.com', run2, 'proj-1'));
+    expect(dropSpy).not.toHaveBeenCalled();
     h3.unmount();
+    const h4 = renderHook(() => useTrust([], 'https://example.com', null, null));
+    expect(h4.result.current.report).toBeNull();
+    h4.unmount();
   });
 
   it('covers internalLinkOpportunities with ordinary typed data and link exclusion', () => {

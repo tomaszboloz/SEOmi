@@ -16,6 +16,7 @@ export interface UsageSummary {
   calls: number;
   remainingUsd: number | null;
   overBudget: boolean;
+  unknownCostCalls?: number;
 }
 
 const LOCAL_PROVIDERS = new Set(['ollama', 'vllm', 'lmstudio', 'llamacpp']);

@@ -3560,6 +3560,21 @@
       "chooseBaseRun": "Wybierz run bazowy",
       "match": "Dopasuj",
       "preview": "Podgląd"
+    },
+    "spaShell": {
+      "summary": "Podstrony wyglądające na niewyrenderowany szkielet JavaScript: {{count}}",
+      "reasons": {
+        "next_data": "Dane Next.js (__NEXT_DATA__)",
+        "nuxt_payload": "Payload Nuxt (__NUXT__)",
+        "initial_state": "Stan aplikacji (__INITIAL_STATE__)",
+        "bundle_empty_root": "Bundle JS z pustym kontenerem aplikacji",
+        "unknown": "Nie zapisano przyczyny"
+      },
+      "reasonCount": "{{reason}}: {{count}}",
+      "payloadRead": "SEOmi odczytało tekst z payloadu frameworka dla {{count}} z {{total}} tych podstron. Ten tekst pochodzi z payloadu JS, a nie z wyrenderowanej strony.",
+      "noPayload": "SEOmi nie odczytało tekstu z payloadu frameworka dla żadnej z tych podstron.",
+      "showUrls": "Pokaż adresy URL tych podstron",
+      "payloadWords": "Słowa w payloadzie JS: {{count}} (to nie jest wyrenderowana treść)"
     }
   },
   "ai": {
@@ -5032,13 +5047,37 @@
   },
   "gscOpportunities": {
     "title": "Szanse w GSC",
+    "views": "Widoki fraz",
+    "view": {
+      "all": "Wszystkie frazy",
+      "near": "Frazy 10–20",
+      "ctr": "Odstające CTR"
+    },
+    "filterLabel": "Filtruj frazy",
+    "filterPlaceholder": "Zawiera…",
+    "pageSize": "Wierszy na stronę",
+    "sort": {
+      "query": "Fraza",
+      "clicks": "Kliknięcia",
+      "impressions": "Wyświetlenia",
+      "ctr": "CTR",
+      "position": "Pozycja",
+      "benchmark": "Benchmark CTR"
+    },
+    "rows": "Wyświetlono {{from}}–{{to}} z {{count}}",
+    "previous": "Poprzednia",
+    "next": "Następna",
     "near": "Frazy tuż za TOP10 (10–20)",
     "ctr": "CTR poniżej obserwowanych fraz",
     "empty": "Brak wierszy spełniających progi dowodowe.",
     "benchmark": "CTR {{actual}}% · inne frazy {{expected}}% ({{count}} fraz)",
     "method": "Średnia pozycja dotyczy okresu. CTR porównujemy z innymi frazami w zakresie ±1 pozycji, przy minimum 3 frazach i 300 wyświetleniach. Sygnały wymagają oceny; marka, intencja i elementy SERP mogą się różnić.",
     "aiOverview": "Google uwzględnia AI Overviews i AI Mode w łącznym ruchu Web. Ten raport nie pozwala wydzielić ich metryk.",
-    "source": "Dokumentacja Google"
+    "source": "Dokumentacja Google",
+    "truncatedWarning": "Lista fraz może być niepełna z powodu limitu raportu. Brak frazy nie oznacza utraty widoczności.",
+    "clear": "Wyczyść filtr tekstowy",
+    "noMatches": "Żadna fraza nie zawiera podanego tekstu.",
+    "noQueries": "W tym raporcie nie ma dostępnych fraz."
   },
   "gscCannibalization": {
     "title": "Możliwa kanibalizacja fraz",
@@ -5889,7 +5928,7 @@
         "nScored": "z {{0}} przeskanowanych",
         "nSkipped": "Nieocenione",
         "nOffTopic": "TRS poniżej 40",
-        "nBorderline": "TRS 60-74",
+        "nBorderline": "TRS 40-74",
         "nStrong": "TRS 75 lub więcej",
         "percent": "{{0}}%",
         "coreBadge": "TEMAT GŁÓWNY",
@@ -6063,15 +6102,25 @@
           "no-answer-first": "Brak bezpośredniej odpowiedzi na początku",
           "filler-opening": "Wodnisty początek",
           "no-facts": "Brak konkretnych faktów",
-          "too-long": "Za długi na jeden fragment"
-        }
+          "too-long": "Za długi na jeden fragment",
+          "deictic-context": "Odwołanie zależne od kontekstu",
+          "no-entity": "Brak odniesienia do tematu"
+        },
+        "profile": "Profil obliczeń: {{0}} / {{1}} / {{2}} / {{3}} / {{4}}",
+        "profilePersisted": "Profil jest zgodny z zapisanym crawlem.",
+        "profileLegacy": "Ten crawl nie ma zapisanego profilu. Wyniki przeliczono według widocznego profilu; nie można ich porównywać z wynikami historycznymi.",
+        "profileMismatch": "Zapisany profil jest inny. Wyniki przeliczono według widocznego profilu; nie można ich porównywać z wynikami historycznymi.",
+        "historicalProfile": "Zapisany profil: {{0}} / {{1}}."
       },
       "trust": {
         "title": "Zaufanie do encji (E-E-A-T)",
         "intro": "Jak łatwo zweryfikować wydawcę, autorów i źródła witryny. Wyniki pochodzą z zapisanego przebiegu; żadne strony nie są pobierane ponownie.",
         "scoreTitle": "Wynik zaufania do encji",
         "legend": "Poziomy: 75-100 silne, 60-74 wystarczające, 40-59 słabe, 0-39 krytyczne.",
+        "profile": "Profil EETV {{0}} (wersja {{1}})",
+        "coverage": "Pokrycie dowodami",
         "kSchema": "Graf encji",
+        "kSameAs": "Deklaracje tożsamości",
         "kAuthor": "Dopasowanie autora",
         "kCitation": "Jakość źródeł",
         "kTransparency": "Transparentność",
@@ -6141,7 +6190,14 @@
           "no-articles": "Nie wykryto stron artykułów; warstwy autorów i cytowań nie zostały ocenione.",
           "author-invalid-profile": "{{0}} autorów podaje profil ORCID lub Wikidata z błędnym identyfikatorem ({{1}}). Sprawdź sumę kontrolną lub Q-ID.",
           "ymyl-no-scholarly-ids": "Żaden z {{0}} artykułów nie cytuje źródła z DOI, PMID ani PMCID. W tematyce YMYL cytuj badanie pierwotne."
-        }
+        },
+        "colProfile": "Dowód profilu",
+        "tClaims": "Dowody twierdzeń",
+        "claimsIntro": "Powiązania twierdzeń z cytowaniami; podobieństwo słów nie jest weryfikacją.",
+        "colClaim": "Twierdzenie",
+        "colEvidence": "Dowód",
+        "colRelation": "Relacja",
+        "colChecked": "Sprawdzone ręcznie"
       },
       "offPage": {
         "title": "Analiza off-page",
@@ -6266,6 +6322,13 @@
         "why": "Strony z bardzo małą ilością tekstu dają wyszukiwarkom mało do zrozumienia, co nazywa się cienką treścią. Dłużej nie znaczy automatycznie lepiej: strona musi w pełni odpowiadać na to, po co przyszedł użytkownik.",
         "action": "Poniżej 300 słów: zapytaj siebie, czy strona naprawdę odpowiada na pytanie. Jeśli nie, dodaj konkretne informacje.\n300 do 1000 słów: normalne dla większości stron usług i produktów.\nPowyżej 1500 słów: typowe dla pogłębionych poradników; podziel tekst nagłówkami na łatwe do przejrzenia części.\nPorównuj się z najlepszymi wynikami Google dla swojej frazy, a nie z magiczną liczbą.",
         "example": "Karta produktu z 80 słowami zwykle przegrywa z konkurencją, która w 400 słowach opisuje materiały, rozmiary, dostawę i zwroty."
+      },
+      "jsShell": {
+        "title": "Podejrzenie szkieletu JavaScript",
+        "what": "Statyczny HTML tych podstron prawie nie zawiera tekstu, ale ładuje aplikację JavaScript (np. Next.js lub Nuxt). Właściwa treść pojawia się dopiero po uruchomieniu skryptów w przeglądarce.",
+        "why": "SEOmi analizuje te podstrony na podstawie surowego HTML. Liczba słów, frazy, kontrole treści i wyniki mogą być dla nich zaniżone. Tekst odczytany z payloadu frameworka jest pokazywany osobno i nie jest liczony jako treść strony.",
+        "action": "Uruchom crawl ponownie w trybie renderowania (JavaScript), aby zobaczyć treść widzianą przez użytkowników.\nSprawdź, czy wyszukiwarki dostają treść bez JavaScript (renderowanie po stronie serwera lub prerendering).\nWyniki treści dla tych podstron traktuj ostrożnie.",
+        "example": "Strona Next.js z pustym <div id=\"__next\"></div> i skryptem __NEXT_DATA__ ma w statycznym HTML 12 słów."
       }
     },
     "metadata": {
@@ -6353,7 +6416,7 @@
         "title": "Odsetek stron w temacie",
         "what": "Udział stron z treścią, których TRS wynosi 60 lub więcej. Strony techniczne, takie jak logowanie czy koszyk, nie są liczone.",
         "why": "Pokazuje, ile stron, a nie jaki ważony wynik, wspiera temat główny.",
-        "action": "Podnieś go, poprawiając strony graniczne (60-74 i niżej) oraz usuwając strony spoza tematu.",
+        "action": "Podnieś go, poprawiając strony graniczne (40-74) oraz usuwając strony spoza tematu.",
         "example": "42 z 50 stron z treścią ma TRS 60 lub więcej: odsetek wynosi 84 procent."
       },
       "semanticSimilarity": {
@@ -6809,7 +6872,7 @@
       "pages": "Ocenione strony",
       "skipped": "Pominięte strony",
       "offTopic": "Strony poza tematem (TRS poniżej 40)",
-      "borderline": "Strony graniczne (60-74)"
+      "borderline": "Strony graniczne (40-74)"
     },
     "heatmap": {
       "title": "Rozkład tematów",
@@ -6819,7 +6882,7 @@
       "filter": {
         "all": "Wszystkie ({{count}})",
         "critical": "Krytyczne <40 ({{count}})",
-        "borderline": "Graniczne 60-74 ({{count}})",
+        "borderline": "Graniczne 40-74 ({{count}})",
         "strong": "Mocne >=75 ({{count}})"
       },
       "filtersAria": "Filtruj strony według trafności",
@@ -7352,11 +7415,34 @@
       "title": "Najsłabsze fragmenty",
       "intro": "Symulowane fragmenty RAG, które najtrudniej zacytować. Najpierw popraw wskazane problemy.",
       "chunk": "Fragment {{n}} · {{tokens}} tokenów · wynik {{score}}",
+      "offset": "znaki źródła {{start}}–{{end}}",
+      "offsetUnavailable": "Brak offsetu źródłowego",
+      "evidence": "Dowody",
+      "score": "Wynik",
+      "answerFirst": "Odpowiedź na początku",
+      "spans": "Wykryte zakresy",
+      "notApplicable": "n/d",
+      "notAvailable": "nieznane",
+      "invalidSpan": "Nieprawidłowy zakres (niepodświetlony)",
+      "invalidSpanCount": "Niepodświetlone nieprawidłowe zakresy: {{count}}.",
+      "cancel": "Anuluj",
+      "export": "Eksportuj wersję roboczą",
+      "approve": "Zatwierdź do briefu",
+      "approved": "Zatwierdzono do briefu",
+      "diff": "Pokaż zmienione wiersze",
+      "scoreChange": "Zmiana profilu: {{delta}}",
+      "beforeAfter": "Przed {{before}} · po {{after}}",
+      "facts": "Fakty: {{before}} → {{after}}",
+      "spoRelations": "Wykryte relacje SPO",
+      "partialProfile": "Profil częściowy: dane językowe lub kotwica są niepełne; zmiana przed/po nie jest pełną oceną.",
+      "preservationWarning": "Wymaga sprawdzenia: tych tokenów źródłowych nie znaleziono po przepisaniu: {{missing}}",
+      "unverified": "Propozycja AI nie jest zweryfikowana. Akceptacja jest ręczna; nic nie trafia do CMS.",
       "noHeading": "(wstęp bez nagłówka)",
       "current": "Obecny fragment",
       "optimized": "Fragment po optymalizacji",
       "generate": "Przepisz z AI",
       "generating": "Przepisuję…",
+      "cancelled": "Przepisywanie anulowane.",
       "copy": "Kopiuj",
       "copied": "Skopiowano",
       "noKey": "Połącz dostawcę AI w Ustawieniach, aby przepisywać fragmenty.",
@@ -7366,6 +7452,8 @@
     },
     "issue": {
       "dangling-pronoun": "Niejasne odniesienie",
+      "deictic-context": "Odniesienie zależne od kontekstu",
+      "no-entity": "Nie nazwano podmiotu ani encji",
       "no-answer-first": "Brak bezpośredniej odpowiedzi na początku",
       "filler-opening": "Wodnisty początek",
       "no-facts": "Brak konkretnych faktów",
@@ -7384,6 +7472,8 @@
     "hero": {
       "label": "Wynik zaufania do encji",
       "articles": "{{articles}} stron artykułów wśród {{pages}} przeskanowanych stron",
+      "profile": "Profil {{profile}} · wersja {{version}}",
+      "coverage": "Pokrycie dowodami: zaobserwowane / zadeklarowane / zweryfikowane / nieznane",
       "previous": "Poprzedni przebieg: {{score}} ({{delta}})",
       "ymyl": "Kategoria YMYL: {{category}}. Wyszukiwarki stosują do tych stron najostrzejsze kryteria zaufania.",
       "unattributed": "{{pct}}% artykułów nie ma imiennego autora ani recenzenta."
@@ -7402,6 +7492,7 @@
     "layers": {
       "title": "Warstwy zaufania",
       "schemaGraph": "Graf encji (JSON-LD)",
+      "sameAs": "Deklaracje tożsamości (sameAs)",
       "authorAlignment": "Dopasowanie autora do tematu",
       "citationQuality": "Jakość źródeł",
       "transparency": "Transparentność redakcyjna",
@@ -7417,9 +7508,19 @@
       "colArticles": "Artykuły",
       "colSameAs": "Linki sameAs",
       "colAlignment": "Dopasowanie do tematu",
-      "generic": "anonimowa sygnatura"
+      "generic": "anonimowa sygnatura",
+      "identityEvidence": "Dowód tożsamości",
+      "unavailableNote": "Brak zadeklarowanego profilu; niedostępność nie oznacza fikcyjności.",
+      "verifyProfiles": "Sprawdź profile",
+      "roleReviewer": "Recenzent",
+      "rolePublisher": "Wydawca",
+      "roleEvidence": "{{name}} ({{role}}) · {{status}} · deklaracja sameAs {{recall}}%",
+      "roleRecall": "Deklaracja sameAs ważona rolą: {{pct}}% (autor 50%, recenzent 25%, wydawca 25%; wagi proponowane, sygnał deklaracji, nie weryfikacja tożsamości)."
     },
     "signals": {
+      "claimEvidence": "Dowody twierdzeń",
+      "unbacked": "bez potwierdzenia",
+      "associationNote": "Powiązanie nie jest wynikanie; podobieństwo nie ustawia ręcznego sourceChecked.",
       "title": "Źródła i transparentność",
       "citations": "{{trusted}} z {{pages}} stron artykułów linkuje do zaufanego źródła (.gov, .edu, PubMed, WHO).",
       "dead": "{{count}} linków wychodzących jest uszkodzonych",
@@ -7468,6 +7569,7 @@
       "open": "Napraw w JSON-LD",
       "title": "Generator JSON-LD",
       "intro": "Tworzy graf Organization, Person i strony z linkami sameAs. Sprawdź go i wklej do sekcji head strony.",
+      "conflict": "Istniejące pole {{property}} dla {{id}} koliduje z propozycją. Rozwiąż konflikt przed eksportem.",
       "close": "Zamknij",
       "field": {
         "personName": "Imię i nazwisko autora",
@@ -7485,7 +7587,8 @@
         "missing-name": "Podaj imię i nazwisko autora.",
         "invalid-organization-url": "Podaj poprawny adres wydawcy (https://...).",
         "invalid-page-url": "Podaj poprawny adres strony (https://...).",
-        "invalid-same-as": "Niektóre wpisy sameAs nie są poprawnymi adresami i zostały pominięte."
+        "invalid-same-as": "Niektóre wpisy sameAs nie są poprawnymi adresami i zostały pominięte.",
+        "conflict": "Istniejące pole {{property}} dla {{id}} koliduje z propozycją. Rozwiąż konflikt przed eksportem."
       },
       "preview": "Wygenerowany JSON-LD",
       "copy": "Kopiuj znacznik script",
@@ -7736,7 +7839,20 @@
     "spent": "Wydano: {{value}}",
     "saved": "Zaoszczędzono dzięki cache i modelom lokalnym: {{value}}",
     "hits": "Trafienia cache: {{count}}",
-    "leaves": "Treść stron jest wysyłana poza to urządzenie do: {{provider}}."
+    "leaves": "Treść stron jest wysyłana poza to urządzenie do: {{provider}}.",
+    "remaining": "Pozostały budżet: {{value}}",
+    "storageUnavailable": "Magazyn budżetu lub wydatków LLM jest niedostępny albo nieprawidłowy.",
+    "overBudget": "Miesięczny budżet LLM został przekroczony.",
+    "unknownCost": "{{count}} zewnętrznych wywołań ma nieznany koszt i nie jest uwzględnionych w wydatkach.",
+    "selectProject": "Wybierz projekt, aby edytować jego budżet LLM.",
+    "budgetTitle": "Budżet LLM projektu",
+    "noLimit": "Bez miesięcznego limitu",
+    "limitLabel": "Limit miesięczny (USD)",
+    "warnLabel": "Ostrzegaj przy (%)",
+    "saveBudget": "Zapisz budżet",
+    "savedBudget": "Zapisano budżet LLM.",
+    "invalidLimit": "Wpisz prawidłowy nieujemny limit miesięczny.",
+    "invalidWarn": "Próg ostrzeżenia musi być liczbą całkowitą od 1 do 100."
   },
   "templateGovernor": {
     "title": "Jakość szablonów programatycznych",

@@ -34,7 +34,8 @@ export const analyzeTransparency = (pages: CrawledPageSummary[], articleNodes: M
 const WEIGHT: Record<TransparencyKind | 'dates', number> = { editorial: 0.25, contact: 0.2, registry: 0.2, about: 0.1, dates: 0.25 };
 
 /** 0-100 from found trust pages (75%) and the share of dated articles (25%); a site without articles scores pages only. */
-export const transparencyScore = (detail: TransparencyDetail): number => {
+export const transparencyScore = (detail: TransparencyDetail): number | undefined => {
+  if (!detail.articles && !Object.values(detail.found).some(Boolean)) return undefined;
   const pages = KINDS.reduce((sum, kind) => sum + (detail.found[kind] ? WEIGHT[kind] : 0), 0);
   if (!detail.articles) return Math.round((pages / (1 - WEIGHT.dates)) * 100);
   return Math.round((pages + WEIGHT.dates * (detail.datedArticles / detail.articles)) * 100);

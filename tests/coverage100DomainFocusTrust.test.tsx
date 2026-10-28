@@ -52,7 +52,8 @@ describe('coverage100 focus, trust and crawl edges', () => {
   it('handles missing trust organization, source status and transparency pages', () => {
     const pages = diabetesPages().map((page) => page.url.includes('/articles/') ? trustedArticle(page) : page);
     const base = buildTrustReport(pages, diabetesFocus(), { now: '2026-10-16T00:00:00Z' });
-    const sparse = { ...base, schema: { ...base.schema, organization: { present: false, hasId: false, sameAs: [] } }, authors: [], citations: { ...base.citations, deadLinks: [{ page: 'p', target: 'https://gone.test/' }] }, transparency: { ...base.transparency, articles: 0, found: {} }, ymylUnattributedPct: 10 };
+    if (base.score === null) throw new Error('fixture requires observed trust evidence');
+    const sparse = { ...base, score: base.score, schema: { ...base.schema, organization: { present: false, hasId: false, sameAs: [] } }, authors: [], citations: { ...base.citations, deadLinks: [{ page: 'p', target: 'https://gone.test/' }] }, transparency: { ...base.transparency, articles: 0, found: {} }, ymylUnattributedPct: 10 };
     render(<TrustHero report={sparse as never} />);
     expect(screen.getByRole('alert')).toBeTruthy();
     render(<TrustHero report={sparse as never} previous={{ at: '', runId: '', score: sparse.score - 1, layers: {} }} />);
@@ -63,5 +64,14 @@ describe('coverage100 focus, trust and crawl edges', () => {
     expect(screen.getByText(/No Organization entity/)).toBeTruthy();
     render(<TrustEntities report={{ ...sparse, schema: { ...sparse.schema, organization: { present: true, hasId: false, sameAs: [], name: undefined } }, authors: [{ ...base.authors[0], sameAs: [], alignmentPct: undefined }] } as never} onGenerate={() => undefined} />);
     expect(screen.getByText(/Publisher: -\./)).toBeTruthy();
+  });
+
+  it('renders unavailable trust without a numeric meter', () => {
+    const report = buildTrustReport([{ ...diabetesPages()[0], http_status: 500 }], undefined, { now: '2026-10-16T00:00:00Z' });
+    render(<TrustHero report={report} />);
+    expect(screen.getByTestId('trust-score').textContent).toBe('n/a');
+    expect(screen.getAllByText('n/a').length).toBeGreaterThan(1);
+    expect(screen.queryByRole('meter', { name: i18n.t('trust.hero.label') })).toBeNull();
+    expect(screen.queryByTestId('trust-score')?.getAttribute('aria-valuenow')).toBeNull();
   });
 });

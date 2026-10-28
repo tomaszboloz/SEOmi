@@ -18,12 +18,12 @@ export function SearchConsoleHub() {
   const crawlResult = useToolsStore((s) => s.crawlResult);
   return <div className="max-w-7xl mx-auto px-4 py-8 space-y-8">
     <SearchConsoleHeader session={session} />
-    {!session.isGscConnected ? <SearchConsoleConnection session={session} /> :
+    {!session.isGscScopeReady ? null : !session.isGscConnected ? <SearchConsoleConnection session={session} /> :
       <div className="space-y-8">
         <SearchConsoleControls session={session} />
         <SearchConsoleMetrics session={session} />
         <SearchConsoleComparison session={session} />
-        {session.currentSnapshot && <GscOpportunities snapshot={session.currentSnapshot} />}
+        {session.currentSnapshot && <GscOpportunities key={`${session.activeProjectId}|${session.currentSnapshot.id}`} snapshot={session.currentSnapshot} data={session.gscData ?? undefined} />}
         {session.currentSnapshot && session.gscData && <GscCannibalization key={session.currentSnapshot.id} data={session.gscData} />}
         <SearchConsoleInspection session={session} />
         <SearchConsoleTables session={session} />

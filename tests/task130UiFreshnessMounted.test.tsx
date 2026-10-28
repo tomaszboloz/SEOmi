@@ -7,6 +7,7 @@ import { readMetricHistory } from '@/services/optimizationTasks/metricHistory';
 import { runTaskVerification } from '@/services/optimizationTasks/runVerification';
 import type { OptimizationTask } from '@/services/optimizationTasks/types';
 import { createCrawlPageFixture, createCrawlResultFixture, createCrawlRunFixture } from './fixtures/crawl';
+import { node } from './eeatTrustFixtures';
 
 const URL = 'https://audit130.test/removed';
 const IMPL = '2026-10-26T10:00:00Z';
@@ -100,14 +101,14 @@ describe('auditor task130 mounted freshness regressions', () => {
 
   it('verifies and records a real metric delta for a completed automatic crawl', () => {
     seed('audit130-positive', { module: 'eetv', kind: 'remove-noindex', baselineScore: 0 });
-    const page = createCrawlPageFixture({ url: URL, final_url: URL, http_status: 200, indexability_status: 'Eligible' });
+    const page = createCrawlPageFixture({ url: URL, final_url: URL, http_status: 200, indexability_status: 'Eligible', schema_references: node('$', { type: 'Article' }) });
     const complete = createCrawlRunFixture({
       id: 'complete-automatic', startedAt: '2026-10-26T10:01:00Z', completedAt: '2026-10-26T10:02:00Z', startUrl: URL,
       result: createCrawlResultFixture({ start_url: URL, pages: [page], pages_crawled: 1, duration_ms: 60_000 }),
     });
     const verified = runTaskVerification('audit130-positive', complete);
     expect(verified[0]).toMatchObject({ status: 'verified', verdict: { code: 'index-ok' } });
-    expect(typeof verified[0].verdict?.delta).toBe('number');
+    expect(verified[0].verdict?.delta).toBe(0);
     expect(readMetricHistory('audit130-positive')).toHaveLength(1);
   });
 });

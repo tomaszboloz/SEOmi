@@ -65,12 +65,12 @@ it('routes generation through the selected provider and rejects an API-only prov
   auth.getState().setConnectionMethod('claude', 'local_cli');
   const generate = vi.spyOn(AIService, 'generateText').mockResolvedValue('real-response-fixture');
   expect(await auth.getState().generateText('question')).toBe('real-response-fixture');
-  expect(generate).toHaveBeenCalledWith('claude', '', 'local-model', 'question', 'local_cli');
+  expect(generate).toHaveBeenCalledWith('claude', '', 'local-model', 'question', 'local_cli', { projectId: null });
   await expect(auth.getState().generateTextForProvider('openai', 'question')).rejects.toThrow();
 
   const generateProvider = vi.spyOn(AIService, 'generateText').mockResolvedValue('provider-answer');
   expect(await auth.getState().generateTextForProvider('claude', 'cli-question')).toBe('provider-answer');
-  expect(generateProvider).toHaveBeenCalledWith('claude', '', 'local-model', 'cli-question', 'local_cli');
+  expect(generateProvider).toHaveBeenCalledWith('claude', '', 'local-model', 'cli-question', 'local_cli', { projectId: null });
 
   const suggestion = { suggestedTitle: 'Suggestion', suggestedDescription: 'Description', keyImprovements: ['Improve code'] };
   const suggestionsSpy = vi.spyOn(AIService, 'generateSuggestions').mockResolvedValue(suggestion);

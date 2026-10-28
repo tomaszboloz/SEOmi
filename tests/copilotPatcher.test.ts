@@ -76,6 +76,12 @@ describe('copilot run', () => {
     expect(second.ok && second.proposal.fromCache).toBe(true);
   });
 
+  it('does not trust local=true for a cloud provider id used by local_cli', async () => {
+    const provider = { id: 'openai', local: true, generate: vi.fn(async () => 'Creatine helps.') };
+    const result = await proposePatch(target(), [provider]);
+    expect(result.ok && result.proposal.leftDevice).toBe(true);
+  });
+
   it('reports abort, provider error, non-Error throw and empty responses', async () => {
     const controller = new AbortController();
     const slow = { id: 'x', generate: () => new Promise<string>(() => {}) };

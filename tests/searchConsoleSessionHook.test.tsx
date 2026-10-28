@@ -20,7 +20,7 @@ describe('useSearchConsoleSession', () => {
     ev.preventDefault = vi.fn();
     useProjectStore.setState({ activeProjectId: 'p1' });
     useToolsStore.setState({
-      ...acts, gscClientId: '', gscClientSecret: '', isGscConnected: false,
+      ...acts, gscHydratedProjectId: 'p1', gscClientId: '', gscClientSecret: '', isGscConnected: false,
       gscProperty: 'sc-domain:a.test', gscData: null, gscFilters: {},
     } as never);
   });

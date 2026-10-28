@@ -9,16 +9,20 @@ import type { TransparencyKind, TrustReport } from './types';
 export const TRUST_PDF_AUTHORS = 15;
 
 export interface TrustPdfSummary {
-  score: number;
-  level: string;
-  layers: { schema_graph: number | null; author_alignment: number | null; citation_quality: number | null; transparency: number | null };
+  score: number | null;
+  level: string | null;
+  layers: { schema_graph: number | null; same_as: number | null; author_alignment: number | null; citation_quality: number | null; transparency: number | null };
+  profile_version: number;
+  profile_id: string;
+  coverage: Record<string, { observed: number; declared: number; verified: number; unknown: number }>;
   ymyl: string | null;
   ymyl_unattributed_pct: number | null;
   article_count: number;
   page_count: number;
   organization: { present: boolean; has_id: boolean; same_as: number };
   counts: { authors: number; authors_with_same_as: number; trusted_pages: number; analyzed_pages: number; dead_links: number; dated_articles: number };
-  authors: Array<{ name: string; articles: number; same_as: number; alignment: number | null; generic: boolean }>;
+  authors: Array<{ name: string; articles: number; same_as: number; alignment: number | null; generic: boolean; profile_status: string }>;
+  claims: Array<{ claim: string; relation: string; evidence: string; source_checked: boolean }>;
   pages: Record<TransparencyKind, string | null>;
   findings: Array<{ code: string; params: CodeParams; severity: string }>;
 }
@@ -29,10 +33,14 @@ export const summarizeTrust = (report: TrustReport): TrustPdfSummary => ({
   level: report.level,
   layers: {
     schema_graph: report.layers.schemaGraph ?? null,
+    same_as: report.layers.sameAs ?? null,
     author_alignment: report.layers.authorAlignment ?? null,
     citation_quality: report.layers.citationQuality ?? null,
     transparency: report.layers.transparency ?? null,
   },
+  profile_version: report.profileVersion,
+  profile_id: report.profileId,
+  coverage: report.coverage,
   ymyl: report.ymyl ?? null,
   ymyl_unattributed_pct: report.ymylUnattributedPct ?? null,
   article_count: report.articleCount,
@@ -44,6 +52,10 @@ export const summarizeTrust = (report: TrustReport): TrustPdfSummary => ({
   },
   authors: report.authors.slice(0, TRUST_PDF_AUTHORS).map((author) => ({
     name: author.name, articles: author.articleUrls.length, same_as: author.sameAs.length, alignment: author.alignmentPct ?? null, generic: author.generic,
+    profile_status: author.profiles.length ? author.profiles.map((profile) => `${profile.kind}:${profile.status}`).join(', ') : 'unavailable',
+  })),
+  claims: (report.citations.claimEvidence ?? []).slice(0, 20).map((claim) => ({
+    claim: claim.claim, relation: claim.relation, evidence: claim.evidence, source_checked: claim.sourceChecked,
   })),
   pages: {
     editorial: report.transparency.found.editorial ?? null, about: report.transparency.found.about ?? null,

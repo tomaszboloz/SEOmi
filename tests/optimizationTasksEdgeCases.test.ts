@@ -7,7 +7,7 @@ import { deriveCrawlStartedAt, runTaskVerification, toIso } from '@/services/opt
 import { writeTasks } from '@/services/optimizationTasks/storage';
 import { verifyTask } from '@/services/optimizationTasks/verify';
 import { createCrawlPageFixture as page } from './fixtures/crawl';
-
+import { node } from './eeatTrustFixtures';
 const P = 'proj-edge';
 const U = 'https://site.test/p1';
 const U2 = 'https://site.test/p2';
@@ -125,12 +125,12 @@ describe('SPRS, EETV, editTask and appendDeltas branch coverage', () => {
   });
 
   it('computes EETV trust score delta when live pages exist and null when absent', () => {
-    const p1 = page({ url: U, final_url: U, http_status: 200 });
+    const p1 = page({ url: U, final_url: U, http_status: 200, schema_references: node('$', { type: 'Article' }) });
     const run = { startedAt: '2026-10-24T11:00:00Z', completedAt: '2026-10-24T11:01:00Z', result: { start_url: U, duration_ms: 1000, pages: [p1] } } as CrawlRunRecord;
     writeTasks(P, [makeTask({ id: 'teetv', module: 'eetv', kind: 'remove-noindex', baselineScore: 20 })]);
     const verified = runTaskVerification(P, run);
     expect(verified[0].status).toBe('verified');
-    expect(typeof verified[0].verdict?.delta).toBe('number');
+    expect(verified[0].verdict?.delta).toBe(-20);
 
     const errorRun = { startedAt: '2026-10-24T12:00:00Z', completedAt: '2026-10-24T12:01:00Z', result: { start_url: U, duration_ms: 1000, pages: [page({ url: U, final_url: U, http_status: 500 })] } } as CrawlRunRecord;
     writeTasks(P, [makeTask({ id: 'teetv2', module: 'eetv', kind: 'remove-410', baselineScore: 20 })]);

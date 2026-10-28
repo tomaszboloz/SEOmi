@@ -21,6 +21,11 @@ describe('score drop alerts (AIO readiness and trust)', () => {
     expect(evaluateScoreDropAlert('trust', { score: 70 }, { score: 80 }, 's')).toBeNull();
   });
 
+  it('rejects unavailable null scores', () => {
+    expect(evaluateScoreDropAlert('trust', { score: 70 }, { score: null }, 's')).toBeNull();
+    expect(evaluateScoreDropAlert('trust', { score: null }, { score: 50 }, 's')).toBeNull();
+  });
+
   it('stays silent without a previous snapshot or finite scores', () => {
     expect(evaluateScoreDropAlert('aio', undefined, { score: 10 }, 's')).toBeNull();
     expect(evaluateScoreDropAlert('aio', { score: Number.NaN }, { score: 10 }, 's')).toBeNull();
@@ -43,5 +48,6 @@ describe('score drop alerts (AIO readiness and trust)', () => {
     const again = await monitorScoreDrop('p1', 'aio', { score: 80 }, { score: 60 }, 'r2');
     expect(again.duplicate).toBe(true);
     expect((await monitorScoreDrop('p1', 'trust', undefined, { score: 60 }, 'r2')).alert).toBeNull();
+    expect((await monitorScoreDrop('p1', 'trust', { score: 80 }, { score: null }, 'r3')).alert).toBeNull();
   });
 });

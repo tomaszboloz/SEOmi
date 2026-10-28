@@ -1,4 +1,4 @@
-import type { ProfileEvidence, ProfileKind } from './types';
+import type { ProfileEvidence, ProfileKind, ProfileStatus } from './types';
 
 const ORCID_PATH = /^\/(\d{4}-\d{4}-\d{4}-\d{3}[\dX])\/?$/;
 const WIKIDATA_PATH = /^\/(?:wiki|entity)\/(Q[1-9]\d*)\/?$/;
@@ -39,7 +39,7 @@ export const classifyProfile = (value: string): ProfileEvidence => {
   if (!url) return { ...base, kind: 'other', status: 'invalid' };
   const host = url.hostname.toLowerCase().replace(/^www\./, '');
   if (hostMatches(host, 'orcid.org')) {
-    const id = ORCID_PATH.exec(url.pathname)?.[1];
+    const id = ORCID_PATH.exec(url.pathname.toUpperCase())?.[1];
     return { ...base, kind: 'orcid', tier: 1, id, status: id && orcidChecksumValid(id) ? 'syntax-valid' : 'invalid' };
   }
   if (hostMatches(host, 'wikidata.org')) {
@@ -52,9 +52,26 @@ export const classifyProfile = (value: string): ProfileEvidence => {
   return { ...base, kind: network[1], tier: network[2], status: isProfile ? 'syntax-valid' : 'declared' };
 };
 
-const dedupeKey = (profile: ProfileEvidence): string => `${profile.kind}:${(profile.id ?? profile.url).toLowerCase().replace(/\/+$/, '')}`;
+const TRACKING_PARAM = /^(utm_.+|fbclid|gclid|igshid|si|ref|ref_src|trk|hl)$/i;
 
-/** Unique profiles; the same ORCID or Q-ID written as two URLs counts once. */
+/**
+ * Canonical form of a sameAs URL for dedupe only (never displayed as evidence):
+ * https scheme, lowercase host without www/m prefix, no fragment, tracking
+ * params dropped, remaining params sorted, trailing slashes removed.
+ */
+export const canonicalProfileUrl = (value: string): string => {
+  const url = parse(value);
+  if (!url) return value.trim().toLowerCase();
+  const host = url.hostname.toLowerCase().replace(/^(www|m|mobile)\./, '');
+  const params = [...url.searchParams].filter(([name]) => !TRACKING_PARAM.test(name)).sort(([a], [b]) => a.localeCompare(b));
+  const query = params.length ? `?${new URLSearchParams(params).toString()}` : '';
+  const port = url.port ? `:${url.port}` : '';
+  return `https://${host}${port}${url.pathname.replace(/\/+$/, '')}${query}`.toLowerCase();
+};
+
+const dedupeKey = (profile: ProfileEvidence): string => `${profile.kind}:${profile.id ? profile.id.toLowerCase() : canonicalProfileUrl(profile.url)}`;
+
+/** Unique profiles; the same ORCID, Q-ID or canonical profile URL written several ways counts once. */
 export const classifyProfiles = (urls: string[]): ProfileEvidence[] => {
   const seen = new Map<string, ProfileEvidence>();
   urls.filter((url) => url.trim()).forEach((url) => {
@@ -65,6 +82,20 @@ export const classifyProfiles = (urls: string[]): ProfileEvidence[] => {
   return [...seen.values()];
 };
 
-/** Rec(E) = min(1, sum of tier weight over syntax-valid profiles): a declaration indicator. */
+/** Worst-first entity status: a conflict or broken id outranks any positive registry result. */
+export const reconciliationStatus = (profiles: ProfileEvidence[]): ProfileStatus | 'unavailable' => {
+  const priorities: ProfileStatus[] = ['mismatch', 'invalid', 'verified', 'fetched', 'syntax-valid', 'declared', 'unavailable'];
+  return priorities.find((status) => profiles.some((profile) => profile.status === status)) ?? 'unavailable';
+};
+
+/**
+ * Rec(E) = min(1, sum of tier weight over profiles whose declaration was
+ * syntactically valid. Fetching is an additional observation and must not
+ * erase the original declaration signal; an unavailable fetch likewise does
+ * not turn a valid declaration into zero. Mismatch and invalid are excluded.
+ */
 export const declarationRecall = (profiles: ProfileEvidence[]): number =>
-  Math.min(1, profiles.reduce((sum, profile) => sum + (profile.status === 'syntax-valid' && profile.tier ? TIER_WEIGHTS[profile.tier] : 0), 0));
+  Math.min(1, profiles.reduce((sum, profile) => {
+    const declarationStillValid = ['syntax-valid', 'fetched', 'verified', 'unavailable'].includes(profile.status);
+    return sum + (declarationStillValid && profile.tier ? TIER_WEIGHTS[profile.tier] : 0);
+  }, 0));

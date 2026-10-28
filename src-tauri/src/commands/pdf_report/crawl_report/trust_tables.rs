@@ -48,6 +48,7 @@ pub fn authors(trust: &Value) -> Table {
                     .get("alignment")
                     .filter(|v| !v.is_null())
                     .map_or_else(|| arg(None), |v| percent(Some(v))),
+                arg(author.get("profile_status")),
             ]
         })
         .collect();
@@ -56,6 +57,7 @@ pub fn authors(trust: &Value) -> Table {
         (t(k::COL_ARTICLES), 18.0),
         (t(k::COL_SAME_AS), 18.0),
         (t(k::COL_ALIGNMENT), 18.0),
+        (t(k::COL_PROFILE), 24.0),
     ];
     Table::text(
         t(k::T_AUTHORS),
@@ -83,6 +85,33 @@ pub fn pages(trust: &Value) -> Table {
     Table::text(
         t(k::T_PAGES),
         Some(t(k::PAGES_INTRO).into()),
+        &columns,
+        rows,
+    )
+}
+
+/// Bounded claim-to-citation evidence; association never becomes manual verification.
+pub fn claims(trust: &Value) -> Table {
+    let rows = list(trust, "claims")
+        .iter()
+        .map(|claim| {
+            vec![
+                arg(claim.get("claim")),
+                arg(claim.get("relation")),
+                arg(claim.get("evidence")),
+                arg(claim.get("source_checked")),
+            ]
+        })
+        .collect();
+    let columns = [
+        (t(k::COL_CLAIM), 52.0),
+        (t(k::COL_RELATION), 16.0),
+        (t(k::COL_EVIDENCE), 18.0),
+        (t(k::COL_CHECKED), 14.0),
+    ];
+    Table::text(
+        t(k::T_CLAIMS),
+        Some(t(k::CLAIMS_INTRO).into()),
         &columns,
         rows,
     )
