@@ -63,7 +63,7 @@ fn focus_section_shows_score_core_topic_pages_recommendations_and_gaps() {
         "Add missing",
         "unknown-code",
         "Recommendations",
-        "Remove or move 4 off-topic pages",
+        "Review 4 off-topic pages",
         "Potential: +6.5 points",
         "Sub-site scores",
         "/phones",
