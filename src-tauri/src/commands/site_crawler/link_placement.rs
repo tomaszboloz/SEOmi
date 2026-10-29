@@ -1,5 +1,6 @@
 use scraper::{ElementRef, Node};
 
+use super::link_context_redaction::{is_hidden_text, redact_context_word};
 use super::link_section_heading::section_heading;
 use super::models::CrawledLink;
 
@@ -72,7 +73,10 @@ pub(crate) fn context_words(element: &ElementRef<'_>) -> (Option<String>, Option
             inside = true;
             continue;
         }
-        let words = text.split_whitespace().map(str::to_owned);
+        if is_hidden_text(node.parent().and_then(ElementRef::wrap)) {
+            continue;
+        }
+        let words = text.split_whitespace().map(redact_context_word);
         if inside {
             after.extend(words)
         } else {
