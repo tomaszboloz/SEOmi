@@ -70,6 +70,8 @@ export const gatedSiteFocus = (pages: FocusPage[], startUrl: string, report: Sit
     return key !== null && selected.has(key);
   }));
   const manualTopic = report.coreTopic.manualOverride?.input.trim();
+  // Re-request the same anchors (home is re-added by the resolver), so the gated model keeps the anchored Core.
+  const anchorUrls = report.coreTopic.anchors ? [...report.coreTopic.anchors.sources, ...report.coreTopic.anchors.missing] : [];
   return {
     pages: eligible,
     report: buildSiteFocusReport(eligible, startUrl, {
@@ -77,6 +79,7 @@ export const gatedSiteFocus = (pages: FocusPage[], startUrl: string, report: Sit
       forceLexical: report.flags.fallbackMode === 'lexical',
       now: report.generatedAt,
       ...(manualTopic ? { manualTopic } : {}),
+      ...(anchorUrls.length ? { anchorUrls } : {}),
     }),
   };
 };

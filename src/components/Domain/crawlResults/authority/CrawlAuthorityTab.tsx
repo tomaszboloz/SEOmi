@@ -4,6 +4,7 @@ import { useSiteFocus } from '@/hooks/useSiteFocus';
 import { useTopicalAuthority, type ReferenceRunner } from '@/hooks/useTopicalAuthority';
 import { buildSiteFocusReport, type FocusPage } from '@/services/siteFocus';
 import { isSelectedCompletedCrawl } from '@/services/optimizationTasks/crawlEvidence';
+import { projectFocusOptions } from '@/services/siteFocusMonitoring/focusOptions';
 import type { CrawledPageSummary, CrawlRunRecord } from '@/types';
 import { Empty } from '../CrawlViewPrimitives';
 import { AuthorityBenchmark } from './AuthorityBenchmark';
@@ -29,7 +30,7 @@ export interface CrawlAuthorityTabProps {
 export const CrawlAuthorityTab = ({ pages, startUrl, run, projectId, runner }: CrawlAuthorityTabProps) => {
   const { t } = useTranslation();
   const focus = useSiteFocus(run, projectId);
-  const local = useMemo(() => (!focus.report && pages.length ? buildSiteFocusReport(pages, startUrl, { now: new Date().toISOString() }) : null), [focus.report, pages, startUrl]);
+  const local = useMemo(() => (!focus.report && pages.length ? buildSiteFocusReport(pages, startUrl, { ...projectFocusOptions(projectId), now: new Date().toISOString() }) : null), [focus.report, pages, startUrl, projectId]);
   const sfs = focus.report ?? local;
   const authority = useTopicalAuthority({ pages, startUrl, sfs, run, projectId, runner });
   const [selected, setSelected] = useState<string | undefined>();
