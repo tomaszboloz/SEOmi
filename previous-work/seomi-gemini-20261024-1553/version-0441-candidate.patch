@@ -1,0 +1,74 @@
+--- a/package.json
++++ b/package.json
+@@ -1,7 +1,7 @@
+ {
+   "name": "seomi",
+   "private": true,
+-  "version": "0.4.40",
++  "version": "0.4.41",
+   "type": "module",
+   "scripts": {
+     "predev": "node scripts/sync-app-version.mjs",
+--- a/package-lock.json
++++ b/package-lock.json
+@@ -1,12 +1,12 @@
+ {
+   "name": "seomi",
+-  "version": "0.4.40",
++  "version": "0.4.41",
+   "lockfileVersion": 3,
+   "requires": true,
+   "packages": {
+     "": {
+       "name": "seomi",
+-      "version": "0.4.40",
++      "version": "0.4.41",
+       "dependencies": {
+         "@tailwindcss/vite": "^4.3.3",
+         "@tauri-apps/api": "^2.12.4",
+--- a/src-tauri/Cargo.toml
++++ b/src-tauri/Cargo.toml
+@@ -1,6 +1,6 @@
+ [package]
+ name = "seomi"
+-version = "0.4.40"
++version = "0.4.41"
+ description = "Lightning-fast Native Desktop SEO & Open Graph Auditor"
+ authors = ["Tomasz Bołoz"]
+ edition = "2021"
+--- a/src-tauri/Cargo.lock
++++ b/src-tauri/Cargo.lock
+@@ -4109,7 +4109,7 @@
+ 
+ [[package]]
+ name = "seomi"
+-version = "0.4.40"
++version = "0.4.41"
+ dependencies = [
+  "anyhow",
+  "base64 0.23.1",
+--- a/RELEASE_NOTES.md
++++ b/RELEASE_NOTES.md
+@@ -1,3 +1,22 @@
++# SEOmi 0.4.41 — release notes (Release Candidate)
++
++## Summary
++- Pre-release candidate preparation for version 0.4.41. This candidate packages changes integrated and verified by the root manager; final publication remains gated by remote CI verification.
++
++## Added
++- Release provenance and supply-chain integrity: CycloneDX SBOM generation for Node (spec 1.6) and Rust (spec 1.3), cryptographic SHA256SUMS attestation input, multi-platform artifact inventory binding, idempotent retry/rerun handling with fail-closed digest verification, and deterministic toolchain setup in release workflows (#102).
++- Observational Causal Market Impact panel in Signals: project-scoped analysis with full UI localization across all 12 supported locales, explicit non-causal observational disclaimers, and data boundary validations.
++- Desktop runtime E2E test harness hardening: strict exact-origin hermetic desktop test fixture preventing cross-origin leaks during automated test runs.
++- Credential store compatibility: robust interoperability and safe fallback decoding for legacy encrypted secrets/ciphertext across desktop platforms.
++
++## Changed
++- Candidate version bump to 0.4.41 across application metadata (`package.json`, `package-lock.json`, `Cargo.toml`, `Cargo.lock`).
++
++## Notes & Limitations
++- Release Candidate status: candidate preparation only; production release publication and OIDC attestation are gated on full green CI.
++- Dependency upgrade scope: TypeScript 7 latest remains peer-dependency blocked; package updates reflect verified compatible versions rather than unconstrained latest.
++- Scope boundary: pending workstreams (#137, #138) are not included in this candidate baseline.
++
+ # SEOmi 0.4.40 — release notes
+ 
+ ## Added

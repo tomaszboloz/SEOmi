@@ -1,0 +1,21 @@
+import { execFileSync } from 'node:child_process';
+import { writeFileSync } from 'node:fs';
+import { loadMainCodeqlEvidence } from '/Users/tomaszboloz/.codex/worktrees/release-next/seomi/scripts/release-codeql-main.mjs';
+const calls = [];
+const fetchImpl = async input => {
+  const url = new URL(String(input));
+  if (url.origin !== 'https://api.github.com' || !url.pathname.startsWith('/repos/tomaszboloz/SEOmi/')) throw new Error('Unexpected endpoint');
+  calls.push(url.pathname + url.search);
+  const raw = execFileSync('gh', ['api', '--include', url.pathname.slice(1) + url.search], { encoding: 'utf8' });
+  const split = raw.search(/\r?\n\r?\n/);
+  if (split < 0) throw new Error('Missing response headers');
+  const header = raw.slice(0, split);
+  const body = raw.slice(split).replace(/^\r?\n\r?\n/, '');
+  const status = Number(header.match(/^HTTP\/[^ ]+ (\d+)/)?.[1]);
+  const link = header.split(/\r?\n/).find(line => /^link:/i.test(line))?.replace(/^link:\s*/i, '');
+  return new Response(body, { status, headers: link ? { Link: link } : {} });
+};
+const proof = await loadMainCodeqlEvidence({ repository: 'tomaszboloz/SEOmi', sha: '4a25a1974d9641a6170c0802919a566e55251071', token: 'gh-authenticated-read-boundary', fetchImpl });
+const receipt = { at: new Date().toISOString(), proof, calls, authentication: 'existing gh CLI connection; no credential file read or credential value emitted' };
+writeFileSync('/tmp/seomi-gemini-20261024-1553/main-codeql-hardened-live-proof.json', JSON.stringify(receipt, null, 2) + '\n');
+console.log(JSON.stringify(receipt));

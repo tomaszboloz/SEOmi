@@ -1,0 +1,289 @@
+--- /dev/null	2026-10-25 23:25:27
++++ tests/geminiGapGOVERNORUi.test.tsx	2026-10-25 23:24:47
+@@ -0,0 +1,123 @@
++import { render, screen, fireEvent, waitFor } from '@testing-library/react';
++import { beforeEach, describe, expect, it, vi } from 'vitest';
++import i18n from '@/i18n';
++import { MetadataAccessibilityHidden } from '@/components/Results/metadata/MetadataAccessibilityHidden';
++import { MetadataDirectives } from '@/components/Results/metadata/MetadataDirectives';
++import * as clipboard from '@/services/clipboard';
++import type { PageAuditData } from '@/types';
++
++vi.mock('@/components/Results/ShowOnPageButton', () => ({
++  ShowOnPageButton: ({ label }: { label: string }) => <button data-testid="show-on-page">{label}</button>,
++}));
++
++beforeEach(async () => {
++  await i18n.changeLanguage('en');
++  vi.restoreAllMocks();
++});
++
++const makeBaseAudit = (): PageAuditData => ({
++  url: 'https://example.com/test',
++  final_url: 'https://example.com/test',
++  http_status: 200,
++  response_time_ms: 120,
++  redirect_chain: [],
++  meta_tags: { canonical: '', robots: '', viewport: '', charset: '' },
++  links: [],
++  headings: [],
++  images: [],
++  scripts: [],
++  stylesheets: [],
++  performance: {} as never,
++  word_count: 500,
++  page_size_bytes: 1024,
++});
++
++describe('geminiGapGOVERNORUi: MetadataAccessibilityHidden and MetadataDirectives branches', () => {
++  it('exercises MetadataAccessibilityHidden truncation limits, source line/column and zero counts', () => {
++    const auditTruncated: PageAuditData = {
++      ...makeBaseAudit(),
++      accessibility: {
++        hidden_form_control_count: 5,
++        hidden_form_controls: [
++          { dom_position: 1, dom_query: '#h1', html_snippet: '<input hidden>', line: 12, column: 4 },
++        ],
++        anti_spam_text_control_count: 4,
++        anti_spam_text_controls: [
++          { dom_position: 1, dom_query: '#spam1', html_snippet: '<input name="bot">' },
++        ],
++      } as never,
++    };
++
++    const view1 = render(<MetadataAccessibilityHidden audit={auditTruncated} />);
++    expect(screen.getByText(/source 12:4/i)).toBeTruthy();
++    expect(screen.getAllByText(/Shown first 1/i).length).toBe(2);
++    view1.unmount();
++
++    const auditUntruncated: PageAuditData = {
++      ...makeBaseAudit(),
++      accessibility: {
++        hidden_form_control_count: 1,
++        hidden_form_controls: [
++          { dom_position: 1, dom_query: '#h2', html_snippet: '<input hidden>' },
++        ],
++        anti_spam_text_control_count: 1,
++        anti_spam_text_controls: [
++          { dom_position: 1, dom_query: '#spam2', html_snippet: '<input>' },
++        ],
++      } as never,
++    };
++
++    const view2 = render(<MetadataAccessibilityHidden audit={auditUntruncated} />);
++    expect(screen.queryByText(/First/i)).toBeNull();
++    view2.unmount();
++
++    const auditEmpty: PageAuditData = { ...makeBaseAudit(), accessibility: undefined };
++    const view3 = render(<MetadataAccessibilityHidden audit={auditEmpty} />);
++    expect(screen.queryByText(/hidden/i)).toBeNull();
++    view3.unmount();
++
++    const auditNullControls: PageAuditData = {
++      ...makeBaseAudit(),
++      accessibility: {
++        hidden_form_control_count: 5,
++        hidden_form_controls: undefined,
++        anti_spam_text_control_count: 4,
++        anti_spam_text_controls: undefined,
++      } as never,
++    };
++    const view4 = render(<MetadataAccessibilityHidden audit={auditNullControls} />);
++    expect(screen.getAllByText(/Shown first 0/i).length).toBe(2);
++    view4.unmount();
++  });
++
++  it('exercises MetadataDirectives canonical copy success/failure and unverified states', async () => {
++    const copySpy = vi.spyOn(clipboard, 'copyText').mockResolvedValue(true);
++    const auditWithCanonical: PageAuditData = {
++      ...makeBaseAudit(),
++      meta_tags: { canonical: 'https://example.com/target', robots: 'index,follow', viewport: 'width=device-width', charset: 'utf-8' },
++      indexability: { canonical_target_checked: true, canonical_target_status: 200 } as never,
++    };
++
++    const view1 = render(<MetadataDirectives audit={auditWithCanonical} />);
++    const copyButton = screen.getByRole('button');
++    fireEvent.click(copyButton);
++    expect(copySpy).toHaveBeenCalledWith('https://example.com/target');
++    await waitFor(() => expect(document.querySelector('.lucide-check')).toBeTruthy());
++    view1.unmount();
++
++    copySpy.mockResolvedValue(false);
++    const view2 = render(<MetadataDirectives audit={auditWithCanonical} />);
++    fireEvent.click(screen.getByRole('button'));
++    view2.unmount();
++
++    const auditNoCanonical: PageAuditData = {
++      ...makeBaseAudit(),
++      meta_tags: { canonical: '', robots: '', viewport: '', charset: '' },
++      indexability: { canonical_target_checked: true, canonical_target_status: 500, canonical_target_check_error: 'Timeout' } as never,
++    };
++    const view3 = render(<MetadataDirectives audit={auditNoCanonical} />);
++    expect(screen.getByText(i18n.t('legacyUi.metadata.notSpecified'))).toBeTruthy();
++    expect(screen.getByText(i18n.t('legacyUi.metadata.canonicalUnverified'))).toBeTruthy();
++    view3.unmount();
++  });
++});
+--- /dev/null	2026-10-25 23:25:27
++++ tests/geminiGapGOVERNORServicesA.test.ts	2026-10-25 23:24:11
+@@ -0,0 +1,84 @@
++import { describe, expect, it, vi, beforeEach } from 'vitest';
++import { renderHook } from '@testing-library/react';
++import i18n from '@/i18n';
++import { useTrust } from '@/hooks/useTrust';
++import { findInternalLinkOpportunities } from '@/services/internalLinkOpportunities';
++import * as eeatTrust from '@/services/eeatTrust';
++import * as monitoringAlerts from '@/services/monitoringAlerts';
++import type { CrawledPageSummary } from '@/types';
++
++vi.mock('@/services/monitoringAlerts', () => ({
++  monitorScoreDrop: vi.fn(),
++}));
++
++vi.mock('@/services/siteFocus', () => ({
++  buildSiteFocusReport: vi.fn().mockReturnValue({ topic: 'SEO' }),
++}));
++
++vi.mock('@/services/semanticText', () => ({
++  semanticPageTermInventory: vi.fn((page: CrawledPageSummary) => {
++    if (page.url.includes('p1') || page.url.includes('p2')) {
++      return new Map([['termA', 'termA'], ['termB', 'termB'], ['termC', 'termC']]);
++    }
++    return new Map();
++  }),
++}));
++
++beforeEach(async () => {
++  await i18n.changeLanguage('en');
++  vi.restoreAllMocks();
++});
++
++describe('geminiGapGOVERNORServicesA: useTrust and internalLinkOpportunities', () => {
++  it('covers useTrust line 26 score drop dispatch, catch handler and duplicate run bypass', async () => {
++    const dummyPage = { url: 'https://example.com/p', final_url: 'https://example.com/p' } as CrawledPageSummary;
++    const run = { id: 'run-100', completedAt: '2026-01-01T00:00:00Z' } as never;
++
++    vi.spyOn(eeatTrust, 'readTrustHistory').mockReturnValue([]);
++    vi.spyOn(eeatTrust, 'recordTrust').mockReturnValue([]);
++    vi.spyOn(eeatTrust, 'buildTrustReport').mockReturnValue({ score: 75 } as never);
++    const dropSpy = vi.spyOn(monitoringAlerts, 'monitorScoreDrop').mockRejectedValue(new Error('dispatch fail'));
++
++    const h1 = renderHook(() => useTrust([dummyPage], 'https://example.com', run, 'proj-1'));
++    expect(dropSpy).toHaveBeenCalledWith('proj-1', 'trust', undefined, expect.any(Object), 'run-100');
++    h1.unmount();
++
++    vi.spyOn(eeatTrust, 'readTrustHistory').mockReturnValue([{ runId: 'run-100', score: 80 } as never]);
++    dropSpy.mockClear();
++    const h2 = renderHook(() => useTrust([dummyPage], 'https://example.com', run, 'proj-1'));
++    expect(dropSpy).not.toHaveBeenCalled();
++    h2.unmount();
++
++    const h3 = renderHook(() => useTrust([], 'https://example.com', null, null));
++    expect(h3.result.current.report).toBeNull();
++    h3.unmount();
++  });
++
++  it('covers internalLinkOpportunities line 79 documentFrequency fallback branch', () => {
++    const makePage = (url: string): CrawledPageSummary => ({
++      url, final_url: url, http_status: 200, indexability_status: 'indexable',
++      body_truncated: false, semantic_links: [],
++    } as never);
++
++    const pages = [makePage('https://example.com/p1'), makePage('https://example.com/p2')];
++    const report1 = findInternalLinkOpportunities(pages);
++    expect(report1.opportunities.length).toBeGreaterThanOrEqual(1);
++
++    const origGet = Map.prototype.get;
++    let afterForms = false;
++    let fallbackHit = false;
++    vi.spyOn(Map.prototype, 'get').mockImplementation(function (this: Map<any, any>, key: any) {
++      if (afterForms && !fallbackHit && key === 'termA') {
++        fallbackHit = true;
++        return undefined;
++      }
++      const val = origGet.call(this, key);
++      if (key === 'termA' && typeof val === 'string') afterForms = true;
++      return val;
++    });
++
++    const report2 = findInternalLinkOpportunities(pages);
++    expect(fallbackHit).toBe(true);
++    expect(report2.opportunities.length).toBeGreaterThanOrEqual(1);
++  });
++});
+--- /dev/null	2026-10-25 23:25:27
++++ tests/geminiGapGOVERNORServicesB.test.ts	2026-10-25 23:20:09
+@@ -0,0 +1,73 @@
++import { describe, expect, it, vi, beforeEach } from 'vitest';
++import i18n from '@/i18n';
++import { buildMetaAndIndexabilityChecks } from '@/services/auditChecks/httpAndMetaChecks';
++import { DataForSEOCore } from '@/services/dataforseo/dataforseoCore';
++import * as tauri from '@/services/tauri';
++import type { PageAuditData } from '@/types';
++
++beforeEach(async () => {
++  await i18n.changeLanguage('en');
++  vi.restoreAllMocks();
++});
++
++describe('geminiGapGOVERNORServicesB: httpAndMetaChecks and dataforseoCore', () => {
++  it('covers httpAndMetaChecks line 59 canonical-target-status all branches', () => {
++    const makeAuditWithCanonical = (indexability?: PageAuditData['indexability']): PageAuditData => ({
++      url: 'https://example.com/test', final_url: 'https://example.com/test',
++      http_status: 200, response_time_ms: 100, redirect_chain: [],
++      meta_tags: { canonical: 'https://example.com/test', robots: '', viewport: '', charset: '' },
++      links: [], headings: [], images: [], scripts: [], stylesheets: [],
++      performance: {} as never, word_count: 100, page_size_bytes: 100,
++      indexability: indexability as never,
++    });
++
++    const checkNotChecked = buildMetaAndIndexabilityChecks(makeAuditWithCanonical(undefined))
++      .find((c) => c.id === 'canonical-target-status');
++    expect(checkNotChecked?.status).toBe('not_applicable');
++
++    const checkPass = buildMetaAndIndexabilityChecks(makeAuditWithCanonical({ status: 'indexable', reasons: [], canonical_target_checked: true, canonical_target_status: 200 } as never))
++      .find((c) => c.id === 'canonical-target-status');
++    expect(checkPass?.status).toBe('pass');
++
++    const checkError500 = buildMetaAndIndexabilityChecks(makeAuditWithCanonical({ status: 'indexable', reasons: [], canonical_target_checked: true, canonical_target_status: 500 } as never))
++      .find((c) => c.id === 'canonical-target-status');
++    expect(checkError500?.status).toBe('error');
++
++    const checkError0 = buildMetaAndIndexabilityChecks(makeAuditWithCanonical({ status: 'indexable', reasons: [], canonical_target_checked: true, canonical_target_status: 0 } as never))
++      .find((c) => c.id === 'canonical-target-status');
++    expect(checkError0?.status).toBe('error');
++    expect(checkError0?.evidence).toContain(i18n.t('auditProblems.unknown'));
++  });
++
++  it('covers DataForSEOCore retry loop, quota limit, non-retryable errors and Tauri IPC', async () => {
++    const client = new DataForSEOCore('login', 'pass', 'https://api.test');
++
++    vi.spyOn(tauri, 'isTauriEnvironment').mockReturnValue(true);
++    const tauriSpy = vi.spyOn(tauri, 'invokeTauriCommand').mockResolvedValue({ status: 'ok', cost: 0.05 });
++    const tauriRes = await (client as any).send('/v3/test', null, 'proj-1');
++    expect(tauriRes.status).toBe('ok');
++    expect(tauriSpy).toHaveBeenCalled();
++
++    vi.spyOn(tauri, 'isTauriEnvironment').mockReturnValue(false);
++    const mockFetch = vi.fn().mockResolvedValue({
++      ok: false, status: 400, json: async () => ({ message: 'Bad request' }),
++    });
++    vi.stubGlobal('fetch', mockFetch);
++
++    await expect((client as any).send('/v3/bad', null, 'proj-1')).rejects.toThrow();
++
++    let attempts = 0;
++    const retryFetch = vi.fn().mockImplementation(async () => {
++      attempts += 1;
++      return {
++        ok: false, status: 429,
++        headers: new Headers({ 'Retry-After': '0' }),
++        json: async () => ({ message: 'Too Many Requests' }),
++      };
++    });
++    vi.stubGlobal('fetch', retryFetch);
++
++    await expect((client as any).send('/v3/retry', null, 'proj-1')).rejects.toThrow();
++    expect(attempts).toBe(3);
++  });
++});

@@ -1,0 +1,261 @@
+diff --git a/src/components/Settings/RenderWorkerPanel.tsx b/src/components/Settings/RenderWorkerPanel.tsx
+index 13d8a2eb..976e7545 100644
+--- a/src/components/Settings/RenderWorkerPanel.tsx
++++ b/src/components/Settings/RenderWorkerPanel.tsx
+@@ -2,21 +2,21 @@ import { Copy, Loader2, Play, Server, ShieldCheck, Square } from 'lucide-react';
+ import { useEffect, useRef, useState } from 'react';
+ import { useTranslation } from 'react-i18next';
+ import {
+-  getRenderWorkerStatus,
+-  isTauriEnvironment,
+-  startRenderWorker,
+-  stopRenderWorker,
+-  type RenderWorkerLease,
++  getRenderWorkerStatus, isTauriEnvironment, startRenderWorker, stopRenderWorker, type RenderWorkerLease,
+ } from '@/services/tauri';
+ import { copyText } from '@/services/clipboard';
+ import { renderWorkerLeaseDelay } from '@/services/renderWorkerLease';
++
+ export const RenderWorkerPanel = () => {
+   const { t } = useTranslation();
+   const operation = useRef(0);
++  const stopping = useRef(false);
++  const leaseRef = useRef<RenderWorkerLease | null>(null);
+   const [lease, setLease] = useState<RenderWorkerLease | null>(null);
+   const [active, setActive] = useState(false);
+   const [busy, setBusy] = useState(false);
+   const [message, setMessage] = useState<string | null>(null);
++
+   useEffect(() => {
+     if (!isTauriEnvironment()) return;
+     let disposed = false;
+@@ -26,9 +26,10 @@ export const RenderWorkerPanel = () => {
+         const nextActive = await getRenderWorkerStatus();
+         if (disposed || revision !== operation.current) return;
+         setActive(nextActive);
+-        if (!nextActive && lease) {
++        if (!nextActive && leaseRef.current && !stopping.current) {
++          leaseRef.current = null;
+           setLease(null);
+-          setMessage(t('legacyUi.renderWorker.sessionExpired')); 
++          setMessage(t('legacyUi.renderWorker.sessionExpired'));
+         }
+       } catch {
+         if (!disposed && revision === operation.current) setActive(false);
+@@ -36,51 +37,57 @@ export const RenderWorkerPanel = () => {
+     };
+     void refreshStatus();
+     const interval = window.setInterval(() => void refreshStatus(), 5_000);
+-    return () => {
+-      disposed = true;
+-      window.clearInterval(interval);
+-    };
++    return () => { disposed = true; window.clearInterval(interval); };
+   }, [lease]);
++
+   useEffect(() => {
+     if (!lease) return;
+     const delay = renderWorkerLeaseDelay(lease.expiresAt);
+     if (delay === null) return;
+     const timer = window.setTimeout(() => {
++      leaseRef.current = null;
+       setLease(null);
+       setActive(false);
+       setMessage(t('legacyUi.renderWorker.leaseExpired'));
+     }, delay);
+     return () => window.clearTimeout(timer);
+   }, [lease]);
++
+   const start = async () => {
+-    if (!isTauriEnvironment()) {
+-      setMessage(t('legacyUi.renderWorker.desktopRequired'));
+-      return;
+-    }
++    if (!isTauriEnvironment()) { setMessage(t('legacyUi.renderWorker.desktopRequired')); return; }
+     operation.current += 1;
+     setBusy(true);
+     setMessage(null);
+     try {
+-      setLease(await startRenderWorker());
++      const freshLease = await startRenderWorker();
++      leaseRef.current = freshLease;
++      setLease(freshLease);
+       setActive(true);
+       setMessage(t('legacyUi.renderWorker.started'));
+     } catch (error) {
++      leaseRef.current = null;
+       setMessage(error instanceof Error ? error.message : String(error));
+     } finally {
++      operation.current += 1;
+       setBusy(false);
+     }
+   };
++
+   const stop = async () => {
+     operation.current += 1;
++    stopping.current = true;
+     setBusy(true);
+     try {
+       await stopRenderWorker();
++      leaseRef.current = null;
+       setLease(null);
+       setActive(false);
+       setMessage(t('legacyUi.renderWorker.stopped'));
+     } catch (error) {
+       setMessage(error instanceof Error ? error.message : String(error));
+     } finally {
++      operation.current += 1;
++      stopping.current = false;
+       setBusy(false);
+     }
+   };
+@@ -101,27 +108,17 @@ export const RenderWorkerPanel = () => {
+         <Server className="mt-0.5 h-4 w-4 shrink-0 text-sky-300" aria-hidden="true" />
+         <div className="min-w-0 flex-1">
+           <h4 className="font-semibold text-slate-200">{t('legacyUi.renderWorker.title')}</h4>
+-          <p className="mt-1 text-[11px] leading-5 text-slate-400">
+-            {t('legacyUi.renderWorker.description')}
+-          </p>
++          <p className="mt-1 text-[11px] leading-5 text-slate-400">{t('legacyUi.renderWorker.description')}</p>
+         </div>
+         {!active ? (
+-          <button
+-            type="button"
+-            onClick={() => void start()}
+-            disabled={busy || !isTauriEnvironment()}
+-            className="inline-flex shrink-0 items-center gap-1.5 rounded-md border border-sky-400/30 bg-sky-400/10 px-2.5 py-1.5 text-[11px] font-medium text-sky-200 transition hover:bg-sky-400/20 disabled:cursor-not-allowed disabled:opacity-40"
+-          >
++          <button type="button" onClick={() => void start()} disabled={busy || !isTauriEnvironment()}
++            className="inline-flex shrink-0 items-center gap-1.5 rounded-md border border-sky-400/30 bg-sky-400/10 px-2.5 py-1.5 text-[11px] font-medium text-sky-200 transition hover:bg-sky-400/20 disabled:cursor-not-allowed disabled:opacity-40">
+             {busy ? <Loader2 className="h-3.5 w-3.5 animate-spin" /> : <Play className="h-3.5 w-3.5" />}
+             {t('legacyUi.renderWorker.start')}
+           </button>
+         ) : (
+-          <button
+-            type="button"
+-            onClick={() => void stop()}
+-            disabled={busy}
+-            className="inline-flex shrink-0 items-center gap-1.5 rounded-md border border-rose-400/30 bg-rose-400/10 px-2.5 py-1.5 text-[11px] font-medium text-rose-200 transition hover:bg-rose-400/20 disabled:cursor-not-allowed disabled:opacity-40"
+-          >
++          <button type="button" onClick={() => void stop()} disabled={busy}
++            className="inline-flex shrink-0 items-center gap-1.5 rounded-md border border-rose-400/30 bg-rose-400/10 px-2.5 py-1.5 text-[11px] font-medium text-rose-200 transition hover:bg-rose-400/20 disabled:cursor-not-allowed disabled:opacity-40">
+             {busy ? <Loader2 className="h-3.5 w-3.5 animate-spin" /> : <Square className="h-3.5 w-3.5" />}
+             {t('legacyUi.renderWorker.stop')}
+           </button>
+diff --git a/tests/renderWorkerPanelBranches.test.tsx b/tests/renderWorkerPanelBranches.test.tsx
+index 2553dbdb..daa6f3ef 100644
+--- a/tests/renderWorkerPanelBranches.test.tsx
++++ b/tests/renderWorkerPanelBranches.test.tsx
+@@ -61,13 +61,14 @@ describe('RenderWorkerPanel branches', () => {
+   it('starts, shows lease details, then stops the worker', async () => {
+     vi.mocked(getRenderWorkerStatus).mockResolvedValue(true);
+     vi.mocked(startRenderWorker).mockResolvedValue(lease());
+-    vi.mocked(stopRenderWorker).mockResolvedValue(undefined);
++    vi.mocked(stopRenderWorker).mockImplementation(async () => {
++      vi.mocked(getRenderWorkerStatus).mockResolvedValue(false);
++    });
+     render(<RenderWorkerPanel />);
+     fireEvent.click(startBtn());
+     expect(await screen.findByText('tok-1')).toBeTruthy();
+     expect(screen.getByText('1.2.3')).toBeTruthy();
+     expect(screen.getByRole('status').textContent).toBe(t('started'));
+-    vi.mocked(getRenderWorkerStatus).mockResolvedValue(false);
+     fireEvent.click(screen.getByRole('button', { name: t('stop') }));
+     await waitFor(() => expect(screen.getByRole('status').textContent).toBe(t('stopped')));
+     expect(screen.queryByText('tok-1')).toBeNull();
+diff --git a/tests/renderWorkerPanelPolling.test.tsx b/tests/renderWorkerPanelPolling.test.tsx
+index 270c5958..fa95b8bc 100644
+--- a/tests/renderWorkerPanelPolling.test.tsx
++++ b/tests/renderWorkerPanelPolling.test.tsx
+@@ -1,17 +1,12 @@
+ import { act, fireEvent, render, screen, waitFor } from '@testing-library/react';
+ import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
+ import { RenderWorkerPanel } from '@/components/Settings/RenderWorkerPanel';
+-import {
+-  getRenderWorkerStatus,
+-  isTauriEnvironment, startRenderWorker, stopRenderWorker,
+-} from '@/services/tauri';
++import { getRenderWorkerStatus, isTauriEnvironment, startRenderWorker, stopRenderWorker } from '@/services/tauri';
+ import i18n from '@/i18n';
+ 
+ vi.mock('@/services/tauri', () => ({
+-  getRenderWorkerStatus: vi.fn(),
+-  isTauriEnvironment: vi.fn(),
+-  startRenderWorker: vi.fn(),
+-  stopRenderWorker: vi.fn(),
++  getRenderWorkerStatus: vi.fn(), isTauriEnvironment: vi.fn(),
++  startRenderWorker: vi.fn(), stopRenderWorker: vi.fn(),
+ }));
+ 
+ describe('RenderWorkerPanel polling', () => {
+@@ -43,24 +38,50 @@ describe('RenderWorkerPanel polling', () => {
+     expect(getRenderWorkerStatus).toHaveBeenCalledTimes(2);
+     expect(screen.queryByTestId('render-worker-panel')).toBeNull();
+   });
+-});
+ 
+- it.each([true, false])('ignores a stale status probe after explicit stop: %s', async (status) => {
+-  let resolve!: (value: boolean) => void;
+-  vi.mocked(isTauriEnvironment).mockReturnValue(true);
+-  vi.mocked(getRenderWorkerStatus).mockReset().mockResolvedValueOnce(false)
+-    .mockReturnValueOnce(new Promise<boolean>((done) => { resolve = done; }))
+-    .mockResolvedValue(false);
+-  vi.mocked(startRenderWorker).mockResolvedValue({ baseUrl: 'http://127.0.0.1', token: 'test-token',
+-    version: '1', expiresAt: new Date(Date.now() + 60_000).toISOString(), oneShot: true });
+-  vi.mocked(stopRenderWorker).mockResolvedValue(undefined);
+-  render(<RenderWorkerPanel />);
+-  fireEvent.click(screen.getByRole('button', { name: i18n.t('legacyUi.renderWorker.start') }));
+-  await screen.findByText('test-token');
+-  await waitFor(() => expect(resolve).toBeTypeOf('function'));
+-  fireEvent.click(screen.getByRole('button', { name: i18n.t('legacyUi.renderWorker.stop') }));
+-  await waitFor(() => expect(screen.getByRole('status').textContent).toBe(i18n.t('legacyUi.renderWorker.stopped')));
+-  await act(async () => resolve(status));
+-  expect(screen.getByRole('status').textContent).toBe(i18n.t('legacyUi.renderWorker.stopped'));
+-  expect(screen.queryByText('test-token')).toBeNull();
+- });
++  it.each([true, false])('ignores a stale status probe after explicit stop: %s', async (status) => {
++    let resolve!: (value: boolean) => void;
++    vi.mocked(isTauriEnvironment).mockReturnValue(true);
++    vi.mocked(getRenderWorkerStatus).mockReset().mockResolvedValueOnce(false)
++      .mockReturnValueOnce(new Promise<boolean>((done) => { resolve = done; }))
++      .mockResolvedValue(false);
++    vi.mocked(startRenderWorker).mockResolvedValue({ baseUrl: 'http://127.0.0.1', token: 'test-token',
++      version: '1', expiresAt: new Date(Date.now() + 60_000).toISOString(), oneShot: true });
++    vi.mocked(stopRenderWorker).mockResolvedValue(undefined);
++    render(<RenderWorkerPanel />);
++    fireEvent.click(screen.getByRole('button', { name: i18n.t('legacyUi.renderWorker.start') }));
++    await screen.findByText('test-token');
++    await waitFor(() => expect(resolve).toBeTypeOf('function'));
++    fireEvent.click(screen.getByRole('button', { name: i18n.t('legacyUi.renderWorker.stop') }));
++    await waitFor(() => expect(screen.getByRole('status').textContent).toBe(i18n.t('legacyUi.renderWorker.stopped')));
++    await act(async () => resolve(status));
++    expect(screen.getByRole('status').textContent).toBe(i18n.t('legacyUi.renderWorker.stopped'));
++    expect(screen.queryByText('test-token')).toBeNull();
++  });
++
++  it('retains explicit stopped outcome when a status probe begun during stop resolves in the same React batch', async () => {
++    vi.useFakeTimers();
++    vi.setSystemTime(new Date('2026-10-25T08:00:00Z'));
++    let finishStop!: () => void;
++    let finishProbe!: (active: boolean) => void;
++    let count = 0;
++    vi.mocked(getRenderWorkerStatus).mockImplementation(() => {
++      count += 1;
++      if (count === 1) return Promise.resolve(false);
++      if (count === 2) return Promise.resolve(true);
++      return new Promise((resolve) => { finishProbe = resolve; });
++    });
++    vi.mocked(startRenderWorker).mockResolvedValue({ baseUrl: 'http://127.0.0.1', token: 'audit-token',
++      version: 'fixture', expiresAt: new Date(Date.now() + 60_000).toISOString(), oneShot: true });
++    vi.mocked(stopRenderWorker).mockImplementation(() => new Promise((resolve) => { finishStop = resolve; }));
++    render(<RenderWorkerPanel />);
++    await act(async () => { await Promise.resolve(); });
++    await act(async () => { fireEvent.click(screen.getByRole('button', { name: i18n.t('legacyUi.renderWorker.start') })); await Promise.resolve(); });
++    expect(screen.getByText('audit-token')).toBeTruthy();
++    await act(async () => { fireEvent.click(screen.getByRole('button', { name: i18n.t('legacyUi.renderWorker.stop') })); await Promise.resolve(); });
++    await act(async () => { await vi.advanceTimersByTimeAsync(5_000); });
++    expect(finishProbe).toBeTypeOf('function');
++    await act(async () => { finishStop(); finishProbe(false); await Promise.resolve(); });
++    expect(screen.getByRole('status').textContent).toBe(i18n.t('legacyUi.renderWorker.stopped'));
++  });
++});

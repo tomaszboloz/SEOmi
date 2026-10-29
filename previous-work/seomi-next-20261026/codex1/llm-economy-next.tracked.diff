@@ -1,0 +1,1355 @@
+src/components/AI/LlmEconomyPanel.tsx              |  13 ++-
+ src/components/Settings/cms/useCmsPatchPanel.ts    |   9 ++
+ .../Settings/settings/ApiSettingsTab.tsx           |   7 +-
+ src/i18n/locales/ar.json                           |   4 +-
+ src/i18n/locales/de.json                           |   4 +-
+ src/i18n/locales/en.json                           |   4 +-
+ src/i18n/locales/es.json                           |   4 +-
+ src/i18n/locales/fr.json                           |   4 +-
+ src/i18n/locales/it.json                           |   4 +-
+ src/i18n/locales/ja.json                           |   4 +-
+ src/i18n/locales/ko.json                           |   4 +-
+ src/i18n/locales/pl.json                           |   4 +-
+ src/i18n/locales/pt.json                           |   4 +-
+ src/i18n/locales/ru.json                           |   4 +-
+ src/i18n/locales/zh.json                           |   4 +-
+ src/services/ai.ts                                 |  94 +++++++++++++----
+ src/services/cmsPatch/apply.ts                     |   5 +
+ src/services/dataErasure/index.ts                  |   4 +
+ src/services/llmEconomy/factGate.ts                |  22 ++++
+ src/services/llmEconomy/index.ts                   |   2 +
+ src/services/llmEconomy/semanticCache.ts           | 111 ++++++++++++++++++++-
+ src/stores/auth/generation.ts                      |  10 +-
+ tests/aiProviderContracts.test.ts                  |  18 ++--
+ tests/aiService.test.ts                            |   8 +-
+ tests/authSlices.test.ts                           |   4 +-
+ 25 files changed, 297 insertions(+), 58 deletions(-)
+
+diff --git a/src/components/AI/LlmEconomyPanel.tsx b/src/components/AI/LlmEconomyPanel.tsx
+index a42f2857..6bd6fdc7 100644
+--- a/src/components/AI/LlmEconomyPanel.tsx
++++ b/src/components/AI/LlmEconomyPanel.tsx
+@@ -2,16 +2,21 @@ import React from 'react';
+ import { useTranslation } from 'react-i18next';
+ import { HelpTip } from '@/components/Help/HelpTip';
+ import { leavesDevice, type UsageSummary } from '@/services/llmEconomy';
++import { useLlmEconomy } from './useLlmEconomy';
+ 
+ export interface LlmEconomyPanelProps {
+-  summary: UsageSummary;
+-  providerId: string;
++  summary?: UsageSummary;
++  projectId?: string | null;
++  providerId?: string;
+ }
+ 
+ const usd = (value: number): string => `$${value.toFixed(2)}`;
+ 
+-export const LlmEconomyPanel: React.FC<LlmEconomyPanelProps> = ({ summary, providerId }) => {
++export const LlmEconomyPanel: React.FC<LlmEconomyPanelProps> = ({ summary: explicitSummary, projectId, providerId = '' }) => {
+   const { t } = useTranslation();
++  const live = useLlmEconomy(projectId, providerId);
++  const summary = explicitSummary ?? live.summary ?? { spentUsd: 0, savedUsd: 0, cacheHits: 0, calls: 0, remainingUsd: null, overBudget: false };
++
+   return (
+     <section className="space-y-2 rounded-lg border border-slate-800 p-4 text-sm text-slate-300" data-testid="llm-economy-panel">
+       <h3 className="flex items-center gap-1 font-semibold text-slate-100">
+@@ -25,8 +30,10 @@ export const LlmEconomyPanel: React.FC<LlmEconomyPanelProps> = ({ summary, provi
+           <li>{t('llmEconomy.spent', { value: usd(summary.spentUsd) })}</li>
+           <li>{t('llmEconomy.saved', { value: usd(summary.savedUsd) })}</li>
+           <li>{t('llmEconomy.hits', { count: summary.cacheHits })}</li>
++          {summary.remainingUsd !== null && <li>{t('llmEconomy.remaining', { value: usd(summary.remainingUsd) })}</li>}
+         </ul>
+       )}
++      {summary.overBudget && <p role="alert" className="text-rose-400">{t('llmEconomy.overBudget')}</p>}
+       {leavesDevice(providerId) && <p role="alert" className="text-amber-300">{t('llmEconomy.leaves', { provider: providerId })}</p>}
+     </section>
+   );
+diff --git a/src/components/Settings/cms/useCmsPatchPanel.ts b/src/components/Settings/cms/useCmsPatchPanel.ts
+index 3d6fd97d..1d4cd40e 100644
+--- a/src/components/Settings/cms/useCmsPatchPanel.ts
++++ b/src/components/Settings/cms/useCmsPatchPanel.ts
+@@ -5,6 +5,7 @@ import { planPatch, type PatchPlan } from '@/services/cmsPatch/plan';
+ import { assertSafeCmsUrl } from '@/services/cmsPatch/ssrf';
+ import { cmsTransport } from '@/services/cmsPatch/transport';
+ import { CmsError } from '@/services/cmsPatch/types';
++import { validateYmylClaim } from '@/services/llmEconomy';
+ import { deniedMessage, enforcePermission } from '@/services/team/enforce';
+ import { readIdentity } from '@/services/team/identity';
+ import { cmsPanelError, initialCmsFields, saveCmsBackup, type CmsPanelFields } from './cmsPanelState';
+@@ -68,6 +69,14 @@ export const useCmsPatchPanel = (projectId: string | null) => {
+     setError(null);
+   };
+   const confirmFacts = (checked: boolean) => {
++    if (checked && plan?.ymyl) {
++      const check = validateYmylClaim(plan.replacement, [plan.before]);
++      if (!check.allowed) {
++        setFactGatePassed(false);
++        setError(`Unsupported numeric claims: ${check.rejectedValues.join(', ')}`);
++        return;
++      }
++    }
+     setFactGatePassed(checked);
+     approve(false);
+   };
+diff --git a/src/components/Settings/settings/ApiSettingsTab.tsx b/src/components/Settings/settings/ApiSettingsTab.tsx
+index 49264915..fe3a4db4 100644
+--- a/src/components/Settings/settings/ApiSettingsTab.tsx
++++ b/src/components/Settings/settings/ApiSettingsTab.tsx
+@@ -3,9 +3,9 @@ import { useTranslation } from 'react-i18next';
+ import { Loader2 } from 'lucide-react';
+ import { useAuthStore } from '@/stores/authStore';
+ import { useSettingsStore } from '@/stores/settingsStore';
++import { useProjectStore } from '@/stores/projectStore';
+ import { DataForSeoBudgetSettings } from '@/components/DataForSEO/cost/DataForSeoBudgetSettings';
+ import { LlmEconomyPanel } from '@/components/AI/LlmEconomyPanel';
+-import { summarizeUsage } from '@/services/llmEconomy';
+ import { SecretKeyField } from '@/components/Auth/SecretKeyField';
+ 
+ interface ApiSettingsTabProps {
+@@ -34,6 +34,7 @@ export const ApiSettingsTab: React.FC<ApiSettingsTabProps> = ({
+   const apiKeys = useAuthStore((s) => s.apiKeys);
+   const secureStorageError = useSettingsStore((s) => s.secureStorageError);
+   const isSaving = useSettingsStore((s) => s.isSaving);
++  const activeProjectId = useProjectStore((s) => s.activeProjectId);
+   const dataForSeoStored = useSettingsStore((s) => s.dataForSeoCredentials);
+   const googleKeyStored = useSettingsStore((s) => s.googleMetricsApiKey);
+   // Stored values never reach this form; the placeholder says one exists instead of looking empty.
+@@ -85,8 +86,8 @@ export const ApiSettingsTab: React.FC<ApiSettingsTabProps> = ({
+         </div>
+       </div>
+ 
+-      {/* No usage ledger is persisted yet: the panel shows its empty state, never estimated cost. */}
+-      <LlmEconomyPanel summary={summarizeUsage([], null)} providerId="" />
++      {/* Live project LLM ledger: shows live usage or empty state, never fictitious costs. */}
++      <LlmEconomyPanel projectId={activeProjectId} providerId="" />
+ 
+       {secureStorageError &&<p role="alert" className="text-[11px] leading-4 text-rose-300">{secureStorageError}</p>}
+       <button type="button" onClick={handleSaveGeneral} disabled={isSaving} aria-busy={isSaving} className="w-full h-9 bg-emerald-600 hover:bg-emerald-500 text-white rounded-lg font-semibold transition disabled:cursor-not-allowed disabled:opacity-60">
+diff --git a/src/i18n/locales/ar.json b/src/i18n/locales/ar.json
+index c759780d..bc1d4809 100644
+--- a/src/i18n/locales/ar.json
++++ b/src/i18n/locales/ar.json
+@@ -7735,7 +7735,9 @@
+     "spent": "المصروف: {{value}}",
+     "saved": "الموفَّر عبر الذاكرة المؤقتة والتشغيل المحلي: {{value}}",
+     "hits": "إصابات الذاكرة المؤقتة: {{count}}",
+-    "leaves": "يُرسل نص الصفحات خارج هذا الجهاز إلى {{provider}}."
++    "leaves": "يُرسل نص الصفحات خارج هذا الجهاز إلى {{provider}}.",
++    "remaining": "الميزانية المتبقية: {{value}}",
++    "overBudget": "تم تجاوز ميزانية LLM الشهرية."
+   },
+   "templateGovernor": {
+     "title": "جودة القوالب البرمجية",
+diff --git a/src/i18n/locales/de.json b/src/i18n/locales/de.json
+index ccf6d82d..03fdf7d3 100644
+--- a/src/i18n/locales/de.json
++++ b/src/i18n/locales/de.json
+@@ -7735,7 +7735,9 @@
+     "spent": "Ausgegeben: {{value}}",
+     "saved": "Gespart durch Cache und lokale Läufe: {{value}}",
+     "hits": "Cache-Treffer: {{count}}",
+-    "leaves": "Der Seitentext wird von diesem Gerät an {{provider}} gesendet."
++    "leaves": "Der Seitentext wird von diesem Gerät an {{provider}} gesendet.",
++    "remaining": "Verbleibendes Budget: {{value}}",
++    "overBudget": "Monatliches LLM-Budget überschritten."
+   },
+   "templateGovernor": {
+     "title": "Qualität programmatischer Templates",
+diff --git a/src/i18n/locales/en.json b/src/i18n/locales/en.json
+index 98091f97..016d66c2 100644
+--- a/src/i18n/locales/en.json
++++ b/src/i18n/locales/en.json
+@@ -7735,7 +7735,9 @@
+     "spent": "Spent: {{value}}",
+     "saved": "Saved by cache and local runs: {{value}}",
+     "hits": "Cache hits: {{count}}",
+-    "leaves": "Page text is sent outside this device to {{provider}}."
++    "leaves": "Page text is sent outside this device to {{provider}}.",
++    "remaining": "Remaining budget: {{value}}",
++    "overBudget": "Monthly LLM budget exceeded."
+   },
+   "templateGovernor": {
+     "title": "Programmatic template quality",
+diff --git a/src/i18n/locales/es.json b/src/i18n/locales/es.json
+index e2dd5878..6ad78b26 100644
+--- a/src/i18n/locales/es.json
++++ b/src/i18n/locales/es.json
+@@ -7735,7 +7735,9 @@
+     "spent": "Gastado: {{value}}",
+     "saved": "Ahorrado con caché y modelos locales: {{value}}",
+     "hits": "Aciertos de caché: {{count}}",
+-    "leaves": "El texto de las páginas se envía fuera de este dispositivo a {{provider}}."
++    "leaves": "El texto de las páginas se envía fuera de este dispositivo a {{provider}}.",
++    "remaining": "Presupuesto restante: {{value}}",
++    "overBudget": "Se ha superado el presupuesto mensual de LLM."
+   },
+   "templateGovernor": {
+     "title": "Calidad de plantillas programáticas",
+diff --git a/src/i18n/locales/fr.json b/src/i18n/locales/fr.json
+index c49192ea..37eefcc6 100644
+--- a/src/i18n/locales/fr.json
++++ b/src/i18n/locales/fr.json
+@@ -7735,7 +7735,9 @@
+     "spent": "Dépensé : {{value}}",
+     "saved": "Économisé par le cache et le local : {{value}}",
+     "hits": "Succès du cache : {{count}}",
+-    "leaves": "Le texte des pages est envoyé hors de cet appareil vers {{provider}}."
++    "leaves": "Le texte des pages est envoyé hors de cet appareil vers {{provider}}.",
++    "remaining": "Budget restant : {{value}}",
++    "overBudget": "Budget LLM mensuel dépassé."
+   },
+   "templateGovernor": {
+     "title": "Qualité des gabarits programmatiques",
+diff --git a/src/i18n/locales/it.json b/src/i18n/locales/it.json
+index d3c6c624..874358e0 100644
+--- a/src/i18n/locales/it.json
++++ b/src/i18n/locales/it.json
+@@ -7735,7 +7735,9 @@
+     "spent": "Speso: {{value}}",
+     "saved": "Risparmiato con cache e modelli locali: {{value}}",
+     "hits": "Hit della cache: {{count}}",
+-    "leaves": "Il testo delle pagine viene inviato fuori da questo dispositivo a {{provider}}."
++    "leaves": "Il testo delle pagine viene inviato fuori da questo dispositivo a {{provider}}.",
++    "remaining": "Budget rimanente: {{value}}",
++    "overBudget": "Budget LLM mensile superato."
+   },
+   "templateGovernor": {
+     "title": "Qualità dei template programmatici",
+diff --git a/src/i18n/locales/ja.json b/src/i18n/locales/ja.json
+index 2a18d18c..7908ae52 100644
+--- a/src/i18n/locales/ja.json
++++ b/src/i18n/locales/ja.json
+@@ -7735,7 +7735,9 @@
+     "spent": "支出: {{value}}",
+     "saved": "キャッシュとローカル実行の節約額: {{value}}",
+     "hits": "キャッシュヒット: {{count}}",
+-    "leaves": "ページ本文はこの端末の外の {{provider}} に送信されます。"
++    "leaves": "ページ本文はこの端末の外の {{provider}} に送信されます。",
++    "remaining": "残りの予算: {{value}}",
++    "overBudget": "月間LLM予算を超過しました。"
+   },
+   "templateGovernor": {
+     "title": "プログラマティックテンプレートの品質",
+diff --git a/src/i18n/locales/ko.json b/src/i18n/locales/ko.json
+index 65c4dcff..adffdb42 100644
+--- a/src/i18n/locales/ko.json
++++ b/src/i18n/locales/ko.json
+@@ -7735,7 +7735,9 @@
+     "spent": "지출: {{value}}",
+     "saved": "캐시·로컬 실행으로 절약: {{value}}",
+     "hits": "캐시 적중: {{count}}",
+-    "leaves": "페이지 본문이 이 기기 밖의 {{provider}}(으)로 전송됩니다."
++    "leaves": "페이지 본문이 이 기기 밖의 {{provider}}(으)로 전송됩니다.",
++    "remaining": "남은 예산: {{value}}",
++    "overBudget": "월간 LLM 예산을 초과했습니다."
+   },
+   "templateGovernor": {
+     "title": "프로그래매틱 템플릿 품질",
+diff --git a/src/i18n/locales/pl.json b/src/i18n/locales/pl.json
+index 153d93e8..2b40cb18 100644
+--- a/src/i18n/locales/pl.json
++++ b/src/i18n/locales/pl.json
+@@ -7735,7 +7735,9 @@
+     "spent": "Wydano: {{value}}",
+     "saved": "Zaoszczędzono dzięki cache i modelom lokalnym: {{value}}",
+     "hits": "Trafienia cache: {{count}}",
+-    "leaves": "Treść stron jest wysyłana poza to urządzenie do: {{provider}}."
++    "leaves": "Treść stron jest wysyłana poza to urządzenie do: {{provider}}.",
++    "remaining": "Pozostały budżet: {{value}}",
++    "overBudget": "Miesięczny budżet LLM został przekroczony."
+   },
+   "templateGovernor": {
+     "title": "Jakość szablonów programatycznych",
+diff --git a/src/i18n/locales/pt.json b/src/i18n/locales/pt.json
+index e61a0a25..0bf6eda7 100644
+--- a/src/i18n/locales/pt.json
++++ b/src/i18n/locales/pt.json
+@@ -7735,7 +7735,9 @@
+     "spent": "Gasto: {{value}}",
+     "saved": "Economizado com cache e execução local: {{value}}",
+     "hits": "Acertos de cache: {{count}}",
+-    "leaves": "O texto das páginas é enviado para fora deste dispositivo para {{provider}}."
++    "leaves": "O texto das páginas é enviado para fora deste dispositivo para {{provider}}.",
++    "remaining": "Orçamento restante: {{value}}",
++    "overBudget": "O orçamento mensal de LLM foi excedido."
+   },
+   "templateGovernor": {
+     "title": "Qualidade de modelos programáticos",
+diff --git a/src/i18n/locales/ru.json b/src/i18n/locales/ru.json
+index 3ff04336..9dd4fac6 100644
+--- a/src/i18n/locales/ru.json
++++ b/src/i18n/locales/ru.json
+@@ -7735,7 +7735,9 @@
+     "spent": "Потрачено: {{value}}",
+     "saved": "Сэкономлено кэшем и локальными запусками: {{value}}",
+     "hits": "Попаданий в кэш: {{count}}",
+-    "leaves": "Текст страниц отправляется за пределы устройства провайдеру {{provider}}."
++    "leaves": "Текст страниц отправляется за пределы устройства провайдеру {{provider}}.",
++    "remaining": "Оставшийся бюджет: {{value}}",
++    "overBudget": "Месячный бюджет LLM превышен."
+   },
+   "templateGovernor": {
+     "title": "Качество программных шаблонов",
+diff --git a/src/i18n/locales/zh.json b/src/i18n/locales/zh.json
+index dfa30319..43777ad9 100644
+--- a/src/i18n/locales/zh.json
++++ b/src/i18n/locales/zh.json
+@@ -7735,7 +7735,9 @@
+     "spent": "已花费：{{value}}",
+     "saved": "缓存和本地运行节省：{{value}}",
+     "hits": "缓存命中：{{count}}",
+-    "leaves": "页面文本将发送到本设备之外的 {{provider}}。"
++    "leaves": "页面文本将发送到本设备之外的 {{provider}}。",
++    "remaining": "剩余预算：{{value}}",
++    "overBudget": "已超出每月 LLM 预算。"
+   },
+   "templateGovernor": {
+     "title": "程序化模板质量",
+diff --git a/src/services/ai.ts b/src/services/ai.ts
+index d91efc91..5ee2b87d 100644
+--- a/src/services/ai.ts
++++ b/src/services/ai.ts
+@@ -1,5 +1,6 @@
+ import type { AiConnectionMethod, AiProvider, PageAuditData } from '@/types';
+ import { invokeTauriCommand } from '@/services/tauri';
++import { executeWithEconomy } from '@/services/llmEconomy';
+ import i18n from '@/i18n';
+ import { parseAiSuggestionResponse, type AiSuggestionResponse } from './ai/parsing';
+ import { buildAiPrompt } from './ai/prompt';
+@@ -11,9 +12,48 @@ import { GEMINI_DEFAULT_MODEL, currentModel } from './ai/modelCatalog';
+ export { extractJsonObject, parseAiSuggestionResponse } from './ai/parsing';
+ export type { AiSuggestionResponse } from './ai/parsing';
+ 
++export interface GenerateTextEconomyOptions {
++  projectId?: string | null;
++  estimatedCostUsd?: number | null;
++  actualCostUsd?: number | null;
++  vector?: ArrayLike<number> | null;
++  ymyl?: boolean;
++  sources?: string[];
++}
++
++export interface GenerateSuggestionsEconomyOptions {
++  projectId?: string | null;
++  estimatedCostUsd?: number | null;
++  actualCostUsd?: number | null;
++  vector?: ArrayLike<number> | null;
++  ymyl?: boolean;
++  sources?: string[];
++}
++
+ export class AIService {
+-  static generateText(provider:AiProvider,apiKey:string,model:string,prompt:string,method:AiConnectionMethod='api_key'):Promise<string> {
+-    return generateAiText(provider,apiKey,model,prompt,method);
++  static generateText(
++    provider: AiProvider,
++    apiKey: string,
++    model: string,
++    prompt: string,
++    method: AiConnectionMethod = 'api_key',
++    options?: GenerateTextEconomyOptions,
++  ): Promise<string> {
++    const projectId = options?.projectId ?? null;
++    if (!projectId?.trim()) return Promise.reject(new Error('Project ID is required for economy-scoped AI generation'));
++    return executeWithEconomy({
++        projectId,
++        configuredProviders: [provider],
++        providerId: provider,
++        model,
++        prompt,
++        vector: options?.vector,
++        estimatedCostUsd: options?.estimatedCostUsd,
++        actualCostUsd: options?.actualCostUsd,
++        ymyl: options?.ymyl,
++        sources: options?.sources,
++        run: async () => ({ text: await generateAiText(provider, apiKey, model, prompt, method) }),
++    }).then((res) => res.text);
+   }
+ static async generateSuggestions(
+   provider: AiProvider,
+@@ -22,28 +62,19 @@ static async generateSuggestions(
+   auditData: PageAuditData,
+   customInstruction?: string,
+   method: AiConnectionMethod = 'api_key',
++  options?: GenerateSuggestionsEconomyOptions,
+ ): Promise<AiSuggestionResponse> {
+-  if (method === 'local_cli') {
+-    const text = await invokeTauriCommand<string>('run_ai_cli', { provider, prompt: buildAiPrompt(auditData, customInstruction) });
+-    return parseAiSuggestionResponse(text);
+-  }
+-  if (!apiKey.trim()) {
+-    throw new Error(i18n.t('runtimeErrors.ai.configureKey'));
+-  }
+-
+   const prompt = buildAiPrompt(auditData, customInstruction);
+-
+-  switch (provider) {
+-    case 'openai':
+-      return callOpenAI(apiKey, model || 'gpt-4o', prompt);
+-    case 'claude':
+-      return callClaude(apiKey, model || CLAUDE_DEFAULT_MODEL, prompt);
+-    case 'gemini':
+-      return callGemini(apiKey, currentModel(model || GEMINI_DEFAULT_MODEL), prompt);
+-    default:
+-      throw new Error(i18n.t('runtimeErrors.ai.unsupportedProvider', { provider }));
+-  }
++  const projectId = options?.projectId ?? null;
++  if (!projectId?.trim()) throw new Error('Project ID is required for economy-scoped AI generation');
++  return executeWithEconomy({
++      projectId, configuredProviders: [provider], providerId: provider, model, prompt,
++      vector: options?.vector, estimatedCostUsd: options?.estimatedCostUsd,
++      actualCostUsd: options?.actualCostUsd, ymyl: options?.ymyl, sources: options?.sources,
++      run: async () => ({ text: await generateSuggestionsDirect(provider, apiKey, model, auditData, customInstruction, method) }),
++  }).then((result) => parseAiSuggestionResponse(result.text));
+ }
++
+   static testConnection(provider:AiProvider,apiKey:string):Promise<{success:boolean;message:string}> {
+     return testAiConnection(provider,apiKey);
+   }
+@@ -58,3 +89,24 @@ static async generateSuggestions(
+     }
+   }
+ }
++
++const generateSuggestionsDirect = async (
++  provider: AiProvider,
++  apiKey: string,
++  model: string,
++  auditData: PageAuditData,
++  customInstruction?: string,
++  method: AiConnectionMethod = 'api_key',
++): Promise<string> => {
++  if (method === 'local_cli') {
++    return invokeTauriCommand<string>('run_ai_cli', { provider, prompt: buildAiPrompt(auditData, customInstruction) });
++  }
++  if (!apiKey.trim()) throw new Error(i18n.t('runtimeErrors.ai.configureKey'));
++  const prompt = buildAiPrompt(auditData, customInstruction);
++  switch (provider) {
++    case 'openai': return JSON.stringify(await callOpenAI(apiKey, model || 'gpt-4o', prompt));
++    case 'claude': return JSON.stringify(await callClaude(apiKey, model || CLAUDE_DEFAULT_MODEL, prompt));
++    case 'gemini': return JSON.stringify(await callGemini(apiKey, currentModel(model || GEMINI_DEFAULT_MODEL), prompt));
++    default: throw new Error(i18n.t('runtimeErrors.ai.unsupportedProvider', { provider }));
++  }
++};
+diff --git a/src/services/cmsPatch/apply.ts b/src/services/cmsPatch/apply.ts
+index 1113c0c8..05265669 100644
+--- a/src/services/cmsPatch/apply.ts
++++ b/src/services/cmsPatch/apply.ts
+@@ -1,6 +1,7 @@
+ import { authorize, type TeamContext } from '@/services/team/guard';
+ import type { KeyValueStore } from '@/services/team/auditStore';
+ import { recordAudit } from '@/services/team/auditStore';
++import { validateYmylClaim } from '@/services/llmEconomy/factGate';
+ import { ADAPTERS } from './adapters';
+ import type { PatchPlan } from './plan';
+ import { CmsError, type CmsTarget, type CmsTransport } from './types';
+@@ -44,6 +45,10 @@ export const applyPatch = async (plan: PatchPlan, approval: Approval | null, dep
+   const adapter = ADAPTERS[plan.target.kind];
+   const current = await adapter.read(plan.target, deps.send);
+   if (current.revision !== plan.baseRevision) return fail('conflict', 'The page changed after the diff was approved');
++  if (plan.ymyl) {
++    const check = validateYmylClaim(plan.replacement, [current.content]);
++    if (!check.allowed) return fail('fact-gate-required', `Unsupported numeric claims: ${check.rejectedValues.join(', ')}`);
++  }
+   const backup: Backup = { target: plan.target, content: current.content, revision: current.revision, at: (deps.now?.() ?? new Date()).toISOString() };
+   await deps.saveBackup(backup);
+   try {
+diff --git a/src/services/dataErasure/index.ts b/src/services/dataErasure/index.ts
+index 2fa45cf5..23707b3d 100644
+--- a/src/services/dataErasure/index.ts
++++ b/src/services/dataErasure/index.ts
+@@ -5,6 +5,7 @@ import { invalidateQueuedCrawlWrites, withCrawlWriteLock } from '@/services/craw
+ import { migrateLegacyCrawlRuns } from '@/services/crawlStore';
+ import { forgetGa4Report, ga4ReportStorageKey } from '@/services/urlTelemetry/ga4Cache';
+ import { offPageHistoryKey } from '@/services/offPage/history';
++import { clearProjectCache } from '@/services/llmEconomy';
+ 
+ /** Evidence returned by the native store after a physical erasure. */
+ export interface ErasureReport {
+@@ -43,6 +44,8 @@ const legacyKeys = (projectId: string): string[] => [
+   `seomi_project_${projectId}_crawl_result`,
+   `seomi_project_${projectId}_crawl_runs_v1_backup`,
+   `seomi_store_v2_migrated_${projectId}`,
++  `seomi_project_${projectId}_llm_budget_v1`,
++  `seomi_project_${projectId}_llm_spend_v1`,
+ ];
+ 
+ const migrationKey = (projectId: string): string => `seomi_store_v2_migrated_${projectId}`;
+@@ -60,6 +63,7 @@ const clearLegacyStorage = (projectId: string): void => {
+     }
+   }
+   forgetGa4Report(projectId);
++  clearProjectCache(projectId);
+ };
+ 
+ /** Full project wipe, including leftover Web Storage migration artifacts. */
+diff --git a/src/services/llmEconomy/factGate.ts b/src/services/llmEconomy/factGate.ts
+index 2e80f7f6..cded7f75 100644
+--- a/src/services/llmEconomy/factGate.ts
++++ b/src/services/llmEconomy/factGate.ts
+@@ -11,6 +11,14 @@ export interface GateResult {
+   needsHumanApproval: true;
+ }
+ 
++export interface YmylGateValidation {
++  allowed: boolean;
++  gate: GateResult;
++  rejectedValues: string[];
++  reason?: GateReason;
++  needsHumanApproval: true;
++}
++
+ const UNITS = 'mg|mcg|µg|ug|g|kg|ml|l|iu|ie|mmol|mol|mmhg|kcal|%|pln|zł|usd|eur|gbp|\\$|€|£';
+ const VALUE = new RegExp(`(\\d+(?:[.,]\\d+)?)\\s*(${UNITS})(?![\\p{L}])`, 'giu');
+ 
+@@ -39,3 +47,17 @@ export const gateFacts = (text: string, sources: string[]): GateResult => {
+   }
+   return result;
+ };
++
++/** Deterministic YMYL gate validation for CMS publishing. */
++export const validateYmylClaim = (replacement: string, sources: string[]): YmylGateValidation => {
++  const gate = gateFacts(replacement, sources);
++  const rejectedValues = gate.rejected.flatMap((item) => item.values);
++  const hasRejections = gate.rejected.length > 0;
++  return {
++    allowed: !hasRejections,
++    gate,
++    rejectedValues,
++    reason: hasRejections ? gate.rejected[0].reason : undefined,
++    needsHumanApproval: true,
++  };
++};
+diff --git a/src/services/llmEconomy/index.ts b/src/services/llmEconomy/index.ts
+index f9c0263c..4a96bd98 100644
+--- a/src/services/llmEconomy/index.ts
++++ b/src/services/llmEconomy/index.ts
+@@ -1,3 +1,5 @@
+ export * from './costMeter';
+ export * from './semanticCache';
+ export * from './factGate';
++export * from './llmBudget';
++export * from './orchestrator';
+diff --git a/src/services/llmEconomy/semanticCache.ts b/src/services/llmEconomy/semanticCache.ts
+index 4cbf4956..08fd7444 100644
+--- a/src/services/llmEconomy/semanticCache.ts
++++ b/src/services/llmEconomy/semanticCache.ts
+@@ -1,17 +1,122 @@
+ import { cosine, normalize } from '@/services/embeddings/vector';
+ 
+ export interface CacheEntry {
+-  /** Task embedding (any dimension, same model for the whole cache). */
+   vector: ArrayLike<number>;
+   response: string;
+   costUsd: number;
+ }
+-
+ export interface CacheHit { entry: CacheEntry; similarity: number }
+ 
++export interface TaskRecord {
++  projectId: string;
++  providerId: string;
++  model: string;
++  prompt: string;
++  vector?: ArrayLike<number>;
++  response: string;
++  costUsd: number | null;
++  at: number;
++}
++
++export interface TaskHit {
++  record: TaskRecord;
++  matchType: 'exact' | 'semantic';
++  similarity: number;
++}
++
++export interface ExactTaskEntry { response: string; costUsd: number; at: number }
++
+ export const DEFAULT_CACHE_THRESHOLD = 0.95;
+ 
+-/** Returns the most similar earlier task when its cosine similarity reaches the threshold; otherwise null. */
++const projectMemoryStore = new Map<string, TaskRecord[]>();
++
++const norm = (s: string) => s.trim().toLowerCase();
++
++export const buildTaskKey = (providerId: string, model: string, prompt: string): string =>
++  `${norm(providerId)}\u0000${norm(model)}\u0000${prompt.trim()}`;
++
++export const findProjectCachedTask = (
++  projectId: string,
++  model: string,
++  prompt: string,
++  queryVector?: ArrayLike<number> | null,
++  threshold = DEFAULT_CACHE_THRESHOLD,
++  providerId?: string,
++): TaskHit | null => {
++  const records = projectMemoryStore.get(projectId) ?? [];
++  const normalizedModel = norm(model);
++  const normalizedProvider = providerId === undefined ? null : norm(providerId);
++  const trimmedPrompt = prompt.trim();
++
++  // 1. Exact prompt repetition within project & model (zero outside calls)
++  const exact = records.find((r) => norm(r.model) === normalizedModel
++    && (normalizedProvider === null || norm(r.providerId) === normalizedProvider)
++    && r.prompt.trim() === trimmedPrompt);
++  if (exact) return { record: exact, matchType: 'exact', similarity: 1.0 };
++
++  // 2. Cosine semantic matching when query vector is provided (unavailable if absent)
++  if (!queryVector || queryVector.length === 0) return null;
++  const normalizedQuery = normalize(queryVector);
++  let best: TaskRecord | null = null;
++  let bestSimilarity = -1;
++
++  for (const r of records) {
++    if (norm(r.model) !== normalizedModel
++      || (normalizedProvider !== null && norm(r.providerId) !== normalizedProvider)
++      || !r.vector || r.vector.length !== queryVector.length) continue;
++    const sim = cosine(normalizedQuery, normalize(r.vector));
++    if (sim >= threshold && sim > bestSimilarity) {
++      best = r;
++      bestSimilarity = sim;
++    }
++  }
++  return best ? { record: best, matchType: 'semantic', similarity: bestSimilarity } : null;
++};
++
++export const storeProjectTask = (
++  projectId: string,
++  providerId: string,
++  model: string,
++  prompt: string,
++  response: string,
++  costUsd: number | null,
++  vector?: ArrayLike<number> | null,
++  now = Date.now(),
++): TaskRecord => {
++  const record: TaskRecord = {
++    projectId, providerId, model, prompt, response, costUsd,
++    vector: vector && vector.length > 0 ? vector : undefined, at: now,
++  };
++  const list = projectMemoryStore.get(projectId) ?? [];
++  list.push(record);
++  projectMemoryStore.set(projectId, list);
++  return record;
++};
++
++export const findExactCached = (key: string): ExactTaskEntry | null => {
++  const parts = key.split('\u0000');
++  const providerId = parts.length >= 3 ? parts[0] ?? '' : undefined;
++  const hit = findProjectCachedTask('default', parts[1] ?? '', parts.slice(2).join('\u0000') || key, undefined, DEFAULT_CACHE_THRESHOLD, providerId);
++  return hit ? { response: hit.record.response, costUsd: hit.record.costUsd ?? 0, at: hit.record.at } : null;
++};
++
++export const putExactCached = (key: string, response: string, costUsd: number, now = Date.now()): ExactTaskEntry => {
++  const parts = key.split('\u0000');
++  storeProjectTask('default', parts[0] ?? '', parts[1] ?? '', parts.slice(2).join('\u0000') || key, response, costUsd, undefined, now);
++  return { response, costUsd, at: now };
++};
++
++export const clearProjectCache = (projectId: string): void => { projectMemoryStore.delete(projectId); };
++export const clearExactCache = (): void => { projectMemoryStore.clear(); };
++export const exactCacheSize = (projectId?: string): number =>
++  projectId ? (projectMemoryStore.get(projectId)?.length ?? 0) : Array.from(projectMemoryStore.values()).reduce((sum, l) => sum + l.length, 0);
++
++export const resolveCacheSavings = (normalCostUsd: number | null): { costUsd: 0; savedUsd: number; cached: true } => ({
++  costUsd: 0,
++  savedUsd: normalCostUsd !== null && Number.isFinite(normalCostUsd) ? Math.max(0, normalCostUsd) : 0,
++  cached: true,
++});
++
+ export const findCached = (
+   task: ArrayLike<number>,
+   history: CacheEntry[],
+diff --git a/src/stores/auth/generation.ts b/src/stores/auth/generation.ts
+index e6e9959d..d2a6a5f5 100644
+--- a/src/stores/auth/generation.ts
++++ b/src/stores/auth/generation.ts
+@@ -1,21 +1,25 @@
+ import { AIService } from '@/services/ai';
++import { useProjectStore } from '@/stores/projectStore';
+ import i18n from '@/i18n';
+ import type { AuthState, AuthSet, AuthGet } from './types';
+ export const createAuthGeneration = (_set: AuthSet, get: AuthGet): Pick<AuthState, 'isProviderConnected' | 'generateText' | 'generateTextForProvider' | 'generateSuggestions'> => ({
+   isProviderConnected: (provider) => get().connectionStatus[provider || get().provider] === 'connected',
+   generateText: async (prompt) => {
+     const { provider, model, apiKeys, connectionMethod } = get();
+-    return AIService.generateText(provider, apiKeys[provider], model, prompt, connectionMethod[provider]);
++    const projectId = useProjectStore.getState().activeProjectId;
++    return AIService.generateText(provider, apiKeys[provider], model, prompt, connectionMethod[provider], { projectId });
+   },
+   generateTextForProvider: async (provider, prompt) => {
+     const { model, apiKeys, connectionMethod } = get();
+     if (connectionMethod[provider] !== 'local_cli') {
+       throw new Error(i18n.t('runtimeErrors.ai.localClientRequired', { provider }));
+     }
+-    return AIService.generateText(provider, apiKeys[provider], model, prompt, 'local_cli');
++    const projectId = useProjectStore.getState().activeProjectId;
++    return AIService.generateText(provider, apiKeys[provider], model, prompt, 'local_cli', { projectId });
+   },
+   generateSuggestions: (audit, instruction) => {
+     const { provider, model, apiKeys, connectionMethod } = get();
+-    return AIService.generateSuggestions(provider, apiKeys[provider], model, audit, instruction, connectionMethod[provider]);
++    const projectId = useProjectStore.getState().activeProjectId;
++    return AIService.generateSuggestions(provider, apiKeys[provider], model, audit, instruction, connectionMethod[provider], { projectId });
+   },
+ });
+diff --git a/tests/aiProviderContracts.test.ts b/tests/aiProviderContracts.test.ts
+index 05a31c0c..d9ff3197 100644
+--- a/tests/aiProviderContracts.test.ts
++++ b/tests/aiProviderContracts.test.ts
+@@ -22,7 +22,7 @@ it('encodes the Gemini connection key as one query value',async()=>{
+ it.each(['openai','claude','gemini'] as const)('generates %s metadata through the hosted provider and preserves source evidence',async provider=>{
+   const fetchMock=vi.spyOn(globalThis,'fetch').mockResolvedValue(new Response(JSON.stringify(responseFor(provider,JSON.stringify(suggestions))),{status:200}));
+   const audit=createAuditFixture({headings:{h1_count:1,h1_texts:['Observed heading'],hierarchy:[],has_valid_hierarchy:true,issues:[]},content_stats:{word_count:10,reading_time_minutes:1,text_ratio_percent:10,top_keywords:[{keyword:'observed',count:2}]}});
+-  expect(await AIService.generateSuggestions(provider,'dummy-key','',audit,'Keep the evidence')).toEqual(suggestions);
++  expect(await AIService.generateSuggestions(provider,'dummy-key','',audit,'Keep the evidence','api_key',{ projectId: 'provider-contracts' })).toEqual(suggestions);
+   expect(invoke).not.toHaveBeenCalled();
+   const [,options]=fetchMock.mock.calls[0];
+   const body=JSON.parse(String(options?.body));
+@@ -36,7 +36,7 @@ it.each(['openai','claude','gemini'] as const)('generates %s metadata through th
+ it.each(['openai','claude','gemini'] as const)('routes %s CLI metadata without API credentials or forcing an API model',async provider=>{
+   const fetchMock=vi.spyOn(globalThis,'fetch');
+   invoke.mockResolvedValue('```json\n'+JSON.stringify(suggestions)+'\n```');
+-  expect(await AIService.generateSuggestions(provider,'','irrelevant-api-model',createAuditFixture(),'Use visible content','local_cli')).toEqual(suggestions);
++  expect(await AIService.generateSuggestions(provider,'','irrelevant-api-model',createAuditFixture(),'Use visible content','local_cli',{ projectId: 'provider-contracts' })).toEqual(suggestions);
+   expect(invoke).toHaveBeenCalledWith('run_ai_cli',{provider,prompt:expect.stringContaining('Use visible content')});
+   expect(invoke.mock.calls[0][1]).not.toHaveProperty('model');
+   expect(fetchMock).not.toHaveBeenCalled();
+@@ -44,7 +44,7 @@ it.each(['openai','claude','gemini'] as const)('routes %s CLI metadata without A
+ 
+ it('does not request hosted suggestions without a configured key',async()=>{
+   const fetchMock=vi.spyOn(globalThis,'fetch');
+-  await expect(AIService.generateSuggestions('openai','  ','model',createAuditFixture())).rejects.toThrow(i18n.t('runtimeErrors.ai.configureKey'));
++  await expect(AIService.generateSuggestions('openai','  ','model',createAuditFixture(),undefined,'api_key',{ projectId: 'provider-contracts' })).rejects.toThrow(i18n.t('runtimeErrors.ai.configureKey'));
+   expect(fetchMock).not.toHaveBeenCalled();
+ });
+ 
+@@ -55,7 +55,7 @@ it.each([
+ ] as const)('preserves %s suggestion failure HTTP %i as %s',async(provider,status,key)=>{
+   vi.spyOn(globalThis,'fetch').mockResolvedValue(new Response('provider unavailable',{status}));
+   let failure:unknown;
+-  try{await AIService.generateSuggestions(provider,'dummy-key','model',createAuditFixture());}catch(error){failure=error;}
++  try{await AIService.generateSuggestions(provider,'dummy-key','model',createAuditFixture(),undefined,'api_key',{ projectId: 'provider-contracts' });}catch(error){failure=error;}
+   expect(failure).toBeInstanceOf(Error);
+   const label=i18n.t(`legacyUi.ai.${provider}`);
+   const host=provider==='openai'?'platform.openai.com':provider==='claude'?'console.anthropic.com':'aistudio.google.com';
+@@ -64,7 +64,7 @@ it.each([
+ 
+ it.each(['openai','claude','gemini'] as const)('rejects malformed %s suggestion responses',async provider=>{
+   vi.spyOn(globalThis,'fetch').mockResolvedValue(new Response(JSON.stringify(responseFor(provider,'{"suggestedTitle":false}')),{status:200}));
+-  await expect(AIService.generateSuggestions(provider,'dummy-key','model',createAuditFixture())).rejects.toThrow(i18n.t('runtimeErrors.ai.missingSuggestionFields'));
++  await expect(AIService.generateSuggestions(provider,'dummy-key','model',createAuditFixture(),undefined,'api_key',{ projectId: 'provider-contracts' })).rejects.toThrow(i18n.t('runtimeErrors.ai.missingSuggestionFields'));
+ });
+ 
+ it.each(['openai','claude','gemini'] as const)('fails %s connection before network when credentials are missing',async provider=>{
+@@ -93,7 +93,7 @@ it.each([new Error('connection unavailable'),'connection cancelled'])('returns n
+ it.each(['openai','claude','gemini'] as const)('generates %s text through a literal hosted prompt',async provider=>{
+   const fetchMock=vi.spyOn(globalThis,'fetch').mockResolvedValue(new Response(JSON.stringify(responseFor(provider,'Observed provider answer')),{status:200}));
+   const prompt='Literal prompt & $(command) "quoted" — 日本語';
+-  expect(await AIService.generateText(provider,'dummy-key','selected-model',prompt)).toBe('Observed provider answer');
++  expect(await AIService.generateText(provider,'dummy-key','selected-model',prompt,'api_key',{ projectId: 'provider-contracts' })).toBe('Observed provider answer');
+   const options=fetchMock.mock.calls[0][1];
+   const body=JSON.parse(String(options?.body));
+   expect(provider==='gemini'?body.contents[0].parts[0].text:body.messages[0].content).toBe(prompt);
+@@ -101,18 +101,18 @@ it.each(['openai','claude','gemini'] as const)('generates %s text through a lite
+ 
+ it.each(['openai','claude','gemini'] as const)('preserves %s hosted text errors',async provider=>{
+   vi.spyOn(globalThis,'fetch').mockResolvedValue(new Response('provider unavailable',{status:503}));
+-  await expect(AIService.generateText(provider,'dummy-key','model','prompt')).rejects.toThrow(i18n.t('runtimeErrors.ai.apiError',{provider:i18n.t(`legacyUi.ai.${provider}`),status:503,detail:i18n.t('runtimeErrors.ai.responseHidden')}));
++  await expect(AIService.generateText(provider,'dummy-key','model','prompt','api_key',{ projectId: 'provider-contracts' })).rejects.toThrow(i18n.t('runtimeErrors.ai.apiError',{provider:i18n.t(`legacyUi.ai.${provider}`),status:503,detail:i18n.t('runtimeErrors.ai.responseHidden')}));
+ });
+ 
+ it.each(['openai','claude','gemini'] as const)('returns no invented text for an empty %s provider envelope',async provider=>{
+   vi.spyOn(globalThis,'fetch').mockResolvedValue(new Response('{}',{status:200}));
+-  expect(await AIService.generateText(provider,'dummy-key','model','prompt')).toBe('');
++  expect(await AIService.generateText(provider,'dummy-key','model','prompt','api_key',{ projectId: 'provider-contracts' })).toBe('');
+ });
+ 
+ it('routes text to an authenticated local CLI without requiring an API key',async()=>{
+   const fetchMock=vi.spyOn(globalThis,'fetch');
+   invoke.mockResolvedValue('Native CLI answer');
+-  expect(await AIService.generateText('claude','','ignored-api-model','Literal CLI prompt','local_cli')).toBe('Native CLI answer');
++  expect(await AIService.generateText('claude','','ignored-api-model','Literal CLI prompt','local_cli',{ projectId: 'provider-contracts' })).toBe('Native CLI answer');
+   expect(invoke).toHaveBeenCalledExactlyOnceWith('run_ai_cli',{provider:'claude',prompt:'Literal CLI prompt'});
+   expect(fetchMock).not.toHaveBeenCalled();
+ });
+diff --git a/tests/aiService.test.ts b/tests/aiService.test.ts
+index 56ccb531..d5b57382 100644
+--- a/tests/aiService.test.ts
++++ b/tests/aiService.test.ts
+@@ -14,6 +14,10 @@ const valid = {
+ };
+ 
+ describe('AI suggestion response parsing', () => {
++  it('requires a project scope before any provider call', async () => {
++    await expect(AIService.generateText('openai', 'key', 'model', 'prompt')).rejects.toThrow('Project ID is required');
++  });
++
+   it('extracts fenced JSON without losing braces inside quoted values', () => {
+     const response = `Here is the result:\n\n\`\`\`json\n${JSON.stringify({
+       ...valid,
+@@ -46,7 +50,7 @@ describe('AI suggestion response parsing', () => {
+   it('encodes a persisted Gemini model before placing it in the request path', async () => {
+     const fetchMock = vi.spyOn(globalThis, 'fetch').mockResolvedValue(new Response(JSON.stringify({ candidates: [{ content: { parts: [{ text: 'safe response' }] } }] })));
+ 
+-    await expect(AIService.generateText('gemini', 'test-key', 'model/name?variant=1', 'prompt')).resolves.toBe('safe response');
++    await expect(AIService.generateText('gemini', 'test-key', 'model/name?variant=1', 'prompt', 'api_key', { projectId: 'ai-service-test' })).resolves.toBe('safe response');
+     expect(String(fetchMock.mock.calls[0]?.[0])).toContain('models/model%2Fname%3Fvariant%3D1:generateContent');
+     fetchMock.mockRestore();
+   });
+@@ -93,6 +97,6 @@ it('skips an invalid complete object and retains the next valid escaped JSON obj
+ 
+ it('rejects unsupported provider when generating suggestions', async () => {
+   await expect(
+-    AIService.generateSuggestions('unsupported' as any, 'key', 'model', createAuditFixture())
++    AIService.generateSuggestions('unsupported' as any, 'key', 'model', createAuditFixture(), undefined, 'api_key', { projectId: 'ai-service-test' })
+   ).rejects.toThrow(i18n.t('runtimeErrors.ai.unsupportedProvider', { provider: 'unsupported' }));
+ });
+diff --git a/tests/authSlices.test.ts b/tests/authSlices.test.ts
+index 218ee650..b5ee0379 100644
+--- a/tests/authSlices.test.ts
++++ b/tests/authSlices.test.ts
+@@ -65,12 +65,12 @@ it('routes generation through the selected provider and rejects an API-only prov
+   auth.getState().setConnectionMethod('claude', 'local_cli');
+   const generate = vi.spyOn(AIService, 'generateText').mockResolvedValue('real-response-fixture');
+   expect(await auth.getState().generateText('question')).toBe('real-response-fixture');
+-  expect(generate).toHaveBeenCalledWith('claude', '', 'local-model', 'question', 'local_cli');
++  expect(generate).toHaveBeenCalledWith('claude', '', 'local-model', 'question', 'local_cli', { projectId: null });
+   await expect(auth.getState().generateTextForProvider('openai', 'question')).rejects.toThrow();
+ 
+   const generateProvider = vi.spyOn(AIService, 'generateText').mockResolvedValue('provider-answer');
+   expect(await auth.getState().generateTextForProvider('claude', 'cli-question')).toBe('provider-answer');
+-  expect(generateProvider).toHaveBeenCalledWith('claude', '', 'local-model', 'cli-question', 'local_cli');
++  expect(generateProvider).toHaveBeenCalledWith('claude', '', 'local-model', 'cli-question', 'local_cli', { projectId: null });
+ 
+   const suggestion = { suggestedTitle: 'Suggestion', suggestedDescription: 'Description', keyImprovements: ['Improve code'] };
+   const suggestionsSpy = vi.spyOn(AIService, 'generateSuggestions').mockResolvedValue(suggestion);
+
+Changes:
+
+src/components/AI/LlmEconomyPanel.tsx
+  @@ -2,16 +2,21 @@ import React from 'react';
+  +import { useLlmEconomy } from './useLlmEconomy';
+   
+   export interface LlmEconomyPanelProps {
+  -  summary: UsageSummary;
+  -  providerId: string;
+  +  summary?: UsageSummary;
+  +  projectId?: string | null;
+  +  providerId?: string;
+   }
+   
+   const usd = (value: number): string => `$${value.toFixed(2)}`;
+   
+  -export const LlmEconomyPanel: React.FC<LlmEconomyPanelProps> = ({ summary, providerId }) => {
+  +export const LlmEconomyPanel: React.FC<LlmEconomyPanelProps> = ({ summary: explicitSummary, projectId, providerId = '' }) => {
+     const { t } = useTranslation();
+  +  const live = useLlmEconomy(projectId, providerId);
+  +  const summary = explicitSummary ?? live.summary ?? { spentUsd: 0, savedUsd: 0, cacheHits: 0, calls: 0, remainingUsd: null, overBudget: false };
+  +
+     return (
+       <section className="space-y-2 rounded-lg border border-slate-800 p-4 text-sm text-slate-300" data-testid="llm-economy-panel">
+         <h3 className="flex items-center gap-1 font-semibold text-slate-100">
+  @@ -25,8 +30,10 @@ export const LlmEconomyPanel: React.FC<LlmEconomyPanelProps> = ({ summary, provi
+  +          {summary.remainingUsd !== null && <li>{t('llmEconomy.remaining', { value: usd(summary.remainingUsd) })}</li>}
+           </ul>
+         )}
+  +      {summary.overBudget && <p role="alert" className="text-rose-400">{t('llmEconomy.overBudget')}</p>}
+         {leavesDevice(providerId) && <p role="alert" className="text-amber-300">{t('llmEconomy.leaves', { provider: providerId })}</p>}
+       </section>
+     );
+  +10 -3
+
+src/components/Settings/cms/useCmsPatchPanel.ts
+  @@ -5,6 +5,7 @@ import { planPatch, type PatchPlan } from '@/services/cmsPatch/plan';
+  +import { validateYmylClaim } from '@/services/llmEconomy';
+   import { deniedMessage, enforcePermission } from '@/services/team/enforce';
+   import { readIdentity } from '@/services/team/identity';
+   import { cmsPanelError, initialCmsFields, saveCmsBackup, type CmsPanelFields } from './cmsPanelState';
+  @@ -68,6 +69,14 @@ export const useCmsPatchPanel = (projectId: string | null) => {
+  +    if (checked && plan?.ymyl) {
+  +      const check = validateYmylClaim(plan.replacement, [plan.before]);
+  +      if (!check.allowed) {
+  +        setFactGatePassed(false);
+  +        setError(`Unsupported numeric claims: ${check.rejectedValues.join(', ')}`);
+  +        return;
+  +      }
+  +    }
+       setFactGatePassed(checked);
+       approve(false);
+     };
+  +9 -0
+
+src/components/Settings/settings/ApiSettingsTab.tsx
+  @@ -3,9 +3,9 @@ import { useTranslation } from 'react-i18next';
+  +import { useProjectStore } from '@/stores/projectStore';
+   import { DataForSeoBudgetSettings } from '@/components/DataForSEO/cost/DataForSeoBudgetSettings';
+   import { LlmEconomyPanel } from '@/components/AI/LlmEconomyPanel';
+  -import { summarizeUsage } from '@/services/llmEconomy';
+   import { SecretKeyField } from '@/components/Auth/SecretKeyField';
+   
+   interface ApiSettingsTabProps {
+  @@ -34,6 +34,7 @@ export const ApiSettingsTab: React.FC<ApiSettingsTabProps> = ({
+  +  const activeProjectId = useProjectStore((s) => s.activeProjectId);
+     const dataForSeoStored = useSettingsStore((s) => s.dataForSeoCredentials);
+     const googleKeyStored = useSettingsStore((s) => s.googleMetricsApiKey);
+     // Stored values never reach this form; the placeholder says one exists instead of looking empty.
+  @@ -85,8 +86,8 @@ export const ApiSettingsTab: React.FC<ApiSettingsTabProps> = ({
+  -      {/* No usage ledger is persisted yet: the panel shows its empty state, never estimated cost. */}
+  -      <LlmEconomyPanel summary={summarizeUsage([], null)} providerId="" />
+  +      {/* Live project LLM ledger: shows live usage or empty state, never fictitious costs. */}
+  +      <LlmEconomyPanel projectId={activeProjectId} providerId="" />
+   
+         {secureStorageError &&<p role="alert" className="text-[11px] leading-4 text-rose-300">{secureStorageError}</p>}
+         <button type="button" onClick={handleSaveGeneral} disabled={isSaving} aria-busy={isSaving} className="w-full h-9 bg-emerald-600 hover:bg-emerald-500 text-white rounded-lg font-semibold transition disabled:cursor-not-allowed disabled:opacity-60">
+  +4 -3
+
+src/i18n/locales/ar.json
+  @@ -7735,7 +7735,9 @@
+  -    "leaves": "يُرسل نص الصفحات خارج هذا الجهاز إلى {{provider}}."
+  +    "leaves": "يُرسل نص الصفحات خارج هذا الجهاز إلى {{provider}}.",
+  +    "remaining": "الميزانية المتبقية: {{value}}",
+  +    "overBudget": "تم تجاوز ميزانية LLM الشهرية."
+     },
+     "templateGovernor": {
+       "title": "جودة القوالب البرمجية",
+  +3 -1
+
+src/i18n/locales/de.json
+  @@ -7735,7 +7735,9 @@
+  -    "leaves": "Der Seitentext wird von diesem Gerät an {{provider}} gesendet."
+  +    "leaves": "Der Seitentext wird von diesem Gerät an {{provider}} gesendet.",
+  +    "remaining": "Verbleibendes Budget: {{value}}",
+  +    "overBudget": "Monatliches LLM-Budget überschritten."
+     },
+     "templateGovernor": {
+       "title": "Qualität programmatischer Templates",
+  +3 -1
+
+src/i18n/locales/en.json
+  @@ -7735,7 +7735,9 @@
+  -    "leaves": "Page text is sent outside this device to {{provider}}."
+  +    "leaves": "Page text is sent outside this device to {{provider}}.",
+  +    "remaining": "Remaining budget: {{value}}",
+  +    "overBudget": "Monthly LLM budget exceeded."
+     },
+     "templateGovernor": {
+       "title": "Programmatic template quality",
+  +3 -1
+
+src/i18n/locales/es.json
+  @@ -7735,7 +7735,9 @@
+  -    "leaves": "El texto de las páginas se envía fuera de este dispositivo a {{provider}}."
+  +    "leaves": "El texto de las páginas se envía fuera de este dispositivo a {{provider}}.",
+  +    "remaining": "Presupuesto restante: {{value}}",
+  +    "overBudget": "Se ha superado el presupuesto mensual de LLM."
+     },
+     "templateGovernor": {
+       "title": "Calidad de plantillas programáticas",
+  +3 -1
+
+src/i18n/locales/fr.json
+  @@ -7735,7 +7735,9 @@
+  -    "leaves": "Le texte des pages est envoyé hors de cet appareil vers {{provider}}."
+  +    "leaves": "Le texte des pages est envoyé hors de cet appareil vers {{provider}}.",
+  +    "remaining": "Budget restant : {{value}}",
+  +    "overBudget": "Budget LLM mensuel dépassé."
+     },
+     "templateGovernor": {
+       "title": "Qualité des gabarits programmatiques",
+  +3 -1
+
+src/i18n/locales/it.json
+  @@ -7735,7 +7735,9 @@
+  -    "leaves": "Il testo delle pagine viene inviato fuori da questo dispositivo a {{provider}}."
+  +    "leaves": "Il testo delle pagine viene inviato fuori da questo dispositivo a {{provider}}.",
+  +    "remaining": "Budget rimanente: {{value}}",
+  +    "overBudget": "Budget LLM mensile superato."
+     },
+     "templateGovernor": {
+       "title": "Qualità dei template programmatici",
+  +3 -1
+
+src/i18n/locales/ja.json
+  @@ -7735,7 +7735,9 @@
+  -    "leaves": "ページ本文はこの端末の外の {{provider}} に送信されます。"
+  +    "leaves": "ページ本文はこの端末の外の {{provider}} に送信されます。",
+  +    "remaining": "残りの予算: {{value}}",
+  +    "overBudget": "月間LLM予算を超過しました。"
+     },
+     "templateGovernor": {
+       "title": "プログラマティックテンプレートの品質",
+  +3 -1
+
+src/i18n/locales/ko.json
+  @@ -7735,7 +7735,9 @@
+  -    "leaves": "페이지 본문이 이 기기 밖의 {{provider}}(으)로 전송됩니다."
+  +    "leaves": "페이지 본문이 이 기기 밖의 {{provider}}(으)로 전송됩니다.",
+  +    "remaining": "남은 예산: {{value}}",
+  +    "overBudget": "월간 LLM 예산을 초과했습니다."
+     },
+     "templateGovernor": {
+       "title": "프로그래매틱 템플릿 품질",
+  +3 -1
+
+src/i18n/locales/pl.json
+  @@ -7735,7 +7735,9 @@
+  -    "leaves": "Treść stron jest wysyłana poza to urządzenie do: {{provider}}."
+  +    "leaves": "Treść stron jest wysyłana poza to urządzenie do: {{provider}}.",
+  +    "remaining": "Pozostały budżet: {{value}}",
+  +    "overBudget": "Miesięczny budżet LLM został przekroczony."
+     },
+     "templateGovernor": {
+       "title": "Jakość szablonów programatycznych",
+  +3 -1
+
+src/i18n/locales/pt.json
+  @@ -7735,7 +7735,9 @@
+  -    "leaves": "O texto das páginas é enviado para fora deste dispositivo para {{provider}}."
+  +    "leaves": "O texto das páginas é enviado para fora deste dispositivo para {{provider}}.",
+  +    "remaining": "Orçamento restante: {{value}}",
+  +    "overBudget": "O orçamento mensal de LLM foi excedido."
+     },
+     "templateGovernor": {
+       "title": "Qualidade de modelos programáticos",
+  +3 -1
+
+src/i18n/locales/ru.json
+  @@ -7735,7 +7735,9 @@
+  -    "leaves": "Текст страниц отправляется за пределы устройства провайдеру {{provider}}."
+  +    "leaves": "Текст страниц отправляется за пределы устройства провайдеру {{provider}}.",
+  +    "remaining": "Оставшийся бюджет: {{value}}",
+  +    "overBudget": "Месячный бюджет LLM превышен."
+     },
+     "templateGovernor": {
+       "title": "Качество программных шаблонов",
+  +3 -1
+
+src/i18n/locales/zh.json
+  @@ -7735,7 +7735,9 @@
+  -    "leaves": "页面文本将发送到本设备之外的 {{provider}}。"
+  +    "leaves": "页面文本将发送到本设备之外的 {{provider}}。",
+  +    "remaining": "剩余预算：{{value}}",
+  +    "overBudget": "已超出每月 LLM 预算。"
+     },
+     "templateGovernor": {
+       "title": "程序化模板质量",
+  +3 -1
+
+src/services/ai.ts
+  @@ -1,5 +1,6 @@
+  +import { executeWithEconomy } from '@/services/llmEconomy';
+   import i18n from '@/i18n';
+   import { parseAiSuggestionResponse, type AiSuggestionResponse } from './ai/parsing';
+   import { buildAiPrompt } from './ai/prompt';
+  @@ -11,9 +12,48 @@ import { GEMINI_DEFAULT_MODEL, currentModel } from './ai/modelCatalog';
+  +export interface GenerateTextEconomyOptions {
+  +  projectId?: string | null;
+  +  estimatedCostUsd?: number | null;
+  +  actualCostUsd?: number | null;
+  +  vector?: ArrayLike<number> | null;
+  +  ymyl?: boolean;
+  +  sources?: string[];
+  +}
+  +
+  +export interface GenerateSuggestionsEconomyOptions {
+  +  projectId?: string | null;
+  +  estimatedCostUsd?: number | null;
+  +  actualCostUsd?: number | null;
+  +  vector?: ArrayLike<number> | null;
+  +  ymyl?: boolean;
+  +  sources?: string[];
+  +}
+  +
+   export class AIService {
+  -  static generateText(provider:AiProvider,apiKey:string,model:string,prompt:string,method:AiConnectionMethod='api_key'):Promise<string> {
+  -    return generateAiText(provider,apiKey,model,prompt,method);
+  +  static generateText(
+  +    provider: AiProvider,
+  +    apiKey: string,
+  +    model: string,
+  +    prompt: string,
+  +    method: AiConnectionMethod = 'api_key',
+  +    options?: GenerateTextEconomyOptions,
+  +  ): Promise<string> {
+  +    const projectId = options?.projectId ?? null;
+  +    if (!projectId?.trim()) return Promise.reject(new Error('Project ID is required for economy-scoped AI generation'));
+  +    return executeWithEconomy({
+  +        projectId,
+  +        configuredProviders: [provider],
+  +        providerId: provider,
+  +        model,
+  +        prompt,
+  +        vector: options?.vector,
+  +        estimatedCostUsd: options?.estimatedCostUsd,
+  +        actualCostUsd: options?.actualCostUsd,
+  +        ymyl: options?.ymyl,
+  +        sources: options?.sources,
+  +        run: async () => ({ text: await generateAiText(provider, apiKey, model, prompt, method) }),
+  +    }).then((res) => res.text);
+     }
+   static async generateSuggestions(
+     provider: AiProvider,
+  @@ -22,28 +62,19 @@ static async generateSuggestions(
+  +  options?: GenerateSuggestionsEconomyOptions,
+   ): Promise<AiSuggestionResponse> {
+  -  if (method === 'local_cli') {
+  -    const text = await invokeTauriCommand<string>('run_ai_cli', { provider, prompt: buildAiPrompt(auditData, customInstruction) });
+  -    return parseAiSuggestionResponse(text);
+  -  }
+  -  if (!apiKey.trim()) {
+  -    throw new Error(i18n.t('runtimeErrors.ai.configureKey'));
+  -  }
+  -
+     const prompt = buildAiPrompt(auditData, customInstruction);
+  -
+  -  switch (provider) {
+  -    case 'openai':
+  -      return callOpenAI(apiKey, model || 'gpt-4o', prompt);
+  -    case 'claude':
+  -      return callClaude(apiKey, model || CLAUDE_DEFAULT_MODEL, prompt);
+  -    case 'gemini':
+  -      return callGemini(apiKey, currentModel(model || GEMINI_DEFAULT_MODEL), prompt);
+  -    default:
+  -      throw new Error(i18n.t('runtimeErrors.ai.unsupportedProvider', { provider }));
+  -  }
+  +  const projectId = options?.projectId ?? null;
+  +  if (!projectId?.trim()) throw new Error('Project ID is required for economy-scoped AI generation');
+  +  return executeWithEconomy({
+  +      projectId, configuredProviders: [provider], providerId: provider, model, prompt,
+  +      vector: options?.vector, estimatedCostUsd: options?.estimatedCostUsd,
+  +      actualCostUsd: options?.actualCostUsd, ymyl: options?.ymyl, sources: options?.sources,
+  +      run: async () => ({ text: await generateSuggestionsDirect(provider, apiKey, model, auditData, customInstruction, method) }),
+  +  }).then((result) => parseAiSuggestionResponse(result.text));
+   }
+  +
+     static testConnection(provider:AiProvider,apiKey:string):Promise<{success:boolean;message:string}> {
+       return testAiConnection(provider,apiKey);
+     }
+  @@ -58,3 +89,24 @@ static async generateSuggestions(
+  +
+  +const generateSuggestionsDirect = async (
+  +  provider: AiProvider,
+  +  apiKey: string,
+  +  model: string,
+  +  auditData: PageAuditData,
+  +  customInstruction?: string,
+  +  method: AiConnectionMethod = 'api_key',
+  +): Promise<string> => {
+  +  if (method === 'local_cli') {
+  +    return invokeTauriCommand<string>('run_ai_cli', { provider, prompt: buildAiPrompt(auditData, customInstruction) });
+  +  }
+  +  if (!apiKey.trim()) throw new Error(i18n.t('runtimeErrors.ai.configureKey'));
+  +  const prompt = buildAiPrompt(auditData, customInstruction);
+  +  switch (provider) {
+  +    case 'openai': return JSON.stringify(await callOpenAI(apiKey, model || 'gpt-4o', prompt));
+  +    case 'claude': return JSON.stringify(await callClaude(apiKey, model || CLAUDE_DEFAULT_MODEL, prompt));
+  +    case 'gemini': return JSON.stringify(await callGemini(apiKey, currentModel(model || GEMINI_DEFAULT_MODEL), prompt));
+  +    default: throw new Error(i18n.t('runtimeErrors.ai.unsupportedProvider', { provider }));
+  +  }
+  +};
+  +73 -21
+
+src/services/cmsPatch/apply.ts
+  @@ -1,6 +1,7 @@
+  +import { validateYmylClaim } from '@/services/llmEconomy/factGate';
+   import { ADAPTERS } from './adapters';
+   import type { PatchPlan } from './plan';
+   import { CmsError, type CmsTarget, type CmsTransport } from './types';
+  @@ -44,6 +45,10 @@ export const applyPatch = async (plan: PatchPlan, approval: Approval | null, dep
+  +  if (plan.ymyl) {
+  +    const check = validateYmylClaim(plan.replacement, [current.content]);
+  +    if (!check.allowed) return fail('fact-gate-required', `Unsupported numeric claims: ${check.rejectedValues.join(', ')}`);
+  +  }
+     const backup: Backup = { target: plan.target, content: current.content, revision: current.revision, at: (deps.now?.() ?? new Date()).toISOString() };
+     await deps.saveBackup(backup);
+     try {
+  +5 -0
+
+src/services/dataErasure/index.ts
+  @@ -5,6 +5,7 @@ import { invalidateQueuedCrawlWrites, withCrawlWriteLock } from '@/services/craw
+  +import { clearProjectCache } from '@/services/llmEconomy';
+   
+   /** Evidence returned by the native store after a physical erasure. */
+   export interface ErasureReport {
+  @@ -43,6 +44,8 @@ const legacyKeys = (projectId: string): string[] => [
+  +  `seomi_project_${projectId}_llm_budget_v1`,
+  +  `seomi_project_${projectId}_llm_spend_v1`,
+   ];
+   
+   const migrationKey = (projectId: string): string => `seomi_store_v2_migrated_${projectId}`;
+  @@ -60,6 +63,7 @@ const clearLegacyStorage = (projectId: string): void => {
+  +  clearProjectCache(projectId);
+   };
+   
+   /** Full project wipe, including leftover Web Storage migration artifacts. */
+  +4 -0
+
+src/services/llmEconomy/factGate.ts
+  @@ -11,6 +11,14 @@ export interface GateResult {
+  +export interface YmylGateValidation {
+  +  allowed: boolean;
+  +  gate: GateResult;
+  +  rejectedValues: string[];
+  +  reason?: GateReason;
+  +  needsHumanApproval: true;
+  +}
+  +
+   const UNITS = 'mg|mcg|µg|ug|g|kg|ml|l|iu|ie|mmol|mol|mmhg|kcal|%|pln|zł|usd|eur|gbp|\\$|€|£';
+   const VALUE = new RegExp(`(\\d+(?:[.,]\\d+)?)\\s*(${UNITS})(?![\\p{L}])`, 'giu');
+   
+  @@ -39,3 +47,17 @@ export const gateFacts = (text: string, sources: string[]): GateResult => {
+  +
+  +/** Deterministic YMYL gate validation for CMS publishing. */
+  +export const validateYmylClaim = (replacement: string, sources: string[]): YmylGateValidation => {
+  +  const gate = gateFacts(replacement, sources);
+  +  const rejectedValues = gate.rejected.flatMap((item) => item.values);
+  +  const hasRejections = gate.rejected.length > 0;
+  +  return {
+  +    allowed: !hasRejections,
+  +    gate,
+  +    rejectedValues,
+  +    reason: hasRejections ? gate.rejected[0].reason : undefined,
+  +    needsHumanApproval: true,
+  +  };
+  +};
+  +22 -0
+
+src/services/llmEconomy/index.ts
+  @@ -1,3 +1,5 @@
+  +export * from './llmBudget';
+  +export * from './orchestrator';
+  +2 -0
+
+src/services/llmEconomy/semanticCache.ts
+  @@ -1,17 +1,122 @@
+  -  /** Task embedding (any dimension, same model for the whole cache). */
+     vector: ArrayLike<number>;
+     response: string;
+     costUsd: number;
+   }
+  -
+   export interface CacheHit { entry: CacheEntry; similarity: number }
+   
+  +export interface TaskRecord {
+  +  projectId: string;
+  +  providerId: string;
+  +  model: string;
+  +  prompt: string;
+  +  vector?: ArrayLike<number>;
+  +  response: string;
+  +  costUsd: number | null;
+  +  at: number;
+  +}
+  +
+  +export interface TaskHit {
+  +  record: TaskRecord;
+  +  matchType: 'exact' | 'semantic';
+  +  similarity: number;
+  +}
+  +
+  +export interface ExactTaskEntry { response: string; costUsd: number; at: number }
+  +
+   export const DEFAULT_CACHE_THRESHOLD = 0.95;
+   
+  -/** Returns the most similar earlier task when its cosine similarity reaches the threshold; otherwise null. */
+  +const projectMemoryStore = new Map<string, TaskRecord[]>();
+  +
+  +const norm = (s: string) => s.trim().toLowerCase();
+  +
+  +export const buildTaskKey = (providerId: string, model: string, prompt: string): string =>
+  +  `${norm(providerId)}\u0000${norm(model)}\u0000${prompt.trim()}`;
+  +
+  +export const findProjectCachedTask = (
+  +  projectId: string,
+  +  model: string,
+  +  prompt: string,
+  +  queryVector?: ArrayLike<number> | null,
+  +  threshold = DEFAULT_CACHE_THRESHOLD,
+  +  providerId?: string,
+  +): TaskHit | null => {
+  +  const records = projectMemoryStore.get(projectId) ?? [];
+  +  const normalizedModel = norm(model);
+  +  const normalizedProvider = providerId === undefined ? null : norm(providerId);
+  +  const trimmedPrompt = prompt.trim();
+  +
+  +  // 1. Exact prompt repetition within project & model (zero outside calls)
+  +  const exact = records.find((r) => norm(r.model) === normalizedModel
+  +    && (normalizedProvider === null || norm(r.providerId) === normalizedProvider)
+  +    && r.prompt.trim() === trimmedPrompt);
+  +  if (exact) return { record: exact, matchType: 'exact', similarity: 1.0 };
+  +
+  +  // 2. Cosine semantic matching when query vector is provided (unavailable if absent)
+  +  if (!queryVector || queryVector.length === 0) return null;
+  +  const normalizedQuery = normalize(queryVector);
+  +  let best: TaskRecord | null = null;
+  +  let bestSimilarity = -1;
+  +
+  +  for (const r of records) {
+  +    if (norm(r.model) !== normalizedModel
+  +      || (normalizedProvider !== null && norm(r.providerId) !== normalizedProvider)
+  +      || !r.vector || r.vector.length !== queryVector.length) continue;
+  +    const sim = cosine(normalizedQuery, normalize(r.vector));
+  +    if (sim >= threshold && sim > bestSimilarity) {
+  +      best = r;
+  +      bestSimilarity = sim;
+  +    }
+  +  }
+  +  return best ? { record: best, matchType: 'semantic', similarity: bestSimilarity } : null;
+  +};
+  +
+  +export const storeProjectTask = (
+  +  projectId: string,
+  +  providerId: string,
+  +  model: string,
+  +  prompt: string,
+  +  response: string,
+  +  costUsd: number | null,
+  +  vector?: ArrayLike<number> | null,
+  +  now = Date.now(),
+  +): TaskRecord => {
+  +  const record: TaskRecord = {
+  +    projectId, providerId, model, prompt, response, costUsd,
+  +    vector: vector && vector.length > 0 ? vector : undefined, at: now,
+  +  };
+  +  const list = projectMemoryStore.get(projectId) ?? [];
+  +  list.push(record);
+  +  projectMemoryStore.set(projectId, list);
+  +  return record;
+  +};
+  +
+  +export const findExactCached = (key: string): ExactTaskEntry | null => {
+  +  const parts = key.split('\u0000');
+  +  const providerId = parts.length >= 3 ? parts[0] ?? '' : undefined;
+  +  const hit = findProjectCachedTask('default', parts[1] ?? '', parts.slice(2).join('\u0000') || key, undefined, DEFAULT_CACHE_THRESHOLD, providerId);
+  +  return hit ? { response: hit.record.response, costUsd: hit.record.costUsd ?? 0, at: hit.record.at } : null;
+  ... (19 lines truncated)
+  +108 -3
+
+src/stores/auth/generation.ts
+  @@ -1,21 +1,25 @@
+  +import { useProjectStore } from '@/stores/projectStore';
+   import i18n from '@/i18n';
+   import type { AuthState, AuthSet, AuthGet } from './types';
+   export const createAuthGeneration = (_set: AuthSet, get: AuthGet): Pick<AuthState, 'isProviderConnected' | 'generateText' | 'generateTextForProvider' | 'generateSuggestions'> => ({
+     isProviderConnected: (provider) => get().connectionStatus[provider || get().provider] === 'connected',
+     generateText: async (prompt) => {
+       const { provider, model, apiKeys, connectionMethod } = get();
+  -    return AIService.generateText(provider, apiKeys[provider], model, prompt, connectionMethod[provider]);
+  +    const projectId = useProjectStore.getState().activeProjectId;
+  +    return AIService.generateText(provider, apiKeys[provider], model, prompt, connectionMethod[provider], { projectId });
+     },
+     generateTextForProvider: async (provider, prompt) => {
+       const { model, apiKeys, connectionMethod } = get();
+       if (connectionMethod[provider] !== 'local_cli') {
+         throw new Error(i18n.t('runtimeErrors.ai.localClientRequired', { provider }));
+       }
+  -    return AIService.generateText(provider, apiKeys[provider], model, prompt, 'local_cli');
+  +    const projectId = useProjectStore.getState().activeProjectId;
+  +    return AIService.generateText(provider, apiKeys[provider], model, prompt, 'local_cli', { projectId });
+     },
+
+... (more changes truncated)
+  +5 -2
+[full diff: rtk git diff --no-compact]

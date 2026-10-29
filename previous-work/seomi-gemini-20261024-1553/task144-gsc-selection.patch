@@ -1,0 +1,228 @@
+diff --git a/src/components/Charts/semanticTopical/signals/SignalsWorkspace.tsx b/src/components/Charts/semanticTopical/signals/SignalsWorkspace.tsx
+index 4f9a2e7c..62754cf9 100644
+--- a/src/components/Charts/semanticTopical/signals/SignalsWorkspace.tsx
++++ b/src/components/Charts/semanticTopical/signals/SignalsWorkspace.tsx
+@@ -17,11 +17,14 @@ import { buildParityReport } from './parityAdapter';
+ import { buildTemplateEvents } from './templateAdapter';
+ import { useDecayHistory } from './useDecayHistory';
+ import { useCausalImpact } from './useCausalImpact';
++import { useToolsStore } from '@/stores/toolsStore';
+ 
+ export const SignalsWorkspace = ({ projectId = null, pages, graph }: { projectId?: string | null; pages: CrawledPageSummary[]; graph: SemanticMap }) => {
+   const { t } = useTranslation();
++  const gscProperty = useToolsStore((state) => state.gscProperty);
++  const gscFilters = useToolsStore((state) => state.gscFilters);
+   const decay = useDecayHistory(projectId);
+-  const causalImpact = useCausalImpact(projectId, pages[0]?.url);
++  const causalImpact = useCausalImpact(projectId, gscProperty || undefined, gscFilters);
+   const { snapshot, stale, refresh } = useGraphSnapshot(graph);
+   const sprsInput = useMemo(() => buildSprsInput(snapshot), [snapshot]);
+   const sprs = useMemo(() => computeSprs(sprsInput.nodes, sprsInput.edges), [sprsInput]);
+diff --git a/src/components/Charts/semanticTopical/signals/useCausalImpact.ts b/src/components/Charts/semanticTopical/signals/useCausalImpact.ts
+index 265804a5..fc4ccb65 100644
+--- a/src/components/Charts/semanticTopical/signals/useCausalImpact.ts
++++ b/src/components/Charts/semanticTopical/signals/useCausalImpact.ts
+@@ -10,18 +10,22 @@ import { experimentsKey, listInterventions } from '@/services/experiments/regist
+ import { readGscSnapshots } from '@/services/gscTracker/read';
+ import { readStoredCausalImpact } from '@/services/causalMarket/adapter';
+ import { CAUSAL_STORAGE_EVENT, installCausalStorageInterceptor } from '@/services/causalMarket/storageEvents';
++import { normalizedFilters } from '@/services/gscTracker/filters';
++import type { GscPerformanceFilters } from '@/types';
+ 
+ const emptyMarket = (): MarketSourceResult => ({ status: 'unknown', source: 'dataforseo-serp-volatility', observations: [] });
+ 
+ interface EvidenceState {
+   projectId: string | null;
++  scopeKey: string;
+   market: MarketSourceResult | null;
+   updateWindows: UpdateWindowSourceResult | null;
+ }
+ 
+-export const useCausalImpact = (projectId: string | null, testSiteUrl?: string) => {
++export const useCausalImpact = (projectId: string | null, testSiteUrl?: string, testFilters?: GscPerformanceFilters) => {
+   const [revision, refresh] = useReducer((value: number) => value + 1, 0);
+-  const [state, setState] = useState<EvidenceState>({ projectId: null, market: null, updateWindows: null });
++  const scopeKey = JSON.stringify([testSiteUrl?.trim() ?? '', normalizedFilters(testFilters)]);
++  const [state, setState] = useState<EvidenceState>({ projectId: null, scopeKey: '', market: null, updateWindows: null });
+ 
+   useEffect(() => {
+     installCausalStorageInterceptor();
+@@ -53,23 +57,23 @@ export const useCausalImpact = (projectId: string | null, testSiteUrl?: string)
+   useEffect(() => {
+     let active = true;
+     if (!projectId || !readGscSnapshots(projectId).length || !listInterventions(projectId).length) {
+-      setState({ projectId, market: null, updateWindows: null });
++      setState({ projectId, scopeKey, market: null, updateWindows: null });
+       return () => { active = false; };
+     }
+     void Promise.all([fetchSerpVolatility(), fetchGoogleSearchUpdateWindows()]).then(([nextMarket, nextWindows]) => {
+       if (!active) return;
+-      setState({ projectId, market: nextMarket, updateWindows: nextWindows });
++      setState({ projectId, scopeKey, market: nextMarket, updateWindows: nextWindows });
+     });
+     return () => { active = false; };
+-  }, [projectId, revision]);
++  }, [projectId, revision, scopeKey]);
+ 
+-  const isCurrent = Boolean(projectId && state.projectId === projectId);
++  const isCurrent = Boolean(projectId && state.projectId === projectId && state.scopeKey === scopeKey);
+   const activeMarket = isCurrent ? state.market : null;
+   const activeWindows = isCurrent ? state.updateWindows : null;
+   const evidence = activeMarket ?? emptyMarket();
+ 
+   return useMemo(
+-    () => readStoredCausalImpact(projectId, evidence, activeWindows, testSiteUrl),
+-    [projectId, evidence, activeWindows, testSiteUrl, revision],
++    () => readStoredCausalImpact(projectId, evidence, activeWindows, testSiteUrl, testFilters),
++    [projectId, evidence, activeWindows, scopeKey, testSiteUrl, testFilters, revision],
+   );
+ };
+diff --git a/src/services/causalMarket/adapter.ts b/src/services/causalMarket/adapter.ts
+index 40ca3f59..c02ef3ac 100644
+--- a/src/services/causalMarket/adapter.ts
++++ b/src/services/causalMarket/adapter.ts
+@@ -22,6 +22,8 @@ export interface StoredCausalImpactInput {
+   interventions: readonly Intervention[];
+   market: CausalMarketEvidence | null;
+   updateWindows?: UpdateWindow[] | UpdateWindowSourceResult | null;
++  /** Explicit Search Console scope selected for the project. */
++  testFilters?: GscPerformanceFilters;
+   testSiteUrl?: string;
+ }
+ 
+@@ -71,8 +73,9 @@ const bestControl = (test: Group, groups: Group[], testDates: Set<string>): { gr
+   return selected ? { group: selected.group, rows: selected.rows, independent: selected.independent } : null;
+ };
+ 
+-const testGroup = (groups: Group[], testSiteUrl?: string): { group: Group; rows: Map<string, Daily> } | null => {
++const testGroup = (groups: Group[], testSiteUrl?: string, testFilters?: GscPerformanceFilters): { group: Group; rows: Map<string, Daily> } | null => {
+   const candidates = groups.map((group) => ({ group, rows: dailyOf(group) }))
++    .filter((candidate) => testFilters === undefined || areCohortsCompatible(candidate.group.filters, testFilters))
+     .filter((candidate) => candidate.rows.size > 0);
+   if (!candidates.length) return null;
+   const target = testSiteUrl?.trim();
+@@ -97,12 +100,11 @@ export const buildCausalImpact = (input: StoredCausalImpactInput): ImpactResult
+   const intervention = input.interventions[0];
+   if (!intervention) return null;
+   const groups = groupSnapshots(input.snapshots);
+-  const test = testGroup(groups, input.testSiteUrl);
++  const test = testGroup(groups, input.testSiteUrl, input.testFilters);
+   if (!test) return null;
+   const control = bestControl(test.group, groups, new Set(test.rows.keys()));
+   const marketReady = input.market?.status === 'available';
+   if (!control && !marketReady) return null;
+-
+   const dates = control
+     ? [...test.rows.keys()].filter((date) => control.rows.has(date)).sort()
+     : [...test.rows.keys()].sort();
+@@ -134,6 +136,7 @@ export const readStoredCausalImpact = (
+   market: CausalMarketEvidence | null,
+   updateWindows?: UpdateWindow[] | UpdateWindowSourceResult | null,
+   testSiteUrl?: string,
++  testFilters?: GscPerformanceFilters,
+ ): ImpactResult | null => {
+   if (!projectId?.trim()) return null;
+   return buildCausalImpact({
+@@ -141,6 +144,7 @@ export const readStoredCausalImpact = (
+     interventions: listInterventions(projectId),
+     market,
+     updateWindows,
++    testFilters,
+     testSiteUrl,
+   });
+ };
+diff --git a/tests/mountPanelsAdapters.test.tsx b/tests/mountPanelsAdapters.test.tsx
+index d3954b12..f9f18c7c 100644
+--- a/tests/mountPanelsAdapters.test.tsx
++++ b/tests/mountPanelsAdapters.test.tsx
+@@ -69,13 +69,13 @@ describe('backlink adapters', () => {
+   it('outreach section lists gap domains and is empty without a report', () => {
+     const { unmount } = render(<BacklinkOutreachSection report={null} />);
+     expect(screen.getByTestId('outreach-panel')).toBeTruthy();
+-    expect(screen.queryByRole('button')).toBeNull();
++    expect(screen.queryByRole('button', { name: /export/i })).toBeNull();
+     unmount();
+     const report: BacklinkGapReport = {
+       target: 'me.com', competitors: ['a.com'], include_subdomains: false, total_rows: 1, rows_scanned: 1,
+       opportunities: [{ referring_domain: 'blog.example', target_backlinks: 0, competitor_backlinks: [{ domain: 'a.com', backlinks: 3, rank: 50 }], max_competitor_spam_score: null }],
+     };
+     render(<BacklinkOutreachSection report={report} />);
+-    expect(screen.getByRole('button')).toBeTruthy();
++    expect(screen.getByRole('button', { name: /export/i })).toBeTruthy();
+   });
+ });
+diff --git a/tests/signalsGscSelectionIntegration.test.tsx b/tests/signalsGscSelectionIntegration.test.tsx
+new file mode 100644
+index 00000000..03efcdca
+--- /dev/null
++++ b/tests/signalsGscSelectionIntegration.test.tsx
+@@ -0,0 +1,69 @@
++import { cleanup, render, screen } from '@testing-library/react';
++import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
++import i18n from '@/i18n';
++import { SignalsWorkspace } from '@/components/Charts/semanticTopical/signals/SignalsWorkspace';
++import { addIntervention } from '@/services/experiments/registry';
++import { saveGscSnapshot } from '@/services/gscTracker/persistence';
++import * as marketSource from '@/services/causalMarket/source';
++import { useToolsStore } from '@/stores/toolsStore';
++import type { GscPerformanceData, GscPerformanceFilters, CrawledPageSummary } from '@/types';
++import type { SemanticMap } from '@/services/semanticGraph/types';
++
++const dates = Array.from({ length: 28 }, (_, index) => `2026-03-${String(index + 1).padStart(2, '0')}`);
++const graph: SemanticMap = { nodes: [], edges: [], topicEdges: [], clusters: [], totalEdges: 0, totalTopicEdges: 0, totalInternalLinks: 0, hasSemanticTerms: false, truncated: false };
++const pages = [{ url: 'https://example.com/first-crawl-page', final_url: 'https://example.com/first-crawl-page' }] as unknown as CrawledPageSummary[];
++const filters: GscPerformanceFilters = { search_type: 'web', device: 'DESKTOP', country: 'pol' };
++
++const data = (site_url: string, clicks: (index: number) => number, selectedFilters = filters): GscPerformanceData => {
++  const daily = dates.map((date, index) => ({ date, clicks: clicks(index), impressions: 100, ctr: 0.1, position: 2 }));
++  return { site_url, start_date: dates[0], end_date: dates.at(-1)!, filters: selectedFilters, total_clicks: daily.reduce((sum, row) => sum + row.clicks, 0), total_impressions: 2800, avg_ctr: 0.1, avg_position: 2, queries: [], pages: [], daily, daily_may_be_truncated: false, queries_may_be_truncated: false, pages_may_be_truncated: false, max_rows_per_dimension: 1000 };
++};
++
++const addEvidence = (projectId: string, site: string, clicks: (index: number) => number, selectedFilters = filters) => saveGscSnapshot(projectId, data(site, clicks, selectedFilters));
++const intervention = (projectId: string) => addIntervention(projectId, { url: 'site', date: '2026-03-15', kind: 'content', note: '' }, new Date('2026-03-01T00:00:00Z'));
++
++beforeEach(async () => {
++  localStorage.clear();
++  await i18n.changeLanguage('en');
++  vi.spyOn(marketSource, 'fetchSerpVolatility').mockResolvedValue({ status: 'available', source: 'test-market', observations: dates.map((date) => ({ date, level: 100 })) });
++  vi.spyOn(marketSource, 'fetchGoogleSearchUpdateWindows').mockResolvedValue({ status: 'available', source: 'test-updates', windows: [] });
++  useToolsStore.setState({ gscProperty: '', gscFilters: {} });
++});
++
++afterEach(() => { cleanup(); vi.restoreAllMocks(); localStorage.clear(); });
++
++describe('mounted SignalsWorkspace GSC property scope', () => {
++  it('uses the selected exact property and filters instead of the first crawl URL or sibling snapshot', async () => {
++    addEvidence('project-a', 'https://example.com/blog/', (index) => index < 14 ? 50 : 80, filters);
++    addEvidence('project-a', 'https://example.com/blog/', (index) => index < 14 ? 100 : 40, { ...filters, device: 'MOBILE' });
++    addEvidence('project-a', 'https://example.com/store/', (index) => index < 14 ? 100 : 40, filters);
++    addEvidence('project-a', 'https://control.example.net/', () => 100, filters);
++    intervention('project-a');
++    useToolsStore.setState({ gscProperty: 'https://example.com/blog/', gscFilters: filters });
++
++    render(<SignalsWorkspace projectId="project-a" pages={pages} graph={graph} />);
++
++    expect(await screen.findByText('Positive effect')).toBeTruthy();
++    expect(screen.queryByText('Negative effect')).toBeNull();
++  });
++
++  it('keeps the mounted result unknown for an unmatched property and invalidates it on project/property switch', async () => {
++    addEvidence('project-a', 'https://example.com/blog/', (index) => index < 14 ? 50 : 80, filters);
++    addEvidence('project-a', 'https://control.example.net/', () => 100, filters);
++    intervention('project-a');
++    useToolsStore.setState({ gscProperty: 'https://example.com/blog/', gscFilters: filters });
++    const view = render(<SignalsWorkspace projectId="project-a" pages={pages} graph={graph} />);
++    expect(await screen.findByText('Positive effect')).toBeTruthy();
++
++    useToolsStore.setState({ gscProperty: 'https://example.com/missing/', gscFilters: filters });
++    view.rerender(<SignalsWorkspace projectId="project-a" pages={pages} graph={graph} />);
++    expect(await screen.findByText('Not estimable. Not enough history: need at least 7 days before and 1 after, a real external market series, and independent control evidence.')).toBeTruthy();
++
++    addEvidence('project-b', 'https://other.example.org/', () => 60, filters);
++    addEvidence('project-b', 'https://control.other.net/', () => 60, filters);
++    intervention('project-b');
++    useToolsStore.setState({ gscProperty: 'https://other.example.org/', gscFilters: filters });
++    view.rerender(<SignalsWorkspace projectId="project-b" pages={pages} graph={graph} />);
++    expect(await screen.findByText('No measurable effect')).toBeTruthy();
++  });
++});

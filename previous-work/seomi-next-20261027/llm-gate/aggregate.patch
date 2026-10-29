@@ -1,0 +1,2717 @@
+diff --git a/src/components/AI/LlmEconomyPanel.tsx b/src/components/AI/LlmEconomyPanel.tsx
+index a42f2857..3b804366 100644
+--- a/src/components/AI/LlmEconomyPanel.tsx
++++ b/src/components/AI/LlmEconomyPanel.tsx
+@@ -2,31 +2,43 @@ import React from 'react';
+ import { useTranslation } from 'react-i18next';
+ import { HelpTip } from '@/components/Help/HelpTip';
+ import { leavesDevice, type UsageSummary } from '@/services/llmEconomy';
++import { useLlmEconomy } from './useLlmEconomy';
+ 
+ export interface LlmEconomyPanelProps {
+-  summary: UsageSummary;
+-  providerId: string;
++  summary?: UsageSummary;
++  projectId?: string | null;
++  providerId?: string;
+ }
+ 
+ const usd = (value: number): string => `$${value.toFixed(2)}`;
+ 
+-export const LlmEconomyPanel: React.FC<LlmEconomyPanelProps> = ({ summary, providerId }) => {
++export const LlmEconomyPanel: React.FC<LlmEconomyPanelProps> = ({ summary: explicitSummary, projectId, providerId = '' }) => {
+   const { t } = useTranslation();
++  const live = useLlmEconomy(projectId, providerId);
++  const summary = explicitSummary ?? live.summary ?? { spentUsd: 0, savedUsd: 0, cacheHits: 0, calls: 0, remainingUsd: null, overBudget: false };
++  const storageUnavailable = live.storage?.budget === 'invalid' || live.storage?.budget === 'unavailable'
++    || live.storage?.spend === 'invalid' || live.storage?.spend === 'unavailable';
++
+   return (
+     <section className="space-y-2 rounded-lg border border-slate-800 p-4 text-sm text-slate-300" data-testid="llm-economy-panel">
+       <h3 className="flex items-center gap-1 font-semibold text-slate-100">
+         {t('llmEconomy.title')}
+         <HelpTip id="llmEconomy.costGate" />
+       </h3>
+-      {summary.calls === 0 ? (
++      {storageUnavailable ? (
++        <p role="alert" className="text-amber-300">{t('llmEconomy.storageUnavailable')}</p>
++      ) : summary.calls === 0 ? (
+         <p>{t('llmEconomy.empty')}</p>
+       ) : (
+         <ul className="space-y-1">
+-          <li>{t('llmEconomy.spent', { value: usd(summary.spentUsd) })}</li>
++          {(!summary.unknownCostCalls || summary.spentUsd > 0) && <li>{t('llmEconomy.spent', { value: usd(summary.spentUsd) })}</li>}
+           <li>{t('llmEconomy.saved', { value: usd(summary.savedUsd) })}</li>
+           <li>{t('llmEconomy.hits', { count: summary.cacheHits })}</li>
++          {summary.remainingUsd !== null && <li>{t('llmEconomy.remaining', { value: usd(summary.remainingUsd) })}</li>}
++          {!!summary.unknownCostCalls && <li role="alert" className="text-amber-300">{t('llmEconomy.unknownCost', { count: summary.unknownCostCalls })}</li>}
+         </ul>
+       )}
++      {summary.overBudget && <p role="alert" className="text-rose-400">{t('llmEconomy.overBudget')}</p>}
+       {leavesDevice(providerId) && <p role="alert" className="text-amber-300">{t('llmEconomy.leaves', { provider: providerId })}</p>}
+     </section>
+   );
+diff --git a/src/components/Results/copilotPatcher/CopilotPatcherPanel.tsx b/src/components/Results/copilotPatcher/CopilotPatcherPanel.tsx
+index 33a41637..83750697 100644
+--- a/src/components/Results/copilotPatcher/CopilotPatcherPanel.tsx
++++ b/src/components/Results/copilotPatcher/CopilotPatcherPanel.tsx
+@@ -29,7 +29,6 @@ export const CopilotPatcherPanel = ({ target, projectId, index, providers }: Pro
+   const { t } = useTranslation();
+   const activeProjectId = useProjectStore((state) => state.activeProjectId);
+   const selectedProvider = useAuthStore((state) => state.provider);
+-  const selectedMethod = useAuthStore((state) => state.connectionMethod[state.provider]);
+   const selectedConnected = useAuthStore((state) => state.connectionStatus[state.provider] === 'connected');
+   const [state, setState] = useState<PanelState>({ kind: 'idle' });
+   const controller = useRef<AbortController | null>(null);
+@@ -70,7 +69,7 @@ export const CopilotPatcherPanel = ({ target, projectId, index, providers }: Pro
+     setState({ kind: 'busy' });
+     const configured = providers ?? (selectedConnected ? [{
+       id: selectedProvider,
+-      local: selectedMethod === 'local_cli',
++      transport: 'cloud' as const,
+       generate: createBriefDeps().generateText,
+     }] : []);
+     const result = await proposePatch(target, configured, { signal: own.signal });
+diff --git a/src/components/Settings/cms/useCmsPatchPanel.ts b/src/components/Settings/cms/useCmsPatchPanel.ts
+index 3d6fd97d..8932542d 100644
+--- a/src/components/Settings/cms/useCmsPatchPanel.ts
++++ b/src/components/Settings/cms/useCmsPatchPanel.ts
+@@ -5,6 +5,7 @@ import { planPatch, type PatchPlan } from '@/services/cmsPatch/plan';
+ import { assertSafeCmsUrl } from '@/services/cmsPatch/ssrf';
+ import { cmsTransport } from '@/services/cmsPatch/transport';
+ import { CmsError } from '@/services/cmsPatch/types';
++import { validateYmylClaim, type YmylSource } from '@/services/llmEconomy';
+ import { deniedMessage, enforcePermission } from '@/services/team/enforce';
+ import { readIdentity } from '@/services/team/identity';
+ import { cmsPanelError, initialCmsFields, saveCmsBackup, type CmsPanelFields } from './cmsPanelState';
+@@ -14,6 +15,7 @@ export const useCmsPatchPanel = (projectId: string | null) => {
+   const [plan, setPlan] = useState<PatchPlan | null>(null);
+   const [approval, setApproval] = useState<Approval | null>(null);
+   const [factGatePassed, setFactGatePassed] = useState(false);
++  const [factSources, setFactSources] = useState<YmylSource[]>([]);
+   const [dryRunHash, setDryRunHash] = useState<string | null>(null);
+   const [status, setStatus] = useState<ApplyStatus | null>(null);
+   const [error, setError] = useState<string | null>(null);
+@@ -27,6 +29,7 @@ export const useCmsPatchPanel = (projectId: string | null) => {
+     setPlan(null);
+     setApproval(null);
+     setFactGatePassed(false);
++    setFactSources([]);
+     setDryRunHash(null);
+     setStatus(null);
+     setError(null);
+@@ -62,12 +65,33 @@ export const useCmsPatchPanel = (projectId: string | null) => {
+     }
+   };
+   const approve = (checked: boolean) => {
+-    setApproval(checked && plan ? { approvedBy: readIdentity().actor, planHash: plan.planHash, factGatePassed } : null);
++    setApproval(checked && plan ? { approvedBy: readIdentity().actor, planHash: plan.planHash, factGatePassed, sources: factSources } : null);
+     setDryRunHash(null);
+     setStatus(null);
+     setError(null);
+   };
+   const confirmFacts = (checked: boolean) => {
++    if (checked && plan?.ymyl) {
++      const identity = readIdentity();
++      const source: YmylSource = {
++        sourceId: `${plan.target.baseUrl}\u0000${plan.target.contentId}`,
++        targetId: `${plan.target.baseUrl}\u0000${plan.target.contentId}`,
++        planHash: plan.planHash,
++        text: plan.before,
++        revision: plan.baseRevision,
++        reviewedBy: identity.actor,
++        reviewedAt: new Date().toISOString(),
++      };
++      const check = validateYmylClaim(plan.replacement, [source]);
++      if (!check.allowed) {
++        setFactGatePassed(false);
++        setFactSources([]);
++        setError(`Unsupported numeric claims: ${check.rejectedValues.join(', ')}`);
++        return;
++      }
++      setFactSources([source]);
++    }
++    if (!checked) setFactSources([]);
+     setFactGatePassed(checked);
+     approve(false);
+   };
+diff --git a/src/components/Settings/settings/ApiSettingsTab.tsx b/src/components/Settings/settings/ApiSettingsTab.tsx
+index 49264915..a13e1348 100644
+--- a/src/components/Settings/settings/ApiSettingsTab.tsx
++++ b/src/components/Settings/settings/ApiSettingsTab.tsx
+@@ -3,9 +3,10 @@ import { useTranslation } from 'react-i18next';
+ import { Loader2 } from 'lucide-react';
+ import { useAuthStore } from '@/stores/authStore';
+ import { useSettingsStore } from '@/stores/settingsStore';
++import { useProjectStore } from '@/stores/projectStore';
+ import { DataForSeoBudgetSettings } from '@/components/DataForSEO/cost/DataForSeoBudgetSettings';
+ import { LlmEconomyPanel } from '@/components/AI/LlmEconomyPanel';
+-import { summarizeUsage } from '@/services/llmEconomy';
++import { LlmEconomyBudgetSettings } from '@/components/AI/LlmEconomyBudgetSettings';
+ import { SecretKeyField } from '@/components/Auth/SecretKeyField';
+ 
+ interface ApiSettingsTabProps {
+@@ -32,8 +33,10 @@ export const ApiSettingsTab: React.FC<ApiSettingsTabProps> = ({
+ }) => {
+   const { t } = useTranslation();
+   const apiKeys = useAuthStore((s) => s.apiKeys);
++  const activeProvider = useAuthStore((s) => s.provider);
+   const secureStorageError = useSettingsStore((s) => s.secureStorageError);
+   const isSaving = useSettingsStore((s) => s.isSaving);
++  const activeProjectId = useProjectStore((s) => s.activeProjectId);
+   const dataForSeoStored = useSettingsStore((s) => s.dataForSeoCredentials);
+   const googleKeyStored = useSettingsStore((s) => s.googleMetricsApiKey);
+   // Stored values never reach this form; the placeholder says one exists instead of looking empty.
+@@ -85,8 +88,9 @@ export const ApiSettingsTab: React.FC<ApiSettingsTabProps> = ({
+         </div>
+       </div>
+ 
+-      {/* No usage ledger is persisted yet: the panel shows its empty state, never estimated cost. */}
+-      <LlmEconomyPanel summary={summarizeUsage([], null)} providerId="" />
++      {/* Live project LLM ledger: shows live usage or empty state, never fictitious costs. */}
++      <LlmEconomyBudgetSettings />
++      <LlmEconomyPanel projectId={activeProjectId} providerId={activeProvider} />
+ 
+       {secureStorageError &&<p role="alert" className="text-[11px] leading-4 text-rose-300">{secureStorageError}</p>}
+       <button type="button" onClick={handleSaveGeneral} disabled={isSaving} aria-busy={isSaving} className="w-full h-9 bg-emerald-600 hover:bg-emerald-500 text-white rounded-lg font-semibold transition disabled:cursor-not-allowed disabled:opacity-60">
+diff --git a/src/i18n/locales/ar.json b/src/i18n/locales/ar.json
+index c759780d..f80f33a4 100644
+--- a/src/i18n/locales/ar.json
++++ b/src/i18n/locales/ar.json
+@@ -7735,7 +7735,10 @@
+     "spent": "المصروف: {{value}}",
+     "saved": "الموفَّر عبر الذاكرة المؤقتة والتشغيل المحلي: {{value}}",
+     "hits": "إصابات الذاكرة المؤقتة: {{count}}",
+-    "leaves": "يُرسل نص الصفحات خارج هذا الجهاز إلى {{provider}}."
++    "leaves": "يُرسل نص الصفحات خارج هذا الجهاز إلى {{provider}}.",
++    "remaining": "الميزانية المتبقية: {{value}}",
++    "storageUnavailable": "تخزين ميزانية أو نفقات LLM غير متاح أو غير صالح.",
++    "overBudget": "تم تجاوز ميزانية LLM الشهرية.", "unknownCost": "تكلفة {{count}} من الاستدعاءات الخارجية غير معروفة ولم تُدرج في الإنفاق.", "selectProject": "اختر مشروعًا لتحرير ميزانية LLM الخاصة به.", "budgetTitle": "ميزانية LLM للمشروع", "noLimit": "بلا حد شهري", "limitLabel": "الحد الشهري (USD)", "warnLabel": "التنبيه عند (%)", "saveBudget": "حفظ الميزانية", "savedBudget": "تم حفظ ميزانية LLM.", "invalidLimit": "أدخل حدًا شهريًا صالحًا غير سالب.", "invalidWarn": "يجب أن تكون عتبة التنبيه عددًا صحيحًا من 1 إلى 100."
+   },
+   "templateGovernor": {
+     "title": "جودة القوالب البرمجية",
+diff --git a/src/i18n/locales/de.json b/src/i18n/locales/de.json
+index ccf6d82d..27470612 100644
+--- a/src/i18n/locales/de.json
++++ b/src/i18n/locales/de.json
+@@ -7735,7 +7735,10 @@
+     "spent": "Ausgegeben: {{value}}",
+     "saved": "Gespart durch Cache und lokale Läufe: {{value}}",
+     "hits": "Cache-Treffer: {{count}}",
+-    "leaves": "Der Seitentext wird von diesem Gerät an {{provider}} gesendet."
++    "leaves": "Der Seitentext wird von diesem Gerät an {{provider}} gesendet.",
++    "remaining": "Verbleibendes Budget: {{value}}",
++    "storageUnavailable": "Der Speicher für LLM-Budget oder Ausgaben ist nicht verfügbar oder ungültig.",
++    "overBudget": "Monatliches LLM-Budget überschritten.", "unknownCost": "{{count}} externe Aufrufe haben unbekannte Kosten und sind nicht enthalten.", "selectProject": "Projekt für das LLM-Budget auswählen.", "budgetTitle": "LLM-Projektbudget", "noLimit": "Kein Monatslimit", "limitLabel": "Monatslimit (USD)", "warnLabel": "Warnung ab (%)", "saveBudget": "Budget speichern", "savedBudget": "LLM-Budget gespeichert.", "invalidLimit": "Gültiges nichtnegatives Monatslimit eingeben.", "invalidWarn": "Schwelle muss eine ganze Zahl von 1 bis 100 sein."
+   },
+   "templateGovernor": {
+     "title": "Qualität programmatischer Templates",
+diff --git a/src/i18n/locales/en.json b/src/i18n/locales/en.json
+index 98091f97..5bc769dc 100644
+--- a/src/i18n/locales/en.json
++++ b/src/i18n/locales/en.json
+@@ -7735,7 +7735,10 @@
+     "spent": "Spent: {{value}}",
+     "saved": "Saved by cache and local runs: {{value}}",
+     "hits": "Cache hits: {{count}}",
+-    "leaves": "Page text is sent outside this device to {{provider}}."
++    "leaves": "Page text is sent outside this device to {{provider}}.",
++    "remaining": "Remaining budget: {{value}}",
++    "storageUnavailable": "LLM budget or spend storage is unavailable or invalid.",
++    "overBudget": "Monthly LLM budget exceeded.", "unknownCost": "{{count}} external calls had unknown cost and are excluded from spend.", "selectProject": "Select a project to edit its LLM budget.", "budgetTitle": "Project LLM budget", "noLimit": "No monthly limit", "limitLabel": "Monthly limit (USD)", "warnLabel": "Warn at (%)", "saveBudget": "Save budget", "savedBudget": "LLM budget saved.", "invalidLimit": "Enter a valid non-negative monthly limit.", "invalidWarn": "Warning threshold must be an integer from 1 to 100."
+   },
+   "templateGovernor": {
+     "title": "Programmatic template quality",
+diff --git a/src/i18n/locales/es.json b/src/i18n/locales/es.json
+index e2dd5878..1049abf6 100644
+--- a/src/i18n/locales/es.json
++++ b/src/i18n/locales/es.json
+@@ -7735,7 +7735,10 @@
+     "spent": "Gastado: {{value}}",
+     "saved": "Ahorrado con caché y modelos locales: {{value}}",
+     "hits": "Aciertos de caché: {{count}}",
+-    "leaves": "El texto de las páginas se envía fuera de este dispositivo a {{provider}}."
++    "leaves": "El texto de las páginas se envía fuera de este dispositivo a {{provider}}.",
++    "remaining": "Presupuesto restante: {{value}}",
++    "storageUnavailable": "El almacenamiento del presupuesto o gasto de LLM no está disponible o no es válido.",
++    "overBudget": "Se ha superado el presupuesto mensual de LLM.", "unknownCost": "{{count}} llamadas externas tienen un coste desconocido y quedan fuera del gasto.", "selectProject": "Selecciona un proyecto para editar su presupuesto LLM.", "budgetTitle": "Presupuesto LLM del proyecto", "noLimit": "Sin límite mensual", "limitLabel": "Límite mensual (USD)", "warnLabel": "Avisar al (%)", "saveBudget": "Guardar presupuesto", "savedBudget": "Presupuesto LLM guardado.", "invalidLimit": "Introduce un límite mensual válido.", "invalidWarn": "El umbral debe ser un entero entre 1 y 100."
+   },
+   "templateGovernor": {
+     "title": "Calidad de plantillas programáticas",
+diff --git a/src/i18n/locales/fr.json b/src/i18n/locales/fr.json
+index c49192ea..e0912f9f 100644
+--- a/src/i18n/locales/fr.json
++++ b/src/i18n/locales/fr.json
+@@ -7735,7 +7735,10 @@
+     "spent": "Dépensé : {{value}}",
+     "saved": "Économisé par le cache et le local : {{value}}",
+     "hits": "Succès du cache : {{count}}",
+-    "leaves": "Le texte des pages est envoyé hors de cet appareil vers {{provider}}."
++    "leaves": "Le texte des pages est envoyé hors de cet appareil vers {{provider}}.",
++    "remaining": "Budget restant : {{value}}",
++    "storageUnavailable": "Le stockage du budget ou des dépenses LLM est indisponible ou invalide.",
++    "overBudget": "Budget LLM mensuel dépassé.", "unknownCost": "{{count}} appels externes ont un coût inconnu et sont exclus des dépenses.", "selectProject": "Sélectionnez un projet pour modifier son budget LLM.", "budgetTitle": "Budget LLM du projet", "noLimit": "Aucune limite mensuelle", "limitLabel": "Limite mensuelle (USD)", "warnLabel": "Alerter à (%)", "saveBudget": "Enregistrer le budget", "savedBudget": "Budget LLM enregistré.", "invalidLimit": "Saisissez une limite mensuelle valide.", "invalidWarn": "Le seuil doit être un entier de 1 à 100."
+   },
+   "templateGovernor": {
+     "title": "Qualité des gabarits programmatiques",
+diff --git a/src/i18n/locales/it.json b/src/i18n/locales/it.json
+index d3c6c624..4de6ef2a 100644
+--- a/src/i18n/locales/it.json
++++ b/src/i18n/locales/it.json
+@@ -7735,7 +7735,10 @@
+     "spent": "Speso: {{value}}",
+     "saved": "Risparmiato con cache e modelli locali: {{value}}",
+     "hits": "Hit della cache: {{count}}",
+-    "leaves": "Il testo delle pagine viene inviato fuori da questo dispositivo a {{provider}}."
++    "leaves": "Il testo delle pagine viene inviato fuori da questo dispositivo a {{provider}}.",
++    "remaining": "Budget rimanente: {{value}}",
++    "storageUnavailable": "Lo storage del budget o delle spese LLM non è disponibile o non è valido.",
++    "overBudget": "Budget LLM mensile superato.", "unknownCost": "{{count}} chiamate esterne hanno un costo sconosciuto e sono escluse dalla spesa.", "selectProject": "Seleziona un progetto per modificare il budget LLM.", "budgetTitle": "Budget LLM del progetto", "noLimit": "Nessun limite mensile", "limitLabel": "Limite mensile (USD)", "warnLabel": "Avvisa al (%)", "saveBudget": "Salva budget", "savedBudget": "Budget LLM salvato.", "invalidLimit": "Inserisci un limite mensile valido.", "invalidWarn": "La soglia deve essere un intero da 1 a 100."
+   },
+   "templateGovernor": {
+     "title": "Qualità dei template programmatici",
+diff --git a/src/i18n/locales/ja.json b/src/i18n/locales/ja.json
+index 2a18d18c..cf88b402 100644
+--- a/src/i18n/locales/ja.json
++++ b/src/i18n/locales/ja.json
+@@ -7735,7 +7735,10 @@
+     "spent": "支出: {{value}}",
+     "saved": "キャッシュとローカル実行の節約額: {{value}}",
+     "hits": "キャッシュヒット: {{count}}",
+-    "leaves": "ページ本文はこの端末の外の {{provider}} に送信されます。"
++    "leaves": "ページ本文はこの端末の外の {{provider}} に送信されます。",
++    "remaining": "残りの予算: {{value}}",
++    "storageUnavailable": "LLM予算または支出の保存領域が利用できないか無効です。",
++    "overBudget": "月間LLM予算を超過しました。", "unknownCost": "{{count}}件の外部呼び出しは費用不明のため支出に含まれません。", "selectProject": "LLM予算を編集するプロジェクトを選択してください。", "budgetTitle": "プロジェクトLLM予算", "noLimit": "月間上限なし", "limitLabel": "月間上限 (USD)", "warnLabel": "警告しきい値 (%)", "saveBudget": "予算を保存", "savedBudget": "LLM予算を保存しました。", "invalidLimit": "0以上の有効な月間上限を入力してください。", "invalidWarn": "警告しきい値は1から100の整数で指定してください。"
+   },
+   "templateGovernor": {
+     "title": "プログラマティックテンプレートの品質",
+diff --git a/src/i18n/locales/ko.json b/src/i18n/locales/ko.json
+index 65c4dcff..45cdd5b6 100644
+--- a/src/i18n/locales/ko.json
++++ b/src/i18n/locales/ko.json
+@@ -7735,7 +7735,10 @@
+     "spent": "지출: {{value}}",
+     "saved": "캐시·로컬 실행으로 절약: {{value}}",
+     "hits": "캐시 적중: {{count}}",
+-    "leaves": "페이지 본문이 이 기기 밖의 {{provider}}(으)로 전송됩니다."
++    "leaves": "페이지 본문이 이 기기 밖의 {{provider}}(으)로 전송됩니다.",
++    "remaining": "남은 예산: {{value}}",
++    "storageUnavailable": "LLM 예산 또는 지출 저장소를 사용할 수 없거나 유효하지 않습니다.",
++    "overBudget": "월간 LLM 예산을 초과했습니다.", "unknownCost": "외부 호출 {{count}}건의 비용을 알 수 없어 지출에서 제외했습니다.", "selectProject": "LLM 예산을 편집할 프로젝트를 선택하세요.", "budgetTitle": "프로젝트 LLM 예산", "noLimit": "월간 한도 없음", "limitLabel": "월간 한도 (USD)", "warnLabel": "경고 기준 (%)", "saveBudget": "예산 저장", "savedBudget": "LLM 예산을 저장했습니다.", "invalidLimit": "0 이상인 유효한 월간 한도를 입력하세요.", "invalidWarn": "경고 기준은 1에서 100 사이의 정수여야 합니다."
+   },
+   "templateGovernor": {
+     "title": "프로그래매틱 템플릿 품질",
+diff --git a/src/i18n/locales/pl.json b/src/i18n/locales/pl.json
+index 153d93e8..fe31490a 100644
+--- a/src/i18n/locales/pl.json
++++ b/src/i18n/locales/pl.json
+@@ -7735,7 +7735,10 @@
+     "spent": "Wydano: {{value}}",
+     "saved": "Zaoszczędzono dzięki cache i modelom lokalnym: {{value}}",
+     "hits": "Trafienia cache: {{count}}",
+-    "leaves": "Treść stron jest wysyłana poza to urządzenie do: {{provider}}."
++    "leaves": "Treść stron jest wysyłana poza to urządzenie do: {{provider}}.",
++    "remaining": "Pozostały budżet: {{value}}",
++    "storageUnavailable": "Magazyn budżetu lub wydatków LLM jest niedostępny albo nieprawidłowy.",
++    "overBudget": "Miesięczny budżet LLM został przekroczony.", "unknownCost": "{{count}} zewnętrznych wywołań ma nieznany koszt i nie jest uwzględnionych w wydatkach.", "selectProject": "Wybierz projekt, aby edytować jego budżet LLM.", "budgetTitle": "Budżet LLM projektu", "noLimit": "Bez miesięcznego limitu", "limitLabel": "Limit miesięczny (USD)", "warnLabel": "Ostrzegaj przy (%)", "saveBudget": "Zapisz budżet", "savedBudget": "Zapisano budżet LLM.", "invalidLimit": "Wpisz prawidłowy nieujemny limit miesięczny.", "invalidWarn": "Próg ostrzeżenia musi być liczbą całkowitą od 1 do 100."
+   },
+   "templateGovernor": {
+     "title": "Jakość szablonów programatycznych",
+diff --git a/src/i18n/locales/pt.json b/src/i18n/locales/pt.json
+index e61a0a25..6db1b68e 100644
+--- a/src/i18n/locales/pt.json
++++ b/src/i18n/locales/pt.json
+@@ -7735,7 +7735,10 @@
+     "spent": "Gasto: {{value}}",
+     "saved": "Economizado com cache e execução local: {{value}}",
+     "hits": "Acertos de cache: {{count}}",
+-    "leaves": "O texto das páginas é enviado para fora deste dispositivo para {{provider}}."
++    "leaves": "O texto das páginas é enviado para fora deste dispositivo para {{provider}}.",
++    "remaining": "Orçamento restante: {{value}}",
++    "storageUnavailable": "O armazenamento do orçamento ou despesas de LLM está indisponível ou inválido.",
++    "overBudget": "O orçamento mensal de LLM foi excedido.", "unknownCost": "{{count}} chamadas externas têm custo desconhecido e não entram nas despesas.", "selectProject": "Selecione um projeto para editar o orçamento LLM.", "budgetTitle": "Orçamento LLM do projeto", "noLimit": "Sem limite mensal", "limitLabel": "Limite mensal (USD)", "warnLabel": "Avisar em (%)", "saveBudget": "Guardar orçamento", "savedBudget": "Orçamento LLM guardado.", "invalidLimit": "Introduza um limite mensal válido.", "invalidWarn": "O limiar deve ser um inteiro de 1 a 100."
+   },
+   "templateGovernor": {
+     "title": "Qualidade de modelos programáticos",
+diff --git a/src/i18n/locales/ru.json b/src/i18n/locales/ru.json
+index 3ff04336..57b97c43 100644
+--- a/src/i18n/locales/ru.json
++++ b/src/i18n/locales/ru.json
+@@ -7735,7 +7735,10 @@
+     "spent": "Потрачено: {{value}}",
+     "saved": "Сэкономлено кэшем и локальными запусками: {{value}}",
+     "hits": "Попаданий в кэш: {{count}}",
+-    "leaves": "Текст страниц отправляется за пределы устройства провайдеру {{provider}}."
++    "leaves": "Текст страниц отправляется за пределы устройства провайдеру {{provider}}.",
++    "remaining": "Оставшийся бюджет: {{value}}",
++    "storageUnavailable": "Хранилище бюджета или расходов LLM недоступно или недействительно.",
++    "overBudget": "Месячный бюджет LLM превышен.", "unknownCost": "У {{count}} внешних вызовов неизвестна стоимость; они исключены из расходов.", "selectProject": "Выберите проект для изменения бюджета LLM.", "budgetTitle": "Бюджет LLM проекта", "noLimit": "Без месячного лимита", "limitLabel": "Месячный лимит (USD)", "warnLabel": "Предупреждать при (%)", "saveBudget": "Сохранить бюджет", "savedBudget": "Бюджет LLM сохранён.", "invalidLimit": "Введите корректный месячный лимит.", "invalidWarn": "Порог должен быть целым числом от 1 до 100."
+   },
+   "templateGovernor": {
+     "title": "Качество программных шаблонов",
+diff --git a/src/i18n/locales/zh.json b/src/i18n/locales/zh.json
+index dfa30319..5d2724a6 100644
+--- a/src/i18n/locales/zh.json
++++ b/src/i18n/locales/zh.json
+@@ -7735,7 +7735,10 @@
+     "spent": "已花费：{{value}}",
+     "saved": "缓存和本地运行节省：{{value}}",
+     "hits": "缓存命中：{{count}}",
+-    "leaves": "页面文本将发送到本设备之外的 {{provider}}。"
++    "leaves": "页面文本将发送到本设备之外的 {{provider}}。",
++    "remaining": "剩余预算：{{value}}",
++    "storageUnavailable": "LLM 预算或支出存储不可用或无效。",
++    "overBudget": "已超出每月 LLM 预算。", "unknownCost": "{{count}} 次外部调用的费用未知，未计入支出。", "selectProject": "选择项目以编辑其 LLM 预算。", "budgetTitle": "项目 LLM 预算", "noLimit": "无每月上限", "limitLabel": "每月上限（USD）", "warnLabel": "警告阈值（%）", "saveBudget": "保存预算", "savedBudget": "LLM 预算已保存。", "invalidLimit": "请输入有效的非负每月上限。", "invalidWarn": "警告阈值必须是 1 到 100 的整数。"
+   },
+   "templateGovernor": {
+     "title": "程序化模板质量",
+diff --git a/src/services/ai.ts b/src/services/ai.ts
+index d91efc91..acd2f1ce 100644
+--- a/src/services/ai.ts
++++ b/src/services/ai.ts
+@@ -1,5 +1,7 @@
+ import type { AiConnectionMethod, AiProvider, PageAuditData } from '@/types';
+ import { invokeTauriCommand } from '@/services/tauri';
++import { executeWithEconomy, LlmFactGateBlockedError } from '@/services/llmEconomy';
++import type { YmylSourceInput } from '@/services/llmEconomy';
+ import i18n from '@/i18n';
+ import { parseAiSuggestionResponse, type AiSuggestionResponse } from './ai/parsing';
+ import { buildAiPrompt } from './ai/prompt';
+@@ -11,9 +13,52 @@ import { GEMINI_DEFAULT_MODEL, currentModel } from './ai/modelCatalog';
+ export { extractJsonObject, parseAiSuggestionResponse } from './ai/parsing';
+ export type { AiSuggestionResponse } from './ai/parsing';
+ 
++export interface GenerateTextEconomyOptions {
++  projectId?: string | null;
++  estimatedCostUsd?: number | null;
++  actualCostUsd?: number | null;
++  vector?: ArrayLike<number> | null;
++  ymyl?: boolean;
++  sources?: YmylSourceInput[];
++}
++
++export interface GenerateSuggestionsEconomyOptions {
++  projectId?: string | null;
++  estimatedCostUsd?: number | null;
++  actualCostUsd?: number | null;
++  vector?: ArrayLike<number> | null;
++  ymyl?: boolean;
++  sources?: YmylSourceInput[];
++}
++
+ export class AIService {
+-  static generateText(provider:AiProvider,apiKey:string,model:string,prompt:string,method:AiConnectionMethod='api_key'):Promise<string> {
+-    return generateAiText(provider,apiKey,model,prompt,method);
++  static generateText(
++    provider: AiProvider,
++    apiKey: string,
++    model: string,
++    prompt: string,
++    method: AiConnectionMethod = 'api_key',
++    options?: GenerateTextEconomyOptions,
++  ): Promise<string> {
++    const projectId = options?.projectId ?? null;
++    if (!projectId?.trim()) return Promise.reject(new Error('Project ID is required for economy-scoped AI generation'));
++    return executeWithEconomy({
++        projectId,
++        configuredProviders: [provider],
++        providerId: provider,
++        transport: 'cloud',
++        model,
++        prompt,
++        vector: options?.vector,
++        estimatedCostUsd: options?.estimatedCostUsd,
++        actualCostUsd: options?.actualCostUsd,
++        ymyl: options?.ymyl,
++        sources: options?.sources,
++        run: async () => ({ text: await generateAiText(provider, apiKey, model, prompt, method), transport: 'cloud' }),
++    }).then((res) => {
++      if (options?.ymyl && !res.factGatePassed) throw new LlmFactGateBlockedError(res.rejectedClaims);
++      return res.text;
++    });
+   }
+ static async generateSuggestions(
+   provider: AiProvider,
+@@ -22,28 +67,22 @@ static async generateSuggestions(
+   auditData: PageAuditData,
+   customInstruction?: string,
+   method: AiConnectionMethod = 'api_key',
++  options?: GenerateSuggestionsEconomyOptions,
+ ): Promise<AiSuggestionResponse> {
+-  if (method === 'local_cli') {
+-    const text = await invokeTauriCommand<string>('run_ai_cli', { provider, prompt: buildAiPrompt(auditData, customInstruction) });
+-    return parseAiSuggestionResponse(text);
+-  }
+-  if (!apiKey.trim()) {
+-    throw new Error(i18n.t('runtimeErrors.ai.configureKey'));
+-  }
+-
+   const prompt = buildAiPrompt(auditData, customInstruction);
+-
+-  switch (provider) {
+-    case 'openai':
+-      return callOpenAI(apiKey, model || 'gpt-4o', prompt);
+-    case 'claude':
+-      return callClaude(apiKey, model || CLAUDE_DEFAULT_MODEL, prompt);
+-    case 'gemini':
+-      return callGemini(apiKey, currentModel(model || GEMINI_DEFAULT_MODEL), prompt);
+-    default:
+-      throw new Error(i18n.t('runtimeErrors.ai.unsupportedProvider', { provider }));
+-  }
++  const projectId = options?.projectId ?? null;
++  if (!projectId?.trim()) throw new Error('Project ID is required for economy-scoped AI generation');
++  return executeWithEconomy({
++      projectId, configuredProviders: [provider], providerId: provider, transport: 'cloud', model, prompt,
++      vector: options?.vector, estimatedCostUsd: options?.estimatedCostUsd,
++      actualCostUsd: options?.actualCostUsd, ymyl: options?.ymyl, sources: options?.sources,
++      run: async () => ({ text: await generateSuggestionsDirect(provider, apiKey, model, auditData, customInstruction, method), transport: 'cloud' }),
++  }).then((result) => {
++    if (options?.ymyl && !result.factGatePassed) throw new LlmFactGateBlockedError(result.rejectedClaims);
++    return parseAiSuggestionResponse(result.text);
++  });
+ }
++
+   static testConnection(provider:AiProvider,apiKey:string):Promise<{success:boolean;message:string}> {
+     return testAiConnection(provider,apiKey);
+   }
+@@ -58,3 +97,24 @@ static async generateSuggestions(
+     }
+   }
+ }
++
++const generateSuggestionsDirect = async (
++  provider: AiProvider,
++  apiKey: string,
++  model: string,
++  auditData: PageAuditData,
++  customInstruction?: string,
++  method: AiConnectionMethod = 'api_key',
++): Promise<string> => {
++  if (method === 'local_cli') {
++    return invokeTauriCommand<string>('run_ai_cli', { provider, prompt: buildAiPrompt(auditData, customInstruction) });
++  }
++  if (!apiKey.trim()) throw new Error(i18n.t('runtimeErrors.ai.configureKey'));
++  const prompt = buildAiPrompt(auditData, customInstruction);
++  switch (provider) {
++    case 'openai': return JSON.stringify(await callOpenAI(apiKey, model || 'gpt-4o', prompt));
++    case 'claude': return JSON.stringify(await callClaude(apiKey, model || CLAUDE_DEFAULT_MODEL, prompt));
++    case 'gemini': return JSON.stringify(await callGemini(apiKey, currentModel(model || GEMINI_DEFAULT_MODEL), prompt));
++    default: throw new Error(i18n.t('runtimeErrors.ai.unsupportedProvider', { provider }));
++  }
++};
+diff --git a/src/services/ai/claude.ts b/src/services/ai/claude.ts
+index 8a774f44..2e4fe2f1 100644
+--- a/src/services/ai/claude.ts
++++ b/src/services/ai/claude.ts
+@@ -3,6 +3,7 @@ import { aiProviderLabel } from './labels';
+ import { currentModel } from './modelCatalog';
+ 
+ export const CLAUDE_MESSAGES_URL = 'https://api.anthropic.com/v1/messages';
++export const CLAUDE_MODELS_URL = 'https://api.anthropic.com/v1/models';
+ export const CLAUDE_DEFAULT_MODEL = 'claude-opus-5';
+ /** Cheapest current model; only used to prove that an API key is accepted. */
+ export const CLAUDE_CONNECTION_PROBE_MODEL = 'claude-haiku-4-5';
+diff --git a/src/services/ai/connection.ts b/src/services/ai/connection.ts
+index c93c316a..5da4ba1f 100644
+--- a/src/services/ai/connection.ts
++++ b/src/services/ai/connection.ts
+@@ -1,7 +1,7 @@
+ import type { AiProvider } from '@/types';
+ import i18n from '@/i18n';
+ import { aiProviderLabel } from './labels';
+-import { CLAUDE_CONNECTION_PROBE_MODEL, CLAUDE_MESSAGES_URL, claudeHeaders } from './claude';
++import { CLAUDE_CONNECTION_PROBE_MODEL, CLAUDE_MODELS_URL, claudeHeaders } from './claude';
+ import { invokeTauriCommand } from '@/services/tauri';
+ import { isDesktopAi } from './native';
+ 
+@@ -45,14 +45,11 @@ export async function testAiConnection(
+     }
+ 
+     if (provider === 'claude') {
+-      const res = await fetch(CLAUDE_MESSAGES_URL, {
+-        method: 'POST',
++      // Models listing validates the credential without sending a billable
++      // prompt/token request (the old `ping` Messages probe did).
++      const res = await fetch(CLAUDE_MODELS_URL, {
++        method: 'GET',
+         headers: claudeHeaders(apiKey, CLAUDE_CONNECTION_PROBE_MODEL),
+-        body: JSON.stringify({
+-          model: CLAUDE_CONNECTION_PROBE_MODEL,
+-          max_tokens: 5,
+-          messages: [{ role: 'user', content: 'ping' }],
+-        }),
+       });
+       if (!res.ok) {
+         if (res.status === 401) {
+diff --git a/src/services/cmsPatch/apply.ts b/src/services/cmsPatch/apply.ts
+index 1113c0c8..e2d98b2e 100644
+--- a/src/services/cmsPatch/apply.ts
++++ b/src/services/cmsPatch/apply.ts
+@@ -1,12 +1,13 @@
+ import { authorize, type TeamContext } from '@/services/team/guard';
+ import type { KeyValueStore } from '@/services/team/auditStore';
+ import { recordAudit } from '@/services/team/auditStore';
++import { isReviewedSource, validateYmylClaim, type YmylSource } from '@/services/llmEconomy/factGate';
+ import { ADAPTERS } from './adapters';
+ import type { PatchPlan } from './plan';
+ import { CmsError, type CmsTarget, type CmsTransport } from './types';
+ import { sectionApplied } from './verify';
+ 
+-export interface Approval { approvedBy: string; planHash: string; factGatePassed?: boolean }
++export interface Approval { approvedBy: string; planHash: string; factGatePassed?: boolean; sources?: YmylSource[] }
+ 
+ export interface Backup { target: CmsTarget; content: string; revision: string; at: string }
+ 
+@@ -40,10 +41,21 @@ export const applyPatch = async (plan: PatchPlan, approval: Approval | null, dep
+     return { status: 'dry-run' };
+   }
+   if (!approval || approval.planHash !== plan.planHash) return fail('not-approved', 'A human approval for this exact diff is required');
+-  if (plan.ymyl && !approval.factGatePassed) return fail('fact-gate-required', 'YMYL content needs a passed fact gate');
++  if (plan.ymyl && !approval.factGatePassed) return fail('fact-gate-required', 'YMYL content needs a passed fact gate with reviewed sources');
+   const adapter = ADAPTERS[plan.target.kind];
+   const current = await adapter.read(plan.target, deps.send);
+   if (current.revision !== plan.baseRevision) return fail('conflict', 'The page changed after the diff was approved');
++  if (plan.ymyl) {
++    const targetId = `${plan.target.baseUrl}\u0000${plan.target.contentId}`;
++    const sources = (approval.sources ?? []).filter((source) => isReviewedSource(source)
++      && source.revision === current.revision
++      && source.planHash === plan.planHash
++      && source.targetId === targetId
++      && source.sourceId.trim().length > 0
++      && current.content.includes(source.text));
++    const check = validateYmylClaim(plan.replacement, sources);
++    if (!sources.length || !check.allowed) return fail('fact-gate-required', `Unsupported numeric claims: ${check.rejectedValues.join(', ') || 'reviewed source required'}`);
++  }
+   const backup: Backup = { target: plan.target, content: current.content, revision: current.revision, at: (deps.now?.() ?? new Date()).toISOString() };
+   await deps.saveBackup(backup);
+   try {
+diff --git a/src/services/copilotPatcher/run.ts b/src/services/copilotPatcher/run.ts
+index 82ad8e0c..78f6c3c3 100644
+--- a/src/services/copilotPatcher/run.ts
++++ b/src/services/copilotPatcher/run.ts
+@@ -5,8 +5,10 @@ import type { PatchProposal, PatchResult, PatchTarget } from './types';
+ /** One configured AI backend. `generate` is the existing provider abstraction (AIService.generateText) bound to credentials. */
+ export interface PatchProvider {
+   id: string;
+-  /** Local CLI providers are local even when their product id is openai/claude. */
++  /** Deprecated caller hint; transport is derived from the provider id. */
+   local?: boolean;
++  /** Explicit transport may only make a known local provider remote. */
++  transport?: 'local' | 'cloud';
+   generate: (prompt: string) => Promise<string>;
+ }
+ 
+@@ -15,7 +17,10 @@ export type PatchCache = Map<string, string>;
+ 
+ /** Local provider first (nothing leaves the device); otherwise the first configured one. */
+ export const choosePatchProvider = (providers: PatchProvider[]): PatchProvider | null =>
+-  providers.find((provider) => provider.local || isLocalProvider(provider.id)) ?? providers[0] ?? null;
++  providers.find((provider) => isLocalProvider(provider.id) && provider.transport !== 'cloud') ?? providers[0] ?? null;
++
++const providerIsLocal = (provider: PatchProvider): boolean =>
++  isLocalProvider(provider.id) && provider.transport !== 'cloud';
+ 
+ const stripHtml = (text: string): string => {
+   let out = text;
+@@ -55,7 +60,7 @@ export const proposePatch = async (target: PatchTarget, providers: PatchProvider
+     const gate = gateFacts(clean, [target.paragraph]);
+     const proposal: PatchProposal = {
+       before: target.paragraph, after: gate.accepted.join(' '), status: 'pending',
+-      rejectedSentences: gate.rejected.map((item) => item.sentence), leftDevice: !(provider.local || isLocalProvider(provider.id)), fromCache: cached !== undefined,
++      rejectedSentences: gate.rejected.map((item) => item.sentence), leftDevice: !providerIsLocal(provider), fromCache: cached !== undefined,
+     };
+     return proposal.after ? { ok: true, proposal } : { ok: false, reason: 'empty-response' };
+   } catch (error) {
+diff --git a/src/services/dataErasure/index.ts b/src/services/dataErasure/index.ts
+index 2fa45cf5..19ca543a 100644
+--- a/src/services/dataErasure/index.ts
++++ b/src/services/dataErasure/index.ts
+@@ -5,6 +5,7 @@ import { invalidateQueuedCrawlWrites, withCrawlWriteLock } from '@/services/craw
+ import { migrateLegacyCrawlRuns } from '@/services/crawlStore';
+ import { forgetGa4Report, ga4ReportStorageKey } from '@/services/urlTelemetry/ga4Cache';
+ import { offPageHistoryKey } from '@/services/offPage/history';
++import { clearProjectCache } from '@/services/llmEconomy';
+ 
+ /** Evidence returned by the native store after a physical erasure. */
+ export interface ErasureReport {
+@@ -43,6 +44,9 @@ const legacyKeys = (projectId: string): string[] => [
+   `seomi_project_${projectId}_crawl_result`,
+   `seomi_project_${projectId}_crawl_runs_v1_backup`,
+   `seomi_store_v2_migrated_${projectId}`,
++  `seomi_project_${projectId}_llm_budget_v1`,
++  `seomi_project_${projectId}_llm_spend_v1`,
++  `seomi_project_${projectId}_llm_cache_v1`,
+ ];
+ 
+ const migrationKey = (projectId: string): string => `seomi_store_v2_migrated_${projectId}`;
+@@ -60,6 +64,7 @@ const clearLegacyStorage = (projectId: string): void => {
+     }
+   }
+   forgetGa4Report(projectId);
++  clearProjectCache(projectId);
+ };
+ 
+ /** Full project wipe, including leftover Web Storage migration artifacts. */
+diff --git a/src/services/llmEconomy/costMeter.ts b/src/services/llmEconomy/costMeter.ts
+index d189748c..822ea9a4 100644
+--- a/src/services/llmEconomy/costMeter.ts
++++ b/src/services/llmEconomy/costMeter.ts
+@@ -16,6 +16,7 @@ export interface UsageSummary {
+   calls: number;
+   remainingUsd: number | null;
+   overBudget: boolean;
++  unknownCostCalls?: number;
+ }
+ 
+ const LOCAL_PROVIDERS = new Set(['ollama', 'vllm', 'lmstudio', 'llamacpp']);
+diff --git a/src/services/llmEconomy/factGate.ts b/src/services/llmEconomy/factGate.ts
+index 2e80f7f6..bbb1bd0c 100644
+--- a/src/services/llmEconomy/factGate.ts
++++ b/src/services/llmEconomy/factGate.ts
+@@ -11,6 +11,29 @@ export interface GateResult {
+   needsHumanApproval: true;
+ }
+ 
++/** A human-reviewed source bound to an explicit provenance record. */
++export interface YmylSource {
++  sourceId: string;
++  text: string;
++  reviewedBy: string;
++  reviewedAt: string;
++  /** CMS sources must also bind to the revision reviewed by the person. */
++  revision?: string;
++  /** Optional binding to the exact CMS plan and target being approved. */
++  planHash?: string;
++  targetId?: string;
++}
++
++export interface YmylGateValidation {
++  allowed: boolean;
++  gate: GateResult;
++  rejectedValues: string[];
++  reason?: GateReason;
++  needsHumanApproval: true;
++}
++
++export type YmylSourceInput = string | YmylSource;
++
+ const UNITS = 'mg|mcg|µg|ug|g|kg|ml|l|iu|ie|mmol|mol|mmhg|kcal|%|pln|zł|usd|eur|gbp|\\$|€|£';
+ const VALUE = new RegExp(`(\\d+(?:[.,]\\d+)?)\\s*(${UNITS})(?![\\p{L}])`, 'giu');
+ 
+@@ -24,8 +47,8 @@ export const extractValues = (text: string): string[] =>
+  * Rejects every sentence that states a dose or amount the given sources do not contain.
+  * Sentences without such a value pass through; no sources means every valued sentence is rejected.
+  */
+-export const gateFacts = (text: string, sources: string[]): GateResult => {
+-  const supported = new Set(sources.flatMap(extractValues));
++export const gateFacts = (text: string, sources: Array<string | YmylSource>): GateResult => {
++  const supported = new Set(sources.flatMap((source) => extractValues(typeof source === 'string' ? source : source.text)));
+   const result: GateResult = { accepted: [], rejected: [], needsHumanApproval: true };
+   for (const sentence of sentencesOf(text)) {
+     const values = extractValues(sentence);
+@@ -39,3 +62,30 @@ export const gateFacts = (text: string, sources: string[]): GateResult => {
+   }
+   return result;
+ };
++
++/** Deterministic YMYL gate validation for CMS publishing. */
++export const isReviewedSource = (source: unknown): source is YmylSource => {
++  if (!source || typeof source !== 'object') return false;
++  const candidate = source as Partial<YmylSource>;
++  return typeof candidate.sourceId === 'string' && candidate.sourceId.trim().length > 0
++    && typeof candidate.text === 'string' && candidate.text.trim().length > 0
++    && typeof candidate.reviewedBy === 'string' && candidate.reviewedBy.trim().length > 0
++    && typeof candidate.reviewedAt === 'string' && Number.isFinite(Date.parse(candidate.reviewedAt));
++};
++
++export const validateYmylClaim = (replacement: string, sources: YmylSourceInput[]): YmylGateValidation => {
++  // Text-only sources remain supported for the generic LLM gate. CMS writes use
++  // the stricter reviewed-object path in apply.ts and never trust caller text.
++  const reviewed = sources.filter(isReviewedSource);
++  const legacyText = sources.filter((source): source is string => typeof source === 'string' && source.trim().length > 0);
++  const gate = gateFacts(replacement, [...reviewed, ...legacyText]);
++  const rejectedValues = gate.rejected.flatMap((item) => item.values);
++  const hasRejections = gate.rejected.length > 0;
++  return {
++    allowed: !hasRejections,
++    gate,
++    rejectedValues,
++    reason: hasRejections ? gate.rejected[0].reason : undefined,
++    needsHumanApproval: true,
++  };
++};
+diff --git a/src/services/llmEconomy/index.ts b/src/services/llmEconomy/index.ts
+index f9c0263c..4a96bd98 100644
+--- a/src/services/llmEconomy/index.ts
++++ b/src/services/llmEconomy/index.ts
+@@ -1,3 +1,5 @@
+ export * from './costMeter';
+ export * from './semanticCache';
+ export * from './factGate';
++export * from './llmBudget';
++export * from './orchestrator';
+diff --git a/src/services/llmEconomy/semanticCache.ts b/src/services/llmEconomy/semanticCache.ts
+index 4cbf4956..dad036da 100644
+--- a/src/services/llmEconomy/semanticCache.ts
++++ b/src/services/llmEconomy/semanticCache.ts
+@@ -1,17 +1,120 @@
+ import { cosine, normalize } from '@/services/embeddings/vector';
++import {
++  CACHE_TTL_MS, MAX_PROJECT_TASKS, clearAllCacheData, clearProjectCacheData, loadProject, persistProject,
++  projectCacheSize, type TaskRecord,
++} from './cacheStore';
++export { CACHE_TTL_MS, MAX_PROJECT_TASKS } from './cacheStore';
+ 
+ export interface CacheEntry {
+-  /** Task embedding (any dimension, same model for the whole cache). */
+   vector: ArrayLike<number>;
+   response: string;
+   costUsd: number;
+ }
+-
+ export interface CacheHit { entry: CacheEntry; similarity: number }
+ 
++export type { TaskRecord } from './cacheStore';
++
++export interface TaskHit {
++  record: TaskRecord;
++  matchType: 'exact' | 'semantic';
++  similarity: number;
++}
++
++export interface ExactTaskEntry { response: string; costUsd: number; at: number }
++
+ export const DEFAULT_CACHE_THRESHOLD = 0.95;
++const norm = (s: string) => s.trim().toLowerCase();
++
++export const buildTaskKey = (providerId: string, model: string, prompt: string): string =>
++  `${norm(providerId)}\u0000${norm(model)}\u0000${prompt.trim()}`;
++
++export const findProjectCachedTask = (
++  projectId: string,
++  model: string,
++  prompt: string,
++  queryVector?: ArrayLike<number> | null,
++  threshold = DEFAULT_CACHE_THRESHOLD,
++  providerId?: string,
++  now = Date.now(),
++): TaskHit | null => {
++  const records = loadProject(projectId, now);
++  const normalizedModel = norm(model);
++  const normalizedProvider = providerId === undefined ? null : norm(providerId);
++  const trimmedPrompt = prompt.trim();
++
++  // 1. Exact prompt repetition within project & model (zero outside calls)
++  const exact = records.find((r) => norm(r.model) === normalizedModel
++    && (normalizedProvider === null || norm(r.providerId) === normalizedProvider)
++    && r.prompt.trim() === trimmedPrompt);
++  if (exact) return { record: exact, matchType: 'exact', similarity: 1.0 };
++
++  // 2. Cosine semantic matching when query vector is provided (unavailable if absent)
++  if (!queryVector || queryVector.length === 0) return null;
++  const normalizedQuery = normalize(queryVector);
++  let best: TaskRecord | null = null;
++  let bestSimilarity = -1;
++
++  for (const r of records) {
++    if (norm(r.model) !== normalizedModel
++      || (normalizedProvider !== null && norm(r.providerId) !== normalizedProvider)
++      || !r.vector || r.vector.length !== queryVector.length) continue;
++    const sim = cosine(normalizedQuery, normalize(r.vector));
++    if (sim >= threshold && sim > bestSimilarity) {
++      best = r;
++      bestSimilarity = sim;
++    }
++  }
++  return best ? { record: best, matchType: 'semantic', similarity: bestSimilarity } : null;
++};
++
++export const storeProjectTask = (
++  projectId: string,
++  providerId: string,
++  model: string,
++  prompt: string,
++  response: string,
++  costUsd: number | null,
++  vector?: ArrayLike<number> | null,
++  now = Date.now(),
++): TaskRecord => {
++  const record: TaskRecord = {
++    projectId, providerId, model, prompt, response, costUsd,
++    vector: vector && vector.length > 0 ? vector : undefined, at: now,
++  };
++  const list = loadProject(projectId, now);
++  const next = [...list, record].filter((item) => now - item.at <= CACHE_TTL_MS).slice(-MAX_PROJECT_TASKS);
++  // Keep the bounded in-memory index in sync with its persisted representation.
++  list.splice(0, list.length, ...next);
++  persistProject(projectId, next);
++  return record;
++};
++
++export const findExactCached = (key: string): ExactTaskEntry | null => {
++  const parts = key.split('\u0000');
++  const providerId = parts.length >= 3 ? parts[0] ?? '' : undefined;
++  const hit = findProjectCachedTask('default', parts[1] ?? '', parts.slice(2).join('\u0000') || key, undefined, DEFAULT_CACHE_THRESHOLD, providerId);
++  return hit ? { response: hit.record.response, costUsd: hit.record.costUsd ?? 0, at: hit.record.at } : null;
++};
++
++export const putExactCached = (key: string, response: string, costUsd: number, now = Date.now()): ExactTaskEntry => {
++  const parts = key.split('\u0000');
++  storeProjectTask('default', parts[0] ?? '', parts[1] ?? '', parts.slice(2).join('\u0000') || key, response, costUsd, undefined, now);
++  return { response, costUsd, at: now };
++};
++
++export const clearProjectCache = (projectId: string): void => {
++  clearProjectCacheData(projectId);
++};
++export const clearExactCache = (): void => { clearAllCacheData(); };
++export const exactCacheSize = (projectId?: string): number =>
++  projectCacheSize(projectId);
++
++export const resolveCacheSavings = (normalCostUsd: number | null): { costUsd: 0; savedUsd: number; cached: true } => ({
++  costUsd: 0,
++  savedUsd: normalCostUsd !== null && Number.isFinite(normalCostUsd) ? Math.max(0, normalCostUsd) : 0,
++  cached: true,
++});
+ 
+-/** Returns the most similar earlier task when its cosine similarity reaches the threshold; otherwise null. */
+ export const findCached = (
+   task: ArrayLike<number>,
+   history: CacheEntry[],
+diff --git a/src/stores/auth/generation.ts b/src/stores/auth/generation.ts
+index e6e9959d..d2a6a5f5 100644
+--- a/src/stores/auth/generation.ts
++++ b/src/stores/auth/generation.ts
+@@ -1,21 +1,25 @@
+ import { AIService } from '@/services/ai';
++import { useProjectStore } from '@/stores/projectStore';
+ import i18n from '@/i18n';
+ import type { AuthState, AuthSet, AuthGet } from './types';
+ export const createAuthGeneration = (_set: AuthSet, get: AuthGet): Pick<AuthState, 'isProviderConnected' | 'generateText' | 'generateTextForProvider' | 'generateSuggestions'> => ({
+   isProviderConnected: (provider) => get().connectionStatus[provider || get().provider] === 'connected',
+   generateText: async (prompt) => {
+     const { provider, model, apiKeys, connectionMethod } = get();
+-    return AIService.generateText(provider, apiKeys[provider], model, prompt, connectionMethod[provider]);
++    const projectId = useProjectStore.getState().activeProjectId;
++    return AIService.generateText(provider, apiKeys[provider], model, prompt, connectionMethod[provider], { projectId });
+   },
+   generateTextForProvider: async (provider, prompt) => {
+     const { model, apiKeys, connectionMethod } = get();
+     if (connectionMethod[provider] !== 'local_cli') {
+       throw new Error(i18n.t('runtimeErrors.ai.localClientRequired', { provider }));
+     }
+-    return AIService.generateText(provider, apiKeys[provider], model, prompt, 'local_cli');
++    const projectId = useProjectStore.getState().activeProjectId;
++    return AIService.generateText(provider, apiKeys[provider], model, prompt, 'local_cli', { projectId });
+   },
+   generateSuggestions: (audit, instruction) => {
+     const { provider, model, apiKeys, connectionMethod } = get();
+-    return AIService.generateSuggestions(provider, apiKeys[provider], model, audit, instruction, connectionMethod[provider]);
++    const projectId = useProjectStore.getState().activeProjectId;
++    return AIService.generateSuggestions(provider, apiKeys[provider], model, audit, instruction, connectionMethod[provider], { projectId });
+   },
+ });
+diff --git a/tests/aiProviderContracts.test.ts b/tests/aiProviderContracts.test.ts
+index 05a31c0c..cebf5053 100644
+--- a/tests/aiProviderContracts.test.ts
++++ b/tests/aiProviderContracts.test.ts
+@@ -22,7 +22,7 @@ it('encodes the Gemini connection key as one query value',async()=>{
+ it.each(['openai','claude','gemini'] as const)('generates %s metadata through the hosted provider and preserves source evidence',async provider=>{
+   const fetchMock=vi.spyOn(globalThis,'fetch').mockResolvedValue(new Response(JSON.stringify(responseFor(provider,JSON.stringify(suggestions))),{status:200}));
+   const audit=createAuditFixture({headings:{h1_count:1,h1_texts:['Observed heading'],hierarchy:[],has_valid_hierarchy:true,issues:[]},content_stats:{word_count:10,reading_time_minutes:1,text_ratio_percent:10,top_keywords:[{keyword:'observed',count:2}]}});
+-  expect(await AIService.generateSuggestions(provider,'dummy-key','',audit,'Keep the evidence')).toEqual(suggestions);
++  expect(await AIService.generateSuggestions(provider,'dummy-key','',audit,'Keep the evidence','api_key',{ projectId: 'provider-contracts' })).toEqual(suggestions);
+   expect(invoke).not.toHaveBeenCalled();
+   const [,options]=fetchMock.mock.calls[0];
+   const body=JSON.parse(String(options?.body));
+@@ -36,7 +36,7 @@ it.each(['openai','claude','gemini'] as const)('generates %s metadata through th
+ it.each(['openai','claude','gemini'] as const)('routes %s CLI metadata without API credentials or forcing an API model',async provider=>{
+   const fetchMock=vi.spyOn(globalThis,'fetch');
+   invoke.mockResolvedValue('```json\n'+JSON.stringify(suggestions)+'\n```');
+-  expect(await AIService.generateSuggestions(provider,'','irrelevant-api-model',createAuditFixture(),'Use visible content','local_cli')).toEqual(suggestions);
++  expect(await AIService.generateSuggestions(provider,'','irrelevant-api-model',createAuditFixture(),'Use visible content','local_cli',{ projectId: 'provider-contracts' })).toEqual(suggestions);
+   expect(invoke).toHaveBeenCalledWith('run_ai_cli',{provider,prompt:expect.stringContaining('Use visible content')});
+   expect(invoke.mock.calls[0][1]).not.toHaveProperty('model');
+   expect(fetchMock).not.toHaveBeenCalled();
+@@ -44,7 +44,7 @@ it.each(['openai','claude','gemini'] as const)('routes %s CLI metadata without A
+ 
+ it('does not request hosted suggestions without a configured key',async()=>{
+   const fetchMock=vi.spyOn(globalThis,'fetch');
+-  await expect(AIService.generateSuggestions('openai','  ','model',createAuditFixture())).rejects.toThrow(i18n.t('runtimeErrors.ai.configureKey'));
++  await expect(AIService.generateSuggestions('openai','  ','model',createAuditFixture(),undefined,'api_key',{ projectId: 'provider-contracts' })).rejects.toThrow(i18n.t('runtimeErrors.ai.configureKey'));
+   expect(fetchMock).not.toHaveBeenCalled();
+ });
+ 
+@@ -55,7 +55,7 @@ it.each([
+ ] as const)('preserves %s suggestion failure HTTP %i as %s',async(provider,status,key)=>{
+   vi.spyOn(globalThis,'fetch').mockResolvedValue(new Response('provider unavailable',{status}));
+   let failure:unknown;
+-  try{await AIService.generateSuggestions(provider,'dummy-key','model',createAuditFixture());}catch(error){failure=error;}
++  try{await AIService.generateSuggestions(provider,'dummy-key','model',createAuditFixture(),undefined,'api_key',{ projectId: 'provider-contracts' });}catch(error){failure=error;}
+   expect(failure).toBeInstanceOf(Error);
+   const label=i18n.t(`legacyUi.ai.${provider}`);
+   const host=provider==='openai'?'platform.openai.com':provider==='claude'?'console.anthropic.com':'aistudio.google.com';
+@@ -64,7 +64,7 @@ it.each([
+ 
+ it.each(['openai','claude','gemini'] as const)('rejects malformed %s suggestion responses',async provider=>{
+   vi.spyOn(globalThis,'fetch').mockResolvedValue(new Response(JSON.stringify(responseFor(provider,'{"suggestedTitle":false}')),{status:200}));
+-  await expect(AIService.generateSuggestions(provider,'dummy-key','model',createAuditFixture())).rejects.toThrow(i18n.t('runtimeErrors.ai.missingSuggestionFields'));
++  await expect(AIService.generateSuggestions(provider,'dummy-key','model',createAuditFixture(),undefined,'api_key',{ projectId: 'provider-contracts' })).rejects.toThrow(i18n.t('runtimeErrors.ai.missingSuggestionFields'));
+ });
+ 
+ it.each(['openai','claude','gemini'] as const)('fails %s connection before network when credentials are missing',async provider=>{
+@@ -82,7 +82,7 @@ it.each([
+   expect(await AIService.testConnection(provider,'dummy-key')).toEqual({success,message:i18n.t(`runtimeErrors.ai.${key}`,{provider:i18n.t(`legacyUi.ai.${provider}`),status})});
+   expect(fetchMock).toHaveBeenCalledOnce();
+   const url=String(fetchMock.mock.calls[0][0]);
+-  expect(url).toContain(provider==='openai'?'api.openai.com/v1/models':provider==='claude'?'api.anthropic.com/v1/messages':'generativelanguage.googleapis.com/v1beta/models');
++  expect(url).toContain(provider==='openai'?'api.openai.com/v1/models':provider==='claude'?'api.anthropic.com/v1/models':'generativelanguage.googleapis.com/v1beta/models');
+ });
+ 
+ it.each([new Error('connection unavailable'),'connection cancelled'])('returns network failure without claiming a connection: %s',async failure=>{
+@@ -93,7 +93,7 @@ it.each([new Error('connection unavailable'),'connection cancelled'])('returns n
+ it.each(['openai','claude','gemini'] as const)('generates %s text through a literal hosted prompt',async provider=>{
+   const fetchMock=vi.spyOn(globalThis,'fetch').mockResolvedValue(new Response(JSON.stringify(responseFor(provider,'Observed provider answer')),{status:200}));
+   const prompt='Literal prompt & $(command) "quoted" — 日本語';
+-  expect(await AIService.generateText(provider,'dummy-key','selected-model',prompt)).toBe('Observed provider answer');
++  expect(await AIService.generateText(provider,'dummy-key','selected-model',prompt,'api_key',{ projectId: 'provider-contracts' })).toBe('Observed provider answer');
+   const options=fetchMock.mock.calls[0][1];
+   const body=JSON.parse(String(options?.body));
+   expect(provider==='gemini'?body.contents[0].parts[0].text:body.messages[0].content).toBe(prompt);
+@@ -101,18 +101,18 @@ it.each(['openai','claude','gemini'] as const)('generates %s text through a lite
+ 
+ it.each(['openai','claude','gemini'] as const)('preserves %s hosted text errors',async provider=>{
+   vi.spyOn(globalThis,'fetch').mockResolvedValue(new Response('provider unavailable',{status:503}));
+-  await expect(AIService.generateText(provider,'dummy-key','model','prompt')).rejects.toThrow(i18n.t('runtimeErrors.ai.apiError',{provider:i18n.t(`legacyUi.ai.${provider}`),status:503,detail:i18n.t('runtimeErrors.ai.responseHidden')}));
++  await expect(AIService.generateText(provider,'dummy-key','model','prompt','api_key',{ projectId: 'provider-contracts' })).rejects.toThrow(i18n.t('runtimeErrors.ai.apiError',{provider:i18n.t(`legacyUi.ai.${provider}`),status:503,detail:i18n.t('runtimeErrors.ai.responseHidden')}));
+ });
+ 
+ it.each(['openai','claude','gemini'] as const)('returns no invented text for an empty %s provider envelope',async provider=>{
+   vi.spyOn(globalThis,'fetch').mockResolvedValue(new Response('{}',{status:200}));
+-  expect(await AIService.generateText(provider,'dummy-key','model','prompt')).toBe('');
++  expect(await AIService.generateText(provider,'dummy-key','model','prompt','api_key',{ projectId: 'provider-contracts' })).toBe('');
+ });
+ 
+ it('routes text to an authenticated local CLI without requiring an API key',async()=>{
+   const fetchMock=vi.spyOn(globalThis,'fetch');
+   invoke.mockResolvedValue('Native CLI answer');
+-  expect(await AIService.generateText('claude','','ignored-api-model','Literal CLI prompt','local_cli')).toBe('Native CLI answer');
++  expect(await AIService.generateText('claude','','ignored-api-model','Literal CLI prompt','local_cli',{ projectId: 'provider-contracts' })).toBe('Native CLI answer');
+   expect(invoke).toHaveBeenCalledExactlyOnceWith('run_ai_cli',{provider:'claude',prompt:'Literal CLI prompt'});
+   expect(fetchMock).not.toHaveBeenCalled();
+ });
+diff --git a/tests/aiService.test.ts b/tests/aiService.test.ts
+index 56ccb531..d5b57382 100644
+--- a/tests/aiService.test.ts
++++ b/tests/aiService.test.ts
+@@ -14,6 +14,10 @@ const valid = {
+ };
+ 
+ describe('AI suggestion response parsing', () => {
++  it('requires a project scope before any provider call', async () => {
++    await expect(AIService.generateText('openai', 'key', 'model', 'prompt')).rejects.toThrow('Project ID is required');
++  });
++
+   it('extracts fenced JSON without losing braces inside quoted values', () => {
+     const response = `Here is the result:\n\n\`\`\`json\n${JSON.stringify({
+       ...valid,
+@@ -46,7 +50,7 @@ describe('AI suggestion response parsing', () => {
+   it('encodes a persisted Gemini model before placing it in the request path', async () => {
+     const fetchMock = vi.spyOn(globalThis, 'fetch').mockResolvedValue(new Response(JSON.stringify({ candidates: [{ content: { parts: [{ text: 'safe response' }] } }] })));
+ 
+-    await expect(AIService.generateText('gemini', 'test-key', 'model/name?variant=1', 'prompt')).resolves.toBe('safe response');
++    await expect(AIService.generateText('gemini', 'test-key', 'model/name?variant=1', 'prompt', 'api_key', { projectId: 'ai-service-test' })).resolves.toBe('safe response');
+     expect(String(fetchMock.mock.calls[0]?.[0])).toContain('models/model%2Fname%3Fvariant%3D1:generateContent');
+     fetchMock.mockRestore();
+   });
+@@ -93,6 +97,6 @@ it('skips an invalid complete object and retains the next valid escaped JSON obj
+ 
+ it('rejects unsupported provider when generating suggestions', async () => {
+   await expect(
+-    AIService.generateSuggestions('unsupported' as any, 'key', 'model', createAuditFixture())
++    AIService.generateSuggestions('unsupported' as any, 'key', 'model', createAuditFixture(), undefined, 'api_key', { projectId: 'ai-service-test' })
+   ).rejects.toThrow(i18n.t('runtimeErrors.ai.unsupportedProvider', { provider: 'unsupported' }));
+ });
+diff --git a/tests/authSlices.test.ts b/tests/authSlices.test.ts
+index 218ee650..b5ee0379 100644
+--- a/tests/authSlices.test.ts
++++ b/tests/authSlices.test.ts
+@@ -65,12 +65,12 @@ it('routes generation through the selected provider and rejects an API-only prov
+   auth.getState().setConnectionMethod('claude', 'local_cli');
+   const generate = vi.spyOn(AIService, 'generateText').mockResolvedValue('real-response-fixture');
+   expect(await auth.getState().generateText('question')).toBe('real-response-fixture');
+-  expect(generate).toHaveBeenCalledWith('claude', '', 'local-model', 'question', 'local_cli');
++  expect(generate).toHaveBeenCalledWith('claude', '', 'local-model', 'question', 'local_cli', { projectId: null });
+   await expect(auth.getState().generateTextForProvider('openai', 'question')).rejects.toThrow();
+ 
+   const generateProvider = vi.spyOn(AIService, 'generateText').mockResolvedValue('provider-answer');
+   expect(await auth.getState().generateTextForProvider('claude', 'cli-question')).toBe('provider-answer');
+-  expect(generateProvider).toHaveBeenCalledWith('claude', '', 'local-model', 'cli-question', 'local_cli');
++  expect(generateProvider).toHaveBeenCalledWith('claude', '', 'local-model', 'cli-question', 'local_cli', { projectId: null });
+ 
+   const suggestion = { suggestedTitle: 'Suggestion', suggestedDescription: 'Description', keyImprovements: ['Improve code'] };
+   const suggestionsSpy = vi.spyOn(AIService, 'generateSuggestions').mockResolvedValue(suggestion);
+diff --git a/tests/copilotPatcher.test.ts b/tests/copilotPatcher.test.ts
+index d30c8a63..dcba4e7d 100644
+--- a/tests/copilotPatcher.test.ts
++++ b/tests/copilotPatcher.test.ts
+@@ -76,6 +76,12 @@ describe('copilot run', () => {
+     expect(second.ok && second.proposal.fromCache).toBe(true);
+   });
+ 
++  it('does not trust local=true for a cloud provider id used by local_cli', async () => {
++    const provider = { id: 'openai', local: true, generate: vi.fn(async () => 'Creatine helps.') };
++    const result = await proposePatch(target(), [provider]);
++    expect(result.ok && result.proposal.leftDevice).toBe(true);
++  });
++
+   it('reports abort, provider error, non-Error throw and empty responses', async () => {
+     const controller = new AbortController();
+     const slow = { id: 'x', generate: () => new Promise<string>(() => {}) };
+diff --git a/src/components/AI/LlmEconomyBudgetSettings.tsx b/src/components/AI/LlmEconomyBudgetSettings.tsx
+new file mode 100644
+index 00000000..acca51da
+--- /dev/null
++++ b/src/components/AI/LlmEconomyBudgetSettings.tsx
+@@ -0,0 +1,45 @@
++import React, { useEffect, useState } from 'react';
++import { useTranslation } from 'react-i18next';
++import { MAX_LLM_MONTHLY_LIMIT_USD, writeLlmBudget } from '@/services/llmEconomy';
++import { useLlmEconomy } from './useLlmEconomy';
++
++const field = 'h-9 w-full rounded-lg border border-slate-800 bg-slate-900 px-3 text-white';
++
++/** Project-scoped writer for the optional LLM monthly cap. */
++export const LlmEconomyBudgetSettings: React.FC = () => {
++  const { t } = useTranslation();
++  const { projectId, budget, storage } = useLlmEconomy();
++  const [noLimit, setNoLimit] = useState(true);
++  const [limit, setLimit] = useState('');
++  const [warnAt, setWarnAt] = useState('80');
++  const [message, setMessage] = useState<string | null>(null);
++
++  useEffect(() => {
++    setNoLimit(!budget || budget.monthlyLimitUsd === null);
++    setLimit(budget?.monthlyLimitUsd === null || !budget ? '' : String(budget.monthlyLimitUsd));
++    setWarnAt(String(budget?.warnAtPercent ?? 80));
++  }, [projectId, budget?.monthlyLimitUsd, budget?.warnAtPercent]);
++
++  if (!projectId) return <p className="text-[11px] text-slate-400">{t('llmEconomy.selectProject')}</p>;
++  if (!storage || storage.budget === 'invalid' || storage.budget === 'unavailable') return <p role="alert" className="text-[11px] text-amber-300">{t('llmEconomy.storageUnavailable')}</p>;
++  if (!budget) return <p className="text-[11px] text-slate-400">{t('llmEconomy.selectProject')}</p>;
++  const save = () => {
++    const value = noLimit ? null : Number(limit.replace(',', '.'));
++    try {
++      if (value !== null && (!limit.trim() || !Number.isFinite(value) || value < 0 || value > MAX_LLM_MONTHLY_LIMIT_USD)) throw new Error(t('llmEconomy.invalidLimit'));
++      writeLlmBudget(projectId, { monthlyLimitUsd: value, warnAtPercent: Number(warnAt) });
++      setMessage(t('llmEconomy.savedBudget'));
++    } catch (error) { setMessage(error instanceof Error ? error.message : String(error)); }
++  };
++
++  return <section aria-labelledby="llm-budget-title" className="space-y-2 border-t border-slate-800 pt-3">
++    <h5 id="llm-budget-title" className="font-semibold text-white">{t('llmEconomy.budgetTitle')}</h5>
++    <label className="flex items-center gap-2 text-slate-200"><input type="checkbox" checked={noLimit} onChange={(event) => setNoLimit(event.target.checked)} />{t('llmEconomy.noLimit')}</label>
++    {!noLimit && <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
++      <label className="text-slate-400">{t('llmEconomy.limitLabel')}<input inputMode="decimal" value={limit} onChange={(event) => setLimit(event.target.value)} className={`${field} mt-1`} /></label>
++      <label className="text-slate-400">{t('llmEconomy.warnLabel')}<input type="number" min={1} max={100} value={warnAt} onChange={(event) => setWarnAt(event.target.value)} className={`${field} mt-1`} /></label>
++    </div>}
++    <button type="button" onClick={save} className="inline-flex h-8 rounded-lg bg-emerald-600 px-3 font-semibold text-white">{t('llmEconomy.saveBudget')}</button>
++    {message && <p role="status" className="text-[11px] text-slate-300">{message}</p>}
++  </section>;
++};
+diff --git a/src/components/AI/useLlmEconomy.ts b/src/components/AI/useLlmEconomy.ts
+new file mode 100644
+index 00000000..db00896c
+--- /dev/null
++++ b/src/components/AI/useLlmEconomy.ts
+@@ -0,0 +1,54 @@
++import { useEffect, useState } from 'react';
++import { useProjectStore } from '@/stores/projectStore';
++import {
++  llmBudgetStatus,
++  LLM_ECONOMY_EVENT,
++  readLlmBudget,
++  readLlmStorageState,
++  readLlmSpend,
++  readLlmUsageSummary,
++} from '@/services/llmEconomy/llmBudget';
++import { isLocalProvider, leavesDevice } from '@/services/llmEconomy/costMeter';
++
++const snapshot = (projectId: string | null) => {
++  if (!projectId) return null;
++  const spend = readLlmSpend(projectId);
++  const budget = readLlmBudget(projectId);
++  const storage = readLlmStorageState(projectId);
++  return {
++    spend,
++    budget,
++    status: llmBudgetStatus(spend, budget),
++    summary: readLlmUsageSummary(projectId),
++    storage,
++  };
++};
++
++/** Live month-to-date LLM spend, savings, cache hits and budget status. */
++export const useLlmEconomy = (explicitProjectId?: string | null, providerId = '') => {
++  const storeProjectId = useProjectStore((state) => state.activeProjectId);
++  const projectId = explicitProjectId !== undefined ? explicitProjectId : storeProjectId;
++  const [state, setState] = useState(() => snapshot(projectId));
++
++  useEffect(() => {
++    const refresh = () => setState(snapshot(projectId));
++    refresh();
++    window.addEventListener(LLM_ECONOMY_EVENT, refresh);
++    window.addEventListener('storage', refresh);
++    return () => {
++      window.removeEventListener(LLM_ECONOMY_EVENT, refresh);
++      window.removeEventListener('storage', refresh);
++    };
++  }, [projectId]);
++
++  return {
++    projectId,
++    spend: state?.spend ?? null,
++    budget: state?.budget ?? null,
++    status: state?.status ?? null,
++    summary: state?.summary ?? null,
++    storage: state?.storage ?? null,
++    isLocal: isLocalProvider(providerId),
++    leavesDevice: leavesDevice(providerId),
++  };
++};
+diff --git a/src/services/llmEconomy/budgetReservation.ts b/src/services/llmEconomy/budgetReservation.ts
+new file mode 100644
+index 00000000..8817563a
+--- /dev/null
++++ b/src/services/llmEconomy/budgetReservation.ts
+@@ -0,0 +1,20 @@
++import { readLlmBudget, readLlmSpend, readLlmStorageState, withinProjectBudget } from './llmBudget';
++
++const pending = new Map<string, number>();
++
++export const reserveProjectBudget = (projectId: string, local: boolean, estimatedCost: number | null, now: Date): (() => void) => {
++  if (local) return () => undefined;
++  const budget = readLlmBudget(projectId);
++  const storage = readLlmStorageState(projectId);
++  if (storage.budget === 'invalid' || storage.budget === 'unavailable') throw new Error('Project LLM budget storage is unavailable or invalid; refusing an unpriced cloud call');
++  if (budget.monthlyLimitUsd !== null && (storage.spend === 'invalid' || storage.spend === 'unavailable')) throw new Error('Project LLM spend storage is unavailable or invalid; refusing a cloud call under an active budget');
++  if (budget.monthlyLimitUsd === null) return () => undefined;
++  if (estimatedCost === null) throw new Error('Cannot execute unpriced external LLM call under active project budget limit');
++  const reserved = pending.get(projectId) ?? 0;
++  if (!withinProjectBudget(projectId, estimatedCost, now) || readLlmSpend(projectId, now).spentUsd + reserved + estimatedCost > budget.monthlyLimitUsd) throw new Error('Project LLM budget exceeded');
++  pending.set(projectId, reserved + estimatedCost);
++  return () => {
++    const next = (pending.get(projectId) ?? estimatedCost) - estimatedCost;
++    if (next > 0) pending.set(projectId, next); else pending.delete(projectId);
++  };
++};
+diff --git a/src/services/llmEconomy/cacheStore.ts b/src/services/llmEconomy/cacheStore.ts
+new file mode 100644
+index 00000000..4b36db64
+--- /dev/null
++++ b/src/services/llmEconomy/cacheStore.ts
+@@ -0,0 +1,74 @@
++import { readStorage, removeStorage, writeStorage } from '@/services/storage';
++
++export interface TaskRecord {
++  projectId: string;
++  providerId: string;
++  model: string;
++  prompt: string;
++  vector?: ArrayLike<number>;
++  response: string;
++  costUsd: number | null;
++  at: number;
++}
++
++export const CACHE_TTL_MS = 24 * 60 * 60 * 1000;
++export const MAX_PROJECT_TASKS = 100;
++const CACHE_KEY_SUFFIX = '_llm_cache_v1';
++const MAX_CACHE_TEXT = 100_000;
++const MAX_CACHE_VECTOR = 2048;
++const MAX_CACHE_BYTES = 2_000_000;
++const memory = new Map<string, TaskRecord[]>();
++const loaded = new Set<string>();
++const known = new Set<string>();
++
++const keyFor = (projectId: string): string => `seomi_project_${projectId}${CACHE_KEY_SUFFIX}`;
++const prune = (records: TaskRecord[], now: number): TaskRecord[] => records
++  .filter((record) => now - record.at <= CACHE_TTL_MS).slice(-MAX_PROJECT_TASKS);
++
++const validRecord = (projectId: string, value: unknown): value is TaskRecord => {
++  if (!value || typeof value !== 'object') return false;
++  const item = value as Partial<TaskRecord>;
++  return item.projectId === projectId && typeof item.providerId === 'string' && typeof item.model === 'string'
++    && typeof item.prompt === 'string' && item.prompt.length <= MAX_CACHE_TEXT
++    && typeof item.response === 'string' && item.response.length <= MAX_CACHE_TEXT
++    && (item.costUsd === null || (typeof item.costUsd === 'number' && Number.isFinite(item.costUsd) && item.costUsd >= 0))
++    && typeof item.at === 'number' && Number.isFinite(item.at)
++    && (item.vector === undefined || (Array.isArray(item.vector) && item.vector.length <= MAX_CACHE_VECTOR
++      && item.vector.every((entry) => typeof entry === 'number' && Number.isFinite(entry))));
++};
++
++export const loadProject = (projectId: string, now: number): TaskRecord[] => {
++  known.add(projectId);
++  if (loaded.has(projectId)) return memory.get(projectId) ?? [];
++  loaded.add(projectId);
++  const raw = readStorage(keyFor(projectId));
++  if (raw === null) { const empty: TaskRecord[] = []; memory.set(projectId, empty); return empty; }
++  try {
++    if (raw.length > MAX_CACHE_BYTES) throw new Error('cache payload exceeds bound');
++    const parsed: unknown = JSON.parse(raw);
++    if (!Array.isArray(parsed)) throw new Error('cache record must be an array');
++    const records = parsed.filter((item): item is TaskRecord => validRecord(projectId, item));
++    const pruned = prune(records, now);
++    memory.set(projectId, pruned);
++    return pruned;
++  } catch {
++    const empty: TaskRecord[] = [];
++    memory.set(projectId, empty);
++    return empty;
++  }
++};
++
++export const persistProject = (projectId: string, records: TaskRecord[]): void => {
++  try { writeStorage(keyFor(projectId), JSON.stringify(records.slice(-MAX_PROJECT_TASKS))); } catch { /* volatile fallback */ }
++};
++
++export const clearProjectCacheData = (projectId: string): void => {
++  memory.delete(projectId); loaded.delete(projectId); known.delete(projectId); removeStorage(keyFor(projectId));
++};
++export const clearAllCacheData = (): void => {
++  for (const projectId of known) removeStorage(keyFor(projectId));
++  memory.clear(); loaded.clear(); known.clear();
++};
++export const projectCacheSize = (projectId?: string): number => projectId
++  ? (memory.get(projectId)?.length ?? 0)
++  : Array.from(memory.values()).reduce((sum, records) => sum + records.length, 0);
+diff --git a/src/services/llmEconomy/executionState.ts b/src/services/llmEconomy/executionState.ts
+new file mode 100644
+index 00000000..389c7f18
+--- /dev/null
++++ b/src/services/llmEconomy/executionState.ts
+@@ -0,0 +1,24 @@
++const inFlight = new Map<string, Promise<unknown>>();
++export const IN_FLIGHT_TTL_MS = 5 * 60 * 1000;
++export const MAX_IN_FLIGHT = 64;
++
++/** Shares bounded provider work only; caller-specific policy is applied outside. */
++export const shareInFlight = <T>(key: string, run: () => Promise<T>): Promise<T> => {
++  const previous = inFlight.get(key);
++  if (previous) return previous as Promise<T>;
++  const current = run();
++  inFlight.set(key, current);
++  const timer = setTimeout(() => {
++    if (inFlight.get(key) === current) inFlight.delete(key);
++  }, IN_FLIGHT_TTL_MS);
++  (timer as unknown as { unref?: () => void }).unref?.();
++  while (inFlight.size > MAX_IN_FLIGHT) {
++    const oldest = inFlight.keys().next().value;
++    if (typeof oldest !== 'string') break;
++    inFlight.delete(oldest);
++  }
++  return current.finally(() => {
++    clearTimeout(timer);
++    if (inFlight.get(key) === current) inFlight.delete(key);
++  });
++};
+diff --git a/src/services/llmEconomy/llmBudget.ts b/src/services/llmEconomy/llmBudget.ts
+new file mode 100644
+index 00000000..30983c51
+--- /dev/null
++++ b/src/services/llmEconomy/llmBudget.ts
+@@ -0,0 +1,150 @@
++import i18n from '@/i18n';
++import { isStorageAvailable, readStorage, removeStorage, writeStorage } from '@/services/storage';
++import type { UsageSummary } from './costMeter';
++
++export const LLM_ECONOMY_EVENT = 'seomi:llm-economy-cost';
++export const MAX_LLM_MONTHLY_LIMIT_USD = 100_000;
++
++export interface LlmBudget { monthlyLimitUsd: number | null; warnAtPercent: number }
++export interface LlmLastCall { providerId: string; model?: string; costUsd: number | null; savedUsd: number; cached: boolean; local: boolean; at: string }
++export interface LlmSpend {
++  month: string; spentUsd: number; savedUsd: number; cacheHits: number; calls: number;
++  unknownCostCalls?: number;
++  lastCostByProvider: Record<string, number>; lastCall: LlmLastCall | null;
++}
++export type BudgetLevel = 'none' | 'ok' | 'warning' | 'exceeded';
++export type LlmStorageState = 'missing' | 'valid' | 'invalid' | 'unavailable';
++
++const budgetKey = (p: string) => `seomi_project_${p}_llm_budget_v1`;
++const spendKey = (p: string) => `seomi_project_${p}_llm_spend_v1`;
++const DEFAULT_BUDGET: LlmBudget = { monthlyLimitUsd: null, warnAtPercent: 80 };
++
++const isPlainObject = (value: unknown): value is Record<string, unknown> => Boolean(value && typeof value === 'object' && !Array.isArray(value));
++const validBudgetShape = (value: Record<string, unknown>): boolean =>
++  (!('monthlyLimitUsd' in value) || value.monthlyLimitUsd === null || finiteCost(value.monthlyLimitUsd))
++  && (!('warnAtPercent' in value) || (typeof value.warnAtPercent === 'number' && Number.isInteger(value.warnAtPercent) && value.warnAtPercent >= 1 && value.warnAtPercent <= 100));
++const validSpendShape = (value: Record<string, unknown>): boolean => {
++  const numeric = ['spentUsd', 'savedUsd'];
++  const counters = ['cacheHits', 'calls', 'unknownCostCalls'];
++  const providerCosts = !('lastCostByProvider' in value) || (isPlainObject(value.lastCostByProvider)
++    && Object.values(value.lastCostByProvider).every((cost) => finiteCost(cost)));
++  const lastCall = !('lastCall' in value) || value.lastCall === null || isPlainObject(value.lastCall);
++  return (!('month' in value) || typeof value.month === 'string')
++    && numeric.every((key) => !(key in value) || finiteCost(value[key]))
++    && counters.every((key) => !(key in value) || (typeof value[key] === 'number' && Number.isInteger(value[key]) && (value[key] as number) >= 0))
++    && providerCosts && lastCall;
++};
++
++const storageState = (key: string, kind: 'budget' | 'spend'): LlmStorageState => {
++  if (!isStorageAvailable()) return 'unavailable';
++  const raw = readStorage(key);
++  if (raw === null) return 'missing';
++  try {
++    const parsed: unknown = JSON.parse(raw);
++    if (!isPlainObject(parsed)) return 'invalid';
++    return (kind === 'budget' ? validBudgetShape(parsed) : validSpendShape(parsed)) ? 'valid' : 'invalid';
++  } catch { return 'invalid'; }
++};
++
++export const readLlmStorageState = (projectId: string): { budget: LlmStorageState; spend: LlmStorageState } => ({
++  budget: storageState(budgetKey(projectId), 'budget'),
++  spend: storageState(spendKey(projectId), 'spend'),
++});
++
++export const monthKey = (now = new Date()): string => `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}`;
++const finiteCost = (v: unknown): v is number => typeof v === 'number' && Number.isFinite(v) && v >= 0 && v <= MAX_LLM_MONTHLY_LIMIT_USD;
++
++const readJson = (key: string): Record<string, unknown> => {
++  try {
++    const val: unknown = JSON.parse(readStorage(key) || '{}');
++    return val && typeof val === 'object' && !Array.isArray(val) ? (val as Record<string, unknown>) : {};
++  } catch { return {}; }
++};
++
++export const readLlmBudget = (projectId: string): LlmBudget => {
++  const s = readJson(budgetKey(projectId));
++  return {
++    monthlyLimitUsd: finiteCost(s.monthlyLimitUsd) ? s.monthlyLimitUsd : null,
++    warnAtPercent: typeof s.warnAtPercent === 'number' && Number.isInteger(s.warnAtPercent) && s.warnAtPercent >= 1 && s.warnAtPercent <= 100 ? s.warnAtPercent : DEFAULT_BUDGET.warnAtPercent,
++  };
++};
++
++export const writeLlmBudget = (projectId: string, budget: LlmBudget): LlmBudget => {
++  if (budget.monthlyLimitUsd !== null && !(finiteCost(budget.monthlyLimitUsd) && budget.monthlyLimitUsd <= MAX_LLM_MONTHLY_LIMIT_USD)) throw new Error(i18n.t('dataforseoCost.invalidLimit'));
++  if (!Number.isInteger(budget.warnAtPercent) || budget.warnAtPercent < 1 || budget.warnAtPercent > 100) throw new Error(i18n.t('dataforseoCost.invalidWarn'));
++  if (!writeStorage(budgetKey(projectId), JSON.stringify(budget))) throw new Error('Unable to persist the project LLM budget');
++  window.dispatchEvent(new CustomEvent(LLM_ECONOMY_EVENT, { detail: { projectId, budget } }));
++  return budget;
++};
++
++export const clearProjectLlmBudgetAndSpend = (projectId: string): void => {
++  removeStorage(budgetKey(projectId));
++  removeStorage(spendKey(projectId));
++  window.dispatchEvent(new CustomEvent(LLM_ECONOMY_EVENT, { detail: { projectId, cleared: true } }));
++};
++
++export const readLlmSpend = (projectId: string, now = new Date()): LlmSpend => {
++  const s = readJson(spendKey(projectId));
++  const month = monthKey(now);
++  const costs = s.lastCostByProvider && typeof s.lastCostByProvider === 'object' ? (s.lastCostByProvider as Record<string, unknown>) : {};
++  const lastCostByProvider = Object.fromEntries(Object.entries(costs).filter((e): e is [string, number] => finiteCost(e[1])).slice(0, 50));
++  const last = s.lastCall as Partial<LlmLastCall> | undefined;
++  const lastCost = last && (last.costUsd === null || finiteCost(last.costUsd)) ? last.costUsd : null;
++  const lastCall: LlmLastCall | null = last && typeof last.providerId === 'string' && (last.costUsd === null || finiteCost(last.costUsd)) && typeof last.at === 'string'
++    ? { providerId: last.providerId, model: typeof last.model === 'string' ? last.model : undefined, costUsd: lastCost, savedUsd: finiteCost(last.savedUsd) ? last.savedUsd : 0, cached: Boolean(last.cached), local: Boolean(last.local), at: last.at }
++    : null;
++  if (s.month !== month) return { month, spentUsd: 0, savedUsd: 0, cacheHits: 0, calls: 0, lastCostByProvider, lastCall };
++  return {
++    month, spentUsd: finiteCost(s.spentUsd) ? s.spentUsd : 0, savedUsd: finiteCost(s.savedUsd) ? s.savedUsd : 0,
++    cacheHits: typeof s.cacheHits === 'number' && Number.isInteger(s.cacheHits) && s.cacheHits >= 0 ? s.cacheHits : 0,
++    calls: typeof s.calls === 'number' && Number.isInteger(s.calls) && s.calls >= 0 ? s.calls : 0,
++    lastCostByProvider, lastCall, ...(typeof s.unknownCostCalls === 'number' && Number.isInteger(s.unknownCostCalls) && s.unknownCostCalls > 0 ? { unknownCostCalls: s.unknownCostCalls } : {}),
++  };
++};
++
++export const recordLlmCost = (
++  projectId: string,
++  entry: { providerId: string; model?: string; costUsd: number | null; savedUsd?: number; cached?: boolean; local?: boolean },
++  now = new Date(),
++): LlmSpend => {
++  const spend = readLlmSpend(projectId, now);
++  const cached = Boolean(entry.cached);
++  const local = Boolean(entry.local);
++  const cost = entry.costUsd === null ? null : (finiteCost(entry.costUsd) ? entry.costUsd : null);
++  const spentDiff = cached || local || cost === null ? 0 : cost;
++  const savedDiff = cached || local ? (finiteCost(entry.savedUsd) ? entry.savedUsd : (cost ?? 0)) : 0;
++  const next: LlmSpend = {
++    ...spend,
++    spentUsd: Math.round((spend.spentUsd + spentDiff) * 1e6) / 1e6,
++    savedUsd: Math.round((spend.savedUsd + savedDiff) * 1e6) / 1e6,
++    cacheHits: spend.cacheHits + (cached ? 1 : 0),
++    calls: spend.calls + 1,
++    lastCostByProvider: cost !== null ? { ...spend.lastCostByProvider, [entry.providerId]: cost } : spend.lastCostByProvider,
++    lastCall: { providerId: entry.providerId, model: entry.model, costUsd: cost, savedUsd: savedDiff, cached, local, at: now.toISOString() },
++    ...(cost === null && !cached && !local ? { unknownCostCalls: (spend.unknownCostCalls ?? 0) + 1 } : spend.unknownCostCalls ? { unknownCostCalls: spend.unknownCostCalls } : {}),
++  };
++  try { writeStorage(spendKey(projectId), JSON.stringify(next)); } catch { /* Storage fallback */ }
++  window.dispatchEvent(new CustomEvent(LLM_ECONOMY_EVENT, { detail: { projectId, entry } }));
++  return next;
++};
++
++export const llmBudgetStatus = (spend: LlmSpend, budget: LlmBudget): { level: BudgetLevel; percent: number | null; remainingUsd: number | null } => {
++  if (budget.monthlyLimitUsd === null) return { level: 'none', percent: null, remainingUsd: null };
++  const limit = budget.monthlyLimitUsd;
++  const percent = limit === 0 ? (spend.spentUsd > 0 ? 100 : 0) : Math.min(999, (spend.spentUsd / limit) * 100);
++  const level: BudgetLevel = spend.spentUsd >= limit ? 'exceeded' : percent >= budget.warnAtPercent ? 'warning' : 'ok';
++  return { level, percent, remainingUsd: Math.max(0, Math.round((limit - spend.spentUsd) * 1e6) / 1e6) };
++};
++
++export const withinProjectBudget = (projectId: string, nextCostUsd: number | null, now = new Date()): boolean => {
++  const budget = readLlmBudget(projectId);
++  if (budget.monthlyLimitUsd === null) return true;
++  if (nextCostUsd === null) return false;
++  return readLlmSpend(projectId, now).spentUsd + nextCostUsd <= budget.monthlyLimitUsd;
++};
++export const readLlmUsageSummary = (projectId: string, now = new Date()): UsageSummary => {
++  const spend = readLlmSpend(projectId, now);
++  const budget = readLlmBudget(projectId);
++  const status = llmBudgetStatus(spend, budget);
++  return { spentUsd: spend.spentUsd, savedUsd: spend.savedUsd, cacheHits: spend.cacheHits, calls: spend.calls, remainingUsd: status.remainingUsd, overBudget: status.level === 'exceeded', ...(spend.unknownCostCalls ? { unknownCostCalls: spend.unknownCostCalls } : {}) };
++};
+diff --git a/src/services/llmEconomy/orchestrator.ts b/src/services/llmEconomy/orchestrator.ts
+new file mode 100644
+index 00000000..4a6ee5ec
+--- /dev/null
++++ b/src/services/llmEconomy/orchestrator.ts
+@@ -0,0 +1,149 @@
++import { isLocalProvider, pickBatchProvider } from './costMeter';
++import { validateYmylClaim, type YmylSourceInput } from './factGate';
++import { recordLlmCost } from './llmBudget';
++import { buildTaskKey, findProjectCachedTask, resolveCacheSavings, storeProjectTask } from './semanticCache';
++import { shareInFlight } from './executionState';
++import { reserveProjectBudget } from './budgetReservation';
++export { IN_FLIGHT_TTL_MS, MAX_IN_FLIGHT } from './executionState';
++
++export interface ExecuteOptions {
++  projectId: string;
++  configuredProviders: string[];
++  providerId?: string;
++  /** Actual adapter transport; cloud is required for local_cli-backed hosted IDs. */
++  transport?: 'local' | 'cloud';
++  model?: string;
++  prompt: string;
++  vector?: ArrayLike<number> | null;
++  cacheThreshold?: number;
++  batchSize?: number;
++  batchThreshold?: number;
++  estimatedCostUsd?: number | null;
++  actualCostUsd?: number | null;
++  ymyl?: boolean;
++  sources?: YmylSourceInput[];
++  run: (providerId: string) => Promise<{ text: string; actualCostUsd?: number | null; transport?: 'local' | 'cloud' }>;
++  now?: Date;
++}
++
++export interface ExecutionResult {
++  text: string;
++  providerId: string;
++  model: string;
++  costUsd: number | null;
++  savedUsd: number;
++  cached: boolean;
++  matchType?: 'exact' | 'semantic';
++  local: boolean;
++  leavesDevice: boolean;
++  factGatePassed: boolean;
++  rejectedClaims: string[];
++  needsHumanApproval: boolean;
++}
++
++export class LlmFactGateBlockedError extends Error {
++  readonly code = 'llm-fact-gate-blocked' as const;
++  readonly factGatePassed = false;
++  readonly needsHumanApproval = true;
++  constructor(readonly rejectedClaims: string[]) {
++    super(`YMYL fact gate rejected unsupported claims: ${rejectedClaims.join(', ')}`);
++    this.name = 'LlmFactGateBlockedError';
++  }
++}
++
++const validateCallerResult = (result: ExecutionResult, options: ExecuteOptions): ExecutionResult => {
++  if (!options.ymyl) return result;
++  if (!result.factGatePassed) return result;
++  const check = validateYmylClaim(result.text, options.sources ?? []);
++  if (!check.allowed) return { ...result, text: '', factGatePassed: false, rejectedClaims: check.rejectedValues, needsHumanApproval: true };
++  return { ...result, factGatePassed: true, rejectedClaims: [], needsHumanApproval: true };
++};
++
++const blockedResult = (base: ExecutionResult, rejectedClaims: string[]): ExecutionResult => ({
++  ...base, text: '', factGatePassed: false, rejectedClaims, needsHumanApproval: true,
++});
++
++export const executeWithEconomy = async (options: ExecuteOptions): Promise<ExecutionResult> => {
++  const chosenProvider = options.providerId
++    ?? (options.batchSize !== undefined ? pickBatchProvider(options.configuredProviders, options.batchSize, options.batchThreshold) : null)
++    ?? options.configuredProviders[0]
++    ?? '';
++  if (!chosenProvider) throw new Error('No AI provider configured');
++
++  const model = options.model ?? 'default';
++  const key = `${options.projectId}\u0000${buildTaskKey(chosenProvider, model, options.prompt)}`;
++  // Share provider work, but never share a caller's fact approval.
++  return shareInFlight(key, () => executeWithEconomyUnshared(options, chosenProvider, model))
++    .then((result) => validateCallerResult(result, options));
++};
++
++const executeWithEconomyUnshared = async (options: ExecuteOptions, chosenProvider: string, model: string): Promise<ExecutionResult> => {
++  const local = isLocalProvider(chosenProvider);
++  const transport = options.transport ?? (local ? 'local' : 'cloud');
++  if (transport === 'local' && !local) throw new Error('Local AI transport requires a known local provider');
++  const executesLocally = transport === 'local';
++  const willLeave = transport === 'cloud';
++  const now = options.now ?? new Date();
++
++  // 1. Project-scoped cache: exact key lookup and cosine semantic lookup
++  const hit = findProjectCachedTask(options.projectId, model, options.prompt, options.vector, options.cacheThreshold, chosenProvider, now.getTime());
++  if (hit) {
++    const savings = resolveCacheSavings(hit.record.costUsd);
++    const ymylCheck = options.ymyl ? validateYmylClaim(hit.record.response, options.sources ?? []) : null;
++    if (ymylCheck && !ymylCheck.allowed) {
++      return blockedResult({
++        text: '', providerId: chosenProvider, model, costUsd: 0, savedUsd: savings.savedUsd,
++        cached: true, matchType: hit.matchType, local, leavesDevice: willLeave,
++        factGatePassed: false, rejectedClaims: ymylCheck.rejectedValues, needsHumanApproval: true,
++      }, ymylCheck.rejectedValues);
++    }
++    recordLlmCost(options.projectId, { providerId: chosenProvider, model, costUsd: 0, savedUsd: savings.savedUsd, cached: true, local: executesLocally }, now);
++    return {
++      text: hit.record.response, providerId: chosenProvider, model, costUsd: 0, savedUsd: savings.savedUsd,
++      cached: true, matchType: hit.matchType, local: executesLocally, leavesDevice: willLeave,
++      factGatePassed: ymylCheck ? ymylCheck.allowed : true,
++      rejectedClaims: ymylCheck ? ymylCheck.rejectedValues : [],
++      needsHumanApproval: Boolean(options.ymyl),
++    };
++  }
++
++  const estimatedCost = executesLocally ? 0 : (options.estimatedCostUsd ?? options.actualCostUsd ?? null);
++  const releaseBudget = reserveProjectBudget(options.projectId, executesLocally, estimatedCost, now);
++
++  try {
++    // 2. Cache miss: execute provider
++    const executed = await options.run(chosenProvider);
++  if (executed.transport && executed.transport !== transport) throw new Error('AI adapter transport contract mismatch');
++  const text = executed.text;
++  let costUsd: number | null;
++  let savedUsd = 0;
++
++  if (executesLocally) {
++    costUsd = 0;
++    savedUsd = executed.actualCostUsd ?? options.actualCostUsd ?? options.estimatedCostUsd ?? 0;
++  } else {
++    const observed = executed.actualCostUsd !== undefined ? executed.actualCostUsd
++      : options.actualCostUsd !== undefined ? options.actualCostUsd
++      : options.estimatedCostUsd !== undefined ? options.estimatedCostUsd
++      : null;
++    costUsd = observed !== null && Number.isFinite(observed) ? Math.max(0, observed) : null;
++  }
++
++  recordLlmCost(options.projectId, { providerId: chosenProvider, model, costUsd, savedUsd, cached: false, local: executesLocally }, now);
++
++  const ymylCheck = options.ymyl ? validateYmylClaim(text, options.sources ?? []) : null;
++  if (ymylCheck && !ymylCheck.allowed) {
++    return blockedResult({
++      text: '', providerId: chosenProvider, model, costUsd, savedUsd, cached: false, local: executesLocally,
++      leavesDevice: willLeave, factGatePassed: false, rejectedClaims: ymylCheck.rejectedValues, needsHumanApproval: true,
++    }, ymylCheck.rejectedValues);
++  }
++  storeProjectTask(options.projectId, chosenProvider, model, options.prompt, text, costUsd, options.vector, now.getTime());
++  return {
++    text, providerId: chosenProvider, model, costUsd, savedUsd, cached: false, local: executesLocally, leavesDevice: willLeave,
++    factGatePassed: ymylCheck ? ymylCheck.allowed : true,
++    rejectedClaims: ymylCheck ? ymylCheck.rejectedValues : [],
++    needsHumanApproval: Boolean(options.ymyl),
++  };
++  } finally { releaseBudget(); }
++};
+diff --git a/tests/cmsPatchYmylAssociation.test.ts b/tests/cmsPatchYmylAssociation.test.ts
+new file mode 100644
+index 00000000..1feb6119
+--- /dev/null
++++ b/tests/cmsPatchYmylAssociation.test.ts
+@@ -0,0 +1,50 @@
++import { describe, expect, it } from 'vitest';
++import { validateYmylClaim } from '@/services/llmEconomy/factGate';
++import { applyPatch, type ApplyDeps } from '@/services/cmsPatch/apply';
++import { planPatch } from '@/services/cmsPatch/plan';
++import { memoryStore, mockCms, target } from './fixtures/cmsMock';
++
++const depsFor = (cms: ReturnType<typeof mockCms>): ApplyDeps => ({
++  send: cms.send,
++  store: memoryStore(),
++  ctx: { actor: 'alice', role: 'developer', projectId: 'cms-gate' },
++  saveBackup: async () => undefined,
++});
++
++describe('CMS YMYL source and revision association', () => {
++  it('requires a reviewed source bound to the exact plan and revision', async () => {
++    const cms = mockCms('wordpress');
++    cms.state.content = '<h2>Pricing</h2><p>Fee is 100 PLN.</p>';
++    const plan = await planPatch({ target: target('wordpress'), heading: 'Pricing', replacement: '<p>Fee remains 100 PLN.</p>', ymyl: true }, cms.send);
++    const deps = depsFor(cms);
++    await expect(applyPatch(plan, { approvedBy: 'alice', planHash: plan.planHash, factGatePassed: true }, deps))
++      .rejects.toMatchObject({ code: 'fact-gate-required' });
++
++    const source = {
++      sourceId: 'cms-reviewed-source',
++      targetId: `${plan.target.baseUrl}\u0000${plan.target.contentId}`,
++      planHash: plan.planHash,
++      text: plan.before,
++      revision: plan.baseRevision,
++      reviewedBy: 'alice',
++      reviewedAt: '2026-10-27T12:00:00.000Z',
++    };
++    expect(validateYmylClaim(plan.replacement, [source]).allowed).toBe(true);
++    await expect(applyPatch(plan, { approvedBy: 'alice', planHash: plan.planHash, factGatePassed: true, sources: [source] }, deps))
++      .resolves.toMatchObject({ status: 'verified' });
++  });
++
++  it('rejects a caller source that is not bound to the live revision', async () => {
++    const cms = mockCms('wordpress');
++    cms.state.content = '<h2>Pricing</h2><p>Fee is 100 PLN.</p>';
++    const plan = await planPatch({ target: target('wordpress'), heading: 'Pricing', replacement: '<p>Fee is 999 PLN.</p>', ymyl: true }, cms.send);
++    const deps = depsFor(cms);
++    const source = {
++      sourceId: 'fake', targetId: `${plan.target.baseUrl}\u0000${plan.target.contentId}`, planHash: plan.planHash,
++      text: 'Fee is 999 PLN.', revision: plan.baseRevision, reviewedBy: 'alice', reviewedAt: '2026-10-27T12:00:00.000Z',
++    };
++    await expect(applyPatch(plan, { approvedBy: 'alice', planHash: plan.planHash, factGatePassed: true, sources: [source] }, deps))
++      .rejects.toMatchObject({ code: 'fact-gate-required' });
++    expect(cms.state.requests.every((request) => request.method === 'GET')).toBe(true);
++  });
++});
+diff --git a/tests/cmsPatchYmylGate.test.ts b/tests/cmsPatchYmylGate.test.ts
+new file mode 100644
+index 00000000..a9ef72eb
+--- /dev/null
++++ b/tests/cmsPatchYmylGate.test.ts
+@@ -0,0 +1,107 @@
++import { describe, expect, it } from 'vitest';
++import { validateYmylClaim } from '@/services/llmEconomy/factGate';
++import { applyPatch, type ApplyDeps } from '@/services/cmsPatch/apply';
++import { planPatch } from '@/services/cmsPatch/plan';
++import { memoryStore, mockCms, target } from './fixtures/cmsMock';
++
++const makeDeps = (role: 'developer' = 'developer') => {
++  const cms = mockCms('wordpress');
++  const store = memoryStore();
++  let saved = 0;
++  const deps: ApplyDeps = {
++    send: cms.send,
++    store,
++    ctx: { actor: 'alice', role, projectId: 'p1' },
++    saveBackup: async () => void saved++,
++  };
++  return { cms, store, deps, saved: () => saved };
++};
++
++describe('deterministic YMYL fact gate for CMS writes', () => {
++  it('blocks unverified numeric medical dosages before human approval', async () => {
++    const s = makeDeps();
++    const before = 'Patients take 200 mg ibuprofen twice daily.';
++    s.cms.state.content = `<h2>Dosage</h2><p>${before}</p>`;
++
++    const hallucinatedReplacement = '<p>Patients take 800 mg ibuprofen right now.</p>';
++    const gate = validateYmylClaim(hallucinatedReplacement, [before]);
++    expect(gate.allowed).toBe(false);
++    expect(gate.rejectedValues).toContain('800mg');
++    expect(gate.needsHumanApproval).toBe(true);
++
++    const plan = await planPatch({
++      target: target('wordpress'),
++      heading: 'Dosage',
++      replacement: hallucinatedReplacement,
++      ymyl: true,
++    }, s.cms.send);
++
++    await expect(applyPatch(plan, { approvedBy: 'alice', planHash: plan.planHash }, s.deps))
++      .rejects.toMatchObject({ code: 'fact-gate-required' });
++  });
++
++  it('refuses write even when caller forces factGatePassed: true on unsupported YMYL claims', async () => {
++    const s = makeDeps();
++    s.cms.state.content = '<h2>Dosage</h2><p>Standard intake is 200 mg.</p>';
++
++    const plan = await planPatch({
++      target: target('wordpress'),
++      heading: 'Dosage',
++      replacement: '<p>Standard intake is 999 mg right now.</p>',
++      ymyl: true,
++    }, s.cms.send);
++
++    // Caller forces factGatePassed: true with human approval, but facts are unsupported in source
++    await expect(applyPatch(plan, { approvedBy: 'alice', planHash: plan.planHash, factGatePassed: true }, s.deps))
++      .rejects.toMatchObject({ code: 'fact-gate-required' });
++
++    expect(s.saved()).toBe(0);
++    expect(s.cms.state.requests.every((r) => r.method === 'GET')).toBe(true);
++    expect(s.cms.state.content).toContain('200 mg');
++    expect(s.cms.state.content).not.toContain('999 mg');
++  });
++
++  it('allows verified numeric claims once human approvals are provided', async () => {
++    const s = makeDeps();
++    const before = 'Fee is 100 PLN with 2,5% tax.';
++    s.cms.state.content = `<h2>Pricing</h2><p>${before}</p>`;
++
++    const verifiedReplacement = '<p>Updated fee remains 100 PLN with 2.5% tax.</p>';
++    const gate = validateYmylClaim(verifiedReplacement, [before]);
++    expect(gate.allowed).toBe(true);
++    expect(gate.needsHumanApproval).toBe(true);
++
++    const plan = await planPatch({
++      target: target('wordpress'),
++      heading: 'Pricing',
++      replacement: verifiedReplacement,
++      ymyl: true,
++    }, s.cms.send);
++
++    const reviewedSource = {
++      sourceId: 'cms-reviewed-pricing',
++      targetId: `${plan.target.baseUrl}\u0000${plan.target.contentId}`,
++      planHash: plan.planHash,
++      text: plan.before,
++      revision: plan.baseRevision,
++      reviewedBy: 'alice',
++      reviewedAt: '2026-10-27T12:00:00.000Z',
++    };
++
++    const result = await applyPatch(
++      plan,
++      { approvedBy: 'alice', planHash: plan.planHash, factGatePassed: true, sources: [reviewedSource] },
++      s.deps,
++    );
++    expect(result.status).toBe('verified');
++  });
++
++  it('ignores caller-supplied source text and binds the gate to the read revision', async () => {
++    const s = makeDeps();
++    s.cms.state.content = '<h2>Pricing</h2><p>Fee is 100 PLN.</p>';
++    const plan = await planPatch({ target: target('wordpress'), heading: 'Pricing', replacement: '<p>Fee is 999 PLN.</p>', ymyl: true }, s.cms.send);
++    const approval = { approvedBy: 'alice', planHash: plan.planHash, factGatePassed: true, sources: ['Fee is 999 PLN.'] } as never;
++    await expect(applyPatch(plan, approval, s.deps)).rejects.toMatchObject({ code: 'fact-gate-required' });
++    expect(s.saved()).toBe(0);
++  });
++});
+diff --git a/tests/llmEconomyAppIntegration.test.ts b/tests/llmEconomyAppIntegration.test.ts
+new file mode 100644
+index 00000000..59968c63
+--- /dev/null
++++ b/tests/llmEconomyAppIntegration.test.ts
+@@ -0,0 +1,121 @@
++import { beforeEach, describe, expect, it, vi } from 'vitest';
++import { AIService } from '@/services/ai';
++import { useAuthStore } from '@/stores/authStore';
++import { useProjectStore } from '@/stores/projectStore';
++import { readLlmSpend, writeLlmBudget } from '@/services/llmEconomy/llmBudget';
++import { clearExactCache } from '@/services/llmEconomy/semanticCache';
++import { createAuditFixture } from './fixtures/audit';
++
++const P = 'p_app_integration';
++
++const mockResponse = (text: string) =>
++  new Response(JSON.stringify({ choices: [{ message: { content: text } }] }), {
++    status: 200, headers: { 'Content-Type': 'application/json' },
++  });
++
++beforeEach(() => {
++  localStorage.clear();
++  clearExactCache();
++  useProjectStore.setState({ activeProjectId: P });
++  useAuthStore.setState({
++    provider: 'openai',
++    model: 'gpt-4o',
++    apiKeys: { openai: 'test-key', claude: '', gemini: '' },
++    connectionStatus: { openai: 'connected', claude: 'unconfigured', gemini: 'unconfigured' },
++    connectionMethod: { openai: 'api_key', claude: 'api_key', gemini: 'api_key' },
++  });
++});
++
++describe('AIService and store integration with LLM economy', () => {
++  it('routes AIService.generateText through project budget and exact cache', async () => {
++    writeLlmBudget(P, { monthlyLimitUsd: 10, warnAtPercent: 80 });
++
++    const fetchMock = vi.fn().mockImplementation(async () => mockResponse('Generated text'));
++    vi.stubGlobal('fetch', fetchMock);
++
++    // Call 1: Miss
++    const res1 = await AIService.generateText('openai', 'test-key', 'gpt-4o', 'Summarize this page', 'api_key', {
++      projectId: P, estimatedCostUsd: 0.05, actualCostUsd: 0.05,
++    });
++    expect(res1).toBe('Generated text');
++    expect(fetchMock).toHaveBeenCalledTimes(1);
++
++    const spend1 = readLlmSpend(P);
++    expect(spend1.spentUsd).toBe(0.05);
++    expect(spend1.calls).toBe(1);
++    expect(spend1.cacheHits).toBe(0);
++
++    // Call 2: Exact repeat hit within project
++    const res2 = await AIService.generateText('openai', 'test-key', 'gpt-4o', 'Summarize this page', 'api_key', {
++      projectId: P, estimatedCostUsd: 0.05,
++    });
++    expect(res2).toBe('Generated text');
++    expect(fetchMock).toHaveBeenCalledTimes(1); // No new network call
++
++    const spend2 = readLlmSpend(P);
++    expect(spend2.spentUsd).toBe(0.05);
++    expect(spend2.savedUsd).toBe(0.05);
++    expect(spend2.calls).toBe(2);
++    expect(spend2.cacheHits).toBe(1);
++
++    vi.unstubAllGlobals();
++  });
++
++  it('routes through cosine semantic cache when comparable vector is provided', async () => {
++    writeLlmBudget(P, { monthlyLimitUsd: 10, warnAtPercent: 80 });
++
++    const fetchMock = vi.fn().mockImplementation(async () => mockResponse('Semantic response'));
++    vi.stubGlobal('fetch', fetchMock);
++
++    // Store entry with vector [1, 0, 0]
++    await AIService.generateText('openai', 'test-key', 'gpt-4o', 'What is SEO?', 'api_key', {
++      projectId: P, estimatedCostUsd: 0.04, actualCostUsd: 0.04, vector: [1, 0, 0],
++    });
++    expect(fetchMock).toHaveBeenCalledTimes(1);
++
++    // Query with close vector [0.99, 0.01, 0] (cosine > 0.95 threshold) but slightly different wording
++    const semHit = await AIService.generateText('openai', 'test-key', 'gpt-4o', 'Explain SEO concept', 'api_key', {
++      projectId: P, estimatedCostUsd: 0.04, vector: [0.99, 0.01, 0],
++    });
++    expect(semHit).toBe('Semantic response');
++    expect(fetchMock).toHaveBeenCalledTimes(1); // Served from cosine semantic cache
++
++    const spend = readLlmSpend(P);
++    expect(spend.cacheHits).toBe(1);
++    expect(spend.savedUsd).toBe(0.04);
++
++    vi.unstubAllGlobals();
++  });
++
++  it('blocks useAuthStore.generateText when project budget is exceeded', async () => {
++    writeLlmBudget(P, { monthlyLimitUsd: 0.06, warnAtPercent: 80 });
++
++    const fetchMock = vi.fn().mockImplementation(async () => mockResponse('Response'));
++    vi.stubGlobal('fetch', fetchMock);
++
++    // First call uses $0.05 of $0.06 budget
++    await AIService.generateText('openai', 'test-key', 'gpt-4o', 'Initial prompt', 'api_key', {
++      projectId: P, actualCostUsd: 0.05, estimatedCostUsd: 0.05,
++    });
++
++    // Second call without cost estimate under budget cap must be blocked
++    await expect(useAuthStore.getState().generateText('Next unpriced prompt'))
++      .rejects.toThrow();
++
++    vi.unstubAllGlobals();
++  });
++
++  it('routes assistant suggestions through the project economy boundary', async () => {
++    writeLlmBudget(P, { monthlyLimitUsd: null, warnAtPercent: 80 });
++    const fetchMock = vi.fn().mockImplementation(async () => mockResponse(JSON.stringify({
++      suggestedTitle: 'Observed title', suggestedDescription: 'Observed description',
++      keyImprovements: ['Observed improvement'], schemaJsonLd: { '@type': 'WebPage' },
++    })));
++    vi.stubGlobal('fetch', fetchMock);
++    const audit = createAuditFixture();
++    await expect(useAuthStore.getState().generateSuggestions(audit, 'Keep evidence')).resolves.toMatchObject({ suggestedTitle: 'Observed title' });
++    expect(fetchMock).toHaveBeenCalledTimes(1);
++    expect(readLlmSpend(P).calls).toBe(1);
++    vi.unstubAllGlobals();
++  });
++});
+diff --git a/tests/llmEconomyBudget.test.ts b/tests/llmEconomyBudget.test.ts
+new file mode 100644
+index 00000000..3f126c26
+--- /dev/null
++++ b/tests/llmEconomyBudget.test.ts
+@@ -0,0 +1,96 @@
++import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
++import i18n from '@/i18n';
++import {
++  llmBudgetStatus, monthKey, readLlmBudget, readLlmSpend, readLlmUsageSummary,
++  recordLlmCost, withinProjectBudget, writeLlmBudget, LLM_ECONOMY_EVENT,
++} from '@/services/llmEconomy/llmBudget';
++
++const P = 'proj_test_1';
++const oct = new Date(2026, 9, 15, 12);
++
++beforeEach(async () => {
++  localStorage.clear();
++  await i18n.changeLanguage('en');
++});
++afterEach(() => vi.restoreAllMocks());
++
++describe('llmBudget settings', () => {
++  it('defaults to no monthly limit and 80% warning', () => {
++    expect(readLlmBudget(P)).toEqual({ monthlyLimitUsd: null, warnAtPercent: 80 });
++  });
++
++  it('writes valid limits and rejects invalid ones', () => {
++    expect(writeLlmBudget(P, { monthlyLimitUsd: 50, warnAtPercent: 90 })).toEqual({ monthlyLimitUsd: 50, warnAtPercent: 90 });
++    expect(readLlmBudget(P)).toEqual({ monthlyLimitUsd: 50, warnAtPercent: 90 });
++    expect(() => writeLlmBudget(P, { monthlyLimitUsd: -5, warnAtPercent: 80 })).toThrow();
++    expect(() => writeLlmBudget(P, { monthlyLimitUsd: 200_000, warnAtPercent: 80 })).toThrow();
++    expect(() => writeLlmBudget(P, { monthlyLimitUsd: 10, warnAtPercent: 0 })).toThrow();
++    expect(() => writeLlmBudget(P, { monthlyLimitUsd: 10, warnAtPercent: 101 })).toThrow();
++    localStorage.setItem(`seomi_project_${P}_llm_budget_v1`, '{"monthlyLimitUsd":"bad"}');
++    expect(readLlmBudget(P)).toEqual({ monthlyLimitUsd: null, warnAtPercent: 80 });
++  });
++});
++
++describe('llmSpend tracking and privacy', () => {
++  it('records spend, savings and cache hits without leaking private text to storage', () => {
++    const listener = vi.fn();
++    window.addEventListener(LLM_ECONOMY_EVENT, listener);
++    recordLlmCost(P, { providerId: 'openai', model: 'gpt-4o', costUsd: 0.05 }, oct);
++    recordLlmCost(P, { providerId: 'ollama', model: 'llama3', costUsd: 0.02, local: true }, oct);
++    recordLlmCost(P, { providerId: 'openai', model: 'gpt-4o', costUsd: 0.05, savedUsd: 0.05, cached: true }, oct);
++    window.removeEventListener(LLM_ECONOMY_EVENT, listener);
++
++    const spend = readLlmSpend(P, oct);
++    expect(spend.month).toBe('2026-10');
++    expect(spend.spentUsd).toBe(0.05);
++    expect(spend.savedUsd).toBe(0.07);
++    expect(spend.cacheHits).toBe(1);
++    expect(spend.calls).toBe(3);
++    expect(spend.lastCostByProvider.openai).toBe(0.05);
++    expect(spend.lastCall?.providerId).toBe('openai');
++    expect(spend.lastCall?.cached).toBe(true);
++    expect(listener).toHaveBeenCalledTimes(3);
++
++    const rawStored = localStorage.getItem(`seomi_project_${P}_llm_spend_v1`) ?? '';
++    expect(rawStored).not.toContain('prompt');
++    expect(rawStored).not.toContain('secret');
++  });
++
++  it('resets month-to-date counters across new months while keeping provider costs', () => {
++    recordLlmCost(P, { providerId: 'claude', costUsd: 1.5 }, new Date(2026, 8, 30));
++    const next = readLlmSpend(P, oct);
++    expect(next.month).toBe(monthKey(oct));
++    expect(next.spentUsd).toBe(0);
++    expect(next.calls).toBe(0);
++    expect(next.lastCostByProvider.claude).toBe(1.5);
++  });
++
++  it('reports status levels and guards next calls', () => {
++    writeLlmBudget(P, { monthlyLimitUsd: 10, warnAtPercent: 80 });
++    expect(withinProjectBudget(P, 5)).toBe(true);
++    recordLlmCost(P, { providerId: 'openai', costUsd: 8.5 }, oct);
++    const spend = readLlmSpend(P, oct);
++    const budget = readLlmBudget(P);
++    const status = llmBudgetStatus(spend, budget);
++    expect(status.level).toBe('warning');
++    expect(status.remainingUsd).toBe(1.5);
++    expect(withinProjectBudget(P, 2)).toBe(false);
++
++    recordLlmCost(P, { providerId: 'openai', costUsd: 2 }, oct);
++    expect(llmBudgetStatus(readLlmSpend(P, oct), budget).level).toBe('exceeded');
++  });
++
++  it('produces a summary compatible with costMeter', () => {
++    writeLlmBudget(P, { monthlyLimitUsd: 10, warnAtPercent: 80 });
++    recordLlmCost(P, { providerId: 'openai', costUsd: 2, savedUsd: 1, cached: true }, oct);
++    const summary = readLlmUsageSummary(P, oct);
++    expect(summary).toEqual({
++      spentUsd: 0,
++      savedUsd: 1,
++      cacheHits: 1,
++      calls: 1,
++      remainingUsd: 10,
++      overBudget: false,
++    });
++  });
++});
+diff --git a/tests/llmEconomyBudgetEdgeCases.test.ts b/tests/llmEconomyBudgetEdgeCases.test.ts
+new file mode 100644
+index 00000000..4f904751
+--- /dev/null
++++ b/tests/llmEconomyBudgetEdgeCases.test.ts
+@@ -0,0 +1,110 @@
++import { beforeEach, describe, expect, it, vi } from 'vitest';
++import * as storageModule from '@/services/storage';
++import {
++  clearProjectLlmBudgetAndSpend,
++  llmBudgetStatus,
++  readLlmBudget,
++  readLlmSpend,
++  recordLlmCost,
++  withinProjectBudget,
++  writeLlmBudget,
++} from '@/services/llmEconomy/llmBudget';
++
++const P = 'p_edge_cases';
++const oct = new Date(2026, 9, 20);
++
++beforeEach(() => {
++  localStorage.clear();
++});
++
++describe('llmBudget edge cases and fault tolerance', () => {
++  it('handles array, null, and corrupt JSON in storage safely', () => {
++    localStorage.setItem(`seomi_project_${P}_llm_budget_v1`, '["not", "an", "object"]');
++    expect(readLlmBudget(P)).toEqual({ monthlyLimitUsd: null, warnAtPercent: 80 });
++
++    localStorage.setItem(`seomi_project_${P}_llm_budget_v1`, '{bad json');
++    expect(readLlmBudget(P)).toEqual({ monthlyLimitUsd: null, warnAtPercent: 80 });
++
++    localStorage.setItem(`seomi_project_${P}_llm_spend_v1`, 'null');
++    expect(readLlmSpend(P, oct)).toMatchObject({ spentUsd: 0, calls: 0, lastCall: null });
++
++    localStorage.setItem(`seomi_project_${P}_llm_spend_v1`, '{corrupt');
++    expect(readLlmSpend(P, oct)).toMatchObject({ spentUsd: 0, calls: 0, lastCall: null });
++  });
++
++  it('tolerates partial lastCall and non-integer counters in spend record', () => {
++    localStorage.setItem(
++      `seomi_project_${P}_llm_spend_v1`,
++      JSON.stringify({
++        month: '2026-10',
++        spentUsd: 1.5,
++        savedUsd: 0.5,
++        cacheHits: 'invalid',
++        calls: null,
++        lastCostByProvider: { openai: 1.5, bad: 'text' },
++        lastCall: { providerId: 'openai', costUsd: 1.5, at: '2026-10-20T10:00:00.000Z' },
++      }),
++    );
++    const spend = readLlmSpend(P, oct);
++    expect(spend.calls).toBe(0);
++    expect(spend.cacheHits).toBe(0);
++    expect(spend.lastCostByProvider).toEqual({ openai: 1.5 });
++    expect(spend.lastCall?.providerId).toBe('openai');
++    expect(spend.lastCall?.model).toBeUndefined();
++
++    localStorage.setItem(
++      `seomi_project_${P}_llm_spend_v1`,
++      JSON.stringify({ month: '2026-10', lastCall: { providerId: 'openai', costUsd: -1, at: 123 } }),
++    );
++    expect(readLlmSpend(P, oct).lastCall).toBeNull();
++  });
++
++  it('handles zero budget limit edge cases and ok status level', () => {
++    const zeroSpend = { month: '2026-10', spentUsd: 0, savedUsd: 0, cacheHits: 0, calls: 0, lastCostByProvider: {}, lastCall: null };
++    const positiveSpend = { ...zeroSpend, spentUsd: 0.01 };
++    const zeroBudget = { monthlyLimitUsd: 0, warnAtPercent: 80 };
++
++    expect(llmBudgetStatus(zeroSpend, zeroBudget)).toEqual({ level: 'exceeded', percent: 0, remainingUsd: 0 });
++    expect(llmBudgetStatus(positiveSpend, zeroBudget)).toEqual({ level: 'exceeded', percent: 100, remainingUsd: 0 });
++    expect(llmBudgetStatus({ ...zeroSpend, spentUsd: 4 }, { monthlyLimitUsd: 10, warnAtPercent: 80 })).toEqual({ level: 'ok', percent: 40, remainingUsd: 6 });
++  });
++
++  it('falls back to raw cost when local call does not specify savedUsd and handles non-finite cost', () => {
++    recordLlmCost(P, { providerId: 'ollama', costUsd: 0.07, local: true }, oct);
++    expect(readLlmSpend(P, oct).savedUsd).toBe(0.07);
++
++    recordLlmCost(P, { providerId: 'openai', costUsd: Number.NaN }, oct);
++    expect(readLlmSpend(P, oct).calls).toBe(2);
++  });
++
++  it('survives storage write failure gracefully', () => {
++    const spy = vi.spyOn(storageModule, 'writeStorage').mockImplementation(() => {
++      throw new Error('QuotaExceeded');
++    });
++    expect(() => recordLlmCost(P, { providerId: 'openai', costUsd: 0.1 }, oct)).not.toThrow();
++    spy.mockRestore();
++  });
++
++  it('clears budget and spend via clearProjectLlmBudgetAndSpend', () => {
++    writeLlmBudget(P, { monthlyLimitUsd: 15, warnAtPercent: 80 });
++    recordLlmCost(P, { providerId: 'openai', costUsd: 2 });
++    clearProjectLlmBudgetAndSpend(P);
++    expect(readLlmBudget(P).monthlyLimitUsd).toBeNull();
++    expect(readLlmSpend(P).spentUsd).toBe(0);
++  });
++
++  it('checks budget without specifying date argument', () => {
++    expect(withinProjectBudget(P, 5)).toBe(true);
++  });
++
++  it('covers null budget status, null cost in withinProjectBudget, and cached call with null cost', () => {
++    const zeroSpend = { month: '2026-10', spentUsd: 0, savedUsd: 0, cacheHits: 0, calls: 0, lastCostByProvider: {}, lastCall: null };
++    expect(llmBudgetStatus(zeroSpend, { monthlyLimitUsd: null, warnAtPercent: 80 })).toEqual({ level: 'none', percent: null, remainingUsd: null });
++
++    writeLlmBudget(P, { monthlyLimitUsd: 10, warnAtPercent: 80 });
++    expect(withinProjectBudget(P, null)).toBe(false);
++
++    recordLlmCost(P, { providerId: 'openai', costUsd: null, cached: true }, oct);
++    expect(readLlmSpend(P, oct).calls).toBe(1);
++  });
++});
+diff --git a/tests/llmEconomyErasure.test.ts b/tests/llmEconomyErasure.test.ts
+new file mode 100644
+index 00000000..a11429cd
+--- /dev/null
++++ b/tests/llmEconomyErasure.test.ts
+@@ -0,0 +1,65 @@
++import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
++import { eraseProjectData, forgetSubject } from '@/services/dataErasure';
++import {
++  readLlmBudget, readLlmSpend, recordLlmCost, writeLlmBudget,
++} from '@/services/llmEconomy/llmBudget';
++import {
++  exactCacheSize, findProjectCachedTask, storeProjectTask,
++} from '@/services/llmEconomy/semanticCache';
++
++const native = vi.hoisted(() => ({ invokeTauriCommand: vi.fn(), isTauriEnvironment: () => true }));
++vi.mock('@/services/tauri', () => native);
++
++const P = 'proj_erasure_test';
++const mockReport = {
++  auditId: 1, projectId: P, subjectId: 's', action: 'erase_project' as const,
++  keyId: 'k', recordsDeleted: 1, runsDeleted: 0, atMs: Date.now(),
++};
++
++beforeEach(() => {
++  localStorage.clear();
++  native.invokeTauriCommand.mockImplementation(async (command: string) => {
++    if (command === 'load_project_crawl_runs') return [];
++    if (command === 'store_import_legacy_runs') return 0;
++    return mockReport;
++  });
++});
++
++afterEach(() => {
++  native.invokeTauriCommand.mockReset();
++  localStorage.clear();
++});
++
++describe('LLM economy project erasure and cache boundary', () => {
++  it('erases project budget, spend ledger and in-memory cache when erasing project', async () => {
++    writeLlmBudget(P, { monthlyLimitUsd: 25, warnAtPercent: 80 });
++    recordLlmCost(P, { providerId: 'openai', costUsd: 1.5 });
++    storeProjectTask(P, 'openai', 'gpt-4o', 'Private prompt', 'Private answer', 1.5);
++
++    expect(readLlmBudget(P).monthlyLimitUsd).toBe(25);
++    expect(readLlmSpend(P).spentUsd).toBe(1.5);
++    expect(exactCacheSize(P)).toBe(1);
++    expect(findProjectCachedTask(P, 'gpt-4o', 'Private prompt')).not.toBeNull();
++
++    await eraseProjectData(P);
++
++    expect(readLlmBudget(P).monthlyLimitUsd).toBeNull();
++    expect(readLlmSpend(P).spentUsd).toBe(0);
++    expect(readLlmSpend(P).calls).toBe(0);
++    expect(readLlmSpend(P).lastCall).toBeNull();
++    expect(exactCacheSize(P)).toBe(0);
++    expect(findProjectCachedTask(P, 'gpt-4o', 'Private prompt')).toBeNull();
++  });
++
++  it('erases project budget, spend and cache when forgetting subject', async () => {
++    writeLlmBudget(P, { monthlyLimitUsd: 50, warnAtPercent: 90 });
++    recordLlmCost(P, { providerId: 'claude', costUsd: 3.0 });
++    storeProjectTask(P, 'claude', 'sonnet', 'Subject prompt', 'Subject response', 3.0);
++
++    await forgetSubject(P, 'subj-1');
++
++    expect(readLlmBudget(P).monthlyLimitUsd).toBeNull();
++    expect(readLlmSpend(P).spentUsd).toBe(0);
++    expect(exactCacheSize(P)).toBe(0);
++  });
++});
+diff --git a/tests/llmEconomyGateAcceptance.test.ts b/tests/llmEconomyGateAcceptance.test.ts
+new file mode 100644
+index 00000000..02c2267f
+--- /dev/null
++++ b/tests/llmEconomyGateAcceptance.test.ts
+@@ -0,0 +1,69 @@
++import { beforeEach, describe, expect, it, vi } from 'vitest';
++import { executeWithEconomy } from '@/services/llmEconomy/orchestrator';
++import { clearExactCache, findProjectCachedTask } from '@/services/llmEconomy/semanticCache';
++import { readLlmStorageState, writeLlmBudget } from '@/services/llmEconomy/llmBudget';
++
++const projectId = 'llm-gate-acceptance';
++const now = new Date('2026-10-27T12:00:00.000Z');
++
++beforeEach(() => {
++  localStorage.clear();
++  clearExactCache();
++});
++
++describe('LLM economy acceptance gates', () => {
++  it('revalidates YMYL for a caller joining an ordinary in-flight request', async () => {
++    let release!: (value: { text: string; actualCostUsd: number }) => void;
++    const run = vi.fn(() => new Promise<{ text: string; actualCostUsd: number }>((resolve) => { release = resolve; }));
++    const ordinary = executeWithEconomy({ projectId, configuredProviders: ['openai'], prompt: 'same task', estimatedCostUsd: 0.1, run, now });
++    const strict = executeWithEconomy({
++      projectId, configuredProviders: ['openai'], prompt: 'same task', ymyl: true,
++      sources: [{ sourceId: 'review-1', text: 'Approved dose is 100 mg.', reviewedBy: 'alice', reviewedAt: now.toISOString() }],
++      estimatedCostUsd: 0.1, run, now,
++    });
++    release({ text: 'Take 900 mg.', actualCostUsd: 0.1 });
++    await expect(ordinary).resolves.toMatchObject({ text: 'Take 900 mg.', factGatePassed: true });
++    await expect(strict).resolves.toMatchObject({ text: '', factGatePassed: false, cached: false, rejectedClaims: ['900mg'] });
++    expect(run).toHaveBeenCalledTimes(1);
++  });
++
++  it('does not cache a rejected YMYL response and never returns its text', async () => {
++    const run = vi.fn().mockResolvedValue({ text: 'Take 900 mg.', actualCostUsd: 0.1 });
++    const result = await executeWithEconomy({
++      projectId, configuredProviders: ['openai'], prompt: 'rejected task', ymyl: true,
++      sources: [{ sourceId: 'review-1', text: 'Approved dose is 100 mg.', reviewedBy: 'alice', reviewedAt: now.toISOString() }],
++      estimatedCostUsd: 0.1, run, now,
++    });
++    expect(result.text).toBe('');
++    expect(result.factGatePassed).toBe(false);
++    expect(findProjectCachedTask(projectId, 'default', 'rejected task', undefined, undefined, 'openai', now.getTime())).toBeNull();
++  });
++
++  it('fails closed for corrupt budget storage before a billable cloud call', async () => {
++    writeLlmBudget(projectId, { monthlyLimitUsd: 1, warnAtPercent: 80 });
++    localStorage.setItem(`seomi_project_${projectId}_llm_budget_v1`, '{broken');
++    const run = vi.fn().mockResolvedValue({ text: 'should not run', actualCostUsd: 0.1 });
++    await expect(executeWithEconomy({ projectId, configuredProviders: ['openai'], prompt: 'corrupt budget', estimatedCostUsd: 0.1, run, now }))
++      .rejects.toThrow('budget storage');
++    expect(run).not.toHaveBeenCalled();
++    expect(readLlmStorageState(projectId).budget).toBe('invalid');
++  });
++
++  it('uses the declared adapter transport instead of trusting a local-looking provider id', async () => {
++    const result = await executeWithEconomy({
++      projectId, configuredProviders: ['ollama'], providerId: 'ollama', transport: 'cloud',
++      prompt: 'adapter transport', estimatedCostUsd: 0.2,
++      run: async () => ({ text: 'cloud answer', actualCostUsd: 0.2, transport: 'cloud' }), now,
++    });
++    expect(result.local).toBe(false);
++    expect(result.leavesDevice).toBe(true);
++    expect(result.costUsd).toBe(0.2);
++  });
++
++  it('rejects a forged local transport for a hosted provider id', async () => {
++    await expect(executeWithEconomy({
++      projectId, configuredProviders: ['openai'], providerId: 'openai', transport: 'local', prompt: 'forged local',
++      run: async () => ({ text: 'must not run', transport: 'local' }), now,
++    })).rejects.toThrow('known local provider');
++  });
++});
+diff --git a/tests/llmEconomyLocales.test.ts b/tests/llmEconomyLocales.test.ts
+new file mode 100644
+index 00000000..789fef26
+--- /dev/null
++++ b/tests/llmEconomyLocales.test.ts
+@@ -0,0 +1,19 @@
++import { readFileSync } from 'node:fs';
++import { resolve } from 'node:path';
++import { describe, expect, it } from 'vitest';
++
++const LOCALES = ['ar', 'de', 'en', 'es', 'fr', 'it', 'ja', 'ko', 'pl', 'pt', 'ru', 'zh'];
++const REQUIRED_KEYS = ['title', 'empty', 'spent', 'saved', 'hits', 'leaves', 'remaining', 'overBudget'];
++
++describe('llmEconomy locales parity across all 12 languages', () => {
++  it.each(LOCALES)('includes complete llmEconomy bundle in %s.json', (locale) => {
++    const file = resolve(__dirname, `../src/i18n/locales/${locale}.json`);
++    const content = JSON.parse(readFileSync(file, 'utf8'));
++    expect(content.llmEconomy).toBeDefined();
++    for (const key of REQUIRED_KEYS) {
++      expect(content.llmEconomy[key], `Missing ${key} in ${locale}.json`).toBeDefined();
++      expect(typeof content.llmEconomy[key]).toBe('string');
++      expect(content.llmEconomy[key].trim().length).toBeGreaterThan(0);
++    }
++  });
++});
+diff --git a/tests/llmEconomyOrchestrator.test.ts b/tests/llmEconomyOrchestrator.test.ts
+new file mode 100644
+index 00000000..2f7d88d2
+--- /dev/null
++++ b/tests/llmEconomyOrchestrator.test.ts
+@@ -0,0 +1,141 @@
++import { beforeEach, describe, expect, it, vi } from 'vitest';
++import { executeWithEconomy } from '@/services/llmEconomy/orchestrator';
++import { clearExactCache } from '@/services/llmEconomy/semanticCache';
++import { readLlmSpend, writeLlmBudget } from '@/services/llmEconomy/llmBudget';
++
++const P = 'proj_orch_test';
++const oct = new Date(2026, 9, 16);
++
++beforeEach(() => {
++  localStorage.clear();
++  clearExactCache();
++});
++
++describe('executeWithEconomy orchestrator', () => {
++  it('throws error when no provider is configured', async () => {
++    await expect(executeWithEconomy({ projectId: P, configuredProviders: [], prompt: 'p', run: async () => ({ text: '' }) }))
++      .rejects.toThrow('No AI provider configured');
++  });
++
++  it('runs with explicit providerId and custom model', async () => {
++    const res = await executeWithEconomy({
++      projectId: P, configuredProviders: ['openai'], providerId: 'gemini', model: 'gemini-1.5-pro', prompt: 'p1',
++      run: async (provider) => ({ text: `provider=${provider}`, actualCostUsd: 0.05 }), now: oct,
++    });
++    expect(res.providerId).toBe('gemini');
++    expect(res.model).toBe('gemini-1.5-pro');
++    expect(res.costUsd).toBe(0.05);
++  });
++
++  it('falls back to estimatedCostUsd when actualCostUsd is not provided by runner', async () => {
++    const res = await executeWithEconomy({
++      projectId: P, configuredProviders: ['openai'], prompt: 'p2', estimatedCostUsd: 0.04,
++      run: async () => ({ text: 'est' }), now: oct,
++    });
++    expect(res.costUsd).toBe(0.04);
++  });
++
++  it('runs with default model and default now when omitted', async () => {
++    const res = await executeWithEconomy({ projectId: P, configuredProviders: ['ollama'], prompt: 'p3', run: async () => ({ text: 'ok' }) });
++    expect(res.model).toBe('default');
++    expect(res.text).toBe('ok');
++  });
++
++  it('respects custom batchThreshold and falls back to zero cost when cost is undefined', async () => {
++    const res = await executeWithEconomy({
++      projectId: P, configuredProviders: ['openai', 'ollama'], batchSize: 10, batchThreshold: 5, prompt: 'p4',
++      run: async () => ({ text: 'ok' }), now: oct,
++    });
++    expect(res.providerId).toBe('ollama');
++    expect(res.costUsd).toBe(0);
++  });
++
++  it('falls back to actualCostUsd from options when run does not return it and handles zero cost', async () => {
++    const res = await executeWithEconomy({
++      projectId: P, configuredProviders: ['openai'], prompt: 'p5', actualCostUsd: 0.03, run: async () => ({ text: 'ok' }), now: oct,
++    });
++    expect(res.costUsd).toBe(0.03);
++
++    const zero = await executeWithEconomy({
++      projectId: P, configuredProviders: ['openai'], prompt: 'p5-zero', run: async () => ({ text: 'zero' }), now: oct,
++    });
++    expect(zero.costUsd).toBeNull();
++  });
++
++  it('prefers local provider for large batches', async () => {
++    const res = await executeWithEconomy({
++      projectId: P, configuredProviders: ['openai', 'ollama'], batchSize: 100, prompt: 'p6', run: vi.fn().mockResolvedValue({ text: 'ok' }), now: oct,
++    });
++    expect(res.providerId).toBe('ollama');
++    expect(res.leavesDevice).toBe(false);
++    expect(res.costUsd).toBe(0);
++  });
++
++  it('blocks execution when project budget is exceeded', async () => {
++    writeLlmBudget(P, { monthlyLimitUsd: 1, warnAtPercent: 80 });
++    await executeWithEconomy({ projectId: P, configuredProviders: ['openai'], prompt: 'c1', estimatedCostUsd: 0.9, actualCostUsd: 0.9, run: async () => ({ text: '1' }), now: oct });
++    await expect(executeWithEconomy({ projectId: P, configuredProviders: ['openai'], prompt: 'c2', estimatedCostUsd: 0.2, run: async () => ({ text: '2' }), now: oct }))
++      .rejects.toThrow('Project LLM budget exceeded');
++  });
++
++  it('serves identical tasks from cache at zero cost and records savings', async () => {
++    const runner = vi.fn().mockResolvedValue({ text: 'cached' });
++    const first = await executeWithEconomy({ projectId: P, configuredProviders: ['openai'], prompt: 'same', estimatedCostUsd: 0.05, actualCostUsd: 0.05, run: runner, now: oct });
++    expect(first.cached).toBe(false);
++    const second = await executeWithEconomy({ projectId: P, configuredProviders: ['openai'], prompt: 'same', estimatedCostUsd: 0.05, run: runner, now: oct });
++    expect(second.cached).toBe(true);
++    expect(second.costUsd).toBe(0);
++    expect(second.savedUsd).toBe(0.05);
++    expect(runner).toHaveBeenCalledTimes(1);
++    const spend = readLlmSpend(P, oct);
++    expect(spend.cacheHits).toBe(1);
++  });
++
++  it('serves a cached external task without a price estimate under an active budget', async () => {
++    writeLlmBudget(P, { monthlyLimitUsd: 1, warnAtPercent: 80 });
++    const runner = vi.fn().mockResolvedValue({ text: 'cached', actualCostUsd: 0.05 });
++    await executeWithEconomy({ projectId: P, configuredProviders: ['openai'], prompt: 'budget-cache', estimatedCostUsd: 0.05, run: runner, now: oct });
++    await expect(executeWithEconomy({ projectId: P, configuredProviders: ['openai'], prompt: 'budget-cache', run: runner, now: oct })).resolves.toMatchObject({ cached: true, costUsd: 0 });
++    expect(runner).toHaveBeenCalledTimes(1);
++  });
++
++  it('enforces deterministic YMYL gate on both cache miss and cache hit', async () => {
++    const ymylFail = await executeWithEconomy({
++      projectId: P, configuredProviders: ['openai'], prompt: 'med-fail', ymyl: true, sources: ['Intake is 100 mg.'],
++      run: async () => ({ text: 'Take 900 mg.' }), now: oct,
++    });
++    expect(ymylFail.factGatePassed).toBe(false);
++    expect(ymylFail.rejectedClaims).toContain('900mg');
++    expect(ymylFail.needsHumanApproval).toBe(true);
++
++    const ymylPass = await executeWithEconomy({
++      projectId: P, configuredProviders: ['openai'], prompt: 'med-pass', ymyl: true, sources: ['Intake is 100 mg.'],
++      run: async () => ({ text: 'Take 100 mg.' }), now: oct,
++    });
++    expect(ymylPass.factGatePassed).toBe(true);
++    expect(ymylPass.needsHumanApproval).toBe(true);
++
++    // Cache hit with YMYL
++    const cachedHit = await executeWithEconomy({
++      projectId: P, configuredProviders: ['openai'], prompt: 'med-pass', ymyl: true, sources: ['Intake is 100 mg.'],
++      run: async () => ({ text: 'Different' }), now: oct,
++    });
++    expect(cachedHit.cached).toBe(true);
++    expect(cachedHit.factGatePassed).toBe(true);
++    expect(cachedHit.needsHumanApproval).toBe(true);
++
++    // Omitted sources are rejected and the unsafe response is not cached.
++    const missNoSrc = await executeWithEconomy({
++      projectId: P, configuredProviders: ['openai'], prompt: 'no-src', ymyl: true,
++      run: async () => ({ text: 'Take 50 mg daily.' }), now: oct,
++    });
++    expect(missNoSrc.factGatePassed).toBe(false);
++
++    const hitNoSrc = await executeWithEconomy({
++      projectId: P, configuredProviders: ['openai'], prompt: 'med-fail', ymyl: true,
++      run: async () => ({ text: 'Take 50 mg daily.' }), now: oct,
++    });
++    expect(hitNoSrc.cached).toBe(false);
++    expect(hitNoSrc.factGatePassed).toBe(false);
++  });
++});
+diff --git a/tests/llmEconomyPanelLive.test.tsx b/tests/llmEconomyPanelLive.test.tsx
+new file mode 100644
+index 00000000..5ccab672
+--- /dev/null
++++ b/tests/llmEconomyPanelLive.test.tsx
+@@ -0,0 +1,58 @@
++import { render, screen } from '@testing-library/react';
++import { beforeEach, describe, expect, it } from 'vitest';
++import '@/i18n';
++import { LlmEconomyPanel } from '@/components/AI/LlmEconomyPanel';
++import { LlmEconomyBudgetSettings } from '@/components/AI/LlmEconomyBudgetSettings';
++import { useProjectStore } from '@/stores/projectStore';
++import { recordLlmCost, writeLlmBudget } from '@/services/llmEconomy/llmBudget';
++
++const P = 'p_panel_test';
++
++beforeEach(() => {
++  localStorage.clear();
++  useProjectStore.setState({ activeProjectId: P });
++});
++
++describe('LlmEconomyPanel live integration', () => {
++  it('renders live spend, savings, remaining budget and leavesDevice warning', () => {
++    writeLlmBudget(P, { monthlyLimitUsd: 10, warnAtPercent: 80 });
++    recordLlmCost(P, { providerId: 'openai', costUsd: 2, savedUsd: 1, cached: true });
++
++    render(<LlmEconomyPanel projectId={P} providerId="openai" />);
++    const text = screen.getByTestId('llm-economy-panel').textContent ?? '';
++    expect(text).toContain('Spent: $0.00');
++    expect(text).toContain('$1.00');
++    expect(text).toContain('Cache hits: 1');
++    expect(text).toContain('Remaining budget: $10.00');
++    expect(screen.getByRole('alert').textContent).toContain('openai');
++  });
++
++  it('renders overBudget alert when monthly limit is exceeded', () => {
++    writeLlmBudget(P, { monthlyLimitUsd: 5, warnAtPercent: 80 });
++    recordLlmCost(P, { providerId: 'claude', costUsd: 6 });
++
++    render(<LlmEconomyPanel projectId={P} providerId="ollama" />);
++    const text = screen.getByTestId('llm-economy-panel').textContent ?? '';
++    expect(text).toContain('Monthly LLM budget exceeded.');
++    expect(screen.queryByText(/leaves/i)).toBeNull();
++  });
++
++  it('renders empty state cleanly when projectId is null or omitted', () => {
++    render(<LlmEconomyPanel projectId={null} />);
++    render(<LlmEconomyPanel />);
++    expect(screen.getAllByTestId('llm-economy-panel')[0].textContent).toContain('No AI calls recorded yet.');
++  });
++
++  it('shows unavailable instead of masking corrupt budget storage as no limit', () => {
++    localStorage.setItem(`seomi_project_${P}_llm_budget_v1`, '{broken');
++    render(<LlmEconomyPanel projectId={P} providerId="openai" />);
++    expect(screen.getByText('LLM budget or spend storage is unavailable or invalid.')).toBeTruthy();
++  });
++
++  it('budget writer refuses to render controls for corrupt storage', () => {
++    localStorage.setItem(`seomi_project_${P}_llm_budget_v1`, '{broken');
++    render(<LlmEconomyBudgetSettings />);
++    expect(screen.getByText('LLM budget or spend storage is unavailable or invalid.')).toBeTruthy();
++    expect(screen.queryByRole('button', { name: 'Save budget' })).toBeNull();
++  });
++});
+diff --git a/tests/llmEconomyProviderBoundary.test.ts b/tests/llmEconomyProviderBoundary.test.ts
+new file mode 100644
+index 00000000..2b63c519
+--- /dev/null
++++ b/tests/llmEconomyProviderBoundary.test.ts
+@@ -0,0 +1,49 @@
++import { beforeEach, describe, expect, it, vi } from 'vitest';
++import { AIService } from '@/services/ai';
++import { clearExactCache } from '@/services/llmEconomy/semanticCache';
++import { leavesDevice } from '@/services/llmEconomy/costMeter';
++import { readLlmSpend } from '@/services/llmEconomy/llmBudget';
++
++const { invoke } = vi.hoisted(() => ({ invoke: vi.fn() }));
++
++const projectId = 'provider-boundary';
++
++const responseFor = (provider: 'openai' | 'claude' | 'gemini') => provider === 'openai'
++  ? { choices: [{ message: { content: 'Hosted answer' } }] }
++  : provider === 'claude'
++    ? { content: [{ type: 'text', text: 'Hosted answer' }] }
++    : { candidates: [{ content: { parts: [{ text: 'Hosted answer' }] } }] };
++
++vi.mock('@/services/tauri', () => ({ invokeTauriCommand: invoke }));
++
++beforeEach(() => {
++  localStorage.clear();
++  clearExactCache();
++  invoke.mockReset();
++});
++
++describe('production provider economy boundary', () => {
++  it.each(['openai', 'claude', 'gemini'] as const)('records hosted %s as cloud with unknown cost when usage is absent', async (provider) => {
++    const fetchMock = vi.spyOn(globalThis, 'fetch').mockResolvedValue(new Response(JSON.stringify(responseFor(provider)), { status: 200 }));
++    await AIService.generateText(provider, 'key', 'model', `hosted-${provider}`, 'api_key', { projectId });
++    const spend = readLlmSpend(projectId);
++    expect(fetchMock).toHaveBeenCalledOnce();
++    expect(spend.lastCall).toMatchObject({ providerId: provider, local: false, costUsd: null });
++    expect(spend.unknownCostCalls).toBe(1);
++    expect(leavesDevice(provider)).toBe(true);
++    fetchMock.mockRestore();
++  });
++
++  it.each(['openai', 'claude', 'gemini'] as const)('keeps %s local_cli on the cloud/privacy-warning side of the ledger', async (provider) => {
++    const fetchMock = vi.spyOn(globalThis, 'fetch');
++    invoke.mockResolvedValue('CLI answer');
++    await AIService.generateText(provider, '', 'ignored-model', `cli-${provider}`, 'local_cli', { projectId });
++    const spend = readLlmSpend(projectId);
++    expect(invoke).toHaveBeenCalledWith('run_ai_cli', { provider, prompt: `cli-${provider}` });
++    expect(fetchMock).not.toHaveBeenCalled();
++    expect(spend.lastCall).toMatchObject({ providerId: provider, local: false, costUsd: null });
++    expect(spend.unknownCostCalls).toBe(1);
++    expect(leavesDevice(provider)).toBe(true);
++    fetchMock.mockRestore();
++  });
++});
+diff --git a/tests/llmEconomyTaskCache.test.ts b/tests/llmEconomyTaskCache.test.ts
+new file mode 100644
+index 00000000..1d9fd78c
+--- /dev/null
++++ b/tests/llmEconomyTaskCache.test.ts
+@@ -0,0 +1,81 @@
++import { beforeEach, describe, expect, it } from 'vitest';
++import {
++  buildTaskKey, clearExactCache, clearProjectCache, exactCacheSize,
++  findCached, findExactCached, findProjectCachedTask, putExactCached,
++  resolveCacheSavings, storeProjectTask,
++} from '@/services/llmEconomy/semanticCache';
++
++beforeEach(() => {
++  clearExactCache();
++});
++
++describe('exact and semantic task cache branches', () => {
++  it('builds canonical task keys regardless of whitespace', () => {
++    const key1 = buildTaskKey(' OpenAI ', 'gpt-4o', 'Summarize this page.');
++    const key2 = buildTaskKey('openai', 'gpt-4o', 'Summarize this page.');
++    expect(key1).toBe(key2);
++  });
++
++  it('stores and retrieves cached task responses at zero cost', () => {
++    const key = buildTaskKey('claude', 'sonnet', 'Prompt text');
++    expect(findExactCached(key)).toBeNull();
++
++    putExactCached(key, 'Cached response', 0.04);
++    expect(exactCacheSize()).toBe(1);
++
++    const hit = findExactCached(key);
++    expect(hit?.response).toBe('Cached response');
++    expect(hit?.costUsd).toBe(0.04);
++
++    const resolved = resolveCacheSavings(hit!.costUsd);
++    expect(resolved).toEqual({ costUsd: 0, savedUsd: 0.04, cached: true });
++  });
++
++  it('skips semantic candidates with mismatched model, dimensions, or empty query vector', () => {
++    storeProjectTask('p1', 'openai', 'gpt-4o', 'Q1', 'Ans1', 0.02, [1, 0, 0]);
++    storeProjectTask('p1', 'openai', 'claude-3', 'Q2', 'Ans2', 0.02, [1, 0, 0]); // different model
++    storeProjectTask('p1', 'openai', 'gpt-4o', 'Q3', 'Ans3', 0.02, [1, 0]); // different vector length
++    storeProjectTask('p1', 'openai', 'gpt-4o', 'Q4', 'Ans4', 0.02, undefined); // no vector
++
++    expect(findProjectCachedTask('p1', 'gpt-4o', 'Different', [])).toBeNull();
++    expect(findProjectCachedTask('p1', 'gpt-4o', 'Different', [0, 1, 0])).toBeNull(); // cosine < 0.95
++    expect(findProjectCachedTask('p1', 'gpt-4o', 'Different', [0.99, 0.01, 0])?.record.response).toBe('Ans1');
++  });
++
++  it('evicts correctly per project and globally', () => {
++    storeProjectTask('p1', 'openai', 'gpt-4o', 'k1', 'resp1', 0.01);
++    storeProjectTask('p2', 'openai', 'gpt-4o', 'k2', 'resp2', 0.01);
++    expect(exactCacheSize('p1')).toBe(1);
++    expect(exactCacheSize()).toBe(2);
++
++    clearProjectCache('p1');
++    expect(exactCacheSize('p1')).toBe(0);
++    expect(exactCacheSize('p2')).toBe(1);
++
++    clearExactCache();
++    expect(exactCacheSize()).toBe(0);
++  });
++
++  it('does not reuse a response across providers with the same model and prompt', () => {
++    storeProjectTask('provider-scope', 'openai', 'same-model', 'same prompt', 'openai answer', 0.02, [1, 0]);
++    expect(findProjectCachedTask('provider-scope', 'same-model', 'same prompt', undefined, undefined, 'claude')).toBeNull();
++    expect(findProjectCachedTask('provider-scope', 'same-model', 'same prompt', undefined, undefined, 'openai')?.record.response).toBe('openai answer');
++  });
++
++  it('handles findCached edge cases with vector length mismatch', () => {
++    const history = [{ vector: [1, 0, 0], response: 'a', costUsd: 0.01 }];
++    expect(findCached([1, 0], history)).toBeNull();
++  });
++
++  it('handles plain keys without delimiters, null cost entries, and nonexistent project size', () => {
++    expect(exactCacheSize('nonexistent-project')).toBe(0);
++    putExactCached('simple-key', 'simple-response', 0.05);
++    const hit = findExactCached('simple-key');
++    expect(hit?.response).toBe('simple-response');
++    expect(hit?.costUsd).toBe(0.05);
++
++    storeProjectTask('default', '', '', 'null-cost-prompt', 'null-cost-resp', null);
++    const nullCostHit = findExactCached('\u0000\u0000null-cost-prompt');
++    expect(nullCostHit?.costUsd).toBe(0);
++  });
++});
+diff --git a/tests/llmEconomyYmylGate.test.ts b/tests/llmEconomyYmylGate.test.ts
+new file mode 100644
+index 00000000..391d0ef5
+--- /dev/null
++++ b/tests/llmEconomyYmylGate.test.ts
+@@ -0,0 +1,44 @@
++import { describe, expect, it } from 'vitest';
++import { validateYmylClaim } from '@/services/llmEconomy/factGate';
++
++describe('validateYmylClaim source gate', () => {
++  const verifiedSource = [
++    'Standard dose of ibuprofen is 200 mg up to 400 mg.',
++    'Maximum daily fee is 150 PLN, with a 5% late penalty.',
++  ];
++
++  it('rejects unsupported medical dosages and financial claims', () => {
++    const invalidText = 'Take 800 mg right now. Total fee is 500 PLN.';
++    const validation = validateYmylClaim(invalidText, verifiedSource);
++    expect(validation.allowed).toBe(false);
++    expect(validation.reason).toBe('unsupported-value');
++    expect(validation.rejectedValues).toContain('800mg');
++    expect(validation.rejectedValues).toContain('500pln');
++    expect(validation.needsHumanApproval).toBe(true);
++  });
++
++  it('rejects all numeric claims when no source is available', () => {
++    const text = 'Recommended daily dose is 200 mg.';
++    const validation = validateYmylClaim(text, []);
++    expect(validation.allowed).toBe(false);
++    expect(validation.reason).toBe('no-source');
++    expect(validation.rejectedValues).toEqual(['200mg']);
++    expect(validation.needsHumanApproval).toBe(true);
++  });
++
++  it('allows claims strictly verified by source text, but mandates human approval', () => {
++    const validText = 'Standard dose of ibuprofen is 200 mg. Late fee is 5%.';
++    const validation = validateYmylClaim(validText, verifiedSource);
++    expect(validation.allowed).toBe(true);
++    expect(validation.rejectedValues).toEqual([]);
++    expect(validation.needsHumanApproval).toBe(true);
++  });
++
++  it('allows non-numeric prose but still enforces human approval for CMS', () => {
++    const generalText = 'Consult your physician before taking any medication.';
++    const validation = validateYmylClaim(generalText, []);
++    expect(validation.allowed).toBe(true);
++    expect(validation.rejectedValues).toEqual([]);
++    expect(validation.needsHumanApproval).toBe(true);
++  });
++});

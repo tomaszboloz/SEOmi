@@ -1,0 +1,166 @@
+diff --git a/src-tauri/examples/desktop_e2e_crawl.js b/src-tauri/examples/desktop_e2e_crawl.js
+--- a/src-tauri/examples/desktop_e2e_crawl.js
++++ b/src-tauri/examples/desktop_e2e_crawl.js
+@@ -24,7 +24,7 @@
+     check(`${label} crawl completed without cancellation or timeout`, result?.cancelled === false && result?.timed_out === false);
+     let finalUrl;
+     try { finalUrl = new URL(page?.final_url); } catch (_) { finalUrl = null; }
+-    check(`${label} observed final URL is expected host`, finalUrl?.hostname === new URL(target).hostname);
++    check(`${label} observed final URL is expected host`, finalUrl?.origin === new URL(target).origin);
+     check(`${label} observed HTTP status is positive`, Number.isInteger(page?.http_status) && page.http_status > 0);
+     check(`${label} observed response time is an integer`, Number.isInteger(page?.response_time_ms) && page.response_time_ms >= 0);
+     check(`${label} live HTML content type is present`, typeof page?.content_type === 'string' && page.content_type.toLowerCase().includes('text/html'));
+diff --git a/src-tauri/examples/desktop_e2e_renderer.js b/src-tauri/examples/desktop_e2e_renderer.js
+--- a/src-tauri/examples/desktop_e2e_renderer.js
++++ b/src-tauri/examples/desktop_e2e_renderer.js
+@@ -92,7 +92,7 @@
+         status.httpStatusFieldPresent && (status.httpStatus === 200 || status.httpStatus === null));
+       let finalUrl;
+       try { finalUrl = new URL(snapshot?.finalUrl); } catch (_) { finalUrl = null; }
+-      check('renderer final URL remains expected host', finalUrl?.hostname === new URL(target).hostname);
++      check('renderer final URL remains expected host', finalUrl?.origin === new URL(target).origin);
+ 
+       const screenshot = await invoke('capture_rendered_artifact', artifactArgs('screenshot'));
+       checkArtifact('screenshot', screenshot, check);
+diff --git a/tests/ciQualityGates.test.ts b/tests/ciQualityGates.test.ts
+index 76fb7408..616fd700 100644
+--- a/tests/ciQualityGates.test.ts
++++ b/tests/ciQualityGates.test.ts
+@@ -17,7 +17,7 @@ it.each(['\n', '\r\n'])('keeps strict CI gates with %j line endings', (newline)
+   expect(rust).toContain('npm ci --prefix mcp-server --ignore-scripts');
+   expect(rust).toContain('npm run build --prefix mcp-server');
+   expect(rust).toContain('cargo +nightly llvm-cov --manifest-path src-tauri/Cargo.toml --branch --no-report');
+-  expect(rust).toContain('SEOMI_E2E_RENDERER=1 cargo +nightly llvm-cov run --manifest-path src-tauri/Cargo.toml --example desktop_e2e --features custom-protocol --branch --no-clean --lcov --output-path coverage-rust.lcov -- test-results/desktop-e2e-coverage.json');
++  expect(rust).toContain('SEOMI_E2E_RENDERER=1 cargo +nightly llvm-cov run --manifest-path src-tauri/Cargo.toml --example desktop_e2e --features custom-protocol,test-fixture --branch --no-clean --lcov --output-path coverage-rust.lcov -- test-results/desktop-e2e-coverage.json');
+   expect(rust).toContain('node scripts/validate-desktop-e2e-report.mjs test-results/desktop-e2e-coverage.json');
+   expect(rust).toContain('--bin seomi --features custom-protocol --branch --no-clean -- --seomi-scheduled-headless');
+   expect(rust).toContain('--bin seomi --features custom-protocol --branch --no-clean -- --seomi-audit-queue-headless');
+diff --git a/tests/desktopE2eFixtureBoundary.test.ts b/tests/desktopE2eFixtureBoundary.test.ts
+new file mode 100644
+--- /dev/null
++++ b/tests/desktopE2eFixtureBoundary.test.ts
+@@ -0,0 +1,124 @@
++import { readFileSync } from 'node:fs';
++import { resolve } from 'node:path';
++import vm from 'node:vm';
++import { describe, expect, it } from 'vitest';
++
++describe('desktop E2E fixture boundary regressions', () => {
++  const loadScripts = (fixtureUrl: string) => {
++    const rFile = resolve(process.cwd(), 'src-tauri/examples/desktop_e2e_renderer.js');
++    const cFile = resolve(process.cwd(), 'src-tauri/examples/desktop_e2e_crawl.js');
++    const win: any = { __seomiE2eFixtureUrl: fixtureUrl };
++    vm.runInNewContext(readFileSync(cFile, 'utf8'), { window: win, URL, Date, Uint8Array, atob, globalThis: { crypto } }, { filename: cFile });
++    vm.runInNewContext(readFileSync(rFile, 'utf8'), { window: win, URL, Date, Uint8Array, atob }, { filename: rFile });
++    return { renderer: win.__seomiRendererE2e, crawl: win.__seomiDesktopCrawlValidation };
++  };
++
++  const fixtureOrigin = 'http://127.0.0.1:49152/';
++  const check = (name: string, ok: boolean) => { if (!ok) throw new Error(name); };
++
++  const baseArtifact = (kind: string, finalUrl = fixtureOrigin) => ({
++    artifactType: kind, requestedUrl: fixtureOrigin, finalUrl, runId: 'desktop-e2e-renderer',
++    capturedAt: '2026-10-25T10:00:00Z', contentType: kind === 'screenshot' ? 'image/png' : 'application/pdf',
++    fileName: `rendered-page-20261025T100000Z-${kind}.${kind === 'screenshot' ? 'png' : 'pdf'}`,
++    bytes: kind === 'screenshot' ? 8 : 5, rendererPlatform: 'macos-wkwebview',
++    dataBase64: kind === 'screenshot' ? 'iVBORw0KGgo=' : 'JVBERi0=',
++  });
++
++  const baseCrawlPage = (final_url = fixtureOrigin, title = 'Example Domain') => ({
++    final_url, http_status: 200, response_time_ms: 10, content_type: 'text/html; charset=utf-8',
++    title, word_count: 24, semantic_content_source: 'primary-root', semantic_content_provenance: 'http',
++  });
++
++  const expectSnapFail = async (renderer: any, id: string, finalUrl: string, expected = 'Error: renderer final URL remains expected host') => {
++    const res = await renderer.run({
++      projectId: id,
++      invoke: async (name: string) => (name === 'render_crawl_page' ? { html: '<title>Example Domain</title><h1>Example Domain</h1>', httpStatus: 200, finalUrl } : {}),
++    });
++    expect(res.passed).toBe(false);
++    expect(res.failure).toBe(expected);
++  };
++
++  const expectCrawlFail = async (crawl: any, id: string, final_url: string, expected = 'HTTP observed final URL is expected host') => {
++    await expect(crawl.run({
++      projectId: id, check,
++      invoke: async () => ({ crawl_mode: 'http', cancelled: false, timed_out: false, pages: [baseCrawlPage(final_url)] }),
++    })).rejects.toThrow(expected);
++  };
++
++  it('rejects Cloudflare rate limited HTML with captured diagnostics', async () => {
++    const { renderer, crawl } = loadScripts(fixtureOrigin);
++    const cfHtml = '<!DOCTYPE html><html><head><title>Rate Limited | example.com | Cloudflare</title></head><body>1015</body></html>';
++    const res = await renderer.run({
++      projectId: 'cf-test',
++      invoke: async (name: string) => (name === 'render_crawl_page' ? { html: cfHtml, httpStatus: 200, finalUrl: fixtureOrigin } : {}),
++    });
++    expect(res.passed).toBe(false);
++    expect(res.failure).toBe('Error: renderer HTML captured');
++    expect(res.snapshot.htmlSnippet).toContain('Rate Limited');
++
++    await expect(crawl.run({
++      projectId: 'cf-crawl', check,
++      invoke: async () => ({ crawl_mode: 'http', cancelled: false, timed_out: false, pages: [baseCrawlPage(fixtureOrigin, 'Rate Limited | Cloudflare')] }),
++    })).rejects.toThrow('HTTP live HTML title is present');
++  });
++
++  it('rejects wrong host in renderer snapshot and crawl final URL', async () => {
++    const { renderer, crawl } = loadScripts(fixtureOrigin);
++    await expectSnapFail(renderer, 'host-snap', 'http://attacker.local:49152/');
++    await expectCrawlFail(crawl, 'host-crawl', 'http://attacker.local:49152/');
++  });
++
++  it('rejects malformed final URL in renderer snapshot and crawl', async () => {
++    const { renderer, crawl } = loadScripts(fixtureOrigin);
++    await expectSnapFail(renderer, 'malformed-snap', 'http://[invalid/');
++    await expectCrawlFail(crawl, 'malformed-crawl', 'http://[invalid/');
++  });
++
++  it('rejects wrong port in renderer snapshot, crawl, and artifacts', async () => {
++    const { renderer, crawl } = loadScripts(fixtureOrigin);
++    const wrongPortUrl = 'http://127.0.0.1:8888/';
++    await expectSnapFail(renderer, 'port-snap', wrongPortUrl);
++    await expectCrawlFail(crawl, 'port-crawl', wrongPortUrl);
++
++    const artRes = await renderer.run({
++      projectId: 'port-art',
++      invoke: async (name: string, args: any) => {
++        if (name === 'render_crawl_page') return { html: '<title>Example Domain</title><h1>Example Domain</h1>', httpStatus: 200, finalUrl: fixtureOrigin };
++        if (name === 'capture_rendered_artifact') return baseArtifact(args.kind, wrongPortUrl);
++        return {};
++      },
++    });
++    expect(artRes.passed).toBe(false);
++    expect(artRes.failure).toBe('Error: screenshot artifact final URL is exact');
++  });
++
++  it('rejects wrong protocol in renderer snapshot and crawl', async () => {
++    const { renderer, crawl } = loadScripts(fixtureOrigin);
++    await expectSnapFail(renderer, 'proto-snap', 'https://127.0.0.1:49152/');
++    await expectCrawlFail(crawl, 'proto-crawl', 'https://127.0.0.1:49152/');
++  });
++
++  it('passes all 48 assertions on exact origin with subpath', async () => {
++    const { renderer } = loadScripts(fixtureOrigin);
++    const exactSubpathUrl = `${fixtureOrigin}subpath?view=full`;
++    const mockInvoke = async (name: string, args: any) => {
++      if (name === 'render_crawl_page') {
++        return { html: '<title>Example Domain</title><h1>Example Domain</h1><p>ok</p>', httpStatus: 200, finalUrl: exactSubpathUrl, contentType: 'text/html' };
++      }
++      if (name === 'capture_rendered_artifact') return baseArtifact(args.kind, fixtureOrigin);
++      if (name === 'open_rendered_element_preview') return;
++      if (name === 'crawl_site') {
++        return {
++          crawl_mode: args.config.crawlMode, cancelled: false, timed_out: false,
++          pages: [baseCrawlPage(exactSubpathUrl)],
++        };
++      }
++      throw new Error(`Unexpected invoke ${name}`);
++    };
++
++    const res = await renderer.run({ projectId: 'exact-origin-test', invoke: mockInvoke });
++    expect(res.passed).toBe(true);
++    expect(res.previewEvidence).toBe('ipc-success');
++    expect(res.checks).toHaveLength(48);
++  });
++});

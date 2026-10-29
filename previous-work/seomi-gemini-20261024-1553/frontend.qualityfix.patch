@@ -1,0 +1,207 @@
+diff --git a/tests/geminiGapFRONTEND_1.test.tsx b/tests/geminiGapFRONTEND_1.test.tsx
+new file mode 100644
+index 00000000..58176f1a
+--- /dev/null
++++ b/tests/geminiGapFRONTEND_1.test.tsx
+@@ -0,0 +1,70 @@
++import { fireEvent, render, screen } from '@testing-library/react';
++import { beforeEach, describe, expect, it, vi } from 'vitest';
++import i18n from '@/i18n';
++import { host } from '@/components/Domain/crawlResults/authority/authorityText';
++import { CrawlFocusTab } from '@/components/Domain/crawlResults/focus/CrawlFocusTab';
++import { CrawlLinksExternalCheck } from '@/components/Domain/crawlResults/linksTab/CrawlLinksExternalCheck';
++import { createCrawlPageFixture } from './fixtures/crawl';
++import type { CrawledPageSummary, CrawlRunRecord } from '@/types';
++
++beforeEach(async () => {
++  await i18n.changeLanguage('en');
++});
++
++describe('geminiGapFRONTEND_1 authority, focus and linksExternalCheck', () => {
++  it('covers host path extraction and catch fallback in authorityText line 30', () => {
++    expect(host('https://example.test/about?q=1')).toBe('/about?q=1');
++    expect(host('https://example.test')).toBe('/');
++    expect(host('invalid-url')).toBe('invalid-url');
++  });
++
++  it('covers CrawlFocusTab gate toggle statements and functions line 98', () => {
++    const page1 = createCrawlPageFixture({
++      url: 'https://site.test/', final_url: 'https://site.test/', title: 'Home',
++      document_language: 'en', http_status: 200, focus_terms: [{ term: 'home', surface: 'home', count: 1, weight: 1 }],
++    }) as CrawledPageSummary;
++    const page2 = createCrawlPageFixture({
++      url: 'https://site.test/gated', final_url: 'https://site.test/gated', title: 'Gated',
++      document_language: 'en', http_status: 200, meta_robots: 'noindex',
++      focus_terms: [{ term: 'gated', surface: 'gated', count: 1, weight: 1 }],
++    }) as CrawledPageSummary;
++
++    render(<CrawlFocusTab pages={[page1, page2]} startUrl="https://site.test/" />);
++    const toggleBtn = screen.getByRole('button', { name: /Include/i });
++    expect(toggleBtn).toBeTruthy();
++    fireEvent.click(toggleBtn);
++    expect(screen.getByRole('button', { name: /Exclude/i })).toBeTruthy();
++    fireEvent.click(screen.getByRole('button', { name: /Exclude/i }));
++    expect(screen.getByRole('button', { name: /Include/i })).toBeTruthy();
++  });
++
++  it('covers CrawlLinksExternalCheck disabled early return and force check line 87', async () => {
++    const checkFn = vi.fn().mockResolvedValue(undefined);
++    const setLimit = vi.fn();
++    const t = ((key: string) => key) as never;
++    const run = { id: 'run-1', completedAt: 'now' } as CrawlRunRecord;
++
++    const { rerender } = render(
++      <CrawlLinksExternalCheck
++        externalLinksCount={10} checkedExternalCount={0} blockedExternalCount={0}
++        invalidExternalCount={0} uncheckedExternalCount={5} isCheckingExternalLinks={false}
++        externalLinkCheckProgress={null} externalLinkLimit={100} setExternalLinkLimit={setLimit}
++        currentRun={undefined} checkExternalLinks={checkFn} externalError={null} t={t}
++      />,
++    );
++    const btn = screen.getByRole('button');
++    fireEvent.click(btn);
++    expect(checkFn).not.toHaveBeenCalled();
++
++    rerender(
++      <CrawlLinksExternalCheck
++        externalLinksCount={10} checkedExternalCount={5} blockedExternalCount={0}
++        invalidExternalCount={0} uncheckedExternalCount={0} isCheckingExternalLinks={false}
++        externalLinkCheckProgress={null} externalLinkLimit={250} setExternalLinkLimit={setLimit}
++        currentRun={run} checkExternalLinks={checkFn} externalError={null} t={t}
++      />,
++    );
++    fireEvent.click(screen.getByRole('button'));
++    expect(checkFn).toHaveBeenCalledWith('run-1', 250, true);
++  });
++});
+diff --git a/tests/geminiGapFRONTEND_2.test.tsx b/tests/geminiGapFRONTEND_2.test.tsx
+new file mode 100644
+index 00000000..8b4c06d4
+--- /dev/null
++++ b/tests/geminiGapFRONTEND_2.test.tsx
+@@ -0,0 +1,125 @@
++import { fireEvent, render, screen } from '@testing-library/react';
++import { beforeEach, describe, expect, it, vi } from 'vitest';
++import i18n from '@/i18n';
++import { CrawlLinksTable } from '@/components/Domain/crawlResults/linksTab/CrawlLinksTable';
++import { CrawlSocialFaviconCell } from '@/components/Domain/crawlResults/socialTab/CrawlSocialFaviconCell';
++import { DomainComparisonTable } from '@/components/Domain/domainOverview/DomainComparisonTable';
++import { createCrawlPageFixture } from './fixtures/crawl';
++import type { CrawledPageSummary, DomainComparisonData } from '@/types';
++
++beforeEach(async () => {
++  await i18n.changeLanguage('en');
++});
++
++describe('geminiGapFRONTEND_2 linksTable, socialFaviconCell, domainComparisonTable', () => {
++  it('covers CrawlLinksTable source excerpt rendering, copy callback and empty state', () => {
++    const copyLinkSource = vi.fn().mockResolvedValue(undefined);
++    const t = ((key: string) => key) as never;
++
++    const withExcerpt = {
++      sourceUrl: 'https://site.test/from',
++      key: 'link-1',
++      link: {
++        target_url: 'https://site.test/to', anchor_text: 'Link Text',
++        is_internal: true, source_excerpt: '<code>const a = 1;</code>',
++      },
++    };
++
++    const { rerender } = render(
++      <CrawlLinksTable
++        links={[withExcerpt]} linkEvidenceHref={() => ''}
++        copiedLinkSourceKey={null} copyLinkSource={copyLinkSource} t={t}
++      />,
++    );
++
++    expect(screen.getByText('crawl.ui.showSourceCode')).toBeTruthy();
++    expect(screen.getByText('<code>const a = 1;</code>')).toBeTruthy();
++    fireEvent.click(screen.getByRole('button', { name: 'crawl.ui.copyCode' }));
++    expect(copyLinkSource).toHaveBeenCalledWith('link-1', '<code>const a = 1;</code>');
++
++    rerender(
++      <CrawlLinksTable
++        links={[withExcerpt]} linkEvidenceHref={() => ''}
++        copiedLinkSourceKey="link-1" copyLinkSource={copyLinkSource} t={t}
++      />,
++    );
++    expect(screen.getByRole('button', { name: 'crawl.ui.copied' })).toBeTruthy();
++
++    const noExcerpt = {
++      sourceUrl: 'https://site.test/from', key: 'link-2',
++      link: { target_url: 'https://site.test/to', anchor_text: 'Link 2', is_internal: true },
++    };
++
++    rerender(
++      <CrawlLinksTable
++        links={[noExcerpt]} linkEvidenceHref={() => ''}
++        copiedLinkSourceKey={null} copyLinkSource={copyLinkSource} t={t}
++      />,
++    );
++    expect(screen.getByText('crawl.ui.noExcerptOlderRun')).toBeTruthy();
++    expect(screen.queryByRole('button', { name: /copy/i })).toBeNull();
++  });
++
++  it('covers CrawlSocialFaviconCell favicons vs metadata and empty declaration', () => {
++    const t = ((key: string, p?: { value?: string }) => p?.value ?? key) as never;
++
++    const faviconPage = createCrawlPageFixture({ favicons: ['/site-icon.png'] }) as CrawledPageSummary;
++    const { rerender } = render(
++      <table><tbody><tr><CrawlSocialFaviconCell page={faviconPage} t={t} /></tr></tbody></table>,
++    );
++    expect(screen.getByText('/site-icon.png')).toBeTruthy();
++
++    const metaPage = createCrawlPageFixture({
++      favicon_metadata: [{ href: '/meta-icon.svg', rel: 'shortcut icon', declared_sizes: '32x32' }],
++    }) as CrawledPageSummary;
++
++    rerender(<table><tbody><tr><CrawlSocialFaviconCell page={metaPage} t={t} /></tr></tbody></table>);
++    expect(screen.getByText('/meta-icon.svg')).toBeTruthy();
++    expect(screen.getByText(/shortcut icon/)).toBeTruthy();
++
++    const emptyPage = createCrawlPageFixture({ favicons: [] }) as CrawledPageSummary;
++    rerender(<table><tbody><tr><CrawlSocialFaviconCell page={emptyPage} t={t} /></tr></tbody></table>);
++    expect(screen.getByText('crawl.social.noDeclaration')).toBeTruthy();
++  });
++
++  it('covers DomainComparisonTable competitors rendering, limit and missing section', () => {
++    const t = ((key: string) => key) as never;
++
++    const comparisonWithCompetitors: DomainComparisonData = {
++      target: 'site.test', location_code: 2840, language_code: 'en', retrieved_at: 'now', source: 'dataforseo',
++      rows: [{
++        domain: 'site.test', organic_traffic: 500, organic_keywords: 200, domain_rank: 45, referring_domains: 50,
++        total_backlinks: 1000, dofollow_ratio: 80, retrieved_at: 'now',
++        competitors: [
++          { domain: 'c1.test', common_keywords: 10, average_position: 2 },
++          { domain: 'c2.test', common_keywords: null, average_position: 4 },
++          { domain: 'c3.test', common_keywords: 8, average_position: 5 },
++          { domain: 'c4.test', common_keywords: 6, average_position: 7 },
++          { domain: 'c5.test', common_keywords: 4, average_position: 8 },
++          { domain: 'c6.test', common_keywords: 2, average_position: 9 },
++        ],
++      }],
++    };
++
++    const { rerender } = render(<DomainComparisonTable comparison={comparisonWithCompetitors} t={t} />);
++    expect(screen.getByText('domainResearchUi.competitors')).toBeTruthy();
++    expect(screen.getByText('c1.test')).toBeTruthy();
++    expect(screen.getByText('10')).toBeTruthy();
++    expect(screen.getByText('c2.test')).toBeTruthy();
++    expect(screen.getByText('—')).toBeTruthy();
++    expect(screen.getByText('c5.test')).toBeTruthy();
++    expect(screen.queryByText('c6.test')).toBeNull();
++
++    const comparisonWithoutCompetitors: DomainComparisonData = {
++      target: 'site.test', location_code: 2840, language_code: 'en', retrieved_at: 'now', source: 'dataforseo',
++      rows: [{
++        domain: 'site.test', organic_traffic: 500, organic_keywords: 200, domain_rank: 45, referring_domains: 50, retrieved_at: 'now',
++        top_keywords: [{ keyword: 'seo test', position: 1, search_volume: null, traffic_share: null, intent: null }],
++      }],
++    };
++
++    rerender(<DomainComparisonTable comparison={comparisonWithoutCompetitors} t={t} />);
++    expect(screen.getByText('seo test')).toBeTruthy();
++    expect(screen.queryByText('domainResearchUi.competitors')).toBeNull();
++  });
++});

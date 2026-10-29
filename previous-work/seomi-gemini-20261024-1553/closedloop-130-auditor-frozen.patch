@@ -1,0 +1,691 @@
+diff --git a/src/types/crawl/history.ts b/src/types/crawl/history.ts
+index 4c93b8eb..c9b98f74 100644
+--- a/src/types/crawl/history.ts
++++ b/src/types/crawl/history.ts
+@@ -22,6 +22,8 @@ export interface CrawlRunRecord {
+   /** Project ownership is persisted so cross-project comparisons fail closed. */
+   projectId?: string;
+   completedAt: string;
++  /** ISO timestamp when crawl was started; used to sequence next-crawl task verification. */
++  startedAt?: string;
+   startUrl: string;
+   config: CrawlConfig;
+   result: SiteCrawlResult;
+diff --git a/src/services/contracts/crawl/crawlResult.ts b/src/services/contracts/crawl/crawlResult.ts
+index e642d25a..6c48d18b 100644
+--- a/src/services/contracts/crawl/crawlResult.ts
++++ b/src/services/contracts/crawl/crawlResult.ts
+@@ -62,6 +62,7 @@ export const CrawlRunRecordSchema = z.object({
+   id: z.string(),
+   projectId: z.string().optional(),
+   completedAt: z.string(),
++  startedAt: z.string().optional(),
+   startUrl: z.string(),
+   config: CrawlConfigSchema,
+   result: SiteCrawlResultSchema,
+diff --git a/src/components/Charts/semanticTopical/signals/sprsAdapter.ts b/src/components/Charts/semanticTopical/signals/sprsAdapter.ts
+index 894622aa..24f1740f 100644
+--- a/src/components/Charts/semanticTopical/signals/sprsAdapter.ts
++++ b/src/components/Charts/semanticTopical/signals/sprsAdapter.ts
+@@ -1,28 +1 @@
+-import { applyGate } from '@/services/indexabilityGate';
+-import { computeSprs, type SprsEdge, type SprsReport } from '@/services/semanticGraph/sprs';
+-import type { SemanticMap } from '@/services/semanticGraph/types';
+-
+-/**
+- * SPRS input from the crawled internal-link graph. Similarity is taken only from an
+- * existing lexical topic edge between the same pair; otherwise it stays unknown.
+- */
+-export const buildSprsInput = (graph: SemanticMap): { nodes: Array<{ id: string }>; edges: SprsEdge[] } => {
+-  const eligiblePages = new Set(applyGate(graph.nodes.map((node) => node.page)).pages);
+-  const nodes = graph.nodes.filter((node) => eligiblePages.has(node.page));
+-  const nodeIds = new Set(nodes.map((node) => node.id));
+-  const similarity = new Map<string, number>();
+-  graph.topicEdges.filter((e) => nodeIds.has(e.source) && nodeIds.has(e.target)).forEach((e) => {
+-    similarity.set(`${e.source}|${e.target}`, e.weightedJaccard);
+-    similarity.set(`${e.target}|${e.source}`, e.weightedJaccard);
+-  });
+-  const edges: SprsEdge[] = graph.edges.filter((e) => nodeIds.has(e.source) && nodeIds.has(e.target)).map((e) => {
+-    const value = similarity.get(`${e.source}|${e.target}`);
+-    return { source: e.source, target: e.target, links: e.links, ...(value === undefined ? {} : { similarity: value }) };
+-  });
+-  return { nodes: nodes.map((node) => ({ id: node.id })), edges };
+-};
+-
+-export const buildSprsReport = (graph: SemanticMap): SprsReport => {
+-  const { nodes, edges } = buildSprsInput(graph);
+-  return computeSprs(nodes, edges);
+-};
++export { buildSprsInput, buildSprsReport } from '@/services/sprs/report';
+diff --git a/src/services/optimizationTasks/verify.ts b/src/services/optimizationTasks/verify.ts
+index e3e09a17..09299930 100644
+--- a/src/services/optimizationTasks/verify.ts
++++ b/src/services/optimizationTasks/verify.ts
+@@ -1,56 +1,113 @@
+ import type { CrawledPageSummary } from '@/types';
+ import { busUrlKey } from '@/services/recommendationBus/url';
++import { hasNoindex, canonicalTarget } from '@/services/indexabilityGate';
+ import { ENTITY_COVERAGE_MIN, type OptimizationTask, type TaskVerdict, type VerdictCode } from './types';
+ 
+ type Check = { ok: boolean; code: VerdictCode; params?: TaskVerdict['params'] };
+ 
+-const find = (pages: CrawledPageSummary[], url: string) => pages.find((page) => [page.url, page.final_url].some((u) => busUrlKey(u) === busUrlKey(url)));
++const find = (pages: CrawledPageSummary[], url: string) =>
++  pages.find((page) => [page.url, page.final_url].some((u) => busUrlKey(u) === busUrlKey(url)));
+ 
+-const addLink = (task: OptimizationTask, page: CrawledPageSummary): Check => {
++const addLink = (task: OptimizationTask, page: CrawledPageSummary): Check | null => {
++  if (page.http_status < 200 || page.http_status >= 300 || page.request_error_kind) return null;
+   const link = [...page.links, ...(page.semantic_links ?? [])].find((l) => busUrlKey(l.target_url) === busUrlKey(task.targetUrl ?? ''));
+-  // `zone` is filled by the crawler when it records link placement; absent in older runs.
+   const zone = (link as { zone?: string } | undefined)?.zone;
+-  return link ? { ok: true, code: 'link-found', params: { zone: zone ?? 'unknown' } } : { ok: false, code: 'link-missing' };
++  if (link) return { ok: true, code: 'link-found', params: { zone: zone ?? 'unknown' } };
++  if (page.body_truncated) return null;
++  return { ok: false, code: 'link-missing' };
+ };
+ 
+-const redirect = (task: OptimizationTask, page: CrawledPageSummary): Check => {
++const redirect = (task: OptimizationTask, page: CrawledPageSummary): Check | null => {
++  if (page.request_error_kind || page.http_status === 0) return null;
+   const hop = page.redirect_chain[0];
+-  if (!hop || ![301, 308].includes(hop.http_status)) return { ok: false, code: 'still-200', params: { status: page.http_status } };
++  if (!hop || ![301, 308].includes(hop.http_status)) {
++    if (page.http_status !== 200) return null;
++    return { ok: false, code: 'still-200', params: { status: page.http_status } };
++  }
+   return busUrlKey(page.final_url) === busUrlKey(task.targetUrl ?? '') ? { ok: true, code: 'redirect-ok' } : { ok: false, code: 'redirect-wrong-target' };
+ };
+ 
+-const entities = (task: OptimizationTask, page: CrawledPageSummary): Check => {
++const remove410 = (page: CrawledPageSummary): Check | null => {
++  if (page.http_status === 0 || page.request_error_kind) return null;
++  return {
++    ok: page.http_status === 410,
++    code: page.http_status === 410 ? 'gone-ok' : page.http_status === 200 ? 'still-200' : 'wrong-status',
++    params: { status: page.http_status },
++  };
++};
++
++const entities = (task: OptimizationTask, page: CrawledPageSummary): Check | null => {
++  if (page.http_status < 200 || page.http_status >= 300 || page.request_error_kind) return null;
++  if (page.semantic_content_source === 'unavailable') return null;
++  if (!page.semantic_terms && (task.requiredEntities?.length ?? 0) > 0) return null;
+   const wanted = task.requiredEntities ?? [];
+   const have = new Set((page.semantic_terms ?? []).map((term) => term.toLocaleLowerCase()));
+   const found = wanted.filter((entity) => have.has(entity.toLocaleLowerCase())).length;
+   const ratio = wanted.length ? found / wanted.length : 0;
+-  return { ok: ratio >= ENTITY_COVERAGE_MIN, code: ratio >= ENTITY_COVERAGE_MIN ? 'entities-ok' : 'entities-missing', params: { found, total: wanted.length } };
++  if (ratio >= ENTITY_COVERAGE_MIN) {
++    return { ok: true, code: 'entities-ok', params: { found, total: wanted.length } };
++  }
++  if (page.body_truncated) return null;
++  return { ok: false, code: 'entities-missing', params: { found, total: wanted.length } };
++};
++
++const NEGATIVE_INDEXABILITY = /\b(not|non)[ -_]?indexable\b|\b(blocked|uncertain|unknown|unavailable|disallow)\b/i;
++
++const isAffirmativeIndexable = (page: CrawledPageSummary): boolean => {
++  if (page.canonical_robots_conflict || Boolean(canonicalTarget(page))) return false;
++  const v = page.indexability_verdict?.status;
++  if (v === 'blocked') return false;
++  if (v === 'uncertain') return false;
++  if (NEGATIVE_INDEXABILITY.test(page.indexability_status ?? '')) return false;
++
++  if (v === 'indexable') return true;
++  if (page.robots_decision?.indexability === 'index') return true;
++  return /^(eligible|indexable)\b/i.test(page.indexability_status ?? '');
+ };
+ 
+-const noindex = (page: CrawledPageSummary): Check => {
+-  const blocked = /noindex/i.test(`${page.meta_robots ?? ''} ${page.x_robots_tag ?? ''} ${page.indexability_status}`);
+-  return { ok: !blocked, code: blocked ? 'still-noindex' : 'index-ok' };
++const noindex = (page: CrawledPageSummary): Check | null => {
++  if (page.http_status < 200 || page.http_status >= 300 || page.request_error_kind) return null;
++  if (hasNoindex(page)) return { ok: false, code: 'still-noindex' };
++  if (/(^|[\s,;])(noindex|none)([\s,;]|$)/i.test(page.indexability_status ?? '')) {
++    return { ok: false, code: 'still-noindex' };
++  }
++  return isAffirmativeIndexable(page) ? { ok: true, code: 'index-ok' } : null;
+ };
+ 
+ /**
+  * Verifies one implemented task against a fresh crawl.
+- * Returns null when the page is absent from the crawl: nothing to verify yet, the task stays open.
++ * Returns null when the page is absent from the crawl or evidence is unavailable: task stays open.
+  */
+ export const verifyTask = (task: OptimizationTask, pages: CrawledPageSummary[], currentScore: number | null): TaskVerdict | null => {
+   const page = find(pages, task.url);
+   if (!page) return null;
+-  const check: Check = task.kind === 'add-link' ? addLink(task, page)
++  const check: Check | null = task.kind === 'add-link' ? addLink(task, page)
+     : task.kind === 'redirect-301' ? redirect(task, page)
+-      : task.kind === 'remove-410' ? { ok: page.http_status === 410, code: page.http_status === 410 ? 'gone-ok' : page.http_status === 200 ? 'still-200' : 'wrong-status', params: { status: page.http_status } }
++      : task.kind === 'remove-410' ? remove410(page)
+         : task.kind === 'add-entities' ? entities(task, page) : noindex(page);
++  if (!check) return null;
+   const delta = currentScore !== null && task.baselineScore !== null ? Math.round((currentScore - task.baselineScore) * 10) / 10 : null;
+   return { status: check.ok ? 'verified' : 'failed', code: check.code, params: check.params ?? {}, delta, regression: delta !== null && delta < 0 };
+ };
+ 
+ /** Verifies every `implemented` task; other statuses and tasks without crawl evidence are returned untouched. */
+-export const verifyTasks = (tasks: OptimizationTask[], pages: CrawledPageSummary[], currentScore: (task: OptimizationTask) => number | null, now = new Date().toISOString()): OptimizationTask[] =>
++export const verifyTasks = (
++  tasks: OptimizationTask[],
++  pages: CrawledPageSummary[],
++  currentScore: (task: OptimizationTask) => number | null,
++  now = new Date().toISOString(),
++  crawlStartedAt?: string,
++): OptimizationTask[] =>
+   tasks.map((task) => {
+     if (task.status !== 'implemented') return task;
++    if (crawlStartedAt !== undefined) {
++      if (!task.implementedAt) return task;
++      const crawlStart = Date.parse(crawlStartedAt);
++      const implemented = Date.parse(task.implementedAt);
++      if (!Number.isFinite(crawlStart) || !Number.isFinite(implemented) || crawlStart <= implemented) {
++        return task;
++      }
++    }
+     const verdict = verifyTask(task, pages, currentScore(task));
+     return verdict ? { ...task, status: verdict.status, verdict, verifiedAt: now } : task;
+   });
+diff --git a/src/services/optimizationTasks/runVerification.ts b/src/services/optimizationTasks/runVerification.ts
+index 43eab796..80183460 100644
+--- a/src/services/optimizationTasks/runVerification.ts
++++ b/src/services/optimizationTasks/runVerification.ts
+@@ -1,24 +1,78 @@
+ import type { CrawlRunRecord } from '@/types';
++import { busUrlKey } from '@/services/recommendationBus/url';
+ import { buildSiteFocusReport } from '@/services/siteFocus';
+ import { buildAuthorityReport } from '@/services/topicalAuthority';
++import { buildSemanticMap } from '@/services/semanticMap';
++import { buildSprsReport } from '@/services/sprs/report';
++import { buildTrustReport } from '@/services/eeatTrust';
+ import { appendDeltas } from './metricHistory';
+ import { readTasks, writeTasks } from './storage';
+ import type { OptimizationTask } from './types';
+ import { verifyTasks } from './verify';
+ 
++export const toIso = (timestamp: number): string | undefined => {
++  try {
++    return Number.isFinite(timestamp) ? new Date(timestamp).toISOString() : undefined;
++  } catch {
++    return undefined;
++  }
++};
++
++export const deriveCrawlStartedAt = (run: CrawlRunRecord): string | undefined => {
++  const rawStart = run.startedAt;
++  if (rawStart && typeof rawStart === 'string') {
++    const iso = toIso(Date.parse(rawStart));
++    if (iso) return iso;
++  }
++  const rawComp = run.completedAt;
++  const dur = run.result?.duration_ms;
++  if (rawComp && typeof rawComp === 'string' && typeof dur === 'number' && Number.isFinite(dur) && dur >= 0) {
++    const iso = toIso(Date.parse(rawComp) - dur);
++    if (iso) return iso;
++  }
++  return undefined;
++};
++
+ /** After a crawl: verifies implemented tasks against fresh pages and records score deltas. */
+ export const runTaskVerification = (projectId: string, run: CrawlRunRecord): OptimizationTask[] => {
+   const tasks = readTasks(projectId);
+   if (!tasks.some((task) => task.status === 'implemented')) return tasks;
+-  const pages = run.result.pages;
+-  const startUrl = run.result.start_url;
++  const pages = run.result?.pages ?? [];
++  const startUrl = run.result?.start_url ?? '';
+   const sfs = buildSiteFocusReport(pages, startUrl);
+   const scores: Record<string, number | null> = { sfs: sfs.unavailable ? null : sfs.score };
++  let sprsReport: ReturnType<typeof buildSprsReport> | null = null;
++  let semanticGraph: ReturnType<typeof buildSemanticMap> | null = null;
++
+   const scoreFor = (task: OptimizationTask): number | null => {
+-    if (task.module === 'tas' && !('tas' in scores)) scores.tas = buildAuthorityReport(pages, startUrl, sfs).tas;
+-    return scores[task.module] ?? null;
++    if (task.module === 'sfs') return scores.sfs;
++    if (task.module === 'tas') {
++      if (!('tas' in scores)) scores.tas = buildAuthorityReport(pages, startUrl, sfs).tas ?? null;
++      return scores.tas;
++    }
++    if (task.module === 'sprs') {
++      if (!sprsReport && pages.length) {
++        semanticGraph = buildSemanticMap(pages, startUrl);
++        sprsReport = buildSprsReport(semanticGraph);
++      }
++      if (sprsReport?.status === 'ready' && semanticGraph) {
++        const node = semanticGraph.nodes.find((n) => [n.page.url, n.page.final_url].some((u) => busUrlKey(u) === busUrlKey(task.url)));
++        if (node) {
++          const sprsPage = sprsReport.pages.find((p) => p.nodeId === node.id);
++          return sprsPage ? sprsPage.score : null;
++        }
++      }
++      return null;
++    }
++    if (!('eetv' in scores)) {
++      const livePages = pages.filter((p) => p.http_status >= 200 && p.http_status < 400 && !p.request_error_kind);
++      scores.eetv = livePages.length > 0 ? buildTrustReport(livePages, sfs).score : null;
++    }
++    return scores.eetv;
+   };
+-  const next = verifyTasks(tasks, pages, scoreFor);
++
++  const crawlStartedAt = deriveCrawlStartedAt(run) ?? 'unavailable';
++  const next = verifyTasks(tasks, pages, scoreFor, new Date().toISOString(), crawlStartedAt);
+   writeTasks(projectId, next);
+   appendDeltas(projectId, tasks, next);
+   return next;
+diff --git a/src/stores/tools/crawl/execution.ts b/src/stores/tools/crawl/execution.ts
+index 105a6dd2..00000000 100644
+--- a/src/stores/tools/crawl/execution.ts
++++ b/src/stores/tools/crawl/execution.ts
+@@ -80,7 +80,7 @@ startSiteCrawl: async (url, limit, configPatch, environment = 'default', notifyC
+       const freshCrawlResult = await services.invoke<SiteCrawlResult>('crawl_site', { startUrl: targetUrl, maxPages: maxLimit, runId, projectId: projectIdAtStart || undefined, config: effectiveCrawlConfig });
+       if (!freshCrawlResult.pages.length && !freshCrawlResult.cancelled && !resumeBaseResult) throw new Error(i18n.t('runtimeErrors.tools.crawlerNoPages'));
+       const crawlResult = resumeBaseResult ? mergeCrawlResults(resumeBaseResult, freshCrawlResult) : freshCrawlResult;
+-      const run: CrawlRunRecord = { id: runId, projectId: projectIdAtStart || undefined, completedAt: new Date().toISOString(), startUrl: targetUrl, config: persistedCrawlConfig, result: crawlResult, environment };
++      const run: CrawlRunRecord = { id: runId, projectId: projectIdAtStart || undefined, startedAt: interruptedCrawl.startedAt, completedAt: new Date().toISOString(), startUrl: targetUrl, config: persistedCrawlConfig, result: crawlResult, environment };
+       const projectRuns = activeProjectId() === projectIdAtStart ? get().crawlRuns : originalCrawlRuns;
+       const crawlRuns = [run, ...projectRuns.filter((item) => item.id !== run.id)].slice(0, 50);
+       const projectId = projectIdAtStart;
+diff --git a/src/services/sprs/report.ts b/src/services/sprs/report.ts
+new file mode 100644
+index 00000000..52187bd6
+--- /dev/null
++++ b/src/services/sprs/report.ts
+@@ -0,0 +1,24 @@
++import { applyGate } from '@/services/indexabilityGate';
++import { computeSprs, type SprsEdge, type SprsReport } from '@/services/semanticGraph/sprs';
++import type { SemanticMap } from '@/services/semanticGraph/types';
++
++export const buildSprsInput = (graph: SemanticMap): { nodes: Array<{ id: string }>; edges: SprsEdge[] } => {
++  const eligiblePages = new Set(applyGate(graph.nodes.map((node) => node.page)).pages);
++  const nodes = graph.nodes.filter((node) => eligiblePages.has(node.page));
++  const nodeIds = new Set(nodes.map((node) => node.id));
++  const similarity = new Map<string, number>();
++  graph.topicEdges.filter((e) => nodeIds.has(e.source) && nodeIds.has(e.target)).forEach((e) => {
++    similarity.set(`${e.source}|${e.target}`, e.weightedJaccard);
++    similarity.set(`${e.target}|${e.source}`, e.weightedJaccard);
++  });
++  const edges: SprsEdge[] = graph.edges.filter((e) => nodeIds.has(e.source) && nodeIds.has(e.target)).map((e) => {
++    const value = similarity.get(`${e.source}|${e.target}`);
++    return { source: e.source, target: e.target, links: e.links, ...(value === undefined ? {} : { similarity: value }) };
++  });
++  return { nodes: nodes.map((node) => ({ id: node.id })), edges };
++};
++
++export const buildSprsReport = (graph: SemanticMap): SprsReport => {
++  const { nodes, edges } = buildSprsInput(graph);
++  return computeSprs(nodes, edges);
++};
+diff --git a/tests/optimizationTasksEdgeCases.test.ts b/tests/optimizationTasksEdgeCases.test.ts
+new file mode 100644
+index 00000000..8bccd1e7
+--- /dev/null
++++ b/tests/optimizationTasksEdgeCases.test.ts
+@@ -0,0 +1,150 @@
++import { beforeEach, describe, expect, it } from 'vitest';
++import type { CrawlRunRecord } from '@/types';
++import type { OptimizationTask } from '@/services/optimizationTasks/types';
++import { editTask } from '@/services/optimizationTasks/edit';
++import { appendDeltas } from '@/services/optimizationTasks/metricHistory';
++import { deriveCrawlStartedAt, runTaskVerification, toIso } from '@/services/optimizationTasks/runVerification';
++import { writeTasks } from '@/services/optimizationTasks/storage';
++import { verifyTask } from '@/services/optimizationTasks/verify';
++import { createCrawlPageFixture as page } from './fixtures/crawl';
++
++const P = 'proj-edge';
++const U = 'https://site.test/p1';
++const U2 = 'https://site.test/p2';
++
++const makeTask = (patch: Partial<OptimizationTask> = {}): OptimizationTask => ({
++  id: 't-test', kind: 'remove-noindex', module: 'sfs', status: 'implemented', url: U,
++  baselineScore: 50, priority: 'high', createdAt: '2026-10-24T09:00:00Z',
++  implementedAt: '2026-10-24T10:00:00Z', ...patch,
++});
++
++describe('remove-noindex evidence certainty, contradictions and gates', () => {
++  it('returns null on http 0/4xx/5xx, transport errors and non-indexable strings', () => {
++    const t = makeTask();
++    expect(verifyTask(t, [page({ url: U, final_url: U, http_status: 0 })], null)).toBeNull();
++    expect(verifyTask(t, [page({ url: U, final_url: U, http_status: 404 })], null)).toBeNull();
++    expect(verifyTask(t, [page({ url: U, final_url: U, http_status: 500 })], null)).toBeNull();
++    expect(verifyTask(t, [page({ url: U, final_url: U, request_error_kind: 'connection_refused' })], null)).toBeNull();
++    expect(verifyTask(t, [page({ url: U, final_url: U, http_status: 200, indexability_status: 'Not indexable' })], null)).toBeNull();
++    expect(verifyTask(t, [page({ url: U, final_url: U, http_status: 200, indexability_status: 'Non-indexable: canonical' })], null)).toBeNull();
++  });
++
++  it('negative structured verdict and canonical contradictions override robots index', () => {
++    const t = makeTask();
++    const badVerdict = { status: 'uncertain', reasons: ['canonical_robots_conflict'] };
++    const pRobots = page({ url: U, final_url: U, http_status: 200, robots_decision: { indexability: 'index', link_following: 'follow', response_headers_available: true }, indexability_verdict: badVerdict });
++    expect(verifyTask(t, [pRobots], null)).toBeNull();
++
++    const pBlocked = page({ url: U, final_url: U, http_status: 200, indexability_verdict: { status: 'blocked', reasons: [] } });
++    expect(verifyTask(t, [pBlocked], null)).toBeNull();
++
++    const pConflict = page({ url: U, final_url: U, http_status: 200, canonical_robots_conflict: true, indexability_status: 'Eligible' });
++    expect(verifyTask(t, [pConflict], null)).toBeNull();
++
++    const pTarget = page({ url: U, final_url: U, http_status: 200, canonical: 'https://site.test/other', indexability_status: 'Eligible' });
++    expect(verifyTask(t, [pTarget], null)).toBeNull();
++  });
++
++  it('fails with still-noindex on negative directive evidence', () => {
++    const t = makeTask();
++    expect(verifyTask(t, [page({ url: U, final_url: U, meta_robots: 'noindex' })], null)).toMatchObject({ status: 'failed', code: 'still-noindex' });
++    expect(verifyTask(t, [page({ url: U, final_url: U, x_robots_tag: 'noindex' })], null)).toMatchObject({ status: 'failed', code: 'still-noindex' });
++    expect(verifyTask(t, [page({ url: U, final_url: U, indexability_status: 'Blocked: noindex' })], null)).toMatchObject({ status: 'failed', code: 'still-noindex' });
++    expect(verifyTask(t, [page({ url: U, final_url: U, meta_robots: null, x_robots_tag: null, robots_decision: null, indexability_status: 'noindex' })], null)).toMatchObject({ status: 'failed', code: 'still-noindex' });
++  });
++
++  it('verifies index-ok on clean affirmative evidence from various sources', () => {
++    const t = makeTask();
++    expect(verifyTask(t, [page({ url: U, final_url: U, http_status: 200, indexability_status: 'Eligible from this response only' })], null)).toMatchObject({ status: 'verified', code: 'index-ok' });
++    expect(verifyTask(t, [page({ url: U, final_url: U, http_status: 200, indexability_status: undefined, indexability_verdict: { status: 'indexable', reasons: [] } })], null)).toMatchObject({ status: 'verified', code: 'index-ok' });
++    expect(verifyTask(t, [page({ url: U, final_url: U, http_status: 200, robots_decision: { indexability: 'index', link_following: 'follow', response_headers_available: true } })], null)).toMatchObject({ status: 'verified', code: 'index-ok' });
++    expect(verifyTask(t, [page({ url: U, final_url: U, http_status: 200, indexability_status: 'Eligible', robots_decision: null, indexability_verdict: null })], null)).toMatchObject({ status: 'verified', code: 'index-ok' });
++  });
++});
++
++describe('deriveCrawlStartedAt and toIso edge cases', () => {
++  it('derives from startedAt, completedAt-duration, and handles RangeError', () => {
++    expect(deriveCrawlStartedAt({ startedAt: '2026-10-24T10:00:00Z' } as CrawlRunRecord)).toBe('2026-10-24T10:00:00.000Z');
++    expect(deriveCrawlStartedAt({ completedAt: '2026-10-24T10:05:00.000Z', result: { duration_ms: 300000 } } as CrawlRunRecord)).toBe('2026-10-24T10:00:00.000Z');
++    expect(deriveCrawlStartedAt({ startedAt: 'invalid-time' } as CrawlRunRecord)).toBeUndefined();
++    expect(deriveCrawlStartedAt({ completedAt: 'invalid-time', result: { duration_ms: 1000 } } as CrawlRunRecord)).toBeUndefined();
++    expect(deriveCrawlStartedAt({ completedAt: '2026-10-24T10:00:00Z' } as CrawlRunRecord)).toBeUndefined();
++    expect(deriveCrawlStartedAt({ completedAt: '2026-10-24T10:00:00Z', result: { duration_ms: -5 } } as CrawlRunRecord)).toBeUndefined();
++    expect(deriveCrawlStartedAt({} as CrawlRunRecord)).toBeUndefined();
++    expect(toIso(8.64e15 + 1)).toBeUndefined();
++    expect(toIso(NaN)).toBeUndefined();
++  });
++});
++
++describe('runTaskVerification-level freshness and caching', () => {
++  beforeEach(() => localStorage.clear());
++
++  it('defers verification when crawl started before implementation or start is unknown', () => {
++    writeTasks(P, [makeTask({ id: 't-defer', implementedAt: '2026-10-24T10:05:00Z' })]);
++    const inFlightRun = { startedAt: '2026-10-24T10:00:00Z', result: { start_url: U, pages: [page({ url: U, final_url: U, http_status: 200, indexability_status: 'Eligible' })] } } as CrawlRunRecord;
++    expect(runTaskVerification(P, inFlightRun)[0].status).toBe('implemented');
++
++    const unknownStartRun = { result: { start_url: U, pages: [page({ url: U, final_url: U, http_status: 200, indexability_status: 'Eligible' })] } } as CrawlRunRecord;
++    expect(runTaskVerification(P, unknownStartRun)[0].status).toBe('implemented');
++
++    const nextCrawlRun = { startedAt: '2026-10-24T10:15:00Z', result: { start_url: U, pages: [page({ url: U, final_url: U, http_status: 200, indexability_status: 'Eligible' })] } } as CrawlRunRecord;
++    expect(runTaskVerification(P, nextCrawlRun)[0].status).toBe('verified');
++  });
++
++  it('covers tas caching and empty run fallback in runTaskVerification', () => {
++    writeTasks(P, [makeTask({ id: 'tas1', module: 'tas', kind: 'remove-noindex', baselineScore: 30 }), makeTask({ id: 'tas2', module: 'tas', kind: 'remove-noindex', baselineScore: 30 })]);
++    const run = { startedAt: '2026-10-24T10:15:00Z', result: { start_url: U, pages: [page({ url: U, final_url: U, http_status: 200, indexability_status: 'Eligible' })] } } as CrawlRunRecord;
++    const verified = runTaskVerification(P, run);
++    expect(verified[0].status).toBe('verified');
++    expect(verified[1].status).toBe('verified');
++
++    writeTasks('empty-run', [makeTask({ id: 'te', implementedAt: undefined })]);
++    expect(runTaskVerification('empty-run', {} as CrawlRunRecord)).toHaveLength(1);
++  });
++});
++
++describe('SPRS, EETV, editTask and appendDeltas branch coverage', () => {
++  beforeEach(() => localStorage.clear());
++
++  it('computes real SPRS score delta for page and honest null when missing', () => {
++    const p1 = page({ url: U, final_url: U, http_status: 200, semantic_terms: ['seo', 'audit'], links: [{ target_url: U2, anchor_text: 'p2', is_internal: true }] });
++    const p2 = page({ url: U2, final_url: U2, http_status: 200, semantic_terms: ['audit', 'tools'], links: [{ target_url: U, anchor_text: 'p1', is_internal: true }] });
++    const run = { startedAt: '2026-10-24T11:00:00Z', result: { start_url: U, duration_ms: 1000, pages: [p1, p2] } } as CrawlRunRecord;
++
++    writeTasks(P, [makeTask({ id: 'tsprs', module: 'sprs', kind: 'add-link', targetUrl: U2, baselineScore: 10 }), makeTask({ id: 'tsprs2', module: 'sprs', kind: 'add-link', targetUrl: U2, baselineScore: 10 }), makeTask({ id: 'tsprs-missing', module: 'sprs', url: 'https://site.test/absent', baselineScore: 10 })]);
++    const verified = runTaskVerification(P, run);
++    expect(verified[0].status).toBe('verified');
++    expect(verified[1].status).toBe('verified');
++    expect(typeof verified[0].verdict?.delta).toBe('number');
++    expect(verified[2].status).toBe('implemented');
++
++    writeTasks('empty-sprs', [makeTask({ id: 'tsprs-empty', module: 'sprs', baselineScore: 10 })]);
++    const emptyRun = { startedAt: '2026-10-24T11:00:00Z', result: { start_url: U, pages: [] } } as unknown as CrawlRunRecord;
++    expect(runTaskVerification('empty-sprs', emptyRun)[0].status).toBe('implemented');
++    expect(runTaskVerification('empty-sprs', emptyRun)[0].verdict).toBeUndefined();
++  });
++
++  it('computes EETV trust score delta when live pages exist and null when absent', () => {
++    const p1 = page({ url: U, final_url: U, http_status: 200 });
++    const run = { startedAt: '2026-10-24T11:00:00Z', result: { start_url: U, duration_ms: 1000, pages: [p1] } } as CrawlRunRecord;
++    writeTasks(P, [makeTask({ id: 'teetv', module: 'eetv', kind: 'remove-noindex', baselineScore: 20 })]);
++    const verified = runTaskVerification(P, run);
++    expect(verified[0].status).toBe('verified');
++    expect(typeof verified[0].verdict?.delta).toBe('number');
++
++    const errorRun = { startedAt: '2026-10-24T12:00:00Z', result: { start_url: U, duration_ms: 1000, pages: [page({ url: U, final_url: U, http_status: 500 })] } } as CrawlRunRecord;
++    writeTasks(P, [makeTask({ id: 'teetv2', module: 'eetv', kind: 'remove-410', baselineScore: 20 })]);
++    const errorVerified = runTaskVerification(P, errorRun);
++    expect(errorVerified[0].verdict?.delta).toBeNull();
++  });
++
++  it('covers editTask invalid priority and appendDeltas empty verifiedAt branches', () => {
++    const t = makeTask({ id: 't-edit', priority: 'medium' });
++    const edited = editTask([t], 't-edit', { priority: 'bogus' as never });
++    expect(edited[0].priority).toBe('medium');
++
++    const verifiedWithoutDate = makeTask({ id: 't-nodate', status: 'verified', verifiedAt: undefined, verdict: { status: 'verified', code: 'index-ok', params: {}, delta: 5, regression: false } });
++    const rows = appendDeltas('p-nodate', [makeTask({ id: 't-nodate', status: 'implemented' })], [verifiedWithoutDate]);
++    expect(rows[0].at).toBe('');
++  });
++});
+diff --git a/tests/optimizationTasksCoverage.test.ts b/tests/optimizationTasksCoverage.test.ts
+new file mode 100644
+index 00000000..d111aaf6
+--- /dev/null
++++ b/tests/optimizationTasksCoverage.test.ts
+@@ -0,0 +1,143 @@
++import { beforeEach, describe, expect, it } from 'vitest';
++import type { CrawlRunRecord } from '@/types';
++import { editTask, filterTasks } from '@/services/optimizationTasks/edit';
++import { appendDeltas, readMetricHistory, metricHistoryKey, MAX_METRIC_HISTORY } from '@/services/optimizationTasks/metricHistory';
++import { runTaskVerification } from '@/services/optimizationTasks/runVerification';
++import { writeTasks } from '@/services/optimizationTasks/storage';
++import { verifyTask } from '@/services/optimizationTasks/verify';
++import type { OptimizationTask } from '@/services/optimizationTasks/types';
++import { createCrawlPageFixture as page } from './fixtures/crawl';
++
++const U = 'https://site.test/p1';
++const task = (id: string, patch: Partial<OptimizationTask> = {}): OptimizationTask => ({
++  id, kind: 'remove-noindex', module: 'sfs', status: 'implemented', url: U,
++  baselineScore: 50, priority: 'medium', createdAt: '2026-10-24T00:00:00Z',
++  implementedAt: '2026-10-24T01:00:00Z', ...patch,
++});
++
++describe('optimizationTasks edit and filter coverage', () => {
++  it('handles editTask branches: owner, priority, dueDate and unmatched id', () => {
++    const t = task('t1', { owner: 'Alice', dueDate: '2026-10-20' });
++    const tasks = [t, task('t2')];
++    expect(editTask(tasks, 't1', { owner: '  Bob  ' })[0].owner).toBe('Bob');
++    expect(editTask(tasks, 't1', { owner: '   ' })[0].owner).toBeUndefined();
++    expect(editTask(tasks, 't1', { priority: 'high' })[0].priority).toBe('high');
++    expect(editTask(tasks, 't1', { priority: 'invalid' as never })[0].priority).toBe('medium');
++    expect(editTask(tasks, 't1', { dueDate: '' })[0].dueDate).toBeUndefined();
++    expect(editTask(tasks, 't1', { dueDate: '2026-11-01' })[0].dueDate).toBe('2026-11-01');
++    expect(editTask(tasks, 't1', { dueDate: 'not-a-date' })[0].dueDate).toBe('2026-10-20');
++  });
++
++  it('handles filterTasks branches: mine, overdue and all', () => {
++    const tMine = task('t1', { owner: 'Alice' });
++    const tOther = task('t2', { owner: 'Bob' });
++    const tNoOwner = task('t3', { owner: undefined });
++    const tOverduePlanned = task('t4', { dueDate: '2026-10-01', status: 'planned' });
++    const tOverdueImpl = task('t5', { dueDate: '2026-10-01', status: 'implemented' });
++    const tOverdueDone = task('t6', { dueDate: '2026-10-01', status: 'verified' });
++    const tFuture = task('t7', { dueDate: '2026-12-01', status: 'planned' });
++    const all = [tMine, tOther, tNoOwner, tOverduePlanned, tOverdueImpl, tOverdueDone, tFuture];
++
++    expect(filterTasks(all, 'mine', 'alice', '2026-10-24')).toEqual([tMine]);
++    expect(filterTasks(all, 'mine', '   ', '2026-10-24')).toEqual([]);
++    expect(filterTasks(all, 'overdue', 'alice', '2026-10-24')).toEqual([tOverduePlanned, tOverdueImpl]);
++    expect(filterTasks(all, 'all', 'alice', '2026-10-24')).toEqual(all);
++  });
++});
++
++describe('optimizationTasks metricHistory and runVerification coverage', () => {
++  beforeEach(() => localStorage.clear());
++
++  it('handles readMetricHistory validation and filtering', () => {
++    localStorage.setItem(metricHistoryKey('m1'), JSON.stringify('not-array'));
++    expect(readMetricHistory('m1')).toEqual([]);
++
++    const rows = [{ taskId: 't1', delta: 5 }, null, 'str', { taskId: 123, delta: 5 }, { taskId: 't2' }];
++    localStorage.setItem(metricHistoryKey('m2'), JSON.stringify(rows));
++    expect(readMetricHistory('m2')).toEqual([{ taskId: 't1', delta: 5 }]);
++  });
++
++  it('handles appendDeltas empty rows and history capping', () => {
++    expect(appendDeltas('m3', [], [])).toEqual([]);
++
++    const before = [task('t1')];
++    const after = [{ ...before[0], status: 'verified' as const, verdict: { status: 'verified' as const, code: 'index-ok' as const, params: {}, delta: 2, regression: false } }];
++    const existing = Array.from({ length: MAX_METRIC_HISTORY + 5 }, (_, i) => ({ taskId: `old-${i}`, module: 'sfs' as const, url: U, delta: 1, status: 'verified' as const, at: '' }));
++    localStorage.setItem(metricHistoryKey('m4'), JSON.stringify(existing));
++    const result = appendDeltas('m4', before, after);
++    expect(result).toHaveLength(1);
++    expect(readMetricHistory('m4')).toHaveLength(MAX_METRIC_HISTORY);
++  });
++
++  it('runTaskVerification early return when no tasks implemented and cached EETV', () => {
++    writeTasks('no-impl', [task('p1', { status: 'planned' }), task('p2', { status: 'verified' })]);
++    expect(runTaskVerification('no-impl', {} as CrawlRunRecord)).toHaveLength(2);
++
++    writeTasks('eetv-cache', [
++      task('e1', { module: 'eetv', kind: 'remove-noindex', baselineScore: 10 }),
++      task('e2', { module: 'eetv', kind: 'remove-noindex', baselineScore: 20 }),
++    ]);
++    const run = { startedAt: '2026-10-24T05:00:00Z', result: { start_url: U, pages: [page({ url: U, final_url: U, http_status: 200, indexability_status: 'Eligible' })] } } as CrawlRunRecord;
++    const verified = runTaskVerification('eetv-cache', run);
++    expect(verified[0].status).toBe('verified');
++    expect(verified[1].status).toBe('verified');
++  });
++
++  it('verifyTask fallback branches: empty targetUrl and absent indexability status', () => {
++    const tLink = task('tl', { kind: 'add-link', targetUrl: undefined });
++    expect(verifyTask(tLink, [page({ url: U, final_url: U, links: [] })], null)).toMatchObject({ status: 'failed', code: 'link-missing' });
++    const pWithLink = page({ url: U, final_url: U, links: [{ target_url: 'https://site.test/other', anchor_text: 'x', is_internal: true }] });
++    expect(verifyTask(tLink, [pWithLink], null)).toMatchObject({ status: 'failed', code: 'link-missing' });
++
++    const tNoindex = task('tni', { kind: 'remove-noindex' });
++    const pNoStatus = page({ url: U, final_url: U, http_status: 200, indexability_status: undefined, robots_decision: null, indexability_verdict: null });
++    expect(verifyTask(tNoindex, [pNoStatus], null)).toBeNull();
++  });
++
++  it('eetv regression on all-HTTP0 crawl: returns honest null delta and zero metricHistory points', () => {
++    writeTasks('eetv-http0', [task('e-fail', { module: 'eetv', kind: 'remove-410', baselineScore: 20 })]);
++    const run = { startedAt: '2026-10-24T05:00:00Z', result: { start_url: U, duration_ms: 1000, pages: [page({ url: U, final_url: U, http_status: 0 })] } } as CrawlRunRecord;
++    const verified = runTaskVerification('eetv-http0', run);
++    expect(verified[0].status).toBe('implemented');
++    expect(verified[0].verdict).toBeUndefined();
++    expect(readMetricHistory('eetv-http0')).toHaveLength(0);
++  });
++
++  it('eetv mixed crawl: measures real 200 trust score while recording valid deltas', () => {
++    const u2 = 'https://site.test/p2';
++    const u3 = 'https://site.test/p3';
++    writeTasks('eetv-mixed', [
++      task('t-fail', { url: U, module: 'eetv', kind: 'remove-410', baselineScore: 20 }),
++      task('t-ok', { url: u2, module: 'eetv', kind: 'remove-noindex', baselineScore: 20 }),
++      task('t-gone', { url: u3, module: 'eetv', kind: 'remove-410', baselineScore: 20 }),
++    ]);
++    const run = {
++      startedAt: '2026-10-24T05:00:00Z',
++      result: {
++        start_url: U, duration_ms: 1000,
++        pages: [
++          page({ url: U, final_url: U, http_status: 0 }),
++          page({ url: u2, final_url: u2, http_status: 200, indexability_status: 'Eligible' }),
++          page({ url: u3, final_url: u3, http_status: 410 }),
++        ],
++      },
++    } as CrawlRunRecord;
++    const verified = runTaskVerification('eetv-mixed', run);
++    expect(verified[0].status).toBe('implemented');
++    expect(verified[1].status).toBe('verified');
++    expect(typeof verified[1].verdict?.delta).toBe('number');
++    expect(verified[2].status).toBe('verified');
++    expect(verified[2].verdict?.code).toBe('gone-ok');
++    expect(readMetricHistory('eetv-mixed')).toHaveLength(2);
++  });
++
++  it('sprs returns honest null when task page is in graph but excluded from sprs report', () => {
++    const u2 = 'https://site.test/p2';
++    writeTasks('sprs-ineligible', [task('s-ineligible', { url: U, module: 'sprs', kind: 'remove-410', baselineScore: 30 })]);
++    const pIneligible = page({ url: U, final_url: U, http_status: 200, meta_robots: 'noindex', semantic_terms: ['seo'] });
++    const pEligible = page({ url: u2, final_url: u2, http_status: 200, semantic_terms: ['seo', 'audit'], links: [{ target_url: U, anchor_text: 'p1', is_internal: true }] });
++    const run = { startedAt: '2026-10-24T05:00:00Z', result: { start_url: u2, duration_ms: 1000, pages: [pIneligible, pEligible] } } as CrawlRunRecord;
++    const verified = runTaskVerification('sprs-ineligible', run);
++    expect(verified[0].verdict?.delta).toBeNull();
++  });
++});
+diff --git a/tests/optimizationTasksEvidenceAuditor.test.ts b/tests/optimizationTasksEvidenceAuditor.test.ts
+new file mode 100644
+index 00000000..8c6d263d
+--- /dev/null
++++ b/tests/optimizationTasksEvidenceAuditor.test.ts
+@@ -0,0 +1,57 @@
++import { describe, expect, it } from 'vitest';
++import { verifyTask, verifyTasks } from '@/services/optimizationTasks/verify';
++import type { OptimizationTask } from '@/services/optimizationTasks/types';
++import { createCrawlPageFixture as page } from './fixtures/crawl';
++
++const U = 'https://site.test/a';
++const U2 = 'https://site.test/b';
++const task = (patch: Partial<OptimizationTask> = {}): OptimizationTask => ({
++  id: 't-aud', kind: 'add-link', module: 'sprs', status: 'implemented', url: U,
++  targetUrl: U2, baselineScore: null, priority: 'high', createdAt: '2026-10-24T08:00:00Z',
++  implementedAt: '2026-10-24T09:00:00Z', ...patch,
++});
++
++describe('optimizationTasks evidence auditor edge cases', () => {
++  it('addLink returns null on error status, transport failure and truncated body', () => {
++    const t = task({ kind: 'add-link' });
++    expect(verifyTask(t, [page({ url: U, final_url: U, http_status: 500, links: [{ target_url: U2, anchor_text: 'b', is_internal: true }] })], null)).toBeNull();
++    expect(verifyTask(t, [page({ url: U, final_url: U, http_status: 0, request_error_kind: 'timeout' })], null)).toBeNull();
++    expect(verifyTask(t, [page({ url: U, final_url: U, http_status: 200, body_truncated: true, links: [] })], null)).toBeNull();
++  });
++
++  it('redirect returns null on transport error or non-200 broken status without redirect chain', () => {
++    const t = task({ kind: 'redirect-301' });
++    expect(verifyTask(t, [page({ url: U, final_url: U, request_error_kind: 'conn_refused' })], null)).toBeNull();
++    expect(verifyTask(t, [page({ url: U, final_url: U, http_status: 500, redirect_chain: [] })], null)).toBeNull();
++  });
++
++  it('remove410 returns null on transport error or HTTP 0, and verifies on actual 410', () => {
++    const t = task({ kind: 'remove-410' });
++    expect(verifyTask(t, [page({ url: U, final_url: U, request_error_kind: 'timeout' })], null)).toBeNull();
++    expect(verifyTask(t, [page({ url: U, final_url: U, http_status: 0 })], null)).toBeNull();
++    expect(verifyTask(t, [page({ url: U, final_url: U, http_status: 410 })], null)).toMatchObject({ status: 'verified', code: 'gone-ok' });
++  });
++
++  it('entities returns null on unavailable semantic source, missing terms, error status or truncated body', () => {
++    const t = task({ kind: 'add-entities', requiredEntities: ['diabetes'] });
++    expect(verifyTask(t, [page({ url: U, final_url: U, http_status: 500, semantic_terms: ['diabetes'] })], null)).toBeNull();
++    expect(verifyTask(t, [page({ url: U, final_url: U, http_status: 200, semantic_content_source: 'unavailable', semantic_terms: [] })], null)).toBeNull();
++    expect(verifyTask(t, [page({ url: U, final_url: U, http_status: 200, semantic_terms: undefined })], null)).toBeNull();
++    expect(verifyTask(t, [page({ url: U, final_url: U, http_status: 200, body_truncated: true, semantic_terms: [] })], null)).toBeNull();
++  });
++
++  it('noindex returns null on error status and transport failure', () => {
++    const t = task({ kind: 'remove-noindex' });
++    expect(verifyTask(t, [page({ url: U, final_url: U, http_status: 500, meta_robots: 'noindex' })], null)).toBeNull();
++    expect(verifyTask(t, [page({ url: U, final_url: U, http_status: 0 })], null)).toBeNull();
++    expect(verifyTask(t, [page({ url: U, final_url: U, request_error_kind: 'timeout' })], null)).toBeNull();
++  });
++
++  it('verifyTasks defers legacy task without implementedAt when freshness timestamp is provided', () => {
++    const legacy = task({ id: 't-legacy', implementedAt: undefined });
++    const pSuccess = page({ url: U, final_url: U, http_status: 200, links: [{ target_url: U2, anchor_text: 'b', is_internal: true }] });
++    const verified = verifyTasks([legacy], [pSuccess], () => null, '2026-10-24T12:00:00Z', '2026-10-24T10:00:00Z');
++    expect(verified[0].status).toBe('implemented');
++    expect(verified[0].verdict).toBeUndefined();
++  });
++});

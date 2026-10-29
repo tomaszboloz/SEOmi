@@ -1,0 +1,81 @@
+diff --git a/tests/desktopE2eFixtureBoundary.test.ts b/tests/desktopE2eFixtureBoundary.test.ts
+--- a/tests/desktopE2eFixtureBoundary.test.ts
++++ b/tests/desktopE2eFixtureBoundary.test.ts
+@@ -38,10 +38,13 @@
+     expect(res.failure).toBe(expected);
+   };
+ 
+-  const expectCrawlFail = async (crawl: any, id: string, final_url: string, expected = 'HTTP observed final URL is expected host') => {
++  const expectCrawlFail = async (crawl: any, id: string, modeToFail: 'http' | 'browser-rendered', badUrl: string, expected: string) => {
+     await expect(crawl.run({
+       projectId: id, check,
+-      invoke: async () => ({ crawl_mode: 'http', cancelled: false, timed_out: false, pages: [baseCrawlPage(final_url)] }),
++      invoke: async (_: string, args: any) => ({
++        crawl_mode: args.config.crawlMode, cancelled: false, timed_out: false,
++        pages: [baseCrawlPage(args.config.crawlMode === modeToFail ? badUrl : fixtureOrigin)],
++      }),
+     })).rejects.toThrow(expected);
+   };
+ 
+@@ -65,37 +68,44 @@
+   it('rejects wrong host in renderer snapshot and crawl final URL', async () => {
+     const { renderer, crawl } = loadScripts(fixtureOrigin);
+     await expectSnapFail(renderer, 'host-snap', 'http://attacker.local:49152/');
+-    await expectCrawlFail(crawl, 'host-crawl', 'http://attacker.local:49152/');
++    await expectCrawlFail(crawl, 'host-crawl', 'http', 'http://attacker.local:49152/', 'HTTP observed final URL is expected host');
+   });
+ 
+   it('rejects malformed final URL in renderer snapshot and crawl', async () => {
+     const { renderer, crawl } = loadScripts(fixtureOrigin);
+     await expectSnapFail(renderer, 'malformed-snap', 'http://[invalid/');
+-    await expectCrawlFail(crawl, 'malformed-crawl', 'http://[invalid/');
++    await expectCrawlFail(crawl, 'malformed-crawl', 'http', 'http://[invalid/', 'HTTP observed final URL is expected host');
+   });
+ 
+-  it('rejects wrong port in renderer snapshot, crawl, and artifacts', async () => {
++  it('rejects wrong port in renderer snapshot, both crawl modes, and each artifact', async () => {
+     const { renderer, crawl } = loadScripts(fixtureOrigin);
+     const wrongPortUrl = 'http://127.0.0.1:8888/';
+     await expectSnapFail(renderer, 'port-snap', wrongPortUrl);
+-    await expectCrawlFail(crawl, 'port-crawl', wrongPortUrl);
++    await expectCrawlFail(crawl, 'port-http', 'http', wrongPortUrl, 'HTTP observed final URL is expected host');
++    await expectCrawlFail(crawl, 'port-rendered', 'browser-rendered', wrongPortUrl, 'browser-rendered observed final URL is expected host');
+ 
+-    const artRes = await renderer.run({
+-      projectId: 'port-art',
+-      invoke: async (name: string, args: any) => {
+-        if (name === 'render_crawl_page') return { html: '<title>Example Domain</title><h1>Example Domain</h1>', httpStatus: 200, finalUrl: fixtureOrigin };
+-        if (name === 'capture_rendered_artifact') return baseArtifact(args.kind, wrongPortUrl);
+-        return {};
+-      },
+-    });
+-    expect(artRes.passed).toBe(false);
+-    expect(artRes.failure).toBe('Error: screenshot artifact final URL is exact');
++    const testArtifactFail = async (badKind: 'screenshot' | 'pdf', expectedError: string) => {
++      const res = await renderer.run({
++        projectId: `port-${badKind}`,
++        invoke: async (name: string, args: any) => {
++          if (name === 'render_crawl_page') return { html: '<title>Example Domain</title><h1>Example Domain</h1>', httpStatus: 200, finalUrl: fixtureOrigin };
++          if (name === 'capture_rendered_artifact') return baseArtifact(args.kind, args.kind === badKind ? wrongPortUrl : fixtureOrigin);
++          return {};
++        },
++      });
++      expect(res.passed).toBe(false);
++      expect(res.failure).toBe(expectedError);
++    };
++    await testArtifactFail('screenshot', 'Error: screenshot artifact final URL is exact');
++    await testArtifactFail('pdf', 'Error: pdf artifact final URL is exact');
+   });
+ 
+-  it('rejects wrong protocol in renderer snapshot and crawl', async () => {
++  it('rejects wrong protocol in renderer snapshot and both crawl modes', async () => {
+     const { renderer, crawl } = loadScripts(fixtureOrigin);
+-    await expectSnapFail(renderer, 'proto-snap', 'https://127.0.0.1:49152/');
+-    await expectCrawlFail(crawl, 'proto-crawl', 'https://127.0.0.1:49152/');
++    const wrongProtoUrl = 'https://127.0.0.1:49152/';
++    await expectSnapFail(renderer, 'proto-snap', wrongProtoUrl);
++    await expectCrawlFail(crawl, 'proto-http', 'http', wrongProtoUrl, 'HTTP observed final URL is expected host');
++    await expectCrawlFail(crawl, 'proto-rendered', 'browser-rendered', wrongProtoUrl, 'browser-rendered observed final URL is expected host');
+   });
+ 
+   it('passes all 48 assertions on exact origin with subpath', async () => {

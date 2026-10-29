@@ -1,0 +1,179 @@
+diff --git a/tests/geminiGapBACKLOGSija.test.ts b/tests/geminiGapBACKLOGSija.test.ts
+new file mode 100644
+index 00000000..13428bcc
+--- /dev/null
++++ b/tests/geminiGapBACKLOGSija.test.ts
+@@ -0,0 +1,75 @@
++import { describe, expect, it } from 'vitest';
++import { extractFeatures, parseFeatures } from '@/services/sija/features';
++
++describe('geminiGapBACKLOG: sija features schema and context branches', () => {
++  it('covers microdata itemtype branches on line 38 and authority parsing on line 13', () => {
++    // Microdata with matching LocalBusiness schema
++    const htmlMatching = '<div itemtype="https://schema.org/LocalBusiness">Store</div>';
++    expect(parseFeatures(htmlMatching).localSignals).toBeGreaterThanOrEqual(1);
++
++    // Microdata with non-matching and empty itemtype
++    const htmlNonMatching = '<div itemtype="https://schema.org/Other">Other</div><div itemtype="">Empty</div>';
++    expect(parseFeatures(htmlNonMatching).localSignals).toBe(0);
++
++    // Value without // authority start < 0
++    const htmlNoSlash = '<div itemtype="mailto:contact@schema.org">Mail</div>';
++    expect(parseFeatures(htmlNoSlash).localSignals).toBe(0);
++
++    // Document with null getAttribute for line 38 ?? branch
++    const doc = new DOMParser().parseFromString('<div itemtype="">NullItemType</div>', 'text/html');
++    const el = doc.querySelector('div')!;
++    Object.defineProperty(el, 'getAttribute', { value: () => null });
++    expect(extractFeatures(doc).localSignals).toBe(0);
++  });
++
++  it('covers context arrays, objects, query params and hashes on lines 29, 30, 33', () => {
++    // Array @context (line 29)
++    const jsonLdArrayContext = JSON.stringify({
++      '@context': ['https://schema.org', { '@language': 'en' }],
++      '@type': 'LocalBusiness',
++    });
++    expect(parseFeatures(`<script type="application/ld+json">${jsonLdArrayContext}</script>`).localSignals).toBeGreaterThanOrEqual(1);
++
++    // Object @context (line 30)
++    const jsonLdObjectContext = JSON.stringify({
++      '@context': { '@vocab': 'https://schema.org/' },
++      '@type': 'LocalBusiness',
++    });
++    expect(parseFeatures(`<script type="application/ld+json">${jsonLdObjectContext}</script>`).localSignals).toBeGreaterThanOrEqual(1);
++
++    // Context with search, hash, or non-root path (line 33)
++    const jsonLdSearch = JSON.stringify({ '@context': 'https://schema.org/?q=1', '@type': 'LocalBusiness' });
++    expect(parseFeatures(`<script type="application/ld+json">${jsonLdSearch}</script>`).localSignals).toBe(0);
++
++    const jsonLdHash = JSON.stringify({ '@context': 'https://schema.org/#tag', '@type': 'LocalBusiness' });
++    expect(parseFeatures(`<script type="application/ld+json">${jsonLdHash}</script>`).localSignals).toBe(0);
++
++    const jsonLdPath = JSON.stringify({ '@context': 'https://schema.org/SubPath', '@type': 'LocalBusiness' });
++    expect(parseFeatures(`<script type="application/ld+json">${jsonLdPath}</script>`).localSignals).toBe(0);
++  });
++
++  it('covers JSON-LD arrays, raw type arrays, and parsing errors on lines 40, 44, 49', () => {
++    // Array value in hasJsonType (line 40)
++    const jsonLdArray = JSON.stringify([
++      { '@context': 'https://schema.org', '@type': ['LocalBusiness', 'Store'] },
++    ]);
++    expect(parseFeatures(`<script type="application/ld+json">${jsonLdArray}</script>`).localSignals).toBeGreaterThanOrEqual(1);
++
++    // String @type
++    const jsonLdString = JSON.stringify({
++      '@context': 'https://schema.org',
++      '@type': 'PostalAddress',
++    });
++    expect(parseFeatures(`<script type="application/ld+json">${jsonLdString}</script>`).localSignals).toBeGreaterThanOrEqual(1);
++
++    // Malformed JSON inside script (line 49 catch block)
++    const htmlMalformed = '<script type="application/ld+json">{ invalid json</script>';
++    expect(parseFeatures(htmlMalformed).localSignals).toBe(0);
++
++    // Document with null script textContent for line 49 ?? branch
++    const doc = new DOMParser().parseFromString('<script type="application/ld+json"></script>', 'text/html');
++    const script = doc.querySelector('script')!;
++    Object.defineProperty(script, 'textContent', { value: null });
++    expect(extractFeatures(doc).localSignals).toBe(0);
++  });
++});
+diff --git a/tests/geminiGapBACKLOGTopical.test.ts b/tests/geminiGapBACKLOGTopical.test.ts
+new file mode 100644
+index 00000000..749cb11d
+--- /dev/null
++++ b/tests/geminiGapBACKLOGTopical.test.ts
+@@ -0,0 +1,92 @@
++import { describe, expect, it } from 'vitest';
++import { templateInformationGain } from '@/services/templateGovernor/informationGain';
++import type { TemplateCluster } from '@/services/templateGovernor/cluster';
++import { contentDecay } from '@/services/topicalAuthorityMonitoring/alerts';
++import { buildTopicalBenchmark } from '@/services/topicalAuthorityReference/benchmark';
++import { buildTopics } from '@/services/topicalDiagnosis/topics';
++import type { DiagnosisDocument } from '@/services/topicalDiagnosis/types';
++import { buildAuthorityReport, type CompetitorPages } from '@/services/topicalAuthority';
++import { NOW, OWN_HOST, ownReport, ownSite, referenceTaxonomy } from './authorityFixtures';
++
++describe('geminiGapBACKLOG: templateGovernor, alerts, benchmark, and topics', () => {
++  it('covers templateInformationGain branch on line 38', () => {
++    const cluster: TemplateCluster = {
++      pattern: '/products/*',
++      pages: [
++        { url: 'https://site.test/p1', text: 'common template text uniqueA' },
++        { url: 'https://site.test/p2', text: 'common template text uniqueB' },
++      ],
++    };
++    const gain = templateInformationGain(cluster, 0.8);
++    expect(gain).toBeGreaterThan(0);
++    expect(gain).toBeLessThan(1);
++  });
++
++  it('covers contentDecay pillarUrl ternary branch on line 27', () => {
++    const report = {
++      silo: {
++        audits: {
++          withPillar: { pillarUrl: 'https://site.test/pillar' },
++          withoutPillar: { pillarUrl: undefined },
++        },
++      },
++      freshness: { stale: ['https://site.test/pillar'] },
++      coverage: [{ bestUrl: 'https://site.test/pillar', entitiesMissing: ['schema', 'author'] }],
++    } as never;
++    const alerts = contentDecay(report);
++    expect(alerts).toEqual([{ code: 'content-decay', params: { url: 'https://site.test/pillar', missing: 2 } }]);
++  });
++
++  it('covers buildTopicalBenchmark tie-breaker sort on line 24 and trailing pillars on line 31', () => {
++    const pages = ownSite();
++    const taxonomy = referenceTaxonomy(pages)!;
++    const own = buildAuthorityReport(pages, `https://${OWN_HOST}/`, ownReport(pages), { taxonomy, now: NOW });
++
++    const competitors: CompetitorPages[] = [
++      { domain: 'beta-comp.test', pages: ownSite() },
++      { domain: 'alpha-comp.test', pages: ownSite() },
++    ];
++
++    // Weak own coverage on 'pour' creates trailing pillars where margin(pillar) < 0
++    const weakOwn = {
++      ...own,
++      tas: own.tas, // same tas as competitors to trigger tie-breaker domain sort
++      pillarCoverage: [
++        { id: 'pour', label: 'Pour', subtopics: 1, coveragePct: 0, gaps: 1, shallow: 0 },
++        { id: 'general', label: 'General', subtopics: 1, coveragePct: 10, gaps: 1, shallow: 0 },
++      ],
++    };
++
++    const benchmark = buildTopicalBenchmark(weakOwn as never, OWN_HOST, competitors, taxonomy, NOW);
++    const benchmarkReversed = buildTopicalBenchmark(weakOwn as never, OWN_HOST, [competitors[1], competitors[0]], taxonomy, NOW);
++    expect(benchmark).not.toBeNull();
++    expect(benchmark?.rows.length).toBe(3);
++    expect(benchmarkReversed?.rows.length).toBe(3);
++    expect(benchmark?.insights.some((i) => i.code === 'trailing-pillars')).toBe(true);
++  });
++
++  it('covers buildTopics pair truncation on line 46', () => {
++    const documents: DiagnosisDocument[] = Array.from({ length: 501 }, (_, i) => ({
++      id: `doc-${i}`,
++      role: 'content',
++      url: `https://site.test/p${i}`,
++      finalUrl: `https://site.test/p${i}`,
++      title: `Page ${i}`,
++      headings: [],
++      terms: new Set(['term1', 'term2']),
++      titleTerms: ['en:term1'],
++      titleForms: new Map([['en:term1', 'Term1']]),
++      primaryPage: { language: 'en' },
++      pages: [],
++    } as never));
++    const stats = {
++      idf: () => 1,
++      isTopical: () => true,
++      documentFrequency: new Map(),
++      comparable: 501,
++    };
++    const result = buildTopics(documents, new Map(), stats as never, () => 1);
++    expect(result.truncated).toBe(true);
++    expect(result.pairs.length).toBe(124_750);
++  });
++});

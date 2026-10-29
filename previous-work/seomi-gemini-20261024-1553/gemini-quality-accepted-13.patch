@@ -1,0 +1,1423 @@
+diff --git a/tests/geminiGapBACKLOGSija.test.ts b/tests/geminiGapBACKLOGSija.test.ts
+new file mode 100644
+index 00000000..88cd0b07
+--- /dev/null
++++ b/tests/geminiGapBACKLOGSija.test.ts
+@@ -0,0 +1,90 @@
++import { describe, expect, it } from 'vitest';
++import { parseFeatures } from '@/services/sija/features';
++
++describe('geminiGapBACKLOG: sija features schema and context branches', () => {
++  it('covers microdata itemtype branches and authority parsing with real HTML', () => {
++    // Matching schema.org LocalBusiness in standard microdata
++    const matching = parseFeatures('<div itemtype="https://schema.org/LocalBusiness">Store</div>');
++    expect(matching.localSignals).toBe(1);
++
++    // Multi-type microdata with extra spaces
++    const multi = parseFeatures('<div itemtype="https://schema.org/Store   https://schema.org/LocalBusiness">Shop</div>');
++    expect(multi.localSignals).toBe(1);
++
++    // Empty and non-matching itemtype attributes
++    const nonMatching = parseFeatures('<div itemtype="https://schema.org/Article">News</div><div itemtype="">Empty</div>');
++    expect(nonMatching.localSignals).toBe(0);
++
++    // Whitespace-only itemtype attribute
++    const whitespace = parseFeatures('<div itemtype="   ">Whitespace</div>');
++    expect(whitespace.localSignals).toBe(0);
++
++    // Schema URL without // (authorityStart < 0) or non-schema scheme
++    const noSlash = parseFeatures('<div itemtype="mailto:info@schema.org">Mail</div><div itemtype="urn:isbn:12345">Book</div>');
++    expect(noSlash.localSignals).toBe(0);
++
++    // Microdata inside ignored content element (navigation) is skipped
++    const inNav = parseFeatures('<nav><div itemtype="https://schema.org/LocalBusiness">Nav Store</div></nav>');
++    expect(inNav.localSignals).toBe(0);
++  });
++
++  it('covers context arrays, objects, query params and hashes on lines 29, 30, 33', () => {
++    // Array @context (line 29)
++    const arrayCtx = JSON.stringify({
++      '@context': ['https://schema.org', { '@language': 'en' }],
++      '@type': 'LocalBusiness',
++    });
++    expect(parseFeatures(`<script type="application/ld+json">${arrayCtx}</script>`).localSignals).toBe(1);
++
++    // Object @context with @vocab (line 30)
++    const objectCtx = JSON.stringify({
++      '@context': { '@vocab': 'https://schema.org/' },
++      '@type': 'LocalBusiness',
++    });
++    expect(parseFeatures(`<script type="application/ld+json">${objectCtx}</script>`).localSignals).toBe(1);
++
++    // Context with search query parameter (line 33 rejected)
++    const searchCtx = JSON.stringify({ '@context': 'https://schema.org/?q=param', '@type': 'LocalBusiness' });
++    expect(parseFeatures(`<script type="application/ld+json">${searchCtx}</script>`).localSignals).toBe(0);
++
++    // Context with fragment hash (line 33 rejected)
++    const hashCtx = JSON.stringify({ '@context': 'https://schema.org/#section', '@type': 'LocalBusiness' });
++    expect(parseFeatures(`<script type="application/ld+json">${hashCtx}</script>`).localSignals).toBe(0);
++
++    // Context with non-root subpath (line 33 rejected)
++    const pathCtx = JSON.stringify({ '@context': 'https://schema.org/SubPath', '@type': 'LocalBusiness' });
++    expect(parseFeatures(`<script type="application/ld+json">${pathCtx}</script>`).localSignals).toBe(0);
++  });
++
++  it('covers JSON-LD arrays, string vs array @type, and parser fallbacks without DOM forgery', () => {
++    // JSON-LD root array of entities and @type array (lines 40, 44)
++    const rootArray = JSON.stringify([
++      { '@context': 'https://schema.org', '@type': ['LocalBusiness', 'Store'] },
++    ]);
++    expect(parseFeatures(`<script type="application/ld+json">${rootArray}</script>`).localSignals).toBe(1);
++
++    // PostalAddress schema type with string @type
++    const postal = JSON.stringify({ '@context': 'https://schema.org', '@type': 'PostalAddress' });
++    expect(parseFeatures(`<script type="application/ld+json">${postal}</script>`).localSignals).toBe(1);
++
++    // Empty script tag: real textContent is "", JSON.parse fails in catch block (line 49)
++    const emptyScript = parseFeatures('<script type="application/ld+json"></script>');
++    expect(emptyScript.localSignals).toBe(0);
++
++    // Whitespace only script tag: real textContent is "  ", JSON.parse fails in catch block
++    const wsScript = parseFeatures('<script type="application/ld+json">   \n   </script>');
++    expect(wsScript.localSignals).toBe(0);
++
++    // Malformed JSON inside script (line 49 catch block)
++    const malformed = parseFeatures('<script type="application/ld+json">{ broken json </script>');
++    expect(malformed.localSignals).toBe(0);
++
++    // Non-object JSON value (primitive null, number)
++    expect(parseFeatures('<script type="application/ld+json">null</script>').localSignals).toBe(0);
++    expect(parseFeatures('<script type="application/ld+json">42</script>').localSignals).toBe(0);
++
++    // Script inside ignored content element (header) is ignored
++    const inHeader = parseFeatures(`<header><script type="application/ld+json">${postal}</script></header>`);
++    expect(inHeader.localSignals).toBe(0);
++  });
++});
+diff --git a/tests/geminiGapBACKLOGTopical.test.ts b/tests/geminiGapBACKLOGTopical.test.ts
+new file mode 100644
+index 00000000..2b946718
+--- /dev/null
++++ b/tests/geminiGapBACKLOGTopical.test.ts
+@@ -0,0 +1,101 @@
++import { describe, expect, it } from 'vitest';
++import { templateInformationGain } from '@/services/templateGovernor/informationGain';
++import type { TemplateCluster } from '@/services/templateGovernor/cluster';
++import { contentDecay } from '@/services/topicalAuthorityMonitoring/alerts';
++import { buildTopicalBenchmark } from '@/services/topicalAuthorityReference/benchmark';
++import { buildTopics } from '@/services/topicalDiagnosis/topics';
++import type { DiagnosisDocument } from '@/services/topicalDiagnosis/types';
++import type { TermStatistics } from '@/services/topicalDiagnosis/similarity';
++import { buildAuthorityReport, type CompetitorPages, type TopicalAuthorityReport } from '@/services/topicalAuthority';
++import { createCrawlPageFixture } from './fixtures/crawl';
++import { NOW, OWN_HOST, ownReport, ownSite, referenceTaxonomy } from './authorityFixtures';
++
++describe('geminiGapBACKLOG: templateGovernor, alerts, benchmark, and topics', () => {
++  it('calculates exact templateInformationGain and covers branch line 38', () => {
++    const cluster: TemplateCluster = {
++      pattern: '/products/*',
++      pages: [
++        { url: 'https://site.test/p1', text: 'common template text uniqueA' },
++        { url: 'https://site.test/p2', text: 'common template text uniqueB' },
++      ],
++    };
++    expect(templateInformationGain(cluster, 0.8)).toBe(0.25);
++
++    const identical: TemplateCluster = {
++      pattern: '/fixed/*',
++      pages: [{ url: 'https://site.test/f1', text: 'same header' }, { url: 'https://site.test/f2', text: 'same header' }],
++    };
++    expect(templateInformationGain(identical, 0.8)).toBe(0);
++
++    const unique: TemplateCluster = {
++      pattern: '/unique/*',
++      pages: [{ url: 'https://site.test/u1', text: 'apple' }, { url: 'https://site.test/u2', text: 'cherry' }],
++    };
++    expect(templateInformationGain(unique, 0.8)).toBe(1);
++  });
++
++  it('covers contentDecay pillarUrl ternary branch on line 27 with typed report', () => {
++    const pages = ownSite();
++    const taxonomy = referenceTaxonomy(pages)!;
++    const base = buildAuthorityReport(pages, `https://${OWN_HOST}/`, ownReport(pages), { taxonomy, now: NOW });
++    const report: TopicalAuthorityReport = {
++      ...base,
++      silo: {
++        ...base.silo,
++        audits: {
++          withPillar: { ...base.silo.audits.pour, pillarUrl: 'https://site.test/pillar' },
++          withoutPillar: { ...base.silo.audits.pour, pillarUrl: undefined },
++        },
++      },
++      freshness: { ...base.freshness, stale: ['https://site.test/pillar'] },
++      coverage: [{
++        ...base.coverage[0],
++        bestUrl: 'https://site.test/pillar',
++        entitiesMissing: ['schema', 'author'],
++      }],
++    };
++    expect(contentDecay(report)).toEqual([{ code: 'content-decay', params: { url: 'https://site.test/pillar', missing: 2 } }]);
++    expect(contentDecay({ ...report, freshness: { ...report.freshness, stale: [] } })).toEqual([]);
++  });
++
++  it('covers buildTopicalBenchmark tie-breaker sort on line 24 and trailing pillars on line 31', () => {
++    const pages = ownSite();
++    const taxonomy = referenceTaxonomy(pages)!;
++    const own = buildAuthorityReport(pages, `https://${OWN_HOST}/`, ownReport(pages), { taxonomy, now: NOW });
++    const competitors: CompetitorPages[] = [
++      { domain: 'beta-comp.test', pages: ownSite() },
++      { domain: 'alpha-comp.test', pages: ownSite() },
++    ];
++    const weakOwn: TopicalAuthorityReport = {
++      ...own, tas: own.tas,
++      pillarCoverage: [
++        { id: 'pour', label: 'Pour', subtopics: 1, coveragePct: 0, gaps: 1, shallow: 0 },
++        { id: 'general', label: 'General', subtopics: 1, coveragePct: 10, gaps: 1, shallow: 0 },
++      ],
++    };
++    const forward = buildTopicalBenchmark(weakOwn, OWN_HOST, competitors, taxonomy, NOW);
++    const reversed = buildTopicalBenchmark(weakOwn, OWN_HOST, [competitors[1], competitors[0]], taxonomy, NOW);
++    expect(forward?.rows.map((r) => r.domain)).toEqual(['alpha-comp.test', 'beta-comp.test', OWN_HOST]);
++    expect(reversed?.rows.map((r) => r.domain)).toEqual(['alpha-comp.test', 'beta-comp.test', OWN_HOST]);
++    expect(forward?.insights).toContainEqual({ code: 'trailing-pillars', params: { pillars: 'General, Pour' } });
++  });
++
++  it('covers buildTopics pair truncation on line 46 using typed diagnosis documents', () => {
++    const fixturePage = createCrawlPageFixture({ url: 'https://site.test/p', final_url: 'https://site.test/p' });
++    const documents: DiagnosisDocument[] = Array.from({ length: 501 }, (_, i) => ({
++      id: `doc-${i}`, role: 'content', url: `https://site.test/p${i}`, finalUrl: `https://site.test/p${i}`,
++      pages: [fixturePage], primaryPage: fixturePage, urls: new Set([`https://site.test/p${i}`]),
++      languages: ['en'], terms: new Set(['term1', 'term2']), titleTerms: new Set(['en:term1']),
++      titleForms: new Map([['en:term1', 'Term1']]), section: '(root)', partialEvidence: false,
++    }));
++    const stats: TermStatistics = {
++      documentFrequency: new Map([['term1', 501], ['term2', 501]]),
++      comparable: 501, isTopical: () => true, idf: () => 1,
++    };
++    const result = buildTopics(documents, new Map(), stats, () => 1);
++    expect(result.truncated).toBe(true);
++    expect(result.pairs.length).toBe(124_750);
++    expect(result.topics.length).toBeGreaterThan(0);
++    expect(result.singletons.length).toBe(0);
++  });
++});
+diff --git a/tests/geminiGapCAUSAL.test.ts b/tests/geminiGapCAUSAL.test.ts
+new file mode 100644
+index 00000000..a93a3469
+--- /dev/null
++++ b/tests/geminiGapCAUSAL.test.ts
+@@ -0,0 +1,96 @@
++import { describe, expect, it } from 'vitest';
++import { scanAuthors } from '@/services/eeatTrust/authors';
++import { buildTrustReport } from '@/services/eeatTrust/build';
++import { buildFindings } from '@/services/eeatTrust/findings';
++import { joinGa4Evidence } from '@/services/ga4/join';
++import { hostOf } from '@/services/indexabilityGate/classify';
++import { checkAlt } from '@/services/multimodal/altCheck';
++import type { SchemaNode } from '@/services/eeatTrust/graph';
++import type { CrawledPageSummary } from '@/types';
++import type { Ga4Report } from '@/types/ga4';
++
++describe('geminiGapCAUSAL targeted branch coverage', () => {
++  it('covers eeatTrust/authors.ts line 74 name fallback branches with stable fixtures', () => {
++    const namedNode: SchemaNode = { page: 'https://site.test/p1', decl: 0, path: '$', id: 'https://site.test/#named', types: ['Person'], name: 'Dr. Jane', props: {} };
++    const idOnlyNode: SchemaNode = { page: 'https://site.test/p1', decl: 0, path: '$', id: 'https://site.test/#idonly', types: ['Person'], name: undefined, props: {} };
++    const article: SchemaNode = { page: 'https://site.test/p1', decl: 0, path: '$', types: ['Article'], props: { author: ['https://site.test/#named', 'https://site.test/#idonly'] } };
++    const registry = new Map([['https://site.test/#named', namedNode], ['https://site.test/#idonly', idOnlyNode]]);
++    const scan = scanAuthors([], new Map(), new Map([['https://site.test/p1', [article]]]), registry, undefined);
++    expect(scan.authors.find((a) => a.key === 'https://site.test/#named')?.name).toBe('Dr. Jane');
++    expect(scan.authors.find((a) => a.key === 'https://site.test/#idonly')?.name).toBe('https://site.test/#idonly');
++  });
++
++  it('covers eeatTrust/build.ts lines 34-35 own and typed article branches with stable crawled pages', () => {
++    const page1 = { url: 'https://site.test/art', final_url: 'https://site.test/art', http_status: 200, links: [], schema_references: [{ declaration_index: 0, format: 'JSON-LD', property: '@type', value: 'BlogPosting' }] } as unknown as CrawledPageSummary;
++    const page2 = { url: 'https://site.test/other', final_url: 'https://site.test/other', http_status: 200, links: [], schema_references: [{ declaration_index: 0, format: 'JSON-LD', property: '@type', value: 'WebPage' }] } as unknown as CrawledPageSummary;
++    const page3 = { url: 'https://site.test/plain', final_url: 'https://site.test/plain', http_status: 200, links: [], schema_references: [] } as unknown as CrawledPageSummary;
++    const focus = { pages: [{ url: 'https://site.test/other', type: 'article' as const, skipped: undefined }], coreTopic: { label: 'General', terms: [] } } as never;
++    const report = buildTrustReport([page1, page2, page3], focus);
++    expect(report.schema.articleCount).toBe(2);
++  });
++
++  it('covers eeatTrust/findings.ts lines 19 and 52 pct and author alignment with stable fixtures', () => {
++    const baseSchema = { articleCount: 10, articlesWithAuthor: 10, articlesWithReviewer: 1, organization: { present: true, name: 'Org', sameAs: ['https://org.test'] } };
++    const citations = { pagesAnalyzed: 10, pagesWithTrusted: 2, deadLinks: ['https://dead.test/404'], scholarlySources: 0 } as never;
++    const baseTransparency = { found: { editorial: true, contact: true, corrections: true, about: true, privacy: true, terms: true } } as never;
++    const findings = buildFindings({
++      schema: baseSchema as never,
++      authors: [
++        { name: 'Offtopic 1', generic: false, alignmentPct: 20, sameAs: ['https://x'], profiles: [], articleUrls: ['/p1'] } as never,
++        { name: 'Ontopic 2', generic: false, alignmentPct: 80, sameAs: ['https://y'], profiles: [], articleUrls: ['/p2'] } as never,
++      ],
++      citations, transparency: baseTransparency, ymyl: 'health', unattributed: 2,
++    });
++    expect(findings.find((f) => f.code === 'ymyl-unattributed')?.params.pct).toBe(20);
++    expect(findings.find((f) => f.code === 'low-citations')?.params.pct).toBe(20);
++    expect(findings.find((f) => f.code === 'author-off-topic')?.params.pct).toBe(20);
++    expect(findings.find((f) => f.params.name === 'Ontopic 2')).toBeUndefined();
++  });
++
++  it('covers ga4/join.ts lines 40, 46, 54 urlKey branches and fallbacks with stable records', () => {
++    const report = { property: 'properties/123', start_date: '2026-01-01', end_date: '2026-01-31', rows: [
++      { host_name: 'site.test', landing_page: '/valid', sessions: 100, engagement_rate: 0.8, conversions: 2, event_count: 10 },
++      { host_name: 'site.test', landing_page: 'https://other.test/bad', sessions: 10, engagement_rate: 0.5, conversions: 0, event_count: 1 },
++      { host_name: 'diff.test', landing_page: '/skip', sessions: 5, engagement_rate: 0.1, conversions: 0, event_count: 0 },
++    ] } as unknown as Ga4Report;
++    const gscData = { site_url: 'https://site.test/', start_date: '2026-01-01', end_date: '2026-01-31', pages: [
++      { page: 'https://site.test/valid', clicks: 10, impressions: 100, ctr: 0.1, position: 2 },
++      { page: 'https://other.test/foreign', clicks: 1, impressions: 1, ctr: 1, position: 1 },
++      { page: 'https://site.test/valid', clicks: 5, impressions: 50, ctr: 0.1, position: 3 },
++      { page: 'https://site.test/nan', clicks: Number.NaN, impressions: 1, ctr: 0, position: 1 },
++    ] } as never;
++    const crawlResult = { pages: [
++      { url: 'https://site.test/valid', issues_count: 3 },
++      { url: 'https://other.test/foreign', issues_count: 1 },
++      { url: 'https://site.test/valid', issues_count: 3 },
++      { url: 'https://site.test/negative', issues_count: -1 },
++    ] } as never;
++    const result = joinGa4Evidence({ report, gscData, crawlResult, projectRootUrl: 'https://site.test/' });
++    expect(result.matched_gsc_rows).toBe(1);
++    expect(result.matched_crawl_rows).toBe(1);
++    expect(result.rows[0].gsc?.clicks).toBe(10);
++    expect(result.rows[0].crawl_issue_count).toBe(3);
++    const emptyJoin = joinGa4Evidence({ report, projectRootUrl: undefined });
++    expect(emptyJoin.warnings).toContain('Project root URL is missing or invalid.');
++  });
++
++  it('covers indexabilityGate/classify.ts line 23 hostOf statement and catch branch with real strings', () => {
++    expect(hostOf('https://EXAMPLE.test:8080/path')).toBe('example.test:8080');
++    expect(hostOf('invalid-url-with-no-base')).toBeNull();
++    expect(hostOf(':::')).toBeNull();
++    expect(hostOf('')).toBeNull();
++  });
++
++  it('covers multimodal/altCheck.ts line 41 file extraction with real string inputs', () => {
++    const verdict1 = checkAlt({ src: 'https://site.test/images/banner.jpg', alt: 'banner.jpg' });
++    expect(verdict1.issues).toContain('filename');
++    const verdict2 = checkAlt({ src: 'https://site.test/images/photo.png?w=200#hash', alt: 'Descriptive scenic view' });
++    expect(verdict2.issues).not.toContain('filename');
++    const verdict3 = checkAlt({ src: 'https://site.test/images/', alt: 'Generic trailing slash' });
++    expect(verdict3.issues).not.toContain('filename');
++    const verdict4 = checkAlt({ src: '', alt: 'Empty source string' });
++    expect(verdict4.issues).not.toContain('filename');
++    const verdict5 = checkAlt({ src: 'assets/icon.svg', alt: 'icon.svg' });
++    expect(verdict5.issues).toContain('filename');
++  });
++});
+diff --git a/tests/geminiGapFRONTEND_1.test.tsx b/tests/geminiGapFRONTEND_1.test.tsx
+new file mode 100644
+index 00000000..58176f1a
+--- /dev/null
++++ b/tests/geminiGapFRONTEND_1.test.tsx
+@@ -0,0 +1,70 @@
++import { fireEvent, render, screen } from '@testing-library/react';
++import { beforeEach, describe, expect, it, vi } from 'vitest';
++import i18n from '@/i18n';
++import { host } from '@/components/Domain/crawlResults/authority/authorityText';
++import { CrawlFocusTab } from '@/components/Domain/crawlResults/focus/CrawlFocusTab';
++import { CrawlLinksExternalCheck } from '@/components/Domain/crawlResults/linksTab/CrawlLinksExternalCheck';
++import { createCrawlPageFixture } from './fixtures/crawl';
++import type { CrawledPageSummary, CrawlRunRecord } from '@/types';
++
++beforeEach(async () => {
++  await i18n.changeLanguage('en');
++});
++
++describe('geminiGapFRONTEND_1 authority, focus and linksExternalCheck', () => {
++  it('covers host path extraction and catch fallback in authorityText line 30', () => {
++    expect(host('https://example.test/about?q=1')).toBe('/about?q=1');
++    expect(host('https://example.test')).toBe('/');
++    expect(host('invalid-url')).toBe('invalid-url');
++  });
++
++  it('covers CrawlFocusTab gate toggle statements and functions line 98', () => {
++    const page1 = createCrawlPageFixture({
++      url: 'https://site.test/', final_url: 'https://site.test/', title: 'Home',
++      document_language: 'en', http_status: 200, focus_terms: [{ term: 'home', surface: 'home', count: 1, weight: 1 }],
++    }) as CrawledPageSummary;
++    const page2 = createCrawlPageFixture({
++      url: 'https://site.test/gated', final_url: 'https://site.test/gated', title: 'Gated',
++      document_language: 'en', http_status: 200, meta_robots: 'noindex',
++      focus_terms: [{ term: 'gated', surface: 'gated', count: 1, weight: 1 }],
++    }) as CrawledPageSummary;
++
++    render(<CrawlFocusTab pages={[page1, page2]} startUrl="https://site.test/" />);
++    const toggleBtn = screen.getByRole('button', { name: /Include/i });
++    expect(toggleBtn).toBeTruthy();
++    fireEvent.click(toggleBtn);
++    expect(screen.getByRole('button', { name: /Exclude/i })).toBeTruthy();
++    fireEvent.click(screen.getByRole('button', { name: /Exclude/i }));
++    expect(screen.getByRole('button', { name: /Include/i })).toBeTruthy();
++  });
++
++  it('covers CrawlLinksExternalCheck disabled early return and force check line 87', async () => {
++    const checkFn = vi.fn().mockResolvedValue(undefined);
++    const setLimit = vi.fn();
++    const t = ((key: string) => key) as never;
++    const run = { id: 'run-1', completedAt: 'now' } as CrawlRunRecord;
++
++    const { rerender } = render(
++      <CrawlLinksExternalCheck
++        externalLinksCount={10} checkedExternalCount={0} blockedExternalCount={0}
++        invalidExternalCount={0} uncheckedExternalCount={5} isCheckingExternalLinks={false}
++        externalLinkCheckProgress={null} externalLinkLimit={100} setExternalLinkLimit={setLimit}
++        currentRun={undefined} checkExternalLinks={checkFn} externalError={null} t={t}
++      />,
++    );
++    const btn = screen.getByRole('button');
++    fireEvent.click(btn);
++    expect(checkFn).not.toHaveBeenCalled();
++
++    rerender(
++      <CrawlLinksExternalCheck
++        externalLinksCount={10} checkedExternalCount={5} blockedExternalCount={0}
++        invalidExternalCount={0} uncheckedExternalCount={0} isCheckingExternalLinks={false}
++        externalLinkCheckProgress={null} externalLinkLimit={250} setExternalLinkLimit={setLimit}
++        currentRun={run} checkExternalLinks={checkFn} externalError={null} t={t}
++      />,
++    );
++    fireEvent.click(screen.getByRole('button'));
++    expect(checkFn).toHaveBeenCalledWith('run-1', 250, true);
++  });
++});
+diff --git a/tests/geminiGapFRONTEND_2.test.tsx b/tests/geminiGapFRONTEND_2.test.tsx
+new file mode 100644
+index 00000000..8b4c06d4
+--- /dev/null
++++ b/tests/geminiGapFRONTEND_2.test.tsx
+@@ -0,0 +1,125 @@
++import { fireEvent, render, screen } from '@testing-library/react';
++import { beforeEach, describe, expect, it, vi } from 'vitest';
++import i18n from '@/i18n';
++import { CrawlLinksTable } from '@/components/Domain/crawlResults/linksTab/CrawlLinksTable';
++import { CrawlSocialFaviconCell } from '@/components/Domain/crawlResults/socialTab/CrawlSocialFaviconCell';
++import { DomainComparisonTable } from '@/components/Domain/domainOverview/DomainComparisonTable';
++import { createCrawlPageFixture } from './fixtures/crawl';
++import type { CrawledPageSummary, DomainComparisonData } from '@/types';
++
++beforeEach(async () => {
++  await i18n.changeLanguage('en');
++});
++
++describe('geminiGapFRONTEND_2 linksTable, socialFaviconCell, domainComparisonTable', () => {
++  it('covers CrawlLinksTable source excerpt rendering, copy callback and empty state', () => {
++    const copyLinkSource = vi.fn().mockResolvedValue(undefined);
++    const t = ((key: string) => key) as never;
++
++    const withExcerpt = {
++      sourceUrl: 'https://site.test/from',
++      key: 'link-1',
++      link: {
++        target_url: 'https://site.test/to', anchor_text: 'Link Text',
++        is_internal: true, source_excerpt: '<code>const a = 1;</code>',
++      },
++    };
++
++    const { rerender } = render(
++      <CrawlLinksTable
++        links={[withExcerpt]} linkEvidenceHref={() => ''}
++        copiedLinkSourceKey={null} copyLinkSource={copyLinkSource} t={t}
++      />,
++    );
++
++    expect(screen.getByText('crawl.ui.showSourceCode')).toBeTruthy();
++    expect(screen.getByText('<code>const a = 1;</code>')).toBeTruthy();
++    fireEvent.click(screen.getByRole('button', { name: 'crawl.ui.copyCode' }));
++    expect(copyLinkSource).toHaveBeenCalledWith('link-1', '<code>const a = 1;</code>');
++
++    rerender(
++      <CrawlLinksTable
++        links={[withExcerpt]} linkEvidenceHref={() => ''}
++        copiedLinkSourceKey="link-1" copyLinkSource={copyLinkSource} t={t}
++      />,
++    );
++    expect(screen.getByRole('button', { name: 'crawl.ui.copied' })).toBeTruthy();
++
++    const noExcerpt = {
++      sourceUrl: 'https://site.test/from', key: 'link-2',
++      link: { target_url: 'https://site.test/to', anchor_text: 'Link 2', is_internal: true },
++    };
++
++    rerender(
++      <CrawlLinksTable
++        links={[noExcerpt]} linkEvidenceHref={() => ''}
++        copiedLinkSourceKey={null} copyLinkSource={copyLinkSource} t={t}
++      />,
++    );
++    expect(screen.getByText('crawl.ui.noExcerptOlderRun')).toBeTruthy();
++    expect(screen.queryByRole('button', { name: /copy/i })).toBeNull();
++  });
++
++  it('covers CrawlSocialFaviconCell favicons vs metadata and empty declaration', () => {
++    const t = ((key: string, p?: { value?: string }) => p?.value ?? key) as never;
++
++    const faviconPage = createCrawlPageFixture({ favicons: ['/site-icon.png'] }) as CrawledPageSummary;
++    const { rerender } = render(
++      <table><tbody><tr><CrawlSocialFaviconCell page={faviconPage} t={t} /></tr></tbody></table>,
++    );
++    expect(screen.getByText('/site-icon.png')).toBeTruthy();
++
++    const metaPage = createCrawlPageFixture({
++      favicon_metadata: [{ href: '/meta-icon.svg', rel: 'shortcut icon', declared_sizes: '32x32' }],
++    }) as CrawledPageSummary;
++
++    rerender(<table><tbody><tr><CrawlSocialFaviconCell page={metaPage} t={t} /></tr></tbody></table>);
++    expect(screen.getByText('/meta-icon.svg')).toBeTruthy();
++    expect(screen.getByText(/shortcut icon/)).toBeTruthy();
++
++    const emptyPage = createCrawlPageFixture({ favicons: [] }) as CrawledPageSummary;
++    rerender(<table><tbody><tr><CrawlSocialFaviconCell page={emptyPage} t={t} /></tr></tbody></table>);
++    expect(screen.getByText('crawl.social.noDeclaration')).toBeTruthy();
++  });
++
++  it('covers DomainComparisonTable competitors rendering, limit and missing section', () => {
++    const t = ((key: string) => key) as never;
++
++    const comparisonWithCompetitors: DomainComparisonData = {
++      target: 'site.test', location_code: 2840, language_code: 'en', retrieved_at: 'now', source: 'dataforseo',
++      rows: [{
++        domain: 'site.test', organic_traffic: 500, organic_keywords: 200, domain_rank: 45, referring_domains: 50,
++        total_backlinks: 1000, dofollow_ratio: 80, retrieved_at: 'now',
++        competitors: [
++          { domain: 'c1.test', common_keywords: 10, average_position: 2 },
++          { domain: 'c2.test', common_keywords: null, average_position: 4 },
++          { domain: 'c3.test', common_keywords: 8, average_position: 5 },
++          { domain: 'c4.test', common_keywords: 6, average_position: 7 },
++          { domain: 'c5.test', common_keywords: 4, average_position: 8 },
++          { domain: 'c6.test', common_keywords: 2, average_position: 9 },
++        ],
++      }],
++    };
++
++    const { rerender } = render(<DomainComparisonTable comparison={comparisonWithCompetitors} t={t} />);
++    expect(screen.getByText('domainResearchUi.competitors')).toBeTruthy();
++    expect(screen.getByText('c1.test')).toBeTruthy();
++    expect(screen.getByText('10')).toBeTruthy();
++    expect(screen.getByText('c2.test')).toBeTruthy();
++    expect(screen.getByText('—')).toBeTruthy();
++    expect(screen.getByText('c5.test')).toBeTruthy();
++    expect(screen.queryByText('c6.test')).toBeNull();
++
++    const comparisonWithoutCompetitors: DomainComparisonData = {
++      target: 'site.test', location_code: 2840, language_code: 'en', retrieved_at: 'now', source: 'dataforseo',
++      rows: [{
++        domain: 'site.test', organic_traffic: 500, organic_keywords: 200, domain_rank: 45, referring_domains: 50, retrieved_at: 'now',
++        top_keywords: [{ keyword: 'seo test', position: 1, search_volume: null, traffic_share: null, intent: null }],
++      }],
++    };
++
++    rerender(<DomainComparisonTable comparison={comparisonWithoutCompetitors} t={t} />);
++    expect(screen.getByText('seo test')).toBeTruthy();
++    expect(screen.queryByText('domainResearchUi.competitors')).toBeNull();
++  });
++});
+diff --git a/tests/geminiGapGOVERNORServicesA.test.ts b/tests/geminiGapGOVERNORServicesA.test.ts
+new file mode 100644
+index 00000000..cc60f834
+--- /dev/null
++++ b/tests/geminiGapGOVERNORServicesA.test.ts
+@@ -0,0 +1,83 @@
++import { describe, expect, it, vi, beforeEach } from 'vitest';
++import { renderHook } from '@testing-library/react';
++import i18n from '@/i18n';
++import { useTrust } from '@/hooks/useTrust';
++import { findInternalLinkOpportunities } from '@/services/internalLinkOpportunities';
++import * as eeatTrust from '@/services/eeatTrust';
++import * as monitoringAlerts from '@/services/monitoringAlerts';
++import type { CrawledPageSummary } from '@/types';
++
++vi.mock('@/services/monitoringAlerts', () => ({
++  monitorScoreDrop: vi.fn(),
++}));
++
++vi.mock('@/services/siteFocus', () => ({
++  buildSiteFocusReport: vi.fn().mockReturnValue({ topic: 'SEO' }),
++}));
++
++vi.mock('@/services/semanticText', () => ({
++  semanticPageTermInventory: vi.fn((page: CrawledPageSummary) => {
++    if (page.url.includes('p1') || page.url.includes('p2') || page.url.includes('p3')) {
++      return new Map([['termA', 'termA'], ['termB', 'termB'], ['termC', 'termC']]);
++    }
++    return new Map();
++  }),
++}));
++
++beforeEach(async () => {
++  await i18n.changeLanguage('en');
++  vi.restoreAllMocks();
++});
++
++describe('geminiGapGOVERNORServicesA: useTrust and internalLinkOpportunities', () => {
++  it('covers useTrust line 26 score drop dispatch, catch handler and duplicate run bypass', async () => {
++    const dummyPage = { url: 'https://example.com/p', final_url: 'https://example.com/p' } as CrawledPageSummary;
++    const run = { id: 'run-100', completedAt: '2026-01-01T00:00:00Z' } as never;
++
++    vi.spyOn(eeatTrust, 'readTrustHistory').mockReturnValue([]);
++    vi.spyOn(eeatTrust, 'recordTrust').mockReturnValue([]);
++    vi.spyOn(eeatTrust, 'buildTrustReport').mockReturnValue({ score: 75 } as never);
++    const dropSpy = vi.spyOn(monitoringAlerts, 'monitorScoreDrop').mockRejectedValue(new Error('dispatch fail'));
++
++    const h1 = renderHook(() => useTrust([dummyPage], 'https://example.com', run, 'proj-1'));
++    expect(dropSpy).toHaveBeenCalledWith('proj-1', 'trust', undefined, expect.any(Object), 'run-100');
++    h1.unmount();
++
++    vi.spyOn(eeatTrust, 'readTrustHistory').mockReturnValue([{ runId: 'run-100', score: 80 } as never]);
++    dropSpy.mockClear();
++    const h2 = renderHook(() => useTrust([dummyPage], 'https://example.com', run, 'proj-1'));
++    expect(dropSpy).not.toHaveBeenCalled();
++    h2.unmount();
++
++    const h3 = renderHook(() => useTrust([], 'https://example.com', null, null));
++    expect(h3.result.current.report).toBeNull();
++    h3.unmount();
++  });
++
++  it('covers internalLinkOpportunities with ordinary typed data and link exclusion', () => {
++    const makePage = (url: string, overrides: Partial<CrawledPageSummary> = {}): CrawledPageSummary => ({
++      url, final_url: url, http_status: 200, indexability_status: 'indexable',
++      body_truncated: false, semantic_links: [], ...overrides,
++    } as never);
++
++    const pages = [
++      makePage('https://example.com/p1'),
++      makePage('https://example.com/p2'),
++      makePage('https://example.com/p3', {
++        semantic_links: [{ is_internal: true, target_url: 'https://example.com/p1', source_url: 'https://example.com/p3', anchor_text: 'link' }] as never,
++      }),
++      makePage('https://example.com/p4', { indexability_status: 'noindex' }),
++    ];
++
++    const report = findInternalLinkOpportunities(pages);
++    expect(report.eligiblePageCount).toBe(3);
++    expect(report.pagesWithoutCompleteEvidence).toBe(1);
++    expect(report.opportunities.length).toBeGreaterThanOrEqual(1);
++
++    const opp = report.opportunities[0];
++    expect(opp.sourceUrl).toBeDefined();
++    expect(opp.targetUrl).toBeDefined();
++    expect(opp.sharedTerms.length).toBeGreaterThanOrEqual(2);
++    expect(opp.weightedJaccard).toBeGreaterThan(0);
++  });
++});
+diff --git a/tests/geminiGapGOVERNORServicesB.test.ts b/tests/geminiGapGOVERNORServicesB.test.ts
+new file mode 100644
+index 00000000..3f2397b6
+--- /dev/null
++++ b/tests/geminiGapGOVERNORServicesB.test.ts
+@@ -0,0 +1,82 @@
++import { describe, expect, it, vi, beforeEach, afterEach } from 'vitest';
++import i18n from '@/i18n';
++import { buildMetaAndIndexabilityChecks } from '@/services/auditChecks/httpAndMetaChecks';
++import { DataForSEOCore } from '@/services/dataforseo/dataforseoCore';
++import * as tauri from '@/services/tauri';
++import type { PageAuditData } from '@/types';
++
++beforeEach(async () => {
++  await i18n.changeLanguage('en');
++  vi.restoreAllMocks();
++  vi.unstubAllGlobals();
++});
++
++afterEach(() => {
++  vi.restoreAllMocks();
++  vi.unstubAllGlobals();
++});
++
++describe('geminiGapGOVERNORServicesB: httpAndMetaChecks and dataforseoCore', () => {
++  it('covers httpAndMetaChecks line 59 canonical-target-status all branches', () => {
++    const makeAuditWithCanonical = (indexability?: PageAuditData['indexability']): PageAuditData => ({
++      url: 'https://example.com/test', final_url: 'https://example.com/test',
++      http_status: 200, response_time_ms: 100, redirect_chain: [],
++      meta_tags: { canonical: 'https://example.com/test', robots: '', viewport: '', charset: '' },
++      links: [], headings: [], images: [], scripts: [], stylesheets: [],
++      performance: {} as never, word_count: 100, page_size_bytes: 100,
++      indexability: indexability as never,
++    } as unknown as PageAuditData);
++
++    const checkNotChecked = buildMetaAndIndexabilityChecks(makeAuditWithCanonical(undefined))
++      .find((c) => c.id === 'canonical-target-status');
++    expect(checkNotChecked?.status).toBe('not_applicable');
++
++    const checkPass = buildMetaAndIndexabilityChecks(makeAuditWithCanonical({ status: 'indexable', reasons: [], canonical_target_checked: true, canonical_target_status: 200 } as never))
++      .find((c) => c.id === 'canonical-target-status');
++    expect(checkPass?.status).toBe('pass');
++
++    const checkError500 = buildMetaAndIndexabilityChecks(makeAuditWithCanonical({ status: 'indexable', reasons: [], canonical_target_checked: true, canonical_target_status: 500 } as never))
++      .find((c) => c.id === 'canonical-target-status');
++    expect(checkError500?.status).toBe('error');
++
++    const checkError0 = buildMetaAndIndexabilityChecks(makeAuditWithCanonical({ status: 'indexable', reasons: [], canonical_target_checked: true, canonical_target_status: 0 } as never))
++      .find((c) => c.id === 'canonical-target-status');
++    expect(checkError0?.status).toBe('error');
++    expect(checkError0?.evidence).toContain(i18n.t('auditProblems.unknown'));
++  });
++
++  it('covers DataForSEOCore public request contract, retries, non-retryable errors and Tauri IPC', async () => {
++    const client = new DataForSEOCore('login', 'pass', 'https://api.test');
++
++    vi.spyOn(tauri, 'isTauriEnvironment').mockReturnValue(true);
++    const tauriSpy = vi.spyOn(tauri, 'invokeTauriCommand').mockResolvedValue({ status: 'ok', cost: 0.05 });
++    const tauriRes = await client.request('/v3/test', undefined, 'proj-1');
++    expect(tauriRes.status).toBe('ok');
++    expect(tauriSpy).toHaveBeenCalledWith('dataforseo_request', expect.objectContaining({
++      projectId: 'proj-1',
++      path: '/v3/test',
++    }));
++
++    vi.spyOn(tauri, 'isTauriEnvironment').mockReturnValue(false);
++    const mockFetch = vi.fn().mockResolvedValue({
++      ok: false, status: 400, json: async () => ({ message: 'Bad request' }),
++    });
++    vi.stubGlobal('fetch', mockFetch);
++
++    await expect(client.request('/v3/bad', undefined, 'proj-1')).rejects.toThrow();
++
++    let attempts = 0;
++    const retryFetch = vi.fn().mockImplementation(async () => {
++      attempts += 1;
++      return {
++        ok: false, status: 429,
++        headers: new Headers({ 'Retry-After': '0' }),
++        json: async () => ({ message: 'Too Many Requests' }),
++      };
++    });
++    vi.stubGlobal('fetch', retryFetch);
++
++    await expect(client.request('/v3/retry', undefined, 'proj-1')).rejects.toThrow();
++    expect(attempts).toBe(3);
++  });
++});
+diff --git a/tests/geminiGapGOVERNORUi.test.tsx b/tests/geminiGapGOVERNORUi.test.tsx
+new file mode 100644
+index 00000000..825a39f2
+--- /dev/null
++++ b/tests/geminiGapGOVERNORUi.test.tsx
+@@ -0,0 +1,123 @@
++import { render, screen, fireEvent, waitFor } from '@testing-library/react';
++import { beforeEach, describe, expect, it, vi } from 'vitest';
++import i18n from '@/i18n';
++import { MetadataAccessibilityHidden } from '@/components/Results/metadata/MetadataAccessibilityHidden';
++import { MetadataDirectives } from '@/components/Results/metadata/MetadataDirectives';
++import * as clipboard from '@/services/clipboard';
++import type { PageAuditData } from '@/types';
++
++vi.mock('@/components/Results/ShowOnPageButton', () => ({
++  ShowOnPageButton: ({ label }: { label: string }) => <button data-testid="show-on-page">{label}</button>,
++}));
++
++beforeEach(async () => {
++  await i18n.changeLanguage('en');
++  vi.restoreAllMocks();
++});
++
++const makeBaseAudit = (): PageAuditData => ({
++  url: 'https://example.com/test',
++  final_url: 'https://example.com/test',
++  http_status: 200,
++  response_time_ms: 120,
++  redirect_chain: [],
++  meta_tags: { canonical: '', robots: '', viewport: '', charset: '' },
++  links: [],
++  headings: [],
++  images: [],
++  scripts: [],
++  stylesheets: [],
++  performance: {} as never,
++  word_count: 500,
++  page_size_bytes: 1024,
++} as unknown as PageAuditData);
++
++describe('geminiGapGOVERNORUi: MetadataAccessibilityHidden and MetadataDirectives branches', () => {
++  it('exercises MetadataAccessibilityHidden truncation limits, source line/column and zero counts', () => {
++    const auditTruncated: PageAuditData = {
++      ...makeBaseAudit(),
++      accessibility: {
++        hidden_form_control_count: 5,
++        hidden_form_controls: [
++          { dom_position: 1, dom_query: '#h1', html_snippet: '<input hidden>', line: 12, column: 4 },
++        ],
++        anti_spam_text_control_count: 4,
++        anti_spam_text_controls: [
++          { dom_position: 1, dom_query: '#spam1', html_snippet: '<input name="bot">' },
++        ],
++      } as never,
++    };
++
++    const view1 = render(<MetadataAccessibilityHidden audit={auditTruncated} />);
++    expect(screen.getByText(/source 12:4/i)).toBeTruthy();
++    expect(screen.getAllByText(/Shown first 1/i).length).toBe(2);
++    view1.unmount();
++
++    const auditUntruncated: PageAuditData = {
++      ...makeBaseAudit(),
++      accessibility: {
++        hidden_form_control_count: 1,
++        hidden_form_controls: [
++          { dom_position: 1, dom_query: '#h2', html_snippet: '<input hidden>' },
++        ],
++        anti_spam_text_control_count: 1,
++        anti_spam_text_controls: [
++          { dom_position: 1, dom_query: '#spam2', html_snippet: '<input>' },
++        ],
++      } as never,
++    };
++
++    const view2 = render(<MetadataAccessibilityHidden audit={auditUntruncated} />);
++    expect(screen.queryByText(/First/i)).toBeNull();
++    view2.unmount();
++
++    const auditEmpty: PageAuditData = { ...makeBaseAudit(), accessibility: undefined };
++    const view3 = render(<MetadataAccessibilityHidden audit={auditEmpty} />);
++    expect(screen.queryByText(/hidden/i)).toBeNull();
++    view3.unmount();
++
++    const auditNullControls: PageAuditData = {
++      ...makeBaseAudit(),
++      accessibility: {
++        hidden_form_control_count: 5,
++        hidden_form_controls: undefined,
++        anti_spam_text_control_count: 4,
++        anti_spam_text_controls: undefined,
++      } as never,
++    };
++    const view4 = render(<MetadataAccessibilityHidden audit={auditNullControls} />);
++    expect(screen.getAllByText(/Shown first 0/i).length).toBe(2);
++    view4.unmount();
++  });
++
++  it('exercises MetadataDirectives canonical copy success/failure and unverified states', async () => {
++    const copySpy = vi.spyOn(clipboard, 'copyText').mockResolvedValue(true);
++    const auditWithCanonical = {
++      ...makeBaseAudit(),
++      meta_tags: { canonical: 'https://example.com/target', robots: 'index,follow', viewport: 'width=device-width', charset: 'utf-8' },
++      indexability: { canonical_target_checked: true, canonical_target_status: 200 } as never,
++    } as unknown as PageAuditData;
++
++    const view1 = render(<MetadataDirectives audit={auditWithCanonical} />);
++    const copyButton = screen.getByRole('button');
++    fireEvent.click(copyButton);
++    expect(copySpy).toHaveBeenCalledWith('https://example.com/target');
++    await waitFor(() => expect(document.querySelector('.lucide-check')).toBeTruthy());
++    view1.unmount();
++
++    copySpy.mockResolvedValue(false);
++    const view2 = render(<MetadataDirectives audit={auditWithCanonical} />);
++    fireEvent.click(screen.getByRole('button'));
++    view2.unmount();
++
++    const auditNoCanonical = {
++      ...makeBaseAudit(),
++      meta_tags: { canonical: '', robots: '', viewport: '', charset: '' },
++      indexability: { canonical_target_checked: true, canonical_target_status: 500, canonical_target_check_error: 'Timeout' } as never,
++    } as unknown as PageAuditData;
++    const view3 = render(<MetadataDirectives audit={auditNoCanonical} />);
++    expect(screen.getByText(i18n.t('legacyUi.metadata.notSpecified'))).toBeTruthy();
++    expect(screen.getByText(i18n.t('legacyUi.metadata.canonicalUnverified'))).toBeTruthy();
++    view3.unmount();
++  });
++});
+diff --git a/tests/geminiGapNATIVEPrimary.test.tsx b/tests/geminiGapNATIVEPrimary.test.tsx
+new file mode 100644
+index 00000000..0798e442
+--- /dev/null
++++ b/tests/geminiGapNATIVEPrimary.test.tsx
+@@ -0,0 +1,129 @@
++import { fireEvent, render, screen, waitFor } from '@testing-library/react';
++import { beforeEach, describe, expect, it, vi } from 'vitest';
++import i18n from '@/i18n';
++import { SearchConsoleTables } from '@/components/AgentWorkflows/searchConsole/Tables';
++import type { SearchConsoleSession } from '@/components/AgentWorkflows/searchConsole/useSearchConsoleSession';
++import { GapBriefPanel } from '@/components/Domain/crawlResults/authority/GapBriefPanel';
++import { useAuthStore } from '@/stores/authStore';
++import { CrawlOverviewTab } from '@/components/Domain/crawlResults/CrawlOverviewTab';
++import type { TopicalAuthorityReport } from '@/services/topicalAuthority';
++
++vi.mock('@/components/AgentWorkflows/searchConsole/PagedTable', () => ({
++  PagedTable: ({ paged }: { paged: { toggleSort: (key: string) => void; rows: Array<{ page?: string; query?: string; position: number }> } }) => (
++    <div>
++      <button data-testid="sort-position-btn" onClick={() => paged.toggleSort('position')}>
++        Sort Position
++      </button>
++      <div data-testid="paged-positions">
++        {paged.rows.map((r) => r.position).join(',')}
++      </div>
++    </div>
++  ),
++}));
++
++vi.mock('@/components/Domain/crawlResults/CrawlSummaryMetrics', () => ({
++  CrawlSummaryMetrics: () => <tr><td>metrics</td></tr>,
++}));
++
++beforeEach(async () => {
++  await i18n.changeLanguage('en');
++});
++
++describe('geminiGapNATIVEPrimary: Tables, GapBriefPanel, CrawlOverviewTab', () => {
++  it('covers SearchConsoleTables PAGE_SORT.position (Tables.tsx line 16)', () => {
++    const session = {
++      t: (key: string) => key,
++      gscData: {
++        queries: [],
++        pages: [
++          { page: 'https://example.com/a', clicks: 10, impressions: 100, ctr: 10, position: 5 },
++          { page: 'https://example.com/b', clicks: 20, impressions: 200, ctr: 10, position: 2 },
++          { page: 'https://example.com/c', clicks: 5, impressions: 50, ctr: 10, position: 8 },
++        ],
++      },
++    } as unknown as SearchConsoleSession;
++
++    render(<SearchConsoleTables session={session} />);
++    const sortButtons = screen.getAllByTestId('sort-position-btn');
++    fireEvent.click(sortButtons[1]);
++    const positions = screen.getAllByTestId('paged-positions');
++    expect(positions[1].textContent).toBe('8,5,2');
++    fireEvent.click(sortButtons[1]);
++    expect(positions[1].textContent).toBe('2,5,8');
++  });
++
++  it('covers GapBriefPanel defaultDeps generateText (GapBriefPanel.tsx line 10)', async () => {
++    const mockGenerate = vi.fn().mockResolvedValue('## AI Generated Gap Outline\n1. Details');
++    useAuthStore.setState({
++      isProviderConnected: () => true,
++      generateText: mockGenerate,
++    } as never);
++
++    const report = {
++      score: 80,
++      tier: 'strong',
++      pillars: { tcr: 0.5, sfs: 0.5 },
++      sfs: { raw: 50 },
++      subtopics: [],
++      coverage: [
++        {
++          subtopicId: 'sub-1',
++          label: 'Missing Piece',
++          coverage: 0,
++          cluster: 'core',
++          pillar: 'general',
++          importance: 0.5,
++          entitiesMissing: [],
++          questionsMissing: [],
++          pages: [],
++        },
++      ],
++      gaps: [{ subtopicId: 'sub-1', label: 'Missing Piece', priority: 'high', impact: 85 }],
++      cannibalization: [],
++      taxonomy: { coreLabel: 'Core Topic', pillars: [], subtopics: [] },
++    } as unknown as TopicalAuthorityReport;
++
++    const row = report.coverage[0];
++    render(<GapBriefPanel report={report} row={row} />);
++    const generateBtn = screen.getByRole('button', { name: i18n.t('authority.brief.generate') });
++    fireEvent.click(generateBtn);
++    await waitFor(() => {
++      expect(mockGenerate).toHaveBeenCalled();
++      expect(screen.getByTestId('authority-ai-brief').textContent).toContain('AI Generated Gap Outline');
++    });
++  });
++
++  it('renders CrawlOverviewTab rejected_urls states with plain stable inputs', () => {
++    const sessionWithRejected = {
++      result: {
++        rejected_urls: [
++          { url: 'https://example.com/bad', reason: 'Blocked by robots.txt' },
++          { url: 'https://example.com/disallowed', reason: 'HTTP 403 Forbidden' },
++        ],
++      },
++      t: (key: string, opts?: { count?: number }) => (opts?.count !== undefined ? `${key}:${opts.count}` : key),
++    };
++    const viewWithRejected = render(<CrawlOverviewTab session={sessionWithRejected as never} />);
++    expect(screen.getByText('siteAudit.rejectedUrls:2')).toBeTruthy();
++    expect(screen.getByText(/https:\/\/example\.com\/bad — Blocked by robots\.txt/)).toBeTruthy();
++    expect(screen.getByText(/https:\/\/example\.com\/disallowed — HTTP 403 Forbidden/)).toBeTruthy();
++    viewWithRejected.unmount();
++
++    const sessionEmpty = {
++      result: { rejected_urls: [] },
++      t: (key: string, opts?: { count?: number }) => (opts?.count !== undefined ? `${key}:${opts.count}` : key),
++    };
++    const viewEmpty = render(<CrawlOverviewTab session={sessionEmpty as never} />);
++    expect(screen.queryByText(/siteAudit\.rejectedUrls/)).toBeNull();
++    expect(screen.getByText('crawl.ui.savedHttpValues')).toBeTruthy();
++    viewEmpty.unmount();
++
++    const sessionAbsent = {
++      result: {},
++      t: (key: string, opts?: { count?: number }) => (opts?.count !== undefined ? `${key}:${opts.count}` : key),
++    };
++    render(<CrawlOverviewTab session={sessionAbsent as never} />);
++    expect(screen.queryByText(/siteAudit\.rejectedUrls/)).toBeNull();
++    expect(screen.getByText('crawl.ui.savedHttpValues')).toBeTruthy();
++  });
++});
+diff --git a/tests/geminiGapNATIVESecondary.test.tsx b/tests/geminiGapNATIVESecondary.test.tsx
+new file mode 100644
+index 00000000..9ee98d6b
+--- /dev/null
++++ b/tests/geminiGapNATIVESecondary.test.tsx
+@@ -0,0 +1,146 @@
++import { fireEvent, render, screen, waitFor } from '@testing-library/react';
++import { beforeEach, describe, expect, it, vi } from 'vitest';
++import i18n from '@/i18n';
++import { SemanticAuditPanel } from '@/components/Charts/SemanticAuditPanel';
++import { ScheduledAuditsPanel } from '@/components/Domain/ScheduledAuditsPanel';
++import { AioPassageCard } from '@/components/Domain/crawlResults/aio/AioPassageCard';
++import { comparisonDocument, comparisonPage } from './fixtures/semanticComparison';
++import { createCrawlResultFixture, createCrawlRunFixture } from './fixtures/crawl';
++
++const { rewriteMock, addMock, syncMock } = vi.hoisted(() => ({
++  rewriteMock: vi.fn(),
++  addMock: vi.fn(),
++  syncMock: vi.fn(),
++}));
++
++vi.mock('@/services/aioReadiness', async (original) => ({
++  ...(await original<typeof import('@/services/aioReadiness')>()),
++  rewritePassage: rewriteMock,
++}));
++
++vi.mock('@/services/scheduleWakeup', () => ({
++  syncAuditWakeup: syncMock,
++  removeAuditWakeup: vi.fn().mockResolvedValue(undefined),
++}));
++
++vi.mock('@/services/auditSchedule', async (orig) => {
++  const actual = await orig<typeof import('@/services/auditSchedule')>();
++  addMock.mockImplementation(actual.addScheduledAudit);
++  return { ...actual, addScheduledAudit: addMock };
++});
++
++vi.mock('@/components/Results/copilotPatcher', () => ({
++  CopilotPatcherPanel: () => <div data-testid="patcher" />,
++  pageHasPatchContext: () => false,
++  patchTargetForPassage: () => ({}),
++}));
++
++beforeEach(async () => {
++  await i18n.changeLanguage('en');
++  Object.defineProperty(window, '__TAURI_INTERNALS__', { value: {}, configurable: true });
++  rewriteMock.mockReset();
++  addMock.mockReset();
++  syncMock.mockReset().mockResolvedValue(undefined);
++});
++
++describe('geminiGapNATIVESecondary: SemanticAuditPanel, ScheduledAuditsPanel, AioPassageCard', () => {
++  it('covers SemanticAuditPanel baseline comparison and fallback (line 43)', () => {
++    const document = comparisonDocument();
++    const current = comparisonPage('https://site.test/coffee', ['coffee']);
++    const baseline = createCrawlRunFixture({
++      id: 'baseline-run',
++      projectId: 'p1',
++      completedAt: '2026-10-01',
++      result: createCrawlResultFixture({ pages: [], pages_crawled: 0 }),
++    });
++    const currentRun = createCrawlRunFixture({
++      id: 'run-custom',
++      projectId: 'p1',
++      completedAt: '2026-10-02',
++      result: createCrawlResultFixture({ pages: [current], pages_crawled: 1 }),
++    });
++
++    const view1 = render(
++      <SemanticAuditPanel
++        document={document}
++        pages={[current]}
++        runs={[baseline, currentRun]}
++        currentRunId="run-custom"
++      />,
++    );
++    expect(screen.getByLabelText(i18n.t('semanticAudit.baselineRunAria'))).toBeTruthy();
++    view1.unmount();
++
++    const view2 = render(
++      <SemanticAuditPanel
++        document={document}
++        pages={[current]}
++        runs={[baseline, currentRun]}
++        currentRunId={undefined}
++      />,
++    );
++    expect(screen.queryByTestId('semantic-comparison-guard')).toBeNull();
++    view2.unmount();
++
++    render(
++      <SemanticAuditPanel
++        document={document}
++        pages={[current]}
++        runs={[baseline, { ...currentRun, id: 'current-snapshot' }]}
++        currentRunId="current-snapshot"
++      />,
++    );
++    expect(screen.getByLabelText(i18n.t('semanticAudit.baselineRunAria'))).toBeTruthy();
++  });
++
++  it('covers ScheduledAuditsPanel error branches (line 129)', async () => {
++    addMock.mockImplementationOnce(() => {
++      throw new Error('Custom scheduler failure');
++    });
++
++    render(<ScheduledAuditsPanel projectId="proj-err" initialUrl="https://example.com" />);
++    fireEvent.click(screen.getByText(i18n.t('schedules.title')));
++    fireEvent.click(screen.getByRole('button', { name: i18n.t('schedules.add') }));
++
++    const alert = await screen.findByRole('alert');
++    expect(alert.textContent).toBe('Custom scheduler failure');
++
++    addMock.mockImplementationOnce(() => {
++      throw 'string-error';
++    });
++    fireEvent.click(screen.getByRole('button', { name: i18n.t('schedules.add') }));
++    await waitFor(() => {
++      expect(screen.getByRole('alert').textContent).toBe(i18n.t('schedules.saveError'));
++    });
++  });
++
++  it('covers AioPassageCard copy and clipboard handling (line 25)', async () => {
++    const clipboard = vi.fn().mockResolvedValue(undefined);
++    Object.defineProperty(navigator, 'clipboard', { value: { writeText: clipboard }, configurable: true });
++
++    const passage = {
++      url: 'https://site.test/p',
++      heading: '',
++      windowIndex: 0,
++      tokens: 15,
++      score: 30,
++      issues: [],
++      text: 'Original unoptimized text',
++    };
++
++    rewriteMock.mockResolvedValueOnce({ status: 'ok', text: 'Optimized rewrite text' });
++    render(<AioPassageCard passage={passage as never} index={0} />);
++
++    expect(screen.getByText(i18n.t('aio.passage.noHeading'), { exact: false })).toBeTruthy();
++
++    const generateBtn = screen.getByRole('button', { name: /Rewrite with AI/i });
++    fireEvent.click(generateBtn);
++
++    const copyBtn = await screen.findByRole('button', { name: i18n.t('aio.passage.copy') });
++    fireEvent.click(copyBtn);
++    await waitFor(() => expect(clipboard).toHaveBeenCalledWith('Optimized rewrite text'));
++
++    clipboard.mockRejectedValueOnce(new Error('Clipboard denied'));
++    fireEvent.click(copyBtn);
++  });
++});
+diff --git a/tests/geminiGapRELEASECopilot.test.tsx b/tests/geminiGapRELEASECopilot.test.tsx
+new file mode 100644
+index 00000000..66c0592f
+--- /dev/null
++++ b/tests/geminiGapRELEASECopilot.test.tsx
+@@ -0,0 +1,90 @@
++import { act, fireEvent, render, screen } from '@testing-library/react';
++import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
++import i18n from '@/i18n';
++import { CopilotPatcherPanel } from '@/components/Results/copilotPatcher';
++import type { PatchTarget } from '@/services/copilotPatcher';
++import { useProjectStore } from '@/stores/projectStore';
++import { useAuthStore } from '@/stores/authStore';
++
++const target: PatchTarget = {
++  h1: 'Blood glucose guide', h2: ['Normal values'], heading: 'What is normal?',
++  paragraph: 'Blood glucose is 90 mg/dl.', language: 'en', pageEntities: ['Blood glucose'], missingEntities: [], removeFragments: [],
++};
++
++describe('RELEASE CopilotPatcherPanel branches lines 71 and 79', () => {
++  const initialProjectState = useProjectStore.getState();
++  const initialAuthState = useAuthStore.getState();
++
++  beforeEach(async () => {
++    await i18n.changeLanguage('en');
++    useProjectStore.setState({ activeProjectId: 'ui-project' });
++  });
++
++  afterEach(() => {
++    vi.restoreAllMocks();
++    useProjectStore.setState(initialProjectState, true);
++    useAuthStore.setState(initialAuthState, true);
++  });
++
++  it('covers line 71 when providers is undefined (selectedConnected true vs false)', async () => {
++    // Branch 1: providers undefined and selectedConnected is false -> configured is []
++    useAuthStore.setState({
++      provider: 'openai',
++      connectionStatus: { ...useAuthStore.getState().connectionStatus, openai: 'unconfigured' },
++    });
++    const { rerender } = render(<CopilotPatcherPanel target={target} projectId="ui-project" index={0} />);
++    fireEvent.click(screen.getByRole('button', { name: 'Suggest patch 1' }));
++    expect(await screen.findByText('Connect an AI provider before requesting a patch.')).toBeTruthy();
++
++    // Branch 2: providers undefined and selectedConnected is true -> configured is [{ id, local, generate }]
++    useAuthStore.setState({
++      provider: 'openai',
++      connectionStatus: { ...useAuthStore.getState().connectionStatus, openai: 'connected' },
++      connectionMethod: { ...useAuthStore.getState().connectionMethod, openai: 'local_cli' },
++    });
++    rerender(<CopilotPatcherPanel target={target} projectId="ui-project" index={0} />);
++    fireEvent.click(screen.getByRole('button', { name: 'Suggest patch 1' }));
++    expect(await screen.findByRole('button', { name: 'Suggest patch 1' })).toBeTruthy();
++  });
++
++  it('covers proposal generation and line 79 provider-error message branch', async () => {
++    // Positive branch: provider successfully generates patch proposal
++    const successfulProvider = {
++      id: 'mock-ok',
++      generate: vi.fn(async () => 'Blood glucose is normal at 90 mg/dl.'),
++    };
++    const { rerender } = render(<CopilotPatcherPanel target={target} projectId="ui-project" index={0} providers={[successfulProvider]} />);
++    fireEvent.click(screen.getByRole('button', { name: 'Suggest patch 1' }));
++    expect(await screen.findByTestId('copilot-patch-proposal')).toBeTruthy();
++    expect(screen.getByText('Before')).toBeTruthy();
++    expect(screen.getByText('After')).toBeTruthy();
++
++    // Negative branch line 79: provider throws Error -> result.reason === 'provider-error' -> shows error alert
++    const failingProvider = {
++      id: 'mock-fail',
++      generate: vi.fn(async () => { throw new Error('Simulated upstream model crash'); }),
++    };
++    rerender(<CopilotPatcherPanel target={target} projectId="ui-project" index={0} providers={[failingProvider]} />);
++    fireEvent.click(screen.getByRole('button', { name: 'Suggest patch 1' }));
++    const alert = await screen.findByRole('alert');
++    expect(alert.textContent).toContain('Simulated upstream model crash');
++  });
++
++  it('exercises real user cancellation flow while generation is in flight', async () => {
++    let unblock!: () => void;
++    const pendingPromise = new Promise<string>((resolve) => { unblock = () => resolve('Late patch result'); });
++    const slowProvider = { id: 'mock-slow', generate: vi.fn(() => pendingPromise) };
++
++    render(<CopilotPatcherPanel target={target} projectId="ui-project" index={0} providers={[slowProvider]} />);
++    fireEvent.click(screen.getByRole('button', { name: 'Suggest patch 1' }));
++
++    // Busy state displays cancel button
++    const cancelButton = await screen.findByRole('button', { name: 'Cancel' });
++    expect(cancelButton).toBeTruthy();
++    fireEvent.click(cancelButton);
++
++    // Resolving after cancel does not update state to proposal
++    await act(async () => { unblock(); });
++    expect(screen.queryByTestId('copilot-patch-proposal')).toBeNull();
++  });
++});
+diff --git a/tests/geminiGapRELEASEHelpPerformance.test.ts b/tests/geminiGapRELEASEHelpPerformance.test.ts
+new file mode 100644
+index 00000000..e96f469c
+--- /dev/null
++++ b/tests/geminiGapRELEASEHelpPerformance.test.ts
+@@ -0,0 +1,102 @@
++import { act, renderHook } from '@testing-library/react';
++import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
++import i18n from '@/i18n';
++import { useHelp } from '@/components/Help/useHelp';
++import type { HelpId } from '@/components/Help/helpTypes';
++import { CLOSE_DELAY_MS, OPEN_DELAY_MS, useHelpTip } from '@/components/Help/useHelpTip';
++import { useHelpStore } from '@/components/Help/helpStore';
++import { cruxCategory } from '@/components/Performance/cruxEvidence';
++
++describe('RELEASE help and performance branch coverage', () => {
++  const originalDev = import.meta.env.DEV;
++  const originalMode = import.meta.env.MODE;
++
++  beforeEach(async () => {
++    await i18n.changeLanguage('en');
++  });
++
++  afterEach(() => {
++    import.meta.env.DEV = originalDev;
++    import.meta.env.MODE = originalMode;
++    vi.restoreAllMocks();
++    vi.useRealTimers();
++    useHelpStore.setState({ openId: null });
++  });
++
++  it('covers useHelp line 14 dev/mode warn branches and valid help resolution', () => {
++    const warnSpy = vi.spyOn(console, 'warn').mockImplementation(() => {});
++
++    // DEV=true, MODE='development' -> logs warning for missing/incomplete key
++    import.meta.env.DEV = true;
++    import.meta.env.MODE = 'development';
++    const { result: devResult, unmount: uDev } = renderHook(() => useHelp('aio.missingEntry' as HelpId));
++    expect(devResult.current).toBeNull();
++    expect(warnSpy).toHaveBeenCalledWith('[help] missing or incomplete help entry "help.aio.missingEntry"');
++    uDev();
++
++    // DEV=true, MODE='test' -> suppresses warning
++    warnSpy.mockClear();
++    import.meta.env.MODE = 'test';
++    const { result: testResult, unmount: uTest } = renderHook(() => useHelp('aio.missingEntry' as HelpId));
++    expect(testResult.current).toBeNull();
++    expect(warnSpy).not.toHaveBeenCalled();
++    uTest();
++
++    // DEV=false -> suppresses warning
++    import.meta.env.DEV = false;
++    import.meta.env.MODE = 'production';
++    const { result: prodResult, unmount: uProd } = renderHook(() => useHelp('aio.missingEntry' as HelpId));
++    expect(prodResult.current).toBeNull();
++    expect(warnSpy).not.toHaveBeenCalled();
++    uProd();
++
++    // Valid help entry using genuine locale data
++    const { result: validResult, unmount: uValid } = renderHook(() => useHelp('aio.aioReadiness'));
++    expect(validResult.current).not.toBeNull();
++    expect(validResult.current?.title).toBe('AI readiness score (AIO-R)');
++    expect(validResult.current?.what).toContain('0-100 measure');
++    uValid();
++  });
++
++  it('covers useHelpTip line 54 open vs closed pointer enter branches', () => {
++    vi.useFakeTimers();
++    const { result, unmount } = renderHook(() => useHelpTip());
++    expect(result.current.open).toBe(false);
++
++    // Touch pointer type returns early without setting timers
++    result.current.trigger.onPointerEnter({ pointerType: 'touch' } as never);
++    expect(useHelpStore.getState().openId).toBeNull();
++
++    // Closed: schedules timer and opens after OPEN_DELAY_MS
++    result.current.trigger.onPointerEnter({ pointerType: 'mouse' } as never);
++    act(() => { vi.advanceTimersByTime(OPEN_DELAY_MS); });
++    expect(useHelpStore.getState().openId).toBe(result.current.uid);
++    expect(result.current.open).toBe(true);
++
++    // Open: pointer enter branch evaluates (!open === false), does not schedule open timer
++    result.current.trigger.onPointerEnter({ pointerType: 'mouse' } as never);
++    expect(useHelpStore.getState().openId).toBe(result.current.uid);
++
++    // Pointer leave hides after CLOSE_DELAY_MS
++    result.current.trigger.onPointerLeave({ pointerType: 'mouse' } as never);
++    act(() => { vi.advanceTimersByTime(CLOSE_DELAY_MS); });
++    expect(useHelpStore.getState().openId).toBeNull();
++    unmount();
++  });
++
++  it('covers cruxCategory line 46 hasOwnProperty branches for thresholds', () => {
++    // Known metric threshold categories using application translator
++    expect(cruxCategory({ metric: 'largest_contentful_paint', percentiles: { p75: 2000 } }, i18n.t)).toBe('Good');
++    expect(cruxCategory({ metric: 'largest_contentful_paint', percentiles: { p75: 3500 } }, i18n.t)).toBe('Needs improvement');
++    expect(cruxCategory({ metric: 'largest_contentful_paint', percentiles: { p75: 4500 } }, i18n.t)).toBe('Poor');
++
++    // Unknown metric name -> bounds undefined -> Unrated
++    expect(cruxCategory({ metric: 'unknown_metric_gap', percentiles: { p75: 100 } }, i18n.t)).toBe('Unrated');
++
++    // metric is undefined -> fallback '' -> does NOT have own property -> bounds undefined -> Unrated
++    expect(cruxCategory({ metric: undefined, percentiles: { p75: 100 } }, i18n.t)).toBe('Unrated');
++
++    // null percentile value -> Unrated
++    expect(cruxCategory({ metric: 'largest_contentful_paint', percentiles: { p75: null } }, i18n.t)).toBe('Unrated');
++  });
++});
+diff --git a/tests/geminiGapRELEASENodes.test.tsx b/tests/geminiGapRELEASENodes.test.tsx
+new file mode 100644
+index 00000000..10e4d915
+--- /dev/null
++++ b/tests/geminiGapRELEASENodes.test.tsx
+@@ -0,0 +1,108 @@
++import { render, screen } from '@testing-library/react';
++import { afterEach, beforeEach, describe, expect, it } from 'vitest';
++import i18n from '@/i18n';
++import { useAuditStore } from '@/stores/auditStore';
++import { DataForSeoSummaryCard } from '@/components/Results/dataforseoAudit/DataForSeoSummaryCard';
++import { MetadataAccessibilityFindings } from '@/components/Results/metadata/MetadataAccessibilityFindings';
++import type { AccessibilityAudit } from '@/types';
++import { createAuditFixture } from './fixtures/audit';
++
++const a11yFixture = (patch: Partial<AccessibilityAudit> = {}): AccessibilityAudit => ({
++  landmarks: [],
++  aria_attribute_count: 0,
++  form_control_count: 0,
++  unlabeled_form_control_count: 0,
++  manual_review_items: [],
++  ...patch,
++});
++
++describe('RELEASE DataForSeoSummaryCard and MetadataAccessibilityFindings branch coverage', () => {
++  const initialAuditState = useAuditStore.getState();
++
++  beforeEach(async () => {
++    await i18n.changeLanguage('en');
++  });
++
++  afterEach(() => {
++    useAuditStore.setState(initialAuditState, true);
++  });
++
++  it('covers DataForSeoSummaryCard line 33 dofollowRatio null vs computed branches', () => {
++    // Branch 1: dofollowRatio is null (no data or zero backlinks) -> shows runLiveMetric
++    useAuditStore.setState({ dataforseoData: undefined });
++    const { rerender } = render(<DataForSeoSummaryCard />);
++    expect(screen.getByText('Run a live request to load this metric.')).toBeTruthy();
++
++    // Branch 2: dofollowRatio is computed (total: 200, dofollow: 150 -> 75%) -> shows percentage
++    useAuditStore.setState({
++      dataforseoData: {
++        total_backlinks: 200,
++        dofollow_backlinks: 150,
++        referring_domains: 25,
++        referring_main_domains: 20,
++        rank: 60,
++        broken_backlinks: 0,
++      } as never,
++    });
++    rerender(<DataForSeoSummaryCard />);
++    expect(screen.getByText('75%')).toBeTruthy();
++    expect(screen.queryByText('Run a live request to load this metric.')).toBeNull();
++  });
++
++  it('covers MetadataAccessibilityFindings line 58 shownCount condition branches', () => {
++    // Branch 1: finding.code is unlabeled form controls AND elements.length (1) < unlabeled_form_control_count (4) -> renders shownCount
++    const auditTruncated = createAuditFixture({
++      accessibility: a11yFixture({
++        unlabeled_form_control_count: 4,
++        findings: [{
++          code: 'accessibility-form-controls-unlabeled', severity: 'warning', message: 'Unlabeled form controls',
++          evidence: '4 controls', recommendation: 'Associate every control with label[for].',
++          elements: [{ dom_position: 1, dom_query: 'input#email', html_snippet: '<input id="email" />' }],
++        }],
++      }),
++    });
++    const { rerender } = render(<MetadataAccessibilityFindings audit={auditTruncated} />);
++    expect(screen.getByText('Shown 1 of 4 elements; the stored report limit is 50.')).toBeTruthy();
++
++    // Branch 2: elements.length (1) >= unlabeled_form_control_count (1) -> does NOT render shownCount
++    const auditComplete = createAuditFixture({
++      accessibility: a11yFixture({
++        unlabeled_form_control_count: 1,
++        findings: [{
++          code: 'accessibility-form-controls-unlabeled', severity: 'warning', message: 'Unlabeled form controls',
++          evidence: '1 control', recommendation: 'Associate every control with label[for].',
++          elements: [{ dom_position: 1, dom_query: 'input#email', html_snippet: '<input id="email" />' }],
++        }],
++      }),
++    });
++    rerender(<MetadataAccessibilityFindings audit={auditComplete} />);
++    expect(screen.queryByText('Shown 1 of 4 elements; the stored report limit is 50.')).toBeNull();
++
++    // Branch 3: unlabeled_form_control_count is undefined (tests ?? 0 fallback)
++    const auditMissingCount = createAuditFixture({
++      accessibility: a11yFixture({
++        unlabeled_form_control_count: undefined as never,
++        findings: [{
++          code: 'accessibility-form-controls-unlabeled', severity: 'warning', message: 'Unlabeled form controls',
++          evidence: '0 controls', recommendation: 'Associate every control with label[for].',
++          elements: [{ dom_position: 1, dom_query: 'input#email', html_snippet: '<input id="email" />' }],
++        }],
++      }),
++    });
++    rerender(<MetadataAccessibilityFindings audit={auditMissingCount} />);
++    expect(screen.queryByText(/Shown 1 of/)).toBeNull();
++
++    // Branch 4: different finding code -> does NOT render shownCount
++    const auditOther = createAuditFixture({
++      accessibility: a11yFixture({
++        findings: [{
++          code: 'accessibility-document-language-missing', severity: 'error', message: 'Language missing',
++          evidence: '', recommendation: 'Add a lang attribute to html tag.',
++          elements: [{ dom_position: 1, dom_query: 'html', html_snippet: '<html>' }],
++        }],
++      }),
++    });
++    rerender(<MetadataAccessibilityFindings audit={auditOther} />);
++    expect(screen.queryByText(/Shown 1 of/)).toBeNull();
++  });
++});

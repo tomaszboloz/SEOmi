@@ -1,0 +1,7 @@
+Po scaleniu #176 do main `4a25a1974d9641a6170c0802919a566e55251071` wykryto dodatkowy błąd odczytu dowodów wydania. GitHub CodeQL default setup tworzy zbiorczy check app57789 dla PR, ale nie dla push do main. Na obecnym main oba Analyze są SUCCESS i istnieją analizy CodeQL dokładnie tego SHA (Actions2024436508, JS/TS2024443006, bez błędów/ostrzeżeń), natomiast nie istnieje check-suite app57789. To samo potwierdzono na poprzednim main189a244. Lista otwartych alertów main jest pusta.
+
+Obecny release-ci-gate.mjs oczekuje zbiorczego checka także na main, więc blokuje wydanie mimo ukończonych skanów. Zatrzymano tylko automatyczny packaging run40263339827; Test Suite dokładnego main40263339776 nadal pracuje. Anulowanie nie jest wynikiem PASS.
+
+Przygotowuję małą poprawkę na osobnej gałęzi codex/release-main-codeql: wszystkie10wymaganych kontroli nadal muszą przejść; dla main z brakującym checkiem PR dodatkowo weryfikowane będą rzeczywiste analizy CodeQL dokładnego SHA, obie kategorie języków i kompletna lista otwartych alertów. Obecny zbiorczy check FAIL nadal będzie blokował wydanie. Wymagane są regresje brakujących/starych/błędnych danych, paginacji i błędów HTTP. Progi95/98/MAX150, query i ochrona main pozostają bez zmian.
+
+Nowy release0.4.41 nadal nie jest opublikowany. Stare dwa obiekty0.4.40 i ich unikalne artefakty pozostają zachowane. Issue207 zawiera także dawną konsolidację0.4.40, więc pozostaje otwarte.

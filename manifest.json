@@ -1,0 +1,3173 @@
+{
+  "files": [
+    {
+      "path": "planning/GAP_REGISTER.md",
+      "sha256": "8a1c715adcda83fbdec87e4fd5c9d026cab86216551c0fcbb50212dad29ff65f",
+      "bytes": 145247,
+      "redacted": false
+    },
+    {
+      "path": "planning/PARITY_MATRIX.md",
+      "sha256": "71083119586d1dad1c6236049de5b80a0876eaaed1a0af4ba41cce4efa5a02e7",
+      "bytes": 2942,
+      "redacted": false
+    },
+    {
+      "path": "planning/PRD.md",
+      "sha256": "1de932e33031f68fa0e4333e511c5c5cbcbe3e1ad4c68486d2941c21ff65558b",
+      "bytes": 26512,
+      "redacted": false
+    },
+    {
+      "path": "planning/TRENDING_NOW_ADAPTER.md",
+      "sha256": "85a22b12e8a9100704ad80dbbb8acf73dda494f37e6c733960b38510e84fc970",
+      "bytes": 2394,
+      "redacted": false
+    },
+    {
+      "path": "planning/modules-3-7-spec.md",
+      "sha256": "9af132990ca04fde97d4aafae3daf810b5daafa33c177cf0a43988b54a285c27",
+      "bytes": 5898,
+      "redacted": false
+    },
+    {
+      "path": "planning/semantic-suite-plan.md",
+      "sha256": "babc94e9a9d20fa110d4c5f01fca54cd4b9406b1ec6d90ff687a81119c58d596",
+      "bytes": 2436,
+      "redacted": false
+    },
+    {
+      "path": "planning/sfs-spec.md",
+      "sha256": "1eb22dd231b3602131071d5ca363704958ed78f87e17fe2e512238da7b043998",
+      "bytes": 6943,
+      "redacted": false
+    },
+    {
+      "path": "planning/tas-spec.md",
+      "sha256": "305330855a1fa34e508b0fba5c43d59af6edcf070625815820416d78d560c456",
+      "bytes": 4716,
+      "redacted": false
+    },
+    {
+      "path": "scratch/temporary-jsonld-boundary.test.ts",
+      "sha256": "f2a60ade3008e7ee8d6cb80d45a2da3b8834430583536aa6e87b1b50409bfce6",
+      "bytes": 743,
+      "redacted": false
+    },
+    {
+      "path": "scratch/loop_runner_resume_and_cancel.rs.bak",
+      "sha256": "84ea5b24df16da134956d546d7e70dac7c4053fe9d1ab9668f46334dc33bb215",
+      "bytes": 2325,
+      "redacted": false
+    },
+    {
+      "path": "previous-work/seomi-next-20261027/ai-trust-ui/acceptance-matrix.md",
+      "sha256": "d13fdfd9fe47ef88a9ee508f971a9ba51c474aa4f375fac47326d536e2f6a985",
+      "bytes": 2474,
+      "redacted": false
+    },
+    {
+      "path": "previous-work/seomi-next-20261027/ai-trust-ui/aggregate.patch",
+      "sha256": "20db1d23d027fb60ffac90d8baeaa24fc19dbb7e472d59fe1663941c8abcb9db",
+      "bytes": 70526,
+      "redacted": false
+    },
+    {
+      "path": "previous-work/seomi-next-20261027/ai-trust-ui/ownership-collisions.md",
+      "sha256": "a7d90406e98803af9646c08ee0bcc4fbcbbc6db7ce52ded5fbfe3c815b6f6792",
+      "bytes": 1854,
+      "redacted": false
+    },
+    {
+      "path": "previous-work/seomi-next-20261027/ai-trust-ui/verification-summary.md",
+      "sha256": "c76f5cd013bd83aa31e0e6f16324a26cf013fd5a3239b1bd0cea5a81bea9664d",
+      "bytes": 1490,
+      "redacted": false
+    },
+    {
+      "path": "previous-work/seomi-next-20261027/aio-core/ac-evidence.md",
+      "sha256": "7fce0b15b834ba220760c64c014ad45fef4cf25a61943b3c12faa12065881083",
+      "bytes": 3295,
+      "redacted": false
+    },
+    {
+      "path": "previous-work/seomi-next-20261027/aio-core/ac-matrix.md",
+      "sha256": "97d104a6c216514d0927ddab76036aef160626d6108292d21250d51c69fa8899",
+      "bytes": 2247,
+      "redacted": false
+    },
+    {
+      "path": "previous-work/seomi-next-20261027/aio-core/aggregate.patch",
+      "sha256": "010e35511926e02e9455ddc47ce2408582a46e783af41c290524bcc4525ab0ef",
+      "bytes": 70860,
+      "redacted": false
+    },
+    {
+      "path": "previous-work/seomi-next-20261027/aio-core/freeze.md",
+      "sha256": "5a4d481aa6251eef31423b5da3beb5cb2444a30cf5f252664652a766c8fab7bf",
+      "bytes": 835,
+      "redacted": false
+    },
+    {
+      "path": "previous-work/seomi-next-20261027/aio-core/remaining-gaps.md",
+      "sha256": "2368d1feecbe25e4aa24143bb3ee43a6ff0e20f6fe29ada46b65ea8ac585f69e",
+      "bytes": 1459,
+      "redacted": false
+    },
+    {
+      "path": "previous-work/seomi-next-20261027/deps-audit/npm-package-lock.actual-diff.patch",
+      "sha256": "ebb4ec9cd48d001b58738de2996ec93b53f807a9a9141485c9525271b4e19b98",
+      "bytes": 21929,
+      "redacted": false
+    },
+    {
+      "path": "previous-work/seomi-next-20261027/deps-audit/npm-update-20261027.md",
+      "sha256": "cf17f37ba98529dd62d97597f1bb0b5e3c40dffb776b036c7dbf7e2419f6bdd2",
+      "bytes": 1970,
+      "redacted": false
+    },
+    {
+      "path": "previous-work/seomi-next-20261027/deps-audit/summary-20261027.md",
+      "sha256": "24e492bbdc3dc684f433a9a12d0c2f301693ced04ebd4c1ccfcc6a4d858c7090",
+      "bytes": 998,
+      "redacted": false
+    },
+    {
+      "path": "previous-work/seomi-next-20261027/eetv-core/freeze-aggregate.md",
+      "sha256": "1d2af91e9370e53078643ff0cf1957d3fb65d20a9f287312560ec0efaf04800e",
+      "bytes": 1361,
+      "redacted": false
+    },
+    {
+      "path": "previous-work/seomi-next-20261027/eetv-core/manifest.md",
+      "sha256": "7b6451e326eb78e116e25540a23510b56a0fb789abe15b99bfab87f24c15df26",
+      "bytes": 3392,
+      "redacted": false
+    },
+    {
+      "path": "previous-work/seomi-next-20261027/eetv-core/raw-logs.md",
+      "sha256": "cb3b6bb8817fd8b3d80c7151246b01d42fcec6eb576d4066eb11024115a3f781",
+      "bytes": 645,
+      "redacted": false
+    },
+    {
+      "path": "previous-work/seomi-next-20261027/eetv-graph-wrongcwd.patch",
+      "sha256": "c46a46ddf342dcbc065f6484d9f9a1e546b9992c412dd847cdd1c6d34ab667ab",
+      "bytes": 26750,
+      "redacted": false
+    },
+    {
+      "path": "previous-work/seomi-next-20261027/eetv-import/0.base",
+      "sha256": "29ad751e809afd942be35155eed452be7f58974310a13a6efcca2d55d296071c",
+      "bytes": 4983,
+      "redacted": false
+    },
+    {
+      "path": "previous-work/seomi-next-20261027/eetv-import/0.merged",
+      "sha256": "5639a7d3b7e103f7436b57ec10176cc1924ada2bdec21dd3999718c812069ded",
+      "bytes": 5069,
+      "redacted": false
+    },
+    {
+      "path": "previous-work/seomi-next-20261027/eetv-import/0.ours",
+      "sha256": "29ad751e809afd942be35155eed452be7f58974310a13a6efcca2d55d296071c",
+      "bytes": 4983,
+      "redacted": false
+    },
+    {
+      "path": "previous-work/seomi-next-20261027/eetv-import/0.theirs",
+      "sha256": "5639a7d3b7e103f7436b57ec10176cc1924ada2bdec21dd3999718c812069ded",
+      "bytes": 5069,
+      "redacted": false
+    },
+    {
+      "path": "previous-work/seomi-next-20261027/eetv-import/1.base",
+      "sha256": "041397690d330750701c9fcef18eb529d564f90f40e16dd6ccb34f6aedb0973e",
+      "bytes": 5011,
+      "redacted": false
+    },
+    {
+      "path": "previous-work/seomi-next-20261027/eetv-import/1.merged",
+      "sha256": "cc8028db284f3e8ac0d2de817046911c277710b30ad37c0f4714180b8227726c",
+      "bytes": 7391,
+      "redacted": false
+    },
+    {
+      "path": "previous-work/seomi-next-20261027/eetv-import/1.ours",
+      "sha256": "b795de216cd150b169c3b548012e59cbbf791eec1737f6861e3d76ce0117dd45",
+      "bytes": 6066,
+      "redacted": false
+    },
+    {
+      "path": "previous-work/seomi-next-20261027/eetv-import/1.theirs",
+      "sha256": "b8d1ec53cc8cfa1ec3ec50269ad4916d46917e5bbc375f588872bc27b09283ae",
+      "bytes": 5454,
+      "redacted": false
+    },
+    {
+      "path": "previous-work/seomi-next-20261027/eetv-import/2.base",
+      "sha256": "b04ed7ffea96f19463feb5b5bfd83f8416ac53e9309a2a58ad5a70dbed1061db",
+      "bytes": 4489,
+      "redacted": false
+    },
+    {
+      "path": "previous-work/seomi-next-20261027/eetv-import/2.merged",
+      "sha256": "3d4ac44cc98028968163d69b54445a6ba7c5c775240e5f7e5ac710840a620154",
+      "bytes": 8791,
+      "redacted": false
+    },
+    {
+      "path": "previous-work/seomi-next-20261027/eetv-import/2.ours",
+      "sha256": "2236476441bb0702a892f96e7480a20a69b3650a6d77579a5716079b47805487",
+      "bytes": 8141,
+      "redacted": false
+    },
+    {
+      "path": "previous-work/seomi-next-20261027/eetv-import/2.theirs",
+      "sha256": "d6e1e030a89beac81effd2a6e45396f245d2eeaac4bbe89a265d51962918012a",
+      "bytes": 4597,
+      "redacted": false
+    },
+    {
+      "path": "previous-work/seomi-next-20261027/eetv-import/3.base",
+      "sha256": "3c761d24911b62c3d18b2704d7bb705e792174badcee805f5f6a989e54acf9bf",
+      "bytes": 2998,
+      "redacted": false
+    },
+    {
+      "path": "previous-work/seomi-next-20261027/eetv-import/3.merged",
+      "sha256": "c6063db33a67c34028306e710c3281a74f36c849be0cdbd6072d6fc183410f11",
+      "bytes": 3726,
+      "redacted": false
+    },
+    {
+      "path": "previous-work/seomi-next-20261027/eetv-import/3.ours",
+      "sha256": "3c761d24911b62c3d18b2704d7bb705e792174badcee805f5f6a989e54acf9bf",
+      "bytes": 2998,
+      "redacted": false
+    },
+    {
+      "path": "previous-work/seomi-next-20261027/eetv-import/3.theirs",
+      "sha256": "c6063db33a67c34028306e710c3281a74f36c849be0cdbd6072d6fc183410f11",
+      "bytes": 3726,
+      "redacted": false
+    },
+    {
+      "path": "previous-work/seomi-next-20261027/eetv-import/4.base",
+      "sha256": "662c731777a109e4e2201ffe93ba610ca8872326a86d2129124da8aca1ff8f99",
+      "bytes": 565,
+      "redacted": false
+    },
+    {
+      "path": "previous-work/seomi-next-20261027/eetv-import/4.merged",
+      "sha256": "5c14eb131fe88bdca07567e30ba12f35605bbd61ec4a82b3097e54050c4f2bcb",
+      "bytes": 970,
+      "redacted": false
+    },
+    {
+      "path": "previous-work/seomi-next-20261027/eetv-import/4.ours",
+      "sha256": "b803bb582d6198841b8afaae78ae468bd2b4a6cdcda6baf6faff8b2504cb752a",
+      "bytes": 921,
+      "redacted": false
+    },
+    {
+      "path": "previous-work/seomi-next-20261027/eetv-import/4.theirs",
+      "sha256": "14ddb64d2bdeb6bc38343e8888287e2214743c4ad500904e5bcb8d218c9596be",
+      "bytes": 614,
+      "redacted": false
+    },
+    {
+      "path": "previous-work/seomi-next-20261027/eetv-import/5.base",
+      "sha256": "a1ca83e7a1eeb89ce74732bb42162dba6d2ee93b0f56f7fc1fb045cf5bbc5695",
+      "bytes": 2587,
+      "redacted": false
+    },
+    {
+      "path": "previous-work/seomi-next-20261027/eetv-import/5.merged",
+      "sha256": "6bf4b42cdc6fcdeb12d62718b828437e1ae69edcb0c90f34e1cc7f6497e55583",
+      "bytes": 2612,
+      "redacted": false
+    },
+    {
+      "path": "previous-work/seomi-next-20261027/eetv-import/5.ours",
+      "sha256": "a1ca83e7a1eeb89ce74732bb42162dba6d2ee93b0f56f7fc1fb045cf5bbc5695",
+      "bytes": 2587,
+      "redacted": false
+    },
+    {
+      "path": "previous-work/seomi-next-20261027/eetv-import/5.theirs",
+      "sha256": "6bf4b42cdc6fcdeb12d62718b828437e1ae69edcb0c90f34e1cc7f6497e55583",
+      "bytes": 2612,
+      "redacted": false
+    },
+    {
+      "path": "previous-work/seomi-next-20261027/eetv-import/6.base",
+      "sha256": "3de854c03631c3a4dcdfbf171a1c0ee92269fd099710644ea7c2a535425b2bff",
+      "bytes": 3139,
+      "redacted": false
+    },
+    {
+      "path": "previous-work/seomi-next-20261027/eetv-import/6.merged",
+      "sha256": "1c967e1a00269ee89c89852d82811613de472b53ae459d0ef8b47b206bc13020",
+      "bytes": 6572,
+      "redacted": false
+    },
+    {
+      "path": "previous-work/seomi-next-20261027/eetv-import/6.ours",
+      "sha256": "7033c8bc8b712b3b7aa7544c0dad5f9176bd2ee0141eb1546a7743f43b2b3e9d",
+      "bytes": 4825,
+      "redacted": false
+    },
+    {
+      "path": "previous-work/seomi-next-20261027/eetv-import/6.theirs",
+      "sha256": "d0420e62c0424dd171b06727d98a2617f1d8e4dbb6281e65c88a3de6ba18e4d2",
+      "bytes": 4282,
+      "redacted": false
+    },
+    {
+      "path": "previous-work/seomi-next-20261027/eetv-import/7.base",
+      "sha256": "bdf54dd24cc559a96ad145277801ca5963cc2aa341fe7f5b324bdab8407aaa60",
+      "bytes": 2047,
+      "redacted": false
+    },
+    {
+      "path": "previous-work/seomi-next-20261027/eetv-import/7.merged",
+      "sha256": "8970c4704058cf300fb6fdbd5c72332039b629fcf9288c5d2ed9f4f1fecf9ea0",
+      "bytes": 2160,
+      "redacted": false
+    },
+    {
+      "path": "previous-work/seomi-next-20261027/eetv-import/7.ours",
+      "sha256": "bdf54dd24cc559a96ad145277801ca5963cc2aa341fe7f5b324bdab8407aaa60",
+      "bytes": 2047,
+      "redacted": false
+    },
+    {
+      "path": "previous-work/seomi-next-20261027/eetv-import/7.theirs",
+      "sha256": "8970c4704058cf300fb6fdbd5c72332039b629fcf9288c5d2ed9f4f1fecf9ea0",
+      "bytes": 2160,
+      "redacted": false
+    },
+    {
+      "path": "previous-work/seomi-next-20261027/gemini-integration/supervisor.py",
+      "sha256": "d59238c1c1b0349b86e6827ddf907a80642f556cc80b42d1a0d1f79bb43ef869",
+      "bytes": 1277,
+      "redacted": false
+    },
+    {
+      "path": "previous-work/seomi-next-20261027/gsc-browser/issue.md",
+      "sha256": "a865c3bce6364641cea4c2d404caa6ca86a269a20d610d46184684485f36845c",
+      "bytes": 1811,
+      "redacted": false
+    },
+    {
+      "path": "previous-work/seomi-next-20261027/import-eetv-graph.py",
+      "sha256": "1b8f9164ea50813e53cdaba96a41fd9095b6bce228e7c1a07bc92007258be80a",
+      "bytes": 1917,
+      "redacted": false
+    },
+    {
+      "path": "previous-work/seomi-next-20261027/integration-050/658031c6/gsc-progress.md",
+      "sha256": "8a6c539e45332bf2291dbf2a37e9a5d2a7edf3e4085f0181c025a05a28773e1d",
+      "bytes": 1315,
+      "redacted": false
+    },
+    {
+      "path": "previous-work/seomi-next-20261027/integration-050/658031c6/pr-body.md",
+      "sha256": "a786d557244bff77a54a5da3f028c575dae3b46d7fcbc95c91f1a3a8f9642acc",
+      "bytes": 3101,
+      "redacted": false
+    },
+    {
+      "path": "previous-work/seomi-next-20261027/integration-050/658031c6/validate.py",
+      "sha256": "f3cf75c4f495c1f4074e6e1d4623a95512e9e3fbcc7ba974b3367e0249a4bd07",
+      "bytes": 2165,
+      "redacted": false
+    },
+    {
+      "path": "previous-work/seomi-next-20261027/integration-050/AI_TRUST_050_ACCEPTANCE.md",
+      "sha256": "e8460bab1430d079385632b38b2e66979351f3438676a52e7c0b16949dc4fd76",
+      "bytes": 3858,
+      "redacted": false
+    },
+    {
+      "path": "previous-work/seomi-next-20261027/integration-050/aio-inspector-pr.md",
+      "sha256": "8b963fe59f31bb8b7135823b00275ba12cc73fc2896c73650028981f2f06d21a",
+      "bytes": 1283,
+      "redacted": false
+    },
+    {
+      "path": "previous-work/seomi-next-20261027/integration-050/f16f6407/aio-followup.md",
+      "sha256": "8b0ca13bddfa0313e91e87b8ef39380d07c4c27081b800a9e02953e47c54b408",
+      "bytes": 1047,
+      "redacted": false
+    },
+    {
+      "path": "previous-work/seomi-next-20261027/integration-050/f16f6407/pr-body.md",
+      "sha256": "9eb95550355945d6fa43a93f48930de665e91ecc0c714f912205a9734b367c19",
+      "bytes": 3931,
+      "redacted": false
+    },
+    {
+      "path": "previous-work/seomi-next-20261027/integration-050/f16f6407/validate.py",
+      "sha256": "f3cf75c4f495c1f4074e6e1d4623a95512e9e3fbcc7ba974b3367e0249a4bd07",
+      "bytes": 2165,
+      "redacted": false
+    },
+    {
+      "path": "previous-work/seomi-next-20261027/integration-050/f16f6407/validation-comment.md",
+      "sha256": "54fa6647bbf5db02188c8bb81be4c7fef88dd650785aba0b90006ee91b13d429",
+      "bytes": 1359,
+      "redacted": false
+    },
+    {
+      "path": "previous-work/seomi-next-20261027/integration-050/full-baseline-comment.md",
+      "sha256": "5782dbf59cb704dfe01e457b49a23a5f33c1319d6b3e09acbd7ce26b8782b3a5",
+      "bytes": 1088,
+      "redacted": false
+    },
+    {
+      "path": "previous-work/seomi-next-20261027/integration-050/github-progress.md",
+      "sha256": "bb5c7d470c03b3649dea59cab5a9f5122413803f145e61d849c429e0567cbe37",
+      "bytes": 1826,
+      "redacted": false
+    },
+    {
+      "path": "previous-work/seomi-next-20261027/integration-050/import-eetv/base/src/components/Domain/crawlResults/trust/TrustHero.tsx",
+      "sha256": "cfdac81d8c70372bed5c961636024f801be9c4420a4a2335687fe6326fc45c7d",
+      "bytes": 3416,
+      "redacted": false
+    },
+    {
+      "path": "previous-work/seomi-next-20261027/integration-050/import-eetv/base/src/components/Domain/crawlResults/trust/trustHelpers.ts",
+      "sha256": "e8b656fb03cc30bcb56e8fba9237c90b84ec3b8890a2526ffc4c52fd40fa333d",
+      "bytes": 1174,
+      "redacted": false
+    },
+    {
+      "path": "previous-work/seomi-next-20261027/integration-050/import-eetv/base/src/hooks/useTrust.ts",
+      "sha256": "9da2517f20278c971becdfd39a11df913ce04af53587790bbc8f512a55e1edf5",
+      "bytes": 1906,
+      "redacted": false
+    },
+    {
+      "path": "previous-work/seomi-next-20261027/integration-050/import-eetv/base/src/services/eeatTrust/authors.ts",
+      "sha256": "041397690d330750701c9fcef18eb529d564f90f40e16dd6ccb34f6aedb0973e",
+      "bytes": 5011,
+      "redacted": false
+    },
+    {
+      "path": "previous-work/seomi-next-20261027/integration-050/import-eetv/base/src/services/eeatTrust/build.ts",
+      "sha256": "b04ed7ffea96f19463feb5b5bfd83f8416ac53e9309a2a58ad5a70dbed1061db",
+      "bytes": 4489,
+      "redacted": false
+    },
+    {
+      "path": "previous-work/seomi-next-20261027/integration-050/import-eetv/base/src/services/eeatTrust/completion.ts",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0,
+      "redacted": false
+    },
+    {
+      "path": "previous-work/seomi-next-20261027/integration-050/import-eetv/base/src/services/eeatTrust/history.ts",
+      "sha256": "fb71503e123a963d5f7f1a24b122adf33dd8d7a22465094451ae22ebea1d595f",
+      "bytes": 1960,
+      "redacted": false
+    },
+    {
+      "path": "previous-work/seomi-next-20261027/integration-050/import-eetv/base/src/services/eeatTrust/index.ts",
+      "sha256": "662c731777a109e4e2201ffe93ba610ca8872326a86d2129124da8aca1ff8f99",
+      "bytes": 565,
+      "redacted": false
+    },
+    {
+      "path": "previous-work/seomi-next-20261027/integration-050/import-eetv/base/src/services/eeatTrust/summary.ts",
+      "sha256": "57ad74131a41e1fd53c98ba8a9e637b6fd74727ccf03fa7d076e54bb372eafa7",
+      "bytes": 3335,
+      "redacted": false
+    },
+    {
+      "path": "previous-work/seomi-next-20261027/integration-050/import-eetv/base/src/services/eeatTrust/transparency.ts",
+      "sha256": "3f0257b7075aa4267d0c98dc659fc4c1865e7d0856c24e0ad9141c68b2b49ad8",
+      "bytes": 2788,
+      "redacted": false
+    },
+    {
+      "path": "previous-work/seomi-next-20261027/integration-050/import-eetv/base/src/services/eeatTrust/types.ts",
+      "sha256": "3de854c03631c3a4dcdfbf171a1c0ee92269fd099710644ea7c2a535425b2bff",
+      "bytes": 3139,
+      "redacted": false
+    },
+    {
+      "path": "previous-work/seomi-next-20261027/integration-050/import-eetv/base/src/stores/tools/crawl/execution.ts",
+      "sha256": "15128ef0d6cb96f0e51ec7c4d4160fee7822d666546eda0d3370d6c5613035ec",
+      "bytes": 8260,
+      "redacted": false
+    },
+    {
+      "path": "previous-work/seomi-next-20261027/integration-050/import-eetv/base/src-tauri/src/commands/pdf_report/crawl_report/sec_trust.rs",
+      "sha256": "a8dbc5f12fc928b02f2497f31dc043753b50b056efa86518b864c7278e61dea1",
+      "bytes": 3968,
+      "redacted": false
+    },
+    {
+      "path": "previous-work/seomi-next-20261027/integration-050/import-eetv/base/src-tauri/src/commands/pdf_report/crawl_report/strings/trust.rs",
+      "sha256": "2f28dc47a182622d3a63f97c9d1c54c727e6683c9c5e5d3d109638c89ccf60a7",
+      "bytes": 3056,
+      "redacted": false
+    },
+    {
+      "path": "previous-work/seomi-next-20261027/integration-050/import-eetv/base/src-tauri/src/commands/pdf_report/crawl_report/tests_trust.rs",
+      "sha256": "4e66e8c3dbd44546f145925a02d7732d99c8d986501048767ae6928ba1ac45f4",
+      "bytes": 4555,
+      "redacted": false
+    },
+    {
+      "path": "previous-work/seomi-next-20261027/integration-050/import-eetv/base/tests/eeatTrustCompletion.test.ts",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0,
+      "redacted": false
+    },
+    {
+      "path": "previous-work/seomi-next-20261027/integration-050/import-eetv/base/tests/eeatTrustEngine2.test.ts",
+      "sha256": "17ca0241b59ef8efb7cb922d5c8c099c8604bc2ebb656a76ac4bd4f59ef47e93",
+      "bytes": 6911,
+      "redacted": false
+    },
+    {
+      "path": "previous-work/seomi-next-20261027/integration-050/import-eetv/base/tests/eeatTrustProfile2.test.ts",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0,
+      "redacted": false
+    },
+    {
+      "path": "previous-work/seomi-next-20261027/integration-050/import-eetv/base/tests/eeatTrustTab.test.tsx",
+      "sha256": "6e5dfe268e9761d086b26ae3adac915e79f6f427a597156f691c8e49786454d9",
+      "bytes": 6490,
+      "redacted": false
+    },
+    {
+      "path": "previous-work/seomi-next-20261027/integration-050/import-eetv/base/tests/eetvCompletionExecution.test.ts",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0,
+      "redacted": false
+    },
+    {
+      "path": "previous-work/seomi-next-20261027/integration-050/import-eetv/manual-resolution.md",
+      "sha256": "de6eaa5d9c803cc669b8414f8930c233ef93ad78664049b33f60d8b97d83e4f8",
+      "bytes": 124,
+      "redacted": false
+    },
+    {
+      "path": "previous-work/seomi-next-20261027/integration-050/import-eetv/ours/src/components/Domain/crawlResults/trust/TrustHero.tsx",
+      "sha256": "cfdac81d8c70372bed5c961636024f801be9c4420a4a2335687fe6326fc45c7d",
+      "bytes": 3416,
+      "redacted": false
+    },
+    {
+      "path": "previous-work/seomi-next-20261027/integration-050/import-eetv/ours/src/components/Domain/crawlResults/trust/trustHelpers.ts",
+      "sha256": "e8b656fb03cc30bcb56e8fba9237c90b84ec3b8890a2526ffc4c52fd40fa333d",
+      "bytes": 1174,
+      "redacted": false
+    },
+    {
+      "path": "previous-work/seomi-next-20261027/integration-050/import-eetv/ours/src/hooks/useTrust.ts",
+      "sha256": "9da2517f20278c971becdfd39a11df913ce04af53587790bbc8f512a55e1edf5",
+      "bytes": 1906,
+      "redacted": false
+    },
+    {
+      "path": "previous-work/seomi-next-20261027/integration-050/import-eetv/ours/src/services/eeatTrust/authors.ts",
+      "sha256": "041397690d330750701c9fcef18eb529d564f90f40e16dd6ccb34f6aedb0973e",
+      "bytes": 5011,
+      "redacted": false
+    },
+    {
+      "path": "previous-work/seomi-next-20261027/integration-050/import-eetv/ours/src/services/eeatTrust/build.ts",
+      "sha256": "b04ed7ffea96f19463feb5b5bfd83f8416ac53e9309a2a58ad5a70dbed1061db",
+      "bytes": 4489,
+      "redacted": false
+    },
+    {
+      "path": "previous-work/seomi-next-20261027/integration-050/import-eetv/ours/src/services/eeatTrust/completion.ts",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0,
+      "redacted": false
+    },
+    {
+      "path": "previous-work/seomi-next-20261027/integration-050/import-eetv/ours/src/services/eeatTrust/history.ts",
+      "sha256": "fb71503e123a963d5f7f1a24b122adf33dd8d7a22465094451ae22ebea1d595f",
+      "bytes": 1960,
+      "redacted": false
+    },
+    {
+      "path": "previous-work/seomi-next-20261027/integration-050/import-eetv/ours/src/services/eeatTrust/index.ts",
+      "sha256": "300d4b9292d58aa46075768d9c5a5b434a7ca3b287974054b3e958d218131b64",
+      "bytes": 581,
+      "redacted": false
+    },
+    {
+      "path": "previous-work/seomi-next-20261027/integration-050/import-eetv/ours/src/services/eeatTrust/summary.ts",
+      "sha256": "57ad74131a41e1fd53c98ba8a9e637b6fd74727ccf03fa7d076e54bb372eafa7",
+      "bytes": 3335,
+      "redacted": false
+    },
+    {
+      "path": "previous-work/seomi-next-20261027/integration-050/import-eetv/ours/src/services/eeatTrust/transparency.ts",
+      "sha256": "3f0257b7075aa4267d0c98dc659fc4c1865e7d0856c24e0ad9141c68b2b49ad8",
+      "bytes": 2788,
+      "redacted": false
+    },
+    {
+      "path": "previous-work/seomi-next-20261027/integration-050/import-eetv/ours/src/services/eeatTrust/types.ts",
+      "sha256": "3de854c03631c3a4dcdfbf171a1c0ee92269fd099710644ea7c2a535425b2bff",
+      "bytes": 3139,
+      "redacted": false
+    },
+    {
+      "path": "previous-work/seomi-next-20261027/integration-050/import-eetv/ours/src/stores/tools/crawl/execution.ts",
+      "sha256": "dee0c8a7affb4b7b42e8370bdaa3c944273ba4dba16843630ff27cf1a050535a",
+      "bytes": 8484,
+      "redacted": false
+    },
+    {
+      "path": "previous-work/seomi-next-20261027/integration-050/import-eetv/ours/src-tauri/src/commands/pdf_report/crawl_report/sec_trust.rs",
+      "sha256": "a8dbc5f12fc928b02f2497f31dc043753b50b056efa86518b864c7278e61dea1",
+      "bytes": 3968,
+      "redacted": false
+    },
+    {
+      "path": "previous-work/seomi-next-20261027/integration-050/import-eetv/ours/src-tauri/src/commands/pdf_report/crawl_report/strings/trust.rs",
+      "sha256": "2f28dc47a182622d3a63f97c9d1c54c727e6683c9c5e5d3d109638c89ccf60a7",
+      "bytes": 3056,
+      "redacted": false
+    },
+    {
+      "path": "previous-work/seomi-next-20261027/integration-050/import-eetv/ours/src-tauri/src/commands/pdf_report/crawl_report/tests_trust.rs",
+      "sha256": "4e66e8c3dbd44546f145925a02d7732d99c8d986501048767ae6928ba1ac45f4",
+      "bytes": 4555,
+      "redacted": false
+    },
+    {
+      "path": "previous-work/seomi-next-20261027/integration-050/import-eetv/ours/tests/eeatTrustCompletion.test.ts",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0,
+      "redacted": false
+    },
+    {
+      "path": "previous-work/seomi-next-20261027/integration-050/import-eetv/ours/tests/eeatTrustEngine2.test.ts",
+      "sha256": "17ca0241b59ef8efb7cb922d5c8c099c8604bc2ebb656a76ac4bd4f59ef47e93",
+      "bytes": 6911,
+      "redacted": false
+    },
+    {
+      "path": "previous-work/seomi-next-20261027/integration-050/import-eetv/ours/tests/eeatTrustProfile2.test.ts",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0,
+      "redacted": false
+    },
+    {
+      "path": "previous-work/seomi-next-20261027/integration-050/import-eetv/ours/tests/eeatTrustTab.test.tsx",
+      "sha256": "6e5dfe268e9761d086b26ae3adac915e79f6f427a597156f691c8e49786454d9",
+      "bytes": 6490,
+      "redacted": false
+    },
+    {
+      "path": "previous-work/seomi-next-20261027/integration-050/import-eetv/ours/tests/eetvCompletionExecution.test.ts",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0,
+      "redacted": false
+    },
+    {
+      "path": "previous-work/seomi-next-20261027/integration-050/import-eetv/theirs/src/components/Domain/crawlResults/trust/TrustHero.tsx",
+      "sha256": "b9ee15d9ab174c0db11a5212481b2f69fc7aea808f7d05e9abec1a3543719cba",
+      "bytes": 4208,
+      "redacted": false
+    },
+    {
+      "path": "previous-work/seomi-next-20261027/integration-050/import-eetv/theirs/src/components/Domain/crawlResults/trust/trustHelpers.ts",
+      "sha256": "d1122c2069b7f125daf5e8adccfc92931e7932ec152fbd3807704b77646e60ce",
+      "bytes": 1224,
+      "redacted": false
+    },
+    {
+      "path": "previous-work/seomi-next-20261027/integration-050/import-eetv/theirs/src/hooks/useTrust.ts",
+      "sha256": "ff73c0a72c5209406a9eae5d7e5429982ec827d34896e936155f7e4156376f1f",
+      "bytes": 2189,
+      "redacted": false
+    },
+    {
+      "path": "previous-work/seomi-next-20261027/integration-050/import-eetv/theirs/src/services/eeatTrust/authors.ts",
+      "sha256": "7dba057befecdd1909f88ed17ef8c779adb867dda2741dafaee2b9e7bcdbad51",
+      "bytes": 5886,
+      "redacted": false
+    },
+    {
+      "path": "previous-work/seomi-next-20261027/integration-050/import-eetv/theirs/src/services/eeatTrust/build.ts",
+      "sha256": "6b6980662680e2cba25d653b95398b6c81ea95601146324c46f94a6c1a53ad82",
+      "bytes": 7419,
+      "redacted": false
+    },
+    {
+      "path": "previous-work/seomi-next-20261027/integration-050/import-eetv/theirs/src/services/eeatTrust/completion.ts",
+      "sha256": "dc752dd52d87030274d734136d7c562c0793bfb1f33a7dc58c9c47ffffe37f6e",
+      "bytes": 2053,
+      "redacted": false
+    },
+    {
+      "path": "previous-work/seomi-next-20261027/integration-050/import-eetv/theirs/src/services/eeatTrust/history.ts",
+      "sha256": "04e0de0561d0645dd0db91064451027fbdae48cc30d61881790801142f2e0365",
+      "bytes": 3293,
+      "redacted": false
+    },
+    {
+      "path": "previous-work/seomi-next-20261027/integration-050/import-eetv/theirs/src/services/eeatTrust/index.ts",
+      "sha256": "c79799fba7c14d6bd2492a095b820ca51aee2e3ce188d31be5cc94275d709c6c",
+      "bytes": 675,
+      "redacted": false
+    },
+    {
+      "path": "previous-work/seomi-next-20261027/integration-050/import-eetv/theirs/src/services/eeatTrust/summary.ts",
+      "sha256": "6f36d21d7b57e2066187682d3b514e13d3142d807536f95a67db6fc3d443ec4a",
+      "bytes": 3657,
+      "redacted": false
+    },
+    {
+      "path": "previous-work/seomi-next-20261027/integration-050/import-eetv/theirs/src/services/eeatTrust/transparency.ts",
+      "sha256": "5f44bac8b29f3a9663a0a92e49f3371d56ad23ca1dc4facf4d03f0b9cec01358",
+      "bytes": 2888,
+      "redacted": false
+    },
+    {
+      "path": "previous-work/seomi-next-20261027/integration-050/import-eetv/theirs/src/services/eeatTrust/types.ts",
+      "sha256": "3fb94f7fef78db44891b326de38db4ed2fc22d330b0ea542a8cd980c7528b0e3",
+      "bytes": 4470,
+      "redacted": false
+    },
+    {
+      "path": "previous-work/seomi-next-20261027/integration-050/import-eetv/theirs/src/stores/tools/crawl/execution.ts",
+      "sha256": "2949b6bd87d009076c7ad52737a73779667903212ba3cc17d60f11542d7c1f61",
+      "bytes": 8458,
+      "redacted": false
+    },
+    {
+      "path": "previous-work/seomi-next-20261027/integration-050/import-eetv/theirs/src-tauri/src/commands/pdf_report/crawl_report/sec_trust.rs",
+      "sha256": "6986eae6b26a2ff1aa468824b34ec75b3edee8e3554e5770593d756899a0def2",
+      "bytes": 4963,
+      "redacted": false
+    },
+    {
+      "path": "previous-work/seomi-next-20261027/integration-050/import-eetv/theirs/src-tauri/src/commands/pdf_report/crawl_report/strings/trust.rs",
+      "sha256": "1dbe45b55d727671465118adec3dd348432001f1616d45b93cf30c86ac7ecb7c",
+      "bytes": 3165,
+      "redacted": false
+    },
+    {
+      "path": "previous-work/seomi-next-20261027/integration-050/import-eetv/theirs/src-tauri/src/commands/pdf_report/crawl_report/tests_trust.rs",
+      "sha256": "bf8d8ba1e901bc3b6f66e9c95186ee48e38a3692293fa9e639542bd7695c597a",
+      "bytes": 4802,
+      "redacted": false
+    },
+    {
+      "path": "previous-work/seomi-next-20261027/integration-050/import-eetv/theirs/tests/eeatTrustCompletion.test.ts",
+      "sha256": "44a635152315dbe46d7e536cc75bbc6f54421190e11b064c506cd6fb3b48ba70",
+      "bytes": 1951,
+      "redacted": false
+    },
+    {
+      "path": "previous-work/seomi-next-20261027/integration-050/import-eetv/theirs/tests/eeatTrustEngine2.test.ts",
+      "sha256": "6332f435db1165b6666008b82a22749f8c9a14cc86b78b31d1661b6affc5b732",
+      "bytes": 7648,
+      "redacted": false
+    },
+    {
+      "path": "previous-work/seomi-next-20261027/integration-050/import-eetv/theirs/tests/eeatTrustProfile2.test.ts",
+      "sha256": "57a4b6762faa8ba54cb8960f56d4f35a1a75bb0a2ae907693c0669b0229f3444",
+      "bytes": 2620,
+      "redacted": false
+    },
+    {
+      "path": "previous-work/seomi-next-20261027/integration-050/import-eetv/theirs/tests/eeatTrustTab.test.tsx",
+      "sha256": "d41e616d37d09e909fe62eeb659f121a2cfd40a2915326b374f7803bbc12c34b",
+      "bytes": 6881,
+      "redacted": false
+    },
+    {
+      "path": "previous-work/seomi-next-20261027/integration-050/import-eetv/theirs/tests/eetvCompletionExecution.test.ts",
+      "sha256": "4de0021958ec586ec472ef812001a50c48ca2da226c67518d80479d9b132eac2",
+      "bytes": 2401,
+      "redacted": false
+    },
+    {
+      "path": "previous-work/seomi-next-20261027/integration-050/import-frozen.py",
+      "sha256": "384ea904afb43e018d06d2b8700a597e01fc85d0746b532b798d3d2bd91fc52b",
+      "bytes": 2588,
+      "redacted": false
+    },
+    {
+      "path": "previous-work/seomi-next-20261027/integration-050/import-trust/base/src/components/Domain/crawlResults/trust/CrawlTrustTab.tsx",
+      "sha256": "bfaf73149150b689763af8b8295acf8b4ef3c14ea2ff067a6dafc8a825821dd8",
+      "bytes": 1689,
+      "redacted": false
+    },
+    {
+      "path": "previous-work/seomi-next-20261027/integration-050/import-trust/base/src/components/Domain/crawlResults/trust/TrustEntities.tsx",
+      "sha256": "0f54ea7c0b3f567d79d84a1400089d080e00a99fd64f811bbf3abebeaf41d329",
+      "bytes": 3246,
+      "redacted": false
+    },
+    {
+      "path": "previous-work/seomi-next-20261027/integration-050/import-trust/base/src/components/Domain/crawlResults/trust/TrustSignals.tsx",
+      "sha256": "c2841d5b8eb3067b59415284e3e73e67d87765a072b3604ca9e948be44835cca",
+      "bytes": 2082,
+      "redacted": false
+    },
+    {
+      "path": "previous-work/seomi-next-20261027/integration-050/import-trust/base/src/hooks/useTrust.ts",
+      "sha256": "9da2517f20278c971becdfd39a11df913ce04af53587790bbc8f512a55e1edf5",
+      "bytes": 1906,
+      "redacted": false
+    },
+    {
+      "path": "previous-work/seomi-next-20261027/integration-050/import-trust/base/src/services/citationEvidence/claims.ts",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0,
+      "redacted": false
+    },
+    {
+      "path": "previous-work/seomi-next-20261027/integration-050/import-trust/base/src/services/eeatTrust/authors.ts",
+      "sha256": "041397690d330750701c9fcef18eb529d564f90f40e16dd6ccb34f6aedb0973e",
+      "bytes": 5011,
+      "redacted": false
+    },
+    {
+      "path": "previous-work/seomi-next-20261027/integration-050/import-trust/base/src/services/eeatTrust/build.ts",
+      "sha256": "b04ed7ffea96f19463feb5b5bfd83f8416ac53e9309a2a58ad5a70dbed1061db",
+      "bytes": 4489,
+      "redacted": false
+    },
+    {
+      "path": "previous-work/seomi-next-20261027/integration-050/import-trust/base/src/services/eeatTrust/citations.ts",
+      "sha256": "9eac2ff90da2e39a19e43087a2a30742ca91ad55691948f528ce79bc470734cf",
+      "bytes": 3970,
+      "redacted": false
+    },
+    {
+      "path": "previous-work/seomi-next-20261027/integration-050/import-trust/base/src/services/eeatTrust/index.ts",
+      "sha256": "662c731777a109e4e2201ffe93ba610ca8872326a86d2129124da8aca1ff8f99",
+      "bytes": 565,
+      "redacted": false
+    },
+    {
+      "path": "previous-work/seomi-next-20261027/integration-050/import-trust/base/src/services/eeatTrust/registry.ts",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0,
+      "redacted": false
+    },
+    {
+      "path": "previous-work/seomi-next-20261027/integration-050/import-trust/base/src/services/eeatTrust/summary.ts",
+      "sha256": "57ad74131a41e1fd53c98ba8a9e637b6fd74727ccf03fa7d076e54bb372eafa7",
+      "bytes": 3335,
+      "redacted": false
+    },
+    {
+      "path": "previous-work/seomi-next-20261027/integration-050/import-trust/base/src/services/eeatTrust/types.ts",
+      "sha256": "3de854c03631c3a4dcdfbf171a1c0ee92269fd099710644ea7c2a535425b2bff",
+      "bytes": 3139,
+      "redacted": false
+    },
+    {
+      "path": "previous-work/seomi-next-20261027/integration-050/import-trust/base/src/services/tauri/browserFallback.ts",
+      "sha256": "6ccb81395f2b97423b0286f6a32eb6c9b99a125870a8f0544a7c7d217e55243f",
+      "bytes": 5416,
+      "redacted": false
+    },
+    {
+      "path": "previous-work/seomi-next-20261027/integration-050/import-trust/base/src-tauri/src/commands/http_client.rs",
+      "sha256": "c65dc6ada355c555f3788974cf13c00d88acdeeda59e2b8e38fc213d0c6f9894",
+      "bytes": 1478,
+      "redacted": false
+    },
+    {
+      "path": "previous-work/seomi-next-20261027/integration-050/import-trust/base/src-tauri/src/commands/http_client_tests.rs",
+      "sha256": "3685e3b3d61bc2cf970a226a75bbf84e9f5566d0962a600f94320f6c5a9f6945",
+      "bytes": 3677,
+      "redacted": false
+    },
+    {
+      "path": "previous-work/seomi-next-20261027/integration-050/import-trust/base/src-tauri/src/commands/pdf_report/crawl_report/sec_trust.rs",
+      "sha256": "a8dbc5f12fc928b02f2497f31dc043753b50b056efa86518b864c7278e61dea1",
+      "bytes": 3968,
+      "redacted": false
+    },
+    {
+      "path": "previous-work/seomi-next-20261027/integration-050/import-trust/base/src-tauri/src/commands/pdf_report/crawl_report/strings/trust.rs",
+      "sha256": "2f28dc47a182622d3a63f97c9d1c54c727e6683c9c5e5d3d109638c89ccf60a7",
+      "bytes": 3056,
+      "redacted": false
+    },
+    {
+      "path": "previous-work/seomi-next-20261027/integration-050/import-trust/base/src-tauri/src/commands/pdf_report/crawl_report/trust_tables.rs",
+      "sha256": "61004a83d884b3859aead5f34934a52858e55ab412c85a69eb5f0bd2d0ffa3bc",
+      "bytes": 2727,
+      "redacted": false
+    },
+    {
+      "path": "previous-work/seomi-next-20261027/integration-050/import-trust/base/src-tauri/src/lib.rs",
+      "sha256": "57aee5cbc9a8048a1a1ff9799e3b241582e3876ae9aca638951a6748c04bf458",
+      "bytes": 7625,
+      "redacted": false
+    },
+    {
+      "path": "previous-work/seomi-next-20261027/integration-050/import-trust/base/src-tauri/src/services/http_client/entry.rs",
+      "sha256": "92de4e74b28a97626fd209f8471bb10aa1487f05cfb35fde1d24705140286c1b",
+      "bytes": 1057,
+      "redacted": false
+    },
+    {
+      "path": "previous-work/seomi-next-20261027/integration-050/import-trust/base/src-tauri/src/services/http_client.rs",
+      "sha256": "ca029af2d4ac04642eb42aa985577168d3305934686b2ebdcfe62a6f3701c105",
+      "bytes": 684,
+      "redacted": false
+    },
+    {
+      "path": "previous-work/seomi-next-20261027/integration-050/import-trust/base/tests/trustEvidenceContracts.test.ts",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0,
+      "redacted": false
+    },
+    {
+      "path": "previous-work/seomi-next-20261027/integration-050/import-trust/ours/src/components/Domain/crawlResults/trust/CrawlTrustTab.tsx",
+      "sha256": "8254fec7b1964dbaeef55cf6c12872ac251736eb8218954df801e639a4dd686b",
+      "bytes": 2178,
+      "redacted": false
+    },
+    {
+      "path": "previous-work/seomi-next-20261027/integration-050/import-trust/ours/src/components/Domain/crawlResults/trust/TrustEntities.tsx",
+      "sha256": "0f54ea7c0b3f567d79d84a1400089d080e00a99fd64f811bbf3abebeaf41d329",
+      "bytes": 3246,
+      "redacted": false
+    },
+    {
+      "path": "previous-work/seomi-next-20261027/integration-050/import-trust/ours/src/components/Domain/crawlResults/trust/TrustSignals.tsx",
+      "sha256": "c2841d5b8eb3067b59415284e3e73e67d87765a072b3604ca9e948be44835cca",
+      "bytes": 2082,
+      "redacted": false
+    },
+    {
+      "path": "previous-work/seomi-next-20261027/integration-050/import-trust/ours/src/hooks/useTrust.ts",
+      "sha256": "ff73c0a72c5209406a9eae5d7e5429982ec827d34896e936155f7e4156376f1f",
+      "bytes": 2189,
+      "redacted": false
+    },
+    {
+      "path": "previous-work/seomi-next-20261027/integration-050/import-trust/ours/src/services/citationEvidence/claims.ts",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0,
+      "redacted": false
+    },
+    {
+      "path": "previous-work/seomi-next-20261027/integration-050/import-trust/ours/src/services/eeatTrust/authors.ts",
+      "sha256": "7dba057befecdd1909f88ed17ef8c779adb867dda2741dafaee2b9e7bcdbad51",
+      "bytes": 5886,
+      "redacted": false
+    },
+    {
+      "path": "previous-work/seomi-next-20261027/integration-050/import-trust/ours/src/services/eeatTrust/build.ts",
+      "sha256": "6b6980662680e2cba25d653b95398b6c81ea95601146324c46f94a6c1a53ad82",
+      "bytes": 7419,
+      "redacted": false
+    },
+    {
+      "path": "previous-work/seomi-next-20261027/integration-050/import-trust/ours/src/services/eeatTrust/citations.ts",
+      "sha256": "9eac2ff90da2e39a19e43087a2a30742ca91ad55691948f528ce79bc470734cf",
+      "bytes": 3970,
+      "redacted": false
+    },
+    {
+      "path": "previous-work/seomi-next-20261027/integration-050/import-trust/ours/src/services/eeatTrust/index.ts",
+      "sha256": "1d5f50841c1505913b6c0288e08de2969d0ce864947591c2afa1037e84125acc",
+      "bytes": 691,
+      "redacted": false
+    },
+    {
+      "path": "previous-work/seomi-next-20261027/integration-050/import-trust/ours/src/services/eeatTrust/registry.ts",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0,
+      "redacted": false
+    },
+    {
+      "path": "previous-work/seomi-next-20261027/integration-050/import-trust/ours/src/services/eeatTrust/summary.ts",
+      "sha256": "6f36d21d7b57e2066187682d3b514e13d3142d807536f95a67db6fc3d443ec4a",
+      "bytes": 3657,
+      "redacted": false
+    },
+    {
+      "path": "previous-work/seomi-next-20261027/integration-050/import-trust/ours/src/services/eeatTrust/types.ts",
+      "sha256": "3fb94f7fef78db44891b326de38db4ed2fc22d330b0ea542a8cd980c7528b0e3",
+      "bytes": 4470,
+      "redacted": false
+    },
+    {
+      "path": "previous-work/seomi-next-20261027/integration-050/import-trust/ours/src/services/tauri/browserFallback.ts",
+      "sha256": "6ccb81395f2b97423b0286f6a32eb6c9b99a125870a8f0544a7c7d217e55243f",
+      "bytes": 5416,
+      "redacted": false
+    },
+    {
+      "path": "previous-work/seomi-next-20261027/integration-050/import-trust/ours/src-tauri/src/commands/http_client.rs",
+      "sha256": "c65dc6ada355c555f3788974cf13c00d88acdeeda59e2b8e38fc213d0c6f9894",
+      "bytes": 1478,
+      "redacted": false
+    },
+    {
+      "path": "previous-work/seomi-next-20261027/integration-050/import-trust/ours/src-tauri/src/commands/http_client_tests.rs",
+      "sha256": "3685e3b3d61bc2cf970a226a75bbf84e9f5566d0962a600f94320f6c5a9f6945",
+      "bytes": 3677,
+      "redacted": false
+    },
+    {
+      "path": "previous-work/seomi-next-20261027/integration-050/import-trust/ours/src-tauri/src/commands/pdf_report/crawl_report/sec_trust.rs",
+      "sha256": "6986eae6b26a2ff1aa468824b34ec75b3edee8e3554e5770593d756899a0def2",
+      "bytes": 4963,
+      "redacted": false
+    },
+    {
+      "path": "previous-work/seomi-next-20261027/integration-050/import-trust/ours/src-tauri/src/commands/pdf_report/crawl_report/strings/trust.rs",
+      "sha256": "1dbe45b55d727671465118adec3dd348432001f1616d45b93cf30c86ac7ecb7c",
+      "bytes": 3165,
+      "redacted": false
+    },
+    {
+      "path": "previous-work/seomi-next-20261027/integration-050/import-trust/ours/src-tauri/src/commands/pdf_report/crawl_report/trust_tables.rs",
+      "sha256": "61004a83d884b3859aead5f34934a52858e55ab412c85a69eb5f0bd2d0ffa3bc",
+      "bytes": 2727,
+      "redacted": false
+    },
+    {
+      "path": "previous-work/seomi-next-20261027/integration-050/import-trust/ours/src-tauri/src/lib.rs",
+      "sha256": "57aee5cbc9a8048a1a1ff9799e3b241582e3876ae9aca638951a6748c04bf458",
+      "bytes": 7625,
+      "redacted": false
+    },
+    {
+      "path": "previous-work/seomi-next-20261027/integration-050/import-trust/ours/src-tauri/src/services/http_client/entry.rs",
+      "sha256": "92de4e74b28a97626fd209f8471bb10aa1487f05cfb35fde1d24705140286c1b",
+      "bytes": 1057,
+      "redacted": false
+    },
+    {
+      "path": "previous-work/seomi-next-20261027/integration-050/import-trust/ours/src-tauri/src/services/http_client.rs",
+      "sha256": "ca029af2d4ac04642eb42aa985577168d3305934686b2ebdcfe62a6f3701c105",
+      "bytes": 684,
+      "redacted": false
+    },
+    {
+      "path": "previous-work/seomi-next-20261027/integration-050/import-trust/ours/tests/trustEvidenceContracts.test.ts",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0,
+      "redacted": false
+    },
+    {
+      "path": "previous-work/seomi-next-20261027/integration-050/import-trust/theirs/src/components/Domain/crawlResults/trust/CrawlTrustTab.tsx",
+      "sha256": "81fa8b8a48d89da74c2193a89f55a398aa76d3abb84f3e4697603e87ade17c1f",
+      "bytes": 2199,
+      "redacted": false
+    },
+    {
+      "path": "previous-work/seomi-next-20261027/integration-050/import-trust/theirs/src/components/Domain/crawlResults/trust/TrustEntities.tsx",
+      "sha256": "d8a4abe55cbf572649815bac929797f667339abf0c5ebfe148863de72772af21",
+      "bytes": 4520,
+      "redacted": false
+    },
+    {
+      "path": "previous-work/seomi-next-20261027/integration-050/import-trust/theirs/src/components/Domain/crawlResults/trust/TrustSignals.tsx",
+      "sha256": "702d3f71fa07cebdbbbe05f3662cfc90243c93f9ecc726a5df5bd5ab121505d4",
+      "bytes": 2795,
+      "redacted": false
+    },
+    {
+      "path": "previous-work/seomi-next-20261027/integration-050/import-trust/theirs/src/hooks/useTrust.ts",
+      "sha256": "1fe88d90b9873acc4943ed6bba023a91fb53e3081c2fcefb50fa2f0e6d802d05",
+      "bytes": 2017,
+      "redacted": false
+    },
+    {
+      "path": "previous-work/seomi-next-20261027/integration-050/import-trust/theirs/src/services/citationEvidence/claims.ts",
+      "sha256": "c60daadb2f2a450a703c35fd264fe86db824ff5e9bbd547d025426d9abcf2487",
+      "bytes": 5070,
+      "redacted": false
+    },
+    {
+      "path": "previous-work/seomi-next-20261027/integration-050/import-trust/theirs/src/services/eeatTrust/authors.ts",
+      "sha256": "47c3befa257716f36a1bcf460a3798d4deae0d08ccec38f79a4b58ff67dfa82a",
+      "bytes": 5465,
+      "redacted": false
+    },
+    {
+      "path": "previous-work/seomi-next-20261027/integration-050/import-trust/theirs/src/services/eeatTrust/build.ts",
+      "sha256": "1a9a8c82eb7d1d0b6178e58e568c2e648c6667577480a1e68c6041c5a2071065",
+      "bytes": 5223,
+      "redacted": false
+    },
+    {
+      "path": "previous-work/seomi-next-20261027/integration-050/import-trust/theirs/src/services/eeatTrust/citations.ts",
+      "sha256": "a559dbbd8a42cb36f2aa4654aaa3e0f254945c31c30440200f2715188c9dd20d",
+      "bytes": 4879,
+      "redacted": false
+    },
+    {
+      "path": "previous-work/seomi-next-20261027/integration-050/import-trust/theirs/src/services/eeatTrust/index.ts",
+      "sha256": "f0931eee1673eff0e8402f58e0b0f09b01b60716bd8c2bc70705b90ca77dbeb8",
+      "bytes": 712,
+      "redacted": false
+    },
+    {
+      "path": "previous-work/seomi-next-20261027/integration-050/import-trust/theirs/src/services/eeatTrust/registry.ts",
+      "sha256": "5a7326cba25ec18989d4fe7e3116a23f5538c5f9c297fc9dd0c4403e9025110e",
+      "bytes": 5177,
+      "redacted": false
+    },
+    {
+      "path": "previous-work/seomi-next-20261027/integration-050/import-trust/theirs/src/services/eeatTrust/summary.ts",
+      "sha256": "30019d84ea4314854f4ce5a09a3d7cc1a5d3868012ad3232c73e5fc89c06bc6a",
+      "bytes": 3799,
+      "redacted": false
+    },
+    {
+      "path": "previous-work/seomi-next-20261027/integration-050/import-trust/theirs/src/services/eeatTrust/types.ts",
+      "sha256": "4e987d3be1bb88b0ac901ac8aae3da50a02c49ebbb21c66cf6cb18b2e2964320",
+      "bytes": 3832,
+      "redacted": false
+    },
+    {
+      "path": "previous-work/seomi-next-20261027/integration-050/import-trust/theirs/src/services/tauri/browserFallback.ts",
+      "sha256": "f3336c114f06f854186f1be50733ef4ffa6a2565d7b3fdde73390de1a3755055",
+      "bytes": 5446,
+      "redacted": false
+    },
+    {
+      "path": "previous-work/seomi-next-20261027/integration-050/import-trust/theirs/src-tauri/src/commands/http_client.rs",
+      "sha256": "8dee94ac8c6f2c12ae80c590684a9af1412db01a6ed95820759d20401dd991bd",
+      "bytes": 4199,
+      "redacted": false
+    },
+    {
+      "path": "previous-work/seomi-next-20261027/integration-050/import-trust/theirs/src-tauri/src/commands/http_client_tests.rs",
+      "sha256": "9689e50cff7fbdb19d32d4141cdf4b1dfd80161d21e79d503dfc7d07c1adfaa4",
+      "bytes": 4194,
+      "redacted": false
+    },
+    {
+      "path": "previous-work/seomi-next-20261027/integration-050/import-trust/theirs/src-tauri/src/commands/pdf_report/crawl_report/sec_trust.rs",
+      "sha256": "f41c46a3c63de5d604439c148f093e04c4c040dff7f74fdc940da5d37f8fb100",
+      "bytes": 4078,
+      "redacted": false
+    },
+    {
+      "path": "previous-work/seomi-next-20261027/integration-050/import-trust/theirs/src-tauri/src/commands/pdf_report/crawl_report/strings/trust.rs",
+      "sha256": "ccd514ffb984e746a2bf7efd414946ee1d79d7464624f851a589805f83138d1f",
+      "bytes": 3346,
+      "redacted": false
+    },
+    {
+      "path": "previous-work/seomi-next-20261027/integration-050/import-trust/theirs/src-tauri/src/commands/pdf_report/crawl_report/trust_tables.rs",
+      "sha256": "831a6844425831c2461cea99fa0df509a28a4e3d1e99964ad27878ef923de9cb",
+      "bytes": 3548,
+      "redacted": false
+    },
+    {
+      "path": "previous-work/seomi-next-20261027/integration-050/import-trust/theirs/src-tauri/src/lib.rs",
+      "sha256": "f010dcd417e8de98ff101533701a70711cc19be5ff38473d7d65efe2cd745ee0",
+      "bytes": 7687,
+      "redacted": false
+    },
+    {
+      "path": "previous-work/seomi-next-20261027/integration-050/import-trust/theirs/src-tauri/src/services/http_client/entry.rs",
+      "sha256": "af3b6ec2ad52c5875e33f16cd424eed2507b9d3020fe702db036b6d8cdeb9ce7",
+      "bytes": 1575,
+      "redacted": false
+    },
+    {
+      "path": "previous-work/seomi-next-20261027/integration-050/import-trust/theirs/src-tauri/src/services/http_client.rs",
+      "sha256": "0e788f211498280d6e9a4d7411168eaf8dfd86019cac2469d6611be6debf9ea2",
+      "bytes": 705,
+      "redacted": false
+    },
+    {
+      "path": "previous-work/seomi-next-20261027/integration-050/import-trust/theirs/tests/trustEvidenceContracts.test.ts",
+      "sha256": "b639b593a1aa46720c907516353987548c307af2f2de5428b7c280450fe1ede3",
+      "bytes": 2712,
+      "redacted": false
+    },
+    {
+      "path": "previous-work/seomi-next-20261027/integration-050/import-trust-unknown/base/src/components/Domain/crawlResults/trust/TrustHero.tsx",
+      "sha256": "cfdac81d8c70372bed5c961636024f801be9c4420a4a2335687fe6326fc45c7d",
+      "bytes": 3416,
+      "redacted": false
+    },
+    {
+      "path": "previous-work/seomi-next-20261027/integration-050/import-trust-unknown/base/src/hooks/useTrust.ts",
+      "sha256": "9da2517f20278c971becdfd39a11df913ce04af53587790bbc8f512a55e1edf5",
+      "bytes": 1906,
+      "redacted": false
+    },
+    {
+      "path": "previous-work/seomi-next-20261027/integration-050/import-trust-unknown/base/src/services/eeatTrust/build.ts",
+      "sha256": "b04ed7ffea96f19463feb5b5bfd83f8416ac53e9309a2a58ad5a70dbed1061db",
+      "bytes": 4489,
+      "redacted": false
+    },
+    {
+      "path": "previous-work/seomi-next-20261027/integration-050/import-trust-unknown/base/src/services/eeatTrust/history.ts",
+      "sha256": "fb71503e123a963d5f7f1a24b122adf33dd8d7a22465094451ae22ebea1d595f",
+      "bytes": 1960,
+      "redacted": false
+    },
+    {
+      "path": "previous-work/seomi-next-20261027/integration-050/import-trust-unknown/base/src/services/eeatTrust/summary.ts",
+      "sha256": "57ad74131a41e1fd53c98ba8a9e637b6fd74727ccf03fa7d076e54bb372eafa7",
+      "bytes": 3335,
+      "redacted": false
+    },
+    {
+      "path": "previous-work/seomi-next-20261027/integration-050/import-trust-unknown/base/src/services/eeatTrust/types.ts",
+      "sha256": "3de854c03631c3a4dcdfbf171a1c0ee92269fd099710644ea7c2a535425b2bff",
+      "bytes": 3139,
+      "redacted": false
+    },
+    {
+      "path": "previous-work/seomi-next-20261027/integration-050/import-trust-unknown/base/src/services/monitoringAlerts/index.ts",
+      "sha256": "bb5c8ebdeaed999665c997b4116b9feec4baba4125f127be03df0d1691946f29",
+      "bytes": 4487,
+      "redacted": false
+    },
+    {
+      "path": "previous-work/seomi-next-20261027/integration-050/import-trust-unknown/base/src/services/monitoringAlerts/scoreDrop.ts",
+      "sha256": "18cba50991f6736a2583a156b71c1d36a7c2d58fd24caffe129bc809b767937a",
+      "bytes": 1557,
+      "redacted": false
+    },
+    {
+      "path": "previous-work/seomi-next-20261027/integration-050/import-trust-unknown/base/tests/coverage100DomainFocusTrust.test.tsx",
+      "sha256": "78f0a666c60fdfc92f6cc4498204e6219841276fad434ce3fee0e2f567991bd2",
+      "bytes": 5900,
+      "redacted": false
+    },
+    {
+      "path": "previous-work/seomi-next-20261027/integration-050/import-trust-unknown/base/tests/eeatTrustEngine1.test.ts",
+      "sha256": "0990cddf7b455e0c5cac59bd9650d2ed62f0cdd7e72ca1e17371873021729329",
+      "bytes": 7800,
+      "redacted": false
+    },
+    {
+      "path": "previous-work/seomi-next-20261027/integration-050/import-trust-unknown/base/tests/eeatTrustEngine2.test.ts",
+      "sha256": "17ca0241b59ef8efb7cb922d5c8c099c8604bc2ebb656a76ac4bd4f59ef47e93",
+      "bytes": 6911,
+      "redacted": false
+    },
+    {
+      "path": "previous-work/seomi-next-20261027/integration-050/import-trust-unknown/base/tests/eeatTrustEngine3.test.ts",
+      "sha256": "2cc879789bd3eb84db11143c90209afb0e5f8945e02681097cb3c7b0480473af",
+      "bytes": 4530,
+      "redacted": false
+    },
+    {
+      "path": "previous-work/seomi-next-20261027/integration-050/import-trust-unknown/base/tests/scoreDropAlert.test.ts",
+      "sha256": "4257e89f244d743890d6860e01d902f187e473bccc65d4192b6bdf2025b90fbc",
+      "bytes": 2486,
+      "redacted": false
+    },
+    {
+      "path": "previous-work/seomi-next-20261027/integration-050/import-trust-unknown/ours/src/components/Domain/crawlResults/trust/TrustHero.tsx",
+      "sha256": "b9ee15d9ab174c0db11a5212481b2f69fc7aea808f7d05e9abec1a3543719cba",
+      "bytes": 4208,
+      "redacted": false
+    },
+    {
+      "path": "previous-work/seomi-next-20261027/integration-050/import-trust-unknown/ours/src/hooks/useTrust.ts",
+      "sha256": "84804a499a441dc0e3017872f501e20f30cf56da815883716b167cc8f389c07d",
+      "bytes": 2985,
+      "redacted": false
+    },
+    {
+      "path": "previous-work/seomi-next-20261027/integration-050/import-trust-unknown/ours/src/services/eeatTrust/build.ts",
+      "sha256": "a96a3827a5e4a7f01deda41f32043bff42fd6f320dda632e045d9be7f88b45c8",
+      "bytes": 7906,
+      "redacted": false
+    },
+    {
+      "path": "previous-work/seomi-next-20261027/integration-050/import-trust-unknown/ours/src/services/eeatTrust/history.ts",
+      "sha256": "0f386c24015ea83ede316bde914d4e2ed79a666435520e28e3b3fa1fc18c3df5",
+      "bytes": 3908,
+      "redacted": false
+    },
+    {
+      "path": "previous-work/seomi-next-20261027/integration-050/import-trust-unknown/ours/src/services/eeatTrust/summary.ts",
+      "sha256": "7f67e4808d2eb70d20eb3f2623bf45a4de6b073973a2027efeebc7124c8e255f",
+      "bytes": 4121,
+      "redacted": false
+    },
+    {
+      "path": "previous-work/seomi-next-20261027/integration-050/import-trust-unknown/ours/src/services/eeatTrust/types.ts",
+      "sha256": "6d3205d425871bff02df7ecafd984d751a249acff4f92e0f4d0abca921e5ffca",
+      "bytes": 4716,
+      "redacted": false
+    },
+    {
+      "path": "previous-work/seomi-next-20261027/integration-050/import-trust-unknown/ours/src/services/monitoringAlerts/index.ts",
+      "sha256": "876d7b0e34cae6ec298978a9801cd5d3179732206c3b046f3d80b267ef200e78",
+      "bytes": 4521,
+      "redacted": false
+    },
+    {
+      "path": "previous-work/seomi-next-20261027/integration-050/import-trust-unknown/ours/src/services/monitoringAlerts/scoreDrop.ts",
+      "sha256": "d1e3fda4929bfcf992ad937650ab4910337a4233974611d8e5fb0e42024f0139",
+      "bytes": 1674,
+      "redacted": false
+    },
+    {
+      "path": "previous-work/seomi-next-20261027/integration-050/import-trust-unknown/ours/tests/coverage100DomainFocusTrust.test.tsx",
+      "sha256": "78f0a666c60fdfc92f6cc4498204e6219841276fad434ce3fee0e2f567991bd2",
+      "bytes": 5900,
+      "redacted": false
+    },
+    {
+      "path": "previous-work/seomi-next-20261027/integration-050/import-trust-unknown/ours/tests/eeatTrustEngine1.test.ts",
+      "sha256": "0990cddf7b455e0c5cac59bd9650d2ed62f0cdd7e72ca1e17371873021729329",
+      "bytes": 7800,
+      "redacted": false
+    },
+    {
+      "path": "previous-work/seomi-next-20261027/integration-050/import-trust-unknown/ours/tests/eeatTrustEngine2.test.ts",
+      "sha256": "6332f435db1165b6666008b82a22749f8c9a14cc86b78b31d1661b6affc5b732",
+      "bytes": 7648,
+      "redacted": false
+    },
+    {
+      "path": "previous-work/seomi-next-20261027/integration-050/import-trust-unknown/ours/tests/eeatTrustEngine3.test.ts",
+      "sha256": "2cc879789bd3eb84db11143c90209afb0e5f8945e02681097cb3c7b0480473af",
+      "bytes": 4530,
+      "redacted": false
+    },
+    {
+      "path": "previous-work/seomi-next-20261027/integration-050/import-trust-unknown/ours/tests/scoreDropAlert.test.ts",
+      "sha256": "4257e89f244d743890d6860e01d902f187e473bccc65d4192b6bdf2025b90fbc",
+      "bytes": 2486,
+      "redacted": false
+    },
+    {
+      "path": "previous-work/seomi-next-20261027/integration-050/import-trust-unknown/theirs/src/components/Domain/crawlResults/trust/TrustHero.tsx",
+      "sha256": "2f2d737d74bebba4db129e5c8b6afe250f281278924226bd6478c7b0523c0c62",
+      "bytes": 3645,
+      "redacted": false
+    },
+    {
+      "path": "previous-work/seomi-next-20261027/integration-050/import-trust-unknown/theirs/src/hooks/useTrust.ts",
+      "sha256": "6f74ef0d2c998a6715c9a04a68e6622c6f574524a8de4f43ad5574da4324c491",
+      "bytes": 1986,
+      "redacted": false
+    },
+    {
+      "path": "previous-work/seomi-next-20261027/integration-050/import-trust-unknown/theirs/src/services/eeatTrust/build.ts",
+      "sha256": "afde4d1c897deaaf156949a5e7d62177754feb37b181df70708359e0d81bbadd",
+      "bytes": 4636,
+      "redacted": false
+    },
+    {
+      "path": "previous-work/seomi-next-20261027/integration-050/import-trust-unknown/theirs/src/services/eeatTrust/history.ts",
+      "sha256": "69a317012fb8184fad69132dc9de5e5d2ac02ce08073217271f6d64a85ab86df",
+      "bytes": 2098,
+      "redacted": false
+    },
+    {
+      "path": "previous-work/seomi-next-20261027/integration-050/import-trust-unknown/theirs/src/services/eeatTrust/summary.ts",
+      "sha256": "dc39ad209f81038ebf8ef528457d0172db3c9b920e5f7410e09ee942766bd605",
+      "bytes": 3349,
+      "redacted": false
+    },
+    {
+      "path": "previous-work/seomi-next-20261027/integration-050/import-trust-unknown/theirs/src/services/eeatTrust/types.ts",
+      "sha256": "5071520eac583d5816aa3612bf6c70fccec36ea39efaec62f69ba6884a786cff",
+      "bytes": 3248,
+      "redacted": false
+    },
+    {
+      "path": "previous-work/seomi-next-20261027/integration-050/import-trust-unknown/theirs/src/services/monitoringAlerts/index.ts",
+      "sha256": "55ebf9dc2b897322bc1298b48c363bc2b0cb7af3bf310154787e93d31420dfa0",
+      "bytes": 4501,
+      "redacted": false
+    },
+    {
+      "path": "previous-work/seomi-next-20261027/integration-050/import-trust-unknown/theirs/src/services/monitoringAlerts/scoreDrop.ts",
+      "sha256": "b2e52eca0b0303e434e939343fc15fea6eb86299cb1c5934910011539f752ef2",
+      "bytes": 1571,
+      "redacted": false
+    },
+    {
+      "path": "previous-work/seomi-next-20261027/integration-050/import-trust-unknown/theirs/tests/coverage100DomainFocusTrust.test.tsx",
+      "sha256": "3e55e3a4725aa5329ea00dbe9f894a32c7d481c209b23e4465587c8c946a638c",
+      "bytes": 6462,
+      "redacted": false
+    },
+    {
+      "path": "previous-work/seomi-next-20261027/integration-050/import-trust-unknown/theirs/tests/eeatTrustEngine1.test.ts",
+      "sha256": "14e961d4c11ff889a226b42fcd1ee156818448cbefb38219552eb2969692ca85",
+      "bytes": 8782,
+      "redacted": false
+    },
+    {
+      "path": "previous-work/seomi-next-20261027/integration-050/import-trust-unknown/theirs/tests/eeatTrustEngine2.test.ts",
+      "sha256": "f6319a2de0209ca715710ba39db58b076bdfe7f115a97e598257db8f3fc442ed",
+      "bytes": 7398,
+      "redacted": false
+    },
+    {
+      "path": "previous-work/seomi-next-20261027/integration-050/import-trust-unknown/theirs/tests/eeatTrustEngine3.test.ts",
+      "sha256": "dcedace44ebff1b241ddae5f1ae0b05aba9e2056948ae7638a59bc93d63bb317",
+      "bytes": 4846,
+      "redacted": false
+    },
+    {
+      "path": "previous-work/seomi-next-20261027/integration-050/import-trust-unknown/theirs/tests/scoreDropAlert.test.ts",
+      "sha256": "765fa77143c17ec611f367bd77117fdb75f4f8df432c4d009213d8dd4c103b88",
+      "bytes": 2835,
+      "redacted": false
+    },
+    {
+      "path": "previous-work/seomi-next-20261027/integration-050/pr-body.md",
+      "sha256": "7f069973a5eb01997127723ec1c98d9174b08b0b43588a52cf9565a2a559a075",
+      "bytes": 2888,
+      "redacted": false
+    },
+    {
+      "path": "previous-work/seomi-next-20261027/integration-050/validate-full.py",
+      "sha256": "7f9d6f3436937677616bd5bfdd5abb32062ded31bc3711625b017cb786a86ba3",
+      "bytes": 1355,
+      "redacted": false
+    },
+    {
+      "path": "previous-work/seomi-next-20261027/integration-050/validate-p1.py",
+      "sha256": "92f040fbc84ae259e5e9703b8f2a39349564c82c21326a961a44bee9af61f77b",
+      "bytes": 1805,
+      "redacted": false
+    },
+    {
+      "path": "previous-work/seomi-next-20261027/integration-050/validate-regressions.py",
+      "sha256": "9175dd89b1cd842cbaeb1cd6efb313836debceb51cbfed1d2ef3d31a79044b3c",
+      "bytes": 1555,
+      "redacted": false
+    },
+    {
+      "path": "previous-work/seomi-next-20261027/integration-050/validate-ui.py",
+      "sha256": "9417d218e7f410e15f0fde42a72046492de866e8e7b294caa3143d47710a6633",
+      "bytes": 709,
+      "redacted": false
+    },
+    {
+      "path": "previous-work/seomi-next-20261027/integration-050/validate.py",
+      "sha256": "ecf351540c780d9d0115d10a9aec7ca171f127f411056ea8aba8cfa8803f4ffb",
+      "bytes": 8946,
+      "redacted": false
+    },
+    {
+      "path": "previous-work/seomi-next-20261027/llm-gate/AC-PROOF.md",
+      "sha256": "944e755d6668d37473a02fd26e6f39714f54d10a57e7004a279422e90952b5d0",
+      "bytes": 3775,
+      "redacted": false
+    },
+    {
+      "path": "previous-work/seomi-next-20261027/llm-gate/aggregate.patch",
+      "sha256": "01c5398fdcb91ff7c37dc470c9bf607eefac05815bc769388493bfe270979e85",
+      "bytes": 143545,
+      "redacted": false
+    },
+    {
+      "path": "previous-work/seomi-next-20261027/misrouted-sources/tracked.patch",
+      "sha256": "16ad0f11a87e907db800cc607dc32f01146928b06bf7ca53e110a1de8604d18f",
+      "bytes": 46168,
+      "redacted": false
+    },
+    {
+      "path": "previous-work/seomi-next-20261027/misrouted-sources/untracked/src/services/eeatTrust/entityGraph.ts",
+      "sha256": "286fce8d7210224e83ea64b7b7ca846b04e3fcf4e4aa04ab769b99e2fb870484",
+      "bytes": 8358,
+      "redacted": false
+    },
+    {
+      "path": "previous-work/seomi-next-20261027/misrouted-sources/untracked/src-tauri/src/services/http_client/tests_registry.rs",
+      "sha256": "355a133e45ab3c42fda07e6bf3cdebdce911e68a44facfe462910bab546622d4",
+      "bytes": 1235,
+      "redacted": false
+    },
+    {
+      "path": "previous-work/seomi-next-20261027/misrouted-sources/untracked/tests/eeatTrustEntityGraph.test.ts",
+      "sha256": "538f94563d1edeeaea6b8e0a2ef475e9e2a9103ecdcf663363e4d8cb1e1071e7",
+      "bytes": 4225,
+      "redacted": false
+    },
+    {
+      "path": "previous-work/seomi-next-20261027/trust-evidence/AC-MATRIX.md",
+      "sha256": "c498124bd9d8c3ec3157b57a9b212cd40017b731724089ec951f954c6651c72d",
+      "bytes": 2759,
+      "redacted": false
+    },
+    {
+      "path": "previous-work/seomi-next-20261027/trust-followup/SOURCE_READY.md",
+      "sha256": "f01ffea6c0b3055a691f03b4531a2afcfd1b59a6613ec8f87cb02bc3b5072d3b",
+      "bytes": 1114,
+      "redacted": false
+    },
+    {
+      "path": "previous-work/seomi-next-20261027/trust-followup/aggregate.patch",
+      "sha256": "778407b29f2c4fd45ec3c8b49d632978e4e3ad745106edf7854e1a6664e76685",
+      "bytes": 21860,
+      "redacted": false
+    },
+    {
+      "path": "previous-work/seomi-next-20261026/chunk-recovery/unowned-recovery.patch",
+      "sha256": "6c45836f7c8f38d63c1bf85812308885d021a70a5de76d2b315ed4a11594a058",
+      "bytes": 10632,
+      "redacted": false
+    },
+    {
+      "path": "previous-work/seomi-next-20261026/codex1/llm-economy-next.report.md",
+      "sha256": "6affb2a67b7fe22bdbe0df35905cc28f8c6ad5d0b6b7e278f43b99c5dd800e3e",
+      "bytes": 1761,
+      "redacted": false
+    },
+    {
+      "path": "previous-work/seomi-next-20261026/codex1/llm-economy-next.tracked.diff",
+      "sha256": "493cfdc55824e95fad74c5699253f14c4c8b2ed5a0f9ab4710c0345bd6baaa27",
+      "bytes": 66829,
+      "redacted": false
+    },
+    {
+      "path": "previous-work/seomi-next-20261026/codex2/report.md",
+      "sha256": "ac4999a746a0c494f2b252d47a88324683ec091af5cb7ab114a1e6cd1b390166",
+      "bytes": 2122,
+      "redacted": false
+    },
+    {
+      "path": "previous-work/seomi-next-20261026/codex3/report.md",
+      "sha256": "e231f26e96527ed26d1ee7adf22936d3ba2b7252ea696aeab6acf0fa63c4220f",
+      "bytes": 2450,
+      "redacted": false
+    },
+    {
+      "path": "previous-work/seomi-next-20261026/codex4/REPORT.md",
+      "sha256": "ef3bc5551d7c2c95ec24fdfc77a5133906b0a6b1058afe7db7641dfd464a32f8",
+      "bytes": 1802,
+      "redacted": false
+    },
+    {
+      "path": "previous-work/seomi-next-20261026/codex4/outreach.patch",
+      "sha256": "cc12aeb8af6c71029705967419a0d53200363cddd4d66787f51434cced70aada",
+      "bytes": 49625,
+      "redacted": false
+    },
+    {
+      "path": "previous-work/seomi-next-20261026/codex6/manifest.md",
+      "sha256": "d604fda027e4575dece9fb29eb371e7988b659f8c45e153c966aaa37f3011e62",
+      "bytes": 4776,
+      "redacted": false
+    },
+    {
+      "path": "previous-work/seomi-next-20261026/gemini/eight-ai-trust/refine/original-tests/geminiAITrust01AioBoundaries.test.ts",
+      "sha256": "f56d672509167e70d214815c4131304760a31d3073a60d6bf4f21f2917b0eba1",
+      "bytes": 3874,
+      "redacted": false
+    },
+    {
+      "path": "previous-work/seomi-next-20261026/gemini/eight-ai-trust/refine/original-tests/geminiAITrust01AioChunking.test.ts",
+      "sha256": "785363aa130d5a0c85baeb59f2050b13f0bacc687468d1e6ab933688d34ab26e",
+      "bytes": 5242,
+      "redacted": false
+    },
+    {
+      "path": "previous-work/seomi-next-20261026/gemini/eight-ai-trust/refine/original-tests/geminiAITrust02LanguageSignals.test.ts",
+      "sha256": "a6049b890af74725d20ea550dd1adde6f5a9ba6b1af6c1bb7e2b2c7e446290f4",
+      "bytes": 4522,
+      "redacted": false
+    },
+    {
+      "path": "previous-work/seomi-next-20261026/gemini/eight-ai-trust/refine/original-tests/geminiAITrust02SpoSignals.test.ts",
+      "sha256": "3178d15bfb3640c504d2a410152a603091acc8b055be70639f05b38e706291be",
+      "bytes": 4684,
+      "redacted": false
+    },
+    {
+      "path": "previous-work/seomi-next-20261026/gemini/eight-ai-trust/refine/original-tests/geminiAITrust03RewriteBoundary.test.ts",
+      "sha256": "306dcc5b67c319998749731ecd0420aa9fd00a255a96cd4ec2c67ec9238364f7",
+      "bytes": 6413,
+      "redacted": false
+    },
+    {
+      "path": "previous-work/seomi-next-20261026/gemini/eight-ai-trust/refine/original-tests/geminiAITrust03RewriteProposal.test.tsx",
+      "sha256": "2785a1fd7887368d2da26adf420ed4bd5c279d15f67d539a9adb6ef1e4e91e5b",
+      "bytes": 4347,
+      "redacted": false
+    },
+    {
+      "path": "previous-work/seomi-next-20261026/gemini/eight-ai-trust/refine/original-tests/geminiAITrust04Authors.test.ts",
+      "sha256": "4d25b0efcfb1fb4e1fd3dcd5bf3b61f1eb38d496df7069b8751db51aeabbca82",
+      "bytes": 7853,
+      "redacted": false
+    },
+    {
+      "path": "previous-work/seomi-next-20261026/gemini/eight-ai-trust/refine/original-tests/geminiAITrust04Identifiers.test.ts",
+      "sha256": "8e84cc02cf5f4302f76330c8b8474cdb2a4386f362f61a44a46f2925a546df5e",
+      "bytes": 5938,
+      "redacted": false
+    },
+    {
+      "path": "previous-work/seomi-next-20261026/gemini/eight-ai-trust/refine/original-tests/geminiAITrust05CitationIds.test.ts",
+      "sha256": "5ba98105202d4da29f0906c5d892e82fb4303ba1c60c1a74fc0949be1f956f7f",
+      "bytes": 4952,
+      "redacted": false
+    },
+    {
+      "path": "previous-work/seomi-next-20261026/gemini/eight-ai-trust/refine/original-tests/geminiAITrust05UncertainEvidence.test.ts",
+      "sha256": "72ef1077f77ffdd91b88b5f0272b0b58d81463509e70fb431e2b3e3eda88b551",
+      "bytes": 5512,
+      "redacted": false
+    },
+    {
+      "path": "previous-work/seomi-next-20261026/gemini/eight-ai-trust/refine/original-tests/geminiAITrust06JsonLdSafety.test.ts",
+      "sha256": "80d80141bd5414f6a4f29b33b454383ebfe045b39f09ff4b352fe520ae98f88e",
+      "bytes": 5912,
+      "redacted": false
+    },
+    {
+      "path": "previous-work/seomi-next-20261026/gemini/eight-ai-trust/refine/original-tests/geminiAITrust06SchemaSafety.test.ts",
+      "sha256": "aaa53586f9e6ec3285f175afeeead6391de0d42a5c7f0b20ff0efaef4a29063a",
+      "bytes": 6153,
+      "redacted": false
+    },
+    {
+      "path": "previous-work/seomi-next-20261026/gemini/eight-ai-trust/refine/original-tests/geminiAITrust07AlertComparability.test.ts",
+      "sha256": "dae4c6658e7b6304d7eb6eb21040c7c463bcc0fa5a487713e6de95acbabf86b1",
+      "bytes": 4266,
+      "redacted": false
+    },
+    {
+      "path": "previous-work/seomi-next-20261026/gemini/eight-ai-trust/refine/original-tests/geminiAITrust07HistorySeparation.test.ts",
+      "sha256": "990a1434b42db8bce4d218a1afa06c3c529040c10dcdbc141d38e3fdd9c4c806",
+      "bytes": 5589,
+      "redacted": false
+    },
+    {
+      "path": "previous-work/seomi-next-20261026/gemini/eight-ai-trust/refine/original-tests/geminiAITrust08AioLocale.test.tsx",
+      "sha256": "e8a2b4cda21d8bac4bd7b01eb73075511cac1c032e56151e0531d9c99b36e31f",
+      "bytes": 5744,
+      "redacted": false
+    },
+    {
+      "path": "previous-work/seomi-next-20261026/gemini/eight-ai-trust/refine/original-tests/geminiAITrust08TrustLocale.test.tsx",
+      "sha256": "dcfb516d8412f6a486fb37a571848569923d1681c6b75816fa090997c9066f3f",
+      "bytes": 5808,
+      "redacted": false
+    },
+    {
+      "path": "previous-work/seomi-next-20261026/gemini/eight-ai-trust/refine/supervisor.py",
+      "sha256": "110eb64a301c82fe8099a1dd71143459bd3e26c6549acab2b6451417c183f6c8",
+      "bytes": 1279,
+      "redacted": false
+    },
+    {
+      "path": "previous-work/seomi-next-20261026/gemini/eight-ai-trust/repair/original-tests/geminiAITrust01AioBoundaries.test.ts",
+      "sha256": "5bce54647a167bb2e89fe98e0664d87de3048ea51249a1a3fd27702d6046d407",
+      "bytes": 3874,
+      "redacted": false
+    },
+    {
+      "path": "previous-work/seomi-next-20261026/gemini/eight-ai-trust/repair/original-tests/geminiAITrust01AioChunking.test.ts",
+      "sha256": "63eb4eac45efed7cc8e6bbd0f7223c85d9681aeb7779e376cf805d993dd8a416",
+      "bytes": 5154,
+      "redacted": false
+    },
+    {
+      "path": "previous-work/seomi-next-20261026/gemini/eight-ai-trust/repair/original-tests/geminiAITrust02LanguageSignals.test.ts",
+      "sha256": "d337c90cc7b0340ebe7559ca3762083392c82e40c6466b0e78d20eafebd76e92",
+      "bytes": 4259,
+      "redacted": false
+    },
+    {
+      "path": "previous-work/seomi-next-20261026/gemini/eight-ai-trust/repair/original-tests/geminiAITrust02SpoSignals.test.ts",
+      "sha256": "ac5a35da2b50c995b7edab51fbd8338061ac2004268b08c86a18d6522d55d00e",
+      "bytes": 4581,
+      "redacted": false
+    },
+    {
+      "path": "previous-work/seomi-next-20261026/gemini/eight-ai-trust/repair/original-tests/geminiAITrust03RewriteBoundary.test.ts",
+      "sha256": "f0dbe22e524e49ca72cafcccf399bb50b8d509443f39a63ac86e960ce763064d",
+      "bytes": 6269,
+      "redacted": false
+    },
+    {
+      "path": "previous-work/seomi-next-20261026/gemini/eight-ai-trust/repair/original-tests/geminiAITrust03RewriteProposal.test.tsx",
+      "sha256": "2785a1fd7887368d2da26adf420ed4bd5c279d15f67d539a9adb6ef1e4e91e5b",
+      "bytes": 4347,
+      "redacted": false
+    },
+    {
+      "path": "previous-work/seomi-next-20261026/gemini/eight-ai-trust/repair/original-tests/geminiAITrust04Authors.test.ts",
+      "sha256": "75e5159ad28283fd8a10edb2676f4ba46c9f32f0534d034d825e7e49d33833a4",
+      "bytes": 7368,
+      "redacted": false
+    },
+    {
+      "path": "previous-work/seomi-next-20261026/gemini/eight-ai-trust/repair/original-tests/geminiAITrust04Identifiers.test.ts",
+      "sha256": "505cd6f868cb6569932e04bcf4c27aca919ee812d53414423532bf9a61666a54",
+      "bytes": 5828,
+      "redacted": false
+    },
+    {
+      "path": "previous-work/seomi-next-20261026/gemini/eight-ai-trust/repair/original-tests/geminiAITrust05CitationIds.test.ts",
+      "sha256": "5ba98105202d4da29f0906c5d892e82fb4303ba1c60c1a74fc0949be1f956f7f",
+      "bytes": 4952,
+      "redacted": false
+    },
+    {
+      "path": "previous-work/seomi-next-20261026/gemini/eight-ai-trust/repair/original-tests/geminiAITrust05UncertainEvidence.test.ts",
+      "sha256": "710578e52adf7d5efad2368958694fc9d6c3c9471add87962fb9e50f4d68886c",
+      "bytes": 5494,
+      "redacted": false
+    },
+    {
+      "path": "previous-work/seomi-next-20261026/gemini/eight-ai-trust/repair/original-tests/geminiAITrust06JsonLdSafety.test.ts",
+      "sha256": "580ca5be6163f5c133882336f30dcb1b6eba9cd24ba708a38126ab563af1f9a9",
+      "bytes": 5751,
+      "redacted": false
+    },
+    {
+      "path": "previous-work/seomi-next-20261026/gemini/eight-ai-trust/repair/original-tests/geminiAITrust06SchemaSafety.test.ts",
+      "sha256": "6ace8a057dc011865b55a6b7f9a6ecd78c6d832ad981e528ebb3384ee8363dcd",
+      "bytes": 5651,
+      "redacted": false
+    },
+    {
+      "path": "previous-work/seomi-next-20261026/gemini/eight-ai-trust/repair/original-tests/geminiAITrust07AlertComparability.test.ts",
+      "sha256": "dae4c6658e7b6304d7eb6eb21040c7c463bcc0fa5a487713e6de95acbabf86b1",
+      "bytes": 4266,
+      "redacted": false
+    },
+    {
+      "path": "previous-work/seomi-next-20261026/gemini/eight-ai-trust/repair/original-tests/geminiAITrust07HistorySeparation.test.ts",
+      "sha256": "1ada54fa0d7d237802367cc762fa2b8303125078fdc9da0f384a41cebb6e40fe",
+      "bytes": 4283,
+      "redacted": false
+    },
+    {
+      "path": "previous-work/seomi-next-20261026/gemini/eight-ai-trust/repair/original-tests/geminiAITrust08AioLocale.test.tsx",
+      "sha256": "df483d8f8f82344678cdd1e9d756e499caa2f0cf8502411ff8a31ff77245ea2e",
+      "bytes": 5309,
+      "redacted": false
+    },
+    {
+      "path": "previous-work/seomi-next-20261026/gemini/eight-ai-trust/repair/original-tests/geminiAITrust08TrustLocale.test.tsx",
+      "sha256": "a78f62316c0f497019736abf3d9af6639e1c1f1871ca23bce3a50764a73db2a6",
+      "bytes": 5046,
+      "redacted": false
+    },
+    {
+      "path": "previous-work/seomi-next-20261026/gemini/eight-ai-trust/repair/supervisor.py",
+      "sha256": "d88289c34a2a6c8aa78a0a4c066af0c3396f37d419354e08ca6223ce3035009b",
+      "bytes": 1279,
+      "redacted": false
+    },
+    {
+      "path": "previous-work/seomi-next-20261026/gemini/eight-ai-trust/repair/validate-repair.py",
+      "sha256": "538e3c58c6eb85b53240c412c011a1cbd16bba4454b8860e8a71305312b5d19d",
+      "bytes": 1808,
+      "redacted": false
+    },
+    {
+      "path": "previous-work/seomi-next-20261026/gemini/eight-ai-trust/supervisor.py",
+      "sha256": "9de03c26a807a21ffa2a01bbf3bb1efed189c239fe2438f217de3a7046972f57",
+      "bytes": 1167,
+      "redacted": false
+    },
+    {
+      "path": "previous-work/seomi-next-20261026/gemini/eight-ai-trust/validate.py",
+      "sha256": "bc97651c0985d4414646f27953800e5897c63fc96d498fcad0d268341d4139c9",
+      "bytes": 1801,
+      "redacted": false
+    },
+    {
+      "path": "previous-work/seomi-next-20261026/gemini/first-wave-on70/validate.py",
+      "sha256": "f1ba41027fa8790a9e24a1ffdd6627cd53e25c092f9b07d87885ee6413e4c893",
+      "bytes": 1799,
+      "redacted": false
+    },
+    {
+      "path": "previous-work/seomi-next-20261026/gemini/supervisor.py",
+      "sha256": "d3ad5d67ff999e67c894005ef07795e91854e1a81670b2984d124c9d0e9c2f7f",
+      "bytes": 1152,
+      "redacted": false
+    },
+    {
+      "path": "previous-work/seomi-next-20261026/gemini/validate.py",
+      "sha256": "7ca72c79e9ae13c81940f7b7b3decf5bc950425b237aaa09a89dba5dd4ad396b",
+      "bytes": 1783,
+      "redacted": false
+    },
+    {
+      "path": "previous-work/seomi-next-20261026/gemini/wave2/supervisor.py",
+      "sha256": "ea681f84d55ad33676c8c3e8994c58216c306e20957a69786bbf1ac57a396686",
+      "bytes": 1263,
+      "redacted": false
+    },
+    {
+      "path": "previous-work/seomi-next-20261026/release-roadmap/issue77-sequence.md",
+      "sha256": "ea21ae79cc22439deca9216e9890e3126d5e784940fe622e001e44e88d0cfff4",
+      "bytes": 2291,
+      "redacted": false
+    },
+    {
+      "path": "previous-work/seomi-gemini-20261024-1553/audit-130-candidate-evidence.mjs",
+      "sha256": "3c49179048deb8c99619d94c42408a8a7a51d95e4df9c7a04f6018bc4dd33a06",
+      "bytes": 4237,
+      "redacted": false
+    },
+    {
+      "path": "previous-work/seomi-gemini-20261024-1553/audit-130-integration.py",
+      "sha256": "7de6ce10fe543747546b31a9c21b132247dc33f5e4bdbf7d92457db18771b828",
+      "bytes": 3064,
+      "redacted": false
+    },
+    {
+      "path": "previous-work/seomi-gemini-20261024-1553/audit-212-integration.py",
+      "sha256": "dc173a912bb7698591af53aaebeb1b247a3e85430bf9292feaa343c9d0e55b70",
+      "bytes": 2406,
+      "redacted": false
+    },
+    {
+      "path": "previous-work/seomi-gemini-20261024-1553/audit-actual-updater-artifacts.py",
+      "sha256": "7f01f8a984a31168cd90aed801ce2cd0533152a824e8a2f0b6feb4df21a5ce87",
+      "bytes": 2093,
+      "redacted": false
+    },
+    {
+      "path": "previous-work/seomi-gemini-20261024-1553/audit-causal-control-compatibility-root-current.mjs",
+      "sha256": "c9322a8821555c77e987da9d651e2048cbb2b1ecf39bf08775b1e74ec75e1eff",
+      "bytes": 3537,
+      "redacted": false
+    },
+    {
+      "path": "previous-work/seomi-gemini-20261024-1553/audit-causal-control-compatibility.mjs",
+      "sha256": "6c92d5f7afdd0bd41ebf2f5b51b337b9541c3a6d6702f22e20efc69ac4204391",
+      "bytes": 3524,
+      "redacted": false
+    },
+    {
+      "path": "previous-work/seomi-gemini-20261024-1553/audit-causal-property-source-v2.mjs",
+      "sha256": "77491d2a6f70fee7d7f8eaf9de0d093f7105a8e1256d1e262d715e137d7471ff",
+      "bytes": 4009,
+      "redacted": false
+    },
+    {
+      "path": "previous-work/seomi-gemini-20261024-1553/audit-causal-property-source-v3.mjs",
+      "sha256": "92dba81ce052c8b9fd00264ff35b6071a1e825d605bd01a14b10a9b9bc5f8b00",
+      "bytes": 4348,
+      "redacted": false
+    },
+    {
+      "path": "previous-work/seomi-gemini-20261024-1553/audit-ci454-fixtures-integration.py",
+      "sha256": "682588130a1e0b9f477b6ad1e9b9c92ca61c49d5a55233b9c74432bb513e3bd3",
+      "bytes": 3005,
+      "redacted": false
+    },
+    {
+      "path": "previous-work/seomi-gemini-20261024-1553/audit-crawl-load-projection-v2.mjs",
+      "sha256": "089947e8117a96fb0077bc96bcde16a4270af5f731542abd520da190dd93eefc",
+      "bytes": 4001,
+      "redacted": false
+    },
+    {
+      "path": "previous-work/seomi-gemini-20261024-1553/audit-eventlog-wire-provenance.mjs",
+      "sha256": "8ce9b33767aa45fcf524cfe14f434514a189a51559a2d5f9ce88eb042023c2d8",
+      "bytes": 5380,
+      "redacted": false
+    },
+    {
+      "path": "previous-work/seomi-gemini-20261024-1553/audit-main-codeql-live-read.mjs",
+      "sha256": "7c5c3ab4534ed2d58ff5127c6d8c1cd7e189c39b17ea213e8d2175c18c98a323",
+      "bytes": 1571,
+      "redacted": false
+    },
+    {
+      "path": "previous-work/seomi-gemini-20261024-1553/audit-provenance-equal-size-v3.mjs",
+      "sha256": "dfd78b554f68db3b2f94aeeacf492d1df9b639c30e7af5f4356dfce92764d7ec",
+      "bytes": 3712,
+      "redacted": false
+    },
+    {
+      "path": "previous-work/seomi-gemini-20261024-1553/audit-provenance-equal-size-v4.mjs",
+      "sha256": "0746c9652f93b86fdc1c9f54800d792c1758f421f282b2f09b6e80ff3de620e3",
+      "bytes": 3900,
+      "redacted": false
+    },
+    {
+      "path": "previous-work/seomi-gemini-20261024-1553/audit-provenance-publisher-v2.mjs",
+      "sha256": "94649e29e726e27f868002e165c2c7119f9b1187c61a00c49508f60732541c80",
+      "bytes": 3572,
+      "redacted": false
+    },
+    {
+      "path": "previous-work/seomi-gemini-20261024-1553/audit-provenance-publisher-v3.mjs",
+      "sha256": "d760a1c0552e1524c187c6f72503fe7f9f7d5d8b83de180fcda96a64582093e3",
+      "bytes": 4223,
+      "redacted": false
+    },
+    {
+      "path": "previous-work/seomi-gemini-20261024-1553/audit-provenance-rerun-v5.mjs",
+      "sha256": "2285c9868635ff5ce306c5edfacc35720032400944d956fdc597b279e2924e0c",
+      "bytes": 7841,
+      "redacted": false
+    },
+    {
+      "path": "previous-work/seomi-gemini-20261024-1553/audit-provenance-runtime.mjs",
+      "sha256": "5e64b5952d3198fbcbf439a467bbd488df8661345efbb5ddc80d2cad7b8a3b0b",
+      "bytes": 4149,
+      "redacted": false
+    },
+    {
+      "path": "previous-work/seomi-gemini-20261024-1553/audit-release-guard-integration.py",
+      "sha256": "055079ddde2212aa053e8415edfd057696d37ba15b5d9a365822324a85e79c9b",
+      "bytes": 2403,
+      "redacted": false
+    },
+    {
+      "path": "previous-work/seomi-gemini-20261024-1553/audit-render-worker-candidate.py",
+      "sha256": "93390bdb88e54652010cd211d8d54a98963e5d80806a9f9bda08fdde1913f076",
+      "bytes": 1562,
+      "redacted": false
+    },
+    {
+      "path": "previous-work/seomi-gemini-20261024-1553/audit-renderer-integration.py",
+      "sha256": "2944a310680319736c35b76d3ffad9293f6e70f1714058c85e0db8837eebaaa9",
+      "bytes": 2548,
+      "redacted": false
+    },
+    {
+      "path": "previous-work/seomi-gemini-20261024-1553/audit-renderer-js-diagnostics-fixed.mjs",
+      "sha256": "6db9ed14f71165a7b5a701c9ef9bb9bb32e8d4f162b3c023662ec81306eb8272",
+      "bytes": 3293,
+      "redacted": false
+    },
+    {
+      "path": "previous-work/seomi-gemini-20261024-1553/audit-renderer-js-diagnostics.mjs",
+      "sha256": "425e9efc0feebe47fdab88366af9c55246cc19697f198381bbd60d6da0e06658",
+      "bytes": 3310,
+      "redacted": false
+    },
+    {
+      "path": "previous-work/seomi-gemini-20261024-1553/auditor-causal-v2-checks.py",
+      "sha256": "4007db76f3fae03b213b3ba7fbc0a8fab5ce0c5f56fc7ca5240c718a7ee0f3c3",
+      "bytes": 2357,
+      "redacted": false
+    },
+    {
+      "path": "previous-work/seomi-gemini-20261024-1553/auditor-render-worker-stop-race.config.mjs",
+      "sha256": "760b56319bed6cfb669ad9b4ee299c4dbbb12d5ab209bfb3ba91ed5ca2db6ed5",
+      "bytes": 584,
+      "redacted": false
+    },
+    {
+      "path": "previous-work/seomi-gemini-20261024-1553/auditor-render-worker-stop-race.test.tsx",
+      "sha256": "cb9c0129beb201210569f8cc284360a2d6b940460d1b9bd411706d716bbd87d0",
+      "bytes": 2034,
+      "redacted": false
+    },
+    {
+      "path": "previous-work/seomi-gemini-20261024-1553/auditor-root-causal-v5-validation.py",
+      "sha256": "478d7390da89c4c76e869a0169c32904b8ec405a7d19db92d59a153c574dbf96",
+      "bytes": 2976,
+      "redacted": false
+    },
+    {
+      "path": "previous-work/seomi-gemini-20261024-1553/auditor-root-combined-v6-validation.py",
+      "sha256": "956df9f23676d01d15f31058f4688b6ed0b3f177d8e9061803c136e82ff1f389",
+      "bytes": 4295,
+      "redacted": false
+    },
+    {
+      "path": "previous-work/seomi-gemini-20261024-1553/auditor-root-desktop-canonical-v6.py",
+      "sha256": "2ea22d0f5c54368f5ee4f0b01f423fa7a72244399ff336c620e9ded2d17a78bb",
+      "bytes": 1136,
+      "redacted": false
+    },
+    {
+      "path": "previous-work/seomi-gemini-20261024-1553/auditor-root-final-v8-validation.py",
+      "sha256": "4681cc61da91653ea7f04179bfb0e2edc024a4b4e1105141bb05a536e6967674",
+      "bytes": 3246,
+      "redacted": false
+    },
+    {
+      "path": "previous-work/seomi-gemini-20261024-1553/auditor-root-final-v9-validation.py",
+      "sha256": "ebc570d0c9c364381061bd7dc220394994024be931fb2457fb0be80c1e2d2598",
+      "bytes": 3282,
+      "redacted": false
+    },
+    {
+      "path": "previous-work/seomi-gemini-20261024-1553/auditor-root-postpush-v10.py",
+      "sha256": "443594559a22136d2976eb9927d5b5b3226125b8a07f04bf3fce202d12ac46d9",
+      "bytes": 3016,
+      "redacted": false
+    },
+    {
+      "path": "previous-work/seomi-gemini-20261024-1553/auditor-root-remaining-v9-validation.py",
+      "sha256": "40a555eef2d42bdbca7454f2d7752144a94bcfdfba7e21bcbef099a93b097416",
+      "bytes": 3139,
+      "redacted": false
+    },
+    {
+      "path": "previous-work/seomi-gemini-20261024-1553/auditor-root-rust-latest-validation.py",
+      "sha256": "34b381b05a9e7e20b6c7ab01e1052c387cdd15651e1dd8398c1be5a785d29393",
+      "bytes": 2693,
+      "redacted": false
+    },
+    {
+      "path": "previous-work/seomi-gemini-20261024-1553/auditor-task130-flow.test.tsx",
+      "sha256": "ec5a924cdabc26f9b913954b8abd2a829408d8f32c3ba46ac52de2263087235f",
+      "bytes": 4189,
+      "redacted": false
+    },
+    {
+      "path": "previous-work/seomi-gemini-20261024-1553/backlog-projection-v3-findings.md",
+      "sha256": "8c2e36e0d0c075e73e9d7e5c002cc9967ed75a6c076bf33382b54de9129bf769",
+      "bytes": 2040,
+      "redacted": false
+    },
+    {
+      "path": "previous-work/seomi-gemini-20261024-1553/backlog.138-collector.patch",
+      "sha256": "395986f6b46edb9b53911a76974d87678924aecc0489e7dcbd6c711c74f557fe",
+      "bytes": 20709,
+      "redacted": false
+    },
+    {
+      "path": "previous-work/seomi-gemini-20261024-1553/backlog.138-v2.patch",
+      "sha256": "613d6ad3653318c5933148aa7655fadd358c2adc8d7fa7606ace89c0fa15e7d3",
+      "bytes": 86491,
+      "redacted": false
+    },
+    {
+      "path": "previous-work/seomi-gemini-20261024-1553/backlog.138-v3.patch",
+      "sha256": "613d6ad3653318c5933148aa7655fadd358c2adc8d7fa7606ace89c0fa15e7d3",
+      "bytes": 86491,
+      "redacted": false
+    },
+    {
+      "path": "previous-work/seomi-gemini-20261024-1553/backlog.138-v4.patch",
+      "sha256": "d18f65c299ae193982938ab098d3125c537e1b819ac733491118774663975999",
+      "bytes": 167042,
+      "redacted": false
+    },
+    {
+      "path": "previous-work/seomi-gemini-20261024-1553/backlog.audit.md",
+      "sha256": "6f40317ecfb3c2f96db5f0eaeceb05ba3fdab889da605a1fd5e466457128ea9a",
+      "bytes": 26591,
+      "redacted": false
+    },
+    {
+      "path": "previous-work/seomi-gemini-20261024-1553/backlog.coverage100-rescope.patch",
+      "sha256": "c1ae96676f031b8bbbcb4475c47edfb992962274a74cc8769b38de0f97d668ba",
+      "bytes": 8563,
+      "redacted": false
+    },
+    {
+      "path": "previous-work/seomi-gemini-20261024-1553/backlog.qualityfix.patch",
+      "sha256": "9dbdbb5d0cf07607667c2851a2d67139c802dcc567b5d7f27b7fbae2d6a2cf0b",
+      "bytes": 10793,
+      "redacted": false
+    },
+    {
+      "path": "previous-work/seomi-gemini-20261024-1553/causal-property-v4-rejection.md",
+      "sha256": "4438a35912513c0449948804ec13882da69bba75b9698ed3fe497efad07abfb0",
+      "bytes": 1757,
+      "redacted": false
+    },
+    {
+      "path": "previous-work/seomi-gemini-20261024-1553/causal-v2-rejection.md",
+      "sha256": "05d43b5beecd57acaaf6557459ff24f4a9a7a9b2a95ad40eda3d9fff30aaee06",
+      "bytes": 1801,
+      "redacted": false
+    },
+    {
+      "path": "previous-work/seomi-gemini-20261024-1553/causal.144.patch",
+      "sha256": "a6e75329879bda76f5d8a25e213c7151469b5ee11242244c6b261c25750b6377",
+      "bytes": 67436,
+      "redacted": false
+    },
+    {
+      "path": "previous-work/seomi-gemini-20261024-1553/causal.audit.md",
+      "sha256": "c76bb3b30b0aa59caebd5945f2ae63de47a766c26c2e28fa642ae0d5139fb62e",
+      "bytes": 20469,
+      "redacted": false
+    },
+    {
+      "path": "previous-work/seomi-gemini-20261024-1553/causal.coverage100-rescope.patch",
+      "sha256": "a9ab4836ec3076cbeed027e02811d60af0f8819bffc21391a4fce0acd0418ee1",
+      "bytes": 7843,
+      "redacted": false
+    },
+    {
+      "path": "previous-work/seomi-gemini-20261024-1553/causal.integrated-v5.patch",
+      "sha256": "73209e0c84935203450faa5f8400f90841ebaf7b9cb1714face2914acc3d1fed",
+      "bytes": 99103,
+      "redacted": false
+    },
+    {
+      "path": "previous-work/seomi-gemini-20261024-1553/causal.issue144-comment.md",
+      "sha256": "9de56dfe87ef3bff2911e8517bf889d12b3d33df5f5a3891c6a7258cef31bd5e",
+      "bytes": 5528,
+      "redacted": false
+    },
+    {
+      "path": "previous-work/seomi-gemini-20261024-1553/causal.qualityfix.patch",
+      "sha256": "9a0edfcd808c9d818793c9db8ae9cd7d935003aba9a1154f476fc35aff2c2e93",
+      "bytes": 7517,
+      "redacted": false
+    },
+    {
+      "path": "previous-work/seomi-gemini-20261024-1553/causal.storage-audit.patch",
+      "sha256": "887f03e1f373e199d9d2fbae8b61386c780e1f5469c59ec2f14688287fac2546",
+      "bytes": 3484,
+      "redacted": false
+    },
+    {
+      "path": "previous-work/seomi-gemini-20261024-1553/causal.v4.patch",
+      "sha256": "dc17e4602cb76c9bdd3278150b32119e7273712d940bc9990e65ec20675748cc",
+      "bytes": 71721,
+      "redacted": false
+    },
+    {
+      "path": "previous-work/seomi-gemini-20261024-1553/ci_watch.py",
+      "sha256": "6ea0b7107c88ec53f96be142508211c08505ccdc9a7217621f79bdc9b22c2fd6",
+      "bytes": 4784,
+      "redacted": false
+    },
+    {
+      "path": "previous-work/seomi-gemini-20261024-1553/closedloop-130-auditor-frozen.patch",
+      "sha256": "bec9117f122deb31508e8ed725c2131d4ee0ce6ec0e30ed55cb011ba7d5a5538",
+      "bytes": 42596,
+      "redacted": false
+    },
+    {
+      "path": "previous-work/seomi-gemini-20261024-1553/closedloop-130.patch",
+      "sha256": "bec9117f122deb31508e8ed725c2131d4ee0ce6ec0e30ed55cb011ba7d5a5538",
+      "bytes": 42596,
+      "redacted": false
+    },
+    {
+      "path": "previous-work/seomi-gemini-20261024-1553/closedloop.audit.md",
+      "sha256": "ebcaaaab1ad38d96ee165c08c05d2be4de8b56dbfde054ad5b170e7dc31bc23c",
+      "bytes": 8383,
+      "redacted": true
+    },
+    {
+      "path": "previous-work/seomi-gemini-20261024-1553/cms-factgate-bypass.repro.test.ts",
+      "sha256": "8f4c472fcfa1ce5ecc86b97d5807549c9faa1cc47dc1b743b83866ad85c4e83e",
+      "bytes": 1157,
+      "redacted": false
+    },
+    {
+      "path": "previous-work/seomi-gemini-20261024-1553/cms-factgate-bypass.repro.ts",
+      "sha256": "0575e41ef5db5114c827c3bf7bed6a4106cdcc645da1652f08b6242ccca52d07",
+      "bytes": 1266,
+      "redacted": false
+    },
+    {
+      "path": "previous-work/seomi-gemini-20261024-1553/codex-native-audit/chacha-repro/src-main.rs",
+      "sha256": "3e1f30deacd6d1b2b8fbd3c6e56bd09d1ea891acb1851d4a95d706f3a0eaaf9b",
+      "bytes": 1155,
+      "redacted": false
+    },
+    {
+      "path": "previous-work/seomi-gemini-20261024-1553/codex-release-audit/publisher-v5-current.mjs",
+      "sha256": "24be291f23f2c9dc30ad68227ea977822af97b3674cea0ed17bd41a1c9dccb1c",
+      "bytes": 9568,
+      "redacted": false
+    },
+    {
+      "path": "previous-work/seomi-gemini-20261024-1553/codex-release-audit/reproduce-rerun.mjs",
+      "sha256": "0e072690d835807dadcaf75b6b86dd803d11b3acdafdbdeb1f604acb670cbf93",
+      "bytes": 6313,
+      "redacted": false
+    },
+    {
+      "path": "previous-work/seomi-gemini-20261024-1553/codex-release-qualification-f2f7bf64.md",
+      "sha256": "7f015a4a4b917d1cf4a644de3beb4b5be01c186e54102f8834c24a8477b6ec94",
+      "bytes": 5949,
+      "redacted": false
+    },
+    {
+      "path": "previous-work/seomi-gemini-20261024-1553/coverage100-gap-pointer-20261025.md",
+      "sha256": "a5559462a5b9eabf1eafe796ea363e59a7f4f0e3dbffdec0f39c50365e80e941",
+      "bytes": 2594,
+      "redacted": false
+    },
+    {
+      "path": "previous-work/seomi-gemini-20261024-1553/create-patch.py",
+      "sha256": "41ea2f6ff0fdf28f713c54812a147bf2f77f9e926c48696d0d3823a692d5446e",
+      "bytes": 1636,
+      "redacted": false
+    },
+    {
+      "path": "previous-work/seomi-gemini-20261024-1553/final-version-contracts-v9.patch",
+      "sha256": "64f0a92da0599d546aeadd068390ca1b92d569e0cf4cff2703aeb7733b45afa7",
+      "bytes": 11352,
+      "redacted": false
+    },
+    {
+      "path": "previous-work/seomi-gemini-20261024-1553/frontend.audit.md",
+      "sha256": "92caeac0dffccda0a49526004bb4328fefc8ecdc11855beff44bb964bf5e0c5c",
+      "bytes": 9118,
+      "redacted": false
+    },
+    {
+      "path": "previous-work/seomi-gemini-20261024-1553/frontend.causal-ui-v3.patch",
+      "sha256": "2e4f83dce14f1f72f284c190eb4c4796952422c4cd1a7a3cc02e6bdc10754038",
+      "bytes": 25564,
+      "redacted": false
+    },
+    {
+      "path": "previous-work/seomi-gemini-20261024-1553/frontend.ci454-fixtures.patch",
+      "sha256": "d6d26710f98280ba74112647acc3fdead56b57c02024ebe1c8074147c37f3f8d",
+      "bytes": 7843,
+      "redacted": false
+    },
+    {
+      "path": "previous-work/seomi-gemini-20261024-1553/frontend.coverage100-rescope.patch",
+      "sha256": "d4cc3e83910fce7c5c29a9f7e70300abf98e9d2c7865b87dfb4d496c13e3f566",
+      "bytes": 9083,
+      "redacted": false
+    },
+    {
+      "path": "previous-work/seomi-gemini-20261024-1553/frontend.desktop-fixture.patch",
+      "sha256": "c96278d7831ffcef160fca604fed8ee5092e8ec2c89c4fd06c36a532d05fcd36",
+      "bytes": 25870,
+      "redacted": false
+    },
+    {
+      "path": "previous-work/seomi-gemini-20261024-1553/frontend.fixture-boundary-complete-v8.patch",
+      "sha256": "17936ca464cef77c945f3e50d04b8f32684455c927bc4392c9b27c6c3244249f",
+      "bytes": 4811,
+      "redacted": false
+    },
+    {
+      "path": "previous-work/seomi-gemini-20261024-1553/frontend.fixture-boundary-v6.patch",
+      "sha256": "9f55bfea04f97664d27e888a81535f583f9c041734079ffecee86f3688d5034e",
+      "bytes": 7186,
+      "redacted": false
+    },
+    {
+      "path": "previous-work/seomi-gemini-20261024-1553/frontend.fixture-exact-origin-v7.patch",
+      "sha256": "d7971675308b05b2aab311fc34c9bab45a633be932da853146fb50f3f373821a",
+      "bytes": 10030,
+      "redacted": false
+    },
+    {
+      "path": "previous-work/seomi-gemini-20261024-1553/frontend.latest-inventory-v2.md",
+      "sha256": "ee920af384524a7ddaf4b1431c599d67f90a37639f118836c6a717d301eb8cfd",
+      "bytes": 13685,
+      "redacted": false
+    },
+    {
+      "path": "previous-work/seomi-gemini-20261024-1553/frontend.legacy-relative-effect-v9.patch",
+      "sha256": "7e5d73bb131117c41d8e13bf71efdc06407a3b2338f3532051babe4d56a517f4",
+      "bytes": 1157,
+      "redacted": false
+    },
+    {
+      "path": "previous-work/seomi-gemini-20261024-1553/frontend.llm137-branches-v10.patch",
+      "sha256": "3d7cf9043d5500fc385f933b63b1f337e1793fe6fde896f6541ac279498c06e3",
+      "bytes": 5435,
+      "redacted": false
+    },
+    {
+      "path": "previous-work/seomi-gemini-20261024-1553/frontend.llm137-unknown-v11.patch",
+      "sha256": "f4d09e266e4fe4c9decc83f55dc7d6d124a9d28f215e6b9a0c7aee658f912a8e",
+      "bytes": 5970,
+      "redacted": false
+    },
+    {
+      "path": "previous-work/seomi-gemini-20261024-1553/frontend.qualityfix.patch",
+      "sha256": "afe8d465601835bda8f4d49f7cee9a8b9c7aee0af8e0cfee8334d6ac761c5406",
+      "bytes": 9979,
+      "redacted": false
+    },
+    {
+      "path": "previous-work/seomi-gemini-20261024-1553/frontend.stop-race.patch",
+      "sha256": "ef4276091ad233bb21a3cd76370381d4c26d6bbf2c027903a687df9514d5dc39",
+      "bytes": 13277,
+      "redacted": false
+    },
+    {
+      "path": "previous-work/seomi-gemini-20261024-1553/gemini-next/file-supervisor.py",
+      "sha256": "1e3a9e881c183fd53e25700e5a6eb9d314c085d8114269066c76ad4b57093076",
+      "bytes": 1561,
+      "redacted": false
+    },
+    {
+      "path": "previous-work/seomi-gemini-20261024-1553/gemini-next/supervisor.py",
+      "sha256": "d9addb3028923f33894c4e310cd68a2a9b6fe0322ff719e34ebd41e25acd8ce2",
+      "bytes": 1342,
+      "redacted": false
+    },
+    {
+      "path": "previous-work/seomi-gemini-20261024-1553/gemini-quality-accepted-13.patch",
+      "sha256": "12798f33debb3e88b9edc73dfe528805e5d567de57c9c5eb772aa03d2c364c0a",
+      "bytes": 68585,
+      "redacted": false
+    },
+    {
+      "path": "previous-work/seomi-gemini-20261024-1553/generate-inventory-v2.py",
+      "sha256": "71365501f3df4ecee661fdd2312b3d415bf1bc18f5d09246c6672cee6c476ded",
+      "bytes": 18148,
+      "redacted": false
+    },
+    {
+      "path": "previous-work/seomi-gemini-20261024-1553/generate-manifest.py",
+      "sha256": "0d39d0c705f5db5161d3399dc283c2812c7ffe8e56359831a8efd8d1b2e62f2b",
+      "bytes": 2940,
+      "redacted": false
+    },
+    {
+      "path": "previous-work/seomi-gemini-20261024-1553/generate-sbom-evidence-v4.py",
+      "sha256": "668f527c1ad831f1c11aa922ae22771ad1ef0832cc4bf25fc7fdac1b8570cd5e",
+      "bytes": 11694,
+      "redacted": false
+    },
+    {
+      "path": "previous-work/seomi-gemini-20261024-1553/governor.audit.md",
+      "sha256": "5a2cbcdbd61fa6a7f41b89026c10ed6002390333d28924b6ed35454b2349bfdb",
+      "bytes": 2072,
+      "redacted": false
+    },
+    {
+      "path": "previous-work/seomi-gemini-20261024-1553/governor.coverage100-rescope.patch",
+      "sha256": "70b56bd67159aca2a78adf25d28f9e3defaf01bb99f48c2aee58a19ae7723826",
+      "bytes": 12729,
+      "redacted": false
+    },
+    {
+      "path": "previous-work/seomi-gemini-20261024-1553/governor.qualityfix.patch",
+      "sha256": "a40b61a3e1a0f9e5e7278ec6a151d39e8a4b116059dfff070feef323d7a0b68f",
+      "bytes": 13155,
+      "redacted": false
+    },
+    {
+      "path": "previous-work/seomi-gemini-20261024-1553/issue-mac-worker-stop-race.md",
+      "sha256": "1f132ed4391caa3cc43022a38520a9f75f3fa78d956a356c01f08ace6d720f7c",
+      "bytes": 1464,
+      "redacted": false
+    },
+    {
+      "path": "previous-work/seomi-gemini-20261024-1553/issue102-provenance-audit-v2.md",
+      "sha256": "6ea3850deafd90439e7997a3c6c2a5e52778c51a18756687ce17bb7695ad8a1d",
+      "bytes": 1357,
+      "redacted": false
+    },
+    {
+      "path": "previous-work/seomi-gemini-20261024-1553/issue102-publisher-runtime-v3.md",
+      "sha256": "19c217727c2e157b88a3f49e2c890cc5ebea87faff951e47773e5e19786c8056",
+      "bytes": 1306,
+      "redacted": false
+    },
+    {
+      "path": "previous-work/seomi-gemini-20261024-1553/issue130-ci454-fixture-blocker.md",
+      "sha256": "6e30d6b62ef455dc9d62719ad5dc044b52f3c5455bbd9a564bba574f3a19a07b",
+      "bytes": 983,
+      "redacted": false
+    },
+    {
+      "path": "previous-work/seomi-gemini-20261024-1553/issue130-current-ui-acceptance.md",
+      "sha256": "3fd043657f885c85ca03533b4da021f3c0f1d6156912a176258c7bb36273faf5",
+      "bytes": 1421,
+      "redacted": false
+    },
+    {
+      "path": "previous-work/seomi-gemini-20261024-1553/issue130-qualified-progress.md",
+      "sha256": "0d6e6d16bf4da517f769e1f071380c7888a20323eb819e2cbc18f7075898126a",
+      "bytes": 1212,
+      "redacted": false
+    },
+    {
+      "path": "previous-work/seomi-gemini-20261024-1553/issue138-collector-audit-v2.md",
+      "sha256": "62d2283f6b4e14286612480311059dd6975fe3b2b397b8d035119391bea3d8bd",
+      "bytes": 1204,
+      "redacted": false
+    },
+    {
+      "path": "previous-work/seomi-gemini-20261024-1553/issue138-projection-runtime-v3.md",
+      "sha256": "319702c6ae0e05ab6586bcf78426e975fbc8cbfa9deb50f47fc0811849ded38c",
+      "bytes": 1337,
+      "redacted": false
+    },
+    {
+      "path": "previous-work/seomi-gemini-20261024-1553/issue144-control-cohort-finding.md",
+      "sha256": "9730574c85487225442cecc53946ab83b62fb5780f730976f00863049807626d",
+      "bytes": 1286,
+      "redacted": false
+    },
+    {
+      "path": "previous-work/seomi-gemini-20261024-1553/issue144-current-ui-acceptance.md",
+      "sha256": "cc09146ba91fb02af02fceca4d4c51f0574b61d49884036f8ca9ea72a0fdc4d4",
+      "bytes": 1148,
+      "redacted": false
+    },
+    {
+      "path": "previous-work/seomi-gemini-20261024-1553/issue144-isolated-audit-v2.md",
+      "sha256": "376f585cf970576fb49b512d1b7b6369cb5dbbab5431ea2c276ffe3e6200ba22",
+      "bytes": 1548,
+      "redacted": false
+    },
+    {
+      "path": "previous-work/seomi-gemini-20261024-1553/issue206-completion.md",
+      "sha256": "4d02cdb9ce8589b6178db9096783e93118a75e1e357665bb6f1dd1d23426a875",
+      "bytes": 1259,
+      "redacted": false
+    },
+    {
+      "path": "previous-work/seomi-gemini-20261024-1553/issue207-main-codeql-diagnosis.md",
+      "sha256": "f7462f1796cb25673016a3164f61b11941f17a93651e516e4a35de6a9a61dcbb",
+      "bytes": 1479,
+      "redacted": false
+    },
+    {
+      "path": "previous-work/seomi-gemini-20261024-1553/issue210-completion.md",
+      "sha256": "b2adfa6aa225625642cfc02b32b9af9a8013cb0709879d0816fbb83e0b732ec9",
+      "bytes": 1097,
+      "redacted": false
+    },
+    {
+      "path": "previous-work/seomi-gemini-20261024-1553/issue211-completion.md",
+      "sha256": "6a0ca1a92933ea4721ca88438c75c9637c5022667180209226a842a85e33a117",
+      "bytes": 1120,
+      "redacted": false
+    },
+    {
+      "path": "previous-work/seomi-gemini-20261024-1553/issue212-4549007-progress.md",
+      "sha256": "f909e10681f3472fff83c2a17b64ebfc69db28a4877997b95ea330042e1ff834",
+      "bytes": 1130,
+      "redacted": false
+    },
+    {
+      "path": "previous-work/seomi-gemini-20261024-1553/issue212-completion.md",
+      "sha256": "a3df989bfa1bc858ec7191eb0be060ff58b8a34cfec2b51c9d430b355c2b5f8d",
+      "bytes": 1125,
+      "redacted": false
+    },
+    {
+      "path": "previous-work/seomi-gemini-20261024-1553/issue90-ci-ec44974-local-llvm-v2.md",
+      "sha256": "3ab07da48729bf66cd0e1fb3219ff7975f10270bacbb2237bab1abd8ac6c4353",
+      "bytes": 1661,
+      "redacted": false
+    },
+    {
+      "path": "previous-work/seomi-gemini-20261024-1553/issue90-ec44974-intel-cloudflare.md",
+      "sha256": "5726d4d550815b5034e37b24adf74d3c848646251a669602de1c91efedd2b4fd",
+      "bytes": 1682,
+      "redacted": false
+    },
+    {
+      "path": "previous-work/seomi-gemini-20261024-1553/llm-economy.audit.md",
+      "sha256": "d9439eed1a578514cc4a7e730b6b81ca40f20c3dfe22a7972456168487e5855a",
+      "bytes": 5705,
+      "redacted": false
+    },
+    {
+      "path": "previous-work/seomi-gemini-20261024-1553/llm-economy.v1.patch",
+      "sha256": "636df222b3784050964323bb4783baafcb49cef5c0befe3bc601d907063e8069",
+      "bytes": 71956,
+      "redacted": false
+    },
+    {
+      "path": "previous-work/seomi-gemini-20261024-1553/llm-economy.v2.audit.md",
+      "sha256": "0b4da80ddd0247b9fb93c330a5bab55bc60588f4500eb6f90a44a6039e888cba",
+      "bytes": 5657,
+      "redacted": false
+    },
+    {
+      "path": "previous-work/seomi-gemini-20261024-1553/llm-economy.v2.patch",
+      "sha256": "021e759d3b51bc9813172e9a83814288d24eaf4f4818fe6ae3a62b8d811eaf43",
+      "bytes": 95891,
+      "redacted": false
+    },
+    {
+      "path": "previous-work/seomi-gemini-20261024-1553/locked-validation.py",
+      "sha256": "dec4669e4cc20db3e1b718fe9c4e73eb1e7239c01dd5a3b94cdb936b2b757849",
+      "bytes": 361,
+      "redacted": false
+    },
+    {
+      "path": "previous-work/seomi-gemini-20261024-1553/manager-handoff-current.md",
+      "sha256": "f8ece780f04a76f33e0dcd259e78da5b63c96f0f4886b379db0fc4be15aa378d",
+      "bytes": 36593,
+      "redacted": true
+    },
+    {
+      "path": "previous-work/seomi-gemini-20261024-1553/manager-issue137-baseline-comment.md",
+      "sha256": "4b14cd2f192d4efbe44f6a893d6c8cd0d6aabf71de26403a5709d847859363d8",
+      "bytes": 965,
+      "redacted": false
+    },
+    {
+      "path": "previous-work/seomi-gemini-20261024-1553/manager-issue144-accepted-local.md",
+      "sha256": "f63df57928b6ffec22564abceb3124f6f0f2695ef33e2493969f62add9f892c7",
+      "bytes": 1096,
+      "redacted": false
+    },
+    {
+      "path": "previous-work/seomi-gemini-20261024-1553/manager-observe.py",
+      "sha256": "71c8d28fd0850e113f791df29becac22837c5a07826a6fe059b175aaba66fd0d",
+      "bytes": 2449,
+      "redacted": false
+    },
+    {
+      "path": "previous-work/seomi-gemini-20261024-1553/manager-provenance-v5-github-comment.md",
+      "sha256": "8d92694a5d2efa7753556359b38033f866cf1b61ebdb24c713f65dce1f93b022",
+      "bytes": 1140,
+      "redacted": false
+    },
+    {
+      "path": "previous-work/seomi-gemini-20261024-1553/manager-provenance-v5-workflow.patch",
+      "sha256": "7d31cb36960f29ea53ff6d53f7e570ff4be0362a095597259c8694e8029dcd5b",
+      "bytes": 1979,
+      "redacted": false
+    },
+    {
+      "path": "previous-work/seomi-gemini-20261024-1553/manager-sbom-evidence-v4.md",
+      "sha256": "b9ccd6ddb3483562f776c397a22f1176c3b549a58b355a71dba3b97d8b8def40",
+      "bytes": 3872,
+      "redacted": false
+    },
+    {
+      "path": "previous-work/seomi-gemini-20261024-1553/manager-updates.md",
+      "sha256": "5277d3cb6899176e662bee3e564581bc235fe4a4f1624495c0e653beecc26d67",
+      "bytes": 8934,
+      "redacted": false
+    },
+    {
+      "path": "previous-work/seomi-gemini-20261024-1553/native-framing-selected-source/src-tauri/src/commands/ai_cli/tests/executable_fixture.rs",
+      "sha256": "8fc2f067b2dadc1fffca2c04aaf5f2c48a4bf7933baf4b8006e0b01a9223fc84",
+      "bytes": 2022,
+      "redacted": false
+    },
+    {
+      "path": "previous-work/seomi-gemini-20261024-1553/native-framing-selected-source/src-tauri/src/services/browser_proxy/runtime_fixture.rs",
+      "sha256": "f2c827822ef8ea8fc00f624823a89aff72d6ef39850e0380d65ca2acc5ae40f0",
+      "bytes": 2350,
+      "redacted": false
+    },
+    {
+      "path": "previous-work/seomi-gemini-20261024-1553/native-framing-selected-source/src-tauri/src/services/browser_proxy/runtime_framing_tests.rs",
+      "sha256": "9e6caccba3d6d8ae9f2a013745cc2568a7fa8796e3cb83a7e1901087a29f903c",
+      "bytes": 4210,
+      "redacted": false
+    },
+    {
+      "path": "previous-work/seomi-gemini-20261024-1553/native-framing-selected-source/src-tauri/src/services/browser_proxy/runtime_tests.rs",
+      "sha256": "ca7bb15a880b425cf737d250b4a6ac9a84290eabb6cbf4cf416165f2aec527e8",
+      "bytes": 4635,
+      "redacted": false
+    },
+    {
+      "path": "previous-work/seomi-gemini-20261024-1553/native-renderer-auditor-frozen.patch",
+      "sha256": "651005672e4aed34906dd2b3e626d00ab4bbf5b752954b48fd9bcc1ee8af62c5",
+      "bytes": 12188,
+      "redacted": false
+    },
+    {
+      "path": "previous-work/seomi-gemini-20261024-1553/native-unaccepted-renderer-candidate/src-tauri/examples/desktop_e2e_contract_tests.rs",
+      "sha256": "1e696321eec7564218feace48f987c457da105e2eadff910f39a28c0fda5b070",
+      "bytes": 3300,
+      "redacted": false
+    },
+    {
+      "path": "previous-work/seomi-gemini-20261024-1553/native.audit.md",
+      "sha256": "d998ea9701fa1187bb21773810eaa877c2cf6f717ee57ab31bd3e642f8f98e22",
+      "bytes": 8220,
+      "redacted": false
+    },
+    {
+      "path": "previous-work/seomi-gemini-20261024-1553/native.coverage100-rescope.patch",
+      "sha256": "8e6b1ba0ef17984bf26c324618e820e546239ee2ba22e5ef6f58f45fa7a49a45",
+      "bytes": 10982,
+      "redacted": false
+    },
+    {
+      "path": "previous-work/seomi-gemini-20261024-1553/native.qualityfix.patch",
+      "sha256": "b6c8d6ff9a046b2c9cd7ba1376ebd219c4578107faff28ee9fa3d17f0bc47c9d",
+      "bytes": 11498,
+      "redacted": false
+    },
+    {
+      "path": "previous-work/seomi-gemini-20261024-1553/native.renderer-qualified.patch",
+      "sha256": "651005672e4aed34906dd2b3e626d00ab4bbf5b752954b48fd9bcc1ee8af62c5",
+      "bytes": 12188,
+      "redacted": false
+    },
+    {
+      "path": "previous-work/seomi-gemini-20261024-1553/native.rust-latest-v3.patch",
+      "sha256": "571175fd0ca3c8949f20b0178b39d6f1e3d3a3eb3d12b0214daf134c6a43af29",
+      "bytes": 83008,
+      "redacted": false
+    },
+    {
+      "path": "previous-work/seomi-gemini-20261024-1553/native.rust-latest-v4.patch",
+      "sha256": "9cc9627cf920e1f36331ec80c398bccea4a4cf821948f847723437237cdcd8e2",
+      "bytes": 87975,
+      "redacted": false
+    },
+    {
+      "path": "previous-work/seomi-gemini-20261024-1553/pr-main-codeql-proof.md",
+      "sha256": "20816202f5aa3d89a45be2352b795a018045d4356949f14394821382ffd0f9a1",
+      "bytes": 2520,
+      "redacted": false
+    },
+    {
+      "path": "previous-work/seomi-gemini-20261024-1553/pr176-4549007-current.md",
+      "sha256": "3a9544f56c37c303db40f483dc130c0ade2e89f54458ce9234897aac9d0611a1",
+      "bytes": 3445,
+      "redacted": false
+    },
+    {
+      "path": "previous-work/seomi-gemini-20261024-1553/pr176-current-0441.md",
+      "sha256": "12efe432661c3a70f7281db601804267a380fa9f97fd0424afff7d69aa5272a6",
+      "bytes": 2516,
+      "redacted": false
+    },
+    {
+      "path": "previous-work/seomi-gemini-20261024-1553/pr176-ec44974-current.md",
+      "sha256": "c70c7cffd92696766258361f11a2b0bec3f220586b42723395e1f6e87f344697",
+      "bytes": 3691,
+      "redacted": false
+    },
+    {
+      "path": "previous-work/seomi-gemini-20261024-1553/pr176-f41ad56-codeql-analysis.md",
+      "sha256": "715483a625a40d88f2ec281d05396450918f5bb5bfd248827ce1f8ac97c25c7f",
+      "bytes": 4494,
+      "redacted": false
+    },
+    {
+      "path": "previous-work/seomi-gemini-20261024-1553/pr176-manager-current-six-agents.md",
+      "sha256": "d3a1695103a5723d5f1e9f15d4fe30c5818b0070a5820acda7eac0a0d44abece",
+      "bytes": 2886,
+      "redacted": false
+    },
+    {
+      "path": "previous-work/seomi-gemini-20261024-1553/pr209-4549007-body.md",
+      "sha256": "57b099041d65581d0663be01deef05c1db28d94ba0d5cb9db3756fdf9033cef0",
+      "bytes": 3940,
+      "redacted": false
+    },
+    {
+      "path": "previous-work/seomi-gemini-20261024-1553/pr209-4549007-with-current-failure.md",
+      "sha256": "c7c295bfb2e90e861abf9d1eaedac117f5daa032a5c57c4b1b90e94a8e952f69",
+      "bytes": 4454,
+      "redacted": false
+    },
+    {
+      "path": "previous-work/seomi-gemini-20261024-1553/pr209-current-0441.md",
+      "sha256": "cdd737b13945a4ea6dba5f22246b13c1631da3635b6b12acde0cc30c4ae512e9",
+      "bytes": 3384,
+      "redacted": false
+    },
+    {
+      "path": "previous-work/seomi-gemini-20261024-1553/pr209-current-failure-body.md",
+      "sha256": "a87cc9b4fd416c724f940c946208d98022b4ddff3382dbbf4280255435fae3e6",
+      "bytes": 3227,
+      "redacted": false
+    },
+    {
+      "path": "previous-work/seomi-gemini-20261024-1553/pr209-ec44974-audited-status-v2.md",
+      "sha256": "858d15426ee974c6a2b4c11a08b556bd622d3231c2c13476d86fd5c309e57456",
+      "bytes": 4300,
+      "redacted": false
+    },
+    {
+      "path": "previous-work/seomi-gemini-20261024-1553/pr209-ec44974-body.md",
+      "sha256": "318cd4153325c6de9e8760fc965f29d39473582dfc02f5a333731ee36367e634",
+      "bytes": 5269,
+      "redacted": false
+    },
+    {
+      "path": "previous-work/seomi-gemini-20261024-1553/prepare-implementation-continuation.py",
+      "sha256": "b29f0885c1d73c073d0850efcd3910f2339ce8733ef9f5d92afcc67972a0cec9",
+      "bytes": 6176,
+      "redacted": false
+    },
+    {
+      "path": "previous-work/seomi-gemini-20261024-1553/public-release-audit/audit_public_release.py",
+      "sha256": "84e696084548a96cf1566ed70833a36f5852f58d1ff92720ed3cef384583be9c",
+      "bytes": 18582,
+      "redacted": false
+    },
+    {
+      "path": "previous-work/seomi-gemini-20261024-1553/public-release-audit/verified_files.py",
+      "sha256": "c42ed69cf55328f75820493b3eccea5c3613b94893427631063bec5461b62309",
+      "bytes": 3483,
+      "redacted": false
+    },
+    {
+      "path": "previous-work/seomi-gemini-20261024-1553/public-release-audit/verify_0441.py",
+      "sha256": "1e5720677d0c1d8bf9645023660ff7cf1df688d73b496ae6b0e5cc9f9c21be68",
+      "bytes": 3836,
+      "redacted": false
+    },
+    {
+      "path": "previous-work/seomi-gemini-20261024-1553/qualified-main-release-watch.mjs",
+      "sha256": "d3d313260ec39f339cfa2dd4110dcac9970c4652849fe709730f3218e1f143b6",
+      "bytes": 6984,
+      "redacted": false
+    },
+    {
+      "path": "previous-work/seomi-gemini-20261024-1553/release-after-ci-issue-update.md",
+      "sha256": "d8b8cb5db28e4596f58346afce0a3df7a3bc4180c59b0bd32a76e0c194a207ac",
+      "bytes": 2853,
+      "redacted": false
+    },
+    {
+      "path": "previous-work/seomi-gemini-20261024-1553/release-after-ci-pr.md",
+      "sha256": "0f57b24dbceddb85afb613b6dfc6a74f032985c347a87dc878bc794ef2fffb86",
+      "bytes": 2421,
+      "redacted": false
+    },
+    {
+      "path": "previous-work/seomi-gemini-20261024-1553/release-guard-qualified-source/scripts/release-ci-gate-assets.d.mts",
+      "sha256": "d068e4a18df7e1d7c31f3adbcf937d067faeb9d46274825a97b5f09cdf7af8a0",
+      "bytes": 1056,
+      "redacted": false
+    },
+    {
+      "path": "previous-work/seomi-gemini-20261024-1553/release-guard-qualified-source/scripts/release-ci-gate-assets.mjs",
+      "sha256": "2a2930b9c3242e9e2f7a97a5caed57a2f823f84ad4e31246c9d46b88b6efcea7",
+      "bytes": 5708,
+      "redacted": false
+    },
+    {
+      "path": "previous-work/seomi-gemini-20261024-1553/release-guard-qualified-source/scripts/release-ci-gate-inventory.d.mts",
+      "sha256": "19e42df8344ce5d2f1fa18deec817a96f12cfc4ddd20bc2d5e83004ac2da606a",
+      "bytes": 464,
+      "redacted": false
+    },
+    {
+      "path": "previous-work/seomi-gemini-20261024-1553/release-guard-qualified-source/scripts/release-ci-gate-inventory.mjs",
+      "sha256": "4e56cada06a92e122c10d3eca543b80578c0ce63c0e4ac2aa4a92265b02213fc",
+      "bytes": 2513,
+      "redacted": false
+    },
+    {
+      "path": "previous-work/seomi-gemini-20261024-1553/release-guard-qualified-source/scripts/release-ci-gate-manifest.d.mts",
+      "sha256": "152cd96500797a50f99cebdbd9b8d4bb7276872c9bd9bf9a1add0cac9ba2dc22",
+      "bytes": 884,
+      "redacted": false
+    },
+    {
+      "path": "previous-work/seomi-gemini-20261024-1553/release-guard-qualified-source/scripts/release-ci-gate-manifest.mjs",
+      "sha256": "fefa1d523e37aa956d415efa6765bc4ce574b36447d95a03751f0af6f7ddb4bd",
+      "bytes": 6300,
+      "redacted": false
+    },
+    {
+      "path": "previous-work/seomi-gemini-20261024-1553/release-guard-qualified-source/scripts/release-ci-gate-publish.d.mts",
+      "sha256": "bf53f70841eff954255ae31e3b1abe4cf162c993849f2b31ae843cc8c095cea3",
+      "bytes": 639,
+      "redacted": false
+    },
+    {
+      "path": "previous-work/seomi-gemini-20261024-1553/release-guard-qualified-source/scripts/release-ci-gate-publish.mjs",
+      "sha256": "6f80984faa7549323e4720bb268d282c11a406ed139c050a48fe211248abadd8",
+      "bytes": 7574,
+      "redacted": false
+    },
+    {
+      "path": "previous-work/seomi-gemini-20261024-1553/release-guard-qualified-source/scripts/release-ci-gate-tag.d.mts",
+      "sha256": "9a02d41a365d49d6a7b94fdc466d593f4099c7584734dcfc88ea2daf433bc96d",
+      "bytes": 1541,
+      "redacted": false
+    },
+    {
+      "path": "previous-work/seomi-gemini-20261024-1553/release-guard-qualified-source/scripts/release-ci-gate-tag.mjs",
+      "sha256": "9776436b9071f32c9613202d2456a71dadd61b3ff336ad495ae02f4428c177dc",
+      "bytes": 7368,
+      "redacted": false
+    },
+    {
+      "path": "previous-work/seomi-gemini-20261024-1553/release-guard-qualified-source/scripts/release-ci-gate.d.mts",
+      "sha256": "aaf54909bff63759c9bbdc6fba042508fe71123305cd148a937c6a4d1cf4c41e",
+      "bytes": 1085,
+      "redacted": false
+    },
+    {
+      "path": "previous-work/seomi-gemini-20261024-1553/release-guard-qualified-source/scripts/release-ci-gate.mjs",
+      "sha256": "deb36f694c58e50b069e27b9de3755371dca512e23fe6c3fe326cc5b756a8e10",
+      "bytes": 6373,
+      "redacted": false
+    },
+    {
+      "path": "previous-work/seomi-gemini-20261024-1553/release-guard-qualified-source/tests/ciActionPins.test.ts",
+      "sha256": "1587c61bff6c7d8771d3abba70e0f8ab30b014c0eb297b07efb7044d170c6d6d",
+      "bytes": 2151,
+      "redacted": false
+    },
+    {
+      "path": "previous-work/seomi-gemini-20261024-1553/release-guard-qualified-source/tests/ciQualityGates.test.ts",
+      "sha256": "41d85f62128681f697d6d3db8ee97d7b9e54edfedc842ccacda4bc52c18fd6c9",
+      "bytes": 5510,
+      "redacted": false
+    },
+    {
+      "path": "previous-work/seomi-gemini-20261024-1553/release-guard-qualified-source/tests/releaseCiGate.test.ts",
+      "sha256": "5f475bae8b056be379beed13b537b739d0d85c747abb082f68fb7ca870f969f6",
+      "bytes": 5177,
+      "redacted": false
+    },
+    {
+      "path": "previous-work/seomi-gemini-20261024-1553/release-guard-qualified-source/tests/releaseCiGateAssets.test.ts",
+      "sha256": "d8b14a1cef407cf3ff73bb41178cabdcceef219d802e263c9abc1ea6f265c002",
+      "bytes": 5203,
+      "redacted": false
+    },
+    {
+      "path": "previous-work/seomi-gemini-20261024-1553/release-guard-qualified-source/tests/releaseCiGateCli.test.ts",
+      "sha256": "f4031020b357297e03a7a2b5b9d382acd3881597d1541fdcc1065b0b6694a549",
+      "bytes": 6005,
+      "redacted": false
+    },
+    {
+      "path": "previous-work/seomi-gemini-20261024-1553/release-guard-qualified-source/tests/releaseCiGateEdge.test.ts",
+      "sha256": "c3d22f80bac57df7cc46b2935d3b49b85d992b5dc7175992f8bb905b8ab5a207",
+      "bytes": 5226,
+      "redacted": false
+    },
+    {
+      "path": "previous-work/seomi-gemini-20261024-1553/release-guard-qualified-source/tests/releaseCiGateInventory.test.ts",
+      "sha256": "f1e393381e656b1d2997ddcc1e387225ad3d30fbbb433f286fecdd9d2b396d2d",
+      "bytes": 8424,
+      "redacted": false
+    },
+    {
+      "path": "previous-work/seomi-gemini-20261024-1553/release-guard-qualified-source/tests/releaseCiGateLifecycle.test.ts",
+      "sha256": "fcb1833d44746f1ea3389044757ac657b95008810475dcf5aaa59cc8436e1e44",
+      "bytes": 6324,
+      "redacted": false
+    },
+    {
+      "path": "previous-work/seomi-gemini-20261024-1553/release-guard-qualified-source/tests/releaseCiGateManifest.test.ts",
+      "sha256": "ff42bd15ca000478a56b5c7303b01799b9cd111615bef553c01aef9a5220ec98",
+      "bytes": 5453,
+      "redacted": false
+    },
+    {
+      "path": "previous-work/seomi-gemini-20261024-1553/release-guard-qualified-source/tests/releaseCiGateTag.test.ts",
+      "sha256": "ae357045f2861872bde73b99366c775cae3fe5f0d31f656bfe30af74b9655016",
+      "bytes": 5007,
+      "redacted": false
+    },
+    {
+      "path": "previous-work/seomi-gemini-20261024-1553/release-provenance-v3-rejection.md",
+      "sha256": "6ccc95c854119e756dd6934369432b9d66f1d4e4b32208ba472b98bbd8575fab",
+      "bytes": 2217,
+      "redacted": false
+    },
+    {
+      "path": "previous-work/seomi-gemini-20261024-1553/release-provenance-v4-rejection.md",
+      "sha256": "5594b39cea80447ce82fb5b881471c76ef016dbf24dd7d8bef5f7d0002646b34",
+      "bytes": 1824,
+      "redacted": false
+    },
+    {
+      "path": "previous-work/seomi-gemini-20261024-1553/release-watch-gh-read.mjs",
+      "sha256": "4594c9ce539d2262911f675d1a4ca41e35c362789a792551c91c3e8b2fe9a302",
+      "bytes": 1506,
+      "redacted": false
+    },
+    {
+      "path": "previous-work/seomi-gemini-20261024-1553/release.audit.md",
+      "sha256": "2e52e1d5f71cf9b4bb3e0b47985c6e6fc4ab64a8f940a98bc777b7679ee86db0",
+      "bytes": 14415,
+      "redacted": false
+    },
+    {
+      "path": "previous-work/seomi-gemini-20261024-1553/release.coverage100-rescope.patch",
+      "sha256": "c0c99fcbd45e83b256e2780f16ae2ec08d9a946be6bac3a1c196f1ec563e643d",
+      "bytes": 14024,
+      "redacted": false
+    },
+    {
+      "path": "previous-work/seomi-gemini-20261024-1553/release.qualityfix.patch",
+      "sha256": "f3749eba70448b47b7604c9ec6703a3dd855fe075d126668a5b0316aa1597711",
+      "bytes": 15340,
+      "redacted": false
+    },
+    {
+      "path": "previous-work/seomi-gemini-20261024-1553/repro-native-instrumented.py",
+      "sha256": "8937e595a831f63c06d380fba8923367e5bfd3a75d1ad7cb3019257202d834a4",
+      "bytes": 2790,
+      "redacted": false
+    },
+    {
+      "path": "previous-work/seomi-gemini-20261024-1553/reproduce-storage-audit.mjs",
+      "sha256": "01ec9c1f0241c1d3e39264cd86586a43c52173b23485d223234fbfb52820c58e",
+      "bytes": 14850,
+      "redacted": false
+    },
+    {
+      "path": "previous-work/seomi-gemini-20261024-1553/resume-worker.before-max-fallback.py",
+      "sha256": "3e01dd80b9e7c656efd7942ba2f014c51c3bd982b6f9f33c81e10d49079ce3c8",
+      "bytes": 2200,
+      "redacted": false
+    },
+    {
+      "path": "previous-work/seomi-gemini-20261024-1553/resume-worker.py",
+      "sha256": "53972cbd1c66133498634468fa77d1bb757c9d27417f30abeec6f72ee43e574e",
+      "bytes": 3206,
+      "redacted": false
+    },
+    {
+      "path": "previous-work/seomi-gemini-20261024-1553/root-0441-publisher-acceptance.mjs",
+      "sha256": "9c9cc5ca55a84e60a0b81b1a91a1b995e28af1000b801eecebd281c626359cb2",
+      "bytes": 5364,
+      "redacted": false
+    },
+    {
+      "path": "previous-work/seomi-gemini-20261024-1553/root-branding-v16.py",
+      "sha256": "d3c91d5a76194996f961f724b317de413dbe74a6d2896c29df08a4d2bd86974a",
+      "bytes": 1785,
+      "redacted": false
+    },
+    {
+      "path": "previous-work/seomi-gemini-20261024-1553/run-rust-latest-review.py",
+      "sha256": "7f51c215ecdca6ad6a8a8c135d08e139114d9668cfa5c6ec0adce3188e188f25",
+      "bytes": 3720,
+      "redacted": false
+    },
+    {
+      "path": "previous-work/seomi-gemini-20261024-1553/run-rust-latest-v4-review.py",
+      "sha256": "aa7cfb3e4cd9c2f8f69c702881549969680e5605a27cdf3331845d1f8408877a",
+      "bytes": 15182,
+      "redacted": false
+    },
+    {
+      "path": "previous-work/seomi-gemini-20261024-1553/run-typescript-latest-v5-audit.py",
+      "sha256": "1dbf18d0861153597287dce92414d571cc4481b814baf4f88ebffa7b94893a76",
+      "bytes": 10970,
+      "redacted": false
+    },
+    {
+      "path": "previous-work/seomi-gemini-20261024-1553/task130-tauri-asset-audit-20261026.md",
+      "sha256": "415e9958d69fe5595b97a5d98cfab0bf3beaceab22a5bcd709493b13c6d3f169",
+      "bytes": 4786,
+      "redacted": false
+    },
+    {
+      "path": "previous-work/seomi-gemini-20261024-1553/task130-tauri-asset-binary-audit-20261026.md",
+      "sha256": "20df158fd688a1f4c47e317abda30938375d6f5802330a017751c45aa09bce14",
+      "bytes": 4239,
+      "redacted": false
+    },
+    {
+      "path": "previous-work/seomi-gemini-20261024-1553/task130-tauri-asset-full-extraction-20261026.md",
+      "sha256": "e54cd8ebc4d318f96be4f905c01e07e1306a3714fee1475eb0fc850dd38097f3",
+      "bytes": 14928,
+      "redacted": false
+    },
+    {
+      "path": "previous-work/seomi-gemini-20261024-1553/task130-ui-freshness-v2.patch",
+      "sha256": "563286ee734d5dcb8217bfed1ceecb23dc19f1d34571f10f391323b1ae034939",
+      "bytes": 44337,
+      "redacted": false
+    },
+    {
+      "path": "previous-work/seomi-gemini-20261024-1553/task130-ui-freshness-v2.report.md",
+      "sha256": "2c013c6ea79229ef175d74c64a3795e83c63de0a7898cbe1fc98d0bbb013443a",
+      "bytes": 2038,
+      "redacted": false
+    },
+    {
+      "path": "previous-work/seomi-gemini-20261024-1553/task130-ui-freshness-v3-cta.patch",
+      "sha256": "93a5fbd1cf544b7c41437dc0a5583ce362503fd4aaa35baf7fa98b656c3e246f",
+      "bytes": 4714,
+      "redacted": false
+    },
+    {
+      "path": "previous-work/seomi-gemini-20261024-1553/task130-ui-freshness-v3-mounted.patch",
+      "sha256": "42047c6447f89e35a965799f02d0f3564b526e27ed9124b88595fd7de872e345",
+      "bytes": 4494,
+      "redacted": false
+    },
+    {
+      "path": "previous-work/seomi-gemini-20261024-1553/task130-ui-freshness-v3-test.patch",
+      "sha256": "c9b88280c6a379bbb0fa514aad4d66d6316ccd996f4afa092e067cca57bbf798",
+      "bytes": 4708,
+      "redacted": false
+    },
+    {
+      "path": "previous-work/seomi-gemini-20261024-1553/task130-ui-freshness-v3.patch",
+      "sha256": "098245ed1d72ea955735bdcc9ca7462ac9ee976ded754c3138510858e999cde8",
+      "bytes": 67084,
+      "redacted": false
+    },
+    {
+      "path": "previous-work/seomi-gemini-20261024-1553/task130-ui-freshness-v3.report.md",
+      "sha256": "a7170c1172a5c2b7f2407db49f9c346bb61f2cf9a72af34a21b23eca92f3e5ca",
+      "bytes": 2399,
+      "redacted": false
+    },
+    {
+      "path": "previous-work/seomi-gemini-20261024-1553/task130-ui-freshness-v4-flow.patch",
+      "sha256": "401f63403ba5e9b310c4a61f04f77cb2c61618e559615986a109a3dba0135fb2",
+      "bytes": 7894,
+      "redacted": false
+    },
+    {
+      "path": "previous-work/seomi-gemini-20261024-1553/task130-ui-freshness-v4-mounted.patch",
+      "sha256": "42047c6447f89e35a965799f02d0f3564b526e27ed9124b88595fd7de872e345",
+      "bytes": 4494,
+      "redacted": false
+    },
+    {
+      "path": "previous-work/seomi-gemini-20261024-1553/task130-ui-freshness-v4.patch",
+      "sha256": "bf4ab0371ca707a2fcd6614e8d5bf033452a4bb50d6e066bae1325871922ee66",
+      "bytes": 73568,
+      "redacted": false
+    },
+    {
+      "path": "previous-work/seomi-gemini-20261024-1553/task130-ui-freshness-v4.report.md",
+      "sha256": "dabab30bc0474109fb75ec19d0d7878ad17f453298b926eb7c4f4c8a3ec34d5c",
+      "bytes": 2096,
+      "redacted": false
+    },
+    {
+      "path": "previous-work/seomi-gemini-20261024-1553/task130-ui-freshness-v5-flow.patch",
+      "sha256": "5da5efc1d03e525fb8975db8513baa9dbebc8ed249a1633f993fe85cabeabf6b",
+      "bytes": 11104,
+      "redacted": false
+    },
+    {
+      "path": "previous-work/seomi-gemini-20261024-1553/task130-ui-freshness-v5-mounted.patch",
+      "sha256": "42047c6447f89e35a965799f02d0f3564b526e27ed9124b88595fd7de872e345",
+      "bytes": 4494,
+      "redacted": false
+    },
+    {
+      "path": "previous-work/seomi-gemini-20261024-1553/task130-ui-freshness-v5.patch",
+      "sha256": "0c83101890208ce5578141d9092a2edf99e6cdbbe9549f258f34a0d01a8062b7",
+      "bytes": 82097,
+      "redacted": false
+    },
+    {
+      "path": "previous-work/seomi-gemini-20261024-1553/task130-ui-freshness-v5.report.md",
+      "sha256": "ab0bf2c337756a741d90cb339aae77d3e87af273e903d284282c1f8460ed0d51",
+      "bytes": 2241,
+      "redacted": false
+    },
+    {
+      "path": "previous-work/seomi-gemini-20261024-1553/task130-ui-freshness-v6-src-services-optimizationTasks-crawlEvidence.ts.patch",
+      "sha256": "62095f2e6f9fa4b053c689e374c11e3b702e104ccaca092242ba3f17cc038d13",
+      "bytes": 948,
+      "redacted": false
+    },
+    {
+      "path": "previous-work/seomi-gemini-20261024-1553/task130-ui-freshness-v6-tests-task130UiFlowV3.test.tsx.patch",
+      "sha256": "5da5efc1d03e525fb8975db8513baa9dbebc8ed249a1633f993fe85cabeabf6b",
+      "bytes": 11104,
+      "redacted": false
+    },
+    {
+      "path": "previous-work/seomi-gemini-20261024-1553/task130-ui-freshness-v6-tests-task130UiFreshnessMounted.test.tsx.patch",
+      "sha256": "f2b8eb468d285d0613e77fb76918f3f1959d4db11b478e1036712139198acdd1",
+      "bytes": 7484,
+      "redacted": false
+    },
+    {
+      "path": "previous-work/seomi-gemini-20261024-1553/task130-ui-freshness-v6.patch",
+      "sha256": "567aaa7dc3951cbbc913e9b83b69e88fae616ca495d16b0ad05e80054bdaab0a",
+      "bytes": 98475,
+      "redacted": false
+    },
+    {
+      "path": "previous-work/seomi-gemini-20261024-1553/task130-ui-freshness-v6.report.md",
+      "sha256": "04c912ef07ad77a7d905431a3e5c9734c7003ee99a3200d4d8b23d634b358522",
+      "bytes": 1893,
+      "redacted": false
+    },
+    {
+      "path": "previous-work/seomi-gemini-20261024-1553/task130-ui-freshness.patch",
+      "sha256": "fee3c8a4a71964cef25c50f687cc892d880e6ba25b3aba6fa47cb72d761936e9",
+      "bytes": 51576,
+      "redacted": false
+    },
+    {
+      "path": "previous-work/seomi-gemini-20261024-1553/task130-ui-freshness.report.md",
+      "sha256": "4b6db09c235c670f6670c60405ca373d9f46313f8920575276c14a344d71cd1e",
+      "bytes": 1379,
+      "redacted": false
+    },
+    {
+      "path": "previous-work/seomi-gemini-20261024-1553/task144-gsc-selection-v2.patch",
+      "sha256": "6dda172faea4ac82a0959fead0b0bcb46760b4ec157eafd67eb31a6b56ec379d",
+      "bytes": 37561,
+      "redacted": false
+    },
+    {
+      "path": "previous-work/seomi-gemini-20261024-1553/task144-gsc-selection-v2.report.md",
+      "sha256": "98285f9bc97073cb5639ef826ff29b2678b520cf946a3abef28167f25cf6878b",
+      "bytes": 2659,
+      "redacted": false
+    },
+    {
+      "path": "previous-work/seomi-gemini-20261024-1553/task144-gsc-selection-v3.patch",
+      "sha256": "59c1d4b48e237623be5eed9906ff12c4aa39d70a61c431504f842f66ab233543",
+      "bytes": 37410,
+      "redacted": false
+    },
+    {
+      "path": "previous-work/seomi-gemini-20261024-1553/task144-gsc-selection-v3.report.md",
+      "sha256": "0a408db97e0449a7d742f84758c4113658994bdccbef8d1f396082c4b9bfa0e1",
+      "bytes": 1668,
+      "redacted": false
+    },
+    {
+      "path": "previous-work/seomi-gemini-20261024-1553/task144-gsc-selection.patch",
+      "sha256": "b49a2d7d5bf841b821ef5a0ad6dc556465137825954dfa094b400c8556ee8aac",
+      "bytes": 13949,
+      "redacted": false
+    },
+    {
+      "path": "previous-work/seomi-gemini-20261024-1553/task144-gsc-selection.report.md",
+      "sha256": "8e1d573188a6c4e0abf12005bc42ca101cb6b7912406f53c8379e4fab06b106e",
+      "bytes": 3314,
+      "redacted": false
+    },
+    {
+      "path": "previous-work/seomi-gemini-20261024-1553/task144-independent-v3-issue-update.md",
+      "sha256": "4ccfe8f83b937608f3ddb0b64095f74fd56d97a0d5ffd6c9576e9377a925d5b2",
+      "bytes": 1966,
+      "redacted": false
+    },
+    {
+      "path": "previous-work/seomi-gemini-20261024-1553/test-loader.mjs",
+      "sha256": "ad756ac85f7dc5978a5bde827e979afd18aa3f066369432e636fb2e606dcc71a",
+      "bytes": 624,
+      "redacted": false
+    },
+    {
+      "path": "previous-work/seomi-gemini-20261024-1553/version-0441-candidate.patch",
+      "sha256": "1004ffd241ece9fc092464db979e84ab2df9e156bb97a1acd07ffc8010a0696d",
+      "bytes": 2900,
+      "redacted": false
+    },
+    {
+      "path": "previous-work/seomi-gemini-20261024-1553/vitest-cms-repro.config.ts",
+      "sha256": "841dd4eacd411bcf682f1990d2df86c96ef04bd6b5691b4cefd16d21d6d0a518",
+      "bytes": 347,
+      "redacted": false
+    }
+  ],
+  "credential_patterns_redacted": 7
+}

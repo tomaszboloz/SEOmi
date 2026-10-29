@@ -1,0 +1,129 @@
+diff --git a/tests/coverage100PersistenceFollowupTasks.test.ts b/tests/coverage100PersistenceFollowupTasks.test.ts
+index 320dfac1..ca00d9b4 100644
+--- a/tests/coverage100PersistenceFollowupTasks.test.ts
++++ b/tests/coverage100PersistenceFollowupTasks.test.ts
+@@ -30,10 +30,19 @@ beforeEach(() => {
+ it('records a null score delta when site focus is unavailable', () => {
+   localStorage.setItem(tasksKey('verify-unavailable'), JSON.stringify([{
+     id: 't', kind: 'remove-410', module: 'sfs', status: 'implemented', url: 'https://site.test/gone',
+-    baselineScore: 50, priority: 'high', createdAt: 'now',
++    baselineScore: 50, priority: 'high', createdAt: 'now', implementedAt: '2026-10-25T08:00:00.000Z',
+   }]));
+-  const run = { result: { start_url: 'https://site.test/', pages: [createCrawlPageFixture({ url: 'https://site.test/gone', http_status: 410 })] } } as never;
+-  expect(runTaskVerification('verify-unavailable', run)[0]).toMatchObject({ status: 'verified', verdict: { delta: null } });
++  const run = { startedAt: '2026-10-25T08:10:00.000Z', result: { start_url: 'https://site.test/', pages: [createCrawlPageFixture({ url: 'https://site.test/gone', http_status: 410 })] } } as never;
++  expect(runTaskVerification('verify-unavailable', run)[0]).toMatchObject({ status: 'verified', verdict: { code: 'gone-ok', delta: null } });
++});
++
++it('keeps task as implemented when temporal markers are missing or crawl preceded implementation', () => {
++  localStorage.setItem(tasksKey('verify-unfresh'), JSON.stringify([{
++    id: 't-unfresh', kind: 'remove-410', module: 'sfs', status: 'implemented', url: 'https://site.test/gone',
++    baselineScore: 50, priority: 'high', createdAt: 'now', implementedAt: '2026-10-25T08:30:00.000Z',
++  }]));
++  const runPreceded = { startedAt: '2026-10-25T08:10:00.000Z', result: { start_url: 'https://site.test/', pages: [createCrawlPageFixture({ url: 'https://site.test/gone', http_status: 410 })] } } as never;
++  expect(runTaskVerification('verify-unfresh', runPreceded)[0].status).toBe('implemented');
+ });
+ 
+ it('handles an add-link task without a target URL when a link row exists', () => {
+diff --git a/tests/crawlStartedAtContracts.test.ts b/tests/crawlStartedAtContracts.test.ts
+new file mode 100644
+index 00000000..aaf19954
+--- /dev/null
++++ b/tests/crawlStartedAtContracts.test.ts
+@@ -0,0 +1,49 @@
++import { readFileSync } from 'node:fs';
++import ts from 'typescript';
++import { describe, expect, it } from 'vitest';
++import type { CrawlRunRecord } from '@/types';
++import { deriveCrawlStartedAt } from '@/services/optimizationTasks/runVerification';
++import { createCrawlResultFixture } from './fixtures/crawl';
++
++const parse = (name: string) => ts.createSourceFile(name, readFileSync(`src/types/${name}`, 'utf8'), ts.ScriptTarget.Latest, true);
++
++describe('CrawlRunRecord.startedAt additive contract and backwards compatibility', () => {
++  it('declares startedAt as an optional string on CrawlRunRecord', () => {
++    const source = parse('crawl/history.ts');
++    const iface = source.statements.find((n): n is ts.InterfaceDeclaration => ts.isInterfaceDeclaration(n) && n.name.text === 'CrawlRunRecord');
++    if (!iface) throw new Error('Missing CrawlRunRecord contract');
++    const startedAt = iface.members.find((m) => m.name?.getText(source) === 'startedAt');
++    if (!startedAt || !ts.isPropertySignature(startedAt)) throw new Error('Missing startedAt member');
++    expect(startedAt.questionToken).toBeDefined();
++    expect(startedAt.type?.getText(source)).toBe('string');
++  });
++
++  it('accepts legacy records without startedAt and derives from completedAt and duration', () => {
++    const legacy: CrawlRunRecord = {
++      id: 'legacy-run',
++      startUrl: 'https://site.test/',
++      completedAt: '2026-10-25T10:00:10.000Z',
++      config: {} as never,
++      result: { ...createCrawlResultFixture(), duration_ms: 10_000 },
++    };
++    expect(legacy.startedAt).toBeUndefined();
++    expect(deriveCrawlStartedAt(legacy)).toBe('2026-10-25T10:00:00.000Z');
++  });
++
++  it('preserves explicit startedAt when present on modern records', () => {
++    const modern: CrawlRunRecord = {
++      id: 'modern-run',
++      startUrl: 'https://site.test/',
++      completedAt: '2026-10-25T10:00:10.000Z',
++      startedAt: '2026-10-25T09:59:55.000Z',
++      config: {} as never,
++      result: { ...createCrawlResultFixture(), duration_ms: 15_000 },
++    };
++    expect(deriveCrawlStartedAt(modern)).toBe('2026-10-25T09:59:55.000Z');
++  });
++
++  it('returns undefined when neither startedAt nor completedAt/duration are available', () => {
++    const empty = { startUrl: 'https://site.test/' } as CrawlRunRecord;
++    expect(deriveCrawlStartedAt(empty)).toBeUndefined();
++  });
++});
+diff --git a/tests/execWiringServices.test.ts b/tests/execWiringServices.test.ts
+index 1381b984..35adcc96 100644
+--- a/tests/execWiringServices.test.ts
++++ b/tests/execWiringServices.test.ts
+@@ -13,7 +13,7 @@ vi.mock('@/services/siteFocus', () => ({ buildSiteFocusReport: () => ({ score: 7
+ vi.mock('@/services/topicalAuthority', () => ({ buildAuthorityReport: () => ({ tas: 65 }) }));
+ 
+ const A = 'https://s.test/a';
+-const task = (patch: Partial<OptimizationTask> = {}): OptimizationTask => ({ id: 't1', kind: 'remove-410', module: 'sfs', status: 'implemented', url: A, baselineScore: 60, priority: 'high', createdAt: 'x', ...patch });
++const task = (patch: Partial<OptimizationTask> = {}): OptimizationTask => ({ id: 't1', kind: 'remove-410', module: 'sfs', status: 'implemented', url: A, baselineScore: 60, priority: 'high', createdAt: 'x', implementedAt: '2026-10-01T10:00:00Z', ...patch });
+ 
+ describe('bus input and rules', () => {
+   it('uses TRS < 40 non-technical pages and cannibal groups', () => {
+@@ -68,7 +68,7 @@ describe('metric history and verification', () => {
+     expect(readMetricHistory('q')).toEqual([]);
+   });
+   it('verifies after a crawl and writes deltas', () => {
+-    const run = { result: { start_url: A, pages: [page({ url: A, final_url: A, http_status: 410 })] } } as never;
++    const run = { startedAt: '2026-10-01T12:00:00Z', result: { start_url: A, pages: [page({ url: A, final_url: A, http_status: 410 })] } } as never;
+     expect(runTaskVerification('p', run)).toEqual([]);
+     writeTasks('p', [task(), task({ id: 't2', module: 'tas', baselineScore: 60 }), task({ id: 't3', module: 'eetv' as never, baselineScore: 1 })]);
+     runTaskVerification('p', run);
+diff --git a/tests/modelTypeContracts.test.ts b/tests/modelTypeContracts.test.ts
+index 60bcc027..1b7e2410 100644
+--- a/tests/modelTypeContracts.test.ts
++++ b/tests/modelTypeContracts.test.ts
+@@ -6,7 +6,7 @@ import { exportedTypeContract } from './fixtures/typeContracts';
+ it('preserves the reviewed crawler contract including optional project ownership and semantic language', () => {
+   expect(exportedTypeContract('src/types/crawl.ts')).toEqual({
+     exports: 40,
+-    sha256: 'a34fe06bebd7b37fd78a37fb08480998d80ab315326b30c251677f9937b6c91a',
++    sha256: '0a66b59fd6dd2aa2cfd7aae5cc00ceb25afc135a459aa777897736a2ca0749a0',
+   });
+ });
+ 
+diff --git a/tests/typeContracts.test.ts b/tests/typeContracts.test.ts
+index 7aefa706..fa89977b 100644
+--- a/tests/typeContracts.test.ts
++++ b/tests/typeContracts.test.ts
+@@ -15,6 +15,7 @@ const additive: Record<string, string[]> = {
+   CrawledPageSummary: ['semantic_language', 'focus_terms', 'heading_texts', 'focus_text_chars', 'content_date', 'rag_sections'],
+   CrawledLink: ['zone', 'zone_method', 'context_before', 'context_after'],
+   SiteCrawlResult: ['score_version', 'robots_txt_evaluation_status', 'robots_txt_warning', 'robots_txt_status_code', 'robots_txt_final_url', 'robots_txt_redirect_chain'],
++  CrawlRunRecord: ['startedAt'],
+ };
+ 
+ it('keeps the type barrel declaration-free and exports all domain contracts as types', () => {

@@ -1,0 +1,1765 @@
+diff --git a/src/components/Charts/semanticTopical/signals/SignalsWorkspace.tsx b/src/components/Charts/semanticTopical/signals/SignalsWorkspace.tsx
+index fe29d61a..4f9a2e7c 100644
+--- a/src/components/Charts/semanticTopical/signals/SignalsWorkspace.tsx
++++ b/src/components/Charts/semanticTopical/signals/SignalsWorkspace.tsx
+@@ -16,10 +16,12 @@ import { useGraphSnapshot } from './useGraphSnapshot';
+ import { buildParityReport } from './parityAdapter';
+ import { buildTemplateEvents } from './templateAdapter';
+ import { useDecayHistory } from './useDecayHistory';
++import { useCausalImpact } from './useCausalImpact';
+ 
+ export const SignalsWorkspace = ({ projectId = null, pages, graph }: { projectId?: string | null; pages: CrawledPageSummary[]; graph: SemanticMap }) => {
+   const { t } = useTranslation();
+   const decay = useDecayHistory(projectId);
++  const causalImpact = useCausalImpact(projectId, pages[0]?.url);
+   const { snapshot, stale, refresh } = useGraphSnapshot(graph);
+   const sprsInput = useMemo(() => buildSprsInput(snapshot), [snapshot]);
+   const sprs = useMemo(() => computeSprs(sprsInput.nodes, sprsInput.edges), [sprsInput]);
+@@ -32,7 +34,7 @@ export const SignalsWorkspace = ({ projectId = null, pages, graph }: { projectId
+     <HreflangParityPanel report={parity} />
+     <TemplateGovernorPanel events={templates} />
+     <DecayRadarPanel evaluation={decay.evaluation} snapshotCount={decay.snapshotCount} />
+-    <CausalImpactPanel result={null} />
++    <CausalImpactPanel result={causalImpact} />
+     <ExperimentsPanel projectId={projectId} pages={pages} />
+   </div>;
+ };
+diff --git a/src/components/Charts/semanticTopical/signals/useCausalImpact.ts b/src/components/Charts/semanticTopical/signals/useCausalImpact.ts
+new file mode 100644
+index 00000000..265804a5
+--- /dev/null
++++ b/src/components/Charts/semanticTopical/signals/useCausalImpact.ts
+@@ -0,0 +1,75 @@
++import { useEffect, useMemo, useReducer, useState } from 'react';
++import {
++  fetchGoogleSearchUpdateWindows,
++  fetchSerpVolatility,
++  type MarketSourceResult,
++  type UpdateWindowSourceResult,
++} from '@/services/causalMarket/source';
++import { gscSnapshotStorageKey } from '@/services/gscTracker/limits';
++import { experimentsKey, listInterventions } from '@/services/experiments/registry';
++import { readGscSnapshots } from '@/services/gscTracker/read';
++import { readStoredCausalImpact } from '@/services/causalMarket/adapter';
++import { CAUSAL_STORAGE_EVENT, installCausalStorageInterceptor } from '@/services/causalMarket/storageEvents';
++
++const emptyMarket = (): MarketSourceResult => ({ status: 'unknown', source: 'dataforseo-serp-volatility', observations: [] });
++
++interface EvidenceState {
++  projectId: string | null;
++  market: MarketSourceResult | null;
++  updateWindows: UpdateWindowSourceResult | null;
++}
++
++export const useCausalImpact = (projectId: string | null, testSiteUrl?: string) => {
++  const [revision, refresh] = useReducer((value: number) => value + 1, 0);
++  const [state, setState] = useState<EvidenceState>({ projectId: null, market: null, updateWindows: null });
++
++  useEffect(() => {
++    installCausalStorageInterceptor();
++  }, []);
++
++  useEffect(() => {
++    if (!projectId) return undefined;
++    const gscKey = gscSnapshotStorageKey(projectId);
++    const expKey = experimentsKey(projectId);
++    const matches = (key: string | null) => key === null || key === gscKey || key === expKey;
++
++    const onStorage = (event: StorageEvent) => {
++      if (event.storageArea && typeof window !== 'undefined' && event.storageArea !== window.localStorage) return;
++      if (matches(event.key)) refresh();
++    };
++    const onLocal = (event: Event) => {
++      const key = (event as CustomEvent<{ key: string | null }>).detail?.key ?? null;
++      if (matches(key)) refresh();
++    };
++
++    window.addEventListener('storage', onStorage);
++    window.addEventListener(CAUSAL_STORAGE_EVENT, onLocal);
++    return () => {
++      window.removeEventListener('storage', onStorage);
++      window.removeEventListener(CAUSAL_STORAGE_EVENT, onLocal);
++    };
++  }, [projectId]);
++
++  useEffect(() => {
++    let active = true;
++    if (!projectId || !readGscSnapshots(projectId).length || !listInterventions(projectId).length) {
++      setState({ projectId, market: null, updateWindows: null });
++      return () => { active = false; };
++    }
++    void Promise.all([fetchSerpVolatility(), fetchGoogleSearchUpdateWindows()]).then(([nextMarket, nextWindows]) => {
++      if (!active) return;
++      setState({ projectId, market: nextMarket, updateWindows: nextWindows });
++    });
++    return () => { active = false; };
++  }, [projectId, revision]);
++
++  const isCurrent = Boolean(projectId && state.projectId === projectId);
++  const activeMarket = isCurrent ? state.market : null;
++  const activeWindows = isCurrent ? state.updateWindows : null;
++  const evidence = activeMarket ?? emptyMarket();
++
++  return useMemo(
++    () => readStoredCausalImpact(projectId, evidence, activeWindows, testSiteUrl),
++    [projectId, evidence, activeWindows, testSiteUrl, revision],
++  );
++};
+diff --git a/src/components/Results/CausalImpactPanel.tsx b/src/components/Results/CausalImpactPanel.tsx
+index dc576a4d..e86f4dff 100644
+--- a/src/components/Results/CausalImpactPanel.tsx
++++ b/src/components/Results/CausalImpactPanel.tsx
+@@ -9,6 +9,11 @@ const VERDICT_KEYS: Record<ImpactVerdict, 'positive' | 'negative' | 'noEffect' |
+   'no-effect': 'noEffect',
+   inconclusive: 'inconclusive',
+ };
++const REASON_KEYS = {
++  'market-unavailable': 'marketUnavailable',
++  'control-unavailable': 'controlUnavailable',
++  'update-window': 'updateWindowReason',
++} as const;
+ 
+ const fixed = (value: number): string => value.toFixed(1);
+ 
+@@ -21,6 +26,7 @@ export const CausalImpactPanel: React.FC<{ result: ImpactResult | null }> = ({ r
+         {t('causalMarket.title')}
+         <HelpTip id="causalMarket.updateWindow" />
+       </h3>
++      <p className="text-xs text-slate-400">{t('causalMarket.disclaimer')}</p>
+       {!result ? (
+         <p>{t('causalMarket.empty')}</p>
+       ) : (
+@@ -28,6 +34,8 @@ export const CausalImpactPanel: React.FC<{ result: ImpactResult | null }> = ({ r
+           <p className="font-medium text-slate-100">{t(`causalMarket.${VERDICT_KEYS[result.verdict]}`)}</p>
+           <p>{t('causalMarket.effect', { effect: fixed(result.effect), lower: fixed(result.lower), upper: fixed(result.upper) })}</p>
+           {result.marketNormalized && <p>{t('causalMarket.normalized')}</p>}
++          {result.marketSource && <p>{t('causalMarket.evidence', { market: result.marketSource, control: result.controlSource || t('causalMarket.unknown') })}</p>}
++          {result.reason && <p role="status">{t(`causalMarket.${REASON_KEYS[result.reason]}`)}</p>}
+           {result.updateWindow && <p role="alert" className="text-amber-300">{t('causalMarket.updateWindow')}</p>}
+         </>
+       )}
+diff --git a/src/i18n/locales/ar.json b/src/i18n/locales/ar.json
+index a2a935a4..c759780d 100644
+--- a/src/i18n/locales/ar.json
++++ b/src/i18n/locales/ar.json
+@@ -7753,14 +7753,20 @@
+   },
+   "causalMarket": {
+     "title": "الأثر السببي",
+-    "empty": "السجل غير كافٍ: 7 أيام على الأقل قبل التغيير ويوم واحد بعده.",
++    "empty": "لا يمكن التقدير: يلزم توفر 7 أيام على الأقل قبل التغيير ويوم واحد بعده وسلسلة سوق خارجية حقيقية وأدلة ضبط مستقلة.",
+     "effect": "الأثر اليومي: {{effect}} (من {{lower}} إلى {{upper}})",
+     "updateWindow": "نافذة تحديث Google: النتيجة غير حاسمة.",
+     "normalized": "مُعاير بخط أساس السوق",
+     "positive": "أثر إيجابي",
+     "negative": "أثر سلبي",
+     "noEffect": "لا أثر قابل للقياس",
+-    "inconclusive": "غير حاسم"
++    "inconclusive": "غير حاسم",
++    "evidence": "الدليل: السوق {{market}}؛ الضبط {{control}}",
++    "unknown": "غير معروف",
++    "marketUnavailable": "خط الأساس الخارجي للسوق غير متاح أو غير صالح؛ لا يُستنتج نجاح أو فشل سببي.",
++    "controlUnavailable": "أدلة الضبط المستقلة غير متاحة؛ لا يُستنتج نجاح أو فشل سببي.",
++    "updateWindowReason": "يتداخل التحليل مع تحديث مؤكد لترتيب Google؛ النتيجة غير حاسمة.",
++    "disclaimer": "هذا تقدير باستخدام بيانات سوق وضبط خارجية، وليس دليلاً على السببية."
+   },
+   "snapshots": {
+     "newerData": "تتوفر بيانات زحف أحدث.",
+diff --git a/src/i18n/locales/de.json b/src/i18n/locales/de.json
+index 1e31d479..ccf6d82d 100644
+--- a/src/i18n/locales/de.json
++++ b/src/i18n/locales/de.json
+@@ -7753,14 +7753,20 @@
+   },
+   "causalMarket": {
+     "title": "Kausale Wirkung",
+-    "empty": "Zu wenig Verlauf: mindestens 7 Tage vor und 1 Tag nach der Änderung.",
++    "empty": "Nicht schätzbar: mindestens 7 Tage davor und 1 Tag danach, eine echte externe Marktserie und unabhängige Kontrolldaten sind nötig.",
+     "effect": "Tageseffekt: {{effect}} ({{lower}} bis {{upper}})",
+     "updateWindow": "Google-Update-Fenster: Ergebnis nicht aussagekräftig.",
+     "normalized": "Mit Marktbasislinie normalisiert",
+     "positive": "Positiver Effekt",
+     "negative": "Negativer Effekt",
+     "noEffect": "Kein messbarer Effekt",
+-    "inconclusive": "Nicht aussagekräftig"
++    "inconclusive": "Nicht aussagekräftig",
++    "evidence": "Nachweis: Markt {{market}}; Kontrolle {{control}}",
++    "unknown": "unbekannt",
++    "marketUnavailable": "Die externe Markt-Baseline ist nicht verfügbar oder ungültig; es wird kein kausaler Erfolg oder Misserfolg abgeleitet.",
++    "controlUnavailable": "Unabhängige Kontrollnachweise fehlen; es wird kein kausaler Erfolg oder Misserfolg abgeleitet.",
++    "updateWindowReason": "Die Analyse überschneidet sich mit einem bestätigten Google-Ranking-Update; das Ergebnis ist nicht schlüssig.",
++    "disclaimer": "Schätzung mit externen Markt- und Kontrolldaten; kein Kausalitätsnachweis."
+   },
+   "snapshots": {
+     "newerData": "Neuere Crawl-Daten sind verfügbar.",
+diff --git a/src/i18n/locales/en.json b/src/i18n/locales/en.json
+index 153bd461..98091f97 100644
+--- a/src/i18n/locales/en.json
++++ b/src/i18n/locales/en.json
+@@ -7753,14 +7753,20 @@
+   },
+   "causalMarket": {
+     "title": "Causal impact",
+-    "empty": "Not enough history: at least 7 days before the change and 1 day after.",
++    "empty": "Not estimable. Not enough history: need at least 7 days before and 1 after, a real external market series, and independent control evidence.",
+     "effect": "Daily effect: {{effect}} ({{lower}} to {{upper}})",
+     "updateWindow": "Google update window: result is inconclusive.",
+     "normalized": "Normalized by market baseline",
+     "positive": "Positive effect",
+     "negative": "Negative effect",
+     "noEffect": "No measurable effect",
+-    "inconclusive": "Inconclusive"
++    "inconclusive": "Inconclusive",
++    "evidence": "Evidence: market {{market}}; control {{control}}",
++    "unknown": "unknown",
++    "marketUnavailable": "External market baseline is unavailable or invalid; no causal success or failure is inferred.",
++    "controlUnavailable": "Independent control evidence is unavailable; no causal success or failure is inferred.",
++    "updateWindowReason": "The analysis overlaps a confirmed Google ranking update; the result is inconclusive.",
++    "disclaimer": "Estimate with external market and control evidence; it is not proof of causation."
+   },
+   "snapshots": {
+     "newerData": "Newer crawl data is available.",
+diff --git a/src/i18n/locales/es.json b/src/i18n/locales/es.json
+index f6f147bf..e2dd5878 100644
+--- a/src/i18n/locales/es.json
++++ b/src/i18n/locales/es.json
+@@ -7753,14 +7753,20 @@
+   },
+   "causalMarket": {
+     "title": "Impacto causal",
+-    "empty": "Historial insuficiente: al menos 7 días antes del cambio y 1 después.",
++    "empty": "No estimable: se necesitan al menos 7 días antes y 1 después, una serie externa real del mercado y evidencia de control independiente.",
+     "effect": "Efecto diario: {{effect}} ({{lower}} a {{upper}})",
+     "updateWindow": "Ventana de actualización de Google: resultado no concluyente.",
+     "normalized": "Normalizado con la línea base del mercado",
+     "positive": "Efecto positivo",
+     "negative": "Efecto negativo",
+     "noEffect": "Sin efecto medible",
+-    "inconclusive": "No concluyente"
++    "inconclusive": "No concluyente",
++    "evidence": "Evidencia: mercado {{market}}; control {{control}}",
++    "unknown": "desconocido",
++    "marketUnavailable": "La línea base externa del mercado no está disponible o no es válida; no se infiere éxito ni fracaso causal.",
++    "controlUnavailable": "No hay evidencia de control independiente; no se infiere éxito ni fracaso causal.",
++    "updateWindowReason": "El análisis se solapa con una actualización confirmada del ranking de Google; el resultado no es concluyente.",
++    "disclaimer": "Estimación con datos externos de mercado y control; no es una prueba de causalidad."
+   },
+   "snapshots": {
+     "newerData": "Hay datos de rastreo más recientes.",
+diff --git a/src/i18n/locales/fr.json b/src/i18n/locales/fr.json
+index 32a6e0ae..c49192ea 100644
+--- a/src/i18n/locales/fr.json
++++ b/src/i18n/locales/fr.json
+@@ -7753,14 +7753,20 @@
+   },
+   "causalMarket": {
+     "title": "Impact causal",
+-    "empty": "Historique insuffisant : au moins 7 jours avant le changement et 1 après.",
++    "empty": "Non estimable : il faut au moins 7 jours avant et 1 jour après, une vraie série externe du marché et des preuves de contrôle indépendant.",
+     "effect": "Effet quotidien : {{effect}} ({{lower}} à {{upper}})",
+     "updateWindow": "Fenêtre de mise à jour Google : résultat non concluant.",
+     "normalized": "Normalisé par la base de marché",
+     "positive": "Effet positif",
+     "negative": "Effet négatif",
+     "noEffect": "Aucun effet mesurable",
+-    "inconclusive": "Non concluant"
++    "inconclusive": "Non concluant",
++    "evidence": "Preuve : marché {{market}} ; contrôle {{control}}",
++    "unknown": "inconnu",
++    "marketUnavailable": "La base de référence externe du marché est indisponible ou invalide ; aucun succès ou échec causal n’est déduit.",
++    "controlUnavailable": "Les preuves d’un contrôle indépendant sont indisponibles ; aucun succès ou échec causal n’est déduit.",
++    "updateWindowReason": "L’analyse recouvre une mise à jour confirmée du classement Google ; le résultat est indéterminé.",
++    "disclaimer": "Estimation avec des données externes de marché et de contrôle ; ce n’est pas une preuve de causalité."
+   },
+   "snapshots": {
+     "newerData": "Des données d'exploration plus récentes sont disponibles.",
+diff --git a/src/i18n/locales/it.json b/src/i18n/locales/it.json
+index 55eb20f4..d3c6c624 100644
+--- a/src/i18n/locales/it.json
++++ b/src/i18n/locales/it.json
+@@ -7753,14 +7753,20 @@
+   },
+   "causalMarket": {
+     "title": "Impatto causale",
+-    "empty": "Storico insufficiente: almeno 7 giorni prima della modifica e 1 dopo.",
++    "empty": "Non stimabile: servono almeno 7 giorni prima e 1 dopo, una serie esterna reale del mercato e prove di controllo indipendenti.",
+     "effect": "Effetto giornaliero: {{effect}} ({{lower}} a {{upper}})",
+     "updateWindow": "Finestra di aggiornamento Google: risultato non conclusivo.",
+     "normalized": "Normalizzato con la baseline di mercato",
+     "positive": "Effetto positivo",
+     "negative": "Effetto negativo",
+     "noEffect": "Nessun effetto misurabile",
+-    "inconclusive": "Non conclusivo"
++    "inconclusive": "Non conclusivo",
++    "evidence": "Evidenza: mercato {{market}}; controllo {{control}}",
++    "unknown": "sconosciuto",
++    "marketUnavailable": "La baseline esterna del mercato non è disponibile o non è valida; non si deduce alcun successo o fallimento causale.",
++    "controlUnavailable": "Mancano prove di controllo indipendenti; non si deduce alcun successo o fallimento causale.",
++    "updateWindowReason": "L’analisi si sovrappone a un aggiornamento confermato del ranking Google; il risultato è inconcludente.",
++    "disclaimer": "Stima con dati esterni di mercato e controllo; non è una prova di causalità."
+   },
+   "snapshots": {
+     "newerData": "Sono disponibili dati di scansione più recenti.",
+diff --git a/src/i18n/locales/ja.json b/src/i18n/locales/ja.json
+index 3adf0e02..2a18d18c 100644
+--- a/src/i18n/locales/ja.json
++++ b/src/i18n/locales/ja.json
+@@ -7753,14 +7753,20 @@
+   },
+   "causalMarket": {
+     "title": "因果効果",
+-    "empty": "履歴が不足しています。変更前7日以上と変更後1日以上が必要です。",
++    "empty": "推定できません。変更前7日以上、変更後1日以上、実際の外部市場系列、独立した対照根拠が必要です。",
+     "effect": "1日あたりの効果: {{effect}}（{{lower}}〜{{upper}}）",
+     "updateWindow": "Googleアップデート期間: 結果は結論不可です。",
+     "normalized": "市場ベースラインで正規化済み",
+     "positive": "プラスの効果",
+     "negative": "マイナスの効果",
+     "noEffect": "測定可能な効果なし",
+-    "inconclusive": "結論不可"
++    "inconclusive": "結論不可",
++    "evidence": "根拠: 市場 {{market}}、対照 {{control}}",
++    "unknown": "不明",
++    "marketUnavailable": "外部市場ベースラインを利用できないか無効です。因果的な成功や失敗は推定しません。",
++    "controlUnavailable": "独立した対照の根拠を利用できません。因果的な成功や失敗は推定しません。",
++    "updateWindowReason": "分析期間が確認済みのGoogleランキング更新と重なるため、結果は判断不能です。",
++    "disclaimer": "外部市場データと対照データによる推定であり、因果関係の証明ではありません。"
+   },
+   "snapshots": {
+     "newerData": "より新しいクロールデータがあります。",
+diff --git a/src/i18n/locales/ko.json b/src/i18n/locales/ko.json
+index b5a27db7..65c4dcff 100644
+--- a/src/i18n/locales/ko.json
++++ b/src/i18n/locales/ko.json
+@@ -7753,14 +7753,20 @@
+   },
+   "causalMarket": {
+     "title": "인과 효과",
+-    "empty": "기록이 부족합니다. 변경 전 7일 이상, 변경 후 1일 이상이 필요합니다.",
++    "empty": "추정할 수 없습니다. 변경 전 7일 이상, 변경 후 1일 이상, 실제 외부 시장 시계열과 독립 대조군 근거가 필요합니다.",
+     "effect": "일일 효과: {{effect}} ({{lower}}~{{upper}})",
+     "updateWindow": "Google 업데이트 기간: 결론을 내릴 수 없습니다.",
+     "normalized": "시장 기준선으로 정규화됨",
+     "positive": "긍정적 효과",
+     "negative": "부정적 효과",
+     "noEffect": "측정 가능한 효과 없음",
+-    "inconclusive": "결론 불가"
++    "inconclusive": "결론 불가",
++    "evidence": "근거: 시장 {{market}}, 대조군 {{control}}",
++    "unknown": "알 수 없음",
++    "marketUnavailable": "외부 시장 기준선을 사용할 수 없거나 유효하지 않습니다. 인과적 성공 또는 실패를 추정하지 않습니다.",
++    "controlUnavailable": "독립 대조군 근거를 사용할 수 없습니다. 인과적 성공 또는 실패를 추정하지 않습니다.",
++    "updateWindowReason": "분석 기간이 확인된 Google 순위 업데이트와 겹치므로 결과는 결론을 내릴 수 없습니다.",
++    "disclaimer": "외부 시장 및 대조군 근거를 사용한 추정이며 인과관계의 증명이 아닙니다."
+   },
+   "snapshots": {
+     "newerData": "더 최신 크롤 데이터가 있습니다.",
+diff --git a/src/i18n/locales/pl.json b/src/i18n/locales/pl.json
+index bd6af06f..153d93e8 100644
+--- a/src/i18n/locales/pl.json
++++ b/src/i18n/locales/pl.json
+@@ -7753,14 +7753,20 @@
+   },
+   "causalMarket": {
+     "title": "Wpływ przyczynowy",
+-    "empty": "Za mało danych: potrzeba min. 7 dni przed zmianą i 1 dnia po niej.",
++    "empty": "Nie można oszacować: potrzeba min. 7 dni przed zmianą, 1 dnia po niej, rzeczywistej zewnętrznej serii rynku i niezależnych dowodów kontroli.",
+     "effect": "Efekt dzienny: {{effect}} ({{lower}} do {{upper}})",
+     "updateWindow": "Okno aktualizacji Google: wynik niejednoznaczny.",
+     "normalized": "Znormalizowano linią bazową rynku",
+     "positive": "Efekt dodatni",
+     "negative": "Efekt ujemny",
+     "noEffect": "Brak mierzalnego efektu",
+-    "inconclusive": "Niejednoznaczny"
++    "inconclusive": "Niejednoznaczny",
++    "evidence": "Dowody: rynek {{market}}; kontrola {{control}}",
++    "unknown": "nieznane",
++    "marketUnavailable": "Zewnętrzna linia bazowa rynku jest niedostępna lub nieprawidłowa; nie wnioskujemy o sukcesie ani porażce przyczynowej.",
++    "controlUnavailable": "Brakuje niezależnych dowodów kontroli; nie wnioskujemy o sukcesie ani porażce przyczynowej.",
++    "updateWindowReason": "Analiza nakłada się na potwierdzoną aktualizację rankingu Google; wynik jest niejednoznaczny.",
++    "disclaimer": "Szacunek z użyciem zewnętrznego rynku i kontroli; nie jest dowodem związku przyczynowego."
+   },
+   "snapshots": {
+     "newerData": "Dostępne są nowsze dane z crawla.",
+diff --git a/src/i18n/locales/pt.json b/src/i18n/locales/pt.json
+index a3d271a0..e61a0a25 100644
+--- a/src/i18n/locales/pt.json
++++ b/src/i18n/locales/pt.json
+@@ -7753,14 +7753,20 @@
+   },
+   "causalMarket": {
+     "title": "Impacto causal",
+-    "empty": "Histórico insuficiente: pelo menos 7 dias antes da mudança e 1 depois.",
++    "empty": "Não estimável: são necessários pelo menos 7 dias antes e 1 depois, uma série externa real do mercado e evidência de controle independente.",
+     "effect": "Efeito diário: {{effect}} ({{lower}} a {{upper}})",
+     "updateWindow": "Janela de atualização do Google: resultado inconclusivo.",
+     "normalized": "Normalizado pela linha de base do mercado",
+     "positive": "Efeito positivo",
+     "negative": "Efeito negativo",
+     "noEffect": "Sem efeito mensurável",
+-    "inconclusive": "Inconclusivo"
++    "inconclusive": "Inconclusivo",
++    "evidence": "Evidência: mercado {{market}}; controle {{control}}",
++    "unknown": "desconhecido",
++    "marketUnavailable": "A linha de base externa do mercado está indisponível ou inválida; nenhum sucesso ou falha causal é inferido.",
++    "controlUnavailable": "Não há evidência de controle independente; nenhum sucesso ou falha causal é inferido.",
++    "updateWindowReason": "A análise coincide com uma atualização confirmada do ranking do Google; o resultado é inconclusivo.",
++    "disclaimer": "Estimativa com dados externos de mercado e controle; não é prova de causalidade."
+   },
+   "snapshots": {
+     "newerData": "Há dados de rastreamento mais recentes.",
+diff --git a/src/i18n/locales/ru.json b/src/i18n/locales/ru.json
+index f70bcce7..3ff04336 100644
+--- a/src/i18n/locales/ru.json
++++ b/src/i18n/locales/ru.json
+@@ -7753,14 +7753,20 @@
+   },
+   "causalMarket": {
+     "title": "Причинный эффект",
+-    "empty": "Недостаточно данных: нужно минимум 7 дней до изменения и 1 день после.",
++    "empty": "Оценка невозможна: нужны не менее 7 дней до и 1 дня после, реальный внешний рыночный ряд и независимые контрольные данные.",
+     "effect": "Эффект в день: {{effect}} (от {{lower}} до {{upper}})",
+     "updateWindow": "Окно обновления Google: результат неубедителен.",
+     "normalized": "Нормализовано по базовой линии рынка",
+     "positive": "Положительный эффект",
+     "negative": "Отрицательный эффект",
+     "noEffect": "Измеримого эффекта нет",
+-    "inconclusive": "Неубедительно"
++    "inconclusive": "Неубедительно",
++    "evidence": "Данные: рынок {{market}}; контроль {{control}}",
++    "unknown": "неизвестно",
++    "marketUnavailable": "Внешняя рыночная база недоступна или недействительна; причинный успех или неудача не выводятся.",
++    "controlUnavailable": "Нет независимых контрольных данных; причинный успех или неудача не выводятся.",
++    "updateWindowReason": "Анализ пересекается с подтверждённым обновлением рейтинга Google; результат неокончательный.",
++    "disclaimer": "Оценка с внешними рыночными и контрольными данными; это не доказательство причинности."
+   },
+   "snapshots": {
+     "newerData": "Доступны более новые данные обхода.",
+diff --git a/src/i18n/locales/zh.json b/src/i18n/locales/zh.json
+index bf5ad3bc..dfa30319 100644
+--- a/src/i18n/locales/zh.json
++++ b/src/i18n/locales/zh.json
+@@ -7753,14 +7753,20 @@
+   },
+   "causalMarket": {
+     "title": "因果影响",
+-    "empty": "历史数据不足：改动前至少 7 天，改动后至少 1 天。",
++    "empty": "无法估计：需要变更前至少 7 天和变更后 1 天、真实的外部市场序列以及独立对照证据。",
+     "effect": "每日效果：{{effect}}（{{lower}} 至 {{upper}}）",
+     "updateWindow": "Google 更新窗口：结果无定论。",
+     "normalized": "已按市场基线归一化",
+     "positive": "正向效果",
+     "negative": "负向效果",
+     "noEffect": "无可测量的效果",
+-    "inconclusive": "无定论"
++    "inconclusive": "无定论",
++    "evidence": "证据：市场 {{market}}；对照 {{control}}",
++    "unknown": "未知",
++    "marketUnavailable": "外部市场基线不可用或无效；不会推断因果成功或失败。",
++    "controlUnavailable": "缺少独立对照证据；不会推断因果成功或失败。",
++    "updateWindowReason": "分析与已确认的 Google 排名更新重叠；结果无法确定。",
++    "disclaimer": "这是基于外部市场和对照证据的估计，不是因果关系证明。"
+   },
+   "snapshots": {
+     "newerData": "有更新的抓取数据。",
+diff --git a/src/services/causalMarket/adapter.ts b/src/services/causalMarket/adapter.ts
+new file mode 100644
+index 00000000..40ca3f59
+--- /dev/null
++++ b/src/services/causalMarket/adapter.ts
+@@ -0,0 +1,146 @@
++import { readGscSnapshots } from '@/services/gscTracker/read';
++import { filtersEqual, normalizedFilters } from '@/services/gscTracker/filters';
++import type { GscPerformanceSnapshot } from '@/services/gscTracker/types';
++import type { GscPerformanceFilters } from '@/types';
++import { listInterventions, type Intervention } from '@/services/experiments/registry';
++import { estimateImpact, type ImpactResult } from './impact';
++import { alignMarketObservations, type DatedMarketObservation, type UpdateWindow } from './normalize';
++import { areSitesIndependent, propertyMatchScore } from './domain';
++import type { MarketSourceStatus, UpdateWindowSourceResult } from './source';
++
++type Daily = NonNullable<GscPerformanceSnapshot['daily']>[number];
++type Group = { site: string; filters?: GscPerformanceSnapshot['filters']; snapshots: GscPerformanceSnapshot[] };
++
++export interface CausalMarketEvidence {
++  status: 'available' | 'unavailable' | 'unknown';
++  source: string;
++  observations: DatedMarketObservation[];
++}
++
++export interface StoredCausalImpactInput {
++  snapshots: readonly GscPerformanceSnapshot[];
++  interventions: readonly Intervention[];
++  market: CausalMarketEvidence | null;
++  updateWindows?: UpdateWindow[] | UpdateWindowSourceResult | null;
++  testSiteUrl?: string;
++}
++
++const groupSnapshots = (snapshots: readonly GscPerformanceSnapshot[]): Group[] => {
++  const groups = new Map<string, Group>();
++  snapshots.forEach((snapshot) => {
++    const key = `${snapshot.site_url}|${snapshot.filters ? JSON.stringify(snapshot.filters) : ''}`;
++    const group = groups.get(key) ?? { site: snapshot.site_url, filters: snapshot.filters, snapshots: [] };
++    group.snapshots.push(snapshot);
++    groups.set(key, group);
++  });
++  return [...groups.values()];
++};
++
++const dailyOf = (group: Group): Map<string, Daily> => {
++  const rows = new Map<string, Daily>();
++  [...group.snapshots].sort((a, b) => b.captured_at.localeCompare(a.captured_at)).forEach((snapshot) => {
++    (snapshot.daily ?? []).forEach((row) => { if (!rows.has(row.date)) rows.set(row.date, row); });
++  });
++  return rows;
++};
++
++const canonicalCohort = (filters?: GscPerformanceFilters): GscPerformanceFilters => {
++  const norm = normalizedFilters(filters);
++  return { search_type: norm.search_type || 'web', ...(norm.device ? { device: norm.device } : {}), ...(norm.country ? { country: norm.country } : {}) };
++};
++const areCohortsCompatible = (left?: GscPerformanceFilters, right?: GscPerformanceFilters): boolean => filtersEqual(canonicalCohort(left), canonicalCohort(right));
++
++const compareCandidates = (
++  left: { group: Group; overlap: number; independent: boolean },
++  right: { group: Group; overlap: number; independent: boolean },
++): number => (
++  Number(right.independent) - Number(left.independent)
++  || right.overlap - left.overlap
++  || left.group.site.localeCompare(right.group.site)
++);
++
++const bestControl = (test: Group, groups: Group[], testDates: Set<string>): { group: Group; rows: Map<string, Daily>; independent: boolean } | null => {
++  const candidates = groups.flatMap((group) => {
++    if (group.site === test.site || !areCohortsCompatible(test.filters, group.filters)) return [];
++    const rows = dailyOf(group);
++    const overlap = [...rows.keys()].filter((date) => testDates.has(date)).length;
++    if (!overlap) return [];
++    return [{ group, rows, overlap, independent: areSitesIndependent(group.site, test.site) }];
++  }).sort(compareCandidates);
++  const selected = candidates[0];
++  return selected ? { group: selected.group, rows: selected.rows, independent: selected.independent } : null;
++};
++
++const testGroup = (groups: Group[], testSiteUrl?: string): { group: Group; rows: Map<string, Daily> } | null => {
++  const candidates = groups.map((group) => ({ group, rows: dailyOf(group) }))
++    .filter((candidate) => candidate.rows.size > 0);
++  if (!candidates.length) return null;
++  const target = testSiteUrl?.trim();
++  if (target) {
++    const scored = candidates
++      .map((cand) => ({ cand, score: propertyMatchScore(cand.group.site, target) }))
++      .filter((item) => item.score > 0)
++      .sort((a, b) => b.score - a.score || b.cand.rows.size - a.cand.rows.size);
++    return scored[0]?.cand ?? null;
++  }
++  if (candidates.length > 1) return null;
++  return candidates[0];
++};
++
++const resolveWindows = (input?: UpdateWindow[] | UpdateWindowSourceResult | null) => {
++  if (Array.isArray(input)) return { windows: input, status: 'available' as MarketSourceStatus };
++  if (input && 'windows' in input) return { windows: input.windows, status: input.status };
++  return { windows: [] as UpdateWindow[], status: (input === null ? 'unavailable' : 'unknown') as MarketSourceStatus };
++};
++
++export const buildCausalImpact = (input: StoredCausalImpactInput): ImpactResult | null => {
++  const intervention = input.interventions[0];
++  if (!intervention) return null;
++  const groups = groupSnapshots(input.snapshots);
++  const test = testGroup(groups, input.testSiteUrl);
++  if (!test) return null;
++  const control = bestControl(test.group, groups, new Set(test.rows.keys()));
++  const marketReady = input.market?.status === 'available';
++  if (!control && !marketReady) return null;
++
++  const dates = control
++    ? [...test.rows.keys()].filter((date) => control.rows.has(date)).sort()
++    : [...test.rows.keys()].sort();
++
++  const market = marketReady ? alignMarketObservations(dates, input.market!.observations) : null;
++  const testSeries = dates.map((date) => test.rows.get(date)!.clicks);
++  const preDates = dates.filter((date) => date < intervention.date);
++  const preMean = preDates.reduce((sum, d) => sum + test.rows.get(d)!.clicks, 0) / Math.max(1, preDates.length);
++  const controlSeries = control ? dates.map((date) => control.rows.get(date)!.clicks) : dates.map(() => preMean);
++
++  const { windows, status: updateFeedStatus } = resolveWindows(input.updateWindows);
++
++  return estimateImpact({
++    dates,
++    test: testSeries,
++    control: controlSeries,
++    market,
++    marketSource: market ? input.market?.source : null,
++    controlSource: control?.independent ? `Google Search Console property ${control.group.site}` : null,
++    controlIndependent: control?.independent ?? false,
++    interventionDate: intervention.date,
++    updateWindows: windows,
++    updateFeedStatus,
++  });
++};
++
++export const readStoredCausalImpact = (
++  projectId: string | null,
++  market: CausalMarketEvidence | null,
++  updateWindows?: UpdateWindow[] | UpdateWindowSourceResult | null,
++  testSiteUrl?: string,
++): ImpactResult | null => {
++  if (!projectId?.trim()) return null;
++  return buildCausalImpact({
++    snapshots: readGscSnapshots(projectId),
++    interventions: listInterventions(projectId),
++    market,
++    updateWindows,
++    testSiteUrl,
++  });
++};
+diff --git a/src/services/causalMarket/domain.ts b/src/services/causalMarket/domain.ts
+new file mode 100644
+index 00000000..7886f6e5
+--- /dev/null
++++ b/src/services/causalMarket/domain.ts
+@@ -0,0 +1,76 @@
++import { parse } from 'tldts';
++
++const DOMAIN_PREFIX = 'sc-domain:';
++
++export const normalizeSiteDomain = (siteUrl: string | null | undefined): string => {
++  if (!siteUrl?.trim()) return '';
++  const trimmed = siteUrl.trim().toLowerCase();
++  const raw = trimmed.startsWith(DOMAIN_PREFIX) ? trimmed.slice(DOMAIN_PREFIX.length) : trimmed;
++  try {
++    const candidate = /^[a-z][a-z0-9+.-]*:\/\//i.test(raw) ? raw : `https://${raw}`;
++    const parsedUrl = new URL(candidate);
++    const host = parsedUrl.hostname.replace(/\.$/, '');
++    const info = parse(host, { allowPrivateDomains: true });
++    return (info.domain || host).replace(/^www\./, '');
++  } catch {
++    const info = parse(raw, { allowPrivateDomains: true });
++    return (info.domain || info.hostname || '').replace(/^www\./, '');
++  }
++};
++
++export const areSitesIndependent = (siteA: string | null | undefined, siteB: string | null | undefined): boolean => {
++  const domainA = normalizeSiteDomain(siteA);
++  const domainB = normalizeSiteDomain(siteB);
++  return Boolean(domainA && domainB && domainA !== domainB);
++};
++
++const parseHttpUrl = (value: string): URL | null => {
++  try {
++    const url = new URL(value);
++    const proto = url.protocol.toLowerCase();
++    if (proto !== 'http:' && proto !== 'https:') return null;
++    if (url.username || url.password) return null;
++    return url;
++  } catch {
++    return null;
++  }
++};
++
++const cleanHost = (url: URL): string => url.hostname.toLowerCase().replace(/\.$/, '');
++
++export const propertyMatchScore = (propertySite: string, target: string): number => {
++  const pTrim = propertySite.trim();
++  const tTrim = target.trim();
++  if (!pTrim || !tTrim) return 0;
++
++  const pIsDomain = pTrim.toLowerCase().startsWith(DOMAIN_PREFIX);
++  const tIsDomain = tTrim.toLowerCase().startsWith(DOMAIN_PREFIX);
++
++  if (pIsDomain && tIsDomain) {
++    const pDom = pTrim.slice(DOMAIN_PREFIX.length).toLowerCase().replace(/\.$/, '');
++    const tDom = tTrim.slice(DOMAIN_PREFIX.length).toLowerCase().replace(/\.$/, '');
++    return pDom === tDom ? 1000 : 0;
++  }
++  if (tIsDomain) {
++    return 0;
++  }
++  if (pIsDomain) {
++    const pDom = pTrim.slice(DOMAIN_PREFIX.length).toLowerCase().replace(/\.$/, '');
++    const tUrl = parseHttpUrl(tTrim);
++    if (!tUrl) return 0;
++    const tHost = cleanHost(tUrl);
++    return (tHost === pDom || tHost.endsWith(`.${pDom}`)) ? 500 + pDom.length : 0;
++  }
++
++  const pUrl = parseHttpUrl(pTrim);
++  const tUrl = parseHttpUrl(tTrim);
++  if (!pUrl || !tUrl) return 0;
++  if (pUrl.protocol.toLowerCase() !== tUrl.protocol.toLowerCase() || pUrl.port !== tUrl.port) return 0;
++  if (cleanHost(pUrl) !== cleanHost(tUrl)) return 0;
++
++  const pPath = pUrl.pathname.endsWith('/') ? pUrl.pathname : `${pUrl.pathname}/`;
++  const tPath = tUrl.pathname.endsWith('/') ? tUrl.pathname : `${tUrl.pathname}/`;
++  if (pPath === tPath && pUrl.search === tUrl.search) return 1000;
++  if (!pUrl.search && tPath.startsWith(pPath)) return 600 + pPath.length;
++  return 0;
++};
+diff --git a/src/services/causalMarket/impact.ts b/src/services/causalMarket/impact.ts
+index 6fb972a0..55aad5bf 100644
+--- a/src/services/causalMarket/impact.ts
++++ b/src/services/causalMarket/impact.ts
+@@ -7,72 +7,112 @@ export interface ImpactInput {
+   control: number[];
+   /** Independent market level per date (e.g. SERP volatility for the niche, or independent control domains). Null when unavailable. */
+   market: number[] | null;
++  /** Provenance is required before a positive or negative causal verdict is exposed. */
++  marketSource?: string | null;
++  /** The control must be independently observed, with a named source. */
++  controlSource?: string | null;
++  controlIndependent?: boolean;
+   /** First date affected by the change. */
+   interventionDate: string;
+-  updateWindows: UpdateWindow[];
++  updateWindows?: UpdateWindow[] | null;
++  updateFeedStatus?: 'available' | 'unavailable' | 'unknown';
+ }
+ 
+ export type ImpactVerdict = 'positive' | 'negative' | 'no-effect' | 'inconclusive';
++export type ImpactReason = 'market-unavailable' | 'control-unavailable' | 'update-window';
+ 
+ export interface ImpactResult {
+   /** Mean daily difference between actual and expected test value after the change. */
+   effect: number;
+   lower: number;
+   upper: number;
+-  relativeEffect: number;
++  relativeEffect: number | null;
+   marketNormalized: boolean;
+-  /** Post-period overlaps a Google update window. */
++  /** Post-period overlaps a Google update window, or update feed is unavailable/unknown. */
+   updateWindow: boolean;
++  updateFeedStatus?: 'available' | 'unavailable' | 'unknown';
+   affectedDates: string[];
+   verdict: ImpactVerdict;
++  reason?: ImpactReason | null;
++  marketSource?: string | null;
++  controlSource?: string | null;
+ }
+ 
+ const MIN_PRE = 7;
+ const Z95 = 1.96;
+ const mean = (values: number[]): number => values.reduce((sum, value) => sum + value, 0) / values.length;
++const isVolatilitySource = (source?: string | null): boolean => Boolean(source && /volatilit/i.test(source));
+ 
+-/** Least squares test ~ a + b * control on the pre-period. */
++/** Least squares test ~ a + b * control on the pre-period; proportional fallback when control has no variance. */
+ const fit = (control: number[], test: number[]) => {
+   const cx = mean(control);
+   const cy = mean(test);
+   const spread = control.reduce((sum, x) => sum + (x - cx) ** 2, 0);
+-  const slope = spread === 0 ? 0 : control.reduce((sum, x, i) => sum + (x - cx) * (test[i] - cy), 0) / spread;
+-  const intercept = cy - slope * cx;
++  const flat = spread === 0;
++  const slope = flat ? (cx === 0 ? 0 : cy / cx) : control.reduce((sum, x, i) => sum + (x - cx) * (test[i] - cy), 0) / spread;
++  const intercept = flat ? (cx === 0 ? cy : 0) : cy - slope * cx;
+   const residuals = control.map((x, i) => test[i] - (intercept + slope * x));
+   const sd = Math.sqrt(residuals.reduce((sum, r) => sum + r * r, 0) / Math.max(1, control.length - 2));
+-  return { slope, intercept, sd };
++  return { slope, intercept, sd, flat };
+ };
+ 
+ /**
+- * Counterfactual impact with market normalization. During a Google update window the verdict is always
+- * 'inconclusive' (the numbers are still returned) so a market shock is never reported as success or failure.
+- * Returns null when there is no usable history (fewer than 7 pre days, no post days, mismatched lengths).
++ * Counterfactual impact with market normalization or independent control baseline.
++ * When update-feed evidence is unknown or an update window overlaps post-period,
++ * verdict is 'inconclusive' to avoid false causal claims.
+  */
+ export const estimateImpact = (input: ImpactInput): ImpactResult | null => {
+-  const { dates, test, control, market, interventionDate, updateWindows } = input;
++  const { dates, test, control, market, interventionDate, updateWindows, updateFeedStatus, marketSource, controlSource, controlIndependent } = input;
+   const pre = dates.filter((date) => date < interventionDate).length;
+   const post = dates.length - pre;
+   if (test.length !== dates.length || control.length !== dates.length || pre < MIN_PRE || post < 1) return null;
+-  const normTest = market ? normalizeByMarket(test, market, pre) : null;
+-  const normControl = market ? normalizeByMarket(control, market, pre) : null;
+-  const usedTest = normTest && normControl ? normTest : test;
+-  const usedControl = normTest && normControl ? normControl : control;
++
++  const cx0 = mean(control.slice(0, pre));
++  const controlReady = controlIndependent === true && Boolean(controlSource?.trim()) && cx0 !== 0;
++  const volatility = isVolatilitySource(marketSource);
++  const shouldNormalize = Boolean(market && !volatility);
++  const normTest = shouldNormalize ? normalizeByMarket(test, market!, pre) : null;
++  const normControl = shouldNormalize ? normalizeByMarket(control, market!, pre) : null;
++  const marketReady = Boolean(market && marketSource?.trim() && (volatility || (normTest && normControl)));
++  const usedTest = normTest ?? test;
++  const usedControl = normControl ?? control;
++
+   const { slope, intercept, sd } = fit(usedControl.slice(0, pre), usedTest.slice(0, pre));
+   const diffs = usedControl.slice(pre).map((x, i) => usedTest[pre + i] - (intercept + slope * x));
+   const effect = mean(diffs);
+   const half = (Z95 * sd) / Math.sqrt(post);
+   const expected = mean(usedControl.slice(pre).map((x) => intercept + slope * x));
+-  const affectedDates = datesInWindows(dates.slice(pre), updateWindows);
+-  const updateWindow = affectedDates.length > 0;
++
++  const windows = Array.isArray(updateWindows) ? updateWindows : [];
++  const affectedDates = datesInWindows(dates.slice(pre), windows);
++  const resolvedFeedStatus = updateFeedStatus ?? (updateWindows === null ? 'unavailable' : Array.isArray(updateWindows) ? 'available' : 'unknown');
++  const feedUnconfirmed = resolvedFeedStatus === 'unavailable' || resolvedFeedStatus === 'unknown';
++  const updateWindow = affectedDates.length > 0 || feedUnconfirmed;
++
++  const reason: ImpactReason | null = affectedDates.length > 0 || resolvedFeedStatus === 'unavailable'
++    ? 'update-window'
++    : !controlReady
++      ? 'control-unavailable'
++      : !marketReady
++        ? 'market-unavailable'
++        : resolvedFeedStatus === 'unknown'
++          ? 'update-window'
++          : null;
++
+   const significant = effect - half > 0 || effect + half < 0;
++
+   return {
+     effect,
+     lower: effect - half,
+     upper: effect + half,
+-    relativeEffect: expected === 0 ? 0 : effect / expected,
+-    marketNormalized: Boolean(normTest && normControl),
++    relativeEffect: expected === 0 || !Number.isFinite(expected) ? null : effect / expected,
++    marketNormalized: Boolean(marketReady && !volatility),
+     updateWindow,
++    updateFeedStatus: resolvedFeedStatus,
+     affectedDates,
+-    verdict: updateWindow ? 'inconclusive' : !significant ? 'no-effect' : effect > 0 ? 'positive' : 'negative',
++    verdict: reason ? 'inconclusive' : !significant ? 'no-effect' : effect > 0 ? 'positive' : 'negative',
++    reason,
++    marketSource: marketReady ? marketSource! : null,
++    controlSource: controlReady ? controlSource! : null,
+   };
+ };
+diff --git a/src/services/causalMarket/index.ts b/src/services/causalMarket/index.ts
+index 712cbe54..e6399e28 100644
+--- a/src/services/causalMarket/index.ts
++++ b/src/services/causalMarket/index.ts
+@@ -1,2 +1,6 @@
+ export * from './normalize';
++export * from './domain';
+ export * from './impact';
++export * from './source';
++export * from './adapter';
++export * from './storageEvents';
+diff --git a/src/services/causalMarket/normalize.ts b/src/services/causalMarket/normalize.ts
+index 06d514ba..4391de1b 100644
+--- a/src/services/causalMarket/normalize.ts
++++ b/src/services/causalMarket/normalize.ts
+@@ -1,23 +1,34 @@
+ export interface UpdateWindow {
+-  /** Inclusive ISO dates (YYYY-MM-DD) of a confirmed Google update rollout. */
++  /** Inclusive ISO dates (YYYY-MM-DD) of a confirmed Google update rollout. End is null for ongoing rollouts. */
+   start: string;
+-  end: string;
++  end: string | null;
+   label?: string;
++  source?: string;
+ }
+ 
++export interface DatedMarketObservation { date: string; level: number }
++
+ const mean = (values: number[]): number => values.reduce((sum, value) => sum + value, 0) / values.length;
+ 
++/** Aligns a dated external source to the GSC observation dates without filling gaps. */
++export const alignMarketObservations = (dates: string[], observations: DatedMarketObservation[]): number[] | null => {
++  const levels = new Map(observations.map(observation => [observation.date, observation.level]));
++  const aligned = dates.map(date => levels.get(date));
++  return aligned.every((level): level is number => level !== undefined && Number.isFinite(level) && level > 0) ? aligned : null;
++};
++
+ /**
+  * Divides a series by the market level relative to its pre-period mean, so a market-wide shock
+  * (Core Update, SERP volatility) no longer moves the series. `market` is any positive level index.
+  */
+ export const normalizeByMarket = (values: number[], market: number[], preLength: number): number[] | null => {
+   const base = market.slice(0, preLength);
+-  if (values.length !== market.length || base.length === 0 || market.some((level) => !(level > 0))) return null;
++  if (values.length !== market.length || !Number.isInteger(preLength) || preLength < 1 || base.length === 0
++    || values.some(value => !Number.isFinite(value)) || market.some((level) => !(level > 0) || !Number.isFinite(level))) return null;
+   const reference = mean(base);
+   return values.map((value, index) => value / (market[index] / reference));
+ };
+ 
+ /** Dates inside any update window; ISO strings compare correctly as text. */
+ export const datesInWindows = (dates: string[], windows: UpdateWindow[]): string[] =>
+-  dates.filter((date) => windows.some((window) => date >= window.start && date <= window.end));
++  dates.filter((date) => windows.some((window) => date >= window.start && (window.end === null || date <= window.end)));
+diff --git a/src/services/causalMarket/source.ts b/src/services/causalMarket/source.ts
+new file mode 100644
+index 00000000..da4add17
+--- /dev/null
++++ b/src/services/causalMarket/source.ts
+@@ -0,0 +1,101 @@
++import type { UpdateWindow } from './normalize';
++
++export const DATAFORSEO_SERP_VOLATILITY_URL = 'https://dataforseo.com/wp-admin/admin-ajax.php';
++export const GOOGLE_SEARCH_STATUS_URL = 'https://status.search.google.com/incidents.json';
++
++export type MarketSourceStatus = 'available' | 'unavailable' | 'unknown';
++export interface MarketObservation { date: string; level: number }
++export interface MarketSourceResult {
++  status: MarketSourceStatus;
++  source: string;
++  observations: MarketObservation[];
++  reason?: 'network' | 'http' | 'invalid-response' | 'empty';
++}
++export interface UpdateWindowSourceResult {
++  status: MarketSourceStatus;
++  source: string;
++  windows: UpdateWindow[];
++  reason?: 'network' | 'http' | 'invalid-response' | 'empty';
++}
++
++export type Fetcher = (input: RequestInfo | URL, init?: RequestInit) => Promise<Response>;
++type RecordValue = Record<string, unknown>;
++
++const record = (value: unknown): RecordValue | null => value && typeof value === 'object' && !Array.isArray(value)
++  ? value as RecordValue : null;
++
++const isValidIsoDate = (value: string): boolean => {
++  const match = /^(\d{4})-(\d{2})-(\d{2})(?:T|$)/.exec(value);
++  if (!match) return false;
++  const y = Number(match[1]), m = Number(match[2]), d = Number(match[3]);
++  if (m < 1 || m > 12 || d < 1 || d > 31) return false;
++  const date = new Date(Date.UTC(y, m - 1, d));
++  return date.getUTCFullYear() === y && date.getUTCMonth() === m - 1 && date.getUTCDate() === d;
++};
++
++const dateOf = (value: unknown): string | null => (
++  typeof value === 'string' && isValidIsoDate(value) ? value.slice(0, 10) : null
++);
++const finiteLevel = (value: unknown): number | null => typeof value === 'number' && Number.isFinite(value) && value > 0 ? value : null;
++export const liveFetcher = (): Fetcher | null => typeof globalThis.fetch === 'function' ? globalThis.fetch.bind(globalThis) : null;
++
++export const parseSerpVolatility = (payload: unknown, category: number | null = null): MarketObservation[] => {
++  if (!Array.isArray(payload)) return [];
++  return payload.flatMap((item): MarketObservation[] => {
++    const row = record(item);
++    const metric = category === null ? record(row?.main_metric) : Array.isArray(row?.other_metrics)
++      ? row.other_metrics.map(record).find(value => value?.category === category) : null;
++    const date = dateOf(row?.date);
++    const level = finiteLevel(metric?.volatility);
++    return date && level !== null ? [{ date, level }] : [];
++  }).sort((left, right) => left.date.localeCompare(right.date));
++};
++
++export const fetchSerpVolatility = async (options: {
++  locationCode?: number; device?: 'desktop' | 'mobile'; searchEngine?: 'google' | 'bing'; category?: number | null;
++  fetcher?: Fetcher;
++} = {}): Promise<MarketSourceResult> => {
++  const fetcher = options.fetcher ?? liveFetcher();
++  if (!fetcher) return { status: 'unavailable', source: 'dataforseo-serp-volatility', observations: [], reason: 'network' };
++  const body = new URLSearchParams({ action: 'dfs_serp_sensor', location: String(options.locationCode ?? 2840), device_type: options.device ?? 'desktop', search_engine: options.searchEngine ?? 'google' });
++  try {
++    const response = await fetcher(DATAFORSEO_SERP_VOLATILITY_URL, { method: 'POST', headers: { 'Content-Type': 'application/x-www-form-urlencoded' }, body });
++    if (!response.ok) return { status: 'unavailable', source: 'dataforseo-serp-volatility', observations: [], reason: 'http' };
++    const observations = parseSerpVolatility(await response.json(), options.category ?? null);
++    return observations.length ? { status: 'available', source: 'dataforseo-serp-volatility', observations }
++      : { status: 'unknown', source: 'dataforseo-serp-volatility', observations: [], reason: 'empty' };
++  } catch {
++    return { status: 'unavailable', source: 'dataforseo-serp-volatility', observations: [], reason: 'network' };
++  }
++};
++
++export const parseGoogleSearchStatus = (payload: unknown): UpdateWindow[] => {
++  if (!Array.isArray(payload)) return [];
++  return payload.flatMap((item): UpdateWindow[] => {
++    const row = record(item);
++    const products = Array.isArray(row?.affected_products) ? row.affected_products.map(record) : [];
++    const ranking = row?.service_name === 'Ranking' || products.some(product => product?.title === 'Ranking');
++    const start = dateOf(row?.begin);
++    const endRaw = row?.end;
++    if (!ranking || !start) return [];
++    if (endRaw !== null && endRaw !== undefined && typeof endRaw !== 'string') return [];
++    const end = endRaw === null || endRaw === undefined ? null : dateOf(endRaw);
++    if (endRaw !== null && endRaw !== undefined && !end) return [];
++    if (end !== null && end < start) return [];
++    const label = typeof row?.external_desc === 'string' ? row.external_desc.trim() : '';
++    return [{ start, end, ...(label ? { label } : {}), source: GOOGLE_SEARCH_STATUS_URL }];
++  });
++};
++
++export const fetchGoogleSearchUpdateWindows = async (fetcher = liveFetcher()): Promise<UpdateWindowSourceResult> => {
++  if (!fetcher) return { status: 'unavailable', source: 'google-search-status', windows: [], reason: 'network' };
++  try {
++    const response = await fetcher(GOOGLE_SEARCH_STATUS_URL);
++    if (!response.ok) return { status: 'unavailable', source: 'google-search-status', windows: [], reason: 'http' };
++    const windows = parseGoogleSearchStatus(await response.json());
++    return windows.length ? { status: 'available', source: 'google-search-status', windows }
++      : { status: 'unknown', source: 'google-search-status', windows: [], reason: 'empty' };
++  } catch {
++    return { status: 'unavailable', source: 'google-search-status', windows: [], reason: 'network' };
++  }
++};
+diff --git a/src/services/causalMarket/storageEvents.ts b/src/services/causalMarket/storageEvents.ts
+new file mode 100644
+index 00000000..033b7c2e
+--- /dev/null
++++ b/src/services/causalMarket/storageEvents.ts
+@@ -0,0 +1,59 @@
++export const CAUSAL_STORAGE_EVENT = 'seomi:causal-storage';
++
++export const dispatchCausalStorageEvent = (key: string | null): void => {
++  if (typeof window === 'undefined') return;
++  try {
++    window.dispatchEvent(new CustomEvent(CAUSAL_STORAGE_EVENT, { detail: { key } }));
++  } catch {
++    // Ignore event dispatch errors in restricted environments.
++  }
++};
++
++const PATCHED_KEY = '__seomiStoragePatched__';
++
++export const installCausalStorageInterceptor = (): void => {
++  if (typeof window === 'undefined' || typeof Storage === 'undefined') return;
++  try {
++    const proto = Storage.prototype;
++    if ((proto as unknown as Record<string, unknown>)[PATCHED_KEY]) return;
++
++    const isLocalStorage = (target: unknown): boolean =>
++      typeof window !== 'undefined' && target === window.localStorage;
++
++    const origSet = proto.setItem;
++    const origRemove = proto.removeItem;
++    const origClear = proto.clear;
++
++    proto.setItem = function (...args: [string, string]): void {
++      origSet.apply(this, args);
++      if (isLocalStorage(this)) {
++        dispatchCausalStorageEvent(args[0]);
++      }
++    };
++
++    proto.removeItem = function (...args: [string]): void {
++      origRemove.apply(this, args);
++      if (isLocalStorage(this)) {
++        dispatchCausalStorageEvent(args[0]);
++      }
++    };
++
++    proto.clear = function (...args: []): void {
++      origClear.apply(this, args);
++      if (isLocalStorage(this)) {
++        dispatchCausalStorageEvent(null);
++      }
++    };
++
++    Object.defineProperty(proto, PATCHED_KEY, {
++      value: true,
++      configurable: true,
++      enumerable: false,
++      writable: true,
++    });
++  } catch {
++    // Graceful fallback if Storage.prototype is frozen or read-only
++  }
++};
++
++installCausalStorageInterceptor();
+diff --git a/tests/causalImpactPanel.test.tsx b/tests/causalImpactPanel.test.tsx
+index 1baa7211..5867f9e8 100644
+--- a/tests/causalImpactPanel.test.tsx
++++ b/tests/causalImpactPanel.test.tsx
+@@ -5,13 +5,14 @@ import { CausalImpactPanel } from '@/components/Results/CausalImpactPanel';
+ import type { ImpactResult } from '@/services/causalMarket';
+ 
+ const result: ImpactResult = {
+-  effect: 4.25, lower: 1, upper: 7.5, relativeEffect: 0.1, marketNormalized: true, updateWindow: false, affectedDates: [], verdict: 'positive',
++  effect: 4.25, lower: 1, upper: 7.5, relativeEffect: 0.1, marketNormalized: true, updateWindow: false,
++  affectedDates: [], verdict: 'positive', reason: null, marketSource: 'test-source', controlSource: 'test-control',
+ };
+ 
+ describe('CausalImpactPanel', () => {
+   it('shows the empty state without a result', () => {
+     render(<CausalImpactPanel result={null} />);
+-    expect(screen.getByTestId('causal-impact-panel').textContent).toContain('Not enough history');
++    expect(screen.getByTestId('causal-impact-panel').textContent).toContain('Not estimable');
+   });
+ 
+   it('shows verdict, interval and normalization', () => {
+@@ -20,6 +21,7 @@ describe('CausalImpactPanel', () => {
+     expect(text).toContain('Positive effect');
+     expect(text).toContain('(1.0 to 7.5)');
+     expect(text).toContain('Normalized by market baseline');
++    expect(text).toContain('test-source');
+     expect(screen.queryByRole('alert')).toBeNull();
+   });
+ 
+@@ -32,4 +34,15 @@ describe('CausalImpactPanel', () => {
+     render(<CausalImpactPanel result={{ ...result, verdict: 'inconclusive', updateWindow: true }} />);
+     expect(screen.getByRole('alert').textContent).toContain('inconclusive');
+   });
++
++  it('explains missing evidence without claiming a causal result', () => {
++    render(<CausalImpactPanel result={{ ...result, verdict: 'inconclusive', marketNormalized: false, reason: 'market-unavailable', marketSource: null, controlSource: null }} />);
++    expect(screen.getByRole('status').textContent).toContain('External market');
++  });
++
++  it('marks missing independent control evidence as inconclusive', () => {
++    render(<CausalImpactPanel result={{ ...result, verdict: 'inconclusive', reason: 'control-unavailable', controlSource: null }} />);
++    expect(screen.getByRole('status').textContent).toContain('Independent control');
++    expect(screen.getByTestId('causal-impact-panel').textContent).toContain('unknown');
++  });
+ });
+diff --git a/tests/causalImpactRuntime.test.tsx b/tests/causalImpactRuntime.test.tsx
+new file mode 100644
+index 00000000..d6d99cd5
+--- /dev/null
++++ b/tests/causalImpactRuntime.test.tsx
+@@ -0,0 +1,144 @@
++import { StrictMode } from 'react';
++import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
++import { act, renderHook, waitFor } from '@testing-library/react';
++import i18n from '@/i18n';
++import { buildCausalImpact, estimateImpact, dispatchCausalStorageEvent } from '@/services/causalMarket';
++import { useCausalImpact } from '@/components/Charts/semanticTopical/signals/useCausalImpact';
++import { saveGscSnapshot } from '@/services/gscTracker/persistence';
++import { snapshotGscPerformance } from '@/services/gscTracker/snapshot';
++import { addIntervention, experimentsKey } from '@/services/experiments/registry';
++import { gscSnapshotStorageKey } from '@/services/gscTracker/limits';
++import type { GscPerformanceData } from '@/types';
++import * as marketSource from '@/services/causalMarket/source';
++
++const dates = Array.from({ length: 28 }, (_, i) => `2026-03-${String(i + 1).padStart(2, '0')}`);
++const mockObservations = dates.map((date) => ({ date, level: 100 }));
++
++const mockData = (site_url: string, clicks: (i: number) => number): GscPerformanceData => {
++  const daily = dates.map((date, i) => ({ date, clicks: clicks(i), impressions: clicks(i) * 10, ctr: 0.1, position: 2 }));
++  return { site_url, start_date: dates[0], end_date: dates.at(-1)!, total_clicks: daily.reduce((s, r) => s + r.clicks, 0), total_impressions: daily.reduce((s, r) => s + r.impressions, 0), avg_ctr: 0.1, avg_position: 2, queries: [], pages: [], daily, daily_may_be_truncated: false, queries_may_be_truncated: false, pages_may_be_truncated: false, max_rows_per_dimension: 1000 };
++};
++
++const interventionFor = (projectId: string) => ({ id: `inv-${projectId}`, projectId, url: 'site' as const, date: '2026-03-15', kind: 'content' as const, note: '', createdAt: '2026-03-01T00:00:00.000Z' });
++
++beforeEach(async () => { localStorage.clear(); sessionStorage.clear(); await i18n.changeLanguage('en'); });
++afterEach(() => { vi.restoreAllMocks(); localStorage.clear(); sessionStorage.clear(); });
++
++describe('causal impact runtime resilience', () => {
++  it('handles null project, StrictMode, and external storage events safely', () => {
++    const { result, unmount } = renderHook(({ p }) => useCausalImpact(p), { initialProps: { p: null as string | null }, wrapper: StrictMode });
++    expect(result.current).toBeNull();
++
++    saveGscSnapshot('p-no-invs', mockData('https://site.test', () => 50));
++    addIntervention('p-no-snaps', interventionFor('p-no-snaps'));
++
++    const hookNoInvs = renderHook(() => useCausalImpact('p-no-invs'));
++    expect(hookNoInvs.result.current).toBeNull();
++
++    const hookNoSnaps = renderHook(() => useCausalImpact('p-no-snaps'));
++    expect(hookNoSnaps.result.current).toBeNull();
++
++    act(() => {
++      window.dispatchEvent(new StorageEvent('storage', { key: gscSnapshotStorageKey('p-no-invs'), storageArea: localStorage }));
++      window.dispatchEvent(new StorageEvent('storage', { key: experimentsKey('p-no-invs'), storageArea: localStorage }));
++      window.dispatchEvent(new StorageEvent('storage', { key: null, storageArea: sessionStorage }));
++      window.dispatchEvent(new StorageEvent('storage', { key: 'unrelated-key' }));
++      dispatchCausalStorageEvent(experimentsKey('p-no-invs'));
++      dispatchCausalStorageEvent(null);
++      dispatchCausalStorageEvent('unrelated');
++      sessionStorage.setItem('s1', 'v1');
++      sessionStorage.clear();
++    });
++    unmount();
++    hookNoInvs.unmount();
++    hookNoSnaps.unmount();
++  });
++
++  it('does not treat sc-domain and https URL properties of same domain as independent control', () => {
++    const snapshots = [snapshotGscPerformance(mockData('sc-domain:example.com', (i) => i < 14 ? 50 : 80)), snapshotGscPerformance(mockData('https://example.com/', () => 100))];
++    const market = { status: 'available' as const, source: 'test-market', observations: mockObservations };
++    const result = buildCausalImpact({ snapshots, interventions: [interventionFor('p1')], market, testSiteUrl: 'sc-domain:example.com' });
++    expect(result?.verdict).toBe('inconclusive');
++    expect(result?.reason).toBe('control-unavailable');
++    expect(result?.controlSource).toBeNull();
++  });
++
++  it('calculates market impact even when no separate control property exists', () => {
++    const snapshots = [snapshotGscPerformance(mockData('https://solosite.test', (i) => i < 14 ? 50 : 80))];
++    const market = { status: 'available' as const, source: 'market-niche-volatility', observations: mockObservations };
++    const result = buildCausalImpact({ snapshots, interventions: [interventionFor('p1')], market, testSiteUrl: 'https://solosite.test' });
++    expect(result).not.toBeNull();
++    expect(result?.marketNormalized).toBe(false);
++    expect(result?.verdict).toBe('inconclusive');
++    expect(result?.reason).toBe('control-unavailable');
++  });
++
++  it('propagates unavailable update-feed status as update-window warning instead of silent empty', () => {
++    const snapshots = [snapshotGscPerformance(mockData('https://site.test', (i) => i < 14 ? 50 : 80)), snapshotGscPerformance(mockData('https://control.test', () => 100))];
++    const market = { status: 'available' as const, source: 'test-market', observations: mockObservations };
++    const result = buildCausalImpact({
++      snapshots, interventions: [interventionFor('p1')], market,
++      updateWindows: { status: 'unavailable', source: 'google-search-status', windows: [], reason: 'network' },
++      testSiteUrl: 'https://site.test',
++    });
++    expect(result?.updateWindow).toBe(true);
++    expect(result?.reason).toBe('update-window');
++    expect(result?.verdict).toBe('inconclusive');
++  });
++
++  it('refreshes on same-document localStorage changes and discards aborted async runs', async () => {
++    let pendingResolve: ((val: marketSource.MarketSourceResult) => void) | null = null;
++    vi.spyOn(marketSource, 'fetchSerpVolatility').mockImplementation(async () => new Promise((res) => { pendingResolve = res; }));
++    vi.spyOn(marketSource, 'fetchGoogleSearchUpdateWindows').mockResolvedValue({ status: 'available', source: 'google-search-status', windows: [] });
++
++    saveGscSnapshot('p1', mockData('https://live.test', (i) => i < 14 ? 50 : 80));
++    saveGscSnapshot('p1', mockData('https://independent.test', () => 100));
++
++    const { unmount } = renderHook(() => useCausalImpact('p1', 'https://live.test'));
++    act(() => { addIntervention('p1', interventionFor('p1')); });
++
++    unmount();
++    act(() => { pendingResolve!({ status: 'available', source: 'aborted-market', observations: mockObservations }); });
++  });
++
++  it('prevents project A evidence leak during A->B switch with deferred promises', async () => {
++    let resolveB: ((val: marketSource.MarketSourceResult) => void) | null = null;
++    vi.spyOn(marketSource, 'fetchSerpVolatility').mockImplementation(async () => {
++      if (resolveB) return new Promise((res) => { resolveB = res; });
++      return { status: 'available', source: 'market-A', observations: mockObservations };
++    });
++    vi.spyOn(marketSource, 'fetchGoogleSearchUpdateWindows').mockResolvedValue({ status: 'available', source: 'google-search-status', windows: [] });
++
++    saveGscSnapshot('pA', mockData('https://site-a.test', (i) => i < 14 ? 50 : 80));
++    saveGscSnapshot('pA', mockData('https://control-a.test', () => 100));
++    addIntervention('pA', interventionFor('pA'));
++
++    saveGscSnapshot('pB', mockData('https://site-b.test', () => 40));
++    saveGscSnapshot('pB', mockData('https://control-b.test', () => 100));
++    addIntervention('pB', interventionFor('pB'));
++
++    const { result, rerender } = renderHook(({ p, url }) => useCausalImpact(p, url), { initialProps: { p: 'pA', url: 'https://site-a.test' } });
++    await waitFor(() => expect(result.current?.marketSource).toBe('market-A'));
++
++    new Promise((res) => { resolveB = res; });
++    rerender({ p: 'pB', url: 'https://site-b.test' });
++
++    expect(result.current?.marketSource).not.toBe('market-A');
++
++    await act(async () => {
++      resolveB!({ status: 'available', source: 'market-B', observations: mockObservations });
++    });
++    await waitFor(() => expect(result.current?.marketSource).toBe('market-B'));
++  });
++
++  it('treats whitespace or empty controlSource as control-unavailable', () => {
++    const out = estimateImpact({
++      dates, test: dates.map(() => 50), control: dates.map(() => 50),
++      market: dates.map(() => 100), marketSource: 'test-market',
++      controlSource: '   ', controlIndependent: true,
++      interventionDate: '2026-03-15', updateWindows: [],
++    });
++    expect(out?.reason).toBe('control-unavailable');
++    expect(out?.verdict).toBe('inconclusive');
++  });
++});
+diff --git a/tests/causalLocales.test.ts b/tests/causalLocales.test.ts
+new file mode 100644
+index 00000000..da592ad7
+--- /dev/null
++++ b/tests/causalLocales.test.ts
+@@ -0,0 +1,26 @@
++import { expect, it } from 'vitest';
++import { readFileSync } from 'node:fs';
++
++const languages = ['ar', 'de', 'en', 'es', 'fr', 'it', 'ja', 'ko', 'pl', 'pt', 'ru', 'zh'];
++const locale = (language: string) => readFileSync(`src/i18n/locales/${language}.json`, 'utf8');
++const entries = (value: Record<string, unknown>, prefix = ''): [string, string][] =>
++  Object.entries(value).flatMap(([key, entry]) => typeof entry === 'string'
++    ? [[`${prefix}${key}`, entry]] : entries(entry as Record<string, unknown>, `${prefix}${key}.`));
++const english = Object.fromEntries(entries(JSON.parse(locale('en')).causalMarket));
++
++it.each(languages)('provides the complete causalMarket tree and canonical JSON formatting: %s', (language) => {
++  const raw = locale(language);
++  const parsed = JSON.parse(raw);
++  expect(raw).toBe(`${JSON.stringify(parsed, null, 2)}\n`);
++  const translated = Object.fromEntries(entries(parsed.causalMarket));
++  expect(Object.keys(translated)).toEqual(Object.keys(english));
++  expect(Object.keys(translated)).toHaveLength(15);
++  for (const [key, text] of Object.entries(translated)) {
++    expect(text.trim()).not.toBe('');
++    expect(text.match(/{{\w+}}/g) ?? []).toEqual(english[key].match(/{{\w+}}/g) ?? []);
++  }
++  if (language !== 'en') {
++    expect(translated.disclaimer).not.toBe(english.disclaimer);
++    expect(translated.title).toBeDefined();
++  }
++});
+diff --git a/tests/causalMarket.test.ts b/tests/causalMarket.test.ts
+index 666103df..59653b24 100644
+--- a/tests/causalMarket.test.ts
++++ b/tests/causalMarket.test.ts
+@@ -1,20 +1,24 @@
+ import { describe, expect, it } from 'vitest';
+-import { datesInWindows, estimateImpact, normalizeByMarket } from '@/services/causalMarket';
++import { alignMarketObservations, datesInWindows, estimateImpact, normalizeByMarket } from '@/services/causalMarket';
+ 
+ const days = Array.from({ length: 28 }, (_, i) => `2026-03-${String(i + 1).padStart(2, '0')}`);
+ const wiggle = (i: number) => 1 + 0.01 * Math.sin(i * 1.7);
+ const control = days.map((_, i) => 100 * wiggle(i));
+ const baseTest = days.map((_, i) => 50 * wiggle(i) * (1 + 0.004 * Math.cos(i)));
+ const interventionDate = '2026-03-15';
+-const common = { dates: days, control, interventionDate };
++const common = {
++  dates: days, control, interventionDate, market: days.map(() => 100), marketSource: 'synthetic-regression',
++  controlSource: 'independent-control-series', controlIndependent: true,
++};
+ 
+ describe('estimateImpact', () => {
+   it('detects a real lift without a market shock', () => {
+     const test = baseTest.map((v, i) => (i >= 14 ? v * 1.3 : v));
+-    const out = estimateImpact({ ...common, test, market: null, updateWindows: [] });
++    const out = estimateImpact({ ...common, test, updateWindows: [] });
+     expect(out?.verdict).toBe('positive');
+     expect(out?.relativeEffect).toBeCloseTo(0.3, 1);
+-    expect(out?.marketNormalized).toBe(false);
++    expect(out?.marketNormalized).toBe(true);
++    expect(out?.controlSource).toBe('independent-control-series');
+   });
+ 
+   it('does not report failure when a market shock hits test and control alike', () => {
+@@ -29,15 +33,30 @@ describe('estimateImpact', () => {
+     expect(out?.verdict).toBe('inconclusive');
+   });
+ 
++  it('propagates null update windows as unavailable feed status in estimateImpact', () => {
++    const out = estimateImpact({ ...common, test: baseTest, updateWindows: null });
++    expect(out?.updateFeedStatus).toBe('unavailable');
++    expect(out?.updateWindow).toBe(true);
++    expect(out?.verdict).toBe('inconclusive');
++  });
++
++  it('treats omitted update windows as unknown feed status and inconclusive verdict', () => {
++    const out = estimateImpact({ ...common, test: baseTest });
++    expect(out?.updateFeedStatus).toBe('unknown');
++    expect(out?.updateWindow).toBe(true);
++    expect(out?.verdict).toBe('inconclusive');
++    expect(out?.reason).toBe('update-window');
++  });
++
+   it('reports no effect for flat data and updateWindow=false', () => {
+-    const out = estimateImpact({ ...common, test: baseTest, market: null, updateWindows: [] });
++    const out = estimateImpact({ ...common, test: baseTest, updateWindows: [] });
+     expect(out?.verdict).toBe('no-effect');
+     expect(out?.updateWindow).toBe(false);
+   });
+ 
+   it('reports a negative effect', () => {
+     const test = baseTest.map((v, i) => (i >= 14 ? v * 0.7 : v));
+-    expect(estimateImpact({ ...common, test, market: null, updateWindows: [] })?.verdict).toBe('negative');
++    expect(estimateImpact({ ...common, test, updateWindows: [] })?.verdict).toBe('negative');
+   });
+ 
+   it('returns null without usable history', () => {
+@@ -46,12 +65,27 @@ describe('estimateImpact', () => {
+     expect(estimateImpact({ ...common, test: baseTest, market: null, updateWindows: [], interventionDate: '2026-04-01' })).toBeNull();
+   });
+ 
++  it('keeps a zero expected post level explicitly unavailable as a relative ratio', () => {
++    const out = estimateImpact({ ...common, control: days.map(() => 0), test: [...days.slice(0, 27).map(() => 0), 1], updateWindows: [] });
++    expect(out?.relativeEffect).toBeNull();
++  });
++
+   it('falls back to raw series for an invalid market series and handles constant control', () => {
+     const bad = days.map(() => 0);
+-    expect(estimateImpact({ ...common, test: baseTest, market: bad, updateWindows: [] })?.marketNormalized).toBe(false);
+-    const flat = estimateImpact({ ...common, control: days.map(() => 10), test: baseTest, market: null, updateWindows: [] });
++    expect(estimateImpact({ ...common, test: baseTest, market: bad, updateWindows: [] })).toMatchObject({ marketNormalized: false, verdict: 'inconclusive', reason: 'market-unavailable' });
++    const flat = estimateImpact({ ...common, control: days.map(() => 10), test: baseTest, market: null, marketSource: null, updateWindows: [] });
+     expect(flat?.verdict).toBeDefined();
+   });
++
++  it('does not expose a causal verdict without an external market or independent control', () => {
++    const noMarket = estimateImpact({ ...common, test: baseTest, market: null, marketSource: null, updateWindows: [] });
++    expect(noMarket).toMatchObject({ verdict: 'inconclusive', reason: 'market-unavailable', marketNormalized: false });
++    const unnamedMarket = estimateImpact({ ...common, test: baseTest, marketSource: null, updateWindows: [] });
++    expect(unnamedMarket).toMatchObject({ verdict: 'inconclusive', reason: 'market-unavailable', marketNormalized: false });
++    const sameSite = estimateImpact({ ...common, test: baseTest, controlIndependent: false, updateWindows: [] });
++    expect(sameSite).toMatchObject({ verdict: 'inconclusive', reason: 'control-unavailable' });
++    expect(sameSite?.controlSource).toBeNull();
++  });
+ });
+ 
+ describe('normalizeByMarket', () => {
+@@ -59,6 +93,12 @@ describe('normalizeByMarket', () => {
+     expect(normalizeByMarket([10, 20, 10], [100, 50, 100], 1)).toEqual([10, 40, 10]);
+     expect(normalizeByMarket([1], [1, 2], 1)).toBeNull();
+     expect(normalizeByMarket([1], [1], 0)).toBeNull();
++    expect(normalizeByMarket([Number.NaN], [1], 1)).toBeNull();
++    expect(alignMarketObservations(['2026-01-01', '2026-01-02'], [
++      { date: '2026-01-02', level: 2 }, { date: '2026-01-01', level: 1 },
++    ])).toEqual([1, 2]);
++    expect(alignMarketObservations(['2026-01-01', '2026-01-02'], [{ date: '2026-01-01', level: 1 }])).toBeNull();
++    expect(alignMarketObservations(['2026-01-01'], [{ date: '2026-01-01', level: 0 }])).toBeNull();
+   });
+   it('finds dates in windows', () => {
+     expect(datesInWindows(['2026-01-01', '2026-01-05'], [{ start: '2026-01-04', end: '2026-01-06' }])).toEqual(['2026-01-05']);
+diff --git a/tests/causalMarketAdapter.test.tsx b/tests/causalMarketAdapter.test.tsx
+new file mode 100644
+index 00000000..724becc0
+--- /dev/null
++++ b/tests/causalMarketAdapter.test.tsx
+@@ -0,0 +1,146 @@
++import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
++import i18n from '@/i18n';
++import { buildCausalImpact, readStoredCausalImpact } from '@/services/causalMarket/adapter';
++import { saveGscSnapshot } from '@/services/gscTracker/persistence';
++import { snapshotGscPerformance } from '@/services/gscTracker/snapshot';
++import { addIntervention } from '@/services/experiments/registry';
++import type { GscPerformanceData } from '@/types';
++
++const dates = Array.from({ length: 28 }, (_, index) => `2026-03-${String(index + 1).padStart(2, '0')}`);
++const intervention = { id: 'i1', projectId: 'p1', url: 'site' as const, date: '2026-03-15', kind: 'content' as const, note: '', createdAt: '2026-03-01T00:00:00.000Z' };
++
++const data = (site_url: string, clicks: (index: number) => number, customDates = dates, filters?: GscPerformanceData['filters']): GscPerformanceData => {
++  const daily = customDates.map((date, index) => ({ date, clicks: clicks(index), impressions: clicks(index) * 10, ctr: 0.1, position: 2 }));
++  return { site_url, start_date: customDates[0], end_date: customDates.at(-1)!, total_clicks: daily.reduce((sum, row) => sum + row.clicks, 0), total_impressions: daily.reduce((sum, row) => sum + row.impressions, 0), avg_ctr: 0.1, avg_position: 2, queries: [], pages: [], daily, daily_may_be_truncated: false, queries_may_be_truncated: false, pages_may_be_truncated: false, max_rows_per_dimension: 1000, filters };
++};
++
++const evidence = { status: 'available' as const, source: 'saved-test-market', observations: dates.map((date) => ({ date, level: 100 })) };
++
++beforeEach(async () => {
++  localStorage.clear();
++  await i18n.changeLanguage('en');
++  vi.spyOn(globalThis, 'fetch').mockImplementation(async (input) => {
++    const url = String(input);
++    if (url.includes('dataforseo')) {
++      const payload = dates.map((date) => ({ date: `${date}T00:00:00`, main_metric: { volatility: 100 } }));
++      return { ok: true, json: async () => payload } as Response;
++    }
++    if (url.includes('status.search.google.com')) {
++      return { ok: true, json: async () => [{ service_name: 'Ranking', begin: '2025-01-01T00:00:00Z', end: '2025-01-02T00:00:00Z' }] } as Response;
++    }
++    return { ok: false, status: 500, json: async () => ({}) } as Response;
++  });
++});
++afterEach(() => { vi.restoreAllMocks(); localStorage.clear(); });
++
++describe('causal market stored adapter', () => {
++  it('builds an impact from saved GSC series and deduplicates daily rows across snapshots', () => {
++    const older = snapshotGscPerformance(data('https://site.test', () => 50), '2026-03-01T00:00:00.000Z');
++    const newer = snapshotGscPerformance(data('https://site.test', (i) => i < 14 ? 50 : 65), '2026-03-02T00:00:00.000Z');
++    const control = snapshotGscPerformance(data('https://control.test', () => 100, dates, { search_type: 'web' }));
++    const missingDaily = { ...snapshotGscPerformance(data('https://extra.test', () => 10)), daily: undefined, filters: undefined };
++    const result = buildCausalImpact({ snapshots: [older, newer, control, missingDaily], interventions: [intervention], market: evidence, updateWindows: [], testSiteUrl: 'https://site.test' });
++    expect(result).toMatchObject({ verdict: 'positive', marketNormalized: true, marketSource: 'saved-test-market' });
++  });
++
++  it('keeps the stored path honest when the market source is missing or project empty', () => {
++    saveGscSnapshot('p1', data('https://site.test', () => 50));
++    saveGscSnapshot('p1', data('https://control.test', () => 100));
++    addIntervention('p1', intervention, new Date('2026-03-01T00:00:00.000Z'));
++    const result = readStoredCausalImpact('p1', { status: 'unknown', source: 'missing-market', observations: [] }, [], 'https://site.test');
++    expect(result?.verdict).toBe('inconclusive');
++    expect(readStoredCausalImpact(null, null)).toBeNull();
++    expect(readStoredCausalImpact('   ', null)).toBeNull();
++  });
++
++  it('ranks independent control candidates ahead of dependent candidates and by overlap', () => {
++    const snapshots = [snapshotGscPerformance(data('https://site.test', () => 50)), snapshotGscPerformance(data('https://site.test/blog', () => 100, dates.slice(0, 26))), snapshotGscPerformance(data('https://other.test', () => 100, dates.slice(0, 20)))];
++    const res = buildCausalImpact({ snapshots, interventions: [intervention], market: evidence, testSiteUrl: 'https://site.test' });
++    expect(res?.controlSource).toContain('https://other.test');
++
++    const equalSnapshots = [snapshotGscPerformance(data('https://site.test', () => 50)), snapshotGscPerformance(data('https://z-control.test', () => 100)), snapshotGscPerformance(data('https://m-control.test', () => 100))];
++    const equalRes = buildCausalImpact({ snapshots: equalSnapshots, interventions: [intervention], market: evidence, testSiteUrl: 'https://site.test' });
++    expect(equalRes?.controlSource).toContain('https://m-control.test');
++  });
++
++  it('enforces cohort filter compatibility across country, device, search type, key order and defaults', () => {
++    const baseFilters = { country: 'pol', device: 'DESKTOP' as const, search_type: 'web' as const };
++    const mismatches = [
++      { country: 'usa', device: 'DESKTOP' as const, search_type: 'web' as const },
++      { country: 'pol', device: 'MOBILE' as const, search_type: 'web' as const },
++      { country: 'pol', device: 'DESKTOP' as const, search_type: 'image' as const },
++    ];
++    for (const filters of mismatches) {
++      const snap = [snapshotGscPerformance(data('https://site.test', (i) => i < 14 ? 50 : 30, dates, baseFilters)), snapshotGscPerformance(data('https://control.test', (i) => i < 14 ? 50 : 30, dates, filters))];
++      const res = buildCausalImpact({ snapshots: snap, interventions: [intervention], market: evidence, updateWindows: [], testSiteUrl: 'https://site.test' });
++      expect(res?.verdict).toBe('inconclusive');
++      expect(res?.reason).toBe('control-unavailable');
++    }
++    const orderReversed = { device: 'DESKTOP' as const, search_type: 'web' as const, country: 'POL' };
++    const orderSnap = [snapshotGscPerformance(data('https://site.test', (i) => i < 14 ? 50 : 30, dates, baseFilters)), snapshotGscPerformance(data('https://control.test', (i) => i < 14 ? 50 : 30, dates, orderReversed))];
++    const orderRes = buildCausalImpact({ snapshots: orderSnap, interventions: [intervention], market: evidence, updateWindows: [], testSiteUrl: 'https://site.test' });
++    expect(orderRes?.verdict).toBe('no-effect');
++    expect(orderRes?.controlSource).toContain('https://control.test');
++
++    const defaultSnap = [snapshotGscPerformance(data('https://site.test', (i) => i < 14 ? 50 : 65, dates, undefined)), snapshotGscPerformance(data('https://control.test', () => 100, dates, { search_type: 'web' }))];
++    const defaultRes = buildCausalImpact({ snapshots: defaultSnap, interventions: [intervention], market: evidence, updateWindows: [], testSiteUrl: 'https://site.test' });
++    expect(defaultRes?.verdict).toBe('positive');
++  });
++
++  it('matches properties by exact identity, prefix coverage, and rejects sibling or wrong subdomain', () => {
++    const domainSnapshots = [snapshotGscPerformance(data('sc-domain:domain.test', (i) => i < 14 ? 50 : 70)), snapshotGscPerformance(data('https://control.test', () => 100))];
++    expect(buildCausalImpact({ snapshots: domainSnapshots, interventions: [intervention], market: evidence, updateWindows: [], testSiteUrl: 'https://domain.test/' })?.verdict).toBe('positive');
++    expect(buildCausalImpact({ snapshots: domainSnapshots, interventions: [intervention], market: evidence, updateWindows: [], testSiteUrl: 'https://other-target.test' })).toBeNull();
++
++    const narrowerSnapshots = [snapshotGscPerformance(data('https://domain.test/', () => 60)), snapshotGscPerformance(data('https://control.test', () => 100))];
++    expect(buildCausalImpact({ snapshots: narrowerSnapshots, interventions: [intervention], market: evidence, updateWindows: [], testSiteUrl: 'sc-domain:domain.test' })).toBeNull();
++
++    const siblingSnapshots = [snapshotGscPerformance(data('https://example.com/store/', () => 60)), snapshotGscPerformance(data('https://independent.test/', () => 100))];
++    expect(buildCausalImpact({ snapshots: siblingSnapshots, interventions: [intervention], market: evidence, updateWindows: [], testSiteUrl: 'https://example.com/blog/' })).toBeNull();
++
++    const subdomainSnapshots = [snapshotGscPerformance(data('https://www.example.com/', () => 60)), snapshotGscPerformance(data('https://independent.test/', () => 100))];
++    expect(buildCausalImpact({ snapshots: subdomainSnapshots, interventions: [intervention], market: evidence, updateWindows: [], testSiteUrl: 'https://app.example.com/' })).toBeNull();
++
++    const wrongCaseSnapshots = [snapshotGscPerformance(data('https://example.com/BLOG/', () => 60)), snapshotGscPerformance(data('https://independent.test/', () => 100))];
++    expect(buildCausalImpact({ snapshots: wrongCaseSnapshots, interventions: [intervention], market: evidence, updateWindows: [], testSiteUrl: 'https://example.com/blog/' })).toBeNull();
++
++    const exactAndSiblingSnapshots = [
++      snapshotGscPerformance(data('https://example.com/store/', () => 60)),
++      snapshotGscPerformance(data('https://example.com/blog', () => 100, dates.slice(0, 20))),
++      snapshotGscPerformance(data('https://example.com/blog/', () => 100)),
++      snapshotGscPerformance(data('https://independent.test/', () => 100)),
++    ];
++    const exactRes = buildCausalImpact({ snapshots: exactAndSiblingSnapshots, interventions: [intervention], market: evidence, updateWindows: [], testSiteUrl: 'https://example.com/blog/' });
++    expect(exactRes?.verdict).toBe('no-effect');
++    expect(exactRes?.effect).toBe(0);
++  });
++
++  it('returns null on missing inputs, zero overlap without market, empty daily or unresolvable test group', () => {
++    expect(buildCausalImpact({ snapshots: [], interventions: [intervention], market: evidence })).toBeNull();
++    expect(buildCausalImpact({ snapshots: [snapshotGscPerformance(data('https://site.test', () => 50))], interventions: [], market: evidence })).toBeNull();
++    const emptyDaily = [snapshotGscPerformance(data('https://site.test', () => 50, []))];
++    expect(buildCausalImpact({ snapshots: emptyDaily, interventions: [intervention], market: evidence })).toBeNull();
++    const twoSites = [snapshotGscPerformance(data('https://a.test', () => 50)), snapshotGscPerformance(data('https://b.test', () => 50))];
++    expect(buildCausalImpact({ snapshots: twoSites, interventions: [intervention], market: evidence })).toBeNull();
++    const noOverlap = [
++      snapshotGscPerformance(data('https://site.test', () => 50)),
++      snapshotGscPerformance(data('https://disjoint.test', () => 100, ['2025-01-01'])),
++    ];
++    expect(buildCausalImpact({ snapshots: noOverlap, interventions: [intervention], market: null, testSiteUrl: 'https://site.test' })).toBeNull();
++    expect(buildCausalImpact({ snapshots: noOverlap, interventions: [intervention], market: evidence, updateWindows: null, testSiteUrl: 'https://site.test' })?.reason).toBe('update-window');
++    const dayOne = { ...intervention, date: '2026-03-01' };
++    expect(buildCausalImpact({ snapshots: [snapshotGscPerformance(data('https://site.test', () => 50))], interventions: [dayOne], market: evidence })).toBeNull();
++  });
++
++  it('supports readStoredCausalImpact with source object windows and unknown feeds', () => {
++    saveGscSnapshot('p1', data('https://site.test', (i) => i < 14 ? 50 : 65));
++    saveGscSnapshot('p1', data('https://control.test', () => 100));
++    addIntervention('p1', intervention, new Date('2026-03-01T00:00:00.000Z'));
++    const impact = readStoredCausalImpact('p1', evidence, { status: 'available', source: 'google-search-status', windows: [] }, 'https://site.test');
++    expect(impact?.verdict).toBe('positive');
++    expect(impact?.marketSource).toBe('saved-test-market');
++    const withoutWindows = readStoredCausalImpact('p1', evidence, undefined, 'https://site.test');
++    expect(withoutWindows?.updateFeedStatus).toBe('unknown');
++    expect(withoutWindows?.verdict).toBe('inconclusive');
++  });
++});
+diff --git a/tests/causalMarketDomain.test.ts b/tests/causalMarketDomain.test.ts
+new file mode 100644
+index 00000000..aabbabee
+--- /dev/null
++++ b/tests/causalMarketDomain.test.ts
+@@ -0,0 +1,70 @@
++import { describe, expect, it } from 'vitest';
++import { areSitesIndependent, normalizeSiteDomain, propertyMatchScore } from '@/services/causalMarket/domain';
++
++describe('causalMarket domain normalization and property matching', () => {
++  it('normalizes sc-domain and url prefix properties of the same domain', () => {
++    expect(normalizeSiteDomain('sc-domain:example.com')).toBe('example.com');
++    expect(normalizeSiteDomain('https://example.com/')).toBe('example.com');
++    expect(normalizeSiteDomain('http://www.example.com')).toBe('example.com');
++    expect(normalizeSiteDomain('https://sub.example.com/path')).toBe('example.com');
++  });
++
++  it('normalizes hostnames without registered domain like IP addresses or localhost', () => {
++    expect(normalizeSiteDomain('http://192.168.1.1/api')).toBe('192.168.1.1');
++    expect(normalizeSiteDomain('http://localhost:3000/')).toBe('localhost');
++  });
++
++  it('recognizes identical or overlapping properties as not independent', () => {
++    expect(areSitesIndependent('sc-domain:example.com', 'https://example.com/')).toBe(false);
++    expect(areSitesIndependent('https://www.example.com', 'https://example.com/blog')).toBe(false);
++    expect(areSitesIndependent('sc-domain:example.com', 'sc-domain:example.com')).toBe(false);
++  });
++
++  it('recognizes distinct domains as truly independent', () => {
++    expect(areSitesIndependent('https://example.com', 'https://other-domain.org')).toBe(true);
++    expect(areSitesIndependent('sc-domain:first.test', 'https://second.test/')).toBe(true);
++  });
++
++  it('handles edge cases safely without false positive independence', () => {
++    expect(areSitesIndependent('', 'https://example.com')).toBe(false);
++    expect(areSitesIndependent(null, 'https://example.com')).toBe(false);
++    expect(areSitesIndependent('invalid-url', 'invalid-url')).toBe(false);
++    expect(normalizeSiteDomain('http://[invalid-host')).toBe('');
++  });
++
++  it('scores exact property matches and rejects empty or blank inputs', () => {
++    expect(propertyMatchScore('', 'https://example.com')).toBe(0);
++    expect(propertyMatchScore('https://example.com', '')).toBe(0);
++    expect(propertyMatchScore('https://example.com/', 'https://example.com')).toBe(1000);
++    expect(propertyMatchScore('https://example.com/blog/', 'HTTPS://EXAMPLE.COM/blog')).toBe(1000);
++    expect(propertyMatchScore('https://example.com/blog/', 'https://example.com/BLOG/')).toBe(0);
++  });
++
++  it('scores domain property matches against domains and covering URLs', () => {
++    expect(propertyMatchScore('sc-domain:example.com', 'sc-domain:example.com')).toBe(1000);
++    expect(propertyMatchScore('sc-domain:example.com', 'sc-domain:other.com')).toBe(0);
++    expect(propertyMatchScore('sc-domain:example.com', 'https://example.com/path')).toBe(500 + 'example.com'.length);
++    expect(propertyMatchScore('sc-domain:example.com', 'https://sub.example.com/path')).toBe(500 + 'example.com'.length);
++    expect(propertyMatchScore('sc-domain:example.com', 'https://other.com/path')).toBe(0);
++    expect(propertyMatchScore('sc-domain:example.com', 'invalid-url')).toBe(0);
++  });
++
++  it('rejects substituting narrower URL prefix when target is explicit sc-domain', () => {
++    expect(propertyMatchScore('https://example.com/', 'sc-domain:example.com')).toBe(0);
++    expect(propertyMatchScore('https://example.com/blog', 'sc-domain:example.com')).toBe(0);
++    expect(propertyMatchScore('https://sub.example.com/', 'sc-domain:example.com')).toBe(0);
++  });
++
++  it('scores URL prefixes against URL targets and rejects credentials, sibling and non-http', () => {
++    expect(propertyMatchScore('https://example.com/blog/', 'https://example.com/blog/post')).toBe(600 + '/blog/'.length);
++    expect(propertyMatchScore('https://example.com/', 'https://example.com/blog/post')).toBe(600 + '/'.length);
++    expect(propertyMatchScore('https://example.com/store/', 'https://example.com/blog/post')).toBe(0);
++    expect(propertyMatchScore('http://example.com/', 'https://example.com/')).toBe(0);
++    expect(propertyMatchScore('https://example.com:8080/', 'https://example.com:9090/')).toBe(0);
++    expect(propertyMatchScore('https://www.example.com/', 'https://app.example.com/')).toBe(0);
++    expect(propertyMatchScore('ftp://example.com/', 'https://example.com/')).toBe(0);
++    expect(propertyMatchScore('https://user:pass@example.com/', 'https://example.com/')).toBe(0);
++    expect(propertyMatchScore('invalid-url', 'https://example.com/')).toBe(0);
++    expect(propertyMatchScore('https://example.com/', 'invalid-target')).toBe(0);
++  });
++});
+diff --git a/tests/causalMarketSource.test.ts b/tests/causalMarketSource.test.ts
+new file mode 100644
+index 00000000..7c4406a3
+--- /dev/null
++++ b/tests/causalMarketSource.test.ts
+@@ -0,0 +1,75 @@
++import { describe, expect, it, vi } from 'vitest';
++import {
++  DATAFORSEO_SERP_VOLATILITY_URL, GOOGLE_SEARCH_STATUS_URL, fetchGoogleSearchUpdateWindows, fetchSerpVolatility,
++  liveFetcher, parseGoogleSearchStatus, parseSerpVolatility,
++} from '@/services/causalMarket';
++
++const response = (body: unknown, ok = true): Response => ({ ok, json: async () => body } as Response);
++
++describe('causal market external sources', () => {
++  it('parses the public SERP volatility series and category metric', () => {
++    const payload = [
++      { date: '2026-03-02T00:00:00', main_metric: { volatility: 3 }, other_metrics: [{ category: 10011, volatility: 5 }] },
++      { date: '2026-03-01', main_metric: { volatility: 2 }, other_metrics: [] },
++      { date: 'bad', main_metric: { volatility: 2 } },
++      { date: '2026-03-03', main_metric: { volatility: 0 }, other_metrics: [{ category: 10011, volatility: 4 }] },
++    ];
++    expect(parseSerpVolatility(payload)).toEqual([{ date: '2026-03-01', level: 2 }, { date: '2026-03-02', level: 3 }]);
++    expect(parseSerpVolatility(payload, 10011)).toEqual([{ date: '2026-03-02', level: 5 }, { date: '2026-03-03', level: 4 }]);
++    expect(parseSerpVolatility({})).toEqual([]);
++    expect(parseSerpVolatility([null, 'invalid', { date: '2026-03-04', main_metric: { volatility: '2' } }])).toEqual([]);
++  });
++
++  it('loads the live market source and reports honest failures', async () => {
++    let request: RequestInit | undefined;
++    const loaded = await fetchSerpVolatility({ fetcher: async (input, init) => {
++      expect(input).toBe(DATAFORSEO_SERP_VOLATILITY_URL); request = init; return response([{ date: '2026-03-01', main_metric: { volatility: 2 } }]);
++    } });
++    expect(loaded).toMatchObject({ status: 'available', source: 'dataforseo-serp-volatility' });
++    expect(String(request?.body)).toContain('action=dfs_serp_sensor');
++    await expect(fetchSerpVolatility({ fetcher: async () => response([], true) })).resolves.toMatchObject({ status: 'unknown', reason: 'empty' });
++    await expect(fetchSerpVolatility({ fetcher: async () => response({}, true) })).resolves.toMatchObject({ status: 'unknown', reason: 'empty' });
++    await expect(fetchSerpVolatility({ fetcher: async () => response({}, false) })).resolves.toMatchObject({ status: 'unavailable', reason: 'http' });
++    await expect(fetchSerpVolatility({ fetcher: async () => { throw new Error('offline'); } })).resolves.toMatchObject({ status: 'unavailable', reason: 'network' });
++  });
++
++  it('parses only dated Google ranking update windows', () => {
++    expect(parseGoogleSearchStatus([
++      { service_name: 'Ranking', begin: '2026-03-01T00:00:00Z', end: '2026-03-05T00:00:00Z', external_desc: 'Core update' },
++      { service_name: 'Ranking', begin: '2026-03-10T00:00:00Z', end: null, external_desc: 'Ongoing Core Update' },
++      { affected_products: [{ title: 'Ranking' }], begin: '2026-03-07' },
++      { service_name: 'Ranking', begin: '2026-03-01', end: 'invalid' },
++      { service_name: 'Ranking', begin: '2026-03-01', end: '2026-02-31' },
++      { service_name: 'Ranking', begin: '2026-03-01', end: 123 },
++      { service_name: 'Ads', begin: '2026-03-01', end: '2026-03-02' },
++      { service_name: 'Ranking', begin: 'bad', end: '2026-03-02' },
++      { service_name: 'Ranking', begin: '2026-03-03', end: '2026-03-02' },
++    ])).toEqual([
++      { start: '2026-03-01', end: '2026-03-05', label: 'Core update', source: GOOGLE_SEARCH_STATUS_URL },
++      { start: '2026-03-10', end: null, label: 'Ongoing Core Update', source: GOOGLE_SEARCH_STATUS_URL },
++      { start: '2026-03-07', end: null, source: GOOGLE_SEARCH_STATUS_URL },
++    ]);
++    expect(parseGoogleSearchStatus(null)).toEqual([]);
++  });
++
++  it('loads update windows with available, empty, HTTP and network states', async () => {
++    const loaded = await fetchGoogleSearchUpdateWindows(async input => {
++      expect(input).toBe(GOOGLE_SEARCH_STATUS_URL);
++      return response([{ service_name: 'Ranking', begin: '2026-03-01', end: '2026-03-02' }]);
++    });
++    expect(loaded.status).toBe('available');
++    await expect(fetchGoogleSearchUpdateWindows(async () => response([]))).resolves.toMatchObject({ status: 'unknown', reason: 'empty' });
++    await expect(fetchGoogleSearchUpdateWindows(async () => response({}, false))).resolves.toMatchObject({ status: 'unavailable', reason: 'http' });
++    await expect(fetchGoogleSearchUpdateWindows(async () => { throw new Error('offline'); })).resolves.toMatchObject({ status: 'unavailable', reason: 'network' });
++  });
++
++  it('returns unavailable when the runtime has no fetch transport', async () => {
++    expect(liveFetcher()).toBeTypeOf('function');
++    const original = globalThis.fetch;
++    vi.stubGlobal('fetch', undefined);
++    expect(liveFetcher()).toBeNull();
++    await expect(fetchSerpVolatility()).resolves.toMatchObject({ status: 'unavailable', reason: 'network' });
++    await expect(fetchGoogleSearchUpdateWindows()).resolves.toMatchObject({ status: 'unavailable', reason: 'network' });
++    vi.stubGlobal('fetch', original);
++  });
++});
+diff --git a/tests/causalStorageEvents.test.ts b/tests/causalStorageEvents.test.ts
+new file mode 100644
+index 00000000..dc624931
+--- /dev/null
++++ b/tests/causalStorageEvents.test.ts
+@@ -0,0 +1,53 @@
++import { describe, expect, it, vi } from 'vitest';
++import {
++  CAUSAL_STORAGE_EVENT,
++  dispatchCausalStorageEvent,
++  installCausalStorageInterceptor,
++} from '@/services/causalMarket/storageEvents';
++
++describe('causal storage events interceptor', () => {
++  it('dispatches custom event on local storage actions but ignores session storage', () => {
++    let captured: string | null = null;
++    let dispatchCount = 0;
++    const listener = (event: Event) => {
++      dispatchCount++;
++      captured = (event as CustomEvent<{ key: string | null }>).detail?.key ?? null;
++    };
++    window.addEventListener(CAUSAL_STORAGE_EVENT, listener);
++
++    localStorage.setItem('test-key', 'value');
++    expect(captured).toBe('test-key');
++    expect(dispatchCount).toBe(1);
++
++    sessionStorage.setItem('session-key', 'value');
++    sessionStorage.removeItem('session-key');
++    expect(dispatchCount).toBe(1);
++
++    sessionStorage.clear();
++    expect(dispatchCount).toBe(1);
++
++    localStorage.removeItem('test-key');
++    expect(captured).toBe('test-key');
++    expect(dispatchCount).toBe(2);
++
++    localStorage.clear();
++    expect(captured).toBeNull();
++    expect(dispatchCount).toBe(3);
++
++    window.removeEventListener(CAUSAL_STORAGE_EVENT, listener);
++  });
++
++  it('safely handles non-browser environments and frozen prototypes without throwing', () => {
++    const originalWindow = globalThis.window;
++    const originalStorage = globalThis.Storage;
++    vi.stubGlobal('window', undefined);
++    vi.stubGlobal('Storage', undefined);
++    expect(() => dispatchCausalStorageEvent('key')).not.toThrow();
++    expect(() => installCausalStorageInterceptor()).not.toThrow();
++    vi.stubGlobal('window', originalWindow);
++    vi.stubGlobal('Storage', originalStorage);
++
++    installCausalStorageInterceptor();
++    installCausalStorageInterceptor();
++  });
++});

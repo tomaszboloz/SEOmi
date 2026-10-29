@@ -1,0 +1,356 @@
+diff --git a/src/hooks/useTrust.ts b/src/hooks/useTrust.ts
+index cd7aab04..eaba8dcd 100644
+--- a/src/hooks/useTrust.ts
++++ b/src/hooks/useTrust.ts
+@@ -2,6 +2,7 @@ import { useEffect, useMemo, useState } from 'react';
+ import type { CrawledPageSummary, CrawlRunRecord } from '@/types';
+ import { buildSiteFocusReport } from '@/services/siteFocus';
+ import { buildTrustReport, comparableTrustSnapshots, readTrustHistory, recordTrust, type ProfileEvidence, type TrustReport, type TrustSnapshot } from '@/services/eeatTrust';
++import { hasVerifiedTrustEvidence } from '@/services/eeatTrust/history';
+ import { monitorScoreDrop } from '@/services/monitoringAlerts';
+ import { readManualTopic } from '@/services/siteFocusMonitoring/topic';
+ 
+@@ -20,6 +21,13 @@ export const useTrust = (pages: CrawledPageSummary[], startUrl: string, run: Cra
+   useEffect(() => {
+     if (!report || !run || !projectId) return;
+     const before = readTrustHistory(projectId);
++    const existing = before.find((item) => item.runId === run.id);
++    // Registry results live only for the current view. Do not let a remount
++    // without them overwrite a stronger verified snapshot for this run.
++    if (existing && hasVerifiedTrustEvidence(existing) && !hasVerifiedTrustEvidence(report)) {
++      setHistory(before);
++      return;
++    }
+     const entries = recordTrust(projectId, report, run.id);
+     setHistory(entries);
+     const previous = before.filter((item) => item.runId !== run.id).at(-1);
+diff --git a/src/services/citationEvidence/claims.ts b/src/services/citationEvidence/claims.ts
+index 805bdec5..9aa02954 100644
+--- a/src/services/citationEvidence/claims.ts
++++ b/src/services/citationEvidence/claims.ts
+@@ -37,6 +37,18 @@ export const extractCitationReferences = (text: string): CitationReference[] =>
+ const sourceFor = (ref: CitationReference, sources: Map<string, CitationSource>): CitationSource | undefined => ref.key ? sources.get(ref.key) : undefined;
+ const sentenceIndex = (text: string, offset: number): number => responseSentences(text).findIndex((sentence) => offset >= sentence.start && offset <= sentence.end);
+ 
++/**
++ * Aggregate evidence for an existential claim without turning an unknown
++ * value into a negative. A single known positive is enough to establish that
++ * at least one linked source has the property; otherwise all-known-false is
++ * false and any remaining uncertainty stays null.
++ */
++const aggregateBoolean = (values: Array<boolean | undefined>): boolean | null => {
++  if (values.some((value) => value === true)) return true;
++  if (values.length > 0 && values.every((value) => value === false)) return false;
++  return null;
++};
++
+ export const mapClaimsToCitations = (text: string, sources: CitationSource[] = []): ClaimCitation[] => {
+   const refs = extractCitationReferences(text); const sourceMap = new Map(sources.map((source) => [source.key, source]));
+   return responseSentences(text).filter((sentence) => HIGH_STAKES.test(sentence.text)).map((sentence) => {
+@@ -46,12 +58,13 @@ export const mapClaimsToCitations = (text: string, sources: CitationSource[] = [
+     const evidence = linked.map((ref) => sourceFor(ref, sourceMap)).filter(Boolean) as CitationSource[];
+     const known = evidence.length ? evidence : [];
+     const manual = known.find((source) => source.sourceChecked === true);
++    const checkedSources = known.filter((source) => source.sourceChecked === true);
+     return {
+       claim: sentence.text, start: sentence.start, end: sentence.end, risk: 'high-stakes', references: linked, relation,
+-      sourceExists: known.length ? known.some((source) => source.exists !== false) : linked.length ? null : false,
+-      reachable: known.length ? known.some((source) => source.reachable === true) : null,
+-      topical: known.length ? known.some((source) => source.topical === true) : null,
+-      supportsClaim: manual ? manual.supportsClaim ?? null : null,
++      sourceExists: known.length ? aggregateBoolean(known.map((source) => source.exists)) : linked.length ? null : false,
++      reachable: known.length ? aggregateBoolean(known.map((source) => source.reachable)) : null,
++      topical: known.length ? aggregateBoolean(known.map((source) => source.topical)) : null,
++      supportsClaim: manual ? aggregateBoolean(checkedSources.map((source) => source.supportsClaim)) : null,
+       sourceChecked: Boolean(manual), evidence: manual ? 'manual' : known.length ? 'association' : 'unavailable',
+     };
+   });
+diff --git a/src/services/eeatTrust/build.ts b/src/services/eeatTrust/build.ts
+index 84c33ae0..d3f325d2 100644
+--- a/src/services/eeatTrust/build.ts
++++ b/src/services/eeatTrust/build.ts
+@@ -27,6 +27,12 @@ const coverage = (score: number | undefined, declared: number, verified = 0) =>
+   observed: score === undefined ? 0 : 100, declared: declared ? 100 : 0, verified, unknown: score === undefined ? 100 : 0,
+ });
+ 
++/** Surface a warning before a positive registry result when profiles conflict. */
++const reconciliationStatus = (profiles: ProfileEvidence[]): ProfileEvidence['status'] | 'unavailable' => {
++  const priorities: Array<ProfileEvidence['status']> = ['mismatch', 'invalid', 'verified', 'fetched', 'syntax-valid', 'declared', 'unavailable'];
++  return priorities.find((status) => profiles.some((profile) => profile.status === status)) ?? 'unavailable';
++};
++
+ /** E-E-A-T & Entity Trust report from the crawl's own schema, links and pages; the Site Focus report supplies Core Topic and page types. */
+ export const buildTrustReport = (pages: CrawledPageSummary[], focus?: SiteFocusReport, options: TrustOptions = {}): TrustReport => {
+   const live = pages.filter(usable);
+@@ -46,7 +52,7 @@ export const buildTrustReport = (pages: CrawledPageSummary[], focus?: SiteFocusR
+     author.profiles = author.profiles.map((profile) => options.profileEvidence?.[profile.url] ?? profile);
+     author.reconciliation = {
+       role: 'author', profiles: author.profiles, declarationRecall: declarationRecall(author.profiles),
+-      status: author.profiles.find((profile) => ['verified', 'mismatch', 'invalid', 'unavailable', 'fetched', 'syntax-valid', 'declared'].includes(profile.status))?.status ?? 'unavailable', evidence: 'registry',
++      status: reconciliationStatus(author.profiles), evidence: 'registry',
+     };
+   });
+   const articleUrls = new Set(articleNodes.keys());
+@@ -65,6 +71,7 @@ export const buildTrustReport = (pages: CrawledPageSummary[], focus?: SiteFocusR
+   const sameAsLinks = schema.organization.sameAs.length + named.reduce((sum, author) => sum + author.sameAs.length, 0);
+   const entityCount = named.length + (schema.organization.present ? 1 : 0);
+   const profileRecall = entityCount ? named.reduce((sum, author) => sum + declarationRecall(author.profiles), 0) / entityCount : 0;
++  const verifiedProfiles = named.reduce((sum, author) => sum + author.profiles.filter((profile) => profile.status === 'verified').length, 0);
+   const sameAsScore = entityCount ? Math.round((Math.min(1, sameAsLinks / entityCount) * 50 + profileRecall * 50)) : undefined;
+   const hasAuthorEvidence = scan.authors.some((author) => author.alignmentPct !== undefined || author.bio || author.credentials?.length || author.knowsAbout?.length);
+   const layers: TrustReport['layers'] = {
+@@ -81,7 +88,7 @@ export const buildTrustReport = (pages: CrawledPageSummary[], focus?: SiteFocusR
+   const score = ymylTriggered ? Math.round(rawScore * 0.45) : rawScore;
+   const coverageByLayer: TrustReport['coverage'] = {
+     schemaGraph: coverage(layers.schemaGraph, schema.articleCount),
+-    sameAs: coverage(layers.sameAs, sameAsLinks),
++    sameAs: coverage(layers.sameAs, sameAsLinks, verifiedProfiles > 0 ? 100 : 0),
+     authorAlignment: coverage(layers.authorAlignment, scan.authors.some((author) => author.bio || author.credentials?.length || author.knowsAbout?.length) ? 1 : 0),
+     citationQuality: coverage(layers.citationQuality, citations.pagesWithAnyExternal),
+     transparency: coverage(layers.transparency, Object.values(transparency.found).filter(Boolean).length),
+diff --git a/src/services/eeatTrust/history.ts b/src/services/eeatTrust/history.ts
+index 9d55ee2a..7fa468c4 100644
+--- a/src/services/eeatTrust/history.ts
++++ b/src/services/eeatTrust/history.ts
+@@ -44,10 +44,21 @@ export const comparableTrustSnapshots = (left: TrustSnapshot | undefined, right:
+   return profile(left) === profile(right);
+ };
+ 
+-/** Appends one snapshot per run (a repeat for the same run replaces it); keeps the newest TRUST_HISTORY_LIMIT. */
++/** Whether a snapshot contains an explicit positive verification observation. */
++export const hasVerifiedTrustEvidence = (item: Pick<TrustSnapshot, 'coverage'>): boolean =>
++  Object.values(item.coverage ?? {}).some((layer) => Boolean(layer && finite(layer.verified) && layer.verified > 0));
++
++/**
++ * Appends one snapshot per run. A verified snapshot is an immutable baseline:
++ * a later remount without the ephemeral profile evidence must not replace it
++ * with a weaker, source-free observation for the same run.
++ */
+ export const recordTrust = (projectId: string | null | undefined, report: TrustReport, runId: string): TrustSnapshot[] => {
+   if (!projectId || !validProjectId(projectId)) return [];
+   const snapshot: TrustSnapshot = { at: report.generatedAt, runId, score: report.score, layers: report.layers, profileVersion: report.profileVersion, profileId: report.profileId, coverage: report.coverage };
+-  const history = [...readTrustHistory(projectId).filter((item) => item.runId !== runId), snapshot].slice(-TRUST_HISTORY_LIMIT);
++  const current = readTrustHistory(projectId);
++  const existing = current.find((item) => item.runId === runId);
++  const next = existing && hasVerifiedTrustEvidence(existing) && !hasVerifiedTrustEvidence(snapshot) ? existing : snapshot;
++  const history = [...current.filter((item) => item.runId !== runId), next].slice(-TRUST_HISTORY_LIMIT);
+   return writeJsonStorage(trustHistoryKey(projectId), history) ? history : readTrustHistory(projectId);
+ };
+diff --git a/src/services/eeatTrust/identifiers.ts b/src/services/eeatTrust/identifiers.ts
+index 0e585128..f2cb044b 100644
+--- a/src/services/eeatTrust/identifiers.ts
++++ b/src/services/eeatTrust/identifiers.ts
+@@ -65,6 +65,14 @@ export const classifyProfiles = (urls: string[]): ProfileEvidence[] => {
+   return [...seen.values()];
+ };
+ 
+-/** Rec(E) = min(1, sum of tier weight over syntax-valid profiles): a declaration indicator. */
++/**
++ * Rec(E) = min(1, sum of tier weight over profiles whose declaration was
++ * syntactically valid. Fetching is an additional observation and must not
++ * erase the original declaration signal; an unavailable fetch likewise does
++ * not turn a valid declaration into zero. Mismatch and invalid are excluded.
++ */
+ export const declarationRecall = (profiles: ProfileEvidence[]): number =>
+-  Math.min(1, profiles.reduce((sum, profile) => sum + (profile.status === 'syntax-valid' && profile.tier ? TIER_WEIGHTS[profile.tier] : 0), 0));
++  Math.min(1, profiles.reduce((sum, profile) => {
++    const declarationStillValid = ['syntax-valid', 'fetched', 'verified', 'unavailable'].includes(profile.status);
++    return sum + (declarationStillValid && profile.tier ? TIER_WEIGHTS[profile.tier] : 0);
++  }, 0));
+diff --git a/src/services/eeatTrust/registry.ts b/src/services/eeatTrust/registry.ts
+index 3e1c8aac..68cf375d 100644
+--- a/src/services/eeatTrust/registry.ts
++++ b/src/services/eeatTrust/registry.ts
+@@ -6,6 +6,8 @@ export interface RegistryResponse { status: number; url: string; body: string; s
+ export interface RegistryFetcher { (url: string, signal: AbortSignal): Promise<RegistryResponse> }
+ export interface RegistryOptions {
+   fetcher?: RegistryFetcher; now?: () => string; ttlMs?: number; maxBytes?: number; timeoutMs?: number; maxRequests?: number;
++  /** Optional durable scope labels; the options object itself remains part of the cache scope. */
++  projectId?: string; runId?: string;
+   matches?: (profile: ProfileEvidence, response: RegistryResponse) => boolean | undefined;
+ }
+ export interface RegistryResult { profile: ProfileEvidence; stale: boolean }
+@@ -18,12 +20,35 @@ export const nativeRegistryFetcher: RegistryFetcher = async (url) => {
+ };
+ 
+ const LIMITS = { ttlMs: 86_400_000, maxBytes: 512_000, timeoutMs: 4_000, maxRequests: 8 };
++const MAX_CACHE_ENTRIES = 128;
+ const cache = new Map<string, { profile: ProfileEvidence; at: number }>();
+ const budgets = new WeakMap<object, number>();
++const identities = new WeakMap<object, number>();
++let nextIdentity = 1;
+ const hosts: Record<string, string[]> = {
+   orcid: ['orcid.org'], wikidata: ['wikidata.org'], register: ['scholar.google.com', 'researchgate.net', 'scopus.com'],
+ };
+ 
++const identityOf = (value: object | undefined): number => {
++  if (!value) return 0;
++  const known = identities.get(value);
++  if (known) return known;
++  const identity = nextIdentity++;
++  identities.set(value, identity);
++  return identity;
++};
++
++/** Cache only within the same run/options/matcher provenance, never by URL alone. */
++const cacheKey = (profile: ProfileEvidence, options: RegistryOptions): string => [
++  profile.url,
++  profile.kind,
++  options.projectId ?? '',
++  options.runId ?? '',
++  identityOf(options),
++  identityOf(options.fetcher),
++  identityOf(options.matches),
++].join('\u0000');
++
+ const privateHost = (host: string): boolean => {
+   const value = host.toLowerCase().replace(/\.$/, '');
+   if (value === 'localhost' || value.endsWith('.localhost') || value === '::1') return true;
+@@ -59,7 +84,8 @@ export const verifyProfile = async (profile: ProfileEvidence, options: RegistryO
+   if (profile.status !== 'syntax-valid') return { profile, stale: false };
+   const now = options.now ?? (() => new Date().toISOString());
+   const nowMs = Date.parse(now()); const ttl = options.ttlMs ?? LIMITS.ttlMs;
+-  const cached = cache.get(profile.url);
++  const key = cacheKey(profile, options);
++  const cached = cache.get(key);
+   if (cached && nowMs - cached.at <= ttl) return { profile: cached.profile, stale: false };
+   const url = safeRegistryUrl(profile.url, profile.kind);
+   if (!url || !options.fetcher) return { profile: { ...profile, status: 'unavailable', detail: 'registry-unavailable' }, stale: Boolean(cached) };
+@@ -72,7 +98,11 @@ export const verifyProfile = async (profile: ProfileEvidence, options: RegistryO
+     if (!safeRegistryUrl(response.url, profile.kind)) return { profile: { ...profile, status: 'unavailable', detail: 'unsafe-redirect' }, stale: false };
+     if (response.body.length > (options.maxBytes ?? LIMITS.maxBytes)) return { profile: { ...profile, status: 'unavailable', detail: 'body-limit' }, stale: false };
+     const result = { ...profile, status: statusFor(profile, response, options), fetchedAt: now(), expiresAt: new Date(nowMs + ttl).toISOString(), sourceDate: response.sourceDate };
+-    cache.set(profile.url, { profile: result, at: nowMs });
++    if (!cache.has(key) && cache.size >= MAX_CACHE_ENTRIES) {
++      const oldest = cache.keys().next().value;
++      if (oldest !== undefined) cache.delete(oldest);
++    }
++    cache.set(key, { profile: result, at: nowMs });
+     return { profile: result, stale: false };
+   } catch { return { profile: { ...profile, status: 'unavailable', detail: 'transport-error' }, stale: Boolean(cached) }; }
+   finally { clearTimeout(timeout); }
+diff --git a/tests/trustEvidenceFollowup.test.ts b/tests/trustEvidenceFollowup.test.ts
+new file mode 100644
+index 00000000..05132e8a
+--- /dev/null
++++ b/tests/trustEvidenceFollowup.test.ts
+@@ -0,0 +1,119 @@
++import { beforeEach, describe, expect, it, vi } from 'vitest';
++import { mapClaimsToCitations } from '@/services/citationEvidence/claims';
++import { buildTrustReport } from '@/services/eeatTrust/build';
++import { classifyProfile, declarationRecall } from '@/services/eeatTrust/identifiers';
++import { hasVerifiedTrustEvidence, readTrustHistory, recordTrust, trustHistoryKey } from '@/services/eeatTrust/history';
++import { clearRegistryCache, verifyProfile } from '@/services/eeatTrust/registry';
++import type { TrustReport } from '@/services/eeatTrust/types';
++import { diabetesFocus, diabetesPages, node, trustedArticle } from './eeatTrustFixtures';
++
++const ORCID = 'https://orcid.org/0000-0002-1825-0097';
++
++const trustedPagesWithValidOrcid = () => diabetesPages().map((page) => {
++  if (!page.url.includes('/articles/')) return page;
++  const article = trustedArticle(page);
++  return {
++    ...article,
++    schema_references: (article.schema_references ?? []).map((reference) => reference.property === 'sameAs'
++      ? { ...reference, value: ORCID }
++      : reference),
++  };
++});
++
++describe('trust evidence follow-up contracts', () => {
++  beforeEach(() => {
++    localStorage.clear();
++    clearRegistryCache();
++  });
++
++  it('keeps citation evidence tri-state and makes mixed known values explicit', () => {
++    const unknown = mapClaimsToCitations('Badania wykazały wzrost ryzyka o 20% (doi:10.1000/test).', [
++      { key: 'doi:10.1000/test' },
++    ])[0];
++    expect(unknown).toMatchObject({ sourceExists: null, reachable: null, topical: null, supportsClaim: null, sourceChecked: false });
++
++    const mixed = mapClaimsToCitations('Badania wykazały wzrost ryzyka o 20% (PMCID PMC12345; PMID 12345).', [
++      { key: 'pmcid:PMC12345', exists: false, reachable: false, topical: false },
++      { key: 'pmid:12345', exists: true, reachable: true, topical: true },
++    ])[0];
++    expect(mixed).toMatchObject({ sourceExists: true, reachable: true, topical: true, supportsClaim: null, sourceChecked: false });
++  });
++
++  it('retains the declaration signal after a fetch state transition', () => {
++    const syntax = classifyProfile(ORCID);
++    const recall = declarationRecall([syntax]);
++    for (const status of ['fetched', 'verified', 'unavailable'] as const) {
++      expect(declarationRecall([{ ...syntax, status }])).toBe(recall);
++    }
++    expect(declarationRecall([{ ...syntax, status: 'mismatch' }])).toBe(0);
++    expect(declarationRecall([{ ...syntax, status: 'invalid' }])).toBe(0);
++  });
++
++  it('does not lower sameAs after verification and exposes verified coverage', () => {
++    const pages = trustedPagesWithValidOrcid();
++    const focus = diabetesFocus(pages);
++    const baseline = buildTrustReport(pages, focus, { now: '2026-10-27T00:00:00Z' });
++    const verified = buildTrustReport(pages, focus, {
++      now: '2026-10-27T00:00:00Z',
++      profileEvidence: { [ORCID]: { url: ORCID, kind: 'orcid', tier: 1, id: '0000-0000-0000-0001', status: 'verified' } },
++    });
++    expect(verified.layers.sameAs).toBe(baseline.layers.sameAs);
++    expect(verified.coverage.sameAs?.verified).toBe(100);
++    expect(verified.authors[0].reconciliation?.status).toBe('verified');
++  });
++
++  it('surfaces mismatch/invalid warnings before a positive profile status', () => {
++    const wikidata = 'https://www.wikidata.org/wiki/Q1';
++    const pages = diabetesPages().map((page) => {
++      if (!page.url.includes('/articles/')) return page;
++      const article = trustedArticle(page);
++      return {
++        ...article,
++        schema_references: [
++          ...(article.schema_references ?? []).map((reference) => reference.property === 'sameAs' ? { ...reference, value: ORCID } : reference),
++          ...node('$.@graph[1]', { props: [['sameAs', wikidata]] }, 1),
++        ],
++      };
++    });
++    const report = buildTrustReport(pages, diabetesFocus(pages), {
++      profileEvidence: {
++        [ORCID]: { url: ORCID, kind: 'orcid', tier: 1, id: '0000-0000-0000-0001', status: 'verified' },
++        [wikidata]: { url: wikidata, kind: 'wikidata', tier: 1, id: 'Q1', status: 'mismatch' },
++      },
++    });
++    expect(report.authors[0].reconciliation?.status).toBe('mismatch');
++  });
++
++  it('preserves a verified run snapshot when a later remount has no evidence', () => {
++    const empty = buildTrustReport([], undefined, { now: '2026-10-27T00:00:00Z' });
++    const report: TrustReport = {
++      ...empty,
++      generatedAt: '2026-10-27T00:00:00Z', score: 80, layers: { sameAs: 80 },
++      coverage: { ...empty.coverage, sameAs: { observed: 100, declared: 100, verified: 100, unknown: 0 } },
++    };
++    const weaker: TrustReport = {
++      ...report,
++      generatedAt: '2026-10-27T01:00:00Z', score: 20, layers: { sameAs: 20 },
++      coverage: { ...report.coverage, sameAs: { observed: 100, declared: 100, verified: 0, unknown: 0 } },
++    };
++    expect(hasVerifiedTrustEvidence(report)).toBe(true);
++    recordTrust('trust-followup-project', report, 'run-1');
++    const history = recordTrust('trust-followup-project', weaker, 'run-1');
++    expect(history).toHaveLength(1);
++    expect(history[0].score).toBe(80);
++    expect(readTrustHistory('trust-followup-project')[0].score).toBe(80);
++    expect(localStorage.getItem(trustHistoryKey('trust-followup-project'))).toContain('"verified":100');
++  });
++
++  it('does not reuse a registry result across matcher or run scope', async () => {
++    const fetcher = vi.fn(async (url: string) => ({ status: 200, url, body: '{}' }));
++    const profile = classifyProfile(ORCID);
++    const first = { fetcher, projectId: 'p1', runId: 'r1', matches: () => true, now: () => '2026-10-27T00:00:00Z' };
++    const second = { fetcher, projectId: 'p1', runId: 'r1', matches: () => false, now: () => '2026-10-27T00:00:00Z' };
++    const third = { fetcher, projectId: 'p1', runId: 'r2', matches: () => true, now: () => '2026-10-27T00:00:00Z' };
++    expect((await verifyProfile(profile, first)).profile.status).toBe('verified');
++    expect((await verifyProfile(profile, second)).profile.status).toBe('mismatch');
++    expect((await verifyProfile(profile, third)).profile.status).toBe('verified');
++    expect(fetcher).toHaveBeenCalledTimes(3);
++  });
++});

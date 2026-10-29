@@ -1,0 +1,963 @@
+diff --git a/src-tauri/src/commands/http_client.rs b/src-tauri/src/commands/http_client.rs
+index c3fc6d2f..48d90a36 100644
+--- a/src-tauri/src/commands/http_client.rs
++++ b/src-tauri/src/commands/http_client.rs
+@@ -1,6 +1,7 @@
+-use crate::services::http_client::check_url_status;
++use crate::services::http_client::{check_url_status, fetch_registry_page, FetchResult};
+ use crate::utils::url_validator::validate_and_normalize_url;
+ use serde::{Deserialize, Serialize};
++use url::Url;
+ 
+ #[derive(Debug, Serialize, Deserialize)]
+ pub struct LinkStatusResult {
+@@ -10,6 +11,92 @@ pub struct LinkStatusResult {
+     pub is_broken: bool,
+ }
+ 
++#[derive(Debug, Serialize)]
++pub struct RegistryProfileResult {
++    pub url: String,
++    pub final_url: String,
++    pub status: u16,
++    pub body: String,
++    pub source_date: Option<String>,
++}
++
++#[derive(Debug, Clone, PartialEq, Eq)]
++enum RegistryTarget {
++    Orcid(String),
++    Wikidata(String),
++}
++
++fn host_matches(host: &str, domain: &str) -> bool {
++    host == domain || host.ends_with(&format!(".{domain}"))
++}
++
++fn orcid_checksum_valid(id: &str) -> bool {
++    let digits: Vec<char> = id.chars().filter(|c| *c != '-').collect();
++    if digits.len() != 16 || !digits[..15].iter().all(|c| c.is_ascii_digit()) {
++        return false;
++    }
++    let total = digits[..15]
++        .iter()
++        .copied()
++        .fold(0u32, |sum, digit| (sum + digit.to_digit(10).unwrap()) * 2);
++    let check = (12 - (total % 11)) % 11;
++    let expected = if check == 10 { 'X' } else { char::from_digit(check, 10).unwrap() };
++    digits[15] == expected
++}
++
++fn registry_target(input: &str) -> Result<(RegistryTarget, Url), String> {
++    let url = Url::parse(input.trim()).map_err(|_| "Invalid registry profile URL".to_string())?;
++    if url.scheme() != "https" || url.query().is_some() || url.fragment().is_some()
++        || url.username() != "" || url.password().is_some()
++        || url.port().is_some_and(|port| port != 443)
++    {
++        return Err("Registry profile must be an HTTPS URL without credentials, query, or custom port".into());
++    }
++    let host = url.host_str().unwrap_or_default().to_ascii_lowercase();
++    let path = url.path().trim_end_matches('/');
++    let target = if host_matches(&host, "orcid.org") {
++        let id = path.strip_prefix('/').unwrap_or_default();
++        if id.len() == 19 && id.as_bytes()[4] == b'-' && id.as_bytes()[9] == b'-'
++            && id.as_bytes()[14] == b'-' && orcid_checksum_valid(id)
++        {
++            RegistryTarget::Orcid(id.to_ascii_uppercase())
++        } else { return Err("Invalid ORCID profile identifier".into()); }
++    } else if host_matches(&host, "wikidata.org") {
++        let id = path.strip_prefix("/wiki/").or_else(|| path.strip_prefix("/entity/"));
++        let valid = id.is_some_and(|value| value.starts_with('Q') && value[1..].chars().all(|c| c.is_ascii_digit()) && value[1..].chars().next().is_some_and(|c| c != '0'));
++        if valid { RegistryTarget::Wikidata(id.unwrap().to_string()) } else { return Err("Invalid Wikidata entity identifier".into()); }
++    } else { return Err("Registry profile host is not allow-listed".into()); };
++    Ok((target, url))
++}
++
++fn api_url(target: &RegistryTarget, person: bool) -> Url {
++    let path = match target {
++        RegistryTarget::Orcid(id) if person => format!("https://pub.orcid.org/v3.0/{id}/person"),
++        RegistryTarget::Orcid(id) => format!("https://pub.orcid.org/v3.0/{id}"),
++        RegistryTarget::Wikidata(id) => format!("https://www.wikidata.org/wiki/Special:EntityData/{id}.json"),
++    };
++    Url::parse(&path).expect("registry API URL is static and valid")
++}
++
++fn has_orcid_id(body: &str, id: &str) -> bool { body.to_ascii_lowercase().contains(&id.to_ascii_lowercase()) }
++
++fn result_from_fetch(url: String, fetched: FetchResult) -> RegistryProfileResult {
++    RegistryProfileResult { url, final_url: fetched.final_url, status: fetched.status, body: fetched.body, source_date: fetched.headers.get("last-modified").cloned().or_else(|| fetched.headers.get("date").cloned()) }
++}
++
++#[tauri::command]
++pub async fn fetch_registry_profile(url: String) -> Result<RegistryProfileResult, String> {
++    let (target, _) = registry_target(&url)?;
++    let first = fetch_registry_page(&api_url(&target, matches!(target, RegistryTarget::Orcid(_))))
++        .await.map_err(|error| format!("Registry request failed: {error}"))?;
++    let fetched = if let RegistryTarget::Orcid(id) = &target {
++        if (200..300).contains(&first.status) && !has_orcid_id(&first.body, id) {
++            fetch_registry_page(&api_url(&target, false)).await.map_err(|error| format!("Registry fallback failed: {error}"))?
++        } else { first }
++    } else { first };
++    Ok(result_from_fetch(url, fetched))
++}
++
+ #[tauri::command]
+ pub async fn check_link(
+     url: String,
+diff --git a/src-tauri/src/commands/http_client_tests.rs b/src-tauri/src/commands/http_client_tests.rs
+index 8dc66fae..f403f2ed 100644
+--- a/src-tauri/src/commands/http_client_tests.rs
++++ b/src-tauri/src/commands/http_client_tests.rs
+@@ -1,4 +1,4 @@
+-use super::{check_link, check_link_with_status};
++use super::{api_url, check_link, check_link_with_status, registry_target, RegistryTarget};
+ use crate::services::http_client::status::check_status_with_resolver;
+ use std::{net::SocketAddr, time::Duration};
+ use tokio::{io::AsyncReadExt, io::AsyncWriteExt, net::TcpListener};
+@@ -108,3 +108,22 @@ async fn check_link_executes_outer_transport_wrapper() {
+     assert_eq!(result.status, 0);
+     assert!(result.is_broken);
+ }
++
++#[test]
++fn registry_targets_use_official_json_apis() {
++    let (orcid, _) = registry_target("https://orcid.org/0000-0002-1825-0097").unwrap();
++    assert_eq!(api_url(&orcid, true).as_str(), "https://pub.orcid.org/v3.0/0000-0002-1825-0097/person");
++    assert_eq!(api_url(&orcid, false).as_str(), "https://pub.orcid.org/v3.0/0000-0002-1825-0097");
++    let (wikidata, _) = registry_target("https://www.wikidata.org/entity/Q42").unwrap();
++    assert_eq!(wikidata, RegistryTarget::Wikidata("Q42".into()));
++    assert_eq!(api_url(&wikidata, true).as_str(), "https://www.wikidata.org/wiki/Special:EntityData/Q42.json");
++}
++
++#[test]
++fn registry_targets_reject_bad_identifiers_and_network_controls() {
++    for url in [
++        "https://orcid.org/0000-0002-1825-0098", "https://orcid.org/0000-0002-1825-0097?x=1",
++        "https://www.wikidata.org/wiki/Q0", "https://www.wikidata.org/wiki/Main_Page",
++        "http://orcid.org/0000-0002-1825-0097", "https://orcid.org:444/0000-0002-1825-0097",
++    ] { assert!(registry_target(url).is_err(), "accepted unsafe or invalid URL: {url}"); }
++}
+diff --git a/src-tauri/src/commands/pdf_report/crawl_report/sec_aio.rs b/src-tauri/src/commands/pdf_report/crawl_report/sec_aio.rs
+index 5dd9ff0b..a1b61d1b 100644
+--- a/src-tauri/src/commands/pdf_report/crawl_report/sec_aio.rs
++++ b/src-tauri/src/commands/pdf_report/crawl_report/sec_aio.rs
+@@ -13,6 +13,54 @@ use crate::commands::pdf_report::layout::text::Style;
+ use crate::commands::pdf_report::layout::widgets::Kpi;
+ use serde_json::Value;
+ 
++fn profile_status(aio: &Value) -> String {
++    field(aio, "profile_status").unwrap_or_else(|| {
++        if aio.get("profile").is_some_and(Value::is_object) {
++            "mismatch".to_owned()
++        } else {
++            "legacy-unversioned".to_owned()
++        }
++    })
++}
++
++fn profile_status_label(status: &str) -> String {
++    match status {
++        "persisted" => t(a::PROFILE_STATUS_PERSISTED).to_owned(),
++        "legacy-unversioned" => t(a::PROFILE_STATUS_LEGACY).to_owned(),
++        "mismatch" => t(a::PROFILE_STATUS_MISMATCH).to_owned(),
++        _ => status.to_owned(),
++    }
++}
++
++fn profile_facts(aio: &Value) -> ([(&'static str, String); 4], [(&'static str, String); 2]) {
++    let profile = aio.get("profile").filter(|value| value.is_object());
++    let status = profile_status(aio);
++    (
++        [
++            (t(a::PROFILE), arg(profile.and_then(|value| value.get("id")))),
++            (t(a::PROFILE_STATUS), profile_status_label(&status)),
++            (
++                t(a::ALGORITHM_VERSION),
++                arg(profile.and_then(|value| value.get("algorithm_version"))),
++            ),
++            (
++                t(a::CONFIG_HASH),
++                arg(profile.and_then(|value| value.get("config_hash"))),
++            ),
++        ],
++        [
++            (
++                t(a::LANGUAGE),
++                arg(profile.and_then(|value| value.get("language"))),
++            ),
++            (
++                t(a::MARKET),
++                arg(profile.and_then(|value| value.get("market"))),
++            ),
++        ],
++    )
++}
++
+ fn kpis(aio: &Value) -> Vec<Kpi> {
+     let item = |label, key: &str, note| Kpi {
+         label,
+@@ -38,6 +86,9 @@ impl Doc {
+     pub fn crawl_aio(&mut self, aio: &Value) {
+         self.heading(t(a::TITLE));
+         self.paragraph(MARGIN, CONTENT_W, Style::CAPTION, t(a::INTRO));
++        let (first_profile_row, second_profile_row) = profile_facts(aio);
++        self.facts_row(&first_profile_row);
++        self.facts_row(&second_profile_row);
+         self.skip(6.0);
+         let code = field(aio, "band").unwrap_or_default();
+         self.ensure(90.0);
+@@ -58,6 +109,17 @@ impl Doc {
+             self.paragraph(MARGIN, CONTENT_W, Style::BODY.colored(WARNING), &note);
+             self.skip(4.0);
+         }
++        let unknown: Vec<&str> = list(aio, "unknown_reasons")
++            .iter()
++            .filter_map(Value::as_str)
++            .filter(|reason| !reason.trim().is_empty())
++            .collect();
++        if !unknown.is_empty() {
++            let reasons = format!("{}: {}", t(a::UNKNOWN_REASONS), unknown.join(", "));
++            let note = tf(t(a::UNKNOWN_DISCLOSURE), &[&reasons]);
++            self.paragraph(MARGIN, CONTENT_W, Style::BODY.colored(WARNING), &note);
++            self.skip(4.0);
++        }
+         self.skip(6.0);
+         self.data_table(&pages_table(aio));
+         if !list(aio, "passages").is_empty() {
+diff --git a/src-tauri/src/commands/pdf_report/crawl_report/strings/aio.rs b/src-tauri/src/commands/pdf_report/crawl_report/strings/aio.rs
+index 78195086..81c7a57a 100644
+--- a/src-tauri/src/commands/pdf_report/crawl_report/strings/aio.rs
++++ b/src-tauri/src/commands/pdf_report/crawl_report/strings/aio.rs
+@@ -37,6 +37,17 @@ keys! {
+     COL_EXCERPT => "crawl.aio.colExcerpt",
+     COL_ISSUES => "crawl.aio.colIssues",
+     PERCENT => "crawl.aio.percent",
++    PROFILE => "crawl.aio.profile",
++    PROFILE_STATUS => "crawl.aio.profileStatus",
++    PROFILE_STATUS_PERSISTED => "crawl.aio.profileStatusPersisted",
++    PROFILE_STATUS_LEGACY => "crawl.aio.profileStatusLegacy",
++    PROFILE_STATUS_MISMATCH => "crawl.aio.profileStatusMismatch",
++    ALGORITHM_VERSION => "crawl.aio.algorithmVersion",
++    CONFIG_HASH => "crawl.aio.configHash",
++    LANGUAGE => "crawl.aio.language",
++    MARKET => "crawl.aio.market",
++    UNKNOWN_REASONS => "crawl.aio.unknownReasons",
++    UNKNOWN_DISCLOSURE => "crawl.aio.unknownDisclosure",
+ }
+ 
+ pub const BAND: &str = "crawl.aio.band";
+diff --git a/src-tauri/src/commands/pdf_report/crawl_report/tests_aio.rs b/src-tauri/src/commands/pdf_report/crawl_report/tests_aio.rs
+index 63f4f303..40f79045 100644
+--- a/src-tauri/src/commands/pdf_report/crawl_report/tests_aio.rs
++++ b/src-tauri/src/commands/pdf_report/crawl_report/tests_aio.rs
+@@ -9,6 +9,15 @@ fn aio() -> Value {
+     json!({
+         "score": 58.5, "band": "weak", "self_containment": 61, "spo_density": 40.5,
+         "extractability": 70, "scored": 12, "skipped": 2,
++        "profile": {
++            "id": "aio-r-v1-en",
++            "algorithm_version": "1.0.0",
++            "config_hash": "cfg-1234",
++            "language": "en",
++            "market": "global"
++        },
++        "profile_status": "persisted",
++        "unknown_reasons": [],
+         "basic_rule_languages": ["de", "ja"],
+         "pages": [
+             {"url": "https://shop.example.test/guide", "score": 31, "self_containment": 40,
+@@ -42,6 +51,12 @@ fn aio_section_shows_score_kpis_pages_and_passages() {
+         "Fact density",
+         "Extractability",
+         "2 pages skipped",
++        "Evaluation profile",
++        "aio-r-v1-en",
++        "Profile persisted",
++        "1.0.0",
++        "cfg-1234",
++        "global",
+         "Language rules for de, ja are basic",
+         "Pages by AI readiness",
+         "shop.example.test/guide",
+@@ -55,6 +70,39 @@ fn aio_section_shows_score_kpis_pages_and_passages() {
+     }
+ }
+ 
++#[test]
++fn aio_profile_status_discloses_legacy_and_mismatch_runs() {
++    let mut legacy = aio();
++    legacy.as_object_mut().unwrap().remove("profile");
++    legacy.as_object_mut().unwrap().remove("profile_status");
++    let legacy_text = text_of(&with_aio(legacy));
++    assert!(legacy_text.contains("Legacy / unversioned profile"));
++    assert!(!legacy_text.contains("aio-r-v1-en"));
++
++    let mut mismatch = aio();
++    mismatch["profile_status"] = json!("mismatch");
++    let mismatch_text = text_of(&with_aio(mismatch));
++    assert!(mismatch_text.contains("Profile mismatch"));
++}
++
++#[test]
++fn aio_unknown_reasons_are_disclosed_and_old_payloads_stay_valid() {
++    let mut data = aio();
++    data["unknown_reasons"] = json!(["unsupported-language", "missing-evidence"]);
++    let text = text_of(&with_aio(data));
++    assert!(text.contains("Unknown or unavailable reasons"));
++    assert!(text.contains("unsupported-language, missing-evidence"));
++
++    let mut old = aio();
++    old.as_object_mut().unwrap().remove("profile");
++    old.as_object_mut().unwrap().remove("profile_status");
++    old.as_object_mut().unwrap().remove("unknown_reasons");
++    let old_text = text_of(&with_aio(old));
++    assert!(old_text.contains("AI readiness score"));
++    assert!(old_text.contains("Legacy / unversioned profile"));
++    assert!(!old_text.contains("Profile persisted"));
++}
++
+ #[test]
+ fn aio_section_is_omitted_without_a_summary_or_when_the_template_excludes_it() {
+     assert!(!text_of(&synthetic(12)).contains("AI readiness score"));
+diff --git a/src-tauri/src/lib.rs b/src-tauri/src/lib.rs
+index 433b4e51..819465af 100644
+--- a/src-tauri/src/lib.rs
++++ b/src-tauri/src/lib.rs
+@@ -79,6 +79,7 @@ pub(crate) fn compose<R: tauri::Runtime>(builder: Builder<R>) -> Builder<R> {
+                 commands::seo_audit::inspect_url,
+                 commands::seo_audit::cancel_inspect_url,
+                 commands::http_client::check_link,
++                commands::http_client::fetch_registry_profile,
+                 commands::cms_patch::cms_patch_request,
+                 commands::external_link_checker::check_external_crawl_links,
+                 commands::free_feeds::fetch_public_feed,
+diff --git a/src-tauri/src/services/http_client.rs b/src-tauri/src/services/http_client.rs
+index 56ff1b6b..b7d02804 100644
+--- a/src-tauri/src/services/http_client.rs
++++ b/src-tauri/src/services/http_client.rs
+@@ -19,7 +19,7 @@ mod tests_resolver_seams;
+ #[cfg(test)]
+ mod tests_stream;
+ 
+-pub use entry::{fetch_page, fetch_page_with_options};
++pub use entry::{fetch_page, fetch_page_with_options, fetch_registry_page};
+ pub use models::FetchResult;
+ pub use resolver::public_client_builder;
+ pub use status::check_url_status;
+@@ -32,3 +32,5 @@ mod tests_error_paths_extended;
+ mod tests_gap_remaining;
+ #[cfg(test)]
+ mod tests_transport_error_paths;
++#[cfg(test)]
++mod tests_registry;
+diff --git a/src-tauri/src/services/http_client/entry.rs b/src-tauri/src/services/http_client/entry.rs
+index 74fbbc19..44b3d8a2 100644
+--- a/src-tauri/src/services/http_client/entry.rs
++++ b/src-tauri/src/services/http_client/entry.rs
+@@ -1,10 +1,33 @@
+-use super::fetch::fetch_with_resolver;
++use super::fetch::{fetch_with_resolver, fetch_with_resolver_policy};
+ use super::models::{FetchOptions, FetchResult, MAX_BODY_BYTES};
+ use super::resolver::resolve_public_addresses;
+ use anyhow::Result;
+ use std::time::Duration;
+ use url::Url;
+ 
++const REGISTRY_USER_AGENT: &str = "SEOmi registry evidence/1.0";
++
++fn official_host(host: &str) -> bool {
++    ["pub.orcid.org", "www.wikidata.org"]
++        .iter()
++        .any(|domain| host == *domain || host.ends_with(&format!(".{domain}")))
++}
++
++/// Registry requests are HTTPS-only and may not follow redirects off official APIs.
++pub fn validate_registry_hop(url: &Url) -> Result<()> {
++    if url.scheme() != "https" || url.port().is_some_and(|port| port != 443) {
++        anyhow::bail!("registry API requires HTTPS on port 443");
++    }
++    if !url.username().is_empty() || url.password().is_some() {
++        anyhow::bail!("registry API URL cannot contain credentials");
++    }
++    let host = url.host_str().unwrap_or_default().to_ascii_lowercase();
++    if !official_host(&host) {
++        anyhow::bail!("registry API host is not allow-listed");
++    }
++    Ok(())
++}
++
+ /// Custom redirect tracker to record each intermediate status code and location header
+ pub async fn fetch_page(
+     target_url: &Url,
+@@ -34,3 +57,20 @@ pub async fn fetch_page_with_options(
+     )
+     .await
+ }
++
++pub async fn fetch_registry_page(target_url: &Url) -> Result<FetchResult> {
++    fetch_with_resolver_policy(
++        target_url,
++        REGISTRY_USER_AGENT,
++        FetchOptions {
++            timeout: Duration::from_secs(4),
++            max_redirects: 3,
++            verify_ssl: true,
++            max_body_bytes: 512 * 1024,
++        },
++        Some("application/json"),
++        |url| async move { resolve_public_addresses(&url).await },
++        validate_registry_hop,
++    )
++    .await
++}
+diff --git a/src-tauri/src/services/http_client/fetch.rs b/src-tauri/src/services/http_client/fetch.rs
+index 1b74f915..18089a24 100644
+--- a/src-tauri/src/services/http_client/fetch.rs
++++ b/src-tauri/src/services/http_client/fetch.rs
+@@ -5,7 +5,7 @@ use crate::models::audit_data::{HttpPerformanceMeasurement, RedirectHop};
+ use crate::utils::url_validator::validate_and_normalize_url;
+ use anyhow::{anyhow, Result};
+ use chrono::Utc;
+-use reqwest::header::{HeaderValue, USER_AGENT};
++use reqwest::header::{HeaderValue, ACCEPT, USER_AGENT};
+ use reqwest::redirect::Policy;
+ use std::future::Future;
+ use std::net::SocketAddr;
+@@ -24,10 +24,30 @@ pub async fn fetch_with_resolver<R, F>(
+ where
+     R: Fn(Url) -> F,
+     F: Future<Output = Result<Vec<SocketAddr>>>,
++{
++    fetch_with_resolver_policy(target_url, user_agent_str, options, None, resolve, |_| Ok(())).await
++}
++
++/// Fetch with an optional request media type and a guard applied to every hop.
++/// The guard is intentionally separate from the generic URL validator so
++/// callers such as registry integrations can keep redirects on official hosts.
++pub async fn fetch_with_resolver_policy<R, F, G>(
++    target_url: &Url,
++    user_agent_str: &str,
++    options: FetchOptions,
++    accept: Option<&str>,
++    resolve: R,
++    guard: G,
++) -> Result<FetchResult>
++where
++    R: Fn(Url) -> F,
++    F: Future<Output = Result<Vec<SocketAddr>>>,
++    G: Fn(&Url) -> Result<()> + Copy,
+ {
+     tokio::time::timeout(options.timeout, async {
+         let mut current = validate_and_normalize_url(target_url.as_str())
+             .map_err(|error| anyhow!(error.to_string()))?;
++        guard(&current)?;
+         let measured_at = Utc::now();
+         let start_time = Instant::now();
+         let mut recorded_hops = Vec::new();
+@@ -48,12 +68,16 @@ where
+             if let Ok(value) = HeaderValue::from_str(user_agent_str) {
+                 request = request.header(USER_AGENT, value);
+             }
++            if let Some(accept) = accept.and_then(|value| HeaderValue::from_str(value).ok()) {
++                request = request.header(ACCEPT, accept);
++            }
+             let response = request.send().await?;
+             if matches!(response.status().as_u16(), 301 | 302 | 303 | 307 | 308) {
+                 if let Some(location) = response.headers().get(reqwest::header::LOCATION) {
+                     let next = current.join(location.to_str()?)?;
+                     let next = validate_and_normalize_url(next.as_str())
+                         .map_err(|error| anyhow!("Unsafe redirect blocked: {error}"))?;
++                    guard(&next).map_err(|error| anyhow!("Unsafe redirect blocked: {error}"))?;
+                     if recorded_hops.len() >= options.max_redirects {
+                         return Err(anyhow!(
+                             "Too many redirects (max {} allowed)",
+diff --git a/src-tauri/src/utils/logging/commands.rs b/src-tauri/src/utils/logging/commands.rs
+index 3956f53d..cc4ffbb7 100644
+--- a/src-tauri/src/utils/logging/commands.rs
++++ b/src-tauri/src/utils/logging/commands.rs
+@@ -35,6 +35,7 @@ pub(super) const IPC_COMMANDS: &[&str] = &[
+     "inspect_url",
+     "cancel_inspect_url",
+     "check_link",
++    "fetch_registry_profile",
+     "cms_patch_request",
+     "check_external_crawl_links",
+     "write_mcp_config_file",
+diff --git a/src/App.tsx b/src/App.tsx
+index 7d1f93a1..6d09c1e4 100644
+--- a/src/App.tsx
++++ b/src/App.tsx
+@@ -1,6 +1,6 @@
+ import { useScheduledLaunch } from '@/hooks/app/useScheduledLaunch';
+ import { useCrawlEvidenceRouting } from '@/hooks/app/useCrawlEvidenceRouting';
+-import React, { lazy, Suspense } from 'react';
++import React, { Suspense } from 'react';
+ import { Header } from '@/components/Layout/Header';
+ import { Footer } from '@/components/Layout/Footer';
+ import { Sidebar } from '@/components/Layout/Sidebar';
+@@ -14,13 +14,14 @@ import { useAppStartup } from '@/hooks/app/useAppStartup';
+ import { useAppHydration } from '@/hooks/app/useAppHydration';
+ import { useAppRouting } from '@/hooks/app/useAppRouting';
+ import { useAppScheduler } from '@/hooks/app/useAppScheduler';
++import { lazyRoute } from '@/services/lazyRoute';
+ 
+-const SettingsModal = lazy(() => import('@/components/Settings/SettingsModal').then((module) => ({ default: module.SettingsModal })));
+-const AIAssistantModal = lazy(() => import('@/components/AI/AIAssistantModal').then((module) => ({ default: module.AIAssistantModal })));
+-const SubscriptionModal = lazy(() => import('@/components/Auth/SubscriptionModal').then((module) => ({ default: module.SubscriptionModal })));
+-const HistoryModal = lazy(() => import('@/components/History/HistoryModal').then((module) => ({ default: module.HistoryModal })));
+-const CreateProjectModal = lazy(() => import('@/components/Projects/CreateProjectModal').then((module) => ({ default: module.CreateProjectModal })));
+-const CommandPalette = lazy(() => import('@/components/Layout/CommandPalette').then((module) => ({ default: module.CommandPalette })));
++const SettingsModal = lazyRoute(() => import('@/components/Settings/SettingsModal').then((module) => ({ default: module.SettingsModal })));
++const AIAssistantModal = lazyRoute(() => import('@/components/AI/AIAssistantModal').then((module) => ({ default: module.AIAssistantModal })));
++const SubscriptionModal = lazyRoute(() => import('@/components/Auth/SubscriptionModal').then((module) => ({ default: module.SubscriptionModal })));
++const HistoryModal = lazyRoute(() => import('@/components/History/HistoryModal').then((module) => ({ default: module.HistoryModal })));
++const CreateProjectModal = lazyRoute(() => import('@/components/Projects/CreateProjectModal').then((module) => ({ default: module.CreateProjectModal })));
++const CommandPalette = lazyRoute(() => import('@/components/Layout/CommandPalette').then((module) => ({ default: module.CommandPalette })));
+ 
+ export const App: React.FC = () => {
+   useKeyboardShortcuts();
+diff --git a/src/components/Charts/semanticTopical/SemanticWorkspacePanels.tsx b/src/components/Charts/semanticTopical/SemanticWorkspacePanels.tsx
+index ada24af8..2a45230c 100644
+--- a/src/components/Charts/semanticTopical/SemanticWorkspacePanels.tsx
++++ b/src/components/Charts/semanticTopical/SemanticWorkspacePanels.tsx
+@@ -1,4 +1,4 @@
+-import React, { lazy, Suspense, useEffect } from 'react';
++import React, { Suspense, useEffect } from 'react';
+ import { takePendingBrief } from '@/services/executionCard/openBrief';
+ import { TopicalCalendar } from '@/components/Charts/TopicalCalendar';
+ import { SemanticAuditPanel } from '@/components/Charts/SemanticAuditPanel';
+@@ -9,9 +9,10 @@ import { EntityEvidenceGraph } from '@/components/Charts/EntityEvidenceGraph';
+ import type { useSemanticTopicalSession } from './useSemanticTopicalSession';
+ import { TopicalTopicBrowser } from './TopicalTopicBrowser';
+ import { TopicalNodeEditor } from './TopicalNodeEditor';
++import { lazyRoute } from '@/services/lazyRoute';
+ 
+ type Session = ReturnType<typeof useSemanticTopicalSession>;
+-const PrePublishWorkspace = lazy(() => import('../prePublish/PrePublishWorkspace'));
++const PrePublishWorkspace = lazyRoute(() => import('../prePublish/PrePublishWorkspace'));
+ 
+ export const SemanticWorkspacePanels: React.FC<{ session: Session }> = ({ session }) => {
+   const {
+diff --git a/src/components/Domain/crawlResults/CrawlCrawlerReadinessTab.tsx b/src/components/Domain/crawlResults/CrawlCrawlerReadinessTab.tsx
+index 996cf6e7..5a2a86fb 100644
+--- a/src/components/Domain/crawlResults/CrawlCrawlerReadinessTab.tsx
++++ b/src/components/Domain/crawlResults/CrawlCrawlerReadinessTab.tsx
+@@ -1,13 +1,14 @@
+ 
+ 
+-import { lazy, Suspense } from 'react';
++import { Suspense } from 'react';
+ import { useTranslation } from 'react-i18next';
+ import { CrawlerReadinessPanel } from "@/components/Results/CrawlerReadinessPanel";
+ import { latestLogCrawl } from './logIntelligence/matrixView';
++import { lazyRoute } from '@/services/lazyRoute';
+ 
+ import type { useCrawlResultsSession } from './useCrawlResultsSession';
+ type Session = ReturnType<typeof useCrawlResultsSession>;
+-const LogIntelligencePanel = lazy(() => import('./logIntelligence/LogIntelligencePanel'));
++const LogIntelligencePanel = lazyRoute(() => import('./logIntelligence/LogIntelligencePanel'));
+ 
+ export const CrawlCrawlerReadinessTab = ({ session }: { session: Session }) => {
+   const { result, activeProjectId, runs } = session;
+diff --git a/src/i18n/locales/en.json b/src/i18n/locales/en.json
+index 99607498..cb5df2e1 100644
+--- a/src/i18n/locales/en.json
++++ b/src/i18n/locales/en.json
+@@ -5892,6 +5892,17 @@
+         "nBorderline": "TRS 60-74",
+         "nStrong": "TRS 75 or more",
+         "percent": "{{0}}%",
++        "profile": "Evaluation profile",
++        "profileStatus": "Profile status",
++        "profileStatusPersisted": "Profile persisted",
++        "profileStatusLegacy": "Legacy / unversioned profile",
++        "profileStatusMismatch": "Profile mismatch",
++        "algorithmVersion": "Algorithm version",
++        "configHash": "Configuration hash",
++        "language": "Language",
++        "market": "Market",
++        "unknownReasons": "Unknown or unavailable reasons",
++        "unknownDisclosure": "AIO-R has unknown or unavailable evidence: {{0}}",
+         "coreBadge": "CORE TOPIC",
+         "coreTerms": "Top terms",
+         "coreTerm": "{{0}} ({{1}}% of pages)",
+diff --git a/src/main.tsx b/src/main.tsx
+index fc81b78d..19669fb7 100644
+--- a/src/main.tsx
++++ b/src/main.tsx
+@@ -5,6 +5,9 @@ import './styles/globals.css';
+ import './i18n';
+ import i18n, { languageReady } from './i18n';
+ import { RootErrorBoundary } from './components/Layout/RootErrorBoundary';
++import { installChunkLoadRecovery } from './services/lazyRoute';
++
++installChunkLoadRecovery();
+ 
+ const mount = () => {
+   const rootErrorProps = {
+diff --git a/src/services/contracts/crawl/crawlFindings.ts b/src/services/contracts/crawl/crawlFindings.ts
+index 98b617d8..40ccb1e9 100644
+--- a/src/services/contracts/crawl/crawlFindings.ts
++++ b/src/services/contracts/crawl/crawlFindings.ts
+@@ -59,6 +59,7 @@ export const CrawledLinkSchema = z.object({
+ export const CrawledSchemaReferenceSchema = z.object({
+   format: z.string(),
+   declaration_index: z.number().finite(),
++  node_path: z.string().nullable().transform(value => value ?? undefined).optional(),
+   property: z.string(),
+   value: z.string(),
+ }).passthrough() satisfies z.ZodType<CrawledSchemaReference, unknown>;
+diff --git a/src/services/eeatTrust/authors.ts b/src/services/eeatTrust/authors.ts
+index b23a896e..22fd9fa6 100644
+--- a/src/services/eeatTrust/authors.ts
++++ b/src/services/eeatTrust/authors.ts
+@@ -2,12 +2,12 @@ import type { CrawledPageSummary } from '@/types';
+ import type { FocusPage, SiteFocusReport } from '@/services/siteFocus';
+ import { normalizeUrl } from '@/services/siteFocus/pageType';
+ import { phraseKey } from '@/services/siteFocus/terms';
+-import { childNodes, type SchemaNode } from './graph';
++import { canonicalId, childNodes, nodeIdentity, type SchemaNode } from './graph';
+ import { classifyProfiles } from './identifiers';
+ import type { AuthorEntity } from './types';
+ 
+ const GENERIC = /^(the\s+)?(redakcj|redaktion|redacci|redazion|r[eé]daction|editorial|editors?\b|staff\b|admin|team\b|zesp[oó]ł|zespol|команд|редакц|администр|autor\b|author\b|unknown|anonim)/i;
+-const ID_LIKE = /^(https?:\/\/|#|\/)/;
++const ID_LIKE = /^(https?:\/\/|#|\/|\.\.?(?:\/|$))/;
+ const BIO_TERMS = 40;
+ 
+ /** A site-root id such as https://site/#person names the entity, not a profile page. */
+@@ -19,16 +19,17 @@ export const isGenericAuthor = (name: string): boolean => GENERIC.test(name.trim
+ export const resolveEntities = (node: SchemaNode, property: string, siblings: SchemaNode[], registry: Map<string, SchemaNode>): SchemaNode[] => {
+   const found: SchemaNode[] = [];
+   for (const value of (node.props[property] ?? []).filter((item) => item.trim())) {
+-    const known = registry.get(value);
++    const known = registry.get(value) ?? registry.get(canonicalId(value, node.page) ?? value);
+     if (known) found.push(known);
+-    else if (ID_LIKE.test(value)) found.push({ ...node, id: value, types: ['Person'], name: undefined, props: {} });
++    else if (ID_LIKE.test(value)) found.push({ ...node, id: value, canonicalId: canonicalId(value, node.page), types: ['Person'], name: undefined, props: {} });
+     else found.push({ ...node, id: undefined, types: ['Person'], name: value, props: {} });
+   }
+-  for (const child of childNodes(node, property, siblings)) found.push((child.id && registry.get(child.id)) || child);
++  for (const child of childNodes(node, property, siblings)) found.push((child.id && (registry.get(child.id) ?? registry.get(canonicalId(child.id, child.page) ?? child.id))) || child);
+   return found;
+ };
+ 
+-const entityKey = (entity: SchemaNode): string => (entity.id ?? entity.name ?? '').trim().toLowerCase();
++/* Ids are stable identities. Name-only bylines are deliberately location-scoped so homonyms cannot merge. */
++const entityKey = (entity: SchemaNode): string => entity.id ? nodeIdentity(entity).toLowerCase() : `name:${entity.page}|${entity.decl}|${entity.path}`;
+ 
+ /** Share (0-100) of the author's declared expertise that lies inside the Core Topic; undefined without bio signal. */
+ const alignmentOf = (entity: SchemaNode, pages: CrawledPageSummary[], report: SiteFocusReport | undefined): number | undefined => {
+@@ -72,7 +73,7 @@ export const scanAuthors = (
+         withAuthor.add(url);
+         const author = byKey.get(key) ?? {
+           key, name: entity.name ?? entity.id ?? key, id: entity.id, jobTitle: entity.props.jobTitle?.[0],
+-          sameAs: entity.props.sameAs ?? [],
++          sameAs: entity.props.sameAs ?? [], aliases: entity.props.alternateName ?? [], profileUrls: entity.props.url ?? [],
+         profiles: classifyProfiles(entity.props.sameAs ?? []), articleUrls: [], generic: isGenericAuthor(entity.name ?? ''),
+           alignmentPct: alignmentOf(entity, pages, report),
+         };
+diff --git a/src/services/eeatTrust/build.ts b/src/services/eeatTrust/build.ts
+index 5d062088..75a5c413 100644
+--- a/src/services/eeatTrust/build.ts
++++ b/src/services/eeatTrust/build.ts
+@@ -5,6 +5,7 @@ import { scanAuthors } from './authors';
+ import { analyzeCitations, citationScore } from './citations';
+ import { buildFindings, levelFor } from './findings';
+ import { buildRegistry, isArticleNode, nodesOf, type SchemaNode } from './graph';
++import { buildTrustGraph } from './entityGraph';
+ import { analyzeSchema, schemaScore } from './schemaScore';
+ import { analyzeTransparency, transparencyScore } from './transparency';
+ import { EEAT_TRUST_VERSION, TRUST_WEIGHTS, type TrustLayer, type TrustReport } from './types';
+@@ -36,6 +37,7 @@ export const buildTrustReport = (pages: CrawledPageSummary[], focus?: SiteFocusR
+     if (focusArticles.has(normalizeUrl(url)) || typed) articleNodes.set(url, own);
+   }
+   const scan = scanAuthors(live, nodesByPage, articleNodes, registry, focus);
++  const graph = buildTrustGraph(live, nodesByPage);
+   const articleUrls = new Set(articleNodes.keys());
+   const cited = new Map<string, string[]>([...articleNodes].map(([url, list]) => [url, list.flatMap((node) => node.props.citation ?? [])]));
+   const citations = analyzeCitations(live, articleUrls, cited);
+@@ -57,7 +59,7 @@ export const buildTrustReport = (pages: CrawledPageSummary[], focus?: SiteFocusR
+   };
+   const score = combineLayers(layers);
+   return {
+-    score, level: levelFor(score), layers, ymyl, schema, authors: scan.authors, citations, transparency,
++    score, level: levelFor(score), layers, ymyl, schema, graph, authors: scan.authors, citations, transparency,
+     findings: buildFindings({ schema, authors: scan.authors, citations, transparency, ymyl, unattributed }),
+     ymylUnattributedPct: ymyl && articleUrls.size ? Math.round((unattributed / articleUrls.size) * 100) : undefined,
+     pageCount: live.length, articleCount: articleUrls.size, generatedAt: options.now ?? new Date().toISOString(), version: EEAT_TRUST_VERSION,
+diff --git a/src/services/eeatTrust/graph.ts b/src/services/eeatTrust/graph.ts
+index 2e528d18..02b14850 100644
+--- a/src/services/eeatTrust/graph.ts
++++ b/src/services/eeatTrust/graph.ts
+@@ -6,6 +6,7 @@ export interface SchemaNode {
+   decl: number;
+   path: string;
+   id?: string;
++  canonicalId?: string;
+   types: string[];
+   name?: string;
+   props: Record<string, string[]>;
+@@ -18,6 +19,15 @@ const ORGANIZATION_TYPE = /Organization|LocalBusiness|Corporation|Hospital|Clini
+ 
+ const push = (target: string[], value: string): void => { if (!target.includes(value)) target.push(value); };
+ 
++/** Resolve an @id in the context of the declaration page; raw id remains available on SchemaNode. */
++export const canonicalId = (value: string | undefined, page: string): string | undefined => {
++  if (!value?.trim()) return undefined;
++  try { return new URL(value, page).toString(); } catch { return value.trim(); }
++};
++
++export const nodeIdentity = (node: SchemaNode): string => node.canonicalId ?? canonicalId(node.id, node.page) ?? `node:${node.page}|${node.decl}|${node.path}`;
++export const isCompleteDefinition = (node: SchemaNode): boolean => Boolean(node.types.length || node.name || Object.keys(node.props).length);
++
+ /** Every JSON-LD node of a page; references without a node path share the declaration's root node. */
+ export const nodesOf = (page: CrawledPageSummary): SchemaNode[] => {
+   const nodes = new Map<string, SchemaNode>();
+@@ -28,7 +38,7 @@ export const nodesOf = (page: CrawledPageSummary): SchemaNode[] => {
+     const key = `${ref.declaration_index}|${path}`;
+     const node = nodes.get(key) ?? { page: url, decl: ref.declaration_index, path, types: [], props: {} };
+     nodes.set(key, node);
+-    if (ref.property === '@id') node.id = ref.value;
++    if (ref.property === '@id') { node.id = ref.value; node.canonicalId = canonicalId(ref.value, url); }
+     else if (ref.property === '@type') push(node.types, ref.value);
+     else if (ref.property === 'name') node.name = ref.value;
+     else push(node.props[ref.property] ??= [], ref.value);
+@@ -52,11 +62,12 @@ export const buildRegistry = (nodes: SchemaNode[]): Map<string, SchemaNode> => {
+   const registry = new Map<string, SchemaNode>();
+   for (const node of nodes) {
+     if (!node.id) continue;
+-    const merged = registry.get(node.id) ?? { ...node, types: [], props: {} };
++    const key = nodeIdentity(node);
++    const merged = registry.get(key) ?? { ...node, types: [], props: {} };
+     node.types.forEach((type) => push(merged.types, type));
+     merged.name ??= node.name;
+     for (const [property, values] of Object.entries(node.props)) values.forEach((value) => push(merged.props[property] ??= [], value));
+-    registry.set(node.id, merged);
++    registry.set(key, merged);
+   }
+   return registry;
+ };
+diff --git a/src/services/eeatTrust/index.ts b/src/services/eeatTrust/index.ts
+index 4bcc7340..348301e7 100644
+--- a/src/services/eeatTrust/index.ts
++++ b/src/services/eeatTrust/index.ts
+@@ -1,5 +1,6 @@
+ export * from './types';
+ export { buildTrustReport, combineLayers } from './build';
++export { buildTrustGraph } from './entityGraph';
+ export { buildFindings, levelFor, TRUST_CODES } from './findings';
+ export { isTrustedHost } from './citations';
+ export { isGenericAuthor } from './authors';
+diff --git a/src/services/eeatTrust/schemaScore.ts b/src/services/eeatTrust/schemaScore.ts
+index 40802cd2..3b194425 100644
+--- a/src/services/eeatTrust/schemaScore.ts
++++ b/src/services/eeatTrust/schemaScore.ts
+@@ -1,4 +1,4 @@
+-import { buildRegistry, isOrganizationNode, type SchemaNode } from './graph';
++import { buildRegistry, isOrganizationNode, nodeIdentity, type SchemaNode } from './graph';
+ import type { AuthorEntity, SchemaGraphDetail } from './types';
+ 
+ const DATE_PROPERTIES = ['dateModified', 'lastReviewed', 'datePublished'];
+@@ -14,7 +14,7 @@ export const analyzeSchema = (
+   withReviewer: Set<string>,
+ ): SchemaGraphDetail => {
+   const registry = buildRegistry(nodes);
+-  const organizations = nodes.filter(isOrganizationNode).map((node) => (node.id && registry.get(node.id)) || node);
++  const organizations = nodes.filter(isOrganizationNode).map((node) => (node.id && registry.get(nodeIdentity(node))) || node);
+   const sameAs = [...new Set(organizations.flatMap((node) => node.props.sameAs ?? []))];
+   const named = authors.filter((author) => !author.generic);
+   const pagesWith = (test: (node: SchemaNode) => boolean): number => [...articleNodes.values()].filter((list) => list.some(test)).length;
+diff --git a/src/services/eeatTrust/types.ts b/src/services/eeatTrust/types.ts
+index 545580d7..4fa967f0 100644
+--- a/src/services/eeatTrust/types.ts
++++ b/src/services/eeatTrust/types.ts
+@@ -11,6 +11,45 @@ export type TransparencyKind = 'editorial' | 'about' | 'contact' | 'registry';
+ 
+ export interface TrustFinding extends Coded { severity: TrustSeverity }
+ 
++export type TrustGraphRole = 'document' | 'author' | 'reviewer' | 'publisher';
++export interface TrustGraphEntity {
++  key: string;
++  id?: string;
++  names: string[];
++  types: string[];
++  roles: TrustGraphRole[];
++  sameAs: string[];
++  aliases: string[];
++  profileUrls: string[];
++  sourcePages: string[];
++  declarations: Array<{ sourcePage: string; declaration: number; nodePath: string }>;
++  complete: boolean;
++}
++export interface TrustGraphEdge {
++  from: string;
++  to: string;
++  role: Exclude<TrustGraphRole, 'document'>;
++  property: string;
++  sourcePage: string;
++  declaration: number;
++  nodePath: string;
++  rawValue: string;
++}
++export interface TrustGraphDiagnostic {
++  code: 'conflicting-definition' | 'dangling-reference' | 'indeterminate-reference' | 'incomplete-definition' | 'cycle' | 'role-overlap';
++  severity: TrustSeverity;
++  sourcePage?: string;
++  declaration?: number;
++  nodePath?: string;
++  entityKey?: string;
++  target?: string;
++}
++export interface TrustGraph {
++  entities: TrustGraphEntity[];
++  edges: TrustGraphEdge[];
++  diagnostics: TrustGraphDiagnostic[];
++}
++
+ /** Weights of the four layers; a layer without data is dropped and the rest renormalized. */
+ export const TRUST_WEIGHTS = { schemaGraph: 0.3, authorAlignment: 0.25, citationQuality: 0.25, transparency: 0.2 } as const;
+ export type TrustLayer = keyof typeof TRUST_WEIGHTS;
+@@ -33,6 +72,8 @@ export interface AuthorEntity {
+   id?: string;
+   jobTitle?: string;
+   sameAs: string[];
++  aliases?: string[];
++  profileUrls?: string[];
+   articleUrls: string[];
+   /** "Redakcja", "Editorial team", "admin": an anonymous byline. */
+   generic: boolean;
+@@ -73,6 +114,7 @@ export interface TrustReport {
+   layers: Partial<Record<TrustLayer, number>>;
+   ymyl?: YmylCategory;
+   schema: SchemaGraphDetail;
++  graph?: TrustGraph;
+   authors: AuthorEntity[];
+   citations: CitationDetail;
+   transparency: TransparencyDetail;
+diff --git a/src/services/lazyRoute.ts b/src/services/lazyRoute.ts
+index 19088c83..d97a4ff5 100644
+--- a/src/services/lazyRoute.ts
++++ b/src/services/lazyRoute.ts
+@@ -3,9 +3,48 @@ import { lazy, type ComponentType, type LazyExoticComponent } from "react";
+ type RouteModule<T extends ComponentType<any>> = { default: T };
+ type RouteLoader<T extends ComponentType<any>> = () => Promise<RouteModule<T>>;
+ 
++const CHUNK_LOAD_ERROR = /failed to fetch dynamically imported module|importing a module script failed|unable to preload css|chunkloaderror/i;
++const RECOVERY_STORAGE_KEY = "seomi:chunk-recovery-at";
++const RECOVERY_WINDOW_MS = 30_000;
++
+ const wait = (delayMs: number): Promise<void> =>
+   new Promise((resolve) => window.setTimeout(resolve, delayMs));
+ 
++export const isChunkLoadError = (error: unknown): boolean => {
++  const message = error instanceof Error ? error.message : String(error);
++  return CHUNK_LOAD_ERROR.test(message);
++};
++
++/**
++ * A Tauri update can leave the WebView holding an old index that references
++ * chunks no longer embedded in the new binary. Reload once per short window;
++ * the guard prevents an endlessly looping reload when the package is broken.
++ */
++export const recoverFromChunkLoad = (error: unknown): boolean => {
++  if (!isChunkLoadError(error) || typeof window === "undefined" || window.location.hostname !== "tauri.localhost") return false;
++  try {
++    const previous = Number(window.sessionStorage.getItem(RECOVERY_STORAGE_KEY) ?? 0);
++    const now = Date.now();
++    if (previous > 0 && now - previous < RECOVERY_WINDOW_MS) return false;
++    window.sessionStorage.setItem(RECOVERY_STORAGE_KEY, String(now));
++    window.location.reload();
++    return true;
++  } catch {
++    return false;
++  }
++};
++
++/** Vite emits this event before rejecting a stale dynamic import. */
++export const installChunkLoadRecovery = (): (() => void) | undefined => {
++  if (typeof window === "undefined") return undefined;
++  const onPreloadError = (event: Event) => {
++    event.preventDefault();
++    recoverFromChunkLoad(new Error("Failed to fetch dynamically imported module"));
++  };
++  window.addEventListener("vite:preloadError", onPreloadError);
++  return () => window.removeEventListener("vite:preloadError", onPreloadError);
++};
++
+ /**
+  * Load a route chunk with one bounded retry. A transient WebView/network
+  * failure should not turn a valid workspace route into a permanent error;
+@@ -24,6 +63,7 @@ export const loadRouteModule = async <T extends ComponentType<any>>(
+     } catch (error) {
+       lastError = error;
+       if (attempt < retries) await wait(delayMs);
++      else recoverFromChunkLoad(error);
+     }
+   }
+   throw lastError;
+diff --git a/src/types/crawl/findings.ts b/src/types/crawl/findings.ts
+index c7e3639f..97942f0c 100644
+--- a/src/types/crawl/findings.ts
++++ b/src/types/crawl/findings.ts
+@@ -21,6 +21,8 @@ export interface CrawledSchemaFinding {
+ export interface CrawledSchemaReference {
+   format: string;
+   declaration_index: number;
++  /** JSON-LD object path, retained so nested and array objects remain distinct. */
++  node_path?: string | null;
+   property: string;
+   value: string;
+ }
+diff --git a/tests/lazyRoute.test.ts b/tests/lazyRoute.test.ts
+index c599f741..8e984de6 100644
+--- a/tests/lazyRoute.test.ts
++++ b/tests/lazyRoute.test.ts
+@@ -1,5 +1,7 @@
+-import { describe, expect, it, vi } from "vitest";
+-import { loadRouteModule } from "@/services/lazyRoute";
++import { afterEach, describe, expect, it, vi } from "vitest";
++import { installChunkLoadRecovery, isChunkLoadError, loadRouteModule, recoverFromChunkLoad } from "@/services/lazyRoute";
++
++afterEach(() => vi.unstubAllGlobals());
+ 
+ describe("lazy route loading", () => {
+   it("retries one transient chunk failure and resolves the module", async () => {
+@@ -21,4 +23,37 @@ describe("lazy route loading", () => {
+     await expect(loadRouteModule(loader, 1, 0)).rejects.toBe(error);
+     expect(loader).toHaveBeenCalledTimes(2);
+   });
++
++  it("recognizes browser dynamic-import failures but not module errors", () => {
++    expect(isChunkLoadError(new Error("Failed to fetch dynamically imported module"))).toBe(true);
++    expect(isChunkLoadError(new Error("Unexpected token"))).toBe(false);
++  });
++
++  it("reloads a stale Tauri document once and blocks an immediate loop", () => {
++    const reload = vi.fn();
++    const values = new Map<string, string>();
++    vi.stubGlobal("window", {
++      location: { hostname: "tauri.localhost", reload },
++      sessionStorage: { getItem: (key: string) => values.get(key) ?? null, setItem: (key: string, value: string) => values.set(key, value) },
++    });
++
++    expect(recoverFromChunkLoad(new Error("Failed to fetch dynamically imported module"))).toBe(true);
++    expect(recoverFromChunkLoad(new Error("Failed to fetch dynamically imported module"))).toBe(false);
++    expect(reload).toHaveBeenCalledOnce();
++  });
++
++  it("prevents the Vite preload event and leaves non-Tauri documents alone", () => {
++    const remove = vi.fn();
++    const add = vi.fn((_name: string, listener: EventListener) => {
++      const event = new Event("vite:preloadError", { cancelable: true });
++      listener(event);
++      expect(event.defaultPrevented).toBe(true);
++    });
++    vi.stubGlobal("window", { addEventListener: add, removeEventListener: remove, location: { hostname: "localhost" } });
++
++    const dispose = installChunkLoadRecovery();
++    expect(dispose).toBeTypeOf("function");
++    dispose?.();
++    expect(remove).toHaveBeenCalledOnce();
++  });
+ });

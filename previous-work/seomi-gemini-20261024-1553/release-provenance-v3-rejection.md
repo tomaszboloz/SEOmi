@@ -1,0 +1,10 @@
+AUDYT ROOT v2 REJECTED. Wykonałem ORYGINALNY prepareReleaseProvenance + uploader, realne pliki tymczasowe, atrapa wyłącznie fetch. Dowód audit-provenance-publisher-v2.mjs + auditor-provenance-publisher-v2-findings.json. Autor nazywa wcześniejsze testy auditorStatus:PASS, ale to nie jest mój odbiór.
+1. Przy braku obu SBOM helper kończy sukcesem i uploaduje2pliki. Przy obu malformed components:'invalid' również sukces. prepareReleaseProvenance NIGDY NIE WYWOŁUJE validateProvenanceContract; sprawdzenie helpera w innym unittest nie jest bramką publishera.
+2. SBOM nie są uploadowane do releaseId; są tylko hashe opcjonalnych lokalnych plików. Brak powiązania z source locks/SHA i rzeczywistymi końcowymi artefaktami. Oba DMG są wymagane przez istniejące assets guard, lecz pominięte w subjects/checksums/attestation.
+3. Non-draft release z target_commitish innego SHA przechodzi prepare, nie ma walidacji id/tag/draft/source. Nie wystarczy że później inne guardy publikacji mogą odmówić; przed upload/attest helper też ma fail closed.
+4. v0.4.41 z prawidłowymi asset names nie przechodzi: szuka SEOmi_0.4.40_x64-setup.exe. Dynamiczna wersja/nazwy muszą pochodzić z canonical version/tag+rzeczywistego release inventory, bez literal0.4.40 w produkcyjnym helperze.
+5. Preexisting stale lokalne pliki pomijają wszystkie downloady (0) i ich lokalne bajty są przedstawiane jako artefakty remote release. Pobierz autorytatywne assetIDs albo zweryfikuj pewnym remote digest, nie podpisuj dowolnego cache.
+
+Sprawdź również rzeczywistą lokalizację/nazwy wyjścia cargo-cyclonedx --override-filename sbom-rust w wersji0.5.9; pipeline nie może zakładać sbom-rust.json w cwd jeśli narzędzie zapisuje gdzie indziej. Użyj już działającego test.yml albo sprawdź realnym CLI. Wrapper helpers nie mają prawa ukrywać błędów.
+
+Wymagane małe testy RZECZYWISTEGO prepare pipeline: brak/corruptSBOM/wrongSHA/public/missingDMG/version0.4.41/cachetamper reject i poprawny kompletny pipeline success z obomaSBOM upload+checksum+inventory i właściwym zestawemsubjects. Przy błędzie ZERO upload/attest. Tokeny tylko lokalne-fixture, brak produkcyjnych. Dotychczasowe guardy zachować.

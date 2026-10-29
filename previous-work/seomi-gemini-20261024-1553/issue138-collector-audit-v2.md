@@ -1,0 +1,5 @@
+Audyt nowego lokalnego natywnego collectora nadal blokuje odbiór #138. Przegląd rzeczywistego przepływu wykazał połykanie błędów otwarcia SQLite przez open_store(...).ok() i zapisów record_started/record_page przez let_=; zapis completed także po anulowaniu/timeout; zwiększanie seq przed udanym append; oraz ryzyko ponownego zapisania poprzedniej strony przez state.pages.last(), gdy obsługa błędu nie dopisała strony. Frontend executionHook ma dodatkowo drugiego writera i własny licznik sekwencji.
+
+Gemini High otrzymał poprawę propagacji błędów, jednej własności sekwencji i właściwych terminal states. Odbiór wymaga failed-write/retry, cancellation i prawdziwego pending crawl command: dwie rzeczywiste obserwacje zapisane przed zakończeniem, SQLite reopen i interrupted replay z poprawnym project/run/provenance. Dwa testy ręcznie wywołujące helper na SQLite nie dowodzą pełnego przepływu.
+
+Wcześniejsze poprawki recovery kolejki, paginacji ponad10000 i kontroli luk pozostają zachowane. Zakres #138 jest lokalny i poza PR #209/main; issue pozostaje OPEN. Maksymalnie5Gemini+manager=6agentów; konto opowiesciodkrywcow i effort high. Progi95/98/MAX150 bez zmian.

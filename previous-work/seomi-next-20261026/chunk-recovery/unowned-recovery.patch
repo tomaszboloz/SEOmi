@@ -1,0 +1,203 @@
+diff --git a/src/App.tsx b/src/App.tsx
+index 7d1f93a1..6d09c1e4 100644
+--- a/src/App.tsx
++++ b/src/App.tsx
+@@ -1,6 +1,6 @@
+ import { useScheduledLaunch } from '@/hooks/app/useScheduledLaunch';
+ import { useCrawlEvidenceRouting } from '@/hooks/app/useCrawlEvidenceRouting';
+-import React, { lazy, Suspense } from 'react';
++import React, { Suspense } from 'react';
+ import { Header } from '@/components/Layout/Header';
+ import { Footer } from '@/components/Layout/Footer';
+ import { Sidebar } from '@/components/Layout/Sidebar';
+@@ -14,13 +14,14 @@ import { useAppStartup } from '@/hooks/app/useAppStartup';
+ import { useAppHydration } from '@/hooks/app/useAppHydration';
+ import { useAppRouting } from '@/hooks/app/useAppRouting';
+ import { useAppScheduler } from '@/hooks/app/useAppScheduler';
++import { lazyRoute } from '@/services/lazyRoute';
+ 
+-const SettingsModal = lazy(() => import('@/components/Settings/SettingsModal').then((module) => ({ default: module.SettingsModal })));
+-const AIAssistantModal = lazy(() => import('@/components/AI/AIAssistantModal').then((module) => ({ default: module.AIAssistantModal })));
+-const SubscriptionModal = lazy(() => import('@/components/Auth/SubscriptionModal').then((module) => ({ default: module.SubscriptionModal })));
+-const HistoryModal = lazy(() => import('@/components/History/HistoryModal').then((module) => ({ default: module.HistoryModal })));
+-const CreateProjectModal = lazy(() => import('@/components/Projects/CreateProjectModal').then((module) => ({ default: module.CreateProjectModal })));
+-const CommandPalette = lazy(() => import('@/components/Layout/CommandPalette').then((module) => ({ default: module.CommandPalette })));
++const SettingsModal = lazyRoute(() => import('@/components/Settings/SettingsModal').then((module) => ({ default: module.SettingsModal })));
++const AIAssistantModal = lazyRoute(() => import('@/components/AI/AIAssistantModal').then((module) => ({ default: module.AIAssistantModal })));
++const SubscriptionModal = lazyRoute(() => import('@/components/Auth/SubscriptionModal').then((module) => ({ default: module.SubscriptionModal })));
++const HistoryModal = lazyRoute(() => import('@/components/History/HistoryModal').then((module) => ({ default: module.HistoryModal })));
++const CreateProjectModal = lazyRoute(() => import('@/components/Projects/CreateProjectModal').then((module) => ({ default: module.CreateProjectModal })));
++const CommandPalette = lazyRoute(() => import('@/components/Layout/CommandPalette').then((module) => ({ default: module.CommandPalette })));
+ 
+ export const App: React.FC = () => {
+   useKeyboardShortcuts();
+diff --git a/src/components/Charts/semanticTopical/SemanticWorkspacePanels.tsx b/src/components/Charts/semanticTopical/SemanticWorkspacePanels.tsx
+index ada24af8..2a45230c 100644
+--- a/src/components/Charts/semanticTopical/SemanticWorkspacePanels.tsx
++++ b/src/components/Charts/semanticTopical/SemanticWorkspacePanels.tsx
+@@ -1,4 +1,4 @@
+-import React, { lazy, Suspense, useEffect } from 'react';
++import React, { Suspense, useEffect } from 'react';
+ import { takePendingBrief } from '@/services/executionCard/openBrief';
+ import { TopicalCalendar } from '@/components/Charts/TopicalCalendar';
+ import { SemanticAuditPanel } from '@/components/Charts/SemanticAuditPanel';
+@@ -9,9 +9,10 @@ import { EntityEvidenceGraph } from '@/components/Charts/EntityEvidenceGraph';
+ import type { useSemanticTopicalSession } from './useSemanticTopicalSession';
+ import { TopicalTopicBrowser } from './TopicalTopicBrowser';
+ import { TopicalNodeEditor } from './TopicalNodeEditor';
++import { lazyRoute } from '@/services/lazyRoute';
+ 
+ type Session = ReturnType<typeof useSemanticTopicalSession>;
+-const PrePublishWorkspace = lazy(() => import('../prePublish/PrePublishWorkspace'));
++const PrePublishWorkspace = lazyRoute(() => import('../prePublish/PrePublishWorkspace'));
+ 
+ export const SemanticWorkspacePanels: React.FC<{ session: Session }> = ({ session }) => {
+   const {
+diff --git a/src/components/Domain/crawlResults/CrawlCrawlerReadinessTab.tsx b/src/components/Domain/crawlResults/CrawlCrawlerReadinessTab.tsx
+index 996cf6e7..5a2a86fb 100644
+--- a/src/components/Domain/crawlResults/CrawlCrawlerReadinessTab.tsx
++++ b/src/components/Domain/crawlResults/CrawlCrawlerReadinessTab.tsx
+@@ -1,13 +1,14 @@
+ 
+ 
+-import { lazy, Suspense } from 'react';
++import { Suspense } from 'react';
+ import { useTranslation } from 'react-i18next';
+ import { CrawlerReadinessPanel } from "@/components/Results/CrawlerReadinessPanel";
+ import { latestLogCrawl } from './logIntelligence/matrixView';
++import { lazyRoute } from '@/services/lazyRoute';
+ 
+ import type { useCrawlResultsSession } from './useCrawlResultsSession';
+ type Session = ReturnType<typeof useCrawlResultsSession>;
+-const LogIntelligencePanel = lazy(() => import('./logIntelligence/LogIntelligencePanel'));
++const LogIntelligencePanel = lazyRoute(() => import('./logIntelligence/LogIntelligencePanel'));
+ 
+ export const CrawlCrawlerReadinessTab = ({ session }: { session: Session }) => {
+   const { result, activeProjectId, runs } = session;
+diff --git a/src/main.tsx b/src/main.tsx
+index fc81b78d..19669fb7 100644
+--- a/src/main.tsx
++++ b/src/main.tsx
+@@ -5,6 +5,9 @@ import './styles/globals.css';
+ import './i18n';
+ import i18n, { languageReady } from './i18n';
+ import { RootErrorBoundary } from './components/Layout/RootErrorBoundary';
++import { installChunkLoadRecovery } from './services/lazyRoute';
++
++installChunkLoadRecovery();
+ 
+ const mount = () => {
+   const rootErrorProps = {
+diff --git a/src/services/lazyRoute.ts b/src/services/lazyRoute.ts
+index 19088c83..d97a4ff5 100644
+--- a/src/services/lazyRoute.ts
++++ b/src/services/lazyRoute.ts
+@@ -3,9 +3,48 @@ import { lazy, type ComponentType, type LazyExoticComponent } from "react";
+ type RouteModule<T extends ComponentType<any>> = { default: T };
+ type RouteLoader<T extends ComponentType<any>> = () => Promise<RouteModule<T>>;
+ 
++const CHUNK_LOAD_ERROR = /failed to fetch dynamically imported module|importing a module script failed|unable to preload css|chunkloaderror/i;
++const RECOVERY_STORAGE_KEY = "seomi:chunk-recovery-at";
++const RECOVERY_WINDOW_MS = 30_000;
++
+ const wait = (delayMs: number): Promise<void> =>
+   new Promise((resolve) => window.setTimeout(resolve, delayMs));
+ 
++export const isChunkLoadError = (error: unknown): boolean => {
++  const message = error instanceof Error ? error.message : String(error);
++  return CHUNK_LOAD_ERROR.test(message);
++};
++
++/**
++ * A Tauri update can leave the WebView holding an old index that references
++ * chunks no longer embedded in the new binary. Reload once per short window;
++ * the guard prevents an endlessly looping reload when the package is broken.
++ */
++export const recoverFromChunkLoad = (error: unknown): boolean => {
++  if (!isChunkLoadError(error) || typeof window === "undefined" || window.location.hostname !== "tauri.localhost") return false;
++  try {
++    const previous = Number(window.sessionStorage.getItem(RECOVERY_STORAGE_KEY) ?? 0);
++    const now = Date.now();
++    if (previous > 0 && now - previous < RECOVERY_WINDOW_MS) return false;
++    window.sessionStorage.setItem(RECOVERY_STORAGE_KEY, String(now));
++    window.location.reload();
++    return true;
++  } catch {
++    return false;
++  }
++};
++
++/** Vite emits this event before rejecting a stale dynamic import. */
++export const installChunkLoadRecovery = (): (() => void) | undefined => {
++  if (typeof window === "undefined") return undefined;
++  const onPreloadError = (event: Event) => {
++    event.preventDefault();
++    recoverFromChunkLoad(new Error("Failed to fetch dynamically imported module"));
++  };
++  window.addEventListener("vite:preloadError", onPreloadError);
++  return () => window.removeEventListener("vite:preloadError", onPreloadError);
++};
++
+ /**
+  * Load a route chunk with one bounded retry. A transient WebView/network
+  * failure should not turn a valid workspace route into a permanent error;
+@@ -24,6 +63,7 @@ export const loadRouteModule = async <T extends ComponentType<any>>(
+     } catch (error) {
+       lastError = error;
+       if (attempt < retries) await wait(delayMs);
++      else recoverFromChunkLoad(error);
+     }
+   }
+   throw lastError;
+diff --git a/tests/lazyRoute.test.ts b/tests/lazyRoute.test.ts
+index c599f741..8e984de6 100644
+--- a/tests/lazyRoute.test.ts
++++ b/tests/lazyRoute.test.ts
+@@ -1,5 +1,7 @@
+-import { describe, expect, it, vi } from "vitest";
+-import { loadRouteModule } from "@/services/lazyRoute";
++import { afterEach, describe, expect, it, vi } from "vitest";
++import { installChunkLoadRecovery, isChunkLoadError, loadRouteModule, recoverFromChunkLoad } from "@/services/lazyRoute";
++
++afterEach(() => vi.unstubAllGlobals());
+ 
+ describe("lazy route loading", () => {
+   it("retries one transient chunk failure and resolves the module", async () => {
+@@ -21,4 +23,37 @@ describe("lazy route loading", () => {
+     await expect(loadRouteModule(loader, 1, 0)).rejects.toBe(error);
+     expect(loader).toHaveBeenCalledTimes(2);
+   });
++
++  it("recognizes browser dynamic-import failures but not module errors", () => {
++    expect(isChunkLoadError(new Error("Failed to fetch dynamically imported module"))).toBe(true);
++    expect(isChunkLoadError(new Error("Unexpected token"))).toBe(false);
++  });
++
++  it("reloads a stale Tauri document once and blocks an immediate loop", () => {
++    const reload = vi.fn();
++    const values = new Map<string, string>();
++    vi.stubGlobal("window", {
++      location: { hostname: "tauri.localhost", reload },
++      sessionStorage: { getItem: (key: string) => values.get(key) ?? null, setItem: (key: string, value: string) => values.set(key, value) },
++    });
++
++    expect(recoverFromChunkLoad(new Error("Failed to fetch dynamically imported module"))).toBe(true);
++    expect(recoverFromChunkLoad(new Error("Failed to fetch dynamically imported module"))).toBe(false);
++    expect(reload).toHaveBeenCalledOnce();
++  });
++
++  it("prevents the Vite preload event and leaves non-Tauri documents alone", () => {
++    const remove = vi.fn();
++    const add = vi.fn((_name: string, listener: EventListener) => {
++      const event = new Event("vite:preloadError", { cancelable: true });
++      listener(event);
++      expect(event.defaultPrevented).toBe(true);
++    });
++    vi.stubGlobal("window", { addEventListener: add, removeEventListener: remove, location: { hostname: "localhost" } });
++
++    const dispose = installChunkLoadRecovery();
++    expect(dispose).toBeTypeOf("function");
++    dispose?.();
++    expect(remove).toHaveBeenCalledOnce();
++  });
+ });

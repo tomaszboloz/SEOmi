@@ -1,0 +1,90 @@
+diff --git a/src/services/causalMarket/storageEvents.ts b/src/services/causalMarket/storageEvents.ts
+index e727673..9821a0f 100644
+--- a/src/services/causalMarket/storageEvents.ts
++++ b/src/services/causalMarket/storageEvents.ts
+@@ -10,27 +10,48 @@ export const dispatchCausalStorageEvent = (key: string | null): void => {
+   }
+ };
+ 
++let isInstalled = false;
++
+ export const installCausalStorageInterceptor = (): void => {
+   if (typeof window === 'undefined' || typeof Storage === 'undefined') return;
+-  const proto = Storage.prototype;
+-  if ((proto.setItem as { __seomiPatched?: boolean }).__seomiPatched) return;
++  try {
++    const proto = Storage.prototype;
++    if ((proto.setItem as { __seomiPatched?: boolean }).__seomiPatched) return;
+ 
+-  const origSet = proto.setItem;
+-  const origRemove = proto.removeItem;
+-  const origClear = proto.clear;
++    const origSet = proto.setItem;
++    const origRemove = proto.removeItem;
++    const origClear = proto.clear;
+ 
+-  proto.setItem = function (key: string, value: string): void {
+-    origSet.apply(this, [key, value]);
+-    dispatchCausalStorageEvent(key);
+-  };
+-  (proto.setItem as { __seomiPatched?: boolean }).__seomiPatched = true;
++    const isLocalStorage = (target: unknown) => {
++      try {
++        return target === window.localStorage;
++      } catch {
++        return true;
++      }
++    };
+ 
+-  proto.removeItem = function (key: string): void {
+-    origRemove.apply(this, [key]);
+-    dispatchCausalStorageEvent(key);
+-  };
++    proto.setItem = function (key: string, value: string): void {
++      origSet.apply(this, arguments as unknown as [string, string]);
++      if (isLocalStorage(this)) {
++        dispatchCausalStorageEvent(key);
++      }
++    };
++    (proto.setItem as { __seomiPatched?: boolean }).__seomiPatched = true;
+ 
+-  proto.clear = function (): void {
+-    origClear.apply(this);
+-    dispatchCausalStorageEvent(null);
+-  };
++    proto.removeItem = function (key: string): void {
++      origRemove.apply(this, arguments as unknown as [string]);
++      if (isLocalStorage(this)) {
++        dispatchCausalStorageEvent(key);
++      }
++    };
++
++    proto.clear = function (): void {
++      origClear.apply(this);
++      if (isLocalStorage(this)) {
++        dispatchCausalStorageEvent(null);
++      }
++    };
++    isInstalled = true;
++  } catch {
++    // Restricted or frozen prototype environment; fallback gracefully.
++  }
+ };
+ 
+ installCausalStorageInterceptor();
+diff --git a/src/components/Charts/semanticTopical/signals/useCausalImpact.ts b/src/components/Charts/semanticTopical/signals/useCausalImpact.ts
+index 4335cdc..89fba71 100644
+--- a/src/components/Charts/semanticTopical/signals/useCausalImpact.ts
++++ b/src/components/Charts/semanticTopical/signals/useCausalImpact.ts
+@@ -35,7 +35,10 @@ export const useCausalImpact = (projectId: string | null, testSiteUrl?: string)
+     const expKey = experimentsKey(projectId);
+     const matches = (key: string | null) => key === null || key === gscKey || key === expKey;
+ 
+-    const onStorage = (event: StorageEvent) => { if (matches(event.key)) refresh(); };
++    const onStorage = (event: StorageEvent) => {
++      if (event.storageArea && typeof window !== 'undefined' && event.storageArea !== window.localStorage) return;
++      if (matches(event.key)) refresh();
++    };
+     const onLocal = (event: Event) => {
+       const key = (event as CustomEvent<{ key: string | null }>).detail?.key ?? null;
+       if (matches(key)) refresh();

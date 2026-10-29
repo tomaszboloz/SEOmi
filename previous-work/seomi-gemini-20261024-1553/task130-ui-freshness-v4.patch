@@ -1,0 +1,1059 @@
+diff --git a/src/components/Charts/DeploymentArtifactsPanel.tsx b/src/components/Charts/DeploymentArtifactsPanel.tsx
+index 33b2df66..84e16933 100644
+--- a/src/components/Charts/DeploymentArtifactsPanel.tsx
++++ b/src/components/Charts/DeploymentArtifactsPanel.tsx
+@@ -3,16 +3,24 @@ import { useTranslation } from 'react-i18next';
+ import { HelpTip } from '@/components/Help/HelpTip';
+ import { downloadBlob } from '@/services/download';
+ import { buildDeploymentBundle, bundleToZip } from '@/services/deployArtifacts/bundle';
++import { validateRules } from '@/services/deployArtifacts/rules';
+ import type { RedirectRule } from '@/services/deployArtifacts/types';
++import type { NewTask } from '@/services/optimizationTasks/storage';
++import { AddTaskButton } from './OptimizationTaskTracker';
+ 
+-interface Props { rules: RedirectRule[]; }
++interface Props {
++  rules: RedirectRule[];
++  projectId?: string | null;
++  baselineScoreFor?: (task: NewTask) => number | null;
++}
+ 
+ const button = 'rounded-md border border-emerald-500/30 bg-emerald-500/10 px-2.5 py-1.5 text-[10px] font-semibold text-emerald-100 hover:bg-emerald-500/20';
+ 
+ /** One-click 301/410 export: .htaccess, Nginx, Cloudflare Bulk Redirects CSV, WordPress Redirection and a ZIP of all. */
+-export const DeploymentArtifactsPanel = ({ rules }: Props) => {
++export const DeploymentArtifactsPanel = ({ rules, projectId, baselineScoreFor }: Props) => {
+   const { t } = useTranslation();
+   const bundle = useMemo(() => buildDeploymentBundle(rules), [rules]);
++  const validRules = useMemo(() => validateRules(rules).rules, [rules]);
+   if (!rules.length) return <p className="rounded-md border border-dashed border-slate-800 p-4 text-center text-xs text-slate-500">{t('executionCard.deploy.empty')}</p>;
+   return <section aria-label={t('executionCard.deploy.aria')} className="rounded-xl border border-slate-800 bg-slate-900/45 p-4">
+     <h4 className="text-sm font-semibold text-slate-100">{t('executionCard.deploy.title')} <HelpTip id="executionCard.deploy" /></h4>
+@@ -21,6 +29,18 @@ export const DeploymentArtifactsPanel = ({ rules }: Props) => {
+       {bundle.files.map((file) => <button key={file.name} type="button" className={button} onClick={() => downloadBlob(file.name, new Blob([file.content], { type: 'text/plain;charset=utf-8' }))}>{file.name}</button>)}
+       <button type="button" className={button} onClick={() => downloadBlob('seomi-redirects.zip', new Blob([bundleToZip(bundle) as BlobPart], { type: 'application/zip' }))}>{t('executionCard.deploy.zip')}</button>
+     </div>
++    {projectId && <ul className="mt-3 space-y-2" data-testid="deployment-task-rules">
++      {validRules.map((rule) => {
++        const task: NewTask = rule.status === 301
++          ? { kind: 'redirect-301', module: 'tas', url: rule.from, targetUrl: rule.to ?? undefined, baselineScore: null }
++          : { kind: 'remove-410', module: 'sfs', url: rule.from, baselineScore: null };
++        task.baselineScore = baselineScoreFor?.(task) ?? null;
++        return <li key={`${rule.status}:${rule.from}`} className="flex flex-wrap items-center justify-between gap-2 rounded-md border border-slate-800 bg-slate-950/40 px-2 py-1.5 text-[10px] text-slate-300">
++          <span className="truncate font-mono" title={rule.to ?? rule.from}>{rule.status} {rule.from}{rule.to ? ` → ${rule.to}` : ''}</span>
++          <AddTaskButton projectId={projectId} task={task} />
++        </li>;
++      })}
++    </ul>}
+     {bundle.issues.length > 0 && <ul role="list" aria-label={t('executionCard.deploy.issuesAria')} className="mt-3 space-y-1 text-[10px] text-amber-200">
+       {bundle.issues.map((issue, index) => <li key={`${issue.kind}-${issue.from}-${index}`} className="truncate font-mono" title={issue.from}>{t(`executionCard.deploy.issue.${issue.kind}`)}: {issue.from}</li>)}
+     </ul>}
+diff --git a/src/components/Charts/InternalLinkOpportunitiesPanel.tsx b/src/components/Charts/InternalLinkOpportunitiesPanel.tsx
+index 507ee4f5..803c3d51 100644
+--- a/src/components/Charts/InternalLinkOpportunitiesPanel.tsx
++++ b/src/components/Charts/InternalLinkOpportunitiesPanel.tsx
+@@ -2,10 +2,18 @@ import { useMemo, useState } from 'react';
+ import { useTranslation } from 'react-i18next';
+ import type { CrawledPageSummary } from '@/types';
+ import { findInternalLinkOpportunities } from '@/services/internalLinkOpportunities';
++import type { NewTask } from '@/services/optimizationTasks/storage';
+ import { excludeQuarantined, excludeQuarantinedPages, type BusConflict, type QuarantineEntry } from '@/services/recommendationBus';
++import { AddTaskButton } from './OptimizationTaskTracker';
+ import { QuarantineConflicts } from './QuarantineConflicts';
+ 
+-interface Props { pages: CrawledPageSummary[]; quarantine?: QuarantineEntry[]; conflicts?: BusConflict[]; }
++interface Props {
++  pages: CrawledPageSummary[];
++  quarantine?: QuarantineEntry[];
++  conflicts?: BusConflict[];
++  projectId?: string | null;
++  baselineScoreFor?: (task: NewTask) => number | null;
++}
+ 
+ const displayUrl = (value: string) => {
+   try { const url = new URL(value); return `${url.hostname}${url.pathname}${url.search}`; }
+@@ -14,7 +22,7 @@ const displayUrl = (value: string) => {
+ 
+ const NO_QUARANTINE: QuarantineEntry[] = [];
+ 
+-export const InternalLinkOpportunitiesPanel = ({ pages, quarantine = NO_QUARANTINE, conflicts }: Props) => {
++export const InternalLinkOpportunitiesPanel = ({ pages, quarantine = NO_QUARANTINE, conflicts, projectId, baselineScoreFor }: Props) => {
+   const { t } = useTranslation();
+   const [query, setQuery] = useState('');
+   const safePages = useMemo(() => excludeQuarantinedPages(pages, quarantine), [pages, quarantine]);
+@@ -41,9 +49,13 @@ export const InternalLinkOpportunitiesPanel = ({ pages, quarantine = NO_QUARANTI
+     {(report.pagesWithoutCompleteEvidence > 0 || report.pagesOmittedByLimit > 0 || report.resultsLimited) && <p role="status" className="mt-3 rounded-md border border-amber-500/20 bg-amber-500/5 p-2.5 text-[10px] leading-4 text-amber-200">{t('componentUi.partialResult', { details: partialDetails })}</p>}
+     {!report.eligiblePageCount ? <p className="mt-3 rounded-md border border-dashed border-slate-800 p-5 text-center text-xs text-slate-500">{t('componentUi.noCompletePages')}</p>
+       : !filtered.length ? <p className="mt-3 rounded-md border border-dashed border-slate-800 p-5 text-center text-xs text-slate-500">{t('componentUi.noCandidates')}</p>
+-      : <ul className="mt-3 max-h-[680px] space-y-2 overflow-y-auto pr-1">{filtered.map((item) => <li key={item.id} className="rounded-lg border border-slate-800 bg-slate-950/40 p-3">
++      : <ul className="mt-3 max-h-[680px] space-y-2 overflow-y-auto pr-1">{filtered.map((item) => {
++        const task: NewTask = { kind: 'add-link', module: 'sprs', url: item.sourceUrl, targetUrl: item.targetUrl, baselineScore: null };
++        task.baselineScore = baselineScoreFor?.(task) ?? null;
++        return <li key={item.id} className="rounded-lg border border-slate-800 bg-slate-950/40 p-3">
+         <div className="grid gap-2 md:grid-cols-[1fr_auto_1fr] md:items-center"><div className="min-w-0"><a href={item.sourceUrl} target="_blank" rel="noreferrer" title={item.sourceUrl} className="block truncate text-xs font-medium text-sky-200 hover:underline">{item.sourceTitle}</a><span className="mt-1 block truncate font-mono text-[9px] text-slate-600">{displayUrl(item.sourceUrl)}</span></div><span aria-label={t('componentUi.possibleLink')} className="justify-self-center text-[10px] text-slate-600">→</span><div className="min-w-0"><a href={item.targetUrl} target="_blank" rel="noreferrer" title={item.targetUrl} className="block truncate text-xs font-medium text-sky-200 hover:underline">{item.targetTitle}</a><span className="mt-1 block truncate font-mono text-[9px] text-slate-600">{displayUrl(item.targetUrl)}</span></div></div>
+-        <div className="mt-2 flex flex-wrap items-center justify-between gap-2 border-t border-slate-800 pt-2"><div className="flex flex-wrap gap-1">{item.sharedTerms.map((term) => <span key={term} className="rounded border border-emerald-500/15 bg-emerald-500/5 px-1.5 py-0.5 text-[9px] text-emerald-200">{term}</span>)}</div><span className="shrink-0 text-[9px] text-slate-500">{t('componentUi.weightedHeuristic', { score: (item.weightedJaccard * 100).toFixed(0) })}</span></div>
+-      </li>)}</ul>}
++        <div className="mt-2 flex flex-wrap items-center justify-between gap-2 border-t border-slate-800 pt-2"><div className="flex flex-wrap gap-1">{item.sharedTerms.map((term) => <span key={term} className="rounded border border-emerald-500/15 bg-emerald-500/5 px-1.5 py-0.5 text-[9px] text-emerald-200">{term}</span>)}</div><span className="shrink-0 text-[9px] text-slate-500">{t('componentUi.weightedHeuristic', { score: (item.weightedJaccard * 100).toFixed(0) })}</span>{projectId && <AddTaskButton projectId={projectId} task={task} />}</div>
++      </li>;
++      })}</ul>}
+   </section>;
+ };
+diff --git a/src/components/Charts/OptimizationTaskTracker.tsx b/src/components/Charts/OptimizationTaskTracker.tsx
+index 5ec069dc..76bb7614 100644
+--- a/src/components/Charts/OptimizationTaskTracker.tsx
++++ b/src/components/Charts/OptimizationTaskTracker.tsx
+@@ -1,8 +1,8 @@
+-import { useState } from 'react';
++import { useEffect, useState } from 'react';
+ import { useTranslation } from 'react-i18next';
+ import { HelpTip } from '@/components/Help/HelpTip';
+ import type { CrawledPageSummary } from '@/types';
+-import { markImplemented, planTask, readTasks, writeTasks, type NewTask } from '@/services/optimizationTasks/storage';
++import { markImplemented, OPTIMIZATION_TASKS_STORAGE_EVENT, planTask, readTasks, writeTasks, type NewTask } from '@/services/optimizationTasks/storage';
+ import type { OptimizationTask } from '@/services/optimizationTasks/types';
+ import { verifyTasks } from '@/services/optimizationTasks/verify';
+ import { editTask, filterTasks, type TaskFilter } from '@/services/optimizationTasks/edit';
+@@ -16,24 +16,46 @@ const btn = 'rounded-md border border-slate-700 px-2 py-1 text-[10px] text-slate
+ export const AddTaskButton = ({ projectId, task, onAdded }: { projectId: string; task: NewTask; onAdded?: () => void }) => {
+   const { t } = useTranslation();
+   const [added, setAdded] = useState(false);
+-  const add = () => { setAdded(writeTasks(projectId, planTask(readTasks(projectId), task))); onAdded?.(); };
++  const entityKey = task.requiredEntities?.join('\u0000') ?? '';
++  useEffect(() => { setAdded(false); }, [projectId, task.kind, task.module, task.url, task.targetUrl, task.baselineScore, entityKey]);
++  const add = () => {
++    const ok = writeTasks(projectId, planTask(readTasks(projectId), task));
++    setAdded(ok);
++    if (ok) onAdded?.();
++  };
+   return <span className="inline-flex items-center gap-1"><button type="button" className={btn} onClick={add}>{t('executionCard.tasks.add')}</button><HelpTip id="executionCard.tasks" />{added && <span role="status" className="text-[10px] text-slate-400">{t('executionCard.tasks.added')}</span>}</span>;
+ };
+ 
+-interface Props { projectId: string; pages: CrawledPageSummary[]; scoreFor: (task: OptimizationTask) => number | null; }
++interface Props {
++  projectId: string;
++  pages: CrawledPageSummary[];
++  scoreFor: (task: OptimizationTask) => number | null;
++  /** Start of the selected crawl, or `unavailable` when its evidence is unknown. */
++  crawlStartedAt: string;
++}
+ 
+-export const OptimizationTaskTracker = ({ projectId, pages, scoreFor }: Props) => {
++export const OptimizationTaskTracker = ({ projectId, pages, scoreFor, crawlStartedAt }: Props) => {
+   const { t } = useTranslation();
+   const [tasks, setTasks] = useState(() => readTasks(projectId));
+   const [filter, setFilter] = useState<TaskFilter>('all');
+   const [me, setMe] = useState('');
+   const today = new Date().toISOString().slice(0, 10);
++  useEffect(() => {
++    const refresh = (event: Event) => {
++      const detail = (event as CustomEvent<{ projectId?: string }>).detail;
++      if (!detail?.projectId || detail.projectId === projectId) setTasks(readTasks(projectId));
++    };
++    window.addEventListener(OPTIMIZATION_TASKS_STORAGE_EVENT, refresh);
++    setTasks(readTasks(projectId));
++    return () => window.removeEventListener(OPTIMIZATION_TASKS_STORAGE_EVENT, refresh);
++  }, [projectId]);
+   const save = (next: OptimizationTask[]) => { setTasks(next); writeTasks(projectId, next); };
+-  const verify = () => { const next = verifyTasks(tasks, pages, scoreFor); appendDeltas(projectId, tasks, next); save(next); };
++  const verify = () => { const next = verifyTasks(tasks, pages, scoreFor, new Date().toISOString(), crawlStartedAt); appendDeltas(projectId, tasks, next); save(next); };
+   if (!tasks.length) return <p className="rounded-md border border-dashed border-slate-800 p-4 text-center text-xs text-slate-500">{t('executionCard.tasks.empty')}</p>;
+   return <section aria-label={t('executionCard.tasks.aria')} className="rounded-xl border border-slate-800 bg-slate-900/45 p-4">
+     <header className="flex items-center justify-between gap-2"><h4 className="text-sm font-semibold text-slate-100">{t('executionCard.tasks.title')} <HelpTip id="executionCard.tasks" /></h4>
+       <button type="button" className={btn} onClick={() => verify()}>{t('executionCard.tasks.verify')}</button></header>
++    {crawlStartedAt === 'unavailable' && <p role="status" className="mt-2 text-[10px] text-amber-200">{t('executionCard.tasks.crawlUnavailable')}</p>}
+     <TaskFilterBar filter={filter} me={me} onFilter={setFilter} onMe={setMe} />
+     <ul className="mt-3 space-y-2">{filterTasks(tasks, filter, me, today).map((task) => <li key={task.id} className="rounded-md border border-slate-800 p-2 text-[11px] text-slate-300">
+       <div className="flex flex-wrap items-center justify-between gap-2"><span className="truncate font-mono" title={task.url}>{t(`executionCard.tasks.kind.${task.kind}`)}: {task.url}</span>
+diff --git a/src/components/Charts/semanticTopical/LinksWorkspace.tsx b/src/components/Charts/semanticTopical/LinksWorkspace.tsx
+index 3ee02afb..af2f35c8 100644
+--- a/src/components/Charts/semanticTopical/LinksWorkspace.tsx
++++ b/src/components/Charts/semanticTopical/LinksWorkspace.tsx
+@@ -8,23 +8,47 @@ import { excludeQuarantinedPages, runRecommendationBus } from '@/services/recomm
+ import { busInputFromReports } from '@/services/recommendationBus/fromReports';
+ import { buildSiteFocusReport } from '@/services/siteFocus';
+ import { buildAuthorityReport } from '@/services/topicalAuthority';
+-import type { CrawledPageSummary } from '@/types';
++import { buildSemanticMap } from '@/services/semanticMap';
++import { buildSprsReport } from '@/services/sprs/report';
++import { buildTrustReport } from '@/services/eeatTrust';
++import { deriveCrawlStartedAt } from '@/services/optimizationTasks/runVerification';
++import { busUrlKey } from '@/services/recommendationBus/url';
++import type { CrawledPageSummary, CrawlRunRecord } from '@/types';
+ 
+ /** Reports are an enhancement: incomplete page data must not break the links view. */
+ const attempt = <T,>(build: () => T | undefined): T | undefined => { try { return build(); } catch { return undefined; } };
+ 
+ /** Links view: bus-filtered link opportunities, 301/410 artifacts from the same bus, task tracker. */
+-export const LinksWorkspace = ({ projectId, pages }: { projectId: string | null; pages: CrawledPageSummary[] }) => {
++export const LinksWorkspace = ({ projectId, pages, run }: { projectId: string | null; pages: CrawledPageSummary[]; run?: CrawlRunRecord | null }) => {
+   const startUrl = pages[0]?.url ?? '';
++  const runCompleted = Boolean(run && run.result?.pages === pages && !run.result.cancelled && Number.isFinite(Date.parse(run.completedAt)));
+   const sfs = useMemo(() => attempt(() => (pages.length ? buildSiteFocusReport(pages, startUrl) : undefined)), [pages, startUrl]);
+   const tas = useMemo(() => attempt(() => (sfs ? buildAuthorityReport(pages, startUrl, sfs) : undefined)), [pages, startUrl, sfs]);
+   const bus = useMemo(() => runRecommendationBus(busInputFromReports(sfs, tas)), [sfs, tas]);
+   const linkPages = useMemo(() => excludeQuarantinedPages(pages, bus.quarantine), [pages, bus]);
+   const rules = useMemo(() => rulesFromQuarantine(bus.quarantine), [bus]);
+-  const scoreFor = (task: OptimizationTask): number | null => (task.module === 'sfs' ? (sfs && !sfs.unavailable ? sfs.score : null) : task.module === 'tas' ? tas?.tas ?? null : null);
++  const semanticGraph = useMemo(() => (pages.length ? attempt(() => buildSemanticMap(pages, startUrl)) : undefined), [pages, startUrl]);
++  const sprs = useMemo(() => (semanticGraph ? attempt(() => buildSprsReport(semanticGraph)) : undefined), [semanticGraph]);
++  const eetv = useMemo(() => {
++    if (!sfs) return null;
++    const livePages = pages.filter((page) => page.http_status >= 200 && page.http_status < 400 && !page.request_error_kind);
++    return livePages.length ? attempt(() => buildTrustReport(livePages, sfs)?.score) ?? null : null;
++  }, [pages, sfs]);
++  const scoreFor = (task: Pick<OptimizationTask, 'module' | 'url'>): number | null => {
++    if (!runCompleted) return null;
++    if (task.module === 'sfs') return sfs && !sfs.unavailable ? sfs.score : null;
++    if (task.module === 'tas') return tas?.tas ?? null;
++    if (task.module === 'eetv') return eetv;
++    if (task.module === 'sprs' && sprs?.status === 'ready' && semanticGraph) {
++      const node = semanticGraph.nodes.find((candidate) => [candidate.page.url, candidate.page.final_url].some((url) => busUrlKey(url) === busUrlKey(task.url)));
++      return node ? sprs.pages.find((page) => page.nodeId === node.id)?.score ?? null : null;
++    }
++    return null;
++  };
++  const crawlStartedAt = runCompleted && run ? deriveCrawlStartedAt(run) ?? 'unavailable' : 'unavailable';
+   return <div className="space-y-4">
+-    <InternalLinkOpportunitiesPanel pages={linkPages} quarantine={bus.quarantine} conflicts={bus.conflicts} />
+-    <DeploymentArtifactsPanel rules={rules} />
+-    {projectId && <OptimizationTaskTracker projectId={projectId} pages={pages} scoreFor={scoreFor} />}
++    <InternalLinkOpportunitiesPanel pages={linkPages} quarantine={bus.quarantine} conflicts={bus.conflicts} projectId={projectId} baselineScoreFor={scoreFor} />
++    <DeploymentArtifactsPanel rules={rules} projectId={projectId} baselineScoreFor={scoreFor} />
++    {projectId && <OptimizationTaskTracker projectId={projectId} pages={pages} scoreFor={scoreFor} crawlStartedAt={crawlStartedAt} />}
+   </div>;
+ };
+diff --git a/src/components/Charts/semanticTopical/SemanticWorkspacePanels.tsx b/src/components/Charts/semanticTopical/SemanticWorkspacePanels.tsx
+index 81e1cacb..ada24af8 100644
+--- a/src/components/Charts/semanticTopical/SemanticWorkspacePanels.tsx
++++ b/src/components/Charts/semanticTopical/SemanticWorkspacePanels.tsx
+@@ -81,7 +81,8 @@ export const SemanticWorkspacePanels: React.FC<{ session: Session }> = ({ sessio
+   }
+ 
+   if (workspacePreferences.view === 'links') {
+-    return <LinksWorkspace projectId={session.projectId} pages={pages} />;
++    const selectedRun = runs.find((run) => run.id === currentRunId) ?? null;
++    return <LinksWorkspace projectId={session.projectId} pages={selectedRun?.result.pages ?? pages} run={selectedRun} />;
+   }
+ 
+   return (
+diff --git a/src/components/Domain/crawlResults/authority/CannibalizationPanel.tsx b/src/components/Domain/crawlResults/authority/CannibalizationPanel.tsx
+index 64cda522..2aca6798 100644
+--- a/src/components/Domain/crawlResults/authority/CannibalizationPanel.tsx
++++ b/src/components/Domain/crawlResults/authority/CannibalizationPanel.tsx
+@@ -4,6 +4,8 @@ import { HelpTip } from '@/components/Help/HelpTip';
+ import type { FocusPage } from '@/services/siteFocus';
+ import { checkDraftOverlap, type DraftOverlap, type TopicalAuthorityReport } from '@/services/topicalAuthority';
+ import { BriefCardButton } from '@/components/Charts/BriefCardButton';
++import { AddTaskButton } from '@/components/Charts/OptimizationTaskTracker';
++import { useProjectStore } from '@/stores/projectStore';
+ import { host } from './authorityText';
+ 
+ export interface CannibalizationPanelProps { report: TopicalAuthorityReport; pages: FocusPage[]; startUrl: string; language?: string }
+@@ -11,6 +13,7 @@ export interface CannibalizationPanelProps { report: TopicalAuthorityReport; pag
+ /** Cannibalization groups with a consolidation plan, plus a pre-publish check for a draft. */
+ export const CannibalizationPanel = ({ report, pages, startUrl, language }: CannibalizationPanelProps) => {
+   const { t } = useTranslation();
++  const projectId = useProjectStore((state) => state.activeProjectId);
+   const [title, setTitle] = useState('');
+   const [body, setBody] = useState('');
+   const [hits, setHits] = useState<DraftOverlap[] | null>(null);
+@@ -29,6 +32,7 @@ export const CannibalizationPanel = ({ report, pages, startUrl, language }: Cann
+                 {group.edges.map((edge) => <li key={`${edge.from}|${edge.to}`} className="break-all">{t('authority.cannibal.edge', { from: host(edge.from), to: host(edge.to), similarity: edge.similarity, basis: t(`authority.cannibal.basis.${edge.basis}`) })}</li>)}
+               </ul>
+               <p className="mt-1 text-slate-400">{t('authority.cannibal.steps')}</p>
++              {projectId && group.urls.filter((url) => url !== group.canonical).map((url) => <AddTaskButton key={`task:${url}`} projectId={projectId} task={{ kind: 'redirect-301', module: 'tas', url, targetUrl: group.canonical, baselineScore: report.tas }} />)}
+               <BriefCardButton input={{ origin: 'tas', title: host(group.canonical), sourceUrl: group.canonical, links: { donorUrls: group.urls.filter((url) => url !== group.canonical), targetPillarUrl: group.canonical } }} />
+             </li>
+           ))}
+diff --git a/src/components/Domain/crawlResults/focus/CrawlFocusTab.tsx b/src/components/Domain/crawlResults/focus/CrawlFocusTab.tsx
+index 75e5750b..35d54e0f 100644
+--- a/src/components/Domain/crawlResults/focus/CrawlFocusTab.tsx
++++ b/src/components/Domain/crawlResults/focus/CrawlFocusTab.tsx
+@@ -95,7 +95,7 @@ export const CrawlFocusTab = ({ pages, startUrl, run, projectId, history, benchm
+     <div className="space-y-4">
+       <FocusHero report={report} history={prior} onRecalculate={onRecalculate} recalcDisabled={spent} recalcNote={note} />
+       <FocusBanners report={report} />
+-      <GateBanner report={report} pages={pages} included={includeGated} onToggle={() => setIncludeGated((value) => !value)} sitemapUrls={run?.result?.sitemap_urls} />
++      <GateBanner report={report} pages={pages} included={includeGated} onToggle={() => setIncludeGated((value) => !value)} sitemapUrls={run?.result?.sitemap_urls} projectId={projectId} />
+       <ProtectionPanel report={report} projectId={projectId} />
+       {historySlot ?? <FocusHistoryChart series={series} />}
+       {weekly && <WeeklySummaryCard weekly={weekly} />}
+diff --git a/src/components/Domain/crawlResults/focus/GateBanner.tsx b/src/components/Domain/crawlResults/focus/GateBanner.tsx
+index e4068174..c5aaa4fe 100644
+--- a/src/components/Domain/crawlResults/focus/GateBanner.tsx
++++ b/src/components/Domain/crawlResults/focus/GateBanner.tsx
+@@ -1,5 +1,6 @@
+ import { useTranslation } from 'react-i18next';
+ import { HelpTip } from '@/components/Help/HelpTip';
++import { AddTaskButton } from '@/components/Charts/OptimizationTaskTracker';
+ import { detectConflicts, type GatePage } from '@/services/indexabilityGate';
+ import type { SiteFocusReport } from '@/services/siteFocus';
+ import { gateSkippedCount } from '@/services/siteFocus/gate';
+@@ -13,15 +14,18 @@ interface Props {
+   clicks?: ReadonlyMap<string, number>;
+   referringDomains?: ReadonlyMap<string, number>;
+   sitemapUrls?: readonly string[];
++  projectId?: string | null;
+ }
+ 
+ const box = 'flex flex-wrap items-center gap-2 rounded-lg border border-sky-500/30 bg-sky-500/5 px-3 py-2 text-xs text-sky-100';
+ 
+ /** "Skipped N pages (noindex/canonical)" counter with opt-in, plus directive conflicts. */
+-export const GateBanner = ({ report, pages, included, onToggle, clicks, referringDomains, sitemapUrls }: Props) => {
++export const GateBanner = ({ report, pages, included, onToggle, clicks, referringDomains, sitemapUrls, projectId }: Props) => {
+   const { t } = useTranslation();
+   const skipped = gateSkippedCount(report.pages);
+   const conflicts = detectConflicts({ pages, clicks, referringDomains, sitemapUrls });
++  const noindexUrls = new Set(conflicts.filter((conflict) => conflict.code === 'noindex-with-traffic' || conflict.code === 'pillar-noindex' || conflict.code === 'sitemap-noindex').map((conflict) => conflict.url));
++  const renderedNoindexTasks = new Set<string>();
+   if (!skipped && !included && !conflicts.length) return null;
+   return (
+     <div className="space-y-2" data-testid="gate-banner">
+@@ -32,9 +36,14 @@ export const GateBanner = ({ report, pages, included, onToggle, clicks, referrin
+       </p>
+       {conflicts.length > 0 && (
+         <ul className="space-y-1 text-xs text-amber-100" data-testid="gate-conflicts">
+-          {conflicts.map((c) => (
+-            <li key={`${c.code}:${c.url}`}>{t(`focus.conflict.${c.code}`, { url: c.url, inlinks: c.detail.inlinks, clicks: c.detail.clicks, domains: c.detail.referringDomains })}</li>
+-          ))}
++          {conflicts.map((c) => {
++            const showTask = Boolean(projectId && noindexUrls.has(c.url) && !renderedNoindexTasks.has(c.url));
++            if (showTask) renderedNoindexTasks.add(c.url);
++            return <li key={`${c.code}:${c.url}`} className="flex flex-wrap items-center gap-2">
++              <span>{t(`focus.conflict.${c.code}`, { url: c.url, inlinks: c.detail.inlinks, clicks: c.detail.clicks, domains: c.detail.referringDomains })}</span>
++              {showTask && <AddTaskButton projectId={projectId!} task={{ kind: 'remove-noindex', module: 'sfs', url: c.url, baselineScore: report.unavailable ? null : report.score }} />}
++            </li>
++          })}
+         </ul>
+       )}
+     </div>
+diff --git a/src/components/Domain/crawlResults/focus/PagePlaybookPanel.tsx b/src/components/Domain/crawlResults/focus/PagePlaybookPanel.tsx
+index 1eb08f91..8fee5c0e 100644
+--- a/src/components/Domain/crawlResults/focus/PagePlaybookPanel.tsx
++++ b/src/components/Domain/crawlResults/focus/PagePlaybookPanel.tsx
+@@ -3,12 +3,15 @@ import { useTranslation } from 'react-i18next';
+ import { buildBriefPrompt, buildPagePlaybook, buildRewriteBrief } from '@/services/siteFocus';
+ import type { PageFocus, SiteFocusReport } from '@/services/siteFocus';
+ import { BriefCardButton } from '@/components/Charts/BriefCardButton';
++import { AddTaskButton } from '@/components/Charts/OptimizationTaskTracker';
++import { useProjectStore } from '@/stores/projectStore';
+ import { codeDetail, codeText, codeTitle } from './focusText';
+ 
+ type CopyState = 'idle' | 'copied' | 'failed';
+ 
+ export const PagePlaybookPanel = ({ page, report }: { page: PageFocus; report: SiteFocusReport }) => {
+   const { t } = useTranslation();
++  const projectId = useProjectStore((state) => state.activeProjectId);
+   const [copy, setCopy] = useState<CopyState>('idle');
+   const playbook = buildPagePlaybook(page, report.pages, report.score, report.coreTopic);
+   const brief = page.playbook === 'C' ? undefined : buildRewriteBrief(page, report.coreTopic);
+@@ -48,6 +51,7 @@ export const PagePlaybookPanel = ({ page, report }: { page: PageFocus; report: S
+           <p><strong>{t('focus.brief.avoid')}:</strong> {brief.avoid.join(', ') || t('focus.detail.none')}</p>
+           <p><strong>{t('focus.brief.headings')}:</strong> {brief.headingSeeds.map((group) => group.join(' / ')).join('; ') || t('focus.detail.none')}</p>
+           <p>{t('focus.brief.words', { min: brief.wordCount.min, max: brief.wordCount.max })}</p>
++          {projectId && brief.mustInclude.length > 0 && <AddTaskButton projectId={projectId} task={{ kind: 'add-entities', module: 'sfs', url: page.url, requiredEntities: brief.mustInclude, baselineScore: report.unavailable ? null : report.score }} />}
+           <BriefCardButton input={{ origin: 'sfs', title: page.url, sourceUrl: page.url, missingEntities: brief.mustInclude }} />
+           <button type="button" onClick={() => void copyPrompt(buildBriefPrompt(brief))} className="rounded border border-slate-600 px-2 py-1 text-slate-100 hover:bg-slate-800 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-400">
+             {t('focus.brief.copy')}
+diff --git a/src/i18n/locales/ar.json b/src/i18n/locales/ar.json
+index c759780d..274f4378 100644
+--- a/src/i18n/locales/ar.json
++++ b/src/i18n/locales/ar.json
+@@ -7553,6 +7553,7 @@
+       "added": "تمت إضافة المهمة",
+       "empty": "لا توجد مهام بعد. أضف واحدة من توصية.",
+       "verify": "تحقق في آخر زحف",
++      "crawlUnavailable": "The selected crawl start time is unavailable; verification is deferred.",
+       "markImplemented": "وضع علامة منفذة",
+       "regression": "تراجع في النتيجة",
+       "kind": {
+diff --git a/src/i18n/locales/de.json b/src/i18n/locales/de.json
+index ccf6d82d..2a71e96d 100644
+--- a/src/i18n/locales/de.json
++++ b/src/i18n/locales/de.json
+@@ -7553,6 +7553,7 @@
+       "added": "Aufgabe hinzugefügt",
+       "empty": "Noch keine Aufgaben. Füge eine aus einer Empfehlung hinzu.",
+       "verify": "Mit letztem Crawl prüfen",
++      "crawlUnavailable": "The selected crawl start time is unavailable; verification is deferred.",
+       "markImplemented": "Als umgesetzt markieren",
+       "regression": "Score-Rückgang",
+       "kind": {
+diff --git a/src/i18n/locales/en.json b/src/i18n/locales/en.json
+index 98091f97..a2def6c9 100644
+--- a/src/i18n/locales/en.json
++++ b/src/i18n/locales/en.json
+@@ -7553,6 +7553,7 @@
+       "added": "Task added",
+       "empty": "No tasks yet. Add one from a recommendation.",
+       "verify": "Verify on latest crawl",
++      "crawlUnavailable": "The selected crawl start time is unavailable; verification is deferred.",
+       "markImplemented": "Mark as implemented",
+       "regression": "Score regression",
+       "kind": {
+diff --git a/src/i18n/locales/es.json b/src/i18n/locales/es.json
+index e2dd5878..6f938732 100644
+--- a/src/i18n/locales/es.json
++++ b/src/i18n/locales/es.json
+@@ -7553,6 +7553,7 @@
+       "added": "Tarea añadida",
+       "empty": "Aún no hay tareas. Añade una desde una recomendación.",
+       "verify": "Verificar en el último rastreo",
++      "crawlUnavailable": "The selected crawl start time is unavailable; verification is deferred.",
+       "markImplemented": "Marcar como implementada",
+       "regression": "Retroceso de puntuación",
+       "kind": {
+diff --git a/src/i18n/locales/fr.json b/src/i18n/locales/fr.json
+index c49192ea..74a7bbb0 100644
+--- a/src/i18n/locales/fr.json
++++ b/src/i18n/locales/fr.json
+@@ -7553,6 +7553,7 @@
+       "added": "Tâche ajoutée",
+       "empty": "Aucune tâche. Ajoutez-en une depuis une recommandation.",
+       "verify": "Vérifier sur le dernier crawl",
++      "crawlUnavailable": "The selected crawl start time is unavailable; verification is deferred.",
+       "markImplemented": "Marquer comme déployée",
+       "regression": "Régression du score",
+       "kind": {
+diff --git a/src/i18n/locales/it.json b/src/i18n/locales/it.json
+index d3c6c624..11f9fd66 100644
+--- a/src/i18n/locales/it.json
++++ b/src/i18n/locales/it.json
+@@ -7553,6 +7553,7 @@
+       "added": "Attività aggiunta",
+       "empty": "Nessuna attività. Aggiungine una da una raccomandazione.",
+       "verify": "Verifica sull'ultimo crawl",
++      "crawlUnavailable": "The selected crawl start time is unavailable; verification is deferred.",
+       "markImplemented": "Segna come implementata",
+       "regression": "Regressione del punteggio",
+       "kind": {
+diff --git a/src/i18n/locales/ja.json b/src/i18n/locales/ja.json
+index 2a18d18c..c51fbc6d 100644
+--- a/src/i18n/locales/ja.json
++++ b/src/i18n/locales/ja.json
+@@ -7553,6 +7553,7 @@
+       "added": "タスクを追加しました",
+       "empty": "タスクはまだありません。推奨から追加してください。",
+       "verify": "最新クロールで検証",
++      "crawlUnavailable": "The selected crawl start time is unavailable; verification is deferred.",
+       "markImplemented": "実装済みにする",
+       "regression": "スコア低下",
+       "kind": {
+diff --git a/src/i18n/locales/ko.json b/src/i18n/locales/ko.json
+index 65c4dcff..8e66f229 100644
+--- a/src/i18n/locales/ko.json
++++ b/src/i18n/locales/ko.json
+@@ -7553,6 +7553,7 @@
+       "added": "작업이 추가되었습니다",
+       "empty": "작업이 없습니다. 추천에서 추가하세요.",
+       "verify": "최신 크롤로 검증",
++      "crawlUnavailable": "The selected crawl start time is unavailable; verification is deferred.",
+       "markImplemented": "구현 완료로 표시",
+       "regression": "점수 하락",
+       "kind": {
+diff --git a/src/i18n/locales/pl.json b/src/i18n/locales/pl.json
+index 153d93e8..af932c66 100644
+--- a/src/i18n/locales/pl.json
++++ b/src/i18n/locales/pl.json
+@@ -7553,6 +7553,7 @@
+       "added": "Dodano zadanie",
+       "empty": "Brak zadań. Dodaj je z rekomendacji.",
+       "verify": "Zweryfikuj na ostatnim crawlu",
++      "crawlUnavailable": "Czas rozpoczęcia wybranego crawla jest niedostępny; weryfikacja została odroczona.",
+       "markImplemented": "Oznacz jako wdrożone",
+       "regression": "Regres wyniku",
+       "kind": {
+diff --git a/src/i18n/locales/pt.json b/src/i18n/locales/pt.json
+index e61a0a25..95e97480 100644
+--- a/src/i18n/locales/pt.json
++++ b/src/i18n/locales/pt.json
+@@ -7553,6 +7553,7 @@
+       "added": "Tarefa adicionada",
+       "empty": "Ainda não há tarefas. Adicione uma a partir de uma recomendação.",
+       "verify": "Verificar no último rastreio",
++      "crawlUnavailable": "The selected crawl start time is unavailable; verification is deferred.",
+       "markImplemented": "Marcar como implementada",
+       "regression": "Regressão da pontuação",
+       "kind": {
+diff --git a/src/i18n/locales/ru.json b/src/i18n/locales/ru.json
+index 3ff04336..16fe2de0 100644
+--- a/src/i18n/locales/ru.json
++++ b/src/i18n/locales/ru.json
+@@ -7553,6 +7553,7 @@
+       "added": "Задача добавлена",
+       "empty": "Задач пока нет. Добавьте её из рекомендации.",
+       "verify": "Проверить по последнему краулу",
++      "crawlUnavailable": "The selected crawl start time is unavailable; verification is deferred.",
+       "markImplemented": "Отметить как внедрённую",
+       "regression": "Падение показателя",
+       "kind": {
+diff --git a/src/i18n/locales/zh.json b/src/i18n/locales/zh.json
+index dfa30319..ebff14f2 100644
+--- a/src/i18n/locales/zh.json
++++ b/src/i18n/locales/zh.json
+@@ -7553,6 +7553,7 @@
+       "added": "任务已添加",
+       "empty": "暂无任务。请从建议中添加。",
+       "verify": "用最新抓取验证",
++      "crawlUnavailable": "The selected crawl start time is unavailable; verification is deferred.",
+       "markImplemented": "标记为已实施",
+       "regression": "分数回落",
+       "kind": {
+diff --git a/src/services/optimizationTasks/storage.ts b/src/services/optimizationTasks/storage.ts
+index cb18a192..b28c0c0d 100644
+--- a/src/services/optimizationTasks/storage.ts
++++ b/src/services/optimizationTasks/storage.ts
+@@ -9,6 +9,12 @@ const STATUSES: TaskStatus[] = ['planned', 'implemented', 'verified', 'failed'];
+ const PRIORITIES: TaskPriority[] = ['high', 'medium', 'low'];
+ 
+ export const tasksKey = (projectId: string) => `seomi_project_${projectId}_optimization_tasks_v1`;
++export const OPTIMIZATION_TASKS_STORAGE_EVENT = 'seomi:optimization-tasks-storage';
++
++const dispatchTasksChanged = (projectId: string): void => {
++  if (typeof window === 'undefined') return;
++  try { window.dispatchEvent(new CustomEvent(OPTIMIZATION_TASKS_STORAGE_EVENT, { detail: { projectId, key: tasksKey(projectId) } })); } catch { /* restricted WebView */ }
++};
+ 
+ const isTask = (value: unknown): value is OptimizationTask => {
+   const t = value as Partial<OptimizationTask> | null;
+@@ -22,7 +28,11 @@ export const readTasks = (projectId: string): OptimizationTask[] => {
+   return Array.isArray(raw) ? raw.filter(isTask).slice(-MAX_TASKS) : [];
+ };
+ 
+-export const writeTasks = (projectId: string, tasks: OptimizationTask[]): boolean => writeJsonStorage(tasksKey(projectId), tasks.slice(-MAX_TASKS));
++export const writeTasks = (projectId: string, tasks: OptimizationTask[]): boolean => {
++  const ok = writeJsonStorage(tasksKey(projectId), tasks.slice(-MAX_TASKS));
++  if (ok) dispatchTasksChanged(projectId);
++  return ok;
++};
+ 
+ export type NewTask = Pick<OptimizationTask, 'kind' | 'module' | 'url' | 'baselineScore'> & Partial<Pick<OptimizationTask, 'targetUrl' | 'requiredEntities' | 'owner' | 'priority' | 'dueDate'>>;
+ 
+diff --git a/tests/coverage100DomainAuthorityPieces.test.tsx b/tests/coverage100DomainAuthorityPieces.test.tsx
+index 8d19d9af..34a17d17 100644
+--- a/tests/coverage100DomainAuthorityPieces.test.tsx
++++ b/tests/coverage100DomainAuthorityPieces.test.tsx
+@@ -9,15 +9,27 @@ import { ReferenceMapPanel } from '@/components/Domain/crawlResults/authority/Re
+ import { SubtopicDrilldown } from '@/components/Domain/crawlResults/authority/SubtopicDrilldown';
+ import { pillarName } from '@/components/Domain/crawlResults/authority/authorityText';
+ import { buildAuthorityReport } from '@/services/topicalAuthority';
++import { readTasks } from '@/services/optimizationTasks/storage';
++import { useProjectStore } from '@/stores/projectStore';
+ import { NOW, OWN_HOST, ownReport, ownSite, referenceTaxonomy } from './authorityFixtures';
+ 
+ const pages = ownSite();
+ const startUrl = `https://${OWN_HOST}/`;
+ const report = () => buildAuthorityReport(pages, startUrl, ownReport(pages), { taxonomy: referenceTaxonomy(pages), now: NOW });
+ 
+-beforeEach(async () => { await i18n.changeLanguage('en'); localStorage.clear(); });
++beforeEach(async () => { await i18n.changeLanguage('en'); localStorage.clear(); useProjectStore.setState({ activeProjectId: null }); });
+ 
+ describe('coverage100 topical authority pieces', () => {
++  it('adds a real canonical redirect task from the mounted execution card', () => {
++    const base = report();
++    const canonical = 'https://coffee.test/canonical';
++    const donor = 'https://coffee.test/donor';
++    useProjectStore.setState({ activeProjectId: 'authority-card' });
++    render(<CannibalizationPanel report={{ ...base, tas: 74, cannibalization: [{ canonical, urls: [canonical, donor], edges: [], similarity: 90, sharedEntitiesPct: 80 }] }} pages={pages} startUrl={startUrl} />);
++    fireEvent.click(screen.getByRole('button', { name: i18n.t('executionCard.tasks.add') as string }));
++    expect(readTasks('authority-card')[0]).toMatchObject({ kind: 'redirect-301', module: 'tas', url: donor, targetUrl: canonical, baselineScore: 74 });
++  });
++
+   it('covers null pillar values, names and rows without optional coverage details', () => {
+     const base = report();
+     render(<AuthorityPillars report={{ ...base, pillars: { ...base.pillars, tcr: null, cdes: null }, warnings: ['empty-authority'], templateDuplicates: [] }} />);
+diff --git a/tests/coverage100UiRemainingB.test.tsx b/tests/coverage100UiRemainingB.test.tsx
+index 1df05e6a..8f52030e 100644
+--- a/tests/coverage100UiRemainingB.test.tsx
++++ b/tests/coverage100UiRemainingB.test.tsx
+@@ -10,7 +10,10 @@ import { SemanticAuditPanel } from '@/components/Charts/SemanticAuditPanel';
+ const m = vi.hoisted(() => ({
+   save: vi.fn(), tauri: vi.fn(() => false), cost: null as unknown, sfs: vi.fn(), tas: vi.fn(), scoreFns: [] as Array<(task: { module: string }) => number | null>,
+ }));
+-vi.mock('react-i18next', () => ({ useTranslation: () => ({ t: (key: string) => key }) }));
++vi.mock('react-i18next', async (importOriginal) => ({
++  ...(await importOriginal<typeof import('react-i18next')>()),
++  useTranslation: () => ({ t: (key: string) => key }),
++}));
+ vi.mock('@/services/tauri', () => ({ saveTextFile: m.save, isTauriEnvironment: m.tauri }));
+ vi.mock('@/services/clipboard', () => ({ copyText: vi.fn() }));
+ vi.mock('@/components/Charts/semanticTopical/OptimizationTaskTracker', () => ({ OptimizationTaskTracker: (props: { scoreFor: (task: { module: string }) => number | null }) => { m.scoreFns.push(props.scoreFor); return <div data-testid="tracker" />; } }));
+diff --git a/tests/coverage100UiResidualD.test.tsx b/tests/coverage100UiResidualD.test.tsx
+index 355ba087..2a5dd0a5 100644
+--- a/tests/coverage100UiResidualD.test.tsx
++++ b/tests/coverage100UiResidualD.test.tsx
+@@ -4,6 +4,7 @@ import { SemanticAuditPanel } from '@/components/Charts/SemanticAuditPanel';
+ import { BriefVersionHistory } from '@/components/Charts/contentBrief/BriefVersionHistory';
+ import { LinksWorkspace } from '@/components/Charts/semanticTopical/LinksWorkspace';
+ import { SemanticWorkspacePanels } from '@/components/Charts/semanticTopical/SemanticWorkspacePanels';
++import { createCrawlPageFixture, createCrawlResultFixture, createCrawlRunFixture } from './fixtures/crawl';
+ 
+ const m = vi.hoisted(() => ({
+   build: vi.fn(), compare: vi.fn(), guard: vi.fn(), monitor: vi.fn(), focus: vi.fn(), authority: vi.fn(), busInput: vi.fn(), bus: vi.fn(), rules: vi.fn(), takePending: vi.fn(), scoreFns: [] as Array<(task: { module: string }) => number | null>,
+@@ -61,14 +62,16 @@ describe('semantic audit and brief edge paths', () => {
+ 
+ describe('semantic links and workspace fallbacks', () => {
+   it('exposes score fallbacks for every optimization module and tolerates report errors', () => {
+-    const page = { url: 'https://site.test/', final_url: 'https://site.test/', http_status: 200 };
+-    render(<LinksWorkspace projectId="project" pages={[page] as never} />);
++    const page = createCrawlPageFixture({ url: 'https://site.test/', final_url: 'https://site.test/', http_status: 200 });
++    const pages = [page];
++    const run = createCrawlRunFixture({ id: 'current-run', result: createCrawlResultFixture({ pages }) });
++    render(<LinksWorkspace projectId="project" pages={pages} run={run} />);
+     const score = m.scoreFns[0];
+     expect(score({ module: 'sfs' })).toBe(88);
+     expect(score({ module: 'tas' })).toBe(77);
+     expect(score({ module: 'other' })).toBeNull();
+     m.focus.mockImplementationOnce(() => { throw new Error('incomplete'); });
+-    render(<LinksWorkspace projectId={null} pages={[page] as never} />);
++    render(<LinksWorkspace projectId={null} pages={pages} run={run} />);
+     expect(m.focus).toHaveBeenCalledTimes(2);
+   });
+ 
+diff --git a/tests/execWiringUi.test.tsx b/tests/execWiringUi.test.tsx
+index 886c46d6..b9eb25bc 100644
+--- a/tests/execWiringUi.test.tsx
++++ b/tests/execWiringUi.test.tsx
+@@ -1,5 +1,5 @@
+ import { fireEvent, render, screen } from '@testing-library/react';
+-import { beforeEach, describe, expect, it, vi } from 'vitest';
++import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
+ import i18n from '@/i18n';
+ import { BriefCardButton, BriefNavigationContext } from '@/components/Charts/BriefCardButton';
+ import { OptimizationTaskTracker } from '@/components/Charts/OptimizationTaskTracker';
+@@ -15,10 +15,11 @@ const tr = (k: string) => i18n.t(`executionCard.tasks.${k}`) as string;
+ const base = { id: 't1', kind: 'remove-410', module: 'sfs', status: 'planned', url: A, baselineScore: 50, priority: 'medium', createdAt: 'x' } as const;
+ 
+ describe('task tracker meta editing', () => {
+-  beforeEach(() => localStorage.clear());
++  beforeEach(() => { localStorage.clear(); vi.useFakeTimers(); vi.setSystemTime(new Date('2026-10-25T10:00:00Z')); });
++  afterEach(() => vi.useRealTimers());
+   it('edits owner, priority, SLA, filters and records delta on verify', () => {
+     writeTasks('p', [{ ...base, dueDate: '2020-01-01' }, { ...base, id: 't2', owner: 'Ann' }]);
+-    render(<OptimizationTaskTracker projectId="p" pages={[page({ url: A, final_url: A, http_status: 410 })]} scoreFor={() => 58} />);
++    render(<OptimizationTaskTracker projectId="p" pages={[page({ url: A, final_url: A, http_status: 410 })]} scoreFor={() => 58} crawlStartedAt="2099-01-01T00:00:00Z" />);
+     expect(screen.getByRole('status').textContent).toBe(tr('overdue'));
+     const owners = screen.getAllByLabelText(tr('owner'));
+     fireEvent.change(owners[0], { target: { value: 'Bob' } });
+@@ -68,7 +69,8 @@ describe('LinksWorkspace', () => {
+     const { rerender } = render(<LinksWorkspace projectId={null} pages={[]} />);
+     expect(screen.queryByLabelText(i18n.t('executionCard.tasks.aria') as string)).toBeNull();
+     writeTasks('p', [{ ...base }, { ...base, id: 't2', module: 'tas' }, { ...base, id: 't3', module: 'sprs' }]);
+-    rerender(<LinksWorkspace projectId="p" pages={[page({ url: A, final_url: A })]} />);
++    const selectedPages = [page({ url: A, final_url: A })];
++    rerender(<LinksWorkspace projectId="p" pages={selectedPages} run={{ id: 'run-p', startedAt: '2026-10-25T00:00:00Z', completedAt: '2026-10-25T00:01:00Z', result: { pages: selectedPages, cancelled: false } } as never} />);
+     expect(screen.getByLabelText(i18n.t('executionCard.tasks.aria') as string)).toBeTruthy();
+     fireEvent.click(screen.getByRole('button', { name: tr('verify') }));
+   });
+diff --git a/tests/linksWorkspaceComposition.test.tsx b/tests/linksWorkspaceComposition.test.tsx
+index ceec98de..57a3b620 100644
+--- a/tests/linksWorkspaceComposition.test.tsx
++++ b/tests/linksWorkspaceComposition.test.tsx
+@@ -2,6 +2,7 @@ import { render, screen } from '@testing-library/react';
+ import { describe, expect, it, vi } from 'vitest';
+ import { LinksWorkspace } from '@/components/Charts/semanticTopical/LinksWorkspace';
+ import type { CrawledPageSummary } from '@/types';
++import { createCrawlPageFixture } from './fixtures/crawl';
+ 
+ const seen = vi.hoisted(() => ({ links: [] as unknown[], tracker: [] as unknown[] }));
+ 
+@@ -13,7 +14,7 @@ vi.mock('@/components/Charts/OptimizationTaskTracker', () => ({
+   OptimizationTaskTracker: (props: { projectId: string }) => { seen.tracker.push(props); return <div data-testid="tracker">{props.projectId}</div>; },
+ }));
+ 
+-const page = (url: string) => ({ url, final_url: url, http_status: 200, title: url }) as unknown as CrawledPageSummary;
++const page = (url: string) => createCrawlPageFixture({ url, final_url: url, title: url });
+ 
+ describe('LinksWorkspace', () => {
+   it('renders opportunities and artifacts without a tracker when no project is open', () => {
+@@ -35,4 +36,24 @@ describe('LinksWorkspace', () => {
+     expect(Array.isArray(props.quarantine) || typeof props.quarantine === 'object').toBe(true);
+     expect(props.conflicts).toBeDefined();
+   });
++
++  it('passes the selected run and exposes real SPRS and EETV scores', () => {
++    const first = page('https://a/');
++    const second = { ...page('https://a/b'), links: [{ target_url: first.url, anchor_text: 'home', is_internal: true }] } as CrawledPageSummary;
++    const selectedPages = [first, second];
++    render(<LinksWorkspace projectId="p2" pages={selectedPages} run={{ id: 'run-2', startedAt: '2026-01-01T00:00:00Z', completedAt: '2026-01-01T00:01:00Z', result: { pages: selectedPages, cancelled: false } } as never} />);
++    const props = seen.tracker.at(-1) as { crawlStartedAt: string; scoreFor: (task: { module: string; url: string }) => number | null };
++    expect(props.crawlStartedAt).toBe('2026-01-01T00:00:00.000Z');
++    expect(typeof props.scoreFor({ module: 'sprs', url: first.url })).toBe('number');
++    expect(typeof props.scoreFor({ module: 'eetv', url: first.url })).toBe('number');
++  });
++
++  it('defers scores and verification when the run is incomplete or not the pages snapshot', () => {
++    const current = page('https://a/current');
++    const other = page('https://a/other');
++    render(<LinksWorkspace projectId="p3" pages={[current]} run={{ id: 'inflight', startedAt: '2026-01-01T00:00:00Z', completedAt: '2026-01-01T00:01:00Z', result: { pages: [other], cancelled: false } } as never} />);
++    const props = seen.tracker.at(-1) as { crawlStartedAt: string; scoreFor: (task: { module: string; url: string }) => number | null };
++    expect(props.crawlStartedAt).toBe('unavailable');
++    expect(props.scoreFor({ module: 'eetv', url: current.url })).toBeNull();
++  });
+ });
+diff --git a/tests/optimizationTaskTracker.test.tsx b/tests/optimizationTaskTracker.test.tsx
+index 6130ea7c..6caade88 100644
+--- a/tests/optimizationTaskTracker.test.tsx
++++ b/tests/optimizationTaskTracker.test.tsx
+@@ -1,18 +1,20 @@
+ import { fireEvent, render, screen } from '@testing-library/react';
+-import { beforeEach, describe, expect, it } from 'vitest';
++import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
+ import { AddTaskButton, OptimizationTaskTracker } from '@/components/Charts/OptimizationTaskTracker';
+-import { readTasks } from '@/services/optimizationTasks/storage';
++import { readTasks, writeTasks } from '@/services/optimizationTasks/storage';
+ import { createCrawlPageFixture as page } from './fixtures/crawl';
+ import i18n from '@/i18n';
+ 
+ const A = 'https://s.test/a';
++const CRAWL_START = '2026-10-26T10:00:00Z';
+ const tr = (k: string, o: Record<string, unknown> = {}) => i18n.t(`executionCard.tasks.${k}`, o) as string;
+ 
+ describe('task tracker UI', () => {
+-  beforeEach(() => localStorage.clear());
++  beforeEach(() => { localStorage.clear(); vi.useFakeTimers(); vi.setSystemTime(new Date('2026-10-25T10:00:00Z')); });
++  afterEach(() => vi.useRealTimers());
+ 
+   it('shows empty state', () => {
+-    render(<OptimizationTaskTracker projectId="p" pages={[]} scoreFor={() => null} />);
++    render(<OptimizationTaskTracker projectId="p" pages={[]} scoreFor={() => null} crawlStartedAt={CRAWL_START} />);
+     expect(screen.getByText(tr('empty'))).toBeTruthy();
+   });
+ 
+@@ -27,7 +29,7 @@ describe('task tracker UI', () => {
+     fireEvent.click(screen.getByRole('button', { name: tr('add') }));
+     expect(readTasks('p')).toHaveLength(1);
+ 
+-    render(<OptimizationTaskTracker projectId="p" pages={[page({ url: A, final_url: A, http_status: 200 })]} scoreFor={() => 55} />);
++    render(<OptimizationTaskTracker projectId="p" pages={[page({ url: A, final_url: A, http_status: 200 })]} scoreFor={() => 55} crawlStartedAt={CRAWL_START} />);
+     fireEvent.click(screen.getByRole('button', { name: tr('markImplemented') }));
+     fireEvent.click(screen.getByRole('button', { name: tr('verify') }));
+     const alert = screen.getByRole('alert');
+@@ -39,7 +41,7 @@ describe('task tracker UI', () => {
+   it('shows the verdict without delta when the module has no score', () => {
+     render(<AddTaskButton projectId="n" task={{ kind: 'remove-410', module: 'sfs', url: A, baselineScore: null }} />);
+     fireEvent.click(screen.getByRole('button', { name: tr('add') }));
+-    render(<OptimizationTaskTracker projectId="n" pages={[page({ url: A, final_url: A, http_status: 410 })]} scoreFor={() => null} />);
++    render(<OptimizationTaskTracker projectId="n" pages={[page({ url: A, final_url: A, http_status: 410 })]} scoreFor={() => null} crawlStartedAt={CRAWL_START} />);
+     fireEvent.click(screen.getByRole('button', { name: tr('markImplemented') }));
+     fireEvent.click(screen.getByRole('button', { name: tr('verify') }));
+     expect(screen.getByText(tr('verdict.gone-ok'))).toBeTruthy();
+@@ -49,9 +51,28 @@ describe('task tracker UI', () => {
+     localStorage.clear();
+     render(<AddTaskButton projectId="q" task={{ kind: 'remove-410', module: 'sfs', url: A, baselineScore: 10 }} />);
+     fireEvent.click(screen.getByRole('button', { name: tr('add') }));
+-    render(<OptimizationTaskTracker projectId="q" pages={[page({ url: A, final_url: A, http_status: 410 })]} scoreFor={() => 28} />);
++    render(<OptimizationTaskTracker projectId="q" pages={[page({ url: A, final_url: A, http_status: 410 })]} scoreFor={() => 28} crawlStartedAt={CRAWL_START} />);
+     fireEvent.click(screen.getByRole('button', { name: tr('markImplemented') }));
+     fireEvent.click(screen.getByRole('button', { name: tr('verify') }));
+     expect(screen.getByText(/\+18/)).toBeTruthy();
+   });
++
++  it('defers stale and unknown crawl evidence', () => {
++    writeTasks('fresh', [{ id: 'fresh-1', kind: 'remove-410', module: 'sfs', status: 'implemented', url: A, baselineScore: 10, priority: 'medium', createdAt: '2026-01-01T00:00:00Z', implementedAt: '2026-10-25T10:00:00Z' }]);
++    const view = render(<OptimizationTaskTracker projectId="fresh" pages={[page({ url: A, final_url: A, http_status: 410 })]} scoreFor={() => 20} crawlStartedAt="2026-10-25T09:00:00Z" />);
++    fireEvent.click(screen.getByRole('button', { name: tr('verify') }));
++    expect(readTasks('fresh')[0].status).toBe('implemented');
++    view.rerender(<OptimizationTaskTracker projectId="fresh" pages={[page({ url: A, final_url: A, http_status: 410 })]} scoreFor={() => 20} crawlStartedAt="unavailable" />);
++    fireEvent.click(screen.getByRole('button', { name: tr('verify') }));
++    expect(readTasks('fresh')[0].status).toBe('implemented');
++    expect(screen.getByRole('status').textContent).toBe(i18n.t('executionCard.tasks.crawlUnavailable'));
++  });
++
++  it('reloads persisted tasks when the project changes while mounted', () => {
++    writeTasks('project-a', [{ id: 'a', kind: 'remove-410', module: 'sfs', status: 'implemented', url: A, baselineScore: null, priority: 'medium', createdAt: '2026-01-01T00:00:00Z', implementedAt: '2026-01-01T00:00:00Z' }]);
++    const view = render(<OptimizationTaskTracker projectId="project-a" pages={[]} scoreFor={() => null} crawlStartedAt="unavailable" />);
++    expect(screen.getByRole('region')).toBeTruthy();
++    view.rerender(<OptimizationTaskTracker projectId="project-b" pages={[]} scoreFor={() => null} crawlStartedAt="unavailable" />);
++    expect(screen.getByText(tr('empty'))).toBeTruthy();
++  });
+ });
+diff --git a/tests/semanticWorkspacePanelsDirect.test.tsx b/tests/semanticWorkspacePanelsDirect.test.tsx
+index 9184419b..7272856d 100644
+--- a/tests/semanticWorkspacePanelsDirect.test.tsx
++++ b/tests/semanticWorkspacePanelsDirect.test.tsx
+@@ -4,6 +4,9 @@ import { SemanticWorkspacePanels } from '@/components/Charts/semanticTopical/Sem
+ import type { useSemanticTopicalSession } from '@/components/Charts/semanticTopical/useSemanticTopicalSession';
+ import type { TopicalWorkspacePreferences, TopicalWorkspaceView } from '@/components/Charts/semanticTopical/workspaceHelpers';
+ import { createEmptyTopicalMap } from '@/services/topicalMap';
++import { createCrawlPageFixture, createCrawlResultFixture, createCrawlRunFixture } from './fixtures/crawl';
++
++const linksSeen = vi.hoisted(() => ({ props: [] as Array<{ pages: unknown[]; run: { id: string } | null }> }));
+ 
+ vi.mock('@/components/Charts/SemanticAuditPanel', () => ({
+   SemanticAuditPanel: ({ currentRunId }: { currentRunId?: string }) => <div data-testid="audit-panel">audit:{currentRunId}</div>,
+@@ -23,6 +26,9 @@ vi.mock('@/components/Charts/SchemaGraphBuilder', () => ({
+ vi.mock('@/components/Charts/InternalLinkOpportunitiesPanel', () => ({
+   InternalLinkOpportunitiesPanel: ({ pages }: { pages: unknown[] }) => <div data-testid="links-panel">links:{pages.length}</div>,
+ }));
++vi.mock('@/components/Charts/semanticTopical/LinksWorkspace', () => ({
++  LinksWorkspace: (props: { pages: unknown[]; run: { id: string } | null }) => { linksSeen.props.push(props); return <div data-testid="links-workspace">links:{props.pages.length}:{props.run?.id ?? 'none'}</div>; },
++}));
+ vi.mock('@/components/Charts/TopicalCalendar', () => ({
+   TopicalCalendar: (props: any) => <div data-testid="calendar-panel">
+     <button onClick={() => props.onMonthChange('2026-11')}>calendar-month</button>
+@@ -57,7 +63,7 @@ describe('SemanticWorkspacePanels direct view contracts', () => {
+     view.rerender(<SemanticWorkspacePanels session={session('entity')} />);
+     expect(screen.getByTestId('entity-panel').textContent).toBe('entity:1');
+     view.rerender(<SemanticWorkspacePanels session={session('links')} />);
+-    expect(screen.getByTestId('links-panel').textContent).toBe('links:1');
++    expect(screen.getByTestId('links-workspace').textContent).toBe('links:1:none');
+   });
+ 
+   it('passes schema state and wraps each schema preference callback', () => {
+@@ -74,6 +80,20 @@ describe('SemanticWorkspacePanels direct view contracts', () => {
+     expect(current.updateWorkspacePreferences).toHaveBeenNthCalledWith(4, { schemaArticleType: 'Article' });
+   });
+ 
++  it('keeps the tracker snapshot paired with the selected run when mounted', () => {
++    const oldPages = [createCrawlPageFixture({ url: 'https://site.test/old' })];
++    const currentPages = [createCrawlPageFixture({ url: 'https://site.test/current' })];
++    const runs = [
++      createCrawlRunFixture({ id: 'old-run', startedAt: '2026-10-24T10:00:00Z', completedAt: '2026-10-24T10:01:00Z', result: createCrawlResultFixture({ pages: oldPages, cancelled: false }) }),
++      createCrawlRunFixture({ id: 'current-run', startedAt: '2026-10-25T10:00:00Z', completedAt: '2026-10-25T10:01:00Z', result: createCrawlResultFixture({ pages: currentPages, cancelled: false }) }),
++    ];
++    const view = render(<SemanticWorkspacePanels session={session('links', { pages: currentPages, runs, currentRunId: 'current-run' })} />);
++    expect(screen.getByTestId('links-workspace').textContent).toBe('links:1:current-run');
++    view.rerender(<SemanticWorkspacePanels session={session('links', { pages: oldPages, runs, currentRunId: 'old-run' })} />);
++    expect(screen.getByTestId('links-workspace').textContent).toBe('links:1:old-run');
++    expect(linksSeen.props.at(-1)?.pages).toBe(oldPages);
++  });
++
+   it('wraps calendar navigation callbacks and shows topic selection states', () => {
+     const current = session('calendar');
+     render(<SemanticWorkspacePanels session={current} />);
+diff --git a/tests/siteFocusCoverageGaps.test.tsx b/tests/siteFocusCoverageGaps.test.tsx
+index 664c3947..1c1f2dfd 100644
+--- a/tests/siteFocusCoverageGaps.test.tsx
++++ b/tests/siteFocusCoverageGaps.test.tsx
+@@ -1,12 +1,15 @@
+ import { act, cleanup, fireEvent, render, renderHook, screen } from '@testing-library/react';
+ import { afterEach, describe, expect, it, vi } from 'vitest';
+ import '@/i18n';
++import i18n from '@/i18n';
+ import { PagePlaybookPanel } from '@/components/Domain/crawlResults/focus/PagePlaybookPanel';
+ import { BenchmarkResults } from '@/components/Domain/crawlResults/focus/benchmark/BenchmarkResults';
+ import { useFocusBenchmark } from '@/components/Domain/crawlResults/focus/benchmark/useFocusBenchmark';
+ import { buildTreeRows } from '@/components/Domain/crawlResults/focus/focusHelpers';
+ import { DataForSEOClient } from '@/services/dataforseo';
+-import { buildSiteFocusReport } from '@/services/siteFocus';
++import { buildRewriteBrief, buildSiteFocusReport } from '@/services/siteFocus';
++import { readTasks } from '@/services/optimizationTasks/storage';
++import { useProjectStore } from '@/stores/projectStore';
+ import { benchmarkQueries, buildGaps, buildInsights, buildRanking, createBenchmarkDeps, pickCompetitors, runBenchmark, type BenchmarkOutcome, type BenchmarkReport, type CompetitorResult } from '@/services/siteFocusBenchmark';
+ import { useSettingsStore } from '@/stores/settingsStore';
+ import { useToolsStore } from '@/stores/toolsStore';
+@@ -59,6 +62,23 @@ describe('createBenchmarkDeps credentials wiring', () => {
+ });
+ 
+ describe('focus components edge branches', () => {
++  it('adds a real entity task from the mounted execution card and preserves unavailable baseline', () => {
++    const target = report.pages.find((candidate) => !candidate.skipped && candidate.playbook !== 'C');
++    expect(target).toBeDefined();
++    const brief = buildRewriteBrief(target!, report.coreTopic);
++    expect(brief.mustInclude.length).toBeGreaterThan(0);
++    useProjectStore.setState({ activeProjectId: 'focus-card' });
++    localStorage.clear();
++    render(<PagePlaybookPanel page={target!} report={report} />);
++    fireEvent.click(screen.getByRole('button', { name: i18n.t('executionCard.tasks.add') as string }));
++    expect(readTasks('focus-card')[0]).toMatchObject({ kind: 'add-entities', module: 'sfs', url: target!.url, baselineScore: report.score });
++    cleanup();
++    localStorage.clear();
++    render(<PagePlaybookPanel page={target!} report={{ ...report, unavailable: true, score: 0 }} />);
++    fireEvent.click(screen.getByRole('button', { name: i18n.t('executionCard.tasks.add') as string }));
++    expect(readTasks('focus-card')[0].baselineScore).toBeNull();
++  });
++
+   it('keeps URL order for identical paths', () => {
+     const [a, b] = report.pages;
+     const rows = buildTreeRows([{ ...b, url: 'https://diabetes.test/p?x=2' }, { ...a, url: 'https://diabetes.test/p?x=1' }]);
+diff --git a/tests/task130UiFlowV3.test.tsx b/tests/task130UiFlowV3.test.tsx
+new file mode 100644
+index 00000000..5ed64606
+--- /dev/null
++++ b/tests/task130UiFlowV3.test.tsx
+@@ -0,0 +1,108 @@
++import { cleanup, fireEvent, render, screen } from '@testing-library/react';
++import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
++import i18n from '@/i18n';
++import { DeploymentArtifactsPanel } from '@/components/Charts/DeploymentArtifactsPanel';
++import { InternalLinkOpportunitiesPanel } from '@/components/Charts/InternalLinkOpportunitiesPanel';
++import { LinksWorkspace } from '@/components/Charts/semanticTopical/LinksWorkspace';
++import { AddTaskButton } from '@/components/Charts/OptimizationTaskTracker';
++import { GateBanner } from '@/components/Domain/crawlResults/focus/GateBanner';
++import { PagePlaybookPanel } from '@/components/Domain/crawlResults/focus/PagePlaybookPanel';
++import { buildSiteFocusReport } from '@/services/siteFocus';
++import * as taskStorage from '@/services/optimizationTasks/storage';
++import { readTasks } from '@/services/optimizationTasks/storage';
++import { useProjectStore } from '@/stores/projectStore';
++import { createCrawlPageFixture as page } from './fixtures/crawl';
++import { diabetesSite } from './siteFocusFixtures';
++
++const addLabel = () => i18n.t('executionCard.tasks.add') as string;
++const project = 'task130-v3';
++
++beforeEach(async () => {
++  await i18n.changeLanguage('en');
++  localStorage.clear();
++  useProjectStore.setState({ activeProjectId: project });
++});
++afterEach(() => { cleanup(); localStorage.clear(); vi.restoreAllMocks(); });
++
++describe('issue 130 v3 mounted task CTAs', () => {
++  it('persists an add-link task from a measured internal-link candidate', () => {
++    const pages = [
++      page({ url: 'https://task130.test/source', final_url: 'https://task130.test/source', title: 'Solar source', semantic_terms: ['solar', 'panel', 'guide'], semantic_links: [] }),
++      page({ url: 'https://task130.test/target', final_url: 'https://task130.test/target', title: 'Solar target', semantic_terms: ['solar', 'panel', 'guide'], semantic_links: [] }),
++    ];
++    render(<InternalLinkOpportunitiesPanel pages={pages} projectId={project} baselineScoreFor={() => 41} />);
++    const add = screen.getAllByRole('button', { name: addLabel() })[0];
++    fireEvent.click(add);
++    fireEvent.click(add);
++    expect(readTasks(project)).toMatchObject([{ kind: 'add-link', module: 'sprs', url: 'https://task130.test/source', targetUrl: 'https://task130.test/target', baselineScore: 41, status: 'planned' }]);
++    expect(readTasks('another-project')).toEqual([]);
++  });
++
++  it('persists one planned task for each valid 301/410 deployment rule', () => {
++    render(<DeploymentArtifactsPanel projectId={project} baselineScoreFor={() => 72} rules={[
++      { from: 'https://task130.test/old', to: 'https://task130.test/new', status: 301 },
++      { from: 'https://task130.test/gone', to: null, status: 410 },
++    ]} />);
++    screen.getAllByRole('button', { name: addLabel() }).forEach((button) => fireEvent.click(button));
++    expect(readTasks(project)).toEqual(expect.arrayContaining([
++      expect.objectContaining({ kind: 'redirect-301', module: 'tas', url: 'https://task130.test/old', targetUrl: 'https://task130.test/new', baselineScore: 72, status: 'planned' }),
++      expect.objectContaining({ kind: 'remove-410', module: 'sfs', url: 'https://task130.test/gone', baselineScore: 72, status: 'planned' }),
++    ]));
++  });
++
++  it('persists remove-noindex only when the mounted conflict has crawl evidence', () => {
++    const noindex = page({ url: 'https://task130.test/noindex', final_url: 'https://task130.test/noindex', meta_robots: 'noindex', indexability_status: 'Blocked by noindex' });
++    const report = buildSiteFocusReport([noindex], noindex.url, { includeNonIndexable: true });
++    render(<GateBanner report={report} pages={[noindex]} included={false} onToggle={() => undefined} sitemapUrls={[noindex.url]} projectId={project} />);
++    fireEvent.click(screen.getByRole('button', { name: addLabel() }));
++    expect(readTasks(project)).toMatchObject([{ kind: 'remove-noindex', module: 'sfs', url: noindex.url, baselineScore: report.unavailable ? null : report.score, status: 'planned' }]);
++  });
++
++  it('retains the existing mounted entity CTA and nulls an unavailable score', () => {
++    const report = buildSiteFocusReport(diabetesSite(), 'https://diabetes.test/');
++    const target = report.pages.find((candidate) => !candidate.skipped && candidate.playbook !== 'C');
++    expect(target).toBeDefined();
++    render(<PagePlaybookPanel page={target!} report={{ ...report, unavailable: true, score: 0 }} />);
++    fireEvent.click(screen.getByRole('button', { name: addLabel() }));
++    expect(readTasks(project)).toMatchObject([{ kind: 'add-entities', module: 'sfs', url: target!.url, baselineScore: null, status: 'planned' }]);
++  });
++
++  it('refreshes the same mounted LinksWorkspace tracker after an internal-link CTA', () => {
++    const pages = [
++      page({ url: 'https://task130.test/source', final_url: 'https://task130.test/source', title: 'Solar source', word_count: 900, semantic_terms: ['solar', 'panel', 'guide'], semantic_links: [] }),
++      page({ url: 'https://task130.test/target', final_url: 'https://task130.test/target', title: 'Solar target', word_count: 900, semantic_terms: ['solar', 'panel', 'guide'], semantic_links: [] }),
++    ];
++    render(<LinksWorkspace projectId={project} pages={pages} />);
++    expect(screen.getByText(i18n.t('executionCard.tasks.empty') as string)).toBeTruthy();
++    const addButtons = screen.getAllByRole('button', { name: addLabel() });
++    expect(addButtons.length).toBeGreaterThan(0);
++    fireEvent.click(addButtons[0]);
++    fireEvent.click(addButtons[0]);
++    const tracker = screen.getByRole('region', { name: i18n.t('executionCard.tasks.aria') as string });
++    expect(tracker.textContent).toContain(`${i18n.t('executionCard.tasks.kind.add-link')}: https://task130.test/source`);
++    expect(tracker.textContent).toContain(i18n.t('executionCard.tasks.status.planned') as string);
++    expect(readTasks(project)).toHaveLength(1);
++    fireEvent.click(screen.getByRole('button', { name: i18n.t('executionCard.tasks.markImplemented') as string }));
++    expect(readTasks(project)[0].status).toBe('implemented');
++    expect(tracker.textContent).toContain(i18n.t('executionCard.tasks.status.implemented') as string);
++    expect(readTasks('other-project')).toEqual([]);
++  });
++
++  it('only calls onAdded after storage success and resets its status on project switch', () => {
++    const onAdded = vi.fn();
++    const view = render(<AddTaskButton projectId={project} task={{ kind: 'add-link', module: 'sprs', url: 'https://task130.test/source', targetUrl: 'https://task130.test/target', baselineScore: null }} onAdded={onAdded} />);
++    fireEvent.click(screen.getByRole('button', { name: addLabel() }));
++    expect(onAdded).toHaveBeenCalledOnce();
++    expect(screen.getByRole('status')).toBeTruthy();
++    view.rerender(<AddTaskButton projectId="switched-project" task={{ kind: 'add-link', module: 'sprs', url: 'https://task130.test/source', targetUrl: 'https://task130.test/target', baselineScore: null }} onAdded={onAdded} />);
++    expect(screen.queryByRole('status')).toBeNull();
++    const failed = vi.spyOn(taskStorage, 'writeTasks').mockReturnValue(false);
++    const failedCallback = vi.fn();
++    cleanup();
++    render(<AddTaskButton projectId="failed-project" task={{ kind: 'remove-410', module: 'sfs', url: 'https://task130.test/gone', baselineScore: null }} onAdded={failedCallback} />);
++    fireEvent.click(screen.getByRole('button', { name: addLabel() }));
++    expect(failedCallback).not.toHaveBeenCalled();
++    expect(screen.queryByRole('status')).toBeNull();
++    failed.mockRestore();
++  });
++});
+diff --git a/tests/task130UiFreshnessMounted.test.tsx b/tests/task130UiFreshnessMounted.test.tsx
+new file mode 100644
+index 00000000..e042ea80
+--- /dev/null
++++ b/tests/task130UiFreshnessMounted.test.tsx
+@@ -0,0 +1,70 @@
++import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
++import { cleanup, fireEvent, render, screen } from '@testing-library/react';
++import i18n from '@/i18n';
++import { LinksWorkspace } from '@/components/Charts/semanticTopical/LinksWorkspace';
++import { readTasks, writeTasks } from '@/services/optimizationTasks/storage';
++import type { OptimizationTask } from '@/services/optimizationTasks/types';
++import { createCrawlPageFixture, createCrawlResultFixture, createCrawlRunFixture } from './fixtures/crawl';
++
++const URL = 'https://audit130.test/removed';
++const IMPL = '2026-10-26T10:00:00Z';
++const verify = () => fireEvent.click(screen.getByRole('button', { name: i18n.t('executionCard.tasks.verify') as string }));
++const seed = (project = 'audit130', patch: Partial<OptimizationTask> = {}) => {
++  const task: OptimizationTask = { id: 'task', kind: 'remove-410', module: 'sfs', status: 'implemented',
++    url: URL, baselineScore: null, priority: 'medium', createdAt: '2026-10-26T08:00:00Z', implementedAt: IMPL, ...patch };
++  expect(writeTasks(project, [task])).toBe(true);
++};
++const run = (startedAt: string, completedAt: string) => createCrawlRunFixture({
++  id: startedAt, startedAt, completedAt, startUrl: URL,
++  result: createCrawlResultFixture({ start_url: URL, pages: [createCrawlPageFixture({ url: URL, final_url: URL, http_status: 410 })], duration_ms: 60_000 }),
++});
++
++beforeEach(async () => {
++  await i18n.changeLanguage('en'); localStorage.clear(); vi.useFakeTimers(); vi.setSystemTime(new Date(IMPL));
++  vi.stubGlobal('fetch', vi.fn(async () => { throw new Error('Unexpected network in mounted task verification'); }));
++});
++afterEach(() => { cleanup(); vi.useRealTimers(); vi.unstubAllGlobals(); });
++
++describe('auditor task130 mounted freshness regressions', () => {
++  it('keeps an old crawl unverified then accepts the later completed snapshot', () => {
++    seed();
++    const old = run('2026-10-26T09:00:00Z', '2026-10-26T09:01:00Z');
++    const view = render(<LinksWorkspace projectId="audit130" pages={old.result.pages} run={old} />);
++    verify(); expect(readTasks('audit130')[0].status).toBe('implemented');
++    vi.setSystemTime(new Date('2026-10-26T10:02:00Z'));
++    const fresh = run('2026-10-26T10:01:00Z', '2026-10-26T10:02:00Z');
++    view.rerender(<LinksWorkspace projectId="audit130" pages={fresh.result.pages} run={fresh} />);
++    verify();
++    expect(readTasks('audit130')[0]).toMatchObject({ status: 'verified', verifiedAt: '2026-10-26T10:02:00.000Z', verdict: { code: 'gone-ok', delta: null, regression: false } });
++  });
++
++  it('does not borrow the timestamp of another page snapshot', () => {
++    seed();
++    const old = run('2026-10-26T09:00:00Z', '2026-10-26T09:01:00Z');
++    const fresh = run('2026-10-26T10:01:00Z', '2026-10-26T10:02:00Z');
++    render(<LinksWorkspace projectId="audit130" pages={old.result.pages} run={fresh} />);
++    verify(); expect(readTasks('audit130')[0].status).toBe('implemented');
++  });
++
++  it.each(['', 'invalid'])('does not accept incomplete/invalid completion: %s', completedAt => {
++    seed(); const next = run('2026-10-26T10:01:00Z', completedAt);
++    render(<LinksWorkspace projectId="audit130" pages={next.result.pages} run={next} />);
++    verify(); expect(readTasks('audit130')[0].status).toBe('implemented');
++  });
++
++  it('does not verify a legacy task without implementation time', () => {
++    seed('audit130', { implementedAt: undefined }); const next = run('2026-10-26T10:01:00Z', '2026-10-26T10:02:00Z');
++    render(<LinksWorkspace projectId="audit130" pages={next.result.pages} run={next} />);
++    verify(); expect(readTasks('audit130')[0].status).toBe('implemented');
++  });
++
++  it('verifies only the currently displayed project after switching', () => {
++    seed('project-a'); seed('project-b');
++    const next = run('2026-10-26T10:01:00Z', '2026-10-26T10:02:00Z');
++    const view = render(<LinksWorkspace projectId="project-a" pages={next.result.pages} run={next} />);
++    view.rerender(<LinksWorkspace projectId="project-b" pages={next.result.pages} run={next} />);
++    verify();
++    expect(readTasks('project-a')[0].status).toBe('implemented');
++    expect(readTasks('project-b')[0].status).toBe('verified');
++  });
++});

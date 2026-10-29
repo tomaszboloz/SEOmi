@@ -1,0 +1,72 @@
+diff --git a/tests/task130UiFlowV3.test.tsx b/tests/task130UiFlowV3.test.tsx
+new file mode 100644
+index 00000000..92328a22
+--- /dev/null
++++ b/tests/task130UiFlowV3.test.tsx
+@@ -0,0 +1,66 @@
++import { cleanup, fireEvent, render, screen } from '@testing-library/react';
++import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
++import i18n from '@/i18n';
++import { DeploymentArtifactsPanel } from '@/components/Charts/DeploymentArtifactsPanel';
++import { InternalLinkOpportunitiesPanel } from '@/components/Charts/InternalLinkOpportunitiesPanel';
++import { GateBanner } from '@/components/Domain/crawlResults/focus/GateBanner';
++import { PagePlaybookPanel } from '@/components/Domain/crawlResults/focus/PagePlaybookPanel';
++import { buildSiteFocusReport } from '@/services/siteFocus';
++import { readTasks } from '@/services/optimizationTasks/storage';
++import { useProjectStore } from '@/stores/projectStore';
++import { createCrawlPageFixture as page } from './fixtures/crawl';
++import { diabetesSite } from './siteFocusFixtures';
++
++const addLabel = () => i18n.t('executionCard.tasks.add') as string;
++const project = 'task130-v3';
++
++beforeEach(async () => {
++  await i18n.changeLanguage('en');
++  localStorage.clear();
++  useProjectStore.setState({ activeProjectId: project });
++});
++afterEach(() => { cleanup(); localStorage.clear(); vi.restoreAllMocks(); });
++
++describe('issue 130 v3 mounted task CTAs', () => {
++  it('persists an add-link task from a measured internal-link candidate', () => {
++    const pages = [
++      page({ url: 'https://task130.test/source', final_url: 'https://task130.test/source', title: 'Solar source', semantic_terms: ['solar', 'panel', 'guide'], semantic_links: [] }),
++      page({ url: 'https://task130.test/target', final_url: 'https://task130.test/target', title: 'Solar target', semantic_terms: ['solar', 'panel', 'guide'], semantic_links: [] }),
++    ];
++    render(<InternalLinkOpportunitiesPanel pages={pages} projectId={project} baselineScoreFor={() => 41} />);
++    const add = screen.getAllByRole('button', { name: addLabel() })[0];
++    fireEvent.click(add);
++    fireEvent.click(add);
++    expect(readTasks(project)).toMatchObject([{ kind: 'add-link', module: 'sprs', url: 'https://task130.test/source', targetUrl: 'https://task130.test/target', baselineScore: 41, status: 'planned' }]);
++    expect(readTasks('another-project')).toEqual([]);
++  });
++
++  it('persists one planned task for each valid 301/410 deployment rule', () => {
++    render(<DeploymentArtifactsPanel projectId={project} baselineScoreFor={() => 72} rules={[
++      { from: 'https://task130.test/old', to: 'https://task130.test/new', status: 301 },
++      { from: 'https://task130.test/gone', to: null, status: 410 },
++    ]} />);
++    screen.getAllByRole('button', { name: addLabel() }).forEach((button) => fireEvent.click(button));
++    expect(readTasks(project)).toEqual(expect.arrayContaining([
++      expect.objectContaining({ kind: 'redirect-301', module: 'tas', url: 'https://task130.test/old', targetUrl: 'https://task130.test/new', baselineScore: 72, status: 'planned' }),
++      expect.objectContaining({ kind: 'remove-410', module: 'sfs', url: 'https://task130.test/gone', baselineScore: 72, status: 'planned' }),
++    ]));
++  });
++
++  it('persists remove-noindex only when the mounted conflict has crawl evidence', () => {
++    const noindex = page({ url: 'https://task130.test/noindex', final_url: 'https://task130.test/noindex', meta_robots: 'noindex', indexability_status: 'Blocked by noindex' });
++    const report = buildSiteFocusReport([noindex], noindex.url, { includeNonIndexable: true });
++    render(<GateBanner report={report} pages={[noindex]} included={false} onToggle={() => undefined} sitemapUrls={[noindex.url]} projectId={project} />);
++    fireEvent.click(screen.getByRole('button', { name: addLabel() }));
++    expect(readTasks(project)).toMatchObject([{ kind: 'remove-noindex', module: 'sfs', url: noindex.url, baselineScore: report.unavailable ? null : report.score, status: 'planned' }]);
++  });
++
++  it('retains the existing mounted entity CTA and nulls an unavailable score', () => {
++    const report = buildSiteFocusReport(diabetesSite(), 'https://diabetes.test/');
++    const target = report.pages.find((candidate) => !candidate.skipped && candidate.playbook !== 'C');
++    expect(target).toBeDefined();
++    render(<PagePlaybookPanel page={target!} report={{ ...report, unavailable: true, score: 0 }} />);
++    fireEvent.click(screen.getByRole('button', { name: addLabel() }));
++    expect(readTasks(project)).toMatchObject([{ kind: 'add-entities', module: 'sfs', url: target!.url, baselineScore: null, status: 'planned' }]);
++  });
++});

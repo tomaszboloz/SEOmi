@@ -1,0 +1,286 @@
+diff --git a/tests/geminiGapRELEASECopilot.test.tsx b/tests/geminiGapRELEASECopilot.test.tsx
+new file mode 100644
+index 00000000..6cf224d7
+--- /dev/null
++++ b/tests/geminiGapRELEASECopilot.test.tsx
+@@ -0,0 +1,69 @@
++import { act, fireEvent, render, screen } from '@testing-library/react';
++import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
++import i18n from '@/i18n';
++import { CopilotPatcherPanel } from '@/components/Results/copilotPatcher';
++import type { PatchTarget } from '@/services/copilotPatcher';
++import { useProjectStore } from '@/stores/projectStore';
++import { useAuthStore } from '@/stores/authStore';
++
++const target: PatchTarget = {
++  h1: 'Blood glucose guide', h2: ['Normal values'], heading: 'What is normal?',
++  paragraph: 'Blood glucose is 90 mg/dl.', language: 'en', pageEntities: ['Blood glucose'], missingEntities: [], removeFragments: [],
++};
++
++describe('RELEASE CopilotPatcherPanel branches lines 71 and 79', () => {
++  beforeEach(async () => {
++    await i18n.changeLanguage('en');
++    useProjectStore.setState({ activeProjectId: 'ui-project' });
++  });
++
++  afterEach(() => {
++    vi.restoreAllMocks();
++  });
++
++  it('covers line 71 when providers is undefined (selectedConnected true vs false)', async () => {
++    // Branch 1: providers is undefined and selectedConnected is false -> configured is []
++    useAuthStore.setState({
++      provider: 'ollama' as never,
++      connectionStatus: { ollama: 'disconnected' } as never,
++    });
++    const { rerender } = render(<CopilotPatcherPanel target={target} projectId="ui-project" index={0} />);
++    fireEvent.click(screen.getByRole('button', { name: 'Suggest patch 1' }));
++    expect(await screen.findByText('Connect an AI provider before requesting a patch.')).toBeTruthy();
++
++    // Branch 2: providers is undefined and selectedConnected is true -> configured is [{ id, local, generate }]
++    useAuthStore.setState({
++      provider: 'ollama' as never,
++      connectionStatus: { ollama: 'connected' } as never,
++      connectionMethod: { ollama: 'local_cli' } as never,
++    });
++    rerender(<CopilotPatcherPanel target={target} projectId="ui-project" index={0} />);
++    fireEvent.click(screen.getByRole('button', { name: 'Suggest patch 1' }));
++    // Will attempt generation; since createBriefDeps has no live local CLI backend, it will fail with an error message
++    expect(await screen.findByRole('button', { name: 'Suggest patch 1' })).toBeTruthy();
++  });
++
++  it('covers line 79 result branches (provider-error vs aborted)', async () => {
++    // Branch 1: provider throws generic Error -> result.reason === 'provider-error' -> shows error
++    const failingProvider = {
++      id: 'mock-fail',
++      generate: vi.fn(async () => { throw new Error('Simulated upstream model crash'); }),
++    };
++    render(<CopilotPatcherPanel target={target} projectId="ui-project" index={0} providers={[failingProvider]} />);
++    fireEvent.click(screen.getByRole('button', { name: 'Suggest patch 1' }));
++    const alert = await screen.findByRole('alert');
++    expect(alert.textContent).toContain('Simulated upstream model crash');
++
++    // Branch 2: provider throws DOMException AbortError from within generate without aborting panel controller
++    // proposePatch returns { ok: false, reason: 'aborted' } -> line 79 else-if evaluates to false (no state update)
++    const abortingProvider = {
++      id: 'mock-abort',
++      generate: vi.fn(async () => { throw new DOMException('aborted', 'AbortError'); }),
++    };
++    const { unmount } = render(<CopilotPatcherPanel target={target} projectId="ui-project" index={1} providers={[abortingProvider]} />);
++    fireEvent.click(screen.getByRole('button', { name: 'Suggest patch 2' }));
++    await act(async () => { await new Promise((r) => setTimeout(r, 20)); });
++    expect(screen.queryByText('Patch generation failed.')).toBeNull();
++    unmount();
++  });
++});
+diff --git a/tests/geminiGapRELEASEHelpPerformance.test.ts b/tests/geminiGapRELEASEHelpPerformance.test.ts
+new file mode 100644
+index 00000000..79c6a4b7
+--- /dev/null
++++ b/tests/geminiGapRELEASEHelpPerformance.test.ts
+@@ -0,0 +1,97 @@
++import { act, renderHook } from '@testing-library/react';
++import { afterEach, describe, expect, it, vi } from 'vitest';
++import i18n from '@/i18n';
++import { useHelp } from '@/components/Help/useHelp';
++import { CLOSE_DELAY_MS, OPEN_DELAY_MS, useHelpTip } from '@/components/Help/useHelpTip';
++import { useHelpStore } from '@/components/Help/helpStore';
++import { cruxCategory } from '@/components/Performance/cruxEvidence';
++
++describe('RELEASE help and performance branch coverage', () => {
++  const originalDev = import.meta.env.DEV;
++  const originalMode = import.meta.env.MODE;
++
++  afterEach(() => {
++    import.meta.env.DEV = originalDev;
++    import.meta.env.MODE = originalMode;
++    vi.restoreAllMocks();
++    vi.useRealTimers();
++    useHelpStore.setState({ openId: null });
++  });
++
++  it('covers useHelp line 14 dev/mode warn branches and valid help resolution', () => {
++    const warnSpy = vi.spyOn(console, 'warn').mockImplementation(() => {});
++
++    // DEV=true, MODE='development' -> logs warning for missing/incomplete key
++    import.meta.env.DEV = true;
++    import.meta.env.MODE = 'development';
++    const { result: devResult } = renderHook(() => useHelp('nonexistent-gap-key' as never));
++    expect(devResult.current).toBeNull();
++    expect(warnSpy).toHaveBeenCalledWith('[help] missing or incomplete help entry "help.nonexistent-gap-key"');
++
++    // DEV=true, MODE='test' -> suppresses warning
++    warnSpy.mockClear();
++    import.meta.env.MODE = 'test';
++    const { result: testResult } = renderHook(() => useHelp('nonexistent-gap-key' as never));
++    expect(testResult.current).toBeNull();
++    expect(warnSpy).not.toHaveBeenCalled();
++
++    // DEV=false -> suppresses warning
++    import.meta.env.DEV = false;
++    import.meta.env.MODE = 'development';
++    const { result: prodResult } = renderHook(() => useHelp('nonexistent-gap-key' as never));
++    expect(prodResult.current).toBeNull();
++    expect(warnSpy).not.toHaveBeenCalled();
++
++    // Valid help entry
++    i18n.addResource('en', 'translation', 'help.sample-gap', {
++      title: 'T', what: 'W', why: 'Y', action: 'A', example: 'E', learnMore: 'L',
++    } as never);
++    const { result: validResult } = renderHook(() => useHelp('sample-gap' as never));
++    expect(validResult.current).toEqual({
++      title: 'T', what: 'W', why: 'Y', action: 'A', example: 'E', learnMore: 'L',
++    });
++  });
++
++  it('covers useHelpTip line 54 open vs closed pointer enter branches', () => {
++    vi.useFakeTimers();
++    const { result } = renderHook(() => useHelpTip());
++    expect(result.current.open).toBe(false);
++
++    // Touch pointer type returns early
++    result.current.trigger.onPointerEnter({ pointerType: 'touch' } as never);
++    expect(useHelpStore.getState().openId).toBeNull();
++
++    // Closed: schedules timer and opens after delay
++    result.current.trigger.onPointerEnter({ pointerType: 'mouse' } as never);
++    act(() => { vi.advanceTimersByTime(OPEN_DELAY_MS); });
++    expect(useHelpStore.getState().openId).toBe(result.current.uid);
++    expect(result.current.open).toBe(true);
++
++    // Open: pointer enter branch evaluates (!open === false), does not schedule open timer
++    result.current.trigger.onPointerEnter({ pointerType: 'mouse' } as never);
++    expect(useHelpStore.getState().openId).toBe(result.current.uid);
++
++    // Pointer leave hides after delay
++    result.current.trigger.onPointerLeave({ pointerType: 'mouse' } as never);
++    act(() => { vi.advanceTimersByTime(CLOSE_DELAY_MS); });
++    expect(useHelpStore.getState().openId).toBeNull();
++  });
++
++  it('covers cruxCategory line 46 hasOwnProperty branches for thresholds', () => {
++    const t = (k: string) => k;
++
++    // Has own property: valid known metric and rating levels
++    expect(cruxCategory({ metric: 'largest_contentful_paint', percentiles: { p75: 2000 } }, t)).toBe('pageSpeedUi.crux.good');
++    expect(cruxCategory({ metric: 'largest_contentful_paint', percentiles: { p75: 3500 } }, t)).toBe('pageSpeedUi.crux.needsImprovement');
++    expect(cruxCategory({ metric: 'largest_contentful_paint', percentiles: { p75: 4500 } }, t)).toBe('pageSpeedUi.crux.poor');
++
++    // Does NOT have own property: unknown metric name -> bounds undefined -> unrated
++    expect(cruxCategory({ metric: 'unknown_metric_gap', percentiles: { p75: 100 } }, t)).toBe('pageSpeedUi.crux.unrated');
++
++    // metric is undefined -> fallback '' -> does NOT have own property -> bounds undefined -> unrated
++    expect(cruxCategory({ metric: undefined, percentiles: { p75: 100 } }, t)).toBe('pageSpeedUi.crux.unrated');
++
++    // null percentile value
++    expect(cruxCategory({ metric: 'largest_contentful_paint', percentiles: { p75: null } }, t)).toBe('pageSpeedUi.crux.unrated');
++  });
++});
+diff --git a/tests/geminiGapRELEASENodes.test.tsx b/tests/geminiGapRELEASENodes.test.tsx
+new file mode 100644
+index 00000000..7b9e539a
+--- /dev/null
++++ b/tests/geminiGapRELEASENodes.test.tsx
+@@ -0,0 +1,102 @@
++import { render, screen } from '@testing-library/react';
++import { beforeEach, describe, expect, it } from 'vitest';
++import i18n from '@/i18n';
++import { useAuditStore } from '@/stores/auditStore';
++import { DataForSeoSummaryCard } from '@/components/Results/dataforseoAudit/DataForSeoSummaryCard';
++import { MetadataAccessibilityFindings } from '@/components/Results/metadata/MetadataAccessibilityFindings';
++import type { PageAuditData } from '@/types';
++
++describe('RELEASE DataForSeoSummaryCard and MetadataAccessibilityFindings branch coverage', () => {
++  beforeEach(async () => {
++    await i18n.changeLanguage('en');
++  });
++
++  it('covers DataForSeoSummaryCard line 33 dofollowRatio null vs computed branches', () => {
++    // Branch 1: dofollowRatio is null (no data or zero backlinks) -> shows runLiveMetric
++    useAuditStore.setState({ dataforseoData: undefined });
++    const { rerender } = render(<DataForSeoSummaryCard />);
++    expect(screen.getByText('Run a live request to load this metric.')).toBeTruthy();
++
++    // Branch 2: dofollowRatio is computed (total: 200, dofollow: 150 -> 75%) -> shows percentage
++    useAuditStore.setState({
++      dataforseoData: {
++        total_backlinks: 200,
++        dofollow_backlinks: 150,
++        referring_domains: 25,
++        referring_main_domains: 20,
++        rank: 60,
++        broken_backlinks: 0,
++      } as never,
++    });
++    rerender(<DataForSeoSummaryCard />);
++    expect(screen.getByText('75%')).toBeTruthy();
++    expect(screen.queryByText('Run a live request to load this metric.')).toBeNull();
++  });
++
++  it('covers MetadataAccessibilityFindings line 58 shownCount condition branches', () => {
++    const baseAudit = {
++      url: 'https://site.test/page', final_url: 'https://site.test/page', http_status: 200,
++      page_size_bytes: 1000, title: 'Test', meta_description: '', h1: [], h2: [], h3: [], canonical_url: null,
++      meta_robots: null, x_robots_tag: null, indexability_status: 'indexable', indexability_reason: null,
++      links: [], images: [], scripts: [], stylesheets: [], redirect_chain: [],
++    };
++
++    // Branch 1: finding.code is unlabeled form controls AND elements.length (1) < unlabeled_form_control_count (4) -> renders shownCount
++    const auditTruncated = {
++      ...baseAudit,
++      accessibility: {
++        score: 60,
++        unlabeled_form_control_count: 4,
++        findings: [{
++          code: 'accessibility-form-controls-unlabeled', severity: 'warning', message: 'Unlabeled form controls', evidence: '4 controls',
++          elements: [{ dom_position: 1, dom_query: 'input#email', html_snippet: '<input id="email" />' }],
++        }],
++      },
++    } as unknown as PageAuditData;
++    const { rerender } = render(<MetadataAccessibilityFindings audit={auditTruncated} />);
++    expect(screen.getByText('Shown 1 of 4 elements; the stored report limit is 50.')).toBeTruthy();
++
++    // Branch 2: elements.length (1) >= unlabeled_form_control_count (1) -> does NOT render shownCount
++    const auditComplete = {
++      ...baseAudit,
++      accessibility: {
++        score: 90,
++        unlabeled_form_control_count: 1,
++        findings: [{
++          code: 'accessibility-form-controls-unlabeled', severity: 'warning', message: 'Unlabeled form controls', evidence: '1 control',
++          elements: [{ dom_position: 1, dom_query: 'input#email', html_snippet: '<input id="email" />' }],
++        }],
++      },
++    } as unknown as PageAuditData;
++    rerender(<MetadataAccessibilityFindings audit={auditComplete} />);
++    expect(screen.queryByText('Shown 1 of 4 elements; the stored report limit is 50.')).toBeNull();
++
++    // Branch 3: unlabeled_form_control_count is undefined (tests ?? 0 fallback)
++    const auditMissingCount = {
++      ...baseAudit,
++      accessibility: {
++        score: 80,
++        findings: [{
++          code: 'accessibility-form-controls-unlabeled', severity: 'warning', message: 'Unlabeled form controls', evidence: '0 controls',
++          elements: [{ dom_position: 1, dom_query: 'input#email', html_snippet: '<input id="email" />' }],
++        }],
++      },
++    } as unknown as PageAuditData;
++    rerender(<MetadataAccessibilityFindings audit={auditMissingCount} />);
++    expect(screen.queryByText(/Shown 1 of/)).toBeNull();
++
++    // Branch 4: different finding code -> does NOT render shownCount
++    const auditOther = {
++      ...baseAudit,
++      accessibility: {
++        score: 70,
++        findings: [{
++          code: 'accessibility-document-language-missing', severity: 'error', message: 'Language missing', evidence: '',
++          elements: [{ dom_position: 1, dom_query: 'html', html_snippet: '<html>' }],
++        }],
++      },
++    } as unknown as PageAuditData;
++    rerender(<MetadataAccessibilityFindings audit={auditOther} />);
++    expect(screen.queryByText(/Shown 1 of/)).toBeNull();
++  });
++});

@@ -1,0 +1,138 @@
+diff --git a/tests/desktopE2eFixtureBoundary.test.ts b/tests/desktopE2eFixtureBoundary.test.ts
+new file mode 100644
+--- /dev/null
++++ b/tests/desktopE2eFixtureBoundary.test.ts
+@@ -0,0 +1,133 @@
++import { readFileSync } from 'node:fs';
++import { resolve } from 'node:path';
++import vm from 'node:vm';
++import { describe, expect, it } from 'vitest';
++
++describe('desktop E2E fixture boundary regressions', () => {
++  const loadScripts = (fixtureUrl: string) => {
++    const rendererFile = resolve(process.cwd(), 'src-tauri/examples/desktop_e2e_renderer.js');
++    const crawlFile = resolve(process.cwd(), 'src-tauri/examples/desktop_e2e_crawl.js');
++    const rendererText = readFileSync(rendererFile, 'utf8');
++    const crawlText = readFileSync(crawlFile, 'utf8');
++    const win: any = { __seomiE2eFixtureUrl: fixtureUrl };
++    vm.runInNewContext(crawlText, { window: win, URL, Date, Uint8Array, atob, globalThis: { crypto } }, { filename: crawlFile });
++    vm.runInNewContext(rendererText, { window: win, URL, Date, Uint8Array, atob }, { filename: rendererFile });
++    return { renderer: win.__seomiRendererE2e, crawl: win.__seomiDesktopCrawlValidation };
++  };
++
++  const fixtureOrigin = 'http://127.0.0.1:49152/';
++
++  const baseArtifact = (kind: string, finalUrl = fixtureOrigin) => ({
++    artifactType: kind, requestedUrl: fixtureOrigin, finalUrl, runId: 'desktop-e2e-renderer',
++    capturedAt: '2026-10-25T10:00:00Z', contentType: kind === 'screenshot' ? 'image/png' : 'application/pdf',
++    fileName: `rendered-page-20261025T100000Z-${kind}.${kind === 'screenshot' ? 'png' : 'pdf'}`,
++    bytes: kind === 'screenshot' ? 8 : 5, rendererPlatform: 'macos-wkwebview',
++    dataBase64: kind === 'screenshot' ? 'iVBORw0KGgo=' : 'JVBERi0=',
++  });
++
++  const baseCrawlPage = (final_url = fixtureOrigin, title = 'Example Domain') => ({
++    final_url, http_status: 200, response_time_ms: 10, content_type: 'text/html; charset=utf-8',
++    title, word_count: 24, semantic_content_source: 'primary-root', semantic_content_provenance: 'http',
++  });
++
++  it('rejects Cloudflare rate limited HTML with captured diagnostics', async () => {
++    const { renderer, crawl } = loadScripts(fixtureOrigin);
++    const cfHtml = '<!DOCTYPE html><html><head><title>Rate Limited | example.com | Cloudflare</title></head><body>1015</body></html>';
++    const res = await renderer.run({
++      projectId: 'cf-test',
++      invoke: async (name: string) => (name === 'render_crawl_page' ? { html: cfHtml, httpStatus: 200, finalUrl: fixtureOrigin } : {}),
++    });
++    expect(res.passed).toBe(false);
++    expect(res.failure).toBe('Error: renderer HTML captured');
++    expect(res.snapshot.htmlSnippet).toContain('Rate Limited');
++
++    const check = (name: string, ok: boolean) => { if (!ok) throw new Error(name); };
++    await expect(crawl.run({
++      projectId: 'cf-crawl', check,
++      invoke: async () => ({ crawl_mode: 'http', cancelled: false, timed_out: false, pages: [baseCrawlPage(fixtureOrigin, 'Rate Limited | Cloudflare')] }),
++    })).rejects.toThrow('HTTP live HTML title is present');
++  });
++
++  it('rejects wrong host in renderer snapshot and crawl final URL', async () => {
++    const { renderer, crawl } = loadScripts(fixtureOrigin);
++    const foreignOrigin = 'http://attacker.local:49152/';
++    const res = await renderer.run({
++      projectId: 'host-test',
++      invoke: async (name: string) => (name === 'render_crawl_page' ? {
++        html: '<title>Example Domain</title><h1>Example Domain</h1>', httpStatus: 200, finalUrl: foreignOrigin,
++      } : {}),
++    });
++    expect(res.passed).toBe(false);
++    expect(res.failure).toBe('Error: renderer final URL remains expected host');
++
++    const check = (name: string, ok: boolean) => { if (!ok) throw new Error(name); };
++    await expect(crawl.run({
++      projectId: 'host-crawl', check,
++      invoke: async () => ({ crawl_mode: 'http', cancelled: false, timed_out: false, pages: [baseCrawlPage(foreignOrigin)] }),
++    })).rejects.toThrow('HTTP observed final URL is expected host');
++  });
++
++  it('rejects malformed final URL in renderer snapshot and crawl', async () => {
++    const { renderer, crawl } = loadScripts(fixtureOrigin);
++    const malformedUrl = 'http://[invalid/';
++    const res = await renderer.run({
++      projectId: 'malformed-test',
++      invoke: async (name: string) => (name === 'render_crawl_page' ? {
++        html: '<title>Example Domain</title><h1>Example Domain</h1>', httpStatus: 200, finalUrl: malformedUrl,
++      } : {}),
++    });
++    expect(res.passed).toBe(false);
++    expect(res.failure).toBe('Error: renderer final URL remains expected host');
++
++    const check = (name: string, ok: boolean) => { if (!ok) throw new Error(name); };
++    await expect(crawl.run({
++      projectId: 'malformed-crawl', check,
++      invoke: async () => ({ crawl_mode: 'http', cancelled: false, timed_out: false, pages: [baseCrawlPage(malformedUrl)] }),
++    })).rejects.toThrow('HTTP observed final URL is expected host');
++  });
++
++  it('enforces exact origin on artifacts and isolates port boundary in snapshot', async () => {
++    const { renderer } = loadScripts(fixtureOrigin);
++    const wrongPortUrl = 'http://127.0.0.1:8888/';
++
++    const artifactRes = await renderer.run({
++      projectId: 'artifact-port-test',
++      invoke: async (name: string, args: any) => {
++        if (name === 'render_crawl_page') return { html: '<title>Example Domain</title><h1>Example Domain</h1>', httpStatus: 200, finalUrl: fixtureOrigin };
++        if (name === 'capture_rendered_artifact') return baseArtifact(args.kind, wrongPortUrl);
++        return {};
++      },
++    });
++    expect(artifactRes.passed).toBe(false);
++    expect(artifactRes.failure).toBe('Error: screenshot artifact final URL is exact');
++
++    const parsedTarget = new URL(fixtureOrigin);
++    const parsedWrongPort = new URL(wrongPortUrl);
++    expect(parsedWrongPort.hostname).toBe(parsedTarget.hostname);
++    expect(parsedWrongPort.host).not.toBe(parsedTarget.host);
++    expect(parsedWrongPort.port).not.toBe(parsedTarget.port);
++  });
++
++  it('passes all 48 assertions when exact origin and valid fixtures are provided', async () => {
++    const { renderer } = loadScripts(fixtureOrigin);
++    const mockInvoke = async (name: string, args: any) => {
++      if (name === 'render_crawl_page') {
++        return { html: '<title>Example Domain</title><h1>Example Domain</h1><p>ok</p>', httpStatus: 200, finalUrl: fixtureOrigin, contentType: 'text/html' };
++      }
++      if (name === 'capture_rendered_artifact') return baseArtifact(args.kind, fixtureOrigin);
++      if (name === 'open_rendered_element_preview') return;
++      if (name === 'crawl_site') {
++        return {
++          crawl_mode: args.config.crawlMode, cancelled: false, timed_out: false,
++          pages: [baseCrawlPage(fixtureOrigin)],
++        };
++      }
++      throw new Error(`Unexpected invoke ${name}`);
++    };
++
++    const res = await renderer.run({ projectId: 'all-48-test', invoke: mockInvoke });
++    expect(res.passed).toBe(true);
++    expect(res.previewEvidence).toBe('ipc-success');
++    expect(res.checks).toHaveLength(48);
++  });
++});

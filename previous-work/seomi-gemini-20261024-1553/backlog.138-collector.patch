@@ -1,0 +1,515 @@
+diff --git a/src-tauri/src/commands/run_store/command_tests.rs b/src-tauri/src/commands/run_store/command_tests.rs
+index 2314ef3b..16f3326f 100644
+--- a/src-tauri/src/commands/run_store/command_tests.rs
++++ b/src-tauri/src/commands/run_store/command_tests.rs
+@@ -1,5 +1,7 @@
+ use super::commands::*;
+ use super::erase_commands::*;
++use super::event_commands::*;
++use super::events::StoredCrawlEvent;
+ use crate::utils::test_app::StorageApp;
+ use serde_json::json;
+ 
+@@ -7,6 +9,20 @@ use serde_json::json;
+ fn commands_round_trip_through_the_sqlite_file_and_validate_ids() {
+     let fixture = StorageApp::new(tauri::test::mock_builder());
+     let app = fixture.handle();
++    let ev = StoredCrawlEvent {
++        project_id: "p1".into(),
++        run_id: "r1".into(),
++        seq: 1,
++        event_type: "start".into(),
++        at: "2026-10-24T12:00:00Z".into(),
++        payload: json!({"url": "https://e.test/"}),
++    };
++    let appended =
++        store_append_crawl_events(app.clone(), "p1".into(), "r1".into(), vec![ev.clone()]).unwrap();
++    assert_eq!(appended, 1);
++    let loaded = store_load_crawl_events(app.clone(), "p1".into(), "r1".into(), 1, 10).unwrap();
++    assert_eq!(loaded.len(), 1);
++    assert_eq!(loaded[0].seq, 1);
+     let run = json!({"id": "r1", "completedAt": "2026-01-01", "startUrl": "https://e.test/",
+         "result": {"pages": [{"url": "https://e.test/a"}, {"url": "https://e.test/b"}]}});
+     store_save_crawl_run(app.clone(), "p1".into(), run.clone()).unwrap();
+@@ -74,5 +90,13 @@ fn commands_round_trip_through_the_sqlite_file_and_validate_ids() {
+             .action,
+         "erase_project"
+     );
+-    assert_eq!(store_erasure_log(app, "p1".into()).unwrap().len(), 2);
++    assert_eq!(
++        store_erasure_log(app.clone(), "p1".into()).unwrap().len(),
++        2
++    );
++    assert!(
++        store_load_crawl_events(app, "p1".into(), "r1".into(), 1, 10)
++            .unwrap()
++            .is_empty()
++    );
+ }
+diff --git a/src-tauri/src/commands/run_store/commands.rs b/src-tauri/src/commands/run_store/commands.rs
+index 1614e690..129d1fc3 100644
+--- a/src-tauri/src/commands/run_store/commands.rs
++++ b/src-tauri/src/commands/run_store/commands.rs
+@@ -6,7 +6,7 @@ use tauri::AppHandle;
+ use super::{records, runs, schema, shred};
+ use crate::commands::crawl_storage::project_directory;
+ 
+-pub(super) fn open_store<R: tauri::Runtime>(
++pub(crate) fn open_store<R: tauri::Runtime>(
+     app: &AppHandle<R>,
+     project_id: &str,
+ ) -> Result<Connection, String> {
+diff --git a/src-tauri/src/commands/run_store/erase.rs b/src-tauri/src/commands/run_store/erase.rs
+index aa03c6e5..0adc6641 100644
+--- a/src-tauri/src/commands/run_store/erase.rs
++++ b/src-tauri/src/commands/run_store/erase.rs
+@@ -88,6 +88,8 @@ pub fn erase_project(conn: &mut Connection, project: &str) -> Result<ErasureRepo
+         .map_err(db)?;
+     tx.execute("DELETE FROM import_log WHERE project_id = ?1", [project])
+         .map_err(db)?;
++    tx.execute("DELETE FROM crawl_events WHERE project_id = ?1", [project])
++        .map_err(db)?;
+     let report = log(
+         &tx,
+         project,
+diff --git a/src-tauri/src/commands/run_store/mod.rs b/src-tauri/src/commands/run_store/mod.rs
+index f18b126b..f1e6f1b2 100644
+--- a/src-tauri/src/commands/run_store/mod.rs
++++ b/src-tauri/src/commands/run_store/mod.rs
+@@ -15,6 +15,10 @@ pub mod erase_commands;
+ mod erase_tests;
+ #[cfg(test)]
+ mod erasure_regression_tests;
++pub mod event_commands;
++#[cfg(test)]
++mod event_tests;
++pub mod events;
+ #[cfg(test)]
+ mod open_store_failure_tests;
+ #[cfg(test)]
+diff --git a/src-tauri/src/commands/run_store/runs.rs b/src-tauri/src/commands/run_store/runs.rs
+index 47d3917c..d7a124ee 100644
+--- a/src-tauri/src/commands/run_store/runs.rs
++++ b/src-tauri/src/commands/run_store/runs.rs
+@@ -111,6 +111,10 @@ where
+ }
+ 
+ pub fn delete_run(conn: &Connection, project_id: &str, run_id: &str) -> Result<usize> {
++    let _ = conn.execute(
++        "DELETE FROM crawl_events WHERE project_id = ?1 AND run_id = ?2",
++        params![project_id, run_id],
++    );
+     conn.execute(
+         "DELETE FROM crawl_runs WHERE project_id = ?1 AND run_id = ?2",
+         params![project_id, run_id],
+diff --git a/src-tauri/src/commands/run_store/schema.rs b/src-tauri/src/commands/run_store/schema.rs
+index 35d9d006..36b104cd 100644
+--- a/src-tauri/src/commands/run_store/schema.rs
++++ b/src-tauri/src/commands/run_store/schema.rs
+@@ -1,7 +1,7 @@
+ use rusqlite::{Connection, Result, TransactionBehavior};
+ use std::{path::Path, time::Duration};
+ 
+-pub const SCHEMA_VERSION: i64 = 2;
++pub const SCHEMA_VERSION: i64 = 3;
+ const SQLITE_BUSY_TIMEOUT: Duration = Duration::from_secs(2);
+ 
+ const V1: &str = "
+@@ -61,6 +61,19 @@ CREATE TABLE erasure_log (
+ );
+ ";
+ 
++const V3: &str = "
++CREATE TABLE crawl_events (
++    project_id TEXT NOT NULL,
++    run_id TEXT NOT NULL,
++    seq INTEGER NOT NULL,
++    event_type TEXT NOT NULL,
++    at TEXT NOT NULL,
++    payload TEXT NOT NULL,
++    PRIMARY KEY (project_id, run_id, seq)
++);
++CREATE INDEX idx_crawl_events_order ON crawl_events (project_id, run_id, seq);
++";
++
+ /// Apply pending migrations atomically: a crash mid-migration rolls back and
+ /// the next open retries from the previous `user_version`.
+ pub fn migrate(conn: &mut Connection) -> Result<()> {
+@@ -75,6 +88,9 @@ pub fn migrate(conn: &mut Connection) -> Result<()> {
+     if current < 2 {
+         tx.execute_batch(V2)?;
+     }
++    if current < 3 {
++        tx.execute_batch(V3)?;
++    }
+     tx.pragma_update(None, "user_version", SCHEMA_VERSION)?;
+     tx.commit()
+ }
+diff --git a/src-tauri/src/commands/site_crawler/orchestration.rs b/src-tauri/src/commands/site_crawler/orchestration.rs
+index f64f514d..a10482da 100644
+--- a/src-tauri/src/commands/site_crawler/orchestration.rs
++++ b/src-tauri/src/commands/site_crawler/orchestration.rs
+@@ -7,6 +7,8 @@ use super::{
+ 
+ mod frontier;
+ mod loop_runner;
++mod loop_runner_progress;
++pub(crate) mod native_collector;
+ mod page_assembler;
+ mod page_assembler_assets;
+ mod page_assembler_signals;
+diff --git a/src-tauri/src/commands/site_crawler/orchestration/loop_runner.rs b/src-tauri/src/commands/site_crawler/orchestration/loop_runner.rs
+index 8e9dc252..d302b2d8 100644
+--- a/src-tauri/src/commands/site_crawler/orchestration/loop_runner.rs
++++ b/src-tauri/src/commands/site_crawler/orchestration/loop_runner.rs
+@@ -1,13 +1,12 @@
+ use std::time::Duration;
+-use tauri::{AppHandle, Emitter, Runtime};
++use tauri::{AppHandle, Runtime};
+ 
+ use super::super::{
+-    control::{CrawlControl, CrawlProgress},
+-    models::RejectedCrawlUrl,
+-    robots::RobotsRule,
+-    robots_matching::robots_deciding_rule,
+-    transport::crawl_deadline_reached,
++    control::CrawlControl, models::RejectedCrawlUrl, robots::RobotsRule,
++    robots_matching::robots_deciding_rule, transport::crawl_deadline_reached,
+ };
++use super::loop_runner_progress::emit_crawl_progress;
++use super::native_collector::NativeCrawlCollector;
+ use super::page_assembler::assemble_page_summary;
+ use super::page_error::handle_page_error;
+ use super::page_fetch::fetch_page_step;
+@@ -16,6 +15,7 @@ use super::selectors::CrawlSelectors;
+ use super::setup::CrawlSetup;
+ use super::state::CrawlLoopState;
+ 
++#[allow(dead_code)]
+ pub async fn run_crawl_loop<R: Runtime>(
+     app: &AppHandle<R>,
+     control: &CrawlControl,
+@@ -24,8 +24,36 @@ pub async fn run_crawl_loop<R: Runtime>(
+     selectors: &CrawlSelectors,
+     robots_rules: &[RobotsRule],
+     robots_crawl_delay: Option<Duration>,
++) {
++    run_crawl_loop_with_collector(
++        app,
++        control,
++        setup,
++        state,
++        selectors,
++        robots_rules,
++        robots_crawl_delay,
++        &mut None,
++    )
++    .await;
++}
++
++#[allow(clippy::too_many_arguments)]
++pub async fn run_crawl_loop_with_collector<R: Runtime>(
++    app: &AppHandle<R>,
++    control: &CrawlControl,
++    setup: &CrawlSetup,
++    state: &mut CrawlLoopState<R>,
++    selectors: &CrawlSelectors,
++    robots_rules: &[RobotsRule],
++    robots_crawl_delay: Option<Duration>,
++    collector: &mut Option<NativeCrawlCollector>,
+ ) {
+     let parallelism = prefetch_parallelism(&setup.config, robots_crawl_delay);
++    if let Some(col) = collector.as_mut() {
++        let cfg = serde_json::to_value(&setup.config).unwrap_or_default();
++        let _ = col.record_started(&setup.normalized_start_url.to_string(), &cfg);
++    }
+ 
+     loop {
+         if state.prefetched_order.is_empty() && state.queue.is_empty() {
+@@ -41,8 +69,6 @@ pub async fn run_crawl_loop<R: Runtime>(
+         if state.pages.len() >= setup.limit {
+             break;
+         }
+-        // The guard at the top of the loop proved one of the queues is non-empty and
+-        // `state` is exclusively borrowed, so a pop cannot come back empty here.
+         let (current_url, depth) = state
+             .prefetched_order
+             .pop_front()
+@@ -71,26 +97,7 @@ pub async fn run_crawl_loop<R: Runtime>(
+         if control.is_cancelled(&setup.run_id) {
+             break;
+         }
+-        let elapsed_seconds = setup.start_time.elapsed().as_secs_f64();
+-        let pages_per_second = if elapsed_seconds > 0.0 {
+-            state.pages.len() as f64 / elapsed_seconds
+-        } else {
+-            0.0
+-        };
+-        let _ = app.emit(
+-            "crawl-progress",
+-            CrawlProgress {
+-                run_id: setup.run_id.clone(),
+-                current_url: Some(current_url.clone()),
+-                discovered: state.visited.len(),
+-                completed: state.pages.len(),
+-                queued: state.queue.len() + state.prefetched_order.len(),
+-                cancelled: false,
+-                paused: false,
+-                elapsed_ms: setup.start_time.elapsed().as_millis() as u64,
+-                pages_per_second,
+-            },
+-        );
++        emit_crawl_progress(app, setup, state, &current_url);
+ 
+         let (resp, page_duration) =
+             fetch_page_step(app, control, setup, state, robots_crawl_delay, &current_url).await;
+@@ -107,9 +114,16 @@ pub async fn run_crawl_loop<R: Runtime>(
+                     state,
+                 )
+                 .await;
++                if let (Some(c), Some(p)) = (collector.as_mut(), state.pages.last()) {
++                    let _ = c.record_page(p);
++                }
+             }
+             Err(e) => {
+-                if !handle_page_error(setup, state, &current_url, depth, page_duration, e) {
++                let cont = handle_page_error(setup, state, &current_url, depth, page_duration, e);
++                if let (Some(c), Some(p)) = (collector.as_mut(), state.pages.last()) {
++                    let _ = c.record_page(p);
++                }
++                if !cont {
+                     break;
+                 }
+             }
+diff --git a/src-tauri/src/commands/site_crawler/orchestration/pipeline.rs b/src-tauri/src/commands/site_crawler/orchestration/pipeline.rs
+index 46c68ef6..e16e6896 100644
+--- a/src-tauri/src/commands/site_crawler/orchestration/pipeline.rs
++++ b/src-tauri/src/commands/site_crawler/orchestration/pipeline.rs
+@@ -1,10 +1,9 @@
+ use tauri::{AppHandle, Runtime};
+ 
+ use super::{
+-    frontier::init_frontier, loop_runner::run_crawl_loop,
+-    resource_crawler::crawl_secondary_resources, robots::fetch_and_eval_robots,
+-    selectors::CrawlSelectors, setup::CrawlSetup, sitemaps::discover_and_parse_sitemaps,
+-    state::CrawlLoopState, summary::build_crawl_result,
++    frontier::init_frontier, resource_crawler::crawl_secondary_resources,
++    robots::fetch_and_eval_robots, selectors::CrawlSelectors, setup::CrawlSetup,
++    sitemaps::discover_and_parse_sitemaps, state::CrawlLoopState, summary::build_crawl_result,
+ };
+ use crate::commands::site_crawler::{control::CrawlControl, models::SiteCrawlResult};
+ 
+@@ -31,7 +30,17 @@ pub(super) async fn run_crawl_pipeline<R: Runtime>(
+     );
+     let selectors = CrawlSelectors::compile();
+ 
+-    run_crawl_loop(
++    let conn = setup
++        .project_id
++        .as_ref()
++        .and_then(|pid| crate::commands::run_store::commands::open_store(app, pid).ok());
++    let mut collector = Some(super::native_collector::NativeCrawlCollector::new(
++        setup.project_id.clone(),
++        setup.run_id.clone(),
++        conn,
++    ));
++
++    super::loop_runner::run_crawl_loop_with_collector(
+         app,
+         control,
+         setup,
+@@ -39,6 +48,7 @@ pub(super) async fn run_crawl_pipeline<R: Runtime>(
+         &selectors,
+         &robots.robots_rules,
+         robots.robots_crawl_delay,
++        &mut collector,
+     )
+     .await;
+ 
+@@ -50,7 +60,7 @@ pub(super) async fn run_crawl_pipeline<R: Runtime>(
+     let (resources, resource_limit_reached) =
+         crawl_secondary_resources(setup, control, &mut state, robots.robots_crawl_delay).await;
+ 
+-    Ok(build_crawl_result(super::summary::BuildCrawlResultInput {
++    let result = build_crawl_result(super::summary::BuildCrawlResultInput {
+         app,
+         control,
+         setup,
+@@ -59,5 +69,14 @@ pub(super) async fn run_crawl_pipeline<R: Runtime>(
+         state: &mut state,
+         resources,
+         resource_limit_reached,
+-    }))
++    });
++    if let Some(col) = collector.as_mut() {
++        let _ = col.record_completed(
++            &result.start_url,
++            result.pages.len(),
++            f64::from(result.health_score),
++            result.duration_ms,
++        );
++    }
++    Ok(result)
+ }
+diff --git a/src-tauri/src/commands/site_crawler/orchestration/setup.rs b/src-tauri/src/commands/site_crawler/orchestration/setup.rs
+index 6777a22e..2180340f 100644
+--- a/src-tauri/src/commands/site_crawler/orchestration/setup.rs
++++ b/src-tauri/src/commands/site_crawler/orchestration/setup.rs
+@@ -33,6 +33,7 @@ pub struct CrawlSetup {
+     pub ua: String,
+     pub client: reqwest::Client,
+     pub retry_budget: Arc<RetryBudget>,
++    pub project_id: Option<String>,
+ }
+ 
+ impl CrawlSetup {
+@@ -120,6 +121,7 @@ impl CrawlSetup {
+             ua,
+             client,
+             retry_budget,
++            project_id,
+         })
+     }
+ }
+diff --git a/src-tauri/src/commands/site_crawler/orchestration/tests/mod.rs b/src-tauri/src/commands/site_crawler/orchestration/tests/mod.rs
+index 966617fa..8c056973 100644
+--- a/src-tauri/src/commands/site_crawler/orchestration/tests/mod.rs
++++ b/src-tauri/src/commands/site_crawler/orchestration/tests/mod.rs
+@@ -111,6 +111,7 @@ mod loop_runner_depth_boundary;
+ 
+ mod gap_boundaries;
+ mod loop_runner_resume_and_cancel;
++mod native_collector_integration;
+ mod page_fetch_rendered_delay;
+ mod page_media_http_scheme;
+ mod page_type_branch_gaps;
+diff --git a/src/services/crawlPersistence.ts b/src/services/crawlPersistence.ts
+index 0bdad61f..3c3c46e9 100644
+--- a/src/services/crawlPersistence.ts
++++ b/src/services/crawlPersistence.ts
+@@ -4,6 +4,7 @@ import { indexedDbWrite } from './crawlPersistence/browser';
+ import { indexedDbRead } from './crawlPersistence/indexedDb';
+ import { clearLegacyCrawlStorage } from './crawlPersistence/legacy';
+ import { loadStoredRuns, migrateLegacyCrawlRuns, saveStoredRuns } from './crawlStore';
++import { buildSyntheticEventsFromRun, fetchCrawlEvents, persistCrawlEvents, replayCrawlEvents, replayLatestRunEvents } from './snapshots';
+ import {
+   assertCrawlWriteGeneration,
+   crawlWriteGeneration,
+@@ -15,6 +16,7 @@ export type { CrawlSaveResult } from './crawlPersistence/contracts';
+ export { encodeCrawlRunsForStorage, decodeCrawlRunsFromStorage } from './crawlPersistence/codec';
+ export { compactCrawlRunsForStorage } from './crawlPersistence/compaction';
+ export { crawlQuotaRetryCounts, isStorageQuotaError } from './crawlPersistence/quota';
++export { replayCrawlEvents, replayLatestRunEvents } from './snapshots';
+ 
+ /**
+  * Returns whether crawl history is stored outside the legacy localStorage
+@@ -27,7 +29,49 @@ export const loadCrawlRuns = async (projectId: string): Promise<CrawlRunRecord[]
+   if (!isTauriEnvironment()) return indexedDbRead(projectId);
+   return withCrawlWriteLock(projectId, async () => {
+     await migrateLegacyCrawlRuns(projectId);
+-    return loadStoredRuns(projectId);
++    const runs = await loadStoredRuns(projectId);
++    if (runs.length > 0) {
++      await replayCrawlEvents(projectId, runs[0].id);
++      return runs;
++    }
++    const inFlight = await replayLatestRunEvents(projectId);
++    if (inFlight.runId && inFlight.log.allEvents().length > 0) {
++      const events = inFlight.log.allEvents();
++      const startEv = events.find((e) => e.type === 'crawl:started');
++      const startPayload = startEv?.payload as Record<string, unknown> | undefined;
++      const pages = events.filter((e) => e.type === 'crawl:page').map((e) => e.payload as any);
++      const completedEv = events.find((e) => e.type === 'crawl:completed');
++      const completedPayload = completedEv?.payload as Record<string, unknown> | undefined;
++      const startUrl = (startPayload?.startUrl as string) ?? (startPayload?.url as string) ?? '';
++      const crawlConfig = startPayload?.config as any;
++      const reconstructed: CrawlRunRecord = {
++        id: inFlight.runId,
++        projectId,
++        startedAt: startEv?.at,
++        completedAt: completedEv ? completedEv.at : '',
++        startUrl,
++        config: crawlConfig,
++        result: {
++          start_url: startUrl,
++          pages_crawled: pages.length,
++          health_score: (completedPayload?.health_score as number | undefined) ?? Number.NaN,
++          critical_count: 0,
++          warning_count: 0,
++          notice_count: 0,
++          pages,
++          duration_ms: (completedPayload?.duration_ms as number | undefined) ?? Number.NaN,
++          cancelled: Boolean(events.find((e) => e.type === 'crawl:cancelled')),
++          timed_out: Boolean(events.find((e) => e.type === 'crawl:timed_out')),
++          robots_txt_status: 'unknown',
++          robots_blocked_count: 0,
++          sitemap_status: 'unknown',
++          sitemap_urls_discovered: 0,
++          sitemap_urls: [],
++        },
++      };
++      return [reconstructed];
++    }
++    return runs;
+   });
+ };
+ 
+@@ -36,6 +80,14 @@ const saveUnlocked = async (projectId: string, runs: CrawlRunRecord[]): Promise<
+   // A save can be the first action after restoring a backup or a failed load.
+   // Finish migration before replacement or legacy cleanup can discard v1 data.
+   await migrateLegacyCrawlRuns(projectId);
++  if (runs.length > 0) {
++    const latest = runs[0];
++    const existing = await fetchCrawlEvents(projectId, latest.id);
++    if (!existing.length) {
++      const events = buildSyntheticEventsFromRun(latest, 'checkpoint-derived');
++      await persistCrawlEvents(projectId, latest.id, events);
++    }
++  }
+   await saveStoredRuns(projectId, runs);
+   clearLegacyCrawlStorage(projectId);
+   return { prunedRuns: Math.max(0, runs.length - 50) };
+diff --git a/src/services/snapshots/eventLog.ts b/src/services/snapshots/eventLog.ts
+index f133cbec..05324670 100644
+--- a/src/services/snapshots/eventLog.ts
++++ b/src/services/snapshots/eventLog.ts
+@@ -5,6 +5,8 @@ export interface CrawlEvent<P = unknown> {
+   readonly type: string;
+   readonly at: string;
+   readonly payload: Readonly<P>;
++  readonly runId?: string;
++  readonly projectId?: string;
+ }
+ 
+ export type EventSink = (event: CrawlEvent) => void;
+@@ -18,10 +20,18 @@ export class CrawlEventLog {
+   private events: CrawlEvent[] = [];
+   private readonly sinks = new Set<EventSink>();
+ 
++  constructor(initial: CrawlEvent[] = []) {
++    this.events = initial.map((ev) => Object.freeze({ ...ev, payload: freezeCopy(ev.payload) }));
++  }
++
+   get revision(): number {
+     return this.events.length;
+   }
+ 
++  allEvents(): readonly CrawlEvent[] {
++    return this.events;
++  }
++
+   append<P>(type: string, payload: P, now: () => Date = () => new Date()): CrawlEvent<P> {
+     const event: CrawlEvent<P> = Object.freeze({
+       seq: this.events.length + 1, type, at: now().toISOString(), payload: freezeCopy(payload),
+diff --git a/src/services/snapshots/index.ts b/src/services/snapshots/index.ts
+index d1ed1009..7993bbb5 100644
+--- a/src/services/snapshots/index.ts
++++ b/src/services/snapshots/index.ts
+@@ -1,4 +1,7 @@
+ export { deepFreeze, freezeCopy } from './freeze';
+ export { CrawlEventLog, type CrawlEvent, type Reducer, type EventSink } from './eventLog';
++export { PersistentCrawlEventLog } from './persistentLog';
+ export { openSimulationSession, type SimulationSession } from './session';
+ export { useSnapshotStale } from './useSnapshotStale';
++export { persistCrawlEvents, fetchCrawlEvents } from './sqliteEventSink';
++export { replayCrawlEvents, replayLatestRunEvents, buildSyntheticEventsFromRun } from './replay';

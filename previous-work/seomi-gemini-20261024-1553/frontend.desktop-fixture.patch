@@ -1,0 +1,592 @@
+diff --git a/.github/workflows/test.yml b/.github/workflows/test.yml
+index 1ad26a27..de2cd288 100644
+--- a/.github/workflows/test.yml
++++ b/.github/workflows/test.yml
+@@ -98,7 +98,7 @@ jobs:
+           cargo +nightly llvm-cov clean --manifest-path src-tauri/Cargo.toml --workspace
+           cargo +nightly llvm-cov --manifest-path src-tauri/Cargo.toml --branch --no-report
+           mkdir -p test-results
+-          SEOMI_E2E_RENDERER=1 cargo +nightly llvm-cov run --manifest-path src-tauri/Cargo.toml --example desktop_e2e --features custom-protocol --branch --no-clean --lcov --output-path coverage-rust.lcov -- test-results/desktop-e2e-coverage.json
++          SEOMI_E2E_RENDERER=1 cargo +nightly llvm-cov run --manifest-path src-tauri/Cargo.toml --example desktop_e2e --features custom-protocol,test-fixture --branch --no-clean --lcov --output-path coverage-rust.lcov -- test-results/desktop-e2e-coverage.json
+           node scripts/validate-desktop-e2e-report.mjs test-results/desktop-e2e-coverage.json
+           cargo +nightly llvm-cov run --manifest-path src-tauri/Cargo.toml --bin seomi --features custom-protocol --branch --no-clean -- --seomi-scheduled-headless --seomi-scheduled-project coverage-smoke --seomi-scheduled-id missing-task
+           cargo +nightly llvm-cov run --manifest-path src-tauri/Cargo.toml --bin seomi --features custom-protocol --branch --no-clean -- --seomi-audit-queue-headless --seomi-scheduled-project coverage-smoke --seomi-scheduled-id missing-run
+diff --git a/scripts/run-desktop-e2e.mjs b/scripts/run-desktop-e2e.mjs
+index fda4885b..25a3d7b5 100644
+--- a/scripts/run-desktop-e2e.mjs
++++ b/scripts/run-desktop-e2e.mjs
+@@ -3,7 +3,7 @@ import { mkdtempSync, readFileSync, rmSync, copyFileSync, mkdirSync } from 'node
+ import { tmpdir } from 'node:os';
+ import { join, resolve } from 'node:path';
+ 
+-const compile = spawnSync('cargo', ['build', '--manifest-path', 'src-tauri/Cargo.toml', '--example', 'desktop_e2e', '--features', 'custom-protocol'], { stdio: 'inherit' });
++const compile = spawnSync('cargo', ['build', '--manifest-path', 'src-tauri/Cargo.toml', '--example', 'desktop_e2e', '--features', 'custom-protocol,test-fixture'], { stdio: 'inherit' });
+ if (compile.status !== 0) process.exit(compile.status ?? 1);
+ const directory = mkdtempSync(join(tmpdir(), 'seomi-desktop-e2e-'));
+ const report = join(directory, 'result.json');
+diff --git a/src-tauri/Cargo.toml b/src-tauri/Cargo.toml
+index c1616db1..9ea52f00 100644
+--- a/src-tauri/Cargo.toml
++++ b/src-tauri/Cargo.toml
+@@ -16,10 +16,11 @@ tauri-build = { version = "2", features = [] }
+ 
+ [features]
+ custom-protocol = ["tauri/custom-protocol"]
++test-fixture = []
+ 
+ [[example]]
+ name = "desktop_e2e"
+-required-features = ["custom-protocol"]
++required-features = ["custom-protocol", "test-fixture"]
+ 
+ [[example]]
+ name = "function_inventory"
+diff --git a/src-tauri/examples/desktop_e2e.rs b/src-tauri/examples/desktop_e2e.rs
+index 3124dffc..d633609e 100644
+--- a/src-tauri/examples/desktop_e2e.rs
++++ b/src-tauri/examples/desktop_e2e.rs
+@@ -4,23 +4,25 @@ use std::{fs, path::PathBuf, sync::Mutex, time::Duration};
+ use tauri::{Listener, Manager};
+ use uuid::Uuid;
+ 
+-// 26 renderer checks plus 11 live-page checks for each of HTTP and browser-rendered modes.
++#[path = "desktop_e2e_fixture.rs"]
++mod fixture;
++
++// 26 renderer + (11 * 2) crawl checks; validation is 40 base + 24 additional + 135 IPC.
+ const REQUIRED_RENDERER_CHECKS: usize = 26 + (11 * 2);
+-// Validation includes 40 base, 24 additional and 135 malformed IPC checks.
+-// Keep this explicit so adding a script without extending the gate fails.
+ const REQUIRED_VALIDATION_CHECKS: usize = 40 + 24 + 135;
+ 
+ fn main() {
+     let report = PathBuf::from(std::env::args_os().nth(1).expect("report path argument"));
+     let renderer_enabled = std::env::var("SEOMI_E2E_RENDERER").ok().as_deref() == Some("1");
++    let fixture = fixture::DesktopFixture::start();
++    let fixture_url = fixture.url();
+     let session = Uuid::new_v4();
+     let mut context = tauri::generate_context!();
+-    context.config_mut().plugins.0.insert(
+-        "updater".into(),
+-        serde_json::json!({ "pubkey": "", "endpoints": [] }),
+-    );
+-    context.config_mut().identifier = format!("com.seomi.desktop.e2e.{}", session.simple());
+-    context.config_mut().product_name = Some("SEOmi Desktop E2E".into());
++    let updater_cfg = serde_json::json!({ "pubkey": "", "endpoints": [] });
++    let cfg = context.config_mut();
++    cfg.plugins.0.insert("updater".into(), updater_cfg);
++    cfg.identifier = format!("com.seomi.desktop.e2e.{}", session.simple());
++    cfg.product_name = Some("SEOmi Desktop E2E".into());
+     let profile = std::env::temp_dir().join(format!("seomi-e2e-webview-{session}"));
+     let mut window = context.config().app.windows[0].clone();
+     window.title = "SEOmi Desktop E2E".into();
+@@ -37,7 +39,7 @@ fn main() {
+     let crawl_validation_script = include_str!("desktop_e2e_crawl.js");
+     let ipc_validation_script = include_str!("desktop_e2e_ipc.js");
+     let main_script = format!(
+-        "window.__seomiE2eRendererEnabled = {renderer_enabled};\n{ipc_validation_script}\n{additional_validation_script}\n{validation_script}\n{crawl_validation_script}\n{renderer_script}\n{script}"
++        "window.__seomiE2eRendererEnabled = {renderer_enabled};\nwindow.__seomiE2eFixtureUrl = '{fixture_url}';\n{ipc_validation_script}\n{additional_validation_script}\n{validation_script}\n{crawl_validation_script}\n{renderer_script}\n{script}"
+     );
+     let plugin = tauri::plugin::Builder::<tauri::Wry, ()>::new("desktop-e2e")
+         .setup(move |app, _| {
+@@ -138,6 +140,7 @@ fn main() {
+         let _ = fs::remove_dir_all(root);
+     }
+     let _ = fs::remove_dir_all(&profile);
++    drop(fixture);
+     std::process::exit(code);
+ }
+ 
+diff --git a/src-tauri/examples/desktop_e2e_crawl.js b/src-tauri/examples/desktop_e2e_crawl.js
+index 749fe46d..a71c0ecf 100644
+--- a/src-tauri/examples/desktop_e2e_crawl.js
++++ b/src-tauri/examples/desktop_e2e_crawl.js
+@@ -1,6 +1,6 @@
+ // Live crawl checks run only when the renderer-enabled desktop E2E is requested.
+ (() => {
+-  const target = 'https://example.com/';
++  const target = (typeof window !== 'undefined' && window.__seomiE2eFixtureUrl) || 'https://example.com/';
+   const nonce = () => globalThis.crypto?.randomUUID?.() || `${Date.now()}-${Math.random().toString(36).slice(2)}`;
+   const crawlConfig = mode => ({
+     crawlMode: mode,
+@@ -24,7 +24,7 @@
+     check(`${label} crawl completed without cancellation or timeout`, result?.cancelled === false && result?.timed_out === false);
+     let finalUrl;
+     try { finalUrl = new URL(page?.final_url); } catch (_) { finalUrl = null; }
+-    check(`${label} observed final URL is example.com`, finalUrl?.hostname === 'example.com');
++    check(`${label} observed final URL is expected host`, finalUrl?.hostname === new URL(target).hostname);
+     check(`${label} observed HTTP status is positive`, Number.isInteger(page?.http_status) && page.http_status > 0);
+     check(`${label} observed response time is an integer`, Number.isInteger(page?.response_time_ms) && page.response_time_ms >= 0);
+     check(`${label} live HTML content type is present`, typeof page?.content_type === 'string' && page.content_type.toLowerCase().includes('text/html'));
+diff --git a/src-tauri/examples/desktop_e2e_fixture.rs b/src-tauri/examples/desktop_e2e_fixture.rs
+new file mode 100644
+index 00000000..7330f4ff
+--- /dev/null
++++ b/src-tauri/examples/desktop_e2e_fixture.rs
+@@ -0,0 +1,74 @@
++//! Deterministic local HTTP fixture server for desktop E2E testing.
++//! Serves illustrative HTML, robots.txt and favicon without external network calls.
++
++use std::io::{Read, Write};
++use std::net::{SocketAddr, TcpListener, TcpStream};
++use std::sync::atomic::{AtomicBool, Ordering};
++use std::sync::Arc;
++use std::thread::{self, JoinHandle};
++
++const FIXTURE_HTML: &str = "<!doctype html>\n<html>\n<head>\n    <title>Example Domain</title>\n    <meta charset=\"utf-8\" />\n    <meta name=\"viewport\" content=\"width=device-width, initial-scale=1\" />\n</head>\n<body>\n<div>\n    <h1>Example Domain</h1>\n    <p>This domain is for use in illustrative examples in documents. You may use this domain in literature without prior coordination or asking for permission.</p>\n</div>\n</body>\n</html>";
++const ROBOTS_TXT: &str = "User-agent: *\nAllow: /\n";
++
++pub struct DesktopFixture {
++    socket: SocketAddr,
++    shutdown: Arc<AtomicBool>,
++    handle: Option<JoinHandle<()>>,
++}
++
++impl DesktopFixture {
++    pub fn start() -> Self {
++        let listener =
++            TcpListener::bind(("127.0.0.1", 0)).expect("bind desktop E2E fixture server");
++        let socket = listener.local_addr().expect("fixture local address");
++        seomi_lib::utils::test_fixture::register_test_fixture_socket(socket);
++        let shutdown = Arc::new(AtomicBool::new(false));
++        let shutdown_flag = shutdown.clone();
++
++        let handle = thread::spawn(move || {
++            while let Ok((mut stream, _)) = listener.accept() {
++                if shutdown_flag.load(Ordering::Relaxed) {
++                    break;
++                }
++                let mut buffer = [0u8; 2048];
++                let count = stream.read(&mut buffer).unwrap_or(0);
++                let request = String::from_utf8_lossy(&buffer[..count]);
++                let path = request.split_whitespace().nth(1).unwrap_or("/");
++
++                let (status, ctype, body) = match path {
++                    "/" | "/index.html" => ("200 OK", "text/html; charset=utf-8", FIXTURE_HTML),
++                    "/robots.txt" => ("200 OK", "text/plain; charset=utf-8", ROBOTS_TXT),
++                    "/favicon.ico" => ("204 No Content", "text/plain", ""),
++                    _ => ("404 Not Found", "text/plain; charset=utf-8", "Not Found"),
++                };
++
++                let response = format!(
++                    "HTTP/1.1 {status}\r\nContent-Type: {ctype}\r\nContent-Length: {}\r\nConnection: close\r\n\r\n{body}",
++                    body.len()
++                );
++                let _ = stream.write_all(response.as_bytes());
++            }
++        });
++
++        Self {
++            socket,
++            shutdown,
++            handle: Some(handle),
++        }
++    }
++
++    pub fn url(&self) -> String {
++        format!("http://{}/", self.socket)
++    }
++}
++
++impl Drop for DesktopFixture {
++    fn drop(&mut self) {
++        self.shutdown.store(true, Ordering::Relaxed);
++        let _ = TcpStream::connect(self.socket);
++        if let Some(handle) = self.handle.take() {
++            let _ = handle.join();
++        }
++        seomi_lib::utils::test_fixture::clear_test_fixture_socket();
++    }
++}
+diff --git a/src-tauri/examples/desktop_e2e_renderer.js b/src-tauri/examples/desktop_e2e_renderer.js
+index 681d05a9..e0b4e842 100644
+--- a/src-tauri/examples/desktop_e2e_renderer.js
++++ b/src-tauri/examples/desktop_e2e_renderer.js
+@@ -1,7 +1,7 @@
+ // Optional online renderer checks for the desktop E2E harness.
+ // This file is intentionally separate until the native harness opts in.
+ (() => {
+-  const target = 'https://example.com/';
++  const target = (typeof window !== 'undefined' && window.__seomiE2eFixtureUrl) || 'https://example.com/';
+   const baseArgs = {
+     url: target,
+     allowSubdomains: false,
+@@ -92,7 +92,7 @@
+         status.httpStatusFieldPresent && (status.httpStatus === 200 || status.httpStatus === null));
+       let finalUrl;
+       try { finalUrl = new URL(snapshot?.finalUrl); } catch (_) { finalUrl = null; }
+-      check('renderer final URL remains example.com', finalUrl?.hostname === 'example.com');
++      check('renderer final URL remains expected host', finalUrl?.hostname === new URL(target).hostname);
+ 
+       const screenshot = await invoke('capture_rendered_artifact', artifactArgs('screenshot'));
+       checkArtifact('screenshot', screenshot, check);
+diff --git a/src-tauri/src/services/browser_proxy/types.rs b/src-tauri/src/services/browser_proxy/types.rs
+index f980f28c..87aeae11 100644
+--- a/src-tauri/src/services/browser_proxy/types.rs
++++ b/src-tauri/src/services/browser_proxy/types.rs
+@@ -36,5 +36,5 @@ pub(super) struct RequestHead {
+ pub(super) use crate::utils::http_syntax::is_http_token_byte;
+ 
+ pub(super) fn is_allowed_plain_http_port(port: u16) -> bool {
+-    ALLOWED_HTTP_PORTS.contains(&port)
++    ALLOWED_HTTP_PORTS.contains(&port) || crate::utils::test_fixture::is_allowed_fixture_port(port)
+ }
+diff --git a/src-tauri/src/services/browser_proxy/upstream.rs b/src-tauri/src/services/browser_proxy/upstream.rs
+index efd093bd..ee3d1a52 100644
+--- a/src-tauri/src/services/browser_proxy/upstream.rs
++++ b/src-tauri/src/services/browser_proxy/upstream.rs
+@@ -55,7 +55,10 @@ where
+     };
+     let public = destinations
+         .into_iter()
+-        .find(|addr| is_public_ip(&addr.ip()))
++        .find(|addr| {
++            is_public_ip(&addr.ip())
++                || crate::utils::test_fixture::is_allowed_test_fixture_socket(addr)
++        })
+         .ok_or_else(|| io::Error::new(io::ErrorKind::PermissionDenied, "no public DNS result"))?;
+     timeout(connect_timeout, connect(public))
+         .await
+diff --git a/src-tauri/src/services/http_client/resolver.rs b/src-tauri/src/services/http_client/resolver.rs
+index a5394d14..37911e8f 100644
+--- a/src-tauri/src/services/http_client/resolver.rs
++++ b/src-tauri/src/services/http_client/resolver.rs
+@@ -87,7 +87,10 @@ pub fn validate_addresses(addresses: Vec<SocketAddr>) -> Result<Vec<SocketAddr>>
+     if addresses.is_empty() {
+         return Err(anyhow!("DNS returned no addresses"));
+     }
+-    if addresses.iter().any(|address| !is_public_ip(&address.ip())) {
++    if addresses.iter().any(|addr| {
++        !is_public_ip(&addr.ip())
++            && !crate::utils::test_fixture::is_allowed_test_fixture_socket(addr)
++    }) {
+         return Err(anyhow!(
+             "DNS resolved to a private or reserved address; request blocked"
+         ));
+diff --git a/src-tauri/src/utils/mod.rs b/src-tauri/src/utils/mod.rs
+index 634eeda1..0aff27bb 100644
+--- a/src-tauri/src/utils/mod.rs
++++ b/src-tauri/src/utils/mod.rs
+@@ -3,6 +3,7 @@ pub(crate) mod http_syntax;
+ pub mod logging;
+ pub(crate) mod provider_error_code;
+ pub mod provider_json;
++pub mod test_fixture;
+ pub mod url_validator;
+ pub mod user_agents;
+ 
+diff --git a/src-tauri/src/utils/test_fixture.rs b/src-tauri/src/utils/test_fixture.rs
+new file mode 100644
+index 00000000..ea1ffcf1
+--- /dev/null
++++ b/src-tauri/src/utils/test_fixture.rs
+@@ -0,0 +1,82 @@
++//! Explicit test fixture origin registration for test harnesses and examples.
++//! In production release builds, all test fixture seams compile down to false.
++
++use std::net::SocketAddr;
++
++#[cfg(any(test, feature = "test-fixture"))]
++use std::sync::RwLock;
++
++#[cfg(any(test, feature = "test-fixture"))]
++static ALLOWED_FIXTURE_SOCKET: RwLock<Option<SocketAddr>> = RwLock::new(None);
++
++#[cfg(any(test, feature = "test-fixture"))]
++pub fn register_test_fixture_socket(addr: SocketAddr) {
++    if let Ok(mut lock) = ALLOWED_FIXTURE_SOCKET.write() {
++        *lock = Some(addr);
++    }
++}
++
++#[cfg(any(test, feature = "test-fixture"))]
++pub fn clear_test_fixture_socket() {
++    if let Ok(mut lock) = ALLOWED_FIXTURE_SOCKET.write() {
++        *lock = None;
++    }
++}
++
++#[cfg(any(test, feature = "test-fixture"))]
++pub fn is_allowed_test_fixture_socket(addr: &SocketAddr) -> bool {
++    if let Ok(lock) = ALLOWED_FIXTURE_SOCKET.read() {
++        if let Some(fixture) = *lock {
++            return addr == &fixture;
++        }
++    }
++    false
++}
++
++#[cfg(any(test, feature = "test-fixture"))]
++pub fn is_allowed_fixture_port(port: u16) -> bool {
++    if let Ok(lock) = ALLOWED_FIXTURE_SOCKET.read() {
++        if let Some(fixture) = *lock {
++            return port == fixture.port();
++        }
++    }
++    false
++}
++
++#[cfg(not(any(test, feature = "test-fixture")))]
++#[inline(always)]
++pub fn is_allowed_test_fixture_socket(_addr: &SocketAddr) -> bool {
++    false
++}
++
++#[cfg(not(any(test, feature = "test-fixture")))]
++#[inline(always)]
++pub fn is_allowed_fixture_port(_port: u16) -> bool {
++    false
++}
++
++#[cfg(any(test, feature = "test-fixture"))]
++pub struct FixtureGuard(SocketAddr);
++
++#[cfg(any(test, feature = "test-fixture"))]
++impl FixtureGuard {
++    pub fn new(addr: SocketAddr) -> Self {
++        register_test_fixture_socket(addr);
++        Self(addr)
++    }
++
++    pub fn socket(&self) -> SocketAddr {
++        self.0
++    }
++}
++
++#[cfg(any(test, feature = "test-fixture"))]
++impl Drop for FixtureGuard {
++    fn drop(&mut self) {
++        clear_test_fixture_socket();
++    }
++}
++
++#[cfg(test)]
++#[path = "test_fixture_tests.rs"]
++mod tests;
+diff --git a/src-tauri/src/utils/test_fixture_tests.rs b/src-tauri/src/utils/test_fixture_tests.rs
+new file mode 100644
+index 00000000..07f32cd7
+--- /dev/null
++++ b/src-tauri/src/utils/test_fixture_tests.rs
+@@ -0,0 +1,88 @@
++use super::*;
++use std::net::{IpAddr, Ipv4Addr};
++use std::sync::Mutex;
++
++static TEST_LOCK: Mutex<()> = Mutex::new(());
++
++#[test]
++fn fixture_socket_defaults_to_disallowed() {
++    let _lock = TEST_LOCK.lock().unwrap();
++    clear_test_fixture_socket();
++    let addr = SocketAddr::new(IpAddr::V4(Ipv4Addr::LOCALHOST), 9999);
++    assert!(!is_allowed_test_fixture_socket(&addr));
++    assert!(!is_allowed_fixture_port(9999));
++}
++
++#[test]
++fn registered_socket_is_strictly_matched_by_ip_and_port() {
++    let _lock = TEST_LOCK.lock().unwrap();
++    clear_test_fixture_socket();
++    let target = SocketAddr::new(IpAddr::V4(Ipv4Addr::LOCALHOST), 8888);
++    register_test_fixture_socket(target);
++    assert!(is_allowed_test_fixture_socket(&target));
++    assert!(is_allowed_fixture_port(8888));
++
++    let wrong_port = SocketAddr::new(IpAddr::V4(Ipv4Addr::LOCALHOST), 8889);
++    assert!(!is_allowed_test_fixture_socket(&wrong_port));
++    assert!(!is_allowed_fixture_port(8889));
++
++    let wrong_ip = SocketAddr::new(IpAddr::V4(Ipv4Addr::new(192, 168, 1, 1)), 8888);
++    assert!(!is_allowed_test_fixture_socket(&wrong_ip));
++
++    clear_test_fixture_socket();
++    assert!(!is_allowed_test_fixture_socket(&target));
++}
++
++#[test]
++fn fixture_guard_clears_registration_on_drop() {
++    let _lock = TEST_LOCK.lock().unwrap();
++    clear_test_fixture_socket();
++    let target = SocketAddr::new(IpAddr::V4(Ipv4Addr::LOCALHOST), 7777);
++    {
++        let guard = FixtureGuard::new(target);
++        assert_eq!(guard.socket(), target);
++        assert!(is_allowed_test_fixture_socket(&target));
++        assert!(is_allowed_fixture_port(7777));
++    }
++    assert!(!is_allowed_test_fixture_socket(&target));
++    assert!(!is_allowed_fixture_port(7777));
++}
++
++#[test]
++fn url_validator_fixture_admission_and_strict_rejection() {
++    let _lock = TEST_LOCK.lock().unwrap();
++    clear_test_fixture_socket();
++    let port = 65432;
++    let url_fixture = format!("http://127.0.0.1:{port}/");
++    let url_other_port = "http://127.0.0.1:8080/";
++    let url_localhost = format!("http://localhost:{port}/");
++
++    assert_eq!(
++        crate::utils::url_validator::validate_and_normalize_url(&url_fixture),
++        Err(crate::utils::url_validator::UrlValidationError::BlockedPrivateIp)
++    );
++
++    let target = SocketAddr::new(IpAddr::V4(Ipv4Addr::LOCALHOST), port);
++    register_test_fixture_socket(target);
++    assert!(crate::utils::url_validator::validate_and_normalize_url(&url_fixture).is_ok());
++
++    assert_eq!(
++        crate::utils::url_validator::validate_and_normalize_url(url_other_port),
++        Err(crate::utils::url_validator::UrlValidationError::BlockedPrivateIp)
++    );
++    let url_foreign_ip = format!("http://192.168.1.1:{port}/");
++    assert_eq!(
++        crate::utils::url_validator::validate_and_normalize_url(&url_foreign_ip),
++        Err(crate::utils::url_validator::UrlValidationError::BlockedPrivateIp)
++    );
++    assert_eq!(
++        crate::utils::url_validator::validate_and_normalize_url(&url_localhost),
++        Err(crate::utils::url_validator::UrlValidationError::BlockedLocalhost)
++    );
++
++    clear_test_fixture_socket();
++    assert_eq!(
++        crate::utils::url_validator::validate_and_normalize_url(&url_fixture),
++        Err(crate::utils::url_validator::UrlValidationError::BlockedPrivateIp)
++    );
++}
+diff --git a/src-tauri/src/utils/url_validator.rs b/src-tauri/src/utils/url_validator.rs
+index 6288b790..18c5720f 100644
+--- a/src-tauri/src/utils/url_validator.rs
++++ b/src-tauri/src/utils/url_validator.rs
+@@ -70,7 +70,10 @@ pub fn validate_and_normalize_url(input: &str) -> Result<Url, UrlValidationError
+         _ => None,
+     };
+     if let Some(ip) = literal_ip {
+-        if is_private_or_loopback(&ip) {
++        let socket = std::net::SocketAddr::new(ip, parsed.port_or_known_default().unwrap_or(80));
++        if is_private_or_loopback(&ip)
++            && !crate::utils::test_fixture::is_allowed_test_fixture_socket(&socket)
++        {
+             return Err(UrlValidationError::BlockedPrivateIp);
+         }
+     }
+diff --git a/tests/desktopE2eFixtureUrl.test.ts b/tests/desktopE2eFixtureUrl.test.ts
+new file mode 100644
+index 00000000..6471afe0
+--- /dev/null
++++ b/tests/desktopE2eFixtureUrl.test.ts
+@@ -0,0 +1,99 @@
++import { readFileSync } from 'node:fs';
++import { resolve } from 'node:path';
++import vm from 'node:vm';
++import { describe, expect, it } from 'vitest';
++
++describe('desktop E2E scripts with dynamic fixture origin', () => {
++  const loadScripts = (fixtureUrl: string) => {
++    const rendererFile = resolve(process.cwd(), 'src-tauri/examples/desktop_e2e_renderer.js');
++    const crawlFile = resolve(process.cwd(), 'src-tauri/examples/desktop_e2e_crawl.js');
++    const rendererText = readFileSync(rendererFile, 'utf8');
++    const crawlText = readFileSync(crawlFile, 'utf8');
++
++    const windowObj: any = {
++      __seomiE2eFixtureUrl: fixtureUrl,
++    };
++    vm.runInNewContext(crawlText, { window: windowObj, URL, Date, Uint8Array, atob, globalThis: { crypto } }, { filename: crawlFile });
++    vm.runInNewContext(rendererText, { window: windowObj, URL, Date, Uint8Array, atob }, { filename: rendererFile });
++    return {
++      renderer: windowObj.__seomiRendererE2e,
++      crawl: windowObj.__seomiDesktopCrawlValidation,
++    };
++  };
++
++  it('runs renderer and crawl against dynamic local fixture origin', async () => {
++    const fixtureOrigin = 'http://127.0.0.1:49152/';
++    const { renderer, crawl } = loadScripts(fixtureOrigin);
++
++    const checks: string[] = [];
++    const check = (name: string, value: boolean) => {
++      if (!value) throw new Error(name);
++      checks.push(name);
++    };
++
++    const mockInvoke = async (name: string, args: any) => {
++      if (name === 'crawl_site') {
++        return {
++          crawl_mode: args.config.crawlMode,
++          cancelled: false,
++          timed_out: false,
++          pages: [{
++            final_url: fixtureOrigin,
++            http_status: 200,
++            response_time_ms: 12,
++            content_type: 'text/html; charset=utf-8',
++            title: 'Example Domain',
++            word_count: 24,
++            semantic_content_source: 'primary-root',
++            semantic_content_provenance: args.config.crawlMode === 'http' ? 'http' : 'rendered',
++          }],
++        };
++      }
++      if (name === 'render_crawl_page') {
++        return {
++          html: '<title>Example Domain</title><h1>Example Domain</h1><p>Words</p>',
++          httpStatus: 200,
++          finalUrl: fixtureOrigin,
++          contentType: 'text/html; charset=utf-8',
++        };
++      }
++      if (name === 'capture_rendered_artifact') {
++        const png = args?.kind === 'screenshot';
++        return {
++          artifactType: args?.kind,
++          requestedUrl: fixtureOrigin,
++          finalUrl: fixtureOrigin,
++          runId: 'desktop-e2e-renderer',
++          capturedAt: '2026-10-25T10:00:00Z',
++          contentType: png ? 'image/png' : 'application/pdf',
++          fileName: `rendered-page-20261025T100000Z-${args?.kind}.${png ? 'png' : 'pdf'}`,
++          bytes: png ? 8 : 5,
++          rendererPlatform: 'macos-wkwebview',
++          dataBase64: png ? 'iVBORw0KGgo=' : 'JVBERi0=',
++        };
++      }
++      if (name === 'open_rendered_element_preview') return;
++      throw new Error(`Unexpected invoke ${name}`);
++    };
++
++    const crawlResult = await crawl.run({
++      projectId: 'fixture-test',
++      check,
++      invoke: mockInvoke,
++    });
++
++    expect(crawlResult.http.pages).toHaveLength(1);
++    expect(crawlResult.rendered.pages).toHaveLength(1);
++    expect(checks).toContain('HTTP observed final URL is expected host');
++    expect(checks).toContain('browser-rendered observed final URL is expected host');
++
++    const rendererResult = await renderer.run({
++      projectId: 'fixture-test',
++      invoke: mockInvoke,
++    });
++
++    expect(rendererResult.passed).toBe(true);
++    expect(rendererResult.checks).toContain('renderer HTML captured');
++    expect(rendererResult.checks).toContain('renderer final URL remains expected host');
++  });
++});
+diff --git a/tests/desktopE2eRendererDiagnostics.test.ts b/tests/desktopE2eRendererDiagnostics.test.ts
+index ad219ba6..b6a71d75 100644
+--- a/tests/desktopE2eRendererDiagnostics.test.ts
++++ b/tests/desktopE2eRendererDiagnostics.test.ts
+@@ -25,6 +25,7 @@ describe('desktop_e2e_renderer script execution and diagnostics', () => {
+     ['HTTP error page', '<html>Error404</html>'],
+     ['WebKit error page', '<html><title>Cannot Open Page</title></html>'],
+     ['about blank', '<html>about:blank</html>'],
++    ['Cloudflare rate limit', '<title>Rate Limited | example.com | Cloudflare</title>'],
+   ])('rejects invalid HTML (%s) and retains diagnostics', async (_, html) => {
+     const api = loadScript();
+     const result = await api.run({

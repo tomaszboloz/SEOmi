@@ -1,0 +1,5 @@
+Bieżący niezależny audyt kryteriów na main `4a25a1974d9641a6170c0802919a566e55251071` potwierdza obecność testów szoku rynkowego, zgodności filtrów/property/prefix, stanów unknown,12lokalizacji i HelpTip. Nie jest to jednak pełny odbiór aktualnego callera.
+
+`SignalsWorkspace` wywołuje useCausalImpact z `pages[0]?.url`, a nie jawną wybraną właściwością GSC projektu. Kontrakt adaptera respektuje tożsamość property i prefiks, więc trzeba doprowadzić właściwy identyfikator przez runtime oraz dodać dodatnią i ujemną regresję całego UI/project switch dla URL-prefix różnego od pierwszego URL crawla. Brak zgodnego źródła ma nadal dawać inconclusive/null; nie wolno wracać do dowolnej domeny ani fikcyjnego sukcesu/porażki.
+
+Jest to przegląd źródeł ścieżki wywołania; bieżący live-runtime tej integracji nie został w tym odbiorze uruchomiony. Wcześniejsze170testów silnika nie zastępuje integracji UI. Issue pozostajeOPEN do domknięcia callera i dowodów. Wyniki mają charakter obserwacyjny, bez twierdzeń przyczynowych. Progi95/98/MAX150 bez zmian; PR213 obejmuje oddzielny błąd publikacji.

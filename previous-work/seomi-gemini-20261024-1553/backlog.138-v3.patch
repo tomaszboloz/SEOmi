@@ -1,0 +1,2278 @@
+diff --git a/src-tauri/src/commands/run_store/command_tests.rs b/src-tauri/src/commands/run_store/command_tests.rs
+index 2314ef3b..16f3326f 100644
+--- a/src-tauri/src/commands/run_store/command_tests.rs
++++ b/src-tauri/src/commands/run_store/command_tests.rs
+@@ -1,5 +1,7 @@
+ use super::commands::*;
+ use super::erase_commands::*;
++use super::event_commands::*;
++use super::events::StoredCrawlEvent;
+ use crate::utils::test_app::StorageApp;
+ use serde_json::json;
+ 
+@@ -7,6 +9,20 @@ use serde_json::json;
+ fn commands_round_trip_through_the_sqlite_file_and_validate_ids() {
+     let fixture = StorageApp::new(tauri::test::mock_builder());
+     let app = fixture.handle();
++    let ev = StoredCrawlEvent {
++        project_id: "p1".into(),
++        run_id: "r1".into(),
++        seq: 1,
++        event_type: "start".into(),
++        at: "2026-10-24T12:00:00Z".into(),
++        payload: json!({"url": "https://e.test/"}),
++    };
++    let appended =
++        store_append_crawl_events(app.clone(), "p1".into(), "r1".into(), vec![ev.clone()]).unwrap();
++    assert_eq!(appended, 1);
++    let loaded = store_load_crawl_events(app.clone(), "p1".into(), "r1".into(), 1, 10).unwrap();
++    assert_eq!(loaded.len(), 1);
++    assert_eq!(loaded[0].seq, 1);
+     let run = json!({"id": "r1", "completedAt": "2026-01-01", "startUrl": "https://e.test/",
+         "result": {"pages": [{"url": "https://e.test/a"}, {"url": "https://e.test/b"}]}});
+     store_save_crawl_run(app.clone(), "p1".into(), run.clone()).unwrap();
+@@ -74,5 +90,13 @@ fn commands_round_trip_through_the_sqlite_file_and_validate_ids() {
+             .action,
+         "erase_project"
+     );
+-    assert_eq!(store_erasure_log(app, "p1".into()).unwrap().len(), 2);
++    assert_eq!(
++        store_erasure_log(app.clone(), "p1".into()).unwrap().len(),
++        2
++    );
++    assert!(
++        store_load_crawl_events(app, "p1".into(), "r1".into(), 1, 10)
++            .unwrap()
++            .is_empty()
++    );
+ }
+
+diff --git a/src-tauri/src/commands/run_store/commands.rs b/src-tauri/src/commands/run_store/commands.rs
+index 1614e690..129d1fc3 100644
+--- a/src-tauri/src/commands/run_store/commands.rs
++++ b/src-tauri/src/commands/run_store/commands.rs
+@@ -6,7 +6,7 @@ use tauri::AppHandle;
+ use super::{records, runs, schema, shred};
+ use crate::commands::crawl_storage::project_directory;
+ 
+-pub(super) fn open_store<R: tauri::Runtime>(
++pub(crate) fn open_store<R: tauri::Runtime>(
+     app: &AppHandle<R>,
+     project_id: &str,
+ ) -> Result<Connection, String> {
+
+diff --git a/src-tauri/src/commands/run_store/erase.rs b/src-tauri/src/commands/run_store/erase.rs
+index aa03c6e5..0adc6641 100644
+--- a/src-tauri/src/commands/run_store/erase.rs
++++ b/src-tauri/src/commands/run_store/erase.rs
+@@ -88,6 +88,8 @@ pub fn erase_project(conn: &mut Connection, project: &str) -> Result<ErasureRepo
+         .map_err(db)?;
+     tx.execute("DELETE FROM import_log WHERE project_id = ?1", [project])
+         .map_err(db)?;
++    tx.execute("DELETE FROM crawl_events WHERE project_id = ?1", [project])
++        .map_err(db)?;
+     let report = log(
+         &tx,
+         project,
+
+diff --git a/src-tauri/src/commands/run_store/mod.rs b/src-tauri/src/commands/run_store/mod.rs
+index f18b126b..f1e6f1b2 100644
+--- a/src-tauri/src/commands/run_store/mod.rs
++++ b/src-tauri/src/commands/run_store/mod.rs
+@@ -15,6 +15,10 @@ pub mod erase_commands;
+ mod erase_tests;
+ #[cfg(test)]
+ mod erasure_regression_tests;
++pub mod event_commands;
++#[cfg(test)]
++mod event_tests;
++pub mod events;
+ #[cfg(test)]
+ mod open_store_failure_tests;
+ #[cfg(test)]
+
+diff --git a/src-tauri/src/commands/run_store/runs.rs b/src-tauri/src/commands/run_store/runs.rs
+index 47d3917c..d7a124ee 100644
+--- a/src-tauri/src/commands/run_store/runs.rs
++++ b/src-tauri/src/commands/run_store/runs.rs
+@@ -111,6 +111,10 @@ where
+ }
+ 
+ pub fn delete_run(conn: &Connection, project_id: &str, run_id: &str) -> Result<usize> {
++    let _ = conn.execute(
++        "DELETE FROM crawl_events WHERE project_id = ?1 AND run_id = ?2",
++        params![project_id, run_id],
++    );
+     conn.execute(
+         "DELETE FROM crawl_runs WHERE project_id = ?1 AND run_id = ?2",
+         params![project_id, run_id],
+
+diff --git a/src-tauri/src/commands/run_store/schema.rs b/src-tauri/src/commands/run_store/schema.rs
+index 35d9d006..36b104cd 100644
+--- a/src-tauri/src/commands/run_store/schema.rs
++++ b/src-tauri/src/commands/run_store/schema.rs
+@@ -1,7 +1,7 @@
+ use rusqlite::{Connection, Result, TransactionBehavior};
+ use std::{path::Path, time::Duration};
+ 
+-pub const SCHEMA_VERSION: i64 = 2;
++pub const SCHEMA_VERSION: i64 = 3;
+ const SQLITE_BUSY_TIMEOUT: Duration = Duration::from_secs(2);
+ 
+ const V1: &str = "
+@@ -61,6 +61,19 @@ CREATE TABLE erasure_log (
+ );
+ ";
+ 
++const V3: &str = "
++CREATE TABLE crawl_events (
++    project_id TEXT NOT NULL,
++    run_id TEXT NOT NULL,
++    seq INTEGER NOT NULL,
++    event_type TEXT NOT NULL,
++    at TEXT NOT NULL,
++    payload TEXT NOT NULL,
++    PRIMARY KEY (project_id, run_id, seq)
++);
++CREATE INDEX idx_crawl_events_order ON crawl_events (project_id, run_id, seq);
++";
++
+ /// Apply pending migrations atomically: a crash mid-migration rolls back and
+ /// the next open retries from the previous `user_version`.
+ pub fn migrate(conn: &mut Connection) -> Result<()> {
+@@ -75,6 +88,9 @@ pub fn migrate(conn: &mut Connection) -> Result<()> {
+     if current < 2 {
+         tx.execute_batch(V2)?;
+     }
++    if current < 3 {
++        tx.execute_batch(V3)?;
++    }
+     tx.pragma_update(None, "user_version", SCHEMA_VERSION)?;
+     tx.commit()
+ }
+
+diff --git a/src-tauri/src/commands/site_crawler/orchestration.rs b/src-tauri/src/commands/site_crawler/orchestration.rs
+index f64f514d..a10482da 100644
+--- a/src-tauri/src/commands/site_crawler/orchestration.rs
++++ b/src-tauri/src/commands/site_crawler/orchestration.rs
+@@ -7,6 +7,8 @@ use super::{
+ 
+ mod frontier;
+ mod loop_runner;
++mod loop_runner_progress;
++pub(crate) mod native_collector;
+ mod page_assembler;
+ mod page_assembler_assets;
+ mod page_assembler_signals;
+
+diff --git a/src-tauri/src/commands/site_crawler/orchestration/loop_runner.rs b/src-tauri/src/commands/site_crawler/orchestration/loop_runner.rs
+index 8e9dc252..2c7e7847 100644
+--- a/src-tauri/src/commands/site_crawler/orchestration/loop_runner.rs
++++ b/src-tauri/src/commands/site_crawler/orchestration/loop_runner.rs
+@@ -1,13 +1,12 @@
+ use std::time::Duration;
+-use tauri::{AppHandle, Emitter, Runtime};
++use tauri::{AppHandle, Runtime};
+ 
+ use super::super::{
+-    control::{CrawlControl, CrawlProgress},
+-    models::RejectedCrawlUrl,
+-    robots::RobotsRule,
+-    robots_matching::robots_deciding_rule,
+-    transport::crawl_deadline_reached,
++    control::CrawlControl, models::RejectedCrawlUrl, robots::RobotsRule,
++    robots_matching::robots_deciding_rule, transport::crawl_deadline_reached,
+ };
++use super::loop_runner_progress::emit_crawl_progress;
++use super::native_collector::NativeCrawlCollector;
+ use super::page_assembler::assemble_page_summary;
+ use super::page_error::handle_page_error;
+ use super::page_fetch::fetch_page_step;
+@@ -16,6 +15,7 @@ use super::selectors::CrawlSelectors;
+ use super::setup::CrawlSetup;
+ use super::state::CrawlLoopState;
+ 
++#[allow(dead_code)]
+ pub async fn run_crawl_loop<R: Runtime>(
+     app: &AppHandle<R>,
+     control: &CrawlControl,
+@@ -25,7 +25,35 @@ pub async fn run_crawl_loop<R: Runtime>(
+     robots_rules: &[RobotsRule],
+     robots_crawl_delay: Option<Duration>,
+ ) {
++    let _ = run_crawl_loop_with_collector(
++        app,
++        control,
++        setup,
++        state,
++        selectors,
++        robots_rules,
++        robots_crawl_delay,
++        &mut None,
++    )
++    .await;
++}
++
++#[allow(clippy::too_many_arguments)]
++pub async fn run_crawl_loop_with_collector<R: Runtime>(
++    app: &AppHandle<R>,
++    control: &CrawlControl,
++    setup: &CrawlSetup,
++    state: &mut CrawlLoopState<R>,
++    selectors: &CrawlSelectors,
++    robots_rules: &[RobotsRule],
++    robots_crawl_delay: Option<Duration>,
++    collector: &mut Option<NativeCrawlCollector>,
++) -> Result<(), String> {
+     let parallelism = prefetch_parallelism(&setup.config, robots_crawl_delay);
++    if let Some(col) = collector.as_mut() {
++        let cfg = serde_json::to_value(&setup.config).unwrap_or_default();
++        col.record_started(&setup.normalized_start_url.to_string(), &cfg)?;
++    }
+ 
+     loop {
+         if state.prefetched_order.is_empty() && state.queue.is_empty() {
+@@ -41,8 +69,6 @@ pub async fn run_crawl_loop<R: Runtime>(
+         if state.pages.len() >= setup.limit {
+             break;
+         }
+-        // The guard at the top of the loop proved one of the queues is non-empty and
+-        // `state` is exclusively borrowed, so a pop cannot come back empty here.
+         let (current_url, depth) = state
+             .prefetched_order
+             .pop_front()
+@@ -71,32 +97,14 @@ pub async fn run_crawl_loop<R: Runtime>(
+         if control.is_cancelled(&setup.run_id) {
+             break;
+         }
+-        let elapsed_seconds = setup.start_time.elapsed().as_secs_f64();
+-        let pages_per_second = if elapsed_seconds > 0.0 {
+-            state.pages.len() as f64 / elapsed_seconds
+-        } else {
+-            0.0
+-        };
+-        let _ = app.emit(
+-            "crawl-progress",
+-            CrawlProgress {
+-                run_id: setup.run_id.clone(),
+-                current_url: Some(current_url.clone()),
+-                discovered: state.visited.len(),
+-                completed: state.pages.len(),
+-                queued: state.queue.len() + state.prefetched_order.len(),
+-                cancelled: false,
+-                paused: false,
+-                elapsed_ms: setup.start_time.elapsed().as_millis() as u64,
+-                pages_per_second,
+-            },
+-        );
++        emit_crawl_progress(app, setup, state, &current_url);
+ 
+         let (resp, page_duration) =
+             fetch_page_step(app, control, setup, state, robots_crawl_delay, &current_url).await;
+ 
+         match resp {
+             Ok(fetched) => {
++                let pages_before = state.pages.len();
+                 let _ = assemble_page_summary(
+                     fetched,
+                     page_duration,
+@@ -107,9 +115,21 @@ pub async fn run_crawl_loop<R: Runtime>(
+                     state,
+                 )
+                 .await;
++                if state.pages.len() > pages_before {
++                    if let (Some(c), Some(p)) = (collector.as_mut(), state.pages.last()) {
++                        c.record_page(p)?;
++                    }
++                }
+             }
+             Err(e) => {
+-                if !handle_page_error(setup, state, &current_url, depth, page_duration, e) {
++                let pages_before = state.pages.len();
++                let cont = handle_page_error(setup, state, &current_url, depth, page_duration, e);
++                if state.pages.len() > pages_before {
++                    if let (Some(c), Some(p)) = (collector.as_mut(), state.pages.last()) {
++                        c.record_page(p)?;
++                    }
++                }
++                if !cont {
+                     break;
+                 }
+             }
+@@ -117,4 +137,5 @@ pub async fn run_crawl_loop<R: Runtime>(
+ 
+         prefetch_next_window(app, control, setup, state, robots_rules, parallelism).await;
+     }
++    Ok(())
+ }
+
+diff --git a/src-tauri/src/commands/site_crawler/orchestration/pipeline.rs b/src-tauri/src/commands/site_crawler/orchestration/pipeline.rs
+index 46c68ef6..d62d68bf 100644
+--- a/src-tauri/src/commands/site_crawler/orchestration/pipeline.rs
++++ b/src-tauri/src/commands/site_crawler/orchestration/pipeline.rs
+@@ -1,10 +1,9 @@
+ use tauri::{AppHandle, Runtime};
+ 
+ use super::{
+-    frontier::init_frontier, loop_runner::run_crawl_loop,
+-    resource_crawler::crawl_secondary_resources, robots::fetch_and_eval_robots,
+-    selectors::CrawlSelectors, setup::CrawlSetup, sitemaps::discover_and_parse_sitemaps,
+-    state::CrawlLoopState, summary::build_crawl_result,
++    frontier::init_frontier, resource_crawler::crawl_secondary_resources,
++    robots::fetch_and_eval_robots, selectors::CrawlSelectors, setup::CrawlSetup,
++    sitemaps::discover_and_parse_sitemaps, state::CrawlLoopState, summary::build_crawl_result,
+ };
+ use crate::commands::site_crawler::{control::CrawlControl, models::SiteCrawlResult};
+ 
+@@ -31,7 +30,19 @@ pub(super) async fn run_crawl_pipeline<R: Runtime>(
+     );
+     let selectors = CrawlSelectors::compile();
+ 
+-    run_crawl_loop(
++    let conn = match setup.project_id.as_deref() {
++        Some(pid) if !pid.trim().is_empty() => {
++            Some(crate::commands::run_store::commands::open_store(app, pid)?)
++        }
++        _ => None,
++    };
++    let mut collector = Some(super::native_collector::NativeCrawlCollector::new(
++        setup.project_id.clone(),
++        setup.run_id.clone(),
++        conn,
++    ));
++
++    super::loop_runner::run_crawl_loop_with_collector(
+         app,
+         control,
+         setup,
+@@ -39,8 +50,9 @@ pub(super) async fn run_crawl_pipeline<R: Runtime>(
+         &selectors,
+         &robots.robots_rules,
+         robots.robots_crawl_delay,
++        &mut collector,
+     )
+-    .await;
++    .await?;
+ 
+     super::super::post_processing::annotate_page_relations(
+         &mut state.pages,
+@@ -50,7 +62,7 @@ pub(super) async fn run_crawl_pipeline<R: Runtime>(
+     let (resources, resource_limit_reached) =
+         crawl_secondary_resources(setup, control, &mut state, robots.robots_crawl_delay).await;
+ 
+-    Ok(build_crawl_result(super::summary::BuildCrawlResultInput {
++    let result = build_crawl_result(super::summary::BuildCrawlResultInput {
+         app,
+         control,
+         setup,
+@@ -59,5 +71,20 @@ pub(super) async fn run_crawl_pipeline<R: Runtime>(
+         state: &mut state,
+         resources,
+         resource_limit_reached,
+-    }))
++    });
++    if let Some(col) = collector.as_mut() {
++        if result.cancelled {
++            col.record_cancelled(&result.start_url, result.pages.len(), result.duration_ms)?;
++        } else if result.timed_out {
++            col.record_timed_out(&result.start_url, result.pages.len(), result.duration_ms)?;
++        } else {
++            col.record_completed(
++                &result.start_url,
++                result.pages.len(),
++                f64::from(result.health_score),
++                result.duration_ms,
++            )?;
++        }
++    }
++    Ok(result)
+ }
+
+diff --git a/src-tauri/src/commands/site_crawler/orchestration/setup.rs b/src-tauri/src/commands/site_crawler/orchestration/setup.rs
+index 6777a22e..2180340f 100644
+--- a/src-tauri/src/commands/site_crawler/orchestration/setup.rs
++++ b/src-tauri/src/commands/site_crawler/orchestration/setup.rs
+@@ -33,6 +33,7 @@ pub struct CrawlSetup {
+     pub ua: String,
+     pub client: reqwest::Client,
+     pub retry_budget: Arc<RetryBudget>,
++    pub project_id: Option<String>,
+ }
+ 
+ impl CrawlSetup {
+@@ -120,6 +121,7 @@ impl CrawlSetup {
+             ua,
+             client,
+             retry_budget,
++            project_id,
+         })
+     }
+ }
+
+diff --git a/src-tauri/src/commands/site_crawler/orchestration/tests/mod.rs b/src-tauri/src/commands/site_crawler/orchestration/tests/mod.rs
+index 966617fa..282288d7 100644
+--- a/src-tauri/src/commands/site_crawler/orchestration/tests/mod.rs
++++ b/src-tauri/src/commands/site_crawler/orchestration/tests/mod.rs
+@@ -111,10 +111,13 @@ mod loop_runner_depth_boundary;
+ 
+ mod gap_boundaries;
+ mod loop_runner_resume_and_cancel;
++mod native_collector_integration;
++mod native_collector_query_only;
+ mod page_fetch_rendered_delay;
+ mod page_media_http_scheme;
+ mod page_type_branch_gaps;
+ mod page_type_links_ratio_gaps;
++mod pipeline_inflight_persistence;
+ mod summary_rendered_sessions;
+ 
+ #[path = "coverage100_exact_gaps.rs"]
+
+diff --git a/src-tauri/src/lib.rs b/src-tauri/src/lib.rs
+index 433b4e51..995975e9 100644
+--- a/src-tauri/src/lib.rs
++++ b/src-tauri/src/lib.rs
+@@ -1,13 +1,5 @@
+ pub mod commands;
+ #[cfg(test)]
+-mod compose_arg_more_tests;
+-#[cfg(test)]
+-mod compose_arg_tests;
+-#[cfg(test)]
+-mod compose_command_tests;
+-#[cfg(test)]
+-mod compose_gap_tests;
+-#[cfg(test)]
+ mod compose_tests;
+ pub mod models;
+ pub mod services;
+@@ -76,6 +68,8 @@ pub(crate) fn compose<R: tauri::Runtime>(builder: Builder<R>) -> Builder<R> {
+                 commands::run_store::erase_commands::store_forget_subject,
+                 commands::run_store::erase_commands::store_erase_project,
+                 commands::run_store::erase_commands::store_erasure_log,
++                commands::run_store::event_commands::store_append_crawl_events,
++                commands::run_store::event_commands::store_load_crawl_events,
+                 commands::seo_audit::inspect_url,
+                 commands::seo_audit::cancel_inspect_url,
+                 commands::http_client::check_link,
+
+diff --git a/src/services/crawlPersistence.ts b/src/services/crawlPersistence.ts
+index 0bdad61f..dc616332 100644
+--- a/src/services/crawlPersistence.ts
++++ b/src/services/crawlPersistence.ts
+@@ -4,6 +4,7 @@ import { indexedDbWrite } from './crawlPersistence/browser';
+ import { indexedDbRead } from './crawlPersistence/indexedDb';
+ import { clearLegacyCrawlStorage } from './crawlPersistence/legacy';
+ import { loadStoredRuns, migrateLegacyCrawlRuns, saveStoredRuns } from './crawlStore';
++import { buildSyntheticEventsFromRun, fetchCrawlEvents, persistCrawlEvents, replayCrawlEvents, replayLatestRunEvents } from './snapshots';
+ import {
+   assertCrawlWriteGeneration,
+   crawlWriteGeneration,
+@@ -15,6 +16,7 @@ export type { CrawlSaveResult } from './crawlPersistence/contracts';
+ export { encodeCrawlRunsForStorage, decodeCrawlRunsFromStorage } from './crawlPersistence/codec';
+ export { compactCrawlRunsForStorage } from './crawlPersistence/compaction';
+ export { crawlQuotaRetryCounts, isStorageQuotaError } from './crawlPersistence/quota';
++export { replayCrawlEvents, replayLatestRunEvents } from './snapshots';
+ 
+ /**
+  * Returns whether crawl history is stored outside the legacy localStorage
+@@ -27,7 +29,59 @@ export const loadCrawlRuns = async (projectId: string): Promise<CrawlRunRecord[]
+   if (!isTauriEnvironment()) return indexedDbRead(projectId);
+   return withCrawlWriteLock(projectId, async () => {
+     await migrateLegacyCrawlRuns(projectId);
+-    return loadStoredRuns(projectId);
++    const runs = await loadStoredRuns(projectId);
++    const inFlight = await replayLatestRunEvents(projectId);
++    if (inFlight.runId && inFlight.log.allEvents().length > 0 && !runs.some((r) => r.id === inFlight.runId)) {
++      const events = inFlight.log.allEvents();
++      const startEv = events.find((e) => e.type === 'crawl:started');
++      const startPayload = startEv?.payload as Record<string, unknown> | undefined;
++      const pages = events.filter((e) => e.type === 'crawl:page').map((e) => e.payload as any);
++      const completedEv = events.find((e) => e.type === 'crawl:completed');
++      const completedPayload = completedEv?.payload as Record<string, unknown> | undefined;
++      const startUrl = (startPayload?.startUrl as string) ?? (startPayload?.url as string) ?? '';
++      const lastEv = events.at(-1);
++      const computedDuration = lastEv?.at && startEv?.at
++        ? Math.max(0, new Date(lastEv.at).getTime() - new Date(startEv.at).getTime())
++        : undefined;
++      let critical_count = 0, warning_count = 0, notice_count = 0;
++      for (const p of pages) {
++        for (const iss of p.issues ?? []) {
++          if (iss.severity === 'critical') critical_count++;
++          else if (iss.severity === 'warning') warning_count++;
++          else if (iss.severity === 'notice') notice_count++;
++        }
++      }
++      const reconstructed: CrawlRunRecord = {
++        id: inFlight.runId,
++        projectId,
++        startedAt: startEv?.at,
++        completedAt: (completedEv ? completedEv.at : undefined) as unknown as string,
++        startUrl,
++        config: startPayload?.config as any,
++        result: {
++          start_url: startUrl,
++          pages_crawled: pages.length,
++          health_score: (completedPayload?.health_score as number | undefined) ?? (undefined as any),
++          critical_count,
++          warning_count,
++          notice_count,
++          pages,
++          duration_ms: (completedPayload?.duration_ms as number | undefined) ?? (computedDuration as any),
++          cancelled: Boolean(events.find((e) => e.type === 'crawl:cancelled')),
++          timed_out: Boolean(events.find((e) => e.type === 'crawl:timed_out')),
++          robots_txt_status: 'unknown',
++          robots_blocked_count: 0,
++          sitemap_status: 'unknown',
++          sitemap_urls_discovered: 0,
++          sitemap_urls: [],
++        },
++      };
++      return [reconstructed, ...runs];
++    }
++    if (runs.length > 0) {
++      await replayCrawlEvents(projectId, runs[0].id);
++    }
++    return runs;
+   });
+ };
+ 
+@@ -36,6 +90,14 @@ const saveUnlocked = async (projectId: string, runs: CrawlRunRecord[]): Promise<
+   // A save can be the first action after restoring a backup or a failed load.
+   // Finish migration before replacement or legacy cleanup can discard v1 data.
+   await migrateLegacyCrawlRuns(projectId);
++  if (runs.length > 0) {
++    const latest = runs[0];
++    const existing = await fetchCrawlEvents(projectId, latest.id);
++    if (!existing.length) {
++      const events = buildSyntheticEventsFromRun(latest, 'checkpoint-derived');
++      await persistCrawlEvents(projectId, latest.id, events);
++    }
++  }
+   await saveStoredRuns(projectId, runs);
+   clearLegacyCrawlStorage(projectId);
+   return { prunedRuns: Math.max(0, runs.length - 50) };
+
+diff --git a/src/services/snapshots/eventLog.ts b/src/services/snapshots/eventLog.ts
+index f133cbec..05324670 100644
+--- a/src/services/snapshots/eventLog.ts
++++ b/src/services/snapshots/eventLog.ts
+@@ -5,6 +5,8 @@ export interface CrawlEvent<P = unknown> {
+   readonly type: string;
+   readonly at: string;
+   readonly payload: Readonly<P>;
++  readonly runId?: string;
++  readonly projectId?: string;
+ }
+ 
+ export type EventSink = (event: CrawlEvent) => void;
+@@ -18,10 +20,18 @@ export class CrawlEventLog {
+   private events: CrawlEvent[] = [];
+   private readonly sinks = new Set<EventSink>();
+ 
++  constructor(initial: CrawlEvent[] = []) {
++    this.events = initial.map((ev) => Object.freeze({ ...ev, payload: freezeCopy(ev.payload) }));
++  }
++
+   get revision(): number {
+     return this.events.length;
+   }
+ 
++  allEvents(): readonly CrawlEvent[] {
++    return this.events;
++  }
++
+   append<P>(type: string, payload: P, now: () => Date = () => new Date()): CrawlEvent<P> {
+     const event: CrawlEvent<P> = Object.freeze({
+       seq: this.events.length + 1, type, at: now().toISOString(), payload: freezeCopy(payload),
+
+diff --git a/src/services/snapshots/index.ts b/src/services/snapshots/index.ts
+index d1ed1009..7993bbb5 100644
+--- a/src/services/snapshots/index.ts
++++ b/src/services/snapshots/index.ts
+@@ -1,4 +1,7 @@
+ export { deepFreeze, freezeCopy } from './freeze';
+ export { CrawlEventLog, type CrawlEvent, type Reducer, type EventSink } from './eventLog';
++export { PersistentCrawlEventLog } from './persistentLog';
+ export { openSimulationSession, type SimulationSession } from './session';
+ export { useSnapshotStale } from './useSnapshotStale';
++export { persistCrawlEvents, fetchCrawlEvents } from './sqliteEventSink';
++export { replayCrawlEvents, replayLatestRunEvents, buildSyntheticEventsFromRun } from './replay';
+
+diff --git a/tests/crawlStoreSqlite.test.ts b/tests/crawlStoreSqlite.test.ts
+index e1e97ea4..9a508918 100644
+--- a/tests/crawlStoreSqlite.test.ts
++++ b/tests/crawlStoreSqlite.test.ts
+@@ -11,7 +11,7 @@ const summary = (id: string, pageCount = 3) => ({ id, completedAt: '2026-01-01',
+ 
+ it('saves the full replacement snapshot without truncation', async () => {
+   const keep = createCrawlRunFixture({ id: 'keep' });
+-  native.invokeTauriCommand.mockImplementation(async (cmd: string) => (cmd === 'load_project_crawl_runs' ? [] : undefined));
++  native.invokeTauriCommand.mockImplementation(async (cmd: string) => (cmd === 'load_project_crawl_runs' || cmd === 'store_load_crawl_events' ? [] : undefined));
+   localStorage.setItem('seomi_project_p_crawl_runs', '[]');
+   expect(await saveCrawlRuns('p', [keep])).toEqual({ prunedRuns: 0 });
+   expect(native.invokeTauriCommand).toHaveBeenCalledWith('store_replace_crawl_runs', { projectId: 'p', runs: [keep] });
+@@ -19,7 +19,7 @@ it('saves the full replacement snapshot without truncation', async () => {
+ });
+ 
+ it('reports pruned count above the fifty run cap', async () => {
+-  native.invokeTauriCommand.mockImplementation(async (cmd: string) => (cmd === 'load_project_crawl_runs' ? [] : undefined));
++  native.invokeTauriCommand.mockImplementation(async (cmd: string) => (cmd === 'load_project_crawl_runs' || cmd === 'store_load_crawl_events' ? [] : undefined));
+   const rows = Array.from({ length: 52 }, (_, i) => createCrawlRunFixture({ id: `r${i}` }));
+   expect(await saveCrawlRuns('p', rows)).toEqual({ prunedRuns: 2 });
+   expect(native.invokeTauriCommand).toHaveBeenCalledWith('store_replace_crawl_runs', { projectId: 'p', runs: rows.slice(0, 50) });
+@@ -34,6 +34,8 @@ it('migrates once with a backup, then loads from SQLite', async () => {
+     if (cmd === 'store_import_legacy_runs') return 1;
+     if (cmd === 'store_list_crawl_runs') return [summary('old', 0)];
+     if (cmd === 'store_load_crawl_run') return legacy;
++    if (cmd === 'store_load_crawl_events') return [];
++    if (cmd === 'store_append_crawl_events') return 1;
+     return undefined;
+   });
+   expect(await loadCrawlRuns('m')).toEqual([legacy]);
+
+diff --git a/src-tauri/src/commands/run_store/event_commands.rs b/src-tauri/src/commands/run_store/event_commands.rs
+new file mode 100644
+index 00000000..171bec8b
+--- /dev/null
++++ b/src-tauri/src/commands/run_store/event_commands.rs
+@@ -0,0 +1,27 @@
++use tauri::AppHandle;
++
++use super::commands::open_store;
++use super::events::{self, StoredCrawlEvent};
++
++#[tauri::command]
++pub fn store_append_crawl_events<R: tauri::Runtime>(
++    app: AppHandle<R>,
++    project_id: String,
++    run_id: String,
++    events: Vec<StoredCrawlEvent>,
++) -> Result<usize, String> {
++    let mut conn = open_store(&app, &project_id)?;
++    events::append_events(&mut conn, &project_id, &run_id, &events)
++}
++
++#[tauri::command]
++pub fn store_load_crawl_events<R: tauri::Runtime>(
++    app: AppHandle<R>,
++    project_id: String,
++    run_id: String,
++    from_seq: i64,
++    limit: i64,
++) -> Result<Vec<StoredCrawlEvent>, String> {
++    let conn = open_store(&app, &project_id)?;
++    events::load_events(&conn, &project_id, &run_id, from_seq, limit)
++}
+
+diff --git a/src-tauri/src/commands/run_store/event_tests.rs b/src-tauri/src/commands/run_store/event_tests.rs
+new file mode 100644
+index 00000000..a13e9807
+--- /dev/null
++++ b/src-tauri/src/commands/run_store/event_tests.rs
+@@ -0,0 +1,96 @@
++use serde_json::json;
++
++use super::events::{append_events, load_events, StoredCrawlEvent};
++use super::schema::open_memory;
++
++fn event(p: &str, r: &str, seq: i64, t: &str, val: &str) -> StoredCrawlEvent {
++    StoredCrawlEvent {
++        project_id: p.into(),
++        run_id: r.into(),
++        seq,
++        event_type: t.into(),
++        at: "2026-10-24T12:00:00Z".into(),
++        payload: json!({ "msg": val }),
++    }
++}
++
++#[test]
++fn test_append_and_load_events_ordering() {
++    let mut conn = open_memory().unwrap();
++    let evs = vec![
++        event("p1", "r1", 1, "start", "init"),
++        event("p1", "r1", 2, "page", "page-1"),
++        event("p1", "r1", 3, "finish", "done"),
++    ];
++    let inserted = append_events(&mut conn, "p1", "r1", &evs).unwrap();
++    assert_eq!(inserted, 3);
++
++    let loaded = load_events(&conn, "p1", "r1", 1, 10).unwrap();
++    assert_eq!(loaded.len(), 3);
++    assert_eq!(loaded[0].seq, 1);
++    assert_eq!(loaded[1].seq, 2);
++    assert_eq!(loaded[2].seq, 3);
++    assert_eq!(loaded[1].payload["msg"], "page-1");
++
++    let paged = load_events(&conn, "p1", "r1", 2, 1).unwrap();
++    assert_eq!(paged.len(), 1);
++    assert_eq!(paged[0].seq, 2);
++}
++
++#[test]
++fn test_append_idempotence_and_conflict() {
++    let mut conn = open_memory().unwrap();
++    let evs = vec![event("p1", "r1", 1, "start", "init")];
++    append_events(&mut conn, "p1", "r1", &evs).unwrap();
++
++    // Idempotent duplicate: same seq and payload
++    let re_append = append_events(&mut conn, "p1", "r1", &evs).unwrap();
++    assert_eq!(re_append, 0);
++
++    // Conflict: same seq, different payload
++    let conflict = vec![event("p1", "r1", 1, "start", "modified")];
++    let err = append_events(&mut conn, "p1", "r1", &conflict).unwrap_err();
++    assert!(err.contains("Sequence conflict"));
++}
++
++#[test]
++fn test_append_sequence_gap_rejected() {
++    let mut conn = open_memory().unwrap();
++    let gap = vec![event("p1", "r1", 2, "page", "page-2")];
++    let err = append_events(&mut conn, "p1", "r1", &gap).unwrap_err();
++    assert!(err.contains("Sequence gap"));
++}
++
++#[test]
++fn test_project_and_run_isolation() {
++    let mut conn = open_memory().unwrap();
++    append_events(&mut conn, "p1", "r1", &[event("p1", "r1", 1, "a", "1")]).unwrap();
++    append_events(&mut conn, "p2", "r1", &[event("p2", "r1", 1, "b", "2")]).unwrap();
++    append_events(&mut conn, "p1", "r2", &[event("p1", "r2", 1, "c", "3")]).unwrap();
++
++    let p1_r1 = load_events(&conn, "p1", "r1", 1, 10).unwrap();
++    let p2_r1 = load_events(&conn, "p2", "r1", 1, 10).unwrap();
++    let p1_r2 = load_events(&conn, "p1", "r2", 1, 10).unwrap();
++
++    assert_eq!(p1_r1[0].payload["msg"], "1");
++    assert_eq!(p2_r1[0].payload["msg"], "2");
++    assert_eq!(p1_r2[0].payload["msg"], "3");
++}
++
++#[test]
++fn test_delete_run_cleans_events() {
++    let mut conn = open_memory().unwrap();
++    append_events(&mut conn, "p1", "r1", &[event("p1", "r1", 1, "a", "1")]).unwrap();
++    super::runs::delete_run(&conn, "p1", "r1").unwrap();
++    let loaded = load_events(&conn, "p1", "r1", 1, 10).unwrap();
++    assert!(loaded.is_empty());
++}
++
++#[test]
++fn test_erase_project_cleans_events() {
++    let mut conn = open_memory().unwrap();
++    append_events(&mut conn, "p1", "r1", &[event("p1", "r1", 1, "a", "1")]).unwrap();
++    super::erase::erase_project(&mut conn, "p1").unwrap();
++    let loaded = load_events(&conn, "p1", "r1", 1, 10).unwrap();
++    assert!(loaded.is_empty());
++}
+
+diff --git a/src-tauri/src/commands/run_store/events.rs b/src-tauri/src/commands/run_store/events.rs
+new file mode 100644
+index 00000000..da4c46a8
+--- /dev/null
++++ b/src-tauri/src/commands/run_store/events.rs
+@@ -0,0 +1,148 @@
++use rusqlite::{params, Connection, OptionalExtension, TransactionBehavior};
++use serde::{Deserialize, Serialize};
++use serde_json::Value;
++
++#[derive(Debug, Clone, Serialize, Deserialize, PartialEq, Eq)]
++#[serde(rename_all = "camelCase")]
++pub struct StoredCrawlEvent {
++    pub project_id: String,
++    pub run_id: String,
++    pub seq: i64,
++    pub event_type: String,
++    pub at: String,
++    pub payload: Value,
++}
++
++fn err(e: impl std::fmt::Display) -> String {
++    format!("Event store error: {e}")
++}
++
++fn decode_json(raw: &str) -> Result<Value, String> {
++    serde_json::from_str(raw).map_err(|e| err(format!("JSON decode error: {e}")))
++}
++
++pub fn append_events(
++    conn: &mut Connection,
++    project: &str,
++    run: &str,
++    events: &[StoredCrawlEvent],
++) -> Result<usize, String> {
++    if project.trim().is_empty() || run.trim().is_empty() {
++        return Err("Project ID and Run ID cannot be empty.".into());
++    }
++    let tx = conn
++        .transaction_with_behavior(TransactionBehavior::Immediate)
++        .map_err(err)?;
++    let mut current_max: i64 = tx
++        .query_row(
++            "SELECT coalesce(max(seq), 0) FROM crawl_events WHERE project_id = ?1 AND run_id = ?2",
++            params![project, run],
++            |row| row.get(0),
++        )
++        .map_err(err)?;
++
++    let mut inserted = 0;
++    for ev in events {
++        if ev.project_id != project || ev.run_id != run {
++            return Err("Event project_id or run_id does not match target.".into());
++        }
++        if ev.seq <= current_max {
++            let existing: Option<(String, String, String)> = tx
++                .query_row(
++                    "SELECT event_type, at, payload FROM crawl_events WHERE project_id = ?1 AND run_id = ?2 AND seq = ?3",
++                    params![project, run, ev.seq],
++                    |row| Ok((row.get(0)?, row.get(1)?, row.get(2)?)),
++                )
++                .optional()
++                .map_err(err)?;
++            if let Some((et, at, pl)) = existing {
++                let existing_val = decode_json(&pl)?;
++                if et == ev.event_type && at == ev.at && existing_val == ev.payload {
++                    continue; // Idempotent duplicate: skip
++                }
++                return Err(format!(
++                    "Sequence conflict at seq {} for run {}: distinct data.",
++                    ev.seq, run
++                ));
++            }
++        }
++        if ev.seq != current_max + 1 {
++            return Err(format!(
++                "Sequence gap: expected seq {}, got {} for run {}.",
++                current_max + 1,
++                ev.seq,
++                run
++            ));
++        }
++        tx.execute(
++            "INSERT INTO crawl_events (project_id, run_id, seq, event_type, at, payload) VALUES (?1, ?2, ?3, ?4, ?5, ?6)",
++            params![project, run, ev.seq, ev.event_type, ev.at, ev.payload.to_string()],
++        )
++        .map_err(err)?;
++        current_max = ev.seq;
++        inserted += 1;
++    }
++    tx.commit().map_err(err)?;
++    Ok(inserted)
++}
++
++pub fn load_events(
++    conn: &Connection,
++    project: &str,
++    run: &str,
++    from_seq: i64,
++    limit: i64,
++) -> Result<Vec<StoredCrawlEvent>, String> {
++    let capped_limit = limit.clamp(1, 10_000);
++    let target_run: String = if run.trim().is_empty() {
++        let q = "SELECT run_id FROM crawl_events WHERE project_id = ?1 ORDER BY rowid DESC LIMIT 1";
++        match conn
++            .query_row(q, params![project], |r| r.get(0))
++            .optional()
++            .map_err(err)?
++        {
++            Some(r) => r,
++            None => return Ok(Vec::new()),
++        }
++    } else {
++        run.to_string()
++    };
++    let mut stmt = conn
++        .prepare(
++            "SELECT project_id, run_id, seq, event_type, at, payload FROM crawl_events \
++             WHERE project_id = ?1 AND run_id = ?2 AND seq >= ?3 \
++             ORDER BY seq ASC LIMIT ?4",
++        )
++        .map_err(err)?;
++
++    let rows = stmt
++        .query_map(
++            params![project, target_run, from_seq.max(1), capped_limit],
++            |row| {
++                Ok((
++                    row.get::<_, String>(0)?,
++                    row.get::<_, String>(1)?,
++                    row.get::<_, i64>(2)?,
++                    row.get::<_, String>(3)?,
++                    row.get::<_, String>(4)?,
++                    row.get::<_, String>(5)?,
++                ))
++            },
++        )
++        .map_err(err)?;
++
++    let mut result = Vec::new();
++    for row in rows {
++        let (p, r, s, et, at, pl) = row.map_err(err)?;
++        let payload = decode_json(&pl)?;
++        result.push(StoredCrawlEvent {
++            project_id: p,
++            run_id: r,
++            seq: s,
++            event_type: et,
++            at,
++            payload,
++        });
++    }
++    Ok(result)
++}
+
+diff --git a/src-tauri/src/commands/site_crawler/orchestration/loop_runner_progress.rs b/src-tauri/src/commands/site_crawler/orchestration/loop_runner_progress.rs
+new file mode 100644
+index 00000000..e7b02286
+--- /dev/null
++++ b/src-tauri/src/commands/site_crawler/orchestration/loop_runner_progress.rs
+@@ -0,0 +1,33 @@
++use tauri::{AppHandle, Emitter, Runtime};
++
++use super::setup::CrawlSetup;
++use super::state::CrawlLoopState;
++use crate::commands::site_crawler::control::CrawlProgress;
++
++pub(super) fn emit_crawl_progress<R: Runtime>(
++    app: &AppHandle<R>,
++    setup: &CrawlSetup,
++    state: &CrawlLoopState<R>,
++    current_url: &str,
++) {
++    let elapsed_s = setup.start_time.elapsed().as_secs_f64();
++    let pps = if elapsed_s > 0.0 {
++        state.pages.len() as f64 / elapsed_s
++    } else {
++        0.0
++    };
++    let _ = app.emit(
++        "crawl-progress",
++        CrawlProgress {
++            run_id: setup.run_id.clone(),
++            current_url: Some(current_url.to_string()),
++            discovered: state.visited.len(),
++            completed: state.pages.len(),
++            queued: state.queue.len() + state.prefetched_order.len(),
++            cancelled: false,
++            paused: false,
++            elapsed_ms: setup.start_time.elapsed().as_millis() as u64,
++            pages_per_second: pps,
++        },
++    );
++}
+
+diff --git a/src-tauri/src/commands/site_crawler/orchestration/native_collector.rs b/src-tauri/src/commands/site_crawler/orchestration/native_collector.rs
+new file mode 100644
+index 00000000..f1249629
+--- /dev/null
++++ b/src-tauri/src/commands/site_crawler/orchestration/native_collector.rs
+@@ -0,0 +1,133 @@
++use chrono::Utc;
++use rusqlite::Connection;
++use serde_json::json;
++
++use crate::commands::run_store::events::{append_events, StoredCrawlEvent};
++use crate::commands::site_crawler::models::CrawledPageSummary;
++
++pub struct NativeCrawlCollector {
++    pub project_id: String,
++    pub run_id: String,
++    pub seq: i64,
++    pub conn: Option<Connection>,
++}
++
++impl NativeCrawlCollector {
++    pub fn new(project_id: Option<String>, run_id: String, conn: Option<Connection>) -> Self {
++        Self {
++            project_id: project_id.unwrap_or_default(),
++            run_id,
++            seq: 0,
++            conn,
++        }
++    }
++
++    pub fn is_active(&self) -> bool {
++        self.conn.is_some() && !self.project_id.trim().is_empty()
++    }
++
++    fn append_single(
++        &mut self,
++        event_type: &str,
++        payload: serde_json::Value,
++    ) -> Result<(), String> {
++        if !self.is_active() {
++            return Ok(());
++        }
++        let next_seq = self.seq + 1;
++        let event = StoredCrawlEvent {
++            project_id: self.project_id.clone(),
++            run_id: self.run_id.clone(),
++            seq: next_seq,
++            event_type: event_type.to_string(),
++            at: Utc::now().to_rfc3339(),
++            payload,
++        };
++        let conn = self.conn.as_mut().ok_or("Collector store unavailable")?;
++        append_events(conn, &self.project_id, &self.run_id, &[event])?;
++        self.seq = next_seq;
++        Ok(())
++    }
++
++    pub fn record_started(
++        &mut self,
++        start_url: &str,
++        config: &serde_json::Value,
++    ) -> Result<(), String> {
++        self.append_single(
++            "crawl:started",
++            json!({
++                "id": self.run_id,
++                "startUrl": start_url,
++                "config": config,
++                "provenance": "live-crawl"
++            }),
++        )
++    }
++
++    pub fn record_page(&mut self, page: &CrawledPageSummary) -> Result<(), String> {
++        let mut val = serde_json::to_value(page).map_err(|e| e.to_string())?;
++        if let Some(obj) = val.as_object_mut() {
++            obj.insert("provenance".to_string(), json!("live-crawl"));
++        }
++        self.append_single("crawl:page", val)
++    }
++
++    pub fn record_completed(
++        &mut self,
++        start_url: &str,
++        page_count: usize,
++        health_score: f64,
++        duration_ms: u64,
++    ) -> Result<(), String> {
++        self.append_single(
++            "crawl:completed",
++            json!({
++                "id": self.run_id,
++                "startUrl": start_url,
++                "pageCount": page_count,
++                "health_score": health_score,
++                "duration_ms": duration_ms,
++                "provenance": "live-crawl"
++            }),
++        )
++    }
++
++    pub fn record_cancelled(
++        &mut self,
++        start_url: &str,
++        page_count: usize,
++        duration_ms: u64,
++    ) -> Result<(), String> {
++        self.append_single(
++            "crawl:cancelled",
++            json!({
++                "id": self.run_id,
++                "startUrl": start_url,
++                "pageCount": page_count,
++                "duration_ms": duration_ms,
++                "cancelled": true,
++                "provenance": "live-crawl"
++            }),
++        )
++    }
++
++    pub fn record_timed_out(
++        &mut self,
++        start_url: &str,
++        page_count: usize,
++        duration_ms: u64,
++    ) -> Result<(), String> {
++        self.append_single(
++            "crawl:timed_out",
++            json!({
++                "id": self.run_id,
++                "startUrl": start_url,
++                "pageCount": page_count,
++                "duration_ms": duration_ms,
++                "timed_out": true,
++                "provenance": "live-crawl"
++            }),
++        )
++    }
++}
+
+diff --git a/src-tauri/src/commands/site_crawler/orchestration/tests/native_collector_integration.rs b/src-tauri/src/commands/site_crawler/orchestration/tests/native_collector_integration.rs
+new file mode 100644
+index 00000000..256031f0
+--- /dev/null
++++ b/src-tauri/src/commands/site_crawler/orchestration/tests/native_collector_integration.rs
+@@ -0,0 +1,130 @@
++use serde_json::json;
++
++use crate::commands::run_store::events::load_events;
++use crate::commands::run_store::schema;
++use crate::commands::site_crawler::models::CrawledPageSummary;
++use crate::commands::site_crawler::orchestration::native_collector::NativeCrawlCollector;
++
++pub fn dummy_page(url: &str) -> CrawledPageSummary {
++    serde_json::from_value(json!({
++        "url": url, "final_url": url, "redirect_chain": [], "depth": 0,
++        "http_status": 200, "response_time_ms": 15, "indexability_status": "indexable",
++        "body_truncated": false, "word_count": 120, "schema_types": [],
++        "schema_syntax_errors": 0, "hreflangs": [], "h1_count": 1,
++        "heading_counts": [1, 0, 0, 0, 0, 0], "internal_link_count": 1,
++        "external_link_count": 0, "links": [], "images": [], "issues_count": 0, "issues": []
++    }))
++    .unwrap()
++}
++
++#[test]
++fn test_in_flight_page_persistence_and_reopen_replay() {
++    let db_dir = std::env::temp_dir().join(format!("seomi-col-inf-{}", uuid::Uuid::new_v4()));
++    let _ = std::fs::create_dir_all(&db_dir);
++    let db_path = db_dir.join("test_store.sqlite3");
++
++    let conn1 = schema::open(&db_path).expect("open connection 1");
++    let mut collector = NativeCrawlCollector::new(
++        Some("proj-crawl-1".into()),
++        "run-live-1".into(),
++        Some(conn1),
++    );
++    assert!(collector.is_active());
++
++    collector
++        .record_started("https://example.test/", &json!({ "maxPages": 10 }))
++        .expect("record started");
++    collector
++        .record_page(&dummy_page("https://example.test/p1"))
++        .expect("record page 1");
++    collector
++        .record_page(&dummy_page("https://example.test/p2"))
++        .expect("record page 2");
++
++    // Reopen second independent connection while crawl is in flight
++    let conn2 = schema::open(&db_path).expect("open connection 2");
++    let in_flight =
++        load_events(&conn2, "proj-crawl-1", "run-live-1", 1, 10).expect("load in flight");
++    assert_eq!(in_flight.len(), 3);
++    assert_eq!(in_flight[0].event_type, "crawl:started");
++    assert_eq!(in_flight[1].event_type, "crawl:page");
++    assert_eq!(in_flight[2].event_type, "crawl:page");
++    assert_eq!(in_flight[1].payload["url"], "https://example.test/p1");
++    assert_eq!(in_flight[2].payload["url"], "https://example.test/p2");
++    assert_eq!(in_flight[1].payload["provenance"], "live-crawl");
++
++    // Verify incomplete run is not marked completed
++    assert!(in_flight.iter().all(|e| e.event_type != "crawl:completed"));
++
++    // Project isolation check
++    let isolated =
++        load_events(&conn2, "other-project", "run-live-1", 1, 10).expect("load isolated");
++    assert_eq!(isolated.len(), 0);
++
++    // Replay / empty run discovery
++    let discovered = load_events(&conn2, "proj-crawl-1", "", 1, 10).expect("discover run");
++    assert_eq!(discovered.len(), 3);
++    assert_eq!(discovered[0].run_id, "run-live-1");
++
++    // Complete the crawl
++    collector
++        .record_completed("https://example.test/", 2, 85.0, 350)
++        .expect("record completed");
++
++    let complete = load_events(&conn2, "proj-crawl-1", "run-live-1", 1, 10).expect("load complete");
++    assert_eq!(complete.len(), 4);
++    assert_eq!(complete[3].event_type, "crawl:completed");
++    assert_eq!(complete[3].payload["pageCount"], 2);
++    assert_eq!(complete[3].payload["health_score"], 85.0);
++    assert_eq!(complete[3].payload["duration_ms"], 350);
++
++    let _ = std::fs::remove_dir_all(&db_dir);
++}
++
++#[test]
++fn test_collector_cancelled_and_timed_out_terminal_states() {
++    let db_dir = std::env::temp_dir().join(format!("seomi-col-term-{}", uuid::Uuid::new_v4()));
++    let _ = std::fs::create_dir_all(&db_dir);
++    let db_path = db_dir.join("test_store.sqlite3");
++
++    // Test cancelled terminal state
++    let conn_c = schema::open(&db_path).expect("open connection");
++    let mut col_c = NativeCrawlCollector::new(
++        Some("proj-term".into()),
++        "run-cancelled".into(),
++        Some(conn_c),
++    );
++    col_c
++        .record_started("https://example.test/", &json!({}))
++        .unwrap();
++    col_c
++        .record_cancelled("https://example.test/", 1, 120)
++        .unwrap();
++
++    let conn_r = schema::open(&db_path).expect("open connection read");
++    let events_c = load_events(&conn_r, "proj-term", "run-cancelled", 1, 10).unwrap();
++    assert_eq!(events_c.len(), 2);
++    assert_eq!(events_c[1].event_type, "crawl:cancelled");
++    assert_eq!(events_c[1].payload["cancelled"], true);
++    assert_eq!(events_c[1].payload["pageCount"], 1);
++    assert_eq!(events_c[1].payload["duration_ms"], 120);
++
++    // Test timed_out terminal state
++    let conn_t = schema::open(&db_path).expect("open connection");
++    let mut col_t =
++        NativeCrawlCollector::new(Some("proj-term".into()), "run-timeout".into(), Some(conn_t));
++    col_t
++        .record_started("https://example.test/", &json!({}))
++        .unwrap();
++    col_t
++        .record_timed_out("https://example.test/", 2, 5000)
++        .unwrap();
++
++    let events_t = load_events(&conn_r, "proj-term", "run-timeout", 1, 10).unwrap();
++    assert_eq!(events_t.len(), 2);
++    assert_eq!(events_t[1].event_type, "crawl:timed_out");
++    assert_eq!(events_t[1].payload["timed_out"], true);
++    assert_eq!(events_t[1].payload["duration_ms"], 5000);
++
++    let _ = std::fs::remove_dir_all(&db_dir);
++}
+
+diff --git a/src-tauri/src/commands/site_crawler/orchestration/tests/native_collector_query_only.rs b/src-tauri/src/commands/site_crawler/orchestration/tests/native_collector_query_only.rs
+new file mode 100644
+index 00000000..d3accf12
+--- /dev/null
++++ b/src-tauri/src/commands/site_crawler/orchestration/tests/native_collector_query_only.rs
+@@ -0,0 +1,70 @@
++use serde_json::json;
++
++use crate::commands::run_store::events::load_events;
++use crate::commands::run_store::schema;
++use crate::commands::site_crawler::orchestration::native_collector::NativeCrawlCollector;
++
++use super::native_collector_integration::dummy_page;
++
++#[test]
++fn test_collector_query_only_seq_recovery() {
++    let db_dir = std::env::temp_dir().join(format!("seomi-query-only-{}", uuid::Uuid::new_v4()));
++    let _ = std::fs::create_dir_all(&db_dir);
++    let db_path = db_dir.join("test_store.sqlite3");
++    let conn = schema::open(&db_path).expect("open connection");
++    let mut collector = NativeCrawlCollector::new(
++        Some("proj-query-only".into()),
++        "run-seq-recovery".into(),
++        Some(conn),
++    );
++    assert_eq!(collector.seq, 0);
++
++    // Make database read-only
++    let conn_ref = collector.conn.as_ref().unwrap();
++    conn_ref.execute_batch("PRAGMA query_only = ON;").unwrap();
++
++    // Attempt append - must fail with Err
++    let err = collector.record_started("https://example.test/", &json!({}));
++    assert!(err.is_err());
++    // Crucial: seq must NOT have advanced!
++    assert_eq!(collector.seq, 0);
++
++    // Re-enable writes
++    let conn_ref = collector.conn.as_ref().unwrap();
++    conn_ref.execute_batch("PRAGMA query_only = OFF;").unwrap();
++
++    // Retry append - must succeed with seq == 1
++    collector
++        .record_started("https://example.test/", &json!({}))
++        .expect("retry record started must succeed");
++    assert_eq!(collector.seq, 1);
++
++    // Append next event - must have seq == 2 with no gaps
++    collector
++        .record_page(&dummy_page("https://example.test/p1"))
++        .expect("record page");
++    assert_eq!(collector.seq, 2);
++
++    let conn2 = schema::open(&db_path).expect("open connection 2");
++    let events = load_events(&conn2, "proj-query-only", "run-seq-recovery", 1, 10).unwrap();
++    assert_eq!(events.len(), 2);
++    assert_eq!(events[0].seq, 1);
++    assert_eq!(events[1].seq, 2);
++
++    let _ = std::fs::remove_dir_all(&db_dir);
++}
++
++#[test]
++fn test_collector_inactive_graceful() {
++    let mut inactive = NativeCrawlCollector::new(None, "run-inactive".into(), None);
++    assert!(!inactive.is_active());
++    assert!(inactive
++        .record_started("https://example.test/", &json!({}))
++        .is_ok());
++    assert!(inactive
++        .record_page(&dummy_page("https://example.test/p1"))
++        .is_ok());
++    assert!(inactive
++        .record_completed("https://example.test/", 1, 90.0, 100)
++        .is_ok());
++}
+
+diff --git a/src-tauri/src/commands/site_crawler/orchestration/tests/pipeline_inflight_persistence.rs b/src-tauri/src/commands/site_crawler/orchestration/tests/pipeline_inflight_persistence.rs
+new file mode 100644
+index 00000000..0f7dc19d
+--- /dev/null
++++ b/src-tauri/src/commands/site_crawler/orchestration/tests/pipeline_inflight_persistence.rs
+@@ -0,0 +1,131 @@
++use super::super::pipeline::run_crawl_pipeline;
++use super::discovery_http_fixture::{delayed_route, html_route, route, DiscoveryServer};
++use super::setup_config::default_crawl_config;
++use super::*;
++use crate::commands::run_store::commands::open_store;
++use crate::commands::run_store::events::load_events;
++use crate::utils::test_app::StorageApp;
++use tauri::test::mock_builder;
++
++#[tokio::test]
++async fn test_production_pipeline_persists_in_flight_pages_to_sqlite() {
++    let mut config = default_crawl_config(Some(5));
++    config.max_concurrent_requests = Some(1);
++    config.max_resource_requests = Some(0);
++
++    let routes = vec![
++        route("/robots.txt", 200, "User-agent: *\nAllow: /\n"),
++        html_route(
++            "/",
++            "<html><body><a href='/p1'>1</a><a href='/p2'>2</a></body></html>",
++        ),
++        html_route("/p1", "<html><body><h1>1</h1></body></html>"),
++        delayed_route("/p2", 200, "<html><body><h1>2</h1></body></html>", 800),
++    ];
++    let mut server = DiscoveryServer::new(config, routes).await;
++    let app = StorageApp::new(mock_builder());
++    let pid = format!("proj-pipe-{}", uuid::Uuid::new_v4());
++    let rid = "run-pipe-live".to_string();
++    server.setup.project_id = Some(pid.clone());
++    server.setup.run_id = rid.clone();
++
++    let control = CrawlControl::new();
++    let handle = app.handle();
++    let crawl = run_crawl_pipeline(&handle, &control, &server.setup);
++    let inspector = async {
++        let conn_inflight = open_store(&handle, &pid).expect("open inflight store");
++        let mut in_flight_events = Vec::new();
++        for _ in 0..40 {
++            tokio::time::sleep(std::time::Duration::from_millis(25)).await;
++            if let Ok(ev) = load_events(&conn_inflight, &pid, &rid, 1, 20) {
++                if ev.iter().filter(|e| e.event_type == "crawl:page").count() >= 2 {
++                    in_flight_events = ev;
++                    break;
++                }
++            }
++        }
++        assert!(in_flight_events.len() >= 3);
++        assert_eq!(in_flight_events[0].event_type, "crawl:started");
++        let page_events: Vec<_> = in_flight_events
++            .iter()
++            .filter(|e| e.event_type == "crawl:page")
++            .collect();
++        assert!(page_events.len() >= 2);
++        assert_eq!(page_events[0].payload["provenance"], "live-crawl");
++        assert!(in_flight_events
++            .iter()
++            .all(|e| e.event_type != "crawl:completed"));
++        assert_eq!(
++            load_events(&conn_inflight, "other-pid", &rid, 1, 20)
++                .unwrap()
++                .len(),
++            0
++        );
++    };
++
++    let (crawl_result, _) = tokio::join!(crawl, inspector);
++    assert!(crawl_result.unwrap().pages.len() >= 3);
++
++    let conn_final = open_store(&handle, &pid).expect("open final store");
++    let complete_events = load_events(&conn_final, &pid, &rid, 1, 20).expect("load final");
++    let final_event = complete_events.last().expect("must have final event");
++    assert_eq!(final_event.event_type, "crawl:completed");
++    assert_eq!(final_event.payload["provenance"], "live-crawl");
++    assert!(final_event.payload["pageCount"].as_u64().unwrap() >= 3);
++}
++
++#[tokio::test]
++async fn test_production_pipeline_persists_cancellation_to_sqlite() {
++    let mut config = default_crawl_config(Some(5));
++    config.max_concurrent_requests = Some(1);
++    config.max_resource_requests = Some(0);
++
++    let routes = vec![
++        route("/robots.txt", 200, "User-agent: *\nAllow: /\n"),
++        html_route(
++            "/",
++            "<html><body><a href='/delayed'>delayed</a></body></html>",
++        ),
++        delayed_route(
++            "/delayed",
++            200,
++            "<html><body><h1>Delayed</h1></body></html>",
++            600,
++        ),
++    ];
++    let mut server = DiscoveryServer::new(config, routes).await;
++    let app = StorageApp::new(mock_builder());
++    let pid = format!("proj-cancel-{}", uuid::Uuid::new_v4());
++    let rid = "run-cancel-live".to_string();
++    server.setup.project_id = Some(pid.clone());
++    server.setup.run_id = rid.clone();
++
++    let control = CrawlControl::new();
++    let handle = app.handle();
++    let crawl = run_crawl_pipeline(&handle, &control, &server.setup);
++    let canceller = async {
++        for _ in 0..40 {
++            tokio::time::sleep(std::time::Duration::from_millis(25)).await;
++            if let Ok(conn) = open_store(&handle, &pid) {
++                if let Ok(ev) = load_events(&conn, &pid, &rid, 1, 10) {
++                    if ev.iter().any(|e| e.event_type == "crawl:page") {
++                        break;
++                    }
++                }
++            }
++        }
++        control.cancelled_runs.lock().unwrap().insert(rid.clone());
++    };
++
++    let (crawl_result, _) = tokio::join!(crawl, canceller);
++    assert!(crawl_result.unwrap().cancelled);
++
++    let conn = open_store(&handle, &pid).expect("open cancel store");
++    let events = load_events(&conn, &pid, &rid, 1, 20).expect("load cancel events");
++    let cancel_event = events
++        .iter()
++        .find(|e| e.event_type == "crawl:cancelled")
++        .unwrap();
++    assert_eq!(cancel_event.payload["cancelled"], true);
++    assert_eq!(cancel_event.payload["provenance"], "live-crawl");
++}
+
+diff --git a/src/services/snapshots/persistentLog.ts b/src/services/snapshots/persistentLog.ts
+new file mode 100644
+index 00000000..a0ee8b90
+--- /dev/null
++++ b/src/services/snapshots/persistentLog.ts
+@@ -0,0 +1,73 @@
++import { CrawlEventLog, type CrawlEvent, type EventSink, type Reducer } from './eventLog';
++import { persistCrawlEvents } from './sqliteEventSink';
++
++/**
++ * A CrawlEventLog bound to a specific project and run that flushes appended
++ * events down to SQLite storage in strict sequence order.
++ */
++export class PersistentCrawlEventLog {
++  readonly projectId: string;
++  readonly runId: string;
++  private readonly inner: CrawlEventLog;
++  private pending: CrawlEvent[] = [];
++  private currentFlush: Promise<void> | null = null;
++
++  constructor(projectId: string, runId: string, initial: CrawlEvent[] = []) {
++    this.projectId = projectId;
++    this.runId = runId;
++    this.inner = new CrawlEventLog(initial);
++  }
++
++  get revision(): number {
++    return this.inner.revision;
++  }
++
++  allEvents(): readonly CrawlEvent[] {
++    return this.inner.allEvents();
++  }
++
++  append<P>(type: string, payload: P, now: () => Date = () => new Date()): CrawlEvent<P> {
++    const event = this.inner.append(type, payload, now);
++    this.pending.push(event);
++    void this.scheduleFlush().catch(() => {});
++    return event;
++  }
++
++  subscribe(sink: EventSink): () => void {
++    return this.inner.subscribe(sink);
++  }
++
++  project<S>(reducer: Reducer<S>, initial: () => S, upTo?: number): S {
++    return this.inner.project(reducer, initial, upTo);
++  }
++
++  private scheduleFlush(): Promise<void> {
++    if (this.currentFlush) return this.currentFlush;
++    this.currentFlush = (async () => {
++      while (this.pending.length > 0) {
++        const batch = [...this.pending];
++        this.pending = [];
++        try {
++          await persistCrawlEvents(this.projectId, this.runId, batch);
++        } catch (err) {
++          this.pending.unshift(...batch);
++          throw err;
++        }
++      }
++    })().finally(() => {
++      this.currentFlush = null;
++    });
++    return this.currentFlush;
++  }
++
++  /** Waits for all in-flight persistence writes to commit. */
++  async flush(): Promise<void> {
++    while (this.pending.length > 0 || this.currentFlush) {
++      if (this.currentFlush) {
++        await this.currentFlush;
++      } else {
++        await this.scheduleFlush();
++      }
++    }
++  }
++}
+
+diff --git a/src/services/snapshots/replay.ts b/src/services/snapshots/replay.ts
+new file mode 100644
+index 00000000..6da72385
+--- /dev/null
++++ b/src/services/snapshots/replay.ts
+@@ -0,0 +1,127 @@
++import { CrawlEventLog, type CrawlEvent } from './eventLog';
++import { fetchCrawlEvents, persistCrawlEvents } from './sqliteEventSink';
++import { listStoredRuns, loadStoredRun } from '@/services/crawlStore';
++import type { CrawlRunRecord } from '@/types';
++
++export type EventProvenance = 'checkpoint-derived' | 'live-crawl';
++
++export const buildSyntheticEventsFromRun = (
++  run: CrawlRunRecord,
++  provenance: EventProvenance = 'checkpoint-derived',
++): CrawlEvent[] => {
++  const startedAt = run.startedAt ?? run.completedAt;
++  const events: CrawlEvent[] = [];
++  events.push({
++    seq: 1,
++    type: 'crawl:started',
++    at: startedAt,
++    payload: { id: run.id, startUrl: run.startUrl, startedAt, provenance },
++  });
++  const pages = run.result?.pages ?? [];
++  pages.forEach((page, index) => {
++    events.push({
++      seq: index + 2,
++      type: 'crawl:page',
++      at: run.completedAt,
++      payload: { ...page, provenance },
++    });
++  });
++  events.push({
++    seq: pages.length + 2,
++    type: 'crawl:completed',
++    at: run.completedAt,
++    payload: {
++      id: run.id,
++      completedAt: run.completedAt,
++      pageCount: pages.length,
++      startUrl: run.startUrl,
++      provenance,
++    },
++  });
++  return events;
++};
++
++/** Paginates sequentially through all events in SQLite until complete. */
++export const fetchAllCrawlEvents = async (
++  projectId: string,
++  runId: string,
++  batchSize = 10_000,
++): Promise<CrawlEvent[]> => {
++  const all: CrawlEvent[] = [];
++  let fromSeq = 1;
++  let effectiveRunId = runId;
++  while (true) {
++    const batch = await fetchCrawlEvents(projectId, effectiveRunId, fromSeq, batchSize);
++    if (!batch.length) break;
++    if (!effectiveRunId && batch[0].runId) {
++      effectiveRunId = batch[0].runId;
++    }
++    all.push(...batch);
++    if (batch.length < batchSize) break;
++    fromSeq = batch[batch.length - 1].seq + 1;
++  }
++  return all;
++};
++
++const assertContiguousEvents = (projectId: string, runId: string, events: readonly CrawlEvent[]): void => {
++  for (let i = 0; i < events.length; i++) {
++    if (events[i].seq !== i + 1) {
++      throw new Error(
++        `Corrupted crawl event sequence for project ${projectId} run ${runId}: expected seq ${i + 1}, got ${events[i].seq}`,
++      );
++    }
++  }
++};
++
++export const replayCrawlEvents = async (
++  projectId: string,
++  runId: string,
++): Promise<CrawlEventLog> => {
++  const existing = await fetchAllCrawlEvents(projectId, runId);
++  if (existing.length > 0) {
++    assertContiguousEvents(projectId, runId, existing);
++    return new CrawlEventLog(existing);
++  }
++  const legacyRun = await loadStoredRun(projectId, runId);
++  if (!legacyRun) return new CrawlEventLog();
++
++  const synthetic = buildSyntheticEventsFromRun(legacyRun, 'checkpoint-derived');
++  await persistCrawlEvents(projectId, runId, synthetic);
++  return new CrawlEventLog(synthetic);
++};
++
++export const replayLatestRunEvents = async (
++  projectId: string,
++): Promise<{ runId: string | null; log: CrawlEventLog }> => {
++  const [summaries, inFlight] = await Promise.all([
++    listStoredRuns(projectId),
++    fetchAllCrawlEvents(projectId, ''),
++  ]);
++
++  const p0 = inFlight[0]?.payload as Record<string, unknown> | undefined;
++  const inFlightRunId = inFlight[0]?.runId
++    ?? (p0?.id !== undefined && p0?.id !== null ? String(p0.id) : null)
++    ?? (p0?.runId !== undefined && p0?.runId !== null ? String(p0.runId) : null)
++    ?? (inFlight.length > 0 ? 'in-flight-run' : null);
++
++  const inFlightLast = inFlight[inFlight.length - 1];
++  const inFlightAt = inFlightLast?.at ? new Date(inFlightLast.at).getTime() : 0;
++  const latestSummary = summaries[0];
++  const summaryAt = latestSummary
++    ? new Date((latestSummary as { completedAt?: string; startedAt?: string }).startedAt || latestSummary.completedAt || 0).getTime()
++    : 0;
++
++  if (inFlight.length > 0 && inFlightRunId) {
++    if (!latestSummary || inFlightAt >= summaryAt || inFlightRunId !== latestSummary.id) {
++      assertContiguousEvents(projectId, inFlightRunId, inFlight);
++      return { runId: inFlightRunId, log: new CrawlEventLog(inFlight) };
++    }
++  }
++
++  if (latestSummary) {
++    const log = await replayCrawlEvents(projectId, latestSummary.id);
++    return { runId: latestSummary.id, log };
++  }
++
++  return { runId: null, log: new CrawlEventLog() };
++};
+
+diff --git a/src/services/snapshots/sqliteEventSink.ts b/src/services/snapshots/sqliteEventSink.ts
+new file mode 100644
+index 00000000..c49cab43
+--- /dev/null
++++ b/src/services/snapshots/sqliteEventSink.ts
+@@ -0,0 +1,73 @@
++import { invokeTauriCommand, isTauriEnvironment } from '@/services/tauri';
++import type { CrawlEvent } from './eventLog';
++
++export interface StoredCrawlEventWire {
++  projectId: string;
++  runId: string;
++  seq: number;
++  eventType: string;
++  at: string;
++  payload: unknown;
++}
++
++const mapWireToEvent = (raw: StoredCrawlEventWire): CrawlEvent => ({
++  seq: raw.seq,
++  type: raw.eventType,
++  at: raw.at,
++  payload: raw.payload as any,
++  runId: raw.runId,
++  projectId: raw.projectId,
++});
++
++const mapEventToWire = (
++  projectId: string,
++  runId: string,
++  event: CrawlEvent,
++): StoredCrawlEventWire => ({
++  projectId: event.projectId ?? projectId,
++  runId: event.runId ?? runId,
++  seq: event.seq,
++  eventType: event.type,
++  at: event.at,
++  payload: event.payload,
++});
++
++/** Persists an ordered sequence of events to SQLite atomically. */
++export const persistCrawlEvents = async (
++  projectId: string,
++  runId: string,
++  events: CrawlEvent[],
++): Promise<number> => {
++  if (!events.length) return 0;
++  if (!isTauriEnvironment()) {
++    throw new Error('Durable SQLite event persistence requires Tauri environment.');
++  }
++  const wire = events.map((ev) => mapEventToWire(projectId, runId, ev));
++  return invokeTauriCommand<number>('store_append_crawl_events', {
++    projectId,
++    runId,
++    events: wire,
++  });
++};
++
++/** Loads ordered events from SQLite starting from seq. */
++export const fetchCrawlEvents = async (
++  projectId: string,
++  runId: string,
++  fromSeq = 1,
++  limit = 10_000,
++): Promise<CrawlEvent[]> => {
++  if (!isTauriEnvironment()) {
++    throw new Error('SQLite event reading requires Tauri environment.');
++  }
++  const rows = await invokeTauriCommand<StoredCrawlEventWire[]>('store_load_crawl_events', {
++    projectId,
++    runId,
++    fromSeq,
++    limit,
++  });
++  if (!Array.isArray(rows)) {
++    throw new Error(`Failed to load crawl events for run ${runId}: invalid response.`);
++  }
++  return rows.map(mapWireToEvent);
++};
+
+diff --git a/src/stores/tools/crawl/executionHook.ts b/src/stores/tools/crawl/executionHook.ts
+new file mode 100644
+index 00000000..e28a5e37
+--- /dev/null
++++ b/src/stores/tools/crawl/executionHook.ts
+@@ -0,0 +1,68 @@
++import { PersistentCrawlEventLog } from '@/services/snapshots';
++import type { CrawledPageSummary, CrawlProgress } from '@/types';
++
++/**
++ * Streams in-flight crawl events directly to SQLite via PersistentCrawlEventLog.
++ * Flushes terminal state on completion, cancellation, or error.
++ */
++export class LiveCrawlEventHook {
++  private log: PersistentCrawlEventLog | null = null;
++
++  constructor(
++    readonly projectId: string,
++    readonly runId: string,
++    injectedLog?: PersistentCrawlEventLog | null,
++  ) {
++    // In Tauri desktop mode, the native crawler collector is the sole authoritative
++    // sequence owner/writer to SQLite. Frontend only writes if an explicit injectedLog is provided.
++    if (injectedLog !== undefined) {
++      this.log = injectedLog;
++    }
++  }
++
++  get eventLog(): PersistentCrawlEventLog | null {
++    return this.log;
++  }
++
++  appendStarted(startUrl: string): void {
++    this.log?.append('crawl:started', { id: this.runId, startUrl, provenance: 'live-crawl' });
++  }
++
++  appendProgress(progress: CrawlProgress): void {
++    this.log?.append('crawl:progress', { ...progress, provenance: 'live-crawl' });
++  }
++
++  appendPages(pages: CrawledPageSummary[]): void {
++    for (const page of pages) {
++      this.log?.append('crawl:page', { ...page, provenance: 'live-crawl' });
++    }
++  }
++
++  async appendCompleted(pageCount: number, completedAt: string, startUrl: string): Promise<void> {
++    this.log?.append('crawl:completed', { id: this.runId, completedAt, pageCount, startUrl, provenance: 'live-crawl' });
++    await this.flush();
++  }
++
++  async appendCancelled(pageCount: number, startUrl: string): Promise<void> {
++    this.log?.append('crawl:cancelled', { id: this.runId, cancelledAt: new Date().toISOString(), pageCount, startUrl, provenance: 'live-crawl' });
++    await this.flush();
++  }
++
++  async appendError(error: string): Promise<void> {
++    this.log?.append('crawl:error', { id: this.runId, error, provenance: 'live-crawl' });
++    await this.flush();
++  }
++
++  async flush(): Promise<void> {
++    if (this.log) {
++      await this.log.flush();
++    }
++  }
++}
++
++export const createLiveCrawlEventHook = (
++  projectId?: string | null,
++  runId?: string | null,
++  injectedLog?: PersistentCrawlEventLog | null,
++): LiveCrawlEventHook | null =>
++  projectId && runId ? new LiveCrawlEventHook(projectId, runId, injectedLog) : null;
+
+diff --git a/tests/crawlEventLogPagination.test.ts b/tests/crawlEventLogPagination.test.ts
+new file mode 100644
+index 00000000..749fa915
+--- /dev/null
++++ b/tests/crawlEventLogPagination.test.ts
+@@ -0,0 +1,87 @@
++import { describe, expect, it, vi, beforeEach } from 'vitest';
++import { PersistentCrawlEventLog, replayCrawlEvents, replayLatestRunEvents } from '../src/services/snapshots';
++import * as sinkModule from '../src/services/snapshots/sqliteEventSink';
++import * as storeModule from '../src/services/crawlStore';
++import type { CrawlEvent } from '../src/services/snapshots/eventLog';
++
++vi.mock('../src/services/snapshots/sqliteEventSink', () => ({
++  fetchCrawlEvents: vi.fn(),
++  persistCrawlEvents: vi.fn(),
++}));
++
++vi.mock('../src/services/crawlStore', () => ({
++  listStoredRuns: vi.fn(),
++  loadStoredRun: vi.fn(),
++}));
++
++describe('Issue #138: Boundary conditions, Pagination >10k and Queue Recovery', () => {
++  beforeEach(() => {
++    vi.clearAllMocks();
++  });
++
++  it('drains queue on second append/flush after first storage failure without permanent rejection', async () => {
++    let writes = 0;
++    vi.mocked(sinkModule.persistCrawlEvents).mockImplementation(async () => {
++      writes++;
++      if (writes === 1) throw new Error('fixture disk full');
++      return 2;
++    });
++
++    const log = new PersistentCrawlEventLog('p', 'r');
++    log.append('crawl:started', { url: 'https://site.test' });
++
++    let firstError: string | undefined;
++    try {
++      await log.flush();
++    } catch (e) {
++      firstError = String(e);
++    }
++    expect(firstError).toContain('fixture disk full');
++
++    log.append('crawl:page', { url: 'https://site.test/a' });
++    let secondError: string | undefined;
++    try {
++      await log.flush();
++    } catch (e) {
++      secondError = String(e);
++    }
++
++    expect(secondError).toBeUndefined();
++    expect(writes).toBe(2);
++    expect(log.allEvents()).toHaveLength(2);
++  });
++
++  it('paginates over 10,000 events without silent truncation', async () => {
++    const total = 10002;
++    const events: CrawlEvent[] = Array.from({ length: total }, (_, i) => ({
++      seq: i + 1,
++      type: i === 0 ? 'crawl:started' : i === total - 1 ? 'crawl:completed' : 'crawl:page',
++      at: '2026-10-24T10:00:00.000Z',
++      payload: { id: i },
++    }));
++
++    let fetches = 0;
++    vi.mocked(sinkModule.fetchCrawlEvents).mockImplementation(async (_p, _r, from = 1, limit = 10000) => {
++      fetches++;
++      return events.slice(from - 1, from - 1 + limit);
++    });
++
++    const log = await replayCrawlEvents('p', 'r');
++    expect(log.allEvents()).toHaveLength(10002);
++    expect(fetches).toBe(2);
++    expect(log.allEvents()[total - 1].type).toBe('crawl:completed');
++  });
++
++  it('discovers in-flight run from durable events when completed run snapshot is missing', async () => {
++    vi.mocked(storeModule.listStoredRuns).mockResolvedValueOnce([]);
++    const events: CrawlEvent[] = [
++      { seq: 1, type: 'crawl:started', at: '2026-10-24T10:00:00Z', payload: { id: 'in-flight-99', startUrl: 'https://inf.test' } },
++      { seq: 2, type: 'crawl:page', at: '2026-10-24T10:00:01Z', payload: { url: 'https://inf.test/p1' } },
++    ];
++    vi.mocked(sinkModule.fetchCrawlEvents).mockResolvedValueOnce(events);
++
++    const restored = await replayLatestRunEvents('p');
++    expect(restored.runId).toBe('in-flight-99');
++    expect(restored.log.allEvents()).toHaveLength(2);
++  });
++});
+
+diff --git a/tests/crawlEventLogRestart.test.ts b/tests/crawlEventLogRestart.test.ts
+new file mode 100644
+index 00000000..816b9435
+--- /dev/null
++++ b/tests/crawlEventLogRestart.test.ts
+@@ -0,0 +1,107 @@
++import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
++import { loadCrawlRuns, saveCrawlRuns } from '../src/services/crawlPersistence';
++import { replayLatestRunEvents } from '../src/services/snapshots';
++import { createCrawlRunFixture } from './fixtures/crawl';
++
++const native = vi.hoisted(() => ({
++  invokeTauriCommand: vi.fn(),
++  isTauriEnvironment: () => true,
++}));
++vi.mock('../src/services/tauri', () => native);
++
++describe('Issue #138: EventLog Restart, Replay & IPC Wiring', () => {
++  beforeEach(() => {
++    native.invokeTauriCommand.mockReset();
++    localStorage.clear();
++  });
++  afterEach(() => {
++    vi.clearAllMocks();
++  });
++
++  it('saveCrawlRuns appends live events to SQLite via IPC and throws on DB failure', async () => {
++    const run = createCrawlRunFixture({ id: 'run-desktop-1' });
++    native.invokeTauriCommand.mockImplementation(async (cmd: string) => {
++      if (cmd === 'load_project_crawl_runs') return [];
++      if (cmd === 'store_load_crawl_events') return [];
++      if (cmd === 'store_append_crawl_events') return 2;
++      if (cmd === 'store_replace_crawl_runs') return undefined;
++      return undefined;
++    });
++
++    const result = await saveCrawlRuns('proj-live', [run]);
++    expect(result).toEqual({ prunedRuns: 0 });
++    expect(native.invokeTauriCommand).toHaveBeenCalledWith(
++      'store_append_crawl_events',
++      expect.objectContaining({
++        projectId: 'proj-live',
++        runId: 'run-desktop-1',
++        events: expect.arrayContaining([
++          expect.objectContaining({ eventType: 'crawl:started' }),
++        ]),
++      }),
++    );
++
++    // DB failure on event append must throw and NOT be swallowed
++    native.invokeTauriCommand.mockImplementation(async (cmd: string) => {
++      if (cmd === 'load_project_crawl_runs') return [];
++      if (cmd === 'store_load_crawl_events') return [];
++      if (cmd === 'store_append_crawl_events') throw new Error('SQLite disk full');
++      return undefined;
++    });
++    await expect(saveCrawlRuns('proj-live', [run])).rejects.toThrow('SQLite disk full');
++  });
++
++  it('restart replay reconstructs projection and isolates projects', async () => {
++    const runA = createCrawlRunFixture({ id: 'run-a' });
++    const runB = createCrawlRunFixture({ id: 'run-b' });
++
++    native.invokeTauriCommand.mockImplementation(async (cmd: string, args: any) => {
++      if (cmd === 'load_project_crawl_runs') return [];
++      if (cmd === 'store_list_crawl_runs') {
++        if (args?.projectId === 'proj-A') {
++          return [{ id: 'run-a', completedAt: '2026', startUrl: 'https://a.test', pageCount: 0 }];
++        }
++        return [{ id: 'run-b', completedAt: '2026', startUrl: 'https://b.test', pageCount: 0 }];
++      }
++      if (cmd === 'store_load_crawl_run') return args?.projectId === 'proj-A' ? runA : runB;
++      if (cmd === 'store_load_crawl_events') {
++        if (args?.projectId === 'proj-A') {
++          return [{
++            projectId: 'proj-A', runId: 'run-a', seq: 1, eventType: 'crawl:started',
++            at: '2026', payload: { domain: 'a.test' },
++          }];
++        }
++        return [{
++          projectId: 'proj-B', runId: 'run-b', seq: 1, eventType: 'crawl:started',
++          at: '2026', payload: { domain: 'b.test' },
++        }];
++      }
++      return undefined;
++    });
++
++    const runsA = await loadCrawlRuns('proj-A');
++    expect(runsA[0].id).toBe('run-a');
++
++    const latestA = await replayLatestRunEvents('proj-A');
++    expect(latestA.runId).toBe('run-a');
++    expect(latestA.log.allEvents()[0].payload).toEqual({ domain: 'a.test' });
++
++    const latestB = await replayLatestRunEvents('proj-B');
++    expect(latestB.runId).toBe('run-b');
++    expect(latestB.log.allEvents()[0].payload).toEqual({ domain: 'b.test' });
++  });
++
++  it('detects and rejects conflicting payloads on replay or re-save', async () => {
++    const run = createCrawlRunFixture({ id: 'run-conflict' });
++    native.invokeTauriCommand.mockImplementation(async (cmd: string) => {
++      if (cmd === 'load_project_crawl_runs') return [];
++      if (cmd === 'store_load_crawl_events') return [];
++      if (cmd === 'store_append_crawl_events') {
++        throw new Error('Sequence conflict at seq 1: distinct data.');
++      }
++      return undefined;
++    });
++
++    await expect(saveCrawlRuns('p-err', [run])).rejects.toThrow('Sequence conflict');
++  });
++});
+
+diff --git a/tests/crawlEventLogSqlite.test.ts b/tests/crawlEventLogSqlite.test.ts
+new file mode 100644
+index 00000000..719201cd
+--- /dev/null
++++ b/tests/crawlEventLogSqlite.test.ts
+@@ -0,0 +1,124 @@
++import { describe, expect, it, vi, beforeEach } from 'vitest';
++import {
++  CrawlEventLog,
++  PersistentCrawlEventLog,
++  openSimulationSession,
++  persistCrawlEvents,
++  replayCrawlEvents,
++} from '@/services/snapshots';
++import * as tauriModule from '@/services/tauri';
++import * as crawlStoreModule from '@/services/crawlStore';
++import type { CrawlRunRecord } from '@/types';
++
++vi.mock('@/services/tauri', () => ({
++  isTauriEnvironment: vi.fn(),
++  invokeTauriCommand: vi.fn(),
++}));
++
++vi.mock('@/services/crawlStore', () => ({
++  listStoredRuns: vi.fn(),
++  loadStoredRun: vi.fn(),
++}));
++
++describe('Issue #138: SQLite Append-Only Crawl Event Log & Replay', () => {
++  beforeEach(() => {
++    vi.clearAllMocks();
++  });
++
++  it('rejects persistence when not in Tauri environment and surfaces IPC failure', async () => {
++    vi.mocked(tauriModule.isTauriEnvironment).mockReturnValue(false);
++    await expect(persistCrawlEvents('p1', 'r1', [{ seq: 1, type: 'init', at: '2026', payload: {} }]))
++      .rejects.toThrow('Durable SQLite event persistence requires Tauri environment');
++
++    vi.mocked(tauriModule.isTauriEnvironment).mockReturnValue(true);
++    vi.mocked(tauriModule.invokeTauriCommand).mockRejectedValueOnce(new Error('Disk I/O error'));
++    await expect(persistCrawlEvents('p1', 'r1', [{ seq: 1, type: 'init', at: '2026', payload: {} }]))
++      .rejects.toThrow('Disk I/O error');
++  });
++
++  it('persistent log flushes ordered batch to SQLite and retains pending on failure for rollback', async () => {
++    vi.mocked(tauriModule.isTauriEnvironment).mockReturnValue(true);
++    const invokeSpy = vi.mocked(tauriModule.invokeTauriCommand).mockResolvedValue(1);
++
++    const log = new PersistentCrawlEventLog('proj-A', 'run-1');
++    log.append('crawl:started', { url: 'https://test.io' });
++    await log.flush();
++
++    expect(invokeSpy).toHaveBeenCalledWith('store_append_crawl_events', expect.objectContaining({
++      projectId: 'proj-A',
++      runId: 'run-1',
++      events: [expect.objectContaining({ seq: 1, eventType: 'crawl:started' })],
++    }));
++
++    invokeSpy.mockRejectedValueOnce(new Error('Storage busy'));
++    log.append('crawl:page', { url: 'https://test.io/1' });
++    await expect(log.flush()).rejects.toThrow('Storage busy');
++    // Events retained in log
++    expect(log.allEvents()).toHaveLength(2);
++  });
++
++  it('replays stored events into a fresh event log with project/run isolation', async () => {
++    vi.mocked(tauriModule.isTauriEnvironment).mockReturnValue(true);
++    vi.mocked(tauriModule.invokeTauriCommand).mockResolvedValueOnce([
++      { projectId: 'proj-A', runId: 'run-1', seq: 1, eventType: 'crawl:started', at: '2026', payload: { start: true } },
++      { projectId: 'proj-A', runId: 'run-1', seq: 2, eventType: 'crawl:page', at: '2026', payload: { url: '/a' } },
++    ]);
++
++    const log = await replayCrawlEvents('proj-A', 'run-1');
++    expect(log.revision).toBe(2);
++    expect(log.allEvents()[1].payload).toEqual({ url: '/a' });
++  });
++
++  it('migrates legacy crawl run into synthetic SQLite events when no prior log exists', async () => {
++    vi.mocked(tauriModule.isTauriEnvironment).mockReturnValue(true);
++    vi.mocked(tauriModule.invokeTauriCommand).mockResolvedValueOnce([]); // No existing events
++    const legacy: CrawlRunRecord = {
++      id: 'legacy-run-99',
++      startUrl: 'https://legacy.test',
++      completedAt: '2026-10-24T10:00:00Z',
++      config: {} as any,
++      result: { pages: [{ url: 'https://legacy.test/p1' } as any] } as any,
++    };
++    vi.mocked(crawlStoreModule.loadStoredRun).mockResolvedValueOnce(legacy);
++
++    const log = await replayCrawlEvents('proj-legacy', 'legacy-run-99');
++    expect(log.revision).toBe(3); // started, page 1, completed
++    expect(log.allEvents()[0].type).toBe('crawl:started');
++    expect(log.allEvents()[1].type).toBe('crawl:page');
++    expect(log.allEvents()[2].type).toBe('crawl:completed');
++  });
++
++  it('10k concurrent page capture does not mutate open WhatIf snapshot and marks session stale', () => {
++    const log = new CrawlEventLog();
++    log.append('page', { id: 'p0', score: 10 });
++
++    type State = { pages: string[]; totalScore: number };
++    const reducer = (state: State, ev: any): State => ({
++      pages: [...state.pages, ev.payload.id],
++      totalScore: state.totalScore + (ev.payload.score ?? 0),
++    });
++    const initial = (): State => ({ pages: [], totalScore: 0 });
++
++    const session = openSimulationSession(log, reducer, initial);
++    expect(session.snapshot).toEqual({ pages: ['p0'], totalScore: 10 });
++    expect(session.isStale()).toBe(false);
++
++    // Simulate 10,000 concurrent page events incoming in background crawl
++    for (let i = 1; i <= 10_000; i++) {
++      log.append('page', { id: `p${i}`, score: 1 });
++    }
++
++    // Open WhatIf snapshot is strictly immutable and unchanged
++    expect(session.snapshot).toEqual({ pages: ['p0'], totalScore: 10 });
++    expect(session.isStale()).toBe(true);
++    expect(Object.isFrozen(session.snapshot)).toBe(true);
++
++    // Refresh produces a detached updated snapshot
++    const refreshed = session.refresh();
++    expect(refreshed.isStale()).toBe(false);
++    expect(refreshed.snapshot.pages.length).toBe(10_001);
++    expect(refreshed.snapshot.totalScore).toBe(10 + 10_000);
++    // Old session remains untouched
++    expect(session.snapshot.pages.length).toBe(1);
++  });
++});
+
+diff --git a/tests/crawlExecutionLiveHook.test.ts b/tests/crawlExecutionLiveHook.test.ts
+new file mode 100644
+index 00000000..c710aea7
+--- /dev/null
++++ b/tests/crawlExecutionLiveHook.test.ts
+@@ -0,0 +1,107 @@
++import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
++import { createCrawlExecutionActions } from '@/stores/tools/crawl/execution';
++import { LiveCrawlEventHook } from '@/stores/tools/crawl/executionHook';
++import { PersistentCrawlEventLog } from '@/services/snapshots';
++import { useProjectStore } from '@/stores/projectStore';
++import { useSettingsStore } from '@/stores/settingsStore';
++import * as tauriModule from '@/services/tauri';
++import { isolatedToolsSlice } from './fixtures/toolsSlice';
++import { createCrawlPageFixture, createCrawlResultFixture } from './fixtures/crawl';
++
++vi.mock('@/services/tauri', () => ({
++  isTauriEnvironment: vi.fn(),
++  invokeTauriCommand: vi.fn(),
++}));
++
++const P = 'proj-live-hook';
++const U = 'https://site.test/';
++
++describe('Issue #138 Live In-flight Event Streaming Hook in Crawl Execution', () => {
++  const originalSettings = useSettingsStore.getState();
++  const capturedWireBatches: Array<{ projectId: string; runId: string; events: unknown[] }> = [];
++
++  beforeEach(() => {
++    localStorage.clear();
++    capturedWireBatches.length = 0;
++    useProjectStore.setState({ activeProjectId: P });
++    vi.mocked(tauriModule.isTauriEnvironment).mockReturnValue(true);
++    vi.mocked(tauriModule.invokeTauriCommand).mockImplementation(async (cmd, args) => {
++      if (cmd === 'store_append_crawl_events') {
++        const payload = args as { projectId: string; runId: string; events: unknown[] };
++        capturedWireBatches.push(payload);
++        return payload.events.length;
++      }
++      return null;
++    });
++  });
++
++  afterEach(() => {
++    vi.restoreAllMocks();
++    useSettingsStore.setState(originalSettings);
++  });
++
++  it('does not create duplicate frontend writer to SQLite during desktop crawl', async () => {
++    const page = createCrawlPageFixture({ url: U, final_url: U, http_status: 200 });
++    const result = createCrawlResultFixture({ start_url: U, pages_crawled: 1, pages: [page] });
++    const invoke = vi.fn().mockResolvedValue(result);
++    const saveCrawlRuns = vi.fn().mockResolvedValue({ prunedRuns: 0 });
++    const { actions } = isolatedToolsSlice(
++      (set, get, services) => createCrawlExecutionActions(set, get, services),
++      { invoke, saveCrawlRuns },
++    );
++
++    const out = await actions.startSiteCrawl(U, 1);
++    expect(out).toEqual(result);
++    // Native collector is the sole authoritative writer; frontend emits no duplicate events
++    expect(capturedWireBatches).toHaveLength(0);
++  });
++
++  it('surfaces runtime failure and sets error state when crawler fails', async () => {
++    const invoke = vi.fn().mockRejectedValue(new Error('Network unreachable'));
++    const { actions, store } = isolatedToolsSlice(
++      (set, get, services) => createCrawlExecutionActions(set, get, services),
++      { invoke },
++    );
++
++    const out = await actions.startSiteCrawl(U, 1);
++    expect(out).toBeNull();
++    expect(store.getState().crawlError).toContain('Network unreachable');
++    expect(capturedWireBatches).toHaveLength(0);
++  });
++
++  it('LiveCrawlEventHook streams started, progress, page and completed when given an event log', async () => {
++    const log = new PersistentCrawlEventLog(P, 'run-direct');
++    const hook = new LiveCrawlEventHook(P, 'run-direct', log);
++    hook.appendStarted(U);
++    hook.appendProgress({ runId: 'run-direct', discovered: 2, completed: 1, queued: 1, cancelled: false, paused: false, elapsedMs: 50, pagesPerSecond: 20 });
++    hook.appendPages([createCrawlPageFixture({ url: U })]);
++    await hook.appendCompleted(1, '2026-10-24T12:00:00Z', U);
++
++    expect(hook.eventLog?.allEvents()).toHaveLength(4);
++    expect(hook.eventLog?.allEvents().map((e) => e.type)).toEqual(['crawl:started', 'crawl:progress', 'crawl:page', 'crawl:completed']);
++    const flatEvents = capturedWireBatches.flatMap((b) => b.events) as Array<{ eventType: string }>;
++    expect(flatEvents).toHaveLength(4);
++  });
++
++  it('LiveCrawlEventHook streams cancelled and error events when given an event log', async () => {
++    const log1 = new PersistentCrawlEventLog(P, 'run-cancelled');
++    const hook1 = new LiveCrawlEventHook(P, 'run-cancelled', log1);
++    hook1.appendStarted(U);
++    await hook1.appendCancelled(0, U);
++    expect(log1.allEvents().map((e) => e.type)).toEqual(['crawl:started', 'crawl:cancelled']);
++
++    const log2 = new PersistentCrawlEventLog(P, 'run-error');
++    const hook2 = new LiveCrawlEventHook(P, 'run-error', log2);
++    hook2.appendStarted(U);
++    await hook2.appendError('Network unreachable');
++    expect(log2.allEvents().map((e) => e.type)).toEqual(['crawl:started', 'crawl:error']);
++  });
++
++  it('bounds events to originating project and run in PersistentCrawlEventLog', async () => {
++    const log = new PersistentCrawlEventLog(P, 'run-bound');
++    const hook = new LiveCrawlEventHook(P, 'run-bound', log);
++    hook.appendStarted(U);
++    await hook.flush();
++    expect(capturedWireBatches.every((b) => b.projectId === P && b.runId === 'run-bound')).toBe(true);
++  });
++});

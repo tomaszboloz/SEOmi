@@ -1,0 +1,5 @@
+Odbiór lokalny #144 został zakończony i zapisany w02fb354d1ec7360d4eb742e6d2d848596ce65cb6 na codex/release-next (30plików). Paczka obejmuje działające podłączenie SignalsWorkspace/useCausalImpact, prezentację wyniku i15kluczy causalMarket we wszystkich12językach.
+
+Niezależny odbiór integratora:170testów/19zestawów PASS, typecheck/lint/MAX150/version/diff PASS; źródła stabilne i wszystkiehashe zgodne z manifestem. Osobny reproduktor produkcyjnego adaptera potwierdził5przypadków tożsamościproperty i dat: sibling/blog/store, www/app, wybórexactprefix, błędnyend orazcase-sensitivepath. Zachowano zgodnośćcountry/device/search_type, inconclusiveprzynieznanymfeedzie,kontrolę no-effect0dlawspólnegospadku40%i relativeEffectnullprzyzerowymmianowniku.
+
+Commit jeszcze nie został wypchnięty; root odbiera równocześnie migracjęRust,desktopfixture ireleaseprovenance przed nowymCI#209. Brakmerge do main i brak nowegorelease. Raport dotyczy tego zakresu; nie dowodzi100%aplikacji ani zaliczenia zdalnych95/98. Issue pozostaje otwarte do spełnienia odbioru na main.

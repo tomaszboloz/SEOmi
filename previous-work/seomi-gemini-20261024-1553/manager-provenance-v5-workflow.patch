@@ -1,0 +1,45 @@
+diff --git a/.github/workflows/release.yml b/.github/workflows/release.yml
+index db67ac48..aab38f02 100644
+--- a/.github/workflows/release.yml
++++ b/.github/workflows/release.yml
+@@ -190,6 +190,8 @@ jobs:
+     permissions:
+       contents: write
+       checks: read
++      id-token: write
++      attestations: write
+     steps:
+       - name: Checkout repository
+         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+@@ -229,6 +231,31 @@ jobs:
+           RELEASE_TAG: ${{ needs.release-preflight.outputs.tag }}
+         run: node scripts/release-ci-gate-manifest.mjs --consolidate --dir updater-manifests
+ 
++      - name: Install dependencies for Node SBOM
++        run: npm ci --ignore-scripts
++
++      - name: Generate CycloneDX Node SBOM
++        run: npx --yes @cyclonedx/cyclonedx-npm@6.0.1 --spec-version 1.6 --output-file sbom-node.json --output-format json
++
++      - name: Generate CycloneDX Rust SBOM
++        run: |
++          cargo install cargo-cyclonedx --version 0.5.9 --locked
++          cargo cyclonedx --manifest-path src-tauri/Cargo.toml --format json --target all --override-filename sbom-rust
++          cp src-tauri/sbom-rust.json sbom-rust.json
++
++      - name: Prepare release provenance, checksums and verify artifacts
++        env:
++          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
++          RELEASE_ID: ${{ needs.release-preflight.outputs.release_id }}
++          RELEASE_COMMIT_SHA: ${{ github.sha }}
++          RELEASE_TAG: ${{ needs.release-preflight.outputs.tag }}
++        run: node scripts/release-ci-gate-provenance.mjs --prepare-provenance
++
++      - name: Attest build provenance for verified release subjects
++        uses: actions/attest-build-provenance@4d101475d8b20a2381f78447822ac1eab6504dd8 # v4.2.2
++        with:
++          subject-checksums: SHA256SUMS.txt
++
+       - name: Validate 3-platform assets and publish shared draft release
+         env:
+           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

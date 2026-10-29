@@ -1,0 +1,282 @@
+diff --git a/src-tauri/examples/desktop_e2e_contract_tests.rs b/src-tauri/examples/desktop_e2e_contract_tests.rs
+index 0aec1716..e8321761 100644
+--- a/src-tauri/examples/desktop_e2e_contract_tests.rs
++++ b/src-tauri/examples/desktop_e2e_contract_tests.rs
+@@ -43,3 +43,25 @@ fn validation_scripts_match_the_runtime_gate() {
+     assert!(additional.contains("window.__seomiDesktopAdditionalValidation"));
+     assert!(include_str!("desktop_e2e.rs").contains("additional_validation_script"));
+ }
++
++#[test]
++fn renderer_script_wires_strict_html_assertion_and_diagnostics() {
++    let renderer = include_str!("desktop_e2e_renderer.js");
++    assert!(
++        renderer.contains(
++            "check('renderer HTML captured', html.length > 0 && html.includes('Example Domain'))"
++        ),
++        "renderer must enforce strict non-empty Example Domain HTML assertion"
++    );
++    assert!(
++        !renderer.contains("html.length === 0 ||") && !renderer.contains("|| true"),
++        "renderer must not contain blanket pass or empty-HTML bypass"
++    );
++    assert!(
++        renderer.contains("htmlLength:")
++            && renderer.contains("htmlSnippet:")
++            && renderer.contains("observedFinalUrl:")
++            && renderer.contains("failedResourceUrls:"),
++        "renderer must capture bounded diagnostics for CI triage"
++    );
++}
+diff --git a/src-tauri/examples/desktop_e2e_renderer.js b/src-tauri/examples/desktop_e2e_renderer.js
+index 67bd58a2..681d05a9 100644
+--- a/src-tauri/examples/desktop_e2e_renderer.js
++++ b/src-tauri/examples/desktop_e2e_renderer.js
+@@ -22,16 +22,14 @@
+   const decode = value => {
+     if (typeof value !== 'string' || typeof atob !== 'function') return null;
+     try {
+-      const binary = atob(value);
+-      return Uint8Array.from(binary, character => character.charCodeAt(0));
++      return Uint8Array.from(atob(value), character => character.charCodeAt(0));
+     } catch (_) {
+       return null;
+     }
+   };
+-  const startsWith = (bytes, signature) => bytes?.length >= signature.length
+-    && signature.every((value, index) => bytes[index] === value);
++  const startsWith = (bytes, sig) => bytes?.length >= sig.length && sig.every((v, i) => bytes[i] === v);
+   const artifactArgs = kind => ({ ...baseArgs, kind, runId: expectedRunId });
+-  const artifactFileName = (kind, extension) => new RegExp(`^rendered-page-[0-9]{8}T[0-9]{6}Z-${kind}\\.${extension}$`);
++  const artifactFileName = (k, ext) => new RegExp(`^rendered-page-[0-9]{8}T[0-9]{6}Z-${k}\\.${ext}$`);
+   const checkArtifact = (kind, artifact, check) => {
+     const contract = artifactContracts[kind];
+     const bytes = decode(artifact?.dataBase64);
+@@ -48,23 +46,32 @@
+     check(`${kind} artifact byte count is exact`, bytes?.length === artifact?.bytes);
+   };
+   const statusEvidence = snapshot => {
+-    const fieldPresent = snapshot !== null && typeof snapshot === 'object'
++    const present = snapshot !== null && typeof snapshot === 'object'
+       && Object.prototype.hasOwnProperty.call(snapshot, 'httpStatus');
+-    const httpStatus = fieldPresent ? snapshot.httpStatus : undefined;
+-    const available = Number.isInteger(httpStatus) && httpStatus > 0;
+-    const reason = !fieldPresent
+-      ? 'Snapshot omitted httpStatus.'
+-      : httpStatus === undefined
+-        ? 'Snapshot exposed an undefined httpStatus.'
+-        : httpStatus === null
+-          ? 'Navigation Timing responseStatus is unavailable in this WebKit runtime.'
+-          : httpStatus === 200 ? null : `Unexpected renderer HTTP status: ${String(httpStatus)}.`;
++    const httpStatus = present ? snapshot.httpStatus : undefined;
++    const reason = !present ? 'Snapshot omitted httpStatus.'
++      : httpStatus === undefined ? 'Snapshot exposed an undefined httpStatus.'
++      : httpStatus === null ? 'Navigation Timing responseStatus is unavailable in this WebKit runtime.'
++      : httpStatus === 200 ? null : `Unexpected renderer HTTP status: ${String(httpStatus)}.`;
+     return {
+       httpStatus: httpStatus === undefined ? null : httpStatus,
+       observedHttpStatus: httpStatus === undefined ? 'undefined' : httpStatus,
+-      httpStatusAvailable: available,
++      httpStatusAvailable: Number.isInteger(httpStatus) && httpStatus > 0,
+       httpStatusReason: reason,
+-      httpStatusFieldPresent: fieldPresent,
++      httpStatusFieldPresent: present,
++    };
++  };
++  const failureDiagnostics = (snapshot, html) => {
++    const rawHtml = typeof html === 'string' ? html : (typeof snapshot?.html === 'string' ? snapshot.html : '');
++    const errors = Array.isArray(snapshot?.consoleErrors) ? snapshot.consoleErrors : [];
++    const resources = Array.isArray(snapshot?.failedResourceUrls) ? snapshot.failedResourceUrls : [];
++    return {
++      htmlLength: rawHtml.length,
++      htmlSnippet: rawHtml.slice(0, 256),
++      observedFinalUrl: typeof snapshot?.finalUrl === 'string' ? snapshot.finalUrl.slice(0, 2048) : null,
++      observedContentType: typeof snapshot?.contentType === 'string' ? snapshot.contentType.slice(0, 256) : null,
++      consoleErrors: errors.filter(e => typeof e === 'string').slice(0, 10).map(e => e.slice(0, 512)),
++      failedResourceUrls: resources.filter(u => typeof u === 'string').slice(0, 10).map(u => u.slice(0, 2048)),
+     };
+   };
+ 
+@@ -94,12 +101,8 @@
+       checkArtifact('pdf', pdf, check);
+ 
+       await invoke('open_rendered_element_preview', {
+-        url: target,
+-        selector: 'h1',
+-        needle: 'Example Domain',
+-        domIndex: null,
+-        previewTitle: 'SEOmi renderer preview',
+-        notFoundMessage: 'Example Domain heading was not found.',
++        url: target, selector: 'h1', needle: 'Example Domain', domIndex: null,
++        previewTitle: 'SEOmi renderer preview', notFoundMessage: 'Example Domain heading was not found.',
+       });
+       previewEvidence = 'ipc-success';
+       check('renderer preview IPC returned', previewEvidence === 'ipc-success');
+@@ -115,6 +118,7 @@
+         ...status,
+       };
+     } catch (error) {
++      const capturedHtml = typeof snapshot?.html === 'string' ? snapshot.html : '';
+       return {
+         status: 'executed',
+         passed: false,
+@@ -122,7 +126,10 @@
+         failure: String(error),
+         target,
+         previewEvidence,
+-        snapshot: statusEvidence(snapshot),
++        snapshot: {
++          ...statusEvidence(snapshot),
++          ...failureDiagnostics(snapshot, capturedHtml),
++        },
+       };
+     }
+   };
+@@ -135,5 +142,5 @@
+     target,
+   });
+ 
+-  window.__seomiRendererE2e = { run, skipped, target };
++  window.__seomiRendererE2e = { run, skipped, target, failureDiagnostics };
+ })();
+diff --git a/tests/desktopE2eRendererDiagnostics.test.ts b/tests/desktopE2eRendererDiagnostics.test.ts
+new file mode 100644
+index 00000000..ad219ba6
+--- /dev/null
++++ b/tests/desktopE2eRendererDiagnostics.test.ts
+@@ -0,0 +1,135 @@
++import { readFileSync } from 'node:fs';
++import { resolve } from 'node:path';
++import vm from 'node:vm';
++import { describe, expect, it } from 'vitest';
++
++describe('desktop_e2e_renderer script execution and diagnostics', () => {
++  const loadScript = () => {
++    const file = resolve(process.cwd(), 'src-tauri/examples/desktop_e2e_renderer.js');
++    const text = readFileSync(file, 'utf8');
++    const windowObj = {
++      __seomiDesktopCrawlValidation: {
++        run: async ({ check }: { check: (name: string, value: boolean) => void }) => {
++          check('controlled actual crawl dependency', true);
++          return { fixture: true };
++        },
++      },
++    };
++    vm.runInNewContext(text, { window: windowObj, URL, Date, Uint8Array, atob }, { filename: file });
++    return (windowObj as unknown as { __seomiRendererE2e: any }).__seomiRendererE2e;
++  };
++
++  it.each([
++    ['empty string', ''],
++    ['whitespace', '   '],
++    ['HTTP error page', '<html>Error404</html>'],
++    ['WebKit error page', '<html><title>Cannot Open Page</title></html>'],
++    ['about blank', '<html>about:blank</html>'],
++  ])('rejects invalid HTML (%s) and retains diagnostics', async (_, html) => {
++    const api = loadScript();
++    const result = await api.run({
++      projectId: 'audit',
++      invoke: async (name: string) => {
++        if (name === 'render_crawl_page') {
++          return {
++            html,
++            httpStatus: null,
++            finalUrl: 'https://example.com/',
++            contentType: 'text/html',
++            consoleErrors: ['known-error'],
++            failedResourceUrls: ['https://example.com/missing'],
++          };
++        }
++        throw new Error(`Unexpected invoke ${name}`);
++      },
++    });
++
++    expect(result.passed).toBe(false);
++    expect(result.failure).toBe('Error: renderer HTML captured');
++    expect(result.snapshot.htmlLength).toBe(html.length);
++    expect(result.snapshot.htmlSnippet).toBe(html.slice(0, 256));
++    expect(result.snapshot.observedFinalUrl).toBe('https://example.com/');
++    expect(result.snapshot.observedContentType).toBe('text/html');
++    expect(result.snapshot.consoleErrors).toEqual(['known-error']);
++    expect(result.snapshot.failedResourceUrls).toEqual(['https://example.com/missing']);
++  });
++
++  it('passes completely on valid HTML and artifact/preview IPC boundary', async () => {
++    const api = loadScript();
++    const result = await api.run({
++      projectId: 'audit',
++      invoke: async (name: string, args: { kind?: string }) => {
++        if (name === 'render_crawl_page') {
++          return {
++            html: '<h1>Example Domain</h1>',
++            httpStatus: null,
++            finalUrl: 'https://example.com/',
++            contentType: 'text/html',
++          };
++        }
++        if (name === 'capture_rendered_artifact') {
++          const png = args?.kind === 'screenshot';
++          return {
++            artifactType: args?.kind,
++            requestedUrl: 'https://example.com/',
++            finalUrl: 'https://example.com/',
++            runId: 'desktop-e2e-renderer',
++            capturedAt: '2026-10-25T09:00:00Z',
++            contentType: png ? 'image/png' : 'application/pdf',
++            fileName: `rendered-page-20261025T090000Z-${args?.kind}.${png ? 'png' : 'pdf'}`,
++            bytes: png ? 8 : 5,
++            rendererPlatform: 'macos-wkwebview',
++            dataBase64: png ? 'iVBORw0KGgo=' : 'JVBERi0=',
++          };
++        }
++        if (name === 'open_rendered_element_preview') return;
++        throw new Error(`Unexpected invoke ${name}`);
++      },
++    });
++
++    expect(result.passed).toBe(true);
++    expect(result.previewEvidence).toBe('ipc-success');
++    expect(result.checks.length).toBeGreaterThanOrEqual(26);
++    expect(result.checks).toContain('renderer HTML captured');
++  });
++
++  it('enforces strict output bounds on hostile/oversized payload', () => {
++    const api = loadScript();
++    const bad = 'x'.repeat(1_000_000);
++    const diag = api.failureDiagnostics(
++      {
++        finalUrl: `https://example.com/${bad}`,
++        contentType: bad,
++        consoleErrors: Array(100).fill(bad),
++        failedResourceUrls: Array(100).fill(`https://example.com/${bad}`),
++      },
++      bad
++    );
++
++    const serialized = JSON.stringify(diag);
++    expect(serialized.length).toBeLessThan(65536);
++    expect(diag.htmlSnippet.length).toBe(256);
++    expect(diag.observedFinalUrl.length).toBe(2048);
++    expect(diag.observedContentType.length).toBe(256);
++    expect(diag.consoleErrors.length).toBe(10);
++    expect(diag.consoleErrors[0].length).toBe(512);
++    expect(diag.failedResourceUrls.length).toBe(10);
++    expect(diag.failedResourceUrls[0].length).toBe(2048);
++  });
++
++  it('handles invocation error before page response gracefully', async () => {
++    const api = loadScript();
++    const result = await api.run({
++      projectId: 'audit',
++      invoke: async () => {
++        throw new Error('IPC dispatch failed');
++      },
++    });
++
++    expect(result.passed).toBe(false);
++    expect(result.failure).toBe('Error: IPC dispatch failed');
++    expect(result.snapshot.htmlLength).toBe(0);
++    expect(result.snapshot.htmlSnippet).toBe('');
++    expect(result.snapshot.observedFinalUrl).toBeNull();
++  });
++});

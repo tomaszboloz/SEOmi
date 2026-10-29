@@ -1,0 +1,515 @@
+diff --git a/src/components/Charts/semanticTopical/signals/SignalsWorkspace.tsx b/src/components/Charts/semanticTopical/signals/SignalsWorkspace.tsx
+index 4f9a2e7c..b7353948 100644
+--- a/src/components/Charts/semanticTopical/signals/SignalsWorkspace.tsx
++++ b/src/components/Charts/semanticTopical/signals/SignalsWorkspace.tsx
+@@ -17,11 +17,15 @@ import { buildParityReport } from './parityAdapter';
+ import { buildTemplateEvents } from './templateAdapter';
+ import { useDecayHistory } from './useDecayHistory';
+ import { useCausalImpact } from './useCausalImpact';
++import { useToolsStore } from '@/stores/toolsStore';
+ 
+ export const SignalsWorkspace = ({ projectId = null, pages, graph }: { projectId?: string | null; pages: CrawledPageSummary[]; graph: SemanticMap }) => {
+   const { t } = useTranslation();
++  const gscProperty = useToolsStore((state) => state.gscProperty);
++  const gscFilters = useToolsStore((state) => state.gscFilters);
++  const gscHydratedProjectId = useToolsStore((state) => state.gscHydratedProjectId);
+   const decay = useDecayHistory(projectId);
+-  const causalImpact = useCausalImpact(projectId, pages[0]?.url);
++  const causalImpact = useCausalImpact(projectId, gscProperty || undefined, gscFilters, gscHydratedProjectId === projectId, true);
+   const { snapshot, stale, refresh } = useGraphSnapshot(graph);
+   const sprsInput = useMemo(() => buildSprsInput(snapshot), [snapshot]);
+   const sprs = useMemo(() => computeSprs(sprsInput.nodes, sprsInput.edges), [sprsInput]);
+diff --git a/src/components/Charts/semanticTopical/signals/useCausalImpact.ts b/src/components/Charts/semanticTopical/signals/useCausalImpact.ts
+index 265804a5..4edc73e1 100644
+--- a/src/components/Charts/semanticTopical/signals/useCausalImpact.ts
++++ b/src/components/Charts/semanticTopical/signals/useCausalImpact.ts
+@@ -10,18 +10,22 @@ import { experimentsKey, listInterventions } from '@/services/experiments/regist
+ import { readGscSnapshots } from '@/services/gscTracker/read';
+ import { readStoredCausalImpact } from '@/services/causalMarket/adapter';
+ import { CAUSAL_STORAGE_EVENT, installCausalStorageInterceptor } from '@/services/causalMarket/storageEvents';
++import { normalizedFilters } from '@/services/gscTracker/filters';
++import type { GscPerformanceFilters } from '@/types';
+ 
+ const emptyMarket = (): MarketSourceResult => ({ status: 'unknown', source: 'dataforseo-serp-volatility', observations: [] });
+ 
+ interface EvidenceState {
+   projectId: string | null;
++  scopeKey: string;
+   market: MarketSourceResult | null;
+   updateWindows: UpdateWindowSourceResult | null;
+ }
+ 
+-export const useCausalImpact = (projectId: string | null, testSiteUrl?: string) => {
++export const useCausalImpact = (projectId: string | null, testSiteUrl?: string, testFilters?: GscPerformanceFilters, gscScopeReady = true, exactProperty = false) => {
+   const [revision, refresh] = useReducer((value: number) => value + 1, 0);
+-  const [state, setState] = useState<EvidenceState>({ projectId: null, market: null, updateWindows: null });
++  const scopeKey = JSON.stringify([testSiteUrl?.trim() ?? '', normalizedFilters(testFilters)]);
++  const [state, setState] = useState<EvidenceState>({ projectId: null, scopeKey: '', market: null, updateWindows: null });
+ 
+   useEffect(() => {
+     installCausalStorageInterceptor();
+@@ -52,24 +56,24 @@ export const useCausalImpact = (projectId: string | null, testSiteUrl?: string)
+ 
+   useEffect(() => {
+     let active = true;
+-    if (!projectId || !readGscSnapshots(projectId).length || !listInterventions(projectId).length) {
+-      setState({ projectId, market: null, updateWindows: null });
++    if (!gscScopeReady || !projectId || !readGscSnapshots(projectId).length || !listInterventions(projectId).length) {
++      setState({ projectId, scopeKey, market: null, updateWindows: null });
+       return () => { active = false; };
+     }
+     void Promise.all([fetchSerpVolatility(), fetchGoogleSearchUpdateWindows()]).then(([nextMarket, nextWindows]) => {
+       if (!active) return;
+-      setState({ projectId, market: nextMarket, updateWindows: nextWindows });
++      setState({ projectId, scopeKey, market: nextMarket, updateWindows: nextWindows });
+     });
+     return () => { active = false; };
+-  }, [projectId, revision]);
++  }, [projectId, revision, scopeKey, gscScopeReady]);
+ 
+-  const isCurrent = Boolean(projectId && state.projectId === projectId);
++  const isCurrent = Boolean(projectId && state.projectId === projectId && state.scopeKey === scopeKey);
+   const activeMarket = isCurrent ? state.market : null;
+   const activeWindows = isCurrent ? state.updateWindows : null;
+   const evidence = activeMarket ?? emptyMarket();
+ 
+   return useMemo(
+-    () => readStoredCausalImpact(projectId, evidence, activeWindows, testSiteUrl),
+-    [projectId, evidence, activeWindows, testSiteUrl, revision],
++    () => gscScopeReady ? readStoredCausalImpact(projectId, evidence, activeWindows, testSiteUrl, testFilters, exactProperty) : null,
++    [projectId, evidence, activeWindows, scopeKey, testSiteUrl, testFilters, revision, gscScopeReady, exactProperty],
+   );
+ };
+diff --git a/src/services/causalMarket/adapter.ts b/src/services/causalMarket/adapter.ts
+index 40ca3f59..6be1b31c 100644
+--- a/src/services/causalMarket/adapter.ts
++++ b/src/services/causalMarket/adapter.ts
+@@ -5,7 +5,7 @@ import type { GscPerformanceFilters } from '@/types';
+ import { listInterventions, type Intervention } from '@/services/experiments/registry';
+ import { estimateImpact, type ImpactResult } from './impact';
+ import { alignMarketObservations, type DatedMarketObservation, type UpdateWindow } from './normalize';
+-import { areSitesIndependent, propertyMatchScore } from './domain';
++import { areSitesIndependent, normalizePropertyIdentity, propertyMatchScore } from './domain';
+ import type { MarketSourceStatus, UpdateWindowSourceResult } from './source';
+ 
+ type Daily = NonNullable<GscPerformanceSnapshot['daily']>[number];
+@@ -22,9 +22,11 @@ export interface StoredCausalImpactInput {
+   interventions: readonly Intervention[];
+   market: CausalMarketEvidence | null;
+   updateWindows?: UpdateWindow[] | UpdateWindowSourceResult | null;
++  testFilters?: GscPerformanceFilters;
+   testSiteUrl?: string;
++  exactProperty?: boolean;
++  exactTestProperty?: boolean;
+ }
+-
+ const groupSnapshots = (snapshots: readonly GscPerformanceSnapshot[]): Group[] => {
+   const groups = new Map<string, Group>();
+   snapshots.forEach((snapshot) => {
+@@ -35,7 +37,6 @@ const groupSnapshots = (snapshots: readonly GscPerformanceSnapshot[]): Group[] =
+   });
+   return [...groups.values()];
+ };
+-
+ const dailyOf = (group: Group): Map<string, Daily> => {
+   const rows = new Map<string, Daily>();
+   [...group.snapshots].sort((a, b) => b.captured_at.localeCompare(a.captured_at)).forEach((snapshot) => {
+@@ -43,13 +44,11 @@ const dailyOf = (group: Group): Map<string, Daily> => {
+   });
+   return rows;
+ };
+-
+ const canonicalCohort = (filters?: GscPerformanceFilters): GscPerformanceFilters => {
+   const norm = normalizedFilters(filters);
+   return { search_type: norm.search_type || 'web', ...(norm.device ? { device: norm.device } : {}), ...(norm.country ? { country: norm.country } : {}) };
+ };
+ const areCohortsCompatible = (left?: GscPerformanceFilters, right?: GscPerformanceFilters): boolean => filtersEqual(canonicalCohort(left), canonicalCohort(right));
+-
+ const compareCandidates = (
+   left: { group: Group; overlap: number; independent: boolean },
+   right: { group: Group; overlap: number; independent: boolean },
+@@ -58,7 +57,6 @@ const compareCandidates = (
+   || right.overlap - left.overlap
+   || left.group.site.localeCompare(right.group.site)
+ );
+-
+ const bestControl = (test: Group, groups: Group[], testDates: Set<string>): { group: Group; rows: Map<string, Daily>; independent: boolean } | null => {
+   const candidates = groups.flatMap((group) => {
+     if (group.site === test.site || !areCohortsCompatible(test.filters, group.filters)) return [];
+@@ -70,39 +68,41 @@ const bestControl = (test: Group, groups: Group[], testDates: Set<string>): { gr
+   const selected = candidates[0];
+   return selected ? { group: selected.group, rows: selected.rows, independent: selected.independent } : null;
+ };
+-
+-const testGroup = (groups: Group[], testSiteUrl?: string): { group: Group; rows: Map<string, Daily> } | null => {
++const testGroup = (groups: Group[], testSiteUrl?: string, testFilters?: GscPerformanceFilters, exactProperty = false): { group: Group; rows: Map<string, Daily> } | null => {
+   const candidates = groups.map((group) => ({ group, rows: dailyOf(group) }))
++    .filter((candidate) => testFilters === undefined || areCohortsCompatible(candidate.group.filters, testFilters))
+     .filter((candidate) => candidate.rows.size > 0);
+   if (!candidates.length) return null;
+   const target = testSiteUrl?.trim();
+   if (target) {
++    if (exactProperty) {
++      const targetIdentity = normalizePropertyIdentity(target);
++      return targetIdentity ? candidates.filter((candidate) => normalizePropertyIdentity(candidate.group.site) === targetIdentity).sort((a, b) => b.rows.size - a.rows.size || a.group.site.localeCompare(b.group.site))[0] ?? null : null;
++    }
+     const scored = candidates
+       .map((cand) => ({ cand, score: propertyMatchScore(cand.group.site, target) }))
+       .filter((item) => item.score > 0)
+       .sort((a, b) => b.score - a.score || b.cand.rows.size - a.cand.rows.size);
+     return scored[0]?.cand ?? null;
+   }
++  if (exactProperty) return null;
+   if (candidates.length > 1) return null;
+   return candidates[0];
+ };
+-
+ const resolveWindows = (input?: UpdateWindow[] | UpdateWindowSourceResult | null) => {
+   if (Array.isArray(input)) return { windows: input, status: 'available' as MarketSourceStatus };
+   if (input && 'windows' in input) return { windows: input.windows, status: input.status };
+   return { windows: [] as UpdateWindow[], status: (input === null ? 'unavailable' : 'unknown') as MarketSourceStatus };
+ };
+-
+ export const buildCausalImpact = (input: StoredCausalImpactInput): ImpactResult | null => {
+   const intervention = input.interventions[0];
+   if (!intervention) return null;
+   const groups = groupSnapshots(input.snapshots);
+-  const test = testGroup(groups, input.testSiteUrl);
++  const test = testGroup(groups, input.testSiteUrl, input.testFilters, input.exactProperty ?? input.exactTestProperty ?? false);
+   if (!test) return null;
+   const control = bestControl(test.group, groups, new Set(test.rows.keys()));
+   const marketReady = input.market?.status === 'available';
+   if (!control && !marketReady) return null;
+-
+   const dates = control
+     ? [...test.rows.keys()].filter((date) => control.rows.has(date)).sort()
+     : [...test.rows.keys()].sort();
+@@ -114,7 +114,6 @@ export const buildCausalImpact = (input: StoredCausalImpactInput): ImpactResult
+   const controlSeries = control ? dates.map((date) => control.rows.get(date)!.clicks) : dates.map(() => preMean);
+ 
+   const { windows, status: updateFeedStatus } = resolveWindows(input.updateWindows);
+-
+   return estimateImpact({
+     dates,
+     test: testSeries,
+@@ -128,12 +127,10 @@ export const buildCausalImpact = (input: StoredCausalImpactInput): ImpactResult
+     updateFeedStatus,
+   });
+ };
+-
+ export const readStoredCausalImpact = (
+   projectId: string | null,
+   market: CausalMarketEvidence | null,
+-  updateWindows?: UpdateWindow[] | UpdateWindowSourceResult | null,
+-  testSiteUrl?: string,
++  updateWindows?: UpdateWindow[] | UpdateWindowSourceResult | null, testSiteUrl?: string, testFilters?: GscPerformanceFilters, exactProperty = false,
+ ): ImpactResult | null => {
+   if (!projectId?.trim()) return null;
+   return buildCausalImpact({
+@@ -141,6 +138,8 @@ export const readStoredCausalImpact = (
+     interventions: listInterventions(projectId),
+     market,
+     updateWindows,
++    testFilters,
+     testSiteUrl,
++    exactProperty,
+   });
+ };
+diff --git a/src/services/causalMarket/domain.ts b/src/services/causalMarket/domain.ts
+index 7886f6e5..cc4d630a 100644
+--- a/src/services/causalMarket/domain.ts
++++ b/src/services/causalMarket/domain.ts
+@@ -38,6 +38,24 @@ const parseHttpUrl = (value: string): URL | null => {
+ 
+ const cleanHost = (url: URL): string => url.hostname.toLowerCase().replace(/\.$/, '');
+ 
++/**
++ * Canonical identity for an explicit Search Console property selection.
++ * Unlike propertyMatchScore this never treats a broader property as covering
++ * a narrower URL-prefix property.
++ */
++export const normalizePropertyIdentity = (siteUrl: string | null | undefined): string => {
++  const trimmed = siteUrl?.trim() || '';
++  if (!trimmed) return '';
++  if (trimmed.toLowerCase().startsWith(DOMAIN_PREFIX)) {
++    const domain = trimmed.slice(DOMAIN_PREFIX.length).trim().toLowerCase().replace(/\.$/, '');
++    return domain ? `${DOMAIN_PREFIX}${domain}` : '';
++  }
++  const url = parseHttpUrl(trimmed);
++  if (!url) return '';
++  const path = url.pathname.endsWith('/') ? url.pathname : `${url.pathname}/`;
++  return `url:${url.protocol.toLowerCase()}//${url.host.toLowerCase()}${path}${url.search}`;
++};
++
+ export const propertyMatchScore = (propertySite: string, target: string): number => {
+   const pTrim = propertySite.trim();
+   const tTrim = target.trim();
+diff --git a/src/stores/tools/contracts/state.ts b/src/stores/tools/contracts/state.ts
+index 55e00d1d..929393fc 100644
+--- a/src/stores/tools/contracts/state.ts
++++ b/src/stores/tools/contracts/state.ts
+@@ -96,6 +96,8 @@ export interface ToolsData {
+   gscProperties: GscSiteProperty[];
+   gscProperty: string;
+   gscFilters: GscPerformanceFilters;
++  /** Project whose GSC property/filter scope has completed hydration. */
++  gscHydratedProjectId: string | null;
+   gscData: GscPerformanceData | null;
+   gscDataFetchedAt: string | null;
+   gscInspectionResult: Record<string, unknown> | null;
+diff --git a/src/stores/tools/hydrationSlice.ts b/src/stores/tools/hydrationSlice.ts
+index d6c6c123..8e122a24 100644
+--- a/src/stores/tools/hydrationSlice.ts
++++ b/src/stores/tools/hydrationSlice.ts
+@@ -27,6 +27,8 @@ hydrateProject: async (projectId) => {
+     beginToolRequest('gsc-session');
+     beginToolRequest('gsc-data');
+     beginToolRequest('gsc-inspection');
++    // Invalidate the previous project's GSC scope before reading the new one.
++    set({ gscHydratedProjectId: null });
+     if (!projectId) return set({ aiResearchSettings: emptyAiResearchSettings(), savedKeywords: [], trackedRanks: [], rankTrackingDraft: defaultRankTrackingDraft(), isRankLoading: false, rankError: null, crawlResult: null, crawlRuns: [], isCrawling: false, isCrawlPaused: false, crawlProgress: 0, activeCrawlRunId: null, crawlError: null, crawlPersistenceError: null, crawlPersistenceNotice: null, crawlPersistenceCompacted: false, isRetryingCrawlPersistence: false, crawlProgressDetail: null, interruptedCrawl: null, crawlUrl: '', crawlLimit: 25, crawlConfig: CrawlConfigSchema.parse(DEFAULT_CRAWL_CONFIG), crawlRequestProfiles: [], selectedCrawlRunId: null, isSavingCrawlRequestProfile: false, isCheckingCrawlExternalLinks: false, crawlExternalLinkCheckProgress: null, crawlExternalLinkCheckError: null, keywordQuery: '', keywordCountry: 'US', keywordLanguage: 'en', isKeywordLoading: false, keywordError: null, domainQuery: '', domainCountry: 'US', domainLanguage: 'en', domainOverview: null, isDomainLoading: false, domainError: null, backlinkQuery: '', backlinkProfile: null, backlinkProfileHistory: [], isBacklinkLoading: false, backlinkError: null, backlinkGapCompetitors: [], backlinkGapIncludeSubdomains: true, backlinkGapReport: null, isBacklinkGapLoading: false, backlinkGapError: null, aiBrandQuery: '', aiBrandDomain: '', aiBrandReport: null, aiBrandHistory: [], isAiBrandLoading: false, aiBrandError: null, aiSearchPrompt: '', aiPromptComparison: null, aiPromptHistory: [], isAiPromptLoading: false, aiPromptError: null, gscClientId: '', gscClientSecret: '', gscProperties: [], gscProperty: '', gscFilters: { ...DEFAULT_GSC_FILTERS }, isGscConnected: false, gscData: null, gscDataFetchedAt: null, gscInspectionResult: null, isGscLoading: false, gscError: null, keywordResults: [], keywordResultsSource: null, domainComparison: null, domainComparisonHistory: [], domainComparisonTargets: [], isDomainComparisonLoading: false, domainComparisonError: null });
+     const storedGscClientId = readStorage(gscClientIdKey(projectId)) || '';
+     // The browser preview has no native credential store. Avoid an extra
+@@ -119,7 +121,7 @@ hydrateProject: async (projectId) => {
+       }
+     }
+     if (!isCurrentHydration()) return;
+-    set({ crawlResult: crawlRuns[0]?.result || null, crawlRuns, crawlPersistenceError: persistenceError, crawlPersistenceNotice: persistenceNotice, crawlPersistenceCompacted: hydratedCompacted, interruptedCrawl: hydratedInterruptedCrawl, crawlUrl: hydratedCrawlUrl, crawlLimit: crawlSettings?.limit || 25, crawlConfig: CrawlConfigSchema.parse({ ...DEFAULT_CRAWL_CONFIG, ...crawlSettings?.config }), selectedCrawlRunId: crawlRuns[0]?.id || null,
++    set({ gscHydratedProjectId: projectId, crawlResult: crawlRuns[0]?.result || null, crawlRuns, crawlPersistenceError: persistenceError, crawlPersistenceNotice: persistenceNotice, crawlPersistenceCompacted: hydratedCompacted, interruptedCrawl: hydratedInterruptedCrawl, crawlUrl: hydratedCrawlUrl, crawlLimit: crawlSettings?.limit || 25, crawlConfig: CrawlConfigSchema.parse({ ...DEFAULT_CRAWL_CONFIG, ...crawlSettings?.config }), selectedCrawlRunId: crawlRuns[0]?.id || null,
+       aiBrandQuery: aiResearchInputs.brand ?? aiBrandReport?.brand ?? '', aiBrandDomain: aiResearchInputs.domain ?? aiBrandReport?.domain ?? '', aiBrandReport, aiBrandHistory, isAiBrandLoading: false, aiBrandError: null,
+       aiSearchPrompt: aiResearchInputs.prompt ?? aiPromptComparison?.prompt ?? '', aiPromptComparison, aiPromptHistory, isAiPromptLoading: false, aiPromptError: null });
+   }
+diff --git a/src/stores/tools/initialState.ts b/src/stores/tools/initialState.ts
+index 3a664450..47550912 100644
+--- a/src/stores/tools/initialState.ts
++++ b/src/stores/tools/initialState.ts
+@@ -11,7 +11,7 @@ import { loadDomainComparisonTargets, loadDomainComparisonHistory, loadLatestDom
+ import { gscClientIdKey, gscPropertyKey, DEFAULT_GSC_FILTERS, readGscFilters, loadProjectQuery, loadKeywordQuery, loadKeywordCountry, loadKeywordLanguage, loadDomainCountry, loadDomainLanguage, loadBacklinkGapSettings } from './projectPreferences';
+ import { DEFAULT_CRAWL_CONFIG, loadCrawlRequestProfiles } from './crawlPersistence';
+ import { loadSavedKeywords, loadTrackedRanks, loadRankTrackingDraft } from './keywordPersistence';
+-export const createToolsInitialState = (): Pick<ToolsState, "keywordQuery" | "keywordCountry" | "keywordLanguage" | "keywordResults" | "keywordResultsSource" | "isKeywordLoading" | "keywordError" | "savedKeywords" | "selectedTagFilter" | "trackedRanks" | "rankTrackingDraft" | "isRankLoading" | "rankError" | "domainQuery" | "domainCountry" | "domainLanguage" | "domainOverview" | "isDomainLoading" | "domainError" | "domainComparison" | "domainComparisonHistory" | "domainComparisonTargets" | "isDomainComparisonLoading" | "domainComparisonError" | "backlinkQuery" | "backlinkProfile" | "backlinkProfileHistory" | "isBacklinkLoading" | "backlinkError" | "backlinkGapCompetitors" | "backlinkGapIncludeSubdomains" | "backlinkGapReport" | "isBacklinkGapLoading" | "backlinkGapError" | "crawlUrl" | "crawlLimit" | "crawlResult" | "crawlRuns" | "isCrawling" | "isCrawlPaused" | "crawlProgress" | "crawlProgressDetail" | "interruptedCrawl" | "crawlConfig" | "crawlRequestProfiles" | "isSavingCrawlRequestProfile" | "isCheckingCrawlExternalLinks" | "crawlExternalLinkCheckProgress" | "crawlExternalLinkCheckError" | "activeCrawlRunId" | "selectedCrawlRunId" | "crawlError" | "crawlPersistenceError" | "crawlPersistenceNotice" | "crawlPersistenceCompacted" | "isRetryingCrawlPersistence" | "aiResearchSettings" | "aiBrandQuery" | "aiBrandDomain" | "aiBrandReport" | "aiBrandHistory" | "isAiBrandLoading" | "aiBrandError" | "aiSearchPrompt" | "aiPromptComparison" | "aiPromptHistory" | "isAiPromptLoading" | "aiPromptError" | "isGscConnected" | "gscClientId" | "gscClientSecret" | "gscProperties" | "gscProperty" | "gscFilters" | "gscData" | "gscDataFetchedAt" | "gscInspectionResult" | "isGscLoading" | "gscError" | "mcpClientTab"> => ({
++export const createToolsInitialState = (): Pick<ToolsState, "keywordQuery" | "keywordCountry" | "keywordLanguage" | "keywordResults" | "keywordResultsSource" | "isKeywordLoading" | "keywordError" | "savedKeywords" | "selectedTagFilter" | "trackedRanks" | "rankTrackingDraft" | "isRankLoading" | "rankError" | "domainQuery" | "domainCountry" | "domainLanguage" | "domainOverview" | "isDomainLoading" | "domainError" | "domainComparison" | "domainComparisonHistory" | "domainComparisonTargets" | "isDomainComparisonLoading" | "domainComparisonError" | "backlinkQuery" | "backlinkProfile" | "backlinkProfileHistory" | "isBacklinkLoading" | "backlinkError" | "backlinkGapCompetitors" | "backlinkGapIncludeSubdomains" | "backlinkGapReport" | "isBacklinkGapLoading" | "backlinkGapError" | "crawlUrl" | "crawlLimit" | "crawlResult" | "crawlRuns" | "isCrawling" | "isCrawlPaused" | "crawlProgress" | "crawlProgressDetail" | "interruptedCrawl" | "crawlConfig" | "crawlRequestProfiles" | "isSavingCrawlRequestProfile" | "isCheckingCrawlExternalLinks" | "crawlExternalLinkCheckProgress" | "crawlExternalLinkCheckError" | "activeCrawlRunId" | "selectedCrawlRunId" | "crawlError" | "crawlPersistenceError" | "crawlPersistenceNotice" | "crawlPersistenceCompacted" | "isRetryingCrawlPersistence" | "aiResearchSettings" | "aiBrandQuery" | "aiBrandDomain" | "aiBrandReport" | "aiBrandHistory" | "isAiBrandLoading" | "aiBrandError" | "aiSearchPrompt" | "aiPromptComparison" | "aiPromptHistory" | "isAiPromptLoading" | "aiPromptError" | "isGscConnected" | "gscClientId" | "gscClientSecret" | "gscProperties" | "gscProperty" | "gscHydratedProjectId" | "gscFilters" | "gscData" | "gscDataFetchedAt" | "gscInspectionResult" | "isGscLoading" | "gscError" | "mcpClientTab"> => ({
+ keywordQuery: activeProjectId() ? loadKeywordQuery(activeProjectId()!) : '',
+ keywordCountry: activeProjectId() ? loadKeywordCountry(activeProjectId()!) : 'US',
+ keywordLanguage: activeProjectId() ? loadKeywordLanguage(activeProjectId()!) : 'en',
+@@ -85,6 +85,7 @@ gscClientId: activeProjectId() ? readStorage(gscClientIdKey(activeProjectId()!))
+ gscClientSecret: '',
+ gscProperties: [],
+ gscProperty: activeProjectId() ? readStorage(gscPropertyKey(activeProjectId()!)) || '' : '',
++gscHydratedProjectId: null,
+ gscFilters: activeProjectId() ? readGscFilters(activeProjectId()!) : { ...DEFAULT_GSC_FILTERS },
+ gscData: null,
+ gscDataFetchedAt: null,
+diff --git a/tests/causalMarketDomain.test.ts b/tests/causalMarketDomain.test.ts
+index aabbabee..a65e0315 100644
+--- a/tests/causalMarketDomain.test.ts
++++ b/tests/causalMarketDomain.test.ts
+@@ -1,5 +1,5 @@
+ import { describe, expect, it } from 'vitest';
+-import { areSitesIndependent, normalizeSiteDomain, propertyMatchScore } from '@/services/causalMarket/domain';
++import { areSitesIndependent, normalizePropertyIdentity, normalizeSiteDomain, propertyMatchScore } from '@/services/causalMarket/domain';
+ 
+ describe('causalMarket domain normalization and property matching', () => {
+   it('normalizes sc-domain and url prefix properties of the same domain', () => {
+@@ -40,6 +40,15 @@ describe('causalMarket domain normalization and property matching', () => {
+     expect(propertyMatchScore('https://example.com/blog/', 'https://example.com/BLOG/')).toBe(0);
+   });
+ 
++  it('normalizes explicit property identities without broadening their scope', () => {
++    expect(normalizePropertyIdentity('HTTPS://Example.com/blog')).toBe('url:https://example.com/blog/');
++    expect(normalizePropertyIdentity('https://example.com/blog/')).toBe('url:https://example.com/blog/');
++    expect(normalizePropertyIdentity('https://example.com/blog/?tab=one')).toBe('url:https://example.com/blog/?tab=one');
++    expect(normalizePropertyIdentity('https://example.com/blog/?tab=two')).not.toBe(normalizePropertyIdentity('https://example.com/blog/?tab=one'));
++    expect(normalizePropertyIdentity('SC-DOMAIN:Example.COM.')).toBe('sc-domain:example.com');
++    expect(normalizePropertyIdentity('https://example.com/other')).not.toBe(normalizePropertyIdentity('https://example.com/blog'));
++  });
++
+   it('scores domain property matches against domains and covering URLs', () => {
+     expect(propertyMatchScore('sc-domain:example.com', 'sc-domain:example.com')).toBe(1000);
+     expect(propertyMatchScore('sc-domain:example.com', 'sc-domain:other.com')).toBe(0);
+diff --git a/tests/mountPanelsAdapters.test.tsx b/tests/mountPanelsAdapters.test.tsx
+index d3954b12..f9f18c7c 100644
+--- a/tests/mountPanelsAdapters.test.tsx
++++ b/tests/mountPanelsAdapters.test.tsx
+@@ -69,13 +69,13 @@ describe('backlink adapters', () => {
+   it('outreach section lists gap domains and is empty without a report', () => {
+     const { unmount } = render(<BacklinkOutreachSection report={null} />);
+     expect(screen.getByTestId('outreach-panel')).toBeTruthy();
+-    expect(screen.queryByRole('button')).toBeNull();
++    expect(screen.queryByRole('button', { name: /export/i })).toBeNull();
+     unmount();
+     const report: BacklinkGapReport = {
+       target: 'me.com', competitors: ['a.com'], include_subdomains: false, total_rows: 1, rows_scanned: 1,
+       opportunities: [{ referring_domain: 'blog.example', target_backlinks: 0, competitor_backlinks: [{ domain: 'a.com', backlinks: 3, rank: 50 }], max_competitor_spam_score: null }],
+     };
+     render(<BacklinkOutreachSection report={report} />);
+-    expect(screen.getByRole('button')).toBeTruthy();
++    expect(screen.getByRole('button', { name: /export/i })).toBeTruthy();
+   });
+ });
+diff --git a/tests/causalMarketExactProperty.test.tsx b/tests/causalMarketExactProperty.test.tsx
+new file mode 100644
+index 00000000..51937a28
+--- /dev/null
++++ b/tests/causalMarketExactProperty.test.tsx
+@@ -0,0 +1,28 @@
++import { describe, expect, it } from 'vitest';
++import { buildCausalImpact } from '@/services/causalMarket/adapter';
++import { snapshotGscPerformance } from '@/services/gscTracker/snapshot';
++import type { GscPerformanceData } from '@/types';
++
++const dates = Array.from({ length: 28 }, (_, index) => `2026-03-${String(index + 1).padStart(2, '0')}`);
++const intervention = { id: 'i1', projectId: 'p1', url: 'site' as const, date: '2026-03-15', kind: 'content' as const, note: '', createdAt: '2026-03-01T00:00:00.000Z' };
++const evidence = { status: 'available' as const, source: 'test-market', observations: dates.map((date) => ({ date, level: 100 })) };
++const data = (site_url: string, clicks: (index: number) => number): GscPerformanceData => {
++  const daily = dates.map((date, index) => ({ date, clicks: clicks(index), impressions: 100, ctr: 0.1, position: 2 }));
++  return { site_url, start_date: dates[0], end_date: dates.at(-1)!, total_clicks: daily.reduce((sum, row) => sum + row.clicks, 0), total_impressions: 2800, avg_ctr: 0.1, avg_position: 2, queries: [], pages: [], daily, daily_may_be_truncated: false, queries_may_be_truncated: false, pages_may_be_truncated: false, max_rows_per_dimension: 1000 };
++};
++
++describe('causal market exact selected property', () => {
++  it('rejects broader properties and accepts the normalized selected URL-prefix property', () => {
++    const snapshots = [
++      snapshotGscPerformance(data('https://example.com/', (i) => i < 14 ? 50 : 70)),
++      snapshotGscPerformance(data('sc-domain:example.com', () => 55)),
++      snapshotGscPerformance(data('https://example.com/blog/', (i) => i < 14 ? 50 : 70)),
++      snapshotGscPerformance(data('https://control.test/', () => 100)),
++    ];
++    const input = { interventions: [intervention], market: evidence, updateWindows: [], testSiteUrl: 'https://example.com/blog/' };
++    expect(buildCausalImpact({ ...input, snapshots: [snapshots[0], snapshots[3]], testSiteUrl: undefined, exactProperty: true })).toBeNull();
++    expect(buildCausalImpact({ ...input, snapshots: snapshots.slice(0, 2).concat(snapshots[3]), exactProperty: true })).toBeNull();
++    expect(buildCausalImpact({ ...input, snapshots, testSiteUrl: 'https://example.com/blog', exactProperty: true })?.verdict).toBe('positive');
++    expect(buildCausalImpact({ ...input, snapshots, exactTestProperty: true })?.verdict).toBe('positive');
++  });
++});
+diff --git a/tests/signalsGscSelectionIntegration.test.tsx b/tests/signalsGscSelectionIntegration.test.tsx
+new file mode 100644
+index 00000000..c4b182b4
+--- /dev/null
++++ b/tests/signalsGscSelectionIntegration.test.tsx
+@@ -0,0 +1,126 @@
++import { cleanup, render, screen, waitFor } from '@testing-library/react';
++import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
++import i18n from '@/i18n';
++import { SignalsWorkspace } from '@/components/Charts/semanticTopical/signals/SignalsWorkspace';
++import { useAppHydration } from '@/hooks/app/useAppHydration';
++import { addIntervention } from '@/services/experiments/registry';
++import { saveGscSnapshot } from '@/services/gscTracker/persistence';
++import * as marketSource from '@/services/causalMarket/source';
++import { useToolsStore } from '@/stores/toolsStore';
++import { useProjectStore } from '@/stores/projectStore';
++import { toolsServices } from '@/stores/tools/services';
++import type { GscPerformanceData, GscPerformanceFilters, CrawledPageSummary } from '@/types';
++import type { SemanticMap } from '@/services/semanticGraph/types';
++
++const dates = Array.from({ length: 28 }, (_, index) => `2026-03-${String(index + 1).padStart(2, '0')}`);
++const graph: SemanticMap = { nodes: [], edges: [], topicEdges: [], clusters: [], totalEdges: 0, totalTopicEdges: 0, totalInternalLinks: 0, hasSemanticTerms: false, truncated: false };
++const pages = [{ url: 'https://example.com/first-crawl-page', final_url: 'https://example.com/first-crawl-page' }] as unknown as CrawledPageSummary[];
++const filters: GscPerformanceFilters = { search_type: 'web', device: 'DESKTOP', country: 'pol' };
++
++const data = (site_url: string, clicks: (index: number) => number, selectedFilters = filters): GscPerformanceData => {
++  const daily = dates.map((date, index) => ({ date, clicks: clicks(index), impressions: 100, ctr: 0.1, position: 2 }));
++  return { site_url, start_date: dates[0], end_date: dates.at(-1)!, filters: selectedFilters, total_clicks: daily.reduce((sum, row) => sum + row.clicks, 0), total_impressions: 2800, avg_ctr: 0.1, avg_position: 2, queries: [], pages: [], daily, daily_may_be_truncated: false, queries_may_be_truncated: false, pages_may_be_truncated: false, max_rows_per_dimension: 1000 };
++};
++
++const addEvidence = (projectId: string, site: string, clicks: (index: number) => number, selectedFilters = filters) => saveGscSnapshot(projectId, data(site, clicks, selectedFilters));
++const intervention = (projectId: string) => addIntervention(projectId, { url: 'site', date: '2026-03-15', kind: 'content', note: '' }, new Date('2026-03-01T00:00:00Z'));
++
++beforeEach(async () => {
++  localStorage.clear();
++  useProjectStore.setState({ projects: [], activeProjectId: null });
++  await i18n.changeLanguage('en');
++  vi.spyOn(marketSource, 'fetchSerpVolatility').mockResolvedValue({ status: 'available', source: 'test-market', observations: dates.map((date) => ({ date, level: 100 })) });
++  vi.spyOn(marketSource, 'fetchGoogleSearchUpdateWindows').mockResolvedValue({ status: 'available', source: 'test-updates', windows: [] });
++  useToolsStore.setState({ gscProperty: '', gscFilters: {}, gscHydratedProjectId: null });
++});
++
++afterEach(() => { cleanup(); vi.restoreAllMocks(); localStorage.clear(); });
++
++describe('mounted SignalsWorkspace GSC property scope', () => {
++  it('uses the selected exact property and filters instead of the first crawl URL or sibling snapshot', async () => {
++    addEvidence('project-a', 'https://example.com/blog/', (index) => index < 14 ? 50 : 80, filters);
++    addEvidence('project-a', 'https://example.com/blog/', (index) => index < 14 ? 100 : 40, { ...filters, device: 'MOBILE' });
++    addEvidence('project-a', 'https://example.com/store/', (index) => index < 14 ? 100 : 40, filters);
++    addEvidence('project-a', 'https://control.example.net/', () => 100, filters);
++    intervention('project-a');
++    useToolsStore.setState({ gscProperty: 'https://example.com/blog/', gscFilters: filters, gscHydratedProjectId: 'project-a' });
++
++    render(<SignalsWorkspace projectId="project-a" pages={pages} graph={graph} />);
++
++    expect(await screen.findByText('Positive effect')).toBeTruthy();
++    expect(screen.queryByText('Negative effect')).toBeNull();
++  });
++
++  it('keeps the mounted result unknown for an unmatched property and invalidates it on project/property switch', async () => {
++    addEvidence('project-a', 'https://example.com/blog/', (index) => index < 14 ? 50 : 80, filters);
++    addEvidence('project-a', 'https://control.example.net/', () => 100, filters);
++    intervention('project-a');
++    useToolsStore.setState({ gscProperty: 'https://example.com/blog/', gscFilters: filters, gscHydratedProjectId: 'project-a' });
++    const view = render(<SignalsWorkspace projectId="project-a" pages={pages} graph={graph} />);
++    expect(await screen.findByText('Positive effect')).toBeTruthy();
++
++    useToolsStore.setState({ gscProperty: 'https://example.com/missing/', gscFilters: filters, gscHydratedProjectId: 'project-a' });
++    view.rerender(<SignalsWorkspace projectId="project-a" pages={pages} graph={graph} />);
++    expect(await screen.findByText('Not estimable. Not enough history: need at least 7 days before and 1 after, a real external market series, and independent control evidence.')).toBeTruthy();
++
++    addEvidence('project-b', 'https://other.example.org/', () => 60, filters);
++    addEvidence('project-b', 'https://control.other.net/', () => 60, filters);
++    intervention('project-b');
++    useToolsStore.setState({ gscProperty: 'https://other.example.org/', gscFilters: filters, gscHydratedProjectId: 'project-b' });
++    view.rerender(<SignalsWorkspace projectId="project-b" pages={pages} graph={graph} />);
++    expect(await screen.findByText('No measurable effect')).toBeTruthy();
++  });
++
++  it('gates the mounted production path on real project hydration and rejects late prior-project completion', async () => {
++    const projects = [
++      { id: 'project-a', name: 'A', rootUrl: 'https://a.example/', createdAt: '2026-01-01T00:00:00.000Z', lastOpenedAt: '2026-01-01T00:00:00.000Z' },
++      { id: 'project-b', name: 'B', rootUrl: 'https://b.example/', createdAt: '2026-01-01T00:00:00.000Z', lastOpenedAt: '2026-01-01T00:00:00.000Z' },
++    ];
++    useProjectStore.setState({ projects, activeProjectId: 'project-a' });
++    localStorage.setItem('seomi_gsc_property_project-a', 'https://a.example/');
++    localStorage.setItem('seomi_gsc_property_project-b', 'https://b.example/');
++    localStorage.setItem('seomi_gsc_filters_project-a_v1', JSON.stringify(filters));
++    localStorage.setItem('seomi_gsc_filters_project-b_v1', JSON.stringify(filters));
++    addEvidence('project-a', 'https://a.example/', (index) => index < 14 ? 100 : 50, filters);
++    addEvidence('project-a', 'https://a-control.example/', () => 100, filters);
++    addEvidence('project-b', 'https://b.example/', (index) => index < 14 ? 50 : 80, filters);
++    addEvidence('project-b', 'https://b-control.example/', () => 100, filters);
++    intervention('project-a');
++    intervention('project-b');
++
++    const deferredRuns = new Map<string, { resolve: () => void }>();
++    vi.spyOn(toolsServices, 'loadCrawlRuns').mockImplementation((projectId) => {
++      const wait = new Promise<Awaited<ReturnType<typeof toolsServices.loadCrawlRuns>>>((resolve) => {
++        deferredRuns.set(projectId, { resolve: () => resolve([]) });
++      });
++      return wait;
++    });
++    const Harness = () => {
++      useAppHydration();
++      const activeProjectId = useProjectStore((state) => state.activeProjectId);
++      return activeProjectId ? <SignalsWorkspace projectId={activeProjectId} pages={pages} graph={graph} /> : null;
++    };
++
++    render(<Harness />);
++    await waitFor(() => expect(deferredRuns.has('project-a')).toBe(true));
++    expect(useToolsStore.getState().gscHydratedProjectId).toBeNull();
++    expect(screen.queryByText('Positive effect')).toBeNull();
++    expect(screen.queryByText('Negative effect')).toBeNull();
++
++    useProjectStore.getState().selectProject('project-b');
++    await waitFor(() => expect(deferredRuns.has('project-b')).toBe(true));
++    expect(useToolsStore.getState().gscHydratedProjectId).toBeNull();
++    expect(screen.queryByText('Positive effect')).toBeNull();
++    expect(screen.queryByText('Negative effect')).toBeNull();
++
++    deferredRuns.get('project-b')!.resolve();
++    await waitFor(() => expect(useToolsStore.getState().gscHydratedProjectId).toBe('project-b'));
++    expect(useToolsStore.getState().gscProperty).toBe('https://b.example/');
++    expect(await screen.findByText('Positive effect')).toBeTruthy();
++
++    deferredRuns.get('project-a')!.resolve();
++    await waitFor(() => expect(useToolsStore.getState().gscHydratedProjectId).toBe('project-b'));
++    expect(useToolsStore.getState().gscProperty).toBe('https://b.example/');
++    expect(screen.getByText('Positive effect')).toBeTruthy();
++  });
++});

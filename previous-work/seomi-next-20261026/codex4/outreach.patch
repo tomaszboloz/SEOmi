@@ -1,0 +1,759 @@
+diff --git a/src/components/Domain/BacklinkChecker.tsx b/src/components/Domain/BacklinkChecker.tsx
+index 3bf60665..88a02555 100644
+--- a/src/components/Domain/BacklinkChecker.tsx
++++ b/src/components/Domain/BacklinkChecker.tsx
+@@ -8,9 +8,20 @@ import { BacklinkInboundTable } from './backlinkChecker/BacklinkInboundTable';
+ import { BacklinkOutreachSection } from './backlinkChecker/BacklinkOutreachSection';
+ import { OffPageSourcesWorkspace } from './backlinkChecker/OffPageSourcesWorkspace';
+ import { DataForSeoCostMeter } from '@/components/DataForSEO/cost/DataForSeoCostMeter';
++import type { InformationGainInput } from '@/services/outreachCopilot';
++import { useOutreachInformationGain } from './backlinkChecker/useOutreachInformationGain';
+ 
+-export const BacklinkChecker: React.FC = () => {
++export interface BacklinkCheckerProps { informationGain?: InformationGainInput | null }
++
++export const BacklinkChecker: React.FC<BacklinkCheckerProps> = ({ informationGain }) => {
+   const session = useBacklinkSession();
++  const generatedInformationGain = useOutreachInformationGain({
++    projectId: session.activeProjectId,
++    site: session.siteUrl,
++    report: session.backlinkGapReport,
++    pages: session.crawlPages,
++    enabled: informationGain === undefined,
++  });
+   const {
+     t,
+     backlinkProfile,
+@@ -26,7 +37,7 @@ export const BacklinkChecker: React.FC = () => {
+       <BacklinkHeader session={session} />
+       <DataForSeoCostMeter />
+       <BacklinkGapSection session={session} />
+-      <BacklinkOutreachSection report={session.backlinkGapReport} />
++      <BacklinkOutreachSection report={session.backlinkGapReport} projectId={session.activeProjectId} informationGain={informationGain === undefined ? generatedInformationGain : informationGain} />
+ 
+       {error && (
+         <div className="p-4 rounded-xl bg-rose-950/40 border border-rose-800/60 text-rose-300 text-sm">
+diff --git a/src/components/Domain/OutreachTargetsPanel.tsx b/src/components/Domain/OutreachTargetsPanel.tsx
+index f6e3eea5..6ed57a31 100644
+--- a/src/components/Domain/OutreachTargetsPanel.tsx
++++ b/src/components/Domain/OutreachTargetsPanel.tsx
+@@ -1,16 +1,23 @@
+-import React from 'react';
++import React, { useState } from 'react';
+ import { useTranslation } from 'react-i18next';
+ import { HelpTip } from '@/components/Help/HelpTip';
+-import type { OutreachTarget } from '@/services/outreachCopilot';
++import { draftOutreach, type DraftTemplate, type InformationGainSource, type OutreachTarget } from '@/services/outreachCopilot';
+ 
+ export interface OutreachTargetsPanelProps {
+   targets: OutreachTarget[];
+   /** Called with the CSV text; the caller decides how to save it. */
+   onExport: (targets: OutreachTarget[]) => void;
++  site?: string;
++  source?: InformationGainSource | null;
+ }
+ 
+-export const OutreachTargetsPanel: React.FC<OutreachTargetsPanelProps> = ({ targets, onExport }) => {
++export const OutreachTargetsPanel: React.FC<OutreachTargetsPanelProps> = ({ targets, onExport, site = '', source = null }) => {
+   const { t } = useTranslation();
++  const [selectedDomain, setSelectedDomain] = useState<string | null>(null);
++  const template: DraftTemplate = { subject: t('outreach.draftSubject'), body: t('outreach.draftBody') };
++  const disclosedSource = source ? { ...source, provenance: { ...source.provenance, approximation: source.provenance.approximation === 'local-lexical' ? t('outreach.localApproximation') : source.provenance.approximation, observedAt: source.provenance.observedAt ?? t('outreach.unknown') } } : null;
++  const selected = selectedDomain ? targets.find((target) => target.domain === selectedDomain) : null;
++  const draft = selected && disclosedSource && site ? draftOutreach(selected, site, disclosedSource, template) : null;
+   return (
+     <section className="space-y-2 rounded-lg border border-slate-800 p-4 text-sm text-slate-300" data-testid="outreach-panel">
+       <h3 className="flex items-center gap-1 font-semibold text-slate-100">
+@@ -25,12 +32,20 @@ export const OutreachTargetsPanel: React.FC<OutreachTargetsPanelProps> = ({ targ
+             {targets.map((target) => (
+               <li key={target.domain}>
+                 {t('outreach.row', { domain: target.domain, priority: target.priority.toFixed(2), count: target.linkingCompetitors.length })}
++                {source && site && <button type="button" className="ml-2 rounded border border-slate-700 px-2 py-0.5 text-xs hover:bg-slate-800" onClick={() => setSelectedDomain(target.domain)}>{t('outreach.draft')}</button>}
+               </li>
+             ))}
+           </ul>
+           <button type="button" className="rounded border border-slate-700 px-2 py-1 hover:bg-slate-800" onClick={() => onExport(targets)}>
+             {t('outreach.export')}
+           </button>
++          {disclosedSource && <p data-testid="outreach-evidence" className="text-xs text-slate-400">{t('outreach.evidence', { score: disclosedSource.score, url: disclosedSource.evidenceUrl })}</p>}
++          {disclosedSource && <p data-testid="outreach-provenance" className="text-xs text-slate-400">{t('outreach.provenance', { provider: disclosedSource.provenance.provider, model: disclosedSource.provenance.model, approximation: disclosedSource.provenance.approximation, observedAt: disclosedSource.provenance.observedAt })}</p>}
++          {draft && <aside data-testid="outreach-draft" className="space-y-1 rounded border border-emerald-900/60 bg-emerald-950/20 p-3">
++            <p className="font-medium text-slate-100">{draft.subject}</p>
++            <textarea aria-label={t('outreach.draft')} readOnly value={draft.body} rows={5} className="w-full rounded bg-slate-950 p-2 text-xs" />
++            <p className="text-xs text-slate-400">{t('outreach.manualNote')}</p>
++          </aside>}
+           <p className="text-xs text-slate-400">{t('outreach.manualNote')}</p>
+         </>
+       )}
+diff --git a/src/components/Domain/backlinkChecker/BacklinkOutreachSection.tsx b/src/components/Domain/backlinkChecker/BacklinkOutreachSection.tsx
+index 998a6c0d..e5e1aa76 100644
+--- a/src/components/Domain/backlinkChecker/BacklinkOutreachSection.tsx
++++ b/src/components/Domain/backlinkChecker/BacklinkOutreachSection.tsx
+@@ -1,13 +1,23 @@
+ import { useMemo } from 'react';
+ import { OutreachTargetsPanel } from '@/components/Domain/OutreachTargetsPanel';
+ import { downloadBlob } from '@/services/download';
+-import { outreachTargets, targetsToCsv, type OutreachTarget } from '@/services/outreachCopilot';
++import { informationGainSource, normalizeDomain, outreachTargets, targetsToCsv, type InformationGainInput, type OutreachTarget } from '@/services/outreachCopilot';
+ import type { BacklinkGapReport } from '@/types';
+ 
+ /** Outreach targets derived from the real backlink-gap report; empty without a report. */
+-export const BacklinkOutreachSection = ({ report }: { report: BacklinkGapReport | null }) => {
+-  const targets = useMemo(() => (report ? outreachTargets(report.opportunities, report.competitors.length) : []), [report]);
++export interface BacklinkOutreachSectionProps {
++  report: BacklinkGapReport | null;
++  projectId?: string | null;
++  informationGain?: InformationGainInput | null;
++}
++
++export const BacklinkOutreachSection = ({ report, projectId = null, informationGain = null }: BacklinkOutreachSectionProps) => {
++  const topCompetitors = useMemo(() => report?.competitors.slice(0, 3).map(normalizeDomain) ?? [], [report]);
++  const targets = useMemo(() => (report ? outreachTargets(report.opportunities, topCompetitors.length, { competitorDomains: topCompetitors }) : []), [report, topCompetitors]);
++  const source = useMemo(() => (
++    informationGain && informationGain.projectId === projectId ? informationGainSource(informationGain) : null
++  ), [informationGain, projectId]);
+   const onExport = (rows: OutreachTarget[]) =>
+     downloadBlob('seomi-outreach-targets.csv', new Blob([targetsToCsv(rows)], { type: 'text/csv;charset=utf-8' }));
+-  return <OutreachTargetsPanel targets={targets} onExport={onExport} />;
++  return <OutreachTargetsPanel targets={targets} onExport={onExport} site={informationGain?.site ?? ''} source={source} />;
+ };
+diff --git a/src/components/Domain/backlinkChecker/useBacklinkSession.ts b/src/components/Domain/backlinkChecker/useBacklinkSession.ts
+index cae5e828..346ac5db 100644
+--- a/src/components/Domain/backlinkChecker/useBacklinkSession.ts
++++ b/src/components/Domain/backlinkChecker/useBacklinkSession.ts
+@@ -12,6 +12,7 @@ export const useBacklinkSession = () => {
+   const backlinkQuery = useToolsStore((s) => s.backlinkQuery);
+   const backlinkProfile = useToolsStore((s) => s.backlinkProfile);
+   const backlinkProfileHistory = useToolsStore((s) => s.backlinkProfileHistory);
++  const crawlRuns = useToolsStore((s) => s.crawlRuns);
+   const isLoading = useToolsStore((s) => s.isBacklinkLoading);
+   const error = useToolsStore((s) => s.backlinkError);
+   const setBacklinkQuery = useToolsStore((s) => s.setBacklinkQuery);
+@@ -36,6 +37,8 @@ export const useBacklinkSession = () => {
+     .map((domain) => domain.trim())
+     .filter(Boolean)
+     .slice(0, 19);
++  const crawlPages = crawlRuns.find((run) => run.projectId === activeProjectId)?.result.pages ?? [];
++  const siteUrl = activeProject?.rootUrl?.trim() ?? '';
+ 
+   useEffect(() => setCompetitorInput(backlinkGapCompetitors.join('\n')), [backlinkGapCompetitors]);
+ 
+@@ -66,6 +69,9 @@ export const useBacklinkSession = () => {
+ 
+   return {
+     t,
++    activeProjectId,
++    crawlPages,
++    siteUrl,
+     inputTarget,
+     setInputTarget,
+     competitorInput,
+diff --git a/src/i18n/locales/ar.json b/src/i18n/locales/ar.json
+index c759780d..999e0ff0 100644
+--- a/src/i18n/locales/ar.json
++++ b/src/i18n/locales/ar.json
+@@ -7749,7 +7749,14 @@
+     "empty": "لا توجد بيانات فجوة الروابط. شغّل تحليل الفجوة أولًا.",
+     "row": "{{domain}}: الأولوية {{priority}}، يربط بـ {{count}} منافسين",
+     "export": "تصدير CSV",
+-    "manualNote": "لا يرسل SEOmi أي رسائل. أرسل المسودات من بريدك."
++    "manualNote": "لا يرسل SEOmi أي رسائل. أرسل المسودات من بريدك.",
++    "draft": "عرض المسودة",
++    "draftSubject": "مصدر لـ {{domain}}",
++    "draftBody": "مرحبًا،\\n\\nلاحظنا أنك تشير إلى {{competitors}}. نشرنا {{title}} ({{url}}): {{summary}}\\nالزاوية الفريدة: {{novelEntities}}. مكسب المعلومات: {{informationGain}}. الدليل: {{evidence}}\\nالمعالج: {{provider}}؛ النموذج: {{model}}؛ {{approximation}}؛ وقت الرصد: {{observedAt}}\\n\\nمع التحية،\\n{{site}}",
++    "evidence": "IGOS {{score}}/100؛ الدليل: {{url}}",
++    "provenance": "مصدر IGOS: المعالج {{provider}}، النموذج {{model}} ({{approximation}})؛ الرصد: {{observedAt}}",
++    "unknown": "غير متاح",
++    "localApproximation": "تقريب محلي معجمي"
+   },
+   "causalMarket": {
+     "title": "الأثر السببي",
+diff --git a/src/i18n/locales/de.json b/src/i18n/locales/de.json
+index ccf6d82d..1e40ebdb 100644
+--- a/src/i18n/locales/de.json
++++ b/src/i18n/locales/de.json
+@@ -7749,7 +7749,14 @@
+     "empty": "Keine Backlink-Lückendaten. Starten Sie zuerst die Backlink-Lückenanalyse.",
+     "row": "{{domain}}: Priorität {{priority}}, verlinkt {{count}} Konkurrenten",
+     "export": "CSV exportieren",
+-    "manualNote": "SEOmi sendet nie Nachrichten. Senden Sie Entwürfe aus Ihrem eigenen Postfach."
++    "manualNote": "SEOmi sendet nie Nachrichten. Senden Sie Entwürfe aus Ihrem eigenen Postfach.",
++    "draft": "Entwurf anzeigen",
++    "draftSubject": "Eine Ressource für {{domain}}",
++    "draftBody": "Hallo,\\n\\nwir haben bemerkt, dass Sie auf {{competitors}} verlinken. Wir haben {{title}} ({{url}}) veröffentlicht: {{summary}}\\nEinzigartiger Ansatz: {{novelEntities}}. Informationsgewinn: {{informationGain}}. Beleg: {{evidence}}\\nAnbieter: {{provider}}; Modell: {{model}}; {{approximation}}; Beobachtung: {{observedAt}}\\n\\nViele Grüße,\\n{{site}}",
++    "evidence": "IGOS {{score}}/100; Beleg: {{url}}",
++    "provenance": "IGOS-Quelle: Anbieter {{provider}}, Modell {{model}} ({{approximation}}); beobachtet: {{observedAt}}",
++    "unknown": "nicht verfügbar",
++    "localApproximation": "lokale lexikalische Näherung"
+   },
+   "causalMarket": {
+     "title": "Kausale Wirkung",
+diff --git a/src/i18n/locales/en.json b/src/i18n/locales/en.json
+index 98091f97..99a461d0 100644
+--- a/src/i18n/locales/en.json
++++ b/src/i18n/locales/en.json
+@@ -7749,7 +7749,14 @@
+     "empty": "No backlink gap data. Run a backlink gap check first.",
+     "row": "{{domain}}: priority {{priority}}, links to {{count}} competitors",
+     "export": "Export CSV",
+-    "manualNote": "SEOmi never sends messages. Send drafts from your own mailbox."
++    "manualNote": "SEOmi never sends messages. Send drafts from your own mailbox.",
++    "draft": "Show draft",
++    "draftSubject": "A resource for {{domain}}",
++    "draftBody": "Hello,\\n\\nWe noticed you link to {{competitors}}. We published {{title}} ({{url}}): {{summary}}\\nUnique angle: {{novelEntities}}. Information gain: {{informationGain}}. Evidence: {{evidence}}\\nProvider: {{provider}}; model: {{model}}; {{approximation}}; observed: {{observedAt}}\\n\\nBest,\\n{{site}}",
++    "evidence": "IGOS {{score}}/100; evidence: {{url}}",
++    "provenance": "IGOS source: provider {{provider}}, model {{model}} ({{approximation}}); observed: {{observedAt}}",
++    "unknown": "unavailable",
++    "localApproximation": "local lexical approximation"
+   },
+   "causalMarket": {
+     "title": "Causal impact",
+diff --git a/src/i18n/locales/es.json b/src/i18n/locales/es.json
+index e2dd5878..bbf6477a 100644
+--- a/src/i18n/locales/es.json
++++ b/src/i18n/locales/es.json
+@@ -7749,7 +7749,14 @@
+     "empty": "Sin datos de brecha de enlaces. Ejecuta antes el análisis.",
+     "row": "{{domain}}: prioridad {{priority}}, enlaza a {{count}} competidores",
+     "export": "Exportar CSV",
+-    "manualNote": "SEOmi nunca envía mensajes. Envía los borradores desde tu correo."
++    "manualNote": "SEOmi nunca envía mensajes. Envía los borradores desde tu correo.",
++    "draft": "Mostrar borrador",
++    "draftSubject": "Un recurso para {{domain}}",
++    "draftBody": "Hola,\\n\\nHemos visto que enlazas a {{competitors}}. Publicamos {{title}} ({{url}}): {{summary}}\\nÁngulo único: {{novelEntities}}. Ganancia informativa: {{informationGain}}. Evidencia: {{evidence}}\\nProveedor: {{provider}}; modelo: {{model}}; {{approximation}}; observado: {{observedAt}}\\n\\nUn saludo,\\n{{site}}",
++    "evidence": "IGOS {{score}}/100; evidencia: {{url}}",
++    "provenance": "Fuente IGOS: proveedor {{provider}}, modelo {{model}} ({{approximation}}); observado: {{observedAt}}",
++    "unknown": "no disponible",
++    "localApproximation": "aproximación léxica local"
+   },
+   "causalMarket": {
+     "title": "Impacto causal",
+diff --git a/src/i18n/locales/fr.json b/src/i18n/locales/fr.json
+index c49192ea..ea1a6c8d 100644
+--- a/src/i18n/locales/fr.json
++++ b/src/i18n/locales/fr.json
+@@ -7749,7 +7749,14 @@
+     "empty": "Aucune donnée d’écart de backlinks. Lancez d’abord l’analyse.",
+     "row": "{{domain}} : priorité {{priority}}, lie {{count}} concurrents",
+     "export": "Exporter en CSV",
+-    "manualNote": "SEOmi n’envoie jamais de messages. Envoyez les brouillons depuis votre messagerie."
++    "manualNote": "SEOmi n’envoie jamais de messages. Envoyez les brouillons depuis votre messagerie.",
++    "draft": "Afficher le brouillon",
++    "draftSubject": "Une ressource pour {{domain}}",
++    "draftBody": "Bonjour,\\n\\nNous avons vu que vous faites un lien vers {{competitors}}. Nous avons publié {{title}} ({{url}}) : {{summary}}\\nAngle unique : {{novelEntities}}. Gain d’information : {{informationGain}}. Preuve : {{evidence}}\\nFournisseur : {{provider}} ; modèle : {{model}} ; {{approximation}} ; observé : {{observedAt}}\\n\\nCordialement,\\n{{site}}",
++    "evidence": "IGOS {{score}}/100 ; preuve : {{url}}",
++    "provenance": "Source IGOS : fournisseur {{provider}}, modèle {{model}} ({{approximation}}) ; observé : {{observedAt}}",
++    "unknown": "indisponible",
++    "localApproximation": "approximation lexicale locale"
+   },
+   "causalMarket": {
+     "title": "Impact causal",
+diff --git a/src/i18n/locales/it.json b/src/i18n/locales/it.json
+index d3c6c624..3d71a06b 100644
+--- a/src/i18n/locales/it.json
++++ b/src/i18n/locales/it.json
+@@ -7749,7 +7749,14 @@
+     "empty": "Nessun dato sul divario di backlink. Esegui prima l’analisi.",
+     "row": "{{domain}}: priorità {{priority}}, linka {{count}} concorrenti",
+     "export": "Esporta CSV",
+-    "manualNote": "SEOmi non invia mai messaggi. Invia le bozze dalla tua casella."
++    "manualNote": "SEOmi non invia mai messaggi. Invia le bozze dalla tua casella.",
++    "draft": "Mostra bozza",
++    "draftSubject": "Una risorsa per {{domain}}",
++    "draftBody": "Buongiorno,\\n\\nAbbiamo notato che linki a {{competitors}}. Abbiamo pubblicato {{title}} ({{url}}): {{summary}}\\nAngolo unico: {{novelEntities}}. Guadagno informativo: {{informationGain}}. Prova: {{evidence}}\\nProvider: {{provider}}; modello: {{model}}; {{approximation}}; osservato: {{observedAt}}\\n\\nCordiali saluti,\\n{{site}}",
++    "evidence": "IGOS {{score}}/100; prova: {{url}}",
++    "provenance": "Fonte IGOS: provider {{provider}}, modello {{model}} ({{approximation}}); osservato: {{observedAt}}",
++    "unknown": "non disponibile",
++    "localApproximation": "approssimazione lessicale locale"
+   },
+   "causalMarket": {
+     "title": "Impatto causale",
+diff --git a/src/i18n/locales/ja.json b/src/i18n/locales/ja.json
+index 2a18d18c..e6a0d269 100644
+--- a/src/i18n/locales/ja.json
++++ b/src/i18n/locales/ja.json
+@@ -7749,7 +7749,14 @@
+     "empty": "被リンクギャップのデータがありません。先にギャップ分析を実行してください。",
+     "row": "{{domain}}: 優先度 {{priority}}、競合{{count}}社にリンク",
+     "export": "CSVを出力",
+-    "manualNote": "SEOmiはメッセージを送信しません。下書きはご自身のメールから送信してください。"
++    "manualNote": "SEOmiはメッセージを送信しません。下書きはご自身のメールから送信してください。",
++    "draft": "下書きを表示",
++    "draftSubject": "{{domain}} 向けのリソース",
++    "draftBody": "こんにちは。\\n\\n{{competitors}} へのリンクを確認しました。{{title}}（{{url}}）を公開しました：{{summary}}\\n独自の切り口：{{novelEntities}}。情報利得：{{informationGain}}。根拠：{{evidence}}\\nプロバイダー：{{provider}}、モデル：{{model}}、{{approximation}}、観測時刻：{{observedAt}}\\n\\nよろしくお願いします。\\n{{site}}",
++    "evidence": "IGOS {{score}}/100；根拠：{{url}}",
++    "provenance": "IGOS ソース：プロバイダー {{provider}}、モデル {{model}}（{{approximation}}）；観測：{{observedAt}}",
++    "unknown": "利用不可",
++    "localApproximation": "ローカル語彙近似"
+   },
+   "causalMarket": {
+     "title": "因果効果",
+diff --git a/src/i18n/locales/ko.json b/src/i18n/locales/ko.json
+index 65c4dcff..88b3ff57 100644
+--- a/src/i18n/locales/ko.json
++++ b/src/i18n/locales/ko.json
+@@ -7749,7 +7749,14 @@
+     "empty": "백링크 격차 데이터가 없습니다. 먼저 격차 분석을 실행하세요.",
+     "row": "{{domain}}: 우선순위 {{priority}}, 경쟁사 {{count}}곳에 링크",
+     "export": "CSV 내보내기",
+-    "manualNote": "SEOmi는 메시지를 보내지 않습니다. 초안은 본인 메일함에서 보내세요."
++    "manualNote": "SEOmi는 메시지를 보내지 않습니다. 초안은 본인 메일함에서 보내세요.",
++    "draft": "초안 보기",
++    "draftSubject": "{{domain}}을 위한 자료",
++    "draftBody": "안녕하세요.\\n\\n{{competitors}}에 연결된 것을 확인했습니다. {{title}}({{url}})을 게시했습니다: {{summary}}\\n고유한 관점: {{novelEntities}}. 정보 이득: {{informationGain}}. 근거: {{evidence}}\\n제공자: {{provider}}; 모델: {{model}}; {{approximation}}; 관찰 시각: {{observedAt}}\\n\\n감사합니다.\\n{{site}}",
++    "evidence": "IGOS {{score}}/100; 근거: {{url}}",
++    "provenance": "IGOS 출처: 제공자 {{provider}}, 모델 {{model}} ({{approximation}}); 관찰: {{observedAt}}",
++    "unknown": "사용할 수 없음",
++    "localApproximation": "로컬 어휘 근사"
+   },
+   "causalMarket": {
+     "title": "인과 효과",
+diff --git a/src/i18n/locales/pl.json b/src/i18n/locales/pl.json
+index 153d93e8..f4553b92 100644
+--- a/src/i18n/locales/pl.json
++++ b/src/i18n/locales/pl.json
+@@ -7749,7 +7749,14 @@
+     "empty": "Brak danych luki linkowej. Najpierw uruchom analizę luki linków.",
+     "row": "{{domain}}: priorytet {{priority}}, linkuje do {{count}} konkurentów",
+     "export": "Eksportuj CSV",
+-    "manualNote": "SEOmi nie wysyła wiadomości. Szkice wysyłasz ze swojej skrzynki."
++    "manualNote": "SEOmi nie wysyła wiadomości. Szkice wysyłasz ze swojej skrzynki.",
++    "draft": "Pokaż szkic",
++    "draftSubject": "Źródło dla {{domain}}",
++    "draftBody": "Dzień dobry,\\n\\nZauważyliśmy, że linkujesz do {{competitors}}. Opublikowaliśmy {{title}} ({{url}}): {{summary}}\\nUnikalny kąt: {{novelEntities}}. Zysk informacji: {{informationGain}}. Dowód: {{evidence}}\\nProvider: {{provider}}; model: {{model}}; {{approximation}}; obserwacja: {{observedAt}}\\n\\nPozdrawiam,\\n{{site}}",
++    "evidence": "IGOS {{score}}/100; dowód: {{url}}",
++    "provenance": "Źródło IGOS: provider {{provider}}, model {{model}} ({{approximation}}); obserwacja: {{observedAt}}",
++    "unknown": "niedostępne",
++    "localApproximation": "lokalne przybliżenie leksykalne"
+   },
+   "causalMarket": {
+     "title": "Wpływ przyczynowy",
+diff --git a/src/i18n/locales/pt.json b/src/i18n/locales/pt.json
+index e61a0a25..018d279d 100644
+--- a/src/i18n/locales/pt.json
++++ b/src/i18n/locales/pt.json
+@@ -7749,7 +7749,14 @@
+     "empty": "Sem dados de lacuna de backlinks. Execute primeiro a análise.",
+     "row": "{{domain}}: prioridade {{priority}}, linka {{count}} concorrentes",
+     "export": "Exportar CSV",
+-    "manualNote": "O SEOmi nunca envia mensagens. Envie os rascunhos pelo seu e-mail."
++    "manualNote": "O SEOmi nunca envia mensagens. Envie os rascunhos pelo seu e-mail.",
++    "draft": "Mostrar rascunho",
++    "draftSubject": "Um recurso para {{domain}}",
++    "draftBody": "Olá,\\n\\nNotámos que liga a {{competitors}}. Publicámos {{title}} ({{url}}): {{summary}}\\nÂngulo único: {{novelEntities}}. Ganho de informação: {{informationGain}}. Evidência: {{evidence}}\\nFornecedor: {{provider}}; modelo: {{model}}; {{approximation}}; observado: {{observedAt}}\\n\\nCumprimentos,\\n{{site}}",
++    "evidence": "IGOS {{score}}/100; evidência: {{url}}",
++    "provenance": "Fonte IGOS: fornecedor {{provider}}, modelo {{model}} ({{approximation}}); observado: {{observedAt}}",
++    "unknown": "indisponível",
++    "localApproximation": "aproximação lexical local"
+   },
+   "causalMarket": {
+     "title": "Impacto causal",
+diff --git a/src/i18n/locales/ru.json b/src/i18n/locales/ru.json
+index 3ff04336..13008521 100644
+--- a/src/i18n/locales/ru.json
++++ b/src/i18n/locales/ru.json
+@@ -7749,7 +7749,14 @@
+     "empty": "Нет данных по разрыву ссылок. Сначала запустите анализ.",
+     "row": "{{domain}}: приоритет {{priority}}, ссылается на конкурентов: {{count}}",
+     "export": "Экспорт CSV",
+-    "manualNote": "SEOmi никогда не отправляет сообщения. Отправляйте черновики из своей почты."
++    "manualNote": "SEOmi никогда не отправляет сообщения. Отправляйте черновики из своей почты.",
++    "draft": "Показать черновик",
++    "draftSubject": "Ресурс для {{domain}}",
++    "draftBody": "Здравствуйте!\\n\\nМы заметили ссылку на {{competitors}}. Мы опубликовали {{title}} ({{url}}): {{summary}}\\nУникальный ракурс: {{novelEntities}}. Информационный выигрыш: {{informationGain}}. Доказательство: {{evidence}}\\nПровайдер: {{provider}}; модель: {{model}}; {{approximation}}; наблюдение: {{observedAt}}\\n\\nС уважением,\\n{{site}}",
++    "evidence": "IGOS {{score}}/100; доказательство: {{url}}",
++    "provenance": "Источник IGOS: провайдер {{provider}}, модель {{model}} ({{approximation}}); наблюдение: {{observedAt}}",
++    "unknown": "недоступно",
++    "localApproximation": "локальное лексическое приближение"
+   },
+   "causalMarket": {
+     "title": "Причинный эффект",
+diff --git a/src/i18n/locales/zh.json b/src/i18n/locales/zh.json
+index dfa30319..ea36290c 100644
+--- a/src/i18n/locales/zh.json
++++ b/src/i18n/locales/zh.json
+@@ -7749,7 +7749,14 @@
+     "empty": "没有外链差距数据。请先运行外链差距分析。",
+     "row": "{{domain}}：优先级 {{priority}}，链接 {{count}} 个竞争对手",
+     "export": "导出 CSV",
+-    "manualNote": "SEOmi 从不发送消息。请从您自己的邮箱发送草稿。"
++    "manualNote": "SEOmi 从不发送消息。请从您自己的邮箱发送草稿。",
++    "draft": "显示草稿",
++    "draftSubject": "给 {{domain}} 的资源",
++    "draftBody": "您好，\\n\\n我们注意到您链接了 {{competitors}}。我们发布了 {{title}}（{{url}}）：{{summary}}\\n独特角度：{{novelEntities}}。信息增益：{{informationGain}}。证据：{{evidence}}\\n提供商：{{provider}}；模型：{{model}}；{{approximation}}；观测时间：{{observedAt}}\\n\\n此致，\\n{{site}}",
++    "evidence": "IGOS {{score}}/100；证据：{{url}}",
++    "provenance": "IGOS 来源：提供商 {{provider}}、模型 {{model}}（{{approximation}}）；观测：{{observedAt}}",
++    "unknown": "不可用",
++    "localApproximation": "本地词汇近似"
+   },
+   "causalMarket": {
+     "title": "因果影响",
+diff --git a/src/services/outreachCopilot/draft.ts b/src/services/outreachCopilot/draft.ts
+index ac908f36..cc591cad 100644
+--- a/src/services/outreachCopilot/draft.ts
++++ b/src/services/outreachCopilot/draft.ts
+@@ -22,6 +22,7 @@ export const draftOutreach = (
+   template: DraftTemplate,
+ ): OutreachDraft | null => {
+   if (!source || !source.title.trim() || !source.url.trim() || !site.trim()) return null;
++  const provenance = 'provenance' in source && source.provenance && typeof source.provenance === 'object' ? source.provenance as Record<string, unknown> : {};
+   const values = {
+     domain: target.domain,
+     competitors: target.linkingCompetitors.join(', '),
+@@ -29,6 +30,13 @@ export const draftOutreach = (
+     title: source.title.trim(),
+     url: source.url.trim(),
+     summary: source.summary.trim(),
++    evidence: 'evidenceUrl' in source && typeof source.evidenceUrl === 'string' ? source.evidenceUrl : '',
++    informationGain: 'score' in source && typeof source.score === 'number' ? String(source.score) : '',
++    novelEntities: 'novelEntities' in source && Array.isArray(source.novelEntities) ? source.novelEntities.join(', ') : '',
++    provider: typeof provenance.provider === 'string' ? provenance.provider : '',
++    model: typeof provenance.model === 'string' ? provenance.model : '',
++    approximation: typeof provenance.approximation === 'string' ? provenance.approximation : '',
++    observedAt: typeof provenance.observedAt === 'string' ? provenance.observedAt : '',
+   };
+   return { to: target.domain, subject: fill(template.subject, values), body: fill(template.body, values) };
+ };
+diff --git a/src/services/outreachCopilot/gap.ts b/src/services/outreachCopilot/gap.ts
+index e8c005d8..a14f38ca 100644
+--- a/src/services/outreachCopilot/gap.ts
++++ b/src/services/outreachCopilot/gap.ts
+@@ -16,6 +16,8 @@ export interface GapOptions {
+   maxSpamScore?: number;
+   /** Rank scale of the data source (DataForSEO and Moz use 0 to 100). */
+   rankScale?: number;
++  /** Restrict outreach ranking to the selected TOP3 comparator set. */
++  competitorDomains?: string[];
+ }
+ 
+ export const normalizeDomain = (value: string): string =>
+@@ -32,12 +34,14 @@ export const outreachTargets = (
+   options: GapOptions = {},
+ ): OutreachTarget[] => {
+   const { maxSpamScore = 60, rankScale = 100 } = options;
++  const allowedCompetitors = options.competitorDomains?.length
++    ? new Set(options.competitorDomains.map(normalizeDomain)) : null;
+   const byDomain = new Map<string, OutreachTarget>();
+   for (const row of opportunities) {
+     const domain = normalizeDomain(row.referring_domain);
+     if (!domain || row.target_backlinks > 0) continue;
+     if (row.max_competitor_spam_score !== null && row.max_competitor_spam_score > maxSpamScore) continue;
+-    const linking = row.competitor_backlinks.filter((link) => link.backlinks > 0);
++    const linking = row.competitor_backlinks.filter((link) => link.backlinks > 0 && (!allowedCompetitors || allowedCompetitors.has(normalizeDomain(link.domain))));
+     if (linking.length === 0) continue;
+     const ranks = linking.flatMap((link) => (link.rank === null ? [] : [Math.min(1, Math.max(0, link.rank / rankScale))]));
+     const authority = ranks.length ? ranks.reduce((sum, rank) => sum + rank, 0) / ranks.length : 0;
+diff --git a/src/services/outreachCopilot/index.ts b/src/services/outreachCopilot/index.ts
+index 6dffa6d7..58ab4f29 100644
+--- a/src/services/outreachCopilot/index.ts
++++ b/src/services/outreachCopilot/index.ts
+@@ -1,3 +1,5 @@
+ export * from './gap';
+ export * from './draft';
+ export * from './csv';
++export * from './informationGain';
++export * from './igosProducer';
+diff --git a/tests/mountPanelsAdapters.test.tsx b/tests/mountPanelsAdapters.test.tsx
+index d3954b12..94811403 100644
+--- a/tests/mountPanelsAdapters.test.tsx
++++ b/tests/mountPanelsAdapters.test.tsx
+@@ -1,5 +1,6 @@
+ import { describe, expect, it } from 'vitest';
+-import { render, screen } from '@testing-library/react';
++import '@/i18n';
++import { fireEvent, render, screen } from '@testing-library/react';
+ import { buildSprsReport } from '@/components/Charts/semanticTopical/signals/sprsAdapter';
+ import { buildParityReport } from '@/components/Charts/semanticTopical/signals/parityAdapter';
+ import { buildTemplateEvents } from '@/components/Charts/semanticTopical/signals/templateAdapter';
+@@ -69,13 +70,32 @@ describe('backlink adapters', () => {
+   it('outreach section lists gap domains and is empty without a report', () => {
+     const { unmount } = render(<BacklinkOutreachSection report={null} />);
+     expect(screen.getByTestId('outreach-panel')).toBeTruthy();
+-    expect(screen.queryByRole('button')).toBeNull();
++    expect(screen.queryByRole('button', { name: 'Export CSV' })).toBeNull();
+     unmount();
+     const report: BacklinkGapReport = {
+       target: 'me.com', competitors: ['a.com'], include_subdomains: false, total_rows: 1, rows_scanned: 1,
+       opportunities: [{ referring_domain: 'blog.example', target_backlinks: 0, competitor_backlinks: [{ domain: 'a.com', backlinks: 3, rank: 50 }], max_competitor_spam_score: null }],
+     };
+     render(<BacklinkOutreachSection report={report} />);
+-    expect(screen.getByRole('button')).toBeTruthy();
++    expect(screen.getByRole('button', { name: 'Export CSV' })).toBeTruthy();
++  });
++
++  it('mounts a deferred IGOS draft only for the producing project', () => {
++    const report = {
++      status: 'ready', igos: 80, components: null, coverage: null, multiplier: null, onTopicShare: 1,
++      availableDocs: 3, requestedDocs: 3, novelEntities: ['local study'], limitations: [],
++      zones: [{ chunk: { text: 'new', offset: 0, heading: null, vector: new Float64Array([1]) }, topic: 0.8, nearest: 0.2, zone: 'gain', evidence: { url: 'https://competitor.example/source', rank: 1, passageIndex: 0 } }],
++    } as never;
++    const reportData: BacklinkGapReport = { target: 'me.com', competitors: ['a.com'], include_subdomains: false, total_rows: 1, rows_scanned: 1, opportunities: [{ referring_domain: 'blog.example', target_backlinks: 0, competitor_backlinks: [{ domain: 'a.com', backlinks: 3, rank: 50 }], max_competitor_spam_score: null }] };
++    const source = { projectId: 'p1', site: 'https://me.com', report, source: { title: 'Study', url: 'https://me.com/study', summary: 'Observed data.' }, provenance: { provider: 'local-hash', model: 'hash-1024-n345', approximation: 'local-lexical', observedAt: '2026-10-26T12:00:00Z' } };
++    const view = render(<BacklinkOutreachSection report={reportData} projectId="p1" informationGain={null} />);
++    expect(screen.queryByRole('button', { name: 'Show draft' })).toBeNull();
++    view.rerender(<BacklinkOutreachSection report={reportData} projectId="p1" informationGain={source} />);
++    fireEvent.click(screen.getByRole('button', { name: 'Show draft' }));
++    expect(screen.getByTestId('outreach-draft').textContent).toContain('Study');
++    expect(screen.getByTestId('outreach-provenance').textContent).toContain('hash-1024-n345');
++    expect(screen.getByTestId('outreach-provenance').textContent).toContain('2026-10-26T12:00:00Z');
++    view.rerender(<BacklinkOutreachSection report={reportData} projectId="p2" informationGain={source} />);
++    expect(screen.queryByTestId('outreach-evidence')).toBeNull();
+   });
+ });
+diff --git a/tests/outreachCopilot.test.ts b/tests/outreachCopilot.test.ts
+index b732249f..36e8d64c 100644
+--- a/tests/outreachCopilot.test.ts
++++ b/tests/outreachCopilot.test.ts
+@@ -1,6 +1,7 @@
+-import { describe, expect, it } from 'vitest';
+-import type { BacklinkGapOpportunity } from '@/types';
+-import { draftOutreach, normalizeDomain, outreachTargets, targetsToCsv } from '@/services/outreachCopilot';
++import { describe, expect, it, vi } from 'vitest';
++import type { BacklinkGapOpportunity, CrawledPageSummary } from '@/types';
++import { draftOutreach, informationGainSource, normalizeDomain, produceInformationGain, outreachTargets, targetsToCsv } from '@/services/outreachCopilot';
++import type { IgosReport } from '@/services/igos/report';
+ 
+ const row = (domain: string, own: number, links: Array<[string, number, number | null]>, spam: number | null = null): BacklinkGapOpportunity => ({
+   referring_domain: domain,
+@@ -31,6 +32,7 @@ describe('outreachTargets', () => {
+   });
+   it('normalizes URLs to hosts', () => {
+     expect(normalizeDomain('https://WWW.Site.com/path?q=1')).toBe('site.com');
++    expect(outreachTargets(data, 2, { competitorDomains: ['a.com', 'b.com'] })[0].linkingCompetitors).toEqual(['a.com', 'b.com']);
+   });
+ });
+ 
+@@ -54,3 +56,56 @@ describe('draft and csv', () => {
+     expect(csv.split('\n')[1]).toBe(`'=cmd,0.500,1.00,0.50,"a,b | c""d"`);
+   });
+ });
++
++describe('evidence-bound IGOS sources', () => {
++  const report = (status: IgosReport['status'] = 'ready'): IgosReport => ({
++    status, igos: status === 'unavailable' ? null : 74, components: null, coverage: null, multiplier: null,
++    onTopicShare: null, availableDocs: 3, requestedDocs: 3, novelEntities: ['local study'],
++    zones: [{ chunk: { text: 'gain', offset: 0, heading: null, vector: new Float64Array([1]) }, topic: 0.8, nearest: 0.4, zone: 'gain', evidence: { url: 'https://competitor.example/source', rank: 1, passageIndex: 0 } }], limitations: [],
++  });
++  const input = { projectId: 'project-a', site: 'https://site.example', report: report(), source: { title: 'Study', url: 'https://site.example/study', summary: 'Observed data.' } };
++
++  it('returns only a verified source from a ready report', () => {
++    expect(informationGainSource(input)).toMatchObject({ score: 74, evidenceUrl: 'https://competitor.example/source', novelEntities: ['local study'], provenance: { provider: 'unavailable', observedAt: null } });
++    expect(informationGainSource({ ...input, report: report('partial') })).toBeNull();
++    expect(informationGainSource({ ...input, source: null })).toBeNull();
++  });
++
++  it('rejects source metadata that cannot be opened as a web URL', () => {
++    expect(informationGainSource({ ...input, source: { ...input.source, url: 'not-a-url' } })).toBeNull();
++    expect(informationGainSource({ ...input, report: { ...report(), zones: [] } })).toBeNull();
++  });
++});
++
++describe('production IGOS caller', () => {
++  const page = { url: 'https://site.example/article', final_url: 'https://site.example/article', title: 'Own study', word_count: 200, semantic_terms: ['own evidence'], semantic_excerpts: ['Own evidence about the topic.'], rag_sections: [] } as unknown as CrawledPageSummary;
++  const fetched = vi.fn(async (source: { sourceUrl: string }) => ({ sourceUrl: source.sourceUrl, authority: null, fetchedAt: '2026-01-01T00:00:00Z', availability: 'ok' as const, text: 'competitor topic content', vector: null }));
++  const embed = vi.fn(async (texts: string[]) => texts.map((_, index) => index === 0 ? new Float64Array([0.8, 0.6]) : new Float64Array([1, 0])));
++
++  it('builds project evidence from crawl pages and live competitor IO', async () => {
++    const result = await produceInformationGain({ projectId: 'p1', site: 'https://site.example', competitors: ['a.example', 'b.example', 'c.example'], pages: [page] }, new AbortController().signal, { fetch: fetched, embed });
++    expect(fetched).toHaveBeenCalledTimes(3);
++    expect(embed).toHaveBeenCalledWith(expect.arrayContaining(['Own evidence about the topic.']));
++    expect(result).toMatchObject({ projectId: 'p1', source: { title: 'Own study', url: 'https://site.example/article' } });
++    expect(result?.provenance).toMatchObject({ provider: 'local-hash', model: 'hash-1024-n345', approximation: 'local-lexical' });
++  });
++
++  it('fails closed when one live competitor source is unavailable', async () => {
++    const unavailable = vi.fn(async (source: { sourceUrl: string }) => ({ ...await fetched(source), availability: 'unavailable' as const, text: '' }));
++    await expect(produceInformationGain({ projectId: 'p1', site: 'https://site.example', competitors: ['a.example', 'b.example', 'c.example'], pages: [page] }, new AbortController().signal, { fetch: unavailable, embed })).resolves.toBeNull();
++  });
++
++  it('fails closed before IO for missing project, target, or malformed competitors', async () => {
++    const input = { projectId: 'p1', site: 'https://site.example', competitors: ['a.example', 'b.example', 'c.example'], pages: [page] };
++    expect(await produceInformationGain({ ...input, projectId: '' }, new AbortController().signal, { fetch: fetched, embed })).toBeNull();
++    expect(await produceInformationGain({ ...input, site: '' }, new AbortController().signal, { fetch: fetched, embed })).toBeNull();
++    expect(await produceInformationGain({ ...input, pages: [] }, new AbortController().signal, { fetch: fetched, embed })).toBeNull();
++    expect(await produceInformationGain({ ...input, competitors: ['a', 'b', 'c'] }, new AbortController().signal, { fetch: fetched, embed })).toBeNull();
++  });
++
++  it('uses retained RAG paragraphs when semantic excerpts and terms are absent', async () => {
++    const sparse = { ...page, title: 'RAG source', semantic_terms: [], semantic_excerpts: [], rag_sections: [{ heading: 'Evidence', level: 2, paragraphs: ['Retained paragraph evidence.'], tables: 0 }] } as unknown as CrawledPageSummary;
++    const result = await produceInformationGain({ projectId: 'p1', site: 'https://site.example', competitors: ['a.example', 'b.example', 'c.example'], pages: [sparse] }, new AbortController().signal, { fetch: fetched, embed });
++    expect(result?.source?.title).toBe('RAG source');
++  });
++});
+diff --git a/src/services/outreachCopilot/igosProducer.ts b/src/services/outreachCopilot/igosProducer.ts
+new file mode 100644
+index 00000000..978403a2
+--- /dev/null
++++ b/src/services/outreachCopilot/igosProducer.ts
+@@ -0,0 +1,78 @@
++import type { CrawledPageSummary } from '@/types';
++import { buildBaseline } from '@/services/igos/baseline';
++import { buildIgosReport } from '@/services/igos/report';
++import type { CompetitorDoc, TargetDoc } from '@/services/igos/types';
++import { createLocalHashProvider } from '@/services/embeddings/localProvider';
++import type { Vector } from '@/services/embeddings/types';
++import { contentStems } from '@/services/embeddings/text';
++import { fetchSource } from '@/services/offPage/sourceTransport';
++import type { SourceEvidence } from '@/services/offPage/sources';
++import { informationGainSource, type InformationGainInput, type InformationGainProvenance } from './informationGain';
++import { normalizeDomain } from './gap';
++
++export interface IgosProducerInput { projectId: string; site: string; competitors: string[]; pages: CrawledPageSummary[] }
++export interface IgosProducerDeps { fetch: (source: SourceEvidence, signal: AbortSignal) => Promise<SourceEvidence>; embed: (texts: string[]) => Promise<Vector[]>; embedding?: InformationGainProvenance }
++
++const textOf = (page: CrawledPageSummary): string => [
++  ...(page.semantic_excerpts ?? []),
++  ...(page.rag_sections ?? []).flatMap((section) => section.paragraphs),
++].join('\n').slice(0, 20_000).trim();
++
++const entitiesOf = (page: CrawledPageSummary, text: string): string[] => {
++  const declared = (page.semantic_terms ?? []).map((term) => term.trim()).filter(Boolean);
++  return [...new Set((declared.length ? declared : contentStems(text)).slice(0, 80))];
++};
++
++const termsOf = (text: string): Map<string, number> => {
++  const terms = new Map<string, number>();
++  contentStems(text).forEach((term) => terms.set(term, (terms.get(term) ?? 0) + 1));
++  return terms;
++};
++
++const ownTarget = (pages: CrawledPageSummary[]): { page: CrawledPageSummary; text: string } | null => pages
++  .map((page) => ({ page, text: textOf(page) }))
++  .filter(({ page, text }) => Boolean(text) && Boolean(page.final_url || page.url))
++  .sort((left, right) => right.text.length - left.text.length)[0] ?? null;
++
++const competitorUrl = (domain: string): string | null => {
++  const normalized = normalizeDomain(domain);
++  return normalized && normalized.includes('.') ? `https://${normalized}/` : null;
++};
++
++const localProvider = createLocalHashProvider();
++localProvider.fit([]);
++const defaultEmbedding: InformationGainProvenance = { provider: localProvider.id, model: localProvider.model, approximation: 'local-lexical', observedAt: null };
++const defaultDeps: IgosProducerDeps = {
++  fetch: fetchSource,
++  embed: async (texts) => {
++    const provider = createLocalHashProvider();
++    provider.fit(texts);
++    return provider.embed(texts);
++  },
++  embedding: defaultEmbedding,
++};
++
++/** Builds IGOS only from the active project's crawl and live competitor pages. */
++export const produceInformationGain = async (
++  input: IgosProducerInput, signal: AbortSignal, deps: IgosProducerDeps = defaultDeps,
++): Promise<InformationGainInput | null> => {
++  const target = ownTarget(input.pages);
++  const competitors = [...new Set(input.competitors.map(normalizeDomain).filter(Boolean))].slice(0, 3);
++  if (!input.projectId.trim() || !input.site.trim() || !target || competitors.length < 3) return null;
++  const sources = competitors.map((domain) => ({ sourceUrl: competitorUrl(domain), authority: null, fetchedAt: null, availability: null, text: '', vector: null }));
++  if (sources.some((source) => !source.sourceUrl)) return null;
++  const fetched = await Promise.all(sources.map((source) => deps.fetch(source as SourceEvidence, signal)));
++  const usable = fetched.filter((source) => source.availability === 'ok' && source.text.trim());
++  if (usable.length < 3) return null;
++  const corpus = [target.text, ...usable.map((source) => source.text)];
++  const vectors = await deps.embed(corpus);
++  if (vectors.length !== corpus.length || vectors.some((vector) => !vector.length)) return null;
++  const targetDoc: TargetDoc = { url: target.page.final_url || target.page.url, entities: entitiesOf(target.page, target.text), chunks: [{ text: target.text, offset: 0, heading: target.page.title ?? null, vector: vectors[0] }], terms: termsOf(target.text), wordCount: Math.max(1, target.page.word_count) };
++  const docs: CompetitorDoc[] = usable.map((source, index) => ({ url: source.sourceUrl, rank: index + 1, fetchedAt: source.fetchedAt, status: 200, entities: [...new Set(contentStems(source.text).slice(0, 80))], passages: [{ text: source.text, vector: vectors[index + 1] }], terms: termsOf(source.text) }));
++  const report = buildIgosReport(targetDoc, docs, buildBaseline(docs, 3));
++  const source = { title: target.page.title?.trim() ?? '', url: targetDoc.url, summary: target.text.slice(0, 500) };
++  const evidence = report.zones.find((zone) => zone.zone === 'gain' && zone.evidence)?.evidence;
++  const observedAt = usable.find((item) => item.sourceUrl === evidence?.url)?.fetchedAt ?? null;
++  const provenance = { ...(deps.embedding ?? defaultEmbedding), observedAt };
++  return { projectId: input.projectId, site: input.site, report, source: informationGainSource({ projectId: input.projectId, site: input.site, report, source, provenance }) ? source : null, provenance };
++};
+diff --git a/src/components/Domain/backlinkChecker/useOutreachInformationGain.ts b/src/components/Domain/backlinkChecker/useOutreachInformationGain.ts
+new file mode 100644
+index 00000000..d6a01c23
+--- /dev/null
++++ b/src/components/Domain/backlinkChecker/useOutreachInformationGain.ts
+@@ -0,0 +1,21 @@
++import { useEffect, useState } from 'react';
++import type { BacklinkGapReport, CrawledPageSummary } from '@/types';
++import { produceInformationGain } from '@/services/outreachCopilot/igosProducer';
++import type { InformationGainInput } from '@/services/outreachCopilot';
++
++interface Input { projectId: string | null; site: string; report: BacklinkGapReport | null; pages: CrawledPageSummary[]; enabled?: boolean }
++
++/** Project-scoped production caller; missing crawl/provider data stays unavailable. */
++export const useOutreachInformationGain = ({ projectId, site, report, pages, enabled = true }: Input): InformationGainInput | null => {
++  const [result, setResult] = useState<InformationGainInput | null>(null);
++  useEffect(() => {
++    const controller = new AbortController();
++    setResult(null);
++    if (!enabled || !projectId || !site || !report || pages.length === 0) return () => controller.abort();
++    void produceInformationGain({ projectId, site, competitors: report.competitors, pages }, controller.signal)
++      .then((next) => { if (!controller.signal.aborted) setResult(next); })
++      .catch(() => { if (!controller.signal.aborted) setResult(null); });
++    return () => controller.abort();
++  }, [enabled, pages, projectId, report, site]);
++  return result;
++};
+diff --git a/src/services/outreachCopilot/informationGain.ts b/src/services/outreachCopilot/informationGain.ts
+new file mode 100644
+index 00000000..8a14f1eb
+--- /dev/null
++++ b/src/services/outreachCopilot/informationGain.ts
+@@ -0,0 +1,60 @@
++import type { IgosReport } from '@/services/igos/report';
++import type { UniqueSource } from './draft';
++
++/** A source is scoped to the project that produced its IGOS evidence. */
++export interface InformationGainInput {
++  projectId: string;
++  site: string;
++  report: IgosReport | null;
++  source: UniqueSource | null;
++  provenance?: InformationGainProvenance;
++}
++
++export interface InformationGainProvenance {
++  provider: string;
++  model: string;
++  approximation: string;
++  observedAt: string | null;
++}
++
++export interface InformationGainSource extends UniqueSource {
++  evidenceUrl: string;
++  score: number;
++  novelEntities: string[];
++  provenance: InformationGainProvenance;
++}
++
++const url = (value: string): string | null => {
++  const trimmed = value.trim();
++  try {
++    const parsed = new URL(trimmed);
++    return parsed.protocol === 'http:' || parsed.protocol === 'https:' ? trimmed : null;
++  } catch {
++    return null;
++  }
++};
++
++/**
++ * Converts a real IGOS result into an outreach source. Partial, unavailable,
++ * off-topic, or source-less reports intentionally produce no draft material.
++ */
++export const informationGainSource = (input: InformationGainInput | null): InformationGainSource | null => {
++  const report = input?.report;
++  const source = input?.source;
++  if (!input?.projectId.trim() || !url(input.site) || !source || !report || report.status !== 'ready' || report.igos === null) return null;
++  if (!report.novelEntities.length || !source.title.trim() || !source.summary.trim()) return null;
++  const evidence = report.zones.find((zone) => zone.zone === 'gain' && zone.evidence?.url)?.evidence;
++  const sourceUrl = url(source.url);
++  const evidenceUrl = evidence ? url(evidence.url) : null;
++  if (!sourceUrl || !evidenceUrl) return null;
++  const provenance = input.provenance ?? { provider: 'unavailable', model: 'unavailable', approximation: 'unavailable', observedAt: null };
++  return {
++    title: source.title.trim(),
++    url: sourceUrl,
++    summary: source.summary.trim(),
++    evidenceUrl,
++    score: report.igos,
++    novelEntities: [...report.novelEntities],
++    provenance: { ...provenance },
++  };
++};

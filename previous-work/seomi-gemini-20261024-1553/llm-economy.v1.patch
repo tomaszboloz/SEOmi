@@ -1,0 +1,1475 @@
+diff --git a/src/components/AI/LlmEconomyPanel.tsx b/src/components/AI/LlmEconomyPanel.tsx
+index a42f2857..6bd6fdc7 100644
+--- a/src/components/AI/LlmEconomyPanel.tsx
++++ b/src/components/AI/LlmEconomyPanel.tsx
+@@ -2,16 +2,21 @@ import React from 'react';
+ import { useTranslation } from 'react-i18next';
+ import { HelpTip } from '@/components/Help/HelpTip';
+ import { leavesDevice, type UsageSummary } from '@/services/llmEconomy';
++import { useLlmEconomy } from './useLlmEconomy';
+ 
+ export interface LlmEconomyPanelProps {
+-  summary: UsageSummary;
+-  providerId: string;
++  summary?: UsageSummary;
++  projectId?: string | null;
++  providerId?: string;
+ }
+ 
+ const usd = (value: number): string => `$${value.toFixed(2)}`;
+ 
+-export const LlmEconomyPanel: React.FC<LlmEconomyPanelProps> = ({ summary, providerId }) => {
++export const LlmEconomyPanel: React.FC<LlmEconomyPanelProps> = ({ summary: explicitSummary, projectId, providerId = '' }) => {
+   const { t } = useTranslation();
++  const live = useLlmEconomy(projectId, providerId);
++  const summary = explicitSummary ?? live.summary ?? { spentUsd: 0, savedUsd: 0, cacheHits: 0, calls: 0, remainingUsd: null, overBudget: false };
++
+   return (
+     <section className="space-y-2 rounded-lg border border-slate-800 p-4 text-sm text-slate-300" data-testid="llm-economy-panel">
+       <h3 className="flex items-center gap-1 font-semibold text-slate-100">
+@@ -25,8 +30,10 @@ export const LlmEconomyPanel: React.FC<LlmEconomyPanelProps> = ({ summary, provi
+           <li>{t('llmEconomy.spent', { value: usd(summary.spentUsd) })}</li>
+           <li>{t('llmEconomy.saved', { value: usd(summary.savedUsd) })}</li>
+           <li>{t('llmEconomy.hits', { count: summary.cacheHits })}</li>
++          {summary.remainingUsd !== null && <li>{t('llmEconomy.remaining', { value: usd(summary.remainingUsd) })}</li>}
+         </ul>
+       )}
++      {summary.overBudget && <p role="alert" className="text-rose-400">{t('llmEconomy.overBudget')}</p>}
+       {leavesDevice(providerId) && <p role="alert" className="text-amber-300">{t('llmEconomy.leaves', { provider: providerId })}</p>}
+     </section>
+   );
+diff --git a/src/components/AI/useLlmEconomy.ts b/src/components/AI/useLlmEconomy.ts
+new file mode 100644
+index 00000000..d92fd3fb
+--- /dev/null
++++ b/src/components/AI/useLlmEconomy.ts
+@@ -0,0 +1,50 @@
++import { useEffect, useState } from 'react';
++import { useProjectStore } from '@/stores/projectStore';
++import {
++  llmBudgetStatus,
++  LLM_ECONOMY_EVENT,
++  readLlmBudget,
++  readLlmSpend,
++  readLlmUsageSummary,
++} from '@/services/llmEconomy/llmBudget';
++import { isLocalProvider, leavesDevice } from '@/services/llmEconomy/costMeter';
++
++const snapshot = (projectId: string | null) => {
++  if (!projectId) return null;
++  const spend = readLlmSpend(projectId);
++  const budget = readLlmBudget(projectId);
++  return {
++    spend,
++    budget,
++    status: llmBudgetStatus(spend, budget),
++    summary: readLlmUsageSummary(projectId),
++  };
++};
++
++/** Live month-to-date LLM spend, savings, cache hits and budget status. */
++export const useLlmEconomy = (explicitProjectId?: string | null, providerId = '') => {
++  const storeProjectId = useProjectStore((state) => state.activeProjectId);
++  const projectId = explicitProjectId !== undefined ? explicitProjectId : storeProjectId;
++  const [state, setState] = useState(() => snapshot(projectId));
++
++  useEffect(() => {
++    const refresh = () => setState(snapshot(projectId));
++    refresh();
++    window.addEventListener(LLM_ECONOMY_EVENT, refresh);
++    window.addEventListener('storage', refresh);
++    return () => {
++      window.removeEventListener(LLM_ECONOMY_EVENT, refresh);
++      window.removeEventListener('storage', refresh);
++    };
++  }, [projectId]);
++
++  return {
++    projectId,
++    spend: state?.spend ?? null,
++    budget: state?.budget ?? null,
++    status: state?.status ?? null,
++    summary: state?.summary ?? null,
++    isLocal: isLocalProvider(providerId),
++    leavesDevice: leavesDevice(providerId),
++  };
++};
+diff --git a/src/components/Settings/cms/useCmsPatchPanel.ts b/src/components/Settings/cms/useCmsPatchPanel.ts
+index 3d6fd97d..1d4cd40e 100644
+--- a/src/components/Settings/cms/useCmsPatchPanel.ts
++++ b/src/components/Settings/cms/useCmsPatchPanel.ts
+@@ -5,6 +5,7 @@ import { planPatch, type PatchPlan } from '@/services/cmsPatch/plan';
+ import { assertSafeCmsUrl } from '@/services/cmsPatch/ssrf';
+ import { cmsTransport } from '@/services/cmsPatch/transport';
+ import { CmsError } from '@/services/cmsPatch/types';
++import { validateYmylClaim } from '@/services/llmEconomy';
+ import { deniedMessage, enforcePermission } from '@/services/team/enforce';
+ import { readIdentity } from '@/services/team/identity';
+ import { cmsPanelError, initialCmsFields, saveCmsBackup, type CmsPanelFields } from './cmsPanelState';
+@@ -68,6 +69,14 @@ export const useCmsPatchPanel = (projectId: string | null) => {
+     setError(null);
+   };
+   const confirmFacts = (checked: boolean) => {
++    if (checked && plan?.ymyl) {
++      const check = validateYmylClaim(plan.replacement, [plan.before]);
++      if (!check.allowed) {
++        setFactGatePassed(false);
++        setError(`Unsupported numeric claims: ${check.rejectedValues.join(', ')}`);
++        return;
++      }
++    }
+     setFactGatePassed(checked);
+     approve(false);
+   };
+diff --git a/src/components/Settings/settings/ApiSettingsTab.tsx b/src/components/Settings/settings/ApiSettingsTab.tsx
+index 49264915..fe3a4db4 100644
+--- a/src/components/Settings/settings/ApiSettingsTab.tsx
++++ b/src/components/Settings/settings/ApiSettingsTab.tsx
+@@ -3,9 +3,9 @@ import { useTranslation } from 'react-i18next';
+ import { Loader2 } from 'lucide-react';
+ import { useAuthStore } from '@/stores/authStore';
+ import { useSettingsStore } from '@/stores/settingsStore';
++import { useProjectStore } from '@/stores/projectStore';
+ import { DataForSeoBudgetSettings } from '@/components/DataForSEO/cost/DataForSeoBudgetSettings';
+ import { LlmEconomyPanel } from '@/components/AI/LlmEconomyPanel';
+-import { summarizeUsage } from '@/services/llmEconomy';
+ import { SecretKeyField } from '@/components/Auth/SecretKeyField';
+ 
+ interface ApiSettingsTabProps {
+@@ -34,6 +34,7 @@ export const ApiSettingsTab: React.FC<ApiSettingsTabProps> = ({
+   const apiKeys = useAuthStore((s) => s.apiKeys);
+   const secureStorageError = useSettingsStore((s) => s.secureStorageError);
+   const isSaving = useSettingsStore((s) => s.isSaving);
++  const activeProjectId = useProjectStore((s) => s.activeProjectId);
+   const dataForSeoStored = useSettingsStore((s) => s.dataForSeoCredentials);
+   const googleKeyStored = useSettingsStore((s) => s.googleMetricsApiKey);
+   // Stored values never reach this form; the placeholder says one exists instead of looking empty.
+@@ -85,8 +86,8 @@ export const ApiSettingsTab: React.FC<ApiSettingsTabProps> = ({
+         </div>
+       </div>
+ 
+-      {/* No usage ledger is persisted yet: the panel shows its empty state, never estimated cost. */}
+-      <LlmEconomyPanel summary={summarizeUsage([], null)} providerId="" />
++      {/* Live project LLM ledger: shows live usage or empty state, never fictitious costs. */}
++      <LlmEconomyPanel projectId={activeProjectId} providerId="" />
+ 
+       {secureStorageError &&<p role="alert" className="text-[11px] leading-4 text-rose-300">{secureStorageError}</p>}
+       <button type="button" onClick={handleSaveGeneral} disabled={isSaving} aria-busy={isSaving} className="w-full h-9 bg-emerald-600 hover:bg-emerald-500 text-white rounded-lg font-semibold transition disabled:cursor-not-allowed disabled:opacity-60">
+diff --git a/src/i18n/locales/ar.json b/src/i18n/locales/ar.json
+index a2a935a4..bc1d4809 100644
+--- a/src/i18n/locales/ar.json
++++ b/src/i18n/locales/ar.json
+@@ -7735,7 +7735,9 @@
+     "spent": "المصروف: {{value}}",
+     "saved": "الموفَّر عبر الذاكرة المؤقتة والتشغيل المحلي: {{value}}",
+     "hits": "إصابات الذاكرة المؤقتة: {{count}}",
+-    "leaves": "يُرسل نص الصفحات خارج هذا الجهاز إلى {{provider}}."
++    "leaves": "يُرسل نص الصفحات خارج هذا الجهاز إلى {{provider}}.",
++    "remaining": "الميزانية المتبقية: {{value}}",
++    "overBudget": "تم تجاوز ميزانية LLM الشهرية."
+   },
+   "templateGovernor": {
+     "title": "جودة القوالب البرمجية",
+@@ -7753,14 +7755,20 @@
+   },
+   "causalMarket": {
+     "title": "الأثر السببي",
+-    "empty": "السجل غير كافٍ: 7 أيام على الأقل قبل التغيير ويوم واحد بعده.",
++    "empty": "لا يمكن التقدير: يلزم توفر 7 أيام على الأقل قبل التغيير ويوم واحد بعده وسلسلة سوق خارجية حقيقية وأدلة ضبط مستقلة.",
+     "effect": "الأثر اليومي: {{effect}} (من {{lower}} إلى {{upper}})",
+     "updateWindow": "نافذة تحديث Google: النتيجة غير حاسمة.",
+     "normalized": "مُعاير بخط أساس السوق",
+     "positive": "أثر إيجابي",
+     "negative": "أثر سلبي",
+     "noEffect": "لا أثر قابل للقياس",
+-    "inconclusive": "غير حاسم"
++    "inconclusive": "غير حاسم",
++    "evidence": "الدليل: السوق {{market}}؛ الضبط {{control}}",
++    "unknown": "غير معروف",
++    "marketUnavailable": "خط الأساس الخارجي للسوق غير متاح أو غير صالح؛ لا يُستنتج نجاح أو فشل سببي.",
++    "controlUnavailable": "أدلة الضبط المستقلة غير متاحة؛ لا يُستنتج نجاح أو فشل سببي.",
++    "updateWindowReason": "يتداخل التحليل مع تحديث مؤكد لترتيب Google؛ النتيجة غير حاسمة.",
++    "disclaimer": "هذا تقدير باستخدام بيانات سوق وضبط خارجية، وليس دليلاً على السببية."
+   },
+   "snapshots": {
+     "newerData": "تتوفر بيانات زحف أحدث.",
+diff --git a/src/i18n/locales/de.json b/src/i18n/locales/de.json
+index 1e31d479..03fdf7d3 100644
+--- a/src/i18n/locales/de.json
++++ b/src/i18n/locales/de.json
+@@ -7735,7 +7735,9 @@
+     "spent": "Ausgegeben: {{value}}",
+     "saved": "Gespart durch Cache und lokale Läufe: {{value}}",
+     "hits": "Cache-Treffer: {{count}}",
+-    "leaves": "Der Seitentext wird von diesem Gerät an {{provider}} gesendet."
++    "leaves": "Der Seitentext wird von diesem Gerät an {{provider}} gesendet.",
++    "remaining": "Verbleibendes Budget: {{value}}",
++    "overBudget": "Monatliches LLM-Budget überschritten."
+   },
+   "templateGovernor": {
+     "title": "Qualität programmatischer Templates",
+@@ -7753,14 +7755,20 @@
+   },
+   "causalMarket": {
+     "title": "Kausale Wirkung",
+-    "empty": "Zu wenig Verlauf: mindestens 7 Tage vor und 1 Tag nach der Änderung.",
++    "empty": "Nicht schätzbar: mindestens 7 Tage davor und 1 Tag danach, eine echte externe Marktserie und unabhängige Kontrolldaten sind nötig.",
+     "effect": "Tageseffekt: {{effect}} ({{lower}} bis {{upper}})",
+     "updateWindow": "Google-Update-Fenster: Ergebnis nicht aussagekräftig.",
+     "normalized": "Mit Marktbasislinie normalisiert",
+     "positive": "Positiver Effekt",
+     "negative": "Negativer Effekt",
+     "noEffect": "Kein messbarer Effekt",
+-    "inconclusive": "Nicht aussagekräftig"
++    "inconclusive": "Nicht aussagekräftig",
++    "evidence": "Nachweis: Markt {{market}}; Kontrolle {{control}}",
++    "unknown": "unbekannt",
++    "marketUnavailable": "Die externe Markt-Baseline ist nicht verfügbar oder ungültig; es wird kein kausaler Erfolg oder Misserfolg abgeleitet.",
++    "controlUnavailable": "Unabhängige Kontrollnachweise fehlen; es wird kein kausaler Erfolg oder Misserfolg abgeleitet.",
++    "updateWindowReason": "Die Analyse überschneidet sich mit einem bestätigten Google-Ranking-Update; das Ergebnis ist nicht schlüssig.",
++    "disclaimer": "Schätzung mit externen Markt- und Kontrolldaten; kein Kausalitätsnachweis."
+   },
+   "snapshots": {
+     "newerData": "Neuere Crawl-Daten sind verfügbar.",
+diff --git a/src/i18n/locales/en.json b/src/i18n/locales/en.json
+index 153bd461..016d66c2 100644
+--- a/src/i18n/locales/en.json
++++ b/src/i18n/locales/en.json
+@@ -7735,7 +7735,9 @@
+     "spent": "Spent: {{value}}",
+     "saved": "Saved by cache and local runs: {{value}}",
+     "hits": "Cache hits: {{count}}",
+-    "leaves": "Page text is sent outside this device to {{provider}}."
++    "leaves": "Page text is sent outside this device to {{provider}}.",
++    "remaining": "Remaining budget: {{value}}",
++    "overBudget": "Monthly LLM budget exceeded."
+   },
+   "templateGovernor": {
+     "title": "Programmatic template quality",
+@@ -7753,14 +7755,20 @@
+   },
+   "causalMarket": {
+     "title": "Causal impact",
+-    "empty": "Not enough history: at least 7 days before the change and 1 day after.",
++    "empty": "Not estimable. Not enough history: need at least 7 days before and 1 after, a real external market series, and independent control evidence.",
+     "effect": "Daily effect: {{effect}} ({{lower}} to {{upper}})",
+     "updateWindow": "Google update window: result is inconclusive.",
+     "normalized": "Normalized by market baseline",
+     "positive": "Positive effect",
+     "negative": "Negative effect",
+     "noEffect": "No measurable effect",
+-    "inconclusive": "Inconclusive"
++    "inconclusive": "Inconclusive",
++    "evidence": "Evidence: market {{market}}; control {{control}}",
++    "unknown": "unknown",
++    "marketUnavailable": "External market baseline is unavailable or invalid; no causal success or failure is inferred.",
++    "controlUnavailable": "Independent control evidence is unavailable; no causal success or failure is inferred.",
++    "updateWindowReason": "The analysis overlaps a confirmed Google ranking update; the result is inconclusive.",
++    "disclaimer": "Estimate with external market and control evidence; it is not proof of causation."
+   },
+   "snapshots": {
+     "newerData": "Newer crawl data is available.",
+diff --git a/src/i18n/locales/es.json b/src/i18n/locales/es.json
+index f6f147bf..2be53355 100644
+--- a/src/i18n/locales/es.json
++++ b/src/i18n/locales/es.json
+@@ -7735,7 +7735,9 @@
+     "spent": "Gastado: {{value}}",
+     "saved": "Ahorrado con caché y modelos locales: {{value}}",
+     "hits": "Aciertos de caché: {{count}}",
+-    "leaves": "El texto de las páginas se envía fuera de este dispositivo a {{provider}}."
++    "leaves": "El texto de las páginas se envía fuera de este dispositivo a {{provider}}.",
++    "remaining": "Presupuesto restante: {{value}}",
++    "overBudget": "Presupuesto mensual de LLM superado."
+   },
+   "templateGovernor": {
+     "title": "Calidad de plantillas programáticas",
+@@ -7753,14 +7755,20 @@
+   },
+   "causalMarket": {
+     "title": "Impacto causal",
+-    "empty": "Historial insuficiente: al menos 7 días antes del cambio y 1 después.",
++    "empty": "No estimable: se necesitan al menos 7 días antes y 1 después, una serie externa real del mercado y evidencia de control independiente.",
+     "effect": "Efecto diario: {{effect}} ({{lower}} a {{upper}})",
+     "updateWindow": "Ventana de actualización de Google: resultado no concluyente.",
+     "normalized": "Normalizado con la línea base del mercado",
+     "positive": "Efecto positivo",
+     "negative": "Efecto negativo",
+     "noEffect": "Sin efecto medible",
+-    "inconclusive": "No concluyente"
++    "inconclusive": "No concluyente",
++    "evidence": "Evidencia: mercado {{market}}; control {{control}}",
++    "unknown": "desconocido",
++    "marketUnavailable": "La línea base externa del mercado no está disponible o no es válida; no se infiere éxito ni fracaso causal.",
++    "controlUnavailable": "No hay evidencia de control independiente; no se infiere éxito ni fracaso causal.",
++    "updateWindowReason": "El análisis se solapa con una actualización confirmada del ranking de Google; el resultado no es concluyente.",
++    "disclaimer": "Estimación con datos externos de mercado y control; no es una prueba de causalidad."
+   },
+   "snapshots": {
+     "newerData": "Hay datos de rastreo más recientes.",
+diff --git a/src/i18n/locales/fr.json b/src/i18n/locales/fr.json
+index 32a6e0ae..3ea2d879 100644
+--- a/src/i18n/locales/fr.json
++++ b/src/i18n/locales/fr.json
+@@ -7735,7 +7735,9 @@
+     "spent": "Dépensé : {{value}}",
+     "saved": "Économisé par le cache et le local : {{value}}",
+     "hits": "Succès du cache : {{count}}",
+-    "leaves": "Le texte des pages est envoyé hors de cet appareil vers {{provider}}."
++    "leaves": "Le texte des pages est envoyé hors de cet appareil vers {{provider}}.",
++    "remaining": "Budget restant: {{value}}",
++    "overBudget": "Budget mensuel LLM dépassé."
+   },
+   "templateGovernor": {
+     "title": "Qualité des gabarits programmatiques",
+@@ -7753,14 +7755,20 @@
+   },
+   "causalMarket": {
+     "title": "Impact causal",
+-    "empty": "Historique insuffisant : au moins 7 jours avant le changement et 1 après.",
++    "empty": "Non estimable : il faut au moins 7 jours avant et 1 jour après, une vraie série externe du marché et des preuves de contrôle indépendant.",
+     "effect": "Effet quotidien : {{effect}} ({{lower}} à {{upper}})",
+     "updateWindow": "Fenêtre de mise à jour Google : résultat non concluant.",
+     "normalized": "Normalisé par la base de marché",
+     "positive": "Effet positif",
+     "negative": "Effet négatif",
+     "noEffect": "Aucun effet mesurable",
+-    "inconclusive": "Non concluant"
++    "inconclusive": "Non concluant",
++    "evidence": "Preuve : marché {{market}} ; contrôle {{control}}",
++    "unknown": "inconnu",
++    "marketUnavailable": "La base de référence externe du marché est indisponible ou invalide ; aucun succès ou échec causal n’est déduit.",
++    "controlUnavailable": "Les preuves d’un contrôle indépendant sont indisponibles ; aucun succès ou échec causal n’est déduit.",
++    "updateWindowReason": "L’analyse recouvre une mise à jour confirmée du classement Google ; le résultat est indéterminé.",
++    "disclaimer": "Estimation avec des données externes de marché et de contrôle ; ce n’est pas une preuve de causalité."
+   },
+   "snapshots": {
+     "newerData": "Des données d'exploration plus récentes sont disponibles.",
+diff --git a/src/i18n/locales/it.json b/src/i18n/locales/it.json
+index 55eb20f4..49dac491 100644
+--- a/src/i18n/locales/it.json
++++ b/src/i18n/locales/it.json
+@@ -7735,7 +7735,9 @@
+     "spent": "Speso: {{value}}",
+     "saved": "Risparmiato con cache e modelli locali: {{value}}",
+     "hits": "Hit della cache: {{count}}",
+-    "leaves": "Il testo delle pagine viene inviato fuori da questo dispositivo a {{provider}}."
++    "leaves": "Il testo delle pagine viene inviato fuori da questo dispositivo a {{provider}}.",
++    "remaining": "Budget rimanente: {{value}}",
++    "overBudget": "Budget mensile LLM superato."
+   },
+   "templateGovernor": {
+     "title": "Qualità dei template programmatici",
+@@ -7753,14 +7755,20 @@
+   },
+   "causalMarket": {
+     "title": "Impatto causale",
+-    "empty": "Storico insufficiente: almeno 7 giorni prima della modifica e 1 dopo.",
++    "empty": "Non stimabile: servono almeno 7 giorni prima e 1 dopo, una serie esterna reale del mercato e prove di controllo indipendenti.",
+     "effect": "Effetto giornaliero: {{effect}} ({{lower}} a {{upper}})",
+     "updateWindow": "Finestra di aggiornamento Google: risultato non conclusivo.",
+     "normalized": "Normalizzato con la baseline di mercato",
+     "positive": "Effetto positivo",
+     "negative": "Effetto negativo",
+     "noEffect": "Nessun effetto misurabile",
+-    "inconclusive": "Non conclusivo"
++    "inconclusive": "Non conclusivo",
++    "evidence": "Evidenza: mercato {{market}}; controllo {{control}}",
++    "unknown": "sconosciuto",
++    "marketUnavailable": "La baseline esterna del mercato non è disponibile o non è valida; non si deduce alcun successo o fallimento causale.",
++    "controlUnavailable": "Mancano prove di controllo indipendenti; non si deduce alcun successo o fallimento causale.",
++    "updateWindowReason": "L’analisi si sovrappone a un aggiornamento confermato del ranking Google; il risultato è inconcludente.",
++    "disclaimer": "Stima con dati esterni di mercato e controllo; non è una prova di causalità."
+   },
+   "snapshots": {
+     "newerData": "Sono disponibili dati di scansione più recenti.",
+diff --git a/src/i18n/locales/ja.json b/src/i18n/locales/ja.json
+index 3adf0e02..bb6c7e39 100644
+--- a/src/i18n/locales/ja.json
++++ b/src/i18n/locales/ja.json
+@@ -7735,7 +7735,9 @@
+     "spent": "支出: {{value}}",
+     "saved": "キャッシュとローカル実行の節約額: {{value}}",
+     "hits": "キャッシュヒット: {{count}}",
+-    "leaves": "ページ本文はこの端末の外の {{provider}} に送信されます。"
++    "leaves": "ページ本文はこの端末の外の {{provider}} に送信されます。",
++    "remaining": "残りの予算: {{value}}",
++    "overBudget": "毎月のLLM予算を超過しました。"
+   },
+   "templateGovernor": {
+     "title": "プログラマティックテンプレートの品質",
+@@ -7753,14 +7755,20 @@
+   },
+   "causalMarket": {
+     "title": "因果効果",
+-    "empty": "履歴が不足しています。変更前7日以上と変更後1日以上が必要です。",
++    "empty": "推定できません。変更前7日以上、変更後1日以上、実際の外部市場系列、独立した対照根拠が必要です。",
+     "effect": "1日あたりの効果: {{effect}}（{{lower}}〜{{upper}}）",
+     "updateWindow": "Googleアップデート期間: 結果は結論不可です。",
+     "normalized": "市場ベースラインで正規化済み",
+     "positive": "プラスの効果",
+     "negative": "マイナスの効果",
+     "noEffect": "測定可能な効果なし",
+-    "inconclusive": "結論不可"
++    "inconclusive": "結論不可",
++    "evidence": "根拠: 市場 {{market}}、対照 {{control}}",
++    "unknown": "不明",
++    "marketUnavailable": "外部市場ベースラインを利用できないか無効です。因果的な成功や失敗は推定しません。",
++    "controlUnavailable": "独立した対照の根拠を利用できません。因果的な成功や失敗は推定しません。",
++    "updateWindowReason": "分析期間が確認済みのGoogleランキング更新と重なるため、結果は判断不能です。",
++    "disclaimer": "外部市場データと対照データによる推定であり、因果関係の証明ではありません。"
+   },
+   "snapshots": {
+     "newerData": "より新しいクロールデータがあります。",
+diff --git a/src/i18n/locales/ko.json b/src/i18n/locales/ko.json
+index b5a27db7..adffdb42 100644
+--- a/src/i18n/locales/ko.json
++++ b/src/i18n/locales/ko.json
+@@ -7735,7 +7735,9 @@
+     "spent": "지출: {{value}}",
+     "saved": "캐시·로컬 실행으로 절약: {{value}}",
+     "hits": "캐시 적중: {{count}}",
+-    "leaves": "페이지 본문이 이 기기 밖의 {{provider}}(으)로 전송됩니다."
++    "leaves": "페이지 본문이 이 기기 밖의 {{provider}}(으)로 전송됩니다.",
++    "remaining": "남은 예산: {{value}}",
++    "overBudget": "월간 LLM 예산을 초과했습니다."
+   },
+   "templateGovernor": {
+     "title": "프로그래매틱 템플릿 품질",
+@@ -7753,14 +7755,20 @@
+   },
+   "causalMarket": {
+     "title": "인과 효과",
+-    "empty": "기록이 부족합니다. 변경 전 7일 이상, 변경 후 1일 이상이 필요합니다.",
++    "empty": "추정할 수 없습니다. 변경 전 7일 이상, 변경 후 1일 이상, 실제 외부 시장 시계열과 독립 대조군 근거가 필요합니다.",
+     "effect": "일일 효과: {{effect}} ({{lower}}~{{upper}})",
+     "updateWindow": "Google 업데이트 기간: 결론을 내릴 수 없습니다.",
+     "normalized": "시장 기준선으로 정규화됨",
+     "positive": "긍정적 효과",
+     "negative": "부정적 효과",
+     "noEffect": "측정 가능한 효과 없음",
+-    "inconclusive": "결론 불가"
++    "inconclusive": "결론 불가",
++    "evidence": "근거: 시장 {{market}}, 대조군 {{control}}",
++    "unknown": "알 수 없음",
++    "marketUnavailable": "외부 시장 기준선을 사용할 수 없거나 유효하지 않습니다. 인과적 성공 또는 실패를 추정하지 않습니다.",
++    "controlUnavailable": "독립 대조군 근거를 사용할 수 없습니다. 인과적 성공 또는 실패를 추정하지 않습니다.",
++    "updateWindowReason": "분석 기간이 확인된 Google 순위 업데이트와 겹치므로 결과는 결론을 내릴 수 없습니다.",
++    "disclaimer": "외부 시장 및 대조군 근거를 사용한 추정이며 인과관계의 증명이 아닙니다."
+   },
+   "snapshots": {
+     "newerData": "더 최신 크롤 데이터가 있습니다.",
+diff --git a/src/i18n/locales/pl.json b/src/i18n/locales/pl.json
+index bd6af06f..2b40cb18 100644
+--- a/src/i18n/locales/pl.json
++++ b/src/i18n/locales/pl.json
+@@ -7735,7 +7735,9 @@
+     "spent": "Wydano: {{value}}",
+     "saved": "Zaoszczędzono dzięki cache i modelom lokalnym: {{value}}",
+     "hits": "Trafienia cache: {{count}}",
+-    "leaves": "Treść stron jest wysyłana poza to urządzenie do: {{provider}}."
++    "leaves": "Treść stron jest wysyłana poza to urządzenie do: {{provider}}.",
++    "remaining": "Pozostały budżet: {{value}}",
++    "overBudget": "Miesięczny budżet LLM został przekroczony."
+   },
+   "templateGovernor": {
+     "title": "Jakość szablonów programatycznych",
+@@ -7753,14 +7755,20 @@
+   },
+   "causalMarket": {
+     "title": "Wpływ przyczynowy",
+-    "empty": "Za mało danych: potrzeba min. 7 dni przed zmianą i 1 dnia po niej.",
++    "empty": "Nie można oszacować: potrzeba min. 7 dni przed zmianą, 1 dnia po niej, rzeczywistej zewnętrznej serii rynku i niezależnych dowodów kontroli.",
+     "effect": "Efekt dzienny: {{effect}} ({{lower}} do {{upper}})",
+     "updateWindow": "Okno aktualizacji Google: wynik niejednoznaczny.",
+     "normalized": "Znormalizowano linią bazową rynku",
+     "positive": "Efekt dodatni",
+     "negative": "Efekt ujemny",
+     "noEffect": "Brak mierzalnego efektu",
+-    "inconclusive": "Niejednoznaczny"
++    "inconclusive": "Niejednoznaczny",
++    "evidence": "Dowody: rynek {{market}}; kontrola {{control}}",
++    "unknown": "nieznane",
++    "marketUnavailable": "Zewnętrzna linia bazowa rynku jest niedostępna lub nieprawidłowa; nie wnioskujemy o sukcesie ani porażce przyczynowej.",
++    "controlUnavailable": "Brakuje niezależnych dowodów kontroli; nie wnioskujemy o sukcesie ani porażce przyczynowej.",
++    "updateWindowReason": "Analiza nakłada się na potwierdzoną aktualizację rankingu Google; wynik jest niejednoznaczny.",
++    "disclaimer": "Szacunek z użyciem zewnętrznego rynku i kontroli; nie jest dowodem związku przyczynowego."
+   },
+   "snapshots": {
+     "newerData": "Dostępne są nowsze dane z crawla.",
+diff --git a/src/i18n/locales/pt.json b/src/i18n/locales/pt.json
+index a3d271a0..1f7c3fe1 100644
+--- a/src/i18n/locales/pt.json
++++ b/src/i18n/locales/pt.json
+@@ -7735,7 +7735,9 @@
+     "spent": "Gasto: {{value}}",
+     "saved": "Economizado com cache e execução local: {{value}}",
+     "hits": "Acertos de cache: {{count}}",
+-    "leaves": "O texto das páginas é enviado para fora deste dispositivo para {{provider}}."
++    "leaves": "O texto das páginas é enviado para fora deste dispositivo para {{provider}}.",
++    "remaining": "Orçamento restante: {{value}}",
++    "overBudget": "Orçamento mensal do LLM excedido."
+   },
+   "templateGovernor": {
+     "title": "Qualidade de modelos programáticos",
+@@ -7753,14 +7755,20 @@
+   },
+   "causalMarket": {
+     "title": "Impacto causal",
+-    "empty": "Histórico insuficiente: pelo menos 7 dias antes da mudança e 1 depois.",
++    "empty": "Não estimável: são necessários pelo menos 7 dias antes e 1 depois, uma série externa real do mercado e evidência de controle independente.",
+     "effect": "Efeito diário: {{effect}} ({{lower}} a {{upper}})",
+     "updateWindow": "Janela de atualização do Google: resultado inconclusivo.",
+     "normalized": "Normalizado pela linha de base do mercado",
+     "positive": "Efeito positivo",
+     "negative": "Efeito negativo",
+     "noEffect": "Sem efeito mensurável",
+-    "inconclusive": "Inconclusivo"
++    "inconclusive": "Inconclusivo",
++    "evidence": "Evidência: mercado {{market}}; controle {{control}}",
++    "unknown": "desconhecido",
++    "marketUnavailable": "A linha de base externa do mercado está indisponível ou inválida; nenhum sucesso ou falha causal é inferido.",
++    "controlUnavailable": "Não há evidência de controle independente; nenhum sucesso ou falha causal é inferido.",
++    "updateWindowReason": "A análise coincide com uma atualização confirmada do ranking do Google; o resultado é inconclusivo.",
++    "disclaimer": "Estimativa com dados externos de mercado e controle; não é prova de causalidade."
+   },
+   "snapshots": {
+     "newerData": "Há dados de rastreamento mais recentes.",
+diff --git a/src/i18n/locales/ru.json b/src/i18n/locales/ru.json
+index f70bcce7..9dd4fac6 100644
+--- a/src/i18n/locales/ru.json
++++ b/src/i18n/locales/ru.json
+@@ -7735,7 +7735,9 @@
+     "spent": "Потрачено: {{value}}",
+     "saved": "Сэкономлено кэшем и локальными запусками: {{value}}",
+     "hits": "Попаданий в кэш: {{count}}",
+-    "leaves": "Текст страниц отправляется за пределы устройства провайдеру {{provider}}."
++    "leaves": "Текст страниц отправляется за пределы устройства провайдеру {{provider}}.",
++    "remaining": "Оставшийся бюджет: {{value}}",
++    "overBudget": "Месячный бюджет LLM превышен."
+   },
+   "templateGovernor": {
+     "title": "Качество программных шаблонов",
+@@ -7753,14 +7755,20 @@
+   },
+   "causalMarket": {
+     "title": "Причинный эффект",
+-    "empty": "Недостаточно данных: нужно минимум 7 дней до изменения и 1 день после.",
++    "empty": "Оценка невозможна: нужны не менее 7 дней до и 1 дня после, реальный внешний рыночный ряд и независимые контрольные данные.",
+     "effect": "Эффект в день: {{effect}} (от {{lower}} до {{upper}})",
+     "updateWindow": "Окно обновления Google: результат неубедителен.",
+     "normalized": "Нормализовано по базовой линии рынка",
+     "positive": "Положительный эффект",
+     "negative": "Отрицательный эффект",
+     "noEffect": "Измеримого эффекта нет",
+-    "inconclusive": "Неубедительно"
++    "inconclusive": "Неубедительно",
++    "evidence": "Данные: рынок {{market}}; контроль {{control}}",
++    "unknown": "неизвестно",
++    "marketUnavailable": "Внешняя рыночная база недоступна или недействительна; причинный успех или неудача не выводятся.",
++    "controlUnavailable": "Нет независимых контрольных данных; причинный успех или неудача не выводятся.",
++    "updateWindowReason": "Анализ пересекается с подтверждённым обновлением рейтинга Google; результат неокончательный.",
++    "disclaimer": "Оценка с внешними рыночными и контрольными данными; это не доказательство причинности."
+   },
+   "snapshots": {
+     "newerData": "Доступны более новые данные обхода.",
+diff --git a/src/i18n/locales/zh.json b/src/i18n/locales/zh.json
+index bf5ad3bc..b8a02a5c 100644
+--- a/src/i18n/locales/zh.json
++++ b/src/i18n/locales/zh.json
+@@ -7735,7 +7735,9 @@
+     "spent": "已花费：{{value}}",
+     "saved": "缓存和本地运行节省：{{value}}",
+     "hits": "缓存命中：{{count}}",
+-    "leaves": "页面文本将发送到本设备之外的 {{provider}}。"
++    "leaves": "页面文本将发送到本设备之外的 {{provider}}。",
++    "remaining": "剩余预算: {{value}}",
++    "overBudget": "超出每月 LLM 预算。"
+   },
+   "templateGovernor": {
+     "title": "程序化模板质量",
+@@ -7753,14 +7755,20 @@
+   },
+   "causalMarket": {
+     "title": "因果影响",
+-    "empty": "历史数据不足：改动前至少 7 天，改动后至少 1 天。",
++    "empty": "无法估计：需要变更前至少 7 天和变更后 1 天、真实的外部市场序列以及独立对照证据。",
+     "effect": "每日效果：{{effect}}（{{lower}} 至 {{upper}}）",
+     "updateWindow": "Google 更新窗口：结果无定论。",
+     "normalized": "已按市场基线归一化",
+     "positive": "正向效果",
+     "negative": "负向效果",
+     "noEffect": "无可测量的效果",
+-    "inconclusive": "无定论"
++    "inconclusive": "无定论",
++    "evidence": "证据：市场 {{market}}；对照 {{control}}",
++    "unknown": "未知",
++    "marketUnavailable": "外部市场基线不可用或无效；不会推断因果成功或失败。",
++    "controlUnavailable": "缺少独立对照证据；不会推断因果成功或失败。",
++    "updateWindowReason": "分析与已确认的 Google 排名更新重叠；结果无法确定。",
++    "disclaimer": "这是基于外部市场和对照证据的估计，不是因果关系证明。"
+   },
+   "snapshots": {
+     "newerData": "有更新的抓取数据。",
+diff --git a/src/services/llmEconomy/factGate.ts b/src/services/llmEconomy/factGate.ts
+index 2e80f7f6..cded7f75 100644
+--- a/src/services/llmEconomy/factGate.ts
++++ b/src/services/llmEconomy/factGate.ts
+@@ -11,6 +11,14 @@ export interface GateResult {
+   needsHumanApproval: true;
+ }
+ 
++export interface YmylGateValidation {
++  allowed: boolean;
++  gate: GateResult;
++  rejectedValues: string[];
++  reason?: GateReason;
++  needsHumanApproval: true;
++}
++
+ const UNITS = 'mg|mcg|µg|ug|g|kg|ml|l|iu|ie|mmol|mol|mmhg|kcal|%|pln|zł|usd|eur|gbp|\\$|€|£';
+ const VALUE = new RegExp(`(\\d+(?:[.,]\\d+)?)\\s*(${UNITS})(?![\\p{L}])`, 'giu');
+ 
+@@ -39,3 +47,17 @@ export const gateFacts = (text: string, sources: string[]): GateResult => {
+   }
+   return result;
+ };
++
++/** Deterministic YMYL gate validation for CMS publishing. */
++export const validateYmylClaim = (replacement: string, sources: string[]): YmylGateValidation => {
++  const gate = gateFacts(replacement, sources);
++  const rejectedValues = gate.rejected.flatMap((item) => item.values);
++  const hasRejections = gate.rejected.length > 0;
++  return {
++    allowed: !hasRejections,
++    gate,
++    rejectedValues,
++    reason: hasRejections ? gate.rejected[0].reason : undefined,
++    needsHumanApproval: true,
++  };
++};
+diff --git a/src/services/llmEconomy/index.ts b/src/services/llmEconomy/index.ts
+index f9c0263c..4a96bd98 100644
+--- a/src/services/llmEconomy/index.ts
++++ b/src/services/llmEconomy/index.ts
+@@ -1,3 +1,5 @@
+ export * from './costMeter';
+ export * from './semanticCache';
+ export * from './factGate';
++export * from './llmBudget';
++export * from './orchestrator';
+diff --git a/src/services/llmEconomy/llmBudget.ts b/src/services/llmEconomy/llmBudget.ts
+new file mode 100644
+index 00000000..11662576
+--- /dev/null
++++ b/src/services/llmEconomy/llmBudget.ts
+@@ -0,0 +1,107 @@
++import i18n from '@/i18n';
++import { readStorage, writeStorage } from '@/services/storage';
++import type { UsageSummary } from './costMeter';
++
++export const LLM_ECONOMY_EVENT = 'seomi:llm-economy-cost';
++export const MAX_LLM_MONTHLY_LIMIT_USD = 100_000;
++
++export interface LlmBudget { monthlyLimitUsd: number | null; warnAtPercent: number }
++export interface LlmLastCall { providerId: string; model?: string; costUsd: number; savedUsd: number; cached: boolean; local: boolean; at: string }
++export interface LlmSpend {
++  month: string; spentUsd: number; savedUsd: number; cacheHits: number; calls: number;
++  lastCostByProvider: Record<string, number>; lastCall: LlmLastCall | null;
++}
++export type BudgetLevel = 'none' | 'ok' | 'warning' | 'exceeded';
++
++const budgetKey = (p: string) => `seomi_project_${p}_llm_budget_v1`;
++const spendKey = (p: string) => `seomi_project_${p}_llm_spend_v1`;
++const DEFAULT_BUDGET: LlmBudget = { monthlyLimitUsd: null, warnAtPercent: 80 };
++
++export const monthKey = (now = new Date()): string => `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}`;
++const finiteCost = (v: unknown): v is number => typeof v === 'number' && Number.isFinite(v) && v >= 0 && v < MAX_LLM_MONTHLY_LIMIT_USD;
++
++const readJson = (key: string): Record<string, unknown> => {
++  try {
++    const val: unknown = JSON.parse(readStorage(key) || '{}');
++    return val && typeof val === 'object' && !Array.isArray(val) ? (val as Record<string, unknown>) : {};
++  } catch { return {}; }
++};
++
++export const readLlmBudget = (projectId: string): LlmBudget => {
++  const s = readJson(budgetKey(projectId));
++  return {
++    monthlyLimitUsd: finiteCost(s.monthlyLimitUsd) ? s.monthlyLimitUsd : null,
++    warnAtPercent: typeof s.warnAtPercent === 'number' && Number.isInteger(s.warnAtPercent) && s.warnAtPercent >= 1 && s.warnAtPercent <= 100 ? s.warnAtPercent : DEFAULT_BUDGET.warnAtPercent,
++  };
++};
++
++export const writeLlmBudget = (projectId: string, budget: LlmBudget): LlmBudget => {
++  if (budget.monthlyLimitUsd !== null && !(finiteCost(budget.monthlyLimitUsd) && budget.monthlyLimitUsd <= MAX_LLM_MONTHLY_LIMIT_USD)) throw new Error(i18n.t('dataforseoCost.invalidLimit'));
++  if (!Number.isInteger(budget.warnAtPercent) || budget.warnAtPercent < 1 || budget.warnAtPercent > 100) throw new Error(i18n.t('dataforseoCost.invalidWarn'));
++  writeStorage(budgetKey(projectId), JSON.stringify(budget));
++  window.dispatchEvent(new CustomEvent(LLM_ECONOMY_EVENT, { detail: { projectId, budget } }));
++  return budget;
++};
++
++export const readLlmSpend = (projectId: string, now = new Date()): LlmSpend => {
++  const s = readJson(spendKey(projectId));
++  const month = monthKey(now);
++  const costs = s.lastCostByProvider && typeof s.lastCostByProvider === 'object' ? (s.lastCostByProvider as Record<string, unknown>) : {};
++  const lastCostByProvider = Object.fromEntries(Object.entries(costs).filter((e): e is [string, number] => finiteCost(e[1])).slice(0, 50));
++  const last = s.lastCall as Partial<LlmLastCall> | undefined;
++  const lastCall: LlmLastCall | null = last && typeof last.providerId === 'string' && finiteCost(last.costUsd) && typeof last.at === 'string'
++    ? { providerId: last.providerId, model: typeof last.model === 'string' ? last.model : undefined, costUsd: last.costUsd, savedUsd: finiteCost(last.savedUsd) ? last.savedUsd : 0, cached: Boolean(last.cached), local: Boolean(last.local), at: last.at }
++    : null;
++  if (s.month !== month) return { month, spentUsd: 0, savedUsd: 0, cacheHits: 0, calls: 0, lastCostByProvider, lastCall };
++  return {
++    month, spentUsd: finiteCost(s.spentUsd) ? s.spentUsd : 0, savedUsd: finiteCost(s.savedUsd) ? s.savedUsd : 0,
++    cacheHits: typeof s.cacheHits === 'number' && Number.isInteger(s.cacheHits) && s.cacheHits >= 0 ? s.cacheHits : 0,
++    calls: typeof s.calls === 'number' && Number.isInteger(s.calls) && s.calls >= 0 ? s.calls : 0,
++    lastCostByProvider, lastCall,
++  };
++};
++
++export const recordLlmCost = (
++  projectId: string,
++  entry: { providerId: string; model?: string; costUsd: number; savedUsd?: number; cached?: boolean; local?: boolean },
++  now = new Date(),
++): LlmSpend => {
++  const spend = readLlmSpend(projectId, now);
++  const cost = finiteCost(entry.costUsd) ? entry.costUsd : 0;
++  const cached = Boolean(entry.cached);
++  const local = Boolean(entry.local);
++  const spentDiff = cached || local ? 0 : cost;
++  const savedDiff = cached || local ? (finiteCost(entry.savedUsd) ? entry.savedUsd : cost) : 0;
++  const next: LlmSpend = {
++    ...spend,
++    spentUsd: Math.round((spend.spentUsd + spentDiff) * 1e6) / 1e6,
++    savedUsd: Math.round((spend.savedUsd + savedDiff) * 1e6) / 1e6,
++    cacheHits: spend.cacheHits + (cached ? 1 : 0),
++    calls: spend.calls + 1,
++    lastCostByProvider: { ...spend.lastCostByProvider, [entry.providerId]: cost },
++    lastCall: { providerId: entry.providerId, model: entry.model, costUsd: cost, savedUsd: savedDiff, cached, local, at: now.toISOString() },
++  };
++  try { writeStorage(spendKey(projectId), JSON.stringify(next)); } catch { /* Storage fallback */ }
++  window.dispatchEvent(new CustomEvent(LLM_ECONOMY_EVENT, { detail: { projectId, entry } }));
++  return next;
++};
++
++export const llmBudgetStatus = (spend: LlmSpend, budget: LlmBudget): { level: BudgetLevel; percent: number | null; remainingUsd: number | null } => {
++  if (budget.monthlyLimitUsd === null) return { level: 'none', percent: null, remainingUsd: null };
++  const limit = budget.monthlyLimitUsd;
++  const percent = limit === 0 ? (spend.spentUsd > 0 ? 100 : 0) : Math.min(999, (spend.spentUsd / limit) * 100);
++  const level: BudgetLevel = spend.spentUsd >= limit ? 'exceeded' : percent >= budget.warnAtPercent ? 'warning' : 'ok';
++  return { level, percent, remainingUsd: Math.max(0, Math.round((limit - spend.spentUsd) * 1e6) / 1e6) };
++};
++
++export const withinProjectBudget = (projectId: string, nextCostUsd: number, now = new Date()): boolean => {
++  const budget = readLlmBudget(projectId);
++  return budget.monthlyLimitUsd === null || readLlmSpend(projectId, now).spentUsd + nextCostUsd <= budget.monthlyLimitUsd;
++};
++
++export const readLlmUsageSummary = (projectId: string, now = new Date()): UsageSummary => {
++  const spend = readLlmSpend(projectId, now);
++  const budget = readLlmBudget(projectId);
++  const status = llmBudgetStatus(spend, budget);
++  return { spentUsd: spend.spentUsd, savedUsd: spend.savedUsd, cacheHits: spend.cacheHits, calls: spend.calls, remainingUsd: status.remainingUsd, overBudget: status.level === 'exceeded' };
++};
+diff --git a/src/services/llmEconomy/orchestrator.ts b/src/services/llmEconomy/orchestrator.ts
+new file mode 100644
+index 00000000..fc856ed5
+--- /dev/null
++++ b/src/services/llmEconomy/orchestrator.ts
+@@ -0,0 +1,102 @@
++import { isLocalProvider, leavesDevice, pickBatchProvider } from './costMeter';
++import { validateYmylClaim } from './factGate';
++import { recordLlmCost, withinProjectBudget } from './llmBudget';
++import { buildTaskKey, findExactCached, putExactCached, resolveCacheSavings } from './semanticCache';
++
++export interface ExecuteOptions {
++  projectId: string;
++  configuredProviders: string[];
++  providerId?: string;
++  model?: string;
++  prompt: string;
++  batchSize?: number;
++  batchThreshold?: number;
++  estimatedCostUsd?: number;
++  actualCostUsd?: number;
++  ymyl?: boolean;
++  sources?: string[];
++  run: (providerId: string) => Promise<{ text: string; actualCostUsd?: number }>;
++  now?: Date;
++}
++
++export interface ExecutionResult {
++  text: string;
++  providerId: string;
++  model: string;
++  costUsd: number;
++  savedUsd: number;
++  cached: boolean;
++  local: boolean;
++  leavesDevice: boolean;
++  factGatePassed: boolean;
++  rejectedClaims: string[];
++  needsHumanApproval: boolean;
++}
++
++export const executeWithEconomy = async (options: ExecuteOptions): Promise<ExecutionResult> => {
++  const chosenProvider = options.providerId
++    ?? (options.batchSize !== undefined ? pickBatchProvider(options.configuredProviders, options.batchSize, options.batchThreshold) : null)
++    ?? options.configuredProviders[0]
++    ?? '';
++  if (!chosenProvider) throw new Error('No AI provider configured');
++
++  const model = options.model ?? 'default';
++  const local = isLocalProvider(chosenProvider);
++  const willLeave = leavesDevice(chosenProvider);
++  const estimatedCost = local ? 0 : Math.max(0, options.estimatedCostUsd ?? 0);
++  const now = options.now ?? new Date();
++
++  if (!withinProjectBudget(options.projectId, estimatedCost, now)) {
++    throw new Error('Project LLM budget exceeded');
++  }
++
++  const taskKey = buildTaskKey(chosenProvider, model, options.prompt);
++  const cachedHit = findExactCached(taskKey);
++
++  let text: string;
++  let costUsd: number;
++  let savedUsd: number;
++  let isCached = false;
++
++  if (cachedHit) {
++    text = cachedHit.response;
++    const savings = resolveCacheSavings(cachedHit.costUsd);
++    costUsd = savings.costUsd;
++    savedUsd = savings.savedUsd;
++    isCached = true;
++    recordLlmCost(options.projectId, { providerId: chosenProvider, model, costUsd: 0, savedUsd, cached: true, local }, now);
++  } else {
++    const executed = await options.run(chosenProvider);
++    text = executed.text;
++    const rawCost = Math.max(0, executed.actualCostUsd ?? options.actualCostUsd ?? options.estimatedCostUsd ?? 0);
++    costUsd = local ? 0 : rawCost;
++    savedUsd = local ? rawCost : 0;
++    putExactCached(taskKey, text, rawCost, now.getTime());
++    recordLlmCost(options.projectId, { providerId: chosenProvider, model, costUsd, savedUsd, cached: false, local }, now);
++  }
++
++  let factGatePassed = true;
++  let rejectedClaims: string[] = [];
++  let needsHumanApproval = false;
++
++  if (options.ymyl) {
++    const ymylCheck = validateYmylClaim(text, options.sources ?? []);
++    factGatePassed = ymylCheck.allowed;
++    rejectedClaims = ymylCheck.rejectedValues;
++    needsHumanApproval = true;
++  }
++
++  return {
++    text,
++    providerId: chosenProvider,
++    model,
++    costUsd,
++    savedUsd,
++    cached: isCached,
++    local,
++    leavesDevice: willLeave,
++    factGatePassed,
++    rejectedClaims,
++    needsHumanApproval,
++  };
++};
+diff --git a/src/services/llmEconomy/semanticCache.ts b/src/services/llmEconomy/semanticCache.ts
+index 4cbf4956..5f61c430 100644
+--- a/src/services/llmEconomy/semanticCache.ts
++++ b/src/services/llmEconomy/semanticCache.ts
+@@ -9,8 +9,33 @@ export interface CacheEntry {
+ 
+ export interface CacheHit { entry: CacheEntry; similarity: number }
+ 
++export interface ExactTaskEntry { response: string; costUsd: number; at: number }
++
+ export const DEFAULT_CACHE_THRESHOLD = 0.95;
+ 
++const exactCache = new Map<string, ExactTaskEntry>();
++
++export const buildTaskKey = (providerId: string, model: string, prompt: string): string =>
++  `${providerId.trim().toLowerCase()}\u0000${model.trim().toLowerCase()}\u0000${prompt.trim()}`;
++
++export const findExactCached = (key: string): ExactTaskEntry | null => exactCache.get(key) ?? null;
++
++export const putExactCached = (key: string, response: string, costUsd: number, now = Date.now()): ExactTaskEntry => {
++  const entry: ExactTaskEntry = { response, costUsd: Math.max(0, costUsd), at: now };
++  exactCache.set(key, entry);
++  return entry;
++};
++
++export const clearExactCache = (): void => { exactCache.clear(); };
++export const exactCacheSize = (): number => exactCache.size;
++
++/** Zero cost for cached responses: cost is 0, saved amount matches provider price. */
++export const resolveCacheSavings = (normalCostUsd: number): { costUsd: 0; savedUsd: number; cached: true } => ({
++  costUsd: 0,
++  savedUsd: Math.max(0, normalCostUsd),
++  cached: true,
++});
++
+ /** Returns the most similar earlier task when its cosine similarity reaches the threshold; otherwise null. */
+ export const findCached = (
+   task: ArrayLike<number>,
+diff --git a/tests/cmsPatchYmylGate.test.ts b/tests/cmsPatchYmylGate.test.ts
+new file mode 100644
+index 00000000..f3bfa3eb
+--- /dev/null
++++ b/tests/cmsPatchYmylGate.test.ts
+@@ -0,0 +1,69 @@
++import { describe, expect, it } from 'vitest';
++import { validateYmylClaim } from '@/services/llmEconomy/factGate';
++import { applyPatch, type ApplyDeps } from '@/services/cmsPatch/apply';
++import { planPatch } from '@/services/cmsPatch/plan';
++import { memoryStore, mockCms, target } from './fixtures/cmsMock';
++
++const makeDeps = (role: 'developer' = 'developer') => {
++  const cms = mockCms('wordpress');
++  const store = memoryStore();
++  let saved = 0;
++  const deps: ApplyDeps = {
++    send: cms.send,
++    store,
++    ctx: { actor: 'alice', role, projectId: 'p1' },
++    saveBackup: async () => void saved++,
++  };
++  return { cms, store, deps, saved: () => saved };
++};
++
++describe('deterministic YMYL fact gate for CMS writes', () => {
++  it('blocks unverified numeric medical dosages before human approval', async () => {
++    const s = makeDeps();
++    const before = 'Patients take 200 mg ibuprofen twice daily.';
++    s.cms.state.content = `<h2>Dosage</h2><p>${before}</p>`;
++
++    const hallucinatedReplacement = '<p>Patients take 800 mg ibuprofen right now.</p>';
++    const gate = validateYmylClaim(hallucinatedReplacement, [before]);
++    expect(gate.allowed).toBe(false);
++    expect(gate.rejectedValues).toContain('800mg');
++    expect(gate.needsHumanApproval).toBe(true);
++
++    const plan = await planPatch({
++      target: target('wordpress'),
++      heading: 'Dosage',
++      replacement: hallucinatedReplacement,
++      ymyl: true,
++    }, s.cms.send);
++
++    // Apply fails without factGatePassed
++    await expect(applyPatch(plan, { approvedBy: 'alice', planHash: plan.planHash }, s.deps))
++      .rejects.toMatchObject({ code: 'fact-gate-required' });
++  });
++
++  it('allows verified numeric claims once human approvals are provided', async () => {
++    const s = makeDeps();
++    const before = 'Fee is 100 PLN with 2,5% tax.';
++    s.cms.state.content = `<h2>Pricing</h2><p>${before}</p>`;
++
++    const verifiedReplacement = '<p>Updated fee remains 100 PLN with 2.5% tax.</p>';
++    const gate = validateYmylClaim(verifiedReplacement, [before]);
++    expect(gate.allowed).toBe(true);
++    expect(gate.needsHumanApproval).toBe(true);
++
++    const plan = await planPatch({
++      target: target('wordpress'),
++      heading: 'Pricing',
++      replacement: verifiedReplacement,
++      ymyl: true,
++    }, s.cms.send);
++
++    // Human approves with factGatePassed: true
++    const result = await applyPatch(
++      plan,
++      { approvedBy: 'alice', planHash: plan.planHash, factGatePassed: gate.allowed },
++      s.deps,
++    );
++    expect(result.status).toBe('verified');
++  });
++});
+diff --git a/tests/llmEconomyBudget.test.ts b/tests/llmEconomyBudget.test.ts
+new file mode 100644
+index 00000000..3f126c26
+--- /dev/null
++++ b/tests/llmEconomyBudget.test.ts
+@@ -0,0 +1,96 @@
++import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
++import i18n from '@/i18n';
++import {
++  llmBudgetStatus, monthKey, readLlmBudget, readLlmSpend, readLlmUsageSummary,
++  recordLlmCost, withinProjectBudget, writeLlmBudget, LLM_ECONOMY_EVENT,
++} from '@/services/llmEconomy/llmBudget';
++
++const P = 'proj_test_1';
++const oct = new Date(2026, 9, 15, 12);
++
++beforeEach(async () => {
++  localStorage.clear();
++  await i18n.changeLanguage('en');
++});
++afterEach(() => vi.restoreAllMocks());
++
++describe('llmBudget settings', () => {
++  it('defaults to no monthly limit and 80% warning', () => {
++    expect(readLlmBudget(P)).toEqual({ monthlyLimitUsd: null, warnAtPercent: 80 });
++  });
++
++  it('writes valid limits and rejects invalid ones', () => {
++    expect(writeLlmBudget(P, { monthlyLimitUsd: 50, warnAtPercent: 90 })).toEqual({ monthlyLimitUsd: 50, warnAtPercent: 90 });
++    expect(readLlmBudget(P)).toEqual({ monthlyLimitUsd: 50, warnAtPercent: 90 });
++    expect(() => writeLlmBudget(P, { monthlyLimitUsd: -5, warnAtPercent: 80 })).toThrow();
++    expect(() => writeLlmBudget(P, { monthlyLimitUsd: 200_000, warnAtPercent: 80 })).toThrow();
++    expect(() => writeLlmBudget(P, { monthlyLimitUsd: 10, warnAtPercent: 0 })).toThrow();
++    expect(() => writeLlmBudget(P, { monthlyLimitUsd: 10, warnAtPercent: 101 })).toThrow();
++    localStorage.setItem(`seomi_project_${P}_llm_budget_v1`, '{"monthlyLimitUsd":"bad"}');
++    expect(readLlmBudget(P)).toEqual({ monthlyLimitUsd: null, warnAtPercent: 80 });
++  });
++});
++
++describe('llmSpend tracking and privacy', () => {
++  it('records spend, savings and cache hits without leaking private text to storage', () => {
++    const listener = vi.fn();
++    window.addEventListener(LLM_ECONOMY_EVENT, listener);
++    recordLlmCost(P, { providerId: 'openai', model: 'gpt-4o', costUsd: 0.05 }, oct);
++    recordLlmCost(P, { providerId: 'ollama', model: 'llama3', costUsd: 0.02, local: true }, oct);
++    recordLlmCost(P, { providerId: 'openai', model: 'gpt-4o', costUsd: 0.05, savedUsd: 0.05, cached: true }, oct);
++    window.removeEventListener(LLM_ECONOMY_EVENT, listener);
++
++    const spend = readLlmSpend(P, oct);
++    expect(spend.month).toBe('2026-10');
++    expect(spend.spentUsd).toBe(0.05);
++    expect(spend.savedUsd).toBe(0.07);
++    expect(spend.cacheHits).toBe(1);
++    expect(spend.calls).toBe(3);
++    expect(spend.lastCostByProvider.openai).toBe(0.05);
++    expect(spend.lastCall?.providerId).toBe('openai');
++    expect(spend.lastCall?.cached).toBe(true);
++    expect(listener).toHaveBeenCalledTimes(3);
++
++    const rawStored = localStorage.getItem(`seomi_project_${P}_llm_spend_v1`) ?? '';
++    expect(rawStored).not.toContain('prompt');
++    expect(rawStored).not.toContain('secret');
++  });
++
++  it('resets month-to-date counters across new months while keeping provider costs', () => {
++    recordLlmCost(P, { providerId: 'claude', costUsd: 1.5 }, new Date(2026, 8, 30));
++    const next = readLlmSpend(P, oct);
++    expect(next.month).toBe(monthKey(oct));
++    expect(next.spentUsd).toBe(0);
++    expect(next.calls).toBe(0);
++    expect(next.lastCostByProvider.claude).toBe(1.5);
++  });
++
++  it('reports status levels and guards next calls', () => {
++    writeLlmBudget(P, { monthlyLimitUsd: 10, warnAtPercent: 80 });
++    expect(withinProjectBudget(P, 5)).toBe(true);
++    recordLlmCost(P, { providerId: 'openai', costUsd: 8.5 }, oct);
++    const spend = readLlmSpend(P, oct);
++    const budget = readLlmBudget(P);
++    const status = llmBudgetStatus(spend, budget);
++    expect(status.level).toBe('warning');
++    expect(status.remainingUsd).toBe(1.5);
++    expect(withinProjectBudget(P, 2)).toBe(false);
++
++    recordLlmCost(P, { providerId: 'openai', costUsd: 2 }, oct);
++    expect(llmBudgetStatus(readLlmSpend(P, oct), budget).level).toBe('exceeded');
++  });
++
++  it('produces a summary compatible with costMeter', () => {
++    writeLlmBudget(P, { monthlyLimitUsd: 10, warnAtPercent: 80 });
++    recordLlmCost(P, { providerId: 'openai', costUsd: 2, savedUsd: 1, cached: true }, oct);
++    const summary = readLlmUsageSummary(P, oct);
++    expect(summary).toEqual({
++      spentUsd: 0,
++      savedUsd: 1,
++      cacheHits: 1,
++      calls: 1,
++      remainingUsd: 10,
++      overBudget: false,
++    });
++  });
++});
+diff --git a/tests/llmEconomyBudgetEdgeCases.test.ts b/tests/llmEconomyBudgetEdgeCases.test.ts
+new file mode 100644
+index 00000000..de4d35f3
+--- /dev/null
++++ b/tests/llmEconomyBudgetEdgeCases.test.ts
+@@ -0,0 +1,89 @@
++import { beforeEach, describe, expect, it, vi } from 'vitest';
++import * as storageModule from '@/services/storage';
++import {
++  llmBudgetStatus,
++  readLlmBudget,
++  readLlmSpend,
++  recordLlmCost,
++  withinProjectBudget,
++} from '@/services/llmEconomy/llmBudget';
++
++const P = 'p_edge_cases';
++const oct = new Date(2026, 9, 20);
++
++beforeEach(() => {
++  localStorage.clear();
++});
++
++describe('llmBudget edge cases and fault tolerance', () => {
++  it('handles array, null, and corrupt JSON in storage safely', () => {
++    localStorage.setItem(`seomi_project_${P}_llm_budget_v1`, '["not", "an", "object"]');
++    expect(readLlmBudget(P)).toEqual({ monthlyLimitUsd: null, warnAtPercent: 80 });
++
++    localStorage.setItem(`seomi_project_${P}_llm_budget_v1`, '{bad json');
++    expect(readLlmBudget(P)).toEqual({ monthlyLimitUsd: null, warnAtPercent: 80 });
++
++    localStorage.setItem(`seomi_project_${P}_llm_spend_v1`, 'null');
++    expect(readLlmSpend(P, oct)).toMatchObject({ spentUsd: 0, calls: 0, lastCall: null });
++
++    localStorage.setItem(`seomi_project_${P}_llm_spend_v1`, '{corrupt');
++    expect(readLlmSpend(P, oct)).toMatchObject({ spentUsd: 0, calls: 0, lastCall: null });
++  });
++
++  it('tolerates partial lastCall and non-integer counters in spend record', () => {
++    localStorage.setItem(
++      `seomi_project_${P}_llm_spend_v1`,
++      JSON.stringify({
++        month: '2026-10',
++        spentUsd: 1.5,
++        savedUsd: 0.5,
++        cacheHits: 'invalid',
++        calls: null,
++        lastCostByProvider: { openai: 1.5, bad: 'text' },
++        lastCall: { providerId: 'openai', costUsd: 1.5, at: '2026-10-20T10:00:00.000Z' },
++      }),
++    );
++    const spend = readLlmSpend(P, oct);
++    expect(spend.calls).toBe(0);
++    expect(spend.cacheHits).toBe(0);
++    expect(spend.lastCostByProvider).toEqual({ openai: 1.5 });
++    expect(spend.lastCall?.providerId).toBe('openai');
++    expect(spend.lastCall?.model).toBeUndefined();
++
++    localStorage.setItem(
++      `seomi_project_${P}_llm_spend_v1`,
++      JSON.stringify({ month: '2026-10', lastCall: { providerId: 'openai', costUsd: -1, at: 123 } }),
++    );
++    expect(readLlmSpend(P, oct).lastCall).toBeNull();
++  });
++
++  it('handles zero budget limit edge cases and ok status level', () => {
++    const zeroSpend = { month: '2026-10', spentUsd: 0, savedUsd: 0, cacheHits: 0, calls: 0, lastCostByProvider: {}, lastCall: null };
++    const positiveSpend = { ...zeroSpend, spentUsd: 0.01 };
++    const zeroBudget = { monthlyLimitUsd: 0, warnAtPercent: 80 };
++
++    expect(llmBudgetStatus(zeroSpend, zeroBudget)).toEqual({ level: 'exceeded', percent: 0, remainingUsd: 0 });
++    expect(llmBudgetStatus(positiveSpend, zeroBudget)).toEqual({ level: 'exceeded', percent: 100, remainingUsd: 0 });
++    expect(llmBudgetStatus({ ...zeroSpend, spentUsd: 4 }, { monthlyLimitUsd: 10, warnAtPercent: 80 })).toEqual({ level: 'ok', percent: 40, remainingUsd: 6 });
++  });
++
++  it('falls back to raw cost when local call does not specify savedUsd and handles non-finite cost', () => {
++    recordLlmCost(P, { providerId: 'ollama', costUsd: 0.07, local: true }, oct);
++    expect(readLlmSpend(P, oct).savedUsd).toBe(0.07);
++
++    recordLlmCost(P, { providerId: 'openai', costUsd: Number.NaN }, oct);
++    expect(readLlmSpend(P, oct).calls).toBe(2);
++  });
++
++  it('survives storage write failure gracefully', () => {
++    const spy = vi.spyOn(storageModule, 'writeStorage').mockImplementation(() => {
++      throw new Error('QuotaExceeded');
++    });
++    expect(() => recordLlmCost(P, { providerId: 'openai', costUsd: 0.1 }, oct)).not.toThrow();
++    spy.mockRestore();
++  });
++
++  it('checks budget without specifying date argument', () => {
++    expect(withinProjectBudget(P, 5)).toBe(true);
++  });
++});
+diff --git a/tests/llmEconomyLocales.test.ts b/tests/llmEconomyLocales.test.ts
+new file mode 100644
+index 00000000..789fef26
+--- /dev/null
++++ b/tests/llmEconomyLocales.test.ts
+@@ -0,0 +1,19 @@
++import { readFileSync } from 'node:fs';
++import { resolve } from 'node:path';
++import { describe, expect, it } from 'vitest';
++
++const LOCALES = ['ar', 'de', 'en', 'es', 'fr', 'it', 'ja', 'ko', 'pl', 'pt', 'ru', 'zh'];
++const REQUIRED_KEYS = ['title', 'empty', 'spent', 'saved', 'hits', 'leaves', 'remaining', 'overBudget'];
++
++describe('llmEconomy locales parity across all 12 languages', () => {
++  it.each(LOCALES)('includes complete llmEconomy bundle in %s.json', (locale) => {
++    const file = resolve(__dirname, `../src/i18n/locales/${locale}.json`);
++    const content = JSON.parse(readFileSync(file, 'utf8'));
++    expect(content.llmEconomy).toBeDefined();
++    for (const key of REQUIRED_KEYS) {
++      expect(content.llmEconomy[key], `Missing ${key} in ${locale}.json`).toBeDefined();
++      expect(typeof content.llmEconomy[key]).toBe('string');
++      expect(content.llmEconomy[key].trim().length).toBeGreaterThan(0);
++    }
++  });
++});
+diff --git a/tests/llmEconomyOrchestrator.test.ts b/tests/llmEconomyOrchestrator.test.ts
+new file mode 100644
+index 00000000..b75c794b
+--- /dev/null
++++ b/tests/llmEconomyOrchestrator.test.ts
+@@ -0,0 +1,110 @@
++import { beforeEach, describe, expect, it, vi } from 'vitest';
++import { executeWithEconomy } from '@/services/llmEconomy/orchestrator';
++import { clearExactCache } from '@/services/llmEconomy/semanticCache';
++import { readLlmSpend, writeLlmBudget } from '@/services/llmEconomy/llmBudget';
++
++const P = 'proj_orch_test';
++const oct = new Date(2026, 9, 16);
++
++beforeEach(() => {
++  localStorage.clear();
++  clearExactCache();
++});
++
++describe('executeWithEconomy orchestrator', () => {
++  it('throws error when no provider is configured', async () => {
++    await expect(executeWithEconomy({ projectId: P, configuredProviders: [], prompt: 'p', run: async () => ({ text: '' }) }))
++      .rejects.toThrow('No AI provider configured');
++  });
++
++  it('runs with explicit providerId and custom model', async () => {
++    const res = await executeWithEconomy({
++      projectId: P, configuredProviders: ['openai'], providerId: 'gemini', model: 'gemini-1.5-pro', prompt: 'p1',
++      run: async (provider) => ({ text: `provider=${provider}`, actualCostUsd: 0.05 }), now: oct,
++    });
++    expect(res.providerId).toBe('gemini');
++    expect(res.model).toBe('gemini-1.5-pro');
++    expect(res.costUsd).toBe(0.05);
++  });
++
++  it('falls back to estimatedCostUsd when actualCostUsd is not provided by runner', async () => {
++    const res = await executeWithEconomy({
++      projectId: P, configuredProviders: ['openai'], prompt: 'p2', estimatedCostUsd: 0.04,
++      run: async () => ({ text: 'est' }), now: oct,
++    });
++    expect(res.costUsd).toBe(0.04);
++  });
++
++  it('runs with default model and default now when omitted', async () => {
++    const res = await executeWithEconomy({ projectId: P, configuredProviders: ['ollama'], prompt: 'p3', run: async () => ({ text: 'ok' }) });
++    expect(res.model).toBe('default');
++    expect(res.text).toBe('ok');
++  });
++
++  it('respects custom batchThreshold and falls back to zero cost when cost is undefined', async () => {
++    const res = await executeWithEconomy({
++      projectId: P, configuredProviders: ['openai', 'ollama'], batchSize: 10, batchThreshold: 5, prompt: 'p4',
++      run: async () => ({ text: 'ok' }), now: oct,
++    });
++    expect(res.providerId).toBe('ollama');
++    expect(res.costUsd).toBe(0);
++  });
++
++  it('falls back to actualCostUsd from options when run does not return it and handles zero cost', async () => {
++    const res = await executeWithEconomy({
++      projectId: P, configuredProviders: ['openai'], prompt: 'p5', actualCostUsd: 0.03, run: async () => ({ text: 'ok' }), now: oct,
++    });
++    expect(res.costUsd).toBe(0.03);
++
++    const zero = await executeWithEconomy({
++      projectId: P, configuredProviders: ['openai'], prompt: 'p5-zero', run: async () => ({ text: 'zero' }), now: oct,
++    });
++    expect(zero.costUsd).toBe(0);
++  });
++
++  it('prefers local provider for large batches', async () => {
++    const res = await executeWithEconomy({
++      projectId: P, configuredProviders: ['openai', 'ollama'], batchSize: 100, prompt: 'p6', run: vi.fn().mockResolvedValue({ text: 'ok' }), now: oct,
++    });
++    expect(res.providerId).toBe('ollama');
++    expect(res.leavesDevice).toBe(false);
++    expect(res.costUsd).toBe(0);
++  });
++
++  it('blocks execution when project budget is exceeded', async () => {
++    writeLlmBudget(P, { monthlyLimitUsd: 1, warnAtPercent: 80 });
++    await executeWithEconomy({ projectId: P, configuredProviders: ['openai'], prompt: 'c1', estimatedCostUsd: 0.9, actualCostUsd: 0.9, run: async () => ({ text: '1' }), now: oct });
++    await expect(executeWithEconomy({ projectId: P, configuredProviders: ['openai'], prompt: 'c2', estimatedCostUsd: 0.2, run: async () => ({ text: '2' }), now: oct }))
++      .rejects.toThrow('Project LLM budget exceeded');
++  });
++
++  it('serves identical tasks from cache at zero cost and records savings', async () => {
++    const runner = vi.fn().mockResolvedValue({ text: 'cached' });
++    const first = await executeWithEconomy({ projectId: P, configuredProviders: ['openai'], prompt: 'same', estimatedCostUsd: 0.05, actualCostUsd: 0.05, run: runner, now: oct });
++    expect(first.cached).toBe(false);
++    const second = await executeWithEconomy({ projectId: P, configuredProviders: ['openai'], prompt: 'same', estimatedCostUsd: 0.05, run: runner, now: oct });
++    expect(second.cached).toBe(true);
++    expect(second.costUsd).toBe(0);
++    expect(second.savedUsd).toBe(0.05);
++    expect(runner).toHaveBeenCalledTimes(1);
++    const spend = readLlmSpend(P, oct);
++    expect(spend.cacheHits).toBe(1);
++  });
++
++  it('enforces deterministic YMYL gate and human approval', async () => {
++    const ymylFail = await executeWithEconomy({
++      projectId: P, configuredProviders: ['openai'], prompt: 'med-fail', ymyl: true, sources: ['Intake is 100 mg.'],
++      run: async () => ({ text: 'Take 900 mg.' }), now: oct,
++    });
++    expect(ymylFail.factGatePassed).toBe(false);
++    expect(ymylFail.rejectedClaims).toContain('900mg');
++    expect(ymylFail.needsHumanApproval).toBe(true);
++
++    const ymylPass = await executeWithEconomy({
++      projectId: P, configuredProviders: ['openai'], prompt: 'med-pass', ymyl: true, sources: ['Intake is 100 mg.'],
++      run: async () => ({ text: 'Take 100 mg.' }), now: oct,
++    });
++    expect(ymylPass.factGatePassed).toBe(true);
++    expect(ymylPass.needsHumanApproval).toBe(true);
++  });
++});
+diff --git a/tests/llmEconomyPanelLive.test.tsx b/tests/llmEconomyPanelLive.test.tsx
+new file mode 100644
+index 00000000..206b599c
+--- /dev/null
++++ b/tests/llmEconomyPanelLive.test.tsx
+@@ -0,0 +1,41 @@
++import { render, screen } from '@testing-library/react';
++import { beforeEach, describe, expect, it } from 'vitest';
++import '@/i18n';
++import { LlmEconomyPanel } from '@/components/AI/LlmEconomyPanel';
++import { recordLlmCost, writeLlmBudget } from '@/services/llmEconomy/llmBudget';
++
++const P = 'p_panel_test';
++
++beforeEach(() => {
++  localStorage.clear();
++});
++
++describe('LlmEconomyPanel live integration', () => {
++  it('renders live spend, savings, remaining budget and leavesDevice warning', () => {
++    writeLlmBudget(P, { monthlyLimitUsd: 10, warnAtPercent: 80 });
++    recordLlmCost(P, { providerId: 'openai', costUsd: 2, savedUsd: 1, cached: true });
++
++    render(<LlmEconomyPanel projectId={P} providerId="openai" />);
++    const text = screen.getByTestId('llm-economy-panel').textContent ?? '';
++    expect(text).toContain('Spent: $0.00');
++    expect(text).toContain('$1.00');
++    expect(text).toContain('Cache hits: 1');
++    expect(text).toContain('Remaining budget: $10.00');
++    expect(screen.getByRole('alert').textContent).toContain('openai');
++  });
++
++  it('renders overBudget alert when monthly limit is exceeded', () => {
++    writeLlmBudget(P, { monthlyLimitUsd: 5, warnAtPercent: 80 });
++    recordLlmCost(P, { providerId: 'claude', costUsd: 6 });
++
++    render(<LlmEconomyPanel projectId={P} providerId="ollama" />);
++    const text = screen.getByTestId('llm-economy-panel').textContent ?? '';
++    expect(text).toContain('Monthly LLM budget exceeded.');
++    expect(screen.queryByText(/leaves/i)).toBeNull();
++  });
++
++  it('renders empty state cleanly when projectId is null or omitted', () => {
++    render(<LlmEconomyPanel projectId={null} />);
++    expect(screen.getByTestId('llm-economy-panel').textContent).toContain('No AI calls recorded yet.');
++  });
++});
+diff --git a/tests/llmEconomyTaskCache.test.ts b/tests/llmEconomyTaskCache.test.ts
+new file mode 100644
+index 00000000..47adf814
+--- /dev/null
++++ b/tests/llmEconomyTaskCache.test.ts
+@@ -0,0 +1,40 @@
++import { beforeEach, describe, expect, it } from 'vitest';
++import {
++  buildTaskKey, clearExactCache, exactCacheSize, findExactCached,
++  putExactCached, resolveCacheSavings,
++} from '@/services/llmEconomy/semanticCache';
++
++beforeEach(() => {
++  clearExactCache();
++});
++
++describe('exact task cache and zero-cost savings', () => {
++  it('builds canonical task keys regardless of whitespace', () => {
++    const key1 = buildTaskKey(' OpenAI ', 'gpt-4o', 'Summarize this page.');
++    const key2 = buildTaskKey('openai', 'gpt-4o', 'Summarize this page.');
++    expect(key1).toBe(key2);
++  });
++
++  it('stores and retrieves cached task responses at zero cost', () => {
++    const key = buildTaskKey('claude', 'sonnet', 'Prompt text');
++    expect(findExactCached(key)).toBeNull();
++
++    putExactCached(key, 'Cached response', 0.04);
++    expect(exactCacheSize()).toBe(1);
++
++    const hit = findExactCached(key);
++    expect(hit?.response).toBe('Cached response');
++    expect(hit?.costUsd).toBe(0.04);
++
++    const resolved = resolveCacheSavings(hit!.costUsd);
++    expect(resolved).toEqual({ costUsd: 0, savedUsd: 0.04, cached: true });
++  });
++
++  it('evicts correctly on clear', () => {
++    putExactCached('k1', 'resp1', 0.01);
++    expect(exactCacheSize()).toBe(1);
++    clearExactCache();
++    expect(exactCacheSize()).toBe(0);
++    expect(findExactCached('k1')).toBeNull();
++  });
++});
+diff --git a/tests/llmEconomyYmylGate.test.ts b/tests/llmEconomyYmylGate.test.ts
+new file mode 100644
+index 00000000..391d0ef5
+--- /dev/null
++++ b/tests/llmEconomyYmylGate.test.ts
+@@ -0,0 +1,44 @@
++import { describe, expect, it } from 'vitest';
++import { validateYmylClaim } from '@/services/llmEconomy/factGate';
++
++describe('validateYmylClaim source gate', () => {
++  const verifiedSource = [
++    'Standard dose of ibuprofen is 200 mg up to 400 mg.',
++    'Maximum daily fee is 150 PLN, with a 5% late penalty.',
++  ];
++
++  it('rejects unsupported medical dosages and financial claims', () => {
++    const invalidText = 'Take 800 mg right now. Total fee is 500 PLN.';
++    const validation = validateYmylClaim(invalidText, verifiedSource);
++    expect(validation.allowed).toBe(false);
++    expect(validation.reason).toBe('unsupported-value');
++    expect(validation.rejectedValues).toContain('800mg');
++    expect(validation.rejectedValues).toContain('500pln');
++    expect(validation.needsHumanApproval).toBe(true);
++  });
++
++  it('rejects all numeric claims when no source is available', () => {
++    const text = 'Recommended daily dose is 200 mg.';
++    const validation = validateYmylClaim(text, []);
++    expect(validation.allowed).toBe(false);
++    expect(validation.reason).toBe('no-source');
++    expect(validation.rejectedValues).toEqual(['200mg']);
++    expect(validation.needsHumanApproval).toBe(true);
++  });
++
++  it('allows claims strictly verified by source text, but mandates human approval', () => {
++    const validText = 'Standard dose of ibuprofen is 200 mg. Late fee is 5%.';
++    const validation = validateYmylClaim(validText, verifiedSource);
++    expect(validation.allowed).toBe(true);
++    expect(validation.rejectedValues).toEqual([]);
++    expect(validation.needsHumanApproval).toBe(true);
++  });
++
++  it('allows non-numeric prose but still enforces human approval for CMS', () => {
++    const generalText = 'Consult your physician before taking any medication.';
++    const validation = validateYmylClaim(generalText, []);
++    expect(validation.allowed).toBe(true);
++    expect(validation.rejectedValues).toEqual([]);
++    expect(validation.needsHumanApproval).toBe(true);
++  });
++});
