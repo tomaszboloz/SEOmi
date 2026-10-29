@@ -4890,7 +4890,12 @@
         "Anchor text",
         "Rel",
         "Internal",
-        "Source HTML excerpt"
+        "Source HTML excerpt",
+        "DOM zone",
+        "Zone method",
+        "Context before",
+        "Context after",
+        "Section heading"
       ],
       "crawlImages": [
         "Run ID",
@@ -7806,6 +7811,7 @@
     "underLinked": "روابط قليلة",
     "leak": "تسرب",
     "unknown": "{{count}} رابطاً بتشابه غير معروف ولا تُحسب كتسرب.",
+    "unweightedZone": "{{count}} روابط لها منطقة DOM غير معروفة أو غير موزونة وتُحتسب بالوزن المحايد 1.",
     "notConverged": "لم يتقارب الحل؛ الدرجات تقريبية.",
     "whatIf": {
       "title": "محاكي الروابط What-If",
@@ -7818,7 +7824,8 @@
       "noChange": "لا تغيّر في الدرجات.",
       "before": "قبل",
       "after": "بعد",
-      "delta": "التغيّر"
+      "delta": "التغيّر",
+      "solver": "بدء دافئ من الدرجات الحالية: {{iterations}} تكرارات، البقية {{residual}}."
     }
   },
   "decayUi": {

@@ -43,7 +43,7 @@ describe('semantic graph PageRank', () => {
   });
 
   it('handles empty nodes and invalid node ids', () => {
-    expect(calculatePageRank([], [])).toEqual({ scores: [], iterations: 0, converged: true });
+    expect(calculatePageRank([], [])).toEqual({ scores: [], iterations: 0, converged: true, residual: 0 });
     expect(() => calculatePageRank([{ id: '' }], [])).toThrow(/non-empty id/);
     expect(() => calculatePageRank([{ id: '   ' }], [])).toThrow(/non-empty id/);
     expect(() => calculatePageRank([{ id: null as never }], [])).toThrow(/non-empty id/);

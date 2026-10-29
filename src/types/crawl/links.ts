@@ -17,6 +17,8 @@ export interface CrawledLink {
   /** Up to 15 words before/after the anchor in its block element. */
   context_before?: string | null;
   context_after?: string | null;
+  /** Nearest H2/H3 before the anchor; absent in older runs. */
+  section_heading?: string | null;
 }
 
 export interface ExternalLinkCheckBatchResult {

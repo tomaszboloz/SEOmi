@@ -4890,7 +4890,12 @@
         "Anchor text",
         "Rel",
         "Internal",
-        "Source HTML excerpt"
+        "Source HTML excerpt",
+        "DOM zone",
+        "Zone method",
+        "Context before",
+        "Context after",
+        "Section heading"
       ],
       "crawlImages": [
         "Run ID",
@@ -7806,6 +7811,7 @@
     "underLinked": "Мало ссылок",
     "leak": "Утечка",
     "unknown": "У {{count}} ссылок неизвестное сходство, они не считаются утечкой.",
+    "unweightedZone": "{{count}} ссылок имеют неизвестную или невзвешенную зону DOM и учитываются с нейтральным весом 1.",
     "notConverged": "Решатель не сошёлся; оценки приблизительные.",
     "whatIf": {
       "title": "Симулятор ссылок What-If",
@@ -7818,7 +7824,8 @@
       "noChange": "Оценки не изменились.",
       "before": "До",
       "after": "После",
-      "delta": "Изменение"
+      "delta": "Изменение",
+      "solver": "Тёплый старт от текущих оценок: {{iterations}} итераций, невязка {{residual}}."
     }
   },
   "decayUi": {

@@ -1,6 +1,6 @@
 [package]
 name = "seomi"
-version = "0.5.0"
+version = "0.6.0"
 description = "Lightning-fast Native Desktop SEO & Open Graph Auditor"
 authors = ["Tomasz Bołoz"]
 edition = "2021"

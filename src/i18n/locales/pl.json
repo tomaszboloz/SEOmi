@@ -4890,7 +4890,12 @@
         "Anchor text",
         "Rel",
         "Internal",
-        "Source HTML excerpt"
+        "Source HTML excerpt",
+        "DOM zone",
+        "Zone method",
+        "Context before",
+        "Context after",
+        "Section heading"
       ],
       "crawlImages": [
         "Run ID",
@@ -7806,6 +7811,7 @@
     "underLinked": "Za mało linków",
     "leak": "Wyciek",
     "unknown": "{{count}} linków ma nieznane podobieństwo i nie liczy się jako wyciek.",
+    "unweightedZone": "{{count}} linków ma nieznaną lub nieważoną strefę DOM i liczy się z neutralną wagą 1.",
     "notConverged": "Solver nie zbiegł; wyniki są przybliżone.",
     "whatIf": {
       "title": "Symulator What-If linków",
@@ -7818,7 +7824,8 @@
       "noChange": "Brak zmian wyników.",
       "before": "Przed",
       "after": "Po",
-      "delta": "Zmiana"
+      "delta": "Zmiana",
+      "solver": "Start od obecnych wyników: {{iterations}} iteracji, residuum {{residual}}."
     }
   },
   "decayUi": {

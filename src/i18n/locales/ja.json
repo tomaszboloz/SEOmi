@@ -4890,7 +4890,12 @@
         "Anchor text",
         "Rel",
         "Internal",
-        "Source HTML excerpt"
+        "Source HTML excerpt",
+        "DOM zone",
+        "Zone method",
+        "Context before",
+        "Context after",
+        "Section heading"
       ],
       "crawlImages": [
         "Run ID",
@@ -7806,6 +7811,7 @@
     "underLinked": "被リンク不足",
     "leak": "流出",
     "unknown": "{{count}} 件のリンクは類似度が不明のため、流出として数えません。",
+    "unweightedZone": "{{count}} 件のリンクは DOM ゾーンが不明または重みなしのため、中立の重み 1 で計算されます。",
     "notConverged": "ソルバーが収束しませんでした。スコアは概算です。",
     "whatIf": {
       "title": "リンクのWhat-Ifシミュレーター",
@@ -7818,7 +7824,8 @@
       "noChange": "スコアに変化はありません。",
       "before": "変更前",
       "after": "変更後",
-      "delta": "差分"
+      "delta": "差分",
+      "solver": "現在のスコアからウォームスタート: {{iterations}} 回の反復、残差 {{residual}}。"
     }
   },
   "decayUi": {

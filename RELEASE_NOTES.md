@@ -1,3 +1,25 @@
+# SEOmi 0.6.0 — release notes
+
+## Added
+- SPRS link flow (#71): each internal link now counts with the weight of its DOM zone (navigation 0.25, widget 0.35, sidebar/footer 0.05). A link whose zone is unknown or unweighted (for example `main` without a render) counts with the neutral weight 1, and the panel shows how many links that applies to. Runs saved before 0.4.6 have no zone data and keep the old link-count weights.
+- SPRS reports the raw probability of each page (all pages sum to about 1) next to the 0-100 score, plus the solver residual.
+- The What-If simulator starts from the current scores instead of a uniform vector and shows iterations and residual. If the solver does not converge, it says so.
+- Crawler (#70): each link stores the nearest H2/H3 before it (`section_heading`, at most 160 characters). The lookup checks at most 1,500 nodes; when that limit is reached, the heading stays empty and is not guessed.
+- Links CSV export has five new columns: DOM zone, zone method, context before, context after and section heading. Runs crawled before these fields existed leave the columns empty.
+- Outreach drafts use Information Gain evidence from the project's IGOS report again. This was lost in the 0.4.48 merge (#143).
+
+## Fixed
+- Site Focus no longer quarantines every content page with TRS below 40 as "remove". Each removal candidate is checked against URL telemetry (Search Console clicks, conversions, revenue, backlinks), and only a measured prune candidate stays on the list. Missing telemetry is not treated as zero (#81).
+- Every Site Focus consumer, including the architecture map colours, uses the project's Core Topic (#82).
+- A cold-render architecture graph test no longer fails on the slow macos-15-intel runner. Its timeout went from 5 s to 20 s.
+
+## CI
+- Pull request runs that a newer push replaces are cancelled. Runs on pushes to main are never cancelled.
+- File-symlink escape tests are skipped only on systems that do not allow file symlinks.
+
+## Included
+- Everything from 0.5.0 (below).
+
 # SEOmi 0.5.0 — release notes
 
 ## Added

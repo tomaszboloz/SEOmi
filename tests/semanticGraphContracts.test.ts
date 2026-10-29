@@ -39,7 +39,7 @@ describe('semantic graph evidence responsibilities', () => {
     } as CrawledPageSummary;
     const graph = buildContentEdges([source, page('https://site.test/target')], {});
     expect(graph.allEdges).toEqual([{
-      id: 'page-0->page-1', source: 'page-0', target: 'page-1', anchors: ['One', 'Two', 'Three'], links: 6,
+      id: 'page-0->page-1', source: 'page-0', target: 'page-1', anchors: ['One', 'Two', 'Three'], links: 6, zoneWeightSum: 0, unweightedZoneLinks: 6,
     }]);
     expect(graph.incoming.get('page-1')).toBe(6);
     expect(buildContentEdges([source], { includeAllInternalLinks: true }).edges).toEqual([]);

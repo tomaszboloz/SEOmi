@@ -83,6 +83,9 @@ pub struct CrawledLink {
     /// Up to 15 words after the anchor in its block element.
     #[serde(default)]
     pub context_after: Option<String>,
+    /// Nearest H2/H3 before the anchor; absent in older saved runs.
+    #[serde(default)]
+    pub section_heading: Option<String>,
 }
 
 #[derive(Debug, Serialize, Deserialize, Clone)]

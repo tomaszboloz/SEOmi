@@ -4890,7 +4890,12 @@
         "Anchor text",
         "Rel",
         "Internal",
-        "Source HTML excerpt"
+        "Source HTML excerpt",
+        "DOM zone",
+        "Zone method",
+        "Context before",
+        "Context after",
+        "Section heading"
       ],
       "crawlImages": [
         "Run ID",
@@ -7806,6 +7811,7 @@
     "underLinked": "Under-linked",
     "leak": "Leak",
     "unknown": "{{count}} links have unknown similarity and are not counted as leaks.",
+    "unweightedZone": "{{count}} links have an unknown or unweighted DOM zone and count at the neutral weight 1.",
     "notConverged": "The solver did not converge; scores are approximate.",
     "whatIf": {
       "title": "What-If link simulator",
@@ -7818,7 +7824,8 @@
       "noChange": "No score changes.",
       "before": "Before",
       "after": "After",
-      "delta": "Change"
+      "delta": "Change",
+      "solver": "Warm-started from the current scores: {{iterations}} iterations, residual {{residual}}."
     }
   },
   "decayUi": {

@@ -4890,7 +4890,12 @@
         "Anchor text",
         "Rel",
         "Internal",
-        "Source HTML excerpt"
+        "Source HTML excerpt",
+        "DOM zone",
+        "Zone method",
+        "Context before",
+        "Context after",
+        "Section heading"
       ],
       "crawlImages": [
         "Run ID",
@@ -7806,6 +7811,7 @@
     "underLinked": "内链不足",
     "leak": "泄漏",
     "unknown": "{{count}} 个链接的相似度未知，不计为泄漏。",
+    "unweightedZone": "{{count}} 个链接的 DOM 区域未知或未加权，按中性权重 1 计算。",
     "notConverged": "求解器未收敛，分数为近似值。",
     "whatIf": {
       "title": "链接 What-If 模拟器",
@@ -7818,7 +7824,8 @@
       "noChange": "分数无变化。",
       "before": "之前",
       "after": "之后",
-      "delta": "变化"
+      "delta": "变化",
+      "solver": "从当前分数热启动：{{iterations}} 次迭代，残差 {{residual}}。"
     }
   },
   "decayUi": {

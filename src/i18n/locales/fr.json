@@ -4890,7 +4890,12 @@
         "Anchor text",
         "Rel",
         "Internal",
-        "Source HTML excerpt"
+        "Source HTML excerpt",
+        "DOM zone",
+        "Zone method",
+        "Context before",
+        "Context after",
+        "Section heading"
       ],
       "crawlImages": [
         "Run ID",
@@ -7806,6 +7811,7 @@
     "underLinked": "Peu de liens",
     "leak": "Fuite",
     "unknown": "{{count}} liens ont une similarité inconnue et ne comptent pas comme fuite.",
+    "unweightedZone": "{{count}} liens ont une zone DOM inconnue ou non pondérée et comptent avec le poids neutre 1.",
     "notConverged": "Le solveur n'a pas convergé ; les scores sont approximatifs.",
     "whatIf": {
       "title": "Simulateur de liens What-If",
@@ -7818,7 +7824,8 @@
       "noChange": "Aucun changement de score.",
       "before": "Avant",
       "after": "Après",
-      "delta": "Variation"
+      "delta": "Variation",
+      "solver": "Démarrage à chaud depuis les scores actuels : {{iterations}} itérations, résidu {{residual}}."
     }
   },
   "decayUi": {

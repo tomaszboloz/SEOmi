@@ -4890,7 +4890,12 @@
         "Anchor text",
         "Rel",
         "Internal",
-        "Source HTML excerpt"
+        "Source HTML excerpt",
+        "DOM zone",
+        "Zone method",
+        "Context before",
+        "Context after",
+        "Section heading"
       ],
       "crawlImages": [
         "Run ID",
@@ -7806,6 +7811,7 @@
     "underLinked": "링크 부족",
     "leak": "누수",
     "unknown": "{{count}}개 링크는 유사도를 알 수 없어 누수로 세지 않습니다.",
+    "unweightedZone": "{{count}}개 링크는 DOM 영역을 알 수 없거나 가중치가 없어 중립 가중치 1로 계산됩니다.",
     "notConverged": "솔버가 수렴하지 않았습니다. 점수는 근삿값입니다.",
     "whatIf": {
       "title": "링크 What-If 시뮬레이터",
@@ -7818,7 +7824,8 @@
       "noChange": "점수 변화가 없습니다.",
       "before": "이전",
       "after": "이후",
-      "delta": "변화"
+      "delta": "변화",
+      "solver": "현재 점수에서 웜 스타트: 반복 {{iterations}}회, 잔차 {{residual}}."
     }
   },
   "decayUi": {

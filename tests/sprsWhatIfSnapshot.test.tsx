@@ -3,7 +3,7 @@ import { afterEach, beforeEach, expect, it, vi } from 'vitest';
 
 import i18n from '@/i18n';
 
-import { simulateWhatIf } from '@/services/semanticGraph/sprs';
+import { simulateWhatIfRun } from '@/services/semanticGraph/sprs';
 import { SprsWhatIf } from '@/components/Charts/SprsWhatIf';
 import { SignalsWorkspace } from '@/components/Charts/semanticTopical/signals/SignalsWorkspace';
 import { buildSprsInput } from '@/components/Charts/semanticTopical/signals/sprsAdapter';
@@ -13,7 +13,7 @@ import type { CrawledPageSummary } from '@/types';
 
 vi.mock('@/services/semanticGraph/sprs', async (importOriginal) => {
   const actual = await importOriginal<typeof import('@/services/semanticGraph/sprs')>();
-  return { ...actual, simulateWhatIf: vi.fn(actual.simulateWhatIf) };
+  return { ...actual, simulateWhatIfRun: vi.fn(actual.simulateWhatIfRun) };
 });
 
 const A = 'https://a.test/', B = 'https://a.test/b', C = 'https://a.test/c', D = 'https://a.test/d';
@@ -68,7 +68,7 @@ it('rejects invalid choices: same page, duplicate add, removing a link that does
 it('reports when a simulation changes no score and shows a table after removing a link', () => {
   const lone = [{ id: A }, { id: B }];
   render(<SprsWhatIf nodes={lone} edges={[{ source: A, target: B, links: 1 }]} />);
-  vi.mocked(simulateWhatIf).mockReturnValueOnce([]);
+  vi.mocked(simulateWhatIfRun).mockReturnValueOnce({ rows: [], converged: true, iterations: 1, residual: 0 });
   pick('From page', B); pick('To page', A);
   fireEvent.click(screen.getByRole('button', { name: 'Simulate' }));
   expect(screen.getByRole('status').textContent).toBe('No score changes.');
@@ -76,6 +76,10 @@ it('reports when a simulation changes no score and shows a table after removing 
   fireEvent.click(screen.getByRole('button', { name: 'Simulate' }));
   expect(screen.queryByRole('status')).toBeNull();
   expect(screen.getByRole('table')).toBeTruthy();
+  expect(screen.getByText(/^Warm-started from the current scores: \d+ iterations, residual /)).toBeTruthy();
+  vi.mocked(simulateWhatIfRun).mockReturnValueOnce({ rows: [], converged: false, iterations: 150, residual: 0.01 });
+  fireEvent.click(screen.getByRole('button', { name: 'Simulate' }));
+  expect(screen.getByText('The solver did not converge; scores are approximate.')).toBeTruthy();
 });
 
 it('renders nothing for fewer than two pages', () => {

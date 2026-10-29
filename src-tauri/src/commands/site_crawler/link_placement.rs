@@ -1,5 +1,6 @@
 use scraper::{ElementRef, Node};
 
+use super::link_section_heading::section_heading;
 use super::models::CrawledLink;
 
 /// Words kept on each side of the anchor (issue #70).
@@ -112,5 +113,6 @@ pub(crate) fn build_link(facts: LinkFacts, element: &ElementRef<'_>) -> CrawledL
         zone_method: Some(METHOD_DOM.to_owned()),
         context_before,
         context_after,
+        section_heading: section_heading(element),
     }
 }
