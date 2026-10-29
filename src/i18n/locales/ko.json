@@ -7865,6 +7865,13 @@
       "tool": "도구·계산기",
       "transactional": "거래",
       "local": "지역"
+    },
+    "phrase": {
+      "description": "이 페이지와 상위 페이지 최대 5개를 데스크톱 WebView에서 렌더링한 뒤 구조를 비교합니다. 렌더링에 실패한 페이지는 추정하지 않고 개수로 셉니다.",
+      "run": "검색 의도 분석",
+      "running": "페이지 렌더링 중…",
+      "failed": "페이지를 렌더링할 수 없어 의도 결과가 없습니다.",
+      "funnel": "렌더링된 상위 페이지: {{requested}}개 중 {{analysed}}개. 퍼널 단계: TOFU {{tofu}}, MOFU {{mofu}}, BOFU {{bofu}}."
     }
   },
   "prePublishUi": {
@@ -8062,7 +8069,8 @@
       "too-few-documents": "신뢰할 만한 기준에는 경쟁 문서가 너무 적습니다.",
       "some-documents-missing": "일부 경쟁 페이지를 가져오지 못했습니다.",
       "no-target-chunks": "분석할 수 있는 문단이 없습니다.",
-      "off-topic-below-quota": "주제에 맞는 문단이 너무 적습니다."
+      "off-topic-below-quota": "주제에 맞는 문단이 너무 적습니다.",
+      "local-lexical-embeddings": "유사도는 의미 모델이 아닌 로컬 어휘 벡터로 계산되므로 영역은 근사치입니다."
     },
     "rec": {
       "rewrite-echo": "오프셋 {{offset}}의 문단이 경쟁 구절을 반복합니다. 자신의 말로 다시 쓰세요.",

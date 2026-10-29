@@ -7865,6 +7865,13 @@
       "tool": "Tool oder Rechner",
       "transactional": "Transaktional",
       "local": "Lokal"
+    },
+    "phrase": {
+      "description": "Rendert diese Seite und bis zu 5 TOP-Seiten im Desktop-WebView und vergleicht ihre Struktur. Seiten, die nicht gerendert werden können, werden gezählt, nicht geschätzt.",
+      "run": "Suchintention analysieren",
+      "running": "Seiten werden gerendert…",
+      "failed": "Die Seite konnte nicht gerendert werden, daher gibt es kein Intentionsergebnis.",
+      "funnel": "Gerenderte TOP-Seiten: {{analysed}} von {{requested}}. Funnel-Stufen darunter: TOFU {{tofu}}, MOFU {{mofu}}, BOFU {{bofu}}."
     }
   },
   "prePublishUi": {
@@ -8062,7 +8069,8 @@
       "too-few-documents": "Zu wenige Konkurrenzdokumente für eine verlässliche Basis.",
       "some-documents-missing": "Einige Konkurrenzseiten konnten nicht abgerufen werden.",
       "no-target-chunks": "Die Seite hat keine analysierbaren Absätze.",
-      "off-topic-below-quota": "Zu wenige themenrelevante Absätze."
+      "off-topic-below-quota": "Zu wenige themenrelevante Absätze.",
+      "local-lexical-embeddings": "Die Ähnlichkeit nutzt lokale lexikalische Vektoren, kein semantisches Modell; die Zonen sind Näherungen."
     },
     "rec": {
       "rewrite-echo": "Der Absatz bei Offset {{offset}} wiederholt eine Konkurrenzpassage: in eigenen Worten umschreiben.",

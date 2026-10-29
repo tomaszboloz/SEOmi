@@ -7865,6 +7865,13 @@
       "tool": "Outil ou calculateur",
       "transactional": "Transactionnelle",
       "local": "Locale"
+    },
+    "phrase": {
+      "description": "Affiche cette page et jusqu'à 5 pages du TOP dans le WebView de l'application, puis compare leur structure. Les pages qui échouent sont comptées, pas devinées.",
+      "run": "Analyser l'intention de recherche",
+      "running": "Rendu des pages…",
+      "failed": "La page n'a pas pu être rendue ; aucun résultat d'intention.",
+      "funnel": "Pages du TOP rendues : {{analysed}} sur {{requested}}. Étapes du tunnel parmi elles : TOFU {{tofu}}, MOFU {{mofu}}, BOFU {{bofu}}."
     }
   },
   "prePublishUi": {
@@ -8062,7 +8069,8 @@
       "too-few-documents": "Trop peu de documents concurrents pour une base fiable.",
       "some-documents-missing": "Certaines pages concurrentes n'ont pas pu être récupérées.",
       "no-target-chunks": "La page n'a aucun paragraphe analysable.",
-      "off-topic-below-quota": "Trop peu de paragraphes sur le sujet."
+      "off-topic-below-quota": "Trop peu de paragraphes sur le sujet.",
+      "local-lexical-embeddings": "La similarité utilise des vecteurs lexicaux locaux, pas un modèle sémantique ; les zones sont approximatives."
     },
     "rec": {
       "rewrite-echo": "Le paragraphe au décalage {{offset}} répète un passage concurrent : réécrivez-le avec vos mots.",

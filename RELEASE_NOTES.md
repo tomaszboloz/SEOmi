@@ -6,6 +6,8 @@
 - The What-If simulator starts from the current scores instead of a uniform vector and shows iterations and residual. If the solver does not converge, it says so.
 - Crawler (#70): each link stores the nearest H2/H3 before it (`section_heading`, at most 160 characters). The lookup checks at most 1,500 nodes; when that limit is reached, the heading stays empty and is not guessed.
 - Links CSV export has five new columns: DOM zone, zone method, context before, context after and section heading. Runs crawled before these fields existed leave the columns empty.
+- IGOS in the target phrase audit (#67, #68): after a TOP 10 audit, the page and the competitor pages that were really fetched are split into 60-word windows (at most 40 per page). The panel shows the IGOS score, its components, the paragraph heatmap and recommendations. Without fetched competitor pages there is no baseline and no score. Vectors come from the local lexical provider, and the panel says so.
+- Search intent (SIJA) in the target phrase audit (#69): **Analyse search intent** renders the page and up to 5 TOP pages in the desktop WebView. It then shows the observed micro-intent, SSAS against the TOP pages and how many TOP pages fall in each funnel stage (TOFU/MOFU/BOFU). Pages that fail to render are counted as missing, never guessed, and no traffic shares are invented. Nothing is rendered until the button is pressed.
 - Outreach drafts use Information Gain evidence from the project's IGOS report again. This was lost in the 0.4.48 merge (#143).
 
 ## Fixed

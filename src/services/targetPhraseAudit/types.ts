@@ -81,6 +81,18 @@ export interface TopTenContentGapReport {
   targetAvailable: boolean;
   status: 'complete' | 'partial' | 'unavailable';
   topics: ContentGapTopic[];
+  /** Page texts behind the topics, kept in memory for IGOS (#67); absent in older reports. */
+  corpus?: TopTenCorpus;
+}
+
+export interface TopTenCorpusPage { rank: number; url: string; fetchedAt: string | null; status: number | null; text: string }
+
+export interface TopTenCorpus {
+  target: { url: string; text: string; wordCount: number } | null;
+  /** Only pages whose body was really fetched. */
+  pages: TopTenCorpusPage[];
+  /** Organic rows selected from the SERP, the IGOS denominator. */
+  requested: number;
 }
 
 export type InspectPage = (url: string) => Promise<PageAuditData>;

@@ -7865,6 +7865,13 @@
       "tool": "Narzędzie lub kalkulator",
       "transactional": "Transakcyjna",
       "local": "Lokalna"
+    },
+    "phrase": {
+      "description": "Renderuje tę stronę i do 5 stron z TOP w WebView aplikacji, a potem porównuje ich strukturę. Strony, których nie udało się wyrenderować, są liczone, a nie zgadywane.",
+      "run": "Analizuj intencję wyszukiwania",
+      "running": "Renderowanie stron…",
+      "failed": "Nie udało się wyrenderować strony, więc nie ma wyniku intencji.",
+      "funnel": "Wyrenderowane strony z TOP: {{analysed}} z {{requested}}. Etapy lejka wśród nich: TOFU {{tofu}}, MOFU {{mofu}}, BOFU {{bofu}}."
     }
   },
   "prePublishUi": {
@@ -8062,7 +8069,8 @@
       "too-few-documents": "Zbyt mało dokumentów konkurencji dla wiarygodnej bazy.",
       "some-documents-missing": "Nie udało się pobrać części stron konkurencji.",
       "no-target-chunks": "Strona nie ma akapitów do analizy.",
-      "off-topic-below-quota": "Zbyt mało akapitów w temacie."
+      "off-topic-below-quota": "Zbyt mało akapitów w temacie.",
+      "local-lexical-embeddings": "Podobieństwo liczą lokalne wektory leksykalne, nie model semantyczny; strefy są przybliżone."
     },
     "rec": {
       "rewrite-echo": "Akapit na offsecie {{offset}} powtarza fragment konkurencji: przepisz go własnymi słowami.",

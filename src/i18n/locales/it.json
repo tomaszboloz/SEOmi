@@ -7865,6 +7865,13 @@
       "tool": "Strumento o calcolatore",
       "transactional": "Transazionale",
       "local": "Locale"
+    },
+    "phrase": {
+      "description": "Esegue il rendering di questa pagina e di massimo 5 pagine TOP nel WebView desktop e ne confronta la struttura. Le pagine non renderizzate vengono contate, non stimate.",
+      "run": "Analizza l'intento di ricerca",
+      "running": "Rendering delle pagine…",
+      "failed": "Impossibile eseguire il rendering della pagina: nessun risultato sull'intento.",
+      "funnel": "Pagine TOP renderizzate: {{analysed}} su {{requested}}. Fasi del funnel tra queste: TOFU {{tofu}}, MOFU {{mofu}}, BOFU {{bofu}}."
     }
   },
   "prePublishUi": {
@@ -8062,7 +8069,8 @@
       "too-few-documents": "Troppo pochi documenti concorrenti per una base affidabile.",
       "some-documents-missing": "Alcune pagine concorrenti non sono state recuperate.",
       "no-target-chunks": "La pagina non ha paragrafi analizzabili.",
-      "off-topic-below-quota": "Troppo pochi paragrafi in tema."
+      "off-topic-below-quota": "Troppo pochi paragrafi in tema.",
+      "local-lexical-embeddings": "La similarità usa vettori lessicali locali, non un modello semantico; le zone sono approssimative."
     },
     "rec": {
       "rewrite-echo": "Il paragrafo all'offset {{offset}} ripete un passaggio concorrente: riscrivilo con parole tue.",

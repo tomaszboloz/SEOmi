@@ -41,6 +41,7 @@ describe('target phrase audit UI', () => {
     expect(screen.getByText('https://result.example/one')).toBeTruthy();
     expect(screen.getAllByText(i18n.t('targetPhraseAuditUi.occurrences', { count: 1 })).length).toBe(4);
     expect(screen.getByText((text) => text.includes(`${i18n.t('targetPhraseAuditUi.reportStatus')}: ${i18n.t('targetPhraseAuditUi.reportStatuses.unavailable')}`))).toBeTruthy();
+    expect(await screen.findByText(i18n.t('igosUi.limit.no-comparable-documents'))).toBeTruthy();
   });
 
   it('audits supplied TOP10 rows through inspect_url only after the explicit action', async () => {
@@ -53,6 +54,8 @@ describe('target phrase audit UI', () => {
     await act(async () => { fireEvent.click(button); });
     await waitFor(() => expect(invoke).toHaveBeenCalledWith('inspect_url', expect.objectContaining({ url: 'https://result.example/one' })));
     await waitFor(() => expect(screen.getByText((text) => text.includes(`${i18n.t('targetPhraseAuditUi.reportStatus')}: ${i18n.t('targetPhraseAuditUi.reportStatuses.complete')}`))).toBeTruthy());
+    expect(await screen.findByText(i18n.t('igosUi.limit.too-few-documents'))).toBeTruthy();
+    expect(screen.getByText(i18n.t('igosUi.limit.local-lexical-embeddings'))).toBeTruthy();
   });
 
   it('assigns a distinct request id to every concurrently inspected page', async () => {

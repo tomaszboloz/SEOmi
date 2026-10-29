@@ -7865,6 +7865,13 @@
       "tool": "工具或计算器",
       "transactional": "交易",
       "local": "本地"
+    },
+    "phrase": {
+      "description": "在桌面 WebView 中渲染此页面和最多 5 个排名靠前的页面，并比较其结构。渲染失败的页面会被计数，不做猜测。",
+      "run": "分析搜索意图",
+      "running": "正在渲染页面…",
+      "failed": "无法渲染该页面，因此没有意图结果。",
+      "funnel": "已渲染的排名靠前页面：{{analysed}} / {{requested}}。其中的漏斗阶段：TOFU {{tofu}}，MOFU {{mofu}}，BOFU {{bofu}}。"
     }
   },
   "prePublishUi": {
@@ -8062,7 +8069,8 @@
       "too-few-documents": "竞品文档太少，无法建立可靠基准。",
       "some-documents-missing": "部分竞品页面无法获取。",
       "no-target-chunks": "页面没有可分析的段落。",
-      "off-topic-below-quota": "切题段落太少。"
+      "off-topic-below-quota": "切题段落太少。",
+      "local-lexical-embeddings": "相似度使用本地词汇向量而非语义模型计算，区域为近似值。"
     },
     "rec": {
       "rewrite-echo": "偏移量 {{offset}} 处的段落重复了竞品内容：请用自己的话改写。",

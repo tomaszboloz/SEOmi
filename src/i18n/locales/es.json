@@ -7865,6 +7865,13 @@
       "tool": "Herramienta o calculadora",
       "transactional": "Transaccional",
       "local": "Local"
+    },
+    "phrase": {
+      "description": "Renderiza esta página y hasta 5 páginas del TOP en el WebView de escritorio y compara su estructura. Las páginas que no se renderizan se cuentan, no se suponen.",
+      "run": "Analizar la intención de búsqueda",
+      "running": "Renderizando páginas…",
+      "failed": "No se pudo renderizar la página, así que no hay resultado de intención.",
+      "funnel": "Páginas del TOP renderizadas: {{analysed}} de {{requested}}. Etapas del embudo entre ellas: TOFU {{tofu}}, MOFU {{mofu}}, BOFU {{bofu}}."
     }
   },
   "prePublishUi": {
@@ -8062,7 +8069,8 @@
       "too-few-documents": "Muy pocos documentos de la competencia para una base fiable.",
       "some-documents-missing": "No se pudieron obtener algunas páginas de la competencia.",
       "no-target-chunks": "La página no tiene párrafos analizables.",
-      "off-topic-below-quota": "Muy pocos párrafos dentro del tema."
+      "off-topic-below-quota": "Muy pocos párrafos dentro del tema.",
+      "local-lexical-embeddings": "La similitud usa vectores léxicos locales, no un modelo semántico; las zonas son aproximadas."
     },
     "rec": {
       "rewrite-echo": "El párrafo en el desplazamiento {{offset}} repite un pasaje de la competencia: reescríbelo con tus palabras.",

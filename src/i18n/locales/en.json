@@ -7865,6 +7865,13 @@
       "tool": "Tool or calculator",
       "transactional": "Transactional",
       "local": "Local"
+    },
+    "phrase": {
+      "description": "Renders this page and up to 5 TOP pages in the desktop WebView, then compares their structure. Pages that fail to render are counted, not guessed.",
+      "run": "Analyse search intent",
+      "running": "Rendering pages…",
+      "failed": "The page could not be rendered, so there is no intent result.",
+      "funnel": "TOP pages rendered: {{analysed}} of {{requested}}. Funnel stages among them: TOFU {{tofu}}, MOFU {{mofu}}, BOFU {{bofu}}."
     }
   },
   "prePublishUi": {
@@ -8062,7 +8069,8 @@
       "too-few-documents": "Too few competitor documents for a reliable baseline.",
       "some-documents-missing": "Some competitor pages could not be fetched.",
       "no-target-chunks": "The page has no analysable paragraphs.",
-      "off-topic-below-quota": "Too few on-topic paragraphs."
+      "off-topic-below-quota": "Too few on-topic paragraphs.",
+      "local-lexical-embeddings": "Similarity uses local lexical vectors, not a semantic model; zones are approximate."
     },
     "rec": {
       "rewrite-echo": "The paragraph at offset {{offset}} repeats a competitor passage: rewrite it in your own words.",

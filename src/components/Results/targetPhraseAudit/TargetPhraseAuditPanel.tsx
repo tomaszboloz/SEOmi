@@ -4,10 +4,14 @@ import type { PageAuditData } from '@/types';
 import { TargetPhraseEvidenceSection } from './TargetPhraseEvidenceSection';
 import { TargetPhraseTopTenSection } from './TargetPhraseTopTenSection';
 import { useTargetPhraseAuditSession } from './useTargetPhraseAuditSession';
+import { usePhraseIgos } from './usePhraseIgos';
+import { IgosPanel } from '../igos/IgosPanel';
+import { TargetPhraseIntentSection } from './TargetPhraseIntentSection';
 
 export const TargetPhraseAuditPanel: React.FC<{ audit: PageAuditData }> = ({ audit }) => {
   const { t } = useTranslation();
   const session = useTargetPhraseAuditSession(audit);
+  const igos = usePhraseIgos(session.report?.corpus);
   return (
     <section className="space-y-4 rounded-2xl border border-slate-800 bg-slate-950/25 p-1">
       <header className="rounded-xl border border-slate-800 bg-slate-900/60 px-5 py-4">
@@ -35,6 +39,8 @@ export const TargetPhraseAuditPanel: React.FC<{ audit: PageAuditData }> = ({ aud
         error={session.error}
         onAudit={() => { void session.auditTopTen(); }}
       />
+      {session.report && <IgosPanel report={igos} />}
+      {session.report && <TargetPhraseIntentSection report={session.report} />}
     </section>
   );
 };
