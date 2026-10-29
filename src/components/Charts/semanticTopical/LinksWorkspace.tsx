@@ -55,7 +55,7 @@ export const LinksWorkspace = ({ projectId, pages, run }: { projectId: string | 
   };
   const crawlStartedAt = runCompleted && run ? deriveCrawlStartedAt(run) ?? 'unavailable' : 'unavailable';
   return <div className="space-y-4">
-    <ContextualLinkInjectorPanel injections={injections} />
+    <ContextualLinkInjectorPanel injections={injections} projectId={projectId} baselineScoreFor={scoreFor} />
     <InternalLinkOpportunitiesPanel pages={linkPages} report={linkReport} quarantine={bus.quarantine} conflicts={bus.conflicts} projectId={projectId} baselineScoreFor={scoreFor} />
     <DeploymentArtifactsPanel rules={rules} projectId={projectId} baselineScoreFor={scoreFor} />
     {projectId && <OptimizationTaskTracker projectId={projectId} pages={pages} scoreFor={scoreFor} crawlStartedAt={crawlStartedAt} />}

@@ -1,11 +1,13 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { CopilotPatcherPanel, pageHasPatchContext, patchTargetForPassage } from '@/components/Results/copilotPatcher';
-import { compareRewrite, passageRevision, rewritePassage, type AioChunk, type RewriteComparison } from '@/services/aioReadiness';
+import { compareRewrite, makeRewriteEntry, passageRevision, recordRewrite, rewritePassage, type AioChunk, type RewriteComparison } from '@/services/aioReadiness';
+import { withOllamaFallback } from '@/services/aioReadiness/rewriteDeps';
 import { createBriefDeps } from '@/services/siteFocusBenchmark/adapter';
 import { copyText } from '@/services/clipboard';
 import { downloadBlob } from '@/services/download';
 import type { CrawledPageSummary } from '@/types';
+import { AioPassageAccept } from './AioPassageAccept';
 import { AioPassageEvidence } from './AioPassageEvidence';
 
 type Passage = AioChunk & { url: string };
@@ -17,7 +19,7 @@ export const AioPassageCard = ({ passage, index, page, projectId, runId }: { pas
   const { t } = useTranslation();
   const [state, setState] = useState<State>({ status: 'idle' });
   const [review, setReview] = useState<RewriteComparison | null>(null);
-  const [approved, setApproved] = useState(false);
+  const [copied, setCopied] = useState<'idle' | 'ok' | 'failed'>('idle');
   const controller = useRef<AbortController | null>(null);
   const revision = useMemo(() => passageRevision(passage), [passage]);
   const contextKey = `${projectId ?? ''}|${runId ?? ''}|${revision}`;
@@ -28,7 +30,7 @@ export const AioPassageCard = ({ passage, index, page, projectId, runId }: { pas
   const reviewPartial = review !== null && (review.before.availability !== 'complete' || review.after.availability !== 'complete');
 
   useEffect(() => () => controller.current?.abort(), [contextKey]);
-  useEffect(() => { setState({ status: 'idle' }); setReview(null); setApproved(false); }, [contextKey]);
+  useEffect(() => { setState({ status: 'idle' }); setReview(null); setCopied('idle'); }, [contextKey]);
 
   const generate = async (): Promise<void> => {
     controller.current?.abort();
@@ -36,17 +38,20 @@ export const AioPassageCard = ({ passage, index, page, projectId, runId }: { pas
     controller.current = active;
     const expected = contextKey;
     setState({ status: 'busy' });
-    const outcome = await rewritePassage(createBriefDeps(), passage, { signal: active.signal });
+    const outcome = await rewritePassage(withOllamaFallback(createBriefDeps(), projectId), passage, { signal: active.signal });
     if (expected !== contextRef.current) return;
     if (active.signal.aborted) { setState({ status: 'cancelled' }); return; }
     setState(outcome.status === 'ok' ? outcome : outcome.status === 'error' ? { status: 'error', message: outcome.message } : { status: outcome.status });
-    if (outcome.status === 'ok') setReview(compareRewrite(passage.text, outcome.text, passage.heading, {
+    if (outcome.status !== 'ok') return;
+    const comparison = compareRewrite(passage.text, outcome.text, passage.heading, {
       language: page?.semantic_language ?? page?.document_language,
       coreTerms: page?.focus_terms?.map((term) => term.term),
-    }));
+    });
+    setReview(comparison);
+    recordRewrite(projectId, makeRewriteEntry(revision, comparison));
   };
   const copy = async (): Promise<void> => {
-    if (optimized) await copyText(optimized);
+    if (optimized) setCopied((await copyText(optimized)) ? 'ok' : 'failed');
   };
   const exportDraft = (): void => { if (optimized) downloadBlob(`seomi-aio-draft-${index + 1}.txt`, new Blob([optimized], { type: 'text/plain;charset=utf-8' })); };
 
@@ -81,8 +86,11 @@ export const AioPassageCard = ({ passage, index, page, projectId, runId }: { pas
           {reviewPartial && <p role="status" data-testid="aio-review-partial" className="text-amber-200">{t('aio.passage.partialProfile')}</p>}
           {review && !review.preservation.ok && <p role="alert" className="text-amber-200">{t('aio.passage.preservationWarning', { missing: Object.values(review.preservation.missing).flat().join(', ') })}</p>}
           <p className="text-amber-200/80">{t('aio.passage.unverified')}</p>
-          <div className="flex flex-wrap gap-2"><button type="button" className={btn} onClick={() => void copy()}>{t('aio.passage.copy')}</button><button type="button" className={btn} onClick={exportDraft}>{t('aio.passage.export')}</button><button type="button" className={btn} aria-pressed={approved} onClick={() => setApproved(true)}>{approved ? t('aio.passage.approved') : t('aio.passage.approve')}</button></div>
-          {approved && review?.diff.changed && <details className="rounded border border-slate-700 p-2"><summary className="cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-400">{t('aio.passage.diff')}</summary><div className="mt-1 space-y-1"><p className="text-rose-200">{review.diff.removedLines.join('\n')}</p><p className="text-emerald-200">{review.diff.addedLines.join('\n')}</p></div></details>}
+          <div className="flex flex-wrap gap-2"><button type="button" className={btn} onClick={() => void copy()}>{t('aio.passage.copy')}</button><button type="button" className={btn} onClick={exportDraft}>{t('aio.passage.export')}</button></div>
+          {copied === 'ok' && <p role="status" className="text-emerald-200">{t('aio.passage.copied')}</p>}
+          {copied === 'failed' && <p role="alert" className="text-rose-300">{t('aio.passage.copyFailed')}</p>}
+          {review && optimized && <AioPassageAccept passage={passage} title={page?.title || passage.url} optimized={optimized} review={review} revision={revision} projectId={projectId} />}
+          {review?.diff.changed && <details className="rounded border border-slate-700 p-2"><summary className="cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-400">{t('aio.passage.diff')}</summary><div className="mt-1 space-y-1"><p className="text-rose-200">{review.diff.removedLines.join('\n')}</p><p className="text-emerald-200">{review.diff.addedLines.join('\n')}</p></div></details>}
         </div>
       )}
       {pageHasPatchContext(page) ? <CopilotPatcherPanel target={patchTarget} projectId={projectId} index={index} /> : <p role="status" className="text-[11px] text-slate-500">{t('copilotPatcherUi.contextUnavailable')}</p>}

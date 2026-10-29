@@ -7,12 +7,12 @@ import { buildFindings, levelFor } from './findings';
 import { buildRegistry, isArticleNode, nodesOf, type SchemaNode } from './graph';
 import { analyzeSchema, schemaScore } from './schemaScore';
 import { analyzeTransparency, transparencyScore } from './transparency';
-import { EEAT_TRUST_VERSION, LEGACY_TRUST_WEIGHTS, TRUST_PROFILE_ID, TRUST_WEIGHTS, type ProfileEvidence, type TrustLayer, type TrustReport } from './types';
-import { detectYmyl } from './ymyl';
+import { EEAT_TRUST_VERSION, LEGACY_TRUST_WEIGHTS, TRUST_PROFILE_ID, SCORING_PROFILE, TRUST_WEIGHTS, type ProfileEvidence, type ScoringProfile, type TrustLayer, type TrustReport } from './types';
+import { detectYmyl, ymylGate, YMYL_SEVERE_MULTIPLIER } from './ymyl';
 import { declarationRecall, reconciliationStatus } from './identifiers';
 import { roleWeightedRecall, scanRoleEntities } from './roles';
 
-export interface TrustOptions { now?: string; profileEvidence?: Record<string, ProfileEvidence> }
+export interface TrustOptions { now?: string; profileEvidence?: Record<string, ProfileEvidence>; scoringProfile?: ScoringProfile }
 
 const usable = (page: CrawledPageSummary): boolean => page.http_status >= 200 && page.http_status < 400 && !page.request_error_kind;
 
@@ -30,6 +30,7 @@ const coverage = (score: number | undefined, declared: number, verified = 0) => 
 
 /** E-E-A-T & Entity Trust report from the crawl's own schema, links and pages; the Site Focus report supplies Core Topic and page types. */
 export const buildTrustReport = (pages: CrawledPageSummary[], focus?: SiteFocusReport, options: TrustOptions = {}): TrustReport => {
+  const scoring = options.scoringProfile ?? SCORING_PROFILE;
   const live = pages.filter(usable);
   const nodesByPage = new Map<string, SchemaNode[]>(live.map((page) => [page.final_url || page.url, nodesOf(page)]));
   const allNodes = [...nodesByPage.values()].flat();
@@ -72,18 +73,22 @@ export const buildTrustReport = (pages: CrawledPageSummary[], focus?: SiteFocusR
   const sameAsScore = entityCount ? Math.round((Math.min(1, sameAsLinks / entityCount) * 50 + profileRecall * 50)) : undefined;
   const hasAuthorEvidence = scan.authors.some((author) => author.alignmentPct !== undefined || author.bio || author.credentials?.length || author.knowsAbout?.length);
   const layers: TrustReport['layers'] = {
-    ...(allNodes.length ? { schemaGraph: schemaScore(schema, Boolean(ymyl)) } : {}),
+    ...(allNodes.length ? { schemaGraph: schemaScore(schema, scoring === 'legacy' ? Boolean(ymyl) : ymyl, scoring) } : {}),
     ...(sameAsScore === undefined ? {} : { sameAs: sameAsScore }),
     ...(transparencyScore(transparency) === undefined ? {} : { transparency: transparencyScore(transparency) }),
     ...(focus && articleUrls.size && hasAuthorEvidence ? { authorAlignment: Math.round(alignmentSum / articleUrls.size) } : {}),
-    ...(citationScore(citations) !== undefined ? { citationQuality: citationScore(citations) } : {}),
+    ...(citationScore(citations, scoring, Boolean(ymyl)) !== undefined ? { citationQuality: citationScore(citations, scoring, Boolean(ymyl)) } : {}),
   };
   const authorScore = layers.authorAlignment;
   const citation = layers.citationQuality;
-  const ymylTriggered = Boolean(ymyl && (authorScore === 0 || (citation !== undefined && citation < 15)));
+  const gate = ymyl && scoring !== 'legacy'
+    ? ymylGate({ category: ymyl, authorScore, citationScore: citation, rBacked: citations.rBacked, claimCount: citations.claimCount, articlesWithReviewer: schema.articlesWithReviewer, articleCount: schema.articleCount })
+    : undefined;
+  const ymylTriggered = gate ? gate.tier !== 'none' : Boolean(ymyl && (authorScore === 0 || (citation !== undefined && citation < 15)));
+  const multiplier = gate ? gate.multiplier : YMYL_SEVERE_MULTIPLIER;
   const rawScore = combineLayers(layers, TRUST_WEIGHTS);
   const observed = Object.values(layers).some((value) => typeof value === 'number' && Number.isFinite(value));
-  const score = observed ? (ymylTriggered ? Math.round(rawScore * 0.45) : rawScore) : null;
+  const score = observed ? (ymylTriggered ? Math.round(rawScore * multiplier) : rawScore) : null;
   const coverageByLayer: TrustReport['coverage'] = {
     schemaGraph: coverage(layers.schemaGraph, schema.articleCount),
     sameAs: coverage(layers.sameAs, sameAsLinks, verifiedProfiles > 0 ? 100 : 0),
@@ -92,8 +97,8 @@ export const buildTrustReport = (pages: CrawledPageSummary[], focus?: SiteFocusR
     transparency: coverage(layers.transparency, Object.values(transparency.found).filter(Boolean).length),
   };
   return {
-    availability: observed ? 'observed' : 'unavailable', score, level: score === null ? null : levelFor(score), layers, profileVersion: EEAT_TRUST_VERSION, profileId: TRUST_PROFILE_ID, coverage: coverageByLayer, ymyl,
-    ...(ymyl ? { ymylPolicy: { category: ymyl, applicable: true, multiplier: 0.45, triggered: ymylTriggered, heuristic: true as const } } : {}),
+    availability: observed ? 'observed' : 'unavailable', score, level: score === null ? null : levelFor(score), layers, profileVersion: EEAT_TRUST_VERSION, profileId: TRUST_PROFILE_ID, scoringProfile: scoring, coverage: coverageByLayer, ymyl,
+    ...(ymyl ? { ymylPolicy: { category: ymyl, applicable: true, multiplier: ymylTriggered ? multiplier : YMYL_SEVERE_MULTIPLIER, triggered: ymylTriggered, heuristic: true as const, ...(gate ? { tier: gate.tier, reasons: gate.reasons, claimGate: gate.claimGate } : {}) } } : {}),
     schema, authors: scan.authors, roleEntities, ...(roleRecall === undefined ? {} : { roleRecall }), citations, transparency,
     findings: buildFindings({ schema, authors: scan.authors, citations, transparency, ymyl, unattributed }),
     ymylUnattributedPct: ymyl && articleUrls.size ? Math.round((unattributed / articleUrls.size) * 100) : undefined,

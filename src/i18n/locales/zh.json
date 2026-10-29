@@ -5068,7 +5068,7 @@
     "views": "查询视图",
     "view": {
       "all": "全部查询",
-      "near": "查询 10–20",
+      "near": "查询 {{min}}–{{max}}",
       "ctr": "CTR 异常值"
     },
     "filterLabel": "筛选查询",
@@ -5095,7 +5095,13 @@
     "truncatedWarning": "由于报告限制，查询列表可能不完整。缺少某个查询并不意味着可见性丢失。",
     "clear": "清除文本筛选",
     "noMatches": "没有查询包含此文本。",
-    "noQueries": "此报告中没有可用的查询。"
+    "noQueries": "此报告中没有可用的查询。",
+    "range": {
+      "min": "排名大于",
+      "max": "排名不超过",
+      "hint": "平均排名大于 {{min}} 且不超过 {{max}} 的查询。",
+      "invalid": "请输入 0 到 100 之间的排名，且第一个小于第二个。"
+    }
   },
   "gscCannibalization": {
     "title": "潜在查询蚕食",
@@ -7488,7 +7494,22 @@
       "noKey": "请在设置中连接 AI 提供商以改写段落。",
       "error": "AI 请求失败：{{message}}",
       "empty": "AI 没有返回文本。",
-      "none": "未发现薄弱段落。"
+      "none": "未发现薄弱段落。",
+      "copyFailed": "复制失败。请选中文本后手动复制。",
+      "brief": {
+        "heading": "改写段落:{{heading}}",
+        "unverified": "AI 建议未经验证。发布前请核对事实、数字和来源。",
+        "original": "原文",
+        "rewritten": "AI 改写(手动接受)",
+        "versionNote": "已接受 AIO 改写,草稿版本 {{n}} ({{revision}})",
+        "accepted": "已添加到简报。已保存草稿版本:{{version}}",
+        "failed": "无法将该段落添加到简报。",
+        "noProject": "请选择项目以将段落添加到其简报。"
+      },
+      "history": {
+        "comparable": "可比较的改写(同一配置):{{count}} 次,最近变化 {{delta}}。",
+        "other": "不可比较(其他配置):{{count}} 次。"
+      }
     },
     "issue": {
       "dangling-pronoun": "指代不清",
@@ -7555,7 +7576,8 @@
       "roleReviewer": "审阅者",
       "rolePublisher": "发布者",
       "roleEvidence": "{{name}} ({{role}}) · {{status}} · sameAs 声明 {{recall}}%",
-      "roleRecall": "按角色加权的 sameAs 声明：{{pct}}%（作者 50%、审阅者 25%、发布者 25%；建议权重，仅为声明信号，并非身份验证）。"
+      "roleRecall": "按角色加权的 sameAs 声明：{{pct}}%（作者 50%、审阅者 25%、发布者 25%；建议权重，仅为声明信号，并非身份验证）。",
+      "declaredNote": "已声明不等于已验证：sameAs 链接只算声明。只有在获取注册表资料且其姓名或别名与作者一致后才会显示 verified；匹配只是较弱的证据，并不证明资质。短横线表示没有数据。"
     },
     "signals": {
       "claimEvidence": "主张证据",
@@ -7621,7 +7643,10 @@
         "dateModified": "修改日期（YYYY-MM-DD）",
         "lastReviewed": "最近审核日期（YYYY-MM-DD）",
         "sameAs": "sameAs 资料（每行一个 URL：Wikidata、ORCID、LinkedIn、职业注册库）",
-        "asReviewer": "声明为专家审核者而非作者"
+        "asReviewer": "声明为专家审核者而非作者",
+        "bio": "简短简介（可选）",
+        "credential": "资质或学位（可选）",
+        "knowsAbout": "专长主题（可选，每行一个）"
       },
       "issue": {
         "missing-name": "请输入作者姓名。",
@@ -7633,7 +7658,24 @@
       "preview": "生成的 JSON-LD",
       "copy": "复制 script 标签",
       "copied": "已复制。",
-      "copyFailed": "复制失败。请选中文本并手动复制。"
+      "copyFailed": "复制失败。请选中文本并手动复制。",
+      "needsVerification": "需要核实：只填写能够证明的内容。",
+      "unverifiedNote": "输出中的未核实字段：{{fields}}。发布前请逐一确认。",
+      "source": "来源：{{source}}",
+      "sourceName": {
+        "crawl": "抓取",
+        "report": "信任报告",
+        "start-url": "起始 URL"
+      },
+      "diff": {
+        "title": "相对已观察 schema 的变更",
+        "none": "相对已观察 schema 没有变更。",
+        "added": "新增",
+        "removed": "移除"
+      },
+      "download": "下载 JSON-LD",
+      "downloaded": "已下载。",
+      "downloadFailed": "下载失败。请改为复制 script 标签。"
     }
   },
   "executionCard": {
@@ -7739,7 +7781,9 @@
         "high": "高",
         "medium": "中",
         "low": "低"
-      }
+      },
+      "expectedDelta": "预期效果（分）",
+      "expectedVsMeasured": "预期 {{expected}}，实测 {{measured}}"
     }
   },
   "scoreDropAlert": {

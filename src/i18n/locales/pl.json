@@ -5068,7 +5068,7 @@
     "views": "Widoki fraz",
     "view": {
       "all": "Wszystkie frazy",
-      "near": "Frazy 10–20",
+      "near": "Frazy {{min}}–{{max}}",
       "ctr": "Odstające CTR"
     },
     "filterLabel": "Filtruj frazy",
@@ -5095,7 +5095,13 @@
     "truncatedWarning": "Lista fraz może być niepełna z powodu limitu raportu. Brak frazy nie oznacza utraty widoczności.",
     "clear": "Wyczyść filtr tekstowy",
     "noMatches": "Żadna fraza nie zawiera podanego tekstu.",
-    "noQueries": "W tym raporcie nie ma dostępnych fraz."
+    "noQueries": "W tym raporcie nie ma dostępnych fraz.",
+    "range": {
+      "min": "Pozycja powyżej",
+      "max": "Pozycja do",
+      "hint": "Frazy ze średnią pozycją powyżej {{min}} i najwyżej {{max}}.",
+      "invalid": "Podaj pozycje od 0 do 100, pierwszą mniejszą niż drugą."
+    }
   },
   "gscCannibalization": {
     "title": "Możliwa kanibalizacja fraz",
@@ -7488,7 +7494,22 @@
       "noKey": "Połącz dostawcę AI w Ustawieniach, aby przepisywać fragmenty.",
       "error": "Zapytanie do AI nie powiodło się: {{message}}",
       "empty": "AI nie zwróciło tekstu.",
-      "none": "Nie znaleziono słabych fragmentów."
+      "none": "Nie znaleziono słabych fragmentów.",
+      "copyFailed": "Kopiowanie nie powiodło się. Zaznacz tekst i skopiuj go ręcznie.",
+      "brief": {
+        "heading": "Przepisany fragment: {{heading}}",
+        "unverified": "Propozycja AI, niezweryfikowana. Sprawdź fakty, liczby i źródła przed publikacją.",
+        "original": "Oryginał",
+        "rewritten": "Przepisanie AI (zaakceptowane ręcznie)",
+        "versionNote": "Przepisanie AIO zaakceptowane, wersja szkicu {{n}} ({{revision}})",
+        "accepted": "Dodano do briefu. Zapisano wersję szkicu: {{version}}",
+        "failed": "Nie udało się dodać fragmentu do briefu.",
+        "noProject": "Wybierz projekt, aby dodać fragment do jego briefu."
+      },
+      "history": {
+        "comparable": "Porównywalne przepisania (ten sam profil): {{count}}, ostatnia zmiana {{delta}}.",
+        "other": "Nieporównywalne (inny profil): {{count}}."
+      }
     },
     "issue": {
       "dangling-pronoun": "Niejasne odniesienie",
@@ -7555,7 +7576,8 @@
       "roleReviewer": "Recenzent",
       "rolePublisher": "Wydawca",
       "roleEvidence": "{{name}} ({{role}}) · {{status}} · deklaracja sameAs {{recall}}%",
-      "roleRecall": "Deklaracja sameAs ważona rolą: {{pct}}% (autor 50%, recenzent 25%, wydawca 25%; wagi proponowane, sygnał deklaracji, nie weryfikacja tożsamości)."
+      "roleRecall": "Deklaracja sameAs ważona rolą: {{pct}}% (autor 50%, recenzent 25%, wydawca 25%; wagi proponowane, sygnał deklaracji, nie weryfikacja tożsamości).",
+      "declaredNote": "Zadeklarowane to nie zweryfikowane: link sameAs liczy się jako deklaracja. Status verified pojawia się dopiero po pobraniu profilu z rejestru i zgodności imienia lub aliasu z autorem; zgodność to słaby dowód i nie potwierdza kwalifikacji. Myślnik oznacza brak danych."
     },
     "signals": {
       "claimEvidence": "Dowody twierdzeń",
@@ -7621,7 +7643,10 @@
         "dateModified": "Data modyfikacji (RRRR-MM-DD)",
         "lastReviewed": "Ostatnia recenzja (RRRR-MM-DD)",
         "sameAs": "Profile sameAs (jeden adres w linii: Wikidata, ORCID, LinkedIn, rejestr zawodowy)",
-        "asReviewer": "Wskaż jako recenzenta merytorycznego zamiast autora"
+        "asReviewer": "Wskaż jako recenzenta merytorycznego zamiast autora",
+        "bio": "Krótki opis (opcjonalnie)",
+        "credential": "Kwalifikacja lub stopień (opcjonalnie)",
+        "knowsAbout": "Tematy specjalizacji (opcjonalnie, po jednym w linii)"
       },
       "issue": {
         "missing-name": "Podaj imię i nazwisko autora.",
@@ -7633,7 +7658,24 @@
       "preview": "Wygenerowany JSON-LD",
       "copy": "Kopiuj znacznik script",
       "copied": "Skopiowano.",
-      "copyFailed": "Nie udało się skopiować. Zaznacz tekst i skopiuj go ręcznie."
+      "copyFailed": "Nie udało się skopiować. Zaznacz tekst i skopiuj go ręcznie.",
+      "needsVerification": "Wymaga weryfikacji: wpisz tylko to, co potrafisz udowodnić.",
+      "unverifiedNote": "Niezweryfikowane pola w wyniku: {{fields}}. Potwierdź każde przed publikacją.",
+      "source": "Źródło: {{source}}",
+      "sourceName": {
+        "crawl": "crawl",
+        "report": "raport zaufania",
+        "start-url": "adres startowy"
+      },
+      "diff": {
+        "title": "Zmiany względem obserwowanego schematu",
+        "none": "Brak zmian względem obserwowanego schematu.",
+        "added": "Dodano",
+        "removed": "Usunięto"
+      },
+      "download": "Pobierz JSON-LD",
+      "downloaded": "Pobrano.",
+      "downloadFailed": "Nie udało się pobrać. Skopiuj znacznik script."
     }
   },
   "executionCard": {
@@ -7739,7 +7781,9 @@
         "high": "Wysoki",
         "medium": "Średni",
         "low": "Niski"
-      }
+      },
+      "expectedDelta": "Oczekiwany efekt (pkt)",
+      "expectedVsMeasured": "oczekiwano {{expected}}, zmierzono {{measured}}"
     }
   },
   "scoreDropAlert": {

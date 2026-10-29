@@ -5068,7 +5068,7 @@
     "views": "Viste delle query",
     "view": {
       "all": "Tutte le query",
-      "near": "Query 10–20",
+      "near": "Query {{min}}–{{max}}",
       "ctr": "Anomalie CTR"
     },
     "filterLabel": "Filtra query",
@@ -5095,7 +5095,13 @@
     "truncatedWarning": "L’elenco delle query potrebbe essere incompleto a causa dei limiti del report. L’assenza di una query non implica una perdita di visibilità.",
     "clear": "Cancella filtro di testo",
     "noMatches": "Nessuna query contiene questo testo.",
-    "noQueries": "Non ci sono query disponibili in questo rapporto."
+    "noQueries": "Non ci sono query disponibili in questo rapporto.",
+    "range": {
+      "min": "Posizione oltre",
+      "max": "Posizione fino a",
+      "hint": "Query con posizione media oltre {{min}} e fino a {{max}}.",
+      "invalid": "Inserisci posizioni da 0 a 100, la prima minore della seconda."
+    }
   },
   "gscCannibalization": {
     "title": "Possibile cannibalizzazione delle query",
@@ -7488,7 +7494,22 @@
       "noKey": "Collega un provider IA nelle Impostazioni per riscrivere i passaggi.",
       "error": "Richiesta all'IA non riuscita: {{message}}",
       "empty": "L'IA non ha restituito testo.",
-      "none": "Nessun passaggio debole trovato."
+      "none": "Nessun passaggio debole trovato.",
+      "copyFailed": "Copia non riuscita. Seleziona il testo e copialo manualmente.",
+      "brief": {
+        "heading": "Passaggio riscritto: {{heading}}",
+        "unverified": "Proposta dell'IA non verificata. Controlla fatti, numeri e fonti prima di pubblicare.",
+        "original": "Originale",
+        "rewritten": "Riscrittura IA (accettata manualmente)",
+        "versionNote": "Riscrittura AIO accettata, versione della bozza {{n}} ({{revision}})",
+        "accepted": "Aggiunto al brief. Versione della bozza salvata: {{version}}",
+        "failed": "Impossibile aggiungere il passaggio al brief.",
+        "noProject": "Seleziona un progetto per aggiungere il passaggio al suo brief."
+      },
+      "history": {
+        "comparable": "Riscritture confrontabili (stesso profilo): {{count}}, ultima variazione {{delta}}.",
+        "other": "Non confrontabili (altro profilo): {{count}}."
+      }
     },
     "issue": {
       "dangling-pronoun": "Riferimento poco chiaro",
@@ -7555,7 +7576,8 @@
       "roleReviewer": "Revisore",
       "rolePublisher": "Editore",
       "roleEvidence": "{{name}} ({{role}}) · {{status}} · dichiarazione sameAs {{recall}}%",
-      "roleRecall": "Dichiarazione sameAs ponderata per ruolo: {{pct}}% (autore 50%, revisore 25%, editore 25%; pesi proposti, un segnale dichiarativo, non una verifica dell’identità)."
+      "roleRecall": "Dichiarazione sameAs ponderata per ruolo: {{pct}}% (autore 50%, revisore 25%, editore 25%; pesi proposti, un segnale dichiarativo, non una verifica dell’identità).",
+      "declaredNote": "Dichiarato non significa verificato: un link sameAs conta come dichiarazione. Verified compare solo dopo aver recuperato il profilo del registro e se il suo nome o alias coincide con l’autore; una corrispondenza è una prova debole e non dimostra le qualifiche. Un trattino indica assenza di dati."
     },
     "signals": {
       "claimEvidence": "Prove delle affermazioni",
@@ -7621,7 +7643,10 @@
         "dateModified": "Data di modifica (AAAA-MM-GG)",
         "lastReviewed": "Ultima revisione (AAAA-MM-GG)",
         "sameAs": "Profili sameAs (un URL per riga: Wikidata, ORCID, LinkedIn, albo professionale)",
-        "asReviewer": "Dichiara come revisore esperto invece che come autore"
+        "asReviewer": "Dichiara come revisore esperto invece che come autore",
+        "bio": "Breve biografia (facoltativo)",
+        "credential": "Titolo o qualifica (facoltativo)",
+        "knowsAbout": "Argomenti di competenza (facoltativo, uno per riga)"
       },
       "issue": {
         "missing-name": "Inserisci il nome dell'autore.",
@@ -7633,7 +7658,24 @@
       "preview": "JSON-LD generato",
       "copy": "Copia il tag script",
       "copied": "Copiato.",
-      "copyFailed": "Copia non riuscita. Seleziona il testo e copialo manualmente."
+      "copyFailed": "Copia non riuscita. Seleziona il testo e copialo manualmente.",
+      "needsVerification": "Da verificare: inserisci solo ciò che puoi dimostrare.",
+      "unverifiedNote": "Campi non verificati nell'output: {{fields}}. Conferma ciascuno prima di pubblicare.",
+      "source": "Fonte: {{source}}",
+      "sourceName": {
+        "crawl": "scansione",
+        "report": "rapporto di fiducia",
+        "start-url": "URL iniziale"
+      },
+      "diff": {
+        "title": "Modifiche rispetto allo schema osservato",
+        "none": "Nessuna modifica rispetto allo schema osservato.",
+        "added": "Aggiunto",
+        "removed": "Rimosso"
+      },
+      "download": "Scarica JSON-LD",
+      "downloaded": "Scaricato.",
+      "downloadFailed": "Download non riuscito. Copia invece il tag script."
     }
   },
   "executionCard": {
@@ -7739,7 +7781,9 @@
         "high": "Alta",
         "medium": "Media",
         "low": "Bassa"
-      }
+      },
+      "expectedDelta": "Effetto atteso (punti)",
+      "expectedVsMeasured": "atteso {{expected}}, misurato {{measured}}"
     }
   },
   "scoreDropAlert": {

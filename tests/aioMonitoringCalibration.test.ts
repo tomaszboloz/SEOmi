@@ -21,4 +21,9 @@ describe('AIO alert threshold harness', () => {
     expect(DEFAULT_AIO_CALIBRATION_CASES.some((item) => item.expected === 'unavailable')).toBe(true);
     expect(evaluateAioCalibration(DEFAULT_AIO_CALIBRATION_CASES, 20).incorrect).toBeGreaterThan(0);
   });
+
+  it('labels the harness as synthetic and never reports real-world calibration', () => {
+    expect(evaluateAioCalibration([]).limitation).toBe('synthetic-labeled-cases-only');
+    expect(evaluateAioCalibration([]).version).toContain('synthetic');
+  });
 });

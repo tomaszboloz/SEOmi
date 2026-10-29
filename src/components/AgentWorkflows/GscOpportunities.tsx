@@ -5,6 +5,7 @@ import { findCtrOutliers, findNearTopTenQueries } from '@/services/gscTracker/op
 import type { GscPerformanceSnapshot } from '@/services/gscPerformanceTracker';
 import type { GscPerformanceData } from '@/types';
 import { gscOpportunitySource } from './GscOpportunitiesSource';
+import { GscNearRangeFields, readNearRange, writeNearRange } from './GscNearRangeFields';
 
 type Query = GscPerformanceSnapshot['queries'][number];
 type Row = Query | CtrOutlier;
@@ -25,7 +26,7 @@ const metric = (row: Row, key: SortKey): number | string | null => {
 };
 const numberText = (value: number | null | undefined, suffix = ''): string => finite(value) ? `${value.toLocaleString()}${suffix}` : '—';
 
-export function GscOpportunities({ snapshot, data }: { snapshot: GscPerformanceSnapshot; data?: GscPerformanceData }) {
+export function GscOpportunities({ snapshot, data, projectId }: { snapshot: GscPerformanceSnapshot; data?: GscPerformanceData; projectId?: string | null }) {
   const { t, i18n } = useTranslation();
   const panelId = useId();
   const source = useMemo(() => gscOpportunitySource(snapshot, data), [snapshot, data]);
@@ -35,7 +36,9 @@ export function GscOpportunities({ snapshot, data }: { snapshot: GscPerformanceS
   const [direction, setDirection] = useState<Direction>('asc');
   const [pageSize, setPageSize] = useState(20);
   const [page, setPage] = useState(0);
-  const nearRows = useMemo(() => findNearTopTenQueries(source), [source]);
+  const [range, setRange] = useState(() => readNearRange(projectId));
+  const changeRange = (next: typeof range) => { setRange(next); writeNearRange(projectId, next); };
+  const nearRows = useMemo(() => findNearTopTenQueries(source, range), [source, range]);
   const ctrRows = useMemo(() => findCtrOutliers(source), [source]);
   const baseRows = useMemo<Row[]>(() => view === 'all' ? source.queries : view === 'near' ? nearRows : ctrRows, [ctrRows, nearRows, source, view]);
   const rows = useMemo(() => {
@@ -52,7 +55,7 @@ export function GscOpportunities({ snapshot, data }: { snapshot: GscPerformanceS
   const pageCount = Math.max(1, Math.ceil(rows.length / pageSize));
   const currentPage = Math.min(page, pageCount - 1);
   const visible = rows.slice(currentPage * pageSize, (currentPage + 1) * pageSize);
-  useEffect(() => setPage(0), [filter, sortKey, direction, view, source, pageSize]);
+  useEffect(() => setPage(0), [filter, sortKey, direction, view, source, pageSize, range]);
   useEffect(() => setPage((value) => Math.min(value, pageCount - 1)), [pageCount]);
   const chooseSort = (key: SortKey): void => { if (key === sortKey) setDirection((value) => value === 'asc' ? 'desc' : 'asc'); else { setSortKey(key); setDirection(key === 'query' || key === 'position' ? 'asc' : 'desc'); } };
   const chooseView = (key: View): void => {
@@ -63,7 +66,7 @@ export function GscOpportunities({ snapshot, data }: { snapshot: GscPerformanceS
   const columns: SortKey[] = view === 'ctr' ? ['query', 'clicks', 'impressions', 'ctr', 'position', 'benchmark'] : ['query', 'clicks', 'impressions', 'ctr', 'position'];
   const from = rows.length ? currentPage * pageSize + 1 : 0;
   const to = Math.min((currentPage + 1) * pageSize, rows.length);
-  const viewLabel = (key: View): string => t(`gscOpportunities.view.${key}`);
+  const viewLabel = (key: View): string => t(`gscOpportunities.view.${key}`, { min: range.min, max: range.max });
   const countFor = (key: View): number => key === 'all' ? source.queries.length : key === 'near' ? nearRows.length : ctrRows.length;
   return <section className="space-y-4 rounded-xl border border-slate-800 bg-slate-900/60 p-4">
     <h2 className="font-semibold text-white">{t('gscOpportunities.title')}</h2>
@@ -84,6 +87,7 @@ export function GscOpportunities({ snapshot, data }: { snapshot: GscPerformanceS
     }} aria-label={t('gscOpportunities.views')} className="flex flex-wrap gap-2">
       {(['all', 'near', 'ctr'] as View[]).map((key) => <button key={key} type="button" role="tab" id={`${panelId}-${key}`} aria-controls={panelId} tabIndex={view === key ? 0 : -1} aria-selected={view === key} onClick={() => chooseView(key)} className="rounded border border-slate-700 px-2 py-1 text-xs text-slate-200 aria-selected:border-emerald-400 aria-selected:text-emerald-300">{viewLabel(key)} ({countFor(key)})</button>)}
     </div>
+    {view === 'near' && <GscNearRangeFields range={range} onChange={changeRange} />}
     <div role="tabpanel" id={panelId} aria-labelledby={`${panelId}-${view}`}><div className="overflow-x-auto"><table className="w-full min-w-[680px] text-left text-xs text-slate-200"><thead><tr>{columns.map((key) => <th key={key} scope="col" aria-sort={sortKey === key ? direction === 'asc' ? 'ascending' : 'descending' : 'none'} className="border-b border-slate-700 px-2 py-2"><button type="button" onClick={() => chooseSort(key)} className="font-semibold hover:text-emerald-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-400">{sortLabel(key)}</button></th>)}</tr></thead><tbody>
       {visible.map((row, index) => <tr key={`${row.query}-${index}`} className="border-b border-slate-800"><td className="px-2 py-2"><span>{row.query}</span></td><td className="px-2 py-2">{numberText(row.clicks)}</td><td className="px-2 py-2">{numberText(row.impressions)}</td><td className="px-2 py-2"><span>{numberText(isCtr(row) ? row.observedCtr : row.ctr, '%')}</span></td><td className="px-2 py-2">{finite(row.position) ? `#${row.position.toFixed(1)}` : '—'}</td>{view === 'ctr' && <td className="px-2 py-2">{isCtr(row) ? t('gscOpportunities.benchmark', { actual: row.observedCtr.toFixed(1), expected: row.peerCtr.toFixed(1), count: row.peerCount }) : '—'}</td>}</tr>)}
     </tbody></table></div>

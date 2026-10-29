@@ -5068,7 +5068,7 @@
     "views": "Query views",
     "view": {
       "all": "All queries",
-      "near": "Queries 10–20",
+      "near": "Queries {{min}}–{{max}}",
       "ctr": "CTR outliers"
     },
     "filterLabel": "Filter queries",
@@ -5095,7 +5095,13 @@
     "truncatedWarning": "The query list may be incomplete because of report limits. A missing query does not imply lost visibility.",
     "clear": "Clear text filter",
     "noMatches": "No queries contain this text.",
-    "noQueries": "No query rows are available in this report."
+    "noQueries": "No query rows are available in this report.",
+    "range": {
+      "min": "Position above",
+      "max": "Position up to",
+      "hint": "Queries with an average position above {{min}} and up to {{max}}.",
+      "invalid": "Enter positions from 0 to 100 with the first lower than the second."
+    }
   },
   "gscCannibalization": {
     "title": "Potential query cannibalization",
@@ -7488,7 +7494,22 @@
       "noKey": "Connect an AI provider in Settings to rewrite passages.",
       "error": "AI request failed: {{message}}",
       "empty": "The AI returned no text.",
-      "none": "No weak passages found."
+      "none": "No weak passages found.",
+      "copyFailed": "Copy failed. Select the text and copy it manually.",
+      "brief": {
+        "heading": "Rewritten passage: {{heading}}",
+        "unverified": "AI proposal, not verified. Check facts, numbers and sources before publishing.",
+        "original": "Original",
+        "rewritten": "AI rewrite (accepted manually)",
+        "versionNote": "AIO rewrite accepted, draft version {{n}} ({{revision}})",
+        "accepted": "Added to the brief. Draft version saved: {{version}}",
+        "failed": "Could not add the passage to the brief.",
+        "noProject": "Select a project to add the passage to its brief."
+      },
+      "history": {
+        "comparable": "Comparable rewrites (same profile): {{count}}, last change {{delta}}.",
+        "other": "Not comparable (different profile): {{count}}."
+      }
     },
     "issue": {
       "dangling-pronoun": "Unclear reference",
@@ -7555,7 +7576,8 @@
       "roleReviewer": "Reviewer",
       "rolePublisher": "Publisher",
       "roleEvidence": "{{name}} ({{role}}) · {{status}} · sameAs declaration {{recall}}%",
-      "roleRecall": "Role-weighted sameAs declaration: {{pct}}% (author 50%, reviewer 25%, publisher 25%; proposed weights, a declaration signal, not identity verification)."
+      "roleRecall": "Role-weighted sameAs declaration: {{pct}}% (author 50%, reviewer 25%, publisher 25%; proposed weights, a declaration signal, not identity verification).",
+      "declaredNote": "Declared is not verified: a sameAs link counts as a declaration. Verified appears only after the registry profile was fetched and its name or alias matched the author; a match is weak evidence and does not prove qualifications. A dash means no data."
     },
     "signals": {
       "claimEvidence": "Claim evidence",
@@ -7621,7 +7643,10 @@
         "dateModified": "Date modified (YYYY-MM-DD)",
         "lastReviewed": "Last reviewed (YYYY-MM-DD)",
         "sameAs": "sameAs profiles (one URL per line: Wikidata, ORCID, LinkedIn, professional register)",
-        "asReviewer": "Declare as expert reviewer instead of author"
+        "asReviewer": "Declare as expert reviewer instead of author",
+        "bio": "Short bio (optional)",
+        "credential": "Credential or degree (optional)",
+        "knowsAbout": "Topics known (optional, one per line)"
       },
       "issue": {
         "missing-name": "Enter the author name.",
@@ -7633,7 +7658,24 @@
       "preview": "Generated JSON-LD",
       "copy": "Copy script tag",
       "copied": "Copied.",
-      "copyFailed": "Copy failed. Select the text and copy it manually."
+      "copyFailed": "Copy failed. Select the text and copy it manually.",
+      "needsVerification": "Needs verification: type only what you can prove.",
+      "unverifiedNote": "Unverified fields in output: {{fields}}. Confirm each before publishing.",
+      "source": "Source: {{source}}",
+      "sourceName": {
+        "crawl": "crawl",
+        "report": "trust report",
+        "start-url": "start URL"
+      },
+      "diff": {
+        "title": "Changes against observed schema",
+        "none": "No changes against observed schema.",
+        "added": "Added",
+        "removed": "Removed"
+      },
+      "download": "Download JSON-LD",
+      "downloaded": "Downloaded.",
+      "downloadFailed": "Download failed. Copy the script tag instead."
     }
   },
   "executionCard": {
@@ -7739,7 +7781,9 @@
         "high": "High",
         "medium": "Medium",
         "low": "Low"
-      }
+      },
+      "expectedDelta": "Expected effect (points)",
+      "expectedVsMeasured": "expected {{expected}}, measured {{measured}}"
     }
   },
   "scoreDropAlert": {

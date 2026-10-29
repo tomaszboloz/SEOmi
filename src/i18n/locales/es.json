@@ -5068,7 +5068,7 @@
     "views": "Vistas de consultas",
     "view": {
       "all": "Todas las consultas",
-      "near": "Consultas 10–20",
+      "near": "Consultas {{min}}–{{max}}",
       "ctr": "Valores atípicos de CTR"
     },
     "filterLabel": "Filtrar consultas",
@@ -5095,7 +5095,13 @@
     "truncatedWarning": "La lista de consultas puede estar incompleta debido a los límites del informe. La ausencia de una consulta no implica pérdida de visibilidad.",
     "clear": "Borrar filtro de texto",
     "noMatches": "Ninguna consulta contiene este texto.",
-    "noQueries": "No hay consultas disponibles en este informe."
+    "noQueries": "No hay consultas disponibles en este informe.",
+    "range": {
+      "min": "Posición por encima de",
+      "max": "Posición hasta",
+      "hint": "Consultas con posición media por encima de {{min}} y hasta {{max}}.",
+      "invalid": "Introduce posiciones de 0 a 100, la primera menor que la segunda."
+    }
   },
   "gscCannibalization": {
     "title": "Posible canibalización de consultas",
@@ -7488,7 +7494,22 @@
       "noKey": "Conecta un proveedor de IA en Ajustes para reescribir pasajes.",
       "error": "La solicitud a la IA falló: {{message}}",
       "empty": "La IA no devolvió texto.",
-      "none": "No se encontraron pasajes débiles."
+      "none": "No se encontraron pasajes débiles.",
+      "copyFailed": "No se pudo copiar. Selecciona el texto y cópialo manualmente.",
+      "brief": {
+        "heading": "Pasaje reescrito: {{heading}}",
+        "unverified": "Propuesta de IA sin verificar. Comprueba hechos, cifras y fuentes antes de publicar.",
+        "original": "Original",
+        "rewritten": "Reescritura con IA (aceptada manualmente)",
+        "versionNote": "Reescritura AIO aceptada, versión de borrador {{n}} ({{revision}})",
+        "accepted": "Añadido al brief. Versión de borrador guardada: {{version}}",
+        "failed": "No se pudo añadir el pasaje al brief.",
+        "noProject": "Selecciona un proyecto para añadir el pasaje a su brief."
+      },
+      "history": {
+        "comparable": "Reescrituras comparables (mismo perfil): {{count}}, último cambio {{delta}}.",
+        "other": "No comparables (otro perfil): {{count}}."
+      }
     },
     "issue": {
       "dangling-pronoun": "Referencia poco clara",
@@ -7555,7 +7576,8 @@
       "roleReviewer": "Revisor",
       "rolePublisher": "Editor",
       "roleEvidence": "{{name}} ({{role}}) · {{status}} · declaración sameAs {{recall}}%",
-      "roleRecall": "Declaración sameAs ponderada por rol: {{pct}}% (autor 50%, revisor 25%, editor 25%; pesos propuestos, una señal declarada, no una verificación de identidad)."
+      "roleRecall": "Declaración sameAs ponderada por rol: {{pct}}% (autor 50%, revisor 25%, editor 25%; pesos propuestos, una señal declarada, no una verificación de identidad).",
+      "declaredNote": "Declarado no es verificado: un enlace sameAs cuenta como declaración. Verified aparece solo cuando se obtuvo el perfil del registro y su nombre o alias coincidió con el autor; una coincidencia es una prueba débil y no demuestra cualificaciones. Un guion significa que no hay datos."
     },
     "signals": {
       "claimEvidence": "Evidencia de afirmaciones",
@@ -7621,7 +7643,10 @@
         "dateModified": "Fecha de modificación (AAAA-MM-DD)",
         "lastReviewed": "Última revisión (AAAA-MM-DD)",
         "sameAs": "Perfiles sameAs (una URL por línea: Wikidata, ORCID, LinkedIn, registro profesional)",
-        "asReviewer": "Declarar como revisor experto en lugar de autor"
+        "asReviewer": "Declarar como revisor experto en lugar de autor",
+        "bio": "Biografía breve (opcional)",
+        "credential": "Credencial o titulación (opcional)",
+        "knowsAbout": "Temas de especialidad (opcional, uno por línea)"
       },
       "issue": {
         "missing-name": "Introduce el nombre del autor.",
@@ -7633,7 +7658,24 @@
       "preview": "JSON-LD generado",
       "copy": "Copiar etiqueta script",
       "copied": "Copiado.",
-      "copyFailed": "No se pudo copiar. Selecciona el texto y cópialo manualmente."
+      "copyFailed": "No se pudo copiar. Selecciona el texto y cópialo manualmente.",
+      "needsVerification": "Requiere verificación: escribe solo lo que puedas demostrar.",
+      "unverifiedNote": "Campos sin verificar en la salida: {{fields}}. Confirma cada uno antes de publicar.",
+      "source": "Fuente: {{source}}",
+      "sourceName": {
+        "crawl": "rastreo",
+        "report": "informe de confianza",
+        "start-url": "URL inicial"
+      },
+      "diff": {
+        "title": "Cambios respecto al esquema observado",
+        "none": "Sin cambios respecto al esquema observado.",
+        "added": "Añadido",
+        "removed": "Eliminado"
+      },
+      "download": "Descargar JSON-LD",
+      "downloaded": "Descargado.",
+      "downloadFailed": "Error al descargar. Copia la etiqueta script."
     }
   },
   "executionCard": {
@@ -7739,7 +7781,9 @@
         "high": "Alta",
         "medium": "Media",
         "low": "Baja"
-      }
+      },
+      "expectedDelta": "Efecto esperado (puntos)",
+      "expectedVsMeasured": "esperado {{expected}}, medido {{measured}}"
     }
   },
   "scoreDropAlert": {

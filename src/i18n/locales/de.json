@@ -5068,7 +5068,7 @@
     "views": "Suchanfragenansichten",
     "view": {
       "all": "Alle Suchanfragen",
-      "near": "Suchanfragen 10–20",
+      "near": "Suchanfragen {{min}}–{{max}}",
       "ctr": "CTR-Ausreißer"
     },
     "filterLabel": "Suchanfragen filtern",
@@ -5095,7 +5095,13 @@
     "truncatedWarning": "Die Suchanfragenliste kann aufgrund von Berichtslimits unvollständig sein. Eine fehlende Suchanfrage bedeutet nicht, dass Sichtbarkeit verloren ging.",
     "clear": "Textfilter löschen",
     "noMatches": "Keine Suchanfrage enthält diesen Text.",
-    "noQueries": "Dieser Bericht enthält keine verfügbaren Suchanfragen."
+    "noQueries": "Dieser Bericht enthält keine verfügbaren Suchanfragen.",
+    "range": {
+      "min": "Position über",
+      "max": "Position bis",
+      "hint": "Suchanfragen mit einer durchschnittlichen Position über {{min}} bis einschließlich {{max}}.",
+      "invalid": "Geben Sie Positionen von 0 bis 100 ein, die erste kleiner als die zweite."
+    }
   },
   "gscCannibalization": {
     "title": "Mögliche Keyword-Kannibalisierung",
@@ -7488,7 +7494,22 @@
       "noKey": "Verbinden Sie in den Einstellungen einen KI-Anbieter, um Textstellen umzuschreiben.",
       "error": "KI-Anfrage fehlgeschlagen: {{message}}",
       "empty": "Die KI hat keinen Text geliefert.",
-      "none": "Keine schwachen Textstellen gefunden."
+      "none": "Keine schwachen Textstellen gefunden.",
+      "copyFailed": "Kopieren fehlgeschlagen. Text markieren und manuell kopieren.",
+      "brief": {
+        "heading": "Umgeschriebene Passage: {{heading}}",
+        "unverified": "KI-Vorschlag, nicht geprüft. Fakten, Zahlen und Quellen vor der Veröffentlichung prüfen.",
+        "original": "Original",
+        "rewritten": "KI-Umschreibung (manuell übernommen)",
+        "versionNote": "AIO-Umschreibung übernommen, Entwurfsversion {{n}} ({{revision}})",
+        "accepted": "Zum Briefing hinzugefügt. Entwurfsversion gespeichert: {{version}}",
+        "failed": "Die Passage konnte nicht zum Briefing hinzugefügt werden.",
+        "noProject": "Projekt auswählen, um die Passage dem Briefing hinzuzufügen."
+      },
+      "history": {
+        "comparable": "Vergleichbare Umschreibungen (gleiches Profil): {{count}}, letzte Änderung {{delta}}.",
+        "other": "Nicht vergleichbar (anderes Profil): {{count}}."
+      }
     },
     "issue": {
       "dangling-pronoun": "Unklarer Bezug",
@@ -7555,7 +7576,8 @@
       "roleReviewer": "Prüfer",
       "rolePublisher": "Herausgeber",
       "roleEvidence": "{{name}} ({{role}}) · {{status}} · sameAs-Angabe {{recall}}%",
-      "roleRecall": "Rollengewichtete sameAs-Angabe: {{pct}}% (Autor 50 %, Prüfer 25 %, Herausgeber 25 %; vorgeschlagene Gewichte, ein Angabesignal, keine Identitätsprüfung)."
+      "roleRecall": "Rollengewichtete sameAs-Angabe: {{pct}}% (Autor 50 %, Prüfer 25 %, Herausgeber 25 %; vorgeschlagene Gewichte, ein Angabesignal, keine Identitätsprüfung).",
+      "declaredNote": "Angegeben heißt nicht geprüft: Ein sameAs-Link zählt als Angabe. Verified erscheint erst, wenn das Registerprofil abgerufen wurde und Name oder Alias zum Autor passen; ein Treffer ist ein schwacher Beleg und beweist keine Qualifikation. Ein Strich bedeutet keine Daten."
     },
     "signals": {
       "claimEvidence": "Belege für Aussagen",
@@ -7621,7 +7643,10 @@
         "dateModified": "Änderungsdatum (JJJJ-MM-TT)",
         "lastReviewed": "Zuletzt geprüft (JJJJ-MM-TT)",
         "sameAs": "sameAs-Profile (eine URL pro Zeile: Wikidata, ORCID, LinkedIn, Berufsregister)",
-        "asReviewer": "Als fachlichen Prüfer statt als Autor angeben"
+        "asReviewer": "Als fachlichen Prüfer statt als Autor angeben",
+        "bio": "Kurzbiografie (optional)",
+        "credential": "Qualifikation oder Abschluss (optional)",
+        "knowsAbout": "Fachthemen (optional, eines pro Zeile)"
       },
       "issue": {
         "missing-name": "Gib den Namen des Autors ein.",
@@ -7633,7 +7658,24 @@
       "preview": "Erzeugtes JSON-LD",
       "copy": "Script-Tag kopieren",
       "copied": "Kopiert.",
-      "copyFailed": "Kopieren fehlgeschlagen. Markiere den Text und kopiere ihn manuell."
+      "copyFailed": "Kopieren fehlgeschlagen. Markiere den Text und kopiere ihn manuell.",
+      "needsVerification": "Prüfung nötig: nur eintragen, was sich belegen lässt.",
+      "unverifiedNote": "Ungeprüfte Felder in der Ausgabe: {{fields}}. Vor der Veröffentlichung einzeln bestätigen.",
+      "source": "Quelle: {{source}}",
+      "sourceName": {
+        "crawl": "Crawl",
+        "report": "Trust-Bericht",
+        "start-url": "Start-URL"
+      },
+      "diff": {
+        "title": "Änderungen gegenüber dem beobachteten Schema",
+        "none": "Keine Änderungen gegenüber dem beobachteten Schema.",
+        "added": "Hinzugefügt",
+        "removed": "Entfernt"
+      },
+      "download": "JSON-LD herunterladen",
+      "downloaded": "Heruntergeladen.",
+      "downloadFailed": "Download fehlgeschlagen. Kopieren Sie stattdessen das Script-Tag."
     }
   },
   "executionCard": {
@@ -7739,7 +7781,9 @@
         "high": "Hoch",
         "medium": "Mittel",
         "low": "Niedrig"
-      }
+      },
+      "expectedDelta": "Erwarteter Effekt (Punkte)",
+      "expectedVsMeasured": "erwartet {{expected}}, gemessen {{measured}}"
     }
   },
   "scoreDropAlert": {

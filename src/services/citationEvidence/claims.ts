@@ -12,7 +12,8 @@ export interface ClaimCitation {
 export interface CitationSource { key: string; exists?: boolean; reachable?: boolean; topical?: boolean; supportsClaim?: boolean; sourceChecked?: boolean }
 
 const DOI = /\b(?:https?:\/\/(?:dx\.)?doi\.org\/|doi:\s*)?(10\.\d{4,9}\/[-._;()/:A-Z0-9]+)\b/giu;
-const PMID = /\b(?:PMID\s*:?[\s#]*)?(\d{5,9})\b/giu;
+/** The PMID label is required: a bare number (population, postcode, price) is not a citation. */
+const PMID = /\bPMID\s*:?[\s#]*(\d{1,9})\b/giu;
 const PMCID = /\b(PMC\d{4,9})\b/giu;
 const URL = /https?:\/\/[^\s)\]>]+/giu;
 const NUMERIC = /\[(\d{1,3})\]/gu;
@@ -27,7 +28,7 @@ export const extractCitationReferences = (text: string): CitationReference[] => 
   const result: CitationReference[] = [];
   for (const match of text.matchAll(DOI)) { const raw = match[0]; const id = scholarlyIds(`https://doi.org/${match[1]}`); push(result, { raw, start: match.index, end: match.index + raw.length, kind: 'doi', key: scholarlyKey(id) }); }
   for (const match of text.matchAll(PMCID)) { const raw = match[0]; push(result, { raw, start: match.index, end: match.index + raw.length, kind: 'pmcid', key: `pmcid:${raw.toUpperCase()}` }); }
-  for (const match of text.matchAll(PMID)) { const raw = match[0]; if (!/\d{5,9}/.test(raw)) continue; push(result, { raw, start: match.index, end: match.index + raw.length, kind: 'pmid', key: `pmid:${match[1]}` }); }
+  for (const match of text.matchAll(PMID)) { const raw = match[0]; push(result, { raw, start: match.index, end: match.index + raw.length, kind: 'pmid', key: `pmid:${match[1]}` }); }
   for (const match of text.matchAll(URL)) { const raw = match[0].replace(/[.,;:]+$/, ''); const id = scholarlyIds(raw); push(result, { raw, start: match.index, end: match.index + raw.length, kind: id.doi ? 'doi' : id.pmid ? 'pmid' : id.pmcid ? 'pmcid' : 'url', key: scholarlyKey(id) }); }
   for (const match of text.matchAll(NUMERIC)) push(result, { raw: match[0], start: match.index, end: match.index + match[0].length, kind: 'numeric' });
   for (const match of text.matchAll(AUTHOR_YEAR)) push(result, { raw: match[0], start: match.index, end: match.index + match[0].length, kind: 'author-year' });
@@ -69,3 +70,25 @@ export const mapClaimsToCitations = (text: string, sources: CitationSource[] = [
     };
   });
 };
+
+/**
+ * A claim counts as backed when a citation sits in its own or an adjacent sentence and no known
+ * fact contradicts it (source missing, unreachable or checked as not supporting). Without an
+ * entailment model this is association evidence only, never verified support (#88 D02).
+ */
+export const isClaimBacked = (claim: ClaimCitation): boolean => (
+  claim.relation !== 'unmatched' && claim.sourceExists !== false && claim.reachable !== false && claim.supportsClaim !== false
+);
+
+/** Source count below which an article with zero claims is not given the benefit of the doubt. */
+export const R_BACKED_MIN_QUALITY_SUM = 2;
+/** R_backed for zero claims when too little source quality was observed (#88 D01). */
+export const R_BACKED_FEW_SOURCES = 0.65;
+
+/**
+ * R_backed = N_backed / N_claims. Zero claims: 1 once the quality sum reaches 2, otherwise .65, so a
+ * thin article neither gets a free pass nor a hard zero. Always within [0, 1].
+ */
+export const backedRatio = (claims: ClaimCitation[], qualitySum: number): number => (
+  claims.length ? claims.filter(isClaimBacked).length / claims.length : qualitySum >= R_BACKED_MIN_QUALITY_SUM ? 1 : R_BACKED_FEW_SOURCES
+);

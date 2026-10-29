@@ -5068,7 +5068,7 @@
     "views": "クエリ表示",
     "view": {
       "all": "すべてのクエリ",
-      "near": "クエリ 10–20",
+      "near": "クエリ {{min}}–{{max}}",
       "ctr": "CTR外れ値"
     },
     "filterLabel": "クエリを絞り込む",
@@ -5095,7 +5095,13 @@
     "truncatedWarning": "レポートの制限により、クエリ一覧は不完全な場合があります。クエリがないことは、表示の喪失を意味しません。",
     "clear": "テキストフィルターをクリア",
     "noMatches": "このテキストを含むクエリはありません。",
-    "noQueries": "このレポートには利用できるクエリがありません。"
+    "noQueries": "このレポートには利用できるクエリがありません。",
+    "range": {
+      "min": "この順位より下",
+      "max": "この順位まで",
+      "hint": "平均掲載順位が {{min}} より下、{{max}} 以内のクエリ。",
+      "invalid": "0〜100 の順位を、1つ目が2つ目より小さくなるよう入力してください。"
+    }
   },
   "gscCannibalization": {
     "title": "クエリの競合候補",
@@ -7488,7 +7494,22 @@
       "noKey": "文章を書き直すには、設定でAIプロバイダーを接続してください。",
       "error": "AIリクエストに失敗しました：{{message}}",
       "empty": "AIがテキストを返しませんでした。",
-      "none": "弱い文章は見つかりませんでした。"
+      "none": "弱い文章は見つかりませんでした。",
+      "copyFailed": "コピーに失敗しました。テキストを選択して手動でコピーしてください。",
+      "brief": {
+        "heading": "書き換えた箇所: {{heading}}",
+        "unverified": "AIの提案は未検証です。公開前に事実・数値・出典を確認してください。",
+        "original": "元の文",
+        "rewritten": "AIによる書き換え(手動で承認)",
+        "versionNote": "AIO書き換えを承認、下書きバージョン {{n}} ({{revision}})",
+        "accepted": "ブリーフに追加しました。下書きバージョンを保存: {{version}}",
+        "failed": "ブリーフに追加できませんでした。",
+        "noProject": "ブリーフに追加するにはプロジェクトを選択してください。"
+      },
+      "history": {
+        "comparable": "比較可能な書き換え(同一プロファイル): {{count}}件、直近の変化 {{delta}}。",
+        "other": "比較不可(別プロファイル): {{count}}件。"
+      }
     },
     "issue": {
       "dangling-pronoun": "指示対象が不明確",
@@ -7555,7 +7576,8 @@
       "roleReviewer": "レビュー担当者",
       "rolePublisher": "発行者",
       "roleEvidence": "{{name}} ({{role}}) · {{status}} · sameAs 宣言 {{recall}}%",
-      "roleRecall": "役割加重の sameAs 宣言: {{pct}}%(著者 50%、レビュー担当者 25%、発行者 25%。提案された重みで、宣言のシグナルであり、本人確認ではありません)。"
+      "roleRecall": "役割加重の sameAs 宣言: {{pct}}%(著者 50%、レビュー担当者 25%、発行者 25%。提案された重みで、宣言のシグナルであり、本人確認ではありません)。",
+      "declaredNote": "宣言は検証済みではありません。sameAs リンクは宣言として数えられます。verified になるのは、レジストリのプロフィールを取得し、その名前または別名が著者と一致した場合だけです。一致は弱い証拠であり、資格を証明するものではありません。ダッシュはデータなしを意味します。"
     },
     "signals": {
       "claimEvidence": "主張の証拠",
@@ -7621,7 +7643,10 @@
         "dateModified": "更新日（YYYY-MM-DD）",
         "lastReviewed": "最終監修日（YYYY-MM-DD）",
         "sameAs": "sameAsプロフィール（1行に1つのURL: Wikidata、ORCID、LinkedIn、専門職の登録簿）",
-        "asReviewer": "著者ではなく専門家の監修者として宣言する"
+        "asReviewer": "著者ではなく専門家の監修者として宣言する",
+        "bio": "短い経歴（任意）",
+        "credential": "資格または学位（任意）",
+        "knowsAbout": "専門トピック（任意、1行に1つ）"
       },
       "issue": {
         "missing-name": "著者名を入力してください。",
@@ -7633,7 +7658,24 @@
       "preview": "生成されたJSON-LD",
       "copy": "scriptタグをコピー",
       "copied": "コピーしました。",
-      "copyFailed": "コピーできませんでした。テキストを選択して手動でコピーしてください。"
+      "copyFailed": "コピーできませんでした。テキストを選択して手動でコピーしてください。",
+      "needsVerification": "要確認: 証明できる内容のみ入力してください。",
+      "unverifiedNote": "出力内の未確認フィールド: {{fields}}。公開前に各項目を確認してください。",
+      "source": "出典: {{source}}",
+      "sourceName": {
+        "crawl": "クロール",
+        "report": "信頼レポート",
+        "start-url": "開始URL"
+      },
+      "diff": {
+        "title": "観測済みスキーマとの差分",
+        "none": "観測済みスキーマとの差分はありません。",
+        "added": "追加",
+        "removed": "削除"
+      },
+      "download": "JSON-LDをダウンロード",
+      "downloaded": "ダウンロードしました。",
+      "downloadFailed": "ダウンロードに失敗しました。代わりにscriptタグをコピーしてください。"
     }
   },
   "executionCard": {
@@ -7739,7 +7781,9 @@
         "high": "高",
         "medium": "中",
         "low": "低"
-      }
+      },
+      "expectedDelta": "期待される効果（ポイント）",
+      "expectedVsMeasured": "期待 {{expected}}、実測 {{measured}}"
     }
   },
   "scoreDropAlert": {
