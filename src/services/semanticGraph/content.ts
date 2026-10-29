@@ -24,7 +24,8 @@ export const buildContentEdges = (selectedPages: CrawledPageSummary[], options: 
       const edge = edgeGroups.get(id) ?? { id, source, target, anchors: [], links: 0, zoneWeightSum: 0, unweightedZoneLinks: 0 };
       edge.links += 1;
       const { weight } = linkZoneWeight(link);
-      if (weight === null) edge.unweightedZoneLinks = (edge.unweightedZoneLinks ?? 0) + 1;
+      if (/(^|\s)nofollow(\s|$)/iu.test(link.rel ?? '')) edge.nofollowLinks = (edge.nofollowLinks ?? 0) + 1;
+      else if (weight === null) edge.unweightedZoneLinks = (edge.unweightedZoneLinks ?? 0) + 1;
       else edge.zoneWeightSum = (edge.zoneWeightSum ?? 0) + weight;
       const anchor = typeof link.anchor_text === 'string' ? link.anchor_text.trim() : '';
       if (anchor && !edge.anchors.includes(anchor) && edge.anchors.length < 3) edge.anchors.push(anchor);

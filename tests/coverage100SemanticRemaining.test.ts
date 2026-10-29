@@ -29,9 +29,10 @@ describe('coverage100 semantic remaining edges', () => {
     const nodes = [{ id: 'a' }, { id: 'b' }, { id: 'c' }, { id: 'd' }];
     const rows = simulateWhatIf(nodes, [], { add: [{ source: 'a', target: 'b' }] });
     expect(rows).toEqual([
-      { nodeId: 'a', before: 100, after: 54.1, delta: -45.9 },
-      { nodeId: 'c', before: 100, after: 54.1, delta: -45.9 },
-      { nodeId: 'd', before: 100, after: 54.1, delta: -45.9 },
+      { nodeId: 'b', before: 100, after: 152.6, delta: 52.6 },
+      { nodeId: 'a', before: 100, after: 82.5, delta: -17.5 },
+      { nodeId: 'c', before: 100, after: 82.5, delta: -17.5 },
+      { nodeId: 'd', before: 100, after: 82.5, delta: -17.5 },
     ]);
     expect(computeSprs(nodes, [{ source: 'a', target: 'b' }]).pages[0]).toMatchObject({ nodeId: 'b', deadEnd: true });
   });
@@ -42,9 +43,10 @@ describe('coverage100 semantic remaining edges', () => {
       { source: 'a', target: 'b' }, { source: 'a', target: 'd' }, { source: 'b', target: 'a' },
     ], { add: [{ source: 'c', target: 'a' }] });
     expect(rows).toEqual([
-      { nodeId: 'b', before: 77, after: 66.2, delta: -10.8 },
-      { nodeId: 'c', before: 34.5, after: 23.7, delta: -10.8 },
-      { nodeId: 'd', before: 77, after: 66.2, delta: -10.8 },
+      { nodeId: 'a', before: 100, after: 112.7, delta: 12.7 },
+      { nodeId: 'c', before: 34.5, after: 26.7, delta: -7.8 },
+      { nodeId: 'b', before: 77, after: 74.6, delta: -2.4 },
+      { nodeId: 'd', before: 77, after: 74.6, delta: -2.4 },
     ]);
   });
 

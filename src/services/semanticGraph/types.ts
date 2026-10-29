@@ -20,6 +20,8 @@ export interface SemanticContentEdge {
   zoneWeightSum?: number;
   /** Links whose zone is unknown or unweighted (e.g. `main` without a render). */
   unweightedZoneLinks?: number;
+  /** rel=nofollow links: kept in the map, excluded from SPRS link flow. */
+  nofollowLinks?: number;
 }
 
 export interface SemanticTopicEdge {

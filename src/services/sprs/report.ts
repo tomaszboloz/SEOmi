@@ -19,7 +19,9 @@ export const buildSprsInput = (graph: SemanticMap): { nodes: Array<{ id: string 
     similarity.set(`${e.source}|${e.target}`, e.weightedJaccard);
     similarity.set(`${e.target}|${e.source}`, e.weightedJaccard);
   });
-  const edges: SprsEdge[] = graph.edges.filter((e) => nodeIds.has(e.source) && nodeIds.has(e.target)).map((e) => {
+  // An edge whose every link is nofollow passes no SPRS flow (#71 GEM-71-T02).
+  const flowing = (e: SemanticContentEdge) => !e.nofollowLinks || e.nofollowLinks < e.links;
+  const edges: SprsEdge[] = graph.edges.filter((e) => nodeIds.has(e.source) && nodeIds.has(e.target) && flowing(e)).map((e) => {
     const value = similarity.get(`${e.source}|${e.target}`);
     return { source: e.source, target: e.target, links: e.links, ...zoneWeighting(e), ...(value === undefined ? {} : { similarity: value }) };
   });

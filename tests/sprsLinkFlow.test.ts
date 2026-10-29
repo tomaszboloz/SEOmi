@@ -64,3 +64,57 @@ describe('SPRS link flow (#70/#71)', () => {
     expect(edge.links).toBe(3);
   });
 });
+
+describe('What-If validation and reference (#71 GEM-71-03/07/08)', () => {
+  const g = [{ source: 'a', target: 'b' }, { source: 'b', target: 'c' }];
+  it('rejects invalid changes without simulating', () => {
+    const run = (change: Parameters<typeof simulateWhatIfRun>[2]) => simulateWhatIfRun(nodes, g, change).issues;
+    expect(run({ add: [{ source: 'a', target: 'x' }] })).toEqual(['unknown-node']);
+    expect(run({ add: [{ source: 'a', target: 'a' }] })).toEqual(['self-link']);
+    expect(run({ add: [{ source: 'a', target: 'b' }] })).toEqual(['duplicate-edge']);
+    expect(run({ add: [{ source: 'c', target: 'a' }, { source: 'c', target: 'a' }] })).toEqual(['duplicate-edge']);
+    expect(run({ remove: [{ source: 'c', target: 'a' }] })).toEqual(['missing-edge']);
+    expect(run({ add: [{ source: 'c', target: 'a', weight: -1 }] })).toEqual(['invalid-weight']);
+    expect(run({ update: [{ source: 'a', target: 'b', weight: Number.NaN }] })).toEqual(['invalid-weight']);
+    const rejected = simulateWhatIfRun(nodes, g, { add: [{ source: 'a', target: 'b' }] });
+    expect(rejected).toMatchObject({ rows: [], uncertain: true, converged: false });
+  });
+  it('updates weights on a copy and reports deltas against the baseline reference', () => {
+    const edges = [{ source: 'a', target: 'b' }, { source: 'a', target: 'c' }, { source: 'b', target: 'a' }, { source: 'c', target: 'a' }];
+    const frozen = JSON.stringify(edges);
+    const run = simulateWhatIfRun(nodes, edges, { update: [{ source: 'a', target: 'b', weight: 5 }] });
+    expect(JSON.stringify(edges)).toBe(frozen);
+    expect(run.issues).toEqual([]);
+    expect(run.uncertain).toBe(false);
+    const b = run.rows.find((row) => row.nodeId === 'b');
+    expect(b && b.after > b.before).toBe(true);
+    const back = simulateWhatIfRun(nodes, edges, { remove: [{ source: 'a', target: 'c' }] });
+    const roundTrip = simulateWhatIfRun(nodes, edges.filter((edge) => !(edge.source === 'a' && edge.target === 'c')), { add: [{ source: 'a', target: 'c' }] });
+    expect(back.rows.length).toBeGreaterThan(0);
+    expect(roundTrip.rows.length).toBeGreaterThan(0);
+  });
+  it('treats non-finite or out-of-range similarity as unknown, never as a leak', () => {
+    const report = computeSprs(nodes, [{ source: 'a', target: 'b', similarity: Number.NaN }, { source: 'b', target: 'c', similarity: -0.5 }, { source: 'c', target: 'a', similarity: 2 }]);
+    expect(report.unknownSimilarityEdges).toBe(3);
+    expect(report.pages.some((page) => page.leak)).toBe(false);
+  });
+});
+
+describe('nofollow links in SPRS (#71 GEM-71-T02)', () => {
+  it('keeps nofollow links in the map but out of the link flow', () => {
+    const page = (url: string, links: CrawledPageSummary['links']) => ({ url, final_url: url, links, semantic_links: links }) as unknown as CrawledPageSummary;
+    const link = (target: string, rel?: string) => ({ target_url: target, anchor_text: 'x', is_internal: true, zone: 'widget', ...(rel ? { rel } : {}) });
+    const pages = [
+      page('https://s.test/a', [link('https://s.test/b', 'nofollow'), link('https://s.test/c', 'NoFollow ugc'), link('https://s.test/c')]),
+      page('https://s.test/b', []),
+      page('https://s.test/c', []),
+    ];
+    const { allEdges } = buildContentEdges(pages, {});
+    expect(allEdges.find((edge) => edge.target === 'page-1')).toMatchObject({ links: 1, nofollowLinks: 1, zoneWeightSum: 0 });
+    expect(allEdges.find((edge) => edge.target === 'page-2')).toMatchObject({ links: 2, nofollowLinks: 1, zoneWeightSum: 0.35 });
+    const graph = { nodes: pages.map((p, i) => ({ id: `page-${i}`, page: p })), edges: allEdges, topicEdges: [] } as unknown as SemanticMap;
+    const input = buildSprsInput(graph);
+    expect(input.edges.map((edge) => edge.target)).toEqual(['page-2']);
+    expect(input.edges[0].weight).toBe(0.35);
+  });
+});

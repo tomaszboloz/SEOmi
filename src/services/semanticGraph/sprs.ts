@@ -48,6 +48,10 @@ const EMPTY: SprsReport = { status: 'unavailable', pages: [], converged: true, i
 
 const isSelf = (edge: SprsEdge): boolean => edge.source === edge.target;
 
+/** Similarity outside [0,1] or not finite is treated as unknown, never as a measured leak (#71 GEM-71-03). */
+export const knownSimilarity = (edge: SprsEdge): number | undefined =>
+  typeof edge.similarity === 'number' && Number.isFinite(edge.similarity) && edge.similarity >= 0 && edge.similarity <= 1 ? edge.similarity : undefined;
+
 /** Self-links are dropped (reason: they pass no authority to other pages). */
 const usable = (edges: SprsEdge[]): SprsEdge[] => edges.filter((edge) => !isSelf(edge));
 
@@ -64,7 +68,8 @@ export const computeSprs = (nodes: PageRankNode[], edges: SprsEdge[], initialRan
     const row = out.get(edge.source) ?? { total: 0, leaking: 0, count: 0 };
     row.total += weight;
     row.count += 1;
-    if (edge.similarity !== undefined && edge.similarity < SPRS_PROFILE.similarityFloor) row.leaking += weight;
+    const similarity = knownSimilarity(edge);
+    if (similarity !== undefined && similarity < SPRS_PROFILE.similarityFloor) row.leaking += weight;
     out.set(edge.source, row);
     incoming.set(edge.target, (incoming.get(edge.target) ?? new Set()).add(edge.source));
   });
@@ -83,36 +88,9 @@ export const computeSprs = (nodes: PageRankNode[], edges: SprsEdge[], initialRan
   });
   return {
     status: 'ready', pages, converged: rank.converged, iterations: rank.iterations, residual: rank.residual,
-    unknownSimilarityEdges: kept.filter((edge) => edge.similarity === undefined).length,
+    unknownSimilarityEdges: kept.filter((edge) => knownSimilarity(edge) === undefined).length,
     unweightedZoneLinks: kept.reduce((sum, edge) => sum + (edge.unweightedZoneLinks ?? 0), 0),
   };
 };
 
-export interface WhatIfChange { add?: SprsEdge[]; remove?: Array<{ source: string; target: string }> }
-
-export interface WhatIfRow { nodeId: string; before: number; after: number; delta: number }
-
-export interface WhatIfResult {
-  rows: WhatIfRow[];
-  /** Solver state of the simulated graph, warm-started from the current ranks. */
-  converged: boolean;
-  iterations: number;
-  residual: number;
-}
-
-const sameEdge = (edge: SprsEdge, ref: { source: string; target: string }) => edge.source === ref.source && edge.target === ref.target;
-
-/** Simulates link changes on a copy, warm-started from the current ranks; the input arrays are never mutated. */
-export const simulateWhatIfRun = (nodes: PageRankNode[], edges: SprsEdge[], change: WhatIfChange): WhatIfResult => {
-  const before = computeSprs(nodes, edges);
-  const next = edges.filter((edge) => !(change.remove ?? []).some((ref) => sameEdge(edge, ref))).concat(change.add ?? []);
-  const after = computeSprs(nodes, next, new Map(before.pages.map((page) => [page.nodeId, page.probability])));
-  const prior = new Map(before.pages.map((page) => [page.nodeId, page.score]));
-  const rows = after.pages
-    .map((page) => ({ nodeId: page.nodeId, before: prior.get(page.nodeId) as number, after: page.score, delta: Math.round((page.score - (prior.get(page.nodeId) as number)) * 10) / 10 }))
-    .filter((row) => row.delta !== 0)
-    .sort((a, b) => Math.abs(b.delta) - Math.abs(a.delta) || (a.nodeId < b.nodeId ? -1 : 1));
-  return { rows, converged: after.converged, iterations: after.iterations, residual: after.residual };
-};
-
-export const simulateWhatIf = (nodes: PageRankNode[], edges: SprsEdge[], change: WhatIfChange): WhatIfRow[] => simulateWhatIfRun(nodes, edges, change).rows;
+export * from './sprsWhatIf';
