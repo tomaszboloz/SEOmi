@@ -11,7 +11,7 @@ import { excludeQuarantined, excludeQuarantinedPages, runRecommendationBus } fro
 import { busInputFromReports } from '@/services/recommendationBus/fromReports';
 import { buildSiteFocusReport } from '@/services/siteFocus';
 import { buildAuthorityReport } from '@/services/topicalAuthority';
-import { projectFocusOptions } from '@/services/siteFocusMonitoring/projectReport';
+import { projectFocusOptions } from '@/services/siteFocusMonitoring/focusOptions';
 import { buildSemanticMap } from '@/services/semanticMap';
 import { buildSprsReport } from '@/services/sprs/report';
 import { buildTrustReport } from '@/services/eeatTrust';

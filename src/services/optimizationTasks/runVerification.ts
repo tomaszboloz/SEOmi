@@ -5,7 +5,7 @@ import { buildAuthorityReport } from '@/services/topicalAuthority';
 import { buildSemanticMap } from '@/services/semanticMap';
 import { buildSprsReport } from '@/services/sprs/report';
 import { buildTrustReport } from '@/services/eeatTrust';
-import { projectFocusOptions } from '@/services/siteFocusMonitoring/projectReport';
+import { projectFocusOptions } from '@/services/siteFocusMonitoring/focusOptions';
 import { appendDeltas } from './metricHistory';
 import { isCompletedCrawlRun } from './crawlEvidence';
 import { readTasks, writeTasks } from './storage';

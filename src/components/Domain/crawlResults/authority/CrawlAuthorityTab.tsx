@@ -4,7 +4,7 @@ import { useSiteFocus } from '@/hooks/useSiteFocus';
 import { useTopicalAuthority, type ReferenceRunner } from '@/hooks/useTopicalAuthority';
 import { buildSiteFocusReport, type FocusPage } from '@/services/siteFocus';
 import { isSelectedCompletedCrawl } from '@/services/optimizationTasks/crawlEvidence';
-import { projectFocusOptions } from '@/services/siteFocusMonitoring/projectReport';
+import { projectFocusOptions } from '@/services/siteFocusMonitoring/focusOptions';
 import type { CrawledPageSummary, CrawlRunRecord } from '@/types';
 import { Empty } from '../CrawlViewPrimitives';
 import { AuthorityBenchmark } from './AuthorityBenchmark';

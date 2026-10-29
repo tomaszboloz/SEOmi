@@ -1,7 +1,7 @@
 import { useMemo, useState } from 'react';
 import type { SemanticContentEdge, SemanticPageNode } from '@/services/semanticMap';
 import { buildSiteFocusReport } from '@/services/siteFocus';
-import { projectFocusOptions } from '@/services/siteFocusMonitoring/projectReport';
+import { projectFocusOptions } from '@/services/siteFocusMonitoring/focusOptions';
 import { useProjectStore } from '@/stores/projectStore';
 import type { CrawledPageSummary } from '@/types';
 import type { LayoutMode, MapEdge, MapFilters, MapNode } from './mapTypes';

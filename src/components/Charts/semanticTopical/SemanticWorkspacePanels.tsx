@@ -12,7 +12,7 @@ import { TopicalNodeEditor } from './TopicalNodeEditor';
 import { buildAuthorityReport } from '@/services/topicalAuthority';
 import { readTaxonomy } from '@/services/topicalAuthorityMonitoring/taxonomyStore';
 import { buildSiteFocusReport } from '@/services/siteFocus';
-import { projectFocusOptions } from '@/services/siteFocusMonitoring/projectReport';
+import { projectFocusOptions } from '@/services/siteFocusMonitoring/focusOptions';
 import type { FocusPage } from '@/services/siteFocus';
 
 type Session = ReturnType<typeof useSemanticTopicalSession>;
