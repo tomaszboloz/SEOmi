@@ -18,7 +18,7 @@
 - File-symlink escape tests are skipped only on systems that do not allow file symlinks.
 
 ## Dependencies
-- MCP server: `@hono/node-server` 2.1.1 → 2.1.5 (#268).
+- MCP server: `@hono/node-server` 2.1.1 → 2.1.5 (#268). Fixes Dependabot alert #8 (moderate): `serveStatic` decoded the request path twice, which let requests to static paths bypass middleware (fixed in 2.1.3).
 
 ## Included
 - Everything from 0.5.0 (below).
