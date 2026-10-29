@@ -9,6 +9,13 @@ on:
 permissions:
   contents: read
 
+# A new push to a PR supersedes its older run, so that run is cancelled and stops holding the
+# scarce macOS runners. Push and manual runs get a unique group and are never cancelled or
+# replaced: release-after-ci needs a successful push run on main for the exact SHA.
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event_name == 'pull_request' && format('pr-{0}', github.event.pull_request.number) || format('run-{0}', github.run_id) }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+
 jobs:
   test-rust:
     name: Rust Backend Unit & Security Tests
