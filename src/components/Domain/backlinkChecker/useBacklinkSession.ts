@@ -12,6 +12,7 @@ export const useBacklinkSession = () => {
   const backlinkQuery = useToolsStore((s) => s.backlinkQuery);
   const backlinkProfile = useToolsStore((s) => s.backlinkProfile);
   const backlinkProfileHistory = useToolsStore((s) => s.backlinkProfileHistory);
+  const crawlRuns = useToolsStore((s) => s.crawlRuns);
   const isLoading = useToolsStore((s) => s.isBacklinkLoading);
   const error = useToolsStore((s) => s.backlinkError);
   const setBacklinkQuery = useToolsStore((s) => s.setBacklinkQuery);
@@ -36,6 +37,8 @@ export const useBacklinkSession = () => {
     .map((domain) => domain.trim())
     .filter(Boolean)
     .slice(0, 19);
+  const crawlPages = crawlRuns.find((run) => run.projectId === activeProjectId)?.result.pages ?? [];
+  const siteUrl = activeProject?.rootUrl?.trim() ?? '';
 
   useEffect(() => setCompetitorInput(backlinkGapCompetitors.join('\n')), [backlinkGapCompetitors]);
 
@@ -66,6 +69,9 @@ export const useBacklinkSession = () => {
 
   return {
     t,
+    activeProjectId,
+    crawlPages,
+    siteUrl,
     inputTarget,
     setInputTarget,
     competitorInput,

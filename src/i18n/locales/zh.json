@@ -7954,7 +7954,14 @@
     "empty": "没有外链差距数据。请先运行外链差距分析。",
     "row": "{{domain}}：优先级 {{priority}}，链接 {{count}} 个竞争对手",
     "export": "导出 CSV",
-    "manualNote": "SEOmi 从不发送消息。请从您自己的邮箱发送草稿。"
+    "manualNote": "SEOmi 从不发送消息。请从您自己的邮箱发送草稿。",
+    "draft": "显示草稿",
+    "draftSubject": "给 {{domain}} 的资源",
+    "draftBody": "您好，\\n\\n我们注意到您链接了 {{competitors}}。我们发布了 {{title}}（{{url}}）：{{summary}}\\n独特角度：{{novelEntities}}。信息增益：{{informationGain}}。证据：{{evidence}}\\n提供商：{{provider}}；模型：{{model}}；{{approximation}}；观测时间：{{observedAt}}\\n\\n此致，\\n{{site}}",
+    "evidence": "IGOS {{score}}/100；证据：{{url}}",
+    "provenance": "IGOS 来源：提供商 {{provider}}、模型 {{model}}（{{approximation}}）；观测：{{observedAt}}",
+    "unknown": "不可用",
+    "localApproximation": "本地词汇近似"
   },
   "causalMarket": {
     "title": "因果影响",

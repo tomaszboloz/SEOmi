@@ -16,6 +16,8 @@ export interface GapOptions {
   maxSpamScore?: number;
   /** Rank scale of the data source (DataForSEO and Moz use 0 to 100). */
   rankScale?: number;
+  /** Restrict outreach ranking to the selected TOP3 comparator set. */
+  competitorDomains?: string[];
 }
 
 export const normalizeDomain = (value: string): string =>
@@ -32,12 +34,14 @@ export const outreachTargets = (
   options: GapOptions = {},
 ): OutreachTarget[] => {
   const { maxSpamScore = 60, rankScale = 100 } = options;
+  const allowedCompetitors = options.competitorDomains?.length
+    ? new Set(options.competitorDomains.map(normalizeDomain)) : null;
   const byDomain = new Map<string, OutreachTarget>();
   for (const row of opportunities) {
     const domain = normalizeDomain(row.referring_domain);
     if (!domain || row.target_backlinks > 0) continue;
     if (row.max_competitor_spam_score !== null && row.max_competitor_spam_score > maxSpamScore) continue;
-    const linking = row.competitor_backlinks.filter((link) => link.backlinks > 0);
+    const linking = row.competitor_backlinks.filter((link) => link.backlinks > 0 && (!allowedCompetitors || allowedCompetitors.has(normalizeDomain(link.domain))));
     if (linking.length === 0) continue;
     const ranks = linking.flatMap((link) => (link.rank === null ? [] : [Math.min(1, Math.max(0, link.rank / rankScale))]));
     const authority = ranks.length ? ranks.reduce((sum, rank) => sum + rank, 0) / ranks.length : 0;

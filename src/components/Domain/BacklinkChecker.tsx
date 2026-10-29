@@ -8,9 +8,20 @@ import { BacklinkInboundTable } from './backlinkChecker/BacklinkInboundTable';
 import { BacklinkOutreachSection } from './backlinkChecker/BacklinkOutreachSection';
 import { OffPageSourcesWorkspace } from './backlinkChecker/OffPageSourcesWorkspace';
 import { DataForSeoCostMeter } from '@/components/DataForSEO/cost/DataForSeoCostMeter';
+import type { InformationGainInput } from '@/services/outreachCopilot';
+import { useOutreachInformationGain } from './backlinkChecker/useOutreachInformationGain';
 
-export const BacklinkChecker: React.FC = () => {
+export interface BacklinkCheckerProps { informationGain?: InformationGainInput | null }
+
+export const BacklinkChecker: React.FC<BacklinkCheckerProps> = ({ informationGain }) => {
   const session = useBacklinkSession();
+  const generatedInformationGain = useOutreachInformationGain({
+    projectId: session.activeProjectId,
+    site: session.siteUrl,
+    report: session.backlinkGapReport,
+    pages: session.crawlPages,
+    enabled: informationGain === undefined,
+  });
   const {
     t,
     backlinkProfile,
@@ -26,7 +37,7 @@ export const BacklinkChecker: React.FC = () => {
       <BacklinkHeader session={session} />
       <DataForSeoCostMeter />
       <BacklinkGapSection session={session} />
-      <BacklinkOutreachSection report={session.backlinkGapReport} />
+      <BacklinkOutreachSection report={session.backlinkGapReport} projectId={session.activeProjectId} informationGain={informationGain === undefined ? generatedInformationGain : informationGain} />
 
       {error && (
         <div className="p-4 rounded-xl bg-rose-950/40 border border-rose-800/60 text-rose-300 text-sm">

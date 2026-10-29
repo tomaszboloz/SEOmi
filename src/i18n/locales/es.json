@@ -7954,7 +7954,14 @@
     "empty": "Sin datos de brecha de enlaces. Ejecuta antes el análisis.",
     "row": "{{domain}}: prioridad {{priority}}, enlaza a {{count}} competidores",
     "export": "Exportar CSV",
-    "manualNote": "SEOmi nunca envía mensajes. Envía los borradores desde tu correo."
+    "manualNote": "SEOmi nunca envía mensajes. Envía los borradores desde tu correo.",
+    "draft": "Mostrar borrador",
+    "draftSubject": "Un recurso para {{domain}}",
+    "draftBody": "Hola,\\n\\nHemos visto que enlazas a {{competitors}}. Publicamos {{title}} ({{url}}): {{summary}}\\nÁngulo único: {{novelEntities}}. Ganancia informativa: {{informationGain}}. Evidencia: {{evidence}}\\nProveedor: {{provider}}; modelo: {{model}}; {{approximation}}; observado: {{observedAt}}\\n\\nUn saludo,\\n{{site}}",
+    "evidence": "IGOS {{score}}/100; evidencia: {{url}}",
+    "provenance": "Fuente IGOS: proveedor {{provider}}, modelo {{model}} ({{approximation}}); observado: {{observedAt}}",
+    "unknown": "no disponible",
+    "localApproximation": "aproximación léxica local"
   },
   "causalMarket": {
     "title": "Impacto causal",

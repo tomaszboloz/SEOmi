@@ -22,6 +22,7 @@ export const draftOutreach = (
   template: DraftTemplate,
 ): OutreachDraft | null => {
   if (!source || !source.title.trim() || !source.url.trim() || !site.trim()) return null;
+  const provenance = 'provenance' in source && source.provenance && typeof source.provenance === 'object' ? source.provenance as Record<string, unknown> : {};
   const values = {
     domain: target.domain,
     competitors: target.linkingCompetitors.join(', '),
@@ -29,6 +30,13 @@ export const draftOutreach = (
     title: source.title.trim(),
     url: source.url.trim(),
     summary: source.summary.trim(),
+    evidence: 'evidenceUrl' in source && typeof source.evidenceUrl === 'string' ? source.evidenceUrl : '',
+    informationGain: 'score' in source && typeof source.score === 'number' ? String(source.score) : '',
+    novelEntities: 'novelEntities' in source && Array.isArray(source.novelEntities) ? source.novelEntities.join(', ') : '',
+    provider: typeof provenance.provider === 'string' ? provenance.provider : '',
+    model: typeof provenance.model === 'string' ? provenance.model : '',
+    approximation: typeof provenance.approximation === 'string' ? provenance.approximation : '',
+    observedAt: typeof provenance.observedAt === 'string' ? provenance.observedAt : '',
   };
   return { to: target.domain, subject: fill(template.subject, values), body: fill(template.body, values) };
 };
