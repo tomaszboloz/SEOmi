@@ -73,6 +73,8 @@ export function calculatePageRank(nodes: PageRankNode[], edges: PageRankEdge[], 
     const targetWeights = outgoing[source];
     targetWeights.set(target, (targetWeights.get(target) ?? 0) + edgeWeight(edge));
   });
+  // Row sums are fixed for the run; computing them once keeps each iteration O(edges).
+  const totals = outgoing.map((targets) => [...targets.values()].reduce((sum, value) => sum + value, 0));
   let rank = startVector(ids, options.initialRank);
   let iterations = 0;
   let converged = false;
@@ -81,8 +83,8 @@ export function calculatePageRank(nodes: PageRankNode[], edges: PageRankEdge[], 
     const dangling = rank.reduce((sum, value, source) => sum + (outgoing[source].size ? 0 : value), 0);
     const next = ids.map(() => (1 - config.damping) / ids.length + config.damping * dangling / ids.length);
     outgoing.forEach((targets, source) => {
-      const total = [...targets.values()].reduce((sum, value) => sum + value, 0);
-      targets.forEach((weight, target) => { next[target] += config.damping * rank[source] * weight / total; });
+      const share = config.damping * rank[source] / totals[source];
+      targets.forEach((weight, target) => { next[target] += share * weight; });
     });
     iterations += 1;
     residual = next.reduce((max, value, position) => Math.max(max, Math.abs(value - rank[position])), 0);
