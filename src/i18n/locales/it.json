@@ -7871,7 +7871,14 @@
       "run": "Analizza l'intento di ricerca",
       "running": "Rendering delle pagine…",
       "failed": "Impossibile eseguire il rendering della pagina: nessun risultato sull'intento.",
-      "funnel": "Pagine TOP renderizzate: {{analysed}} su {{requested}}. Fasi del funnel tra queste: TOFU {{tofu}}, MOFU {{mofu}}, BOFU {{bofu}}."
+      "funnel": "Pagine TOP renderizzate: {{analysed}} su {{requested}}. Fasi del funnel tra queste: TOFU {{tofu}}, MOFU {{mofu}}, BOFU {{bofu}}.",
+      "gapsTitle": "Formati mancanti",
+      "gap": {
+        "table": "Aggiungi una tabella comparativa: {{count}} pagine TOP su {{analysed}} ne hanno una.",
+        "ordered-list": "Aggiungi passaggi numerati: {{count}} pagine TOP su {{analysed}} usano un elenco numerato.",
+        "calculator": "Valuta un calcolatore o strumento funzionante: {{count}} pagine TOP su {{analysed}} ne hanno uno con veri campi modulo.",
+        "product-cards": "Mostra prodotti o offerte: {{count}} pagine TOP su {{analysed}} mostrano schede prodotto o prezzo."
+      }
     }
   },
   "prePublishUi": {

@@ -18,6 +18,11 @@ export const TargetPhraseIntentSection: React.FC<{ report: TopTenContentGapRepor
       {result && <>
         <SijaPanel intent={result.page} ssas={result.ssas} />
         <p>{t('sijaUi.phrase.funnel', { analysed: result.analysed, requested: result.requested, tofu: result.funnel.TOFU, mofu: result.funnel.MOFU, bofu: result.funnel.BOFU })}</p>
+        {result.gaps.length > 0 && (
+          <ul className="list-disc pl-5" aria-label={t('sijaUi.phrase.gapsTitle')}>
+            {result.gaps.map((gap) => <li key={gap.format}>{t(`sijaUi.phrase.gap.${gap.format}`, { count: gap.topPages, analysed: gap.analysed })}</li>)}
+          </ul>
+        )}
       </>}
     </section>
   );

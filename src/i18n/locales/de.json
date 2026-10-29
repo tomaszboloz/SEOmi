@@ -7871,7 +7871,14 @@
       "run": "Suchintention analysieren",
       "running": "Seiten werden gerendert…",
       "failed": "Die Seite konnte nicht gerendert werden, daher gibt es kein Intentionsergebnis.",
-      "funnel": "Gerenderte TOP-Seiten: {{analysed}} von {{requested}}. Funnel-Stufen darunter: TOFU {{tofu}}, MOFU {{mofu}}, BOFU {{bofu}}."
+      "funnel": "Gerenderte TOP-Seiten: {{analysed}} von {{requested}}. Funnel-Stufen darunter: TOFU {{tofu}}, MOFU {{mofu}}, BOFU {{bofu}}.",
+      "gapsTitle": "Fehlende Formate",
+      "gap": {
+        "table": "Füge eine Vergleichstabelle hinzu: {{count}} von {{analysed}} TOP-Seiten haben eine.",
+        "ordered-list": "Füge nummerierte Schritte hinzu: {{count}} von {{analysed}} TOP-Seiten nutzen eine nummerierte Liste.",
+        "calculator": "Erwäge einen funktionierenden Rechner oder ein Tool: {{count}} von {{analysed}} TOP-Seiten haben eines mit echten Formularfeldern.",
+        "product-cards": "Zeige Produkte oder Angebote: {{count}} von {{analysed}} TOP-Seiten zeigen Produkt- oder Preiskarten."
+      }
     }
   },
   "prePublishUi": {

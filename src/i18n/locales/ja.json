@@ -7871,7 +7871,14 @@
       "run": "検索意図を分析",
       "running": "ページをレンダリング中…",
       "failed": "ページをレンダリングできなかったため、意図の結果はありません。",
-      "funnel": "レンダリングした上位ページ: {{requested}} 件中 {{analysed}} 件。ファネル段階: TOFU {{tofu}}、MOFU {{mofu}}、BOFU {{bofu}}。"
+      "funnel": "レンダリングした上位ページ: {{requested}} 件中 {{analysed}} 件。ファネル段階: TOFU {{tofu}}、MOFU {{mofu}}、BOFU {{bofu}}。",
+      "gapsTitle": "不足している形式",
+      "gap": {
+        "table": "比較表を追加: 上位 {{analysed}} ページ中 {{count}} ページにあります。",
+        "ordered-list": "番号付き手順を追加: 上位 {{analysed}} ページ中 {{count}} ページが番号付きリストを使っています。",
+        "calculator": "実際に動く計算ツールを検討: 上位 {{analysed}} ページ中 {{count}} ページに実際のフォーム要素付きのものがあります。",
+        "product-cards": "商品やオファーを表示: 上位 {{analysed}} ページ中 {{count}} ページが商品・価格カードを表示しています。"
+      }
     }
   },
   "prePublishUi": {

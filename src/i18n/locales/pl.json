@@ -7871,7 +7871,14 @@
       "run": "Analizuj intencję wyszukiwania",
       "running": "Renderowanie stron…",
       "failed": "Nie udało się wyrenderować strony, więc nie ma wyniku intencji.",
-      "funnel": "Wyrenderowane strony z TOP: {{analysed}} z {{requested}}. Etapy lejka wśród nich: TOFU {{tofu}}, MOFU {{mofu}}, BOFU {{bofu}}."
+      "funnel": "Wyrenderowane strony z TOP: {{analysed}} z {{requested}}. Etapy lejka wśród nich: TOFU {{tofu}}, MOFU {{mofu}}, BOFU {{bofu}}.",
+      "gapsTitle": "Brakujące formaty",
+      "gap": {
+        "table": "Dodaj tabelę porównawczą: ma ją {{count}} z {{analysed}} stron z TOP.",
+        "ordered-list": "Dodaj ponumerowane kroki: listy numerowanej używa {{count}} z {{analysed}} stron z TOP.",
+        "calculator": "Rozważ działający kalkulator lub narzędzie: ma je {{count}} z {{analysed}} stron z TOP (z prawdziwymi polami formularza).",
+        "product-cards": "Pokaż produkty lub oferty: karty produktów lub cen ma {{count}} z {{analysed}} stron z TOP."
+      }
     }
   },
   "prePublishUi": {

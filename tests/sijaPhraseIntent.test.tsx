@@ -16,7 +16,7 @@ describe('SIJA for the audited phrase (#69)', () => {
     const report = await analyzePhraseIntent('me', ['a', 'b', 'c', 'd', 'e', 'f'], fetchHtml);
     expect(fetchHtml).toHaveBeenCalledTimes(1 + PHRASE_INTENT_TOP);
     expect(report.page.primary).toBe('how-to');
-    expect(report).toMatchObject({ requested: 5, analysed: 3, funnel: { TOFU: 2, MOFU: 1, BOFU: 0 } });
+    expect(report).toMatchObject({ requested: 5, analysed: 3, funnel: { TOFU: 2, MOFU: 1, BOFU: 0 }, gaps: [] });
     expect(report.ssas.score).not.toBeNull();
   });
 
@@ -42,6 +42,17 @@ describe('SIJA for the audited phrase (#69)', () => {
     spy.mockRejectedValue(new Error('down'));
     fireEvent.click(screen.getByRole('button', { name: 'Analyse search intent' }));
     expect(await screen.findByRole('alert')).toBeTruthy();
+    spy.mockRestore();
+  });
+
+  it('lists formats most rendered TOP pages use and the page lacks', async () => {
+    await i18n.changeLanguage('en');
+    const rows = ['a', 'b', 'c'].map((id, i) => ({ rank: i + 1, url: `https://${id}.test/`, finalUrl: null, availability: 'available' }));
+    const report = { rows, corpus: { target: { url: 'https://me.test/', text: 't', wordCount: 1 }, pages: [], requested: 3 } } as unknown as TopTenContentGapReport;
+    const spy = vi.spyOn(rendered, 'renderCrawlPage').mockImplementation(async ({ url }) => ({ html: url.includes('me.test') ? HOW_TO : COMPARE, httpStatus: 200 }) as rendered.RenderedPageSnapshot);
+    render(<TargetPhraseIntentSection report={report} />);
+    fireEvent.click(screen.getByRole('button', { name: 'Analyse search intent' }));
+    expect(await screen.findByText('Add a comparison table: 3 of 3 TOP pages have one.')).toBeTruthy();
     spy.mockRestore();
   });
 

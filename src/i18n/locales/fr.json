@@ -7871,7 +7871,14 @@
       "run": "Analyser l'intention de recherche",
       "running": "Rendu des pages…",
       "failed": "La page n'a pas pu être rendue ; aucun résultat d'intention.",
-      "funnel": "Pages du TOP rendues : {{analysed}} sur {{requested}}. Étapes du tunnel parmi elles : TOFU {{tofu}}, MOFU {{mofu}}, BOFU {{bofu}}."
+      "funnel": "Pages du TOP rendues : {{analysed}} sur {{requested}}. Étapes du tunnel parmi elles : TOFU {{tofu}}, MOFU {{mofu}}, BOFU {{bofu}}.",
+      "gapsTitle": "Formats manquants",
+      "gap": {
+        "table": "Ajoutez un tableau comparatif : {{count}} pages du TOP sur {{analysed}} en ont un.",
+        "ordered-list": "Ajoutez des étapes numérotées : {{count}} pages du TOP sur {{analysed}} utilisent une liste numérotée.",
+        "calculator": "Envisagez un calculateur ou outil fonctionnel : {{count}} pages du TOP sur {{analysed}} en ont un avec de vrais champs de formulaire.",
+        "product-cards": "Montrez des produits ou offres : {{count}} pages du TOP sur {{analysed}} affichent des fiches produit ou prix."
+      }
     }
   },
   "prePublishUi": {

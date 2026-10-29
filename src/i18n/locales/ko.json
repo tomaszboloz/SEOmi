@@ -7871,7 +7871,14 @@
       "run": "검색 의도 분석",
       "running": "페이지 렌더링 중…",
       "failed": "페이지를 렌더링할 수 없어 의도 결과가 없습니다.",
-      "funnel": "렌더링된 상위 페이지: {{requested}}개 중 {{analysed}}개. 퍼널 단계: TOFU {{tofu}}, MOFU {{mofu}}, BOFU {{bofu}}."
+      "funnel": "렌더링된 상위 페이지: {{requested}}개 중 {{analysed}}개. 퍼널 단계: TOFU {{tofu}}, MOFU {{mofu}}, BOFU {{bofu}}.",
+      "gapsTitle": "누락된 형식",
+      "gap": {
+        "table": "비교표 추가: 상위 {{analysed}}개 페이지 중 {{count}}개에 있습니다.",
+        "ordered-list": "번호 단계 추가: 상위 {{analysed}}개 페이지 중 {{count}}개가 번호 목록을 사용합니다.",
+        "calculator": "작동하는 계산기나 도구 고려: 상위 {{analysed}}개 페이지 중 {{count}}개에 실제 양식 필드가 있는 도구가 있습니다.",
+        "product-cards": "제품이나 혜택 표시: 상위 {{analysed}}개 페이지 중 {{count}}개가 제품 또는 가격 카드를 보여 줍니다."
+      }
     }
   },
   "prePublishUi": {

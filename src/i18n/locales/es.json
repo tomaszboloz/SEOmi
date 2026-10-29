@@ -7871,7 +7871,14 @@
       "run": "Analizar la intención de búsqueda",
       "running": "Renderizando páginas…",
       "failed": "No se pudo renderizar la página, así que no hay resultado de intención.",
-      "funnel": "Páginas del TOP renderizadas: {{analysed}} de {{requested}}. Etapas del embudo entre ellas: TOFU {{tofu}}, MOFU {{mofu}}, BOFU {{bofu}}."
+      "funnel": "Páginas del TOP renderizadas: {{analysed}} de {{requested}}. Etapas del embudo entre ellas: TOFU {{tofu}}, MOFU {{mofu}}, BOFU {{bofu}}.",
+      "gapsTitle": "Formatos que faltan",
+      "gap": {
+        "table": "Añade una tabla comparativa: {{count}} de {{analysed}} páginas del TOP la tienen.",
+        "ordered-list": "Añade pasos numerados: {{count}} de {{analysed}} páginas del TOP usan una lista numerada.",
+        "calculator": "Considera una calculadora o herramienta funcional: {{count}} de {{analysed}} páginas del TOP tienen una con campos de formulario reales.",
+        "product-cards": "Muestra productos u ofertas: {{count}} de {{analysed}} páginas del TOP muestran tarjetas de producto o precio."
+      }
     }
   },
   "prePublishUi": {

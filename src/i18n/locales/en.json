@@ -7871,7 +7871,14 @@
       "run": "Analyse search intent",
       "running": "Rendering pages…",
       "failed": "The page could not be rendered, so there is no intent result.",
-      "funnel": "TOP pages rendered: {{analysed}} of {{requested}}. Funnel stages among them: TOFU {{tofu}}, MOFU {{mofu}}, BOFU {{bofu}}."
+      "funnel": "TOP pages rendered: {{analysed}} of {{requested}}. Funnel stages among them: TOFU {{tofu}}, MOFU {{mofu}}, BOFU {{bofu}}.",
+      "gapsTitle": "Missing formats",
+      "gap": {
+        "table": "Add a comparison table: {{count}} of {{analysed}} TOP pages have one.",
+        "ordered-list": "Add numbered steps: {{count}} of {{analysed}} TOP pages use an ordered list.",
+        "calculator": "Consider a working calculator or tool: {{count}} of {{analysed}} TOP pages have one with real form controls.",
+        "product-cards": "Show products or offers: {{count}} of {{analysed}} TOP pages show product or price cards."
+      }
     }
   },
   "prePublishUi": {

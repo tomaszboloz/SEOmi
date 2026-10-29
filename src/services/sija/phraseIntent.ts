@@ -1,5 +1,6 @@
 import { renderCrawlPage } from '@/services/tauri/rendered';
 import { classify, funnelCounts } from './classify';
+import { formatGaps, type FormatGap } from './formatGaps';
 import { parseFeatures } from './features';
 import { ssas, type SsasResult } from './ssas';
 import type { Funnel, ObservedMicroIntent, PageFeatures } from './types';
@@ -15,6 +16,8 @@ export interface PhraseIntentReport {
   funnel: Record<Funnel, number>;
   requested: number;
   analysed: number;
+  /** Formats most rendered TOP pages use and this page lacks (GEM-69-08). */
+  gaps: FormatGap[];
 }
 
 const renderHtml: FetchHtml = async (url) => {
@@ -31,5 +34,5 @@ export const analyzePhraseIntent = async (targetUrl: string, topUrls: readonly s
   for (const url of requested) {
     try { top.push(parseFeatures(await fetchHtml(url))); } catch { /* counted through `analysed` */ }
   }
-  return { page: classify(page), ssas: ssas(page, top), funnel: funnelCounts(top.map(classify)), requested: requested.length, analysed: top.length };
+  return { page: classify(page), ssas: ssas(page, top), funnel: funnelCounts(top.map(classify)), requested: requested.length, analysed: top.length, gaps: formatGaps(page, top) };
 };
