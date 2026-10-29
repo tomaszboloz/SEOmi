@@ -7,6 +7,7 @@
 - What-If checks a change before simulating. It rejects unknown pages, self links, duplicate links, removal of a link that does not exist and invalid weights, and it can change the weight of an existing link. "After" and "change" now use the score scale from before the change (100 = best page before), so a page that gains can go above 100. Before, each state was rescaled to its own best page, which could hide the gain.
 - SPRS: `rel=nofollow` links stay on the map but pass no link flow. A similarity value that is not a number or lies outside 0-1 counts as unknown, not as a leak.
 - Crawler (#70): each link stores the nearest H2/H3 before it (`section_heading`, at most 160 characters). The lookup checks at most 1,500 nodes; when that limit is reached, the heading stays empty and is not guessed.
+- The crawl PDF report has a new **Internal link placement** table. It shows internal links per DOM zone, their share, the number of pages and the SPRS weight.
 - Links CSV export has five new columns: DOM zone, zone method, context before, context after and section heading. Runs crawled before these fields existed leave the columns empty.
 - IGOS in the target phrase audit (#67, #68): after a TOP 10 audit, the page and the competitor pages that were really fetched are split into 60-word windows (at most 40 per page). The panel shows the IGOS score, its components, the paragraph heatmap and recommendations. Without fetched competitor pages there is no baseline and no score. Vectors come from the local lexical provider, and the panel says so.
 - Search intent (SIJA) in the target phrase audit (#69): **Analyse search intent** renders the page and up to 5 TOP pages in the desktop WebView. It then shows the observed micro-intent, SSAS against the TOP pages and how many TOP pages fall in each funnel stage (TOFU/MOFU/BOFU). Pages that fail to render are counted as missing, never guessed, and no traffic shares are invented. Nothing is rendered until the button is pressed.
@@ -15,6 +16,8 @@
 - Outreach drafts use Information Gain evidence from the project's IGOS report again. This was lost in the 0.4.48 merge (#143).
 
 ## Fixed
+- The ±15-word link context no longer includes text from `<script>`, `<style>`, `<noscript>`, `<template>`, `<svg>` or `<textarea>`. E-mail addresses, long digit runs and long letter/digit tokens are replaced with `[email]`, `[number]` and `[token]`.
+- SPRS is faster on large sites: link weight totals are computed once per run instead of in every iteration.
 - Site Focus no longer quarantines every content page with TRS below 40 as "remove". Each removal candidate is checked against URL telemetry (Search Console clicks, conversions, revenue, backlinks), and only a measured prune candidate stays on the list. Missing telemetry is not treated as zero (#81).
 - Every Site Focus consumer, including the architecture map colours, uses the project's Core Topic (#82).
 - A cold-render architecture graph test no longer fails on the slow macos-15-intel runner. Its timeout went from 5 s to 20 s.
