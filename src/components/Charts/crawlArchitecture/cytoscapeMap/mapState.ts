@@ -1,6 +1,8 @@
 import { useMemo, useState } from 'react';
 import type { SemanticContentEdge, SemanticPageNode } from '@/services/semanticMap';
 import { buildSiteFocusReport } from '@/services/siteFocus';
+import { projectFocusOptions } from '@/services/siteFocusMonitoring/projectReport';
+import { useProjectStore } from '@/stores/projectStore';
 import type { CrawledPageSummary } from '@/types';
 import type { LayoutMode, MapEdge, MapFilters, MapNode } from './mapTypes';
 import { emptyFilters } from './mapTypes';
@@ -8,10 +10,10 @@ import { applyMapFilters, buildMapNodes, keepEdges, matchIds } from './mapNodes'
 import { allSections, resolveCollapsed } from './sections';
 import { buildElements } from './buildElements';
 
-/** Page URL to TRS lookup; empty when the Site Focus report cannot be built. */
-export const trsLookup = (pages: CrawledPageSummary[], startUrl: string): Record<string, number> => {
+/** Page URL to TRS lookup with the project's Core Topic inputs (#82); empty when the Site Focus report cannot be built. */
+export const trsLookup = (pages: CrawledPageSummary[], startUrl: string, projectId?: string | null): Record<string, number> => {
   try {
-    const report = buildSiteFocusReport(pages as never, startUrl, { now: new Date(0).toISOString() });
+    const report = buildSiteFocusReport(pages as never, startUrl, { ...projectFocusOptions(projectId), now: new Date(0).toISOString() });
     return Object.fromEntries(report.pages.filter((page) => !page.skipped).map((page) => [page.url, page.trs]));
   } catch {
     return {};
@@ -25,7 +27,8 @@ export const useMapModel = (pages: CrawledPageSummary[], startUrl: string, visib
   const [filters, setFilters] = useState<MapFilters>(emptyFilters);
   const [highlight, setHighlight] = useState('');
   const [toggled, setToggled] = useState<ReadonlySet<string>>(new Set());
-  const trs = useMemo(() => trsLookup(pages, startUrl), [pages, startUrl]);
+  const projectId = useProjectStore((state) => state.activeProjectId);
+  const trs = useMemo(() => trsLookup(pages, startUrl, projectId), [pages, startUrl, projectId]);
   const allNodes = useMemo(() => buildMapNodes(visibleNodes, trs), [visibleNodes, trs]);
   const nodes = useMemo(() => applyMapFilters(allNodes, filters), [allNodes, filters]);
   const edges = useMemo(() => keepEdges(toMapEdges(visibleEdges), nodes), [visibleEdges, nodes]);
