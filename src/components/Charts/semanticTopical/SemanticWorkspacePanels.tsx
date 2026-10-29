@@ -12,6 +12,7 @@ import { TopicalNodeEditor } from './TopicalNodeEditor';
 import { buildAuthorityReport } from '@/services/topicalAuthority';
 import { readTaxonomy } from '@/services/topicalAuthorityMonitoring/taxonomyStore';
 import { buildSiteFocusReport } from '@/services/siteFocus';
+import { projectFocusOptions } from '@/services/siteFocusMonitoring/projectReport';
 import type { FocusPage } from '@/services/siteFocus';
 
 type Session = ReturnType<typeof useSemanticTopicalSession>;
@@ -35,7 +36,7 @@ export const SemanticWorkspacePanels: React.FC<{ session: Session }> = ({ sessio
     const startUrl = pages[0]?.url;
     if (!startUrl) return null;
     try {
-      const sfs = buildSiteFocusReport(pages as FocusPage[], startUrl);
+      const sfs = buildSiteFocusReport(pages as FocusPage[], startUrl, projectFocusOptions(session.projectId));
       return buildAuthorityReport(pages as FocusPage[], startUrl, sfs, { taxonomy: readTaxonomy(session.projectId), now: sfs.generatedAt });
     } catch {
       return null;

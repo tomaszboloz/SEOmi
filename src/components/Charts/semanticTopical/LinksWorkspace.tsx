@@ -11,6 +11,7 @@ import { excludeQuarantined, excludeQuarantinedPages, runRecommendationBus } fro
 import { busInputFromReports } from '@/services/recommendationBus/fromReports';
 import { buildSiteFocusReport } from '@/services/siteFocus';
 import { buildAuthorityReport } from '@/services/topicalAuthority';
+import { projectFocusOptions } from '@/services/siteFocusMonitoring/projectReport';
 import { buildSemanticMap } from '@/services/semanticMap';
 import { buildSprsReport } from '@/services/sprs/report';
 import { buildTrustReport } from '@/services/eeatTrust';
@@ -26,7 +27,7 @@ const attempt = <T,>(build: () => T | undefined): T | undefined => { try { retur
 export const LinksWorkspace = ({ projectId, pages, run }: { projectId: string | null; pages: CrawledPageSummary[]; run?: CrawlRunRecord | null }) => {
   const startUrl = pages[0]?.url ?? '';
   const runCompleted = isSelectedCompletedCrawl(run, pages);
-  const sfs = useMemo(() => attempt(() => (pages.length ? buildSiteFocusReport(pages, startUrl) : undefined)), [pages, startUrl]);
+  const sfs = useMemo(() => attempt(() => (pages.length ? buildSiteFocusReport(pages, startUrl, projectFocusOptions(projectId)) : undefined)), [pages, startUrl, projectId]);
   const tas = useMemo(() => attempt(() => (sfs ? buildAuthorityReport(pages, startUrl, sfs) : undefined)), [pages, startUrl, sfs]);
   const bus = useMemo(() => runRecommendationBus(busInputFromReports(sfs, tas)), [sfs, tas]);
   const linkPages = useMemo(() => excludeQuarantinedPages(pages, bus.quarantine), [pages, bus]);

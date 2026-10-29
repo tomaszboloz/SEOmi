@@ -5,6 +5,7 @@ import { buildAuthorityReport } from '@/services/topicalAuthority';
 import { buildSemanticMap } from '@/services/semanticMap';
 import { buildSprsReport } from '@/services/sprs/report';
 import { buildTrustReport } from '@/services/eeatTrust';
+import { projectFocusOptions } from '@/services/siteFocusMonitoring/projectReport';
 import { appendDeltas } from './metricHistory';
 import { isCompletedCrawlRun } from './crawlEvidence';
 import { readTasks, writeTasks } from './storage';
@@ -41,7 +42,8 @@ export const runTaskVerification = (projectId: string, run: CrawlRunRecord): Opt
   if (!isCompletedCrawlRun(run)) return tasks;
   const pages = run.result?.pages ?? [];
   const startUrl = run.result?.start_url ?? '';
-  const sfs = buildSiteFocusReport(pages, startUrl);
+  // Same Core Topic inputs as the baseline (Focus tab), so deltas compare like with like (#82).
+  const sfs = buildSiteFocusReport(pages, startUrl, projectFocusOptions(projectId));
   const scores: Record<string, number | null> = { sfs: sfs.unavailable ? null : sfs.score };
   let sprsReport: ReturnType<typeof buildSprsReport> | null = null;
   let semanticGraph: ReturnType<typeof buildSemanticMap> | null = null;
