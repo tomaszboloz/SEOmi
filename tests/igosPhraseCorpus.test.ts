@@ -46,3 +46,18 @@ describe('IGOS from the phrase TOP 10 corpus (#67/#68)', () => {
     expect(report.corpus?.target).toEqual({ url: 'https://me.test/', text: 'T gamma', wordCount: 2 });
   });
 });
+
+describe('IGOS components (#67 GEM-67-06/07)', () => {
+  it('counts measured quantities in EDSI and ignores bare numbers', async () => {
+    const { edsi, measuredQuantities } = await import('@/services/igos/components');
+    expect(measuredQuantities('Brew at 93 °C with 12 g, 4,5 kWh, 30% and $5; year 2024, page 3, v1.2, 10.1000/x')).toBe(5);
+    expect(edsi('12 g 15 g 18 g 20 g', 1000)).toBeCloseTo(1 / 3);
+    expect(edsi('no data here 2024', 1000)).toBe(0);
+  });
+  it('counts only novel entities found in on-topic text', async () => {
+    const { novelEntities } = await import('@/services/igos/components');
+    const base = { consensusEntities: ['coffee'] } as never;
+    expect(novelEntities(['coffee', 'burr', 'crypto'], base)).toEqual(['burr', 'crypto']);
+    expect(novelEntities(['coffee', 'Burr', 'crypto'], base, 'the burr grinder sets the coffee size')).toEqual(['Burr']);
+  });
+});

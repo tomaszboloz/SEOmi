@@ -26,7 +26,8 @@ export const buildIgosReport = (target: TargetDoc, docs: CompetitorDoc[], baseli
   }
   const zones = zoneChunks(target.chunks, baseline, docs);
   const onTopic = zones.filter((zone) => zone.topic >= P.gainTopic).length / zones.length;
-  const novel = novelEntities(target.entities, baseline);
+  const onTopicText = zones.filter((zone) => zone.topic >= P.gainTopic).map((zone) => zone.chunk.text).join('\n');
+  const novel = novelEntities(target.entities, baseline, onTopicText);
   const text = target.chunks.map((chunk) => chunk.text).join('\n');
   const components = { nefr: nefr(novel.length, baseline.consensusEntities.length), edsi: edsi(text, target.wordCount), fhem: fhem(text), sdd: sdd(target.terms, baseline.terms) };
   const coverage = baseCoverage(target, baseline);

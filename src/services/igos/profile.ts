@@ -13,4 +13,6 @@ export const IGOS_PROFILE = {
   minDocs: 3,
   weights: { nefr: 0.35, edsi: 0.3, fhem: 0.2, sdd: 0.15 },
   epsilon: 1e-9,
+  /** Four measured quantities weigh as much as one DOI/PMID reference in EDSI. */
+  quantityWeight: 0.25,
 } as const;
