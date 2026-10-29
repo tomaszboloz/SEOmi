@@ -3,11 +3,12 @@ import { existsSync, lstatSync, mkdirSync, mkdtempSync, readFileSync, readdirSyn
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { describe, expect, it } from 'vitest';
+import { itWithFileSymlinks } from './fixtures/fileSymlinks';
 import { readReleaseFile, writeReleaseFileAtomically } from '../scripts/release-atomic-file.mjs';
 import { fetchOrVerifyAsset } from '../scripts/release-ci-gate-provenance-upload.mjs';
 
 describe('atomic release files', () => {
-  it('reads a bounded regular file and refuses outside symlinks and directories', () => {
+  itWithFileSymlinks('reads a bounded regular file and refuses outside symlinks and directories', () => {
     const root = mkdtempSync(join(tmpdir(), 'seomi-read-boundary-'));
     try {
       const dir = join(root, 'artifacts'); mkdirSync(dir);
@@ -41,7 +42,7 @@ describe('atomic release files', () => {
     } finally { rmSync(root, { recursive: true, force: true }); }
   });
 
-  it('cannot follow a cache symlink swapped during the network download', async () => {
+  itWithFileSymlinks('cannot follow a cache symlink swapped during the network download', async () => {
     const root = mkdtempSync(join(tmpdir(), 'seomi-download-race-'));
     try {
       const dir = join(root, 'artifacts'); mkdirSync(dir);
