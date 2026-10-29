@@ -5865,7 +5865,17 @@
         "reasonsIntro": "Warum Seiten blockiert oder unklar sind, einschließlich robots.txt-Regeln.",
         "httpIntro": "{{0}} von {{1}} Seiten lieferten Header- oder Entdeckungsdaten; die übrigen haben keine.",
         "tHttp": "HTTP-Antwortdetails und Entdeckung",
-        "discovered": "{{0}} {{1}}"
+        "discovered": "{{0}} {{1}}",
+        "tLinkZones": "Platzierung interner Links",
+        "linkZonesIntro": "Wo interne Links auf der Seite stehen, anhand der DOM-Vorfahren. Das Gewicht ist das SPRS-Referenzprofil; Hauptinhalt ohne Rendering hat keine Fold-Position und zählt mit dem neutralen Gewicht 1.",
+        "zoneMain": "Hauptinhalt",
+        "zoneAbove": "Above the Fold",
+        "zoneBelow": "Below the Fold",
+        "zoneWidget": "Widget",
+        "zoneNav": "Navigation / Breadcrumb",
+        "zoneFooter": "Seitenleiste / Footer",
+        "zoneUnknown": "Unbekannt (älterer Lauf)",
+        "zoneNeutral": "neutral (1)"
       },
       "cols": {
         "colItem": "Element",
@@ -5938,7 +5948,10 @@
         "colXrobots": "X-Robots-Tag",
         "colDiscovered": "Entdeckt über",
         "colArea": "Bereich",
-        "colResult": "Ergebnis"
+        "colResult": "Ergebnis",
+        "colZone": "Zone",
+        "colShare": "Anteil",
+        "colWeight": "SPRS-Gewicht"
       },
       "focus": {
         "title": "Site Focus",

@@ -5865,7 +5865,17 @@
         "reasonsIntro": "Pourquoi des pages sont bloquées ou incertaines, y compris les règles robots.txt.",
         "httpIntro": "{{0}} pages sur {{1}} ont renvoyé des données d'en-tête ou de découverte ; les autres n'en ont pas.",
         "tHttp": "Détails de la réponse HTTP et découverte",
-        "discovered": "{{0}} {{1}}"
+        "discovered": "{{0}} {{1}}",
+        "tLinkZones": "Emplacement des liens internes",
+        "linkZonesIntro": "Où se trouvent les liens internes dans la page, d'après les ancêtres DOM. Le poids est le profil de référence SPRS ; le contenu principal sans rendu n'a pas de position par rapport à la ligne de flottaison et compte avec le poids neutre 1.",
+        "zoneMain": "Contenu principal",
+        "zoneAbove": "Au-dessus de la ligne de flottaison",
+        "zoneBelow": "Sous la ligne de flottaison",
+        "zoneWidget": "Widget",
+        "zoneNav": "Navigation / fil d'Ariane",
+        "zoneFooter": "Barre latérale / pied de page",
+        "zoneUnknown": "Inconnue (ancien crawl)",
+        "zoneNeutral": "neutre (1)"
       },
       "cols": {
         "colItem": "Élément",
@@ -5938,7 +5948,10 @@
         "colXrobots": "X-Robots-Tag",
         "colDiscovered": "Découvert via",
         "colArea": "Domaine",
-        "colResult": "Résultat"
+        "colResult": "Résultat",
+        "colZone": "Zone",
+        "colShare": "Part",
+        "colWeight": "Poids SPRS"
       },
       "focus": {
         "title": "Site Focus",

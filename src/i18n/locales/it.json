@@ -5865,7 +5865,17 @@
         "reasonsIntro": "Perché le pagine sono bloccate o incerte, comprese le regole di robots.txt.",
         "httpIntro": "{{0}} pagine su {{1}} hanno restituito dati di header o di scoperta; le altre non ne hanno.",
         "tHttp": "Dettagli della risposta HTTP e scoperta",
-        "discovered": "{{0}} {{1}}"
+        "discovered": "{{0}} {{1}}",
+        "tLinkZones": "Posizione dei link interni",
+        "linkZonesIntro": "Dove si trovano i link interni nella pagina, in base agli antenati DOM. Il peso è il profilo di riferimento SPRS; il contenuto principale senza rendering non ha posizione rispetto alla piega e conta con il peso neutro 1.",
+        "zoneMain": "Contenuto principale",
+        "zoneAbove": "Above the fold",
+        "zoneBelow": "Below the fold",
+        "zoneWidget": "Widget",
+        "zoneNav": "Navigazione / breadcrumb",
+        "zoneFooter": "Barra laterale / footer",
+        "zoneUnknown": "Sconosciuta (scansione precedente)",
+        "zoneNeutral": "neutro (1)"
       },
       "cols": {
         "colItem": "Elemento",
@@ -5938,7 +5948,10 @@
         "colXrobots": "X-Robots-Tag",
         "colDiscovered": "Scoperta tramite",
         "colArea": "Area",
-        "colResult": "Esito"
+        "colResult": "Esito",
+        "colZone": "Zona",
+        "colShare": "Quota",
+        "colWeight": "Peso SPRS"
       },
       "focus": {
         "title": "Focus del sito",

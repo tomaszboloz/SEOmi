@@ -69,3 +69,6 @@ pub const COL_XROBOTS: &str = "crawl.cols.colXrobots";
 pub const COL_DISCOVERED: &str = "crawl.cols.colDiscovered";
 pub const COL_AREA: &str = "crawl.cols.colArea";
 pub const COL_RESULT: &str = "crawl.cols.colResult";
+pub const COL_ZONE: &str = "crawl.cols.colZone";
+pub const COL_SHARE: &str = "crawl.cols.colShare";
+pub const COL_WEIGHT: &str = "crawl.cols.colWeight";

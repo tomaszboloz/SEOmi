@@ -5865,7 +5865,17 @@
         "reasonsIntro": "Dlaczego strony są zablokowane lub niepewne, w tym reguły robots.txt.",
         "httpIntro": "{{0}} z {{1}} stron zwróciło dane nagłówków lub wykrywania; pozostałe ich nie mają.",
         "tHttp": "Szczegóły odpowiedzi HTTP i wykrywanie",
-        "discovered": "{{0}} {{1}}"
+        "discovered": "{{0}} {{1}}",
+        "tLinkZones": "Rozmieszczenie linków wewnętrznych",
+        "linkZonesIntro": "Gdzie na stronie są linki wewnętrzne, według przodków w DOM. Waga to profil referencyjny SPRS; treść główna bez renderu nie ma pozycji względem linii zgięcia i liczy się z neutralną wagą 1.",
+        "zoneMain": "Treść główna",
+        "zoneAbove": "Nad linią zgięcia",
+        "zoneBelow": "Pod linią zgięcia",
+        "zoneWidget": "Widżet",
+        "zoneNav": "Nawigacja / okruszki",
+        "zoneFooter": "Pasek boczny / stopka",
+        "zoneUnknown": "Nieznana (starszy przebieg)",
+        "zoneNeutral": "neutralna (1)"
       },
       "cols": {
         "colItem": "Element",
@@ -5938,7 +5948,10 @@
         "colXrobots": "X-Robots-Tag",
         "colDiscovered": "Wykryto przez",
         "colArea": "Obszar",
-        "colResult": "Wynik"
+        "colResult": "Wynik",
+        "colZone": "Strefa",
+        "colShare": "Udział",
+        "colWeight": "Waga SPRS"
       },
       "focus": {
         "title": "Site Focus",

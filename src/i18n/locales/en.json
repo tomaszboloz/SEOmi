@@ -5865,7 +5865,17 @@
         "reasonsIntro": "Why pages are blocked or uncertain, including robots.txt rules.",
         "httpIntro": "{{0}} of {{1}} pages returned header or discovery data; the others carry none.",
         "tHttp": "HTTP response details and discovery",
-        "discovered": "{{0}} {{1}}"
+        "discovered": "{{0}} {{1}}",
+        "tLinkZones": "Internal link placement",
+        "linkZonesIntro": "Where internal links sit on the page, judged from DOM ancestry. The weight is the SPRS reference profile; main content without a render has no fold position and counts at the neutral weight 1.",
+        "zoneMain": "Main content",
+        "zoneAbove": "Above the fold",
+        "zoneBelow": "Below the fold",
+        "zoneWidget": "Widget",
+        "zoneNav": "Navigation / breadcrumb",
+        "zoneFooter": "Sidebar / footer",
+        "zoneUnknown": "Unknown (older run)",
+        "zoneNeutral": "neutral (1)"
       },
       "cols": {
         "colItem": "Item",
@@ -5938,7 +5948,10 @@
         "colXrobots": "X-Robots-Tag",
         "colDiscovered": "Discovered via",
         "colArea": "Area",
-        "colResult": "Result"
+        "colResult": "Result",
+        "colZone": "Zone",
+        "colShare": "Share",
+        "colWeight": "SPRS weight"
       },
       "focus": {
         "title": "Site Focus",
