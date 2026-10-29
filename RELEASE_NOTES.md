@@ -17,6 +17,9 @@
 - Pull request runs that a newer push replaces are cancelled. Runs on pushes to main are never cancelled.
 - File-symlink escape tests are skipped only on systems that do not allow file symlinks.
 
+## Dependencies
+- MCP server: `@hono/node-server` 2.1.1 → 2.1.5 (#268).
+
 ## Included
 - Everything from 0.5.0 (below).
 
