@@ -6015,7 +6015,7 @@
           "anchorsMissing": "In diesem Crawl nicht gefundene Ankerseiten: {{0}}."
         },
         "rec": {
-          "remove-offtopic": "{{0}} themenfremde Seiten entfernen oder verschieben: die schlechtesten weiterleiten, auf noindex setzen oder löschen und interne Links darauf entfernen. Potenzial: +{{1}} Punkte.",
+          "remove-offtopic": "{{0}} themenfremde Seiten vor dem Handeln prüfen: zuerst Traffic, Conversions und Links prüfen. Seiten ohne diese Belege kommen für eine 301 auf eine passende Seite oder eine Überarbeitung infrage. Nichts wird automatisch entfernt. Potenzial: +{{1}} Punkte.",
           "strengthen-borderline": "{{0}} Grenzfall-Seiten stärken: fehlende Kernbegriffe und Abschnitte ergänzen, um sie auf etwa {{1}} zu heben. Potenzial: +{{2}} Punkte.",
           "expand-core-cluster": "Das Kernthema-Cluster ausbauen: {{0}} neue Seiten für dünn abgedeckte Unterthemen schreiben. Potenzial: +{{1}} Punkte.",
           "add-internal-links": "Interne Links zu Hub-Seiten ergänzen: {{0}} Linkvorschläge führen schwache Seiten zu starken Hubs.",
@@ -7008,8 +7008,8 @@
     },
     "recommendation": {
       "remove-offtopic": {
-        "title": "{{count}} themenfremde Seiten entfernen oder verschieben",
-        "detail": "Leite die schlechtesten Seiten weiter, setze sie auf noindex oder lösche sie und entferne interne Links darauf. Potenzial: +{{gain}} Punkte."
+        "title": "{{count}} themenfremde Seiten prüfen",
+        "detail": "Prüfe Traffic, Conversions und Links, bevor du handelst. Ohne diese Belege kommt eine 301 auf eine passende Seite oder eine Überarbeitung infrage. Nichts wird automatisch entfernt. Potenzial: +{{gain}} Punkte."
       },
       "strengthen-borderline": {
         "title": "{{count}} Grenzfall-Seiten stärken",
@@ -7688,7 +7688,8 @@
         "redirect": "301-Weiterleitung"
       },
       "conflict": {
-        "protected-by-evidence": "Behalten: Search-Console- oder Backlink-Daten vorhanden",
+        "protected-by-evidence": "Behalten: Traffic-, Conversion-, Umsatz- oder Backlink-Daten vorhanden",
+        "needs-data": "Nicht entfernt: Traffic- oder Linkdaten fehlen oder sind unvollständig, zuerst prüfen",
         "canonical-removed": "Konflikt: Die kanonische URL steht ebenfalls auf der Entfernungsliste"
       }
     },

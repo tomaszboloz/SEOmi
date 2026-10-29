@@ -6015,7 +6015,7 @@
           "anchorsMissing": "Páginas âncora não encontradas neste rastreio: {{0}}."
         },
         "rec": {
-          "remove-offtopic": "Remova ou mova {{0}} páginas off-topic: redirecione, aplique noindex ou exclua as piores e remova os links internos que apontam para elas. Potencial: +{{1}} pontos.",
+          "remove-offtopic": "Revise {{0}} páginas off-topic antes de agir: verifique primeiro tráfego, conversões e links. Páginas sem essa evidência são candidatas a um 301 para uma página relevante ou a uma reescrita. Nada é removido automaticamente. Potencial: +{{1}} pontos.",
           "strengthen-borderline": "Reforce {{0}} páginas limítrofes: adicione os termos e as seções do tema principal que faltam para levá-las a cerca de {{1}}. Potencial: +{{2}} pontos.",
           "expand-core-cluster": "Amplie o cluster do tema principal: escreva {{0}} páginas novas para subtemas pouco cobertos. Potencial: +{{1}} pontos.",
           "add-internal-links": "Adicione links internos para páginas hub: {{0}} sugestões de link levam páginas fracas a hubs fortes.",
@@ -7008,8 +7008,8 @@
     },
     "recommendation": {
       "remove-offtopic": {
-        "title": "Remova ou mova {{count}} páginas off-topic",
-        "detail": "Redirecione, aplique noindex ou exclua as piores páginas e remova os links internos que apontam para elas. Potencial: +{{gain}} pontos."
+        "title": "Revise {{count}} páginas off-topic",
+        "detail": "Verifique tráfego, conversões e links antes de agir. Sem essa evidência, considere um 301 para uma página relevante ou uma reescrita. Nada é removido automaticamente. Potencial: +{{gain}} pontos."
       },
       "strengthen-borderline": {
         "title": "Reforce {{count}} páginas limítrofes",
@@ -7688,7 +7688,8 @@
         "redirect": "Redirecionamento 301"
       },
       "conflict": {
-        "protected-by-evidence": "Mantida: tem dados do Search Console ou backlinks",
+        "protected-by-evidence": "Mantida: tem dados de tráfego, conversões, receita ou backlinks",
+        "needs-data": "Não removida: dados de tráfego ou links ausentes ou incompletos, verifique-os primeiro",
         "canonical-removed": "Conflito: a URL canônica também está na lista de remoção"
       }
     },

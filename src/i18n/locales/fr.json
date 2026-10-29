@@ -6015,7 +6015,7 @@
           "anchorsMissing": "Pages d’ancrage introuvables dans ce crawl : {{0}}."
         },
         "rec": {
-          "remove-offtopic": "Supprimer ou déplacer {{0}} pages hors sujet : rediriger, passer en noindex ou supprimer les pires et retirer les liens internes qui y mènent. Potentiel : +{{1}} points.",
+          "remove-offtopic": "Vérifier {{0}} pages hors sujet avant d'agir : contrôler d'abord le trafic, les conversions et les liens. Les pages sans ces preuves sont candidates à une 301 vers une page pertinente ou à une réécriture. Rien n'est supprimé automatiquement. Potentiel : +{{1}} points.",
           "strengthen-borderline": "Renforcer {{0}} pages limites : ajouter les termes et sections clés manquants pour les amener à environ {{1}}. Potentiel : +{{2}} points.",
           "expand-core-cluster": "Développer le cluster du sujet principal : rédiger {{0}} nouvelles pages pour les sous-thèmes peu couverts. Potentiel : +{{1}} points.",
           "add-internal-links": "Ajouter des liens internes vers les pages hub : {{0}} suggestions de liens renvoient les pages faibles vers des hubs solides.",
@@ -7008,8 +7008,8 @@
     },
     "recommendation": {
       "remove-offtopic": {
-        "title": "Supprimer ou déplacer {{count}} pages hors sujet",
-        "detail": "Redirigez, passez en noindex ou supprimez les pires pages et retirez les liens internes qui y mènent. Potentiel : +{{gain}} points."
+        "title": "Vérifier {{count}} pages hors sujet",
+        "detail": "Contrôlez le trafic, les conversions et les liens avant d'agir. Sans ces preuves, envisagez une 301 vers une page pertinente ou une réécriture. Rien n'est supprimé automatiquement. Potentiel : +{{gain}} points."
       },
       "strengthen-borderline": {
         "title": "Renforcer {{count}} pages limites",
@@ -7688,7 +7688,8 @@
         "redirect": "Redirection 301"
       },
       "conflict": {
-        "protected-by-evidence": "Conservée : elle a des données Search Console ou des backlinks",
+        "protected-by-evidence": "Conservée : elle a des données de trafic, de conversions, de revenus ou des backlinks",
+        "needs-data": "Non supprimée : les données de trafic ou de liens manquent ou sont incomplètes, vérifiez-les d'abord",
         "canonical-removed": "Conflit : l'URL canonique figure aussi dans la liste de suppression"
       }
     },

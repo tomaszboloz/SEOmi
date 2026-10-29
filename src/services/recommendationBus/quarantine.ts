@@ -2,18 +2,21 @@ import { busUrlKey } from './url';
 import type { BusConflict, BusInput, BusResult, QuarantineEntry } from './types';
 
 /**
- * Runs in hierarchy: (1) removal list guarded by GSC/backlink evidence,
+ * Runs in hierarchy: (1) removal list guarded by telemetry evidence,
  * (2) consolidation 301s, (3) everything else consumes the result.
- * Removal wins over redirect; protected URLs are never removed.
+ * Removal wins over redirect; protected and needs-data URLs are never removed.
  */
 export const runRecommendationBus = (input: BusInput): BusResult => {
-  const guarded = new Set((input.protectedUrls ?? []).map(busUrlKey).filter(Boolean));
+  const keys = (urls: string[] = []) => new Set(urls.map(busUrlKey).filter(Boolean));
+  const guarded = keys(input.protectedUrls);
+  const unknown = keys(input.needsDataUrls);
   const conflicts: BusConflict[] = [];
   const byUrl = new Map<string, QuarantineEntry>();
   for (const raw of input.removeUrls) {
     const url = busUrlKey(raw);
     if (!url || byUrl.has(url)) continue;
     if (guarded.has(url)) conflicts.push({ kind: 'protected-by-evidence', url });
+    else if (unknown.has(url)) conflicts.push({ kind: 'needs-data', url });
     else byUrl.set(url, { url, reason: 'remove', quarantined: true, source: 'site-focus' });
   }
   for (const group of input.cannibal ?? []) {
