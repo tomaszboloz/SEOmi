@@ -8,7 +8,9 @@ import type { OptimizationTask } from '@/services/optimizationTasks/types';
 import { findInternalLinkOpportunities } from '@/services/internalLinkOpportunities';
 import { buildLinkInjections, sprsGainContext } from '@/services/linkInjector';
 import { excludeQuarantined, excludeQuarantinedPages, runRecommendationBus } from '@/services/recommendationBus';
-import { busInputFromReports } from '@/services/recommendationBus/fromReports';
+import { busInputFromReports, removalCandidates, REMOVE_TRS_BELOW } from '@/services/recommendationBus/fromReports';
+import { guardRemovals } from '@/services/recommendationBus/guard';
+import { ensureUrlTelemetry } from '@/services/urlTelemetry';
 import { buildSiteFocusReport } from '@/services/siteFocus';
 import { buildAuthorityReport } from '@/services/topicalAuthority';
 import { buildSemanticMap } from '@/services/semanticMap';
@@ -22,13 +24,18 @@ import type { CrawledPageSummary, CrawlRunRecord } from '@/types';
 /** Reports are an enhancement: incomplete page data must not break the links view. */
 const attempt = <T,>(build: () => T | undefined): T | undefined => { try { return build(); } catch { return undefined; } };
 
-/** Links view: bus-filtered link opportunities, 301/410 artifacts from the same bus, task tracker. */
+/** Links view: bus-filtered link opportunities, 301/410 artifacts from the same bus (removals only after the #81 telemetry guard), task tracker. */
 export const LinksWorkspace = ({ projectId, pages, run }: { projectId: string | null; pages: CrawledPageSummary[]; run?: CrawlRunRecord | null }) => {
   const startUrl = pages[0]?.url ?? '';
   const runCompleted = isSelectedCompletedCrawl(run, pages);
   const sfs = useMemo(() => attempt(() => (pages.length ? buildSiteFocusReport(pages, startUrl) : undefined)), [pages, startUrl]);
   const tas = useMemo(() => attempt(() => (sfs ? buildAuthorityReport(pages, startUrl, sfs) : undefined)), [pages, startUrl, sfs]);
-  const bus = useMemo(() => runRecommendationBus(busInputFromReports(sfs, tas)), [sfs, tas]);
+  const guard = useMemo(() => {
+    const candidates = removalCandidates(sfs);
+    const snapshot = projectId && candidates.length ? attempt(() => ensureUrlTelemetry(projectId, pages.map((page) => page.url))) ?? null : null;
+    return guardRemovals(candidates, snapshot, REMOVE_TRS_BELOW);
+  }, [sfs, projectId, pages]);
+  const bus = useMemo(() => runRecommendationBus(busInputFromReports(sfs, tas, guard)), [sfs, tas, guard]);
   const linkPages = useMemo(() => excludeQuarantinedPages(pages, bus.quarantine), [pages, bus]);
   const rules = useMemo(() => rulesFromQuarantine(bus.quarantine), [bus]);
   const semanticGraph = useMemo(() => (pages.length ? attempt(() => buildSemanticMap(pages, startUrl)) : undefined), [pages, startUrl]);

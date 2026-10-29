@@ -19,8 +19,8 @@ describe('bus input and rules', () => {
   it('uses TRS < 40 non-technical pages and cannibal groups', () => {
     const sfs = { pages: [{ url: 'a', trs: 10, type: 'blog' }, { url: 'b', trs: 90, type: 'blog' }, { url: 'c', trs: 5, type: 'technical' }, { url: 'd', trs: 1, type: 'blog', skipped: 'thin' }] };
     const tas = { cannibalization: [{ urls: ['x', 'y'], canonical: 'x' }] };
-    expect(busInputFromReports(sfs as never, tas as never, ['p'])).toEqual({ removeUrls: ['a'], protectedUrls: ['p'], cannibal: [{ urls: ['x', 'y'], canonical: 'x' }] });
-    expect(busInputFromReports()).toEqual({ removeUrls: [], protectedUrls: [], cannibal: [] });
+    expect(busInputFromReports(sfs as never, tas as never, { protectedUrls: ['p'], needsDataUrls: ['n'] })).toEqual({ removeUrls: ['a'], protectedUrls: ['p'], needsDataUrls: ['n'], cannibal: [{ urls: ['x', 'y'], canonical: 'x' }] });
+    expect(busInputFromReports()).toEqual({ removeUrls: [], protectedUrls: [], needsDataUrls: [], cannibal: [] });
   });
   it('maps quarantine to 410 and 301 rules', () => {
     expect(rulesFromQuarantine([

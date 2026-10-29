@@ -18,7 +18,7 @@ vi.mock('@/services/monitoringAlerts', () => ({ monitorSemanticComparison: m.mon
 vi.mock('@/services/contentBrief', () => ({ compareDrafts: () => ({ changed: false, addedLineCount: 0, removedLineCount: 0, addedCharacterCount: 0, removedCharacterCount: 0, addedLines: [], removedLines: [] }), saveDraftVersion: (brief: unknown) => brief }));
 vi.mock('@/services/siteFocus', () => ({ buildSiteFocusReport: m.focus }));
 vi.mock('@/services/topicalAuthority', () => ({ buildAuthorityReport: m.authority }));
-vi.mock('@/services/recommendationBus/fromReports', () => ({ busInputFromReports: m.busInput }));
+vi.mock('@/services/recommendationBus/fromReports', () => ({ busInputFromReports: m.busInput, removalCandidates: () => [], REMOVE_TRS_BELOW: 40 }));
 vi.mock('@/services/recommendationBus', () => ({ runRecommendationBus: m.bus, excludeQuarantinedPages: (pages: unknown[]) => pages }));
 vi.mock('@/services/deployArtifacts/fromBus', () => ({ rulesFromQuarantine: m.rules }));
 vi.mock('@/services/executionCard/openBrief', () => ({ takePendingBrief: m.takePending }));

@@ -6015,7 +6015,7 @@
           "anchorsMissing": "Pagine àncora non trovate in questa scansione: {{0}}."
         },
         "rec": {
-          "remove-offtopic": "Rimuovi o sposta {{0}} pagine off-topic: reindirizza, applica noindex o elimina le peggiori e rimuovi i link interni che puntano a esse. Potenziale: +{{1}} punti.",
+          "remove-offtopic": "Verifica {{0}} pagine off-topic prima di agire: controlla prima traffico, conversioni e link. Le pagine senza questi dati sono candidate a un 301 verso una pagina pertinente o a una riscrittura. Nulla viene rimosso automaticamente. Potenziale: +{{1}} punti.",
           "strengthen-borderline": "Rafforza {{0}} pagine al limite: aggiungi i termini e le sezioni mancanti dell'argomento principale per portarle a circa {{1}}. Potenziale: +{{2}} punti.",
           "expand-core-cluster": "Amplia il cluster dell'argomento principale: scrivi {{0}} nuove pagine per i sotto-argomenti poco coperti. Potenziale: +{{1}} punti.",
           "add-internal-links": "Aggiungi link interni alle pagine hub: {{0}} suggerimenti di link indirizzano le pagine deboli verso hub solidi.",
@@ -7008,8 +7008,8 @@
     },
     "recommendation": {
       "remove-offtopic": {
-        "title": "Rimuovi o sposta {{count}} pagine off-topic",
-        "detail": "Reindirizza, applica noindex o elimina le pagine peggiori e rimuovi i link interni che puntano a esse. Potenziale: +{{gain}} punti."
+        "title": "Verifica {{count}} pagine off-topic",
+        "detail": "Controlla traffico, conversioni e link prima di agire. Senza questi dati, valuta un 301 verso una pagina pertinente o una riscrittura. Nulla viene rimosso automaticamente. Potenziale: +{{gain}} punti."
       },
       "strengthen-borderline": {
         "title": "Rafforza {{count}} pagine al limite",
@@ -7688,7 +7688,8 @@
         "redirect": "Redirect 301"
       },
       "conflict": {
-        "protected-by-evidence": "Mantenuta: ha dati Search Console o backlink",
+        "protected-by-evidence": "Mantenuta: ha dati di traffico, conversioni, ricavi o backlink",
+        "needs-data": "Non rimossa: i dati di traffico o link mancano o sono incompleti, verificali prima",
         "canonical-removed": "Conflitto: l'URL canonica è anche nell'elenco di rimozione"
       }
     },
