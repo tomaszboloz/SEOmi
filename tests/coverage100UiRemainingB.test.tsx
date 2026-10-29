@@ -22,7 +22,7 @@ vi.mock('@/components/Charts/InternalLinkOpportunitiesPanel', () => ({ InternalL
 vi.mock('@/components/Charts/DeploymentArtifactsPanel', () => ({ DeploymentArtifactsPanel: () => <div /> }));
 vi.mock('@/services/siteFocus', () => ({ buildSiteFocusReport: m.sfs }));
 vi.mock('@/services/topicalAuthority', () => ({ buildAuthorityReport: m.tas }));
-vi.mock('@/services/recommendationBus/fromReports', () => ({ busInputFromReports: vi.fn(() => ({})) }));
+vi.mock('@/services/recommendationBus/fromReports', () => ({ busInputFromReports: vi.fn(() => ({})), removalCandidates: () => [], REMOVE_TRS_BELOW: 40 }));
 vi.mock('@/services/recommendationBus', () => ({ runRecommendationBus: vi.fn(() => ({ quarantine: [], conflicts: [] })), excludeQuarantinedPages: (pages: unknown[]) => pages }));
 vi.mock('@/services/deployArtifacts/fromBus', () => ({ rulesFromQuarantine: vi.fn(() => []) }));
 vi.mock('@/services/semanticAudit', () => ({ buildSemanticAudit: vi.fn(() => ({ mappedTopics: 0, totalTopics: 0, mappedPages: 0, totalPages: 0, contentOrphanPages: 0, truncated: false, entityObservability: [], findings: [] })) }));

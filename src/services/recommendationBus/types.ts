@@ -9,7 +9,7 @@ export interface QuarantineEntry {
   source: 'site-focus' | 'topical-authority';
 }
 
-export type BusConflictKind = 'protected-by-evidence' | 'canonical-removed';
+export type BusConflictKind = 'protected-by-evidence' | 'needs-data' | 'canonical-removed';
 
 export interface BusConflict {
   kind: BusConflictKind;
@@ -22,10 +22,12 @@ export interface CannibalInput {
 }
 
 export interface BusInput {
-  /** URLs Site Focus recommends removing (remove-offtopic). */
+  /** Site Focus removal candidates (TRS below the Content Guard threshold); the guard lists decide. */
   removeUrls: string[];
-  /** URLs with GSC clicks or backlinks (#81): never quarantined for removal. */
+  /** URLs shielded by traffic, conversions, revenue or links, or kept as a semantic bridge (#81): never quarantined for removal. */
   protectedUrls?: string[];
+  /** URLs whose telemetry is missing, partial or stale (#81): checked first, never quarantined for removal. */
+  needsDataUrls?: string[];
   /** Cannibalisation groups: every non-canonical URL is redirected to canonical. */
   cannibal?: CannibalInput[];
 }

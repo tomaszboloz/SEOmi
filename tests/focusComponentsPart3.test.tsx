@@ -70,7 +70,7 @@ describe('SiteRecommendations and SubSiteScores', () => {
       linkSuggestions: [{ code: 'link-to-hub', fromUrl: 'https://x.test/a', toUrl: 'https://x.test/', anchors: ['insulin'] }],
     };
     render(<SiteRecommendations report={rich} />);
-    expect(screen.getByText('Remove or move 2 off-topic pages')).toBeTruthy();
+    expect(screen.getByText('Review 2 off-topic pages')).toBeTruthy();
     expect(screen.getByText('Delta Score: +4.2')).toBeTruthy();
     expect(screen.getByText('Delta Score: 0')).toBeTruthy();
     expect(screen.getByText(/Thin subtopic "foot care"/)).toBeTruthy();

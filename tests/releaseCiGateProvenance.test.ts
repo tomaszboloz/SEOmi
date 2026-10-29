@@ -2,6 +2,7 @@ import { readFileSync, writeFileSync, mkdirSync, mkdtempSync, rmSync, symlinkSyn
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { describe, expect, it } from 'vitest';
+import { itWithFileSymlinks } from './fixtures/fileSymlinks';
 import { mockRelease } from './releaseProvenanceFixtures';
 import {
   generateArtifactChecksums, buildProvenanceInventory,
@@ -18,7 +19,7 @@ const sampleArtifacts = [
 
 
 describe('release-ci-gate-provenance runtime & contract verification', () => {
-  it('generates checksums and rejects symlink escapes, duplicates, and traversal', () => {
+  itWithFileSymlinks('generates checksums and rejects symlink escapes, duplicates, and traversal', () => {
     const root = mkdtempSync(join(tmpdir(), 'prov-test-')), dir = join(root, 'artifacts'); mkdirSync(dir);
     try {
       const f1 = join(dir, 'test.json'), f2 = join(dir, 'app.exe'), outside = join(root, 'outside', 'out.txt');

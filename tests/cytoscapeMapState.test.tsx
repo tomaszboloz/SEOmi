@@ -3,6 +3,7 @@ import { describe, expect, it, vi } from 'vitest';
 import type { SemanticPageNode } from '@/services/semanticMap';
 import { toMapEdges, trsLookup, useMapModel } from '@/components/Charts/crawlArchitecture/cytoscapeMap/mapState';
 import * as siteFocus from '@/services/siteFocus';
+import { writeManualTopic } from '@/services/siteFocusMonitoring/topic';
 import { createCrawlPageFixture } from './fixtures/crawl';
 
 const sem = (id: string, url: string, status = 200): SemanticPageNode => ({
@@ -22,6 +23,14 @@ describe('trsLookup', () => {
   it('falls back to an empty record when the report cannot be built', () => {
     const spy = vi.spyOn(siteFocus, 'buildSiteFocusReport').mockImplementation(() => { throw new Error('boom'); });
     expect(trsLookup([], 'https://a.test/')).toEqual({});
+    spy.mockRestore();
+  });
+
+  it('scores the map with the saved project Core Topic (#82)', () => {
+    writeManualTopic('map-project', 'espresso');
+    const spy = vi.spyOn(siteFocus, 'buildSiteFocusReport').mockReturnValue({ pages: [] } as never);
+    trsLookup([], 'https://a.test/', 'map-project');
+    expect(spy).toHaveBeenCalledWith([], 'https://a.test/', expect.objectContaining({ manualTopic: 'espresso' }));
     spy.mockRestore();
   });
 

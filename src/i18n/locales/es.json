@@ -6015,7 +6015,7 @@
           "anchorsMissing": "Páginas ancla no encontradas en este rastreo: {{0}}."
         },
         "rec": {
-          "remove-offtopic": "Elimina o mueve {{0}} páginas off-topic: redirige, aplica noindex o elimina las peores y quita los enlaces internos que apuntan a ellas. Potencial: +{{1}} puntos.",
+          "remove-offtopic": "Revisa {{0}} páginas off-topic antes de actuar: comprueba primero tráfico, conversiones y enlaces. Las páginas sin esa evidencia son candidatas a un 301 hacia una página relevante o a una reescritura. Nada se elimina automáticamente. Potencial: +{{1}} puntos.",
           "strengthen-borderline": "Refuerza {{0}} páginas límite: añade los términos y secciones del tema principal que faltan para subirlas a unos {{1}}. Potencial: +{{2}} puntos.",
           "expand-core-cluster": "Amplía el clúster del tema principal: escribe {{0}} páginas nuevas para subtemas poco cubiertos. Potencial: +{{1}} puntos.",
           "add-internal-links": "Añade enlaces internos a páginas hub: {{0}} sugerencias de enlace envían páginas débiles a hubs sólidos.",
@@ -7008,8 +7008,8 @@
     },
     "recommendation": {
       "remove-offtopic": {
-        "title": "Elimina o mueve {{count}} páginas off-topic",
-        "detail": "Redirige, aplica noindex o elimina las peores páginas y quita los enlaces internos que apuntan a ellas. Potencial: +{{gain}} puntos."
+        "title": "Revisa {{count}} páginas off-topic",
+        "detail": "Comprueba tráfico, conversiones y enlaces antes de actuar. Sin esa evidencia, valora un 301 hacia una página relevante o una reescritura. Nada se elimina automáticamente. Potencial: +{{gain}} puntos."
       },
       "strengthen-borderline": {
         "title": "Refuerza {{count}} páginas límite",
@@ -7688,7 +7688,8 @@
         "redirect": "Redirección 301"
       },
       "conflict": {
-        "protected-by-evidence": "Conservada: tiene datos de Search Console o backlinks",
+        "protected-by-evidence": "Conservada: tiene datos de tráfico, conversiones, ingresos o backlinks",
+        "needs-data": "No eliminada: faltan datos de tráfico o enlaces o están incompletos, revísalos primero",
         "canonical-removed": "Conflicto: la URL canónica también está en la lista de eliminación"
       }
     },
@@ -7954,7 +7955,14 @@
     "empty": "Sin datos de brecha de enlaces. Ejecuta antes el análisis.",
     "row": "{{domain}}: prioridad {{priority}}, enlaza a {{count}} competidores",
     "export": "Exportar CSV",
-    "manualNote": "SEOmi nunca envía mensajes. Envía los borradores desde tu correo."
+    "manualNote": "SEOmi nunca envía mensajes. Envía los borradores desde tu correo.",
+    "draft": "Mostrar borrador",
+    "draftSubject": "Un recurso para {{domain}}",
+    "draftBody": "Hola,\\n\\nHemos visto que enlazas a {{competitors}}. Publicamos {{title}} ({{url}}): {{summary}}\\nÁngulo único: {{novelEntities}}. Ganancia informativa: {{informationGain}}. Evidencia: {{evidence}}\\nProveedor: {{provider}}; modelo: {{model}}; {{approximation}}; observado: {{observedAt}}\\n\\nUn saludo,\\n{{site}}",
+    "evidence": "IGOS {{score}}/100; evidencia: {{url}}",
+    "provenance": "Fuente IGOS: proveedor {{provider}}, modelo {{model}} ({{approximation}}); observado: {{observedAt}}",
+    "unknown": "no disponible",
+    "localApproximation": "aproximación léxica local"
   },
   "causalMarket": {
     "title": "Impacto causal",

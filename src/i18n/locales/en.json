@@ -6015,7 +6015,7 @@
           "anchorsMissing": "Anchor pages not found in this crawl: {{0}}."
         },
         "rec": {
-          "remove-offtopic": "Remove or move {{0}} off-topic pages: redirect, noindex or delete the worst ones and remove internal links to them. Potential: +{{1}} points.",
+          "remove-offtopic": "Review {{0}} off-topic pages before acting: check traffic, conversions and links first. Pages without that evidence are candidates for a 301 to a relevant page or a rewrite. Nothing is removed automatically. Potential: +{{1}} points.",
           "strengthen-borderline": "Strengthen {{0}} borderline pages: add missing core terms and sections to lift them to about {{1}}. Potential: +{{2}} points.",
           "expand-core-cluster": "Expand the core topic cluster: write {{0}} new pages for thin subtopics. Potential: +{{1}} points.",
           "add-internal-links": "Add internal links to hub pages: {{0}} link suggestions send weak pages to strong hubs.",
@@ -7008,8 +7008,8 @@
     },
     "recommendation": {
       "remove-offtopic": {
-        "title": "Remove or move {{count}} off-topic pages",
-        "detail": "Redirect, noindex or delete the worst pages and remove internal links to them. Potential: +{{gain}} points."
+        "title": "Review {{count}} off-topic pages",
+        "detail": "Check traffic, conversions and links before acting. Without that evidence, consider a 301 to a relevant page or a rewrite. Nothing is removed automatically. Potential: +{{gain}} points."
       },
       "strengthen-borderline": {
         "title": "Strengthen {{count}} borderline pages",
@@ -7688,7 +7688,8 @@
         "redirect": "301 redirect"
       },
       "conflict": {
-        "protected-by-evidence": "Kept: it has Search Console or backlink evidence",
+        "protected-by-evidence": "Kept: it has traffic, conversion, revenue or backlink evidence",
+        "needs-data": "Not removed: traffic or link data is missing or incomplete, check it first",
         "canonical-removed": "Conflict: the canonical URL is also on the removal list"
       }
     },
@@ -7954,7 +7955,14 @@
     "empty": "No backlink gap data. Run a backlink gap check first.",
     "row": "{{domain}}: priority {{priority}}, links to {{count}} competitors",
     "export": "Export CSV",
-    "manualNote": "SEOmi never sends messages. Send drafts from your own mailbox."
+    "manualNote": "SEOmi never sends messages. Send drafts from your own mailbox.",
+    "draft": "Show draft",
+    "draftSubject": "A resource for {{domain}}",
+    "draftBody": "Hello,\\n\\nWe noticed you link to {{competitors}}. We published {{title}} ({{url}}): {{summary}}\\nUnique angle: {{novelEntities}}. Information gain: {{informationGain}}. Evidence: {{evidence}}\\nProvider: {{provider}}; model: {{model}}; {{approximation}}; observed: {{observedAt}}\\n\\nBest,\\n{{site}}",
+    "evidence": "IGOS {{score}}/100; evidence: {{url}}",
+    "provenance": "IGOS source: provider {{provider}}, model {{model}} ({{approximation}}); observed: {{observedAt}}",
+    "unknown": "unavailable",
+    "localApproximation": "local lexical approximation"
   },
   "causalMarket": {
     "title": "Causal impact",

@@ -6015,7 +6015,7 @@
           "anchorsMissing": "이번 크롤링에서 찾지 못한 앵커 페이지: {{0}}."
         },
         "rec": {
-          "remove-offtopic": "주제에서 벗어난 페이지 {{0}}개 삭제 또는 이동: 가장 심한 페이지는 리디렉션하거나 noindex 처리하거나 삭제하고, 해당 페이지로 향하는 내부 링크를 제거하세요. 잠재 효과: +{{1}}점.",
+          "remove-offtopic": "주제에서 벗어난 페이지 {{0}}개는 조치 전에 검토하세요. 먼저 트래픽, 전환, 링크를 확인합니다. 이러한 근거가 없는 페이지는 관련 페이지로의 301 또는 재작성 후보입니다. 자동으로 삭제되는 것은 없습니다. 잠재 효과: +{{1}}점.",
           "strengthen-borderline": "경계선 페이지 {{0}}개 강화: 빠진 핵심 용어와 섹션을 추가해 약 {{1}}까지 끌어올리세요. 잠재 효과: +{{2}}점.",
           "expand-core-cluster": "핵심 주제 클러스터 확장: 내용이 빈약한 하위 주제를 위해 새 페이지 {{0}}개를 작성하세요. 잠재 효과: +{{1}}점.",
           "add-internal-links": "허브 페이지로 내부 링크 추가: 약한 페이지를 강한 허브로 연결하는 링크 제안이 {{0}}개 있습니다.",
@@ -7008,8 +7008,8 @@
     },
     "recommendation": {
       "remove-offtopic": {
-        "title": "주제에서 벗어난 페이지 {{count}}개 삭제 또는 이동",
-        "detail": "가장 심한 페이지는 리디렉션하거나 noindex 처리하거나 삭제하고, 해당 페이지로 향하는 내부 링크를 제거하세요. 잠재 효과: +{{gain}}점."
+        "title": "주제에서 벗어난 페이지 {{count}}개 검토",
+        "detail": "조치 전에 트래픽, 전환, 링크를 확인하세요. 근거가 없으면 관련 페이지로의 301 또는 재작성을 고려하세요. 자동으로 삭제되는 것은 없습니다. 잠재 효과: +{{gain}}점."
       },
       "strengthen-borderline": {
         "title": "경계선 페이지 {{count}}개 강화",
@@ -7688,7 +7688,8 @@
         "redirect": "301 리디렉션"
       },
       "conflict": {
-        "protected-by-evidence": "유지: Search Console 또는 백링크 데이터가 있음",
+        "protected-by-evidence": "유지: 트래픽, 전환, 매출 또는 백링크 데이터가 있음",
+        "needs-data": "삭제 안 함: 트래픽 또는 링크 데이터가 없거나 불완전함, 먼저 확인하세요",
         "canonical-removed": "충돌: 표준 URL이 삭제 목록에도 있음"
       }
     },
@@ -7954,7 +7955,14 @@
     "empty": "백링크 격차 데이터가 없습니다. 먼저 격차 분석을 실행하세요.",
     "row": "{{domain}}: 우선순위 {{priority}}, 경쟁사 {{count}}곳에 링크",
     "export": "CSV 내보내기",
-    "manualNote": "SEOmi는 메시지를 보내지 않습니다. 초안은 본인 메일함에서 보내세요."
+    "manualNote": "SEOmi는 메시지를 보내지 않습니다. 초안은 본인 메일함에서 보내세요.",
+    "draft": "초안 보기",
+    "draftSubject": "{{domain}}을 위한 자료",
+    "draftBody": "안녕하세요.\\n\\n{{competitors}}에 연결된 것을 확인했습니다. {{title}}({{url}})을 게시했습니다: {{summary}}\\n고유한 관점: {{novelEntities}}. 정보 이득: {{informationGain}}. 근거: {{evidence}}\\n제공자: {{provider}}; 모델: {{model}}; {{approximation}}; 관찰 시각: {{observedAt}}\\n\\n감사합니다.\\n{{site}}",
+    "evidence": "IGOS {{score}}/100; 근거: {{url}}",
+    "provenance": "IGOS 출처: 제공자 {{provider}}, 모델 {{model}} ({{approximation}}); 관찰: {{observedAt}}",
+    "unknown": "사용할 수 없음",
+    "localApproximation": "로컬 어휘 근사"
   },
   "causalMarket": {
     "title": "인과 효과",

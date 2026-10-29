@@ -2,6 +2,7 @@ import { lstatSync, mkdirSync, mkdtempSync, readFileSync, rmSync, symlinkSync, w
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { describe, expect, it } from 'vitest';
+import { itWithFileSymlinks } from './fixtures/fileSymlinks';
 import { consolidateManifests, extractPlatformFragment } from '../scripts/release-ci-gate-manifest.mjs';
 
 const writeFragments = (dir: string) => {
@@ -40,7 +41,7 @@ describe('release manifest IO boundaries', () => {
     } finally { process.chdir(cwd); rmSync(root, { recursive: true, force: true }); }
   });
 
-  it('rejects signature symlinks outside target before writing output', () => {
+  itWithFileSymlinks('rejects signature symlinks outside target before writing output', () => {
     const root = mkdtempSync(join(tmpdir(), 'seomi-manifest-sig-link-')), targetDir = join(root, 'target');
     const bundle = join(targetDir, 'aarch64-apple-darwin', 'SEOmi.app.tar.gz'), output = 'updater-manifest-macos-15.json';
     const cwd = process.cwd(); process.chdir(root);
@@ -68,7 +69,7 @@ describe('release manifest IO boundaries', () => {
     } finally { process.chdir(cwd); rmSync(root, { recursive: true, force: true }); }
   });
 
-  it('replaces latest.json symlink without touching its target', async () => {
+  itWithFileSymlinks('replaces latest.json symlink without touching its target', async () => {
     const root = mkdtempSync(join(tmpdir(), 'seomi-manifest-latest-link-')), dir = join(root, 'fragments');
     const cwd = process.cwd(); process.chdir(root);
     try {

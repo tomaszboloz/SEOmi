@@ -6015,7 +6015,7 @@
           "anchorsMissing": "Strony-kotwice nieznalezione w tym crawlu: {{0}}."
         },
         "rec": {
-          "remove-offtopic": "Usuń lub przenieś {{0}} stron spoza tematu: przekieruj, oznacz noindex lub usuń najgorsze i usuń linki wewnętrzne do nich. Potencjał: +{{1}} pkt.",
+          "remove-offtopic": "Zweryfikuj {{0}} stron spoza tematu przed działaniem: najpierw sprawdź ruch, konwersje i linki. Strony bez takich dowodów to kandydaci do 301 na adekwatną stronę lub przepisania. Nic nie jest usuwane automatycznie. Potencjał: +{{1}} pkt.",
           "strengthen-borderline": "Wzmocnij {{0}} stron granicznych: dodaj brakujące kluczowe terminy i sekcje, aby podnieść je do około {{1}}. Potencjał: +{{2}} pkt.",
           "expand-core-cluster": "Rozbuduj klaster tematu głównego: napisz {{0}} nowych stron dla słabo pokrytych podtematów. Potencjał: +{{1}} pkt.",
           "add-internal-links": "Dodaj linki wewnętrzne do stron-hubów: {{0}} sugestii linków kieruje słabe strony do mocnych hubów.",
@@ -7008,8 +7008,8 @@
     },
     "recommendation": {
       "remove-offtopic": {
-        "title": "Usuń lub przenieś {{count}} stron spoza tematu",
-        "detail": "Przekieruj, oznacz noindex lub usuń najgorsze strony i usuń linki wewnętrzne do nich. Potencjał: +{{gain}} pkt."
+        "title": "Zweryfikuj {{count}} stron spoza tematu",
+        "detail": "Przed działaniem sprawdź ruch, konwersje i linki. Bez takich dowodów rozważ 301 na adekwatną stronę lub przepisanie. Nic nie jest usuwane automatycznie. Potencjał: +{{gain}} pkt."
       },
       "strengthen-borderline": {
         "title": "Wzmocnij {{count}} stron granicznych",
@@ -7688,7 +7688,8 @@
         "redirect": "Przekierowanie 301"
       },
       "conflict": {
-        "protected-by-evidence": "Zachowano: adres ma dane z Search Console lub linki zwrotne",
+        "protected-by-evidence": "Zachowano: adres ma dane o ruchu, konwersjach, przychodzie lub linkach zwrotnych",
+        "needs-data": "Nie usunięto: brakuje danych o ruchu lub linkach albo są niepełne, najpierw je sprawdź",
         "canonical-removed": "Konflikt: adres kanoniczny jest też na liście do usunięcia"
       }
     },
@@ -7954,7 +7955,14 @@
     "empty": "Brak danych luki linkowej. Najpierw uruchom analizę luki linków.",
     "row": "{{domain}}: priorytet {{priority}}, linkuje do {{count}} konkurentów",
     "export": "Eksportuj CSV",
-    "manualNote": "SEOmi nie wysyła wiadomości. Szkice wysyłasz ze swojej skrzynki."
+    "manualNote": "SEOmi nie wysyła wiadomości. Szkice wysyłasz ze swojej skrzynki.",
+    "draft": "Pokaż szkic",
+    "draftSubject": "Źródło dla {{domain}}",
+    "draftBody": "Dzień dobry,\\n\\nZauważyliśmy, że linkujesz do {{competitors}}. Opublikowaliśmy {{title}} ({{url}}): {{summary}}\\nUnikalny kąt: {{novelEntities}}. Zysk informacji: {{informationGain}}. Dowód: {{evidence}}\\nProvider: {{provider}}; model: {{model}}; {{approximation}}; obserwacja: {{observedAt}}\\n\\nPozdrawiam,\\n{{site}}",
+    "evidence": "IGOS {{score}}/100; dowód: {{url}}",
+    "provenance": "Źródło IGOS: provider {{provider}}, model {{model}} ({{approximation}}); obserwacja: {{observedAt}}",
+    "unknown": "niedostępne",
+    "localApproximation": "lokalne przybliżenie leksykalne"
   },
   "causalMarket": {
     "title": "Wpływ przyczynowy",
