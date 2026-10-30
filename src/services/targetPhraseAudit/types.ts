@@ -85,10 +85,11 @@ export interface TopTenContentGapReport {
   corpus?: TopTenCorpus;
 }
 
-export interface TopTenCorpusPage { rank: number; url: string; fetchedAt: string | null; status: number | null; text: string }
+export interface TopTenCorpusPage { rank: number; url: string; fetchedAt: string | null; status: number | null; text: string; headings?: string[] }
 
 export interface TopTenCorpus {
-  target: { url: string; text: string; wordCount: number } | null;
+  /** `headings`: H2/H3 texts in document order, used for section-aware IGOS chunks. */
+  target: { url: string; text: string; wordCount: number; headings?: string[] } | null;
   /** Only pages whose body was really fetched. */
   pages: TopTenCorpusPage[];
   /** Organic rows selected from the SERP, the IGOS denominator. */

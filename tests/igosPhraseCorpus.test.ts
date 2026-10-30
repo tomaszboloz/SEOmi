@@ -43,7 +43,7 @@ describe('IGOS from the phrase TOP 10 corpus (#67/#68)', () => {
     const report = buildTopTenContentGap({ phrase: 'x', rows, evidence: [{ url: 'https://a.test/', fetchedAt: 'now', audit: audit('https://a.test/', 'alpha beta') }], targetPageAudit: audit('https://me.test/', 'gamma') });
     expect(report.corpus?.requested).toBe(2);
     expect(report.corpus?.pages.map((page) => page.url)).toEqual(['https://a.test/']);
-    expect(report.corpus?.target).toEqual({ url: 'https://me.test/', text: 'T gamma', wordCount: 2 });
+    expect(report.corpus?.target).toEqual({ url: 'https://me.test/', text: 'T gamma', wordCount: 2, headings: [] });
   });
 });
 

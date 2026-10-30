@@ -23,7 +23,9 @@ export const buildSprsInput = (graph: SemanticMap): { nodes: Array<{ id: string 
   const flowing = (e: SemanticContentEdge) => !e.nofollowLinks || e.nofollowLinks < e.links;
   const edges: SprsEdge[] = graph.edges.filter((e) => nodeIds.has(e.source) && nodeIds.has(e.target) && flowing(e)).map((e) => {
     const value = similarity.get(`${e.source}|${e.target}`);
-    return { source: e.source, target: e.target, links: e.links, ...zoneWeighting(e), ...(value === undefined ? {} : { similarity: value }) };
+    const followed = e.links - (e.nofollowLinks ?? 0);
+    const context = e.contextKnownLinks && e.contextKnownLinks === followed ? (e.contextSimilaritySum ?? 0) / followed : undefined;
+    return { source: e.source, target: e.target, links: e.links, ...zoneWeighting(e), ...(value === undefined ? {} : { similarity: value }), ...(context === undefined ? {} : { contextSimilarity: context }) };
   });
   return { nodes: nodes.map((node) => ({ id: node.id })), edges };
 };

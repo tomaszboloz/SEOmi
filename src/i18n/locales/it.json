@@ -8193,6 +8193,8 @@
     "unknown": "{{count}} link hanno similarità sconosciuta e non contano come perdita.",
     "unweightedZone": "{{count}} link hanno una zona DOM sconosciuta o non ponderata e contano con il peso neutro 1.",
     "notConverged": "Il solver non è convergente; i punteggi sono approssimati.",
+    "degree": "Link in/out",
+    "similarityWeighted": "I pesi includono la similarità lessicale delle pagine su {{pageEdges}} link e quella del contesto dell'ancora su {{contextEdges}} link (minimo 0,05). Le pagine con un link non misurato usano solo i pesi di zona.",
     "whatIf": {
       "title": "Simulatore di link What-If",
       "source": "Dalla pagina",
@@ -8200,6 +8202,9 @@
       "action": "Modifica",
       "add": "Aggiungi link",
       "remove": "Rimuovi link",
+      "addPage": "Aggiungi nuova pagina",
+      "removePage": "Rimuovi pagina",
+      "newPage": "URL della nuova pagina",
       "run": "Simula",
       "noChange": "Nessuna variazione dei punteggi.",
       "before": "Prima",
@@ -8253,11 +8258,19 @@
       "failed": "Impossibile eseguire il rendering della pagina: nessun risultato sull'intento.",
       "funnel": "Pagine TOP renderizzate: {{analysed}} su {{requested}}. Fasi del funnel tra queste: TOFU {{tofu}}, MOFU {{mofu}}, BOFU {{bofu}}.",
       "gapsTitle": "Formati mancanti",
+      "serpMatch": "Intento del TOP: {{serp}} ({{pages}} su {{analysed}} pagine renderizzate). La tua pagina corrisponde ({{own}}).",
+      "serpMismatch": "Intento del TOP: {{serp}} ({{pages}} su {{analysed}} pagine renderizzate), ma la tua pagina sembra: {{own}}. Verifica che risponda allo stesso bisogno.",
+      "serpUnknown": "Intento del TOP: {{serp}} ({{pages}} su {{analysed}} pagine renderizzate). La tua pagina non ha un intento chiaro, quindi non si possono confrontare.",
+      "serpNoMajority": "Nessun intento è condiviso dalla maggioranza delle {{analysed}} pagine TOP renderizzate.",
+      "drillDown": "Pagine TOP renderizzate ({{n}})",
+      "topPage": "{{url}} · {{intent}} · {{stage}}",
+      "previous": "Esecuzione precedente {{runAt}}: {{intent}}, SSAS {{ssas}}, {{analysed}} pagine TOP renderizzate.",
       "gap": {
         "table": "Aggiungi una tabella comparativa: {{count}} pagine TOP su {{analysed}} ne hanno una.",
         "ordered-list": "Aggiungi passaggi numerati: {{count}} pagine TOP su {{analysed}} usano un elenco numerato.",
         "calculator": "Valuta un calcolatore o strumento funzionante: {{count}} pagine TOP su {{analysed}} ne hanno uno con veri campi modulo.",
-        "product-cards": "Mostra prodotti o offerte: {{count}} pagine TOP su {{analysed}} mostrano schede prodotto o prezzo."
+        "product-cards": "Mostra prodotti o offerte: {{count}} pagine TOP su {{analysed}} mostrano schede prodotto o prezzo.",
+        "cta": "Aggiungi una call to action chiara: {{count}} pagine TOP su {{analysed}} ne hanno una (ignoralo per pagine puramente informative)."
       }
     }
   },
@@ -8362,7 +8375,10 @@
     "sampledOnly": "Solo campione (testo completo non misurato)",
     "variablesUnavailable": "Variabili del template non disponibili",
     "noindex": "Consigliato: noindex per questo segmento",
-    "limit": "Consigliato: limita le pagine indicizzate"
+    "limit": "Consigliato: limita le pagine indicizzate",
+    "tasNodes": "Autorità tematica: {{nodes}} nodi di sottotema, un URL rappresentativo ciascuno ({{representatives}} URL)",
+    "tasUnknown": "Sottotema di autorità tematica sconosciuto per queste pagine (nessuna corrispondenza nel report di autorità)",
+    "noindexWithheld": "noindex non viene proposto finché scheletro DOM, variabili del template e testo completo non sono misurati."
   },
   "outreach": {
     "title": "Obiettivi di outreach",
@@ -8464,13 +8480,25 @@
     "detail": "Offset {{offset}}, somiglianza tematica {{topic}}, passaggio concorrente più vicino {{nearest}}.",
     "source": "Fonte più vicina: {{url}} (posizione {{rank}}).",
     "noSource": "Nessuna fonte vicina.",
+    "run": "Esecuzione {{runAt}} per {{url}} · vettori: {{provider}} / {{model}}",
+    "compareFirst": "Prima esecuzione salvata per questa frase.",
+    "compareModelChanged": "Il modello di embedding è cambiato dall'esecuzione precedente ({{previous}}), quindi i punteggi non vengono confrontati. Un cambio di modello non è un calo di qualità della pagina.",
+    "compareBaselineChanged": "Variazione {{delta}} dall'esecuzione precedente, ma le pagine TOP confrontate sono cambiate: in parte dipende dalla nuova base, non solo dalla tua pagina.",
+    "compareSameBasis": "Variazione {{delta}} dall'esecuzione precedente con le stesse pagine TOP e lo stesso modello.",
+    "compareNoDelta": "Una delle esecuzioni non ha punteggio, quindi non c'è nulla da confrontare.",
+    "sources": "Pagine confrontate ({{n}})",
+    "sourceRow": "#{{rank}} {{url}} · scaricata {{fetchedAt}} · più vicina a {{echo}} paragrafi eco e {{gain}} paragrafi gain",
+    "history": "Esecuzioni salvate ({{n}})",
+    "historyRow": "{{runAt}}: punteggio {{score}} · {{provider}} / {{model}} · {{available}} di {{requested}} pagine",
     "limit": {
       "no-comparable-documents": "Nessun documento concorrente comparabile.",
       "too-few-documents": "Troppo pochi documenti concorrenti per una base affidabile.",
       "some-documents-missing": "Alcune pagine concorrenti non sono state recuperate.",
       "no-target-chunks": "La pagina non ha paragrafi analizzabili.",
       "off-topic-below-quota": "Troppo pochi paragrafi in tema.",
-      "local-lexical-embeddings": "La similarità usa vettori lessicali locali, non un modello semantico; le zone sono approssimative."
+      "local-lexical-embeddings": "La similarità usa vettori lessicali locali, non un modello semantico; le zone sono approssimative.",
+      "heuristic-entities": "Le entità derivano da frasi con maiuscole e da fatti soggetto-predicato-oggetto, non da un modello di entità addestrato.",
+      "semantic-provider-unavailable": "Il provider semantico di embedding del progetto non era disponibile; sono stati usati vettori lessicali locali."
     },
     "rec": {
       "rewrite-echo": "Il paragrafo all'offset {{offset}} ripete un passaggio concorrente: riscrivilo con parole tue.",

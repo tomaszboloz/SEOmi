@@ -11,7 +11,7 @@ import { TargetPhraseIntentSection } from './TargetPhraseIntentSection';
 export const TargetPhraseAuditPanel: React.FC<{ audit: PageAuditData }> = ({ audit }) => {
   const { t } = useTranslation();
   const session = useTargetPhraseAuditSession(audit);
-  const igos = usePhraseIgos(session.report?.corpus);
+  const igos = usePhraseIgos(session.report?.corpus, { projectId: session.activeProjectId, phrase: session.report?.phrase ?? '', language: session.report?.languageCode });
   return (
     <section className="space-y-4 rounded-2xl border border-slate-800 bg-slate-950/25 p-1">
       <header className="rounded-xl border border-slate-800 bg-slate-900/60 px-5 py-4">
@@ -39,8 +39,8 @@ export const TargetPhraseAuditPanel: React.FC<{ audit: PageAuditData }> = ({ aud
         error={session.error}
         onAudit={() => { void session.auditTopTen(); }}
       />
-      {session.report && <IgosPanel report={igos} />}
-      {session.report && <TargetPhraseIntentSection report={session.report} />}
+      {session.report && <IgosPanel report={igos.report} history={igos.history} />}
+      {session.report && <TargetPhraseIntentSection report={session.report} projectId={session.activeProjectId} />}
     </section>
   );
 };

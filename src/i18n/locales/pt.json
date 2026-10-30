@@ -8193,6 +8193,8 @@
     "unknown": "{{count}} links têm similaridade desconhecida e não contam como vazamento.",
     "unweightedZone": "{{count}} links têm uma zona DOM desconhecida ou sem peso e contam com o peso neutro 1.",
     "notConverged": "O solver não convergiu; as pontuações são aproximadas.",
+    "degree": "Links entrada/saída",
+    "similarityWeighted": "Os pesos incluem similaridade lexical de páginas em {{pageEdges}} links e similaridade do contexto da âncora em {{contextEdges}} links (mínimo 0,05). Páginas com algum link não medido usam só pesos de zona.",
     "whatIf": {
       "title": "Simulador de links What-If",
       "source": "Da página",
@@ -8200,6 +8202,9 @@
       "action": "Alteração",
       "add": "Adicionar link",
       "remove": "Remover link",
+      "addPage": "Adicionar página nova",
+      "removePage": "Remover página",
+      "newPage": "URL da página nova",
       "run": "Simular",
       "noChange": "Sem alterações nas pontuações.",
       "before": "Antes",
@@ -8253,11 +8258,19 @@
       "failed": "Não foi possível renderizar a página, então não há resultado de intenção.",
       "funnel": "Páginas do TOP renderizadas: {{analysed}} de {{requested}}. Etapas do funil entre elas: TOFU {{tofu}}, MOFU {{mofu}}, BOFU {{bofu}}.",
       "gapsTitle": "Formatos em falta",
+      "serpMatch": "Intenção do TOP: {{serp}} ({{pages}} de {{analysed}} páginas renderizadas). A sua página corresponde ({{own}}).",
+      "serpMismatch": "Intenção do TOP: {{serp}} ({{pages}} de {{analysed}} páginas renderizadas), mas a sua página parece: {{own}}. Verifique se responde à mesma necessidade.",
+      "serpUnknown": "Intenção do TOP: {{serp}} ({{pages}} de {{analysed}} páginas renderizadas). A sua página não tem intenção clara, por isso não é possível comparar.",
+      "serpNoMajority": "Nenhuma intenção é partilhada pela maioria das {{analysed}} páginas TOP renderizadas.",
+      "drillDown": "Páginas TOP renderizadas ({{n}})",
+      "topPage": "{{url}} · {{intent}} · {{stage}}",
+      "previous": "Execução anterior {{runAt}}: {{intent}}, SSAS {{ssas}}, {{analysed}} páginas TOP renderizadas.",
       "gap": {
         "table": "Adicione uma tabela comparativa: {{count}} de {{analysed}} páginas do TOP têm uma.",
         "ordered-list": "Adicione passos numerados: {{count}} de {{analysed}} páginas do TOP usam uma lista numerada.",
         "calculator": "Considere uma calculadora ou ferramenta funcional: {{count}} de {{analysed}} páginas do TOP têm uma com campos de formulário reais.",
-        "product-cards": "Mostre produtos ou ofertas: {{count}} de {{analysed}} páginas do TOP mostram cartões de produto ou preço."
+        "product-cards": "Mostre produtos ou ofertas: {{count}} de {{analysed}} páginas do TOP mostram cartões de produto ou preço.",
+        "cta": "Adicione um apelo à ação claro: {{count}} de {{analysed}} páginas TOP têm um (ignore em páginas puramente informativas)."
       }
     }
   },
@@ -8362,7 +8375,10 @@
     "sampledOnly": "Somente amostra (texto completo não medido)",
     "variablesUnavailable": "Variáveis do template indisponíveis",
     "noindex": "Recomendado: noindex neste segmento",
-    "limit": "Recomendado: limitar as páginas indexadas"
+    "limit": "Recomendado: limitar as páginas indexadas",
+    "tasNodes": "Autoridade temática: {{nodes}} nós de subtema, um URL representativo cada ({{representatives}} URLs)",
+    "tasUnknown": "Subtema de autoridade temática desconhecido para estas páginas (sem mapeamento no relatório de autoridade)",
+    "noindexWithheld": "noindex não é proposto até que o esqueleto DOM, as variáveis do modelo e o texto completo sejam medidos."
   },
   "outreach": {
     "title": "Alvos de outreach",
@@ -8464,13 +8480,25 @@
     "detail": "Deslocamento {{offset}}, similaridade temática {{topic}}, trecho concorrente mais próximo {{nearest}}.",
     "source": "Fonte mais próxima: {{url}} (posição {{rank}}).",
     "noSource": "Sem fonte próxima.",
+    "run": "Execução {{runAt}} para {{url}} · vetores: {{provider}} / {{model}}",
+    "compareFirst": "Primeira execução guardada para esta frase.",
+    "compareModelChanged": "O modelo de embeddings mudou desde a execução anterior ({{previous}}), por isso as pontuações não são comparadas. Uma mudança de modelo não é uma queda de qualidade da página.",
+    "compareBaselineChanged": "Variação {{delta}} desde a execução anterior, mas as páginas TOP comparadas mudaram: parte vem da nova base, não só da sua página.",
+    "compareSameBasis": "Variação {{delta}} desde a execução anterior com as mesmas páginas TOP e o mesmo modelo.",
+    "compareNoDelta": "Uma das execuções não tem pontuação, por isso não há o que comparar.",
+    "sources": "Páginas comparadas ({{n}})",
+    "sourceRow": "#{{rank}} {{url}} · obtida {{fetchedAt}} · mais próxima de {{echo}} parágrafos eco e {{gain}} parágrafos de ganho",
+    "history": "Execuções guardadas ({{n}})",
+    "historyRow": "{{runAt}}: pontuação {{score}} · {{provider}} / {{model}} · {{available}} de {{requested}} páginas",
     "limit": {
       "no-comparable-documents": "Nenhum documento concorrente comparável.",
       "too-few-documents": "Poucos documentos concorrentes para uma base confiável.",
       "some-documents-missing": "Algumas páginas concorrentes não puderam ser obtidas.",
       "no-target-chunks": "A página não tem parágrafos analisáveis.",
       "off-topic-below-quota": "Poucos parágrafos dentro do tema.",
-      "local-lexical-embeddings": "A similaridade usa vetores léxicos locais, não um modelo semântico; as zonas são aproximadas."
+      "local-lexical-embeddings": "A similaridade usa vetores léxicos locais, não um modelo semântico; as zonas são aproximadas.",
+      "heuristic-entities": "As entidades vêm de frases com maiúscula e de factos sujeito-predicado-objeto, não de um modelo de entidades treinado.",
+      "semantic-provider-unavailable": "O fornecedor semântico de embeddings do projeto estava indisponível; foram usados vetores lexicais locais."
     },
     "rec": {
       "rewrite-echo": "O parágrafo no deslocamento {{offset}} repete um trecho concorrente: reescreva com suas palavras.",

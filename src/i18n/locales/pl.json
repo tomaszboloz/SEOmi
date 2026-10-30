@@ -8193,6 +8193,8 @@
     "unknown": "{{count}} linków ma nieznane podobieństwo i nie liczy się jako wyciek.",
     "unweightedZone": "{{count}} linków ma nieznaną lub nieważoną strefę DOM i liczy się z neutralną wagą 1.",
     "notConverged": "Solver nie zbiegł; wyniki są przybliżone.",
+    "degree": "Linki wch./wych.",
+    "similarityWeighted": "Wagi linków uwzględniają leksykalne podobieństwo stron dla {{pageEdges}} linków i podobieństwo kontekstu anchora dla {{contextEdges}} linków (minimum 0,05). Strony z choćby jednym niezmierzonym linkiem mają tylko wagi stref.",
     "whatIf": {
       "title": "Symulator What-If linków",
       "source": "Ze strony",
@@ -8200,6 +8202,9 @@
       "action": "Zmiana",
       "add": "Dodaj link",
       "remove": "Usuń link",
+      "addPage": "Dodaj nową stronę",
+      "removePage": "Usuń stronę",
+      "newPage": "URL nowej strony",
       "run": "Symuluj",
       "noChange": "Brak zmian wyników.",
       "before": "Przed",
@@ -8253,11 +8258,19 @@
       "failed": "Nie udało się wyrenderować strony, więc nie ma wyniku intencji.",
       "funnel": "Wyrenderowane strony z TOP: {{analysed}} z {{requested}}. Etapy lejka wśród nich: TOFU {{tofu}}, MOFU {{mofu}}, BOFU {{bofu}}.",
       "gapsTitle": "Brakujące formaty",
+      "serpMatch": "Intencja TOP: {{serp}} ({{pages}} z {{analysed}} wyrenderowanych stron). Twoja strona jest zgodna ({{own}}).",
+      "serpMismatch": "Intencja TOP: {{serp}} ({{pages}} z {{analysed}} wyrenderowanych stron), a Twoja strona wygląda na: {{own}}. Sprawdź, czy odpowiada na tę samą potrzebę.",
+      "serpUnknown": "Intencja TOP: {{serp}} ({{pages}} z {{analysed}} wyrenderowanych stron). Twoja strona nie ma wyraźnej intencji, więc nie da się ich porównać.",
+      "serpNoMajority": "Żadna intencja nie dominuje wśród {{analysed}} wyrenderowanych stron TOP.",
+      "drillDown": "Wyrenderowane strony TOP ({{n}})",
+      "topPage": "{{url}} · {{intent}} · {{stage}}",
+      "previous": "Poprzedni przebieg {{runAt}}: {{intent}}, SSAS {{ssas}}, wyrenderowano {{analysed}} stron TOP.",
       "gap": {
         "table": "Dodaj tabelę porównawczą: ma ją {{count}} z {{analysed}} stron z TOP.",
         "ordered-list": "Dodaj ponumerowane kroki: listy numerowanej używa {{count}} z {{analysed}} stron z TOP.",
         "calculator": "Rozważ działający kalkulator lub narzędzie: ma je {{count}} z {{analysed}} stron z TOP (z prawdziwymi polami formularza).",
-        "product-cards": "Pokaż produkty lub oferty: karty produktów lub cen ma {{count}} z {{analysed}} stron z TOP."
+        "product-cards": "Pokaż produkty lub oferty: karty produktów lub cen ma {{count}} z {{analysed}} stron z TOP.",
+        "cta": "Dodaj wyraźne wezwanie do działania: ma je {{count}} z {{analysed}} stron TOP (pomiń dla stron czysto informacyjnych)."
       }
     }
   },
@@ -8362,7 +8375,10 @@
     "sampledOnly": "Tylko próbka wstępna (pełny tekst niezmierzony)",
     "variablesUnavailable": "Zmienne szablonu niedostępne",
     "noindex": "Zalecane: noindex dla segmentu",
-    "limit": "Zalecane: ogranicz liczbę indeksowanych stron"
+    "limit": "Zalecane: ogranicz liczbę indeksowanych stron",
+    "tasNodes": "Autorytet tematyczny: {{nodes}} węzłów subtematów, po jednym reprezentatywnym URL ({{representatives}} URL)",
+    "tasUnknown": "Subtemat autorytetu tematycznego nieznany dla tych stron (brak mapowania w raporcie autorytetu)",
+    "noindexWithheld": "noindex nie jest proponowany, dopóki szkielet DOM, zmienne szablonu i pełny tekst nie zostaną zmierzone."
   },
   "outreach": {
     "title": "Cele outreachu",
@@ -8464,13 +8480,25 @@
     "detail": "Offset {{offset}}, podobieństwo do tematu {{topic}}, najbliższy fragment konkurencji {{nearest}}.",
     "source": "Najbliższe źródło: {{url}} (pozycja {{rank}}).",
     "noSource": "Brak najbliższego źródła.",
+    "run": "Przebieg {{runAt}} dla {{url}} · wektory: {{provider}} / {{model}}",
+    "compareFirst": "Pierwszy zapisany przebieg dla tej frazy.",
+    "compareModelChanged": "Model embeddingów zmienił się od poprzedniego przebiegu ({{previous}}), więc wyniki nie są porównywane. Zmiana modelu to nie spadek jakości strony.",
+    "compareBaselineChanged": "Zmiana {{delta}} od poprzedniego przebiegu, ale porównywane strony TOP się zmieniły: część zmiany wynika z nowej bazy, nie tylko z Twojej strony.",
+    "compareSameBasis": "Zmiana {{delta}} od poprzedniego przebiegu przy tych samych stronach TOP i modelu.",
+    "compareNoDelta": "Jeden z przebiegów nie ma wyniku, więc nie ma czego porównać.",
+    "sources": "Porównane strony ({{n}})",
+    "sourceRow": "#{{rank}} {{url}} · pobrano {{fetchedAt}} · najbliższa dla {{echo}} akapitów echo i {{gain}} akapitów gain",
+    "history": "Zapisane przebiegi ({{n}})",
+    "historyRow": "{{runAt}}: wynik {{score}} · {{provider}} / {{model}} · {{available}} z {{requested}} stron",
     "limit": {
       "no-comparable-documents": "Brak porównywalnych dokumentów konkurencji.",
       "too-few-documents": "Zbyt mało dokumentów konkurencji dla wiarygodnej bazy.",
       "some-documents-missing": "Nie udało się pobrać części stron konkurencji.",
       "no-target-chunks": "Strona nie ma akapitów do analizy.",
       "off-topic-below-quota": "Zbyt mało akapitów w temacie.",
-      "local-lexical-embeddings": "Podobieństwo liczą lokalne wektory leksykalne, nie model semantyczny; strefy są przybliżone."
+      "local-lexical-embeddings": "Podobieństwo liczą lokalne wektory leksykalne, nie model semantyczny; strefy są przybliżone.",
+      "heuristic-entities": "Encje pochodzą z fraz pisanych wielką literą i faktów podmiot-orzeczenie-dopełnienie, a nie z wytrenowanego modelu encji.",
+      "semantic-provider-unavailable": "Semantyczny dostawca embeddingów projektu był niedostępny; użyto lokalnych wektorów leksykalnych."
     },
     "rec": {
       "rewrite-echo": "Akapit na offsecie {{offset}} powtarza fragment konkurencji: przepisz go własnymi słowami.",

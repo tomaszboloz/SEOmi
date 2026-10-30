@@ -8193,6 +8193,8 @@
     "unknown": "{{count}} liens ont une similarité inconnue et ne comptent pas comme fuite.",
     "unweightedZone": "{{count}} liens ont une zone DOM inconnue ou non pondérée et comptent avec le poids neutre 1.",
     "notConverged": "Le solveur n'a pas convergé ; les scores sont approximatifs.",
+    "degree": "Liens entrants/sortants",
+    "similarityWeighted": "Les poids incluent la similarité lexicale des pages sur {{pageEdges}} liens et celle du contexte d'ancre sur {{contextEdges}} liens (plancher 0,05). Les pages ayant un lien non mesuré gardent seulement les poids de zone.",
     "whatIf": {
       "title": "Simulateur de liens What-If",
       "source": "Depuis la page",
@@ -8200,6 +8202,9 @@
       "action": "Modification",
       "add": "Ajouter un lien",
       "remove": "Retirer un lien",
+      "addPage": "Ajouter une page",
+      "removePage": "Supprimer la page",
+      "newPage": "URL de la nouvelle page",
       "run": "Simuler",
       "noChange": "Aucun changement de score.",
       "before": "Avant",
@@ -8253,11 +8258,19 @@
       "failed": "La page n'a pas pu être rendue ; aucun résultat d'intention.",
       "funnel": "Pages du TOP rendues : {{analysed}} sur {{requested}}. Étapes du tunnel parmi elles : TOFU {{tofu}}, MOFU {{mofu}}, BOFU {{bofu}}.",
       "gapsTitle": "Formats manquants",
+      "serpMatch": "Intention du TOP : {{serp}} ({{pages}} sur {{analysed}} pages rendues). Votre page correspond ({{own}}).",
+      "serpMismatch": "Intention du TOP : {{serp}} ({{pages}} sur {{analysed}} pages rendues), mais votre page ressemble à : {{own}}. Vérifiez qu'elle répond au même besoin.",
+      "serpUnknown": "Intention du TOP : {{serp}} ({{pages}} sur {{analysed}} pages rendues). Votre page n'a pas d'intention claire, la comparaison est impossible.",
+      "serpNoMajority": "Aucune intention n'est partagée par la majorité des {{analysed}} pages TOP rendues.",
+      "drillDown": "Pages TOP rendues ({{n}})",
+      "topPage": "{{url}} · {{intent}} · {{stage}}",
+      "previous": "Exécution précédente {{runAt}} : {{intent}}, SSAS {{ssas}}, {{analysed}} pages TOP rendues.",
       "gap": {
         "table": "Ajoutez un tableau comparatif : {{count}} pages du TOP sur {{analysed}} en ont un.",
         "ordered-list": "Ajoutez des étapes numérotées : {{count}} pages du TOP sur {{analysed}} utilisent une liste numérotée.",
         "calculator": "Envisagez un calculateur ou outil fonctionnel : {{count}} pages du TOP sur {{analysed}} en ont un avec de vrais champs de formulaire.",
-        "product-cards": "Montrez des produits ou offres : {{count}} pages du TOP sur {{analysed}} affichent des fiches produit ou prix."
+        "product-cards": "Montrez des produits ou offres : {{count}} pages du TOP sur {{analysed}} affichent des fiches produit ou prix.",
+        "cta": "Ajoutez un appel à l'action clair : {{count}} pages TOP sur {{analysed}} en ont un (à ignorer pour les pages purement informatives)."
       }
     }
   },
@@ -8362,7 +8375,10 @@
     "sampledOnly": "Échantillon seulement (texte complet non mesuré)",
     "variablesUnavailable": "Variables du modèle indisponibles",
     "noindex": "Recommandé : noindex pour ce segment",
-    "limit": "Recommandé : limiter le nombre de pages indexées"
+    "limit": "Recommandé : limiter le nombre de pages indexées",
+    "tasNodes": "Autorité thématique : {{nodes}} nœuds de sous-thème, une URL représentative chacun ({{representatives}} URL)",
+    "tasUnknown": "Sous-thème d'autorité thématique inconnu pour ces pages (aucune correspondance dans le rapport d'autorité)",
+    "noindexWithheld": "noindex n'est pas proposé tant que le squelette DOM, les variables du modèle et le texte complet ne sont pas mesurés."
   },
   "outreach": {
     "title": "Cibles d’outreach",
@@ -8464,13 +8480,25 @@
     "detail": "Décalage {{offset}}, similarité thématique {{topic}}, passage concurrent le plus proche {{nearest}}.",
     "source": "Source la plus proche : {{url}} (rang {{rank}}).",
     "noSource": "Aucune source proche.",
+    "run": "Exécution {{runAt}} pour {{url}} · vecteurs : {{provider}} / {{model}}",
+    "compareFirst": "Première exécution enregistrée pour cette expression.",
+    "compareModelChanged": "Le modèle d'embeddings a changé depuis l'exécution précédente ({{previous}}) ; les scores ne sont donc pas comparés. Un changement de modèle n'est pas une baisse de qualité de la page.",
+    "compareBaselineChanged": "Variation {{delta}} depuis l'exécution précédente, mais les pages TOP comparées ont changé : une partie vient de la nouvelle base, pas seulement de votre page.",
+    "compareSameBasis": "Variation {{delta}} depuis l'exécution précédente avec les mêmes pages TOP et le même modèle.",
+    "compareNoDelta": "L'une des exécutions n'a pas de score : rien à comparer.",
+    "sources": "Pages comparées ({{n}})",
+    "sourceRow": "#{{rank}} {{url}} · récupérée {{fetchedAt}} · la plus proche de {{echo}} paragraphes écho et {{gain}} paragraphes de gain",
+    "history": "Exécutions enregistrées ({{n}})",
+    "historyRow": "{{runAt}} : score {{score}} · {{provider}} / {{model}} · {{available}} sur {{requested}} pages",
     "limit": {
       "no-comparable-documents": "Aucun document concurrent comparable.",
       "too-few-documents": "Trop peu de documents concurrents pour une base fiable.",
       "some-documents-missing": "Certaines pages concurrentes n'ont pas pu être récupérées.",
       "no-target-chunks": "La page n'a aucun paragraphe analysable.",
       "off-topic-below-quota": "Trop peu de paragraphes sur le sujet.",
-      "local-lexical-embeddings": "La similarité utilise des vecteurs lexicaux locaux, pas un modèle sémantique ; les zones sont approximatives."
+      "local-lexical-embeddings": "La similarité utilise des vecteurs lexicaux locaux, pas un modèle sémantique ; les zones sont approximatives.",
+      "heuristic-entities": "Les entités proviennent d'expressions en majuscules et de faits sujet-prédicat-objet, pas d'un modèle d'entités entraîné.",
+      "semantic-provider-unavailable": "Le fournisseur sémantique d'embeddings du projet était indisponible ; des vecteurs lexicaux locaux ont été utilisés."
     },
     "rec": {
       "rewrite-echo": "Le paragraphe au décalage {{offset}} répète un passage concurrent : réécrivez-le avec vos mots.",

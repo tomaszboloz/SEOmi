@@ -3,6 +3,15 @@ import { IGOS_PROFILE as P } from './profile';
 import type { Availability, CompetitorDoc, ConsensusBaseline, TargetDoc, ZonedChunk } from './types';
 import { zoneChunks } from './zones';
 
+/** Who produced the vectors and when; one identity per run (GEM-68-01). */
+export interface IgosProvenance {
+  provider: string;
+  model: string;
+  runAt: string;
+  targetUrl: string;
+  docs: Array<{ url: string; rank: number; fetchedAt: string | null }>;
+}
+
 export interface IgosReport {
   status: Availability | 'off-topic';
   /** null whenever the score would be fabricated: no baseline or off-topic page. */
@@ -16,6 +25,7 @@ export interface IgosReport {
   novelEntities: string[];
   zones: ZonedChunk[];
   limitations: string[];
+  provenance?: IgosProvenance;
 }
 
 export const buildIgosReport = (target: TargetDoc, docs: CompetitorDoc[], baseline: ConsensusBaseline): IgosReport => {

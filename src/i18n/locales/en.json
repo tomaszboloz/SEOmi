@@ -8193,6 +8193,8 @@
     "unknown": "{{count}} links have unknown similarity and are not counted as leaks.",
     "unweightedZone": "{{count}} links have an unknown or unweighted DOM zone and count at the neutral weight 1.",
     "notConverged": "The solver did not converge; scores are approximate.",
+    "degree": "Links in/out",
+    "similarityWeighted": "Link weights include lexical page similarity on {{pageEdges}} links and anchor-context similarity on {{contextEdges}} links (floor 0.05). Pages with any unmeasured link keep zone weights only.",
     "whatIf": {
       "title": "What-If link simulator",
       "source": "From page",
@@ -8200,6 +8202,9 @@
       "action": "Change",
       "add": "Add link",
       "remove": "Remove link",
+      "addPage": "Add new page",
+      "removePage": "Remove page",
+      "newPage": "New page URL",
       "run": "Simulate",
       "noChange": "No score changes.",
       "before": "Before",
@@ -8253,11 +8258,19 @@
       "failed": "The page could not be rendered, so there is no intent result.",
       "funnel": "TOP pages rendered: {{analysed}} of {{requested}}. Funnel stages among them: TOFU {{tofu}}, MOFU {{mofu}}, BOFU {{bofu}}.",
       "gapsTitle": "Missing formats",
+      "serpMatch": "TOP intent: {{serp}} ({{pages}} of {{analysed}} rendered pages). Your page matches it ({{own}}).",
+      "serpMismatch": "TOP intent: {{serp}} ({{pages}} of {{analysed}} rendered pages), but your page reads as {{own}}. Check whether the page answers the same need.",
+      "serpUnknown": "TOP intent: {{serp}} ({{pages}} of {{analysed}} rendered pages). Your page has no clear intent, so they cannot be compared.",
+      "serpNoMajority": "No intent is shared by most of the {{analysed}} rendered TOP pages.",
+      "drillDown": "Rendered TOP pages ({{n}})",
+      "topPage": "{{url}} · {{intent}} · {{stage}}",
+      "previous": "Previous run {{runAt}}: {{intent}}, SSAS {{ssas}}, {{analysed}} TOP pages rendered.",
       "gap": {
         "table": "Add a comparison table: {{count}} of {{analysed}} TOP pages have one.",
         "ordered-list": "Add numbered steps: {{count}} of {{analysed}} TOP pages use an ordered list.",
         "calculator": "Consider a working calculator or tool: {{count}} of {{analysed}} TOP pages have one with real form controls.",
-        "product-cards": "Show products or offers: {{count}} of {{analysed}} TOP pages show product or price cards."
+        "product-cards": "Show products or offers: {{count}} of {{analysed}} TOP pages show product or price cards.",
+        "cta": "Add a clear call to action: {{count}} of {{analysed}} TOP pages have one (skip this for purely informational pages)."
       }
     }
   },
@@ -8362,7 +8375,10 @@
     "sampledOnly": "Sampled prefix only (full text unmeasured)",
     "variablesUnavailable": "Template variables unavailable",
     "noindex": "Recommended: noindex this segment",
-    "limit": "Recommended: limit the number of indexed pages"
+    "limit": "Recommended: limit the number of indexed pages",
+    "tasNodes": "Topical authority: {{nodes}} subtopic nodes, one representative URL each ({{representatives}} URLs)",
+    "tasUnknown": "Topical authority subtopic unknown for these pages (no mapping in the authority report)",
+    "noindexWithheld": "noindex is not proposed until the DOM skeleton, template variables and full text are measured."
   },
   "outreach": {
     "title": "Outreach targets",
@@ -8464,13 +8480,25 @@
     "detail": "Offset {{offset}}, topic similarity {{topic}}, nearest competitor passage {{nearest}}.",
     "source": "Nearest source: {{url}} (rank {{rank}}).",
     "noSource": "No nearest source.",
+    "run": "Run {{runAt}} for {{url}} · vectors: {{provider}} / {{model}}",
+    "compareFirst": "First stored run for this phrase.",
+    "compareModelChanged": "The embedding model changed since the previous run ({{previous}}), so scores are not compared. A model change is not a drop in page quality.",
+    "compareBaselineChanged": "Change {{delta}} since the previous run, but the compared TOP pages changed: part of it comes from the new baseline, not only from your page.",
+    "compareSameBasis": "Change {{delta}} since the previous run on the same TOP pages and model.",
+    "compareNoDelta": "One of the runs has no score, so there is nothing to compare.",
+    "sources": "Compared pages ({{n}})",
+    "sourceRow": "#{{rank}} {{url}} · fetched {{fetchedAt}} · nearest to {{echo}} echo and {{gain}} gain paragraphs",
+    "history": "Stored runs ({{n}})",
+    "historyRow": "{{runAt}}: score {{score}} · {{provider}} / {{model}} · {{available}} of {{requested}} pages",
     "limit": {
       "no-comparable-documents": "No comparable competitor documents.",
       "too-few-documents": "Too few competitor documents for a reliable baseline.",
       "some-documents-missing": "Some competitor pages could not be fetched.",
       "no-target-chunks": "The page has no analysable paragraphs.",
       "off-topic-below-quota": "Too few on-topic paragraphs.",
-      "local-lexical-embeddings": "Similarity uses local lexical vectors, not a semantic model; zones are approximate."
+      "local-lexical-embeddings": "Similarity uses local lexical vectors, not a semantic model; zones are approximate.",
+      "heuristic-entities": "Entities come from capitalised phrases and subject-predicate-object facts, not from a trained entity model.",
+      "semantic-provider-unavailable": "The project's semantic embedding provider was unavailable; local lexical vectors were used instead."
     },
     "rec": {
       "rewrite-echo": "The paragraph at offset {{offset}} repeats a competitor passage: rewrite it in your own words.",

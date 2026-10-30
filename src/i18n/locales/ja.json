@@ -8193,6 +8193,8 @@
     "unknown": "{{count}} 件のリンクは類似度が不明のため、流出として数えません。",
     "unweightedZone": "{{count}} 件のリンクは DOM ゾーンが不明または重みなしのため、中立の重み 1 で計算されます。",
     "notConverged": "ソルバーが収束しませんでした。スコアは概算です。",
+    "degree": "被リンク/発リンク",
+    "similarityWeighted": "リンク重みには {{pageEdges}} 件のリンクでページの語彙類似度、{{contextEdges}} 件でアンカー文脈の類似度を含みます（下限 0.05）。未計測のリンクがあるページはゾーン重みのみです。",
     "whatIf": {
       "title": "リンクのWhat-Ifシミュレーター",
       "source": "リンク元ページ",
@@ -8200,6 +8202,9 @@
       "action": "変更",
       "add": "リンクを追加",
       "remove": "リンクを削除",
+      "addPage": "新しいページを追加",
+      "removePage": "ページを削除",
+      "newPage": "新しいページの URL",
       "run": "シミュレーション",
       "noChange": "スコアに変化はありません。",
       "before": "変更前",
@@ -8253,11 +8258,19 @@
       "failed": "ページをレンダリングできなかったため、意図の結果はありません。",
       "funnel": "レンダリングした上位ページ: {{requested}} 件中 {{analysed}} 件。ファネル段階: TOFU {{tofu}}、MOFU {{mofu}}、BOFU {{bofu}}。",
       "gapsTitle": "不足している形式",
+      "serpMatch": "TOP の意図: {{serp}}（レンダリングした {{analysed}} ページ中 {{pages}} ページ）。あなたのページは一致しています（{{own}}）。",
+      "serpMismatch": "TOP の意図: {{serp}}（レンダリングした {{analysed}} ページ中 {{pages}} ページ）ですが、あなたのページは {{own}} に見えます。同じニーズに応えているか確認してください。",
+      "serpUnknown": "TOP の意図: {{serp}}（レンダリングした {{analysed}} ページ中 {{pages}} ページ）。あなたのページには明確な意図がないため比較できません。",
+      "serpNoMajority": "レンダリングした {{analysed}} 件の TOP ページの過半数に共通する意図はありません。",
+      "drillDown": "レンダリングした TOP ページ（{{n}}）",
+      "topPage": "{{url}} · {{intent}} · {{stage}}",
+      "previous": "前回の実行 {{runAt}}: {{intent}}、SSAS {{ssas}}、TOP ページ {{analysed}} 件をレンダリング。",
       "gap": {
         "table": "比較表を追加: 上位 {{analysed}} ページ中 {{count}} ページにあります。",
         "ordered-list": "番号付き手順を追加: 上位 {{analysed}} ページ中 {{count}} ページが番号付きリストを使っています。",
         "calculator": "実際に動く計算ツールを検討: 上位 {{analysed}} ページ中 {{count}} ページに実際のフォーム要素付きのものがあります。",
-        "product-cards": "商品やオファーを表示: 上位 {{analysed}} ページ中 {{count}} ページが商品・価格カードを表示しています。"
+        "product-cards": "商品やオファーを表示: 上位 {{analysed}} ページ中 {{count}} ページが商品・価格カードを表示しています。",
+        "cta": "明確な行動喚起を追加してください: TOP ページ {{analysed}} 件中 {{count}} 件にあります（純粋な情報ページでは不要です）。"
       }
     }
   },
@@ -8362,7 +8375,10 @@
     "sampledOnly": "サンプルのみ（全文は未測定）",
     "variablesUnavailable": "テンプレート変数は利用できません",
     "noindex": "推奨: このセグメントをnoindexにする",
-    "limit": "推奨: インデックス対象ページ数を制限する"
+    "limit": "推奨: インデックス対象ページ数を制限する",
+    "tasNodes": "トピック権威: サブトピックノード {{nodes}} 件、各ノードに代表 URL 1 件（計 {{representatives}} URL）",
+    "tasUnknown": "これらのページのトピック権威サブトピックは不明です（権威レポートに対応付けがありません）",
+    "noindexWithheld": "DOM 骨格、テンプレート変数、全文が計測されるまで noindex は提案されません。"
   },
   "outreach": {
     "title": "アウトリーチ対象",
@@ -8464,13 +8480,25 @@
     "detail": "オフセット {{offset}}、トピック類似度 {{topic}}、最も近い競合箇所 {{nearest}}。",
     "source": "最も近い情報源: {{url}}(順位 {{rank}})。",
     "noSource": "近い情報源なし。",
+    "run": "{{url}} の実行 {{runAt}} · ベクトル: {{provider}} / {{model}}",
+    "compareFirst": "このフレーズで最初に保存された実行です。",
+    "compareModelChanged": "前回の実行から埋め込みモデルが変わったため（{{previous}}）、スコアは比較しません。モデルの変更はページ品質の低下ではありません。",
+    "compareBaselineChanged": "前回から {{delta}} 変化しましたが、比較した TOP ページが変わりました。変化の一部はページではなく新しい基準によるものです。",
+    "compareSameBasis": "同じ TOP ページとモデルで前回から {{delta}} 変化しました。",
+    "compareNoDelta": "どちらかの実行にスコアがないため、比較できません。",
+    "sources": "比較したページ（{{n}}）",
+    "sourceRow": "#{{rank}} {{url}} · 取得 {{fetchedAt}} · エコー段落 {{echo}} 件とゲイン段落 {{gain}} 件の最近傍",
+    "history": "保存された実行（{{n}}）",
+    "historyRow": "{{runAt}}: スコア {{score}} · {{provider}} / {{model}} · {{requested}} ページ中 {{available}} ページ",
     "limit": {
       "no-comparable-documents": "比較可能な競合文書がありません。",
       "too-few-documents": "信頼できる基準には競合文書が少なすぎます。",
       "some-documents-missing": "取得できなかった競合ページがあります。",
       "no-target-chunks": "ページに分析可能な段落がありません。",
       "off-topic-below-quota": "トピック内の段落が少なすぎます。",
-      "local-lexical-embeddings": "類似度はセマンティックモデルではなくローカルの語彙ベクトルで計算されるため、ゾーンは近似値です。"
+      "local-lexical-embeddings": "類似度はセマンティックモデルではなくローカルの語彙ベクトルで計算されるため、ゾーンは近似値です。",
+      "heuristic-entities": "エンティティは大文字で始まる語句と主語・述語・目的語の事実から抽出しており、学習済みのエンティティモデルではありません。",
+      "semantic-provider-unavailable": "プロジェクトのセマンティック埋め込みプロバイダーが利用できなかったため、ローカルの語彙ベクトルを使用しました。"
     },
     "rec": {
       "rewrite-echo": "オフセット {{offset}} の段落は競合の記述と重複しています。自分の言葉で書き直してください。",

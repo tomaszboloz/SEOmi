@@ -3,11 +3,12 @@ import { useTranslation } from 'react-i18next';
 import { SijaPanel } from '@/components/Charts/SijaPanel';
 import type { TopTenContentGapReport } from '@/services/targetPhraseAudit/types';
 import { usePhraseIntent } from './usePhraseIntent';
+import { SijaPhraseDetails } from './SijaPhraseDetails';
 
 /** SIJA for the audited phrase; rendering pages starts only after the explicit button press. */
-export const TargetPhraseIntentSection: React.FC<{ report: TopTenContentGapReport | null }> = ({ report }) => {
+export const TargetPhraseIntentSection: React.FC<{ report: TopTenContentGapReport | null; projectId?: string | null }> = ({ report, projectId = null }) => {
   const { t } = useTranslation();
-  const { result, running, failed, canRun, start } = usePhraseIntent(report);
+  const { result, running, failed, canRun, start, history } = usePhraseIntent(report, projectId);
   return (
     <section className="space-y-2 rounded-2xl border border-slate-800 bg-slate-900/60 p-5 text-xs text-slate-300">
       <p className="leading-5 text-slate-400">{t('sijaUi.phrase.description')}</p>
@@ -18,6 +19,7 @@ export const TargetPhraseIntentSection: React.FC<{ report: TopTenContentGapRepor
       {result && <>
         <SijaPanel intent={result.page} ssas={result.ssas} />
         <p>{t('sijaUi.phrase.funnel', { analysed: result.analysed, requested: result.requested, tofu: result.funnel.TOFU, mofu: result.funnel.MOFU, bofu: result.funnel.BOFU })}</p>
+        <SijaPhraseDetails result={result} history={history} />
         {result.gaps.length > 0 && (
           <ul className="list-disc pl-5" aria-label={t('sijaUi.phrase.gapsTitle')}>
             {result.gaps.map((gap) => <li key={gap.format}>{t(`sijaUi.phrase.gap.${gap.format}`, { count: gap.topPages, analysed: gap.analysed })}</li>)}

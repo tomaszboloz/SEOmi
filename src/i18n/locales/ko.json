@@ -8193,6 +8193,8 @@
     "unknown": "{{count}}개 링크는 유사도를 알 수 없어 누수로 세지 않습니다.",
     "unweightedZone": "{{count}}개 링크는 DOM 영역을 알 수 없거나 가중치가 없어 중립 가중치 1로 계산됩니다.",
     "notConverged": "솔버가 수렴하지 않았습니다. 점수는 근삿값입니다.",
+    "degree": "링크 입/출",
+    "similarityWeighted": "링크 가중치에 {{pageEdges}}개 링크의 어휘적 페이지 유사도와 {{contextEdges}}개 링크의 앵커 문맥 유사도가 포함됩니다(하한 0.05). 측정되지 않은 링크가 있는 페이지는 영역 가중치만 사용합니다.",
     "whatIf": {
       "title": "링크 What-If 시뮬레이터",
       "source": "출발 페이지",
@@ -8200,6 +8202,9 @@
       "action": "변경",
       "add": "링크 추가",
       "remove": "링크 제거",
+      "addPage": "새 페이지 추가",
+      "removePage": "페이지 삭제",
+      "newPage": "새 페이지 URL",
       "run": "시뮬레이션",
       "noChange": "점수 변화가 없습니다.",
       "before": "이전",
@@ -8253,11 +8258,19 @@
       "failed": "페이지를 렌더링할 수 없어 의도 결과가 없습니다.",
       "funnel": "렌더링된 상위 페이지: {{requested}}개 중 {{analysed}}개. 퍼널 단계: TOFU {{tofu}}, MOFU {{mofu}}, BOFU {{bofu}}.",
       "gapsTitle": "누락된 형식",
+      "serpMatch": "TOP 의도: {{serp}} (렌더링한 {{analysed}}개 중 {{pages}}개). 내 페이지가 일치합니다 ({{own}}).",
+      "serpMismatch": "TOP 의도: {{serp}} (렌더링한 {{analysed}}개 중 {{pages}}개)이지만 내 페이지는 {{own}}(으)로 보입니다. 같은 요구에 답하는지 확인하세요.",
+      "serpUnknown": "TOP 의도: {{serp}} (렌더링한 {{analysed}}개 중 {{pages}}개). 내 페이지에 뚜렷한 의도가 없어 비교할 수 없습니다.",
+      "serpNoMajority": "렌더링한 TOP 페이지 {{analysed}}개의 과반이 공유하는 의도가 없습니다.",
+      "drillDown": "렌더링한 TOP 페이지 ({{n}})",
+      "topPage": "{{url}} · {{intent}} · {{stage}}",
+      "previous": "이전 실행 {{runAt}}: {{intent}}, SSAS {{ssas}}, TOP 페이지 {{analysed}}개 렌더링.",
       "gap": {
         "table": "비교표 추가: 상위 {{analysed}}개 페이지 중 {{count}}개에 있습니다.",
         "ordered-list": "번호 단계 추가: 상위 {{analysed}}개 페이지 중 {{count}}개가 번호 목록을 사용합니다.",
         "calculator": "작동하는 계산기나 도구 고려: 상위 {{analysed}}개 페이지 중 {{count}}개에 실제 양식 필드가 있는 도구가 있습니다.",
-        "product-cards": "제품이나 혜택 표시: 상위 {{analysed}}개 페이지 중 {{count}}개가 제품 또는 가격 카드를 보여 줍니다."
+        "product-cards": "제품이나 혜택 표시: 상위 {{analysed}}개 페이지 중 {{count}}개가 제품 또는 가격 카드를 보여 줍니다.",
+        "cta": "명확한 행동 유도를 추가하세요: TOP 페이지 {{analysed}}개 중 {{count}}개에 있습니다(순수 정보 페이지는 제외)."
       }
     }
   },
@@ -8362,7 +8375,10 @@
     "sampledOnly": "샘플만 측정됨(전체 텍스트 미측정)",
     "variablesUnavailable": "템플릿 변수를 사용할 수 없음",
     "noindex": "권장: 이 세그먼트를 noindex로 설정",
-    "limit": "권장: 색인 페이지 수 제한"
+    "limit": "권장: 색인 페이지 수 제한",
+    "tasNodes": "주제 권위: 하위 주제 노드 {{nodes}}개, 노드당 대표 URL 1개 (총 {{representatives}}개 URL)",
+    "tasUnknown": "이 페이지들의 주제 권위 하위 주제를 알 수 없습니다 (권위 보고서에 매핑 없음)",
+    "noindexWithheld": "DOM 골격, 템플릿 변수, 전체 텍스트가 측정될 때까지 noindex는 제안되지 않습니다."
   },
   "outreach": {
     "title": "아웃리치 대상",
@@ -8464,13 +8480,25 @@
     "detail": "오프셋 {{offset}}, 주제 유사도 {{topic}}, 가장 가까운 경쟁 구절 {{nearest}}.",
     "source": "가장 가까운 출처: {{url}} (순위 {{rank}}).",
     "noSource": "가까운 출처 없음.",
+    "run": "{{url}} 실행 {{runAt}} · 벡터: {{provider}} / {{model}}",
+    "compareFirst": "이 구문에 저장된 첫 실행입니다.",
+    "compareModelChanged": "이전 실행 이후 임베딩 모델이 바뀌어({{previous}}) 점수를 비교하지 않습니다. 모델 변경은 페이지 품질 하락이 아닙니다.",
+    "compareBaselineChanged": "이전 실행 대비 {{delta}} 변화했지만 비교한 TOP 페이지가 바뀌었습니다. 변화의 일부는 페이지가 아니라 새 기준선 때문입니다.",
+    "compareSameBasis": "같은 TOP 페이지와 모델에서 이전 실행 대비 {{delta}} 변화했습니다.",
+    "compareNoDelta": "실행 중 하나에 점수가 없어 비교할 수 없습니다.",
+    "sources": "비교한 페이지 ({{n}})",
+    "sourceRow": "#{{rank}} {{url}} · 수집 {{fetchedAt}} · 에코 문단 {{echo}}개, 게인 문단 {{gain}}개에 가장 가까움",
+    "history": "저장된 실행 ({{n}})",
+    "historyRow": "{{runAt}}: 점수 {{score}} · {{provider}} / {{model}} · {{requested}}개 중 {{available}}개 페이지",
     "limit": {
       "no-comparable-documents": "비교 가능한 경쟁 문서가 없습니다.",
       "too-few-documents": "신뢰할 만한 기준에는 경쟁 문서가 너무 적습니다.",
       "some-documents-missing": "일부 경쟁 페이지를 가져오지 못했습니다.",
       "no-target-chunks": "분석할 수 있는 문단이 없습니다.",
       "off-topic-below-quota": "주제에 맞는 문단이 너무 적습니다.",
-      "local-lexical-embeddings": "유사도는 의미 모델이 아닌 로컬 어휘 벡터로 계산되므로 영역은 근사치입니다."
+      "local-lexical-embeddings": "유사도는 의미 모델이 아닌 로컬 어휘 벡터로 계산되므로 영역은 근사치입니다.",
+      "heuristic-entities": "엔터티는 대문자 구문과 주어-서술어-목적어 사실에서 추출하며, 학습된 엔터티 모델이 아닙니다.",
+      "semantic-provider-unavailable": "프로젝트의 의미 임베딩 제공자를 사용할 수 없어 로컬 어휘 벡터를 사용했습니다."
     },
     "rec": {
       "rewrite-echo": "오프셋 {{offset}}의 문단이 경쟁 구절을 반복합니다. 자신의 말로 다시 쓰세요.",

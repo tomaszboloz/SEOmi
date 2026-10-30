@@ -1,8 +1,11 @@
 import { calculatePageRank, type PageRankEdge, type PageRankNode } from './pageRank';
+import { applySimilarityWeights } from './sprsSimilarity';
 
 export interface SprsEdge extends PageRankEdge {
   /** Semantic similarity source->target in [0,1]; undefined means unknown (never guessed). */
   similarity?: number;
+  /** Lexical simContext of the anchor's ±15-word context vs the target's terms; undefined means unknown. */
+  contextSimilarity?: number;
   /** Links on this edge whose DOM zone carried no profile weight (#70). */
   unweightedZoneLinks?: number;
 }
@@ -10,7 +13,7 @@ export interface SprsEdge extends PageRankEdge {
 export const SPRS_PROFILE = {
   /** Page is under-linked when its score is below this share of the uniform score 1/n. */
   underLinkedShare: 0.5,
-  /** Outgoing edge counts as leaking when similarity is known and below this floor. */
+  /** Outgoing edge counts as leaking when similarity is known and below this floor; also the W multiplier floor. */
   similarityFloor: 0.05,
   /** Node leaks when at least this share of its outgoing weight is leaking. */
   leakShare: 0.5,
@@ -42,6 +45,9 @@ export interface SprsReport {
   unknownSimilarityEdges: number;
   /** Links weighted at the neutral zone weight because their zone is unknown or unweighted. */
   unweightedZoneLinks: number;
+  /** Edges whose flow was multiplied by simPage / simContext (known for every edge of their source). */
+  pageSimilarityWeightedEdges?: number;
+  contextSimilarityWeightedEdges?: number;
 }
 
 const EMPTY: SprsReport = { status: 'unavailable', pages: [], converged: true, iterations: 0, residual: 0, unknownSimilarityEdges: 0, unweightedZoneLinks: 0 };
@@ -58,7 +64,8 @@ const usable = (edges: SprsEdge[]): SprsEdge[] => edges.filter((edge) => !isSelf
 export const computeSprs = (nodes: PageRankNode[], edges: SprsEdge[], initialRank?: ReadonlyMap<string, number>): SprsReport => {
   if (!nodes.length) return EMPTY;
   const kept = usable(edges);
-  const rank = calculatePageRank(nodes, kept, { tolerance: SPRS_PROFILE.tolerance, maxIterations: SPRS_PROFILE.maxIterations, initialRank });
+  const similarityWeighting = applySimilarityWeights(kept, SPRS_PROFILE.similarityFloor);
+  const rank = calculatePageRank(nodes, similarityWeighting.edges, { tolerance: SPRS_PROFILE.tolerance, maxIterations: SPRS_PROFILE.maxIterations, initialRank });
   const max = Math.max(...rank.scores.map((row) => row.score));
   const uniform = 1 / nodes.length;
   const out = new Map<string, { total: number; leaking: number; count: number }>();
@@ -90,6 +97,8 @@ export const computeSprs = (nodes: PageRankNode[], edges: SprsEdge[], initialRan
     status: 'ready', pages, converged: rank.converged, iterations: rank.iterations, residual: rank.residual,
     unknownSimilarityEdges: kept.filter((edge) => knownSimilarity(edge) === undefined).length,
     unweightedZoneLinks: kept.reduce((sum, edge) => sum + (edge.unweightedZoneLinks ?? 0), 0),
+    pageSimilarityWeightedEdges: similarityWeighting.pageWeightedEdges,
+    contextSimilarityWeightedEdges: similarityWeighting.contextWeightedEdges,
   };
 };
 

@@ -1,3 +1,4 @@
+import { contentStems } from '@/services/embeddings/text';
 import { entityKey } from './baseline';
 import { IGOS_PROFILE as P } from './profile';
 import type { ConsensusBaseline, TargetDoc } from './types';
@@ -11,10 +12,13 @@ const clamp01 = (value: number): number => Math.max(0, Math.min(1, value));
 export const novelEntities = (target: string[], baseline: ConsensusBaseline, onTopicText?: string): string[] => {
   const consensus = new Set(baseline.consensusEntities.map(entityKey));
   const onTopic = onTopicText === undefined ? null : entityKey(onTopicText);
+  // Stem-sequence entities (entities.ts) are matched against the stemmed on-topic text, word-bounded.
+  const onTopicStems = onTopicText === undefined ? '' : ` ${contentStems(onTopicText).join(' ')} `;
+  const inTopic = (key: string) => onTopic === null || onTopic.includes(key) || onTopicStems.includes(` ${key} `);
   const seen = new Map<string, string>();
   target.forEach((entity) => {
     const key = entityKey(entity);
-    if (key && !consensus.has(key) && (onTopic === null || onTopic.includes(key))) seen.set(key, entity.trim());
+    if (key && !consensus.has(key) && inTopic(key)) seen.set(key, entity.trim());
   });
   return [...seen.values()].sort();
 };

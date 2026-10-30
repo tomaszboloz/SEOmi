@@ -2,12 +2,18 @@ import type { CrawledPageSummary } from '@/types';
 import { linkZoneWeight } from '@/services/sprs/zoneWeights';
 import type { SemanticContentEdge, SemanticMapOptions } from './types';
 import { normalizeGraphUrl, pageOwnersByUrl } from './urls';
+import { linkContextSimilarity, targetTerms } from './contextSimilarity';
 
 export const MAX_GRAPH_EDGES = 5_000;
 
 export const buildContentEdges = (selectedPages: CrawledPageSummary[], options: SemanticMapOptions) => {
   const pageIdByUrl = pageOwnersByUrl(selectedPages);
   const edgeGroups = new Map<string, SemanticContentEdge>();
+  const terms = new Map<string, Set<string> | null>();
+  const termsOf = (target: string) => {
+    if (!terms.has(target)) terms.set(target, targetTerms(selectedPages[Number(target.slice(5))]));
+    return terms.get(target) ?? null;
+  };
   for (let index = 0; index < selectedPages.length; index += 1) {
     const source = `page-${index}`;
     const pageLinks = options.includeAllInternalLinks
@@ -27,6 +33,11 @@ export const buildContentEdges = (selectedPages: CrawledPageSummary[], options: 
       if (/(^|\s)nofollow(\s|$)/iu.test(link.rel ?? '')) edge.nofollowLinks = (edge.nofollowLinks ?? 0) + 1;
       else if (weight === null) edge.unweightedZoneLinks = (edge.unweightedZoneLinks ?? 0) + 1;
       else edge.zoneWeightSum = (edge.zoneWeightSum ?? 0) + weight;
+      const contextSimilarity = /(^|\s)nofollow(\s|$)/iu.test(link.rel ?? '') ? undefined : linkContextSimilarity(link, termsOf(target));
+      if (contextSimilarity !== undefined) {
+        edge.contextSimilaritySum = (edge.contextSimilaritySum ?? 0) + contextSimilarity;
+        edge.contextKnownLinks = (edge.contextKnownLinks ?? 0) + 1;
+      }
       const anchor = typeof link.anchor_text === 'string' ? link.anchor_text.trim() : '';
       if (anchor && !edge.anchors.includes(anchor) && edge.anchors.length < 3) edge.anchors.push(anchor);
       edgeGroups.set(id, edge);

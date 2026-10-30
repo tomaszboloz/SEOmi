@@ -1,20 +1,31 @@
 import { useEffect, useState } from 'react';
-import { buildPhraseIgos } from '@/services/igos/phraseIgos';
+import { loadEmbeddingSession } from '@/components/Keywords/embeddingClustering/useEmbeddingClustering';
+import { recordIgosRun, type IgosHistoryEntry } from '@/services/igos/history';
+import { buildPhraseIgosWithSettings } from '@/services/igos/phraseIgosProvider';
 import type { IgosReport } from '@/services/igos/report';
 import type { TopTenCorpus } from '@/services/targetPhraseAudit/types';
 
-/** IGOS for the audited phrase; stays null until a TOP 10 corpus with target text exists. */
-export const usePhraseIgos = (corpus: TopTenCorpus | undefined): IgosReport | null => {
-  const [report, setReport] = useState<IgosReport | null>(null);
+export interface PhraseIgosContext { projectId: string | null; phrase: string; language?: string | null }
+export interface PhraseIgosState { report: IgosReport | null; history: IgosHistoryEntry[] }
+
+const EMPTY: PhraseIgosState = { report: null, history: [] };
+
+/**
+ * IGOS for the audited phrase; stays empty until a TOP 10 corpus with target text exists. Uses the
+ * project's embedding settings (#86) and stores each run in the project's phrase history (GEM-68-06).
+ */
+export const usePhraseIgos = (corpus: TopTenCorpus | undefined, context: PhraseIgosContext = { projectId: null, phrase: '' }): PhraseIgosState => {
+  const [state, setState] = useState<PhraseIgosState>(EMPTY);
+  const { projectId, phrase, language } = context;
   useEffect(() => {
     let current = true;
-    setReport(null);
+    setState(EMPTY);
     if (corpus) {
-      void buildPhraseIgos(corpus)
-        .then((next) => { if (current) setReport(next); })
-        .catch(() => { if (current) setReport(null); });
+      void buildPhraseIgosWithSettings(corpus, loadEmbeddingSession(projectId).settings, { language: language ?? undefined })
+        .then((report) => { if (current) setState({ report, history: report ? recordIgosRun(projectId, phrase, report) : [] }); })
+        .catch(() => { if (current) setState(EMPTY); });
     }
     return () => { current = false; };
-  }, [corpus]);
-  return report;
+  }, [corpus, projectId, phrase, language]);
+  return state;
 };

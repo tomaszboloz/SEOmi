@@ -8193,6 +8193,8 @@
     "unknown": "{{count}} 个链接的相似度未知，不计为泄漏。",
     "unweightedZone": "{{count}} 个链接的 DOM 区域未知或未加权，按中性权重 1 计算。",
     "notConverged": "求解器未收敛，分数为近似值。",
+    "degree": "入链/出链",
+    "similarityWeighted": "链接权重包含 {{pageEdges}} 条链接的词汇页面相似度和 {{contextEdges}} 条链接的锚文本上下文相似度（下限 0.05）。存在未测量链接的页面仅使用区域权重。",
     "whatIf": {
       "title": "链接 What-If 模拟器",
       "source": "来源页面",
@@ -8200,6 +8202,9 @@
       "action": "变更",
       "add": "添加链接",
       "remove": "移除链接",
+      "addPage": "添加新页面",
+      "removePage": "删除页面",
+      "newPage": "新页面 URL",
       "run": "模拟",
       "noChange": "分数无变化。",
       "before": "之前",
@@ -8253,11 +8258,19 @@
       "failed": "无法渲染该页面，因此没有意图结果。",
       "funnel": "已渲染的排名靠前页面：{{analysed}} / {{requested}}。其中的漏斗阶段：TOFU {{tofu}}，MOFU {{mofu}}，BOFU {{bofu}}。",
       "gapsTitle": "缺少的格式",
+      "serpMatch": "TOP 意图：{{serp}}（已渲染 {{analysed}} 个页面中的 {{pages}} 个）。您的页面与之一致（{{own}}）。",
+      "serpMismatch": "TOP 意图：{{serp}}（已渲染 {{analysed}} 个页面中的 {{pages}} 个），但您的页面看起来是：{{own}}。请检查它是否满足相同需求。",
+      "serpUnknown": "TOP 意图：{{serp}}（已渲染 {{analysed}} 个页面中的 {{pages}} 个）。您的页面没有明确意图，无法比较。",
+      "serpNoMajority": "已渲染的 {{analysed}} 个 TOP 页面中没有多数共享的意图。",
+      "drillDown": "已渲染的 TOP 页面（{{n}}）",
+      "topPage": "{{url}} · {{intent}} · {{stage}}",
+      "previous": "上次运行 {{runAt}}：{{intent}}，SSAS {{ssas}}，渲染了 {{analysed}} 个 TOP 页面。",
       "gap": {
         "table": "添加对比表：{{analysed}} 个排名靠前页面中有 {{count}} 个包含。",
         "ordered-list": "添加编号步骤：{{analysed}} 个排名靠前页面中有 {{count}} 个使用编号列表。",
         "calculator": "考虑提供可用的计算器或工具：{{analysed}} 个排名靠前页面中有 {{count}} 个带有真实表单控件的工具。",
-        "product-cards": "展示产品或优惠：{{analysed}} 个排名靠前页面中有 {{count}} 个显示产品或价格卡片。"
+        "product-cards": "展示产品或优惠：{{analysed}} 个排名靠前页面中有 {{count}} 个显示产品或价格卡片。",
+        "cta": "添加明确的行动号召：{{analysed}} 个 TOP 页面中有 {{count}} 个包含（纯信息页面可忽略）。"
       }
     }
   },
@@ -8362,7 +8375,10 @@
     "sampledOnly": "仅为采样前缀（完整文本未测量）",
     "variablesUnavailable": "模板变量不可用",
     "noindex": "建议：对该分段设置 noindex",
-    "limit": "建议：限制被索引的页面数量"
+    "limit": "建议：限制被索引的页面数量",
+    "tasNodes": "主题权威：{{nodes}} 个子主题节点，每个节点一个代表 URL（共 {{representatives}} 个 URL）",
+    "tasUnknown": "这些页面的主题权威子主题未知（权威报告中没有映射）",
+    "noindexWithheld": "在测量 DOM 骨架、模板变量和全文之前，不会建议 noindex。"
   },
   "outreach": {
     "title": "外链拓展目标",
@@ -8464,13 +8480,25 @@
     "detail": "偏移量 {{offset}}，主题相似度 {{topic}}，最接近的竞品段落 {{nearest}}。",
     "source": "最近来源：{{url}}（排名 {{rank}}）。",
     "noSource": "没有相近来源。",
+    "run": "{{url}} 的运行 {{runAt}} · 向量：{{provider}} / {{model}}",
+    "compareFirst": "此短语的第一次保存运行。",
+    "compareModelChanged": "自上次运行以来嵌入模型已更改（{{previous}}），因此不比较分数。模型更改并不代表页面质量下降。",
+    "compareBaselineChanged": "与上次运行相比变化 {{delta}}，但比较的 TOP 页面已变化：部分变化来自新的基准，而不仅是您的页面。",
+    "compareSameBasis": "在相同 TOP 页面和模型下，与上次运行相比变化 {{delta}}。",
+    "compareNoDelta": "其中一次运行没有分数，无法比较。",
+    "sources": "比较的页面（{{n}}）",
+    "sourceRow": "#{{rank}} {{url}} · 获取于 {{fetchedAt}} · 最接近 {{echo}} 个回声段落和 {{gain}} 个增益段落",
+    "history": "已保存的运行（{{n}}）",
+    "historyRow": "{{runAt}}：分数 {{score}} · {{provider}} / {{model}} · {{requested}} 个页面中的 {{available}} 个",
     "limit": {
       "no-comparable-documents": "没有可比较的竞品文档。",
       "too-few-documents": "竞品文档太少，无法建立可靠基准。",
       "some-documents-missing": "部分竞品页面无法获取。",
       "no-target-chunks": "页面没有可分析的段落。",
       "off-topic-below-quota": "切题段落太少。",
-      "local-lexical-embeddings": "相似度使用本地词汇向量而非语义模型计算，区域为近似值。"
+      "local-lexical-embeddings": "相似度使用本地词汇向量而非语义模型计算，区域为近似值。",
+      "heuristic-entities": "实体来自首字母大写的短语和主谓宾事实，而不是训练好的实体模型。",
+      "semantic-provider-unavailable": "项目的语义嵌入提供方不可用，已改用本地词汇向量。"
     },
     "rec": {
       "rewrite-echo": "偏移量 {{offset}} 处的段落重复了竞品内容：请用自己的话改写。",

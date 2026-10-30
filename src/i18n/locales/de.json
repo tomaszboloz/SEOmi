@@ -8193,6 +8193,8 @@
     "unknown": "{{count}} Links haben unbekannte Ähnlichkeit und zählen nicht als Leck.",
     "unweightedZone": "{{count}} Links haben eine unbekannte oder ungewichtete DOM-Zone und zählen mit dem neutralen Gewicht 1.",
     "notConverged": "Der Solver ist nicht konvergiert; die Werte sind ungefähr.",
+    "degree": "Links ein/aus",
+    "similarityWeighted": "Linkgewichte enthalten lexikalische Seitenähnlichkeit bei {{pageEdges}} Links und Anker-Kontext-Ähnlichkeit bei {{contextEdges}} Links (Untergrenze 0,05). Seiten mit einem ungemessenen Link behalten nur Zonengewichte.",
     "whatIf": {
       "title": "What-If-Linksimulator",
       "source": "Von Seite",
@@ -8200,6 +8202,9 @@
       "action": "Änderung",
       "add": "Link hinzufügen",
       "remove": "Link entfernen",
+      "addPage": "Neue Seite hinzufügen",
+      "removePage": "Seite entfernen",
+      "newPage": "URL der neuen Seite",
       "run": "Simulieren",
       "noChange": "Keine Änderung der Werte.",
       "before": "Vorher",
@@ -8253,11 +8258,19 @@
       "failed": "Die Seite konnte nicht gerendert werden, daher gibt es kein Intentionsergebnis.",
       "funnel": "Gerenderte TOP-Seiten: {{analysed}} von {{requested}}. Funnel-Stufen darunter: TOFU {{tofu}}, MOFU {{mofu}}, BOFU {{bofu}}.",
       "gapsTitle": "Fehlende Formate",
+      "serpMatch": "TOP-Intention: {{serp}} ({{pages}} von {{analysed}} gerenderten Seiten). Ihre Seite passt dazu ({{own}}).",
+      "serpMismatch": "TOP-Intention: {{serp}} ({{pages}} von {{analysed}} gerenderten Seiten), Ihre Seite wirkt jedoch wie: {{own}}. Prüfen Sie, ob sie dasselbe Bedürfnis erfüllt.",
+      "serpUnknown": "TOP-Intention: {{serp}} ({{pages}} von {{analysed}} gerenderten Seiten). Ihre Seite hat keine klare Intention, ein Vergleich ist nicht möglich.",
+      "serpNoMajority": "Keine Intention wird von der Mehrheit der {{analysed}} gerenderten TOP-Seiten geteilt.",
+      "drillDown": "Gerenderte TOP-Seiten ({{n}})",
+      "topPage": "{{url}} · {{intent}} · {{stage}}",
+      "previous": "Vorheriger Lauf {{runAt}}: {{intent}}, SSAS {{ssas}}, {{analysed}} TOP-Seiten gerendert.",
       "gap": {
         "table": "Füge eine Vergleichstabelle hinzu: {{count}} von {{analysed}} TOP-Seiten haben eine.",
         "ordered-list": "Füge nummerierte Schritte hinzu: {{count}} von {{analysed}} TOP-Seiten nutzen eine nummerierte Liste.",
         "calculator": "Erwäge einen funktionierenden Rechner oder ein Tool: {{count}} von {{analysed}} TOP-Seiten haben eines mit echten Formularfeldern.",
-        "product-cards": "Zeige Produkte oder Angebote: {{count}} von {{analysed}} TOP-Seiten zeigen Produkt- oder Preiskarten."
+        "product-cards": "Zeige Produkte oder Angebote: {{count}} von {{analysed}} TOP-Seiten zeigen Produkt- oder Preiskarten.",
+        "cta": "Fügen Sie einen klaren Call-to-Action hinzu: {{count}} von {{analysed}} TOP-Seiten haben einen (bei rein informativen Seiten überspringen)."
       }
     }
   },
@@ -8362,7 +8375,10 @@
     "sampledOnly": "Nur Stichproben-Präfix (Gesamter Text ungemessen)",
     "variablesUnavailable": "Vorlagenvariablen nicht verfügbar",
     "noindex": "Empfohlen: Segment auf noindex setzen",
-    "limit": "Empfohlen: Zahl indexierter Seiten begrenzen"
+    "limit": "Empfohlen: Zahl indexierter Seiten begrenzen",
+    "tasNodes": "Themenautorität: {{nodes}} Unterthemen-Knoten, je eine repräsentative URL ({{representatives}} URLs)",
+    "tasUnknown": "Unterthema der Themenautorität für diese Seiten unbekannt (keine Zuordnung im Autoritätsbericht)",
+    "noindexWithheld": "noindex wird erst vorgeschlagen, wenn DOM-Gerüst, Template-Variablen und Volltext gemessen sind."
   },
   "outreach": {
     "title": "Outreach-Ziele",
@@ -8464,13 +8480,25 @@
     "detail": "Offset {{offset}}, Themenähnlichkeit {{topic}}, nächste Konkurrenzpassage {{nearest}}.",
     "source": "Nächste Quelle: {{url}} (Rang {{rank}}).",
     "noSource": "Keine nächste Quelle.",
+    "run": "Lauf {{runAt}} für {{url}} · Vektoren: {{provider}} / {{model}}",
+    "compareFirst": "Erster gespeicherter Lauf für diese Phrase.",
+    "compareModelChanged": "Das Embedding-Modell hat sich seit dem letzten Lauf geändert ({{previous}}), daher werden die Werte nicht verglichen. Ein Modellwechsel ist kein Qualitätsverlust der Seite.",
+    "compareBaselineChanged": "Änderung {{delta}} seit dem letzten Lauf, aber die verglichenen TOP-Seiten haben sich geändert: Ein Teil stammt aus der neuen Basis, nicht nur von Ihrer Seite.",
+    "compareSameBasis": "Änderung {{delta}} seit dem letzten Lauf bei gleichen TOP-Seiten und gleichem Modell.",
+    "compareNoDelta": "Einer der Läufe hat keinen Wert, daher gibt es nichts zu vergleichen.",
+    "sources": "Verglichene Seiten ({{n}})",
+    "sourceRow": "#{{rank}} {{url}} · abgerufen {{fetchedAt}} · am nächsten zu {{echo}} Echo- und {{gain}} Gain-Absätzen",
+    "history": "Gespeicherte Läufe ({{n}})",
+    "historyRow": "{{runAt}}: Wert {{score}} · {{provider}} / {{model}} · {{available}} von {{requested}} Seiten",
     "limit": {
       "no-comparable-documents": "Keine vergleichbaren Konkurrenzdokumente.",
       "too-few-documents": "Zu wenige Konkurrenzdokumente für eine verlässliche Basis.",
       "some-documents-missing": "Einige Konkurrenzseiten konnten nicht abgerufen werden.",
       "no-target-chunks": "Die Seite hat keine analysierbaren Absätze.",
       "off-topic-below-quota": "Zu wenige themenrelevante Absätze.",
-      "local-lexical-embeddings": "Die Ähnlichkeit nutzt lokale lexikalische Vektoren, kein semantisches Modell; die Zonen sind Näherungen."
+      "local-lexical-embeddings": "Die Ähnlichkeit nutzt lokale lexikalische Vektoren, kein semantisches Modell; die Zonen sind Näherungen.",
+      "heuristic-entities": "Entitäten stammen aus großgeschriebenen Phrasen und Subjekt-Prädikat-Objekt-Fakten, nicht aus einem trainierten Entitätsmodell.",
+      "semantic-provider-unavailable": "Der semantische Embedding-Anbieter des Projekts war nicht verfügbar; stattdessen wurden lokale lexikalische Vektoren verwendet."
     },
     "rec": {
       "rewrite-echo": "Der Absatz bei Offset {{offset}} wiederholt eine Konkurrenzpassage: in eigenen Worten umschreiben.",
