@@ -7497,6 +7497,8 @@
       }
     },
     "draft": {
+      "selfUrlPlaceholder": "正在更新现有页面？粘贴其 URL，以免与自身匹配",
+      "selfUrlField": "此草稿更新的页面 URL（可选）",
       "title": "发布前检查草稿",
       "titleField": "草稿标题",
       "bodyField": "草稿正文",

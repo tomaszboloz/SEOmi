@@ -7497,6 +7497,8 @@
       }
     },
     "draft": {
+      "selfUrlPlaceholder": "Aktualizujesz istniejącą stronę? Wklej jej URL, aby nie porównywać jej z samą sobą",
+      "selfUrlField": "URL strony, którą aktualizuje szkic (opcjonalnie)",
       "title": "Sprawdź szkic przed publikacją",
       "titleField": "Tytuł szkicu",
       "bodyField": "Tekst szkicu",

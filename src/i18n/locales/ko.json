@@ -7497,6 +7497,8 @@
       }
     },
     "draft": {
+      "selfUrlPlaceholder": "기존 페이지를 업데이트하나요? 자기 자신과 비교되지 않도록 URL을 붙여 넣으세요",
+      "selfUrlField": "이 초안이 업데이트하는 페이지 URL(선택)",
       "title": "게시 전 초안 확인",
       "titleField": "초안 제목",
       "bodyField": "초안 본문",

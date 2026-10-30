@@ -7497,6 +7497,8 @@
       }
     },
     "draft": {
+      "selfUrlPlaceholder": "Stai aggiornando una pagina esistente? Incolla il suo URL perché non venga confrontata con se stessa",
+      "selfUrlField": "URL della pagina che questa bozza aggiorna (facoltativo)",
       "title": "Controlla una bozza prima di pubblicare",
       "titleField": "Titolo della bozza",
       "bodyField": "Testo della bozza",

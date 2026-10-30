@@ -7497,6 +7497,8 @@
       }
     },
     "draft": {
+      "selfUrlPlaceholder": "Updating an existing page? Paste its URL so it is not matched with itself",
+      "selfUrlField": "URL of the page this draft updates (optional)",
       "title": "Check a draft before publishing",
       "titleField": "Draft title",
       "bodyField": "Draft text",

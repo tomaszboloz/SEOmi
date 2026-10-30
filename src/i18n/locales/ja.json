@@ -7497,6 +7497,8 @@
       }
     },
     "draft": {
+      "selfUrlPlaceholder": "既存ページを更新しますか？自分自身と照合されないよう URL を貼り付けてください",
+      "selfUrlField": "この下書きが更新するページの URL（任意）",
       "title": "公開前に下書きを確認",
       "titleField": "下書きのタイトル",
       "bodyField": "下書きの本文",

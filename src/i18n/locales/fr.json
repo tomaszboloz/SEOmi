@@ -7497,6 +7497,8 @@
       }
     },
     "draft": {
+      "selfUrlPlaceholder": "Vous mettez à jour une page existante ? Collez son URL pour qu'elle ne soit pas comparée à elle-même",
+      "selfUrlField": "URL de la page mise à jour par ce brouillon (facultatif)",
       "title": "Vérifier un brouillon avant publication",
       "titleField": "Titre du brouillon",
       "bodyField": "Texte du brouillon",

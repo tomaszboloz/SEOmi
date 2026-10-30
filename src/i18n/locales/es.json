@@ -7497,6 +7497,8 @@
       }
     },
     "draft": {
+      "selfUrlPlaceholder": "¿Actualizas una página existente? Pega su URL para que no se compare consigo misma",
+      "selfUrlField": "URL de la página que actualiza este borrador (opcional)",
       "title": "Comprueba un borrador antes de publicar",
       "titleField": "Título del borrador",
       "bodyField": "Texto del borrador",

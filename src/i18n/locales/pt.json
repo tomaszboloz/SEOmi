@@ -7497,6 +7497,8 @@
       }
     },
     "draft": {
+      "selfUrlPlaceholder": "Atualizando uma página existente? Cole o URL dela para que não seja comparada consigo mesma",
+      "selfUrlField": "URL da página que este rascunho atualiza (opcional)",
       "title": "Verifique um rascunho antes de publicar",
       "titleField": "Título do rascunho",
       "bodyField": "Texto do rascunho",
