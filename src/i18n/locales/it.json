@@ -7736,6 +7736,20 @@
       "negated": "negato",
       "none": "Nessun fatto soggetto-predicato-oggetto rilevato in questo frammento.",
       "heuristic": "Euristica lessicale, non un parser delle dipendenze. Q: 1 = numero con unità, 0,7 = termine specifico, 0,3 = generico."
+    },
+    "calibration": {
+      "title": "Calibrazione della soglia di avviso (etichette)",
+      "intro": "Copia il foglio delle coppie di punteggi dalle scansioni di questo progetto, contrassegna a mano ogni riga come \"alert\" o \"no-alert\" e incollalo di nuovo. Una soglia viene suggerita solo con almeno {{min}} etichette umane di entrambi i tipi; l'impostazione degli avvisi non viene mai modificata qui.",
+      "copy": "Copia il foglio di etichettatura ({{count}} coppie)",
+      "copied": "Copiato",
+      "failed": "Copia non riuscita",
+      "paste": "Foglio etichettato (CSV)",
+      "check": "Verifica etichette",
+      "counts": "Coppie etichettate: {{labelled}} (avviso {{alert}}, nessun avviso {{noAlert}}); senza etichetta: {{unlabelled}}.",
+      "errors": "Righe ignorate per dati non validi: righe {{lines}}.",
+      "recommended": "Queste etichette si adattano meglio a una soglia di calo di {{threshold}} punti. È solo un suggerimento: modifica tu l'impostazione degli avvisi se sei d'accordo.",
+      "insufficient-labels": "Etichette ancora insufficienti: ne servono almeno {{min}} prima di suggerire una soglia.",
+      "single-class": "Tutte le etichette hanno lo stesso valore; etichetta casi con e senza avviso per confrontare le soglie."
     }
   },
   "trust": {

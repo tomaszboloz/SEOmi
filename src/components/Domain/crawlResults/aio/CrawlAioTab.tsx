@@ -3,6 +3,7 @@ import { HelpTip } from '@/components/Help/HelpTip';
 import { useAioReadiness } from '@/hooks/useAioReadiness';
 import type { CrawledPageSummary, CrawlRunRecord } from '@/types';
 import { Empty } from '../CrawlViewPrimitives';
+import { AioCalibrationLabels } from './AioCalibrationLabels';
 import { AioHero } from './AioHero';
 import { AioPagesTable } from './AioPagesTable';
 import { AioPassageCard } from './AioPassageCard';
@@ -49,6 +50,7 @@ export const CrawlAioTab = ({ pages, run, projectId }: CrawlAioTabProps) => {
         ) : (
           <p className="text-xs text-slate-400">{t('aio.history.empty')}</p>
         )}
+        {history.length > 1 && <AioCalibrationLabels history={history} />}
       </section>
     </div>
   );

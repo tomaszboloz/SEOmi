@@ -21,6 +21,7 @@ export * from './scoreDrop';
 export * from './aio';
 export * from './aioCalibration';
 export * from './aioThresholdSweep';
+export * from './aioLabelling';
 
 export interface MonitoringDelivery { email?: (alert: MonitoringAlert) => Promise<boolean>; }
 export interface MonitoringDeliveryResult { alert: MonitoringAlert | null; delivered: boolean; persisted: boolean; duplicate: boolean; emailConfigured: boolean; }

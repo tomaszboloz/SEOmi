@@ -7736,6 +7736,20 @@
       "negated": "verneint",
       "none": "In diesem Abschnitt wurden keine Subjekt-Prädikat-Objekt-Fakten erkannt.",
       "heuristic": "Lexikalische Heuristik, kein Dependenzparser. Q: 1 = Zahl mit Einheit, 0,7 = benannter Begriff, 0,3 = allgemein."
+    },
+    "calibration": {
+      "title": "Kalibrierung der Alarmschwelle (Labels)",
+      "intro": "Kopieren Sie die Tabelle der Scorepaare aus den Crawls dieses Projekts, markieren Sie jede Zeile von Hand mit \"alert\" oder \"no-alert\" und fügen Sie sie wieder ein. Eine Schwelle wird erst ab mindestens {{min}} menschlichen Labels beider Arten vorgeschlagen; die Alarmeinstellung wird hier nie geändert.",
+      "copy": "Label-Tabelle kopieren ({{count}} Paare)",
+      "copied": "Kopiert",
+      "failed": "Kopieren fehlgeschlagen",
+      "paste": "Gelabelte Tabelle (CSV)",
+      "check": "Labels prüfen",
+      "counts": "Gelabelte Paare: {{labelled}} (Alarm {{alert}}, kein Alarm {{noAlert}}); ohne Label: {{unlabelled}}.",
+      "errors": "Wegen ungültiger Daten ignorierte Zeilen: {{lines}}.",
+      "recommended": "Diese Labels passen am besten zu einer Abfallschwelle von {{threshold}} Punkten. Das ist nur ein Hinweis: Ändern Sie die Alarmeinstellung selbst, wenn Sie zustimmen.",
+      "insufficient-labels": "Noch nicht genug Labels: Mindestens {{min}} sind nötig, bevor eine Schwelle vorgeschlagen wird.",
+      "single-class": "Alle Labels haben denselben Wert; labeln Sie Fälle mit und ohne Alarm, um Schwellen zu vergleichen."
     }
   },
   "trust": {

@@ -7736,6 +7736,20 @@
       "negated": "négation",
       "none": "Aucun fait sujet-prédicat-objet détecté dans ce fragment.",
       "heuristic": "Heuristique lexicale, pas un analyseur de dépendances. Q : 1 = nombre avec unité, 0,7 = terme nommé, 0,3 = générique."
+    },
+    "calibration": {
+      "title": "Calibrage du seuil d'alerte (étiquettes)",
+      "intro": "Copiez la feuille des paires de scores issues des explorations de ce projet, marquez chaque ligne « alert » ou « no-alert » à la main, puis recollez-la. Un seuil n'est suggéré qu'à partir d'au moins {{min}} étiquettes humaines des deux types ; le réglage d'alerte n'est jamais modifié ici.",
+      "copy": "Copier la feuille d'étiquetage ({{count}} paires)",
+      "copied": "Copié",
+      "failed": "Échec de la copie",
+      "paste": "Feuille étiquetée (CSV)",
+      "check": "Vérifier les étiquettes",
+      "counts": "Paires étiquetées : {{labelled}} (alerte {{alert}}, sans alerte {{noAlert}}) ; sans étiquette : {{unlabelled}}.",
+      "errors": "Lignes ignorées pour données invalides : {{lines}}.",
+      "recommended": "Ces étiquettes correspondent le mieux à un seuil de baisse de {{threshold}} points. Ce n'est qu'un conseil : modifiez vous-même le réglage d'alerte si vous êtes d'accord.",
+      "insufficient-labels": "Pas encore assez d'étiquettes : il en faut au moins {{min}} avant de suggérer un seuil.",
+      "single-class": "Toutes les étiquettes ont la même valeur ; étiquetez des cas avec et sans alerte pour comparer les seuils."
     }
   },
   "trust": {

@@ -7736,6 +7736,20 @@
       "negated": "negated",
       "none": "No subject-predicate-object facts detected in this chunk.",
       "heuristic": "Lexical heuristic, not a dependency parser. Q: 1 = number with unit, 0.7 = named term, 0.3 = generic."
+    },
+    "calibration": {
+      "title": "Alert threshold calibration (labels)",
+      "intro": "Copy the sheet of score pairs from this project's crawls, mark each row \"alert\" or \"no-alert\" by hand, and paste it back. A threshold is suggested only from at least {{min}} human labels of both kinds; the alert setting is never changed here.",
+      "copy": "Copy labelling sheet ({{count}} pairs)",
+      "copied": "Copied",
+      "failed": "Copy failed",
+      "paste": "Labelled sheet (CSV)",
+      "check": "Check labels",
+      "counts": "Labelled pairs: {{labelled}} (alert {{alert}}, no alert {{noAlert}}); unlabelled: {{unlabelled}}.",
+      "errors": "Rows ignored because of invalid data: lines {{lines}}.",
+      "recommended": "These labels fit best with a drop threshold of {{threshold}} points. This is advice only: change the alert setting yourself if you agree.",
+      "insufficient-labels": "Not enough labels yet: at least {{min}} are needed before a threshold is suggested.",
+      "single-class": "All labels have the same value; label both alert and no-alert cases to compare thresholds."
     }
   },
   "trust": {

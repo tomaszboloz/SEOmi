@@ -7736,6 +7736,20 @@
       "negated": "negado",
       "none": "Nenhum facto sujeito-predicado-objeto detetado neste fragmento.",
       "heuristic": "Heurística lexical, não um analisador de dependências. Q: 1 = número com unidade, 0,7 = termo nomeado, 0,3 = genérico."
+    },
+    "calibration": {
+      "title": "Calibração do limite de alertas (rótulos)",
+      "intro": "Copie a planilha de pares de pontuação dos rastreamentos deste projeto, marque cada linha como \"alert\" ou \"no-alert\" manualmente e cole-a de volta. Um limite só é sugerido com pelo menos {{min}} rótulos humanos dos dois tipos; a configuração de alertas nunca é alterada aqui.",
+      "copy": "Copiar planilha de rotulagem ({{count}} pares)",
+      "copied": "Copiado",
+      "failed": "Falha ao copiar",
+      "paste": "Planilha rotulada (CSV)",
+      "check": "Verificar rótulos",
+      "counts": "Pares rotulados: {{labelled}} (alerta {{alert}}, sem alerta {{noAlert}}); sem rótulo: {{unlabelled}}.",
+      "errors": "Linhas ignoradas por dados inválidos: {{lines}}.",
+      "recommended": "Estes rótulos se ajustam melhor a um limite de queda de {{threshold}} pontos. É apenas uma sugestão: altere a configuração de alertas você mesmo se concordar.",
+      "insufficient-labels": "Ainda não há rótulos suficientes: são necessários pelo menos {{min}} antes de sugerir um limite.",
+      "single-class": "Todos os rótulos têm o mesmo valor; rotule casos com e sem alerta para comparar limites."
     }
   },
   "trust": {

@@ -7736,6 +7736,20 @@
       "negated": "negado",
       "none": "No se detectaron hechos sujeto-predicado-objeto en este fragmento.",
       "heuristic": "Heurística léxica, no un analizador de dependencias. Q: 1 = número con unidad, 0,7 = término con nombre, 0,3 = genérico."
+    },
+    "calibration": {
+      "title": "Calibración del umbral de alertas (etiquetas)",
+      "intro": "Copia la hoja de pares de puntuaciones de los rastreos de este proyecto, marca a mano cada fila como \"alert\" o \"no-alert\" y pégala de nuevo. Solo se sugiere un umbral con al menos {{min}} etiquetas humanas de ambos tipos; la configuración de alertas nunca se cambia aquí.",
+      "copy": "Copiar hoja de etiquetado ({{count}} pares)",
+      "copied": "Copiado",
+      "failed": "No se pudo copiar",
+      "paste": "Hoja etiquetada (CSV)",
+      "check": "Comprobar etiquetas",
+      "counts": "Pares etiquetados: {{labelled}} (alerta {{alert}}, sin alerta {{noAlert}}); sin etiqueta: {{unlabelled}}.",
+      "errors": "Filas ignoradas por datos no válidos: líneas {{lines}}.",
+      "recommended": "Estas etiquetas encajan mejor con un umbral de caída de {{threshold}} puntos. Es solo una sugerencia: cambia la configuración de alertas tú mismo si estás de acuerdo.",
+      "insufficient-labels": "Aún no hay suficientes etiquetas: se necesitan al menos {{min}} antes de sugerir un umbral.",
+      "single-class": "Todas las etiquetas tienen el mismo valor; etiqueta casos con y sin alerta para comparar umbrales."
     }
   },
   "trust": {

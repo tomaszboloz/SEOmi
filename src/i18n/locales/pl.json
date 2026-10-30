@@ -7736,6 +7736,20 @@
       "negated": "zaprzeczenie",
       "none": "W tym fragmencie nie wykryto faktów podmiot-orzeczenie-dopełnienie.",
       "heuristic": "Heurystyka leksykalna, nie parser zależności. Q: 1 = liczba z jednostką, 0,7 = nazwany termin, 0,3 = ogólne."
+    },
+    "calibration": {
+      "title": "Kalibracja progu alertów (etykiety)",
+      "intro": "Skopiuj arkusz par wyników z crawli tego projektu, oznacz ręcznie każdy wiersz jako \"alert\" lub \"no-alert\" i wklej go z powrotem. Próg jest proponowany dopiero przy co najmniej {{min}} etykietach nadanych przez człowieka, obu rodzajów; ustawienie alertu nie jest tu nigdy zmieniane.",
+      "copy": "Kopiuj arkusz do etykietowania (par: {{count}})",
+      "copied": "Skopiowano",
+      "failed": "Nie udało się skopiować",
+      "paste": "Oznaczony arkusz (CSV)",
+      "check": "Sprawdź etykiety",
+      "counts": "Oznaczone pary: {{labelled}} (alert {{alert}}, bez alertu {{noAlert}}); bez etykiety: {{unlabelled}}.",
+      "errors": "Pominięte wiersze z niepoprawnymi danymi: linie {{lines}}.",
+      "recommended": "Te etykiety najlepiej pasują do progu spadku {{threshold}} pkt. To tylko sugestia: zmień ustawienie alertu samodzielnie, jeśli się zgadzasz.",
+      "insufficient-labels": "Za mało etykiet: potrzeba co najmniej {{min}}, zanim pojawi się propozycja progu.",
+      "single-class": "Wszystkie etykiety mają tę samą wartość; oznacz przypadki zarówno z alertem, jak i bez, aby porównać progi."
     }
   },
   "trust": {
