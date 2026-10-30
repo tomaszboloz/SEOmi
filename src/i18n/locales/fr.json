@@ -6043,8 +6043,8 @@
           "monitor-strong-pages": "Surveiller {{0}} pages solides : gardez-les dans le sujet et revérifiez-les régulièrement."
         },
         "option": {
-          "remove-redirect": "Supprimer et rediriger en 301 (+{{0}} points)",
-          "noindex-isolate": "Passer en noindex et isoler (+{{0}} points)",
+          "remove-redirect": "Seulement sans clics, conversions ni liens : 301 vers une page pertinente (+{{0}} points)",
+          "noindex-isolate": "Seulement sans clics, conversions ni liens : noindex et isoler (+{{0}} points)",
           "rewrite-on-topic": "Réécrire dans le sujet à partir d'un brief (TRS cible d'environ {{0}})",
           "add-missing-terms": "Ajouter les termes manquants : {{0}}",
           "reinforce-headings": "Renforcer les titres H2 et H3",
@@ -7065,7 +7065,7 @@
       },
       "noindex-isolate": {
         "title": "Passer en noindex et isoler",
-        "detail": "Gardez la page pour les utilisateurs mais masquez-la de la recherche et coupez les liens internes. Gain pour le site : +{{gain}} points."
+        "detail": "Seulement si trafic, conversions et liens sont mesurés et faibles : gardez la page pour les utilisateurs, masquez-la de la recherche et coupez les liens internes. Gain pour le site : +{{gain}} points."
       },
       "rewrite-on-topic": {
         "title": "Réécrire dans le sujet à partir d'un brief",
@@ -7169,7 +7169,42 @@
         "revenue": "Revenu mesuré",
         "pri-above-threshold": "Trafic, conversions ou liens atteignent le seuil de protection",
         "telemetry-incomplete": "Télémétrie absente, périmée ou échantillonnée",
-        "low-pri-measured": "Les signaux mesurés sont faibles ; vérifiez d'abord la valeur métier"
+        "low-pri-measured": "Les signaux mesurés sont faibles ; vérifiez d'abord la valeur métier",
+        "conversions": "Conversions mesurées"
+      },
+      "reasonsLabel": "Pourquoi",
+      "alternativesLabel": "Options manuelles",
+      "signal": {
+        "clicks": "Clics",
+        "conversions": "Conversions",
+        "referringDomains": "Domaines référents",
+        "revenue": "Revenus"
+      },
+      "unknown": "{{signal}} : inconnu ({{state}})",
+      "measured": "{{signal}} : {{value}}",
+      "currencyUnknown": "{{value}} (devise inconnue)",
+      "onlyIf": "seulement si : {{conditions}}",
+      "rule": "Un TRS de {{trs}} ou plus conserve la page ; un PRI de {{pri}} ou plus la protège. Une égalité compte comme protégée.",
+      "alternative": {
+        "confirm-revenue-currency": "Confirmer la devise des revenus",
+        "check-gsc-ga4-backlinks-access": "Vérifier l’accès à GSC, GA4 et aux backlinks",
+        "link-to-pillar": "Lier vers la page pilier",
+        "redirect-301-to-relevant-target": "301 vers une page pertinente",
+        "canonical-for-duplicates": "Canonical pour les doublons",
+        "keep-and-rewrite": "Conserver et réécrire",
+        "noindex-or-410-after-review": "noindex ou 410 après examen"
+      },
+      "condition": {
+        "currency-from-analytics": "la devise vient de l’analytique, pas d’une supposition",
+        "fresh-90-day-window": "une fenêtre récente et complète de 90 jours est disponible",
+        "real-topic-relation": "les sujets sont réellement liés",
+        "relevant-target-same-intent": "la cible répond à la même intention",
+        "no-measured-value": "aucun clic, conversion, revenu ni lien n’a été mesuré",
+        "update-links-and-sitemap": "les liens internes et le sitemap sont mis à jour",
+        "near-duplicate-only": "le contenu est un quasi-doublon",
+        "owner-confirms-value": "le propriétaire confirme la valeur de la page",
+        "not-via-robots-txt": "défini dans la page, pas dans robots.txt",
+        "business-review": "une personne a examiné l’impact business"
       }
     }
   },

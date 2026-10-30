@@ -6043,8 +6043,8 @@
           "monitor-strong-pages": "{{0}} starke Seiten überwachen: Halte sie beim Thema und prüfe sie regelmäßig erneut."
         },
         "option": {
-          "remove-redirect": "Löschen und mit 301 weiterleiten (+{{0}} Punkte)",
-          "noindex-isolate": "Auf noindex setzen und isolieren (+{{0}} Punkte)",
+          "remove-redirect": "Nur ohne Klicks, Conversions oder Links: 301 auf eine relevante Seite (+{{0}} Punkte)",
+          "noindex-isolate": "Nur ohne Klicks, Conversions oder Links: noindex und isolieren (+{{0}} Punkte)",
           "rewrite-on-topic": "Mit einem Briefing themenbezogen neu schreiben (Ziel-TRS etwa {{0}})",
           "add-missing-terms": "Fehlende Begriffe ergänzen: {{0}}",
           "reinforce-headings": "H2- und H3-Überschriften stärken",
@@ -7065,7 +7065,7 @@
       },
       "noindex-isolate": {
         "title": "Auf noindex setzen und isolieren",
-        "detail": "Behalte die Seite für Nutzer, blende sie aber in der Suche aus und kappe interne Links. Gewinn für die Website: +{{gain}} Punkte."
+        "detail": "Nur wenn Traffic, Conversions und Links gemessen und niedrig sind: Seite für Nutzer behalten, in der Suche ausblenden und interne Links kappen. Gewinn für die Website: +{{gain}} Punkte."
       },
       "rewrite-on-topic": {
         "title": "Mit einem Briefing themenbezogen neu schreiben",
@@ -7169,7 +7169,42 @@
         "revenue": "Umsatz gemessen",
         "pri-above-threshold": "Traffic, Conversions oder Links erreichen die Schutzschwelle",
         "telemetry-incomplete": "Telemetrie fehlt, ist veraltet oder gesampelt",
-        "low-pri-measured": "Gemessene Signale sind niedrig; zuerst den Geschäftswert prüfen"
+        "low-pri-measured": "Gemessene Signale sind niedrig; zuerst den Geschäftswert prüfen",
+        "conversions": "Conversions gemessen"
+      },
+      "reasonsLabel": "Warum",
+      "alternativesLabel": "Manuelle Optionen",
+      "signal": {
+        "clicks": "Klicks",
+        "conversions": "Conversions",
+        "referringDomains": "Verweisende Domains",
+        "revenue": "Umsatz"
+      },
+      "unknown": "{{signal}}: unbekannt ({{state}})",
+      "measured": "{{signal}}: {{value}}",
+      "currencyUnknown": "{{value}} (Währung unbekannt)",
+      "onlyIf": "nur wenn: {{conditions}}",
+      "rule": "Ein TRS ab {{trs}} behält eine Seite; ein PRI ab {{pri}} schützt sie. Gleichstand gilt als geschützt.",
+      "alternative": {
+        "confirm-revenue-currency": "Umsatzwährung bestätigen",
+        "check-gsc-ga4-backlinks-access": "Zugriff auf GSC, GA4 und Backlinks prüfen",
+        "link-to-pillar": "Auf die Pillar-Seite verlinken",
+        "redirect-301-to-relevant-target": "301 auf eine relevante Seite",
+        "canonical-for-duplicates": "Canonical für Duplikate",
+        "keep-and-rewrite": "Behalten und umschreiben",
+        "noindex-or-410-after-review": "noindex oder 410 nach Prüfung"
+      },
+      "condition": {
+        "currency-from-analytics": "die Währung stammt aus der Analyse, nicht aus einer Annahme",
+        "fresh-90-day-window": "ein frisches, vollständiges 90-Tage-Fenster liegt vor",
+        "real-topic-relation": "die Themen hängen wirklich zusammen",
+        "relevant-target-same-intent": "das Ziel bedient dieselbe Suchintention",
+        "no-measured-value": "keine Klicks, Conversions, Umsätze oder Links gemessen",
+        "update-links-and-sitemap": "interne Links und Sitemap werden angepasst",
+        "near-duplicate-only": "der Inhalt ist ein Beinahe-Duplikat",
+        "owner-confirms-value": "der Inhaber bestätigt den Wert der Seite",
+        "not-via-robots-txt": "in der Seite gesetzt, nicht in robots.txt",
+        "business-review": "ein Mensch hat die geschäftlichen Folgen geprüft"
       }
     }
   },

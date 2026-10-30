@@ -6043,8 +6043,8 @@
           "monitor-strong-pages": "监控 {{0}} 个高相关页面:保持其主题不偏离,并定期复查。"
         },
         "option": {
-          "remove-redirect": "删除并 301 重定向(+{{0}} 分)",
-          "noindex-isolate": "设置 noindex 并隔离(+{{0}} 分)",
+          "remove-redirect": "仅在没有点击、转化或链接时：301 到相关页面（+{{0}} 分）",
+          "noindex-isolate": "仅在没有点击、转化或链接时：noindex 并隔离（+{{0}} 分）",
           "rewrite-on-topic": "按内容简报围绕主题重写(目标 TRS 约 {{0}})",
           "add-missing-terms": "补充缺失的词:{{0}}",
           "reinforce-headings": "强化 H2 和 H3 标题",
@@ -7065,7 +7065,7 @@
       },
       "noindex-isolate": {
         "title": "设置 noindex 并隔离",
-        "detail": "为用户保留该页面,但对搜索隐藏并减少内部链接。站点提升:+{{gain}} 分。"
+        "detail": "仅当流量、转化和链接均已测得且很低时：为用户保留页面，在搜索中隐藏并移除内部链接。网站提升：+{{gain}} 分。"
       },
       "rewrite-on-topic": {
         "title": "按简报围绕主题重写",
@@ -7169,7 +7169,42 @@
         "revenue": "已测得收入",
         "pri-above-threshold": "流量、转化或链接达到保护阈值",
         "telemetry-incomplete": "遥测数据缺失、过期或经过抽样",
-        "low-pri-measured": "已测信号偏低；请先评估业务价值"
+        "low-pri-measured": "已测信号偏低；请先评估业务价值",
+        "conversions": "已测得转化"
+      },
+      "reasonsLabel": "原因",
+      "alternativesLabel": "人工选项",
+      "signal": {
+        "clicks": "点击",
+        "conversions": "转化",
+        "referringDomains": "引荐域名",
+        "revenue": "收入"
+      },
+      "unknown": "{{signal}}：未知（{{state}}）",
+      "measured": "{{signal}}：{{value}}",
+      "currencyUnknown": "{{value}}（货币未知）",
+      "onlyIf": "仅当：{{conditions}}",
+      "rule": "TRS 达到 {{trs}} 或以上则保留页面；PRI 达到 {{pri}} 或以上则保护页面。相等视为受保护。",
+      "alternative": {
+        "confirm-revenue-currency": "确认收入货币",
+        "check-gsc-ga4-backlinks-access": "检查 GSC、GA4 和外链的访问权限",
+        "link-to-pillar": "链接到支柱页面",
+        "redirect-301-to-relevant-target": "301 到相关页面",
+        "canonical-for-duplicates": "重复内容使用 canonical",
+        "keep-and-rewrite": "保留并改写",
+        "noindex-or-410-after-review": "审核后再 noindex 或 410"
+      },
+      "condition": {
+        "currency-from-analytics": "货币来自分析数据，而非猜测",
+        "fresh-90-day-window": "有最新且完整的 90 天数据",
+        "real-topic-relation": "主题确实相关",
+        "relevant-target-same-intent": "目标页面满足相同的搜索意图",
+        "no-measured-value": "未测得点击、转化、收入或链接",
+        "update-links-and-sitemap": "同步更新内部链接和站点地图",
+        "near-duplicate-only": "内容几乎重复",
+        "owner-confirms-value": "所有者确认页面有价值",
+        "not-via-robots-txt": "在页面中设置，而不是在 robots.txt 中",
+        "business-review": "已有人审核业务影响"
       }
     }
   },

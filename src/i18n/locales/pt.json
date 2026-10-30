@@ -6043,8 +6043,8 @@
           "monitor-strong-pages": "Monitore {{0}} páginas fortes: mantenha-as no tema e reavalie com regularidade."
         },
         "option": {
-          "remove-redirect": "Excluir e redirecionar com 301 (+{{0}} pontos)",
-          "noindex-isolate": "Aplicar noindex e isolar (+{{0}} pontos)",
+          "remove-redirect": "Apenas sem cliques, conversões ou links: 301 para uma página relevante (+{{0}} pontos)",
+          "noindex-isolate": "Apenas sem cliques, conversões ou links: noindex e isolar (+{{0}} pontos)",
           "rewrite-on-topic": "Reescrever no tema com um briefing (TRS alvo: cerca de {{0}})",
           "add-missing-terms": "Adicionar os termos que faltam: {{0}}",
           "reinforce-headings": "Reforçar os títulos H2 e H3",
@@ -7065,7 +7065,7 @@
       },
       "noindex-isolate": {
         "title": "Aplicar noindex e isolar",
-        "detail": "Mantenha a página para os usuários, mas oculte-a da busca e reduza os links internos. Ganho para o site: +{{gain}} pontos."
+        "detail": "Apenas quando tráfego, conversões e links estão medidos e baixos: mantenha a página para os utilizadores, oculte-a da pesquisa e corte os links internos. Ganho do site: +{{gain}} pontos."
       },
       "rewrite-on-topic": {
         "title": "Reescrever no tema com um briefing",
@@ -7169,7 +7169,42 @@
         "revenue": "Receita medida",
         "pri-above-threshold": "Tráfego, conversões ou links atingem o limite de proteção",
         "telemetry-incomplete": "Telemetria ausente, desatualizada ou amostrada",
-        "low-pri-measured": "Os sinais medidos são baixos; verifique primeiro o valor de negócio"
+        "low-pri-measured": "Os sinais medidos são baixos; verifique primeiro o valor de negócio",
+        "conversions": "Conversões medidas"
+      },
+      "reasonsLabel": "Porquê",
+      "alternativesLabel": "Opções manuais",
+      "signal": {
+        "clicks": "Cliques",
+        "conversions": "Conversões",
+        "referringDomains": "Domínios de referência",
+        "revenue": "Receita"
+      },
+      "unknown": "{{signal}}: desconhecido ({{state}})",
+      "measured": "{{signal}}: {{value}}",
+      "currencyUnknown": "{{value}} (moeda desconhecida)",
+      "onlyIf": "apenas se: {{conditions}}",
+      "rule": "TRS de {{trs}} ou mais mantém a página; PRI de {{pri}} ou mais protege-a. Um empate conta como protegido.",
+      "alternative": {
+        "confirm-revenue-currency": "Confirmar a moeda da receita",
+        "check-gsc-ga4-backlinks-access": "Verificar acesso ao GSC, GA4 e backlinks",
+        "link-to-pillar": "Ligar à página pilar",
+        "redirect-301-to-relevant-target": "301 para uma página relevante",
+        "canonical-for-duplicates": "Canonical para duplicados",
+        "keep-and-rewrite": "Manter e reescrever",
+        "noindex-or-410-after-review": "noindex ou 410 após revisão"
+      },
+      "condition": {
+        "currency-from-analytics": "a moeda vem da análise, não de um palpite",
+        "fresh-90-day-window": "existe uma janela de 90 dias recente e completa",
+        "real-topic-relation": "os temas estão realmente relacionados",
+        "relevant-target-same-intent": "o destino responde à mesma intenção",
+        "no-measured-value": "não foram medidos cliques, conversões, receita nem links",
+        "update-links-and-sitemap": "os links internos e o sitemap são atualizados",
+        "near-duplicate-only": "o conteúdo é quase um duplicado",
+        "owner-confirms-value": "o proprietário confirma o valor da página",
+        "not-via-robots-txt": "definido na página, não no robots.txt",
+        "business-review": "uma pessoa avaliou o impacto no negócio"
       }
     }
   },

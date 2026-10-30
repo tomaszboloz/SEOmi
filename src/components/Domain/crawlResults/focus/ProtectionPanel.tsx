@@ -1,8 +1,9 @@
 import { useTranslation } from 'react-i18next';
 import { HelpTip } from '@/components/Help/HelpTip';
 import type { SiteFocusReport } from '@/services/siteFocus';
-import { decideProtection, DEFAULT_TRS_THRESHOLD } from '@/services/urlProtection';
+import { decideProtection, DEFAULT_PRI_THRESHOLD, DEFAULT_TRS_THRESHOLD } from '@/services/urlProtection';
 import { ensureUrlTelemetry, type UrlTelemetry } from '@/services/urlTelemetry';
+import { ProtectionRow } from './ProtectionRow';
 import { TelemetrySources } from './TelemetrySources';
 
 const MAX_ROWS = 20;
@@ -28,17 +29,9 @@ export const ProtectionPanel = ({ report, projectId }: { report: SiteFocusReport
       <TelemetrySources snapshot={snapshot} />
       {!snapshot && <p role="status" data-testid="protection-empty">{t('focus.protection.empty')}</p>}
       <ul className="space-y-1">
-        {rows.map(({ page, result }) => (
-          <li key={page.url}>
-            <span className="font-mono">{page.url}</span>
-            {' '}
-            <strong>{t(`focus.protection.decision.${result.decision}`)}</strong>
-            {' '}
-            <span>{t(`focus.protection.reason.${result.reasons[0]}`)}</span>
-            {result.pri.pri !== null && <span>{' '}{t('focus.protection.pri', { value: result.pri.pri.toFixed(2) })}</span>}
-          </li>
-        ))}
+        {rows.map(({ page, result }) => <ProtectionRow key={page.url} url={page.url} result={result} />)}
       </ul>
+      <p data-testid="protection-rule">{t('focus.protection.rule', { trs: DEFAULT_TRS_THRESHOLD, pri: DEFAULT_PRI_THRESHOLD })}</p>
       <p>{t('focus.protection.advisory')}</p>
     </section>
   );

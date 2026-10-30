@@ -6043,8 +6043,8 @@
           "monitor-strong-pages": "راقب {{0}} من الصفحات القوية: أبقِها ضمن الموضوع وأعد فحصها بانتظام."
         },
         "option": {
-          "remove-redirect": "الحذف وإعادة التوجيه عبر 301 (+{{0}} نقطة)",
-          "noindex-isolate": "noindex والعزل (+{{0}} نقطة)",
+          "remove-redirect": "فقط عند عدم وجود نقرات أو تحويلات أو روابط: 301 إلى صفحة ذات صلة (+{{0}} نقطة)",
+          "noindex-isolate": "فقط عند عدم وجود نقرات أو تحويلات أو روابط: noindex والعزل (+{{0}} نقطة)",
           "rewrite-on-topic": "إعادة الكتابة ضمن الموضوع وفق موجز (TRS المستهدف نحو {{0}})",
           "add-missing-terms": "إضافة المصطلحات الناقصة: {{0}}",
           "reinforce-headings": "تعزيز عناوين H2 وH3",
@@ -7065,7 +7065,7 @@
       },
       "noindex-isolate": {
         "title": "noindex والعزل",
-        "detail": "أبقِ الصفحة للمستخدمين لكن أخفِها عن البحث وقلّل الروابط الداخلية إليها. المكسب للموقع: +{{gain}} نقطة."
+        "detail": "فقط عندما تكون الزيارات والتحويلات والروابط مقيسة ومنخفضة: أبقِ الصفحة للمستخدمين وأخفها من البحث واقطع الروابط الداخلية. مكسب الموقع: +{{gain}} نقطة."
       },
       "rewrite-on-topic": {
         "title": "إعادة الكتابة ضمن الموضوع وفق موجز",
@@ -7169,7 +7169,42 @@
         "revenue": "تم قياس الإيرادات",
         "pri-above-threshold": "الزيارات أو التحويلات أو الروابط بلغت حد الحماية",
         "telemetry-incomplete": "بيانات القياس مفقودة أو قديمة أو مأخوذة بالعينة",
-        "low-pri-measured": "الإشارات المقاسة منخفضة؛ افحص القيمة التجارية أولًا"
+        "low-pri-measured": "الإشارات المقاسة منخفضة؛ افحص القيمة التجارية أولًا",
+        "conversions": "تم قياس التحويلات"
+      },
+      "reasonsLabel": "السبب",
+      "alternativesLabel": "خيارات يدوية",
+      "signal": {
+        "clicks": "النقرات",
+        "conversions": "التحويلات",
+        "referringDomains": "النطاقات المُحيلة",
+        "revenue": "الإيرادات"
+      },
+      "unknown": "{{signal}}: غير معروف ({{state}})",
+      "measured": "{{signal}}: {{value}}",
+      "currencyUnknown": "{{value}} (العملة غير معروفة)",
+      "onlyIf": "فقط إذا: {{conditions}}",
+      "rule": "TRS بقيمة {{trs}} أو أكثر يُبقي الصفحة؛ وPRI بقيمة {{pri}} أو أكثر يحميها. التعادل يُعد حماية.",
+      "alternative": {
+        "confirm-revenue-currency": "تأكيد عملة الإيرادات",
+        "check-gsc-ga4-backlinks-access": "التحقق من الوصول إلى GSC وGA4 والروابط الخلفية",
+        "link-to-pillar": "الربط بالصفحة المحورية",
+        "redirect-301-to-relevant-target": "إعادة توجيه 301 إلى صفحة ذات صلة",
+        "canonical-for-duplicates": "Canonical للمحتوى المكرر",
+        "keep-and-rewrite": "الإبقاء وإعادة الكتابة",
+        "noindex-or-410-after-review": "noindex أو 410 بعد المراجعة"
+      },
+      "condition": {
+        "currency-from-analytics": "العملة مأخوذة من التحليلات وليست تخمينًا",
+        "fresh-90-day-window": "تتوفر نافذة حديثة وكاملة لمدة 90 يومًا",
+        "real-topic-relation": "الموضوعات مرتبطة فعلًا",
+        "relevant-target-same-intent": "الصفحة الهدف تلبي النية نفسها",
+        "no-measured-value": "لم تُقس أي نقرات أو تحويلات أو إيرادات أو روابط",
+        "update-links-and-sitemap": "تُحدّث الروابط الداخلية وخريطة الموقع",
+        "near-duplicate-only": "المحتوى شبه مكرر",
+        "owner-confirms-value": "المالك يؤكد قيمة الصفحة",
+        "not-via-robots-txt": "يُضبط داخل الصفحة وليس في robots.txt",
+        "business-review": "راجع شخص الأثر على الأعمال"
       }
     }
   },
