@@ -14,7 +14,11 @@ export const classifySource = (target: string, trusted: boolean, dead: boolean):
   dead ? 'D' : scholarlyKey(scholarlyIds(target)) ? 'A' : trusted ? 'B' : 'C'
 );
 
-export const pageQuality = (page: string, classes: SourceClass[], claims: ClaimCitation[]): PageCitationQuality => {
+/** Only firm theses enter R_backed; hedged hypotheses and negations stay visible but are not demanded a citation (#88 GEM-88-04). */
+export const firmClaims = (claims: ClaimCitation[]): ClaimCitation[] => claims.filter((claim) => (claim.stance ?? 'firm') === 'firm');
+
+export const pageQuality = (page: string, classes: SourceClass[], allClaims: ClaimCitation[]): PageCitationQuality => {
+  const claims = firmClaims(allClaims);
   const sources: Record<SourceClass, number> = { A: 0, B: 0, C: 0, D: 0 };
   classes.forEach((item) => { sources[item] += 1; });
   const sumQ = classes.reduce((sum, item) => sum + SOURCE_QUALITY[item], 0);
