@@ -3,7 +3,7 @@ import type { CrawlRunRecord } from '@/types';
 import type { FocusPage, HistoryAnnotation, PageFocus, SfsSnapshot, SiteFocusReport } from '@/services/siteFocus';
 import {
   annotationsByRun, applyIncremental, buildProjectRunReport, buildRunReport, consumeRecompute, isCompletedRun, readAnchorUrls, readFocusHistory,
-  readManualTopic, readRecomputeBudget, recordFullAnalysis, validFocusProject, writeAnchorUrls, writeManualTopic,
+  readBusinessGoal, readManualTopic, readRecomputeBudget, recordFullAnalysis, validFocusProject, writeAnchorUrls, writeBusinessGoal, writeManualTopic,
   type Clock, type ManualTopic, type RecomputeBudget,
 } from '@/services/siteFocusMonitoring';
 
@@ -16,9 +16,13 @@ export interface SiteFocusState {
   manualTopic: ManualTopic | undefined;
   /** Saved anchor pages that pick the Core Topic together with the home page (#82). */
   anchorUrls: string[];
+  /** Saved, validated business goal (#82); undefined when none. */
+  businessGoal: string | undefined;
   recompute: () => { ok: boolean; budget: RecomputeBudget };
   setManualTopic: (topic: ManualTopic | null) => void;
   setAnchorUrls: (urls: string[]) => void;
+  /** Validates and saves the goal; an invalid goal is rejected and the saved one kept. */
+  setBusinessGoal: (goal: string) => ReturnType<typeof writeBusinessGoal>;
   incrementalUpdate: (newPages: FocusPage[]) => PageFocus[];
 }
 
@@ -27,6 +31,7 @@ export const useSiteFocus = (run: CrawlRunRecord | null | undefined, projectId: 
   const clock = options.clock ?? Date.now;
   const [manualTopic, setTopic] = useState<ManualTopic | undefined>(() => readManualTopic(projectId));
   const [anchorUrls, setAnchors] = useState<string[]>(() => readAnchorUrls(projectId));
+  const [businessGoal, setGoal] = useState(() => readBusinessGoal(projectId));
   const [entries, setEntries] = useState(() => readFocusHistory(projectId));
   const [budget, setBudget] = useState(() => readRecomputeBudget(projectId, clock));
   const [override, setOverride] = useState<SiteFocusReport | null>(null);
@@ -38,13 +43,14 @@ export const useSiteFocus = (run: CrawlRunRecord | null | undefined, projectId: 
     setOverride(null);
     setTopic(readManualTopic(projectId));
     setAnchors(readAnchorUrls(projectId));
+    setGoal(readBusinessGoal(projectId));
     setEntries(readFocusHistory(projectId));
     setBudget(readRecomputeBudget(projectId, clock));
   }
 
-  const base = useMemo(() => (isCompletedRun(run) ? buildRunReport(run, manualTopic, undefined, anchorUrls) : null),
+  const base = useMemo(() => (isCompletedRun(run) ? buildRunReport(run, manualTopic, undefined, anchorUrls, businessGoal) : null),
     // nonce forces a rebuild on explicit recompute; clock is read inside the callbacks.
-    [run, manualTopic, anchorUrls, nonce]);
+    [run, manualTopic, anchorUrls, businessGoal, nonce]);
   const report = override ?? base;
 
   useEffect(() => {
@@ -78,6 +84,12 @@ export const useSiteFocus = (run: CrawlRunRecord | null | undefined, projectId: 
     setAnchors(readAnchorUrls(projectId));
   }, [projectId]);
 
+  const setBusinessGoal = useCallback((goal: string) => {
+    const result = writeBusinessGoal(projectId ?? '', goal);
+    if (result.ok) { setOverride(null); setGoal(readBusinessGoal(projectId)); }
+    return result;
+  }, [projectId]);
+
   const incrementalUpdate = useCallback((newPages: FocusPage[]): PageFocus[] => {
     if (!report || !run) return [];
     const outcome = applyIncremental(projectId, report, newPages, run.startUrl, { clock });
@@ -87,6 +99,6 @@ export const useSiteFocus = (run: CrawlRunRecord | null | undefined, projectId: 
 
   return {
     report, history: entries.map((entry) => entry.snapshot), annotations: annotationsByRun(entries),
-    recomputeBudget: budget, manualTopic, anchorUrls, recompute, setManualTopic, setAnchorUrls, incrementalUpdate,
+    recomputeBudget: budget, manualTopic, anchorUrls, businessGoal, recompute, setManualTopic, setAnchorUrls, setBusinessGoal, incrementalUpdate,
   };
 };

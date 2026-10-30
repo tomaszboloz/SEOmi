@@ -4890,7 +4890,12 @@
         "Anchor text",
         "Rel",
         "Internal",
-        "Source HTML excerpt"
+        "Source HTML excerpt",
+        "DOM zone",
+        "Zone method",
+        "Context before",
+        "Context after",
+        "Section heading"
       ],
       "crawlImages": [
         "Run ID",
@@ -5860,7 +5865,17 @@
         "reasonsIntro": "robots.txt 규칙을 포함하여 페이지가 차단되었거나 불확실한 이유입니다.",
         "httpIntro": "{{1}}개 페이지 중 {{0}}개에서 헤더 또는 발견 데이터가 반환되었으며, 나머지에는 없습니다.",
         "tHttp": "HTTP 응답 상세 및 발견",
-        "discovered": "{{0}} {{1}}"
+        "discovered": "{{0}} {{1}}",
+        "tLinkZones": "내부 링크 배치",
+        "linkZonesIntro": "DOM 상위 요소로 판단한 페이지 내 내부 링크의 위치입니다. 가중치는 SPRS 참조 프로필이며, 렌더링 없는 본문은 스크롤 없이 보이는 영역 위치를 알 수 없어 중립 가중치 1로 계산합니다.",
+        "zoneMain": "본문",
+        "zoneAbove": "첫 화면",
+        "zoneBelow": "첫 화면 아래",
+        "zoneWidget": "위젯",
+        "zoneNav": "내비게이션 / 이동 경로",
+        "zoneFooter": "사이드바 / 푸터",
+        "zoneUnknown": "알 수 없음(이전 크롤)",
+        "zoneNeutral": "중립 (1)"
       },
       "cols": {
         "colItem": "항목",
@@ -5933,7 +5948,10 @@
         "colXrobots": "X-Robots-Tag",
         "colDiscovered": "발견 경로",
         "colArea": "영역",
-        "colResult": "결과"
+        "colResult": "결과",
+        "colZone": "영역",
+        "colShare": "비율",
+        "colWeight": "SPRS 가중치"
       },
       "focus": {
         "title": "사이트 포커스",
@@ -6012,7 +6030,9 @@
           "degraded": "일부 페이지는 데이터가 제한적이어서 점수가 덜 정확할 수 있습니다.",
           "unmatchedTopic": "\"{{0}}\" 주제와 일치하는 페이지가 없습니다. 대신 감지된 주제를 사용합니다.",
           "anchoredTopic": "핵심 주제는 홈페이지와 앵커 페이지({{0}}개)에서 선택되었습니다.",
-          "anchorsMissing": "이번 크롤링에서 찾지 못한 앵커 페이지: {{0}}."
+          "anchorsMissing": "이번 크롤링에서 찾지 못한 앵커 페이지: {{0}}.",
+          "goalTopic": "핵심 주제는 비즈니스 목표 \"{{0}}\"에 따라 선택되었습니다.",
+          "goalUnmatched": "비즈니스 목표 \"{{0}}\"와 일치하는 크롤 콘텐츠가 없어 목표 없이 주제를 선택했습니다."
         },
         "rec": {
           "remove-offtopic": "주제에서 벗어난 페이지 {{0}}개는 조치 전에 검토하세요. 먼저 트래픽, 전환, 링크를 확인합니다. 이러한 근거가 없는 페이지는 관련 페이지로의 301 또는 재작성 후보입니다. 자동으로 삭제되는 것은 없습니다. 잠재 효과: +{{1}}점.",
@@ -6025,8 +6045,8 @@
           "monitor-strong-pages": "우수 페이지 {{0}}개 모니터링: 주제를 유지하고 정기적으로 다시 확인하세요."
         },
         "option": {
-          "remove-redirect": "삭제 후 301 리디렉션(+{{0}}점)",
-          "noindex-isolate": "noindex 처리 후 분리(+{{0}}점)",
+          "remove-redirect": "클릭, 전환, 링크가 없을 때만: 관련 페이지로 301 (+{{0}}점)",
+          "noindex-isolate": "클릭, 전환, 링크가 없을 때만: noindex 및 분리 (+{{0}}점)",
           "rewrite-on-topic": "브리프에 따라 주제에 맞게 다시 작성(목표 TRS 약 {{0}})",
           "add-missing-terms": "빠진 용어 추가: {{0}}",
           "reinforce-headings": "H2 및 H3 제목 보강",
@@ -6038,6 +6058,67 @@
         "gap": {
           "thin-subtopic": "내용이 빈약한 하위 주제 \"{{0}}\": 페이지의 {{1}}%만 다룹니다({{2}}페이지). 용어: {{3}}.",
           "competitor-terms": "내 사이트에 없는 경쟁사 용어: {{3}}."
+        },
+        "protection": {
+          "title": "URL 보호 점검",
+          "intro": "TRS가 {{0}} 미만인 페이지에 대한 참고용 점검입니다. TRS가 {{0}} 이상이면 페이지를 유지하고 PRI가 {{1}} 이상이면 보호하며, 같은 값은 보호로 간주합니다. 삭제, 리디렉션, noindex는 자동으로 수행되지 않습니다.",
+          "noTelemetry": "GSC, GA4, 백링크 데이터가 없어 모든 페이지는 결정 전에 데이터가 필요합니다.",
+          "colDecision": "결정과 이유",
+          "colEvidence": "근거",
+          "colOptions": "수동 옵션과 조건",
+          "unknown": "{{0}}: 알 수 없음 ({{1}})",
+          "measured": "{{0}}: {{1}} ({{2}})",
+          "onlyIf": "조건: {{0}}",
+          "decision": {
+            "keep": "유지",
+            "shield": "보호",
+            "needs-data": "데이터 필요",
+            "semantic-bridge": "시맨틱 브리지",
+            "prune-candidate": "정리 검토"
+          },
+          "reason": {
+            "trs-above-threshold": "TRS가 충분히 높음",
+            "revenue": "수익 측정됨",
+            "pri-above-threshold": "트래픽, 전환 또는 링크가 보호 기준에 도달함",
+            "telemetry-incomplete": "텔레메트리가 없거나 오래되었거나 샘플링됨",
+            "low-pri-measured": "측정된 신호가 낮습니다. 먼저 비즈니스 가치를 확인하세요",
+            "conversions": "전환 측정됨"
+          },
+          "signal": {
+            "clicks": "클릭",
+            "conversions": "전환",
+            "referringDomains": "참조 도메인",
+            "revenue": "수익"
+          },
+          "alternative": {
+            "confirm-revenue-currency": "수익 통화 확인",
+            "check-gsc-ga4-backlinks-access": "GSC, GA4, 백링크 접근 확인",
+            "link-to-pillar": "필러 페이지로 링크",
+            "redirect-301-to-relevant-target": "관련 페이지로 301",
+            "canonical-for-duplicates": "중복에는 canonical",
+            "keep-and-rewrite": "유지하고 다시 쓰기",
+            "noindex-or-410-after-review": "검토 후 noindex 또는 410"
+          },
+          "condition": {
+            "currency-from-analytics": "통화는 추측이 아니라 분석 도구에서 가져옴",
+            "fresh-90-day-window": "최신의 완전한 90일 데이터가 있음",
+            "real-topic-relation": "주제가 실제로 관련됨",
+            "relevant-target-same-intent": "대상 페이지가 같은 검색 의도에 답함",
+            "no-measured-value": "클릭, 전환, 수익, 링크가 측정되지 않음",
+            "update-links-and-sitemap": "내부 링크와 사이트맵을 업데이트함",
+            "near-duplicate-only": "콘텐츠가 거의 중복임",
+            "owner-confirms-value": "소유자가 페이지 가치를 확인함",
+            "not-via-robots-txt": "robots.txt가 아니라 페이지에서 설정",
+            "business-review": "담당자가 비즈니스 영향을 검토함"
+          },
+          "state": {
+            "measured": "측정됨",
+            "partial-history": "일부 기록",
+            "stale": "오래된 데이터",
+            "sampled": "표본",
+            "missing-permission": "권한 없음",
+            "unavailable": "사용 불가"
+          }
         }
       },
       "authority": {
@@ -6896,7 +6977,8 @@
       "mode": {
         "auto": "주제 모드: 전체 콘텐츠에서 감지",
         "manual": "주제 모드: 수동 설정",
-        "anchored": "주제 모드: 홈페이지와 앵커 페이지"
+        "anchored": "주제 모드: 홈페이지와 앵커 페이지",
+        "goal": "주제 모드: 비즈니스 목표"
       },
       "inputLabel": "앵커 페이지 (한 줄에 URL 하나)",
       "placeholder": "https://example.com/offer",
@@ -7047,7 +7129,7 @@
       },
       "noindex-isolate": {
         "title": "noindex 처리 후 분리",
-        "detail": "사용자를 위해 페이지는 유지하되 검색에서는 숨기고 내부 링크를 줄이세요. 사이트 상승폭: +{{gain}}점."
+        "detail": "트래픽, 전환, 링크가 측정되었고 낮을 때만: 사용자용으로 페이지를 유지하되 검색에서 숨기고 내부 링크를 끊으세요. 사이트 개선: +{{gain}}점."
       },
       "rewrite-on-topic": {
         "title": "브리프에 따라 주제에 맞게 다시 작성",
@@ -7109,7 +7191,8 @@
       "mode": {
         "auto": "전체 콘텐츠에서 감지",
         "manual": "수동 주제",
-        "anchored": "홈페이지와 앵커 페이지"
+        "anchored": "홈페이지와 앵커 페이지",
+        "goal": "비즈니스 목표"
       },
       "title": "점수 기록",
       "empty": "추세를 보려면 전체 분석을 두 번 이상 실행하세요.",
@@ -7151,7 +7234,63 @@
         "revenue": "수익 측정됨",
         "pri-above-threshold": "트래픽, 전환 또는 링크가 보호 기준에 도달함",
         "telemetry-incomplete": "텔레메트리가 없거나 오래되었거나 샘플링됨",
-        "low-pri-measured": "측정된 신호가 낮습니다. 먼저 비즈니스 가치를 확인하세요"
+        "low-pri-measured": "측정된 신호가 낮습니다. 먼저 비즈니스 가치를 확인하세요",
+        "conversions": "전환 측정됨"
+      },
+      "reasonsLabel": "이유",
+      "alternativesLabel": "수동 옵션",
+      "signal": {
+        "clicks": "클릭",
+        "conversions": "전환",
+        "referringDomains": "참조 도메인",
+        "revenue": "수익"
+      },
+      "unknown": "{{signal}}: 알 수 없음 ({{state}})",
+      "measured": "{{signal}}: {{value}}",
+      "currencyUnknown": "{{value}} (통화 알 수 없음)",
+      "onlyIf": "조건: {{conditions}}",
+      "rule": "TRS가 {{trs}} 이상이면 페이지를 유지하고, PRI가 {{pri}} 이상이면 보호합니다. 같은 값은 보호로 간주합니다.",
+      "alternative": {
+        "confirm-revenue-currency": "수익 통화 확인",
+        "check-gsc-ga4-backlinks-access": "GSC, GA4, 백링크 접근 확인",
+        "link-to-pillar": "필러 페이지로 링크",
+        "redirect-301-to-relevant-target": "관련 페이지로 301",
+        "canonical-for-duplicates": "중복에는 canonical",
+        "keep-and-rewrite": "유지하고 다시 쓰기",
+        "noindex-or-410-after-review": "검토 후 noindex 또는 410"
+      },
+      "condition": {
+        "currency-from-analytics": "통화는 추측이 아니라 분석 도구에서 가져옴",
+        "fresh-90-day-window": "최신의 완전한 90일 데이터가 있음",
+        "real-topic-relation": "주제가 실제로 관련됨",
+        "relevant-target-same-intent": "대상 페이지가 같은 검색 의도에 답함",
+        "no-measured-value": "클릭, 전환, 수익, 링크가 측정되지 않음",
+        "update-links-and-sitemap": "내부 링크와 사이트맵을 업데이트함",
+        "near-duplicate-only": "콘텐츠가 거의 중복임",
+        "owner-confirms-value": "소유자가 페이지 가치를 확인함",
+        "not-via-robots-txt": "robots.txt가 아니라 페이지에서 설정",
+        "business-review": "담당자가 비즈니스 영향을 검토함"
+      }
+    },
+    "goal": {
+      "title": "비즈니스 목표",
+      "inputLabel": "이 사이트는 무엇을 판매하거나 달성해야 하나요? (한 문장)",
+      "placeholder": "예: 병원에 인슐린 펌프 판매",
+      "save": "목표 저장",
+      "help": "목표는 해당 단어를 공유하는 주제 클러스터를 선택합니다. 수동 주제 다음, 앵커 페이지보다 먼저 적용됩니다. 목표 자체가 주제가 되지는 않습니다.",
+      "needsProject": "비즈니스 목표는 프로젝트별로 저장됩니다. 설정하려면 프로젝트에서 이 크롤을 여세요.",
+      "none": "설정된 비즈니스 목표가 없습니다.",
+      "applied": "비즈니스 목표가 핵심 주제를 선택했습니다: {{input}}",
+      "manualWins": "수동 주제가 비즈니스 목표보다 우선합니다.",
+      "unmatched": {
+        "auto": "목표의 단어가 크롤된 콘텐츠에 없어 전체 콘텐츠에서 주제를 감지합니다.",
+        "anchored": "목표의 단어가 크롤된 콘텐츠에 없어 홈페이지와 앵커 페이지에서 주제를 정합니다."
+      },
+      "error": {
+        "too-short": "3자 이상 입력하세요.",
+        "too-long": "목표는 {{max}}자 이하로 입력하세요.",
+        "no-words": "숫자나 기호만이 아니라 단어를 사용하세요.",
+        "looks-like-url": "URL처럼 보입니다. 페이지는 앵커 페이지 입력란에 추가하세요."
       }
     }
   },
@@ -7524,6 +7663,15 @@
       "title": "기록",
       "empty": "기록은 이 프로젝트의 두 번째 분석 이후에 표시됩니다.",
       "row": "{{date}}: {{score}}"
+    },
+    "languageStatus": {
+      "uncertain": "{{languages}}의 결과는 불확실합니다. 원어민 검토를 거치지 않은 기본 대명사 및 군더더기 표현 목록을 사용합니다.",
+      "unsupported": "{{languages}}에 대한 언어 규칙이 없습니다. 대신 영어 단어 목록을 사용했으므로 대명사와 사실 감지가 부분적이며 이 점수는 불확실합니다.",
+      "undetermined": "확인되지 않은 언어",
+      "short": {
+        "uncertain": "불확실",
+        "unsupported": "규칙 없음(영어로 대체)"
+      }
     }
   },
   "trust": {
@@ -7676,6 +7824,49 @@
       "download": "JSON-LD 다운로드",
       "downloaded": "다운로드했습니다.",
       "downloadFailed": "다운로드에 실패했습니다. script 태그를 복사하세요."
+    },
+    "claims": {
+      "relation": {
+        "same-sentence": "같은 문장에 인용 있음",
+        "adjacent-sentence": "인접 문장에 인용 있음",
+        "unmatched": "근처에 인용 없음"
+      },
+      "evidence": {
+        "association": "연관성만",
+        "manual": "수동 확인됨",
+        "unavailable": "출처 데이터 없음"
+      },
+      "references": "인용된 출처",
+      "noReference": "이 주장 근처에서 인용을 찾지 못했습니다.",
+      "more": "표시되지 않은 주장: {{n}}개",
+      "linkNote": "DOI, PMID, PMCID 링크는 공개 리졸버(doi.org, PubMed, PMC)를 엽니다. 링크는 문헌을 찾아볼 위치만 알려 줄 뿐, 문헌의 존재나 주장 뒷받침 여부를 확인하지 않습니다."
+    },
+    "identity": {
+      "status": {
+        "syntax-valid": "형식 유효, 미확인",
+        "declared": "선언됨",
+        "fetched": "레지스트리 조회됨, 이름 미대조",
+        "verified": "레지스트리 이름 일치",
+        "mismatch": "레지스트리 이름 불일치",
+        "unavailable": "사용 불가",
+        "invalid": "잘못된 식별자 또는 URL"
+      },
+      "kind": {
+        "orcid": "ORCID",
+        "wikidata": "위키데이터",
+        "register": "학술 레지스트리",
+        "social": "소셜 프로필",
+        "other": "기타 링크"
+      },
+      "tier": "{{tier}}등급",
+      "detail": {
+        "registry-unavailable": "이 빌드에서는 레지스트리에 연결할 수 없음",
+        "rate-budget": "이번 실행의 요청 한도 도달",
+        "unsafe-redirect": "레지스트리 외부로 리디렉션되어 무시함",
+        "body-limit": "응답이 너무 커서 읽지 않음",
+        "transport-error": "요청 실패 또는 시간 초과"
+      },
+      "more": "표시되지 않은 프로필: {{n}}개"
     }
   },
   "executionCard": {
@@ -7806,6 +7997,7 @@
     "underLinked": "링크 부족",
     "leak": "누수",
     "unknown": "{{count}}개 링크는 유사도를 알 수 없어 누수로 세지 않습니다.",
+    "unweightedZone": "{{count}}개 링크는 DOM 영역을 알 수 없거나 가중치가 없어 중립 가중치 1로 계산됩니다.",
     "notConverged": "솔버가 수렴하지 않았습니다. 점수는 근삿값입니다.",
     "whatIf": {
       "title": "링크 What-If 시뮬레이터",
@@ -7818,7 +8010,8 @@
       "noChange": "점수 변화가 없습니다.",
       "before": "이전",
       "after": "이후",
-      "delta": "변화"
+      "delta": "변화",
+      "solver": "현재 점수에서 웜 스타트: 반복 {{iterations}}회, 잔차 {{residual}}."
     }
   },
   "decayUi": {
@@ -7858,6 +8051,20 @@
       "tool": "도구·계산기",
       "transactional": "거래",
       "local": "지역"
+    },
+    "phrase": {
+      "description": "이 페이지와 상위 페이지 최대 5개를 데스크톱 WebView에서 렌더링한 뒤 구조를 비교합니다. 렌더링에 실패한 페이지는 추정하지 않고 개수로 셉니다.",
+      "run": "검색 의도 분석",
+      "running": "페이지 렌더링 중…",
+      "failed": "페이지를 렌더링할 수 없어 의도 결과가 없습니다.",
+      "funnel": "렌더링된 상위 페이지: {{requested}}개 중 {{analysed}}개. 퍼널 단계: TOFU {{tofu}}, MOFU {{mofu}}, BOFU {{bofu}}.",
+      "gapsTitle": "누락된 형식",
+      "gap": {
+        "table": "비교표 추가: 상위 {{analysed}}개 페이지 중 {{count}}개에 있습니다.",
+        "ordered-list": "번호 단계 추가: 상위 {{analysed}}개 페이지 중 {{count}}개가 번호 목록을 사용합니다.",
+        "calculator": "작동하는 계산기나 도구 고려: 상위 {{analysed}}개 페이지 중 {{count}}개에 실제 양식 필드가 있는 도구가 있습니다.",
+        "product-cards": "제품이나 혜택 표시: 상위 {{analysed}}개 페이지 중 {{count}}개가 제품 또는 가격 카드를 보여 줍니다."
+      }
     }
   },
   "prePublishUi": {
@@ -8055,7 +8262,8 @@
       "too-few-documents": "신뢰할 만한 기준에는 경쟁 문서가 너무 적습니다.",
       "some-documents-missing": "일부 경쟁 페이지를 가져오지 못했습니다.",
       "no-target-chunks": "분석할 수 있는 문단이 없습니다.",
-      "off-topic-below-quota": "주제에 맞는 문단이 너무 적습니다."
+      "off-topic-below-quota": "주제에 맞는 문단이 너무 적습니다.",
+      "local-lexical-embeddings": "유사도는 의미 모델이 아닌 로컬 어휘 벡터로 계산되므로 영역은 근사치입니다."
     },
     "rec": {
       "rewrite-echo": "오프셋 {{offset}}의 문단이 경쟁 구절을 반복합니다. 자신의 말로 다시 쓰세요.",

@@ -6,7 +6,7 @@ import { exportedTypeContract } from './fixtures/typeContracts';
 it('preserves the reviewed crawler contract including optional project ownership and semantic language', () => {
   expect(exportedTypeContract('src/types/crawl.ts')).toEqual({
     exports: 40,
-    sha256: '3ca7be548e0a53d54890017d94b0eb147e1ecde386acbb319d5f97de62cd50c5',
+    sha256: '0a75e9a7aedbfb1aa7e8a8943a02d9ab2c42b8349b61b2cddeadc0b2f6e8da1f',
   });
 });
 

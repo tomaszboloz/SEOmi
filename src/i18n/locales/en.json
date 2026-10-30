@@ -4890,7 +4890,12 @@
         "Anchor text",
         "Rel",
         "Internal",
-        "Source HTML excerpt"
+        "Source HTML excerpt",
+        "DOM zone",
+        "Zone method",
+        "Context before",
+        "Context after",
+        "Section heading"
       ],
       "crawlImages": [
         "Run ID",
@@ -5860,7 +5865,17 @@
         "reasonsIntro": "Why pages are blocked or uncertain, including robots.txt rules.",
         "httpIntro": "{{0}} of {{1}} pages returned header or discovery data; the others carry none.",
         "tHttp": "HTTP response details and discovery",
-        "discovered": "{{0}} {{1}}"
+        "discovered": "{{0}} {{1}}",
+        "tLinkZones": "Internal link placement",
+        "linkZonesIntro": "Where internal links sit on the page, judged from DOM ancestry. The weight is the SPRS reference profile; main content without a render has no fold position and counts at the neutral weight 1.",
+        "zoneMain": "Main content",
+        "zoneAbove": "Above the fold",
+        "zoneBelow": "Below the fold",
+        "zoneWidget": "Widget",
+        "zoneNav": "Navigation / breadcrumb",
+        "zoneFooter": "Sidebar / footer",
+        "zoneUnknown": "Unknown (older run)",
+        "zoneNeutral": "neutral (1)"
       },
       "cols": {
         "colItem": "Item",
@@ -5933,7 +5948,10 @@
         "colXrobots": "X-Robots-Tag",
         "colDiscovered": "Discovered via",
         "colArea": "Area",
-        "colResult": "Result"
+        "colResult": "Result",
+        "colZone": "Zone",
+        "colShare": "Share",
+        "colWeight": "SPRS weight"
       },
       "focus": {
         "title": "Site Focus",
@@ -6012,7 +6030,9 @@
           "degraded": "Some pages had limited data, so their scores may be less precise.",
           "unmatchedTopic": "No pages matched the topic \"{{0}}\". The detected topic is used instead.",
           "anchoredTopic": "The core topic was chosen from the home page and anchor pages ({{0}} pages).",
-          "anchorsMissing": "Anchor pages not found in this crawl: {{0}}."
+          "anchorsMissing": "Anchor pages not found in this crawl: {{0}}.",
+          "goalTopic": "The core topic was chosen by the business goal \"{{0}}\".",
+          "goalUnmatched": "The business goal \"{{0}}\" matched no crawled content; the topic was chosen without it."
         },
         "rec": {
           "remove-offtopic": "Review {{0}} off-topic pages before acting: check traffic, conversions and links first. Pages without that evidence are candidates for a 301 to a relevant page or a rewrite. Nothing is removed automatically. Potential: +{{1}} points.",
@@ -6025,8 +6045,8 @@
           "monitor-strong-pages": "Monitor {{0}} strong pages: keep them on topic and recheck regularly."
         },
         "option": {
-          "remove-redirect": "Delete and redirect with 301 (+{{0}} points)",
-          "noindex-isolate": "Noindex and isolate (+{{0}} points)",
+          "remove-redirect": "Only without clicks, conversions or links: 301 to a relevant page (+{{0}} points)",
+          "noindex-isolate": "Only without clicks, conversions or links: noindex and isolate (+{{0}} points)",
           "rewrite-on-topic": "Rewrite on topic with a brief (target TRS about {{0}})",
           "add-missing-terms": "Add missing terms: {{0}}",
           "reinforce-headings": "Reinforce H2 and H3 headings",
@@ -6038,6 +6058,67 @@
         "gap": {
           "thin-subtopic": "Thin subtopic \"{{0}}\": only {{1}}% of pages cover it ({{2}} pages). Terms: {{3}}.",
           "competitor-terms": "Competitor terms missing on your site: {{3}}."
+        },
+        "protection": {
+          "title": "URL protection check",
+          "intro": "Advisory check for pages with TRS below {{0}}. TRS of {{0}} or more keeps a page and PRI of {{1}} or more protects it; ties count as protected. Nothing is deleted, redirected or noindexed automatically.",
+          "noTelemetry": "No GSC, GA4 or backlink data was available, so every page needs data before any decision.",
+          "colDecision": "Decision and reasons",
+          "colEvidence": "Evidence",
+          "colOptions": "Manual options and conditions",
+          "unknown": "{{0}}: unknown ({{1}})",
+          "measured": "{{0}}: {{1}} ({{2}})",
+          "onlyIf": "only if: {{0}}",
+          "decision": {
+            "keep": "Keep",
+            "shield": "Protect",
+            "needs-data": "Needs data",
+            "semantic-bridge": "Semantic bridge",
+            "prune-candidate": "Review for pruning"
+          },
+          "reason": {
+            "trs-above-threshold": "TRS is high enough",
+            "revenue": "Revenue measured",
+            "pri-above-threshold": "Traffic, conversions or links reach the protection threshold",
+            "telemetry-incomplete": "Telemetry is missing, stale or sampled",
+            "low-pri-measured": "Measured signals are low; check business value first",
+            "conversions": "Conversions measured"
+          },
+          "signal": {
+            "clicks": "Clicks",
+            "conversions": "Conversions",
+            "referringDomains": "Referring domains",
+            "revenue": "Revenue"
+          },
+          "alternative": {
+            "confirm-revenue-currency": "Confirm the revenue currency",
+            "check-gsc-ga4-backlinks-access": "Check GSC, GA4 and backlink access",
+            "link-to-pillar": "Link to the pillar page",
+            "redirect-301-to-relevant-target": "301 to a relevant page",
+            "canonical-for-duplicates": "Canonical for duplicates",
+            "keep-and-rewrite": "Keep and rewrite",
+            "noindex-or-410-after-review": "noindex or 410 after review"
+          },
+          "condition": {
+            "currency-from-analytics": "the currency comes from analytics, not a guess",
+            "fresh-90-day-window": "a fresh, complete 90-day window is available",
+            "real-topic-relation": "the topics are really related",
+            "relevant-target-same-intent": "the target answers the same intent",
+            "no-measured-value": "no clicks, conversions, revenue or links were measured",
+            "update-links-and-sitemap": "internal links and the sitemap are updated",
+            "near-duplicate-only": "the content is a near duplicate",
+            "owner-confirms-value": "the owner confirms the page has value",
+            "not-via-robots-txt": "set in the page, not in robots.txt",
+            "business-review": "a person reviewed the business impact"
+          },
+          "state": {
+            "measured": "Measured",
+            "partial-history": "Partial history",
+            "stale": "Stale",
+            "sampled": "Sampled",
+            "missing-permission": "Missing permission",
+            "unavailable": "Unavailable"
+          }
         }
       },
       "authority": {
@@ -6896,7 +6977,8 @@
       "mode": {
         "auto": "Topic mode: detected from all content",
         "manual": "Topic mode: set manually",
-        "anchored": "Topic mode: home page and anchor pages"
+        "anchored": "Topic mode: home page and anchor pages",
+        "goal": "Topic mode: business goal"
       },
       "inputLabel": "Anchor pages (one URL per line)",
       "placeholder": "https://example.com/offer",
@@ -7047,7 +7129,7 @@
       },
       "noindex-isolate": {
         "title": "Noindex and isolate",
-        "detail": "Keep the page for users but hide it from search and cut internal links. Site gain: +{{gain}} points."
+        "detail": "Only when traffic, conversions and links are measured and low: keep the page for users, hide it from search and cut internal links. Site gain: +{{gain}} points."
       },
       "rewrite-on-topic": {
         "title": "Rewrite on topic with a brief",
@@ -7109,7 +7191,8 @@
       "mode": {
         "auto": "detection from all content",
         "manual": "manual topic",
-        "anchored": "home and anchor pages"
+        "anchored": "home and anchor pages",
+        "goal": "business goal"
       },
       "title": "Score history",
       "empty": "Run at least two full analyses to see the trend.",
@@ -7151,7 +7234,63 @@
         "revenue": "Revenue measured",
         "pri-above-threshold": "Traffic, conversions or links reach the protection threshold",
         "telemetry-incomplete": "Telemetry is missing, stale or sampled",
-        "low-pri-measured": "Measured signals are low; check business value first"
+        "low-pri-measured": "Measured signals are low; check business value first",
+        "conversions": "Conversions measured"
+      },
+      "reasonsLabel": "Why",
+      "alternativesLabel": "Manual options",
+      "signal": {
+        "clicks": "Clicks",
+        "conversions": "Conversions",
+        "referringDomains": "Referring domains",
+        "revenue": "Revenue"
+      },
+      "unknown": "{{signal}}: unknown ({{state}})",
+      "measured": "{{signal}}: {{value}}",
+      "currencyUnknown": "{{value}} (currency unknown)",
+      "onlyIf": "only if: {{conditions}}",
+      "rule": "TRS of {{trs}} or more keeps a page; PRI of {{pri}} or more protects it. A tie counts as protected.",
+      "alternative": {
+        "confirm-revenue-currency": "Confirm the revenue currency",
+        "check-gsc-ga4-backlinks-access": "Check GSC, GA4 and backlink access",
+        "link-to-pillar": "Link to the pillar page",
+        "redirect-301-to-relevant-target": "301 to a relevant page",
+        "canonical-for-duplicates": "Canonical for duplicates",
+        "keep-and-rewrite": "Keep and rewrite",
+        "noindex-or-410-after-review": "noindex or 410 after review"
+      },
+      "condition": {
+        "currency-from-analytics": "the currency comes from analytics, not a guess",
+        "fresh-90-day-window": "a fresh, complete 90-day window is available",
+        "real-topic-relation": "the topics are really related",
+        "relevant-target-same-intent": "the target answers the same intent",
+        "no-measured-value": "no clicks, conversions, revenue or links were measured",
+        "update-links-and-sitemap": "internal links and the sitemap are updated",
+        "near-duplicate-only": "the content is a near duplicate",
+        "owner-confirms-value": "the owner confirms the page has value",
+        "not-via-robots-txt": "set in the page, not in robots.txt",
+        "business-review": "a person reviewed the business impact"
+      }
+    },
+    "goal": {
+      "title": "Business goal",
+      "inputLabel": "What should this site sell or achieve? (one sentence)",
+      "placeholder": "for example: sell insulin pumps to clinics",
+      "save": "Save goal",
+      "help": "The goal picks the topic cluster that shares its words, after a manual topic and before anchor pages. It never becomes a topic on its own.",
+      "needsProject": "Business goals are saved per project. Open this crawl from a project to set one.",
+      "none": "No business goal set.",
+      "applied": "Business goal picked the core topic: {{input}}",
+      "manualWins": "Your manual topic takes precedence over the business goal.",
+      "unmatched": {
+        "auto": "None of the goal's words appear in the crawled content, so the topic is detected from all content instead.",
+        "anchored": "None of the goal's words appear in the crawled content, so the topic comes from the home page and anchor pages instead."
+      },
+      "error": {
+        "too-short": "Enter at least 3 characters.",
+        "too-long": "Keep the goal under {{max}} characters.",
+        "no-words": "Use words, not only numbers or symbols.",
+        "looks-like-url": "This looks like a URL. Add pages in the anchor pages field instead."
       }
     }
   },
@@ -7524,6 +7663,15 @@
       "title": "History",
       "empty": "History appears after the second analysis of this project.",
       "row": "{{date}}: {{score}}"
+    },
+    "languageStatus": {
+      "uncertain": "Results for {{languages}} are uncertain: basic pronoun and filler lists are used and have not been reviewed by a native speaker.",
+      "unsupported": "No language rules exist for {{languages}}. English word lists were used as a fallback, so pronoun and fact detection is partial and these scores are uncertain.",
+      "undetermined": "undetermined language",
+      "short": {
+        "uncertain": "uncertain",
+        "unsupported": "no rules (English fallback)"
+      }
     }
   },
   "trust": {
@@ -7676,6 +7824,49 @@
       "download": "Download JSON-LD",
       "downloaded": "Downloaded.",
       "downloadFailed": "Download failed. Copy the script tag instead."
+    },
+    "claims": {
+      "relation": {
+        "same-sentence": "citation in the same sentence",
+        "adjacent-sentence": "citation in an adjacent sentence",
+        "unmatched": "no nearby citation"
+      },
+      "evidence": {
+        "association": "association only",
+        "manual": "checked manually",
+        "unavailable": "source data unavailable"
+      },
+      "references": "Cited references",
+      "noReference": "No citation found near this claim.",
+      "more": "{{n}} more claims not shown.",
+      "linkNote": "DOI, PMID and PMCID links open the public resolver (doi.org, PubMed, PMC). A link shows where to look the work up; it does not confirm that the work exists or supports the claim."
+    },
+    "identity": {
+      "status": {
+        "syntax-valid": "valid format, not checked",
+        "declared": "declared",
+        "fetched": "registry fetched, name not matched",
+        "verified": "registry name matched",
+        "mismatch": "registry name does not match",
+        "unavailable": "unavailable",
+        "invalid": "invalid identifier or URL"
+      },
+      "kind": {
+        "orcid": "ORCID",
+        "wikidata": "Wikidata",
+        "register": "scholarly register",
+        "social": "social profile",
+        "other": "other link"
+      },
+      "tier": "tier {{tier}}",
+      "detail": {
+        "registry-unavailable": "registry not reachable from this build",
+        "rate-budget": "request limit reached for this run",
+        "unsafe-redirect": "redirected outside the registry; ignored",
+        "body-limit": "response too large; not read",
+        "transport-error": "request failed or timed out"
+      },
+      "more": "{{n}} more profiles not shown."
     }
   },
   "executionCard": {
@@ -7806,6 +7997,7 @@
     "underLinked": "Under-linked",
     "leak": "Leak",
     "unknown": "{{count}} links have unknown similarity and are not counted as leaks.",
+    "unweightedZone": "{{count}} links have an unknown or unweighted DOM zone and count at the neutral weight 1.",
     "notConverged": "The solver did not converge; scores are approximate.",
     "whatIf": {
       "title": "What-If link simulator",
@@ -7818,7 +8010,8 @@
       "noChange": "No score changes.",
       "before": "Before",
       "after": "After",
-      "delta": "Change"
+      "delta": "Change",
+      "solver": "Warm-started from the current scores: {{iterations}} iterations, residual {{residual}}."
     }
   },
   "decayUi": {
@@ -7858,6 +8051,20 @@
       "tool": "Tool or calculator",
       "transactional": "Transactional",
       "local": "Local"
+    },
+    "phrase": {
+      "description": "Renders this page and up to 5 TOP pages in the desktop WebView, then compares their structure. Pages that fail to render are counted, not guessed.",
+      "run": "Analyse search intent",
+      "running": "Rendering pages…",
+      "failed": "The page could not be rendered, so there is no intent result.",
+      "funnel": "TOP pages rendered: {{analysed}} of {{requested}}. Funnel stages among them: TOFU {{tofu}}, MOFU {{mofu}}, BOFU {{bofu}}.",
+      "gapsTitle": "Missing formats",
+      "gap": {
+        "table": "Add a comparison table: {{count}} of {{analysed}} TOP pages have one.",
+        "ordered-list": "Add numbered steps: {{count}} of {{analysed}} TOP pages use an ordered list.",
+        "calculator": "Consider a working calculator or tool: {{count}} of {{analysed}} TOP pages have one with real form controls.",
+        "product-cards": "Show products or offers: {{count}} of {{analysed}} TOP pages show product or price cards."
+      }
     }
   },
   "prePublishUi": {
@@ -8055,7 +8262,8 @@
       "too-few-documents": "Too few competitor documents for a reliable baseline.",
       "some-documents-missing": "Some competitor pages could not be fetched.",
       "no-target-chunks": "The page has no analysable paragraphs.",
-      "off-topic-below-quota": "Too few on-topic paragraphs."
+      "off-topic-below-quota": "Too few on-topic paragraphs.",
+      "local-lexical-embeddings": "Similarity uses local lexical vectors, not a semantic model; zones are approximate."
     },
     "rec": {
       "rewrite-echo": "The paragraph at offset {{offset}} repeats a competitor passage: rewrite it in your own words.",

@@ -21,6 +21,7 @@ export const SprsPanel = ({ report }: { report: SprsReport }) => {
         </tr>)}</tbody>
       </table>
       {report.unknownSimilarityEdges > 0 && <p className="text-slate-400">{t('sprsUi.unknown', { count: report.unknownSimilarityEdges })}</p>}
+      {report.unweightedZoneLinks > 0 && <p className="text-slate-400">{t('sprsUi.unweightedZone', { count: report.unweightedZoneLinks })}</p>}
     </>}
   </section>;
 };

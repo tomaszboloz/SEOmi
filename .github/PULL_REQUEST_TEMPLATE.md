@@ -9,9 +9,11 @@ Fixes #
 
 ## Tests
 <!-- Commands run and results, for the exact head SHA. No tests run? Say so. -->
+Tested head SHA:
 
 - [ ] No code file over 150 physical lines (`npm run check:loc`)
 - [ ] CI thresholds unchanged (Rust 95%, frontend/MCP 98%)
+- [ ] New or changed workflow actions pinned to a full commit SHA with a version comment
 
 ## Migrations and risks
 <!-- Stored-data migrations, rollback, compatibility. "None" if none. -->

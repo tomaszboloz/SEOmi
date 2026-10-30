@@ -1,5 +1,6 @@
 export * from './types';
 export { buildSiteFocusReport } from './build';
+export { checkBusinessGoal, MAX_GOAL_LENGTH, MIN_GOAL_LENGTH, type GoalCheck, type GoalError } from './businessGoal';
 export { scoreIncremental } from './incremental';
 export { bandFor, computeSfs, statusFor, priorityFor, playbookFor } from './aggregate';
 export { trsGroup, isBorderlineTrs, OFF_TOPIC_BELOW, ON_TOPIC_FROM, STRONG_FROM, type TrsGroup } from './trsPolicy';

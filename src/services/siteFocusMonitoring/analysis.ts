@@ -11,9 +11,9 @@ import type { ManualTopic } from './topic';
 
 export interface AnalysisDeps { clock?: Clock; notify?: boolean; delivery?: MonitoringDelivery }
 
-export const buildRunReport = (run: CrawlRunRecord, manualTopic?: ManualTopic, now?: string, anchorUrls?: readonly string[]): SiteFocusReport =>
+export const buildRunReport = (run: CrawlRunRecord, manualTopic?: ManualTopic, now?: string, anchorUrls?: readonly string[], businessGoal?: string): SiteFocusReport =>
   buildSiteFocusReport(run.result.pages as FocusPage[], run.startUrl, {
-    manualTopic, ...(now ? { now } : {}), ...(anchorUrls?.length ? { anchorUrls: [...anchorUrls] } : {}),
+    manualTopic, ...(now ? { now } : {}), ...(anchorUrls?.length ? { anchorUrls: [...anchorUrls] } : {}), ...(businessGoal ? { businessGoal } : {}),
   });
 
 export const isCompletedRun = (run: CrawlRunRecord | null | undefined): run is CrawlRunRecord =>

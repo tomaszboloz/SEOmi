@@ -1,5 +1,6 @@
 import { useTranslation } from 'react-i18next';
 import type { TransparencyKind, TrustReport } from '@/services/eeatTrust';
+import { TrustClaimEvidence } from './TrustClaimEvidence';
 
 const KINDS: TransparencyKind[] = ['editorial', 'about', 'contact', 'registry'];
 
@@ -10,15 +11,7 @@ export const TrustSignals = ({ report }: { report: TrustReport }) => {
     <section aria-labelledby="trust-signals-title" className="space-y-3 rounded-xl border border-slate-800 bg-slate-900/60 p-4">
       <h2 id="trust-signals-title" className="text-sm font-semibold text-slate-200">{t('trust.signals.title')}</h2>
       <p className="text-xs text-slate-300">{t('trust.signals.citations', { trusted: citations.pagesWithTrusted, pages: citations.pagesAnalyzed })}</p>
-      {citations.claimEvidence && citations.claimEvidence.length > 0 && (
-        <details className="text-xs text-slate-300">
-          <summary className="cursor-pointer">{t('trust.signals.claimEvidence')} · {citations.claimEvidence.length} · {t('trust.signals.unbacked')} {citations.unbackedHighStakesClaims ?? 0}</summary>
-          <ul className="mt-1 space-y-1 text-slate-400">
-            {citations.claimEvidence.slice(0, 12).map((claim) => <li key={`${claim.start}|${claim.end}`}><span className="text-slate-200">{claim.relation}</span> · {claim.evidence} · {claim.claim}</li>)}
-          </ul>
-          <p className="mt-1 text-[10px] text-amber-300">{t('trust.signals.associationNote')}</p>
-        </details>
-      )}
+      <TrustClaimEvidence claims={citations.claimEvidence ?? []} unbacked={citations.unbackedHighStakesClaims} />
       {citations.deadLinks.length > 0 && (
         <details className="text-xs text-amber-200">
           <summary className="cursor-pointer">{t('trust.signals.dead', { count: citations.deadLinks.length })}</summary>

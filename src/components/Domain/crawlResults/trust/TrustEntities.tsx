@@ -3,6 +3,7 @@ import { useTranslation } from 'react-i18next';
 import { HelpTip } from '@/components/Help/HelpTip';
 import type { AuthorEntity, TrustReport } from '@/services/eeatTrust';
 import { FOCUS_RING } from './trustHelpers';
+import { TrustProfileEvidence } from './TrustProfileEvidence';
 
 export interface TrustEntitiesProps { report: TrustReport; onGenerate: (author: AuthorEntity) => void; onVerify?: (author: AuthorEntity) => void }
 
@@ -54,13 +55,7 @@ export const TrustEntities = ({ report, onGenerate, onVerify }: TrustEntitiesPro
                 </tr>
                 <tr key={`${author.key}-evidence`} className="border-t border-slate-900 text-[10px] text-slate-500">
                   <td colSpan={5} className="py-1">
-                    <details>
-                      <summary className="cursor-pointer">{t('trust.entities.identityEvidence')} · {author.reconciliation?.status ?? 'unavailable'} · {Math.round((author.reconciliation?.declarationRecall ?? 0) * 100)}%</summary>
-                      <ul className="mt-1 space-y-0.5 ps-4">
-                        {author.profiles.slice(0, 8).map((profile) => <li key={`${profile.kind}|${profile.url}`} className="break-all">{profile.kind}: {profile.status} · {profile.url}</li>)}
-                        {!author.profiles.length && <li>{t('trust.entities.unavailableNote')}</li>}
-                      </ul>
-                    </details>
+                    <TrustProfileEvidence reconciliation={author.reconciliation} profiles={author.profiles} />
                   </td>
                 </tr>
                 </Fragment>
@@ -75,7 +70,7 @@ export const TrustEntities = ({ report, onGenerate, onVerify }: TrustEntitiesPro
             <li key={entity.key} className="break-all">
               {t('trust.entities.roleEvidence', {
                 role: t(entity.role === 'reviewer' ? 'trust.entities.roleReviewer' : 'trust.entities.rolePublisher'),
-                name: entity.name, status: entity.reconciliation.status,
+                name: entity.name, status: t(`trust.identity.status.${entity.reconciliation.status}`),
                 recall: Math.round(entity.reconciliation.declarationRecall * 100),
               })}
             </li>

@@ -38,6 +38,7 @@ pub fn extract_page_links<R: Runtime>(input: ExtractPageLinksInput<'_, R>) -> Pa
         setup,
         state,
     } = input;
+    let rendered = setup.config.crawl_mode == "browser-rendered";
     let mut internal_link_count = 0usize;
     let mut external_link_count = 0usize;
     let mut links = Vec::new();
@@ -94,6 +95,7 @@ pub fn extract_page_links<R: Runtime>(input: ExtractPageLinksInput<'_, R>) -> Pa
                         rel: rel.clone(),
                         is_internal,
                         source_excerpt: source_excerpt.clone(),
+                        rendered,
                     },
                     &element,
                 ));
@@ -109,6 +111,7 @@ pub fn extract_page_links<R: Runtime>(input: ExtractPageLinksInput<'_, R>) -> Pa
                         rel,
                         is_internal: true,
                         source_excerpt,
+                        rendered,
                     },
                     &element,
                 ));

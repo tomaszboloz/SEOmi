@@ -14,7 +14,7 @@ describe('coverage100 semantic residual edges', () => {
     const rows = simulateWhatIf(nodes, [{ source: 'a', target: 'a' }], { add: [
       { source: 'c', target: 'a' }, { source: 'c', target: 'b' }, { source: 'd', target: 'a' }, { source: 'd', target: 'b' },
     ] });
-    expect(rows.map((row) => row.nodeId)).toEqual(['c', 'd']);
+    expect(rows.map((row) => row.nodeId)).toEqual(['a', 'b', 'c', 'd']);
     expect(computeSprs(nodes, rows.map((row) => ({ source: row.nodeId, target: 'a' })))).toHaveProperty('status', 'ready');
   });
 

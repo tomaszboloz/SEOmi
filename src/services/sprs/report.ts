@@ -1,6 +1,14 @@
 import { applyGate } from '@/services/indexabilityGate';
-import { computeSprs, type SprsEdge, type SprsReport } from '@/services/semanticGraph/sprs';
-import type { SemanticMap } from '@/services/semanticGraph/types';
+import { computeSprs, SPRS_PROFILE, type SprsEdge, type SprsReport } from '@/services/semanticGraph/sprs';
+import type { SemanticContentEdge, SemanticMap } from '@/services/semanticGraph/types';
+
+/** PDOM link mass (#70/#71): weighted zones count by profile weight, unweighted ones at the neutral weight. */
+const zoneWeighting = (edge: SemanticContentEdge): Pick<SprsEdge, 'weight' | 'unweightedZoneLinks'> => {
+  if (edge.zoneWeightSum === undefined && edge.unweightedZoneLinks === undefined) return {};
+  const unweighted = edge.unweightedZoneLinks ?? 0;
+  const weight = (edge.zoneWeightSum ?? 0) + unweighted * SPRS_PROFILE.unweightedZoneWeight;
+  return weight > 0 ? { weight, unweightedZoneLinks: unweighted } : { unweightedZoneLinks: unweighted };
+};
 
 export const buildSprsInput = (graph: SemanticMap): { nodes: Array<{ id: string }>; edges: SprsEdge[] } => {
   const eligiblePages = new Set(applyGate(graph.nodes.map((node) => node.page)).pages);
@@ -11,9 +19,11 @@ export const buildSprsInput = (graph: SemanticMap): { nodes: Array<{ id: string 
     similarity.set(`${e.source}|${e.target}`, e.weightedJaccard);
     similarity.set(`${e.target}|${e.source}`, e.weightedJaccard);
   });
-  const edges: SprsEdge[] = graph.edges.filter((e) => nodeIds.has(e.source) && nodeIds.has(e.target)).map((e) => {
+  // An edge whose every link is nofollow passes no SPRS flow (#71 GEM-71-T02).
+  const flowing = (e: SemanticContentEdge) => !e.nofollowLinks || e.nofollowLinks < e.links;
+  const edges: SprsEdge[] = graph.edges.filter((e) => nodeIds.has(e.source) && nodeIds.has(e.target) && flowing(e)).map((e) => {
     const value = similarity.get(`${e.source}|${e.target}`);
-    return { source: e.source, target: e.target, links: e.links, ...(value === undefined ? {} : { similarity: value }) };
+    return { source: e.source, target: e.target, links: e.links, ...zoneWeighting(e), ...(value === undefined ? {} : { similarity: value }) };
   });
   return { nodes: nodes.map((node) => ({ id: node.id })), edges };
 };

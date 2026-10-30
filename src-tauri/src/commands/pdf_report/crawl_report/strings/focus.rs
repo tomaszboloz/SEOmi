@@ -82,6 +82,8 @@ pub const NOTES: &[&str] = &[
     "unmatchedTopic",
     "anchoredTopic",
     "anchorsMissing",
+    "goalTopic",
+    "goalUnmatched",
 ];
 #[cfg(test)]
 pub const STATUSES: &[&str] = &["strong", "moderate", "borderline", "weak", "off-topic"];

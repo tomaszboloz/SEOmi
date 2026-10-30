@@ -46,7 +46,7 @@ export const buildSiteFocusReport = (pages: FocusPage[], startUrl: string, optio
   const totals = siteTotals(vectors);
   const { clusters } = clusterTerms(topTerms(totals), vectors, { cut: options.clusterCut, similarity: options.similarity });
   const anchors = resolveAnchors(live, vectors, startUrl, options.anchorUrls);
-  const selection = chooseCore(clusters, totals, options.manualTopic, language, anchors);
+  const selection = chooseCore(clusters, totals, options.manualTopic, language, anchors, options.businessGoal);
   const surfaces = surfaceMap(live);
   const labels = new Map(selection.clusters.map((cluster) => [cluster.id, labelOf(cluster.keys, surfaces)]));
   const termCluster = new Map(selection.clusters.flatMap((cluster) => cluster.keys.map((key): [string, string] => [key, cluster.id])));

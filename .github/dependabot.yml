@@ -15,6 +15,11 @@ updates:
     schedule:
       interval: weekly
     open-pull-requests-limit: 5
+    # Tauri JS and Rust crates must move to a new major together in a planned
+    # release PR; a lone Dependabot major bump breaks the CLI/runtime match.
+    ignore:
+      - dependency-name: "@tauri-apps/*"
+        update-types: ["version-update:semver-major"]
     groups:
       npm-minor-patch:
         update-types: [minor, patch]
@@ -35,6 +40,9 @@ updates:
     schedule:
       interval: weekly
     open-pull-requests-limit: 5
+    ignore:
+      - dependency-name: "tauri*"
+        update-types: ["version-update:semver-major"]
     groups:
       cargo-minor-patch:
         update-types: [minor, patch]

@@ -26,7 +26,8 @@ it('renders the content-only force map and lets users select a page from its acc
     expect(screen.getByText('Coffee brewing')).toBeTruthy();
     expect(screen.getByText('Linki z głównej treści')).toBeTruthy();
     expect(screen.getAllByText(/grinding guide/).length).toBeGreaterThan(0);
-  });
+  // First render pays the cold graph import; 5 s timed out on the shared macos-15-intel runner.
+  }, 20_000);
 
 it('lets keyboard users select pages through the accessible table', async () => {
     renderGraph(<CrawlArchitectureGraph pages={pages} startUrl={pages[0].url} />);

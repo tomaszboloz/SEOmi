@@ -9,6 +9,7 @@ mod data;
 mod detail_tables;
 mod evidence;
 mod focus_cards;
+mod focus_protection;
 mod focus_tables;
 mod focus_text;
 mod issues;
@@ -24,6 +25,7 @@ mod sec_dupes;
 mod sec_extra;
 mod sec_focus;
 mod sec_http;
+mod sec_link_zones;
 mod sec_links;
 mod sec_media;
 mod sec_meta;
@@ -59,6 +61,10 @@ mod tests_data;
 mod tests_focus;
 #[cfg(test)]
 mod tests_focus_more;
+#[cfg(test)]
+mod tests_focus_protection;
+#[cfg(test)]
+mod tests_link_zones;
 #[cfg(test)]
 mod tests_more;
 #[cfg(test)]

@@ -4890,7 +4890,12 @@
         "Anchor text",
         "Rel",
         "Internal",
-        "Source HTML excerpt"
+        "Source HTML excerpt",
+        "DOM zone",
+        "Zone method",
+        "Context before",
+        "Context after",
+        "Section heading"
       ],
       "crawlImages": [
         "Run ID",
@@ -5860,7 +5865,17 @@
         "reasonsIntro": "页面被屏蔽或不确定的原因，包括 robots.txt 规则。",
         "httpIntro": "{{1}} 个页面中有 {{0}} 个返回了响应头或发现数据；其余页面没有。",
         "tHttp": "HTTP 响应详情与发现",
-        "discovered": "{{0}} {{1}}"
+        "discovered": "{{0}} {{1}}",
+        "tLinkZones": "内部链接位置",
+        "linkZonesIntro": "根据 DOM 祖先元素判断内部链接在页面中的位置。权重为 SPRS 参考配置；未渲染的主要内容没有首屏位置，按中性权重 1 计算。",
+        "zoneMain": "主要内容",
+        "zoneAbove": "首屏",
+        "zoneBelow": "首屏以下",
+        "zoneWidget": "小部件",
+        "zoneNav": "导航 / 面包屑",
+        "zoneFooter": "侧边栏 / 页脚",
+        "zoneUnknown": "未知（旧抓取）",
+        "zoneNeutral": "中性 (1)"
       },
       "cols": {
         "colItem": "项目",
@@ -5933,7 +5948,10 @@
         "colXrobots": "X-Robots-Tag",
         "colDiscovered": "发现途径",
         "colArea": "范围",
-        "colResult": "结果"
+        "colResult": "结果",
+        "colZone": "区域",
+        "colShare": "占比",
+        "colWeight": "SPRS 权重"
       },
       "focus": {
         "title": "站点聚焦度",
@@ -6012,7 +6030,9 @@
           "degraded": "部分页面的数据有限,因此其评分可能不够精确。",
           "unmatchedTopic": "没有页面与主题“{{0}}”匹配,将改用自动识别的主题。",
           "anchoredTopic": "核心主题选自首页和锚点页面（{{0}} 个页面）。",
-          "anchorsMissing": "本次抓取中未找到的锚点页面：{{0}}。"
+          "anchorsMissing": "本次抓取中未找到的锚点页面：{{0}}。",
+          "goalTopic": "核心主题由业务目标“{{0}}”选定。",
+          "goalUnmatched": "业务目标“{{0}}”与抓取内容均不匹配；主题在不使用该目标的情况下选定。"
         },
         "rec": {
           "remove-offtopic": "在采取行动前审核 {{0}} 个偏离主题的页面:先检查流量、转化和链接。缺少这些证据的页面可考虑 301 到相关页面或重写。不会自动删除任何内容。潜在提升:+{{1}} 分。",
@@ -6025,8 +6045,8 @@
           "monitor-strong-pages": "监控 {{0}} 个高相关页面:保持其主题不偏离,并定期复查。"
         },
         "option": {
-          "remove-redirect": "删除并 301 重定向(+{{0}} 分)",
-          "noindex-isolate": "设置 noindex 并隔离(+{{0}} 分)",
+          "remove-redirect": "仅在没有点击、转化或链接时：301 到相关页面（+{{0}} 分）",
+          "noindex-isolate": "仅在没有点击、转化或链接时：noindex 并隔离（+{{0}} 分）",
           "rewrite-on-topic": "按内容简报围绕主题重写(目标 TRS 约 {{0}})",
           "add-missing-terms": "补充缺失的词:{{0}}",
           "reinforce-headings": "强化 H2 和 H3 标题",
@@ -6038,6 +6058,67 @@
         "gap": {
           "thin-subtopic": "内容单薄的子主题“{{0}}”:仅有 {{1}}% 的页面涉及(共 {{2}} 个页面)。相关词:{{3}}。",
           "competitor-terms": "竞争对手使用而你的站点缺失的词:{{3}}。"
+        },
+        "protection": {
+          "title": "URL 保护检查",
+          "intro": "针对 TRS 低于 {{0}} 的页面的建议性检查。TRS 达到 {{0}} 或以上则保留页面，PRI 达到 {{1}} 或以上则保护页面；相等视为受保护。不会自动删除、重定向或设置 noindex。",
+          "noTelemetry": "没有可用的 GSC、GA4 或外链数据，因此每个页面在做决定前都需要数据。",
+          "colDecision": "决定与原因",
+          "colEvidence": "依据",
+          "colOptions": "人工选项与条件",
+          "unknown": "{{0}}：未知（{{1}}）",
+          "measured": "{{0}}：{{1}}（{{2}}）",
+          "onlyIf": "仅当：{{0}}",
+          "decision": {
+            "keep": "保留",
+            "shield": "保护",
+            "needs-data": "需要数据",
+            "semantic-bridge": "语义桥接",
+            "prune-candidate": "待审查（可修剪）"
+          },
+          "reason": {
+            "trs-above-threshold": "TRS 足够高",
+            "revenue": "已测得收入",
+            "pri-above-threshold": "流量、转化或链接达到保护阈值",
+            "telemetry-incomplete": "遥测数据缺失、过期或经过抽样",
+            "low-pri-measured": "已测信号偏低；请先评估业务价值",
+            "conversions": "已测得转化"
+          },
+          "signal": {
+            "clicks": "点击",
+            "conversions": "转化",
+            "referringDomains": "引荐域名",
+            "revenue": "收入"
+          },
+          "alternative": {
+            "confirm-revenue-currency": "确认收入货币",
+            "check-gsc-ga4-backlinks-access": "检查 GSC、GA4 和外链的访问权限",
+            "link-to-pillar": "链接到支柱页面",
+            "redirect-301-to-relevant-target": "301 到相关页面",
+            "canonical-for-duplicates": "重复内容使用 canonical",
+            "keep-and-rewrite": "保留并改写",
+            "noindex-or-410-after-review": "审核后再 noindex 或 410"
+          },
+          "condition": {
+            "currency-from-analytics": "货币来自分析数据，而非猜测",
+            "fresh-90-day-window": "有最新且完整的 90 天数据",
+            "real-topic-relation": "主题确实相关",
+            "relevant-target-same-intent": "目标页面满足相同的搜索意图",
+            "no-measured-value": "未测得点击、转化、收入或链接",
+            "update-links-and-sitemap": "同步更新内部链接和站点地图",
+            "near-duplicate-only": "内容几乎重复",
+            "owner-confirms-value": "所有者确认页面有价值",
+            "not-via-robots-txt": "在页面中设置，而不是在 robots.txt 中",
+            "business-review": "已有人审核业务影响"
+          },
+          "state": {
+            "measured": "已测量",
+            "partial-history": "历史不完整",
+            "stale": "已过期",
+            "sampled": "样本",
+            "missing-permission": "缺少权限",
+            "unavailable": "不可用"
+          }
         }
       },
       "authority": {
@@ -6896,7 +6977,8 @@
       "mode": {
         "auto": "主题模式：从全部内容中识别",
         "manual": "主题模式：手动设置",
-        "anchored": "主题模式：首页和锚点页面"
+        "anchored": "主题模式：首页和锚点页面",
+        "goal": "主题模式：业务目标"
       },
       "inputLabel": "锚点页面（每行一个 URL）",
       "placeholder": "https://example.com/offer",
@@ -7047,7 +7129,7 @@
       },
       "noindex-isolate": {
         "title": "设置 noindex 并隔离",
-        "detail": "为用户保留该页面,但对搜索隐藏并减少内部链接。站点提升:+{{gain}} 分。"
+        "detail": "仅当流量、转化和链接均已测得且很低时：为用户保留页面，在搜索中隐藏并移除内部链接。网站提升：+{{gain}} 分。"
       },
       "rewrite-on-topic": {
         "title": "按简报围绕主题重写",
@@ -7109,7 +7191,8 @@
       "mode": {
         "auto": "从全部内容识别",
         "manual": "手动主题",
-        "anchored": "首页和锚点页面"
+        "anchored": "首页和锚点页面",
+        "goal": "业务目标"
       },
       "title": "评分历史",
       "empty": "至少运行两次完整分析后才能看到趋势。",
@@ -7151,7 +7234,63 @@
         "revenue": "已测得收入",
         "pri-above-threshold": "流量、转化或链接达到保护阈值",
         "telemetry-incomplete": "遥测数据缺失、过期或经过抽样",
-        "low-pri-measured": "已测信号偏低；请先评估业务价值"
+        "low-pri-measured": "已测信号偏低；请先评估业务价值",
+        "conversions": "已测得转化"
+      },
+      "reasonsLabel": "原因",
+      "alternativesLabel": "人工选项",
+      "signal": {
+        "clicks": "点击",
+        "conversions": "转化",
+        "referringDomains": "引荐域名",
+        "revenue": "收入"
+      },
+      "unknown": "{{signal}}：未知（{{state}}）",
+      "measured": "{{signal}}：{{value}}",
+      "currencyUnknown": "{{value}}（货币未知）",
+      "onlyIf": "仅当：{{conditions}}",
+      "rule": "TRS 达到 {{trs}} 或以上则保留页面；PRI 达到 {{pri}} 或以上则保护页面。相等视为受保护。",
+      "alternative": {
+        "confirm-revenue-currency": "确认收入货币",
+        "check-gsc-ga4-backlinks-access": "检查 GSC、GA4 和外链的访问权限",
+        "link-to-pillar": "链接到支柱页面",
+        "redirect-301-to-relevant-target": "301 到相关页面",
+        "canonical-for-duplicates": "重复内容使用 canonical",
+        "keep-and-rewrite": "保留并改写",
+        "noindex-or-410-after-review": "审核后再 noindex 或 410"
+      },
+      "condition": {
+        "currency-from-analytics": "货币来自分析数据，而非猜测",
+        "fresh-90-day-window": "有最新且完整的 90 天数据",
+        "real-topic-relation": "主题确实相关",
+        "relevant-target-same-intent": "目标页面满足相同的搜索意图",
+        "no-measured-value": "未测得点击、转化、收入或链接",
+        "update-links-and-sitemap": "同步更新内部链接和站点地图",
+        "near-duplicate-only": "内容几乎重复",
+        "owner-confirms-value": "所有者确认页面有价值",
+        "not-via-robots-txt": "在页面中设置，而不是在 robots.txt 中",
+        "business-review": "已有人审核业务影响"
+      }
+    },
+    "goal": {
+      "title": "业务目标",
+      "inputLabel": "这个网站应该销售什么或实现什么？（一句话）",
+      "placeholder": "例如：向诊所销售胰岛素泵",
+      "save": "保存目标",
+      "help": "目标会选择包含其词语的主题簇，优先级在手动主题之后、锚点页面之前。目标本身永远不会成为主题。",
+      "needsProject": "业务目标按项目保存。请从项目中打开此抓取以设置目标。",
+      "none": "未设置业务目标。",
+      "applied": "业务目标选定了核心主题：{{input}}",
+      "manualWins": "手动主题优先于业务目标。",
+      "unmatched": {
+        "auto": "抓取内容中没有出现目标中的任何词语，因此主题改为从全部内容中识别。",
+        "anchored": "抓取内容中没有出现目标中的任何词语，因此主题改为来自首页和锚点页面。"
+      },
+      "error": {
+        "too-short": "请至少输入 3 个字符。",
+        "too-long": "目标不能超过 {{max}} 个字符。",
+        "no-words": "请使用词语，而不只是数字或符号。",
+        "looks-like-url": "这看起来像 URL。请在锚点页面字段中添加页面。"
       }
     }
   },
@@ -7524,6 +7663,15 @@
       "title": "历史",
       "empty": "此项目完成第二次分析后会显示历史记录。",
       "row": "{{date}}：{{score}}"
+    },
+    "languageStatus": {
+      "uncertain": "{{languages}} 的结果不确定：使用的是基础代词和填充词列表，尚未经过母语人士审核。",
+      "unsupported": "{{languages}} 没有语言规则。已改用英语词表作为替代，因此代词和事实识别并不完整，这些分数不确定。",
+      "undetermined": "未确定的语言",
+      "short": {
+        "uncertain": "不确定",
+        "unsupported": "无规则（以英语替代）"
+      }
     }
   },
   "trust": {
@@ -7676,6 +7824,49 @@
       "download": "下载 JSON-LD",
       "downloaded": "已下载。",
       "downloadFailed": "下载失败。请改为复制 script 标签。"
+    },
+    "claims": {
+      "relation": {
+        "same-sentence": "同一句中有引用",
+        "adjacent-sentence": "相邻句中有引用",
+        "unmatched": "附近没有引用"
+      },
+      "evidence": {
+        "association": "仅关联",
+        "manual": "已人工核查",
+        "unavailable": "无来源数据"
+      },
+      "references": "引用的来源",
+      "noReference": "该主张附近未找到引用。",
+      "more": "未显示的主张：{{n}} 条",
+      "linkNote": "DOI、PMID 和 PMCID 链接会打开公共解析服务（doi.org、PubMed、PMC）。链接只说明在哪里查找该文献，并不证明文献存在或支持该主张。"
+    },
+    "identity": {
+      "status": {
+        "syntax-valid": "格式有效，未核查",
+        "declared": "已声明",
+        "fetched": "已获取登记信息，名称未匹配",
+        "verified": "登记名称一致",
+        "mismatch": "登记名称不一致",
+        "unavailable": "不可用",
+        "invalid": "标识符或 URL 无效"
+      },
+      "kind": {
+        "orcid": "ORCID",
+        "wikidata": "维基数据",
+        "register": "学术登记",
+        "social": "社交资料",
+        "other": "其他链接"
+      },
+      "tier": "第 {{tier}} 级",
+      "detail": {
+        "registry-unavailable": "此版本无法访问登记机构",
+        "rate-budget": "本次运行已达请求上限",
+        "unsafe-redirect": "重定向到登记机构之外，已忽略",
+        "body-limit": "响应过大，未读取",
+        "transport-error": "请求失败或超时"
+      },
+      "more": "未显示的资料：{{n}} 个"
     }
   },
   "executionCard": {
@@ -7806,6 +7997,7 @@
     "underLinked": "内链不足",
     "leak": "泄漏",
     "unknown": "{{count}} 个链接的相似度未知，不计为泄漏。",
+    "unweightedZone": "{{count}} 个链接的 DOM 区域未知或未加权，按中性权重 1 计算。",
     "notConverged": "求解器未收敛，分数为近似值。",
     "whatIf": {
       "title": "链接 What-If 模拟器",
@@ -7818,7 +8010,8 @@
       "noChange": "分数无变化。",
       "before": "之前",
       "after": "之后",
-      "delta": "变化"
+      "delta": "变化",
+      "solver": "从当前分数热启动：{{iterations}} 次迭代，残差 {{residual}}。"
     }
   },
   "decayUi": {
@@ -7858,6 +8051,20 @@
       "tool": "工具或计算器",
       "transactional": "交易",
       "local": "本地"
+    },
+    "phrase": {
+      "description": "在桌面 WebView 中渲染此页面和最多 5 个排名靠前的页面，并比较其结构。渲染失败的页面会被计数，不做猜测。",
+      "run": "分析搜索意图",
+      "running": "正在渲染页面…",
+      "failed": "无法渲染该页面，因此没有意图结果。",
+      "funnel": "已渲染的排名靠前页面：{{analysed}} / {{requested}}。其中的漏斗阶段：TOFU {{tofu}}，MOFU {{mofu}}，BOFU {{bofu}}。",
+      "gapsTitle": "缺少的格式",
+      "gap": {
+        "table": "添加对比表：{{analysed}} 个排名靠前页面中有 {{count}} 个包含。",
+        "ordered-list": "添加编号步骤：{{analysed}} 个排名靠前页面中有 {{count}} 个使用编号列表。",
+        "calculator": "考虑提供可用的计算器或工具：{{analysed}} 个排名靠前页面中有 {{count}} 个带有真实表单控件的工具。",
+        "product-cards": "展示产品或优惠：{{analysed}} 个排名靠前页面中有 {{count}} 个显示产品或价格卡片。"
+      }
     }
   },
   "prePublishUi": {
@@ -8055,7 +8262,8 @@
       "too-few-documents": "竞品文档太少，无法建立可靠基准。",
       "some-documents-missing": "部分竞品页面无法获取。",
       "no-target-chunks": "页面没有可分析的段落。",
-      "off-topic-below-quota": "切题段落太少。"
+      "off-topic-below-quota": "切题段落太少。",
+      "local-lexical-embeddings": "相似度使用本地词汇向量而非语义模型计算，区域为近似值。"
     },
     "rec": {
       "rewrite-echo": "偏移量 {{offset}} 处的段落重复了竞品内容：请用自己的话改写。",

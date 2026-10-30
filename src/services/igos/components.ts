@@ -4,11 +4,18 @@ import type { ConsensusBaseline, TargetDoc } from './types';
 
 const clamp01 = (value: number): number => Math.max(0, Math.min(1, value));
 
-/** NEFR = min(1, |E_novel| / max(5, .35 * |E_consensus|)). Novel = target entity that is not a consensus entity. */
-export const novelEntities = (target: string[], baseline: ConsensusBaseline): string[] => {
+/**
+ * NEFR = min(1, |E_novel| / max(5, .35 * |E_consensus|)). Novel = target entity that is not a consensus entity.
+ * With `onTopicText`, only entities that occur in on-topic chunks count (GEM-67-06), so drift cannot inflate NEFR.
+ */
+export const novelEntities = (target: string[], baseline: ConsensusBaseline, onTopicText?: string): string[] => {
   const consensus = new Set(baseline.consensusEntities.map(entityKey));
+  const onTopic = onTopicText === undefined ? null : entityKey(onTopicText);
   const seen = new Map<string, string>();
-  target.forEach((entity) => { const key = entityKey(entity); if (key && !consensus.has(key)) seen.set(key, entity.trim()); });
+  target.forEach((entity) => {
+    const key = entityKey(entity);
+    if (key && !consensus.has(key) && (onTopic === null || onTopic.includes(key))) seen.set(key, entity.trim());
+  });
   return [...seen.values()].sort();
 };
 
@@ -16,11 +23,17 @@ export const nefr = (novelCount: number, consensusCount: number): number =>
   clamp01(novelCount / Math.max(5, 0.35 * consensusCount));
 
 const EVIDENCE = [/\b10\.\d{4,9}\/[^\s"<>]+/gi, /\bPMID:?\s*\d{4,9}\b/gi];
+/** A number with a unit of measure, e.g. `93 °C`, `12 g`, `4,5 kWh` (GEM-67-07). */
+const QUANTITY = /(?<![\p{L}\p{N}.,/])\d+(?:[.,]\d+)?\s?(?:%|°[CF]|k?g|mg|km|cm|mm|m|ms|min|h|kWh|W|MB|GB|px|zł|PLN|EUR|USD|[$€£])(?![\p{L}\p{N}])/gu;
 
-/** Evidence references (DOI, PMID) per 1000 words, saturating at 3. */
+const PREFIX_PRICE = /[$€£]\s?\d+(?:[.,]\d+)?(?![\p{L}\p{N}])/gu;
+
+export const measuredQuantities = (text: string): number => (text.match(QUANTITY)?.length ?? 0) + (text.match(PREFIX_PRICE)?.length ?? 0);
+
+/** Evidence per 1000 words, saturating at 3: each DOI/PMID counts 1, each measured quantity counts `quantityWeight`. */
 export const edsi = (text: string, wordCount: number): number => {
   const refs = EVIDENCE.reduce((sum, pattern) => sum + (text.match(pattern)?.length ?? 0), 0);
-  return clamp01(refs / Math.max(1, wordCount / 1000) / 3);
+  return clamp01((refs + P.quantityWeight * measuredQuantities(text)) / Math.max(1, wordCount / 1000) / 3);
 };
 
 const FIRST_HAND = [

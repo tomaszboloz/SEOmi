@@ -3,6 +3,7 @@ import { buildPagePlaybook, type CodeParams, type PageFocus, type SiteFocusRepor
 import { isCompletedRun } from '@/services/siteFocusMonitoring/analysis';
 import { buildProjectRunReport } from '@/services/siteFocusMonitoring/projectReport';
 import type { CrawlRunRecord } from '@/types';
+import { summarizeProtection, type FocusPdfProtection } from './focusProtection';
 
 /** Worst pages listed in the PDF; the full per-page model stays in the app. */
 export const FOCUS_PDF_PAGES = 25;
@@ -17,7 +18,9 @@ export interface FocusPdfSummary {
   core_topic: {
     label: string; terms: Array<{ term: string; coverage_pct: number }>; manual_input?: string; manual_matched?: boolean;
     /** How the topic was chosen; anchor counts include the home page. */
-    mode?: 'auto' | 'manual' | 'anchored'; anchor_source_count?: number; anchor_missing_count?: number;
+    mode?: 'auto' | 'manual' | 'goal' | 'anchored'; anchor_source_count?: number; anchor_missing_count?: number;
+    /** Explicit business goal as validated (#82) and whether it picked the topic. */
+    business_goal?: string; goal_matched?: boolean; goal_applied?: boolean;
   };
   flags: { low_confidence: boolean; multi_topic: boolean; lexical_fallback: boolean; degraded: boolean; skipped_render_timeouts: number };
   counts: { scored: number; skipped: number; off_topic: number; borderline: number; strong: number };
@@ -28,6 +31,8 @@ export interface FocusPdfSummary {
   recommendations: Array<{ code: string; params: CodeParams; gain: number }>;
   sub_sites: Array<{ label: string; path_prefix: string; share_pct: number; score: number }>;
   gaps: Array<{ code: string; label: string; terms: string[]; coverage_pct: number; pages_covering: number }>;
+  /** Advisory URL protection check for low-TRS pages (#81); absent when no page is below the threshold. */
+  protection?: FocusPdfProtection;
 }
 
 const byWorst = (a: PageFocus, b: PageFocus): number => a.trs - b.trs || (a.url < b.url ? -1 : 1);
@@ -39,6 +44,7 @@ export const summarizeSiteFocus = (report: SiteFocusReport): FocusPdfSummary => 
   const worst = [...content].sort(byWorst).slice(0, FOCUS_PDF_PAGES);
   const manual = report.coreTopic.manualOverride;
   const anchors = report.coreTopic.anchors;
+  const goal = report.coreTopic.businessGoal;
   return {
     score: report.score,
     band: report.band,
@@ -52,6 +58,7 @@ export const summarizeSiteFocus = (report: SiteFocusReport): FocusPdfSummary => 
       mode: report.coreTopic.mode ?? 'auto',
       ...(anchors?.applied ? { anchor_source_count: anchors.sources.length } : {}),
       ...(anchors?.missing.length ? { anchor_missing_count: anchors.missing.length } : {}),
+      ...(goal ? { business_goal: goal.input, goal_matched: goal.matched, goal_applied: goal.applied } : {}),
     },
     flags: {
       low_confidence: report.flags.isLowConfidence,
@@ -84,5 +91,7 @@ export const summarizeSiteFocus = (report: SiteFocusReport): FocusPdfSummary => 
 /** Summary for a completed run, honouring the project's manual core topic; undefined when nothing can be scored. */
 export const crawlFocusSummary = (run: CrawlRunRecord): FocusPdfSummary | undefined => {
   if (!isCompletedRun(run)) return undefined;
-  return summarizeSiteFocus(buildProjectRunReport(run, run.projectId));
+  const report = buildProjectRunReport(run, run.projectId);
+  const protection = summarizeProtection(report, run.projectId);
+  return { ...summarizeSiteFocus(report), ...(protection ? { protection } : {}) };
 };

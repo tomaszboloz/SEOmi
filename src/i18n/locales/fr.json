@@ -4890,7 +4890,12 @@
         "Anchor text",
         "Rel",
         "Internal",
-        "Source HTML excerpt"
+        "Source HTML excerpt",
+        "DOM zone",
+        "Zone method",
+        "Context before",
+        "Context after",
+        "Section heading"
       ],
       "crawlImages": [
         "Run ID",
@@ -5860,7 +5865,17 @@
         "reasonsIntro": "Pourquoi des pages sont bloquées ou incertaines, y compris les règles robots.txt.",
         "httpIntro": "{{0}} pages sur {{1}} ont renvoyé des données d'en-tête ou de découverte ; les autres n'en ont pas.",
         "tHttp": "Détails de la réponse HTTP et découverte",
-        "discovered": "{{0}} {{1}}"
+        "discovered": "{{0}} {{1}}",
+        "tLinkZones": "Emplacement des liens internes",
+        "linkZonesIntro": "Où se trouvent les liens internes dans la page, d'après les ancêtres DOM. Le poids est le profil de référence SPRS ; le contenu principal sans rendu n'a pas de position par rapport à la ligne de flottaison et compte avec le poids neutre 1.",
+        "zoneMain": "Contenu principal",
+        "zoneAbove": "Au-dessus de la ligne de flottaison",
+        "zoneBelow": "Sous la ligne de flottaison",
+        "zoneWidget": "Widget",
+        "zoneNav": "Navigation / fil d'Ariane",
+        "zoneFooter": "Barre latérale / pied de page",
+        "zoneUnknown": "Inconnue (ancien crawl)",
+        "zoneNeutral": "neutre (1)"
       },
       "cols": {
         "colItem": "Élément",
@@ -5933,7 +5948,10 @@
         "colXrobots": "X-Robots-Tag",
         "colDiscovered": "Découvert via",
         "colArea": "Domaine",
-        "colResult": "Résultat"
+        "colResult": "Résultat",
+        "colZone": "Zone",
+        "colShare": "Part",
+        "colWeight": "Poids SPRS"
       },
       "focus": {
         "title": "Site Focus",
@@ -6012,7 +6030,9 @@
           "degraded": "Certaines pages disposaient de données limitées ; leurs scores peuvent donc être moins précis.",
           "unmatchedTopic": "Aucune page ne correspond au sujet « {{0}} ». Le sujet détecté est utilisé à la place.",
           "anchoredTopic": "Le sujet principal a été choisi à partir de la page d’accueil et des pages d’ancrage ({{0}} pages).",
-          "anchorsMissing": "Pages d’ancrage introuvables dans ce crawl : {{0}}."
+          "anchorsMissing": "Pages d’ancrage introuvables dans ce crawl : {{0}}.",
+          "goalTopic": "Le sujet principal a été choisi par l’objectif commercial « {{0}} ».",
+          "goalUnmatched": "L’objectif commercial « {{0}} » ne correspond à aucun contenu exploré ; le sujet a été choisi sans lui."
         },
         "rec": {
           "remove-offtopic": "Vérifier {{0}} pages hors sujet avant d'agir : contrôler d'abord le trafic, les conversions et les liens. Les pages sans ces preuves sont candidates à une 301 vers une page pertinente ou à une réécriture. Rien n'est supprimé automatiquement. Potentiel : +{{1}} points.",
@@ -6025,8 +6045,8 @@
           "monitor-strong-pages": "Surveiller {{0}} pages solides : gardez-les dans le sujet et revérifiez-les régulièrement."
         },
         "option": {
-          "remove-redirect": "Supprimer et rediriger en 301 (+{{0}} points)",
-          "noindex-isolate": "Passer en noindex et isoler (+{{0}} points)",
+          "remove-redirect": "Seulement sans clics, conversions ni liens : 301 vers une page pertinente (+{{0}} points)",
+          "noindex-isolate": "Seulement sans clics, conversions ni liens : noindex et isoler (+{{0}} points)",
           "rewrite-on-topic": "Réécrire dans le sujet à partir d'un brief (TRS cible d'environ {{0}})",
           "add-missing-terms": "Ajouter les termes manquants : {{0}}",
           "reinforce-headings": "Renforcer les titres H2 et H3",
@@ -6038,6 +6058,67 @@
         "gap": {
           "thin-subtopic": "Sous-thème peu couvert « {{0}} » : seulement {{1}} % des pages le traitent ({{2}} pages). Termes : {{3}}.",
           "competitor-terms": "Termes des concurrents absents de votre site : {{3}}."
+        },
+        "protection": {
+          "title": "Contrôle de protection des URL",
+          "intro": "Contrôle consultatif des pages dont le TRS est inférieur à {{0}}. Un TRS de {{0}} ou plus conserve la page et un PRI de {{1}} ou plus la protège ; une égalité compte comme protégée. Rien n’est supprimé, redirigé ou passé en noindex automatiquement.",
+          "noTelemetry": "Aucune donnée GSC, GA4 ou backlinks n’était disponible : chaque page a besoin de données avant toute décision.",
+          "colDecision": "Décision et raisons",
+          "colEvidence": "Preuves",
+          "colOptions": "Options manuelles et conditions",
+          "unknown": "{{0}} : inconnu ({{1}})",
+          "measured": "{{0}} : {{1}} ({{2}})",
+          "onlyIf": "seulement si : {{0}}",
+          "decision": {
+            "keep": "Conserver",
+            "shield": "Protéger",
+            "needs-data": "Données requises",
+            "semantic-bridge": "Pont sémantique",
+            "prune-candidate": "À examiner pour élagage"
+          },
+          "reason": {
+            "trs-above-threshold": "Le TRS est assez élevé",
+            "revenue": "Revenu mesuré",
+            "pri-above-threshold": "Trafic, conversions ou liens atteignent le seuil de protection",
+            "telemetry-incomplete": "Télémétrie absente, périmée ou échantillonnée",
+            "low-pri-measured": "Les signaux mesurés sont faibles ; vérifiez d'abord la valeur métier",
+            "conversions": "Conversions mesurées"
+          },
+          "signal": {
+            "clicks": "Clics",
+            "conversions": "Conversions",
+            "referringDomains": "Domaines référents",
+            "revenue": "Revenus"
+          },
+          "alternative": {
+            "confirm-revenue-currency": "Confirmer la devise des revenus",
+            "check-gsc-ga4-backlinks-access": "Vérifier l’accès à GSC, GA4 et aux backlinks",
+            "link-to-pillar": "Lier vers la page pilier",
+            "redirect-301-to-relevant-target": "301 vers une page pertinente",
+            "canonical-for-duplicates": "Canonical pour les doublons",
+            "keep-and-rewrite": "Conserver et réécrire",
+            "noindex-or-410-after-review": "noindex ou 410 après examen"
+          },
+          "condition": {
+            "currency-from-analytics": "la devise vient de l’analytique, pas d’une supposition",
+            "fresh-90-day-window": "une fenêtre récente et complète de 90 jours est disponible",
+            "real-topic-relation": "les sujets sont réellement liés",
+            "relevant-target-same-intent": "la cible répond à la même intention",
+            "no-measured-value": "aucun clic, conversion, revenu ni lien n’a été mesuré",
+            "update-links-and-sitemap": "les liens internes et le sitemap sont mis à jour",
+            "near-duplicate-only": "le contenu est un quasi-doublon",
+            "owner-confirms-value": "le propriétaire confirme la valeur de la page",
+            "not-via-robots-txt": "défini dans la page, pas dans robots.txt",
+            "business-review": "une personne a examiné l’impact business"
+          },
+          "state": {
+            "measured": "Mesuré",
+            "partial-history": "Historique partiel",
+            "stale": "Obsolète",
+            "sampled": "Échantillon",
+            "missing-permission": "Autorisation manquante",
+            "unavailable": "Indisponible"
+          }
         }
       },
       "authority": {
@@ -6896,7 +6977,8 @@
       "mode": {
         "auto": "Mode du thème : détecté sur l’ensemble du contenu",
         "manual": "Mode du thème : défini manuellement",
-        "anchored": "Mode du thème : page d’accueil et pages d’ancrage"
+        "anchored": "Mode du thème : page d’accueil et pages d’ancrage",
+        "goal": "Mode du sujet : objectif commercial"
       },
       "inputLabel": "Pages d’ancrage (une URL par ligne)",
       "placeholder": "https://example.com/offre",
@@ -7047,7 +7129,7 @@
       },
       "noindex-isolate": {
         "title": "Passer en noindex et isoler",
-        "detail": "Gardez la page pour les utilisateurs mais masquez-la de la recherche et coupez les liens internes. Gain pour le site : +{{gain}} points."
+        "detail": "Seulement si trafic, conversions et liens sont mesurés et faibles : gardez la page pour les utilisateurs, masquez-la de la recherche et coupez les liens internes. Gain pour le site : +{{gain}} points."
       },
       "rewrite-on-topic": {
         "title": "Réécrire dans le sujet à partir d'un brief",
@@ -7109,7 +7191,8 @@
       "mode": {
         "auto": "détection sur tout le contenu",
         "manual": "sujet manuel",
-        "anchored": "accueil et pages d’ancrage"
+        "anchored": "accueil et pages d’ancrage",
+        "goal": "objectif commercial"
       },
       "title": "Historique du score",
       "empty": "Lancez au moins deux analyses complètes pour voir la tendance.",
@@ -7151,7 +7234,63 @@
         "revenue": "Revenu mesuré",
         "pri-above-threshold": "Trafic, conversions ou liens atteignent le seuil de protection",
         "telemetry-incomplete": "Télémétrie absente, périmée ou échantillonnée",
-        "low-pri-measured": "Les signaux mesurés sont faibles ; vérifiez d'abord la valeur métier"
+        "low-pri-measured": "Les signaux mesurés sont faibles ; vérifiez d'abord la valeur métier",
+        "conversions": "Conversions mesurées"
+      },
+      "reasonsLabel": "Pourquoi",
+      "alternativesLabel": "Options manuelles",
+      "signal": {
+        "clicks": "Clics",
+        "conversions": "Conversions",
+        "referringDomains": "Domaines référents",
+        "revenue": "Revenus"
+      },
+      "unknown": "{{signal}} : inconnu ({{state}})",
+      "measured": "{{signal}} : {{value}}",
+      "currencyUnknown": "{{value}} (devise inconnue)",
+      "onlyIf": "seulement si : {{conditions}}",
+      "rule": "Un TRS de {{trs}} ou plus conserve la page ; un PRI de {{pri}} ou plus la protège. Une égalité compte comme protégée.",
+      "alternative": {
+        "confirm-revenue-currency": "Confirmer la devise des revenus",
+        "check-gsc-ga4-backlinks-access": "Vérifier l’accès à GSC, GA4 et aux backlinks",
+        "link-to-pillar": "Lier vers la page pilier",
+        "redirect-301-to-relevant-target": "301 vers une page pertinente",
+        "canonical-for-duplicates": "Canonical pour les doublons",
+        "keep-and-rewrite": "Conserver et réécrire",
+        "noindex-or-410-after-review": "noindex ou 410 après examen"
+      },
+      "condition": {
+        "currency-from-analytics": "la devise vient de l’analytique, pas d’une supposition",
+        "fresh-90-day-window": "une fenêtre récente et complète de 90 jours est disponible",
+        "real-topic-relation": "les sujets sont réellement liés",
+        "relevant-target-same-intent": "la cible répond à la même intention",
+        "no-measured-value": "aucun clic, conversion, revenu ni lien n’a été mesuré",
+        "update-links-and-sitemap": "les liens internes et le sitemap sont mis à jour",
+        "near-duplicate-only": "le contenu est un quasi-doublon",
+        "owner-confirms-value": "le propriétaire confirme la valeur de la page",
+        "not-via-robots-txt": "défini dans la page, pas dans robots.txt",
+        "business-review": "une personne a examiné l’impact business"
+      }
+    },
+    "goal": {
+      "title": "Objectif commercial",
+      "inputLabel": "Que doit vendre ou accomplir ce site ? (une phrase)",
+      "placeholder": "par exemple : vendre des pompes à insuline aux cliniques",
+      "save": "Enregistrer l’objectif",
+      "help": "L’objectif choisit le cluster thématique qui partage ses mots, après un sujet manuel et avant les pages d’ancrage. Il ne devient jamais un sujet à lui seul.",
+      "needsProject": "Les objectifs commerciaux sont enregistrés par projet. Ouvrez ce crawl depuis un projet pour en définir un.",
+      "none": "Aucun objectif commercial défini.",
+      "applied": "L’objectif commercial a choisi le sujet principal : {{input}}",
+      "manualWins": "Votre sujet manuel a priorité sur l’objectif commercial.",
+      "unmatched": {
+        "auto": "Aucun mot de l’objectif n’apparaît dans le contenu exploré : le sujet est donc détecté à partir de tout le contenu.",
+        "anchored": "Aucun mot de l’objectif n’apparaît dans le contenu exploré : le sujet vient donc de la page d’accueil et des pages d’ancrage."
+      },
+      "error": {
+        "too-short": "Saisissez au moins 3 caractères.",
+        "too-long": "L’objectif ne doit pas dépasser {{max}} caractères.",
+        "no-words": "Utilisez des mots, pas seulement des chiffres ou des symboles.",
+        "looks-like-url": "Cela ressemble à une URL. Ajoutez des pages dans le champ des pages d’ancrage."
       }
     }
   },
@@ -7524,6 +7663,15 @@
       "title": "Historique",
       "empty": "L'historique apparaît après la deuxième analyse de ce projet.",
       "row": "{{date}} : {{score}}"
+    },
+    "languageStatus": {
+      "uncertain": "Les résultats pour {{languages}} sont incertains : des listes de base de pronoms et de formules creuses sont utilisées, sans relecture par un locuteur natif.",
+      "unsupported": "Aucune règle linguistique n'existe pour {{languages}}. Des listes de mots anglaises ont été utilisées par défaut : la détection des pronoms et des faits est donc partielle et ces scores sont incertains.",
+      "undetermined": "langue indéterminée",
+      "short": {
+        "uncertain": "incertain",
+        "unsupported": "aucune règle (repli anglais)"
+      }
     }
   },
   "trust": {
@@ -7676,6 +7824,49 @@
       "download": "Télécharger le JSON-LD",
       "downloaded": "Téléchargé.",
       "downloadFailed": "Échec du téléchargement. Copiez plutôt la balise script."
+    },
+    "claims": {
+      "relation": {
+        "same-sentence": "citation dans la même phrase",
+        "adjacent-sentence": "citation dans une phrase voisine",
+        "unmatched": "aucune citation à proximité"
+      },
+      "evidence": {
+        "association": "association seulement",
+        "manual": "vérifié manuellement",
+        "unavailable": "données de la source indisponibles"
+      },
+      "references": "Références citées",
+      "noReference": "Aucune citation trouvée à proximité de cette affirmation.",
+      "more": "Affirmations supplémentaires non affichées : {{n}}.",
+      "linkNote": "Les liens DOI, PMID et PMCID ouvrent le résolveur public (doi.org, PubMed, PMC). Un lien indique où consulter l'ouvrage ; il ne confirme ni son existence ni qu'il étaye l'affirmation."
+    },
+    "identity": {
+      "status": {
+        "syntax-valid": "format valide, non vérifié",
+        "declared": "déclaré",
+        "fetched": "registre récupéré, nom non rapproché",
+        "verified": "nom concordant dans le registre",
+        "mismatch": "le nom du registre ne concorde pas",
+        "unavailable": "indisponible",
+        "invalid": "identifiant ou URL invalide"
+      },
+      "kind": {
+        "orcid": "ORCID",
+        "wikidata": "Wikidata",
+        "register": "registre scientifique",
+        "social": "profil social",
+        "other": "autre lien"
+      },
+      "tier": "niveau {{tier}}",
+      "detail": {
+        "registry-unavailable": "registre inaccessible depuis cette version",
+        "rate-budget": "limite de requêtes atteinte pour cette exécution",
+        "unsafe-redirect": "redirection hors du registre ; ignorée",
+        "body-limit": "réponse trop volumineuse ; non lue",
+        "transport-error": "requête échouée ou expirée"
+      },
+      "more": "Profils supplémentaires non affichés : {{n}}."
     }
   },
   "executionCard": {
@@ -7806,6 +7997,7 @@
     "underLinked": "Peu de liens",
     "leak": "Fuite",
     "unknown": "{{count}} liens ont une similarité inconnue et ne comptent pas comme fuite.",
+    "unweightedZone": "{{count}} liens ont une zone DOM inconnue ou non pondérée et comptent avec le poids neutre 1.",
     "notConverged": "Le solveur n'a pas convergé ; les scores sont approximatifs.",
     "whatIf": {
       "title": "Simulateur de liens What-If",
@@ -7818,7 +8010,8 @@
       "noChange": "Aucun changement de score.",
       "before": "Avant",
       "after": "Après",
-      "delta": "Variation"
+      "delta": "Variation",
+      "solver": "Démarrage à chaud depuis les scores actuels : {{iterations}} itérations, résidu {{residual}}."
     }
   },
   "decayUi": {
@@ -7858,6 +8051,20 @@
       "tool": "Outil ou calculateur",
       "transactional": "Transactionnelle",
       "local": "Locale"
+    },
+    "phrase": {
+      "description": "Affiche cette page et jusqu'à 5 pages du TOP dans le WebView de l'application, puis compare leur structure. Les pages qui échouent sont comptées, pas devinées.",
+      "run": "Analyser l'intention de recherche",
+      "running": "Rendu des pages…",
+      "failed": "La page n'a pas pu être rendue ; aucun résultat d'intention.",
+      "funnel": "Pages du TOP rendues : {{analysed}} sur {{requested}}. Étapes du tunnel parmi elles : TOFU {{tofu}}, MOFU {{mofu}}, BOFU {{bofu}}.",
+      "gapsTitle": "Formats manquants",
+      "gap": {
+        "table": "Ajoutez un tableau comparatif : {{count}} pages du TOP sur {{analysed}} en ont un.",
+        "ordered-list": "Ajoutez des étapes numérotées : {{count}} pages du TOP sur {{analysed}} utilisent une liste numérotée.",
+        "calculator": "Envisagez un calculateur ou outil fonctionnel : {{count}} pages du TOP sur {{analysed}} en ont un avec de vrais champs de formulaire.",
+        "product-cards": "Montrez des produits ou offres : {{count}} pages du TOP sur {{analysed}} affichent des fiches produit ou prix."
+      }
     }
   },
   "prePublishUi": {
@@ -8055,7 +8262,8 @@
       "too-few-documents": "Trop peu de documents concurrents pour une base fiable.",
       "some-documents-missing": "Certaines pages concurrentes n'ont pas pu être récupérées.",
       "no-target-chunks": "La page n'a aucun paragraphe analysable.",
-      "off-topic-below-quota": "Trop peu de paragraphes sur le sujet."
+      "off-topic-below-quota": "Trop peu de paragraphes sur le sujet.",
+      "local-lexical-embeddings": "La similarité utilise des vecteurs lexicaux locaux, pas un modèle sémantique ; les zones sont approximatives."
     },
     "rec": {
       "rewrite-echo": "Le paragraphe au décalage {{offset}} répète un passage concurrent : réécrivez-le avec vos mots.",

@@ -2,6 +2,7 @@
 
 use super::data::{list, num};
 use super::focus_cards::{core_card, count, kpis};
+use super::focus_protection::protection;
 use super::focus_tables as tables;
 use super::focus_text::{arg, coded};
 use super::strings::focus::{self as f, BAND, NOTE};
@@ -68,6 +69,12 @@ pub fn notes(focus: &Value) -> Vec<String> {
             &[arg(core.get("manual_input"))],
         ));
     }
+    let goal = core.get("business_goal");
+    if core.get("mode").and_then(Value::as_str) == Some("goal") {
+        notes.push(coded(NOTE, "goalTopic", &[arg(goal)]));
+    } else if core.get("goal_matched").and_then(Value::as_bool) == Some(false) {
+        notes.push(coded(NOTE, "goalUnmatched", &[arg(goal)]));
+    }
     let sources = core.get("anchor_source_count");
     if core.get("mode").and_then(Value::as_str) == Some("anchored") {
         notes.push(coded(NOTE, "anchoredTopic", &[arg(sources)]));
@@ -106,6 +113,9 @@ impl Doc {
         self.skip(6.0);
         self.data_table(&tables::pages(focus));
         self.data_table(&tables::recommendations(focus));
+        if let Some(table) = protection(focus) {
+            self.data_table(&table);
+        }
         if !list(focus, "sub_sites").is_empty() {
             self.data_table(&tables::sub_sites(focus));
         }

@@ -1,3 +1,45 @@
+# SEOmi 0.6.0 — release notes
+
+## Added
+- SPRS link flow (#71): each internal link now counts with the weight of its DOM zone (navigation 0.25, widget 0.35, sidebar/footer 0.05). A link whose zone is unknown or unweighted (for example `main` without a render) counts with the neutral weight 1, and the panel shows how many links that applies to. Runs saved before 0.4.6 have no zone data and keep the old link-count weights.
+- SPRS reports the raw probability of each page (all pages sum to about 1) next to the 0-100 score, plus the solver residual.
+- The What-If simulator starts from the current scores instead of a uniform vector and shows iterations and residual. If the solver does not converge, it says so.
+- What-If checks a change before simulating. It rejects unknown pages, self links, duplicate links, removal of a link that does not exist and invalid weights, and it can change the weight of an existing link. "After" and "change" now use the score scale from before the change (100 = best page before), so a page that gains can go above 100. Before, each state was rescaled to its own best page, which could hide the gain.
+- SPRS: `rel=nofollow` links stay on the map but pass no link flow. A similarity value that is not a number or lies outside 0-1 counts as unknown, not as a leak.
+- Crawler (#70): each link stores the nearest H2/H3 before it (`section_heading`, at most 160 characters). The lookup checks at most 1,500 nodes; when that limit is reached, the heading stays empty and is not guessed.
+- The crawl PDF report has a new **Internal link placement** table. It shows internal links per DOM zone, their share, the number of pages and the SPRS weight.
+- In browser-rendered crawls, links in the main content are marked **above** or **below the fold** from the real viewport, so SPRS uses the 1.00 / 0.75 weights for them. HTTP crawls still say `main`, because the HTML alone cannot show the fold.
+- Links CSV export has five new columns: DOM zone, zone method, context before, context after and section heading. Runs crawled before these fields existed leave the columns empty.
+- IGOS in the target phrase audit (#67, #68): after a TOP 10 audit, the page and the competitor pages that were really fetched are split into 60-word windows (at most 40 per page). The panel shows the IGOS score, its components, the paragraph heatmap and recommendations. Without fetched competitor pages there is no baseline and no score. Vectors come from the local lexical provider, and the panel says so.
+- Search intent (SIJA) in the target phrase audit (#69): **Analyse search intent** renders the page and up to 5 TOP pages in the desktop WebView. It then shows the observed micro-intent, SSAS against the TOP pages and how many TOP pages fall in each funnel stage (TOFU/MOFU/BOFU). Pages that fail to render are counted as missing, never guessed, and no traffic shares are invented. Nothing is rendered until the button is pressed.
+- IGOS: new entities count only when they appear in on-topic paragraphs. Evidence density also counts numbers with units and prices (four such values count like one DOI/PMID reference).
+- Search intent suggests missing formats: a table, numbered steps, a calculator or product cards. A format is suggested only when at least 60% of at least 3 rendered TOP pages use it and your page does not. A calculator counts only if it has real form fields.
+- Outreach drafts use Information Gain evidence from the project's IGOS report again. This was lost in the 0.4.48 merge (#143).
+
+- Trust (#88): claim citations with a DOI, PMID or PMCID link to doi.org, PubMed and PMC. A link is only a lookup target, not proof that the work exists or supports the claim. A claim with no citation nearby says so, and an unknown count of unbacked claims shows "—" instead of 0.
+- Trust (#87): sameAs evidence is readable. ORCID and Wikidata links are built from the checksum-valid id, never from the URL a page declares, and "valid format" is labelled "not checked". When an author has no sameAs check, recall shows "—" instead of 0%.
+- AI Overview readiness (#108): languages without native-speaker review are marked "uncertain", and languages scored with the English word lists are marked "unsupported". A threshold sweep helper can recommend an alert threshold from labelled before/after pairs. It needs at least 20 labels with both outcomes and never changes the setting itself.
+
+- Site Focus (#81): each URL protection result keeps its evidence (raw value and telemetry state per signal, unknown stays unknown) and the thresholds used. The order is TRS, revenue, any measured conversion, PRI, then needs-data. One conversion now protects a page even when custom PRI parameters would score it below the threshold. A value equal to the threshold protects the page. 301, canonical, noindex and 410 appear only as advice with conditions; nothing is changed automatically. The Focus tab, the export and a new PDF table show the same rows.
+- Site Focus (#82): a business goal can be set per project (3-200 characters, no URLs). The Core Topic uses this order: manual topic, business goal, anchor pages, detection. The goal only selects a topic cluster it shares words with. If it matches nothing, the report says so and falls back to anchors or detection.
+
+## Fixed
+- The ±15-word link context no longer includes text from `<script>`, `<style>`, `<noscript>`, `<template>`, `<svg>` or `<textarea>`. E-mail addresses, long digit runs and long letter/digit tokens are replaced with `[email]`, `[number]` and `[token]`.
+- SPRS is faster on large sites: link weight totals are computed once per run instead of in every iteration.
+- Site Focus no longer quarantines every content page with TRS below 40 as "remove". Each removal candidate is checked against URL telemetry (Search Console clicks, conversions, revenue, backlinks), and only a measured prune candidate stays on the list. Missing telemetry is not treated as zero (#81).
+- Every Site Focus consumer, including the architecture map colours, uses the project's Core Topic (#82).
+- A cold-render architecture graph test no longer fails on the slow macos-15-intel runner. Its timeout went from 5 s to 20 s.
+
+## CI
+- Pull request runs that a newer push replaces are cancelled. Runs on pushes to main are never cancelled.
+- File-symlink escape tests are skipped only on systems that do not allow file symlinks.
+
+## Dependencies
+- MCP server: `@hono/node-server` 2.1.1 → 2.1.5 (#268). Fixes Dependabot alert #8 (moderate): `serveStatic` decoded the request path twice, which let requests to static paths bypass middleware (fixed in 2.1.3).
+
+## Included
+- Everything from 0.5.0 (below).
+
 # SEOmi 0.5.0 — release notes
 
 ## Added

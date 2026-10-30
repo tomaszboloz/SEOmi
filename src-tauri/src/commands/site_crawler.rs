@@ -43,7 +43,9 @@ mod inline_images;
 mod js_redirects;
 mod js_shell;
 mod js_shell_payload;
+mod link_context_redaction;
 mod link_placement;
+mod link_section_heading;
 mod models;
 mod orchestration;
 mod pagination;
@@ -124,6 +126,15 @@ mod tests;
 
 #[cfg(test)]
 mod link_placement_tests;
+
+#[cfg(test)]
+mod link_section_heading_tests;
+
+#[cfg(test)]
+mod link_context_redaction_tests;
+
+#[cfg(test)]
+mod link_fold_tests;
 
 #[cfg(test)]
 mod semantic_fold_tests;
