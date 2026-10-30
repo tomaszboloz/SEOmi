@@ -8150,6 +8150,27 @@
       "copied": "Copié",
       "failed": "Échec de la copie",
       "hint": "L’export contient les entrées et pondérations exactes, le score peut donc être recalculé."
+    },
+    "card": {
+      "title": "Fiche d'exécution",
+      "diagnosis": "Diagnostic et raison",
+      "location": "Emplacement",
+      "artifact": "Artefact avant/après",
+      "deployment": "Déploiement et vérification",
+      "noUrl": "Aucune URL de page unique (constat à l'échelle du site).",
+      "kind": {
+        "link": "Lien à ajouter de la première URL vers la seconde. La phrase prête avec <a> se trouve dans l'espace Liens.",
+        "entities": "Entités à ajouter à cette page. Le paragraphe avant/après se trouve dans l'onglet du module.",
+        "removal": "Suppression ou fusion. Les règles 301/410 viennent uniquement des Artefacts de déploiement, après le contrôle de protection de l'URL.",
+        "module": "L'artefact avant/après est préparé dans l'onglet du module."
+      },
+      "noTask": {
+        "blocked": "Bloqué par un garde-fou ou un conflit : aucune tâche n'est planifiée.",
+        "removal": "Les suppressions se planifient dans les Artefacts de déploiement, jamais ici.",
+        "no-url": "Pas d'URL de page : corrigez dans l'onglet du module.",
+        "in-module": "Corrigez page par page dans l'onglet du module."
+      },
+      "openModule": "Ouvrir l'artefact dans {{tab}}"
     }
   },
   "surgical": {

@@ -53,7 +53,7 @@ export const CrawlExecutiveTab = ({ pages, startUrl, run, projectId, onOpenTab }
       <ExecutiveHssHero hss={hss} />
       <ExecutiveModuleCards hss={hss} onOpen={onOpenTab} />
       <div className="grid gap-4 xl:grid-cols-[2fr_1fr]">
-        <ExecutiveActionFeed actions={actions} onOpen={onOpenTab} />
+        <ExecutiveActionFeed actions={actions} onOpen={onOpenTab} hss={hss} projectId={projectId} />
         <ExecutiveWhatIf key={`${hss.runId}|${hss.profile.version}`} hss={hss} />
       </div>
     </div>

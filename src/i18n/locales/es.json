@@ -8150,6 +8150,27 @@
       "copied": "Copiado",
       "failed": "Error al copiar",
       "hint": "La exportación contiene las entradas y pesos exactos, así que la puntuación puede recalcularse."
+    },
+    "card": {
+      "title": "Tarjeta de ejecución",
+      "diagnosis": "Diagnóstico y motivo",
+      "location": "Ubicación",
+      "artifact": "Artefacto antes/después",
+      "deployment": "Implementación y verificación",
+      "noUrl": "Sin URL de página única (hallazgo de todo el sitio).",
+      "kind": {
+        "link": "Enlace que añadir de la primera URL a la segunda. La frase lista con <a> está en el espacio Enlaces.",
+        "entities": "Entidades que añadir a esta página. El párrafo antes/después está en la pestaña del módulo.",
+        "removal": "Eliminación o fusión. Las reglas 301/410 salen solo de Artefactos de despliegue, tras comprobar la protección de la URL.",
+        "module": "El artefacto antes/después se prepara en la pestaña del módulo."
+      },
+      "noTask": {
+        "blocked": "Bloqueado por una salvaguarda o un conflicto, así que no se planifica ninguna tarea.",
+        "removal": "Las eliminaciones se planifican en Artefactos de despliegue, nunca aquí.",
+        "no-url": "Sin URL de página: corrígelo en la pestaña del módulo.",
+        "in-module": "Corrígelo página por página en la pestaña del módulo."
+      },
+      "openModule": "Abrir el artefacto en {{tab}}"
     }
   },
   "surgical": {

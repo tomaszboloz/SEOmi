@@ -8150,6 +8150,27 @@
       "copied": "Kopiert",
       "failed": "Kopieren fehlgeschlagen",
       "hint": "Der Export enthält die exakten Eingaben und Gewichte, sodass der Wert neu berechnet werden kann."
+    },
+    "card": {
+      "title": "Ausführungskarte",
+      "diagnosis": "Diagnose und Grund",
+      "location": "Ort",
+      "artifact": "Vorher/Nachher-Artefakt",
+      "deployment": "Umsetzung und Prüfung",
+      "noUrl": "Keine einzelne Seiten-URL (websiteweiter Befund).",
+      "kind": {
+        "link": "Link von der ersten zur zweiten URL hinzufügen. Der fertige Satz mit <a> steht im Bereich Links.",
+        "entities": "Entitäten, die dieser Seite hinzugefügt werden. Der Vorher/Nachher-Absatz steht im Modul-Tab.",
+        "removal": "Entfernen oder Zusammenführen. 301/410-Regeln entstehen nur in den Deployment-Artefakten nach der URL-Schutzprüfung.",
+        "module": "Das Vorher/Nachher-Artefakt wird im Modul-Tab erstellt."
+      },
+      "noTask": {
+        "blocked": "Durch eine Schutzregel oder einen Konflikt blockiert, daher wird keine Aufgabe geplant.",
+        "removal": "Entfernungen werden in den Deployment-Artefakten geplant, nie hier.",
+        "no-url": "Keine Seiten-URL, daher im Modul-Tab beheben.",
+        "in-module": "Seite für Seite im Modul-Tab beheben."
+      },
+      "openModule": "Artefakt öffnen in {{tab}}"
     }
   },
   "surgical": {

@@ -8150,6 +8150,27 @@
       "copied": "Copiato",
       "failed": "Copia non riuscita",
       "hint": "L’esportazione contiene gli input e i pesi esatti, quindi il punteggio può essere ricalcolato."
+    },
+    "card": {
+      "title": "Scheda di esecuzione",
+      "diagnosis": "Diagnosi e motivo",
+      "location": "Posizione",
+      "artifact": "Artefatto prima/dopo",
+      "deployment": "Implementazione e verifica",
+      "noUrl": "Nessun URL di pagina singolo (rilievo sull’intero sito).",
+      "kind": {
+        "link": "Link da aggiungere dal primo URL al secondo. La frase pronta con <a> è nell’area Link.",
+        "entities": "Entità da aggiungere a questa pagina. Il paragrafo prima/dopo è nella scheda del modulo.",
+        "removal": "Rimozione o unione. Le regole 301/410 nascono solo dagli Artefatti di distribuzione, dopo il controllo di protezione dell’URL.",
+        "module": "L’artefatto prima/dopo è preparato nella scheda del modulo."
+      },
+      "noTask": {
+        "blocked": "Bloccato da una protezione o da un conflitto, quindi nessuna attività è pianificata.",
+        "removal": "Le rimozioni si pianificano negli Artefatti di distribuzione, mai qui.",
+        "no-url": "Nessun URL di pagina: correggi nella scheda del modulo.",
+        "in-module": "Correggi pagina per pagina nella scheda del modulo."
+      },
+      "openModule": "Apri l’artefatto in {{tab}}"
     }
   },
   "surgical": {
