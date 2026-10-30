@@ -7296,6 +7296,7 @@
     }
   },
   "focusBenchmark": {
+    "partialSerp": "Search results are partial ({{min}}–{{max}} organic results per query, source: {{providers}}). This is not a full Google TOP 10, so treat the comparison as indicative.",
     "title": "Competitive benchmark",
     "intro": "Compare your Site Focus Score with the sites that rank for your Core Topic. SEOmi looks up the search results, crawls a small sample of each competitor politely (robots.txt respected) and scores them with the same engine.",
     "run": "Run benchmark",

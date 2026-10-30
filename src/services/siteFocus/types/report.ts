@@ -1,3 +1,4 @@
+import type { EmbeddingSet } from '@/services/semanticSource/types';
 import type { SfsBand } from './base';
 import type { CoreTopic, FocusCluster, PageFocus, SiteFlags, SubSite } from './page';
 import type { LinkSuggestion, Recommendation, TopicGap } from './recommend';
@@ -47,6 +48,8 @@ export interface SiteFocusOptions {
   businessGoal?: string;
   /** Pluggable term-to-term similarity (e.g. embeddings). Blended into term clustering. */
   similarity?: TermSimilarity;
+  /** Shared embedding set (#86): its term vectors feed term clustering; without it the report is `tfidf-only`. */
+  embeddings?: EmbeddingSet;
   language?: string;
   competitorTerms?: string[];
   /** Force the lexical formula (0.75*Overlap - 0.25*LexicalDrift). */

@@ -1,3 +1,4 @@
+import type { SimilaritySource } from '@/services/semanticSource/types';
 import type { AuthorityRecommendation, AuthorityWarning, CannibalGroup, FreshnessReport, PillarCoverage, Pillars, Quadrant, SiloReport, SubtopicCoverage } from './metrics';
 import type { ReferenceTaxonomy } from './taxonomy';
 
@@ -28,4 +29,6 @@ export interface TopicalAuthorityReport {
   pageCount: number;
   generatedAt: string;
   version: number;
+  /** Which page-pair similarity produced cannibalization (#86); absent on reports built before it existed. */
+  similaritySource?: SimilaritySource;
 }

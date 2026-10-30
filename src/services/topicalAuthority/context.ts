@@ -3,6 +3,8 @@ import { applyGate } from '@/services/indexabilityGate';
 import { prepare } from '@/services/siteFocus/evaluate';
 import { normalizeUrl } from '@/services/siteFocus/pageType';
 import { buildTermStats, phraseKey, tfidfVector } from '@/services/siteFocus/terms';
+import { pageVectorFrom } from '@/services/semanticSource/similarity';
+import type { EmbeddingSet } from '@/services/semanticSource/types';
 
 export type Vector = Map<string, number>;
 
@@ -21,6 +23,8 @@ export interface AuthorityPage {
   /** Every term key on the page. */
   keys: Set<string>;
   date?: string;
+  /** Page vector from the shared embedding set (#86), when one was supplied and valid. */
+  embedding?: ArrayLike<number>;
 }
 
 export interface AuthorityContext {
@@ -63,7 +67,9 @@ export const jaccard = (left: Set<string>, right: Set<string>): number => {
 const validDate = (value: string | undefined): string | undefined => (value && /^\d{4}-\d{2}-\d{2}$/.test(value) ? value : undefined);
 
 /** Rebuild the scoring model from the pages that pass the indexability gate. */
-export const gatedSiteFocus = (pages: FocusPage[], startUrl: string, report: SiteFocusReport): { pages: FocusPage[]; report: SiteFocusReport } => {
+export const gatedSiteFocus = (
+  pages: FocusPage[], startUrl: string, report: SiteFocusReport, embeddings?: EmbeddingSet,
+): { pages: FocusPage[]; report: SiteFocusReport } => {
   const selected = new Set(report.pages.map((page) => normalizeUrl(page.url)).filter((url): url is string => Boolean(url)));
   const eligible = applyGate(pages).pages.filter((page) => [page.url, page.final_url].some((url) => {
     const key = normalizeUrl(url);
@@ -77,6 +83,7 @@ export const gatedSiteFocus = (pages: FocusPage[], startUrl: string, report: Sit
     report: buildSiteFocusReport(eligible, startUrl, {
       language: report.model.language || undefined,
       forceLexical: report.flags.fallbackMode === 'lexical',
+      ...(embeddings ? { embeddings } : {}),
       now: report.generatedAt,
       ...(manualTopic ? { manualTopic } : {}),
       ...(anchorUrls.length ? { anchorUrls } : {}),
@@ -84,12 +91,17 @@ export const gatedSiteFocus = (pages: FocusPage[], startUrl: string, report: Sit
   };
 };
 
+const withEmbedding = (set: EmbeddingSet | undefined, url: string): { embedding?: ArrayLike<number> } => {
+  const embedding = pageVectorFrom(set, url);
+  return embedding ? { embedding } : {};
+};
+
 export const coreKeysOf = (report: SiteFocusReport): Set<string> =>
   new Set(Object.entries(report.model.termCluster).filter(([, id]) => id === report.model.coreClusterId).map(([key]) => key));
 
 /** Analysed pages of a crawl joined with their Site Focus scores, vectors and heading keys. */
-export const buildContext = (pages: FocusPage[], startUrl: string, report: SiteFocusReport): AuthorityContext => {
-  const scoped = gatedSiteFocus(pages, startUrl, report);
+export const buildContext = (pages: FocusPage[], startUrl: string, report: SiteFocusReport, embeddings?: EmbeddingSet): AuthorityContext => {
+  const scoped = gatedSiteFocus(pages, startUrl, report, embeddings);
   const language = scoped.report.model.language || '';
   const eligible = scoped.pages;
   const items = prepare(eligible, startUrl, language || undefined).filter((item) => !item.skipped);
@@ -105,7 +117,7 @@ export const buildContext = (pages: FocusPage[], startUrl: string, report: SiteF
     const h1 = unigramKeys((heads?.h1 ?? []).join(' ') || item.page.title || '', language);
     const headings = [...(heads?.h2 ?? []), ...(heads?.h3 ?? [])].map((text) => unigramKeys(text, language));
     const zone = new Set([...unigramKeys(item.page.title ?? '', language), ...h1, ...headings.flatMap((set) => [...set])]);
-    out.push({ url, page: item.page, focus, vector: tfidfVector(item.terms, stats), zone, h1, headings, keys: new Set(item.terms.entries.keys()), date: validDate(item.page.content_date) });
+    out.push({ url, page: item.page, focus, vector: tfidfVector(item.terms, stats), zone, h1, headings, keys: new Set(item.terms.entries.keys()), date: validDate(item.page.content_date), ...withEmbedding(embeddings, url) });
   });
   return { language, pages: out, byUrl: new Map(out.map((entry) => [entry.url, entry])), coreKeys };
 };

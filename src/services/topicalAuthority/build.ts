@@ -1,5 +1,7 @@
 import type { FocusPage, SiteFocusReport } from '@/services/siteFocus';
-import { cannibalizationIndex, findCannibalization } from './cannibal';
+import { describeSource } from '@/services/semanticSource/similarity';
+import type { EmbeddingSet } from '@/services/semanticSource/types';
+import { cannibalizationIndex, findCannibalization, type SimilarityUsage } from './cannibal';
 import { buildContext, eligiblePages, type AuthorityContext, type AuthorityPage } from './context';
 import { contentDepth, mapCoverage, pillarCoverage, topicCoverageRatio } from './coverage';
 import { measureFreshness } from './freshness';
@@ -9,7 +11,12 @@ import { auditSilo, contentEdges, groupByDirectory } from './silo';
 import { splitTemplates } from './templates';
 import { TAS_VERSION, type AuthorityWarning, type ReferenceTaxonomy, type SubtopicCoverage, type TopicalAuthorityReport } from './types';
 
-export interface AuthorityOptions { taxonomy?: ReferenceTaxonomy | null; now?: string }
+export interface AuthorityOptions {
+  taxonomy?: ReferenceTaxonomy | null;
+  now?: string;
+  /** Shared embedding set (#86); its page vectors join cannibalization similarity. Without it TAS is `tfidf-only`. */
+  embeddings?: EmbeddingSet;
+}
 
 const EMPTY_AUTHORITY_TCR = 50;
 const EMPTY_AUTHORITY_DEPTH = 30;
@@ -28,14 +35,15 @@ const groupByPillar = (coverage: SubtopicCoverage[], context: AuthorityContext):
 export const buildAuthorityReport = (pages: FocusPage[], startUrl: string, sfs: SiteFocusReport, options: AuthorityOptions = {}): TopicalAuthorityReport => {
   const now = options.now ?? new Date().toISOString();
   const taxonomy = options.taxonomy ?? null;
-  const context = buildContext(pages, startUrl, sfs);
+  const context = buildContext(pages, startUrl, sfs, options.embeddings);
   const { representatives, duplicates } = splitTemplates(eligiblePages(context));
   const mapped = taxonomy ? mapCoverage(representatives, context, taxonomy) : [];
   const silo = auditSilo(context, representatives, taxonomy ? groupByPillar(mapped, context) : groupByDirectory(representatives));
   const edges = contentEdges(context);
   const inbound = new Map<string, number>();
   edges.forEach((edge) => inbound.set(edge.to, (inbound.get(edge.to) ?? 0) + 1));
-  const cannibalization = findCannibalization(representatives, context, mapped, inbound);
+  const usage: SimilarityUsage = { pairs: 0 };
+  const cannibalization = findCannibalization(representatives, context, mapped, inbound, usage);
   const index = cannibalizationIndex(cannibalization, representatives.length);
   const clashing = new Set(cannibalization.flatMap((group) => (group.subtopicId ? [group.subtopicId] : [])));
   const coverage = mapped.map((row): SubtopicCoverage => (clashing.has(row.subtopicId) ? { ...row, status: 'cannibalized' } : row));
@@ -61,5 +69,6 @@ export const buildAuthorityReport = (pages: FocusPage[], startUrl: string, sfs: 
     pillarCoverage: taxonomy ? pillarCoverage(coverage, taxonomy) : [], silo, cannibalization, freshness,
     recommendations: buildAuthorityRecommendations({ coverage, pillars, sfs: sfs.score, silo, cannibalization, cannibalizationIndex: index, freshness, pillarLabels: labels }),
     warnings, templateDuplicates: duplicates, taxonomy, pageCount: context.pages.length, generatedAt: now, version: TAS_VERSION,
+    similaritySource: describeSource(sfs.flags.fallbackMode === 'lexical', usage.pairs, options.embeddings, false),
   };
 };

@@ -1,4 +1,5 @@
 import { buildSiteFocusReport } from '@/services/siteFocus';
+import { summarizeSerpEvidence, type SerpEvidence, type SerpEvidenceSummary } from '@/services/serpSnapshot';
 import { buildGaps, buildInsights, buildRanking, industryAverage, summarize, targetFor } from './analysis';
 import { hostOf, pickCompetitors, type DomainCandidate } from './domains';
 import type { BenchmarkDeps, BenchmarkInput, BenchmarkOutcome, CompetitorResult, SerpHit } from './types';
@@ -7,6 +8,8 @@ export const DEFAULT_QUERIES = 3;
 export const DEFAULT_COMPETITORS = 10;
 export const DEFAULT_PAGES = 20;
 export const DEFAULT_CONCURRENCY = 2;
+
+const withEvidence = (summary: SerpEvidenceSummary | null): { serpEvidence?: SerpEvidenceSummary } => (summary ? { serpEvidence: summary } : {});
 
 const messageOf = (error: unknown): string => (error instanceof Error ? error.message : String(error));
 
@@ -63,6 +66,7 @@ export const runBenchmark = async (deps: BenchmarkDeps, input: BenchmarkInput): 
 
   const hits: SerpHit[][] = [];
   const sources = new Set<string>();
+  const evidence: SerpEvidence[] = [];
   let lastError = '';
   for (const [index, query] of queries.entries()) {
     if (input.signal?.aborted) return { status: 'cancelled' };
@@ -70,6 +74,7 @@ export const runBenchmark = async (deps: BenchmarkDeps, input: BenchmarkInput): 
     try {
       const response = await fetchSerp(query, input.signal);
       sources.add(response.source);
+      if (response.evidence) evidence.push(response.evidence);
       hits.push(response.hits);
     } catch (error) {
       lastError = messageOf(error);
@@ -101,6 +106,7 @@ export const runBenchmark = async (deps: BenchmarkDeps, input: BenchmarkInput): 
     report: {
       queries,
       serpSource: [...sources].sort().join(', '),
+      ...withEvidence(summarizeSerpEvidence(evidence)),
       ranking,
       ownRank: ranking.findIndex((row) => row.isOwn) + 1,
       competitors,

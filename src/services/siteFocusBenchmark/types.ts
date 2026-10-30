@@ -1,9 +1,11 @@
 import type { CodeParams, FocusPage, SfsBand, SiteFocusReport } from '@/services/siteFocus';
+import type { SerpEvidence, SerpEvidenceSummary } from '@/services/serpSnapshot';
 
 /** Benchmark contracts. Wording is code plus params: the UI localizes. */
 
 export interface SerpHit { rank: number; url: string; domain: string }
-export interface SerpResponse { source: string; hits: SerpHit[] }
+/** `evidence` keeps the full SERP provenance (#85/#86); absent for custom fetchers. */
+export interface SerpResponse { source: string; hits: SerpHit[]; evidence?: SerpEvidence }
 
 export interface CrawlRequest { url: string; maxPages: number; signal?: AbortSignal; onPages?: (done: number) => void }
 export interface CrawlResponse { pages: FocusPage[]; cancelled?: boolean }
@@ -81,6 +83,8 @@ export interface CompetitorGap {
 export interface BenchmarkReport {
   queries: string[];
   serpSource: string;
+  /** Provider, availability and real K across queries; absent when no fetcher reported evidence. */
+  serpEvidence?: SerpEvidenceSummary;
   ranking: RankingRow[];
   ownRank: number;
   competitors: CompetitorResult[];

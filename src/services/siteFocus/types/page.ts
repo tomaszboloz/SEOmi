@@ -1,3 +1,4 @@
+import type { SimilaritySource } from '@/services/semanticSource/types';
 import type { AlignmentLevel, FallbackMode, PagePriority, PageStatus, PageType, Playbook, SkipReason } from './base';
 
 export interface TermCoverage { term: string; coveragePct: number; weight: number }
@@ -57,6 +58,8 @@ export interface SiteFlags {
   isLowConfidence: boolean;
   isMultiTopic: boolean;
   fallbackMode: FallbackMode;
+  /** Which similarity produced the report (#86); absent on reports built before it existed. */
+  similaritySource?: SimilaritySource;
   degraded: boolean;
   skippedRenderTimeouts: number;
 }

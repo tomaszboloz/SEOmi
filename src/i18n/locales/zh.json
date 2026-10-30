@@ -7296,6 +7296,7 @@
     }
   },
   "focusBenchmark": {
+    "partialSerp": "搜索结果不完整（每个查询 {{min}}–{{max}} 条自然结果，来源：{{providers}}）。这不是完整的 Google 前 10 名，比较结果仅供参考。",
     "title": "竞争对手基准",
     "intro": "将你的 Site Focus Score 与针对核心主题排名靠前的站点进行比较。SEOmi 会查询搜索结果,以友好的方式(遵守 robots.txt)爬取每个竞争对手的少量页面样本,并用同一套引擎为它们评分。",
     "run": "运行基准",

@@ -70,12 +70,12 @@ export const scorePage = (page: PageTerms, stats: TermStats, model: ScoringModel
   const overlap = Math.min(1, present / Math.min(Math.max(1, model.kCore.length), OVERLAP_SATURATION));
   const drift = total > 0 ? foreignTotal / total : 0;
   const lexicalDrift = tfTotal > 0 ? tfForeign / tfTotal : 0;
-  const raw = mode === 'semantic' ? 0.5 * similarity + 0.3 * overlap - 0.2 * drift : 0.75 * overlap - 0.25 * lexicalDrift;
+  const raw = mode !== 'lexical' ? 0.5 * similarity + 0.3 * overlap - 0.2 * drift : 0.75 * overlap - 0.25 * lexicalDrift;
   return {
     trs: round1(Math.max(0, Math.min(100, raw * 125))),
     similarity: round1(similarity * 100),
     keywordOverlap: round1(overlap * 100),
-    semanticDrift: round1((mode === 'semantic' ? drift : lexicalDrift) * 100),
+    semanticDrift: round1((mode !== 'lexical' ? drift : lexicalDrift) * 100),
     foreignMass, weights,
   };
 };

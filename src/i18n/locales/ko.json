@@ -7296,6 +7296,7 @@
     }
   },
   "focusBenchmark": {
+    "partialSerp": "검색 결과가 일부만 있습니다(쿼리당 자연 검색 결과 {{min}}–{{max}}개, 출처: {{providers}}). 완전한 Google TOP 10이 아니므로 비교는 참고용입니다.",
     "title": "경쟁사 벤치마크",
     "intro": "내 Site Focus Score를 핵심 주제로 검색 상위에 노출되는 사이트와 비교합니다. SEOmi는 검색 결과를 조회하고, 각 경쟁사의 일부 페이지를 예의 바르게(robots.txt 준수) 크롤링한 뒤 동일한 엔진으로 점수를 매깁니다.",
     "run": "벤치마크 실행",

@@ -1,4 +1,5 @@
 import { semanticPageLanguage } from '@/services/semanticText';
+import { describeSource, termSimilarityFrom } from '@/services/semanticSource/similarity';
 import { bandFor, computeSfs } from './aggregate';
 import { applyIndexabilityGate } from './gate';
 import { clusterTerms, siteTotals, topTerms } from './cluster';
@@ -10,7 +11,7 @@ import { buildLinkSuggestions } from './links';
 import { resolveAnchors } from './anchors';
 import { buildRecommendations } from './recommend';
 import { buildTermStats, tfidfVector } from './terms';
-import { SITE_FOCUS_VERSION, type FallbackMode, type FocusPage, type SiteFocusModel, type SiteFocusOptions, type SiteFocusReport } from './types';
+import { SITE_FOCUS_VERSION, type FallbackMode, type FocusPage, type SiteFocusModel, type SiteFocusOptions, type SiteFocusReport, type TermSimilarity } from './types';
 
 const DEGRADED_MAJORITY = 0.5;
 
@@ -34,6 +35,14 @@ const surfaceMap = (items: Prepared[]): Map<string, string> => {
   return new Map([...counts].map(([key, forms]) => [key, [...forms].sort((a, b) => b[1] - a[1] || (a[0] < b[0] ? -1 : 1))[0][0]]));
 };
 
+/** Embedding term vectors first, then the injected hook; either may leave a pair unknown. */
+const similarityHook = (options: SiteFocusOptions): TermSimilarity | undefined => {
+  const fromEmbeddings = termSimilarityFrom(options.embeddings);
+  const custom = options.similarity;
+  if (!fromEmbeddings || !custom) return fromEmbeddings ?? custom;
+  return (left, right) => fromEmbeddings(left, right) ?? custom(left, right);
+};
+
 const record = <T>(map: Map<string, T>, keys: Iterable<string>): Record<string, T> =>
   Object.fromEntries([...keys].filter((key) => map.has(key)).sort().map((key) => [key, map.get(key) as T]));
 
@@ -44,21 +53,24 @@ export const buildSiteFocusReport = (pages: FocusPage[], startUrl: string, optio
   const stats = buildTermStats(live.map((item) => item.terms));
   const vectors = live.map((item) => tfidfVector(item.terms, stats));
   const totals = siteTotals(vectors);
-  const { clusters } = clusterTerms(topTerms(totals), vectors, { cut: options.clusterCut, similarity: options.similarity });
+  const { clusters, similarityPairs } = clusterTerms(topTerms(totals), vectors, { cut: options.clusterCut, similarity: similarityHook(options) });
   const anchors = resolveAnchors(live, vectors, startUrl, options.anchorUrls);
   const selection = chooseCore(clusters, totals, options.manualTopic, language, anchors, options.businessGoal);
   const surfaces = surfaceMap(live);
   const labels = new Map(selection.clusters.map((cluster) => [cluster.id, labelOf(cluster.keys, surfaces)]));
   const termCluster = new Map(selection.clusters.flatMap((cluster) => cluster.keys.map((key): [string, string] => [key, cluster.id])));
   const degradedShare = live.length ? live.filter((item) => item.terms.degraded).length / live.length : 0;
-  const mode: FallbackMode = options.forceLexical || degradedShare > DEGRADED_MAJORITY ? 'lexical' : 'semantic';
+  const lexicalOnly = Boolean(options.forceLexical) || degradedShare > DEGRADED_MAJORITY;
+  // `semantic` is claimed only when a semantic similarity really contributed (#86); TF-IDF alone is `tfidf-only`.
+  const source = describeSource(lexicalOnly, similarityPairs, options.embeddings, Boolean(options.similarity));
+  const mode: FallbackMode = source.mode;
   const model = modelFor(selection.core, selection.kCore, termCluster, totals);
   const context: EvalContext = { stats, model, mode, surfaces, labels, type: typeContext(pages, startUrl) };
   const focus = items.map((item) => evaluatePage(item, context));
   const { score, onTopicRatio } = computeSfs(focus);
   const described = describeClusters(selection.clusters, surfaces, totals);
   const subSites = detectSubSites(described, selection.clusters, items, context, totals);
-  const flags = computeFlags(items, selection.confidence, !!selection.manual, mode, subSites.length > 0);
+  const flags = computeFlags(items, selection.confidence, !!selection.manual, mode, subSites.length > 0, source);
   const gaps = analyzeGaps(items, vectors, selection.core.keys, totals, surfaces, options.competitorTerms ?? [], language);
   const linkSuggestions = buildLinkSuggestions(focus, pages);
   const modelState: SiteFocusModel = {

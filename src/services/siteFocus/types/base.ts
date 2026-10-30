@@ -14,7 +14,8 @@ export type PageStatus = 'strong' | 'moderate' | 'borderline' | 'weak' | 'off-to
 export type PagePriority = 'critical' | 'high' | 'medium' | 'low';
 export type Playbook = 'A' | 'B' | 'C';
 export type SfsBand = 'excellent' | 'good' | 'moderate' | 'weak' | 'critical';
-export type FallbackMode = 'semantic' | 'lexical';
+/** `semantic` only when an embedding or injected similarity really contributed (#86); TF-IDF alone is `tfidf-only`. */
+export type FallbackMode = 'semantic' | 'tfidf-only' | 'lexical';
 export type AlignmentLevel = 'strong' | 'moderate' | 'weak';
 export type SkipReason = 'render-timeout' | 'request-error' | 'non-topical-status' | 'non-html' | 'no-content' | 'noindex' | 'canonicalized';
 export type CodeParams = Record<string, number | string>;
