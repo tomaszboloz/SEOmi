@@ -70,6 +70,8 @@ mod tests_focus_protection;
 #[cfg(test)]
 mod tests_focus_segments;
 #[cfg(test)]
+mod tests_focus_visual;
+#[cfg(test)]
 mod tests_link_zones;
 #[cfg(test)]
 mod tests_more;
