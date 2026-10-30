@@ -69,6 +69,12 @@ pub fn notes(focus: &Value) -> Vec<String> {
             &[arg(core.get("manual_input"))],
         ));
     }
+    let goal = core.get("business_goal");
+    if core.get("mode").and_then(Value::as_str) == Some("goal") {
+        notes.push(coded(NOTE, "goalTopic", &[arg(goal)]));
+    } else if core.get("goal_matched").and_then(Value::as_bool) == Some(false) {
+        notes.push(coded(NOTE, "goalUnmatched", &[arg(goal)]));
+    }
     let sources = core.get("anchor_source_count");
     if core.get("mode").and_then(Value::as_str) == Some("anchored") {
         notes.push(coded(NOTE, "anchoredTopic", &[arg(sources)]));

@@ -6030,7 +6030,9 @@
           "degraded": "Niektóre strony miały ograniczone dane, więc ich wyniki mogą być mniej precyzyjne.",
           "unmatchedTopic": "Żadna strona nie pasuje do tematu „{{0}}”. Zamiast niego użyto wykrytego tematu.",
           "anchoredTopic": "Temat główny wybrano ze strony głównej i stron-kotwic (stron: {{0}}).",
-          "anchorsMissing": "Strony-kotwice nieznalezione w tym crawlu: {{0}}."
+          "anchorsMissing": "Strony-kotwice nieznalezione w tym crawlu: {{0}}.",
+          "goalTopic": "Temat przewodni wybrano na podstawie celu biznesowego „{{0}}”.",
+          "goalUnmatched": "Cel biznesowy „{{0}}” nie pasuje do żadnej przeskanowanej treści; temat wybrano bez niego."
         },
         "rec": {
           "remove-offtopic": "Zweryfikuj {{0}} stron spoza tematu przed działaniem: najpierw sprawdź ruch, konwersje i linki. Strony bez takich dowodów to kandydaci do 301 na adekwatną stronę lub przepisania. Nic nie jest usuwane automatycznie. Potencjał: +{{1}} pkt.",
@@ -6975,7 +6977,8 @@
       "mode": {
         "auto": "Tryb tematu: wykryty z całej treści",
         "manual": "Tryb tematu: ustawiony ręcznie",
-        "anchored": "Tryb tematu: strona główna i strony-kotwice"
+        "anchored": "Tryb tematu: strona główna i strony-kotwice",
+        "goal": "Tryb tematu: cel biznesowy"
       },
       "inputLabel": "Strony-kotwice (jeden URL w wierszu)",
       "placeholder": "https://example.com/oferta",
@@ -7188,7 +7191,8 @@
       "mode": {
         "auto": "wykrywanie z całej treści",
         "manual": "temat ręczny",
-        "anchored": "strona główna i kotwice"
+        "anchored": "strona główna i kotwice",
+        "goal": "cel biznesowy"
       },
       "title": "Historia wyniku",
       "empty": "Wykonaj co najmniej dwie pełne analizy, aby zobaczyć trend.",
@@ -7266,6 +7270,27 @@
         "owner-confirms-value": "właściciel potwierdza wartość strony",
         "not-via-robots-txt": "ustawione na stronie, nie w robots.txt",
         "business-review": "człowiek ocenił skutki biznesowe"
+      }
+    },
+    "goal": {
+      "title": "Cel biznesowy",
+      "inputLabel": "Co ta witryna ma sprzedawać lub osiągać? (jedno zdanie)",
+      "placeholder": "na przykład: sprzedaż pomp insulinowych dla przychodni",
+      "save": "Zapisz cel",
+      "help": "Cel wybiera klaster tematyczny, który ma z nim wspólne słowa: po temacie ręcznym, a przed stronami-kotwicami. Nigdy nie staje się tematem sam z siebie.",
+      "needsProject": "Cele biznesowe są zapisywane per projekt. Otwórz ten crawl z projektu, aby go ustawić.",
+      "none": "Nie ustawiono celu biznesowego.",
+      "applied": "Cel biznesowy wybrał temat przewodni: {{input}}",
+      "manualWins": "Temat ustawiony ręcznie ma pierwszeństwo przed celem biznesowym.",
+      "unmatched": {
+        "auto": "Żadne słowo z celu nie występuje w przeskanowanej treści, więc temat wykryto z całej treści.",
+        "anchored": "Żadne słowo z celu nie występuje w przeskanowanej treści, więc temat pochodzi ze strony głównej i stron-kotwic."
+      },
+      "error": {
+        "too-short": "Wpisz co najmniej 3 znaki.",
+        "too-long": "Cel może mieć najwyżej {{max}} znaków.",
+        "no-words": "Użyj słów, nie samych liczb ani symboli.",
+        "looks-like-url": "To wygląda na adres URL. Dodaj strony w polu stron-kotwic."
       }
     }
   },

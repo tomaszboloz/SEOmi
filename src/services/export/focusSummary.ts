@@ -18,7 +18,9 @@ export interface FocusPdfSummary {
   core_topic: {
     label: string; terms: Array<{ term: string; coverage_pct: number }>; manual_input?: string; manual_matched?: boolean;
     /** How the topic was chosen; anchor counts include the home page. */
-    mode?: 'auto' | 'manual' | 'anchored'; anchor_source_count?: number; anchor_missing_count?: number;
+    mode?: 'auto' | 'manual' | 'goal' | 'anchored'; anchor_source_count?: number; anchor_missing_count?: number;
+    /** Explicit business goal as validated (#82) and whether it picked the topic. */
+    business_goal?: string; goal_matched?: boolean; goal_applied?: boolean;
   };
   flags: { low_confidence: boolean; multi_topic: boolean; lexical_fallback: boolean; degraded: boolean; skipped_render_timeouts: number };
   counts: { scored: number; skipped: number; off_topic: number; borderline: number; strong: number };
@@ -42,6 +44,7 @@ export const summarizeSiteFocus = (report: SiteFocusReport): FocusPdfSummary => 
   const worst = [...content].sort(byWorst).slice(0, FOCUS_PDF_PAGES);
   const manual = report.coreTopic.manualOverride;
   const anchors = report.coreTopic.anchors;
+  const goal = report.coreTopic.businessGoal;
   return {
     score: report.score,
     band: report.band,
@@ -55,6 +58,7 @@ export const summarizeSiteFocus = (report: SiteFocusReport): FocusPdfSummary => 
       mode: report.coreTopic.mode ?? 'auto',
       ...(anchors?.applied ? { anchor_source_count: anchors.sources.length } : {}),
       ...(anchors?.missing.length ? { anchor_missing_count: anchors.missing.length } : {}),
+      ...(goal ? { business_goal: goal.input, goal_matched: goal.matched, goal_applied: goal.applied } : {}),
     },
     flags: {
       low_confidence: report.flags.isLowConfidence,

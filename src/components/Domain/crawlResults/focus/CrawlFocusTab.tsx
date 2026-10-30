@@ -6,6 +6,7 @@ import type { SfsSnapshot, SiteFocusReport } from '@/services/siteFocus';
 import { buildHistorySeries, buildWeeklyReport, parseAnchorInput, validFocusProject } from '@/services/siteFocusMonitoring';
 import type { CrawledPageSummary, CrawlRunRecord } from '@/types';
 import { Empty } from '../CrawlViewPrimitives';
+import { BusinessGoalPanel } from './BusinessGoalPanel';
 import { CoreAnchorsPanel } from './CoreAnchorsPanel';
 import { CoreTopicPanel } from './CoreTopicPanel';
 import { FocusBanners } from './FocusBanners';
@@ -72,9 +73,9 @@ export const CrawlFocusTab = ({ pages, startUrl, run, projectId, history, benchm
   const base = focus.report ?? local;
   const report = useMemo(
     () => (base && (competitorTerms.length || includeGated)
-      ? buildSiteFocusReport(pages, startUrl, { manualTopic: focus.manualTopic ?? (deferredTopic || undefined), anchorUrls, competitorTerms, includeNonIndexable: includeGated, now: base.generatedAt })
+      ? buildSiteFocusReport(pages, startUrl, { manualTopic: focus.manualTopic ?? (deferredTopic || undefined), anchorUrls, businessGoal: focus.businessGoal, competitorTerms, includeNonIndexable: includeGated, now: base.generatedAt })
       : base),
-    [base, competitorTerms, pages, startUrl, focus.manualTopic, deferredTopic, anchorUrls, includeGated],
+    [base, competitorTerms, pages, startUrl, focus.manualTopic, deferredTopic, anchorUrls, focus.businessGoal, includeGated],
   );
   useEffect(() => { if (report) onReport?.(report); }, [report, onReport]);
 
@@ -112,6 +113,7 @@ export const CrawlFocusTab = ({ pages, startUrl, run, projectId, history, benchm
         <div className="space-y-4">
           <CoreTopicPanel coreTopic={report.coreTopic} coveragePct={report.onTopicRatio} confidence={report.confidence} manualTopic={draft} onManualTopicChange={setDraft} />
           <CoreAnchorsPanel coreTopic={report.coreTopic} value={anchorDraft} onChange={setAnchorDraft} />
+          <BusinessGoalPanel key={projectId ?? ''} coreTopic={report.coreTopic} saved={focus.businessGoal} persisted={persisted} onSave={focus.setBusinessGoal} />
         </div>
         <FocusMetricsStrip report={report} />
       </div>

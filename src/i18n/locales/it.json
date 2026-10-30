@@ -6030,7 +6030,9 @@
           "degraded": "Alcune pagine avevano dati limitati, quindi i loro punteggi potrebbero essere meno precisi.",
           "unmatchedTopic": "Nessuna pagina corrisponde all'argomento \"{{0}}\". Viene usato l'argomento rilevato.",
           "anchoredTopic": "L'argomento principale è stato scelto da home page e pagine àncora ({{0}} pagine).",
-          "anchorsMissing": "Pagine àncora non trovate in questa scansione: {{0}}."
+          "anchorsMissing": "Pagine àncora non trovate in questa scansione: {{0}}.",
+          "goalTopic": "L’argomento principale è stato scelto dall’obiettivo di business «{{0}}».",
+          "goalUnmatched": "L’obiettivo di business «{{0}}» non corrisponde a nessun contenuto scansionato; l’argomento è stato scelto senza di esso."
         },
         "rec": {
           "remove-offtopic": "Verifica {{0}} pagine off-topic prima di agire: controlla prima traffico, conversioni e link. Le pagine senza questi dati sono candidate a un 301 verso una pagina pertinente o a una riscrittura. Nulla viene rimosso automaticamente. Potenziale: +{{1}} punti.",
@@ -6975,7 +6977,8 @@
       "mode": {
         "auto": "Modalità argomento: rilevato da tutti i contenuti",
         "manual": "Modalità argomento: impostato manualmente",
-        "anchored": "Modalità argomento: home page e pagine àncora"
+        "anchored": "Modalità argomento: home page e pagine àncora",
+        "goal": "Modalità argomento: obiettivo di business"
       },
       "inputLabel": "Pagine àncora (un URL per riga)",
       "placeholder": "https://example.com/offerta",
@@ -7188,7 +7191,8 @@
       "mode": {
         "auto": "rilevamento da tutti i contenuti",
         "manual": "argomento manuale",
-        "anchored": "home e pagine àncora"
+        "anchored": "home e pagine àncora",
+        "goal": "obiettivo di business"
       },
       "title": "Storico del punteggio",
       "empty": "Esegui almeno due analisi complete per vedere l'andamento.",
@@ -7266,6 +7270,27 @@
         "owner-confirms-value": "il proprietario conferma il valore della pagina",
         "not-via-robots-txt": "impostato nella pagina, non in robots.txt",
         "business-review": "una persona ha valutato l’impatto sul business"
+      }
+    },
+    "goal": {
+      "title": "Obiettivo di business",
+      "inputLabel": "Cosa deve vendere o ottenere questo sito? (una frase)",
+      "placeholder": "per esempio: vendere microinfusori di insulina alle cliniche",
+      "save": "Salva obiettivo",
+      "help": "L’obiettivo sceglie il cluster tematico che condivide le sue parole, dopo un argomento manuale e prima delle pagine àncora. Non diventa mai un argomento da solo.",
+      "needsProject": "Gli obiettivi di business sono salvati per progetto. Apri questa scansione da un progetto per impostarne uno.",
+      "none": "Nessun obiettivo di business impostato.",
+      "applied": "L’obiettivo di business ha scelto l’argomento principale: {{input}}",
+      "manualWins": "Il tuo argomento manuale ha la precedenza sull’obiettivo di business.",
+      "unmatched": {
+        "auto": "Nessuna parola dell’obiettivo compare nei contenuti scansionati, quindi l’argomento viene rilevato da tutti i contenuti.",
+        "anchored": "Nessuna parola dell’obiettivo compare nei contenuti scansionati, quindi l’argomento deriva dalla home page e dalle pagine àncora."
+      },
+      "error": {
+        "too-short": "Inserisci almeno 3 caratteri.",
+        "too-long": "L’obiettivo non può superare {{max}} caratteri.",
+        "no-words": "Usa parole, non solo numeri o simboli.",
+        "looks-like-url": "Sembra un URL. Aggiungi le pagine nel campo delle pagine àncora."
       }
     }
   },

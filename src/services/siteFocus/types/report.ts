@@ -43,6 +43,8 @@ export interface SiteFocusOptions {
   manualTopic?: string | string[];
   /** Key offer pages that, with the home page, define the Core Topic when no manual topic is set. */
   anchorUrls?: string[];
+  /** Explicit business goal (#82); picks the matching cluster after a manual topic, before anchors. */
+  businessGoal?: string;
   /** Pluggable term-to-term similarity (e.g. embeddings). Blended into term clustering. */
   similarity?: TermSimilarity;
   language?: string;

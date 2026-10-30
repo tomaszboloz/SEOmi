@@ -6030,7 +6030,9 @@
           "degraded": "Bei einigen Seiten waren die Daten begrenzt, daher können ihre Werte ungenauer sein.",
           "unmatchedTopic": "Keine Seite passt zum Thema „{{0}}“. Stattdessen wird das erkannte Thema verwendet.",
           "anchoredTopic": "Das Kernthema wurde aus Startseite und Ankerseiten gewählt ({{0}} Seiten).",
-          "anchorsMissing": "In diesem Crawl nicht gefundene Ankerseiten: {{0}}."
+          "anchorsMissing": "In diesem Crawl nicht gefundene Ankerseiten: {{0}}.",
+          "goalTopic": "Das Kernthema wurde durch das Geschäftsziel „{{0}}“ gewählt.",
+          "goalUnmatched": "Das Geschäftsziel „{{0}}“ passte zu keinem gecrawlten Inhalt; das Thema wurde ohne es gewählt."
         },
         "rec": {
           "remove-offtopic": "{{0}} themenfremde Seiten vor dem Handeln prüfen: zuerst Traffic, Conversions und Links prüfen. Seiten ohne diese Belege kommen für eine 301 auf eine passende Seite oder eine Überarbeitung infrage. Nichts wird automatisch entfernt. Potenzial: +{{1}} Punkte.",
@@ -6975,7 +6977,8 @@
       "mode": {
         "auto": "Themenmodus: aus allen Inhalten erkannt",
         "manual": "Themenmodus: manuell festgelegt",
-        "anchored": "Themenmodus: Startseite und Ankerseiten"
+        "anchored": "Themenmodus: Startseite und Ankerseiten",
+        "goal": "Themenmodus: Geschäftsziel"
       },
       "inputLabel": "Ankerseiten (eine URL pro Zeile)",
       "placeholder": "https://example.com/angebot",
@@ -7188,7 +7191,8 @@
       "mode": {
         "auto": "Erkennung aus allen Inhalten",
         "manual": "manuelles Thema",
-        "anchored": "Startseite und Ankerseiten"
+        "anchored": "Startseite und Ankerseiten",
+        "goal": "Geschäftsziel"
       },
       "title": "Verlauf des Werts",
       "empty": "Führe mindestens zwei vollständige Analysen durch, um den Trend zu sehen.",
@@ -7266,6 +7270,27 @@
         "owner-confirms-value": "der Inhaber bestätigt den Wert der Seite",
         "not-via-robots-txt": "in der Seite gesetzt, nicht in robots.txt",
         "business-review": "ein Mensch hat die geschäftlichen Folgen geprüft"
+      }
+    },
+    "goal": {
+      "title": "Geschäftsziel",
+      "inputLabel": "Was soll diese Website verkaufen oder erreichen? (ein Satz)",
+      "placeholder": "zum Beispiel: Insulinpumpen an Kliniken verkaufen",
+      "save": "Ziel speichern",
+      "help": "Das Ziel wählt den Themencluster, der seine Wörter enthält – nach einem manuellen Thema und vor Ankerseiten. Es wird nie selbst zum Thema.",
+      "needsProject": "Geschäftsziele werden pro Projekt gespeichert. Öffne diesen Crawl aus einem Projekt, um eines festzulegen.",
+      "none": "Kein Geschäftsziel festgelegt.",
+      "applied": "Das Geschäftsziel hat das Kernthema gewählt: {{input}}",
+      "manualWins": "Dein manuelles Thema hat Vorrang vor dem Geschäftsziel.",
+      "unmatched": {
+        "auto": "Keines der Wörter des Ziels kommt im gecrawlten Inhalt vor, daher wird das Thema aus allen Inhalten erkannt.",
+        "anchored": "Keines der Wörter des Ziels kommt im gecrawlten Inhalt vor, daher stammt das Thema von der Startseite und den Ankerseiten."
+      },
+      "error": {
+        "too-short": "Gib mindestens 3 Zeichen ein.",
+        "too-long": "Das Ziel darf höchstens {{max}} Zeichen haben.",
+        "no-words": "Verwende Wörter, nicht nur Zahlen oder Symbole.",
+        "looks-like-url": "Das sieht wie eine URL aus. Füge Seiten im Feld für Ankerseiten hinzu."
       }
     }
   },

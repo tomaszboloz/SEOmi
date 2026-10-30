@@ -6030,7 +6030,9 @@
           "degraded": "Algunas páginas tenían datos limitados, por lo que sus puntuaciones pueden ser menos precisas.",
           "unmatchedTopic": "Ninguna página coincidió con el tema \"{{0}}\". Se usa el tema detectado.",
           "anchoredTopic": "El tema principal se eligió a partir de la página de inicio y las páginas ancla ({{0}} páginas).",
-          "anchorsMissing": "Páginas ancla no encontradas en este rastreo: {{0}}."
+          "anchorsMissing": "Páginas ancla no encontradas en este rastreo: {{0}}.",
+          "goalTopic": "El tema principal se eligió según el objetivo de negocio «{{0}}».",
+          "goalUnmatched": "El objetivo de negocio «{{0}}» no coincidió con ningún contenido rastreado; el tema se eligió sin él."
         },
         "rec": {
           "remove-offtopic": "Revisa {{0}} páginas off-topic antes de actuar: comprueba primero tráfico, conversiones y enlaces. Las páginas sin esa evidencia son candidatas a un 301 hacia una página relevante o a una reescritura. Nada se elimina automáticamente. Potencial: +{{1}} puntos.",
@@ -6975,7 +6977,8 @@
       "mode": {
         "auto": "Modo del tema: detectado de todo el contenido",
         "manual": "Modo del tema: definido manualmente",
-        "anchored": "Modo del tema: página de inicio y páginas ancla"
+        "anchored": "Modo del tema: página de inicio y páginas ancla",
+        "goal": "Modo del tema: objetivo de negocio"
       },
       "inputLabel": "Páginas ancla (una URL por línea)",
       "placeholder": "https://example.com/oferta",
@@ -7188,7 +7191,8 @@
       "mode": {
         "auto": "detección en todo el contenido",
         "manual": "tema manual",
-        "anchored": "inicio y páginas ancla"
+        "anchored": "inicio y páginas ancla",
+        "goal": "objetivo de negocio"
       },
       "title": "Historial de puntuación",
       "empty": "Ejecuta al menos dos análisis completos para ver la tendencia.",
@@ -7266,6 +7270,27 @@
         "owner-confirms-value": "el propietario confirma que la página tiene valor",
         "not-via-robots-txt": "se aplica en la página, no en robots.txt",
         "business-review": "una persona revisó el impacto en el negocio"
+      }
+    },
+    "goal": {
+      "title": "Objetivo de negocio",
+      "inputLabel": "¿Qué debe vender o conseguir este sitio? (una frase)",
+      "placeholder": "por ejemplo: vender bombas de insulina a clínicas",
+      "save": "Guardar objetivo",
+      "help": "El objetivo elige el clúster temático que comparte sus palabras, después de un tema manual y antes de las páginas ancla. Nunca se convierte en tema por sí solo.",
+      "needsProject": "Los objetivos de negocio se guardan por proyecto. Abre este rastreo desde un proyecto para definir uno.",
+      "none": "No hay objetivo de negocio.",
+      "applied": "El objetivo de negocio eligió el tema principal: {{input}}",
+      "manualWins": "Tu tema manual tiene prioridad sobre el objetivo de negocio.",
+      "unmatched": {
+        "auto": "Ninguna palabra del objetivo aparece en el contenido rastreado, así que el tema se detecta a partir de todo el contenido.",
+        "anchored": "Ninguna palabra del objetivo aparece en el contenido rastreado, así que el tema proviene de la página de inicio y las páginas ancla."
+      },
+      "error": {
+        "too-short": "Escribe al menos 3 caracteres.",
+        "too-long": "El objetivo no puede superar {{max}} caracteres.",
+        "no-words": "Usa palabras, no solo números o símbolos.",
+        "looks-like-url": "Parece una URL. Añade páginas en el campo de páginas ancla."
       }
     }
   },

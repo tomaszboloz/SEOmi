@@ -6030,7 +6030,9 @@
           "degraded": "Some pages had limited data, so their scores may be less precise.",
           "unmatchedTopic": "No pages matched the topic \"{{0}}\". The detected topic is used instead.",
           "anchoredTopic": "The core topic was chosen from the home page and anchor pages ({{0}} pages).",
-          "anchorsMissing": "Anchor pages not found in this crawl: {{0}}."
+          "anchorsMissing": "Anchor pages not found in this crawl: {{0}}.",
+          "goalTopic": "The core topic was chosen by the business goal \"{{0}}\".",
+          "goalUnmatched": "The business goal \"{{0}}\" matched no crawled content; the topic was chosen without it."
         },
         "rec": {
           "remove-offtopic": "Review {{0}} off-topic pages before acting: check traffic, conversions and links first. Pages without that evidence are candidates for a 301 to a relevant page or a rewrite. Nothing is removed automatically. Potential: +{{1}} points.",
@@ -6975,7 +6977,8 @@
       "mode": {
         "auto": "Topic mode: detected from all content",
         "manual": "Topic mode: set manually",
-        "anchored": "Topic mode: home page and anchor pages"
+        "anchored": "Topic mode: home page and anchor pages",
+        "goal": "Topic mode: business goal"
       },
       "inputLabel": "Anchor pages (one URL per line)",
       "placeholder": "https://example.com/offer",
@@ -7188,7 +7191,8 @@
       "mode": {
         "auto": "detection from all content",
         "manual": "manual topic",
-        "anchored": "home and anchor pages"
+        "anchored": "home and anchor pages",
+        "goal": "business goal"
       },
       "title": "Score history",
       "empty": "Run at least two full analyses to see the trend.",
@@ -7266,6 +7270,27 @@
         "owner-confirms-value": "the owner confirms the page has value",
         "not-via-robots-txt": "set in the page, not in robots.txt",
         "business-review": "a person reviewed the business impact"
+      }
+    },
+    "goal": {
+      "title": "Business goal",
+      "inputLabel": "What should this site sell or achieve? (one sentence)",
+      "placeholder": "for example: sell insulin pumps to clinics",
+      "save": "Save goal",
+      "help": "The goal picks the topic cluster that shares its words, after a manual topic and before anchor pages. It never becomes a topic on its own.",
+      "needsProject": "Business goals are saved per project. Open this crawl from a project to set one.",
+      "none": "No business goal set.",
+      "applied": "Business goal picked the core topic: {{input}}",
+      "manualWins": "Your manual topic takes precedence over the business goal.",
+      "unmatched": {
+        "auto": "None of the goal's words appear in the crawled content, so the topic is detected from all content instead.",
+        "anchored": "None of the goal's words appear in the crawled content, so the topic comes from the home page and anchor pages instead."
+      },
+      "error": {
+        "too-short": "Enter at least 3 characters.",
+        "too-long": "Keep the goal under {{max}} characters.",
+        "no-words": "Use words, not only numbers or symbols.",
+        "looks-like-url": "This looks like a URL. Add pages in the anchor pages field instead."
       }
     }
   },

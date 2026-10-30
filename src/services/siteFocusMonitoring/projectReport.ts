@@ -6,6 +6,6 @@ import { projectFocusOptions } from './focusOptions';
 export { projectFocusOptions, type ProjectFocusOptions } from './focusOptions';
 
 export const buildProjectRunReport = (run: CrawlRunRecord, projectId: string | null | undefined, now?: string): SiteFocusReport => {
-  const { manualTopic, anchorUrls } = projectFocusOptions(projectId);
-  return buildRunReport(run, manualTopic, now, anchorUrls);
+  const { manualTopic, anchorUrls, businessGoal } = projectFocusOptions(projectId);
+  return buildRunReport(run, manualTopic, now, anchorUrls, businessGoal);
 };

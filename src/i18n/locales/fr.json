@@ -6030,7 +6030,9 @@
           "degraded": "Certaines pages disposaient de données limitées ; leurs scores peuvent donc être moins précis.",
           "unmatchedTopic": "Aucune page ne correspond au sujet « {{0}} ». Le sujet détecté est utilisé à la place.",
           "anchoredTopic": "Le sujet principal a été choisi à partir de la page d’accueil et des pages d’ancrage ({{0}} pages).",
-          "anchorsMissing": "Pages d’ancrage introuvables dans ce crawl : {{0}}."
+          "anchorsMissing": "Pages d’ancrage introuvables dans ce crawl : {{0}}.",
+          "goalTopic": "Le sujet principal a été choisi par l’objectif commercial « {{0}} ».",
+          "goalUnmatched": "L’objectif commercial « {{0}} » ne correspond à aucun contenu exploré ; le sujet a été choisi sans lui."
         },
         "rec": {
           "remove-offtopic": "Vérifier {{0}} pages hors sujet avant d'agir : contrôler d'abord le trafic, les conversions et les liens. Les pages sans ces preuves sont candidates à une 301 vers une page pertinente ou à une réécriture. Rien n'est supprimé automatiquement. Potentiel : +{{1}} points.",
@@ -6975,7 +6977,8 @@
       "mode": {
         "auto": "Mode du thème : détecté sur l’ensemble du contenu",
         "manual": "Mode du thème : défini manuellement",
-        "anchored": "Mode du thème : page d’accueil et pages d’ancrage"
+        "anchored": "Mode du thème : page d’accueil et pages d’ancrage",
+        "goal": "Mode du sujet : objectif commercial"
       },
       "inputLabel": "Pages d’ancrage (une URL par ligne)",
       "placeholder": "https://example.com/offre",
@@ -7188,7 +7191,8 @@
       "mode": {
         "auto": "détection sur tout le contenu",
         "manual": "sujet manuel",
-        "anchored": "accueil et pages d’ancrage"
+        "anchored": "accueil et pages d’ancrage",
+        "goal": "objectif commercial"
       },
       "title": "Historique du score",
       "empty": "Lancez au moins deux analyses complètes pour voir la tendance.",
@@ -7266,6 +7270,27 @@
         "owner-confirms-value": "le propriétaire confirme la valeur de la page",
         "not-via-robots-txt": "défini dans la page, pas dans robots.txt",
         "business-review": "une personne a examiné l’impact business"
+      }
+    },
+    "goal": {
+      "title": "Objectif commercial",
+      "inputLabel": "Que doit vendre ou accomplir ce site ? (une phrase)",
+      "placeholder": "par exemple : vendre des pompes à insuline aux cliniques",
+      "save": "Enregistrer l’objectif",
+      "help": "L’objectif choisit le cluster thématique qui partage ses mots, après un sujet manuel et avant les pages d’ancrage. Il ne devient jamais un sujet à lui seul.",
+      "needsProject": "Les objectifs commerciaux sont enregistrés par projet. Ouvrez ce crawl depuis un projet pour en définir un.",
+      "none": "Aucun objectif commercial défini.",
+      "applied": "L’objectif commercial a choisi le sujet principal : {{input}}",
+      "manualWins": "Votre sujet manuel a priorité sur l’objectif commercial.",
+      "unmatched": {
+        "auto": "Aucun mot de l’objectif n’apparaît dans le contenu exploré : le sujet est donc détecté à partir de tout le contenu.",
+        "anchored": "Aucun mot de l’objectif n’apparaît dans le contenu exploré : le sujet vient donc de la page d’accueil et des pages d’ancrage."
+      },
+      "error": {
+        "too-short": "Saisissez au moins 3 caractères.",
+        "too-long": "L’objectif ne doit pas dépasser {{max}} caractères.",
+        "no-words": "Utilisez des mots, pas seulement des chiffres ou des symboles.",
+        "looks-like-url": "Cela ressemble à une URL. Ajoutez des pages dans le champ des pages d’ancrage."
       }
     }
   },

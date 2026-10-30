@@ -2,6 +2,7 @@ export * from './keys';
 export * from './history';
 export * from './topic';
 export * from './anchors';
+export * from './goal';
 export * from './projectReport';
 export * from './budget';
 export * from './firstSeen';
