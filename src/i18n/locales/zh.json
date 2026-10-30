@@ -8959,7 +8959,14 @@
     "absolute": "对点击的累计效应：{{value}}（95% 区间 {{lower}} 至 {{upper}}）。",
     "relative": "相对效应：{{value}}（95% 区间 {{lower}} 至 {{upper}}）。",
     "probability": "效应为此符号的概率：{{value}}（正态近似，不是贝叶斯后验）。",
-    "caveat": "经对照调整的估计并不能证明因果关系。其他变更、Google 更新或同样影响对照的变化都可能使其产生偏差。不推断 ROI。"
+    "caveat": "经对照调整的估计并不能证明因果关系。其他变更、Google 更新或同样影响对照的变化都可能使其产生偏差。不推断 ROI。",
+    "backtest": {
+      "passed": "回测通过：前期内 {{runs}} 次伪干预均未发现效应。",
+      "failed": "回测未通过：前期内 {{runs}} 次伪干预中有 {{fp}} 次发现了并不存在的效应。不要信任此估计。",
+      "not-estimable": "无法回测：前期太短，无法进行伪干预。"
+    },
+    "familySignificant": "对同时显示的 {{family}} 个实验校正后仍显著（Holm，p = {{p}}）。",
+    "familyNotSignificant": "对同时显示的 {{family}} 个实验校正后不显著（Holm，p = {{p}}）。"
   },
   "revenueImportUi": {
     "title": "收入（可选的 GA4 导出）",

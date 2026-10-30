@@ -8959,7 +8959,14 @@
     "absolute": "Effet cumulé sur les clics : {{value}} (intervalle à 95 % de {{lower}} à {{upper}}).",
     "relative": "Effet relatif : {{value}} (intervalle à 95 % de {{lower}} à {{upper}}).",
     "probability": "Probabilité que l’effet ait ce signe : {{value}} (approximation normale, pas une loi a posteriori bayésienne).",
-    "caveat": "Une estimation ajustée sur le témoin ne prouve pas la causalité. D’autres changements, des mises à jour Google ou une variation touchant aussi le témoin peuvent la biaiser. Aucun ROI n’est déduit."
+    "caveat": "Une estimation ajustée sur le témoin ne prouve pas la causalité. D’autres changements, des mises à jour Google ou une variation touchant aussi le témoin peuvent la biaiser. Aucun ROI n’est déduit.",
+    "backtest": {
+      "passed": "Backtest réussi : {{runs}} pseudo-interventions dans la période antérieure n’ont trouvé aucun effet.",
+      "failed": "Backtest échoué : {{fp}} sur {{runs}} pseudo-interventions dans la période antérieure ont trouvé un effet inexistant. Ne vous fiez pas à cette estimation.",
+      "not-estimable": "Backtest impossible : la période antérieure est trop courte pour des pseudo-interventions."
+    },
+    "familySignificant": "Toujours significatif après ajustement pour {{family}} expériences affichées ensemble (Holm, p = {{p}}).",
+    "familyNotSignificant": "Non significatif après ajustement pour {{family}} expériences affichées ensemble (Holm, p = {{p}})."
   },
   "revenueImportUi": {
     "title": "Revenus (export GA4 facultatif)",

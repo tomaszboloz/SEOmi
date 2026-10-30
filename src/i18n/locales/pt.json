@@ -8959,7 +8959,14 @@
     "absolute": "Efeito acumulado nos cliques: {{value}} (intervalo de 95%: {{lower}} a {{upper}}).",
     "relative": "Efeito relativo: {{value}} (intervalo de 95%: {{lower}} a {{upper}}).",
     "probability": "Probabilidade de o efeito ter este sinal: {{value}} (aproximação normal, não uma posterior bayesiana).",
-    "caveat": "Uma estimativa ajustada pelo controle não prova causalidade. Outras mudanças, atualizações do Google ou variações que também afetem o controle podem enviesá-la. Nenhum ROI é inferido."
+    "caveat": "Uma estimativa ajustada pelo controle não prova causalidade. Outras mudanças, atualizações do Google ou variações que também afetem o controle podem enviesá-la. Nenhum ROI é inferido.",
+    "backtest": {
+      "passed": "Backtest aprovado: {{runs}} pseudo-intervenções no período anterior não encontraram efeito.",
+      "failed": "Backtest reprovado: {{fp}} de {{runs}} pseudo-intervenções no período anterior encontraram um efeito inexistente. Não confie nesta estimativa.",
+      "not-estimable": "Backtest impossível: o período anterior é curto demais para pseudo-intervenções."
+    },
+    "familySignificant": "Ainda significativo após ajuste para {{family}} experimentos exibidos juntos (Holm, p = {{p}}).",
+    "familyNotSignificant": "Não significativo após ajuste para {{family}} experimentos exibidos juntos (Holm, p = {{p}})."
   },
   "revenueImportUi": {
     "title": "Receita (exportação opcional do GA4)",

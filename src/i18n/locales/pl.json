@@ -8959,7 +8959,14 @@
     "absolute": "Skumulowany efekt na kliknięcia: {{value}} (przedział 95% od {{lower}} do {{upper}}).",
     "relative": "Efekt względny: {{value}} (przedział 95% od {{lower}} do {{upper}}).",
     "probability": "Prawdopodobieństwo, że efekt ma ten znak: {{value}} (przybliżenie normalne, nie bayesowski rozkład a posteriori).",
-    "caveat": "Estymacja skorygowana o kontrolę nie dowodzi przyczynowości. Inne zmiany, aktualizacje Google lub przesunięcie wpływające też na kontrolę mogą ją zniekształcić. Nie wyliczamy ROI."
+    "caveat": "Estymacja skorygowana o kontrolę nie dowodzi przyczynowości. Inne zmiany, aktualizacje Google lub przesunięcie wpływające też na kontrolę mogą ją zniekształcić. Nie wyliczamy ROI.",
+    "backtest": {
+      "passed": "Backtest zaliczony: {{runs}} pozorne interwencje w okresie przed zmianą nie wykazały efektu.",
+      "failed": "Backtest niezaliczony: {{fp}} z {{runs}} pozornych interwencji w okresie przed zmianą wykazało efekt, którego nie było. Nie ufaj tej estymacji.",
+      "not-estimable": "Backtest niemożliwy: okres przed zmianą jest za krótki na pozorne interwencje."
+    },
+    "familySignificant": "Nadal istotne po korekcie na {{family}} eksperymentów pokazanych razem (Holm, p = {{p}}).",
+    "familyNotSignificant": "Nieistotne po korekcie na {{family}} eksperymentów pokazanych razem (Holm, p = {{p}})."
   },
   "revenueImportUi": {
     "title": "Przychód (opcjonalny eksport GA4)",

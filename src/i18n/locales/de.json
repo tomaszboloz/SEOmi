@@ -8959,7 +8959,14 @@
     "absolute": "Kumulierter Effekt auf Klicks: {{value}} (95-%-Intervall {{lower}} bis {{upper}}).",
     "relative": "Relativer Effekt: {{value}} (95-%-Intervall {{lower}} bis {{upper}}).",
     "probability": "Wahrscheinlichkeit, dass der Effekt dieses Vorzeichen hat: {{value}} (Normalapproximation, keine Bayes-Posterior).",
-    "caveat": "Eine um die Kontrolle bereinigte Schätzung beweist keine Kausalität. Andere Änderungen, Google-Updates oder Verschiebungen, die auch die Kontrolle betreffen, können sie verzerren. Kein ROI wird abgeleitet."
+    "caveat": "Eine um die Kontrolle bereinigte Schätzung beweist keine Kausalität. Andere Änderungen, Google-Updates oder Verschiebungen, die auch die Kontrolle betreffen, können sie verzerren. Kein ROI wird abgeleitet.",
+    "backtest": {
+      "passed": "Backtest bestanden: {{runs}} Schein-Interventionen im Vorzeitraum fanden keinen Effekt.",
+      "failed": "Backtest nicht bestanden: {{fp}} von {{runs}} Schein-Interventionen im Vorzeitraum fanden einen Effekt, obwohl keiner stattfand. Dieser Schätzung nicht vertrauen.",
+      "not-estimable": "Backtest nicht möglich: Der Vorzeitraum ist für Schein-Interventionen zu kurz."
+    },
+    "familySignificant": "Nach Korrektur für {{family}} gemeinsam angezeigte Experimente weiterhin signifikant (Holm, p = {{p}}).",
+    "familyNotSignificant": "Nach Korrektur für {{family}} gemeinsam angezeigte Experimente nicht signifikant (Holm, p = {{p}})."
   },
   "revenueImportUi": {
     "title": "Umsatz (optionaler GA4-Export)",

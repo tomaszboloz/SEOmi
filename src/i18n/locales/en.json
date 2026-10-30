@@ -8959,7 +8959,14 @@
     "absolute": "Cumulative effect on clicks: {{value}} (95% interval {{lower}} to {{upper}}).",
     "relative": "Relative effect: {{value}} (95% interval {{lower}} to {{upper}}).",
     "probability": "Probability that the effect has this sign: {{value}} (normal approximation, not a Bayesian posterior).",
-    "caveat": "An estimate adjusted for the control is not proof of causality. Other changes, Google updates or a shift that also affects the control can bias it. No ROI is inferred."
+    "caveat": "An estimate adjusted for the control is not proof of causality. Other changes, Google updates or a shift that also affects the control can bias it. No ROI is inferred.",
+    "backtest": {
+      "passed": "Backtest passed: {{runs}} pseudo-interventions in the pre-period found no effect.",
+      "failed": "Backtest failed: {{fp}} of {{runs}} pseudo-interventions in the pre-period found an effect where none happened. Do not trust this estimate.",
+      "not-estimable": "Backtest not possible: the pre-period is too short for pseudo-interventions."
+    },
+    "familySignificant": "Still significant after adjusting for {{family}} experiments shown together (Holm, p = {{p}}).",
+    "familyNotSignificant": "Not significant after adjusting for {{family}} experiments shown together (Holm, p = {{p}})."
   },
   "revenueImportUi": {
     "title": "Revenue (optional GA4 export)",

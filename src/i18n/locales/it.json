@@ -8959,7 +8959,14 @@
     "absolute": "Effetto cumulativo sui clic: {{value}} (intervallo al 95% da {{lower}} a {{upper}}).",
     "relative": "Effetto relativo: {{value}} (intervallo al 95% da {{lower}} a {{upper}}).",
     "probability": "Probabilità che l’effetto abbia questo segno: {{value}} (approssimazione normale, non una posteriore bayesiana).",
-    "caveat": "Una stima corretta per il controllo non prova la causalità. Altre modifiche, aggiornamenti di Google o variazioni che colpiscono anche il controllo possono distorcerla. Nessun ROI viene dedotto."
+    "caveat": "Una stima corretta per il controllo non prova la causalità. Altre modifiche, aggiornamenti di Google o variazioni che colpiscono anche il controllo possono distorcerla. Nessun ROI viene dedotto.",
+    "backtest": {
+      "passed": "Backtest superato: {{runs}} pseudo-interventi nel periodo precedente non hanno trovato effetti.",
+      "failed": "Backtest fallito: {{fp}} di {{runs}} pseudo-interventi nel periodo precedente hanno trovato un effetto inesistente. Non fidarti di questa stima.",
+      "not-estimable": "Backtest impossibile: il periodo precedente è troppo breve per pseudo-interventi."
+    },
+    "familySignificant": "Ancora significativo dopo la correzione per {{family}} esperimenti mostrati insieme (Holm, p = {{p}}).",
+    "familyNotSignificant": "Non significativo dopo la correzione per {{family}} esperimenti mostrati insieme (Holm, p = {{p}})."
   },
   "revenueImportUi": {
     "title": "Entrate (esportazione GA4 facoltativa)",
