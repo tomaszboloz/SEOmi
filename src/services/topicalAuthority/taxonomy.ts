@@ -136,6 +136,7 @@ export const buildTaxonomy = (input: TaxonomyInput): ReferenceTaxonomy | null =>
     importance: Math.round(row.importance * 1000) / 1000,
     entities: entitiesOf(row.group, input.language),
     questions: [...row.group.questions],
+    sources: { domains: [...row.group.domains].sort(), suggest: row.group.suggest },
   }));
   const pillars: RefPillar[] = [...new Set(anchors)].map((id) => {
     const rows = subtopics.filter((item) => item.pillar === id);

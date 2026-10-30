@@ -15,6 +15,8 @@ export interface RefSubtopic {
   entities: string[];
   /** Heading questions and suggestion questions users ask (People Also Ask style). */
   questions: string[];
+  /** Provenance: competitor domains whose headings gave this sub-topic, and whether Google Suggest matched it (Suggest is not PAA). */
+  sources?: { domains: string[]; suggest: boolean };
 }
 
 export interface ReferenceTaxonomy {

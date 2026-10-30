@@ -3,7 +3,7 @@ import type { CrawlRunRecord, CrawledPageSummary } from '@/types';
 import type { FocusPage, SiteFocusReport } from '@/services/siteFocus';
 import { buildAuthorityReport, type ReferenceTaxonomy, type TopicalAuthorityReport } from '@/services/topicalAuthority';
 import {
-  readAuthorityHistory, readTaxonomy, readTopicalBenchmark, recordAuthority, validAuthorityProject, writeTaxonomy, clearTaxonomy,
+  readAuthorityHistory, readTaxonomy, readTopicalBenchmark, recordAuthority, validAuthorityProject, writeTaxonomy, clearTaxonomy, taxonomyMatchesCore,
   type AuthorityHistoryEntry,
 } from '@/services/topicalAuthorityMonitoring';
 import {
@@ -61,14 +61,16 @@ export const useTopicalAuthority = ({ pages, startUrl, sfs, run, projectId, runn
 
   useEffect(() => () => controller.current?.abort(), []);
 
+  // A cached map built for another Core Topic or language is not applied (treated as absent until rebuilt).
+  const usable = taxonomy && sfs && taxonomyMatchesCore(taxonomy, { coreLabel: sfs.coreTopic.label, language: sfs.model.language }) ? taxonomy : null;
   const report = useMemo<TopicalAuthorityReport | null>(
-    () => (sfs ? buildAuthorityReport(pages as FocusPage[], startUrl, sfs, { taxonomy, now: sfs.generatedAt }) : null),
-    [pages, startUrl, sfs, taxonomy],
+    () => (sfs ? buildAuthorityReport(pages as FocusPage[], startUrl, sfs, { taxonomy: usable, now: sfs.generatedAt }) : null),
+    [pages, startUrl, sfs, usable],
   );
 
   useEffect(() => {
     if (!report || !run || !validAuthorityProject(projectId)) return;
-    const runId = taxonomy ? `${run.id}:${taxonomy.builtAt}` : run.id;
+    const runId = usable ? `${run.id}:${usable.builtAt}` : run.id;
     const saved = recordAuthority(projectId, report, runId, pages.map((page) => page.url), { benchmark: pendingBenchmark });
     if (saved.saved) { setHistory(saved.entries); if (pendingBenchmark) setBenchmark(pendingBenchmark); }
     // One snapshot per run and reference map; deduped by runId in the history store.
@@ -85,7 +87,8 @@ export const useTopicalAuthority = ({ pages, startUrl, sfs, run, projectId, runn
       if (controller.current !== own) return;
       if (outcome.status !== 'ok') { setState({ ...IDLE, failure: outcome }); return; }
       writeTaxonomy(projectId, outcome.taxonomy);
-      recordReferenceSnapshot(projectId ?? null, outcome.taxonomy, outcome.serp, market());      const fresh = buildAuthorityReport(pages as FocusPage[], startUrl, sfs, { taxonomy: outcome.taxonomy, now: sfs.generatedAt });
+      recordReferenceSnapshot(projectId ?? null, outcome.taxonomy, outcome.serp, market());
+      const fresh = buildAuthorityReport(pages as FocusPage[], startUrl, sfs, { taxonomy: outcome.taxonomy, now: sfs.generatedAt });
       setPendingBenchmark(buildTopicalBenchmark(fresh, domainOf(startUrl), outcome.competitors, outcome.taxonomy, new Date().toISOString(), outcome.attempted));
       setTaxonomy(outcome.taxonomy);
       setState(IDLE);
@@ -97,5 +100,5 @@ export const useTopicalAuthority = ({ pages, startUrl, sfs, run, projectId, runn
   const cancel = useCallback(() => controller.current?.abort(), []);
   const clear = useCallback(() => { clearTaxonomy(projectId); setTaxonomy(null); setBenchmark(null); setPendingBenchmark(null); }, [projectId]);
 
-  return { report, taxonomy, benchmark: pendingBenchmark ?? benchmark, history, state, build, cancel, clear };
+  return { report, taxonomy: usable, benchmark: pendingBenchmark ?? benchmark, history, state, build, cancel, clear };
 };
