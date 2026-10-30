@@ -7536,6 +7536,20 @@
       "basis": {
         "intent": "misma intención",
         "subtopic": "mismo subtema"
+      },
+      "gsc": {
+        "unavailable": "Search Console: no hay datos guardados de consulta/página para este proyecto, así que la elección se basa solo en el contenido.",
+        "noOverlap": "Search Console: estas URL no reciben impresiones para las mismas consultas.",
+        "agrees": "Search Console coincide: {{leader}} recibe más clics en las consultas compartidas.",
+        "conflict": "Conflicto a revisar: Search Console da más clics a {{leader}}, la similitud de contenido sugiere conservar {{canonical}}.",
+        "query": "«{{query}}»: {{pages}}",
+        "page": "{{url}} {{clicks}} clics / {{impressions}} impresiones",
+        "truncated": "Las filas de Search Console pueden estar truncadas; pueden faltar consultas."
+      },
+      "unique": {
+        "title": "Contenido único que conservar al fusionar:",
+        "terms": "{{url}}: {{terms}}",
+        "none": "{{url}}: no hay términos exclusivos de esta página"
       }
     },
     "draft": {

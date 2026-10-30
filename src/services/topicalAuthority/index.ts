@@ -5,6 +5,7 @@ export { buildContext, eligiblePages, cosine, unigramKeys, type AuthorityContext
 export { mapCoverage, topicCoverageRatio, contentDepth, pillarCoverage, FULL_COSINE, PARTIAL_COSINE, SHALLOW_BELOW } from './coverage';
 export { aggregateTas, focusMultiplier, quadrantFor, simulateTas, velocityScore, TAS_WEIGHTS } from './score';
 export { findCannibalization, cannibalizationIndex, overlapsWith, PRE_PUBLISH_COSINE } from './cannibal';
+export { gscEvidenceFor, uniqueTermsByUrl, urlIdentity, type GroupGscEvidence, type GscQueryPages } from './consolidation';
 export { buildGapBrief, buildAuthorityPrompt, type GapBrief } from './brief';
 export { checkDraftOverlap, type DraftOverlap } from './draft';
 export { isGenericAnchor } from './genericAnchors';

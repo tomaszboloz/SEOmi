@@ -7536,6 +7536,20 @@
       "basis": {
         "intent": "same intent",
         "subtopic": "same sub-topic"
+      },
+      "gsc": {
+        "unavailable": "Search Console: no saved query/page data for this project, so the choice is based on content only.",
+        "noOverlap": "Search Console: these URLs do not receive impressions for the same queries.",
+        "agrees": "Search Console agrees: {{leader}} gets the most clicks on the shared queries.",
+        "conflict": "Conflict to review: Search Console gives the most clicks to {{leader}}, content similarity suggests keeping {{canonical}}.",
+        "query": "“{{query}}”: {{pages}}",
+        "page": "{{url}} {{clicks}} clicks / {{impressions}} impressions",
+        "truncated": "Search Console rows may be truncated; queries can be missing."
+      },
+      "unique": {
+        "title": "Unique content to keep when merging:",
+        "terms": "{{url}}: {{terms}}",
+        "none": "{{url}}: no terms found only on this page"
       }
     },
     "draft": {

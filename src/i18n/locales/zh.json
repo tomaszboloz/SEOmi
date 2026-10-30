@@ -7536,6 +7536,20 @@
       "basis": {
         "intent": "相同意图",
         "subtopic": "相同子主题"
+      },
+      "gsc": {
+        "unavailable": "Search Console：此项目没有已保存的查询/页面数据，因此仅根据内容进行选择。",
+        "noOverlap": "Search Console：这些 URL 没有在相同查询中获得展示。",
+        "agrees": "Search Console 一致：{{leader}} 在共同查询中获得最多点击。",
+        "conflict": "需要审核的冲突：Search Console 中 {{leader}} 点击最多，而内容相似度建议保留 {{canonical}}。",
+        "query": "“{{query}}”：{{pages}}",
+        "page": "{{url}} 点击 {{clicks}} / 展示 {{impressions}}",
+        "truncated": "Search Console 行可能被截断，部分查询可能缺失。"
+      },
+      "unique": {
+        "title": "合并时需要保留的独有内容：",
+        "terms": "{{url}}：{{terms}}",
+        "none": "{{url}}：没有仅出现在此页面的术语"
       }
     },
     "draft": {

@@ -7536,6 +7536,20 @@
       "basis": {
         "intent": "同じ検索意図",
         "subtopic": "同じサブトピック"
+      },
+      "gsc": {
+        "unavailable": "Search Console: このプロジェクトには保存済みのクエリ/ページデータがないため、コンテンツのみで判断しています。",
+        "noOverlap": "Search Console: これらの URL は同じクエリで表示されていません。",
+        "agrees": "Search Console も一致: 共通クエリで最もクリックされているのは {{leader}} です。",
+        "conflict": "確認が必要な競合: Search Console では {{leader}} のクリックが最多ですが、内容の類似度では {{canonical}} の維持が推奨されます。",
+        "query": "「{{query}}」: {{pages}}",
+        "page": "{{url}} クリック {{clicks}} / 表示 {{impressions}}",
+        "truncated": "Search Console の行は切り詰められている可能性があり、一部のクエリが欠けていることがあります。"
+      },
+      "unique": {
+        "title": "統合時に残すべき固有のコンテンツ:",
+        "terms": "{{url}}: {{terms}}",
+        "none": "{{url}}: このページだけにある用語はありません"
       }
     },
     "draft": {

@@ -7536,6 +7536,20 @@
       "basis": {
         "intent": "gleiche Absicht",
         "subtopic": "gleiches Unterthema"
+      },
+      "gsc": {
+        "unavailable": "Search Console: keine gespeicherten Abfrage/Seite-Daten für dieses Projekt, die Wahl beruht nur auf dem Inhalt.",
+        "noOverlap": "Search Console: Diese URLs erhalten keine Impressionen für dieselben Suchanfragen.",
+        "agrees": "Search Console bestätigt: {{leader}} erhält die meisten Klicks bei den gemeinsamen Suchanfragen.",
+        "conflict": "Zu prüfender Konflikt: Search Console zeigt die meisten Klicks für {{leader}}, die Inhaltsähnlichkeit empfiehlt {{canonical}}.",
+        "query": "„{{query}}“: {{pages}}",
+        "page": "{{url}} {{clicks}} Klicks / {{impressions}} Impressionen",
+        "truncated": "Search-Console-Zeilen können gekürzt sein; Suchanfragen können fehlen."
+      },
+      "unique": {
+        "title": "Einzigartige Inhalte, die beim Zusammenführen erhalten bleiben sollen:",
+        "terms": "{{url}}: {{terms}}",
+        "none": "{{url}}: keine Begriffe, die nur auf dieser Seite vorkommen"
       }
     },
     "draft": {

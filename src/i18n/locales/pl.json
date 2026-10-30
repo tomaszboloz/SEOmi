@@ -7536,6 +7536,20 @@
       "basis": {
         "intent": "ta sama intencja",
         "subtopic": "ten sam podtemat"
+      },
+      "gsc": {
+        "unavailable": "Search Console: brak zapisanych danych zapytanie/strona dla projektu, więc wybór opiera się tylko na treści.",
+        "noOverlap": "Search Console: te adresy URL nie zbierają wyświetleń na te same zapytania.",
+        "agrees": "Search Console potwierdza: {{leader}} ma najwięcej kliknięć na wspólnych zapytaniach.",
+        "conflict": "Konflikt do przeglądu: Search Console daje najwięcej kliknięć {{leader}}, a podobieństwo treści wskazuje zachowanie {{canonical}}.",
+        "query": "„{{query}}”: {{pages}}",
+        "page": "{{url}} {{clicks}} kliknięć / {{impressions}} wyświetleń",
+        "truncated": "Wiersze Search Console mogą być obcięte; części zapytań może brakować."
+      },
+      "unique": {
+        "title": "Unikalna treść do zachowania przy scalaniu:",
+        "terms": "{{url}}: {{terms}}",
+        "none": "{{url}}: brak terminów występujących tylko na tej stronie"
       }
     },
     "draft": {

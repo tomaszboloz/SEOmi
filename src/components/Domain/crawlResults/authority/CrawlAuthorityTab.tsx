@@ -3,6 +3,7 @@ import { useTranslation } from 'react-i18next';
 import { useSiteFocus } from '@/hooks/useSiteFocus';
 import { useTopicalAuthority, type ReferenceRunner } from '@/hooks/useTopicalAuthority';
 import { buildSiteFocusReport, type FocusPage } from '@/services/siteFocus';
+import { readGscSnapshots } from '@/services/gscTracker/read';
 import { isSelectedCompletedCrawl } from '@/services/optimizationTasks/crawlEvidence';
 import { projectFocusOptions } from '@/services/siteFocusMonitoring/focusOptions';
 import { useFocusConfigRevision } from '@/hooks/useFocusConfigRevision';
@@ -49,7 +50,7 @@ export const CrawlAuthorityTab = ({ pages, startUrl, run, projectId, runner }: C
       {report.taxonomy && (row ? (
         <SubtopicDrilldown report={report} row={row} onBack={() => setSelected(undefined)} />
       ) : <CoverageMap report={report} onSelect={setSelected} />)}
-      <CannibalizationPanel report={report} pages={pages as FocusPage[]} startUrl={startUrl} language={sfs?.model.language || undefined} projectId={projectId} baselineScore={taskBaseline} />
+      <CannibalizationPanel report={report} pages={pages as FocusPage[]} startUrl={startUrl} language={sfs?.model.language || undefined} projectId={projectId} baselineScore={taskBaseline} gsc={projectId ? readGscSnapshots(projectId)[0] ?? null : null} />
       <AuthorityRecommendations report={report} />
       <AuthorityBenchmark benchmark={authority.benchmark} />
       <AuthorityHistoryChart entries={authority.history} />

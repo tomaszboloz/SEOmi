@@ -7536,6 +7536,20 @@
       "basis": {
         "intent": "동일한 의도",
         "subtopic": "동일한 하위 주제"
+      },
+      "gsc": {
+        "unavailable": "Search Console: 이 프로젝트에 저장된 쿼리/페이지 데이터가 없어 콘텐츠만으로 선택했습니다.",
+        "noOverlap": "Search Console: 이 URL들은 같은 쿼리에서 노출되지 않습니다.",
+        "agrees": "Search Console 일치: 공통 쿼리에서 {{leader}}이(가) 가장 많은 클릭을 받습니다.",
+        "conflict": "검토 필요한 충돌: Search Console에서는 {{leader}}의 클릭이 가장 많지만 콘텐츠 유사도는 {{canonical}} 유지를 제안합니다.",
+        "query": "'{{query}}': {{pages}}",
+        "page": "{{url}} 클릭 {{clicks}} / 노출 {{impressions}}",
+        "truncated": "Search Console 행이 잘렸을 수 있어 일부 쿼리가 빠질 수 있습니다."
+      },
+      "unique": {
+        "title": "통합 시 유지할 고유 콘텐츠:",
+        "terms": "{{url}}: {{terms}}",
+        "none": "{{url}}: 이 페이지에만 있는 용어가 없습니다"
       }
     },
     "draft": {

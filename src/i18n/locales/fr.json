@@ -7536,6 +7536,20 @@
       "basis": {
         "intent": "même intention",
         "subtopic": "même sous-thème"
+      },
+      "gsc": {
+        "unavailable": "Search Console : aucune donnée requête/page enregistrée pour ce projet, le choix repose donc uniquement sur le contenu.",
+        "noOverlap": "Search Console : ces URL ne reçoivent pas d’impressions sur les mêmes requêtes.",
+        "agrees": "Search Console confirme : {{leader}} reçoit le plus de clics sur les requêtes communes.",
+        "conflict": "Conflit à examiner : Search Console attribue le plus de clics à {{leader}}, la similarité de contenu suggère de garder {{canonical}}.",
+        "query": "« {{query}} » : {{pages}}",
+        "page": "{{url}} {{clicks}} clics / {{impressions}} impressions",
+        "truncated": "Les lignes Search Console peuvent être tronquées ; des requêtes peuvent manquer."
+      },
+      "unique": {
+        "title": "Contenu unique à conserver lors de la fusion :",
+        "terms": "{{url}} : {{terms}}",
+        "none": "{{url}} : aucun terme présent uniquement sur cette page"
       }
     },
     "draft": {
