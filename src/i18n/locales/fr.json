@@ -3591,7 +3591,8 @@
         "pending": "en attente",
         "rendering": "rendu en cours…",
         "cancelled": "annulé"
-      }
+      },
+      "auto": "Rendre automatiquement les pages coquilles après chaque crawl (application de bureau, jusqu’à {{count}} pages ; désactivé par défaut)"
     }
   },
   "ai": {

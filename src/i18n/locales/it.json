@@ -3591,7 +3591,8 @@
         "pending": "in attesa",
         "rendering": "rendering…",
         "cancelled": "annullato"
-      }
+      },
+      "auto": "Renderizza automaticamente le pagine shell dopo ogni scansione (app desktop, fino a {{count}} pagine; disattivato per impostazione predefinita)"
     }
   },
   "ai": {

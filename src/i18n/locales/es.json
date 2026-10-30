@@ -3591,7 +3591,8 @@
         "pending": "en espera",
         "rendering": "renderizando…",
         "cancelled": "cancelado"
-      }
+      },
+      "auto": "Renderizar automáticamente las páginas shell tras cada rastreo (app de escritorio, hasta {{count}} páginas; desactivado por defecto)"
     }
   },
   "ai": {

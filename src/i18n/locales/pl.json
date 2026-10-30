@@ -3591,7 +3591,8 @@
         "pending": "w kolejce",
         "rendering": "renderowanie…",
         "cancelled": "przerwano"
-      }
+      },
+      "auto": "Renderuj strony-szkielety automatycznie po każdym crawlu (aplikacja desktopowa, maks. {{count}} stron; domyślnie wyłączone)"
     }
   },
   "ai": {

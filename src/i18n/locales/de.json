@@ -3591,7 +3591,8 @@
         "pending": "wartet",
         "rendering": "wird gerendert…",
         "cancelled": "abgebrochen"
-      }
+      },
+      "auto": "Shell-Seiten nach jedem Crawl automatisch rendern (Desktop-App, bis zu {{count}} Seiten; standardmäßig aus)"
     }
   },
   "ai": {

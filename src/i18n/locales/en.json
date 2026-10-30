@@ -3591,7 +3591,8 @@
         "pending": "waiting",
         "rendering": "rendering…",
         "cancelled": "cancelled"
-      }
+      },
+      "auto": "Render shell pages automatically after each crawl (desktop app, up to {{count}} pages; off by default)"
     }
   },
   "ai": {
