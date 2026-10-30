@@ -1,8 +1,9 @@
-/** Splits only where punctuation is followed by space, so decimals like 2.5 stay whole. */
-const sentencesOf = (text: string): string[] =>
-  text.split(/(?<=[.!?…])\s+|(?<=[。！？])/u).map((part) => part.trim()).filter(Boolean);
+import { extractValues, sentencesOf } from './ymylValues';
+import { boundValues, mentionedTerms, type TermDictionary } from './termBinding';
 
-export type GateReason = 'no-source' | 'unsupported-value';
+export { extractValues, sentencesOf } from './ymylValues';
+
+export type GateReason = 'no-source' | 'unsupported-value' | 'value-not-bound-to-term';
 
 export interface GateResult {
   accepted: string[];
@@ -34,21 +35,15 @@ export interface YmylGateValidation {
 
 export type YmylSourceInput = string | YmylSource;
 
-const UNITS = 'mg|mcg|µg|ug|g|kg|ml|l|iu|ie|mmol|mol|mmhg|kcal|%|pln|zł|usd|eur|gbp|\\$|€|£';
-const VALUE = new RegExp(`(\\d+(?:[.,]\\d+)?)\\s*(${UNITS})(?![\\p{L}])`, 'giu');
-
-const canon = (amount: string, unit: string): string => `${Number(amount.replace(',', '.'))}${unit.toLowerCase()}`;
-
-/** Numbers with a medical or financial unit, e.g. "500 mg", "2,5%", "100 PLN". */
-export const extractValues = (text: string): string[] =>
-  [...text.matchAll(VALUE)].map((match) => canon(match[1], match[2]));
-
 /**
  * Rejects every sentence that states a dose or amount the given sources do not contain.
  * Sentences without such a value pass through; no sources means every valued sentence is rejected.
+ * With a term dictionary (user-imported MeSH/ICD-10/drug list), a value next to a known term must also
+ * appear next to the same term in a source sentence: "paracetamol 500 mg" is not backed by "ibuprofen 500 mg".
  */
-export const gateFacts = (text: string, sources: Array<string | YmylSource>): GateResult => {
-  const supported = new Set(sources.flatMap((source) => extractValues(typeof source === 'string' ? source : source.text)));
+export const gateFacts = (text: string, sources: Array<string | YmylSource>, terms?: TermDictionary): GateResult => {
+  const texts = sources.map((source) => (typeof source === 'string' ? source : source.text));
+  const supported = new Set(texts.flatMap(extractValues));
   const result: GateResult = { accepted: [], rejected: [], needsHumanApproval: true };
   for (const sentence of sentencesOf(text)) {
     const values = extractValues(sentence);
@@ -57,8 +52,11 @@ export const gateFacts = (text: string, sources: Array<string | YmylSource>): Ga
       continue;
     }
     const missing = values.filter((value) => !supported.has(value));
-    if (missing.length === 0) result.accepted.push(sentence);
-    else result.rejected.push({ sentence, reason: supported.size === 0 ? 'no-source' : 'unsupported-value', values: missing });
+    const named = terms ? mentionedTerms(sentence, terms) : [];
+    const unbound = missing.length || !named.length ? [] : values.filter((value) => !boundValues(texts, named, terms as TermDictionary).has(value));
+    if (missing.length) result.rejected.push({ sentence, reason: supported.size === 0 ? 'no-source' : 'unsupported-value', values: missing });
+    else if (unbound.length) result.rejected.push({ sentence, reason: 'value-not-bound-to-term', values: unbound });
+    else result.accepted.push(sentence);
   }
   return result;
 };
@@ -73,12 +71,12 @@ export const isReviewedSource = (source: unknown): source is YmylSource => {
     && typeof candidate.reviewedAt === 'string' && Number.isFinite(Date.parse(candidate.reviewedAt));
 };
 
-export const validateYmylClaim = (replacement: string, sources: YmylSourceInput[]): YmylGateValidation => {
+export const validateYmylClaim = (replacement: string, sources: YmylSourceInput[], terms?: TermDictionary): YmylGateValidation => {
   // Text-only sources remain supported for the generic LLM gate. CMS writes use
   // the stricter reviewed-object path in apply.ts and never trust caller text.
   const reviewed = sources.filter(isReviewedSource);
   const legacyText = sources.filter((source): source is string => typeof source === 'string' && source.trim().length > 0);
-  const gate = gateFacts(replacement, [...reviewed, ...legacyText]);
+  const gate = gateFacts(replacement, [...reviewed, ...legacyText], terms);
   const rejectedValues = gate.rejected.flatMap((item) => item.values);
   const hasRejections = gate.rejected.length > 0;
   return {
