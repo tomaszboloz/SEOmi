@@ -6232,7 +6232,16 @@
         "profilePersisted": "Das Profil entspricht dem gespeicherten Crawl.",
         "profileLegacy": "Dieser Crawl hat kein gespeichertes Profil. Die Werte wurden mit dem angezeigten Profil neu berechnet und sind nicht mit historischen Werten vergleichbar.",
         "profileMismatch": "Das gespeicherte Profil weicht ab. Die Werte wurden mit dem angezeigten Profil neu berechnet und sind nicht mit historischen Werten vergleichbar.",
-        "historicalProfile": "Gespeichertes Profil: {{0}} / {{1}}."
+        "historicalProfile": "Gespeichertes Profil: {{0}} / {{1}}.",
+        "tInspector": "Passagen-Inspektor",
+        "inspectorIntro": "Bewertungskomponenten der schwächsten Passagen, ihre Position im Abschnittstext (UTF-16-Zeichen) und die ersten erkannten Subjekt-Prädikat-Objekt-Fakten. Die Fakten stammen aus einer lexikalischen Heuristik, nicht aus einem Dependenzparser.",
+        "colPosition": "Position",
+        "colAnswer": "Antwort zuerst",
+        "colFactsFound": "Erkannte Fakten",
+        "position": "Zeichen {{0}}–{{1}}",
+        "notApplicable": "entfällt",
+        "negated": "{{0}} (verneint)",
+        "noFactsFound": "Keine Fakten erkannt"
       },
       "trust": {
         "title": "Entitätsvertrauen (E-E-A-T)",

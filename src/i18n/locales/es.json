@@ -6232,7 +6232,16 @@
         "profilePersisted": "El perfil coincide con el rastreo guardado.",
         "profileLegacy": "Este rastreo no tiene un perfil guardado. Los resultados se recalcularon con el perfil mostrado y no son comparables con los históricos.",
         "profileMismatch": "El perfil guardado es distinto. Los resultados se recalcularon con el perfil mostrado y no son comparables con los históricos.",
-        "historicalProfile": "Perfil guardado: {{0}} / {{1}}."
+        "historicalProfile": "Perfil guardado: {{0}} / {{1}}.",
+        "tInspector": "Inspector de fragmentos",
+        "inspectorIntro": "Componentes de la puntuación de los fragmentos más débiles, su posición en el texto de la sección (caracteres UTF-16) y los primeros hechos sujeto-predicado-objeto detectados. Los hechos provienen de una heurística léxica, no de un analizador de dependencias.",
+        "colPosition": "Posición",
+        "colAnswer": "Respuesta primero",
+        "colFactsFound": "Hechos detectados",
+        "position": "caracteres {{0}}–{{1}}",
+        "notApplicable": "n/a",
+        "negated": "{{0}} (negado)",
+        "noFactsFound": "No se detectaron hechos"
       },
       "trust": {
         "title": "Confianza de entidad (E-E-A-T)",

@@ -42,6 +42,15 @@ keys! {
     PROFILE_LEGACY => "crawl.aio.profileLegacy",
     PROFILE_MISMATCH => "crawl.aio.profileMismatch",
     HISTORICAL_PROFILE => "crawl.aio.historicalProfile",
+    T_INSPECTOR => "crawl.aio.tInspector",
+    INSPECTOR_INTRO => "crawl.aio.inspectorIntro",
+    COL_POSITION => "crawl.aio.colPosition",
+    COL_ANSWER => "crawl.aio.colAnswer",
+    COL_FACTS_FOUND => "crawl.aio.colFactsFound",
+    POSITION => "crawl.aio.position",
+    NOT_APPLICABLE => "crawl.aio.notApplicable",
+    NEGATED => "crawl.aio.negated",
+    NO_FACTS_FOUND => "crawl.aio.noFactsFound",
 }
 
 pub const BAND: &str = "crawl.aio.band";

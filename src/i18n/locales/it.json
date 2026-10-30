@@ -6232,7 +6232,16 @@
         "profilePersisted": "Il profilo corrisponde alla scansione salvata.",
         "profileLegacy": "Questa scansione non ha un profilo salvato. I risultati sono stati ricalcolati con il profilo visualizzato e non sono confrontabili con quelli storici.",
         "profileMismatch": "Il profilo salvato è diverso. I risultati sono stati ricalcolati con il profilo visualizzato e non sono confrontabili con quelli storici.",
-        "historicalProfile": "Profilo salvato: {{0}} / {{1}}."
+        "historicalProfile": "Profilo salvato: {{0}} / {{1}}.",
+        "tInspector": "Ispettore dei passaggi",
+        "inspectorIntro": "Componenti del punteggio dei passaggi più deboli, la loro posizione nel testo della sezione (caratteri UTF-16) e i primi fatti soggetto-predicato-oggetto rilevati. I fatti derivano da un'euristica lessicale, non da un parser a dipendenze.",
+        "colPosition": "Posizione",
+        "colAnswer": "Risposta in apertura",
+        "colFactsFound": "Fatti rilevati",
+        "position": "caratteri {{0}}–{{1}}",
+        "notApplicable": "n/a",
+        "negated": "{{0}} (negato)",
+        "noFactsFound": "Nessun fatto rilevato"
       },
       "trust": {
         "title": "Fiducia delle entità (E-E-A-T)",

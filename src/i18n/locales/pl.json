@@ -6232,7 +6232,16 @@
         "profilePersisted": "Profil jest zgodny z zapisanym crawlem.",
         "profileLegacy": "Ten crawl nie ma zapisanego profilu. Wyniki przeliczono według widocznego profilu; nie można ich porównywać z wynikami historycznymi.",
         "profileMismatch": "Zapisany profil jest inny. Wyniki przeliczono według widocznego profilu; nie można ich porównywać z wynikami historycznymi.",
-        "historicalProfile": "Zapisany profil: {{0}} / {{1}}."
+        "historicalProfile": "Zapisany profil: {{0}} / {{1}}.",
+        "tInspector": "Inspektor fragmentów",
+        "inspectorIntro": "Składowe wyniku najsłabszych fragmentów, ich pozycja w tekście sekcji (znaki UTF-16) i pierwsze wykryte fakty podmiot-orzeczenie-dopełnienie. Fakty pochodzą z heurystyki leksykalnej, nie z parsera zależności.",
+        "colPosition": "Pozycja",
+        "colAnswer": "Odpowiedź na początku",
+        "colFactsFound": "Wykryte fakty",
+        "position": "znaki {{0}}–{{1}}",
+        "notApplicable": "nd.",
+        "negated": "{{0}} (zaprzeczenie)",
+        "noFactsFound": "Nie wykryto faktów"
       },
       "trust": {
         "title": "Zaufanie do encji (E-E-A-T)",

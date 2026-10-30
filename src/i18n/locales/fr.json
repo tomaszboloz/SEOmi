@@ -6232,7 +6232,16 @@
         "profilePersisted": "Le profil correspond à celui de l’exploration enregistrée.",
         "profileLegacy": "Cette exploration n’a pas de profil enregistré. Les résultats ont été recalculés avec le profil affiché et ne sont pas comparables aux résultats historiques.",
         "profileMismatch": "Le profil enregistré est différent. Les résultats ont été recalculés avec le profil affiché et ne sont pas comparables aux résultats historiques.",
-        "historicalProfile": "Profil enregistré: {{0}} / {{1}}."
+        "historicalProfile": "Profil enregistré: {{0}} / {{1}}.",
+        "tInspector": "Inspecteur de passages",
+        "inspectorIntro": "Composantes du score des passages les plus faibles, leur position dans le texte de la section (caractères UTF-16) et les premiers faits sujet-prédicat-objet détectés. Les faits proviennent d'une heuristique lexicale, pas d'un analyseur de dépendances.",
+        "colPosition": "Position",
+        "colAnswer": "Réponse d'abord",
+        "colFactsFound": "Faits détectés",
+        "position": "caractères {{0}}–{{1}}",
+        "notApplicable": "s.o.",
+        "negated": "{{0}} (nié)",
+        "noFactsFound": "Aucun fait détecté"
       },
       "trust": {
         "title": "Confiance des entités (E-E-A-T)",

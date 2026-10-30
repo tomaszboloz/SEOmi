@@ -6232,7 +6232,16 @@
         "profilePersisted": "저장된 크롤링의 프로필과 일치합니다.",
         "profileLegacy": "이 크롤링에는 저장된 프로필이 없습니다. 표시된 프로필로 다시 계산한 결과이므로 과거 결과와 비교할 수 없습니다.",
         "profileMismatch": "저장된 프로필이 다릅니다. 표시된 프로필로 다시 계산한 결과이므로 과거 결과와 비교할 수 없습니다.",
-        "historicalProfile": "저장된 프로필: {{0}} / {{1}}."
+        "historicalProfile": "저장된 프로필: {{0}} / {{1}}.",
+        "tInspector": "구절 검사기",
+        "inspectorIntro": "가장 약한 구절의 점수 구성 요소, 섹션 텍스트 내 위치(UTF-16 문자), 처음 감지된 주어-술어-목적어 사실입니다. 사실은 의존 구문 분석기가 아닌 어휘 휴리스틱으로 추출됩니다.",
+        "colPosition": "위치",
+        "colAnswer": "답변 우선",
+        "colFactsFound": "감지된 사실",
+        "position": "문자 {{0}}–{{1}}",
+        "notApplicable": "해당 없음",
+        "negated": "{{0}} (부정)",
+        "noFactsFound": "감지된 사실 없음"
       },
       "trust": {
         "title": "엔터티 신뢰도 (E-E-A-T)",

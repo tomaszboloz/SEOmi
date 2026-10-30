@@ -1,6 +1,7 @@
 //! Styled crawl report built on the layout engine.
 
 mod agg;
+mod aio_inspector;
 mod aio_tables;
 mod authority_tables;
 mod cover;
@@ -54,6 +55,8 @@ mod tests;
 mod tests_agg;
 #[cfg(test)]
 mod tests_aio;
+#[cfg(test)]
+mod tests_aio_inspector;
 #[cfg(test)]
 mod tests_authority;
 #[cfg(test)]

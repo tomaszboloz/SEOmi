@@ -6232,7 +6232,16 @@
         "profilePersisted": "此配置与已保存的抓取一致。",
         "profileLegacy": "此抓取没有保存的配置。结果已按显示的配置重新计算，不能与历史结果比较。",
         "profileMismatch": "已保存的配置不同。结果已按显示的配置重新计算，不能与历史结果比较。",
-        "historicalProfile": "已保存的配置: {{0}} / {{1}}."
+        "historicalProfile": "已保存的配置: {{0}} / {{1}}.",
+        "tInspector": "段落检查器",
+        "inspectorIntro": "最弱段落的评分组成、在章节文本中的位置（UTF-16 字符）以及最先检测到的主语-谓语-宾语事实。事实来自词汇启发式，而非依存句法分析器。",
+        "colPosition": "位置",
+        "colAnswer": "答案先行",
+        "colFactsFound": "检测到的事实",
+        "position": "字符 {{0}}–{{1}}",
+        "notApplicable": "不适用",
+        "negated": "{{0}}（否定）",
+        "noFactsFound": "未检测到事实"
       },
       "trust": {
         "title": "实体信任度（E-E-A-T）",

@@ -6232,7 +6232,16 @@
           "too-long": "Too long for one chunk",
           "deictic-context": "Context-dependent reference",
           "no-entity": "Missing topic anchor"
-        }
+        },
+        "tInspector": "Passage inspector",
+        "inspectorIntro": "Score components of the weakest passages, their position in the section text (UTF-16 characters) and the first detected subject-predicate-object facts. Facts come from a lexical heuristic, not a dependency parser.",
+        "colPosition": "Position",
+        "colAnswer": "Answer-First",
+        "colFactsFound": "Detected facts",
+        "position": "chars {{0}}–{{1}}",
+        "notApplicable": "n/a",
+        "negated": "{{0}} (negated)",
+        "noFactsFound": "No facts detected"
       },
       "trust": {
         "title": "Entity Trust (E-E-A-T)",
