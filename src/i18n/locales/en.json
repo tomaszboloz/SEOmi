@@ -8094,6 +8094,44 @@
     "chunk": {
       "leading-pronoun": "Passage {{index}} starts with a pronoun that needs earlier context.",
       "too-short": "Passage {{index}} is too short to stand alone."
+    },
+    "policy": {
+      "advisory": "advisory",
+      "enforced": "enforced"
+    },
+    "gate": {
+      "advice": "Policy: {{policy}}. Advice only; publishing is your decision.",
+      "pass": "Policy: {{policy}}. The check passed for these exact inputs.",
+      "hold": "Policy: {{policy}}. Held for human review: the check is not a complete OK."
+    },
+    "gap": {
+      "stale-baseline": "The baseline crawl is older than 30 days.",
+      "unsupported-language": "Passage rules do not support the site language; passage checks are partial.",
+      "no-baseline-date": "The baseline crawl has no completion date."
+    },
+    "donors": {
+      "title": "Internal link donors",
+      "rule": "Up to 3 existing pages with similarity 60–85% and relevance (TRS) of at least 70.",
+      "none": "No page meets the donor rule.",
+      "row": "{{url}} (similarity {{similarity}}%, TRS {{trs}})",
+      "links": {
+        "yes": "already links to the draft URL",
+        "no": "does not link to the draft URL yet",
+        "unknown": "existing links unknown"
+      },
+      "anchor": "proposed anchor: “{{anchor}}”",
+      "noAnchor": "no anchor proposed (no short title line)",
+      "placement": "Placement proposal: a body passage on the same topic. Not an above-the-fold claim; no viewport was rendered."
+    },
+    "aio": {
+      "title": "Passage readiness (AIO-R)",
+      "language": {
+        "supported": "Rules for {{language}}: full.",
+        "uncertain": "Rules for {{language}}: basic; results are indicative.",
+        "unsupported": "No passage rules for {{language}}; results are partial."
+      },
+      "summary": "Weak passages: {{weak}} of {{total}}.",
+      "chunk": "Passage {{index}} (characters {{start}}–{{end}}, score {{score}})"
     }
   },
   "parityUi": {
@@ -8388,7 +8426,11 @@
     "running": "Embedding the draft and crawl evidence…",
     "unreachable": "The selected embedding provider could not return vectors. Check the project embedding settings and provider connection.",
     "cancelled": "Check cancelled. No result was applied.",
-    "stale": "Inputs or crawl changed. Run the check again."
+    "stale": "Inputs or crawl changed. Run the check again.",
+    "policy": "Review policy",
+    "policyAdvisory": "Advisory (default)",
+    "policyEnforced": "Enforced (opt-in)",
+    "policyHint": "Enforced only holds the draft for a human decision when the check is not a complete OK. Nothing is ever published, deleted or redirected."
   },
   "telemetrySourcesUi": {
     "title": "Sources",

@@ -8094,6 +8094,44 @@
     "chunk": {
       "leading-pronoun": "Abschnitt {{index}} beginnt mit einem Pronomen, das früheren Kontext braucht.",
       "too-short": "Abschnitt {{index}} ist zu kurz, um allein zu bestehen."
+    },
+    "policy": {
+      "advisory": "beratend",
+      "enforced": "verbindlich"
+    },
+    "gate": {
+      "advice": "Richtlinie: {{policy}}. Nur Empfehlung; die Veröffentlichung entscheiden Sie.",
+      "pass": "Richtlinie: {{policy}}. Die Prüfung ist für genau diese Eingaben bestanden.",
+      "hold": "Richtlinie: {{policy}}. Zur menschlichen Prüfung zurückgehalten: kein vollständiges OK."
+    },
+    "gap": {
+      "stale-baseline": "Der Basis-Crawl ist älter als 30 Tage.",
+      "unsupported-language": "Die Passagenregeln unterstützen die Sprache der Website nicht; die Passagenprüfung ist unvollständig.",
+      "no-baseline-date": "Der Basis-Crawl hat kein Abschlussdatum."
+    },
+    "donors": {
+      "title": "Interne Linkgeber",
+      "rule": "Bis zu 3 bestehende Seiten mit 60–85 % Ähnlichkeit und einer Relevanz (TRS) von mindestens 70.",
+      "none": "Keine Seite erfüllt die Linkgeber-Regel.",
+      "row": "{{url}} (Ähnlichkeit {{similarity}} %, TRS {{trs}})",
+      "links": {
+        "yes": "verlinkt bereits auf die Entwurfs-URL",
+        "no": "verlinkt noch nicht auf die Entwurfs-URL",
+        "unknown": "bestehende Links unbekannt"
+      },
+      "anchor": "vorgeschlagener Anker: „{{anchor}}“",
+      "noAnchor": "kein Anker vorgeschlagen (keine kurze Titelzeile)",
+      "placement": "Platzierungsvorschlag: ein Textabschnitt zum selben Thema. Keine Aussage über den sichtbaren Bereich; es wurde kein Viewport gerendert."
+    },
+    "aio": {
+      "title": "Passagenbereitschaft (AIO-R)",
+      "language": {
+        "supported": "Regeln für {{language}}: vollständig.",
+        "uncertain": "Regeln für {{language}}: grundlegend; Ergebnisse sind Richtwerte.",
+        "unsupported": "Keine Passagenregeln für {{language}}; Ergebnisse sind unvollständig."
+      },
+      "summary": "Schwache Passagen: {{weak}} von {{total}}.",
+      "chunk": "Passage {{index}} (Zeichen {{start}}–{{end}}, Wert {{score}})"
     }
   },
   "parityUi": {
@@ -8388,7 +8426,11 @@
     "running": "Embeddings für Entwurf und Crawl-Daten werden erstellt…",
     "unreachable": "Der gewählte Embedding-Anbieter konnte keine Vektoren liefern. Projekteinstellungen und Verbindung prüfen.",
     "cancelled": "Prüfung abgebrochen. Kein Ergebnis wurde übernommen.",
-    "stale": "Eingaben oder Crawl geändert. Prüfung erneut starten."
+    "stale": "Eingaben oder Crawl geändert. Prüfung erneut starten.",
+    "policy": "Prüfrichtlinie",
+    "policyAdvisory": "Beratend (Standard)",
+    "policyEnforced": "Verbindlich (Opt-in)",
+    "policyHint": "Verbindlich hält den Entwurf nur für eine menschliche Entscheidung zurück, wenn die Prüfung kein vollständiges OK ergibt. Es wird nie etwas veröffentlicht, gelöscht oder umgeleitet."
   },
   "telemetrySourcesUi": {
     "title": "Quellen",

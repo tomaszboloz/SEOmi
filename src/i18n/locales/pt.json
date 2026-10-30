@@ -8094,6 +8094,44 @@
     "chunk": {
       "leading-pronoun": "A passagem {{index}} começa com um pronome que exige contexto anterior.",
       "too-short": "A passagem {{index}} é curta demais para se sustentar sozinha."
+    },
+    "policy": {
+      "advisory": "consultiva",
+      "enforced": "obrigatória"
+    },
+    "gate": {
+      "advice": "Política: {{policy}}. Apenas conselho; publicar é decisão sua.",
+      "pass": "Política: {{policy}}. A verificação passou para exatamente estas entradas.",
+      "hold": "Política: {{policy}}. Retido para revisão humana: a verificação não é um OK completo."
+    },
+    "gap": {
+      "stale-baseline": "O rastreamento de base tem mais de 30 dias.",
+      "unsupported-language": "As regras de trechos não suportam o idioma do site; a verificação de trechos é parcial.",
+      "no-baseline-date": "O rastreamento de base não tem data de conclusão."
+    },
+    "donors": {
+      "title": "Doadores de links internos",
+      "rule": "Até 3 páginas existentes com similaridade de 60–85% e relevância (TRS) de pelo menos 70.",
+      "none": "Nenhuma página atende à regra de doador.",
+      "row": "{{url}} (similaridade {{similarity}}%, TRS {{trs}})",
+      "links": {
+        "yes": "já aponta para a URL do rascunho",
+        "no": "ainda não aponta para a URL do rascunho",
+        "unknown": "links existentes desconhecidos"
+      },
+      "anchor": "âncora proposta: “{{anchor}}”",
+      "noAnchor": "nenhuma âncora proposta (sem linha de título curta)",
+      "placement": "Proposta de posicionamento: um trecho do corpo sobre o mesmo tema. Não é uma afirmação sobre a área visível sem rolagem; nenhum viewport foi renderizado."
+    },
+    "aio": {
+      "title": "Prontidão dos trechos (AIO-R)",
+      "language": {
+        "supported": "Regras para {{language}}: completas.",
+        "uncertain": "Regras para {{language}}: básicas; resultados indicativos.",
+        "unsupported": "Não há regras de trechos para {{language}}; resultados parciais."
+      },
+      "summary": "Trechos fracos: {{weak}} de {{total}}.",
+      "chunk": "Trecho {{index}} (caracteres {{start}}–{{end}}, pontuação {{score}})"
     }
   },
   "parityUi": {
@@ -8388,7 +8426,11 @@
     "running": "A gerar embeddings do rascunho e dos dados do rastreio…",
     "unreachable": "O fornecedor de embeddings selecionado não devolveu vetores. Verifique as definições do projeto e a ligação.",
     "cancelled": "Verificação cancelada. Nenhum resultado aplicado.",
-    "stale": "Os dados ou o rastreio mudaram. Execute a verificação novamente."
+    "stale": "Os dados ou o rastreio mudaram. Execute a verificação novamente.",
+    "policy": "Política de revisão",
+    "policyAdvisory": "Consultiva (padrão)",
+    "policyEnforced": "Obrigatória (opcional)",
+    "policyHint": "A política obrigatória apenas retém o rascunho para uma decisão humana quando a verificação não é um OK completo. Nada é publicado, excluído ou redirecionado."
   },
   "telemetrySourcesUi": {
     "title": "Fontes",

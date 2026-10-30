@@ -8094,6 +8094,44 @@
     "chunk": {
       "leading-pronoun": "Le passage {{index}} commence par un pronom qui exige un contexte antérieur.",
       "too-short": "Le passage {{index}} est trop court pour tenir seul."
+    },
+    "policy": {
+      "advisory": "consultative",
+      "enforced": "appliquée"
+    },
+    "gate": {
+      "advice": "Politique : {{policy}}. Simple conseil ; la publication reste votre décision.",
+      "pass": "Politique : {{policy}}. La vérification est réussie pour ces entrées exactes.",
+      "hold": "Politique : {{policy}}. Retenu pour revue humaine : la vérification n’est pas un OK complet."
+    },
+    "gap": {
+      "stale-baseline": "Le crawl de référence date de plus de 30 jours.",
+      "unsupported-language": "Les règles de passages ne prennent pas en charge la langue du site ; la vérification des passages est partielle.",
+      "no-baseline-date": "Le crawl de référence n’a pas de date de fin."
+    },
+    "donors": {
+      "title": "Donneurs de liens internes",
+      "rule": "Jusqu’à 3 pages existantes avec une similarité de 60 à 85 % et une pertinence (TRS) d’au moins 70.",
+      "none": "Aucune page ne respecte la règle de donneur.",
+      "row": "{{url}} (similarité {{similarity}} %, TRS {{trs}})",
+      "links": {
+        "yes": "renvoie déjà vers l’URL du brouillon",
+        "no": "ne renvoie pas encore vers l’URL du brouillon",
+        "unknown": "liens existants inconnus"
+      },
+      "anchor": "ancre proposée : « {{anchor}} »",
+      "noAnchor": "aucune ancre proposée (pas de ligne de titre courte)",
+      "placement": "Proposition d’emplacement : un passage du corps sur le même sujet. Ce n’est pas une affirmation sur la partie visible sans défilement ; aucun viewport n’a été rendu."
+    },
+    "aio": {
+      "title": "Préparation des passages (AIO-R)",
+      "language": {
+        "supported": "Règles pour {{language}} : complètes.",
+        "uncertain": "Règles pour {{language}} : de base ; résultats indicatifs.",
+        "unsupported": "Aucune règle de passages pour {{language}} ; résultats partiels."
+      },
+      "summary": "Passages faibles : {{weak}} sur {{total}}.",
+      "chunk": "Passage {{index}} (caractères {{start}}–{{end}}, score {{score}})"
     }
   },
   "parityUi": {
@@ -8388,7 +8426,11 @@
     "running": "Création des embeddings du brouillon et des données du crawl…",
     "unreachable": "Le fournisseur d’embeddings sélectionné n’a pas renvoyé de vecteurs. Vérifiez les paramètres du projet et la connexion.",
     "cancelled": "Vérification annulée. Aucun résultat appliqué.",
-    "stale": "Les données ou le crawl ont changé. Relancez la vérification."
+    "stale": "Les données ou le crawl ont changé. Relancez la vérification.",
+    "policy": "Politique de revue",
+    "policyAdvisory": "Consultative (par défaut)",
+    "policyEnforced": "Appliquée (sur option)",
+    "policyHint": "La politique appliquée retient seulement le brouillon pour une décision humaine lorsque la vérification n’est pas un OK complet. Rien n’est jamais publié, supprimé ni redirigé."
   },
   "telemetrySourcesUi": {
     "title": "Sources",

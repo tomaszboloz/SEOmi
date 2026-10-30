@@ -8094,6 +8094,44 @@
     "chunk": {
       "leading-pronoun": "Fragment {{index}} zaczyna się zaimkiem wymagającym wcześniejszego kontekstu.",
       "too-short": "Fragment {{index}} jest za krótki, by działać samodzielnie."
+    },
+    "policy": {
+      "advisory": "doradcza",
+      "enforced": "egzekwowana"
+    },
+    "gate": {
+      "advice": "Polityka: {{policy}}. Tylko porada; decyzja o publikacji należy do Ciebie.",
+      "pass": "Polityka: {{policy}}. Kontrola zaliczona dla dokładnie tych danych.",
+      "hold": "Polityka: {{policy}}. Wstrzymane do przeglądu przez człowieka: kontrola nie daje pełnego OK."
+    },
+    "gap": {
+      "stale-baseline": "Bazowy crawl jest starszy niż 30 dni.",
+      "unsupported-language": "Reguły fragmentów nie obsługują języka witryny; kontrola fragmentów jest częściowa.",
+      "no-baseline-date": "Bazowy crawl nie ma daty zakończenia."
+    },
+    "donors": {
+      "title": "Dawcy linków wewnętrznych",
+      "rule": "Do 3 istniejących stron o podobieństwie 60–85% i trafności (TRS) co najmniej 70.",
+      "none": "Żadna strona nie spełnia reguły dawcy.",
+      "row": "{{url}} (podobieństwo {{similarity}}%, TRS {{trs}})",
+      "links": {
+        "yes": "już linkuje do URL szkicu",
+        "no": "jeszcze nie linkuje do URL szkicu",
+        "unknown": "istniejące linki nieznane"
+      },
+      "anchor": "proponowany anchor: „{{anchor}}”",
+      "noAnchor": "brak propozycji anchora (brak krótkiej linii tytułu)",
+      "placement": "Propozycja umiejscowienia: fragment treści o tym samym temacie. To nie jest twierdzenie o widoczności bez przewijania; nie renderowano viewportu."
+    },
+    "aio": {
+      "title": "Gotowość fragmentów (AIO-R)",
+      "language": {
+        "supported": "Reguły dla {{language}}: pełne.",
+        "uncertain": "Reguły dla {{language}}: podstawowe; wyniki orientacyjne.",
+        "unsupported": "Brak reguł fragmentów dla {{language}}; wyniki częściowe."
+      },
+      "summary": "Słabe fragmenty: {{weak}} z {{total}}.",
+      "chunk": "Fragment {{index}} (znaki {{start}}–{{end}}, wynik {{score}})"
     }
   },
   "parityUi": {
@@ -8388,7 +8426,11 @@
     "running": "Tworzenie embeddingów szkicu i danych z crawla…",
     "unreachable": "Wybrany dostawca embeddingów nie zwrócił wektorów. Sprawdź ustawienia embeddingów projektu i połączenie z dostawcą.",
     "cancelled": "Kontrola anulowana. Nie zastosowano żadnego wyniku.",
-    "stale": "Zmieniono dane wejściowe lub crawl. Uruchom kontrolę ponownie."
+    "stale": "Zmieniono dane wejściowe lub crawl. Uruchom kontrolę ponownie.",
+    "policy": "Polityka przeglądu",
+    "policyAdvisory": "Doradcza (domyślna)",
+    "policyEnforced": "Egzekwowana (opcjonalna)",
+    "policyHint": "Tryb egzekwowany jedynie wstrzymuje szkic do decyzji człowieka, gdy kontrola nie daje pełnego OK. Nic nie jest publikowane, usuwane ani przekierowywane."
   },
   "telemetrySourcesUi": {
     "title": "Źródła",

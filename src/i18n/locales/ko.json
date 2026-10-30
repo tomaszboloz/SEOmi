@@ -8094,6 +8094,44 @@
     "chunk": {
       "leading-pronoun": "구절 {{index}}이(가) 앞선 문맥이 필요한 대명사로 시작합니다.",
       "too-short": "구절 {{index}}이(가) 단독으로 쓰기엔 너무 짧습니다."
+    },
+    "policy": {
+      "advisory": "권고",
+      "enforced": "강제"
+    },
+    "gate": {
+      "advice": "정책: {{policy}}. 권고일 뿐이며 게시는 직접 결정합니다.",
+      "pass": "정책: {{policy}}. 이 입력 그대로 검사를 통과했습니다.",
+      "hold": "정책: {{policy}}. 사람의 검토를 위해 보류됨: 검사가 완전한 OK가 아닙니다."
+    },
+    "gap": {
+      "stale-baseline": "기준 크롤링이 30일보다 오래되었습니다.",
+      "unsupported-language": "구절 규칙이 사이트 언어를 지원하지 않아 구절 검사가 부분적입니다.",
+      "no-baseline-date": "기준 크롤링에 완료 날짜가 없습니다."
+    },
+    "donors": {
+      "title": "내부 링크 기여 페이지",
+      "rule": "유사도 60–85%, 관련도(TRS) 70 이상인 기존 페이지 최대 3개.",
+      "none": "기여 페이지 규칙을 충족하는 페이지가 없습니다.",
+      "row": "{{url}} (유사도 {{similarity}}%, TRS {{trs}})",
+      "links": {
+        "yes": "이미 초안 URL로 링크함",
+        "no": "아직 초안 URL로 링크하지 않음",
+        "unknown": "기존 링크 알 수 없음"
+      },
+      "anchor": "제안 앵커: “{{anchor}}”",
+      "noAnchor": "제안된 앵커 없음(짧은 제목 줄 없음)",
+      "placement": "배치 제안: 같은 주제의 본문 구절. 첫 화면 노출에 대한 주장이 아니며 뷰포트를 렌더링하지 않았습니다."
+    },
+    "aio": {
+      "title": "구절 준비도(AIO-R)",
+      "language": {
+        "supported": "{{language}} 규칙: 전체.",
+        "uncertain": "{{language}} 규칙: 기본; 결과는 참고용입니다.",
+        "unsupported": "{{language}}에 대한 구절 규칙이 없어 결과가 부분적입니다."
+      },
+      "summary": "약한 구절: {{total}}개 중 {{weak}}개.",
+      "chunk": "구절 {{index}} (문자 {{start}}–{{end}}, 점수 {{score}})"
     }
   },
   "parityUi": {
@@ -8388,7 +8426,11 @@
     "running": "초안과 크롤링 데이터의 임베딩 생성 중…",
     "unreachable": "선택한 임베딩 제공자가 벡터를 반환하지 못했습니다. 프로젝트 설정과 연결을 확인하세요.",
     "cancelled": "검사가 취소되었습니다. 결과가 적용되지 않았습니다.",
-    "stale": "입력 또는 크롤링이 변경되었습니다. 검사를 다시 실행하세요."
+    "stale": "입력 또는 크롤링이 변경되었습니다. 검사를 다시 실행하세요.",
+    "policy": "검토 정책",
+    "policyAdvisory": "권고(기본값)",
+    "policyEnforced": "강제(선택)",
+    "policyHint": "강제 정책은 검사가 완전한 OK가 아닐 때 사람의 결정을 위해 초안을 보류할 뿐입니다. 게시, 삭제, 리디렉션은 절대 하지 않습니다."
   },
   "telemetrySourcesUi": {
     "title": "데이터 소스",

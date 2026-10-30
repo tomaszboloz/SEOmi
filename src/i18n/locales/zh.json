@@ -8094,6 +8094,44 @@
     "chunk": {
       "leading-pronoun": "第 {{index}} 段以需要上文语境的代词开头。",
       "too-short": "第 {{index}} 段太短，无法独立成立。"
+    },
+    "policy": {
+      "advisory": "建议",
+      "enforced": "强制"
+    },
+    "gate": {
+      "advice": "策略：{{policy}}。仅供参考；是否发布由您决定。",
+      "pass": "策略：{{policy}}。对这些确切输入，检查已通过。",
+      "hold": "策略：{{policy}}。保留以待人工审核：检查不是完整 OK。"
+    },
+    "gap": {
+      "stale-baseline": "基准抓取已超过 30 天。",
+      "unsupported-language": "段落规则不支持网站语言；段落检查不完整。",
+      "no-baseline-date": "基准抓取没有完成日期。"
+    },
+    "donors": {
+      "title": "内部链接来源页",
+      "rule": "最多 3 个相似度为 60–85% 且相关度（TRS）不低于 70 的现有页面。",
+      "none": "没有页面符合来源页规则。",
+      "row": "{{url}}（相似度 {{similarity}}%，TRS {{trs}}）",
+      "links": {
+        "yes": "已链接到草稿 URL",
+        "no": "尚未链接到草稿 URL",
+        "unknown": "现有链接未知"
+      },
+      "anchor": "建议锚文本：“{{anchor}}”",
+      "noAnchor": "未建议锚文本（没有简短的标题行）",
+      "placement": "放置建议：同一主题的正文段落。这不是关于首屏的结论；未渲染任何视口。"
+    },
+    "aio": {
+      "title": "段落就绪度（AIO-R）",
+      "language": {
+        "supported": "{{language}} 规则：完整。",
+        "uncertain": "{{language}} 规则：基础；结果仅供参考。",
+        "unsupported": "没有 {{language}} 的段落规则；结果不完整。"
+      },
+      "summary": "薄弱段落：{{weak}} / {{total}}。",
+      "chunk": "段落 {{index}}（字符 {{start}}–{{end}}，得分 {{score}}）"
     }
   },
   "parityUi": {
@@ -8388,7 +8426,11 @@
     "running": "正在生成草稿和抓取数据的嵌入…",
     "unreachable": "所选嵌入提供方未能返回向量。请检查项目设置和提供方连接。",
     "cancelled": "检查已取消，未应用任何结果。",
-    "stale": "输入或抓取已更改，请重新运行检查。"
+    "stale": "输入或抓取已更改，请重新运行检查。",
+    "policy": "审核策略",
+    "policyAdvisory": "建议（默认）",
+    "policyEnforced": "强制（可选）",
+    "policyHint": "强制策略仅在检查不是完整 OK 时将草稿保留以待人工决定。不会发布、删除或重定向任何内容。"
   },
   "telemetrySourcesUi": {
     "title": "数据来源",

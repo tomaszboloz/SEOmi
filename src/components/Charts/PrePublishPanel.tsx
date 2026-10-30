@@ -4,6 +4,7 @@ import { copyText } from '@/services/clipboard';
 import { prePublishReportText } from '@/services/prePublish/reportText';
 import { HelpTip } from '@/components/Help/HelpTip';
 import type { PrePublishReport } from '@/services/prePublish/check';
+import { PrePublishDetails } from './prePublish/PrePublishDetails';
 
 /** Advisory pre-publish card. Shows reasons for every non-ok verdict; never publishes anything. */
 export const PrePublishPanel = ({ report }: { report: PrePublishReport }) => {
@@ -17,6 +18,7 @@ export const PrePublishPanel = ({ report }: { report: PrePublishReport }) => {
     {report.reasons.length > 0 && <ul className="list-disc pl-4">{report.reasons.map((r) => <li key={r}>{t(`prePublishUi.reason.${r}`)}</li>)}</ul>}
     {report.conflicts.map((c) => <p key={c.url} className="break-all">{t(`prePublishUi.${c.level}`, { url: c.url, value: (c.similarity * 100).toFixed(1) })}</p>)}
     {report.chunkIssues.map((i) => <p key={`${i.index}-${i.kind}`}>{t(`prePublishUi.chunk.${i.kind}`, { index: i.index + 1 })}</p>)}
+    <PrePublishDetails report={report} />
     <button type="button" onClick={copyReport} className="rounded border border-slate-700 px-2 py-1">{t('prePublishUi.copy')}</button>
     {copy && <p role="status">{t(`prePublishUi.${copy}`)}</p>}
   </section>;

@@ -8094,6 +8094,44 @@
     "chunk": {
       "leading-pronoun": "Il passaggio {{index}} inizia con un pronome che richiede contesto precedente.",
       "too-short": "Il passaggio {{index}} è troppo breve per reggersi da solo."
+    },
+    "policy": {
+      "advisory": "consultivo",
+      "enforced": "vincolante"
+    },
+    "gate": {
+      "advice": "Criterio: {{policy}}. Solo un consiglio; la pubblicazione è una tua decisione.",
+      "pass": "Criterio: {{policy}}. Il controllo è superato per questi input esatti.",
+      "hold": "Criterio: {{policy}}. Trattenuto per revisione umana: il controllo non è un OK completo."
+    },
+    "gap": {
+      "stale-baseline": "La scansione di riferimento ha più di 30 giorni.",
+      "unsupported-language": "Le regole dei passaggi non supportano la lingua del sito; il controllo dei passaggi è parziale.",
+      "no-baseline-date": "La scansione di riferimento non ha una data di completamento."
+    },
+    "donors": {
+      "title": "Donatori di link interni",
+      "rule": "Fino a 3 pagine esistenti con somiglianza del 60–85% e pertinenza (TRS) di almeno 70.",
+      "none": "Nessuna pagina soddisfa la regola del donatore.",
+      "row": "{{url}} (somiglianza {{similarity}}%, TRS {{trs}})",
+      "links": {
+        "yes": "rimanda già all’URL della bozza",
+        "no": "non rimanda ancora all’URL della bozza",
+        "unknown": "link esistenti sconosciuti"
+      },
+      "anchor": "anchor proposto: «{{anchor}}»",
+      "noAnchor": "nessun anchor proposto (manca una riga di titolo breve)",
+      "placement": "Proposta di posizionamento: un passaggio del corpo sullo stesso argomento. Non è un’affermazione sulla parte visibile senza scorrimento; nessun viewport è stato renderizzato."
+    },
+    "aio": {
+      "title": "Prontezza dei passaggi (AIO-R)",
+      "language": {
+        "supported": "Regole per {{language}}: complete.",
+        "uncertain": "Regole per {{language}}: di base; risultati indicativi.",
+        "unsupported": "Nessuna regola dei passaggi per {{language}}; risultati parziali."
+      },
+      "summary": "Passaggi deboli: {{weak}} su {{total}}.",
+      "chunk": "Passaggio {{index}} (caratteri {{start}}–{{end}}, punteggio {{score}})"
     }
   },
   "parityUi": {
@@ -8388,7 +8426,11 @@
     "running": "Generazione degli embedding della bozza e dei dati della scansione…",
     "unreachable": "Il fornitore di embedding selezionato non ha restituito vettori. Controlla le impostazioni del progetto e la connessione.",
     "cancelled": "Controllo annullato. Nessun risultato applicato.",
-    "stale": "Dati o scansione modificati. Ripeti il controllo."
+    "stale": "Dati o scansione modificati. Ripeti il controllo.",
+    "policy": "Criterio di revisione",
+    "policyAdvisory": "Consultivo (predefinito)",
+    "policyEnforced": "Vincolante (su richiesta)",
+    "policyHint": "Il criterio vincolante trattiene la bozza per una decisione umana solo quando il controllo non è un OK completo. Nulla viene mai pubblicato, eliminato o reindirizzato."
   },
   "telemetrySourcesUi": {
     "title": "Fonti",

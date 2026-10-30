@@ -8094,6 +8094,44 @@
     "chunk": {
       "leading-pronoun": "El pasaje {{index}} empieza con un pronombre que necesita contexto previo.",
       "too-short": "El pasaje {{index}} es demasiado corto para valerse solo."
+    },
+    "policy": {
+      "advisory": "consultiva",
+      "enforced": "obligatoria"
+    },
+    "gate": {
+      "advice": "Política: {{policy}}. Solo consejo; publicar es tu decisión.",
+      "pass": "Política: {{policy}}. La comprobación se superó para estos datos exactos.",
+      "hold": "Política: {{policy}}. Retenido para revisión humana: la comprobación no es un OK completo."
+    },
+    "gap": {
+      "stale-baseline": "El rastreo base tiene más de 30 días.",
+      "unsupported-language": "Las reglas de pasajes no admiten el idioma del sitio; la comprobación de pasajes es parcial.",
+      "no-baseline-date": "El rastreo base no tiene fecha de finalización."
+    },
+    "donors": {
+      "title": "Donantes de enlaces internos",
+      "rule": "Hasta 3 páginas existentes con similitud del 60–85 % y relevancia (TRS) de al menos 70.",
+      "none": "Ninguna página cumple la regla de donante.",
+      "row": "{{url}} (similitud {{similarity}} %, TRS {{trs}})",
+      "links": {
+        "yes": "ya enlaza a la URL del borrador",
+        "no": "aún no enlaza a la URL del borrador",
+        "unknown": "enlaces existentes desconocidos"
+      },
+      "anchor": "ancla propuesta: «{{anchor}}»",
+      "noAnchor": "sin ancla propuesta (no hay una línea de título corta)",
+      "placement": "Propuesta de ubicación: un pasaje del cuerpo sobre el mismo tema. No es una afirmación sobre la mitad superior; no se renderizó ningún viewport."
+    },
+    "aio": {
+      "title": "Preparación de pasajes (AIO-R)",
+      "language": {
+        "supported": "Reglas para {{language}}: completas.",
+        "uncertain": "Reglas para {{language}}: básicas; resultados orientativos.",
+        "unsupported": "No hay reglas de pasajes para {{language}}; resultados parciales."
+      },
+      "summary": "Pasajes débiles: {{weak}} de {{total}}.",
+      "chunk": "Pasaje {{index}} (caracteres {{start}}–{{end}}, puntuación {{score}})"
     }
   },
   "parityUi": {
@@ -8388,7 +8426,11 @@
     "running": "Generando embeddings del borrador y de los datos del rastreo…",
     "unreachable": "El proveedor de embeddings seleccionado no devolvió vectores. Revisa la configuración del proyecto y la conexión.",
     "cancelled": "Comprobación cancelada. No se aplicó ningún resultado.",
-    "stale": "Han cambiado los datos o el rastreo. Repite la comprobación."
+    "stale": "Han cambiado los datos o el rastreo. Repite la comprobación.",
+    "policy": "Política de revisión",
+    "policyAdvisory": "Consultiva (predeterminada)",
+    "policyEnforced": "Obligatoria (opcional)",
+    "policyHint": "La política obligatoria solo retiene el borrador para una decisión humana cuando la comprobación no es un OK completo. Nunca se publica, elimina ni redirige nada."
   },
   "telemetrySourcesUi": {
     "title": "Fuentes",
