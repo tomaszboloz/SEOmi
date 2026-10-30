@@ -16,6 +16,8 @@ Rule `js/incomplete-multi-character-sanitization`, `src/services/siteFocusBenchm
 | Issue forms (version/SHA, environment, reproduction, scope, secret-free evidence), blank issues off, vulnerabilities routed to private advisories | `.github/ISSUE_TEMPLATE/*`, `SECURITY.md` | `tests/githubCommunityFiles.test.ts` |
 | PR template (linked issue, paths, tested head SHA, risks, no release promise), CONTRIBUTING (DOR/DOD, MAX150, Rust 95 / frontend+MCP 98) | `.github/PULL_REQUEST_TEMPLATE.md`, `CONTRIBUTING.md` | `tests/githubCommunityFiles.test.ts` |
 | CODEOWNERS lists only the owner, catch-all first, only existing paths | `.github/CODEOWNERS` | `tests/githubCommunityFiles.test.ts` |
+| Code of Conduct: unmodified Contributor Covenant 2.1, enforcement contact is the private reporting link from `SECURITY.md`, linked from CONTRIBUTING (default decision, #101) | `CODE_OF_CONDUCT.md`, `CONTRIBUTING.md` | `tests/githubCodeOfConduct.test.ts` |
+| Release profile keeps `panic = "unwind"` so objc2 can catch the WebKit exception raised when a reload cancels a protocol task; both desktop E2E profiles run a real Foundation exception probe (macOS Intel failure in run 40987852299, #90) | `src-tauri/Cargo.toml`, `src-tauri/examples/desktop_e2e_assets.rs`, `src-tauri/examples/desktop_e2e_exceptions.rs` | `tests/releaseProfileUnwind.test.ts` |
 
 ## Remaining manual admin steps
 These need repository admin settings or an owner decision. They stay open until someone reads the setting back after the change.
@@ -23,7 +25,7 @@ These need repository admin settings or an owner decision. They stay open until 
 - [ ] Decide on a release `environment` with required reviewers, then reference it from the publish job in `release.yml`. An environment that no job uses does not protect a release.
 - [ ] Watch the first real OIDC attestation run on a published release and verify it with `gh attestation verify`.
 - [ ] Raise required approvals to 1 only after a second independent maintainer agrees to review. Until then the sole maintainer must not be blocked.
-- [ ] Publish a Code of Conduct. The owner chooses the text and the enforcement contact; none is invented here.
+- [ ] Code of Conduct: Contributor Covenant 2.1 is published as a default decision with the `SECURITY.md` contact. The owner confirms or replaces the text and contact; a dedicated conduct e-mail address is not invented here.
 - [ ] Secret-scanning non-provider patterns and validity checks: confirm plan availability and enable in settings.
 - [ ] After merge, read the community profile and confirm GitHub picks up the forms, CODEOWNERS and CONTRIBUTING.
 

@@ -31,5 +31,13 @@ Cross-cutting: old snapshots, partial data, project A/B, restart/cancel/retry, n
 ## Commands (confirm from `package.json`, workflows and `src-tauri/Cargo.toml` at the target SHA)
 `npm run check:loc`, frontend and MCP test and coverage scripts, `cargo test --manifest-path src-tauri/Cargo.toml`. macOS and Windows IPC/MCP smoke, and a real-provider check only within authorized scope.
 
+## CI evidence log (platform jobs)
+Each entry is tied to the exact head SHA of the run. A later green run does not turn an earlier FAIL into PASS.
+
+| Run | Head SHA | Job | Result | Cause and follow-up |
+|---|---|---|---|---|
+| 40987852299 | `09a1ef69` | Desktop platform smoke (macos-15-intel), production-profile desktop E2E | FAIL | Debug-profile E2E and renderer evidence passed. The production profile aborted with `panic in a function that cannot unwind` right after the last pre-reload check, when `location.reload()` cancels in-flight protocol tasks. `[profile.release]` had `panic = "abort"`, so objc2 could not catch the WebKit exception. Fixed in `40a347ee` (`panic = "unwind"` plus a real Foundation exception probe in both desktop E2E profiles); guarded by `tests/releaseProfileUnwind.test.ts`. |
+| 41053285216 | `40a347ee` | Same matrix | NOT_TESTED at time of writing | Run in progress; record PASS or FAIL from the run itself, not from this note. |
+
 ## Release evidence (future)
 Release only after: green checks for the current SHA, one version source, release notes, macOS/Windows smoke, installers, updater signatures, checksums and SBOM. Credit @RafalSzy. Nothing is released now. A plan does not guarantee enterprise compliance, 100% parity or error-free runtime (GEM-90-D01).
