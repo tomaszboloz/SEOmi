@@ -456,7 +456,8 @@
       "backlinkNoProfile": "DataForSEO returned no backlink profile for this target.",
       "backlinkLoad": "Connect DataForSEO in Settings to load more backlinks.",
       "backlinkAnchorLoad": "Connect DataForSEO in Settings to load more anchor texts.",
-      "crawlerNoPages": "Crawler returned no pages for this target."
+      "crawlerNoPages": "Crawler returned no pages for this target.",
+      "crawlLogRecoveryFailed": "크롤 이벤트 로그를 읽을 수 없어 재시작 전에 완료된 페이지를 복구하지 못했습니다: {{reason}}"
     },
     "semanticAudit": {
       "actionUnmapped": "Review the topical plan and assign a crawled URL, or confirm that the topic is still planned.",
@@ -2651,7 +2652,9 @@
       "path-key-collision": "중복 경로 키",
       "url-key-collision": "중복 URL 키"
     },
-    "pageLimitUnlimited": "제한 없음"
+    "pageLimitUnlimited": "제한 없음",
+    "interruptedRecovered": "앱 종료 전에 완료된 {{pages}}개 페이지를 크롤 로그에서 복구했으며 재개 시 유지됩니다.",
+    "interruptedRecoveredInvalid": "기록된 {{count}}개 페이지를 읽을 수 없어 다시 크롤합니다."
   },
   "mcp": {
     "badge": "AI agent workflows",

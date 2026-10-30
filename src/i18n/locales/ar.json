@@ -456,7 +456,8 @@
       "backlinkNoProfile": "DataForSEO returned no backlink profile for this target.",
       "backlinkLoad": "Connect DataForSEO in Settings to load more backlinks.",
       "backlinkAnchorLoad": "Connect DataForSEO in Settings to load more anchor texts.",
-      "crawlerNoPages": "Crawler returned no pages for this target."
+      "crawlerNoPages": "Crawler returned no pages for this target.",
+      "crawlLogRecoveryFailed": "تعذرت قراءة سجل أحداث الزحف، لذلك لم تُستعد الصفحات المكتملة قبل إعادة التشغيل: {{reason}}"
     },
     "semanticAudit": {
       "actionUnmapped": "Review the topical plan and assign a crawled URL, or confirm that the topic is still planned.",
@@ -2651,7 +2652,9 @@
       "path-key-collision": "مفتاح مسار مكرر",
       "url-key-collision": "مفتاح URL مكرر"
     },
-    "pageLimitUnlimited": "بدون حد"
+    "pageLimitUnlimited": "بدون حد",
+    "interruptedRecovered": "استُعيدت من سجل الزحف {{pages}} صفحة اكتملت قبل إغلاق التطبيق، وستُحفظ عند الاستئناف.",
+    "interruptedRecoveredInvalid": "تعذرت قراءة {{count}} صفحة مسجلة وسيُعاد زحفها."
   },
   "mcp": {
     "badge": "AI agent workflows",

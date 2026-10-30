@@ -37,6 +37,7 @@ export const normalizeInterruptedCrawl = (value: unknown): InterruptedCrawl | nu
     completedUrls: Array.isArray(candidate.completedUrls) ? candidate.completedUrls.filter((item): item is string => typeof item === 'string').slice(0, 20_000) : undefined,
     frontierUrls: Array.isArray(candidate.frontierUrls) ? candidate.frontierUrls.filter((item): item is string => typeof item === 'string').slice(0, 20_000) : undefined,
     baseRunId: typeof candidate.baseRunId === 'string' ? candidate.baseRunId : undefined,
+    runId: typeof candidate.runId === 'string' && candidate.runId ? candidate.runId : undefined,
   };
 };
 

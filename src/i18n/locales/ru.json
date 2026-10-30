@@ -456,7 +456,8 @@
       "backlinkNoProfile": "DataForSEO returned no backlink profile for this target.",
       "backlinkLoad": "Connect DataForSEO in Settings to load more backlinks.",
       "backlinkAnchorLoad": "Connect DataForSEO in Settings to load more anchor texts.",
-      "crawlerNoPages": "Crawler returned no pages for this target."
+      "crawlerNoPages": "Crawler returned no pages for this target.",
+      "crawlLogRecoveryFailed": "Не удалось прочитать журнал событий краулинга, поэтому страницы, обработанные до перезапуска, не восстановлены: {{reason}}"
     },
     "semanticAudit": {
       "actionUnmapped": "Review the topical plan and assign a crawled URL, or confirm that the topic is still planned.",
@@ -2651,7 +2652,9 @@
       "path-key-collision": "дублирующийся ключ пути",
       "url-key-collision": "дублирующийся ключ URL"
     },
-    "pageLimitUnlimited": "Без ограничений"
+    "pageLimitUnlimited": "Без ограничений",
+    "interruptedRecovered": "{{pages}} страниц, обработанных до закрытия приложения, восстановлены из журнала краулинга и сохранятся при возобновлении.",
+    "interruptedRecoveredInvalid": "Не удалось прочитать {{count}} записанных страниц; они будут обработаны заново."
   },
   "mcp": {
     "badge": "AI agent workflows",

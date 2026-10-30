@@ -456,7 +456,8 @@
       "backlinkNoProfile": "DataForSEO returned no backlink profile for this target.",
       "backlinkLoad": "Connect DataForSEO in Settings to load more backlinks.",
       "backlinkAnchorLoad": "Connect DataForSEO in Settings to load more anchor texts.",
-      "crawlerNoPages": "Crawler returned no pages for this target."
+      "crawlerNoPages": "Crawler returned no pages for this target.",
+      "crawlLogRecoveryFailed": "无法读取抓取事件日志，因此未恢复重启前已完成的页面：{{reason}}"
     },
     "semanticAudit": {
       "actionUnmapped": "Review the topical plan and assign a crawled URL, or confirm that the topic is still planned.",
@@ -2651,7 +2652,9 @@
       "path-key-collision": "路径键重复",
       "url-key-collision": "URL 键重复"
     },
-    "pageLimitUnlimited": "不限制"
+    "pageLimitUnlimited": "不限制",
+    "interruptedRecovered": "已从抓取日志恢复应用关闭前完成的 {{pages}} 个页面，继续时会保留。",
+    "interruptedRecoveredInvalid": "有 {{count}} 个已记录页面无法读取，将重新抓取。"
   },
   "mcp": {
     "badge": "AI agent workflows",

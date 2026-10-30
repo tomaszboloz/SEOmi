@@ -50,7 +50,9 @@ startSiteCrawl: async (url, limit, configPatch, environment = 'default', notifyC
       resumeCompletedUrls: undefined,
       resumeFrontierUrls: undefined,
     };
+    const runId = createId('crawl');
     const interruptedCrawl: InterruptedCrawl = {
+      runId,
       url: targetUrl,
       limit: Math.max(1, Math.min(MAX_CRAWL_LIMIT, Math.floor(maxLimit))),
       config: persistedCrawlConfig,
@@ -59,7 +61,6 @@ startSiteCrawl: async (url, limit, configPatch, environment = 'default', notifyC
       updatedAt: new Date().toISOString(),
     };
 
-    const runId = createId('crawl');
     const isCurrentCrawlRun = () => activeProjectId() === projectIdAtStart && get().activeCrawlRunId === runId;
     if (projectIdAtStart) activeCrawlRuns.set(projectIdAtStart, runId);
     let unlisten: (() => void) | undefined;

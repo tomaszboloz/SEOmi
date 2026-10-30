@@ -456,7 +456,8 @@
       "backlinkNoProfile": "DataForSEO nie zwróciło profilu linków dla tego celu.",
       "backlinkLoad": "Połącz DataForSEO w Ustawieniach, aby wczytać więcej linków.",
       "backlinkAnchorLoad": "Połącz DataForSEO w Ustawieniach, aby wczytać więcej anchorów.",
-      "crawlerNoPages": "Crawler nie zwrócił stron dla tego celu."
+      "crawlerNoPages": "Crawler nie zwrócił stron dla tego celu.",
+      "crawlLogRecoveryFailed": "Nie udało się odczytać dziennika zdarzeń crawla, więc strony ukończone przed restartem nie zostały odzyskane: {{reason}}"
     },
     "semanticAudit": {
       "actionUnmapped": "Sprawdź topical plan i przypisz crawlowany URL albo potwierdź, że temat jest jeszcze planowany.",
@@ -2651,7 +2652,9 @@
       "path-key-collision": "zduplikowany klucz ścieżki",
       "url-key-collision": "zduplikowany klucz URL"
     },
-    "pageLimitUnlimited": "Bez limitu"
+    "pageLimitUnlimited": "Bez limitu",
+    "interruptedRecovered": "Odzyskano z dziennika crawla {{pages}} stron ukończonych przed zamknięciem aplikacji; wznowienie je zachowa.",
+    "interruptedRecoveredInvalid": "Nie udało się odczytać {{count}} zapisanych stron; zostaną pobrane ponownie."
   },
   "mcp": {
     "badge": "Workflowy agentów AI",

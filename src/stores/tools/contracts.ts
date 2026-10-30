@@ -35,6 +35,12 @@ export interface InterruptedCrawl {
   completedUrls?: string[];
   frontierUrls?: string[];
   baseRunId?: string;
+  /** Native run id, also the key of its crawl event log (#138). */
+  runId?: string;
+  /** Set when pages were recovered from the event log of `runId` after a restart. */
+  recoveredRunId?: string;
+  recoveredPages?: number;
+  recoveredInvalidPages?: number;
 }
 
 export type ToolsSet = StoreApi<ToolsState>['setState'];
