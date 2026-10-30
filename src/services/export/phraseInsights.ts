@@ -12,6 +12,7 @@ export interface PhraseIgosSummary {
   requestedDocs: number;
   zones: Record<ChunkZone, number>;
   novelEntities: number;
+  missingBasics: number;
   provider: string | null;
   model: string | null;
   runAt: string | null;
@@ -41,7 +42,7 @@ export const igosSummary = (report: IgosReport): PhraseIgosSummary => {
   report.zones.forEach((zone) => { zones[zone.zone] += 1; });
   return {
     igos: report.igos, status: report.status, components: report.components ? { ...report.components } : null, coverage: report.coverage,
-    availableDocs: report.availableDocs, requestedDocs: report.requestedDocs, zones, novelEntities: report.novelEntities.length,
+    availableDocs: report.availableDocs, requestedDocs: report.requestedDocs, zones, novelEntities: report.novelEntities.length, missingBasics: report.missingBasics?.length ?? 0,
     provider: report.provenance?.provider ?? null, model: report.provenance?.model ?? null, runAt: report.provenance?.runAt ?? null,
     limitations: [...report.limitations],
   };

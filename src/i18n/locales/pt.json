@@ -5755,7 +5755,9 @@
           "product-cards": "Mostre produtos ou ofertas: {{0}} de {{1}} páginas do TOP mostram cartões de produto ou preço.",
           "cta": "Adicione um apelo à ação claro: {{0}} de {{1}} páginas TOP têm um (ignore em páginas puramente informativas)."
         },
-        "mismatchAdvice": "A página tem uma intenção diferente da maioria das páginas TOP: verifique se responde à mesma necessidade."
+        "mismatchAdvice": "A página tem uma intenção diferente da maioria das páginas TOP: verifique se responde à mesma necessidade.",
+        "missingBasics": "Fundamentos em falta",
+        "basicsAdvice": "Cubra primeiro os {{0}} temas básicos em falta: abaixo de metade da cobertura a pontuação é penalizada, e factos novos não substituem o básico."
       }
     },
     "crawl": {
@@ -8631,8 +8633,10 @@
     "rec": {
       "rewrite-echo": "O parágrafo no deslocamento {{offset}} repete um trecho concorrente: reescreva com suas palavras.",
       "add-evidence": "Adicione dados concretos com unidades ou fontes; nenhum foi detectado.",
-      "refocus-drift": "O parágrafo no deslocamento {{offset}} foge do tema: refoque ou remova."
-    }
+      "refocus-drift": "O parágrafo no deslocamento {{offset}} foge do tema: refoque ou remova.",
+      "add-basics": "Cubra primeiro os {{count}} temas básicos em falta: abaixo de metade da cobertura a pontuação é penalizada, e factos novos não substituem o básico."
+    },
+    "missingBasics": "Fundamentos cobertos pela maioria das páginas TOP, mas não por esta página: {{list}}"
   },
   "logIntelUi": {
     "title": "Análise de logs",

@@ -5755,7 +5755,9 @@
           "product-cards": "Muestra productos u ofertas: {{0}} de {{1}} páginas del TOP muestran tarjetas de producto o precio.",
           "cta": "Añade una llamada a la acción clara: {{0}} de {{1}} páginas TOP la tienen (omítelo en páginas puramente informativas)."
         },
-        "mismatchAdvice": "La página tiene una intención distinta a la mayoría de páginas TOP: comprueba que responda a la misma necesidad."
+        "mismatchAdvice": "La página tiene una intención distinta a la mayoría de páginas TOP: comprueba que responda a la misma necesidad.",
+        "missingBasics": "Fundamentos que faltan",
+        "basicsAdvice": "Cubre primero los {{0}} temas básicos que faltan: por debajo de la mitad de cobertura la puntuación se penaliza y los datos nuevos no sustituyen lo básico."
       }
     },
     "crawl": {
@@ -8631,8 +8633,10 @@
     "rec": {
       "rewrite-echo": "El párrafo en el desplazamiento {{offset}} repite un pasaje de la competencia: reescríbelo con tus palabras.",
       "add-evidence": "Añade datos concretos con unidades o fuentes; no se detectó ninguno.",
-      "refocus-drift": "El párrafo en el desplazamiento {{offset}} se desvía del tema: enfócalo o elimínalo."
-    }
+      "refocus-drift": "El párrafo en el desplazamiento {{offset}} se desvía del tema: enfócalo o elimínalo.",
+      "add-basics": "Cubre primero los {{count}} temas básicos que faltan: por debajo de la mitad de cobertura la puntuación se penaliza y los datos nuevos no sustituyen lo básico."
+    },
+    "missingBasics": "Fundamentos que cubren la mayoría de páginas TOP y esta página no: {{list}}"
   },
   "logIntelUi": {
     "title": "Inteligencia de registros",

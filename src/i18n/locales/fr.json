@@ -5755,7 +5755,9 @@
           "product-cards": "Montrez des produits ou offres : {{0}} pages du TOP sur {{1}} affichent des fiches produit ou prix.",
           "cta": "Ajoutez un appel à l'action clair : {{0}} pages TOP sur {{1}} en ont un (à ignorer pour les pages purement informatives)."
         },
-        "mismatchAdvice": "La page relève d’une autre intention que la plupart des pages TOP : vérifiez qu’elle répond au même besoin."
+        "mismatchAdvice": "La page relève d’une autre intention que la plupart des pages TOP : vérifiez qu’elle répond au même besoin.",
+        "missingBasics": "Fondamentaux manquants",
+        "basicsAdvice": "Couvrez d’abord les {{0}} sujets de base manquants : sous la moitié de couverture le score est pénalisé, et des faits nouveaux ne remplacent pas les bases."
       }
     },
     "crawl": {
@@ -8631,8 +8633,10 @@
     "rec": {
       "rewrite-echo": "Le paragraphe au décalage {{offset}} répète un passage concurrent : réécrivez-le avec vos mots.",
       "add-evidence": "Ajoutez des données concrètes avec unités ou sources ; aucune détectée.",
-      "refocus-drift": "Le paragraphe au décalage {{offset}} dérive du sujet : recentrez-le ou supprimez-le."
-    }
+      "refocus-drift": "Le paragraphe au décalage {{offset}} dérive du sujet : recentrez-le ou supprimez-le.",
+      "add-basics": "Couvrez d’abord les {{count}} sujets de base manquants : sous la moitié de couverture le score est pénalisé, et des faits nouveaux ne remplacent pas les bases."
+    },
+    "missingBasics": "Fondamentaux couverts par la plupart des pages TOP mais absents de cette page : {{list}}"
   },
   "logIntelUi": {
     "title": "Analyse des journaux",

@@ -66,11 +66,14 @@ export const sdd = (target: Map<string, number>, consensus: Map<string, number>)
   return clamp01((kl(p, mid) + kl(q, mid)) / 2 / Math.LN2);
 };
 
-export const baseCoverage = (target: TargetDoc, baseline: ConsensusBaseline): number => {
-  if (!baseline.consensusEntities.length) return 1;
+/** Consensus entities (DF >= consensusDf) the target never mentions: the missing basics (GEM-67-10). */
+export const missingBasics = (target: TargetDoc, baseline: ConsensusBaseline): string[] => {
   const own = new Set(target.entities.map(entityKey));
-  return baseline.consensusEntities.filter((entity) => own.has(entityKey(entity))).length / baseline.consensusEntities.length;
+  return baseline.consensusEntities.filter((entity) => !own.has(entityKey(entity)));
 };
+
+export const baseCoverage = (target: TargetDoc, baseline: ConsensusBaseline): number =>
+  baseline.consensusEntities.length ? 1 - missingBasics(target, baseline).length / baseline.consensusEntities.length : 1;
 
 /** Penalty multiplier: 1 once half of the consensus entities are covered, linear below. */
 export const penalty = (coverage: number): number => Math.min(1, 0.5 + coverage);

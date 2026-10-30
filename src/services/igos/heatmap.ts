@@ -15,7 +15,7 @@ export interface HeatmapCell {
 
 export interface HeatmapSection { heading: string | null; cells: HeatmapCell[] }
 
-export type RecommendationKind = 'rewrite-echo' | 'add-evidence' | 'refocus-drift';
+export type RecommendationKind = 'rewrite-echo' | 'add-evidence' | 'refocus-drift' | 'add-basics';
 
 export interface HeatmapRecommendation { kind: RecommendationKind; offset: number; source: HeatmapCell['source'] }
 
@@ -41,5 +41,7 @@ export const recommend = (sections: HeatmapSection[]): HeatmapRecommendation[] =
     return [];
   }));
 
-export const evidenceAdvice = (report: IgosReport): HeatmapRecommendation[] =>
-  report.components && report.components.edsi === 0 ? [{ kind: 'add-evidence', offset: 0, source: null }] : [];
+export const evidenceAdvice = (report: IgosReport): HeatmapRecommendation[] => [
+  ...(report.missingBasics?.length ? [{ kind: 'add-basics' as const, offset: 0, source: null }] : []),
+  ...(report.components && report.components.edsi === 0 ? [{ kind: 'add-evidence' as const, offset: 0, source: null }] : []),
+];

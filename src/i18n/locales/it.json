@@ -5755,7 +5755,9 @@
           "product-cards": "Mostra prodotti o offerte: {{0}} pagine TOP su {{1}} mostrano schede prodotto o prezzo.",
           "cta": "Aggiungi una call to action chiara: {{0}} pagine TOP su {{1}} ne hanno una (ignoralo per pagine puramente informative)."
         },
-        "mismatchAdvice": "La pagina ha un intento diverso dalla maggior parte delle pagine TOP: verifica che risponda allo stesso bisogno."
+        "mismatchAdvice": "La pagina ha un intento diverso dalla maggior parte delle pagine TOP: verifica che risponda allo stesso bisogno.",
+        "missingBasics": "Basi mancanti",
+        "basicsAdvice": "Tratta prima i {{0}} argomenti di base mancanti: sotto metà copertura il punteggio è penalizzato e i fatti nuovi non sostituiscono le basi."
       }
     },
     "crawl": {
@@ -8631,8 +8633,10 @@
     "rec": {
       "rewrite-echo": "Il paragrafo all'offset {{offset}} ripete un passaggio concorrente: riscrivilo con parole tue.",
       "add-evidence": "Aggiungi dati concreti con unità o fonti; nessuno rilevato.",
-      "refocus-drift": "Il paragrafo all'offset {{offset}} esce dal tema: rimettilo a fuoco o rimuovilo."
-    }
+      "refocus-drift": "Il paragrafo all'offset {{offset}} esce dal tema: rimettilo a fuoco o rimuovilo.",
+      "add-basics": "Tratta prima i {{count}} argomenti di base mancanti: sotto metà copertura il punteggio è penalizzato e i fatti nuovi non sostituiscono le basi."
+    },
+    "missingBasics": "Basi trattate dalla maggior parte delle pagine TOP ma non da questa pagina: {{list}}"
   },
   "logIntelUi": {
     "title": "Analisi dei log",

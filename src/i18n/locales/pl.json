@@ -5755,7 +5755,9 @@
           "product-cards": "Pokaż produkty lub oferty: karty produktów lub cen ma {{0}} z {{1}} stron z TOP.",
           "cta": "Dodaj wyraźne wezwanie do działania: ma je {{0}} z {{1}} stron TOP (pomiń dla stron czysto informacyjnych)."
         },
-        "mismatchAdvice": "Strona ma inną intencję niż większość stron TOP: sprawdź, czy odpowiada na tę samą potrzebę."
+        "mismatchAdvice": "Strona ma inną intencję niż większość stron TOP: sprawdź, czy odpowiada na tę samą potrzebę.",
+        "missingBasics": "Brakujące podstawy",
+        "basicsAdvice": "Najpierw omów brakujące podstawy ({{0}}): poniżej połowy pokrycia wynik jest obniżany, a nowe fakty nie zastępują podstaw."
       }
     },
     "crawl": {
@@ -8631,8 +8633,10 @@
     "rec": {
       "rewrite-echo": "Akapit na offsecie {{offset}} powtarza fragment konkurencji: przepisz go własnymi słowami.",
       "add-evidence": "Dodaj konkretne dane z jednostkami lub źródłami; żadnych nie wykryto.",
-      "refocus-drift": "Akapit na offsecie {{offset}} odpływa od tematu: skup go lub usuń."
-    }
+      "refocus-drift": "Akapit na offsecie {{offset}} odpływa od tematu: skup go lub usuń.",
+      "add-basics": "Najpierw omów brakujące podstawy ({{count}}): poniżej połowy pokrycia wynik jest obniżany, a nowe fakty nie zastępują podstaw."
+    },
+    "missingBasics": "Podstawy obecne na większości stron TOP, których brakuje na tej stronie: {{list}}"
   },
   "logIntelUi": {
     "title": "Analiza logów",

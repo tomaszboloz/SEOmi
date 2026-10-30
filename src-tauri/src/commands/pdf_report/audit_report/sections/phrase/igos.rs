@@ -78,6 +78,11 @@ pub(super) fn rows(igos: &Value) -> Vec<Check> {
         t(p::NOVEL),
         Some(count(igos, "/novelEntities")),
     ));
+    let missing = count(igos, "/missingBasics");
+    if missing != "0" {
+        let advice = tf(t(p::BASICS_ADVICE), &[&missing]);
+        rows.push(attention(t(p::MISSING_BASICS), missing, advice));
+    }
     let run = [field(igos, "provider"), field(igos, "model")]
         .map(|part| part.unwrap_or_else(|| EMPTY.into()))
         .join(" / ");

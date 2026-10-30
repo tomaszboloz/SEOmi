@@ -5755,7 +5755,9 @@
           "product-cards": "Zeige Produkte oder Angebote: {{0}} von {{1}} TOP-Seiten zeigen Produkt- oder Preiskarten.",
           "cta": "Fügen Sie einen klaren Call-to-Action hinzu: {{0}} von {{1}} TOP-Seiten haben einen (bei rein informativen Seiten überspringen)."
         },
-        "mismatchAdvice": "Die Seite hat eine andere Intention als die meisten TOP-Seiten: Prüfe, ob sie dasselbe Bedürfnis erfüllt."
+        "mismatchAdvice": "Die Seite hat eine andere Intention als die meisten TOP-Seiten: Prüfe, ob sie dasselbe Bedürfnis erfüllt.",
+        "missingBasics": "Fehlende Grundlagen",
+        "basicsAdvice": "Decke zuerst die {{0}} fehlenden Grundthemen ab: Unter der Hälfte Abdeckung wird der Wert gemindert, und neue Fakten ersetzen die Grundlagen nicht."
       }
     },
     "crawl": {
@@ -8631,8 +8633,10 @@
     "rec": {
       "rewrite-echo": "Der Absatz bei Offset {{offset}} wiederholt eine Konkurrenzpassage: in eigenen Worten umschreiben.",
       "add-evidence": "Konkrete Daten mit Einheiten oder Quellen ergänzen; keine erkannt.",
-      "refocus-drift": "Der Absatz bei Offset {{offset}} driftet vom Thema ab: fokussieren oder entfernen."
-    }
+      "refocus-drift": "Der Absatz bei Offset {{offset}} driftet vom Thema ab: fokussieren oder entfernen.",
+      "add-basics": "Decke zuerst die {{count}} fehlenden Grundthemen ab: Unter der Hälfte Abdeckung wird der Wert gemindert, und neue Fakten ersetzen die Grundlagen nicht."
+    },
+    "missingBasics": "Grundlagen, die die meisten TOP-Seiten abdecken, diese Seite aber nicht: {{list}}"
   },
   "logIntelUi": {
     "title": "Log-Analyse",

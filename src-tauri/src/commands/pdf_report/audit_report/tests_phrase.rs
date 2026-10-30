@@ -34,7 +34,7 @@ fn insights() -> Value {
     json!({"final_url": "u", "phrase_insights": {"phrase": "kawa", "igos": {
         "igos": 42, "status": "partial", "components": {"nefr": 0.4, "edsi": 0, "fhem": 0.25, "sdd": 0.123},
         "coverage": 0.666, "availableDocs": 4, "requestedDocs": 10, "zones": {"echo": 2, "gain": 3, "drift": 0, "neutral": 1},
-        "novelEntities": 5, "provider": "ollama", "model": "nomic", "runAt": "2026-10-13T17:30:39Z",
+        "novelEntities": 5, "missingBasics": 3, "provider": "ollama", "model": "nomic", "runAt": "2026-10-13T17:30:39Z",
         "limitations": ["some-documents-missing", "custom-code"]
     }, "sija": {
         "intent": "how-to", "serpIntent": "comparison", "match": "mismatch", "ssas": null, "ssasStatus": "inconclusive",
@@ -69,6 +69,10 @@ fn igos_section_renders_numbers_zones_advice_and_localised_limits() {
         .iter()
         .any(|row| row.0 == "Vectors (provider / model, run)"
             && row.1 == "ollama / nomic, 2026-10-13 17:30 UTC"));
+    assert!(igos.iter().any(|row| row.0 == "Missing basics"
+        && row.1 == "3"
+        && row.2 == Status::Attention
+        && row.3.starts_with("Cover the 3")));
     let limits = igos.iter().find(|row| row.0 == "Limitations").unwrap();
     assert!(limits.1.ends_with("; custom-code") && !limits.1.starts_with("some-documents-missing"));
 }
@@ -103,9 +107,9 @@ fn missing_score_parts_and_empty_insights_degrade_without_inventing_values() {
         (igos[0].1, igos[0].2, igos[0].3),
         ("No score", Status::Attention, "None")
     );
-    assert!(!igos
-        .iter()
-        .any(|row| row.0.starts_with("Components") || row.0 == "Baseline coverage"));
+    assert!(!igos.iter().any(|row| row.0.starts_with("Components")
+        || row.0 == "Baseline coverage"
+        || row.0 == "Missing basics"));
     assert!(igos
         .iter()
         .any(|row| row.0 == "Vectors (provider / model, run)" && row.1 == "— / —, —"));

@@ -5755,7 +5755,9 @@
           "product-cards": "Show products or offers: {{0}} of {{1}} TOP pages show product or price cards.",
           "cta": "Add a clear call to action: {{0}} of {{1}} TOP pages have one (skip this for purely informational pages)."
         },
-        "mismatchAdvice": "The page reads as a different intent than most TOP pages: check that it answers the same need."
+        "mismatchAdvice": "The page reads as a different intent than most TOP pages: check that it answers the same need.",
+        "missingBasics": "Missing basics",
+        "basicsAdvice": "Cover the {{0}} missing basic topic(s) first: below half coverage the score is penalised, and new facts do not replace the basics."
       }
     },
     "crawl": {
@@ -8631,8 +8633,10 @@
     "rec": {
       "rewrite-echo": "The paragraph at offset {{offset}} repeats a competitor passage: rewrite it in your own words.",
       "add-evidence": "Add concrete data with units or sources; none was detected.",
-      "refocus-drift": "The paragraph at offset {{offset}} drifts off the topic: refocus or remove it."
-    }
+      "refocus-drift": "The paragraph at offset {{offset}} drifts off the topic: refocus or remove it.",
+      "add-basics": "Cover the {{count}} missing basic topic(s) first: below half coverage the score is penalised, and new facts do not replace the basics."
+    },
+    "missingBasics": "Basics most TOP pages cover but this page does not: {{list}}"
   },
   "logIntelUi": {
     "title": "Log intelligence",
