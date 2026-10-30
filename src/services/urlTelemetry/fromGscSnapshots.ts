@@ -4,6 +4,7 @@ import { readGscLastResult } from '@/stores/tools/gscLastResult';
 import type { GscPerformanceSnapshot } from '@/services/gscTracker/types';
 import { recallGa4Report } from './ga4Cache';
 import { readBacklinkTelemetry } from './backlinkPersistence';
+import { recallRevenueImport } from './revenueStore';
 import { buildUrlTelemetrySnapshot } from './snapshot';
 import { getSnapshot, putSnapshot } from './store';
 import type { UrlTelemetrySnapshot } from './types';
@@ -63,7 +64,7 @@ export const ensureUrlTelemetry = (projectId: string, urls: string[], now: Date 
   const root = urls[0];
   if (!gsc || !root) return null;
   const built = buildUrlTelemetrySnapshot({
-    projectId, rootUrl: root, urls, gsc, ga4: recallGa4Report(projectId),
+    projectId, rootUrl: root, urls, gsc, ga4: recallGa4Report(projectId), revenue: recallRevenueImport(projectId),
     ...readBacklinkTelemetry(projectId), now,
   });
   if (built) putSnapshot(built);

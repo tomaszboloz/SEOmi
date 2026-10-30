@@ -8437,7 +8437,8 @@
     "sources": {
       "gsc": "GSC",
       "ga4": "GA4",
-      "backlinks": "Links de entrada"
+      "backlinks": "Links de entrada",
+      "revenue": "Receita"
     },
     "states": {
       "measured": "Medido",
@@ -8456,7 +8457,11 @@
       "no": "Dados truncados: não"
     },
     "coverage": "Cobertura: {{value}}%",
-    "unknownNote": "Os dados desconhecidos nunca são contados como zero."
+    "unknownNote": "Os dados desconhecidos nunca são contados como zero.",
+    "currency": "Moeda: {{value}}",
+    "attribution": {
+      "ga4-session-landing-page": "Atribuição: página de destino da sessão no GA4"
+    }
   },
   "offPageSourcesUi": {
     "analyze": "Analisar fontes dos links",
@@ -8701,5 +8706,23 @@
     "relative": "Efeito relativo: {{value}} (intervalo de 95%: {{lower}} a {{upper}}).",
     "probability": "Probabilidade de o efeito ter este sinal: {{value}} (aproximação normal, não uma posterior bayesiana).",
     "caveat": "Uma estimativa ajustada pelo controle não prova causalidade. Outras mudanças, atualizações do Google ou variações que também afetem o controle podem enviesá-la. Nenhum ROI é inferido."
+  },
+  "revenueImportUi": {
+    "title": "Receita (exportação opcional do GA4)",
+    "model": "Importe um CSV de relatório do GA4 com página de destino e receita, filtrado para sessões de pesquisa orgânica. A receita é atribuída à página de destino da sessão como o GA4 a informa e fica na moeda que você indicar. Páginas ausentes da exportação continuam desconhecidas, não zero.",
+    "current": "Importado {{file}}: {{rows}} páginas de destino em {{currency}}, período {{period}}.",
+    "noPeriod": "não indicado no arquivo",
+    "clear": "Remover",
+    "none": "Nenhuma exportação de receita importada; a receita continua indisponível.",
+    "currency": "Moeda (código ISO)",
+    "organic": "A exportação contém apenas sessões de pesquisa orgânica",
+    "file": "Exportação CSV do GA4",
+    "errors": {
+      "invalid-currency": "Informe a moeda da propriedade como código ISO de 3 letras, por exemplo BRL.",
+      "not-organic": "Confirme que a exportação se limita a sessões de pesquisa orgânica.",
+      "no-header": "Não foi encontrado um cabeçalho com coluna de página de destino e coluna de receita.",
+      "no-rows": "O arquivo não tem página de destino com valor numérico de receita.",
+      "storage-failed": "Não foi possível atualizar o armazenamento local; a importação não foi salva."
+    }
   }
 }

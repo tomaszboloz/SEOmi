@@ -8437,7 +8437,8 @@
     "sources": {
       "gsc": "GSC",
       "ga4": "GA4",
-      "backlinks": "Liens entrants"
+      "backlinks": "Liens entrants",
+      "revenue": "Revenus"
     },
     "states": {
       "measured": "Mesuré",
@@ -8456,7 +8457,11 @@
       "no": "Données tronquées : non"
     },
     "coverage": "Couverture : {{value}} %",
-    "unknownNote": "Les données inconnues ne sont jamais comptées comme zéro."
+    "unknownNote": "Les données inconnues ne sont jamais comptées comme zéro.",
+    "currency": "Devise : {{value}}",
+    "attribution": {
+      "ga4-session-landing-page": "Attribution : page de destination de la session GA4"
+    }
   },
   "offPageSourcesUi": {
     "analyze": "Analyser les sources des liens",
@@ -8701,5 +8706,23 @@
     "relative": "Effet relatif : {{value}} (intervalle à 95 % de {{lower}} à {{upper}}).",
     "probability": "Probabilité que l’effet ait ce signe : {{value}} (approximation normale, pas une loi a posteriori bayésienne).",
     "caveat": "Une estimation ajustée sur le témoin ne prouve pas la causalité. D’autres changements, des mises à jour Google ou une variation touchant aussi le témoin peuvent la biaiser. Aucun ROI n’est déduit."
+  },
+  "revenueImportUi": {
+    "title": "Revenus (export GA4 facultatif)",
+    "model": "Importez un rapport GA4 au format CSV avec page de destination et revenus, filtré sur les sessions de recherche organique. Les revenus sont attribués à la page de destination de la session telle que GA4 la rapporte et restent dans la devise que vous indiquez. Les pages absentes de l’export restent inconnues, pas nulles.",
+    "current": "{{file}} importé : {{rows}} pages de destination en {{currency}}, période {{period}}.",
+    "noPeriod": "non indiquée dans le fichier",
+    "clear": "Supprimer",
+    "none": "Aucun export de revenus importé ; les revenus restent indisponibles.",
+    "currency": "Devise (code ISO)",
+    "organic": "L’export ne contient que des sessions de recherche organique",
+    "file": "Export CSV GA4",
+    "errors": {
+      "invalid-currency": "Indiquez la devise de la propriété sous forme de code ISO à 3 lettres, par exemple EUR.",
+      "not-organic": "Confirmez que l’export est limité aux sessions de recherche organique.",
+      "no-header": "Aucun en-tête avec une colonne page de destination et une colonne revenus n’a été trouvé.",
+      "no-rows": "Le fichier ne contient aucune page de destination avec un revenu numérique.",
+      "storage-failed": "Le stockage local n’a pas pu être mis à jour ; l’import n’a pas été enregistré."
+    }
   }
 }

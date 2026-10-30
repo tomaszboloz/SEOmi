@@ -8437,7 +8437,8 @@
     "sources": {
       "gsc": "GSC",
       "ga4": "GA4",
-      "backlinks": "Enlaces entrantes"
+      "backlinks": "Enlaces entrantes",
+      "revenue": "Ingresos"
     },
     "states": {
       "measured": "Medido",
@@ -8456,7 +8457,11 @@
       "no": "Datos truncados: no"
     },
     "coverage": "Cobertura: {{value}}%",
-    "unknownNote": "Los datos desconocidos nunca se cuentan como cero."
+    "unknownNote": "Los datos desconocidos nunca se cuentan como cero.",
+    "currency": "Moneda: {{value}}",
+    "attribution": {
+      "ga4-session-landing-page": "Atribución: página de destino de la sesión en GA4"
+    }
   },
   "offPageSourcesUi": {
     "analyze": "Analizar fuentes de enlaces",
@@ -8701,5 +8706,23 @@
     "relative": "Efecto relativo: {{value}} (intervalo del 95 %: {{lower}} a {{upper}}).",
     "probability": "Probabilidad de que el efecto tenga este signo: {{value}} (aproximación normal, no una posterior bayesiana).",
     "caveat": "Una estimación ajustada por el control no prueba causalidad. Otros cambios, actualizaciones de Google o variaciones que también afecten al control pueden sesgarla. No se infiere ROI."
+  },
+  "revenueImportUi": {
+    "title": "Ingresos (exportación opcional de GA4)",
+    "model": "Importa un CSV de un informe de GA4 con página de destino e ingresos, filtrado a sesiones de búsqueda orgánica. Los ingresos se atribuyen a la página de destino de la sesión tal como los informa GA4 y se mantienen en la moneda que indiques. Las páginas que faltan en la exportación siguen siendo desconocidas, no cero.",
+    "current": "Importado {{file}}: {{rows}} páginas de destino en {{currency}}, periodo {{period}}.",
+    "noPeriod": "no indicado en el archivo",
+    "clear": "Eliminar",
+    "none": "No se ha importado ninguna exportación de ingresos; los ingresos siguen no disponibles.",
+    "currency": "Moneda (código ISO)",
+    "organic": "La exportación contiene solo sesiones de búsqueda orgánica",
+    "file": "Exportación CSV de GA4",
+    "errors": {
+      "invalid-currency": "Indica la moneda de la propiedad como código ISO de 3 letras, por ejemplo EUR.",
+      "not-organic": "Confirma que la exportación se limita a sesiones de búsqueda orgánica.",
+      "no-header": "No se encontró un encabezado con una columna de página de destino y otra de ingresos.",
+      "no-rows": "El archivo no tiene ninguna página de destino con un valor numérico de ingresos.",
+      "storage-failed": "No se pudo actualizar el almacenamiento local; la importación no se guardó."
+    }
   }
 }

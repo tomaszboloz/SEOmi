@@ -8437,7 +8437,8 @@
     "sources": {
       "gsc": "GSC",
       "ga4": "GA4",
-      "backlinks": "Linki zwrotne"
+      "backlinks": "Linki zwrotne",
+      "revenue": "Przychód"
     },
     "states": {
       "measured": "Zmierzone",
@@ -8456,7 +8457,11 @@
       "no": "Dane obcięte: nie"
     },
     "coverage": "Pokrycie: {{value}}%",
-    "unknownNote": "Nieznane dane nigdy nie są liczone jako zero."
+    "unknownNote": "Nieznane dane nigdy nie są liczone jako zero.",
+    "currency": "Waluta: {{value}}",
+    "attribution": {
+      "ga4-session-landing-page": "Atrybucja: strona docelowa sesji GA4"
+    }
   },
   "offPageSourcesUi": {
     "analyze": "Analizuj źródła linków",
@@ -8701,5 +8706,23 @@
     "relative": "Efekt względny: {{value}} (przedział 95% od {{lower}} do {{upper}}).",
     "probability": "Prawdopodobieństwo, że efekt ma ten znak: {{value}} (przybliżenie normalne, nie bayesowski rozkład a posteriori).",
     "caveat": "Estymacja skorygowana o kontrolę nie dowodzi przyczynowości. Inne zmiany, aktualizacje Google lub przesunięcie wpływające też na kontrolę mogą ją zniekształcić. Nie wyliczamy ROI."
+  },
+  "revenueImportUi": {
+    "title": "Przychód (opcjonalny eksport GA4)",
+    "model": "Zaimportuj CSV raportu GA4 ze stroną docelową i przychodem, przefiltrowany do sesji z wyszukiwania organicznego. Przychód jest przypisany do strony docelowej sesji tak, jak raportuje go GA4, i pozostaje w podanej przez Ciebie walucie. Strony nieobecne w eksporcie pozostają nieznane, a nie zerowe.",
+    "current": "Zaimportowano {{file}}: {{rows}} stron docelowych w {{currency}}, okres {{period}}.",
+    "noPeriod": "nie podano w pliku",
+    "clear": "Usuń",
+    "none": "Nie zaimportowano eksportu przychodu; przychód pozostaje niedostępny.",
+    "currency": "Waluta (kod ISO)",
+    "organic": "Eksport zawiera wyłącznie sesje z wyszukiwania organicznego",
+    "file": "Eksport CSV z GA4",
+    "errors": {
+      "invalid-currency": "Podaj walutę usługi jako 3-literowy kod ISO, np. PLN.",
+      "not-organic": "Potwierdź, że eksport obejmuje wyłącznie sesje z wyszukiwania organicznego.",
+      "no-header": "Nie znaleziono nagłówka z kolumną strony docelowej i kolumną przychodu.",
+      "no-rows": "Plik nie zawiera strony docelowej z liczbową wartością przychodu.",
+      "storage-failed": "Nie udało się zapisać w pamięci lokalnej; import nie został zapisany."
+    }
   }
 }

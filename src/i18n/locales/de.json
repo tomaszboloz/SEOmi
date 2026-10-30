@@ -8437,7 +8437,8 @@
     "sources": {
       "gsc": "GSC",
       "ga4": "GA4",
-      "backlinks": "Backlinks"
+      "backlinks": "Backlinks",
+      "revenue": "Umsatz"
     },
     "states": {
       "measured": "Gemessen",
@@ -8456,7 +8457,11 @@
       "no": "Gekürzt: nein"
     },
     "coverage": "Abdeckung: {{value}}%",
-    "unknownNote": "Unbekannte Daten werden niemals als null gezählt."
+    "unknownNote": "Unbekannte Daten werden niemals als null gezählt.",
+    "currency": "Währung: {{value}}",
+    "attribution": {
+      "ga4-session-landing-page": "Attribution: GA4-Sitzungs-Landingpage"
+    }
   },
   "offPageSourcesUi": {
     "analyze": "Linkquellen analysieren",
@@ -8701,5 +8706,23 @@
     "relative": "Relativer Effekt: {{value}} (95-%-Intervall {{lower}} bis {{upper}}).",
     "probability": "Wahrscheinlichkeit, dass der Effekt dieses Vorzeichen hat: {{value}} (Normalapproximation, keine Bayes-Posterior).",
     "caveat": "Eine um die Kontrolle bereinigte Schätzung beweist keine Kausalität. Andere Änderungen, Google-Updates oder Verschiebungen, die auch die Kontrolle betreffen, können sie verzerren. Kein ROI wird abgeleitet."
+  },
+  "revenueImportUi": {
+    "title": "Umsatz (optionaler GA4-Export)",
+    "model": "Importieren Sie einen GA4-Bericht als CSV mit Landingpage und Umsatz, gefiltert auf Sitzungen aus der organischen Suche. Der Umsatz wird der Sitzungs-Landingpage zugeordnet, wie GA4 sie meldet, und bleibt in der von Ihnen angegebenen Währung. Seiten, die im Export fehlen, bleiben unbekannt, nicht null.",
+    "current": "{{file}} importiert: {{rows}} Landingpages in {{currency}}, Zeitraum {{period}}.",
+    "noPeriod": "in der Datei nicht angegeben",
+    "clear": "Entfernen",
+    "none": "Kein Umsatzexport importiert; der Umsatz bleibt nicht verfügbar.",
+    "currency": "Währung (ISO-Code)",
+    "organic": "Der Export enthält nur Sitzungen aus der organischen Suche",
+    "file": "GA4-CSV-Export",
+    "errors": {
+      "invalid-currency": "Geben Sie die Property-Währung als dreistelligen ISO-Code an, z. B. EUR.",
+      "not-organic": "Bestätigen Sie, dass der Export auf Sitzungen aus der organischen Suche beschränkt ist.",
+      "no-header": "Keine Kopfzeile mit einer Landingpage- und einer Umsatzspalte gefunden.",
+      "no-rows": "Die Datei enthält keine Landingpage mit numerischem Umsatz.",
+      "storage-failed": "Der lokale Speicher konnte nicht aktualisiert werden; der Import wurde nicht gespeichert."
+    }
   }
 }

@@ -8437,7 +8437,8 @@
     "sources": {
       "gsc": "GSC",
       "ga4": "GA4",
-      "backlinks": "Backlinks"
+      "backlinks": "Backlinks",
+      "revenue": "Revenue"
     },
     "states": {
       "measured": "Measured",
@@ -8456,7 +8457,11 @@
       "no": "Truncated: no"
     },
     "coverage": "Coverage: {{value}}%",
-    "unknownNote": "Unknown data is never counted as zero."
+    "unknownNote": "Unknown data is never counted as zero.",
+    "currency": "Currency: {{value}}",
+    "attribution": {
+      "ga4-session-landing-page": "Attribution: GA4 session landing page"
+    }
   },
   "offPageSourcesUi": {
     "analyze": "Analyze link sources",
@@ -8701,5 +8706,23 @@
     "relative": "Relative effect: {{value}} (95% interval {{lower}} to {{upper}}).",
     "probability": "Probability that the effect has this sign: {{value}} (normal approximation, not a Bayesian posterior).",
     "caveat": "An estimate adjusted for the control is not proof of causality. Other changes, Google updates or a shift that also affects the control can bias it. No ROI is inferred."
+  },
+  "revenueImportUi": {
+    "title": "Revenue (optional GA4 export)",
+    "model": "Import a GA4 report CSV with landing page and revenue, filtered to organic search sessions. Revenue is attributed to the session landing page as GA4 reports it and kept in the currency you state. Pages missing from the export stay unknown, not zero.",
+    "current": "Imported {{file}}: {{rows}} landing pages in {{currency}}, period {{period}}.",
+    "noPeriod": "not stated in the file",
+    "clear": "Remove",
+    "none": "No revenue export imported; revenue stays unavailable.",
+    "currency": "Currency (ISO code)",
+    "organic": "The export contains organic search sessions only",
+    "file": "GA4 CSV export",
+    "errors": {
+      "invalid-currency": "Enter the property currency as a 3-letter ISO code, for example EUR.",
+      "not-organic": "Confirm that the export is limited to organic search sessions.",
+      "no-header": "No header with a landing page column and a revenue column was found.",
+      "no-rows": "The file has no landing page with a numeric revenue value.",
+      "storage-failed": "Local storage could not be updated; the import was not saved."
+    }
   }
 }

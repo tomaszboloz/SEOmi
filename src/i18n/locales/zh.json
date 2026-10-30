@@ -8437,7 +8437,8 @@
     "sources": {
       "gsc": "GSC",
       "ga4": "GA4",
-      "backlinks": "反向链接"
+      "backlinks": "反向链接",
+      "revenue": "收入"
     },
     "states": {
       "measured": "已测量",
@@ -8456,7 +8457,11 @@
       "no": "数据截断：否"
     },
     "coverage": "覆盖率：{{value}}%",
-    "unknownNote": "未知数据绝不会被计为零。"
+    "unknownNote": "未知数据绝不会被计为零。",
+    "currency": "货币：{{value}}",
+    "attribution": {
+      "ga4-session-landing-page": "归因：GA4 会话着陆页"
+    }
   },
   "offPageSourcesUi": {
     "analyze": "分析链接来源",
@@ -8701,5 +8706,23 @@
     "relative": "相对效应：{{value}}（95% 区间 {{lower}} 至 {{upper}}）。",
     "probability": "效应为此符号的概率：{{value}}（正态近似，不是贝叶斯后验）。",
     "caveat": "经对照调整的估计并不能证明因果关系。其他变更、Google 更新或同样影响对照的变化都可能使其产生偏差。不推断 ROI。"
+  },
+  "revenueImportUi": {
+    "title": "收入（可选的 GA4 导出）",
+    "model": "导入包含着陆页和收入、并筛选为自然搜索会话的 GA4 报告 CSV。收入按 GA4 报告的方式归因到会话着陆页，并保留您指定的货币。导出中缺失的页面保持未知，而不是零。",
+    "current": "已导入 {{file}}：{{rows}} 个着陆页，货币 {{currency}}，期间 {{period}}。",
+    "noPeriod": "文件中未注明",
+    "clear": "移除",
+    "none": "尚未导入收入导出；收入保持不可用。",
+    "currency": "货币（ISO 代码）",
+    "organic": "导出仅包含自然搜索会话",
+    "file": "GA4 CSV 导出",
+    "errors": {
+      "invalid-currency": "请用 3 个字母的 ISO 代码输入媒体资源货币，例如 CNY。",
+      "not-organic": "请确认导出仅限于自然搜索会话。",
+      "no-header": "未找到包含着陆页列和收入列的表头。",
+      "no-rows": "文件中没有带数值收入的着陆页。",
+      "storage-failed": "无法更新本地存储；导入未保存。"
+    }
   }
 }

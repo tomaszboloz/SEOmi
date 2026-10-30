@@ -5,6 +5,7 @@ import { DAY_MS, missing } from './measure';
 import { backlinkMeasures, backlinkProvenance, ga4Absent, ga4Measures, ga4Provenance } from './otherSources';
 import type { SourceFailure, UrlTelemetry, UrlTelemetrySnapshot } from './types';
 import { scopeOf, urlKey } from './urlKey';
+import { revenueAbsent, revenueMeasures, revenueProvenance, type RevenueImport } from './revenue';
 
 export const SNAPSHOT_TTL_MS = DAY_MS;
 
@@ -20,6 +21,8 @@ export interface SnapshotInput {
   backlinks?: BacklinkProfileData | null;
   backlinkProvider?: string;
   backlinkRetrievedAt?: string;
+  /** User-imported GA4 revenue export (#91); absent means revenue stays unavailable. */
+  revenue?: RevenueImport | null;
   /** Canonical/redirect aliases keyed by normalized URL. */
   aliases?: Readonly<Record<string, string>>;
   now?: Date;
@@ -41,19 +44,22 @@ export const buildUrlTelemetrySnapshot = (input: SnapshotInput): UrlTelemetrySna
   const gsc = gscMeasures(gscData, gscProv, ctx);
   const ga4 = ga4Measures(ga4Data, ga4Prov, ctx);
   const bl = backlinkMeasures(links, blProv, ctx);
+  const revenueData = input.revenue ?? null;
+  const revProv = revenueProvenance(revenueData, now);
+  const rev = revenueMeasures(revenueData, revProv, ctx);
   const crawled = input.urls.map((url) => urlKey(url, input.rootUrl, scope, input.aliases)).filter((key): key is string => !!key);
-  const keys = new Set([...crawled, ...gsc.keys(), ...ga4.keys(), ...bl.keys()]);
+  const keys = new Set([...crawled, ...gsc.keys(), ...ga4.keys(), ...bl.keys(), ...rev.keys()]);
   const rows: UrlTelemetry[] = [...keys].sort().map((url) => Object.freeze({
     url,
     gsc: gsc.get(url) ?? gscAbsent(gscData, gscProv),
     ga4: ga4.get(url) ?? ga4Absent(ga4Data, ga4Prov),
     // A backlink profile lists a bounded sample, so an unlisted URL is unknown, not zero.
     backlinks: bl.get(url) ?? missing(links && blProv.state === 'sampled' ? 'sampled' : 'unavailable'),
-    revenue: missing<{ amount: number; currency: string }>('unavailable', 'no revenue or currency source'),
+    revenue: rev.get(url) ?? revenueAbsent(revenueData),
   }));
   return Object.freeze({
     id: `${input.projectId}:${now.getTime()}`, projectId: input.projectId, origin: scope.origin,
     createdAt: now.toISOString(), expiresAt: new Date(now.getTime() + (input.ttlMs ?? SNAPSHOT_TTL_MS)).toISOString(),
-    sources: { gsc: gscProv, ga4: ga4Prov, backlinks: blProv }, urls: Object.freeze(rows),
+    sources: { gsc: gscProv, ga4: ga4Prov, backlinks: blProv, ...(revenueData ? { revenue: revProv } : {}) }, urls: Object.freeze(rows),
   });
 };

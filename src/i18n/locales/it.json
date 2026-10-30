@@ -8437,7 +8437,8 @@
     "sources": {
       "gsc": "GSC",
       "ga4": "GA4",
-      "backlinks": "Link in entrata"
+      "backlinks": "Link in entrata",
+      "revenue": "Entrate"
     },
     "states": {
       "measured": "Misurato",
@@ -8456,7 +8457,11 @@
       "no": "Dati troncati: no"
     },
     "coverage": "Copertura: {{value}}%",
-    "unknownNote": "I dati sconosciuti non vengono mai conteggiati come zero."
+    "unknownNote": "I dati sconosciuti non vengono mai conteggiati come zero.",
+    "currency": "Valuta: {{value}}",
+    "attribution": {
+      "ga4-session-landing-page": "Attribuzione: pagina di destinazione della sessione GA4"
+    }
   },
   "offPageSourcesUi": {
     "analyze": "Analizza le fonti dei link",
@@ -8701,5 +8706,23 @@
     "relative": "Effetto relativo: {{value}} (intervallo al 95% da {{lower}} a {{upper}}).",
     "probability": "Probabilità che l’effetto abbia questo segno: {{value}} (approssimazione normale, non una posteriore bayesiana).",
     "caveat": "Una stima corretta per il controllo non prova la causalità. Altre modifiche, aggiornamenti di Google o variazioni che colpiscono anche il controllo possono distorcerla. Nessun ROI viene dedotto."
+  },
+  "revenueImportUi": {
+    "title": "Entrate (esportazione GA4 facoltativa)",
+    "model": "Importa un CSV di un rapporto GA4 con pagina di destinazione ed entrate, filtrato sulle sessioni da ricerca organica. Le entrate sono attribuite alla pagina di destinazione della sessione come la riporta GA4 e restano nella valuta indicata. Le pagine assenti dall’esportazione restano sconosciute, non zero.",
+    "current": "Importato {{file}}: {{rows}} pagine di destinazione in {{currency}}, periodo {{period}}.",
+    "noPeriod": "non indicato nel file",
+    "clear": "Rimuovi",
+    "none": "Nessuna esportazione delle entrate importata; le entrate restano non disponibili.",
+    "currency": "Valuta (codice ISO)",
+    "organic": "L’esportazione contiene solo sessioni da ricerca organica",
+    "file": "Esportazione CSV di GA4",
+    "errors": {
+      "invalid-currency": "Inserisci la valuta della proprietà come codice ISO di 3 lettere, ad esempio EUR.",
+      "not-organic": "Conferma che l’esportazione è limitata alle sessioni da ricerca organica.",
+      "no-header": "Nessuna intestazione con una colonna della pagina di destinazione e una delle entrate.",
+      "no-rows": "Il file non contiene pagine di destinazione con un valore numerico di entrate.",
+      "storage-failed": "Impossibile aggiornare l’archiviazione locale; l’importazione non è stata salvata."
+    }
   }
 }
