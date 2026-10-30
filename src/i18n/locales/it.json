@@ -5683,6 +5683,79 @@
         "resource": "Risorsa non sicura: {{0}}",
         "response": "Risposta del server: HTTP {{1}} in {{0}} ms",
         "hop": "Passaggio di reindirizzamento: HTTP {{0}} da {{1}}"
+      },
+      "phrase": {
+        "igosTitle": "Guadagno informativo (IGOS) per «{{0}}»",
+        "sijaTitle": "Intento di ricerca (SIJA) per «{{0}}»",
+        "score": "Punteggio",
+        "baseline": "Pagine TOP confrontate",
+        "ofTotal": "{{0}} su {{1}}",
+        "components": "Componenti (NEFR / EDSI / FHEM / SDD)",
+        "coverage": "Copertura della base",
+        "zones": "Zone dei paragrafi",
+        "novel": "Nuove entità in tema",
+        "vectors": "Vettori (fornitore / modello, esecuzione)",
+        "limits": "Limitazioni",
+        "pageIntent": "Intento della pagina",
+        "serpIntent": "Intento TOP (maggioranza delle pagine renderizzate)",
+        "match": "Corrispondenza dell’intento",
+        "matchValue": {
+          "match": "Corrisponde",
+          "mismatch": "Non corrisponde",
+          "unknown": "Sconosciuta"
+        },
+        "ssas": "SSAS (struttura rispetto a TOP)",
+        "funnel": "Fasi del funnel tra le pagine TOP renderizzate",
+        "funnelValue": "{{0}} su {{1}} renderizzate: TOFU {{2}} · MOFU {{3}} · BOFU {{4}}",
+        "gaps": "Formati mancanti",
+        "none": "Nessuno",
+        "echoAdvice": "Riscrivi i {{0}} paragrafi eco con parole, dati o esperienza tuoi.",
+        "driftAdvice": "Rifocalizza o rimuovi i {{0}} paragrafi di deriva; il testo fuori tema non alza l’IGOS.",
+        "method": "Euristica SEOmi, non una metrica Google. Il testo dei concorrenti non viene riprodotto.",
+        "methodLabel": "Metodo",
+        "noScore": "Nessun punteggio",
+        "evidenceAdvice": "Aggiungi dati concreti con unità o fonti; nessuno rilevato.",
+        "inconclusive": "SSAS non conclusivo: {{0}} pagine TOP reali disponibili, ne servono almeno 3.",
+        "component": {
+          "nefr": "Entità nuove",
+          "edsi": "Densità di prove",
+          "fhem": "Indicatori di esperienza",
+          "sdd": "Distribuzione dei sottotemi"
+        },
+        "zone": {
+          "echo": "Eco",
+          "gain": "Guadagno",
+          "drift": "Deriva",
+          "neutral": "Neutro"
+        },
+        "limit": {
+          "no-comparable-documents": "Nessun documento concorrente comparabile.",
+          "too-few-documents": "Troppo pochi documenti concorrenti per una base affidabile.",
+          "some-documents-missing": "Alcune pagine concorrenti non sono state recuperate.",
+          "no-target-chunks": "La pagina non ha paragrafi analizzabili.",
+          "off-topic-below-quota": "Troppo pochi paragrafi in tema.",
+          "local-lexical-embeddings": "La similarità usa vettori lessicali locali, non un modello semantico; le zone sono approssimative.",
+          "heuristic-entities": "Le entità derivano da frasi con maiuscole e da fatti soggetto-predicato-oggetto, non da un modello di entità addestrato.",
+          "semantic-provider-unavailable": "Il provider semantico di embedding del progetto non era disponibile; sono stati usati vettori lessicali locali."
+        },
+        "intent": {
+          "definitional": "Definizione",
+          "how-to": "Guida pratica",
+          "troubleshooting": "Risoluzione problemi",
+          "comparison": "Confronto",
+          "curated-list": "Elenco selezionato",
+          "tool": "Strumento o calcolatore",
+          "transactional": "Transazionale",
+          "local": "Locale"
+        },
+        "gap": {
+          "table": "Aggiungi una tabella comparativa: {{0}} pagine TOP su {{1}} ne hanno una.",
+          "ordered-list": "Aggiungi passaggi numerati: {{0}} pagine TOP su {{1}} usano un elenco numerato.",
+          "calculator": "Valuta un calcolatore o strumento funzionante: {{0}} pagine TOP su {{1}} ne hanno uno con veri campi modulo.",
+          "product-cards": "Mostra prodotti o offerte: {{0}} pagine TOP su {{1}} mostrano schede prodotto o prezzo.",
+          "cta": "Aggiungi una call to action chiara: {{0}} pagine TOP su {{1}} ne hanno una (ignoralo per pagine puramente informative)."
+        },
+        "mismatchAdvice": "La pagina ha un intento diverso dalla maggior parte delle pagine TOP: verifica che risponda allo stesso bisogno."
       }
     },
     "crawl": {

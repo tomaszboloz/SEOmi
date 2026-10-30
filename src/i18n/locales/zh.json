@@ -5683,6 +5683,79 @@
         "resource": "不安全的资源：{{0}}",
         "response": "服务器响应：HTTP {{1}}，耗时 {{0}} ms",
         "hop": "重定向跳转：来自 {{1}} 的 HTTP {{0}}"
+      },
+      "phrase": {
+        "igosTitle": "“{{0}}”的信息增益（IGOS）",
+        "sijaTitle": "“{{0}}”的搜索意图（SIJA）",
+        "score": "得分",
+        "baseline": "比较的 TOP 页面",
+        "ofTotal": "{{1}} 个中的 {{0}} 个",
+        "components": "组成部分（NEFR / EDSI / FHEM / SDD）",
+        "coverage": "基线覆盖率",
+        "zones": "段落区域",
+        "novel": "切题的新实体",
+        "vectors": "向量（提供方 / 模型，运行）",
+        "limits": "局限",
+        "pageIntent": "页面意图",
+        "serpIntent": "TOP 意图（多数已渲染页面）",
+        "match": "意图匹配",
+        "matchValue": {
+          "match": "匹配",
+          "mismatch": "不匹配",
+          "unknown": "未知"
+        },
+        "ssas": "SSAS（与 TOP 的结构对比）",
+        "funnel": "已渲染 TOP 页面的漏斗阶段",
+        "funnelValue": "已渲染 {{1}} 个中的 {{0}} 个：TOFU {{2}} · MOFU {{3}} · BOFU {{4}}",
+        "gaps": "缺少的格式",
+        "none": "无",
+        "echoAdvice": "用自己的话、数据或经验改写 {{0}} 个回声段落。",
+        "driftAdvice": "将 {{0}} 个偏题段落拉回主题或删除；偏题文字不会提高 IGOS。",
+        "method": "SEOmi 启发式指标，不是 Google 指标。不复制竞争对手文本。",
+        "methodLabel": "方法",
+        "noScore": "无分数",
+        "evidenceAdvice": "请添加带单位或来源的具体数据；未检测到任何数据。",
+        "inconclusive": "SSAS 无法判定：仅有 {{0}} 个真实 TOP 页面，至少需要 3 个。",
+        "component": {
+          "nefr": "新实体",
+          "edsi": "证据密度",
+          "fhem": "经验标记",
+          "sdd": "子主题分布"
+        },
+        "zone": {
+          "echo": "回声",
+          "gain": "增益",
+          "drift": "偏移",
+          "neutral": "中性"
+        },
+        "limit": {
+          "no-comparable-documents": "没有可比较的竞品文档。",
+          "too-few-documents": "竞品文档太少，无法建立可靠基准。",
+          "some-documents-missing": "部分竞品页面无法获取。",
+          "no-target-chunks": "页面没有可分析的段落。",
+          "off-topic-below-quota": "切题段落太少。",
+          "local-lexical-embeddings": "相似度使用本地词汇向量而非语义模型计算，区域为近似值。",
+          "heuristic-entities": "实体来自首字母大写的短语和主谓宾事实，而不是训练好的实体模型。",
+          "semantic-provider-unavailable": "项目的语义嵌入提供方不可用，已改用本地词汇向量。"
+        },
+        "intent": {
+          "definitional": "定义",
+          "how-to": "操作指南",
+          "troubleshooting": "故障排除",
+          "comparison": "对比",
+          "curated-list": "精选列表",
+          "tool": "工具或计算器",
+          "transactional": "交易",
+          "local": "本地"
+        },
+        "gap": {
+          "table": "添加对比表：{{1}} 个排名靠前页面中有 {{0}} 个包含。",
+          "ordered-list": "添加编号步骤：{{1}} 个排名靠前页面中有 {{0}} 个使用编号列表。",
+          "calculator": "考虑提供可用的计算器或工具：{{1}} 个排名靠前页面中有 {{0}} 个带有真实表单控件的工具。",
+          "product-cards": "展示产品或优惠：{{1}} 个排名靠前页面中有 {{0}} 个显示产品或价格卡片。",
+          "cta": "添加明确的行动号召：{{1}} 个 TOP 页面中有 {{0}} 个包含（纯信息页面可忽略）。"
+        },
+        "mismatchAdvice": "该页面的意图与多数 TOP 页面不同：请检查它是否满足同一需求。"
       }
     },
     "crawl": {

@@ -6,6 +6,7 @@ import { saveImportedSerp } from '@/components/Keywords/embeddingClustering/impo
 import { useProjectStore } from '@/stores/projectStore';
 import * as tauri from '@/services/tauri';
 import { createAuditFixture } from './fixtures/audit';
+import { phraseInsightsFor } from '@/services/export/phraseInsights';
 import type { PageAuditData } from '@/types';
 
 const project = { id: 'target-project', name: 'Target project', rootUrl: 'https://example.test', createdAt: '2026-10-01T00:00:00Z', lastOpenedAt: '2026-10-01T00:00:00Z' };
@@ -56,6 +57,8 @@ describe('target phrase audit UI', () => {
     await waitFor(() => expect(screen.getByText((text) => text.includes(`${i18n.t('targetPhraseAuditUi.reportStatus')}: ${i18n.t('targetPhraseAuditUi.reportStatuses.complete')}`))).toBeTruthy());
     expect(await screen.findByText(i18n.t('igosUi.limit.too-few-documents'))).toBeTruthy();
     expect(screen.getByText(i18n.t('igosUi.limit.local-lexical-embeddings'))).toBeTruthy();
+    // The PDF export picks up this IGOS run for the audited URL (#68 GEM-68-06).
+    expect(phraseInsightsFor(audit().final_url)?.igos?.limitations).toContain('too-few-documents');
   });
 
   it('assigns a distinct request id to every concurrently inspected page', async () => {

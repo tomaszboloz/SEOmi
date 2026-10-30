@@ -5683,6 +5683,79 @@
         "resource": "Niezabezpieczony zasób: {{0}}",
         "response": "Odpowiedź serwera: HTTP {{1}} w {{0}} ms",
         "hop": "Krok przekierowania: HTTP {{0}} z {{1}}"
+      },
+      "phrase": {
+        "igosTitle": "Przyrost informacji (IGOS) dla „{{0}}”",
+        "sijaTitle": "Intencja wyszukiwania (SIJA) dla „{{0}}”",
+        "score": "Wynik",
+        "baseline": "Porównane strony TOP",
+        "ofTotal": "{{0}} z {{1}}",
+        "components": "Składowe (NEFR / EDSI / FHEM / SDD)",
+        "coverage": "Pokrycie bazy",
+        "zones": "Strefy akapitów",
+        "novel": "Nowe encje na temat",
+        "vectors": "Wektory (dostawca / model, przebieg)",
+        "limits": "Ograniczenia",
+        "pageIntent": "Intencja strony",
+        "serpIntent": "Intencja TOP (większość wyrenderowanych stron)",
+        "match": "Zgodność intencji",
+        "matchValue": {
+          "match": "Zgodna",
+          "mismatch": "Niezgodna",
+          "unknown": "Nieznana"
+        },
+        "ssas": "SSAS (struktura wobec TOP)",
+        "funnel": "Etapy lejka wśród wyrenderowanych stron TOP",
+        "funnelValue": "Wyrenderowano {{0}} z {{1}}: TOFU {{2}} · MOFU {{3}} · BOFU {{4}}",
+        "gaps": "Brakujące formaty",
+        "none": "Brak",
+        "echoAdvice": "Przepisz akapity echo ({{0}}) własnymi słowami, z własnymi danymi lub doświadczeniem.",
+        "driftAdvice": "Skup na temacie lub usuń akapity dryfu ({{0}}); tekst poza tematem nie podnosi IGOS.",
+        "method": "Heurystyka SEOmi, nie metryka Google. Tekst konkurencji nie jest powielany.",
+        "methodLabel": "Metoda",
+        "noScore": "Brak wyniku",
+        "evidenceAdvice": "Dodaj konkretne dane z jednostkami lub źródłami; żadnych nie wykryto.",
+        "inconclusive": "SSAS nierozstrzygający: dostępne realne strony TOP: {{0}}, potrzeba co najmniej 3.",
+        "component": {
+          "nefr": "Nowe encje",
+          "edsi": "Gęstość dowodów",
+          "fhem": "Znaczniki doświadczenia",
+          "sdd": "Rozkład podtematów"
+        },
+        "zone": {
+          "echo": "Echo",
+          "gain": "Zysk",
+          "drift": "Dryf",
+          "neutral": "Neutralny"
+        },
+        "limit": {
+          "no-comparable-documents": "Brak porównywalnych dokumentów konkurencji.",
+          "too-few-documents": "Zbyt mało dokumentów konkurencji dla wiarygodnej bazy.",
+          "some-documents-missing": "Nie udało się pobrać części stron konkurencji.",
+          "no-target-chunks": "Strona nie ma akapitów do analizy.",
+          "off-topic-below-quota": "Zbyt mało akapitów w temacie.",
+          "local-lexical-embeddings": "Podobieństwo liczą lokalne wektory leksykalne, nie model semantyczny; strefy są przybliżone.",
+          "heuristic-entities": "Encje pochodzą z fraz pisanych wielką literą i faktów podmiot-orzeczenie-dopełnienie, a nie z wytrenowanego modelu encji.",
+          "semantic-provider-unavailable": "Semantyczny dostawca embeddingów projektu był niedostępny; użyto lokalnych wektorów leksykalnych."
+        },
+        "intent": {
+          "definitional": "Definicja",
+          "how-to": "Poradnik krok po kroku",
+          "troubleshooting": "Rozwiązywanie problemów",
+          "comparison": "Porównanie",
+          "curated-list": "Zestawienie",
+          "tool": "Narzędzie lub kalkulator",
+          "transactional": "Transakcyjna",
+          "local": "Lokalna"
+        },
+        "gap": {
+          "table": "Dodaj tabelę porównawczą: ma ją {{0}} z {{1}} stron z TOP.",
+          "ordered-list": "Dodaj ponumerowane kroki: listy numerowanej używa {{0}} z {{1}} stron z TOP.",
+          "calculator": "Rozważ działający kalkulator lub narzędzie: ma je {{0}} z {{1}} stron z TOP (z prawdziwymi polami formularza).",
+          "product-cards": "Pokaż produkty lub oferty: karty produktów lub cen ma {{0}} z {{1}} stron z TOP.",
+          "cta": "Dodaj wyraźne wezwanie do działania: ma je {{0}} z {{1}} stron TOP (pomiń dla stron czysto informacyjnych)."
+        },
+        "mismatchAdvice": "Strona ma inną intencję niż większość stron TOP: sprawdź, czy odpowiada na tę samą potrzebę."
       }
     },
     "crawl": {

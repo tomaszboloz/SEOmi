@@ -5683,6 +5683,79 @@
         "resource": "安全でないリソース: {{0}}",
         "response": "サーバー応答: HTTP {{1}}（{{0}} ms）",
         "hop": "リダイレクトのホップ: {{1}}からHTTP {{0}}"
+      },
+      "phrase": {
+        "igosTitle": "「{{0}}」の情報利得（IGOS）",
+        "sijaTitle": "「{{0}}」の検索意図（SIJA）",
+        "score": "スコア",
+        "baseline": "比較したTOPページ",
+        "ofTotal": "{{1}} 件中 {{0}} 件",
+        "components": "構成要素（NEFR / EDSI / FHEM / SDD）",
+        "coverage": "ベースラインの網羅率",
+        "zones": "段落ゾーン",
+        "novel": "トピック内の新しいエンティティ",
+        "vectors": "ベクトル（プロバイダー / モデル、実行）",
+        "limits": "制約",
+        "pageIntent": "ページの意図",
+        "serpIntent": "TOPの意図（レンダリング済みページの多数）",
+        "match": "意図の一致",
+        "matchValue": {
+          "match": "一致",
+          "mismatch": "不一致",
+          "unknown": "不明"
+        },
+        "ssas": "SSAS（TOPとの構造比較）",
+        "funnel": "レンダリング済みTOPページのファネル段階",
+        "funnelValue": "{{1}} 件中 {{0}} 件をレンダリング: TOFU {{2}} · MOFU {{3}} · BOFU {{4}}",
+        "gaps": "不足している形式",
+        "none": "なし",
+        "echoAdvice": "エコー段落（{{0}} 件）を独自のデータや経験を使って自分の言葉で書き直してください。",
+        "driftAdvice": "ドリフト段落（{{0}} 件）をトピックに戻すか削除してください。トピック外の文章はIGOSを上げません。",
+        "method": "SEOmiのヒューリスティックであり、Googleの指標ではありません。競合の文章は転載しません。",
+        "methodLabel": "手法",
+        "noScore": "スコアなし",
+        "evidenceAdvice": "単位や出典つきの具体的なデータを追加してください。検出されませんでした。",
+        "inconclusive": "SSAS は判定不能です。実際の上位ページが {{0}} 件で、最低 3 件必要です。",
+        "component": {
+          "nefr": "新規エンティティ",
+          "edsi": "根拠の密度",
+          "fhem": "経験マーカー",
+          "sdd": "サブトピックの分布"
+        },
+        "zone": {
+          "echo": "エコー",
+          "gain": "ゲイン",
+          "drift": "ドリフト",
+          "neutral": "ニュートラル"
+        },
+        "limit": {
+          "no-comparable-documents": "比較可能な競合文書がありません。",
+          "too-few-documents": "信頼できる基準には競合文書が少なすぎます。",
+          "some-documents-missing": "取得できなかった競合ページがあります。",
+          "no-target-chunks": "ページに分析可能な段落がありません。",
+          "off-topic-below-quota": "トピック内の段落が少なすぎます。",
+          "local-lexical-embeddings": "類似度はセマンティックモデルではなくローカルの語彙ベクトルで計算されるため、ゾーンは近似値です。",
+          "heuristic-entities": "エンティティは大文字で始まる語句と主語・述語・目的語の事実から抽出しており、学習済みのエンティティモデルではありません。",
+          "semantic-provider-unavailable": "プロジェクトのセマンティック埋め込みプロバイダーが利用できなかったため、ローカルの語彙ベクトルを使用しました。"
+        },
+        "intent": {
+          "definitional": "定義",
+          "how-to": "手順",
+          "troubleshooting": "トラブルシューティング",
+          "comparison": "比較",
+          "curated-list": "厳選リスト",
+          "tool": "ツール・計算機",
+          "transactional": "取引",
+          "local": "ローカル"
+        },
+        "gap": {
+          "table": "比較表を追加: 上位 {{1}} ページ中 {{0}} ページにあります。",
+          "ordered-list": "番号付き手順を追加: 上位 {{1}} ページ中 {{0}} ページが番号付きリストを使っています。",
+          "calculator": "実際に動く計算ツールを検討: 上位 {{1}} ページ中 {{0}} ページに実際のフォーム要素付きのものがあります。",
+          "product-cards": "商品やオファーを表示: 上位 {{1}} ページ中 {{0}} ページが商品・価格カードを表示しています。",
+          "cta": "明確な行動喚起を追加してください: TOP ページ {{1}} 件中 {{0}} 件にあります（純粋な情報ページでは不要です）。"
+        },
+        "mismatchAdvice": "このページは多くのTOPページと異なる意図に見えます。同じニーズに応えているか確認してください。"
       }
     },
     "crawl": {

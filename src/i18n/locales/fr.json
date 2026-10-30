@@ -5683,6 +5683,79 @@
         "resource": "Ressource non sécurisée : {{0}}",
         "response": "Réponse du serveur : HTTP {{1}} en {{0}} ms",
         "hop": "Saut de redirection : HTTP {{0}} depuis {{1}}"
+      },
+      "phrase": {
+        "igosTitle": "Gain d’information (IGOS) pour « {{0}} »",
+        "sijaTitle": "Intention de recherche (SIJA) pour « {{0}} »",
+        "score": "Score",
+        "baseline": "Pages TOP comparées",
+        "ofTotal": "{{0}} sur {{1}}",
+        "components": "Composantes (NEFR / EDSI / FHEM / SDD)",
+        "coverage": "Couverture de la base",
+        "zones": "Zones de paragraphes",
+        "novel": "Nouvelles entités dans le sujet",
+        "vectors": "Vecteurs (fournisseur / modèle, exécution)",
+        "limits": "Limites",
+        "pageIntent": "Intention de la page",
+        "serpIntent": "Intention TOP (majorité des pages rendues)",
+        "match": "Concordance d’intention",
+        "matchValue": {
+          "match": "Concorde",
+          "mismatch": "Ne concorde pas",
+          "unknown": "Inconnue"
+        },
+        "ssas": "SSAS (structure vs TOP)",
+        "funnel": "Étapes de l’entonnoir parmi les pages TOP rendues",
+        "funnelValue": "{{0}} sur {{1}} rendues : TOFU {{2}} · MOFU {{3}} · BOFU {{4}}",
+        "gaps": "Formats manquants",
+        "none": "Aucun",
+        "echoAdvice": "Réécrivez les {{0}} paragraphes écho avec vos mots, vos données ou votre expérience.",
+        "driftAdvice": "Recentrez ou supprimez les {{0}} paragraphes de dérive ; un texte hors sujet n’augmente pas l’IGOS.",
+        "method": "Heuristique SEOmi, pas une métrique Google. Le texte des concurrents n’est pas reproduit.",
+        "methodLabel": "Méthode",
+        "noScore": "Pas de score",
+        "evidenceAdvice": "Ajoutez des données concrètes avec unités ou sources ; aucune détectée.",
+        "inconclusive": "SSAS non concluant : {{0}} pages TOP réelles disponibles, 3 minimum requises.",
+        "component": {
+          "nefr": "Nouvelles entités",
+          "edsi": "Densité de preuves",
+          "fhem": "Marqueurs d'expérience",
+          "sdd": "Répartition des sous-thèmes"
+        },
+        "zone": {
+          "echo": "Écho",
+          "gain": "Gain",
+          "drift": "Dérive",
+          "neutral": "Neutre"
+        },
+        "limit": {
+          "no-comparable-documents": "Aucun document concurrent comparable.",
+          "too-few-documents": "Trop peu de documents concurrents pour une base fiable.",
+          "some-documents-missing": "Certaines pages concurrentes n'ont pas pu être récupérées.",
+          "no-target-chunks": "La page n'a aucun paragraphe analysable.",
+          "off-topic-below-quota": "Trop peu de paragraphes sur le sujet.",
+          "local-lexical-embeddings": "La similarité utilise des vecteurs lexicaux locaux, pas un modèle sémantique ; les zones sont approximatives.",
+          "heuristic-entities": "Les entités proviennent d'expressions en majuscules et de faits sujet-prédicat-objet, pas d'un modèle d'entités entraîné.",
+          "semantic-provider-unavailable": "Le fournisseur sémantique d'embeddings du projet était indisponible ; des vecteurs lexicaux locaux ont été utilisés."
+        },
+        "intent": {
+          "definitional": "Définition",
+          "how-to": "Tutoriel",
+          "troubleshooting": "Dépannage",
+          "comparison": "Comparatif",
+          "curated-list": "Sélection",
+          "tool": "Outil ou calculateur",
+          "transactional": "Transactionnelle",
+          "local": "Locale"
+        },
+        "gap": {
+          "table": "Ajoutez un tableau comparatif : {{0}} pages du TOP sur {{1}} en ont un.",
+          "ordered-list": "Ajoutez des étapes numérotées : {{0}} pages du TOP sur {{1}} utilisent une liste numérotée.",
+          "calculator": "Envisagez un calculateur ou outil fonctionnel : {{0}} pages du TOP sur {{1}} en ont un avec de vrais champs de formulaire.",
+          "product-cards": "Montrez des produits ou offres : {{0}} pages du TOP sur {{1}} affichent des fiches produit ou prix.",
+          "cta": "Ajoutez un appel à l'action clair : {{0}} pages TOP sur {{1}} en ont un (à ignorer pour les pages purement informatives)."
+        },
+        "mismatchAdvice": "La page relève d’une autre intention que la plupart des pages TOP : vérifiez qu’elle répond au même besoin."
       }
     },
     "crawl": {

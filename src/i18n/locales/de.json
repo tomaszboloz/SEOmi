@@ -5683,6 +5683,79 @@
         "resource": "Unsichere Ressource: {{0}}",
         "response": "Serverantwort: HTTP {{1}} in {{0}} ms",
         "hop": "Weiterleitungsschritt: HTTP {{0}} von {{1}}"
+      },
+      "phrase": {
+        "igosTitle": "Informationsgewinn (IGOS) für „{{0}}“",
+        "sijaTitle": "Suchintention (SIJA) für „{{0}}“",
+        "score": "Wert",
+        "baseline": "Verglichene TOP-Seiten",
+        "ofTotal": "{{0}} von {{1}}",
+        "components": "Komponenten (NEFR / EDSI / FHEM / SDD)",
+        "coverage": "Abdeckung der Basis",
+        "zones": "Absatzzonen",
+        "novel": "Neue themenbezogene Entitäten",
+        "vectors": "Vektoren (Anbieter / Modell, Lauf)",
+        "limits": "Einschränkungen",
+        "pageIntent": "Seitenintention",
+        "serpIntent": "TOP-Intention (Mehrheit der gerenderten Seiten)",
+        "match": "Intentionsabgleich",
+        "matchValue": {
+          "match": "Stimmt überein",
+          "mismatch": "Stimmt nicht überein",
+          "unknown": "Unbekannt"
+        },
+        "ssas": "SSAS (Struktur vs. TOP)",
+        "funnel": "Trichterphasen der gerenderten TOP-Seiten",
+        "funnelValue": "{{0}} von {{1}} gerendert: TOFU {{2}} · MOFU {{3}} · BOFU {{4}}",
+        "gaps": "Fehlende Formate",
+        "none": "Keine",
+        "echoAdvice": "Formuliere die {{0}} Echo-Absätze neu, mit eigenen Daten oder Erfahrungen.",
+        "driftAdvice": "Richte die {{0}} Drift-Absätze neu aus oder entferne sie; themenfremder Text erhöht IGOS nicht.",
+        "method": "SEOmi-Heuristik, keine Google-Metrik. Text von Mitbewerbern wird nicht wiedergegeben.",
+        "methodLabel": "Methode",
+        "noScore": "Kein Wert",
+        "evidenceAdvice": "Konkrete Daten mit Einheiten oder Quellen ergänzen; keine erkannt.",
+        "inconclusive": "SSAS nicht aussagekräftig: {{0}} echte TOP-Seiten verfügbar, mindestens 3 nötig.",
+        "component": {
+          "nefr": "Neue Entitäten",
+          "edsi": "Belegdichte",
+          "fhem": "Erfahrungsmarker",
+          "sdd": "Unterthemenverteilung"
+        },
+        "zone": {
+          "echo": "Echo",
+          "gain": "Gewinn",
+          "drift": "Drift",
+          "neutral": "Neutral"
+        },
+        "limit": {
+          "no-comparable-documents": "Keine vergleichbaren Konkurrenzdokumente.",
+          "too-few-documents": "Zu wenige Konkurrenzdokumente für eine verlässliche Basis.",
+          "some-documents-missing": "Einige Konkurrenzseiten konnten nicht abgerufen werden.",
+          "no-target-chunks": "Die Seite hat keine analysierbaren Absätze.",
+          "off-topic-below-quota": "Zu wenige themenrelevante Absätze.",
+          "local-lexical-embeddings": "Die Ähnlichkeit nutzt lokale lexikalische Vektoren, kein semantisches Modell; die Zonen sind Näherungen.",
+          "heuristic-entities": "Entitäten stammen aus großgeschriebenen Phrasen und Subjekt-Prädikat-Objekt-Fakten, nicht aus einem trainierten Entitätsmodell.",
+          "semantic-provider-unavailable": "Der semantische Embedding-Anbieter des Projekts war nicht verfügbar; stattdessen wurden lokale lexikalische Vektoren verwendet."
+        },
+        "intent": {
+          "definitional": "Definition",
+          "how-to": "Anleitung",
+          "troubleshooting": "Fehlerbehebung",
+          "comparison": "Vergleich",
+          "curated-list": "Kuratierte Liste",
+          "tool": "Tool oder Rechner",
+          "transactional": "Transaktional",
+          "local": "Lokal"
+        },
+        "gap": {
+          "table": "Füge eine Vergleichstabelle hinzu: {{0}} von {{1}} TOP-Seiten haben eine.",
+          "ordered-list": "Füge nummerierte Schritte hinzu: {{0}} von {{1}} TOP-Seiten nutzen eine nummerierte Liste.",
+          "calculator": "Erwäge einen funktionierenden Rechner oder ein Tool: {{0}} von {{1}} TOP-Seiten haben eines mit echten Formularfeldern.",
+          "product-cards": "Zeige Produkte oder Angebote: {{0}} von {{1}} TOP-Seiten zeigen Produkt- oder Preiskarten.",
+          "cta": "Fügen Sie einen klaren Call-to-Action hinzu: {{0}} von {{1}} TOP-Seiten haben einen (bei rein informativen Seiten überspringen)."
+        },
+        "mismatchAdvice": "Die Seite hat eine andere Intention als die meisten TOP-Seiten: Prüfe, ob sie dasselbe Bedürfnis erfüllt."
       }
     },
     "crawl": {
