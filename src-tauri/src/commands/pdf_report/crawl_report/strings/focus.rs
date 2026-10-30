@@ -60,6 +60,11 @@ keys! {
     COL_SCORE => "crawl.focus.colScore",
     T_GAPS => "crawl.focus.tGaps",
     COL_GAP => "crawl.focus.colGap",
+    PROFILE => "crawl.focus.profile",
+    T_HIDDEN => "crawl.focus.tHidden",
+    HIDDEN_INTRO => "crawl.focus.hiddenIntro",
+    COL_TERM => "crawl.focus.colTerm",
+    COL_REASON => "crawl.focus.colReason",
 }
 
 pub const BAND: &str = "crawl.focus.band";
@@ -69,9 +74,20 @@ pub const OPTION: &str = "crawl.focus.option";
 pub const GAP: &str = "crawl.focus.gap";
 pub const STATUS: &str = "crawl.focus.status";
 pub const TYPE: &str = "crawl.focus.type";
+pub const BRAND_REASON: &str = "crawl.focus.brandReason";
 
 #[cfg(test)]
-pub const BANDS: &[&str] = &["excellent", "good", "moderate", "weak", "critical"];
+pub const BRAND_REASONS: &[&str] = &["own-domain", "own-alias", "competitor-brand"];
+
+#[cfg(test)]
+pub const BANDS: &[&str] = &[
+    "excellent",
+    "good",
+    "moderate",
+    "weak",
+    "critical",
+    "unavailable",
+];
 #[cfg(test)]
 pub const NOTES: &[&str] = &[
     "lowConfidence",
@@ -84,6 +100,7 @@ pub const NOTES: &[&str] = &[
     "anchorsMissing",
     "goalTopic",
     "goalUnmatched",
+    "unavailable",
 ];
 #[cfg(test)]
 pub const STATUSES: &[&str] = &["strong", "moderate", "borderline", "weak", "off-topic"];

@@ -1,7 +1,8 @@
 import { clusterTerms } from './cluster';
 import { phraseKey } from './terms';
+import { brandReason, type BrandPolicy } from './brandPolicy';
 import type { Prepared } from './evaluate';
-import type { TopicGap } from './types';
+import type { BrandFilterReport, TopicGap } from './types';
 
 const SUBTOPIC_CUT = 0.35;
 const CORE_TERMS_CONSIDERED = 60;
@@ -16,7 +17,8 @@ const round1 = (value: number): number => Math.round(value * 10) / 10;
  */
 export const analyzeGaps = (
   items: Prepared[], vectors: Map<string, number>[], coreKeys: string[], totals: Map<string, number>,
-  surfaces: Map<string, string>, competitorTerms: string[], language: string,
+  surfaces: Map<string, string>, competitorTerms: string[], language: string, brand?: BrandPolicy,
+  filtered: BrandFilterReport['filteredGaps'] = [],
 ): TopicGap[] => {
   const live = items.filter((item) => !item.skipped);
   const terms = coreKeys.slice(0, CORE_TERMS_CONSIDERED).map((key) => ({ key, weight: totals.get(key) ?? 0 }));
@@ -35,9 +37,13 @@ export const analyzeGaps = (
     });
   }
   gaps.sort((a, b) => a.coveragePct - b.coveragePct || (a.label < b.label ? -1 : 1));
+  // Brand-navigational noise (#56) is moved to `filtered` with its reason instead of shown as a gap.
   const missing = [...new Set(competitorTerms.map((term) => term.trim()).filter(Boolean))].sort().filter((term) => {
     const key = phraseKey(term, language);
-    return !!key && !totals.has(key);
+    if (!key) return false;
+    const reason = brand ? brandReason(key, brand) : undefined;
+    if (reason) filtered.push({ term, reason });
+    return !reason && !totals.has(key);
   }).slice(0, MAX_COMPETITOR_TERMS);
   const result = gaps.slice(0, MAX_GAPS);
   if (missing.length) result.push({ code: 'competitor-terms', label: missing[0], terms: missing, coveragePct: 0, pagesCovering: 0 });

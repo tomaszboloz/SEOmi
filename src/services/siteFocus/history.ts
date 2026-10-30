@@ -1,4 +1,5 @@
 import { computeSfs } from './aggregate';
+import { comparableSfsProfiles, type SfsProfileRef } from './profile';
 import { isBorderlineTrs, OFF_TOPIC_BELOW } from './trsPolicy';
 import type { CodeParams, CoreTopicMode, PageFocus, SiteFocusReport } from './types';
 
@@ -13,9 +14,17 @@ export interface SfsSnapshot {
   coreTopic: { label: string; clusterId: string; mode?: CoreTopicMode; anchorCount?: number };
   clusterLabels: string[];
   pages: Record<string, { trs: number; weight: number; type: PageFocus['type'] }>;
+  /** Scoring profile (#83); absent in snapshots saved before profiles were recorded. */
+  profile?: SfsProfileRef;
+  /** Core Topic / brand inputs hash (#82); a new hash for the same run is a new report version. */
+  coreConfigHash?: string;
 }
 
-export interface HistoryAnnotation { code: 'removed-offtopic' | 'new-cluster' | 'optimized-borderline' | 'core-topic-changed' | 'core-mode-changed'; params: CodeParams; delta: number }
+export interface HistoryAnnotation {
+  code: 'removed-offtopic' | 'new-cluster' | 'optimized-borderline' | 'core-topic-changed' | 'core-mode-changed' | 'profile-changed' | 'config-changed';
+  params: CodeParams;
+  delta: number;
+}
 export interface AlertEvent { code: 'sfs-drop' | 'content-guard'; params: CodeParams }
 
 export const SFS_DROP_POINTS = 5;
@@ -31,6 +40,8 @@ export const makeSnapshot = (report: SiteFocusReport, runId: string, at: string 
     ...(report.coreTopic.anchors?.applied ? { anchorCount: report.coreTopic.anchors.sources.length } : {}),
   },
   clusterLabels: report.clusters.map((cluster) => cluster.label),
+  ...(report.profile ? { profile: report.profile } : {}),
+  ...(report.coreConfigHash ? { coreConfigHash: report.coreConfigHash } : {}),
   pages: Object.fromEntries(report.pages.filter((page) => !page.skipped).map((page) => [page.url, { trs: page.trs, weight: page.weight, type: page.type }])),
 });
 
@@ -60,7 +71,29 @@ export const annotateChange = (prev: SfsSnapshot, next: SfsSnapshot): HistoryAnn
   }
   const [was, now] = [prev.coreTopic.mode, next.coreTopic.mode];
   if (was && now && was !== now) result.push({ code: 'core-mode-changed', params: { from: was, to: now }, delta: round1(next.score - prev.score) });
-  return result;
+  return [...result, ...breakAnnotations(prev, next)];
+};
+
+const LEGACY = 'legacy';
+
+/**
+ * Whether two snapshots were scored the same way (#83 GEM-83-16): same profile and the same Core Topic
+ * inputs. Two pre-#83 snapshots keep the old behaviour; a pre-#83 snapshot next to a profiled one is a
+ * break in the trend, because its provenance is unknown.
+ */
+type Versioned = Pick<SfsSnapshot, 'profile' | 'coreConfigHash'>;
+export const comparableSnapshots = (prev: Versioned, next: Versioned): boolean => {
+  if (!prev.profile && !next.profile) return true;
+  return comparableSfsProfiles(prev.profile, next.profile) && prev.coreConfigHash === next.coreConfigHash;
+};
+
+/** Marks a profile or configuration break so the chart never draws an unlabelled jump. */
+export const breakAnnotations = (prev: SfsSnapshot, next: SfsSnapshot): HistoryAnnotation[] => {
+  const delta = round1(next.score - prev.score);
+  if (!comparableSfsProfiles(prev.profile, next.profile) && (prev.profile || next.profile)) {
+    return [{ code: 'profile-changed', params: { from: prev.profile?.algorithmVersion ?? LEGACY, to: next.profile?.algorithmVersion ?? LEGACY }, delta }];
+  }
+  return comparableSnapshots(prev, next) ? [] : [{ code: 'config-changed', params: {}, delta }];
 };
 
 /** True when the score fell by more than `points` between two full analyses. */
@@ -71,7 +104,7 @@ export const contentGuard = (page: Pick<PageFocus, 'trs' | 'skipped'>, threshold
 
 export const evaluateAlerts = (prev: SfsSnapshot | undefined, next: SfsSnapshot, newPages: PageFocus[] = []): AlertEvent[] => {
   const alerts: AlertEvent[] = [];
-  if (prev && !prev.unavailable && !next.unavailable && dropMoreThan(prev.score, next.score)) alerts.push({ code: 'sfs-drop', params: { from: prev.score, to: next.score, points: round1(prev.score - next.score) } });
+  if (prev && !prev.unavailable && !next.unavailable && comparableSnapshots(prev, next) && dropMoreThan(prev.score, next.score)) alerts.push({ code: 'sfs-drop', params: { from: prev.score, to: next.score, points: round1(prev.score - next.score) } });
   newPages.filter((page) => contentGuard(page)).forEach((page) => alerts.push({ code: 'content-guard', params: { url: page.url, trs: page.trs } }));
   return alerts;
 };

@@ -6008,7 +6008,8 @@
           "good": "Bon focus",
           "moderate": "Focus modéré",
           "weak": "Focus faible",
-          "critical": "Focus critique"
+          "critical": "Focus critique",
+          "unavailable": "Non disponible"
         },
         "status": {
           "strong": "Solide",
@@ -6033,7 +6034,8 @@
           "anchoredTopic": "Le sujet principal a été choisi à partir de la page d’accueil et des pages d’ancrage ({{0}} pages).",
           "anchorsMissing": "Pages d’ancrage introuvables dans ce crawl : {{0}}.",
           "goalTopic": "Le sujet principal a été choisi par l’objectif commercial « {{0}} ».",
-          "goalUnmatched": "L’objectif commercial « {{0}} » ne correspond à aucun contenu exploré ; le sujet a été choisi sans lui."
+          "goalUnmatched": "L’objectif commercial « {{0}} » ne correspond à aucun contenu exploré ; le sujet a été choisi sans lui.",
+          "unavailable": "Aucune page n'a pu être notée dans ce crawl, il n'y a donc pas de Site Focus Score. Ce n'est pas un score de 0."
         },
         "rec": {
           "remove-offtopic": "Vérifier {{0}} pages hors sujet avant d'agir : contrôler d'abord le trafic, les conversions et les liens. Les pages sans ces preuves sont candidates à une 301 vers une page pertinente ou à une réécriture. Rien n'est supprimé automatiquement. Potentiel : +{{1}} points.",
@@ -6089,7 +6091,8 @@
             "clicks": "Clics",
             "conversions": "Conversions",
             "referringDomains": "Domaines référents",
-            "revenue": "Revenus"
+            "revenue": "Revenus",
+            "botHits": "Visites Googlebot vérifiées (journaux serveur)"
           },
           "alternative": {
             "confirm-revenue-currency": "Confirmer la devise des revenus",
@@ -6120,6 +6123,16 @@
             "missing-permission": "Autorisation manquante",
             "unavailable": "Indisponible"
           }
+        },
+        "profile": "Profil de notation {{0}}, configuration {{1}}.",
+        "tHidden": "Termes concurrents non affichés comme lacunes",
+        "hiddenIntro": "Ces termes nomment une marque (la vôtre ou celle d'un concurrent) : ce sont des recherches de marque, pas des lacunes thématiques.",
+        "colTerm": "Terme",
+        "colReason": "Raison",
+        "brandReason": {
+          "own-domain": "votre nom de domaine",
+          "own-alias": "votre nom de marque",
+          "competitor-brand": "marque concurrente"
         }
       },
       "authority": {
@@ -6944,7 +6957,9 @@
       "change": "{{delta}} points depuis l'analyse précédente",
       "progressAria": "Site Focus Score {{score}} sur 100, {{band}}",
       "recalcBudget": "Il reste {{remaining}} recalculs complets sur {{limit}} aujourd'hui.",
-      "recalcExhausted": "La limite quotidienne de {{limit}} recalculs complets est atteinte. Réessayez demain."
+      "recalcExhausted": "La limite quotidienne de {{limit}} recalculs complets est atteinte. Réessayez demain.",
+      "metaProfile": "Profil de notation {{version}} (configuration {{hash}})",
+      "trendBreak": "Non comparé à l'analyse précédente : elle utilisait un autre profil de notation ou d'autres réglages du sujet."
     },
     "drawer": {
       "title": "Comment fonctionne le Site Focus Score",
@@ -7199,7 +7214,10 @@
       "empty": "Lancez au moins deux analyses complètes pour voir la tendance.",
       "aria": "Site Focus Score sur {{count}} analyses, de {{from}} à {{to}}",
       "point": "{{date}} : {{score}}",
-      "annotations": "Changements clés"
+      "annotations": "Changements clés",
+      "profile-changed": "Le profil de notation est passé de {{from}} à {{to}} ; les scores avant et après ne sont pas directement comparables ({{delta}} points).",
+      "config-changed": "Les réglages du sujet ont changé (sujet, pages d'ancrage, objectif ou termes de marque) ; nouvelle version du rapport, non directement comparable ({{delta}} points).",
+      "legacyProfile": "un profil sans version"
     },
     "alert": {
       "sfs-drop": "Le Site Focus Score est passé de {{from}} à {{to}} ({{points}} points).",
@@ -7244,7 +7262,8 @@
         "clicks": "Clics",
         "conversions": "Conversions",
         "referringDomains": "Domaines référents",
-        "revenue": "Revenus"
+        "revenue": "Revenus",
+        "botHits": "Visites Googlebot vérifiées (journaux serveur)"
       },
       "unknown": "{{signal}} : inconnu ({{state}})",
       "measured": "{{signal}} : {{value}}",
@@ -7292,6 +7311,23 @@
         "too-long": "L’objectif ne doit pas dépasser {{max}} caractères.",
         "no-words": "Utilisez des mots, pas seulement des chiffres ou des symboles.",
         "looks-like-url": "Cela ressemble à une URL. Ajoutez des pages dans le champ des pages d’ancrage."
+      }
+    },
+    "brand": {
+      "title": "Termes de marque",
+      "help": "Votre nom de domaine n'est jamais traité comme un sujet. Ajoutez d'autres noms de votre marque, les marques concurrentes qui ne doivent pas apparaître comme lacunes thématiques, et des exceptions : des mots qui ressemblent à une marque mais sont de vrais termes du secteur.",
+      "aliases": "Autres noms de votre marque (un par ligne)",
+      "competitors": "Marques concurrentes (une par ligne)",
+      "exceptions": "Termes du secteur à conserver (un par ligne)",
+      "save": "Enregistrer les termes de marque",
+      "needsProject": "Les termes de marque sont enregistrés par projet. Ouvrez ce crawl depuis un projet pour les définir.",
+      "ownBrand": "Exclus comme votre marque (mots normalisés) : {{terms}}",
+      "filteredTitle": "Termes concurrents masqués dans les lacunes",
+      "filtered": "{{term}} : {{reason}}",
+      "reason": {
+        "own-domain": "votre nom de domaine",
+        "own-alias": "votre nom de marque",
+        "competitor-brand": "une marque concurrente"
       }
     }
   },

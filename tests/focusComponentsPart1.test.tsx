@@ -114,7 +114,7 @@ describe('FocusHero', () => {
   });
 
   it('reports change vs history and the all-on-topic summary', () => {
-    const snap = { runId: 'r', at: 'x', score: report.score - 4, pageCount: 1, coreTopic: { label: 'a', clusterId: 'b' }, clusterLabels: [], pages: {} };
+    const snap = { runId: 'r', at: 'x', score: report.score - 4, pageCount: 1, coreTopic: { label: 'a', clusterId: 'b' }, clusterLabels: [], pages: {}, profile: report.profile, coreConfigHash: report.coreConfigHash };
     const clean = { ...report, pages: report.pages.map((p) => ({ ...p, trs: 90 })) };
     const { rerender } = render(<FocusHero report={clean} onRecalculate={vi.fn()} history={[snap]} />);
     expect(screen.getByText(/\+4 points since/)).toBeTruthy();
@@ -125,6 +125,10 @@ describe('FocusHero', () => {
     expect(screen.queryByText(/since the previous/)).toBeNull();
     rerender(<FocusHero report={clean} onRecalculate={vi.fn()} history={[]} />);
     expect(screen.queryByText(/since the previous/)).toBeNull();
+    // A snapshot saved before scoring profiles existed is a trend break, never a change (#83).
+    rerender(<FocusHero report={clean} onRecalculate={vi.fn()} history={[{ ...snap, profile: undefined, coreConfigHash: undefined }]} />);
+    expect(screen.queryByText(/since the previous/)).toBeNull();
+    expect(screen.getByTestId('focus-trend-break')).toBeTruthy();
   });
 
   it('summarises off-topic pages', () => {

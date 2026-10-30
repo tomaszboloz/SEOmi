@@ -6008,7 +6008,8 @@
           "good": "聚焦度良好",
           "moderate": "聚焦度中等",
           "weak": "聚焦度较弱",
-          "critical": "聚焦度严重不足"
+          "critical": "聚焦度严重不足",
+          "unavailable": "不可用"
         },
         "status": {
           "strong": "强",
@@ -6033,7 +6034,8 @@
           "anchoredTopic": "核心主题选自首页和锚点页面（{{0}} 个页面）。",
           "anchorsMissing": "本次抓取中未找到的锚点页面：{{0}}。",
           "goalTopic": "核心主题由业务目标“{{0}}”选定。",
-          "goalUnmatched": "业务目标“{{0}}”与抓取内容均不匹配；主题在不使用该目标的情况下选定。"
+          "goalUnmatched": "业务目标“{{0}}”与抓取内容均不匹配；主题在不使用该目标的情况下选定。",
+          "unavailable": "此次抓取中没有可评分的页面，因此没有 Site Focus Score。这不是 0 分。"
         },
         "rec": {
           "remove-offtopic": "在采取行动前审核 {{0}} 个偏离主题的页面:先检查流量、转化和链接。缺少这些证据的页面可考虑 301 到相关页面或重写。不会自动删除任何内容。潜在提升:+{{1}} 分。",
@@ -6089,7 +6091,8 @@
             "clicks": "点击",
             "conversions": "转化",
             "referringDomains": "引荐域名",
-            "revenue": "收入"
+            "revenue": "收入",
+            "botHits": "已验证的 Googlebot 访问（服务器日志）"
           },
           "alternative": {
             "confirm-revenue-currency": "确认收入货币",
@@ -6120,6 +6123,16 @@
             "missing-permission": "缺少权限",
             "unavailable": "不可用"
           }
+        },
+        "profile": "评分配置文件 {{0}}，配置 {{1}}。",
+        "tHidden": "未作为缺口显示的竞争对手词",
+        "hiddenIntro": "这些词是品牌名称（您的或竞争对手的），因此属于品牌搜索，而不是主题缺口。",
+        "colTerm": "术语",
+        "colReason": "原因",
+        "brandReason": {
+          "own-domain": "您的域名",
+          "own-alias": "您的品牌名称",
+          "competitor-brand": "竞争对手品牌"
         }
       },
       "authority": {
@@ -6944,7 +6957,9 @@
       "change": "较上次分析 {{delta}} 分",
       "progressAria": "Site Focus Score {{score}} 分(满分 100),{{band}}",
       "recalcBudget": "今天还剩 {{remaining}} 次完整重新计算机会(共 {{limit}} 次)。",
-      "recalcExhausted": "已达到每日 {{limit}} 次完整重新计算的上限。请明天再试。"
+      "recalcExhausted": "已达到每日 {{limit}} 次完整重新计算的上限。请明天再试。",
+      "metaProfile": "评分配置文件 {{version}}（配置 {{hash}}）",
+      "trendBreak": "未与上一次分析比较：它使用了其他评分配置文件或其他主题设置。"
     },
     "drawer": {
       "title": "Site Focus Score 的工作原理",
@@ -7199,7 +7214,10 @@
       "empty": "至少运行两次完整分析后才能看到趋势。",
       "aria": "{{count}} 次分析中的 Site Focus Score,从 {{from}} 到 {{to}}",
       "point": "{{date}}:{{score}}",
-      "annotations": "关键变化"
+      "annotations": "关键变化",
+      "profile-changed": "评分配置文件已从 {{from}} 变为 {{to}}；前后的分数不可直接比较（{{delta}} 分）。",
+      "config-changed": "主题设置已更改（主题、锚点页面、目标或品牌词）；这是新的报告版本，不可直接比较（{{delta}} 分）。",
+      "legacyProfile": "无版本的配置文件"
     },
     "alert": {
       "sfs-drop": "Site Focus Score 从 {{from}} 降至 {{to}}({{points}} 分)。",
@@ -7244,7 +7262,8 @@
         "clicks": "点击",
         "conversions": "转化",
         "referringDomains": "引荐域名",
-        "revenue": "收入"
+        "revenue": "收入",
+        "botHits": "已验证的 Googlebot 访问（服务器日志）"
       },
       "unknown": "{{signal}}：未知（{{state}}）",
       "measured": "{{signal}}：{{value}}",
@@ -7292,6 +7311,23 @@
         "too-long": "目标不能超过 {{max}} 个字符。",
         "no-words": "请使用词语，而不只是数字或符号。",
         "looks-like-url": "这看起来像 URL。请在锚点页面字段中添加页面。"
+      }
+    },
+    "brand": {
+      "title": "品牌词",
+      "help": "您的域名永远不会被视为主题。请添加您品牌的其他名称、不得显示为主题缺口的竞争对手品牌，以及例外：看起来像品牌但实际上是行业术语的词。",
+      "aliases": "您品牌的其他名称（每行一个）",
+      "competitors": "竞争对手品牌（每行一个）",
+      "exceptions": "需保留的行业术语（每行一个）",
+      "save": "保存品牌词",
+      "needsProject": "品牌词按项目保存。请从项目中打开此抓取以进行设置。",
+      "ownBrand": "作为您的品牌排除（规范化词）：{{terms}}",
+      "filteredTitle": "从缺口中隐藏的竞争对手词",
+      "filtered": "{{term}}：{{reason}}",
+      "reason": {
+        "own-domain": "您的域名",
+        "own-alias": "您的品牌名称",
+        "competitor-brand": "竞争对手品牌"
       }
     }
   },

@@ -42,5 +42,9 @@ pub fn from_params(prefix: &str, table: &[Coded], code: &str, params: Option<&Va
 
 /// `{{0}}%` style helper for plain percentages.
 pub fn percent(value: Option<&Value>) -> String {
-    tf(t(super::strings::focus::PERCENT), &[&arg(value)])
+    let shown = arg(value);
+    if shown == EMPTY {
+        return shown;
+    }
+    tf(t(super::strings::focus::PERCENT), &[&shown])
 }

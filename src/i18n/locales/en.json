@@ -6008,7 +6008,8 @@
           "good": "Good focus",
           "moderate": "Moderate focus",
           "weak": "Weak focus",
-          "critical": "Critical focus"
+          "critical": "Critical focus",
+          "unavailable": "Not available"
         },
         "status": {
           "strong": "Strong",
@@ -6033,7 +6034,8 @@
           "anchoredTopic": "The core topic was chosen from the home page and anchor pages ({{0}} pages).",
           "anchorsMissing": "Anchor pages not found in this crawl: {{0}}.",
           "goalTopic": "The core topic was chosen by the business goal \"{{0}}\".",
-          "goalUnmatched": "The business goal \"{{0}}\" matched no crawled content; the topic was chosen without it."
+          "goalUnmatched": "The business goal \"{{0}}\" matched no crawled content; the topic was chosen without it.",
+          "unavailable": "No page could be scored in this crawl, so there is no Site Focus Score. This is not a score of 0."
         },
         "rec": {
           "remove-offtopic": "Review {{0}} off-topic pages before acting: check traffic, conversions and links first. Pages without that evidence are candidates for a 301 to a relevant page or a rewrite. Nothing is removed automatically. Potential: +{{1}} points.",
@@ -6089,7 +6091,8 @@
             "clicks": "Clicks",
             "conversions": "Conversions",
             "referringDomains": "Referring domains",
-            "revenue": "Revenue"
+            "revenue": "Revenue",
+            "botHits": "Verified Googlebot visits (server logs)"
           },
           "alternative": {
             "confirm-revenue-currency": "Confirm the revenue currency",
@@ -6120,6 +6123,16 @@
             "missing-permission": "Missing permission",
             "unavailable": "Unavailable"
           }
+        },
+        "profile": "Scoring profile {{0}}, configuration {{1}}.",
+        "tHidden": "Competitor terms not shown as gaps",
+        "hiddenIntro": "These terms name a brand (yours or a competitor's), so they are brand searches, not topic gaps.",
+        "colTerm": "Term",
+        "colReason": "Reason",
+        "brandReason": {
+          "own-domain": "your domain name",
+          "own-alias": "your brand name",
+          "competitor-brand": "competitor brand"
         }
       },
       "authority": {
@@ -6944,7 +6957,9 @@
       "change": "{{delta}} points since the previous analysis",
       "progressAria": "Site Focus Score {{score}} out of 100, {{band}}",
       "recalcBudget": "{{remaining}} of {{limit}} full recalculations left today.",
-      "recalcExhausted": "Daily limit of {{limit}} full recalculations reached. Try again tomorrow."
+      "recalcExhausted": "Daily limit of {{limit}} full recalculations reached. Try again tomorrow.",
+      "metaProfile": "Scoring profile {{version}} (configuration {{hash}})",
+      "trendBreak": "Not compared with the previous analysis: it used another scoring profile or other topic settings."
     },
     "drawer": {
       "title": "How the Site Focus Score works",
@@ -7199,7 +7214,10 @@
       "empty": "Run at least two full analyses to see the trend.",
       "aria": "Site Focus Score over {{count}} analyses, from {{from}} to {{to}}",
       "point": "{{date}}: {{score}}",
-      "annotations": "Key changes"
+      "annotations": "Key changes",
+      "profile-changed": "Scoring profile changed from {{from}} to {{to}}; scores before and after are not directly comparable ({{delta}} points).",
+      "config-changed": "Topic settings changed (topic, anchor pages, goal or brand terms); this is a new report version, not directly comparable ({{delta}} points).",
+      "legacyProfile": "an unversioned profile"
     },
     "alert": {
       "sfs-drop": "Site Focus Score fell from {{from}} to {{to}} ({{points}} points).",
@@ -7244,7 +7262,8 @@
         "clicks": "Clicks",
         "conversions": "Conversions",
         "referringDomains": "Referring domains",
-        "revenue": "Revenue"
+        "revenue": "Revenue",
+        "botHits": "Verified Googlebot visits (server logs)"
       },
       "unknown": "{{signal}}: unknown ({{state}})",
       "measured": "{{signal}}: {{value}}",
@@ -7292,6 +7311,23 @@
         "too-long": "Keep the goal under {{max}} characters.",
         "no-words": "Use words, not only numbers or symbols.",
         "looks-like-url": "This looks like a URL. Add pages in the anchor pages field instead."
+      }
+    },
+    "brand": {
+      "title": "Brand terms",
+      "help": "Your domain name is never treated as a topic. Add other names of your brand, competitor brands that must not appear as topic gaps, and exceptions: words that look like a brand but are real industry terms.",
+      "aliases": "Other names of your brand (one per line)",
+      "competitors": "Competitor brands (one per line)",
+      "exceptions": "Industry terms to keep (one per line)",
+      "save": "Save brand terms",
+      "needsProject": "Brand terms are saved per project. Open this crawl from a project to set them.",
+      "ownBrand": "Excluded as your brand (normalised words): {{terms}}",
+      "filteredTitle": "Competitor terms hidden from the gaps",
+      "filtered": "{{term}}: {{reason}}",
+      "reason": {
+        "own-domain": "your domain name",
+        "own-alias": "your brand name",
+        "competitor-brand": "a competitor brand"
       }
     }
   },

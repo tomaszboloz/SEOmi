@@ -11,6 +11,9 @@ import { buildLinkSuggestions } from './links';
 import { resolveAnchors } from './anchors';
 import { buildRecommendations } from './recommend';
 import { buildTermStats, tfidfVector } from './terms';
+import { describeBrandFilter, resolveBrandPolicy } from './brandPolicy';
+import { focusConfigHash } from './configHash';
+import { sfsProfileRef } from './profile';
 import { SITE_FOCUS_VERSION, type FallbackMode, type FocusPage, type SiteFocusModel, type SiteFocusOptions, type SiteFocusReport, type TermSimilarity } from './types';
 
 const DEGRADED_MAJORITY = 0.5;
@@ -48,7 +51,8 @@ const record = <T>(map: Map<string, T>, keys: Iterable<string>): Record<string, 
 
 export const buildSiteFocusReport = (pages: FocusPage[], startUrl: string, options: SiteFocusOptions = {}): SiteFocusReport => {
   const language = options.language ?? dominantLanguage(pages);
-  const items = applyIndexabilityGate(prepare(pages, startUrl, language), options.includeNonIndexable);
+  const brand = resolveBrandPolicy(startUrl, language, options.brand);
+  const items = applyIndexabilityGate(prepare(pages, startUrl, language, brand), options.includeNonIndexable);
   const live = items.filter((item) => !item.skipped);
   const stats = buildTermStats(live.map((item) => item.terms));
   const vectors = live.map((item) => tfidfVector(item.terms, stats));
@@ -71,12 +75,14 @@ export const buildSiteFocusReport = (pages: FocusPage[], startUrl: string, optio
   const described = describeClusters(selection.clusters, surfaces, totals);
   const subSites = detectSubSites(described, selection.clusters, items, context, totals);
   const flags = computeFlags(items, selection.confidence, !!selection.manual, mode, subSites.length > 0, source);
-  const gaps = analyzeGaps(items, vectors, selection.core.keys, totals, surfaces, options.competitorTerms ?? [], language);
+  const filteredGaps: Parameters<typeof describeBrandFilter>[1] = [];
+  const gaps = analyzeGaps(items, vectors, selection.core.keys, totals, surfaces, options.competitorTerms ?? [], language, brand, filteredGaps);
   const linkSuggestions = buildLinkSuggestions(focus, pages);
   const modelState: SiteFocusModel = {
     language, pageCount: stats.pageCount, clusterLabels: Object.fromEntries(labels), kCore: selection.kCore, coreClusterId: selection.core.id,
     documentFrequency: record(stats.documentFrequency, termCluster.keys()), termCluster: Object.fromEntries([...termCluster].sort()),
     coreWeights: record(model.coreWeights, model.coreWeights.keys()), surfaces: record(surfaces, termCluster.keys()),
+    ...(Object.keys(brand.input).length ? { brand: brand.input } : {}),
   };
   return {
     score, band: bandFor(score), confidence: selection.confidence, onTopicRatio,
@@ -84,7 +90,8 @@ export const buildSiteFocusReport = (pages: FocusPage[], startUrl: string, optio
     clusters: described, pages: focus, ...(subSites.length ? { subSites } : {}), flags,
     recommendations: buildRecommendations(focus, score, flags, gaps, linkSuggestions.length, subSites),
     gaps, linkSuggestions, model: modelState, generatedAt: options.now ?? new Date().toISOString(),
-    pageCount: pages.length, version: SITE_FOCUS_VERSION,
+    pageCount: pages.length, version: SITE_FOCUS_VERSION, profile: sfsProfileRef(), coreConfigHash: focusConfigHash(options),
+    brandFilter: describeBrandFilter(brand, filteredGaps),
     // No scored page means no measurement: the 0 above is a placeholder, not a result.
     ...(focus.some((page) => !page.skipped) ? {} : { unavailable: true }),
   };

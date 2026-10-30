@@ -6008,7 +6008,8 @@
           "good": "Bom foco",
           "moderate": "Foco moderado",
           "weak": "Foco fraco",
-          "critical": "Foco crítico"
+          "critical": "Foco crítico",
+          "unavailable": "Não disponível"
         },
         "status": {
           "strong": "Forte",
@@ -6033,7 +6034,8 @@
           "anchoredTopic": "O tema principal foi escolhido a partir da página inicial e das páginas âncora ({{0}} páginas).",
           "anchorsMissing": "Páginas âncora não encontradas neste rastreio: {{0}}.",
           "goalTopic": "O tema principal foi escolhido pelo objetivo de negócio «{{0}}».",
-          "goalUnmatched": "O objetivo de negócio «{{0}}» não correspondeu a nenhum conteúdo rastreado; o tema foi escolhido sem ele."
+          "goalUnmatched": "O objetivo de negócio «{{0}}» não correspondeu a nenhum conteúdo rastreado; o tema foi escolhido sem ele.",
+          "unavailable": "Nenhuma página pôde ser pontuada neste rastreamento, por isso não há Site Focus Score. Não é uma pontuação de 0."
         },
         "rec": {
           "remove-offtopic": "Revise {{0}} páginas off-topic antes de agir: verifique primeiro tráfego, conversões e links. Páginas sem essa evidência são candidatas a um 301 para uma página relevante ou a uma reescrita. Nada é removido automaticamente. Potencial: +{{1}} pontos.",
@@ -6089,7 +6091,8 @@
             "clicks": "Cliques",
             "conversions": "Conversões",
             "referringDomains": "Domínios de referência",
-            "revenue": "Receita"
+            "revenue": "Receita",
+            "botHits": "Visitas verificadas do Googlebot (registos do servidor)"
           },
           "alternative": {
             "confirm-revenue-currency": "Confirmar a moeda da receita",
@@ -6120,6 +6123,16 @@
             "missing-permission": "Sem permissão",
             "unavailable": "Indisponível"
           }
+        },
+        "profile": "Perfil de pontuação {{0}}, configuração {{1}}.",
+        "tHidden": "Termos de concorrentes não mostrados como lacunas",
+        "hiddenIntro": "Estes termos nomeiam uma marca (sua ou de um concorrente), portanto são pesquisas de marca, não lacunas temáticas.",
+        "colTerm": "Termo",
+        "colReason": "Motivo",
+        "brandReason": {
+          "own-domain": "o nome do seu domínio",
+          "own-alias": "o nome da sua marca",
+          "competitor-brand": "marca concorrente"
         }
       },
       "authority": {
@@ -6944,7 +6957,9 @@
       "change": "{{delta}} pontos desde a análise anterior",
       "progressAria": "Site Focus Score {{score}} de 100, {{band}}",
       "recalcBudget": "Restam {{remaining}} de {{limit}} recálculos completos hoje.",
-      "recalcExhausted": "Limite diário de {{limit}} recálculos completos atingido. Tente novamente amanhã."
+      "recalcExhausted": "Limite diário de {{limit}} recálculos completos atingido. Tente novamente amanhã.",
+      "metaProfile": "Perfil de pontuação {{version}} (configuração {{hash}})",
+      "trendBreak": "Não comparado com a análise anterior: usou outro perfil de pontuação ou outras definições do tema."
     },
     "drawer": {
       "title": "Como funciona o Site Focus Score",
@@ -7199,7 +7214,10 @@
       "empty": "Execute pelo menos duas análises completas para ver a tendência.",
       "aria": "Site Focus Score ao longo de {{count}} análises, de {{from}} a {{to}}",
       "point": "{{date}}: {{score}}",
-      "annotations": "Mudanças principais"
+      "annotations": "Mudanças principais",
+      "profile-changed": "O perfil de pontuação mudou de {{from}} para {{to}}; as pontuações antes e depois não são diretamente comparáveis ({{delta}} pontos).",
+      "config-changed": "As definições do tema mudaram (tema, páginas âncora, objetivo ou termos de marca); é uma nova versão do relatório, não diretamente comparável ({{delta}} pontos).",
+      "legacyProfile": "um perfil sem versão"
     },
     "alert": {
       "sfs-drop": "O Site Focus Score caiu de {{from}} para {{to}} ({{points}} pontos).",
@@ -7244,7 +7262,8 @@
         "clicks": "Cliques",
         "conversions": "Conversões",
         "referringDomains": "Domínios de referência",
-        "revenue": "Receita"
+        "revenue": "Receita",
+        "botHits": "Visitas verificadas do Googlebot (registos do servidor)"
       },
       "unknown": "{{signal}}: desconhecido ({{state}})",
       "measured": "{{signal}}: {{value}}",
@@ -7292,6 +7311,23 @@
         "too-long": "O objetivo não pode ter mais de {{max}} caracteres.",
         "no-words": "Use palavras, não apenas números ou símbolos.",
         "looks-like-url": "Isto parece um URL. Adicione páginas no campo de páginas âncora."
+      }
+    },
+    "brand": {
+      "title": "Termos de marca",
+      "help": "O nome do seu domínio nunca é tratado como tema. Adicione outros nomes da sua marca, marcas concorrentes que não devem aparecer como lacunas temáticas e exceções: palavras que parecem uma marca, mas são termos reais do setor.",
+      "aliases": "Outros nomes da sua marca (um por linha)",
+      "competitors": "Marcas concorrentes (uma por linha)",
+      "exceptions": "Termos do setor a manter (um por linha)",
+      "save": "Guardar termos de marca",
+      "needsProject": "Os termos de marca são guardados por projeto. Abra este rastreamento a partir de um projeto para os definir.",
+      "ownBrand": "Excluídas como sua marca (palavras normalizadas): {{terms}}",
+      "filteredTitle": "Termos de concorrentes ocultos nas lacunas",
+      "filtered": "{{term}}: {{reason}}",
+      "reason": {
+        "own-domain": "o nome do seu domínio",
+        "own-alias": "o nome da sua marca",
+        "competitor-brand": "uma marca concorrente"
       }
     }
   },

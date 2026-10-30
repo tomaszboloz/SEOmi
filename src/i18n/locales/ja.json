@@ -6008,7 +6008,8 @@
           "good": "フォーカス良好",
           "moderate": "フォーカス普通",
           "weak": "フォーカス弱い",
-          "critical": "フォーカス危険"
+          "critical": "フォーカス危険",
+          "unavailable": "利用不可"
         },
         "status": {
           "strong": "強い",
@@ -6033,7 +6034,8 @@
           "anchoredTopic": "中心トピックはトップページとアンカーページ（{{0}} ページ）から選ばれました。",
           "anchorsMissing": "このクロールで見つからなかったアンカーページ：{{0}}。",
           "goalTopic": "コアトピックはビジネス目標「{{0}}」により選ばれました。",
-          "goalUnmatched": "ビジネス目標「{{0}}」はクロールしたコンテンツと一致しなかったため、目標なしでトピックを選びました。"
+          "goalUnmatched": "ビジネス目標「{{0}}」はクロールしたコンテンツと一致しなかったため、目標なしでトピックを選びました。",
+          "unavailable": "このクロールでは採点できたページがないため、Site Focus Score はありません。これは 0 点ではありません。"
         },
         "rec": {
           "remove-offtopic": "トピック外のページ {{0}} 件は、対応する前に確認してください。まずトラフィック、コンバージョン、リンクを確認します。これらの根拠がないページは、関連ページへの301またはリライトの候補です。自動では何も削除されません。見込み: +{{1}} ポイント。",
@@ -6089,7 +6091,8 @@
             "clicks": "クリック",
             "conversions": "コンバージョン",
             "referringDomains": "参照ドメイン",
-            "revenue": "収益"
+            "revenue": "収益",
+            "botHits": "確認済みの Googlebot 訪問（サーバーログ）"
           },
           "alternative": {
             "confirm-revenue-currency": "収益の通貨を確認",
@@ -6120,6 +6123,16 @@
             "missing-permission": "権限なし",
             "unavailable": "利用不可"
           }
+        },
+        "profile": "スコアリングプロファイル {{0}}、構成 {{1}}。",
+        "tHidden": "ギャップとして表示しない競合用語",
+        "hiddenIntro": "これらの用語はブランド名（自社または競合）であり、トピックのギャップではなくブランド検索です。",
+        "colTerm": "用語",
+        "colReason": "理由",
+        "brandReason": {
+          "own-domain": "ドメイン名",
+          "own-alias": "自社ブランド名",
+          "competitor-brand": "競合ブランド"
         }
       },
       "authority": {
@@ -6944,7 +6957,9 @@
       "change": "前回の分析から {{delta}} ポイント",
       "progressAria": "Site Focus Score {{score}} / 100、{{band}}",
       "recalcBudget": "本日の完全再計算の残り回数: {{remaining}} / {{limit}}。",
-      "recalcExhausted": "完全再計算の1日の上限({{limit}} 回)に達しました。明日もう一度お試しください。"
+      "recalcExhausted": "完全再計算の1日の上限({{limit}} 回)に達しました。明日もう一度お試しください。",
+      "metaProfile": "スコアリングプロファイル {{version}}（構成 {{hash}}）",
+      "trendBreak": "前回の分析とは比較していません。別のスコアリングプロファイルまたは別のトピック設定が使われました。"
     },
     "drawer": {
       "title": "Site Focus Score のしくみ",
@@ -7199,7 +7214,10 @@
       "empty": "推移を見るには、完全分析を2回以上実行してください。",
       "aria": "{{count}} 回の分析における Site Focus Score の推移({{from}} から {{to}})",
       "point": "{{date}}: {{score}}",
-      "annotations": "主な変更点"
+      "annotations": "主な変更点",
+      "profile-changed": "スコアリングプロファイルが {{from}} から {{to}} に変わりました。前後のスコアは直接比較できません（{{delta}} ポイント）。",
+      "config-changed": "トピック設定（トピック、アンカーページ、目標、ブランド用語）が変わりました。新しいレポートバージョンであり、直接比較できません（{{delta}} ポイント）。",
+      "legacyProfile": "バージョンなしのプロファイル"
     },
     "alert": {
       "sfs-drop": "Site Focus Score が {{from}} から {{to}} に低下しました({{points}} ポイント)。",
@@ -7244,7 +7262,8 @@
         "clicks": "クリック",
         "conversions": "コンバージョン",
         "referringDomains": "参照ドメイン",
-        "revenue": "収益"
+        "revenue": "収益",
+        "botHits": "確認済みの Googlebot 訪問（サーバーログ）"
       },
       "unknown": "{{signal}}: 不明（{{state}}）",
       "measured": "{{signal}}: {{value}}",
@@ -7292,6 +7311,23 @@
         "too-long": "目標は {{max}} 文字以内にしてください。",
         "no-words": "数字や記号だけでなく、言葉を使ってください。",
         "looks-like-url": "URL のようです。ページはアンカーページ欄に追加してください。"
+      }
+    },
+    "brand": {
+      "title": "ブランド用語",
+      "help": "ドメイン名がトピックとして扱われることはありません。自社ブランドの別名、トピックのギャップとして表示してはならない競合ブランド、そして例外（ブランドに見えるが実際の業界用語である語）を追加してください。",
+      "aliases": "自社ブランドの別名（1 行に 1 つ）",
+      "competitors": "競合ブランド（1 行に 1 つ）",
+      "exceptions": "残す業界用語（1 行に 1 つ）",
+      "save": "ブランド用語を保存",
+      "needsProject": "ブランド用語はプロジェクトごとに保存されます。設定するには、このクロールをプロジェクトから開いてください。",
+      "ownBrand": "自社ブランドとして除外（正規化された語）: {{terms}}",
+      "filteredTitle": "ギャップから除外した競合用語",
+      "filtered": "{{term}}: {{reason}}",
+      "reason": {
+        "own-domain": "ドメイン名",
+        "own-alias": "自社ブランド名",
+        "competitor-brand": "競合ブランド"
       }
     }
   },

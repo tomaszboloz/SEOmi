@@ -55,7 +55,13 @@ pub const CODES: &[(&str, &[&str])] = &[
     ),
     (
         SIGNAL,
-        &["clicks", "conversions", "referringDomains", "revenue"],
+        &[
+            "clicks",
+            "conversions",
+            "referringDomains",
+            "revenue",
+            "botHits",
+        ],
     ),
     (
         STATE,

@@ -3,9 +3,9 @@ import type { SiteFocusReport } from '@/services/siteFocus';
 import { buildRunReport } from './analysis';
 import { projectFocusOptions } from './focusOptions';
 
-export { projectFocusOptions, type ProjectFocusOptions } from './focusOptions';
+export { focusConfigRevision, projectFocusOptions, type ProjectFocusOptions } from './focusOptions';
 
 export const buildProjectRunReport = (run: CrawlRunRecord, projectId: string | null | undefined, now?: string): SiteFocusReport => {
-  const { manualTopic, anchorUrls, businessGoal } = projectFocusOptions(projectId);
-  return buildRunReport(run, manualTopic, now, anchorUrls, businessGoal);
+  const { manualTopic, anchorUrls, businessGoal, brand } = projectFocusOptions(projectId);
+  return buildRunReport(run, manualTopic, now, anchorUrls, businessGoal, brand);
 };

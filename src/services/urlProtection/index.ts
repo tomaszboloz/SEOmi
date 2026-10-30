@@ -3,3 +3,4 @@ export { decideProtection, DEFAULT_PRI_THRESHOLD, DEFAULT_TRS_THRESHOLD, type Pr
 export { adviceFor, ADVICE_CONDITIONS, type AdviceCondition, type ProtectionAdvice, type ProtectionAlternative } from './advice';
 export { collectEvidence, type ProtectionEvidence, type ProtectionParameters } from './evidence';
 export { protectionRows, MAX_PROTECTION_ROWS, type ProtectionRows } from './forReport';
+export { logVisitEvidence, verifiedGooglebotHits, type LogVisitEvidence } from './logEvidence';

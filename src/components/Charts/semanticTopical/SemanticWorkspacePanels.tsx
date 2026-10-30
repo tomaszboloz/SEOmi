@@ -13,6 +13,7 @@ import { buildAuthorityReport } from '@/services/topicalAuthority';
 import { readTaxonomy } from '@/services/topicalAuthorityMonitoring/taxonomyStore';
 import { buildSiteFocusReport } from '@/services/siteFocus';
 import { projectFocusOptions } from '@/services/siteFocusMonitoring/focusOptions';
+import { useFocusConfigRevision } from '@/hooks/useFocusConfigRevision';
 import type { FocusPage } from '@/services/siteFocus';
 
 type Session = ReturnType<typeof useSemanticTopicalSession>;
@@ -32,6 +33,7 @@ export const SemanticWorkspacePanels: React.FC<{ session: Session }> = ({ sessio
     workspacePreferences,
   } = session;
 
+  const focusRevision = useFocusConfigRevision(session.projectId);
   const authorityReport = useMemo(() => {
     const startUrl = pages[0]?.url;
     if (!startUrl) return null;
@@ -41,7 +43,7 @@ export const SemanticWorkspacePanels: React.FC<{ session: Session }> = ({ sessio
     } catch {
       return null;
     }
-  }, [pages, session.projectId]);
+  }, [pages, session.projectId, focusRevision]);
 
   useEffect(() => {
     const pendingId = takePendingBrief();

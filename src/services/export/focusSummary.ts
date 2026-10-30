@@ -10,10 +10,16 @@ export const FOCUS_PDF_PAGES = 25;
 const TOP_TERMS = 8;
 
 export interface FocusPdfSummary {
-  score: number;
+  /** Null when no page was scored (#53): the PDF shows a dash and the unavailable band, never a critical 0. */
+  score: number | null;
   band: string;
-  confidence: number;
-  on_topic_ratio: number;
+  confidence: number | null;
+  on_topic_ratio: number | null;
+  unavailable?: boolean;
+  /** Scoring profile that produced the numbers (#83). */
+  profile?: { id: string; algorithm_version: string; config_hash: string };
+  /** Competitor terms hidden from the gap list as brand noise, with the reason (#56). */
+  brand_filtered?: Array<{ term: string; reason: string }>;
   page_count: number;
   core_topic: {
     label: string; terms: Array<{ term: string; coverage_pct: number }>; manual_input?: string; manual_matched?: boolean;
@@ -45,11 +51,17 @@ export const summarizeSiteFocus = (report: SiteFocusReport): FocusPdfSummary => 
   const manual = report.coreTopic.manualOverride;
   const anchors = report.coreTopic.anchors;
   const goal = report.coreTopic.businessGoal;
+  const none = report.unavailable === true;
+  const profile = report.profile;
+  const hidden = report.brandFilter?.filteredGaps ?? [];
   return {
-    score: report.score,
-    band: report.band,
-    confidence: report.confidence,
-    on_topic_ratio: report.onTopicRatio,
+    score: none ? null : report.score,
+    band: none ? 'unavailable' : report.band,
+    confidence: none ? null : report.confidence,
+    on_topic_ratio: none ? null : report.onTopicRatio,
+    ...(none ? { unavailable: true } : {}),
+    ...(profile ? { profile: { id: profile.id, algorithm_version: profile.algorithmVersion, config_hash: profile.configHash } } : {}),
+    ...(hidden.length ? { brand_filtered: hidden.map((item) => ({ term: item.term, reason: item.reason })) } : {}),
     page_count: report.pageCount,
     core_topic: {
       label: report.coreTopic.label,

@@ -1,9 +1,9 @@
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import type { CrawlRunRecord } from '@/types';
-import type { FocusPage, HistoryAnnotation, PageFocus, SfsSnapshot, SiteFocusReport } from '@/services/siteFocus';
+import type { BrandPolicyInput, FocusPage, HistoryAnnotation, PageFocus, SfsSnapshot, SiteFocusReport } from '@/services/siteFocus';
 import {
   annotationsByRun, applyIncremental, buildProjectRunReport, buildRunReport, consumeRecompute, isCompletedRun, readAnchorUrls, readFocusHistory,
-  readBusinessGoal, readManualTopic, readRecomputeBudget, recordFullAnalysis, validFocusProject, writeAnchorUrls, writeBusinessGoal, writeManualTopic,
+  readBrandPolicy, readBusinessGoal, readManualTopic, readRecomputeBudget, recordFullAnalysis, validFocusProject, writeAnchorUrls, writeBrandPolicy, writeBusinessGoal, writeManualTopic,
   type Clock, type ManualTopic, type RecomputeBudget,
 } from '@/services/siteFocusMonitoring';
 
@@ -18,6 +18,9 @@ export interface SiteFocusState {
   anchorUrls: string[];
   /** Saved, validated business goal (#82); undefined when none. */
   businessGoal: string | undefined;
+  /** Saved brand dictionary (#56): aliases, competitor brands and exceptions. */
+  brandPolicy: BrandPolicyInput;
+  setBrandPolicy: (policy: BrandPolicyInput) => void;
   recompute: () => { ok: boolean; budget: RecomputeBudget };
   setManualTopic: (topic: ManualTopic | null) => void;
   setAnchorUrls: (urls: string[]) => void;
@@ -32,6 +35,7 @@ export const useSiteFocus = (run: CrawlRunRecord | null | undefined, projectId: 
   const [manualTopic, setTopic] = useState<ManualTopic | undefined>(() => readManualTopic(projectId));
   const [anchorUrls, setAnchors] = useState<string[]>(() => readAnchorUrls(projectId));
   const [businessGoal, setGoal] = useState(() => readBusinessGoal(projectId));
+  const [brandPolicy, setBrand] = useState(() => readBrandPolicy(projectId));
   const [entries, setEntries] = useState(() => readFocusHistory(projectId));
   const [budget, setBudget] = useState(() => readRecomputeBudget(projectId, clock));
   const [override, setOverride] = useState<SiteFocusReport | null>(null);
@@ -44,13 +48,14 @@ export const useSiteFocus = (run: CrawlRunRecord | null | undefined, projectId: 
     setTopic(readManualTopic(projectId));
     setAnchors(readAnchorUrls(projectId));
     setGoal(readBusinessGoal(projectId));
+    setBrand(readBrandPolicy(projectId));
     setEntries(readFocusHistory(projectId));
     setBudget(readRecomputeBudget(projectId, clock));
   }
 
-  const base = useMemo(() => (isCompletedRun(run) ? buildRunReport(run, manualTopic, undefined, anchorUrls, businessGoal) : null),
+  const base = useMemo(() => (isCompletedRun(run) ? buildRunReport(run, manualTopic, undefined, anchorUrls, businessGoal, brandPolicy) : null),
     // nonce forces a rebuild on explicit recompute; clock is read inside the callbacks.
-    [run, manualTopic, anchorUrls, businessGoal, nonce]);
+    [run, manualTopic, anchorUrls, businessGoal, brandPolicy, nonce]);
   const report = override ?? base;
 
   useEffect(() => {
@@ -90,6 +95,12 @@ export const useSiteFocus = (run: CrawlRunRecord | null | undefined, projectId: 
     return result;
   }, [projectId]);
 
+  const setBrandPolicy = useCallback((policy: BrandPolicyInput) => {
+    if (validFocusProject(projectId)) writeBrandPolicy(projectId, policy);
+    setOverride(null);
+    setBrand(readBrandPolicy(projectId));
+  }, [projectId]);
+
   const incrementalUpdate = useCallback((newPages: FocusPage[]): PageFocus[] => {
     if (!report || !run) return [];
     const outcome = applyIncremental(projectId, report, newPages, run.startUrl, { clock });
@@ -99,6 +110,7 @@ export const useSiteFocus = (run: CrawlRunRecord | null | undefined, projectId: 
 
   return {
     report, history: entries.map((entry) => entry.snapshot), annotations: annotationsByRun(entries),
-    recomputeBudget: budget, manualTopic, anchorUrls, businessGoal, recompute, setManualTopic, setAnchorUrls, setBusinessGoal, incrementalUpdate,
+    recomputeBudget: budget, manualTopic, anchorUrls, businessGoal, brandPolicy, setBrandPolicy,
+    recompute, setManualTopic, setAnchorUrls, setBusinessGoal, incrementalUpdate,
   };
 };

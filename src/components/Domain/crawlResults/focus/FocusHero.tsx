@@ -2,7 +2,7 @@ import { Info } from 'lucide-react';
 import { useCallback, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { HelpTip } from '@/components/Help/HelpTip';
-import type { SfsSnapshot, SiteFocusReport } from '@/services/siteFocus';
+import { comparableSnapshots, type SfsSnapshot, type SiteFocusReport } from '@/services/siteFocus';
 import { FocusDrawer } from './FocusDrawer';
 import { BAND_BAR, BAND_TEXT, CRITICAL_BELOW } from './focusHelpers';
 
@@ -28,7 +28,9 @@ export const FocusHero = ({ report, onRecalculate, history, recalcDisabled = fal
   const scored = report.pages.filter((page) => !page.skipped && page.type !== 'technical');
   const off = scored.filter((page) => page.trs < CRITICAL_BELOW).length;
   const previous = history?.length ? history[history.length - 1] : undefined;
-  const delta = previous ? Math.round((report.score - previous.score) * 10) / 10 : undefined;
+  // A previous analysis scored with another profile or other topic settings is a break, not a change (#83).
+  const comparable = !previous || comparableSnapshots(previous, report);
+  const delta = previous && comparable ? Math.round((report.score - previous.score) * 10) / 10 : undefined;
   const date = new Date(report.generatedAt).toLocaleString(i18n.language);
 
   return (
@@ -55,6 +57,7 @@ export const FocusHero = ({ report, onRecalculate, history, recalcDisabled = fal
             <div id="focus-hero-meta" role="group" aria-label={t('focus.hero.metaButton')} className="absolute end-0 top-full z-10 mt-1 w-64 space-y-2 rounded-lg border border-slate-700 bg-slate-950 p-3 text-xs text-slate-300 shadow-lg">
               <p>{t('focus.hero.metaPages', { count: report.pageCount })}</p>
               <p>{t('focus.hero.metaAge', { date })}</p>
+              {report.profile && <p data-testid="focus-profile">{t('focus.hero.metaProfile', { version: report.profile.algorithmVersion, hash: report.profile.configHash })}</p>}
               <button
                 type="button"
                 onClick={onRecalculate}
@@ -79,6 +82,7 @@ export const FocusHero = ({ report, onRecalculate, history, recalcDisabled = fal
         {delta !== undefined && delta !== 0 && (
           <p className="pb-1 text-xs text-slate-400">{t('focus.hero.change', { delta: delta > 0 ? `+${delta}` : `${delta}` })}</p>
         )}
+        {!comparable && <p className="pb-1 text-xs text-amber-300" data-testid="focus-trend-break">{t('focus.hero.trendBreak')}</p>}
       </div>
       <div
         role="progressbar"
