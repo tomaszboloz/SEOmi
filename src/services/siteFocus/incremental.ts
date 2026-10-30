@@ -21,7 +21,7 @@ export const modelOf = (report: SiteFocusReport): ScoringModel => ({
 export const scoreIncremental = (
   report: SiteFocusReport, changed: FocusPage[], startUrl: string, now: string = new Date().toISOString(),
 ): { scored: PageFocus[]; report: SiteFocusReport } => {
-  const items = applyIndexabilityGate(prepare(changed, startUrl, report.model.language));
+  const items = applyIndexabilityGate(prepare(changed, startUrl, report.model.language, report.model.brand));
   const context = {
     stats: { pageCount: report.model.pageCount, documentFrequency: new Map(Object.entries(report.model.documentFrequency)) },
     model: modelOf(report), mode: report.flags.fallbackMode,

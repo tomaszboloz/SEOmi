@@ -1,7 +1,7 @@
 import { idf, type PageTerms, type TermStats } from './terms';
+import { SFS_LEXICAL_WEIGHTS as LEX, SFS_OVERLAP_SATURATION, SFS_SEMANTIC_WEIGHTS as SEM, SFS_TRS_SCALE } from './profile';
 import type { AlignmentRow, FallbackMode } from './types';
 
-const OVERLAP_SATURATION = 12;
 const round1 = (value: number): number => Math.round(value * 10) / 10;
 
 /** What the scorer needs to know about the site; also the serializable shape of SiteFocusModel. */
@@ -67,12 +67,14 @@ export const scorePage = (page: PageTerms, stats: TermStats, model: ScoringModel
   });
   const similarity = cosineMaps(weights, model.coreWeights);
   const present = model.kCore.filter((key) => page.entries.has(key)).length;
-  const overlap = Math.min(1, present / Math.min(Math.max(1, model.kCore.length), OVERLAP_SATURATION));
+  const overlap = Math.min(1, present / Math.min(Math.max(1, model.kCore.length), SFS_OVERLAP_SATURATION));
   const drift = total > 0 ? foreignTotal / total : 0;
   const lexicalDrift = tfTotal > 0 ? tfForeign / tfTotal : 0;
-  const raw = mode === 'semantic' ? 0.5 * similarity + 0.3 * overlap - 0.2 * drift : 0.75 * overlap - 0.25 * lexicalDrift;
+  const raw = mode === 'semantic'
+    ? SEM.similarity * similarity + SEM.overlap * overlap - SEM.drift * drift
+    : LEX.overlap * overlap - LEX.drift * lexicalDrift;
   return {
-    trs: round1(Math.max(0, Math.min(100, raw * 125))),
+    trs: round1(Math.max(0, Math.min(100, raw * SFS_TRS_SCALE))),
     similarity: round1(similarity * 100),
     keywordOverlap: round1(overlap * 100),
     semanticDrift: round1((mode === 'semantic' ? drift : lexicalDrift) * 100),

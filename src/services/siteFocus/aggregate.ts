@@ -1,3 +1,4 @@
+import { SFS_BANDS } from './profile';
 import { OFF_TOPIC_BELOW, ON_TOPIC_FROM, STRONG_FROM, trsGroup } from './trsPolicy';
 import type { PageFocus, PagePriority, PageStatus, Playbook, SfsBand } from './types';
 
@@ -5,7 +6,8 @@ export const ON_TOPIC_TRS = ON_TOPIC_FROM;
 const round1 = (value: number): number => Math.round(value * 10) / 10;
 
 export const bandFor = (score: number): SfsBand =>
-  score >= 90 ? 'excellent' : score >= 75 ? 'good' : score >= 60 ? 'moderate' : score >= 40 ? 'weak' : 'critical';
+  score >= SFS_BANDS.excellent ? 'excellent' : score >= SFS_BANDS.good ? 'good' : score >= SFS_BANDS.moderate ? 'moderate'
+    : score >= SFS_BANDS.weak ? 'weak' : 'critical';
 
 /** Status subdivides the TRS groups in ./trsPolicy: 'weak', 'borderline' and 'moderate' are all in the borderline group (40-74). */
 export const statusFor = (trs: number): PageStatus =>

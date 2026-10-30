@@ -80,6 +80,9 @@ export const gatedSiteFocus = (pages: FocusPage[], startUrl: string, report: Sit
       now: report.generatedAt,
       ...(manualTopic ? { manualTopic } : {}),
       ...(anchorUrls.length ? { anchorUrls } : {}),
+      // Same goal and brand dictionary as the source report: one Core Topic for every module (#82/#56).
+      ...(report.coreTopic.businessGoal ? { businessGoal: report.coreTopic.businessGoal.input } : {}),
+      ...(report.model.brand ? { brand: report.model.brand } : {}),
     }),
   };
 };
@@ -92,7 +95,7 @@ export const buildContext = (pages: FocusPage[], startUrl: string, report: SiteF
   const scoped = gatedSiteFocus(pages, startUrl, report);
   const language = scoped.report.model.language || '';
   const eligible = scoped.pages;
-  const items = prepare(eligible, startUrl, language || undefined).filter((item) => !item.skipped);
+  const items = prepare(eligible, startUrl, language || undefined, scoped.report.model.brand).filter((item) => !item.skipped);
   const stats = buildTermStats(items.map((item) => item.terms));
   const focusByUrl = new Map(scoped.report.pages.map((page) => [normalizeUrl(page.url), page]));
   const coreKeys = coreKeysOf(scoped.report);

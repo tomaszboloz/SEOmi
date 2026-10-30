@@ -3,8 +3,9 @@ import { buildPageDetails } from './alignment';
 import { playbookFor, priorityFor, statusFor } from './aggregate';
 import { TYPE_WEIGHT, classifyPage, linkGraph, type TypeContext } from './pageType';
 import { scorePage, type ScoringModel } from './pageScore';
-import { brandKeys, extractPageTerms, type PageTerms, type TermStats } from './terms';
-import type { FallbackMode, FocusPage, PageFocus, SkipReason } from './types';
+import { extractPageTerms, type PageTerms, type TermStats } from './terms';
+import { ownBrandMatcher, resolveBrandPolicy, type BrandPolicy } from './brandPolicy';
+import type { BrandPolicyInput, FallbackMode, FocusPage, PageFocus, SkipReason } from './types';
 import type { TermCluster } from './cluster';
 
 export interface Prepared { page: FocusPage; terms: PageTerms; skipped?: SkipReason }
@@ -18,8 +19,10 @@ export const skipReasonOf = (page: FocusPage, terms: PageTerms): SkipReason | un
   return terms.entries.size ? undefined : 'no-content';
 };
 
-export const prepare = (pages: FocusPage[], startUrl: string, language: string | undefined): Prepared[] => {
-  const brand = brandKeys(startUrl, language ?? '');
+/** Pages with their terms; own-brand words (domain, aliases, minus exceptions #56) are removed first. */
+export const prepare = (pages: FocusPage[], startUrl: string, language: string | undefined, brandInput?: BrandPolicyInput | BrandPolicy): Prepared[] => {
+  const policy = brandInput && 'own' in brandInput ? brandInput : resolveBrandPolicy(startUrl, language ?? '', brandInput);
+  const brand = ownBrandMatcher(policy);
   return pages.map((page) => {
     const terms = extractPageTerms(page, language, brand);
     return { page, terms, skipped: skipReasonOf(page, terms) };
