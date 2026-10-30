@@ -1,0 +1,33 @@
+//! Label keys of the phrase sections (IGOS #68, SIJA #69) under `pdfReport.audit.phrase`.
+
+pub const IGOS_TITLE: &str = "audit.phrase.igosTitle";
+pub const SIJA_TITLE: &str = "audit.phrase.sijaTitle";
+pub const SCORE: &str = "audit.phrase.score";
+pub const NO_SCORE: &str = "audit.phrase.noScore";
+pub const BASELINE: &str = "audit.phrase.baseline";
+pub const OF_TOTAL: &str = "audit.phrase.ofTotal";
+pub const COMPONENTS: &str = "audit.phrase.components";
+pub const COVERAGE: &str = "audit.phrase.coverage";
+pub const ZONES: &str = "audit.phrase.zones";
+pub const NOVEL: &str = "audit.phrase.novel";
+pub const MISSING_BASICS: &str = "audit.phrase.missingBasics";
+pub const BASICS_ADVICE: &str = "audit.phrase.basicsAdvice";
+pub const VECTORS: &str = "audit.phrase.vectors";
+pub const LIMITS: &str = "audit.phrase.limits";
+pub const NONE: &str = "audit.phrase.none";
+pub const ECHO_ADVICE: &str = "audit.phrase.echoAdvice";
+pub const DRIFT_ADVICE: &str = "audit.phrase.driftAdvice";
+pub const EVIDENCE_ADVICE: &str = "audit.phrase.evidenceAdvice";
+pub const PAGE_INTENT: &str = "audit.phrase.pageIntent";
+pub const SERP_INTENT: &str = "audit.phrase.serpIntent";
+pub const MATCH: &str = "audit.phrase.match";
+pub const MISMATCH_ADVICE: &str = "audit.phrase.mismatchAdvice";
+pub const SSAS: &str = "audit.phrase.ssas";
+pub const INCONCLUSIVE: &str = "audit.phrase.inconclusive";
+pub const FUNNEL: &str = "audit.phrase.funnel";
+pub const FUNNEL_VALUE: &str = "audit.phrase.funnelValue";
+pub const GAPS: &str = "audit.phrase.gaps";
+pub const METHOD_LABEL: &str = "audit.phrase.methodLabel";
+pub const METHOD: &str = "audit.phrase.method";
+pub const ZONE_ORDER: [&str; 4] = ["echo", "gain", "drift", "neutral"];
+pub const COMPONENT_ORDER: [&str; 4] = ["nefr", "edsi", "fhem", "sdd"];

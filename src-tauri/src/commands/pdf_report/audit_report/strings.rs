@@ -4,6 +4,7 @@
 
 pub mod checks;
 pub mod loc;
+pub mod phrase;
 pub mod report;
 
 pub use crate::commands::pdf_report::labels::{t, tf};

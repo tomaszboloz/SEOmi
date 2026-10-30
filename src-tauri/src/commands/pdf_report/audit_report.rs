@@ -29,6 +29,8 @@ mod tests_locate_tech;
 #[cfg(test)]
 mod tests_model;
 #[cfg(test)]
+mod tests_phrase;
+#[cfg(test)]
 mod tests_sections;
 #[cfg(test)]
 mod tests_sections_gaps;

@@ -5,6 +5,7 @@ mod index;
 mod media;
 mod page;
 mod perf;
+mod phrase;
 mod security;
 
 use super::check::Section;
@@ -38,5 +39,6 @@ pub fn build(ctx: &Ctx) -> Vec<Section> {
                 .any(|key| ctx.audit.get(key).is_some_and(|value| !value.is_null()))
         })
         .map(|(_, section)| section)
+        .chain(phrase::sections(ctx))
         .collect()
 }

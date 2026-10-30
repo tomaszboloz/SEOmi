@@ -3,6 +3,7 @@ import type { SemanticMap, SemanticMapOptions } from './semanticGraph/types';
 import { normalizeGraphUrl } from './semanticGraph/urls';
 import { buildSemanticTopics, MAX_TOPIC_EDGES } from './semanticGraph/topics';
 import { buildContentEdges, MAX_GRAPH_EDGES } from './semanticGraph/content';
+import { inboundSources, isOrphan } from './linkGraph';
 
 export type {
   SemanticPageNode, SemanticContentEdge, SemanticTopicEdge, SemanticMap, SemanticMapOptions,
@@ -17,6 +18,9 @@ export const buildSemanticMap = (
   const selectedPages = pages.slice(0, MAX_GRAPH_NODES);
   const { termsByPage, topicEdges, totalTopicEdges, groupMembers, groupDetails, find } = buildSemanticTopics(selectedPages);
   const { allEdges, edges, incoming } = buildContentEdges(selectedPages, options);
+  const inbound = inboundSources(allEdges.map((edge) => ({ from: edge.source, to: edge.target })));
+  const start = normalizeGraphUrl(startUrl);
+  const roots = new Set(selectedPages.flatMap((page, index) => (normalizeGraphUrl(page.url) === start || normalizeGraphUrl(page.final_url) === start ? [`page-${index}`] : [])));
   const nodes = selectedPages.map((page, index) => {
     const details = groupDetails.get(find(index))!;
     const id = `page-${index}`;
@@ -28,9 +32,7 @@ export const buildSemanticMap = (
       clusterLabel: details.label,
       semanticSignalCount: termsByPage[index].length,
       incomingContentLinks,
-      orphan: normalizeGraphUrl(page.url) !== normalizeGraphUrl(startUrl)
-        && normalizeGraphUrl(page.final_url) !== normalizeGraphUrl(startUrl)
-        && incomingContentLinks === 0,
+      orphan: isOrphan(id, inbound, roots),
     };
   });
   const clusters = [...groupMembers.entries()]

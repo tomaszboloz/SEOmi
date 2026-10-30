@@ -5,6 +5,7 @@ import type { PageAuditData } from '@/types';
 import { escapeCsv, csv, exportHeaders, exportText } from './csv';
 import { downloadText, downloadPdf } from './download';
 import { reportFilename, auditTableFilename } from './filenames';
+import { phraseInsightsFor } from './phraseInsights';
 
 export const auditCsv = (audit: PageAuditData): string => {
   const fields = exportHeaders('auditFields');
@@ -26,7 +27,8 @@ export const downloadAuditCsv = (audit: PageAuditData): void => downloadText(rep
 
 export const downloadAuditPdf = async (audit: PageAuditData): Promise<void> => {
   requireAllowed('export_audit_pdf', { report: 'page-audit' });
-  return downloadPdf('generate_audit_pdf', { audit }, reportFilename(audit, 'pdf'));
+  const insights = phraseInsightsFor(audit.final_url);
+  return downloadPdf('generate_audit_pdf', { audit: insights ? { ...audit, phrase_insights: insights } : audit }, reportFilename(audit, 'pdf'));
 };
 
 export const auditLinksCsv = (audit: PageAuditData): string => {

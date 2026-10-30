@@ -5683,6 +5683,81 @@
         "resource": "안전하지 않은 리소스: {{0}}",
         "response": "서버 응답: HTTP {{1}}, {{0}} ms 소요",
         "hop": "리디렉션 홉: {{1}}에서 HTTP {{0}}"
+      },
+      "phrase": {
+        "igosTitle": "\"{{0}}\"의 정보 이득(IGOS)",
+        "sijaTitle": "\"{{0}}\"의 검색 의도(SIJA)",
+        "score": "점수",
+        "baseline": "비교한 TOP 페이지",
+        "ofTotal": "{{1}}개 중 {{0}}개",
+        "components": "구성 요소(NEFR / EDSI / FHEM / SDD)",
+        "coverage": "기준선 커버리지",
+        "zones": "단락 구역",
+        "novel": "주제 내 새 엔터티",
+        "vectors": "벡터(제공자 / 모델, 실행)",
+        "limits": "제한 사항",
+        "pageIntent": "페이지 의도",
+        "serpIntent": "TOP 의도(렌더링된 페이지 다수)",
+        "match": "의도 일치",
+        "matchValue": {
+          "match": "일치",
+          "mismatch": "불일치",
+          "unknown": "알 수 없음"
+        },
+        "ssas": "SSAS(TOP 대비 구조)",
+        "funnel": "렌더링된 TOP 페이지의 퍼널 단계",
+        "funnelValue": "{{1}}개 중 {{0}}개 렌더링: TOFU {{2}} · MOFU {{3}} · BOFU {{4}}",
+        "gaps": "누락된 형식",
+        "none": "없음",
+        "echoAdvice": "에코 단락 {{0}}개를 자체 데이터나 경험을 담아 직접 다시 쓰세요.",
+        "driftAdvice": "드리프트 단락 {{0}}개를 주제에 맞추거나 삭제하세요. 주제를 벗어난 글은 IGOS를 높이지 않습니다.",
+        "method": "SEOmi 휴리스틱이며 Google 지표가 아닙니다. 경쟁사 텍스트는 복제하지 않습니다.",
+        "methodLabel": "방법",
+        "noScore": "점수 없음",
+        "evidenceAdvice": "단위나 출처가 있는 구체적 데이터를 추가하세요. 감지된 것이 없습니다.",
+        "inconclusive": "SSAS 판단 불가: 실제 상위 페이지가 {{0}}개이며 최소 3개가 필요합니다.",
+        "component": {
+          "nefr": "새 엔터티",
+          "edsi": "근거 밀도",
+          "fhem": "경험 표지",
+          "sdd": "하위 주제 분포"
+        },
+        "zone": {
+          "echo": "에코",
+          "gain": "이득",
+          "drift": "이탈",
+          "neutral": "중립"
+        },
+        "limit": {
+          "no-comparable-documents": "비교 가능한 경쟁 문서가 없습니다.",
+          "too-few-documents": "신뢰할 만한 기준에는 경쟁 문서가 너무 적습니다.",
+          "some-documents-missing": "일부 경쟁 페이지를 가져오지 못했습니다.",
+          "no-target-chunks": "분석할 수 있는 문단이 없습니다.",
+          "off-topic-below-quota": "주제에 맞는 문단이 너무 적습니다.",
+          "local-lexical-embeddings": "유사도는 의미 모델이 아닌 로컬 어휘 벡터로 계산되므로 영역은 근사치입니다.",
+          "heuristic-entities": "엔터티는 대문자 구문과 주어-서술어-목적어 사실에서 추출하며, 학습된 엔터티 모델이 아닙니다.",
+          "semantic-provider-unavailable": "프로젝트의 의미 임베딩 제공자를 사용할 수 없어 로컬 어휘 벡터를 사용했습니다."
+        },
+        "intent": {
+          "definitional": "정의",
+          "how-to": "방법 안내",
+          "troubleshooting": "문제 해결",
+          "comparison": "비교",
+          "curated-list": "추천 목록",
+          "tool": "도구·계산기",
+          "transactional": "거래",
+          "local": "지역"
+        },
+        "gap": {
+          "table": "비교표 추가: 상위 {{1}}개 페이지 중 {{0}}개에 있습니다.",
+          "ordered-list": "번호 단계 추가: 상위 {{1}}개 페이지 중 {{0}}개가 번호 목록을 사용합니다.",
+          "calculator": "작동하는 계산기나 도구 고려: 상위 {{1}}개 페이지 중 {{0}}개에 실제 양식 필드가 있는 도구가 있습니다.",
+          "product-cards": "제품이나 혜택 표시: 상위 {{1}}개 페이지 중 {{0}}개가 제품 또는 가격 카드를 보여 줍니다.",
+          "cta": "명확한 행동 유도를 추가하세요: TOP 페이지 {{1}}개 중 {{0}}개에 있습니다(순수 정보 페이지는 제외)."
+        },
+        "mismatchAdvice": "이 페이지는 대부분의 TOP 페이지와 다른 의도로 보입니다. 같은 요구에 답하는지 확인하세요.",
+        "missingBasics": "누락된 기본 항목",
+        "basicsAdvice": "먼저 누락된 기본 주제 {{0}}개를 다루세요. 커버리지가 절반 미만이면 점수가 감점되며, 새로운 사실이 기본을 대신하지 않습니다."
       }
     },
     "crawl": {
@@ -8199,6 +8274,22 @@
         "in-module": "모듈 탭에서 페이지별로 수정하세요."
       },
       "openModule": "{{tab}}에서 산출물 열기"
+    },
+    "trend": {
+      "first": "이 HSS 프로필로 저장된 이전 실행이 없어 아직 추세가 없습니다.",
+      "notComparable": "이전 실행과 비교할 수 없습니다(둘 중 하나에서 측정되지 않음).",
+      "up": "이전 실행({{date}}) 대비 {{value}} 상승",
+      "down": "이전 실행({{date}}) 대비 {{value}} 하락",
+      "flat": "이전 실행({{date}}) 대비 변화 없음"
+    },
+    "review": {
+      "group": "검토 결정",
+      "decision": {
+        "accepted": "수락",
+        "deferred": "보류",
+        "rejected": "거부"
+      },
+      "current": "결정: {{decision}} ({{date}}) · 기록 {{count}}건"
     }
   },
   "surgical": {
@@ -8605,8 +8696,10 @@
     "rec": {
       "rewrite-echo": "오프셋 {{offset}}의 문단이 경쟁 구절을 반복합니다. 자신의 말로 다시 쓰세요.",
       "add-evidence": "단위나 출처가 있는 구체적 데이터를 추가하세요. 감지된 것이 없습니다.",
-      "refocus-drift": "오프셋 {{offset}}의 문단이 주제에서 벗어납니다. 다시 집중하거나 삭제하세요."
-    }
+      "refocus-drift": "오프셋 {{offset}}의 문단이 주제에서 벗어납니다. 다시 집중하거나 삭제하세요.",
+      "add-basics": "먼저 누락된 기본 주제 {{count}}개를 다루세요. 커버리지가 절반 미만이면 점수가 감점되며, 새로운 사실이 기본을 대신하지 않습니다."
+    },
+    "missingBasics": "대부분의 TOP 페이지가 다루지만 이 페이지에는 없는 기본 항목: {{list}}"
   },
   "logIntelUi": {
     "title": "로그 분석",

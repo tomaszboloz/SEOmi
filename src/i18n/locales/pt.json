@@ -5683,6 +5683,81 @@
         "resource": "Recurso inseguro: {{0}}",
         "response": "Resposta do servidor: HTTP {{1}} em {{0}} ms",
         "hop": "Salto de redirecionamento: HTTP {{0}} de {{1}}"
+      },
+      "phrase": {
+        "igosTitle": "Ganho de informação (IGOS) para «{{0}}»",
+        "sijaTitle": "Intenção de pesquisa (SIJA) para «{{0}}»",
+        "score": "Pontuação",
+        "baseline": "Páginas TOP comparadas",
+        "ofTotal": "{{0}} de {{1}}",
+        "components": "Componentes (NEFR / EDSI / FHEM / SDD)",
+        "coverage": "Cobertura da base",
+        "zones": "Zonas de parágrafos",
+        "novel": "Novas entidades no tema",
+        "vectors": "Vetores (provedor / modelo, execução)",
+        "limits": "Limitações",
+        "pageIntent": "Intenção da página",
+        "serpIntent": "Intenção TOP (maioria das páginas renderizadas)",
+        "match": "Correspondência de intenção",
+        "matchValue": {
+          "match": "Corresponde",
+          "mismatch": "Não corresponde",
+          "unknown": "Desconhecida"
+        },
+        "ssas": "SSAS (estrutura vs TOP)",
+        "funnel": "Etapas do funil entre as páginas TOP renderizadas",
+        "funnelValue": "{{0}} de {{1}} renderizadas: TOFU {{2}} · MOFU {{3}} · BOFU {{4}}",
+        "gaps": "Formatos em falta",
+        "none": "Nenhum",
+        "echoAdvice": "Reescreva os {{0}} parágrafos eco com suas palavras, dados ou experiência.",
+        "driftAdvice": "Refoque ou remova os {{0}} parágrafos de desvio; texto fora do tema não aumenta o IGOS.",
+        "method": "Heurística do SEOmi, não uma métrica do Google. O texto dos concorrentes não é reproduzido.",
+        "methodLabel": "Método",
+        "noScore": "Sem pontuação",
+        "evidenceAdvice": "Adicione dados concretos com unidades ou fontes; nenhum foi detectado.",
+        "inconclusive": "SSAS inconclusivo: {{0}} páginas TOP reais disponíveis, são necessárias pelo menos 3.",
+        "component": {
+          "nefr": "Entidades novas",
+          "edsi": "Densidade de evidências",
+          "fhem": "Marcadores de experiência",
+          "sdd": "Distribuição de subtemas"
+        },
+        "zone": {
+          "echo": "Eco",
+          "gain": "Ganho",
+          "drift": "Desvio",
+          "neutral": "Neutro"
+        },
+        "limit": {
+          "no-comparable-documents": "Nenhum documento concorrente comparável.",
+          "too-few-documents": "Poucos documentos concorrentes para uma base confiável.",
+          "some-documents-missing": "Algumas páginas concorrentes não puderam ser obtidas.",
+          "no-target-chunks": "A página não tem parágrafos analisáveis.",
+          "off-topic-below-quota": "Poucos parágrafos dentro do tema.",
+          "local-lexical-embeddings": "A similaridade usa vetores léxicos locais, não um modelo semântico; as zonas são aproximadas.",
+          "heuristic-entities": "As entidades vêm de frases com maiúscula e de factos sujeito-predicado-objeto, não de um modelo de entidades treinado.",
+          "semantic-provider-unavailable": "O fornecedor semântico de embeddings do projeto estava indisponível; foram usados vetores lexicais locais."
+        },
+        "intent": {
+          "definitional": "Definição",
+          "how-to": "Passo a passo",
+          "troubleshooting": "Solução de problemas",
+          "comparison": "Comparação",
+          "curated-list": "Lista selecionada",
+          "tool": "Ferramenta ou calculadora",
+          "transactional": "Transacional",
+          "local": "Local"
+        },
+        "gap": {
+          "table": "Adicione uma tabela comparativa: {{0}} de {{1}} páginas do TOP têm uma.",
+          "ordered-list": "Adicione passos numerados: {{0}} de {{1}} páginas do TOP usam uma lista numerada.",
+          "calculator": "Considere uma calculadora ou ferramenta funcional: {{0}} de {{1}} páginas do TOP têm uma com campos de formulário reais.",
+          "product-cards": "Mostre produtos ou ofertas: {{0}} de {{1}} páginas do TOP mostram cartões de produto ou preço.",
+          "cta": "Adicione um apelo à ação claro: {{0}} de {{1}} páginas TOP têm um (ignore em páginas puramente informativas)."
+        },
+        "mismatchAdvice": "A página tem uma intenção diferente da maioria das páginas TOP: verifique se responde à mesma necessidade.",
+        "missingBasics": "Fundamentos em falta",
+        "basicsAdvice": "Cubra primeiro os {{0}} temas básicos em falta: abaixo de metade da cobertura a pontuação é penalizada, e factos novos não substituem o básico."
       }
     },
     "crawl": {
@@ -8199,6 +8274,22 @@
         "in-module": "Corrija página a página na aba do módulo."
       },
       "openModule": "Abrir o artefato em {{tab}}"
+    },
+    "trend": {
+      "first": "Nenhuma execução salva anterior com este perfil HSS: ainda sem tendência.",
+      "notComparable": "Não comparável com a execução anterior (não medido em uma delas).",
+      "up": "Subiu {{value}} em relação à execução anterior ({{date}})",
+      "down": "Caiu {{value}} em relação à execução anterior ({{date}})",
+      "flat": "Sem alteração em relação à execução anterior ({{date}})"
+    },
+    "review": {
+      "group": "Decisão de revisão",
+      "decision": {
+        "accepted": "Aceitar",
+        "deferred": "Adiar",
+        "rejected": "Rejeitar"
+      },
+      "current": "Decisão: {{decision}} ({{date}}) · {{count}} no histórico"
     }
   },
   "surgical": {
@@ -8605,8 +8696,10 @@
     "rec": {
       "rewrite-echo": "O parágrafo no deslocamento {{offset}} repete um trecho concorrente: reescreva com suas palavras.",
       "add-evidence": "Adicione dados concretos com unidades ou fontes; nenhum foi detectado.",
-      "refocus-drift": "O parágrafo no deslocamento {{offset}} foge do tema: refoque ou remova."
-    }
+      "refocus-drift": "O parágrafo no deslocamento {{offset}} foge do tema: refoque ou remova.",
+      "add-basics": "Cubra primeiro os {{count}} temas básicos em falta: abaixo de metade da cobertura a pontuação é penalizada, e factos novos não substituem o básico."
+    },
+    "missingBasics": "Fundamentos cobertos pela maioria das páginas TOP, mas não por esta página: {{list}}"
   },
   "logIntelUi": {
     "title": "Análise de logs",

@@ -1,6 +1,7 @@
 import { buildSiteFocusReport } from '@/services/siteFocus';
 import { buildAuthorityReport, type CompetitorPages, type ReferenceTaxonomy, type TopicalAuthorityReport } from '@/services/topicalAuthority';
-import type { AuthorityInsight, BenchmarkRow, PillarComparison, TopicalBenchmark } from './types';
+import { summarizeSerpEvidence } from '@/services/serpSnapshot';
+import type { AuthorityInsight, BenchmarkRow, PillarComparison, ReferenceSerpObservation, TopicalBenchmark } from './types';
 
 export const BENCHMARK_COMPETITORS = 3;
 const TRAILING_SHOWN = 2;
@@ -43,4 +44,10 @@ export const buildTopicalBenchmark = (
   }
   const sample = attempted ? { attempted: tried.length, scored: scored.length, failed: tried.filter((domain) => !scoredDomains.has(domain)).sort() } : undefined;
   return { builtAt: now, source: taxonomy.source, rows, ownRank: rows.findIndex((row) => row.isOwn) + 1, pillars, insights, ...(sample ? { sample } : {}) };
+};
+
+/** Attaches the shared SERP evidence summary of the reference run; without evidence the benchmark is unchanged. */
+export const withSerpEvidence = (benchmark: TopicalBenchmark | null, serp: ReferenceSerpObservation[] | undefined): TopicalBenchmark | null => {
+  const summary = summarizeSerpEvidence((serp ?? []).flatMap((item) => (item.evidence ? [item.evidence] : [])));
+  return benchmark && summary ? { ...benchmark, serpEvidence: summary } : benchmark;
 };

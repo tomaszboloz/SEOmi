@@ -1,4 +1,5 @@
-import React from 'react';
+import React, { useEffect } from 'react';
+import { setPhraseSija } from '@/services/export/phraseInsights';
 import { useTranslation } from 'react-i18next';
 import { SijaPanel } from '@/components/Charts/SijaPanel';
 import type { TopTenContentGapReport } from '@/services/targetPhraseAudit/types';
@@ -6,9 +7,12 @@ import { usePhraseIntent } from './usePhraseIntent';
 import { SijaPhraseDetails } from './SijaPhraseDetails';
 
 /** SIJA for the audited phrase; rendering pages starts only after the explicit button press. */
-export const TargetPhraseIntentSection: React.FC<{ report: TopTenContentGapReport | null; projectId?: string | null }> = ({ report, projectId = null }) => {
+export const TargetPhraseIntentSection: React.FC<{ report: TopTenContentGapReport | null; projectId?: string | null; auditUrl?: string }> = ({ report, projectId = null, auditUrl = '' }) => {
   const { t } = useTranslation();
   const { result, running, failed, canRun, start, history } = usePhraseIntent(report, projectId);
+  const phrase = report?.phrase ?? '';
+  // The PDF export reads the latest SIJA result of this audited URL (#69 GEM-69-08).
+  useEffect(() => { setPhraseSija(auditUrl, phrase, result); }, [auditUrl, phrase, result]);
   return (
     <section className="space-y-2 rounded-2xl border border-slate-800 bg-slate-900/60 p-5 text-xs text-slate-300">
       <p className="leading-5 text-slate-400">{t('sijaUi.phrase.description')}</p>

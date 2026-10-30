@@ -40,12 +40,13 @@ export const IgosPanel: React.FC<{ report: IgosReport | null; history?: IgosHist
         <p className="flex items-center gap-1">{t('igosUi.coverage', { coverage: pct(report.coverage), multiplier: report.multiplier.toFixed(2) })}<HelpTip id="igos.coverage" /></p>
       )}
       {report.novelEntities.length > 0 && <p>{t('igosUi.novel', { list: report.novelEntities.join(', ') })}</p>}
+      {report.missingBasics && report.missingBasics.length > 0 && <p data-testid="igos-missing-basics">{t('igosUi.missingBasics', { list: report.missingBasics.join(', ') })}</p>}
       {limits}
       <IgosRunDetails report={report} history={history} />
       <IgosHeatmap sections={sections} />
       {advice.length > 0 && (
         <ul className="list-disc pl-5" aria-label={t('igosUi.advice')}>
-          {advice.map((item, i) => <li key={i}>{t(`igosUi.rec.${item.kind}`, { offset: item.offset })}</li>)}
+          {advice.map((item, i) => <li key={i}>{t(`igosUi.rec.${item.kind}`, { offset: item.offset, count: report.missingBasics?.length ?? 0 })}</li>)}
         </ul>
       )}
     </section>

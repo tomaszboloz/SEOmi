@@ -14,6 +14,8 @@ export const AuthorityBenchmark = ({ benchmark }: { benchmark: TopicalBenchmark 
           <p className="text-xs text-slate-400">{t('authority.benchmark.provenance', { source: benchmark.source || '—', date: benchmark.builtAt.slice(0, 10) })}</p>
           {benchmark.sample && <p className="text-xs text-slate-400" role="status">{t('authority.benchmark.sample', { scored: benchmark.sample.scored, attempted: benchmark.sample.attempted })}
             {benchmark.sample.failed.length > 0 && ` ${t('authority.benchmark.failed', { domains: benchmark.sample.failed.join(', ') })}`}</p>}
+          {benchmark.serpEvidence && !benchmark.serpEvidence.fullScoreEligible && <p role="status" data-testid="authority-partial-serp" className="text-xs text-amber-300">
+            {t('focusBenchmark.partialSerp', { min: benchmark.serpEvidence.minK, max: benchmark.serpEvidence.maxK, providers: benchmark.serpEvidence.providers.join(', ') })}</p>}
           <table className="w-full text-start text-xs text-slate-200" aria-label={t('authority.benchmark.title')}>
             <thead><tr className="text-slate-400"><th className="text-start">{t('authority.benchmark.domain')}</th><th className="text-start">{t('authority.matrix.axisX')}</th><th className="text-start">{t('authority.matrix.axisY')}</th></tr></thead>
             <tbody>{benchmark.rows.map((row) => (

@@ -5683,6 +5683,81 @@
         "resource": "Insecure resource: {{0}}",
         "response": "Server response: HTTP {{1}} in {{0}} ms",
         "hop": "Redirect hop: HTTP {{0}} from {{1}}"
+      },
+      "phrase": {
+        "igosTitle": "Information gain (IGOS) for \"{{0}}\"",
+        "sijaTitle": "Search intent (SIJA) for \"{{0}}\"",
+        "score": "Score",
+        "baseline": "Compared TOP pages",
+        "ofTotal": "{{0}} of {{1}}",
+        "components": "Components (NEFR / EDSI / FHEM / SDD)",
+        "coverage": "Baseline coverage",
+        "zones": "Paragraph zones",
+        "novel": "Novel on-topic entities",
+        "vectors": "Vectors (provider / model, run)",
+        "limits": "Limitations",
+        "pageIntent": "Page intent",
+        "serpIntent": "TOP intent (majority of rendered pages)",
+        "match": "Intent match",
+        "matchValue": {
+          "match": "Matches",
+          "mismatch": "Does not match",
+          "unknown": "Unknown"
+        },
+        "ssas": "SSAS (structure vs TOP)",
+        "funnel": "Funnel stages among rendered TOP pages",
+        "funnelValue": "{{0}} of {{1}} rendered: TOFU {{2}} · MOFU {{3}} · BOFU {{4}}",
+        "gaps": "Missing formats",
+        "none": "None",
+        "echoAdvice": "Rewrite the {{0}} echo paragraph(s) in your own words, with your own data or experience.",
+        "driftAdvice": "Refocus or remove the {{0}} drift paragraph(s); off-topic text does not raise IGOS.",
+        "method": "SEOmi heuristic, not a Google metric. Competitor text is not reproduced.",
+        "methodLabel": "Method",
+        "noScore": "No score",
+        "evidenceAdvice": "Add concrete data with units or sources; none was detected.",
+        "inconclusive": "SSAS inconclusive: {{0}} real TOP pages available, at least 3 needed.",
+        "component": {
+          "nefr": "Novel entities",
+          "edsi": "Evidence density",
+          "fhem": "Experience markers",
+          "sdd": "Subtopic distribution"
+        },
+        "zone": {
+          "echo": "Echo",
+          "gain": "Gain",
+          "drift": "Drift",
+          "neutral": "Neutral"
+        },
+        "limit": {
+          "no-comparable-documents": "No comparable competitor documents.",
+          "too-few-documents": "Too few competitor documents for a reliable baseline.",
+          "some-documents-missing": "Some competitor pages could not be fetched.",
+          "no-target-chunks": "The page has no analysable paragraphs.",
+          "off-topic-below-quota": "Too few on-topic paragraphs.",
+          "local-lexical-embeddings": "Similarity uses local lexical vectors, not a semantic model; zones are approximate.",
+          "heuristic-entities": "Entities come from capitalised phrases and subject-predicate-object facts, not from a trained entity model.",
+          "semantic-provider-unavailable": "The project's semantic embedding provider was unavailable; local lexical vectors were used instead."
+        },
+        "intent": {
+          "definitional": "Definition",
+          "how-to": "How-to",
+          "troubleshooting": "Troubleshooting",
+          "comparison": "Comparison",
+          "curated-list": "Curated list",
+          "tool": "Tool or calculator",
+          "transactional": "Transactional",
+          "local": "Local"
+        },
+        "gap": {
+          "table": "Add a comparison table: {{0}} of {{1}} TOP pages have one.",
+          "ordered-list": "Add numbered steps: {{0}} of {{1}} TOP pages use an ordered list.",
+          "calculator": "Consider a working calculator or tool: {{0}} of {{1}} TOP pages have one with real form controls.",
+          "product-cards": "Show products or offers: {{0}} of {{1}} TOP pages show product or price cards.",
+          "cta": "Add a clear call to action: {{0}} of {{1}} TOP pages have one (skip this for purely informational pages)."
+        },
+        "mismatchAdvice": "The page reads as a different intent than most TOP pages: check that it answers the same need.",
+        "missingBasics": "Missing basics",
+        "basicsAdvice": "Cover the {{0}} missing basic topic(s) first: below half coverage the score is penalised, and new facts do not replace the basics."
       }
     },
     "crawl": {
@@ -8199,6 +8274,22 @@
         "in-module": "Fix it page by page in the module tab."
       },
       "openModule": "Open the artifact in {{tab}}"
+    },
+    "trend": {
+      "first": "No earlier saved run with this HSS profile: no trend yet.",
+      "notComparable": "Not comparable with the previous run (not measured in one of them).",
+      "up": "Up {{value}} vs previous run ({{date}})",
+      "down": "Down {{value}} vs previous run ({{date}})",
+      "flat": "No change vs previous run ({{date}})"
+    },
+    "review": {
+      "group": "Review decision",
+      "decision": {
+        "accepted": "Accept",
+        "deferred": "Defer",
+        "rejected": "Reject"
+      },
+      "current": "Decision: {{decision}} ({{date}}) · {{count}} in history"
     }
   },
   "surgical": {
@@ -8605,8 +8696,10 @@
     "rec": {
       "rewrite-echo": "The paragraph at offset {{offset}} repeats a competitor passage: rewrite it in your own words.",
       "add-evidence": "Add concrete data with units or sources; none was detected.",
-      "refocus-drift": "The paragraph at offset {{offset}} drifts off the topic: refocus or remove it."
-    }
+      "refocus-drift": "The paragraph at offset {{offset}} drifts off the topic: refocus or remove it.",
+      "add-basics": "Cover the {{count}} missing basic topic(s) first: below half coverage the score is penalised, and new facts do not replace the basics."
+    },
+    "missingBasics": "Basics most TOP pages cover but this page does not: {{list}}"
   },
   "logIntelUi": {
     "title": "Log intelligence",

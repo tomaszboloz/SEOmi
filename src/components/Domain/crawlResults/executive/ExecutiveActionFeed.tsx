@@ -1,7 +1,9 @@
 import type { TFunction } from 'i18next';
+import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import type { ExecutiveAction } from '@/services/actionFeed';
+import { readDecisionLog, recordDecision, type ActionDecisionKind, type ExecutiveAction } from '@/services/actionFeed';
 import type { HssReport } from '@/services/hss';
+import { ExecutiveActionReview } from './ExecutiveActionReview';
 import type { CodeParams } from '@/services/siteFocus/types';
 import type { CrawlTab } from '../helpers/crawlResultsTabsConfig';
 import { codeTitle } from '../focus/focusText';
@@ -21,11 +23,13 @@ export const actionTitle = (t: TFunction, action: ExecutiveAction): string => {
 
 const signed = (value: number): string => `${value > 0 ? '+' : ''}${value}`;
 
-interface FeedProps { actions: ExecutiveAction[]; onOpen: (tab: CrawlTab) => void; hss?: HssReport | null; projectId?: string | null }
+export interface ExecutiveActionFeedProps { actions: ExecutiveAction[]; onOpen: (tab: CrawlTab) => void; hss?: HssReport | null; projectId?: string | null }
 
 /** Action feed (#89 / #73 GEM-73-05): explicit delta, effort range, conflicts and a drill-down to the module screen. */
-export const ExecutiveActionFeed = ({ actions, onOpen, hss, projectId }: FeedProps) => {
+export const ExecutiveActionFeed = ({ actions, onOpen, projectId = null, hss = null }: ExecutiveActionFeedProps) => {
   const { t } = useTranslation();
+  const [log, setLog] = useState(() => readDecisionLog(projectId));
+  const decide = (action: ExecutiveAction, decision: ActionDecisionKind) => setLog(recordDecision(projectId, hss?.runId ?? 'unsaved', action, decision));
   return (
     <section aria-labelledby="executive-actions-title" className="space-y-2 rounded-xl border border-slate-800 bg-slate-900/60 p-4">
       <h2 id="executive-actions-title" className="text-sm font-semibold text-slate-200">{t('executive.actions.title')}</h2>
@@ -48,6 +52,7 @@ export const ExecutiveActionFeed = ({ actions, onOpen, hss, projectId }: FeedPro
                 {t('executive.actions.open', { tab: t(`crawl.tabs.${action.drillTab}`) })}
               </button>
               <ExecutionCardDetails action={action} hss={hss} projectId={projectId} onOpen={onOpen} />
+              {projectId && hss && <ExecutiveActionReview projectId={projectId} action={action} log={log} onDecide={decide} />}
             </li>
           ))}
         </ol>

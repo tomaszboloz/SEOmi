@@ -7,7 +7,7 @@ import {
   type AuthorityHistoryEntry,
 } from '@/services/topicalAuthorityMonitoring';
 import {
-  buildTopicalBenchmark, createReferenceDeps, referenceMarket, runReference,
+  buildTopicalBenchmark, createReferenceDeps, referenceMarket, runReference, withSerpEvidence,
   type ReferenceInput, type ReferenceOutcome, type ReferenceProgress, type TopicalBenchmark,
 } from '@/services/topicalAuthorityReference';
 
@@ -89,7 +89,7 @@ export const useTopicalAuthority = ({ pages, startUrl, sfs, run, projectId, runn
       writeTaxonomy(projectId, outcome.taxonomy);
       recordReferenceSnapshot(projectId ?? null, outcome.taxonomy, outcome.serp, market());
       const fresh = buildAuthorityReport(pages as FocusPage[], startUrl, sfs, { taxonomy: outcome.taxonomy, now: sfs.generatedAt });
-      setPendingBenchmark(buildTopicalBenchmark(fresh, domainOf(startUrl), outcome.competitors, outcome.taxonomy, new Date().toISOString(), outcome.attempted));
+      setPendingBenchmark(withSerpEvidence(buildTopicalBenchmark(fresh, domainOf(startUrl), outcome.competitors, outcome.taxonomy, new Date().toISOString(), outcome.attempted), outcome.serp));
       setTaxonomy(outcome.taxonomy);
       setState(IDLE);
     } catch (error) {
