@@ -2,6 +2,15 @@ name: Feature request
 description: Propose an improvement
 labels: [enhancement]
 body:
+  - type: checkboxes
+    id: routing
+    attributes:
+      label: Before you file
+      options:
+        - label: I searched existing issues and this is not a duplicate.
+          required: true
+        - label: This request contains no API keys, tokens or private project data.
+          required: true
   - type: textarea
     id: problem
     attributes:
@@ -18,6 +27,8 @@ body:
     id: scope
     attributes:
       label: Scope and out of scope
+    validations:
+      required: true
   - type: textarea
     id: acceptance
     attributes:
