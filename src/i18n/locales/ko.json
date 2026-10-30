@@ -8064,11 +8064,19 @@
       "failed": "페이지를 렌더링할 수 없어 의도 결과가 없습니다.",
       "funnel": "렌더링된 상위 페이지: {{requested}}개 중 {{analysed}}개. 퍼널 단계: TOFU {{tofu}}, MOFU {{mofu}}, BOFU {{bofu}}.",
       "gapsTitle": "누락된 형식",
+      "serpMatch": "TOP 의도: {{serp}} (렌더링한 {{analysed}}개 중 {{pages}}개). 내 페이지가 일치합니다 ({{own}}).",
+      "serpMismatch": "TOP 의도: {{serp}} (렌더링한 {{analysed}}개 중 {{pages}}개)이지만 내 페이지는 {{own}}(으)로 보입니다. 같은 요구에 답하는지 확인하세요.",
+      "serpUnknown": "TOP 의도: {{serp}} (렌더링한 {{analysed}}개 중 {{pages}}개). 내 페이지에 뚜렷한 의도가 없어 비교할 수 없습니다.",
+      "serpNoMajority": "렌더링한 TOP 페이지 {{analysed}}개의 과반이 공유하는 의도가 없습니다.",
+      "drillDown": "렌더링한 TOP 페이지 ({{n}})",
+      "topPage": "{{url}} · {{intent}} · {{stage}}",
+      "previous": "이전 실행 {{runAt}}: {{intent}}, SSAS {{ssas}}, TOP 페이지 {{analysed}}개 렌더링.",
       "gap": {
         "table": "비교표 추가: 상위 {{analysed}}개 페이지 중 {{count}}개에 있습니다.",
         "ordered-list": "번호 단계 추가: 상위 {{analysed}}개 페이지 중 {{count}}개가 번호 목록을 사용합니다.",
         "calculator": "작동하는 계산기나 도구 고려: 상위 {{analysed}}개 페이지 중 {{count}}개에 실제 양식 필드가 있는 도구가 있습니다.",
-        "product-cards": "제품이나 혜택 표시: 상위 {{analysed}}개 페이지 중 {{count}}개가 제품 또는 가격 카드를 보여 줍니다."
+        "product-cards": "제품이나 혜택 표시: 상위 {{analysed}}개 페이지 중 {{count}}개가 제품 또는 가격 카드를 보여 줍니다.",
+        "cta": "명확한 행동 유도를 추가하세요: TOP 페이지 {{analysed}}개 중 {{count}}개에 있습니다(순수 정보 페이지는 제외)."
       }
     }
   },

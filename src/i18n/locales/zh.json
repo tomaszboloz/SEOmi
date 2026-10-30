@@ -8064,11 +8064,19 @@
       "failed": "无法渲染该页面，因此没有意图结果。",
       "funnel": "已渲染的排名靠前页面：{{analysed}} / {{requested}}。其中的漏斗阶段：TOFU {{tofu}}，MOFU {{mofu}}，BOFU {{bofu}}。",
       "gapsTitle": "缺少的格式",
+      "serpMatch": "TOP 意图：{{serp}}（已渲染 {{analysed}} 个页面中的 {{pages}} 个）。您的页面与之一致（{{own}}）。",
+      "serpMismatch": "TOP 意图：{{serp}}（已渲染 {{analysed}} 个页面中的 {{pages}} 个），但您的页面看起来是：{{own}}。请检查它是否满足相同需求。",
+      "serpUnknown": "TOP 意图：{{serp}}（已渲染 {{analysed}} 个页面中的 {{pages}} 个）。您的页面没有明确意图，无法比较。",
+      "serpNoMajority": "已渲染的 {{analysed}} 个 TOP 页面中没有多数共享的意图。",
+      "drillDown": "已渲染的 TOP 页面（{{n}}）",
+      "topPage": "{{url}} · {{intent}} · {{stage}}",
+      "previous": "上次运行 {{runAt}}：{{intent}}，SSAS {{ssas}}，渲染了 {{analysed}} 个 TOP 页面。",
       "gap": {
         "table": "添加对比表：{{analysed}} 个排名靠前页面中有 {{count}} 个包含。",
         "ordered-list": "添加编号步骤：{{analysed}} 个排名靠前页面中有 {{count}} 个使用编号列表。",
         "calculator": "考虑提供可用的计算器或工具：{{analysed}} 个排名靠前页面中有 {{count}} 个带有真实表单控件的工具。",
-        "product-cards": "展示产品或优惠：{{analysed}} 个排名靠前页面中有 {{count}} 个显示产品或价格卡片。"
+        "product-cards": "展示产品或优惠：{{analysed}} 个排名靠前页面中有 {{count}} 个显示产品或价格卡片。",
+        "cta": "添加明确的行动号召：{{analysed}} 个 TOP 页面中有 {{count}} 个包含（纯信息页面可忽略）。"
       }
     }
   },

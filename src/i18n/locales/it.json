@@ -8064,11 +8064,19 @@
       "failed": "Impossibile eseguire il rendering della pagina: nessun risultato sull'intento.",
       "funnel": "Pagine TOP renderizzate: {{analysed}} su {{requested}}. Fasi del funnel tra queste: TOFU {{tofu}}, MOFU {{mofu}}, BOFU {{bofu}}.",
       "gapsTitle": "Formati mancanti",
+      "serpMatch": "Intento del TOP: {{serp}} ({{pages}} su {{analysed}} pagine renderizzate). La tua pagina corrisponde ({{own}}).",
+      "serpMismatch": "Intento del TOP: {{serp}} ({{pages}} su {{analysed}} pagine renderizzate), ma la tua pagina sembra: {{own}}. Verifica che risponda allo stesso bisogno.",
+      "serpUnknown": "Intento del TOP: {{serp}} ({{pages}} su {{analysed}} pagine renderizzate). La tua pagina non ha un intento chiaro, quindi non si possono confrontare.",
+      "serpNoMajority": "Nessun intento è condiviso dalla maggioranza delle {{analysed}} pagine TOP renderizzate.",
+      "drillDown": "Pagine TOP renderizzate ({{n}})",
+      "topPage": "{{url}} · {{intent}} · {{stage}}",
+      "previous": "Esecuzione precedente {{runAt}}: {{intent}}, SSAS {{ssas}}, {{analysed}} pagine TOP renderizzate.",
       "gap": {
         "table": "Aggiungi una tabella comparativa: {{count}} pagine TOP su {{analysed}} ne hanno una.",
         "ordered-list": "Aggiungi passaggi numerati: {{count}} pagine TOP su {{analysed}} usano un elenco numerato.",
         "calculator": "Valuta un calcolatore o strumento funzionante: {{count}} pagine TOP su {{analysed}} ne hanno uno con veri campi modulo.",
-        "product-cards": "Mostra prodotti o offerte: {{count}} pagine TOP su {{analysed}} mostrano schede prodotto o prezzo."
+        "product-cards": "Mostra prodotti o offerte: {{count}} pagine TOP su {{analysed}} mostrano schede prodotto o prezzo.",
+        "cta": "Aggiungi una call to action chiara: {{count}} pagine TOP su {{analysed}} ne hanno una (ignoralo per pagine puramente informative)."
       }
     }
   },

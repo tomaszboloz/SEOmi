@@ -8064,11 +8064,19 @@
       "failed": "ページをレンダリングできなかったため、意図の結果はありません。",
       "funnel": "レンダリングした上位ページ: {{requested}} 件中 {{analysed}} 件。ファネル段階: TOFU {{tofu}}、MOFU {{mofu}}、BOFU {{bofu}}。",
       "gapsTitle": "不足している形式",
+      "serpMatch": "TOP の意図: {{serp}}（レンダリングした {{analysed}} ページ中 {{pages}} ページ）。あなたのページは一致しています（{{own}}）。",
+      "serpMismatch": "TOP の意図: {{serp}}（レンダリングした {{analysed}} ページ中 {{pages}} ページ）ですが、あなたのページは {{own}} に見えます。同じニーズに応えているか確認してください。",
+      "serpUnknown": "TOP の意図: {{serp}}（レンダリングした {{analysed}} ページ中 {{pages}} ページ）。あなたのページには明確な意図がないため比較できません。",
+      "serpNoMajority": "レンダリングした {{analysed}} 件の TOP ページの過半数に共通する意図はありません。",
+      "drillDown": "レンダリングした TOP ページ（{{n}}）",
+      "topPage": "{{url}} · {{intent}} · {{stage}}",
+      "previous": "前回の実行 {{runAt}}: {{intent}}、SSAS {{ssas}}、TOP ページ {{analysed}} 件をレンダリング。",
       "gap": {
         "table": "比較表を追加: 上位 {{analysed}} ページ中 {{count}} ページにあります。",
         "ordered-list": "番号付き手順を追加: 上位 {{analysed}} ページ中 {{count}} ページが番号付きリストを使っています。",
         "calculator": "実際に動く計算ツールを検討: 上位 {{analysed}} ページ中 {{count}} ページに実際のフォーム要素付きのものがあります。",
-        "product-cards": "商品やオファーを表示: 上位 {{analysed}} ページ中 {{count}} ページが商品・価格カードを表示しています。"
+        "product-cards": "商品やオファーを表示: 上位 {{analysed}} ページ中 {{count}} ページが商品・価格カードを表示しています。",
+        "cta": "明確な行動喚起を追加してください: TOP ページ {{analysed}} 件中 {{count}} 件にあります（純粋な情報ページでは不要です）。"
       }
     }
   },

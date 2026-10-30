@@ -40,7 +40,7 @@ export const TargetPhraseAuditPanel: React.FC<{ audit: PageAuditData }> = ({ aud
         onAudit={() => { void session.auditTopTen(); }}
       />
       {session.report && <IgosPanel report={igos.report} history={igos.history} />}
-      {session.report && <TargetPhraseIntentSection report={session.report} />}
+      {session.report && <TargetPhraseIntentSection report={session.report} projectId={session.activeProjectId} />}
     </section>
   );
 };

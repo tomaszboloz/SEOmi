@@ -8064,11 +8064,19 @@
       "failed": "Não foi possível renderizar a página, então não há resultado de intenção.",
       "funnel": "Páginas do TOP renderizadas: {{analysed}} de {{requested}}. Etapas do funil entre elas: TOFU {{tofu}}, MOFU {{mofu}}, BOFU {{bofu}}.",
       "gapsTitle": "Formatos em falta",
+      "serpMatch": "Intenção do TOP: {{serp}} ({{pages}} de {{analysed}} páginas renderizadas). A sua página corresponde ({{own}}).",
+      "serpMismatch": "Intenção do TOP: {{serp}} ({{pages}} de {{analysed}} páginas renderizadas), mas a sua página parece: {{own}}. Verifique se responde à mesma necessidade.",
+      "serpUnknown": "Intenção do TOP: {{serp}} ({{pages}} de {{analysed}} páginas renderizadas). A sua página não tem intenção clara, por isso não é possível comparar.",
+      "serpNoMajority": "Nenhuma intenção é partilhada pela maioria das {{analysed}} páginas TOP renderizadas.",
+      "drillDown": "Páginas TOP renderizadas ({{n}})",
+      "topPage": "{{url}} · {{intent}} · {{stage}}",
+      "previous": "Execução anterior {{runAt}}: {{intent}}, SSAS {{ssas}}, {{analysed}} páginas TOP renderizadas.",
       "gap": {
         "table": "Adicione uma tabela comparativa: {{count}} de {{analysed}} páginas do TOP têm uma.",
         "ordered-list": "Adicione passos numerados: {{count}} de {{analysed}} páginas do TOP usam uma lista numerada.",
         "calculator": "Considere uma calculadora ou ferramenta funcional: {{count}} de {{analysed}} páginas do TOP têm uma com campos de formulário reais.",
-        "product-cards": "Mostre produtos ou ofertas: {{count}} de {{analysed}} páginas do TOP mostram cartões de produto ou preço."
+        "product-cards": "Mostre produtos ou ofertas: {{count}} de {{analysed}} páginas do TOP mostram cartões de produto ou preço.",
+        "cta": "Adicione um apelo à ação claro: {{count}} de {{analysed}} páginas TOP têm um (ignore em páginas puramente informativas)."
       }
     }
   },

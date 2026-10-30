@@ -53,6 +53,9 @@ const STAGE: Record<MicroIntent, Funnel> = {
   definitional: 'TOFU', 'how-to': 'TOFU', troubleshooting: 'TOFU', comparison: 'MOFU', 'curated-list': 'MOFU', tool: 'MOFU', transactional: 'BOFU', local: 'BOFU',
 };
 
+/** Funnel stage of one classified page; null without a clear intent. */
+export const funnelStage = (item: ObservedMicroIntent): Funnel | null => (item.primary ? STAGE[item.primary] : null);
+
 /** Funnel map from real classified pages: only counts, no invented traffic shares. */
 export const funnelCounts = (items: ObservedMicroIntent[]): Record<Funnel, number> => {
   const out: Record<Funnel, number> = { TOFU: 0, MOFU: 0, BOFU: 0 };

@@ -4,6 +4,8 @@ const IGNORED_CONTENT = 'nav, header, footer, aside, style, noscript, template, 
 const CHROME = `${IGNORED_CONTENT}, script`;
 const CALC = /calculat|kalkulator|rechner|calculadora|calculatrice|calcolatrice|计算|計算|계산|калькулятор/i;
 const LOCAL_TEXT = /near me|opening hours|w pobliżu|godziny otwarcia|öffnungszeiten|horario de apertura|horaires d'ouverture|orari di apertura/i;
+/** Call-to-action wording on buttons and links (GEM-69-08); navigation chrome is removed before counting. */
+const CTA = /(?<![\p{L}\p{N}])(?:buy|order|add to (?:cart|basket)|book|sign up|subscribe|get started|contact us|request a quote|free trial|kup|zamów|zamow|dodaj do koszyka|zarezerwuj|zapisz się|skontaktuj|kaufen|bestellen|in den warenkorb|comprar|reservar|acheter|commander|réserver|acquista|ordina|prenota|купить|заказать)/iu;
 const PRICE = /(?:[$€£]|zł|pln|eur|usd)\s?\d|\d\s?(?:[$€£]|zł|pln|eur|usd)(?![\p{L}])/iu;
 
 const schemaUrl = (value: string): URL | null => {
@@ -59,12 +61,17 @@ export const extractFeatures = (doc: Document): PageFeatures => {
   const text = root.textContent as string;
   const heads = [...root.querySelectorAll('h1, h2, h3')];
   const formInputs = count('form input:not([type="hidden"]):not([type="submit"]), form select, form textarea');
-  const calculators = [...root.querySelectorAll('form, [class], [id]')].filter((el) => CALC.test(`${el.id} ${el.getAttribute('class') ?? ''}`) && el.querySelector('input, select')).length;
+  const calculatorElements = [...root.querySelectorAll('form, [class], [id]')].filter((el) => CALC.test(`${el.id} ${el.getAttribute('class') ?? ''}`) && el.querySelector('input, select'));
+  const calculators = calculatorElements.length;
+  // GEM-69-09: a working tool needs a numeric/choice input and an output or action, and is never a login form.
+  const functionalCalculators = calculatorElements.filter((el) => el.querySelector('input[type="number"], input[type="range"], select, input:not([type])')
+    && el.querySelector('output, button, input[type="submit"], input[type="button"], [aria-live]') && !el.querySelector('input[type="password"]')).length;
+  const ctas = [...root.querySelectorAll('a[href], button, input[type="submit"]')].filter((el) => CTA.test(`${el.textContent ?? ''} ${el.getAttribute('value') ?? ''}`)).length;
   const schema = root.innerHTML.match(/https?:\/\/(?:www\.)?schema\.org\/(?:Product|Offer)\b/g)?.length ?? 0;
   const priced = [...root.querySelectorAll('[class*="product"], [class*="price"], [data-price]')].filter((el) => PRICE.test(el.textContent as string) || el.hasAttribute('data-price')).length;
   const local = count('a[href^="tel:"], iframe[src*="maps"], address') + (hasLocalSchema ? 1 : 0) + (LOCAL_TEXT.test(text) ? 1 : 0);
   return {
-    tables: count('table'), orderedLists: count('ol'), unorderedLists: count('ul'), formInputs, calculators,
+    tables: count('table'), orderedLists: count('ol'), unorderedLists: count('ul'), formInputs, calculators, functionalCalculators, ctas,
     productCards: Math.max(schema, priced), localSignals: local,
     words: (text.match(/[\p{L}\p{N}]+/gu) ?? []).length, headings: heads.length,
     headingText: heads.map((h) => h.textContent as string).join(' | '),

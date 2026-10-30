@@ -8064,11 +8064,19 @@
       "failed": "Die Seite konnte nicht gerendert werden, daher gibt es kein Intentionsergebnis.",
       "funnel": "Gerenderte TOP-Seiten: {{analysed}} von {{requested}}. Funnel-Stufen darunter: TOFU {{tofu}}, MOFU {{mofu}}, BOFU {{bofu}}.",
       "gapsTitle": "Fehlende Formate",
+      "serpMatch": "TOP-Intention: {{serp}} ({{pages}} von {{analysed}} gerenderten Seiten). Ihre Seite passt dazu ({{own}}).",
+      "serpMismatch": "TOP-Intention: {{serp}} ({{pages}} von {{analysed}} gerenderten Seiten), Ihre Seite wirkt jedoch wie: {{own}}. Prüfen Sie, ob sie dasselbe Bedürfnis erfüllt.",
+      "serpUnknown": "TOP-Intention: {{serp}} ({{pages}} von {{analysed}} gerenderten Seiten). Ihre Seite hat keine klare Intention, ein Vergleich ist nicht möglich.",
+      "serpNoMajority": "Keine Intention wird von der Mehrheit der {{analysed}} gerenderten TOP-Seiten geteilt.",
+      "drillDown": "Gerenderte TOP-Seiten ({{n}})",
+      "topPage": "{{url}} · {{intent}} · {{stage}}",
+      "previous": "Vorheriger Lauf {{runAt}}: {{intent}}, SSAS {{ssas}}, {{analysed}} TOP-Seiten gerendert.",
       "gap": {
         "table": "Füge eine Vergleichstabelle hinzu: {{count}} von {{analysed}} TOP-Seiten haben eine.",
         "ordered-list": "Füge nummerierte Schritte hinzu: {{count}} von {{analysed}} TOP-Seiten nutzen eine nummerierte Liste.",
         "calculator": "Erwäge einen funktionierenden Rechner oder ein Tool: {{count}} von {{analysed}} TOP-Seiten haben eines mit echten Formularfeldern.",
-        "product-cards": "Zeige Produkte oder Angebote: {{count}} von {{analysed}} TOP-Seiten zeigen Produkt- oder Preiskarten."
+        "product-cards": "Zeige Produkte oder Angebote: {{count}} von {{analysed}} TOP-Seiten zeigen Produkt- oder Preiskarten.",
+        "cta": "Fügen Sie einen klaren Call-to-Action hinzu: {{count}} von {{analysed}} TOP-Seiten haben einen (bei rein informativen Seiten überspringen)."
       }
     }
   },

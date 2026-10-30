@@ -8064,11 +8064,19 @@
       "failed": "La page n'a pas pu être rendue ; aucun résultat d'intention.",
       "funnel": "Pages du TOP rendues : {{analysed}} sur {{requested}}. Étapes du tunnel parmi elles : TOFU {{tofu}}, MOFU {{mofu}}, BOFU {{bofu}}.",
       "gapsTitle": "Formats manquants",
+      "serpMatch": "Intention du TOP : {{serp}} ({{pages}} sur {{analysed}} pages rendues). Votre page correspond ({{own}}).",
+      "serpMismatch": "Intention du TOP : {{serp}} ({{pages}} sur {{analysed}} pages rendues), mais votre page ressemble à : {{own}}. Vérifiez qu'elle répond au même besoin.",
+      "serpUnknown": "Intention du TOP : {{serp}} ({{pages}} sur {{analysed}} pages rendues). Votre page n'a pas d'intention claire, la comparaison est impossible.",
+      "serpNoMajority": "Aucune intention n'est partagée par la majorité des {{analysed}} pages TOP rendues.",
+      "drillDown": "Pages TOP rendues ({{n}})",
+      "topPage": "{{url}} · {{intent}} · {{stage}}",
+      "previous": "Exécution précédente {{runAt}} : {{intent}}, SSAS {{ssas}}, {{analysed}} pages TOP rendues.",
       "gap": {
         "table": "Ajoutez un tableau comparatif : {{count}} pages du TOP sur {{analysed}} en ont un.",
         "ordered-list": "Ajoutez des étapes numérotées : {{count}} pages du TOP sur {{analysed}} utilisent une liste numérotée.",
         "calculator": "Envisagez un calculateur ou outil fonctionnel : {{count}} pages du TOP sur {{analysed}} en ont un avec de vrais champs de formulaire.",
-        "product-cards": "Montrez des produits ou offres : {{count}} pages du TOP sur {{analysed}} affichent des fiches produit ou prix."
+        "product-cards": "Montrez des produits ou offres : {{count}} pages du TOP sur {{analysed}} affichent des fiches produit ou prix.",
+        "cta": "Ajoutez un appel à l'action clair : {{count}} pages TOP sur {{analysed}} en ont un (à ignorer pour les pages purement informatives)."
       }
     }
   },

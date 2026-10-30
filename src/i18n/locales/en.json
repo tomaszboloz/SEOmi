@@ -8064,11 +8064,19 @@
       "failed": "The page could not be rendered, so there is no intent result.",
       "funnel": "TOP pages rendered: {{analysed}} of {{requested}}. Funnel stages among them: TOFU {{tofu}}, MOFU {{mofu}}, BOFU {{bofu}}.",
       "gapsTitle": "Missing formats",
+      "serpMatch": "TOP intent: {{serp}} ({{pages}} of {{analysed}} rendered pages). Your page matches it ({{own}}).",
+      "serpMismatch": "TOP intent: {{serp}} ({{pages}} of {{analysed}} rendered pages), but your page reads as {{own}}. Check whether the page answers the same need.",
+      "serpUnknown": "TOP intent: {{serp}} ({{pages}} of {{analysed}} rendered pages). Your page has no clear intent, so they cannot be compared.",
+      "serpNoMajority": "No intent is shared by most of the {{analysed}} rendered TOP pages.",
+      "drillDown": "Rendered TOP pages ({{n}})",
+      "topPage": "{{url}} · {{intent}} · {{stage}}",
+      "previous": "Previous run {{runAt}}: {{intent}}, SSAS {{ssas}}, {{analysed}} TOP pages rendered.",
       "gap": {
         "table": "Add a comparison table: {{count}} of {{analysed}} TOP pages have one.",
         "ordered-list": "Add numbered steps: {{count}} of {{analysed}} TOP pages use an ordered list.",
         "calculator": "Consider a working calculator or tool: {{count}} of {{analysed}} TOP pages have one with real form controls.",
-        "product-cards": "Show products or offers: {{count}} of {{analysed}} TOP pages show product or price cards."
+        "product-cards": "Show products or offers: {{count}} of {{analysed}} TOP pages show product or price cards.",
+        "cta": "Add a clear call to action: {{count}} of {{analysed}} TOP pages have one (skip this for purely informational pages)."
       }
     }
   },

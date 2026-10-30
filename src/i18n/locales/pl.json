@@ -8064,11 +8064,19 @@
       "failed": "Nie udało się wyrenderować strony, więc nie ma wyniku intencji.",
       "funnel": "Wyrenderowane strony z TOP: {{analysed}} z {{requested}}. Etapy lejka wśród nich: TOFU {{tofu}}, MOFU {{mofu}}, BOFU {{bofu}}.",
       "gapsTitle": "Brakujące formaty",
+      "serpMatch": "Intencja TOP: {{serp}} ({{pages}} z {{analysed}} wyrenderowanych stron). Twoja strona jest zgodna ({{own}}).",
+      "serpMismatch": "Intencja TOP: {{serp}} ({{pages}} z {{analysed}} wyrenderowanych stron), a Twoja strona wygląda na: {{own}}. Sprawdź, czy odpowiada na tę samą potrzebę.",
+      "serpUnknown": "Intencja TOP: {{serp}} ({{pages}} z {{analysed}} wyrenderowanych stron). Twoja strona nie ma wyraźnej intencji, więc nie da się ich porównać.",
+      "serpNoMajority": "Żadna intencja nie dominuje wśród {{analysed}} wyrenderowanych stron TOP.",
+      "drillDown": "Wyrenderowane strony TOP ({{n}})",
+      "topPage": "{{url}} · {{intent}} · {{stage}}",
+      "previous": "Poprzedni przebieg {{runAt}}: {{intent}}, SSAS {{ssas}}, wyrenderowano {{analysed}} stron TOP.",
       "gap": {
         "table": "Dodaj tabelę porównawczą: ma ją {{count}} z {{analysed}} stron z TOP.",
         "ordered-list": "Dodaj ponumerowane kroki: listy numerowanej używa {{count}} z {{analysed}} stron z TOP.",
         "calculator": "Rozważ działający kalkulator lub narzędzie: ma je {{count}} z {{analysed}} stron z TOP (z prawdziwymi polami formularza).",
-        "product-cards": "Pokaż produkty lub oferty: karty produktów lub cen ma {{count}} z {{analysed}} stron z TOP."
+        "product-cards": "Pokaż produkty lub oferty: karty produktów lub cen ma {{count}} z {{analysed}} stron z TOP.",
+        "cta": "Dodaj wyraźne wezwanie do działania: ma je {{count}} z {{analysed}} stron TOP (pomiń dla stron czysto informacyjnych)."
       }
     }
   },

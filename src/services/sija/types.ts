@@ -8,6 +8,10 @@ export interface PageFeatures {
   unorderedLists: number;
   formInputs: number;
   calculators: number;
+  /** Calculators with a numeric/choice input and an output or action, never a login form; absent in older fixtures. */
+  functionalCalculators?: number;
+  /** Buttons/links with call-to-action wording in main content; absent means unknown. */
+  ctas?: number;
   productCards: number;
   localSignals: number;
   words: number;
