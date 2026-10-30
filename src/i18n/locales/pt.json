@@ -7499,6 +7499,8 @@
       }
     },
     "draft": {
+      "selfUrlPlaceholder": "Atualizando uma página existente? Cole o URL dela para que não seja comparada consigo mesma",
+      "selfUrlField": "URL da página que este rascunho atualiza (opcional)",
       "title": "Verifique um rascunho antes de publicar",
       "titleField": "Título do rascunho",
       "bodyField": "Texto do rascunho",
@@ -7524,6 +7526,9 @@
       }
     },
     "benchmark": {
+      "failed": "Sem páginas utilizáveis (sem pontuação): {{domains}}.",
+      "sample": "Comparados {{scored}} de {{attempted}} concorrentes testados a partir da SERP.",
+      "provenance": "Fonte SERP: {{source}}, criado em {{date}}. Os concorrentes são pontuados com o mesmo motor e mapa de referência.",
       "title": "Matriz de lacunas temáticas versus os principais concorrentes",
       "empty": "Crie o mapa de referência para comparar com os principais concorrentes. Só dados reais rastreados são exibidos.",
       "domain": "Domínio",
@@ -8249,6 +8254,19 @@
     }
   },
   "parityUi": {
+    "exception": {
+      "reasonPlaceholder": "Motivo (opcional)",
+      "reasonLabel": "Motivo da exceção local: {{topic}} em {{language}}",
+      "removeLabel": "Remover a exceção local de {{topic}} em {{language}}",
+      "addLabel": "Marcar {{topic}} como intencionalmente local em {{language}}",
+      "remove": "Desfazer local",
+      "add": "Marcar como local",
+      "column": "Exceção local"
+    },
+    "scope": {
+      "document-language": "Nenhuma anotação hreflang encontrada: as páginas são comparadas pelo idioma declarado do documento.",
+      "hreflang-clusters": "Foram comparadas apenas páginas dentro de {{clusters}} clusters hreflang; {{issues}} problemas técnicos de hreflang são relatados à parte e não são lacunas de conteúdo."
+    },
     "title": "Paridade internacional",
     "summary": "{{covered}} cobertos, {{shallow}} superficiais, {{missing}} em falta, {{local}} intencionalmente locais.",
     "inconclusive": "Inconclusivo: com os dados disponíveis não é possível avaliar a paridade.",

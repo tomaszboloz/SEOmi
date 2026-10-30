@@ -7499,6 +7499,8 @@
       }
     },
     "draft": {
+      "selfUrlPlaceholder": "Updating an existing page? Paste its URL so it is not matched with itself",
+      "selfUrlField": "URL of the page this draft updates (optional)",
       "title": "Check a draft before publishing",
       "titleField": "Draft title",
       "bodyField": "Draft text",
@@ -7524,6 +7526,9 @@
       }
     },
     "benchmark": {
+      "failed": "No usable pages (not scored): {{domains}}.",
+      "sample": "Compared {{scored}} of {{attempted}} competitors tried from the SERP.",
+      "provenance": "SERP source: {{source}}, built {{date}}. Competitors are scored with the same engine and reference map.",
       "title": "Topical gap matrix vs top competitors",
       "empty": "Build the reference map to compare with the top-ranking competitors. Only real crawled data is shown.",
       "domain": "Domain",
@@ -8249,6 +8254,19 @@
     }
   },
   "parityUi": {
+    "exception": {
+      "reasonPlaceholder": "Reason (optional)",
+      "reasonLabel": "Reason for the local exception: {{topic}} in {{language}}",
+      "removeLabel": "Remove the local exception for {{topic}} in {{language}}",
+      "addLabel": "Mark {{topic}} as intentionally local in {{language}}",
+      "remove": "Undo local",
+      "add": "Mark as local",
+      "column": "Local exception"
+    },
+    "scope": {
+      "document-language": "No hreflang annotations found: pages are compared by declared document language.",
+      "hreflang-clusters": "Compared only pages inside {{clusters}} hreflang clusters; {{issues}} technical hreflang issues are reported separately and are not content gaps."
+    },
     "title": "International parity",
     "summary": "{{covered}} covered, {{shallow}} shallow, {{missing}} missing, {{local}} intentionally local.",
     "inconclusive": "Inconclusive: parity cannot be judged from the data available.",

@@ -7499,6 +7499,8 @@
       }
     },
     "draft": {
+      "selfUrlPlaceholder": "기존 페이지를 업데이트하나요? 자기 자신과 비교되지 않도록 URL을 붙여 넣으세요",
+      "selfUrlField": "이 초안이 업데이트하는 페이지 URL(선택)",
       "title": "게시 전 초안 확인",
       "titleField": "초안 제목",
       "bodyField": "초안 본문",
@@ -7524,6 +7526,9 @@
       }
     },
     "benchmark": {
+      "failed": "사용 가능한 페이지 없음(평가 안 함): {{domains}}.",
+      "sample": "SERP에서 시도한 경쟁사 {{attempted}}곳 중 {{scored}}곳을 비교했습니다.",
+      "provenance": "SERP 출처: {{source}}, 생성일 {{date}}. 경쟁사는 동일한 엔진과 참조 맵으로 평가됩니다.",
       "title": "상위 경쟁사 대비 주제 격차 매트릭스",
       "empty": "참조 지도를 만들면 상위 경쟁사와 비교할 수 있습니다. 실제 크롤링 데이터만 표시합니다.",
       "domain": "도메인",
@@ -8249,6 +8254,19 @@
     }
   },
   "parityUi": {
+    "exception": {
+      "reasonPlaceholder": "사유(선택)",
+      "reasonLabel": "로컬 예외 사유: {{language}}의 {{topic}}",
+      "removeLabel": "{{language}}의 {{topic}} 로컬 예외 제거",
+      "addLabel": "{{language}}에서 {{topic}}을(를) 의도적 로컬로 표시",
+      "remove": "로컬 취소",
+      "add": "로컬로 표시",
+      "column": "로컬 예외"
+    },
+    "scope": {
+      "document-language": "hreflang 주석이 없습니다. 페이지를 선언된 문서 언어로 비교합니다.",
+      "hreflang-clusters": "{{clusters}}개 hreflang 클러스터 안의 페이지만 비교했습니다. hreflang 기술 문제 {{issues}}개는 별도로 보고되며 콘텐츠 공백이 아닙니다."
+    },
     "title": "국제 패리티",
     "summary": "충족 {{covered}}개, 얕음 {{shallow}}개, 누락 {{missing}}개, 의도적 로컬 {{local}}개.",
     "inconclusive": "판단 불가: 사용 가능한 데이터로는 패리티를 판단할 수 없습니다.",

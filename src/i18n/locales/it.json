@@ -7499,6 +7499,8 @@
       }
     },
     "draft": {
+      "selfUrlPlaceholder": "Stai aggiornando una pagina esistente? Incolla il suo URL perché non venga confrontata con se stessa",
+      "selfUrlField": "URL della pagina che questa bozza aggiorna (facoltativo)",
       "title": "Controlla una bozza prima di pubblicare",
       "titleField": "Titolo della bozza",
       "bodyField": "Testo della bozza",
@@ -7524,6 +7526,9 @@
       }
     },
     "benchmark": {
+      "failed": "Nessuna pagina utilizzabile (non valutato): {{domains}}.",
+      "sample": "Confrontati {{scored}} su {{attempted}} concorrenti provati dalla SERP.",
+      "provenance": "Fonte SERP: {{source}}, creato il {{date}}. I concorrenti sono valutati con lo stesso motore e la stessa mappa di riferimento.",
       "title": "Matrice delle lacune tematiche rispetto ai migliori concorrenti",
       "empty": "Crea la mappa di riferimento per confrontarti con i migliori concorrenti. Sono mostrati solo dati reali scansionati.",
       "domain": "Dominio",
@@ -8249,6 +8254,19 @@
     }
   },
   "parityUi": {
+    "exception": {
+      "reasonPlaceholder": "Motivo (facoltativo)",
+      "reasonLabel": "Motivo dell'eccezione locale: {{topic}} in {{language}}",
+      "removeLabel": "Rimuovi l'eccezione locale per {{topic}} in {{language}}",
+      "addLabel": "Segna {{topic}} come intenzionalmente locale in {{language}}",
+      "remove": "Annulla locale",
+      "add": "Segna come locale",
+      "column": "Eccezione locale"
+    },
+    "scope": {
+      "document-language": "Nessuna annotazione hreflang trovata: le pagine sono confrontate per lingua dichiarata del documento.",
+      "hreflang-clusters": "Confrontate solo le pagine in {{clusters}} cluster hreflang; {{issues}} problemi tecnici hreflang sono segnalati a parte e non sono lacune di contenuto."
+    },
     "title": "Parità internazionale",
     "summary": "{{covered}} coperti, {{shallow}} superficiali, {{missing}} mancanti, {{local}} volutamente locali.",
     "inconclusive": "Non conclusivo: con i dati disponibili la parità non si può valutare.",

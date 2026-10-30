@@ -23,3 +23,9 @@ export const createReferenceDeps = (): ReferenceDeps => {
     fetchSuggestions: createSuggestionFetcher({ geo: tools.keywordCountry || 'US', language: tools.keywordLanguage || 'en', fetch: fetchFreeSuggestions as SuggestionFetcher }),
   };
 };
+
+/** Market the reference SERP was fetched for (same store fields the SERP fetcher uses). */
+export const referenceMarket = (): { country: string; language: string } => {
+  const tools = useToolsStore.getState();
+  return { country: tools.keywordCountry || 'US', language: tools.keywordLanguage || 'en' };
+};

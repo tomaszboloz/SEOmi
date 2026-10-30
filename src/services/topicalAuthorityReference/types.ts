@@ -1,5 +1,5 @@
 import type { CodeParams, SiteFocusReport } from '@/services/siteFocus';
-import type { BenchmarkDeps } from '@/services/siteFocusBenchmark';
+import type { BenchmarkDeps, SerpHit } from '@/services/siteFocusBenchmark';
 import type { CompetitorPages, Quadrant, ReferenceTaxonomy } from '@/services/topicalAuthority';
 
 export interface ReferenceDeps extends Pick<BenchmarkDeps, 'fetchSerp' | 'crawlSite' | 'now'> {
@@ -28,7 +28,10 @@ export type ReferenceUnavailable = 'no-serp-source' | 'no-queries' | 'serp-faile
 export type ReferenceOutcome =
   | { status: 'unavailable'; reason: ReferenceUnavailable; error?: string }
   | { status: 'cancelled' }
-  | { status: 'ok'; taxonomy: ReferenceTaxonomy; competitors: CompetitorPages[] };
+  | { status: 'ok'; taxonomy: ReferenceTaxonomy; competitors: CompetitorPages[]; serp?: ReferenceSerpObservation[]; attempted?: string[] };
+
+/** One SERP response actually received during the reference run (query, provider label and ranked hits). */
+export interface ReferenceSerpObservation { query: string; source: string; hits: SerpHit[] }
 
 export interface BenchmarkRow { domain: string; sfs: number; tas: number | null; quadrant: Quadrant | null; isOwn: boolean }
 export interface PillarComparison { id: string; label: string; own: number; competitors: Record<string, number> }
@@ -42,4 +45,6 @@ export interface TopicalBenchmark {
   ownRank: number;
   pillars: PillarComparison[];
   insights: AuthorityInsight[];
+  /** Real sample behind the matrix: competitors picked from the SERP, scored, and those whose crawl failed or was empty. */
+  sample?: { attempted: number; scored: number; failed: string[] };
 }

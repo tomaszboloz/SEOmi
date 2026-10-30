@@ -7499,6 +7499,8 @@
       }
     },
     "draft": {
+      "selfUrlPlaceholder": "Aktualizujesz istniejącą stronę? Wklej jej URL, aby nie porównywać jej z samą sobą",
+      "selfUrlField": "URL strony, którą aktualizuje szkic (opcjonalnie)",
       "title": "Sprawdź szkic przed publikacją",
       "titleField": "Tytuł szkicu",
       "bodyField": "Tekst szkicu",
@@ -7524,6 +7526,9 @@
       }
     },
     "benchmark": {
+      "failed": "Brak użytecznych stron (bez oceny): {{domains}}.",
+      "sample": "Porównano {{scored}} z {{attempted}} konkurentów sprawdzonych z SERP.",
+      "provenance": "Źródło SERP: {{source}}, zbudowano {{date}}. Konkurenci są oceniani tym samym silnikiem i tą samą mapą referencyjną.",
       "title": "Macierz luk tematycznych vs najlepsi konkurenci",
       "empty": "Zbuduj mapę referencyjną, aby porównać się z najlepszymi konkurentami. Pokazujemy wyłącznie realne dane z crawla.",
       "domain": "Domena",
@@ -8249,6 +8254,19 @@
     }
   },
   "parityUi": {
+    "exception": {
+      "reasonPlaceholder": "Powód (opcjonalnie)",
+      "reasonLabel": "Powód wyjątku lokalnego: {{topic}} w {{language}}",
+      "removeLabel": "Usuń wyjątek lokalny dla {{topic}} w {{language}}",
+      "addLabel": "Oznacz {{topic}} jako świadomie lokalne dla {{language}}",
+      "remove": "Cofnij wyjątek",
+      "add": "Oznacz jako lokalne",
+      "column": "Wyjątek lokalny"
+    },
+    "scope": {
+      "document-language": "Brak adnotacji hreflang: strony porównano według zadeklarowanego języka dokumentu.",
+      "hreflang-clusters": "Porównano tylko strony w {{clusters}} klastrach hreflang; {{issues}} problemów technicznych hreflang raportujemy osobno — to nie są luki treści."
+    },
     "title": "Parytet międzynarodowy",
     "summary": "Pokryte: {{covered}}, płytkie: {{shallow}}, brakujące: {{missing}}, celowo lokalne: {{local}}.",
     "inconclusive": "Brak rozstrzygnięcia: z dostępnych danych nie da się ocenić parytetu.",

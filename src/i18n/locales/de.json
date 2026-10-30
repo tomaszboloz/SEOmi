@@ -7499,6 +7499,8 @@
       }
     },
     "draft": {
+      "selfUrlPlaceholder": "Aktualisierst du eine bestehende Seite? Füge ihre URL ein, damit sie nicht mit sich selbst verglichen wird",
+      "selfUrlField": "URL der Seite, die dieser Entwurf aktualisiert (optional)",
       "title": "Entwurf vor der Veröffentlichung prüfen",
       "titleField": "Entwurfstitel",
       "bodyField": "Entwurfstext",
@@ -7524,6 +7526,9 @@
       }
     },
     "benchmark": {
+      "failed": "Keine verwertbaren Seiten (nicht bewertet): {{domains}}.",
+      "sample": "{{scored}} von {{attempted}} aus der SERP geprüften Wettbewerbern verglichen.",
+      "provenance": "SERP-Quelle: {{source}}, erstellt am {{date}}. Wettbewerber werden mit derselben Engine und Referenzkarte bewertet.",
       "title": "Themenlücken-Matrix im Vergleich zu den Top-Wettbewerbern",
       "empty": "Erstelle die Referenzkarte, um dich mit den Top-Wettbewerbern zu vergleichen. Es werden nur echte Crawl-Daten gezeigt.",
       "domain": "Domain",
@@ -8249,6 +8254,19 @@
     }
   },
   "parityUi": {
+    "exception": {
+      "reasonPlaceholder": "Grund (optional)",
+      "reasonLabel": "Grund der lokalen Ausnahme: {{topic}} in {{language}}",
+      "removeLabel": "Lokale Ausnahme für {{topic}} in {{language}} entfernen",
+      "addLabel": "{{topic}} für {{language}} als bewusst lokal markieren",
+      "remove": "Ausnahme aufheben",
+      "add": "Als lokal markieren",
+      "column": "Lokale Ausnahme"
+    },
+    "scope": {
+      "document-language": "Keine hreflang-Annotationen gefunden: Seiten werden nach der deklarierten Dokumentsprache verglichen.",
+      "hreflang-clusters": "Verglichen wurden nur Seiten in {{clusters}} hreflang-Clustern; {{issues}} technische hreflang-Probleme werden separat gemeldet und sind keine Inhaltslücken."
+    },
     "title": "Internationale Parität",
     "summary": "{{covered}} abgedeckt, {{shallow}} oberflächlich, {{missing}} fehlend, {{local}} bewusst lokal.",
     "inconclusive": "Nicht aussagekräftig: Die Parität lässt sich mit den verfügbaren Daten nicht beurteilen.",

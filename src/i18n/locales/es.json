@@ -7499,6 +7499,8 @@
       }
     },
     "draft": {
+      "selfUrlPlaceholder": "¿Actualizas una página existente? Pega su URL para que no se compare consigo misma",
+      "selfUrlField": "URL de la página que actualiza este borrador (opcional)",
       "title": "Comprueba un borrador antes de publicar",
       "titleField": "Título del borrador",
       "bodyField": "Texto del borrador",
@@ -7524,6 +7526,9 @@
       }
     },
     "benchmark": {
+      "failed": "Sin páginas utilizables (sin puntuar): {{domains}}.",
+      "sample": "Se compararon {{scored}} de {{attempted}} competidores probados desde la SERP.",
+      "provenance": "Fuente SERP: {{source}}, creado el {{date}}. Los competidores se puntúan con el mismo motor y mapa de referencia.",
       "title": "Matriz de lagunas temáticas frente a los mejores competidores",
       "empty": "Crea el mapa de referencia para compararte con los mejores competidores. Solo se muestran datos reales rastreados.",
       "domain": "Dominio",
@@ -8249,6 +8254,19 @@
     }
   },
   "parityUi": {
+    "exception": {
+      "reasonPlaceholder": "Motivo (opcional)",
+      "reasonLabel": "Motivo de la excepción local: {{topic}} en {{language}}",
+      "removeLabel": "Quitar la excepción local de {{topic}} en {{language}}",
+      "addLabel": "Marcar {{topic}} como intencionalmente local en {{language}}",
+      "remove": "Deshacer local",
+      "add": "Marcar como local",
+      "column": "Excepción local"
+    },
+    "scope": {
+      "document-language": "No se encontraron anotaciones hreflang: las páginas se comparan por el idioma declarado del documento.",
+      "hreflang-clusters": "Solo se compararon páginas dentro de {{clusters}} clústeres hreflang; {{issues}} problemas técnicos de hreflang se informan por separado y no son lagunas de contenido."
+    },
     "title": "Paridad internacional",
     "summary": "{{covered}} cubiertos, {{shallow}} superficiales, {{missing}} ausentes, {{local}} locales a propósito.",
     "inconclusive": "No concluyente: con los datos disponibles no se puede juzgar la paridad.",

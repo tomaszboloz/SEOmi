@@ -7499,6 +7499,8 @@
       }
     },
     "draft": {
+      "selfUrlPlaceholder": "既存ページを更新しますか？自分自身と照合されないよう URL を貼り付けてください",
+      "selfUrlField": "この下書きが更新するページの URL（任意）",
       "title": "公開前に下書きを確認",
       "titleField": "下書きのタイトル",
       "bodyField": "下書きの本文",
@@ -7524,6 +7526,9 @@
       }
     },
     "benchmark": {
+      "failed": "利用可能なページなし（未採点）: {{domains}}。",
+      "sample": "SERP から試した {{attempted}} 件の競合のうち {{scored}} 件を比較しました。",
+      "provenance": "SERP ソース: {{source}}、作成日 {{date}}。競合は同じエンジンと参照マップで採点されます。",
       "title": "トップ競合とのトピックギャップ・マトリクス",
       "empty": "リファレンスマップを作成すると上位競合と比較できます。表示するのは実際にクロールしたデータのみです。",
       "domain": "ドメイン",
@@ -8249,6 +8254,19 @@
     }
   },
   "parityUi": {
+    "exception": {
+      "reasonPlaceholder": "理由（任意）",
+      "reasonLabel": "ローカル例外の理由: {{language}} の {{topic}}",
+      "removeLabel": "{{language}} の {{topic}} のローカル例外を削除",
+      "addLabel": "{{language}} で {{topic}} を意図的なローカルとしてマーク",
+      "remove": "ローカルを取り消す",
+      "add": "ローカルとしてマーク",
+      "column": "ローカル例外"
+    },
+    "scope": {
+      "document-language": "hreflang 注釈が見つかりません。ページは宣言された文書言語で比較されます。",
+      "hreflang-clusters": "{{clusters}} 件の hreflang クラスター内のページのみを比較しました。{{issues}} 件の hreflang 技術的問題は別途報告され、コンテンツの不足ではありません。"
+    },
     "title": "国際パリティ",
     "summary": "網羅 {{covered}} 件、浅い {{shallow}} 件、不足 {{missing}} 件、意図的なローカル {{local}} 件。",
     "inconclusive": "判定不能: 利用できるデータではパリティを判断できません。",

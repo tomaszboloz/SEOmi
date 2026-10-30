@@ -11,7 +11,9 @@ const round1 = (value: number): number => Math.round(value * 10) / 10;
  * Topical Gap Matrix: the strongest SERP competitors are scored with the very same engine and reference map,
  * so the pillar-by-pillar comparison is like for like.
  */
-export const buildTopicalBenchmark = (own: TopicalAuthorityReport, ownDomain: string, competitors: CompetitorPages[], taxonomy: ReferenceTaxonomy, now: string): TopicalBenchmark | null => {
+export const buildTopicalBenchmark = (
+  own: TopicalAuthorityReport, ownDomain: string, competitors: CompetitorPages[], taxonomy: ReferenceTaxonomy, now: string, attempted?: string[],
+): TopicalBenchmark | null => {
   const scored = competitors.filter((item) => item.pages.length).slice(0, BENCHMARK_COMPETITORS).map((item) => {
     const start = `https://${item.domain}/`;
     const sfs = buildSiteFocusReport(item.pages, start, { language: taxonomy.language || undefined, now });
@@ -32,5 +34,13 @@ export const buildTopicalBenchmark = (own: TopicalAuthorityReport, ownDomain: st
   const insights: AuthorityInsight[] = [{ code: 'rank', params: { rank: rows.findIndex((row) => row.isOwn) + 1, total: rows.length } }];
   if (lead && margin(lead) > 0) insights.push({ code: 'lead-pillar', params: { pillar: lead.label, own: round1(lead.own), best: round1(Math.max(...Object.values(lead.competitors))) } });
   if (trailing.length) insights.push({ code: 'trailing-pillars', params: { pillars: trailing.map((pillar) => pillar.label).join(', ') } });
-  return { builtAt: now, source: taxonomy.source, rows, ownRank: rows.findIndex((row) => row.isOwn) + 1, pillars, insights };
+  const scoredDomains = new Set(scored.map(({ domain }) => domain));
+  // SERP order: the competitors tried before the matrix filled up; the ones that gave no pages are reported, not scored 0.
+  const tried: string[] = [];
+  for (const domain of new Set(attempted ?? [])) {
+    if (tried.filter((item) => scoredDomains.has(item)).length >= scored.length) break;
+    tried.push(domain);
+  }
+  const sample = attempted ? { attempted: tried.length, scored: scored.length, failed: tried.filter((domain) => !scoredDomains.has(domain)).sort() } : undefined;
+  return { builtAt: now, source: taxonomy.source, rows, ownRank: rows.findIndex((row) => row.isOwn) + 1, pillars, insights, ...(sample ? { sample } : {}) };
 };

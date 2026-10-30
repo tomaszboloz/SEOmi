@@ -14,6 +14,7 @@ export const CannibalizationPanel = ({ report, pages, startUrl, language, projec
   const { t } = useTranslation();
   const [title, setTitle] = useState('');
   const [body, setBody] = useState('');
+  const [selfUrl, setSelfUrl] = useState('');
   const [hits, setHits] = useState<DraftOverlap[] | null>(null);
   return (
     <section aria-labelledby="authority-cannibal-title" className="space-y-3 rounded-xl border border-slate-800 bg-slate-900/60 p-4">
@@ -36,9 +37,10 @@ export const CannibalizationPanel = ({ report, pages, startUrl, language, projec
           ))}
         </ul>
       )}
-      <form className="space-y-2" onSubmit={(event) => { event.preventDefault(); setHits(checkDraftOverlap({ title, body }, pages, startUrl, language)); }}>
+      <form className="space-y-2" onSubmit={(event) => { event.preventDefault(); setHits(checkDraftOverlap({ title, body }, pages, startUrl, language, selfUrl)); }}>
         <h3 className="text-xs font-semibold text-slate-300">{t('authority.draft.title')}</h3>
         <input value={title} onChange={(event) => setTitle(event.target.value)} aria-label={t('authority.draft.titleField')} className="w-full rounded-lg border border-slate-700 bg-slate-950 px-2 py-1 text-xs text-slate-100" />
+        <input value={selfUrl} onChange={(event) => setSelfUrl(event.target.value)} aria-label={t('authority.draft.selfUrlField')} placeholder={t('authority.draft.selfUrlPlaceholder')} className="w-full rounded-lg border border-slate-700 bg-slate-950 px-2 py-1 text-xs text-slate-100" />
         <textarea value={body} onChange={(event) => setBody(event.target.value)} rows={4} aria-label={t('authority.draft.bodyField')} className="w-full rounded-lg border border-slate-700 bg-slate-950 px-2 py-1 text-xs text-slate-100" />
         <button type="submit" disabled={!title.trim() && !body.trim()} className="rounded-lg border border-emerald-500/40 px-3 py-1 text-xs text-emerald-200 disabled:opacity-50">{t('authority.draft.check')}</button>
         {hits && (hits.length === 0 ? <p role="status" className="text-xs text-emerald-300">{t('authority.draft.none')}</p> : (
