@@ -87,7 +87,7 @@ describe('What-If validation and reference (#71 GEM-71-03/07/08)', () => {
     expect(run.issues).toEqual([]);
     expect(run.uncertain).toBe(false);
     const b = run.rows.find((row) => row.nodeId === 'b');
-    expect(b && b.after > b.before).toBe(true);
+    expect(b && b.after !== null && b.before !== null && b.after > b.before).toBe(true);
     const back = simulateWhatIfRun(nodes, edges, { remove: [{ source: 'a', target: 'c' }] });
     const roundTrip = simulateWhatIfRun(nodes, edges.filter((edge) => !(edge.source === 'a' && edge.target === 'c')), { add: [{ source: 'a', target: 'c' }] });
     expect(back.rows.length).toBeGreaterThan(0);

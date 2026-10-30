@@ -74,12 +74,12 @@ export const simulateWhatIfRun = (nodes: PageRankNode[], edges: SprsEdge[], chan
   const round = (value: number) => Math.round(value * 10) / 10;
   // Added pages have no "before" and removed pages no "after": their delta is unknown, never 0 (GEM-71-08).
   const changed: WhatIfRow[] = after.pages
-    .map((page) => {
+    .map((page): WhatIfRow => {
       const was = prior.has(page.nodeId) ? prior.get(page.nodeId) as number : null;
       const now = round((page.probability / reference) * 100);
       return { nodeId: page.nodeId, before: was, after: now, delta: was === null ? null : round(now - was) };
     })
-    .concat([...removedNodes].map((nodeId) => ({ nodeId, before: prior.get(nodeId) ?? null, after: null, delta: null })));
+    .concat([...removedNodes].map((nodeId): WhatIfRow => ({ nodeId, before: prior.get(nodeId) ?? null, after: null, delta: null })));
   const magnitude = (row: WhatIfRow) => (row.delta === null ? Number.POSITIVE_INFINITY : Math.abs(row.delta));
   const rows = changed
     .filter((row) => row.delta !== 0)
