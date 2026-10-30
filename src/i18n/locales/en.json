@@ -7719,6 +7719,33 @@
       "noReference": "No citation found near this claim.",
       "more": "{{n}} more claims not shown.",
       "linkNote": "DOI, PMID and PMCID links open the public resolver (doi.org, PubMed, PMC). A link shows where to look the work up; it does not confirm that the work exists or supports the claim."
+    },
+    "identity": {
+      "status": {
+        "syntax-valid": "valid format, not checked",
+        "declared": "declared",
+        "fetched": "registry fetched, name not matched",
+        "verified": "registry name matched",
+        "mismatch": "registry name does not match",
+        "unavailable": "unavailable",
+        "invalid": "invalid identifier or URL"
+      },
+      "kind": {
+        "orcid": "ORCID",
+        "wikidata": "Wikidata",
+        "register": "scholarly register",
+        "social": "social profile",
+        "other": "other link"
+      },
+      "tier": "tier {{tier}}",
+      "detail": {
+        "registry-unavailable": "registry not reachable from this build",
+        "rate-budget": "request limit reached for this run",
+        "unsafe-redirect": "redirected outside the registry; ignored",
+        "body-limit": "response too large; not read",
+        "transport-error": "request failed or timed out"
+      },
+      "more": "{{n}} more profiles not shown."
     }
   },
   "executionCard": {

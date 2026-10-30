@@ -7719,6 +7719,33 @@
       "noReference": "W pobliżu tego twierdzenia nie znaleziono przypisu.",
       "more": "Nie pokazano kolejnych twierdzeń: {{n}}.",
       "linkNote": "Linki DOI, PMID i PMCID otwierają publiczny resolver (doi.org, PubMed, PMC). Link wskazuje, gdzie sprawdzić publikację; nie potwierdza, że istnieje ani że popiera twierdzenie."
+    },
+    "identity": {
+      "status": {
+        "syntax-valid": "poprawny format, niesprawdzony",
+        "declared": "zadeklarowany",
+        "fetched": "pobrano z rejestru, nazwy nie dopasowano",
+        "verified": "nazwa w rejestrze zgodna",
+        "mismatch": "nazwa w rejestrze niezgodna",
+        "unavailable": "niedostępne",
+        "invalid": "nieprawidłowy identyfikator lub URL"
+      },
+      "kind": {
+        "orcid": "ORCID",
+        "wikidata": "Wikidata",
+        "register": "rejestr naukowy",
+        "social": "profil społecznościowy",
+        "other": "inny link"
+      },
+      "tier": "poziom {{tier}}",
+      "detail": {
+        "registry-unavailable": "rejestr nieosiągalny w tej wersji",
+        "rate-budget": "osiągnięto limit zapytań w tym przebiegu",
+        "unsafe-redirect": "przekierowanie poza rejestr; pominięto",
+        "body-limit": "odpowiedź za duża; nie odczytano",
+        "transport-error": "zapytanie nie powiodło się lub przekroczyło czas"
+      },
+      "more": "Nie pokazano kolejnych profili: {{n}}."
     }
   },
   "executionCard": {

@@ -7719,6 +7719,33 @@
       "noReference": "Aucune citation trouvée à proximité de cette affirmation.",
       "more": "Affirmations supplémentaires non affichées : {{n}}.",
       "linkNote": "Les liens DOI, PMID et PMCID ouvrent le résolveur public (doi.org, PubMed, PMC). Un lien indique où consulter l'ouvrage ; il ne confirme ni son existence ni qu'il étaye l'affirmation."
+    },
+    "identity": {
+      "status": {
+        "syntax-valid": "format valide, non vérifié",
+        "declared": "déclaré",
+        "fetched": "registre récupéré, nom non rapproché",
+        "verified": "nom concordant dans le registre",
+        "mismatch": "le nom du registre ne concorde pas",
+        "unavailable": "indisponible",
+        "invalid": "identifiant ou URL invalide"
+      },
+      "kind": {
+        "orcid": "ORCID",
+        "wikidata": "Wikidata",
+        "register": "registre scientifique",
+        "social": "profil social",
+        "other": "autre lien"
+      },
+      "tier": "niveau {{tier}}",
+      "detail": {
+        "registry-unavailable": "registre inaccessible depuis cette version",
+        "rate-budget": "limite de requêtes atteinte pour cette exécution",
+        "unsafe-redirect": "redirection hors du registre ; ignorée",
+        "body-limit": "réponse trop volumineuse ; non lue",
+        "transport-error": "requête échouée ou expirée"
+      },
+      "more": "Profils supplémentaires non affichés : {{n}}."
     }
   },
   "executionCard": {

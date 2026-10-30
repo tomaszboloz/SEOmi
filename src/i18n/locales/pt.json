@@ -7719,6 +7719,33 @@
       "noReference": "Nenhuma citação encontrada perto desta afirmação.",
       "more": "Outras afirmações não mostradas: {{n}}.",
       "linkNote": "As ligações DOI, PMID e PMCID abrem o resolvedor público (doi.org, PubMed, PMC). Uma ligação mostra onde consultar a obra; não confirma que ela exista nem que apoie a afirmação."
+    },
+    "identity": {
+      "status": {
+        "syntax-valid": "formato válido, não verificado",
+        "declared": "declarado",
+        "fetched": "registo obtido, nome não correspondido",
+        "verified": "nome corresponde no registo",
+        "mismatch": "o nome no registo não corresponde",
+        "unavailable": "indisponível",
+        "invalid": "identificador ou URL inválido"
+      },
+      "kind": {
+        "orcid": "ORCID",
+        "wikidata": "Wikidata",
+        "register": "registo académico",
+        "social": "perfil social",
+        "other": "outra ligação"
+      },
+      "tier": "nível {{tier}}",
+      "detail": {
+        "registry-unavailable": "registo inacessível nesta versão",
+        "rate-budget": "limite de pedidos atingido nesta execução",
+        "unsafe-redirect": "redirecionamento para fora do registo; ignorado",
+        "body-limit": "resposta demasiado grande; não lida",
+        "transport-error": "o pedido falhou ou expirou"
+      },
+      "more": "Outros perfis não mostrados: {{n}}."
     }
   },
   "executionCard": {

@@ -7719,6 +7719,33 @@
       "noReference": "この主張の近くに出典は見つかりませんでした。",
       "more": "表示されていない主張：{{n}} 件",
       "linkNote": "DOI・PMID・PMCID のリンクは公開リゾルバー（doi.org、PubMed、PMC）を開きます。リンクは文献の参照先を示すだけで、文献の存在や主張の裏付けを確認するものではありません。"
+    },
+    "identity": {
+      "status": {
+        "syntax-valid": "形式は有効・未確認",
+        "declared": "申告のみ",
+        "fetched": "登録情報を取得・名前は未照合",
+        "verified": "登録上の名前が一致",
+        "mismatch": "登録上の名前が不一致",
+        "unavailable": "利用不可",
+        "invalid": "無効な識別子または URL"
+      },
+      "kind": {
+        "orcid": "ORCID",
+        "wikidata": "ウィキデータ",
+        "register": "学術登録",
+        "social": "ソーシャルプロフィール",
+        "other": "その他のリンク"
+      },
+      "tier": "ティア {{tier}}",
+      "detail": {
+        "registry-unavailable": "このビルドからは登録先に接続できません",
+        "rate-budget": "この実行のリクエスト上限に達しました",
+        "unsafe-redirect": "登録先外へのリダイレクトのため無視",
+        "body-limit": "応答が大きすぎるため未読",
+        "transport-error": "リクエスト失敗またはタイムアウト"
+      },
+      "more": "表示されていないプロフィール：{{n}} 件"
     }
   },
   "executionCard": {

@@ -7719,6 +7719,33 @@
       "noReference": "该主张附近未找到引用。",
       "more": "未显示的主张：{{n}} 条",
       "linkNote": "DOI、PMID 和 PMCID 链接会打开公共解析服务（doi.org、PubMed、PMC）。链接只说明在哪里查找该文献，并不证明文献存在或支持该主张。"
+    },
+    "identity": {
+      "status": {
+        "syntax-valid": "格式有效，未核查",
+        "declared": "已声明",
+        "fetched": "已获取登记信息，名称未匹配",
+        "verified": "登记名称一致",
+        "mismatch": "登记名称不一致",
+        "unavailable": "不可用",
+        "invalid": "标识符或 URL 无效"
+      },
+      "kind": {
+        "orcid": "ORCID",
+        "wikidata": "维基数据",
+        "register": "学术登记",
+        "social": "社交资料",
+        "other": "其他链接"
+      },
+      "tier": "第 {{tier}} 级",
+      "detail": {
+        "registry-unavailable": "此版本无法访问登记机构",
+        "rate-budget": "本次运行已达请求上限",
+        "unsafe-redirect": "重定向到登记机构之外，已忽略",
+        "body-limit": "响应过大，未读取",
+        "transport-error": "请求失败或超时"
+      },
+      "more": "未显示的资料：{{n}} 个"
     }
   },
   "executionCard": {

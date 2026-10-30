@@ -27,7 +27,7 @@ describe('CrawlTrustTab', () => {
     expect(screen.getByRole('list', { name: 'Trust layers' })).toBeTruthy();
     expect(screen.getByText('Anna Nowak')).toBeTruthy();
     expect(screen.getByText(/Publisher: Diabetes Portal/)).toBeTruthy();
-    expect(screen.getByText(/Diabetes Portal \(Publisher\) · syntax-valid · sameAs declaration 45%/)).toBeTruthy();
+    expect(screen.getByText(/Diabetes Portal \(Publisher\) · valid format, not checked · sameAs declaration 45%/)).toBeTruthy();
     expect(screen.getByText(/Role-weighted sameAs declaration: \d+%/)).toBeTruthy();
     expect(screen.getByTestId('trust-profile').textContent).toContain('eetv-5-layer-v2');
     expect(screen.getByTestId('trust-coverage').textContent).toContain('Evidence coverage');

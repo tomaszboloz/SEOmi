@@ -7719,6 +7719,33 @@
       "noReference": "이 주장 근처에서 인용을 찾지 못했습니다.",
       "more": "표시되지 않은 주장: {{n}}개",
       "linkNote": "DOI, PMID, PMCID 링크는 공개 리졸버(doi.org, PubMed, PMC)를 엽니다. 링크는 문헌을 찾아볼 위치만 알려 줄 뿐, 문헌의 존재나 주장 뒷받침 여부를 확인하지 않습니다."
+    },
+    "identity": {
+      "status": {
+        "syntax-valid": "형식 유효, 미확인",
+        "declared": "선언됨",
+        "fetched": "레지스트리 조회됨, 이름 미대조",
+        "verified": "레지스트리 이름 일치",
+        "mismatch": "레지스트리 이름 불일치",
+        "unavailable": "사용 불가",
+        "invalid": "잘못된 식별자 또는 URL"
+      },
+      "kind": {
+        "orcid": "ORCID",
+        "wikidata": "위키데이터",
+        "register": "학술 레지스트리",
+        "social": "소셜 프로필",
+        "other": "기타 링크"
+      },
+      "tier": "{{tier}}등급",
+      "detail": {
+        "registry-unavailable": "이 빌드에서는 레지스트리에 연결할 수 없음",
+        "rate-budget": "이번 실행의 요청 한도 도달",
+        "unsafe-redirect": "레지스트리 외부로 리디렉션되어 무시함",
+        "body-limit": "응답이 너무 커서 읽지 않음",
+        "transport-error": "요청 실패 또는 시간 초과"
+      },
+      "more": "표시되지 않은 프로필: {{n}}개"
     }
   },
   "executionCard": {
