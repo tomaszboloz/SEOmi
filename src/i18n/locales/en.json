@@ -7466,7 +7466,10 @@
         "no-competitors": "No competing domains were found in the rankings.",
         "no-pages": "No competitor pages could be crawled (robots.txt, blocking or timeouts).",
         "no-taxonomy": "The competitor pages share too few headings to form a reliable map. Try again later or with more competitors."
-      }
+      },
+      "withPaa": "Include real People Also Ask (DataForSEO advanced SERP, billed separately)",
+      "paaUsed": "{{count}} People Also Ask questions from the SERP were used.",
+      "paaMissing": "No People Also Ask source: questions come only from competitor headings and Google Suggest."
     },
     "coverage": {
       "title": "Topic coverage map",

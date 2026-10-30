@@ -7466,7 +7466,10 @@
         "no-competitors": "W rankingach nie znaleziono domen konkurencyjnych.",
         "no-pages": "Nie udało się przeskanować stron konkurencji (robots.txt, blokady lub limity czasu).",
         "no-taxonomy": "Strony konkurencji mają zbyt mało wspólnych nagłówków, by zbudować wiarygodną mapę. Spróbuj później lub z większą liczbą konkurentów."
-      }
+      },
+      "withPaa": "Uwzględnij prawdziwe People Also Ask (zaawansowany SERP DataForSEO, płatny osobno)",
+      "paaUsed": "Użyto {{count}} pytań People Also Ask z SERP.",
+      "paaMissing": "Brak źródła People Also Ask: pytania pochodzą tylko z nagłówków konkurencji i Google Suggest."
     },
     "coverage": {
       "title": "Mapa pokrycia tematu",

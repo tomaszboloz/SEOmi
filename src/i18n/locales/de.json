@@ -7466,7 +7466,10 @@
         "no-competitors": "In den Rankings wurden keine konkurrierenden Domains gefunden.",
         "no-pages": "Keine Wettbewerberseiten konnten gecrawlt werden (robots.txt, Sperren oder Timeouts).",
         "no-taxonomy": "Die Wettbewerberseiten teilen zu wenige Überschriften für eine verlässliche Karte. Später oder mit mehr Wettbewerbern erneut versuchen."
-      }
+      },
+      "withPaa": "Echte „Ähnliche Fragen“ (People Also Ask) einbeziehen (DataForSEO Advanced SERP, separat berechnet)",
+      "paaUsed": "{{count}} „Ähnliche Fragen“ aus der SERP wurden verwendet.",
+      "paaMissing": "Keine Quelle für „Ähnliche Fragen“: Fragen stammen nur aus Überschriften der Konkurrenz und Google Suggest."
     },
     "coverage": {
       "title": "Themenabdeckungskarte",

@@ -13,10 +13,10 @@ export interface RefSubtopic {
   importance: number;
   /** Surface forms of entities most of the covering pages mention. */
   entities: string[];
-  /** Heading questions and suggestion questions users ask (People Also Ask style). */
+  /** Questions from competitor headings, Suggest phrases and, when the provider returned it, the real People Also Ask block. */
   questions: string[];
   /** Provenance: competitor domains whose headings gave this sub-topic, and whether Google Suggest matched it (Suggest is not PAA). */
-  sources?: { domains: string[]; suggest: boolean };
+  sources?: { domains: string[]; suggest: boolean; paa?: boolean };
 }
 
 export interface ReferenceTaxonomy {
@@ -28,6 +28,10 @@ export interface ReferenceTaxonomy {
   source: string;
   competitors: string[];
   suggestionCount: number;
+  /** Real People Also Ask questions used (0 or absent: no PAA source, not "no questions"). */
+  paaCount?: number;
+  /** Market (country/language) the reference SERP was fetched for; part of the cache identity (#57 GEM-57-07). */
+  market?: { country: string; language: string };
   pillars: RefPillar[];
   subtopics: RefSubtopic[];
   /** Term key -> share (0-1) of competitor pages using it; only terms with share >= 0.1. */

@@ -44,7 +44,7 @@ export const CrawlAuthorityTab = ({ pages, startUrl, run, projectId, runner }: C
   return (
     <div className="space-y-4">
       <AuthorityHero report={report} />
-      <ReferenceMapPanel taxonomy={authority.taxonomy} state={authority.state} onBuild={() => void authority.build()} onCancel={authority.cancel} onClear={authority.clear} />
+      <ReferenceMapPanel taxonomy={authority.taxonomy} state={authority.state} onBuild={(withQuestions) => void authority.build({ withQuestions })} onCancel={authority.cancel} onClear={authority.clear} />
       <AuthorityPillars report={report} />
       {report.taxonomy && (row ? (
         <SubtopicDrilldown report={report} row={row} onBack={() => setSelected(undefined)} />

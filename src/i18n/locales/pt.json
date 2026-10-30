@@ -7466,7 +7466,10 @@
         "no-competitors": "Nenhum domínio concorrente foi encontrado nos rankings.",
         "no-pages": "Nenhuma página de concorrentes pôde ser rastreada (robots.txt, bloqueios ou tempo esgotado).",
         "no-taxonomy": "As páginas dos concorrentes compartilham poucos títulos para formar um mapa confiável. Tente depois ou com mais concorrentes."
-      }
+      },
+      "withPaa": "Incluir People Also Ask reais (SERP avançada da DataForSEO, cobrada à parte)",
+      "paaUsed": "Foram usadas {{count}} perguntas People Also Ask da SERP.",
+      "paaMissing": "Sem fonte de People Also Ask: as perguntas vêm apenas dos títulos dos concorrentes e do Google Suggest."
     },
     "coverage": {
       "title": "Mapa de cobertura do tema",

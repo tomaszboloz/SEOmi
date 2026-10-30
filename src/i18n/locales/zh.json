@@ -7466,7 +7466,10 @@
         "no-competitors": "排名中未找到竞争域名。",
         "no-pages": "无法抓取任何竞争对手页面（robots.txt、拦截或超时）。",
         "no-taxonomy": "竞争对手页面共有的标题太少，无法形成可靠图谱。请稍后重试或增加竞争对手。"
-      }
+      },
+      "withPaa": "包含真实的“相关问题”(People Also Ask)（DataForSEO 高级 SERP，单独计费）",
+      "paaUsed": "已使用 SERP 中的 {{count}} 个 People Also Ask 问题。",
+      "paaMissing": "没有 People Also Ask 来源：问题仅来自竞争对手的标题和 Google 搜索建议。"
     },
     "coverage": {
       "title": "主题覆盖图谱",

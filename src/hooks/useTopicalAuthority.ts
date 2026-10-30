@@ -13,8 +13,9 @@ import {
 
 import { recordReferenceSnapshot } from '@/services/semanticDecay/recordReferenceSnapshot';
 
-export type ReferenceRunner = (input: ReferenceInput) => Promise<ReferenceOutcome>;
-export const defaultReferenceRunner: ReferenceRunner = (input) => runReference(createReferenceDeps(), input);
+export interface ReferenceRunOptions { /** Opt-in real People Also Ask via the separately billed advanced SERP. */ withQuestions?: boolean }
+export type ReferenceRunner = (input: ReferenceInput, options?: ReferenceRunOptions) => Promise<ReferenceOutcome>;
+export const defaultReferenceRunner: ReferenceRunner = (input, options) => runReference(createReferenceDeps(options), input);
 
 export interface ReferenceState {
   running: boolean;
@@ -61,8 +62,8 @@ export const useTopicalAuthority = ({ pages, startUrl, sfs, run, projectId, runn
 
   useEffect(() => () => controller.current?.abort(), []);
 
-  // A cached map built for another Core Topic or language is not applied (treated as absent until rebuilt).
-  const usable = taxonomy && sfs && taxonomyMatchesCore(taxonomy, { coreLabel: sfs.coreTopic.label, language: sfs.model.language }) ? taxonomy : null;
+  // A cached map built for another Core Topic, language or SERP market is not applied (treated as absent until rebuilt).
+  const usable = taxonomy && sfs && taxonomyMatchesCore(taxonomy, { coreLabel: sfs.coreTopic.label, language: sfs.model.language, market: market() }) ? taxonomy : null;
   const report = useMemo<TopicalAuthorityReport | null>(
     () => (sfs ? buildAuthorityReport(pages as FocusPage[], startUrl, sfs, { taxonomy: usable, now: sfs.generatedAt }) : null),
     [pages, startUrl, sfs, usable],
@@ -76,21 +77,23 @@ export const useTopicalAuthority = ({ pages, startUrl, sfs, run, projectId, runn
     // One snapshot per run and reference map; deduped by runId in the history store.
   }, [report?.generatedAt, report?.tas, run?.id, projectId, pendingBenchmark]);
 
-  const build = useCallback(async () => {
+  const build = useCallback(async (options?: ReferenceRunOptions) => {
     if (!sfs) return;
     controller.current?.abort();
     const own = new AbortController();
     controller.current = own;
     setState({ ...IDLE, running: true });
     try {
-      const outcome = await runner({ report: sfs, startUrl, signal: own.signal, onProgress: (progress) => { if (!own.signal.aborted) setState((current) => ({ ...current, progress })); } });
+      const outcome = await runner({ report: sfs, startUrl, signal: own.signal, onProgress: (progress) => { if (!own.signal.aborted) setState((current) => ({ ...current, progress })); } }, options);
       if (controller.current !== own) return;
       if (outcome.status !== 'ok') { setState({ ...IDLE, failure: outcome }); return; }
-      writeTaxonomy(projectId, outcome.taxonomy);
-      recordReferenceSnapshot(projectId ?? null, outcome.taxonomy, outcome.serp, market());
-      const fresh = buildAuthorityReport(pages as FocusPage[], startUrl, sfs, { taxonomy: outcome.taxonomy, now: sfs.generatedAt });
-      setPendingBenchmark(buildTopicalBenchmark(fresh, domainOf(startUrl), outcome.competitors, outcome.taxonomy, new Date().toISOString(), outcome.attempted));
-      setTaxonomy(outcome.taxonomy);
+      const where = market();
+      const stamped: ReferenceTaxonomy = { ...outcome.taxonomy, market: where };
+      writeTaxonomy(projectId, stamped);
+      recordReferenceSnapshot(projectId ?? null, stamped, outcome.serp, where);
+      const fresh = buildAuthorityReport(pages as FocusPage[], startUrl, sfs, { taxonomy: stamped, now: sfs.generatedAt });
+      setPendingBenchmark(buildTopicalBenchmark(fresh, domainOf(startUrl), outcome.competitors, stamped, new Date().toISOString(), outcome.attempted));
+      setTaxonomy(stamped);
       setState(IDLE);
     } catch (error) {
       if (controller.current === own) setState({ ...IDLE, error: error instanceof Error ? error.message : String(error) });

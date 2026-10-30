@@ -7466,7 +7466,10 @@
         "no-competitors": "Aucun domaine concurrent trouvé dans les classements.",
         "no-pages": "Aucune page concurrente n’a pu être explorée (robots.txt, blocages ou délais dépassés).",
         "no-taxonomy": "Les pages concurrentes partagent trop peu de titres pour former une carte fiable. Réessayez plus tard ou avec plus de concurrents."
-      }
+      },
+      "withPaa": "Inclure les vrais « Autres questions posées » (SERP avancée DataForSEO, facturée à part)",
+      "paaUsed": "{{count}} questions « Autres questions posées » de la SERP ont été utilisées.",
+      "paaMissing": "Aucune source « Autres questions posées » : les questions viennent seulement des titres des concurrents et de Google Suggest."
     },
     "coverage": {
       "title": "Carte de couverture du sujet",

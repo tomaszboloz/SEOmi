@@ -7466,7 +7466,10 @@
         "no-competitors": "순위에서 경쟁 도메인을 찾지 못했습니다.",
         "no-pages": "경쟁사 페이지를 크롤링하지 못했습니다(robots.txt, 차단 또는 시간 초과).",
         "no-taxonomy": "경쟁사 페이지의 공통 제목이 너무 적어 신뢰할 지도를 만들 수 없습니다. 나중에 또는 경쟁사를 늘려 다시 시도하세요."
-      }
+      },
+      "withPaa": "실제 '관련 질문'(People Also Ask) 포함 (DataForSEO 고급 SERP, 별도 과금)",
+      "paaUsed": "SERP의 People Also Ask 질문 {{count}}개를 사용했습니다.",
+      "paaMissing": "People Also Ask 소스 없음: 질문은 경쟁사 제목과 Google 자동완성에서만 가져옵니다."
     },
     "coverage": {
       "title": "주제 커버리지 지도",

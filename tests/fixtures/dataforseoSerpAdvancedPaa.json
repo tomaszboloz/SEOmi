@@ -1,0 +1,13 @@
+{
+  "items": [
+    { "type": "people_also_ask", "rank_group": 1, "items": [
+      { "type": "people_also_ask_element", "title": "How do you descale an espresso machine?" },
+      { "type": "people_also_ask_element", "title": "What  grind size is best for pour over?" },
+      { "type": "people_also_ask_element", "title": "How do you descale an espresso machine?" },
+      { "type": "people_also_ask_element", "title": "" }
+    ] },
+    { "type": "organic", "rank_group": 1, "rank_absolute": 2, "domain": "rival-one.test", "title": "Espresso", "description": "", "url": "https://rival-one.test/" },
+    { "type": "related_searches", "items": ["espresso grinder"] },
+    { "type": "organic", "rank_group": 2, "rank_absolute": 3, "domain": "rival-two.test", "title": "Pour over", "description": "", "url": "https://rival-two.test/" }
+  ]
+}

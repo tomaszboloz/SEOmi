@@ -7466,7 +7466,10 @@
         "no-competitors": "Nessun dominio concorrente trovato nei posizionamenti.",
         "no-pages": "Nessuna pagina dei concorrenti è stata scansionata (robots.txt, blocchi o timeout).",
         "no-taxonomy": "Le pagine dei concorrenti condividono troppi pochi titoli per una mappa affidabile. Riprova più tardi o con più concorrenti."
-      }
+      },
+      "withPaa": "Includi le vere People Also Ask (SERP avanzata DataForSEO, fatturata a parte)",
+      "paaUsed": "Sono state usate {{count}} domande People Also Ask dalla SERP.",
+      "paaMissing": "Nessuna fonte People Also Ask: le domande provengono solo dai titoli dei concorrenti e da Google Suggest."
     },
     "coverage": {
       "title": "Mappa di copertura del tema",
