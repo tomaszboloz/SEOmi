@@ -3194,7 +3194,8 @@
       "focus": "Site Focus",
       "authority": "Autorité thématique",
       "aio": "Préparation à l'IA",
-      "trust": "Confiance des entités"
+      "trust": "Confiance des entités",
+      "executive": "Direction"
     },
     "groups": {
       "core": "Aperçu",
@@ -7977,6 +7978,121 @@
       "expectedDelta": "Effet attendu (points)",
       "expectedVsMeasured": "attendu {{expected}}, mesuré {{measured}}"
     }
+  },
+  "executive": {
+    "title": "Tableau de bord de direction",
+    "subtitle": "Une vue sur les rapports des modules du crawl sélectionné. Calculé localement à partir des données enregistrées : aucun nouveau crawl, rien n’est publié.",
+    "workflow": "Parcours : diagnostic → choix d’une priorité → preuves du module → What-If → brief / copie / export. Rien n’est publié dans un CMS.",
+    "run": "Crawl : {{date}}",
+    "runUnsaved": "Crawl : pas encore enregistré",
+    "hss": {
+      "title": "Holistic Semantic Score (HSS)",
+      "valueAria": "HSS {{value}}",
+      "status": {
+        "complete": "Complet",
+        "partial": "Partiel",
+        "insufficient": "Couverture insuffisante",
+        "unavailable": "Indisponible"
+      },
+      "coverageAria": "Part mesurée du poids HSS",
+      "coverage": "Poids mesuré {{pct}} % · {{count}} sur {{total}} modules",
+      "insufficient": "Les modules mesurés portent moins de {{min}} % du poids : le score est retenu.",
+      "renormalised": "Renormalisé sur les modules mesurés : {{value}}.",
+      "partialHint": "Score partiel : renormalisé sur les seuls modules mesurés. Les modules manquants ne comptent pas comme 0.",
+      "disclaimer": "Heuristique SEOmi, pas une métrique Google. Distinct du score d’audit technique. Profil {{profile}}."
+    },
+    "modules": {
+      "title": "Modules",
+      "weight": "poids {{weight}} % (effectif {{effective}} %)",
+      "open": "Ouvrir les détails"
+    },
+    "module": {
+      "sfs": "Site Focus (SFS)",
+      "tas": "Autorité thématique (TAS)",
+      "igos": "Gain d’information (IGOS)",
+      "sprs": "PageRank sémantique (SPRS)",
+      "eetv": "Confiance des entités (EETV)",
+      "sija": "Intention de recherche (SIJA)",
+      "aior": "Préparation IA (AIO-R)"
+    },
+    "componentStatus": {
+      "measured": "Mesuré",
+      "unavailable": "Indisponible",
+      "invalid": "Valeur invalide",
+      "incompatible": "Autre crawl ou obsolète"
+    },
+    "reason": {
+      "not-provided": "Aucune valeur fournie.",
+      "not-run": "Le module n’a pas été exécuté pour ce crawl.",
+      "domain-aggregation-undefined": "Module par page : aucun score de site n’est encore défini, il est donc exclu au lieu d’être moyenné.",
+      "sfs-no-scored-pages": "Aucune page n’a pu être notée.",
+      "tas-no-reference-map": "Générez la carte thématique de référence pour mesurer le TAS.",
+      "eetv-no-signals": "Aucun signal de confiance observé.",
+      "aio-unavailable": "Aucune page n’a pu être notée pour la préparation IA.",
+      "aio-error": "L’analyse de préparation IA a échoué.",
+      "aio-cancelled": "L’analyse de préparation IA a été annulée.",
+      "aio-partial": "Certaines pages ont été ignorées (couverture partielle).",
+      "aio-stale": "Le résultat de préparation IA est obsolète.",
+      "out-of-range": "La valeur est hors de 0–100.",
+      "different-run": "La valeur provient d’un autre crawl.",
+      "what-if-removed": "Retiré dans le scénario What-If."
+    },
+    "whatIf": {
+      "title": "What-If (copie de ce crawl)",
+      "hint": "Modifiez les valeurs des modules mesurés pour voir le HSS recalculé. Rien n’est enregistré ; ce n’est pas une prévision de trafic.",
+      "result": "HSS du scénario {{value}} ({{delta}})",
+      "unavailable": "Le HSS du scénario est indisponible.",
+      "reset": "Réinitialiser"
+    },
+    "actions": {
+      "title": "Fil d’actions",
+      "hint": "Classé par delta HSS par heure estimée. Les deltas proviennent uniquement des simulations des modules ; sans elles, le delta est indisponible. Aucune promesse de trafic, de citations ni de ROI.",
+      "empty": "Les rapports des modules de ce crawl n’ont produit aucune action.",
+      "internalLink": "Ajouter un lien interne : {{from}} → {{to}}",
+      "delta": "Δ HSS {{value}}",
+      "deltaUnavailable": "Δ HSS indisponible (aucun modèle déclaré)",
+      "moduleDelta": "Δ {{module}} {{value}}",
+      "effort": "Effort estimé {{min}}–{{max}} h",
+      "effortUnknown": "Effort inconnu",
+      "scope": "URL : {{urls}} · preuves : {{evidence}}",
+      "blocked": "Bloqué : conservez la page ou collectez d’abord des données.",
+      "conflict": {
+        "protected-by-evidence": "Protégé par le trafic, les conversions ou les liens (URL : {{count}}).",
+        "needs-data": "Télémétrie manquante ou obsolète ; vérifiez avant suppression (URL : {{count}}).",
+        "merge-vs-expand": "URL cannibalisée : fusionnez d’abord, puis enrichissez (URL : {{count}}).",
+        "keep-vs-prune": "Une autre action conserve ou améliore cette URL ; la conservation l’emporte (URL : {{count}})."
+      },
+      "dependsOn": "À faire après d’autres actions : {{count}}.",
+      "open": "Ouvrir {{tab}}",
+      "more": "Autres actions dans les onglets des modules : {{count}}."
+    },
+    "export": {
+      "copy": "Copier HSS + actions (JSON)",
+      "copied": "Copié",
+      "failed": "Échec de la copie",
+      "hint": "L’export contient les entrées et pondérations exactes, le score peut donc être recalculé."
+    }
+  },
+  "surgical": {
+    "title": "Réécriture chirurgicale (avant / après)",
+    "location": "Page {{url}}, sous H{{level}} «{{heading}}» (section #{{position}}).",
+    "noSections": "Aucune section H2/H3 n’a été capturée pour cette page ; relancez un crawl pour obtenir des conseils par section.",
+    "nothing": "Les sections H2 couvrent déjà le sujet principal ; aucune modification chirurgicale n’est proposée.",
+    "before": "Avant",
+    "after": "Après",
+    "headingTemplate": "{{heading}} : {{entity}}",
+    "answerFirst": "{{topic}} : [réponse directe en 1 à 2 phrases citant {{terms}}]",
+    "answerFirstNoTerms": "{{topic}} : [réponse directe en 1 à 2 phrases]",
+    "missing": "Entités du sujet principal manquantes : {{terms}}",
+    "dangling": "La première phrase commence par « {{opener}} », qui renvoie à un texte antérieur. Nommez plutôt le sujet.",
+    "drift": "Sections qui dérivent du sujet (supprimer ou réécrire) :",
+    "driftItem": "«{{heading}}» — termes hors sujet : {{terms}}",
+    "forecast": "Si cette page atteint l’objectif d’amélioration, SFS {{current}} → {{projected}} ({{delta}}), simulé par le moteur SFS.",
+    "noForecast": "Aucune prévision SFS pour cette page.",
+    "factGate": "Remplissez les [espaces réservés] uniquement avec des faits vérifiés. Rien n’est publié.",
+    "copy": "Copier le HTML « Après »",
+    "copied": "Copié",
+    "failed": "Échec de la copie"
   },
   "scoreDropAlert": {
     "aio": {

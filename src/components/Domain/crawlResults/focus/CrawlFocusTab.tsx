@@ -119,7 +119,7 @@ export const CrawlFocusTab = ({ pages, startUrl, run, projectId, history, benchm
       </div>
       {report.subSites && report.subSites.length > 0 && <SubSiteScores subSites={report.subSites} />}
       {selected ? (
-        <PageFocusDetail page={selected} report={report} onBack={() => setSelectedUrl(undefined)} projectId={projectId} baselineScore={taskBaseline} />
+        <PageFocusDetail page={selected} report={report} onBack={() => setSelectedUrl(undefined)} projectId={projectId} baselineScore={taskBaseline} crawled={pages.find((item) => item.url === selected.url)} />
       ) : (
         <FocusHeatmapTree
           pages={report.pages}

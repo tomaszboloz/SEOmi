@@ -22,9 +22,11 @@ import { CrawlFocusTab } from './focus/CrawlFocusTab';
 import { CrawlAuthorityTab } from './authority/CrawlAuthorityTab';
 import { CrawlTrustTab } from './trust/CrawlTrustTab';
 import { CrawlExportsTab } from './CrawlExportsTab';
+import { CrawlExecutiveTab } from './executive/CrawlExecutiveTab';
 const renderTab = (session: ReturnType<typeof useCrawlResultsSession>) => {
 switch (session.activeTab) {
 case 'overview': return <CrawlOverviewTab session={session} />;
+case 'executive': return <CrawlExecutiveTab pages={session.result.pages} startUrl={session.result.start_url} run={session.currentRun} projectId={session.activeProjectId} onOpenTab={session.setActiveTab} />;
 case 'crawlerReadiness': return <CrawlCrawlerReadinessTab session={session} />;
 case 'urls': return <CrawlUrlsTab session={session} />;
 case 'issues': return <CrawlIssuesTab session={session} />;

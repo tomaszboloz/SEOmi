@@ -3194,7 +3194,8 @@
       "focus": "Enfoque del sitio",
       "authority": "Autoridad temática",
       "aio": "Preparación para IA",
-      "trust": "Confianza de entidad"
+      "trust": "Confianza de entidad",
+      "executive": "Ejecutivo"
     },
     "groups": {
       "core": "Resumen",
@@ -7977,6 +7978,121 @@
       "expectedDelta": "Efecto esperado (puntos)",
       "expectedVsMeasured": "esperado {{expected}}, medido {{measured}}"
     }
+  },
+  "executive": {
+    "title": "Panel ejecutivo",
+    "subtitle": "Una vista de los informes de módulos del rastreo seleccionado. Calculado localmente con datos guardados: sin nuevo rastreo, no se publica nada.",
+    "workflow": "Flujo: diagnóstico → elegir prioridad → evidencia del módulo → What-If → brief / copiar / exportar. No se publica nada en un CMS.",
+    "run": "Rastreo: {{date}}",
+    "runUnsaved": "Rastreo: aún no guardado",
+    "hss": {
+      "title": "Holistic Semantic Score (HSS)",
+      "valueAria": "HSS {{value}}",
+      "status": {
+        "complete": "Completo",
+        "partial": "Parcial",
+        "insufficient": "Cobertura insuficiente",
+        "unavailable": "No disponible"
+      },
+      "coverageAria": "Parte medida del peso del HSS",
+      "coverage": "Peso medido {{pct}} % · {{count}} de {{total}} módulos",
+      "insufficient": "Los módulos medidos suman menos del {{min}} % del peso, por lo que la puntuación se retiene.",
+      "renormalised": "Renormalizado sobre los módulos medidos: {{value}}.",
+      "partialHint": "Puntuación parcial: renormalizada solo sobre los módulos medidos. Los módulos ausentes no cuentan como 0.",
+      "disclaimer": "Heurística de SEOmi, no una métrica de Google. Separada de la puntuación técnica de auditoría. Perfil {{profile}}."
+    },
+    "modules": {
+      "title": "Módulos",
+      "weight": "peso {{weight}} % (efectivo {{effective}} %)",
+      "open": "Abrir detalles"
+    },
+    "module": {
+      "sfs": "Site Focus (SFS)",
+      "tas": "Autoridad temática (TAS)",
+      "igos": "Ganancia de información (IGOS)",
+      "sprs": "PageRank semántico (SPRS)",
+      "eetv": "Confianza de entidad (EETV)",
+      "sija": "Intención de búsqueda (SIJA)",
+      "aior": "Preparación para IA (AIO-R)"
+    },
+    "componentStatus": {
+      "measured": "Medido",
+      "unavailable": "No disponible",
+      "invalid": "Valor no válido",
+      "incompatible": "Otro rastreo u obsoleto"
+    },
+    "reason": {
+      "not-provided": "No se proporcionó ningún valor.",
+      "not-run": "El módulo no se ejecutó para este rastreo.",
+      "domain-aggregation-undefined": "Módulo por página: aún no hay una puntuación de sitio definida, así que se omite en lugar de promediarse.",
+      "sfs-no-scored-pages": "No se pudo puntuar ninguna página.",
+      "tas-no-reference-map": "Genera el mapa temático de referencia para medir TAS.",
+      "eetv-no-signals": "No se observaron señales de confianza.",
+      "aio-unavailable": "No se pudo puntuar ninguna página para la preparación para IA.",
+      "aio-error": "El análisis de preparación para IA falló.",
+      "aio-cancelled": "El análisis de preparación para IA se canceló.",
+      "aio-partial": "Se omitieron algunas páginas (cobertura parcial).",
+      "aio-stale": "El resultado de preparación para IA está obsoleto.",
+      "out-of-range": "El valor está fuera de 0–100.",
+      "different-run": "El valor procede de otro rastreo.",
+      "what-if-removed": "Eliminado en el escenario What-If."
+    },
+    "whatIf": {
+      "title": "What-If (copia de este rastreo)",
+      "hint": "Cambia los valores de los módulos medidos para ver cómo se recalcularía el HSS. No se guarda nada; no es una previsión de tráfico.",
+      "result": "HSS del escenario {{value}} ({{delta}})",
+      "unavailable": "El HSS del escenario no está disponible.",
+      "reset": "Restablecer"
+    },
+    "actions": {
+      "title": "Flujo de acciones",
+      "hint": "Ordenado por delta de HSS por hora estimada. Los deltas proceden solo de las simulaciones de los propios módulos; sin ellas el delta no está disponible. No promete tráfico, citas ni ROI.",
+      "empty": "Los informes de módulos de este rastreo no generaron acciones.",
+      "internalLink": "Añadir un enlace interno: {{from}} → {{to}}",
+      "delta": "Δ HSS {{value}}",
+      "deltaUnavailable": "Δ HSS no disponible (sin modelo declarado)",
+      "moduleDelta": "Δ {{module}} {{value}}",
+      "effort": "Esfuerzo estimado {{min}}–{{max}} h",
+      "effortUnknown": "Esfuerzo desconocido",
+      "scope": "URL: {{urls}} · evidencias: {{evidence}}",
+      "blocked": "Bloqueado: conserva la página o recoge datos primero.",
+      "conflict": {
+        "protected-by-evidence": "Protegido por tráfico, conversiones o enlaces (URL: {{count}}).",
+        "needs-data": "Telemetría ausente u obsoleta; revisa antes de eliminar (URL: {{count}}).",
+        "merge-vs-expand": "URL canibalizada: primero fusiona, luego amplía (URL: {{count}}).",
+        "keep-vs-prune": "Otra acción conserva o mejora esta URL; conservar tiene prioridad (URL: {{count}})."
+      },
+      "dependsOn": "Hazlo después de otras acciones: {{count}}.",
+      "open": "Abrir {{tab}}",
+      "more": "Más acciones en las pestañas de módulos: {{count}}."
+    },
+    "export": {
+      "copy": "Copiar HSS + acciones (JSON)",
+      "copied": "Copiado",
+      "failed": "Error al copiar",
+      "hint": "La exportación contiene las entradas y pesos exactos, así que la puntuación puede recalcularse."
+    }
+  },
+  "surgical": {
+    "title": "Reescritura quirúrgica (antes / después)",
+    "location": "Página {{url}}, bajo H{{level}} «{{heading}}» (sección #{{position}}).",
+    "noSections": "No se capturaron secciones H2/H3 para esta página; vuelve a rastrear para obtener sugerencias por sección.",
+    "nothing": "Las secciones H2 ya cubren el tema principal; no se sugiere ningún cambio quirúrgico.",
+    "before": "Antes",
+    "after": "Después",
+    "headingTemplate": "{{heading}}: {{entity}}",
+    "answerFirst": "{{topic}}: [respuesta directa en 1–2 frases que mencione {{terms}}]",
+    "answerFirstNoTerms": "{{topic}}: [respuesta directa en 1–2 frases]",
+    "missing": "Entidades del tema principal que faltan: {{terms}}",
+    "dangling": "La primera frase empieza con «{{opener}}», que remite a un texto anterior. Nombra el sujeto en su lugar.",
+    "drift": "Secciones que se desvían del tema (eliminar o reescribir):",
+    "driftItem": "«{{heading}}» — términos ajenos al tema: {{terms}}",
+    "forecast": "Si esta página alcanza el objetivo de mejora, SFS {{current}} → {{projected}} ({{delta}}), según la simulación del motor SFS.",
+    "noForecast": "No hay previsión de SFS para esta página.",
+    "factGate": "Rellena los [marcadores] solo con hechos verificados. No se publica nada.",
+    "copy": "Copiar HTML «Después»",
+    "copied": "Copiado",
+    "failed": "Error al copiar"
   },
   "scoreDropAlert": {
     "aio": {

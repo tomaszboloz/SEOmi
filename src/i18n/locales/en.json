@@ -3194,7 +3194,8 @@
       "focus": "Site focus",
       "authority": "Topical authority",
       "aio": "AI readiness",
-      "trust": "Entity trust"
+      "trust": "Entity trust",
+      "executive": "Executive"
     },
     "groups": {
       "core": "Overview",
@@ -7977,6 +7978,121 @@
       "expectedDelta": "Expected effect (points)",
       "expectedVsMeasured": "expected {{expected}}, measured {{measured}}"
     }
+  },
+  "executive": {
+    "title": "Executive dashboard",
+    "subtitle": "One view over the module reports of the selected crawl run. Computed locally from saved data: no recrawl, nothing is published.",
+    "workflow": "Workflow: diagnosis → pick a priority → module evidence → What-If → brief / copy / export. Nothing is published to a CMS.",
+    "run": "Run: {{date}}",
+    "runUnsaved": "Run: not saved yet",
+    "hss": {
+      "title": "Holistic Semantic Score (HSS)",
+      "valueAria": "HSS {{value}}",
+      "status": {
+        "complete": "Complete",
+        "partial": "Partial",
+        "insufficient": "Insufficient coverage",
+        "unavailable": "Unavailable"
+      },
+      "coverageAria": "Measured share of HSS weight",
+      "coverage": "Measured weight {{pct}}% · {{count}} of {{total}} modules",
+      "insufficient": "Measured modules carry less than {{min}}% of the weight, so the score is withheld.",
+      "renormalised": "Renormalised over measured modules: {{value}}.",
+      "partialHint": "Partial score: renormalised over the measured modules only. Missing modules are not counted as 0.",
+      "disclaimer": "SEOmi heuristic, not a Google metric. Separate from the technical audit score. Profile {{profile}}."
+    },
+    "modules": {
+      "title": "Modules",
+      "weight": "weight {{weight}}% (effective {{effective}}%)",
+      "open": "Open details"
+    },
+    "module": {
+      "sfs": "Site Focus (SFS)",
+      "tas": "Topical Authority (TAS)",
+      "igos": "Information Gain (IGOS)",
+      "sprs": "Semantic PageRank (SPRS)",
+      "eetv": "Entity trust (EETV)",
+      "sija": "Search intent (SIJA)",
+      "aior": "AI readiness (AIO-R)"
+    },
+    "componentStatus": {
+      "measured": "Measured",
+      "unavailable": "Unavailable",
+      "invalid": "Invalid value",
+      "incompatible": "Other run or stale"
+    },
+    "reason": {
+      "not-provided": "No value was provided.",
+      "not-run": "The module did not run for this crawl.",
+      "domain-aggregation-undefined": "Per-page module: a site-level score is not defined yet, so it is left out instead of averaged.",
+      "sfs-no-scored-pages": "No page could be scored.",
+      "tas-no-reference-map": "Build the reference topic map to measure TAS.",
+      "eetv-no-signals": "No trust signals were observed.",
+      "aio-unavailable": "No page could be scored for AI readiness.",
+      "aio-error": "AI readiness analysis failed.",
+      "aio-cancelled": "AI readiness analysis was cancelled.",
+      "aio-partial": "Some pages were skipped (partial coverage).",
+      "aio-stale": "The AI readiness result is stale.",
+      "out-of-range": "The value is outside 0–100.",
+      "different-run": "The value comes from another crawl run.",
+      "what-if-removed": "Removed in the What-If scenario."
+    },
+    "whatIf": {
+      "title": "What-If (copy of this run)",
+      "hint": "Change measured module values to see how HSS would be recomputed. Nothing is saved; this is not a traffic forecast.",
+      "result": "Scenario HSS {{value}} ({{delta}})",
+      "unavailable": "Scenario HSS is unavailable.",
+      "reset": "Reset"
+    },
+    "actions": {
+      "title": "Action feed",
+      "hint": "Ranked by HSS delta per estimated hour. Deltas come only from the modules' own simulations; without one the delta is unavailable. Not a promise of traffic, citations or ROI.",
+      "empty": "The module reports of this run produced no actions.",
+      "internalLink": "Add an internal link: {{from}} → {{to}}",
+      "delta": "HSS Δ {{value}}",
+      "deltaUnavailable": "HSS Δ unavailable (no declared model)",
+      "moduleDelta": "{{module}} Δ {{value}}",
+      "effort": "Effort estimate {{min}}–{{max}} h",
+      "effortUnknown": "Effort unknown",
+      "scope": "URLs: {{urls}} · evidence: {{evidence}}",
+      "blocked": "Blocked: keep the page or collect data first.",
+      "conflict": {
+        "protected-by-evidence": "Protected by traffic, conversions or links (URLs: {{count}}).",
+        "needs-data": "Telemetry missing or stale; check before removing (URLs: {{count}}).",
+        "merge-vs-expand": "Cannibalised URL: merge first, then expand (URLs: {{count}}).",
+        "keep-vs-prune": "Another action keeps or improves this URL; keep wins (URLs: {{count}})."
+      },
+      "dependsOn": "Do after {{count}} other action(s).",
+      "open": "Open {{tab}}",
+      "more": "{{count}} more actions in the module tabs."
+    },
+    "export": {
+      "copy": "Copy HSS + actions (JSON)",
+      "copied": "Copied",
+      "failed": "Copy failed",
+      "hint": "The export contains the exact inputs and weights, so the score can be recomputed."
+    }
+  },
+  "surgical": {
+    "title": "Surgical rewrite (before / after)",
+    "location": "Page {{url}}, under H{{level}} «{{heading}}» (section #{{position}}).",
+    "noSections": "No H2/H3 sections were captured for this page; re-crawl to get section-level hints.",
+    "nothing": "The H2 sections already cover the Core Topic; no surgical change is suggested.",
+    "before": "Before",
+    "after": "After",
+    "headingTemplate": "{{heading}}: {{entity}}",
+    "answerFirst": "{{topic}}: [direct answer in 1–2 sentences that names {{terms}}]",
+    "answerFirstNoTerms": "{{topic}}: [direct answer in 1–2 sentences]",
+    "missing": "Missing Core Topic entities: {{terms}}",
+    "dangling": "The first sentence opens with “{{opener}}”, which points back to earlier text. Name the subject instead.",
+    "drift": "Sections drifting off-topic (remove or rewrite):",
+    "driftItem": "«{{heading}}» — off-topic terms: {{terms}}",
+    "forecast": "If this page reaches the improvement target, SFS {{current}} → {{projected}} ({{delta}}), simulated by the SFS engine.",
+    "noForecast": "No SFS forecast for this page.",
+    "factGate": "Fill the [placeholders] only with verified facts. Nothing is published.",
+    "copy": "Copy After HTML",
+    "copied": "Copied",
+    "failed": "Copy failed"
   },
   "scoreDropAlert": {
     "aio": {

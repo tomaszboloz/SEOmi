@@ -3194,7 +3194,8 @@
       "focus": "サイトフォーカス",
       "authority": "トピカルオーソリティ",
       "aio": "AI対応度",
-      "trust": "エンティティの信頼性"
+      "trust": "エンティティの信頼性",
+      "executive": "エグゼクティブ"
     },
     "groups": {
       "core": "概要",
@@ -7977,6 +7978,121 @@
       "expectedDelta": "期待される効果（ポイント）",
       "expectedVsMeasured": "期待 {{expected}}、実測 {{measured}}"
     }
+  },
+  "executive": {
+    "title": "エグゼクティブダッシュボード",
+    "subtitle": "選択したクロールのモジュールレポートをまとめて表示します。保存済みデータからローカルで計算し、再クロールや公開は行いません。",
+    "workflow": "流れ：診断 → 優先度の選択 → モジュールの根拠 → What-If → ブリーフ / コピー / エクスポート。CMS への公開は行いません。",
+    "run": "クロール：{{date}}",
+    "runUnsaved": "クロール：未保存",
+    "hss": {
+      "title": "Holistic Semantic Score（HSS）",
+      "valueAria": "HSS {{value}}",
+      "status": {
+        "complete": "完全",
+        "partial": "部分的",
+        "insufficient": "カバレッジ不足",
+        "unavailable": "利用不可"
+      },
+      "coverageAria": "HSS の重みのうち測定済みの割合",
+      "coverage": "測定済みの重み {{pct}}% · {{total}} モジュール中 {{count}}",
+      "insufficient": "測定済みモジュールの重みが {{min}}% 未満のため、スコアは表示されません。",
+      "renormalised": "測定済みモジュールで再正規化した値：{{value}}。",
+      "partialHint": "部分スコア：測定済みモジュールのみで再正規化しています。欠けているモジュールは 0 として数えません。",
+      "disclaimer": "SEOmi のヒューリスティックであり、Google の指標ではありません。技術監査スコアとは別です。プロファイル {{profile}}。"
+    },
+    "modules": {
+      "title": "モジュール",
+      "weight": "重み {{weight}}%（実効 {{effective}}%）",
+      "open": "詳細を開く"
+    },
+    "module": {
+      "sfs": "サイトフォーカス（SFS）",
+      "tas": "トピック権威性（TAS）",
+      "igos": "情報利得（IGOS）",
+      "sprs": "セマンティック PageRank（SPRS）",
+      "eetv": "エンティティ信頼（EETV）",
+      "sija": "検索意図（SIJA）",
+      "aior": "AI 対応度（AIO-R）"
+    },
+    "componentStatus": {
+      "measured": "測定済み",
+      "unavailable": "利用不可",
+      "invalid": "無効な値",
+      "incompatible": "別のクロールまたは古いデータ"
+    },
+    "reason": {
+      "not-provided": "値が指定されていません。",
+      "not-run": "このクロールではモジュールが実行されていません。",
+      "domain-aggregation-undefined": "ページ単位のモジュールです。サイト単位のスコアが未定義のため、平均せずに除外しています。",
+      "sfs-no-scored-pages": "評価できたページがありません。",
+      "tas-no-reference-map": "TAS を測定するには参照トピックマップを作成してください。",
+      "eetv-no-signals": "信頼シグナルが見つかりませんでした。",
+      "aio-unavailable": "AI 対応度を評価できたページがありません。",
+      "aio-error": "AI 対応度の分析に失敗しました。",
+      "aio-cancelled": "AI 対応度の分析はキャンセルされました。",
+      "aio-partial": "一部のページをスキップしました（部分カバレッジ）。",
+      "aio-stale": "AI 対応度の結果が古くなっています。",
+      "out-of-range": "値が 0～100 の範囲外です。",
+      "different-run": "値は別のクロールのものです。",
+      "what-if-removed": "What-If シナリオで除外しました。"
+    },
+    "whatIf": {
+      "title": "What-If（このクロールのコピー）",
+      "hint": "測定済みモジュールの値を変更すると、HSS の再計算結果を確認できます。何も保存されず、トラフィック予測でもありません。",
+      "result": "シナリオの HSS {{value}}（{{delta}}）",
+      "unavailable": "シナリオの HSS は利用できません。",
+      "reset": "リセット"
+    },
+    "actions": {
+      "title": "アクションフィード",
+      "hint": "推定 1 時間あたりの HSS 差分で並べています。差分は各モジュール自身のシミュレーションのみから算出し、ない場合は利用不可です。トラフィック、引用、ROI を約束するものではありません。",
+      "empty": "このクロールのモジュールレポートからアクションは生成されませんでした。",
+      "internalLink": "内部リンクを追加：{{from}} → {{to}}",
+      "delta": "HSS Δ {{value}}",
+      "deltaUnavailable": "HSS Δ 利用不可（宣言されたモデルなし）",
+      "moduleDelta": "{{module}} Δ {{value}}",
+      "effort": "推定工数 {{min}}～{{max}} 時間",
+      "effortUnknown": "工数不明",
+      "scope": "URL：{{urls}} · 根拠：{{evidence}}",
+      "blocked": "ブロック中：ページを維持するか、先にデータを収集してください。",
+      "conflict": {
+        "protected-by-evidence": "トラフィック、コンバージョン、リンクにより保護されています（URL：{{count}}）。",
+        "needs-data": "テレメトリがないか古いため、削除前に確認してください（URL：{{count}}）。",
+        "merge-vs-expand": "カニバリゼーションのある URL：先に統合し、その後拡充してください（URL：{{count}}）。",
+        "keep-vs-prune": "別のアクションがこの URL を維持・改善します。維持を優先します（URL：{{count}}）。"
+      },
+      "dependsOn": "他のアクションの後に実施：{{count}}。",
+      "open": "{{tab}} を開く",
+      "more": "その他のアクションはモジュールのタブにあります：{{count}}。"
+    },
+    "export": {
+      "copy": "HSS とアクションをコピー（JSON）",
+      "copied": "コピーしました",
+      "failed": "コピーに失敗しました",
+      "hint": "エクスポートには正確な入力と重みが含まれるため、スコアを再計算できます。"
+    }
+  },
+  "surgical": {
+    "title": "ピンポイント修正（修正前 / 修正後）",
+    "location": "ページ {{url}}、H{{level}}「{{heading}}」の下（セクション #{{position}}）。",
+    "noSections": "このページでは H2/H3 セクションが取得されていません。セクション単位のヒントを得るには再クロールしてください。",
+    "nothing": "H2 セクションはすでにコアトピックをカバーしています。ピンポイント修正の提案はありません。",
+    "before": "修正前",
+    "after": "修正後",
+    "headingTemplate": "{{heading}}：{{entity}}",
+    "answerFirst": "{{topic}}：[{{terms}} に触れる 1～2 文の直接的な回答]",
+    "answerFirstNoTerms": "{{topic}}：[1～2 文の直接的な回答]",
+    "missing": "不足しているコアトピックのエンティティ：{{terms}}",
+    "dangling": "最初の文が「{{opener}}」で始まり、前の文章を参照しています。主語を明示してください。",
+    "drift": "トピックから外れているセクション（削除または書き直し）：",
+    "driftItem": "「{{heading}}」— トピック外の語：{{terms}}",
+    "forecast": "このページが改善目標に達した場合、SFS {{current}} → {{projected}}（{{delta}}）。SFS エンジンによるシミュレーションです。",
+    "noForecast": "このページの SFS 予測はありません。",
+    "factGate": "[プレースホルダー] には検証済みの事実のみを入れてください。何も公開されません。",
+    "copy": "修正後の HTML をコピー",
+    "copied": "コピーしました",
+    "failed": "コピーに失敗しました"
   },
   "scoreDropAlert": {
     "aio": {
