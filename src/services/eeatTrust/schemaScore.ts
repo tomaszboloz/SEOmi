@@ -1,4 +1,5 @@
 import { buildRegistry, isOrganizationNode, type SchemaNode } from './graph';
+import type { GraphAudit } from './graphAudit';
 import type { AuthorEntity, SchemaGraphDetail, ScoringProfile, YmylCategory } from './types';
 import { reviewerApplicable } from './ymyl';
 
@@ -68,4 +69,17 @@ export const schemaScore = (detail: SchemaGraphDetail, ymyl: YmylCategory | bool
   const keys = (Object.keys(SCHEMA_WEIGHTS) as Array<keyof typeof SCHEMA_WEIGHTS>).filter((key) => key !== 'reviewer' || useReviewer);
   const total = keys.reduce((sum, key) => sum + SCHEMA_WEIGHTS[key], 0);
   return Math.round((keys.reduce((sum, key) => sum + parts[key] * SCHEMA_WEIGHTS[key], 0) / total) * 100);
+};
+
+/** Reference multiplier for a schema graph split into disconnected islands on every audited page (#65 GEM-65-03). */
+export const ISLAND_MULTIPLIER = 0.65;
+
+/**
+ * claim-backed-v1 only: scales S_schema by the share of audited pages whose graph is split, so all
+ * pages split = x.65 and one split page out of many costs little. Legacy and unaudited crawls stay untouched.
+ */
+export const islandPenalty = (score: number, audit: Pick<GraphAudit, 'pagesAudited' | 'islands'>, profile: ScoringProfile = 'legacy'): number => {
+  if (profile === 'legacy' || !audit.pagesAudited || !audit.islands.length) return score;
+  const share = Math.min(1, audit.islands.length / audit.pagesAudited);
+  return Math.round(score * (1 - (1 - ISLAND_MULTIPLIER) * share));
 };
