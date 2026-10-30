@@ -2,6 +2,7 @@
 
 use super::data::{list, num};
 use super::focus_cards::{core_card, count, kpis};
+use super::focus_protection::protection;
 use super::focus_tables as tables;
 use super::focus_text::{arg, coded};
 use super::strings::focus::{self as f, BAND, NOTE};
@@ -106,6 +107,9 @@ impl Doc {
         self.skip(6.0);
         self.data_table(&tables::pages(focus));
         self.data_table(&tables::recommendations(focus));
+        if let Some(table) = protection(focus) {
+            self.data_table(&table);
+        }
         if !list(focus, "sub_sites").is_empty() {
             self.data_table(&tables::sub_sites(focus));
         }

@@ -6056,6 +6056,67 @@
         "gap": {
           "thin-subtopic": "薄いサブトピック「{{0}}」: 扱っているのはページの {{1}}%({{2}} ページ)のみです。用語: {{3}}。",
           "competitor-terms": "自社サイトにない競合の用語: {{3}}。"
+        },
+        "protection": {
+          "title": "URL 保護チェック",
+          "intro": "TRS が {{0}} 未満のページに対する参考チェックです。TRS が {{0}} 以上ならページを維持し、PRI が {{1}} 以上なら保護します。同値は保護扱いです。削除・リダイレクト・noindex は自動では行いません。",
+          "noTelemetry": "GSC・GA4・被リンクのデータがないため、どのページも判断の前にデータが必要です。",
+          "colDecision": "判断と理由",
+          "colEvidence": "根拠",
+          "colOptions": "手動の選択肢と条件",
+          "unknown": "{{0}}: 不明（{{1}}）",
+          "measured": "{{0}}: {{1}}（{{2}}）",
+          "onlyIf": "条件: {{0}}",
+          "decision": {
+            "keep": "維持",
+            "shield": "保護",
+            "needs-data": "データ必要",
+            "semantic-bridge": "セマンティックブリッジ",
+            "prune-candidate": "整理候補として確認"
+          },
+          "reason": {
+            "trs-above-threshold": "TRS が十分に高い",
+            "revenue": "収益を計測済み",
+            "pri-above-threshold": "流入・コンバージョン・リンクが保護しきい値に達しています",
+            "telemetry-incomplete": "テレメトリが欠落、古い、またはサンプリングされています",
+            "low-pri-measured": "計測された指標は低めです。まず事業上の価値を確認してください",
+            "conversions": "コンバージョンを計測済み"
+          },
+          "signal": {
+            "clicks": "クリック",
+            "conversions": "コンバージョン",
+            "referringDomains": "参照ドメイン",
+            "revenue": "収益"
+          },
+          "alternative": {
+            "confirm-revenue-currency": "収益の通貨を確認",
+            "check-gsc-ga4-backlinks-access": "GSC・GA4・被リンクへのアクセスを確認",
+            "link-to-pillar": "ピラーページへリンク",
+            "redirect-301-to-relevant-target": "関連ページへ 301",
+            "canonical-for-duplicates": "重複には canonical",
+            "keep-and-rewrite": "維持して書き直す",
+            "noindex-or-410-after-review": "確認後に noindex または 410"
+          },
+          "condition": {
+            "currency-from-analytics": "通貨は推測ではなく分析ツールから取得",
+            "fresh-90-day-window": "最新で完全な 90 日間のデータがある",
+            "real-topic-relation": "トピックが実際に関連している",
+            "relevant-target-same-intent": "移転先が同じ検索意図に応える",
+            "no-measured-value": "クリック・コンバージョン・収益・リンクが計測されていない",
+            "update-links-and-sitemap": "内部リンクとサイトマップを更新する",
+            "near-duplicate-only": "内容がほぼ重複している",
+            "owner-confirms-value": "所有者がページの価値を確認した",
+            "not-via-robots-txt": "robots.txt ではなくページ側で設定する",
+            "business-review": "担当者がビジネスへの影響を確認した"
+          },
+          "state": {
+            "measured": "計測済み",
+            "partial-history": "履歴が不完全",
+            "stale": "古いデータ",
+            "sampled": "サンプル",
+            "missing-permission": "権限なし",
+            "unavailable": "利用不可"
+          }
         }
       },
       "authority": {

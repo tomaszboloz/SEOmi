@@ -1,35 +1,22 @@
 import { useTranslation } from 'react-i18next';
 import { HelpTip } from '@/components/Help/HelpTip';
 import type { SiteFocusReport } from '@/services/siteFocus';
-import { decideProtection, DEFAULT_PRI_THRESHOLD, DEFAULT_TRS_THRESHOLD } from '@/services/urlProtection';
-import { ensureUrlTelemetry, type UrlTelemetry } from '@/services/urlTelemetry';
+import { DEFAULT_PRI_THRESHOLD, DEFAULT_TRS_THRESHOLD, protectionRows } from '@/services/urlProtection';
 import { ProtectionRow } from './ProtectionRow';
 import { TelemetrySources } from './TelemetrySources';
-
-const MAX_ROWS = 20;
-const NONE = { state: 'unavailable', value: null } as const;
-
-const keyOf = (url: string): string => url.replace(/\/+$/, '');
 
 /** Advisory PRI guardrail for low-TRS pages. No snapshot means an empty state, never zeros. */
 export const ProtectionPanel = ({ report, projectId }: { report: SiteFocusReport; projectId?: string | null }) => {
   const { t } = useTranslation();
-  const low = report.pages.filter((page) => !page.skipped && page.trs < DEFAULT_TRS_THRESHOLD);
-  const snapshot = projectId ? ensureUrlTelemetry(projectId, report.pages.map((page) => page.url)) : null;
-  if (!low.length) return null;
-  const byUrl = new Map((snapshot?.urls ?? []).map((row) => [keyOf(row.url), row]));
-  const rows = low.slice(0, MAX_ROWS).map((page) => {
-    const found = byUrl.get(keyOf(page.url));
-    const telemetry: UrlTelemetry = found ?? { url: page.url, gsc: NONE, ga4: NONE, backlinks: NONE, revenue: NONE };
-    return { page, result: decideProtection(page.trs, telemetry) };
-  });
+  const { snapshot, rows } = protectionRows(report, projectId);
+  if (!rows.length) return null;
   return (
     <section className="space-y-2 rounded-lg border border-white/10 p-3 text-xs" data-testid="protection-panel">
       <h3 className="flex items-center gap-2 font-semibold">{t('focus.protection.title')}<HelpTip id="focus.protection" /></h3>
       <TelemetrySources snapshot={snapshot} />
       {!snapshot && <p role="status" data-testid="protection-empty">{t('focus.protection.empty')}</p>}
       <ul className="space-y-1">
-        {rows.map(({ page, result }) => <ProtectionRow key={page.url} url={page.url} result={result} />)}
+        {rows.map(({ url, result }) => <ProtectionRow key={url} url={url} result={result} />)}
       </ul>
       <p data-testid="protection-rule">{t('focus.protection.rule', { trs: DEFAULT_TRS_THRESHOLD, pri: DEFAULT_PRI_THRESHOLD })}</p>
       <p>{t('focus.protection.advisory')}</p>

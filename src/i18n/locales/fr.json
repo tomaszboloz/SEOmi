@@ -6056,6 +6056,67 @@
         "gap": {
           "thin-subtopic": "Sous-thème peu couvert « {{0}} » : seulement {{1}} % des pages le traitent ({{2}} pages). Termes : {{3}}.",
           "competitor-terms": "Termes des concurrents absents de votre site : {{3}}."
+        },
+        "protection": {
+          "title": "Contrôle de protection des URL",
+          "intro": "Contrôle consultatif des pages dont le TRS est inférieur à {{0}}. Un TRS de {{0}} ou plus conserve la page et un PRI de {{1}} ou plus la protège ; une égalité compte comme protégée. Rien n’est supprimé, redirigé ou passé en noindex automatiquement.",
+          "noTelemetry": "Aucune donnée GSC, GA4 ou backlinks n’était disponible : chaque page a besoin de données avant toute décision.",
+          "colDecision": "Décision et raisons",
+          "colEvidence": "Preuves",
+          "colOptions": "Options manuelles et conditions",
+          "unknown": "{{0}} : inconnu ({{1}})",
+          "measured": "{{0}} : {{1}} ({{2}})",
+          "onlyIf": "seulement si : {{0}}",
+          "decision": {
+            "keep": "Conserver",
+            "shield": "Protéger",
+            "needs-data": "Données requises",
+            "semantic-bridge": "Pont sémantique",
+            "prune-candidate": "À examiner pour élagage"
+          },
+          "reason": {
+            "trs-above-threshold": "Le TRS est assez élevé",
+            "revenue": "Revenu mesuré",
+            "pri-above-threshold": "Trafic, conversions ou liens atteignent le seuil de protection",
+            "telemetry-incomplete": "Télémétrie absente, périmée ou échantillonnée",
+            "low-pri-measured": "Les signaux mesurés sont faibles ; vérifiez d'abord la valeur métier",
+            "conversions": "Conversions mesurées"
+          },
+          "signal": {
+            "clicks": "Clics",
+            "conversions": "Conversions",
+            "referringDomains": "Domaines référents",
+            "revenue": "Revenus"
+          },
+          "alternative": {
+            "confirm-revenue-currency": "Confirmer la devise des revenus",
+            "check-gsc-ga4-backlinks-access": "Vérifier l’accès à GSC, GA4 et aux backlinks",
+            "link-to-pillar": "Lier vers la page pilier",
+            "redirect-301-to-relevant-target": "301 vers une page pertinente",
+            "canonical-for-duplicates": "Canonical pour les doublons",
+            "keep-and-rewrite": "Conserver et réécrire",
+            "noindex-or-410-after-review": "noindex ou 410 après examen"
+          },
+          "condition": {
+            "currency-from-analytics": "la devise vient de l’analytique, pas d’une supposition",
+            "fresh-90-day-window": "une fenêtre récente et complète de 90 jours est disponible",
+            "real-topic-relation": "les sujets sont réellement liés",
+            "relevant-target-same-intent": "la cible répond à la même intention",
+            "no-measured-value": "aucun clic, conversion, revenu ni lien n’a été mesuré",
+            "update-links-and-sitemap": "les liens internes et le sitemap sont mis à jour",
+            "near-duplicate-only": "le contenu est un quasi-doublon",
+            "owner-confirms-value": "le propriétaire confirme la valeur de la page",
+            "not-via-robots-txt": "défini dans la page, pas dans robots.txt",
+            "business-review": "une personne a examiné l’impact business"
+          },
+          "state": {
+            "measured": "Mesuré",
+            "partial-history": "Historique partiel",
+            "stale": "Obsolète",
+            "sampled": "Échantillon",
+            "missing-permission": "Autorisation manquante",
+            "unavailable": "Indisponible"
+          }
         }
       },
       "authority": {

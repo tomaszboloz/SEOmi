@@ -6056,6 +6056,67 @@
         "gap": {
           "thin-subtopic": "内容单薄的子主题“{{0}}”:仅有 {{1}}% 的页面涉及(共 {{2}} 个页面)。相关词:{{3}}。",
           "competitor-terms": "竞争对手使用而你的站点缺失的词:{{3}}。"
+        },
+        "protection": {
+          "title": "URL 保护检查",
+          "intro": "针对 TRS 低于 {{0}} 的页面的建议性检查。TRS 达到 {{0}} 或以上则保留页面，PRI 达到 {{1}} 或以上则保护页面；相等视为受保护。不会自动删除、重定向或设置 noindex。",
+          "noTelemetry": "没有可用的 GSC、GA4 或外链数据，因此每个页面在做决定前都需要数据。",
+          "colDecision": "决定与原因",
+          "colEvidence": "依据",
+          "colOptions": "人工选项与条件",
+          "unknown": "{{0}}：未知（{{1}}）",
+          "measured": "{{0}}：{{1}}（{{2}}）",
+          "onlyIf": "仅当：{{0}}",
+          "decision": {
+            "keep": "保留",
+            "shield": "保护",
+            "needs-data": "需要数据",
+            "semantic-bridge": "语义桥接",
+            "prune-candidate": "待审查（可修剪）"
+          },
+          "reason": {
+            "trs-above-threshold": "TRS 足够高",
+            "revenue": "已测得收入",
+            "pri-above-threshold": "流量、转化或链接达到保护阈值",
+            "telemetry-incomplete": "遥测数据缺失、过期或经过抽样",
+            "low-pri-measured": "已测信号偏低；请先评估业务价值",
+            "conversions": "已测得转化"
+          },
+          "signal": {
+            "clicks": "点击",
+            "conversions": "转化",
+            "referringDomains": "引荐域名",
+            "revenue": "收入"
+          },
+          "alternative": {
+            "confirm-revenue-currency": "确认收入货币",
+            "check-gsc-ga4-backlinks-access": "检查 GSC、GA4 和外链的访问权限",
+            "link-to-pillar": "链接到支柱页面",
+            "redirect-301-to-relevant-target": "301 到相关页面",
+            "canonical-for-duplicates": "重复内容使用 canonical",
+            "keep-and-rewrite": "保留并改写",
+            "noindex-or-410-after-review": "审核后再 noindex 或 410"
+          },
+          "condition": {
+            "currency-from-analytics": "货币来自分析数据，而非猜测",
+            "fresh-90-day-window": "有最新且完整的 90 天数据",
+            "real-topic-relation": "主题确实相关",
+            "relevant-target-same-intent": "目标页面满足相同的搜索意图",
+            "no-measured-value": "未测得点击、转化、收入或链接",
+            "update-links-and-sitemap": "同步更新内部链接和站点地图",
+            "near-duplicate-only": "内容几乎重复",
+            "owner-confirms-value": "所有者确认页面有价值",
+            "not-via-robots-txt": "在页面中设置，而不是在 robots.txt 中",
+            "business-review": "已有人审核业务影响"
+          },
+          "state": {
+            "measured": "已测量",
+            "partial-history": "历史不完整",
+            "stale": "已过期",
+            "sampled": "样本",
+            "missing-permission": "缺少权限",
+            "unavailable": "不可用"
+          }
         }
       },
       "authority": {

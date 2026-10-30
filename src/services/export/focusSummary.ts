@@ -3,6 +3,7 @@ import { buildPagePlaybook, type CodeParams, type PageFocus, type SiteFocusRepor
 import { isCompletedRun } from '@/services/siteFocusMonitoring/analysis';
 import { buildProjectRunReport } from '@/services/siteFocusMonitoring/projectReport';
 import type { CrawlRunRecord } from '@/types';
+import { summarizeProtection, type FocusPdfProtection } from './focusProtection';
 
 /** Worst pages listed in the PDF; the full per-page model stays in the app. */
 export const FOCUS_PDF_PAGES = 25;
@@ -28,6 +29,8 @@ export interface FocusPdfSummary {
   recommendations: Array<{ code: string; params: CodeParams; gain: number }>;
   sub_sites: Array<{ label: string; path_prefix: string; share_pct: number; score: number }>;
   gaps: Array<{ code: string; label: string; terms: string[]; coverage_pct: number; pages_covering: number }>;
+  /** Advisory URL protection check for low-TRS pages (#81); absent when no page is below the threshold. */
+  protection?: FocusPdfProtection;
 }
 
 const byWorst = (a: PageFocus, b: PageFocus): number => a.trs - b.trs || (a.url < b.url ? -1 : 1);
@@ -84,5 +87,7 @@ export const summarizeSiteFocus = (report: SiteFocusReport): FocusPdfSummary => 
 /** Summary for a completed run, honouring the project's manual core topic; undefined when nothing can be scored. */
 export const crawlFocusSummary = (run: CrawlRunRecord): FocusPdfSummary | undefined => {
   if (!isCompletedRun(run)) return undefined;
-  return summarizeSiteFocus(buildProjectRunReport(run, run.projectId));
+  const report = buildProjectRunReport(run, run.projectId);
+  const protection = summarizeProtection(report, run.projectId);
+  return { ...summarizeSiteFocus(report), ...(protection ? { protection } : {}) };
 };

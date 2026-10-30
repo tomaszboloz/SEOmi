@@ -6056,6 +6056,67 @@
         "gap": {
           "thin-subtopic": "Subtema pouco coberto \"{{0}}\": apenas {{1}}% das páginas o abordam ({{2}} páginas). Termos: {{3}}.",
           "competitor-terms": "Termos dos concorrentes ausentes no seu site: {{3}}."
+        },
+        "protection": {
+          "title": "Verificação de proteção de URL",
+          "intro": "Verificação consultiva para páginas com TRS abaixo de {{0}}. TRS de {{0}} ou mais mantém a página e PRI de {{1}} ou mais protege-a; um empate conta como protegido. Nada é eliminado, redirecionado ou marcado como noindex automaticamente.",
+          "noTelemetry": "Não havia dados do GSC, GA4 ou backlinks, por isso cada página precisa de dados antes de qualquer decisão.",
+          "colDecision": "Decisão e motivos",
+          "colEvidence": "Evidência",
+          "colOptions": "Opções manuais e condições",
+          "unknown": "{{0}}: desconhecido ({{1}})",
+          "measured": "{{0}}: {{1}} ({{2}})",
+          "onlyIf": "apenas se: {{0}}",
+          "decision": {
+            "keep": "Manter",
+            "shield": "Proteger",
+            "needs-data": "Faltam dados",
+            "semantic-bridge": "Ponte semântica",
+            "prune-candidate": "Revisar para poda"
+          },
+          "reason": {
+            "trs-above-threshold": "O TRS é alto o bastante",
+            "revenue": "Receita medida",
+            "pri-above-threshold": "Tráfego, conversões ou links atingem o limite de proteção",
+            "telemetry-incomplete": "Telemetria ausente, desatualizada ou amostrada",
+            "low-pri-measured": "Os sinais medidos são baixos; verifique primeiro o valor de negócio",
+            "conversions": "Conversões medidas"
+          },
+          "signal": {
+            "clicks": "Cliques",
+            "conversions": "Conversões",
+            "referringDomains": "Domínios de referência",
+            "revenue": "Receita"
+          },
+          "alternative": {
+            "confirm-revenue-currency": "Confirmar a moeda da receita",
+            "check-gsc-ga4-backlinks-access": "Verificar acesso ao GSC, GA4 e backlinks",
+            "link-to-pillar": "Ligar à página pilar",
+            "redirect-301-to-relevant-target": "301 para uma página relevante",
+            "canonical-for-duplicates": "Canonical para duplicados",
+            "keep-and-rewrite": "Manter e reescrever",
+            "noindex-or-410-after-review": "noindex ou 410 após revisão"
+          },
+          "condition": {
+            "currency-from-analytics": "a moeda vem da análise, não de um palpite",
+            "fresh-90-day-window": "existe uma janela de 90 dias recente e completa",
+            "real-topic-relation": "os temas estão realmente relacionados",
+            "relevant-target-same-intent": "o destino responde à mesma intenção",
+            "no-measured-value": "não foram medidos cliques, conversões, receita nem links",
+            "update-links-and-sitemap": "os links internos e o sitemap são atualizados",
+            "near-duplicate-only": "o conteúdo é quase um duplicado",
+            "owner-confirms-value": "o proprietário confirma o valor da página",
+            "not-via-robots-txt": "definido na página, não no robots.txt",
+            "business-review": "uma pessoa avaliou o impacto no negócio"
+          },
+          "state": {
+            "measured": "Medido",
+            "partial-history": "Histórico parcial",
+            "stale": "Desatualizado",
+            "sampled": "Amostra",
+            "missing-permission": "Sem permissão",
+            "unavailable": "Indisponível"
+          }
         }
       },
       "authority": {

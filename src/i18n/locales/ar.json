@@ -6056,6 +6056,67 @@
         "gap": {
           "thin-subtopic": "موضوع فرعي ضعيف \"{{0}}\": تغطيه {{1}}% فقط من الصفحات (عدد الصفحات: {{2}}). المصطلحات: {{3}}.",
           "competitor-terms": "مصطلحات المنافسين غير الموجودة في موقعك: {{3}}."
+        },
+        "protection": {
+          "title": "فحص حماية عناوين URL",
+          "intro": "فحص استشاري للصفحات التي يقل TRS فيها عن {{0}}. يُبقي TRS بقيمة {{0}} أو أكثر الصفحة، ويحميها PRI بقيمة {{1}} أو أكثر؛ التعادل يُعد حماية. لا يُحذف أي شيء ولا يُعاد توجيهه ولا يُضبط على noindex تلقائيًا.",
+          "noTelemetry": "لم تتوفر بيانات GSC أو GA4 أو الروابط الخلفية، لذا تحتاج كل صفحة إلى بيانات قبل أي قرار.",
+          "colDecision": "القرار والأسباب",
+          "colEvidence": "الأدلة",
+          "colOptions": "الخيارات اليدوية والشروط",
+          "unknown": "{{0}}: غير معروف ({{1}})",
+          "measured": "{{0}}: {{1}} ({{2}})",
+          "onlyIf": "فقط إذا: {{0}}",
+          "decision": {
+            "keep": "إبقاء",
+            "shield": "حماية",
+            "needs-data": "بيانات مطلوبة",
+            "semantic-bridge": "جسر دلالي",
+            "prune-candidate": "مراجعة للتقليم"
+          },
+          "reason": {
+            "trs-above-threshold": "TRS مرتفع بما يكفي",
+            "revenue": "تم قياس الإيرادات",
+            "pri-above-threshold": "الزيارات أو التحويلات أو الروابط بلغت حد الحماية",
+            "telemetry-incomplete": "بيانات القياس مفقودة أو قديمة أو مأخوذة بالعينة",
+            "low-pri-measured": "الإشارات المقاسة منخفضة؛ افحص القيمة التجارية أولًا",
+            "conversions": "تم قياس التحويلات"
+          },
+          "signal": {
+            "clicks": "النقرات",
+            "conversions": "التحويلات",
+            "referringDomains": "النطاقات المُحيلة",
+            "revenue": "الإيرادات"
+          },
+          "alternative": {
+            "confirm-revenue-currency": "تأكيد عملة الإيرادات",
+            "check-gsc-ga4-backlinks-access": "التحقق من الوصول إلى GSC وGA4 والروابط الخلفية",
+            "link-to-pillar": "الربط بالصفحة المحورية",
+            "redirect-301-to-relevant-target": "إعادة توجيه 301 إلى صفحة ذات صلة",
+            "canonical-for-duplicates": "Canonical للمحتوى المكرر",
+            "keep-and-rewrite": "الإبقاء وإعادة الكتابة",
+            "noindex-or-410-after-review": "noindex أو 410 بعد المراجعة"
+          },
+          "condition": {
+            "currency-from-analytics": "العملة مأخوذة من التحليلات وليست تخمينًا",
+            "fresh-90-day-window": "تتوفر نافذة حديثة وكاملة لمدة 90 يومًا",
+            "real-topic-relation": "الموضوعات مرتبطة فعلًا",
+            "relevant-target-same-intent": "الصفحة الهدف تلبي النية نفسها",
+            "no-measured-value": "لم تُقس أي نقرات أو تحويلات أو إيرادات أو روابط",
+            "update-links-and-sitemap": "تُحدّث الروابط الداخلية وخريطة الموقع",
+            "near-duplicate-only": "المحتوى شبه مكرر",
+            "owner-confirms-value": "المالك يؤكد قيمة الصفحة",
+            "not-via-robots-txt": "يُضبط داخل الصفحة وليس في robots.txt",
+            "business-review": "راجع شخص الأثر على الأعمال"
+          },
+          "state": {
+            "measured": "تم القياس",
+            "partial-history": "سجل جزئي",
+            "stale": "بيانات قديمة",
+            "sampled": "عينة",
+            "missing-permission": "الإذن مفقود",
+            "unavailable": "غير متاح"
+          }
         }
       },
       "authority": {

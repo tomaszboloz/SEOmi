@@ -6056,6 +6056,67 @@
         "gap": {
           "thin-subtopic": "Thin subtopic \"{{0}}\": only {{1}}% of pages cover it ({{2}} pages). Terms: {{3}}.",
           "competitor-terms": "Competitor terms missing on your site: {{3}}."
+        },
+        "protection": {
+          "title": "URL protection check",
+          "intro": "Advisory check for pages with TRS below {{0}}. TRS of {{0}} or more keeps a page and PRI of {{1}} or more protects it; ties count as protected. Nothing is deleted, redirected or noindexed automatically.",
+          "noTelemetry": "No GSC, GA4 or backlink data was available, so every page needs data before any decision.",
+          "colDecision": "Decision and reasons",
+          "colEvidence": "Evidence",
+          "colOptions": "Manual options and conditions",
+          "unknown": "{{0}}: unknown ({{1}})",
+          "measured": "{{0}}: {{1}} ({{2}})",
+          "onlyIf": "only if: {{0}}",
+          "decision": {
+            "keep": "Keep",
+            "shield": "Protect",
+            "needs-data": "Needs data",
+            "semantic-bridge": "Semantic bridge",
+            "prune-candidate": "Review for pruning"
+          },
+          "reason": {
+            "trs-above-threshold": "TRS is high enough",
+            "revenue": "Revenue measured",
+            "pri-above-threshold": "Traffic, conversions or links reach the protection threshold",
+            "telemetry-incomplete": "Telemetry is missing, stale or sampled",
+            "low-pri-measured": "Measured signals are low; check business value first",
+            "conversions": "Conversions measured"
+          },
+          "signal": {
+            "clicks": "Clicks",
+            "conversions": "Conversions",
+            "referringDomains": "Referring domains",
+            "revenue": "Revenue"
+          },
+          "alternative": {
+            "confirm-revenue-currency": "Confirm the revenue currency",
+            "check-gsc-ga4-backlinks-access": "Check GSC, GA4 and backlink access",
+            "link-to-pillar": "Link to the pillar page",
+            "redirect-301-to-relevant-target": "301 to a relevant page",
+            "canonical-for-duplicates": "Canonical for duplicates",
+            "keep-and-rewrite": "Keep and rewrite",
+            "noindex-or-410-after-review": "noindex or 410 after review"
+          },
+          "condition": {
+            "currency-from-analytics": "the currency comes from analytics, not a guess",
+            "fresh-90-day-window": "a fresh, complete 90-day window is available",
+            "real-topic-relation": "the topics are really related",
+            "relevant-target-same-intent": "the target answers the same intent",
+            "no-measured-value": "no clicks, conversions, revenue or links were measured",
+            "update-links-and-sitemap": "internal links and the sitemap are updated",
+            "near-duplicate-only": "the content is a near duplicate",
+            "owner-confirms-value": "the owner confirms the page has value",
+            "not-via-robots-txt": "set in the page, not in robots.txt",
+            "business-review": "a person reviewed the business impact"
+          },
+          "state": {
+            "measured": "Measured",
+            "partial-history": "Partial history",
+            "stale": "Stale",
+            "sampled": "Sampled",
+            "missing-permission": "Missing permission",
+            "unavailable": "Unavailable"
+          }
         }
       },
       "authority": {

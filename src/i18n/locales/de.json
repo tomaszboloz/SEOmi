@@ -6056,6 +6056,67 @@
         "gap": {
           "thin-subtopic": "Dünn abgedecktes Unterthema „{{0}}“: nur {{1}} % der Seiten behandeln es ({{2}} Seiten). Begriffe: {{3}}.",
           "competitor-terms": "Begriffe der Konkurrenz, die auf deiner Website fehlen: {{3}}."
+        },
+        "protection": {
+          "title": "URL-Schutzprüfung",
+          "intro": "Beratende Prüfung für Seiten mit TRS unter {{0}}. Ein TRS ab {{0}} behält eine Seite, ein PRI ab {{1}} schützt sie; Gleichstand gilt als geschützt. Nichts wird automatisch gelöscht, weitergeleitet oder auf noindex gesetzt.",
+          "noTelemetry": "Keine GSC-, GA4- oder Backlink-Daten verfügbar, daher braucht jede Seite vor einer Entscheidung Daten.",
+          "colDecision": "Entscheidung und Gründe",
+          "colEvidence": "Belege",
+          "colOptions": "Manuelle Optionen und Bedingungen",
+          "unknown": "{{0}}: unbekannt ({{1}})",
+          "measured": "{{0}}: {{1}} ({{2}})",
+          "onlyIf": "nur wenn: {{0}}",
+          "decision": {
+            "keep": "Behalten",
+            "shield": "Schützen",
+            "needs-data": "Daten nötig",
+            "semantic-bridge": "Semantische Brücke",
+            "prune-candidate": "Zur Bereinigung prüfen"
+          },
+          "reason": {
+            "trs-above-threshold": "TRS ist hoch genug",
+            "revenue": "Umsatz gemessen",
+            "pri-above-threshold": "Traffic, Conversions oder Links erreichen die Schutzschwelle",
+            "telemetry-incomplete": "Telemetrie fehlt, ist veraltet oder gesampelt",
+            "low-pri-measured": "Gemessene Signale sind niedrig; zuerst den Geschäftswert prüfen",
+            "conversions": "Conversions gemessen"
+          },
+          "signal": {
+            "clicks": "Klicks",
+            "conversions": "Conversions",
+            "referringDomains": "Verweisende Domains",
+            "revenue": "Umsatz"
+          },
+          "alternative": {
+            "confirm-revenue-currency": "Umsatzwährung bestätigen",
+            "check-gsc-ga4-backlinks-access": "Zugriff auf GSC, GA4 und Backlinks prüfen",
+            "link-to-pillar": "Auf die Pillar-Seite verlinken",
+            "redirect-301-to-relevant-target": "301 auf eine relevante Seite",
+            "canonical-for-duplicates": "Canonical für Duplikate",
+            "keep-and-rewrite": "Behalten und umschreiben",
+            "noindex-or-410-after-review": "noindex oder 410 nach Prüfung"
+          },
+          "condition": {
+            "currency-from-analytics": "die Währung stammt aus der Analyse, nicht aus einer Annahme",
+            "fresh-90-day-window": "ein frisches, vollständiges 90-Tage-Fenster liegt vor",
+            "real-topic-relation": "die Themen hängen wirklich zusammen",
+            "relevant-target-same-intent": "das Ziel bedient dieselbe Suchintention",
+            "no-measured-value": "keine Klicks, Conversions, Umsätze oder Links gemessen",
+            "update-links-and-sitemap": "interne Links und Sitemap werden angepasst",
+            "near-duplicate-only": "der Inhalt ist ein Beinahe-Duplikat",
+            "owner-confirms-value": "der Inhaber bestätigt den Wert der Seite",
+            "not-via-robots-txt": "in der Seite gesetzt, nicht in robots.txt",
+            "business-review": "ein Mensch hat die geschäftlichen Folgen geprüft"
+          },
+          "state": {
+            "measured": "Gemessen",
+            "partial-history": "Unvollständiger Verlauf",
+            "stale": "Veraltet",
+            "sampled": "Stichprobe",
+            "missing-permission": "Fehlende Berechtigung",
+            "unavailable": "Nicht verfügbar"
+          }
         }
       },
       "authority": {
