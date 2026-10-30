@@ -8,6 +8,7 @@ mod coverage;
 mod data;
 mod detail_tables;
 mod evidence;
+mod focus_brand;
 mod focus_cards;
 mod focus_protection;
 mod focus_tables;
@@ -59,6 +60,8 @@ mod tests_authority;
 mod tests_data;
 #[cfg(test)]
 mod tests_focus;
+#[cfg(test)]
+mod tests_focus_brand;
 #[cfg(test)]
 mod tests_focus_more;
 #[cfg(test)]

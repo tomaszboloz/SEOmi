@@ -15,7 +15,7 @@ fn trs_cell(page: &Value) -> Cell {
     let trs = page.get("trs").and_then(Value::as_f64);
     let color = match trs {
         Some(v) if v >= 75.0 => OK,
-        Some(v) if v >= 60.0 => WARNING,
+        Some(v) if v >= 40.0 => WARNING,
         _ => CRITICAL,
     };
     Cell::styled(
