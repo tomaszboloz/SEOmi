@@ -8572,7 +8572,7 @@
     "complete": "Import abgeschlossen.",
     "storageFailed": "Lokaler Speicher konnte nicht aktualisiert werden. Änderungen bleiben nur im Arbeitsspeicher; gespeicherte Logs sind eventuell unverändert.",
     "tooLarge": "Die Datei überschreitet das Limit von 500 MB.",
-    "invalidFile": "Eine .log- oder .txt-Datei auswählen.",
+    "invalidFile": "Wählen Sie ein .log-, .txt- oder rotiertes .gz-Zugriffslog.",
     "resumeRequired": "Die unvollständige Datei fortsetzen oder Logs löschen, bevor eine andere Datei importiert wird.",
     "importFailed": "Die Datei konnte nicht gelesen oder gehasht werden. Bitte erneut versuchen.",
     "resume": "Dieselbe Datei auswählen, um ohne doppelte Zeilenzählung fortzusetzen.",
@@ -8632,7 +8632,10 @@
         "too-many-prefixes": "Die Datei enthält mehr als 5.000 Bereiche.",
         "storageFailed": "Der lokale Speicher konnte nicht aktualisiert werden; die Bereiche wurden nicht gespeichert."
       }
-    }
+    },
+    "gzipTooLarge": "Das entpackte Log überschreitet die Grenze von 2 GB.",
+    "gzipCorrupt": "Die .gz-Datei ist beschädigt oder kein gzip.",
+    "gzipUnsupported": "Dieses System kann .gz-Dateien nicht entpacken; entpacken Sie die Datei zuerst."
   },
   "altCheckUi": {
     "column": "ALT-Qualität",

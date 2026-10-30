@@ -8572,7 +8572,7 @@
     "complete": "Importación completa.",
     "storageFailed": "No se pudo actualizar el almacenamiento local. Los cambios solo quedan en memoria; los registros guardados podrían no cambiar.",
     "tooLarge": "El archivo supera el límite de 500 MB.",
-    "invalidFile": "Elige un archivo .log o .txt.",
+    "invalidFile": "Elige un registro de acceso .log, .txt o .gz rotado.",
     "resumeRequired": "Reanuda el archivo incompleto o borra los registros antes de importar otro.",
     "importFailed": "No se pudo leer el archivo o calcular su hash. Inténtalo de nuevo.",
     "resume": "Selecciona el mismo archivo para reanudar sin contar líneas dos veces.",
@@ -8632,7 +8632,10 @@
         "too-many-prefixes": "El archivo contiene más de 5000 rangos.",
         "storageFailed": "No se pudo actualizar el almacenamiento local; los rangos no se guardaron."
       }
-    }
+    },
+    "gzipTooLarge": "El registro descomprimido supera el límite de 2 GB.",
+    "gzipCorrupt": "El archivo .gz está dañado o no es gzip.",
+    "gzipUnsupported": "Este sistema no puede descomprimir archivos .gz; descomprímelo primero."
   },
   "altCheckUi": {
     "column": "Calidad del ALT",

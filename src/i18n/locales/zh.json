@@ -8572,7 +8572,7 @@
     "complete": "导入完成。",
     "storageFailed": "无法更新本地存储。更改仅保留在内存中，已保存的日志可能未变。",
     "tooLarge": "文件超过500 MB限制。",
-    "invalidFile": "请选择 .log 或 .txt 文件。",
+    "invalidFile": "请选择 .log、.txt 或轮转后的 .gz 访问日志。",
     "resumeRequired": "导入其他文件前请恢复未完成的文件或清除日志。",
     "importFailed": "无法读取文件或计算哈希。请重试。",
     "resume": "选择相同文件即可继续，且不会重复计算行数。",
@@ -8632,7 +8632,10 @@
         "too-many-prefixes": "文件包含超过 5,000 个范围。",
         "storageFailed": "无法更新本地存储；范围未保存。"
       }
-    }
+    },
+    "gzipTooLarge": "解压后的日志超过 2 GB 上限。",
+    "gzipCorrupt": ".gz 文件已损坏或不是 gzip。",
+    "gzipUnsupported": "此系统无法解压 .gz 文件；请先解压。"
   },
   "altCheckUi": {
     "column": "ALT 质量",

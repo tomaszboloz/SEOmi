@@ -8572,7 +8572,7 @@
     "complete": "Importation terminée.",
     "storageFailed": "Impossible de mettre à jour le stockage local. Les modifications restent en mémoire ; les journaux enregistrés peuvent rester inchangés.",
     "tooLarge": "Le fichier dépasse la limite de 500 Mo.",
-    "invalidFile": "Choisissez un fichier .log ou .txt.",
+    "invalidFile": "Choisissez un journal d’accès .log, .txt ou .gz issu d’une rotation.",
     "resumeRequired": "Reprenez le fichier incomplet ou effacez les journaux avant d’en importer un autre.",
     "importFailed": "Impossible de lire le fichier ou de calculer son empreinte. Réessayez.",
     "resume": "Sélectionnez le même fichier pour reprendre sans compter deux fois les lignes.",
@@ -8632,7 +8632,10 @@
         "too-many-prefixes": "Le fichier contient plus de 5 000 plages.",
         "storageFailed": "Le stockage local n’a pas pu être mis à jour ; les plages n’ont pas été enregistrées."
       }
-    }
+    },
+    "gzipTooLarge": "Le journal décompressé dépasse la limite de 2 Go.",
+    "gzipCorrupt": "Le fichier .gz est endommagé ou n’est pas au format gzip.",
+    "gzipUnsupported": "Ce système ne peut pas décompresser les fichiers .gz ; décompressez-le d’abord."
   },
   "altCheckUi": {
     "column": "Qualité de l'ALT",

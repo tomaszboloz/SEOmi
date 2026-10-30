@@ -8572,7 +8572,7 @@
     "complete": "Import complete.",
     "storageFailed": "Local storage could not be updated. Changes remain in memory only; saved logs may be unchanged.",
     "tooLarge": "This file exceeds the 500 MB limit.",
-    "invalidFile": "Choose a .log or .txt file.",
+    "invalidFile": "Choose a .log, .txt or rotated .gz access log.",
     "resumeRequired": "Resume the unfinished file or clear logs before importing a different file.",
     "importFailed": "The file could not be read or hashed. Please try again.",
     "resume": "Select the same file to resume without counting lines twice.",
@@ -8632,7 +8632,10 @@
         "too-many-prefixes": "The file contains more than 5,000 ranges.",
         "storageFailed": "Local storage could not be updated; the ranges were not saved."
       }
-    }
+    },
+    "gzipTooLarge": "The decompressed log exceeds the 2 GB limit.",
+    "gzipCorrupt": "The .gz file is damaged or not gzip.",
+    "gzipUnsupported": "This system cannot decompress .gz files; decompress it first."
   },
   "altCheckUi": {
     "column": "ALT quality",

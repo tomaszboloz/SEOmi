@@ -8572,7 +8572,7 @@
     "complete": "Import zakończony.",
     "storageFailed": "Nie udało się zaktualizować pamięci lokalnej. Zmiany pozostają tylko w pamięci; zapisane logi mogą być bez zmian.",
     "tooLarge": "Plik przekracza limit 500 MB.",
-    "invalidFile": "Wybierz plik .log lub .txt.",
+    "invalidFile": "Wybierz log dostępu .log, .txt lub zrotowany .gz.",
     "resumeRequired": "Wznów niedokończony plik lub wyczyść logi przed importem innego pliku.",
     "importFailed": "Nie udało się odczytać pliku lub obliczyć skrótu. Spróbuj ponownie.",
     "resume": "Wybierz ten sam plik, aby wznowić import bez podwójnego zliczania wierszy.",
@@ -8632,7 +8632,10 @@
         "too-many-prefixes": "Plik zawiera ponad 5000 zakresów.",
         "storageFailed": "Nie udało się zapisać w pamięci lokalnej; zakresy nie zostały zapisane."
       }
-    }
+    },
+    "gzipTooLarge": "Rozpakowany log przekracza limit 2 GB.",
+    "gzipCorrupt": "Plik .gz jest uszkodzony albo to nie gzip.",
+    "gzipUnsupported": "Ten system nie rozpakuje plików .gz; najpierw rozpakuj plik."
   },
   "altCheckUi": {
     "column": "Jakość ALT",
