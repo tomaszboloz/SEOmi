@@ -7542,6 +7542,15 @@
       "title": "Histórico",
       "empty": "O histórico aparece após a segunda análise deste projeto.",
       "row": "{{date}}: {{score}}"
+    },
+    "languageStatus": {
+      "uncertain": "Os resultados para {{languages}} são incertos: são usadas listas básicas de pronomes e expressões de enchimento ainda não revistas por um falante nativo.",
+      "unsupported": "Não existem regras de idioma para {{languages}}. Foram usadas listas de palavras em inglês como alternativa, por isso a deteção de pronomes e factos é parcial e estas pontuações são incertas.",
+      "undetermined": "idioma não determinado",
+      "short": {
+        "uncertain": "incerto",
+        "unsupported": "sem regras (alternativa em inglês)"
+      }
     }
   },
   "trust": {
@@ -7694,6 +7703,49 @@
       "download": "Baixar JSON-LD",
       "downloaded": "Baixado.",
       "downloadFailed": "Falha no download. Copie a tag script."
+    },
+    "claims": {
+      "relation": {
+        "same-sentence": "citação na mesma frase",
+        "adjacent-sentence": "citação numa frase adjacente",
+        "unmatched": "sem citação próxima"
+      },
+      "evidence": {
+        "association": "apenas associação",
+        "manual": "verificado manualmente",
+        "unavailable": "dados da fonte indisponíveis"
+      },
+      "references": "Referências citadas",
+      "noReference": "Nenhuma citação encontrada perto desta afirmação.",
+      "more": "Outras afirmações não mostradas: {{n}}.",
+      "linkNote": "As ligações DOI, PMID e PMCID abrem o resolvedor público (doi.org, PubMed, PMC). Uma ligação mostra onde consultar a obra; não confirma que ela exista nem que apoie a afirmação."
+    },
+    "identity": {
+      "status": {
+        "syntax-valid": "formato válido, não verificado",
+        "declared": "declarado",
+        "fetched": "registo obtido, nome não correspondido",
+        "verified": "nome corresponde no registo",
+        "mismatch": "o nome no registo não corresponde",
+        "unavailable": "indisponível",
+        "invalid": "identificador ou URL inválido"
+      },
+      "kind": {
+        "orcid": "ORCID",
+        "wikidata": "Wikidata",
+        "register": "registo académico",
+        "social": "perfil social",
+        "other": "outra ligação"
+      },
+      "tier": "nível {{tier}}",
+      "detail": {
+        "registry-unavailable": "registo inacessível nesta versão",
+        "rate-budget": "limite de pedidos atingido nesta execução",
+        "unsafe-redirect": "redirecionamento para fora do registo; ignorado",
+        "body-limit": "resposta demasiado grande; não lida",
+        "transport-error": "o pedido falhou ou expirou"
+      },
+      "more": "Outros perfis não mostrados: {{n}}."
     }
   },
   "executionCard": {

@@ -7542,6 +7542,15 @@
       "title": "Verlauf",
       "empty": "Der Verlauf erscheint nach der zweiten Analyse dieses Projekts.",
       "row": "{{date}}: {{score}}"
+    },
+    "languageStatus": {
+      "uncertain": "Ergebnisse für {{languages}} sind unsicher: Es werden einfache Pronomen- und Füllwortlisten verwendet, die noch kein Muttersprachler geprüft hat.",
+      "unsupported": "Für {{languages}} gibt es keine Sprachregeln. Ersatzweise wurden englische Wortlisten verwendet, daher ist die Erkennung von Pronomen und Fakten lückenhaft und diese Werte sind unsicher.",
+      "undetermined": "unbestimmte Sprache",
+      "short": {
+        "uncertain": "unsicher",
+        "unsupported": "keine Regeln (englischer Ersatz)"
+      }
     }
   },
   "trust": {
@@ -7694,6 +7703,49 @@
       "download": "JSON-LD herunterladen",
       "downloaded": "Heruntergeladen.",
       "downloadFailed": "Download fehlgeschlagen. Kopieren Sie stattdessen das Script-Tag."
+    },
+    "claims": {
+      "relation": {
+        "same-sentence": "Beleg im selben Satz",
+        "adjacent-sentence": "Beleg im Nachbarsatz",
+        "unmatched": "kein Beleg in der Nähe"
+      },
+      "evidence": {
+        "association": "nur Zuordnung",
+        "manual": "manuell geprüft",
+        "unavailable": "Quelldaten nicht verfügbar"
+      },
+      "references": "Zitierte Quellen",
+      "noReference": "In der Nähe dieser Aussage wurde kein Beleg gefunden.",
+      "more": "Weitere nicht angezeigte Aussagen: {{n}}.",
+      "linkNote": "DOI-, PMID- und PMCID-Links öffnen den öffentlichen Resolver (doi.org, PubMed, PMC). Ein Link zeigt, wo die Arbeit nachgeschlagen werden kann; er bestätigt nicht, dass sie existiert oder die Aussage stützt."
+    },
+    "identity": {
+      "status": {
+        "syntax-valid": "gültiges Format, nicht geprüft",
+        "declared": "angegeben",
+        "fetched": "Register abgerufen, Name nicht abgeglichen",
+        "verified": "Name im Register übereinstimmend",
+        "mismatch": "Name im Register stimmt nicht überein",
+        "unavailable": "nicht verfügbar",
+        "invalid": "ungültige Kennung oder URL"
+      },
+      "kind": {
+        "orcid": "ORCID",
+        "wikidata": "Wikidata",
+        "register": "wissenschaftliches Verzeichnis",
+        "social": "Social-Media-Profil",
+        "other": "anderer Link"
+      },
+      "tier": "Stufe {{tier}}",
+      "detail": {
+        "registry-unavailable": "Register in diesem Build nicht erreichbar",
+        "rate-budget": "Anfragelimit für diesen Lauf erreicht",
+        "unsafe-redirect": "Weiterleitung außerhalb des Registers; ignoriert",
+        "body-limit": "Antwort zu groß; nicht gelesen",
+        "transport-error": "Anfrage fehlgeschlagen oder Zeitüberschreitung"
+      },
+      "more": "Weitere nicht angezeigte Profile: {{n}}."
     }
   },
   "executionCard": {

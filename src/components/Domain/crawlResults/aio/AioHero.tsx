@@ -2,6 +2,7 @@ import { useTranslation } from 'react-i18next';
 import { HelpTip } from '@/components/Help/HelpTip';
 import type { AioReport, AioSnapshot } from '@/services/aioReadiness';
 import { BAND_BAR, BAND_TEXT } from '../focus/focusHelpers';
+import { AioLanguageNote } from './AioLanguageNote';
 
 const COMPONENTS = [
   { key: 'selfContainment', label: 'aio.components.self', help: 'aio.selfContainment' },
@@ -42,7 +43,7 @@ export const AioHero = ({ report, previous }: { report: AioReport; previous?: Ai
           </div>
         ))}
       </dl>
-      {report.basicRuleLanguages.length > 0 && <p role="note" className="text-xs text-amber-200">{t('aio.basicNote', { languages: report.basicRuleLanguages.join(', ') })}</p>}
+      <AioLanguageNote report={report} />
     </section>
   );
 };

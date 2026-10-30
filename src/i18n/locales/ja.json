@@ -7542,6 +7542,15 @@
       "title": "履歴",
       "empty": "履歴はこのプロジェクトの2回目の分析後に表示されます。",
       "row": "{{date}}：{{score}}"
+    },
+    "languageStatus": {
+      "uncertain": "{{languages}} の結果は不確実です。ネイティブスピーカーの確認を受けていない基本的な代名詞・つなぎ言葉のリストを使用しています。",
+      "unsupported": "{{languages}} には言語ルールがありません。代わりに英語の単語リストを使用したため、代名詞と事実の検出は部分的で、このスコアは不確実です。",
+      "undetermined": "判定できない言語",
+      "short": {
+        "uncertain": "不確実",
+        "unsupported": "ルールなし（英語で代用）"
+      }
     }
   },
   "trust": {
@@ -7694,6 +7703,49 @@
       "download": "JSON-LDをダウンロード",
       "downloaded": "ダウンロードしました。",
       "downloadFailed": "ダウンロードに失敗しました。代わりにscriptタグをコピーしてください。"
+    },
+    "claims": {
+      "relation": {
+        "same-sentence": "同じ文に出典あり",
+        "adjacent-sentence": "隣接する文に出典あり",
+        "unmatched": "近くに出典なし"
+      },
+      "evidence": {
+        "association": "関連付けのみ",
+        "manual": "手動で確認済み",
+        "unavailable": "出典データなし"
+      },
+      "references": "引用された出典",
+      "noReference": "この主張の近くに出典は見つかりませんでした。",
+      "more": "表示されていない主張：{{n}} 件",
+      "linkNote": "DOI・PMID・PMCID のリンクは公開リゾルバー（doi.org、PubMed、PMC）を開きます。リンクは文献の参照先を示すだけで、文献の存在や主張の裏付けを確認するものではありません。"
+    },
+    "identity": {
+      "status": {
+        "syntax-valid": "形式は有効・未確認",
+        "declared": "申告のみ",
+        "fetched": "登録情報を取得・名前は未照合",
+        "verified": "登録上の名前が一致",
+        "mismatch": "登録上の名前が不一致",
+        "unavailable": "利用不可",
+        "invalid": "無効な識別子または URL"
+      },
+      "kind": {
+        "orcid": "ORCID",
+        "wikidata": "ウィキデータ",
+        "register": "学術登録",
+        "social": "ソーシャルプロフィール",
+        "other": "その他のリンク"
+      },
+      "tier": "ティア {{tier}}",
+      "detail": {
+        "registry-unavailable": "このビルドからは登録先に接続できません",
+        "rate-budget": "この実行のリクエスト上限に達しました",
+        "unsafe-redirect": "登録先外へのリダイレクトのため無視",
+        "body-limit": "応答が大きすぎるため未読",
+        "transport-error": "リクエスト失敗またはタイムアウト"
+      },
+      "more": "表示されていないプロフィール：{{n}} 件"
     }
   },
   "executionCard": {

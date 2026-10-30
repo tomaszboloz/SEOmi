@@ -33,7 +33,12 @@ export const AioPagesTable = ({ pages }: { pages: AioPageReport[] }) => {
                     <td className={`p-1 font-semibold tabular-nums ${TONE_TEXT[tone(page.score)]}`}>{page.score}</td>
                     <td className="p-1 tabular-nums">{page.chunkCount}</td>
                     <td className="p-1 tabular-nums">{page.tripleCount}</td>
-                    <td className="p-1">{page.language}</td>
+                    <td className="p-1">
+                      {page.language}
+                      {page.languageStatus && page.languageStatus !== 'supported' && (
+                        <span className="ms-1 text-amber-200">· {t(`aio.languageStatus.short.${page.languageStatus}`)}</span>
+                      )}
+                    </td>
                   </>
                 )}
               </tr>

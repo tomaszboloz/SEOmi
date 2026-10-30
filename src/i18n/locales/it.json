@@ -7542,6 +7542,15 @@
       "title": "Cronologia",
       "empty": "La cronologia compare dopo la seconda analisi di questo progetto.",
       "row": "{{date}}: {{score}}"
+    },
+    "languageStatus": {
+      "uncertain": "I risultati per {{languages}} sono incerti: si usano elenchi di base di pronomi e riempitivi non ancora verificati da un madrelingua.",
+      "unsupported": "Non esistono regole linguistiche per {{languages}}. Sono stati usati in sostituzione elenchi di parole inglesi, quindi il rilevamento di pronomi e fatti è parziale e questi punteggi sono incerti.",
+      "undetermined": "lingua non determinata",
+      "short": {
+        "uncertain": "incerto",
+        "unsupported": "nessuna regola (ripiego inglese)"
+      }
     }
   },
   "trust": {
@@ -7694,6 +7703,49 @@
       "download": "Scarica JSON-LD",
       "downloaded": "Scaricato.",
       "downloadFailed": "Download non riuscito. Copia invece il tag script."
+    },
+    "claims": {
+      "relation": {
+        "same-sentence": "citazione nella stessa frase",
+        "adjacent-sentence": "citazione in una frase adiacente",
+        "unmatched": "nessuna citazione vicina"
+      },
+      "evidence": {
+        "association": "solo associazione",
+        "manual": "verificato manualmente",
+        "unavailable": "dati della fonte non disponibili"
+      },
+      "references": "Riferimenti citati",
+      "noReference": "Nessuna citazione trovata vicino a questa affermazione.",
+      "more": "Altre affermazioni non mostrate: {{n}}.",
+      "linkNote": "I link DOI, PMID e PMCID aprono il resolver pubblico (doi.org, PubMed, PMC). Un link indica dove consultare l'opera; non conferma che esista né che sostenga l'affermazione."
+    },
+    "identity": {
+      "status": {
+        "syntax-valid": "formato valido, non verificato",
+        "declared": "dichiarato",
+        "fetched": "registro recuperato, nome non abbinato",
+        "verified": "nome corrispondente nel registro",
+        "mismatch": "il nome nel registro non corrisponde",
+        "unavailable": "non disponibile",
+        "invalid": "identificatore o URL non valido"
+      },
+      "kind": {
+        "orcid": "ORCID",
+        "wikidata": "Wikidata",
+        "register": "registro accademico",
+        "social": "profilo social",
+        "other": "altro link"
+      },
+      "tier": "livello {{tier}}",
+      "detail": {
+        "registry-unavailable": "registro non raggiungibile da questa versione",
+        "rate-budget": "limite di richieste raggiunto per questa esecuzione",
+        "unsafe-redirect": "reindirizzamento fuori dal registro; ignorato",
+        "body-limit": "risposta troppo grande; non letta",
+        "transport-error": "richiesta non riuscita o scaduta"
+      },
+      "more": "Altri profili non mostrati: {{n}}."
     }
   },
   "executionCard": {
