@@ -8791,6 +8791,11 @@
         "unavailable": "Indisponível"
       },
       "privacy": "As últimas 10 análises concluídas são guardadas localmente por projeto. O texto completo das páginas e os vetores nunca são guardados."
+    },
+    "stance": {
+      "negated": "Menção negada; não é uma recomendação",
+      "critical": "Linguagem crítica junto à marca; não é uma recomendação",
+      "quoted": "Opinião citada ou atribuída; não é uma recomendação da própria fonte"
     }
   },
   "experimentsUi": {

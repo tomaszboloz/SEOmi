@@ -8791,6 +8791,11 @@
         "unavailable": "Unavailable"
       },
       "privacy": "The last 10 completed analyses are stored locally per project. Full page text and vectors are never saved."
+    },
+    "stance": {
+      "negated": "Negated mention; not a recommendation",
+      "critical": "Critical wording near the brand; not a recommendation",
+      "quoted": "Quoted or attributed opinion; not the source's own recommendation"
     }
   },
   "experimentsUi": {

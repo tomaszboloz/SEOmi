@@ -22,6 +22,7 @@ export const OffPageSourceResults = ({ sources, reports }: { sources: SourceEvid
         <p>{t('offPageSourcesUi.offset', { url: hit.sourceUrl, offset: hit.offset })}</p>
         <blockquote>{hit.excerpt}</blockquote>
         <p>{t(`offPageSourcesUi.polarity.${hit.polarity}`)}</p>
+        {hit.stance !== 'neutral' && <p>{t(`offPageSourcesUi.stance.${hit.stance}`)}</p>}
       </li>)}
     </ul>
     <p>{t('offPageSourcesUi.missing')}</p>

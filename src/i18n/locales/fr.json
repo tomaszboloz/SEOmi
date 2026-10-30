@@ -8791,6 +8791,11 @@
         "unavailable": "Indisponible"
       },
       "privacy": "Les 10 dernières analyses terminées sont conservées localement par projet. Le texte intégral des pages et les vecteurs ne sont jamais enregistrés."
+    },
+    "stance": {
+      "negated": "Mention négative ; pas une recommandation",
+      "critical": "Termes critiques près de la marque ; pas une recommandation",
+      "quoted": "Opinion citée ou attribuée ; pas une recommandation de la source elle-même"
     }
   },
   "experimentsUi": {

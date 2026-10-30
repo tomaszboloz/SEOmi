@@ -8791,6 +8791,11 @@
         "unavailable": "Niedostępne"
       },
       "privacy": "Ostatnie 10 ukończonych analiz jest zapisanych lokalnie dla każdego projektu. Pełny tekst stron i wektory nigdy nie są zapisywane."
+    },
+    "stance": {
+      "negated": "Wzmianka z przeczeniem; to nie rekomendacja",
+      "critical": "Krytyczne słowa przy marce; to nie rekomendacja",
+      "quoted": "Cytat lub cudza opinia; to nie rekomendacja samego źródła"
     }
   },
   "experimentsUi": {

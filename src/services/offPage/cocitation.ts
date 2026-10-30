@@ -1,11 +1,15 @@
+import { mentionStance, type MentionStance } from './mentionStance';
+
 export interface SourceParagraph { sourceUrl: string; offset: number; text: string; linked: boolean }
 
 export interface CoCitation {
   sourceUrl: string;
   offset: number;
   linked: boolean;
-  /** 'unclear' when a negation cue sits near the brand; never counted as support. */
+  /** 'unclear' when the brand sentence is negated, critical or quoted; never counted as support. */
   polarity: 'neutral' | 'unclear';
+  /** Which cue made the mention unclear (#93 GEM-93-07). */
+  stance: MentionStance;
   excerpt: string;
 }
 
@@ -17,7 +21,6 @@ export interface CoCitationReport {
   note: 'ready' | 'no-source-text';
 }
 
-const NEGATION = /\b(?:not|never|no|without|nie|nigdy|kein|keine|nicht|pas|jamais|nunca|sin|non|mai|não|без|не)\b|不|没有|ない|않/iu;
 const EXCERPT = 160;
 
 const escape = (value: string) => value.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
@@ -33,7 +36,8 @@ export const findCoCitations = (paragraphs: SourceParagraph[], brandAliases: str
   if (!aliases.length || !coreEntity.trim()) return report;
   paragraphs.forEach((p) => {
     if (!hasTerm(p.text, coreEntity) || !aliases.some((a) => hasTerm(p.text, a))) return;
-    const hit: CoCitation = { sourceUrl: p.sourceUrl, offset: p.offset, linked: p.linked, polarity: NEGATION.test(p.text) ? 'unclear' : 'neutral', excerpt: p.text.trim().slice(0, EXCERPT) };
+    const stance = mentionStance(p.text, aliases);
+    const hit: CoCitation = { sourceUrl: p.sourceUrl, offset: p.offset, linked: p.linked, polarity: stance === 'neutral' ? 'neutral' : 'unclear', stance, excerpt: p.text.trim().slice(0, EXCERPT) };
     (p.linked ? report.linked : report.unlinked).push(hit);
   });
   return report;

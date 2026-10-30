@@ -8791,6 +8791,11 @@
         "unavailable": "Nicht verfügbar"
       },
       "privacy": "Die letzten 10 abgeschlossenen Analysen werden lokal je Projekt gespeichert. Vollständige Seitentexte und Vektoren werden nie gespeichert."
+    },
+    "stance": {
+      "negated": "Verneinte Erwähnung; keine Empfehlung",
+      "critical": "Kritische Wortwahl bei der Marke; keine Empfehlung",
+      "quoted": "Zitierte oder zugeschriebene Meinung; keine eigene Empfehlung der Quelle"
     }
   },
   "experimentsUi": {

@@ -18,11 +18,12 @@ it('shows pending sources without inventing retrieval dates, plus every TBVA lim
 });
 it('shows both linked and unlinked real report excerpts without treating neutral mentions as endorsement', () => {
   const reports = buildOffPageReports(null);
-  const hit = { sourceUrl: 'https://source.test', offset: 14, excerpt: 'Acme SEO', polarity: 'neutral' as const, linked: true };
-  reports.coCitation = { linked: [hit], unlinked: [{ ...hit, offset: 100, linked: false }], inspected: 2, note: 'ready' };
+  const hit = { sourceUrl: 'https://source.test', offset: 14, excerpt: 'Acme SEO', polarity: 'neutral' as const, stance: 'neutral' as const, linked: true };
+  reports.coCitation = { linked: [hit], unlinked: [{ ...hit, offset: 100, linked: false }, { ...hit, offset: 200, linked: false, polarity: 'unclear', stance: 'critical' }], inspected: 3, note: 'ready' };
   render(<OffPageSourceResults sources={[sourceEvidence({ availability: 'too-large', fetchedAt: '2026-10-24T10:00:00Z' })]} reports={reports} />);
   expect(screen.getByText('Body too large')).toBeTruthy();
   expect(screen.getAllByText('Neutral co-occurrence; not endorsement')).toHaveLength(2);
   expect(screen.getByText(/offset 14/)).toBeTruthy();
   expect(screen.getByText(/offset 100/)).toBeTruthy();
+  expect(screen.getByText('Critical wording near the brand; not a recommendation')).toBeTruthy();
 });

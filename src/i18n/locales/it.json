@@ -8791,6 +8791,11 @@
         "unavailable": "Non disponibile"
       },
       "privacy": "Le ultime 10 analisi completate vengono salvate localmente per progetto. Il testo completo delle pagine e i vettori non vengono mai salvati."
+    },
+    "stance": {
+      "negated": "Menzione negata; non è una raccomandazione",
+      "critical": "Termini critici vicino al marchio; non è una raccomandazione",
+      "quoted": "Opinione citata o attribuita; non è una raccomandazione della fonte"
     }
   },
   "experimentsUi": {
