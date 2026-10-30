@@ -7672,6 +7672,17 @@
         "uncertain": "불확실",
         "unsupported": "규칙 없음(영어로 대체)"
       }
+    },
+    "facts": {
+      "title": "사실과 Answer-First",
+      "answerComponents": "Answer-First 구성 요소: 제목 일치 {{similarity}} · 서술문으로 시작 {{declarative}} · 군더더기 도입 {{fluff}}",
+      "yes": "예",
+      "no": "아니요",
+      "quality": "Q {{q}}",
+      "unit": "단위 {{unit}}",
+      "negated": "부정",
+      "none": "이 청크에서 주어-서술어-목적어 사실이 감지되지 않았습니다.",
+      "heuristic": "어휘 휴리스틱이며 의존 구문 분석기가 아닙니다. Q: 1 = 단위가 있는 숫자, 0.7 = 명명된 용어, 0.3 = 일반."
     }
   },
   "trust": {

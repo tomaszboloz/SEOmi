@@ -7672,6 +7672,17 @@
         "uncertain": "uncertain",
         "unsupported": "no rules (English fallback)"
       }
+    },
+    "facts": {
+      "title": "Facts and Answer-First",
+      "answerComponents": "Answer-First components: heading match {{similarity}} · declarative lead {{declarative}} · filler opening {{fluff}}",
+      "yes": "yes",
+      "no": "no",
+      "quality": "Q {{q}}",
+      "unit": "unit {{unit}}",
+      "negated": "negated",
+      "none": "No subject-predicate-object facts detected in this chunk.",
+      "heuristic": "Lexical heuristic, not a dependency parser. Q: 1 = number with unit, 0.7 = named term, 0.3 = generic."
     }
   },
   "trust": {

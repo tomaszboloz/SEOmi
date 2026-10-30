@@ -7672,6 +7672,17 @@
         "uncertain": "niepewne",
         "unsupported": "brak reguł (zastępczo angielskie)"
       }
+    },
+    "facts": {
+      "title": "Fakty i Answer-First",
+      "answerComponents": "Składowe Answer-First: zgodność z nagłówkiem {{similarity}} · zdanie oznajmujące na początku {{declarative}} · pusty wstęp {{fluff}}",
+      "yes": "tak",
+      "no": "nie",
+      "quality": "Q {{q}}",
+      "unit": "jednostka {{unit}}",
+      "negated": "zaprzeczenie",
+      "none": "W tym fragmencie nie wykryto faktów podmiot-orzeczenie-dopełnienie.",
+      "heuristic": "Heurystyka leksykalna, nie parser zależności. Q: 1 = liczba z jednostką, 0,7 = nazwany termin, 0,3 = ogólne."
     }
   },
   "trust": {

@@ -7672,6 +7672,17 @@
         "uncertain": "不确定",
         "unsupported": "无规则（以英语替代）"
       }
+    },
+    "facts": {
+      "title": "事实与 Answer-First",
+      "answerComponents": "Answer-First 组成部分：与标题匹配 {{similarity}} · 开头为陈述句 {{declarative}} · 空泛开头 {{fluff}}",
+      "yes": "是",
+      "no": "否",
+      "quality": "Q {{q}}",
+      "unit": "单位 {{unit}}",
+      "negated": "否定",
+      "none": "此片段中未检测到主语-谓语-宾语事实。",
+      "heuristic": "词汇启发式，而非依存句法分析器。Q：1 = 带单位的数字，0.7 = 具名术语，0.3 = 一般内容。"
     }
   },
   "trust": {

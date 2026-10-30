@@ -11,6 +11,7 @@ const ANSWER_WORDS = 60;
 const MIN_ANSWER_WORDS = 8;
 const LONG_CHUNK = AIO_R_MAX_WORDS;
 const MIN_FACT_TOKENS = 20;
+const SHOWN_TRIPLES = 6;
 const HEADING_STOPWORDS = new Set(['a', 'an', 'the', 'is', 'are', 'was', 'were', 'what', 'how', 'why', 'when', 'where', 'does', 'do', 'to', 'of']);
 
 const round = (value: number): number => Math.round(value * 100) / 100;
@@ -83,6 +84,8 @@ export const scoreChunk = (chunk: RawChunk, rules: LanguageRules): AioChunk => {
     spoDensity: spo,
     answerFirstAvailability: answer.score === null ? 'not-applicable' : 'available',
     selfContainmentDetails: containment,
+    spoTriples: triplesFound.slice(0, SHOWN_TRIPLES).map(({ subject, predicate, object, negated, quality, unit }) => ({ subject, predicate, object, negated, quality, unit })),
+    ...(answer.score === null ? {} : { answerFirstDetails: { similarity: round(answer.cosine), declarative: answer.declarative, fluff: answer.fluff } }),
     offsets: chunk.offsets,
     oversizedSentence: chunk.oversizedSentence,
     issues,

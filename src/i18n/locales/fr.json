@@ -7672,6 +7672,17 @@
         "uncertain": "incertain",
         "unsupported": "aucune règle (repli anglais)"
       }
+    },
+    "facts": {
+      "title": "Faits et Answer-First",
+      "answerComponents": "Composantes Answer-First : correspondance avec le titre {{similarity}} · phrase déclarative en tête {{declarative}} · ouverture de remplissage {{fluff}}",
+      "yes": "oui",
+      "no": "non",
+      "quality": "Q {{q}}",
+      "unit": "unité {{unit}}",
+      "negated": "négation",
+      "none": "Aucun fait sujet-prédicat-objet détecté dans ce fragment.",
+      "heuristic": "Heuristique lexicale, pas un analyseur de dépendances. Q : 1 = nombre avec unité, 0,7 = terme nommé, 0,3 = générique."
     }
   },
   "trust": {

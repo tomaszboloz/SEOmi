@@ -32,6 +32,10 @@ export interface AioChunk {
   spoDensity?: number;
   offsets?: { start: number; end: number; unit: 'utf16' };
   oversizedSentence?: boolean;
+  /** First detected SPO facts (capped) with quality Q and negation, for the inspector (#64). */
+  spoTriples?: AioTripleEvidence[];
+  /** Answer-First components; absent when Answer-First does not apply to the window. */
+  answerFirstDetails?: { similarity: number; declarative: number; fluff: number };
   triples: number;
   issues: AioIssue[];
 }
@@ -46,6 +50,8 @@ export interface SpoTriple {
   quality?: 0.3 | 0.7 | 1;
   unit?: string;
 }
+
+export type AioTripleEvidence = Pick<SpoTriple, 'subject' | 'object' | 'predicate' | 'negated' | 'quality' | 'unit'>;
 
 export interface SelfContainmentDetails {
   score: number;

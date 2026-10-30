@@ -7672,6 +7672,17 @@
         "uncertain": "不確実",
         "unsupported": "ルールなし（英語で代用）"
       }
+    },
+    "facts": {
+      "title": "事実と Answer-First",
+      "answerComponents": "Answer-First の構成要素: 見出しとの一致 {{similarity}} · 冒頭の平叙文 {{declarative}} · 前置きの埋め草 {{fluff}}",
+      "yes": "はい",
+      "no": "いいえ",
+      "quality": "Q {{q}}",
+      "unit": "単位 {{unit}}",
+      "negated": "否定",
+      "none": "このチャンクでは主語・述語・目的語の事実は検出されませんでした。",
+      "heuristic": "語彙ヒューリスティックであり、係り受け解析ではありません。Q: 1 = 単位付きの数値、0.7 = 固有の用語、0.3 = 一般的。"
     }
   },
   "trust": {

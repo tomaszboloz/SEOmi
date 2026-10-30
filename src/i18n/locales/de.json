@@ -7672,6 +7672,17 @@
         "uncertain": "unsicher",
         "unsupported": "keine Regeln (englischer Ersatz)"
       }
+    },
+    "facts": {
+      "title": "Fakten und Answer-First",
+      "answerComponents": "Answer-First-Komponenten: Übereinstimmung mit Überschrift {{similarity}} · Aussagesatz am Anfang {{declarative}} · Füllphrase am Anfang {{fluff}}",
+      "yes": "ja",
+      "no": "nein",
+      "quality": "Q {{q}}",
+      "unit": "Einheit {{unit}}",
+      "negated": "verneint",
+      "none": "In diesem Abschnitt wurden keine Subjekt-Prädikat-Objekt-Fakten erkannt.",
+      "heuristic": "Lexikalische Heuristik, kein Dependenzparser. Q: 1 = Zahl mit Einheit, 0,7 = benannter Begriff, 0,3 = allgemein."
     }
   },
   "trust": {
