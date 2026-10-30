@@ -4,3 +4,6 @@ export * from './unavailable';
 export * from './imageBytes';
 export * from './nearDuplicates';
 export * from './modelProviders';
+export * from './captions';
+export * from './mediaFacts';
+export * from './ollamaVisionOcr';

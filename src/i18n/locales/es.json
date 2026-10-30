@@ -8258,7 +8258,21 @@
     "lostEntities": "Entidades perdidas",
     "intent": "Intención: {{from}} a {{to}}",
     "format": "Formato: {{from}} a {{to}}",
-    "incompatible": "Distinto: {{fields}}. No es un cambio de mercado."
+    "incompatible": "Distinto: {{fields}}. No es un cambio de mercado.",
+    "labels": {
+      "video": "vídeo",
+      "forum": "foro",
+      "product": "página de producto",
+      "category": "página de categoría",
+      "guide": "guía",
+      "listicle": "ranking/lista",
+      "news": "noticias",
+      "tool": "herramienta",
+      "encyclopedia": "enciclopedia",
+      "homepage": "página de inicio",
+      "transactional": "transaccional",
+      "informational": "informativa"
+    }
   },
   "sijaUi": {
     "title": "Intención de búsqueda (SIJA)",
@@ -8586,7 +8600,7 @@
     "complete": "Importación completa.",
     "storageFailed": "No se pudo actualizar el almacenamiento local. Los cambios solo quedan en memoria; los registros guardados podrían no cambiar.",
     "tooLarge": "El archivo supera el límite de 500 MB.",
-    "invalidFile": "Elige un archivo .log o .txt.",
+    "invalidFile": "Elige un registro de acceso .log, .txt o .gz rotado.",
     "resumeRequired": "Reanuda el archivo incompleto o borra los registros antes de importar otro.",
     "importFailed": "No se pudo leer el archivo o calcular su hash. Inténtalo de nuevo.",
     "resume": "Selecciona el mismo archivo para reanudar sin contar líneas dos veces.",
@@ -8646,7 +8660,10 @@
         "too-many-prefixes": "El archivo contiene más de 5000 rangos.",
         "storageFailed": "No se pudo actualizar el almacenamiento local; los rangos no se guardaron."
       }
-    }
+    },
+    "gzipTooLarge": "El registro descomprimido supera el límite de 2 GB.",
+    "gzipCorrupt": "El archivo .gz está dañado o no es gzip.",
+    "gzipUnsupported": "Este sistema no puede descomprimir archivos .gz; descomprímelo primero."
   },
   "altCheckUi": {
     "column": "Calidad del ALT",
@@ -8805,6 +8822,11 @@
         "unavailable": "No disponible"
       },
       "privacy": "Los últimos 10 análisis completados se guardan localmente por proyecto. Nunca se guardan el texto completo de las páginas ni los vectores."
+    },
+    "stance": {
+      "negated": "Mención negada; no es una recomendación",
+      "critical": "Lenguaje crítico junto a la marca; no es una recomendación",
+      "quoted": "Opinión citada o atribuida; no es una recomendación propia de la fuente"
     }
   },
   "experimentsUi": {
@@ -8968,7 +8990,14 @@
     "absolute": "Efecto acumulado en clics: {{value}} (intervalo del 95 %: {{lower}} a {{upper}}).",
     "relative": "Efecto relativo: {{value}} (intervalo del 95 %: {{lower}} a {{upper}}).",
     "probability": "Probabilidad de que el efecto tenga este signo: {{value}} (aproximación normal, no una posterior bayesiana).",
-    "caveat": "Una estimación ajustada por el control no prueba causalidad. Otros cambios, actualizaciones de Google o variaciones que también afecten al control pueden sesgarla. No se infiere ROI."
+    "caveat": "Una estimación ajustada por el control no prueba causalidad. Otros cambios, actualizaciones de Google o variaciones que también afecten al control pueden sesgarla. No se infiere ROI.",
+    "backtest": {
+      "passed": "Backtest superado: {{runs}} pseudointervenciones en el periodo previo no encontraron efecto.",
+      "failed": "Backtest fallido: {{fp}} de {{runs}} pseudointervenciones en el periodo previo encontraron un efecto inexistente. No confíes en esta estimación.",
+      "not-estimable": "Backtest imposible: el periodo previo es demasiado corto para pseudointervenciones."
+    },
+    "familySignificant": "Sigue siendo significativo tras ajustar por {{family}} experimentos mostrados juntos (Holm, p = {{p}}).",
+    "familyNotSignificant": "No significativo tras ajustar por {{family}} experimentos mostrados juntos (Holm, p = {{p}})."
   },
   "revenueImportUi": {
     "title": "Ingresos (exportación opcional de GA4)",

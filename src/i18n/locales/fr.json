@@ -8258,7 +8258,21 @@
     "lostEntities": "Entités perdues",
     "intent": "Intention : {{from}} vers {{to}}",
     "format": "Format : {{from}} vers {{to}}",
-    "incompatible": "Différent : {{fields}}. Ce n'est pas un changement de marché."
+    "incompatible": "Différent : {{fields}}. Ce n'est pas un changement de marché.",
+    "labels": {
+      "video": "vidéo",
+      "forum": "forum",
+      "product": "page produit",
+      "category": "page catégorie",
+      "guide": "guide",
+      "listicle": "classement/liste",
+      "news": "actualités",
+      "tool": "outil",
+      "encyclopedia": "encyclopédie",
+      "homepage": "page d’accueil",
+      "transactional": "transactionnelle",
+      "informational": "informationnelle"
+    }
   },
   "sijaUi": {
     "title": "Intention de recherche (SIJA)",
@@ -8586,7 +8600,7 @@
     "complete": "Importation terminée.",
     "storageFailed": "Impossible de mettre à jour le stockage local. Les modifications restent en mémoire ; les journaux enregistrés peuvent rester inchangés.",
     "tooLarge": "Le fichier dépasse la limite de 500 Mo.",
-    "invalidFile": "Choisissez un fichier .log ou .txt.",
+    "invalidFile": "Choisissez un journal d’accès .log, .txt ou .gz issu d’une rotation.",
     "resumeRequired": "Reprenez le fichier incomplet ou effacez les journaux avant d’en importer un autre.",
     "importFailed": "Impossible de lire le fichier ou de calculer son empreinte. Réessayez.",
     "resume": "Sélectionnez le même fichier pour reprendre sans compter deux fois les lignes.",
@@ -8646,7 +8660,10 @@
         "too-many-prefixes": "Le fichier contient plus de 5 000 plages.",
         "storageFailed": "Le stockage local n’a pas pu être mis à jour ; les plages n’ont pas été enregistrées."
       }
-    }
+    },
+    "gzipTooLarge": "Le journal décompressé dépasse la limite de 2 Go.",
+    "gzipCorrupt": "Le fichier .gz est endommagé ou n’est pas au format gzip.",
+    "gzipUnsupported": "Ce système ne peut pas décompresser les fichiers .gz ; décompressez-le d’abord."
   },
   "altCheckUi": {
     "column": "Qualité de l'ALT",
@@ -8805,6 +8822,11 @@
         "unavailable": "Indisponible"
       },
       "privacy": "Les 10 dernières analyses terminées sont conservées localement par projet. Le texte intégral des pages et les vecteurs ne sont jamais enregistrés."
+    },
+    "stance": {
+      "negated": "Mention négative ; pas une recommandation",
+      "critical": "Termes critiques près de la marque ; pas une recommandation",
+      "quoted": "Opinion citée ou attribuée ; pas une recommandation de la source elle-même"
     }
   },
   "experimentsUi": {
@@ -8968,7 +8990,14 @@
     "absolute": "Effet cumulé sur les clics : {{value}} (intervalle à 95 % de {{lower}} à {{upper}}).",
     "relative": "Effet relatif : {{value}} (intervalle à 95 % de {{lower}} à {{upper}}).",
     "probability": "Probabilité que l’effet ait ce signe : {{value}} (approximation normale, pas une loi a posteriori bayésienne).",
-    "caveat": "Une estimation ajustée sur le témoin ne prouve pas la causalité. D’autres changements, des mises à jour Google ou une variation touchant aussi le témoin peuvent la biaiser. Aucun ROI n’est déduit."
+    "caveat": "Une estimation ajustée sur le témoin ne prouve pas la causalité. D’autres changements, des mises à jour Google ou une variation touchant aussi le témoin peuvent la biaiser. Aucun ROI n’est déduit.",
+    "backtest": {
+      "passed": "Backtest réussi : {{runs}} pseudo-interventions dans la période antérieure n’ont trouvé aucun effet.",
+      "failed": "Backtest échoué : {{fp}} sur {{runs}} pseudo-interventions dans la période antérieure ont trouvé un effet inexistant. Ne vous fiez pas à cette estimation.",
+      "not-estimable": "Backtest impossible : la période antérieure est trop courte pour des pseudo-interventions."
+    },
+    "familySignificant": "Toujours significatif après ajustement pour {{family}} expériences affichées ensemble (Holm, p = {{p}}).",
+    "familyNotSignificant": "Non significatif après ajustement pour {{family}} expériences affichées ensemble (Holm, p = {{p}})."
   },
   "revenueImportUi": {
     "title": "Revenus (export GA4 facultatif)",

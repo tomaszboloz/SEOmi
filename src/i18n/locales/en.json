@@ -8258,7 +8258,21 @@
     "lostEntities": "Lost entities",
     "intent": "Intent: {{from}} to {{to}}",
     "format": "Format: {{from}} to {{to}}",
-    "incompatible": "Different {{fields}}: not a market change."
+    "incompatible": "Different {{fields}}: not a market change.",
+    "labels": {
+      "video": "video",
+      "forum": "forum",
+      "product": "product page",
+      "category": "category page",
+      "guide": "guide",
+      "listicle": "ranking/list",
+      "news": "news",
+      "tool": "tool",
+      "encyclopedia": "encyclopedia",
+      "homepage": "home page",
+      "transactional": "transactional",
+      "informational": "informational"
+    }
   },
   "sijaUi": {
     "title": "Search intent (SIJA)",
@@ -8586,7 +8600,7 @@
     "complete": "Import complete.",
     "storageFailed": "Local storage could not be updated. Changes remain in memory only; saved logs may be unchanged.",
     "tooLarge": "This file exceeds the 500 MB limit.",
-    "invalidFile": "Choose a .log or .txt file.",
+    "invalidFile": "Choose a .log, .txt or rotated .gz access log.",
     "resumeRequired": "Resume the unfinished file or clear logs before importing a different file.",
     "importFailed": "The file could not be read or hashed. Please try again.",
     "resume": "Select the same file to resume without counting lines twice.",
@@ -8646,7 +8660,10 @@
         "too-many-prefixes": "The file contains more than 5,000 ranges.",
         "storageFailed": "Local storage could not be updated; the ranges were not saved."
       }
-    }
+    },
+    "gzipTooLarge": "The decompressed log exceeds the 2 GB limit.",
+    "gzipCorrupt": "The .gz file is damaged or not gzip.",
+    "gzipUnsupported": "This system cannot decompress .gz files; decompress it first."
   },
   "altCheckUi": {
     "column": "ALT quality",
@@ -8805,6 +8822,11 @@
         "unavailable": "Unavailable"
       },
       "privacy": "The last 10 completed analyses are stored locally per project. Full page text and vectors are never saved."
+    },
+    "stance": {
+      "negated": "Negated mention; not a recommendation",
+      "critical": "Critical wording near the brand; not a recommendation",
+      "quoted": "Quoted or attributed opinion; not the source's own recommendation"
     }
   },
   "experimentsUi": {
@@ -8968,7 +8990,14 @@
     "absolute": "Cumulative effect on clicks: {{value}} (95% interval {{lower}} to {{upper}}).",
     "relative": "Relative effect: {{value}} (95% interval {{lower}} to {{upper}}).",
     "probability": "Probability that the effect has this sign: {{value}} (normal approximation, not a Bayesian posterior).",
-    "caveat": "An estimate adjusted for the control is not proof of causality. Other changes, Google updates or a shift that also affects the control can bias it. No ROI is inferred."
+    "caveat": "An estimate adjusted for the control is not proof of causality. Other changes, Google updates or a shift that also affects the control can bias it. No ROI is inferred.",
+    "backtest": {
+      "passed": "Backtest passed: {{runs}} pseudo-interventions in the pre-period found no effect.",
+      "failed": "Backtest failed: {{fp}} of {{runs}} pseudo-interventions in the pre-period found an effect where none happened. Do not trust this estimate.",
+      "not-estimable": "Backtest not possible: the pre-period is too short for pseudo-interventions."
+    },
+    "familySignificant": "Still significant after adjusting for {{family}} experiments shown together (Holm, p = {{p}}).",
+    "familyNotSignificant": "Not significant after adjusting for {{family}} experiments shown together (Holm, p = {{p}})."
   },
   "revenueImportUi": {
     "title": "Revenue (optional GA4 export)",

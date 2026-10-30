@@ -8258,7 +8258,21 @@
     "lostEntities": "消失实体",
     "intent": "意图：{{from}} 变为 {{to}}",
     "format": "形式：{{from}} 变为 {{to}}",
-    "incompatible": "{{fields}} 不同，这不是市场变化。"
+    "incompatible": "{{fields}} 不同，这不是市场变化。",
+    "labels": {
+      "video": "视频",
+      "forum": "论坛",
+      "product": "产品页",
+      "category": "分类页",
+      "guide": "指南",
+      "listicle": "排行/列表",
+      "news": "新闻",
+      "tool": "工具",
+      "encyclopedia": "百科",
+      "homepage": "首页",
+      "transactional": "交易型",
+      "informational": "信息型"
+    }
   },
   "sijaUi": {
     "title": "搜索意图 (SIJA)",
@@ -8586,7 +8600,7 @@
     "complete": "导入完成。",
     "storageFailed": "无法更新本地存储。更改仅保留在内存中，已保存的日志可能未变。",
     "tooLarge": "文件超过500 MB限制。",
-    "invalidFile": "请选择 .log 或 .txt 文件。",
+    "invalidFile": "请选择 .log、.txt 或轮转后的 .gz 访问日志。",
     "resumeRequired": "导入其他文件前请恢复未完成的文件或清除日志。",
     "importFailed": "无法读取文件或计算哈希。请重试。",
     "resume": "选择相同文件即可继续，且不会重复计算行数。",
@@ -8646,7 +8660,10 @@
         "too-many-prefixes": "文件包含超过 5,000 个范围。",
         "storageFailed": "无法更新本地存储；范围未保存。"
       }
-    }
+    },
+    "gzipTooLarge": "解压后的日志超过 2 GB 上限。",
+    "gzipCorrupt": ".gz 文件已损坏或不是 gzip。",
+    "gzipUnsupported": "此系统无法解压 .gz 文件；请先解压。"
   },
   "altCheckUi": {
     "column": "ALT 质量",
@@ -8805,6 +8822,11 @@
         "unavailable": "不可用"
       },
       "privacy": "每个项目在本地保存最近 10 次已完成的分析。绝不保存页面全文或向量。"
+    },
+    "stance": {
+      "negated": "否定提及；不是推荐",
+      "critical": "品牌附近有批评性措辞；不是推荐",
+      "quoted": "引用或转述的观点；不是来源本身的推荐"
     }
   },
   "experimentsUi": {
@@ -8968,7 +8990,14 @@
     "absolute": "对点击的累计效应：{{value}}（95% 区间 {{lower}} 至 {{upper}}）。",
     "relative": "相对效应：{{value}}（95% 区间 {{lower}} 至 {{upper}}）。",
     "probability": "效应为此符号的概率：{{value}}（正态近似，不是贝叶斯后验）。",
-    "caveat": "经对照调整的估计并不能证明因果关系。其他变更、Google 更新或同样影响对照的变化都可能使其产生偏差。不推断 ROI。"
+    "caveat": "经对照调整的估计并不能证明因果关系。其他变更、Google 更新或同样影响对照的变化都可能使其产生偏差。不推断 ROI。",
+    "backtest": {
+      "passed": "回测通过：前期内 {{runs}} 次伪干预均未发现效应。",
+      "failed": "回测未通过：前期内 {{runs}} 次伪干预中有 {{fp}} 次发现了并不存在的效应。不要信任此估计。",
+      "not-estimable": "无法回测：前期太短，无法进行伪干预。"
+    },
+    "familySignificant": "对同时显示的 {{family}} 个实验校正后仍显著（Holm，p = {{p}}）。",
+    "familyNotSignificant": "对同时显示的 {{family}} 个实验校正后不显著（Holm，p = {{p}}）。"
   },
   "revenueImportUi": {
     "title": "收入（可选的 GA4 导出）",

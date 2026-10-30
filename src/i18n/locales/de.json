@@ -8258,7 +8258,21 @@
     "lostEntities": "Verlorene Entitäten",
     "intent": "Intent: {{from}} zu {{to}}",
     "format": "Format: {{from}} zu {{to}}",
-    "incompatible": "Abweichend: {{fields}}. Das ist keine Marktveränderung."
+    "incompatible": "Abweichend: {{fields}}. Das ist keine Marktveränderung.",
+    "labels": {
+      "video": "Video",
+      "forum": "Forum",
+      "product": "Produktseite",
+      "category": "Kategorieseite",
+      "guide": "Ratgeber",
+      "listicle": "Ranking/Liste",
+      "news": "Nachrichten",
+      "tool": "Tool",
+      "encyclopedia": "Enzyklopädie",
+      "homepage": "Startseite",
+      "transactional": "transaktional",
+      "informational": "informativ"
+    }
   },
   "sijaUi": {
     "title": "Suchintention (SIJA)",
@@ -8586,7 +8600,7 @@
     "complete": "Import abgeschlossen.",
     "storageFailed": "Lokaler Speicher konnte nicht aktualisiert werden. Änderungen bleiben nur im Arbeitsspeicher; gespeicherte Logs sind eventuell unverändert.",
     "tooLarge": "Die Datei überschreitet das Limit von 500 MB.",
-    "invalidFile": "Eine .log- oder .txt-Datei auswählen.",
+    "invalidFile": "Wählen Sie ein .log-, .txt- oder rotiertes .gz-Zugriffslog.",
     "resumeRequired": "Die unvollständige Datei fortsetzen oder Logs löschen, bevor eine andere Datei importiert wird.",
     "importFailed": "Die Datei konnte nicht gelesen oder gehasht werden. Bitte erneut versuchen.",
     "resume": "Dieselbe Datei auswählen, um ohne doppelte Zeilenzählung fortzusetzen.",
@@ -8646,7 +8660,10 @@
         "too-many-prefixes": "Die Datei enthält mehr als 5.000 Bereiche.",
         "storageFailed": "Der lokale Speicher konnte nicht aktualisiert werden; die Bereiche wurden nicht gespeichert."
       }
-    }
+    },
+    "gzipTooLarge": "Das entpackte Log überschreitet die Grenze von 2 GB.",
+    "gzipCorrupt": "Die .gz-Datei ist beschädigt oder kein gzip.",
+    "gzipUnsupported": "Dieses System kann .gz-Dateien nicht entpacken; entpacken Sie die Datei zuerst."
   },
   "altCheckUi": {
     "column": "ALT-Qualität",
@@ -8805,6 +8822,11 @@
         "unavailable": "Nicht verfügbar"
       },
       "privacy": "Die letzten 10 abgeschlossenen Analysen werden lokal je Projekt gespeichert. Vollständige Seitentexte und Vektoren werden nie gespeichert."
+    },
+    "stance": {
+      "negated": "Verneinte Erwähnung; keine Empfehlung",
+      "critical": "Kritische Wortwahl bei der Marke; keine Empfehlung",
+      "quoted": "Zitierte oder zugeschriebene Meinung; keine eigene Empfehlung der Quelle"
     }
   },
   "experimentsUi": {
@@ -8968,7 +8990,14 @@
     "absolute": "Kumulierter Effekt auf Klicks: {{value}} (95-%-Intervall {{lower}} bis {{upper}}).",
     "relative": "Relativer Effekt: {{value}} (95-%-Intervall {{lower}} bis {{upper}}).",
     "probability": "Wahrscheinlichkeit, dass der Effekt dieses Vorzeichen hat: {{value}} (Normalapproximation, keine Bayes-Posterior).",
-    "caveat": "Eine um die Kontrolle bereinigte Schätzung beweist keine Kausalität. Andere Änderungen, Google-Updates oder Verschiebungen, die auch die Kontrolle betreffen, können sie verzerren. Kein ROI wird abgeleitet."
+    "caveat": "Eine um die Kontrolle bereinigte Schätzung beweist keine Kausalität. Andere Änderungen, Google-Updates oder Verschiebungen, die auch die Kontrolle betreffen, können sie verzerren. Kein ROI wird abgeleitet.",
+    "backtest": {
+      "passed": "Backtest bestanden: {{runs}} Schein-Interventionen im Vorzeitraum fanden keinen Effekt.",
+      "failed": "Backtest nicht bestanden: {{fp}} von {{runs}} Schein-Interventionen im Vorzeitraum fanden einen Effekt, obwohl keiner stattfand. Dieser Schätzung nicht vertrauen.",
+      "not-estimable": "Backtest nicht möglich: Der Vorzeitraum ist für Schein-Interventionen zu kurz."
+    },
+    "familySignificant": "Nach Korrektur für {{family}} gemeinsam angezeigte Experimente weiterhin signifikant (Holm, p = {{p}}).",
+    "familyNotSignificant": "Nach Korrektur für {{family}} gemeinsam angezeigte Experimente nicht signifikant (Holm, p = {{p}})."
   },
   "revenueImportUi": {
     "title": "Umsatz (optionaler GA4-Export)",

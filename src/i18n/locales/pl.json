@@ -8258,7 +8258,21 @@
     "lostEntities": "Utracone encje",
     "intent": "Intencja: {{from}} na {{to}}",
     "format": "Format: {{from}} na {{to}}",
-    "incompatible": "Różne pola: {{fields}}. To nie jest zmiana rynku."
+    "incompatible": "Różne pola: {{fields}}. To nie jest zmiana rynku.",
+    "labels": {
+      "video": "wideo",
+      "forum": "forum",
+      "product": "strona produktu",
+      "category": "strona kategorii",
+      "guide": "poradnik",
+      "listicle": "ranking/lista",
+      "news": "aktualności",
+      "tool": "narzędzie",
+      "encyclopedia": "encyklopedia",
+      "homepage": "strona główna",
+      "transactional": "transakcyjna",
+      "informational": "informacyjna"
+    }
   },
   "sijaUi": {
     "title": "Intencja wyszukiwania (SIJA)",
@@ -8586,7 +8600,7 @@
     "complete": "Import zakończony.",
     "storageFailed": "Nie udało się zaktualizować pamięci lokalnej. Zmiany pozostają tylko w pamięci; zapisane logi mogą być bez zmian.",
     "tooLarge": "Plik przekracza limit 500 MB.",
-    "invalidFile": "Wybierz plik .log lub .txt.",
+    "invalidFile": "Wybierz log dostępu .log, .txt lub zrotowany .gz.",
     "resumeRequired": "Wznów niedokończony plik lub wyczyść logi przed importem innego pliku.",
     "importFailed": "Nie udało się odczytać pliku lub obliczyć skrótu. Spróbuj ponownie.",
     "resume": "Wybierz ten sam plik, aby wznowić import bez podwójnego zliczania wierszy.",
@@ -8646,7 +8660,10 @@
         "too-many-prefixes": "Plik zawiera ponad 5000 zakresów.",
         "storageFailed": "Nie udało się zapisać w pamięci lokalnej; zakresy nie zostały zapisane."
       }
-    }
+    },
+    "gzipTooLarge": "Rozpakowany log przekracza limit 2 GB.",
+    "gzipCorrupt": "Plik .gz jest uszkodzony albo to nie gzip.",
+    "gzipUnsupported": "Ten system nie rozpakuje plików .gz; najpierw rozpakuj plik."
   },
   "altCheckUi": {
     "column": "Jakość ALT",
@@ -8805,6 +8822,11 @@
         "unavailable": "Niedostępne"
       },
       "privacy": "Ostatnie 10 ukończonych analiz jest zapisanych lokalnie dla każdego projektu. Pełny tekst stron i wektory nigdy nie są zapisywane."
+    },
+    "stance": {
+      "negated": "Wzmianka z przeczeniem; to nie rekomendacja",
+      "critical": "Krytyczne słowa przy marce; to nie rekomendacja",
+      "quoted": "Cytat lub cudza opinia; to nie rekomendacja samego źródła"
     }
   },
   "experimentsUi": {
@@ -8968,7 +8990,14 @@
     "absolute": "Skumulowany efekt na kliknięcia: {{value}} (przedział 95% od {{lower}} do {{upper}}).",
     "relative": "Efekt względny: {{value}} (przedział 95% od {{lower}} do {{upper}}).",
     "probability": "Prawdopodobieństwo, że efekt ma ten znak: {{value}} (przybliżenie normalne, nie bayesowski rozkład a posteriori).",
-    "caveat": "Estymacja skorygowana o kontrolę nie dowodzi przyczynowości. Inne zmiany, aktualizacje Google lub przesunięcie wpływające też na kontrolę mogą ją zniekształcić. Nie wyliczamy ROI."
+    "caveat": "Estymacja skorygowana o kontrolę nie dowodzi przyczynowości. Inne zmiany, aktualizacje Google lub przesunięcie wpływające też na kontrolę mogą ją zniekształcić. Nie wyliczamy ROI.",
+    "backtest": {
+      "passed": "Backtest zaliczony: {{runs}} pozorne interwencje w okresie przed zmianą nie wykazały efektu.",
+      "failed": "Backtest niezaliczony: {{fp}} z {{runs}} pozornych interwencji w okresie przed zmianą wykazało efekt, którego nie było. Nie ufaj tej estymacji.",
+      "not-estimable": "Backtest niemożliwy: okres przed zmianą jest za krótki na pozorne interwencje."
+    },
+    "familySignificant": "Nadal istotne po korekcie na {{family}} eksperymentów pokazanych razem (Holm, p = {{p}}).",
+    "familyNotSignificant": "Nieistotne po korekcie na {{family}} eksperymentów pokazanych razem (Holm, p = {{p}})."
   },
   "revenueImportUi": {
     "title": "Przychód (opcjonalny eksport GA4)",

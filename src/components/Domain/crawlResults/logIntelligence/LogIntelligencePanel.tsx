@@ -20,7 +20,7 @@ export default function LogIntelligencePanel({ projectId, run }: { projectId: st
     <p className="text-sm text-slate-400">{translate('logIntelUi.description')}</p>
     <div className="flex flex-wrap items-center gap-3">
       <label htmlFor={inputId}>{translate('logIntelUi.chooseFile')}</label>
-      <input id={inputId} type="file" accept=".log,.txt" disabled={importer.busy} onChange={(event) => {
+      <input id={inputId} type="file" accept=".log,.txt,.gz" disabled={importer.busy} onChange={(event) => {
         const file = event.currentTarget.files?.[0];
         event.currentTarget.value = '';
         if (file) void importer.importFile(file);

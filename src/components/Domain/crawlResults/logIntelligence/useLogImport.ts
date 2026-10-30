@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from 'react';
 import { emptyImportState, importAccessLog, type LogImportState } from '@/services/logIntelligence';
 import { hashLogFile, LOG_CHUNK_BYTES, LogFileError, readLogLines } from '@/services/logIntelligence/browserFile';
 import { desktopResolver } from '@/services/logIntelligence/desktopResolver';
+import { LogDecompressionError } from '@/services/logIntelligence/gzipLog';
 import { clearLogState, readLogState, saveLogState } from '@/services/logIntelligence/storage';
 import { rangesByFamily, readPublishedRanges } from '@/services/logIntelligence/publishedRanges';
 
@@ -46,7 +47,7 @@ export const useLogImport = (projectId: string) => {
         if (!saved) setError('storageFailed');
       }
     } catch (failure) {
-      if (mounted.current) setError(failure instanceof LogFileError ? failure.code : 'importFailed');
+      if (mounted.current) setError(failure instanceof LogFileError || failure instanceof LogDecompressionError ? failure.code : 'importFailed');
     } finally {
       working.current = false;
       if (mounted.current) setBusy(false);

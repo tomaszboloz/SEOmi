@@ -21,6 +21,10 @@ export const CausalImpactSection = ({ setup }: { setup: CausalSetup }) => {
       })}</p>}
       {estimate.absolute && <p>{t('causalImpactUi.absolute', { value: number(estimate.absolute.estimate), lower: number(estimate.absolute.lower), upper: number(estimate.absolute.upper) })}</p>}
       {estimate.relative && <p>{t('causalImpactUi.relative', { value: percent(estimate.relative.estimate), lower: percent(estimate.relative.lower), upper: percent(estimate.relative.upper) })}</p>}
+      {setup.backtest && <p>{t(`causalImpactUi.backtest.${setup.backtest.status}`, { runs: setup.backtest.runs, fp: setup.backtest.falsePositives })}</p>}
+      {setup.family && setup.family.adjustedP !== null && setup.family.family > 1 && <p>{t(setup.family.significant ? 'causalImpactUi.familySignificant' : 'causalImpactUi.familyNotSignificant', {
+        family: setup.family.family, p: number(setup.family.adjustedP, 3).replace(/^\+/u, ''),
+      })}</p>}
       {estimate.probability !== null && <p>{t('causalImpactUi.probability', { value: percent(estimate.probability).replace(/^\+/u, '') })}</p>}
     </>}
     <p>{t('causalImpactUi.caveat')}</p>
