@@ -8569,5 +8569,40 @@
     "languageFallback": "ページの言語が不明なため、文は英語です。",
     "copy": "コピー",
     "copied": "コピーしました"
+  },
+  "offPageLinksUi": {
+    "profileTitle": "サイト全体リンクと重複リンクのプロファイル",
+    "profileSummary": "{{domains}} 件の参照元ドメインから生リンク {{raw}} 件（follow リンクあり {{follow}} 件）。サイト全体ドメイン：{{sitewide}} 件（生リンクの {{share}}%）、繰り返しドメイン：{{repeated}} 件。TBVA は参照元ドメインごとに 1 リンクのみ数えます。",
+    "unknown": "不明",
+    "sample": "読み込んだサンプルに基づくもので、プロバイダーの全プロファイルではありません。",
+    "complete": "プロバイダーが返したすべての行に基づきます。",
+    "rule": "サイト全体 = 参照元ページ 5 件以上かつ異なるアンカー 2 件以下（未較正のヒューリスティックで、ペナルティではありません）。",
+    "columns": {
+      "domain": "参照元ドメイン",
+      "raw": "生リンク",
+      "follow": "Follow",
+      "pages": "参照元ページ",
+      "anchors": "異なるアンカー",
+      "pattern": "パターン"
+    },
+    "patterns": {
+      "single": "単一ページ",
+      "repeated": "繰り返し",
+      "sitewide": "サイト全体"
+    },
+    "anchorTitle": "分析したリンクのアンカー文脈",
+    "anchorNote": "プロバイダーが報告したアンカーテキストを取得済みの参照元テキストから探します。テキストにはリンクのマークアップがないため、一致は周辺の語を示すだけで、その出現がリンクである証拠ではありません。",
+    "noAnchors": "読み込んだサンプルには、分析した参照元ページのリンクがありません。",
+    "anchorRow": "{{source}} → {{target}} · アンカー「{{anchor}}」",
+    "follow": "follow",
+    "nofollow": "nofollow",
+    "offset": "オフセット {{offset}}：",
+    "status": {
+      "located": "アンカーが 1 回見つかりました",
+      "ambiguous": "アンカーが {{n}} 回見つかりました（曖昧）",
+      "not-found": "参照元テキストにアンカーが見つかりません",
+      "no-anchor-text": "アンカーテキストなし（画像リンクなど）",
+      "source-unavailable": "参照元テキストを利用できません"
+    }
   }
 }

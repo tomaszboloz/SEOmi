@@ -8569,5 +8569,40 @@
     "languageFallback": "页面语言未知：句子为英文。",
     "copy": "复制",
     "copied": "已复制"
+  },
+  "offPageLinksUi": {
+    "profileTitle": "全站链接与重复链接概况",
+    "profileSummary": "来自 {{domains}} 个来源域名的 {{raw}} 条原始链接（{{follow}} 个含 follow 链接）。全站链接域名：{{sitewide}} 个（占原始链接 {{share}}%）；重复域名：{{repeated}} 个。TBVA 每个来源域名只计一条链接。",
+    "unknown": "未知",
+    "sample": "基于已加载的样本，而非提供商的完整概况。",
+    "complete": "基于提供商返回的全部行。",
+    "rule": "全站链接 = 至少 5 个来源页面且不同锚文本不超过 2 个（未校准的启发式规则，不是惩罚）。",
+    "columns": {
+      "domain": "来源域名",
+      "raw": "原始链接",
+      "follow": "Follow",
+      "pages": "来源页面",
+      "anchors": "不同锚文本",
+      "pattern": "模式"
+    },
+    "patterns": {
+      "single": "单页",
+      "repeated": "重复",
+      "sitewide": "全站"
+    },
+    "anchorTitle": "已分析链接的锚文本上下文",
+    "anchorNote": "在已抓取的来源文本中查找提供商报告的锚文本。文本不含链接标记，因此匹配只显示周围的词语，不能证明该处出现就是链接。",
+    "noAnchors": "已加载的样本中，已分析的来源页面没有链接。",
+    "anchorRow": "{{source}} → {{target}} · 锚文本“{{anchor}}”",
+    "follow": "follow",
+    "nofollow": "nofollow",
+    "offset": "偏移 {{offset}}：",
+    "status": {
+      "located": "锚文本出现一次",
+      "ambiguous": "锚文本出现 {{n}} 次（不明确）",
+      "not-found": "来源文本中未找到锚文本",
+      "no-anchor-text": "无锚文本（例如图片链接）",
+      "source-unavailable": "来源文本不可用"
+    }
   }
 }

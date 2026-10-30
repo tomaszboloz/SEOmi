@@ -8569,5 +8569,40 @@
     "languageFallback": "Seitensprache unbekannt: Der Satz ist auf Englisch.",
     "copy": "Kopieren",
     "copied": "Kopiert"
+  },
+  "offPageLinksUi": {
+    "profileTitle": "Sitewide- und Duplikat-Linkprofil",
+    "profileSummary": "{{raw}} Rohlinks von {{domains}} Quelldomains ({{follow}} mit Follow-Link). Sitewide-Domains: {{sitewide}} ({{share}} % der Rohlinks); wiederholte Domains: {{repeated}}. TBVA zählt einen Link pro Quelldomain.",
+    "unknown": "unbekannt",
+    "sample": "Basierend auf der geladenen Stichprobe, nicht dem vollständigen Anbieterprofil.",
+    "complete": "Basierend auf allen vom Anbieter gelieferten Zeilen.",
+    "rule": "Sitewide = mindestens 5 Quellseiten mit höchstens 2 verschiedenen Ankern (unkalibrierte Heuristik, keine Abwertung).",
+    "columns": {
+      "domain": "Quelldomain",
+      "raw": "Rohlinks",
+      "follow": "Follow",
+      "pages": "Quellseiten",
+      "anchors": "Verschiedene Anker",
+      "pattern": "Muster"
+    },
+    "patterns": {
+      "single": "Einzelseite",
+      "repeated": "Wiederholt",
+      "sitewide": "Sitewide"
+    },
+    "anchorTitle": "Ankerkontext der analysierten Links",
+    "anchorNote": "Sucht den vom Anbieter gemeldeten Ankertext im abgerufenen Quelltext. Der Text enthält kein Link-Markup; ein Treffer zeigt die umgebenden Wörter, ist aber kein Beweis, dass genau dieses Vorkommen der Link ist.",
+    "noAnchors": "Keine analysierte Quellseite hat einen Link in der geladenen Stichprobe.",
+    "anchorRow": "{{source}} → {{target}} · Anker „{{anchor}}“",
+    "follow": "follow",
+    "nofollow": "nofollow",
+    "offset": "Offset {{offset}}:",
+    "status": {
+      "located": "Anker einmal gefunden",
+      "ambiguous": "Anker {{n}}-mal gefunden (mehrdeutig)",
+      "not-found": "Anker im Quelltext nicht gefunden",
+      "no-anchor-text": "kein Ankertext (z. B. Bildlink)",
+      "source-unavailable": "Quelltext nicht verfügbar"
+    }
   }
 }

@@ -8569,5 +8569,40 @@
     "languageFallback": "Langue de la page inconnue : la phrase est en anglais.",
     "copy": "Copier",
     "copied": "Copié"
+  },
+  "offPageLinksUi": {
+    "profileTitle": "Profil des liens sitewide et dupliqués",
+    "profileSummary": "{{raw}} liens bruts depuis {{domains}} domaines sources ({{follow}} avec un lien follow). Domaines sitewide : {{sitewide}} ({{share}} % des liens bruts) ; domaines répétés : {{repeated}}. Le TBVA compte un lien par domaine source.",
+    "unknown": "inconnu",
+    "sample": "Basé sur l’échantillon chargé, pas sur le profil complet du fournisseur.",
+    "complete": "Basé sur toutes les lignes renvoyées par le fournisseur.",
+    "rule": "Sitewide = au moins 5 pages sources avec au plus 2 ancres distinctes (heuristique non calibrée, pas une pénalité).",
+    "columns": {
+      "domain": "Domaine source",
+      "raw": "Liens bruts",
+      "follow": "Follow",
+      "pages": "Pages sources",
+      "anchors": "Ancres distinctes",
+      "pattern": "Schéma"
+    },
+    "patterns": {
+      "single": "Page unique",
+      "repeated": "Répété",
+      "sitewide": "Sitewide"
+    },
+    "anchorTitle": "Contexte d’ancre des liens analysés",
+    "anchorNote": "Recherche le texte d’ancre indiqué par le fournisseur dans le texte source récupéré. Le texte ne contient pas de balisage de lien : une correspondance montre les mots voisins, pas la preuve que cette occurrence est le lien.",
+    "noAnchors": "Aucune page source analysée n’a de lien dans l’échantillon chargé.",
+    "anchorRow": "{{source}} → {{target}} · ancre « {{anchor}} »",
+    "follow": "follow",
+    "nofollow": "nofollow",
+    "offset": "Décalage {{offset}} :",
+    "status": {
+      "located": "ancre trouvée une fois",
+      "ambiguous": "ancre trouvée {{n}} fois (ambigu)",
+      "not-found": "ancre introuvable dans le texte source",
+      "no-anchor-text": "pas de texte d’ancre (par exemple un lien image)",
+      "source-unavailable": "texte source indisponible"
+    }
   }
 }

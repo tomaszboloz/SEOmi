@@ -8569,5 +8569,40 @@
     "languageFallback": "Page language unknown: the sentence is in English.",
     "copy": "Copy",
     "copied": "Copied"
+  },
+  "offPageLinksUi": {
+    "profileTitle": "Sitewide and duplicate link profile",
+    "profileSummary": "{{raw}} raw links from {{domains}} source domains ({{follow}} with a follow link). Sitewide domains: {{sitewide}} ({{share}}% of raw links); repeated domains: {{repeated}}. TBVA counts one link per source domain.",
+    "unknown": "unknown",
+    "sample": "Based on the loaded sample, not the full provider profile.",
+    "complete": "Based on all rows the provider returned.",
+    "rule": "Sitewide = at least 5 source pages with at most 2 distinct anchors (uncalibrated heuristic, not a penalty).",
+    "columns": {
+      "domain": "Source domain",
+      "raw": "Raw links",
+      "follow": "Follow",
+      "pages": "Source pages",
+      "anchors": "Distinct anchors",
+      "pattern": "Pattern"
+    },
+    "patterns": {
+      "single": "Single page",
+      "repeated": "Repeated",
+      "sitewide": "Sitewide"
+    },
+    "anchorTitle": "Anchor context of analysed links",
+    "anchorNote": "Searches the provider-reported anchor text in the fetched source text. The text has no link markup, so a match shows the surrounding words, not proof that this occurrence is the link.",
+    "noAnchors": "No analysed source page has a link in the loaded sample.",
+    "anchorRow": "{{source}} → {{target}} · anchor “{{anchor}}”",
+    "follow": "follow",
+    "nofollow": "nofollow",
+    "offset": "Offset {{offset}}:",
+    "status": {
+      "located": "anchor found once",
+      "ambiguous": "anchor found {{n}} times (ambiguous)",
+      "not-found": "anchor not found in the source text",
+      "no-anchor-text": "no anchor text (for example an image link)",
+      "source-unavailable": "source text unavailable"
+    }
   }
 }

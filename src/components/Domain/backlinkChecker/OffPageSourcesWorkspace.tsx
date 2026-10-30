@@ -5,6 +5,7 @@ import { useOffPageReports } from './useOffPageReports';
 import { useOffPageSources } from './useOffPageSources';
 import { OffPageSourceResults } from './OffPageSourceResults';
 import { OffPageHistory } from './OffPageHistory';
+import { OffPageAnchorContexts, OffPageLinkProfile } from './OffPageLinkEvidence';
 
 export const OffPageSourcesWorkspace = ({ profile }: { profile: BacklinkProfileData }) => {
   const { t } = useTranslation();
@@ -13,6 +14,7 @@ export const OffPageSourcesWorkspace = ({ profile }: { profile: BacklinkProfileD
   const running = session.status === 'running';
   return <div className="space-y-3" data-testid="offpage-sources">
     <OffPagePanel {...reports} />
+    <OffPageLinkProfile profile={profile} />
     <p>{t('offPageSourcesUi.scope')}</p>
     <p>{t('offPageSourcesUi.pacing')}</p>
     <label>{t('offPageSourcesUi.provider')}
@@ -30,6 +32,7 @@ export const OffPageSourcesWorkspace = ({ profile }: { profile: BacklinkProfileD
     {session.status !== 'idle' && <>
       <p role="status">{t(`offPageSourcesUi.status.${session.status}`)}</p>
       <OffPageSourceResults sources={session.sources} reports={reports} />
+      <OffPageAnchorContexts profile={profile} sources={session.sources} />
     </>}
     <OffPageHistory key={session.projectId ?? ''} projectId={session.projectId} current={session.record} saved={session.historySaved} />
   </div>;

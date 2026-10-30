@@ -8569,5 +8569,40 @@
     "languageFallback": "Nieznany język strony: zdanie jest po angielsku.",
     "copy": "Kopiuj",
     "copied": "Skopiowano"
+  },
+  "offPageLinksUi": {
+    "profileTitle": "Profil linków sitewide i duplikatów",
+    "profileSummary": "{{raw}} surowych linków z {{domains}} domen źródłowych ({{follow}} z linkiem follow). Domeny sitewide: {{sitewide}} ({{share}}% surowych linków); domeny powtarzalne: {{repeated}}. TBVA liczy jeden link na domenę źródłową.",
+    "unknown": "nieznane",
+    "sample": "Na podstawie wczytanej próbki, nie pełnego profilu dostawcy.",
+    "complete": "Na podstawie wszystkich wierszy zwróconych przez dostawcę.",
+    "rule": "Sitewide = co najmniej 5 stron źródłowych i najwyżej 2 różne anchory (heurystyka bez kalibracji, nie kara).",
+    "columns": {
+      "domain": "Domena źródłowa",
+      "raw": "Surowe linki",
+      "follow": "Follow",
+      "pages": "Strony źródłowe",
+      "anchors": "Różne anchory",
+      "pattern": "Wzorzec"
+    },
+    "patterns": {
+      "single": "Pojedyncza strona",
+      "repeated": "Powtarzalny",
+      "sitewide": "Sitewide"
+    },
+    "anchorTitle": "Kontekst anchorów analizowanych linków",
+    "anchorNote": "Wyszukuje tekst anchora podany przez dostawcę w pobranym tekście źródła. Tekst nie zawiera znaczników linków, więc trafienie pokazuje otaczające słowa, a nie dowód, że to wystąpienie jest linkiem.",
+    "noAnchors": "Żadna analizowana strona źródłowa nie ma linku we wczytanej próbce.",
+    "anchorRow": "{{source}} → {{target}} · anchor „{{anchor}}”",
+    "follow": "follow",
+    "nofollow": "nofollow",
+    "offset": "Przesunięcie {{offset}}:",
+    "status": {
+      "located": "anchor znaleziony raz",
+      "ambiguous": "anchor znaleziony {{n}} razy (niejednoznaczne)",
+      "not-found": "anchora nie znaleziono w tekście źródła",
+      "no-anchor-text": "brak tekstu anchora (np. link obrazkowy)",
+      "source-unavailable": "tekst źródła niedostępny"
+    }
   }
 }

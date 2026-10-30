@@ -8569,5 +8569,40 @@
     "languageFallback": "Idioma de la página desconocido: la frase está en inglés.",
     "copy": "Copiar",
     "copied": "Copiado"
+  },
+  "offPageLinksUi": {
+    "profileTitle": "Perfil de enlaces sitewide y duplicados",
+    "profileSummary": "{{raw}} enlaces brutos de {{domains}} dominios de origen ({{follow}} con enlace follow). Dominios sitewide: {{sitewide}} ({{share}} % de los enlaces brutos); dominios repetidos: {{repeated}}. TBVA cuenta un enlace por dominio de origen.",
+    "unknown": "desconocido",
+    "sample": "Basado en la muestra cargada, no en el perfil completo del proveedor.",
+    "complete": "Basado en todas las filas devueltas por el proveedor.",
+    "rule": "Sitewide = al menos 5 páginas de origen con como máximo 2 anclas distintas (heurística sin calibrar, no es una penalización).",
+    "columns": {
+      "domain": "Dominio de origen",
+      "raw": "Enlaces brutos",
+      "follow": "Follow",
+      "pages": "Páginas de origen",
+      "anchors": "Anclas distintas",
+      "pattern": "Patrón"
+    },
+    "patterns": {
+      "single": "Página única",
+      "repeated": "Repetido",
+      "sitewide": "Sitewide"
+    },
+    "anchorTitle": "Contexto del ancla de los enlaces analizados",
+    "anchorNote": "Busca el texto ancla indicado por el proveedor en el texto de origen descargado. El texto no tiene marcado de enlaces, así que una coincidencia muestra las palabras cercanas, no la prueba de que esa aparición sea el enlace.",
+    "noAnchors": "Ninguna página de origen analizada tiene un enlace en la muestra cargada.",
+    "anchorRow": "{{source}} → {{target}} · ancla «{{anchor}}»",
+    "follow": "follow",
+    "nofollow": "nofollow",
+    "offset": "Desplazamiento {{offset}}:",
+    "status": {
+      "located": "ancla encontrada una vez",
+      "ambiguous": "ancla encontrada {{n}} veces (ambiguo)",
+      "not-found": "ancla no encontrada en el texto de origen",
+      "no-anchor-text": "sin texto ancla (por ejemplo, un enlace de imagen)",
+      "source-unavailable": "texto de origen no disponible"
+    }
   }
 }

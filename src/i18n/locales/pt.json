@@ -8569,5 +8569,40 @@
     "languageFallback": "Idioma da página desconhecido: a frase está em inglês.",
     "copy": "Copiar",
     "copied": "Copiado"
+  },
+  "offPageLinksUi": {
+    "profileTitle": "Perfil de links sitewide e duplicados",
+    "profileSummary": "{{raw}} links brutos de {{domains}} domínios de origem ({{follow}} com link follow). Domínios sitewide: {{sitewide}} ({{share}}% dos links brutos); domínios repetidos: {{repeated}}. O TBVA conta um link por domínio de origem.",
+    "unknown": "desconhecido",
+    "sample": "Baseado na amostra carregada, não no perfil completo do provedor.",
+    "complete": "Baseado em todas as linhas retornadas pelo provedor.",
+    "rule": "Sitewide = pelo menos 5 páginas de origem com no máximo 2 âncoras distintas (heurística não calibrada, não é penalidade).",
+    "columns": {
+      "domain": "Domínio de origem",
+      "raw": "Links brutos",
+      "follow": "Follow",
+      "pages": "Páginas de origem",
+      "anchors": "Âncoras distintas",
+      "pattern": "Padrão"
+    },
+    "patterns": {
+      "single": "Página única",
+      "repeated": "Repetido",
+      "sitewide": "Sitewide"
+    },
+    "anchorTitle": "Contexto da âncora dos links analisados",
+    "anchorNote": "Procura o texto âncora informado pelo provedor no texto de origem obtido. O texto não tem marcação de links; uma correspondência mostra as palavras ao redor, não a prova de que essa ocorrência é o link.",
+    "noAnchors": "Nenhuma página de origem analisada tem link na amostra carregada.",
+    "anchorRow": "{{source}} → {{target}} · âncora “{{anchor}}”",
+    "follow": "follow",
+    "nofollow": "nofollow",
+    "offset": "Deslocamento {{offset}}:",
+    "status": {
+      "located": "âncora encontrada uma vez",
+      "ambiguous": "âncora encontrada {{n}} vezes (ambíguo)",
+      "not-found": "âncora não encontrada no texto de origem",
+      "no-anchor-text": "sem texto âncora (por exemplo, link de imagem)",
+      "source-unavailable": "texto de origem indisponível"
+    }
   }
 }

@@ -8569,5 +8569,40 @@
     "languageFallback": "Lingua della pagina sconosciuta: la frase è in inglese.",
     "copy": "Copia",
     "copied": "Copiato"
+  },
+  "offPageLinksUi": {
+    "profileTitle": "Profilo dei link sitewide e duplicati",
+    "profileSummary": "{{raw}} link grezzi da {{domains}} domini di origine ({{follow}} con link follow). Domini sitewide: {{sitewide}} ({{share}}% dei link grezzi); domini ripetuti: {{repeated}}. Il TBVA conta un link per dominio di origine.",
+    "unknown": "sconosciuto",
+    "sample": "Basato sul campione caricato, non sul profilo completo del fornitore.",
+    "complete": "Basato su tutte le righe restituite dal fornitore.",
+    "rule": "Sitewide = almeno 5 pagine di origine con al massimo 2 anchor distinti (euristica non calibrata, non una penalità).",
+    "columns": {
+      "domain": "Dominio di origine",
+      "raw": "Link grezzi",
+      "follow": "Follow",
+      "pages": "Pagine di origine",
+      "anchors": "Anchor distinti",
+      "pattern": "Schema"
+    },
+    "patterns": {
+      "single": "Pagina singola",
+      "repeated": "Ripetuto",
+      "sitewide": "Sitewide"
+    },
+    "anchorTitle": "Contesto dell’anchor dei link analizzati",
+    "anchorNote": "Cerca il testo anchor indicato dal fornitore nel testo di origine scaricato. Il testo non ha markup dei link: una corrispondenza mostra le parole vicine, non la prova che quell’occorrenza sia il link.",
+    "noAnchors": "Nessuna pagina di origine analizzata ha un link nel campione caricato.",
+    "anchorRow": "{{source}} → {{target}} · anchor «{{anchor}}»",
+    "follow": "follow",
+    "nofollow": "nofollow",
+    "offset": "Offset {{offset}}:",
+    "status": {
+      "located": "anchor trovato una volta",
+      "ambiguous": "anchor trovato {{n}} volte (ambiguo)",
+      "not-found": "anchor non trovato nel testo di origine",
+      "no-anchor-text": "nessun testo anchor (ad esempio un link immagine)",
+      "source-unavailable": "testo di origine non disponibile"
+    }
   }
 }
