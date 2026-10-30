@@ -111,4 +111,16 @@ describe('application version synchronization', () => {
     expect(() => syncAppVersion({ rootDir: root })).toThrow(/invalid package\.json version/i);
     expect(targetSnapshot(root)).toEqual(before);
   });
+
+  it('keeps the MCP server package and its lockfile on the app version when present', () => {
+    const root = createFixture('0.0.4');
+    mkdirSync(join(root, 'mcp-server'));
+    writeFileSync(join(root, 'mcp-server', 'package.json'), JSON.stringify({ name: 'seomi-mcp-server', version: '0.0.1' }, null, 2));
+    writeFileSync(join(root, 'mcp-server', 'package-lock.json'), JSON.stringify({ version: '0.0.1', packages: { '': { version: '0.0.1' } } }, null, 2));
+
+    expect(() => syncAppVersion({ rootDir: root, check: true })).toThrow(/mcp-server/);
+    expect(syncAppVersion({ rootDir: root }).changed).toHaveLength(2);
+    expect(JSON.parse(readFileSync(join(root, 'mcp-server', 'package.json'), 'utf8')).version).toBe('0.0.4');
+    expect(JSON.parse(readFileSync(join(root, 'mcp-server', 'package-lock.json'), 'utf8')).packages[''].version).toBe('0.0.4');
+  });
 });
