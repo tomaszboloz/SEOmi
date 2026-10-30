@@ -8000,7 +8000,7 @@
     "unweightedZone": "{{count}} links têm uma zona DOM desconhecida ou sem peso e contam com o peso neutro 1.",
     "notConverged": "O solver não convergiu; as pontuações são aproximadas.",
     "degree": "Links entrada/saída",
-    "similarityWeighted": "Os pesos incluem similaridade lexical de páginas em {{page}} links e similaridade do contexto da âncora em {{context}} links (mínimo 0,05). Páginas com algum link não medido usam só pesos de zona.",
+    "similarityWeighted": "Os pesos incluem similaridade lexical de páginas em {{pageEdges}} links e similaridade do contexto da âncora em {{contextEdges}} links (mínimo 0,05). Páginas com algum link não medido usam só pesos de zona.",
     "whatIf": {
       "title": "Simulador de links What-If",
       "source": "Da página",

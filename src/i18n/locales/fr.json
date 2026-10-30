@@ -8000,7 +8000,7 @@
     "unweightedZone": "{{count}} liens ont une zone DOM inconnue ou non pondérée et comptent avec le poids neutre 1.",
     "notConverged": "Le solveur n'a pas convergé ; les scores sont approximatifs.",
     "degree": "Liens entrants/sortants",
-    "similarityWeighted": "Les poids incluent la similarité lexicale des pages sur {{page}} liens et celle du contexte d'ancre sur {{context}} liens (plancher 0,05). Les pages ayant un lien non mesuré gardent seulement les poids de zone.",
+    "similarityWeighted": "Les poids incluent la similarité lexicale des pages sur {{pageEdges}} liens et celle du contexte d'ancre sur {{contextEdges}} liens (plancher 0,05). Les pages ayant un lien non mesuré gardent seulement les poids de zone.",
     "whatIf": {
       "title": "Simulateur de liens What-If",
       "source": "Depuis la page",

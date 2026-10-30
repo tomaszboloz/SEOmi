@@ -8000,7 +8000,7 @@
     "unweightedZone": "{{count}} linków ma nieznaną lub nieważoną strefę DOM i liczy się z neutralną wagą 1.",
     "notConverged": "Solver nie zbiegł; wyniki są przybliżone.",
     "degree": "Linki wch./wych.",
-    "similarityWeighted": "Wagi linków uwzględniają leksykalne podobieństwo stron dla {{page}} linków i podobieństwo kontekstu anchora dla {{context}} linków (minimum 0,05). Strony z choćby jednym niezmierzonym linkiem mają tylko wagi stref.",
+    "similarityWeighted": "Wagi linków uwzględniają leksykalne podobieństwo stron dla {{pageEdges}} linków i podobieństwo kontekstu anchora dla {{contextEdges}} linków (minimum 0,05). Strony z choćby jednym niezmierzonym linkiem mają tylko wagi stref.",
     "whatIf": {
       "title": "Symulator What-If linków",
       "source": "Ze strony",

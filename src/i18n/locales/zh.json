@@ -8000,7 +8000,7 @@
     "unweightedZone": "{{count}} 个链接的 DOM 区域未知或未加权，按中性权重 1 计算。",
     "notConverged": "求解器未收敛，分数为近似值。",
     "degree": "入链/出链",
-    "similarityWeighted": "链接权重包含 {{page}} 条链接的词汇页面相似度和 {{context}} 条链接的锚文本上下文相似度（下限 0.05）。存在未测量链接的页面仅使用区域权重。",
+    "similarityWeighted": "链接权重包含 {{pageEdges}} 条链接的词汇页面相似度和 {{contextEdges}} 条链接的锚文本上下文相似度（下限 0.05）。存在未测量链接的页面仅使用区域权重。",
     "whatIf": {
       "title": "链接 What-If 模拟器",
       "source": "来源页面",

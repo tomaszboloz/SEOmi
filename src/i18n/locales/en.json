@@ -8000,7 +8000,7 @@
     "unweightedZone": "{{count}} links have an unknown or unweighted DOM zone and count at the neutral weight 1.",
     "notConverged": "The solver did not converge; scores are approximate.",
     "degree": "Links in/out",
-    "similarityWeighted": "Link weights include lexical page similarity on {{page}} links and anchor-context similarity on {{context}} links (floor 0.05). Pages with any unmeasured link keep zone weights only.",
+    "similarityWeighted": "Link weights include lexical page similarity on {{pageEdges}} links and anchor-context similarity on {{contextEdges}} links (floor 0.05). Pages with any unmeasured link keep zone weights only.",
     "whatIf": {
       "title": "What-If link simulator",
       "source": "From page",
