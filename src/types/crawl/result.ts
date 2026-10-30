@@ -23,6 +23,8 @@ export interface SiteCrawlResult {
   duration_ms: number;
   cancelled: boolean;
   timed_out?: boolean;
+  /** First write error of the native crawl event log (#138); absent when the log was written. */
+  event_log_error?: string;
   robots_txt_status: string;
   /** Machine-readable robots outcome: loaded, unrestricted, unknown or disabled. */
   robots_txt_evaluation_status?: 'loaded' | 'unrestricted' | 'unknown' | 'disabled' | string;

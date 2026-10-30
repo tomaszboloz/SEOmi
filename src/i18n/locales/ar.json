@@ -457,7 +457,8 @@
       "backlinkLoad": "Connect DataForSEO in Settings to load more backlinks.",
       "backlinkAnchorLoad": "Connect DataForSEO in Settings to load more anchor texts.",
       "crawlerNoPages": "Crawler returned no pages for this target.",
-      "crawlLogRecoveryFailed": "تعذرت قراءة سجل أحداث الزحف، لذلك لم تُستعد الصفحات المكتملة قبل إعادة التشغيل: {{reason}}"
+      "crawlLogRecoveryFailed": "تعذرت قراءة سجل أحداث الزحف، لذلك لم تُستعد الصفحات المكتملة قبل إعادة التشغيل: {{reason}}",
+      "crawlEventLogWriteFailed": "اكتمل الزحف، لكن تعذرت كتابة سجل الاستئناف الخاص به ({{reason}}). لو أُغلق التطبيق أثناء الزحف لما أمكن استعادة التقدم."
     },
     "semanticAudit": {
       "actionUnmapped": "Review the topical plan and assign a crawled URL, or confirm that the topic is still planned.",

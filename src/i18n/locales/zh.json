@@ -457,7 +457,8 @@
       "backlinkLoad": "Connect DataForSEO in Settings to load more backlinks.",
       "backlinkAnchorLoad": "Connect DataForSEO in Settings to load more anchor texts.",
       "crawlerNoPages": "Crawler returned no pages for this target.",
-      "crawlLogRecoveryFailed": "无法读取抓取事件日志，因此未恢复重启前已完成的页面：{{reason}}"
+      "crawlLogRecoveryFailed": "无法读取抓取事件日志，因此未恢复重启前已完成的页面：{{reason}}",
+      "crawlEventLogWriteFailed": "抓取已完成，但无法写入其恢复日志（{{reason}}）。如果应用在抓取中途关闭，进度将无法恢复。"
     },
     "semanticAudit": {
       "actionUnmapped": "Review the topical plan and assign a crawled URL, or confirm that the topic is still planned.",

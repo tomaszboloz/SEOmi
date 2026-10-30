@@ -24,6 +24,7 @@ it('surfaces only actual persistence changes and combines prune and compaction n
   expect(formatCrawlPersistenceNotice({prunedRuns:3},2)).toBe(prune);
   expect(formatCrawlPersistenceNotice({prunedRuns:0,compactedRuns:1},2)).toBe(compact);
   expect(formatCrawlPersistenceNotice({prunedRuns:3,compactedRuns:1},2)).toBe(`${prune} ${compact}`);
+  expect(formatCrawlPersistenceNotice({prunedRuns:0},2,'disk full')).toContain('restart log could not be written (disk full)');
 });
 
 it('distinguishes native disk quota from browser quota and preserves ordinary error messages',()=>{

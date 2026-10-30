@@ -105,7 +105,7 @@ startSiteCrawl: async (url, limit, configPatch, environment = 'default', notifyC
             removeStorage(crawlResultKey(projectId));
             removeStorage(crawlRunsKey(projectId));
           }
-          if (activeProjectId() === projectId && activeCrawlRuns.get(projectId) === runId) set({ crawlRuns: retainedRuns, crawlPersistenceError: null, crawlPersistenceNotice: formatCrawlPersistenceNotice(saveResult, retainedRuns.length), crawlPersistenceCompacted: Boolean(saveResult.compactedRuns) });
+          if (activeProjectId() === projectId && activeCrawlRuns.get(projectId) === runId) set({ crawlRuns: retainedRuns, crawlPersistenceError: null, crawlPersistenceNotice: formatCrawlPersistenceNotice(saveResult, retainedRuns.length, freshCrawlResult.event_log_error), crawlPersistenceCompacted: Boolean(saveResult.compactedRuns) });
         } catch (error) {
           if (activeProjectId() === projectId && activeCrawlRuns.get(projectId) === runId) set({ crawlPersistenceError: isStorageQuotaError(error) ? formatCrawlRuntimeError(error) : error instanceof Error ? error.message : i18n.t('runtimeErrors.tools.crawlHistorySaveFailed') });
         }

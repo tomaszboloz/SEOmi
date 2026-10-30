@@ -457,7 +457,8 @@
       "backlinkLoad": "Connect DataForSEO in Settings to load more backlinks.",
       "backlinkAnchorLoad": "Connect DataForSEO in Settings to load more anchor texts.",
       "crawlerNoPages": "Crawler returned no pages for this target.",
-      "crawlLogRecoveryFailed": "Impossibile leggere il registro eventi della scansione, quindi le pagine completate prima del riavvio non sono state recuperate: {{reason}}"
+      "crawlLogRecoveryFailed": "Impossibile leggere il registro eventi della scansione, quindi le pagine completate prima del riavvio non sono state recuperate: {{reason}}",
+      "crawlEventLogWriteFailed": "La scansione è terminata, ma non è stato possibile scrivere il registro di ripresa ({{reason}}). Se l'app si fosse chiusa a metà, l'avanzamento non sarebbe stato recuperabile."
     },
     "semanticAudit": {
       "actionUnmapped": "Review the topical plan and assign a crawled URL, or confirm that the topic is still planned.",

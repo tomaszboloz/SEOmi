@@ -457,7 +457,8 @@
       "backlinkLoad": "Connect DataForSEO in Settings to load more backlinks.",
       "backlinkAnchorLoad": "Connect DataForSEO in Settings to load more anchor texts.",
       "crawlerNoPages": "Crawler returned no pages for this target.",
-      "crawlLogRecoveryFailed": "Das Crawl-Ereignisprotokoll konnte nicht gelesen werden, daher wurden vor dem Neustart abgeschlossene Seiten nicht wiederhergestellt: {{reason}}"
+      "crawlLogRecoveryFailed": "Das Crawl-Ereignisprotokoll konnte nicht gelesen werden, daher wurden vor dem Neustart abgeschlossene Seiten nicht wiederhergestellt: {{reason}}",
+      "crawlEventLogWriteFailed": "Der Crawl ist beendet, aber sein Wiederherstellungsprotokoll konnte nicht geschrieben werden ({{reason}}). Bei einem Absturz während des Crawls wäre der Fortschritt verloren gewesen."
     },
     "semanticAudit": {
       "actionUnmapped": "Review the topical plan and assign a crawled URL, or confirm that the topic is still planned.",

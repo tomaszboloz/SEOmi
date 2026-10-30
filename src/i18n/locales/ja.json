@@ -457,7 +457,8 @@
       "backlinkLoad": "Connect DataForSEO in Settings to load more backlinks.",
       "backlinkAnchorLoad": "Connect DataForSEO in Settings to load more anchor texts.",
       "crawlerNoPages": "Crawler returned no pages for this target.",
-      "crawlLogRecoveryFailed": "クロールのイベントログを読み取れなかったため、再起動前に完了したページは復元されませんでした: {{reason}}"
+      "crawlLogRecoveryFailed": "クロールのイベントログを読み取れなかったため、再起動前に完了したページは復元されませんでした: {{reason}}",
+      "crawlEventLogWriteFailed": "クロールは完了しましたが、再開用ログを書き込めませんでした（{{reason}}）。途中でアプリが終了していた場合、進捗は復元できませんでした。"
     },
     "semanticAudit": {
       "actionUnmapped": "Review the topical plan and assign a crawled URL, or confirm that the topic is still planned.",

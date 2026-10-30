@@ -9,7 +9,7 @@ const native = vi.hoisted(() => ({ invokeTauriCommand: vi.fn(), isTauriEnvironme
 vi.mock('@/services/tauri', () => native);
 afterEach(() => native.invokeTauriCommand.mockReset());
 
-const page = (url: string, links: string[] = []) => createCrawlPageFixture({ url, final_url: url, links: links.map((target_url) => ({ target_url, anchor_text: '', rel: null, is_internal: true })) });
+const page = (url: string, links: string[] = []) => createCrawlPageFixture({ url, final_url: url, links: links.map((target_url) => ({ target_url, anchor_text: '', is_internal: true })) });
 const started = (at = 1_000): CrawlLogEvent => ({ seq: 1, kind: 'started', at_ms: at, payload: { start_url: 'https://e.test/', limit: 5 } });
 const log = (...pages: unknown[]): CrawlLogEvent[] => [started(), ...pages.map((p, i) => ({ seq: i + 2, kind: 'page', at_ms: 1_000 + (i + 1) * 500, payload: { page: p } }))];
 const checkpoint = (patch: Partial<InterruptedCrawl> = {}): InterruptedCrawl => ({ runId: 'run-1', url: 'https://e.test/', limit: 5, config: DEFAULT_CRAWL_CONFIG,

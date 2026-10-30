@@ -457,7 +457,8 @@
       "backlinkLoad": "Connect DataForSEO in Settings to load more backlinks.",
       "backlinkAnchorLoad": "Connect DataForSEO in Settings to load more anchor texts.",
       "crawlerNoPages": "Crawler returned no pages for this target.",
-      "crawlLogRecoveryFailed": "Le journal d'événements du crawl n'a pas pu être lu ; les pages terminées avant le redémarrage n'ont pas été récupérées : {{reason}}"
+      "crawlLogRecoveryFailed": "Le journal d'événements du crawl n'a pas pu être lu ; les pages terminées avant le redémarrage n'ont pas été récupérées : {{reason}}",
+      "crawlEventLogWriteFailed": "Le crawl est terminé, mais son journal de reprise n'a pas pu être écrit ({{reason}}). Si l'app s'était fermée en cours de crawl, la progression n'aurait pas pu être récupérée."
     },
     "semanticAudit": {
       "actionUnmapped": "Review the topical plan and assign a crawled URL, or confirm that the topic is still planned.",

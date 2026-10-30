@@ -457,7 +457,8 @@
       "backlinkLoad": "Połącz DataForSEO w Ustawieniach, aby wczytać więcej linków.",
       "backlinkAnchorLoad": "Połącz DataForSEO w Ustawieniach, aby wczytać więcej anchorów.",
       "crawlerNoPages": "Crawler nie zwrócił stron dla tego celu.",
-      "crawlLogRecoveryFailed": "Nie udało się odczytać dziennika zdarzeń crawla, więc strony ukończone przed restartem nie zostały odzyskane: {{reason}}"
+      "crawlLogRecoveryFailed": "Nie udało się odczytać dziennika zdarzeń crawla, więc strony ukończone przed restartem nie zostały odzyskane: {{reason}}",
+      "crawlEventLogWriteFailed": "Crawl się zakończył, ale nie udało się zapisać jego dziennika do wznowienia ({{reason}}). Gdyby aplikacja zamknęła się w trakcie, postępu nie dałoby się odzyskać."
     },
     "semanticAudit": {
       "actionUnmapped": "Sprawdź topical plan i przypisz crawlowany URL albo potwierdź, że temat jest jeszcze planowany.",
