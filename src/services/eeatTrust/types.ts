@@ -1,6 +1,7 @@
 import type { Coded } from '@/services/siteFocus';
 import type { PageCitationQuality } from './citationQuality';
 import type { ClaimCitation } from '@/services/citationEvidence/claims';
+import type { GraphAudit } from './graphAudit';
 
 /** E-E-A-T & Entity Trust Verifier contracts. Wording is a code plus params: the UI localizes. */
 
@@ -121,6 +122,8 @@ export interface TrustReport {
   ymyl?: YmylCategory;
   ymylPolicy?: { category: YmylCategory; applicable: boolean; multiplier: number; triggered: boolean; heuristic: true; tier?: 'none' | 'moderate' | 'severe'; reasons?: string[]; claimGate?: boolean };
   schema: SchemaGraphDetail;
+  /** JSON-LD graph audit (#65); absent in reports stored before it existed. */
+  graphAudit?: GraphAudit;
   authors: AuthorEntity[];
   /** Reviewers and publishers; absent in reports stored before #87. */
   roleEntities?: RoleEntity[];

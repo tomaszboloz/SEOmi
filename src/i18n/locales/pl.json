@@ -7784,7 +7784,11 @@
         "missing-dates": "Tylko {{pct}}% artykułów pokazuje datę modyfikacji lub recenzji.",
         "no-articles": "Nie wykryto stron artykułów, więc warstwy autorów i cytowań nie zostały ocenione.",
         "author-invalid-profile": "{{count}} autorów podaje profil ORCID lub Wikidata z błędnym identyfikatorem ({{names}}). Sprawdź sumę kontrolną lub Q-ID.",
-        "ymyl-no-scholarly-ids": "Żaden z {{pages}} artykułów nie cytuje źródła z DOI, PMID ani PMCID. W tematyce YMYL cytuj badanie pierwotne."
+        "ymyl-no-scholarly-ids": "Żaden z {{pages}} artykułów nie cytuje źródła z DOI, PMID ani PMCID. W tematyce YMYL cytuj badanie pierwotne.",
+        "graph-dangling": "{{count}} odwołań JSON-LD wskazuje @id, które nie jest zdefiniowane w tym crawlu ({{ids}}).",
+        "graph-id-conflict": "{{count}} wartości @id ma sprzeczny typ, nazwę lub sameAs ({{ids}}). Zostaw jedną definicję na @id.",
+        "graph-unshared-id": "{{count}} encji występuje na kilku stronach bez wspólnego @id ({{names}}).",
+        "graph-islands": "Na {{count}} stronach węzły JSON-LD nie są połączone odwołaniami @id (osobne wyspy). Tylko informacja; wynik nie jest obniżany."
       }
     },
     "generator": {

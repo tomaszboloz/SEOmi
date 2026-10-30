@@ -7784,7 +7784,11 @@
         "missing-dates": "Solo il {{pct}}% degli articoli mostra una data di modifica o di revisione.",
         "no-articles": "Non sono state rilevate pagine di articoli, quindi i livelli autori e citazioni non sono stati valutati.",
         "author-invalid-profile": "{{count}} autori collegano un profilo ORCID o Wikidata con identificatore non valido ({{names}}). Controlla il checksum o il Q-ID.",
-        "ymyl-no-scholarly-ids": "Nessuno dei {{pages}} articoli cita una fonte con DOI, PMID o PMCID. Su temi YMYL cita lo studio primario."
+        "ymyl-no-scholarly-ids": "Nessuno dei {{pages}} articoli cita una fonte con DOI, PMID o PMCID. Su temi YMYL cita lo studio primario.",
+        "graph-dangling": "{{count}} riferimenti JSON-LD puntano a un @id non definito in questa scansione ({{ids}}).",
+        "graph-id-conflict": "{{count}} valori @id JSON-LD sono dichiarati con tipo, nome o sameAs in conflitto ({{ids}}). Mantieni una sola definizione per @id.",
+        "graph-unshared-id": "{{count}} entità compaiono su più pagine senza un @id condiviso ({{names}}).",
+        "graph-islands": "Su {{count}} pagine i nodi JSON-LD non sono collegati da riferimenti @id (isole separate). Solo segnalato; il punteggio non viene penalizzato."
       }
     },
     "generator": {

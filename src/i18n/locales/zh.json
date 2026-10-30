@@ -7784,7 +7784,11 @@
         "missing-dates": "只有 {{pct}}% 的文章显示了修改或审核日期。",
         "no-articles": "未检测到文章页面，因此未对作者和引用层级评分。",
         "author-invalid-profile": "{{count}}位作者链接的ORCID或Wikidata档案标识符无效（{{names}}）。请检查校验码或Q-ID。",
-        "ymyl-no-scholarly-ids": "{{pages}}篇文章均未引用带DOI、PMID或PMCID的来源。YMYL主题请引用原始研究。"
+        "ymyl-no-scholarly-ids": "{{pages}}篇文章均未引用带DOI、PMID或PMCID的来源。YMYL主题请引用原始研究。",
+        "graph-dangling": "{{count}} 个 JSON-LD 引用指向本次抓取中未定义的 @id（{{ids}}）。",
+        "graph-id-conflict": "{{count}} 个 JSON-LD @id 的类型、名称或 sameAs 声明相互矛盾（{{ids}}）。每个 @id 只保留一个定义。",
+        "graph-unshared-id": "{{count}} 个实体出现在多个页面上但没有共享的 @id（{{names}}）。",
+        "graph-islands": "在 {{count}} 个页面上，JSON-LD 节点没有通过 @id 引用相连（彼此孤立）。仅作提示，不扣分。"
       }
     },
     "generator": {

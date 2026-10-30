@@ -7784,7 +7784,11 @@
         "missing-dates": "수정일 또는 검토일이 표시된 문서는 {{pct}}%뿐입니다.",
         "no-articles": "문서 페이지가 감지되지 않아 저자 및 인용 계층은 점수를 매기지 않았습니다.",
         "author-invalid-profile": "{{count}}명의 저자가 유효하지 않은 식별자의 ORCID 또는 Wikidata 프로필을 연결했습니다({{names}}). 체크섬 또는 Q-ID를 확인하세요.",
-        "ymyl-no-scholarly-ids": "{{pages}}개 문서 중 DOI, PMID, PMCID가 있는 출처를 인용한 문서가 없습니다. YMYL 주제에서는 1차 연구를 인용하세요."
+        "ymyl-no-scholarly-ids": "{{pages}}개 문서 중 DOI, PMID, PMCID가 있는 출처를 인용한 문서가 없습니다. YMYL 주제에서는 1차 연구를 인용하세요.",
+        "graph-dangling": "JSON-LD 참조 {{count}}개가 이번 크롤링 어디에도 정의되지 않은 @id를 가리킵니다({{ids}}).",
+        "graph-id-conflict": "JSON-LD @id 값 {{count}}개가 서로 다른 유형, 이름 또는 sameAs로 선언되어 있습니다({{ids}}). @id마다 정의를 하나만 유지하세요.",
+        "graph-unshared-id": "엔터티 {{count}}개가 공유 @id 없이 여러 페이지에 나타납니다({{names}}).",
+        "graph-islands": "{{count}}개 페이지에서 JSON-LD 노드가 @id 참조로 연결되어 있지 않습니다(분리된 섬). 보고만 하며 점수는 감점되지 않습니다."
       }
     },
     "generator": {

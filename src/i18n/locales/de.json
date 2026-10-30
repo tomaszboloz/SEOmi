@@ -7784,7 +7784,11 @@
         "missing-dates": "Nur {{pct}} % der Artikel zeigen ein Änderungs- oder Prüfdatum.",
         "no-articles": "Es wurden keine Artikelseiten erkannt, daher wurden die Ebenen Autoren und Quellenangaben nicht bewertet.",
         "author-invalid-profile": "{{count}} Autoren verlinken ein ORCID- oder Wikidata-Profil mit ungültiger Kennung ({{names}}). Prüfsumme oder Q-ID kontrollieren.",
-        "ymyl-no-scholarly-ids": "Keiner der {{pages}} Artikel zitiert eine Quelle mit DOI, PMID oder PMCID. Bei YMYL-Themen die Primärstudie zitieren."
+        "ymyl-no-scholarly-ids": "Keiner der {{pages}} Artikel zitiert eine Quelle mit DOI, PMID oder PMCID. Bei YMYL-Themen die Primärstudie zitieren.",
+        "graph-dangling": "{{count}} JSON-LD-Verweise zeigen auf eine @id, die in diesem Crawl nirgends definiert ist ({{ids}}).",
+        "graph-id-conflict": "{{count}} JSON-LD-@id-Werte sind mit widersprüchlichem Typ, Namen oder sameAs deklariert ({{ids}}). Pro @id nur eine Definition verwenden.",
+        "graph-unshared-id": "{{count}} Entitäten erscheinen auf mehreren Seiten ohne gemeinsame @id ({{names}}).",
+        "graph-islands": "Auf {{count}} Seiten sind die JSON-LD-Knoten nicht durch @id-Verweise verbunden (getrennte Inseln). Nur gemeldet; die Bewertung wird nicht gesenkt."
       }
     },
     "generator": {

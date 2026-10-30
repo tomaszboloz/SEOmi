@@ -7784,7 +7784,11 @@
         "missing-dates": "更新日または監修日を表示している記事は{{pct}}%だけです。",
         "no-articles": "記事ページが検出されなかったため、著者と引用のレイヤーは採点されませんでした。",
         "author-invalid-profile": "{{count}}人の著者が無効な識別子のORCIDまたはWikidataプロフィールをリンクしています（{{names}}）。チェックサムまたはQ-IDを確認してください。",
-        "ymyl-no-scholarly-ids": "{{pages}}件の記事のいずれもDOI、PMID、PMCIDを持つ情報源を引用していません。YMYLの話題では一次研究を引用してください。"
+        "ymyl-no-scholarly-ids": "{{pages}}件の記事のいずれもDOI、PMID、PMCIDを持つ情報源を引用していません。YMYLの話題では一次研究を引用してください。",
+        "graph-dangling": "{{count}} 件の JSON-LD 参照が、このクロールのどこにも定義されていない @id を指しています（{{ids}}）。",
+        "graph-id-conflict": "{{count}} 件の JSON-LD @id が矛盾するタイプ、名前、または sameAs で宣言されています（{{ids}}）。@id ごとに定義は 1 つにしてください。",
+        "graph-unshared-id": "{{count}} 件のエンティティが共通の @id なしで複数のページに出現しています（{{names}}）。",
+        "graph-islands": "{{count}} ページで JSON-LD ノードが @id 参照でつながっていません（分離した島）。報告のみで、スコアは減点されません。"
       }
     },
     "generator": {

@@ -1,3 +1,4 @@
+import type { GraphAudit } from './graphAudit';
 import type { AuthorEntity, CitationDetail, SchemaGraphDetail, TransparencyDetail, TrustFinding, TrustLevel, TrustSeverity, YmylCategory } from './types';
 
 export const TRUST_CODES = {
@@ -5,6 +6,7 @@ export const TRUST_CODES = {
     'ymyl-unattributed', 'ymyl-no-reviewer', 'no-bylines', 'generic-author', 'org-missing', 'org-no-same-as', 'author-no-same-as',
     'author-no-id', 'author-off-topic', 'low-citations', 'dead-citations', 'missing-editorial', 'missing-contact', 'missing-registry',
     'missing-about', 'missing-dates', 'no-articles', 'author-invalid-profile', 'ymyl-no-scholarly-ids',
+    'graph-dangling', 'graph-id-conflict', 'graph-unshared-id', 'graph-islands',
   ],
   level: ['strong', 'adequate', 'weak', 'critical'],
   ymyl: ['health', 'finance', 'legal'],
@@ -25,6 +27,7 @@ export interface FindingInput {
   transparency: TransparencyDetail;
   ymyl?: YmylCategory;
   unattributed: number;
+  graph?: GraphAudit;
 }
 
 /** Ordered action list: YMYL attribution first, then entity graph, citations and trust pages. */
@@ -56,6 +59,11 @@ export const buildFindings = (input: FindingInput): TrustFinding[] => {
   }
   if (ymyl && citations.pagesAnalyzed && !citations.scholarlySources) add('info', 'ymyl-no-scholarly-ids', { pages: citations.pagesAnalyzed });
   if (citations.deadLinks.length) add('warning', 'dead-citations', { count: citations.deadLinks.length });
+  const { graph } = input;
+  if (graph?.dangling.length) add('warning', 'graph-dangling', { count: graph.dangling.length, ids: graph.dangling.slice(0, 3).map((item) => item.id).join(', ') });
+  if (graph?.conflicts.length) add('warning', 'graph-id-conflict', { count: graph.conflicts.length, ids: graph.conflicts.slice(0, 3).map((item) => item.id).join(', ') });
+  if (graph?.unshared.length) add('info', 'graph-unshared-id', { count: graph.unshared.length, names: graph.unshared.slice(0, 3).map((item) => item.name).join(', ') });
+  if (graph?.islands.length) add('info', 'graph-islands', { count: graph.islands.length });
   if (!transparency.found.editorial) add('warning', 'missing-editorial');
   if (!transparency.found.contact) add('warning', 'missing-contact');
   if (!transparency.found.registry) add('info', 'missing-registry');

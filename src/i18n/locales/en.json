@@ -7784,7 +7784,11 @@
         "missing-dates": "Only {{pct}}% of articles show a modified or review date.",
         "no-articles": "No article pages were detected, so the author and citation layers were not scored.",
         "author-invalid-profile": "{{count}} authors link an ORCID or Wikidata profile with an invalid identifier ({{names}}). Check the checksum or Q-ID.",
-        "ymyl-no-scholarly-ids": "None of the {{pages}} article pages cite a source with a DOI, PMID or PMCID. On a YMYL topic, cite the primary study."
+        "ymyl-no-scholarly-ids": "None of the {{pages}} article pages cite a source with a DOI, PMID or PMCID. On a YMYL topic, cite the primary study.",
+        "graph-dangling": "{{count}} JSON-LD references point to an @id that is not defined anywhere in this crawl ({{ids}}).",
+        "graph-id-conflict": "{{count}} JSON-LD @id values are declared with conflicting type, name or sameAs ({{ids}}). Keep one definition per @id.",
+        "graph-unshared-id": "{{count}} entities appear on several pages without a shared @id ({{names}}).",
+        "graph-islands": "On {{count}} pages the JSON-LD nodes are not connected by @id references (separate islands). Reported only; the score is not penalized."
       }
     },
     "generator": {

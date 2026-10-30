@@ -7784,7 +7784,11 @@
         "missing-dates": "{{pct}}% فقط من المقالات تعرض تاريخ تعديل أو مراجعة.",
         "no-articles": "لم تُكتشف صفحات مقالات، لذا لم تُقيَّم طبقتا المؤلفين والاستشهادات.",
         "author-invalid-profile": "يربط {{count}} مؤلفين ملف ORCID أو Wikidata بمعرّف غير صالح ({{names}}). تحقق من رقم التحقق أو Q-ID.",
-        "ymyl-no-scholarly-ids": "لا تستشهد أي من {{pages}} مقالات بمصدر يحمل DOI أو PMID أو PMCID. في مواضيع YMYL استشهد بالدراسة الأصلية."
+        "ymyl-no-scholarly-ids": "لا تستشهد أي من {{pages}} مقالات بمصدر يحمل DOI أو PMID أو PMCID. في مواضيع YMYL استشهد بالدراسة الأصلية.",
+        "graph-dangling": "{{count}} من مراجع JSON-LD تشير إلى @id غير معرّف في أي مكان ضمن هذا الزحف ({{ids}}).",
+        "graph-id-conflict": "{{count}} من قيم @id في JSON-LD مُعلنة بنوع أو اسم أو sameAs متعارض ({{ids}}). احتفظ بتعريف واحد لكل @id.",
+        "graph-unshared-id": "{{count}} من الكيانات تظهر في عدة صفحات دون @id مشترك ({{names}}).",
+        "graph-islands": "في {{count}} صفحة لا ترتبط عُقد JSON-LD بمراجع @id (جزر منفصلة). للإبلاغ فقط؛ لا تُخفَّض النتيجة."
       }
     },
     "generator": {
