@@ -20,6 +20,9 @@
 - Trust (#87): sameAs evidence is readable. ORCID and Wikidata links are built from the checksum-valid id, never from the URL a page declares, and "valid format" is labelled "not checked". When an author has no sameAs check, recall shows "—" instead of 0%.
 - AI Overview readiness (#108): languages without native-speaker review are marked "uncertain", and languages scored with the English word lists are marked "unsupported". A threshold sweep helper can recommend an alert threshold from labelled before/after pairs. It needs at least 20 labels with both outcomes and never changes the setting itself.
 
+- Site Focus (#81): each URL protection result keeps its evidence (raw value and telemetry state per signal, unknown stays unknown) and the thresholds used. The order is TRS, revenue, any measured conversion, PRI, then needs-data. One conversion now protects a page even when custom PRI parameters would score it below the threshold. A value equal to the threshold protects the page. 301, canonical, noindex and 410 appear only as advice with conditions; nothing is changed automatically. The Focus tab, the export and a new PDF table show the same rows.
+- Site Focus (#82): a business goal can be set per project (3-200 characters, no URLs). The Core Topic uses this order: manual topic, business goal, anchor pages, detection. The goal only selects a topic cluster it shares words with. If it matches nothing, the report says so and falls back to anchors or detection.
+
 ## Fixed
 - The ±15-word link context no longer includes text from `<script>`, `<style>`, `<noscript>`, `<template>`, `<svg>` or `<textarea>`. E-mail addresses, long digit runs and long letter/digit tokens are replaced with `[email]`, `[number]` and `[token]`.
 - SPRS is faster on large sites: link weight totals are computed once per run instead of in every iteration.

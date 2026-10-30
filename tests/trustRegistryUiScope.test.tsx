@@ -39,7 +39,7 @@ describe('CrawlTrustTab registry verification scope', () => {
       expect.objectContaining({ url: profile.url, kind: 'orcid', status: 'syntax-valid' }),
       expect.objectContaining({ fetcher: nativeRegistryFetcher, projectId: 'registry-project', runId: 'registry-run' }),
     );
-    await waitFor(() => expect(screen.getByText(new RegExp(`orcid: fetched.*${profile.url}`))).toBeTruthy());
+    await waitFor(() => expect(screen.getByText(new RegExp(`registry fetched, name not matched.*${profile.url}`))).toBeTruthy());
   });
 
   it('drops late evidence after run/project switch and after unmount', async () => {
@@ -50,7 +50,7 @@ describe('CrawlTrustTab registry verification scope', () => {
     await waitFor(() => expect(verifyProfile).toHaveBeenCalledTimes(1));
     view.rerender(<CrawlTrustTab pages={pages} startUrl={START} run={run('new-run')} projectId="new-project" />);
     await act(async () => resolve(result));
-    await waitFor(() => expect(screen.queryByText(new RegExp(`orcid: fetched.*${profile.url}`))).toBeNull());
+    await waitFor(() => expect(screen.queryByText(new RegExp(`registry fetched, name not matched.*${profile.url}`))).toBeNull());
     view.unmount();
 
     const unmounted = render(<CrawlTrustTab pages={pages} startUrl={START} run={run('unmounted-run')} projectId="unmounted-project" />);
