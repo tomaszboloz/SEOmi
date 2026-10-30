@@ -8178,6 +8178,27 @@
       "copied": "Skopiowano",
       "failed": "Kopiowanie nie powiodło się",
       "hint": "Eksport zawiera dokładne wejścia i wagi, więc wynik można przeliczyć ponownie."
+    },
+    "card": {
+      "title": "Karta egzekucyjna",
+      "diagnosis": "Diagnoza i powód",
+      "location": "Lokalizacja",
+      "artifact": "Artefakt przed/po",
+      "deployment": "Wdrożenie i weryfikacja",
+      "noUrl": "Brak pojedynczego URL (ustalenie dla całej witryny).",
+      "kind": {
+        "link": "Link do dodania z pierwszego URL do drugiego. Gotowe zdanie z <a> jest w obszarze Linki.",
+        "entities": "Encje do dodania na tej stronie. Akapit przed/po jest w karcie modułu.",
+        "removal": "Usunięcie lub scalenie. Reguły 301/410 powstają tylko w Artefaktach wdrożeniowych, po sprawdzeniu ochrony URL.",
+        "module": "Artefakt przed/po jest przygotowany w karcie modułu."
+      },
+      "noTask": {
+        "blocked": "Zablokowane przez zabezpieczenie lub konflikt, więc zadanie nie jest planowane.",
+        "removal": "Usunięcia planuje się w Artefaktach wdrożeniowych, nigdy tutaj.",
+        "no-url": "Brak URL strony, popraw to w karcie modułu.",
+        "in-module": "Popraw to strona po stronie w karcie modułu."
+      },
+      "openModule": "Otwórz artefakt w: {{tab}}"
     }
   },
   "surgical": {

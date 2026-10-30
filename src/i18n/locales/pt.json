@@ -8178,6 +8178,27 @@
       "copied": "Copiado",
       "failed": "Falha ao copiar",
       "hint": "A exportação contém as entradas e pesos exatos, então a pontuação pode ser recalculada."
+    },
+    "card": {
+      "title": "Cartão de execução",
+      "diagnosis": "Diagnóstico e motivo",
+      "location": "Localização",
+      "artifact": "Artefato antes/depois",
+      "deployment": "Implementação e verificação",
+      "noUrl": "Sem URL de página única (constatação de todo o site).",
+      "kind": {
+        "link": "Link a adicionar da primeira URL para a segunda. A frase pronta com <a> está na área Links.",
+        "entities": "Entidades a adicionar a esta página. O parágrafo antes/depois está na aba do módulo.",
+        "removal": "Remoção ou fusão. As regras 301/410 vêm apenas dos Artefatos de implantação, após a verificação de proteção da URL.",
+        "module": "O artefato antes/depois é preparado na aba do módulo."
+      },
+      "noTask": {
+        "blocked": "Bloqueado por uma proteção ou conflito, por isso nenhuma tarefa é planejada.",
+        "removal": "Remoções são planejadas nos Artefatos de implantação, nunca aqui.",
+        "no-url": "Sem URL de página: corrija na aba do módulo.",
+        "in-module": "Corrija página a página na aba do módulo."
+      },
+      "openModule": "Abrir o artefato em {{tab}}"
     }
   },
   "surgical": {

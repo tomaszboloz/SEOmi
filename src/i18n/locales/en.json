@@ -8178,6 +8178,27 @@
       "copied": "Copied",
       "failed": "Copy failed",
       "hint": "The export contains the exact inputs and weights, so the score can be recomputed."
+    },
+    "card": {
+      "title": "Execution card",
+      "diagnosis": "Diagnosis and reason",
+      "location": "Location",
+      "artifact": "Before/after artifact",
+      "deployment": "Deployment and verification",
+      "noUrl": "No single page URL (site-wide finding).",
+      "kind": {
+        "link": "Link to add from the first URL to the second. The ready sentence with <a> is in the Links workspace.",
+        "entities": "Entities to add to this page. The before/after paragraph is in the module tab.",
+        "removal": "Removal or merge. 301/410 rules come only from Deployment Artifacts, after the URL protection check.",
+        "module": "The before/after artifact is prepared in the module tab."
+      },
+      "noTask": {
+        "blocked": "Blocked by a guardrail or conflict, so no task is planned.",
+        "removal": "Removals are planned from Deployment Artifacts, never from here.",
+        "no-url": "No page URL, so fix it in the module tab.",
+        "in-module": "Fix it page by page in the module tab."
+      },
+      "openModule": "Open the artifact in {{tab}}"
     }
   },
   "surgical": {
