@@ -6134,7 +6134,11 @@
           "own-domain": "votre nom de domaine",
           "own-alias": "votre nom de marque",
           "competitor-brand": "marque concurrente"
-        }
+        },
+        "tSegments": "Scores des segments",
+        "segmentsIntro": "Segments définis pour ce projet, chacun évalué par rapport à son propre thème central. Un tiret signifie qu’aucune page sous le préfixe n’a été évaluée.",
+        "colSegment": "Segment",
+        "colCore": "Thème central"
       },
       "authority": {
         "title": "Autorité thématique",
@@ -7330,6 +7334,17 @@
         "own-alias": "votre nom de marque",
         "competitor-brand": "une marque concurrente"
       }
+    },
+    "segments": {
+      "title": "Segments avec leur propre thème",
+      "inputLabel": "Segments (un par ligne : Nom | /préfixe-de-chemin | thème facultatif)",
+      "placeholder": "Boutique | /boutique | pompes à insuline",
+      "save": "Enregistrer les segments",
+      "help": "Pour les sites multithématiques : chaque segment est évalué par rapport à son propre thème central (le thème saisi ou celui que ses pages portent le plus). Le Site Focus Score du site entier ne change pas. Jusqu’à {{max}} segments.",
+      "dropped": "{{count}} ligne(s) non valide(s) n’ont pas été enregistrée(s). Format : Nom | /préfixe-de-chemin | thème facultatif.",
+      "needsProject": "Les segments sont enregistrés par projet. Ouvrez ce crawl depuis un projet pour les définir.",
+      "item": "{{label}} ({{prefix}}) : {{score}}, {{band}}. Thème central : {{core}}. Pages évaluées : {{scored}} sur {{pages}}.",
+      "unavailable": "{{label}} ({{prefix}}) : aucune page évaluée sous ce préfixe, donc aucun score (ce n’est pas 0)."
     }
   },
   "focusBenchmark": {

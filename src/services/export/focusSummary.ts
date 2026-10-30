@@ -20,6 +20,8 @@ export interface FocusPdfSummary {
   profile?: { id: string; algorithm_version: string; config_hash: string };
   /** Competitor terms hidden from the gap list as brand noise, with the reason (#56). */
   brand_filtered?: Array<{ term: string; reason: string }>;
+  /** User segments scored against their own Core (#82 GEM-82-05); score null means no scored page. */
+  segments?: Array<{ label: string; path_prefix: string; core: string; scored: number; pages: number; score: number | null }>;
   page_count: number;
   core_topic: {
     label: string; terms: Array<{ term: string; coverage_pct: number }>; manual_input?: string; manual_matched?: boolean;
@@ -54,6 +56,7 @@ export const summarizeSiteFocus = (report: SiteFocusReport): FocusPdfSummary => 
   const none = report.unavailable === true;
   const profile = report.profile;
   const hidden = report.brandFilter?.filteredGaps ?? [];
+  const segments = report.segments ?? [];
   return {
     score: none ? null : report.score,
     band: none ? 'unavailable' : report.band,
@@ -62,6 +65,7 @@ export const summarizeSiteFocus = (report: SiteFocusReport): FocusPdfSummary => 
     ...(none ? { unavailable: true } : {}),
     ...(profile ? { profile: { id: profile.id, algorithm_version: profile.algorithmVersion, config_hash: profile.configHash } } : {}),
     ...(hidden.length ? { brand_filtered: hidden.map((item) => ({ term: item.term, reason: item.reason })) } : {}),
+    ...(segments.length ? { segments: segments.map((item) => ({ label: item.label, path_prefix: item.pathPrefix, core: item.coreLabel, scored: item.scoredCount, pages: item.pageCount, score: item.score })) } : {}),
     page_count: report.pageCount,
     core_topic: {
       label: report.coreTopic.label,

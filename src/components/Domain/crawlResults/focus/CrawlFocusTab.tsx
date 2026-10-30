@@ -19,6 +19,7 @@ import { FocusHistoryChart } from './FocusHistoryChart';
 import { FocusMetricsStrip } from './FocusMetricsStrip';
 import { PageFocusDetail } from './PageFocusDetail';
 import { SiteRecommendations } from './SiteRecommendations';
+import { SegmentsPanel } from './SegmentsPanel';
 import { SubSiteScores } from './SubSiteScores';
 import { WeeklySummaryCard } from './WeeklySummaryCard';
 import { FocusBenchmarkSection } from './benchmark/FocusBenchmarkSection';
@@ -74,9 +75,9 @@ export const CrawlFocusTab = ({ pages, startUrl, run, projectId, history, benchm
   const base = focus.report ?? local;
   const report = useMemo(
     () => (base && (competitorTerms.length || includeGated)
-      ? buildSiteFocusReport(pages, startUrl, { manualTopic: focus.manualTopic ?? (deferredTopic || undefined), anchorUrls, businessGoal: focus.businessGoal, brand: focus.brandPolicy, competitorTerms, includeNonIndexable: includeGated, now: base.generatedAt })
+      ? buildSiteFocusReport(pages, startUrl, { manualTopic: focus.manualTopic ?? (deferredTopic || undefined), anchorUrls, businessGoal: focus.businessGoal, brand: focus.brandPolicy, segments: focus.segments, competitorTerms, includeNonIndexable: includeGated, now: base.generatedAt })
       : base),
-    [base, competitorTerms, pages, startUrl, focus.manualTopic, deferredTopic, anchorUrls, focus.businessGoal, focus.brandPolicy, includeGated],
+    [base, competitorTerms, pages, startUrl, focus.manualTopic, deferredTopic, anchorUrls, focus.businessGoal, focus.brandPolicy, focus.segments, includeGated],
   );
   useEffect(() => { if (report) onReport?.(report); }, [report, onReport]);
 
@@ -120,6 +121,7 @@ export const CrawlFocusTab = ({ pages, startUrl, run, projectId, history, benchm
         <FocusMetricsStrip report={report} />
       </div>
       {report.subSites && report.subSites.length > 0 && <SubSiteScores subSites={report.subSites} />}
+      <SegmentsPanel key={`segments:${projectId ?? ''}`} results={report.segments} saved={focus.segments} persisted={persisted} onSave={focus.setSegments} />
       {selected ? (
         <PageFocusDetail page={selected} report={report} onBack={() => setSelectedUrl(undefined)} projectId={projectId} baselineScore={taskBaseline} crawled={pages.find((item) => item.url === selected.url)} />
       ) : (

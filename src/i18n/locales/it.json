@@ -6134,7 +6134,11 @@
           "own-domain": "il nome del tuo dominio",
           "own-alias": "il nome del tuo marchio",
           "competitor-brand": "marchio concorrente"
-        }
+        },
+        "tSegments": "Punteggi dei segmenti",
+        "segmentsIntro": "Segmenti definiti per questo progetto, ciascuno valutato rispetto al proprio tema centrale. Un trattino indica che nessuna pagina sotto il prefisso è stata valutata.",
+        "colSegment": "Segmento",
+        "colCore": "Tema centrale"
       },
       "authority": {
         "title": "Autorità tematica",
@@ -7330,6 +7334,17 @@
         "own-alias": "il nome del tuo marchio",
         "competitor-brand": "un marchio concorrente"
       }
+    },
+    "segments": {
+      "title": "Segmenti con un proprio tema",
+      "inputLabel": "Segmenti (uno per riga: Nome | /prefisso-percorso | tema facoltativo)",
+      "placeholder": "Negozio | /negozio | pompe per insulina",
+      "save": "Salva segmenti",
+      "help": "Per siti multitematici: ogni segmento viene valutato rispetto al proprio tema centrale (il tema inserito o quello che le sue pagine portano di più). Il Site Focus Score dell’intero sito non cambia. Fino a {{max}} segmenti.",
+      "dropped": "{{count}} riga/righe non valide non sono state salvate. Formato: Nome | /prefisso-percorso | tema facoltativo.",
+      "needsProject": "I segmenti vengono salvati per progetto. Apri questa scansione da un progetto per impostarli.",
+      "item": "{{label}} ({{prefix}}): {{score}}, {{band}}. Tema centrale: {{core}}. Pagine valutate: {{scored}} su {{pages}}.",
+      "unavailable": "{{label}} ({{prefix}}): nessuna pagina valutata sotto questo prefisso, quindi nessun punteggio (non è 0)."
     }
   },
   "focusBenchmark": {

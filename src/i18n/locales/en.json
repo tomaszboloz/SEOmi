@@ -6134,7 +6134,11 @@
           "own-domain": "your domain name",
           "own-alias": "your brand name",
           "competitor-brand": "competitor brand"
-        }
+        },
+        "tSegments": "Segment scores",
+        "segmentsIntro": "Segments you defined for this project, each scored against its own core topic. A dash means no page under the prefix was scored.",
+        "colSegment": "Segment",
+        "colCore": "Core topic"
       },
       "authority": {
         "title": "Topical Authority",
@@ -7330,6 +7334,17 @@
         "own-alias": "your brand name",
         "competitor-brand": "a competitor brand"
       }
+    },
+    "segments": {
+      "title": "Segments with their own topic",
+      "inputLabel": "Segments (one per line: Label | /path-prefix | optional topic)",
+      "placeholder": "Shop | /shop | insulin pumps",
+      "save": "Save segments",
+      "help": "For multi-topic sites: each segment is scored against its own Core Topic (the topic you type, or the topic its pages carry most). The site-wide Site Focus Score does not change. Up to {{max}} segments.",
+      "dropped": "{{count}} line(s) were not valid and were not saved. Use: Label | /path-prefix | optional topic.",
+      "needsProject": "Segments are saved per project. Open this crawl from a project to set them.",
+      "item": "{{label}} ({{prefix}}): {{score}}, {{band}}. Core: {{core}}. Scored pages: {{scored}} of {{pages}}.",
+      "unavailable": "{{label}} ({{prefix}}): no scored page under this prefix, so there is no score (not 0)."
     }
   },
   "focusBenchmark": {

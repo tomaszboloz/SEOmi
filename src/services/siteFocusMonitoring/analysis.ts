@@ -4,7 +4,7 @@ import {
   type AlertEvent, type FocusPage, type PageFocus, type SfsSnapshot, type SiteFocusReport,
 } from '@/services/siteFocus';
 import type { CrawlRunRecord } from '@/types';
-import type { BrandPolicyInput } from '@/services/siteFocus/types';
+import type { BrandPolicyInput, FocusSegmentInput } from '@/services/siteFocus/types';
 import type { Clock } from './budget';
 import { registerSeenUrls } from './firstSeen';
 import { appendFocusHistory, readFocusHistory, type FocusHistoryEntry } from './history';
@@ -14,10 +14,11 @@ export interface AnalysisDeps { clock?: Clock; notify?: boolean; delivery?: Moni
 
 export const buildRunReport = (
   run: CrawlRunRecord, manualTopic?: ManualTopic, now?: string, anchorUrls?: readonly string[], businessGoal?: string, brand?: BrandPolicyInput,
+  segments?: readonly FocusSegmentInput[],
 ): SiteFocusReport =>
   buildSiteFocusReport(run.result.pages as FocusPage[], run.startUrl, {
     manualTopic, ...(now ? { now } : {}), ...(anchorUrls?.length ? { anchorUrls: [...anchorUrls] } : {}), ...(businessGoal ? { businessGoal } : {}),
-    ...(brand && Object.keys(brand).length ? { brand } : {}),
+    ...(brand && Object.keys(brand).length ? { brand } : {}), ...(segments?.length ? { segments: [...segments] } : {}),
   });
 
 export const isCompletedRun = (run: CrawlRunRecord | null | undefined): run is CrawlRunRecord =>

@@ -4,6 +4,7 @@ use super::data::{list, num};
 use super::focus_brand::{hidden_gaps, profile_line};
 use super::focus_cards::{core_card, count, kpis};
 use super::focus_protection::protection;
+use super::focus_segments::segments;
 use super::focus_tables as tables;
 use super::focus_text::{arg, coded};
 use super::strings::focus::{self as f, BAND, NOTE};
@@ -126,6 +127,9 @@ impl Doc {
         }
         if !list(focus, "sub_sites").is_empty() {
             self.data_table(&tables::sub_sites(focus));
+        }
+        if let Some(table) = segments(focus) {
+            self.data_table(&table);
         }
         if !list(focus, "gaps").is_empty() {
             self.data_table(&tables::gaps(focus));
