@@ -86,7 +86,7 @@ export const useCmsPatchPanel = (projectId: string | null) => {
       if (!check.allowed) {
         setFactGatePassed(false);
         setFactSources([]);
-        setError(`Unsupported numeric claims: ${check.rejectedValues.join(', ')}`);
+        setError(cmsPanelError(new CmsError('fact-gate-required', check.rejectedValues.join(', '))));
         return;
       }
       setFactSources([source]);
