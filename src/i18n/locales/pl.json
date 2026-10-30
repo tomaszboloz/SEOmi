@@ -6328,7 +6328,8 @@
         "colClaim": "Twierdzenie",
         "colEvidence": "Dowód",
         "colRelation": "Relacja",
-        "colChecked": "Sprawdzone ręcznie"
+        "colChecked": "Sprawdzone ręcznie",
+        "scoring": "Podprofil punktacji {{0}} (wagi referencyjne, nieskalibrowane)"
       },
       "offPage": {
         "title": "Analiza off-page",
@@ -7970,6 +7971,10 @@
       },
       "more": "Nie pokazano kolejnych profili: {{n}}.",
       "checked": "sprawdzono {{date}} przez {{source}}"
+    },
+    "scoring": {
+      "label": "Użyj referencyjnej punktacji opartej na twierdzeniach (eksperymentalne)",
+      "hint": "Stosuje wagi referencyjne ze specyfikacji zaufania: recall sameAs ważony rolą, karę za rozłączne wyspy grafu, jakość źródeł z poparciem twierdzeń i progi YMYL. Wagi nie są jeszcze skalibrowane, a wyniki porównujemy tylko z przebiegami liczonymi tym samym profilem."
     }
   },
   "executionCard": {

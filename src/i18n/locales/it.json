@@ -6328,7 +6328,8 @@
         "colClaim": "Affermazione",
         "colEvidence": "Prova",
         "colRelation": "Relazione",
-        "colChecked": "Controllo manuale"
+        "colChecked": "Controllo manuale",
+        "scoring": "Sottoprofilo di punteggio {{0}} (pesi di riferimento, non calibrati)"
       },
       "offPage": {
         "title": "Analisi off-page",
@@ -7970,6 +7971,10 @@
       },
       "more": "Altri profili non mostrati: {{n}}.",
       "checked": "controllato il {{date}} tramite {{source}}"
+    },
+    "scoring": {
+      "label": "Usa il punteggio di riferimento basato sulle affermazioni (sperimentale)",
+      "hint": "Applica i pesi di riferimento della specifica di fiducia: recall sameAs pesato per ruolo, penalità per isole del grafo scollegate, qualità delle fonti con supporto delle affermazioni e livelli YMYL. I pesi non sono ancora calibrati e i punteggi si confrontano solo con le esecuzioni dello stesso profilo."
     }
   },
   "executionCard": {

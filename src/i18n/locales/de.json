@@ -6328,7 +6328,8 @@
         "colClaim": "Aussage",
         "colEvidence": "Beleg",
         "colRelation": "Beziehung",
-        "colChecked": "Manuell geprüft"
+        "colChecked": "Manuell geprüft",
+        "scoring": "Bewertungs-Unterprofil {{0}} (Referenzgewichte, nicht kalibriert)"
       },
       "offPage": {
         "title": "Offpage-Analyse",
@@ -7970,6 +7971,10 @@
       },
       "more": "Weitere nicht angezeigte Profile: {{n}}.",
       "checked": "geprüft am {{date}} über {{source}}"
+    },
+    "scoring": {
+      "label": "Referenzbewertung mit Belegprüfung verwenden (experimentell)",
+      "hint": "Wendet die Referenzgewichte der Vertrauensspezifikation an: rollengewichteter sameAs-Recall, Abzug für getrennte Graphinseln, Quellenqualität mit Belegung von Aussagen und YMYL-Stufen. Die Gewichte sind noch nicht kalibriert; Werte werden nur mit Läufen desselben Profils verglichen."
     }
   },
   "executionCard": {

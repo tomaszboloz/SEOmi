@@ -6328,7 +6328,8 @@
         "colClaim": "主张",
         "colEvidence": "证据",
         "colRelation": "关系",
-        "colChecked": "手动检查"
+        "colChecked": "手动检查",
+        "scoring": "评分子配置 {{0}}（参考权重，未校准）"
       },
       "offPage": {
         "title": "站外分析",
@@ -7970,6 +7971,10 @@
       },
       "more": "未显示的资料：{{n}} 个",
       "checked": "{{date}} 通过 {{source}} 检查"
+    },
+    "scoring": {
+      "label": "使用基于主张佐证的参考评分（实验性）",
+      "hint": "应用信任规范中的参考权重：按角色加权的 sameAs 召回率、断开的图孤岛惩罚、带主张佐证的来源质量以及 YMYL 分级。权重尚未校准，分数只与使用相同配置的运行进行比较。"
     }
   },
   "executionCard": {

@@ -10,7 +10,9 @@ import { TrustEntities } from './TrustEntities';
 import { TrustFindings } from './TrustFindings';
 import { TrustHero } from './TrustHero';
 import { TrustJsonLdGenerator } from './TrustJsonLdGenerator';
+import { TrustScoringToggle } from './TrustScoringToggle';
 import { TrustSignals } from './TrustSignals';
+import { useScoringProfile } from './useScoringProfile';
 
 export interface CrawlTrustTabProps {
   pages: CrawledPageSummary[];
@@ -26,7 +28,8 @@ export const CrawlTrustTab = ({ pages, startUrl, run, projectId }: CrawlTrustTab
   useEffect(() => { activeScope.current = scope; return () => { if (activeScope.current === scope) activeScope.current = undefined; }; }, [scope]);
   const registryOptions = useMemo(() => ({ fetcher: nativeRegistryFetcher, maxRequests: 8, projectId: projectId ?? undefined, runId: run?.id }), [scope, projectId, run?.id]);
   const [evidence, setEvidence] = useState<{ scope: symbol; profiles: Record<string, ProfileEvidence> }>();
-  const { report, previous } = useTrust(pages, startUrl, run, projectId, evidence?.scope === scope ? evidence.profiles : undefined);
+  const [scoring, setScoring] = useScoringProfile(projectId);
+  const { report, previous } = useTrust(pages, startUrl, run, projectId, evidence?.scope === scope ? evidence.profiles : undefined, scoring);
   const [form, setForm] = useState<TrustJsonLdInput | null>(null);
   if (!report) return <Empty>{t('trust.empty')}</Empty>;
   const observed = { '@graph': pages.flatMap((page) => nodesOf(page).map((node) => ({
@@ -44,6 +47,7 @@ export const CrawlTrustTab = ({ pages, startUrl, run, projectId }: CrawlTrustTab
   return (
     <div className="space-y-4">
       <p className="text-xs text-slate-400">{t('trust.subtitle')}</p>
+      <TrustScoringToggle profile={scoring} onChange={setScoring} />
       <TrustHero report={report} previous={previous} />
       <TrustFindings findings={report.findings} />
       <div className="grid gap-4 lg:grid-cols-2">

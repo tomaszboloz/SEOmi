@@ -6,7 +6,7 @@ import { analyzeCitations, citationScore } from './citations';
 import { buildFindings, levelFor } from './findings';
 import { buildRegistry, isArticleNode, nodesOf, type SchemaNode } from './graph';
 import { auditGraph } from './graphAudit';
-import { analyzeSchema, schemaScore } from './schemaScore';
+import { analyzeSchema, islandPenalty, schemaScore } from './schemaScore';
 import { analyzeTransparency, transparencyScore } from './transparency';
 import { EEAT_TRUST_VERSION, LEGACY_TRUST_WEIGHTS, TRUST_PROFILE_ID, SCORING_PROFILE, TRUST_WEIGHTS, type ProfileEvidence, type ScoringProfile, type TrustLayer, type TrustReport } from './types';
 import { detectYmyl, ymylGate, YMYL_SEVERE_MULTIPLIER } from './ymyl';
@@ -72,10 +72,12 @@ export const buildTrustReport = (pages: CrawledPageSummary[], focus?: SiteFocusR
   const entityCount = named.length + (schema.organization.present ? 1 : 0);
   const profileRecall = entityCount ? named.reduce((sum, author) => sum + declarationRecall(author.profiles), 0) / entityCount : 0;
   const verifiedProfiles = named.reduce((sum, author) => sum + author.profiles.filter((profile) => profile.status === 'verified').length, 0);
-  const sameAsScore = entityCount ? Math.round((Math.min(1, sameAsLinks / entityCount) * 50 + profileRecall * 50)) : undefined;
+  const legacySameAs = entityCount ? Math.round((Math.min(1, sameAsLinks / entityCount) * 50 + profileRecall * 50)) : undefined;
+  // claim-backed-v1: S_sameAs = .50 Rec(author) + .25 Rec(reviewer) + .25 Rec(publisher) (#87 GEM-87-05).
+  const sameAsScore = scoring === 'legacy' ? legacySameAs : roleRecall === undefined ? undefined : Math.round(roleRecall * 100);
   const hasAuthorEvidence = scan.authors.some((author) => author.alignmentPct !== undefined || author.bio || author.credentials?.length || author.knowsAbout?.length);
   const layers: TrustReport['layers'] = {
-    ...(allNodes.length ? { schemaGraph: schemaScore(schema, scoring === 'legacy' ? Boolean(ymyl) : ymyl, scoring) } : {}),
+    ...(allNodes.length ? { schemaGraph: islandPenalty(schemaScore(schema, scoring === 'legacy' ? Boolean(ymyl) : ymyl, scoring), graphAudit, scoring) } : {}),
     ...(sameAsScore === undefined ? {} : { sameAs: sameAsScore }),
     ...(transparencyScore(transparency) === undefined ? {} : { transparency: transparencyScore(transparency) }),
     ...(focus && articleUrls.size && hasAuthorEvidence ? { authorAlignment: Math.round(alignmentSum / articleUrls.size) } : {}),

@@ -6328,7 +6328,8 @@
         "colClaim": "Claim",
         "colEvidence": "Evidence",
         "colRelation": "Relation",
-        "colChecked": "Manual check"
+        "colChecked": "Manual check",
+        "scoring": "Scoring sub-profile {{0}} (reference weights, not calibrated)"
       },
       "offPage": {
         "title": "Off-page analysis",
@@ -7970,6 +7971,10 @@
       },
       "more": "{{n}} more profiles not shown.",
       "checked": "checked {{date}} via {{source}}"
+    },
+    "scoring": {
+      "label": "Use the claim-backed reference scoring (experimental)",
+      "hint": "Applies the reference weights from the trust specification: role-weighted sameAs recall, graph-island penalty, source quality with claim backing and YMYL tiers. The weights are not calibrated yet, and scores are compared only with runs that used the same profile."
     }
   },
   "executionCard": {

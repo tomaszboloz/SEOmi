@@ -3,9 +3,9 @@ import { pathSegments } from '@/services/siteFocus/pageType';
 import type { SchemaNode } from './graph';
 import type { TransparencyDetail, TransparencyKind } from './types';
 
-/** URL segments and title words that identify trust-building pages in the site's main languages. */
+/** URL segments and title words that identify trust-building pages in the site's main languages. Editorial also covers the review process and disclaimer pages (#65 GEM-65-06). */
 const PATTERNS: Record<TransparencyKind, RegExp> = {
-  editorial: /(editorial|redakcyj|polityka-redak|metodolog|methodolog|fact-?check|weryfikacj|verification|redaktionell|politique-edit|politica-editorial|politica-redazion|редакцион)/i,
+  editorial: /(editorial|redakcyj|polityka-redak|metodolog|methodolog|fact-?check|weryfikacj|verification|redaktionell|politique-edit|politica-editorial|politica-redazion|редакцион|review-process|medical-review|proces-recenzji|disclaimer|zastrze[zż]eni|haftungsausschluss|avertissement)/i,
   about: /(^|[-/ ])(o-nas|about|about-us|over-ons|uber-uns|ueber-uns|qui-sommes|chi-siamo|sobre|quienes-somos|о-нас|会社|关于|소개|من-نحن)($|[-/ ])/i,
   contact: /(^|[-/ ])(kontakt|contact|contacto|contato|contatti|kontakte|контакт|お問い合わせ|联系|문의|اتصل)/i,
   registry: /((^|[-/ ])(krs|nip|regon)($|[-/ ])|impressum|imprint|mentions-legales|aviso-legal|note-legali|dane-firmy|dane-rejestrowe|company-(info|details|data)|legal-notice|stopka-prawna|регистрац|法的|公司信息)/i,

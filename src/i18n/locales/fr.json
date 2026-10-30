@@ -6328,7 +6328,8 @@
         "colClaim": "Affirmation",
         "colEvidence": "Preuve",
         "colRelation": "Relation",
-        "colChecked": "Vérifié manuellement"
+        "colChecked": "Vérifié manuellement",
+        "scoring": "Sous-profil de score {{0}} (pondérations de référence, non calibrées)"
       },
       "offPage": {
         "title": "Analyse off-page",
@@ -7970,6 +7971,10 @@
       },
       "more": "Profils supplémentaires non affichés : {{n}}.",
       "checked": "vérifié le {{date}} via {{source}}"
+    },
+    "scoring": {
+      "label": "Utiliser le score de référence fondé sur les affirmations (expérimental)",
+      "hint": "Applique les pondérations de référence de la spécification de confiance : rappel sameAs pondéré par rôle, pénalité pour îlots de graphe déconnectés, qualité des sources avec appui des affirmations et paliers YMYL. Les pondérations ne sont pas encore calibrées ; les scores ne sont comparés qu’aux analyses utilisant le même profil."
     }
   },
   "executionCard": {

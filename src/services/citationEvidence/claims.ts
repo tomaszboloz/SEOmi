@@ -1,5 +1,6 @@
 import { scholarlyIds, scholarlyKey } from '@/services/eeatTrust/citationIds';
 import { responseSentences } from './sentences';
+import { claimStance, type ClaimStance } from './stance';
 
 export type ClaimRisk = 'ordinary' | 'high-stakes';
 export type CitationRelation = 'same-sentence' | 'adjacent-sentence' | 'unmatched';
@@ -8,6 +9,8 @@ export interface ClaimCitation {
   claim: string; start: number; end: number; risk: ClaimRisk; references: CitationReference[]; relation: CitationRelation;
   sourceExists: boolean | null; reachable: boolean | null; topical: boolean | null; supportsClaim: boolean | null;
   sourceChecked: boolean; evidence: 'association' | 'manual' | 'unavailable';
+  /** Firm thesis, hedged hypothesis or negation; absent in evidence stored before #88 GEM-88-04 (treat as firm). */
+  stance?: ClaimStance;
 }
 export interface CitationSource { key: string; exists?: boolean; reachable?: boolean; topical?: boolean; supportsClaim?: boolean; sourceChecked?: boolean }
 
@@ -61,7 +64,7 @@ export const mapClaimsToCitations = (text: string, sources: CitationSource[] = [
     const manual = known.find((source) => source.sourceChecked === true);
     const checkedSources = known.filter((source) => source.sourceChecked === true);
     return {
-      claim: sentence.text, start: sentence.start, end: sentence.end, risk: 'high-stakes', references: linked, relation,
+      claim: sentence.text, stance: claimStance(sentence.text), start: sentence.start, end: sentence.end, risk: 'high-stakes', references: linked, relation,
       sourceExists: known.length ? aggregateBoolean(known.map((source) => source.exists)) : linked.length ? null : false,
       reachable: known.length ? aggregateBoolean(known.map((source) => source.reachable)) : null,
       topical: known.length ? aggregateBoolean(known.map((source) => source.topical)) : null,

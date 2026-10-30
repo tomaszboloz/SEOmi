@@ -6328,7 +6328,8 @@
         "colClaim": "Afirmação",
         "colEvidence": "Evidência",
         "colRelation": "Relação",
-        "colChecked": "Verificação manual"
+        "colChecked": "Verificação manual",
+        "scoring": "Subperfil de pontuação {{0}} (pesos de referência, não calibrados)"
       },
       "offPage": {
         "title": "Análise off-page",
@@ -7970,6 +7971,10 @@
       },
       "more": "Outros perfis não mostrados: {{n}}.",
       "checked": "verificado em {{date}} via {{source}}"
+    },
+    "scoring": {
+      "label": "Usar a pontuação de referência baseada em afirmações (experimental)",
+      "hint": "Aplica os pesos de referência da especificação de confiança: recall de sameAs ponderado por função, penalização por ilhas desconectadas do grafo, qualidade das fontes com respaldo das afirmações e níveis YMYL. Os pesos ainda não estão calibrados e as pontuações só são comparadas com execuções do mesmo perfil."
     }
   },
   "executionCard": {

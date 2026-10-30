@@ -121,3 +121,15 @@ fn level_colours_and_kpis_cover_every_layer() {
     assert_eq!(items[5].note, "1 with sameAs");
     assert_eq!(coded(k::LEVEL, "strong", &[]), "Strong trust");
 }
+
+#[test]
+fn scoring_sub_profile_is_named_only_when_it_is_not_legacy() {
+    let mut claim = trust();
+    claim["scoring_profile"] = json!("claim-backed-v1");
+    let text = text_of(&with_trust(claim));
+    assert!(text.contains("Scoring sub-profile claim-backed-v1 (reference weights, not calibrated)"));
+    let mut legacy = trust();
+    legacy["scoring_profile"] = json!("legacy");
+    assert!(!text_of(&with_trust(legacy)).contains("Scoring sub-profile"));
+    assert!(!text_of(&with_trust(trust())).contains("Scoring sub-profile"));
+}

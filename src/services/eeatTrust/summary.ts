@@ -2,6 +2,7 @@ import { isCompletedRun } from '@/services/siteFocusMonitoring/analysis';
 import { buildProjectRunReport } from '@/services/siteFocusMonitoring/projectReport';
 import type { CrawlRunRecord } from '@/types';
 import { buildTrustReport } from './build';
+import { readScoringProfile } from './scoringPreference';
 import type { CodeParams } from '@/services/siteFocus';
 import type { TransparencyKind, TrustReport } from './types';
 
@@ -14,6 +15,8 @@ export interface TrustPdfSummary {
   layers: { schema_graph: number | null; same_as: number | null; author_alignment: number | null; citation_quality: number | null; transparency: number | null };
   profile_version: number;
   profile_id: string;
+  /** EETV sub-scoring profile: 'legacy' or the opt-in 'claim-backed-v1'. */
+  scoring_profile: string;
   coverage: Record<string, { observed: number; declared: number; verified: number; unknown: number }>;
   ymyl: string | null;
   ymyl_unattributed_pct: number | null;
@@ -40,6 +43,7 @@ export const summarizeTrust = (report: TrustReport): TrustPdfSummary => ({
   },
   profile_version: report.profileVersion,
   profile_id: report.profileId,
+  scoring_profile: report.scoringProfile ?? 'legacy',
   coverage: report.coverage,
   ymyl: report.ymyl ?? null,
   ymyl_unattributed_pct: report.ymylUnattributedPct ?? null,
@@ -68,5 +72,5 @@ export const summarizeTrust = (report: TrustReport): TrustPdfSummary => ({
 export const crawlTrustSummary = (run: CrawlRunRecord): TrustPdfSummary | undefined => {
   if (!isCompletedRun(run)) return undefined;
   const focus = buildProjectRunReport(run, run.projectId);
-  return summarizeTrust(buildTrustReport(run.result.pages, focus));
+  return summarizeTrust(buildTrustReport(run.result.pages, focus, { scoringProfile: readScoringProfile(run.projectId) }));
 };
