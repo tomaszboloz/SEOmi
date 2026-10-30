@@ -1,4 +1,5 @@
 import type { SerpAvailability, SerpSnapshot } from '@/services/serpImport/contracts';
+import { serpUrlKey } from './normalize';
 
 /**
  * Shared SERP evidence (#85 GEM-85-05, #86 GEM-86-04/05, #106 item 1). Every module that reads search
@@ -34,6 +35,9 @@ export interface SerpEvidenceSummary {
   queries: number;
 }
 
+/** Distinct documents after canonical normalization (www/scheme/tracking/trailing slash). */
+const distinct = (urls: string[]): number => new Set(urls.filter(Boolean).map((url) => serpUrlKey(url) ?? url)).size;
+
 const ORDER: SerpAvailability[] = ['complete', 'partial', 'blocked', 'missing'];
 export const TOP10 = 10;
 
@@ -48,7 +52,7 @@ export const evidenceFromSnapshot = (query: string, snapshot: SerpSnapshot | und
   availability: snapshot ? (snapshot.rows.length ? snapshot.source.availability : 'missing') : 'missing',
   reason: snapshot?.source.reason ?? null,
   requestedDepth: null,
-  actualK: snapshot ? new Set(snapshot.rows.map((row) => row.url)).size : 0,
+  actualK: snapshot ? distinct(snapshot.rows.map((row) => row.url)) : 0,
 });
 
 /**
@@ -58,7 +62,7 @@ export const evidenceFromSnapshot = (query: string, snapshot: SerpSnapshot | und
 export const evidenceFromLive = (
   query: string, urls: string[], market: { countryCode: string | null; languageCode: string | null; requestedDepth: number | null; retrievedAt: string },
 ): SerpEvidence => {
-  const actualK = new Set(urls.filter(Boolean)).size;
+  const actualK = distinct(urls);
   return {
     query, providerKind: 'dataforseo-live', provider: 'DataForSEO', countryCode: market.countryCode, languageCode: market.languageCode,
     retrievedAt: market.retrievedAt, availability: actualK === 0 ? 'missing' : actualK < TOP10 ? 'partial' : 'complete',

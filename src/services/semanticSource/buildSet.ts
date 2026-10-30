@@ -1,4 +1,5 @@
 import type { EmbeddingProvider } from '@/services/embeddings/types';
+import { withTimeout } from './providerErrors';
 import { safeCosine } from './similarity';
 import type { EmbeddingSet } from './types';
 
@@ -9,6 +10,10 @@ export interface EmbeddingSetInput {
   terms?: ReadonlyMap<string, string>;
   batchSize?: number;
   signal?: AbortSignal;
+  /** Per-batch timeout in ms (#86 GEM-86-03); a slow provider rejects with a TimeoutError. */
+  timeoutMs?: number;
+  /** Budget: at most this many texts are embedded; the rest is reported as `skipped`, never scored. */
+  maxEntries?: number;
 }
 
 export interface EmbeddingSetResult {
@@ -18,6 +23,8 @@ export interface EmbeddingSetResult {
   rejected: number;
   /** Entries requested in total. */
   requested: number;
+  /** Entries left out by the `maxEntries` budget. */
+  skipped: number;
 }
 
 const DEFAULT_BATCH = 32;
@@ -33,12 +40,15 @@ export const buildEmbeddingSet = async (provider: EmbeddingProvider, input: Embe
     ...[...(input.pages ?? new Map<string, string>())].map(([key, text]) => ({ bucket: 'byUrl' as const, key, text })),
     ...[...(input.terms ?? new Map<string, string>())].map(([key, text]) => ({ bucket: 'byTerm' as const, key, text })),
   ].filter((entry) => entry.text.trim() !== '');
+  const budget = input.maxEntries === undefined ? entries.length : Math.max(0, Math.floor(input.maxEntries));
+  const skipped = Math.max(0, entries.length - budget);
+  entries.splice(budget);
   const size = Math.max(1, Math.floor(input.batchSize ?? DEFAULT_BATCH));
   const vectors: Array<ArrayLike<number> | undefined> = [];
   for (let start = 0; start < entries.length; start += size) {
     if (input.signal?.aborted) throw abortError();
     const batch = entries.slice(start, start + size);
-    const result = await provider.embed(batch.map((entry) => entry.text));
+    const result = await withTimeout(provider.embed(batch.map((entry) => entry.text)), input.timeoutMs, input.signal);
     if (input.signal?.aborted) throw abortError();
     batch.forEach((_, index) => vectors.push(result[index]));
   }
@@ -55,6 +65,7 @@ export const buildEmbeddingSet = async (provider: EmbeddingProvider, input: Embe
   return {
     set: usable ? { providerId: provider.id, model: provider.model, dimensions, byUrl, byTerm } : null,
     rejected,
-    requested: entries.length,
+    requested: entries.length + skipped,
+    skipped,
   };
 };
