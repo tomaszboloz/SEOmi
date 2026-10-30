@@ -3,7 +3,13 @@ use tauri::{
     Context, Runtime,
 };
 
+#[cfg(target_os = "macos")]
+#[path = "desktop_e2e_exceptions.rs"]
+mod exceptions;
+
 pub fn verified_context() -> Context<tauri::Wry> {
+    #[cfg(target_os = "macos")]
+    exceptions::assert_catchable_navigation_exception();
     let context = tauri::generate_context!();
     assert_embedded_frontend_mime(&context);
     context
