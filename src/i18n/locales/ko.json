@@ -8646,5 +8646,30 @@
       "no-anchor-text": "앵커 텍스트 없음(예: 이미지 링크)",
       "source-unavailable": "원본 텍스트를 사용할 수 없음"
     }
+  },
+  "imagePhashUi": {
+    "title": "거의 중복된 이미지(지각 해시)",
+    "note": "이 앱에서 사이트 자체 이미지를 최대 {{max}}개까지 한 번만 내려받아 64비트 지각 해시를 비교합니다. 서버가 교차 출처 읽기를 막는 이미지는 사용할 수 없음으로 남습니다. 일치는 이미지가 비슷해 보인다는 뜻일 뿐, 스톡 사용, 저작자, 가치 없음을 증명하지 않습니다.",
+    "run": "이미지 {{count}}개 해시 계산",
+    "cancel": "취소",
+    "threshold": "최대 다른 비트 수(0–16)",
+    "uncalibrated": "기본값 8비트이며 이 임계값은 실제 데이터로 보정되지 않았습니다.",
+    "status": {
+      "running": "계산 중… {{hashed}}개 완료, {{failed}}개 사용 불가",
+      "done": "완료: {{hashed}}개 해시, {{failed}}개 사용 불가",
+      "cancelled": "취소됨: {{hashed}}개 해시, {{failed}}개 사용 불가"
+    },
+    "failures": {
+      "blocked": "{{n}}개 차단 또는 접근 불가",
+      "http-error": "{{n}}개 HTTP 오류",
+      "too-large": "{{n}}개 5MB 초과",
+      "not-image": "{{n}}개 래스터 이미지 아님",
+      "decode-failed": "{{n}}개 디코딩 실패",
+      "unsupported-url": "{{n}}개 지원하지 않는 URL"
+    },
+    "pair": "{{left}} ≈ {{right}} ({{distance}}비트 다름)",
+    "identical": "{{left}} = {{right}} (동일한 파일)",
+    "noPairs": "이 임계값에서는 거의 중복된 쌍이 없습니다.",
+    "external": "외부 이미지 검색 결과와의 비교: 사용할 수 없음(이미지 제공업체 미설정)."
   }
 }

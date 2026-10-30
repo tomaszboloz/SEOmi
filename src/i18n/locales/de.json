@@ -8646,5 +8646,30 @@
       "no-anchor-text": "kein Ankertext (z. B. Bildlink)",
       "source-unavailable": "Quelltext nicht verfügbar"
     }
+  },
+  "imagePhashUi": {
+    "title": "Nahezu doppelte Bilder (Wahrnehmungs-Hash)",
+    "note": "Lädt bis zu {{max}} eigene Bilder der Website einmalig in dieser App und vergleicht ihre 64-Bit-Wahrnehmungs-Hashes. Bilder, deren Server Cross-Origin-Lesezugriffe blockiert, bleiben nicht verfügbar. Ein Treffer bedeutet, dass die Bilder ähnlich aussehen; er belegt weder Stock-Nutzung noch Urheberschaft oder fehlenden Wert.",
+    "run": "{{count}} Bilder hashen",
+    "cancel": "Abbrechen",
+    "threshold": "Maximal abweichende Bits (0–16)",
+    "uncalibrated": "Standard 8 Bit; dieser Schwellenwert ist nicht an echten Daten kalibriert.",
+    "status": {
+      "running": "Hashen… {{hashed}} gehasht, {{failed}} nicht verfügbar",
+      "done": "Fertig: {{hashed}} gehasht, {{failed}} nicht verfügbar",
+      "cancelled": "Abgebrochen: {{hashed}} gehasht, {{failed}} nicht verfügbar"
+    },
+    "failures": {
+      "blocked": "{{n}} blockiert oder nicht erreichbar",
+      "http-error": "{{n}} HTTP-Fehler",
+      "too-large": "{{n}} größer als 5 MB",
+      "not-image": "{{n}} kein Rasterbild",
+      "decode-failed": "{{n}} nicht dekodierbar",
+      "unsupported-url": "{{n}} nicht unterstützte URL"
+    },
+    "pair": "{{left}} ≈ {{right}} ({{distance}} Bit abweichend)",
+    "identical": "{{left}} = {{right}} (identische Datei)",
+    "noPairs": "Kein nahezu doppeltes Paar bei diesem Schwellenwert.",
+    "external": "Vergleich mit externen Bildsuchergebnissen: nicht verfügbar (kein Bildanbieter konfiguriert)."
   }
 }

@@ -8646,5 +8646,30 @@
       "no-anchor-text": "brak tekstu anchora (np. link obrazkowy)",
       "source-unavailable": "tekst źródła niedostępny"
     }
+  },
+  "imagePhashUi": {
+    "title": "Prawie identyczne obrazy (hash percepcyjny)",
+    "note": "Pobiera jednorazowo, w tej aplikacji, do {{max}} własnych obrazów witryny i porównuje ich 64-bitowe hashe percepcyjne. Obrazy, których serwer blokuje odczyt cross-origin, pozostają niedostępne. Dopasowanie oznacza, że obrazy wyglądają podobnie; nie dowodzi użycia stocku, autorstwa ani braku wartości.",
+    "run": "Oblicz hash dla {{count}} obrazów",
+    "cancel": "Anuluj",
+    "threshold": "Maksymalna liczba różnych bitów (0–16)",
+    "uncalibrated": "Domyślnie 8 bitów; ten próg nie jest skalibrowany na rzeczywistych danych.",
+    "status": {
+      "running": "Obliczanie… {{hashed}} obliczonych, {{failed}} niedostępnych",
+      "done": "Gotowe: {{hashed}} obliczonych, {{failed}} niedostępnych",
+      "cancelled": "Anulowano: {{hashed}} obliczonych, {{failed}} niedostępnych"
+    },
+    "failures": {
+      "blocked": "{{n}} zablokowanych lub nieosiągalnych",
+      "http-error": "{{n}} z błędem HTTP",
+      "too-large": "{{n}} większych niż 5 MB",
+      "not-image": "{{n}} niebędących obrazem rastrowym",
+      "decode-failed": "{{n}} nie dało się zdekodować",
+      "unsupported-url": "{{n}} z nieobsługiwanym URL"
+    },
+    "pair": "{{left}} ≈ {{right}} (różni się {{distance}} bitów)",
+    "identical": "{{left}} = {{right}} (identyczny plik)",
+    "noPairs": "Brak par prawie identycznych przy tym progu.",
+    "external": "Porównanie z zewnętrznymi wynikami wyszukiwania grafik: niedostępne (brak skonfigurowanego dostawcy obrazów)."
   }
 }

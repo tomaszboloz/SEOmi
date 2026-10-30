@@ -8646,5 +8646,30 @@
       "no-anchor-text": "no anchor text (for example an image link)",
       "source-unavailable": "source text unavailable"
     }
+  },
+  "imagePhashUi": {
+    "title": "Near-duplicate images (perceptual hash)",
+    "note": "Downloads up to {{max}} of the site's own images once, in this app, and compares their 64-bit perceptual hashes. Images whose server blocks cross-origin reads stay unavailable. A match means the pictures look alike; it does not show stock use, authorship or lack of value.",
+    "run": "Hash {{count}} images",
+    "cancel": "Cancel",
+    "threshold": "Maximum differing bits (0–16)",
+    "uncalibrated": "Default 8 bits; this threshold is not calibrated on real data.",
+    "status": {
+      "running": "Hashing… {{hashed}} hashed, {{failed}} unavailable",
+      "done": "Done: {{hashed}} hashed, {{failed}} unavailable",
+      "cancelled": "Cancelled: {{hashed}} hashed, {{failed}} unavailable"
+    },
+    "failures": {
+      "blocked": "{{n}} blocked or unreachable",
+      "http-error": "{{n}} HTTP error",
+      "too-large": "{{n}} larger than 5 MB",
+      "not-image": "{{n}} not a raster image",
+      "decode-failed": "{{n}} could not be decoded",
+      "unsupported-url": "{{n}} unsupported URL"
+    },
+    "pair": "{{left}} ≈ {{right}} ({{distance}} bits differ)",
+    "identical": "{{left}} = {{right}} (identical file)",
+    "noPairs": "No near-duplicate pair at this threshold.",
+    "external": "Comparison with external image search results: unavailable (no images provider configured)."
   }
 }

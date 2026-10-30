@@ -8646,5 +8646,30 @@
       "no-anchor-text": "pas de texte d’ancre (par exemple un lien image)",
       "source-unavailable": "texte source indisponible"
     }
+  },
+  "imagePhashUi": {
+    "title": "Images quasi dupliquées (hash perceptuel)",
+    "note": "Télécharge une seule fois, dans cette application, jusqu’à {{max}} images du site et compare leurs hashs perceptuels de 64 bits. Les images dont le serveur bloque la lecture inter-origine restent indisponibles. Une correspondance signifie que les images se ressemblent ; elle ne prouve ni usage de banque d’images, ni paternité, ni absence de valeur.",
+    "run": "Hacher {{count}} images",
+    "cancel": "Annuler",
+    "threshold": "Bits différents maximum (0–16)",
+    "uncalibrated": "8 bits par défaut ; ce seuil n’est pas calibré sur des données réelles.",
+    "status": {
+      "running": "Calcul… {{hashed}} hachées, {{failed}} indisponibles",
+      "done": "Terminé : {{hashed}} hachées, {{failed}} indisponibles",
+      "cancelled": "Annulé : {{hashed}} hachées, {{failed}} indisponibles"
+    },
+    "failures": {
+      "blocked": "{{n}} bloquées ou injoignables",
+      "http-error": "{{n}} erreur HTTP",
+      "too-large": "{{n}} de plus de 5 Mo",
+      "not-image": "{{n}} pas une image matricielle",
+      "decode-failed": "{{n}} non décodables",
+      "unsupported-url": "{{n}} URL non prise en charge"
+    },
+    "pair": "{{left}} ≈ {{right}} ({{distance}} bits différents)",
+    "identical": "{{left}} = {{right}} (fichier identique)",
+    "noPairs": "Aucune paire quasi dupliquée à ce seuil.",
+    "external": "Comparaison avec des résultats externes de recherche d’images : indisponible (aucun fournisseur d’images configuré)."
   }
 }

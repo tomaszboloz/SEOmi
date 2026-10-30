@@ -8646,5 +8646,30 @@
       "no-anchor-text": "nessun testo anchor (ad esempio un link immagine)",
       "source-unavailable": "testo di origine non disponibile"
     }
+  },
+  "imagePhashUi": {
+    "title": "Immagini quasi duplicate (hash percettivo)",
+    "note": "Scarica una sola volta, in questa app, fino a {{max}} immagini del sito e confronta i loro hash percettivi a 64 bit. Le immagini il cui server blocca la lettura cross-origin restano non disponibili. Una corrispondenza significa che le immagini si somigliano; non dimostra uso di stock, paternità o mancanza di valore.",
+    "run": "Calcola l’hash di {{count}} immagini",
+    "cancel": "Annulla",
+    "threshold": "Bit diversi massimi (0–16)",
+    "uncalibrated": "Predefinito 8 bit; questa soglia non è calibrata su dati reali.",
+    "status": {
+      "running": "Calcolo… {{hashed}} con hash, {{failed}} non disponibili",
+      "done": "Fatto: {{hashed}} con hash, {{failed}} non disponibili",
+      "cancelled": "Annullato: {{hashed}} con hash, {{failed}} non disponibili"
+    },
+    "failures": {
+      "blocked": "{{n}} bloccate o irraggiungibili",
+      "http-error": "{{n}} errore HTTP",
+      "too-large": "{{n}} più grandi di 5 MB",
+      "not-image": "{{n}} non sono immagini raster",
+      "decode-failed": "{{n}} non decodificabili",
+      "unsupported-url": "{{n}} URL non supportato"
+    },
+    "pair": "{{left}} ≈ {{right}} ({{distance}} bit diversi)",
+    "identical": "{{left}} = {{right}} (file identico)",
+    "noPairs": "Nessuna coppia quasi duplicata con questa soglia.",
+    "external": "Confronto con risultati esterni di ricerca immagini: non disponibile (nessun fornitore di immagini configurato)."
   }
 }

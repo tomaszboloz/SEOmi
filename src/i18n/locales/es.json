@@ -8646,5 +8646,30 @@
       "no-anchor-text": "sin texto ancla (por ejemplo, un enlace de imagen)",
       "source-unavailable": "texto de origen no disponible"
     }
+  },
+  "imagePhashUi": {
+    "title": "Imágenes casi duplicadas (hash perceptual)",
+    "note": "Descarga una vez, en esta app, hasta {{max}} imágenes propias del sitio y compara sus hashes perceptuales de 64 bits. Las imágenes cuyo servidor bloquea la lectura entre orígenes quedan no disponibles. Una coincidencia significa que se parecen; no demuestra uso de stock, autoría ni falta de valor.",
+    "run": "Calcular hash de {{count}} imágenes",
+    "cancel": "Cancelar",
+    "threshold": "Máximo de bits distintos (0–16)",
+    "uncalibrated": "Por defecto 8 bits; este umbral no está calibrado con datos reales.",
+    "status": {
+      "running": "Calculando… {{hashed}} con hash, {{failed}} no disponibles",
+      "done": "Listo: {{hashed}} con hash, {{failed}} no disponibles",
+      "cancelled": "Cancelado: {{hashed}} con hash, {{failed}} no disponibles"
+    },
+    "failures": {
+      "blocked": "{{n}} bloqueadas o inaccesibles",
+      "http-error": "{{n}} con error HTTP",
+      "too-large": "{{n}} de más de 5 MB",
+      "not-image": "{{n}} no son imagen rasterizada",
+      "decode-failed": "{{n}} no se pudieron decodificar",
+      "unsupported-url": "{{n}} con URL no compatible"
+    },
+    "pair": "{{left}} ≈ {{right}} ({{distance}} bits distintos)",
+    "identical": "{{left}} = {{right}} (archivo idéntico)",
+    "noPairs": "No hay pares casi duplicados con este umbral.",
+    "external": "Comparación con resultados externos de búsqueda de imágenes: no disponible (no hay proveedor de imágenes configurado)."
   }
 }

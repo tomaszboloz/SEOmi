@@ -8646,5 +8646,30 @@
       "no-anchor-text": "无锚文本（例如图片链接）",
       "source-unavailable": "来源文本不可用"
     }
+  },
+  "imagePhashUi": {
+    "title": "近似重复图片（感知哈希）",
+    "note": "在本应用中一次性下载网站自身最多 {{max}} 张图片，并比较其 64 位感知哈希。服务器禁止跨源读取的图片将保持不可用。匹配仅表示图片看起来相似，不能证明使用了图库、作者身份或缺乏价值。",
+    "run": "计算 {{count}} 张图片的哈希",
+    "cancel": "取消",
+    "threshold": "最大不同位数（0–16）",
+    "uncalibrated": "默认 8 位；该阈值未经真实数据校准。",
+    "status": {
+      "running": "计算中… 已完成 {{hashed}}，不可用 {{failed}}",
+      "done": "完成：已计算 {{hashed}}，不可用 {{failed}}",
+      "cancelled": "已取消：已计算 {{hashed}}，不可用 {{failed}}"
+    },
+    "failures": {
+      "blocked": "{{n}} 个被阻止或无法访问",
+      "http-error": "{{n}} 个 HTTP 错误",
+      "too-large": "{{n}} 个大于 5 MB",
+      "not-image": "{{n}} 个不是位图",
+      "decode-failed": "{{n}} 个无法解码",
+      "unsupported-url": "{{n}} 个 URL 不受支持"
+    },
+    "pair": "{{left}} ≈ {{right}}（相差 {{distance}} 位）",
+    "identical": "{{left}} = {{right}}（相同文件）",
+    "noPairs": "在此阈值下没有近似重复的图片对。",
+    "external": "与外部图片搜索结果比较：不可用（未配置图片提供商）。"
   }
 }
