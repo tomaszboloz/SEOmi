@@ -7817,7 +7817,8 @@
         "invalid-organization-url": "有効な発行者URLを入力してください（https://...）。",
         "invalid-page-url": "有効なページURLを入力してください（https://...）。",
         "invalid-same-as": "有効なURLではないsameAsの項目は除外しました。",
-        "conflict": "{{id}} の既存の {{property}} が提案と競合しています。エクスポート前に解決してください。"
+        "conflict": "{{id}} の既存の {{property}} が提案と競合しています。エクスポート前に解決してください。",
+        "medical-no-reviewer": "レビュー担当者のいない MedicalWebPage: reviewedBy は生成されません。実在する有資格のレビュー担当者がいる場合のみ追加してください。エクスポートは引き続き可能です。"
       },
       "preview": "生成されたJSON-LD",
       "copy": "scriptタグをコピー",

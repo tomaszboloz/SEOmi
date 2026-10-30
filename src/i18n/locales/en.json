@@ -7817,7 +7817,8 @@
         "invalid-organization-url": "Enter a valid publisher URL (https://...).",
         "invalid-page-url": "Enter a valid page URL (https://...).",
         "invalid-same-as": "Some sameAs entries are not valid URLs and were left out.",
-        "conflict": "Existing {{property}} for {{id}} conflicts with this proposal. Resolve it before export."
+        "conflict": "Existing {{property}} for {{id}} conflicts with this proposal. Resolve it before export.",
+        "medical-no-reviewer": "MedicalWebPage without a reviewer: no reviewedBy is generated. Add a real, qualified reviewer only if one exists; the export still works."
       },
       "preview": "Generated JSON-LD",
       "copy": "Copy script tag",

@@ -7817,7 +7817,8 @@
         "invalid-organization-url": "Podaj poprawny adres wydawcy (https://...).",
         "invalid-page-url": "Podaj poprawny adres strony (https://...).",
         "invalid-same-as": "Niektóre wpisy sameAs nie są poprawnymi adresami i zostały pominięte.",
-        "conflict": "Istniejące pole {{property}} dla {{id}} koliduje z propozycją. Rozwiąż konflikt przed eksportem."
+        "conflict": "Istniejące pole {{property}} dla {{id}} koliduje z propozycją. Rozwiąż konflikt przed eksportem.",
+        "medical-no-reviewer": "MedicalWebPage bez recenzenta: reviewedBy nie jest generowane. Dodaj prawdziwego, wykwalifikowanego recenzenta tylko wtedy, gdy istnieje; eksport nadal działa."
       },
       "preview": "Wygenerowany JSON-LD",
       "copy": "Kopiuj znacznik script",

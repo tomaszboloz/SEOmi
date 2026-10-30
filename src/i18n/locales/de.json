@@ -7817,7 +7817,8 @@
         "invalid-organization-url": "Gib eine gültige Herausgeber-URL ein (https://...).",
         "invalid-page-url": "Gib eine gültige Seiten-URL ein (https://...).",
         "invalid-same-as": "Einige sameAs-Einträge sind keine gültigen URLs und wurden weggelassen.",
-        "conflict": "Das vorhandene Feld {{property}} für {{id}} widerspricht dem Vorschlag. Vor dem Export muss der Konflikt gelöst werden."
+        "conflict": "Das vorhandene Feld {{property}} für {{id}} widerspricht dem Vorschlag. Vor dem Export muss der Konflikt gelöst werden.",
+        "medical-no-reviewer": "MedicalWebPage ohne Prüfer: Es wird kein reviewedBy erzeugt. Fügen Sie nur einen echten, qualifizierten Prüfer hinzu, falls es ihn gibt; der Export funktioniert trotzdem."
       },
       "preview": "Erzeugtes JSON-LD",
       "copy": "Script-Tag kopieren",

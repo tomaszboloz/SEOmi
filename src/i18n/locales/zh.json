@@ -7817,7 +7817,8 @@
         "invalid-organization-url": "请输入有效的发布者 URL（https://...）。",
         "invalid-page-url": "请输入有效的页面 URL（https://...）。",
         "invalid-same-as": "部分 sameAs 条目不是有效 URL，已被忽略。",
-        "conflict": "{{id}} 的现有 {{property}} 与此提案冲突。请在导出前解决。"
+        "conflict": "{{id}} 的现有 {{property}} 与此提案冲突。请在导出前解决。",
+        "medical-no-reviewer": "MedicalWebPage 没有审核人：不会生成 reviewedBy。仅在确有真实、合格的审核人时才添加；导出仍可进行。"
       },
       "preview": "生成的 JSON-LD",
       "copy": "复制 script 标签",

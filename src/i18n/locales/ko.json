@@ -7817,7 +7817,8 @@
         "invalid-organization-url": "올바른 발행자 URL을 입력하세요 (https://...).",
         "invalid-page-url": "올바른 페이지 URL을 입력하세요 (https://...).",
         "invalid-same-as": "올바른 URL이 아닌 sameAs 항목은 제외했습니다.",
-        "conflict": "{{id}}의 기존 {{property}}가 제안과 충돌합니다. 내보내기 전에 해결하세요."
+        "conflict": "{{id}}의 기존 {{property}}가 제안과 충돌합니다. 내보내기 전에 해결하세요.",
+        "medical-no-reviewer": "검토자가 없는 MedicalWebPage: reviewedBy가 생성되지 않습니다. 실제 자격을 갖춘 검토자가 있을 때만 추가하세요. 내보내기는 계속 가능합니다."
       },
       "preview": "생성된 JSON-LD",
       "copy": "script 태그 복사",

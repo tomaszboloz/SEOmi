@@ -7817,7 +7817,8 @@
         "invalid-organization-url": "Inserisci un URL dell'editore valido (https://...).",
         "invalid-page-url": "Inserisci un URL di pagina valido (https://...).",
         "invalid-same-as": "Alcune voci sameAs non sono URL validi e sono state escluse.",
-        "conflict": "Il campo {{property}} esistente per {{id}} è in conflitto con la proposta. Risolvi il conflitto prima dell’esportazione."
+        "conflict": "Il campo {{property}} esistente per {{id}} è in conflitto con la proposta. Risolvi il conflitto prima dell’esportazione.",
+        "medical-no-reviewer": "MedicalWebPage senza revisore: reviewedBy non viene generato. Aggiungi un revisore reale e qualificato solo se esiste; l'esportazione funziona comunque."
       },
       "preview": "JSON-LD generato",
       "copy": "Copia il tag script",

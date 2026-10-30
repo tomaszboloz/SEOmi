@@ -7817,7 +7817,8 @@
         "invalid-organization-url": "Saisissez une URL d'éditeur valide (https://...).",
         "invalid-page-url": "Saisissez une URL de page valide (https://...).",
         "invalid-same-as": "Certaines entrées sameAs ne sont pas des URL valides et ont été ignorées.",
-        "conflict": "Le champ {{property}} existant pour {{id}} est en conflit avec la proposition. Résolvez-le avant l’export."
+        "conflict": "Le champ {{property}} existant pour {{id}} est en conflit avec la proposition. Résolvez-le avant l’export.",
+        "medical-no-reviewer": "MedicalWebPage sans relecteur : aucun reviewedBy n'est généré. Ajoutez un relecteur réel et qualifié uniquement s'il existe ; l'export reste possible."
       },
       "preview": "JSON-LD généré",
       "copy": "Copier la balise script",

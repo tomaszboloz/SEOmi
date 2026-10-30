@@ -22,12 +22,17 @@ export interface TrustJsonLdInput {
   knowsAbout?: string[];
   /** Where a prefilled field came from. */
   sources?: Partial<Record<string, FieldSource>>;
+  /** @id values already declared in the crawl; reused so the export never creates a parallel identity (#66). */
+  ids?: { person?: string; organization?: string; page?: string };
 }
 
 export type FieldSource = 'crawl' | 'report' | 'start-url';
 export type UnverifiedField = 'bio' | 'hasCredential' | 'knowsAbout';
 
-export type JsonLdIssue = 'missing-name' | 'invalid-organization-url' | 'invalid-page-url' | 'invalid-same-as';
+export type JsonLdIssue = 'missing-name' | 'invalid-organization-url' | 'invalid-page-url' | 'invalid-same-as' | 'medical-no-reviewer';
+
+/** Advisory issues: shown, but they do not block copy/export. */
+const ADVISORY: JsonLdIssue[] = ['invalid-same-as', 'medical-no-reviewer'];
 
 export interface TrustJsonLd { ok: boolean; graph: Record<string, unknown>; text: string; issues: JsonLdIssue[]; needsVerification: UnverifiedField[] }
 
@@ -39,6 +44,12 @@ const web = (value: string | undefined): string | undefined => {
     const url = new URL(value ?? '');
     return url.protocol === 'https:' || url.protocol === 'http:' ? url.toString() : undefined;
   } catch { return undefined; }
+};
+
+/** An observed @id is reused only when it is an absolute http(s) IRI or a fragment; anything else falls back to a generated id. */
+const existingId = (value: string | undefined): string | undefined => {
+  const id = value?.trim();
+  return id && /^(?:https?:\/\/|#)\S+$/.test(id) ? id : undefined;
 };
 
 const slug = (text: string): string => text.toLowerCase().normalize('NFKD').replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '') || 'person';
@@ -58,8 +69,8 @@ export const buildTrustJsonLd = (input: TrustJsonLdInput): TrustJsonLd => {
   const validSameAs = sameAs.map(web).filter((item): item is string => Boolean(item));
   if (validSameAs.length !== sameAs.length) issues.push('invalid-same-as');
   const origin = org ? new URL(org).origin : '';
-  const orgId = `${origin}/#organization`;
-  const personId = web(input.personUrl) ? `${new URL(web(input.personUrl) as string).href.split('#')[0]}#person` : `${origin}/#${slug(name)}`;
+  const orgId = existingId(input.ids?.organization) ?? `${origin}/#organization`;
+  const personId = existingId(input.ids?.person) ?? (web(input.personUrl) ? `${new URL(web(input.personUrl) as string).href.split('#')[0]}#person` : `${origin}/#${slug(name)}`);
   const organization = {
     '@type': 'Organization', '@id': orgId, name: input.organizationName?.trim() || undefined, url: org,
     ...(input.organizationSameAs?.length ? { sameAs: input.organizationSameAs.map(web).filter(Boolean) } : {}),
@@ -76,17 +87,20 @@ export const buildTrustJsonLd = (input: TrustJsonLdInput): TrustJsonLd => {
     url: web(input.personUrl), sameAs: validSameAs.length ? validSameAs : undefined, worksFor: { '@id': orgId },
   };
   const webPage = {
-    '@type': input.category ? PAGE_TYPE[input.category] : 'WebPage', '@id': `${page ?? ''}#webpage`, url: page, name: input.pageName?.trim() || undefined,
+    '@type': input.category ? PAGE_TYPE[input.category] : 'WebPage', '@id': existingId(input.ids?.page) ?? `${page ?? ''}#webpage`, url: page, name: input.pageName?.trim() || undefined,
     [input.asReviewer ? 'reviewedBy' : 'author']: { '@id': personId }, publisher: { '@id': orgId },
     dateModified: input.dateModified || undefined, lastReviewed: input.lastReviewed || undefined,
   };
+  // A medical page is generated without reviewedBy rather than with an invented reviewer (#66 GEM-66-T03).
+  if (input.category === 'health' && !input.asReviewer) issues.push('medical-no-reviewer');
   const graph = { '@context': 'https://schema.org', '@graph': [organization, person, webPage] };
   const text = safeJsonLdText(graph);
-  return { ok: issues.filter((issue) => issue !== 'invalid-same-as').length === 0, graph, text, issues, needsVerification };
+  return { ok: issues.filter((issue) => !ADVISORY.includes(issue)).length === 0, graph, text, issues, needsVerification };
 };
 
 /** Form defaults for an author found in the crawl, so the generator starts from real data. */
-export const prefillFromAuthor = (author: AuthorEntity, report: TrustReport, startUrl: string): TrustJsonLdInput => ({
+export const prefillFromAuthor = (author: AuthorEntity, report: TrustReport, startUrl: string, observedIds: { organization?: string; page?: string } = {}): TrustJsonLdInput => ({
+  ids: { person: author.id, ...observedIds },
   personName: author.generic ? '' : author.name,
   jobTitle: author.jobTitle,
   personUrl: author.id && /^https?:/.test(author.id) ? author.id.split('#')[0] : undefined,
