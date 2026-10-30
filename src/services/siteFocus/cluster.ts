@@ -41,8 +41,10 @@ const cooccurrence = (keys: string[], vectors: Map<string, number>[]): Float64Ar
   return result;
 };
 
-const blend = (matrix: Float64Array, keys: string[], hook: TermSimilarity | undefined): void => {
-  if (!hook) return;
+/** Blends the hook into the co-occurrence matrix; returns how many term pairs got a finite value. */
+const blend = (matrix: Float64Array, keys: string[], hook: TermSimilarity | undefined): number => {
+  if (!hook) return 0;
+  let used = 0;
   const n = keys.length;
   for (let i = 0; i < n; i += 1) {
     for (let j = i + 1; j < n; j += 1) {
@@ -51,8 +53,10 @@ const blend = (matrix: Float64Array, keys: string[], hook: TermSimilarity | unde
       const value = (matrix[i * n + j] + Math.max(0, Math.min(1, extra))) / 2;
       matrix[i * n + j] = value;
       matrix[j * n + i] = value;
+      used += 1;
     }
   }
+  return used;
 };
 
 /**
@@ -63,14 +67,14 @@ export const clusterTerms = (
   terms: Array<{ key: string; weight: number }>,
   vectors: Map<string, number>[],
   options: { cut?: number; similarity?: TermSimilarity } = {},
-): { clusters: TermCluster[]; unassigned: string[] } => {
+): { clusters: TermCluster[]; unassigned: string[]; similarityPairs: number } => {
   const keys = terms.map((term) => term.key);
   const weightOf = new Map(terms.map((term) => [term.key, term.weight]));
   const weight = (key: string): number => weightOf.get(key) as number;
   const n = keys.length;
   const cut = options.cut ?? DEFAULT_CLUSTER_CUT;
   const sim = cooccurrence(keys, vectors);
-  blend(sim, keys, options.similarity);
+  const similarityPairs = blend(sim, keys, options.similarity);
   const members: number[][] = keys.map((_, i) => [i]);
   const active = new Set(keys.map((_, i) => i));
   for (;;) {
@@ -109,5 +113,6 @@ export const clusterTerms = (
   return {
     clusters: kept.map((cluster, i) => ({ id: `c${i + 1}`, ...cluster })),
     unassigned: groups.filter((group) => group.length < MIN_CLUSTER_SIZE).flat().sort(),
+    similarityPairs,
   };
 };

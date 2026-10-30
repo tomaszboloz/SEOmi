@@ -1,3 +1,4 @@
+import { blendSimilarity, safeCosine } from '@/services/semanticSource/similarity';
 import { cosine, jaccard, type AuthorityContext, type AuthorityPage } from './context';
 import { PARTIAL_COSINE } from './coverage';
 import type { CannibalEdge, CannibalGroup, SubtopicCoverage } from './types';
@@ -21,6 +22,20 @@ const sharedEntities = (left: AuthorityPage, right: AuthorityPage, context: Auth
   return small ? a.filter((key) => b.has(key)).length / small : 0;
 };
 
+/** Counts page pairs where an embedding similarity was really used (#86). */
+export interface SimilarityUsage { pairs: number }
+
+/**
+ * TF-IDF cosine, blended with the page-embedding cosine when both pages have a valid vector.
+ * Decision (default chosen by agent, #86): the mean, not the max, so an embedding can confirm but never on
+ * its own push an unrelated pair over the cannibalization thresholds calibrated on TF-IDF.
+ */
+export const pairSimilarityOf = (a: AuthorityPage, b: AuthorityPage, usage?: SimilarityUsage): number => {
+  const semantic = safeCosine(a.embedding, b.embedding);
+  if (semantic !== null && usage) usage.pairs += 1;
+  return blendSimilarity(cosine(a.vector, b.vector), semantic);
+};
+
 const canonicalOf = (members: AuthorityPage[], inbound: Map<string, number>): AuthorityPage =>
   [...members].sort((a, b) => b.focus.trs - a.focus.trs || (inbound.get(b.url) ?? 0) - (inbound.get(a.url) ?? 0) || b.keys.size - a.keys.size || (a.url < b.url ? -1 : 1))[0];
 
@@ -28,7 +43,9 @@ const canonicalOf = (members: AuthorityPage[], inbound: Map<string, number>): Au
  * Semantic cannibalization: two pages fight for one intent when their vectors match (cos >= 0.88) and their H1s agree,
  * or when both fully cover the same reference sub-topic and still read alike (cos >= 0.60).
  */
-export const findCannibalization = (pages: AuthorityPage[], context: AuthorityContext, coverage: SubtopicCoverage[], inbound: Map<string, number>): CannibalGroup[] => {
+export const findCannibalization = (
+  pages: AuthorityPage[], context: AuthorityContext, coverage: SubtopicCoverage[], inbound: Map<string, number>, usage?: SimilarityUsage,
+): CannibalGroup[] => {
   const parents = new Map(pages.map((entry) => [entry.url, entry.url]));
   const pairSimilarity = new Map<string, number>();
   const topicOf = new Map<string, string>();
@@ -41,12 +58,12 @@ export const findCannibalization = (pages: AuthorityPage[], context: AuthorityCo
     if (subtopic) topicOf.set(a.url, subtopic);
   };
   pages.forEach((a, index) => pages.slice(index + 1).forEach((b) => {
-    const value = cosine(a.vector, b.vector);
+    const value = pairSimilarityOf(a, b, usage);
     if (value >= SAME_INTENT_COSINE && jaccard(a.h1, b.h1) >= SAME_H1_JACCARD) note(a, b, value);
   }));
   coverage.filter((row) => row.coverage === 1 && row.urls.length > 1).forEach((row) => {
     const members = row.urls.map((url) => context.byUrl.get(url)).filter((entry): entry is AuthorityPage => Boolean(entry) && pages.includes(entry as AuthorityPage));
-    members.forEach((a, index) => members.slice(index + 1).forEach((b) => { const value = cosine(a.vector, b.vector); if (value >= PARTIAL_COSINE) note(a, b, value, row.subtopicId); }));
+    members.forEach((a, index) => members.slice(index + 1).forEach((b) => { const value = pairSimilarityOf(a, b, usage); if (value >= PARTIAL_COSINE) note(a, b, value, row.subtopicId); }));
   });
   const find = (key: string): string => { let root = key; while (parents.get(root) !== root) root = parents.get(root) as string; return root; };
   const buckets = new Map<string, AuthorityPage[]>();
@@ -54,7 +71,7 @@ export const findCannibalization = (pages: AuthorityPage[], context: AuthorityCo
   return [...buckets.values()].filter((members) => members.length > 1).map((members) => {
     const canonical = canonicalOf(members, inbound);
     const others = members.filter((entry) => entry !== canonical);
-    const similarity = Math.max(...others.map((entry) => pairSimilarity.get([entry.url, canonical.url].sort().join('|')) ?? cosine(entry.vector, canonical.vector)));
+    const similarity = Math.max(...others.map((entry) => pairSimilarity.get([entry.url, canonical.url].sort().join('|')) ?? pairSimilarityOf(entry, canonical)));
     const shared = others.reduce((sum, entry) => sum + sharedEntities(entry, canonical, context), 0) / others.length;
     const subtopicId = members.map((entry) => topicOf.get(entry.url)).find(Boolean);
     return { urls: members.map((entry) => entry.url).sort(), canonical: canonical.url, similarity: round1(similarity * 100), sharedEntitiesPct: round1(shared * 100), edges: evidence.filter((edge) => members.some((entry) => entry.url === edge.from)).sort((a, b) => (a.from + a.to < b.from + b.to ? -1 : 1)), ...(subtopicId ? { subtopicId } : {}) };

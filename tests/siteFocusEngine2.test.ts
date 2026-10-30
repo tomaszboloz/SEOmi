@@ -88,8 +88,12 @@ describe('Site Focus Score engine', () => {
     const calls: string[] = [];
     const hooked = build(diabetesSite(), { similarity: (a: string) => { calls.push(a); return a === 'diabetes' ? 1.5 : a === 'insulin' ? Number.NaN : undefined; } });
     expect(calls.length).toBeGreaterThan(0);
-    expect(hooked.flags.fallbackMode).toBe('semantic');
+    // #86: an injected hook that never yields a finite value is not a semantic source.
+    expect(hooked.flags.fallbackMode).toBe(hooked.flags.similaritySource?.pairsUsed ? 'semantic' : 'tfidf-only');
     expect(find(hooked, '/phones/review-1').trs).toBeLessThan(40);
+    const valid = build(diabetesSite(), { similarity: () => 0.9 });
+    expect(valid.flags.fallbackMode).toBe('semantic');
+    expect(valid.flags.similaritySource).toMatchObject({ mode: 'semantic', kind: 'custom' });
   });
 
   it('keeps the polysemy guard from counting core-sense words as drift', () => {

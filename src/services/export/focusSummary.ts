@@ -22,7 +22,7 @@ export interface FocusPdfSummary {
     /** Explicit business goal as validated (#82) and whether it picked the topic. */
     business_goal?: string; goal_matched?: boolean; goal_applied?: boolean;
   };
-  flags: { low_confidence: boolean; multi_topic: boolean; lexical_fallback: boolean; degraded: boolean; skipped_render_timeouts: number };
+  flags: { low_confidence: boolean; multi_topic: boolean; lexical_fallback: boolean; similarity_mode?: 'semantic' | 'tfidf-only' | 'lexical'; degraded: boolean; skipped_render_timeouts: number };
   counts: { scored: number; skipped: number; off_topic: number; borderline: number; strong: number };
   pages: Array<{
     url: string; type: string; trs: number; similarity: number; overlap: number; drift: number; status: string;
@@ -64,6 +64,8 @@ export const summarizeSiteFocus = (report: SiteFocusReport): FocusPdfSummary => 
       low_confidence: report.flags.isLowConfidence,
       multi_topic: report.flags.isMultiTopic,
       lexical_fallback: report.flags.fallbackMode === 'lexical',
+      // #86: `semantic` only when embeddings really contributed; TF-IDF alone exports `tfidf-only`.
+      similarity_mode: report.flags.fallbackMode,
       degraded: report.flags.degraded,
       skipped_render_timeouts: report.flags.skippedRenderTimeouts,
     },

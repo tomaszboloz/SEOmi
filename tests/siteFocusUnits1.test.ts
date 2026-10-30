@@ -110,7 +110,7 @@ describe('clustering and core topic', () => {
     const terms = topTerms(totals, 40);
     expect(clusterTerms(terms, vectors)).toEqual(clusterTerms(terms, vectors));
     expect(clusterTerms(terms, vectors, { cut: 0.99 }).clusters.length).toBeLessThanOrEqual(clusterTerms(terms, vectors, { cut: 0.01 }).clusters.length + terms.length);
-    expect(clusterTerms([], vectors)).toEqual({ clusters: [], unassigned: [] });
+    expect(clusterTerms([], vectors)).toEqual({ clusters: [], unassigned: [], similarityPairs: 0 });
     expect(clusterTerms(terms, vectors, { cut: 2 }).clusters).toEqual([]);
   });
 
