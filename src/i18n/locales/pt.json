@@ -8329,6 +8329,22 @@
       "ok": "OK",
       "inconclusive": "Inconclusivo",
       "no-logs": "Sem logs"
+    },
+    "ranges": {
+      "title": "Evidências de verificação de bots",
+      "note": "Opcional: carregue o arquivo oficial de faixas de IP baixado do operador do rastreador (por exemplo gptbot.json ou perplexitybot.json). O SEOmi não o baixa. As faixas têm prioridade sobre o DNS para esse bot e valem a partir da próxima importação.",
+      "family": "Bot",
+      "file": "Arquivo oficial de faixas de IP (JSON)",
+      "loaded": "{{family}}: {{count}} faixas de {{source}} (publicado {{created}}, carregado {{loaded}} UTC)",
+      "summary": "Verificações de identidade: {{checks}} (verificados {{verified}}, declarados {{claimed}}, falsificados {{spoofed}}). Método: DNS {{dns}}, faixas publicadas {{ranges}}, nenhum {{none}}. Última verificação: {{time}} UTC.",
+      "noChecks": "Nenhuma identidade de rastreador foi verificada ainda.",
+      "errors": {
+        "invalid-json": "O arquivo não é um JSON válido.",
+        "unsupported-format": "Formato não suportado: esperava-se uma lista prefixes com entradas ipv4Prefix ou ipv6Prefix.",
+        "no-valid-prefix": "O arquivo não contém nenhuma faixa de IP válida.",
+        "too-many-prefixes": "O arquivo contém mais de 5.000 faixas.",
+        "storageFailed": "Não foi possível atualizar o armazenamento local; as faixas não foram salvas."
+      }
     }
   },
   "altCheckUi": {

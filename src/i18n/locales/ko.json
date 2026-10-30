@@ -8329,6 +8329,22 @@
       "ok": "정상",
       "inconclusive": "판단 불가",
       "no-logs": "로그 없음"
+    },
+    "ranges": {
+      "title": "봇 검증 증거",
+      "note": "선택 사항: 크롤러 운영자에게서 내려받은 공식 IP 범위 파일(예: gptbot.json, perplexitybot.json)을 불러옵니다. SEOmi는 직접 내려받지 않습니다. 해당 봇에는 범위가 DNS보다 우선하며 다음 가져오기부터 적용됩니다.",
+      "family": "봇",
+      "file": "공식 IP 범위 파일(JSON)",
+      "loaded": "{{family}}: {{source}}의 범위 {{count}}개(게시 {{created}}, 불러옴 {{loaded}} UTC)",
+      "summary": "신원 확인: {{checks}}건(검증됨 {{verified}}, 주장 {{claimed}}, 위조 {{spoofed}}). 방법: DNS {{dns}}, 게시된 범위 {{ranges}}, 없음 {{none}}. 마지막 확인: {{time}} UTC.",
+      "noChecks": "아직 확인한 크롤러 신원이 없습니다.",
+      "errors": {
+        "invalid-json": "파일이 올바른 JSON이 아닙니다.",
+        "unsupported-format": "지원하지 않는 형식입니다. ipv4Prefix 또는 ipv6Prefix 항목이 있는 prefixes 목록이 필요합니다.",
+        "no-valid-prefix": "파일에 올바른 IP 범위가 없습니다.",
+        "too-many-prefixes": "파일에 범위가 5,000개를 초과합니다.",
+        "storageFailed": "로컬 저장소를 업데이트하지 못해 범위가 저장되지 않았습니다."
+      }
     }
   },
   "altCheckUi": {

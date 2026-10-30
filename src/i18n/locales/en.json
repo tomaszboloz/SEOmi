@@ -8329,6 +8329,22 @@
       "ok": "OK",
       "inconclusive": "Inconclusive",
       "no-logs": "No logs"
+    },
+    "ranges": {
+      "title": "Bot verification evidence",
+      "note": "Optional: load the official IP range file you downloaded from the crawler operator (for example gptbot.json or perplexitybot.json). SEOmi does not download it. Ranges take precedence over DNS for that bot and apply to the next import.",
+      "family": "Bot",
+      "file": "Official IP range file (JSON)",
+      "loaded": "{{family}}: {{count}} ranges from {{source}} (published {{created}}, loaded {{loaded}} UTC)",
+      "summary": "Identity checks: {{checks}} (verified {{verified}}, claimed {{claimed}}, spoofed {{spoofed}}). Method: DNS {{dns}}, published ranges {{ranges}}, none {{none}}. Last check: {{time}} UTC.",
+      "noChecks": "No crawler identity has been checked yet.",
+      "errors": {
+        "invalid-json": "The file is not valid JSON.",
+        "unsupported-format": "Unsupported format: expected a prefixes list with ipv4Prefix or ipv6Prefix entries.",
+        "no-valid-prefix": "The file contains no valid IP range.",
+        "too-many-prefixes": "The file contains more than 5,000 ranges.",
+        "storageFailed": "Local storage could not be updated; the ranges were not saved."
+      }
     }
   },
   "altCheckUi": {

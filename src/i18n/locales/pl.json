@@ -8329,6 +8329,22 @@
       "ok": "OK",
       "inconclusive": "Nierozstrzygnięte",
       "no-logs": "Brak logów"
+    },
+    "ranges": {
+      "title": "Dowody weryfikacji botów",
+      "note": "Opcjonalnie: wczytaj oficjalny plik zakresów IP pobrany od operatora crawlera (np. gptbot.json lub perplexitybot.json). SEOmi go nie pobiera. Zakresy mają pierwszeństwo przed DNS dla danego bota i działają przy następnym imporcie.",
+      "family": "Bot",
+      "file": "Oficjalny plik zakresów IP (JSON)",
+      "loaded": "{{family}}: {{count}} zakresów z {{source}} (opublikowano {{created}}, wczytano {{loaded}} UTC)",
+      "summary": "Sprawdzenia tożsamości: {{checks}} (zweryfikowane {{verified}}, deklarowane {{claimed}}, podszyte {{spoofed}}). Metoda: DNS {{dns}}, opublikowane zakresy {{ranges}}, brak {{none}}. Ostatnie sprawdzenie: {{time}} UTC.",
+      "noChecks": "Nie sprawdzono jeszcze tożsamości żadnego crawlera.",
+      "errors": {
+        "invalid-json": "Plik nie jest poprawnym JSON.",
+        "unsupported-format": "Nieobsługiwany format: oczekiwano listy prefixes z wpisami ipv4Prefix lub ipv6Prefix.",
+        "no-valid-prefix": "Plik nie zawiera żadnego poprawnego zakresu IP.",
+        "too-many-prefixes": "Plik zawiera ponad 5000 zakresów.",
+        "storageFailed": "Nie udało się zapisać w pamięci lokalnej; zakresy nie zostały zapisane."
+      }
     }
   },
   "altCheckUi": {

@@ -8329,6 +8329,22 @@
       "ok": "正常",
       "inconclusive": "判定不能",
       "no-logs": "ログなし"
+    },
+    "ranges": {
+      "title": "ボット検証の根拠",
+      "note": "任意：クローラー運営者からダウンロードした公式 IP 範囲ファイル（例：gptbot.json、perplexitybot.json）を読み込みます。SEOmi 自体はダウンロードしません。範囲はそのボットについて DNS より優先され、次回のインポートから適用されます。",
+      "family": "ボット",
+      "file": "公式 IP 範囲ファイル（JSON）",
+      "loaded": "{{family}}：{{source}} から {{count}} 件の範囲（公開 {{created}}、読み込み {{loaded}} UTC）",
+      "summary": "ID チェック：{{checks}} 件（検証済み {{verified}}、自己申告 {{claimed}}、なりすまし {{spoofed}}）。方法：DNS {{dns}}、公開範囲 {{ranges}}、なし {{none}}。最終チェック：{{time}} UTC。",
+      "noChecks": "クローラーの ID はまだチェックされていません。",
+      "errors": {
+        "invalid-json": "ファイルが有効な JSON ではありません。",
+        "unsupported-format": "未対応の形式です：ipv4Prefix または ipv6Prefix を含む prefixes リストが必要です。",
+        "no-valid-prefix": "ファイルに有効な IP 範囲がありません。",
+        "too-many-prefixes": "ファイルに 5,000 件を超える範囲があります。",
+        "storageFailed": "ローカルストレージを更新できず、範囲は保存されませんでした。"
+      }
     }
   },
   "altCheckUi": {

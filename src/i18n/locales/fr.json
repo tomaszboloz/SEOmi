@@ -8329,6 +8329,22 @@
       "ok": "Correct",
       "inconclusive": "Indéterminé",
       "no-logs": "Aucun journal"
+    },
+    "ranges": {
+      "title": "Preuves de vérification des robots",
+      "note": "Facultatif : chargez le fichier officiel de plages IP téléchargé auprès de l’opérateur du robot (par exemple gptbot.json ou perplexitybot.json). SEOmi ne le télécharge pas. Les plages priment sur le DNS pour ce robot et s’appliquent à la prochaine importation.",
+      "family": "Robot",
+      "file": "Fichier officiel de plages IP (JSON)",
+      "loaded": "{{family}} : {{count}} plages depuis {{source}} (publié {{created}}, chargé {{loaded}} UTC)",
+      "summary": "Vérifications d’identité : {{checks}} (vérifiés {{verified}}, déclarés {{claimed}}, usurpés {{spoofed}}). Méthode : DNS {{dns}}, plages publiées {{ranges}}, aucune {{none}}. Dernière vérification : {{time}} UTC.",
+      "noChecks": "Aucune identité de robot n’a encore été vérifiée.",
+      "errors": {
+        "invalid-json": "Le fichier n’est pas un JSON valide.",
+        "unsupported-format": "Format non pris en charge : une liste prefixes avec des entrées ipv4Prefix ou ipv6Prefix est attendue.",
+        "no-valid-prefix": "Le fichier ne contient aucune plage IP valide.",
+        "too-many-prefixes": "Le fichier contient plus de 5 000 plages.",
+        "storageFailed": "Le stockage local n’a pas pu être mis à jour ; les plages n’ont pas été enregistrées."
+      }
     }
   },
   "altCheckUi": {

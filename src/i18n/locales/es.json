@@ -8329,6 +8329,22 @@
       "ok": "Correcto",
       "inconclusive": "No concluyente",
       "no-logs": "Sin registros"
+    },
+    "ranges": {
+      "title": "Evidencia de verificación de bots",
+      "note": "Opcional: carga el archivo oficial de rangos IP que descargaste del operador del rastreador (por ejemplo gptbot.json o perplexitybot.json). SEOmi no lo descarga. Los rangos tienen prioridad sobre DNS para ese bot y se aplican en la siguiente importación.",
+      "family": "Bot",
+      "file": "Archivo oficial de rangos IP (JSON)",
+      "loaded": "{{family}}: {{count}} rangos de {{source}} (publicado {{created}}, cargado {{loaded}} UTC)",
+      "summary": "Comprobaciones de identidad: {{checks}} (verificados {{verified}}, declarados {{claimed}}, suplantados {{spoofed}}). Método: DNS {{dns}}, rangos publicados {{ranges}}, ninguno {{none}}. Última comprobación: {{time}} UTC.",
+      "noChecks": "Aún no se ha comprobado la identidad de ningún rastreador.",
+      "errors": {
+        "invalid-json": "El archivo no es JSON válido.",
+        "unsupported-format": "Formato no compatible: se esperaba una lista prefixes con entradas ipv4Prefix o ipv6Prefix.",
+        "no-valid-prefix": "El archivo no contiene ningún rango IP válido.",
+        "too-many-prefixes": "El archivo contiene más de 5000 rangos.",
+        "storageFailed": "No se pudo actualizar el almacenamiento local; los rangos no se guardaron."
+      }
     }
   },
   "altCheckUi": {

@@ -8329,6 +8329,22 @@
       "ok": "正常",
       "inconclusive": "无法确定",
       "no-logs": "无日志"
+    },
+    "ranges": {
+      "title": "爬虫验证证据",
+      "note": "可选：加载您从爬虫运营方下载的官方 IP 范围文件（例如 gptbot.json 或 perplexitybot.json）。SEOmi 不会自行下载。对该爬虫，IP 范围优先于 DNS，并在下一次导入时生效。",
+      "family": "爬虫",
+      "file": "官方 IP 范围文件（JSON）",
+      "loaded": "{{family}}：来自 {{source}} 的 {{count}} 个范围（发布于 {{created}}，加载于 {{loaded}} UTC）",
+      "summary": "身份检查：{{checks}} 次（已验证 {{verified}}，声称 {{claimed}}，伪造 {{spoofed}}）。方法：DNS {{dns}}，公开范围 {{ranges}}，无 {{none}}。最近检查：{{time}} UTC。",
+      "noChecks": "尚未检查任何爬虫身份。",
+      "errors": {
+        "invalid-json": "文件不是有效的 JSON。",
+        "unsupported-format": "不支持的格式：需要包含 ipv4Prefix 或 ipv6Prefix 条目的 prefixes 列表。",
+        "no-valid-prefix": "文件中没有有效的 IP 范围。",
+        "too-many-prefixes": "文件包含超过 5,000 个范围。",
+        "storageFailed": "无法更新本地存储；范围未保存。"
+      }
     }
   },
   "altCheckUi": {

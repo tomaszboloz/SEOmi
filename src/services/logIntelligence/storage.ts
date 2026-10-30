@@ -21,6 +21,10 @@ const schema = validator.object({
   fileHashes: validator.array(validator.string()), inProgress: validator.object({ hash: validator.string(), offset: count }).nullable(),
   lines: count, malformed: count, ignoredNonBot: count,
   firstAt: timestamp.nullable(), lastAt: timestamp.nullable(), days: validator.array(day), aggs: validator.record(validator.string(), aggregate),
+  verification: validator.object({
+    checks: count, byMethod: validator.object({ 'reverse-forward-dns': count, 'published-ranges': count, none: count }),
+    byStatus: validator.object({ verified: count, claimed: count, spoofed: count, unknown: count }), lastCheckedAt: timestamp.nullable(),
+  }).optional(),
 }).refine((value) => value.malformed + value.ignoredNonBot <= value.lines
   && ((value.firstAt === null && value.lastAt === null)
     || (value.firstAt !== null && value.lastAt !== null && value.firstAt <= value.lastAt))

@@ -8329,6 +8329,22 @@
       "ok": "OK",
       "inconclusive": "Unklar",
       "no-logs": "Keine Logs"
+    },
+    "ranges": {
+      "title": "Nachweise der Bot-Verifizierung",
+      "note": "Optional: Laden Sie die offizielle IP-Bereichsdatei, die Sie vom Crawler-Betreiber heruntergeladen haben (z. B. gptbot.json oder perplexitybot.json). SEOmi lädt sie nicht selbst herunter. Bereiche haben für diesen Bot Vorrang vor DNS und gelten ab dem nächsten Import.",
+      "family": "Bot",
+      "file": "Offizielle IP-Bereichsdatei (JSON)",
+      "loaded": "{{family}}: {{count}} Bereiche aus {{source}} (veröffentlicht {{created}}, geladen {{loaded}} UTC)",
+      "summary": "Identitätsprüfungen: {{checks}} (verifiziert {{verified}}, behauptet {{claimed}}, gefälscht {{spoofed}}). Methode: DNS {{dns}}, veröffentlichte Bereiche {{ranges}}, keine {{none}}. Letzte Prüfung: {{time}} UTC.",
+      "noChecks": "Noch keine Crawler-Identität geprüft.",
+      "errors": {
+        "invalid-json": "Die Datei ist kein gültiges JSON.",
+        "unsupported-format": "Nicht unterstütztes Format: erwartet wird eine prefixes-Liste mit ipv4Prefix- oder ipv6Prefix-Einträgen.",
+        "no-valid-prefix": "Die Datei enthält keinen gültigen IP-Bereich.",
+        "too-many-prefixes": "Die Datei enthält mehr als 5.000 Bereiche.",
+        "storageFailed": "Der lokale Speicher konnte nicht aktualisiert werden; die Bereiche wurden nicht gespeichert."
+      }
     }
   },
   "altCheckUi": {

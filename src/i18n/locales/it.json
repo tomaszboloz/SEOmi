@@ -8329,6 +8329,22 @@
       "ok": "OK",
       "inconclusive": "Inconcludente",
       "no-logs": "Nessun log"
+    },
+    "ranges": {
+      "title": "Prove di verifica dei bot",
+      "note": "Facoltativo: carica il file ufficiale degli intervalli IP scaricato dall’operatore del crawler (ad esempio gptbot.json o perplexitybot.json). SEOmi non lo scarica. Gli intervalli hanno la precedenza sul DNS per quel bot e si applicano alla prossima importazione.",
+      "family": "Bot",
+      "file": "File ufficiale degli intervalli IP (JSON)",
+      "loaded": "{{family}}: {{count}} intervalli da {{source}} (pubblicato {{created}}, caricato {{loaded}} UTC)",
+      "summary": "Controlli di identità: {{checks}} (verificati {{verified}}, dichiarati {{claimed}}, falsificati {{spoofed}}). Metodo: DNS {{dns}}, intervalli pubblicati {{ranges}}, nessuno {{none}}. Ultimo controllo: {{time}} UTC.",
+      "noChecks": "Nessuna identità di crawler è stata ancora verificata.",
+      "errors": {
+        "invalid-json": "Il file non è un JSON valido.",
+        "unsupported-format": "Formato non supportato: è prevista una lista prefixes con voci ipv4Prefix o ipv6Prefix.",
+        "no-valid-prefix": "Il file non contiene alcun intervallo IP valido.",
+        "too-many-prefixes": "Il file contiene più di 5.000 intervalli.",
+        "storageFailed": "Impossibile aggiornare l’archiviazione locale; gli intervalli non sono stati salvati."
+      }
     }
   },
   "altCheckUi": {

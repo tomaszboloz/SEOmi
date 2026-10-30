@@ -3,6 +3,7 @@ import { emptyImportState, importAccessLog, type LogImportState } from '@/servic
 import { hashLogFile, LOG_CHUNK_BYTES, LogFileError, readLogLines } from '@/services/logIntelligence/browserFile';
 import { desktopResolver } from '@/services/logIntelligence/desktopResolver';
 import { clearLogState, readLogState, saveLogState } from '@/services/logIntelligence/storage';
+import { rangesByFamily, readPublishedRanges } from '@/services/logIntelligence/publishedRanges';
 
 const counters = ({ lines, malformed, ignoredNonBot }: LogImportState) => ({ lines, malformed, ignoredNonBot });
 
@@ -33,7 +34,7 @@ export const useLogImport = (projectId: string) => {
       if (state.inProgress && state.inProgress.hash !== fileHash && !state.fileHashes.includes(fileHash)) {
         throw new LogFileError('resumeRequired');
       }
-      const next = await importAccessLog({ lines: readLogLines(file, LOG_CHUNK_BYTES, () => cancelled.current), fileHash, state, verify: { resolver: desktopResolver() },
+      const next = await importAccessLog({ lines: readLogLines(file, LOG_CHUNK_BYTES, () => cancelled.current), fileHash, state, verify: { resolver: desktopResolver(), ranges: rangesByFamily(readPublishedRanges(projectId)) },
         shouldCancel: () => cancelled.current,
         onProgress: (current) => { if (mounted.current) setProgress(counters(current)); },
       });

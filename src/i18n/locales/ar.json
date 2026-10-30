@@ -8329,6 +8329,22 @@
       "ok": "جيد",
       "inconclusive": "غير حاسم",
       "no-logs": "لا سجلات"
+    },
+    "ranges": {
+      "title": "أدلة التحقق من الروبوتات",
+      "note": "اختياري: حمّل ملف نطاقات IP الرسمي الذي نزّلته من مشغّل الزاحف (مثل gptbot.json أو perplexitybot.json). لا ينزّله SEOmi بنفسه. للنطاقات أولوية على DNS لهذا الروبوت وتُطبق في الاستيراد التالي.",
+      "family": "الروبوت",
+      "file": "ملف نطاقات IP الرسمي (JSON)",
+      "loaded": "{{family}}: {{count}} نطاقات من {{source}} (نُشر {{created}}، حُمّل {{loaded}} UTC)",
+      "summary": "عمليات التحقق من الهوية: {{checks}} (موثّق {{verified}}، مُدّعى {{claimed}}، منتحل {{spoofed}}). الطريقة: DNS {{dns}}، نطاقات منشورة {{ranges}}، بلا {{none}}. آخر تحقق: {{time}} UTC.",
+      "noChecks": "لم يُتحقق بعد من هوية أي زاحف.",
+      "errors": {
+        "invalid-json": "الملف ليس JSON صالحًا.",
+        "unsupported-format": "تنسيق غير مدعوم: يُتوقع وجود قائمة prefixes بإدخالات ipv4Prefix أو ipv6Prefix.",
+        "no-valid-prefix": "لا يحتوي الملف على أي نطاق IP صالح.",
+        "too-many-prefixes": "يحتوي الملف على أكثر من 5000 نطاق.",
+        "storageFailed": "تعذّر تحديث التخزين المحلي؛ لم تُحفظ النطاقات."
+      }
     }
   },
   "altCheckUi": {
