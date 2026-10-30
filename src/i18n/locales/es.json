@@ -8155,7 +8155,10 @@
     "sampledOnly": "Solo muestra parcial (texto completo no medido)",
     "variablesUnavailable": "Variables de plantilla no disponibles",
     "noindex": "Recomendado: noindex para este segmento",
-    "limit": "Recomendado: limitar las páginas indexadas"
+    "limit": "Recomendado: limitar las páginas indexadas",
+    "tasNodes": "Autoridad temática: {{nodes}} nodos de subtema, una URL representativa por nodo ({{representatives}} URL)",
+    "tasUnknown": "Subtema de autoridad temática desconocido para estas páginas (sin asignación en el informe de autoridad)",
+    "noindexWithheld": "No se propone noindex hasta medir el esqueleto DOM, las variables de plantilla y el texto completo."
   },
   "outreach": {
     "title": "Objetivos de outreach",

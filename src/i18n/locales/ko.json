@@ -8155,7 +8155,10 @@
     "sampledOnly": "샘플만 측정됨(전체 텍스트 미측정)",
     "variablesUnavailable": "템플릿 변수를 사용할 수 없음",
     "noindex": "권장: 이 세그먼트를 noindex로 설정",
-    "limit": "권장: 색인 페이지 수 제한"
+    "limit": "권장: 색인 페이지 수 제한",
+    "tasNodes": "주제 권위: 하위 주제 노드 {{nodes}}개, 노드당 대표 URL 1개 (총 {{representatives}}개 URL)",
+    "tasUnknown": "이 페이지들의 주제 권위 하위 주제를 알 수 없습니다 (권위 보고서에 매핑 없음)",
+    "noindexWithheld": "DOM 골격, 템플릿 변수, 전체 텍스트가 측정될 때까지 noindex는 제안되지 않습니다."
   },
   "outreach": {
     "title": "아웃리치 대상",

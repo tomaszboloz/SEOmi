@@ -8155,7 +8155,10 @@
     "sampledOnly": "仅为采样前缀（完整文本未测量）",
     "variablesUnavailable": "模板变量不可用",
     "noindex": "建议：对该分段设置 noindex",
-    "limit": "建议：限制被索引的页面数量"
+    "limit": "建议：限制被索引的页面数量",
+    "tasNodes": "主题权威：{{nodes}} 个子主题节点，每个节点一个代表 URL（共 {{representatives}} 个 URL）",
+    "tasUnknown": "这些页面的主题权威子主题未知（权威报告中没有映射）",
+    "noindexWithheld": "在测量 DOM 骨架、模板变量和全文之前，不会建议 noindex。"
   },
   "outreach": {
     "title": "外链拓展目标",

@@ -8155,7 +8155,10 @@
     "sampledOnly": "Échantillon seulement (texte complet non mesuré)",
     "variablesUnavailable": "Variables du modèle indisponibles",
     "noindex": "Recommandé : noindex pour ce segment",
-    "limit": "Recommandé : limiter le nombre de pages indexées"
+    "limit": "Recommandé : limiter le nombre de pages indexées",
+    "tasNodes": "Autorité thématique : {{nodes}} nœuds de sous-thème, une URL représentative chacun ({{representatives}} URL)",
+    "tasUnknown": "Sous-thème d'autorité thématique inconnu pour ces pages (aucune correspondance dans le rapport d'autorité)",
+    "noindexWithheld": "noindex n'est pas proposé tant que le squelette DOM, les variables du modèle et le texte complet ne sont pas mesurés."
   },
   "outreach": {
     "title": "Cibles d’outreach",

@@ -8155,7 +8155,10 @@
     "sampledOnly": "Sampled prefix only (full text unmeasured)",
     "variablesUnavailable": "Template variables unavailable",
     "noindex": "Recommended: noindex this segment",
-    "limit": "Recommended: limit the number of indexed pages"
+    "limit": "Recommended: limit the number of indexed pages",
+    "tasNodes": "Topical authority: {{nodes}} subtopic nodes, one representative URL each ({{representatives}} URLs)",
+    "tasUnknown": "Topical authority subtopic unknown for these pages (no mapping in the authority report)",
+    "noindexWithheld": "noindex is not proposed until the DOM skeleton, template variables and full text are measured."
   },
   "outreach": {
     "title": "Outreach targets",

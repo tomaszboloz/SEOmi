@@ -8155,7 +8155,10 @@
     "sampledOnly": "Nur Stichproben-Präfix (Gesamter Text ungemessen)",
     "variablesUnavailable": "Vorlagenvariablen nicht verfügbar",
     "noindex": "Empfohlen: Segment auf noindex setzen",
-    "limit": "Empfohlen: Zahl indexierter Seiten begrenzen"
+    "limit": "Empfohlen: Zahl indexierter Seiten begrenzen",
+    "tasNodes": "Themenautorität: {{nodes}} Unterthemen-Knoten, je eine repräsentative URL ({{representatives}} URLs)",
+    "tasUnknown": "Unterthema der Themenautorität für diese Seiten unbekannt (keine Zuordnung im Autoritätsbericht)",
+    "noindexWithheld": "noindex wird erst vorgeschlagen, wenn DOM-Gerüst, Template-Variablen und Volltext gemessen sind."
   },
   "outreach": {
     "title": "Outreach-Ziele",

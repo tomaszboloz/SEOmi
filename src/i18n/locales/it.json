@@ -8155,7 +8155,10 @@
     "sampledOnly": "Solo campione (testo completo non misurato)",
     "variablesUnavailable": "Variabili del template non disponibili",
     "noindex": "Consigliato: noindex per questo segmento",
-    "limit": "Consigliato: limita le pagine indicizzate"
+    "limit": "Consigliato: limita le pagine indicizzate",
+    "tasNodes": "Autorità tematica: {{nodes}} nodi di sottotema, un URL rappresentativo ciascuno ({{representatives}} URL)",
+    "tasUnknown": "Sottotema di autorità tematica sconosciuto per queste pagine (nessuna corrispondenza nel report di autorità)",
+    "noindexWithheld": "noindex non viene proposto finché scheletro DOM, variabili del template e testo completo non sono misurati."
   },
   "outreach": {
     "title": "Obiettivi di outreach",

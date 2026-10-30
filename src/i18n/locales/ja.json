@@ -8155,7 +8155,10 @@
     "sampledOnly": "サンプルのみ（全文は未測定）",
     "variablesUnavailable": "テンプレート変数は利用できません",
     "noindex": "推奨: このセグメントをnoindexにする",
-    "limit": "推奨: インデックス対象ページ数を制限する"
+    "limit": "推奨: インデックス対象ページ数を制限する",
+    "tasNodes": "トピック権威: サブトピックノード {{nodes}} 件、各ノードに代表 URL 1 件（計 {{representatives}} URL）",
+    "tasUnknown": "これらのページのトピック権威サブトピックは不明です（権威レポートに対応付けがありません）",
+    "noindexWithheld": "DOM 骨格、テンプレート変数、全文が計測されるまで noindex は提案されません。"
   },
   "outreach": {
     "title": "アウトリーチ対象",

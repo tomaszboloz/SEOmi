@@ -23,7 +23,9 @@ export const TemplateGovernorPanel: React.FC<{ events: TemplateEvent[] }> = ({ e
                 {event.isSampledOnly && <span className="rounded bg-sky-950 px-1.5 py-0.5 text-xs text-sky-300">{t('templateGovernor.sampledOnly')}</span>}
                 {event.injectedVariablesProvenance === 'unavailable' && <span className="rounded bg-slate-800 px-1.5 py-0.5 text-xs text-slate-400">{t('templateGovernor.variablesUnavailable')}</span>}
               </div>
+              <p className="text-xs text-slate-400" data-testid="template-governor-tas">{event.tasSubtopicCount ? t('templateGovernor.tasNodes', { nodes: event.tasSubtopicCount, representatives: event.tasRepresentativeUrls?.length ?? 0 }) : t('templateGovernor.tasUnknown')}</p>
               {event.action !== 'none' && <p className="text-amber-300">{t(event.action === 'noindex' ? 'templateGovernor.noindex' : 'templateGovernor.limit')}</p>}
+              {event.action === 'limit' && (event.domSignatureProvenance === 'unavailable' || event.injectedVariablesProvenance === 'unavailable' || event.isSampledOnly) && <p className="text-xs text-slate-400">{t('templateGovernor.noindexWithheld')}</p>}
             </li>
           ))}
         </ul>
