@@ -7703,6 +7703,22 @@
       "download": "JSON-LDをダウンロード",
       "downloaded": "ダウンロードしました。",
       "downloadFailed": "ダウンロードに失敗しました。代わりにscriptタグをコピーしてください。"
+    },
+    "claims": {
+      "relation": {
+        "same-sentence": "同じ文に出典あり",
+        "adjacent-sentence": "隣接する文に出典あり",
+        "unmatched": "近くに出典なし"
+      },
+      "evidence": {
+        "association": "関連付けのみ",
+        "manual": "手動で確認済み",
+        "unavailable": "出典データなし"
+      },
+      "references": "引用された出典",
+      "noReference": "この主張の近くに出典は見つかりませんでした。",
+      "more": "表示されていない主張：{{n}} 件",
+      "linkNote": "DOI・PMID・PMCID のリンクは公開リゾルバー（doi.org、PubMed、PMC）を開きます。リンクは文献の参照先を示すだけで、文献の存在や主張の裏付けを確認するものではありません。"
     }
   },
   "executionCard": {

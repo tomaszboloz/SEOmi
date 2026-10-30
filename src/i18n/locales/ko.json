@@ -7703,6 +7703,22 @@
       "download": "JSON-LD 다운로드",
       "downloaded": "다운로드했습니다.",
       "downloadFailed": "다운로드에 실패했습니다. script 태그를 복사하세요."
+    },
+    "claims": {
+      "relation": {
+        "same-sentence": "같은 문장에 인용 있음",
+        "adjacent-sentence": "인접 문장에 인용 있음",
+        "unmatched": "근처에 인용 없음"
+      },
+      "evidence": {
+        "association": "연관성만",
+        "manual": "수동 확인됨",
+        "unavailable": "출처 데이터 없음"
+      },
+      "references": "인용된 출처",
+      "noReference": "이 주장 근처에서 인용을 찾지 못했습니다.",
+      "more": "표시되지 않은 주장: {{n}}개",
+      "linkNote": "DOI, PMID, PMCID 링크는 공개 리졸버(doi.org, PubMed, PMC)를 엽니다. 링크는 문헌을 찾아볼 위치만 알려 줄 뿐, 문헌의 존재나 주장 뒷받침 여부를 확인하지 않습니다."
     }
   },
   "executionCard": {

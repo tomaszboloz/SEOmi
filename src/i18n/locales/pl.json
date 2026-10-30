@@ -7703,6 +7703,22 @@
       "download": "Pobierz JSON-LD",
       "downloaded": "Pobrano.",
       "downloadFailed": "Nie udało się pobrać. Skopiuj znacznik script."
+    },
+    "claims": {
+      "relation": {
+        "same-sentence": "przypis w tym samym zdaniu",
+        "adjacent-sentence": "przypis w sąsiednim zdaniu",
+        "unmatched": "brak przypisu w pobliżu"
+      },
+      "evidence": {
+        "association": "tylko powiązanie",
+        "manual": "sprawdzone ręcznie",
+        "unavailable": "brak danych o źródle"
+      },
+      "references": "Cytowane źródła",
+      "noReference": "W pobliżu tego twierdzenia nie znaleziono przypisu.",
+      "more": "Nie pokazano kolejnych twierdzeń: {{n}}.",
+      "linkNote": "Linki DOI, PMID i PMCID otwierają publiczny resolver (doi.org, PubMed, PMC). Link wskazuje, gdzie sprawdzić publikację; nie potwierdza, że istnieje ani że popiera twierdzenie."
     }
   },
   "executionCard": {

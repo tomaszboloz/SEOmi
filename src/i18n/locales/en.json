@@ -7703,6 +7703,22 @@
       "download": "Download JSON-LD",
       "downloaded": "Downloaded.",
       "downloadFailed": "Download failed. Copy the script tag instead."
+    },
+    "claims": {
+      "relation": {
+        "same-sentence": "citation in the same sentence",
+        "adjacent-sentence": "citation in an adjacent sentence",
+        "unmatched": "no nearby citation"
+      },
+      "evidence": {
+        "association": "association only",
+        "manual": "checked manually",
+        "unavailable": "source data unavailable"
+      },
+      "references": "Cited references",
+      "noReference": "No citation found near this claim.",
+      "more": "{{n}} more claims not shown.",
+      "linkNote": "DOI, PMID and PMCID links open the public resolver (doi.org, PubMed, PMC). A link shows where to look the work up; it does not confirm that the work exists or supports the claim."
     }
   },
   "executionCard": {

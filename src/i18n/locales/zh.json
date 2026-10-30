@@ -7703,6 +7703,22 @@
       "download": "下载 JSON-LD",
       "downloaded": "已下载。",
       "downloadFailed": "下载失败。请改为复制 script 标签。"
+    },
+    "claims": {
+      "relation": {
+        "same-sentence": "同一句中有引用",
+        "adjacent-sentence": "相邻句中有引用",
+        "unmatched": "附近没有引用"
+      },
+      "evidence": {
+        "association": "仅关联",
+        "manual": "已人工核查",
+        "unavailable": "无来源数据"
+      },
+      "references": "引用的来源",
+      "noReference": "该主张附近未找到引用。",
+      "more": "未显示的主张：{{n}} 条",
+      "linkNote": "DOI、PMID 和 PMCID 链接会打开公共解析服务（doi.org、PubMed、PMC）。链接只说明在哪里查找该文献，并不证明文献存在或支持该主张。"
     }
   },
   "executionCard": {

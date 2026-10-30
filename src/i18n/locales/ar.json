@@ -7703,6 +7703,22 @@
       "download": "تنزيل JSON-LD",
       "downloaded": "تم التنزيل.",
       "downloadFailed": "فشل التنزيل. انسخ وسم script بدلًا من ذلك."
+    },
+    "claims": {
+      "relation": {
+        "same-sentence": "استشهاد في الجملة نفسها",
+        "adjacent-sentence": "استشهاد في جملة مجاورة",
+        "unmatched": "لا استشهاد قريب"
+      },
+      "evidence": {
+        "association": "ارتباط فقط",
+        "manual": "تم التحقق يدويًا",
+        "unavailable": "بيانات المصدر غير متاحة"
+      },
+      "references": "المراجع المستشهد بها",
+      "noReference": "لم يُعثر على استشهاد قرب هذا الادعاء.",
+      "more": "ادعاءات أخرى غير معروضة: {{n}}.",
+      "linkNote": "تفتح روابط DOI وPMID وPMCID أداة الحل العامة (doi.org وPubMed وPMC). يوضح الرابط مكان البحث عن العمل؛ ولا يؤكد وجوده أو دعمه للادعاء."
     }
   },
   "executionCard": {

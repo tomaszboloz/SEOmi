@@ -7703,6 +7703,22 @@
       "download": "JSON-LD herunterladen",
       "downloaded": "Heruntergeladen.",
       "downloadFailed": "Download fehlgeschlagen. Kopieren Sie stattdessen das Script-Tag."
+    },
+    "claims": {
+      "relation": {
+        "same-sentence": "Beleg im selben Satz",
+        "adjacent-sentence": "Beleg im Nachbarsatz",
+        "unmatched": "kein Beleg in der Nähe"
+      },
+      "evidence": {
+        "association": "nur Zuordnung",
+        "manual": "manuell geprüft",
+        "unavailable": "Quelldaten nicht verfügbar"
+      },
+      "references": "Zitierte Quellen",
+      "noReference": "In der Nähe dieser Aussage wurde kein Beleg gefunden.",
+      "more": "Weitere nicht angezeigte Aussagen: {{n}}.",
+      "linkNote": "DOI-, PMID- und PMCID-Links öffnen den öffentlichen Resolver (doi.org, PubMed, PMC). Ein Link zeigt, wo die Arbeit nachgeschlagen werden kann; er bestätigt nicht, dass sie existiert oder die Aussage stützt."
     }
   },
   "executionCard": {

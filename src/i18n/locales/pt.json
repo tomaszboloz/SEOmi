@@ -7703,6 +7703,22 @@
       "download": "Baixar JSON-LD",
       "downloaded": "Baixado.",
       "downloadFailed": "Falha no download. Copie a tag script."
+    },
+    "claims": {
+      "relation": {
+        "same-sentence": "citação na mesma frase",
+        "adjacent-sentence": "citação numa frase adjacente",
+        "unmatched": "sem citação próxima"
+      },
+      "evidence": {
+        "association": "apenas associação",
+        "manual": "verificado manualmente",
+        "unavailable": "dados da fonte indisponíveis"
+      },
+      "references": "Referências citadas",
+      "noReference": "Nenhuma citação encontrada perto desta afirmação.",
+      "more": "Outras afirmações não mostradas: {{n}}.",
+      "linkNote": "As ligações DOI, PMID e PMCID abrem o resolvedor público (doi.org, PubMed, PMC). Uma ligação mostra onde consultar a obra; não confirma que ela exista nem que apoie a afirmação."
     }
   },
   "executionCard": {
