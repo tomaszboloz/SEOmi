@@ -11,7 +11,7 @@ fn payload(valid: Value, key: &str, bad: Value) -> Value {
 
 #[test]
 fn composed_commands_reject_undecodable_last_argument() {
-    let fixture = StorageApp::new(super::compose(mock_builder()));
+    let fixture = StorageApp::new(crate::compose(mock_builder()));
     let view = tauri::WebviewWindowBuilder::new(&fixture.app, "main", Default::default())
         .build()
         .unwrap();

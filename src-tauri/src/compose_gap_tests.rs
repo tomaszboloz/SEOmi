@@ -17,7 +17,7 @@ fn composed_search_console_updater_and_link_commands_answer_over_ipc() {
         .plugins
         .0
         .insert("updater".into(), json!({ "pubkey": "", "endpoints": [] }));
-    let app = super::compose(
+    let app = crate::compose(
         tauri::test::mock_builder().plugin(tauri_plugin_updater::Builder::new().build()),
     )
     .build(context)
@@ -61,5 +61,5 @@ fn composed_search_console_updater_and_link_commands_answer_over_ipc() {
 
 #[test]
 fn desktop_builder_assembles_the_shipped_plugins_without_an_event_loop() {
-    let _builder: tauri::Builder<tauri::Wry> = super::desktop_builder();
+    let _builder: tauri::Builder<tauri::Wry> = crate::desktop_builder();
 }

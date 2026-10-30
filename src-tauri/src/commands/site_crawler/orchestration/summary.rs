@@ -111,6 +111,7 @@ pub fn build_crawl_result<R: Runtime>(input: BuildCrawlResultInput<'_, R>) -> Si
         warning_count,
         notice_count,
         pages: std::mem::take(&mut state.pages),
+        event_log_error: None,
         duration_ms: setup.start_time.elapsed().as_millis() as u64,
         cancelled,
         timed_out: state.timed_out,

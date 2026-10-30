@@ -6,7 +6,7 @@ use tauri::AppHandle;
 use super::{records, runs, schema, shred};
 use crate::commands::crawl_storage::project_directory;
 
-pub(super) fn open_store<R: tauri::Runtime>(
+pub(crate) fn open_store<R: tauri::Runtime>(
     app: &AppHandle<R>,
     project_id: &str,
 ) -> Result<Connection, String> {

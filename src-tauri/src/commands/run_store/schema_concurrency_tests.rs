@@ -68,6 +68,10 @@ fn simultaneous_first_opens_and_writers_wait_for_each_other() {
 #[test]
 fn schema_migrate_idempotent_on_current_version() {
     let mut conn = rusqlite::Connection::open_in_memory().unwrap();
-    conn.execute_batch("PRAGMA user_version = 2;").unwrap();
+    conn.execute_batch(&format!(
+        "PRAGMA user_version = {};",
+        schema::SCHEMA_VERSION
+    ))
+    .unwrap();
     assert!(schema::migrate(&mut conn).is_ok());
 }

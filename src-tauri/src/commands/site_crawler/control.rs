@@ -18,6 +18,7 @@ pub struct CrawlProgress {
 pub struct CrawlControl {
     pub(super) cancelled_runs: Mutex<HashSet<String>>,
     pub(super) paused_runs: Mutex<HashSet<String>>,
+    pub(super) recorders: Mutex<HashMap<String, super::event_recorder::EventRecorder>>,
 }
 
 impl CrawlControl {
@@ -25,6 +26,7 @@ impl CrawlControl {
         Self {
             cancelled_runs: Mutex::new(HashSet::new()),
             paused_runs: Mutex::new(HashSet::new()),
+            recorders: Mutex::new(HashMap::new()),
         }
     }
 

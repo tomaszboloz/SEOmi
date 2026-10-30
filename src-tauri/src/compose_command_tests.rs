@@ -7,7 +7,7 @@ use tauri::test::mock_builder;
 
 #[tokio::test]
 async fn composed_render_worker_commands_manage_the_worker_lifecycle() {
-    let fixture = StorageApp::new(super::compose(mock_builder()));
+    let fixture = StorageApp::new(crate::compose(mock_builder()));
     let view = tauri::WebviewWindowBuilder::new(&fixture.app, "main", Default::default())
         .build()
         .unwrap();
@@ -33,7 +33,7 @@ async fn composed_render_worker_commands_manage_the_worker_lifecycle() {
 
 #[tokio::test]
 async fn composed_commands_with_invalid_input_fail_before_any_window_or_network_work() {
-    let fixture = StorageApp::new(super::compose(mock_builder()));
+    let fixture = StorageApp::new(crate::compose(mock_builder()));
     let view = tauri::WebviewWindowBuilder::new(&fixture.app, "main", Default::default())
         .build()
         .unwrap();
@@ -73,7 +73,7 @@ async fn composed_commands_with_invalid_input_fail_before_any_window_or_network_
 #[test]
 #[allow(deprecated)]
 fn composed_app_runs_its_interactive_setup_hook() {
-    let mut app = super::compose(mock_builder())
+    let mut app = crate::compose(mock_builder())
         .build(tauri::test::mock_context(tauri::test::noop_assets()))
         .unwrap();
     app.run_iteration(|_, _| {});

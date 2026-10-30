@@ -78,6 +78,7 @@ mod page_text;
 mod page_type_guidance;
 mod page_type_guidance_boundaries;
 mod page_type_links_edges;
+mod pipeline_event_log;
 mod pipeline_runtime;
 mod pipeline_scope;
 mod rendered_prefetch;

@@ -1,7 +1,7 @@
 use rusqlite::{Connection, Result, TransactionBehavior};
 use std::{path::Path, time::Duration};
 
-pub const SCHEMA_VERSION: i64 = 2;
+pub const SCHEMA_VERSION: i64 = 3;
 const SQLITE_BUSY_TIMEOUT: Duration = Duration::from_secs(2);
 
 const V1: &str = "
@@ -61,6 +61,23 @@ CREATE TABLE erasure_log (
 );
 ";
 
+/// Append-only crawl event log (#138): one row per event, sequence owned by the
+/// native crawler. Deleting a saved run removes its events too.
+const V3: &str = "
+CREATE TABLE crawl_events (
+    project_id TEXT NOT NULL,
+    run_id TEXT NOT NULL,
+    seq INTEGER NOT NULL,
+    kind TEXT NOT NULL,
+    at_ms INTEGER NOT NULL,
+    payload TEXT NOT NULL,
+    PRIMARY KEY (project_id, run_id, seq)
+);
+CREATE TRIGGER crawl_runs_delete_events AFTER DELETE ON crawl_runs BEGIN
+    DELETE FROM crawl_events WHERE project_id = OLD.project_id AND run_id = OLD.run_id;
+END;
+";
+
 /// Apply pending migrations atomically: a crash mid-migration rolls back and
 /// the next open retries from the previous `user_version`.
 pub fn migrate(conn: &mut Connection) -> Result<()> {
@@ -74,6 +91,9 @@ pub fn migrate(conn: &mut Connection) -> Result<()> {
     }
     if current < 2 {
         tx.execute_batch(V2)?;
+    }
+    if current < 3 {
+        tx.execute_batch(V3)?;
     }
     tx.pragma_update(None, "user_version", SCHEMA_VERSION)?;
     tx.commit()
