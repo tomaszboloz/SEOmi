@@ -7,9 +7,11 @@ import {
   type AuthorityHistoryEntry,
 } from '@/services/topicalAuthorityMonitoring';
 import {
-  buildTopicalBenchmark, createReferenceDeps, runReference,
+  buildTopicalBenchmark, createReferenceDeps, referenceMarket, runReference,
   type ReferenceInput, type ReferenceOutcome, type ReferenceProgress, type TopicalBenchmark,
 } from '@/services/topicalAuthorityReference';
+
+import { recordReferenceSnapshot } from '@/services/semanticDecay/recordReferenceSnapshot';
 
 export type ReferenceRunner = (input: ReferenceInput) => Promise<ReferenceOutcome>;
 export const defaultReferenceRunner: ReferenceRunner = (input) => runReference(createReferenceDeps(), input);
@@ -35,10 +37,12 @@ export interface UseTopicalAuthorityArgs {
   run?: CrawlRunRecord | null;
   projectId?: string | null;
   runner?: ReferenceRunner;
+  /** Market of the reference SERP; defaults to the keyword country/language settings. */
+  market?: () => { country: string; language: string };
 }
 
 /** Topical Authority for a crawl: report, cached reference map, competitor benchmark, history and the map builder. */
-export const useTopicalAuthority = ({ pages, startUrl, sfs, run, projectId, runner = defaultReferenceRunner }: UseTopicalAuthorityArgs) => {
+export const useTopicalAuthority = ({ pages, startUrl, sfs, run, projectId, runner = defaultReferenceRunner, market = referenceMarket }: UseTopicalAuthorityArgs) => {
   const [taxonomy, setTaxonomy] = useState<ReferenceTaxonomy | null>(() => readTaxonomy(projectId));
   const [benchmark, setBenchmark] = useState<TopicalBenchmark | null>(() => readTopicalBenchmark(projectId));
   const [history, setHistory] = useState<AuthorityHistoryEntry[]>(() => readAuthorityHistory(projectId));
@@ -81,14 +85,14 @@ export const useTopicalAuthority = ({ pages, startUrl, sfs, run, projectId, runn
       if (controller.current !== own) return;
       if (outcome.status !== 'ok') { setState({ ...IDLE, failure: outcome }); return; }
       writeTaxonomy(projectId, outcome.taxonomy);
-      const fresh = buildAuthorityReport(pages as FocusPage[], startUrl, sfs, { taxonomy: outcome.taxonomy, now: sfs.generatedAt });
+      recordReferenceSnapshot(projectId ?? null, outcome.taxonomy, outcome.serp, market());      const fresh = buildAuthorityReport(pages as FocusPage[], startUrl, sfs, { taxonomy: outcome.taxonomy, now: sfs.generatedAt });
       setPendingBenchmark(buildTopicalBenchmark(fresh, domainOf(startUrl), outcome.competitors, outcome.taxonomy, new Date().toISOString()));
       setTaxonomy(outcome.taxonomy);
       setState(IDLE);
     } catch (error) {
       if (controller.current === own) setState({ ...IDLE, error: error instanceof Error ? error.message : String(error) });
     }
-  }, [sfs, startUrl, pages, projectId, runner]);
+  }, [sfs, startUrl, pages, projectId, runner, market]);
 
   const cancel = useCallback(() => controller.current?.abort(), []);
   const clear = useCallback(() => { clearTaxonomy(projectId); setTaxonomy(null); setBenchmark(null); setPendingBenchmark(null); }, [projectId]);

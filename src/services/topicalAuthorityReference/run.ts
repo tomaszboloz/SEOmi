@@ -3,7 +3,7 @@ import { benchmarkQueries, DEFAULT_COMPETITORS, DEFAULT_CONCURRENCY, DEFAULT_PAG
 import { buildTaxonomy, type CompetitorPages } from '@/services/topicalAuthority';
 import { coreKeysOf, gatedSiteFocus } from '@/services/topicalAuthority/context';
 import type { FocusPage } from '@/services/siteFocus';
-import type { ReferenceDeps, ReferenceInput, ReferenceOutcome } from './types';
+import type { ReferenceDeps, ReferenceInput, ReferenceOutcome, ReferenceSerpObservation } from './types';
 
 const MAX_SUGGESTIONS = 100;
 
@@ -32,6 +32,7 @@ export const runReference = async (deps: ReferenceDeps, input: ReferenceRunInput
   const queries = benchmarkQueries({ report, startUrl: input.startUrl, maxQueries: input.maxQueries ?? DEFAULT_QUERIES });
   if (!queries.length) return { status: 'unavailable', reason: 'no-queries' };
   const hits: SerpHit[][] = [];
+  const serp: ReferenceSerpObservation[] = [];
   const sources = new Set<string>();
   const suggestions = new Set<string>();
   let lastError = '';
@@ -42,6 +43,7 @@ export const runReference = async (deps: ReferenceDeps, input: ReferenceRunInput
       const response = await fetchSerp(query, input.signal);
       sources.add(response.source);
       hits.push(response.hits);
+      serp.push({ query, source: response.source, hits: response.hits });
     } catch (error) { lastError = messageOf(error); }
     (await deps.fetchSuggestions?.(query, input.signal)?.catch(() => [] as string[]) ?? []).forEach((phrase) => suggestions.add(phrase));
   }
@@ -68,5 +70,5 @@ export const runReference = async (deps: ReferenceDeps, input: ReferenceRunInput
     language: model.language, competitors, suggestions: [...suggestions].slice(0, MAX_SUGGESTIONS), source: [...sources].sort().join(', '), now: now(),
   });
   input.onProgress?.({ phase: 'build', done: 1, total: 1 });
-  return taxonomy ? { status: 'ok', taxonomy, competitors } : { status: 'unavailable', reason: 'no-taxonomy' };
+  return taxonomy ? { status: 'ok', taxonomy, competitors, serp } : { status: 'unavailable', reason: 'no-taxonomy' };
 };
