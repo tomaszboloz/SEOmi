@@ -13,7 +13,13 @@ export const AuthorityHistoryChart = ({ entries }: { entries: AuthorityHistoryEn
   const xOf = (index: number): number => (rtl ? W - PAD - index * step : PAD + index * step);
   const yOf = (score: number): number => H - PAD - (Math.min(100, Math.max(0, score)) / 100) * (H - PAD * 2);
   const date = (at: string): string => new Date(at).toLocaleDateString(i18n.language);
-  const tasPoints = entries.flatMap((entry, index) => (entry.snapshot.tas === null ? [] : [`${xOf(index)},${yOf(entry.snapshot.tas)}`]));
+  // The TAS line breaks where the scoring profile changed: points on both sides use different denominators.
+  const breaks = entries.flatMap((entry, index) => (entry.annotations.some((note) => note.code === 'incomparable') ? [index] : []));
+  const tasSegments = entries.reduce<string[][]>((segments, entry, index) => {
+    if (breaks.includes(index)) segments.push([]);
+    if (entry.snapshot.tas !== null) segments[segments.length - 1].push(`${xOf(index)},${yOf(entry.snapshot.tas)}`);
+    return segments;
+  }, [[]]);
   const marks = entries.flatMap((entry) => entry.annotations.map((note) => ({ entry, note })));
   return (
     <section aria-labelledby="authority-history-title" className="space-y-2 rounded-xl border border-slate-800 bg-slate-900/60 p-4">
@@ -23,7 +29,8 @@ export const AuthorityHistoryChart = ({ entries }: { entries: AuthorityHistoryEn
           <svg viewBox={`0 0 ${W} ${H}`} role="img" aria-label={t('authority.history.aria', { count: entries.length })} className="h-40 w-full">
             {[0, 50, 100].map((tick) => <line key={tick} x1={PAD} x2={W - PAD} y1={yOf(tick)} y2={yOf(tick)} className="stroke-slate-800" />)}
             <polyline fill="none" strokeWidth={2} className="stroke-emerald-400" points={entries.map((entry, index) => `${xOf(index)},${yOf(entry.snapshot.sfs)}`).join(' ')} />
-            {tasPoints.length > 1 && <polyline fill="none" strokeWidth={2} strokeDasharray="5 4" className="stroke-sky-400" points={tasPoints.join(' ')} />}
+            {tasSegments.filter((segment) => segment.length > 1).map((segment) => <polyline key={segment[0]} fill="none" strokeWidth={2} strokeDasharray="5 4" className="stroke-sky-400" points={segment.join(' ')} />)}
+            {breaks.map((index) => <line key={`break-${index}`} data-testid="authority-history-break" x1={xOf(index)} x2={xOf(index)} y1={PAD} y2={H - PAD} strokeDasharray="2 3" className="stroke-amber-400" />)}
             {entries.map((entry, index) => <circle key={entry.snapshot.runId} cx={xOf(index)} cy={yOf(entry.snapshot.sfs)} r={3} className="fill-emerald-300"><title>{t('authority.history.point', { date: date(entry.snapshot.at), sfs: entry.snapshot.sfs, tas: entry.snapshot.tas ?? '—' })}</title></circle>)}
           </svg>
           <p className="flex gap-4 text-[11px] text-slate-400"><span className="text-emerald-300">{t('authority.history.sfs')}</span><span className="text-sky-300">{t('authority.history.tas')}</span></p>

@@ -7434,7 +7434,13 @@
       "silcNote": "고아 페이지 {{orphans}}개, 약한 앵커 {{weak}}개, 주제 밖 페이지로의 링크 {{bleed}}개",
       "cvffNote": "오래된 페이지 {{stale}}개, 카니발라이제이션 그룹 {{groups}}개",
       "unavailable": "측정 불가",
-      "multiplier": "SFS {{sfs}}에 따른 포커스 배수 ×{{value}}"
+      "multiplier": "SFS {{sfs}}에 따른 포커스 배수 ×{{value}}",
+      "cdesPartial": "부분 결과: 다루어진 하위 주제 {{rows}}개 중 일부에서 {{parts}}을(를) 측정할 수 없었습니다. CDES는 측정된 요소만 사용합니다.",
+      "depthPart": {
+        "entities": "엔터티",
+        "questions": "사용자 질문(PAA)",
+        "gain": "정보 이득"
+      }
     },
     "warning": {
       "empty-authority": "빈 권위: 주제의 {{tcr}}%를 다루지만 평균 깊이는 {{depth}}/100에 불과합니다. 새 글보다 기존 페이지를 데이터와 엔티티로 보강하세요.",
@@ -7614,7 +7620,8 @@
       "cleanup": "정리: SFS가 {{delta}} 상승",
       "architecture": "구조: 링크와 카니발라이제이션이 {{delta}} 개선",
       "expansion": "확장: 주제 커버리지가 {{delta}} 상승",
-      "regression": "하락: TAS가 {{delta}} 변동"
+      "regression": "하락: TAS가 {{delta}} 변동",
+      "incomparable": "점수 프로필이 변경되었습니다(새 참조 맵 또는 TAS 공식). 이 시점 전후의 TAS는 직접 비교할 수 없습니다."
     }
   },
   "authorityMonitoring": {

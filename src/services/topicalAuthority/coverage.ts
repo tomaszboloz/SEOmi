@@ -44,7 +44,7 @@ export const mapCoverage = (pages: AuthorityPage[], context: AuthorityContext, t
     return {
       ...base, status: (shallow ? 'covered_shallow' : 'covered_strong') as CoverageStatus, coverage,
       urls: ranked.filter((row) => covered(row.value) === 1).map((row) => row.entry.url).concat(coverage === 1 ? [] : [best.entry.url]),
-      bestUrl: best.entry.url, similarity: round1(best.value * 100), ...(depth.depth === null ? {} : { depth: depth.depth }),
+      bestUrl: best.entry.url, similarity: round1(best.value * 100), ...(depth.depth === null ? {} : { depth: depth.depth }), depthParts: depth.parts,
       entitiesPresent: depth.present, entitiesMissing: depth.missing, questionsMissing: depth.questionsMissing,
     };
   });

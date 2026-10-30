@@ -7434,7 +7434,13 @@
       "silcNote": "{{orphans}} orphan pages, {{weak}} weak anchors, {{bleed}} links to off-topic pages",
       "cvffNote": "{{stale}} stale pages, {{groups}} cannibalization groups",
       "unavailable": "not measurable",
-      "multiplier": "Focus multiplier ×{{value}} from SFS {{sfs}}"
+      "multiplier": "Focus multiplier ×{{value}} from SFS {{sfs}}",
+      "cdesPartial": "Partial: {{parts}} could not be measured for some of the {{rows}} covered sub-topics; CDES uses only the measured parts.",
+      "depthPart": {
+        "entities": "entities",
+        "questions": "user questions (PAA)",
+        "gain": "information gain"
+      }
     },
     "warning": {
       "empty-authority": "Empty authority: the site touches {{tcr}}% of the topics but their average depth is only {{depth}}/100. Deepen existing pages with hard data and entities before publishing more.",
@@ -7614,7 +7620,8 @@
       "cleanup": "Cleanup: SFS rose by {{delta}}",
       "architecture": "Architecture: linking and cannibalization improved by {{delta}}",
       "expansion": "Expansion: topic coverage rose by {{delta}}",
-      "regression": "Regression: TAS changed by {{delta}}"
+      "regression": "Regression: TAS changed by {{delta}}",
+      "incomparable": "Scoring profile changed (new reference map or TAS formula): TAS before and after this point is not directly comparable."
     }
   },
   "authorityMonitoring": {

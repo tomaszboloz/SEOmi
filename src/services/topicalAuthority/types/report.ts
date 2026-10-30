@@ -1,5 +1,5 @@
 import type { SimilaritySource } from '@/services/semanticSource/types';
-import type { AuthorityRecommendation, AuthorityWarning, CannibalGroup, FreshnessReport, PillarCoverage, Pillars, Quadrant, SiloReport, SubtopicCoverage } from './metrics';
+import type { AuthorityRecommendation, DepthInputs, AuthorityWarning, CannibalGroup, FreshnessReport, PillarCoverage, Pillars, Quadrant, SiloReport, SubtopicCoverage } from './metrics';
 import type { ReferenceTaxonomy } from './taxonomy';
 
 export const TAS_VERSION = 1;
@@ -29,6 +29,8 @@ export interface TopicalAuthorityReport {
   pageCount: number;
   generatedAt: string;
   version: number;
+  /** Inputs behind CDES; `partial` when PAA/questions, entities or InfoGain were missing for some pages (#58). */
+  depthInputs?: DepthInputs;
   /** Which page-pair similarity produced cannibalization (#86); absent on reports built before it existed. */
   similaritySource?: SimilaritySource;
 }

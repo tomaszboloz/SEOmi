@@ -7434,7 +7434,13 @@
       "silcNote": "{{orphans}} pages orphelines, {{weak}} ancres faibles, {{bleed}} liens vers des pages hors sujet",
       "cvffNote": "{{stale}} pages obsolètes, {{groups}} groupes de cannibalisation",
       "unavailable": "non mesurable",
-      "multiplier": "Multiplicateur de focus ×{{value}} issu du SFS {{sfs}}"
+      "multiplier": "Multiplicateur de focus ×{{value}} issu du SFS {{sfs}}",
+      "cdesPartial": "Partiel : {{parts}} n’a pas pu être mesuré pour certains des {{rows}} sous-thèmes couverts ; le CDES n’utilise que les parties mesurées.",
+      "depthPart": {
+        "entities": "entités",
+        "questions": "questions des utilisateurs (PAA)",
+        "gain": "gain d’information"
+      }
     },
     "warning": {
       "empty-authority": "Autorité creuse : le site touche {{tcr}}% des sujets mais la profondeur moyenne n’est que de {{depth}}/100. Approfondissez les pages existantes avant d’en publier de nouvelles.",
@@ -7614,7 +7620,8 @@
       "cleanup": "Nettoyage : le SFS a gagné {{delta}}",
       "architecture": "Architecture : maillage et cannibalisation améliorés de {{delta}}",
       "expansion": "Expansion : la couverture du sujet a gagné {{delta}}",
-      "regression": "Régression : le TAS a varié de {{delta}}"
+      "regression": "Régression : le TAS a varié de {{delta}}",
+      "incomparable": "Le profil de notation a changé (nouvelle carte de référence ou formule TAS) : le TAS avant et après ce point n’est pas directement comparable."
     }
   },
   "authorityMonitoring": {

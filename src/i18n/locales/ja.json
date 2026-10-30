@@ -7434,7 +7434,13 @@
       "silcNote": "孤立ページ{{orphans}}件、弱いアンカー{{weak}}件、テーマ外ページへのリンク{{bleed}}件",
       "cvffNote": "古いページ{{stale}}件、カニバリゼーショングループ{{groups}}件",
       "unavailable": "測定不可",
-      "multiplier": "SFS {{sfs}}によるフォーカス係数 ×{{value}}"
+      "multiplier": "SFS {{sfs}}によるフォーカス係数 ×{{value}}",
+      "cdesPartial": "部分的: カバー済みサブトピック {{rows}} 件の一部で {{parts}} を測定できませんでした。CDES は測定できた要素のみを使用します。",
+      "depthPart": {
+        "entities": "エンティティ",
+        "questions": "ユーザーの質問 (PAA)",
+        "gain": "情報利得"
+      }
     },
     "warning": {
       "empty-authority": "空虚なオーソリティ：トピックの{{tcr}}%に触れていますが平均の深さは{{depth}}/100しかありません。新規公開の前に既存ページを事実とエンティティで深めてください。",
@@ -7614,7 +7620,8 @@
       "cleanup": "整理：SFSが{{delta}}上昇",
       "architecture": "アーキテクチャ：リンクとカニバリゼーションが{{delta}}改善",
       "expansion": "拡張：トピックカバレッジが{{delta}}上昇",
-      "regression": "悪化：TASが{{delta}}変化"
+      "regression": "悪化：TASが{{delta}}変化",
+      "incomparable": "スコアリングプロファイルが変更されました（新しい参照マップまたは TAS 式）。この時点の前後の TAS は直接比較できません。"
     }
   },
   "authorityMonitoring": {

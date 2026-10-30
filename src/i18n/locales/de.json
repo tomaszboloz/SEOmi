@@ -7434,7 +7434,13 @@
       "silcNote": "{{orphans}} verwaiste Seiten, {{weak}} schwache Anker, {{bleed}} Links auf themenfremde Seiten",
       "cvffNote": "{{stale}} veraltete Seiten, {{groups}} Kannibalisierungsgruppen",
       "unavailable": "nicht messbar",
-      "multiplier": "Fokus-Multiplikator ×{{value}} aus SFS {{sfs}}"
+      "multiplier": "Fokus-Multiplikator ×{{value}} aus SFS {{sfs}}",
+      "cdesPartial": "Teilweise: {{parts}} konnte für einige der {{rows}} abgedeckten Unterthemen nicht gemessen werden; CDES nutzt nur die gemessenen Teile.",
+      "depthPart": {
+        "entities": "Entitäten",
+        "questions": "Nutzerfragen (PAA)",
+        "gain": "Informationsgewinn"
+      }
     },
     "warning": {
       "empty-authority": "Leere Autorität: Die Seite berührt {{tcr}}% der Themen, die durchschnittliche Tiefe beträgt aber nur {{depth}}/100. Bestehende Seiten mit Fakten und Entitäten vertiefen, bevor Neues erscheint.",
@@ -7614,7 +7620,8 @@
       "cleanup": "Bereinigung: SFS stieg um {{delta}}",
       "architecture": "Architektur: Verlinkung und Kannibalisierung um {{delta}} verbessert",
       "expansion": "Ausbau: Themenabdeckung stieg um {{delta}}",
-      "regression": "Rückgang: TAS änderte sich um {{delta}}"
+      "regression": "Rückgang: TAS änderte sich um {{delta}}",
+      "incomparable": "Bewertungsprofil geändert (neue Referenzkarte oder TAS-Formel): TAS vor und nach diesem Punkt ist nicht direkt vergleichbar."
     }
   },
   "authorityMonitoring": {

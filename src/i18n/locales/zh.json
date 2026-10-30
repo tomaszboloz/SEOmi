@@ -7434,7 +7434,13 @@
       "silcNote": "{{orphans}} 个孤立页面，{{weak}} 个弱锚文本，{{bleed}} 条指向无关页面的链接",
       "cvffNote": "{{stale}} 个过时页面，{{groups}} 个内部竞争组",
       "unavailable": "无法衡量",
-      "multiplier": "来自 SFS {{sfs}} 的聚焦系数 ×{{value}}"
+      "multiplier": "来自 SFS {{sfs}} 的聚焦系数 ×{{value}}",
+      "cdesPartial": "部分结果：在 {{rows}} 个已覆盖子主题中，部分无法测量 {{parts}}；CDES 只使用已测量的部分。",
+      "depthPart": {
+        "entities": "实体",
+        "questions": "用户问题（PAA）",
+        "gain": "信息增益"
+      }
     },
     "warning": {
       "empty-authority": "空洞权威：网站涉及 {{tcr}}% 的主题，但平均深度仅 {{depth}}/100。发布新内容前，请先用数据和实体深化现有页面。",
@@ -7614,7 +7620,8 @@
       "cleanup": "清理：SFS 上升 {{delta}}",
       "architecture": "架构：链接与内部竞争改善 {{delta}}",
       "expansion": "扩展：主题覆盖率上升 {{delta}}",
-      "regression": "退步：TAS 变化 {{delta}}"
+      "regression": "退步：TAS 变化 {{delta}}",
+      "incomparable": "评分配置已更改（新的参考地图或 TAS 公式）：此点前后的 TAS 无法直接比较。"
     }
   },
   "authorityMonitoring": {
