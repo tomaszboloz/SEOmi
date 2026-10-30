@@ -7851,7 +7851,25 @@
       "references": "Cytowane źródła",
       "noReference": "W pobliżu tego twierdzenia nie znaleziono przypisu.",
       "more": "Nie pokazano kolejnych twierdzeń: {{n}}.",
-      "linkNote": "Linki DOI, PMID i PMCID otwierają publiczny resolver (doi.org, PubMed, PMC). Link wskazuje, gdzie sprawdzić publikację; nie potwierdza, że istnieje ani że popiera twierdzenie."
+      "linkNote": "Linki DOI, PMID i PMCID otwierają publiczny resolver (doi.org, PubMed, PMC). Link wskazuje, gdzie sprawdzić publikację; nie potwierdza, że istnieje ani że popiera twierdzenie.",
+      "reach": {
+        "check": "Sprawdź dostępność źródeł ({{n}})",
+        "checking": "Sprawdzanie źródeł…",
+        "note": "Sprawdzenie sieciowe na żądanie: każdy adres resolvera cytowania jest odpytywany raz (maks. 20). Dostępne oznacza, że adres odpowiada, a nie że praca popiera twierdzenie.",
+        "desktopOnly": "Sprawdzanie źródeł wymaga aplikacji desktopowej.",
+        "reachable": "dostępne",
+        "broken": "odpowiedź z błędem",
+        "no-response": "brak odpowiedzi",
+        "not-checked": "niesprawdzone"
+      },
+      "support": {
+        "associated": "sprawdzenie lokalne: zidentyfikowane źródło w tym samym zdaniu",
+        "weak": "sprawdzenie lokalne: słabe powiązanie",
+        "none": "sprawdzenie lokalne: brak cytowania",
+        "hedged": "ostrożne sformułowanie",
+        "negated": "zaprzeczenie",
+        "note": "Sprawdzenie lokalne czyta tylko tę stronę (pozycja przypisu, identyfikator, sformułowania ostrożne, zaprzeczenie). Nie czyta cytowanej pracy, więc nie potwierdza poparcia."
+      }
     },
     "identity": {
       "status": {

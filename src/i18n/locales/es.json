@@ -7851,7 +7851,25 @@
       "references": "Referencias citadas",
       "noReference": "No se encontró ninguna cita cerca de esta afirmación.",
       "more": "Afirmaciones adicionales no mostradas: {{n}}.",
-      "linkNote": "Los enlaces DOI, PMID y PMCID abren el resolvedor público (doi.org, PubMed, PMC). Un enlace indica dónde consultar la obra; no confirma que exista ni que respalde la afirmación."
+      "linkNote": "Los enlaces DOI, PMID y PMCID abren el resolvedor público (doi.org, PubMed, PMC). Un enlace indica dónde consultar la obra; no confirma que exista ni que respalde la afirmación.",
+      "reach": {
+        "check": "Comprobar accesibilidad de las fuentes ({{n}})",
+        "checking": "Comprobando fuentes…",
+        "note": "Comprobación de red opcional: consulta una vez cada URL de resolución citada (máx. 20). Accesible significa que la dirección responde, no que el trabajo respalde la afirmación.",
+        "desktopOnly": "La comprobación de fuentes requiere la aplicación de escritorio.",
+        "reachable": "accesible",
+        "broken": "respuesta de error",
+        "no-response": "sin respuesta",
+        "not-checked": "sin comprobar"
+      },
+      "support": {
+        "associated": "comprobación local: fuente identificada en la misma frase",
+        "weak": "comprobación local: asociación débil",
+        "none": "comprobación local: sin cita",
+        "hedged": "redacción prudente",
+        "negated": "negación",
+        "note": "La comprobación local solo lee esta página (posición de la cita, identificador, matización, negación). Nunca lee el trabajo citado, por lo que no puede confirmar el respaldo."
+      }
     },
     "identity": {
       "status": {

@@ -7851,7 +7851,25 @@
       "references": "引用的来源",
       "noReference": "该主张附近未找到引用。",
       "more": "未显示的主张：{{n}} 条",
-      "linkNote": "DOI、PMID 和 PMCID 链接会打开公共解析服务（doi.org、PubMed、PMC）。链接只说明在哪里查找该文献，并不证明文献存在或支持该主张。"
+      "linkNote": "DOI、PMID 和 PMCID 链接会打开公共解析服务（doi.org、PubMed、PMC）。链接只说明在哪里查找该文献，并不证明文献存在或支持该主张。",
+      "reach": {
+        "check": "检查来源可访问性（{{n}}）",
+        "checking": "正在检查来源…",
+        "note": "可选的网络检查：每个被引用的解析器 URL 只请求一次（最多 20 个）。可访问表示该地址有响应，不表示该文献支持此论断。",
+        "desktopOnly": "来源检查需要桌面应用。",
+        "reachable": "可访问",
+        "broken": "错误响应",
+        "no-response": "无响应",
+        "not-checked": "未检查"
+      },
+      "support": {
+        "associated": "本地检查：同一句中有可识别的来源",
+        "weak": "本地检查：关联较弱",
+        "none": "本地检查：无引用",
+        "hedged": "措辞保留",
+        "negated": "否定",
+        "note": "本地检查只读取本页面（引用位置、标识符、保留措辞、否定）。它从不读取被引用的文献，因此无法确认支持关系。"
+      }
     },
     "identity": {
       "status": {

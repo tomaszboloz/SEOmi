@@ -7851,7 +7851,25 @@
       "references": "Zitierte Quellen",
       "noReference": "In der Nähe dieser Aussage wurde kein Beleg gefunden.",
       "more": "Weitere nicht angezeigte Aussagen: {{n}}.",
-      "linkNote": "DOI-, PMID- und PMCID-Links öffnen den öffentlichen Resolver (doi.org, PubMed, PMC). Ein Link zeigt, wo die Arbeit nachgeschlagen werden kann; er bestätigt nicht, dass sie existiert oder die Aussage stützt."
+      "linkNote": "DOI-, PMID- und PMCID-Links öffnen den öffentlichen Resolver (doi.org, PubMed, PMC). Ein Link zeigt, wo die Arbeit nachgeschlagen werden kann; er bestätigt nicht, dass sie existiert oder die Aussage stützt.",
+      "reach": {
+        "check": "Erreichbarkeit der Quellen prüfen ({{n}})",
+        "checking": "Quellen werden geprüft…",
+        "note": "Optionale Netzwerkprüfung: Jede zitierte Resolver-URL wird einmal abgefragt (max. 20). Erreichbar heißt, dass die Adresse antwortet, nicht dass die Arbeit die Aussage stützt.",
+        "desktopOnly": "Quellenprüfungen erfordern die Desktop-App.",
+        "reachable": "erreichbar",
+        "broken": "Fehlerantwort",
+        "no-response": "keine Antwort",
+        "not-checked": "nicht geprüft"
+      },
+      "support": {
+        "associated": "lokale Prüfung: identifizierte Quelle im selben Satz",
+        "weak": "lokale Prüfung: schwache Zuordnung",
+        "none": "lokale Prüfung: kein Zitat",
+        "hedged": "vorsichtige Formulierung",
+        "negated": "Verneinung",
+        "note": "Die lokale Prüfung liest nur diese Seite (Position des Zitats, Kennung, vorsichtige Formulierung, Verneinung). Sie liest nie die zitierte Arbeit und kann daher keine Stützung bestätigen."
+      }
     },
     "identity": {
       "status": {

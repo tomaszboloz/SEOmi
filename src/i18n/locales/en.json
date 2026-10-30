@@ -7851,7 +7851,25 @@
       "references": "Cited references",
       "noReference": "No citation found near this claim.",
       "more": "{{n}} more claims not shown.",
-      "linkNote": "DOI, PMID and PMCID links open the public resolver (doi.org, PubMed, PMC). A link shows where to look the work up; it does not confirm that the work exists or supports the claim."
+      "linkNote": "DOI, PMID and PMCID links open the public resolver (doi.org, PubMed, PMC). A link shows where to look the work up; it does not confirm that the work exists or supports the claim.",
+      "reach": {
+        "check": "Check source reachability ({{n}})",
+        "checking": "Checking sources…",
+        "note": "Opt-in network check: requests each cited resolver URL once (max 20). Reachable means the address answers, not that the work supports the claim.",
+        "desktopOnly": "Source checks need the desktop app.",
+        "reachable": "reachable",
+        "broken": "error response",
+        "no-response": "no response",
+        "not-checked": "not checked"
+      },
+      "support": {
+        "associated": "local check: identified source in the same sentence",
+        "weak": "local check: weak association",
+        "none": "local check: no citation",
+        "hedged": "hedged wording",
+        "negated": "negation",
+        "note": "The local check reads only this page (citation position, identifier, hedging, negation). It never reads the cited work, so it cannot confirm support."
+      }
     },
     "identity": {
       "status": {
