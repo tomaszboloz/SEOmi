@@ -19,7 +19,7 @@ use super::super::{
 use super::page_headings::extract_page_headings;
 use super::page_title_meta::extract_page_title_and_meta;
 use super::page_type_guidance::thin_content_issue;
-use super::template_signature;
+use super::{dom_structure, template_signature};
 
 pub fn extract_page_content(input: ExtractPageContentInput<'_>) -> PageContentOutcome {
     let ExtractPageContentInput {
@@ -108,6 +108,7 @@ pub fn extract_page_content(input: ExtractPageContentInput<'_>) -> PageContentOu
         Default::default()
     };
 
+    let complete_html = is_html && !body_truncated && !body_read_failed;
     PageContentOutcome {
         document_language,
         word_count: cm.word_count,
@@ -118,10 +119,14 @@ pub fn extract_page_content(input: ExtractPageContentInput<'_>) -> PageContentOu
         semantic_terms,
         semantic_language,
         semantic_excerpts,
-        focus: template_signature::attach(
-            focus.with_js_shell(document, is_html.then_some(cm.word_count)),
+        focus: dom_structure::attach(
+            template_signature::attach(
+                focus.with_js_shell(document, is_html.then_some(cm.word_count)),
+                document,
+                complete_html,
+            ),
             document,
-            is_html && !body_truncated && !body_read_failed,
+            complete_html,
         ),
         has_primary_content_root,
         semantic_content_source,

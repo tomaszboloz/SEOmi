@@ -5,6 +5,7 @@ use super::{
     models::{CrawlConfig, SiteCrawlResult},
 };
 
+mod dom_structure;
 mod frontier;
 mod loop_runner;
 mod page_assembler;

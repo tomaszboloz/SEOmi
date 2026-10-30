@@ -86,6 +86,8 @@ export interface CrawledPageSummary {
   semantic_excerpts?: string[];
   /** Native fetched-DOM tag/depth skeleton; absent when DOM evidence is unavailable. */
   template_dom_signature?: string;
+  /** Main-content tables/lists/form controls counted by the native crawler (#70); absent when not assessed. */
+  dom_structure?: { tables: number; ordered_lists: number; unordered_lists: number; interactive_inputs: number };
   /** Native injected-variable capture; absent when the crawler has no such source. */
   template_injected_variables?: string[];
   /** Explicit TAS subtopic identity; absent when the authority report is unavailable. */
