@@ -8150,6 +8150,22 @@
       "copied": "コピーしました",
       "failed": "コピーに失敗しました",
       "hint": "エクスポートには正確な入力と重みが含まれるため、スコアを再計算できます。"
+    },
+    "trend": {
+      "first": "このHSSプロファイルで保存された以前の実行がないため、傾向はまだありません。",
+      "notComparable": "前回の実行と比較できません（どちらかで未測定）。",
+      "up": "前回の実行（{{date}}）から {{value}} 上昇",
+      "down": "前回の実行（{{date}}）から {{value}} 低下",
+      "flat": "前回の実行（{{date}}）から変化なし"
+    },
+    "review": {
+      "group": "レビューの判断",
+      "decision": {
+        "accepted": "承認",
+        "deferred": "保留",
+        "rejected": "却下"
+      },
+      "current": "判断: {{decision}}（{{date}}）· 履歴 {{count}} 件"
     }
   },
   "surgical": {

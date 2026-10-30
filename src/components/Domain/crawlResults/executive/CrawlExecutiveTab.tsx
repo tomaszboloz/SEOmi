@@ -9,6 +9,7 @@ import { ExecutiveHssHero } from './ExecutiveHssHero';
 import { ExecutiveModuleCards } from './ExecutiveModuleCards';
 import { ExecutiveWhatIf } from './ExecutiveWhatIf';
 import { useExecutiveData } from './useExecutiveData';
+import { useHssTrend } from './useHssTrend';
 
 export interface CrawlExecutiveTabProps {
   pages: CrawledPageSummary[];
@@ -28,6 +29,7 @@ type CopyState = 'idle' | 'copied' | 'failed';
 export const CrawlExecutiveTab = ({ pages, startUrl, run, projectId, onOpenTab }: CrawlExecutiveTabProps) => {
   const { t, i18n } = useTranslation();
   const { hss, actions } = useExecutiveData(pages, startUrl, run, projectId);
+  const trend = useHssTrend(projectId, hss, run?.completedAt);
   const [copy, setCopy] = useState<CopyState>('idle');
   const exportJson = async () => {
     const payload = { hss: hssExportPayload(hss), actions };
@@ -50,10 +52,10 @@ export const CrawlExecutiveTab = ({ pages, startUrl, run, projectId, onOpenTab }
         </div>
       </header>
       <p className="text-xs text-slate-300">{t('executive.workflow')}</p>
-      <ExecutiveHssHero hss={hss} />
-      <ExecutiveModuleCards hss={hss} onOpen={onOpenTab} />
+      <ExecutiveHssHero hss={hss} trend={trend} />
+      <ExecutiveModuleCards hss={hss} trend={trend} onOpen={onOpenTab} />
       <div className="grid gap-4 xl:grid-cols-[2fr_1fr]">
-        <ExecutiveActionFeed actions={actions} onOpen={onOpenTab} />
+        <ExecutiveActionFeed key={`${projectId ?? ''}|${hss.runId}`} actions={actions} onOpen={onOpenTab} projectId={projectId} hss={hss} />
         <ExecutiveWhatIf key={`${hss.runId}|${hss.profile.version}`} hss={hss} />
       </div>
     </div>

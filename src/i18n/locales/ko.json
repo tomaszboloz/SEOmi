@@ -8150,6 +8150,22 @@
       "copied": "복사됨",
       "failed": "복사 실패",
       "hint": "내보내기에는 정확한 입력값과 가중치가 포함되어 점수를 다시 계산할 수 있습니다."
+    },
+    "trend": {
+      "first": "이 HSS 프로필로 저장된 이전 실행이 없어 아직 추세가 없습니다.",
+      "notComparable": "이전 실행과 비교할 수 없습니다(둘 중 하나에서 측정되지 않음).",
+      "up": "이전 실행({{date}}) 대비 {{value}} 상승",
+      "down": "이전 실행({{date}}) 대비 {{value}} 하락",
+      "flat": "이전 실행({{date}}) 대비 변화 없음"
+    },
+    "review": {
+      "group": "검토 결정",
+      "decision": {
+        "accepted": "수락",
+        "deferred": "보류",
+        "rejected": "거부"
+      },
+      "current": "결정: {{decision}} ({{date}}) · 기록 {{count}}건"
     }
   },
   "surgical": {

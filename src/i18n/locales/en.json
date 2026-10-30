@@ -8150,6 +8150,22 @@
       "copied": "Copied",
       "failed": "Copy failed",
       "hint": "The export contains the exact inputs and weights, so the score can be recomputed."
+    },
+    "trend": {
+      "first": "No earlier saved run with this HSS profile: no trend yet.",
+      "notComparable": "Not comparable with the previous run (not measured in one of them).",
+      "up": "Up {{value}} vs previous run ({{date}})",
+      "down": "Down {{value}} vs previous run ({{date}})",
+      "flat": "No change vs previous run ({{date}})"
+    },
+    "review": {
+      "group": "Review decision",
+      "decision": {
+        "accepted": "Accept",
+        "deferred": "Defer",
+        "rejected": "Reject"
+      },
+      "current": "Decision: {{decision}} ({{date}}) · {{count}} in history"
     }
   },
   "surgical": {

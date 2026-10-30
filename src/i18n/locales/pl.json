@@ -8150,6 +8150,22 @@
       "copied": "Skopiowano",
       "failed": "Kopiowanie nie powiodło się",
       "hint": "Eksport zawiera dokładne wejścia i wagi, więc wynik można przeliczyć ponownie."
+    },
+    "trend": {
+      "first": "Brak wcześniejszego zapisanego przebiegu z tym profilem HSS: trend jeszcze niedostępny.",
+      "notComparable": "Nieporównywalne z poprzednim przebiegiem (w jednym z nich brak pomiaru).",
+      "up": "Wzrost {{value}} wobec poprzedniego przebiegu ({{date}})",
+      "down": "Spadek {{value}} wobec poprzedniego przebiegu ({{date}})",
+      "flat": "Bez zmian wobec poprzedniego przebiegu ({{date}})"
+    },
+    "review": {
+      "group": "Decyzja przeglądu",
+      "decision": {
+        "accepted": "Akceptuj",
+        "deferred": "Odłóż",
+        "rejected": "Odrzuć"
+      },
+      "current": "Decyzja: {{decision}} ({{date}}) · w historii: {{count}}"
     }
   },
   "surgical": {

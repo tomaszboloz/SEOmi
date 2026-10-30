@@ -8150,6 +8150,22 @@
       "copied": "Kopiert",
       "failed": "Kopieren fehlgeschlagen",
       "hint": "Der Export enthält die exakten Eingaben und Gewichte, sodass der Wert neu berechnet werden kann."
+    },
+    "trend": {
+      "first": "Kein früherer gespeicherter Lauf mit diesem HSS-Profil: noch kein Trend.",
+      "notComparable": "Nicht mit dem vorherigen Lauf vergleichbar (in einem der Läufe nicht gemessen).",
+      "up": "Plus {{value}} gegenüber dem vorherigen Lauf ({{date}})",
+      "down": "Minus {{value}} gegenüber dem vorherigen Lauf ({{date}})",
+      "flat": "Keine Änderung gegenüber dem vorherigen Lauf ({{date}})"
+    },
+    "review": {
+      "group": "Prüfentscheidung",
+      "decision": {
+        "accepted": "Annehmen",
+        "deferred": "Zurückstellen",
+        "rejected": "Ablehnen"
+      },
+      "current": "Entscheidung: {{decision}} ({{date}}) · {{count}} im Verlauf"
     }
   },
   "surgical": {

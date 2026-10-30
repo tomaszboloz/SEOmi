@@ -8150,6 +8150,22 @@
       "copied": "Copié",
       "failed": "Échec de la copie",
       "hint": "L’export contient les entrées et pondérations exactes, le score peut donc être recalculé."
+    },
+    "trend": {
+      "first": "Aucune exécution antérieure enregistrée avec ce profil HSS : pas encore de tendance.",
+      "notComparable": "Non comparable avec l’exécution précédente (non mesuré dans l’une d’elles).",
+      "up": "En hausse de {{value}} par rapport à l’exécution précédente ({{date}})",
+      "down": "En baisse de {{value}} par rapport à l’exécution précédente ({{date}})",
+      "flat": "Aucun changement par rapport à l’exécution précédente ({{date}})"
+    },
+    "review": {
+      "group": "Décision de revue",
+      "decision": {
+        "accepted": "Accepter",
+        "deferred": "Reporter",
+        "rejected": "Rejeter"
+      },
+      "current": "Décision : {{decision}} ({{date}}) · {{count}} dans l’historique"
     }
   },
   "surgical": {

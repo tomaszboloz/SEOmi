@@ -8150,6 +8150,22 @@
       "copied": "已复制",
       "failed": "复制失败",
       "hint": "导出包含确切的输入和权重，因此可以重新计算分数。"
+    },
+    "trend": {
+      "first": "没有使用此 HSS 配置的早期已保存运行：暂无趋势。",
+      "notComparable": "无法与上一次运行比较（其中一次未测量）。",
+      "up": "较上次运行（{{date}}）上升 {{value}}",
+      "down": "较上次运行（{{date}}）下降 {{value}}",
+      "flat": "与上次运行（{{date}}）相比无变化"
+    },
+    "review": {
+      "group": "审核决定",
+      "decision": {
+        "accepted": "接受",
+        "deferred": "推迟",
+        "rejected": "拒绝"
+      },
+      "current": "决定：{{decision}}（{{date}}）· 历史记录 {{count}} 条"
     }
   },
   "surgical": {

@@ -8150,6 +8150,22 @@
       "copied": "Copiado",
       "failed": "Error al copiar",
       "hint": "La exportación contiene las entradas y pesos exactos, así que la puntuación puede recalcularse."
+    },
+    "trend": {
+      "first": "No hay una ejecución guardada anterior con este perfil HSS: aún no hay tendencia.",
+      "notComparable": "No comparable con la ejecución anterior (no medido en una de ellas).",
+      "up": "Sube {{value}} frente a la ejecución anterior ({{date}})",
+      "down": "Baja {{value}} frente a la ejecución anterior ({{date}})",
+      "flat": "Sin cambios frente a la ejecución anterior ({{date}})"
+    },
+    "review": {
+      "group": "Decisión de revisión",
+      "decision": {
+        "accepted": "Aceptar",
+        "deferred": "Aplazar",
+        "rejected": "Rechazar"
+      },
+      "current": "Decisión: {{decision}} ({{date}}) · {{count}} en el historial"
     }
   },
   "surgical": {
