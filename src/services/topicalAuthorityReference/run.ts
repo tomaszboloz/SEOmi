@@ -43,7 +43,7 @@ export const runReference = async (deps: ReferenceDeps, input: ReferenceRunInput
       const response = await fetchSerp(query, input.signal);
       sources.add(response.source);
       hits.push(response.hits);
-      serp.push({ query, source: response.source, hits: response.hits });
+      serp.push({ query, source: response.source, hits: response.hits, ...(response.evidence ? { evidence: response.evidence } : {}) });
     } catch (error) { lastError = messageOf(error); }
     (await deps.fetchSuggestions?.(query, input.signal)?.catch(() => [] as string[]) ?? []).forEach((phrase) => suggestions.add(phrase));
   }

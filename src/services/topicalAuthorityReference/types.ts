@@ -1,3 +1,4 @@
+import type { SerpEvidence, SerpEvidenceSummary } from '@/services/serpSnapshot';
 import type { CodeParams, SiteFocusReport } from '@/services/siteFocus';
 import type { BenchmarkDeps, SerpHit } from '@/services/siteFocusBenchmark';
 import type { CompetitorPages, Quadrant, ReferenceTaxonomy } from '@/services/topicalAuthority';
@@ -31,7 +32,8 @@ export type ReferenceOutcome =
   | { status: 'ok'; taxonomy: ReferenceTaxonomy; competitors: CompetitorPages[]; serp?: ReferenceSerpObservation[]; attempted?: string[] };
 
 /** One SERP response actually received during the reference run (query, provider label and ranked hits). */
-export interface ReferenceSerpObservation { query: string; source: string; hits: SerpHit[] }
+/** `evidence` carries the shared SERP provenance (#106 item 1) when the fetcher supplied it. */
+export interface ReferenceSerpObservation { query: string; source: string; hits: SerpHit[]; evidence?: SerpEvidence }
 
 export interface BenchmarkRow { domain: string; sfs: number; tas: number | null; quadrant: Quadrant | null; isOwn: boolean }
 export interface PillarComparison { id: string; label: string; own: number; competitors: Record<string, number> }
@@ -47,4 +49,6 @@ export interface TopicalBenchmark {
   insights: AuthorityInsight[];
   /** Real sample behind the matrix: competitors picked from the SERP, scored, and those whose crawl failed or was empty. */
   sample?: { attempted: number; scored: number; failed: string[] };
+  /** Shared SERP evidence summary (#106 item 1): same contract as the SFS benchmark. */
+  serpEvidence?: SerpEvidenceSummary;
 }
