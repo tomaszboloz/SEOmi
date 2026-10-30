@@ -8265,13 +8265,25 @@
     "detail": "Décalage {{offset}}, similarité thématique {{topic}}, passage concurrent le plus proche {{nearest}}.",
     "source": "Source la plus proche : {{url}} (rang {{rank}}).",
     "noSource": "Aucune source proche.",
+    "run": "Exécution {{runAt}} pour {{url}} · vecteurs : {{provider}} / {{model}}",
+    "compareFirst": "Première exécution enregistrée pour cette expression.",
+    "compareModelChanged": "Le modèle d'embeddings a changé depuis l'exécution précédente ({{previous}}) ; les scores ne sont donc pas comparés. Un changement de modèle n'est pas une baisse de qualité de la page.",
+    "compareBaselineChanged": "Variation {{delta}} depuis l'exécution précédente, mais les pages TOP comparées ont changé : une partie vient de la nouvelle base, pas seulement de votre page.",
+    "compareSameBasis": "Variation {{delta}} depuis l'exécution précédente avec les mêmes pages TOP et le même modèle.",
+    "compareNoDelta": "L'une des exécutions n'a pas de score : rien à comparer.",
+    "sources": "Pages comparées ({{n}})",
+    "sourceRow": "#{{rank}} {{url}} · récupérée {{fetchedAt}} · la plus proche de {{echo}} paragraphes écho et {{gain}} paragraphes de gain",
+    "history": "Exécutions enregistrées ({{n}})",
+    "historyRow": "{{runAt}} : score {{score}} · {{provider}} / {{model}} · {{available}} sur {{requested}} pages",
     "limit": {
       "no-comparable-documents": "Aucun document concurrent comparable.",
       "too-few-documents": "Trop peu de documents concurrents pour une base fiable.",
       "some-documents-missing": "Certaines pages concurrentes n'ont pas pu être récupérées.",
       "no-target-chunks": "La page n'a aucun paragraphe analysable.",
       "off-topic-below-quota": "Trop peu de paragraphes sur le sujet.",
-      "local-lexical-embeddings": "La similarité utilise des vecteurs lexicaux locaux, pas un modèle sémantique ; les zones sont approximatives."
+      "local-lexical-embeddings": "La similarité utilise des vecteurs lexicaux locaux, pas un modèle sémantique ; les zones sont approximatives.",
+      "heuristic-entities": "Les entités proviennent d'expressions en majuscules et de faits sujet-prédicat-objet, pas d'un modèle d'entités entraîné.",
+      "semantic-provider-unavailable": "Le fournisseur sémantique d'embeddings du projet était indisponible ; des vecteurs lexicaux locaux ont été utilisés."
     },
     "rec": {
       "rewrite-echo": "Le paragraphe au décalage {{offset}} répète un passage concurrent : réécrivez-le avec vos mots.",

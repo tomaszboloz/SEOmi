@@ -8265,13 +8265,25 @@
     "detail": "Offset {{offset}}, podobieństwo do tematu {{topic}}, najbliższy fragment konkurencji {{nearest}}.",
     "source": "Najbliższe źródło: {{url}} (pozycja {{rank}}).",
     "noSource": "Brak najbliższego źródła.",
+    "run": "Przebieg {{runAt}} dla {{url}} · wektory: {{provider}} / {{model}}",
+    "compareFirst": "Pierwszy zapisany przebieg dla tej frazy.",
+    "compareModelChanged": "Model embeddingów zmienił się od poprzedniego przebiegu ({{previous}}), więc wyniki nie są porównywane. Zmiana modelu to nie spadek jakości strony.",
+    "compareBaselineChanged": "Zmiana {{delta}} od poprzedniego przebiegu, ale porównywane strony TOP się zmieniły: część zmiany wynika z nowej bazy, nie tylko z Twojej strony.",
+    "compareSameBasis": "Zmiana {{delta}} od poprzedniego przebiegu przy tych samych stronach TOP i modelu.",
+    "compareNoDelta": "Jeden z przebiegów nie ma wyniku, więc nie ma czego porównać.",
+    "sources": "Porównane strony ({{n}})",
+    "sourceRow": "#{{rank}} {{url}} · pobrano {{fetchedAt}} · najbliższa dla {{echo}} akapitów echo i {{gain}} akapitów gain",
+    "history": "Zapisane przebiegi ({{n}})",
+    "historyRow": "{{runAt}}: wynik {{score}} · {{provider}} / {{model}} · {{available}} z {{requested}} stron",
     "limit": {
       "no-comparable-documents": "Brak porównywalnych dokumentów konkurencji.",
       "too-few-documents": "Zbyt mało dokumentów konkurencji dla wiarygodnej bazy.",
       "some-documents-missing": "Nie udało się pobrać części stron konkurencji.",
       "no-target-chunks": "Strona nie ma akapitów do analizy.",
       "off-topic-below-quota": "Zbyt mało akapitów w temacie.",
-      "local-lexical-embeddings": "Podobieństwo liczą lokalne wektory leksykalne, nie model semantyczny; strefy są przybliżone."
+      "local-lexical-embeddings": "Podobieństwo liczą lokalne wektory leksykalne, nie model semantyczny; strefy są przybliżone.",
+      "heuristic-entities": "Encje pochodzą z fraz pisanych wielką literą i faktów podmiot-orzeczenie-dopełnienie, a nie z wytrenowanego modelu encji.",
+      "semantic-provider-unavailable": "Semantyczny dostawca embeddingów projektu był niedostępny; użyto lokalnych wektorów leksykalnych."
     },
     "rec": {
       "rewrite-echo": "Akapit na offsecie {{offset}} powtarza fragment konkurencji: przepisz go własnymi słowami.",

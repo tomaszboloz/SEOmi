@@ -8265,13 +8265,25 @@
     "detail": "Desplazamiento {{offset}}, similitud temática {{topic}}, pasaje competidor más cercano {{nearest}}.",
     "source": "Fuente más cercana: {{url}} (posición {{rank}}).",
     "noSource": "Sin fuente cercana.",
+    "run": "Ejecución {{runAt}} para {{url}} · vectores: {{provider}} / {{model}}",
+    "compareFirst": "Primera ejecución guardada para esta frase.",
+    "compareModelChanged": "El modelo de embeddings cambió desde la ejecución anterior ({{previous}}), así que las puntuaciones no se comparan. Un cambio de modelo no es una caída de calidad de la página.",
+    "compareBaselineChanged": "Cambio {{delta}} desde la ejecución anterior, pero las páginas TOP comparadas cambiaron: parte se debe a la nueva base, no solo a tu página.",
+    "compareSameBasis": "Cambio {{delta}} desde la ejecución anterior con las mismas páginas TOP y el mismo modelo.",
+    "compareNoDelta": "Una de las ejecuciones no tiene puntuación, así que no hay nada que comparar.",
+    "sources": "Páginas comparadas ({{n}})",
+    "sourceRow": "#{{rank}} {{url}} · obtenida {{fetchedAt}} · más cercana a {{echo}} párrafos eco y {{gain}} párrafos de ganancia",
+    "history": "Ejecuciones guardadas ({{n}})",
+    "historyRow": "{{runAt}}: puntuación {{score}} · {{provider}} / {{model}} · {{available}} de {{requested}} páginas",
     "limit": {
       "no-comparable-documents": "Sin documentos comparables de la competencia.",
       "too-few-documents": "Muy pocos documentos de la competencia para una base fiable.",
       "some-documents-missing": "No se pudieron obtener algunas páginas de la competencia.",
       "no-target-chunks": "La página no tiene párrafos analizables.",
       "off-topic-below-quota": "Muy pocos párrafos dentro del tema.",
-      "local-lexical-embeddings": "La similitud usa vectores léxicos locales, no un modelo semántico; las zonas son aproximadas."
+      "local-lexical-embeddings": "La similitud usa vectores léxicos locales, no un modelo semántico; las zonas son aproximadas.",
+      "heuristic-entities": "Las entidades provienen de frases con mayúscula y de hechos sujeto-predicado-objeto, no de un modelo de entidades entrenado.",
+      "semantic-provider-unavailable": "El proveedor semántico de embeddings del proyecto no estaba disponible; se usaron vectores léxicos locales."
     },
     "rec": {
       "rewrite-echo": "El párrafo en el desplazamiento {{offset}} repite un pasaje de la competencia: reescríbelo con tus palabras.",

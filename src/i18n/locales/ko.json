@@ -8265,13 +8265,25 @@
     "detail": "오프셋 {{offset}}, 주제 유사도 {{topic}}, 가장 가까운 경쟁 구절 {{nearest}}.",
     "source": "가장 가까운 출처: {{url}} (순위 {{rank}}).",
     "noSource": "가까운 출처 없음.",
+    "run": "{{url}} 실행 {{runAt}} · 벡터: {{provider}} / {{model}}",
+    "compareFirst": "이 구문에 저장된 첫 실행입니다.",
+    "compareModelChanged": "이전 실행 이후 임베딩 모델이 바뀌어({{previous}}) 점수를 비교하지 않습니다. 모델 변경은 페이지 품질 하락이 아닙니다.",
+    "compareBaselineChanged": "이전 실행 대비 {{delta}} 변화했지만 비교한 TOP 페이지가 바뀌었습니다. 변화의 일부는 페이지가 아니라 새 기준선 때문입니다.",
+    "compareSameBasis": "같은 TOP 페이지와 모델에서 이전 실행 대비 {{delta}} 변화했습니다.",
+    "compareNoDelta": "실행 중 하나에 점수가 없어 비교할 수 없습니다.",
+    "sources": "비교한 페이지 ({{n}})",
+    "sourceRow": "#{{rank}} {{url}} · 수집 {{fetchedAt}} · 에코 문단 {{echo}}개, 게인 문단 {{gain}}개에 가장 가까움",
+    "history": "저장된 실행 ({{n}})",
+    "historyRow": "{{runAt}}: 점수 {{score}} · {{provider}} / {{model}} · {{requested}}개 중 {{available}}개 페이지",
     "limit": {
       "no-comparable-documents": "비교 가능한 경쟁 문서가 없습니다.",
       "too-few-documents": "신뢰할 만한 기준에는 경쟁 문서가 너무 적습니다.",
       "some-documents-missing": "일부 경쟁 페이지를 가져오지 못했습니다.",
       "no-target-chunks": "분석할 수 있는 문단이 없습니다.",
       "off-topic-below-quota": "주제에 맞는 문단이 너무 적습니다.",
-      "local-lexical-embeddings": "유사도는 의미 모델이 아닌 로컬 어휘 벡터로 계산되므로 영역은 근사치입니다."
+      "local-lexical-embeddings": "유사도는 의미 모델이 아닌 로컬 어휘 벡터로 계산되므로 영역은 근사치입니다.",
+      "heuristic-entities": "엔터티는 대문자 구문과 주어-서술어-목적어 사실에서 추출하며, 학습된 엔터티 모델이 아닙니다.",
+      "semantic-provider-unavailable": "프로젝트의 의미 임베딩 제공자를 사용할 수 없어 로컬 어휘 벡터를 사용했습니다."
     },
     "rec": {
       "rewrite-echo": "오프셋 {{offset}}의 문단이 경쟁 구절을 반복합니다. 자신의 말로 다시 쓰세요.",

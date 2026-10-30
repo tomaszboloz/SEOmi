@@ -8265,13 +8265,25 @@
     "detail": "Offset {{offset}}, Themenähnlichkeit {{topic}}, nächste Konkurrenzpassage {{nearest}}.",
     "source": "Nächste Quelle: {{url}} (Rang {{rank}}).",
     "noSource": "Keine nächste Quelle.",
+    "run": "Lauf {{runAt}} für {{url}} · Vektoren: {{provider}} / {{model}}",
+    "compareFirst": "Erster gespeicherter Lauf für diese Phrase.",
+    "compareModelChanged": "Das Embedding-Modell hat sich seit dem letzten Lauf geändert ({{previous}}), daher werden die Werte nicht verglichen. Ein Modellwechsel ist kein Qualitätsverlust der Seite.",
+    "compareBaselineChanged": "Änderung {{delta}} seit dem letzten Lauf, aber die verglichenen TOP-Seiten haben sich geändert: Ein Teil stammt aus der neuen Basis, nicht nur von Ihrer Seite.",
+    "compareSameBasis": "Änderung {{delta}} seit dem letzten Lauf bei gleichen TOP-Seiten und gleichem Modell.",
+    "compareNoDelta": "Einer der Läufe hat keinen Wert, daher gibt es nichts zu vergleichen.",
+    "sources": "Verglichene Seiten ({{n}})",
+    "sourceRow": "#{{rank}} {{url}} · abgerufen {{fetchedAt}} · am nächsten zu {{echo}} Echo- und {{gain}} Gain-Absätzen",
+    "history": "Gespeicherte Läufe ({{n}})",
+    "historyRow": "{{runAt}}: Wert {{score}} · {{provider}} / {{model}} · {{available}} von {{requested}} Seiten",
     "limit": {
       "no-comparable-documents": "Keine vergleichbaren Konkurrenzdokumente.",
       "too-few-documents": "Zu wenige Konkurrenzdokumente für eine verlässliche Basis.",
       "some-documents-missing": "Einige Konkurrenzseiten konnten nicht abgerufen werden.",
       "no-target-chunks": "Die Seite hat keine analysierbaren Absätze.",
       "off-topic-below-quota": "Zu wenige themenrelevante Absätze.",
-      "local-lexical-embeddings": "Die Ähnlichkeit nutzt lokale lexikalische Vektoren, kein semantisches Modell; die Zonen sind Näherungen."
+      "local-lexical-embeddings": "Die Ähnlichkeit nutzt lokale lexikalische Vektoren, kein semantisches Modell; die Zonen sind Näherungen.",
+      "heuristic-entities": "Entitäten stammen aus großgeschriebenen Phrasen und Subjekt-Prädikat-Objekt-Fakten, nicht aus einem trainierten Entitätsmodell.",
+      "semantic-provider-unavailable": "Der semantische Embedding-Anbieter des Projekts war nicht verfügbar; stattdessen wurden lokale lexikalische Vektoren verwendet."
     },
     "rec": {
       "rewrite-echo": "Der Absatz bei Offset {{offset}} wiederholt eine Konkurrenzpassage: in eigenen Worten umschreiben.",

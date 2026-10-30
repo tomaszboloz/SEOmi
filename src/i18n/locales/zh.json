@@ -8265,13 +8265,25 @@
     "detail": "偏移量 {{offset}}，主题相似度 {{topic}}，最接近的竞品段落 {{nearest}}。",
     "source": "最近来源：{{url}}（排名 {{rank}}）。",
     "noSource": "没有相近来源。",
+    "run": "{{url}} 的运行 {{runAt}} · 向量：{{provider}} / {{model}}",
+    "compareFirst": "此短语的第一次保存运行。",
+    "compareModelChanged": "自上次运行以来嵌入模型已更改（{{previous}}），因此不比较分数。模型更改并不代表页面质量下降。",
+    "compareBaselineChanged": "与上次运行相比变化 {{delta}}，但比较的 TOP 页面已变化：部分变化来自新的基准，而不仅是您的页面。",
+    "compareSameBasis": "在相同 TOP 页面和模型下，与上次运行相比变化 {{delta}}。",
+    "compareNoDelta": "其中一次运行没有分数，无法比较。",
+    "sources": "比较的页面（{{n}}）",
+    "sourceRow": "#{{rank}} {{url}} · 获取于 {{fetchedAt}} · 最接近 {{echo}} 个回声段落和 {{gain}} 个增益段落",
+    "history": "已保存的运行（{{n}}）",
+    "historyRow": "{{runAt}}：分数 {{score}} · {{provider}} / {{model}} · {{requested}} 个页面中的 {{available}} 个",
     "limit": {
       "no-comparable-documents": "没有可比较的竞品文档。",
       "too-few-documents": "竞品文档太少，无法建立可靠基准。",
       "some-documents-missing": "部分竞品页面无法获取。",
       "no-target-chunks": "页面没有可分析的段落。",
       "off-topic-below-quota": "切题段落太少。",
-      "local-lexical-embeddings": "相似度使用本地词汇向量而非语义模型计算，区域为近似值。"
+      "local-lexical-embeddings": "相似度使用本地词汇向量而非语义模型计算，区域为近似值。",
+      "heuristic-entities": "实体来自首字母大写的短语和主谓宾事实，而不是训练好的实体模型。",
+      "semantic-provider-unavailable": "项目的语义嵌入提供方不可用，已改用本地词汇向量。"
     },
     "rec": {
       "rewrite-echo": "偏移量 {{offset}} 处的段落重复了竞品内容：请用自己的话改写。",

@@ -8265,13 +8265,25 @@
     "detail": "Offset {{offset}}, somiglianza tematica {{topic}}, passaggio concorrente più vicino {{nearest}}.",
     "source": "Fonte più vicina: {{url}} (posizione {{rank}}).",
     "noSource": "Nessuna fonte vicina.",
+    "run": "Esecuzione {{runAt}} per {{url}} · vettori: {{provider}} / {{model}}",
+    "compareFirst": "Prima esecuzione salvata per questa frase.",
+    "compareModelChanged": "Il modello di embedding è cambiato dall'esecuzione precedente ({{previous}}), quindi i punteggi non vengono confrontati. Un cambio di modello non è un calo di qualità della pagina.",
+    "compareBaselineChanged": "Variazione {{delta}} dall'esecuzione precedente, ma le pagine TOP confrontate sono cambiate: in parte dipende dalla nuova base, non solo dalla tua pagina.",
+    "compareSameBasis": "Variazione {{delta}} dall'esecuzione precedente con le stesse pagine TOP e lo stesso modello.",
+    "compareNoDelta": "Una delle esecuzioni non ha punteggio, quindi non c'è nulla da confrontare.",
+    "sources": "Pagine confrontate ({{n}})",
+    "sourceRow": "#{{rank}} {{url}} · scaricata {{fetchedAt}} · più vicina a {{echo}} paragrafi eco e {{gain}} paragrafi gain",
+    "history": "Esecuzioni salvate ({{n}})",
+    "historyRow": "{{runAt}}: punteggio {{score}} · {{provider}} / {{model}} · {{available}} di {{requested}} pagine",
     "limit": {
       "no-comparable-documents": "Nessun documento concorrente comparabile.",
       "too-few-documents": "Troppo pochi documenti concorrenti per una base affidabile.",
       "some-documents-missing": "Alcune pagine concorrenti non sono state recuperate.",
       "no-target-chunks": "La pagina non ha paragrafi analizzabili.",
       "off-topic-below-quota": "Troppo pochi paragrafi in tema.",
-      "local-lexical-embeddings": "La similarità usa vettori lessicali locali, non un modello semantico; le zone sono approssimative."
+      "local-lexical-embeddings": "La similarità usa vettori lessicali locali, non un modello semantico; le zone sono approssimative.",
+      "heuristic-entities": "Le entità derivano da frasi con maiuscole e da fatti soggetto-predicato-oggetto, non da un modello di entità addestrato.",
+      "semantic-provider-unavailable": "Il provider semantico di embedding del progetto non era disponibile; sono stati usati vettori lessicali locali."
     },
     "rec": {
       "rewrite-echo": "Il paragrafo all'offset {{offset}} ripete un passaggio concorrente: riscrivilo con parole tue.",

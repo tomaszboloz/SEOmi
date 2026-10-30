@@ -8265,13 +8265,25 @@
     "detail": "オフセット {{offset}}、トピック類似度 {{topic}}、最も近い競合箇所 {{nearest}}。",
     "source": "最も近い情報源: {{url}}(順位 {{rank}})。",
     "noSource": "近い情報源なし。",
+    "run": "{{url}} の実行 {{runAt}} · ベクトル: {{provider}} / {{model}}",
+    "compareFirst": "このフレーズで最初に保存された実行です。",
+    "compareModelChanged": "前回の実行から埋め込みモデルが変わったため（{{previous}}）、スコアは比較しません。モデルの変更はページ品質の低下ではありません。",
+    "compareBaselineChanged": "前回から {{delta}} 変化しましたが、比較した TOP ページが変わりました。変化の一部はページではなく新しい基準によるものです。",
+    "compareSameBasis": "同じ TOP ページとモデルで前回から {{delta}} 変化しました。",
+    "compareNoDelta": "どちらかの実行にスコアがないため、比較できません。",
+    "sources": "比較したページ（{{n}}）",
+    "sourceRow": "#{{rank}} {{url}} · 取得 {{fetchedAt}} · エコー段落 {{echo}} 件とゲイン段落 {{gain}} 件の最近傍",
+    "history": "保存された実行（{{n}}）",
+    "historyRow": "{{runAt}}: スコア {{score}} · {{provider}} / {{model}} · {{requested}} ページ中 {{available}} ページ",
     "limit": {
       "no-comparable-documents": "比較可能な競合文書がありません。",
       "too-few-documents": "信頼できる基準には競合文書が少なすぎます。",
       "some-documents-missing": "取得できなかった競合ページがあります。",
       "no-target-chunks": "ページに分析可能な段落がありません。",
       "off-topic-below-quota": "トピック内の段落が少なすぎます。",
-      "local-lexical-embeddings": "類似度はセマンティックモデルではなくローカルの語彙ベクトルで計算されるため、ゾーンは近似値です。"
+      "local-lexical-embeddings": "類似度はセマンティックモデルではなくローカルの語彙ベクトルで計算されるため、ゾーンは近似値です。",
+      "heuristic-entities": "エンティティは大文字で始まる語句と主語・述語・目的語の事実から抽出しており、学習済みのエンティティモデルではありません。",
+      "semantic-provider-unavailable": "プロジェクトのセマンティック埋め込みプロバイダーが利用できなかったため、ローカルの語彙ベクトルを使用しました。"
     },
     "rec": {
       "rewrite-echo": "オフセット {{offset}} の段落は競合の記述と重複しています。自分の言葉で書き直してください。",

@@ -8265,13 +8265,25 @@
     "detail": "Deslocamento {{offset}}, similaridade temática {{topic}}, trecho concorrente mais próximo {{nearest}}.",
     "source": "Fonte mais próxima: {{url}} (posição {{rank}}).",
     "noSource": "Sem fonte próxima.",
+    "run": "Execução {{runAt}} para {{url}} · vetores: {{provider}} / {{model}}",
+    "compareFirst": "Primeira execução guardada para esta frase.",
+    "compareModelChanged": "O modelo de embeddings mudou desde a execução anterior ({{previous}}), por isso as pontuações não são comparadas. Uma mudança de modelo não é uma queda de qualidade da página.",
+    "compareBaselineChanged": "Variação {{delta}} desde a execução anterior, mas as páginas TOP comparadas mudaram: parte vem da nova base, não só da sua página.",
+    "compareSameBasis": "Variação {{delta}} desde a execução anterior com as mesmas páginas TOP e o mesmo modelo.",
+    "compareNoDelta": "Uma das execuções não tem pontuação, por isso não há o que comparar.",
+    "sources": "Páginas comparadas ({{n}})",
+    "sourceRow": "#{{rank}} {{url}} · obtida {{fetchedAt}} · mais próxima de {{echo}} parágrafos eco e {{gain}} parágrafos de ganho",
+    "history": "Execuções guardadas ({{n}})",
+    "historyRow": "{{runAt}}: pontuação {{score}} · {{provider}} / {{model}} · {{available}} de {{requested}} páginas",
     "limit": {
       "no-comparable-documents": "Nenhum documento concorrente comparável.",
       "too-few-documents": "Poucos documentos concorrentes para uma base confiável.",
       "some-documents-missing": "Algumas páginas concorrentes não puderam ser obtidas.",
       "no-target-chunks": "A página não tem parágrafos analisáveis.",
       "off-topic-below-quota": "Poucos parágrafos dentro do tema.",
-      "local-lexical-embeddings": "A similaridade usa vetores léxicos locais, não um modelo semântico; as zonas são aproximadas."
+      "local-lexical-embeddings": "A similaridade usa vetores léxicos locais, não um modelo semântico; as zonas são aproximadas.",
+      "heuristic-entities": "As entidades vêm de frases com maiúscula e de factos sujeito-predicado-objeto, não de um modelo de entidades treinado.",
+      "semantic-provider-unavailable": "O fornecedor semântico de embeddings do projeto estava indisponível; foram usados vetores lexicais locais."
     },
     "rec": {
       "rewrite-echo": "O parágrafo no deslocamento {{offset}} repete um trecho concorrente: reescreva com suas palavras.",

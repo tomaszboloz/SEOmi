@@ -3,14 +3,26 @@ import { contentStems } from '@/services/embeddings/text';
 import type { Vector } from '@/services/embeddings/types';
 import type { TopTenCorpus } from '@/services/targetPhraseAudit/types';
 import { buildBaseline } from './baseline';
-import { buildIgosReport, type IgosReport } from './report';
+import { entitiesFromText, entityVocabulary, HEURISTIC_ENTITIES } from './entities';
+import { buildIgosReport, type IgosProvenance, type IgosReport } from './report';
+export type { IgosProvenance } from './report';
+import { CHUNK_PROFILE, chunkSections } from './sections';
 import type { CompetitorDoc, TargetDoc } from './types';
 
-export const PHRASE_IGOS_PROFILE = { chunkWords: 60, maxChunks: 40, maxEntities: 80 } as const;
+export const PHRASE_IGOS_PROFILE = { ...CHUNK_PROFILE, maxEntities: 80 } as const;
 /** Limitation code: vectors come from the local lexical hash provider, not a semantic model. */
 export const LOCAL_LEXICAL = 'local-lexical-embeddings';
 
 export type Embed = (texts: string[]) => Promise<Vector[]>;
+
+export interface PhraseIgosOptions {
+  /** Content language of the phrase, for SPO relation rules. */
+  language?: string;
+  provider?: { id: string; model: string };
+  now?: () => string;
+}
+
+export const LOCAL_PROVIDER_IDENTITY = { id: 'local-hash', model: 'local-lexical' } as const;
 
 const localEmbed: Embed = async (texts) => {
   const provider = createLocalHashProvider();
@@ -18,16 +30,8 @@ const localEmbed: Embed = async (texts) => {
   return provider.embed(texts);
 };
 
-/** Fixed word windows with character offsets into the source text. */
-export const chunkText = (text: string): Array<{ text: string; offset: number }> => {
-  const words = [...text.matchAll(/\S+/gu)];
-  const chunks: Array<{ text: string; offset: number }> = [];
-  for (let i = 0; i < words.length && chunks.length < PHRASE_IGOS_PROFILE.maxChunks; i += PHRASE_IGOS_PROFILE.chunkWords) {
-    const window = words.slice(i, i + PHRASE_IGOS_PROFILE.chunkWords);
-    chunks.push({ text: window.map((match) => match[0]).join(' '), offset: window[0].index ?? 0 });
-  }
-  return chunks;
-};
+/** Fixed word windows with character offsets into the source text (no headings). */
+export const chunkText = (text: string): Array<{ text: string; offset: number }> => chunkSections(text).map(({ text: value, offset }) => ({ text: value, offset }));
 
 const termsOf = (text: string): Map<string, number> => {
   const terms = new Map<string, number>();
@@ -35,29 +39,33 @@ const termsOf = (text: string): Map<string, number> => {
   return terms;
 };
 
-const entitiesOf = (text: string): string[] => [...new Set(contentStems(text))].slice(0, PHRASE_IGOS_PROFILE.maxEntities);
-
 /** IGOS for one phrase from the TOP 10 corpus actually fetched; null when the target page text is missing. */
-export const buildPhraseIgos = async (corpus: TopTenCorpus, embed: Embed = localEmbed, lexical = embed === localEmbed): Promise<IgosReport | null> => {
+export const buildPhraseIgos = async (corpus: TopTenCorpus, embed: Embed = localEmbed, lexical = embed === localEmbed, options: PhraseIgosOptions = {}): Promise<IgosReport | null> => {
   if (!corpus.target?.text.trim()) return null;
-  const targetChunks = chunkText(corpus.target.text);
-  const pageChunks = corpus.pages.map((page) => chunkText(page.text));
+  const targetChunks = chunkSections(corpus.target.text, corpus.target.headings);
+  const pageChunks = corpus.pages.map((page) => chunkSections(page.text, page.headings));
   const texts = [...targetChunks, ...pageChunks.flat()].map((chunk) => chunk.text);
   const vectors = texts.length ? await embed(texts) : [];
   if (vectors.length !== texts.length) return null;
+  const vocabulary = entityVocabulary([corpus.target.text, ...corpus.pages.map((page) => page.text)], options.language);
   let cursor = targetChunks.length;
   const target: TargetDoc = {
     url: corpus.target.url,
-    entities: entitiesOf(corpus.target.text),
-    chunks: targetChunks.map((chunk, i) => ({ ...chunk, heading: null, vector: vectors[i] })),
+    entities: entitiesFromText(corpus.target.text, vocabulary),
+    chunks: targetChunks.map((chunk, i) => ({ ...chunk, vector: vectors[i] })),
     terms: termsOf(corpus.target.text),
     wordCount: Math.max(1, corpus.target.wordCount || targetChunks.reduce((sum, chunk) => sum + chunk.text.split(' ').length, 0)),
   };
   const docs: CompetitorDoc[] = corpus.pages.map((page, index) => ({
     url: page.url, rank: page.rank, fetchedAt: page.fetchedAt, status: page.status,
-    entities: entitiesOf(page.text), terms: termsOf(page.text),
+    entities: entitiesFromText(page.text, vocabulary), terms: termsOf(page.text),
     passages: pageChunks[index].map((chunk) => ({ text: chunk.text, vector: vectors[cursor++] })),
   }));
   const report = buildIgosReport(target, docs, buildBaseline(docs, corpus.requested));
-  return lexical ? { ...report, limitations: [...report.limitations, LOCAL_LEXICAL] } : report;
+  const identity = options.provider ?? (lexical ? LOCAL_PROVIDER_IDENTITY : { id: 'custom', model: 'unknown' });
+  const provenance: IgosProvenance = {
+    provider: identity.id, model: identity.model, runAt: (options.now ?? (() => new Date().toISOString()))(), targetUrl: corpus.target.url,
+    docs: corpus.pages.map((page) => ({ url: page.url, rank: page.rank, fetchedAt: page.fetchedAt })),
+  };
+  return { ...report, provenance, limitations: [...report.limitations, ...(lexical ? [LOCAL_LEXICAL] : []), HEURISTIC_ENTITIES] };
 };

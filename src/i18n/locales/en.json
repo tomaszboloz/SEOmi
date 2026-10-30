@@ -8265,13 +8265,25 @@
     "detail": "Offset {{offset}}, topic similarity {{topic}}, nearest competitor passage {{nearest}}.",
     "source": "Nearest source: {{url}} (rank {{rank}}).",
     "noSource": "No nearest source.",
+    "run": "Run {{runAt}} for {{url}} · vectors: {{provider}} / {{model}}",
+    "compareFirst": "First stored run for this phrase.",
+    "compareModelChanged": "The embedding model changed since the previous run ({{previous}}), so scores are not compared. A model change is not a drop in page quality.",
+    "compareBaselineChanged": "Change {{delta}} since the previous run, but the compared TOP pages changed: part of it comes from the new baseline, not only from your page.",
+    "compareSameBasis": "Change {{delta}} since the previous run on the same TOP pages and model.",
+    "compareNoDelta": "One of the runs has no score, so there is nothing to compare.",
+    "sources": "Compared pages ({{n}})",
+    "sourceRow": "#{{rank}} {{url}} · fetched {{fetchedAt}} · nearest to {{echo}} echo and {{gain}} gain paragraphs",
+    "history": "Stored runs ({{n}})",
+    "historyRow": "{{runAt}}: score {{score}} · {{provider}} / {{model}} · {{available}} of {{requested}} pages",
     "limit": {
       "no-comparable-documents": "No comparable competitor documents.",
       "too-few-documents": "Too few competitor documents for a reliable baseline.",
       "some-documents-missing": "Some competitor pages could not be fetched.",
       "no-target-chunks": "The page has no analysable paragraphs.",
       "off-topic-below-quota": "Too few on-topic paragraphs.",
-      "local-lexical-embeddings": "Similarity uses local lexical vectors, not a semantic model; zones are approximate."
+      "local-lexical-embeddings": "Similarity uses local lexical vectors, not a semantic model; zones are approximate.",
+      "heuristic-entities": "Entities come from capitalised phrases and subject-predicate-object facts, not from a trained entity model.",
+      "semantic-provider-unavailable": "The project's semantic embedding provider was unavailable; local lexical vectors were used instead."
     },
     "rec": {
       "rewrite-echo": "The paragraph at offset {{offset}} repeats a competitor passage: rewrite it in your own words.",
