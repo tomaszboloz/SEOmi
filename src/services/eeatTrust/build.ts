@@ -5,6 +5,7 @@ import { scanAuthors } from './authors';
 import { analyzeCitations, citationScore } from './citations';
 import { buildFindings, levelFor } from './findings';
 import { buildRegistry, isArticleNode, nodesOf, type SchemaNode } from './graph';
+import { auditGraph } from './graphAudit';
 import { analyzeSchema, schemaScore } from './schemaScore';
 import { analyzeTransparency, transparencyScore } from './transparency';
 import { EEAT_TRUST_VERSION, LEGACY_TRUST_WEIGHTS, TRUST_PROFILE_ID, SCORING_PROFILE, TRUST_WEIGHTS, type ProfileEvidence, type ScoringProfile, type TrustLayer, type TrustReport } from './types';
@@ -60,6 +61,7 @@ export const buildTrustReport = (pages: CrawledPageSummary[], focus?: SiteFocusR
   const titles = live.filter((page) => articleUrls.has(page.final_url || page.url)).map((page) => page.title ?? '');
   const ymyl = detectYmyl(allNodes, focus, titles);
   const schema = analyzeSchema(allNodes, articleNodes, scan.authors, scan.withAuthor, scan.withReviewer);
+  const graphAudit = auditGraph(live);
 
   const named = scan.authors.filter((author) => !author.generic);
   const attributed = new Set([...named.flatMap((author) => author.articleUrls), ...scan.withReviewer]);
@@ -99,8 +101,8 @@ export const buildTrustReport = (pages: CrawledPageSummary[], focus?: SiteFocusR
   return {
     availability: observed ? 'observed' : 'unavailable', score, level: score === null ? null : levelFor(score), layers, profileVersion: EEAT_TRUST_VERSION, profileId: TRUST_PROFILE_ID, scoringProfile: scoring, coverage: coverageByLayer, ymyl,
     ...(ymyl ? { ymylPolicy: { category: ymyl, applicable: true, multiplier: ymylTriggered ? multiplier : YMYL_SEVERE_MULTIPLIER, triggered: ymylTriggered, heuristic: true as const, ...(gate ? { tier: gate.tier, reasons: gate.reasons, claimGate: gate.claimGate } : {}) } } : {}),
-    schema, authors: scan.authors, roleEntities, ...(roleRecall === undefined ? {} : { roleRecall }), citations, transparency,
-    findings: buildFindings({ schema, authors: scan.authors, citations, transparency, ymyl, unattributed }),
+    schema, graphAudit, authors: scan.authors, roleEntities, ...(roleRecall === undefined ? {} : { roleRecall }), citations, transparency,
+    findings: buildFindings({ schema, authors: scan.authors, citations, transparency, ymyl, unattributed, graph: graphAudit }),
     ymylUnattributedPct: ymyl && articleUrls.size ? Math.round((unattributed / articleUrls.size) * 100) : undefined,
     pageCount: live.length, articleCount: articleUrls.size, generatedAt: options.now ?? new Date().toISOString(), version: EEAT_TRUST_VERSION,
   };

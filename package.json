@@ -1,7 +1,7 @@
 {
   "name": "seomi",
   "private": true,
-  "version": "0.6.0",
+  "version": "0.7.0",
   "type": "module",
   "scripts": {
     "predev": "node scripts/sync-app-version.mjs",
@@ -37,7 +37,7 @@
     "cytoscape-fcose": "^2.2.0",
     "date-fns": "^4.4.0",
     "i18next": "^26.5.11",
-    "lucide-react": "^1.61.0",
+    "lucide-react": "^1.62.0",
     "react": "^19.3.1",
     "react-dom": "^19.3.1",
     "react-i18next": "^17.1.9",

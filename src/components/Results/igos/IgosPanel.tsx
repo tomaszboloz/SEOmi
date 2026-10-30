@@ -4,13 +4,15 @@ import { HelpTip } from '@/components/Help/HelpTip';
 import { buildHeatmap, evidenceAdvice, recommend } from '@/services/igos/heatmap';
 import type { IgosReport } from '@/services/igos/report';
 import { IgosHeatmap } from './IgosHeatmap';
+import { IgosRunDetails } from './IgosRunDetails';
+import type { IgosHistoryEntry } from '@/services/igos/history';
 
 const COMPONENTS = ['nefr', 'edsi', 'fhem', 'sdd'] as const;
 const pct = (value: number): string => `${Math.round(value * 100)}%`;
 const SECTION = 'space-y-3 rounded-lg border border-slate-800 p-4 text-sm text-slate-300';
 
 /** `report` is null until a real TOP-K baseline exists; no baseline never produces a score. */
-export const IgosPanel: React.FC<{ report: IgosReport | null }> = ({ report }) => {
+export const IgosPanel: React.FC<{ report: IgosReport | null; history?: IgosHistoryEntry[] }> = ({ report, history = [] }) => {
   const { t } = useTranslation();
   const head = (
     <h3 className="flex items-center gap-1 font-semibold text-slate-100">{t('igosUi.title')}<HelpTip id="igos.score" /></h3>
@@ -39,6 +41,7 @@ export const IgosPanel: React.FC<{ report: IgosReport | null }> = ({ report }) =
       )}
       {report.novelEntities.length > 0 && <p>{t('igosUi.novel', { list: report.novelEntities.join(', ') })}</p>}
       {limits}
+      <IgosRunDetails report={report} history={history} />
       <IgosHeatmap sections={sections} />
       {advice.length > 0 && (
         <ul className="list-disc pl-5" aria-label={t('igosUi.advice')}>

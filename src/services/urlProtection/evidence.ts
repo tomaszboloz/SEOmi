@@ -3,7 +3,8 @@ import type { PriParams, PriResult, PriSignal } from './pri';
 
 /** One input of the decision as it was read: the raw value and its state, never a defaulted zero. */
 export interface ProtectionEvidence {
-  signal: PriSignal | 'revenue';
+  /** `botHits` (verified Googlebot visits from imported logs, #81 GEM-81-08) is informational only. */
+  signal: PriSignal | 'revenue' | 'botHits';
   state: MeasureState;
   /** Raw measured value; null when the source gave none. */
   value: number | null;
@@ -11,9 +12,16 @@ export interface ProtectionEvidence {
   currency?: string;
   /** Normalized PRI contribution (0-1); null for revenue and for unknown signals. */
   norm: number | null;
+  /** Days covered by imported server logs (`botHits` only). */
+  days?: number | null;
 }
 
 /**
+ * Decision (default chosen by agent, #81 GEM-81-D01/D02): TRS < 40 and PRI < 0.15 (PRI = max of
+ * clicks/(50*4), conversions/(1*2), referring domains/(5*3), see ./pri) are the accepted defaults; both
+ * comparisons are inclusive and revenue or any conversion always protects. `prune-candidate` is a
+ * review label, never a "safe to delete" verdict: the report stays advisory and executes nothing.
+ *
  * Thresholds the decision used. Both comparisons are inclusive: TRS equal to the threshold keeps
  * the page and PRI equal to the threshold shields it, so a tie never pushes a page towards pruning.
  */

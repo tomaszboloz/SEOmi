@@ -3,7 +3,9 @@ import { useTranslation } from 'react-i18next';
 import { HelpTip } from '@/components/Help/HelpTip';
 import type { PageFocus, SiteFocusReport } from '@/services/siteFocus';
 import { KeywordAlignmentMatrix } from './KeywordAlignmentMatrix';
+import type { CrawledPageSummary } from '@/types';
 import { PagePlaybookPanel } from './PagePlaybookPanel';
+import { SurgicalRewritePanel } from './SurgicalRewritePanel';
 import { TONE_TEXT, trsTone } from './focusHelpers';
 import { formatPct } from './focusText';
 
@@ -25,9 +27,11 @@ export interface PageFocusDetailProps {
   onBack: () => void;
   projectId?: string | null;
   baselineScore?: number | null;
+  /** Crawled page behind `page`; enables section-level Surgical Rewriter hints (#127). */
+  crawled?: CrawledPageSummary;
 }
 
-export const PageFocusDetail = ({ page, report, onBack, projectId, baselineScore }: PageFocusDetailProps) => {
+export const PageFocusDetail = ({ page, report, onBack, projectId, baselineScore, crawled }: PageFocusDetailProps) => {
   const { t } = useTranslation();
   const headingRef = useRef<HTMLHeadingElement>(null);
   useEffect(() => { headingRef.current?.focus(); }, [page.url]);
@@ -98,6 +102,7 @@ export const PageFocusDetail = ({ page, report, onBack, projectId, baselineScore
           </div>
           <KeywordAlignmentMatrix rows={page.alignment} />
           <PagePlaybookPanel page={page} report={report} projectId={projectId} baselineScore={baselineScore} />
+          {crawled && <SurgicalRewritePanel crawled={crawled} page={page} report={report} />}
         </>
       )}
     </section>

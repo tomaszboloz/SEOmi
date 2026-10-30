@@ -1,7 +1,7 @@
 import { useTranslation } from 'react-i18next';
 import type { SourceProvenance, UrlTelemetrySnapshot } from '@/services/urlTelemetry';
 
-const SOURCES = ['gsc', 'ga4', 'backlinks'] as const;
+const SOURCES = ['gsc', 'ga4', 'backlinks', 'revenue'] as const;
 const UNAVAILABLE: SourceProvenance = { state: 'unavailable' };
 
 export const TelemetrySources = ({ snapshot }: { snapshot: UrlTelemetrySnapshot | null }) => {
@@ -22,6 +22,8 @@ export const TelemetrySources = ({ snapshot }: { snapshot: UrlTelemetrySnapshot 
               {source.retrievedAt && <dd>{t('telemetrySourcesUi.retrievedAt', { value: source.retrievedAt })}</dd>}
               {source.truncated !== undefined && <dd>{t(`telemetrySourcesUi.truncated.${source.truncated ? 'yes' : 'no'}`)}</dd>}
               {source.coveragePct != null && <dd>{t('telemetrySourcesUi.coverage', { value: source.coveragePct })}</dd>}
+              {source.currency && <dd>{t('telemetrySourcesUi.currency', { value: source.currency })}</dd>}
+              {source.attribution && <dd>{t(`telemetrySourcesUi.attribution.${source.attribution}`)}</dd>}
             </div>
           );
         })}

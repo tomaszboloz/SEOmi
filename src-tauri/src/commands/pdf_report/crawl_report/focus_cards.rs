@@ -87,7 +87,10 @@ pub fn core_card(focus: &Value) -> Card {
         accent: band_color(band),
         badge: t(f::CORE_BADGE).into(),
         meta,
-        tag: tf(t(f::CORE_CONFIDENCE), &[&arg(focus.get("confidence"))]),
+        tag: match focus.get("confidence").filter(|v| v.is_number()) {
+            Some(value) => tf(t(f::CORE_CONFIDENCE), &[&arg(Some(value))]),
+            None => arg(None),
+        },
         headline: arg(core.get("label")),
         rows: vec![CardRow {
             label: t(f::CORE_TERMS).into(),

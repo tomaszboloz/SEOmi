@@ -3194,7 +3194,8 @@
       "focus": "Focus del sito",
       "authority": "Autorità tematica",
       "aio": "Prontezza per l'IA",
-      "trust": "Fiducia delle entità"
+      "trust": "Fiducia delle entità",
+      "executive": "Direzione"
     },
     "groups": {
       "core": "Panoramica",
@@ -3591,7 +3592,8 @@
         "pending": "in attesa",
         "rendering": "rendering…",
         "cancelled": "annullato"
-      }
+      },
+      "auto": "Renderizza automaticamente le pagine shell dopo ogni scansione (app desktop, fino a {{count}} pagine; disattivato per impostazione predefinita)"
     }
   },
   "ai": {
@@ -6007,7 +6009,8 @@
           "good": "Buon focus",
           "moderate": "Focus moderato",
           "weak": "Focus debole",
-          "critical": "Focus critico"
+          "critical": "Focus critico",
+          "unavailable": "Non disponibile"
         },
         "status": {
           "strong": "Solida",
@@ -6032,7 +6035,8 @@
           "anchoredTopic": "L'argomento principale è stato scelto da home page e pagine àncora ({{0}} pagine).",
           "anchorsMissing": "Pagine àncora non trovate in questa scansione: {{0}}.",
           "goalTopic": "L’argomento principale è stato scelto dall’obiettivo di business «{{0}}».",
-          "goalUnmatched": "L’obiettivo di business «{{0}}» non corrisponde a nessun contenuto scansionato; l’argomento è stato scelto senza di esso."
+          "goalUnmatched": "L’obiettivo di business «{{0}}» non corrisponde a nessun contenuto scansionato; l’argomento è stato scelto senza di esso.",
+          "unavailable": "In questa scansione nessuna pagina è stata valutata, quindi non c'è un Site Focus Score. Non è un punteggio di 0."
         },
         "rec": {
           "remove-offtopic": "Verifica {{0}} pagine off-topic prima di agire: controlla prima traffico, conversioni e link. Le pagine senza questi dati sono candidate a un 301 verso una pagina pertinente o a una riscrittura. Nulla viene rimosso automaticamente. Potenziale: +{{1}} punti.",
@@ -6088,7 +6092,8 @@
             "clicks": "Clic",
             "conversions": "Conversioni",
             "referringDomains": "Domini di riferimento",
-            "revenue": "Entrate"
+            "revenue": "Entrate",
+            "botHits": "Visite Googlebot verificate (log del server)"
           },
           "alternative": {
             "confirm-revenue-currency": "Conferma la valuta delle entrate",
@@ -6119,6 +6124,16 @@
             "missing-permission": "Autorizzazione mancante",
             "unavailable": "Non disponibile"
           }
+        },
+        "profile": "Profilo di punteggio {{0}}, configurazione {{1}}.",
+        "tHidden": "Termini dei concorrenti non mostrati come lacune",
+        "hiddenIntro": "Questi termini indicano un marchio (tuo o di un concorrente), quindi sono ricerche di marca, non lacune tematiche.",
+        "colTerm": "Termine",
+        "colReason": "Motivo",
+        "brandReason": {
+          "own-domain": "il nome del tuo dominio",
+          "own-alias": "il nome del tuo marchio",
+          "competitor-brand": "marchio concorrente"
         }
       },
       "authority": {
@@ -6943,7 +6958,9 @@
       "change": "{{delta}} punti dall'analisi precedente",
       "progressAria": "Site Focus Score {{score}} su 100, {{band}}",
       "recalcBudget": "Oggi restano {{remaining}} ricalcoli completi su {{limit}}.",
-      "recalcExhausted": "Raggiunto il limite giornaliero di {{limit}} ricalcoli completi. Riprova domani."
+      "recalcExhausted": "Raggiunto il limite giornaliero di {{limit}} ricalcoli completi. Riprova domani.",
+      "metaProfile": "Profilo di punteggio {{version}} (configurazione {{hash}})",
+      "trendBreak": "Non confrontato con l'analisi precedente: usava un altro profilo di punteggio o altre impostazioni dell'argomento."
     },
     "drawer": {
       "title": "Come funziona il Site Focus Score",
@@ -7198,7 +7215,10 @@
       "empty": "Esegui almeno due analisi complete per vedere l'andamento.",
       "aria": "Site Focus Score su {{count}} analisi, da {{from}} a {{to}}",
       "point": "{{date}}: {{score}}",
-      "annotations": "Cambiamenti chiave"
+      "annotations": "Cambiamenti chiave",
+      "profile-changed": "Il profilo di punteggio è cambiato da {{from}} a {{to}}; i punteggi prima e dopo non sono direttamente confrontabili ({{delta}} punti).",
+      "config-changed": "Impostazioni dell'argomento cambiate (argomento, pagine ancora, obiettivo o termini di marca); nuova versione del report, non direttamente confrontabile ({{delta}} punti).",
+      "legacyProfile": "un profilo senza versione"
     },
     "alert": {
       "sfs-drop": "Il Site Focus Score è sceso da {{from}} a {{to}} ({{points}} punti).",
@@ -7243,7 +7263,8 @@
         "clicks": "Clic",
         "conversions": "Conversioni",
         "referringDomains": "Domini di riferimento",
-        "revenue": "Entrate"
+        "revenue": "Entrate",
+        "botHits": "Visite Googlebot verificate (log del server)"
       },
       "unknown": "{{signal}}: sconosciuto ({{state}})",
       "measured": "{{signal}}: {{value}}",
@@ -7292,9 +7313,27 @@
         "no-words": "Usa parole, non solo numeri o simboli.",
         "looks-like-url": "Sembra un URL. Aggiungi le pagine nel campo delle pagine àncora."
       }
+    },
+    "brand": {
+      "title": "Termini di marca",
+      "help": "Il nome del dominio non viene mai trattato come argomento. Aggiungi altri nomi del tuo marchio, marchi concorrenti che non devono comparire come lacune tematiche ed eccezioni: parole che sembrano un marchio ma sono veri termini di settore.",
+      "aliases": "Altri nomi del tuo marchio (uno per riga)",
+      "competitors": "Marchi concorrenti (uno per riga)",
+      "exceptions": "Termini di settore da mantenere (uno per riga)",
+      "save": "Salva termini di marca",
+      "needsProject": "I termini di marca sono salvati per progetto. Apri questa scansione da un progetto per impostarli.",
+      "ownBrand": "Esclusi come tuo marchio (parole normalizzate): {{terms}}",
+      "filteredTitle": "Termini dei concorrenti nascosti dalle lacune",
+      "filtered": "{{term}}: {{reason}}",
+      "reason": {
+        "own-domain": "il nome del tuo dominio",
+        "own-alias": "il nome del tuo marchio",
+        "competitor-brand": "un marchio concorrente"
+      }
     }
   },
   "focusBenchmark": {
+    "partialSerp": "I risultati di ricerca sono parziali ({{min}}–{{max}} risultati organici per query, fonte: {{providers}}). Non è una TOP 10 completa di Google, quindi il confronto è indicativo.",
     "title": "Benchmark competitivo",
     "intro": "Confronta il tuo Site Focus Score con quello dei siti che si posizionano per il tuo argomento principale. SEOmi consulta i risultati di ricerca, scansiona con cortesia un piccolo campione di ciascun concorrente (nel rispetto di robots.txt) e li valuta con lo stesso motore.",
     "run": "Avvia benchmark",
@@ -7497,6 +7536,8 @@
       }
     },
     "draft": {
+      "selfUrlPlaceholder": "Stai aggiornando una pagina esistente? Incolla il suo URL perché non venga confrontata con se stessa",
+      "selfUrlField": "URL della pagina che questa bozza aggiorna (facoltativo)",
       "title": "Controlla una bozza prima di pubblicare",
       "titleField": "Titolo della bozza",
       "bodyField": "Testo della bozza",
@@ -7522,6 +7563,9 @@
       }
     },
     "benchmark": {
+      "failed": "Nessuna pagina utilizzabile (non valutato): {{domains}}.",
+      "sample": "Confrontati {{scored}} su {{attempted}} concorrenti provati dalla SERP.",
+      "provenance": "Fonte SERP: {{source}}, creato il {{date}}. I concorrenti sono valutati con lo stesso motore e la stessa mappa di riferimento.",
       "title": "Matrice delle lacune tematiche rispetto ai migliori concorrenti",
       "empty": "Crea la mappa di riferimento per confrontarti con i migliori concorrenti. Sono mostrati solo dati reali scansionati.",
       "domain": "Dominio",
@@ -7672,6 +7716,17 @@
         "uncertain": "incerto",
         "unsupported": "nessuna regola (ripiego inglese)"
       }
+    },
+    "facts": {
+      "title": "Fatti e Answer-First",
+      "answerComponents": "Componenti Answer-First: corrispondenza con il titolo {{similarity}} · frase dichiarativa iniziale {{declarative}} · apertura riempitiva {{fluff}}",
+      "yes": "sì",
+      "no": "no",
+      "quality": "Q {{q}}",
+      "unit": "unità {{unit}}",
+      "negated": "negato",
+      "none": "Nessun fatto soggetto-predicato-oggetto rilevato in questo frammento.",
+      "heuristic": "Euristica lessicale, non un parser delle dipendenze. Q: 1 = numero con unità, 0,7 = termine specifico, 0,3 = generico."
     }
   },
   "trust": {
@@ -7725,7 +7780,8 @@
       "rolePublisher": "Editore",
       "roleEvidence": "{{name}} ({{role}}) · {{status}} · dichiarazione sameAs {{recall}}%",
       "roleRecall": "Dichiarazione sameAs ponderata per ruolo: {{pct}}% (autore 50%, revisore 25%, editore 25%; pesi proposti, un segnale dichiarativo, non una verifica dell’identità).",
-      "declaredNote": "Dichiarato non significa verificato: un link sameAs conta come dichiarazione. Verified compare solo dopo aver recuperato il profilo del registro e se il suo nome o alias coincide con l’autore; una corrispondenza è una prova debole e non dimostra le qualifiche. Un trattino indica assenza di dati."
+      "declaredNote": "Dichiarato non significa verificato: un link sameAs conta come dichiarazione. Verified compare solo dopo aver recuperato il profilo del registro e se il suo nome o alias coincide con l’autore; una corrispondenza è una prova debole e non dimostra le qualifiche. Un trattino indica assenza di dati.",
+      "verifyNote": "Verifica profili è un controllo di rete facoltativo: invia richieste all'API pubblica ORCID e a Wikidata per ogni ORCID o Q-ID valido dell'autore (max 8). Nulla viene inviato finché non fai clic."
     },
     "signals": {
       "claimEvidence": "Prove delle affermazioni",
@@ -7772,7 +7828,11 @@
         "missing-dates": "Solo il {{pct}}% degli articoli mostra una data di modifica o di revisione.",
         "no-articles": "Non sono state rilevate pagine di articoli, quindi i livelli autori e citazioni non sono stati valutati.",
         "author-invalid-profile": "{{count}} autori collegano un profilo ORCID o Wikidata con identificatore non valido ({{names}}). Controlla il checksum o il Q-ID.",
-        "ymyl-no-scholarly-ids": "Nessuno dei {{pages}} articoli cita una fonte con DOI, PMID o PMCID. Su temi YMYL cita lo studio primario."
+        "ymyl-no-scholarly-ids": "Nessuno dei {{pages}} articoli cita una fonte con DOI, PMID o PMCID. Su temi YMYL cita lo studio primario.",
+        "graph-dangling": "{{count}} riferimenti JSON-LD puntano a un @id non definito in questa scansione ({{ids}}).",
+        "graph-id-conflict": "{{count}} valori @id JSON-LD sono dichiarati con tipo, nome o sameAs in conflitto ({{ids}}). Mantieni una sola definizione per @id.",
+        "graph-unshared-id": "{{count}} entità compaiono su più pagine senza un @id condiviso ({{names}}).",
+        "graph-islands": "Su {{count}} pagine i nodi JSON-LD non sono collegati da riferimenti @id (isole separate). Solo segnalato; il punteggio non viene penalizzato."
       }
     },
     "generator": {
@@ -7801,7 +7861,8 @@
         "invalid-organization-url": "Inserisci un URL dell'editore valido (https://...).",
         "invalid-page-url": "Inserisci un URL di pagina valido (https://...).",
         "invalid-same-as": "Alcune voci sameAs non sono URL validi e sono state escluse.",
-        "conflict": "Il campo {{property}} esistente per {{id}} è in conflitto con la proposta. Risolvi il conflitto prima dell’esportazione."
+        "conflict": "Il campo {{property}} esistente per {{id}} è in conflitto con la proposta. Risolvi il conflitto prima dell’esportazione.",
+        "medical-no-reviewer": "MedicalWebPage senza revisore: reviewedBy non viene generato. Aggiungi un revisore reale e qualificato solo se esiste; l'esportazione funziona comunque."
       },
       "preview": "JSON-LD generato",
       "copy": "Copia il tag script",
@@ -7839,7 +7900,25 @@
       "references": "Riferimenti citati",
       "noReference": "Nessuna citazione trovata vicino a questa affermazione.",
       "more": "Altre affermazioni non mostrate: {{n}}.",
-      "linkNote": "I link DOI, PMID e PMCID aprono il resolver pubblico (doi.org, PubMed, PMC). Un link indica dove consultare l'opera; non conferma che esista né che sostenga l'affermazione."
+      "linkNote": "I link DOI, PMID e PMCID aprono il resolver pubblico (doi.org, PubMed, PMC). Un link indica dove consultare l'opera; non conferma che esista né che sostenga l'affermazione.",
+      "reach": {
+        "check": "Verifica raggiungibilità delle fonti ({{n}})",
+        "checking": "Verifica delle fonti…",
+        "note": "Controllo di rete facoltativo: ogni URL di risoluzione citato viene interrogato una volta (max 20). Raggiungibile significa che l'indirizzo risponde, non che l'opera supporti l'affermazione.",
+        "desktopOnly": "La verifica delle fonti richiede l'app desktop.",
+        "reachable": "raggiungibile",
+        "broken": "risposta di errore",
+        "no-response": "nessuna risposta",
+        "not-checked": "non verificato"
+      },
+      "support": {
+        "associated": "controllo locale: fonte identificata nella stessa frase",
+        "weak": "controllo locale: associazione debole",
+        "none": "controllo locale: nessuna citazione",
+        "hedged": "formulazione prudente",
+        "negated": "negazione",
+        "note": "Il controllo locale legge solo questa pagina (posizione della citazione, identificatore, cautela, negazione). Non legge mai l'opera citata, quindi non può confermarne il supporto."
+      }
     },
     "identity": {
       "status": {
@@ -7866,7 +7945,8 @@
         "body-limit": "risposta troppo grande; non letta",
         "transport-error": "richiesta non riuscita o scaduta"
       },
-      "more": "Altri profili non mostrati: {{n}}."
+      "more": "Altri profili non mostrati: {{n}}.",
+      "checked": "controllato il {{date}} tramite {{source}}"
     }
   },
   "executionCard": {
@@ -7978,6 +8058,121 @@
       "expectedVsMeasured": "atteso {{expected}}, misurato {{measured}}"
     }
   },
+  "executive": {
+    "title": "Dashboard direzionale",
+    "subtitle": "Una vista sui report dei moduli della scansione selezionata. Calcolata in locale dai dati salvati: nessuna nuova scansione, nulla viene pubblicato.",
+    "workflow": "Flusso: diagnosi → scelta della priorità → evidenze del modulo → What-If → brief / copia / esportazione. Nulla viene pubblicato in un CMS.",
+    "run": "Scansione: {{date}}",
+    "runUnsaved": "Scansione: non ancora salvata",
+    "hss": {
+      "title": "Holistic Semantic Score (HSS)",
+      "valueAria": "HSS {{value}}",
+      "status": {
+        "complete": "Completo",
+        "partial": "Parziale",
+        "insufficient": "Copertura insufficiente",
+        "unavailable": "Non disponibile"
+      },
+      "coverageAria": "Quota misurata del peso HSS",
+      "coverage": "Peso misurato {{pct}}% · {{count}} di {{total}} moduli",
+      "insufficient": "I moduli misurati pesano meno del {{min}}%, quindi il punteggio non viene mostrato.",
+      "renormalised": "Rinormalizzato sui moduli misurati: {{value}}.",
+      "partialHint": "Punteggio parziale: rinormalizzato solo sui moduli misurati. I moduli mancanti non contano come 0.",
+      "disclaimer": "Euristica SEOmi, non una metrica Google. Separata dal punteggio di audit tecnico. Profilo {{profile}}."
+    },
+    "modules": {
+      "title": "Moduli",
+      "weight": "peso {{weight}}% (effettivo {{effective}}%)",
+      "open": "Apri dettagli"
+    },
+    "module": {
+      "sfs": "Site Focus (SFS)",
+      "tas": "Autorità tematica (TAS)",
+      "igos": "Guadagno informativo (IGOS)",
+      "sprs": "PageRank semantico (SPRS)",
+      "eetv": "Fiducia delle entità (EETV)",
+      "sija": "Intento di ricerca (SIJA)",
+      "aior": "Prontezza IA (AIO-R)"
+    },
+    "componentStatus": {
+      "measured": "Misurato",
+      "unavailable": "Non disponibile",
+      "invalid": "Valore non valido",
+      "incompatible": "Altra scansione o obsoleto"
+    },
+    "reason": {
+      "not-provided": "Nessun valore fornito.",
+      "not-run": "Il modulo non è stato eseguito per questa scansione.",
+      "domain-aggregation-undefined": "Modulo per pagina: un punteggio di sito non è ancora definito, quindi viene escluso invece di essere mediato.",
+      "sfs-no-scored-pages": "Nessuna pagina è stata valutata.",
+      "tas-no-reference-map": "Crea la mappa tematica di riferimento per misurare il TAS.",
+      "eetv-no-signals": "Nessun segnale di fiducia osservato.",
+      "aio-unavailable": "Nessuna pagina è stata valutata per la prontezza IA.",
+      "aio-error": "L’analisi della prontezza IA non è riuscita.",
+      "aio-cancelled": "L’analisi della prontezza IA è stata annullata.",
+      "aio-partial": "Alcune pagine sono state saltate (copertura parziale).",
+      "aio-stale": "Il risultato della prontezza IA è obsoleto.",
+      "out-of-range": "Il valore è fuori da 0–100.",
+      "different-run": "Il valore proviene da un’altra scansione.",
+      "what-if-removed": "Rimosso nello scenario What-If."
+    },
+    "whatIf": {
+      "title": "What-If (copia di questa scansione)",
+      "hint": "Modifica i valori dei moduli misurati per vedere l’HSS ricalcolato. Nulla viene salvato; non è una previsione di traffico.",
+      "result": "HSS dello scenario {{value}} ({{delta}})",
+      "unavailable": "L’HSS dello scenario non è disponibile.",
+      "reset": "Reimposta"
+    },
+    "actions": {
+      "title": "Elenco azioni",
+      "hint": "Ordinato per delta HSS per ora stimata. I delta provengono solo dalle simulazioni dei moduli stessi; senza di esse il delta non è disponibile. Nessuna promessa di traffico, citazioni o ROI.",
+      "empty": "I report dei moduli di questa scansione non hanno prodotto azioni.",
+      "internalLink": "Aggiungi un link interno: {{from}} → {{to}}",
+      "delta": "Δ HSS {{value}}",
+      "deltaUnavailable": "Δ HSS non disponibile (nessun modello dichiarato)",
+      "moduleDelta": "Δ {{module}} {{value}}",
+      "effort": "Impegno stimato {{min}}–{{max}} h",
+      "effortUnknown": "Impegno sconosciuto",
+      "scope": "URL: {{urls}} · evidenze: {{evidence}}",
+      "blocked": "Bloccato: mantieni la pagina o raccogli prima i dati.",
+      "conflict": {
+        "protected-by-evidence": "Protetto da traffico, conversioni o link (URL: {{count}}).",
+        "needs-data": "Telemetria mancante o obsoleta; verifica prima di rimuovere (URL: {{count}}).",
+        "merge-vs-expand": "URL cannibalizzato: prima unisci, poi amplia (URL: {{count}}).",
+        "keep-vs-prune": "Un’altra azione mantiene o migliora questo URL; il mantenimento prevale (URL: {{count}})."
+      },
+      "dependsOn": "Da fare dopo altre azioni: {{count}}.",
+      "open": "Apri {{tab}}",
+      "more": "Altre azioni nelle schede dei moduli: {{count}}."
+    },
+    "export": {
+      "copy": "Copia HSS + azioni (JSON)",
+      "copied": "Copiato",
+      "failed": "Copia non riuscita",
+      "hint": "L’esportazione contiene gli input e i pesi esatti, quindi il punteggio può essere ricalcolato."
+    }
+  },
+  "surgical": {
+    "title": "Riscrittura chirurgica (prima / dopo)",
+    "location": "Pagina {{url}}, sotto H{{level}} «{{heading}}» (sezione #{{position}}).",
+    "noSections": "Per questa pagina non sono state acquisite sezioni H2/H3; ripeti la scansione per ottenere suggerimenti per sezione.",
+    "nothing": "Le sezioni H2 coprono già l’argomento principale; nessuna modifica chirurgica suggerita.",
+    "before": "Prima",
+    "after": "Dopo",
+    "headingTemplate": "{{heading}}: {{entity}}",
+    "answerFirst": "{{topic}}: [risposta diretta in 1–2 frasi che citi {{terms}}]",
+    "answerFirstNoTerms": "{{topic}}: [risposta diretta in 1–2 frasi]",
+    "missing": "Entità mancanti dell’argomento principale: {{terms}}",
+    "dangling": "La prima frase inizia con «{{opener}}», che rimanda a un testo precedente. Indica invece il soggetto.",
+    "drift": "Sezioni fuori tema (rimuovere o riscrivere):",
+    "driftItem": "«{{heading}}» — termini fuori tema: {{terms}}",
+    "forecast": "Se questa pagina raggiunge l’obiettivo di miglioramento, SFS {{current}} → {{projected}} ({{delta}}), simulato dal motore SFS.",
+    "noForecast": "Nessuna previsione SFS per questa pagina.",
+    "factGate": "Compila i [segnaposto] solo con fatti verificati. Nulla viene pubblicato.",
+    "copy": "Copia HTML «Dopo»",
+    "copied": "Copiato",
+    "failed": "Copia non riuscita"
+  },
   "scoreDropAlert": {
     "aio": {
       "title": "Calo della prontezza IA",
@@ -7999,6 +8194,8 @@
     "unknown": "{{count}} link hanno similarità sconosciuta e non contano come perdita.",
     "unweightedZone": "{{count}} link hanno una zona DOM sconosciuta o non ponderata e contano con il peso neutro 1.",
     "notConverged": "Il solver non è convergente; i punteggi sono approssimati.",
+    "degree": "Link in/out",
+    "similarityWeighted": "I pesi includono la similarità lessicale delle pagine su {{pageEdges}} link e quella del contesto dell'ancora su {{contextEdges}} link (minimo 0,05). Le pagine con un link non misurato usano solo i pesi di zona.",
     "whatIf": {
       "title": "Simulatore di link What-If",
       "source": "Dalla pagina",
@@ -8006,6 +8203,9 @@
       "action": "Modifica",
       "add": "Aggiungi link",
       "remove": "Rimuovi link",
+      "addPage": "Aggiungi nuova pagina",
+      "removePage": "Rimuovi pagina",
+      "newPage": "URL della nuova pagina",
       "run": "Simula",
       "noChange": "Nessuna variazione dei punteggi.",
       "before": "Prima",
@@ -8059,11 +8259,19 @@
       "failed": "Impossibile eseguire il rendering della pagina: nessun risultato sull'intento.",
       "funnel": "Pagine TOP renderizzate: {{analysed}} su {{requested}}. Fasi del funnel tra queste: TOFU {{tofu}}, MOFU {{mofu}}, BOFU {{bofu}}.",
       "gapsTitle": "Formati mancanti",
+      "serpMatch": "Intento del TOP: {{serp}} ({{pages}} su {{analysed}} pagine renderizzate). La tua pagina corrisponde ({{own}}).",
+      "serpMismatch": "Intento del TOP: {{serp}} ({{pages}} su {{analysed}} pagine renderizzate), ma la tua pagina sembra: {{own}}. Verifica che risponda allo stesso bisogno.",
+      "serpUnknown": "Intento del TOP: {{serp}} ({{pages}} su {{analysed}} pagine renderizzate). La tua pagina non ha un intento chiaro, quindi non si possono confrontare.",
+      "serpNoMajority": "Nessun intento è condiviso dalla maggioranza delle {{analysed}} pagine TOP renderizzate.",
+      "drillDown": "Pagine TOP renderizzate ({{n}})",
+      "topPage": "{{url}} · {{intent}} · {{stage}}",
+      "previous": "Esecuzione precedente {{runAt}}: {{intent}}, SSAS {{ssas}}, {{analysed}} pagine TOP renderizzate.",
       "gap": {
         "table": "Aggiungi una tabella comparativa: {{count}} pagine TOP su {{analysed}} ne hanno una.",
         "ordered-list": "Aggiungi passaggi numerati: {{count}} pagine TOP su {{analysed}} usano un elenco numerato.",
         "calculator": "Valuta un calcolatore o strumento funzionante: {{count}} pagine TOP su {{analysed}} ne hanno uno con veri campi modulo.",
-        "product-cards": "Mostra prodotti o offerte: {{count}} pagine TOP su {{analysed}} mostrano schede prodotto o prezzo."
+        "product-cards": "Mostra prodotti o offerte: {{count}} pagine TOP su {{analysed}} mostrano schede prodotto o prezzo.",
+        "cta": "Aggiungi una call to action chiara: {{count}} pagine TOP su {{analysed}} ne hanno una (ignoralo per pagine puramente informative)."
       }
     }
   },
@@ -8093,9 +8301,60 @@
     "chunk": {
       "leading-pronoun": "Il passaggio {{index}} inizia con un pronome che richiede contesto precedente.",
       "too-short": "Il passaggio {{index}} è troppo breve per reggersi da solo."
+    },
+    "policy": {
+      "advisory": "consultivo",
+      "enforced": "vincolante"
+    },
+    "gate": {
+      "advice": "Criterio: {{policy}}. Solo un consiglio; la pubblicazione è una tua decisione.",
+      "pass": "Criterio: {{policy}}. Il controllo è superato per questi input esatti.",
+      "hold": "Criterio: {{policy}}. Trattenuto per revisione umana: il controllo non è un OK completo."
+    },
+    "gap": {
+      "stale-baseline": "La scansione di riferimento ha più di 30 giorni.",
+      "unsupported-language": "Le regole dei passaggi non supportano la lingua del sito; il controllo dei passaggi è parziale.",
+      "no-baseline-date": "La scansione di riferimento non ha una data di completamento."
+    },
+    "donors": {
+      "title": "Donatori di link interni",
+      "rule": "Fino a 3 pagine esistenti con somiglianza del 60–85% e pertinenza (TRS) di almeno 70.",
+      "none": "Nessuna pagina soddisfa la regola del donatore.",
+      "row": "{{url}} (somiglianza {{similarity}}%, TRS {{trs}})",
+      "links": {
+        "yes": "rimanda già all’URL della bozza",
+        "no": "non rimanda ancora all’URL della bozza",
+        "unknown": "link esistenti sconosciuti"
+      },
+      "anchor": "anchor proposto: «{{anchor}}»",
+      "noAnchor": "nessun anchor proposto (manca una riga di titolo breve)",
+      "placement": "Proposta di posizionamento: un passaggio del corpo sullo stesso argomento. Non è un’affermazione sulla parte visibile senza scorrimento; nessun viewport è stato renderizzato."
+    },
+    "aio": {
+      "title": "Prontezza dei passaggi (AIO-R)",
+      "language": {
+        "supported": "Regole per {{language}}: complete.",
+        "uncertain": "Regole per {{language}}: di base; risultati indicativi.",
+        "unsupported": "Nessuna regola dei passaggi per {{language}}; risultati parziali."
+      },
+      "summary": "Passaggi deboli: {{weak}} su {{total}}.",
+      "chunk": "Passaggio {{index}} (caratteri {{start}}–{{end}}, punteggio {{score}})"
     }
   },
   "parityUi": {
+    "exception": {
+      "reasonPlaceholder": "Motivo (facoltativo)",
+      "reasonLabel": "Motivo dell'eccezione locale: {{topic}} in {{language}}",
+      "removeLabel": "Rimuovi l'eccezione locale per {{topic}} in {{language}}",
+      "addLabel": "Segna {{topic}} come intenzionalmente locale in {{language}}",
+      "remove": "Annulla locale",
+      "add": "Segna come locale",
+      "column": "Eccezione locale"
+    },
+    "scope": {
+      "document-language": "Nessuna annotazione hreflang trovata: le pagine sono confrontate per lingua dichiarata del documento.",
+      "hreflang-clusters": "Confrontate solo le pagine in {{clusters}} cluster hreflang; {{issues}} problemi tecnici hreflang sono segnalati a parte e non sono lacune di contenuto."
+    },
     "title": "Parità internazionale",
     "summary": "{{covered}} coperti, {{shallow}} superficiali, {{missing}} mancanti, {{local}} volutamente locali.",
     "inconclusive": "Non conclusivo: con i dati disponibili la parità non si può valutare.",
@@ -8155,7 +8414,10 @@
     "sampledOnly": "Solo campione (testo completo non misurato)",
     "variablesUnavailable": "Variabili del template non disponibili",
     "noindex": "Consigliato: noindex per questo segmento",
-    "limit": "Consigliato: limita le pagine indicizzate"
+    "limit": "Consigliato: limita le pagine indicizzate",
+    "tasNodes": "Autorità tematica: {{nodes}} nodi di sottotema, un URL rappresentativo ciascuno ({{representatives}} URL)",
+    "tasUnknown": "Sottotema di autorità tematica sconosciuto per queste pagine (nessuna corrispondenza nel report di autorità)",
+    "noindexWithheld": "noindex non viene proposto finché scheletro DOM, variabili del template e testo completo non sono misurati."
   },
   "outreach": {
     "title": "Obiettivi di outreach",
@@ -8257,13 +8519,25 @@
     "detail": "Offset {{offset}}, somiglianza tematica {{topic}}, passaggio concorrente più vicino {{nearest}}.",
     "source": "Fonte più vicina: {{url}} (posizione {{rank}}).",
     "noSource": "Nessuna fonte vicina.",
+    "run": "Esecuzione {{runAt}} per {{url}} · vettori: {{provider}} / {{model}}",
+    "compareFirst": "Prima esecuzione salvata per questa frase.",
+    "compareModelChanged": "Il modello di embedding è cambiato dall'esecuzione precedente ({{previous}}), quindi i punteggi non vengono confrontati. Un cambio di modello non è un calo di qualità della pagina.",
+    "compareBaselineChanged": "Variazione {{delta}} dall'esecuzione precedente, ma le pagine TOP confrontate sono cambiate: in parte dipende dalla nuova base, non solo dalla tua pagina.",
+    "compareSameBasis": "Variazione {{delta}} dall'esecuzione precedente con le stesse pagine TOP e lo stesso modello.",
+    "compareNoDelta": "Una delle esecuzioni non ha punteggio, quindi non c'è nulla da confrontare.",
+    "sources": "Pagine confrontate ({{n}})",
+    "sourceRow": "#{{rank}} {{url}} · scaricata {{fetchedAt}} · più vicina a {{echo}} paragrafi eco e {{gain}} paragrafi gain",
+    "history": "Esecuzioni salvate ({{n}})",
+    "historyRow": "{{runAt}}: punteggio {{score}} · {{provider}} / {{model}} · {{available}} di {{requested}} pagine",
     "limit": {
       "no-comparable-documents": "Nessun documento concorrente comparabile.",
       "too-few-documents": "Troppo pochi documenti concorrenti per una base affidabile.",
       "some-documents-missing": "Alcune pagine concorrenti non sono state recuperate.",
       "no-target-chunks": "La pagina non ha paragrafi analizzabili.",
       "off-topic-below-quota": "Troppo pochi paragrafi in tema.",
-      "local-lexical-embeddings": "La similarità usa vettori lessicali locali, non un modello semantico; le zone sono approssimative."
+      "local-lexical-embeddings": "La similarità usa vettori lessicali locali, non un modello semantico; le zone sono approssimative.",
+      "heuristic-entities": "Le entità derivano da frasi con maiuscole e da fatti soggetto-predicato-oggetto, non da un modello di entità addestrato.",
+      "semantic-provider-unavailable": "Il provider semantico di embedding del progetto non era disponibile; sono stati usati vettori lessicali locali."
     },
     "rec": {
       "rewrite-echo": "Il paragrafo all'offset {{offset}} ripete un passaggio concorrente: riscrivilo con parole tue.",
@@ -8328,6 +8602,22 @@
       "ok": "OK",
       "inconclusive": "Inconcludente",
       "no-logs": "Nessun log"
+    },
+    "ranges": {
+      "title": "Prove di verifica dei bot",
+      "note": "Facoltativo: carica il file ufficiale degli intervalli IP scaricato dall’operatore del crawler (ad esempio gptbot.json o perplexitybot.json). SEOmi non lo scarica. Gli intervalli hanno la precedenza sul DNS per quel bot e si applicano alla prossima importazione.",
+      "family": "Bot",
+      "file": "File ufficiale degli intervalli IP (JSON)",
+      "loaded": "{{family}}: {{count}} intervalli da {{source}} (pubblicato {{created}}, caricato {{loaded}} UTC)",
+      "summary": "Controlli di identità: {{checks}} (verificati {{verified}}, dichiarati {{claimed}}, falsificati {{spoofed}}). Metodo: DNS {{dns}}, intervalli pubblicati {{ranges}}, nessuno {{none}}. Ultimo controllo: {{time}} UTC.",
+      "noChecks": "Nessuna identità di crawler è stata ancora verificata.",
+      "errors": {
+        "invalid-json": "Il file non è un JSON valido.",
+        "unsupported-format": "Formato non supportato: è prevista una lista prefixes con voci ipv4Prefix o ipv6Prefix.",
+        "no-valid-prefix": "Il file non contiene alcun intervallo IP valido.",
+        "too-many-prefixes": "Il file contiene più di 5.000 intervalli.",
+        "storageFailed": "Impossibile aggiornare l’archiviazione locale; gli intervalli non sono stati salvati."
+      }
     }
   },
   "altCheckUi": {
@@ -8371,14 +8661,19 @@
     "running": "Generazione degli embedding della bozza e dei dati della scansione…",
     "unreachable": "Il fornitore di embedding selezionato non ha restituito vettori. Controlla le impostazioni del progetto e la connessione.",
     "cancelled": "Controllo annullato. Nessun risultato applicato.",
-    "stale": "Dati o scansione modificati. Ripeti il controllo."
+    "stale": "Dati o scansione modificati. Ripeti il controllo.",
+    "policy": "Criterio di revisione",
+    "policyAdvisory": "Consultivo (predefinito)",
+    "policyEnforced": "Vincolante (su richiesta)",
+    "policyHint": "Il criterio vincolante trattiene la bozza per una decisione umana solo quando il controllo non è un OK completo. Nulla viene mai pubblicato, eliminato o reindirizzato."
   },
   "telemetrySourcesUi": {
     "title": "Fonti",
     "sources": {
       "gsc": "GSC",
       "ga4": "GA4",
-      "backlinks": "Link in entrata"
+      "backlinks": "Link in entrata",
+      "revenue": "Entrate"
     },
     "states": {
       "measured": "Misurato",
@@ -8397,7 +8692,11 @@
       "no": "Dati troncati: no"
     },
     "coverage": "Copertura: {{value}}%",
-    "unknownNote": "I dati sconosciuti non vengono mai conteggiati come zero."
+    "unknownNote": "I dati sconosciuti non vengono mai conteggiati come zero.",
+    "currency": "Valuta: {{value}}",
+    "attribution": {
+      "ga4-session-landing-page": "Attribuzione: pagina di destinazione della sessione GA4"
+    }
   },
   "offPageSourcesUi": {
     "analyze": "Analizza le fonti dei link",
@@ -8552,5 +8851,113 @@
     "languageFallback": "Lingua della pagina sconosciuta: la frase è in inglese.",
     "copy": "Copia",
     "copied": "Copiato"
+  },
+  "offPageLinksUi": {
+    "profileTitle": "Profilo dei link sitewide e duplicati",
+    "profileSummary": "{{raw}} link grezzi da {{domains}} domini di origine ({{follow}} con link follow). Domini sitewide: {{sitewide}} ({{share}}% dei link grezzi); domini ripetuti: {{repeated}}. Il TBVA conta un link per dominio di origine.",
+    "unknown": "sconosciuto",
+    "sample": "Basato sul campione caricato, non sul profilo completo del fornitore.",
+    "complete": "Basato su tutte le righe restituite dal fornitore.",
+    "rule": "Sitewide = almeno 5 pagine di origine con al massimo 2 anchor distinti (euristica non calibrata, non una penalità).",
+    "columns": {
+      "domain": "Dominio di origine",
+      "raw": "Link grezzi",
+      "follow": "Follow",
+      "pages": "Pagine di origine",
+      "anchors": "Anchor distinti",
+      "pattern": "Schema"
+    },
+    "patterns": {
+      "single": "Pagina singola",
+      "repeated": "Ripetuto",
+      "sitewide": "Sitewide"
+    },
+    "anchorTitle": "Contesto dell’anchor dei link analizzati",
+    "anchorNote": "Cerca il testo anchor indicato dal fornitore nel testo di origine scaricato. Il testo non ha markup dei link: una corrispondenza mostra le parole vicine, non la prova che quell’occorrenza sia il link.",
+    "noAnchors": "Nessuna pagina di origine analizzata ha un link nel campione caricato.",
+    "anchorRow": "{{source}} → {{target}} · anchor «{{anchor}}»",
+    "follow": "follow",
+    "nofollow": "nofollow",
+    "offset": "Offset {{offset}}:",
+    "status": {
+      "located": "anchor trovato una volta",
+      "ambiguous": "anchor trovato {{n}} volte (ambiguo)",
+      "not-found": "anchor non trovato nel testo di origine",
+      "no-anchor-text": "nessun testo anchor (ad esempio un link immagine)",
+      "source-unavailable": "testo di origine non disponibile"
+    }
+  },
+  "imagePhashUi": {
+    "title": "Immagini quasi duplicate (hash percettivo)",
+    "note": "Scarica una sola volta, in questa app, fino a {{max}} immagini del sito e confronta i loro hash percettivi a 64 bit. Le immagini il cui server blocca la lettura cross-origin restano non disponibili. Una corrispondenza significa che le immagini si somigliano; non dimostra uso di stock, paternità o mancanza di valore.",
+    "run": "Calcola l’hash di {{count}} immagini",
+    "cancel": "Annulla",
+    "threshold": "Bit diversi massimi (0–16)",
+    "uncalibrated": "Predefinito 8 bit; questa soglia non è calibrata su dati reali.",
+    "status": {
+      "running": "Calcolo… {{hashed}} con hash, {{failed}} non disponibili",
+      "done": "Fatto: {{hashed}} con hash, {{failed}} non disponibili",
+      "cancelled": "Annullato: {{hashed}} con hash, {{failed}} non disponibili"
+    },
+    "failures": {
+      "blocked": "{{n}} bloccate o irraggiungibili",
+      "http-error": "{{n}} errore HTTP",
+      "too-large": "{{n}} più grandi di 5 MB",
+      "not-image": "{{n}} non sono immagini raster",
+      "decode-failed": "{{n}} non decodificabili",
+      "unsupported-url": "{{n}} URL non supportato"
+    },
+    "pair": "{{left}} ≈ {{right}} ({{distance}} bit diversi)",
+    "identical": "{{left}} = {{right}} (file identico)",
+    "noPairs": "Nessuna coppia quasi duplicata con questa soglia.",
+    "external": "Confronto con risultati esterni di ricerca immagini: non disponibile (nessun fornitore di immagini configurato)."
+  },
+  "causalImpactUi": {
+    "title": "Stima controfattuale (serie di controllo)",
+    "method": "I clic giornalieri di Search Console di questa proprietà sono regrediti su una proprietà di controllo indipendente per un massimo di 90 giorni prima della modifica; il modello prevede i clic senza la modifica. Approssimazione frequentista di Causal Impact, senza modellare la stagionalità.",
+    "unavailable": {
+      "page-series-unavailable": "Non stimabile per un singolo URL: vengono salvati solo i clic giornalieri della proprietà.",
+      "no-test-series": "Non stimabile: nessuna serie giornaliera di Search Console salvata per questo sito."
+    },
+    "series": "Serie di test: {{test}} · controllo: {{control}}",
+    "none": "nessuno",
+    "status": {
+      "estimated": "Stimato su {{pre}} giorni prima e {{post}} giorni dopo.",
+      "not-estimable": "Non stimabile ({{pre}} giorni prima e {{post}} dopo con dati)."
+    },
+    "reasons": {
+      "short-pre-period": "Meno di 28 giorni prima della modifica.",
+      "short-post-period": "Meno di 7 giorni dopo la modifica.",
+      "missing-data": "In una finestra manca più del 10% dei giorni.",
+      "no-control": "Nessuna proprietà di controllo indipendente con gli stessi filtri è salvata. Salva i dati Search Console di un altro dominio da usare come controllo.",
+      "flat-control": "La serie di controllo non varia nel periodo precedente.",
+      "poor-prefit": "Il controllo spiega troppo poco del periodo precedente (R² inferiore a 0,5).",
+      "placebo-failed": "Un test placebo nel periodo precedente ha trovato un effetto dove non dovrebbe esserci; il modello non è affidabile."
+    },
+    "prefit": "Adattamento precedente: R² {{r2}}, autocorrelazione dei residui {{rho}}.",
+    "placeboPassed": "Test placebo superato (l’intervallo precedente da {{lower}} a {{upper}} include lo zero).",
+    "placeboFailed": "Test placebo non superato (l’intervallo precedente da {{lower}} a {{upper}} esclude lo zero).",
+    "absolute": "Effetto cumulativo sui clic: {{value}} (intervallo al 95% da {{lower}} a {{upper}}).",
+    "relative": "Effetto relativo: {{value}} (intervallo al 95% da {{lower}} a {{upper}}).",
+    "probability": "Probabilità che l’effetto abbia questo segno: {{value}} (approssimazione normale, non una posteriore bayesiana).",
+    "caveat": "Una stima corretta per il controllo non prova la causalità. Altre modifiche, aggiornamenti di Google o variazioni che colpiscono anche il controllo possono distorcerla. Nessun ROI viene dedotto."
+  },
+  "revenueImportUi": {
+    "title": "Entrate (esportazione GA4 facoltativa)",
+    "model": "Importa un CSV di un rapporto GA4 con pagina di destinazione ed entrate, filtrato sulle sessioni da ricerca organica. Le entrate sono attribuite alla pagina di destinazione della sessione come la riporta GA4 e restano nella valuta indicata. Le pagine assenti dall’esportazione restano sconosciute, non zero.",
+    "current": "Importato {{file}}: {{rows}} pagine di destinazione in {{currency}}, periodo {{period}}.",
+    "noPeriod": "non indicato nel file",
+    "clear": "Rimuovi",
+    "none": "Nessuna esportazione delle entrate importata; le entrate restano non disponibili.",
+    "currency": "Valuta (codice ISO)",
+    "organic": "L’esportazione contiene solo sessioni da ricerca organica",
+    "file": "Esportazione CSV di GA4",
+    "errors": {
+      "invalid-currency": "Inserisci la valuta della proprietà come codice ISO di 3 lettere, ad esempio EUR.",
+      "not-organic": "Conferma che l’esportazione è limitata alle sessioni da ricerca organica.",
+      "no-header": "Nessuna intestazione con una colonna della pagina di destinazione e una delle entrate.",
+      "no-rows": "Il file non contiene pagine di destinazione con un valore numerico di entrate.",
+      "storage-failed": "Impossibile aggiornare l’archiviazione locale; l’importazione non è stata salvata."
+    }
   }
 }

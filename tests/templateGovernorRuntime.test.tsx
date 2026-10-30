@@ -45,4 +45,12 @@ describe('template governor runtime flow', () => {
     expect(subtopicsFromAuthorityReport({ coverage: [{ subtopicId: 'sub-a', urls: ['https://site.test/a'] }] })).toEqual({ 'https://site.test/a': 'sub-a' });
   });
 
+  it('withholds noindex when template variables were not measured, even with a crawler DOM skeleton', () => {
+    const pages = Array.from({ length: 60 }, (_, index) => page(index, { template_injected_variables: undefined }));
+    const [event] = buildTemplateEvents(pages);
+    expect(event.domSignatureProvenance).toBe('crawler');
+    expect(event.action).toBe('limit');
+    render(<TemplateGovernorPanel events={[event]} />);
+    expect(screen.getByText(/noindex is not proposed/)).toBeTruthy();
+  });
 });

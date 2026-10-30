@@ -26,4 +26,4 @@ Review routing follows `.github/CODEOWNERS`. The repository has one maintainer, 
 Pin every `uses:` reference to a full 40-character commit SHA with a `# vX.Y.Z` comment. `tests/ciWorkflowPinsAll.test.ts` fails on tags, branches or short SHAs.
 
 ## Code of Conduct
-Not yet published. The owner chooses the text and the enforcement contact.
+Participation follows [CODE_OF_CONDUCT.md](CODE_OF_CONDUCT.md) (Contributor Covenant 2.1). Report conduct problems privately through the channel listed in `SECURITY.md`. This is a default decision recorded in #101; the owner may replace the text or the contact.

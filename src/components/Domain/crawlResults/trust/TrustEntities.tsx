@@ -23,6 +23,7 @@ export const TrustEntities = ({ report, onGenerate, onVerify }: TrustEntitiesPro
           : t('trust.entities.orgMissing')}
       </p>
       <p className="text-[11px] text-slate-400">{t('trust.entities.declaredNote')}</p>
+      {onVerify && <p className="text-[11px] text-slate-400" data-testid="trust-verify-note">{t('trust.entities.verifyNote')}</p>}
       {report.authors.length === 0 ? <p className="text-xs text-slate-500">{t('trust.entities.none')}</p> : (
         <div className="overflow-x-auto">
           <table className="w-full text-start text-xs text-slate-300">

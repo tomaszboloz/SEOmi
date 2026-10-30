@@ -17,13 +17,18 @@ export interface ParityInput {
   topicLabels?: Map<string, string>;
 }
 
-export interface ParityRow { language: string; topic: string; label?: string; status: ParityStatus; depth: number; referenceDepth: number }
+export interface ParityRow { language: string; topic: string; label?: string; status: ParityStatus; depth: number; referenceDepth: number; reason?: string }
 
 export interface ParityReport {
   status: 'ready' | 'inconclusive';
   rows: ParityRow[];
   /** Why the report cannot be trusted; empty when ready. */
   gaps: string[];
+  /** Which pages were compared: members of hreflang clusters, or (no hreflang in the crawl) all pages by document language. */
+  scope?: 'hreflang-clusters' | 'document-language';
+  /** Hreflang clusters and technical graph issues found; a broken graph is not a content gap. */
+  clusters?: number;
+  graphIssues?: number;
 }
 
 export const SHALLOW_RATIO = 0.5;

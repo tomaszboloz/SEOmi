@@ -22,7 +22,7 @@ afterEach(() => { cleanup(); clearSnapshots(); });
 describe('localized telemetry sources', () => {
   it.each(labels)('labels %s for every source', (state, label) => {
     render(<TelemetrySources snapshot={snapshot({ gsc: { state }, ga4: { state }, backlinks: { state } })} />);
-    expect(screen.getAllByText(label)).toHaveLength(3);
+    expect(screen.getAllByText(label)).toHaveLength(state === 'unavailable' ? 4 : 3);
     expect(screen.getByText('GSC')).toBeTruthy();
     expect(screen.getByText('GA4')).toBeTruthy();
     expect(screen.getByText('Backlinks')).toBeTruthy();
@@ -58,7 +58,7 @@ describe('localized telemetry sources', () => {
   it('keeps all sources unavailable and the existing empty state without a snapshot', () => {
     render(<ProtectionPanel report={report} projectId={null} />);
     expect(screen.getByTestId('protection-empty')).toBeTruthy();
-    expect(screen.getAllByText('Unavailable')).toHaveLength(3);
+    expect(screen.getAllByText('Unavailable')).toHaveLength(4);
     expect(screen.getByText('Unknown data is never counted as zero.')).toBeTruthy();
     expect(screen.getByTestId('telemetry-source-backlinks').querySelectorAll('dd')).toHaveLength(1);
   });

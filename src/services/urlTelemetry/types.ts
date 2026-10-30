@@ -26,6 +26,9 @@ export interface SourceProvenance {
   provider?: string;
   retrievedAt?: string;
   coveragePct?: number | null;
+  /** Revenue only: ISO 4217 currency stated by the user, and the attribution model. */
+  currency?: string;
+  attribution?: string;
 }
 
 export interface UrlTelemetrySnapshot {
@@ -34,7 +37,7 @@ export interface UrlTelemetrySnapshot {
   origin: string;
   createdAt: string;
   expiresAt: string;
-  sources: { gsc: SourceProvenance; ga4: SourceProvenance; backlinks: SourceProvenance };
+  sources: { gsc: SourceProvenance; ga4: SourceProvenance; backlinks: SourceProvenance; revenue?: SourceProvenance };
   urls: readonly UrlTelemetry[];
 }
 

@@ -9,6 +9,7 @@ import { downloadBlob } from '@/services/download';
 import type { CrawledPageSummary } from '@/types';
 import { AioPassageAccept } from './AioPassageAccept';
 import { AioPassageEvidence } from './AioPassageEvidence';
+import { AioPassageFacts } from './AioPassageFacts';
 
 type Passage = AioChunk & { url: string };
 type State = { status: 'idle' | 'busy' | 'ok' | 'no-key' | 'empty' | 'cancelled' | 'error'; text?: string; message?: string };
@@ -65,6 +66,7 @@ export const AioPassageCard = ({ passage, index, page, projectId, runId }: { pas
         {passage.issues.map((issue) => <li key={issue} className="rounded bg-rose-500/10 px-2 py-0.5 text-rose-200">{t(`aio.issue.${issue}`)}</li>)}
       </ul>
       <AioPassageEvidence passage={passage} />
+      <AioPassageFacts passage={passage} />
       <div className="flex flex-wrap items-center gap-2">
         <button type="button" className={btn} disabled={state.status === 'busy'} onClick={() => void generate()} aria-label={`${t('aio.passage.generate')} ${index + 1}`}>
           {state.status === 'busy' ? t('aio.passage.generating') : t('aio.passage.generate')}

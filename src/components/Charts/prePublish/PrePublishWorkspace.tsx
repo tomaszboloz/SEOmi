@@ -21,6 +21,14 @@ export default function PrePublishWorkspace({ projectId, runs }: { projectId: st
         aria-invalid={check.invalidUrl} className="mt-1 w-full rounded border border-slate-700 bg-slate-950 p-2" />
     </label>
     <p className="text-xs text-slate-400">{label('urlHint')}</p>
+    <label className="block text-xs text-slate-300">{label('policy')}
+      <select value={check.policy} onChange={(event) => check.changePolicy(event.target.value === 'enforced' ? 'enforced' : 'advisory')}
+        className="mt-1 block rounded border border-slate-700 bg-slate-950 p-2">
+        <option value="advisory">{label('policyAdvisory')}</option>
+        <option value="enforced">{label('policyEnforced')}</option>
+      </select>
+    </label>
+    <p className="text-xs text-slate-400">{label('policyHint')}</p>
     {check.invalidUrl && <p role="alert">{label('invalidUrl')}</p>}
     <button type="button" onClick={check.run}
       disabled={!check.context.run || !check.text.trim() || check.invalidUrl || check.status === 'running'}

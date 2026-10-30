@@ -6,6 +6,7 @@ import type { SfsSnapshot, SiteFocusReport } from '@/services/siteFocus';
 import { buildHistorySeries, buildWeeklyReport, parseAnchorInput, validFocusProject } from '@/services/siteFocusMonitoring';
 import type { CrawledPageSummary, CrawlRunRecord } from '@/types';
 import { Empty } from '../CrawlViewPrimitives';
+import { BrandPolicyPanel } from './BrandPolicyPanel';
 import { BusinessGoalPanel } from './BusinessGoalPanel';
 import { CoreAnchorsPanel } from './CoreAnchorsPanel';
 import { CoreTopicPanel } from './CoreTopicPanel';
@@ -73,9 +74,9 @@ export const CrawlFocusTab = ({ pages, startUrl, run, projectId, history, benchm
   const base = focus.report ?? local;
   const report = useMemo(
     () => (base && (competitorTerms.length || includeGated)
-      ? buildSiteFocusReport(pages, startUrl, { manualTopic: focus.manualTopic ?? (deferredTopic || undefined), anchorUrls, businessGoal: focus.businessGoal, competitorTerms, includeNonIndexable: includeGated, now: base.generatedAt })
+      ? buildSiteFocusReport(pages, startUrl, { manualTopic: focus.manualTopic ?? (deferredTopic || undefined), anchorUrls, businessGoal: focus.businessGoal, brand: focus.brandPolicy, competitorTerms, includeNonIndexable: includeGated, now: base.generatedAt })
       : base),
-    [base, competitorTerms, pages, startUrl, focus.manualTopic, deferredTopic, anchorUrls, focus.businessGoal, includeGated],
+    [base, competitorTerms, pages, startUrl, focus.manualTopic, deferredTopic, anchorUrls, focus.businessGoal, focus.brandPolicy, includeGated],
   );
   useEffect(() => { if (report) onReport?.(report); }, [report, onReport]);
 
@@ -114,12 +115,13 @@ export const CrawlFocusTab = ({ pages, startUrl, run, projectId, history, benchm
           <CoreTopicPanel coreTopic={report.coreTopic} coveragePct={report.onTopicRatio} confidence={report.confidence} manualTopic={draft} onManualTopicChange={setDraft} />
           <CoreAnchorsPanel coreTopic={report.coreTopic} value={anchorDraft} onChange={setAnchorDraft} />
           <BusinessGoalPanel key={projectId ?? ''} coreTopic={report.coreTopic} saved={focus.businessGoal} persisted={persisted} onSave={focus.setBusinessGoal} />
+          <BrandPolicyPanel key={`brand:${projectId ?? ''}`} report={report} saved={focus.brandPolicy} persisted={persisted} onSave={focus.setBrandPolicy} />
         </div>
         <FocusMetricsStrip report={report} />
       </div>
       {report.subSites && report.subSites.length > 0 && <SubSiteScores subSites={report.subSites} />}
       {selected ? (
-        <PageFocusDetail page={selected} report={report} onBack={() => setSelectedUrl(undefined)} projectId={projectId} baselineScore={taskBaseline} />
+        <PageFocusDetail page={selected} report={report} onBack={() => setSelectedUrl(undefined)} projectId={projectId} baselineScore={taskBaseline} crawled={pages.find((item) => item.url === selected.url)} />
       ) : (
         <FocusHeatmapTree
           pages={report.pages}

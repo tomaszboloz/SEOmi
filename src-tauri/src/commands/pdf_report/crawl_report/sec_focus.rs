@@ -1,6 +1,7 @@
 //! "Site Focus" section: score card, core topic, notes and the tables.
 
 use super::data::{list, num};
+use super::focus_brand::{hidden_gaps, profile_line};
 use super::focus_cards::{core_card, count, kpis};
 use super::focus_protection::protection;
 use super::focus_tables as tables;
@@ -36,6 +37,9 @@ pub fn notes(focus: &Value) -> Vec<String> {
     };
     let sub_sites = list(focus, "sub_sites").len().to_string();
     let mut notes = Vec::new();
+    if focus.get("unavailable").and_then(Value::as_bool) == Some(true) {
+        notes.push(coded(NOTE, "unavailable", &[]));
+    }
     if on("low_confidence") {
         notes.push(coded(NOTE, "lowConfidence", &[arg(count(focus, "scored"))]));
     }
@@ -104,6 +108,10 @@ impl Doc {
             t(f::SCORE_TITLE),
             t(f::LEGEND),
         );
+        if let Some(line) = profile_line(focus) {
+            self.paragraph(MARGIN, CONTENT_W, Style::CAPTION, &line);
+            self.skip(4.0);
+        }
         self.kpi_grid(&kpis(focus));
         self.card(&core_card(focus));
         for note in notes(focus) {
@@ -121,6 +129,9 @@ impl Doc {
         }
         if !list(focus, "gaps").is_empty() {
             self.data_table(&tables::gaps(focus));
+        }
+        if let Some(table) = hidden_gaps(focus) {
+            self.data_table(&table);
         }
     }
 }

@@ -20,6 +20,17 @@ const setupHook = async () => {
   return { ...hook, cms };
 };
 
+it('rejects an invented YMYL dose with a localized message and keeps the fact gate closed (#137)', async () => {
+  transport.mockImplementation(mockCms('wordpress').send);
+  const { result } = renderHook(() => useCmsPatchPanel('cms-project'));
+  act(() => ready(result.current));
+  act(() => { result.current.update('ymyl', true); result.current.update('replacement', '<p>Take 750 mg twice a day.</p>'); });
+  await act(() => result.current.prepare());
+  act(() => result.current.confirmFacts(true));
+  expect(result.current.factGatePassed).toBe(false);
+  expect(result.current.error).toBe('YMYL content needs a passed fact check before writing.');
+});
+
 it('keeps incomplete, absent-project, absent-plan and absent-approval calls inert', async () => {
   const { result, rerender } = renderHook(({ projectId }) => useCmsPatchPanel(projectId), {
     initialProps: { projectId: null as string | null },

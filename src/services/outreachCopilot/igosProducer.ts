@@ -9,14 +9,10 @@ import { fetchSource } from '@/services/offPage/sourceTransport';
 import type { SourceEvidence } from '@/services/offPage/sources';
 import { informationGainSource, type InformationGainInput, type InformationGainProvenance } from './informationGain';
 import { normalizeDomain } from './gap';
+import { informationGainTarget } from './requestKey';
 
 export interface IgosProducerInput { projectId: string; site: string; competitors: string[]; pages: CrawledPageSummary[] }
 export interface IgosProducerDeps { fetch: (source: SourceEvidence, signal: AbortSignal) => Promise<SourceEvidence>; embed: (texts: string[]) => Promise<Vector[]>; embedding?: InformationGainProvenance }
-
-const textOf = (page: CrawledPageSummary): string => [
-  ...(page.semantic_excerpts ?? []),
-  ...(page.rag_sections ?? []).flatMap((section) => section.paragraphs),
-].join('\n').slice(0, 20_000).trim();
 
 const entitiesOf = (page: CrawledPageSummary, text: string): string[] => {
   const declared = (page.semantic_terms ?? []).map((term) => term.trim()).filter(Boolean);
@@ -28,11 +24,6 @@ const termsOf = (text: string): Map<string, number> => {
   contentStems(text).forEach((term) => terms.set(term, (terms.get(term) ?? 0) + 1));
   return terms;
 };
-
-const ownTarget = (pages: CrawledPageSummary[]): { page: CrawledPageSummary; text: string } | null => pages
-  .map((page) => ({ page, text: textOf(page) }))
-  .filter(({ page, text }) => Boolean(text) && Boolean(page.final_url || page.url))
-  .sort((left, right) => right.text.length - left.text.length)[0] ?? null;
 
 const competitorUrl = (domain: string): string | null => {
   const normalized = normalizeDomain(domain);
@@ -56,7 +47,7 @@ const defaultDeps: IgosProducerDeps = {
 export const produceInformationGain = async (
   input: IgosProducerInput, signal: AbortSignal, deps: IgosProducerDeps = defaultDeps,
 ): Promise<InformationGainInput | null> => {
-  const target = ownTarget(input.pages);
+  const target = informationGainTarget(input.pages);
   const competitors = [...new Set(input.competitors.map(normalizeDomain).filter(Boolean))].slice(0, 3);
   if (!input.projectId.trim() || !input.site.trim() || !target || competitors.length < 3) return null;
   const sources = competitors.map((domain) => ({ sourceUrl: competitorUrl(domain), authority: null, fetchedAt: null, availability: null, text: '', vector: null }));

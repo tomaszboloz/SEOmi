@@ -41,4 +41,16 @@ describe('coverage 100 signals UI', () => {
     expect(screen.getByText(/Not enough comparable SERP snapshots/)).toBeTruthy();
     expect(screen.getByText(/Not enough history/)).toBeTruthy();
   });
+
+  it('takes TAS identity from AuthorityReport.coverage, not lexical graph cluster ids (#139)', () => {
+    const { pages, graph } = fixture();
+    const coverage = [{ subtopicId: 'sub-a', urls: pages.slice(0, 5).map((p) => p.url) }, { subtopicId: 'sub-b', urls: pages.slice(5).map((p) => p.url) }];
+    const { unmount } = render(<SignalsWorkspace pages={pages} graph={graph} authorityReport={{ coverage }} />);
+    expect(screen.getByTestId('template-governor-tas').textContent).toContain('2 subtopic nodes');
+    expect(screen.getByTestId('template-governor-event').getAttribute('data-tas-nodes')).toBe('2');
+    unmount();
+    render(<SignalsWorkspace pages={pages} graph={graph} />);
+    expect(screen.getByTestId('template-governor-tas').textContent).toContain('subtopic unknown');
+    expect(screen.getByText(/noindex is not proposed/)).toBeTruthy();
+  });
 });

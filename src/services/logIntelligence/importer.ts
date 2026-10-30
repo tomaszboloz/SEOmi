@@ -31,7 +31,15 @@ export interface LogImportState {
   /** Days (UTC) that had at least one line; a gap is a missing day inside the period. */
   days: string[];
   aggs: Record<string, UrlBotAgg>;
+  /** Provenance of identity checks: one entry per looked-up address and claimed family, never per hit. */
+  verification?: VerificationSummary;
 }
+
+export interface VerificationSummary { checks: number; byMethod: Record<BotVerdict['method'], number>; byStatus: Record<BotStatus, number>; lastCheckedAt: number | null }
+
+const emptyVerification = (): VerificationSummary => ({
+  checks: 0, byMethod: { 'reverse-forward-dns': 0, 'published-ranges': 0, none: 0 }, byStatus: { verified: 0, claimed: 0, spoofed: 0, unknown: 0 }, lastCheckedAt: null,
+});
 
 export const emptyImportState = (): LogImportState => ({
   fileHashes: [], inProgress: null, lines: 0, malformed: 0, ignoredNonBot: 0, firstAt: null, lastAt: null, days: [], aggs: {},
@@ -55,8 +63,10 @@ const MAX_IP_CACHE = 10_000;
 /** Streams lines once, keeping only bounded aggregates. Returns a new state; the input state is not mutated. */
 export const importAccessLog = async (input: ImportInput): Promise<LogImportState> => {
   const base = input.state ?? emptyImportState();
-  const state: LogImportState = { ...base, aggs: { ...base.aggs }, days: [...base.days], fileHashes: [...base.fileHashes] };
-  if (state.fileHashes.includes(input.fileHash)) return state;
+  if (base.fileHashes.includes(input.fileHash)) return { ...base, aggs: { ...base.aggs }, days: [...base.days], fileHashes: [...base.fileHashes] };
+  const prior = base.verification ?? emptyVerification();
+  const verification: VerificationSummary = { ...prior, byMethod: { ...prior.byMethod }, byStatus: { ...prior.byStatus } };
+  const state: LogImportState = { ...base, aggs: { ...base.aggs }, days: [...base.days], fileHashes: [...base.fileHashes], verification };
   const skip = state.inProgress?.hash === input.fileHash ? state.inProgress.offset : 0;
   const days = new Set(state.days);
   const cache = new Map<string, BotVerdict>();
@@ -86,6 +96,10 @@ export const importAccessLog = async (input: ImportInput): Promise<LogImportStat
     if (!verdict) {
       verdict = await verifyBot(ip, hit.userAgent, input.verify);
       if (key) {
+        verification.checks += 1;
+        verification.byMethod[verdict.method] += 1;
+        verification.byStatus[verdict.status] += 1;
+        verification.lastCheckedAt = Math.max(verification.lastCheckedAt ?? verdict.checkedAt, verdict.checkedAt);
         if (cache.size >= MAX_IP_CACHE) cache.clear();
         cache.set(key, verdict);
       }

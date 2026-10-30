@@ -24,3 +24,12 @@ export const writeTaxonomy = (projectId: string | null | undefined, taxonomy: Re
 
 export const clearTaxonomy = (projectId: string | null | undefined): boolean =>
   validAuthorityProject(projectId) ? removeStorage(authorityTaxonomyKey(projectId)) : false;
+
+const fold = (value: string): string => value.normalize('NFKC').trim().replace(/\s+/g, ' ').toLocaleLowerCase();
+
+/**
+ * A cached map is only reused for the same Core Topic and content language; a map built for another topic or
+ * language would give a wrong TCR, so it is treated as absent until rebuilt.
+ */
+export const taxonomyMatchesCore = (taxonomy: ReferenceTaxonomy, core: { coreLabel: string; language: string }): boolean =>
+  fold(taxonomy.coreLabel) === fold(core.coreLabel) && (!taxonomy.language || !core.language || fold(taxonomy.language) === fold(core.language));

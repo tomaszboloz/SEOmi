@@ -87,7 +87,9 @@ export const governTemplates = (clusters: TemplateCluster[], options: GovernorOp
       const informationGain = isSampledOnly ? null : rawGain;
       const thin = isSampledOnly || (!isSampledOnly && rawGain < thinBelow) || (uniqueVariableShare !== null && uniqueVariableShare < uniqueVariableBelow);
       const verdict: TemplateVerdict = !thin ? 'ok' : hasUnavailableDom ? 'unverified-structure' : isSampledOnly ? 'bounded-sample' : cluster.pages.length >= minPages * 5 ? 'template-bloat' : 'thin-template';
-      const action: SegmentAction = verdict === 'ok' ? 'none' : (hasUnavailableDom || isSampledOnly) ? 'limit' : rawGain < noindexBelow ? 'noindex' : 'limit';
+      // noindex is proposed only when DOM skeleton and injected variables were both measured by the crawler.
+      const hasUnavailableVariables = cluster.pages.some((page) => page.injectedVariablesProvenance === 'unavailable');
+      const action: SegmentAction = verdict === 'ok' ? 'none' : (hasUnavailableDom || hasUnavailableVariables || isSampledOnly) ? 'limit' : rawGain < noindexBelow ? 'noindex' : 'limit';
       const tasPages = deduplicateTasPages(cluster.pages);
       const tasSubtopics = new Set(cluster.pages.map((page) => page.subtopicId?.trim()).filter(Boolean));
       return {

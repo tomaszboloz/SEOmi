@@ -2,6 +2,7 @@ import type { CrawlConfig, CrawlProgress, DataForSEOSerpItem, SiteCrawlResult } 
 import { DEFAULT_CRAWL_CONFIG } from '@/services/contracts/crawlDefaults';
 import { DataForSEOClient, dataForSeoLanguage, dataForSeoLocation } from '@/services/dataforseo';
 import { fetchFreeSerp } from '@/services/freeSerp';
+import { evidenceFromLive, evidenceFromSnapshot } from '@/services/serpSnapshot';
 import { invokeTauriCommand } from '@/services/tauri';
 import { createId } from '@/services/ids';
 import { useAuthStore } from '@/stores/authStore';
@@ -35,7 +36,12 @@ export interface SerpEnv {
   language: string;
   dataForSeo: (login: string, password: string) => Pick<DataForSEOClient, 'getSerpCompetitors'>;
   freeSerp: typeof fetchFreeSerp;
+  now?: () => string;
 }
+
+/** Depth requested in `getSerpCompetitors` (organic live, depth 100). */
+const DATAFORSEO_SERP_DEPTH = 100;
+const nowIso = (): string => new Date().toISOString();
 
 /**
  * SERP source order, discovered from the app's existing integrations: DataForSEO live organic results when
@@ -46,12 +52,16 @@ export const createSerpFetcher = (env: SerpEnv): NonNullable<BenchmarkDeps['fetc
   if (login.trim() && password.trim()) {
     const language = dataForSeoLanguage(env.country, env.language);
     const rows = await env.dataForSeo(login, password).getSerpCompetitors(keyword, dataForSeoLocation(env.country), language);
-    return { source: 'dataforseo', hits: dataForSeoHits(rows) };
+    const evidence = evidenceFromLive(keyword, rows.map((row) => row.url), {
+      countryCode: env.country || null, languageCode: language || null, requestedDepth: DATAFORSEO_SERP_DEPTH, retrievedAt: (env.now ?? nowIso)(),
+    });
+    return { source: 'dataforseo', hits: dataForSeoHits(rows), evidence };
   }
   const outcome = await env.freeSerp({ feed: 'bing-serp', geo: env.country, language: env.language, keyword });
   if (outcome.status !== 'ok' || !outcome.result) throw new Error(outcome.response.error ?? outcome.status);
   const rows = outcome.result.snapshots.flatMap((snapshot) => snapshot.rows);
-  return { source: 'bing-rss', hits: rows.map((row) => ({ rank: row.rank, url: row.url, domain: '' })) };
+  const evidence = evidenceFromSnapshot(keyword, outcome.result.snapshots[0], 'bing-rss');
+  return { source: 'bing-rss', hits: rows.map((row) => ({ rank: row.rank, url: row.url, domain: '' })), evidence };
 };
 
 export interface CrawlEnv {

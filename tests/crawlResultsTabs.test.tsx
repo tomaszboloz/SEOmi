@@ -39,7 +39,7 @@ it("exposes all result sections as keyboard-accessible tabs", () => {
       />,
     );
 
-    expect(screen.getAllByRole("tab")).toHaveLength(22);
+    expect(screen.getAllByRole("tab")).toHaveLength(23);
     expect(
       screen
 .getByRole("tab", { name: /Overview/ })
@@ -54,7 +54,7 @@ fireEvent.click(screen.getByRole("tab", { name: /Content/ }));
   });
 
 it.each([
-  "overview", "visualisations", "focus", "trust", "crawlerReadiness", "urls", "issues",
+  "overview", "visualisations", "executive", "focus", "trust", "crawlerReadiness", "urls", "issues",
   "content", "metadata", "customSearch", "links", "media", "frames",
   "social", "directives", "international", "structured", "validation",
   "performance", "exports",

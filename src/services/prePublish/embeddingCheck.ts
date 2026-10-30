@@ -2,10 +2,22 @@ import { LOCAL_OLLAMA_URL } from '@/services/embeddingClustering';
 import { createProvider, type ProviderSettings } from '@/services/embeddings/registry';
 import { checkDraft, PREPUBLISH_PROFILE } from './check';
 import { insufficientPrePublish, normalizeDraftUrl, type PrePublishContext } from './context';
+import { draftChunkDetails } from './aioChunks';
+import { applyPolicy, evidenceGaps, type PrePublishPolicy } from './policy';
+
+/** Majority document language of the baseline crawl; the draft has no language field of its own yet. */
+const baselineLanguage = (context: PrePublishContext): string => {
+  const counts = new Map<string, number>();
+  context.pages.forEach(({ source }) => {
+    const lang = (source.document_language ?? '').trim().toLowerCase().split('-')[0];
+    if (lang) counts.set(lang, (counts.get(lang) ?? 0) + 1);
+  });
+  return [...counts].sort((left, right) => right[1] - left[1] || left[0].localeCompare(right[0]))[0]?.[0] ?? 'und';
+};
 
 export const checkPrePublish = async (
   text: string, url: string, context: PrePublishContext,
-  settings: Pick<ProviderSettings, 'provider' | 'ollamaModel'>, signal: AbortSignal,
+  settings: Pick<ProviderSettings, 'provider' | 'ollamaModel'>, signal: AbortSignal, policy: PrePublishPolicy = 'advisory', now = new Date(),
 ) => {
   signal.throwIfAborted();
   if (!context.coreText) return insufficientPrePublish('no-core');
@@ -31,9 +43,13 @@ export const checkPrePublish = async (
   }
   const replaced = normalizedUrl ? context.pages.find(({ source }) =>
     [source.url, source.final_url].some((candidate) => candidate && normalizeDraftUrl(candidate) === normalizedUrl)) : undefined;
-  const corpus = context.pages.map(({ score }, index) => ({
+  const corpus = context.pages.map(({ score, source }, index) => ({
     url: score.url, trs: score.trs, weight: score.weight, type: score.type, vector: vectors[index + 2],
+    links: source.links?.filter((link) => link.is_internal).map((link) => link.target_url),
   }));
-  return checkDraft({ url: replaced?.score.url ?? normalizedUrl, vector: vectors[1],
+  const report = checkDraft({ url: replaced?.score.url ?? normalizedUrl, vector: vectors[1], text: text.trim(),
     chunks: text.trim().split(/\n\s*\n/u).map((chunk) => chunk.trim()) }, corpus, vectors[0]);
+  const chunkDetails = draftChunkDetails(text, baselineLanguage(context));
+  const gaps = evidenceGaps({ baselineCompletedAt: context.run?.completedAt ?? null, languageStatus: chunkDetails.languageStatus, now });
+  return applyPolicy({ ...report, chunkDetails }, policy, gaps);
 };

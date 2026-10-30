@@ -16,6 +16,17 @@ export const auditText = (audit: PageAuditData): string => [
   audit.content_stats?.body_text ?? '',
 ].filter(Boolean).join(' ');
 
+/** H2/H3 heading texts in document order (IGOS sections, #67). */
+export const sectionHeadings = (audit: PageAuditData): string[] => {
+  const out: string[] = [];
+  const walk = (nodes: PageAuditData['headings']['hierarchy'] = []) => nodes.forEach((node) => {
+    if ((node.level === 2 || node.level === 3) && node.text.trim()) out.push(node.text.trim());
+    walk(node.children);
+  });
+  walk(audit.headings?.hierarchy);
+  return out;
+};
+
 export const buildTopics = (pages: Array<{ rank: number; url: string; text: string }>, availablePages: number, targetCounts: Map<string, number> | null): ContentGapTopic[] => {
   if (!availablePages) return [];
   const perPage = pages.map((page) => {

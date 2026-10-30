@@ -36,7 +36,8 @@ describe('Site Focus Score engine', () => {
     expect(report.score).toBeLessThan(80);
     expect(report.onTopicRatio).toBeGreaterThan(85);
     expect(report.pageCount).toBe(report.pages.length);
-    expect(report.flags).toMatchObject({ isLowConfidence: false, isMultiTopic: false, fallbackMode: 'semantic', degraded: false, skippedRenderTimeouts: 0 });
+    expect(report.flags).toMatchObject({ isLowConfidence: false, isMultiTopic: false, fallbackMode: 'tfidf-only', degraded: false, skippedRenderTimeouts: 0 });
+    expect(report.flags.similaritySource).toEqual({ mode: 'tfidf-only', kind: 'none', pairsUsed: 0 });
     expect(report.clusters.map((cluster) => cluster.id)).toEqual(['c1', 'c2', 'c3']);
   });
 

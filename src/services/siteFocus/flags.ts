@@ -66,12 +66,14 @@ export const detectSubSites = (
 
 export const computeFlags = (
   items: Prepared[], confidence: number, manual: boolean, mode: SiteFlags['fallbackMode'], multiTopic: boolean,
+  similaritySource?: SiteFlags['similaritySource'],
 ): SiteFlags => {
   const live = items.filter((item) => !item.skipped);
   return {
     isLowConfidence: live.length < LOW_CONFIDENCE_PAGES || (!manual && confidence < LOW_CONFIDENCE_PCT),
     isMultiTopic: multiTopic,
     fallbackMode: mode,
+    ...(similaritySource ? { similaritySource } : {}),
     degraded: items.some((item) => !item.skipped && item.terms.degraded),
     skippedRenderTimeouts: items.filter((item) => item.skipped === 'render-timeout').length,
   };

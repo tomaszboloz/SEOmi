@@ -8,12 +8,16 @@ export interface WhatIfChange {
   remove?: EdgeRef[];
   /** New positive weight for an existing edge. */
   update?: Array<EdgeRef & { weight: number }>;
+  /** New page ids (URLs) to simulate; they must not exist yet and can be linked through `add`. */
+  addNodes?: string[];
+  /** Existing pages to simulate deleting, together with every edge touching them. */
+  removeNodes?: string[];
 }
 
-export type WhatIfIssue = 'unknown-node' | 'self-link' | 'duplicate-edge' | 'missing-edge' | 'invalid-weight';
+export type WhatIfIssue = 'unknown-node' | 'self-link' | 'duplicate-edge' | 'missing-edge' | 'invalid-weight' | 'duplicate-node' | 'empty-graph';
 
 /** `after` and `delta` use the baseline reference: 100 = the best page before the change (GEM-71-08). */
-export interface WhatIfRow { nodeId: string; before: number; after: number; delta: number }
+export interface WhatIfRow { nodeId: string; before: number | null; after: number | null; delta: number | null }
 
 export interface WhatIfResult {
   rows: WhatIfRow[];
@@ -32,9 +36,15 @@ const validWeight = (value: number | undefined): boolean => value === undefined 
 
 /** GEM-71-07: unknown ids, self links, duplicates, missing edges and bad weights reject the change. */
 export const validateWhatIf = (nodes: PageRankNode[], edges: SprsEdge[], change: WhatIfChange): WhatIfIssue[] => {
-  const ids = new Set(nodes.map((node) => node.id));
-  const existing = new Set(edges.map(key));
   const issues = new Set<WhatIfIssue>();
+  const baseIds = new Set(nodes.map((node) => node.id));
+  const addNodes = (change.addNodes ?? []).map((id) => id.trim());
+  if (addNodes.some((id, i) => !id || baseIds.has(id) || addNodes.indexOf(id) !== i)) issues.add('duplicate-node');
+  if ((change.removeNodes ?? []).some((id) => !baseIds.has(id))) issues.add('unknown-node');
+  const removedNodes = new Set(change.removeNodes ?? []);
+  const ids = new Set([...baseIds, ...addNodes].filter((id) => !removedNodes.has(id)));
+  if (ids.size === 0) issues.add('empty-graph');
+  const existing = new Set(edges.filter((edge) => !removedNodes.has(edge.source) && !removedNodes.has(edge.target)).map(key));
   const refs = [...(change.add ?? []), ...(change.remove ?? []), ...(change.update ?? [])];
   if (refs.some((ref) => !ids.has(ref.source) || !ids.has(ref.target))) issues.add('unknown-node');
   if (refs.some((ref) => ref.source === ref.target)) issues.add('self-link');
@@ -52,22 +62,28 @@ export const simulateWhatIfRun = (nodes: PageRankNode[], edges: SprsEdge[], chan
   if (issues.length) return { rows: [], converged: false, iterations: 0, residual: Number.NaN, issues, uncertain: true };
   const before = computeSprs(nodes, edges);
   const removed = new Set((change.remove ?? []).map(key));
+  const removedNodes = new Set(change.removeNodes ?? []);
+  const nextNodes = nodes.filter((node) => !removedNodes.has(node.id)).concat((change.addNodes ?? []).map((id) => ({ id: id.trim() })));
   const updated = new Map((change.update ?? []).map((ref) => [key(ref), ref.weight]));
-  const next = edges.filter((edge) => !removed.has(key(edge)))
+  const next = edges.filter((edge) => !removed.has(key(edge)) && !removedNodes.has(edge.source) && !removedNodes.has(edge.target))
     .map((edge) => (updated.has(key(edge)) ? { ...edge, weight: updated.get(key(edge)) } : edge))
     .concat(change.add ?? []);
-  const after = computeSprs(nodes, next, new Map(before.pages.map((page) => [page.nodeId, page.probability])));
+  const after = computeSprs(nextNodes, next, new Map(before.pages.map((page) => [page.nodeId, page.probability])));
   const reference = Math.max(...before.pages.map((page) => page.probability), Number.MIN_VALUE);
   const prior = new Map(before.pages.map((page) => [page.nodeId, page.score]));
   const round = (value: number) => Math.round(value * 10) / 10;
-  const rows = after.pages
-    .map((page) => {
-      const was = prior.get(page.nodeId) as number;
+  // Added pages have no "before" and removed pages no "after": their delta is unknown, never 0 (GEM-71-08).
+  const changed: WhatIfRow[] = after.pages
+    .map((page): WhatIfRow => {
+      const was = prior.has(page.nodeId) ? prior.get(page.nodeId) as number : null;
       const now = round((page.probability / reference) * 100);
-      return { nodeId: page.nodeId, before: was, after: now, delta: round(now - was) };
+      return { nodeId: page.nodeId, before: was, after: now, delta: was === null ? null : round(now - was) };
     })
+    .concat([...removedNodes].map((nodeId): WhatIfRow => ({ nodeId, before: prior.get(nodeId) ?? null, after: null, delta: null })));
+  const magnitude = (row: WhatIfRow) => (row.delta === null ? Number.POSITIVE_INFINITY : Math.abs(row.delta));
+  const rows = changed
     .filter((row) => row.delta !== 0)
-    .sort((a, b) => Math.abs(b.delta) - Math.abs(a.delta) || (a.nodeId < b.nodeId ? -1 : 1));
+    .sort((a, b) => magnitude(b) - magnitude(a) || (a.nodeId < b.nodeId ? -1 : 1));
   return { rows, converged: after.converged, iterations: after.iterations, residual: after.residual, issues: [], uncertain: !after.converged };
 };
 

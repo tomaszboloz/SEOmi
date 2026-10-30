@@ -1,7 +1,7 @@
 import type { PageAuditData } from '@/types';
 import type { InspectPage, SuppliedTargetEvidence, SuppliedTopTenEvidence, TopTenContentGapReport, TopTenPageObservation, TopTenSerpRow } from './types';
 import { normalizeSerpUrl, selectOrganicTopTen } from './serp';
-import { auditText, buildTopics, tokenList } from './topics';
+import { auditText, buildTopics, sectionHeadings, tokenList } from './topics';
 
 const errorText = (error: unknown): string => (error instanceof Error ? error.message : String(error)).slice(0, 240);
 const hasAuditIdentity = (audit: PageAuditData | null): audit is PageAuditData => Boolean(audit && (audit.url || audit.final_url));
@@ -73,9 +73,9 @@ const reportFromEvidence = (options: BuildContentGapOptions, selected: TopTenSer
   const targetCounts = targetAvailable ? new Map<string, number>() : null;
   if (targetAvailable && targetAudit) tokenList(auditText(targetAudit)).forEach((term) => targetCounts!.set(term, (targetCounts!.get(term) ?? 0) + 1));
   const topicPages = rows.flatMap((row, index) => row.availability === 'available' && audits[index]
-    ? [{ rank: row.rank, url: row.url, fetchedAt: row.fetchedAt, status: row.status, text: auditText(audits[index]!) }]
+    ? [{ rank: row.rank, url: row.url, fetchedAt: row.fetchedAt, status: row.status, text: auditText(audits[index]!), headings: sectionHeadings(audits[index]!) }]
     : []);
-  const target = targetAvailable && targetAudit ? { url: targetAudit.final_url || targetAudit.url, text: auditText(targetAudit), wordCount: targetAudit.content_stats?.word_count ?? 0 } : null;
+  const target = targetAvailable && targetAudit ? { url: targetAudit.final_url || targetAudit.url, text: auditText(targetAudit), wordCount: targetAudit.content_stats?.word_count ?? 0, headings: sectionHeadings(targetAudit) } : null;
   const status = !selected.length || !available ? 'unavailable' : available === selected.length ? 'complete' : 'partial';
   return { phrase: options.phrase.trim(), source: 'supplied-serp', retrievedAt: options.retrievedAt || now(), locationCode: options.locationCode ?? null, languageCode: options.languageCode ?? null, rows, availablePages: available, targetAvailable, status, topics: buildTopics(topicPages, available, targetCounts), corpus: { target, pages: topicPages, requested: selected.length } };
 };

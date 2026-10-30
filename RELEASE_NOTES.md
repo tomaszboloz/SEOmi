@@ -1,3 +1,51 @@
+# SEOmi 0.7.0 — release notes
+
+## Added
+- Holistic Semantic Score (HSS, #72): one weighted score over the module reports. Missing modules are left out and the weights are recalculated; the score is withheld when measured modules carry less than 50% of the weight. Modules without an agreed site-level score (IGOS, SPRS, SIJA) are listed as unavailable, never averaged.
+- Executive tab (#73): HSS with coverage, seven module cards that open their tabs ("—" with a reason for a missing module), a ranked action feed, a What-If that never changes the baseline and a JSON export with the exact inputs.
+- Executive Action Feed (#89): one deduplicated list across SFS, TAS, EETV and link suggestions. Protected or kept pages win over removals, and the HSS change is shown only when a module simulation exists.
+- Surgical Rewriter (#127): hints at H2-section level (where to change, missing entities, dangling pronouns, off-topic sections) with a Before/After diff, copyable HTML and a forecast from the Site Focus engine.
+- Site Focus: each score records its scoring profile and settings (#83). History marks profile or topic-setting changes and does not compare or alert across them. A report of the same run with different settings is kept as a new version (#82).
+- Site Focus: per-project brand list with other brand names, competitor brands and exceptions. Brand names are no longer reported as topic gaps, and the reason is shown (#56).
+- Changing the topic, goal, anchor pages or brand list now updates Topical Authority, E-E-A-T and Links straight away (#82).
+- URL protection: verified Googlebot visits from imported server logs are shown as evidence and do not change the decision (#81). An optional GA4 revenue CSV import (stated currency, session landing-page attribution) lets revenue shield a page (#91).
+- Site Focus calibration harness (opt-in, runs only over consented crawls with manual labels) (#52).
+- Site Focus and Topical Authority label similarity honestly: `tfidf-only` without embeddings and `semantic` only when embeddings contributed. A shared embedding source computes page and term vectors once (#86, #106).
+- The competitive benchmark shows where its search results came from and how many there were, and warns about partial coverage (#85, #106).
+- Shared analysis contracts: typed availability status, report envelope, a guard that stops aggregates mixing crawl runs and a parse-once cache key (#85).
+- International parity compares pages only inside hreflang clusters, keeps hreflang issues apart from content gaps and lets you mark a topic as intentionally local per language (#99).
+- Semantic Decay Radar records a dated SERP snapshot on each Topical Authority reference build (#98). The Topical Gap Matrix shows its SERP source, date and competitor sample (#61). Reference sub-topics record their sources, and a cached map for another Core Topic or language is not reused (#57). The pre-publish cannibalization check skips the page being updated (#59).
+- AIO chunk inspector shows detected subject-predicate-object facts and Answer-First components (#63, #64).
+- Trust: "Verify profiles" queries the ORCID public API and Wikidata labels (opt-in network call, source and date recorded) (#87); opt-in source reachability check and a page-only local support check (#88); JSON-LD graph audit for dangling @id, @id conflicts, unshared ids and islands, report-only (#65). The JSON-LD generator keeps existing @id values and warns about a MedicalWebPage without a reviewer (#66).
+- SPRS link weights include page and anchor-context similarity where known (floor 0.05); the panel shows links in/out, and What-If can add or remove a page (#71). The rendered fold zone records the viewport size (#70).
+- IGOS: heuristic entities and SPO, H2/H3 section chunks, the project's embedding provider with a labelled fallback, per-source drill-down and per-phrase run history (#67, #68). SIJA: intent against TOP pages, funnel drill-down, call-to-action format gap and run history (#69).
+- Template governor takes TAS subtopics from the Topical Authority report; noindex is proposed only after DOM, template variables and full text were measured (#139).
+- Optional automatic browser render of JS-shell pages after a crawl (off by default, up to 10 pages) (#131).
+- Log intelligence: IPv6 ranges, import of official crawler IP range files and a record of each bot identity check (#92).
+- Off-page: sitewide/duplicate link profile and anchor location in the fetched source text (#93).
+- Pre-publish: up to 3 internal link donors, passage-level AIO detail and an advisory/enforced policy (advisory by default) (#94). CMS pre-publish contract v1; ADR 0004 accepted (#95).
+- Media: near-duplicate image detection with perceptual hashes of real image bytes (uncalibrated threshold); OCR, CLIP and transcripts are marked unavailable (#96).
+- Experiments: counterfactual estimate against an independent control property with 95% intervals, fit diagnostics, a placebo test and explicit "not estimable" reasons (#97).
+- `scripts/locale-review.mts` writes native-speaker review checklists for UI strings and AIO word lists (#108, #109).
+- Code of Conduct (Contributor Covenant 2.1); reports go to the private channel from SECURITY.md (#101).
+
+## Fixed
+- PDF: a crawl with no scored pages shows "Not available" instead of a critical 0, TRS colours follow the 40/75 rules, and the PDF shows the scoring profile and hidden brand terms (#53).
+- Outreach Information Gain requests use an unambiguous structured identity, so different entity lists can no longer share a request (#143).
+- Local Ollama rewrites count in the AI cost ledger and reuse the project cache; the YMYL fact-gate message is localized (#137).
+- Topical Authority rebuilds keep the business goal, so TAS and Focus pick the same Core Topic (#82).
+
+## Quality
+- A regression guard keeps `panic = "unwind"` in the release profile, which prevents the macOS abort on WebView reload (#90).
+- The MCP server package now carries the app version (it was 0.0.1), and `npm run version:check` covers it.
+- New tests pin the TAS thresholds (#58). Strings for every addition are in all 12 locales.
+
+## Included
+- Everything from 0.6.0 (below).
+
+## Thanks
+- Thank you @RafalSzy and all contributors.
+
 # SEOmi 0.6.0 — release notes
 
 ## Added

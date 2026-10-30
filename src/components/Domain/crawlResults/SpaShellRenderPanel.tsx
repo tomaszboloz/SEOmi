@@ -1,5 +1,6 @@
 import { useTranslation } from 'react-i18next';
 import { MAX_SHELL_RENDERS, useSpaShellRender, type ShellRenderRow } from '@/hooks/useSpaShellRender';
+import { useSpaAutoRender } from '@/hooks/useSpaAutoRender';
 import { isTauriEnvironment } from '@/services/tauri/transport';
 import type { CrawledPageSummary } from '@/types';
 import type { RenderedPageSnapshot } from '@/services/tauri/rendered';
@@ -29,7 +30,9 @@ const RowResult = ({ row }: { row: ShellRenderRow }) => {
 export const SpaShellRenderPanel = ({ shells, render }: { shells: CrawledPageSummary[]; render?: (url: string) => Promise<RenderedPageSnapshot> }) => {
   const { t } = useTranslation();
   const { rows, running, start, cancel } = useSpaShellRender(shells, render);
-  if (!render && !isTauriEnvironment()) return <p className="text-amber-200/80">{t('crawl.spaRender.desktopOnly')}</p>;
+  const available = !!render || isTauriEnvironment();
+  const { auto, setAuto } = useSpaAutoRender(shells, available, rows.length === 0 && !running, start);
+  if (!available) return <p className="text-amber-200/80">{t('crawl.spaRender.desktopOnly')}</p>;
   return (
     <div className="space-y-2" data-testid="spa-render-panel">
       <div className="flex flex-wrap items-center gap-2">
@@ -42,6 +45,10 @@ export const SpaShellRenderPanel = ({ shells, render }: { shells: CrawledPageSum
         </button>
         <span className="text-amber-200/70">{t('crawl.spaRender.note')}</span>
       </div>
+      <label className="flex items-center gap-2 text-amber-100">
+        <input type="checkbox" checked={auto} onChange={(event) => setAuto(event.currentTarget.checked)} />
+        {t('crawl.spaRender.auto', { count: MAX_SHELL_RENDERS })}
+      </label>
       {rows.length > 0 && (
         <ul aria-live="polite" className="space-y-1 font-mono text-[11px]">
           {rows.map((row) => (

@@ -1,4 +1,5 @@
 import { readJsonStorage, removeStorage, writeJsonStorage } from '@/services/storage';
+import { notifyFocusConfigChanged } from './configEvents';
 import { focusTopicKey, validFocusProject } from './keys';
 
 export type ManualTopic = string | string[];
@@ -17,5 +18,7 @@ export const readManualTopic = (projectId: string | null | undefined): ManualTop
 export const writeManualTopic = (projectId: string, topic: ManualTopic | null | undefined): boolean => {
   if (!validFocusProject(projectId)) return false;
   const value = clean(topic);
-  return value === undefined ? removeStorage(focusTopicKey(projectId)) : writeJsonStorage(focusTopicKey(projectId), value);
+  const saved = value === undefined ? removeStorage(focusTopicKey(projectId)) : writeJsonStorage(focusTopicKey(projectId), value);
+  notifyFocusConfigChanged(projectId);
+  return saved;
 };

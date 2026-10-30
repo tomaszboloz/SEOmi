@@ -3,6 +3,8 @@ export * from './history';
 export * from './topic';
 export * from './anchors';
 export * from './goal';
+export * from './brand';
+export * from './configEvents';
 export * from './projectReport';
 export * from './budget';
 export * from './firstSeen';

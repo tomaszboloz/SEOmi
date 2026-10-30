@@ -1,4 +1,4 @@
-import { readFileSync, writeFileSync } from 'node:fs';
+import { existsSync, readFileSync, writeFileSync } from 'node:fs';
 import { dirname, join, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
@@ -10,6 +10,8 @@ const paths = (rootDir) => ({
   lock: join(rootDir, 'package-lock.json'),
   cargo: join(rootDir, 'src-tauri', 'Cargo.toml'),
   cargoLock: join(rootDir, 'src-tauri', 'Cargo.lock'),
+  mcpPackage: join(rootDir, 'mcp-server', 'package.json'),
+  mcpLock: join(rootDir, 'mcp-server', 'package-lock.json'),
 });
 
 const readJson = (path) => JSON.parse(readFileSync(path, 'utf8'));
@@ -26,6 +28,11 @@ const packageLockWithVersion = (path, version) => {
   const newline = source.includes('\r\n') ? '\r\n' : '\n';
   const trailing = source.endsWith('\r\n') || source.endsWith('\n') ? newline : '';
   return `${JSON.stringify(lock, null, 2).replaceAll('\n', newline)}${trailing}`;
+};
+
+const packageJsonWithVersion = (source, version) => {
+  if (JSON.parse(source).version === version) return source;
+  return source.replace(/("version"\s*:\s*)"[^"]*"/, `$1"${version}"`);
 };
 
 const cargoVersion = (contents, version) => {
@@ -73,6 +80,12 @@ export function syncAppVersion({ rootDir = projectRoot, check = false } = {}) {
     [targetPaths.cargo, cargoVersion(current.get(targetPaths.cargo), version)],
     [targetPaths.cargoLock, cargoLockVersion(current.get(targetPaths.cargoLock), version)],
   ]);
+  // The MCP server reports its package version in the MCP handshake, so it ships with the app version.
+  for (const [path, update] of [[targetPaths.mcpPackage, packageJsonWithVersion], [targetPaths.mcpLock, packageLockWithVersion]]) {
+    if (!existsSync(path)) continue;
+    current.set(path, readFileSync(path, 'utf8'));
+    next.set(path, update === packageLockWithVersion ? update(path, version) : update(current.get(path), version));
+  }
   const changed = [...next.keys()].filter((path) => next.get(path) !== current.get(path));
   if (check && changed.length > 0) {
     throw new Error(`Application version drift detected in: ${changed.map((path) => path.slice(resolvedRoot.length + 1)).join(', ')}`);

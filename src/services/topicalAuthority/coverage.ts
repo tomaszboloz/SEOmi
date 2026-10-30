@@ -26,7 +26,8 @@ const referenceVector = (subtopic: RefSubtopic, context: AuthorityContext): Map<
 const similarity = (entry: AuthorityPage, reference: Map<string, number>): number =>
   Math.max(cosine(reference, entry.vector), cosine(reference, binary(entry.zone)));
 
-const covered = (value: number): 0 | 0.5 | 1 => (value >= FULL_COSINE ? 1 : value >= PARTIAL_COSINE ? 0.5 : 0);
+/** Cov(s_j) from the best page cosine: 1 at >= 0.78, 0.5 at >= 0.60, else 0 (Gemini reference thresholds). */
+export const covered = (value: number): 0 | 0.5 | 1 => (value >= FULL_COSINE ? 1 : value >= PARTIAL_COSINE ? 0.5 : 0);
 
 /** Maps each reference sub-topic to the on-topic pages that cover it, then grades depth. */
 export const mapCoverage = (pages: AuthorityPage[], context: AuthorityContext, taxonomy: ReferenceTaxonomy): SubtopicCoverage[] =>

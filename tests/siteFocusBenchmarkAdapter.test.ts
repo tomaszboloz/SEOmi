@@ -21,12 +21,17 @@ describe('createSerpFetcher', () => {
 
   it('uses DataForSEO when credentials exist', async () => {
     const response = await createSerpFetcher(env('a', 'b'))('kw');
-    expect(response).toEqual({ source: 'dataforseo', hits: dataForSeoHits([item(1), item(2)]) });
+    expect(response).toMatchObject({ source: 'dataforseo', hits: dataForSeoHits([item(1), item(2)]) });
+    // #85/#86: two organic results are partial evidence, never a TOP 10.
+    expect(response.evidence).toMatchObject({ query: 'kw', providerKind: 'dataforseo-live', countryCode: 'US', availability: 'partial', actualK: 2, requestedDepth: 100 });
     expect(client.getSerpCompetitors).toHaveBeenCalledWith('kw', expect.any(Number), 'en');
   });
   it('falls back to the free Bing feed', async () => {
-    free.mockResolvedValue({ status: 'ok', response: {}, result: { snapshots: [{ rows: [{ rank: 1, url: 'https://x.test/p' }] }, { rows: [] }] } });
-    expect(await createSerpFetcher(env('', ''))('kw')).toEqual({ source: 'bing-rss', hits: [{ rank: 1, url: 'https://x.test/p', domain: '' }] });
+    const source = { provider: 'Bing', countryCode: 'US', languageCode: 'en', retrievedAt: '2026-10-30T00:00:00Z', capturedAt: null, availability: 'partial', reason: 'free-engine' };
+    free.mockResolvedValue({ status: 'ok', response: {}, result: { snapshots: [{ rows: [{ rank: 1, url: 'https://x.test/p' }], source }, { rows: [], source }] } });
+    const bing = await createSerpFetcher(env('', ''))('kw');
+    expect(bing).toMatchObject({ source: 'bing-rss', hits: [{ rank: 1, url: 'https://x.test/p', domain: '' }] });
+    expect(bing.evidence).toMatchObject({ providerKind: 'bing-rss', provider: 'Bing', availability: 'partial', actualK: 1, retrievedAt: '2026-10-30T00:00:00Z' });
     expect(await createSerpFetcher(env('a', ' '))('kw')).toMatchObject({ source: 'bing-rss' });
   });
   it('throws readable errors when the free feed fails', async () => {

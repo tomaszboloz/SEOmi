@@ -16,6 +16,7 @@ import { useGraphSnapshot } from './useGraphSnapshot';
 import { buildParityReport } from './parityAdapter';
 import { buildTemplateEvents, subtopicsFromAuthorityReport, subtopicsFromGraph } from './templateAdapter';
 import { useDecayHistory } from './useDecayHistory';
+import { useParityExceptions } from './useParityExceptions';
 import { useCausalImpact } from './useCausalImpact';
 import { useToolsStore } from '@/stores/toolsStore';
 
@@ -37,7 +38,8 @@ export const SignalsWorkspace = ({ projectId = null, pages, graph, subtopicsByUr
   const { snapshot, stale, refresh } = useGraphSnapshot(graph);
   const sprsInput = useMemo(() => buildSprsInput(snapshot), [snapshot]);
   const sprs = useMemo(() => computeSprs(sprsInput.nodes, sprsInput.edges), [sprsInput]);
-  const parity = useMemo(() => buildParityReport(pages, graph), [pages, graph]);
+  const parityExceptions = useParityExceptions(projectId);
+  const parity = useMemo(() => buildParityReport(pages, graph, parityExceptions.exceptions), [pages, graph, parityExceptions.exceptions]);
   const authoritySubtopics = useMemo(() => subtopicsFromAuthorityReport(authorityReport), [authorityReport]);
   const subtopicsByUrl = useMemo(() => ({ ...authoritySubtopics, ...subtopicsFromGraph(graph), ...providedSubtopics }), [authoritySubtopics, graph, providedSubtopics]);
   const templates = useMemo(() => buildTemplateEvents(pages, { subtopicsByUrl }), [pages, subtopicsByUrl]);
@@ -45,7 +47,7 @@ export const SignalsWorkspace = ({ projectId = null, pages, graph, subtopicsByUr
     <StaleSnapshotBanner stale={stale} onRefresh={refresh} />
     <SprsPanel report={sprs} />
     <SprsWhatIf nodes={sprsInput.nodes} edges={sprsInput.edges} />
-    <HreflangParityPanel report={parity} />
+    <HreflangParityPanel report={parity} exceptions={parityExceptions.handlers} />
     <TemplateGovernorPanel events={templates} />
     <DecayRadarPanel evaluation={decay.evaluation} snapshotCount={decay.snapshotCount} />
     <CausalImpactPanel result={causalImpact} />

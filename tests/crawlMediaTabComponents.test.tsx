@@ -18,7 +18,7 @@ describe('CrawlMediaTab modular architecture', () => {
       'src/components/Domain/crawlResults/CrawlMediaTab.tsx',
       ...codeFiles('src/components/Domain/crawlResults/mediaTab'),
     ];
-    expect(files.length).toBe(9);
+    expect(files.length).toBe(10);
     const report = maxLocReport(files);
     expect(report.violations).toEqual([]);
   });

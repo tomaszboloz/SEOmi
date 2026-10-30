@@ -3194,7 +3194,8 @@
       "focus": "サイトフォーカス",
       "authority": "トピカルオーソリティ",
       "aio": "AI対応度",
-      "trust": "エンティティの信頼性"
+      "trust": "エンティティの信頼性",
+      "executive": "エグゼクティブ"
     },
     "groups": {
       "core": "概要",
@@ -3591,7 +3592,8 @@
         "pending": "待機中",
         "rendering": "レンダリング中…",
         "cancelled": "キャンセル済み"
-      }
+      },
+      "auto": "クロールのたびにシェルページを自動レンダリング（デスクトップアプリ、最大 {{count}} ページ、既定はオフ）"
     }
   },
   "ai": {
@@ -6007,7 +6009,8 @@
           "good": "フォーカス良好",
           "moderate": "フォーカス普通",
           "weak": "フォーカス弱い",
-          "critical": "フォーカス危険"
+          "critical": "フォーカス危険",
+          "unavailable": "利用不可"
         },
         "status": {
           "strong": "強い",
@@ -6032,7 +6035,8 @@
           "anchoredTopic": "中心トピックはトップページとアンカーページ（{{0}} ページ）から選ばれました。",
           "anchorsMissing": "このクロールで見つからなかったアンカーページ：{{0}}。",
           "goalTopic": "コアトピックはビジネス目標「{{0}}」により選ばれました。",
-          "goalUnmatched": "ビジネス目標「{{0}}」はクロールしたコンテンツと一致しなかったため、目標なしでトピックを選びました。"
+          "goalUnmatched": "ビジネス目標「{{0}}」はクロールしたコンテンツと一致しなかったため、目標なしでトピックを選びました。",
+          "unavailable": "このクロールでは採点できたページがないため、Site Focus Score はありません。これは 0 点ではありません。"
         },
         "rec": {
           "remove-offtopic": "トピック外のページ {{0}} 件は、対応する前に確認してください。まずトラフィック、コンバージョン、リンクを確認します。これらの根拠がないページは、関連ページへの301またはリライトの候補です。自動では何も削除されません。見込み: +{{1}} ポイント。",
@@ -6088,7 +6092,8 @@
             "clicks": "クリック",
             "conversions": "コンバージョン",
             "referringDomains": "参照ドメイン",
-            "revenue": "収益"
+            "revenue": "収益",
+            "botHits": "確認済みの Googlebot 訪問（サーバーログ）"
           },
           "alternative": {
             "confirm-revenue-currency": "収益の通貨を確認",
@@ -6119,6 +6124,16 @@
             "missing-permission": "権限なし",
             "unavailable": "利用不可"
           }
+        },
+        "profile": "スコアリングプロファイル {{0}}、構成 {{1}}。",
+        "tHidden": "ギャップとして表示しない競合用語",
+        "hiddenIntro": "これらの用語はブランド名（自社または競合）であり、トピックのギャップではなくブランド検索です。",
+        "colTerm": "用語",
+        "colReason": "理由",
+        "brandReason": {
+          "own-domain": "ドメイン名",
+          "own-alias": "自社ブランド名",
+          "competitor-brand": "競合ブランド"
         }
       },
       "authority": {
@@ -6943,7 +6958,9 @@
       "change": "前回の分析から {{delta}} ポイント",
       "progressAria": "Site Focus Score {{score}} / 100、{{band}}",
       "recalcBudget": "本日の完全再計算の残り回数: {{remaining}} / {{limit}}。",
-      "recalcExhausted": "完全再計算の1日の上限({{limit}} 回)に達しました。明日もう一度お試しください。"
+      "recalcExhausted": "完全再計算の1日の上限({{limit}} 回)に達しました。明日もう一度お試しください。",
+      "metaProfile": "スコアリングプロファイル {{version}}（構成 {{hash}}）",
+      "trendBreak": "前回の分析とは比較していません。別のスコアリングプロファイルまたは別のトピック設定が使われました。"
     },
     "drawer": {
       "title": "Site Focus Score のしくみ",
@@ -7198,7 +7215,10 @@
       "empty": "推移を見るには、完全分析を2回以上実行してください。",
       "aria": "{{count}} 回の分析における Site Focus Score の推移({{from}} から {{to}})",
       "point": "{{date}}: {{score}}",
-      "annotations": "主な変更点"
+      "annotations": "主な変更点",
+      "profile-changed": "スコアリングプロファイルが {{from}} から {{to}} に変わりました。前後のスコアは直接比較できません（{{delta}} ポイント）。",
+      "config-changed": "トピック設定（トピック、アンカーページ、目標、ブランド用語）が変わりました。新しいレポートバージョンであり、直接比較できません（{{delta}} ポイント）。",
+      "legacyProfile": "バージョンなしのプロファイル"
     },
     "alert": {
       "sfs-drop": "Site Focus Score が {{from}} から {{to}} に低下しました({{points}} ポイント)。",
@@ -7243,7 +7263,8 @@
         "clicks": "クリック",
         "conversions": "コンバージョン",
         "referringDomains": "参照ドメイン",
-        "revenue": "収益"
+        "revenue": "収益",
+        "botHits": "確認済みの Googlebot 訪問（サーバーログ）"
       },
       "unknown": "{{signal}}: 不明（{{state}}）",
       "measured": "{{signal}}: {{value}}",
@@ -7292,9 +7313,27 @@
         "no-words": "数字や記号だけでなく、言葉を使ってください。",
         "looks-like-url": "URL のようです。ページはアンカーページ欄に追加してください。"
       }
+    },
+    "brand": {
+      "title": "ブランド用語",
+      "help": "ドメイン名がトピックとして扱われることはありません。自社ブランドの別名、トピックのギャップとして表示してはならない競合ブランド、そして例外（ブランドに見えるが実際の業界用語である語）を追加してください。",
+      "aliases": "自社ブランドの別名（1 行に 1 つ）",
+      "competitors": "競合ブランド（1 行に 1 つ）",
+      "exceptions": "残す業界用語（1 行に 1 つ）",
+      "save": "ブランド用語を保存",
+      "needsProject": "ブランド用語はプロジェクトごとに保存されます。設定するには、このクロールをプロジェクトから開いてください。",
+      "ownBrand": "自社ブランドとして除外（正規化された語）: {{terms}}",
+      "filteredTitle": "ギャップから除外した競合用語",
+      "filtered": "{{term}}: {{reason}}",
+      "reason": {
+        "own-domain": "ドメイン名",
+        "own-alias": "自社ブランド名",
+        "competitor-brand": "競合ブランド"
+      }
     }
   },
   "focusBenchmark": {
+    "partialSerp": "検索結果は部分的です（クエリごとのオーガニック結果 {{min}}–{{max}} 件、ソース: {{providers}}）。Google の完全な TOP 10 ではないため、比較は目安としてご利用ください。",
     "title": "競合ベンチマーク",
     "intro": "あなたの Site Focus Score を、中心トピックで上位表示されているサイトと比較します。SEOmi は検索結果を取得し、各競合サイトの少数のページを(robots.txt を尊重して)配慮しながらクロールし、同じエンジンでスコア化します。",
     "run": "ベンチマークを実行",
@@ -7497,6 +7536,8 @@
       }
     },
     "draft": {
+      "selfUrlPlaceholder": "既存ページを更新しますか？自分自身と照合されないよう URL を貼り付けてください",
+      "selfUrlField": "この下書きが更新するページの URL（任意）",
       "title": "公開前に下書きを確認",
       "titleField": "下書きのタイトル",
       "bodyField": "下書きの本文",
@@ -7522,6 +7563,9 @@
       }
     },
     "benchmark": {
+      "failed": "利用可能なページなし（未採点）: {{domains}}。",
+      "sample": "SERP から試した {{attempted}} 件の競合のうち {{scored}} 件を比較しました。",
+      "provenance": "SERP ソース: {{source}}、作成日 {{date}}。競合は同じエンジンと参照マップで採点されます。",
       "title": "トップ競合とのトピックギャップ・マトリクス",
       "empty": "リファレンスマップを作成すると上位競合と比較できます。表示するのは実際にクロールしたデータのみです。",
       "domain": "ドメイン",
@@ -7672,6 +7716,17 @@
         "uncertain": "不確実",
         "unsupported": "ルールなし（英語で代用）"
       }
+    },
+    "facts": {
+      "title": "事実と Answer-First",
+      "answerComponents": "Answer-First の構成要素: 見出しとの一致 {{similarity}} · 冒頭の平叙文 {{declarative}} · 前置きの埋め草 {{fluff}}",
+      "yes": "はい",
+      "no": "いいえ",
+      "quality": "Q {{q}}",
+      "unit": "単位 {{unit}}",
+      "negated": "否定",
+      "none": "このチャンクでは主語・述語・目的語の事実は検出されませんでした。",
+      "heuristic": "語彙ヒューリスティックであり、係り受け解析ではありません。Q: 1 = 単位付きの数値、0.7 = 固有の用語、0.3 = 一般的。"
     }
   },
   "trust": {
@@ -7725,7 +7780,8 @@
       "rolePublisher": "発行者",
       "roleEvidence": "{{name}} ({{role}}) · {{status}} · sameAs 宣言 {{recall}}%",
       "roleRecall": "役割加重の sameAs 宣言: {{pct}}%(著者 50%、レビュー担当者 25%、発行者 25%。提案された重みで、宣言のシグナルであり、本人確認ではありません)。",
-      "declaredNote": "宣言は検証済みではありません。sameAs リンクは宣言として数えられます。verified になるのは、レジストリのプロフィールを取得し、その名前または別名が著者と一致した場合だけです。一致は弱い証拠であり、資格を証明するものではありません。ダッシュはデータなしを意味します。"
+      "declaredNote": "宣言は検証済みではありません。sameAs リンクは宣言として数えられます。verified になるのは、レジストリのプロフィールを取得し、その名前または別名が著者と一致した場合だけです。一致は弱い証拠であり、資格を証明するものではありません。ダッシュはデータなしを意味します。",
+      "verifyNote": "プロフィールの確認はオプトインのネットワーク確認です。著者の有効な ORCID または Q-ID ごとに ORCID 公開 API と Wikidata へリクエストを送信します（最大 8 件）。クリックするまで何も送信されません。"
     },
     "signals": {
       "claimEvidence": "主張の証拠",
@@ -7772,7 +7828,11 @@
         "missing-dates": "更新日または監修日を表示している記事は{{pct}}%だけです。",
         "no-articles": "記事ページが検出されなかったため、著者と引用のレイヤーは採点されませんでした。",
         "author-invalid-profile": "{{count}}人の著者が無効な識別子のORCIDまたはWikidataプロフィールをリンクしています（{{names}}）。チェックサムまたはQ-IDを確認してください。",
-        "ymyl-no-scholarly-ids": "{{pages}}件の記事のいずれもDOI、PMID、PMCIDを持つ情報源を引用していません。YMYLの話題では一次研究を引用してください。"
+        "ymyl-no-scholarly-ids": "{{pages}}件の記事のいずれもDOI、PMID、PMCIDを持つ情報源を引用していません。YMYLの話題では一次研究を引用してください。",
+        "graph-dangling": "{{count}} 件の JSON-LD 参照が、このクロールのどこにも定義されていない @id を指しています（{{ids}}）。",
+        "graph-id-conflict": "{{count}} 件の JSON-LD @id が矛盾するタイプ、名前、または sameAs で宣言されています（{{ids}}）。@id ごとに定義は 1 つにしてください。",
+        "graph-unshared-id": "{{count}} 件のエンティティが共通の @id なしで複数のページに出現しています（{{names}}）。",
+        "graph-islands": "{{count}} ページで JSON-LD ノードが @id 参照でつながっていません（分離した島）。報告のみで、スコアは減点されません。"
       }
     },
     "generator": {
@@ -7801,7 +7861,8 @@
         "invalid-organization-url": "有効な発行者URLを入力してください（https://...）。",
         "invalid-page-url": "有効なページURLを入力してください（https://...）。",
         "invalid-same-as": "有効なURLではないsameAsの項目は除外しました。",
-        "conflict": "{{id}} の既存の {{property}} が提案と競合しています。エクスポート前に解決してください。"
+        "conflict": "{{id}} の既存の {{property}} が提案と競合しています。エクスポート前に解決してください。",
+        "medical-no-reviewer": "レビュー担当者のいない MedicalWebPage: reviewedBy は生成されません。実在する有資格のレビュー担当者がいる場合のみ追加してください。エクスポートは引き続き可能です。"
       },
       "preview": "生成されたJSON-LD",
       "copy": "scriptタグをコピー",
@@ -7839,7 +7900,25 @@
       "references": "引用された出典",
       "noReference": "この主張の近くに出典は見つかりませんでした。",
       "more": "表示されていない主張：{{n}} 件",
-      "linkNote": "DOI・PMID・PMCID のリンクは公開リゾルバー（doi.org、PubMed、PMC）を開きます。リンクは文献の参照先を示すだけで、文献の存在や主張の裏付けを確認するものではありません。"
+      "linkNote": "DOI・PMID・PMCID のリンクは公開リゾルバー（doi.org、PubMed、PMC）を開きます。リンクは文献の参照先を示すだけで、文献の存在や主張の裏付けを確認するものではありません。",
+      "reach": {
+        "check": "出典の到達性を確認 ({{n}})",
+        "checking": "出典を確認中…",
+        "note": "オプトインのネットワーク確認: 引用された各リゾルバー URL に 1 回だけリクエストします（最大 20 件）。到達可能とはアドレスが応答したという意味で、文献が主張を裏付けるという意味ではありません。",
+        "desktopOnly": "出典の確認にはデスクトップアプリが必要です。",
+        "reachable": "到達可能",
+        "broken": "エラー応答",
+        "no-response": "応答なし",
+        "not-checked": "未確認"
+      },
+      "support": {
+        "associated": "ローカル確認: 同じ文に特定可能な出典あり",
+        "weak": "ローカル確認: 弱い関連",
+        "none": "ローカル確認: 引用なし",
+        "hedged": "断定を避けた表現",
+        "negated": "否定",
+        "note": "ローカル確認はこのページだけを読みます（引用の位置、識別子、断定回避、否定）。引用文献は読まないため、裏付けを確認することはできません。"
+      }
     },
     "identity": {
       "status": {
@@ -7866,7 +7945,8 @@
         "body-limit": "応答が大きすぎるため未読",
         "transport-error": "リクエスト失敗またはタイムアウト"
       },
-      "more": "表示されていないプロフィール：{{n}} 件"
+      "more": "表示されていないプロフィール：{{n}} 件",
+      "checked": "{{date}} に {{source}} で確認"
     }
   },
   "executionCard": {
@@ -7978,6 +8058,121 @@
       "expectedVsMeasured": "期待 {{expected}}、実測 {{measured}}"
     }
   },
+  "executive": {
+    "title": "エグゼクティブダッシュボード",
+    "subtitle": "選択したクロールのモジュールレポートをまとめて表示します。保存済みデータからローカルで計算し、再クロールや公開は行いません。",
+    "workflow": "流れ：診断 → 優先度の選択 → モジュールの根拠 → What-If → ブリーフ / コピー / エクスポート。CMS への公開は行いません。",
+    "run": "クロール：{{date}}",
+    "runUnsaved": "クロール：未保存",
+    "hss": {
+      "title": "Holistic Semantic Score（HSS）",
+      "valueAria": "HSS {{value}}",
+      "status": {
+        "complete": "完全",
+        "partial": "部分的",
+        "insufficient": "カバレッジ不足",
+        "unavailable": "利用不可"
+      },
+      "coverageAria": "HSS の重みのうち測定済みの割合",
+      "coverage": "測定済みの重み {{pct}}% · {{total}} モジュール中 {{count}}",
+      "insufficient": "測定済みモジュールの重みが {{min}}% 未満のため、スコアは表示されません。",
+      "renormalised": "測定済みモジュールで再正規化した値：{{value}}。",
+      "partialHint": "部分スコア：測定済みモジュールのみで再正規化しています。欠けているモジュールは 0 として数えません。",
+      "disclaimer": "SEOmi のヒューリスティックであり、Google の指標ではありません。技術監査スコアとは別です。プロファイル {{profile}}。"
+    },
+    "modules": {
+      "title": "モジュール",
+      "weight": "重み {{weight}}%（実効 {{effective}}%）",
+      "open": "詳細を開く"
+    },
+    "module": {
+      "sfs": "サイトフォーカス（SFS）",
+      "tas": "トピック権威性（TAS）",
+      "igos": "情報利得（IGOS）",
+      "sprs": "セマンティック PageRank（SPRS）",
+      "eetv": "エンティティ信頼（EETV）",
+      "sija": "検索意図（SIJA）",
+      "aior": "AI 対応度（AIO-R）"
+    },
+    "componentStatus": {
+      "measured": "測定済み",
+      "unavailable": "利用不可",
+      "invalid": "無効な値",
+      "incompatible": "別のクロールまたは古いデータ"
+    },
+    "reason": {
+      "not-provided": "値が指定されていません。",
+      "not-run": "このクロールではモジュールが実行されていません。",
+      "domain-aggregation-undefined": "ページ単位のモジュールです。サイト単位のスコアが未定義のため、平均せずに除外しています。",
+      "sfs-no-scored-pages": "評価できたページがありません。",
+      "tas-no-reference-map": "TAS を測定するには参照トピックマップを作成してください。",
+      "eetv-no-signals": "信頼シグナルが見つかりませんでした。",
+      "aio-unavailable": "AI 対応度を評価できたページがありません。",
+      "aio-error": "AI 対応度の分析に失敗しました。",
+      "aio-cancelled": "AI 対応度の分析はキャンセルされました。",
+      "aio-partial": "一部のページをスキップしました（部分カバレッジ）。",
+      "aio-stale": "AI 対応度の結果が古くなっています。",
+      "out-of-range": "値が 0～100 の範囲外です。",
+      "different-run": "値は別のクロールのものです。",
+      "what-if-removed": "What-If シナリオで除外しました。"
+    },
+    "whatIf": {
+      "title": "What-If（このクロールのコピー）",
+      "hint": "測定済みモジュールの値を変更すると、HSS の再計算結果を確認できます。何も保存されず、トラフィック予測でもありません。",
+      "result": "シナリオの HSS {{value}}（{{delta}}）",
+      "unavailable": "シナリオの HSS は利用できません。",
+      "reset": "リセット"
+    },
+    "actions": {
+      "title": "アクションフィード",
+      "hint": "推定 1 時間あたりの HSS 差分で並べています。差分は各モジュール自身のシミュレーションのみから算出し、ない場合は利用不可です。トラフィック、引用、ROI を約束するものではありません。",
+      "empty": "このクロールのモジュールレポートからアクションは生成されませんでした。",
+      "internalLink": "内部リンクを追加：{{from}} → {{to}}",
+      "delta": "HSS Δ {{value}}",
+      "deltaUnavailable": "HSS Δ 利用不可（宣言されたモデルなし）",
+      "moduleDelta": "{{module}} Δ {{value}}",
+      "effort": "推定工数 {{min}}～{{max}} 時間",
+      "effortUnknown": "工数不明",
+      "scope": "URL：{{urls}} · 根拠：{{evidence}}",
+      "blocked": "ブロック中：ページを維持するか、先にデータを収集してください。",
+      "conflict": {
+        "protected-by-evidence": "トラフィック、コンバージョン、リンクにより保護されています（URL：{{count}}）。",
+        "needs-data": "テレメトリがないか古いため、削除前に確認してください（URL：{{count}}）。",
+        "merge-vs-expand": "カニバリゼーションのある URL：先に統合し、その後拡充してください（URL：{{count}}）。",
+        "keep-vs-prune": "別のアクションがこの URL を維持・改善します。維持を優先します（URL：{{count}}）。"
+      },
+      "dependsOn": "他のアクションの後に実施：{{count}}。",
+      "open": "{{tab}} を開く",
+      "more": "その他のアクションはモジュールのタブにあります：{{count}}。"
+    },
+    "export": {
+      "copy": "HSS とアクションをコピー（JSON）",
+      "copied": "コピーしました",
+      "failed": "コピーに失敗しました",
+      "hint": "エクスポートには正確な入力と重みが含まれるため、スコアを再計算できます。"
+    }
+  },
+  "surgical": {
+    "title": "ピンポイント修正（修正前 / 修正後）",
+    "location": "ページ {{url}}、H{{level}}「{{heading}}」の下（セクション #{{position}}）。",
+    "noSections": "このページでは H2/H3 セクションが取得されていません。セクション単位のヒントを得るには再クロールしてください。",
+    "nothing": "H2 セクションはすでにコアトピックをカバーしています。ピンポイント修正の提案はありません。",
+    "before": "修正前",
+    "after": "修正後",
+    "headingTemplate": "{{heading}}：{{entity}}",
+    "answerFirst": "{{topic}}：[{{terms}} に触れる 1～2 文の直接的な回答]",
+    "answerFirstNoTerms": "{{topic}}：[1～2 文の直接的な回答]",
+    "missing": "不足しているコアトピックのエンティティ：{{terms}}",
+    "dangling": "最初の文が「{{opener}}」で始まり、前の文章を参照しています。主語を明示してください。",
+    "drift": "トピックから外れているセクション（削除または書き直し）：",
+    "driftItem": "「{{heading}}」— トピック外の語：{{terms}}",
+    "forecast": "このページが改善目標に達した場合、SFS {{current}} → {{projected}}（{{delta}}）。SFS エンジンによるシミュレーションです。",
+    "noForecast": "このページの SFS 予測はありません。",
+    "factGate": "[プレースホルダー] には検証済みの事実のみを入れてください。何も公開されません。",
+    "copy": "修正後の HTML をコピー",
+    "copied": "コピーしました",
+    "failed": "コピーに失敗しました"
+  },
   "scoreDropAlert": {
     "aio": {
       "title": "AI対応度が低下",
@@ -7999,6 +8194,8 @@
     "unknown": "{{count}} 件のリンクは類似度が不明のため、流出として数えません。",
     "unweightedZone": "{{count}} 件のリンクは DOM ゾーンが不明または重みなしのため、中立の重み 1 で計算されます。",
     "notConverged": "ソルバーが収束しませんでした。スコアは概算です。",
+    "degree": "被リンク/発リンク",
+    "similarityWeighted": "リンク重みには {{pageEdges}} 件のリンクでページの語彙類似度、{{contextEdges}} 件でアンカー文脈の類似度を含みます（下限 0.05）。未計測のリンクがあるページはゾーン重みのみです。",
     "whatIf": {
       "title": "リンクのWhat-Ifシミュレーター",
       "source": "リンク元ページ",
@@ -8006,6 +8203,9 @@
       "action": "変更",
       "add": "リンクを追加",
       "remove": "リンクを削除",
+      "addPage": "新しいページを追加",
+      "removePage": "ページを削除",
+      "newPage": "新しいページの URL",
       "run": "シミュレーション",
       "noChange": "スコアに変化はありません。",
       "before": "変更前",
@@ -8059,11 +8259,19 @@
       "failed": "ページをレンダリングできなかったため、意図の結果はありません。",
       "funnel": "レンダリングした上位ページ: {{requested}} 件中 {{analysed}} 件。ファネル段階: TOFU {{tofu}}、MOFU {{mofu}}、BOFU {{bofu}}。",
       "gapsTitle": "不足している形式",
+      "serpMatch": "TOP の意図: {{serp}}（レンダリングした {{analysed}} ページ中 {{pages}} ページ）。あなたのページは一致しています（{{own}}）。",
+      "serpMismatch": "TOP の意図: {{serp}}（レンダリングした {{analysed}} ページ中 {{pages}} ページ）ですが、あなたのページは {{own}} に見えます。同じニーズに応えているか確認してください。",
+      "serpUnknown": "TOP の意図: {{serp}}（レンダリングした {{analysed}} ページ中 {{pages}} ページ）。あなたのページには明確な意図がないため比較できません。",
+      "serpNoMajority": "レンダリングした {{analysed}} 件の TOP ページの過半数に共通する意図はありません。",
+      "drillDown": "レンダリングした TOP ページ（{{n}}）",
+      "topPage": "{{url}} · {{intent}} · {{stage}}",
+      "previous": "前回の実行 {{runAt}}: {{intent}}、SSAS {{ssas}}、TOP ページ {{analysed}} 件をレンダリング。",
       "gap": {
         "table": "比較表を追加: 上位 {{analysed}} ページ中 {{count}} ページにあります。",
         "ordered-list": "番号付き手順を追加: 上位 {{analysed}} ページ中 {{count}} ページが番号付きリストを使っています。",
         "calculator": "実際に動く計算ツールを検討: 上位 {{analysed}} ページ中 {{count}} ページに実際のフォーム要素付きのものがあります。",
-        "product-cards": "商品やオファーを表示: 上位 {{analysed}} ページ中 {{count}} ページが商品・価格カードを表示しています。"
+        "product-cards": "商品やオファーを表示: 上位 {{analysed}} ページ中 {{count}} ページが商品・価格カードを表示しています。",
+        "cta": "明確な行動喚起を追加してください: TOP ページ {{analysed}} 件中 {{count}} 件にあります（純粋な情報ページでは不要です）。"
       }
     }
   },
@@ -8093,9 +8301,60 @@
     "chunk": {
       "leading-pronoun": "パッセージ {{index}} は前の文脈が必要な代名詞で始まっています。",
       "too-short": "パッセージ {{index}} は単独で成立するには短すぎます。"
+    },
+    "policy": {
+      "advisory": "助言",
+      "enforced": "強制"
+    },
+    "gate": {
+      "advice": "ポリシー：{{policy}}。助言のみで、公開の判断はあなたが行います。",
+      "pass": "ポリシー：{{policy}}。この入力内容でチェックに合格しました。",
+      "hold": "ポリシー：{{policy}}。人によるレビューのため保留：チェックが完全な OK ではありません。"
+    },
+    "gap": {
+      "stale-baseline": "基準クロールが 30 日より古くなっています。",
+      "unsupported-language": "パッセージのルールがサイトの言語に対応していないため、パッセージのチェックは部分的です。",
+      "no-baseline-date": "基準クロールに完了日がありません。"
+    },
+    "donors": {
+      "title": "内部リンクのドナー",
+      "rule": "類似度 60～85% かつ関連度（TRS）70 以上の既存ページを最大 3 件。",
+      "none": "ドナーの条件を満たすページはありません。",
+      "row": "{{url}}（類似度 {{similarity}}%、TRS {{trs}}）",
+      "links": {
+        "yes": "すでに下書き URL にリンクしています",
+        "no": "まだ下書き URL にリンクしていません",
+        "unknown": "既存のリンクは不明です"
+      },
+      "anchor": "提案アンカー：「{{anchor}}」",
+      "noAnchor": "アンカーの提案なし（短いタイトル行がありません）",
+      "placement": "配置の提案：同じトピックの本文パッセージ。ファーストビューに関する主張ではなく、ビューポートはレンダリングしていません。"
+    },
+    "aio": {
+      "title": "パッセージの準備状況（AIO-R）",
+      "language": {
+        "supported": "{{language}} のルール：完全。",
+        "uncertain": "{{language}} のルール：基本のみ。結果は目安です。",
+        "unsupported": "{{language}} のパッセージのルールはありません。結果は部分的です。"
+      },
+      "summary": "弱いパッセージ：{{total}} 件中 {{weak}} 件。",
+      "chunk": "パッセージ {{index}}（文字 {{start}}～{{end}}、スコア {{score}}）"
     }
   },
   "parityUi": {
+    "exception": {
+      "reasonPlaceholder": "理由（任意）",
+      "reasonLabel": "ローカル例外の理由: {{language}} の {{topic}}",
+      "removeLabel": "{{language}} の {{topic}} のローカル例外を削除",
+      "addLabel": "{{language}} で {{topic}} を意図的なローカルとしてマーク",
+      "remove": "ローカルを取り消す",
+      "add": "ローカルとしてマーク",
+      "column": "ローカル例外"
+    },
+    "scope": {
+      "document-language": "hreflang 注釈が見つかりません。ページは宣言された文書言語で比較されます。",
+      "hreflang-clusters": "{{clusters}} 件の hreflang クラスター内のページのみを比較しました。{{issues}} 件の hreflang 技術的問題は別途報告され、コンテンツの不足ではありません。"
+    },
     "title": "国際パリティ",
     "summary": "網羅 {{covered}} 件、浅い {{shallow}} 件、不足 {{missing}} 件、意図的なローカル {{local}} 件。",
     "inconclusive": "判定不能: 利用できるデータではパリティを判断できません。",
@@ -8155,7 +8414,10 @@
     "sampledOnly": "サンプルのみ（全文は未測定）",
     "variablesUnavailable": "テンプレート変数は利用できません",
     "noindex": "推奨: このセグメントをnoindexにする",
-    "limit": "推奨: インデックス対象ページ数を制限する"
+    "limit": "推奨: インデックス対象ページ数を制限する",
+    "tasNodes": "トピック権威: サブトピックノード {{nodes}} 件、各ノードに代表 URL 1 件（計 {{representatives}} URL）",
+    "tasUnknown": "これらのページのトピック権威サブトピックは不明です（権威レポートに対応付けがありません）",
+    "noindexWithheld": "DOM 骨格、テンプレート変数、全文が計測されるまで noindex は提案されません。"
   },
   "outreach": {
     "title": "アウトリーチ対象",
@@ -8257,13 +8519,25 @@
     "detail": "オフセット {{offset}}、トピック類似度 {{topic}}、最も近い競合箇所 {{nearest}}。",
     "source": "最も近い情報源: {{url}}(順位 {{rank}})。",
     "noSource": "近い情報源なし。",
+    "run": "{{url}} の実行 {{runAt}} · ベクトル: {{provider}} / {{model}}",
+    "compareFirst": "このフレーズで最初に保存された実行です。",
+    "compareModelChanged": "前回の実行から埋め込みモデルが変わったため（{{previous}}）、スコアは比較しません。モデルの変更はページ品質の低下ではありません。",
+    "compareBaselineChanged": "前回から {{delta}} 変化しましたが、比較した TOP ページが変わりました。変化の一部はページではなく新しい基準によるものです。",
+    "compareSameBasis": "同じ TOP ページとモデルで前回から {{delta}} 変化しました。",
+    "compareNoDelta": "どちらかの実行にスコアがないため、比較できません。",
+    "sources": "比較したページ（{{n}}）",
+    "sourceRow": "#{{rank}} {{url}} · 取得 {{fetchedAt}} · エコー段落 {{echo}} 件とゲイン段落 {{gain}} 件の最近傍",
+    "history": "保存された実行（{{n}}）",
+    "historyRow": "{{runAt}}: スコア {{score}} · {{provider}} / {{model}} · {{requested}} ページ中 {{available}} ページ",
     "limit": {
       "no-comparable-documents": "比較可能な競合文書がありません。",
       "too-few-documents": "信頼できる基準には競合文書が少なすぎます。",
       "some-documents-missing": "取得できなかった競合ページがあります。",
       "no-target-chunks": "ページに分析可能な段落がありません。",
       "off-topic-below-quota": "トピック内の段落が少なすぎます。",
-      "local-lexical-embeddings": "類似度はセマンティックモデルではなくローカルの語彙ベクトルで計算されるため、ゾーンは近似値です。"
+      "local-lexical-embeddings": "類似度はセマンティックモデルではなくローカルの語彙ベクトルで計算されるため、ゾーンは近似値です。",
+      "heuristic-entities": "エンティティは大文字で始まる語句と主語・述語・目的語の事実から抽出しており、学習済みのエンティティモデルではありません。",
+      "semantic-provider-unavailable": "プロジェクトのセマンティック埋め込みプロバイダーが利用できなかったため、ローカルの語彙ベクトルを使用しました。"
     },
     "rec": {
       "rewrite-echo": "オフセット {{offset}} の段落は競合の記述と重複しています。自分の言葉で書き直してください。",
@@ -8328,6 +8602,22 @@
       "ok": "正常",
       "inconclusive": "判定不能",
       "no-logs": "ログなし"
+    },
+    "ranges": {
+      "title": "ボット検証の根拠",
+      "note": "任意：クローラー運営者からダウンロードした公式 IP 範囲ファイル（例：gptbot.json、perplexitybot.json）を読み込みます。SEOmi 自体はダウンロードしません。範囲はそのボットについて DNS より優先され、次回のインポートから適用されます。",
+      "family": "ボット",
+      "file": "公式 IP 範囲ファイル（JSON）",
+      "loaded": "{{family}}：{{source}} から {{count}} 件の範囲（公開 {{created}}、読み込み {{loaded}} UTC）",
+      "summary": "ID チェック：{{checks}} 件（検証済み {{verified}}、自己申告 {{claimed}}、なりすまし {{spoofed}}）。方法：DNS {{dns}}、公開範囲 {{ranges}}、なし {{none}}。最終チェック：{{time}} UTC。",
+      "noChecks": "クローラーの ID はまだチェックされていません。",
+      "errors": {
+        "invalid-json": "ファイルが有効な JSON ではありません。",
+        "unsupported-format": "未対応の形式です：ipv4Prefix または ipv6Prefix を含む prefixes リストが必要です。",
+        "no-valid-prefix": "ファイルに有効な IP 範囲がありません。",
+        "too-many-prefixes": "ファイルに 5,000 件を超える範囲があります。",
+        "storageFailed": "ローカルストレージを更新できず、範囲は保存されませんでした。"
+      }
     }
   },
   "altCheckUi": {
@@ -8371,14 +8661,19 @@
     "running": "下書きとクロールデータの埋め込みを作成中…",
     "unreachable": "選択した埋め込みプロバイダーからベクトルを取得できませんでした。プロジェクトの設定と接続を確認してください。",
     "cancelled": "チェックをキャンセルしました。結果は適用されていません。",
-    "stale": "入力またはクロールが変更されました。チェックを再実行してください。"
+    "stale": "入力またはクロールが変更されました。チェックを再実行してください。",
+    "policy": "レビューポリシー",
+    "policyAdvisory": "助言（既定）",
+    "policyEnforced": "強制（オプトイン）",
+    "policyHint": "強制ポリシーは、チェックが完全な OK でない場合に下書きを人の判断のために保留するだけです。公開・削除・リダイレクトは一切行いません。"
   },
   "telemetrySourcesUi": {
     "title": "データソース",
     "sources": {
       "gsc": "GSC",
       "ga4": "GA4",
-      "backlinks": "被リンク"
+      "backlinks": "被リンク",
+      "revenue": "収益"
     },
     "states": {
       "measured": "計測済み",
@@ -8397,7 +8692,11 @@
       "no": "データの切り詰め: なし"
     },
     "coverage": "カバレッジ: {{value}}%",
-    "unknownNote": "不明なデータをゼロとして数えることはありません。"
+    "unknownNote": "不明なデータをゼロとして数えることはありません。",
+    "currency": "通貨：{{value}}",
+    "attribution": {
+      "ga4-session-landing-page": "アトリビューション：GA4 のセッションのランディングページ"
+    }
   },
   "offPageSourcesUi": {
     "analyze": "リンク元を分析",
@@ -8552,5 +8851,113 @@
     "languageFallback": "ページの言語が不明なため、文は英語です。",
     "copy": "コピー",
     "copied": "コピーしました"
+  },
+  "offPageLinksUi": {
+    "profileTitle": "サイト全体リンクと重複リンクのプロファイル",
+    "profileSummary": "{{domains}} 件の参照元ドメインから生リンク {{raw}} 件（follow リンクあり {{follow}} 件）。サイト全体ドメイン：{{sitewide}} 件（生リンクの {{share}}%）、繰り返しドメイン：{{repeated}} 件。TBVA は参照元ドメインごとに 1 リンクのみ数えます。",
+    "unknown": "不明",
+    "sample": "読み込んだサンプルに基づくもので、プロバイダーの全プロファイルではありません。",
+    "complete": "プロバイダーが返したすべての行に基づきます。",
+    "rule": "サイト全体 = 参照元ページ 5 件以上かつ異なるアンカー 2 件以下（未較正のヒューリスティックで、ペナルティではありません）。",
+    "columns": {
+      "domain": "参照元ドメイン",
+      "raw": "生リンク",
+      "follow": "Follow",
+      "pages": "参照元ページ",
+      "anchors": "異なるアンカー",
+      "pattern": "パターン"
+    },
+    "patterns": {
+      "single": "単一ページ",
+      "repeated": "繰り返し",
+      "sitewide": "サイト全体"
+    },
+    "anchorTitle": "分析したリンクのアンカー文脈",
+    "anchorNote": "プロバイダーが報告したアンカーテキストを取得済みの参照元テキストから探します。テキストにはリンクのマークアップがないため、一致は周辺の語を示すだけで、その出現がリンクである証拠ではありません。",
+    "noAnchors": "読み込んだサンプルには、分析した参照元ページのリンクがありません。",
+    "anchorRow": "{{source}} → {{target}} · アンカー「{{anchor}}」",
+    "follow": "follow",
+    "nofollow": "nofollow",
+    "offset": "オフセット {{offset}}：",
+    "status": {
+      "located": "アンカーが 1 回見つかりました",
+      "ambiguous": "アンカーが {{n}} 回見つかりました（曖昧）",
+      "not-found": "参照元テキストにアンカーが見つかりません",
+      "no-anchor-text": "アンカーテキストなし（画像リンクなど）",
+      "source-unavailable": "参照元テキストを利用できません"
+    }
+  },
+  "imagePhashUi": {
+    "title": "ほぼ重複する画像（知覚ハッシュ）",
+    "note": "このアプリ内でサイト自身の画像を最大 {{max}} 件、1 回だけダウンロードし、64 ビットの知覚ハッシュを比較します。サーバーがクロスオリジン読み取りを拒否する画像は利用不可のままです。一致は見た目が似ていることを示すだけで、ストック素材の使用、著作者、価値のなさを示すものではありません。",
+    "run": "{{count}} 件の画像をハッシュ化",
+    "cancel": "キャンセル",
+    "threshold": "異なるビット数の上限（0～16）",
+    "uncalibrated": "既定は 8 ビット。このしきい値は実データで較正されていません。",
+    "status": {
+      "running": "ハッシュ化中… {{hashed}} 件完了、{{failed}} 件利用不可",
+      "done": "完了：{{hashed}} 件ハッシュ化、{{failed}} 件利用不可",
+      "cancelled": "キャンセル：{{hashed}} 件ハッシュ化、{{failed}} 件利用不可"
+    },
+    "failures": {
+      "blocked": "{{n}} 件がブロックまたは到達不可",
+      "http-error": "{{n}} 件が HTTP エラー",
+      "too-large": "{{n}} 件が 5 MB 超",
+      "not-image": "{{n}} 件がラスター画像ではない",
+      "decode-failed": "{{n}} 件がデコード不可",
+      "unsupported-url": "{{n}} 件が未対応の URL"
+    },
+    "pair": "{{left}} ≈ {{right}}（{{distance}} ビット異なる）",
+    "identical": "{{left}} = {{right}}（同一ファイル）",
+    "noPairs": "このしきい値ではほぼ重複するペアはありません。",
+    "external": "外部の画像検索結果との比較：利用不可（画像プロバイダーが未設定）。"
+  },
+  "causalImpactUi": {
+    "title": "反事実推定（コントロール系列）",
+    "method": "このプロパティの Search Console の日次クリック数を、変更前最大 90 日間について独立したコントロールプロパティに回帰し、変更がなかった場合のクリック数を予測します。季節性をモデル化しない、Causal Impact の頻度論的な近似です。",
+    "unavailable": {
+      "page-series-unavailable": "単一 URL では推定できません。保存されているのはプロパティ全体の日次クリック数のみです。",
+      "no-test-series": "推定できません。このサイトの保存済み Search Console 日次系列がありません。"
+    },
+    "series": "テスト系列：{{test}} · コントロール：{{control}}",
+    "none": "なし",
+    "status": {
+      "estimated": "変更前 {{pre}} 日と変更後 {{post}} 日から推定しました。",
+      "not-estimable": "推定できません（データのある変更前 {{pre}} 日、変更後 {{post}} 日）。"
+    },
+    "reasons": {
+      "short-pre-period": "変更前の期間が 28 日未満です。",
+      "short-post-period": "変更後の期間が 7 日未満です。",
+      "missing-data": "いずれかの期間で 10% を超える日が欠けています。",
+      "no-control": "同じフィルターの独立したコントロールプロパティが保存されていません。コントロールとして使う別ドメインの Search Console データを保存してください。",
+      "flat-control": "コントロール系列が変更前の期間に変動していません。",
+      "poor-prefit": "コントロールが変更前の期間をほとんど説明できません（R² が 0.5 未満）。",
+      "placebo-failed": "変更前の期間でのプラセボテストが、効果がないはずの所で効果を検出しました。モデルは信頼できません。"
+    },
+    "prefit": "変更前の当てはまり：R² {{r2}}、残差の自己相関 {{rho}}。",
+    "placeboPassed": "プラセボテスト合格（変更前の区間 {{lower}}～{{upper}} は 0 を含みます）。",
+    "placeboFailed": "プラセボテスト不合格（変更前の区間 {{lower}}～{{upper}} は 0 を含みません）。",
+    "absolute": "クリック数への累積効果：{{value}}（95% 区間 {{lower}}～{{upper}}）。",
+    "relative": "相対効果：{{value}}（95% 区間 {{lower}}～{{upper}}）。",
+    "probability": "効果がこの符号である確率：{{value}}（正規近似であり、ベイズ事後確率ではありません）。",
+    "caveat": "コントロールで調整した推定は因果関係の証明ではありません。他の変更、Google のアップデート、コントロールにも及ぶ変動によって偏ることがあります。ROI は推定しません。"
+  },
+  "revenueImportUi": {
+    "title": "収益（任意の GA4 エクスポート）",
+    "model": "ランディングページと収益を含み、オーガニック検索のセッションに絞り込んだ GA4 レポートの CSV をインポートします。収益は GA4 が報告するとおりセッションのランディングページに帰属させ、指定した通貨のまま保持します。エクスポートにないページは 0 ではなく不明のままです。",
+    "current": "{{file}} をインポート済み：{{currency}} のランディングページ {{rows}} 件、期間 {{period}}。",
+    "noPeriod": "ファイルに記載なし",
+    "clear": "削除",
+    "none": "収益のエクスポートはインポートされていません。収益は利用不可のままです。",
+    "currency": "通貨（ISO コード）",
+    "organic": "エクスポートにはオーガニック検索のセッションのみが含まれます",
+    "file": "GA4 の CSV エクスポート",
+    "errors": {
+      "invalid-currency": "プロパティの通貨を 3 文字の ISO コード（例：JPY）で入力してください。",
+      "not-organic": "エクスポートがオーガニック検索のセッションに限定されていることを確認してください。",
+      "no-header": "ランディングページ列と収益列を含むヘッダーが見つかりません。",
+      "no-rows": "数値の収益を持つランディングページがファイルにありません。",
+      "storage-failed": "ローカルストレージを更新できず、インポートは保存されませんでした。"
+    }
   }
 }

@@ -100,16 +100,15 @@ const fromFallback = (page: FocusPage, language: string, entries: Map<string, Te
 };
 
 /** Extracts a page's zone-weighted terms; falls back to titles/excerpts/semantic terms and marks the page degraded. */
-export const extractPageTerms = (page: FocusPage, language: string | undefined, brand: Set<string>): PageTerms => {
+export const extractPageTerms = (page: FocusPage, language: string | undefined, brand: Set<string> | ((key: string) => boolean)): PageTerms => {
   const lang = language ?? semanticPageLanguage(page) ?? '';
   const entries = new Map<string, TermEntry>();
   const focusTerms = page.focus_terms ?? [];
   const degraded = !focusTerms.length;
   if (degraded) fromFallback(page, lang, entries);
   else fromFocusTerms(focusTerms, lang, entries);
-  [...entries.keys()].forEach((key) => {
-    if (key.split(' ').some((part) => brand.has(part))) entries.delete(key);
-  });
+  const isBrand = typeof brand === 'function' ? brand : (key: string) => key.split(' ').some((part) => brand.has(part));
+  [...entries.keys()].forEach((key) => { if (isBrand(key)) entries.delete(key); });
   return { url: page.url, language: lang, degraded, entries, neighbors: neighborMap(entries) };
 };
 

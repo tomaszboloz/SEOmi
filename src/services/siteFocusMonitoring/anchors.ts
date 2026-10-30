@@ -1,5 +1,6 @@
 import { readJsonStorage, removeStorage, writeJsonStorage } from '@/services/storage';
 import { MAX_ANCHOR_URL_LENGTH, MAX_ANCHORS } from '@/services/siteFocus/anchors';
+import { notifyFocusConfigChanged } from './configEvents';
 import { focusAnchorsKey, validFocusProject } from './keys';
 
 /** Trimmed, de-duplicated http(s) URLs within the engine's input caps; anything else is dropped, not repaired. */
@@ -20,5 +21,7 @@ export const readAnchorUrls = (projectId: string | null | undefined): string[] =
 export const writeAnchorUrls = (projectId: string, urls: readonly string[] | null | undefined): boolean => {
   if (!validFocusProject(projectId)) return false;
   const value = cleanAnchorUrls(urls ?? []);
-  return value.length ? writeJsonStorage(focusAnchorsKey(projectId), value) : removeStorage(focusAnchorsKey(projectId));
+  const saved = value.length ? writeJsonStorage(focusAnchorsKey(projectId), value) : removeStorage(focusAnchorsKey(projectId));
+  notifyFocusConfigChanged(projectId);
+  return saved;
 };

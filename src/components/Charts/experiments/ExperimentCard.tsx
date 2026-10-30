@@ -1,9 +1,11 @@
 import { useTranslation } from 'react-i18next';
 import type { Intervention } from '@/services/experiments/registry';
 import type { ExperimentEvaluation } from '@/services/experiments/types';
+import type { CausalSetup } from '@/services/experiments/causalSeries';
+import { CausalImpactSection } from './CausalImpactSection';
 
-export const ExperimentCard = ({ intervention, evaluation, onRemove }: {
-  intervention: Intervention; evaluation: ExperimentEvaluation; onRemove: () => void;
+export const ExperimentCard = ({ intervention, evaluation, causal, onRemove }: {
+  intervention: Intervention; evaluation: ExperimentEvaluation; causal?: CausalSetup; onRemove: () => void;
 }) => {
   const { t, i18n } = useTranslation();
   const unavailable = t('experimentsUi.unavailable');
@@ -49,6 +51,7 @@ export const ExperimentCard = ({ intervention, evaluation, onRemove }: {
         {t(`experimentsUi.${key}`)}: {points(evaluation.relativeVsSite?.[key] ?? null)}
       </p>)}
     </>}
+    {causal && <CausalImpactSection setup={causal} />}
     <h6 className="font-semibold">{t('experimentsUi.limitations')}</h6>
     <ul className="list-disc ps-4">{evaluation.limitations.map(reason =>
       <li key={reason}>{t(`experimentsUi.reasons.${reason}`)}</li>)}</ul>

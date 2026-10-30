@@ -7,4 +7,7 @@ export { trsGroup, isBorderlineTrs, OFF_TOPIC_BELOW, ON_TOPIC_FROM, STRONG_FROM,
 export { simulateRemoval, simulateImprovement, buildPagePlaybook } from './recommend';
 export { buildRewriteBrief, buildBriefPrompt, type RewriteBrief } from './brief';
 export { buildLinkSuggestions } from './links';
-export { makeSnapshot, annotateChange, dropMoreThan, contentGuard, evaluateAlerts, type SfsSnapshot, type HistoryAnnotation, type AlertEvent } from './history';
+export { makeSnapshot, annotateChange, comparableSnapshots, breakAnnotations, dropMoreThan, contentGuard, evaluateAlerts, type SfsSnapshot, type HistoryAnnotation, type AlertEvent } from './history';
+export { sfsProfile, sfsProfileRef, comparableSfsProfiles, SFS_PROFILE_ID, SFS_ALGORITHM_VERSION, SFS_CONFIG_HASH, SFS_TRS_SCALE, SFS_BANDS, SFS_SEMANTIC_WEIGHTS, SFS_LEXICAL_WEIGHTS, type SfsProfile, type SfsProfileRef } from './profile';
+export { focusConfigHash } from './configHash';
+export { resolveBrandPolicy, brandReason, cleanBrandList, MAX_BRAND_TERMS, MAX_BRAND_TERM_LENGTH, type BrandPolicy } from './brandPolicy';
