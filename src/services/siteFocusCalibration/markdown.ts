@@ -1,7 +1,7 @@
 import type { CalibrationReport, SiteCalibration } from './types';
 
 const show = (value: number | string | null | undefined): string => (value === null || value === undefined || value === '' ? '—' : String(value));
-const cell = (value: string): string => value.replace(/\|/g, '\\|').replace(/\s+/g, ' ');
+const cell = (value: string): string => value.replace(/[\\|]/g, '\\$&').replace(/\s+/g, ' ');
 
 const siteRow = (site: SiteCalibration): string => [
   site.id, site.kind, show(site.inputSha256?.slice(0, 12)), String(site.pageCount), String(site.scored), String(site.skipped), String(site.partial),

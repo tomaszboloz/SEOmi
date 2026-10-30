@@ -42,7 +42,7 @@ export const reviewItems = (en: unknown, target: unknown, prefix = ''): ReviewIt
   });
 };
 
-const cell = (value: string | undefined): string => (value ?? '—').replace(/\|/g, '\\|').replace(/\r?\n/g, ' ');
+const cell = (value: string | undefined): string => (value ?? '—').replace(/[\\|]/g, '\\$&').replace(/\r?\n/g, ' ');
 
 export interface ChecklistOptions { locale: string; prefix?: string; generatedAt: string; flaggedOnly?: boolean }
 
