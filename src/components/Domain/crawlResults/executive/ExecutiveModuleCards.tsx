@@ -1,5 +1,6 @@
 import { useTranslation } from 'react-i18next';
-import type { HssModule, HssReport } from '@/services/hss';
+import type { HssModule, HssReport, HssTrend } from '@/services/hss';
+import { ExecutiveTrend } from './ExecutiveTrend';
 import type { CrawlTab } from '../helpers/crawlResultsTabsConfig';
 
 /** Existing screens the module cards open; modules without a site-level view have no link. */
@@ -8,7 +9,7 @@ export const MODULE_TAB: Record<HssModule, CrawlTab | null> = {
 };
 
 /** Meso level (#73 GEM-73-03): seven module cards with value, weight, status and the reason for a gap. */
-export const ExecutiveModuleCards = ({ hss, onOpen }: { hss: HssReport; onOpen: (tab: CrawlTab) => void }) => {
+export const ExecutiveModuleCards = ({ hss, trend = null, onOpen }: { hss: HssReport; trend?: HssTrend | null; onOpen: (tab: CrawlTab) => void }) => {
   const { t } = useTranslation();
   return (
     <section aria-labelledby="executive-modules-title" className="space-y-2">
@@ -20,6 +21,7 @@ export const ExecutiveModuleCards = ({ hss, onOpen }: { hss: HssReport; onOpen: 
             <li key={item.module} className="flex flex-col gap-1 rounded-lg border border-slate-800 bg-slate-950/40 p-3 text-xs text-slate-300">
               <span className="font-medium text-slate-100">{t(`executive.module.${item.module}`)}</span>
               <span className="font-mono text-2xl text-slate-100">{item.value ?? '—'}</span>
+            {item.status === 'measured' && <ExecutiveTrend trend={trend} value={trend?.modules[item.module]} />}
               <span>{t(`executive.componentStatus.${item.status}`)} · {t('executive.modules.weight', { weight: Math.round(item.weight * 100), effective: Math.round(item.effectiveWeight * 1000) / 10 })}</span>
               {item.status !== 'measured' && item.reason && <span className="text-slate-400">{t(`executive.reason.${item.reason}`, { defaultValue: item.reason })}</span>}
               {item.status === 'measured' && item.reason && <span className="text-amber-200">{t(`executive.reason.${item.reason}`, { defaultValue: item.reason })}</span>}
