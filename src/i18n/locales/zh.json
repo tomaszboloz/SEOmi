@@ -7542,6 +7542,15 @@
       "title": "历史",
       "empty": "此项目完成第二次分析后会显示历史记录。",
       "row": "{{date}}：{{score}}"
+    },
+    "languageStatus": {
+      "uncertain": "{{languages}} 的结果不确定：使用的是基础代词和填充词列表，尚未经过母语人士审核。",
+      "unsupported": "{{languages}} 没有语言规则。已改用英语词表作为替代，因此代词和事实识别并不完整，这些分数不确定。",
+      "undetermined": "未确定的语言",
+      "short": {
+        "uncertain": "不确定",
+        "unsupported": "无规则（以英语替代）"
+      }
     }
   },
   "trust": {

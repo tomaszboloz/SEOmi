@@ -7542,6 +7542,15 @@
       "title": "Cronologia",
       "empty": "La cronologia compare dopo la seconda analisi di questo progetto.",
       "row": "{{date}}: {{score}}"
+    },
+    "languageStatus": {
+      "uncertain": "I risultati per {{languages}} sono incerti: si usano elenchi di base di pronomi e riempitivi non ancora verificati da un madrelingua.",
+      "unsupported": "Non esistono regole linguistiche per {{languages}}. Sono stati usati in sostituzione elenchi di parole inglesi, quindi il rilevamento di pronomi e fatti è parziale e questi punteggi sono incerti.",
+      "undetermined": "lingua non determinata",
+      "short": {
+        "uncertain": "incerto",
+        "unsupported": "nessuna regola (ripiego inglese)"
+      }
     }
   },
   "trust": {

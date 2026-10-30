@@ -7542,6 +7542,15 @@
       "title": "Verlauf",
       "empty": "Der Verlauf erscheint nach der zweiten Analyse dieses Projekts.",
       "row": "{{date}}: {{score}}"
+    },
+    "languageStatus": {
+      "uncertain": "Ergebnisse für {{languages}} sind unsicher: Es werden einfache Pronomen- und Füllwortlisten verwendet, die noch kein Muttersprachler geprüft hat.",
+      "unsupported": "Für {{languages}} gibt es keine Sprachregeln. Ersatzweise wurden englische Wortlisten verwendet, daher ist die Erkennung von Pronomen und Fakten lückenhaft und diese Werte sind unsicher.",
+      "undetermined": "unbestimmte Sprache",
+      "short": {
+        "uncertain": "unsicher",
+        "unsupported": "keine Regeln (englischer Ersatz)"
+      }
     }
   },
   "trust": {

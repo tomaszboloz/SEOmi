@@ -7542,6 +7542,15 @@
       "title": "History",
       "empty": "History appears after the second analysis of this project.",
       "row": "{{date}}: {{score}}"
+    },
+    "languageStatus": {
+      "uncertain": "Results for {{languages}} are uncertain: basic pronoun and filler lists are used and have not been reviewed by a native speaker.",
+      "unsupported": "No language rules exist for {{languages}}. English word lists were used as a fallback, so pronoun and fact detection is partial and these scores are uncertain.",
+      "undetermined": "undetermined language",
+      "short": {
+        "uncertain": "uncertain",
+        "unsupported": "no rules (English fallback)"
+      }
     }
   },
   "trust": {

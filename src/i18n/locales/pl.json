@@ -7542,6 +7542,15 @@
       "title": "Historia",
       "empty": "Historia pojawi się po drugiej analizie tego projektu.",
       "row": "{{date}}: {{score}}"
+    },
+    "languageStatus": {
+      "uncertain": "Wyniki dla {{languages}} są niepewne: używane są podstawowe listy zaimków i wypełniaczy, których nie sprawdził jeszcze rodzimy użytkownik języka.",
+      "unsupported": "Brak reguł językowych dla {{languages}}. Zastępczo użyto angielskich list słów, więc wykrywanie zaimków i faktów jest częściowe, a te wyniki są niepewne.",
+      "undetermined": "nieustalony język",
+      "short": {
+        "uncertain": "niepewne",
+        "unsupported": "brak reguł (zastępczo angielskie)"
+      }
     }
   },
   "trust": {

@@ -8,6 +8,7 @@ export { extractTriples } from './spo';
 export { selfContainmentOf } from './selfContainment';
 export { aioRProfile, legacyAioProfile, AIO_R_MAX_WORDS } from './profile';
 export { rulesFor, AIO_LANGUAGES, type LanguageRules } from './languageRules';
+export { aioLanguageStatusGroups, type AioLanguageStatusGroups } from './languageStatus';
 export { buildRewritePrompt, rewritePassage, type RewriteOptions, type RewriteOutcome } from './rewrite';
 export { checkRewritePreservation, compareRewrite, extractPreservationTokens, passageRevision, profileRewrite, type PreservationCheck, type PreservationTokens, type RewriteComparison, type RewriteProfile, type RewriteProfileOptions } from './rewriteReview';
 export { readAioHistory, recordAioSnapshot, makeAioSnapshot, aioHistoryKey, validAioProject, AIO_HISTORY_LIMIT, type AioSnapshot } from './history';

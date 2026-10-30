@@ -7542,6 +7542,15 @@
       "title": "기록",
       "empty": "기록은 이 프로젝트의 두 번째 분석 이후에 표시됩니다.",
       "row": "{{date}}: {{score}}"
+    },
+    "languageStatus": {
+      "uncertain": "{{languages}}의 결과는 불확실합니다. 원어민 검토를 거치지 않은 기본 대명사 및 군더더기 표현 목록을 사용합니다.",
+      "unsupported": "{{languages}}에 대한 언어 규칙이 없습니다. 대신 영어 단어 목록을 사용했으므로 대명사와 사실 감지가 부분적이며 이 점수는 불확실합니다.",
+      "undetermined": "확인되지 않은 언어",
+      "short": {
+        "uncertain": "불확실",
+        "unsupported": "규칙 없음(영어로 대체)"
+      }
     }
   },
   "trust": {

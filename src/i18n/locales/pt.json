@@ -7542,6 +7542,15 @@
       "title": "Histórico",
       "empty": "O histórico aparece após a segunda análise deste projeto.",
       "row": "{{date}}: {{score}}"
+    },
+    "languageStatus": {
+      "uncertain": "Os resultados para {{languages}} são incertos: são usadas listas básicas de pronomes e expressões de enchimento ainda não revistas por um falante nativo.",
+      "unsupported": "Não existem regras de idioma para {{languages}}. Foram usadas listas de palavras em inglês como alternativa, por isso a deteção de pronomes e factos é parcial e estas pontuações são incertas.",
+      "undetermined": "idioma não determinado",
+      "short": {
+        "uncertain": "incerto",
+        "unsupported": "sem regras (alternativa em inglês)"
+      }
     }
   },
   "trust": {

@@ -7542,6 +7542,15 @@
       "title": "Historique",
       "empty": "L'historique apparaît après la deuxième analyse de ce projet.",
       "row": "{{date}} : {{score}}"
+    },
+    "languageStatus": {
+      "uncertain": "Les résultats pour {{languages}} sont incertains : des listes de base de pronoms et de formules creuses sont utilisées, sans relecture par un locuteur natif.",
+      "unsupported": "Aucune règle linguistique n'existe pour {{languages}}. Des listes de mots anglaises ont été utilisées par défaut : la détection des pronoms et des faits est donc partielle et ces scores sont incertains.",
+      "undetermined": "langue indéterminée",
+      "short": {
+        "uncertain": "incertain",
+        "unsupported": "aucune règle (repli anglais)"
+      }
     }
   },
   "trust": {
