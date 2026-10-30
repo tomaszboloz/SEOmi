@@ -7999,6 +7999,8 @@
     "unknown": "{{count}} enlaces tienen similitud desconocida y no cuentan como fuga.",
     "unweightedZone": "{{count}} enlaces tienen una zona DOM desconocida o sin peso y cuentan con el peso neutro 1.",
     "notConverged": "El solver no convergió; las puntuaciones son aproximadas.",
+    "degree": "Enlaces entrada/salida",
+    "similarityWeighted": "Los pesos incluyen similitud léxica de páginas en {{page}} enlaces y similitud del contexto del ancla en {{context}} enlaces (mínimo 0,05). Las páginas con algún enlace sin medir solo usan pesos de zona.",
     "whatIf": {
       "title": "Simulador de enlaces What-If",
       "source": "Desde la página",
@@ -8006,6 +8008,9 @@
       "action": "Cambio",
       "add": "Añadir enlace",
       "remove": "Quitar enlace",
+      "addPage": "Añadir página nueva",
+      "removePage": "Eliminar página",
+      "newPage": "URL de la página nueva",
       "run": "Simular",
       "noChange": "Sin cambios en las puntuaciones.",
       "before": "Antes",

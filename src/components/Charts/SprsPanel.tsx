@@ -10,9 +10,9 @@ export const SprsPanel = ({ report }: { report: SprsReport }) => {
     {report.status === 'unavailable' ? <p role="status" className="text-slate-400">{t('sprsUi.empty')}</p> : <>
       {!report.converged && <p role="status" className="text-amber-300">{t('sprsUi.notConverged')}</p>}
       <table className="w-full text-left">
-        <thead><tr><th>{t('sprsUi.page')}</th><th>{t('sprsUi.score')}</th><th /></tr></thead>
+        <thead><tr><th>{t('sprsUi.page')}</th><th>{t('sprsUi.score')}</th><th>{t('sprsUi.degree')}</th><th /></tr></thead>
         <tbody>{report.pages.map((page) => <tr key={page.nodeId}>
-          <td className="break-all">{page.nodeId}</td><td>{page.score}</td>
+          <td className="break-all">{page.nodeId}</td><td>{page.score}</td><td>{page.inDegree}/{page.outDegree}</td>
           <td className="space-x-1">
             {page.deadEnd && <span className="text-rose-300">{t('sprsUi.deadEnd')}</span>}
             {page.underLinked && <span className="text-amber-300">{t('sprsUi.underLinked')}</span>}
@@ -21,6 +21,7 @@ export const SprsPanel = ({ report }: { report: SprsReport }) => {
         </tr>)}</tbody>
       </table>
       {report.unknownSimilarityEdges > 0 && <p className="text-slate-400">{t('sprsUi.unknown', { count: report.unknownSimilarityEdges })}</p>}
+      {Boolean(report.pageSimilarityWeightedEdges || report.contextSimilarityWeightedEdges) && <p className="text-slate-400">{t('sprsUi.similarityWeighted', { page: report.pageSimilarityWeightedEdges ?? 0, context: report.contextSimilarityWeightedEdges ?? 0 })}</p>}
       {report.unweightedZoneLinks > 0 && <p className="text-slate-400">{t('sprsUi.unweightedZone', { count: report.unweightedZoneLinks })}</p>}
     </>}
   </section>;

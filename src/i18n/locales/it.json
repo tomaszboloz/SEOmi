@@ -7999,6 +7999,8 @@
     "unknown": "{{count}} link hanno similarità sconosciuta e non contano come perdita.",
     "unweightedZone": "{{count}} link hanno una zona DOM sconosciuta o non ponderata e contano con il peso neutro 1.",
     "notConverged": "Il solver non è convergente; i punteggi sono approssimati.",
+    "degree": "Link in/out",
+    "similarityWeighted": "I pesi includono la similarità lessicale delle pagine su {{page}} link e quella del contesto dell'ancora su {{context}} link (minimo 0,05). Le pagine con un link non misurato usano solo i pesi di zona.",
     "whatIf": {
       "title": "Simulatore di link What-If",
       "source": "Dalla pagina",
@@ -8006,6 +8008,9 @@
       "action": "Modifica",
       "add": "Aggiungi link",
       "remove": "Rimuovi link",
+      "addPage": "Aggiungi nuova pagina",
+      "removePage": "Rimuovi pagina",
+      "newPage": "URL della nuova pagina",
       "run": "Simula",
       "noChange": "Nessuna variazione dei punteggi.",
       "before": "Prima",

@@ -7999,6 +7999,8 @@
     "unknown": "{{count}} links have unknown similarity and are not counted as leaks.",
     "unweightedZone": "{{count}} links have an unknown or unweighted DOM zone and count at the neutral weight 1.",
     "notConverged": "The solver did not converge; scores are approximate.",
+    "degree": "Links in/out",
+    "similarityWeighted": "Link weights include lexical page similarity on {{page}} links and anchor-context similarity on {{context}} links (floor 0.05). Pages with any unmeasured link keep zone weights only.",
     "whatIf": {
       "title": "What-If link simulator",
       "source": "From page",
@@ -8006,6 +8008,9 @@
       "action": "Change",
       "add": "Add link",
       "remove": "Remove link",
+      "addPage": "Add new page",
+      "removePage": "Remove page",
+      "newPage": "New page URL",
       "run": "Simulate",
       "noChange": "No score changes.",
       "before": "Before",

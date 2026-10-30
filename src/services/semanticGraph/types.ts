@@ -22,6 +22,10 @@ export interface SemanticContentEdge {
   unweightedZoneLinks?: number;
   /** rel=nofollow links: kept in the map, excluded from SPRS link flow. */
   nofollowLinks?: number;
+  /** Sum of lexical simContext over followed links whose context and target terms were both known (#71). */
+  contextSimilaritySum?: number;
+  /** Followed links with a known simContext; simContext is unknown for the edge unless this equals its followed links. */
+  contextKnownLinks?: number;
 }
 
 export interface SemanticTopicEdge {

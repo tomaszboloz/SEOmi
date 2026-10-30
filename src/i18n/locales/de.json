@@ -7999,6 +7999,8 @@
     "unknown": "{{count}} Links haben unbekannte Ähnlichkeit und zählen nicht als Leck.",
     "unweightedZone": "{{count}} Links haben eine unbekannte oder ungewichtete DOM-Zone und zählen mit dem neutralen Gewicht 1.",
     "notConverged": "Der Solver ist nicht konvergiert; die Werte sind ungefähr.",
+    "degree": "Links ein/aus",
+    "similarityWeighted": "Linkgewichte enthalten lexikalische Seitenähnlichkeit bei {{page}} Links und Anker-Kontext-Ähnlichkeit bei {{context}} Links (Untergrenze 0,05). Seiten mit einem ungemessenen Link behalten nur Zonengewichte.",
     "whatIf": {
       "title": "What-If-Linksimulator",
       "source": "Von Seite",
@@ -8006,6 +8008,9 @@
       "action": "Änderung",
       "add": "Link hinzufügen",
       "remove": "Link entfernen",
+      "addPage": "Neue Seite hinzufügen",
+      "removePage": "Seite entfernen",
+      "newPage": "URL der neuen Seite",
       "run": "Simulieren",
       "noChange": "Keine Änderung der Werte.",
       "before": "Vorher",
