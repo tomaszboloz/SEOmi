@@ -61,8 +61,8 @@ export interface CrawlResultsTabsProps {
 
 export const tabs: Array<{ id: CrawlTab; labelKey: string; icon: typeof Rows3 }> = [
   { id: 'overview', labelKey: 'tabs.overview', icon: Radar },
-  { id: 'executive', labelKey: 'tabs.executive', icon: BarChart3 },
   { id: 'visualisations', labelKey: 'tabs.visualisations', icon: Map },
+  { id: 'executive', labelKey: 'tabs.executive', icon: BarChart3 },
   { id: 'focus', labelKey: 'tabs.focus', icon: Target },
   { id: 'authority', labelKey: 'tabs.authority', icon: Landmark },
   { id: 'aio', labelKey: 'tabs.aio', icon: Sparkles },
@@ -95,7 +95,7 @@ export const tabGroups: Array<{
     id: 'core',
     labelKey: 'groups.core',
     shortLabelKey: 'groups.coreShort',
-    tabs: ['overview', 'executive', 'visualisations', 'focus', 'authority', 'aio', 'trust', 'crawlerReadiness', 'urls', 'issues'],
+    tabs: ['overview', 'visualisations', 'executive', 'focus', 'authority', 'aio', 'trust', 'crawlerReadiness', 'urls', 'issues'],
   },
   {
     id: 'content',
