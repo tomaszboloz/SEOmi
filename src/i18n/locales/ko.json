@@ -8073,6 +8073,27 @@
       "hint": "내보내기에는 정확한 입력값과 가중치가 포함되어 점수를 다시 계산할 수 있습니다."
     }
   },
+  "surgical": {
+    "title": "정밀 수정(수정 전 / 수정 후)",
+    "location": "페이지 {{url}}, H{{level}} «{{heading}}» 아래(섹션 #{{position}}).",
+    "noSections": "이 페이지에서 H2/H3 섹션을 수집하지 못했습니다. 섹션 단위 힌트를 받으려면 다시 크롤하세요.",
+    "nothing": "H2 섹션이 이미 핵심 주제를 다루고 있어 정밀 수정 제안이 없습니다.",
+    "before": "수정 전",
+    "after": "수정 후",
+    "headingTemplate": "{{heading}}: {{entity}}",
+    "answerFirst": "{{topic}}: [{{terms}}을(를) 언급하는 1–2문장의 직접적인 답변]",
+    "answerFirstNoTerms": "{{topic}}: [1–2문장의 직접적인 답변]",
+    "missing": "누락된 핵심 주제 엔터티: {{terms}}",
+    "dangling": "첫 문장이 앞선 내용을 가리키는 “{{opener}}”(으)로 시작합니다. 대신 주어를 명시하세요.",
+    "drift": "주제에서 벗어난 섹션(삭제 또는 재작성):",
+    "driftItem": "«{{heading}}» — 주제와 무관한 용어: {{terms}}",
+    "forecast": "이 페이지가 개선 목표에 도달하면 SFS {{current}} → {{projected}}({{delta}}), SFS 엔진 시뮬레이션 결과입니다.",
+    "noForecast": "이 페이지의 SFS 예측이 없습니다.",
+    "factGate": "[자리표시자]에는 검증된 사실만 넣으세요. 아무것도 게시되지 않습니다.",
+    "copy": "수정 후 HTML 복사",
+    "copied": "복사됨",
+    "failed": "복사 실패"
+  },
   "scoreDropAlert": {
     "aio": {
       "title": "AI 준비도 하락",

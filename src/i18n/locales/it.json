@@ -8073,6 +8073,27 @@
       "hint": "L’esportazione contiene gli input e i pesi esatti, quindi il punteggio può essere ricalcolato."
     }
   },
+  "surgical": {
+    "title": "Riscrittura chirurgica (prima / dopo)",
+    "location": "Pagina {{url}}, sotto H{{level}} «{{heading}}» (sezione #{{position}}).",
+    "noSections": "Per questa pagina non sono state acquisite sezioni H2/H3; ripeti la scansione per ottenere suggerimenti per sezione.",
+    "nothing": "Le sezioni H2 coprono già l’argomento principale; nessuna modifica chirurgica suggerita.",
+    "before": "Prima",
+    "after": "Dopo",
+    "headingTemplate": "{{heading}}: {{entity}}",
+    "answerFirst": "{{topic}}: [risposta diretta in 1–2 frasi che citi {{terms}}]",
+    "answerFirstNoTerms": "{{topic}}: [risposta diretta in 1–2 frasi]",
+    "missing": "Entità mancanti dell’argomento principale: {{terms}}",
+    "dangling": "La prima frase inizia con «{{opener}}», che rimanda a un testo precedente. Indica invece il soggetto.",
+    "drift": "Sezioni fuori tema (rimuovere o riscrivere):",
+    "driftItem": "«{{heading}}» — termini fuori tema: {{terms}}",
+    "forecast": "Se questa pagina raggiunge l’obiettivo di miglioramento, SFS {{current}} → {{projected}} ({{delta}}), simulato dal motore SFS.",
+    "noForecast": "Nessuna previsione SFS per questa pagina.",
+    "factGate": "Compila i [segnaposto] solo con fatti verificati. Nulla viene pubblicato.",
+    "copy": "Copia HTML «Dopo»",
+    "copied": "Copiato",
+    "failed": "Copia non riuscita"
+  },
   "scoreDropAlert": {
     "aio": {
       "title": "Calo della prontezza IA",

@@ -8073,6 +8073,27 @@
       "hint": "导出包含确切的输入和权重，因此可以重新计算分数。"
     }
   },
+  "surgical": {
+    "title": "精准改写（修改前 / 修改后）",
+    "location": "页面 {{url}}，位于 H{{level}}「{{heading}}」下（第 {{position}} 节）。",
+    "noSections": "未采集到此页面的 H2/H3 章节；请重新抓取以获得章节级提示。",
+    "nothing": "H2 章节已覆盖核心主题，无需精准修改。",
+    "before": "修改前",
+    "after": "修改后",
+    "headingTemplate": "{{heading}}：{{entity}}",
+    "answerFirst": "{{topic}}：[用 1–2 句直接回答，并提及 {{terms}}]",
+    "answerFirstNoTerms": "{{topic}}：[用 1–2 句直接回答]",
+    "missing": "缺失的核心主题实体：{{terms}}",
+    "dangling": "第一句以“{{opener}}”开头，指代前文内容。请直接写明主语。",
+    "drift": "偏离主题的章节（删除或改写）：",
+    "driftItem": "「{{heading}}」— 主题无关词：{{terms}}",
+    "forecast": "若此页面达到改进目标，SFS {{current}} → {{projected}}（{{delta}}），由 SFS 引擎模拟。",
+    "noForecast": "此页面没有 SFS 预测。",
+    "factGate": "[占位符] 只能填写经过核实的事实。不会发布任何内容。",
+    "copy": "复制修改后的 HTML",
+    "copied": "已复制",
+    "failed": "复制失败"
+  },
   "scoreDropAlert": {
     "aio": {
       "title": "AI就绪度下降",

@@ -8073,6 +8073,27 @@
       "hint": "A exportação contém as entradas e pesos exatos, então a pontuação pode ser recalculada."
     }
   },
+  "surgical": {
+    "title": "Reescrita cirúrgica (antes / depois)",
+    "location": "Página {{url}}, sob H{{level}} «{{heading}}» (seção #{{position}}).",
+    "noSections": "Nenhuma seção H2/H3 foi capturada para esta página; rastreie novamente para obter dicas por seção.",
+    "nothing": "As seções H2 já cobrem o tema principal; nenhuma alteração cirúrgica é sugerida.",
+    "before": "Antes",
+    "after": "Depois",
+    "headingTemplate": "{{heading}}: {{entity}}",
+    "answerFirst": "{{topic}}: [resposta direta em 1–2 frases que cite {{terms}}]",
+    "answerFirstNoTerms": "{{topic}}: [resposta direta em 1–2 frases]",
+    "missing": "Entidades do tema principal ausentes: {{terms}}",
+    "dangling": "A primeira frase começa com “{{opener}}”, que remete a um texto anterior. Nomeie o sujeito.",
+    "drift": "Seções fora do tema (remover ou reescrever):",
+    "driftItem": "«{{heading}}» — termos fora do tema: {{terms}}",
+    "forecast": "Se esta página atingir a meta de melhoria, SFS {{current}} → {{projected}} ({{delta}}), simulado pelo mecanismo SFS.",
+    "noForecast": "Sem previsão de SFS para esta página.",
+    "factGate": "Preencha os [marcadores] apenas com fatos verificados. Nada é publicado.",
+    "copy": "Copiar HTML “Depois”",
+    "copied": "Copiado",
+    "failed": "Falha ao copiar"
+  },
   "scoreDropAlert": {
     "aio": {
       "title": "Queda na prontidão para IA",

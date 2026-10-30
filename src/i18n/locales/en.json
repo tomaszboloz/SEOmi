@@ -8073,6 +8073,27 @@
       "hint": "The export contains the exact inputs and weights, so the score can be recomputed."
     }
   },
+  "surgical": {
+    "title": "Surgical rewrite (before / after)",
+    "location": "Page {{url}}, under H{{level}} «{{heading}}» (section #{{position}}).",
+    "noSections": "No H2/H3 sections were captured for this page; re-crawl to get section-level hints.",
+    "nothing": "The H2 sections already cover the Core Topic; no surgical change is suggested.",
+    "before": "Before",
+    "after": "After",
+    "headingTemplate": "{{heading}}: {{entity}}",
+    "answerFirst": "{{topic}}: [direct answer in 1–2 sentences that names {{terms}}]",
+    "answerFirstNoTerms": "{{topic}}: [direct answer in 1–2 sentences]",
+    "missing": "Missing Core Topic entities: {{terms}}",
+    "dangling": "The first sentence opens with “{{opener}}”, which points back to earlier text. Name the subject instead.",
+    "drift": "Sections drifting off-topic (remove or rewrite):",
+    "driftItem": "«{{heading}}» — off-topic terms: {{terms}}",
+    "forecast": "If this page reaches the improvement target, SFS {{current}} → {{projected}} ({{delta}}), simulated by the SFS engine.",
+    "noForecast": "No SFS forecast for this page.",
+    "factGate": "Fill the [placeholders] only with verified facts. Nothing is published.",
+    "copy": "Copy After HTML",
+    "copied": "Copied",
+    "failed": "Copy failed"
+  },
   "scoreDropAlert": {
     "aio": {
       "title": "AI readiness dropped",

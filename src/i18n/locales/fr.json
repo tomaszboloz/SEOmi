@@ -8073,6 +8073,27 @@
       "hint": "L’export contient les entrées et pondérations exactes, le score peut donc être recalculé."
     }
   },
+  "surgical": {
+    "title": "Réécriture chirurgicale (avant / après)",
+    "location": "Page {{url}}, sous H{{level}} «{{heading}}» (section #{{position}}).",
+    "noSections": "Aucune section H2/H3 n’a été capturée pour cette page ; relancez un crawl pour obtenir des conseils par section.",
+    "nothing": "Les sections H2 couvrent déjà le sujet principal ; aucune modification chirurgicale n’est proposée.",
+    "before": "Avant",
+    "after": "Après",
+    "headingTemplate": "{{heading}} : {{entity}}",
+    "answerFirst": "{{topic}} : [réponse directe en 1 à 2 phrases citant {{terms}}]",
+    "answerFirstNoTerms": "{{topic}} : [réponse directe en 1 à 2 phrases]",
+    "missing": "Entités du sujet principal manquantes : {{terms}}",
+    "dangling": "La première phrase commence par « {{opener}} », qui renvoie à un texte antérieur. Nommez plutôt le sujet.",
+    "drift": "Sections qui dérivent du sujet (supprimer ou réécrire) :",
+    "driftItem": "«{{heading}}» — termes hors sujet : {{terms}}",
+    "forecast": "Si cette page atteint l’objectif d’amélioration, SFS {{current}} → {{projected}} ({{delta}}), simulé par le moteur SFS.",
+    "noForecast": "Aucune prévision SFS pour cette page.",
+    "factGate": "Remplissez les [espaces réservés] uniquement avec des faits vérifiés. Rien n’est publié.",
+    "copy": "Copier le HTML « Après »",
+    "copied": "Copié",
+    "failed": "Échec de la copie"
+  },
   "scoreDropAlert": {
     "aio": {
       "title": "Préparation IA en baisse",

@@ -8073,6 +8073,27 @@
       "hint": "Eksport zawiera dokładne wejścia i wagi, więc wynik można przeliczyć ponownie."
     }
   },
+  "surgical": {
+    "title": "Chirurgiczna poprawka (przed / po)",
+    "location": "Strona {{url}}, pod H{{level}} «{{heading}}» (sekcja #{{position}}).",
+    "noSections": "Dla tej strony nie zapisano sekcji H2/H3; wykonaj ponowny crawl, aby uzyskać podpowiedzi na poziomie sekcji.",
+    "nothing": "Sekcje H2 już pokrywają Temat Główny; nie proponujemy chirurgicznej zmiany.",
+    "before": "Przed",
+    "after": "Po",
+    "headingTemplate": "{{heading}}: {{entity}}",
+    "answerFirst": "{{topic}}: [bezpośrednia odpowiedź w 1–2 zdaniach, która wymienia {{terms}}]",
+    "answerFirstNoTerms": "{{topic}}: [bezpośrednia odpowiedź w 1–2 zdaniach]",
+    "missing": "Brakujące encje Tematu Głównego: {{terms}}",
+    "dangling": "Pierwsze zdanie zaczyna się od „{{opener}}”, które odsyła do wcześniejszego tekstu. Nazwij podmiot wprost.",
+    "drift": "Sekcje odbiegające od tematu (usuń lub przepisz):",
+    "driftItem": "«{{heading}}» — terminy spoza tematu: {{terms}}",
+    "forecast": "Jeśli ta strona osiągnie docelowy poziom, SFS {{current}} → {{projected}} ({{delta}}), według symulacji silnika SFS.",
+    "noForecast": "Brak prognozy SFS dla tej strony.",
+    "factGate": "Wypełnij [pola] wyłącznie zweryfikowanymi faktami. Nic nie jest publikowane.",
+    "copy": "Kopiuj HTML „Po”",
+    "copied": "Skopiowano",
+    "failed": "Kopiowanie nie powiodło się"
+  },
   "scoreDropAlert": {
     "aio": {
       "title": "Spadła gotowość AI",

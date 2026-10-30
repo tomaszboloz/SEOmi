@@ -8073,6 +8073,27 @@
       "hint": "エクスポートには正確な入力と重みが含まれるため、スコアを再計算できます。"
     }
   },
+  "surgical": {
+    "title": "ピンポイント修正（修正前 / 修正後）",
+    "location": "ページ {{url}}、H{{level}}「{{heading}}」の下（セクション #{{position}}）。",
+    "noSections": "このページでは H2/H3 セクションが取得されていません。セクション単位のヒントを得るには再クロールしてください。",
+    "nothing": "H2 セクションはすでにコアトピックをカバーしています。ピンポイント修正の提案はありません。",
+    "before": "修正前",
+    "after": "修正後",
+    "headingTemplate": "{{heading}}：{{entity}}",
+    "answerFirst": "{{topic}}：[{{terms}} に触れる 1～2 文の直接的な回答]",
+    "answerFirstNoTerms": "{{topic}}：[1～2 文の直接的な回答]",
+    "missing": "不足しているコアトピックのエンティティ：{{terms}}",
+    "dangling": "最初の文が「{{opener}}」で始まり、前の文章を参照しています。主語を明示してください。",
+    "drift": "トピックから外れているセクション（削除または書き直し）：",
+    "driftItem": "「{{heading}}」— トピック外の語：{{terms}}",
+    "forecast": "このページが改善目標に達した場合、SFS {{current}} → {{projected}}（{{delta}}）。SFS エンジンによるシミュレーションです。",
+    "noForecast": "このページの SFS 予測はありません。",
+    "factGate": "[プレースホルダー] には検証済みの事実のみを入れてください。何も公開されません。",
+    "copy": "修正後の HTML をコピー",
+    "copied": "コピーしました",
+    "failed": "コピーに失敗しました"
+  },
   "scoreDropAlert": {
     "aio": {
       "title": "AI対応度が低下",

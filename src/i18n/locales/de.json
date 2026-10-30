@@ -8073,6 +8073,27 @@
       "hint": "Der Export enthält die exakten Eingaben und Gewichte, sodass der Wert neu berechnet werden kann."
     }
   },
+  "surgical": {
+    "title": "Chirurgische Überarbeitung (vorher / nachher)",
+    "location": "Seite {{url}}, unter H{{level}} «{{heading}}» (Abschnitt #{{position}}).",
+    "noSections": "Für diese Seite wurden keine H2/H3-Abschnitte erfasst; crawlen Sie erneut, um Hinweise auf Abschnittsebene zu erhalten.",
+    "nothing": "Die H2-Abschnitte decken das Kernthema bereits ab; keine chirurgische Änderung vorgeschlagen.",
+    "before": "Vorher",
+    "after": "Nachher",
+    "headingTemplate": "{{heading}}: {{entity}}",
+    "answerFirst": "{{topic}}: [direkte Antwort in 1–2 Sätzen, die {{terms}} nennt]",
+    "answerFirstNoTerms": "{{topic}}: [direkte Antwort in 1–2 Sätzen]",
+    "missing": "Fehlende Entitäten des Kernthemas: {{terms}}",
+    "dangling": "Der erste Satz beginnt mit „{{opener}}“, das auf früheren Text verweist. Nennen Sie stattdessen das Subjekt.",
+    "drift": "Abschnitte, die vom Thema abweichen (entfernen oder umschreiben):",
+    "driftItem": "«{{heading}}» — themenfremde Begriffe: {{terms}}",
+    "forecast": "Erreicht diese Seite das Verbesserungsziel: SFS {{current}} → {{projected}} ({{delta}}), simuliert von der SFS-Engine.",
+    "noForecast": "Keine SFS-Prognose für diese Seite.",
+    "factGate": "Füllen Sie die [Platzhalter] nur mit geprüften Fakten. Nichts wird veröffentlicht.",
+    "copy": "Nachher-HTML kopieren",
+    "copied": "Kopiert",
+    "failed": "Kopieren fehlgeschlagen"
+  },
   "scoreDropAlert": {
     "aio": {
       "title": "KI-Bereitschaft gesunken",
