@@ -6241,6 +6241,7 @@
         "legend": "Niveaux : 75-100 fort, 60-74 suffisant, 40-59 faible, 0-39 critique.",
         "profile": "Profil EETV {{0}} (version {{1}})",
         "coverage": "Couverture des preuves",
+        "scoring": "Sous-profil de score {{0}} (pondérations de référence, non calibrées)",
         "kSchema": "Graphe d'entités",
         "kSameAs": "Déclarations d'identité",
         "kAuthor": "Adéquation de l'auteur",
@@ -7947,6 +7948,10 @@
       },
       "more": "Profils supplémentaires non affichés : {{n}}.",
       "checked": "vérifié le {{date}} via {{source}}"
+    },
+    "scoring": {
+      "label": "Utiliser le score de référence fondé sur les affirmations (expérimental)",
+      "hint": "Applique les pondérations de référence de la spécification de confiance : rappel sameAs pondéré par rôle, pénalité pour îlots de graphe déconnectés, qualité des sources avec appui des affirmations et paliers YMYL. Les pondérations ne sont pas encore calibrées ; les scores ne sont comparés qu’aux analyses utilisant le même profil."
     }
   },
   "executionCard": {

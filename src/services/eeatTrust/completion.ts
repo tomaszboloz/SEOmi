@@ -5,6 +5,7 @@ import { monitorScoreDrop } from '@/services/monitoringAlerts';
 import { isCompletedCrawlRun } from '@/services/optimizationTasks/crawlEvidence';
 import { comparableTrustSnapshots, readTrustHistory, recordTrust, scoringField } from './history';
 import { buildTrustReport } from './build';
+import { readScoringProfile } from './scoringPreference';
 import type { TrustReport, TrustSnapshot } from './types';
 
 export interface CompletedTrustResult {
@@ -19,7 +20,7 @@ export const persistCompletedTrustRun = (projectId: string | null | undefined, r
   if (!projectId || !isCompletedCrawlRun(run) || !run.result.pages.length) return undefined;
   const pages = run.result.pages;
   const focus = buildSiteFocusReport(pages, run.startUrl, { ...projectFocusOptions(projectId), now: run.completedAt });
-  const report = buildTrustReport(pages, focus, { now: run.completedAt });
+  const report = buildTrustReport(pages, focus, { now: run.completedAt, scoringProfile: readScoringProfile(projectId) });
   const before = readTrustHistory(projectId);
   if (report.score === null) return { report, history: before, alerted: false };
   const previous = before.filter((entry) => entry.runId !== run.id).at(-1);

@@ -6241,6 +6241,7 @@
         "legend": "Poziomy: 75-100 silne, 60-74 wystarczające, 40-59 słabe, 0-39 krytyczne.",
         "profile": "Profil EETV {{0}} (wersja {{1}})",
         "coverage": "Pokrycie dowodami",
+        "scoring": "Podprofil punktacji {{0}} (wagi referencyjne, nieskalibrowane)",
         "kSchema": "Graf encji",
         "kSameAs": "Deklaracje tożsamości",
         "kAuthor": "Dopasowanie autora",
@@ -7947,6 +7948,10 @@
       },
       "more": "Nie pokazano kolejnych profili: {{n}}.",
       "checked": "sprawdzono {{date}} przez {{source}}"
+    },
+    "scoring": {
+      "label": "Użyj referencyjnej punktacji opartej na twierdzeniach (eksperymentalne)",
+      "hint": "Stosuje wagi referencyjne ze specyfikacji zaufania: recall sameAs ważony rolą, karę za rozłączne wyspy grafu, jakość źródeł z poparciem twierdzeń i progi YMYL. Wagi nie są jeszcze skalibrowane, a wyniki porównujemy tylko z przebiegami liczonymi tym samym profilem."
     }
   },
   "executionCard": {

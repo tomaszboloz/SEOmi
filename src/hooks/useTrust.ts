@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useState } from 'react';
 import type { CrawledPageSummary, CrawlRunRecord } from '@/types';
 import { buildSiteFocusReport } from '@/services/siteFocus';
-import { buildTrustReport, comparableTrustSnapshots, readTrustHistory, recordTrust, type ProfileEvidence, type TrustReport, type TrustSnapshot } from '@/services/eeatTrust';
+import { buildTrustReport, comparableTrustSnapshots, readTrustHistory, recordTrust, type ProfileEvidence, type ScoringProfile, type TrustReport, type TrustSnapshot } from '@/services/eeatTrust';
 import { hasVerifiedTrustEvidence } from '@/services/eeatTrust/history';
 import { monitorScoreDrop } from '@/services/monitoringAlerts';
 import { projectFocusOptions } from '@/services/siteFocusMonitoring/projectReport';
@@ -10,15 +10,15 @@ import { useFocusConfigRevision } from '@/hooks/useFocusConfigRevision';
 export interface TrustState { report: TrustReport | null; previous: TrustSnapshot | undefined }
 
 /** E-E-A-T trust report for a crawl; the Site Focus report (manual topic applied) supplies the Core Topic. One history snapshot per saved run. */
-export const useTrust = (pages: CrawledPageSummary[], startUrl: string, run: CrawlRunRecord | null | undefined, projectId: string | null | undefined, profileEvidence?: Record<string, ProfileEvidence>): TrustState => {
+export const useTrust = (pages: CrawledPageSummary[], startUrl: string, run: CrawlRunRecord | null | undefined, projectId: string | null | undefined, profileEvidence?: Record<string, ProfileEvidence>, scoringProfile?: ScoringProfile): TrustState => {
   const [history, setHistory] = useState(() => readTrustHistory(projectId));
   const focusRevision = useFocusConfigRevision(projectId);
   const report = useMemo(() => {
     if (!pages.length) return null;
     const focus = buildSiteFocusReport(pages, startUrl, { ...projectFocusOptions(projectId), now: run?.completedAt });
-    return buildTrustReport(pages, focus, { now: run?.completedAt, profileEvidence });
+    return buildTrustReport(pages, focus, { now: run?.completedAt, profileEvidence, scoringProfile });
     // focusRevision: a saved topic/goal/anchor/brand change rebuilds EETV on the new Core Topic (#82).
-  }, [pages, startUrl, projectId, run?.completedAt, profileEvidence, focusRevision]);
+  }, [pages, startUrl, projectId, run?.completedAt, profileEvidence, scoringProfile, focusRevision]);
 
   useEffect(() => { setHistory((current) => { const next = readTrustHistory(projectId); return JSON.stringify(current) === JSON.stringify(next) ? current : next; }); }, [projectId]);
   useEffect(() => {

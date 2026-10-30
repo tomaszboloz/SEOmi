@@ -1,7 +1,7 @@
 import { useMemo } from 'react';
 import { buildActionFeed, type ExecutiveAction } from '@/services/actionFeed';
 import { buildAioReport } from '@/services/aioReadiness';
-import { buildTrustReport } from '@/services/eeatTrust';
+import { buildTrustReport, readScoringProfile } from '@/services/eeatTrust';
 import { computeHss, hssInputsFromReports, type HssReport } from '@/services/hss';
 import { findInternalLinkOpportunities } from '@/services/internalLinkOpportunities';
 import { excludeQuarantinedPages, runRecommendationBus } from '@/services/recommendationBus';
@@ -30,7 +30,7 @@ export const useExecutiveData = (pages: CrawledPageSummary[], startUrl: string, 
     const now = run?.completedAt;
     const sfs = pages.length ? attempt(() => buildSiteFocusReport(pages, startUrl, { ...projectFocusOptions(projectId), ...(now ? { now } : {}) })) : null;
     const tas = sfs ? attempt(() => buildAuthorityReport(pages, startUrl, sfs, { taxonomy: readTaxonomy(projectId), now: sfs.generatedAt })) : null;
-    const trust = pages.length ? attempt(() => buildTrustReport(pages, sfs ?? undefined, now ? { now } : {})) : null;
+    const trust = pages.length ? attempt(() => buildTrustReport(pages, sfs ?? undefined, { ...(now ? { now } : {}), scoringProfile: readScoringProfile(projectId) })) : null;
     const aio = pages.length ? attempt(() => buildAioReport(pages, { crawlRunId: runId, ...(now ? { now } : {}) })) : null;
     const hss = computeHss(hssInputsFromReports({ runId, sfs, tas, trust, aio }), runId);
     const candidates = removalCandidates(sfs ?? undefined);

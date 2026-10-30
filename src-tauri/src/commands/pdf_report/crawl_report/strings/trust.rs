@@ -19,6 +19,7 @@ keys! {
     LEGEND "crawl.trust.legend",
     PROFILE "crawl.trust.profile",
     COVERAGE "crawl.trust.coverage",
+    SCORING "crawl.trust.scoring",
     K_SCHEMA "crawl.trust.kSchema",
     K_SAME_AS "crawl.trust.kSameAs",
     K_AUTHOR "crawl.trust.kAuthor",

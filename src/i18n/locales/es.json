@@ -6241,6 +6241,7 @@
         "legend": "Niveles: 75-100 alta, 60-74 suficiente, 40-59 débil, 0-39 crítica.",
         "profile": "Perfil EETV {{0}} (versión {{1}})",
         "coverage": "Cobertura de evidencia",
+        "scoring": "Subperfil de puntuación {{0}} (pesos de referencia, sin calibrar)",
         "kSchema": "Grafo de entidades",
         "kSameAs": "Declaraciones de identidad",
         "kAuthor": "Afinidad del autor",
@@ -7947,6 +7948,10 @@
       },
       "more": "Perfiles adicionales no mostrados: {{n}}.",
       "checked": "comprobado el {{date}} mediante {{source}}"
+    },
+    "scoring": {
+      "label": "Usar la puntuación de referencia basada en afirmaciones (experimental)",
+      "hint": "Aplica los pesos de referencia de la especificación de confianza: recall de sameAs ponderado por rol, penalización por islas desconectadas del grafo, calidad de fuentes con respaldo de afirmaciones y niveles YMYL. Los pesos aún no están calibrados y las puntuaciones solo se comparan con ejecuciones del mismo perfil."
     }
   },
   "executionCard": {
