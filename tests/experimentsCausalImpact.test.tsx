@@ -58,7 +58,8 @@ describe('counterfactual estimate (#97)', () => {
     expect(estimateCausalImpact({ ...input(90, 60, 0), control: null }).reasons).toEqual(['no-control']);
     expect(estimateCausalImpact(input(40, CAUSAL_PROFILE.minPreDays - 1, 0)).reasons).toContain('short-pre-period');
     expect(estimateCausalImpact(input(64, 60, 0)).reasons).toEqual(['short-post-period']);
-    const gappy = input(90, 60, 0);
+    const raw = series(90, 60, 0);
+    const gappy = { ...raw, interventionDate: day(60) };
     expect(estimateCausalImpact({ ...gappy, test: gappy.test.map((value, i) => (i % 5 === 0 ? null : value)) }).reasons).toEqual(['missing-data']);
     expect(estimateCausalImpact({ ...gappy, control: gappy.control.map(() => 5) }).reasons).toEqual(['flat-control']);
     const unrelated = { ...gappy, test: gappy.test.map((_, i) => 100 + noise(i * 3) * 5) };
@@ -67,7 +68,7 @@ describe('counterfactual estimate (#97)', () => {
     expect(poor.absolute).toBeNull();
     const drift = { ...gappy, test: gappy.test.map((value, i) => value + (i >= 30 ? 25 : 0)) };
     expect(estimateCausalImpact(drift).reasons).toContain('placebo-failed');
-    const zero = estimateCausalImpact({ ...input(90, 60, 0), test: input(90, 60, 0).control.map((c) => c - 300) });
+    const zero = estimateCausalImpact({ ...gappy, test: raw.control.map((c) => c - 300) });
     expect(zero.relative).toBeNull();
   });
 });
