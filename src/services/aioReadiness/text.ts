@@ -79,8 +79,10 @@ export const contentWords = (text: string, charBased = false): string[] =>
   wordsOf(text.toLowerCase(), charBased).filter((word) => (charBased ? true : word.length >= 3));
 
 /** Prefix match so inflected forms (cukrzyca/cukrzycy) count as the same entity word. */
-export const mentions = (haystack: string, word: string, charBased = false): boolean => {
+export const mentions = (haystack: string, term: string, charBased = false): boolean => {
   const lower = haystack.toLowerCase();
+  // Core terms may arrive capitalised (entity labels such as "CGM"); the haystack is compared lowercased.
+  const word = term.toLowerCase();
   if (charBased) return lower.includes(word);
   const variants = word.endsWith('ies')
     ? [word, `${word.slice(0, -3)}y`]
