@@ -7522,6 +7522,9 @@
       }
     },
     "benchmark": {
+      "failed": "No usable pages (not scored): {{domains}}.",
+      "sample": "Compared {{scored}} of {{attempted}} competitors tried from the SERP.",
+      "provenance": "SERP source: {{source}}, built {{date}}. Competitors are scored with the same engine and reference map.",
       "title": "Topical gap matrix vs top competitors",
       "empty": "Build the reference map to compare with the top-ranking competitors. Only real crawled data is shown.",
       "domain": "Domain",

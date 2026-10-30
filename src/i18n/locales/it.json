@@ -7522,6 +7522,9 @@
       }
     },
     "benchmark": {
+      "failed": "Nessuna pagina utilizzabile (non valutato): {{domains}}.",
+      "sample": "Confrontati {{scored}} su {{attempted}} concorrenti provati dalla SERP.",
+      "provenance": "Fonte SERP: {{source}}, creato il {{date}}. I concorrenti sono valutati con lo stesso motore e la stessa mappa di riferimento.",
       "title": "Matrice delle lacune tematiche rispetto ai migliori concorrenti",
       "empty": "Crea la mappa di riferimento per confrontarti con i migliori concorrenti. Sono mostrati solo dati reali scansionati.",
       "domain": "Dominio",

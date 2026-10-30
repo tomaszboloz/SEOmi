@@ -28,7 +28,7 @@ export type ReferenceUnavailable = 'no-serp-source' | 'no-queries' | 'serp-faile
 export type ReferenceOutcome =
   | { status: 'unavailable'; reason: ReferenceUnavailable; error?: string }
   | { status: 'cancelled' }
-  | { status: 'ok'; taxonomy: ReferenceTaxonomy; competitors: CompetitorPages[]; serp?: ReferenceSerpObservation[] };
+  | { status: 'ok'; taxonomy: ReferenceTaxonomy; competitors: CompetitorPages[]; serp?: ReferenceSerpObservation[]; attempted?: string[] };
 
 /** One SERP response actually received during the reference run (query, provider label and ranked hits). */
 export interface ReferenceSerpObservation { query: string; source: string; hits: SerpHit[] }
@@ -45,4 +45,6 @@ export interface TopicalBenchmark {
   ownRank: number;
   pillars: PillarComparison[];
   insights: AuthorityInsight[];
+  /** Real sample behind the matrix: competitors picked from the SERP, scored, and those whose crawl failed or was empty. */
+  sample?: { attempted: number; scored: number; failed: string[] };
 }

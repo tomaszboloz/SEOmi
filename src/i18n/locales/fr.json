@@ -7522,6 +7522,9 @@
       }
     },
     "benchmark": {
+      "failed": "Aucune page exploitable (non noté) : {{domains}}.",
+      "sample": "{{scored}} concurrents comparés sur {{attempted}} essayés depuis la SERP.",
+      "provenance": "Source SERP : {{source}}, construit le {{date}}. Les concurrents sont évalués avec le même moteur et la même carte de référence.",
       "title": "Matrice des lacunes thématiques face aux meilleurs concurrents",
       "empty": "Créez la carte de référence pour vous comparer aux meilleurs concurrents. Seules des données explorées réelles sont affichées.",
       "domain": "Domaine",

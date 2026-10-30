@@ -7522,6 +7522,9 @@
       }
     },
     "benchmark": {
+      "failed": "Brak użytecznych stron (bez oceny): {{domains}}.",
+      "sample": "Porównano {{scored}} z {{attempted}} konkurentów sprawdzonych z SERP.",
+      "provenance": "Źródło SERP: {{source}}, zbudowano {{date}}. Konkurenci są oceniani tym samym silnikiem i tą samą mapą referencyjną.",
       "title": "Macierz luk tematycznych vs najlepsi konkurenci",
       "empty": "Zbuduj mapę referencyjną, aby porównać się z najlepszymi konkurentami. Pokazujemy wyłącznie realne dane z crawla.",
       "domain": "Domena",

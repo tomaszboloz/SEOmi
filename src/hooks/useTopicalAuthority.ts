@@ -86,7 +86,7 @@ export const useTopicalAuthority = ({ pages, startUrl, sfs, run, projectId, runn
       if (outcome.status !== 'ok') { setState({ ...IDLE, failure: outcome }); return; }
       writeTaxonomy(projectId, outcome.taxonomy);
       recordReferenceSnapshot(projectId ?? null, outcome.taxonomy, outcome.serp, market());      const fresh = buildAuthorityReport(pages as FocusPage[], startUrl, sfs, { taxonomy: outcome.taxonomy, now: sfs.generatedAt });
-      setPendingBenchmark(buildTopicalBenchmark(fresh, domainOf(startUrl), outcome.competitors, outcome.taxonomy, new Date().toISOString()));
+      setPendingBenchmark(buildTopicalBenchmark(fresh, domainOf(startUrl), outcome.competitors, outcome.taxonomy, new Date().toISOString(), outcome.attempted));
       setTaxonomy(outcome.taxonomy);
       setState(IDLE);
     } catch (error) {

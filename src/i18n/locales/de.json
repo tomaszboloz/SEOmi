@@ -7522,6 +7522,9 @@
       }
     },
     "benchmark": {
+      "failed": "Keine verwertbaren Seiten (nicht bewertet): {{domains}}.",
+      "sample": "{{scored}} von {{attempted}} aus der SERP geprüften Wettbewerbern verglichen.",
+      "provenance": "SERP-Quelle: {{source}}, erstellt am {{date}}. Wettbewerber werden mit derselben Engine und Referenzkarte bewertet.",
       "title": "Themenlücken-Matrix im Vergleich zu den Top-Wettbewerbern",
       "empty": "Erstelle die Referenzkarte, um dich mit den Top-Wettbewerbern zu vergleichen. Es werden nur echte Crawl-Daten gezeigt.",
       "domain": "Domain",

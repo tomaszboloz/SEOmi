@@ -70,5 +70,5 @@ export const runReference = async (deps: ReferenceDeps, input: ReferenceRunInput
     language: model.language, competitors, suggestions: [...suggestions].slice(0, MAX_SUGGESTIONS), source: [...sources].sort().join(', '), now: now(),
   });
   input.onProgress?.({ phase: 'build', done: 1, total: 1 });
-  return taxonomy ? { status: 'ok', taxonomy, competitors, serp } : { status: 'unavailable', reason: 'no-taxonomy' };
+  return taxonomy ? { status: 'ok', taxonomy, competitors, serp, attempted: candidates.map((candidate) => candidate.domain) } : { status: 'unavailable', reason: 'no-taxonomy' };
 };

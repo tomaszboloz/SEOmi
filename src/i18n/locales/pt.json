@@ -7522,6 +7522,9 @@
       }
     },
     "benchmark": {
+      "failed": "Sem páginas utilizáveis (sem pontuação): {{domains}}.",
+      "sample": "Comparados {{scored}} de {{attempted}} concorrentes testados a partir da SERP.",
+      "provenance": "Fonte SERP: {{source}}, criado em {{date}}. Os concorrentes são pontuados com o mesmo motor e mapa de referência.",
       "title": "Matriz de lacunas temáticas versus os principais concorrentes",
       "empty": "Crie o mapa de referência para comparar com os principais concorrentes. Só dados reais rastreados são exibidos.",
       "domain": "Domínio",
