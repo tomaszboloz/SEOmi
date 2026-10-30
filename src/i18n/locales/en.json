@@ -8230,7 +8230,21 @@
     "lostEntities": "Lost entities",
     "intent": "Intent: {{from}} to {{to}}",
     "format": "Format: {{from}} to {{to}}",
-    "incompatible": "Different {{fields}}: not a market change."
+    "incompatible": "Different {{fields}}: not a market change.",
+    "labels": {
+      "video": "video",
+      "forum": "forum",
+      "product": "product page",
+      "category": "category page",
+      "guide": "guide",
+      "listicle": "ranking/list",
+      "news": "news",
+      "tool": "tool",
+      "encyclopedia": "encyclopedia",
+      "homepage": "home page",
+      "transactional": "transactional",
+      "informational": "informational"
+    }
   },
   "sijaUi": {
     "title": "Search intent (SIJA)",

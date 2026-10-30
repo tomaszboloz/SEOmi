@@ -1,6 +1,7 @@
 import { normalize } from '@/services/embeddings/vector';
 import { TAXONOMY_VERSION, type ReferenceTaxonomy } from '@/services/topicalAuthority';
 import type { ReferenceSerpObservation } from '@/services/topicalAuthorityReference/types';
+import { summarizeSerpFormats } from './serpFormat';
 import { appendSerpSnapshot } from './snapshotStore';
 import type { SerpSnapshot } from './types';
 
@@ -8,7 +9,8 @@ import type { SerpSnapshot } from './types';
  * Decay Radar producer fed by the Topical Authority reference run (#98). The centroid is a hashed lexical
  * vector of the market's common terms and the entities are the reference map's lexical entities (no NER):
  * the model label says so, so snapshots never mix with neural embeddings (the comparability gate rejects
- * a model change). Intent and format stay unknown (null) because no classifier observes them.
+ * a model change). Format and intent of TOP K come from the deterministic URL heuristic in `serpFormat.ts`
+ * and stay null without a clear majority.
  * Decision (default chosen by agent): only complete SERP sources are recorded; the free Bing RSS feed is
  * partial coverage and is skipped instead of producing a drift baseline.
  */
@@ -50,13 +52,14 @@ export const buildReferenceSnapshot = (taxonomy: ReferenceTaxonomy, serp: Refere
   if (!docs.length) return null;
   const provider = [...new Set(used.map((observation) => observation.source))].sort().join(', ');
   const profile = JSON.stringify(['tas-reference', TAXONOMY_VERSION, [...new Set(used.map((observation) => observation.query))].sort()]);
+  const formats = summarizeSerpFormats(docs.filter((doc) => doc.rank <= SERP_K).map((doc) => doc.url));
   const entities = [...new Set(taxonomy.subtopics.flatMap((subtopic) => subtopic.entities).map((entity) => entity.trim()).filter(Boolean))].sort().slice(0, MAX_ENTITIES);
   return {
     id: JSON.stringify([taxonomy.builtAt, provider, REFERENCE_DECAY_MODEL, profile]), takenAt: taxonomy.builtAt,
     query: taxonomy.coreLabel, country: market.country, language: market.language || taxonomy.language,
     provider, model: REFERENCE_DECAY_MODEL, profile, k: SERP_K,
     centroid: lexicalCentroid(taxonomy.commonTerms), consensusEntities: entities,
-    dominantIntent: null, dominantFormat: null, docs,
+    dominantIntent: formats.dominantIntent, dominantFormat: formats.dominantFormat, docs,
   };
 };
 

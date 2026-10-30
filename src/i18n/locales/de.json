@@ -8230,7 +8230,21 @@
     "lostEntities": "Verlorene Entitäten",
     "intent": "Intent: {{from}} zu {{to}}",
     "format": "Format: {{from}} zu {{to}}",
-    "incompatible": "Abweichend: {{fields}}. Das ist keine Marktveränderung."
+    "incompatible": "Abweichend: {{fields}}. Das ist keine Marktveränderung.",
+    "labels": {
+      "video": "Video",
+      "forum": "Forum",
+      "product": "Produktseite",
+      "category": "Kategorieseite",
+      "guide": "Ratgeber",
+      "listicle": "Ranking/Liste",
+      "news": "Nachrichten",
+      "tool": "Tool",
+      "encyclopedia": "Enzyklopädie",
+      "homepage": "Startseite",
+      "transactional": "transaktional",
+      "informational": "informativ"
+    }
   },
   "sijaUi": {
     "title": "Suchintention (SIJA)",

@@ -8230,7 +8230,21 @@
     "lostEntities": "كيانات مفقودة",
     "intent": "النية: {{from}} إلى {{to}}",
     "format": "الشكل: {{from}} إلى {{to}}",
-    "incompatible": "اختلاف في {{fields}}: ليس تغيراً في السوق."
+    "incompatible": "اختلاف في {{fields}}: ليس تغيراً في السوق.",
+    "labels": {
+      "video": "فيديو",
+      "forum": "منتدى",
+      "product": "صفحة منتج",
+      "category": "صفحة فئة",
+      "guide": "دليل",
+      "listicle": "تصنيف/قائمة",
+      "news": "أخبار",
+      "tool": "أداة",
+      "encyclopedia": "موسوعة",
+      "homepage": "الصفحة الرئيسية",
+      "transactional": "معاملاتي",
+      "informational": "معلوماتي"
+    }
   },
   "sijaUi": {
     "title": "نية البحث (SIJA)",

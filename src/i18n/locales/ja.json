@@ -8230,7 +8230,21 @@
     "lostEntities": "失われたエンティティ",
     "intent": "意図: {{from}} から {{to}}",
     "format": "形式: {{from}} から {{to}}",
-    "incompatible": "{{fields}} が異なります。市場の変化ではありません。"
+    "incompatible": "{{fields}} が異なります。市場の変化ではありません。",
+    "labels": {
+      "video": "動画",
+      "forum": "フォーラム",
+      "product": "商品ページ",
+      "category": "カテゴリページ",
+      "guide": "ガイド",
+      "listicle": "ランキング/リスト",
+      "news": "ニュース",
+      "tool": "ツール",
+      "encyclopedia": "百科事典",
+      "homepage": "トップページ",
+      "transactional": "取引型",
+      "informational": "情報型"
+    }
   },
   "sijaUi": {
     "title": "検索意図 (SIJA)",

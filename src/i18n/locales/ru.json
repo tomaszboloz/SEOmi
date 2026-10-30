@@ -8230,7 +8230,21 @@
     "lostEntities": "Утраченные сущности",
     "intent": "Интент: {{from}} на {{to}}",
     "format": "Формат: {{from}} на {{to}}",
-    "incompatible": "Различаются: {{fields}}. Это не изменение рынка."
+    "incompatible": "Различаются: {{fields}}. Это не изменение рынка.",
+    "labels": {
+      "video": "видео",
+      "forum": "форум",
+      "product": "страница товара",
+      "category": "страница категории",
+      "guide": "руководство",
+      "listicle": "рейтинг/список",
+      "news": "новости",
+      "tool": "инструмент",
+      "encyclopedia": "энциклопедия",
+      "homepage": "главная страница",
+      "transactional": "транзакционный",
+      "informational": "информационный"
+    }
   },
   "sijaUi": {
     "title": "Интент поиска (SIJA)",

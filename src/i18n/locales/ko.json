@@ -8230,7 +8230,21 @@
     "lostEntities": "사라진 엔티티",
     "intent": "의도: {{from}} → {{to}}",
     "format": "형식: {{from}} → {{to}}",
-    "incompatible": "{{fields}}이(가) 다릅니다. 시장 변화가 아닙니다."
+    "incompatible": "{{fields}}이(가) 다릅니다. 시장 변화가 아닙니다.",
+    "labels": {
+      "video": "동영상",
+      "forum": "포럼",
+      "product": "제품 페이지",
+      "category": "카테고리 페이지",
+      "guide": "가이드",
+      "listicle": "순위/목록",
+      "news": "뉴스",
+      "tool": "도구",
+      "encyclopedia": "백과사전",
+      "homepage": "홈페이지",
+      "transactional": "거래형",
+      "informational": "정보형"
+    }
   },
   "sijaUi": {
     "title": "검색 의도 (SIJA)",

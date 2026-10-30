@@ -8230,7 +8230,21 @@
     "lostEntities": "Entità perse",
     "intent": "Intento: {{from}} a {{to}}",
     "format": "Formato: {{from}} a {{to}}",
-    "incompatible": "Diverso: {{fields}}. Non è un cambiamento di mercato."
+    "incompatible": "Diverso: {{fields}}. Non è un cambiamento di mercato.",
+    "labels": {
+      "video": "video",
+      "forum": "forum",
+      "product": "pagina prodotto",
+      "category": "pagina categoria",
+      "guide": "guida",
+      "listicle": "classifica/elenco",
+      "news": "notizie",
+      "tool": "strumento",
+      "encyclopedia": "enciclopedia",
+      "homepage": "home page",
+      "transactional": "transazionale",
+      "informational": "informativo"
+    }
   },
   "sijaUi": {
     "title": "Intento di ricerca (SIJA)",

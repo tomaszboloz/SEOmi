@@ -8230,7 +8230,21 @@
     "lostEntities": "Utracone encje",
     "intent": "Intencja: {{from}} na {{to}}",
     "format": "Format: {{from}} na {{to}}",
-    "incompatible": "Różne pola: {{fields}}. To nie jest zmiana rynku."
+    "incompatible": "Różne pola: {{fields}}. To nie jest zmiana rynku.",
+    "labels": {
+      "video": "wideo",
+      "forum": "forum",
+      "product": "strona produktu",
+      "category": "strona kategorii",
+      "guide": "poradnik",
+      "listicle": "ranking/lista",
+      "news": "aktualności",
+      "tool": "narzędzie",
+      "encyclopedia": "encyklopedia",
+      "homepage": "strona główna",
+      "transactional": "transakcyjna",
+      "informational": "informacyjna"
+    }
   },
   "sijaUi": {
     "title": "Intencja wyszukiwania (SIJA)",

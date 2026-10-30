@@ -8230,7 +8230,21 @@
     "lostEntities": "消失实体",
     "intent": "意图：{{from}} 变为 {{to}}",
     "format": "形式：{{from}} 变为 {{to}}",
-    "incompatible": "{{fields}} 不同，这不是市场变化。"
+    "incompatible": "{{fields}} 不同，这不是市场变化。",
+    "labels": {
+      "video": "视频",
+      "forum": "论坛",
+      "product": "产品页",
+      "category": "分类页",
+      "guide": "指南",
+      "listicle": "排行/列表",
+      "news": "新闻",
+      "tool": "工具",
+      "encyclopedia": "百科",
+      "homepage": "首页",
+      "transactional": "交易型",
+      "informational": "信息型"
+    }
   },
   "sijaUi": {
     "title": "搜索意图 (SIJA)",
