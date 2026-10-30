@@ -5877,7 +5877,9 @@
         "zoneNav": "ナビゲーション / パンくず",
         "zoneFooter": "サイドバー / フッター",
         "zoneUnknown": "不明（旧クロール）",
-        "zoneNeutral": "中立 (1)"
+        "zoneNeutral": "中立 (1)",
+        "tLinkContext": "内部リンクの文脈",
+        "linkContextIntro": "クローラーが記録したアンカー（角括弧内）と前後最大15語。古い実行には文脈がありません。表示行数:"
       },
       "cols": {
         "colItem": "項目",
@@ -5953,7 +5955,9 @@
         "colResult": "結果",
         "colZone": "ゾーン",
         "colShare": "割合",
-        "colWeight": "SPRS の重み"
+        "colWeight": "SPRS の重み",
+        "colContext": "文脈（±15語）",
+        "colSection": "セクション見出し"
       },
       "focus": {
         "title": "サイトフォーカス",

@@ -5877,7 +5877,9 @@
         "zoneNav": "Navigation / fil d'Ariane",
         "zoneFooter": "Barre latérale / pied de page",
         "zoneUnknown": "Inconnue (ancien crawl)",
-        "zoneNeutral": "neutre (1)"
+        "zoneNeutral": "neutre (1)",
+        "tLinkContext": "Contexte des liens internes",
+        "linkContextIntro": "Ancre entre crochets avec jusqu'à 15 mots de chaque côté, tels qu'enregistrés par le crawler. Les anciens runs n'ont pas de contexte. Lignes affichées :"
       },
       "cols": {
         "colItem": "Élément",
@@ -5953,7 +5955,9 @@
         "colResult": "Résultat",
         "colZone": "Zone",
         "colShare": "Part",
-        "colWeight": "Poids SPRS"
+        "colWeight": "Poids SPRS",
+        "colContext": "Contexte (±15 mots)",
+        "colSection": "Titre de section"
       },
       "focus": {
         "title": "Site Focus",

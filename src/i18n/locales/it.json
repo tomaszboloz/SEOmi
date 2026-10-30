@@ -5877,7 +5877,9 @@
         "zoneNav": "Navigazione / breadcrumb",
         "zoneFooter": "Barra laterale / footer",
         "zoneUnknown": "Sconosciuta (scansione precedente)",
-        "zoneNeutral": "neutro (1)"
+        "zoneNeutral": "neutro (1)",
+        "tLinkContext": "Contesto dei link interni",
+        "linkContextIntro": "Anchor tra parentesi con fino a 15 parole per lato, come registrate dal crawler. Le esecuzioni precedenti non hanno contesto. Righe mostrate:"
       },
       "cols": {
         "colItem": "Elemento",
@@ -5953,7 +5955,9 @@
         "colResult": "Esito",
         "colZone": "Zona",
         "colShare": "Quota",
-        "colWeight": "Peso SPRS"
+        "colWeight": "Peso SPRS",
+        "colContext": "Contesto (±15 parole)",
+        "colSection": "Titolo della sezione"
       },
       "focus": {
         "title": "Focus del sito",

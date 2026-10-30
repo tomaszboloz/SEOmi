@@ -5877,7 +5877,9 @@
         "zoneNav": "내비게이션 / 이동 경로",
         "zoneFooter": "사이드바 / 푸터",
         "zoneUnknown": "알 수 없음(이전 크롤)",
-        "zoneNeutral": "중립 (1)"
+        "zoneNeutral": "중립 (1)",
+        "tLinkContext": "내부 링크 문맥",
+        "linkContextIntro": "크롤러가 기록한 대로 대괄호 안의 앵커와 양쪽 최대 15단어. 이전 실행에는 문맥이 없습니다. 표시된 행:"
       },
       "cols": {
         "colItem": "항목",
@@ -5953,7 +5955,9 @@
         "colResult": "결과",
         "colZone": "영역",
         "colShare": "비율",
-        "colWeight": "SPRS 가중치"
+        "colWeight": "SPRS 가중치",
+        "colContext": "문맥(±15단어)",
+        "colSection": "섹션 제목"
       },
       "focus": {
         "title": "사이트 포커스",

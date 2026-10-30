@@ -5877,7 +5877,9 @@
         "zoneNav": "Navigation / Breadcrumb",
         "zoneFooter": "Seitenleiste / Footer",
         "zoneUnknown": "Unbekannt (älterer Lauf)",
-        "zoneNeutral": "neutral (1)"
+        "zoneNeutral": "neutral (1)",
+        "tLinkContext": "Kontext interner Links",
+        "linkContextIntro": "Ankertext in Klammern mit bis zu 15 Wörtern auf jeder Seite, wie vom Crawler erfasst. Ältere Läufe haben keinen Kontext. Angezeigte Zeilen:"
       },
       "cols": {
         "colItem": "Element",
@@ -5953,7 +5955,9 @@
         "colResult": "Ergebnis",
         "colZone": "Zone",
         "colShare": "Anteil",
-        "colWeight": "SPRS-Gewicht"
+        "colWeight": "SPRS-Gewicht",
+        "colContext": "Kontext (±15 Wörter)",
+        "colSection": "Abschnittsüberschrift"
       },
       "focus": {
         "title": "Site Focus",

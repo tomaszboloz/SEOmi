@@ -5877,7 +5877,9 @@
         "zoneNav": "Navegación / migas de pan",
         "zoneFooter": "Barra lateral / pie",
         "zoneUnknown": "Desconocida (rastreo antiguo)",
-        "zoneNeutral": "neutro (1)"
+        "zoneNeutral": "neutro (1)",
+        "tLinkContext": "Contexto de enlaces internos",
+        "linkContextIntro": "Ancla entre corchetes con hasta 15 palabras a cada lado, tal como las registró el rastreador. Las ejecuciones antiguas no tienen contexto. Filas mostradas:"
       },
       "cols": {
         "colItem": "Elemento",
@@ -5953,7 +5955,9 @@
         "colResult": "Resultado",
         "colZone": "Zona",
         "colShare": "Proporción",
-        "colWeight": "Peso SPRS"
+        "colWeight": "Peso SPRS",
+        "colContext": "Contexto (±15 palabras)",
+        "colSection": "Encabezado de sección"
       },
       "focus": {
         "title": "Enfoque del sitio",

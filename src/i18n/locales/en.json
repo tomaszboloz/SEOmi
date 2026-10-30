@@ -5877,7 +5877,9 @@
         "zoneNav": "Navigation / breadcrumb",
         "zoneFooter": "Sidebar / footer",
         "zoneUnknown": "Unknown (older run)",
-        "zoneNeutral": "neutral (1)"
+        "zoneNeutral": "neutral (1)",
+        "tLinkContext": "Internal link context",
+        "linkContextIntro": "Anchor in brackets with up to 15 words on each side, as recorded by the crawler. Older runs have no context. Rows shown:"
       },
       "cols": {
         "colItem": "Item",
@@ -5953,7 +5955,9 @@
         "colResult": "Result",
         "colZone": "Zone",
         "colShare": "Share",
-        "colWeight": "SPRS weight"
+        "colWeight": "SPRS weight",
+        "colContext": "Context (±15 words)",
+        "colSection": "Section heading"
       },
       "focus": {
         "title": "Site Focus",

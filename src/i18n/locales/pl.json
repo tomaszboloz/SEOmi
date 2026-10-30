@@ -5877,7 +5877,9 @@
         "zoneNav": "Nawigacja / okruszki",
         "zoneFooter": "Pasek boczny / stopka",
         "zoneUnknown": "Nieznana (starszy przebieg)",
-        "zoneNeutral": "neutralna (1)"
+        "zoneNeutral": "neutralna (1)",
+        "tLinkContext": "Kontekst linków wewnętrznych",
+        "linkContextIntro": "Anchor w nawiasach z maksymalnie 15 słowami z każdej strony, tak jak zapisał je crawler. Starsze runy nie mają kontekstu. Pokazane wiersze:"
       },
       "cols": {
         "colItem": "Element",
@@ -5953,7 +5955,9 @@
         "colResult": "Wynik",
         "colZone": "Strefa",
         "colShare": "Udział",
-        "colWeight": "Waga SPRS"
+        "colWeight": "Waga SPRS",
+        "colContext": "Kontekst (±15 słów)",
+        "colSection": "Nagłówek sekcji"
       },
       "focus": {
         "title": "Site Focus",

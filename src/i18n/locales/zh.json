@@ -5877,7 +5877,9 @@
         "zoneNav": "导航 / 面包屑",
         "zoneFooter": "侧边栏 / 页脚",
         "zoneUnknown": "未知（旧抓取）",
-        "zoneNeutral": "中性 (1)"
+        "zoneNeutral": "中性 (1)",
+        "tLinkContext": "内部链接上下文",
+        "linkContextIntro": "方括号内为锚文本，两侧各最多 15 个词，由爬虫记录。旧的运行没有上下文。显示行数："
       },
       "cols": {
         "colItem": "项目",
@@ -5953,7 +5955,9 @@
         "colResult": "结果",
         "colZone": "区域",
         "colShare": "占比",
-        "colWeight": "SPRS 权重"
+        "colWeight": "SPRS 权重",
+        "colContext": "上下文（±15 词）",
+        "colSection": "章节标题"
       },
       "focus": {
         "title": "站点聚焦度",

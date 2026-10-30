@@ -5877,7 +5877,9 @@
         "zoneNav": "Navegação / breadcrumb",
         "zoneFooter": "Barra lateral / rodapé",
         "zoneUnknown": "Desconhecida (rastreio antigo)",
-        "zoneNeutral": "neutro (1)"
+        "zoneNeutral": "neutro (1)",
+        "tLinkContext": "Contexto dos links internos",
+        "linkContextIntro": "Âncora entre colchetes com até 15 palavras de cada lado, conforme registrado pelo rastreador. Execuções antigas não têm contexto. Linhas exibidas:"
       },
       "cols": {
         "colItem": "Item",
@@ -5953,7 +5955,9 @@
         "colResult": "Resultado",
         "colZone": "Zona",
         "colShare": "Proporção",
-        "colWeight": "Peso SPRS"
+        "colWeight": "Peso SPRS",
+        "colContext": "Contexto (±15 palavras)",
+        "colSection": "Título da seção"
       },
       "focus": {
         "title": "Foco do site",
