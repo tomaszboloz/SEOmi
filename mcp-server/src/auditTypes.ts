@@ -1,4 +1,5 @@
 import { MAX_AUDIT_URL_LENGTH, validatePublicTarget } from './httpSafety.js';
+import type { PublicLinkDetail } from './linkDetails.js';
 
 export interface PublicAuditResult {
   requested_url: string;
@@ -16,6 +17,9 @@ export interface PublicAuditResult {
   security_headers: Record<string, string | null>;
   discovered_links: string[];
   discovered_links_truncated: boolean;
+  /** Anchor, rel, DOM zone and ±15 words of context per link (#70); only when requested. */
+  link_details?: PublicLinkDetail[];
+  link_details_truncated?: boolean;
   semantic_terms: string[];
   semantic_links: string[];
   semantic_content_source: 'primary-root' | 'body-fallback' | 'unavailable';
@@ -29,6 +33,8 @@ export interface PublicAuditOptions {
   /** Bounded glob-like pathname filters shared by CLI, API and MCP. */
   includePatterns?: string[];
   excludePatterns?: string[];
+  /** Adds per-link placement evidence (#70); off by default to keep responses small. */
+  includeLinkDetails?: boolean;
 }
 
 export interface PublicCrawlPage {
