@@ -7493,6 +7493,15 @@
         "critical": "laguna crítica",
         "high": "laguna alta",
         "medium": "laguna media"
+      },
+      "pillarFilter": "Filtrar por pilar",
+      "allPillars": "Todos los pilares",
+      "urlFilter": "Filtrar por URL",
+      "sortLabel": "Ordenar subtemas",
+      "sort": {
+        "importance": "Importancia de mercado",
+        "similarity": "Mejor coincidencia de página",
+        "label": "Nombre (A–Z)"
       }
     },
     "drill": {

@@ -7493,6 +7493,15 @@
         "critical": "치명적 공백",
         "high": "큰 공백",
         "medium": "중간 공백"
+      },
+      "pillarFilter": "필러별 필터",
+      "allPillars": "모든 필러",
+      "urlFilter": "URL별 필터",
+      "sortLabel": "하위 주제 정렬",
+      "sort": {
+        "importance": "시장 중요도",
+        "similarity": "최적 페이지 일치도",
+        "label": "이름순"
       }
     },
     "drill": {

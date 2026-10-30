@@ -7493,6 +7493,15 @@
         "critical": "kritische Lücke",
         "high": "große Lücke",
         "medium": "mittlere Lücke"
+      },
+      "pillarFilter": "Nach Säule filtern",
+      "allPillars": "Alle Säulen",
+      "urlFilter": "Nach URL filtern",
+      "sortLabel": "Unterthemen sortieren",
+      "sort": {
+        "importance": "Marktrelevanz",
+        "similarity": "Beste Seitenübereinstimmung",
+        "label": "Name (A–Z)"
       }
     },
     "drill": {

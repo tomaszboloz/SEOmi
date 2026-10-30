@@ -7493,6 +7493,15 @@
         "critical": "luka krytyczna",
         "high": "luka wysoka",
         "medium": "luka średnia"
+      },
+      "pillarFilter": "Filtruj według filaru",
+      "allPillars": "Wszystkie filary",
+      "urlFilter": "Filtruj według URL",
+      "sortLabel": "Sortuj podtematy",
+      "sort": {
+        "importance": "Ważność rynkowa",
+        "similarity": "Dopasowanie najlepszej strony",
+        "label": "Nazwa (A–Z)"
       }
     },
     "drill": {

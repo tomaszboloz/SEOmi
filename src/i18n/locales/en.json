@@ -7493,6 +7493,15 @@
         "critical": "critical gap",
         "high": "high gap",
         "medium": "medium gap"
+      },
+      "pillarFilter": "Filter by pillar",
+      "allPillars": "All pillars",
+      "urlFilter": "Filter by URL",
+      "sortLabel": "Sort sub-topics",
+      "sort": {
+        "importance": "Market importance",
+        "similarity": "Best page match",
+        "label": "Name (A–Z)"
       }
     },
     "drill": {

@@ -7493,6 +7493,15 @@
         "critical": "关键缺口",
         "high": "较大缺口",
         "medium": "中等缺口"
+      },
+      "pillarFilter": "按支柱筛选",
+      "allPillars": "所有支柱",
+      "urlFilter": "按 URL 筛选",
+      "sortLabel": "子主题排序",
+      "sort": {
+        "importance": "市场重要性",
+        "similarity": "最佳页面匹配度",
+        "label": "名称（A–Z）"
       }
     },
     "drill": {

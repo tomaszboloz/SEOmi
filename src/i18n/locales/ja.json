@@ -7493,6 +7493,15 @@
         "critical": "重大な欠落",
         "high": "大きな欠落",
         "medium": "中程度の欠落"
+      },
+      "pillarFilter": "ピラーで絞り込む",
+      "allPillars": "すべてのピラー",
+      "urlFilter": "URL で絞り込む",
+      "sortLabel": "サブトピックを並べ替え",
+      "sort": {
+        "importance": "市場での重要度",
+        "similarity": "最適ページの一致度",
+        "label": "名前順"
       }
     },
     "drill": {

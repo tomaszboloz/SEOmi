@@ -7493,6 +7493,15 @@
         "critical": "lacuna critica",
         "high": "lacuna alta",
         "medium": "lacuna media"
+      },
+      "pillarFilter": "Filtra per pilastro",
+      "allPillars": "Tutti i pilastri",
+      "urlFilter": "Filtra per URL",
+      "sortLabel": "Ordina i sottoargomenti",
+      "sort": {
+        "importance": "Importanza di mercato",
+        "similarity": "Migliore corrispondenza di pagina",
+        "label": "Nome (A–Z)"
       }
     },
     "drill": {
