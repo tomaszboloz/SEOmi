@@ -69,7 +69,7 @@ export const simulateWhatIfRun = (nodes: PageRankNode[], edges: SprsEdge[], chan
     .map((edge) => (updated.has(key(edge)) ? { ...edge, weight: updated.get(key(edge)) } : edge))
     .concat(change.add ?? []);
   const after = computeSprs(nextNodes, next, new Map(before.pages.map((page) => [page.nodeId, page.probability])));
-  const reference = Math.max(...before.pages.map((page) => page.probability), Number.MIN_VALUE);
+  const reference = before.pages.reduce((best, page) => Math.max(best, page.probability), Number.MIN_VALUE);
   const prior = new Map(before.pages.map((page) => [page.nodeId, page.score]));
   const round = (value: number) => Math.round(value * 10) / 10;
   // Added pages have no "before" and removed pages no "after": their delta is unknown, never 0 (GEM-71-08).
