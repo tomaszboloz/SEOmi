@@ -14,7 +14,7 @@ const emptyGroups = (): Record<TrsGroup, number> => ({ 'off-topic': 0, borderlin
  */
 export const rawTrs = (page: Pick<PageFocus, 'similarity' | 'keywordOverlap' | 'semanticDrift'>, mode: FallbackMode): number => {
   const [sim, overlap, drift] = [page.similarity / 100, page.keywordOverlap / 100, page.semanticDrift / 100];
-  return mode === 'semantic'
+  return mode !== 'lexical'
     ? SFS_SEMANTIC_WEIGHTS.similarity * sim + SFS_SEMANTIC_WEIGHTS.overlap * overlap - SFS_SEMANTIC_WEIGHTS.drift * drift
     : SFS_LEXICAL_WEIGHTS.overlap * overlap - SFS_LEXICAL_WEIGHTS.drift * drift;
 };

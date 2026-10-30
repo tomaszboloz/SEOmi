@@ -1,4 +1,4 @@
-import type { FocusPage, SfsBand, SfsProfileRef, SiteFocusOptions, TrsGroup } from '@/services/siteFocus';
+import type { FallbackMode, FocusPage, SfsBand, SfsProfileRef, SiteFocusOptions, TrsGroup } from '@/services/siteFocus';
 
 /** Corpus kinds #52 asks for (GEM-52-01); a report says which are still missing. */
 export const CALIBRATION_KINDS = ['niche', 'offer-blog', 'ecommerce', 'multi-topic', 'polysemy'] as const;
@@ -54,7 +54,7 @@ export interface SiteCalibration {
   band: SfsBand | null;
   confidence: number | null;
   onTopicRatio: number | null;
-  fallbackMode: 'semantic' | 'lexical';
+  fallbackMode: FallbackMode;
   coreTopic: { label: string; mode: string };
   /** Content pages per 10-point TRS bucket, 0-9 ... 90-100. */
   trsHistogram: number[];
