@@ -7295,6 +7295,7 @@
     }
   },
   "focusBenchmark": {
+    "partialSerp": "Les résultats de recherche sont partiels ({{min}}–{{max}} résultats organiques par requête, source : {{providers}}). Ce n’est pas un TOP 10 Google complet : la comparaison est indicative.",
     "title": "Benchmark concurrentiel",
     "intro": "Comparez votre Site Focus Score avec les sites qui se positionnent sur votre sujet principal. SEOmi consulte les résultats de recherche, crawle poliment un petit échantillon de chaque concurrent (robots.txt respecté) et les évalue avec le même moteur.",
     "run": "Lancer le benchmark",

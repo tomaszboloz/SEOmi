@@ -7295,6 +7295,7 @@
     }
   },
   "focusBenchmark": {
+    "partialSerp": "Wyniki wyszukiwania są niepełne ({{min}}–{{max}} wyników organicznych na zapytanie, źródło: {{providers}}). To nie jest pełne TOP 10 Google, więc porównanie ma charakter orientacyjny.",
     "title": "Benchmark konkurencji",
     "intro": "Porównaj swój Site Focus Score z serwisami, które pozycjonują się na Twój temat główny. SEOmi sprawdza wyniki wyszukiwania, w uprzejmy sposób skanuje niewielką próbę stron każdego konkurenta (z poszanowaniem robots.txt) i ocenia je tym samym silnikiem.",
     "run": "Uruchom benchmark",

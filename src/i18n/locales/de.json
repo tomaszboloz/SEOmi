@@ -7295,6 +7295,7 @@
     }
   },
   "focusBenchmark": {
+    "partialSerp": "Die Suchergebnisse sind unvollständig ({{min}}–{{max}} organische Ergebnisse pro Anfrage, Quelle: {{providers}}). Das ist keine vollständige Google-TOP-10, der Vergleich ist daher nur ein Anhaltspunkt.",
     "title": "Wettbewerbs-Benchmark",
     "intro": "Vergleiche deinen Site Focus Score mit den Websites, die für dein Kernthema ranken. SEOmi ruft die Suchergebnisse ab, crawlt von jedem Wettbewerber rücksichtsvoll eine kleine Stichprobe (robots.txt wird beachtet) und bewertet sie mit derselben Engine.",
     "run": "Benchmark starten",

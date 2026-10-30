@@ -13,6 +13,11 @@ export const BenchmarkResults = ({ report, onApplyTerms }: { report: BenchmarkRe
       <p className="text-xs text-slate-400">
         {t('focusBenchmark.sources', { source: report.serpSource })} · {t('focusBenchmark.queries', { queries: report.queries.join(', ') })} · {t('focusBenchmark.sample', { count: report.pagesPerCompetitor })}
       </p>
+      {report.serpEvidence && !report.serpEvidence.fullScoreEligible && (
+        <p role="status" data-testid="benchmark-partial-serp" className="text-xs text-amber-300">
+          {t('focusBenchmark.partialSerp', { min: report.serpEvidence.minK, max: report.serpEvidence.maxK, providers: report.serpEvidence.providers.join(', ') })}
+        </p>
+      )}
       <div className="flex flex-wrap gap-4 text-sm text-slate-200">
         <span>{t('focusBenchmark.ranking.position', { rank: report.ownRank, total: report.ranking.length })}</span>
         {report.industryAverage !== null && <span>{t('focusBenchmark.ranking.average')}: <strong>{report.industryAverage}</strong></span>}
