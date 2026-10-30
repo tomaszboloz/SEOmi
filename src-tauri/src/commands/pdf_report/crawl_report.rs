@@ -2,6 +2,7 @@
 
 mod agg;
 mod aio_tables;
+mod authority_notes;
 mod authority_tables;
 mod cover;
 mod coverage;

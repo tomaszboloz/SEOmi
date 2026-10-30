@@ -37,11 +37,17 @@ keys! {
     T_RECS => "crawl.authority.tRecs",
     T_BENCH => "crawl.authority.tBench",
     REFERENCE => "crawl.authority.reference",
+    PAA_USED => "crawl.authority.paaUsed",
+    PAA_MISSING => "crawl.authority.paaMissing",
+    CDES_PARTIAL => "crawl.authority.cdesPartial",
 }
 
 pub const QUADRANT: &str = "crawl.authority.quadrant";
 pub const WARNING: &str = "crawl.authority.warning";
 pub const LEVEL: &str = "crawl.authority.level";
+pub const DEPTH_PART: &str = "crawl.authority.depthPart";
+#[cfg(test)]
+pub const DEPTH_PARTS: &[&str] = &["entities", "questions", "gain"];
 pub const REC: &str = "crawl.authority.rec";
 
 #[cfg(test)]

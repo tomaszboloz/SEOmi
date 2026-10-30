@@ -6183,6 +6183,14 @@
           "fix-linking": "Corrige los enlaces internos: {{0}} páginas huérfanas, {{1}} enlaces a páginas fuera de tema",
           "deepen-shallow": "Profundiza {{0}} subtemas superficiales",
           "refresh-stale": "Actualiza {{0}} páginas sin cambios desde hace más de un año"
+        },
+        "paaUsed": "Se usaron {{0}} preguntas People Also Ask de la SERP.",
+        "paaMissing": "Sin fuente de People Also Ask: las preguntas proceden solo de los encabezados de la competencia y de Google Suggest.",
+        "cdesPartial": "Parcial: no se pudo medir {{0}} en algunos de los {{1}} subtemas cubiertos; CDES usa solo las partes medidas.",
+        "depthPart": {
+          "entities": "entidades",
+          "questions": "preguntas de usuarios (PAA)",
+          "gain": "ganancia de información"
         }
       },
       "aio": {

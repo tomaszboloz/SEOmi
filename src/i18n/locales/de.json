@@ -6183,6 +6183,14 @@
           "fix-linking": "Interne Verlinkung reparieren: {{0}} verwaiste Seiten, {{1}} Links auf Themenfremdes",
           "deepen-shallow": "{{0}} oberflächliche Unterthemen vertiefen",
           "refresh-stale": "{{0}} seit über einem Jahr nicht aktualisierte Seiten auffrischen"
+        },
+        "paaUsed": "{{0}} „Ähnliche Fragen“ aus der SERP wurden verwendet.",
+        "paaMissing": "Keine Quelle für „Ähnliche Fragen“: Fragen stammen nur aus Überschriften der Konkurrenz und Google Suggest.",
+        "cdesPartial": "Teilweise: {{0}} konnte für einige der {{1}} abgedeckten Unterthemen nicht gemessen werden; CDES nutzt nur die gemessenen Teile.",
+        "depthPart": {
+          "entities": "Entitäten",
+          "questions": "Nutzerfragen (PAA)",
+          "gain": "Informationsgewinn"
         }
       },
       "aio": {

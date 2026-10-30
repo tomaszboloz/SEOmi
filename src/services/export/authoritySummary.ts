@@ -16,7 +16,10 @@ export interface AuthorityPdfSummary {
   pillars: TopicalAuthorityReport['pillars'];
   cannibalization_index: number;
   warnings: string[];
-  reference: { subtopics: number; pillars: number; competitors: number; source: string; built_at: string } | null;
+  /** `paa`: real People Also Ask questions used (0 = no PAA source). */
+  reference: { subtopics: number; pillars: number; competitors: number; source: string; built_at: string; paa: number } | null;
+  /** CDES inputs; `partial` is stated in the PDF exactly as in the UI. */
+  depth_inputs: { status: string; rows: number; missing: string[] } | null;
   pillar_coverage: Array<{ label: string; coverage_pct: number; gaps: number; shallow: number }>;
   gaps: Array<{ label: string; level: string; weight: number }>;
   cannibalization: Array<{ canonical: string; pages: number; similarity: number }>;
@@ -28,7 +31,8 @@ export interface AuthorityPdfSummary {
 export const summarizeAuthority = (report: TopicalAuthorityReport, benchmark: Array<{ domain: string; sfs: number; tas: number | null }> = []): AuthorityPdfSummary => ({
   tas: report.tas, sfs: report.sfs, quadrant: report.quadrant, multiplier: report.multiplier, pillars: report.pillars,
   cannibalization_index: report.cannibalizationIndex, warnings: report.warnings,
-  reference: report.taxonomy ? { subtopics: report.taxonomy.subtopics.length, pillars: report.taxonomy.pillars.length, competitors: report.taxonomy.competitors.length, source: report.taxonomy.source, built_at: report.taxonomy.builtAt } : null,
+  reference: report.taxonomy ? { subtopics: report.taxonomy.subtopics.length, pillars: report.taxonomy.pillars.length, competitors: report.taxonomy.competitors.length, source: report.taxonomy.source, built_at: report.taxonomy.builtAt, paa: report.taxonomy.paaCount ?? 0 } : null,
+  depth_inputs: report.depthInputs ? { status: report.depthInputs.status, rows: report.depthInputs.rows, missing: report.depthInputs.missing } : null,
   pillar_coverage: report.pillarCoverage.map((pillar) => ({ label: pillar.label, coverage_pct: pillar.coveragePct, gaps: pillar.gaps, shallow: pillar.shallow })),
   gaps: report.coverage.filter((row) => row.coverage === 0).sort((a, b) => b.importance - a.importance || (a.label < b.label ? -1 : 1)).slice(0, AUTHORITY_PDF_GAPS)
     .map((row) => ({ label: row.label, level: buildGapBrief(report, row).level, weight: Math.round(row.importance * 100) })),

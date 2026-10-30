@@ -36,6 +36,12 @@ it('summarises the report compactly with gaps, groups, plan and benchmark rows',
   expect(JSON.stringify(summary)).not.toContain('commonTerms');
   const bare = summarizeAuthority(buildAuthorityReport(pages, START, ownReport(pages), { now: NOW }));
   expect(bare).toMatchObject({ tas: null, reference: null, gaps: [], benchmark: [] });
+  // #62 GEM-62-05: PAA source and partial CDES go to the PDF from the same report DTO, never recomputed.
+  expect(summary.reference?.paa).toBe(0);
+  expect(summary.depth_inputs).toEqual({ status: report.depthInputs!.status, rows: report.depthInputs!.rows, missing: report.depthInputs!.missing });
+  const withPaa = summarizeAuthority({ ...report, taxonomy: { ...report.taxonomy!, paaCount: 3 }, depthInputs: undefined });
+  expect(withPaa).toMatchObject({ reference: { paa: 3 }, depth_inputs: null });
+  expect(summarizeAuthority({ ...report, taxonomy: { ...report.taxonomy!, paaCount: undefined } }).reference?.paa).toBe(0);
 });
 
 it('builds a run summary from the cached map and benchmark, only for completed runs', () => {

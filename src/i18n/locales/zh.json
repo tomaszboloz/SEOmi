@@ -6183,6 +6183,14 @@
           "fix-linking": "修复内部链接：{{0}} 个孤立页面，{{1}} 条指向无关页面的链接",
           "deepen-shallow": "深化 {{0}} 个覆盖较浅的子主题",
           "refresh-stale": "更新 {{0}} 个超过一年未更新的页面"
+        },
+        "paaUsed": "已使用 SERP 中的 {{0}} 个 People Also Ask 问题。",
+        "paaMissing": "没有 People Also Ask 来源：问题仅来自竞争对手的标题和 Google 搜索建议。",
+        "cdesPartial": "部分结果：在 {{1}} 个已覆盖子主题中，部分无法测量 {{0}}；CDES 只使用已测量的部分。",
+        "depthPart": {
+          "entities": "实体",
+          "questions": "用户问题（PAA）",
+          "gain": "信息增益"
         }
       },
       "aio": {

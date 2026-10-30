@@ -6183,6 +6183,14 @@
           "fix-linking": "Corrigez le maillage : {{0}} pages orphelines, {{1}} liens vers des pages hors sujet",
           "deepen-shallow": "Approfondissez {{0}} sous-thèmes superficiels",
           "refresh-stale": "Actualisez {{0}} pages inchangées depuis plus d’un an"
+        },
+        "paaUsed": "{{0}} questions « Autres questions posées » de la SERP ont été utilisées.",
+        "paaMissing": "Aucune source « Autres questions posées » : les questions viennent seulement des titres des concurrents et de Google Suggest.",
+        "cdesPartial": "Partiel : {{0}} n’a pas pu être mesuré pour certains des {{1}} sous-thèmes couverts ; le CDES n’utilise que les parties mesurées.",
+        "depthPart": {
+          "entities": "entités",
+          "questions": "questions des utilisateurs (PAA)",
+          "gain": "gain d’information"
         }
       },
       "aio": {

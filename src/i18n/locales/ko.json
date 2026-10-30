@@ -6183,6 +6183,14 @@
           "fix-linking": "내부 링크 수정: 고아 페이지 {{0}}개, 주제 밖 링크 {{1}}개",
           "deepen-shallow": "얕은 하위 주제 {{0}}개 보강",
           "refresh-stale": "1년 넘게 수정되지 않은 페이지 {{0}}개 갱신"
+        },
+        "paaUsed": "SERP의 People Also Ask 질문 {{0}}개를 사용했습니다.",
+        "paaMissing": "People Also Ask 소스 없음: 질문은 경쟁사 제목과 Google 자동완성에서만 가져옵니다.",
+        "cdesPartial": "부분 결과: 다루어진 하위 주제 {{1}}개 중 일부에서 {{0}}을(를) 측정할 수 없었습니다. CDES는 측정된 요소만 사용합니다.",
+        "depthPart": {
+          "entities": "엔터티",
+          "questions": "사용자 질문(PAA)",
+          "gain": "정보 이득"
         }
       },
       "aio": {

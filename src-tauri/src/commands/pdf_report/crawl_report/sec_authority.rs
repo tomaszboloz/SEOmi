@@ -1,5 +1,6 @@
 //! "Topical Authority" section: TAS score panel, component KPIs, notes and tables.
 
+use super::authority_notes::input_notes;
 use super::authority_tables as tables;
 use super::data::{list, num};
 use super::focus_text::{arg, coded, percent};
@@ -87,6 +88,9 @@ impl Doc {
                 Style::BODY.colored(WARN_COLOR),
                 t(a::NO_REFERENCE),
             ),
+        }
+        for note in input_notes(authority) {
+            self.paragraph(MARGIN, CONTENT_W, Style::CAPTION, &note);
         }
         self.skip(4.0);
         for warning in list(authority, "warnings").iter().filter_map(Value::as_str) {

@@ -6183,6 +6183,14 @@
           "fix-linking": "Fix internal linking: {{0}} orphan pages, {{1}} links to off-topic pages",
           "deepen-shallow": "Deepen {{0}} shallow sub-topics",
           "refresh-stale": "Refresh {{0}} pages not updated for over a year"
+        },
+        "paaUsed": "{{0}} People Also Ask questions from the SERP were used.",
+        "paaMissing": "No People Also Ask source: questions come only from competitor headings and Google Suggest.",
+        "cdesPartial": "Partial: {{0}} could not be measured for some of the {{1}} covered sub-topics; CDES uses only the measured parts.",
+        "depthPart": {
+          "entities": "entities",
+          "questions": "user questions (PAA)",
+          "gain": "information gain"
         }
       },
       "aio": {
