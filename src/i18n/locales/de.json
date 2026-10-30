@@ -8671,5 +8671,35 @@
     "identical": "{{left}} = {{right}} (identische Datei)",
     "noPairs": "Kein nahezu doppeltes Paar bei diesem Schwellenwert.",
     "external": "Vergleich mit externen Bildsuchergebnissen: nicht verfügbar (kein Bildanbieter konfiguriert)."
+  },
+  "causalImpactUi": {
+    "title": "Kontrafaktische Schätzung (Kontrollreihe)",
+    "method": "Die täglichen Search-Console-Klicks dieser Property werden über bis zu 90 Tage vor der Änderung auf eine unabhängige Kontroll-Property regressiert; das Modell sagt die Klicks ohne Änderung voraus. Frequentistische Näherung von Causal Impact ohne Saisonmodellierung.",
+    "unavailable": {
+      "page-series-unavailable": "Für eine einzelne URL nicht schätzbar: Gespeichert werden nur tägliche Klicks der gesamten Property.",
+      "no-test-series": "Nicht schätzbar: keine gespeicherte tägliche Search-Console-Reihe für diese Website."
+    },
+    "series": "Testreihe: {{test}} · Kontrolle: {{control}}",
+    "none": "keine",
+    "status": {
+      "estimated": "Geschätzt aus {{pre}} Tagen vor und {{post}} Tagen nach der Änderung.",
+      "not-estimable": "Nicht schätzbar ({{pre}} Tage davor und {{post}} Tage danach mit Daten)."
+    },
+    "reasons": {
+      "short-pre-period": "Weniger als 28 Tage vor der Änderung.",
+      "short-post-period": "Weniger als 7 Tage nach der Änderung.",
+      "missing-data": "In einem Zeitfenster fehlen mehr als 10 % der Tage.",
+      "no-control": "Keine unabhängige Kontroll-Property mit denselben Filtern gespeichert. Speichern Sie Search-Console-Daten einer anderen Domain als Kontrolle.",
+      "flat-control": "Die Kontrollreihe variiert vor der Änderung nicht.",
+      "poor-prefit": "Die Kontrolle erklärt den Zeitraum vor der Änderung zu wenig (R² unter 0,5).",
+      "placebo-failed": "Ein Placebotest im Zeitraum vor der Änderung fand einen Effekt, wo keiner sein sollte; das Modell ist unzuverlässig."
+    },
+    "prefit": "Anpassung vor der Änderung: R² {{r2}}, Residuen-Autokorrelation {{rho}}.",
+    "placeboPassed": "Placebotest bestanden (Intervall vor der Änderung {{lower}} bis {{upper}} enthält null).",
+    "placeboFailed": "Placebotest nicht bestanden (Intervall vor der Änderung {{lower}} bis {{upper}} schließt null aus).",
+    "absolute": "Kumulierter Effekt auf Klicks: {{value}} (95-%-Intervall {{lower}} bis {{upper}}).",
+    "relative": "Relativer Effekt: {{value}} (95-%-Intervall {{lower}} bis {{upper}}).",
+    "probability": "Wahrscheinlichkeit, dass der Effekt dieses Vorzeichen hat: {{value}} (Normalapproximation, keine Bayes-Posterior).",
+    "caveat": "Eine um die Kontrolle bereinigte Schätzung beweist keine Kausalität. Andere Änderungen, Google-Updates oder Verschiebungen, die auch die Kontrolle betreffen, können sie verzerren. Kein ROI wird abgeleitet."
   }
 }

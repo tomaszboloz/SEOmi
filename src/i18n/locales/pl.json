@@ -8671,5 +8671,35 @@
     "identical": "{{left}} = {{right}} (identyczny plik)",
     "noPairs": "Brak par prawie identycznych przy tym progu.",
     "external": "Porównanie z zewnętrznymi wynikami wyszukiwania grafik: niedostępne (brak skonfigurowanego dostawcy obrazów)."
+  },
+  "causalImpactUi": {
+    "title": "Estymacja kontrfaktyczna (seria kontrolna)",
+    "method": "Dzienne kliknięcia Search Console tej usługi są regresowane względem niezależnej usługi kontrolnej w okresie do 90 dni przed zmianą; model przewiduje kliknięcia bez zmiany. Częstościowe przybliżenie Causal Impact, bez modelowania sezonowości.",
+    "unavailable": {
+      "page-series-unavailable": "Nie do oszacowania dla pojedynczego URL: zapisywane są tylko dzienne kliknięcia całej usługi.",
+      "no-test-series": "Nie do oszacowania: brak zapisanej dziennej serii Search Console dla tej witryny."
+    },
+    "series": "Seria testowa: {{test}} · kontrola: {{control}}",
+    "none": "brak",
+    "status": {
+      "estimated": "Oszacowano na podstawie {{pre}} dni przed i {{post}} dni po zmianie.",
+      "not-estimable": "Nie do oszacowania ({{pre}} dni przed i {{post}} dni po zmianie z danymi)."
+    },
+    "reasons": {
+      "short-pre-period": "Mniej niż 28 dni przed zmianą.",
+      "short-post-period": "Mniej niż 7 dni po zmianie.",
+      "missing-data": "W jednym z okien brakuje ponad 10% dni.",
+      "no-control": "Brak zapisanej niezależnej usługi kontrolnej z tymi samymi filtrami. Zapisz dane Search Console innej domeny, aby użyć jej jako kontroli.",
+      "flat-control": "Seria kontrolna nie zmienia się w okresie przed zmianą.",
+      "poor-prefit": "Kontrola wyjaśnia zbyt mało okresu przed zmianą (R² poniżej 0,5).",
+      "placebo-failed": "Test placebo w okresie przed zmianą wykrył efekt tam, gdzie go nie powinno być; model jest niewiarygodny."
+    },
+    "prefit": "Dopasowanie przed zmianą: R² {{r2}}, autokorelacja reszt {{rho}}.",
+    "placeboPassed": "Test placebo zaliczony (przedział przed zmianą {{lower}} do {{upper}} obejmuje zero).",
+    "placeboFailed": "Test placebo niezaliczony (przedział przed zmianą {{lower}} do {{upper}} nie obejmuje zera).",
+    "absolute": "Skumulowany efekt na kliknięcia: {{value}} (przedział 95% od {{lower}} do {{upper}}).",
+    "relative": "Efekt względny: {{value}} (przedział 95% od {{lower}} do {{upper}}).",
+    "probability": "Prawdopodobieństwo, że efekt ma ten znak: {{value}} (przybliżenie normalne, nie bayesowski rozkład a posteriori).",
+    "caveat": "Estymacja skorygowana o kontrolę nie dowodzi przyczynowości. Inne zmiany, aktualizacje Google lub przesunięcie wpływające też na kontrolę mogą ją zniekształcić. Nie wyliczamy ROI."
   }
 }

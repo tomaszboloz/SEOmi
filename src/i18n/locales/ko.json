@@ -8671,5 +8671,35 @@
     "identical": "{{left}} = {{right}} (동일한 파일)",
     "noPairs": "이 임계값에서는 거의 중복된 쌍이 없습니다.",
     "external": "외부 이미지 검색 결과와의 비교: 사용할 수 없음(이미지 제공업체 미설정)."
+  },
+  "causalImpactUi": {
+    "title": "반사실 추정(대조 시계열)",
+    "method": "이 속성의 Search Console 일별 클릭을 변경 전 최대 90일 동안 독립된 대조 속성에 회귀하여, 변경이 없었을 때의 클릭을 예측합니다. 계절성을 모델링하지 않는 Causal Impact의 빈도주의 근사입니다.",
+    "unavailable": {
+      "page-series-unavailable": "단일 URL은 추정할 수 없습니다. 속성 전체의 일별 클릭만 저장됩니다.",
+      "no-test-series": "추정할 수 없습니다. 이 사이트의 저장된 Search Console 일별 시계열이 없습니다."
+    },
+    "series": "테스트 시계열: {{test}} · 대조: {{control}}",
+    "none": "없음",
+    "status": {
+      "estimated": "변경 전 {{pre}}일, 변경 후 {{post}}일로 추정했습니다.",
+      "not-estimable": "추정할 수 없습니다(데이터가 있는 변경 전 {{pre}}일, 변경 후 {{post}}일)."
+    },
+    "reasons": {
+      "short-pre-period": "변경 전 기간이 28일 미만입니다.",
+      "short-post-period": "변경 후 기간이 7일 미만입니다.",
+      "missing-data": "한 기간에서 10%를 넘는 날짜가 누락되었습니다.",
+      "no-control": "같은 필터를 쓰는 독립 대조 속성이 저장되어 있지 않습니다. 대조로 쓸 다른 도메인의 Search Console 데이터를 저장하세요.",
+      "flat-control": "대조 시계열이 변경 전 기간에 변하지 않습니다.",
+      "poor-prefit": "대조가 변경 전 기간을 충분히 설명하지 못합니다(R² 0.5 미만).",
+      "placebo-failed": "변경 전 기간의 위약 검정에서 효과가 없어야 할 곳에 효과가 나타났습니다. 모델을 신뢰할 수 없습니다."
+    },
+    "prefit": "변경 전 적합도: R² {{r2}}, 잔차 자기상관 {{rho}}.",
+    "placeboPassed": "위약 검정 통과(변경 전 구간 {{lower}}~{{upper}}에 0 포함).",
+    "placeboFailed": "위약 검정 실패(변경 전 구간 {{lower}}~{{upper}}에 0 미포함).",
+    "absolute": "클릭에 대한 누적 효과: {{value}}(95% 구간 {{lower}}~{{upper}}).",
+    "relative": "상대 효과: {{value}}(95% 구간 {{lower}}~{{upper}}).",
+    "probability": "효과가 이 부호일 확률: {{value}}(정규 근사이며 베이즈 사후확률이 아님).",
+    "caveat": "대조로 보정한 추정은 인과관계의 증거가 아닙니다. 다른 변경, Google 업데이트, 대조에도 영향을 주는 변화로 편향될 수 있습니다. ROI는 추론하지 않습니다."
   }
 }

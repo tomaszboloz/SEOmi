@@ -8671,5 +8671,35 @@
     "identical": "{{left}} = {{right}} (fichier identique)",
     "noPairs": "Aucune paire quasi dupliquée à ce seuil.",
     "external": "Comparaison avec des résultats externes de recherche d’images : indisponible (aucun fournisseur d’images configuré)."
+  },
+  "causalImpactUi": {
+    "title": "Estimation contrefactuelle (série témoin)",
+    "method": "Les clics quotidiens Search Console de cette propriété sont régressés sur une propriété témoin indépendante sur jusqu’à 90 jours avant le changement ; le modèle prédit les clics sans le changement. Approximation fréquentiste de Causal Impact, sans modélisation de la saisonnalité.",
+    "unavailable": {
+      "page-series-unavailable": "Non estimable pour une seule URL : seuls les clics quotidiens de la propriété sont enregistrés.",
+      "no-test-series": "Non estimable : aucune série quotidienne Search Console enregistrée pour ce site."
+    },
+    "series": "Série testée : {{test}} · témoin : {{control}}",
+    "none": "aucun",
+    "status": {
+      "estimated": "Estimé sur {{pre}} jours avant et {{post}} jours après.",
+      "not-estimable": "Non estimable ({{pre}} jours avant et {{post}} jours après avec données)."
+    },
+    "reasons": {
+      "short-pre-period": "Moins de 28 jours avant le changement.",
+      "short-post-period": "Moins de 7 jours après le changement.",
+      "missing-data": "Plus de 10 % des jours manquent dans une fenêtre.",
+      "no-control": "Aucune propriété témoin indépendante avec les mêmes filtres n’est enregistrée. Enregistrez des données Search Console d’un autre domaine comme témoin.",
+      "flat-control": "La série témoin ne varie pas avant le changement.",
+      "poor-prefit": "Le témoin explique trop peu la période avant le changement (R² inférieur à 0,5).",
+      "placebo-failed": "Un test placebo dans la période avant le changement a trouvé un effet là où il ne devrait pas y en avoir ; le modèle n’est pas fiable."
+    },
+    "prefit": "Ajustement avant changement : R² {{r2}}, autocorrélation des résidus {{rho}}.",
+    "placeboPassed": "Test placebo réussi (l’intervalle avant changement de {{lower}} à {{upper}} contient zéro).",
+    "placeboFailed": "Test placebo échoué (l’intervalle avant changement de {{lower}} à {{upper}} exclut zéro).",
+    "absolute": "Effet cumulé sur les clics : {{value}} (intervalle à 95 % de {{lower}} à {{upper}}).",
+    "relative": "Effet relatif : {{value}} (intervalle à 95 % de {{lower}} à {{upper}}).",
+    "probability": "Probabilité que l’effet ait ce signe : {{value}} (approximation normale, pas une loi a posteriori bayésienne).",
+    "caveat": "Une estimation ajustée sur le témoin ne prouve pas la causalité. D’autres changements, des mises à jour Google ou une variation touchant aussi le témoin peuvent la biaiser. Aucun ROI n’est déduit."
   }
 }

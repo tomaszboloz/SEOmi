@@ -8671,5 +8671,35 @@
     "identical": "{{left}} = {{right}}（相同文件）",
     "noPairs": "在此阈值下没有近似重复的图片对。",
     "external": "与外部图片搜索结果比较：不可用（未配置图片提供商）。"
+  },
+  "causalImpactUi": {
+    "title": "反事实估计（对照序列）",
+    "method": "将此资源的 Search Console 每日点击量在变更前最多 90 天内对一个独立的对照资源做回归，模型预测没有变更时的点击量。这是 Causal Impact 的频率学近似，不对季节性建模。",
+    "unavailable": {
+      "page-series-unavailable": "无法对单个 URL 估计：只保存了资源级别的每日点击。",
+      "no-test-series": "无法估计：没有为此网站保存的 Search Console 每日序列。"
+    },
+    "series": "测试序列：{{test}} · 对照：{{control}}",
+    "none": "无",
+    "status": {
+      "estimated": "基于变更前 {{pre}} 天和变更后 {{post}} 天估计。",
+      "not-estimable": "无法估计（有数据的变更前 {{pre}} 天、变更后 {{post}} 天）。"
+    },
+    "reasons": {
+      "short-pre-period": "变更前少于 28 天。",
+      "short-post-period": "变更后少于 7 天。",
+      "missing-data": "某个窗口中缺失超过 10% 的天数。",
+      "no-control": "未保存使用相同筛选条件的独立对照资源。请保存另一个域名的 Search Console 数据作为对照。",
+      "flat-control": "对照序列在变更前没有变化。",
+      "poor-prefit": "对照对变更前时期的解释力太弱（R² 低于 0.5）。",
+      "placebo-failed": "变更前时期内的安慰剂检验在不应有效应处发现了效应；模型不可靠。"
+    },
+    "prefit": "变更前拟合：R² {{r2}}，残差自相关 {{rho}}。",
+    "placeboPassed": "安慰剂检验通过（变更前区间 {{lower}} 至 {{upper}} 包含零）。",
+    "placeboFailed": "安慰剂检验未通过（变更前区间 {{lower}} 至 {{upper}} 不包含零）。",
+    "absolute": "对点击的累计效应：{{value}}（95% 区间 {{lower}} 至 {{upper}}）。",
+    "relative": "相对效应：{{value}}（95% 区间 {{lower}} 至 {{upper}}）。",
+    "probability": "效应为此符号的概率：{{value}}（正态近似，不是贝叶斯后验）。",
+    "caveat": "经对照调整的估计并不能证明因果关系。其他变更、Google 更新或同样影响对照的变化都可能使其产生偏差。不推断 ROI。"
   }
 }

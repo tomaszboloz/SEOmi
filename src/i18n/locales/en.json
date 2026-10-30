@@ -8671,5 +8671,35 @@
     "identical": "{{left}} = {{right}} (identical file)",
     "noPairs": "No near-duplicate pair at this threshold.",
     "external": "Comparison with external image search results: unavailable (no images provider configured)."
+  },
+  "causalImpactUi": {
+    "title": "Counterfactual estimate (control series)",
+    "method": "Daily Search Console clicks of this property are regressed on an independent control property over up to 90 days before the change; the model predicts the clicks without the change. Frequentist approximation of Causal Impact, without seasonality modelling.",
+    "unavailable": {
+      "page-series-unavailable": "Not estimable for a single URL: only property-level daily clicks are saved.",
+      "no-test-series": "Not estimable: no saved daily Search Console series for this site."
+    },
+    "series": "Test series: {{test}} · control: {{control}}",
+    "none": "none",
+    "status": {
+      "estimated": "Estimated from {{pre}} pre-period and {{post}} post-period days.",
+      "not-estimable": "Not estimable ({{pre}} pre-period and {{post}} post-period days with data)."
+    },
+    "reasons": {
+      "short-pre-period": "Fewer than 28 pre-period days.",
+      "short-post-period": "Fewer than 7 post-period days.",
+      "missing-data": "More than 10% of days are missing in a window.",
+      "no-control": "No independent control property with the same filters is saved. Save Search Console data for another domain to use as a control.",
+      "flat-control": "The control series has no variation in the pre-period.",
+      "poor-prefit": "The control explains too little of the pre-period (R² below 0.5).",
+      "placebo-failed": "A placebo test inside the pre-period found an effect where none should be; the model is unreliable."
+    },
+    "prefit": "Pre-period fit: R² {{r2}}, residual autocorrelation {{rho}}.",
+    "placeboPassed": "Placebo test passed (pre-period interval {{lower}} to {{upper}} includes zero).",
+    "placeboFailed": "Placebo test failed (pre-period interval {{lower}} to {{upper}} excludes zero).",
+    "absolute": "Cumulative effect on clicks: {{value}} (95% interval {{lower}} to {{upper}}).",
+    "relative": "Relative effect: {{value}} (95% interval {{lower}} to {{upper}}).",
+    "probability": "Probability that the effect has this sign: {{value}} (normal approximation, not a Bayesian posterior).",
+    "caveat": "An estimate adjusted for the control is not proof of causality. Other changes, Google updates or a shift that also affects the control can bias it. No ROI is inferred."
   }
 }

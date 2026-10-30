@@ -8671,5 +8671,35 @@
     "identical": "{{left}} = {{right}} (archivo idéntico)",
     "noPairs": "No hay pares casi duplicados con este umbral.",
     "external": "Comparación con resultados externos de búsqueda de imágenes: no disponible (no hay proveedor de imágenes configurado)."
+  },
+  "causalImpactUi": {
+    "title": "Estimación contrafactual (serie de control)",
+    "method": "Los clics diarios de Search Console de esta propiedad se regresan sobre una propiedad de control independiente durante hasta 90 días antes del cambio; el modelo predice los clics sin el cambio. Aproximación frecuentista de Causal Impact, sin modelar estacionalidad.",
+    "unavailable": {
+      "page-series-unavailable": "No estimable para una sola URL: solo se guardan los clics diarios de la propiedad.",
+      "no-test-series": "No estimable: no hay una serie diaria de Search Console guardada para este sitio."
+    },
+    "series": "Serie de prueba: {{test}} · control: {{control}}",
+    "none": "ninguno",
+    "status": {
+      "estimated": "Estimado con {{pre}} días previos y {{post}} días posteriores.",
+      "not-estimable": "No estimable ({{pre}} días previos y {{post}} posteriores con datos)."
+    },
+    "reasons": {
+      "short-pre-period": "Menos de 28 días previos.",
+      "short-post-period": "Menos de 7 días posteriores.",
+      "missing-data": "Falta más del 10 % de los días en una ventana.",
+      "no-control": "No hay una propiedad de control independiente con los mismos filtros. Guarda datos de Search Console de otro dominio para usarlo como control.",
+      "flat-control": "La serie de control no varía en el periodo previo.",
+      "poor-prefit": "El control explica demasiado poco del periodo previo (R² inferior a 0,5).",
+      "placebo-failed": "Una prueba placebo en el periodo previo encontró un efecto donde no debería haberlo; el modelo no es fiable."
+    },
+    "prefit": "Ajuste previo: R² {{r2}}, autocorrelación de residuos {{rho}}.",
+    "placeboPassed": "Prueba placebo superada (el intervalo previo de {{lower}} a {{upper}} incluye cero).",
+    "placeboFailed": "Prueba placebo fallida (el intervalo previo de {{lower}} a {{upper}} excluye cero).",
+    "absolute": "Efecto acumulado en clics: {{value}} (intervalo del 95 %: {{lower}} a {{upper}}).",
+    "relative": "Efecto relativo: {{value}} (intervalo del 95 %: {{lower}} a {{upper}}).",
+    "probability": "Probabilidad de que el efecto tenga este signo: {{value}} (aproximación normal, no una posterior bayesiana).",
+    "caveat": "Una estimación ajustada por el control no prueba causalidad. Otros cambios, actualizaciones de Google o variaciones que también afecten al control pueden sesgarla. No se infiere ROI."
   }
 }
