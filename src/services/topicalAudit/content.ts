@@ -3,6 +3,7 @@ import type { SemanticAuditFinding } from './types';
 import i18n from '@/i18n';
 import { auditPageIndex } from './mapping';
 import { urlKey, addFinding, semanticText } from './evidence';
+import { isOrphan } from '@/services/linkGraph';
 
 export const auditContentLinks = (pages: CrawledPageSummary[], inputTruncated: boolean, findings: SemanticAuditFinding[]) => {
   // Deliberately measure contextual links from extracted main content only. This
@@ -26,10 +27,11 @@ export const auditContentLinks = (pages: CrawledPageSummary[], inputTruncated: b
     }
   }
   let contentOrphanPages: number | null = hasContentLinkSnapshot ? 0 : null;
+  // The crawl seed is a root by definition, not an orphan merely because it
+  // has no incoming contextual link. Old snapshots without semantic_links are unknown.
+  const roots = new Set(pages.filter((page) => page.depth === 0).map((page) => urlKey(page.url)));
   if (hasContentLinkSnapshot) for (const page of pages) {
-    // The crawl seed is a root by definition, not an orphan merely because it
-    // has no incoming contextual link. Old snapshots without semantic_links are unknown.
-    if (page.depth === 0 || (contentIncomingSources.get(urlKey(page.url))?.size ?? 0) > 0) continue;
+    if (!isOrphan(urlKey(page.url), contentIncomingSources, roots)) continue;
     contentOrphanPages! += 1;
     const incomingCount = contentIncomingSources.get(urlKey(page.url))?.size ?? 0;
     addFinding(findings, {
