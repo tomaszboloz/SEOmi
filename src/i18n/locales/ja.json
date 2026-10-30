@@ -8096,6 +8096,19 @@
     }
   },
   "parityUi": {
+    "exception": {
+      "reasonPlaceholder": "理由（任意）",
+      "reasonLabel": "ローカル例外の理由: {{language}} の {{topic}}",
+      "removeLabel": "{{language}} の {{topic}} のローカル例外を削除",
+      "addLabel": "{{language}} で {{topic}} を意図的なローカルとしてマーク",
+      "remove": "ローカルを取り消す",
+      "add": "ローカルとしてマーク",
+      "column": "ローカル例外"
+    },
+    "scope": {
+      "document-language": "hreflang 注釈が見つかりません。ページは宣言された文書言語で比較されます。",
+      "hreflang-clusters": "{{clusters}} 件の hreflang クラスター内のページのみを比較しました。{{issues}} 件の hreflang 技術的問題は別途報告され、コンテンツの不足ではありません。"
+    },
     "title": "国際パリティ",
     "summary": "網羅 {{covered}} 件、浅い {{shallow}} 件、不足 {{missing}} 件、意図的なローカル {{local}} 件。",
     "inconclusive": "判定不能: 利用できるデータではパリティを判断できません。",

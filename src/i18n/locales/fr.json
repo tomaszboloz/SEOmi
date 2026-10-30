@@ -8096,6 +8096,19 @@
     }
   },
   "parityUi": {
+    "exception": {
+      "reasonPlaceholder": "Motif (facultatif)",
+      "reasonLabel": "Motif de l'exception locale : {{topic}} en {{language}}",
+      "removeLabel": "Retirer l'exception locale pour {{topic}} en {{language}}",
+      "addLabel": "Marquer {{topic}} comme volontairement local en {{language}}",
+      "remove": "Annuler local",
+      "add": "Marquer comme local",
+      "column": "Exception locale"
+    },
+    "scope": {
+      "document-language": "Aucune annotation hreflang trouvée : les pages sont comparées selon la langue déclarée du document.",
+      "hreflang-clusters": "Seules les pages de {{clusters}} clusters hreflang sont comparées ; {{issues}} problèmes techniques hreflang sont signalés à part et ne sont pas des lacunes de contenu."
+    },
     "title": "Parité internationale",
     "summary": "{{covered}} couverts, {{shallow}} superficiels, {{missing}} manquants, {{local}} volontairement locaux.",
     "inconclusive": "Non concluant : la parité ne peut pas être jugée avec les données disponibles.",

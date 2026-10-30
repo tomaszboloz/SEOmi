@@ -8096,6 +8096,19 @@
     }
   },
   "parityUi": {
+    "exception": {
+      "reasonPlaceholder": "السبب (اختياري)",
+      "reasonLabel": "سبب الاستثناء المحلي: {{topic}} في {{language}}",
+      "removeLabel": "إزالة الاستثناء المحلي لـ {{topic}} في {{language}}",
+      "addLabel": "وضع علامة على {{topic}} كمحلي عن قصد في {{language}}",
+      "remove": "إلغاء المحلي",
+      "add": "وضع علامة محلي",
+      "column": "استثناء محلي"
+    },
+    "scope": {
+      "document-language": "لم يتم العثور على تعليقات hreflang: تتم مقارنة الصفحات حسب لغة المستند المعلنة.",
+      "hreflang-clusters": "تمت مقارنة الصفحات داخل {{clusters}} مجموعات hreflang فقط؛ يتم الإبلاغ عن {{issues}} مشكلات تقنية في hreflang بشكل منفصل وهي ليست فجوات في المحتوى."
+    },
     "title": "التكافؤ الدولي",
     "summary": "مغطّى: {{covered}}، سطحي: {{shallow}}، مفقود: {{missing}}، محلي عن قصد: {{local}}.",
     "inconclusive": "غير حاسم: لا يمكن الحكم على التكافؤ بالبيانات المتاحة.",

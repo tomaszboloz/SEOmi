@@ -8096,6 +8096,19 @@
     }
   },
   "parityUi": {
+    "exception": {
+      "reasonPlaceholder": "原因（可选）",
+      "reasonLabel": "本地例外原因：{{language}} 中的 {{topic}}",
+      "removeLabel": "移除 {{language}} 中 {{topic}} 的本地例外",
+      "addLabel": "将 {{language}} 中的 {{topic}} 标记为有意本地",
+      "remove": "撤销本地",
+      "add": "标记为本地",
+      "column": "本地例外"
+    },
+    "scope": {
+      "document-language": "未找到 hreflang 标注：页面按声明的文档语言比较。",
+      "hreflang-clusters": "仅比较了 {{clusters}} 个 hreflang 集群内的页面；{{issues}} 个 hreflang 技术问题单独报告，不属于内容缺口。"
+    },
     "title": "国际对等性",
     "summary": "已覆盖 {{covered}}，较浅 {{shallow}}，缺失 {{missing}}，有意本地化 {{local}}。",
     "inconclusive": "无法判定：现有数据不足以评估对等性。",
