@@ -1,6 +1,7 @@
 import type { SiteFocusReport } from '@/services/siteFocus';
 import { ensureUrlTelemetry, type UrlTelemetry, type UrlTelemetrySnapshot } from '@/services/urlTelemetry';
 import { decideProtection, DEFAULT_TRS_THRESHOLD, type ProtectionResult } from './decide';
+import { logVisitEvidence } from './logEvidence';
 
 export const MAX_PROTECTION_ROWS = 20;
 const NONE = { state: 'unavailable', value: null } as const;
@@ -20,9 +21,12 @@ export const protectionRows = (report: SiteFocusReport, projectId: string | null
   const low = report.pages.filter((page) => !page.skipped && page.trs < DEFAULT_TRS_THRESHOLD);
   const snapshot = projectId ? ensureUrlTelemetry(projectId, report.pages.map((page) => page.url)) : null;
   const byUrl = new Map((snapshot?.urls ?? []).map((row) => [keyOf(row.url), row]));
+  const visits = logVisitEvidence(projectId);
   const rows = low.slice(0, limit).map((page) => {
     const telemetry: UrlTelemetry = byUrl.get(keyOf(page.url)) ?? { url: page.url, gsc: NONE, ga4: NONE, backlinks: NONE, revenue: NONE };
-    return { url: page.url, trs: page.trs, result: decideProtection(page.trs, telemetry) };
+    const result = decideProtection(page.trs, telemetry);
+    // Log visits enrich the evidence but never change the decision (#81 GEM-81-08).
+    return { url: page.url, trs: page.trs, result: { ...result, evidence: [...result.evidence, visits(page.url)] } };
   });
   return { snapshot, rows };
 };
