@@ -32,3 +32,23 @@ fn rendered_viewport_mark_sets_fold_only_for_main_content_on_rendered_pages() {
         some("main", "dom-ancestry")
     );
 }
+
+#[test]
+fn rendered_fold_method_records_a_valid_viewport_only() {
+    let with = "<main><a data-seomi-fold=above data-seomi-viewport=1280x800 href=/x>x</a></main>";
+    assert_eq!(
+        placed(with, true),
+        (
+            Some("above_fold".to_owned()),
+            Some("rendered-viewport:1280x800".to_owned())
+        )
+    );
+    let bad = "<main><a data-seomi-fold=below data-seomi-viewport=wide href=/x>x</a></main>";
+    assert_eq!(
+        placed(bad, true),
+        (
+            Some("below_fold".to_owned()),
+            Some("rendered-viewport".to_owned())
+        )
+    );
+}

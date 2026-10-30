@@ -102,14 +102,27 @@ pub(crate) struct LinkFacts {
     pub rendered: bool,
 }
 
-/// Main-content links get their fold position from the rendered viewport mark (#70).
-fn placed_zone(element: &ElementRef<'_>, rendered: bool) -> (&'static str, &'static str) {
+/// `WIDTHxHEIGHT` of the rendered viewport, e.g. `1280x800`; anything else is ignored (#70 GEM-70-03).
+fn viewport_mark<'a>(element: &ElementRef<'a>) -> Option<&'a str> {
+    let value = element.value().attr("data-seomi-viewport")?;
+    let (width, height) = value.split_once('x')?;
+    let valid =
+        |part: &str| (1..=5).contains(&part.len()) && part.bytes().all(|b| b.is_ascii_digit());
+    (valid(width) && valid(height)).then_some(value)
+}
+
+/// Main-content links get their fold position (and viewport size, when recorded) from the render mark (#70).
+fn placed_zone(element: &ElementRef<'_>, rendered: bool) -> (&'static str, String) {
     let zone = dom_zone(element);
     let mark = element.value().attr("data-seomi-fold");
+    let method = || match viewport_mark(element) {
+        Some(size) => format!("{METHOD_RENDERED}:{size}"),
+        None => METHOD_RENDERED.to_owned(),
+    };
     match (zone, rendered, mark) {
-        ("main", true, Some("above")) => ("above_fold", METHOD_RENDERED),
-        ("main", true, Some("below")) => ("below_fold", METHOD_RENDERED),
-        _ => (zone, METHOD_DOM),
+        ("main", true, Some("above")) => ("above_fold", method()),
+        ("main", true, Some("below")) => ("below_fold", method()),
+        _ => (zone, METHOD_DOM.to_owned()),
     }
 }
 
@@ -129,7 +142,7 @@ pub(crate) fn build_link(facts: LinkFacts, element: &ElementRef<'_>) -> CrawledL
         target_request_error_kind: None,
         target_checked_at: None,
         zone: Some(zone.to_owned()),
-        zone_method: Some(zone_method.to_owned()),
+        zone_method: Some(zone_method),
         context_before,
         context_after,
         section_heading: section_heading(element),
