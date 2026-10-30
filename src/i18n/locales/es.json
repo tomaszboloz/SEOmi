@@ -6030,7 +6030,9 @@
           "degraded": "Algunas páginas tenían datos limitados, por lo que sus puntuaciones pueden ser menos precisas.",
           "unmatchedTopic": "Ninguna página coincidió con el tema \"{{0}}\". Se usa el tema detectado.",
           "anchoredTopic": "El tema principal se eligió a partir de la página de inicio y las páginas ancla ({{0}} páginas).",
-          "anchorsMissing": "Páginas ancla no encontradas en este rastreo: {{0}}."
+          "anchorsMissing": "Páginas ancla no encontradas en este rastreo: {{0}}.",
+          "goalTopic": "El tema principal se eligió según el objetivo de negocio «{{0}}».",
+          "goalUnmatched": "El objetivo de negocio «{{0}}» no coincidió con ningún contenido rastreado; el tema se eligió sin él."
         },
         "rec": {
           "remove-offtopic": "Revisa {{0}} páginas off-topic antes de actuar: comprueba primero tráfico, conversiones y enlaces. Las páginas sin esa evidencia son candidatas a un 301 hacia una página relevante o a una reescritura. Nada se elimina automáticamente. Potencial: +{{1}} puntos.",
@@ -6043,8 +6045,8 @@
           "monitor-strong-pages": "Supervisa {{0}} páginas sólidas: mantenlas en el tema y vuelve a comprobarlas con regularidad."
         },
         "option": {
-          "remove-redirect": "Eliminar y redirigir con 301 (+{{0}} puntos)",
-          "noindex-isolate": "Aplicar noindex y aislar (+{{0}} puntos)",
+          "remove-redirect": "Solo sin clics, conversiones ni enlaces: 301 a una página relevante (+{{0}} puntos)",
+          "noindex-isolate": "Solo sin clics, conversiones ni enlaces: noindex y aislar (+{{0}} puntos)",
           "rewrite-on-topic": "Reescribir sobre el tema con un brief (TRS objetivo: unos {{0}})",
           "add-missing-terms": "Añadir términos que faltan: {{0}}",
           "reinforce-headings": "Reforzar los encabezados H2 y H3",
@@ -6056,6 +6058,67 @@
         "gap": {
           "thin-subtopic": "Subtema poco cubierto \"{{0}}\": solo el {{1}}% de las páginas lo trata ({{2}} páginas). Términos: {{3}}.",
           "competitor-terms": "Términos de la competencia que faltan en tu sitio: {{3}}."
+        },
+        "protection": {
+          "title": "Comprobación de protección de URL",
+          "intro": "Comprobación orientativa para páginas con TRS inferior a {{0}}. Un TRS de {{0}} o más mantiene la página y un PRI de {{1}} o más la protege; un empate cuenta como protegido. Nada se elimina, redirige ni marca como noindex automáticamente.",
+          "noTelemetry": "No había datos de GSC, GA4 ni backlinks, así que cada página necesita datos antes de decidir.",
+          "colDecision": "Decisión y motivos",
+          "colEvidence": "Evidencia",
+          "colOptions": "Opciones manuales y condiciones",
+          "unknown": "{{0}}: desconocido ({{1}})",
+          "measured": "{{0}}: {{1}} ({{2}})",
+          "onlyIf": "solo si: {{0}}",
+          "decision": {
+            "keep": "Mantener",
+            "shield": "Proteger",
+            "needs-data": "Faltan datos",
+            "semantic-bridge": "Puente semántico",
+            "prune-candidate": "Revisar para poda"
+          },
+          "reason": {
+            "trs-above-threshold": "El TRS es suficientemente alto",
+            "revenue": "Ingresos medidos",
+            "pri-above-threshold": "Tráfico, conversiones o enlaces alcanzan el umbral de protección",
+            "telemetry-incomplete": "Faltan datos de telemetría, están obsoletos o muestreados",
+            "low-pri-measured": "Las señales medidas son bajas; revisa primero el valor de negocio",
+            "conversions": "Conversiones medidas"
+          },
+          "signal": {
+            "clicks": "Clics",
+            "conversions": "Conversiones",
+            "referringDomains": "Dominios de referencia",
+            "revenue": "Ingresos"
+          },
+          "alternative": {
+            "confirm-revenue-currency": "Confirmar la moneda de los ingresos",
+            "check-gsc-ga4-backlinks-access": "Comprobar el acceso a GSC, GA4 y backlinks",
+            "link-to-pillar": "Enlazar a la página pilar",
+            "redirect-301-to-relevant-target": "301 a una página relevante",
+            "canonical-for-duplicates": "Canonical para duplicados",
+            "keep-and-rewrite": "Mantener y reescribir",
+            "noindex-or-410-after-review": "noindex o 410 tras revisión"
+          },
+          "condition": {
+            "currency-from-analytics": "la moneda viene de la analítica, no de una suposición",
+            "fresh-90-day-window": "hay una ventana de 90 días reciente y completa",
+            "real-topic-relation": "los temas están realmente relacionados",
+            "relevant-target-same-intent": "el destino responde a la misma intención",
+            "no-measured-value": "no se midieron clics, conversiones, ingresos ni enlaces",
+            "update-links-and-sitemap": "se actualizan los enlaces internos y el sitemap",
+            "near-duplicate-only": "el contenido es casi un duplicado",
+            "owner-confirms-value": "el propietario confirma que la página tiene valor",
+            "not-via-robots-txt": "se aplica en la página, no en robots.txt",
+            "business-review": "una persona revisó el impacto en el negocio"
+          },
+          "state": {
+            "measured": "Medido",
+            "partial-history": "Historial parcial",
+            "stale": "Desactualizado",
+            "sampled": "Muestra",
+            "missing-permission": "Sin permisos",
+            "unavailable": "No disponible"
+          }
         }
       },
       "authority": {
@@ -6914,7 +6977,8 @@
       "mode": {
         "auto": "Modo del tema: detectado de todo el contenido",
         "manual": "Modo del tema: definido manualmente",
-        "anchored": "Modo del tema: página de inicio y páginas ancla"
+        "anchored": "Modo del tema: página de inicio y páginas ancla",
+        "goal": "Modo del tema: objetivo de negocio"
       },
       "inputLabel": "Páginas ancla (una URL por línea)",
       "placeholder": "https://example.com/oferta",
@@ -7065,7 +7129,7 @@
       },
       "noindex-isolate": {
         "title": "Aplicar noindex y aislar",
-        "detail": "Mantén la página para los usuarios pero ocúltala de los buscadores y reduce los enlaces internos. Ganancia para el sitio: +{{gain}} puntos."
+        "detail": "Solo cuando tráfico, conversiones y enlaces están medidos y son bajos: mantén la página para los usuarios, ocúltala de la búsqueda y corta los enlaces internos. Ganancia del sitio: +{{gain}} puntos."
       },
       "rewrite-on-topic": {
         "title": "Reescribir sobre el tema con un brief",
@@ -7127,7 +7191,8 @@
       "mode": {
         "auto": "detección en todo el contenido",
         "manual": "tema manual",
-        "anchored": "inicio y páginas ancla"
+        "anchored": "inicio y páginas ancla",
+        "goal": "objetivo de negocio"
       },
       "title": "Historial de puntuación",
       "empty": "Ejecuta al menos dos análisis completos para ver la tendencia.",
@@ -7169,7 +7234,63 @@
         "revenue": "Ingresos medidos",
         "pri-above-threshold": "Tráfico, conversiones o enlaces alcanzan el umbral de protección",
         "telemetry-incomplete": "Faltan datos de telemetría, están obsoletos o muestreados",
-        "low-pri-measured": "Las señales medidas son bajas; revisa primero el valor de negocio"
+        "low-pri-measured": "Las señales medidas son bajas; revisa primero el valor de negocio",
+        "conversions": "Conversiones medidas"
+      },
+      "reasonsLabel": "Por qué",
+      "alternativesLabel": "Opciones manuales",
+      "signal": {
+        "clicks": "Clics",
+        "conversions": "Conversiones",
+        "referringDomains": "Dominios de referencia",
+        "revenue": "Ingresos"
+      },
+      "unknown": "{{signal}}: desconocido ({{state}})",
+      "measured": "{{signal}}: {{value}}",
+      "currencyUnknown": "{{value}} (moneda desconocida)",
+      "onlyIf": "solo si: {{conditions}}",
+      "rule": "Un TRS de {{trs}} o más mantiene la página; un PRI de {{pri}} o más la protege. Un empate cuenta como protegido.",
+      "alternative": {
+        "confirm-revenue-currency": "Confirmar la moneda de los ingresos",
+        "check-gsc-ga4-backlinks-access": "Comprobar el acceso a GSC, GA4 y backlinks",
+        "link-to-pillar": "Enlazar a la página pilar",
+        "redirect-301-to-relevant-target": "301 a una página relevante",
+        "canonical-for-duplicates": "Canonical para duplicados",
+        "keep-and-rewrite": "Mantener y reescribir",
+        "noindex-or-410-after-review": "noindex o 410 tras revisión"
+      },
+      "condition": {
+        "currency-from-analytics": "la moneda viene de la analítica, no de una suposición",
+        "fresh-90-day-window": "hay una ventana de 90 días reciente y completa",
+        "real-topic-relation": "los temas están realmente relacionados",
+        "relevant-target-same-intent": "el destino responde a la misma intención",
+        "no-measured-value": "no se midieron clics, conversiones, ingresos ni enlaces",
+        "update-links-and-sitemap": "se actualizan los enlaces internos y el sitemap",
+        "near-duplicate-only": "el contenido es casi un duplicado",
+        "owner-confirms-value": "el propietario confirma que la página tiene valor",
+        "not-via-robots-txt": "se aplica en la página, no en robots.txt",
+        "business-review": "una persona revisó el impacto en el negocio"
+      }
+    },
+    "goal": {
+      "title": "Objetivo de negocio",
+      "inputLabel": "¿Qué debe vender o conseguir este sitio? (una frase)",
+      "placeholder": "por ejemplo: vender bombas de insulina a clínicas",
+      "save": "Guardar objetivo",
+      "help": "El objetivo elige el clúster temático que comparte sus palabras, después de un tema manual y antes de las páginas ancla. Nunca se convierte en tema por sí solo.",
+      "needsProject": "Los objetivos de negocio se guardan por proyecto. Abre este rastreo desde un proyecto para definir uno.",
+      "none": "No hay objetivo de negocio.",
+      "applied": "El objetivo de negocio eligió el tema principal: {{input}}",
+      "manualWins": "Tu tema manual tiene prioridad sobre el objetivo de negocio.",
+      "unmatched": {
+        "auto": "Ninguna palabra del objetivo aparece en el contenido rastreado, así que el tema se detecta a partir de todo el contenido.",
+        "anchored": "Ninguna palabra del objetivo aparece en el contenido rastreado, así que el tema proviene de la página de inicio y las páginas ancla."
+      },
+      "error": {
+        "too-short": "Escribe al menos 3 caracteres.",
+        "too-long": "El objetivo no puede superar {{max}} caracteres.",
+        "no-words": "Usa palabras, no solo números o símbolos.",
+        "looks-like-url": "Parece una URL. Añade páginas en el campo de páginas ancla."
       }
     }
   },

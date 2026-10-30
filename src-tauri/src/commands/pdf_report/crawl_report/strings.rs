@@ -8,6 +8,7 @@ pub mod focus;
 mod labels;
 mod labels_cols;
 pub mod offpage;
+pub mod protection;
 pub mod recs;
 pub mod report;
 pub mod trust;

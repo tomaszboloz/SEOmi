@@ -40,6 +40,19 @@ fn notes_state_anchored_topic_provenance_and_missing_anchors() {
 }
 
 #[test]
+fn notes_state_whether_the_business_goal_chose_the_topic() {
+    let chosen = json!({"core_topic": {"mode": "goal", "business_goal": "sell pumps", "goal_matched": true}});
+    assert_eq!(
+        notes(&chosen),
+        vec!["The core topic was chosen by the business goal \"sell pumps\"."]
+    );
+    let unmatched = json!({"core_topic": {"mode": "auto", "business_goal": "sell pumps", "goal_matched": false}});
+    assert!(notes(&unmatched)[0].contains("matched no crawled content"));
+    let ignored = json!({"core_topic": {"mode": "manual", "business_goal": "sell pumps", "goal_matched": true}});
+    assert!(notes(&ignored).is_empty());
+}
+
+#[test]
 fn band_colors_differ_per_band() {
     let colors: Vec<_> = BANDS.iter().map(|band| band_color(band)).collect();
     assert!(colors

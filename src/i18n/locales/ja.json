@@ -6030,7 +6030,9 @@
           "degraded": "一部のページはデータが限られていたため、スコアの精度が低い可能性があります。",
           "unmatchedTopic": "トピック「{{0}}」に一致するページはありませんでした。代わりに検出されたトピックを使用します。",
           "anchoredTopic": "中心トピックはトップページとアンカーページ（{{0}} ページ）から選ばれました。",
-          "anchorsMissing": "このクロールで見つからなかったアンカーページ：{{0}}。"
+          "anchorsMissing": "このクロールで見つからなかったアンカーページ：{{0}}。",
+          "goalTopic": "コアトピックはビジネス目標「{{0}}」により選ばれました。",
+          "goalUnmatched": "ビジネス目標「{{0}}」はクロールしたコンテンツと一致しなかったため、目標なしでトピックを選びました。"
         },
         "rec": {
           "remove-offtopic": "トピック外のページ {{0}} 件は、対応する前に確認してください。まずトラフィック、コンバージョン、リンクを確認します。これらの根拠がないページは、関連ページへの301またはリライトの候補です。自動では何も削除されません。見込み: +{{1}} ポイント。",
@@ -6043,8 +6045,8 @@
           "monitor-strong-pages": "強いページ {{0}} 件を監視してください。トピックから外れないよう保ち、定期的に再確認します。"
         },
         "option": {
-          "remove-redirect": "削除して 301 でリダイレクト(+{{0}} ポイント)",
-          "noindex-isolate": "noindex にして隔離(+{{0}} ポイント)",
+          "remove-redirect": "クリック・コンバージョン・リンクがない場合のみ: 関連ページへ 301（+{{0}} ポイント）",
+          "noindex-isolate": "クリック・コンバージョン・リンクがない場合のみ: noindex と分離（+{{0}} ポイント）",
           "rewrite-on-topic": "ブリーフに沿ってトピックに合わせて書き直す(目標 TRS 約 {{0}})",
           "add-missing-terms": "不足している用語を追加: {{0}}",
           "reinforce-headings": "H2 と H3 の見出しを強化",
@@ -6056,6 +6058,67 @@
         "gap": {
           "thin-subtopic": "薄いサブトピック「{{0}}」: 扱っているのはページの {{1}}%({{2}} ページ)のみです。用語: {{3}}。",
           "competitor-terms": "自社サイトにない競合の用語: {{3}}。"
+        },
+        "protection": {
+          "title": "URL 保護チェック",
+          "intro": "TRS が {{0}} 未満のページに対する参考チェックです。TRS が {{0}} 以上ならページを維持し、PRI が {{1}} 以上なら保護します。同値は保護扱いです。削除・リダイレクト・noindex は自動では行いません。",
+          "noTelemetry": "GSC・GA4・被リンクのデータがないため、どのページも判断の前にデータが必要です。",
+          "colDecision": "判断と理由",
+          "colEvidence": "根拠",
+          "colOptions": "手動の選択肢と条件",
+          "unknown": "{{0}}: 不明（{{1}}）",
+          "measured": "{{0}}: {{1}}（{{2}}）",
+          "onlyIf": "条件: {{0}}",
+          "decision": {
+            "keep": "維持",
+            "shield": "保護",
+            "needs-data": "データ必要",
+            "semantic-bridge": "セマンティックブリッジ",
+            "prune-candidate": "整理候補として確認"
+          },
+          "reason": {
+            "trs-above-threshold": "TRS が十分に高い",
+            "revenue": "収益を計測済み",
+            "pri-above-threshold": "流入・コンバージョン・リンクが保護しきい値に達しています",
+            "telemetry-incomplete": "テレメトリが欠落、古い、またはサンプリングされています",
+            "low-pri-measured": "計測された指標は低めです。まず事業上の価値を確認してください",
+            "conversions": "コンバージョンを計測済み"
+          },
+          "signal": {
+            "clicks": "クリック",
+            "conversions": "コンバージョン",
+            "referringDomains": "参照ドメイン",
+            "revenue": "収益"
+          },
+          "alternative": {
+            "confirm-revenue-currency": "収益の通貨を確認",
+            "check-gsc-ga4-backlinks-access": "GSC・GA4・被リンクへのアクセスを確認",
+            "link-to-pillar": "ピラーページへリンク",
+            "redirect-301-to-relevant-target": "関連ページへ 301",
+            "canonical-for-duplicates": "重複には canonical",
+            "keep-and-rewrite": "維持して書き直す",
+            "noindex-or-410-after-review": "確認後に noindex または 410"
+          },
+          "condition": {
+            "currency-from-analytics": "通貨は推測ではなく分析ツールから取得",
+            "fresh-90-day-window": "最新で完全な 90 日間のデータがある",
+            "real-topic-relation": "トピックが実際に関連している",
+            "relevant-target-same-intent": "移転先が同じ検索意図に応える",
+            "no-measured-value": "クリック・コンバージョン・収益・リンクが計測されていない",
+            "update-links-and-sitemap": "内部リンクとサイトマップを更新する",
+            "near-duplicate-only": "内容がほぼ重複している",
+            "owner-confirms-value": "所有者がページの価値を確認した",
+            "not-via-robots-txt": "robots.txt ではなくページ側で設定する",
+            "business-review": "担当者がビジネスへの影響を確認した"
+          },
+          "state": {
+            "measured": "計測済み",
+            "partial-history": "履歴が不完全",
+            "stale": "古いデータ",
+            "sampled": "サンプル",
+            "missing-permission": "権限なし",
+            "unavailable": "利用不可"
+          }
         }
       },
       "authority": {
@@ -6914,7 +6977,8 @@
       "mode": {
         "auto": "トピックモード：全コンテンツから検出",
         "manual": "トピックモード：手動で設定",
-        "anchored": "トピックモード：トップページとアンカーページ"
+        "anchored": "トピックモード：トップページとアンカーページ",
+        "goal": "トピックモード: ビジネス目標"
       },
       "inputLabel": "アンカーページ（1行に1つのURL）",
       "placeholder": "https://example.com/offer",
@@ -7065,7 +7129,7 @@
       },
       "noindex-isolate": {
         "title": "noindex にして隔離",
-        "detail": "ユーザー向けにはページを残しつつ、検索結果からは非表示にして内部リンクを減らします。サイト全体の上昇幅: +{{gain}} ポイント。"
+        "detail": "トラフィック・コンバージョン・リンクが計測済みで低い場合のみ: ユーザー向けにページを残し、検索から隠して内部リンクを外します。サイトの改善: +{{gain}} ポイント。"
       },
       "rewrite-on-topic": {
         "title": "ブリーフに沿ってトピックに合わせて書き直す",
@@ -7127,7 +7191,8 @@
       "mode": {
         "auto": "全コンテンツから検出",
         "manual": "手動トピック",
-        "anchored": "トップページとアンカーページ"
+        "anchored": "トップページとアンカーページ",
+        "goal": "ビジネス目標"
       },
       "title": "スコア履歴",
       "empty": "推移を見るには、完全分析を2回以上実行してください。",
@@ -7169,7 +7234,63 @@
         "revenue": "収益を計測済み",
         "pri-above-threshold": "流入・コンバージョン・リンクが保護しきい値に達しています",
         "telemetry-incomplete": "テレメトリが欠落、古い、またはサンプリングされています",
-        "low-pri-measured": "計測された指標は低めです。まず事業上の価値を確認してください"
+        "low-pri-measured": "計測された指標は低めです。まず事業上の価値を確認してください",
+        "conversions": "コンバージョンを計測済み"
+      },
+      "reasonsLabel": "理由",
+      "alternativesLabel": "手動の選択肢",
+      "signal": {
+        "clicks": "クリック",
+        "conversions": "コンバージョン",
+        "referringDomains": "参照ドメイン",
+        "revenue": "収益"
+      },
+      "unknown": "{{signal}}: 不明（{{state}}）",
+      "measured": "{{signal}}: {{value}}",
+      "currencyUnknown": "{{value}}（通貨不明）",
+      "onlyIf": "条件: {{conditions}}",
+      "rule": "TRS が {{trs}} 以上ならページを維持し、PRI が {{pri}} 以上なら保護します。同値は保護扱いです。",
+      "alternative": {
+        "confirm-revenue-currency": "収益の通貨を確認",
+        "check-gsc-ga4-backlinks-access": "GSC・GA4・被リンクへのアクセスを確認",
+        "link-to-pillar": "ピラーページへリンク",
+        "redirect-301-to-relevant-target": "関連ページへ 301",
+        "canonical-for-duplicates": "重複には canonical",
+        "keep-and-rewrite": "維持して書き直す",
+        "noindex-or-410-after-review": "確認後に noindex または 410"
+      },
+      "condition": {
+        "currency-from-analytics": "通貨は推測ではなく分析ツールから取得",
+        "fresh-90-day-window": "最新で完全な 90 日間のデータがある",
+        "real-topic-relation": "トピックが実際に関連している",
+        "relevant-target-same-intent": "移転先が同じ検索意図に応える",
+        "no-measured-value": "クリック・コンバージョン・収益・リンクが計測されていない",
+        "update-links-and-sitemap": "内部リンクとサイトマップを更新する",
+        "near-duplicate-only": "内容がほぼ重複している",
+        "owner-confirms-value": "所有者がページの価値を確認した",
+        "not-via-robots-txt": "robots.txt ではなくページ側で設定する",
+        "business-review": "担当者がビジネスへの影響を確認した"
+      }
+    },
+    "goal": {
+      "title": "ビジネス目標",
+      "inputLabel": "このサイトは何を販売・達成すべきですか？（1 文）",
+      "placeholder": "例: クリニック向けにインスリンポンプを販売する",
+      "save": "目標を保存",
+      "help": "目標は、その語を含むトピッククラスターを選びます。優先順位は手動トピックの次、アンカーページの前です。目標そのものがトピックになることはありません。",
+      "needsProject": "ビジネス目標はプロジェクトごとに保存されます。設定するにはプロジェクトからこのクロールを開いてください。",
+      "none": "ビジネス目標は未設定です。",
+      "applied": "ビジネス目標がコアトピックを選びました: {{input}}",
+      "manualWins": "手動トピックがビジネス目標より優先されます。",
+      "unmatched": {
+        "auto": "目標の語がクロールしたコンテンツに見つからないため、トピックは全コンテンツから検出しています。",
+        "anchored": "目標の語がクロールしたコンテンツに見つからないため、トピックはホームページとアンカーページから決めています。"
+      },
+      "error": {
+        "too-short": "3 文字以上入力してください。",
+        "too-long": "目標は {{max}} 文字以内にしてください。",
+        "no-words": "数字や記号だけでなく、言葉を使ってください。",
+        "looks-like-url": "URL のようです。ページはアンカーページ欄に追加してください。"
       }
     }
   },

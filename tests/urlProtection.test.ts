@@ -42,7 +42,7 @@ describe('protection decision', () => {
   });
   it('shields a conversion without revenue', () => {
     const r = decideProtection(10, tel({ ga4: { state: 'measured', value: { sessions: 1, engagedSessions: 1, keyEvents: 1 } } }));
-    expect(r).toMatchObject({ decision: 'shield', reasons: ['pri-above-threshold'] });
+    expect(r).toMatchObject({ decision: 'shield', reasons: ['conversions'] });
   });
   it('shields on PRI', () => {
     const r = decideProtection(10, tel({ backlinks: { state: 'measured', value: { referringDomains: 5 } } }));

@@ -22,6 +22,7 @@ vi.mock('@/components/Domain/crawlResults/focus/FocusHistoryChart', () => ({ Foc
 vi.mock('@/components/Domain/crawlResults/focus/WeeklySummaryCard', () => ({ WeeklySummaryCard: () => <div>weekly</div> }));
 vi.mock('@/components/Domain/crawlResults/focus/CoreTopicPanel', () => ({ CoreTopicPanel: () => <div>topic</div> }));
 vi.mock('@/components/Domain/crawlResults/focus/CoreAnchorsPanel', () => ({ CoreAnchorsPanel: () => <div>anchors</div> }));
+vi.mock('@/components/Domain/crawlResults/focus/BusinessGoalPanel', () => ({ BusinessGoalPanel: () => <div>goal</div> }));
 vi.mock('@/components/Domain/crawlResults/focus/FocusMetricsStrip', () => ({ FocusMetricsStrip: () => <div>metrics</div> }));
 vi.mock('@/components/Domain/crawlResults/focus/SubSiteScores', () => ({ SubSiteScores: () => <div>subsites</div> }));
 vi.mock('@/components/Domain/crawlResults/focus/FocusHeatmapTree', () => ({ FocusHeatmapTree: () => <div>heatmap</div> }));

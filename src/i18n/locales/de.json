@@ -6030,7 +6030,9 @@
           "degraded": "Bei einigen Seiten waren die Daten begrenzt, daher können ihre Werte ungenauer sein.",
           "unmatchedTopic": "Keine Seite passt zum Thema „{{0}}“. Stattdessen wird das erkannte Thema verwendet.",
           "anchoredTopic": "Das Kernthema wurde aus Startseite und Ankerseiten gewählt ({{0}} Seiten).",
-          "anchorsMissing": "In diesem Crawl nicht gefundene Ankerseiten: {{0}}."
+          "anchorsMissing": "In diesem Crawl nicht gefundene Ankerseiten: {{0}}.",
+          "goalTopic": "Das Kernthema wurde durch das Geschäftsziel „{{0}}“ gewählt.",
+          "goalUnmatched": "Das Geschäftsziel „{{0}}“ passte zu keinem gecrawlten Inhalt; das Thema wurde ohne es gewählt."
         },
         "rec": {
           "remove-offtopic": "{{0}} themenfremde Seiten vor dem Handeln prüfen: zuerst Traffic, Conversions und Links prüfen. Seiten ohne diese Belege kommen für eine 301 auf eine passende Seite oder eine Überarbeitung infrage. Nichts wird automatisch entfernt. Potenzial: +{{1}} Punkte.",
@@ -6043,8 +6045,8 @@
           "monitor-strong-pages": "{{0}} starke Seiten überwachen: Halte sie beim Thema und prüfe sie regelmäßig erneut."
         },
         "option": {
-          "remove-redirect": "Löschen und mit 301 weiterleiten (+{{0}} Punkte)",
-          "noindex-isolate": "Auf noindex setzen und isolieren (+{{0}} Punkte)",
+          "remove-redirect": "Nur ohne Klicks, Conversions oder Links: 301 auf eine relevante Seite (+{{0}} Punkte)",
+          "noindex-isolate": "Nur ohne Klicks, Conversions oder Links: noindex und isolieren (+{{0}} Punkte)",
           "rewrite-on-topic": "Mit einem Briefing themenbezogen neu schreiben (Ziel-TRS etwa {{0}})",
           "add-missing-terms": "Fehlende Begriffe ergänzen: {{0}}",
           "reinforce-headings": "H2- und H3-Überschriften stärken",
@@ -6056,6 +6058,67 @@
         "gap": {
           "thin-subtopic": "Dünn abgedecktes Unterthema „{{0}}“: nur {{1}} % der Seiten behandeln es ({{2}} Seiten). Begriffe: {{3}}.",
           "competitor-terms": "Begriffe der Konkurrenz, die auf deiner Website fehlen: {{3}}."
+        },
+        "protection": {
+          "title": "URL-Schutzprüfung",
+          "intro": "Beratende Prüfung für Seiten mit TRS unter {{0}}. Ein TRS ab {{0}} behält eine Seite, ein PRI ab {{1}} schützt sie; Gleichstand gilt als geschützt. Nichts wird automatisch gelöscht, weitergeleitet oder auf noindex gesetzt.",
+          "noTelemetry": "Keine GSC-, GA4- oder Backlink-Daten verfügbar, daher braucht jede Seite vor einer Entscheidung Daten.",
+          "colDecision": "Entscheidung und Gründe",
+          "colEvidence": "Belege",
+          "colOptions": "Manuelle Optionen und Bedingungen",
+          "unknown": "{{0}}: unbekannt ({{1}})",
+          "measured": "{{0}}: {{1}} ({{2}})",
+          "onlyIf": "nur wenn: {{0}}",
+          "decision": {
+            "keep": "Behalten",
+            "shield": "Schützen",
+            "needs-data": "Daten nötig",
+            "semantic-bridge": "Semantische Brücke",
+            "prune-candidate": "Zur Bereinigung prüfen"
+          },
+          "reason": {
+            "trs-above-threshold": "TRS ist hoch genug",
+            "revenue": "Umsatz gemessen",
+            "pri-above-threshold": "Traffic, Conversions oder Links erreichen die Schutzschwelle",
+            "telemetry-incomplete": "Telemetrie fehlt, ist veraltet oder gesampelt",
+            "low-pri-measured": "Gemessene Signale sind niedrig; zuerst den Geschäftswert prüfen",
+            "conversions": "Conversions gemessen"
+          },
+          "signal": {
+            "clicks": "Klicks",
+            "conversions": "Conversions",
+            "referringDomains": "Verweisende Domains",
+            "revenue": "Umsatz"
+          },
+          "alternative": {
+            "confirm-revenue-currency": "Umsatzwährung bestätigen",
+            "check-gsc-ga4-backlinks-access": "Zugriff auf GSC, GA4 und Backlinks prüfen",
+            "link-to-pillar": "Auf die Pillar-Seite verlinken",
+            "redirect-301-to-relevant-target": "301 auf eine relevante Seite",
+            "canonical-for-duplicates": "Canonical für Duplikate",
+            "keep-and-rewrite": "Behalten und umschreiben",
+            "noindex-or-410-after-review": "noindex oder 410 nach Prüfung"
+          },
+          "condition": {
+            "currency-from-analytics": "die Währung stammt aus der Analyse, nicht aus einer Annahme",
+            "fresh-90-day-window": "ein frisches, vollständiges 90-Tage-Fenster liegt vor",
+            "real-topic-relation": "die Themen hängen wirklich zusammen",
+            "relevant-target-same-intent": "das Ziel bedient dieselbe Suchintention",
+            "no-measured-value": "keine Klicks, Conversions, Umsätze oder Links gemessen",
+            "update-links-and-sitemap": "interne Links und Sitemap werden angepasst",
+            "near-duplicate-only": "der Inhalt ist ein Beinahe-Duplikat",
+            "owner-confirms-value": "der Inhaber bestätigt den Wert der Seite",
+            "not-via-robots-txt": "in der Seite gesetzt, nicht in robots.txt",
+            "business-review": "ein Mensch hat die geschäftlichen Folgen geprüft"
+          },
+          "state": {
+            "measured": "Gemessen",
+            "partial-history": "Unvollständiger Verlauf",
+            "stale": "Veraltet",
+            "sampled": "Stichprobe",
+            "missing-permission": "Fehlende Berechtigung",
+            "unavailable": "Nicht verfügbar"
+          }
         }
       },
       "authority": {
@@ -6914,7 +6977,8 @@
       "mode": {
         "auto": "Themenmodus: aus allen Inhalten erkannt",
         "manual": "Themenmodus: manuell festgelegt",
-        "anchored": "Themenmodus: Startseite und Ankerseiten"
+        "anchored": "Themenmodus: Startseite und Ankerseiten",
+        "goal": "Themenmodus: Geschäftsziel"
       },
       "inputLabel": "Ankerseiten (eine URL pro Zeile)",
       "placeholder": "https://example.com/angebot",
@@ -7065,7 +7129,7 @@
       },
       "noindex-isolate": {
         "title": "Auf noindex setzen und isolieren",
-        "detail": "Behalte die Seite für Nutzer, blende sie aber in der Suche aus und kappe interne Links. Gewinn für die Website: +{{gain}} Punkte."
+        "detail": "Nur wenn Traffic, Conversions und Links gemessen und niedrig sind: Seite für Nutzer behalten, in der Suche ausblenden und interne Links kappen. Gewinn für die Website: +{{gain}} Punkte."
       },
       "rewrite-on-topic": {
         "title": "Mit einem Briefing themenbezogen neu schreiben",
@@ -7127,7 +7191,8 @@
       "mode": {
         "auto": "Erkennung aus allen Inhalten",
         "manual": "manuelles Thema",
-        "anchored": "Startseite und Ankerseiten"
+        "anchored": "Startseite und Ankerseiten",
+        "goal": "Geschäftsziel"
       },
       "title": "Verlauf des Werts",
       "empty": "Führe mindestens zwei vollständige Analysen durch, um den Trend zu sehen.",
@@ -7169,7 +7234,63 @@
         "revenue": "Umsatz gemessen",
         "pri-above-threshold": "Traffic, Conversions oder Links erreichen die Schutzschwelle",
         "telemetry-incomplete": "Telemetrie fehlt, ist veraltet oder gesampelt",
-        "low-pri-measured": "Gemessene Signale sind niedrig; zuerst den Geschäftswert prüfen"
+        "low-pri-measured": "Gemessene Signale sind niedrig; zuerst den Geschäftswert prüfen",
+        "conversions": "Conversions gemessen"
+      },
+      "reasonsLabel": "Warum",
+      "alternativesLabel": "Manuelle Optionen",
+      "signal": {
+        "clicks": "Klicks",
+        "conversions": "Conversions",
+        "referringDomains": "Verweisende Domains",
+        "revenue": "Umsatz"
+      },
+      "unknown": "{{signal}}: unbekannt ({{state}})",
+      "measured": "{{signal}}: {{value}}",
+      "currencyUnknown": "{{value}} (Währung unbekannt)",
+      "onlyIf": "nur wenn: {{conditions}}",
+      "rule": "Ein TRS ab {{trs}} behält eine Seite; ein PRI ab {{pri}} schützt sie. Gleichstand gilt als geschützt.",
+      "alternative": {
+        "confirm-revenue-currency": "Umsatzwährung bestätigen",
+        "check-gsc-ga4-backlinks-access": "Zugriff auf GSC, GA4 und Backlinks prüfen",
+        "link-to-pillar": "Auf die Pillar-Seite verlinken",
+        "redirect-301-to-relevant-target": "301 auf eine relevante Seite",
+        "canonical-for-duplicates": "Canonical für Duplikate",
+        "keep-and-rewrite": "Behalten und umschreiben",
+        "noindex-or-410-after-review": "noindex oder 410 nach Prüfung"
+      },
+      "condition": {
+        "currency-from-analytics": "die Währung stammt aus der Analyse, nicht aus einer Annahme",
+        "fresh-90-day-window": "ein frisches, vollständiges 90-Tage-Fenster liegt vor",
+        "real-topic-relation": "die Themen hängen wirklich zusammen",
+        "relevant-target-same-intent": "das Ziel bedient dieselbe Suchintention",
+        "no-measured-value": "keine Klicks, Conversions, Umsätze oder Links gemessen",
+        "update-links-and-sitemap": "interne Links und Sitemap werden angepasst",
+        "near-duplicate-only": "der Inhalt ist ein Beinahe-Duplikat",
+        "owner-confirms-value": "der Inhaber bestätigt den Wert der Seite",
+        "not-via-robots-txt": "in der Seite gesetzt, nicht in robots.txt",
+        "business-review": "ein Mensch hat die geschäftlichen Folgen geprüft"
+      }
+    },
+    "goal": {
+      "title": "Geschäftsziel",
+      "inputLabel": "Was soll diese Website verkaufen oder erreichen? (ein Satz)",
+      "placeholder": "zum Beispiel: Insulinpumpen an Kliniken verkaufen",
+      "save": "Ziel speichern",
+      "help": "Das Ziel wählt den Themencluster, der seine Wörter enthält – nach einem manuellen Thema und vor Ankerseiten. Es wird nie selbst zum Thema.",
+      "needsProject": "Geschäftsziele werden pro Projekt gespeichert. Öffne diesen Crawl aus einem Projekt, um eines festzulegen.",
+      "none": "Kein Geschäftsziel festgelegt.",
+      "applied": "Das Geschäftsziel hat das Kernthema gewählt: {{input}}",
+      "manualWins": "Dein manuelles Thema hat Vorrang vor dem Geschäftsziel.",
+      "unmatched": {
+        "auto": "Keines der Wörter des Ziels kommt im gecrawlten Inhalt vor, daher wird das Thema aus allen Inhalten erkannt.",
+        "anchored": "Keines der Wörter des Ziels kommt im gecrawlten Inhalt vor, daher stammt das Thema von der Startseite und den Ankerseiten."
+      },
+      "error": {
+        "too-short": "Gib mindestens 3 Zeichen ein.",
+        "too-long": "Das Ziel darf höchstens {{max}} Zeichen haben.",
+        "no-words": "Verwende Wörter, nicht nur Zahlen oder Symbole.",
+        "looks-like-url": "Das sieht wie eine URL aus. Füge Seiten im Feld für Ankerseiten hinzu."
       }
     }
   },

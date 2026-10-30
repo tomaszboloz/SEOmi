@@ -58,7 +58,7 @@ fn focus_section_shows_score_core_topic_pages_recommendations_and_gaps() {
         "Weakest pages by topic relevance",
         "phones/review-1",
         "Strongly",
-        "Delete and",
+        "Only without",
         "Rewrite on",
         "Add missing",
         "unknown-code",
